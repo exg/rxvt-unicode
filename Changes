@@ -2,11 +2,22 @@ Lines marked with "xterm:" indicate either xterm features ported to rxvt
 or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
-TODO: escaping system for long escape sequences, so we can stop on CR/LF.
 TODO: implement xterm mode to be able to use xfree's TERM=xterm.
 TODO: multibyte support for setwmname et al.
-TODO: there are other todo items, but they are not in this file because they
-      are very long-term :)
+TODO: there are other todo items, but they are not in this file.
+
+3.3
+	- some doc updates (Eduard Bloch).
+	- use faster inheritpixmap method when tinting color not set.
+	- fix pixmap offset when tinting (reported by Eduard Bloch).
+        - new -sh option by Mikael Magnusson.
+	- off-focus-fading (--enable-fading) support (patch by
+          Mikael Magnusson).
+      	- cursor now set correctly on --disable-blank (reported by
+          Mikael Magnusson).
+        - better (and non-crashing) slipwheeling (Mikael Magnusson).
+	- solaris 2.8 portability changes (reported by Colin Marquardt).
+      	- disable-xim now really disables xim code.
 
 3.2  Mon Jul 26 19:57:32 CEST 2004
         - support real bold fonts (patch by Adam Sampson <azz@us-lot.org>),
