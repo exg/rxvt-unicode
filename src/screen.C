@@ -2716,7 +2716,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
   XTextProperty ct;
 
   if (XGetWindowProperty (display->display, win, prop,
-                          0, (long)(PROP_SIZE / 4),
+                          0, PROP_SIZE / 4,
                           delete_prop, AnyPropertyType,
                           &ct.encoding, &ct.format,
                           &ct.nitems, &bytes_after,
@@ -2733,25 +2733,22 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
     {
       // fetch and append remaining data
       XTextProperty ct2;
-      unsigned long bytes_after2;
 
       if (XGetWindowProperty (display->display, win, prop,
-                              ct.nitems / 4, (long) (bytes_after + 3) / 4,
+                              ct.nitems / 4, (bytes_after + 3) / 4,
                               delete_prop, AnyPropertyType,
                               &ct2.encoding, &ct2.format,
-                              &ct2.nitems, &bytes_after2,
+                              &ct2.nitems, &bytes_after,
                               &ct2.value) != Success)
         goto bailout;
 
       // realloc should be compatible to XFree, here, and elsewhere, too
-      ct.value = (unsigned char *)realloc (ct.value, ct.nitems + bytes_after);
-      memcpy (ct.value + ct.nitems, ct2.value, ct2.nitems);
+      ct.value = (unsigned char *)realloc (ct.value, ct.nitems + ct2.nitems + 1);
+      memcpy (ct.value + ct.nitems, ct2.value, ct2.nitems + 1);
       ct.nitems += ct2.nitems;
 
       XFree (ct2.value);
     }
-  else if (delete_prop)
-    XDeleteProperty (display->display, win, prop);
 
   if (ct.value == 0)
     goto bailout;
