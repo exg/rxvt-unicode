@@ -9731,10 +9731,13 @@ else
 support_xft=no
 fi
 
-  cat >> confdefs.h <<\EOF
+
+  if test x$support_xft = xyes; then
+    cat >> confdefs.h <<\EOF
 #define XFT 1
 EOF
 
+  fi
 fi
 
 trap '' 1 2 15
