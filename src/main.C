@@ -264,9 +264,6 @@ rxvt_term::init (int argc, const char *const *argv)
   init_xlocale ();
 
   scr_reset ();         /* initialize screen */
-#ifdef RXVT_GRAPHICS
-  Gr_reset ();          /* reset graphics */
-#endif
 
 #if 0
   XSynchronize (display->display, True);
@@ -997,11 +994,6 @@ rxvt_term::resize_all_windows (unsigned int width, unsigned int height, int igno
       XMoveResizeWindow (display->display, TermWin.vt, window_vt_x,
                          window_vt_y, TermWin_TotalWidth (),
                          TermWin_TotalHeight ());
-#ifdef RXVT_GRAPHICS
-      if (old_height)
-        Gr_Resize (old_width - szHint.base_width,
-                   old_height - szHint.base_height);
-#endif
       scr_clear ();
 #ifdef XPM_BACKGROUND
       resize_pixmap ();

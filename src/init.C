@@ -401,10 +401,6 @@ rxvt_term::init_vars ()
   ks_smallfont = XK_less;
 #endif
 
-#ifdef GREEK_SUPPORT
-  ks_greekmodeswith = GREEK_KEYBOARD_MODESWITCH;
-#endif
-
   refresh_limit = 1;
   refresh_type = SLOW_REFRESH;
   prev_nrow = prev_ncol = 0;
@@ -902,10 +898,6 @@ rxvt_term::init_command (const char *const *argv)
       PrivateModes |= PrivMode_menuBar;
       SavedModes |= PrivMode_menuBar;
     }
-
-#ifdef GREEK_SUPPORT
-  greek_init ();
-#endif
 
 #ifdef CURSOR_BLINK
   if (Options & Opt_cursorBlink)

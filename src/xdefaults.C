@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xdefaults.c
  *----------------------------------------------------------------------*
- * $Id: xdefaults.C,v 1.11 2004/02/13 12:16:21 pcg Exp $
+ * $Id: xdefaults.C,v 1.12 2004/02/22 08:09:38 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994      Robert Nation <nation@rocket.sanders.lockheed.com>
@@ -199,11 +199,6 @@ optList[] = {
               STRG (Rs_imLocale, "imLocale", "imlocale", "string", "locale to use for input method"),
 #endif
 #endif				/* USE_XIM */
-#ifdef GREEK_SUPPORT
-              STRG (Rs_greek_keyboard, "greek_keyboard", "grk", "mode",
-                   "greek keyboard mapping; mode = iso | ibm"),
-              RSTRG (Rs_greektoggle_key, "greektoggle_key", "keysym"),
-#endif
               STRG (Rs_name, NULL, "name", "string",
                    "client instance, icon, and title strings"),
               STRG (Rs_title, "title", "title", "string", "title name for window"),
@@ -325,12 +320,6 @@ static const char optionsstring[] = "Options: "
 # endif
 #endif
                                     ","
-#if defined(GREEK_SUPPORT)
-                                    "Greek,"
-#endif
-#if defined(RXVT_GRAPHICS)
-                                    "graphics,"
-#endif
 #if defined(NO_BACKSPACE_KEY)
                                     "no_backspace,"
 #endif
@@ -998,40 +987,16 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
    * even without resources, at least do this setup for command-line
    * options and command-line long options
    */
-#ifdef MULTICHAR_SET
-  set_multichar_encoding (rs[Rs_multichar_encoding]);
-#endif
-#ifdef GREEK_SUPPORT
-  /* this could be a function in grkelot.c */
-  /* void set_greek_keyboard (const char * str); */
-  if (rs[Rs_greek_keyboard])
-    {
-      if (!STRCMP (rs[Rs_greek_keyboard], "iso"))
-        greek_setmode (GREEK_ELOT928);	/* former -grk9 */
-      else if (!STRCMP (rs[Rs_greek_keyboard], "ibm"))
-        greek_setmode (GREEK_IBM437);	/* former -grk4 */
-    }
-  {
-    KeySym          sym;
-
-    if (rs[Rs_greektoggle_key]
-        && ((sym = XStringToKeysym (rs[Rs_greektoggle_key])) != 0))
-      ks_greekmodeswith = sym;
-  }
-#endif				/* GREEK_SUPPORT */
 
 #if defined (HOTKEY_CTRL) || defined (HOTKEY_META)
+  KeySym          sym;
 
-  {
-    KeySym          sym;
-
-    if (rs[Rs_bigfont_key]
-        && ((sym = XStringToKeysym (rs[Rs_bigfont_key])) != 0))
-      ks_bigfont = sym;
-    if (rs[Rs_smallfont_key]
-        && ((sym = XStringToKeysym (rs[Rs_smallfont_key])) != 0))
-      ks_smallfont = sym;
-  }
+  if (rs[Rs_bigfont_key]
+      && ((sym = XStringToKeysym (rs[Rs_bigfont_key])) != 0))
+    ks_bigfont = sym;
+  if (rs[Rs_smallfont_key]
+      && ((sym = XStringToKeysym (rs[Rs_smallfont_key])) != 0))
+    ks_smallfont = sym;
 #endif
 }
 

@@ -51,9 +51,6 @@ typedef struct {
 } ttymode_t;
 #endif
 
-#ifdef GREEK_SUPPORT
-# include "grkelot.h"
-#endif
 #ifdef XPM_BACKGROUND
 # ifdef XPM_INC_X11
 #  include <X11/xpm.h>
@@ -475,10 +472,6 @@ enum {
 #if (MENUBAR_MAX)
   Rs_menu,
 #endif
-#ifdef GREEK_SUPPORT
-  Rs_greek_keyboard,
-  Rs_greektoggle_key,
-#endif
   Rs_loginShell,
   Rs_jumpScroll,
 #ifdef HAVE_SCROLLBARS
@@ -868,16 +861,10 @@ struct rxvt_term : rxvt_vars {
                   selection_wait,
                   selection_type;
 /* ---------- */
-#ifdef GREEK_SUPPORT
-  short           greek_mode;         /* greek keyboard mode               */
-#endif
   short           rvideo;
   int16_t         num_scr;    /* screen: number lines scrolled             */
   unsigned int    prev_ncol,  /* screen: previous number of columns        */
                   prev_nrow;  /* screen: previous number of rows           */
-#ifdef RXVT_GRAPHICS
-  uint16_t        gr_prev_start;
-#endif
 /* ---------- */
   rend_t          rstyle;
 /* ---------- */
@@ -989,9 +976,6 @@ struct rxvt_term : rxvt_vars {
 #if defined (HOTKEY_CTRL) || defined (HOTKEY_META)
   KeySym          ks_bigfont, ks_smallfont;
 #endif
-#ifdef GREEK_SUPPORT
-  KeySym          ks_greekmodeswith;
-#endif
 #ifdef USE_XIM
   rxvt_xim       *input_method;
   XIC             Input_Context;
@@ -1000,10 +984,6 @@ struct rxvt_term : rxvt_vars {
 #endif
   struct mouse_event MEvent;
   XComposeStatus  compose;
-#ifdef RXVT_GRAPHICS
-  int             graphics_up;
-  struct grwin_t *gr_root;
-#endif
   ttymode_t       tio;
 #ifdef UTMP_SUPPORT
 # ifdef HAVE_STRUCT_UTMP
@@ -1022,10 +1002,6 @@ struct rxvt_term : rxvt_vars {
   bgPixmap_t      bgPixmap;
   XpmAttributes   xpmAttr;    /* originally loaded pixmap and its scaling */
 #endif
-#ifdef MULTICHAR_SET
-  int             oldcursormulti;
-  void            (*multichar_decode) (unsigned char *str, int len);
-#endif
 #ifndef RESET_TTY_TO_COMMON_DEFAULTS
   struct stat     ttyfd_stat; /* original status of our tty */
 #endif
@@ -1036,9 +1012,6 @@ struct rxvt_term : rxvt_vars {
 # if ! (MENUBAR_MAX > 1)
   bar_t           BarList;
 # endif                         /* (MENUBAR_MAX > 1) */
-#endif
-#ifdef RXVT_GRAPHICS
-  Window          gr_last_id;
 #endif
 #ifdef CURSOR_BLINK
   struct timeval  lastcursorchange;

@@ -190,9 +190,6 @@
 /* Define if you want the depth of scrollbars and menus to be less */
 #undef HALFSHADOW
 
-/* Define if you want support for Greek Elot-928 & IBM-437 keyboard */
-#undef GREEK_SUPPORT
-
 /* Define to change gid of ttys to group tty */
 #undef TTY_GID_SUPPORT
 

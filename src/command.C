@@ -246,22 +246,6 @@ rxvt_term::lookup_key (XKeyEvent &ev)
           return;
         }
 #endif
-#ifdef GREEK_SUPPORT
-      if (keysym == ks_greekmodeswith)
-        {
-          greek_mode = !greek_mode;
-          if (greek_mode)
-            {
-              xterm_seq (XTerm_title,
-                         (greek_getmode () == GREEK_ELOT928
-                          ? "[Greek: iso]" : "[Greek: ibm]"), CHAR_ST);
-              greek_reset ();
-            }
-          else
-            xterm_seq (XTerm_title, APL_NAME "-" VERSION, CHAR_ST);
-          return;
-        }
-#endif
 
       if (keysym >= 0xFF00 && keysym <= 0xFFFF)
         {
@@ -639,10 +623,6 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                 *ch |= 0x80;
               meta = 0;
             }
-#endif
-#ifdef GREEK_SUPPORT
-          if (greek_mode)
-            len = greek_xlat (kbuf, len);
 #endif
           /* nil */ ;
         }
@@ -1426,10 +1406,6 @@ rxvt_term::x_cb (XEvent &ev)
             if (menubar_visible () && isMenuBarWindow (ev.xany.window))
               menubar_expose ();
 #endif
-#ifdef RXVT_GRAPHICS
-            Gr_expose (ev.xany.window);
-#endif
-
           }
         break;
 
@@ -1592,88 +1568,80 @@ rxvt_term::button_press (const XButtonEvent &ev)
    */
   if (ev.window == TermWin.vt)
     {
-#if RXVT_GRAPHICS
-      if (ev.subwindow != None)
-        rxvt_Gr_ButtonPress (ev.x, ev.y);
-      else
-#endif
-
+      clickintime = ev.time - MEvent.time < MULTICLICK_TIME;
+      if (reportmode)
         {
-          clickintime = ev.time - MEvent.time < MULTICLICK_TIME;
-          if (reportmode)
-            {
-              /* mouse report from vt window */
-              /* save the xbutton state (for ButtonRelease) */
-              MEvent.state = ev.state;
+          /* mouse report from vt window */
+          /* save the xbutton state (for ButtonRelease) */
+          MEvent.state = ev.state;
 #ifdef MOUSE_REPORT_DOUBLECLICK
-              if (ev.button == MEvent.button && clickintime)
+          if (ev.button == MEvent.button && clickintime)
+            {
+              /* same button, within alloted time */
+              MEvent.clicks++;
+              if (MEvent.clicks > 1)
                 {
-                  /* same button, within alloted time */
-                  MEvent.clicks++;
-                  if (MEvent.clicks > 1)
-                    {
-                      /* only report double clicks */
-                      MEvent.clicks = 2;
-                      mouse_report (ev);
-
-                      /* don't report the release */
-                      MEvent.clicks = 0;
-                      MEvent.button = AnyButton;
-                    }
-                }
-              else
-                {
-                  /* different button, or time expired */
-                  MEvent.clicks = 1;
-                  MEvent.button = ev.button;
+                  /* only report double clicks */
+                  MEvent.clicks = 2;
                   mouse_report (ev);
-                }
-#else
-              MEvent.button = ev.button;
-              mouse_report (ev);
-#endif				/* MOUSE_REPORT_DOUBLECLICK */
 
+                  /* don't report the release */
+                  MEvent.clicks = 0;
+                  MEvent.button = AnyButton;
+                }
             }
           else
             {
-              if (ev.button != MEvent.button)
-                MEvent.clicks = 0;
-              switch (ev.button)
-                {
-                  case Button1:
-                    /* allow shift+left click to extend selection */
-                    if (ev.state & ShiftMask && ! (PrivateModes & PrivMode_mouse_report))
-                      {
-                        if (MEvent.button == Button1 && clickintime)
-                          selection_rotate (ev.x, ev.y);
-                        else
-                          selection_extend (ev.x, ev.y, 1);
-                      }
-                    else
-                      {
-                        if (MEvent.button == Button1 && clickintime)
-                          MEvent.clicks++;
-                        else
-                          MEvent.clicks = 1;
+              /* different button, or time expired */
+              MEvent.clicks = 1;
+              MEvent.button = ev.button;
+              mouse_report (ev);
+            }
+#else
+          MEvent.button = ev.button;
+          mouse_report (ev);
+#endif				/* MOUSE_REPORT_DOUBLECLICK */
 
-                        selection_click (MEvent.clicks, ev.x, ev.y);
-                      }
-
-                    MEvent.button = Button1;
-                    break;
-
-                  case Button3:
-                    if (MEvent.button == Button3 && clickintime)
+        }
+      else
+        {
+          if (ev.button != MEvent.button)
+            MEvent.clicks = 0;
+          switch (ev.button)
+            {
+              case Button1:
+                /* allow shift+left click to extend selection */
+                if (ev.state & ShiftMask && ! (PrivateModes & PrivMode_mouse_report))
+                  {
+                    if (MEvent.button == Button1 && clickintime)
                       selection_rotate (ev.x, ev.y);
                     else
                       selection_extend (ev.x, ev.y, 1);
-                    MEvent.button = Button3;
-                    break;
-                }
+                  }
+                else
+                  {
+                    if (MEvent.button == Button1 && clickintime)
+                      MEvent.clicks++;
+                    else
+                      MEvent.clicks = 1;
+
+                    selection_click (MEvent.clicks, ev.x, ev.y);
+                  }
+
+                MEvent.button = Button1;
+                break;
+
+              case Button3:
+                if (MEvent.button == Button3 && clickintime)
+                  selection_rotate (ev.x, ev.y);
+                else
+                  selection_extend (ev.x, ev.y, 1);
+                MEvent.button = Button3;
+                break;
             }
-          MEvent.time = ev.time;
-          return;
         }
+      MEvent.time = ev.time;
+      return;
     }
 
   /*
@@ -1848,93 +1816,85 @@ rxvt_term::button_release (const XButtonEvent &ev)
 #endif
   if (ev.window == TermWin.vt)
     {
-#ifdef RXVT_GRAPHICS
-      if (ev.subwindow != None)
-        rxvt_Gr_ButtonRelease (ev.x, ev.y);
-      else
-#endif
-
+      if (reportmode)
         {
-          if (reportmode)
-            {
-              /* mouse report from vt window */
-              /* don't report release of wheel "buttons" */
-              if (ev.button >= 4)
-                return;
+          /* mouse report from vt window */
+          /* don't report release of wheel "buttons" */
+          if (ev.button >= 4)
+            return;
 #ifdef MOUSE_REPORT_DOUBLECLICK
-              /* only report the release of 'slow' single clicks */
-              if (MEvent.button != AnyButton
-                  && (ev.button != MEvent.button
-                      || (ev.time - MEvent.time
-                          > MULTICLICK_TIME / 2)))
-                {
-                  MEvent.clicks = 0;
-                  MEvent.button = AnyButton;
-                  mouse_report (ev);
-                }
-#else				/* MOUSE_REPORT_DOUBLECLICK */
+          /* only report the release of 'slow' single clicks */
+          if (MEvent.button != AnyButton
+              && (ev.button != MEvent.button
+                  || (ev.time - MEvent.time
+                      > MULTICLICK_TIME / 2)))
+            {
+              MEvent.clicks = 0;
               MEvent.button = AnyButton;
               mouse_report (ev);
-#endif				/* MOUSE_REPORT_DOUBLECLICK */
-              return;
             }
-          /*
-           * dumb hack to compensate for the failure of click-and-drag
-           * when overriding mouse reporting
-           */
-          if (PrivateModes & PrivMode_mouse_report
-              && bypass_keystate
-              && ev.button == Button1 && MEvent.clicks <= 1)
-            selection_extend (ev.x, ev.y, 0);
+#else				/* MOUSE_REPORT_DOUBLECLICK */
+          MEvent.button = AnyButton;
+          mouse_report (ev);
+#endif				/* MOUSE_REPORT_DOUBLECLICK */
+          return;
+        }
+      /*
+       * dumb hack to compensate for the failure of click-and-drag
+       * when overriding mouse reporting
+       */
+      if (PrivateModes & PrivMode_mouse_report
+          && bypass_keystate
+          && ev.button == Button1 && MEvent.clicks <= 1)
+        selection_extend (ev.x, ev.y, 0);
 
-          switch (ev.button)
-            {
-              case Button1:
-              case Button3:
-                selection_make (ev.time);
-                break;
-              case Button2:
-                selection_request (ev.time, ev.x, ev.y);
-                break;
+      switch (ev.button)
+        {
+          case Button1:
+          case Button3:
+            selection_make (ev.time);
+            break;
+          case Button2:
+            selection_request (ev.time, ev.x, ev.y);
+            break;
 #ifdef MOUSE_WHEEL
-              case Button4:
-              case Button5:
-                {
-                  int i;
-                  page_dirn v;
+          case Button4:
+          case Button5:
+            {
+              int i;
+              page_dirn v;
 
-                  v = (ev.button == Button4) ? UP : DN;
-                  if (ev.state & ShiftMask)
-                    i = 1;
-                  else if ((Options & Opt_mouseWheelScrollPage))
-                    i = TermWin.nrow - 1;
-                  else
-                    i = 5;
+              v = (ev.button == Button4) ? UP : DN;
+              if (ev.state & ShiftMask)
+                i = 1;
+              else if ((Options & Opt_mouseWheelScrollPage))
+                i = TermWin.nrow - 1;
+              else
+                i = 5;
 # ifdef MOUSE_SLIP_WHEELING
-                  if (ev.state & ControlMask)
-                    {
-                      mouse_slip_wheel_speed += (v ? -1 : 1);
-                      mouse_slip_wheel_delay = SCROLLBAR_CONTINUOUS_DELAY;
-                    }
+              if (ev.state & ControlMask)
+                {
+                  mouse_slip_wheel_speed += (v ? -1 : 1);
+                  mouse_slip_wheel_delay = SCROLLBAR_CONTINUOUS_DELAY;
+                }
 # endif
 # ifdef JUMP_MOUSE_WHEEL
-                  scr_page (v, i);
+              scr_page (v, i);
+              scr_refresh (SMOOTH_REFRESH);
+              scrollbar_show (1);
+# else
+              while (i--)
+                {
+                  scr_page (v, 1);
                   scr_refresh (SMOOTH_REFRESH);
                   scrollbar_show (1);
-# else
-                  while (i--)
-                    {
-                      scr_page (v, 1);
-                      scr_refresh (SMOOTH_REFRESH);
-                      scrollbar_show (1);
-                    }
+                }
 # endif
 
-                }
-                break;
+            }
+            break;
 #endif
 
-            }
         }
     }
 #ifdef MENUBAR
@@ -3474,7 +3434,6 @@ rxvt_term::process_graphics ()
 {
   unsigned char   ch, cmd = cmd_getc ();
 
-#ifndef RXVT_GRAPHICS
   if (cmd == 'Q')
     {		/* query graphics */
       tt_printf ("\033G0\n");	/* no graphics */
@@ -3484,51 +3443,6 @@ rxvt_term::process_graphics ()
   do
     ch = cmd_getc ();
   while (ch != ':');
-#else
-  unsigned int    nargs;
-  int             args[NGRX_PTS];
-  unsigned char  *text = NULL;
-
-  if (cmd == 'Q')
-    {		/* query graphics */
-      tt_printf ("\033G1\n");	/* yes, graphics (color) */
-      return;
-    }
-  for (nargs = 0; nargs < (sizeof (args) / sizeof (args[0])) - 1;)
-    {
-      int             neg;
-
-      ch = cmd_getc ();
-      neg = (ch == '-');
-      if (neg || ch == '+')
-        ch = cmd_getc ();
-
-      for (args[nargs] = 0; isdigit (ch); ch = cmd_getc ())
-        args[nargs] = args[nargs] * 10 + (ch - '0');
-      if (neg)
-        args[nargs] = -args[nargs];
-
-      nargs++;
-      args[nargs] = 0;
-      if (ch != ';')
-        break;
-    }
-
-  if ((cmd == 'T') && (nargs >= 5))
-    {
-      int             i, len = args[4];
-
-      text = (unsigned char *)rxvt_malloc ((len + 1) * sizeof (char));
-
-      if (text != NULL)
-        {
-          for (i = 0; i < len; i++)
-            text[i] = cmd_getc ();
-          text[len] = '\0';
-        }
-    }
-  Gr_do_graphics (cmd, nargs, args, text);
-#endif
 }
 /*}}} */
 

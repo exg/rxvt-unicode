@@ -487,9 +487,6 @@ rxvt_term::scr_poweron ()
 
   scr_clear ();
   scr_refresh (SLOW_REFRESH);
-#ifdef RXVT_GRAPHICS
-  Gr_reset ();
-#endif
 }
 
 /* ------------------------------------------------------------------------- *
@@ -595,26 +592,9 @@ rxvt_term::scr_change_screen (int scrn)
   SWAP_IT (screen.flags, swap.flags, int);
   screen.flags |= Screen_VisibleCursor;
   swap.flags |= Screen_VisibleCursor;
-
-# ifdef RXVT_GRAPHICS
-
-  if (Gr_Displayed ())
-    {
-      Gr_scroll (0);
-      Gr_ChangeScreen ();
-    }
-# endif
 #else
 # ifdef SCROLL_ON_NO_SECONDARY
-#  ifdef RXVT_GRAPHICS
-  if (Gr_Displayed ())
-    Gr_ClearScreen ();
-#  endif
-  if (current_screen == PRIMARY
-#  ifdef RXVT_GRAPHICS
-      && !Gr_Displayed ()
-#  endif
-     )
+  if (current_screen == PRIMARY)
     scr_scroll_text (0, (prev_nrow - 1), prev_nrow, 0);
 # endif
 #endif
@@ -773,11 +753,6 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
         scr_blank_screen_mem (screen.text, screen.rend,
                               (unsigned int)j, rstyle);
     }
-
-#ifdef RXVT_GRAPHICS
-  if (Gr_Displayed ())
-    Gr_scroll (count);
-#endif
 
   return count;
 }
@@ -1077,10 +1052,6 @@ rxvt_term::scr_gotorc (int row, int col, int relative)
 {
   want_refresh = 1;
   ZERO_SCROLLBACK ();
-#ifdef RXVT_GRAPHICS
-  if (Gr_Displayed ())
-    Gr_scroll (0);
-#endif
 
   D_SCREEN ((stderr, "rxvt_scr_gotorc (r:%s%d,c:%s%d): from (r:%d,c:%d)", (relative & R_RELATIVE ? "+" : ""), row, (relative & C_RELATIVE ? "+" : ""), col, screen.cur.row, screen.cur.col));
 
@@ -1138,11 +1109,6 @@ rxvt_term::scr_index (enum page_dirn direction)
 
   ZERO_SCROLLBACK ();
 
-#ifdef RXVT_GRAPHICS
-  if (Gr_Displayed ())
-    Gr_scroll (0);
-#endif
-
   screen.flags &= ~Screen_WrapNext;
   if ((screen.cur.row == screen.bscroll && direction == UP)
       || (screen.cur.row == screen.tscroll && direction == DN))
@@ -1169,11 +1135,6 @@ rxvt_term::scr_erase_line (int mode)
   want_refresh = 1;
   D_SCREEN ((stderr, "rxvt_scr_erase_line (%d) at screen row: %d", mode, screen.cur.row));
   ZERO_SCROLLBACK ();
-
-#ifdef RXVT_GRAPHICS
-  if (Gr_Displayed ())
-    Gr_scroll (0);
-#endif
 
   selection_check (1);
 
@@ -1252,9 +1213,6 @@ rxvt_term::scr_erase_screen (int mode)
         break;
       case 2:                     /* erase whole screen */
         selection_check (3);
-#ifdef RXVT_GRAPHICS
-        Gr_ClearScreen ();
-#endif
         row = 0;
         num = TermWin.nrow;
         break;
@@ -1333,11 +1291,6 @@ rxvt_term::scr_insdel_lines (int count, int insdel)
 
   ZERO_SCROLLBACK ();
 
-#ifdef RXVT_GRAPHICS
-  if (Gr_Displayed ())
-    Gr_scroll (0);
-#endif
-
   selection_check (1);
 
   if (screen.cur.row > screen.bscroll)
@@ -1371,11 +1324,6 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
 
   want_refresh = 1;
   ZERO_SCROLLBACK ();
-
-#ifdef RXVT_GRAPHICS
-  if (Gr_Displayed ())
-    Gr_scroll (0);
-#endif
 
   if (count <= 0)
     return;
@@ -1810,10 +1758,6 @@ rxvt_term::scr_changeview (uint16_t oldviewstart)
   if (TermWin.view_start != oldviewstart)
     {
       want_refresh = 1;
-#ifdef RXVT_GRAPHICS
-      if (Gr_Displayed ())
-        Gr_scroll (0);
-#endif
       num_scr -= (TermWin.view_start - oldviewstart);
     }
   return (int) (TermWin.view_start - oldviewstart);

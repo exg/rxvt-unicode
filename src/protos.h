@@ -3,13 +3,6 @@
 
 #include "defaultfont.extpro"
 
-#ifdef RXVT_GRAPHICS
-# include "graphics.extpro"
-#endif
-#ifdef GREEK_SUPPORT
-# include "grkelot.extpro"
-#endif
-
 #include "init.extpro"
 
 #ifdef UTMP_SUPPORT

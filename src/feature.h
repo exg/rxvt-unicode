@@ -209,13 +209,6 @@
 /* #define CTRL_TAB_MAKES_META */
 /* #define MOD4_TAB_MAKES_META */
 
-/*
- * default mode switch when greek keyboard is enabled (i.e. GREEK_SUPPORT)
- */
-#ifndef GREEK_KEYBOARD_MODESWITCH
-# define GREEK_KEYBOARD_MODESWITCH XK_Mode_switch
-#endif
-
 /*--------------------------------MOUSE---------------------------------*/
 /*
  * Disable sending escape sequences (up, down, page up/down)
