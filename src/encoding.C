@@ -28,6 +28,8 @@ const struct n2cs {
   { "FCD885915",	CS_ISO8859_15       },
   { "ISO885916",	CS_ISO8859_16       },
                                             
+  { "TIS620*",		CS_ISO8859_11	    }, // close enough
+
   { "ISO10646*",	CS_UNICODE          },
   { "UNICODE",		CS_UNICODE          },
   { "UTF8",		CS_UNICODE          },
@@ -42,7 +44,6 @@ const struct n2cs {
   { "KOI8U",		CS_KOI8_U           },
 
   { "VISCII*",		CS_VISCII	    },
-  { "TIS62025291",	CS_VISCII	    }, // close enough
                                             
   { "JISX0201*",	CS_JIS0201_1976_0   },
   { "JISX0208*",	CS_JIS0208_1983_0   }, // also wrongly matches -1990-0 (check Encode::JP)
@@ -131,17 +132,6 @@ struct rxvt_codeset_conv_unicode_16 : rxvt_codeset_conv {
   uint32_t from_unicode (uint32_t unicode) const { return unicode <= 65535 ? unicode : NOCHAR; }
 } rxvt_codeset_conv_unicode_16;
 
-/* block character set, must conform to the dec special pseudofont in defaultfont.C */
-struct rxvt_codeset_conv_special : rxvt_codeset_conv {
-  uint32_t to_unicode (uint32_t enc) const {
-    return enc;
-  }
-
-  uint32_t from_unicode (uint32_t unicode) const {
-    return unicode;
-  }
-} rxvt_codeset_conv_special;
-
 #define ENCODING_DEFAULT
 
 #include "table/iso8859_1.h"
@@ -206,7 +196,6 @@ struct rxvt_codeset_conv_special : rxvt_codeset_conv {
 // order must match table in encoding.h(!)
 const rxvt_codeset_conv *rxvt_codeset[NUM_CODESETS] = {
   &rxvt_codeset_conv_unknown,
-  &rxvt_codeset_conv_special,
 
   &rxvt_codeset_conv_us_ascii,
 
@@ -258,3 +247,29 @@ const rxvt_codeset_conv *rxvt_codeset[NUM_CODESETS] = {
   &rxvt_codeset_conv_unicode
 };
 
+//#define ENCODING_COMPOSE
+
+#include "table/compose.h"
+
+uint32_t
+rxvt_compose (uint32_t c1, uint32_t c2)
+{
+  int l = 0;
+  int r = sizeof (rxvt_compose_table) / sizeof (rxvt_compose_entry) - 1;
+  int m;
+
+  while (r > l)
+    {
+      m = (l + r) / 2;
+      rxvt_compose_entry &c = rxvt_compose_table[m];
+
+      if (c.c1 < c1 || (c.c1 == c1 && c.c2 < c2))
+        l = m + 1;
+      else if (c.c1 > c1 || (c.c1 == c1 && c.c2 > c2))
+        r = m - 1;
+      else
+        return c.r;
+    }
+
+  return NOCHAR;
+}
