@@ -94,12 +94,15 @@ const struct rxvt_fallback_font {
 #if XFT
   { CS_UNICODE,      "xft:Andale Mono"                             },
   { CS_UNICODE,      "xft:Arial Unicode MS"                        },
-  { CS_UNICODE,      "xft:FreeMono"                                },
 #endif
   { CS_UNICODE,      "-*-lucidatypewriter-*-*-*-*-*-*-*-*-m-*-iso10646-1" },
   { CS_UNICODE,      "-*-unifont-*-*-*-*-*-*-*-*-c-*-iso10646-1"   },
   { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-c-*-iso10646-1"         },
   { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1"         },
+#if XFT
+  // FreeMono is usually uglier than x fonts, so try last only.
+  //{ CS_UNICODE,      "xft:FreeMono"                                },
+#endif
 
   { CS_UNKNOWN, 0 }
 };
@@ -882,13 +885,14 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
   if (FcPatternGet (p, FC_SLANT, 0, &v) != FcResultMatch)
     FcPatternAddInteger (p, FC_SLANT, prop.slant);
 
+  if (FcPatternGet (p, FC_MINSPACE, 0, &v) != FcResultMatch)
+    FcPatternAddBool (p, FC_MINSPACE, 1);
+
 #if 0 // clipping unfortunately destroys our precious double-width-characters
   // clip width, we can't do better, or can we?
   if (FcPatternGet (p, FC_CHAR_WIDTH, 0, &v) != FcResultMatch)
     FcPatternAddInteger (p, FC_CHAR_WIDTH, prop.width);
 #endif
-
-  //FcPatternAddBool (p, FC_MINSPACE, 1);
 
   XftResult result;
   FcPattern *match = XftFontMatch (DISPLAY, DefaultScreen (DISPLAY), p, &result);
@@ -1232,6 +1236,8 @@ rxvt_fontset::find_font (unicode_t unicode, bool bold)
               FcPatternAddInteger (p, FC_PIXEL_SIZE, base_prop.height);
               FcPatternAddInteger (p, FC_WEIGHT, base_prop.weight);
               FcPatternAddInteger (p, FC_SLANT, base_prop.slant);
+              FcPatternAddBool    (p, FC_MINSPACE, 1);
+              //FcPatternAddBool    (p, FC_ANTIALIAS, 1);
 
               XftResult result;
               FcPattern *match = XftFontMatch (DISPLAY, DefaultScreen (DISPLAY), p, &result);
