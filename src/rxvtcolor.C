@@ -129,7 +129,8 @@ bool rxvt_xim::init ()
   ximcallback.client_data = (XPointer)this;
   ximcallback.callback = im_destroy_cb;
 
-  XSetIMValues (xim, XNDestroyCallback, &ximcallback, NULL);
+  ((void (*)(XIM, ...)) XSetIMValues)
+     (xim, XNDestroyCallback, &ximcallback, NULL);
 
   return true;
 }
