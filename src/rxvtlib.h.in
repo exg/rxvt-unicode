@@ -218,6 +218,7 @@ typedef enum {
 typedef struct {
   short           state;
   Window          win;
+  struct rxvt_drawable *drawable;
 } menuBar_t;
 
 typedef struct {

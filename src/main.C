@@ -119,8 +119,15 @@ rxvt_term::~rxvt_term ()
   delete TermWin.fontset;
 
   if (display)
-    if (TermWin.parent[0])
-      XDestroyWindow (display->display, TermWin.parent[0]);
+    {
+      if (TermWin.parent[0])
+        XDestroyWindow (display->display, TermWin.parent[0]);
+#if defined(MENUBAR) && (MENUBAR_MAX > 1)
+      if (menuBar.win)
+        XDestroyWindow (display->display, menuBar.win);
+      delete menuBar.drawable;
+#endif
+    }
 
   // TODO: free pixcolours, colours should become part of rxvt_display
 
@@ -251,7 +258,7 @@ rxvt_term::init (int argc, const char *const *argv)
 
   set_locale ("");
 
-#if (MENUBAR_MAX)
+#if MENUBAR_MAX
   menubar_read (rs[Rs_menu]);
 #endif
 #ifdef HAVE_SCROLLBARS

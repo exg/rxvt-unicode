@@ -12,6 +12,7 @@
           keysyms that also have string translations, when not --enable-xim.
           reported by joel reed.
         - re-enabled esc-seq. for font-switching (\033 ] 50 ; <fontset> \007).
+        - re-enabled menubar (experimental!).
         - fix bug in locale-handling that kept the correct locale from
           being selected.
         - implemented esc-seq. to switch locales (\033 ] 9 ; <locale> \007).

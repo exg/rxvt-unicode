@@ -1176,6 +1176,7 @@ struct rxvt_term : rxvt_vars {
   void lookup_key (XKeyEvent &ev);
   unsigned int cmd_write (const unsigned char *str, unsigned int count);
   uint32_t cmd_getc ();
+  bool cmd_parse ();
   void mouse_report (XButtonEvent &ev);
   void button_press (XButtonEvent &ev);
   void button_release (XButtonEvent &ev);

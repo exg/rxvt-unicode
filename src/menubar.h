@@ -44,6 +44,7 @@ typedef struct menu_t {
     short           len;	/* strlen (name) */
     short           width;	/* maximum menu width [chars] */
     Window          win;	/* window of the menu */
+    struct rxvt_drawable *drawable;
     short           x;		/* x location [pixels] (chars if parent == NULL) */
     short           y;		/* y location [pixels] */
     short           w, h;	/* window width, height [pixels] */
@@ -70,8 +71,7 @@ typedef struct bar_t {
 #define HEIGHT_SEPARATOR	(SHADOW + 1)
 #define HEIGHT_TEXT		(Height2Pixel(1) + 2)
 
-#define MENU_DELAY_USEC	250000	/* 1/4 sec */
-
+#define MENU_DELAY_USEC	0	/* no delay */
 
 #define SEPARATOR_NAME		"-"
 #define MENUITEM_BEG		'{'

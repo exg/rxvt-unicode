@@ -24,7 +24,7 @@ struct refcounted {
   char *id;
 
   refcounted (const char *id);
-  bool init () { }
+  bool init () { return false; }
   ~refcounted ();
 };
 

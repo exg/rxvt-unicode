@@ -1248,9 +1248,12 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                                         0,
                                         PixColors[Color_fg],
                                         PixColors[Color_scroll]);
+
 #ifdef DEBUG_X
       XStoreName (display->display, menuBar.win, "menubar");
 #endif
+
+      menuBar.drawable = new rxvt_drawable (display, menuBar.win);
 
       XDefineCursor (display->display, menuBar.win,
                      XCreateFontCursor (display->display, XC_left_ptr));

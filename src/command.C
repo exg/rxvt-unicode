@@ -696,6 +696,7 @@ rxvt_term::cmd_write (const unsigned char *str, unsigned int count)
 
   n = cmdbuf_ptr - cmdbuf_base;
   s = cmdbuf_base + BUFSIZ - 1 - cmdbuf_endp;
+
   if (n > 0 && s < count)
     {
       MEMMOVE (cmdbuf_base, cmdbuf_ptr,
@@ -704,13 +705,18 @@ rxvt_term::cmd_write (const unsigned char *str, unsigned int count)
       cmdbuf_endp -= n;
       s += n;
     }
+
   if (count > s)
     {
       rxvt_print_error ("data loss: cmd_write too large");
       count = s;
     }
+
   for (; count--;)
     *cmdbuf_endp++ = *str++;
+
+  cmd_parse ();
+
   return 0;
 }
 #endif				/* MENUBAR_MAX */
@@ -792,7 +798,7 @@ rxvt_term::pty_fill ()
     }
   else if (n < 0 && errno != EAGAIN)
     destroy ();
-
+  
   return false;
 }
 
@@ -819,106 +825,116 @@ rxvt_term::pty_cb (io_watcher &w, short revents)
               tt_winch ();
             }
 
-          uint32_t ch = NOCHAR;
+          if (cmd_parse ())
+            break;
+        }
+    }
+}
+
+bool
+rxvt_term::cmd_parse ()
+{
+  bool flag = false;
+  uint32_t ch = NOCHAR;
+
+  for (;;)
+    {
+      if (ch == NOCHAR)
+        ch = next_char ();
+
+      if (ch == NOCHAR) // TODO: improve
+        break;
+
+      if (ch >= ' ' || ch == '\t' || ch == '\n' || ch == '\r')
+        {
+          /* Read a text string from the input buffer */
+          uint32_t buf[BUFSIZ];
+          bool refreshnow = false;
+          int nlines = 0;
+          uint32_t *str = buf;
+
+          *str++ = ch;
 
           for (;;)
             {
-              if (ch == NOCHAR)
-                ch = next_char ();
+              ch = next_char ();
 
-              if (ch == NOCHAR) // TODO: improve
+              if (ch == NOCHAR || (ch < ' ' && ch != '\t' && ch != '\n' && ch != '\r'))
                 break;
-
-              if (ch >= ' ' || ch == '\t' || ch == '\n' || ch == '\r')
+              else
                 {
-                  /* Read a text string from the input buffer */
-                  uint32_t buf[BUFSIZ];
-                  bool refreshnow = false;
-                  int nlines = 0;
-                  uint32_t *str = buf;
-
                   *str++ = ch;
 
-                  for (;;)
+                  if (ch == '\n')
                     {
-                      ch = next_char ();
+                      nlines++;
+                      refresh_count++;
 
-                      if (ch == NOCHAR || (ch < ' ' && ch != '\t' && ch != '\n' && ch != '\r'))
-                        break;
-                      else
+                      if (! (Options & Opt_jumpScroll)
+                          || (refresh_count >= (refresh_limit * (TermWin.nrow - 1))))
                         {
-                          *str++ = ch;
+                          refreshnow = true;
+                          flag = false;
+                          ch = NOCHAR;
+                          break;
+                        }
 
-                          if (ch == '\n')
-                            {
-                              nlines++;
-                              refresh_count++;
-
-                              if (! (Options & Opt_jumpScroll)
-                                  || (refresh_count >= (refresh_limit * (TermWin.nrow - 1))))
-                                {
-                                  refreshnow = true;
-                                  flag = false;
-                                  ch = NOCHAR;
-                                  break;
-                                }
-
-                              // scr_add_lines only works for nlines < TermWin.nrow - 1.
-                              if (nlines >= TermWin.nrow - 1)
-                                {
-                                  scr_add_lines (buf, nlines, str - buf);
-                                  nlines = 0;
-                                  str = buf;
-                                }
-                            }
-
-                          if (str >= buf + BUFSIZ)
-                            {
-                              ch = NOCHAR;
-                              break;
-                            }
+                      // scr_add_lines only works for nlines < TermWin.nrow - 1.
+                      if (nlines >= TermWin.nrow - 1)
+                        {
+                          scr_add_lines (buf, nlines, str - buf);
+                          nlines = 0;
+                          str = buf;
                         }
                     }
 
-                  scr_add_lines (buf, nlines, str - buf);
-
-                  /*
-                   * If there have been a lot of new lines, then update the screen
-                   * What the heck I'll cheat and only refresh less than every page-full.
-                   * the number of pages between refreshes is refresh_limit, which
-                   * is incremented here because we must be doing flat-out scrolling.
-                   *
-                   * refreshing should be correct for small scrolls, because of the
-                   * time-out
-                   */
-                  if (refreshnow)
+                  if (str >= buf + BUFSIZ)
                     {
-                      if ((Options & Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
-                        refresh_limit++;
-
-                      scr_refresh (refresh_type);
+                      ch = NOCHAR;
+                      break;
                     }
-
-                }
-              else
-                {
-                  switch (ch)
-                    {
-                      default:
-                        process_nonprinting (ch);
-                        break;
-                      case C0_ESC:	/* escape char */
-                        process_escape_seq ();
-                        break;
-                        /*case 0x9b: */	/* CSI */
-                        /*  process_csi_seq (); */
-                    }
-
-                  ch = NOCHAR;
                 }
             }
+
+          scr_add_lines (buf, nlines, str - buf);
+
+          /*
+           * If there have been a lot of new lines, then update the screen
+           * What the heck I'll cheat and only refresh less than every page-full.
+           * the number of pages between refreshes is refresh_limit, which
+           * is incremented here because we must be doing flat-out scrolling.
+           *
+           * refreshing should be correct for small scrolls, because of the
+           * time-out
+           */
+          if (refreshnow)
+            {
+              if ((Options & Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
+                refresh_limit++;
+
+              scr_refresh (refresh_type);
+            }
+
+        }
+      else
+        {
+          switch (ch)
+            {
+              default:
+                process_nonprinting (ch);
+                break;
+              case C0_ESC:	/* escape char */
+                process_escape_seq ();
+                break;
+                /*case 0x9b: */	/* CSI */
+                /*  process_csi_seq (); */
+            }
+
+          ch = NOCHAR;
         }
     }
+
+  return flag;
 }
 
 // read the next character, currently handles UTF-8
