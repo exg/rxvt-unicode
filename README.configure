@@ -20,11 +20,25 @@
 	alternative input methods (e.g. kinput2) and will also correctly
 	set up the input for people using dead keys or compose keys.
 --enable-unicode3
-	enable support for unicode codepoints above 65535 (the basic
-        multilingual page). This increases storage requirements per character
-        from 2 to 4 bytes and is not too useful as font support in X11 and Xft
-        is largely missing, although cut & paste will work correctly, as will
-        displaying, if you have the right font(s).
+        enable support for unicode codepoints above 65535 (the basic
+        multilingual page). This increases storage requirements per
+        character from 2 to 4 bytes. X11 fonts do not yet support these
+        extra characters, but Xft does.
+--enable-combining
+        enable automatic composition of combining characters into
+        composite characters. This is required for proper viewing of text
+        where accents are encoded as seperate unicode characters. This is
+        done by using precomposited characters when available or creating
+        new pseudo-characters when no precomposed form exists. Without
+        --enable-unicode3, the number of additional precomposed characters
+        is rather limited (2048, if this is full, rxvt will use the
+        private use area, extending the number of combinations to
+        8448). With --enable-unicode3, no practical limit exists. This
+        will also enable storage of characters >16bit. They currently
+        won't display properly, but they will paste correctly.
+        The combining table also contains entries for arabic presentation
+        forms, but these are not currently used. Bug me if you want
+        these to be used.
 --enable-fallback(=CLASS)
 	when reading resource settings, also read settings for class CLASS
         (default: Rxvt). To disable resource fallback use --disable-fallback.
