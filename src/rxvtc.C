@@ -27,6 +27,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
 #include <unistd.h>
 #include <signal.h>
@@ -53,7 +54,7 @@ client::client ()
 
   if (connect (fd, (sockaddr *)&sa, sizeof (sa)))
     {
-      perror ("unable to connect to rxvtd");
+      perror ("unable to connect to the rxvt-unicode daemon");
       exit (EXIT_FAILURE);
     }
 }
@@ -81,7 +82,11 @@ main (int argc, const char *const *argv)
   for (char **var = environ; *environ; environ++)
     c.send ("ENV"), c.send (*environ);
 
-  for (int i = 0; i < argc; i++)
+  const char *base = strrchr (argv[0], '/');
+  base = base ? base + 1 : argv[0];
+  c.send ("ARG"), c.send (strcmp (base, RXVTNAME "c") ? base : RXVTNAME);
+
+  for (int i = 1; i < argc; i++)
     c.send ("ARG"), c.send (argv[i]);
 
   c.send ("END");

@@ -214,6 +214,9 @@
 /* Resource class */
 #undef RESCLASS
 
+/* Binary base name */
+#undef RXVTNAME
+
 /* Disable the secondary screen. Many programs use the secondary screen as their workplace */
 #undef NO_SECONDARY_SCREEN
 

@@ -321,6 +321,7 @@ RXVTNAME=urxvt
 AC_ARG_WITH(name,
   [  --with-name=NAME        set the basename for the installed binaries (default: urxvt)],
   [RXVTNAME="$withval"])
+AC_DEFINE_UNQUOTED(RXVTNAME,"$RXVTNAME", [Binary base name])
 
 RXVTNAME=`echo "$RXVTNAME"|sed "$program_transform_name"`
 AC_SUBST(RXVTNAME)
