@@ -821,10 +821,9 @@ enum {
 struct mbstate {
   mbstate_t mbs;
 
-  mbstate ()
-  {
-    MEMSET (&mbs, 0, sizeof (mbs));
-  }
+  operator mbstate_t *() { return &mbs; }
+  void reset () { MEMSET (&mbs, 0, sizeof (mbs)); }
+  mbstate () { reset (); }
 };
 
 struct rxvt_term : rxvt_vars {

@@ -1,4 +1,4 @@
-/*--------------------------------*-C-*---------------------------------*
+/*--------------------------------*-C-*---------------------------------*;
  * File:        main.c
  *----------------------------------------------------------------------*
  *
@@ -1316,7 +1316,7 @@ rxvt_term::im_cb ()
 
 #if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
   if (rs[Rs_imLocale])
-    setlocale (LC_CTYPE, rs[Rs_imLocale]);
+    rxvt_set_locale (rs[Rs_imLocale]);
 #endif
 
   p = rs[Rs_inputMethod];
@@ -1357,7 +1357,7 @@ rxvt_term::im_cb ()
 done:
 #if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
   if (rs[Rs_imLocale])
-    setlocale (LC_CTYPE, locale);
+    rxvt_set_locale (locale);
 #endif
 }
 

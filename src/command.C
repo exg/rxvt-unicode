@@ -949,7 +949,7 @@ rxvt_term::next_char ()
         return *cmdbuf_ptr++;
 
       wchar_t wc;
-      size_t len = mbrtowc (&wc, (char *)cmdbuf_ptr, cmdbuf_endp - cmdbuf_ptr, &mbstate.mbs);
+      size_t len = mbrtowc (&wc, (char *)cmdbuf_ptr, cmdbuf_endp - cmdbuf_ptr, mbstate);
 
       if (len == (size_t)-2)
         return NOCHAR;

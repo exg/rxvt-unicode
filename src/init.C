@@ -808,6 +808,8 @@ rxvt_term::set_locale (const char *locale)
 #if HAVE_XSETLOCALE || HAVE_SETLOCALE
   free (this->locale);
   this->locale = rxvt_strdup (setlocale (LC_CTYPE, ""));
+  rxvt_set_locale (this->locale);
+  mbstate.reset ();
 #endif
 #if HAVE_NL_LANGINFO
   free (codeset);

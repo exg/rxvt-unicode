@@ -341,7 +341,7 @@ rxvt_color::free (rxvt_display *display)
 #if XFT
   XftColorFree (display->display, display->visual, display->cmap, &c);
 #else
-  XFreeColors (display->display, display->cmap, &c, 1, AllPlanes);
+  XFreeColors (display->display, display->cmap, &p, 1, AllPlanes);
 #endif
 }
 
