@@ -16,7 +16,7 @@ client::client ()
 {
   if ((fd = socket (PF_LOCAL, SOCK_STREAM, 0)) < 0)
     {
-      perror ("unable to create listening socket");
+      perror ("unable to create communications socket");
       exit (EXIT_FAILURE);
     }
 
@@ -28,7 +28,7 @@ client::client ()
 
   if (connect (fd, (sockaddr *)&sa, sizeof (sa)))
     {
-      perror ("unable to bind listening socket");
+      perror ("unable to connect to rxvtd");
       exit (EXIT_FAILURE);
     }
 }

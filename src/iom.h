@@ -51,8 +51,6 @@ class io_manager {
 #endif
 #if IOM_TIME
   simplevec<time_watcher *>  tw;
-
-  void idle_cb (time_watcher &w); time_watcher *idle;
 #endif
 
   template<class watcher>

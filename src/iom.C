@@ -131,10 +131,13 @@ void io_manager::loop ()
         cw[i]->call (*cw[i]);
 #endif
 
+      struct timeval *to = 0;
+
 #if IOM_TIME
+      struct timeval tval;
       time_watcher *w;
 
-      for (;;)
+      for (;tw.size ();)
         {
           w = tw[0];
 
@@ -143,19 +146,18 @@ void io_manager::loop ()
               w = *i;
 
           if (w->at > NOW)
-            break;
-
-          // call it
-          w->call (*w);
-
-          if (w->at < 0)
+            {
+              double diff = w->at - NOW;
+              tval.tv_sec  = (int)diff;
+              tval.tv_usec = (int)((diff - tval.tv_sec) * 1000000);
+              to = &tval;
+              break;
+            }
+          else if (w->at >= 0)
+            w->call (*w);
+          else
             unreg (w);
         }
-
-      double diff = w->at - NOW;
-      struct timeval to;
-      to.tv_sec  = (int)diff;
-      to.tv_usec = (int)((diff - to.tv_sec) * 1000000);
 #endif
 
 #if IOM_IO
@@ -171,14 +173,15 @@ void io_manager::loop ()
           if ((*w)->events & EVENT_READ ) FD_SET ((*w)->fd, &rfd);
           if ((*w)->events & EVENT_WRITE) FD_SET ((*w)->fd, &wfd);
 
-          if ((*w)->fd > fds) fds = (*w)->fd;
+          if ((*w)->fd >= fds) fds = (*w)->fd + 1;
         }
 
+      if (!to && !fds)
+        break; // no events
+
+      fds = select (fds, &rfd, &wfd, 0, to);
 # if IOM_TIME
-      fds = select (fds + 1, &rfd, &wfd, 0, &to);
       set_now ();
-# else
-      fds = select (fds + 1, &rfd, &wfd, 0, 0);
 # endif
 
       if (fds > 0)
@@ -194,28 +197,25 @@ void io_manager::loop ()
             if (revents)
               w->call (*w, revents);
           }
-    }
 #elif IOM_TIME
+      if (!to)
+        break;
+
       select (0, 0, 0, 0, &to);
       set_now ();
+#else
+      break;
 #endif
-}
-
-void io_manager::idle_cb (time_watcher &w)
-{
-  w.at = NOW + 1000000000;
+    }
 }
 
 io_manager::io_manager ()
 {
+#if IOM_TIME
   set_now ();
+#endif
 
   iom_valid = true;
-
-#if IOM_TIME
-  idle = new time_watcher (this, &io_manager::idle_cb);
-  idle->start (0);
-#endif
 }
 
 io_manager::~io_manager ()
