@@ -155,7 +155,7 @@ struct mouse_event {
 # define COLORTERMENVFULL COLORTERMENV
 #endif
 #ifndef TERMENV
-# define TERMENV        "xterm"
+# define TERMENV        "rxvt"
 #endif
 
 #if defined (NO_MOUSE_REPORT) && !defined (NO_MOUSE_REPORT_SCROLLBAR)

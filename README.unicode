@@ -7,8 +7,14 @@ Sketchy overview of the details:
   might work and might be broken.
 
 - wchar_t MUST be UNICODE or ISO-10646-1 on your system, or various things
-  will break down. On GNU/Linux, this is true, on Solaris, this is true
-  only for "@ucs" locales, but you should have plenty of them.
+  will break down. On GNU/Linux, this is true for all locales, on Solaris,
+  this might be true only for locales ending in "@ucs", but you should
+  have plenty of them, as there should be a corresponding @ucs-locale for
+  every normal locale.
+
+  If you know details for other operating systems, please notify me (in
+  general, if your env defines __STDC_ISO_10646__ then everything should
+  be fine).
 
 - rxvt will use unicode internally, but does input/output in the current
   locale. so to get a utf-8 terminal, use "LC_CTYPE=en_US.UTF-8 rxvt" or
@@ -18,7 +24,9 @@ Sketchy overview of the details:
   using the imLocale ressource or switch, e.g.:
   LC_CTYPE=ja_JP.UTF-8 rxvt -imlocale ja_JP.EUC-JP
 
-- keyboard input is limited by the selected X locale.
+- keyboard input is limited by the selected locale (and X's support for it),
+  tty input and output likewise. selection support is mostly independent
+  of the locale.
 
 - "-fn" commandline switch and *.font ressource accepts a comma
   seperated list of fontnames:
