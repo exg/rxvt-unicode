@@ -1,6 +1,5 @@
 /*
  * File:	feature.h
- * $Id: feature.h,v 1.4 2003/12/18 13:33:02 pcg Exp $
  *
  * Compile-time configuration.
  *-----------------------------------------------------------------------
@@ -21,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *----------------------------------------------------------------------*/
-#ifndef _FEATURE_H
-#define _FEATURE_H
+#ifndef FEATURE_H
+#define FEATURE_H
 
 #ifndef X11USRLIBDIR
 # define X11USRLIBDIR		"/usr/X11R6/lib"

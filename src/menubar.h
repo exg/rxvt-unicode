@@ -1,9 +1,5 @@
-/*
- * $Id: menubar.h,v 1.2 2003/11/24 17:31:27 pcg Exp $
- */
-
-#ifndef _MENUBAR_H_
-#define _MENUBAR_H_
+#ifndef MENUBAR_H_
+#define MENUBAR_H_
 
 typedef struct {
     short           type;	/* must not be changed; first element */

@@ -24,8 +24,8 @@
     Foundation, Inc. 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef VPE_CALLBACK_H__
-#define VPE_CALLBACK_H__
+#ifndef CALLBACK_H__
+#define CALLBACK_H__
 
 template<class R>
 class callback0 {

@@ -1,9 +1,5 @@
-/*
- * $Id: defaultfont.h,v 1.8 2003/12/24 09:07:01 pcg Exp $
- */
-
-#ifndef _DEFAULTFONT_H_
-#define _DEFAULTFONT_H_
+#ifndef DEFAULTFONT_H_
+#define DEFAULTFONT_H_
 
 #ifdef HAVE_XSETLOCALE
 # define X_LOCALE
@@ -21,7 +17,7 @@
 #include "rxvtlib.h"
 #include "feature.h"
 #include "encoding.h"
-#include "rxvtvec.h"
+#include "rxvtstl.h"
 
 struct rxvt_fontprop {
   enum {

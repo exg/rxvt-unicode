@@ -1,7 +1,7 @@
 #ifndef RXVT_DAEMON_H
 #define RXVT_DAEMON_H
 
-#include "rxvtvec.h"
+#include "rxvtstl.h"
 
 struct rxvt_connection {
   int fd;

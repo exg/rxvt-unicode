@@ -1,6 +1,5 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	rxvtgrx.h
- * $Id: rxvtgrx.h,v 1.2 2003/11/24 17:31:27 pcg Exp $
  *
  * Stuff for text alignment for rxvt special graphics mode
  *
@@ -21,8 +20,8 @@
  *	text is placed so that the specified point is equidistant from the
  *	bottom and tops of capital letters
  *----------------------------------------------------------------------*/
-#ifndef _RXVTGRX_H_
-#define _RXVTGRX_H_
+#ifndef RXVTGRX_H_
+#define RXVTGRX_H_
 
 #define GRX_SCALE		10000
 

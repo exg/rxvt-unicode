@@ -1,3 +1,6 @@
+1.5
+	- share io manager between rxvt-unicode and vpe
+
 1.4  Fri Jan 16 23:03:22 CET 2004
 	- fix stupid segfault on esc-c
         - small font tunings

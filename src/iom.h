@@ -1,6 +1,6 @@
 /*
     iom.h -- generic I/O multiplexor
-    Copyright (C) 2003 Marc Lehmann <pcg@goof.com>
+    Copyright (C) 2003, 2004 Marc Lehmann <pcg@goof.com>
  
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,22 +17,25 @@
     Foundation, Inc. 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef VPE_IOM_H__
-#define VPE_IOM_H__
+#ifndef IOM_H__
+#define IOM_H__
 
-#include <cassert>
+// required:
+// - a vector template like simplevec or stl's vector
+// - defines for all watcher types required in your app
+// edit iom_conf.h as appropriate.
+#include "iom_conf.h"
 
 #include "callback.h"
-#include "rxvtvec.h"
 
 #ifndef IOM_IO
-# define IOM_IO 1
+# define IOM_IO 0
 #endif
 #ifndef IOM_TIME
-# define IOM_TIME 1
+# define IOM_TIME 0
 #endif
 #ifndef IOM_CHECK
-# define IOM_CHECK 1
+# define IOM_CHECK 0
 #endif
 #ifndef IOM_IDLE
 # define IOM_IDLE 0
@@ -41,21 +44,22 @@
 typedef double tstamp;
 extern tstamp NOW;
 
+struct watcher;
 #if IOM_IO
-  struct io_watcher;
+struct io_watcher;
 #endif
 #if IOM_TIME
-  struct time_watcher;
+struct time_watcher;
 #endif
 #if IOM_CHECK
-  struct check_watcher;
+struct check_watcher;
 #endif
 #if IOM_IDLE
-  struct idle_watcher;
+struct idle_watcher;
 #endif
 
 template<class watcher>
-struct io_manager_vec : protected simplevec<watcher *> {
+struct io_manager_vec : protected vector<watcher *> {
   friend class io_manager;
 protected:
   void erase_unordered (unsigned int pos)
@@ -84,10 +88,10 @@ class io_manager {
 #endif
 
   template<class watcher>
-  void reg (watcher *w, simplevec<watcher *> &queue);
+  void reg (watcher *w, io_manager_vec<watcher> &queue);
 
   template<class watcher>
-  void unreg (watcher *w, simplevec<watcher *> &queue);
+  void unreg (watcher *w, io_manager_vec<watcher> &queue);
 
 public:
   // register a watcher

@@ -1,9 +1,5 @@
-/*
- * $Id: logging.h,v 1.2 2003/11/24 17:31:27 pcg Exp $
- */
-
-#ifndef _LOGGING_H_
-#define _LOGGING_H_
+#ifndef LOGGING_H_
+#define LOGGING_H_
 
 #ifdef UTMP_SUPPORT
 # if ! defined(HAVE_STRUCT_UTMPX) && ! defined(HAVE_STRUCT_UTMP)

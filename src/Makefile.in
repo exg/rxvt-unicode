@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.7 2004/01/16 22:11:09 pcg Exp $
+# $Id: Makefile.in,v 1.8 2004/01/17 01:20:01 pcg Exp $
 @MCOMMON@
 
 LINT = lint -DNARROWPROTO=1 $(XINC) -chapbxz
@@ -27,24 +27,24 @@ dummy:
 LIBSRCS = command.C defaultfont.C graphics.C grkelot.C init.C logging.C \
 	main.C menubar.C misc.C netdisp.C ptytty.C screen.C scrollbar.C \
 	scrollbar-rxvt.C scrollbar-next.C scrollbar-xterm.C strings.C \
-	xdefaults.C xpm.C encoding.C rxvtcolor.C rxvtvec.C iom.C
+	xdefaults.C xpm.C encoding.C rxvtcolor.C rxvtstl.C iom.C
 
 SRCS =  rxvt.C $(LIBSRCS)
 
 HDRS =	command.h defaultfont.h feature.h grkelot.h init.h logging.h \
 	menubar.h netdisp.h protos.h rxvt.h rxvtgrx.h version.h encoding.h \
-	rxvtvec.h iom.h
+	rxvtstl.h iom.h iom_conf.h
 
 EXTRAHDRS = rxvtlib.h rxvtdaemon.h
 
 OBJS =	command.o defaultfont.o init.o graphics.o grkelot.o logging.o \
 	main.o menubar.o misc.o netdisp.o ptytty.o screen.o \
 	scrollbar.o scrollbar-next.o scrollbar-rxvt.o scrollbar-xterm.o \
-	strings.o xdefaults.o xpm.o rxvt.o encoding.o rxvtcolor.o rxvtvec.o iom.o
+	strings.o xdefaults.o xpm.o rxvt.o encoding.o rxvtcolor.o rxvtstl.o iom.o
 LIBOBJS = command.lo defaultfont.lo init.lo graphics.lo grkelot.lo logging.lo \
 	main.lo menubar.lo misc.lo netdisp.lo ptytty.lo screen.lo \
 	scrollbar.lo scrollbar-next.lo scrollbar-rxvt.lo scrollbar-xterm.lo \
-	strings.lo xdefaults.lo xpm.lo encoding.lo rxvt.lo rxvtcolor.lo rxvtvec.lo iom.lo
+	strings.lo xdefaults.lo xpm.lo encoding.lo rxvt.lo rxvtcolor.lo rxvtstl.lo iom.lo
 
 LIBVERSION = @LIBVERSION@
 INSTALL_LIBRXVT = @INSTALL_LIBRXVT@
@@ -184,11 +184,11 @@ distcopy: .protos $(INTPROS)
 # DO NOT DELETE: nice dependency list follows
 #
 
-defaultfont.h: encoding.h rxvtvec.h
+defaultfont.h: encoding.h rxvtstl.h
 rxvtlib.h: rxvtcolor.h defaultfont.h
 rxvtdaemon.o:       rxvtdaemon.C	rxvtdaemon.h
-rxvtd.o:            rxvtd.C     $(DEPS) rxvtdaemon.h rxvtvec.h
-rxvtc.o:            rxvtc.C     $(DEPS) rxvtdaemon.h rxvtvec.h
+rxvtd.o:            rxvtd.C     $(DEPS) rxvtdaemon.h rxvtstl.h
+rxvtc.o:            rxvtc.C     $(DEPS) rxvtdaemon.h rxvtstl.h
 
 command.o:          command.C   $(DEPS) command.intpro	command.h version.h
 defaultfont.o:      defaultfont.C $(DEPS) defaultfont.intpro defaultfont.h

@@ -1,9 +1,5 @@
-/*
- * $Id: rxvt.h,v 1.20 2003/12/24 09:22:29 pcg Exp $
- */
-
-#ifndef _RXVT_H_                /* include once only */
-#define _RXVT_H_
+#ifndef RXVT_H_                /* include once only */
+#define RXVT_H_
 
 #include "rxvtlib.h"
 

@@ -1,6 +1,6 @@
 /*
     iom.C -- generic I/O multiplexor
-    Copyright (C) 2003 Marc Lehmann <pcg@goof.com>
+    Copyright (C) 2003, 2004 Marc Lehmann <pcg@goof.com>
  
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,8 +16,6 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc. 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-
-#include "../config.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -36,7 +34,7 @@ static bool iom_valid;
 io_manager iom;
 
 template<class watcher>
-void io_manager::reg (watcher *w, simplevec<watcher *> &queue)
+void io_manager::reg (watcher *w, io_manager_vec<watcher> &queue)
 {
   if (!iom_valid)
     abort ();
@@ -49,7 +47,7 @@ void io_manager::reg (watcher *w, simplevec<watcher *> &queue)
 }
 
 template<class watcher>
-void io_manager::unreg (watcher *w, simplevec<watcher *> &queue)
+void io_manager::unreg (watcher *w, io_manager_vec<watcher> &queue)
 {
   if (!iom_valid)
     return;
@@ -144,7 +142,7 @@ void io_manager::loop ()
                     }
                   break;
                 }
-              else if (next->at >= 0)
+              else
                 {
                   unreg (next);
                   next->call (*next);
@@ -169,7 +167,7 @@ void io_manager::loop ()
 
       int fds = 0;
 
-      for (io_watcher **i = iow.end (); i-- > iow.begin (); )
+      for (io_manager_vec<io_watcher>::iterator i = iow.end (); i-- > iow.begin (); )
         if (*i)
           {
             if ((*i)->events & EVENT_READ ) FD_SET ((*i)->fd, &rfd);

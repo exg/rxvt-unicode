@@ -1,9 +1,9 @@
 /*
- * $Id: command.h,v 1.4 2003/12/19 09:41:09 pcg Exp $
+ * $Id: command.h,v 1.5 2004/01/17 01:20:01 pcg Exp $
  */
 
-#ifndef _COMMAND_H_
-#define _COMMAND_H_
+#ifndef COMMAND_H_
+#define COMMAND_H_
 
 #define STRING_MAX	512	/* max string size for process_rxvt_xterm_seq() */
 #define ESC_ARGS	32	/* max # of args for esc sequences */
