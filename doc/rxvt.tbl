@@ -1,4 +1,4 @@
-.TH "RXVT" "1" "2004-03-28" "X Version 11" "X Tools" 
+.TH "RXVT" "1" "2004-04-02" "X Version 11" "X Tools" 
 .SH "NAME" 
 rxvt-unicode (ouR XVT, unicode) \- a VT102 emulator for the X window system
 .PP 
@@ -182,6 +182,12 @@ Override detection of Meta modifier with specified key:
 \fBalt\fP, \fBmeta\fP, \fBhyper\fP, \fBsuper\fP, \fBmod1\fP, \fBmod2\fP, \fBmod3\fP,
 \fBmod4\fP, \fBmod5\fP;
 resource \fImodifier\fP\&.
+.IP "\fB-ssc\fP|\fB+ssc\fP" 
+Turn on/off secondary screen (default enabled);
+resource \fBsecondaryScreen\fP\&.
+.IP "\fB-ssr\fP|\fB+ssr\fP" 
+Turn on/off secondary screen scroll (default enabled);
+resource \fBsecondaryScroll\fP\&.
 .IP "\fB-xrm\fP \fIresourcestring\fP" 
 No effect on rxvt\&.  Simply passes through an argument to be made
 available in the instance\&'s argument list\&.  Appears in \fIWM_COMMAND\fP
@@ -436,13 +442,15 @@ option \fB-imlocale\fP\&.
 .IP "\fBinsecure\fP" 
 Enables "insecure" mode\&. Rxvt-unicode offers some escape sequences
 that echo arbitrary strings like the icon name or the locale\&. This
-could be abused if somebody gets 8-bit-clean access to your display,
-wether throuh a mail client displaying mail bodies unfiltered or
-though write(1)\&. Therefore, these sequences are disabled by default\&.
-You can enable them by setting this boolean resource or specifying
-\fB-insecure\fP as an option\&. At the moment, this enabled display-answer,
-locale, findfont, icon label and window title requests as well as
-dynamic menubar dispatch\&.
+could be abused if somebody gets 8-bit-clean access to your
+display, wether throuh a mail client displaying mail bodies
+unfiltered or though write(1)\&. Therefore, these sequences are
+disabled by default\&.  (Note that other terminals, including xterm,
+have these sequences enabled by default)\&. You can enable them
+by setting this boolean resource or specifying \fB-insecure\fP as
+an option\&. At the moment, this enabled display-answer, locale,
+findfont, icon label and window title requests as well as dynamic
+menubar dispatch\&.
 .IP "\fBmodifier:\fP \fImodifier\fP" 
 Set the key to be interpreted as the Meta key to:
 \fBalt\fP, \fBmeta\fP, \fBhyper\fP, \fBsuper\fP, \fBmod1\fP, \fBmod2\fP, \fBmod3\fP,
@@ -452,6 +460,13 @@ option \fB-mod\fP\&.
 Specify the reply rxvt sends to the shell when an ENQ (control-E)
 character is passed through\&.  It may contain escape values as
 described in the entry on \fBkeysym\fP following\&.
+.IP "\fBsecondaryScreen:\fP \fIbool\fP" 
+Turn on/off secondary screen (default enabled)\&.
+.IP "\fBsecondaryScroll:\fP \fIbool\fP" 
+Turn on/off secondary screen scroll (default enabled)\&. If
+the this option is enabled, scrolls on the secondary screen will
+change the scrollback buffer and switching to/from the secondary screen
+will instead scroll the screen up\&.
 .IP "\fBkeysym\&.\fP\fIsym\fP: \fIstring\fP" 
 Associate \fIstring\fP with keysym \fIsym\fP (\fB0xFF00 - 0xFFFF\fP)\&.  It
 may contain escape values (\ea: bell, \eb: backspace, \ee, \eE: escape,

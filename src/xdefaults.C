@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xdefaults.c
  *----------------------------------------------------------------------*
- * $Id: xdefaults.C,v 1.19 2004/03/22 15:15:04 pcg Exp $
+ * $Id: xdefaults.C,v 1.23 2004/04/02 18:00:01 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994      Robert Nation <nation@rocket.sanders.lockheed.com>
@@ -85,39 +85,31 @@ static const struct
 optList[] = {
               STRG (Rs_display_name, NULL, "d", NULL, NULL),	/* short form */
               STRG (Rs_display_name, NULL, "display", "string", "X server to contact"),
-              STRG (Rs_term_name, "termName", "tn", "string",
-                   "value of the TERM environment variable"),
+              STRG (Rs_term_name, "termName", "tn", "string", "value of the TERM environment variable"),
               STRG (Rs_geometry, NULL, "g", NULL, NULL),	/* short form */
-              STRG (Rs_geometry, "geometry", "geometry", "geometry",
-                   "size (in characters) and position"),
+              STRG (Rs_geometry, "geometry", "geometry", "geometry", "size (in characters) and position"),
               SWCH ("C", Opt_console, "intercept console messages"),
               SWCH ("iconic", Opt_iconic, "start iconic"),
               SWCH ("ic", Opt_iconic, NULL),	/* short form */
-              BOOL (Rs_reverseVideo, "reverseVideo", "rv", Opt_reverseVideo,
-                   "reverse video"),
+              BOOL (Rs_reverseVideo, "reverseVideo", "rv", Opt_reverseVideo, "reverse video"),
               BOOL (Rs_loginShell, "loginShell", "ls", Opt_loginShell, "login shell"),
               BOOL (Rs_jumpScroll, "jumpScroll", "j", Opt_jumpScroll, "jump scrolling"),
 #ifdef HAVE_SCROLLBARS
               BOOL (Rs_scrollBar, "scrollBar", "sb", Opt_scrollBar, "scrollbar"),
-              BOOL (Rs_scrollBar_right, "scrollBar_right", "sr", Opt_scrollBar_right,
-                   "scrollbar right"),
-              BOOL (Rs_scrollBar_floating, "scrollBar_floating", "st",
-                   Opt_scrollBar_floating, "scrollbar without a trough"),
+              BOOL (Rs_scrollBar_right, "scrollBar_right", "sr", Opt_scrollBar_right, "scrollbar right"),
+              BOOL (Rs_scrollBar_floating, "scrollBar_floating", "st", Opt_scrollBar_floating, "scrollbar without a trough"),
 #endif
-              BOOL (Rs_scrollTtyOutput, "scrollTtyOutput", NULL, Opt_scrollTtyOutput,
-                   NULL),
-              BOOL (Rs_scrollTtyOutput, NULL, "si", Opt_Reverse | Opt_scrollTtyOutput,
-                   "scroll-on-tty-output inhibit"),
-              BOOL (Rs_scrollTtyKeypress, "scrollTtyKeypress", "sk", Opt_scrollTtyKeypress,
-                   "scroll-on-keypress"),
-              BOOL (Rs_scrollWithBuffer, "scrollWithBuffer", "sw", Opt_scrollWithBuffer,
-                   "scroll-with-buffer"),
+              BOOL (Rs_scrollTtyOutput, "scrollTtyOutput", NULL, Opt_scrollTtyOutput, NULL),
+              BOOL (Rs_scrollTtyOutput, NULL, "si", Opt_Reverse | Opt_scrollTtyOutput, "scroll-on-tty-output inhibit"),
+              BOOL (Rs_scrollTtyKeypress, "scrollTtyKeypress", "sk", Opt_scrollTtyKeypress, "scroll-on-keypress"),
+              BOOL (Rs_scrollWithBuffer, "scrollWithBuffer", "sw", Opt_scrollWithBuffer, "scroll-with-buffer"),
 #ifdef TRANSPARENT
-              BOOL (Rs_transparent, "inheritPixmap", "ip", Opt_transparent,
-                   "inherit parent pixmap"),
-              BOOL (Rs_transparent_all, "inheritPixmapforce", "ipf", Opt_transparent_all,
-                   "forcefully inherit root pixmap"),
+              BOOL (Rs_transparent, "inheritPixmap", "ip", Opt_transparent, "inherit parent pixmap"),
+              BOOL (Rs_transparent_all, "inheritPixmapforce", "ipf", Opt_transparent_all, "forcefully inherit root pixmap"),
               SWCH ("tr", Opt_transparent, NULL),
+#if TINTING
+              STRG (Rs_color + Color_tint, "tintColor", "tint", "color", "tint color"),
+#endif
 #endif
               BOOL (Rs_utmpInhibit, "utmpInhibit", "ut", Opt_utmpInhibit, "utmp inhibit"),
 #ifndef NO_BELL
@@ -130,12 +122,11 @@ optList[] = {
               BOOL (Rs_meta8, "meta8", NULL, Opt_meta8, NULL),
 #endif
 #ifdef MOUSE_WHEEL
-              BOOL (Rs_mouseWheelScrollPage, "mouseWheelScrollPage", NULL, Opt_mouseWheelScrollPage,
-                   NULL),
+              BOOL (Rs_mouseWheelScrollPage, "mouseWheelScrollPage", NULL, Opt_mouseWheelScrollPage, NULL),
 #endif
 #ifndef NO_FRILLS
-              BOOL (Rs_tripleclickwords, "tripleclickwords", "tcw", Opt_tripleclickwords,
-                   "triple click word selection"),
+              BOOL (Rs_tripleclickwords, "tripleclickwords", "tcw", Opt_tripleclickwords, "triple click word selection"),
+              BOOL (Rs_insecure, "insecure", "insecure", Opt_insecure, "enable possibly insecure escape sequences"),
 #endif
 #ifdef CURSOR_BLINK
               BOOL (Rs_cursorBlink, "cursorBlink", "bc", Opt_cursorBlink, "blinking cursor"),
@@ -179,8 +170,7 @@ optList[] = {
               RSTRG (Rs_path, "path", "search path"),
 #endif				/* defined (XPM_BACKGROUND) || (MENUBAR_MAX) */
 #ifdef XPM_BACKGROUND
-              STRG (Rs_backgroundPixmap, "backgroundPixmap", "pixmap", "file[;geom]",
-                   "background pixmap"),
+              STRG (Rs_backgroundPixmap, "backgroundPixmap", "pixmap", "file[;geom]", "background pixmap"),
 #endif				/* XPM_BACKGROUND */
 #if (MENUBAR_MAX)
               RSTRG (Rs_menu, "menu", "name[;tag]"),
@@ -189,14 +179,12 @@ optList[] = {
               /* fonts: command-line option = resource name */
 #ifdef USE_XIM
               STRG (Rs_inputMethod, "inputMethod", "im", "name", "name of input method"),
-              STRG (Rs_preeditType, "preeditType", "pt", "style",
-                   "input style: style = OverTheSpot|OffTheSpot|Root"),
+              STRG (Rs_preeditType, "preeditType", "pt", "style", "input style: style = OverTheSpot|OffTheSpot|Root"),
 #if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
               STRG (Rs_imLocale, "imLocale", "imlocale", "string", "locale to use for input method"),
 #endif
 #endif				/* USE_XIM */
-              STRG (Rs_name, NULL, "name", "string",
-                   "client instance, icon, and title strings"),
+              STRG (Rs_name, NULL, "name", "string", "client instance, icon, and title strings"),
               STRG (Rs_title, "title", "title", "string", "title name for window"),
               STRG (Rs_title, NULL, "T", NULL, NULL),	/* short form */
               STRG (Rs_iconName, "iconName", "n", "string", "icon name for window"),
@@ -205,26 +193,20 @@ optList[] = {
               /* command-line option = resource name */
               RSTRG (Rs_color + Color_cursor2, "cursorColor2", "color"),
 #endif				/* NO_CURSORCOLOR */
-              STRG (Rs_color + Color_pointer, "pointerColor", "pr", "color",
-                   "pointer color"),
-              STRG (Rs_color + Color_border, "borderColor", "bd", "color",
-                   "border color"),
-              STRG (Rs_saveLines, "saveLines", "sl", "number",
-                   "number of scrolled lines to save"),
+              STRG (Rs_color + Color_pointer_fg, "pointerColor", "pr", "color", "pointer color"),
+              STRG (Rs_color + Color_pointer_bg, "pointerColor2", "pr2", "color", "pointer bg color"),
+              STRG (Rs_color + Color_border, "borderColor", "bd", "color", "border color"),
+              STRG (Rs_saveLines, "saveLines", "sl", "number", "number of scrolled lines to save"),
 #ifndef NO_FRILLS
-              STRG (Rs_ext_bwidth, "externalBorder", "w", "number",
-                   "external border in pixels"),
+              STRG (Rs_ext_bwidth, "externalBorder", "w", "number", "external border in pixels"),
               STRG (Rs_ext_bwidth, NULL, "bw", NULL, NULL),
               STRG (Rs_ext_bwidth, NULL, "borderwidth", NULL, NULL),
-              STRG (Rs_int_bwidth, "internalBorder", "b", "number",
-                   "internal border in pixels"),
+              STRG (Rs_int_bwidth, "internalBorder", "b", "number", "internal border in pixels"),
 #endif
 #ifndef NO_LINESPACE
-              STRG (Rs_lineSpace, "lineSpace", "lsp", "number",
-                   "number of extra pixels between rows"),
+              STRG (Rs_lineSpace, "lineSpace", "lsp", "number", "number of extra pixels between rows"),
 #endif
-              STRG (Rs_scrollBar_thickness, "thickness", "sbt", "number",
-                   "scrollbar thickness/width in pixels"),
+              STRG (Rs_scrollBar_thickness, "thickness", "sbt", "number", "scrollbar thickness/width in pixels"),
 #ifdef POINTER_BLANK
               RSTRG (Rs_pointerBlankDelay, "pointerBlankDelay", "number"),
 #endif
@@ -242,13 +224,16 @@ optList[] = {
 #ifdef PRINTPIPE
               RSTRG (Rs_print_pipe, "print-pipe", "string"),
 #endif
-              STRG (Rs_modifier, "modifier", "mod", "modifier",
-                   "meta modifier = alt|meta|hyper|super|mod1|...|mod5"),
+              STRG (Rs_modifier, "modifier", "mod", "modifier", "meta modifier = alt|meta|hyper|super|mod1|...|mod5"),
               INFO ("xrm", "string", "X resource"),
 #ifdef CUTCHAR_RESOURCE
               RSTRG (Rs_cutchars, "cutchars", "string"),
 #endif				/* CUTCHAR_RESOURCE */
               RSTRG (Rs_answerbackstring, "answerbackString", "string"),
+#ifndef NO_SECONDARY_SCREEN
+              BOOL (Rs_secondaryScreen, "secondaryScreen", "ssc", Opt_secondaryScreen, "enable secondary screen"),
+              BOOL (Rs_secondaryScroll, "secondaryScroll", "ssr", Opt_secondaryScroll, "enable secondary screen scroll"),
+#endif
               INFO ("e", "command arg ...", "command to execute")
             };
 

@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-options.yo,v 1.9 2004/03/29 21:02:11 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-options.yo,v 1.10 2004/04/02 18:00:00 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpageoptions()
 
@@ -168,6 +168,12 @@ startdit()
 	bf(alt), bf(meta), bf(hyper), bf(super), bf(mod1), bf(mod2), bf(mod3),
 	bf(mod4), bf(mod5);
 	resource em(modifier).
+    dit(bf(-ssc)|bf(+ssc))
+	Turn on/off secondary screen (default enabled);
+	resource bf(secondaryScreen).
+    dit(bf(-ssr)|bf(+ssr))
+	Turn on/off secondary screen scroll (default enabled);
+	resource bf(secondaryScroll).
     dit(bf(-xrm) em(resourcestring))
 	No effect on rxvt.  Simply passes through an argument to be made
 	available in the instance's argument list.  Appears in em(WM_COMMAND)

@@ -357,12 +357,6 @@
 /* #define DISPLAY_IS_IP */
 
 /*
- * Have "\E[7n" transmit the display name.
- * This has been cited as a potential security hole.
- */
-#define ENABLE_DISPLAY_ANSWER
-
-/*
  * Change what ESC Z transmits instead of the default "\E[?1;2c"
  */
 /* #define ESCZ_ANSWER	"\033[?1;2C" */
@@ -383,12 +377,6 @@
  * Remove secondary screen's independent cursor position, a la xterm
  */
 /* #define NO_SECONDARY_SCREEN_CURSOR */
-
-/*
- * If no secondary screen is available (NO_SECONDARY_SCREEN in config.h),
- * then scroll the text up on a window change request
- */
-#define SCROLL_ON_NO_SECONDARY
 
 /*
  * Width of the term internal border
@@ -414,5 +402,12 @@
  * Provide termcap/terminfo bw support (wrap backwards on cub1)
  */
 /* #define TERMCAP_HAS_BW */
+
+/*
+ * Some (older, e.g. fvwm 2.2.2) window managers need some time when
+ * updating window positions. If transparency isn't working correctly
+ * then you might try out this one.
+ */
+/* #define WAIT_FOR_WM */
 
 #endif

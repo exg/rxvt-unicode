@@ -84,18 +84,18 @@ typedef uint32_t rend_t;
  */
 
 typedef struct {
-  uint16_t       width; /* window width                    [pixels] */
+  uint16_t       width;         /* window width                    [pixels] */
   uint16_t       height;        /* window height                   [pixels] */
   uint16_t       fwidth;        /* font width                      [pixels] */
   uint16_t       fheight;       /* font height                     [pixels] */
-  uint16_t       fbase;      /* font ascent (baseline)          [pixels] */
+  uint16_t       fbase;         /* font ascent (baseline)          [pixels] */
   uint16_t       propfont;      /* font proportional flags                  */
-  uint16_t       ncol;  /* window columns              [characters] */
-  uint16_t       nrow;  /* window rows                 [characters] */
-  uint16_t       focus; /* window has focus                         */
+  uint16_t       ncol;          /* window columns              [characters] */
+  uint16_t       nrow;          /* window rows                 [characters] */
+  uint16_t       focus;         /* window has focus                         */
   uint16_t       mapped;        /* window state mapped?                     */
-  uint16_t       int_bwidth; /* internal border width                    */
-  uint16_t       ext_bwidth; /* external border width                    */
+  uint16_t       int_bwidth;    /* internal border width                    */
+  uint16_t       ext_bwidth;    /* external border width                    */
   uint16_t       lineSpace;     /* number of extra pixels between rows      */
   uint16_t       saveLines;     /* number of lines that fit in scrollback   */
   uint16_t       nscrolled;     /* number of line actually scrolled         */
@@ -182,34 +182,41 @@ typedef struct {
 #define Screen_DefaultFlags     (Screen_VisibleCursor|Screen_Autowrap)
 
 /* rxvt_vars.Options */
-#define Opt_console             (1LU<<0)
-#define Opt_loginShell          (1LU<<1)
-#define Opt_iconic              (1LU<<2)
-#define Opt_visualBell          (1LU<<3)
-#define Opt_mapAlert            (1LU<<4)
-#define Opt_reverseVideo        (1LU<<5)
-#define Opt_utmpInhibit         (1LU<<6)
-#define Opt_scrollBar           (1LU<<7)
-#define Opt_scrollBar_right     (1LU<<8)
-#define Opt_scrollBar_floating  (1LU<<9)
-#define Opt_meta8               (1LU<<10)
-#define Opt_scrollTtyOutput     (1LU<<11)
-#define Opt_scrollTtyKeypress   (1LU<<12)
-#define Opt_transparent         (1LU<<13)
-#define Opt_transparent_all     (1LU<<14)
-#define Opt_15                  (1LU<<15) // UNALLOCATED
-#define Opt_tripleclickwords    (1LU<<16)
-#define Opt_scrollWithBuffer    (1LU<<17)
-#define Opt_jumpScroll          (1LU<<18)
-#define Opt_mouseWheelScrollPage (1LU<<19)
-#define Opt_pointerBlank        (1LU<<20)
-#define Opt_cursorBlink         (1LU<<21)
+#define Opt_console             (1UL<<0)
+#define Opt_loginShell          (1UL<<1)
+#define Opt_iconic              (1UL<<2)
+#define Opt_visualBell          (1UL<<3)
+#define Opt_mapAlert            (1UL<<4)
+#define Opt_reverseVideo        (1UL<<5)
+#define Opt_utmpInhibit         (1UL<<6)
+#define Opt_scrollBar           (1UL<<7)
+#define Opt_scrollBar_right     (1UL<<8)
+#define Opt_scrollBar_floating  (1UL<<9)
+#define Opt_meta8               (1UL<<10)
+#define Opt_scrollTtyOutput     (1UL<<11)
+#define Opt_scrollTtyKeypress   (1UL<<12)
+#define Opt_transparent         (1UL<<13)
+#define Opt_transparent_all     (1UL<<14)
+#define Opt_15                  (1UL<<15) // UNALLOCATED
+#define Opt_tripleclickwords    (1UL<<16)
+#define Opt_scrollWithBuffer    (1UL<<17)
+#define Opt_jumpScroll          (1UL<<18)
+#define Opt_mouseWheelScrollPage (1UL<<19)
+#define Opt_pointerBlank        (1UL<<20)
+#define Opt_cursorBlink         (1UL<<21)
+#ifdef NO_FRILLS
+# define Opt_insecure            0
+#else
+# define Opt_insecure            (1UL<<22) // insecure esc sequences
+#endif
+#define Opt_secondaryScreen	(1UL<<23)
+#define Opt_secondaryScroll	(1UL<<24)
 /* place holder used for parsing command-line options */
-#define Opt_Reverse             (1LU<<30)
-#define Opt_Boolean             (1LU<<31)
+#define Opt_Reverse             (1UL<<30)
+#define Opt_Boolean             (1UL<<31)
 
-#define DEFAULT_OPTIONS         (Opt_scrollBar | Opt_scrollTtyOutput \
-                                 | Opt_jumpScroll)
+#define DEFAULT_OPTIONS         (Opt_scrollBar | Opt_scrollTtyOutput | \
+                                 Opt_jumpScroll | Opt_secondaryScreen)
 
 /* ------------------------------------------------------------------------- */
 
