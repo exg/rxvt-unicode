@@ -755,7 +755,7 @@ rxvt_term::flush ()
 
     }
 
-  XFlush (display->display);
+  display->flush ();
 }
 
 void

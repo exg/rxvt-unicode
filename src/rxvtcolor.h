@@ -56,7 +56,7 @@ struct rxvt_display : refcounted {
   
   io_manager_vec<xevent_watcher> xw;
 
-  io_watcher x_watcher; void x_event (io_watcher &w, short revents);
+  io_watcher x_ev; void x_cb (io_watcher &w, short revents);
 
   refcache<rxvt_xim> xims;
   vector<im_watcher *> imw;
@@ -74,6 +74,8 @@ struct rxvt_display : refcounted {
   rxvt_display (const char *id);
   bool init ();
   ~rxvt_display ();
+
+  void flush ();
 
   void reg (xevent_watcher *w);
   void unreg (xevent_watcher *w);

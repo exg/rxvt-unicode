@@ -104,7 +104,7 @@ rxvt_xim::~rxvt_xim ()
 
 rxvt_display::rxvt_display (const char *id)
 : refcounted (id)
-, x_watcher (this, &rxvt_display::x_event)
+, x_ev (this, &rxvt_display::x_cb)
 , selection_owner (0)
 {
 }
@@ -139,18 +139,20 @@ bool rxvt_display::init ()
 #endif
 
   int fd = XConnectionNumber (display);
-  x_watcher.start (fd, EVENT_READ);
+  x_ev.start (fd, EVENT_READ);
   fcntl (fd, F_SETFL, FD_CLOEXEC);
 
   XSelectInput (display, root, PropertyChangeMask);
   xa_xim_servers = XInternAtom (display, "XIM_SERVERS", 0);
+
+  flush ();
 
   return true;
 }
 
 rxvt_display::~rxvt_display ()
 {
-  x_watcher.stop ();
+  x_ev.stop ();
 
   XCloseDisplay (display);
 }
@@ -161,7 +163,7 @@ void rxvt_display::im_change_cb ()
     (*i)->call ();
 }
 
-void rxvt_display::x_event (io_watcher &w, short revents)
+void rxvt_display::x_cb (io_watcher &w, short revents)
 {
   do
     {
@@ -184,6 +186,21 @@ void rxvt_display::x_event (io_watcher &w, short revents)
         }
     }
   while (XPending (display));
+
+  flush ();
+}
+
+void rxvt_display::flush ()
+{
+  for (;;)
+    {
+      XFlush (display);
+
+      if (!XPending (display))
+        break;
+
+      x_cb (x_ev, 0);
+    }
 }
 
 void rxvt_display::reg (xevent_watcher *w)
