@@ -184,9 +184,6 @@
 /* Build shared library version - specify via configure only */
 #undef LIBRXVT
 
-/* Define default multichar glyph encoding */
-#undef MULTICHAR_ENCODING
-
 /* Define if you want the depth of scrollbars and menus to be less */
 #undef HALFSHADOW
 

@@ -76,7 +76,7 @@ fi
 AC_SUBST(INSTALL_LIBRXVT)
 
 AC_ARG_ENABLE(everything,
-  [  --enable-everything     enable standard non-multichoice features: marked *
+  [  --enable-everything     enable standard non-multichoice features
                      NOTE: this option is order dependent
                      NOTE: automatically enabled with --enable-shared],
   [if test x$enableval = xyes; then
@@ -109,29 +109,19 @@ AC_ARG_ENABLE(everything,
 
 AC_ARG_ENABLE(unicode3,
   [  --enable-unicode3       use 21 instead of 16 bits to represent unicode characters],
-  [if test x$enableval = xyes; then
+  [if test x$enableval = xyes -o x$enableval = xno; then
     support_unicode3=yes
   fi])
 
 AC_ARG_ENABLE(xft,
   [  --enable-xft       enable xft support on systems that have it],
-  [if test x$enableval = xyes; then
+  [if test x$enableval = xyes -o x$enableval = xno; then
     support_xft=yes
   fi])
 
 AC_ARG_WITH(codesets,
   [  --with-codesets=NAME,...    compile in additional codesets (jp,jp_ext,kr,cn,cn_ext,vn,all)],
-  [if test x$enableval = xyes; then
-    codesets="$withval"
-  fi])
-
-AC_ARG_WITH(encoding,
-  [  --with-encoding=NAME    set language default encoding to NAME (default: sjis)
-                          (eucj|sjis|big5|gb|kr|noenc)],
-  [if test x$enableval = xyes; then
-    withval=`echo $withval | tr '[a-z]' '[A-Z]'`
-    AC_DEFINE_UNQUOTED(MULTICHAR_ENCODING, $withval, Define default multichar glyph encoding)
-  fi])
+  [codesets="$withval"])
 
 AC_ARG_ENABLE(utmp,
   [  --enable-utmp           enable utmp (utmpx) support],
