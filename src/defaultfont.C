@@ -203,7 +203,7 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color)
 }
 
 static const char *linedraw_cmds[128] = {
-  "1hH", "2hH", "1vV", "2vV",
+  "1-", "2-", "1|", "2|",
   0, 0, 0, 0,
   0, 0, 0, 0,
   "1HV", "2H1V", "1H2V", "2HV",
@@ -212,24 +212,24 @@ static const char *linedraw_cmds[128] = {
   "1hV", "2h1V", "1h2V", "2hV",
   "1Hv", "2H1v", "1H2v", "2Hv",
   "1hv", "2h1v", "1h2v", "2hv",
-  "1HvV", "2H1vV", "1HV2v", "1Hv2V",
+  "1H|", "2H1|", "1HV2v", "1Hv2V",
 
   // 2520
-  "1H2vV", "2Hv1V", "2HV1v", "2HvV",
-  "1hvV", "2h1vV", "1hV2v", "1hv2V",
-  "1h2vV", "2hv1V", "1v2hV", "2hvV",
-  "1hHV", "2h1HV", "2H1hV", "2hH1V",
+  "1H2|", "2Hv1V", "2HV1v", "2H|",
+  "1h|", "2h1|", "1hV2v", "1hv2V",
+  "1h2|", "2hv1V", "1v2hV", "2h|",
+  "1-V", "2h1HV", "2H1hV", "2-1V",
 
   // 2530
-  "1hH2V", "2hV1H", "1h2HV", "2hHV",
-  "1hHv", "1vH2h", "1hv2H", "1v2hH",
-  "1hH2v", "1H2hv", "1h2Hv", "2hHv",
-  "1hHvV", "1vVH2h", "1hvV2H", "1vV2hH",
+  "1-2V", "2hV1H", "1h2HV", "2-V",
+  "1-v", "1vH2h", "1hv2H", "1v2-",
+  "1-2v", "1H2hv", "1h2Hv", "2-v",
+  "1-|", "1|H2h", "1h|2H", "1|2-",
 
   // 2540
-  "1hHV2v", "1hHv2V", "1hH2vV", "1HV2hv",
-  "1hV2Hv", "1Hv2hV", "1hv2HV", "1V2hHv",
-  "1v2hHV", "1H2hvV", "1h2HvV", "2hHvV",
+  "1-V2v", "1-v2V", "1-2|", "1HV2hv",
+  "1hV2Hv", "1Hv2hV", "1hv2HV", "1V2-v",
+  "1v2-V", "1H2h|", "1h2H|", "2-|",
   0, 0, 0, 0,
 
   // 2550
@@ -242,10 +242,10 @@ static const char *linedraw_cmds[128] = {
   0, 0, 0, 0,
   0, 0, 0, 0,
   0, 0, 0, 0,
-  0, 0, 0, 0,
+  0, "A", "B", "C",
 
   // 2570
-  0, "1a", "1b", "1ab",
+  "D", "1/", "1\\", "1/\\",
   "1h", "1v", "1H", "1V",
   "2h", "2v", "2H", "2V",
   "1h2H", "1v2V", "1H2h", "1V2v"
@@ -325,10 +325,15 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
         {
           const char *p = linedraw_cmds[t - 0x2500];
 
-          int x0 = x, x1 = x + (r->TermWin.fwidth  - 1) / 2, x2 = x + r->TermWin.fwidth  - 1;
-          int y0 = y, y1 = y + (r->TermWin.fheight - 1) / 2, y2 = y + r->TermWin.fheight - 1;
+          int W = r->TermWin.fwidth , w = (W - 1) / 2;
+          int H = r->TermWin.fheight, h = (H - 1) / 2;
+          int x0 = x, x1 = x + w, x2 = x + r->TermWin.fwidth ;
+          int y0 = y, y1 = y + h, y2 = y + r->TermWin.fheight;
 
           XGCValues gcv;
+
+          gcv.cap_style = CapNotLast;
+          XChangeGC (d.display->display, GC, GCCapStyle, &gcv);
 
           while (*p)
             {
@@ -340,22 +345,31 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
                     break;
 
                   case '2':
-                    gcv.line_width = 2;
+                    gcv.line_width = 3;
                     XChangeGC (d.display->display, GC, GCLineWidth, &gcv);
                     break;
 
-                  case 'h': XDrawLine (d.display->display, d, GC, x0, y1, x1, y1); break;
-                  case 'H': XDrawLine (d.display->display, d, GC, x1, y1, x2, y1); break;
-                  case 'v': XDrawLine (d.display->display, d, GC, x1, y0, x1, y1); break;
-                  case 'V': XDrawLine (d.display->display, d, GC, x1, y1, x1, y2); break;
-                  case 'a': XDrawLine (d.display->display, d, GC, x0, y2, x2, y0); break;
-                  case 'b': XDrawLine (d.display->display, d, GC, x0, y0, x2, y2); break;
+                  case 'h': XDrawLine (d.display->display, d, GC, x0, y1, x1+1, y1  ); break;
+                  case 'H': XDrawLine (d.display->display, d, GC, x2, y1, x1-1, y1  ); break;
+                  case '-': XDrawLine (d.display->display, d, GC, x0, y1, x2  , y1  ); break;
+                  case 'v': XDrawLine (d.display->display, d, GC, x1, y0, x1  , y1+1); break;
+                  case 'V': XDrawLine (d.display->display, d, GC, x1, y2, x1  , y1-1); break;
+                  case '|': XDrawLine (d.display->display, d, GC, x1, y0, x1  , y2  ); break;
+
+                  case '/' : XDrawLine (d.display->display, d, GC, x0, y2, x2  , y0  ); break;
+                  case '\\': XDrawLine (d.display->display, d, GC, x0, y0, x2  , y2  ); break;
+
+                  case 'A': XDrawArc (d.display->display, d, GC, x1    , y1    , W-1, H-1,  90*64,  90*64); break;
+                  case 'B': XDrawArc (d.display->display, d, GC, x1-W+1, y1    , W-1, H-1,   0*64,  90*64); break;
+                  case 'C': XDrawArc (d.display->display, d, GC, x1-W+1, y1-H+1, W-1, H-1,   0*64, -90*64); break;
+                  case 'D': XDrawArc (d.display->display, d, GC, x1    , y1-H+1, W-1, H-1, -90*64, -90*64); break;
                 }
             }
 
           gcv.line_width = 0;
           XChangeGC (d.display->display, GC, GCLineWidth, &gcv);
         }
+
 #if ENABLE_COMBINING
       else if (IS_COMPOSE (t) && (cc = rxvt_composite[t]))
         {
