@@ -2,6 +2,43 @@ Lines marked with "xterm:" indicate either xterm features ported to rxvt
 or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
+TODO: escaping system for long escape sequences, so we can stop on CR/LF.
+TODO: implement xterm mode to be able to use xfree's TERM=xterm.
+TODO: multibyte support for setwmname et al.
+TODO: there are other todo items, but they are not in this file because they
+      are very long-term :)
+
+3.2  Mon Jul 26 19:57:32 CEST 2004
+        - support real bold fonts (patch by Adam Sampson <azz@us-lot.org>),
+          if specified in the font list (and enabled by -rb).
+        - fixed --enable-keepscrolling and --enable-selectionscrolling, which
+          was broken since 1.8. Patch by Hans de Goede <j.w.r.degoede@hhs.nl>.
+        - fixed --enable-slipwheeling, see above.
+	- sequences ended by ST can now contain any octet by quoting it
+          with ^V (SYN).
+        - 8-bit-controls disabled by default (compiletime option).
+
+3.1  Sat Jun 26 23:38:07 CEST 2004
+	- set default backspace sequence to "DEC" (which defaults to \177)
+          as opposed to \010 as before, which was incorrect (ahem :).
+        - updated doc/etc/rxvt.* to reflect the change. This brings rxvt
+          in line with many existing rxvt terminfo and termcap entries as
+          well as with other terminal emulators.
+	- fix a segfault when trying to set a nonexistant locale
+          (reported by elmex).
+        - find more fonts by default for japanese.
+        - the internal border wasn't always cleared. This is fixed by moving
+          the window relative to it's frame and simplifies a lot of code, too.
+        - fixed quite hard to find scrollbar colour bug, reported by Eduard
+          Bloch.
+
+3.0  Mon May 10 20:47:23 CEST 2004
+	- experimental flickerfree resize mode (I tried to get even
+	  less flickering with SouthWestGravity but couldn't get it to work,
+	  sorry).
+	- c++-ify (or at least make it compile with g++-3.4, which should
+	  make it a little bit more correct c++).
+
 2.9  Sat May  8 19:13:41 CEST 2004
         - fix some minor doc issues + some generated doc files are now
           getting distributed (closes debian bug #246035).

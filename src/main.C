@@ -157,6 +157,15 @@ rxvt_term::rxvt_term ()
 #ifdef TEXT_BLINK
     text_blink_ev (this, &rxvt_term::text_blink_cb),
 #endif
+#ifndef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
+    cont_scroll_ev (this, &rxvt_term::cont_scroll_cb),
+#endif
+#ifdef SELECTION_SCROLLING
+    sel_scroll_ev (this, &rxvt_term::sel_scroll_cb),
+#endif
+#if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
+    slip_wheel_ev (this, &rxvt_term::slip_wheel_cb),
+#endif
 #ifdef POINTER_BLANK
     pointer_ev (this, &rxvt_term::pointer_cb),
 #endif
@@ -287,6 +296,12 @@ rxvt_term::destroy ()
 #endif
 #ifdef TEXT_BLINK
   text_blink_ev.stop ();
+#endif
+#ifndef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
+  cont_scroll_ev.stop ();
+#endif
+#ifdef SELECTION_SCROLLING
+  sel_scroll_ev.stop ();
 #endif
 #ifdef POINTER_BLANK
   pointer_ev.stop ();
@@ -742,21 +757,21 @@ rxvt_term::window_calc (unsigned int width, unsigned int height)
   szHint.base_width = szHint.base_height = 2 * TermWin.int_bwidth;
 
   sb_w = mb_h = 0;
-  window_vt_x = window_vt_y = 0;
+  window_vt_x = window_vt_y = TermWin.int_bwidth;
 
   if (scrollbar_visible ())
     {
       sb_w = scrollbar_TotalWidth ();
       szHint.base_width += sb_w;
-      if (! (Options & Opt_scrollBar_right))
-        window_vt_x = sb_w;
+      if (!(Options & Opt_scrollBar_right))
+        window_vt_x += sb_w;
     }
 
   if (menubar_visible ())
     {
       mb_h = menuBar_TotalHeight ();
       szHint.base_height += mb_h;
-      window_vt_y = mb_h;
+      window_vt_y += mb_h;
     }
 
   szHint.width_inc = TermWin.fwidth;

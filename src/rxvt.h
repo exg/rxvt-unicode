@@ -268,7 +268,10 @@ enum {
   FAST_REFRESH     = 1<<0,  /* Fully exposed window              */
   SLOW_REFRESH     = 1<<1,  /* Partially exposed window          */
   SMOOTH_REFRESH   = 1<<2,  /* Do sync'ing to make it smooth     */
+#if 0
   REFRESH_BOUNDS   = 1<<3
+#endif
+  REFRESH_BOUNDS   = 0      /* only required for old int_bwidth code. */ //TODO: remove this and all depending code
 };
 
 #ifdef NO_SECONDARY_SCREEN
@@ -550,6 +553,9 @@ enum {
   Rs_secondaryScreen,
   Rs_secondaryScroll,
 #endif
+#ifndef NO_BOLD_UNDERLINE_REVERSE
+  Rs_realBold,
+#endif
   NUM_RESOURCES
 };
 
@@ -648,17 +654,17 @@ enum {
 #define STRRCHR(x, y)           strrchr((const char *)(x), (int)(y))
 
 /* convert pixel dimensions to row/column values.  Everything as int32_t */
-#define Pixel2Col(x)            Pixel2Width((int32_t)(x) - (int32_t)TermWin.int_bwidth)
-#define Pixel2Row(y)            Pixel2Height((int32_t)(y) - (int32_t)TermWin.int_bwidth)
+#define Pixel2Col(x)            Pixel2Width((int32_t)(x))
+#define Pixel2Row(y)            Pixel2Height((int32_t)(y))
 #define Pixel2Width(x)          ((int32_t)(x) / (int32_t)TermWin.fwidth)
 #define Pixel2Height(y)         ((int32_t)(y) / (int32_t)TermWin.fheight)
-#define Col2Pixel(col)          ((int32_t)Width2Pixel(col) + (int32_t)TermWin.int_bwidth)
-#define Row2Pixel(row)          ((int32_t)Height2Pixel(row) + (int32_t)TermWin.int_bwidth)
+#define Col2Pixel(col)          ((int32_t)Width2Pixel(col))
+#define Row2Pixel(row)          ((int32_t)Height2Pixel(row))
 #define Width2Pixel(n)          ((int32_t)(n) * (int32_t)TermWin.fwidth)
 #define Height2Pixel(n)         ((int32_t)(n) * (int32_t)TermWin.fheight)
 
-#define TermWin_TotalWidth()    ((int32_t)TermWin.width  + 2 * (int32_t)TermWin.int_bwidth)
-#define TermWin_TotalHeight()   ((int32_t)TermWin.height + 2 * (int32_t)TermWin.int_bwidth)
+#define TermWin_TotalWidth()    ((int32_t)TermWin.width)
+#define TermWin_TotalHeight()   ((int32_t)TermWin.height)
 
 /* how to build & extract colors and attributes */
 #define GET_BASEFG(x)           (((x) & RS_fgMask))
@@ -938,22 +944,16 @@ struct rxvt_term : rxvt_vars {
   uint32_t        pixcolor_set[NPIXCLR_SETS];
 /* ---------- */
 #ifdef SELECTION_SCROLLING
-  int             scroll_selection_delay,
-                  scroll_selection_lines;
+  int             scroll_selection_lines;
   enum page_dirn  scroll_selection_dir;
   int             selection_save_x,
                   selection_save_y,
-                  selection_save_state,
-                  pending_scroll_selection;
+                  selection_save_state;
 #endif
 /* ---------- */
   int             csrO,       /* Hops - csr offset in thumb/slider to      */
                               /*   give proper Scroll behaviour            */
-#ifndef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
-                  scroll_arrow_delay,
-#endif
 #if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
-                  mouse_slip_wheel_delay,
                   mouse_slip_wheel_speed,
 #endif
                   refresh_count,
@@ -1142,6 +1142,16 @@ struct rxvt_term : rxvt_vars {
   void text_blink_cb (time_watcher &w); time_watcher text_blink_ev;
 #endif
 
+#ifndef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
+  void cont_scroll_cb (time_watcher &w); time_watcher cont_scroll_ev;
+#endif
+#ifdef SELECTION_SCROLLING
+  void sel_scroll_cb (time_watcher &w); time_watcher sel_scroll_ev;
+#endif
+#if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
+  void slip_wheel_cb (time_watcher &w); time_watcher slip_wheel_ev;
+#endif
+
 #ifdef POINTER_BLANK
   void pointer_cb (time_watcher &w); time_watcher pointer_ev;
   void pointer_blank ();
@@ -1159,8 +1169,6 @@ struct rxvt_term : rxvt_vars {
 
   bool init (int argc, const char *const *argv);
   bool init_vars ();
-
-  unicode_t next_char ();
 
   bool pty_fill ();
 
@@ -1226,7 +1234,12 @@ struct rxvt_term : rxvt_vars {
   // command.C
   void lookup_key (XKeyEvent &ev);
   unsigned int cmd_write (const unsigned char *str, unsigned int count);
+
+  unicode_t next_char ();
   unicode_t cmd_getc ();
+  unicode_t next_octet ();
+  unicode_t cmd_get8 ();
+
   bool cmd_parse ();
   void mouse_report (XButtonEvent &ev);
   void button_press (XButtonEvent &ev);

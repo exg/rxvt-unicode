@@ -5,10 +5,10 @@
 
 ./configure --prefix=/opt/rxvt --enable-utmp \
             --enable-wtmp --enable-lastlog --enable-xim --disable-strings \
-            --with-term=rxvt --enable-keepscrolling --enable-xft \
+            --with-term=rxvt --disable-keepscrolling --enable-xft --enable-mousewheel \
             --with-name=rxvt --enable-selectionscrolling \
             --enable-frills --enable-swapscreen --enable-transparency \
             --with-codesets=eu,jp --enable-menubar --enable-tinting \
             --enable-cursor-blink --enable-pointer-blank --enable-text-blink \
-            --enable-plain-scroll --enable-combining \
+            --enable-plain-scroll --enable-rxvt-scroll --enable-combining \
             "$@"

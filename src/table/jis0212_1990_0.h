@@ -2122,8 +2122,8 @@ struct rxvt_codeset_conv_jis0212_1990_0 : rxvt_codeset_conv {
     if (unicode == 0x2122) return 0x226f;
     uint8_t  l = unicode;
     uint16_t h = unicode >> 8;
-    if (0x00 <= h && h <= 0x9f
-        && 0x00 <= l && l <= 0xff
+    if (h <= 0x9f
+        && l <= 0xff
         && jis0212_1990_0_f_i[h - 0x00])
       return jis0212_1990_0_f_i[h - 0x00][l - 0x00]
              ? jis0212_1990_0_f_i[h - 0x00][l - 0x00]

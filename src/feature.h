@@ -150,8 +150,7 @@
  * Define defaults for backspace and delete keys - unless they have been
  * configured out with --disable-backspace-key / --disable-delete-key
  */
-//#define DEFAULT_BACKSPACE	"DEC"		/* SPECIAL */
-#define DEFAULT_BACKSPACE	"\010"		/* wrong, but match terminfo etc. */
+#define DEFAULT_BACKSPACE	"DEC"		/* SPECIAL */
 #define DEFAULT_DELETE		"\033[3~"
 
 /*
@@ -250,8 +249,8 @@
 /*
  * Set delay periods for continuous scrolling with scrollbar buttons
  */
-/* #define SCROLLBAR_INITIAL_DELAY 40 */
-/* #define SCROLLBAR_CONTINUOUS_DELAY 2 */
+/* #define SCROLLBAR_INITIAL_DELAY 0.33 */
+/* #define SCROLLBAR_CONTINUOUS_DELAY 0.05 */
 
 /*
  * The speed of selection scrolling is proportional to the distance

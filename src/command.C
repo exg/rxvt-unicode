@@ -712,6 +712,49 @@ rxvt_term::text_blink_cb (time_watcher &w)
 }
 #endif
 
+#ifndef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
+void
+rxvt_term::cont_scroll_cb (time_watcher &w)
+{
+  if ((scrollbar_isUp() || scrollbar_isDn()) &&
+      scr_page (scrollbar_isUp() ? UP : DN, 1))
+    {
+      refresh_type |= SMOOTH_REFRESH;
+      want_refresh = 1;
+      w.start (w.at + SCROLLBAR_CONTINUOUS_DELAY);
+    }
+}
+#endif
+
+#ifdef SELECTION_SCROLLING
+void
+rxvt_term::sel_scroll_cb (time_watcher &w)
+{
+  if (scr_page (scroll_selection_dir, scroll_selection_lines))
+    {
+      selection_extend (selection_save_x, selection_save_y, selection_save_state);
+      refresh_type |= SMOOTH_REFRESH;
+      want_refresh = 1;
+      w.start (w.at + SCROLLBAR_CONTINUOUS_DELAY);
+    }
+}
+#endif
+
+#if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
+void
+rxvt_term::slip_wheel_cb (time_watcher &w)
+{
+  if (mouse_slip_wheel_speed == 0
+      || mouse_slip_wheel_speed < 0 ? scr_page (DN, -mouse_slip_wheel_speed)
+                                    : scr_page (UP,  mouse_slip_wheel_speed))
+    {
+      refresh_type |= SMOOTH_REFRESH;
+      want_refresh = 1;
+      w.start (w.at + SCROLLBAR_CONTINUOUS_DELAY);
+    }
+}
+#endif
+
 bool
 rxvt_term::pty_fill ()
 {
@@ -973,11 +1016,11 @@ rxvt_term::x_cb (XEvent &ev)
 #if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
       case KeyRelease:
         {
-          if (! (ev.xkey.state & ControlMask))
-            mouse_slip_wheel_speed = 0;
+          if (!(ev.xkey.state & ControlMask))
+            slip_wheel_ev.stop ();
           else
             {
-              KeySym          ks;
+              KeySym ks;
 
               ks = XKeycodeToKeysym (display->display, ev.xkey.keycode, 0);
               if (ks == XK_Control_L || ks == XK_Control_R)
@@ -1240,13 +1283,11 @@ rxvt_term::x_cb (XEvent &ev)
                       {
                         int dist;
 
-                        pending_scroll_selection=1;
-
                         /* don't clobber the current delay if we are
                          * already in the middle of scrolling.
                          */
-                        if (scroll_selection_delay<=0)
-                          scroll_selection_delay=SCROLLBAR_CONTINUOUS_DELAY;
+                        if (!sel_scroll_ev.active)
+                          sel_scroll_ev.start (NOW + SCROLLBAR_INITIAL_DELAY);
 
                         /* save the event params so we can highlight
                          * the selection in the pending-scroll loop
@@ -1278,7 +1319,8 @@ rxvt_term::x_cb (XEvent &ev)
                         /* we are within the text window, so we
                          * shouldn't be scrolling
                          */
-                        pending_scroll_selection = 0;
+                        if (sel_scroll_ev.active)
+                          sel_scroll_ev.stop();
                       }
 #endif
 #ifdef MOUSE_THRESHOLD
@@ -1505,7 +1547,7 @@ rxvt_term::button_press (XButtonEvent &ev)
           if (upordown)
             {
 #ifndef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
-              scroll_arrow_delay = SCROLLBAR_INITIAL_DELAY;
+              cont_scroll_ev.start (NOW + SCROLLBAR_INITIAL_DELAY);
 #endif
               if (scr_page (upordown < 0 ? UP : DN, 1))
                 {
@@ -1602,7 +1644,8 @@ rxvt_term::button_release (XButtonEvent &ev)
 
     }
 #ifdef SELECTION_SCROLLING
-  pending_scroll_selection=0;
+  if (sel_scroll_ev.active)
+    sel_scroll_ev.stop();
 #endif
   if (ev.window == TermWin.vt)
     {
@@ -1654,18 +1697,20 @@ rxvt_term::button_release (XButtonEvent &ev)
               int i;
               page_dirn v;
 
-              v = (ev.button == Button4) ? UP : DN;
+              v = ev.button == Button4 ? UP : DN;
+
               if (ev.state & ShiftMask)
                 i = 1;
-              else if ((Options & Opt_mouseWheelScrollPage))
+              else if (Options & Opt_mouseWheelScrollPage)
                 i = TermWin.nrow - 1;
               else
                 i = 5;
+
 # ifdef MOUSE_SLIP_WHEELING
               if (ev.state & ControlMask)
                 {
-                  mouse_slip_wheel_speed += (v ? -1 : 1);
-                  mouse_slip_wheel_delay = SCROLLBAR_CONTINUOUS_DELAY;
+                  mouse_slip_wheel_speed += v ? -1 : 1;
+                  slip_wheel_ev.start (NOW + SCROLLBAR_CONTINUOUS_DELAY);
                 }
 # endif
 # ifdef JUMP_MOUSE_WHEEL
@@ -2275,6 +2320,15 @@ rxvt_term::cmd_parse ()
   return flag;
 }
 
+// read the next octet
+unicode_t
+rxvt_term::next_octet ()
+{
+  return cmdbuf_ptr < cmdbuf_endp
+         ? *cmdbuf_ptr++
+         : NOCHAR;
+}
+
 // read the next character
 unicode_t
 rxvt_term::next_char ()
@@ -2315,6 +2369,17 @@ unicode_t
 rxvt_term::cmd_getc ()
 {
   unicode_t c = next_char ();
+
+  if (c == NOCHAR)
+    throw out_of_input;
+
+  return c;
+}
+
+unicode_t
+rxvt_term::cmd_get8 ()
+{
+  unicode_t c = next_octet ();
 
   if (c == NOCHAR)
     throw out_of_input;
@@ -2454,6 +2519,7 @@ rxvt_term::process_nonprinting (unicode_t ch)
         scr_charset_choose (0);
         break;
 
+#ifdef EIGHT_BIT_CONTROLS
       // 8-bit controls
       case 0x90: 	/* DCS */
         process_dcs_seq ();
@@ -2464,6 +2530,7 @@ rxvt_term::process_nonprinting (unicode_t ch)
       case 0x9d: 	/* CSI */
         process_osc_seq ();
         break;
+#endif
     }
 }
 /*}}} */
@@ -3091,39 +3158,36 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
 unsigned char *
 rxvt_term::get_to_st (unicode_t &ends_how)
 {
-  int seen_esc = 0;	/* seen escape? */
+  unicode_t prev = 0, ch;
   unsigned int n = 0;
   unsigned char *s;
-  unicode_t ch;
   unsigned char string[STRING_MAX];
 
-  while ((ch = cmd_getc ()))
+  while ((ch = cmd_getc ()) != NOCHAR)
     {
-      if (ch == C0_BEL || ch == CHAR_ST)
-        break;
-
-      if (seen_esc)
-        if (ch == 0x5c)	/* 7bit ST */
-          break;
-        else
-          return NULL;
-
-      if (ch == C0_ESC)
+      if (prev == C0_ESC)
         {
-          seen_esc = 1;
-          continue;
+          if (ch == 0x5c)	/* 7bit ST */
+            break;
+          else
+            return NULL;
         }
-      else if (ch == C0_HT)
-        ch = ' ';	/* translate '\t' to space */
-      else if (ch < 0x20 && (ch != C0_LF && ch != C0_CR))
+      else if (ch == C0_BEL || ch == CHAR_ST)
+        break;
+      else if (ch < 0x20)
         return NULL;	/* other control character - exit */
 
       if (n >= sizeof (string) - 1)
         // stop at some sane length
         return NULL;
 
-      string[n++] = ch;
-      seen_esc = 0;
+      if (ch == C0_SYN)
+        {
+          string[n++] = cmd_get8 ();
+          prev = 0;
+        }
+      else
+        string[n++] = prev = ch;
     }
 
   string[n++] = '\0';

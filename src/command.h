@@ -1,12 +1,12 @@
 /*
- * $Id: command.h,v 1.8 2004/04/08 20:22:25 pcg Exp $
+ * $Id: command.h,v 1.10 2004/07/26 18:01:19 root Exp $
  */
 
 #ifndef COMMAND_H_
 #define COMMAND_H_
 
 // STRING_MAX __MUST__ not be larger than what CBUFSIZ can hold.
-#define STRING_MAX	1024	/* max string size for process_rxvt_xterm_seq() */
+#define STRING_MAX	2048	/* max string size for process_rxvt_xterm_seq() */
 
 #define ESC_ARGS	32	/* max # of args for esc sequences */
 
@@ -23,14 +23,10 @@
 # define MULTICLICK_TIME	500
 #endif
 #ifndef SCROLLBAR_INITIAL_DELAY
-# ifdef NEXT_SCROLLER
-#  define SCROLLBAR_INITIAL_DELAY	20
-# else
-#  define SCROLLBAR_INITIAL_DELAY	40
-# endif
+# define SCROLLBAR_INITIAL_DELAY	0.33
 #endif
 #ifndef SCROLLBAR_CONTINUOUS_DELAY
-# define SCROLLBAR_CONTINUOUS_DELAY	2
+# define SCROLLBAR_CONTINUOUS_DELAY	0.05
 #endif
 
 /*
