@@ -328,9 +328,6 @@
 /* Define for second char in devptyXX */
 #undef PTYCHAR2
 
-/* Define if you want Rob Nation's own graphic mode */
-#undef RXVT_GRAPHICS
-
 /* Define if you want your background to use the parent window background */
 #undef TRANSPARENT
 
@@ -390,6 +387,9 @@
 
 /* Define if you want blinking cursor support */
 #undef CURSOR_BLINK
+
+/* Define if you want blinking text support */
+#undef TEXT_BLINK
 
 /* Define if you want to represent unicode characters outside plane 0 */
 #undef UNICODE_3
