@@ -164,7 +164,10 @@ src/test/strings-memmove.c
 
 src/gentables
 src/gencompose
+src/genlinedraw
 src/table/compose.h
+src/table/category.h
+src/table/linedraw.h
 src/table/viscii.h
 src/table/ksc5601_1987_0.h
 src/table/gb2312_1980_0.h
@@ -197,7 +200,7 @@ src/table/iso8859_14.h
 src/table/iso8859_15.h
 src/table/iso8859_16.h
 src/table/jis0201_1976_0.h
-src/table/jis0208_1983_0.h
+src/table/jis0208_1990_0.h
 src/table/jis0212_1990_0.h
 src/table/jis0213_1.h
 src/table/jis0213_2.h
