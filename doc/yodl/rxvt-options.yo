@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-options.yo,v 1.4 2004/02/22 08:36:11 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-options.yo,v 1.5 2004/03/03 01:45:14 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpageoptions()
 
@@ -100,10 +100,6 @@ startdit()
     dit(bf(-st)|bf(+st)) 
 	Display normal (non XTerm/NeXT) scrollbar without/with a trough;
 	resource bf(scrollBar_floating).
-    dit(bf(-mcc)|bf(+mcc))
-	Compile em(multichar_languages): treat multibyte glyphs as single
-	character for backspace, delete and cursor movement keys;
-	resource bf(multibyte_cursor).
     dit(bf(-bc)|bf(+bc))
 	Blink the cursor; resource bf(cursorBlink).
     dit(bf(-iconic)) 

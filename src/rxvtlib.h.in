@@ -199,7 +199,7 @@ typedef enum {
 #define Opt_scrollTtyKeypress   (1LU<<12)
 #define Opt_transparent         (1LU<<13)
 #define Opt_transparent_all     (1LU<<14)
-#define Opt_mc_hack             (1LU<<15)
+#define Opt_15                  (1LU<<15) // UNALLOCATED
 #define Opt_tripleclickwords    (1LU<<16)
 #define Opt_scrollWithBuffer    (1LU<<17)
 #define Opt_jumpScroll          (1LU<<18)

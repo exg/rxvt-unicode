@@ -117,10 +117,6 @@ resource \fBscrollBar_right\fP\&.
 .IP "\fB-st\fP|\fB+st\fP" 
 Display normal (non XTerm/NeXT) scrollbar without/with a trough;
 resource \fBscrollBar_floating\fP\&.
-.IP "\fB-mcc\fP|\fB+mcc\fP" 
-Compile \fImultichar_languages\fP: treat multibyte glyphs as single
-character for backspace, delete and cursor movement keys;
-resource \fBmultibyte_cursor\fP\&.
 .IP "\fB-bc\fP|\fB+bc\fP" 
 Blink the cursor; resource \fBcursorBlink\fP\&.
 .IP "\fB-iconic\fP" 
@@ -406,12 +402,6 @@ of seconds of inactivity\&.
 \fBFalse\fP: the pointer is always visible [default]\&.
 .IP "\fBpointerBlankDelay:\fP \fInumber\fP" 
 Specifies number of seconds before blanking the pointer [default 2]\&.
-.IP "\fBmultibyte_cursor:\fP \fIboolean\fP" 
-\fBTrue\fP: consider multibyte glyphs as single character for backspace,
-delete and cursor movement keys;
-option \fB-mcc\fP\&.
-\fBFalse\fP: move through all components of all glyphs;
-option \fB+mcc\fP\&.
 .IP "\fBbackspacekey:\fP \fIstring\fP" 
 The string to send when the backspace key is pressed\&.  If set to
 \fBDEC\fP or unset it will send \fBDelete\fP (code 127) or, if shifted,

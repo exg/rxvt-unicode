@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-resources.yo,v 1.4 2004/02/22 08:36:11 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-resources.yo,v 1.5 2004/03/03 01:45:14 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpagesection(RESOURCES (available also as long-options))
 
@@ -220,12 +220,6 @@ startdit()
 	bf(False): the pointer is always visible [default].
     dit(bf(pointerBlankDelay:) em(number))
 	Specifies number of seconds before blanking the pointer [default 2].
-    dit(bf(multibyte_cursor:) em(boolean))
-	bf(True): consider multibyte glyphs as single character for backspace,
-	delete and cursor movement keys;
-	option bf(-mcc).
-	bf(False): move through all components of all glyphs;
-	option bf(+mcc).
     dit(bf(backspacekey:) em(string))
 	The string to send when the backspace key is pressed.  If set to
 	bf(DEC) or unset it will send bf(Delete) (code 127) or, if shifted,
