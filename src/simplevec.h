@@ -269,3 +269,4 @@ bool operator< (const simplevec<T> &v1, const simplevec<T> &v2)
 }
 
 #endif
+
