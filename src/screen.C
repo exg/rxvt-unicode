@@ -2692,8 +2692,7 @@ rxvt_term::selection_clear ()
   D_SELECT ((stderr, "rxvt_selection_clear ()"));
 
   want_refresh = 1;
-  if (selection.text)
-    free (selection.text);
+  free (selection.text);
   selection.text = NULL;
   selection.len = 0;
   CLEAR_SELECTION ();
