@@ -318,9 +318,11 @@ rxvt_term::lookup_key (XKeyEvent &ev)
           // at the point of XOpenIM, so temporarily switch locales
           if (rs[Rs_imLocale])
             SET_LOCALE (rs[Rs_imLocale]);
+
           // assume wchar_t == unicode or better
           len = XwcLookupString (Input_Context, &ev, wkbuf,
                                  KBUFSZ, &keysym, &status_return);
+
           if (rs[Rs_imLocale])
             SET_LOCALE (locale);
 
@@ -3590,7 +3592,7 @@ rxvt_term::get_to_st (unicode_t &ends_how)
 
       seen_esc = false;
 
-      if (n >= sizeof (string) - 1)
+      if (n >= STRING_MAX - 1)
         // stop at some sane length
         return NULL;
 

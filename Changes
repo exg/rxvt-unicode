@@ -1,5 +1,4 @@
 TODO: do font request caching, might help rxvtd on some machines
-TODO: manpage 900mb update
 TODO: safer command: keymap processing.
 TODO: "slow" rendering mode for bidi and scripts
 TODO: read property sequence is broken with respect to utf-8 etc.
@@ -12,6 +11,12 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
+5.3  Sun Mar 13 00:20:44 CET 2005
+	- fix a bug that allowed to overflow a buffer via a long
+          escape sequence, which is probably exploitable (fix by
+          Rob Holland / Yoann Vandoorselaere / Gentoo Audit Team).
+        - Custom key mappings no longer confuse mouse buttons
+          with modifiers.
 	- use XmbSetWMProperties instead of XSetWMProperties.
 	- properly update WM_LOCALE.
         - implement _NET_WM_PING protocol.

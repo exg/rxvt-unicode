@@ -262,6 +262,8 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
 {
   assert (hash[0] == 0 && "register_done() need to be called");
 
+  state &= OtherModMask; // mask out uninteresting modifiers
+
   if (state & term->ModMetaMask)    state |= MetaMask;
   if (state & term->ModNumLockMask) state |= NumLockMask;
   if (state & term->ModLevel3Mask)  state |= Level3Mask;
