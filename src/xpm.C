@@ -352,6 +352,7 @@ rxvt_term::set_bgPixmap (const char *file)
       XFreePixmap (display->display, bgPixmap.pixmap);
       bgPixmap.pixmap = None;
     }
+
   XSetWindowBackground (display->display, TermWin.vt, pix_colors[Color_bg]);
 
   if (*file != '\0')
@@ -383,7 +384,7 @@ rxvt_term::set_bgPixmap (const char *file)
           if ((p = strchr (file, ';')) == NULL)
             p = strchr (file, '\0');
 
-          rxvt_warn ("couldn't load XPM file \"%.*s\", ignoring.", (p - file), file);
+          rxvt_warn ("couldn't load XPM file \"%.*s\", ignoring.\n", (p - file), file);
         }
 
       free (f);
