@@ -1069,7 +1069,7 @@ rxvt_fontset::realize_font (int i)
   return true;
 }
 
-void
+bool
 rxvt_fontset::populate (const char *desc)
 {
   clear ();
@@ -1091,12 +1091,11 @@ rxvt_fontset::populate (const char *desc)
     }
 
   if ((int)fonts.size () <= base_id || !realize_font (base_id))
-    {
-      fprintf (stderr, "unable to load a base font, please provide one using -fn fontname\n");
-      exit (1);
-    }
+    return false;
 
   base_prop = fonts[base_id]->properties ();
+
+  return true;
 }
 
 int

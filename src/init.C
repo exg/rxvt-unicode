@@ -666,12 +666,6 @@ rxvt_term::init_resources (int argc, const char *const *argv)
                    rs[Rs_scrollBar_thickness]);
 #endif
 
-  TermWin.fontset = new rxvt_fontset (this);
-  TermWin.fontset->populate (rs[Rs_font]);
-  TermWin.fwidth  = TermWin.fontset->base_font ()->width;
-  TermWin.fheight = TermWin.fontset->base_font ()->height;
-  TermWin.fbase   = TermWin.fontset->base_font ()->ascent;
-
 #ifdef XTERM_REVERSE_VIDEO
   /* this is how xterm implements reverseVideo */
   if (Options & Opt_reverseVideo)
@@ -1139,7 +1133,13 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   /* grab colors before netscape does */
   Get_Colours ();
 
-  change_font (1, NULL);
+  if (!change_font (rs[Rs_font]))
+    {
+      fprintf (stderr, "unable to load a base font, please provide one using -fn fontname\n");
+      destroy ();
+      return;
+    }
+
   window_calc (0, 0);
   old_width = szHint.width;
   old_height = szHint.height;

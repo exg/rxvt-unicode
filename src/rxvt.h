@@ -369,6 +369,7 @@ enum {
 /*
  * rxvt extensions of XTerm OSCs: ESC ] Ps;Pt (ST|BEL)
  */
+#define XTerm_locale		 9	/* change locale */
 #define XTerm_Menu              10      /* set menu item */
 #define XTerm_Pixmap            20      /* new bg pixmap */
 #define XTerm_restoreFG         39      /* change default fg color */
@@ -1188,8 +1189,8 @@ struct rxvt_term : rxvt_vars {
   void privileges (int mode);
   void privileged_utmp (char action);
   void privileged_ttydev (char action);
-  void change_font (int init, const char *fontname);
-  void font_up_down (int n, int direction);
+  bool change_font (const char *fontname);
+  bool font_up_down (int n, int direction);
   void set_title (const char *str);
   void set_iconName (const char *str);
   void set_window_color (int idx, const char *color);

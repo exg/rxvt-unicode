@@ -143,12 +143,12 @@ rxvt_term::lookup_key (XKeyEvent &ev)
         {
           if (keysym == ks_bigfont)
             {
-              change_font (0, FONT_UP);
+              change_font (FONT_UP);
               return;
             }
           else if (keysym == ks_smallfont)
             {
-              change_font (0, FONT_DN);
+              change_font (FONT_DN);
               return;
             }
         }
@@ -231,10 +231,10 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                     return;
                     /* rxvt extras */
                   case XK_KP_Add:	/* Shift+KP_Add = bigger font */
-                    change_font (0, FONT_UP);
+                    change_font (FONT_UP);
                     return;
                   case XK_KP_Subtract:	/* Shift+KP_Subtract = smaller font */
-                    change_font (0, FONT_DN);
+                    change_font (FONT_DN);
                     return;
                 }
             }
@@ -2973,6 +2973,7 @@ rxvt_term::process_osc_seq ()
  *      50 = change font
  *
  * rxvt extensions:
+ *       9 = change locale (NYI)
  *      10 = menu (may change in future)
  *      20 = bg pixmap
  *      39 = change default fg color
@@ -3073,7 +3074,10 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
       case XTerm_logfile:
         break;
       case XTerm_font:
-        change_font (0, str);
+        change_font (str);
+        break;
+      case XTerm_locale:
+        /* TODO */
         break;
 #if 0
       case XTerm_dumpscreen:	/* no error notices */

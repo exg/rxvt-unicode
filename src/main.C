@@ -717,13 +717,43 @@ rxvt_term::tt_winch ()
  * fontname == FONT_UP  - switch to bigger font
  * fontname == FONT_DN  - switch to smaller font
  */
-void
-rxvt_term::change_font (int init, const char *fontname)
-{}
+bool
+rxvt_term::change_font (const char *fontname)
+{
+  if (fontname == FONT_UP)
+    {
+      // TODO
+    }
+  else if (fontname == FONT_DN)
+    {
+      // TODO
+    }
+  else
+    {
+      rxvt_fontset *fs = new rxvt_fontset (this);
 
-void
+      if (fs && fs->populate (fontname))
+        {
+          delete TermWin.fontset;
+          TermWin.fontset = fs;
+          TermWin.fwidth  = fs->base_font ()->width;
+          TermWin.fheight = fs->base_font ()->height;
+          TermWin.fbase   = fs->base_font ()->ascent;
+
+          // TODO: screen needs to be told about new fonts
+          
+          return true;
+        }
+    }
+
+  return false;
+}
+
+bool
 rxvt_term::font_up_down (int n, int direction)
-{}
+{
+  return false;
+}
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
