@@ -5,12 +5,8 @@
 
 
 struct rxvt_codeset_conv_iso8859_1 : rxvt_codeset_conv {
-  uint32_t from_unicode (uint32_t unicode) const {
+  uint32_t from_unicode (unicode_t unicode) const {
     if (unicode <= 0x00ff) return unicode;
-    return NOCHAR;
-  }
-  uint32_t to_unicode (uint32_t enc) const {
-    if (enc <= 0x00ff) return enc;
     return NOCHAR;
   }
 } rxvt_codeset_conv_iso8859_1;
