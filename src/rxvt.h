@@ -298,27 +298,27 @@ enum {
 enum {
   C_RELATIVE = 1    ,       /* col movement is relative */
   R_RELATIVE =     2,       /* row movement is relative */
-  RELATIVE   = 1 | 2
+  RELATIVE   = 1 | 2,
 };
 
 /* modes for rxvt_scr_insdel_chars (), rxvt_scr_insdel_lines () */
 enum {
   INSERT = -1,				/* don't change these values */
   DELETE = +1,
-  ERASE  = +2
+  ERASE  = +2,
 };
 
 /* modes for rxvt_scr_page () - scroll page. used by scrollbar window */
 enum page_dirn {
   UP,
   DN,
-  NO_DIR
+  NO_DIR,
 };
 
 /* arguments for rxvt_scr_change_screen () */
 enum {
   PRIMARY = 0,
-  SECONDARY
+  SECONDARY,
 };
 
 #define RS_None                 0               /* Normal */
@@ -352,7 +352,7 @@ enum {
           C0_SOH, C0_STX, C0_ETX, C0_EOT, C0_ENQ, C0_ACK, C0_BEL,
   C0_BS , C0_HT , C0_LF , C0_VT , C0_FF , C0_CR , C0_SO , C0_SI ,
   C0_DLE, C0_DC1, C0_DC2, D0_DC3, C0_DC4, C0_NAK, C0_SYN, C0_ETB,
-  C0_CAN, C0_EM , C0_SUB, C0_ESC, C0_IS4, C0_IS3, C0_IS2, C0_IS1
+  C0_CAN, C0_EM , C0_SUB, C0_ESC, C0_IS4, C0_IS3, C0_IS2, C0_IS1,
 }; 
 #define CHAR_ST                 0x9c    /* 0234 */
 
@@ -360,27 +360,38 @@ enum {
  * XTerm Operating System Commands: ESC ] Ps;Pt (ST|BEL)
  * colour extensions by Christian W. Zuckschwerdt <zany@triq.net>
  */
-#define XTerm_name              0
-#define XTerm_iconName          1
-#define XTerm_title             2
-#define XTerm_Color             4       /* change colors */
-#define XTerm_Color_cursor      12      /* change actual 'Cursor' color */
-#define XTerm_Color_pointer     13      /* change actual 'Pointer' color */
-#define XTerm_Color_RV          17      /* change actual 'Highlight' color */
-#define XTerm_Color_BD          18      /* change actual 'Bold' color */
-#define XTerm_Color_UL          19      /* change actual 'Underline' color */
-#define XTerm_logfile           46      /* not implemented */
-#define XTerm_font              50
+enum {
+  XTerm_name             =  0,
+  XTerm_iconName         =  1,
+  XTerm_title            =  2,
+  XTerm_property         =  3,      /* change X property, not yet implemented */
+  XTerm_Color            =  4,      /* change colors */
+  XTerm_Color00          = 10,      /* not implemented, CLASH! */
+  XTerm_Color01          = 11,      /* not implemented */
+  XTerm_Color_cursor     = 12,      /* change actual 'Cursor' color */
+  XTerm_Color_pointer    = 13,      /* change actual 'Pointer' color */
+  XTerm_Color04          = 14,      /* not implemented */
+  XTerm_Color05          = 15,      /* not implemented */
+  XTerm_Color06          = 16,      /* not implemented */
+  XTerm_Color_RV         = 17,      /* change actual 'Highlight' color */
+  XTerm_logfile          = 46,      /* not implemented */
+  XTerm_font             = 50,
 
-/*
- * rxvt extensions of XTerm OSCs: ESC ] Ps;Pt (ST|BEL)
- */
-#define XTerm_locale		 9	/* change locale */
-#define XTerm_Menu              10      /* set menu item */
-#define XTerm_Pixmap            20      /* new bg pixmap */
-#define XTerm_restoreFG         39      /* change default fg color */
-#define XTerm_restoreBG         49      /* change default bg color */
-#define XTerm_dumpscreen        55      /* dump scrollback and all of screen */
+  XTerm_konsole30        = 30,      /* reserved for konsole */
+  XTerm_konsole31        = 31,      /* reserved for konsole */
+  XTerm_emacs51          = 51,      /* reserved for emacs shell */
+  /*
+   * rxvt extensions of XTerm OSCs: ESC ] Ps;Pt (ST|BEL)
+   */
+  XTerm_locale		=  9,      /* change locale */
+  XTerm_Menu             = 10,     /* set menu item */
+  XTerm_Color_BD         = 18,     /* change actual 'Bold' color */
+  XTerm_Color_UL         = 19,     /* change actual 'Underline' color */
+  XTerm_Pixmap           = 20,     /* new bg pixmap */
+  XTerm_restoreFG        = 39,     /* change default fg color */
+  XTerm_restoreBG        = 49,     /* change default bg color */
+  XTerm_dumpscreen       = 55,     /* dump scrollback and all of screen */
+};
 
 /* Words starting with `Color_' are colours.  Others are counts */
 /*
