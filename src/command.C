@@ -1389,12 +1389,6 @@ rxvt_term::x_cb (XEvent &ev)
 #endif
         break;
 
-      case PropertyNotify:
-        if (ev.xproperty.atom == xa[XA_VT_SELECTION])
-          if (ev.xproperty.state == PropertyNewValue)
-            selection_property (ev.xproperty.window, ev.xproperty.atom);
-        break;
-
 #ifdef TRANSPARENT
       case ReparentNotify:
         rootwin_cb (ev);
@@ -1550,33 +1544,44 @@ rxvt_term::x_cb (XEvent &ev)
     }
 }
 
-#ifdef TRANSPARENT
 void
 rxvt_term::rootwin_cb (XEvent &ev)
 {
   SET_R (this);
   SET_LOCALE (locale);
 
-  if (ev.type == PropertyNotify)
+  switch (ev.type)
     {
-      /*
-       * if user used some Esetroot compatible prog to set the root bg,
-       * use the property to determine the pixmap.  We use it later on.
-       */
-      if (xa[XA_XROOTPMAPID] == 0)
-        xa[XA_XROOTPMAPID] = XInternAtom(display->display, "_XROOTPMAP_ID", False);
+      case PropertyNotify:
+        if (ev.xproperty.atom == xa[XA_VT_SELECTION])
+          {
+            if (ev.xproperty.state == PropertyNewValue)
+              selection_property (ev.xproperty.window, ev.xproperty.atom);
+            break;
+          }
+#ifdef TRANSPARENT
+        else
+          {
+            /*
+             * if user used some Esetroot compatible prog to set the root bg,
+             * use the property to determine the pixmap.  We use it later on.
+             */
+            if (xa[XA_XROOTPMAPID] == 0)
+              xa[XA_XROOTPMAPID] = XInternAtom(display->display, "_XROOTPMAP_ID", False);
 
-      if (ev.xproperty.atom != xa[XA_XROOTPMAPID])
-        return;
-    }
+            if (ev.xproperty.atom != xa[XA_XROOTPMAPID])
+              return;
+          }
 
-  if ((Options & Opt_transparent) && check_our_parents ())
-    {
-      if (am_transparent)
-        want_full_refresh = 1;
+        /* FALLTHROUGH */
+      case ReparentNotify:
+        if ((Options & Opt_transparent) && check_our_parents ())
+          if (am_transparent)
+            want_full_refresh = 1;
+        break;
+#endif
     }
 }
-#endif
 
 void
 rxvt_term::button_press (const XButtonEvent &ev)

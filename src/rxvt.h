@@ -1073,10 +1073,8 @@ struct rxvt_term : rxvt_vars {
 
   void flush ();
 
-#ifdef TRANSPARENT
   void rootwin_cb (XEvent &xev);
   xevent_watcher rootwin_ev;
-#endif
 
   void x_cb (XEvent &xev);
   xevent_watcher termwin_ev;

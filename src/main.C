@@ -74,9 +74,7 @@ rxvt_term::operator delete (void *p, size_t s)
 
 rxvt_term::rxvt_term ()
     :
-#ifdef TRANSPARENT
     rootwin_ev (this, &rxvt_term::rootwin_cb),
-#endif
     termwin_ev (this, &rxvt_term::x_cb),
     vt_ev (this, &rxvt_term::x_cb),
 #ifdef HAVE_SCROLLBARS
@@ -277,10 +275,12 @@ rxvt_term::init (int argc, const char *const *argv)
   if (Options & Opt_transparent)
     {
       XSelectInput (display->display, display->root, PropertyChangeMask);
-      rootwin_ev.start (display, display->root);
       check_our_parents ();
     }
 #endif
+
+  rootwin_ev.start (display, display->root);
+
   XMapWindow (display->display, TermWin.vt);
   XMapWindow (display->display, TermWin.parent[0]);
 
