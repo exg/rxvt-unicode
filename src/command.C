@@ -373,14 +373,14 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                   case XK_Right:	/* "\033[C" */
                   case XK_Left:	/* "\033[D" */
                     STRCPY (kbuf, "\033[Z");
-                    kbuf[2] = ("DACB"[keysym - XK_Left]);
+                    kbuf[2] = "DACB"[keysym - XK_Left];
                     /* do Shift first */
                     if (shft)
-                      kbuf[2] = ("dacb"[keysym - XK_Left]);
+                      kbuf[2] = "dacb"[keysym - XK_Left];
                     else if (ctrl)
                       {
                         kbuf[1] = 'O';
-                        kbuf[2] = ("dacb"[keysym - XK_Left]);
+                        kbuf[2] = "dacb"[keysym - XK_Left];
                       }
                     else if (PrivateModes & PrivMode_aplCUR)
                       kbuf[1] = 'O';
