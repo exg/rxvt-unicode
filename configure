@@ -1038,6 +1038,7 @@ Optional Features:
   --enable-lastlog        enable lastlog support (requires --enable-utmp)
   --enable-xpm-background enable XPM background pixmaps
   --enable-transparency   enable transparent backgrounds
+  --enable-tinting        enable tinting of transparent bg
   --enable-menubar        enable menubar
   --enable-rxvt-scroll    enable rxvt style scrollbar
   --enable-next-scroll    enable NeXT style scrollbar
@@ -5032,7 +5033,7 @@ test "x$enable_libtool_lock" != xno && enable_libtool_lock=yes
 case "$host" in
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5035 "configure"' > conftest.$ac_ext
+  echo '#line 5036 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -5583,7 +5584,7 @@ chmod -w .
 save_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -o out/conftest2.$ac_objext"
 compiler_c_o=no
-if { (eval echo configure:5586: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>out/conftest.err; } && test -s out/conftest2.$ac_objext; then
+if { (eval echo configure:5587: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>out/conftest.err; } && test -s out/conftest2.$ac_objext; then
   # The compiler can only warn and ignore the option if not recognized
   # So say no if there are warnings
   if test -s out/conftest.err; then
@@ -7199,7 +7200,7 @@ else
     lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 7202 "configure"
+#line 7203 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -7297,7 +7298,7 @@ else
     lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 7300 "configure"
+#line 7301 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -8030,6 +8031,7 @@ support_addstrings=no
 support_frills=no
 support_linespace=no
 support_inheritpixmap=no
+support_tinting=no
 support_keepscrolling=no
 support_selectionscrolling=no
 support_menubar=no
@@ -8071,6 +8073,7 @@ if test "${enable_everything+set}" = set; then
     support_frills=yes
     support_linespace=yes
     support_inheritpixmap=yes
+    support_tinting=yes
     support_keepscrolling=yes
     support_selectionscrolling=yes
     support_lastlog=yes
@@ -8156,6 +8159,14 @@ if test "${enable_transparency+set}" = set; then
   enableval="$enable_transparency"
   if test x$enableval = xyes -o x$enableval = xno; then
     support_inheritpixmap=$enableval
+  fi
+fi;
+
+# Check whether --enable-tinting or --disable-tinting was given.
+if test "${enable_tinting+set}" = set; then
+  enableval="$enable_tinting"
+  if test x$enableval = xyes -o x$enableval = xno; then
+    support_tinting=$enableval
   fi
 fi;
 
@@ -8850,9 +8861,12 @@ fi
 
 
 
-echo "$as_me:$LINENO: checking for X" >&5
+
+if test "x$ac_path_x_has_been_run" != xyes; then
+  echo "$as_me:$LINENO: checking for X" >&5
 echo $ECHO_N "checking for X... $ECHO_C" >&6
 
+ac_path_x_has_been_run=yes
 
 # Check whether --with-x or --without-x was given.
 if test "${with_x+set}" = set; then
@@ -8945,7 +8959,7 @@ ac_x_header_dirs='
 /usr/openwin/share/include'
 
 if test "$ac_x_includes" = no; then
-  # Guess where to find include files, by looking for Intrinsic.h.
+  # Guess where to find include files, by looking for a specified header file.
   # First, try using that file with no special directory specified.
   cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
@@ -9079,10 +9093,15 @@ else
   # Update the cache value to reflect the command line values.
   ac_cv_have_x="have_x=yes \
 		ac_x_includes=$x_includes ac_x_libraries=$x_libraries"
-  echo "$as_me:$LINENO: result: libraries $x_libraries, headers $x_includes" >&5
-echo "${ECHO_T}libraries $x_libraries, headers $x_includes" >&6
+  # It might be that x_includes is empty (headers are found in the
+  # standard search path. Then output the corresponding message
+  ac_out_x_includes=$x_includes
+  test "x$x_includes" = x && ac_out_x_includes="in standard search path"
+  echo "$as_me:$LINENO: result: libraries $x_libraries, headers $ac_out_x_includes" >&5
+echo "${ECHO_T}libraries $x_libraries, headers $ac_out_x_includes" >&6
 fi
 
+fi
 if test "$no_x" = yes; then
   # Not all programs may use this symbol, but it does not hurt to define it.
 
@@ -16212,6 +16231,13 @@ if test $ac_cv_lib_xpg4_setlocale = yes; then
 fi
 
 
+if test x$support_tinting = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define TINTING 1
+_ACEOF
+
+fi
 if test x$support_inheritpixmap = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
