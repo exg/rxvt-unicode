@@ -9,6 +9,7 @@
 
 rxvt_display::rxvt_display (const char *name)
 : x_watcher (this, &rxvt_display::x_event)
+, selection_owner (0)
 {
   this->name = STRDUP (name);
 }
@@ -89,6 +90,14 @@ void rxvt_display::unreg (xevent_watcher *w)
 {
   if (w->active)
     xw[w->active - 1] = 0;
+}
+
+void rxvt_display::set_selection_owner (rxvt_term *owner)
+{
+  if (selection_owner && selection_owner != owner)
+    selection_owner->selection_clear ();
+
+  selection_owner = owner;
 }
 
 /////////////////////////////////////////////////////////////////////////////

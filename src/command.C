@@ -1362,7 +1362,7 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case SelectionClear:
-        selection_clear ();
+        display->set_selection_owner (0);
         break;
 
       case SelectionNotify:

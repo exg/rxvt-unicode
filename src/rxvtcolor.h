@@ -14,13 +14,15 @@
 
 #include "callback.h"
 
-struct rxvt_vars;
+struct rxvt_term;
 
 struct xevent_watcher;
 
 struct rxvt_display {
   int referenced;
   char *name;
+
+  rxvt_term *selection_owner;
   
   io_manager_vec<xevent_watcher> xw;
   io_watcher x_watcher; void x_event (io_watcher &w, short revents);
@@ -41,6 +43,8 @@ struct rxvt_display {
 
   rxvt_display (const char *name);
   ~rxvt_display ();
+
+  void set_selection_owner (rxvt_term *owner);
 };
 
 struct xevent_watcher : watcher, callback1<void, XEvent &> {

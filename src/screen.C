@@ -2833,10 +2833,11 @@ rxvt_term::selection_make (Time tm)
 
   selection.text = new_selection_text;
 
-  XSetSelectionOwner(display->display, XA_PRIMARY, TermWin.vt, tm);
-  if (XGetSelectionOwner(display->display, XA_PRIMARY) != TermWin.vt)
+  XSetSelectionOwner (display->display, XA_PRIMARY, TermWin.vt, tm);
+  if (XGetSelectionOwner (display->display, XA_PRIMARY) == TermWin.vt)
+    display->set_selection_owner (this);
+  else
     rxvt_print_error("can't get primary selection");
-
 
   {
     XTextProperty ct;
