@@ -163,6 +163,8 @@ src/test/gettty.c
 src/test/strings-memmove.c
 
 src/gentables
+src/gencompose
+src/table/compose.h
 src/table/viscii.h
 src/table/ksc5601_1987_0.h
 src/table/gb2312_1980_0.h
