@@ -82,6 +82,7 @@ support_xim=no
 support_xpm=no
 support_xft=no
 support_unicode3=no
+support_combining=no
 codesets=
 
 dnl# --------------------------------------------------------------------------
@@ -123,6 +124,7 @@ AC_ARG_ENABLE(everything,
     support_xpm=yes
     support_xft=yes
     support_unicode3=yes
+    support_combining=yes
     codesets=all
   fi])
 
@@ -130,6 +132,12 @@ AC_ARG_ENABLE(unicode3,
   [  --enable-unicode3       use 21 instead of 16 bits to represent unicode characters],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_unicode3=yes
+  fi])
+
+AC_ARG_ENABLE(combining,
+  [  --enable-combining      enable composition of base and combining characters],
+  [if test x$enableval = xyes -o x$enableval = xno; then
+    support_combining=yes
   fi])
 
 AC_ARG_ENABLE(xft,
@@ -1233,8 +1241,11 @@ fi
 if test x$support_unicode3 = xyes; then
   AC_DEFINE(UNICODE_3, 1, Define if you want to represent unicode characters outside plane 0)
 fi
+if test x$support_combining = xyes; then
+  AC_DEFINE(ENCODING_COMPOSE, 1, Define if you want to automatically compose combining characters)
+fi
 if test x$codesets = xall; then
-  codesets=jp,jp-ext,kr,cn,cn-ext,vn
+  codesets=jp,jp-ext,kr,cn,cn-ext
 fi
 for codeset in `echo $codesets | tr "[a-z,\\-]" "[A-Z _]"`; do
   AC_DEFINE(ENCODING_EU, 1, Define if you want european extended codesets)
