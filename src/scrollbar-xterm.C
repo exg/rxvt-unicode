@@ -54,8 +54,8 @@ rxvt_term::scrollbar_show_xterm (int update __attribute__ ((unused)), int last_t
       gcvalue.background = PixColors[Color_bg];
 
       xscrollbarGC = XCreateGC (display->display, scrollBar.win,
-                               GCForeground | GCBackground
-                               | GCFillStyle | GCStipple, &gcvalue);
+                                GCForeground | GCBackground
+                                | GCFillStyle | GCStipple, &gcvalue);
       gcvalue.foreground = PixColors[Color_border];
       ShadowGC = XCreateGC (display->display, scrollBar.win, GCForeground, &gcvalue);
     }

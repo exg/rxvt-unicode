@@ -326,14 +326,13 @@ const char *const def_colorName[] =
 #ifdef OPTION_HC
     NULL,
 #endif
-#if TINTING
-    NULL,
-#endif
 #ifdef KEEP_SCROLLCOLOR
     COLOR_SCROLLBAR,
     COLOR_SCROLLTROUGH,
 #endif                          /* KEEP_SCROLLCOLOR */
-
+#if TINTING
+    NULL,
+#endif
   };
 
 const char *const xa_names[NUM_XA] =
@@ -755,7 +754,16 @@ rxvt_term::set_locale (const char *locale)
 {
 #if HAVE_XSETLOCALE || HAVE_SETLOCALE
   free (this->locale);
-  this->locale = rxvt_strdup (setlocale (LC_CTYPE, locale));
+  this->locale = setlocale (LC_CTYPE, locale);
+
+  if (!this->locale)
+    {
+      rxvt_warn ("unable to set locale \"%s\", using default locale instead.\n", locale);
+      setlocale (LC_CTYPE, "");
+      this->locale = "";
+    }
+
+  this->locale = rxvt_strdup (this->locale);
   SET_LOCALE (this->locale);
   mbstate.reset ();
 #endif
@@ -828,11 +836,11 @@ rxvt_term::init_command (const char *const *argv)
 
   get_ourmods ();
 
-  if (! (Options & Opt_scrollTtyOutput))
+  if (!(Options & Opt_scrollTtyOutput))
     PrivateModes |= PrivMode_TtyOutputInh;
   if (Options & Opt_scrollTtyKeypress)
     PrivateModes |= PrivMode_Keypress;
-  if (! (Options & Opt_jumpScroll))
+  if (!(Options & Opt_jumpScroll))
     PrivateModes |= PrivMode_smoothScroll;
 
 #ifndef NO_BACKSPACE_KEY
@@ -932,13 +940,13 @@ rxvt_term::Get_Colours ()
 
   if (XDEPTH <= 2)
     {  /* Monochrome */
-      PixColors[Color_scroll] = PixColors[Color_fg];
-      PixColors[Color_topShadow] = PixColors[Color_bg];
+      PixColors[Color_scroll]       = PixColors[Color_fg];
+      PixColors[Color_topShadow]    = PixColors[Color_bg];
       PixColors[Color_bottomShadow] = PixColors[Color_bg];
     }
   else
     {
-      rxvt_color          xcol[3];
+      rxvt_color xcol[3];
       /* xcol[0] == white
        * xcol[1] == top shadow
        * xcol[2] == bot shadow */
@@ -1176,7 +1184,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   /* the vt window */
   TermWin.vt = XCreateSimpleWindow (display->display, TermWin.parent[0],
-                                   window_vt_x, window_vt_y,
+                                   window_vt_x,
+                                   window_vt_y,
                                    TermWin_TotalWidth (),
                                    TermWin_TotalHeight (),
                                    0,

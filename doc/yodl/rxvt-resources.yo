@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-resources.yo,v 1.12 2004/04/02 19:15:57 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-resources.yo,v 1.13 2004/06/21 22:24:07 root Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpagesection(RESOURCES (available also as long-options))
 
@@ -109,7 +109,7 @@ startdit()
 	is xterm style with 2.20 old word selection, or anything else which
 	gives xterm style selection.
     dit(bf(scrollstyle:) em(mode))
-	Set scrollbar style to bf(RXVTNAME()), bf(next) or bf(xterm)
+	Set scrollbar style to bf(RXVTNAME()), bf(rxvt), bf(plain), bf(next) or bf(xterm)
     dit(bf(title:) em(string))
 	Set window title string, the default title is the command-line
 	specified after the bf(-e) option, if any, otherwise the application
