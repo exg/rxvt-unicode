@@ -42,7 +42,7 @@ if test x$GCC = xyes && test x$GXX = xyes; then
 fi
 AC_SUBST(LINKER,[$LINKER])
 
-CPPFLAGS="-D_GNU_SOURCE -D_XOPEN_SOURCE"
+CPPFLAGS="-D_GNU_SOURCE -D_XOPEN_SOURCE=2"
 
 dnl if test x$GXX = xyes; then
 dnl    CXXFLAGS="$CXXFLAGS" dnl I once had -fno-exceptions, but I am using them now...
