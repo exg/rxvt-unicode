@@ -4,15 +4,25 @@
 	is order dependant.  You can specify this and then disable options
 	which this enables by _following_ this with the appropriate
 	commands.
---enable-languages
-	add support for languages which require multiple character glyphs
-	to display.
---with-encoding=NAME
-	set the default encoding for multi-char glyph languages to NAME.
-	Options are: "eucj" EUC Japanese encoding; "sjis" Shift JIS encoding;
-	"big5" BIG5 encoding; "gb" GB encoding; "kr" EUC Korean encoding;
-	"noenc" no encoding.  This option requires --enable-languages to
-	also be specified.
+--enable-xft
+	add support for xft (anti-aliases, among others) fonts. xft fonts are
+        slower and require lots of memory, but as long as you don't use them,
+        you don't pay for them.
+--with-codesets=NAME,...
+	compile in support for additional codeset groups:
+        jp	common japanese encodings
+        jp_ext	rarely used but big japanese encodings
+        kr	korean encodings
+        cn	common chinese encodings
+        cn_ext	rarely used but very big chinese encodigs
+        vn	vietnamese (not well-supported, though)
+        all	all of the above.
+--enable-unicode3
+	enable support for unicode codepoints above 65535 (the basic
+        multilingual page). This increases storage requirements per character
+        from 2 to 4 bytes and is not too useful as font support in X11 and Xft
+        is largely missing, although cut & paste will work correctly, as will
+        displaying, if you have the right font(s).
 --enable-utmp
 	write user and tty to utmp file (used by programs like ``w'') at
 	start of rxvt execution and delete information when rxvt exits.
