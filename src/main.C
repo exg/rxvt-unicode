@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.19 2003/12/24 09:22:29 pcg Exp $
+ * $Id: main.C,v 1.20 2004/01/16 16:34:56 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -638,7 +638,7 @@ rxvt_term::window_calc (unsigned int width, unsigned int height)
 void
 rxvt_term::tt_winch ()
 {
-  struct winsize  ws;
+  struct winsize ws;
 
   if (cmd_fd < 0)
     return;

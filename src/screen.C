@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*--------------------------------------*
  * File:        screen.c
  *---------------------------------------------------------------------------*
- * $Id: screen.C,v 1.14 2003/12/26 07:42:23 pcg Exp $
+ * $Id: screen.C,v 1.15 2004/01/16 16:34:56 pcg Exp $
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
  *
@@ -449,8 +449,8 @@ rxvt_term::scr_release()
     }
 #endif
 
-  delete talloc;
-  delete ralloc;
+  delete talloc; talloc = 0;
+  delete ralloc; ralloc = 0;
 
   free (screen.text);
   free (screen.tlen);
