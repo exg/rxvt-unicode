@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.8 2003/11/26 10:42:34 pcg Exp $
+ * $Id: command.C,v 1.9 2003/11/27 10:12:10 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -706,6 +706,8 @@ rxvt_term::process_x_events ()
 void
 rxvt_term::blink_cb (time_watcher &w)
 {
+  SET_R (this);
+
   w.at += BLINK_INTERVAL;
   hidden_cursor = !hidden_cursor;
   want_refresh = 1;
@@ -715,6 +717,8 @@ rxvt_term::blink_cb (time_watcher &w)
 void
 rxvt_term::x_cb (io_watcher &w, short revents)
 {
+  SET_R (this);
+
   process_x_events ();
 
   flush ();
@@ -794,13 +798,14 @@ rxvt_term::pty_fill ()
   else if (n < 0 && errno == EAGAIN)
     return false;
 
-  rxvt_clean_exit ();
-  exit (EXIT_FAILURE);	/* bad order of events? */
+  destroy ();
 }
 
 void
 rxvt_term::pty_cb (io_watcher &w, short revents)
 {
+  SET_R (this);
+
   // loop, but don't allow a single term to monopolize us
   // the number of loops is fully arbitrary, and thus wrong
   for (int i = 7; i-- && pty_fill (); )
@@ -1045,6 +1050,8 @@ rxvt_term::pointer_blank ()
 void
 rxvt_term::pointer_cb (time_watcher &w)
 {
+  SET_R (this);
+
   pointer_blank ();
 }
 #endif
@@ -1251,10 +1258,10 @@ rxvt_process_x_event(pR_ XEvent *ev)
     case ClientMessage:
 	if (ev->xclient.format == 32
 	    && (Atom)ev->xclient.data.l[0] == R->xa[XA_WMDELETEWINDOW])
-	    exit(EXIT_SUCCESS);
+          R->destroy ();
 #ifdef OFFIX_DND
     /* OffiX Dnd (drag 'n' drop) protocol */
-	if (ev->xclient.message_type == R->xa[XA_DNDPROTOCOL]
+        else if (ev->xclient.message_type == R->xa[XA_DNDPROTOCOL]
 	    && (ev->xclient.data.l[0] == DndFile
 		|| ev->xclient.data.l[0] == DndDir
 		|| ev->xclient.data.l[0] == DndLink)) {

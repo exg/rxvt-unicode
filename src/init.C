@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        init.c
  *----------------------------------------------------------------------*
- * $Id: init.C,v 1.7 2003/11/26 10:42:34 pcg Exp $
+ * $Id: init.C,v 1.8 2003/11/27 10:12:10 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -1303,27 +1303,8 @@ rxvt_run_command(pR_ const char *const *argv)
     else
 #endif
         er = -1;
+
     rxvt_get_ttymode(&(R->tio), er);
-
-/* install exit handler for cleanup */
-#ifdef HAVE_ATEXIT
-    atexit(rxvt_clean_exit);
-#else
-# ifdef HAVE_ON_EXIT
-    on_exit(rxvt_clean_exit, NULL);     /* non-ANSI exit handler */
-# endif
-#endif
-
-    signal(SIGHUP, rxvt_Exit_signal);
-#ifndef __svr4__
-    signal(SIGINT, rxvt_Exit_signal);
-#endif
-    signal(SIGQUIT, rxvt_Exit_signal);
-    signal(SIGTERM, rxvt_Exit_signal);
-    signal(SIGCHLD, rxvt_Child_signal);
-
-/* need to trap SIGURG for SVR4 (Unixware) rlogin */
-/* signal (SIGURG, SIG_DFL); */
 
 #ifndef __QNX__
 /* spin off the command interpreter */
@@ -1417,17 +1398,17 @@ rxvt_run_child(pR_ const char *const *argv)
     }
 
 /* reset signals and spin off the command interpreter */
-    signal(SIGINT, SIG_DFL);
-    signal(SIGQUIT, SIG_DFL);
-    signal(SIGCHLD, SIG_DFL);
+    signal (SIGINT,  SIG_DFL);
+    signal (SIGQUIT, SIG_DFL);
+    signal (SIGCHLD, SIG_DFL);
 /*
  * mimick login's behavior by disabling the job control signals
  * a shell that wants them can turn them back on
  */
 #ifdef SIGTSTP
-    signal(SIGTSTP, SIG_IGN);
-    signal(SIGTTIN, SIG_IGN);
-    signal(SIGTTOU, SIG_IGN);
+    signal (SIGTSTP, SIG_IGN);
+    signal (SIGTTIN, SIG_IGN);
+    signal (SIGTTOU, SIG_IGN);
 #endif                          /* SIGTSTP */
 
     /* set window size */

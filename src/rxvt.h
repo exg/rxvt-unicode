@@ -1,5 +1,5 @@
 /*
- * $Id: rxvt.h,v 1.7 2003/11/26 10:42:34 pcg Exp $
+ * $Id: rxvt.h,v 1.8 2003/11/27 10:12:10 pcg Exp $
  */
 
 #ifndef _RXVT_H_                /* include once only */
@@ -1115,6 +1115,8 @@ struct rxvt_term : rxvt_vars {
   unsigned char   cmdbuf_base[BUFSIZ];
   unsigned char   kbuf[KBUFSZ];
 
+  void destroy_cb (time_watcher &w); time_watcher destroy_ev;
+
   void pty_cb (io_watcher &w, short revents); io_watcher pty_ev;
   void x_cb   (io_watcher &w, short revents); io_watcher x_ev;
 
@@ -1132,6 +1134,7 @@ struct rxvt_term : rxvt_vars {
 
   rxvt_term ();
   ~rxvt_term ();
+  void destroy ();
 
   bool init (int argc, const char *const *argv);
   bool init_vars ();

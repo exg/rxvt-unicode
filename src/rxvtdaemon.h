@@ -6,7 +6,7 @@
 struct rxvt_connection {
   int fd;
 
-  static const char *unix_sockname ();
+  static char *unix_sockname ();
 
   void send (const char *data, int len);
   void send (const char *data);

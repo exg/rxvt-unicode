@@ -1,13 +1,32 @@
-#include <unistd.h>
 #include <stdint.h>
 #include <cstdlib>
 #include <cstring>
 
+#include <unistd.h>
+#include <sys/utsname.h>
+#include <limits.h>
+
 #include "rxvtdaemon.h"
 
-const char *rxvt_connection::unix_sockname ()
+char *rxvt_connection::unix_sockname ()
 {
-  return "/tmp/rxvtd~";
+  char name[PATH_MAX];
+  char *path = getenv ("RXVT_SOCKET");
+
+  if (!path)
+    {
+      struct utsname u;
+      uname (&u);
+
+      path = getenv ("HOME");
+      snprintf (name, PATH_MAX, "%s/.rxvt-%s",
+                path ? path : "/tmp",
+                u.nodename);
+
+      path = name;
+    }
+
+  return strdup (path);
 }
 
 void rxvt_connection::send (const char *data, int len)

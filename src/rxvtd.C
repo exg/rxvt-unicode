@@ -8,6 +8,8 @@
 #include <cstring>
 
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 
@@ -28,16 +30,16 @@ struct server : rxvt_connection {
   void err (const char *format = 0, ...);
 };
 
-struct listener {
+struct unix_listener {
   int fd;
 
   void accept_cb (io_watcher &w, short revents); io_watcher accept_ev;
 
-  listener ();
+  unix_listener (const char *sockname);
 };
 
-listener::listener ()
-: accept_ev (this, &listener::accept_cb)
+unix_listener::unix_listener (const char *sockname)
+: accept_ev (this, &unix_listener::accept_cb)
 {
   if ((fd = socket (PF_LOCAL, SOCK_STREAM, 0)) < 0)
     {
@@ -48,15 +50,19 @@ listener::listener ()
   sockaddr_un sa;
 
   sa.sun_family = AF_UNIX;
-  strcpy (sa.sun_path, rxvt_connection::unix_sockname ());
+  strcpy (sa.sun_path, sockname);
 
   unlink (rxvt_connection::unix_sockname ());
+
+  mode_t omask = umask (0077);
 
   if (bind (fd, (sockaddr *)&sa, sizeof (sa)))
     {
       perror ("unable to bind listening socket");
       exit (EXIT_FAILURE);
     }
+
+  umask (omask);
 
   if (listen (fd, 5))
     {
@@ -67,7 +73,7 @@ listener::listener ()
   accept_ev.start (fd, EVENT_READ);
 }
 
-void listener::accept_cb (io_watcher &w, short revents)
+void unix_listener::accept_cb (io_watcher &w, short revents)
 {
   int fd2 = accept (fd, 0, 0);
 
@@ -147,16 +153,21 @@ void server::read_cb (io_watcher &w, short revents)
 int
 main(int argc, const char *const *argv)
 {
-  listener l;
-
   {
     sigset_t ss;
 
     sigaddset (&ss, SIGHUP);
+    sigaddset (&ss, SIGPIPE);
     sigprocmask (SIG_BLOCK, &ss, 0);
   }
 
-  printf ("rxvtd running.\n");
+  rxvt_init_signals ();
+
+  char *sockname = rxvt_connection::unix_sockname ();
+  unix_listener l (sockname);
+  printf ("rxvtd listening on %s.\n", sockname);
+  free (sockname);
+
   iom.loop ();
 
 #if 0

@@ -20,10 +20,11 @@ client::client ()
       exit (EXIT_FAILURE);
     }
 
+  char *sockname = rxvt_connection::unix_sockname ();
   sockaddr_un sa;
-
   sa.sun_family = AF_UNIX;
-  strcpy (sa.sun_path, rxvt_connection::unix_sockname ());
+  strcpy (sa.sun_path, sockname);
+  free (sockname);
 
   if (connect (fd, (sockaddr *)&sa, sizeof (sa)))
     {

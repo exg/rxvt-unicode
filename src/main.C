@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.7 2003/11/26 10:42:34 pcg Exp $
+ * $Id: main.C,v 1.8 2003/11/27 10:12:10 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -67,14 +67,60 @@ rxvt_term::rxvt_term ()
 #ifdef POINTER_BLANK
   pointer_ev (this, &rxvt_term::pointer_cb),
 #endif
-  x_ev       (this, &rxvt_term::x_cb)
+  x_ev       (this, &rxvt_term::x_cb),
+  destroy_ev (this, &rxvt_term::destroy_cb)
 {
   cmdbuf_ptr = cmdbuf_endp = cmdbuf_base;
 }
 
 rxvt_term::~rxvt_term ()
 {
+  rxvt_scr_release (this);
+
+#ifndef NO_SETOWNER_TTYDEV
+  rxvt_privileged_ttydev (this, RESTORE);
+#endif
+#ifdef UTMP_SUPPORT
+  rxvt_privileged_utmp (this, RESTORE);
+#endif
+#ifdef USE_XIM
+  if (Input_Context != NULL)
+    {
+      XDestroyIC (Input_Context);
+      Input_Context = NULL;
+    }
+#endif
+
+  if (cmd_fd >= 0)
+    close (cmd_fd);
+
+  if (Xfd >= 0)
+    XCloseDisplay (Xdisplay);
+
   delete PixColors;
+}
+
+void
+rxvt_term::destroy ()
+{
+  pty_ev.stop ();
+  x_ev.stop ();
+#ifdef CURSOR_BLINK
+  blink_ev.stop ();
+#endif
+#ifdef POINTER_BLANK
+  pointer_ev.stop ();
+#endif
+
+  destroy_ev.start (0);
+}
+
+void
+rxvt_term::destroy_cb (time_watcher &w)
+{
+  SET_R (this);
+
+  delete this;
 }
 
 /*----------------------------------------------------------------------*/
@@ -93,6 +139,38 @@ rxvt_init(int argc, const char *const *argv)
     }
 
   return R;
+}
+
+/* EXTPROTO */
+void
+rxvt_init_signals ()
+{
+/* install exit handler for cleanup */
+#if 0
+#ifdef HAVE_ATEXIT
+  atexit(rxvt_clean_exit);
+#else
+# ifdef HAVE_ON_EXIT
+  on_exit(rxvt_clean_exit, NULL);     /* non-ANSI exit handler */
+# endif
+#endif
+#endif
+
+  struct sigaction sa;
+
+  sigfillset (&sa.sa_mask);
+  sa.sa_flags = SA_NOCLDSTOP | SA_RESTART;
+  sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGHUP , &sa, 0); //TODO, also: SIGPIPE
+  sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGINT , &sa, 0);
+  sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGQUIT, &sa, 0);
+  sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGTERM, &sa, 0);
+  sa.sa_handler = rxvt_Child_signal; sigaction (SIGCHLD, &sa, 0);
+
+/* need to trap SIGURG for SVR4 (Unixware) rlogin */
+/* signal (SIGURG, SIG_DFL); */
+
+  XSetErrorHandler ((XErrorHandler) rxvt_xerror_handler);
+  //XSetIOErrorHandler ((XErrorHandler) rxvt_xioerror_handler);
 }
 
 bool
@@ -134,9 +212,6 @@ rxvt_term::init (int argc, const char *const *argv)
 #if 0
 #ifdef DEBUG_X
   XSynchronize(Xdisplay, True);
-  XSetErrorHandler((XErrorHandler) abort);
-#else
-  XSetErrorHandler((XErrorHandler) rxvt_xerror_handler);
 #endif
 #endif
 
@@ -180,18 +255,15 @@ rxvt_term::init (int argc, const char *const *argv)
 RETSIGTYPE
 rxvt_Child_signal(int sig __attribute__ ((unused)))
 {
-    dR;
-    int             pid, save_errno = errno;
-
-    do {
-        errno = 0;
-    } while ((pid = waitpid(-1, NULL, WNOHANG)) == -1 && errno == EINTR);
-
-    if (pid == R->cmd_pid)
-        exit(EXIT_SUCCESS);
-
+    int pid, save_errno = errno;
+    while ((pid = waitpid (-1, NULL, WNOHANG)) == -1 && errno == EINTR)
+      ;
     errno = save_errno;
-    signal(SIGCHLD, rxvt_Child_signal);
+
+#if 0
+    if (pid == R->cmd_pid)
+        exit (EXIT_SUCCESS);
+#endif
 }
 
 /*
@@ -215,18 +287,20 @@ int
 rxvt_xerror_handler(const Display * display
                     __attribute__ ((unused)), const XErrorEvent * event)
 {
-    dR;
+  dR;
 
-    if (R->allowedxerror == -1) {
-        R->allowedxerror = event->error_code;
-        return 0;               /* ignored anyway */
+  if (R->allowedxerror == -1)
+    R->allowedxerror = event->error_code;
+  else
+    {
+      rxvt_print_error("XError: Request: %d . %d, Error: %d",
+                       event->request_code, event->minor_code,
+                       event->error_code);
+
+      R->destroy ();
     }
-    rxvt_print_error("XError: Request: %d . %d, Error: %d",
-                     event->request_code, event->minor_code,
-                     event->error_code);
-/* XXX: probably should call rxvt_clean_exit() bypassing X routines */
-    exit(EXIT_FAILURE);
-/* NOTREACHED */
+
+  return 0;
 }
 
 /*----------------------------------------------------------------------*/
@@ -236,25 +310,11 @@ rxvt_xerror_handler(const Display * display
  */
 /* EXTPROTO */
 void
-rxvt_clean_exit(void)
+rxvt_clean_exit ()
 {
-    dR;
+  dR;
 
-#ifdef DEBUG_SCREEN
-    rxvt_scr_release(aR);
-#endif
-#ifndef NO_SETOWNER_TTYDEV
-    rxvt_privileged_ttydev(aR_ RESTORE);
-#endif
-#ifdef UTMP_SUPPORT
-    rxvt_privileged_utmp(aR_ RESTORE);
-#endif
-#ifdef USE_XIM
-    if (R->Input_Context != NULL) {
-        XDestroyIC(R->Input_Context);
-        R->Input_Context = NULL;
-    }
-#endif
+  R->destroy ();
 }
 
 /* ------------------------------------------------------------------------- *

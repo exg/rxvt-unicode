@@ -1,5 +1,5 @@
 /*
- * $Id: rxvtlib.h.in,v 1.3 2003/11/25 11:52:42 pcg Exp $
+ * $Id: rxvtlib.h.in,v 1.4 2003/11/27 10:12:10 pcg Exp $
  */
 
 #ifndef _RXVTLIB_H_             /* include once only */
@@ -312,6 +312,7 @@ struct rxvt_vars {
   sstyle_t        selection_style;
 };
 
+void rxvt_init_signals ();
 rxvt_t rxvt_init (int argc, const char *const *argv);
 
 #endif                          /* _RXVTLIB_H_ */

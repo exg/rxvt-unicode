@@ -41,7 +41,7 @@ struct auto_ptr {
   auto_ptr() : p(0) { }
   auto_ptr(T *a) : p(a) { }
 
-  auto_ptr(auto_ptr &a)
+  auto_ptr(auto_ptr<T> &a)
   {
     p = a.p;
     a.p = 0;
