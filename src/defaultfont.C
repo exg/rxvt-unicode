@@ -781,10 +781,11 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
 
   f = XftFontOpenPattern (DISPLAY, match);
 
-  FcPatternDestroy (match);
-
   if (!f)
-    return false;
+    {
+      FcPatternDestroy (match);
+      return false;
+    }
 
   FT_Face face = XftLockFace (f);
 
