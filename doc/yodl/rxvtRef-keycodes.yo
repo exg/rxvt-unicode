@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvtRef-keycodes.yo,v 1.3 2004/08/11 03:56:50 root Exp $ --)
+COMMENT(-- $Id: rxvtRef-keycodes.yo,v 1.4 2004/08/11 22:38:08 root Exp $ --)
 label(KeyCodes)
 nsect(Key Codes)
 
@@ -8,7 +8,9 @@ Note: Partial ISO 14755-support is implemented, that means that pressing
 Control and Shift together enters unicode input mode. Entering hex
 digits composes a Unicode character, pressing space or releasing the
 modifiers commits the keycode and every other key cancels the current
-input character.
+input character. Pressing and immediately releasing Control and Shift
+together enters keycap entry mode: Pressing a function key (tab, return
+etc..) will enter the unicode character corresponding to the given key.
 
 For the keypad, use bf(Shift) to temporarily override Application-Keypad
 setting use bf(Num_Lock) to toggle Application-Keypad setting if bf(Num_Lock)
