@@ -16,6 +16,10 @@ WISH: OnTheSpot editing.
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
+	- fix a bug when parsing fontnames and another one
+          for empty keymaps which could result in crashes
+          (Kuang-che Wu).
+
 5.0  Fri Feb 11 18:31:48 CET 2005
 	- document a race-free hack to start urxvtd.
         - document all(?) environment variables used and set by rxvt.

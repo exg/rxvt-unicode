@@ -1383,7 +1383,8 @@ rxvt_fontset::add_fonts (const char *desc)
 
       do
         {
-          while (*desc <= ' ') desc++;
+          while (*desc && *desc <= ' ')
+            desc++;
 
           codeset cs = CS_UNICODE;
 

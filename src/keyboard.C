@@ -8,6 +8,7 @@
 #include "keyboard.h"
 #include "command.h"
 
+#if STOCK_KEYMAP
 ////////////////////////////////////////////////////////////////////////////////
 // default keycode translation map and keyevent handlers
 
@@ -34,6 +35,7 @@ keysym_t keyboard_manager::stock_keymap[] = {
 //{            '0', MetaMask|ControlMask,    10,       keysym_t::RANGE, "0" "\033<M-C-%c>"},
 //{            'a', MetaMask|ControlMask,    26,       keysym_t::RANGE, "a" "\033<M-C-%c>"},
 };
+#endif
 
 static void
 output_string (rxvt_term *rt, const char *str)
@@ -209,11 +211,14 @@ keyboard_manager::register_keymap (keysym_t *key)
 void
 keyboard_manager::register_done ()
 {
-  unsigned int i, n = sizeof (stock_keymap) / sizeof (keysym_t);
+#if STOCK_KEYMAP
+  int n = sizeof (stock_keymap) / sizeof (keysym_t);
 
-  if (keymap.back () != &stock_keymap[n - 1])
-    for (i = 0; i < n; ++i)
+  //TODO: shield against repeated calls and empty keymap
+  //if (keymap.back () != &stock_keymap[n - 1])
+    for (int i = 0; i < n; ++i)
       register_keymap (&stock_keymap[i]);
+#endif
 
   purge_duplicate_keymap ();
 
