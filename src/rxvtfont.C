@@ -364,8 +364,8 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
             {
               // prefer font of first character, for no good reasons
               rxvt_font *f2 = f1->has_codepoint (cc->c2)
-                              ? f1
-                              : (*fs)[fs->find_font (cc->c2)];
+                                ? f1
+                                : (*fs)[fs->find_font (cc->c2)];
 
               f2->draw (d, x, y, &(t = cc->c2), 1, fg, -1);
             }
