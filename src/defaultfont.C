@@ -170,6 +170,57 @@ rxvt_font::clear_rect (int x, int y, int w, int h, int color)
     }
 }
 
+static const char *linedraw_cmds[128] = {
+  "1hH", "2hH", "1vV", "2vV",
+  0, 0, 0, 0,
+  0, 0, 0, 0,
+  "1HV", "2H1V", "1H2V", "2HV",
+
+  // 2510
+  "1hV", "2h1V", "1h2V", "2hV",
+  "1Hv", "2H1v", "1H2v", "2Hv",
+  "1hv", "2h1v", "1h2v", "2hv",
+  "1HvV", "2H1vV", "1HV2v", "1Hv2V",
+
+  // 2520
+  "1H2vV", "2Hv1V", "2HV1v", "2HvV",
+  "1hvV", "2h1vV", "1hV2v", "1hv2V",
+  "1h2vV", "2hv1V", "1v2hV", "2hvV",
+  "1hHV", "2h1HV", "2H1hV", "2hH1V",
+
+  // 2530
+  "1hH2V", "2hV1H", "1h2HV", "2hHV",
+  "1hHv", "1vH2h", "1hv2H", "1v2hH",
+  "1hH2v", "1H2hv", "1h2Hv", "2hHv",
+  "1hHvV", "1vVH2h", "1hvV2H", "1vV2hH",
+
+  // 2540
+  "1hHV2v", "1hHv2V", "1hH2vV", "1HV2hv",
+  "1hV2Hv", "1Hv2hV", "1hv2HV", "1V2hHv",
+  "1v2hHV", "1H2hvV", "1h2HvV", "2hHvV",
+  0, 0, 0, 0,
+
+  // 2550
+  0, 0, 0, 0,
+  0, 0, 0, 0,
+  0, 0, 0, 0,
+  0, 0, 0, 0,
+
+  // 2560
+  0, 0, 0, 0,
+  0, 0, 0, 0,
+  0, 0, 0, 0,
+  0, 0, 0, 0,
+
+  // 2570
+  0, "1a", "1b", "1ab",
+  "1h", "1v", "1H", "1V",
+  "2h", "2v", "2H", "2V",
+  "1h2H", "1v2V", "1H2h", "1V2v"
+
+  // to be done
+};
+
 struct rxvt_font_default : rxvt_font {
   bool load (int maxheight)
   {
@@ -181,8 +232,13 @@ struct rxvt_font_default : rxvt_font {
 
   bool has_codepoint (uint32_t unicode)
   {
-    if (unicode <= 0x001f
-        || (unicode >= 0x80 && unicode <= 0x9f))
+    if (unicode <= 0x001f)
+      return true;
+    if (unicode >= 0x0080 && unicode <= 0x009f)
+      return true;
+
+    if (unicode >= 0x2500 && unicode <= 0x257f
+        && linedraw_cmds[unicode - 0x2500])
       return true;
 
     switch (unicode)
@@ -206,17 +262,59 @@ rxvt_font_default::draw (int x, int y,
 {
   clear_rect (x, y, r->TermWin.fwidth * len, r->TermWin.fheight, bg);
 
+  XSetForeground (DISPLAY, GC, r->PixColors[fg]);
+
   while (len--)
     {
-      switch (*text++)
+      text_t t = *text++;
+
+      if (t >= 0x2500 & t <= 0x2580 && linedraw_cmds[t - 0x2500])
         {
-          case NOCHAR:
-          case ZERO_WIDTH_CHAR:
-            break;
-          default:
-            XSetForeground (DISPLAY, GC, r->PixColors[fg]);
-            XDrawRectangle (DISPLAY, DRAWABLE, GC, x + 2, y + 2, r->TermWin.fwidth - 5, r->TermWin.fheight - 5);
+          const char *p = linedraw_cmds[t - 0x2500];
+
+          int x0 = x, x1 = x + (r->TermWin.fwidth  - 1) / 2, x2 = x + r->TermWin.fwidth  - 1;
+          int y0 = y, y1 = y + (r->TermWin.fheight - 1) / 2, y2 = y + r->TermWin.fheight - 1;
+
+          XGCValues gcv;
+
+          gcv.cap_style = CapButt;
+          XChangeGC (DISPLAY, GC, GCCapStyle, &gcv);
+
+          while (*p)
+            {
+              switch (*p++)
+                {
+                  case '1':
+                    gcv.line_width = 0;
+                    XChangeGC (DISPLAY, GC, GCLineWidth, &gcv);
+                    break;
+
+                  case '2':
+                    gcv.line_width = 2;
+                    XChangeGC (DISPLAY, GC, GCLineWidth, &gcv);
+                    break;
+
+                  case 'h': XDrawLine (DISPLAY, DRAWABLE, GC, x0, y1, x1, y1); break;
+                  case 'H': XDrawLine (DISPLAY, DRAWABLE, GC, x1, y1, x2, y1); break;
+                  case 'v': XDrawLine (DISPLAY, DRAWABLE, GC, x1, y0, x1, y1); break;
+                  case 'V': XDrawLine (DISPLAY, DRAWABLE, GC, x1, y1, x1, y2); break;
+                  case 'a': XDrawLine (DISPLAY, DRAWABLE, GC, x0, y2, x2, y0); break;
+                  case 'b': XDrawLine (DISPLAY, DRAWABLE, GC, x0, y0, x2, y2); break;
+                }
+            }
+
+          gcv.line_width = 0;
+          XChangeGC (DISPLAY, GC, GCLineWidth, &gcv);
         }
+      else
+        switch (*text++)
+          {
+            case NOCHAR:
+            case ZERO_WIDTH_CHAR:
+              break;
+            default:
+              XDrawRectangle (DISPLAY, DRAWABLE, GC, x + 2, y + 2, r->TermWin.fwidth - 5, r->TermWin.fheight - 5);
+          }
 
       x += r->TermWin.fwidth;
     }
