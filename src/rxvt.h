@@ -1476,7 +1476,11 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void scr_refresh (unsigned char refresh_type);
   bool scr_refresh_rend (rend_t mask, rend_t value);
   void scr_erase_screen (int mode);
+#if ENABLE_FRILLS
   void scr_erase_savelines ();
+  void scr_backindex ();
+  void scr_forwardindex ();
+#endif
   void scr_touch (bool refresh);
   void scr_expose (int x, int y, int width, int height, bool refresh);
   rxvt_fontset *scr_find_fontset (rend_t r = DEFAULT_RSTYLE);
@@ -1493,8 +1497,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void scr_add_lines (const unicode_t *str, int nlines, int len);
   void scr_backspace ();
   void scr_tab (int count, bool ht = false);
-  void scr_backindex ();
-  void scr_forwardindex ();
   void scr_gotorc (int row, int col, int relative);
   void scr_index (enum page_dirn direction);
   void scr_erase_line (int mode);

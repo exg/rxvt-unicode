@@ -1163,7 +1163,7 @@ rxvt_term::scr_backindex ()
 void
 rxvt_term::scr_forwardindex ()
 {
-  int             row;
+  int row;
 
   if (screen.cur.col < TermWin.ncol - 1)
     scr_gotorc (0, 1, R_RELATIVE | C_RELATIVE);
@@ -1392,6 +1392,7 @@ rxvt_term::scr_erase_screen (int mode)
     }
 }
 
+#if ENABLE_FRILLS
 void
 rxvt_term::scr_erase_savelines ()
 {
@@ -1405,6 +1406,7 @@ rxvt_term::scr_erase_savelines ()
         scr_blank_line (screen.text [i], screen.rend [i], (unsigned int)TermWin.ncol, DEFAULT_RSTYLE);
       }
 }
+#endif
 
 /* ------------------------------------------------------------------------- */
 /*
