@@ -218,6 +218,7 @@ main (int argc, const char *const *argv)
   char *sockname = rxvt_connection::unix_sockname ();
   unix_listener l (sockname);
   printf ("rxvt-unicode daemon listening on %s.\n", sockname);
+  fflush (stdout);
   free (sockname);
 
   io_manager::loop ();
