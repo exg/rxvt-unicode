@@ -23,6 +23,8 @@ WISH: tabbed windows (hey, just use screen...)
           ignored.
         - do not use XSETROOTPMAP_ID anymore, support ESETROOT_PMAP_ID
           instead.
+        - fix a crash in rxvtd when the last window was being closed
+          (reported by hednod).
         - fix an unlikely memory leak.
         - fix atom name enumeration.
 
