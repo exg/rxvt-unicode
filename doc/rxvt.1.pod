@@ -26,12 +26,19 @@ scripts. Most other scripts, latin, cyrillic, kanji, thai etc. should work
 fine, though. A somewhat difficult case are left-to-right scripts, such
 as hebrew: B<rxvt-unicode> adopts the view that bidirectional algorithms
 belong into the application, not the terminal emulator (too many things --
-such as cursor-movement -- break othwerwise).
+such as cursor-movement while editing -- break othwerwise), but that might
+change.
 
-Another design rationale was the use of multiple fonts to display
-characters: The idea of a single unicode font which many other programs
-force onto it's users never made sense to me: You should be able to choose
-any font for any script.
+If you are looking for a terminal that supports more exotic scripts, let
+me recommend C<mlterm>, which is a very userfriendly, lean and clean
+terminal emulator. In fact, the reason rxvt-unicode was born was solely
+because the author couldn't get C<mlterm> to use one font for latin1 and
+another for japanese.
+
+Therefore another design rationale was the use of multiple fonts to
+display characters: The idea of a single unicode font which many other
+programs force onto it's users never made sense to me: You should be able
+to choose any font for any script freely.
 
 Apart from that, rxvt-unicode is also much better internationalised than
 it's predecessor, supports things such as XFT and ISO 14755 that are handy
@@ -586,16 +593,6 @@ are those which are intercepted by rxvt-unicode for special handling and
 are not passed onto the shell; option B<-sk>. B<False>: do not scroll to
 bottom when a non-special key is pressed; option B<+sk>.
 
-=item B<smallfont_key:> I<keysym>
-
-If enabled, use B<@@HOTKEY@@->I<keysym> to toggle to a smaller font
-[default B<@@HOTKEY@@-@@SMALLFONT@@>]
-
-=item B<bigfont_key:> I<keysym>
-
-If enabled, use B<@@HOTKEY@@->I<keysym> to toggle to a bigger font
-[default B<@@HOTKEY@@-@@BIGFONT@@>]
-
 =item B<saveLines:> I<number>
 
 Save I<number> lines in the scrollback buffer [default 64]. This
@@ -792,26 +789,75 @@ inserted as if it had been typed on the keyboard.
 
 =head1 CHANGING FONTS
 
-You can change fonts on-the-fly, which is to say cycle through the
-default font and others of various sizes, by using B<Shift-KP_Add> and
-B<Shift-KP_Subtract>. Or, alternatively (if enabled) with
-B<@@HOTKEY@@-@@BIGFONT@@> and B<@@HOTKEY@@-@@SMALLFONT@@>, where the
-actual key can be selected using resources
-B<smallfont_key>/B<bigfont_key>.
+Changing fonts (or font sizes, respectively) via the keypad is not yet
+supported in rxvt-unicode. Bug me if you need this.
+
+You can, however, switch fonts at runtime using escape sequences (and
+therefore using the menubar), e.g.:
+
+   printf '\e]701;%s\007' "9x15bold,xft:Kochi Gothic"
+
+rxvt-unicode will automatically re-apply these fonts to the output so far.
 
 =head1 ISO 14755 SUPPORT
 
-Partial ISO 14755-support is implemented. that means that pressing
+ISO 14755 is a standard for entering and viewing unicode characters
+and character codes using the keyboard. It consists of 4 parts. The
+first part is available rxvt-unicode has been compiled with
+C<--enable-frills>, the rest is available when rxvt-unicode was compiled
+with C<--enable-iso14755>.
 
-Section 5.1: Control and Shift together enters unicode input
-mode. Entering hex digits composes a Unicode character, pressing space or
-releasing the modifiers commits the keycode and every other key cancels
-the current input character.
+=over 4
 
-Section 5.2: Pressing and immediately releasing Control and Shift together
-enters keycap entry mode for the next key: pressing a function key (tab,
-return etc..) will enter the unicode character corresponding to the given
-key.
+=item 5.1: Basic method
+
+This allows you to enter unicode characters using their hexcode.
+
+Start by pressing and holding both C<Control> and C<Shift>, then enter
+hex-digits (between one and six). Releasing C<Control> and C<Shift> will
+commit the character as if it were typed directly. While holding down
+C<Control> and C<Shift> you can also enter multiple characters by pressing
+C<Space>, which will commit the current character and lets you start a new
+one.
+
+As an example of use, imagine a business card with a japanese e-mail
+address, which you cannot type. Fortunately, the card has the e-mail
+address printed as hexcodes, e.g. C<671d 65e5>. You can enter this easily
+by pressing C<Control> and C<Shift>, followed by C<6-7-1-D-SPACE-6-5-E-5>,
+followed by releasing the modifier keys.
+
+=item 5.2: Keyboard symbols entry method
+
+This mode lets you input characters representing the keycap symbols of
+your keyboard, if representable in the current locale encoding.
+
+Start by pressing C<Control> and C<Shift> together, then releasing
+them. The next special key (cursor keys, home etc.) you enter will not
+invoke it's usual function but instead will insert the corresponding
+keycap symbol. The symbol will only be entered when the key has been
+released, otherwise pressing e.g. C<Shift> would enter the symbol for
+C<ISO Level 2 Switch>, although your intention might have beenm to enter a
+reverse tab (Shift-Tab).
+
+=item 5.3: Screen-selection entry method
+
+While this is implemented already (it's basically the selection
+mechanism), it could be extended by displaying a unicode character map.
+
+=item 5.4: Feedback method for identifying displayed characters for later input
+
+This method lets you display the unicode character code associated with
+characters already displayed.
+
+You enter this mode by holding down C<Control> and C<Shift> together, then
+pressing and holding the left mouse button and moving around. The unicode
+hex code(s) (it might be a combining character) of the character under the
+pointer is displayed until you release C<Control> and C<Shift>.
+
+=back
+
+With respect to conformance, rxvt-unicode is supposed to be compliant to
+both scenario A and B of ISO 14755, including part 5.2.
 
 =head1 LOGIN STAMP
 
@@ -879,6 +925,36 @@ The version number is displayed with the usage (-h).  For rxvt-unicode
 version 2.14 and later, the escape sequence C<ESC[8n> sets the window
 title to the version number.
 
+=item Rxvt-unicode does not seem to understand the selected encoding?
+
+=item Unicode does not seem to work?
+
+If you encounter strange problems like typing an accented character but
+getting two unrelated other characters or similar, or if program output is
+subtly garbled, then you should check your locale settings.
+
+Rxvt-unicode must be started with the same C<LC_CTYPE> setting as the
+programs. Often rxvt-unicode is started in the C<C> locale, while the
+login script running within the rxvt-unicode window changes the locale to
+sth. else, e.h. C<en_GB.UTF-8>. Needless to say, this is not going to work.
+
+The best thing is to fix your startup environment, as you will likely run
+into other problems. If nothing works you can try this in your .profile.
+
+  printf '\e]701;%s\007' "$LC_CTYPE"
+
+If this doesn't work, then maybe you use a C<LC_CTYPE> specification not
+supported on your systems. Some systems have a C<locale> comamnd which
+displays this. If it displays sth. like:
+
+  locale: Cannot set LC_CTYPE to default locale: ...
+
+Then the locale you specified is not supported on your system.
+
+If nothing works and you are sure that everything is set correctly then
+you will need to remember a little known fact: Some programs just don't
+support locales :(
+
 =item Why do the characters look ugly?
 
 =item How does rxvt-unicode choose fonts?
@@ -924,6 +1000,70 @@ In the future it might be possible to switch preferences at runtime (the
 internal data structure has no problem with using different fonts for
 the same character at the same time, but no interface for this has been
 designed yet).
+
+=item How does rxvt-unicode determine the encoding to use?
+
+=item Is there an option to switch encodings?
+
+Unlike some other terminals, rxvt-unicode has no encoding switch, and no
+specific "utf-8" mode, such as xterm. In fact, it doesn't even know about
+UTF-8 or any other encodings with respect to terminal I/O.
+
+The reasons is that there exists a perfectly fine mechanism for selecting
+the encoding, doing I/O and (most important) communicating this to all
+applications so everybody agrees on character properties such as width and
+code number. This mechanism is the I<locale>.
+
+Rxvt-unicode uses the C<LC_CTYPE> locale category to select encoding. All
+programs doing the same (that is, most) will automatically agree in the
+interpretation of characters.
+
+Unfortunately, there is no system-independent way to select locales, nor
+is there a standard on how locale specifiers will look like.
+
+On most systems, the content of the C<LC_CTYPE> environment variable
+contains an arbitrary string which corresponds to an already-installed
+locale. Common names for locales are C<en_US.UTF-8>, C<de_DE.ISO-8859-15>,
+C<ja_JP.EUC-JP>, i.e. C<language_country.encoding>, but other forms
+(i.e. C<de> or C<german>) are also common.
+
+Rxvt-unicode ignores all other locale categories, and except for
+the encoding, ignores country or language-specific settings,
+i.e. C<de_DE.UTF-8> and C<ja_JP.UTF-8> are the same for rxvt-unicode.
+
+If you want to use a specific encoding you have to make sure you start
+rxvt-unicode with the correct C<LC_CTYPE> category.
+
+=item Can I switch locales at runtime?
+
+Yes, using an escape sequence. Try sth. like this, which sets
+rxvt-unicode's idea of C<LC_CTYPE>.
+
+  printf '\e]701;%s\007' ja_JP.SJIS
+
+See also the previous question.
+
+Sometimes this capability is rather handy when you want to work in one
+locale (e.g. C<de_DE.UTF-8>) but some programs don't support UTF-8. For
+example, I use this script to start C<xjdic>, which first switches to a
+locale supported by xjdic and back later:
+
+   printf '\e]701;%s\007' ja_JP.SJIS
+   xjdic -js
+   printf '\e]701;%s\007' de_DE.UTF-8
+
+=item Can I switch the fonts at runtime?
+
+Yes, using an escape sequence. Try sth. like this, which has the same
+effect as using the C<-fn> switch, and takes effect immediately:
+
+   printf '\e]50;%s\007' "9x15bold,xft:Kochi Gothic"
+
+This is useful if you e.g. work primarily with japanese (and prefer a
+japanese font), but you have to switch to chinese temporarily, where
+japanese fonts would only be in your way.
+
+You can think of this as a kind of manual ISO-2022 switching.
 
 =item Mouse cut/paste suddenly no longer works.
 
@@ -1177,11 +1317,11 @@ Click-and-drag doesn't work with X11 mouse report overriding.
 
 =item Project Coordinator
 
-@@RXVTMAINT@@ L<@@RXVT_MAINTEMAIL@@>
+@@RXVT_MAINT@@ L<@@RXVT_MAINTEMAIL@@>
 
 =item Web page maintainter
 
-@@RXVTWEBMAINT@@ L<@@RXVT_WEBMAINTEMAIL@@>
+@@RXVT_WEBMAINT@@ L<@@RXVT_WEBMAINTEMAIL@@>
 
 L<@@RXVT_WEBPAGE@@>
 
