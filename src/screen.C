@@ -975,11 +975,12 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
           while (--width > 0);
 
           // pad with spaces when overwriting wide character with smaller one
-          for (int c = screen.cur.col; c < last_col && stp[c] == NOCHAR; c++)
-            {
-              stp[c] = ' ';
-              srp[c] = rend;
-            }
+          if (!width)
+            for (int c = screen.cur.col; c < last_col && stp[c] == NOCHAR; c++)
+              {
+                stp[c] = ' ';
+                srp[c] = rend;
+              }
         }
       else if (width == 0)
         {
@@ -2400,9 +2401,12 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
             font->draw (*TermWin.drawable, xpixel, ypixel, text, count, fore, back);
 
           if (rend & RS_Uline && font->descent > 1 && fore != back)
-            XDrawLine (display->display, drawBuffer, TermWin.gc,
-                       xpixel, ypixel + font->ascent + 1,
-                       xpixel + Width2Pixel (count) - 1, ypixel + font->ascent + 1);
+            {
+              XSetForeground (display->display, TermWin.gc, pix_colors[fore]);
+              XDrawLine (display->display, drawBuffer, TermWin.gc,
+                         xpixel, ypixel + font->ascent + 1,
+                         xpixel + Width2Pixel (count) - 1, ypixel + font->ascent + 1);
+            }
         }                     /* for (col....) */
     }                         /* for (row....) */
 
@@ -2756,6 +2760,23 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
 
       char **cl;
       int cr;
+
+#if ENABLE_FRILLS
+      // xlib is horribly broken with respect to UTF8_STRING, and nobody cares to fix it
+      // so recode it manually
+      if (ct.encoding == xa[XA_UTF8_STRING])
+        {
+          wchar_t *w = rxvt_utf8towcs ((const char *)ct.value, ct.nitems);
+          char *s = rxvt_wcstombs (w);
+
+          // TODO: strlen == only the first element will be converted. well...
+          paste ((unsigned char *)s, strlen (s));
+
+          free (s);
+          free (w);
+        }
+      else
+#endif
       if (XmbTextPropertyToTextList (display->display, &ct, &cl, &cr) >= 0 && cl)
         {
           for (int i = 0; i < cr; i++)
@@ -2848,7 +2869,6 @@ rxvt_term::selection_request (Time tm, int x, int y)
           if (selection_request_other (xa[XA_COMPOUND_TEXT], i))
             return;
 #endif
-
         }
     }
 
@@ -3019,8 +3039,7 @@ rxvt_term::selection_make (Time tm)
 
   if (XwcTextListToTextProperty (display->display, &selection.text, 1, XStringStyle, &ct) >= 0)
     {
-      XChangeProperty (display->display, display->root, XA_CUT_BUFFER0, XA_STRING, 8,
-                       PropModeReplace, ct.value, ct.nitems);
+      set_string_property (XA_CUT_BUFFER0, ct.value, ct.nitems);
       XFree (ct.value);
     }
 #endif
@@ -3485,9 +3504,6 @@ void
 rxvt_term::selection_send (const XSelectionRequestEvent &rq)
 {
   XSelectionEvent ev;
-  XTextProperty ct;
-  XICCEncodingStyle style;
-  Atom target;
 
   ev.type = SelectionNotify;
   ev.property = None;
@@ -3534,28 +3550,38 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq)
            || rq.target == xa[XA_UTF8_STRING]
           )
     {
+      XTextProperty ct;
+      Atom target = rq.target;
       short freect = 0;
       int selectlen;
       wchar_t *cl;
-
-      target = rq.target;
+      enum {
+        enc_string        = XStringStyle,
+        enc_text          = XStdICCTextStyle,
+        enc_compound_text = XCompoundTextStyle,
+#ifdef X_HAVE_UTF8_STRING
+        enc_utf8          = XUTF8StringStyle,
+#else
+        enc_utf8          = -1,
+#endif
+      } style;
 
       if (target == XA_STRING)
         // we actually don't do XA_STRING, but who cares, as i18n clients
         // will ask for another format anyways.
-        style = XStringStyle;
+        style = enc_string;
       else if (target == xa[XA_TEXT])
-        style = XStdICCTextStyle;
+        style = enc_text;
       else if (target == xa[XA_COMPOUND_TEXT])
-        style = XCompoundTextStyle;
-#if X_HAVE_UTF8_STRING
+        style = enc_compound_text;
+#if ENABLE_FRILLS
       else if (target == xa[XA_UTF8_STRING])
-        style = XUTF8StringStyle;
+        style = enc_utf8;
 #endif
       else
         {
           target = xa[XA_COMPOUND_TEXT];
-          style = XCompoundTextStyle;
+          style = enc_compound_text;
         }
 
       if (selection.text)
@@ -3569,19 +3595,31 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq)
           selectlen = 0;
         }
 
-      // Xwc doesn't handle iso-10646 in wchar_t gracefully, so maybe recode it
-      // manually for XUTF8StringStyle.
-      if (XwcTextListToTextProperty (display->display, &cl, 1, style, &ct) >= 0)
+#if ENABLE_FRILLS
+      // xlib is horribly broken with respect to UTF8_STRING, and nobody cares to fix it
+      // so recode it manually
+      if (style == enc_utf8)
+        {
+          freect = 1;
+          ct.encoding = target;
+          ct.format = 8;
+          ct.value = (unsigned char *)rxvt_wcstoutf8 (cl, selectlen);
+          ct.nitems = strlen ((char *)ct.value);
+        }
+      else
+#endif
+      if (XwcTextListToTextProperty (display->display, &cl, 1, (XICCEncodingStyle) style, &ct) >= 0)
         freect = 1;
       else
         {
           /* if we failed to convert then send it raw */
           ct.value = (unsigned char *)cl;
           ct.nitems = selectlen;
+          ct.encoding = target;
         }
 
       XChangeProperty (display->display, rq.requestor, rq.property,
-                       target, 8, PropModeReplace,
+                       ct.encoding, 8, PropModeReplace,
                        ct.value, (int)ct.nitems);
       ev.property = rq.property;
 

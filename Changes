@@ -2,16 +2,36 @@ Lines marked with "xterm:" indicate either xterm features ported to rxvt
 or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
-TODO: hotkey font resizing
+TODO: underline colour changes?
+TODO: read property sequence is broken with respect to utf-8 etc.
 TODO: +ssc -ssr seems to scroll at wrong time, scrolling up the empty sec. scr.
-TODO: multibyte support for setwmname et al.
-TODO: tabbed windows
-TODO: there are other todo items, but they are not in this file.
-TODO: OnTheSpot editing.
-TODO: searchable backlog
-TODO: meta-tagging of data by regex (my dream project)
-TODO: triple-click == select full output line
-TODO: double-click: more intelligent (urls etc.)
+FEAT: hotkey font resizing
+FEAT: searchable backlog
+FEAT: meta-tagging of data by regex (my dream project)
+FEAT: triple-click == select full output line
+FEAT: double-click: more intelligent (urls etc.)
+FEAT: OnTheSpot editing.
+FEAT: tabbed windows
+
+4.4
+	- rewrote handling of default-char width.
+        - implement _NET_WM_NAME et al., and also use UTF8_STRING
+          for the xterm property esc. sequence. Allows i18n window
+          titles etc.
+        - SMART_WINDOW_TITLE removed, pls. complain if you need this.
+        - added GBK encoding (formidable patch by WU Fengguang).
+        - fixed a bug in the transparency code.
+        - upgraded iom.[Ch].
+        - force slower (but more responsive) transparency update.
+        - fix off-by-one bug with wide characters at the end of a line,
+          which got partially overwritten by spaces.
+        - as xlib is completely broken with respect to utf-8 handling
+          and nobody is going to fix it, that part has been re-implemented.
+          should fix most paste problems between apps that use UTF8 encoding
+          and rxvt running in a lesser-supported locale (thanks to Robin Redeker
+          for writing utf8towcs). Only enabled with ENABLE_FRILLS.
+        - darwin compile fix by Ethan Blanton.
+        - fix the colour of the underline, which was rather random before.
 
 4.3  Sat Dec  4 04:58:37 CET 2004
         - unapply the "emulated graphical chars. respect wcwidth" patch.
@@ -23,8 +43,7 @@ TODO: double-click: more intelligent (urls etc.)
           now, too.
 
 4.2  Wed Dec  1 03:30:22 CET 2004
-	- make emulated graphical characters respect wcwidth
-          (forgot who reported this).
+	- make emulated graphical characters respect wcwidth (Kuang-che Wu).
         - remove debugging code that caused major slowdowns
           on high-latency networks.
         - wide characters shift the correct number of characters
