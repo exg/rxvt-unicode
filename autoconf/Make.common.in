@@ -5,12 +5,10 @@ LSMDATE=@LSMDATE@
 VERSION=@VERSION@
 VERNAME=rxvt-unicode-$(VERSION)
 MAINT=Marc A. Lehmann
-MAINTEMAIL=<rxvt@schmorp.de>
+MAINTEMAIL=rxvt@schmorp.de
 WEBMAINT=Marc A. Lehmann
-WEBMAINTEMAIL=<rxvt@schmorp.de>
-WEBPAGE=<http://www.sourceforge.net/projects/rxvt-unicode/>
-FTPSITENAME=ftp.rxvt.org
-FTPSITEDIR=/pub/rxvt
+WEBMAINTEMAIL=rxvt@schmorp.de
+WEBPAGE=http://software.schmorp.de/#rxvt-unicode
 
 #-------------------------------------------------------------------------
 RXVTNAME=@RXVTNAME@
@@ -30,8 +28,10 @@ exec_prefix = @exec_prefix@
 bindir = @bindir@
 libdir = @libdir@
 includedir = @includedir@
-mandir = @mandir@/man1
-manext = 1
+man1dir = @mandir@/man1
+man1ext = 1
+man7dir = @mandir@/man7
+man7ext = 7
 
 # Tools & program stuff
 CC = @CC@

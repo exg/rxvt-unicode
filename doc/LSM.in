@@ -1,9 +1,9 @@
 Begin3
 Title:		rxvt
-Version:	@RXVT_VERSION@
-Entered-date:	@RXVT_LSMDATE@
+Version:	@@RXVT_VERSION@@
+Entered-date:	@@RXVT_LSMDATE@@
 
-Description:	@RXVT_WEBPAGE@
+Description:	@@RXVT_WEBPAGE@@
 		Rxvt is an 8-bit clean, colour xterm replacement that uses
 		significantly less memory than a conventional xterm, mostly
 		since it doesn't support toolkit configurability or Tek
@@ -39,10 +39,9 @@ Author:		* John Bovey [Univ. Kent at Canterbury] was the creator of
 		  and mouse selection.
 		  Coordinated development, versions 2.4.6 - 
 
-Maintained-by:	@RXVT_MAINT@ @RXVT_MAINTEMAIL@ Project Coordinator
+Maintained-by:	@@RXVT_MAINT@@ @@RXVT_MAINTEMAIL@@ Project Coordinator
 
-Original-site:	@RXVT_FTPSITENAME@ @RXVT_FTPSITEDIR@
-		582k	rxvt-@RXVT_VERSION@.tar.gz
+Original-site:	http://software.schmorp.de/#rxvt-unicode
 
 Platforms:	requires X11 installed
 

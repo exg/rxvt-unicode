@@ -1,8 +1,4 @@
-=head1 Rxvt Technical Reference
-
-Marc Lehmann <rxvt@schmorp.de>, converted to pod and reworked from the
-original Rxvt documentation by Geoff Wing <gcw@pobox.com>, who in turn used
-the XTerm documentation and other sources.
+=head1 RXVT TECHNICAL REFERENCE
 
 =head1 Definitions
 
@@ -39,7 +35,7 @@ A text parameter composed of printable characters.
 =item B<< C<ENQ> >>
 
 Enquiry (Ctrl-E) = Send Device Attributes (DA)
-request attributes from terminal ==
+request attributes from terminal. See B<< C<ESC [ Ps c> >>.
 
 =item B<< C<BEL> >>
 
@@ -300,11 +296,11 @@ Move backward B<< C<Ps> >> [default: 1] tab stops
 
 =item B<< C<ESC [ Ps '> >>
 
-==
+See B<< C<ESC [ Ps G> >>
 
 =item B<< C<ESC [ Ps a> >>
 
-==X<ESCOBPsc>
+See B<< C<ESC [ Ps C> >>
 
 =item B<< C<ESC [ Ps c> >>
 
@@ -319,7 +315,7 @@ Cursor to Line B<< C<Ps> >> (VPA)
 
 =item B<< C<ESC [ Ps e> >>
 
-==
+See B<< C<ESC [ Ps A> >>
 
 =item B<< C<ESC [ Ps;Ps f> >>
 
@@ -627,8 +623,8 @@ X<Priv66>
 
 =begin table
 
-	B<< C<h> >>	Application Keypad (DECPAM) ==
-	B<< C<l> >>	Normal Keypad (DECPNM) ==
+	B<< C<h> >>	Application Keypad (DECPAM) == C<ESC =>
+	B<< C<l> >>	Normal Keypad (DECPNM) == C<< ESC > >>
 
 =end table
 
@@ -731,9 +727,9 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 	B<< C<Ps = 49> >>	Change default background colour to B<< C<Pt> >> I<rxvt compile-time option>
 	B<< C<Ps = 50> >>	Set fontset to B<< C<Pt> >>, with the following special values of B<< C<Pt> >> (B<rxvt>) B<< C<#+n> >> change up B<< C<n> >> B<< C<#-n> >> change down B<< C<n> >> if B<< C<n> >> is missing of 0, a value of 1 is used I<empty> change to font0 B<< C<n> >> change to font B<< C<n> >>
 	B<< C<Ps = 55> >>	Log all scrollback buffer and all of screen to B<< C<Pt> >>
-	B<< C<Ps = 701> >>	Change current locale to B<< C<Pt> >>, or, if B<< C<Pt> >> is B<< C<?> >>, return the current locale (@@RXVTNAME@@ extension)
-	B<< C<Ps = 702> >>	find font for character, used for debugging (@@RXVTNAME@@ extension)
-	B<< C<Ps = 703> >>	command B<< C<Pt> >> I<rxvt compile-time option> (@@RXVTNAME@@ extension)
+	B<< C<Ps = 701> >>	Change current locale to B<< C<Pt> >>, or, if B<< C<Pt> >> is B<< C<?> >>, return the current locale (@@RXVT_NAME@@ extension)
+	B<< C<Ps = 702> >>	find font for character, used for debugging (@@RXVT_NAME@@ extension)
+	B<< C<Ps = 703> >>	command B<< C<Pt> >> I<rxvt compile-time option> (@@RXVT_NAME@@ extension)
 
 =end table
 
@@ -1323,20 +1319,6 @@ Row = B<< C<< <y> - SPACE >> >>
 =back
 X<KeyCodes>
 
-=head1 ISO 14755 support
-
-Partial ISO 14755-support is implemented. that means that pressing
-
-section 5.1: Control and Shift together enters unicode input
-mode. Entering hex digits composes a Unicode character, pressing space or
-releasing the modifiers commits the keycode and every other key cancels
-the current input character.
-
-section 5.2: Pressing and immediately releasing Control and Shift together
-enters keycap entry mode for the next key: pressing a function key (tab,
-return etc..) will enter the unicode character corresponding to the given
-key.
-
 =head1 Key Codes
 
 Note: B<Shift> + B<F1>-B<F10> generates B<F11>-B<F20>
@@ -1409,4 +1391,11 @@ your system.
 	XK_KP_9	9			ESC O y
 
 =end table
+
+=head1 AUTHORS
+
+Marc Lehmann <rxvt@schmorp.de>, converted this document to pod and
+reworked it from the original Rxvt documentation, which was done by Geoff
+Wing <gcw@pobox.com>, who in turn used the XTerm documentation and other
+sources.
 

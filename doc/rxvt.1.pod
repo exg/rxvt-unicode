@@ -4,7 +4,7 @@ rxvt-unicode (ouR XVT, unicode) - (a VT102 emulator for the X window system)
 
 =head1 SYNOPSIS
 
-B<@@RXVTNAME@@> [options] [-e command [ args ]]
+B<@@RXVT_NAME@@> [options] [-e command [ args ]]
 
 =head1 DESCRIPTION
 
@@ -14,9 +14,12 @@ require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, B<rxvt-unicode> uses much less swap space --
 a significant advantage on a machine serving many X sessions.
 
+See also @@RXVT_NAME@@(7) for technical reference documentation (escape
+sequences etc.).
+
 =head1 OPTIONS
 
-The B<@@RXVTNAME@@> options (mostly a subset of I<xterm>'s) are listed
+The B<@@RXVT_NAME@@> options (mostly a subset of I<xterm>'s) are listed
 below. In keeping with the smaller-is-better philosophy, options may be
 eliminated or default values chosen at compile-time, so options and
 defaults listed may not accurately reflect the version installed on
@@ -26,7 +29,7 @@ compile option each is dependent upon. e.g. `Compile I<XIM>:' requires
 I<XIM> on the I<Options> line. Note: `rxvt -help' gives a list of all
 command-line options compiled into your version.
 
-Note that B<@@RXVTNAME@@> permits the resource name to be used as a
+Note that B<@@RXVT_NAME@@> permits the resource name to be used as a
 long-option (--/++ option) so the potential command-line options are
 far greater than those listed. For example: `rxvt --loginShell --color1
 Orange'.
@@ -221,7 +224,7 @@ resource B<termName>.
 
 =item B<-e> I<command [arguments]>
 
-Run the command with its command-line arguments in the B<@@RXVTNAME@@>
+Run the command with its command-line arguments in the B<@@RXVT_NAME@@>
 window; also sets the window title and icon name to be the basename of
 the program being executed if neither I<-title> (I<-T>) nor I<-n> are
 given on the command line. If this option is used, it must be the last
@@ -293,27 +296,27 @@ some window managers.
 
 =head1 RESOURCES (available also as long-options)
 
-Note: `@@RXVTNAME@@ --help' gives a list of all resources (long
+Note: `@@RXVT_NAME@@ --help' gives a list of all resources (long
 options) compiled into your version.
 
-There are two different methods that @@RXVTNAME@@ can use to get the
+There are two different methods that @@RXVT_NAME@@ can use to get the
 Xresource data: using the X libraries (Xrm*-functions) or internal
 Xresources reader (B<~/.Xdefaults>). For the first method (ie.
-B<@@RXVTNAME@@ -h> lists B<XGetDefaults>), you can set and change the
+B<@@RXVT_NAME@@ -h> lists B<XGetDefaults>), you can set and change the
 resources using X11 tools like B<xset>. Many distribution do also load
 settings from the B<~/.Xresources> file when X starts.
 
-If compiled with internal Xresources support (i.e. B<@@RXVTNAME@@ -h>
-lists B<.Xdefaults>) then B<@@RXVTNAME@@> accepts application defaults
+If compiled with internal Xresources support (i.e. B<@@RXVT_NAME@@ -h>
+lists B<.Xdefaults>) then B<@@RXVT_NAME@@> accepts application defaults
 set in XAPPLOADDIR/URxvt (compile-time defined: usually
 B</usr/lib/X11/app-defaults/URxvt>) and resources set in
 B<~/.Xdefaults>, or B<~/.Xresources> if B<~/.Xdefaults> does not exist.
-Note that when reading X resources, B<@@RXVTNAME@@> recognizes two
+Note that when reading X resources, B<@@RXVT_NAME@@> recognizes two
 class names: B<XTerm> and B<URxvt>. The class name B<Rxvt> allows
-resources common to both B<@@RXVTNAME@@> and the original I<rxvt> to be
+resources common to both B<@@RXVT_NAME@@> and the original I<rxvt> to be
 easily configured, while the class name B<URxvt> allows resources
-unique to B<@@RXVTNAME@@>, notably colours and key-handling, to be
-shared between different B<@@RXVTNAME@@> configurations. If no
+unique to B<@@RXVT_NAME@@>, notably colours and key-handling, to be
+shared between different B<@@RXVT_NAME@@> configurations. If no
 resources are specified, suitable defaults will be used. Command-line
 arguments can be used to override resource settings. The following
 resources are allowed:
@@ -464,7 +467,7 @@ xterm style selection.
 
 =item B<scrollstyle:> I<mode>
 
-Set scrollbar style to B<@@RXVTNAME@@>, B<rxvt>, B<plain>, B<next> or
+Set scrollbar style to B<@@RXVT_NAME@@>, B<rxvt>, B<plain>, B<next> or
 B<xterm>
 
 =item B<title:> I<string>
@@ -705,9 +708,9 @@ KEYSYM_RESOURCE.
 
 =head1 THE SCROLLBAR
 
-Lines of text that scroll off the top of the B<@@RXVTNAME@@> window
+Lines of text that scroll off the top of the B<@@RXVT_NAME@@> window
 (resource: B<saveLines>) and can be scrolled back using the scrollbar
-or by keystrokes. The normal B<@@RXVTNAME@@> scrollbar has arrows and
+or by keystrokes. The normal B<@@RXVT_NAME@@> scrollbar has arrows and
 its behaviour is fairly intuitive. The B<xterm-scrollbar> is without
 arrows and its behaviour mimics that of I<xterm>
 
@@ -745,7 +748,7 @@ line.
 =item B<Insertion>:
 
 Pressing and releasing the Middle mouse button (or B<Shift-Insert>) in
-an B<@@RXVTNAME@@> window causes the current text selection to be
+an B<@@RXVT_NAME@@> window causes the current text selection to be
 inserted as if it had been typed on the keyboard.
 
 =back
@@ -759,17 +762,31 @@ B<@@HOTKEY@@-@@BIGFONT@@> and B<@@HOTKEY@@-@@SMALLFONT@@>, where the
 actual key can be selected using resources
 B<smallfont_key>/B<bigfont_key>.
 
+=head1 ISO 14755 SUPPORT
+
+Partial ISO 14755-support is implemented. that means that pressing
+
+Section 5.1: Control and Shift together enters unicode input
+mode. Entering hex digits composes a Unicode character, pressing space or
+releasing the modifiers commits the keycode and every other key cancels
+the current input character.
+
+Section 5.2: Pressing and immediately releasing Control and Shift together
+enters keycap entry mode for the next key: pressing a function key (tab,
+return etc..) will enter the unicode character corresponding to the given
+key.
+
 =head1 LOGIN STAMP
 
-B<@@RXVTNAME@@> tries to write an entry into the I<utmp>(5) file so
+B<@@RXVT_NAME@@> tries to write an entry into the I<utmp>(5) file so
 that it can be seen via the I<who(1)> command, and can accept messages.
-To allow this feature, B<@@RXVTNAME@@> must be installed setuid root on
+To allow this feature, B<@@RXVT_NAME@@> must be installed setuid root on
 some systems.
 
 =head1 COLORS AND GRAPHICS
 
 In addition to the default foreground and background colours,
-B<@@RXVTNAME@@> can display up to 16 colours (8 ANSI colours plus
+B<@@RXVT_NAME@@> can display up to 16 colours (8 ANSI colours plus
 high-intensity bold/blink versions of the same). Here is a list of the
 colours with their B<rgb.txt> names.
 
@@ -817,11 +834,11 @@ on White.
 
 =head1 ENVIRONMENT
 
-B<@@RXVTNAME@@> sets the environment variables B<TERM>, B<COLORTERM>
+B<@@RXVT_NAME@@> sets the environment variables B<TERM>, B<COLORTERM>
 and B<COLORFGBG>. The environment variable B<WINDOWID> is set to the X
-window id number of the B<@@RXVTNAME@@> window and it also uses and
+window id number of the B<@@RXVT_NAME@@> window and it also uses and
 sets the environment variable B<DISPLAY> to specify which display
-terminal to use. B<@@RXVTNAME@@> uses the environment variables
+terminal to use. B<@@RXVT_NAME@@> uses the environment variables
 B<RXVTPATH> and B<PATH> to find XPM files.
 
 =head1 FILES
@@ -852,23 +869,19 @@ Cursor change support is not yet implemented.
 
 Click-and-drag doesn't work with X11 mouse report overriding.
 
-=head1 FTP LOCATION
-
-rxvt-+@@RXVTVERSION@@.tar.gz can be found at the following ftp sites L<@@RXVTFTPSITE@@>(@@RXVTFTPSITE@@)
-
 =head1 CURRENT PROJECT COORDINATOR
 
 =over 4
 
 =item Project Coordinator
 
-@@RXVTMAINT@@ L<@@RXVTMAINTEMAIL@@>
+@@RXVTMAINT@@ L<@@RXVT_MAINTEMAIL@@>
 
 =item Web page maintainter
 
-@@RXVTWEBMAINT@@ L<@@RXVTWEBMAINTEMAIL@@>
+@@RXVTWEBMAINT@@ L<@@RXVT_WEBMAINTEMAIL@@>
 
-L<@@RXVTWEBPAGE@@>(@@RXVTWEBPAGE@@)
+L<@@RXVT_WEBPAGE@@>
 
 =back
 

@@ -1,0 +1,84 @@
+#!/usr/bin/perl
+
+use Pod::Parser;
+use List::Util qw(max);
+
+@ISA = Pod::Parser::;
+
+sub stripfcodes {
+   # strip formatting codes, dumb version
+   map {
+         s/[IBCLFSXZ]<< (.*?) >>/$1/gs;
+         s/[IBCLFSXZ]<(.*?)>/$1/gs;
+         $_
+       } @$_;
+}
+
+sub htmlfcodes {
+   my %tag = (
+      I => "i",
+      B => "b",
+      C => "tt",
+      L => "i",    # broken
+      F => "tt",
+      S => "nobr", # non-std
+      X => "span", # brokwn
+      Z => "span", # brokwn
+   );
+   # strip formatting codes, dumb version
+   map {
+         s/([IBCLFSXZ])<< (.*?) >>/<$tag{$1}>$2<\/$tag{$1}>/gs;
+         s/([IBCLFSXZ])<(.*?)>/<$tag{$1}>$2<\/$tag{$1}>/gs;
+         $_
+       } @$_;
+}
+
+sub command {
+   my ($self, $command, $paragraph) = @_;
+
+   if ($command eq "begin" && $paragraph =~ /^\s*table\s*$/s) {
+      $table++;
+   } elsif ($command eq "end" && $paragraph =~ /^\s*table\s*$/s) {
+      $table--;
+   } else {
+      shift;
+      return $self->SUPER::command (@_);
+   }
+}  
+
+sub verbatim {
+   my ($self, $para) = @_;
+   shift;
+
+   return $self->SUPER::verbatim (@_) unless $table;
+
+   my $table = [ map [$_ =~ /\t([^\t]*)/g], split /\n/, $para ];
+   my $cols = max map scalar @$_, @$table;
+
+   my $fh = $self->output_handle;
+
+   # format the table
+   # tbl first
+   print $fh "=begin roff\n\n";
+
+   print $fh ".TS\n" . ("l " x $cols) . ".\n";
+   print $fh map +(join "\t", stripfcodes @$_) . "\n", @$table;
+   print $fh ".TE\n\n";
+
+   print $fh "=end roff\n\n";
+
+   # html second
+   print $fh "=begin html\n\n";
+
+   print $fh "<table>\n";
+   print $fh map "<tr><td>" . +(join "</td><td>", htmlfcodes @$_) . "</td></tr>\n", @$table;
+   print $fh "</table>\n\n";
+
+   print $fh "=end html\n\n";
+
+}
+
+__PACKAGE__->new->parse_from_filehandle;
+
+
+
