@@ -130,6 +130,9 @@
 /* Define if you have the <libc.h> header file.  */
 #undef HAVE_LIBC_H
 
+/* Define if you have the <pty.h> header file.  */
+#undef HAVE_PTY_H
+
 /* Define if you have the <stdarg.h> header file.  */
 #undef HAVE_STDARG_H
 

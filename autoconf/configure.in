@@ -522,6 +522,7 @@ AC_CHECK_HEADERS( \
 	utmp.h \
 	utmpx.h \
         stdint.h \
+        pty.h \
 )
 
 AC_HEADER_TIME

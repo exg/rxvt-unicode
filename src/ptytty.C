@@ -48,6 +48,9 @@
 #ifdef HAVE_ISASTREAM
 # include <stropts.h>
 #endif
+#ifdef HAVE_PTY_H
+# include <pty.h>
+#endif
 
 // better do this via configure, but....
 #if defined(__FreeBSD__)
@@ -436,6 +439,33 @@ rxvt_ptytty::get ()
     }
 
   return true;
+}
+
+void
+rxvt_ptytty::set_utf8_mode (bool on)
+{
+#ifdef IUTF8
+  if (pty != -1)
+    {
+      struct termios tio;
+
+      if (tcgetattr (pty, &tio) != -1)
+        {
+          tcflag_t new_cflag = tio.c_iflag;
+
+          if (on)
+            new_cflag |= IUTF8;
+          else
+            new_cflag &= ~IUTF8;
+
+          if (new_cflag != tio.c_iflag)
+            {
+              tio.c_iflag = new_cflag;
+              tcsetattr (pty, TCSANOW, &tio);
+            }
+        }
+    }
+#endif
 }
 
 /*----------------------- end-of-file (C source) -----------------------*/
