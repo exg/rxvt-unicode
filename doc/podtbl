@@ -58,23 +58,33 @@ sub verbatim {
    my $fh = $self->output_handle;
 
    # format the table
-   # tbl first
+   # text
+   print $fh "=begin text\n\n";
+
+   for (@$table) {
+      print $fh "   ", (map +(sprintf "%-15s ", $_), stripfcodes @$_), "\n";
+   }
+
+   print $fh "\n=end text\n\n";
+
+   
+   # tbl
    print $fh "=begin roff\n\n";
 
    print $fh ".TS\n" . ("l " x $cols) . ".\n";
    print $fh map +(join "\t", stripfcodes @$_) . "\n", @$table;
-   print $fh ".TE\n\n";
+   print $fh ".TE\n";
 
-   print $fh "=end roff\n\n";
+   print $fh "\n=end roff\n\n";
 
-   # html second
+   # html
    print $fh "=begin html\n\n";
 
    print $fh "<table>\n";
    print $fh map "<tr><td>" . +(join "</td><td>", htmlfcodes @$_) . "</td></tr>\n", @$table;
-   print $fh "</table>\n\n";
+   print $fh "</table>\n";
 
-   print $fh "=end html\n\n";
+   print $fh "\n=end html\n\n";
 
 }
 
