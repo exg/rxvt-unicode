@@ -103,26 +103,29 @@ rxvt_utf8towcs (const char *str, int len)
 {
   if (len < 0) len = strlen (str);
 
-  wchar_t *r = (wchar_t *)rxvt_malloc ((len + 1) * sizeof (wchar_t));
-  wchar_t *p = r;
+  wchar_t *r = (wchar_t *)rxvt_malloc ((len + 1) * sizeof (wchar_t)),
+          *p = r;
 
-  unsigned char *s = (unsigned char *)str;
+  unsigned char *s = (unsigned char *)str,
+                *e = s + len;
 
-  while (len)
+  for (;;)
     {
-      if (s[0] < 0x80)
-        {
-          *p++ = *s++; len--;
-        }
-      else if (len > 0 
+      len = e - s;
+
+      if (len == 0)
+        break;
+      else if (s[0] < 0x80)
+        *p++ = *s++;
+      else if (len >= 2
                && s[0] >= 0xc2 && s[0] <= 0xdf 
                && (s[1] & 0xc0) == 0x80)
         {
           *p++ = ((s[0] & 0x1f) << 6)
                |  (s[1] & 0x3f);
-          s += 2; len -= 2;
+          s += 2;
         }
-      else if (len > 1 
+      else if (len >= 3
                && (   (s[0] == 0xe0                 && s[1] >= 0xa0 && s[1] <= 0xbf)
                    || (s[0] >= 0xe1 && s[0] <= 0xec && s[1] >= 0x80 && s[1] <= 0xbf)
                    || (s[0] == 0xed                 && s[1] >= 0x80 && s[1] <= 0x9f)
@@ -133,9 +136,9 @@ rxvt_utf8towcs (const char *str, int len)
           *p++ = ((s[0] & 0x0f) << 12)
                | ((s[1] & 0x3f) <<  6)
                |  (s[2] & 0x3f);
-          s += 3; len -= 3;
+          s += 3;
         }
-      else if (len > 2
+      else if (len >= 4
                && (   (s[0] == 0xf0                 && s[1] >= 0x90 && s[1] <= 0xbf)
                    || (s[0] >= 0xf1 && s[0] <= 0xf3 && s[1] >= 0x80 && s[1] <= 0xbf)
                    || (s[0] == 0xf4                 && s[1] >= 0x80 && s[1] <= 0x8f)
@@ -147,12 +150,12 @@ rxvt_utf8towcs (const char *str, int len)
                | ((s[1] & 0x3f) << 12) 
                | ((s[2] & 0x3f) <<  6) 
                |  (s[3] & 0x3f);
-          s += 4; len -= 4;
+          s += 4;
         }
       else
         {
           *p++ = 0xfffd;
-          s++; len--;
+          s++;
         }
     }
 
