@@ -2262,6 +2262,29 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
   want_refresh = 0;        /* screen is current */
 }
 
+void
+rxvt_term::scr_remap_chars (text_t *tp, rend_t *rp)
+{
+  if (!rp || !tp)
+    return;
+
+  for (int i = TermWin.ncol; i; i--, rp++, tp++)
+    *rp = SET_FONT (*rp, TermWin.fontset->find_font (*tp));
+}
+
+void
+rxvt_term::scr_remap_chars ()
+{
+  for (int i = TermWin.nrow + TermWin.saveLines; i--; )
+    scr_remap_chars (screen.text[i], screen.rend[i]);
+
+  for (int i = TermWin.nrow; i--; )
+    {
+      scr_remap_chars (drawn_text[i], drawn_rend[i]);
+      scr_remap_chars (swap.text[i], swap.rend[i]);
+    }
+}
+
 /* ------------------------------------------------------------------------- */
 void
 rxvt_term::scr_clear ()

@@ -742,6 +742,13 @@ rxvt_term::change_font (const char *fontname)
 
           // TODO: screen needs to be told about new fonts
           
+          if (TermWin.parent[0])
+            {
+              resize_all_windows (0, 0, 0);
+              scr_remap_chars ();
+              scr_touch (true);
+            }   
+
           return true;
         }
     }

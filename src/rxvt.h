@@ -271,11 +271,13 @@ struct mouse_event {
   *           +---< SB_WIDTH_NEXT
   */
 
-#define NO_REFRESH              0       /* Window not visible at all!        */
-#define FAST_REFRESH            (1<<0)  /* Fully exposed window              */
-#define SLOW_REFRESH            (1<<1)  /* Partially exposed window          */
-#define SMOOTH_REFRESH          (1<<2)  /* Do sync'ing to make it smooth     */
-#define REFRESH_BOUNDS          (1<<3)
+enum {
+  NO_REFRESH       = 0   ,  /* Window not visible at all!        */
+  FAST_REFRESH     = 1<<0,  /* Fully exposed window              */
+  SLOW_REFRESH     = 1<<1,  /* Partially exposed window          */
+  SMOOTH_REFRESH   = 1<<2,  /* Do sync'ing to make it smooth     */
+  REFRESH_BOUNDS   = 1<<3
+};
 
 #ifdef NO_SECONDARY_SCREEN
 # define NSCREENS               0
@@ -293,14 +295,18 @@ struct mouse_event {
 #define FONT_UP                 "#+"
 
 /* flags for rxvt_scr_gotorc () */
-#define C_RELATIVE              1       /* col movement is relative */
-#define R_RELATIVE              2       /* row movement is relative */
-#define RELATIVE                (R_RELATIVE|C_RELATIVE)
+enum {
+  C_RELATIVE = 1    ,       /* col movement is relative */
+  R_RELATIVE =     2,       /* row movement is relative */
+  RELATIVE   = 1 | 2
+};
 
 /* modes for rxvt_scr_insdel_chars (), rxvt_scr_insdel_lines () */
-#define INSERT                  -1      /* don't change these values */
-#define DELETE                  +1
-#define ERASE                   +2
+enum {
+  INSERT = -1,				/* don't change these values */
+  DELETE = +1,
+  ERASE  = +2
+};
 
 /* modes for rxvt_scr_page () - scroll page. used by scrollbar window */
 enum page_dirn {
@@ -1150,6 +1156,8 @@ struct rxvt_term : rxvt_vars {
   void scr_erase_screen (int mode);
   void scr_touch (bool refresh);
   void scr_expose (int x, int y, int width, int height, bool refresh);
+  void scr_remap_chars ();
+  void scr_remap_chars (text_t *tp, rend_t *rp);
 
   /* autoconvert */
 
@@ -1162,7 +1170,7 @@ struct rxvt_term : rxvt_vars {
   void button_release (const XButtonEvent &ev);
   int check_our_parents ();
 #ifdef PRINTPIPE
-  FILE * popen_printer ();
+  FILE *popen_printer ();
   int pclose_printer (FILE *stream);
 #endif
   void process_print_pipe ();
