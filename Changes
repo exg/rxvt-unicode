@@ -8,6 +8,24 @@ TODO: multibyte support for setwmname et al.
 TODO: tabbed windows
 TODO: there are other todo items, but they are not in this file.
 TODO: OnTheSpot editing.
+TODO: searchable backlog
+TODO: meta-tagging of data by regex (my dream project)
+TODO: triple-click == select full output line
+TODO: double-click: more intelligent (urls etc.)
+
+4.2  Wed Dec  1 03:30:22 CET 2004
+	- make emulated graphical characters respect wcwidth
+          (forgot who reported this).
+        - remove debugging code that caused major slowdowns
+          on high-latency networks.
+        - wide characters shift the correct number of characters
+          in insert mode now. Reported by Gunnar Ritter.
+        - doc/rxvt-unicode.spec file contributed by Ville Herva.
+        - make storage of tab movements as characters optional
+          on the -ptab option and pastableTabs: resource. On request
+          by Gunnar Ritter.
+        - fix a bug where :size= argument for xft fonts was ignored
+          or used incorrectly. Reported by Ville Herva.
 
 4.1  Sun Nov 21 21:10:19 CET 2004
 	- save and restore cursor position in secondary screen regardless of
