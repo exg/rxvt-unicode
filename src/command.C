@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.26 2003/12/24 06:26:52 pcg Exp $
+ * $Id: command.C,v 1.27 2003/12/30 01:35:58 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -754,6 +754,7 @@ rxvt_term::process_x_events ()
   while (XPending (Xdisplay));
 }
 
+#ifdef CURSOR_BLINK
 void
 rxvt_term::blink_cb (time_watcher &w)
 {
@@ -761,6 +762,7 @@ rxvt_term::blink_cb (time_watcher &w)
   hidden_cursor = !hidden_cursor;
   want_refresh = 1;
 }
+#endif
 
 void
 rxvt_term::x_cb (io_watcher &w, short revents)
