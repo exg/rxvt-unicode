@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.3 2003/11/25 11:52:42 pcg Exp $
+ * $Id: main.C,v 1.4 2003/11/25 15:25:17 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -44,13 +44,6 @@
 # include <termios.h>
 #endif
 
-rxvt_term::rxvt_term()
-: pty_ev(this, &rxvt_term::pty_cb),
-  x_ev  (this, &rxvt_term::x_cb)
-{
-  cmdbuf_ptr = cmdbuf_endp = cmdbuf_base;
-}
-
 void *
 rxvt_term::operator new (size_t s)
 {
@@ -66,89 +59,106 @@ rxvt_term::operator delete (void *p, size_t s)
   free (p);
 }
 
+rxvt_term::rxvt_term ()
+: pty_ev(this, &rxvt_term::pty_cb),
+  x_ev  (this, &rxvt_term::x_cb)
+{
+  cmdbuf_ptr = cmdbuf_endp = cmdbuf_base;
+}
+
+rxvt_term::~rxvt_term ()
+{
+  delete PixColors;
+}
+
 /*----------------------------------------------------------------------*/
 /* rxvt_init() */
 /* LIBPROTO */
 rxvt_t
 rxvt_init(int argc, const char *const *argv)
 {
-  const char    **cmd_argv;
-
   SET_R(new rxvt_term);
   dR;
 
-  if (rxvt_init_vars(aR) < 0)
+  if (!R->init_vars () || !R->init (argc, argv))
     {
-      free(R);
+      delete R;
       return NULL;
     }
 
-/*
- * Save and then give up any super-user privileges
- * If we need privileges in any area then we must specifically request it.
- * We should only need to be root in these cases:
- *  1.  write utmp entries on some systems
- *  2.  chown tty on some systems
- */
-    rxvt_privileges(aR_ SAVE);
-    rxvt_privileges(aR_ IGNORE);
+  return R;
+}
 
-    rxvt_init_secondary(aR);
+bool
+rxvt_term::init (int argc, const char *const *argv)
+{
+  dR;//TODO (scrollbar, setidle)
 
-    cmd_argv = rxvt_init_resources(aR_ argc, argv);
+  /*
+   * Save and then give up any super-user privileges
+   * If we need privileges in any area then we must specifically request it.
+   * We should only need to be root in these cases:
+   *  1.  write utmp entries on some systems
+   *  2.  chown tty on some systems
+   */
+  rxvt_privileges (this, SAVE);
+  rxvt_privileges (this, IGNORE);
 
-    R->x_ev.start (ConnectionNumber (R->Xdisplay), EVENT_READ);
+  rxvt_init_secondary (this);
+
+  const char **cmd_argv = rxvt_init_resources (this, argc, argv);
 
 #if (MENUBAR_MAX)
-    rxvt_menubar_read(aR_ R->rs[Rs_menu]);
+  rxvt_menubar_read (this, rs[Rs_menu]);
 #endif
 #ifdef HAVE_SCROLLBARS
-    if (R->Options & Opt_scrollBar)
-      scrollbar_setIdle();    /* set existence for size calculations */
+  if (Options & Opt_scrollBar)
+    scrollbar_setIdle ();    /* set existence for size calculations */
 #endif
 
-    rxvt_Create_Windows(aR_ argc, argv);
+  rxvt_Create_Windows (this, argc, argv);
 
-    rxvt_init_xlocale(aR);
+  rxvt_init_xlocale (this);
 
-    rxvt_scr_reset(aR);         /* initialize screen */
+  rxvt_scr_reset (this);         /* initialize screen */
 #ifdef RXVT_GRAPHICS
-    rxvt_Gr_reset(aR);          /* reset graphics */
+  rxvt_Gr_reset (this);          /* reset graphics */
 #endif
 
 #if 0
 #ifdef DEBUG_X
-    XSynchronize(R->Xdisplay, True);
-    XSetErrorHandler((XErrorHandler) abort);
+  XSynchronize(Xdisplay, True);
+  XSetErrorHandler((XErrorHandler) abort);
 #else
-    XSetErrorHandler((XErrorHandler) rxvt_xerror_handler);
+  XSetErrorHandler((XErrorHandler) rxvt_xerror_handler);
 #endif
 #endif
 
 #ifdef HAVE_SCROLLBARS
-    if (R->Options & Opt_scrollBar)
-      rxvt_Resize_scrollBar(aR);      /* create and map scrollbar */
+  if (Options & Opt_scrollBar)
+    rxvt_Resize_scrollBar (this);      /* create and map scrollbar */
 #endif
 #if (MENUBAR_MAX)
-    if (menubar_visible(r))
-      XMapWindow(R->Xdisplay, R->menuBar.win);
+  if (menubar_visible(r))
+    XMapWindow (Xdisplay, menuBar.win);
 #endif
 #ifdef TRANSPARENT
-    if (R->Options & Opt_transparent)
-      {
-        XSelectInput(R->Xdisplay, Xroot, PropertyChangeMask);
-        rxvt_check_our_parents(aR);
-      }
+  if (Options & Opt_transparent)
+    {
+      XSelectInput (Xdisplay, Xroot, PropertyChangeMask);
+      rxvt_check_our_parents (this);
+    }
 #endif
-    XMapWindow(R->Xdisplay, R->TermWin.vt);
-    XMapWindow(R->Xdisplay, R->TermWin.parent[0]);
+  XMapWindow (Xdisplay, TermWin.vt);
+  XMapWindow (Xdisplay, TermWin.parent[0]);
 
-    rxvt_init_env(aR);
-    rxvt_init_command(aR_ cmd_argv);
+  rxvt_init_env (this);
+  rxvt_init_command (this, cmd_argv);
 
-    R->pty_ev.start (R->cmd_fd, EVENT_READ);
+  x_ev.start (Xfd, EVENT_READ);
+  pty_ev.start (cmd_fd, EVENT_READ);
 
-    return R;
+  return true;
 }
 
 /* ------------------------------------------------------------------------- *

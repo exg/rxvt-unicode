@@ -1,5 +1,5 @@
 /*
- * $Id: defaultfont.h,v 1.4 2003/11/25 11:52:42 pcg Exp $
+ * $Id: defaultfont.h,v 1.5 2003/11/25 15:25:17 pcg Exp $
  */
 
 #ifndef _DEFAULTFONT_H_
@@ -25,12 +25,9 @@
 
 struct rxvt_font {
   // managed by the fontset
-#if EXPLICIT_CONTEXT
-  rxvt_t rxvt_term;
-  void set_term (pR) { this->rxvt_term = R; }
-#else
-  void set_term (pR) { }
-#endif
+  rxvt_t r;
+  void set_term (rxvt_t r) { this->r = r; }
+
   char *name;
   codeset cs;
   bool loaded;
@@ -68,7 +65,7 @@ struct rxvt_font {
 struct rxvt_fallback_font;
 
 struct rxvt_fontset {
-  rxvt_fontset (pR);
+  rxvt_fontset (rxvt_t r);
   ~rxvt_fontset ();
 
   rxvt_font *new_font (const char *name, codeset cs);
@@ -87,9 +84,7 @@ struct rxvt_fontset {
   }
 
 private:
-#ifdef EXPLICIT_CONTEXT
-  rxvt_t rxvt_term;
-#endif
+  rxvt_t r;
   simplevec<rxvt_font *> fonts;
   const rxvt_fallback_font *fallback;
 

@@ -120,19 +120,19 @@ void io_manager::loop ()
       int fds = 0;
 
       for (io_watcher **w = iow.begin (); w < iow.end (); ++w)
-         {
-           if ((*w)->events & EVENT_READ ) FD_SET ((*w)->fd, &rfd);
-           if ((*w)->events & EVENT_WRITE) FD_SET ((*w)->fd, &wfd);
+        {
+          if ((*w)->events & EVENT_READ ) FD_SET ((*w)->fd, &rfd);
+          if ((*w)->events & EVENT_WRITE) FD_SET ((*w)->fd, &wfd);
 
-           if ((*w)->fd > fds) fds = (*w)->fd;
-         }
+          if ((*w)->fd > fds) fds = (*w)->fd;
+        }
 
       fds = select (fds + 1, &rfd, &wfd, 0, &to);
 
       set_now ();
 
       if (fds > 0)
-        for (io_watcher **w = iow.begin (); w < iow.end (); w++)
+        for (io_watcher **w = iow.begin (); w < iow.end (); ++w)
           {
             short revents = (*w)->events;
 

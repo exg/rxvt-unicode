@@ -7,10 +7,10 @@
 int
 main(int argc, const char *const *argv)
 {
-    if (rxvt_init(argc, argv) == NULL)
-	return EXIT_FAILURE;
+  if (!rxvt_init(argc, argv))
+    return EXIT_FAILURE;
 
-    iom.loop ();
+  iom.loop ();
 
-    return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }

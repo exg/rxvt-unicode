@@ -1,5 +1,5 @@
 /*
- * $Id: init.h,v 1.2 2003/11/24 17:31:27 pcg Exp $
+ * $Id: init.h,v 1.3 2003/11/25 15:25:17 pcg Exp $
  */
 
 #ifndef _INIT_H_
@@ -145,9 +145,6 @@
 
 #ifndef O_NOCTTY
 # define O_NOCTTY	0
-#endif
-#ifndef O_NDELAY
-# define O_NDELAY	O_NONBLOCK	/* QNX, at least */
 #endif
 #ifndef ONLCR
 # define ONLCR		0		/* QNX, at least */

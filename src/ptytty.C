@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	ptytty.c
  *----------------------------------------------------------------------*
- * $Id: ptytty.C,v 1.2 2003/11/24 17:31:27 pcg Exp $
+ * $Id: ptytty.C,v 1.3 2003/11/25 15:25:17 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1999-2001 Geoff Wing <gcw@pobox.com>
@@ -69,10 +69,10 @@
 int
 rxvt_get_pty(int *fd_tty, const char **ttydev)
 {
-    int             pfd;
+    int pfd;
 
 #ifdef PTYS_ARE_OPENPTY
-    char            tty_name[sizeof "/dev/pts/????\0"];
+    char tty_name[sizeof "/dev/pts/????\0"];
 
     if (openpty(&pfd, fd_tty, tty_name, NULL, NULL) != -1) {
 	*ttydev = strdup(tty_name);
@@ -81,7 +81,7 @@ rxvt_get_pty(int *fd_tty, const char **ttydev)
 #endif
 
 #ifdef PTYS_ARE__GETPTY
-    *ttydev = _getpty(&pfd, O_RDWR | O_NDELAY | O_NOCTTY, 0622, 0);
+    *ttydev = _getpty(&pfd, O_RDWR | O_NONBLOCK | O_NOCTTY, 0622, 0);
     if (*ttydev != NULL)
 	return pfd;
 #endif

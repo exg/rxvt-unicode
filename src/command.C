@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.3 2003/11/25 11:52:42 pcg Exp $
+ * $Id: command.C,v 1.4 2003/11/25 15:25:16 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -634,7 +634,7 @@ rxvt_cmd_write(pR_ const unsigned char *str, unsigned int count)
     unsigned int    n, s;
     unsigned char  *cmdbuf_base = R->cmdbuf_base,
                    *cmdbuf_endp = R->cmdbuf_endp,
-                   *cmdbuf_ptr = R->cmdbuf_ptr;
+                   *cmdbuf_ptr  = R->cmdbuf_ptr;
 
     n = cmdbuf_ptr - cmdbuf_base;
     s = cmdbuf_base + BUFSIZ - 1 - cmdbuf_endp;
@@ -703,24 +703,26 @@ void
 rxvt_term::x_cb (io_watcher &w, short revents)
 {
   process_x_events ();
+
+  flush ();
 }
 
 // read the next character, currently handles UTF-8
 // will probably handle all sorts of other stuff in the future
-static uint32_t
-next_char (pR)
+uint32_t
+rxvt_term::next_char ()
 {
-  mbstate &s = R->mbstate;
+  struct mbstate &s = mbstate;
 
-  while (R->cmdbuf_ptr < R->cmdbuf_endp)
+  while (cmdbuf_ptr < cmdbuf_endp)
     {
-      uint8_t ch = *R->cmdbuf_ptr;
+      uint8_t ch = *cmdbuf_ptr;
 
       if (s.cnt)
         {
           if ((ch & 0xc0) == 0x80)
             {
-              R->cmdbuf_ptr++;
+              cmdbuf_ptr++;
 
               /* continuation */
               s.reg = (s.reg << 6) | (ch & 0x7f);
@@ -739,7 +741,7 @@ next_char (pR)
       
       if ((ch & 0xc0) == 0xc0)
         {
-          R->cmdbuf_ptr++;
+          cmdbuf_ptr++;
 
           /* first byte */
           s.orig = ch; /* for broken encodings */
@@ -752,7 +754,7 @@ next_char (pR)
         }
       else
         {
-          R->cmdbuf_ptr++; /* _occasional_ non-utf8 may slip through... */
+          cmdbuf_ptr++; /* _occasional_ non-utf8 may slip through... */
           return ch;
         }
     }
@@ -760,40 +762,155 @@ next_char (pR)
   return NOCHAR;
 }
 
+bool
+rxvt_term::pty_fill (size_t count)
+{
+  ssize_t n = cmdbuf_endp - cmdbuf_ptr;
+
+  memmove (cmdbuf_base, cmdbuf_ptr, n);
+  cmdbuf_ptr = cmdbuf_base;
+  cmdbuf_endp = cmdbuf_ptr + n;
+ 
+  n = read (cmd_fd, cmdbuf_endp, count);
+
+  if (n > 0)
+    {
+      cmdbuf_endp += n;
+      return true;
+    }
+  else if (n < 0 && errno == EAGAIN)
+    return false;
+
+  rxvt_clean_exit();
+  exit(EXIT_FAILURE);	/* bad order of events? */
+}
+
 void
 rxvt_term::pty_cb (io_watcher &w, short revents)
 {
-  int             n;
-  unsigned int    count;
-
-  if (count = (cmdbuf_endp - cmdbuf_ptr))
+  while (pty_fill (BUFSIZ - (cmdbuf_endp - cmdbuf_ptr)))
     {
-      memmove (cmdbuf_base, cmdbuf_ptr, count);
-      cmdbuf_ptr = cmdbuf_base;
-      cmdbuf_endp = cmdbuf_ptr + count;
-    }
-      
+      /* once we know the shell is running, send the screen size.  Again! */
+      //ch = rxvt_cmd_getc(aR);	/* wait for something */
+      //rxvt_tt_winsize(cmd_fd, TermWin.ncol, TermWin.nrow, cmd_pid);
 
-  for (count = BUFSIZ - count; count; count -= n, cmdbuf_endp += n)
-      if ((n = read(cmd_fd, cmdbuf_endp, count)) > 0)
-        continue;
-      else if (n == 0 || (n < 0 && errno == EAGAIN))
-        break;
-      else
+      uint32_t ch = NOCHAR;
+
+      for (;;)
         {
-          rxvt_clean_exit();
-          exit(EXIT_FAILURE);	/* bad order of events? */
+          if (ch == NOCHAR)
+            ch = next_char ();
+
+          if (ch == NOCHAR) // TODO: improve
+            break;
+
+          if (ch >= ' ' || ch == '\t' || ch == '\n' || ch == '\r')
+            {
+              /* Read a text string from the input buffer */
+              uint32_t buf[BUFSIZ];
+              bool refreshnow = false;
+              int nlines = 0;
+              uint32_t *str = buf;
+
+              *str++ = ch;
+
+              for (;;)
+                {
+                  ch = next_char ();
+
+                  if (ch == NOCHAR || (ch < ' ' && ch != '\t' && ch != '\n' && ch != '\r'))
+                    break;
+                  else
+                    {
+                      *str++ = ch;
+
+                      if (ch == '\n')
+                        {
+                          nlines++;
+                          refresh_count++;
+
+                          if (!(Options & Opt_jumpScroll)
+                              || (refresh_count >= (refresh_limit * (TermWin.nrow - 1))))
+                            {
+                              refreshnow = true;
+                              ch = NOCHAR;
+                              break;
+                            }
+                        }
+
+                      if (str >= buf + BUFSIZ)
+                        {
+                          ch = NOCHAR;
+                          break;
+                        }
+                    }
+                }
+
+              rxvt_scr_add_lines (this, buf, nlines, str - buf);
+
+              /*
+               * If there have been a lot of new lines, then update the screen
+               * What the heck I'll cheat and only refresh less than every page-full.
+               * the number of pages between refreshes is refresh_limit, which
+               * is incremented here because we must be doing flat-out scrolling.
+               *
+               * refreshing should be correct for small scrolls, because of the
+               * time-out
+               */
+              if (refreshnow)
+                {
+                  if ((Options & Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
+                    refresh_limit++;
+
+                  rxvt_scr_refresh (this, refresh_type);
+                }
+
+            }
+          else
+            {
+              switch (ch)
+                {
+                  default:
+                    rxvt_process_nonprinting (this, ch);
+                    break;
+                  case C0_ESC:	/* escape char */
+                    rxvt_process_escape_seq (this);
+                    break;
+                  /*case 0x9b: */	/* CSI */
+                  /*  rxvt_process_csi_seq (this); */
+                }
+
+              ch = NOCHAR;
+            }
         }
+    }
 
-  if (count != BUFSIZ)	/* some characters read in */
+  flush ();
+}
+
+void
+rxvt_term::flush ()
+{
+#ifdef TRANSPARENT
+  if (want_full_refresh)
     {
-      uint32_t c = next_char (this);
+      want_full_refresh = 0;
+      rxvt_scr_clear (this);
+      rxvt_scr_touch (this, False);
+      want_refresh = 1;
+    }
+#endif
 
-#if 0
-      if (c != NOCHAR)
-        return c;
+  if (want_refresh)
+    {
+      rxvt_scr_refresh (this, refresh_type);
+      rxvt_scrollbar_show (this, 1);
+#ifdef USE_XIM
+      rxvt_IMSendSpot (this);
 #endif
     }
+
+  XFlush (Xdisplay);
 }
 
 /* rxvt_cmd_getc() - Return next input character */
@@ -805,6 +922,19 @@ rxvt_term::pty_cb (io_watcher &w, short revents)
 uint32_t
 rxvt_cmd_getc(pR)
 {
+  for (;;)
+    {
+      uint32_t c = R->next_char ();
+      if (c != NOCHAR)
+        return c;
+
+      // incomplete sequences should occur rarely, still, a better solution
+      // would be preferred. either setjmp/longjmp or better design.
+      fcntl (R->cmd_fd, F_SETFL, 0);
+      R->pty_fill (1);
+      fcntl (R->cmd_fd, F_SETFL, O_NONBLOCK);
+    }
+
 #define TIMEOUT_USEC	5000
     fd_set          readfds;
     int             quick_timeout, select_res;
@@ -813,10 +943,6 @@ rxvt_cmd_getc(pR)
 #if defined(POINTER_BLANK) || defined(CURSOR_BLINK)
     struct timeval  tp;
 #endif
-
-    uint32_t c = next_char (aR);
-    if (c != NOCHAR)
-      return c;
 
     for (;;) {
     /* loop until we can return something */
@@ -981,49 +1107,8 @@ rxvt_cmd_getc(pR)
 	if (R->Options & Opt_cursorBlink)
 	    R->want_refresh = 1;
 #endif
-
-    /* See if we can read new data from the application */
-	if (select_res > 0 && FD_ISSET(R->cmd_fd, &readfds)) {
-	    int             n;
-	    unsigned int    count;
-
-	    R->cmdbuf_ptr = R->cmdbuf_endp = R->cmdbuf_base;
-	    for (count = BUFSIZ; count; count -= n, R->cmdbuf_endp += n)
-		if ((n = read(R->cmd_fd, R->cmdbuf_endp, count)) > 0)
-		    continue;
-		else if (n == 0 || (n < 0 && errno == EAGAIN))
-		    break;
-		else {
-		    rxvt_clean_exit();
-		    exit(EXIT_FAILURE);	/* bad order of events? */
-		}
-
-	    if (count != BUFSIZ)	/* some characters read in */
-              {
-                uint32_t c = next_char (aR);
-                if (c != NOCHAR)
-                  return c;
-              }
-	}
-#ifdef TRANSPARENT
-	if (R->want_full_refresh) {
-	    R->want_full_refresh = 0;
-	    rxvt_scr_clear(aR);
-	    rxvt_scr_touch(aR_ False);
-	    R->want_refresh = 1;
-	}
-#endif
-	if (R->want_refresh) {
-	    rxvt_scr_refresh(aR_ R->refresh_type);
-	    rxvt_scrollbar_show(aR_ 1);
-#ifdef USE_XIM
-	    rxvt_IMSendSpot(aR);
-#endif
-	}
     }
-/* NOTREACHED */
 }
-/*}}} */
 
 /* EXTPROTO */
 void
@@ -3393,107 +3478,6 @@ rxvt_process_graphics(pR)
 /*}}} */
 
 /* ------------------------------------------------------------------------- */
-
-/*{{{ Read and process output from the application */
-/* LIBPROTO */
-void
-rxvt_main_loop(pR)
-{
-    uint32_t ch, *str, buf[BUFSIZ];
-    int nlines, refreshnow;
-
-    R->cmdbuf_ptr = R->cmdbuf_endp = R->cmdbuf_base;
-
-    /* once we know the shell is running, send the screen size.  Again! */
-    ch = rxvt_cmd_getc(aR);	/* wait for something */
-    rxvt_tt_winsize(R->cmd_fd, R->TermWin.ncol, R->TermWin.nrow, R->cmd_pid);
-
-    refreshnow = 0;
-    for (;;) {
-        if (ch == NOCHAR)
-          ch = rxvt_cmd_getc(aR);
-
-	if (ch >= ' ' || ch == '\t' || ch == '\n' || ch == '\r')
-          {
-            /* Read a text string from the input buffer */
-            nlines = 0;
-            str = buf;
-            *str++ = ch;
-            for (;;)
-              {
-                ch = next_char (aR);
-
-		if (ch == NOCHAR || (ch < ' ' && ch != '\t' && ch != '\n' && ch != '\r'))
-                  break;
-                else
-                  {
-                    *str++ = ch;
-
-                    if (ch == '\n')
-                      {
-                        nlines++;
-                        R->refresh_count++;
-                        if (!(R->Options & Opt_jumpScroll)
-                            || (R->refresh_count >= (R->refresh_limit
-                                                     * (R->TermWin.nrow - 1))))
-                          {
-                            refreshnow = 1;
-                            ch = NOCHAR;
-                            break;
-                          }
-                      }
-
-                    if (str >= buf + BUFSIZ)
-                      {
-                        ch = NOCHAR;
-                        break;
-                      }
-                  }
-	      }
-
-	    rxvt_scr_add_lines(aR_ buf, nlines, str - buf);
-
-            /*
-             * If there have been a lot of new lines, then update the screen
-             * What the heck I'll cheat and only refresh less than every page-full.
-             * the number of pages between refreshes is R->refresh_limit, which
-             * is incremented here because we must be doing flat-out scrolling.
-             *
-             * refreshing should be correct for small scrolls, because of the
-             * time-out
-             */
-
-            //TODO: REFRESH_PERIOD is one, fix it
-	    if (refreshnow)
-              {
-		refreshnow = 0;
-
-		if ((R->Options & Opt_jumpScroll) && R->refresh_limit < REFRESH_PERIOD)
-	          R->refresh_limit++;
-
-		rxvt_scr_refresh(aR_ R->refresh_type);
-	      }
-
-	  }
-        else
-          {
-	    switch (ch)
-              {
-                default:
-                    rxvt_process_nonprinting(aR_ ch);
-                    break;
-                case C0_ESC:	/* escape char */
-                    rxvt_process_escape_seq(aR);
-                    break;
-                /* case 0x9b: */	/* CSI */
-                /*  rxvt_process_csi_seq(aR); */
-              }
-
-            ch = NOCHAR;
-          }
-    }
-/* NOTREACHED */
-}
 
 /*
  * Send printf() formatted output to the command.
