@@ -272,11 +272,14 @@ void rxvt_display::x_cb (io_watcher &w, short revents)
     }
   while (XEventsQueued (display, QueuedAlready));
 
-  flush ();
+  XFlush (display);
 }
 
 void rxvt_display::flush ()
 {
+  if (XEventsQueued (display, QueuedAlready))
+    x_cb (x_ev, EVENT_READ);
+
   XFlush (display);
 }
 
@@ -334,7 +337,9 @@ rxvt_xim *rxvt_display::get_xim (const char *locale, const char *modifiers)
 
 void rxvt_display::put_xim (rxvt_xim *xim)
 {
+#if XLIB_IS_RACEFREE
   xims.put (xim);
+#endif
 }
 #endif
 
