@@ -120,7 +120,7 @@ void
 rxvt_term::scr_blank_line (text_t *et, rend_t *er, unsigned int width, rend_t efs)
 {
   efs &= ~RS_baseattrMask;
-  efs = SET_FONT (efs, TermWin.fontset->find_font (' '));
+  efs = SET_FONT (efs, TermWin.ascii_map [' ' - 0x20]);
 
   while (width--)
     {
@@ -796,7 +796,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 #ifdef DEBUG_STRICT
   assert (screen.cur.col < last_col);
   assert ((screen.cur.row < TermWin.nrow)
-         && (screen.cur.row >= - (int32_t)TermWin.nscrolled));
+          && (screen.cur.row >= - (int32_t)TermWin.nscrolled));
 #else                           /* drive with your eyes closed */
   MIN_IT (screen.cur.col, last_col - 1);
   MIN_IT (screen.cur.row, (int32_t)TermWin.nrow - 1);
@@ -900,7 +900,10 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
             c = rxvt_composite.compose (c); // map to lower 16 bits
 #endif
           bool bold = (Options & Opt_realBold) && ((rstyle & RS_Bold) != 0);
-          rend_t rend = SET_FONT (rstyle, TermWin.fontset->find_font (c, bold));
+          rend_t rend = SET_FONT (rstyle,
+                                  c > 0x7f || bold || c < 0x20
+                                     ? TermWin.fontset->find_font (c, bold)
+                                     : TermWin.ascii_map [c - 0x20]);
 
           do
             {
@@ -1749,6 +1752,14 @@ rxvt_term::scr_expose (int x, int y, int width, int height, bool refresh)
   if (drawn_text == NULL)  /* sanity check */
     return;
 
+#ifndef NO_SLOW_LINK_SUPPORT
+  if (refresh_type == FAST_REFRESH && !display->is_local)
+    {
+      y = 0;
+      height = TermWin.height;
+    }
+#endif
+
 #ifdef DEBUG_STRICT
   x = max (x, 0);
   x = min (x, (int)TermWin.width);
@@ -2057,7 +2068,8 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
    *    This has been deliberately kept simple.
    */
   i = num_scr;
-  if (refresh_type == FAST_REFRESH && num_scr_allow && i
+  if (!display->is_local
+      && refresh_type == FAST_REFRESH && num_scr_allow && i
       && abs (i) < TermWin.nrow && !must_clear)
     {
       int16_t nits;
@@ -2237,7 +2249,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
             }
 
 #ifdef TEXT_BLINK
-          if (rend & RS_Blink && back == Color_bg)
+          if (rend & RS_Blink && (back == Color_bg || fore == Color_bg))
             {
               if (!text_blink_ev.active)
                 {
@@ -2277,7 +2289,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
           else
             font->draw (*TermWin.drawable, xpixel, ypixel, text, count, fore, back);
 
-          if ((rend & RS_Uline) && (font->descent > 1))
+          if (rend & RS_Uline && font->descent > 1 && fore != back)
             XDrawLine (display->display, drawBuffer, TermWin.gc,
                        xpixel, ypixel + font->ascent + 1,
                        xpixel + Width2Pixel (count) - 1, ypixel + font->ascent + 1);
@@ -2347,7 +2359,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 #endif
 
   if (refresh_type & SMOOTH_REFRESH)
-    XSync (display->display, False);
+    XFlush (display->display);
 
   num_scr = 0;
   num_scr_allow = 1;
