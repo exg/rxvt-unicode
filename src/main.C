@@ -357,7 +357,7 @@ rxvt_term::init (int argc, const char *const *argv)
 
   scr_reset ();         /* initialize screen */
 
-#if 0
+#if 1
   XSynchronize (display->display, True);
 #endif
 
@@ -1301,32 +1301,44 @@ rxvt_term::IM_get_IC (const char *modifiers)
       return false;
     }
 
-  p = rs[Rs_preeditType] ? rs[Rs_preeditType] : "OverTheSpot,OffTheSpot,Root,None";
-  s = rxvt_splitcommastring (p);
+  const char *pet[] = { rs[Rs_preeditType], "OverTheSpot,OffTheSpot,Root,None" };
 
-  for (i = found = 0; !found && s[i]; i++)
+  for (int pi = 0; pi < 2; pi++)
     {
-      if (!strcmp (s[i], "OverTheSpot"))
-        input_style = (XIMPreeditPosition | XIMStatusNothing);
-      else if (!strcmp (s[i], "OffTheSpot"))
-        input_style = (XIMPreeditArea | XIMStatusArea);
-      else if (!strcmp (s[i], "Root"))
-        input_style = (XIMPreeditNothing | XIMStatusNothing);
-      else if (!strcmp (s[i], "None"))
-        input_style = (XIMPreeditNone | XIMStatusNone);
+      p = pet[pi];
 
-      for (j = 0; j < xim_styles->count_styles; j++)
-        if (input_style == xim_styles->supported_styles[j])
-          {
-            found = 1;
-            break;
-          }
+      if (!p)
+        continue;
+
+      s = rxvt_splitcommastring (p);
+
+      for (i = found = 0; !found && s[i]; i++)
+        {
+          if (!strcmp (s[i], "OverTheSpot"))
+            input_style = (XIMPreeditPosition | XIMStatusNothing);
+          else if (!strcmp (s[i], "OffTheSpot"))
+            input_style = (XIMPreeditArea | XIMStatusArea);
+          else if (!strcmp (s[i], "Root"))
+            input_style = (XIMPreeditNothing | XIMStatusNothing);
+          else if (!strcmp (s[i], "None"))
+            input_style = (XIMPreeditNone | XIMStatusNone);
+
+          for (j = 0; j < xim_styles->count_styles; j++)
+            if (input_style == xim_styles->supported_styles[j])
+              {
+                rxvt_freecommastring (s);
+
+                found = 1;
+                goto foundpet;
+              }
+
+        }
+
+      rxvt_freecommastring (s);
     }
 
-  for (i = 0; s[i]; i++)
-    free (s[i]);
+foundpet:
 
-  free (s);
   XFree (xim_styles);
 
   if (!found)
@@ -1461,6 +1473,7 @@ rxvt_term::im_cb ()
       bool found = false;
 
       s = rxvt_splitcommastring (p);
+
       for (i = 0; s[i]; i++)
         {
           if (*s[i])
@@ -1474,9 +1487,8 @@ rxvt_term::im_cb ()
                 }
             }
         }
-      for (i = 0; s[i]; i++)
-        free (s[i]);
-      free (s);
+
+      rxvt_freecommastring (s);
 
       if (found)
         goto done;

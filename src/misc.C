@@ -322,6 +322,15 @@ rxvt_splitcommastring (const char *cs)
   return ret;
 }
 
+void
+rxvt_freecommastring (char **cs)
+{
+  for (int i = 0; cs[i]; ++i)
+    free (cs[i]);
+
+  free (cs);
+}
+
 /*----------------------------------------------------------------------*
  * file searching
  */
