@@ -140,6 +140,7 @@ src/table/category.h
 src/table/linedraw.h
 src/table/viscii.h
 src/table/ksc5601_1987_0.h
+src/table/gbk_0.h
 src/table/gb2312_1980_0.h
 src/table/cns11643_1992_1.h
 src/table/cns11643_1992_2.h
