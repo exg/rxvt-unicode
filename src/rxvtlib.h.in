@@ -63,8 +63,8 @@ extern rxvt_t rxvt_current_term;
 #define menubar_visible()      menuBar.state
 
 typedef struct {
-  int32_t         row;
-  int32_t         col;
+  int row;
+  int col;
 } row_col_t;
 
 #if UNICODE_3
@@ -86,22 +86,22 @@ typedef uint32_t rend_t;
  */
 
 typedef struct {
-  unsigned int   width;         /* window width                    [pixels] */
-  unsigned int   height;        /* window height                   [pixels] */
-  unsigned int   fwidth;        /* font width                      [pixels] */
-  unsigned int   fheight;       /* font height                     [pixels] */
-  unsigned int   fweight, fslant;
-  unsigned int   fbase;         /* font ascent (baseline)          [pixels] */
-  unsigned int   ncol;          /* window columns              [characters] */
-  unsigned int   nrow;          /* window rows                 [characters] */
-  unsigned int   focus;         /* window has focus                         */
-  unsigned int   mapped;        /* window state mapped?                     */
-  unsigned int   int_bwidth;    /* internal border width                    */
-  unsigned int   ext_bwidth;    /* external border width                    */
-  unsigned int   lineSpace;     /* number of extra pixels between rows      */
-  unsigned int   saveLines;     /* number of lines that fit in scrollback   */
-  unsigned int   nscrolled;     /* number of line actually scrolled         */
-  unsigned int   view_start;    /* scrollback view starts here              */
+  int            width;         /* window width                    [pixels] */
+  int            height;        /* window height                   [pixels] */
+  int            fwidth;        /* font width                      [pixels] */
+  int            fheight;       /* font height                     [pixels] */
+  int            fweight, fslant;
+  int            fbase;         /* font ascent (baseline)          [pixels] */
+  int            ncol;          /* window columns              [characters] */
+  int            nrow;          /* window rows                 [characters] */
+  int            focus;         /* window has focus                         */
+  int            mapped;        /* window state mapped?                     */
+  int            int_bwidth;    /* internal border width                    */
+  int            ext_bwidth;    /* external border width                    */
+  int            lineSpace;     /* number of extra pixels between rows      */
+  int            saveLines;     /* number of lines that fit in scrollback   */
+  int            nscrolled;     /* number of line actually scrolled         */
+  int            view_start;    /* scrollback view starts here              */
   Window         parent[6];     /* parent identifiers - we're parent[0]     */
   Window         vt;            /* vt100 window                             */
   GC             gc;            /* GC for drawing                           */
@@ -163,14 +163,15 @@ enum selection_op_t {
 };
 
 typedef struct {
-  wchar_t        *text;       /* selected text                             */
-  unsigned int    len;        /* length of selected text                   */
-  unsigned int    screen;     /* screen being used                         */
-  unsigned int    clicks;     /* number of clicks                          */
-  selection_op_t  op;         /* current operation                         */
-  row_col_t       beg;        /* beginning of selection   <= mark          */
-  row_col_t       mark;       /* point of initial click   <= end           */
-  row_col_t       end;        /* one character past end point              */
+  wchar_t          *text;       /* selected text                             */
+  unsigned int      len;        /* length of selected text                   */
+  unsigned int      screen;     /* screen being used                         */
+  unsigned int      clicks;     /* number of clicks                          */
+  selection_op_t    op;         /* current operation                         */
+  bool              rect;       /* rectangluar selection?                    */
+  row_col_t         beg;        /* beginning of selection   <= mark          */
+  row_col_t         mark;       /* point of initial click   <= end           */
+  row_col_t         end;        /* one character past end point              */
 } selection_t;
 
 /* ------------------------------------------------------------------------- */
