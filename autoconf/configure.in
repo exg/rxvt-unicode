@@ -1365,7 +1365,6 @@ doc/Makefile \
 src/Makefile \
 src/test/Makefile \
 src/rxvtlib.h \
-W11/Makefile \
 ])
 AC_OUTPUT
 
