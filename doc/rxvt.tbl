@@ -58,11 +58,12 @@ Fade the text by the given percentage when focus is lost\&.
 .IP "\fB-tint\fP \fIcolour\fP" 
 Tint the transparent background pixmap with the given colour when
 transparency is enabled with \fB-tr\fP or \fB-ip\fP\&. See also
-the \fB-sh\fP option that cna be used to brighten or darken
+the \fB-sh\fP option that can be used to brighten or darken
 the image in addition to tinting it\&.
-dot(\fB-sh\fP) \fInumber\fP
+.IP "\fB-sh\fP" 
+\fInumber\fP
 Darken (0 \&.\&. 100) or lighten (-1 \&.\&. -100) the transparent background
-image in addition to tinting it\&.
+image in addition to tinting it (i\&.e\&. \fB-tint\fP must be specified, too)\&.
 .IP "\fB-bg\fP \fIcolour\fP" 
 Window background colour;
 resource \fBbackground\fP\&.
