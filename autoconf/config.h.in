@@ -178,6 +178,18 @@
 /* Define if you have the Xft library (-lXft).  */
 #undef HAVE_LIBXFT
 
+/* Use all glibc features. */
+#undef _GNU_SOURCE
+
+/* Needed to get declarations for msg_control and msg_controllen on Solaris */
+#undef _XOPEN_SOURCE_EXTENDED
+
+/* Needed to get declarations for msg_control and msg_controllen on Solaris */
+#undef _XOPEN_SOURCE
+
+/* Needed to get declarations for msg_control and msg_controllen on Solaris */
+#undef __EXTENSIONS__
+
 /* Build shared library version - specify via configure only */
 #undef LIBRXVT
 

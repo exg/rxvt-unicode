@@ -7,6 +7,8 @@ AC_CONFIG_SRCDIR([src/feature.h])
 AC_CONFIG_AUX_DIR(autoconf)
 AC_CONFIG_HEADER(config.h:autoconf/config.h.in)
 
+AC_CANONICAL_HOST
+
 dnl RXVT version
 changequote(, )dnl
 VERSION=`sed -n -e 's/^.*[ \t]VERSION.*"\(.*\)"$/\1/p' ${srcdir}/src/version.h`
@@ -42,7 +44,15 @@ if test x$GCC = xyes && test x$GXX = xyes; then
 fi
 AC_SUBST(LINKER,[$LINKER])
 
-CPPFLAGS="-D_GNU_SOURCE -D_XOPEN_SOURCE=2"
+AC_DEFINE(_GNU_SOURCE, 1, Use all glibc features.)
+
+case $host in
+   *-*-solaris* )
+      AC_DEFINE(_XOPEN_SOURCE_EXTENDED, 1, Needed to get declarations for msg_control and msg_controllen on Solaris)
+      AC_DEFINE(_XOPEN_SOURCE,          2, Needed to get declarations for msg_control and msg_controllen on Solaris)
+      AC_DEFINE(__EXTENSIONS__,         1, Needed to get declarations for msg_control and msg_controllen on Solaris)
+      ;;
+esac
 
 dnl if test x$GXX = xyes; then
 dnl    CXXFLAGS="$CXXFLAGS" dnl I once had -fno-exceptions, but I am using them now...
