@@ -1223,6 +1223,7 @@ rxvt_fontset::find_font (unicode_t unicode, bool bold)
               // only xft currently supported, as there is no
               // way to configure this and xft is easier to hack in,
               // while x11 has more framework in place already.
+              // TODO: bold is being ignroed (obviously).
 #if XFT
               // grab the first xft font that seems suitable
               FcPattern *p = FcPatternCreate ();
@@ -1234,7 +1235,7 @@ rxvt_fontset::find_font (unicode_t unicode, bool bold)
               // a non-matching font even if a better font is available :/
 
               FcPatternAddInteger (p, FC_PIXEL_SIZE, base_prop.height);
-              FcPatternAddInteger (p, FC_WEIGHT, base_prop.weight);
+              FcPatternAddInteger (p, FC_WEIGHT, bold ? rxvt_fontprop::bold : base_prop.weight);
               FcPatternAddInteger (p, FC_SLANT, base_prop.slant);
               FcPatternAddBool    (p, FC_MINSPACE, 1);
               //FcPatternAddBool    (p, FC_ANTIALIAS, 1);
