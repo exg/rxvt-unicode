@@ -37,18 +37,20 @@ rxvt_term::scrollbar_mapping (int map)
   int             change = 0;
 
 #ifdef HAVE_SCROLLBARS
-  if (map && !scrollbar_visible ())
+  if (map)
     {
       scrollBar.setIdle ();
+
       if (!scrollBar.win)
         resize_scrollbar ();
+
       if (scrollBar.win)
         {
           XMapWindow (display->display, scrollBar.win);
           change = 1;
         }
     }
-  else if (!map && scrollbar_visible ())
+  else
     {
       scrollBar.state = 0;
       XUnmapWindow (display->display, scrollBar.win);
@@ -116,7 +118,7 @@ rxvt_term::resize_scrollbar ()
                                           szHint.height,
                                           0,
                                           pix_colors[Color_fg],
-                                          pix_colors[Color_bg]);
+                                          pix_colors[Color_border]);
 #ifdef DEBUG_X
       XStoreName (display->display, scrollBar.win, "scrollbar");
 #endif
