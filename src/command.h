@@ -1,5 +1,5 @@
 /*
- * $Id: command.h,v 1.3 2003/12/05 04:05:13 pcg Exp $
+ * $Id: command.h,v 1.4 2003/12/19 09:41:09 pcg Exp $
  */
 
 #ifndef _COMMAND_H_
@@ -15,7 +15,7 @@
 #endif
 
 /* a large REFRESH_PERIOD causes problems with `cat' */
-#define REFRESH_PERIOD		1
+#define REFRESH_PERIOD		2
 
 #ifndef MULTICLICK_TIME
 # define MULTICLICK_TIME	500

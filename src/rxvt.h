@@ -1,5 +1,5 @@
 /*
- * $Id: rxvt.h,v 1.18 2003/12/18 13:33:03 pcg Exp $
+ * $Id: rxvt.h,v 1.19 2003/12/19 09:41:09 pcg Exp $
  */
 
 #ifndef _RXVT_H_                /* include once only */
@@ -1081,7 +1081,6 @@ struct rxvt_term : rxvt_vars {
 /* command input buffering */
   unsigned char  *cmdbuf_ptr, *cmdbuf_endp;
   unsigned char   cmdbuf_base[BUFSIZ];
-  unsigned char   kbuf[KBUFSZ];
 
   rxvt_salloc *ralloc;
   rxvt_salloc *talloc;

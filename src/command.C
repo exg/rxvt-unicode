@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.24 2003/12/19 06:17:03 pcg Exp $
+ * $Id: command.C,v 1.25 2003/12/19 09:41:09 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -66,7 +66,7 @@ rxvt_lookup_key(pR_ XKeyEvent *ev)
     static int      debug_key = 1;	/* accessible by a debugger only */
 #endif
     int             valid_keysym;
-    unsigned char  *kbuf = R->kbuf;
+    unsigned char kbuf[KBUFSZ];
 
 /*
  * use Num_Lock to toggle Keypad on/off.  If Num_Lock is off, allow an
