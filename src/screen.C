@@ -568,28 +568,32 @@ rxvt_term::scr_change_screen (int scrn)
   selection_check (2);        /* check for boundary cross */
 
   SWAP_IT (current_screen, scrn, int);
+
+  SWAP_IT (screen.cur.row, swap.cur.row, int16_t);
+  SWAP_IT (screen.cur.col, swap.cur.col, int16_t);
+# ifdef DEBUG_STRICT
+  assert (screen.cur.row >= 0 && screen.cur.row < prev_nrow);
+  assert (screen.cur.col >= 0 && screen.cur.col < prev_ncol);
+# else                          /* drive with your eyes closed */
+  MAX_IT (screen.cur.row, 0);
+  MIN_IT (screen.cur.row, (int32_t)prev_nrow - 1);
+  MAX_IT (screen.cur.col, 0);
+  MIN_IT (screen.cur.col, (int32_t)prev_ncol - 1);
+# endif
+
 #if NSCREENS
   if (options & Opt_secondaryScreen)
     {
       num_scr = 0;
       offset = TermWin.saveLines;
+
       for (i = prev_nrow; i--;)
         {
           SWAP_IT (screen.text[i + offset], swap.text[i], text_t *);
           SWAP_IT (screen.tlen[i + offset], swap.tlen[i], int16_t);
           SWAP_IT (screen.rend[i + offset], swap.rend[i], rend_t *);
         }
-      SWAP_IT (screen.cur.row, swap.cur.row, int16_t);
-      SWAP_IT (screen.cur.col, swap.cur.col, int16_t);
-# ifdef DEBUG_STRICT
-      assert ((screen.cur.row >= 0) && (screen.cur.row < prev_nrow));
-      assert ((screen.cur.col >= 0) && (screen.cur.col < prev_ncol));
-# else                          /* drive with your eyes closed */
-      MAX_IT (screen.cur.row, 0);
-      MIN_IT (screen.cur.row, (int32_t)prev_nrow - 1);
-      MAX_IT (screen.cur.col, 0);
-      MIN_IT (screen.cur.col, (int32_t)prev_ncol - 1);
-# endif
+
       SWAP_IT (screen.charset, swap.charset, int16_t);
       SWAP_IT (screen.flags, swap.flags, int);
       screen.flags |= Screen_VisibleCursor;
@@ -599,7 +603,8 @@ rxvt_term::scr_change_screen (int scrn)
 #endif
     if (options & Opt_secondaryScroll)
       //if (current_screen == PRIMARY)
-        scr_scroll_text (0, (prev_nrow - 1), prev_nrow, 0);
+        scr_scroll_text (0, prev_nrow - 1, prev_nrow, 0);
+
   return scrn;
 }
 
@@ -1380,7 +1385,7 @@ rxvt_term::scr_erase_screen (int mode)
     }
   else
     {
-      ren = (rstyle & (RS_fgMask | RS_bgMask));
+      ren = rstyle & (RS_fgMask | RS_bgMask);
       gcvalue.foreground = pix_colors[GET_BGCOLOR (rstyle)];
       XChangeGC (display->display, TermWin.gc, GCForeground, &gcvalue);
       ERASE_ROWS (row, num);
@@ -1390,11 +1395,9 @@ rxvt_term::scr_erase_screen (int mode)
 
   for (; num--; row++)
     {
-      scr_blank_screen_mem (screen.text, screen.rend,
-                            (unsigned int) (row + row_offset), rstyle);
+      scr_blank_screen_mem (screen.text, screen.rend, (unsigned int) (row + row_offset), rstyle);
       screen.tlen[row + row_offset] = 0;
-      scr_blank_line (drawn_text[row], drawn_rend[row],
-                      (unsigned int)TermWin.ncol, ren);
+      scr_blank_line (drawn_text[row], drawn_rend[row], (unsigned int)TermWin.ncol, ren);
     }
 }
 
@@ -3369,7 +3372,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
         {
           int end_row;
 
-          selection_delimit_word (UP, & (selection.beg), & (selection.beg));
+          selection_delimit_word (UP, &selection.beg, &selection.beg);
           end_row = screen.tlen[selection.mark.row + TermWin.saveLines];
 
           for (end_row = selection.mark.row; end_row < TermWin.nrow; end_row++)
@@ -3475,14 +3478,6 @@ rxvt_term::selection_rotate (int x, int y)
 
 /* ------------------------------------------------------------------------- */
 /*
- * On some systems, the Atom typedef is 64 bits wide.  We need to have a type
- * that is exactly 32 bits wide, because a format of 64 is not allowed by
- * the X11 protocol.
- */
-typedef CARD32 Atom32;
-
-/* ------------------------------------------------------------------------- */
-/*
  * Respond to a request for our current selection
  * EXT: SelectionRequest
  */
@@ -3504,22 +3499,21 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq)
 
   if (rq.target == xa[XA_TARGETS])
     {
-      Atom32 target_list[6];
-      Atom32 *target = target_list;
+      Atom target_list[6];
+      Atom *target = target_list;
 
-      *target++ = (Atom32) xa[XA_TARGETS];
-      *target++ = (Atom32) xa[XA_TIMESTAMP];
-      *target++ = (Atom32) XA_STRING;
-      *target++ = (Atom32) xa[XA_TEXT];
-      *target++ = (Atom32) xa[XA_COMPOUND_TEXT];
+      *target++ = xa[XA_TARGETS];
+      *target++ = xa[XA_TIMESTAMP];
+      *target++ = XA_STRING;
+      *target++ = xa[XA_TEXT];
+      *target++ = xa[XA_COMPOUND_TEXT];
 #if X_HAVE_UTF8_STRING
-      *target++ = (Atom32) xa[XA_UTF8_STRING];
+      *target++ = xa[XA_UTF8_STRING];
 #endif
 
       XChangeProperty (display->display, rq.requestor, rq.property, XA_ATOM,
-                       (8 * sizeof (target_list[0])), PropModeReplace,
-                       (unsigned char *)target_list,
-                       target - target_list);
+                       32, PropModeReplace,
+                       (unsigned char *)target_list, target - target_list);
       ev.property = rq.property;
     }
 #if TODO // TODO
@@ -3530,9 +3524,8 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq)
 #endif
   else if (rq.target == xa[XA_TIMESTAMP] && selection.text)
     {
-      XChangeProperty (display->display, rq.requestor, rq.property, XA_INTEGER,
-                       (8 * sizeof (Time)), PropModeReplace,
-                       (unsigned char *)&selection_time, 1);
+      XChangeProperty (display->display, rq.requestor, rq.property, rq.target,
+                       32, PropModeReplace, (unsigned char *)&selection_time, 1);
       ev.property = rq.property;
     }
   else if (rq.target == XA_STRING
