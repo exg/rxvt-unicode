@@ -1,7 +1,6 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	scrollbar.c
  *----------------------------------------------------------------------*
- * $Id: scrollbar.C,v 1.9 2004/01/31 02:15:02 pcg Exp $
  *
  * Copyright (c) 1997,1998 mj olesen <olesen@me.QueensU.CA>
  * Copyright (c) 1998      Alfredo K. Kojima <kojima@windowmaker.org>
@@ -70,6 +69,13 @@ rxvt_term::resize_scrollbar ()
 #define R_SCROLLEND_RXVT	szHint.height - R_SCROLLBEG_RXVT - \
 				    (2 * sb_shadow)
 
+#if defined(PLAIN_SCROLLBAR)
+    if (scrollBar.style == R_SB_PLAIN) {
+	scrollBar.beg = R_SCROLLBEG_XTERM;
+	scrollBar.end = R_SCROLLEND_XTERM;
+	scrollBar.update = &rxvt_term::scrollbar_show_plain;
+    }
+#endif
 #if defined(XTERM_SCROLLBAR)
     if (scrollBar.style == R_SB_XTERM) {
 	scrollBar.beg = R_SCROLLBEG_XTERM;
@@ -165,17 +171,19 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
     int             i;
     short           style, width;
 
-# if defined(RXVT_SCROLLBAR) || !(defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR))
+# if defined(RXVT_SCROLLBAR)
     style = R_SB_RXVT;
-# else
-#  ifdef NEXT_SCROLLBAR
-    style = R_SB_NEXT;
-#  elif defined(XTERM_SCROLLBAR)
+# elif defined(XTERM_SCROLLBAR)
     style = R_SB_XTERM;
-#  endif
+# elif defined(NEXT_SCROLLBAR)
+    style = R_SB_NEXT;
+# elif defined(PLAIN_SCROLLBAR)
+    style = R_SB_PLAIN;
+#else
+    style = R_SB_RXVT;
 # endif
 
-# if (defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR))
+# if (defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR) || defined(PLAIN_SCROLLBAR))
     if (scrollstyle) {
 #  ifdef NEXT_SCROLLBAR
 	if (STRNCASECMP(scrollstyle, "next", 4) == 0)
@@ -185,12 +193,18 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
 	if (STRNCASECMP(scrollstyle, "xterm", 5) == 0)
 	    style = R_SB_XTERM;
 #  endif
+#  ifdef PLAIN_SCROLLBAR
+	if (STRNCASECMP(scrollstyle, "plain", 5) == 0)
+	    style = R_SB_XTERM;
+#  endif
     }
 # endif
     if (style == R_SB_NEXT)
 	width = SB_WIDTH_NEXT;
     else if (style == R_SB_XTERM)
 	width = SB_WIDTH_XTERM;
+    else if (style == R_SB_PLAIN)
+	width = SB_WIDTH_PLAIN;
     else /* if (style == R_SB_RXVT) */
 	width = SB_WIDTH_RXVT;
 
@@ -217,3 +231,4 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
 }
 
 /*----------------------- end-of-file (C source) -----------------------*/
+

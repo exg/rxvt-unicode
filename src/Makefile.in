@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.9 2004/01/28 23:48:02 pcg Exp $
+# $Id: Makefile.in,v 1.10 2004/01/31 04:12:10 pcg Exp $
 @MCOMMON@
 
 LINT = lint -DNARROWPROTO=1 $(XINC) -chapbxz
@@ -27,7 +27,8 @@ dummy:
 LIBSRCS = command.C defaultfont.C grkelot.C init.C logging.C \
 	main.C menubar.C misc.C netdisp.C ptytty.C screen.C scrollbar.C \
 	scrollbar-rxvt.C scrollbar-next.C scrollbar-xterm.C strings.C \
-	xdefaults.C xpm.C encoding.C rxvtcolor.C rxvtstl.C iom.C
+	xdefaults.C xpm.C encoding.C rxvtcolor.C rxvtstl.C iom.C \
+	scrollbar-plain.C
 
 SRCS =  rxvt.C $(LIBSRCS)
 
@@ -39,11 +40,11 @@ EXTRAHDRS = rxvtlib.h rxvtdaemon.h
 
 OBJS =	command.o defaultfont.o init.o grkelot.o logging.o \
 	main.o menubar.o misc.o netdisp.o ptytty.o screen.o \
-	scrollbar.o scrollbar-next.o scrollbar-rxvt.o scrollbar-xterm.o \
+	scrollbar.o scrollbar-next.o scrollbar-rxvt.o scrollbar-xterm.o scrollbar-plain.o \
 	strings.o xdefaults.o xpm.o rxvt.o encoding.o rxvtcolor.o rxvtstl.o iom.o
 LIBOBJS = command.lo defaultfont.lo init.lo grkelot.lo logging.lo \
 	main.lo menubar.lo misc.lo netdisp.lo ptytty.lo screen.lo \
-	scrollbar.lo scrollbar-next.lo scrollbar-rxvt.lo scrollbar-xterm.lo \
+	scrollbar.lo scrollbar-next.lo scrollbar-rxvt.lo scrollbar-xterm.lo scrollbar-plain.lo \
 	strings.lo xdefaults.lo xpm.lo encoding.lo rxvt.lo rxvtcolor.lo rxvtstl.lo iom.lo
 
 LIBVERSION = @LIBVERSION@
@@ -61,13 +62,13 @@ RXVT_OLDNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)-old$(EXEEXT)
 EXTPROS = command.extpro defaultfont.extpro grkelot.extpro \
 	init.extpro logging.extpro main.extpro menubar.extpro misc.extpro \
 	netdisp.extpro ptytty.extpro screen.extpro scrollbar.extpro \
-	scrollbar-rxvt.extpro scrollbar-next.extpro scrollbar-xterm.extpro \
+	scrollbar-rxvt.extpro scrollbar-next.extpro scrollbar-xterm.extpro scrollbar-plain.intpro \
 	strings.extpro xdefaults.extpro xpm.extpro
 
 INTPROS = command.intpro defaultfont.intpro grkelot.intpro \
 	init.intpro logging.intpro main.intpro menubar.intpro misc.intpro \
 	netdisp.intpro ptytty.intpro screen.intpro scrollbar.intpro \
-	scrollbar-rxvt.intpro scrollbar-next.intpro scrollbar-xterm.intpro \
+	scrollbar-rxvt.intpro scrollbar-next.intpro scrollbar-xterm.intpro scrollbar-plain.intpro \
 	strings.intpro xdefaults.intpro xpm.intpro
 
 DEPS =  rxvt.h rxvtlib.h ${basedir}/config.h feature.h .protos
@@ -206,6 +207,7 @@ scrollbar.o:        scrollbar.C $(DEPS) scrollbar.intpro
 scrollbar-rxvt.o:   scrollbar-rxvt.C  $(DEPS) scrollbar-rxvt.intpro
 scrollbar-next.o:   scrollbar-next.C  $(DEPS) scrollbar-next.intpro
 scrollbar-xterm.o:  scrollbar-xterm.C $(DEPS) scrollbar-xterm.intpro
+scrollbar-plain.o:  scrollbar-plain.C $(DEPS) scrollbar-plain.intpro
 strings.o:          strings.C   $(DEPS) strings.intpro
 xdefaults.o:        xdefaults.C $(DEPS) xdefaults.intpro	  version.h
 xpm.o:              xpm.C       $(DEPS) xpm.intpro
@@ -229,6 +231,7 @@ scrollbar.lo:       scrollbar.C $(DEPS) scrollbar.intpro
 scrollbar-rxvt.lo:  scrollbar-rxvt.C  $(DEPS) scrollbar-rxvt.intpro
 scrollbar-next.lo:  scrollbar-next.C  $(DEPS) scrollbar-next.intpro
 scrollbar-xterm.lo: scrollbar-xterm.C $(DEPS) scrollbar-xterm.intpro
+scrollbar-plain.lo: scrollbar-plain.C $(DEPS) scrollbar-plain.intpro
 strings.lo:         strings.C   $(DEPS) strings.intpro
 xdefaults.lo:       xdefaults.C $(DEPS) xdefaults.intpro	  version.h
 xpm.lo:             xpm.C       $(DEPS) xpm.intpro

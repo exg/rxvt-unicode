@@ -184,7 +184,7 @@ struct mouse_event {
 #define scrollBar_esc           30
 #define menuBar_margin          2       /* margin below text */
 
-#if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR)
+#if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR) || defined(PLAIN_SCROLLBAR)
 # define HAVE_SCROLLBARS
 #endif
 
@@ -202,9 +202,11 @@ struct mouse_event {
 #define R_SB_RXVT               0
 #define R_SB_NEXT               1
 #define R_SB_XTERM              2
+#define R_SB_PLAIN              4
 
 #define SB_WIDTH_NEXT           19
-#define SB_WIDTH_XTERM          7
+#define SB_WIDTH_XTERM          15
+#define SB_WIDTH_PLAIN          7
 #ifndef SB_WIDTH_RXVT
 # define SB_WIDTH_RXVT          10
 #endif
@@ -950,6 +952,10 @@ struct rxvt_term : rxvt_vars {
   GC              xscrollbarGC,
                   ShadowGC;
 #endif
+#ifdef PLAIN_SCROLLBAR
+  GC              pscrollbarGC,
+                  pShadowGC;
+#endif
 #ifdef NEXT_SCROLLBAR
   GC              blackGC,
                   whiteGC,
@@ -1305,6 +1311,11 @@ struct rxvt_term : rxvt_vars {
 #if defined(XTERM_SCROLLBAR)
   // scrollbar-xterm.C
   int scrollbar_show_xterm (int update, int last_top, int last_bot, int scrollbar_len);
+#endif
+
+#if defined(PLAIN_SCROLLBAR)
+  // scrollbar-plain.C
+  int scrollbar_show_plain (int update, int last_top, int last_bot, int scrollbar_len);
 #endif
 
   // scrollbar.C

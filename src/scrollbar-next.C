@@ -1,7 +1,6 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	scrollbar-next.c
  *----------------------------------------------------------------------*
- * $Id: scrollbar-next.C,v 1.5 2004/01/31 00:20:21 pcg Exp $
  *
  * Copyright (c) 1997,1998 mj olesen <olesen@me.QueensU.CA>
  * Copyright (c) 1998      Alfredo K. Kojima <kojima@windowmaker.org>

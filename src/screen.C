@@ -1714,8 +1714,8 @@ rxvt_term::scr_touch (bool refresh)
 int
 rxvt_term::scr_move_to (int y, int len)
 {
-    long            p = 0;
-    uint16_t       oldviewstart;
+    long p = 0;
+    uint16_t oldviewstart;
 
     oldviewstart = TermWin.view_start;
     if (y < len) {
@@ -2119,18 +2119,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
             rend = GET_ATTR (rend);
 
             rvid = !!(rend & RS_RVid);
-#ifdef TEXT_BLINK
-            if (rend & RS_Blink)
-              {
-                if (!text_blink_ev.active)
-                  {
-                    text_blink_ev.start (NOW + TEXT_BLINK_INTERVAL);
-                    hidden_text = 0;
-                  }
-                else if (hidden_text)
-                  fore = back;
-              }
-#endif
             if (rvid)
               {
                 SWAP_IT(fore, back, int);
@@ -2144,6 +2132,18 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                   back = Color_RV;
 #endif
               }
+#ifdef TEXT_BLINK
+            if (rend & RS_Blink)
+              {
+                if (!text_blink_ev.active)
+                  {
+                    text_blink_ev.start (NOW + TEXT_BLINK_INTERVAL);
+                    hidden_text = 0;
+                  }
+                else if (hidden_text)
+                  fore = back;
+              }
+#endif
 #ifndef NO_BOLD_UNDERLINE_REVERSE
             else if (rend & RS_Bold)
               {
