@@ -2,6 +2,11 @@ Lines marked with "xterm:" indicate either xterm features ported to rxvt
 or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
+2.8  Thu Apr  8 22:44:36 CEST 2004
+	- replace PF_LOCAL by PF_UNIX (portability).
+        - try to detect -lnsl and -lsocket (portability).
+        - fix some minor bugs.
+
 2.7  Mon Apr  5 02:11:15 CEST 2004
 	- this version should now work fine with TERM=xterm.
         - don't leave the X or rxvtd sockets open in child processes.
