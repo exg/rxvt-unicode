@@ -4,8 +4,9 @@
 # support and is a good baseline :)
 
 ./configure --prefix=/opt/rxvt --enable-utmp \
-            --enable-wtmp --enable-lastlog --enable-xim --disable-strings --enable-xterm-scroll \
+            --enable-wtmp --enable-lastlog --enable-xim --disable-strings \
             --with-term=xterm --enable-keepscrolling --enable-xft \
-            --enable-frills --disable-swapscreen \
-            --with-codesets=eu,jp \
-            --enable-cursor-blink --enable-pointer-blank --enable-cursor-blink
+            --enable-frills --enable-swapscreen --enable-transparency \
+            --with-codesets=eu,jp --enable-menubar \
+            --enable-cursor-blink --enable-pointer-blank --enable-text-blink \
+            --enable-plain-scroll

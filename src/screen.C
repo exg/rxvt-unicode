@@ -864,17 +864,23 @@ rxvt_term::scr_add_lines (const uint32_t *str, int nlines, int len)
       if (charsets[screen.charset] == '0') // DEC SPECIAL
         switch (c)
           {
+            // dunno where these come from
+#if 0
             case '+': c = 0x2192; break; case ',': c = 0x2190; break; case '-': c = 0x2191; break;
-            case '.': c = 0x2193; break; case '0': c = 0x25ae; break; case '`': c = 0x25c6; break;
-            case 'a': c = 0x2592; break; case 'f': c = 0x00b0; break; case 'g': c = 0x00b1; break;
-            case 'h': c = 0x2592; break; case 'i': c = 0x2603; break; case 'j': c = 0x2518; break;
-            case 'k': c = 0x2510; break; case 'l': c = 0x250c; break; case 'm': c = 0x2514; break;
-            case 'n': c = 0x253c; break; case 'o': c = 0x23ba; break; case 'p': c = 0x23bb; break;
-            case 'q': c = 0x2500; break; case 'r': c = 0x23bc; break; case 's': c = 0x23bd; break;
-            case 't': c = 0x251c; break; case 'u': c = 0x2524; break; case 'v': c = 0x2534; break;
-            case 'w': c = 0x252c; break; case 'x': c = 0x2502; break; case 'y': c = 0x2264; break;
-            case 'z': c = 0x2265; break; case '{': c = 0x03c0; break; case '|': c = 0x2260; break;
-            case '}': c = 0x00a3; break; case '~': c = 0x00b7; break;
+            case '.': c = 0x2193; break; case '0': c = 0x25ae; break;
+#endif
+            // vt100 special graphics and line drawing
+            case '`': c = 0x25c6; break; case '_': c = 0x0020; break;
+            case 'a': c = 0x2592; break; case 'b': c = 0x2409; break; case 'c': c = 0x240c; break;
+            case 'd': c = 0x240d; break; case 'e': c = 0x240a; break; case 'f': c = 0x00b0; break;
+            case 'g': c = 0x00b1; break; case 'h': c = 0x2424; break; case 'i': c = 0x240b; break;
+            case 'j': c = 0x2518; break; case 'k': c = 0x2510; break; case 'l': c = 0x250c; break;
+            case 'm': c = 0x2514; break; case 'n': c = 0x253c; break; case 'o': c = 0x23ba; break;
+            case 'p': c = 0x23bb; break; case 'q': c = 0x2500; break; case 'r': c = 0x23bc; break;
+            case 's': c = 0x23bd; break; case 't': c = 0x251c; break; case 'u': c = 0x2524; break;
+            case 'v': c = 0x2534; break; case 'w': c = 0x252c; break; case 'x': c = 0x2502; break;
+            case 'y': c = 0x2264; break; case 'z': c = 0x2265; break; case '{': c = 0x03c0; break;
+            case '|': c = 0x2260; break; case '}': c = 0x00a3; break; case '~': c = 0x00b7; break;
           }
 
       rend_t rend = SET_FONT (rstyle, TermWin.fontset->find_font (c));
@@ -2118,19 +2124,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 
           rvid = !!(rend & RS_RVid);
 
-#ifdef TEXT_BLINK
-          if (rend & RS_Blink)
-            {
-              if (!text_blink_ev.active)
-                {
-                  text_blink_ev.start (NOW + TEXT_BLINK_INTERVAL);
-                  hidden_text = 0;
-                }
-              else if (hidden_text)
-                fore = back;
-            }
-#endif
-
 #ifndef NO_BOLD_UNDERLINE_REVERSE
           if (rend & RS_Bold && fore == Color_fg)
             {
@@ -2160,6 +2153,19 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                 back = Color_RV;
 #endif
             }
+
+#ifdef TEXT_BLINK
+          if (rend & RS_Blink)
+            {
+              if (!text_blink_ev.active)
+                {
+                  text_blink_ev.start (NOW + TEXT_BLINK_INTERVAL);
+                  hidden_text = 0;
+                }
+              else if (hidden_text)
+                fore = back;
+            }
+#endif
 
           /*
            * Actually do the drawing of the string here

@@ -306,8 +306,8 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
         {
           const char *p = linedraw_cmds[t - 0x2500];
 
-          int x0 = x, x1 = x + r->TermWin.fwidth  / 2, x2 = x + r->TermWin.fwidth ;
-          int y0 = y, y1 = y + r->TermWin.fheight / 2, y2 = y + r->TermWin.fheight;
+          int x0 = x, x1 = x + r->TermWin.fwidth  / 2, x2 = x + r->TermWin.fwidth  - 1;
+          int y0 = y, y1 = y + r->TermWin.fheight / 2, y2 = y + r->TermWin.fheight - 1;
 
           XGCValues gcv;
 
