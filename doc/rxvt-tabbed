@@ -11,6 +11,8 @@ my $RXVT_BASENAME = "rxvt";
 use Gtk2;
 use Encode;
 
+$SIG{CHLD} = 'IGNORE';
+
 my $event_cb; # $wid => $cb
 
 init Gtk2;
