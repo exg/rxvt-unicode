@@ -558,41 +558,43 @@ rxvt_term::scr_change_screen (int scrn)
   TermWin.view_start = 0;
 
   if (current_screen == scrn)
-    return current_screen;
+    return scrn;
 
   selection_check (2);        /* check for boundary cross */
 
   SWAP_IT (current_screen, scrn, int);
 #if NSCREENS
-  num_scr = 0;
-  offset = TermWin.saveLines;
-  for (i = prev_nrow; i--;)
+  if (Options & Opt_secondaryScreen)
     {
-      SWAP_IT (screen.text[i + offset], swap.text[i], text_t *);
-      SWAP_IT (screen.tlen[i + offset], swap.tlen[i], int16_t);
-      SWAP_IT (screen.rend[i + offset], swap.rend[i], rend_t *);
-    }
-  SWAP_IT (screen.cur.row, swap.cur.row, int16_t);
-  SWAP_IT (screen.cur.col, swap.cur.col, int16_t);
+      num_scr = 0;
+      offset = TermWin.saveLines;
+      for (i = prev_nrow; i--;)
+        {
+          SWAP_IT (screen.text[i + offset], swap.text[i], text_t *);
+          SWAP_IT (screen.tlen[i + offset], swap.tlen[i], int16_t);
+          SWAP_IT (screen.rend[i + offset], swap.rend[i], rend_t *);
+        }
+      SWAP_IT (screen.cur.row, swap.cur.row, int16_t);
+      SWAP_IT (screen.cur.col, swap.cur.col, int16_t);
 # ifdef DEBUG_STRICT
-  assert ((screen.cur.row >= 0) && (screen.cur.row < prev_nrow));
-  assert ((screen.cur.col >= 0) && (screen.cur.col < prev_ncol));
+      assert ((screen.cur.row >= 0) && (screen.cur.row < prev_nrow));
+      assert ((screen.cur.col >= 0) && (screen.cur.col < prev_ncol));
 # else                          /* drive with your eyes closed */
-  MAX_IT (screen.cur.row, 0);
-  MIN_IT (screen.cur.row, (int32_t)prev_nrow - 1);
-  MAX_IT (screen.cur.col, 0);
-  MIN_IT (screen.cur.col, (int32_t)prev_ncol - 1);
+      MAX_IT (screen.cur.row, 0);
+      MIN_IT (screen.cur.row, (int32_t)prev_nrow - 1);
+      MAX_IT (screen.cur.col, 0);
+      MIN_IT (screen.cur.col, (int32_t)prev_ncol - 1);
 # endif
-  SWAP_IT (screen.charset, swap.charset, int16_t);
-  SWAP_IT (screen.flags, swap.flags, int);
-  screen.flags |= Screen_VisibleCursor;
-  swap.flags |= Screen_VisibleCursor;
-#else
-# ifdef SCROLL_ON_NO_SECONDARY
-  if (current_screen == PRIMARY)
-    scr_scroll_text (0, (prev_nrow - 1), prev_nrow, 0);
-# endif
+      SWAP_IT (screen.charset, swap.charset, int16_t);
+      SWAP_IT (screen.flags, swap.flags, int);
+      screen.flags |= Screen_VisibleCursor;
+      swap.flags |= Screen_VisibleCursor;
+    }
+  else
 #endif
+    if (Options & Opt_secondaryScroll)
+      //if (current_screen == PRIMARY)
+        scr_scroll_text (0, (prev_nrow - 1), prev_nrow, 0);
   return scrn;
 }
 
@@ -644,7 +646,8 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
   want_refresh = 1;
   D_SCREEN ((stderr, "rxvt_scroll_text (%d,%d,%d,%d): %s", row1, row2, count, spec, (current_screen == PRIMARY) ? "Primary" : "Secondary"));
 
-  if ((count > 0) && (row1 == 0) && (current_screen == PRIMARY))
+  if (row1 == 0 && count > 0
+      && (current_screen == PRIMARY || Options & Opt_secondaryScroll))
     {
       nscrolled = (long)TermWin.nscrolled + (long)count;
 
