@@ -3,6 +3,7 @@ or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
 TODO: read property sequence is broken with respect to utf-8 etc.
+FEAT: just for fun, do shade and tint with XRender.
 FEAT: hotkey font resizing
 FEAT: searchable backlog
 FEAT: meta-tagging of data by regex (my dream project)
