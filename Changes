@@ -12,7 +12,7 @@ FEAT: OnTheSpot editing.
 FEAT: tabbed windows (hey, just use screen...)
 
 	- try very hard not to exhaust the kernel tty buffers, even
-          if it slows down large pastes.
+          if it slows down large pastes and is only cosmetic.
 
 4.5  Mon Dec 13 07:47:16 CET 2004
 	- fix an extremely nasty bug in utf8-conversion. upgrade is advised.
