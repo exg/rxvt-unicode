@@ -52,7 +52,7 @@
 // better do this via configure, but....
 #if defined(__FreeBSD__)
 # include <libutil.h>
-#elif defined(__DARWIN__)
+#elif defined(__DARWIN__) || (defined (__MACH__) && defined (__APPLE__))
 # include <util.h>
 #endif
 
