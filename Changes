@@ -1,4 +1,3 @@
-TODO: bts show 254316
 TODO: http://cvs.sourceforge.net/viewcvs.py/rxvt/rxvt/src/init.c?r1=1.123&r2=1.124&sortby=date
       http://cvs.sourceforge.net/viewcvs.py/rxvt/rxvt/src/scrollbar.c?r1=1.44&r2=1.45&sortby=date
       Pull more events to all windows so that we don't miss out in
@@ -25,6 +24,10 @@ WISH: just for fun, do shade and tint with XRender.
           (sourceforge bugs #1028739, #1028732), except for
           pts/%s fix as it seems to collide with freebsd,
           and sourceforge bug #954654, which is unreproducible.
+        - change terminfo file to not clobber G1 when using
+          line-drawing characters, as this seems to mess
+          with EUC-JP (it will clobber G0, but G0 practically
+          needs to be US-ASCII all the time).
 
 5.1  Tue Feb 15 17:13:27 CET 2005
 	- fix a bug when parsing fontnames and another one

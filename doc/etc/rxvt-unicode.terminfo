@@ -1,11 +1,8 @@
 # From: Thomas Dickey <dickey@clark.net> 04 Oct 1997
-# Updated: Özgür Kesim <kesim@math.fu-berlin.de> 02 Nov 1997
-# Updated: Marc Lehmann <pcg@goof.com>, 17 Aug 2004
+# Updated: Ã–zgÃ¼r Kesim <kesim@math.fu-berlin.de> 02 Nov 1997
+# Updated: Marc Lehmann <pcg@goof.com>, 17 Feb 2005
 # Notes:
-# rxvt 2.21b uses
-#       smacs=\E(B\E)U^N, rmacs=\E(B\E)0^O,
-# but some applications don't work with that.
-# It also has an AIX extension
+# It has an AIX extension
 #       box2=lqkxjmwuvtn,
 # but the latter does not work correctly.
 #
@@ -19,7 +16,7 @@ rxvt-unicode|rxvt-unicode terminal (X Window System),
 	cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C, 
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A, 
 	cvvis=\E[?25h, dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, 
-	dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K, enacs=\E(B\E)0, 
+	dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K,
 	flash=\E[?5h$<50/>\E[?5l, home=\E[H, hpa=\E[%i%p1%dG, ht=^I, 
 	hts=\EH, ich=\E[%p1%d@, ich1=\E[@, il=\E[%p1%dL, il1=\E[L, 
 	ind=^J, is1=\E[?47l\E=\E[?1l, 
@@ -35,13 +32,12 @@ rxvt-unicode|rxvt-unicode terminal (X Window System),
 	kf4=\E[14~, kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, 
 	kf9=\E[20~, kfnd=\E[1~, khome=\E[7~, kich1=\E[2~, 
 	kmous=\E[M, knp=\E[6~, kpp=\E[5~, kslt=\E[4~, rc=\E8, 
-	rev=\E[7m, ri=\EM, rmacs=^O,
+	rev=\E[7m, ri=\EM,
 	rmso=\E[27m, rmul=\E[24m, 
 	rs1=\Ec,
 	rs2=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;3;4;6l\E[4l\E>, 
-	s0ds=\E(B, s1ds=\E(0, sc=\E7, 
 	sgr0=\E[m\017, 
-	smacs=^N,
+	enacs=, rmacs=\E(B, smacs=\E(0,
 	smso=\E[7m, smul=\E[4m, tbc=\E[3g, 
 	vpa=\E[%i%p1%dd, 
 	colors#88, pairs#256, btns#5, lm#0,
@@ -49,17 +45,18 @@ rxvt-unicode|rxvt-unicode terminal (X Window System),
 	ech=\E[%p1%dX,
 	mc0=\E[i, mc4=\E[4i, mc5=\E[5i,
 	sitm=\E[3m, ritm=\E[23m,
-        smam=\E[?7h, rmam=\E[?7l,
+	smam=\E[?7h, rmam=\E[?7l,
 	smir=\E[4h, rmir=\E[4l,
 	smcup=\E[?1049h, rmcup=\E[r\E[?1049l, 
 	smkx=\E[?1h\E=, rmkx=\E[?1l\E>,
 	indn=\E[%p1%dS, rin=\E[%p1%dT,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;, 
 	op=\E[39;49m, 
-        setaf=\E[38;5;%p1%dm, setab=\E[48;5;%p1%dm,
-        setf=%?%p1%{7}%>%t\E[38;5;%p1%dm%e\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m%;,
-        setb=%?%p1%{7}%>%t\E[48;5;%p1%dm%e\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m%;,
+	setaf=\E[38;5;%p1%dm, setab=\E[48;5;%p1%dm,
+	setf=%?%p1%{7}%>%t\E[38;5;%p1%dm%e\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m%;,
+	setb=%?%p1%{7}%>%t\E[48;5;%p1%dm%e\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m%;,
 	initc=\E]4;%p1%d;rgb\:%p2%{65535}%*%{1000}%/%4.4X/%p3%{65535}%*%{1000}%/%4.4X/%p4%{65535}%*%{1000}%/%4.4X\E\\,
-        s0ds=\E(B, s1ds=\E(0, s2ds=\E*B, s3ds=\E+B,
-        u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c,
+	sc=\E7, 
+	s0ds=\E(B, s1ds=\E(0, s2ds=\E*B, s3ds=\E+B,
+	u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c,
 
