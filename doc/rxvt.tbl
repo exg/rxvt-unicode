@@ -8,7 +8,7 @@ rxvt-unicode (ouR XVT, unicode) \- a VT102 emulator for the X window system
 .PP 
 .SH "DESCRIPTION" 
 .PP 
-\fBrxvt-unicode\fP, version \fB3\&.2\fP, is a colour vt102 terminal emulator
+\fBrxvt-unicode\fP, version \fB3\&.3\fP, is a colour vt102 terminal emulator
 intended as an \fIxterm\fP(1) replacement for users who do not require
 features such as Tektronix 4014 emulation and toolkit-style configurability\&.
 As a result, \fBrxvt-unicode\fP uses much less swap space -- a significant
@@ -629,7 +629,7 @@ Click-and-drag doesn\&'t work with X11 mouse report overriding\&.
 .PP 
 .SH "FTP LOCATION" 
 .PP 
-rxvt-3\&.2\&.tar\&.gz can be found at the following ftp sites
+rxvt-3\&.3\&.tar\&.gz can be found at the following ftp sites
 ftp://ftp\&.rxvt\&.org/pub/rxvt
 .PP 
 .SH "CURRENT PROJECT COORDINATOR" 
