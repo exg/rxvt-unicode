@@ -1,8 +1,14 @@
-COMMENT(-- $Id: rxvtRef-keycodes.yo,v 1.2 2003/11/24 17:31:27 pcg Exp $ --)
+COMMENT(-- $Id: rxvtRef-keycodes.yo,v 1.3 2004/08/11 03:56:50 root Exp $ --)
 label(KeyCodes)
 nsect(Key Codes)
 
 Note: bf(Shift) + bf(F1)-bf(F10) generates bf(F11)-bf(F20)
+
+Note: Partial ISO 14755-support is implemented, that means that pressing
+Control and Shift together enters unicode input mode. Entering hex
+digits composes a Unicode character, pressing space or releasing the
+modifiers commits the keycode and every other key cancels the current
+input character.
 
 For the keypad, use bf(Shift) to temporarily override Application-Keypad
 setting use bf(Num_Lock) to toggle Application-Keypad setting if bf(Num_Lock)
@@ -71,3 +77,6 @@ starttable(5)(l l l l l)(1)\
     row(cell(XK_KP_8        )cell(8          )cell(           )cell(           )cell(ESC O x))\
     row(cell(XK_KP_9        )cell(9          )cell(           )cell(           )cell(ESC O y))\
 endtable()
+
+label(KeyCodes)
+nsect(Key Codes)
