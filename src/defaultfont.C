@@ -917,18 +917,22 @@ rxvt_font_xft::draw (int x, int y,
         {
           if (*text != NOCHAR && *text != ' ')
             {
+              int fwidth = r->TermWin.fwidth;
+              if (len >= 2 && text[1] == NOCHAR)
+                fwidth *= 2;
+
               XGlyphInfo extents;
               if (sizeof (text_t) == sizeof (FcChar16))
                 {
                   XftTextExtents16 (DISPLAY, f, (const FcChar16 *)text, 1, &extents);
-                  XftDrawString16 (d, &r->PixColors[fg].c, f, x + extents.x + (r->TermWin.fwidth - extents.width) / 2,
+                  XftDrawString16 (d, &r->PixColors[fg].c, f, x + extents.x + (fwidth - extents.width) / 2,
                                    y + r->TermWin.fbase, (const FcChar16 *)text, 1);
                 }
               else
                 {
                   XGlyphInfo extents;
                   XftTextExtents32 (DISPLAY, f, (const FcChar32 *)text, 1, &extents);
-                  XftDrawString32 (d, &r->PixColors[fg].c, f, x + extents.x + (r->TermWin.fwidth - extents.width) / 2,
+                  XftDrawString32 (d, &r->PixColors[fg].c, f, x + extents.x + (fwidth - extents.width) / 2,
                                    y + r->TermWin.fbase, (const FcChar32 *)text, 1);
                 }
             }
@@ -1088,6 +1092,7 @@ rxvt_fontset::populate (const char *desc)
   // we currently need a base-font, no matter what
   if (fonts.size () <= base_id || !realize_font (base_id))
     {
+      puts ("unable to load specified font(s), falling back to 'fixed'\n");
       add_fonts ("fixed");
       base_id = fonts.size () - 1;
     }
