@@ -1,3 +1,42 @@
+Lines marked with "xterm:" indicate either xterm features ported to rxvt
+or changed rxvt behaviour to make it more compatible to xterm (usually
+xfree86's xterm).
+
+2.7  Mon Apr  5 02:11:15 CEST 2004
+	- this version should now work fine with TERM=xterm.
+        - don't leave the X or rxvtd sockets open in child processes.
+          (inherited fd's stay open - different to rxvt).
+	- xterm: implemented OSC3, set/get window property. get is an
+          extension and is slightly ugly.
+	- removed --disable-swapscreen and SCROLL_ON_NO_SECONDARY and
+          replaced them by runtime-configurable options secondaryScreen and
+          secondaryScroll (-ssr and -ssc) (see debian bug #237673).
+	- close down terminal window when child exits. (debian bug #241267).
+        - xterm: enable seperate mouse bg colour setting.
+        - re-enable mouse cursor colours again, fixing colours when fg/bg are
+          overwritten (as is common).
+        - xterm: correctly implement privmodes 1047, 1048, 1049.
+        - ported to solaris by elmar@math.uni-bremen.de.
+
+2.6  Fri Apr  2 03:24:10 CEST 2004
+	- minor doc corrections.
+        - WARNING: changed menu sequence from ESC ] 10 to ESC ] 703 to
+          avoid clashes with xterm.
+        - changed OSC701/OSC702 sequence to return standard escaped reports.
+        - xterm: make set window colour and other requests report window
+          colour when arg is "?".
+        - enable colour tinting of "transparent" backgrounds.
+        - stop ST sequences earlier, as we now react on 0x90 and thus
+          cause conditions more often that look like locks but are, in
+          fact, just rxvt waiting for a ST/BEL etc.
+        - re-enabled most of the "dangerous" echo escapes, but only
+          when -insecure is specified as option or resource (see reference).
+          (FRILLS).
+        - disables sleep(1) on transparency updates on default.
+        - fixes to make it compile better on solaris 2.9 (at least).
+          asprintf replacement is still missing(!).
+        - set _NET_WM_PID.
+
 2.5  Sun Mar 28 04:05:51 CEST 2004
 	- the usual sprinkled little code cleanups.
         - support more 8-bit controls.
@@ -120,7 +159,7 @@
 1.7  Fri Jan 30 16:50:11 CET 2004
 	- further cleanups.
         - never do last-minute-changes: restore ability to have
-          color + bold ass high-intensity, and let the selection
+          color + bold as high-intensity, and let the selection
           use reverse video, not _blink_.
         - remove OPTION_HC, at least temporarily. If you want it back,
           please drop me a note.
@@ -130,8 +169,8 @@
         - blinking text.
         - normal text color + bold gets white text instead of
           normal text when colorBD is not set.
-        (- support double-byte characters (by blocking).)
-          was not implemented
+        (- support double-wide characters (by blocking).)
+          was never implemented
 
 1.5  Thu Jan 29 00:43:48 CET 2004
 	- share io manager between rxvt-unicode and vpe
@@ -155,7 +194,7 @@
         - fix a bug in font height selection
         - autoscale scalable x11 fonts
         - slow-mode xft rendering centers characters
-        - much faster x11 font selecti
+        - much faster x11 font selection
 
 1.2  2003-12-24
         - fix another segfault-on-resize-bug form the original rxvt
