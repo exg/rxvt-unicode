@@ -354,9 +354,17 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
         }
       else if (IS_COMPOSE (t) && (cc = rxvt_composite[t]))
         {
-          (*fs)[fs->find_font (cc->c1)]->draw (d, x, y, &(t = cc->c1), 1, fg, bg);
+          rxvt_font *f1 = (*fs)[fs->find_font (cc->c1)];
+          f1->draw (d, x, y, &(t = cc->c1), 1, fg, bg);
           if (cc->c2 != NOCHAR)
-            (*fs)[fs->find_font (cc->c2)]->draw (d, x, y, &(t = cc->c2), 1, fg, -1);
+            {
+              // prefer font of first character, for no good reasons
+              rxvt_font *f2 = f1->has_codepoint (cc->c2)
+                              ? f1
+                              : (*fs)[fs->find_font (cc->c2)];
+
+              f2->draw (d, x, y, &(t = cc->c2), 1, fg, -1);
+            }
         }
       else
         switch (t)
