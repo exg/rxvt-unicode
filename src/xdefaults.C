@@ -111,6 +111,12 @@ optList[] = {
               STRG (Rs_color + Color_tint, "tintColor", "tint", "color", "tint color"),
 #endif
 #endif
+#ifdef OFF_FOCUS_FADING
+              STRG (Rs_fade, "fading", "fade", "%", "make colors x% darker when urxvt is losing focus."),
+#endif
+#ifdef TINTING
+              STRG (Rs_shade, "shading", "sh", "%", "shade background by x% when tinting."),
+#endif
               BOOL (Rs_utmpInhibit, "utmpInhibit", "ut", Opt_utmpInhibit, "utmp inhibit"),
 #ifndef NO_BELL
               BOOL (Rs_visualBell, "visualBell", "vb", Opt_visualBell, "visual bell"),
@@ -464,32 +470,18 @@ rxvt_term::get_options (int argc, const char *const *argv)
         {
           if (optList_isReverse (entry))
             flag = flag == On ? Off : On;
+
           if (optList_strlen (entry))
-            {	/* string value */
-              const char *str = argv[++i];
+            {
+              /*
+               * special cases are handled in main.c:main () to allow
+               * X resources to set these values before we settle for
+               * default values
+               */
 
-#ifdef DEBUG_RESOURCES
-              fprintf (stderr, "string (%s,%s) = ",
-                      optList[entry].opt ? optList[entry].opt : "nil",
-                      optList[entry].kw ? optList[entry].kw : "nil");
-#endif
-              if (flag == On && str && (optList[entry].doff != -1))
-                {
-#ifdef DEBUG_RESOURCES
-                  fprintf (stderr, "\"%s\"\n", str);
-#endif
-                  rs[optList[entry].doff] = str;
-                  /*
-                   * special cases are handled in main.c:main () to allow
-                   * X resources to set these values before we settle for
-                   * default values
-                   */
-                }
-#ifdef DEBUG_RESOURCES
-              else
-                fprintf (stderr, "???\n");
-#endif
-
+              if (optList[entry].doff != -1)
+                rs[optList[entry].doff] = flag == On && argv[i+1]
+                                          ? argv[++i] : 0;
             }
           else
             {		/* boolean value */

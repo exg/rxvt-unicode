@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-resources.yo,v 1.16 2004/07/30 22:32:33 root Exp $ --)
+COMMENT(-- $Id: rxvt-resources.yo,v 1.17 2004/07/30 22:36:42 root Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpagesection(RESOURCES (available also as long-options))
 
@@ -81,8 +81,12 @@ startdit()
 	bf(True): make the background inherit the parent windows' pixmap,
 	giving artificial transparency.
 	bf(False): do not inherit the parent windows' pixmap.
+    dit(bf(fading:) em(number))
+    	Fade the text by the given percentage when focus is lost.
     dit(bf(tintColor:) em(colour))
         Tint the transparent background pixmap with the given colour.
+    dit(bf(fading:) em(number))
+        Scale the tint colour by the given percentage.
     dit(bf(scrollColor:) em(colour))
 	Use the specified colour for the scrollbar [default #B2B2B2].
     dit(bf(troughColor:) em(colour))

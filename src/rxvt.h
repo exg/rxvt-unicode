@@ -556,6 +556,12 @@ enum {
 #ifndef NO_BOLD_UNDERLINE_REVERSE
   Rs_realBold,
 #endif
+#ifdef OFF_FOCUS_FADING
+  Rs_fade,
+#endif
+#ifdef TINTING
+  Rs_shade,
+#endif
   NUM_RESOURCES
 };
 
@@ -1155,8 +1161,8 @@ struct rxvt_term : rxvt_vars {
 #ifdef POINTER_BLANK
   void pointer_cb (time_watcher &w); time_watcher pointer_ev;
   void pointer_blank ();
-  void pointer_unblank ();
 #endif
+  void pointer_unblank ();
 
   void tt_printf (const char *fmt,...);
   void tt_write (const unsigned char *data, unsigned int len);
