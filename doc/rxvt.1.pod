@@ -14,8 +14,42 @@ require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, B<rxvt-unicode> uses much less swap space --
 a significant advantage on a machine serving many X sessions.
 
-See also @@RXVT_NAME@@(7) for technical reference documentation (escape
-sequences etc.) and the FAQ section at the end of this document.
+=head1 RXVT-UNICODE VS. RXVT
+
+Unlike the original rxvt, B<rxvt-unicode> stores all text in Unicode
+internally. That means it can store and display most scripts in the
+world. Being a terminal emulator, however, some things are very difficult,
+especially cursive scripts such as arabic, vertically written scripts
+like mongolian or scripts requiring extremely complex combining rules,
+like tibetan or devenagari. Don't expect pretty output when using these
+scripts. Most other scripts, latin, cyrillic, kanji, thai etc. should work
+fine, though. A somewhat difficult case are left-to-right scripts, such
+as hebrew: B<rxvt-unicode> adopts the view that bidirectional algorithms
+belong into the application, not the terminal emulator (too many things --
+such as cursor-movement -- break othwerwise).
+
+Another design rationale was the use of multiple fonts to display
+characters: The idea of a single unicode font which many other programs
+force onto it's users never made sense to me: You should be able to choose
+any font for any script.
+
+Apart from that, rxvt-unicode is also much better internationalised than
+it's predecessor, supports things such as XFT and ISO 14755 that are handy
+in i18n-environments, is faster, and has a lot less bugs than the original
+rxvt. This all in addition to dozens of other small improvements.
+
+It is still faithfully following the original rxvt idea of being lean
+and nice on resources: for example, you can still configure rxvt-unicode
+without most of it's features to get a lean binary. It also comes with
+a client/daemon pair that lets you open any number of terminal windows
+from within a single process, which makes startup time very fast and
+drastically reduces memory usage. See @@RXVT_NAME@@d(1) (daemon) and
+@@RXVT_NAME@@c(1) (client).
+
+It also makes technical information about escape sequences (which have
+been extended) easier accessible: see @@RXVT_NAME@@(7) for technical
+reference documentation (escape sequences etc.) and the FAQ section at the
+end of this document.
 
 =head1 OPTIONS
 
@@ -121,6 +155,9 @@ names that are used in turn when trying to display Unicode characters.
 The first font defines the cell size for characters; other fonts might
 be smaller, but not larger. A reasonable default font list is always
 appended to it. resource B<font>.
+
+See also the question "How does rxvt-unicode choose fonts?" in the FAQ
+section.
 
 =item B<-rb>|B<+rb>
 
@@ -832,29 +869,6 @@ on White.
 
 =back
 
-=head1 ENVIRONMENT
-
-B<@@RXVT_NAME@@> sets the environment variables B<TERM>, B<COLORTERM>
-and B<COLORFGBG>. The environment variable B<WINDOWID> is set to the X
-window id number of the B<@@RXVT_NAME@@> window and it also uses and
-sets the environment variable B<DISPLAY> to specify which display
-terminal to use. B<@@RXVT_NAME@@> uses the environment variables
-B<RXVTPATH> and B<PATH> to find XPM files.
-
-=head1 FILES
-
-=over 4
-
-=item B</etc/utmp>
-
-System file for login records.
-
-=item B</usr/lib/X11/rgb.txt>
-
-Color names.
-
-=back
-
 =head1 FREQUENTLY ASKED QUESTIONS (FAQ)
 
 =over 4
@@ -864,6 +878,52 @@ Color names.
 The version number is displayed with the usage (-h).  For rxvt-unicode
 version 2.14 and later, the escape sequence C<ESC[8n> sets the window
 title to the version number.
+
+=item Why do the characters look ugly?
+
+=item How does rxvt-unicode choose fonts?
+
+Most fonts do not contain the full range of Unicode, which is
+fine. Chances are that the font you (or the admin/package maintainer of
+your system/os) have specified does not cover all the characters you want
+to display.
+
+B<rxvt-unicode> makes a best-effort try at finding a replacement
+font. Often the result is fine, but sometimes the chosen font looks
+bad. In that case, select a font of your taste and add it to the font
+list, e.g.:
+
+   @@RXVT_NAME@@ -fn basefont,font2,font3...
+
+When rxvt-unicode sees a character, it will first look at the base
+font. If the base font does not contain the character, it will go to the
+next font, and so on.
+
+The only limitation is that all the fonts must not be larger than the base
+font, as the base font defines the principial cell size, which must be the
+same due to the way terminals work.
+
+=item Why do some chinese characters look so different than others?
+
+This is because there is a difference between script and language --
+rxvt-unicode does not know which language the text that is output
+is, as it only knows the unicode character codes. If rxvt-unicode
+first sees a japanese character, it might choose a japanese font for
+it. Subseqzuent japanese characters will take that font. Now, many chinese
+characters aren't represented in japanese fonts, so when the first
+non-japanese character comes up, rxvt-unicode will look for a chinese font
+-- unfortunately at this point, it will still use the japanese font for
+japanese characters that are also chinese.
+
+The workaround is easy: just tag a chinese font at the end of your font
+list (see the previous question). The key is to view the font list as
+a preference list: If you expect more japanese, list a japanese font
+first. If you expect more chinese, put a chinese font first.
+
+In the future it might be possible to switch preferences at runtime (the
+internal data structure has no problem with using different fonts for
+the same character at the same time, but no interface for this has been
+designed yet).
 
 =item Mouse cut/paste suddenly no longer works.
 
@@ -1073,6 +1133,29 @@ snippets:
 You need to have a recent version of perl installed as F</usr/bin/perl>,
 one that comes with F<pod2man>, F<pod2text> and F<pod2html>. Then go to
 the doc subdirectory and enter C<make alldoc>.
+
+=back
+
+=head1 ENVIRONMENT
+
+B<@@RXVT_NAME@@> sets the environment variables B<TERM>, B<COLORTERM>
+and B<COLORFGBG>. The environment variable B<WINDOWID> is set to the X
+window id number of the B<@@RXVT_NAME@@> window and it also uses and
+sets the environment variable B<DISPLAY> to specify which display
+terminal to use. B<@@RXVT_NAME@@> uses the environment variables
+B<RXVTPATH> and B<PATH> to find XPM files.
+
+=head1 FILES
+
+=over 4
+
+=item B</etc/utmp>
+
+System file for login records.
+
+=item B</usr/lib/X11/rgb.txt>
+
+Color names.
 
 =back
 

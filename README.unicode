@@ -1,5 +1,7 @@
 Sketchy overview of the details:
 
+See also the FAQ section in doc/rxvt.1.txt, and README.configure.
+
 - the options used in the ./reconf script should work. everything else
   might work and might be broken.
 

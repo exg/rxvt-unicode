@@ -1392,6 +1392,294 @@ your system.
 
 =end table
 
+=head1 CONFIGURE OPTIONS
+
+General hint: if you get compile errors, then likely your configuration
+hasn't been tested well. Either try with --enable-everything or use the
+./reconf script as a base for experiments. ./reconf is used by myself,
+so it should generally be a working config. Of course, you should always
+report when a combination doesn't work, so it can be fixed. Marc Lehmann
+<rxvt@schmorp.de>.
+
+=over 4
+
+=item --enable-everything
+
+Add support for all non-multichoice options listed in "./configure
+--help". Note that unlike other enable options this is order dependant.
+You can specify this and then disable options which this enables by
+I<following> this with the appropriate commands.
+
+=item --enable-xft
+
+Add support for Xft (anti-aliases, among others) fonts. Xft fonts are
+slower and require lots of memory, but as long as you don't use them, you
+don't pay for them.
+
+=item --with-codesets=NAME,...
+
+Compile in support for additional codeset groups:
+
+=begin table
+
+	all	all of the above
+	cn	common chinese encodings
+	cn_ext	rarely used but very big chinese encodigs
+	jp	common japanese encodings
+	jp_ext	rarely used but big japanese encodings
+	kr	korean encodings
+
+=end table
+
+=item --enable-xim
+
+Add support for XIM (X Input Method) protocol. This allows using
+alternative input methods (e.g. kinput2) and will also correctly
+set up the input for people using dead keys or compose keys.
+
+=item --enable-unicode3
+
+Enable direct support for displaying unicode codepoints above
+65535 (the basic multilingual page). This increases storage
+requirements per character from 2 to 4 bytes. X11 fonts do not yet
+support these extra characters, but Xft does.
+
+Please note that rxvt-unicode can store unicode code points >65535
+even without this flag, but the number of such characters is
+limited to a view thousand (shared with combining characters,
+see next switch), and right now rxvt-unicode cannot display them
+(input/output and cut&paste still work, though).
+
+=item --enable-combining
+
+Enable automatic composition of combining characters into
+composite characters. This is required for proper viewing of text
+where accents are encoded as seperate unicode characters. This is
+done by using precomposited characters when available or creating
+new pseudo-characters when no precomposed form exists.
+
+Without --enable-unicode3, the number of additional precomposed
+characters is rather limited (2048, if this is full, rxvt will use the
+private use area, extending the number of combinations to 8448). With
+--enable-unicode3, no practical limit exists. This will also enable
+storage of characters >65535.
+
+The combining table also contains entries for arabic presentation forms,
+but these are not currently used. Bug me if you want these to be used.
+
+=item --enable-fallback(=CLASS)
+
+When reading resource settings, also read settings for class CLASS
+(default: Rxvt). To disable resource fallback use --disable-fallback.
+
+=item --with-res-name=NAME
+
+Use the given name (default: urxvt) as default application name when
+reading resources. Specify --with-res-name=rxvt to replace rxvt.
+
+=item --with-res-class=CLASS
+
+Use the given class (default: URxvt) as default application class
+when reading resources.  Specify --with-res-class=Rxvt to replace
+rxvt.
+
+=item --enable-utmp
+
+Write user and tty to utmp file (used by programs like F<w>) at
+start of rxvt execution and delete information when rxvt exits.
+
+=item --enable-wtmp
+
+Write user and tty to wtmp file (used by programs like F<last>) at
+start of rxvt execution and write logout when rxvt exits.  This
+option requires --enable-utmp to also be specified.
+
+=item --enable-lastlog
+
+Write user and tty to lastlog file (used by programs like
+F<lastlogin>) at start of rxvt execution.  This option requires
+--enable-utmp to also be specified.
+
+=item --enable-xpm-background
+
+Add support for XPM background pixmaps.
+
+=item --enable-transparency
+
+Add support for inheriting parent backgrounds thus giving a fake
+transparency to the term.
+
+=item --enable-fading
+
+Add support for fading the text when focus is lost.
+
+=item --enable-tinting
+
+Add support for tinting of transparent backgrounds.
+
+=item --enable-menubar
+
+Add support for our menu bar system (this interacts badly with
+dynamic locale switching currently).
+
+=item --enable-rxvt-scroll
+
+Add support for the original rxvt scrollbar.
+
+=item --enable-next-scroll
+
+Add support for a NeXT-like scrollbar.
+
+=item --enable-xterm-scroll
+
+Add support for an Xterm-like scrollbar.
+
+=item --enable-plain-scroll
+
+Add support for a very unobtrusive, plain-looking scrollbar that
+is the favourite of the rxvt-unicode author, having used it for
+many years.
+
+=item --enable-half-shadow
+
+Make shadows on the scrollbar only half the normal width & height.
+only applicable to rxvt scrollbars.
+
+=item --enable-ttygid
+
+Change tty device setting to group "tty" - only use this if
+your system uses this type of security.
+
+=item --disable-backspace-key
+
+Disable any handling of the backspace key by us - let the X server
+do it.
+
+=item --disable-delete-key
+
+Disable any handling of the delete key by us - let the X server
+do it.
+
+=item --disable-resources
+
+Remove all resources checking.
+
+=item --enable-xgetdefault
+
+Make resources checking via XGetDefault() instead of our small
+version which only checks ~/.Xdefaults, or if that doesn't exist
+then ~/.Xresources.
+
+=item --enable-strings
+
+Add support for our possibly faster memset() function and other
+various routines, overriding your system's versions which may
+have been hand-crafted in assembly or may require extra libraries
+to link in. (this breaks ANSI-C rules and has problems on many
+GNU/Linux systems).
+
+=item --disable-swapscreen
+
+Remove support for swap screen.
+
+=item --enable-frills
+
+Add support for many small features that are not essential but nice to
+have. Normally you want this, but for very small binaries you may want to
+disable this.
+
+=item --enable-linespace
+
+Add support to provide user specified line spacing between text rows.
+
+=item --enable-keepscrolling
+
+Add support for continual scrolling of the display when you hold
+the mouse button down on a scrollbar arrow.
+
+=item --enable-mousewheel
+
+Add support for scrolling via mouse wheel or buttons 4 & 5.
+
+=item --enable-slipwheeling
+
+Add support for continual scrolling (using the mouse wheel as an
+accelerator) while the control key is held down.  This option
+requires --enable-mousewheel to also be specified.
+
+=item --disable-new-selection
+
+Remove support for mouse selection style like that of xterm.
+
+=item --enable-dmalloc
+
+Use Gray Watson's malloc - which is good for debugging See
+http://www.letters.com/dmalloc/ for details If you use either this or the
+next option, you may need to edit src/Makefile after compiling to point
+DINCLUDE and DLIB to the right places.
+
+You can only use either this option and the following (should
+you use either) .
+
+=item --enable-dlmalloc
+
+Use Doug Lea's malloc - which is good for a production version
+See L<http://g.oswego.edu/dl/html/malloc.html> for details.
+
+=item --enable-smart-resize
+
+Add smart growth/shrink behaviour when changing font size via from hot
+keys. This should keep in a fixed position the rxvt corner which is
+closest to a corner of the screen.
+
+=item --enable-256-color
+
+Add support for 256 colours rather than the base 16 colours.
+
+This option will likely go away in the future. Speak up if you don't want
+this.
+
+=item --enable-cursor-blink
+
+Add support for a blinking cursor.
+
+=item --enable-pointer-blank
+
+Add support to have the pointer disappear when typing or inactive.
+
+=item --with-name=NAME
+
+Set the basename for the installed binaries (default: urxvt, resulting in
+urxvt, urxvtd etc.). Specify --with-name=rxvt to replace rxvt.
+
+=item --with-term=NAME
+
+Change the environmental variable for the terminal to NAME (default
+"rxvt")
+
+=item --with-terminfo=PATH
+
+Change the environmental variable for the path to the terminfo tree to
+PATH.
+
+=item --with-x
+
+Use the X Window System (pretty much default, eh?).
+
+=item --with-xpm-includes=DIR
+
+Look for the XPM includes in DIR.
+
+=item --with-xpm-library=DIR
+
+Look for the XPM library in DIR.
+
+=item --with-xpm
+
+Not needed - define via --enable-xpm-background.
+
+=back
+
 =head1 AUTHORS
 
 Marc Lehmann <rxvt@schmorp.de> converted this document to pod and

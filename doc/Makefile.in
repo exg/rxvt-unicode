@@ -1,5 +1,5 @@
 # doc/Makefile.in	-*- Makefile -*-
-# $Id: Makefile.in,v 1.8 2004/07/30 19:54:14 root Exp $
+# $Id: Makefile.in,v 1.14 2004/08/14 03:00:32 root Exp $
 @MCOMMON@
 
 srcdir =	@srcdir@
@@ -12,102 +12,76 @@ thisdir = doc
 first_rule: all
 dummy:
 
-#
-# Distribution variables
-#
-
-YODL_RXVT = yodl/rxvt-colours.yo yodl/rxvt-environment.yo\
-	    yodl/rxvt-files.yo yodl/rxvt-fonts.yo yodl/rxvt-login.yo\
-	    yodl/rxvt-mousereporting.yo yodl/rxvt-options.yo\
-	    yodl/rxvt-resources.yo yodl/rxvt-scrollbar.yo\
-	    yodl/rxvt-textselection.yo yodl/versioninfo.yo
-YODL_RREF = yodl/rxvtRef-csi.yo yodl/rxvtRef-definitions.yo\
-	    yodl/rxvtRef-keycodes.yo\
-	    yodl/rxvtRef-menubar.yo yodl/rxvtRef-mouse.yo\
-	    yodl/rxvtRef-privatemodes.yo yodl/rxvtRef-sequences.yo\
-	    yodl/rxvtRef-values.yo yodl/rxvtRef-xpm.yo yodl/rxvtRef-xterm.yo\
-	    yodl/versioninfo.yo
-
 DIST_ETC  = etc/rxvt.termcap etc/rxvt.terminfo etc/XTerm.ad
-DIST_YODL = yodl/masonyodl.yo yodl/versioninfo.yo yodl/versioninfo.yo.in\
-	    $(YODL_RXVT) yodl/rxvt.yo $(YODL_RREF) yodl/rxvtRef.yo
+DIST_POD  = rxvt.1.pod rxvt.7.pod
 DIST_MENU = menu/menu menu/example.menu menu/rxvt.menu menu/rxvt.zh-menu\
 	    menu/terminal.menu menu/jedmenu.sl
 DIST	  = Makefile.in README.menu README.xvt BUGS FAQ TODO\
-	    changes.txt xterm.seq LSM.in rxvt.1 rxvt.tbl rxvtRef.txt\
-	    rxvtRef.html rxvtRef-frame.html rxvtRef-toc.html rxvt.html 
+	    changes.txt xterm.seq LSM.in \
+	    rxvt.1.man rxvt.7.man rxvt.1.html rxvt.7.html rxvt.1.txt rxvt.7.txt
 
 #-------------------------------------------------------------------------
 
-all:	rxvt.1
+all:
 
-rxvt.1: rxvt.tbl Makefile
-	@if test x$(TBL) = x; then : ; else echo "$(TBL) $(srcdir)/rxvt.tbl | grep -v '^.lf' > rxvt.1"; $(TBL) $(srcdir)/rxvt.tbl | grep -v '^.lf' > rxvt.1 ; fi
+SEDREPLACE = -e 's%@@RXVT_VERSION@@%$(VERSION)%g;'\
+	     -e 's%@@RXVT_LSMDATE@@%$(LSMDATE)%g;'\
+	     -e 's%@@RXVT_NAME@@%$(RXVTNAME)%g;'\
+	     -e 's%@@RXVT_DATE@@%$(DATE)%g;'\
+	     -e 's%@@RXVT_MAINTEMAIL@@%$(MAINTEMAIL)%g;'\
+	     -e 's%@@RXVT_MAINT@@%$(MAINT)%g;'\
+	     -e 's%@@RXVT_WEBPAGE@@%$(WEBPAGE)%g;'\
+	     -e 's%@@RXVT_WEBMAINTEMAIL@@%$(WEBMAINTEMAIL)%g;'\
+	     -e 's%@@RXVT_WEBMAINT@@%$(WEBMAINT)%g;'
 
-SEDREPLACE = -e 's%@RXVT_VERSION@%$(VERSION)%g;'\
-	     -e 's%@RXVT_LSMDATE@%$(LSMDATE)%g;'\
-	     -e 's%@RXVT_NAME@%$(RXVTNAME)%g;'\
-	     -e 's%@RXVT_DATE@%$(DATE)%g;'\
-	     -e 's%@RXVT_MAINTEMAIL@%$(MAINTEMAIL)%g;'\
-	     -e 's%@RXVT_MAINT@%$(MAINT)%g;'\
-	     -e 's%@RXVT_WEBPAGE@%$(WEBPAGE)%g;'\
-	     -e 's%@RXVT_WEBMAINTEMAIL@%$(WEBMAINTEMAIL)%g;'\
-	     -e 's%@RXVT_WEBMAINT@%$(WEBMAINT)%g;'\
-	     -e 's%@RXVT_FTPSITENAME@%$(FTPSITENAME)%g;'\
-	     -e 's%@RXVT_FTPSITEDIR@%$(FTPSITEDIR)%g;'
+rxvt.1.man: rxvt.1.pod
+	$(SED) $(SEDREPLACE) < $< | ./podtbl | pod2man -n rxvt -qnone -s1 -c "RXVT-UNICODE" >$@
+
+rxvt.7.man: rxvt.7.pod
+	$(SED) $(SEDREPLACE) < $< | ./podtbl | pod2man -n rxvt -qnone -s7 -c "RXVT-UNICODE" >$@
+
+rxvt.1.html: rxvt.1.pod
+	$(SED) $(SEDREPLACE) < $< | ./podtbl | pod2html >$@
+
+rxvt.7.html: rxvt.7.pod
+	$(SED) $(SEDREPLACE) < $< | ./podtbl | pod2html >$@
+
+rxvt.1.txt: rxvt.1.pod
+	$(SED) $(SEDREPLACE) < $< | ./podtbl | pod2text >$@
+
+rxvt.7.txt: rxvt.7.pod
+	$(SED) $(SEDREPLACE) < $< | ./podtbl | pod2text >$@
+
+../README.configure: rxvt.7.pod
+	$(SED) $(SEDREPLACE) < $< | ./podtbl | podselect -section "CONFIGURE OPTIONS" | pod2text >$@
 
 tags allbin:
 
-alldoc:	$(basedir)/$(VERNAME).lsm yodl/versioninfo.yo rxvt.1 rxvt.html rxvtRef.html rxvtRef.txt
+alldoc:	$(basedir)/$(VERNAME).lsm rxvt.1.man rxvt.7.man rxvt.1.html rxvt.7.html rxvt.1.txt rxvt.7.txt ../README.configure
 
-yodl/versioninfo.yo: yodl/versioninfo.yo.in ../src/version.h
-	$(SED) $(SEDREPLACE) < $(srcdir)/yodl/versioninfo.yo.in > $@
-
-$(basedir)/$(VERNAME).lsm: LSM.in $(srcdir)/../autoconf/Make.common.in $(srcdir)/../src/version.h
+$(basedir)/$(VERNAME).lsm: LSM.in $(srcdir)/../autoconf/Make.common.in
 	$(SED) $(SEDREPLACE) < $(srcdir)/LSM.in > $@
 
-rxvt.tbl: yodl/rxvt.yo $(YODL_RXVT) yodl/masonyodl.yo
-	(cd $(srcdir)/yodl; yodl2man -o../rxvt.tbl rxvt.yo)
-
-rxvt.html: yodl/rxvt.yo $(YODL_RXVT) yodl/masonyodl.yo
-	(cd $(srcdir)/yodl; yodl2html -o../rxvt.html rxvt.yo)
-
-rxvtRef.html: $(YODL_RREF) yodl/rxvtRef.yo yodl/masonyodl.yo
-	(cd $(srcdir)/yodl; yodl2html -o../rxvtRef.html rxvtRef.yo)
-
-rxvtRef.txt: $(YODL_RREF) yodl/rxvtRef.yo yodl/masonyodl.yo
-	(cd $(srcdir)/yodl; yodl2txt -o../rxvtRef.txt rxvtRef.yo)
-
 clean:
-	$(RMF) rxvt.man *~ yodl/*~
+	$(RMF) *~
 
 realclean: clean
-	$(RMF) tags rxvt.1 rxvt.html rxvtRef.html rxvtRef.txt
+	$(RMF) tags rxvt.1.man rxvt.7.man rxvt.1.html rxvt.7.htmlrxvt.1.txt rxvt.7.txt
 
 cleandir: realclean
 
 distclean:
 
-install: alldoc
-	$(INSTALL_DATA) rxvt.1 $(DESTDIR)$(mandir)/$(RXVTNAME).$(manext)
-	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(mandir)/$(RXVTNAME)c.$(manext)
-	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(mandir)/$(RXVTNAME)d.$(manext)
+install:
+	$(INSTALL) -d $(DESTDIR)$(man1dir)
+	$(INSTALL) -d $(DESTDIR)$(man7dir)
+	$(INSTALL_DATA) rxvt.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME).$(man1ext)
+	$(INSTALL_DATA) rxvt.7.man $(DESTDIR)$(man7dir)/$(RXVTNAME).$(man7ext)
+	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(man1dir)/$(RXVTNAME)c.$(man1ext)
+	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(man1dir)/$(RXVTNAME)d.$(man1ext)
 
 uninstall:
 	-(cd $(mandir); $(RMF) $(RXVTNAME).$(manext) )
-
-distdirs:
-	mkdir $(basedir)/../$(VERNAME)/$(thisdir)
-	mkdir $(basedir)/../$(VERNAME)/$(thisdir)/etc
-	mkdir $(basedir)/../$(VERNAME)/$(thisdir)/menu
-	mkdir $(basedir)/../$(VERNAME)/$(thisdir)/yodl
-
-distcopy: realclean distdepend
-	$(CP) -p $(basedir)/$(VERNAME).lsm $(basedir)/../$(VERNAME);
-	$(CP) -p $(DIST)      $(basedir)/../$(VERNAME)/$(thisdir)
-	$(CP) -p $(DIST_ETC)  $(basedir)/../$(VERNAME)/$(thisdir)/etc
-	$(CP) -p $(DIST_MENU) $(basedir)/../$(VERNAME)/$(thisdir)/menu
-	$(CP) -p $(DIST_YODL) $(basedir)/../$(VERNAME)/$(thisdir)/yodl
 
 distdepend: alldoc
 
