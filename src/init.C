@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        init.c
  *----------------------------------------------------------------------*
- * $Id: init.C,v 1.4 2003/11/25 15:25:17 pcg Exp $
+ * $Id: init.C,v 1.5 2003/11/25 15:44:38 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -386,7 +386,7 @@ rxvt_term::init_vars()
     cmd_pid = -1;
     cmd_fd = tty_fd = Xfd = -1;
     PrivateModes = SavedModes = PrivMode_Default;
-    TermWin.focus = 1;
+    TermWin.focus = 0;
     TermWin.ncol = 80;
     TermWin.nrow = 24;
     TermWin.int_bwidth = INTERNALBORDERWIDTH;

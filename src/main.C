@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.4 2003/11/25 15:25:17 pcg Exp $
+ * $Id: main.C,v 1.5 2003/11/25 15:44:38 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -60,8 +60,11 @@ rxvt_term::operator delete (void *p, size_t s)
 }
 
 rxvt_term::rxvt_term ()
-: pty_ev(this, &rxvt_term::pty_cb),
-  x_ev  (this, &rxvt_term::x_cb)
+: pty_ev   (this, &rxvt_term::pty_cb),
+#ifdef CURSOR_BLINK
+  blink_ev (this, &rxvt_term::blink_cb),
+#endif
+  x_ev     (this, &rxvt_term::x_cb)
 {
   cmdbuf_ptr = cmdbuf_endp = cmdbuf_base;
 }

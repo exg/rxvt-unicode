@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.4 2003/11/25 15:25:16 pcg Exp $
+ * $Id: command.C,v 1.5 2003/11/25 15:44:38 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -665,6 +665,7 @@ rxvt_term::process_x_events ()
       XEvent          xev;
 
       XNextEvent (Xdisplay, &xev);
+
 #if defined(CURSOR_BLINK)
       if ((Options & Opt_cursorBlink)
           && xev.type == KeyPress) {
@@ -672,7 +673,7 @@ rxvt_term::process_x_events ()
               hidden_cursor = 0;
               want_refresh = 1;
           }
-          want_keypress_time = 1;
+          blink_ev.start (NOW + BLINK_INTERVAL);
       }
 #endif
 
@@ -697,6 +698,15 @@ rxvt_term::process_x_events ()
         rxvt_process_x_event (this, &xev);
     }
   while (XPending (Xdisplay));
+}
+
+void
+rxvt_term::blink_cb (time_watcher &w)
+{
+  w.at += BLINK_INTERVAL;
+  hidden_cursor = !hidden_cursor;
+  want_refresh = 1;
+  flush();
 }
 
 void
@@ -1407,6 +1417,10 @@ rxvt_process_x_event(pR_ XEvent *ev)
 	    if (R->Input_Context != NULL)
 		XSetICFocus(R->Input_Context);
 #endif
+#ifdef CURSOR_BLINK
+            if (R->Options & Opt_cursorBlink)
+              R->blink_ev.start (NOW + BLINK_INTERVAL);
+#endif
 	}
 	break;
 
@@ -1417,6 +1431,11 @@ rxvt_process_x_event(pR_ XEvent *ev)
 #ifdef USE_XIM
 	    if (R->Input_Context != NULL)
 		XUnsetICFocus(R->Input_Context);
+#endif
+#ifdef CURSOR_BLINK
+            if (R->Options & Opt_cursorBlink)
+              R->blink_ev.stop ();
+            R->hidden_cursor = 0;
 #endif
 	}
 	break;

@@ -1,5 +1,5 @@
 /*
- * $Id: rxvt.h,v 1.4 2003/11/25 15:25:17 pcg Exp $
+ * $Id: rxvt.h,v 1.5 2003/11/25 15:44:39 pcg Exp $
  */
 
 #ifndef _RXVT_H_                /* include once only */
@@ -841,6 +841,8 @@ enum {
 # include "menubar.h"
 #endif
 
+#define BLINK_INTERVAL 0.5
+
 struct mbstate {
   unsigned char orig;
   uint32_t reg;
@@ -1116,6 +1118,10 @@ struct rxvt_term : rxvt_vars {
   void pty_cb (io_watcher &w, short revents); io_watcher pty_ev;
   void x_cb   (io_watcher &w, short revents); io_watcher x_ev;
 
+#ifdef CURSOR_BLINK
+  void blink_cb (time_watcher &w); time_watcher blink_ev;
+#endif
+
   void flush ();
 
   rxvt_term ();
@@ -1159,3 +1165,4 @@ struct rxvt_term : rxvt_vars {
 #endif
 
 #endif                          /* _RXVT_H_ */
+
