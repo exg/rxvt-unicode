@@ -1,4 +1,4 @@
-#define VERSION "1.3"
+#define VERSION "1.4"
 #define VSTRING "10300"
 #define DATE	"2003-26-12"
 #define LSMDATE	"26DEC03"

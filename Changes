@@ -22,3 +22,5 @@
 1.0
         - first release
         - original cloned from rxvt-CVS 2003-11-19 00:26
+        - removed rclock et al.
+        - initial conversion to C++
