@@ -569,6 +569,12 @@ You need to have a recent version of perl installed as F</usr/bin/perl>,
 one that comes with F<pod2man>, F<pod2text> and F<pod2html>. Then go to
 the doc subdirectory and enter C<make alldoc>.
 
+=item My question isn't answered here, can I ask a human?
+
+Before sending me mail, you could go to IRC: C<irc.freenode.net>,
+channel C<#rxvt-unicode> has some rxvt-unicode enthusiasts that might be
+interested in learning about new and exciting problems (but not FAQs :).
+
 =back
 
 =head1 SYNOPSIS
@@ -2050,8 +2056,8 @@ you use an X11 font requiring one of these encodings.
 =begin table
 
 	all	all available codeset groups
-	cn	common chinese encodings
-	cn_ext	rarely used but very big chinese encodigs
+	zh	common chinese encodings
+	zh_ext	rarely used but very big chinese encodigs
 	jp	common japanese encodings
 	jp_ext	rarely used but big japanese encodings
 	kr	korean encodings
