@@ -1074,11 +1074,11 @@ rxvt_term::get_ourmods ()
 void
 rxvt_term::create_windows (int argc, const char *const *argv)
 {
-  XClassHint      classHint;
-  XWMHints        wmHint;
-  XGCValues       gcvalue;
-  long            vt_emask;
-
+  XClassHint classHint;
+  XWMHints wmHint;
+  XGCValues gcvalue;
+  long vt_emask;
+  XSetWindowAttributes attributes;
   XWindowAttributes gattr;
 
   if (Options & Opt_transparent)
@@ -1101,14 +1101,10 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   old_width = szHint.width;
   old_height = szHint.height;
 
-  /* parent window - reverse video so we can see placement errors
-   * sub-window placement & size in rxvt_resize_subwindows ()
-   */
+  /* sub-window placement & size in rxvt_resize_subwindows () */
 
 #ifdef PREFER_24BIT
-  XSetWindowAttributes attributes;
-
-  attributes.background_pixel = PixColors[Color_fg];
+  attributes.background_pixel = PixColors[Color_bg];
   attributes.border_pixel = PixColors[Color_border];
   attributes.colormap = display->cmap;
   TermWin.parent[0] = XCreateWindow (display->display, DefaultRootWindow (display->display),
@@ -1117,15 +1113,14 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                                      TermWin.ext_bwidth,
                                      display->depth, InputOutput,
                                      display->visual,
-                                     CWBackPixel | CWBorderPixel | CWColormap, &attributes);
+                                     CWColormap | CWBackPixel | CWBorderPixel, &attributes);
 #else
   TermWin.parent[0] = XCreateSimpleWindow (display->display, DefaultRootWindow (display->display),
-                      szHint.x, szHint.y,
-                      szHint.width,
-                      szHint.height,
-                      TermWin.ext_bwidth,
-                      PixColors[Color_border],
-                      PixColors[Color_fg]);
+                                           szHint.x, szHint.y,
+                                           szHint.width, szHint.height,
+                                           TermWin.ext_bwidth,
+                                           PixColors[Color_border],
+                                           PixColors[Color_bg]);
 #endif
 
   process_xterm_seq (XTerm_title, rs[Rs_title], CHAR_ST);
@@ -1134,10 +1129,9 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   classHint.res_name = (char *)rs[Rs_name];
   classHint.res_class = (char *)RESCLASS;
 
-  wmHint.flags = (InputHint | StateHint | WindowGroupHint);
+  wmHint.flags = InputHint | StateHint | WindowGroupHint;
   wmHint.input = True;
-  wmHint.initial_state = (Options & Opt_iconic ? IconicState
-                          : NormalState);
+  wmHint.initial_state = Options & Opt_iconic ? IconicState : NormalState;
   wmHint.window_group = TermWin.parent[0];
 
   XSetWMProperties (display->display, TermWin.parent[0], NULL, NULL,
@@ -1193,17 +1187,19 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   XStoreName (display->display, TermWin.vt, "vt window");
 #endif
 
-  vt_emask = (ExposureMask | ButtonPressMask | ButtonReleaseMask
-              | PropertyChangeMask);
+  attributes.bit_gravity = NorthWestGravity;
+  XChangeWindowAttributes (display->display, TermWin.vt, CWBitGravity, &attributes);
+
+  vt_emask = ExposureMask | ButtonPressMask | ButtonReleaseMask | PropertyChangeMask;
 
 #ifdef POINTER_BLANK
   pointer_unblank ();
 
-  if ((Options & Opt_pointerBlank))
+  if (Options & Opt_pointerBlank)
     vt_emask |= PointerMotionMask;
   else
 #endif
-    vt_emask |= (Button1MotionMask | Button3MotionMask);
+    vt_emask |= Button1MotionMask | Button3MotionMask;
 
   XSelectInput (display->display, TermWin.vt, vt_emask);
   vt_ev.start (display, TermWin.vt);

@@ -1212,7 +1212,7 @@ struct rxvt_term : rxvt_vars {
   void scr_reset ();
   void scr_reset_realloc ();
   void scr_release ();
-  void scr_clear (bool really = true);
+  void scr_clear (bool really = false);
   void scr_refresh (unsigned char refresh_type);
   bool scr_refresh_rend (rend_t mask, rend_t value);
   void scr_erase_screen (int mode);

@@ -1171,7 +1171,7 @@ rxvt_term::x_cb (XEvent &ev)
             scr_expose (ev.xexpose.x, ev.xexpose.y,
                         ev.xexpose.width, ev.xexpose.height, False);
 #else
-            // don't understand this, so commented it out
+            // I don't understand this, so I changed it :)
             scr_expose (ev.xexpose.x, ev.xexpose.y,
                         ev.xexpose.width, ev.xexpose.height, False);
             //scr_expose (ev.xexpose.x, 0,
@@ -1183,12 +1183,11 @@ rxvt_term::x_cb (XEvent &ev)
           {
             XEvent unused_event;
 
-            while (XCheckTypedWindowEvent (display->display, ev.xany.window,
-                                          Expose,
-                                          &unused_event)) ;
-            while (XCheckTypedWindowEvent (display->display, ev.xany.window,
-                                          GraphicsExpose,
-                                          &unused_event)) ;
+            while (XCheckTypedWindowEvent (display->display, ev.xany.window, Expose, &unused_event))
+              ;
+            while (XCheckTypedWindowEvent (display->display, ev.xany.window, GraphicsExpose, &unused_event))
+              ;
+
             if (isScrollbarWindow (ev.xany.window))
               {
                 scrollBar.setIdle ();
@@ -2663,7 +2662,7 @@ rxvt_term::process_escape_seq ()
 /* *INDENT-OFF* */
 enum {
   CSI_ICH = 0x40,
-  CSI_CUU, CSI_CUD, CSI_CUF, CSI_CUB, CSI_CNL, CSI_CPL, CSI_CHA,
+           CSI_CUU, CSI_CUD, CSI_CUF, CSI_CUB, CSI_CNL, CSI_CPL, CSI_CHA,
   CSI_CUP, CSI_CHT, CSI_ED , CSI_EL , CSI_IL , CSI_DL , CSI_EF , CSI_EA ,
   CSI_DCH, CSI_SEE, CSI_CPR, CSI_SU , CSI_SD , CSI_NP , CSI_PP , CSI_CTC,
   CSI_ECH, CSI_CVT, CSI_CBT, CSI_SRS, CSI_PTX, CSI_SDS, CSI_SIMD, CSI_5F,

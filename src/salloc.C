@@ -70,6 +70,22 @@ rxvt_salloc::alloc ()
   return r;
 }
 
+void *
+rxvt_salloc::alloc (void *data, unsigned int datalen)
+{
+  void *s = alloc ();
+
+  if (datalen < size)
+    {
+      memcpy (s, data, datalen);
+      memset ((unsigned char *)s + datalen, 0, size - datalen); // not strictly required for screen.C
+    }
+  else
+    memcpy (s, data, size);
+
+  return s;
+}
+
 void
 rxvt_salloc::free (void *data)
 {

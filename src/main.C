@@ -743,6 +743,7 @@ rxvt_term::window_calc (unsigned int width, unsigned int height)
 
   sb_w = mb_h = 0;
   window_vt_x = window_vt_y = 0;
+
   if (scrollbar_visible ())
     {
       sb_w = scrollbar_TotalWidth ();
@@ -750,12 +751,14 @@ rxvt_term::window_calc (unsigned int width, unsigned int height)
       if (! (Options & Opt_scrollBar_right))
         window_vt_x = sb_w;
     }
+
   if (menubar_visible ())
     {
       mb_h = menuBar_TotalHeight ();
       szHint.base_height += mb_h;
       window_vt_y = mb_h;
     }
+
   szHint.width_inc = TermWin.fwidth;
   szHint.height_inc = TermWin.fheight;
   szHint.min_width = szHint.base_width + szHint.width_inc;
@@ -771,6 +774,7 @@ rxvt_term::window_calc (unsigned int width, unsigned int height)
       MIN_IT (TermWin.width, max_width);
       szHint.width = szHint.base_width + TermWin.width;
     }
+
   if (height && height - szHint.base_height < max_height)
     {
       szHint.height = height;
@@ -781,6 +785,7 @@ rxvt_term::window_calc (unsigned int width, unsigned int height)
       MIN_IT (TermWin.height, max_height);
       szHint.height = szHint.base_height + TermWin.height;
     }
+
   if (scrollbar_visible () && (Options & Opt_scrollBar_right))
     window_sb_x = szHint.width - sb_w;
 
@@ -1081,6 +1086,7 @@ rxvt_term::resize_all_windows (unsigned int width, unsigned int height, int igno
 
   window_calc (width, height);
   XSetWMNormalHints (display->display, TermWin.parent[0], &szHint);
+
   if (!ignoreparent)
     {
 #ifdef SMART_RESIZE
@@ -1125,36 +1131,34 @@ rxvt_term::resize_all_windows (unsigned int width, unsigned int height, int igno
       XMoveResizeWindow (display->display, TermWin.parent[0], x + dx, y + dy,
                          szHint.width, szHint.height);
 #else
-      XResizeWindow (display->display, TermWin.parent[0], szHint.width,
-                     szHint.height);
+      XResizeWindow (display->display, TermWin.parent[0], szHint.width, szHint.height);
 #endif
-
     }
 
-  fix_screen = (TermWin.ncol != prev_ncol
-                || TermWin.nrow != prev_nrow);
+  fix_screen = TermWin.ncol != prev_ncol || TermWin.nrow != prev_nrow;
 
   if (fix_screen || width != old_width || height != old_height)
     {
       if (scrollbar_visible ())
         {
-          XMoveResizeWindow (display->display, scrollBar.win, window_sb_x,
-                             0, scrollbar_TotalWidth (), szHint.height);
+          XMoveResizeWindow (display->display, scrollBar.win,
+                             window_sb_x, 0,
+                             scrollbar_TotalWidth (), szHint.height);
           resize_scrollbar ();
         }
 
       if (menubar_visible ())
-        XMoveResizeWindow (display->display, menuBar.win, window_vt_x,
-                           0, TermWin_TotalWidth (), menuBar_TotalHeight ());
+        XMoveResizeWindow (display->display, menuBar.win,
+                           window_vt_x, 0,
+                           TermWin_TotalWidth (), menuBar_TotalHeight ());
 
-      XMoveResizeWindow (display->display, TermWin.vt, window_vt_x,
-                         window_vt_y, TermWin_TotalWidth (),
-                         TermWin_TotalHeight ());
-      scr_clear (height != old_height);
+      XMoveResizeWindow (display->display, TermWin.vt,
+                         window_vt_x, window_vt_y,
+                         TermWin_TotalWidth (), TermWin_TotalHeight ());
+      scr_clear ();
 #ifdef XPM_BACKGROUND
       resize_pixmap ();
 #endif
-
     }
 
   if (fix_screen || old_height == 0)

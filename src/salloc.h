@@ -19,6 +19,7 @@ struct rxvt_salloc {
   ~rxvt_salloc ();
 
   void *alloc ();
+  void *alloc (void *data, unsigned int datalen);
   void free (void *data);
 };
 
