@@ -57,7 +57,7 @@ refcounted::~refcounted ()
 template<class T>
 T *refcache<T>::get (const char *id)
 {
-  for (T **i = begin (); i < end (); ++i)
+  for (T **i = this->begin (); i < this->end (); ++i)
     {
       if (!strcmp (id, (*i)->id))
         {
@@ -72,7 +72,7 @@ T *refcache<T>::get (const char *id)
 
   if (obj && obj->init ())
     {
-      push_back (obj);
+      this->push_back (obj);
       return obj;
     }
   else
@@ -90,7 +90,7 @@ void refcache<T>::put (T *obj)
 
   if (!--obj->referenced)
     {
-      erase (find (begin (), end (), obj));
+      this->erase (find (this->begin (), this->end (), obj));
       delete obj;
     }
 }
@@ -98,8 +98,8 @@ void refcache<T>::put (T *obj)
 template<class T>
 refcache<T>::~refcache ()
 {
-  while (size ())
-    put (*begin ());
+  while (this->size ())
+    put (*this->begin ());
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -309,7 +309,7 @@ Atom rxvt_display::atom (const char *name)
 
 /////////////////////////////////////////////////////////////////////////////
 
-template refcache<rxvt_display>;
+template class refcache<rxvt_display>;
 refcache<rxvt_display> displays;
 
 /////////////////////////////////////////////////////////////////////////////

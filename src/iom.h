@@ -72,10 +72,10 @@ struct io_manager_vec : vector<watcher *> {
 
   void erase_unordered (unsigned int pos)
   {
-    watcher *w = (*this)[size () - 1];
-    pop_back ();
+    watcher *w = (*this)[this->size () - 1];
+    this->pop_back ();
 
-    if (size ())
+    if (this->size ())
       if ((*this)[pos] = w)
         w->active = pos + 1;
   }
