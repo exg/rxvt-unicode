@@ -61,38 +61,39 @@ const struct rxvt_fallback_font {
 #if ENCODING_JP || ENCODING_JP_EXT
 # if XFT
   // prefer xft for complex scripts
-  { CS_UNICODE,        "xft:Kochi Gothic:antialias=false"     },
+  { CS_UNICODE,        "xft:Kochi Gothic:antialias=false"          },
 # endif
-  { CS_JIS0201_1976_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0201*-0" },
-  { CS_JIS0208_1983_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0208*-0" },
-  { CS_JIS0212_1990_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0212*-0" },
+  { CS_JIS0201_1976_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0201*-0"  },
+  { CS_JIS0208_1983_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0208*-0"  },
+  { CS_JIS0212_1990_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0212*-0"  },
 #endif
 
 #if ENCODING_CN || ENCODING_CN_EXT
 # if XFT
-  { CS_BIG5_EXT,       "xft:AR PL Mingti2L Big5"              },
-  { CS_BIG5_EXT,       "xft:AR PL KaitiM Big5"                },
-  { CS_GB2312_1980_0,  "xft:AR PL KaitiM GB"                  },
-  { CS_GB2312_1980_0,  "xft:AR PL SungtiL GB"                 },
+  { CS_BIG5_EXT,       "xft:AR PL Mingti2L Big5"                   },
+  { CS_BIG5_EXT,       "xft:AR PL KaitiM Big5"                     },
+  { CS_GB2312_1980_0,  "xft:AR PL KaitiM GB"                       },
+  { CS_GB2312_1980_0,  "xft:AR PL SungtiL GB"                      },
 # endif
-  { CS_CNS11643_1992_1, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-1" },
-  { CS_CNS11643_1992_2, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-2" },
-  { CS_CNS11643_1992_3, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-3" },
-  { CS_CNS11643_1992_4, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-4" },
-  { CS_CNS11643_1992_5, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-5" },
-  { CS_CNS11643_1992_6, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-6" },
-  { CS_CNS11643_1992_7, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-7" },
-  { CS_CNS11643_1992_F, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-f" },
+  { CS_CNS11643_1992_1, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643.1992-1" },
+  { CS_CNS11643_1992_2, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643.1992-2" },
+  { CS_CNS11643_1992_3, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643.1992-3" },
+  { CS_CNS11643_1992_4, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643.1992-4" },
+  { CS_CNS11643_1992_5, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643.1992-5" },
+  { CS_CNS11643_1992_6, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643.1992-6" },
+  { CS_CNS11643_1992_7, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643.1992-7" },
+  { CS_CNS11643_1992_F, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643.1992-f" },
 #endif
 
 #if XFT
-  { CS_UNICODE,      "xft:Andale Mono"                        },
-  { CS_UNICODE,      "xft:Arial Unicode MS"                   },
+  { CS_UNICODE,      "xft:Andale Mono"                             },
+  { CS_UNICODE,      "xft:Arial Unicode MS"                        },
 #endif
-  { CS_UNICODE,      "-*-lucidatypewriter-*-r-*-*-*-*-*-*-m-*-iso10646-1" },
-  { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1" },
-  { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1" },
-  { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1" },
+  { CS_UNICODE,      "-*-lucidatypewriter-*-*-*-*-*-*-*-*-m-*-iso10646-1" },
+  { CS_UNICODE,      "xft:FreeMono"                                },
+  { CS_UNICODE,      "-*-unifont-*-*-*-*-*-*-*-*-c-*-iso10646-1"   },
+  { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-c-*-iso10646-1"         },
+  { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1"         },
 
   { CS_UNKNOWN, 0 }
 };
@@ -421,6 +422,9 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
             }
         }
     }
+
+  if (!best)
+    return false;
 
   set_name (strdup (list[best - info]));
 

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.25 2003/12/19 09:41:09 pcg Exp $
+ * $Id: command.C,v 1.26 2003/12/24 06:26:52 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -1528,7 +1528,7 @@ rxvt_process_x_event(pR_ XEvent *ev)
 void
 rxvt_button_press(pR_ XButtonEvent *ev)
 {
-    int             reportmode = 0, clickintime;
+    int reportmode = 0, clickintime;
 
     R->bypass_keystate = ev->state & (R->ModMetaMask | ShiftMask);
     if (!R->bypass_keystate)
@@ -1586,7 +1586,7 @@ rxvt_button_press(pR_ XButtonEvent *ev)
                   {
                     case Button1:
                         /* allow shift+left click to extend selection */
-                        if (ev->state & ShiftMask)
+                        if (ev->state & ShiftMask && !(R->PrivateModes & PrivMode_mouse_report))
                           {
                             if (R->MEvent.button == Button1 && clickintime)
                               R->selection_rotate (ev->x, ev->y);
