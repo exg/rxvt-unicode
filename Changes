@@ -1,5 +1,4 @@
 TODO: manpage 900mb update
-TODO: maybe just output the error and continue on x errors, especially for XIM-management
 TODO: safer command: keymap processing.
 TODO: read property sequence is broken with respect to utf-8 etc.
 WISH: keyboard modification via esc-sequences.
@@ -15,6 +14,7 @@ WISH: just for fun, do shade and tint with XRender.
 	- fix a bug when parsing fontnames and another one
           for empty keymaps which could result in crashes
           (Kuang-che Wu).
+        - only warn on X errors, *try* to continue (frills).
         - add COPYING back, which got lost somehow.
 
 5.0  Fri Feb 11 18:31:48 CET 2005

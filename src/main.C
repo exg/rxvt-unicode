@@ -364,6 +364,55 @@ rxvt_emergency_cleanup ()
     (*t)->emergency_cleanup ();
 }
 
+#if ENABLE_FRILLS
+static void
+print_x_error (Display *dpy, XErrorEvent *event)
+{
+    char buffer[BUFSIZ];
+    char mesg[BUFSIZ];
+    char number[32];
+    char *mtype = "XlibMessage";
+    XGetErrorText(dpy, event->error_code, buffer, BUFSIZ);
+    XGetErrorDatabaseText(dpy, mtype, "XError", "X Error", mesg, BUFSIZ);
+    rxvt_warn ("An X Error occured, trying to continue after report.\n");
+    rxvt_warn ("%s:  %s\n", mesg, buffer);
+    XGetErrorDatabaseText(dpy, mtype, "MajorCode", "Request Major code %d", mesg, BUFSIZ);
+    rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->request_code);
+    sprintf(number, "%d", event->request_code);
+    XGetErrorDatabaseText(dpy, "XRequest", number, "", buffer, BUFSIZ);
+    rxvt_warn ("(which is %s)\n", buffer);
+    if (event->request_code >= 128) {
+	XGetErrorDatabaseText(dpy, mtype, "MinorCode", "Request Minor code %d",
+			      mesg, BUFSIZ);
+        rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->minor_code);
+    }
+    if ((event->error_code == BadWindow) ||
+	       (event->error_code == BadPixmap) ||
+	       (event->error_code == BadCursor) ||
+	       (event->error_code == BadFont) ||
+	       (event->error_code == BadDrawable) ||
+	       (event->error_code == BadColor) ||
+	       (event->error_code == BadGC) ||
+	       (event->error_code == BadIDChoice) ||
+	       (event->error_code == BadValue) ||
+	       (event->error_code == BadAtom)) {
+	if (event->error_code == BadValue)
+	    XGetErrorDatabaseText(dpy, mtype, "Value", "Value 0x%x",
+				  mesg, BUFSIZ);
+	else if (event->error_code == BadAtom)
+	    XGetErrorDatabaseText(dpy, mtype, "AtomID", "AtomID 0x%x",
+				  mesg, BUFSIZ);
+	else
+	    XGetErrorDatabaseText(dpy, mtype, "ResourceID", "ResourceID 0x%x",
+				  mesg, BUFSIZ);
+	rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->resourceid);
+    }
+    XGetErrorDatabaseText(dpy, mtype, "ErrorSerial", "Error Serial #%d", 
+			  mesg, BUFSIZ);
+    rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->serial);
+}
+#endif
+
 int
 rxvt_xerror_handler (Display *display, XErrorEvent *event)
 {
@@ -373,8 +422,11 @@ rxvt_xerror_handler (Display *display, XErrorEvent *event)
     {
       //TODO: GET_R is most likely not the terminal which caused the error
       //TODO: maybe just output the error and continue?
+#if ENABLE_FRILLS
+      print_x_error (display, event);
+#else
       old_xerror_handler (display, event);
-      GET_R->destroy ();
+#endif
     }
 
   return 0;
@@ -1502,6 +1554,8 @@ rxvt_term::im_cb ()
   const char *p;
   char **s;
   char buf[IMBUFSIZ];
+
+  SET_R (this);
 
   im_destroy ();
 

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2005-02-11" "5.0" "RXVT-UNICODE"
+.TH rxvt 7 "2005-02-13" "5.1" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -576,6 +576,16 @@ Now you can start your terminal with \f(CW\*(C`LC_CTYPE=ja_JP.UTF\-8\*(C'\fR and
 use your input method. Please note, however, that you will not be able to
 input characters outside \f(CW\*(C`EUC\-JP\*(C'\fR in a normal way then, as your input
 method limits you.
+.IP "Rxvt-unicode crashes when the X Input Method changes or exits." 4
+.IX Item "Rxvt-unicode crashes when the X Input Method changes or exits."
+Unfortunately, this is unavoidable, as the \s-1XIM\s0 protocol is racy by
+design. Applications can avoid some crashes at the expense of memory
+leaks, and Input Methods can avoid some crashes by careful ordering at
+exit time. \fBkinput2\fR (and derived input methods) generally succeeds,
+while \fB\s-1SCIM\s0\fR (or similar input methods) fails. In the end, however,
+crashes cannot be completely avoided even if both sides cooperate.
+.Sp
+So the only workaround is not to kill your Input Method Servers.
 .IP "Rxvt-unicode uses gobs of memory, how can I reduce that?" 4
 .IX Item "Rxvt-unicode uses gobs of memory, how can I reduce that?"
 Rxvt-unicode tries to obey the rule of not charging you for something you

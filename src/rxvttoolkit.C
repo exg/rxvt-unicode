@@ -233,7 +233,7 @@ void rxvt_display::im_change_cb ()
 
 void rxvt_display::im_change_check ()
 {
-  // make sure we only call im_change_cb when a new input method
+  // try to only call im_change_cb when a new input method
   // registers, as xlib crashes due to a race otherwise.
   Atom actual_type, *atoms;
   int actual_format;

@@ -411,6 +411,17 @@ FREQUENTLY ASKED QUESTIONS
         be able to input characters outside "EUC-JP" in a normal way then,
         as your input method limits you.
 
+    Rxvt-unicode crashes when the X Input Method changes or exits.
+        Unfortunately, this is unavoidable, as the XIM protocol is racy by
+        design. Applications can avoid some crashes at the expense of memory
+        leaks, and Input Methods can avoid some crashes by careful ordering
+        at exit time. kinput2 (and derived input methods) generally
+        succeeds, while SCIM (or similar input methods) fails. In the end,
+        however, crashes cannot be completely avoided even if both sides
+        cooperate.
+
+        So the only workaround is not to kill your Input Method Servers.
+
     Rxvt-unicode uses gobs of memory, how can I reduce that?
         Rxvt-unicode tries to obey the rule of not charging you for
         something you don't use. One thing you should try is to configure

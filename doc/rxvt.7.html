@@ -586,6 +586,20 @@ input characters outside <code>EUC-JP</code> in a normal way then, as your input
 method limits you.</p>
 </dd>
 <p></p>
+<dt><strong><a name="item_rxvt_2dunicode_crashes_when_the_x_input_method_cha">Rxvt-unicode crashes when the X Input Method changes or exits.</a></strong><br />
+</dt>
+<dd>
+Unfortunately, this is unavoidable, as the XIM protocol is racy by
+design. Applications can avoid some crashes at the expense of memory
+leaks, and Input Methods can avoid some crashes by careful ordering at
+exit time. <strong>kinput2</strong> (and derived input methods) generally succeeds,
+while <strong>SCIM</strong> (or similar input methods) fails. In the end, however,
+crashes cannot be completely avoided even if both sides cooperate.
+</dd>
+<dd>
+<p>So the only workaround is not to kill your Input Method Servers.</p>
+</dd>
+<p></p>
 <dt><strong><a name="item_rxvt_2dunicode_uses_gobs_of_memory_2c_how_can_i_re">Rxvt-unicode uses gobs of memory, how can I reduce that?</a></strong><br />
 </dt>
 <dd>
