@@ -532,9 +532,9 @@ thumb with the pointer on middle button press/drag.
 
 =item B<scrollTtyOutput:> I<boolean>
 
-B<True>: scroll to bottom when tty receives output; option B<+si>.
+B<True>: scroll to bottom when tty receives output; option B<-si>.
 B<False>: do not scroll to bottom when tty receives output; option
-B<-si>.
+B<+si>.
 
 =item B<scrollWithBuffer:> I<boolean>
 
