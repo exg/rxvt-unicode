@@ -2157,7 +2157,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
             }
 
 #ifdef TEXT_BLINK
-          if (rend & RS_Blink)
+          if (rend & RS_Blink && back == Color_bg)
             {
               if (!text_blink_ev.active)
                 {
