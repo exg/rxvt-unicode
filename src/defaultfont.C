@@ -232,7 +232,10 @@ struct rxvt_font_default : rxvt_font {
     if (unicode <= 0x001f)
       return true;
 
-    if (unicode >= 0x0080 && unicode <= 0x009f)
+    if (unicode <= 0x007f)
+      return false;
+
+    if (unicode <= 0x009f)
       return true;
 
     if (unicode >= 0x2500 && unicode <= 0x259f)
@@ -1147,7 +1150,9 @@ rxvt_fontset::populate (const char *desc)
 int
 rxvt_fontset::find_font (unicode_t unicode)
 {
-  for (unsigned int i = 0; i < fonts.size (); i++)
+  for (unsigned int i = !!(0x20 <= unicode && unicode <= 0x7f); // skip pseudo-font for ascii
+       i < fonts.size ();
+       i++)
     {
       rxvt_font *f = fonts[i];
 
