@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2005-01-18" "4.8" "RXVT-UNICODE"
+.TH rxvt 7 "2005-02-03" "4.9" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "FREQUENTLY ASKED QUESTIONS"
@@ -685,27 +685,29 @@ use the `keysym' resource to alter the keystrings associated with keysyms.
 Here's an example for a URxvt session started using `@@RXVT_NAME@@ \-name URxvt'
 .Sp
 .Vb 20
-\&        URxvt*keysym.Home:          \ee[1~
-\&        URxvt*keysym.End:           \ee[4~
-\&        URxvt*keysym.C-apostrophe:  \ee<C-'>
-\&        URxvt*keysym.C-slash:       \ee<C-/>
-\&        URxvt*keysym.C-semicolon:   \ee<C-;>
-\&        URxvt*keysym.C-grave:       \ee<C-`>
-\&        URxvt*keysym.C-comma:       \ee<C-,>
-\&        URxvt*keysym.C-period:      \ee<C-.>
-\&        URxvt*keysym.C-0x60:        \ee<C-`>
-\&        URxvt*keysym.C-Tab:         \ee<C-Tab>
-\&        URxvt*keysym.C-Return:      \ee<C-Return>
-\&        URxvt*keysym.S-Return:      \ee<S-Return>
-\&        URxvt*keysym.S-space:       \ee<S-Space>
-\&        URxvt*keysym.M-Up:          \ee<M-Up>
-\&        URxvt*keysym.M-Down:        \ee<M-Down>
-\&        URxvt*keysym.M-Left:        \ee<M-Left>
-\&        URxvt*keysym.M-Right:       \ee<M-Right>
-\&        URxvt*keysym.M-C-0:         list.0123456789.\ee<M-C-.>
-\&        URxvt*keysym.M-C-a:         list.abcdefghijklmnopqrstuvwxyz.\e033<M-C-.>
-\&        URxvt*keysym.F12:           proto:\e033]701;zh_CN.GBK\e007
+\&   URxvt.keysym.Home:          \ee[1~
+\&   URxvt.keysym.End:           \ee[4~
+\&   URxvt.keysym.C-apostrophe:  \ee<C-'>
+\&   URxvt.keysym.C-slash:       \ee<C-/>
+\&   URxvt.keysym.C-semicolon:   \ee<C-;>
+\&   URxvt.keysym.C-grave:       \ee<C-`>
+\&   URxvt.keysym.C-comma:       \ee<C-,>
+\&   URxvt.keysym.C-period:      \ee<C-.>
+\&   URxvt.keysym.C-0x60:        \ee<C-`>
+\&   URxvt.keysym.C-Tab:         \ee<C-Tab>
+\&   URxvt.keysym.C-Return:      \ee<C-Return>
+\&   URxvt.keysym.S-Return:      \ee<S-Return>
+\&   URxvt.keysym.S-space:       \ee<S-Space>
+\&   URxvt.keysym.M-Up:          \ee<M-Up>
+\&   URxvt.keysym.M-Down:        \ee<M-Down>
+\&   URxvt.keysym.M-Left:        \ee<M-Left>
+\&   URxvt.keysym.M-Right:       \ee<M-Right>
+\&   URxvt.keysym.M-C-0:         list \ee<M-C- 0123456789 >
+\&   URxvt.keysym.M-C-a:         list \e033<M-C- abcdefghijklmnopqrstuvwxyz >
+\&   URxvt.keysym.F12:           proto:\e033]701;zh_CN.GBK\e007
 .Ve
+.Sp
+See some more examples in the documentation for the \fBkeysym\fR resource.
 .IP "I'm using keyboard model \s-1XXX\s0 that has extra Prior/Next/Insert keys. How do I make use of them?  For example, the Sun Keyboard type 4 has the following mappings that rxvt-unicode doesn't recognize." 4
 .IX Item "I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How do I make use of them?  For example, the Sun Keyboard type 4 has the following mappings that rxvt-unicode doesn't recognize."
 .Vb 6
@@ -717,9 +719,9 @@ Here's an example for a URxvt session started using `@@RXVT_NAME@@ \-name URxvt'
 \&   F35 == Next
 .Ve
 .Sp
-Rather than have rxvt-unicode try to accommodate all the various possible keyboard
-mappings, it is better to use `xmodmap' to remap the keys as required for
-your particular machine.
+Rather than have rxvt-unicode try to accommodate all the various possible
+keyboard mappings, it is better to use `xmodmap' to remap the keys as
+required for your particular machine.
 .IP "How do I distinguish if I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc." 4
 .IX Item "How do I distinguish if I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc."
 rxvt and rxvt-unicode always export the variable \*(L"\s-1COLORTERM\s0\*(R", so you can
@@ -1202,14 +1204,38 @@ Set Scrolling Region [top;bottom]
 .el .IP "\fB\f(CB\*(C`ESC [ s\*(C'\fB\fR" 4
 .IX Item "ESC [ s"
 Save Cursor (\s-1SC\s0)
-.ie n .IP "\fB\fB\*(C`ESC [ Ps x\*(C'\fB\fR" 4
-.el .IP "\fB\f(CB\*(C`ESC [ Ps x\*(C'\fB\fR" 4
-.IX Item "ESC [ Ps x"
-Request Terminal Parameters (\s-1DECREQTPARM\s0)
+.ie n .IP "\fB\fB\*(C`ESC [ Ps;Pt t\*(C'\fB\fR" 4
+.el .IP "\fB\f(CB\*(C`ESC [ Ps;Pt t\*(C'\fB\fR" 4
+.IX Item "ESC [ Ps;Pt t"
+Window Operations
+.TS
+l l .
+Ps = 1	Deiconify (map) window
+Ps = 2	Iconify window
+Ps = 3	ESC [ 3 ; X ; Y t Move window to (X|Y)
+Ps = 4	ESC [ 4 ; W ; H t Resize to WxH pixels
+Ps = 5	Raise window
+Ps = 6	Lower window
+Ps = 7	Refresh screen once
+Ps = 8	ESC [ 4 ; C ; R t Resize to C columns and R rows
+Ps = 11	Report window state (responds with Ps = 1 or Ps = 2
+Ps = 13	Report window position (responds with Ps = 3)
+Ps = 14	Report window pixel size (responds with Ps = 4)
+Ps = 18	Report window text size (responds with Ps = 7)
+Ps = 19	Currently the same as Ps = 18, but responds with Ps = 9
+Ps = 20	Reports icon label (ESC ] L NAME \234)
+Ps = 21	Reports window title (ESC ] l NAME \234)
+Ps = 24..	Set window height to Ps rows
+.TE
+
 .ie n .IP "\fB\fB\*(C`ESC [ u\*(C'\fB\fR" 4
 .el .IP "\fB\f(CB\*(C`ESC [ u\*(C'\fB\fR" 4
 .IX Item "ESC [ u"
 Restore Cursor
+.ie n .IP "\fB\fB\*(C`ESC [ Ps x\*(C'\fB\fR" 4
+.el .IP "\fB\f(CB\*(C`ESC [ Ps x\*(C'\fB\fR" 4
+.IX Item "ESC [ Ps x"
+Request Terminal Parameters (\s-1DECREQTPARM\s0)
 .PP
 
 .IX Xref "PrivateModes"

@@ -13,33 +13,33 @@
 
 keysym_t keyboard_manager::stock_keymap[] = {
   /* examples */
-  /*        keysym,                state, range,        handler,             str */
-//{XK_ISO_Left_Tab,                    0,     1,         NORMAL,           "\033[Z"},
-//{            'a',                    0,    26,    RANGE_META8,           "a" "%c"},
-//{            'a',          ControlMask,    26,    RANGE_META8,          "" "%c"},
-//{        XK_Left,                    0,     4,           LIST,   "DACBZ" "\033[Z"},
-//{        XK_Left,            ShiftMask,     4,           LIST,   "dacbZ" "\033[Z"},
-//{        XK_Left,          ControlMask,     4,           LIST,   "dacbZ" "\033OZ"},
-//{         XK_Tab,          ControlMask,     1,         NORMAL,      "\033<C-Tab>"},
-//{  XK_apostrophe,          ControlMask,     1,         NORMAL,        "\033<C-'>"},
-//{       XK_slash,          ControlMask,     1,         NORMAL,        "\033<C-/>"},
-//{   XK_semicolon,          ControlMask,     1,         NORMAL,        "\033<C-;>"},
-//{       XK_grave,          ControlMask,     1,         NORMAL,        "\033<C-`>"},
-//{       XK_comma,          ControlMask,     1,         NORMAL,     "\033<C-\054>"},
-//{      XK_Return,          ControlMask,     1,         NORMAL,    "\033<C-Return>"},
-//{      XK_Return,            ShiftMask,     1,         NORMAL,    "\033<S-Return>"},
-//{            ' ',            ShiftMask,     1,         NORMAL,    "\033<S-Space>"},
-//{            '.',          ControlMask,     1,         NORMAL,        "\033<C-.>"},
-//{            '0',          ControlMask,    10,          RANGE,   "0" "\033<C-%c>"},
-//{            '0', MetaMask|ControlMask,    10,          RANGE, "0" "\033<M-C-%c>"},
-//{            'a', MetaMask|ControlMask,    26,          RANGE, "a" "\033<M-C-%c>"},
+  /*        keysym,                state, range,               handler,              str */
+//{XK_ISO_Left_Tab,                    0,     1,      keysym_t::NORMAL,           "\033[Z"},
+//{            'a',                    0,    26, keysym_t::RANGE_META8,           "a" "%c"},
+//{            'a',          ControlMask,    26, keysym_t::RANGE_META8,          "" "%c"},
+//{        XK_Left,                    0,     4,        keysym_t::LIST,     ".\033[.DACB."},
+//{        XK_Left,            ShiftMask,     4,        keysym_t::LIST,     ".\033[.dacb."},
+//{        XK_Left,          ControlMask,     4,        keysym_t::LIST,     ".\033O.dacb."},
+//{         XK_Tab,          ControlMask,     1,      keysym_t::NORMAL,      "\033<C-Tab>"},
+//{  XK_apostrophe,          ControlMask,     1,      keysym_t::NORMAL,        "\033<C-'>"},
+//{       XK_slash,          ControlMask,     1,      keysym_t::NORMAL,        "\033<C-/>"},
+//{   XK_semicolon,          ControlMask,     1,      keysym_t::NORMAL,        "\033<C-;>"},
+//{       XK_grave,          ControlMask,     1,      keysym_t::NORMAL,        "\033<C-`>"},
+//{       XK_comma,          ControlMask,     1,      keysym_t::NORMAL,     "\033<C-\054>"},
+//{      XK_Return,          ControlMask,     1,      keysym_t::NORMAL,   "\033<C-Return>"},
+//{      XK_Return,            ShiftMask,     1,      keysym_t::NORMAL,   "\033<S-Return>"},
+//{            ' ',            ShiftMask,     1,      keysym_t::NORMAL,    "\033<S-Space>"},
+//{            '.',          ControlMask,     1,      keysym_t::NORMAL,        "\033<C-.>"},
+//{            '0',          ControlMask,    10,       keysym_t::RANGE,   "0" "\033<C-%c>"},
+//{            '0', MetaMask|ControlMask,    10,       keysym_t::RANGE, "0" "\033<M-C-%c>"},
+//{            'a', MetaMask|ControlMask,    26,       keysym_t::RANGE, "a" "\033<M-C-%c>"},
 };
 
 static void
 output_string (rxvt_term *rt, const char *str)
 {
-  if (strncmp (str, "proto:", 6) == 0)
-    rt->cmd_write ((unsigned char *)str + 6, strlen (str) - 6);
+  if (strncmp (str, "command:", 8) == 0)
+    rt->cmd_write ((unsigned char *)str + 8, strlen (str) - 8);
   else
     rt->tt_write ((unsigned char *)str, strlen (str));
 }
@@ -368,7 +368,6 @@ keyboard_manager::setup_hash ()
     }
 
   // and allocate just enough space
-  //sorted_keymap.reserve (hash[i - 1] + hash_budget_size[i - 1]);
   sorted_keymap.insert (sorted_keymap.begin (), index + hash_budget_size [i - 1], 0);
 
   // fill in sorted_keymap
@@ -425,7 +424,7 @@ keyboard_manager::setup_hash ()
           assert (index >= 0);
           keysym_t *b = keymap [index];
           assert (i == (signed) index ||	// the normally expected result
-            (a->keysym + j) >= b->keysym && (a->keysym + j) <= (b->keysym + b->range) && compare_priority (a, b) <= 0);	// is effectively the same
+            (a->keysym + j) >= b->keysym && (a->keysym + j) <= (b->keysym + b->range) && compare_priority (a, b) <= 0);	// is effectively the same or a closer match
         }
     }
 #endif
@@ -445,7 +444,7 @@ keyboard_manager::find_keysym (KeySym keysym, unsigned int state)
           // match only the specified bits in state and ignore others
           && (key->state & state) == key->state)
         return index;
-      else if (key->keysym > keysym && key->range == 1)
+      else if ((key->keysym & KEYSYM_HASH_MASK) > hashkey && key->range == 1)
         return -1;
     }
 

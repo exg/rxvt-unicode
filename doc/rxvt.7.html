@@ -731,26 +731,29 @@ use the `keysym' resource to alter the keystrings associated with keysyms.
 </dd>
 <dd>
 <pre>
-        URxvt*keysym.Home:          \e[1~
-        URxvt*keysym.End:           \e[4~
-        URxvt*keysym.C-apostrophe:  \e&lt;C-'&gt;
-        URxvt*keysym.C-slash:       \e&lt;C-/&gt;
-        URxvt*keysym.C-semicolon:   \e&lt;C-;&gt;
-        URxvt*keysym.C-grave:       \e&lt;C-`&gt;
-        URxvt*keysym.C-comma:       \e&lt;C-,&gt;
-        URxvt*keysym.C-period:      \e&lt;C-.&gt;
-        URxvt*keysym.C-0x60:        \e&lt;C-`&gt;
-        URxvt*keysym.C-Tab:         \e&lt;C-Tab&gt;
-        URxvt*keysym.C-Return:      \e&lt;C-Return&gt;
-        URxvt*keysym.S-Return:      \e&lt;S-Return&gt;
-        URxvt*keysym.S-space:       \e&lt;S-Space&gt;
-        URxvt*keysym.M-Up:          \e&lt;M-Up&gt;
-        URxvt*keysym.M-Down:        \e&lt;M-Down&gt;
-        URxvt*keysym.M-Left:        \e&lt;M-Left&gt;
-        URxvt*keysym.M-Right:       \e&lt;M-Right&gt;
-        URxvt*keysym.M-C-0:         list.0123456789.\e&lt;M-C-.&gt;
-        URxvt*keysym.M-C-a:         list.abcdefghijklmnopqrstuvwxyz.\033&lt;M-C-.&gt;
-        URxvt*keysym.F12:           proto:\033]701;zh_CN.GBK\007</pre>
+   URxvt.keysym.Home:          \e[1~
+   URxvt.keysym.End:           \e[4~
+   URxvt.keysym.C-apostrophe:  \e&lt;C-'&gt;
+   URxvt.keysym.C-slash:       \e&lt;C-/&gt;
+   URxvt.keysym.C-semicolon:   \e&lt;C-;&gt;
+   URxvt.keysym.C-grave:       \e&lt;C-`&gt;
+   URxvt.keysym.C-comma:       \e&lt;C-,&gt;
+   URxvt.keysym.C-period:      \e&lt;C-.&gt;
+   URxvt.keysym.C-0x60:        \e&lt;C-`&gt;
+   URxvt.keysym.C-Tab:         \e&lt;C-Tab&gt;
+   URxvt.keysym.C-Return:      \e&lt;C-Return&gt;
+   URxvt.keysym.S-Return:      \e&lt;S-Return&gt;
+   URxvt.keysym.S-space:       \e&lt;S-Space&gt;
+   URxvt.keysym.M-Up:          \e&lt;M-Up&gt;
+   URxvt.keysym.M-Down:        \e&lt;M-Down&gt;
+   URxvt.keysym.M-Left:        \e&lt;M-Left&gt;
+   URxvt.keysym.M-Right:       \e&lt;M-Right&gt;
+   URxvt.keysym.M-C-0:         list \e&lt;M-C- 0123456789 &gt;
+   URxvt.keysym.M-C-a:         list \033&lt;M-C- abcdefghijklmnopqrstuvwxyz &gt;
+   URxvt.keysym.F12:           proto:\033]701;zh_CN.GBK\007</pre>
+</dd>
+<dd>
+<p>See some more examples in the documentation for the <strong>keysym</strong> resource.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_i_27m_using_keyboard_model_xxx_that_has_extra_prio">I'm using keyboard model XXX that has extra Prior/Next/Insert keys.
@@ -767,9 +770,9 @@ has the following mappings that rxvt-unicode doesn't recognize.</a></strong><br 
    F35 == Next</pre>
 </dd>
 <dd>
-<p>Rather than have rxvt-unicode try to accommodate all the various possible keyboard
-mappings, it is better to use `xmodmap' to remap the keys as required for
-your particular machine.</p>
+<p>Rather than have rxvt-unicode try to accommodate all the various possible
+keyboard mappings, it is better to use `xmodmap' to remap the keys as
+required for your particular machine.</p>
 </dd>
 <dt><strong><a name="item_how_do_i_distinguish_if_i_27m_running_rxvt_2dunico">How do I distinguish if I'm running rxvt-unicode or a regular xterm?
 I need this to decide about setting colors etc.</a></strong><br />
@@ -1378,16 +1381,39 @@ Set Scrolling Region [top;bottom]
 Save Cursor (SC)
 </dd>
 <p></p>
-<dt><strong><a name="item_esc__5b_ps_x"><strong><code>ESC [ Ps x</code> </strong>&gt;</a></strong><br />
+<dt><strong><a name="item_esc__5b_ps_3bpt_t"><strong><code>ESC [ Ps;Pt t</code> </strong>&gt;</a></strong><br />
 </dt>
 <dd>
-Request Terminal Parameters (DECREQTPARM)
+Window Operations
 </dd>
-<p></p>
+<table>
+<tr><td>Ps = 1</td><td>Deiconify (map) window</td></tr>
+<tr><td>Ps = 2</td><td>Iconify window</td></tr>
+<tr><td>Ps = 3</td><td>ESC [ 3 ; X ; Y t Move window to (X|Y)</td></tr>
+<tr><td>Ps = 4</td><td>ESC [ 4 ; W ; H t Resize to WxH pixels</td></tr>
+<tr><td>Ps = 5</td><td>Raise window</td></tr>
+<tr><td>Ps = 6</td><td>Lower window</td></tr>
+<tr><td>Ps = 7</td><td>Refresh screen once</td></tr>
+<tr><td>Ps = 8</td><td>ESC [ 4 ; C ; R t Resize to C columns and R rows</td></tr>
+<tr><td>Ps = 11</td><td>Report window state (responds with Ps = 1 or Ps = 2</td></tr>
+<tr><td>Ps = 13</td><td>Report window position (responds with Ps = 3)</td></tr>
+<tr><td>Ps = 14</td><td>Report window pixel size (responds with Ps = 4)</td></tr>
+<tr><td>Ps = 18</td><td>Report window text size (responds with Ps = 7)</td></tr>
+<tr><td>Ps = 19</td><td>Currently the same as Ps = 18, but responds with Ps = 9</td></tr>
+<tr><td>Ps = 20</td><td>Reports icon label (ESC ] L NAME \234)</td></tr>
+<tr><td>Ps = 21</td><td>Reports window title (ESC ] l NAME \234)</td></tr>
+<tr><td>Ps = 24..</td><td>Set window height to Ps rows</td></tr>
+</table><p></p>
 <dt><strong><a name="item_esc__5b_u"><strong><code>ESC [ u</code> </strong>&gt;</a></strong><br />
 </dt>
 <dd>
 Restore Cursor
+</dd>
+<p></p>
+<dt><strong><a name="item_esc__5b_ps_x"><strong><code>ESC [ Ps x</code> </strong>&gt;</a></strong><br />
+</dt>
+<dd>
+Request Terminal Parameters (DECREQTPARM)
 </dd>
 <p></p></dl>
 <p></p>

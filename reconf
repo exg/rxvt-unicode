@@ -11,6 +11,6 @@
             --with-codesets=zh,jp,kr --enable-menubar --enable-tinting \
             --enable-cursor-blink --enable-text-blink --enable-fading \
             --enable-plain-scroll --enable-rxvt-scroll --enable-combining --enable-iso14755 \
-            --enable-font-styles \
+            --enable-font-styles --enable-xpm-background --enable-xgetdefault \
             --enable-next-scroll --enable-xterm-scroll \
             "$@"

@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 4.8, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 4.9, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -279,10 +279,20 @@ OPTIONS
         Compile *XIM*: input method name. resource inputMethod.
 
     -imlocale *string*
-        The locale to use for opening the IM. You can use an LC_CTYPE of
-        e.g. de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP for the
-        input extension to be able to input japanese characters while
-        staying in another locale.
+        The locale to use for opening the IM. You can use an "LC_CTYPE" of
+        e.g. "de_DE.UTF-8" for normal text processing but "ja_JP.EUC-JP" for
+        the input extension to be able to input japanese characters while
+        staying in another locale. resource imLocale.
+
+    -imfont *fontset*
+        Set the font set to use for the X Input Method, see resource imFont
+        for more info.
+
+    -tcw
+        Change the meaning of triple-click selection with the left mouse
+        button. Instead of selecting a full line it will extend the
+        selection the end of the logical line only. resource
+        tripleclickwords.
 
     -insecure
         Enable "insecure" mode, which currently enables most of the escape
@@ -656,10 +666,23 @@ RESOURCES (available also as long-options)
         *name* of inputMethod to use; option -im.
 
     imLocale: *name*
-        The locale to use for opening the IM. You can use an LC_CTYPE of
-        e.g. de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP for the
-        input extension to be able to input japanese characters while
+        The locale to use for opening the IM. You can use an "LC_CTYPE" of
+        e.g. "de_DE.UTF-8" for normal text processing but "ja_JP.EUC-JP" for
+        the input extension to be able to input japanese characters while
         staying in another locale. option -imlocale.
+
+    imFont: *fontset*
+        Specify the font-set used for XIM styles "OverTheSpot" or
+        "OffTheSpot". It must be a standard X font set (XLFD patterns
+        separated by commas), i.e. it's not in the same format as the other
+        font lists used in rxvt. The default will be set-up to chose *any*
+        suitable found found, preferably one or two pixels differing in size
+        to the base font. option -imfont.
+
+    tripleclickwords: *boolean*
+        Change the meaning of triple-click selection with the left mouse
+        button. Instead of selecting a full line it will extend the
+        selection to the end of the logical line only. option -tcw.
 
     insecure: *boolean*
         Enables "insecure" mode. Rxvt-unicode offers some escape sequences
@@ -702,8 +725,8 @@ RESOURCES (available also as long-options)
 
         The NumLock, Meta and ISOLevel3 modifiers are usually aliased to
         whatever modifier the NumLock key, Meta/Alt keys or ISO Level3
-        Shift/AltGr keys are being mapped. AppKeypad is a artificial
-        modifier mapped to the current application keymap mode state.
+        Shift/AltGr keys are being mapped. AppKeypad is a synthetic modifier
+        mapped to the current application keymap mode state.
 
         The spellings of *key* can be obtained by using xev(1) command or
         searching keysym macros from /usr/X11R6/include/X11/keysymdef.h and
@@ -733,7 +756,19 @@ RESOURCES (available also as long-options)
           URxvt.keysym.Meta-Control-0x63:    \e<M-C-c>
 
         If *string* takes the form of "proto:STRING", the specified STRING
-        is interpreted and executed as rxvt's control sequence. For example,
+        is interpreted and executed as rxvt's control sequence. For example
+        the following means "change the current locale to "zh_CN.GBK" when
+        Control-Meta-c is being pressed":
+
+          URxvt.keysym.M-C-c: proto:\033]701;zh_CN.GBK\007
+
+        The following example will map Control-Meta-1 and Control-Meta-2 to
+        the fonts "suxuseuro" and "9x15bold", so you cna have some limited
+        font-switching at runtime:
+
+          URxvt.keysym.M-C-1: proto:\033]50;suxuseuro\007
+          URxvt.keysym.M-C-2: proto:\033]50;9x15bold\007
+
         "proto:\033]701;zh_CN.GBK\007" means: change the current locale to
         "zh_CN.GBK".
 
@@ -767,7 +802,8 @@ TEXT SELECTION AND INSERTION
         Left click at the beginning of the region, drag to the end of the
         region and release; Right click to extend the marked region; Left
         double-click to select a word; Left triple-click to select the
-        entire line.
+        entire logical line (which can span multiple screen lines), unless
+        modified by resource tripleclickwords.
 
         Starting a selection while pressing the Meta key (or Meta+Ctrl keys)
         (Compile: *frills*) will create a rectangular selection instead of a
@@ -797,7 +833,7 @@ ISO 14755 SUPPORT
     the rest is available when rxvt-unicode was compiled with
     "--enable-iso14755".
 
-    5.1: Basic method
+    * 5.1: Basic method
         This allows you to enter unicode characters using their hexcode.
 
         Start by pressing and holding both "Control" and "Shift", then enter
@@ -813,7 +849,7 @@ ISO 14755 SUPPORT
         easily by pressing "Control" and "Shift", followed by
         "6-7-1-D-SPACE-6-5-E-5", followed by releasing the modifier keys.
 
-    5.2: Keyboard symbols entry method
+    * 5.2: Keyboard symbols entry method
         This mode lets you input characters representing the keycap symbols
         of your keyboard, if representable in the current locale encoding.
 
@@ -825,12 +861,12 @@ ISO 14755 SUPPORT
         enter the symbol for "ISO Level 2 Switch", although your intention
         might have been to enter a reverse tab (Shift-Tab).
 
-    5.3: Screen-selection entry method
+    * 5.3: Screen-selection entry method
         While this is implemented already (it's basically the selection
         mechanism), it could be extended by displaying a unicode character
         map.
 
-    5.4: Feedback method for identifying displayed characters for later
+    * 5.4: Feedback method for identifying displayed characters for later
     input
         This method lets you display the unicode character code associated
         with characters already displayed.
@@ -852,7 +888,8 @@ ISO 14755 SUPPORT
 LOGIN STAMP
     rxvt tries to write an entry into the *utmp*(5) file so that it can be
     seen via the *who(1)* command, and can accept messages. To allow this
-    feature, rxvt must be installed setuid root on some systems.
+    feature, rxvt may need to be installed setuid root on some systems or
+    setgid to root or to some other group on others.
 
 COLORS AND GRAPHICS
     In addition to the default foreground and background colours, rxvt can
@@ -901,9 +938,6 @@ ENVIRONMENT
     variables RXVTPATH and PATH to find XPM files.
 
 FILES
-    /etc/utmp
-        System file for login records.
-
     /usr/lib/X11/rgb.txt
         Color names.
 

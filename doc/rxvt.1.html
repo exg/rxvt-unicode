@@ -49,7 +49,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>4.8</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>4.9</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -460,10 +460,25 @@ Compile <em>XIM</em>: input method name. resource <strong>inputMethod</strong>.
 <dt><strong><a name="item__2dimlocale_string"><strong>-imlocale</strong> <em>string</em></a></strong><br />
 </dt>
 <dd>
-The locale to use for opening the IM. You can use an LC_CTYPE of e.g.
-de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP for the input
-extension to be able to input japanese characters while staying in
-another locale.
+The locale to use for opening the IM. You can use an <code>LC_CTYPE</code> of e.g.
+<code>de_DE.UTF-8</code> for normal text processing but <code>ja_JP.EUC-JP</code> for the
+input extension to be able to input japanese characters while staying in
+another locale. resource <strong>imLocale</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dimfont_fontset"><strong>-imfont</strong> <em>fontset</em></a></strong><br />
+</dt>
+<dd>
+Set the font set to use for the X Input Method, see resource <strong>imFont</strong>
+for more info.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dtcw"><strong>-tcw</strong></a></strong><br />
+</dt>
+<dd>
+Change the meaning of triple-click selection with the left mouse
+button. Instead of selecting a full line it will extend the selection the
+end of the logical line only. resource <strong>tripleclickwords</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item__2dinsecure"><strong>-insecure</strong></a></strong><br />
@@ -1048,10 +1063,29 @@ built-in default:
 <dt><strong><a name="item_imlocale_3a_name"><strong>imLocale:</strong> <em>name</em></a></strong><br />
 </dt>
 <dd>
-The locale to use for opening the IM. You can use an LC_CTYPE of e.g.
-de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP for the input
-extension to be able to input japanese characters while staying in
+The locale to use for opening the IM. You can use an <code>LC_CTYPE</code> of e.g.
+<code>de_DE.UTF-8</code> for normal text processing but <code>ja_JP.EUC-JP</code> for the
+input extension to be able to input japanese characters while staying in
 another locale. option <strong>-imlocale</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_imfont_3a_fontset"><strong>imFont:</strong> <em>fontset</em></a></strong><br />
+</dt>
+<dd>
+Specify the font-set used for XIM styles <code>OverTheSpot</code> or
+<code>OffTheSpot</code>. It must be a standard X font set (XLFD patterns separated
+by commas), i.e. it's not in the same format as the other font lists used
+in rxvt. The default will be set-up to chose *any* suitable found
+found, preferably one or two pixels differing in size to the base font.
+option <strong>-imfont</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_tripleclickwords_3a_boolean"><strong>tripleclickwords:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+Change the meaning of triple-click selection with the left mouse
+button. Instead of selecting a full line it will extend the selection to
+the end of the logical line only. option <strong>-tcw</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item_insecure_3a_boolean"><strong>insecure:</strong> <em>boolean</em></a></strong><br />
@@ -1116,7 +1150,7 @@ and the abbreviated <strong>I</strong>, <strong>K</strong>, <strong>C</strong>, 
 <dd>
 <p>The <strong>NumLock</strong>, <strong>Meta</strong> and <strong>ISOLevel3</strong> modifiers are usually aliased to
 whatever modifier the NumLock key, Meta/Alt keys or ISO Level3 Shift/AltGr
-keys are being mapped. <strong>AppKeypad</strong> is a artificial modifier mapped to the
+keys are being mapped. <strong>AppKeypad</strong> is a synthetic modifier mapped to the
 current application keymap mode state.</p>
 </dd>
 <dd>
@@ -1155,9 +1189,27 @@ should be a character not used by the strings.</p>
   URxvt.keysym.Meta-Control-0x63:    \e&lt;M-C-c&gt;</pre>
 </dd>
 <dd>
-<p>If <em>string</em> takes the form of <code>proto:STRING</code>, the specified <strong>STRING</strong> is
-interpreted and executed as rxvt's control sequence. For example,
-<code>proto:\033]701;zh_CN.GBK\007</code> means: change the current locale to
+<p>If <em>string</em> takes the form of <code>proto:STRING</code>, the specified <strong>STRING</strong>
+is interpreted and executed as rxvt's control sequence. For
+example the following means ``change the current locale to <code>zh_CN.GBK</code>
+when Control-Meta-c is being pressed'':</p>
+</dd>
+<dd>
+<pre>
+  URxvt.keysym.M-C-c: proto:\033]701;zh_CN.GBK\007</pre>
+</dd>
+<dd>
+<p>The following example will map Control-Meta-1 and Control-Meta-2 to
+the fonts <code>suxuseuro</code> and <code>9x15bold</code>, so you cna have some limited
+font-switching at runtime:</p>
+</dd>
+<dd>
+<pre>
+  URxvt.keysym.M-C-1: proto:\033]50;suxuseuro\007
+  URxvt.keysym.M-C-2: proto:\033]50;9x15bold\007</pre>
+</dd>
+<dd>
+<p><code>proto:\033]701;zh_CN.GBK\007</code> means: change the current locale to
 <code>zh_CN.GBK</code>.</p>
 </dd>
 <p></p></dl>
@@ -1196,10 +1248,11 @@ respectively.</p>
 <dt><strong><a name="item_selection_3a"><strong>Selection</strong>:</a></strong><br />
 </dt>
 <dd>
-Left click at the beginning of the region, drag to the end of the
-region and release; Right click to extend the marked region; Left
-double-click to select a word; Left triple-click to select the entire
-line.
+Left click at the beginning of the region, drag to the end of the region
+and release; Right click to extend the marked region; Left double-click
+to select a word; Left triple-click to select the entire logical line
+(which can span multiple screen lines), unless modified by resource
+<strong>tripleclickwords</strong>.
 </dd>
 <dd>
 <p>Starting a selection while pressing the <strong>Meta</strong> key (or <strong>Meta+Ctrl</strong> keys)
@@ -1235,8 +1288,8 @@ and character codes using the keyboard. It consists of 4 parts. The
 first part is available rxvt-unicode has been compiled with
 <code>--enable-frills</code>, the rest is available when rxvt-unicode was compiled
 with <code>--enable-iso14755</code>.</p>
-<ol>
-<li><strong><a name="item_1_3a_basic_method">1: Basic method</a></strong><br />
+<ul>
+<li><strong><a name="item_5_2e1_3a_basic_method">5.1: Basic method</a></strong><br />
 </li>
 This allows you to enter unicode characters using their hexcode.
 <p>Start by pressing and holding both <code>Control</code> and <code>Shift</code>, then enter
@@ -1251,7 +1304,7 @@ address printed as hexcodes, e.g. <code>671d 65e5</code>. You can enter this eas
 by pressing <code>Control</code> and <code>Shift</code>, followed by <code>6-7-1-D-SPACE-6-5-E-5</code>,
 followed by releasing the modifier keys.</p>
 <p></p>
-<li><strong><a name="item_2_3a_keyboard_symbols_entry_method">2: Keyboard symbols entry method</a></strong><br />
+<li><strong><a name="item_5_2e2_3a_keyboard_symbols_entry_method">5.2: Keyboard symbols entry method</a></strong><br />
 </li>
 This mode lets you input characters representing the keycap symbols of
 your keyboard, if representable in the current locale encoding.
@@ -1263,12 +1316,12 @@ released, otherwise pressing e.g. <code>Shift</code> would enter the symbol for
 <code>ISO Level 2 Switch</code>, although your intention might have been to enter a
 reverse tab (Shift-Tab).</p>
 <p></p>
-<li><strong><a name="item_3_3a_screen_2dselection_entry_method">3: Screen-selection entry method</a></strong><br />
+<li><strong><a name="item_5_2e3_3a_screen_2dselection_entry_method">5.3: Screen-selection entry method</a></strong><br />
 </li>
 While this is implemented already (it's basically the selection
 mechanism), it could be extended by displaying a unicode character map.
 <p></p>
-<li><strong><a name="item_4_3a_feedback_method_for_identifying_displayed_cha">4: Feedback method for identifying displayed characters for later input</a></strong><br />
+<li><strong><a name="item_5_2e4_3a_feedback_method_for_identifying_displayed">5.4: Feedback method for identifying displayed characters for later input</a></strong><br />
 </li>
 This method lets you display the unicode character code associated with
 characters already displayed.
@@ -1280,17 +1333,17 @@ pointer is displayed until you release <code>Control</code> and <code>Shift</cod
 character - due to implementation reasons, characters combined with
 combining characters, line drawing characters and unknown characters will
 always be drawn using the built-in support font.</p>
-<p></p></ol>
+<p></p></ul>
 <p>With respect to conformance, rxvt-unicode is supposed to be compliant to
 both scenario A and B of ISO 14755, including part 5.2.</p>
 <p>
 </p>
 <hr />
 <h1><a name="login_stamp">LOGIN STAMP</a></h1>
-<p><strong>rxvt</strong> tries to write an entry into the <em>utmp</em>(5) file so
-that it can be seen via the <em>who(1)</em> command, and can accept messages.
-To allow this feature, <strong>rxvt</strong> must be installed setuid root on
-some systems.</p>
+<p><strong>rxvt</strong> tries to write an entry into the <em>utmp</em>(5) file so that
+it can be seen via the <em>who(1)</em> command, and can accept messages.  To
+allow this feature, <strong>rxvt</strong> may need to be installed setuid root
+on some systems or setgid to root or to some other group on others.</p>
 <p>
 </p>
 <hr />
@@ -1349,12 +1402,6 @@ terminal to use. <strong>rxvt</strong> uses the environment variables
 <hr />
 <h1><a name="files">FILES</a></h1>
 <dl>
-<dt><strong><a name="item__2fetc_2futmp"><strong>/etc/utmp</strong></a></strong><br />
-</dt>
-<dd>
-System file for login records.
-</dd>
-<p></p>
 <dt><strong><a name="item__2fusr_2flib_2fx11_2frgb_2etxt"><strong>/usr/lib/X11/rgb.txt</strong></a></strong><br />
 </dt>
 <dd>

@@ -99,9 +99,12 @@ optList[] = {
               BOOL (Rs_jumpScroll, "jumpScroll", "j", Opt_jumpScroll, "jump scrolling"),
               BOOL (Rs_pastableTabs, "pastableTabs", "ptab", Opt_pastableTabs, "tab characters are pastable"),
 #ifdef HAVE_SCROLLBARS
+              RSTRG (Rs_scrollstyle, "scrollstyle", "mode"),
               BOOL (Rs_scrollBar, "scrollBar", "sb", Opt_scrollBar, "scrollbar"),
               BOOL (Rs_scrollBar_right, "scrollBar_right", "sr", Opt_scrollBar_right, "scrollbar right"),
               BOOL (Rs_scrollBar_floating, "scrollBar_floating", "st", Opt_scrollBar_floating, "scrollbar without a trough"),
+              RSTRG (Rs_scrollBar_align, "scrollBar_align", "mode"),
+              STRG (Rs_scrollBar_thickness, "thickness", "sbt", "number", "scrollbar thickness/width in pixels"),
 #endif
               BOOL (Rs_scrollTtyOutput, "scrollTtyOutput", NULL, Opt_scrollTtyOutput, NULL),
               BOOL (Rs_scrollTtyOutput, NULL, "si", Opt_Reverse | Opt_scrollTtyOutput, "scroll-on-tty-output inhibit"),
@@ -180,6 +183,14 @@ optList[] = {
 #ifdef OPTION_HC
               STRG (Rs_color + Color_HC, "highlightColor", "hc", "color", "highlight color"),
 #endif
+#ifndef NO_CURSORCOLOR
+              STRG (Rs_color + Color_cursor, "cursorColor", "cr", "color", "cursor color"),
+              /* command-line option = resource name */
+              RSTRG (Rs_color + Color_cursor2, "cursorColor2", "color"),
+#endif				/* NO_CURSORCOLOR */
+              STRG (Rs_color + Color_pointer_fg, "pointerColor", "pr", "color", "pointer color"),
+              STRG (Rs_color + Color_pointer_bg, "pointerColor2", "pr2", "color", "pointer bg color"),
+              STRG (Rs_color + Color_border, "borderColor", "bd", "color", "border color"),
 #if defined (XPM_BACKGROUND) || (MENUBAR_MAX)
               RSTRG (Rs_path, "path", "search path"),
 #endif				/* defined (XPM_BACKGROUND) || (MENUBAR_MAX) */
@@ -199,22 +210,13 @@ optList[] = {
 #ifdef USE_XIM
               STRG (Rs_inputMethod, "inputMethod", "im", "name", "name of input method"),
               STRG (Rs_preeditType, "preeditType", "pt", "style", "input style: style = OverTheSpot|OffTheSpot|Root"),
-#if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
               STRG (Rs_imLocale, "imLocale", "imlocale", "string", "locale to use for input method"),
-#endif
+              STRG (Rs_imFont, "imFont", "imfont", "fontname", "fontset for styles OverTheSpot and OffTheSpot"),
 #endif				/* USE_XIM */
               STRG (Rs_name, NULL, "name", "string", "client instance, icon, and title strings"),
               STRG (Rs_title, "title", "title", "string", "title name for window"),
               STRG (Rs_title, NULL, "T", NULL, NULL),	/* short form */
               STRG (Rs_iconName, "iconName", "n", "string", "icon name for window"),
-#ifndef NO_CURSORCOLOR
-              STRG (Rs_color + Color_cursor, "cursorColor", "cr", "color", "cursor color"),
-              /* command-line option = resource name */
-              RSTRG (Rs_color + Color_cursor2, "cursorColor2", "color"),
-#endif				/* NO_CURSORCOLOR */
-              STRG (Rs_color + Color_pointer_fg, "pointerColor", "pr", "color", "pointer color"),
-              STRG (Rs_color + Color_pointer_bg, "pointerColor2", "pr2", "color", "pointer bg color"),
-              STRG (Rs_color + Color_border, "borderColor", "bd", "color", "border color"),
               STRG (Rs_saveLines, "saveLines", "sl", "number", "number of scrolled lines to save"),
 #if ENABLE_FRILLS
               STRG (Rs_ext_bwidth, "externalBorder", "w", "number", "external border in pixels"),
@@ -224,7 +226,6 @@ optList[] = {
               BOOL (Rs_borderLess, "borderLess", "bl", Opt_borderLess, "borderless window"),
               STRG (Rs_lineSpace, "lineSpace", "lsp", "number", "number of extra pixels between rows"),
 #endif
-              STRG (Rs_scrollBar_thickness, "thickness", "sbt", "number", "scrollbar thickness/width in pixels"),
 #ifdef POINTER_BLANK
               RSTRG (Rs_pointerBlankDelay, "pointerBlankDelay", "number"),
 #endif
@@ -235,15 +236,10 @@ optList[] = {
               RSTRG (Rs_delete_key, "deletekey", "string"),
 #endif
               RSTRG (Rs_selectstyle, "selectstyle", "mode"),
-              RSTRG (Rs_scrollstyle, "scrollstyle", "mode"),
-#ifdef HAVE_SCROLLBARS
-              RSTRG (Rs_scrollBar_align, "scrollBar_align", "mode"),
-#endif
 #ifdef PRINTPIPE
               RSTRG (Rs_print_pipe, "print-pipe", "string"),
 #endif
               STRG (Rs_modifier, "modifier", "mod", "modifier", "meta modifier = alt|meta|hyper|super|mod1|...|mod5"),
-              INFO ("xrm", "string", "X resource"),
 #ifdef CUTCHAR_RESOURCE
               RSTRG (Rs_cutchars, "cutchars", "string"),
 #endif				/* CUTCHAR_RESOURCE */
@@ -251,6 +247,9 @@ optList[] = {
 #ifndef NO_SECONDARY_SCREEN
               BOOL (Rs_secondaryScreen, "secondaryScreen", "ssc", Opt_secondaryScreen, "enable secondary screen"),
               BOOL (Rs_secondaryScroll, "secondaryScroll", "ssr", Opt_secondaryScroll, "enable secondary screen scroll"),
+#endif
+#if !defined(NO_RESOURCES) && defined(USE_XGETDEFAULT)
+              INFO ("xrm", "string", "X resource"),
 #endif
               INFO ("e", "command arg ...", "command to execute")
             };
@@ -608,10 +607,11 @@ rxvt_define_key (XrmDatabase *database __attribute__((unused)),
                  XrmValue *value,
                  XPointer closure __attribute__((unused)))
 {
-  int             last;
+  int last;
 
   for (last = 0; quarks[last] != NULLQUARK; last++)	/* look for last quark in list */
     ;
+
   last--;
   GET_R->parse_keysym (XrmQuarkToString (quarks[last]), (char *)value->addr);//D//TODO
   return False;
@@ -665,11 +665,11 @@ keysym_vocabulary_t keysym_vocabulary[] =
 int
 rxvt_term::parse_keysym (const char *str, const char *arg)
 {
-  int          n, sym;
+  int n, sym;
   unsigned int state = 0;
-  const char   *pmodend = NULL;
-  char         *newarg = NULL;
-  char         newargstr[NEWARGLIM];
+  const char *pmodend = NULL;
+  char *newarg = NULL;
+  char newargstr[NEWARGLIM];
 
   if (arg == NULL)
     {
@@ -935,7 +935,6 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
 #    ifndef HAVE_BOTH_XRESOURCE_FILES
               break;
 #    endif
-
             }
         }
     }
@@ -1042,23 +1041,24 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
 
 # else				/* USE_XGETDEFAULT */
     /* get resources the hard way, but save lots of memory */
-    FILE           *fd = NULL;
-    char           *home;
+    FILE *fd = NULL;
+    char *home;
 
     if ((home = getenv ("HOME")) != NULL)
       {
-        unsigned int    i, len = strlen (home) + 2;
-        char           *f = NULL;
+        unsigned int i, len = strlen (home) + 2;
+        char *f = NULL;
 
         for (i = 0; i < (sizeof (xnames) / sizeof (xnames[0])); i++)
           {
-            f = (char *)rxvt_realloc (f, (len + strlen (xnames[i])) * sizeof (char));
+            f = (char *)rxvt_realloc (f, len + strlen (xnames[i]));
 
             sprintf (f, "%s/%s", home, xnames[i]);
 
             if ((fd = fopen (f, "r")) != NULL)
               break;
           }
+
         free (f);
       }
     /*

@@ -511,26 +511,28 @@ FREQUENTLY ASKED QUESTIONS
         Here's an example for a URxvt session started using `rxvt -name
         URxvt'
 
-                URxvt*keysym.Home:          \e[1~
-                URxvt*keysym.End:           \e[4~
-                URxvt*keysym.C-apostrophe:  \e<C-'>
-                URxvt*keysym.C-slash:       \e<C-/>
-                URxvt*keysym.C-semicolon:   \e<C-;>
-                URxvt*keysym.C-grave:       \e<C-`>
-                URxvt*keysym.C-comma:       \e<C-,>
-                URxvt*keysym.C-period:      \e<C-.>
-                URxvt*keysym.C-0x60:        \e<C-`>
-                URxvt*keysym.C-Tab:         \e<C-Tab>
-                URxvt*keysym.C-Return:      \e<C-Return>
-                URxvt*keysym.S-Return:      \e<S-Return>
-                URxvt*keysym.S-space:       \e<S-Space>
-                URxvt*keysym.M-Up:          \e<M-Up>
-                URxvt*keysym.M-Down:        \e<M-Down>
-                URxvt*keysym.M-Left:        \e<M-Left>
-                URxvt*keysym.M-Right:       \e<M-Right>
-                URxvt*keysym.M-C-0:         list.0123456789.\e<M-C-.>
-                URxvt*keysym.M-C-a:         list.abcdefghijklmnopqrstuvwxyz.\033<M-C-.>
-                URxvt*keysym.F12:           proto:\033]701;zh_CN.GBK\007
+           URxvt.keysym.Home:          \e[1~
+           URxvt.keysym.End:           \e[4~
+           URxvt.keysym.C-apostrophe:  \e<C-'>
+           URxvt.keysym.C-slash:       \e<C-/>
+           URxvt.keysym.C-semicolon:   \e<C-;>
+           URxvt.keysym.C-grave:       \e<C-`>
+           URxvt.keysym.C-comma:       \e<C-,>
+           URxvt.keysym.C-period:      \e<C-.>
+           URxvt.keysym.C-0x60:        \e<C-`>
+           URxvt.keysym.C-Tab:         \e<C-Tab>
+           URxvt.keysym.C-Return:      \e<C-Return>
+           URxvt.keysym.S-Return:      \e<S-Return>
+           URxvt.keysym.S-space:       \e<S-Space>
+           URxvt.keysym.M-Up:          \e<M-Up>
+           URxvt.keysym.M-Down:        \e<M-Down>
+           URxvt.keysym.M-Left:        \e<M-Left>
+           URxvt.keysym.M-Right:       \e<M-Right>
+           URxvt.keysym.M-C-0:         list \e<M-C- 0123456789 >
+           URxvt.keysym.M-C-a:         list \033<M-C- abcdefghijklmnopqrstuvwxyz >
+           URxvt.keysym.F12:           proto:\033]701;zh_CN.GBK\007
+
+        See some more examples in the documentation for the keysym resource.
 
     I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How
     do I make use of them? For example, the Sun Keyboard type 4 has the
@@ -902,11 +904,31 @@ CSI (Command Sequence Introducer) Sequences
     "ESC [ s"
         Save Cursor (SC)
 
-    "ESC [ Ps x"
-        Request Terminal Parameters (DECREQTPARM)
+    "ESC [ Ps;Pt t"
+        Window Operations
+
+           Ps = 1          Deiconify (map) window 
+           Ps = 2          Iconify window  
+           Ps = 3          ESC [ 3 ; X ; Y t Move window to (X|Y) 
+           Ps = 4          ESC [ 4 ; W ; H t Resize to WxH pixels 
+           Ps = 5          Raise window    
+           Ps = 6          Lower window    
+           Ps = 7          Refresh screen once 
+           Ps = 8          ESC [ 4 ; C ; R t Resize to C columns and R rows 
+           Ps = 11         Report window state (responds with Ps = 1 or Ps = 2 
+           Ps = 13         Report window position (responds with Ps = 3) 
+           Ps = 14         Report window pixel size (responds with Ps = 4) 
+           Ps = 18         Report window text size (responds with Ps = 7) 
+           Ps = 19         Currently the same as Ps = 18, but responds with Ps = 9 
+           Ps = 20         Reports icon label (ESC ] L NAME \234) 
+           Ps = 21         Reports window title (ESC ] l NAME \234) 
+           Ps = 24..       Set window height to Ps rows 
 
     "ESC [ u"
         Restore Cursor
+
+    "ESC [ Ps x"
+        Request Terminal Parameters (DECREQTPARM)
 
 
 

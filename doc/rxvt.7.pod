@@ -528,26 +528,28 @@ use the `keysym' resource to alter the keystrings associated with keysyms.
 
 Here's an example for a URxvt session started using `@@RXVT_NAME@@ -name URxvt'
 
-        URxvt*keysym.Home:          \e[1~
-        URxvt*keysym.End:           \e[4~
-        URxvt*keysym.C-apostrophe:  \e<C-'>
-        URxvt*keysym.C-slash:       \e<C-/>
-        URxvt*keysym.C-semicolon:   \e<C-;>
-        URxvt*keysym.C-grave:       \e<C-`>
-        URxvt*keysym.C-comma:       \e<C-,>
-        URxvt*keysym.C-period:      \e<C-.>
-        URxvt*keysym.C-0x60:        \e<C-`>
-        URxvt*keysym.C-Tab:         \e<C-Tab>
-        URxvt*keysym.C-Return:      \e<C-Return>
-        URxvt*keysym.S-Return:      \e<S-Return>
-        URxvt*keysym.S-space:       \e<S-Space>
-        URxvt*keysym.M-Up:          \e<M-Up>
-        URxvt*keysym.M-Down:        \e<M-Down>
-        URxvt*keysym.M-Left:        \e<M-Left>
-        URxvt*keysym.M-Right:       \e<M-Right>
-        URxvt*keysym.M-C-0:         list.0123456789.\e<M-C-.>
-        URxvt*keysym.M-C-a:         list.abcdefghijklmnopqrstuvwxyz.\033<M-C-.>
-        URxvt*keysym.F12:           proto:\033]701;zh_CN.GBK\007
+   URxvt.keysym.Home:          \033[1~
+   URxvt.keysym.End:           \033[4~
+   URxvt.keysym.C-apostrophe:  \033<C-'>
+   URxvt.keysym.C-slash:       \033<C-/>
+   URxvt.keysym.C-semicolon:   \033<C-;>
+   URxvt.keysym.C-grave:       \033<C-`>
+   URxvt.keysym.C-comma:       \033<C-,>
+   URxvt.keysym.C-period:      \033<C-.>
+   URxvt.keysym.C-0x60:        \033<C-`>
+   URxvt.keysym.C-Tab:         \033<C-Tab>
+   URxvt.keysym.C-Return:      \033<C-Return>
+   URxvt.keysym.S-Return:      \033<S-Return>
+   URxvt.keysym.S-space:       \033<S-Space>
+   URxvt.keysym.M-Up:          \033<M-Up>
+   URxvt.keysym.M-Down:        \033<M-Down>
+   URxvt.keysym.M-Left:        \033<M-Left>
+   URxvt.keysym.M-Right:       \033<M-Right>
+   URxvt.keysym.M-C-0:         list \033<M-C- 0123456789 >
+   URxvt.keysym.M-C-a:         list \033<M-C- abcdefghijklmnopqrstuvwxyz >
+   URxvt.keysym.F12:           command:\033]701;zh_CN.GBK\007
+
+See some more examples in the documentation for the B<keysym> resource.
 
 =item I'm using keyboard model XXX that has extra Prior/Next/Insert keys.
 How do I make use of them?  For example, the Sun Keyboard type 4
@@ -560,9 +562,9 @@ has the following mappings that rxvt-unicode doesn't recognize.
    F33 == End
    F35 == Next
 
-Rather than have rxvt-unicode try to accommodate all the various possible keyboard
-mappings, it is better to use `xmodmap' to remap the keys as required for
-your particular machine.
+Rather than have rxvt-unicode try to accommodate all the various possible
+keyboard mappings, it is better to use `xmodmap' to remap the keys as
+required for your particular machine.
 
 =item How do I distinguish if I'm running rxvt-unicode or a regular xterm?
 I need this to decide about setting colors etc.
@@ -1063,13 +1065,38 @@ Set Scrolling Region [top;bottom]
 
 Save Cursor (SC)
 
-=item B<< C<ESC [ Ps x> >>
+=item B<< C<ESC [ Ps;Pt t> >>
 
-Request Terminal Parameters (DECREQTPARM)
+Window Operations
+
+=begin table
+
+	B<< C<Ps = 1> >>	Deiconify (map) window
+	B<< C<Ps = 2> >>	Iconify window
+	B<< C<Ps = 3> >>	B<< C<ESC [ 3 ; X ; Y t> >> Move window to (X|Y)
+	B<< C<Ps = 4> >>	B<< C<ESC [ 4 ; H ; W t> >> Resize to WxH pixels
+	B<< C<Ps = 5> >>	Raise window
+	B<< C<Ps = 6> >>	Lower window
+	B<< C<Ps = 7> >>	Refresh screen once
+	B<< C<Ps = 8> >>	B<< C<ESC [ 8 ; R ; C t> >> Resize to R rows and C columns
+	B<< C<Ps = 11> >>	Report window state (responds with C<Ps = 1> or C<Ps = 2>
+	B<< C<Ps = 13> >>	Report window position (responds with C<Ps = 3>)
+	B<< C<Ps = 14> >>	Report window pixel size (responds with C<Ps = 4>)
+	B<< C<Ps = 18> >>	Report window text size (responds with C<Ps = 7>)
+	B<< C<Ps = 19> >>	Currently the same as C<Ps = 18>, but responds with C<Ps = 9>
+	B<< C<Ps = 20> >>	Reports icon label (B<< C<ESC ] L NAME \234> >>)
+	B<< C<Ps = 21> >>	Reports window title (B<< C<ESC ] l NAME \234> >>)
+	B<< C<Ps = 24..> >>	Set window height to C<Ps> rows
+
+=end table
 
 =item B<< C<ESC [ u> >>
 
 Restore Cursor
+
+=item B<< C<ESC [ Ps x> >>
+
+Request Terminal Parameters (DECREQTPARM)
 
 =back
 

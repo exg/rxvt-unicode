@@ -330,10 +330,21 @@ Compile I<XIM>: input method name. resource B<inputMethod>.
 
 =item B<-imlocale> I<string>
 
-The locale to use for opening the IM. You can use an LC_CTYPE of e.g.
-de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP for the input
-extension to be able to input japanese characters while staying in
-another locale.
+The locale to use for opening the IM. You can use an C<LC_CTYPE> of e.g.
+C<de_DE.UTF-8> for normal text processing but C<ja_JP.EUC-JP> for the
+input extension to be able to input japanese characters while staying in
+another locale. resource B<imLocale>.
+
+=item B<-imfont> I<fontset>
+
+Set the font set to use for the X Input Method, see resource B<imFont>
+for more info.
+
+=item B<-tcw>
+
+Change the meaning of triple-click selection with the left mouse
+button. Instead of selecting a full line it will extend the selection the
+end of the logical line only. resource B<tripleclickwords>.
 
 =item B<-insecure>
 
@@ -777,10 +788,25 @@ I<name> of inputMethod to use; option B<-im>.
 
 =item B<imLocale:> I<name>
 
-The locale to use for opening the IM. You can use an LC_CTYPE of e.g.
-de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP for the input
-extension to be able to input japanese characters while staying in
+The locale to use for opening the IM. You can use an C<LC_CTYPE> of e.g.
+C<de_DE.UTF-8> for normal text processing but C<ja_JP.EUC-JP> for the
+input extension to be able to input japanese characters while staying in
 another locale. option B<-imlocale>.
+
+=item B<imFont:> I<fontset>
+
+Specify the font-set used for XIM styles C<OverTheSpot> or
+C<OffTheSpot>. It must be a standard X font set (XLFD patterns separated
+by commas), i.e. it's not in the same format as the other font lists used
+in @@RXVT_NAME@@. The default will be set-up to chose *any* suitable found
+found, preferably one or two pixels differing in size to the base font.
+option B<-imfont>.
+
+=item B<tripleclickwords:> I<boolean>
+
+Change the meaning of triple-click selection with the left mouse
+button. Instead of selecting a full line it will extend the selection to
+the end of the logical line only. option B<-tcw>.
 
 =item B<insecure:> I<boolean>
 
@@ -831,7 +857,7 @@ B<2>, B<3>, B<4>, B<5>.
 
 The B<NumLock>, B<Meta> and B<ISOLevel3> modifiers are usually aliased to
 whatever modifier the NumLock key, Meta/Alt keys or ISO Level3 Shift/AltGr
-keys are being mapped. B<AppKeypad> is a artificial modifier mapped to the
+keys are being mapped. B<AppKeypad> is a synthetic modifier mapped to the
 current application keymap mode state.
 
 The spellings of I<key> can be obtained by using B<xev>(1) command or
@@ -846,24 +872,44 @@ C<\000>: octal number) or verbatim control characters (C<^?>: delete,
 C<^@>: null, C<^A> ...) and may be enclosed with double quotes so that it
 can start or end with whitespace.
 
+Please note that you need to double the C<\> when using
+C<--enable-xgetdefault>, as X itself does it's own de-escaping (you can
+use C<\033> instead of C<\e> (and so on), which will work with both Xt and
+@@RXVT_NAME@@'s own processing).
+
 You can define a range of keysyms in one shot by providing a I<string>
 with pattern B<list/PREFIX/MIDDLE/SUFFIX>, where the delimeter `/'
 should be a character not used by the strings.
 
 Its usage can be demonstrated by an example:
 
-  URxvt.keysym.M-C-0x61:    list|\e<M-C-|abc|>
+  URxvt.keysym.M-C-0x61:    list|\033<M-C-|abc|>
 
 The above line is equivalent to the following three lines:
 
-  URxvt.keysym.Meta-Control-0x61:    \e<M-C-a>
-  URxvt.keysym.Meta-Control-0x62:    \e<M-C-b>
-  URxvt.keysym.Meta-Control-0x63:    \e<M-C-c>
+  URxvt.keysym.Meta-Control-0x61:    \033<M-C-a>
+  URxvt.keysym.Meta-Control-0x62:    \033<M-C-b>
+  URxvt.keysym.Meta-Control-0x63:    \033<M-C-c>
 
-If I<string> takes the form of C<proto:STRING>, the specified B<STRING> is
-interpreted and executed as @@RXVT_NAME@@'s control sequence. For example,
-C<proto:\033]701;zh_CN.GBK\007> means: change the current locale to
-C<zh_CN.GBK>.
+If I<string> takes the form of C<command:STRING>, the specified B<STRING>
+is interpreted and executed as @@RXVT_NAME@@'s control sequence. For
+example the following means "change the current locale to C<zh_CN.GBK>
+when Control-Meta-c is being pressed":
+
+  URxvt.keysym.M-C-c: command:\033]701;zh_CN.GBK\007
+
+The following example will map Control-Meta-1 and Control-Meta-2 to
+the fonts C<suxuseuro> and C<9x15bold>, so you can have some limited
+font-switching at runtime:
+
+  URxvt.keysym.M-C-1: command:\033]50;suxuseuro\007
+  URxvt.keysym.M-C-2: command:\033]50;9x15bold\007
+
+Other things are possible, e.g. resizing (see @@RXVT_NAME@@(7) for more
+info):
+
+  URxvt.keysym.M-C-3: command:\033[8;25;80t
+  URxvt.keysym.M-C-4: command:\033[8;48;110t
 
 =back
 
@@ -901,10 +947,11 @@ I<xterm>(1).
 
 =item B<Selection>:
 
-Left click at the beginning of the region, drag to the end of the
-region and release; Right click to extend the marked region; Left
-double-click to select a word; Left triple-click to select the entire
-line.
+Left click at the beginning of the region, drag to the end of the region
+and release; Right click to extend the marked region; Left double-click
+to select a word; Left triple-click to select the entire logical line
+(which can span multiple screen lines), unless modified by resource
+B<tripleclickwords>.
 
 Starting a selection while pressing the B<Meta> key (or B<Meta+Ctrl> keys)
 (Compile: I<frills>) will create a rectangular selection instead of a normal
@@ -940,7 +987,7 @@ with C<--enable-iso14755>.
 
 =over 4
 
-=item 5.1: Basic method
+=item * 5.1: Basic method
 
 This allows you to enter unicode characters using their hexcode.
 
@@ -957,7 +1004,7 @@ address printed as hexcodes, e.g. C<671d 65e5>. You can enter this easily
 by pressing C<Control> and C<Shift>, followed by C<6-7-1-D-SPACE-6-5-E-5>,
 followed by releasing the modifier keys.
 
-=item 5.2: Keyboard symbols entry method
+=item * 5.2: Keyboard symbols entry method
 
 This mode lets you input characters representing the keycap symbols of
 your keyboard, if representable in the current locale encoding.
@@ -970,12 +1017,12 @@ released, otherwise pressing e.g. C<Shift> would enter the symbol for
 C<ISO Level 2 Switch>, although your intention might have been to enter a
 reverse tab (Shift-Tab).
 
-=item 5.3: Screen-selection entry method
+=item * 5.3: Screen-selection entry method
 
 While this is implemented already (it's basically the selection
 mechanism), it could be extended by displaying a unicode character map.
 
-=item 5.4: Feedback method for identifying displayed characters for later input
+=item * 5.4: Feedback method for identifying displayed characters for later input
 
 This method lets you display the unicode character code associated with
 characters already displayed.
@@ -997,10 +1044,10 @@ both scenario A and B of ISO 14755, including part 5.2.
 
 =head1 LOGIN STAMP
 
-B<@@RXVT_NAME@@> tries to write an entry into the I<utmp>(5) file so
-that it can be seen via the I<who(1)> command, and can accept messages.
-To allow this feature, B<@@RXVT_NAME@@> must be installed setuid root on
-some systems.
+B<@@RXVT_NAME@@> tries to write an entry into the I<utmp>(5) file so that
+it can be seen via the I<who(1)> command, and can accept messages.  To
+allow this feature, B<@@RXVT_NAME@@> may need to be installed setuid root
+on some systems or setgid to root or to some other group on others.
 
 =head1 COLORS AND GRAPHICS
 
@@ -1063,10 +1110,6 @@ B<RXVTPATH> and B<PATH> to find XPM files.
 =head1 FILES
 
 =over 4
-
-=item B</etc/utmp>
-
-System file for login records.
 
 =item B</usr/lib/X11/rgb.txt>
 

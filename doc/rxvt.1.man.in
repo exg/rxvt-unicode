@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-01-18" "4.8" "RXVT-UNICODE"
+.TH rxvt 1 "2005-02-03" "4.9" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -410,10 +410,19 @@ Compile \fI\s-1XIM\s0\fR: input style for input method; \fBOverTheSpot\fR,
 Compile \fI\s-1XIM\s0\fR: input method name. resource \fBinputMethod\fR.
 .IP "\fB\-imlocale\fR \fIstring\fR" 4
 .IX Item "-imlocale string"
-The locale to use for opening the \s-1IM\s0. You can use an \s-1LC_CTYPE\s0 of e.g.
-de_DE.UTF\-8 for normal text processing but ja_JP.EUC\-JP for the input
-extension to be able to input japanese characters while staying in
-another locale.
+The locale to use for opening the \s-1IM\s0. You can use an \f(CW\*(C`LC_CTYPE\*(C'\fR of e.g.
+\&\f(CW\*(C`de_DE.UTF\-8\*(C'\fR for normal text processing but \f(CW\*(C`ja_JP.EUC\-JP\*(C'\fR for the
+input extension to be able to input japanese characters while staying in
+another locale. resource \fBimLocale\fR.
+.IP "\fB\-imfont\fR \fIfontset\fR" 4
+.IX Item "-imfont fontset"
+Set the font set to use for the X Input Method, see resource \fBimFont\fR
+for more info.
+.IP "\fB\-tcw\fR" 4
+.IX Item "-tcw"
+Change the meaning of triple-click selection with the left mouse
+button. Instead of selecting a full line it will extend the selection the
+end of the logical line only. resource \fBtripleclickwords\fR.
 .IP "\fB\-insecure\fR" 4
 .IX Item "-insecure"
 Enable \*(L"insecure\*(R" mode, which currently enables most of the escape
@@ -793,10 +802,23 @@ built-in default:
 \&\fIname\fR of inputMethod to use; option \fB\-im\fR.
 .IP "\fBimLocale:\fR \fIname\fR" 4
 .IX Item "imLocale: name"
-The locale to use for opening the \s-1IM\s0. You can use an \s-1LC_CTYPE\s0 of e.g.
-de_DE.UTF\-8 for normal text processing but ja_JP.EUC\-JP for the input
-extension to be able to input japanese characters while staying in
+The locale to use for opening the \s-1IM\s0. You can use an \f(CW\*(C`LC_CTYPE\*(C'\fR of e.g.
+\&\f(CW\*(C`de_DE.UTF\-8\*(C'\fR for normal text processing but \f(CW\*(C`ja_JP.EUC\-JP\*(C'\fR for the
+input extension to be able to input japanese characters while staying in
 another locale. option \fB\-imlocale\fR.
+.IP "\fBimFont:\fR \fIfontset\fR" 4
+.IX Item "imFont: fontset"
+Specify the font-set used for \s-1XIM\s0 styles \f(CW\*(C`OverTheSpot\*(C'\fR or
+\&\f(CW\*(C`OffTheSpot\*(C'\fR. It must be a standard X font set (\s-1XLFD\s0 patterns separated
+by commas), i.e. it's not in the same format as the other font lists used
+in @@RXVT_NAME@@. The default will be set-up to chose *any* suitable found
+found, preferably one or two pixels differing in size to the base font.
+option \fB\-imfont\fR.
+.IP "\fBtripleclickwords:\fR \fIboolean\fR" 4
+.IX Item "tripleclickwords: boolean"
+Change the meaning of triple-click selection with the left mouse
+button. Instead of selecting a full line it will extend the selection to
+the end of the logical line only. option \fB\-tcw\fR.
 .IP "\fBinsecure:\fR \fIboolean\fR" 4
 .IX Item "insecure: boolean"
 Enables \*(L"insecure\*(R" mode. Rxvt-unicode offers some escape sequences that
@@ -841,7 +863,7 @@ and the abbreviated \fBI\fR, \fBK\fR, \fBC\fR, \fBN\fR, \fBS\fR, \fBM\fR, \fBA\f
 .Sp
 The \fBNumLock\fR, \fBMeta\fR and \fBISOLevel3\fR modifiers are usually aliased to
 whatever modifier the NumLock key, Meta/Alt keys or \s-1ISO\s0 Level3 Shift/AltGr
-keys are being mapped. \fBAppKeypad\fR is a artificial modifier mapped to the
+keys are being mapped. \fBAppKeypad\fR is a synthetic modifier mapped to the
 current application keymap mode state.
 .Sp
 The spellings of \fIkey\fR can be obtained by using \fBxev\fR(1) command or
@@ -874,8 +896,24 @@ The above line is equivalent to the following three lines:
 \&  URxvt.keysym.Meta-Control-0x63:    \ee<M-C-c>
 .Ve
 .Sp
-If \fIstring\fR takes the form of \f(CW\*(C`proto:STRING\*(C'\fR, the specified \fB\s-1STRING\s0\fR is
-interpreted and executed as @@RXVT_NAME@@'s control sequence. For example,
+If \fIstring\fR takes the form of \f(CW\*(C`proto:STRING\*(C'\fR, the specified \fB\s-1STRING\s0\fR
+is interpreted and executed as @@RXVT_NAME@@'s control sequence. For
+example the following means "change the current locale to \f(CW\*(C`zh_CN.GBK\*(C'\fR
+when Control-Meta-c is being pressed":
+.Sp
+.Vb 1
+\&  URxvt.keysym.M-C-c: proto:\e033]701;zh_CN.GBK\e007
+.Ve
+.Sp
+The following example will map Control\-Meta\-1 and Control\-Meta\-2 to
+the fonts \f(CW\*(C`suxuseuro\*(C'\fR and \f(CW\*(C`9x15bold\*(C'\fR, so you cna have some limited
+font-switching at runtime:
+.Sp
+.Vb 2
+\&  URxvt.keysym.M-C-1: proto:\e033]50;suxuseuro\e007
+\&  URxvt.keysym.M-C-2: proto:\e033]50;9x15bold\e007
+.Ve
+.Sp
 \&\f(CW\*(C`proto:\e033]701;zh_CN.GBK\e007\*(C'\fR means: change the current locale to
 \&\f(CW\*(C`zh_CN.GBK\*(C'\fR.
 .SH "THE SCROLLBAR"
@@ -907,10 +945,11 @@ The behaviour of text selection and insertion mechanism is similar to
 \&\fIxterm\fR(1).
 .IP "\fBSelection\fR:" 4
 .IX Item "Selection:"
-Left click at the beginning of the region, drag to the end of the
-region and release; Right click to extend the marked region; Left
-double-click to select a word; Left triple-click to select the entire
-line.
+Left click at the beginning of the region, drag to the end of the region
+and release; Right click to extend the marked region; Left double-click
+to select a word; Left triple-click to select the entire logical line
+(which can span multiple screen lines), unless modified by resource
+\&\fBtripleclickwords\fR.
 .Sp
 Starting a selection while pressing the \fBMeta\fR key (or \fBMeta+Ctrl\fR keys)
 (Compile: \fIfrills\fR) will create a rectangular selection instead of a normal
@@ -940,7 +979,7 @@ and character codes using the keyboard. It consists of 4 parts. The
 first part is available rxvt-unicode has been compiled with
 \&\f(CW\*(C`\-\-enable\-frills\*(C'\fR, the rest is available when rxvt-unicode was compiled
 with \f(CW\*(C`\-\-enable\-iso14755\*(C'\fR.
-.IP "5.1: Basic method" 4
+.IP "* 5.1: Basic method" 4
 .IX Item "5.1: Basic method"
 This allows you to enter unicode characters using their hexcode.
 .Sp
@@ -956,7 +995,7 @@ address, which you cannot type. Fortunately, the card has the e\-mail
 address printed as hexcodes, e.g. \f(CW\*(C`671d 65e5\*(C'\fR. You can enter this easily
 by pressing \f(CW\*(C`Control\*(C'\fR and \f(CW\*(C`Shift\*(C'\fR, followed by \f(CW\*(C`6\-7\-1\-D\-SPACE\-6\-5\-E\-5\*(C'\fR,
 followed by releasing the modifier keys.
-.IP "5.2: Keyboard symbols entry method" 4
+.IP "* 5.2: Keyboard symbols entry method" 4
 .IX Item "5.2: Keyboard symbols entry method"
 This mode lets you input characters representing the keycap symbols of
 your keyboard, if representable in the current locale encoding.
@@ -968,11 +1007,11 @@ keycap symbol. The symbol will only be entered when the key has been
 released, otherwise pressing e.g. \f(CW\*(C`Shift\*(C'\fR would enter the symbol for
 \&\f(CW\*(C`ISO Level 2 Switch\*(C'\fR, although your intention might have been to enter a
 reverse tab (Shift\-Tab).
-.IP "5.3: Screen-selection entry method" 4
+.IP "* 5.3: Screen-selection entry method" 4
 .IX Item "5.3: Screen-selection entry method"
 While this is implemented already (it's basically the selection
 mechanism), it could be extended by displaying a unicode character map.
-.IP "5.4: Feedback method for identifying displayed characters for later input" 4
+.IP "* 5.4: Feedback method for identifying displayed characters for later input" 4
 .IX Item "5.4: Feedback method for identifying displayed characters for later input"
 This method lets you display the unicode character code associated with
 characters already displayed.
@@ -991,10 +1030,10 @@ With respect to conformance, rxvt-unicode is supposed to be compliant to
 both scenario A and B of \s-1ISO\s0 14755, including part 5.2.
 .SH "LOGIN STAMP"
 .IX Header "LOGIN STAMP"
-\&\fB@@RXVT_NAME@@\fR tries to write an entry into the \fIutmp\fR(5) file so
-that it can be seen via the \fI\fIwho\fI\|(1)\fR command, and can accept messages.
-To allow this feature, \fB@@RXVT_NAME@@\fR must be installed setuid root on
-some systems.
+\&\fB@@RXVT_NAME@@\fR tries to write an entry into the \fIutmp\fR(5) file so that
+it can be seen via the \fI\fIwho\fI\|(1)\fR command, and can accept messages.  To
+allow this feature, \fB@@RXVT_NAME@@\fR may need to be installed setuid root
+on some systems or setgid to root or to some other group on others.
 .SH "COLORS AND GRAPHICS"
 .IX Header "COLORS AND GRAPHICS"
 In addition to the default foreground and background colours,
@@ -1047,9 +1086,6 @@ terminal to use. \fB@@RXVT_NAME@@\fR uses the environment variables
 \&\fB\s-1RXVTPATH\s0\fR and \fB\s-1PATH\s0\fR to find \s-1XPM\s0 files.
 .SH "FILES"
 .IX Header "FILES"
-.IP "\fB/etc/utmp\fR" 4
-.IX Item "/etc/utmp"
-System file for login records.
 .IP "\fB/usr/lib/X11/rgb.txt\fR" 4
 .IX Item "/usr/lib/X11/rgb.txt"
 Color names.

@@ -508,26 +508,28 @@ FREQUENTLY ASKED QUESTIONS
         Here's an example for a URxvt session started using `rxvt -name
         URxvt'
 
-                URxvt*keysym.Home:          \e[1~
-                URxvt*keysym.End:           \e[4~
-                URxvt*keysym.C-apostrophe:  \e<C-'>
-                URxvt*keysym.C-slash:       \e<C-/>
-                URxvt*keysym.C-semicolon:   \e<C-;>
-                URxvt*keysym.C-grave:       \e<C-`>
-                URxvt*keysym.C-comma:       \e<C-,>
-                URxvt*keysym.C-period:      \e<C-.>
-                URxvt*keysym.C-0x60:        \e<C-`>
-                URxvt*keysym.C-Tab:         \e<C-Tab>
-                URxvt*keysym.C-Return:      \e<C-Return>
-                URxvt*keysym.S-Return:      \e<S-Return>
-                URxvt*keysym.S-space:       \e<S-Space>
-                URxvt*keysym.M-Up:          \e<M-Up>
-                URxvt*keysym.M-Down:        \e<M-Down>
-                URxvt*keysym.M-Left:        \e<M-Left>
-                URxvt*keysym.M-Right:       \e<M-Right>
-                URxvt*keysym.M-C-0:         list.0123456789.\e<M-C-.>
-                URxvt*keysym.M-C-a:         list.abcdefghijklmnopqrstuvwxyz.\033<M-C-.>
-                URxvt*keysym.F12:           proto:\033]701;zh_CN.GBK\007
+           URxvt.keysym.Home:          \e[1~
+           URxvt.keysym.End:           \e[4~
+           URxvt.keysym.C-apostrophe:  \e<C-'>
+           URxvt.keysym.C-slash:       \e<C-/>
+           URxvt.keysym.C-semicolon:   \e<C-;>
+           URxvt.keysym.C-grave:       \e<C-`>
+           URxvt.keysym.C-comma:       \e<C-,>
+           URxvt.keysym.C-period:      \e<C-.>
+           URxvt.keysym.C-0x60:        \e<C-`>
+           URxvt.keysym.C-Tab:         \e<C-Tab>
+           URxvt.keysym.C-Return:      \e<C-Return>
+           URxvt.keysym.S-Return:      \e<S-Return>
+           URxvt.keysym.S-space:       \e<S-Space>
+           URxvt.keysym.M-Up:          \e<M-Up>
+           URxvt.keysym.M-Down:        \e<M-Down>
+           URxvt.keysym.M-Left:        \e<M-Left>
+           URxvt.keysym.M-Right:       \e<M-Right>
+           URxvt.keysym.M-C-0:         list \e<M-C- 0123456789 >
+           URxvt.keysym.M-C-a:         list \033<M-C- abcdefghijklmnopqrstuvwxyz >
+           URxvt.keysym.F12:           proto:\033]701;zh_CN.GBK\007
+
+        See some more examples in the documentation for the keysym resource.
 
     I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How
     do I make use of them? For example, the Sun Keyboard type 4 has the
