@@ -1037,14 +1037,14 @@ rxvt_term::menu_show ()
             name = NULL;
 
           if (len && name)
-            draw_string (*ActiveMenu->drawable, gc, TermWin.fontset,
+            draw_string (*ActiveMenu->drawable, gc, TermWin.fontset[0],
                          xoff, 2 * SHADOW + y, name, len);
 
           len = item->len2;
           name = item->name2;
 
           if (len && name)
-            draw_string (*ActiveMenu->drawable, gc, TermWin.fontset,
+            draw_string (*ActiveMenu->drawable, gc, TermWin.fontset[0],
                          ActiveMenu->w - (xoff + Width2Pixel (xright)), 2 * SHADOW + y, name, len);
 
           h = HEIGHT_TEXT + 2 * SHADOW;
@@ -2064,7 +2064,7 @@ rxvt_term::menubar_expose ()
             len = (TermWin.ncol - (menu->x + HSPACE));
 
           drawbox_menubar (menu->x, len, +1);
-          draw_string (*menuBar.drawable, menubarGC, TermWin.fontset,
+          draw_string (*menuBar.drawable, menubarGC, TermWin.fontset[0],
                        (Width2Pixel (menu->x) + Width2Pixel (HSPACE) / 2),
                        SHADOW, menu->name, len);
 
@@ -2127,7 +2127,7 @@ rxvt_term::menubar_expose ()
 
       ncol -= (x + len + HSPACE);
       if (len > 0 && ncol >= 0)
-        draw_string (*menuBar.drawable, menubarGC, TermWin.fontset,
+        draw_string (*menuBar.drawable, menubarGC, TermWin.fontset[0],
                      Width2Pixel (x) + Width2Pixel (ncol + HSPACE) / 2,
                      SHADOW, title, len);
     }

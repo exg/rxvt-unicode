@@ -116,5 +116,11 @@ struct stringvec : simplevec<char *>
       delete [] *c;
   }
 };
+
+struct zero_initialized {
+  void *operator new (size_t s);
+  void operator delete (void *p, size_t s);
+};
+
 #endif
 

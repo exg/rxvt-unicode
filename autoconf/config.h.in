@@ -331,6 +331,12 @@
 /* Define for second char in devptyXX */
 #undef PTYCHAR2
 
+/* Define to enable xft support */
+#undef XFT
+
+/* Define if you want bold and italic support */
+#undef ENABLE_STYLES
+
 /* Define if you want ISO 14755 extended support */
 #undef ISO_14755
 
@@ -435,7 +441,4 @@
 
 /* Define if you don't need to use our replacement string functions */
 #undef NO_STRINGS
-
-/* Define to enable xft support */
-#undef XFT
 

@@ -6,6 +6,8 @@
 
 class byteorder byteorder;
 
+unsigned int byteorder::e;
+
 byteorder::byteorder ()
 {
   union {
@@ -19,6 +21,21 @@ byteorder::byteorder ()
   w.b[3] = 0x44;
 
   e = w.u;
+}
+
+void *
+zero_initialized::operator new (size_t s)
+{
+  void *p = malloc (s);
+
+  memset (p, 0, s);
+  return p;
+}
+
+void
+zero_initialized::operator delete (void *p, size_t s)
+{
+  free (p);
 }
 
 
