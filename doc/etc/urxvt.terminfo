@@ -14,7 +14,7 @@
 urxvt|rxvt-unicode terminal (X Window System), 
 	am, bce, eo, km, msgr, xenl, 
 	cols#80, it#8, lines#24, 
-	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~, 
+	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~-A.B+C\,D0EhF,
 	bel=^G, blink=\E[5m, bold=\E[1m, blink=\E[5m, civis=\E[?25l, 
 	clear=\E[H\E[2J, cnorm=\E[?25h, cr=^M, 
 	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H, 
