@@ -1,5 +1,5 @@
-#define VERSION "1.6"
-#define VSTRING "10600"
+#define VERSION "1.7"
+#define VSTRING "10700"
 #define DATE	"2004-01-30"
 #define LSMDATE	"30JAN04"
-#define LIBVERSION "1:6:0"
+#define LIBVERSION "1:7:0"
