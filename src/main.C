@@ -142,9 +142,9 @@ rxvt_term::operator delete (void *p, size_t s)
 
 rxvt_term::rxvt_term ()
     :
+#if TRANSPARENT
     rootwin_ev (this, &rxvt_term::rootwin_cb),
-    termwin_ev (this, &rxvt_term::x_cb),
-    vt_ev (this, &rxvt_term::x_cb),
+#endif
 #ifdef HAVE_SCROLLBARS
     scrollbar_ev (this, &rxvt_term::x_cb),
 #endif
@@ -172,6 +172,8 @@ rxvt_term::rxvt_term ()
 #ifdef USE_XIM
     im_ev (this, &rxvt_term::im_cb),
 #endif
+    termwin_ev (this, &rxvt_term::x_cb),
+    vt_ev (this, &rxvt_term::x_cb),
     check_ev (this, &rxvt_term::check_cb),
     flush_ev (this, &rxvt_term::flush_cb),
     destroy_ev (this, &rxvt_term::destroy_cb),
@@ -284,16 +286,19 @@ rxvt_term::destroy ()
 
   if (display)
     {
-#ifdef USE_XIM
+#if USE_XIM
       im_ev.stop (display);
 #endif
-#ifdef HAVE_SCROLLBARS
+#if HAVE_SCROLLBARS
       scrollbar_ev.stop (display);
 #endif
-#ifdef MENUBAR
+#if MENUBAR
       menubar_ev.stop (display);
 #endif
+#if TRANSPARENT
       rootwin_ev.stop (display);
+#endif
+      incr_ev.stop ();
       termwin_ev.stop (display);
       vt_ev.stop (display);
     }
@@ -384,10 +389,9 @@ rxvt_term::init (int argc, const char *const *argv)
     {
       XSelectInput (display->display, display->root, PropertyChangeMask);
       check_our_parents ();
+      rootwin_ev.start (display, display->root);
     }
 #endif
-
-  rootwin_ev.start (display, display->root);
 
   XMapWindow (display->display, TermWin.vt);
   XMapWindow (display->display, TermWin.parent[0]);
@@ -1238,6 +1242,7 @@ rxvt_term::set_widthheight (unsigned int width, unsigned int height)
       if (height == 0)
         height = wattr.height - szHint.base_height;
     }
+
   if (width != TermWin.width || height != TermWin.height)
     {
       width += szHint.base_width;
