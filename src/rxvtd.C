@@ -217,7 +217,7 @@ main (int argc, const char *const *argv)
 
   char *sockname = rxvt_connection::unix_sockname ();
   unix_listener l (sockname);
-  printf ("rxvtd listening on %s.\n", sockname);
+  printf ("rxvt-unicode daemon listening on %s.\n", sockname);
   free (sockname);
 
   iom.loop ();

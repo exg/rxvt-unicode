@@ -42,7 +42,7 @@ char *rxvt_connection::unix_sockname ()
       uname (&u);
 
       path = getenv ("HOME");
-      snprintf (name, PATH_MAX, "%s/.rxvt-%s",
+      snprintf (name, PATH_MAX, "%s/.rxvt-unicode-%s",
                 path ? path : "/tmp",
                 u.nodename);
 
