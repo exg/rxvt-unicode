@@ -35,12 +35,6 @@ Note that \fBrxvt\fP permits the resource name to be used as a long-option
 those listed\&.
 For example: `rxvt --loginShell --color1 Orange\&'\&.
 .PP 
-Also note that if you do not explictly specify a font (\fB-fn\fP and \fB-fm\fP)
-or a multichar encoding method (\fB-km\fP), rxvt will select a font for the
-preferable encoding according to your locale\&.  Supported encodings are:
-\fBISO-8859-\fPn (n=\fB1\fP\&.\&.\&.\fB15\fP), \fBKOI8-R\fP, \fBKOI8-U\fP, \fBEUC-JP\fP,
-\fBShift_JIS\fP, \fBEUC-KR\fP, \fBEUC-CN\fP (aka \fBGB\fP), and \fBBig5\fP\&.
-.PP 
 The following options are available:
 .PP 
 .IP "\fB-help\fP, \fB--help\fP" 
@@ -84,24 +78,12 @@ resource \fBpointerColor\fP\&.
 The colour of the border between the xterm scrollbar and the text;
 resource \fBborderColor\fP\&.
 .IP "\fB-fn\fP \fIfontname\fP" 
-Main normal text font;
+Select the fonts to be used used\&. This is a comma seperated
+list of font names that are used in turn when trying to display
+unicode characters\&. The first font defines the cell size for characters,
+pther fonts might be smaller, but not larger\&. A reasonable default list
+is appended\&.
 resource \fBfont\fP\&.
-.IP "\fB-fb\fP \fIfontname\fP" 
-Main bold text font;
-resource \fBboldFont\fP\&.
-.IP "\fB-fm\fP \fIfontname\fP" 
-Main multicharacter font;
-resource \fBmfont\fP\&.
-.IP "\fB-km\fP \fImode\fP" 
-Compile \fImultichar_languages\fP: 
-Multiple-character font-set encoding mode;
-\fBeucj\fP: EUC Japanese encoding\&.
-\fBsjis\fP: Shift JIS encoding\&.
-\fBbig5\fP: BIG5 encoding\&.
-\fBgb\fP: GB encoding\&.
-\fBkr\fP: EUC Korean encoding\&.
-\fBnoenc\fP: no encoding;
-resource \fBmultichar_encoding\fP\&.
 .IP "\fB-grk\fP \fImode\fP" 
 Compile \fIGreek\fP: Greek keyboard translation;
 \fBiso\fP: ISO-8859 mapping\&.
@@ -196,6 +178,11 @@ resource \fBpreeditType\fP\&.
 .IP "\fB-im\fP \fItext\fP" 
 Compile \fIXIM\fP: input method name\&.
 resource \fBinputMethod\fP\&.
+.IP "\fB-imlocale\fP \fIstring\fP" 
+The locale to use for opening the IM\&. You can use an LC_CTYPE
+of e\&.g\&. de_DE\&.UTF-8 for normal text processing but ja_JP\&.EUC-JP
+for the input extension to be able to input japanese characters
+while staying in another locale\&.
 .IP "\fB-mod\fP \fImodifier\fP" 
 Override detection of Meta modifier with specified key:
 \fBalt\fP, \fBmeta\fP, \fBhyper\fP, \fBsuper\fP, \fBmod1\fP, \fBmod2\fP, \fBmod3\fP,
@@ -300,258 +287,12 @@ Specify the colon-delimited search path for finding files (XPM and
 menus), in addition to the paths specified by the \fBRXVTPATH\fP and
 \fBPATH\fP environment variables\&.
 .IP "\fBfont:\fP \fIfontname\fP" 
-Select the main text font used [default 7x14];
+Select the fonts to be used used\&. This is a comma seperated
+list of font names that are used in turn when trying to display
+unicode characters\&. The first font defines the cell size for characters,
+pther fonts might be smaller, but not larger\&. A reasonable default list
+is appended\&.
 option \fB-fn\fP\&.
-.IP "\fBfont\fP\fIn\fP\fB:\fP \fIfontname\fP" 
-Specify the alternative font \fIn\fP\&.  The default font values: 
-.br 
-.RS 
-.HP 
-.TS 
-.nr 3c \n(.C
-.cp 0
-.nr 3lps \n[.s]
-.nr 3cent \n[.ce]
-.de 3init
-.ft \n[.f]
-.ps \n[.s]
-.vs \n[.v]u
-.in \n[.i]u
-.ll \n[.l]u
-.ls \n[.L]
-.ad \n[.j]
-.ie \n[.u] .fi
-.el .nf
-.ce \n[.ce]
-..
-.nr 3ind \n[.i]
-.nr 3fnt \n[.f]
-.nr 3sz \n[.s]
-.nr 3fll \n[.u]
-.nr T. 0
-.nr 3crow 0-1
-.nr 3passed 0-1
-.nr 3sflag 0
-.ds 3trans
-.ds 3quote
-.nr 3brule 1
-.nr 3supbot 0
-.eo
-.de 3rmk
-.mk \$1
-.if !'\n(.z'' \!.3rmk "\$1"
-..
-.de 3rvpt
-.vpt \$1
-.if !'\n(.z'' \!.3rvpt "\$1"
-..
-.de 3keep
-.if '\n[.z]'' \{.ds 3quote \\
-.ds 3trans \!
-.di 3section
-.nr 3sflag 1
-.in 0
-.\}
-..
-.de 3release
-.if \n[3sflag] \{.di
-.in \n[3ind]u
-.nr 3dn \n[dn]
-.ds 3quote
-.ds 3trans
-.nr 3sflag 0
-.if \n[.t]<=\n[dn] \{.nr T. 1
-.T#
-.nr 3supbot 1
-.sp \n[.t]u
-.nr 3supbot 0
-.mk #T
-.\}
-.if \n[.t]<=\n[3dn] .tm warning: page \n%: table text block will not fit on one page
-.nf
-.ls 1
-.3section
-.ls
-.rm 3section
-.\}
-..
-.nr 3tflag 0
-.de 3tkeep
-.if '\n[.z]'' \{.di 3table
-.nr 3tflag 1
-.\}
-..
-.de 3trelease
-.if \n[3tflag] \{.br
-.di
-.nr 3dn \n[dn]
-.ne \n[dn]u+\n[.V]u
-.ie \n[.t]<=\n[3dn] .tm error: page \n%: table will not fit on one page; use .TS H/.TH with a supporting macro package
-.el \{.in 0
-.ls 1
-.nf
-.3table
-.\}
-.rm 3table
-.\}
-..
-.ec
-.ce 0
-.nf
-.nr 3sep 1n
-.nr 3w0 \n(.H
-.nr 3aw0 0
-.nr 3lnw0 0
-.nr 3rnw0 0
-.nr 3w1 \n(.H
-.nr 3aw1 0
-.nr 3lnw1 0
-.nr 3rnw1 0
-.nr 3w0 \n[3w0]>?\w\[tbl]\fBfont\fP: \[tbl]
-.nr 3w1 \n[3w1]>?\w\[tbl]\ 7x14 \[tbl]
-.nr 3w0 \n[3w0]>?\w\[tbl]\fBfont1\fP: \[tbl]
-.nr 3w1 \n[3w1]>?\w\[tbl]\ 6x10 \[tbl]
-.nr 3w0 \n[3w0]>?\w\[tbl]\fBfont2\fP: \[tbl]
-.nr 3w1 \n[3w1]>?\w\[tbl]\ 6x13 \[tbl]
-.nr 3w0 \n[3w0]>?\w\[tbl]\fBfont3\fP: \[tbl]
-.nr 3w1 \n[3w1]>?\w\[tbl]\ 8x13 \[tbl]
-.nr 3w0 \n[3w0]>?\w\[tbl]\fBfont4\fP: \[tbl]
-.nr 3w1 \n[3w1]>?\w\[tbl]\ 9x15 \[tbl]
-.nr 3w0 \n[3w0]>?(\n[3lnw0]+\n[3rnw0])
-.if \n[3aw0] .nr 3w0 \n[3w0]>?(\n[3aw0]+2n)
-.nr 3w1 \n[3w1]>?(\n[3lnw1]+\n[3rnw1])
-.if \n[3aw1] .nr 3w1 \n[3w1]>?(\n[3aw1]+2n)
-.nr 3cd0 0
-.nr 3cl0 0*\n[3sep]
-.nr 3ce0 \n[3cl0]+\n[3w0]
-.nr 3cl1 \n[3ce0]+(3*\n[3sep])
-.nr 3cd1 \n[3ce0]+\n[3cl1]/2
-.nr 3ce1 \n[3cl1]+\n[3w1]
-.nr 3cd2 \n[3ce1]+(0*\n[3sep])
-.nr TW \n[3cd2]
-.if \n[3cent] \{.in +(u;\n[.l]-\n[.i]-\n[TW]/2>?-\n[.i])
-.nr 3ind \n[.i]
-.\}
-.eo
-.de T#
-.if !\n[3supbot] \{.3rvpt 0
-.mk 3vert
-.ls 1
-.ls
-.nr 3passed \n[3crow]
-.sp |\n[3vert]u
-.3rvpt 1
-.\}
-..
-.ec
-.fc 
-.3keep
-.3rmk 3rt0
-\*[3trans].nr 3crow 0
-.3keep
-.mk 3rs0
-.mk 3bot
-.3rvpt 0
-.ta \n[3ce0]u \n[3ce1]u
-\&\h'|\n[3cl0]u'\fBfont\fP: \h'|\n[3cl1]u'\ 7x14 
-.nr 3bot \n[3bot]>?\n[.d]
-.sp |\n[3rs0]u
-.3rvpt 1
-.sp |\n[3bot]u
-\*[3trans].nr 3brule 1
-.3release
-.3keep
-.3rmk 3rt1
-\*[3trans].nr 3crow 1
-.3keep
-.mk 3rs1
-.mk 3bot
-.3rvpt 0
-.ta \n[3ce0]u \n[3ce1]u
-\&\h'|\n[3cl0]u'\fBfont1\fP: \h'|\n[3cl1]u'\ 6x10 
-.nr 3bot \n[3bot]>?\n[.d]
-.sp |\n[3rs1]u
-.3rvpt 1
-.sp |\n[3bot]u
-\*[3trans].nr 3brule 1
-.3release
-.3keep
-.3rmk 3rt2
-\*[3trans].nr 3crow 2
-.3keep
-.mk 3rs2
-.mk 3bot
-.3rvpt 0
-.ta \n[3ce0]u \n[3ce1]u
-\&\h'|\n[3cl0]u'\fBfont2\fP: \h'|\n[3cl1]u'\ 6x13 
-.nr 3bot \n[3bot]>?\n[.d]
-.sp |\n[3rs2]u
-.3rvpt 1
-.sp |\n[3bot]u
-\*[3trans].nr 3brule 1
-.3release
-.3keep
-.3rmk 3rt3
-\*[3trans].nr 3crow 3
-.3keep
-.mk 3rs3
-.mk 3bot
-.3rvpt 0
-.ta \n[3ce0]u \n[3ce1]u
-\&\h'|\n[3cl0]u'\fBfont3\fP: \h'|\n[3cl1]u'\ 8x13 
-.nr 3bot \n[3bot]>?\n[.d]
-.sp |\n[3rs3]u
-.3rvpt 1
-.sp |\n[3bot]u
-\*[3trans].nr 3brule 1
-.3release
-.3keep
-.3rmk 3rt4
-\*[3trans].nr 3crow 4
-.3keep
-.mk 3rs4
-.mk 3bot
-.3rvpt 0
-.ta \n[3ce0]u \n[3ce1]u
-\&\h'|\n[3cl0]u'\fBfont4\fP: \h'|\n[3cl1]u'\ 9x15 
-.nr 3bot \n[3bot]>?\n[.d]
-.sp |\n[3rs4]u
-.3rvpt 1
-.sp |\n[3bot]u
-\*[3trans].nr 3brule 1
-.3release
-.mk 3rt5
-.nr 3brule 1
-.nr T. 1
-.T#
-.3init
-.fc
-.cp \n(3c
-.TE 
-.RE 
-.IP "\fBboldFont:\fP \fIfontname\fP" 
-Specify the name of the bold font to use if \fBcolorBD\fP has not been
-specified and it is not possible to map the default foreground colour
-to colour 8-15 [default NONE]\&.  This font must be the same height and
-width as the normal font;
-option \fB-fb\fP\&.
-.IP "\fBmfont:\fP \fIfontname\fP" 
-Select the main multiple-character text font used [default k14];
-option \fB-fk\fP\&.
-.IP "\fBmfont\fP\fIn\fP\fB:\fP \fIfontname\fP" 
-Specify the alternative multiple-character font \fIn\fP\&.  If compiled
-for multiple-character fonts, the Roman and multiple-character font
-sizes should match\&.
-.IP "\fBmultichar_encoding:\fP \fImode\fP" 
-Set the encoding mode to be used when multicharacter encoding is
-received;
-\fBeucj\fP: EUC Japanese encoding [default for Kanji]\&.
-\fBsjis\fP: Shift JIS encoding\&.
-\fBbig5\fP: BIG5 encoding\&.
-\fBgb\fP: GB encoding\&.
-\fBkr\fP: EUC Korean encoding\&.
-\fBnoenc\fP: no encoding;
-option \fB-km\fP\&.
 .IP "\fBgreek_keyboard:\fP \fImode\fP" 
 Set the Greek keyboard translation mode to be used;
 \fBiso\fP: ISO-8859 mapping (elot-928) [default]\&.
@@ -705,6 +446,12 @@ option \fB-pt\fP\&.
 .IP "\fBinputMethod:\fP \fIname\fP" 
 \fIname\fP of inputMethod to use;
 option \fB-im\fP\&.
+.IP "\fBimLocale:\fP \fIname\fP" 
+The locale to use for opening the IM\&. You can use an LC_CTYPE
+of e\&.g\&. de_DE\&.UTF-8 for normal text processing but ja_JP\&.EUC-JP
+for the input extension to be able to input japanese characters
+while staying in another locale\&.
+option \fB-imlocale\fP\&.
 .IP "\fBmodifier:\fP \fImodifier\fP" 
 Set the key to be interpreted as the Meta key to:
 \fBalt\fP, \fBmeta\fP, \fBhyper\fP, \fBsuper\fP, \fBmod1\fP, \fBmod2\fP, \fBmod3\fP,

@@ -1,5 +1,5 @@
 /*
- * $Id: rxvt.h,v 1.13 2003/12/18 00:29:29 pcg Exp $
+ * $Id: rxvt.h,v 1.14 2003/12/18 00:38:07 pcg Exp $
  */
 
 #ifndef _RXVT_H_                /* include once only */
@@ -482,9 +482,6 @@ enum {
 #endif
 #if (MENUBAR_MAX)
   Rs_menu,
-#endif
-#ifndef NO_BOLDFONT
-  Rs_boldFont,
 #endif
 #ifdef GREEK_SUPPORT
   Rs_greek_keyboard,

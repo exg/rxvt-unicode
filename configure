@@ -191,7 +191,7 @@ ac_help="$ac_help
 ac_help="$ac_help
   --enable-xft       enable xft support on systems that have it"
 ac_help="$ac_help
-  --with-codesets=NAME,...    compile in additional codesets (hp,jp_ext,kr,cn,cn_ext,vn,all)"
+  --with-codesets=NAME,...    compile in additional codesets (jp,jp_ext,kr,cn,cn_ext,vn,all)"
 ac_help="$ac_help
   --with-encoding=NAME    set language default encoding to NAME (default: sjis)
                           (eucj|sjis|big5|gb|kr|noenc)"

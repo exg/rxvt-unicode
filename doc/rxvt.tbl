@@ -32,12 +32,6 @@ Note that \fBrxvt\fP permits the resource name to be used as a long-option
 those listed\&.
 For example: `rxvt --loginShell --color1 Orange\&'\&.
 .PP 
-Also note that if you do not explictly specify a font (\fB-fn\fP and \fB-fm\fP)
-or a multichar encoding method (\fB-km\fP), rxvt will select a font for the
-preferable encoding according to your locale\&.  Supported encodings are:
-\fBISO-8859-\fPn (n=\fB1\fP\&.\&.\&.\fB15\fP), \fBKOI8-R\fP, \fBKOI8-U\fP, \fBEUC-JP\fP,
-\fBShift_JIS\fP, \fBEUC-KR\fP, \fBEUC-CN\fP (aka \fBGB\fP), and \fBBig5\fP\&.
-.PP 
 The following options are available:
 .PP 
 .IP "\fB-help\fP, \fB--help\fP" 
@@ -81,24 +75,12 @@ resource \fBpointerColor\fP\&.
 The colour of the border between the xterm scrollbar and the text;
 resource \fBborderColor\fP\&.
 .IP "\fB-fn\fP \fIfontname\fP" 
-Main normal text font;
+Select the fonts to be used used\&. This is a comma seperated
+list of font names that are used in turn when trying to display
+unicode characters\&. The first font defines the cell size for characters,
+pther fonts might be smaller, but not larger\&. A reasonable default list
+is appended\&.
 resource \fBfont\fP\&.
-.IP "\fB-fb\fP \fIfontname\fP" 
-Main bold text font;
-resource \fBboldFont\fP\&.
-.IP "\fB-fm\fP \fIfontname\fP" 
-Main multicharacter font;
-resource \fBmfont\fP\&.
-.IP "\fB-km\fP \fImode\fP" 
-Compile \fImultichar_languages\fP: 
-Multiple-character font-set encoding mode;
-\fBeucj\fP: EUC Japanese encoding\&.
-\fBsjis\fP: Shift JIS encoding\&.
-\fBbig5\fP: BIG5 encoding\&.
-\fBgb\fP: GB encoding\&.
-\fBkr\fP: EUC Korean encoding\&.
-\fBnoenc\fP: no encoding;
-resource \fBmultichar_encoding\fP\&.
 .IP "\fB-grk\fP \fImode\fP" 
 Compile \fIGreek\fP: Greek keyboard translation;
 \fBiso\fP: ISO-8859 mapping\&.
@@ -193,6 +175,11 @@ resource \fBpreeditType\fP\&.
 .IP "\fB-im\fP \fItext\fP" 
 Compile \fIXIM\fP: input method name\&.
 resource \fBinputMethod\fP\&.
+.IP "\fB-imlocale\fP \fIstring\fP" 
+The locale to use for opening the IM\&. You can use an LC_CTYPE
+of e\&.g\&. de_DE\&.UTF-8 for normal text processing but ja_JP\&.EUC-JP
+for the input extension to be able to input japanese characters
+while staying in another locale\&.
 .IP "\fB-mod\fP \fImodifier\fP" 
 Override detection of Meta modifier with specified key:
 \fBalt\fP, \fBmeta\fP, \fBhyper\fP, \fBsuper\fP, \fBmod1\fP, \fBmod2\fP, \fBmod3\fP,
@@ -297,46 +284,12 @@ Specify the colon-delimited search path for finding files (XPM and
 menus), in addition to the paths specified by the \fBRXVTPATH\fP and
 \fBPATH\fP environment variables\&.
 .IP "\fBfont:\fP \fIfontname\fP" 
-Select the main text font used [default 7x14];
+Select the fonts to be used used\&. This is a comma seperated
+list of font names that are used in turn when trying to display
+unicode characters\&. The first font defines the cell size for characters,
+pther fonts might be smaller, but not larger\&. A reasonable default list
+is appended\&.
 option \fB-fn\fP\&.
-.IP "\fBfont\fP\fIn\fP\fB:\fP \fIfontname\fP" 
-Specify the alternative font \fIn\fP\&.  The default font values: 
-.br 
-.RS 
-.HP 
-.TS 
-tab(`); 
-l l .
-\fBfont\fP: `\ 7x14 
-\fBfont1\fP: `\ 6x10 
-\fBfont2\fP: `\ 6x13 
-\fBfont3\fP: `\ 8x13 
-\fBfont4\fP: `\ 9x15 
-.TE 
-.RE 
-.IP "\fBboldFont:\fP \fIfontname\fP" 
-Specify the name of the bold font to use if \fBcolorBD\fP has not been
-specified and it is not possible to map the default foreground colour
-to colour 8-15 [default NONE]\&.  This font must be the same height and
-width as the normal font;
-option \fB-fb\fP\&.
-.IP "\fBmfont:\fP \fIfontname\fP" 
-Select the main multiple-character text font used [default k14];
-option \fB-fk\fP\&.
-.IP "\fBmfont\fP\fIn\fP\fB:\fP \fIfontname\fP" 
-Specify the alternative multiple-character font \fIn\fP\&.  If compiled
-for multiple-character fonts, the Roman and multiple-character font
-sizes should match\&.
-.IP "\fBmultichar_encoding:\fP \fImode\fP" 
-Set the encoding mode to be used when multicharacter encoding is
-received;
-\fBeucj\fP: EUC Japanese encoding [default for Kanji]\&.
-\fBsjis\fP: Shift JIS encoding\&.
-\fBbig5\fP: BIG5 encoding\&.
-\fBgb\fP: GB encoding\&.
-\fBkr\fP: EUC Korean encoding\&.
-\fBnoenc\fP: no encoding;
-option \fB-km\fP\&.
 .IP "\fBgreek_keyboard:\fP \fImode\fP" 
 Set the Greek keyboard translation mode to be used;
 \fBiso\fP: ISO-8859 mapping (elot-928) [default]\&.
@@ -490,6 +443,12 @@ option \fB-pt\fP\&.
 .IP "\fBinputMethod:\fP \fIname\fP" 
 \fIname\fP of inputMethod to use;
 option \fB-im\fP\&.
+.IP "\fBimLocale:\fP \fIname\fP" 
+The locale to use for opening the IM\&. You can use an LC_CTYPE
+of e\&.g\&. de_DE\&.UTF-8 for normal text processing but ja_JP\&.EUC-JP
+for the input extension to be able to input japanese characters
+while staying in another locale\&.
+option \fB-imlocale\fP\&.
 .IP "\fBmodifier:\fP \fImodifier\fP" 
 Set the key to be interpreted as the Meta key to:
 \fBalt\fP, \fBmeta\fP, \fBhyper\fP, \fBsuper\fP, \fBmod1\fP, \fBmod2\fP, \fBmod3\fP,

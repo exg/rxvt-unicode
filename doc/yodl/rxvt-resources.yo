@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-resources.yo,v 1.2 2003/11/24 17:31:27 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-resources.yo,v 1.3 2003/12/18 00:38:07 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpagesection(RESOURCES (available also as long-options))
 
@@ -96,41 +96,12 @@ startdit()
 	menus), in addition to the paths specified by the bf(RXVTPATH) and
 	bf(PATH) environment variables.
     dit(bf(font:) em(fontname))
-	Select the main text font used [default 7x14];
+	Select the fonts to be used used. This is a comma seperated
+        list of font names that are used in turn when trying to display
+        unicode characters. The first font defines the cell size for characters,
+        pther fonts might be smaller, but not larger. A reasonable default list
+        is appended.
 	option bf(-fn).
-    dit(bf(font)em(n)bf(:) em(fontname))
-	Specify the alternative font em(n).  The default font values: nl()\
-	indent(\
-	    starttable(2)(l l)(0)\
-		row(cell(bf(font):)cell(7x14))\
-		row(cell(bf(font1):)cell(6x10))\
-		row(cell(bf(font2):)cell(6x13))\
-		row(cell(bf(font3):)cell(8x13))\
-		row(cell(bf(font4):)cell(9x15))\
-	    endtable())
-    dit(bf(boldFont:) em(fontname))
-	Specify the name of the bold font to use if bf(colorBD) has not been
-	specified and it is not possible to map the default foreground colour
-	to colour 8-15 [default NONE].  This font must be the same height and
-	width as the normal font;
-	option bf(-fb).
-    dit(bf(mfont:) em(fontname))
-	Select the main multiple-character text font used [default k14];
-	option bf(-fk).
-    dit(bf(mfont)em(n)bf(:) em(fontname))
-	Specify the alternative multiple-character font em(n).  If compiled
-	for multiple-character fonts, the Roman and multiple-character font
-	sizes should match.
-    dit(bf(multichar_encoding:) em(mode))
-	Set the encoding mode to be used when multicharacter encoding is
-	received;
-	bf(eucj): EUC Japanese encoding [default for Kanji].
-	bf(sjis): Shift JIS encoding.
-	bf(big5): BIG5 encoding.
-	bf(gb): GB encoding.
-	bf(kr): EUC Korean encoding.
-	bf(noenc): no encoding;
-	option bf(-km).
     dit(bf(greek_keyboard:) em(mode))
 	Set the Greek keyboard translation mode to be used;
 	bf(iso): ISO-8859 mapping (elot-928) [default].
@@ -283,6 +254,12 @@ startdit()
     dit(bf(inputMethod:) em(name))
 	em(name) of inputMethod to use;
 	option bf(-im).
+    dit(bf(imLocale:) em(name))
+        The locale to use for opening the IM. You can use an LC_CTYPE
+        of e.g. de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP
+        for the input extension to be able to input japanese characters
+        while staying in another locale.
+	option bf(-imlocale).
     dit(bf(modifier:) em(modifier))
 	Set the key to be interpreted as the Meta key to:
 	bf(alt), bf(meta), bf(hyper), bf(super), bf(mod1), bf(mod2), bf(mod3),

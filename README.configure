@@ -53,9 +53,9 @@
 	make shadows on the scrollbar only half the normal width & height.
 	only applicable to rxvt scrollbars
 --enable-xim
-	add support for XIM (X Input Method) protocol.  This allows using
+	add support for XIM (X Input Method) protocol. This allows using
 	alternative input methods (e.g. kinput2) and will also correctly
-	set up the input for people using dead keys.
+	set up the input for people using dead keys or compose keys.
 --enable-greek
 	add support for greek keyboard
 --enable-ttygid
@@ -89,7 +89,7 @@
 	the mouse button down on a scrollbar arrow
 --enable-mousewheel
 	add support for scrolling via mouse wheel or buttons 4 & 5
--enable-slipwheeling
+--enable-slipwheeling
 	add support for continual scrolling (using the mouse wheel as an
 	accelerator) while the control key is held down.  This option
 	requires --enable-mousewheel to also be specified.
@@ -114,7 +114,7 @@
 	via from hot keys.  This should keep in a fixed position the
 	rxvt corner which is closest to a corner of the screen
 --enable-256-color
-	add support for 256 colours rather than the base 16 colours
+        add support for 256 colours rather than the base 16 colours
 --enable-cursor-blink
 	add support for a blinking cursor
 --enable-pointer-blank
