@@ -281,10 +281,6 @@ enum {
   FAST_REFRESH     = 1<<0,  /* Fully exposed window              */
   SLOW_REFRESH     = 1<<1,  /* Partially exposed window          */
   SMOOTH_REFRESH   = 1<<2,  /* Do sync'ing to make it smooth     */
-#if 0
-  REFRESH_BOUNDS   = 1<<3
-#endif
-  REFRESH_BOUNDS   = 0      /* only required for old int_bwidth code. */ //TODO: remove this and all depending code
 };
 
 #ifdef NO_SECONDARY_SCREEN
