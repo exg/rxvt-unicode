@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        init.c
  *----------------------------------------------------------------------*
- * $Id: init.C,v 1.9 2003/12/02 21:49:46 pcg Exp $
+ * $Id: init.C,v 1.10 2003/12/08 23:14:40 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -825,7 +825,7 @@ rxvt_init_xlocale(pR)
     rxvt_print_error("Setting locale failed.");
   else
     {
-      Atom            wmlocale;
+      Atom wmlocale;
 
       wmlocale = XInternAtom(R->Xdisplay, "WM_LOCALE_NAME", False);
       XChangeProperty(R->Xdisplay, R->TermWin.parent[0], wmlocale,
@@ -837,6 +837,7 @@ rxvt_init_xlocale(pR)
           rxvt_print_error("The locale is not supported by Xlib");
           return;
         }
+
       rxvt_setTermFontSet(aR_ 0);
 
       /* see if we can connect yet */

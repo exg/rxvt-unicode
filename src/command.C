@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.13 2003/12/05 04:27:20 pcg Exp $
+ * $Id: command.C,v 1.14 2003/12/08 23:14:40 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -63,9 +63,7 @@ rxvt_lookup_key(pR_ XKeyEvent *ev)
 #ifdef DEBUG_CMD
     static int      debug_key = 1;	/* accessible by a debugger only */
 #endif
-#ifdef USE_XIM
     int             valid_keysym;
-#endif
     unsigned char  *kbuf = R->kbuf;
 
 /*
@@ -77,15 +75,20 @@ rxvt_lookup_key(pR_ XKeyEvent *ev)
     shft = (ev->state & ShiftMask);
     ctrl = (ev->state & ControlMask);
     meta = (ev->state & R->ModMetaMask);
-    if (R->numlock_state || (ev->state & R->ModNumLockMask)) {
+
+    if (R->numlock_state || (ev->state & R->ModNumLockMask))
+      {
 	R->numlock_state = (ev->state & R->ModNumLockMask);
 	PrivMode((!R->numlock_state), PrivMode_aplKP);
-    }
-#ifdef USE_XIM
-    if (R->Input_Context != NULL) {
-	Status          status_return;
+      }
 
-	kbuf[0] = '\0';
+    kbuf[0] = 0;
+
+#ifdef USE_XIM
+    if (R->Input_Context)
+      {
+	Status status_return;
+
 #ifdef X_HAVE_UTF8_STRING
 	len = Xutf8LookupString(R->Input_Context, ev, (char *)kbuf,
 			      KBUFSZ, &keysym, &status_return);
@@ -95,47 +98,35 @@ rxvt_lookup_key(pR_ XKeyEvent *ev)
 #endif
 	valid_keysym = ((status_return == XLookupKeySym)
 			|| (status_return == XLookupBoth));
-    } else {
-	len = XLookupString(ev, (char *)kbuf, KBUFSZ, &keysym,
-			    &R->compose);
-	valid_keysym = 1;
-    }
-#else				/* USE_XIM */
-    len = XLookupString(ev, (char *)kbuf, KBUFSZ, &keysym,
-			&R->compose);
-/*
- * map unmapped Latin[2-4]/Katakana/Arabic/Cyrillic/Greek entries -> Latin1
- * good for installations with correct fonts, but without XLOCALE
- */
-    if (!len) {
-	if ((keysym >= 0x0100) && (keysym < 0x0800)) {
-	    kbuf[0] = (keysym & 0xFF);
-	    kbuf[1] = '\0';
-	    len = 1;
-	} else
-	    kbuf[0] = '\0';
-    }
-#endif				/* USE_XIM */
-
-#ifdef USE_XIM
-    if (valid_keysym)
+      }
+    else
 #endif
-    {
+      {
+	len = XLookupString(ev, (char *)kbuf, KBUFSZ, &keysym, &R->compose);
+	valid_keysym = !len;
+      }
+
+    if (valid_keysym)
+      {
 /* for some backwards compatibility */
 #if defined(HOTKEY_CTRL) || defined(HOTKEY_META)
 # ifdef HOTKEY_CTRL
-	if (ctrl) {
+	if (ctrl)
 # else
-	if (meta) {
+	if (meta)
 # endif
-	    if (keysym == R->ks_bigfont) {
+          {
+	    if (keysym == R->ks_bigfont)
+              {
 		rxvt_change_font(aR_ 0, FONT_UP);
 		return;
-	    } else if (keysym == R->ks_smallfont) {
+	      }
+            else if (keysym == R->ks_smallfont)
+              {
 		rxvt_change_font(aR_ 0, FONT_DN);
 		return;
-	    }
-	}
+	      }
+	  }
 #endif
 
 	if (R->TermWin.saveLines) {
@@ -239,8 +230,8 @@ rxvt_lookup_key(pR_ XKeyEvent *ev)
 # ifdef META8_OPTION
 		    if (R->meta_char == C0_ESC)
 # endif
-			R->tt_write(&ch, 1);
-		R->tt_write(kbuf0, l);
+			R->tt_write (&ch, 1);
+		R->tt_write (kbuf0, l);
 		return;
 	    } else
 #endif
@@ -574,7 +565,7 @@ rxvt_lookup_key(pR_ XKeyEvent *ev)
 #endif
 	/* nil */ ;
 	}
-    }
+      }
 
     if (len <= 0)
 	return;			/* not mapped */

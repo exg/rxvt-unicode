@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.10 2003/12/03 23:19:44 pcg Exp $
+ * $Id: main.C,v 1.11 2003/12/08 23:14:40 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -1120,49 +1120,53 @@ rxvt_IMInstantiateCallback(Display * unused
                            __attribute__ ((unused)), XPointer call_data
                            __attribute__ ((unused)))
 {
-    dR;
-    int             i, found, had_im;
-    const char     *p;
-    char          **s;
-    char            buf[IMBUFSIZ];
+  dR;
+  int i, found, had_im;
+  const char *p;
+  char **s;
+  char buf[IMBUFSIZ];
 
-    D_MAIN((stderr, "rxvt_IMInstantiateCallback()"));
-    if (R->Input_Context)
-        return;
+  D_MAIN((stderr, "rxvt_IMInstantiateCallback()"));
+  if (R->Input_Context)
+    return;
 
-    found = had_im = 0;
-    p = R->rs[Rs_inputMethod];
-    if (p && *p) {
-        had_im = 1;
-        s = rxvt_splitcommastring(p);
-        for (i = 0; s[i]; i++) {
-            if (*s[i]) {
-                STRCPY(buf, "@im=");
-                STRNCAT(buf, s[i], IMBUFSIZ - 5);
-                if ((p = XSetLocaleModifiers(buf)) != NULL && *p
-                    && (rxvt_IM_get_IC(aR) == True)) {
-                    found = 1;
-                    break;
+  p = R->rs[Rs_inputMethod];
+  if (p && *p)
+    {
+      bool found = false;
+
+      s = rxvt_splitcommastring (p);
+      for (i = 0; s[i]; i++)
+        {
+          if (*s[i])
+            {
+              STRCPY (buf, "@im=");
+              STRNCAT (buf, s[i], IMBUFSIZ - 5);
+              if ((p = XSetLocaleModifiers (buf)) && *p
+                  && rxvt_IM_get_IC (aR))
+                {
+                  found = true;
+                  break;
                 }
             }
         }
-        for (i = 0; s[i]; i++)
-            free(s[i]);
-        free(s);
-    }
-    if (found)
+      for (i = 0; s[i]; i++)
+          free(s[i]);
+      free(s);
+
+      if (found)
         return;
+    }
 
 /* try with XMODIFIERS env. var. */
-    if ((p = XSetLocaleModifiers("")) != NULL && *p) {
-        rxvt_IM_get_IC(aR);
-        return;
-    }
+  if ((p = XSetLocaleModifiers ("")) && *p
+      && rxvt_IM_get_IC (aR))
+    return;
 
 /* try with no modifiers base IF the user didn't specify an IM */
-    if (!had_im && (p = XSetLocaleModifiers("@im=none")) != NULL && *p
-        && rxvt_IM_get_IC(aR) == True)
-        return;
+  if ((p = XSetLocaleModifiers ("@im=none")) && *p
+      && rxvt_IM_get_IC (aR) == True)
+    return;
 }
 
 /*
