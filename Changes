@@ -17,6 +17,7 @@
           being selected.
         - implemented esc-seq. to switch locales (\033 ] 9 ; <locale> \007).
         - removed greek support.
+        - allow NUL bytes (ctrl-@) to be entered even with XIM enabled.
 
 1.8  Mon Feb  2 20:09:18 CET 2004
 	- almost total conversion to C++. Except for introducing

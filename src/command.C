@@ -112,10 +112,19 @@ rxvt_term::lookup_key (XKeyEvent &ev)
           if (status_return == XLookupChars
               || status_return == XLookupBoth)
             {
-              wkbuf[len] = 0;
-              len = wcstombs ((char *)kbuf, wkbuf, KBUFSZ);
-              if (len < 0)
-                len = 0;
+              /* make sure the user can type ctrl-@, i.e. NUL */
+              if (len == 1 && *wkbuf == 0)
+                {
+                  kbuf[0] = 0;
+                  len = 1;
+                }
+              else
+                {
+                  wkbuf[len] = 0;
+                  len = wcstombs ((char *)kbuf, wkbuf, KBUFSZ);
+                  if (len < 0)
+                    len = 0;
+                }
             }
           else
             len = 0;
@@ -655,25 +664,23 @@ rxvt_term::lookup_key (XKeyEvent &ev)
   /* escape prefix */
   if (meta
 #ifdef META8_OPTION
-      && (meta_char == C0_ESC)
+      && meta_char == C0_ESC
 #endif
      )
     {
       const unsigned char ch = C0_ESC;
-
       tt_write (&ch, 1);
     }
-#ifdef DEBUG_CMD
-  if (debug_key)
-    {		/* Display keyboard buffer contents */
-      char           *p;
-      int             i;
 
-      fprintf (stderr, "key 0x%04X [%d]: `", (unsigned int)keysym, len);
-      for (i = 0, p = kbuf; i < len; i++, p++)
-        fprintf (stderr, (*p >= ' ' && *p < '\177' ? "%c" : "\\%03o"), *p);
-      fprintf (stderr, "'\n");
-    }
+#if defined(DEBUG_CMD)
+  /* Display keyboard buffer contents */
+  unsigned char *p;
+  int i;
+
+  fprintf (stderr, "key 0x%04X [%d]: `", (unsigned int)keysym, len);
+  for (i = 0, p = kbuf; i < len; i++, p++)
+    fprintf (stderr, (*p >= ' ' && *p < '\177' ? "%c" : "\\%03o"), *p);
+  fprintf (stderr, "'\n");
 #endif				/* DEBUG_CMD */
   tt_write (kbuf, (unsigned int)len);
 }
