@@ -1217,7 +1217,7 @@ rxvt_fontset::find_font (unicode_t unicode, bool bold)
               fonts.push_back (new_font (fallback->name, fallback->cs));
               fallback++;
             }
-          else
+          else if (!bold)
             {
               // try to find a new font.
               // only xft currently supported, as there is no
