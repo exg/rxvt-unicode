@@ -11,7 +11,7 @@
 #       ech=\E[%p1%dX,
 # but the latter does not work correctly.
 #
-urxvt|rxvt-unicode terminal (X Window System), 
+rxvt-unicode|rxvt-unicode terminal (X Window System), 
 	am, bce, eo, km, msgr, xenl, 
 	cols#80, it#8, lines#24, 
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~-A.B+C\,D0EhFiG,

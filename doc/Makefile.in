@@ -1,5 +1,5 @@
 # doc/Makefile.in	-*- Makefile -*-
-# $Id: Makefile.in,v 1.14 2004/08/14 03:00:32 root Exp $
+# $Id: Makefile.in,v 1.16 2004/08/22 22:25:11 root Exp $
 @MCOMMON@
 
 srcdir =	@srcdir@
@@ -79,6 +79,7 @@ install:
 	$(INSTALL_DATA) rxvt.7.man $(DESTDIR)$(man7dir)/$(RXVTNAME).$(man7ext)
 	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(man1dir)/$(RXVTNAME)c.$(man1ext)
 	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(man1dir)/$(RXVTNAME)d.$(man1ext)
+	if test -x "@TIC@"; then if test -n "@TIC@"; then @TIC@ etc/rxvt-unicode.terminfo; fi; fi
 
 uninstall:
 	-(cd $(mandir); $(RMF) $(RXVTNAME).$(manext) )
