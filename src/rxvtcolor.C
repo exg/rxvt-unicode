@@ -27,6 +27,11 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#ifndef NO_SLOW_LINK_SUPPORT
+# include <sys/socket.h>
+# include <sys/un.h>
+#endif
+
 class byteorder byteorder;
 
 byteorder::byteorder ()
@@ -167,6 +172,20 @@ bool rxvt_display::init ()
   cmap   = DefaultColormap (display, screen);
   depth  = DefaultDepth (display, screen);
 
+  int fd = XConnectionNumber (display);
+
+#ifndef NO_SLOW_LINK_SUPPORT
+  // try to detetc wether we have a local connection.
+  // assume unix domains socket == local, everything else not
+  // TODO: might want to check for inet/127.0.0.1
+  is_local = 0;
+  sockaddr_un sa;
+  socklen_t sl = sizeof (sa);
+
+  if (!getsockname (fd, (sockaddr *)&sa, &sl))
+    is_local = sa.sun_family == AF_LOCAL;
+#endif
+
 #ifdef PREFER_24BIT
   /*
    * If depth is not 24, look for a 24bit visual.
@@ -186,7 +205,6 @@ bool rxvt_display::init ()
     }
 #endif
 
-  int fd = XConnectionNumber (display);
   x_ev.start (fd, EVENT_READ);
   fcntl (fd, F_SETFD, FD_CLOEXEC);
 

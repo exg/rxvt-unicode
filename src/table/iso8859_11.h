@@ -12,18 +12,17 @@ static const uint8_t iso8859_11_f_3584[] = {
   0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb
 };
 
-struct rxvt_codeset_conv_iso8859_11 : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const {
+static uint32_t cs_iso8859_11_from_unicode (unicode_t unicode) {
     if (unicode <= 0x009f) return unicode;
     if (unicode == 0x00a0) return 0x00a0;
     if (0x0e01 <= unicode && unicode <= 0x0e5b)
       return iso8859_11_f_3584[unicode - 0x0e01] == 0 ? NOCHAR : iso8859_11_f_3584[unicode - 0x0e01];
     return NOCHAR;
-  }
-} rxvt_codeset_conv_iso8859_11;
+}
 
 #else
 
-#define rxvt_codeset_conv_iso8859_11 rxvt_codeset_conv_unknown
+#define cs_iso8859_11_from_unicode cs_unknown_from_unicode
+#define cs_iso8859_11_to_unicode   cs_unknown_to_unicode
 
 #endif

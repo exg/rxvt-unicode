@@ -2191,8 +2191,7 @@ const uint16_t *gb2312_1980_0_f_i[] = {
 };
 
 
-struct rxvt_codeset_conv_gb2312_1980_0 : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const {
+static uint32_t cs_gb2312_1980_0_from_unicode (unicode_t unicode) {
     if (unicode == 0x02c7) return 0x2126;
     if (unicode == 0x02c9) return 0x2125;
     if (unicode == 0x2312) return 0x2150;
@@ -2220,11 +2219,11 @@ struct rxvt_codeset_conv_gb2312_1980_0 : rxvt_codeset_conv {
              ? gb2312_1980_0_f_i[h - 0x00][l - 0x00]
              : NOCHAR;
     return NOCHAR;
-  }
-} rxvt_codeset_conv_gb2312_1980_0;
+}
 
 #else
 
-#define rxvt_codeset_conv_gb2312_1980_0 rxvt_codeset_conv_unknown
+#define cs_gb2312_1980_0_from_unicode cs_unknown_from_unicode
+#define cs_gb2312_1980_0_to_unicode   cs_unknown_to_unicode
 
 #endif

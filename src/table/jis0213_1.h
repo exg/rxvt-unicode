@@ -2501,8 +2501,7 @@ const uint16_t *jis0213_1_f_i[] = {
 };
 
 
-struct rxvt_codeset_conv_jis0213_1 : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const {
+static uint32_t cs_jis0213_1_from_unicode (unicode_t unicode) {
     if (unicode == 0x1e3e) return 0x2872;
     if (unicode == 0x1e3f) return 0x2873;
     if (unicode == 0x1f70) return 0x2b46;
@@ -2539,11 +2538,11 @@ struct rxvt_codeset_conv_jis0213_1 : rxvt_codeset_conv {
              ? jis0213_1_f_i[h - 0x00][l - 0x00]
              : NOCHAR;
     return NOCHAR;
-  }
-} rxvt_codeset_conv_jis0213_1;
+}
 
 #else
 
-#define rxvt_codeset_conv_jis0213_1 rxvt_codeset_conv_unknown
+#define cs_jis0213_1_from_unicode cs_unknown_from_unicode
+#define cs_jis0213_1_to_unicode   cs_unknown_to_unicode
 
 #endif

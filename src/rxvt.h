@@ -11,6 +11,9 @@
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
 #include <X11/Xatom.h>
+#ifndef NO_FRILLS
+#include <X11/Xmd.h>
+#endif
 
 #include "encoding.h"
 #include "defaultfont.h"
@@ -132,6 +135,16 @@ struct mouse_event {
     (int16_t) ((val) <= 0                                \
               ? 0                                       \
               : min ((val), (((uint16_t)-1)>>1)))
+
+#ifndef NO_FRILLS
+typedef struct _mwmhints {
+  CARD32 flags;
+  CARD32 functions;
+  CARD32 decorations;
+  INT32  input_mode;
+  CARD32 status;
+} MWMHints;
+#endif
 
 /*
  *****************************************************************************
@@ -535,6 +548,7 @@ enum {
 #ifndef NO_FRILLS
   Rs_ext_bwidth,
   Rs_int_bwidth,
+  Rs_borderLess,
 #endif
   Rs_scrollBar_thickness,
 #ifndef NO_LINESPACE
@@ -625,10 +639,7 @@ enum {
 # define PrivMode_Default (PrivMode_Autowrap|PrivMode_aplKP|PrivMode_ShiftKeys|PrivMode_VisibleCursor)
 #endif
 
-#define XDEPTH                 display->depth
-#define XCMAP                  display->cmap
-#define XVISUAL                display->visual
-
+// do not change these constants lightly, there are many interdependencies
 #define IMBUFSIZ               128     // input modifier buffer sizes
 #define KBUFSZ                 512     // size of keyboard mapping buffer
 #define CBUFSIZ                4096    // size of command buffer
@@ -637,6 +648,33 @@ enum {
 #ifndef PATH_MAX
 # define PATH_MAX 16384
 #endif
+
+/* Motif window hints */
+#define MWM_HINTS_FUNCTIONS     (1L << 0)
+#define MWM_HINTS_DECORATIONS   (1L << 1)
+#define MWM_HINTS_INPUT_MODE    (1L << 2)
+#define MWM_HINTS_STATUS        (1L << 3)
+/* bit definitions for MwmHints.functions */
+#define MWM_FUNC_ALL            (1L << 0)
+#define MWM_FUNC_RESIZE         (1L << 1)
+#define MWM_FUNC_MOVE           (1L << 2)
+#define MWM_FUNC_MINIMIZE       (1L << 3)
+#define MWM_FUNC_MAXIMIZE       (1L << 4)
+#define MWM_FUNC_CLOSE          (1L << 5)
+/* bit definitions for MwmHints.decorations */
+#define MWM_DECOR_ALL           (1L << 0)
+#define MWM_DECOR_BORDER        (1L << 1)
+#define MWM_DECOR_RESIZEH       (1L << 2)
+#define MWM_DECOR_TITLE         (1L << 3)
+#define MWM_DECOR_MENU          (1L << 4)
+#define MWM_DECOR_MINIMIZE      (1L << 5)
+#define MWM_DECOR_MAXIMIZE      (1L << 6)
+/* bit definitions for MwmHints.inputMode */
+#define MWM_INPUT_MODELESS                  0
+#define MWM_INPUT_PRIMARY_APPLICATION_MODAL 1
+#define MWM_INPUT_SYSTEM_MODAL              2
+#define MWM_INPUT_FULL_APPLICATION_MODAL    3
+#define PROP_MWM_HINTS_ELEMENTS             5
 
 /*
  *****************************************************************************
@@ -964,7 +1002,6 @@ struct rxvt_term : rxvt_vars {
 #endif
                   refresh_count,
                   refresh_limit,
-                  fnum,       /* logical font number                       */
                   last_bot,   /* scrollbar last bottom position            */
                   last_top,   /* scrollbar last top position               */
                   last_state, /* scrollbar last state                      */
@@ -1134,8 +1171,9 @@ struct rxvt_term : rxvt_vars {
   xevent_watcher menubar_ev;
 #endif
 
-  void check_cb   (check_watcher &w); check_watcher check_ev;
+  void check_cb (check_watcher &w); check_watcher check_ev;
   void destroy_cb (time_watcher &w); time_watcher destroy_ev;
+  void flush_cb (time_watcher &w); time_watcher flush_ev;
 
   void pty_cb (io_watcher &w, short revents); io_watcher pty_ev;
 

@@ -661,8 +661,7 @@ const uint16_t *cns11643_1992_5_f_i[] = {
 };
 
 
-struct rxvt_codeset_conv_cns11643_1992_5 : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const {
+static uint32_t cs_cns11643_1992_5_from_unicode (unicode_t unicode) {
     if (unicode == 0x5921) return 0x373d;
     if (unicode == 0x5e07) return 0x225c;
     if (unicode == 0x5e3f) return 0x377c;
@@ -726,11 +725,11 @@ struct rxvt_codeset_conv_cns11643_1992_5 : rxvt_codeset_conv {
              ? cns11643_1992_5_f_i[h - 0x34][l - 0x00]
              : NOCHAR;
     return NOCHAR;
-  }
-} rxvt_codeset_conv_cns11643_1992_5;
+}
 
 #else
 
-#define rxvt_codeset_conv_cns11643_1992_5 rxvt_codeset_conv_unknown
+#define cs_cns11643_1992_5_from_unicode cs_unknown_from_unicode
+#define cs_cns11643_1992_5_to_unicode   cs_unknown_to_unicode
 
 #endif

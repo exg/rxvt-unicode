@@ -11,8 +11,7 @@ static const uint8_t iso8859_6_f_1536[] = {
   0xec, 0xed, 0xee, 0xef, 0xf0, 0xf1, 0xf2
 };
 
-struct rxvt_codeset_conv_iso8859_6 : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const {
+static uint32_t cs_iso8859_6_from_unicode (unicode_t unicode) {
     if (unicode <= 0x009f) return unicode;
     if (unicode == 0x00a0) return 0x00a0;
     if (unicode == 0x00a4) return 0x00a4;
@@ -20,11 +19,11 @@ struct rxvt_codeset_conv_iso8859_6 : rxvt_codeset_conv {
     if (0x060c <= unicode && unicode <= 0x0652)
       return iso8859_6_f_1536[unicode - 0x060c] == 0 ? NOCHAR : iso8859_6_f_1536[unicode - 0x060c];
     return NOCHAR;
-  }
-} rxvt_codeset_conv_iso8859_6;
+}
 
 #else
 
-#define rxvt_codeset_conv_iso8859_6 rxvt_codeset_conv_unknown
+#define cs_iso8859_6_from_unicode cs_unknown_from_unicode
+#define cs_iso8859_6_to_unicode   cs_unknown_to_unicode
 
 #endif

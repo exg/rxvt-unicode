@@ -139,23 +139,17 @@ codeset_from_name (const char *name)
   return CS_UNKNOWN;
 }
 
-struct rxvt_codeset_conv_unknown : rxvt_codeset_conv {
-  unicode_t to_unicode (uint32_t enc) const { return NOCHAR; }
-  uint32_t from_unicode (unicode_t unicode) const { return NOCHAR; }
-} rxvt_codeset_conv_unknown;
+static unicode_t cs_unknown_to_unicode (uint32_t enc)          { return NOCHAR; }
+static uint32_t cs_unknown_from_unicode (unicode_t unicode)    { return NOCHAR; }
 
-struct rxvt_codeset_conv_us_ascii : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const { return unicode <= 127 ? unicode : NOCHAR; }
-} rxvt_codeset_conv_us_ascii;
+static unicode_t cs_unicode_to_unicode (uint32_t enc)          { return enc; }
+static uint32_t cs_unicode_from_unicode (unicode_t unicode)    { return unicode; }
 
-struct rxvt_codeset_conv_unicode : rxvt_codeset_conv {
-  /* transparent */
-} rxvt_codeset_conv_unicode;
+#define cs_us_ascii_to_unicode cs_unicode_to_unicode
+static uint32_t cs_us_ascii_from_unicode (unicode_t unicode)   { return unicode <= 127 ? unicode : NOCHAR; }
 
-struct rxvt_codeset_conv_unicode_16 : rxvt_codeset_conv {
-  unicode_t to_unicode (uint32_t enc) const { return enc; }
-  uint32_t from_unicode (unicode_t unicode) const { return unicode <= 65535 ? unicode : NOCHAR; }
-} rxvt_codeset_conv_unicode_16;
+#define cs_us_ascii_to_unicode_16 cs_unicode_to_unicode
+static uint32_t cs_unicode_16_from_unicode (unicode_t unicode) { return unicode <= 65535 ? unicode : NOCHAR; }
 
 #define ENCODING_DEFAULT
 
@@ -218,58 +212,65 @@ struct rxvt_codeset_conv_unicode_16 : rxvt_codeset_conv {
 #include "table/jis0213_1.h"
 #include "table/jis0213_2.h"
 
+#if ENCODING_TO_UNICODE
+# define ENC(base) { cs_ ## base ## _from_unicode, cs_ ## base ## _to_unicode }
+#else
+# define ENC(base) { cs_ ## base ## _from_unicode }
+#endif
+  
+
 // order must match table in encoding.h(!)
-const rxvt_codeset_conv *rxvt_codeset[NUM_CODESETS] = {
-  &rxvt_codeset_conv_unknown,
+const rxvt_codeset_conv rxvt_codeset[NUM_CODESETS] = {
+  ENC (unknown),
 
-  &rxvt_codeset_conv_us_ascii,
+  ENC (us_ascii),
 
-  &rxvt_codeset_conv_iso8859_1,
-  &rxvt_codeset_conv_iso8859_2,
-  &rxvt_codeset_conv_iso8859_3,
-  &rxvt_codeset_conv_iso8859_4,
-  &rxvt_codeset_conv_iso8859_5,
-  &rxvt_codeset_conv_iso8859_6,
-  &rxvt_codeset_conv_iso8859_7,
-  &rxvt_codeset_conv_iso8859_8,
-  &rxvt_codeset_conv_iso8859_9,
-  &rxvt_codeset_conv_iso8859_10,
-  &rxvt_codeset_conv_iso8859_11,
-  &rxvt_codeset_conv_iso8859_13,
-  &rxvt_codeset_conv_iso8859_14,
-  &rxvt_codeset_conv_iso8859_15,
-  &rxvt_codeset_conv_iso8859_16,
+  ENC (iso8859_1),
+  ENC (iso8859_2),
+  ENC (iso8859_3),
+  ENC (iso8859_4),
+  ENC (iso8859_5),
+  ENC (iso8859_6),
+  ENC (iso8859_7),
+  ENC (iso8859_8),
+  ENC (iso8859_9),
+  ENC (iso8859_10),
+  ENC (iso8859_11),
+  ENC (iso8859_13),
+  ENC (iso8859_14),
+  ENC (iso8859_15),
+  ENC (iso8859_16),
 
-  &rxvt_codeset_conv_koi8_r,
-  &rxvt_codeset_conv_koi8_u,
+  ENC (koi8_r),
+  ENC (koi8_u),
 
-  &rxvt_codeset_conv_jis0201_1976_0,
-  &rxvt_codeset_conv_jis0208_1990_0,
-  &rxvt_codeset_conv_jis0212_1990_0,
+  ENC (jis0201_1976_0),
+  ENC (jis0208_1990_0),
+  ENC (jis0212_1990_0),
 
-  &rxvt_codeset_conv_jis0213_1,
-  &rxvt_codeset_conv_jis0213_2,
+  ENC (jis0213_1),
+  ENC (jis0213_2),
 
-  &rxvt_codeset_conv_ksc5601_1987_0,
+  ENC (ksc5601_1987_0),
 
-  &rxvt_codeset_conv_gb2312_1980_0,
+  ENC (gb2312_1980_0),
 
-  &rxvt_codeset_conv_cns11643_1992_1,
-  &rxvt_codeset_conv_cns11643_1992_2,
-  &rxvt_codeset_conv_cns11643_1992_3,
-  &rxvt_codeset_conv_cns11643_1992_4,
-  &rxvt_codeset_conv_cns11643_1992_5,
-  &rxvt_codeset_conv_cns11643_1992_6,
-  &rxvt_codeset_conv_cns11643_1992_7,
-  &rxvt_codeset_conv_cns11643_1992_f,
-  &rxvt_codeset_conv_big5,
-  &rxvt_codeset_conv_big5_ext,
-  &rxvt_codeset_conv_big5_plus,
+  ENC (cns11643_1992_1),
+  ENC (cns11643_1992_2),
+  ENC (cns11643_1992_3),
+  ENC (cns11643_1992_4),
+  ENC (cns11643_1992_5),
+  ENC (cns11643_1992_6),
+  ENC (cns11643_1992_7),
+  ENC (cns11643_1992_f),
+  ENC (big5),
+  ENC (big5_ext),
+  ENC (big5_plus),
 
-  &rxvt_codeset_conv_viscii,
+  ENC (viscii),
 
-  &rxvt_codeset_conv_unicode_16,
-  &rxvt_codeset_conv_unicode
+  ENC (unicode_16),
+  ENC (unicode),
 };
 
 #if ENABLE_COMBINING

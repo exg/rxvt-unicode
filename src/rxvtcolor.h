@@ -84,6 +84,9 @@ struct rxvt_display : refcounted {
   Colormap cmap;
   Window   root;
   rxvt_term *selection_owner;
+#ifndef NO_SLOW_LINK_SUPPORT
+  bool     is_local;
+#endif
 
   rxvt_display (const char *id);
   bool init ();

@@ -4,15 +4,14 @@
 #ifdef ENCODING_DEFAULT
 
 
-struct rxvt_codeset_conv_iso8859_1 : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const {
+static uint32_t cs_iso8859_1_from_unicode (unicode_t unicode) {
     if (unicode <= 0x00ff) return unicode;
     return NOCHAR;
-  }
-} rxvt_codeset_conv_iso8859_1;
+}
 
 #else
 
-#define rxvt_codeset_conv_iso8859_1 rxvt_codeset_conv_unknown
+#define cs_iso8859_1_from_unicode cs_unknown_from_unicode
+#define cs_iso8859_1_to_unicode   cs_unknown_to_unicode
 
 #endif

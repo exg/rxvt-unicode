@@ -677,6 +677,8 @@ rxvt_term::flush ()
     }
 
   display->flush ();
+
+  flush_ev.stop ();
 }
 
 void
@@ -685,6 +687,20 @@ rxvt_term::check_cb (check_watcher &w)
   SET_R (this);
   SET_LOCALE (locale);
 
+  display->flush ();
+
+  if (!flush_ev.active)
+    flush_ev.start (NOW + 0.01);
+}
+
+void
+rxvt_term::flush_cb (time_watcher &w)
+{
+  SET_R (this);
+  SET_LOCALE (locale);
+
+  refresh_limit = 1;
+  refresh_count = 0;
   flush ();
 }
 
@@ -1076,7 +1092,7 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case MappingNotify:
-        XRefreshKeyboardMapping (& (ev.xmapping));
+        XRefreshKeyboardMapping (&ev.xmapping);
         break;
 
         /*
@@ -1171,16 +1187,8 @@ rxvt_term::x_cb (XEvent &ev)
             while (XCheckTypedWindowEvent (display->display, ev.xconfigure.window, ConfigureNotify, &ev));
 
             if (szHint.width != width || szHint.height != height)
-              {
-                D_SIZE ((stderr, "Size: Resizing from: %4d x %4d", szHint.width, szHint.height));
-                resize_all_windows (width, height, 1);
-              }
-#ifdef DEBUG_SIZE
-            else
-              {
-                D_SIZE ((stderr, "Size: Not resizing"));
-              }
-#endif
+              resize_all_windows (width, height, 1);
+
 #ifdef TRANSPARENT		/* XXX: maybe not needed - leave in for now */
             if (Options & Opt_transparent)
               {
@@ -1230,17 +1238,18 @@ rxvt_term::x_cb (XEvent &ev)
       case Expose:
         if (ev.xany.window == TermWin.vt)
           {
-#ifdef NO_SLOW_LINK_SUPPORT
-            scr_expose (ev.xexpose.x, ev.xexpose.y,
-                        ev.xexpose.width, ev.xexpose.height, False);
-#else
-            // I don't understand this, so I changed it :)
-            scr_expose (ev.xexpose.x, ev.xexpose.y,
-                        ev.xexpose.width, ev.xexpose.height, False);
-            //scr_expose (ev.xexpose.x, 0,
-            //		    ev.xexpose.width, TermWin.height, False);
-#endif
-            want_refresh = 1;
+            do
+              scr_expose (ev.xexpose.x, ev.xexpose.y,
+                          ev.xexpose.width, ev.xexpose.height, False);
+            while (XCheckTypedWindowEvent (display->display, TermWin.vt, ev.xany.type, &ev));
+
+            ev.xany.type = ev.xany.type == Expose ? GraphicsExpose : Expose;
+
+            while (XCheckTypedWindowEvent (display->display, TermWin.vt, ev.xany.type, &ev))
+              scr_expose (ev.xexpose.x, ev.xexpose.y,
+                          ev.xexpose.width, ev.xexpose.height, False);
+
+            scr_refresh (refresh_type);
           }
         else
           {
@@ -1259,6 +1268,11 @@ rxvt_term::x_cb (XEvent &ev)
 #ifdef MENUBAR
             if (menubar_visible () && isMenuBarWindow (ev.xany.window))
               menubar_expose ();
+#endif
+
+#ifdef TRANSPARENT
+            if (am_transparent && ev.xany.window == TermWin.parent[0])
+              XClearWindow (display->display, ev.xany.window);
 #endif
           }
         break;
@@ -1769,238 +1783,234 @@ rxvt_term::button_release (XButtonEvent &ev)
 
 #ifdef TRANSPARENT
 #if TINTING
-/* shading taken from eterm-0.9.2 */
-/* RGB 15 */
+/* taken from aterm-0.4.2 */
 
-static void
-shade_ximage_15(void *data, int bpl, int w, int h, int rm, int gm, int bm)
+typedef uint32_t RUINT32T;
+
+void ShadeXImage(rxvt_display *display, XImage* srcImage, int shade, int rm, int gm, int bm)
 {
-    unsigned char  *ptr;
-    int             x, y;
+  int sh_r, sh_g, sh_b;
+  RUINT32T mask_r, mask_g, mask_b;
+  RUINT32T *lookup, *lookup_r, *lookup_g, *lookup_b;
+  unsigned int lower_lim_r, lower_lim_g, lower_lim_b;
+  unsigned int upper_lim_r, upper_lim_g, upper_lim_b;
+  int i;
 
-    ptr = (unsigned char *)data + (w * sizeof(uint16_t));
-    if ((rm <= 256) && (gm <= 256) && (bm <= 256)) {
-    /* No saturation */
-        for (y = h; --y >= 0;) {
-            for (x = -w; x < 0; x++) {
-                int             r, g, b;
+  Visual* visual = display->visual;
 
-                b = ((uint16_t *) ptr)[x];
-                r = (b & 0x7c00) * rm;
-                g = (b & 0x3e0) * gm;
-                b = (b & 0x1f) * bm;
-                ((uint16_t *) ptr)[x] = ((r >> 8) & 0x7c00)
-                    | ((g >> 8) & 0x3e0)
-                    | ((b >> 8) & 0x1f);
-            }
-            ptr += bpl;
+  if( visual->c_class != TrueColor || srcImage->format != ZPixmap ) return ;
+
+  /* for convenience */
+  mask_r = visual->red_mask;
+  mask_g = visual->green_mask;
+  mask_b = visual->blue_mask;
+
+  /* boring lookup table pre-initialization */
+  switch (srcImage->bits_per_pixel) {
+    case 15:
+      if ((mask_r != 0x7c00) ||
+          (mask_g != 0x03e0) ||
+          (mask_b != 0x001f))
+        return;
+        lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(32+32+32));
+        lookup_r = lookup;
+        lookup_g = lookup+32;
+        lookup_b = lookup+32+32;
+        sh_r = 10;
+        sh_g = 5;
+        sh_b = 0;
+      break;
+    case 16:
+      if ((mask_r != 0xf800) ||
+          (mask_g != 0x07e0) ||
+          (mask_b != 0x001f))
+        return;
+        lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(32+64+32));
+        lookup_r = lookup;
+        lookup_g = lookup+32;
+        lookup_b = lookup+32+64;
+        sh_r = 11;
+        sh_g = 5;
+        sh_b = 0;
+      break;
+    case 24:
+      if ((mask_r != 0xff0000) ||
+          (mask_g != 0x00ff00) ||
+          (mask_b != 0x0000ff))
+        return;
+        lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(256+256+256));
+        lookup_r = lookup;
+        lookup_g = lookup+256;
+        lookup_b = lookup+256+256;
+        sh_r = 16;
+        sh_g = 8;
+        sh_b = 0;
+      break;
+    case 32:
+      if ((mask_r != 0xff0000) ||
+          (mask_g != 0x00ff00) ||
+          (mask_b != 0x0000ff))
+        return;
+        lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(256+256+256));
+        lookup_r = lookup;
+        lookup_g = lookup+256;
+        lookup_b = lookup+256+256;
+        sh_r = 16;
+        sh_g = 8;
+        sh_b = 0;
+      break;
+    default:
+      return; /* we do not support this color depth */
+  }
+
+  /* prepare limits for color transformation (each channel is handled separately) */
+  if (shade < 0) {
+    shade = -shade;
+    if (shade < 0) shade = 0;
+    if (shade > 100) shade = 100;
+
+    lower_lim_r = 65535-rm;
+    lower_lim_g = 65535-gm;
+    lower_lim_b = 65535-bm;
+
+    lower_lim_r = 65535-(unsigned int)(((RUINT32T)lower_lim_r)*((RUINT32T)shade)/100);
+    lower_lim_g = 65535-(unsigned int)(((RUINT32T)lower_lim_g)*((RUINT32T)shade)/100);
+    lower_lim_b = 65535-(unsigned int)(((RUINT32T)lower_lim_b)*((RUINT32T)shade)/100);
+
+    upper_lim_r = upper_lim_g = upper_lim_b = 65535;
+  } else {
+    if (shade < 0) shade = 0;
+    if (shade > 100) shade = 100;
+
+    lower_lim_r = lower_lim_g = lower_lim_b = 0;
+
+    upper_lim_r = (unsigned int)((((RUINT32T)rm)*((RUINT32T)shade))/100);
+    upper_lim_g = (unsigned int)((((RUINT32T)gm)*((RUINT32T)shade))/100);
+    upper_lim_b = (unsigned int)((((RUINT32T)bm)*((RUINT32T)shade))/100);
+  }
+
+  /* switch red and blue bytes if necessary, we need it for some weird XServers like XFree86 3.3.3.1 */
+  if ((srcImage->bits_per_pixel == 24) && (mask_r >= 0xFF0000 ))
+  {
+    unsigned int tmp;
+
+    tmp = lower_lim_r;
+    lower_lim_r = lower_lim_b;
+    lower_lim_b = tmp;
+
+    tmp = upper_lim_r;
+    upper_lim_r = upper_lim_b;
+    upper_lim_b = tmp;
+  }
+
+  /* fill our lookup tables */
+  for (i = 0; i <= mask_r>>sh_r; i++)
+  {
+    RUINT32T tmp;
+    tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_r-lower_lim_r));
+    tmp += ((RUINT32T)(mask_r>>sh_r))*((RUINT32T)lower_lim_r);
+    lookup_r[i] = (tmp/65535)<<sh_r;
+  }
+  for (i = 0; i <= mask_g>>sh_g; i++)
+  {
+    RUINT32T tmp;
+    tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_g-lower_lim_g));
+    tmp += ((RUINT32T)(mask_g>>sh_g))*((RUINT32T)lower_lim_g);
+    lookup_g[i] = (tmp/65535)<<sh_g;
+  }
+  for (i = 0; i <= mask_b>>sh_b; i++)
+  {
+    RUINT32T tmp;
+    tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_b-lower_lim_b));
+    tmp += ((RUINT32T)(mask_b>>sh_b))*((RUINT32T)lower_lim_b);
+    lookup_b[i] = (tmp/65535)<<sh_b;
+  }
+
+  /* apply table to input image (replacing colors by newly calculated ones) */
+  switch (srcImage->bits_per_pixel)
+  {
+    case 15:
+    {
+      unsigned short *p1, *pf, *p, *pl;
+      p1 = (unsigned short *) srcImage->data;
+      pf = (unsigned short *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
+      while (p1 < pf)
+      {
+        p = p1;
+        pl = p1 + srcImage->width;
+        for (; p < pl; p++)
+        {
+          *p = lookup_r[(*p & 0x7c00)>>10] |
+               lookup_g[(*p & 0x03e0)>> 5] |
+               lookup_b[(*p & 0x001f)];
         }
-    } else {
-        for (y = h; --y >= 0;) {
-            for (x = -w; x < 0; x++) {
-                int             r, g, b;
-
-                b = ((uint16_t *) ptr)[x];
-                r = (b & 0x7c00) * rm;
-                g = (b & 0x3e0) * gm;
-                b = (b & 0x1f) * bm;
-                r |= (!(r >> 15) - 1);
-                g |= (!(g >> 10) - 1);
-                b |= (!(b >> 5) - 1);
-                ((uint16_t *) ptr)[x] = ((r >> 8) & 0x7c00)
-                    | ((g >> 8) & 0x3e0)
-                    | ((b >> 8) & 0x1f);
-            }
-            ptr += bpl;
-        }
+        p1 = (unsigned short *) ((char *) p1 + srcImage->bytes_per_line);
+      }
+      break;
     }
-}
-
-/* RGB 16 */
-static void
-shade_ximage_16(void *data, int bpl, int w, int h, int rm, int gm, int bm)
-{
-    unsigned char  *ptr;
-    int             x, y;
-
-    ptr = (unsigned char *)data + (w * sizeof(uint16_t));
-    if ((rm <= 256) && (gm <= 256) && (bm <= 256)) {
-    /* No saturation */
-        for (y = h; --y >= 0;) {
-            for (x = -w; x < 0; x++) {
-                int             r, g, b;
-
-                b = ((uint16_t *) ptr)[x];
-                r = (b & 0xf800) * rm;
-                g = (b & 0x7e0) * gm;
-                b = (b & 0x1f) * bm;
-                ((uint16_t *) ptr)[x] = ((r >> 8) & 0xf800)
-                    | ((g >> 8) & 0x7e0)
-                    | ((b >> 8) & 0x1f);
-            }
-            ptr += bpl;
+    case 16:
+    {
+      unsigned short *p1, *pf, *p, *pl;
+      p1 = (unsigned short *) srcImage->data;
+      pf = (unsigned short *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
+      while (p1 < pf)
+      {
+        p = p1;
+        pl = p1 + srcImage->width;
+        for (; p < pl; p++)
+        {
+          *p = lookup_r[(*p & 0xf800)>>11] |
+               lookup_g[(*p & 0x07e0)>> 5] |
+               lookup_b[(*p & 0x001f)];
         }
-    } else {
-        for (y = h; --y >= 0;) {
-            for (x = -w; x < 0; x++) {
-                int             r, g, b;
-
-                b = ((uint16_t *) ptr)[x];
-                r = (b & 0xf800) * rm;
-                g = (b & 0x7e0) * gm;
-                b = (b & 0x1f) * bm;
-                r |= (!(r >> 16) - 1);
-                g |= (!(g >> 11) - 1);
-                b |= (!(b >> 5) - 1);
-                ((uint16_t *) ptr)[x] = ((r >> 8) & 0xf800)
-                    | ((g >> 8) & 0x7e0)
-                    | ((b >> 8) & 0x1f);
-            }
-            ptr += bpl;
-        }
+        p1 = (unsigned short *) ((char *) p1 + srcImage->bytes_per_line);
+      }
+      break;
     }
-}
-
-/* RGB 24 */
-static void
-shade_ximage_24(void *data, int bpl, int w, int h, int rm, int gm, int bm)
-{
-    unsigned char  *ptr;
-    int             x, y;
-
-    ptr = (unsigned char *)data + (w * 3);
-    if ((rm <= 256) && (gm <= 256) && (bm <= 256)) {
-    /* No saturation */
-        for (y = h; --y >= 0;) {
-            for (x = -(w * 3); x < 0; x += 3) {
-                int             r, g, b;
-
-                if (byteorder.big_endian()) {
-                    r = (ptr[x + 0] * rm) >> 8;
-                    g = (ptr[x + 1] * gm) >> 8;
-                    b = (ptr[x + 2] * bm) >> 8;
-                    ptr[x + 0] = r;
-                    ptr[x + 1] = g;
-                    ptr[x + 2] = b;
-                } else {
-                    r = (ptr[x + 2] * rm) >> 8;
-                    g = (ptr[x + 1] * gm) >> 8;
-                    b = (ptr[x + 0] * bm) >> 8;
-                    ptr[x + 2] = r;
-                    ptr[x + 1] = g;
-                    ptr[x + 0] = b;
-                }
-            }
-            ptr += bpl;
+    case 24:
+    {
+      unsigned char *p1, *pf, *p, *pl;
+      p1 = (unsigned char *) srcImage->data;
+      pf = (unsigned char *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
+      while (p1 < pf)
+      {
+        p = p1;
+        pl = p1 + srcImage->width * 3;
+        for (; p < pl; p += 3)
+        {
+          p[0] = lookup_r[(p[0] & 0xff0000)>>16];
+          p[1] = lookup_r[(p[1] & 0x00ff00)>> 8];
+          p[2] = lookup_r[(p[2] & 0x0000ff)];
         }
-    } else {
-        for (y = h; --y >= 0;) {
-            for (x = -(w * 3); x < 0; x += 3) {
-                int             r, g, b;
-
-                if (byteorder.big_endian()) {
-                    r = (ptr[x + 0] * rm) >> 8;
-                    g = (ptr[x + 1] * gm) >> 8;
-                    b = (ptr[x + 2] * bm) >> 8;
-
-                    r |= (!(r >> 8) - 1);
-                    g |= (!(g >> 8) - 1);
-                    b |= (!(b >> 8) - 1);
-
-                    ptr[x + 0] = r;
-                    ptr[x + 1] = g;
-                    ptr[x + 2] = b;
-                } else {
-                    r = (ptr[x + 2] * rm) >> 8;
-                    g = (ptr[x + 1] * gm) >> 8;
-                    b = (ptr[x + 0] * bm) >> 8;
-
-                    r |= (!(r >> 8) - 1);
-                    g |= (!(g >> 8) - 1);
-                    b |= (!(b >> 8) - 1);
-
-                    ptr[x + 2] = r;
-                    ptr[x + 1] = g;
-                    ptr[x + 0] = b;
-                }
-            }
-            ptr += bpl;
-        }
+        p1 = (unsigned char *) ((char *) p1 + srcImage->bytes_per_line);
+      }
+      break;
     }
-}
+    case 32:
+    {
+      RUINT32T *p1, *pf, *p, *pl;
+      p1 = (RUINT32T *) srcImage->data;
+      pf = (RUINT32T *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
 
-/* RGB 32 */
-static void
-shade_ximage_32(void *data, int bpl, int w, int h, int rm, int gm, int bm)
-{
-    unsigned char  *ptr;
-    int             x, y;
-
-    ptr = (unsigned char *)data + (w * 4);
-    if ((rm <= 256) && (gm <= 256) && (bm <= 256)) {
-    /* No saturation */
-        for (y = h; --y >= 0;) {
-            if (byteorder.big_endian()) {
-                for (x = -(w * 4); x < 0; x += 4) {
-                    int             r, g, b;
-
-                    r = (ptr[x + 1] * rm) >> 8;
-                    g = (ptr[x + 2] * gm) >> 8;
-                    b = (ptr[x + 3] * bm) >> 8;
-                    ptr[x + 1] = r;
-                    ptr[x + 2] = g;
-                    ptr[x + 3] = b;
-                }
-            } else {
-                for (x = -(w * 4); x < 0; x += 4) {
-                    int             r, g, b;
-
-                    r = (ptr[x + 2] * rm) >> 8;
-                    g = (ptr[x + 1] * gm) >> 8;
-                    b = (ptr[x + 0] * bm) >> 8;
-                    ptr[x + 2] = r;
-                    ptr[x + 1] = g;
-                    ptr[x + 0] = b;
-                }
-            }
-            ptr += bpl;
+      while (p1 < pf)
+      {
+        p = p1;
+        pl = p1 + srcImage->width;
+        for (; p < pl; p++)
+        {
+          *p = lookup_r[(*p & 0xff0000)>>16] |
+               lookup_g[(*p & 0x00ff00)>> 8] |
+               lookup_b[(*p & 0x0000ff)] |
+               (*p & ~0xffffff);
         }
-    } else {
-        for (y = h; --y >= 0;) {
-            for (x = -(w * 4); x < 0; x += 4) {
-                int             r, g, b;
-
-                if (byteorder.big_endian()) {
-                    r = (ptr[x + 1] * rm) >> 8;
-                    g = (ptr[x + 2] * gm) >> 8;
-                    b = (ptr[x + 3] * bm) >> 8;
-
-                    r |= (!(r >> 8) - 1);
-                    g |= (!(g >> 8) - 1);
-                    b |= (!(b >> 8) - 1);
-
-                    ptr[x + 1] = r;
-                    ptr[x + 2] = g;
-                    ptr[x + 3] = b;
-                } else {
-                    r = (ptr[x + 2] * rm) >> 8;
-                    g = (ptr[x + 1] * gm) >> 8;
-                    b = (ptr[x + 0] * bm) >> 8;
-
-                    r |= (!(r >> 8) - 1);
-                    g |= (!(g >> 8) - 1);
-                    b |= (!(b >> 8) - 1);
-
-                    ptr[x + 2] = r;
-                    ptr[x + 1] = g;
-                    ptr[x + 0] = b;
-                }
-            }
-            ptr += bpl;
-        }
+        p1 = (RUINT32T *) ((char *) p1 + srcImage->bytes_per_line);
+      }
+      break;
     }
-}
+  }
 
+  free (lookup);
+}
 #endif
 
 /*
@@ -2059,7 +2069,11 @@ rxvt_term::check_our_parents ()
                                  0L, 1L, False, XA_PIXMAP, &atype, &aformat,
                                  &nitems, &bytes_after, &prop) == Success);
 
-  if (!i || prop == NULL || !rs[Rs_color + Color_tint])
+  if (!i || prop == NULL
+#if TINTING
+      || !rs[Rs_color + Color_tint]
+#endif
+      )
     have_pixmap = 0;
   else
     {
@@ -2080,7 +2094,7 @@ rxvt_term::check_our_parents ()
       GC gc;
       XGCValues gcvalue;
 
-      XTranslateCoordinates (display->display, TermWin.vt, display->root,
+      XTranslateCoordinates (display->display, TermWin.parent[0], display->root,
                              0, 0, &sx, &sy, &cr);
       nw = (unsigned int)szHint.width;
       nh = (unsigned int)szHint.height;
@@ -2132,21 +2146,11 @@ rxvt_term::check_our_parents ()
           if (ISSET_PIXCOLOR (Color_tint))
             {
               unsigned short rm, gm, bm;
-              if (rs[Rs_shade])
-                PixColorsFocused[Color_tint].fade (display, atoi (rs[Rs_shade])).get (display, rm, gm, bm);
-              else
-                PixColorsFocused[Color_tint].get (display, rm, gm, bm);
+              int shade = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100;
 
-              rm >>= 8; gm >>= 8; bm >>= 8; // not 100% correct, but...
+              PixColorsFocused[Color_tint].get (display, rm, gm, bm);
 
-              /* Determine bitshift and bitmask values */
-              switch (image->bits_per_pixel)
-                {
-                  case 15: shade_ximage_15 (image->data, image->bytes_per_line, image->width, image->height, rm, gm, bm); break;
-                  case 16: shade_ximage_16 (image->data, image->bytes_per_line, image->width, image->height, rm, gm, bm); break;
-                  case 24: shade_ximage_24 (image->data, image->bytes_per_line, image->width, image->height, rm, gm, bm); break;
-                  case 32: shade_ximage_32 (image->data, image->bytes_per_line, image->width, image->height, rm, gm, bm); break;
-                }
+              ShadeXImage (display, image, shade, rm, gm, bm);
             }
 #endif
 
@@ -2157,7 +2161,8 @@ rxvt_term::check_our_parents ()
                      nx, ny, image->width, image->height);
           XFreeGC (display->display, gc);
           XDestroyImage (image);
-          XSetWindowBackgroundPixmap (display->display, TermWin.vt, TermWin.pixmap);
+          XSetWindowBackgroundPixmap (display->display, TermWin.parent[0], TermWin.pixmap);
+          XClearWindow (display->display, TermWin.parent[0]);
 
           if (!am_transparent || !am_pixmap_trans)
             pchanged = 1;
@@ -2211,7 +2216,7 @@ rxvt_term::check_our_parents ()
 
       if (n > (int) (sizeof (TermWin.parent) / sizeof (TermWin.parent[0])))
         {
-          D_X ((stderr, "InheritPixmap Turning off"));             /* Mikachu? */
+          D_X ((stderr, "InheritPixmap Turning off"));
           XSetWindowBackground (display->display, TermWin.parent[0], PixColorsFocused[Color_fg]);
           XSetWindowBackground (display->display, TermWin.vt, PixColorsFocused[Color_bg]);
           am_transparent = 0;
@@ -2226,7 +2231,10 @@ rxvt_term::check_our_parents ()
 #endif
           D_X ((stderr, "InheritPixmap Turning on (%d parents)", i - 1));
           for (n = 0; n < (unsigned int)i; n++)
-            XSetWindowBackgroundPixmap (display->display, TermWin.parent[n], ParentRelative);
+            {
+              XSetWindowBackgroundPixmap (display->display, TermWin.parent[n], ParentRelative);
+              XClearWindow (display->display, TermWin.parent[n]);
+            }
 
           XSetWindowBackgroundPixmap (display->display, TermWin.vt, ParentRelative);
           am_transparent = 1;
@@ -2234,6 +2242,15 @@ rxvt_term::check_our_parents ()
 
       for (; i < (int) (sizeof (TermWin.parent) / sizeof (Window)); i++)
         TermWin.parent[i] = None;
+    }
+
+  // this is experimental
+  if (scrollBar.win)
+    {
+      XSetWindowBackgroundPixmap (display->display, scrollBar.win, ParentRelative);
+      XClearWindow (display->display, scrollBar.win);
+      scrollBar.setIdle ();
+      scrollbar_show (0);
     }
 
   return pchanged;
@@ -2286,10 +2303,9 @@ rxvt_term::cmd_parse ()
                   refresh_count++;
 
                   if (! (Options & Opt_jumpScroll)
-                      || (refresh_count >= (refresh_limit * (TermWin.nrow - 1))))
+                      || (refresh_count >= refresh_limit * (TermWin.nrow - 1)))
                     {
                       refreshnow = true;
-                      flag = true;
                       ch = NOCHAR;
                       break;
                     }
@@ -2317,16 +2333,16 @@ rxvt_term::cmd_parse ()
            * What the heck I'll cheat and only refresh less than every page-full.
            * the number of pages between refreshes is refresh_limit, which
            * is incremented here because we must be doing flat-out scrolling.
-           *
-           * refreshing should be correct for small scrolls, because of the
-           * time-out
            */
           if (refreshnow)
             {
               if ((Options & Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
                 refresh_limit++;
               else
-                scr_refresh (refresh_type);
+                {
+                  flag = true;
+                  scr_refresh (refresh_type);
+                }
             }
 
         }

@@ -19,6 +19,8 @@
 # include <langinfo.h>
 #endif
 
+#include <inttypes.h>
+
 #include "rxvtlib.h"
 #include "feature.h"
 #include "encoding.h"
@@ -110,6 +112,7 @@ struct rxvt_fontset {
   bool populate (const char *desc);
   int find_font (uint32_t unicode, bool bold = false);
 
+  // font-id's MUST fit into a signed 16 bit integer.
   rxvt_font *operator [] (int id) const
   {
     return fonts[id];

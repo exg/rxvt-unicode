@@ -39,8 +39,7 @@ static const uint8_t iso8859_14_f_7680[] = {
   0xac, 0xbc
 };
 
-struct rxvt_codeset_conv_iso8859_14 : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const {
+static uint32_t cs_iso8859_14_from_unicode (unicode_t unicode) {
     if (unicode <= 0x009f) return unicode;
     if (0x00a0 <= unicode && unicode <= 0x00ff)
       return iso8859_14_f_0[unicode - 0x00a0] == 0 ? NOCHAR : iso8859_14_f_0[unicode - 0x00a0];
@@ -49,11 +48,11 @@ struct rxvt_codeset_conv_iso8859_14 : rxvt_codeset_conv {
     if (0x1e02 <= unicode && unicode <= 0x1ef3)
       return iso8859_14_f_7680[unicode - 0x1e02] == 0 ? NOCHAR : iso8859_14_f_7680[unicode - 0x1e02];
     return NOCHAR;
-  }
-} rxvt_codeset_conv_iso8859_14;
+}
 
 #else
 
-#define rxvt_codeset_conv_iso8859_14 rxvt_codeset_conv_unknown
+#define cs_iso8859_14_from_unicode cs_unknown_from_unicode
+#define cs_iso8859_14_to_unicode   cs_unknown_to_unicode
 
 #endif

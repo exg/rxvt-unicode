@@ -43,8 +43,7 @@ static const uint8_t viscii_f_7680[] = {
   0xb9, 0xf1, 0x9f, 0xcf, 0x1e, 0xdc, 0x14, 0xd6, 0x19, 0xdb
 };
 
-struct rxvt_codeset_conv_viscii : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const {
+static uint32_t cs_viscii_from_unicode (unicode_t unicode) {
     if (unicode == 0x007e) return 0x007e;
     if (unicode == 0x007f) return 0x007f;
     if (0x0000 <= unicode && unicode <= 0x00fd)
@@ -54,11 +53,11 @@ struct rxvt_codeset_conv_viscii : rxvt_codeset_conv {
     if (0x1ea0 <= unicode && unicode <= 0x1ef9)
       return viscii_f_7680[unicode - 0x1ea0];
     return NOCHAR;
-  }
-} rxvt_codeset_conv_viscii;
+}
 
 #else
 
-#define rxvt_codeset_conv_viscii rxvt_codeset_conv_unknown
+#define cs_viscii_from_unicode cs_unknown_from_unicode
+#define cs_viscii_to_unicode   cs_unknown_to_unicode
 
 #endif

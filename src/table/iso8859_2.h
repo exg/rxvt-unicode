@@ -22,8 +22,7 @@ static const uint8_t iso8859_2_f_256[] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xac, 0xbc, 0xaf, 0xbf, 0xae, 0xbe
 };
 
-struct rxvt_codeset_conv_iso8859_2 : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const {
+static uint32_t cs_iso8859_2_from_unicode (unicode_t unicode) {
     if (unicode <= 0x009f) return unicode;
     if (unicode == 0x02c7) return 0x00b7;
     if (unicode == 0x02d8) return 0x00a2;
@@ -35,11 +34,11 @@ struct rxvt_codeset_conv_iso8859_2 : rxvt_codeset_conv {
     if (0x0102 <= unicode && unicode <= 0x017e)
       return iso8859_2_f_256[unicode - 0x0102] == 0 ? NOCHAR : iso8859_2_f_256[unicode - 0x0102];
     return NOCHAR;
-  }
-} rxvt_codeset_conv_iso8859_2;
+}
 
 #else
 
-#define rxvt_codeset_conv_iso8859_2 rxvt_codeset_conv_unknown
+#define cs_iso8859_2_from_unicode cs_unknown_from_unicode
+#define cs_iso8859_2_to_unicode   cs_unknown_to_unicode
 
 #endif

@@ -173,6 +173,7 @@ rxvt_term::rxvt_term ()
     im_ev (this, &rxvt_term::im_cb),
 #endif
     check_ev (this, &rxvt_term::check_cb),
+    flush_ev (this, &rxvt_term::flush_cb),
     destroy_ev (this, &rxvt_term::destroy_cb),
     pty_ev (this, &rxvt_term::pty_cb),
     incr_ev (this, &rxvt_term::incr_cb)
@@ -888,6 +889,9 @@ rxvt_term::change_font (const char *fontname)
               scr_touch (true);
             }   
 
+          for (unicode_t ch = 0x20; ch <= 0x7f; ch++)
+            TermWin.ascii_map [ch - 0x20] = fs->find_font (ch);
+
           return true;
         }
     }
@@ -977,7 +981,7 @@ rxvt_term::set_window_color (int idx, const char *color)
   if (!rXParseAllocColor (& xcol, color))
     return;
 
-  /* XStoreColor (display->display, XCMAP, XColor*); */
+  /* XStoreColor (display->display, display->cmap, XColor*); */
 
   /*
    * FIXME: should free colors here, but no idea how to do it so instead,
@@ -990,7 +994,7 @@ rxvt_term::set_window_color (int idx, const char *color)
   if (i > Color_White)
     {
       /* fprintf (stderr, "XFreeColors: PixColors [%d] = %lu\n", idx, PixColors [idx]); */
-      XFreeColors (display->display, XCMAP, (PixColors + idx), 1,
+      XFreeColors (display->display, display->cmap, (PixColors + idx), 1,
                   DisplayPlanes (display->display, display->screen));
     }
 # endif
@@ -1025,7 +1029,7 @@ rxvt_term::recolour_cursor ()
 
   xcol[0].pixel = ISSET_PIXCOLOR (Color_pointer_fg) ? PixColorsFocused[Color_pointer_fg] : PixColorsFocused[Color_fg];
   xcol[1].pixel = ISSET_PIXCOLOR (Color_pointer_bg) ? PixColorsFocused[Color_pointer_bg] : PixColorsFocused[Color_bg];
-  XQueryColors (display->display, XCMAP, xcol, 2);
+  XQueryColors (display->display, display->cmap, xcol, 2);
   XRecolorCursor (display->display, TermWin_cursor, xcol + 0, xcol + 1);
 }
 

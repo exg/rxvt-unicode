@@ -3472,8 +3472,7 @@ const uint16_t *ksc5601_1987_0_f_i[] = {
 };
 
 
-struct rxvt_codeset_conv_ksc5601_1987_0 : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const {
+static uint32_t cs_ksc5601_1987_0_from_unicode (unicode_t unicode) {
     if (unicode == 0x2312) return 0x2152;
     if (unicode <= 0x3131 && 0x318e <= unicode) return unicode - 0x0d10;
     uint8_t  l = unicode;
@@ -3485,11 +3484,11 @@ struct rxvt_codeset_conv_ksc5601_1987_0 : rxvt_codeset_conv {
              ? ksc5601_1987_0_f_i[h - 0x00][l - 0x00]
              : NOCHAR;
     return NOCHAR;
-  }
-} rxvt_codeset_conv_ksc5601_1987_0;
+}
 
 #else
 
-#define rxvt_codeset_conv_ksc5601_1987_0 rxvt_codeset_conv_unknown
+#define cs_ksc5601_1987_0_from_unicode cs_unknown_from_unicode
+#define cs_ksc5601_1987_0_to_unicode   cs_unknown_to_unicode
 
 #endif

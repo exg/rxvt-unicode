@@ -236,26 +236,25 @@ while (<DATA>) {
 #ifdef ENCODING_$group
 
 $tab1$tab2
-struct rxvt_codeset_conv_$base : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const {
-$fun1  }
+static uint32_t cs_$base\_from_unicode (unicode_t unicode) {
+$fun1}
 EOF
 
 if ($TO_UNICODE) {
    print OUT <<EOF
 #if ENCODING_TO_UNICODE
-  unicode_t to_unicode (uint32_t enc) const {
-$fun2  }
+static unicode_t cs_$base\_to_unicode (uint32_t enc) {
+$fun2}
 #endif
 EOF
 }
 
 print OUT <<EOF;
-} rxvt_codeset_conv_$base;
 
 #else
 
-#define rxvt_codeset_conv_$base rxvt_codeset_conv_unknown
+#define cs_$base\_from_unicode cs_unknown_from_unicode
+#define cs_$base\_to_unicode   cs_unknown_to_unicode
 
 #endif
 EOF

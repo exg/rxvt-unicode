@@ -68,18 +68,18 @@ enum {
 };
 
 struct rxvt_codeset_conv {
-  virtual uint32_t from_unicode (unicode_t unicode) const { return unicode; }
+  uint32_t (*from_unicode) (unicode_t unicode);
 #if ENCODING_TO_UNICODE
-  virtual unicode_t to_unicode (uint32_t enc) const { return enc; }
+  unicode_t (*to_unicode) (uint32_t enc);
 #endif
 };
 
-extern const rxvt_codeset_conv *rxvt_codeset[NUM_CODESETS];
+extern const rxvt_codeset_conv rxvt_codeset[NUM_CODESETS];
 
 extern unicode_t rxvt_compose (unicode_t c1, unicode_t c2);
 
-#define FROM_UNICODE(cs,code) rxvt_codeset[cs]->from_unicode (code)
-#define TO_UNICODE(cs,code)   rxvt_codeset[cs]->to_unicode   (code)
+#define FROM_UNICODE(cs,code) rxvt_codeset[cs].from_unicode (code)
+#define TO_UNICODE(cs,code)   rxvt_codeset[cs].to_unicode   (code)
 
 struct unicode { // namespace für arme
   static bool is_space (unicode_t c);

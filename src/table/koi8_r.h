@@ -33,8 +33,7 @@ static const uint8_t koi8_r_f_9472[] = {
   0x94
 };
 
-struct rxvt_codeset_conv_koi8_r : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const {
+static uint32_t cs_koi8_r_from_unicode (unicode_t unicode) {
     if (unicode <= 0x007f) return unicode;
     if (unicode == 0x2219) return 0x0095;
     if (unicode == 0x221a) return 0x0096;
@@ -50,11 +49,11 @@ struct rxvt_codeset_conv_koi8_r : rxvt_codeset_conv {
     if (0x2500 <= unicode && unicode <= 0x25a0)
       return koi8_r_f_9472[unicode - 0x2500] == 0 ? NOCHAR : koi8_r_f_9472[unicode - 0x2500];
     return NOCHAR;
-  }
-} rxvt_codeset_conv_koi8_r;
+}
 
 #else
 
-#define rxvt_codeset_conv_koi8_r rxvt_codeset_conv_unknown
+#define cs_koi8_r_from_unicode cs_unknown_from_unicode
+#define cs_koi8_r_to_unicode   cs_unknown_to_unicode
 
 #endif

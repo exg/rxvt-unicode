@@ -19,19 +19,18 @@ static const uint8_t iso8859_9_f_256[] = {
   0xde, 0xfe
 };
 
-struct rxvt_codeset_conv_iso8859_9 : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const {
+static uint32_t cs_iso8859_9_from_unicode (unicode_t unicode) {
     if (unicode <= 0x009f) return unicode;
     if (0x00a0 <= unicode && unicode <= 0x00ff)
       return iso8859_9_f_0[unicode - 0x00a0] == 0 ? NOCHAR : iso8859_9_f_0[unicode - 0x00a0];
     if (0x011e <= unicode && unicode <= 0x015f)
       return iso8859_9_f_256[unicode - 0x011e] == 0 ? NOCHAR : iso8859_9_f_256[unicode - 0x011e];
     return NOCHAR;
-  }
-} rxvt_codeset_conv_iso8859_9;
+}
 
 #else
 
-#define rxvt_codeset_conv_iso8859_9 rxvt_codeset_conv_unknown
+#define cs_iso8859_9_from_unicode cs_unknown_from_unicode
+#define cs_iso8859_9_to_unicode   cs_unknown_to_unicode
 
 #endif

@@ -2401,8 +2401,7 @@ const uint16_t *big5_f_i[] = {
 };
 
 
-struct rxvt_codeset_conv_big5 : rxvt_codeset_conv {
-  uint32_t from_unicode (unicode_t unicode) const {
+static uint32_t cs_big5_from_unicode (unicode_t unicode) {
     if (unicode <= 0x007f) return unicode;
     if (unicode == 0x014b) return 0xc8fc;
     if (unicode == 0x0153) return 0xc8fa;
@@ -2427,11 +2426,11 @@ struct rxvt_codeset_conv_big5 : rxvt_codeset_conv {
              ? big5_f_i[h - 0x00][l - 0x00]
              : NOCHAR;
     return NOCHAR;
-  }
-} rxvt_codeset_conv_big5;
+}
 
 #else
 
-#define rxvt_codeset_conv_big5 rxvt_codeset_conv_unknown
+#define cs_big5_from_unicode cs_unknown_from_unicode
+#define cs_big5_to_unicode   cs_unknown_to_unicode
 
 #endif
