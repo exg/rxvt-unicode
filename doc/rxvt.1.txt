@@ -1,0 +1,920 @@
+NAME
+    rxvt-unicode (ouR XVT, unicode) - (a VT102 emulator for the X window
+    system)
+
+SYNOPSIS
+    rxvt [options] [-e command [ args ]]
+
+DESCRIPTION
+    rxvt-unicode, version 4.8, is a colour vt102 terminal emulator intended
+    as an *xterm*(1) replacement for users who do not require features such
+    as Tektronix 4014 emulation and toolkit-style configurability. As a
+    result, rxvt-unicode uses much less swap space -- a significant
+    advantage on a machine serving many X sessions.
+
+FREQUENTLY ASKED QUESTIONS
+    See rxvt(7) (try "man 7 rxvt") for a list of frequently asked questions
+    and answer to them and some common problems.
+
+RXVT-UNICODE VS. RXVT
+    Unlike the original rxvt, rxvt-unicode stores all text in Unicode
+    internally. That means it can store and display most scripts in the
+    world. Being a terminal emulator, however, some things are very
+    difficult, especially cursive scripts such as arabic, vertically written
+    scripts like mongolian or scripts requiring extremely complex combining
+    rules, like tibetan or devenagari. Don't expect pretty output when using
+    these scripts. Most other scripts, latin, cyrillic, kanji, thai etc.
+    should work fine, though. A somewhat difficult case are left-to-right
+    scripts, such as hebrew: rxvt-unicode adopts the view that bidirectional
+    algorithms belong into the application, not the terminal emulator (too
+    many things -- such as cursor-movement while editing -- break
+    otherwise), but that might change.
+
+    If you are looking for a terminal that supports more exotic scripts, let
+    me recommend "mlterm", which is a very userfriendly, lean and clean
+    terminal emulator. In fact, the reason rxvt-unicode was born was solely
+    because the author couldn't get "mlterm" to use one font for latin1 and
+    another for japanese.
+
+    Therefore another design rationale was the use of multiple fonts to
+    display characters: The idea of a single unicode font which many other
+    programs force onto it's users never made sense to me: You should be
+    able to choose any font for any script freely.
+
+    Apart from that, rxvt-unicode is also much better internationalised than
+    it's predecessor, supports things such as XFT and ISO 14755 that are
+    handy in i18n-environments, is faster, and has a lot less bugs than the
+    original rxvt. This all in addition to dozens of other small
+    improvements.
+
+    It is still faithfully following the original rxvt idea of being lean
+    and nice on resources: for example, you can still configure rxvt-unicode
+    without most of it's features to get a lean binary. It also comes with a
+    client/daemon pair that lets you open any number of terminal windows
+    from within a single process, which makes startup time very fast and
+    drastically reduces memory usage. See rxvtd(1) (daemon) and rxvtc(1)
+    (client).
+
+    It also makes technical information about escape sequences (which have
+    been extended) easier accessible: see rxvt(7) for technical reference
+    documentation (escape sequences etc.).
+
+OPTIONS
+    The rxvt options (mostly a subset of *xterm*'s) are listed below. In
+    keeping with the smaller-is-better philosophy, options may be eliminated
+    or default values chosen at compile-time, so options and defaults listed
+    may not accurately reflect the version installed on your system. `rxvt
+    -h' gives a list of major compile-time options on the *Options* line.
+    Option descriptions may be prefixed with which compile option each is
+    dependent upon. e.g. `Compile *XIM*:' requires *XIM* on the *Options*
+    line. Note: `rxvt -help' gives a list of all command-line options
+    compiled into your version.
+
+    Note that rxvt permits the resource name to be used as a long-option
+    (--/++ option) so the potential command-line options are far greater
+    than those listed. For example: `rxvt --loginShell --color1 Orange'.
+
+    The following options are available:
+
+    -help, --help
+        Print out a message describing available options.
+
+    -display *displayname*
+        Attempt to open a window on the named X display (-d still
+        respected). In the absence of this option, the display specified by
+        the DISPLAY environment variable is used.
+
+    -geometry *geom*
+        Window geometry (-g still respected); resource geometry.
+
+    -rv|+rv
+        Turn on/off simulated reverse video; resource reverseVideo.
+
+    -j|+j
+        Turn on/off jump scrolling; resource jumpScroll.
+
+    -ip|+ip
+        Turn on/off inheriting parent window's pixmap. Alternative form is
+        -tr; resource inheritPixmap.
+
+    -fade *number*
+        Fade the text by the given percentage when focus is lost. resource
+        fading.
+
+    -tint *colour*
+        Tint the transparent background pixmap with the given colour when
+        transparency is enabled with -tr or -ip. See also the -sh option
+        that can be used to brighten or darken the image in addition to
+        tinting it.
+
+    -sh *number* Darken (0 .. 100) or lighten (-1 .. -100) the transparent
+        background image in addition to tinting it (i.e. -tint must be
+        specified, too, e.g. "-tint white").
+
+    -bg *colour*
+        Window background colour; resource background.
+
+    -fg *colour*
+        Window foreground colour; resource foreground.
+
+    -pixmap *file[;geom]*
+        Compile *XPM*: Specify XPM file for the background and also
+        optionally specify its scaling with a geometry string. Note you may
+        need to add quotes to avoid special shell interpretation of the `;'
+        in the command-line; resource backgroundPixmap.
+
+    -cr *colour*
+        The cursor colour; resource cursorColor.
+
+    -pr *colour*
+        The mouse pointer foreground colour; resource pointerColor.
+
+    -pr2 *colour*
+        The mouse pointer background colour; resource pointerColor2.
+
+    -bd *colour*
+        The colour of the border around the text area and between the
+        scrollbar and the text; resource borderColor.
+
+    -fn *fontlist*
+        Select the fonts to be used. This is a comma separated list of font
+        names that are used in turn when trying to display Unicode
+        characters. The first font defines the cell size for characters;
+        other fonts might be smaller, but not (in general) larger. A
+        (hopefully) reasonable default font list is always appended to it.
+        See resource font for more details.
+
+        In short, to specify an X11 core font, just specify it's name or
+        prefix it with "x:". To specify an XFT-font, you need to prefix it
+        with "xft:", e.g.:
+
+           rxvt -fn "xft:Bitstream Vera Sans Mono:pixelsize=15"
+           rxvt -fn "9x15bold,xft:Bitstream Vera Sans Mono"
+
+        See also the question "How does rxvt-unicode choose fonts?" in the
+        FAQ section of rxvt(7).
+
+    -fb *fontlist*
+        Compile font-styles: The bold font list to use when bold characters
+        are to be printed. See resource boldFont for details.
+
+    -fi *fontlist*
+        Compile font-styles: The italic font list to use when bold
+        characters are to be printed. See resource italicFont for details.
+
+    -fbi *fontlist*
+        Compile font-styles: The bold italic font list to use when bold
+        characters are to be printed. See resource boldItalicFont for
+        details.
+
+    -name *name*
+        Specify the application name under which resources are to be
+        obtained, rather than the default executable file name. Name should
+        not contain `.' or `*' characters. Also sets the icon and title
+        name.
+
+    -ls|+ls
+        Start as a login-shell/sub-shell; resource loginShell.
+
+    -ut|+ut
+        Compile *utmp*: Inhibit/enable writing a utmp entry; resource
+        utmpInhibit.
+
+    -vb|+vb
+        Turn on/off visual bell on receipt of a bell character; resource
+        visualBell.
+
+    -sb|+sb
+        Turn on/off scrollbar; resource scrollBar.
+
+    -si|+si
+        Turn on/off scroll-to-bottom on TTY output inhibit; resource
+        scrollTtyOutput has opposite effect.
+
+    -sk|+sk
+        Turn on/off scroll-to-bottom on keypress; resource
+        scrollTtyKeypress.
+
+    -sw|+sw
+        Turn on/off scrolling with the scrollback buffer as new lines
+        appear. This only takes effect if -si is also given; resource
+        scrollWithBuffer.
+
+    -sr|+sr
+        Put scrollbar on right/left; resource scrollBar_right.
+
+    -st|+st
+        Display normal (non XTerm/NeXT) scrollbar without/with a trough;
+        resource scrollBar_floating.
+
+    -ptab|+ptab
+        If enabled (default), "Horizontal Tab" characters are being stored
+        as actual wide characters in the screen buffer, which makes it
+        possible to select and paste them. Since a horizontal tab is a
+        cursor movement and not an actual glyph, this can sometimes be
+        visually annoying as the cursor on a tab character is displayed as a
+        wide cursor; resource pastableTabs.
+
+    -bc|+bc
+        Blink the cursor; resource cursorBlink.
+
+    -iconic
+        Start iconified, if the window manager supports that option.
+        Alternative form is -ic.
+
+    -sl *number*
+        Save *number* lines in the scrollback buffer. See resource entry for
+        limits; resource saveLines.
+
+    -b *number*
+        Compile *frills*: Internal border of *number* pixels. See resource
+        entry for limits; resource internalBorder.
+
+    -w *number*
+        Compile *frills*: External border of *number* pixels. Also, -bw and
+        -borderwidth. See resource entry for limits; resource
+        externalBorder.
+
+    -bl Compile *frills*: Set MWM hints to request a borderless window, i.e.
+        if honoured by the WM, the rxvt-unicode window will not have window
+        decorations; resource borderLess.
+
+    -lsp *number*
+        Compile *frills*: Lines (pixel height) to insert between each row of
+        the display. Useful to work around font rendering problems; resource
+        linespace.
+
+    -tn *termname*
+        This option specifies the name of the terminal type to be set in the
+        TERM environment variable. This terminal type must exist in the
+        *termcap(5)* database and should have *li#* and *co#* entries;
+        resource termName.
+
+    -e *command [arguments]*
+        Run the command with its command-line arguments in the rxvt window;
+        also sets the window title and icon name to be the basename of the
+        program being executed if neither *-title* (*-T*) nor *-n* are given
+        on the command line. If this option is used, it must be the last on
+        the command-line. If there is no -e option then the default is to
+        run the program specified by the SHELL environment variable or,
+        failing that, *sh(1)*.
+
+    -title *text*
+        Window title (-T still respected); the default title is the basename
+        of the program specified after the -e option, if any, otherwise the
+        application name; resource title.
+
+    -n *text*
+        Icon name; the default name is the basename of the program specified
+        after the -e option, if any, otherwise the application name;
+        resource iconName.
+
+    -C  Capture system console messages.
+
+    -pt *style*
+        Compile *XIM*: input style for input method; OverTheSpot,
+        OffTheSpot, Root; resource preeditType.
+
+    -im *text*
+        Compile *XIM*: input method name. resource inputMethod.
+
+    -imlocale *string*
+        The locale to use for opening the IM. You can use an LC_CTYPE of
+        e.g. de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP for the
+        input extension to be able to input japanese characters while
+        staying in another locale.
+
+    -insecure
+        Enable "insecure" mode, which currently enables most of the escape
+        sequences that echo strings. See the resource insecure for more
+        info.
+
+    -mod *modifier*
+        Override detection of Meta modifier with specified key: alt, meta,
+        hyper, super, mod1, mod2, mod3, mod4, mod5; resource *modifier*.
+
+    -ssc|+ssc
+        Turn on/off secondary screen (default enabled); resource
+        secondaryScreen.
+
+    -ssr|+ssr
+        Turn on/off secondary screen scroll (default enabled); resource
+        secondaryScroll.
+
+    -xrm *resourcestring*
+        No effect on rxvt-unicode. Simply passes through an argument to be
+        made available in the instance's argument list. Appears in
+        *WM_COMMAND* in some window managers.
+
+RESOURCES (available also as long-options)
+    Note: `rxvt --help' gives a list of all resources (long options)
+    compiled into your version.
+
+    There are two different methods that rxvt can use to get the Xresource
+    data: using the X libraries (Xrm*-functions) or internal Xresources
+    reader (~/.Xdefaults). For the first method (ie. rxvt -h lists
+    XGetDefaults), you can set and change the resources using X11 tools like
+    xset. Many distribution do also load settings from the ~/.Xresources
+    file when X starts.
+
+    If compiled with internal Xresources support (i.e. rxvt -h lists
+    .Xdefaults) then rxvt accepts application defaults set in
+    XAPPLOADDIR/URxvt (compile-time defined: usually
+    /usr/lib/X11/app-defaults/URxvt) and resources set in ~/.Xdefaults, or
+    ~/.Xresources if ~/.Xdefaults does not exist. Note that when reading X
+    resources, rxvt recognizes two class names: XTerm and URxvt. The class
+    name Rxvt allows resources common to both rxvt and the original *rxvt*
+    to be easily configured, while the class name URxvt allows resources
+    unique to rxvt, notably colours and key-handling, to be shared between
+    different rxvt configurations. If no resources are specified, suitable
+    defaults will be used. Command-line arguments can be used to override
+    resource settings. The following resources are allowed:
+
+    geometry: *geom*
+        Create the window with the specified X window geometry [default
+        80x24]; option -geometry.
+
+    background: *colour*
+        Use the specified colour as the window's background colour [default
+        White]; option -bg.
+
+    foreground: *colour*
+        Use the specified colour as the window's foreground colour [default
+        Black]; option -fg.
+
+    color*n*: *colour*
+        Use the specified colour for the colour value *n*, where 0-7
+        corresponds to low-intensity (normal) colours and 8-15 corresponds
+        to high-intensity (bold = bright foreground, blink = bright
+        background) colours. The canonical names are as follows: 0=black,
+        1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white, but
+        the actual colour names used are listed in the COLORS AND GRAPHICS
+        section.
+
+        Colours higher than 15 cannot be set using resources (yet), but can
+        be changed using an escape command (see rxvt(7)).
+
+        Colours 16-79 form a standard 4x4x4 colour cube (the same as xterm
+        with 88 colour support). Colours 80-87 are evenly spaces grey steps.
+
+    colorBD: *colour*
+    colorIT: *colour*
+        Use the specified colour to display bold or italic characters when
+        the foreground colour is the default. If font styles are not
+        available (Compile styles) and this option is unset, reverse video
+        is used instead.
+
+    colorUL: *colour*
+        Use the specified colour to display underlined characters when the
+        foreground colour is the default.
+
+    colorRV: *colour*
+        Use the specified colour as the background for reverse video
+        characters.
+
+    underlineColor: *colour*
+        If set, use the specified colour as the colour for the underline
+        itself. If unset, use the foreground colour.
+
+    cursorColor: *colour*
+        Use the specified colour for the cursor. The default is to use the
+        foreground colour; option -cr.
+
+    cursorColor2: *colour*
+        Use the specified colour for the colour of the cursor text. For this
+        to take effect, cursorColor must also be specified. The default is
+        to use the background colour.
+
+    reverseVideo: *boolean*
+        True: simulate reverse video by foreground and background colours;
+        option -rv. False: regular screen colours [default]; option +rv. See
+        note in COLORS AND GRAPHICS section.
+
+    jumpScroll: *boolean*
+        True: specify that jump scrolling should be used. When scrolling
+        quickly, fewer screen updates are performed [default]; option -j.
+        False: specify that smooth scrolling should be used; option +j.
+
+    inheritPixmap: *boolean*
+        True: make the background inherit the parent windows' pixmap, giving
+        artificial transparency. False: do not inherit the parent windows'
+        pixmap.
+
+    fading: *number*
+        Fade the text by the given percentage when focus is lost.
+
+    tintColor: *colour*
+        Tint the transparent background pixmap with the given colour.
+
+    shading: *number*
+        Darken (0 .. 100) or lighten (-1 .. -100) the transparent background
+        image in addition to tinting it.
+
+    scrollColor: *colour*
+        Use the specified colour for the scrollbar [default #B2B2B2].
+
+    troughColor: *colour*
+        Use the specified colour for the scrollbar's trough area [default
+        #969696]. Only relevant for normal (non XTerm/NeXT) scrollbar.
+
+    borderColor: *colour*
+        The colour of the border around the text area and between the
+        scrollbar and the text.
+
+    backgroundPixmap: *file[;geom]*
+        Use the specified XPM file (note the `.xpm' extension is optional)
+        for the background and also optionally specify its scaling with a
+        geometry string WxH+X+Y, in which "W" / "H" specify the
+        horizontal/vertical scale (percent) and "X" / "Y" locate the image
+        centre (percent). A scale of 0 displays the image with tiling. A
+        scale of 1 displays the image without any scaling. A scale of 2 to 9
+        specifies an integer number of images in that direction. No image
+        will be magnified beyond 10 times its original size. The maximum
+        permitted scale is 1000. [default 0x0+50+50]
+
+    menu: *file[;tag]*
+        Read in the specified menu file (note the `.menu' extension is
+        optional) and also optionally specify a starting tag to find. See
+        the reference documentation for details on the syntax for the
+        menuBar.
+
+    path: *path*
+        Specify the colon-delimited search path for finding files (XPM and
+        menus), in addition to the paths specified by the RXVTPATH and PATH
+        environment variables.
+
+    font: *fontlist*
+        Select the fonts to be used. This is a comma separated list of font
+        names that are used in turn when trying to display Unicode
+        characters. The first font defines the cell size for characters;
+        other fonts might be smaller, but not larger. A reasonable default
+        font list is always appended to it. option -fn.
+
+        Each font can either be a standard X11 core font (XLFD) name, with
+        optional prefix "x:" or a Xft font (Compile xft), prefixed with
+        "xft:".
+
+        In addition, each font can be prefixed with additional hints and
+        specifications enclosed in square brackets ("[]"). The only
+        available hint currently is "codeset=codeset-name", and this is only
+        used for Xft fonts.
+
+        For example, this font resource
+
+           URxvt*font: 9x15bold,\
+                       -misc-fixed-bold-r-normal--15-140-75-75-c-90-iso10646-1,\
+                       -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1, \
+                       [codeset=JISX0208]xft:Kochi Gothic:antialias=false, \
+                       xft:Code2000:antialias=false
+
+        specifies five fonts to be used. The first one is "9x15bold"
+        (actually the iso8859-1 version of the second font), which is the
+        base font (because it is named first) and thus defines the character
+        cell grid to be 9 pixels wide and 15 pixels high.
+
+        The second font is just used to add additional unicode characters
+        not in the base font, likewise the third, which is unfortunately
+        non-bold, but the bold version of the font does contain less
+        characters, so this is a useful supplement.
+
+        The third font is an Xft font with aliasing turned off, and the
+        characters are limited to the JIS 0208 codeset (i.e. japanese
+        kanji). The font contains other characters, but we are not
+        interested in them.
+
+        The last font is a useful catch-all font that supplies most of the
+        remaining unicode characters.
+
+    boldFont: *fontlist*
+    italicFont: *fontlist*
+    boldItalicFont: *fontlist*
+        The font list to use for displaying bold, *italic* or *bold italic*
+        characters, respectively.
+
+        If specified and non-empty, then the syntax is the same as for the
+        font-resource, and the given font list will be used as is, which
+        makes it possible to substitute completely different font styles for
+        bold and italic.
+
+        If unset (the default), a suitable font list will be synthesized by
+        "morphing" the normal text font list into the desired shape. If that
+        is not possible, replacement fonts of the desired shape will be
+        tried.
+
+        If set, but empty, then this specific style is disabled and the
+        normal text font will being used for the given style.
+
+    selectstyle: *mode*
+        Set mouse selection style to old which is 2.20, oldword which is
+        xterm style with 2.20 old word selection, or anything else which
+        gives xterm style selection.
+
+    scrollstyle: *mode*
+        Set scrollbar style to rxvt, plain, next or xterm. plain is the
+        author's favourite..
+
+    title: *string*
+        Set window title string, the default title is the command-line
+        specified after the -e option, if any, otherwise the application
+        name; option -title.
+
+    iconName: *string*
+        Set the name used to label the window's icon or displayed in an icon
+        manager window, it also sets the window's title unless it is
+        explicitly set; option -n.
+
+    mapAlert: *boolean*
+        True: de-iconify (map) on receipt of a bell character. False: no
+        de-iconify (map) on receipt of a bell character [default].
+
+    visualBell: *boolean*
+        True: use visual bell on receipt of a bell character; option -vb.
+        False: no visual bell [default]; option +vb.
+
+    loginShell: *boolean*
+        True: start as a login shell by prepending a `-' to argv[0] of the
+        shell; option -ls. False: start as a normal sub-shell [default];
+        option +ls.
+
+    utmpInhibit: *boolean*
+        True: inhibit writing record into the system log file utmp; option
+        -ut. False: write record into the system log file utmp [default];
+        option +ut.
+
+    print-pipe: *string*
+        Specify a command pipe for vt100 printer [default *lpr(1)*]. Use
+        Print to initiate a screen dump to the printer and Ctrl-Print or
+        Shift-Print to include the scrollback as well.
+
+    scrollBar: *boolean*
+        True: enable the scrollbar [default]; option -sb. False: disable the
+        scrollbar; option +sb.
+
+    scrollBar_right: *boolean*
+        True: place the scrollbar on the right of the window; option -sr.
+        False: place the scrollbar on the left of the window; option +sr.
+
+    scrollBar_floating: *boolean*
+        True: display an rxvt scrollbar without a trough; option -st. False:
+        display an rxvt scrollbar with a trough; option +st.
+
+    scrollBar_align: *mode*
+        Align the top, bottom or centre [default] of the scrollbar thumb
+        with the pointer on middle button press/drag.
+
+    scrollTtyOutput: *boolean*
+        True: scroll to bottom when tty receives output; option -si. False:
+        do not scroll to bottom when tty receives output; option +si.
+
+    scrollWithBuffer: *boolean*
+        True: scroll with scrollback buffer when tty receives new lines (and
+        scrollTtyOutput is False); option +sw. False: do not scroll with
+        scrollback buffer when tty recieves new lines; option -sw.
+
+    scrollTtyKeypress: *boolean*
+        True: scroll to bottom when a non-special key is pressed. Special
+        keys are those which are intercepted by rxvt-unicode for special
+        handling and are not passed onto the shell; option -sk. False: do
+        not scroll to bottom when a non-special key is pressed; option +sk.
+
+    saveLines: *number*
+        Save *number* lines in the scrollback buffer [default 64]. This
+        resource is limited on most machines to 65535; option -sl.
+
+    internalBorder: *number*
+        Internal border of *number* pixels. This resource is limited to 100;
+        option -b.
+
+    externalBorder: *number*
+        External border of *number* pixels. This resource is limited to 100;
+        option -w, -bw, -borderwidth.
+
+    borderLess: *boolean*
+        Set MWM hints to request a borderless window, i.e. if honoured by
+        the WM, the rxvt-unicode window will not have window decorations;
+        option -bl.
+
+    termName: *termname*
+        Specifies the terminal type name to be set in the TERM environment
+        variable; option -tn.
+
+    linespace: *number*
+        Specifies number of lines (pixel height) to insert between each row
+        of the display [default 0]; option -lsp.
+
+    meta8: *boolean*
+        True: handle Meta (Alt) + keypress to set the 8th bit. False: handle
+        Meta (Alt) + keypress as an escape prefix [default].
+
+    mouseWheelScrollPage: *boolean*
+        True: the mouse wheel scrolls a page full. False: the mouse wheel
+        scrolls five lines [default].
+
+    pastableTabs: *boolean*
+        True: store tabs as wide characters. False: interpret tabs as cursor
+        movement only; option "-ptab".
+
+    cursorBlink: *boolean*
+        True: blink the cursor. False: do not blink the cursor [default];
+        option -bc.
+
+    pointerBlank: *boolean*
+        True: blank the pointer when a key is pressed or after a set number
+        of seconds of inactivity. False: the pointer is always visible
+        [default].
+
+    pointerColor: *colour*
+        Mouse pointer foreground colour.
+
+    pointerColor2: *colour*
+        Mouse pointer background colour.
+
+    pointerBlankDelay: *number*
+        Specifies number of seconds before blanking the pointer [default 2].
+
+    backspacekey: *string*
+        The string to send when the backspace key is pressed. If set to DEC
+        or unset it will send Delete (code 127) or, if shifted, Backspace
+        (code 8) - which can be reversed with the appropriate DEC private
+        mode escape sequence.
+
+    deletekey: *string*
+        The string to send when the delete key (not the keypad delete key)
+        is pressed. If unset it will send the sequence traditionally
+        associated with the Execute key.
+
+    cutchars: *string*
+        The characters used as delimiters for double-click word selection.
+        The built-in default:
+
+        BACKSLASH `"'&()*,;<=>?@[]{|}
+
+    preeditType: *style*
+        OverTheSpot, OffTheSpot, Root; option -pt.
+
+    inputMethod: *name*
+        *name* of inputMethod to use; option -im.
+
+    imLocale: *name*
+        The locale to use for opening the IM. You can use an LC_CTYPE of
+        e.g. de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP for the
+        input extension to be able to input japanese characters while
+        staying in another locale. option -imlocale.
+
+    insecure: *boolean*
+        Enables "insecure" mode. Rxvt-unicode offers some escape sequences
+        that echo arbitrary strings like the icon name or the locale. This
+        could be abused if somebody gets 8-bit-clean access to your display,
+        whether throuh a mail client displaying mail bodies unfiltered or
+        though write(1). Therefore, these sequences are disabled by default.
+        (Note that other terminals, including xterm, have these sequences
+        enabled by default). You can enable them by setting this boolean
+        resource or specifying -insecure as an option. At the moment, this
+        enabled display-answer, locale, findfont, icon label and window
+        title requests as well as dynamic menubar dispatch.
+
+    modifier: *modifier*
+        Set the key to be interpreted as the Meta key to: alt, meta, hyper,
+        super, mod1, mod2, mod3, mod4, mod5; option -mod.
+
+    answerbackString: *string*
+        Specify the reply rxvt-unicode sends to the shell when an ENQ
+        (control-E) character is passed through. It may contain escape
+        values as described in the entry on keysym following.
+
+    secondaryScreen: *bool*
+        Turn on/off secondary screen (default enabled).
+
+    secondaryScroll: *bool*
+        Turn on/off secondary screen scroll (default enabled). If the this
+        option is enabled, scrolls on the secondary screen will change the
+        scrollback buffer and switching to/from the secondary screen will
+        instead scroll the screen up.
+
+    keysym.*sym*: *string*
+        Associate *string* with keysym *sym* (0xFF00 - 0xFFFF). It may
+        contain escape values (\a: bell, \b: backspace, \e, \E: escape, \n:
+        newline, \r: return, \t: tab, \000: octal number) or control
+        characters (^?: delete, ^@: null, ^A ...) and may enclosed with
+        double quotes so that it can start or end with whitespace. The
+        intervening resource name keysym. cannot be omitted. This resource
+        is only available when compiled with KEYSYM_RESOURCE.
+
+THE SCROLLBAR
+    Lines of text that scroll off the top of the rxvt window (resource:
+    saveLines) and can be scrolled back using the scrollbar or by
+    keystrokes. The normal rxvt scrollbar has arrows and its behaviour is
+    fairly intuitive. The xterm-scrollbar is without arrows and its
+    behaviour mimics that of *xterm*
+
+    Scroll down with Button1 (xterm-scrollbar) or Shift-Next. Scroll up with
+    Button3 (xterm-scrollbar) or Shift-Prior. Continuous scroll with
+    Button2.
+
+MOUSE REPORTING
+    To temporarily override mouse reporting, for either the scrollbar or the
+    normal text selection/insertion, hold either the Shift or the Meta (Alt)
+    key while performing the desired mouse action.
+
+    If mouse reporting mode is active, the normal scrollbar actions are
+    disabled -- on the assumption that we are using a fullscreen
+    application. Instead, pressing Button1 and Button3 sends ESC[6~ (Next)
+    and ESC[5~ (Prior), respectively. Similarly, clicking on the up and down
+    arrows sends ESC[A (Up) and ESC[B (Down), respectively.
+
+TEXT SELECTION AND INSERTION
+    The behaviour of text selection and insertion mechanism is similar to
+    *xterm*(1).
+
+    Selection:
+        Left click at the beginning of the region, drag to the end of the
+        region and release; Right click to extend the marked region; Left
+        double-click to select a word; Left triple-click to select the
+        entire line.
+
+        Starting a selection while pressing the Meta key (or Meta+Ctrl keys)
+        (Compile: frills) will create a rectangular selection instead of a
+        normal one.
+
+    Insertion:
+        Pressing and releasing the Middle mouse button (or Shift-Insert) in
+        an rxvt window causes the current text selection to be inserted as
+        if it had been typed on the keyboard.
+
+CHANGING FONTS
+    Changing fonts (or font sizes, respectively) via the keypad is not yet
+    supported in rxvt-unicode. Bug me if you need this.
+
+    You can, however, switch fonts at runtime using escape sequences (and
+    therefore using the menubar), e.g.:
+
+       printf '\e]701;%s\007' "9x15bold,xft:Kochi Gothic"
+
+    rxvt-unicode will automatically re-apply these fonts to the output so
+    far.
+
+ISO 14755 SUPPORT
+    ISO 14755 is a standard for entering and viewing unicode characters and
+    character codes using the keyboard. It consists of 4 parts. The first
+    part is available rxvt-unicode has been compiled with "--enable-frills",
+    the rest is available when rxvt-unicode was compiled with
+    "--enable-iso14755".
+
+    5.1: Basic method
+        This allows you to enter unicode characters using their hexcode.
+
+        Start by pressing and holding both "Control" and "Shift", then enter
+        hex-digits (between one and six). Releasing "Control" and "Shift"
+        will commit the character as if it were typed directly. While
+        holding down "Control" and "Shift" you can also enter multiple
+        characters by pressing "Space", which will commit the current
+        character and lets you start a new one.
+
+        As an example of use, imagine a business card with a japanese e-mail
+        address, which you cannot type. Fortunately, the card has the e-mail
+        address printed as hexcodes, e.g. "671d 65e5". You can enter this
+        easily by pressing "Control" and "Shift", followed by
+        "6-7-1-D-SPACE-6-5-E-5", followed by releasing the modifier keys.
+
+    5.2: Keyboard symbols entry method
+        This mode lets you input characters representing the keycap symbols
+        of your keyboard, if representable in the current locale encoding.
+
+        Start by pressing "Control" and "Shift" together, then releasing
+        them. The next special key (cursor keys, home etc.) you enter will
+        not invoke it's usual function but instead will insert the
+        corresponding keycap symbol. The symbol will only be entered when
+        the key has been released, otherwise pressing e.g. "Shift" would
+        enter the symbol for "ISO Level 2 Switch", although your intention
+        might have been to enter a reverse tab (Shift-Tab).
+
+    5.3: Screen-selection entry method
+        While this is implemented already (it's basically the selection
+        mechanism), it could be extended by displaying a unicode character
+        map.
+
+    5.4: Feedback method for identifying displayed characters for later
+    input
+        This method lets you display the unicode character code associated
+        with characters already displayed.
+
+        You enter this mode by holding down "Control" and "Shift" together,
+        then pressing and holding the left mouse button and moving around.
+        The unicode hex code(s) (it might be a combining character) of the
+        character under the pointer is displayed until you release "Control"
+        and "Shift".
+
+        In addition to the hex codes it will display the font used to draw
+        this character - due to implementation reasons, characters combined
+        with combining characters, line drawing characters and unknown
+        characters will always be drawn using the built-in support font.
+
+    With respect to conformance, rxvt-unicode is supposed to be compliant to
+    both scenario A and B of ISO 14755, including part 5.2.
+
+LOGIN STAMP
+    rxvt tries to write an entry into the *utmp*(5) file so that it can be
+    seen via the *who(1)* command, and can accept messages. To allow this
+    feature, rxvt must be installed setuid root on some systems.
+
+COLORS AND GRAPHICS
+    In addition to the default foreground and background colours, rxvt can
+    display up to 16 colours (8 ANSI colours plus high-intensity bold/blink
+    versions of the same). Here is a list of the colours with their rgb.txt
+    names.
+
+       color0          (black)         = Black         
+       color1          (red)           = Red3          
+       color2          (green)         = Green3        
+       color3          (yellow)        = Yellow3       
+       color4          (blue)          = Blue3         
+       color5          (magenta)       = Magenta3      
+       color6          (cyan)          = Cyan3         
+       color7          (white)         = AntiqueWhite  
+       color8          (bright black)  = Grey25        
+       color9          (bright red)    = Red           
+       color10         (bright green)  = Green         
+       color11         (bright yellow) = Yellow        
+       color12         (bright blue)   = Blue          
+       color13         (bright magenta) = Magenta       
+       color14         (bright cyan)   = Cyan          
+       color15         (bright white)  = White         
+       foreground                      = Black         
+       background                      = White         
+
+    It is also possible to specify the colour values of foreground,
+    background, cursorColor, cursorColor2, colorBD, colorUL as a number
+    0-15, as a convenient shorthand to reference the colour name of
+    color0-color15.
+
+    Note that -rv ("reverseVideo: True") simulates reverse video by always
+    swapping the foreground/background colours. This is in contrast to
+    *xterm*(1) where the colours are only swapped if they have not otherwise
+    been specified. For example,
+
+    rxvt -fg Black -bg White -rv
+        would yield White on Black, while on *xterm*(1) it would yield Black
+        on White.
+
+ENVIRONMENT
+    rxvt sets the environment variables TERM, COLORTERM and COLORFGBG. The
+    environment variable WINDOWID is set to the X window id number of the
+    rxvt window and it also uses and sets the environment variable DISPLAY
+    to specify which display terminal to use. rxvt uses the environment
+    variables RXVTPATH and PATH to find XPM files.
+
+FILES
+    /etc/utmp
+        System file for login records.
+
+    /usr/lib/X11/rgb.txt
+        Color names.
+
+SEE ALSO
+    rxvt(7), xterm(1), sh(1), resize(1), X(1), pty(4), tty(4), utmp(5)
+
+BUGS
+    Check the BUGS file for an up-to-date list.
+
+    Cursor change support is not yet implemented.
+
+    Click-and-drag doesn't work with X11 mouse report overriding.
+
+CURRENT PROJECT COORDINATOR
+    Project Coordinator
+        Marc A. Lehmann rxvt@schmorp.de
+
+    Web page maintainter
+        Marc A. Lehmann rxvt@schmorp.de
+
+        <http://software.schmorp.de/>
+
+AUTHORS
+    John Bovey
+        University of Kent, 1992, wrote the original Xvt.
+
+    Rob Nation <nation@rocket.sanders.lockheed.com>
+        very heavily modified Xvt and came up with Rxvt
+
+    Angelo Haritsis <ah@doc.ic.ac.uk>
+        wrote the Greek Keyboard Input (no longer in code)
+
+    mj olesen <olesen@me.QueensU.CA>
+        Wrote the menu system.
+
+        Project Coordinator (changes.txt 2.11 to 2.21)
+
+    Oezguer Kesim <kesim@math.fu-berlin.de>
+        Project Coordinator (changes.txt 2.21a to 2.4.5)
+
+    Geoff Wing <gcw@pobox.com>
+        Rewrote screen display and text selection routines. Project
+        Coordinator (changes.txt 2.4.6 - rxvt-unicode)
+
+    Marc Alexander Lehmann <rxvt@schmorp.de>
+        Forked rxvt-unicode, rewrote most of the display code and internal
+        character handling to store text in unicode, improve xterm
+        compatibility and apply numerous other bugfixes and extensions.
+
+        Project Coordinator (Changes 1.0 -)
+

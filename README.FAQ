@@ -1,0 +1,605 @@
+FREQUENTLY ASKED QUESTIONS
+    How do I know which rxvt-unicode version I'm using?
+        The version number is displayed with the usage (-h). Also the escape
+        sequence "ESC[8n" sets the window title to the version number.
+
+    When I log-in to another system it tells me about missing terminfo data?
+        The terminal description used by rxvt-unicode is not as widely
+        available as that for xterm, or even rxvt (for which the same
+        problem often arises).
+
+        The correct solution for this problem is to install the terminfo,
+        this can be done like this (with ncurses' infocmp):
+
+           REMOTE=remotesystem.domain
+           infocmp rxvt-unicode | ssh $REMOTE "cat >/tmp/ti && tic /tmp/ti"
+
+        ... or by installing rxvt-unicode normally on the remote system,
+
+        If you cannot or do not want to do this, then you can simply set
+        "TERM=rxvt" or even "TERM=xterm", and live with the small number of
+        problems arising, which includes wrong keymapping, less and
+        different colours and some refresh errors in fullscreen
+        applications. It's a nice quick-and-dirty workaround for rare cases,
+        though.
+
+        If you always want to do this you can either recompile rxvt-unicode
+        with the desired TERM value or use a resource to set it:
+
+           URxvt.termName: rxvt
+
+        If you don't plan to use rxvt (quite common...) you could also
+        replace the rxvt terminfo file with the rxvt-unicode one.
+
+    I need a termcap file entry.
+        You could use rxvt's termcap entry with resonable results in many
+        cases. You can also create a termcap entry by using terminfo's
+        infocmp program like this:
+
+           infocmp -C rxvt-unicode
+
+        OR you could this termcap entry:
+
+           rxvt-unicode|rxvt-unicode terminal (X Window System):\
+                   :am:bw:eo:km:mi:ms:xn:xo:\
+                   :co#80:it#8:li#24:\
+                   :AL=\E[%dL:DC=\E[%dP:DL=\E[%dM:DO=\E[%dB:IC=\E[%d@:\
+                   :K1=\EOw:K2=\EOu:K3=\EOy:K4=\EOq:K5=\EOs:LE=\E[%dD:\
+                   :RI=\E[%dC:SF=\E[%dS:SR=\E[%dT:UP=\E[%dA:ae=^O:al=\E[L:\
+                   :as=^N:bl=^G:cd=\E[J:ce=\E[K:cl=\E[H\E[2J:cm=\E[%i%d;%dH:\
+                   :cr=^M:cs=\E[%i%d;%dr:ct=\E[3g:dc=\E[P:dl=\E[M:do=^J:\
+                   :ec=\E[%dX:ei=\E[4l:ho=\E[H:i1=\E[?47l\E=\E[?1l:ic=\E[@:\
+                   :im=\E[4h:is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;3;4;6l\E[4l:\
+                   :k0=\E[21~:k1=\E[11~:k2=\E[12~:k3=\E[13~:k4=\E[14~:\
+                   :k5=\E[15~:k6=\E[17~:k7=\E[18~:k8=\E[19~:k9=\E[20~:\
+                   :kD=\E[3~:kI=\E[2~:kN=\E[6~:kP=\E[5~:kb=\177:kd=\EOB:\
+                   :ke=\E[?1l\E>:kh=\E[7~:kl=\EOD:kr=\EOC:ks=\E[?1h\E=:\
+                   :ku=\EOA:le=^H:mb=\E[5m:md=\E[1m:me=\E[m\017:mr=\E[7m:\
+                   :nd=\E[C:rc=\E8:sc=\E7:se=\E[27m:sf=^J:so=\E[7m:sr=\EM:\
+                   :st=\EH:ta=^I:te=\E[r\E[?1049l:ti=\E[?1049h:ue=\E[24m:\
+                   :up=\E[A:us=\E[4m:vb=\E[?5h\E[?5l:ve=\E[?25h:vi=\E[?25l:\
+                   :vs=\E[?25h:
+
+    Why does "ls" no longer have coloured output?
+        The "ls" in the GNU coreutils unfortunately doesn't use terminfo to
+        decide wether a terminal has colour, but uses it's own configuration
+        file. Needless to say, "rxvt-unicode" is not in it's default file
+        (among with most other terminals supporting colour). Either add:
+
+           TERM rxvt-unicode
+
+        to "/etc/DIR_COLORS" or simply add:
+
+           alias ls='ls --color=auto'
+
+        to your ".profile" or ".bashrc".
+
+    Why doesn't vim/emacs etc. use the 88 colour mode?
+    Why doesn't vim/emacs etc. make use of italic?
+    Why are the secondary screen-related options not working properly?
+        Make sure you are using "TERM=rxvt-unicode". Some pre-packaged
+        distributions (most notably Debian GNU/Linux) break rxvt-unicode by
+        setting "TERM" to "rxvt", which doesn't have these extra features.
+        Unfortunately, some of these (most notably, again, Debian GNU/Linux)
+        furthermore fail to even install the "rxvt-unicode" terminfo file,
+        so you will need to install it on your own (See the question When I
+        log-in to another system it tells me about missing terminfo data? on
+        how to do this).
+
+    Rxvt-unicode does not seem to understand the selected encoding?
+    Unicode does not seem to work?
+        If you encounter strange problems like typing an accented character
+        but getting two unrelated other characters or similar, or if program
+        output is subtly garbled, then you should check your locale
+        settings.
+
+        Rxvt-unicode must be started with the same "LC_CTYPE" setting as the
+        programs. Often rxvt-unicode is started in the "C" locale, while the
+        login script running within the rxvt-unicode window changes the
+        locale to sth. else, e.h. "en_GB.UTF-8". Needless to say, this is
+        not going to work.
+
+        The best thing is to fix your startup environment, as you will
+        likely run into other problems. If nothing works you can try this in
+        your .profile.
+
+          printf '\e]701;%s\007' "$LC_CTYPE"
+
+        If this doesn't work, then maybe you use a "LC_CTYPE" specification
+        not supported on your systems. Some systems have a "locale" command
+        which displays this. If it displays sth. like:
+
+          locale: Cannot set LC_CTYPE to default locale: ...
+
+        Then the locale you specified is not supported on your system.
+
+        If nothing works and you are sure that everything is set correctly
+        then you will need to remember a little known fact: Some programs
+        just don't support locales :(
+
+    Why do some characters look so much different than others?
+    How does rxvt-unicode choose fonts?
+        Most fonts do not contain the full range of Unicode, which is fine.
+        Chances are that the font you (or the admin/package maintainer of
+        your system/os) have specified does not cover all the characters you
+        want to display.
+
+        rxvt-unicode makes a best-effort try at finding a replacement font.
+        Often the result is fine, but sometimes the chosen font looks bad.
+        Many fonts have totally strange characters that don't resemble the
+        correct glyph at all, and rxvt-unicode lacks the artificial
+        intelligence to detect that a specific glyph is wrong: it has to
+        believe the font that the characters it contains indeed look
+        correct.
+
+        In that case, select a font of your taste and add it to the font
+        list, e.g.:
+
+           rxvt -fn basefont,font2,font3...
+
+        When rxvt-unicode sees a character, it will first look at the base
+        font. If the base font does not contain the character, it will go to
+        the next font, and so on. Specifying your own fonts will also speed
+        up this search and use less resources within rxvt-unicode and the
+        X-server.
+
+        The only limitation is that all the fonts must not be larger than
+        the base font, as the base font defines the principal cell size,
+        which must be the same due to the way terminals work.
+
+    Why do some chinese characters look so different than others?
+        This is because there is a difference between script and language --
+        rxvt-unicode does not know which language the text that is output
+        is, as it only knows the unicode character codes. If rxvt-unicode
+        first sees a japanese character, it might choose a japanese font for
+        it. Subsequent japanese characters will take that font. Now, many
+        chinese characters aren't represented in japanese fonts, so when the
+        first non-japanese character comes up, rxvt-unicode will look for a
+        chinese font -- unfortunately at this point, it will still use the
+        japanese font for japanese characters that are also chinese.
+
+        The workaround is easy: just tag a chinese font at the end of your
+        font list (see the previous question). The key is to view the font
+        list as a preference list: If you expect more japanese, list a
+        japanese font first. If you expect more chinese, put a chinese font
+        first.
+
+        In the future it might be possible to switch preferences at runtime
+        (the internal data structure has no problem with using different
+        fonts for the same character at the same time, but no interface for
+        this has been designed yet).
+
+    Why does rxvt-unicode sometimes leave pixel droppings?
+        Most fonts were not designed for terminal use, which means that
+        character size varies a lot. A font that is otherwise fine for
+        terminal use might contain some characters that are simply too wide.
+        Rxvt-unicode will avoid these characters. For characters that are
+        just "a bit" too wide a special "careful" rendering mode is used
+        that redraws adjacent characters.
+
+        All of this requires that fonts do not lie about character sizes,
+        however: Xft fonts often draw glyphs larger than their acclaimed
+        bounding box, and rxvt-unicode has no way of detecting this (the
+        correct way is to ask for the character bounding box, which
+        unfortunately is wrong in these cases).
+
+        It's not clear (to me at least), wether this is a bug in Xft,
+        freetype, or the respective font. If you encounter this problem you
+        might try using the "-lsp" option to give the font more height. If
+        that doesn't work, you might be forced to use a different font.
+
+        All of this is not a problem when using X11 core fonts, as their
+        bounding box data is correct.
+
+    My Compose (Multi_key) key is no longer working.
+        The most common causes for this are that either your locale is not
+        set correctly, or you specified a preeditStyle that is not supported
+        by your input method. For example, if you specified OverTheSpot and
+        your input method (e.g. the default input method handling Compose
+        keys) does not support this (for instance because it is not visual),
+        then rxvt-unicode will continue without an input method.
+
+        In this case either do not specify a preeditStyle or specify more
+        than one pre-edit style, such as OverTheSpot,Root,None.
+
+    I cannot type "Ctrl-Shift-2" to get an ASCII NUL character due to ISO
+    14755
+        Either try "Ctrl-2" alone (it often is mapped to ASCII NUL even on
+        international keyboards) or simply use ISO 14755 support to your
+        advantage, typing <Ctrl-Shift-0> to get a ASCII NUL. This works for
+        other codes, too, such as "Ctrl-Shift-1-d" to type the default
+        telnet escape character and so on.
+
+    How can I keep rxvt-unicode from using reverse video so much?
+        First of all, make sure you are running with the right terminfo
+        ("urxvt"), which will get rid of most of these effects. Then make
+        sure you have specified colours for italic and bold, as otherwise
+        rxvt-unicode might use reverse video to simulate the effect:
+
+           URxvt*colorBD:  white
+           URxvt*colorIT:  green
+
+    Some programs assume totally weird colours (red instead of blue), how
+    can I fix that?
+        For some unexplainable reason, some programs (i.e. irssi) assume a
+        very weird colour palette when confronted with a terminal with more
+        than the standard 8 colours (rxvt-unicode supports 88). The right
+        fix is, of course, to fix these programs not to assume non-ISO
+        colours without very good reasons.
+
+        In the meantime, you can either edit your "urxvt" terminfo
+        definition to only claim 8 colour support or use "TERM=rxvt", which
+        will fix colours but keep you from using other rxvt-unicode
+        features.
+
+    I am on FreeBSD and rxvt-unicode does not seem to work at all.
+        Rxvt-unicode requires the symbol "__STDC_ISO_10646__" to be defined
+        in your compile environment, or an implementation that implements
+        it, wether it defines the symbol or not. "__STDC_ISO_10646__"
+        requires that wchar_t is represented as unicode.
+
+        As you might have guessed, FreeBSD does neither define this symobl
+        nor does it support it. Instead, it uses it's own internal
+        representation of wchar_t. This is, of course, completely legal.
+
+        However, "__STDC_ISO_10646__" is the only sane way to support
+        multi-language apps in an OS, as using a locale-dependent (and
+        non-standardized) representation of wchar_t makes it impossible to
+        convert between wchar_t (as used by X11 and your applications) and
+        any other encoding without implementing OS-specific-wrappers for
+        each and every locale. There simply are no APIs to convert wchar_t
+        into anything except the current locale encoding.
+
+        Some applications (such as the formidable mlterm) work around this
+        by carrying their own replacement functions for character set
+        handling with them, and either implementing OS-dependent hacks or
+        doing multiple conversions (which is slow and unreliable in case the
+        OS implements encodings slightly different than the terminal
+        emulator).
+
+        The rxvt-unicode author insists that the right way to fix this is in
+        the system libraries once and for all, instead of forcing every app
+        to carry complete replacements.
+
+    How does rxvt-unicode determine the encoding to use?
+    Is there an option to switch encodings?
+        Unlike some other terminals, rxvt-unicode has no encoding switch,
+        and no specific "utf-8" mode, such as xterm. In fact, it doesn't
+        even know about UTF-8 or any other encodings with respect to
+        terminal I/O.
+
+        The reasons is that there exists a perfectly fine mechanism for
+        selecting the encoding, doing I/O and (most important) communicating
+        this to all applications so everybody agrees on character properties
+        such as width and code number. This mechanism is the *locale*.
+
+        Rxvt-unicode uses the "LC_CTYPE" locale category to select encoding.
+        All programs doing the same (that is, most) will automatically agree
+        in the interpretation of characters.
+
+        Unfortunately, there is no system-independent way to select locales,
+        nor is there a standard on how locale specifiers will look like.
+
+        On most systems, the content of the "LC_CTYPE" environment variable
+        contains an arbitrary string which corresponds to an
+        already-installed locale. Common names for locales are
+        "en_US.UTF-8", "de_DE.ISO-8859-15", "ja_JP.EUC-JP", i.e.
+        "language_country.encoding", but other forms (i.e. "de" or "german")
+        are also common.
+
+        Rxvt-unicode ignores all other locale categories, and except for the
+        encoding, ignores country or language-specific settings, i.e.
+        "de_DE.UTF-8" and "ja_JP.UTF-8" are the same for rxvt-unicode.
+
+        If you want to use a specific encoding you have to make sure you
+        start rxvt-unicode with the correct "LC_CTYPE" category.
+
+    Can I switch locales at runtime?
+        Yes, using an escape sequence. Try sth. like this, which sets
+        rxvt-unicode's idea of "LC_CTYPE".
+
+          printf '\e]701;%s\007' ja_JP.SJIS
+
+        See also the previous question.
+
+        Sometimes this capability is rather handy when you want to work in
+        one locale (e.g. "de_DE.UTF-8") but some programs don't support
+        UTF-8. For example, I use this script to start "xjdic", which first
+        switches to a locale supported by xjdic and back later:
+
+           printf '\e]701;%s\007' ja_JP.SJIS
+           xjdic -js
+           printf '\e]701;%s\007' de_DE.UTF-8
+
+    Can I switch the fonts at runtime?
+        Yes, using an escape sequence. Try sth. like this, which has the
+        same effect as using the "-fn" switch, and takes effect immediately:
+
+           printf '\e]50;%s\007' "9x15bold,xft:Kochi Gothic"
+
+        This is useful if you e.g. work primarily with japanese (and prefer
+        a japanese font), but you have to switch to chinese temporarily,
+        where japanese fonts would only be in your way.
+
+        You can think of this as a kind of manual ISO-2022 switching.
+
+    Why do italic characters look as if clipped?
+        Many fonts have difficulties with italic characters and hinting. For
+        example, the otherwise very nicely hinted font "xft:Bitstream Vera
+        Sans Mono" completely fails in it's italic face. A workaround is to
+        enable freetype autohinting, i.e. like this:
+
+           URxvt*italicFont:        xft:Bitstream Vera Sans Mono:italic:autohint=true
+           URxvt*boldItalicFont:    xft:Bitstream Vera Sans Mono:bold:italic:autohint=true
+
+    My input method wants <some encoding> but I want UTF-8, what can I do?
+        You can specify separate locales for the input method and the rest
+        of the terminal, using the resource "imlocale":
+
+           URxvt*imlocale: ja_JP.EUC-JP
+
+        Now you can start your terminal with "LC_CTYPE=ja_JP.UTF-8" and
+        still use your input method. Please note, however, that you will not
+        be able to input characters outside "EUC-JP" in a normal way then,
+        as your input method limits you.
+
+    Rxvt-unicode uses gobs of memory, how can I reduce that?
+        Rxvt-unicode tries to obey the rule of not charging you for sth. you
+        don't use. One thing you should try is to configure out all settings
+        that you don't need, for example, Xft support is a resource hog by
+        design, when used. Compiling it out ensures that no Xft font will be
+        loaded accidentally when rxvt-unicode tries to find a font for your
+        characters.
+
+        Also, many people (me included) like large windows and even larger
+        scrollback buffers: Without "--enable-unicode3", rxvt-unicode will
+        use 6 bytes per screen cell. For a 160x?? window this amounts to
+        almost a kilobyte per line. A scrollback buffer of 10000 lines will
+        then (if full) use 10 Megabytes of memory. With "--enable-unicode3"
+        it gets worse, as rxvt-unicode then uses 8 bytes per screen cell.
+
+    Can I speed up Xft rendering somehow?
+        Yes, the most obvious way to speed it up is to avoid Xft entirely,
+        as it is simply slow. If you still want Xft fonts you might try to
+        disable antialiasing (by appending ":antialiasing=false"), which
+        saves lots of memory and also speeds up rendering considerably.
+
+    Rxvt-unicode doesn't seem to anti-alias its fonts, what is wrong?
+        Rxvt-unicode will use whatever you specify as a font. If it needs to
+        fall back to it's default font search list it will prefer X11 core
+        fonts, because they are small and fast, and then use Xft fonts. It
+        has antialiasing disabled for most of them, because the author
+        thinks they look best that way.
+
+        If you want antialiasing, you have to specify the fonts manually.
+
+    Mouse cut/paste suddenly no longer works.
+        Make sure that mouse reporting is actually turned off since killing
+        some editors prematurely may leave the mouse in mouse report mode.
+        I've heard that tcsh may use mouse reporting unless it otherwise
+        specified. A quick check is to see if cut/paste works when the Alt
+        or Shift keys are depressed. See rxvt(7)
+
+    What's with this bold/blink stuff?
+        If no bold colour is set via "colorBD:", bold will invert text using
+        the standard foreground colour.
+
+        For the standard background colour, blinking will actually make the
+        text blink when compiled with "--enable-blinking". with standard
+        colours. Without "--enable-blinking", the blink attribute will be
+        ignored.
+
+        On ANSI colours, bold/blink attributes are used to set
+        high-intensity foreground/background colors.
+
+        color0-7 are the low-intensity colors.
+
+        color8-15 are the corresponding high-intensity colors.
+
+    I don't like the screen colors. How do I change them?
+        You can change the screen colors at run-time using ~/.Xdefaults
+        resources (or as long-options).
+
+        Here are values that are supposed to resemble a VGA screen,
+        including the murky brown that passes for low-intensity yellow:
+
+           URxvt*color0:   #000000
+           URxvt*color1:   #A80000
+           URxvt*color2:   #00A800
+           URxvt*color3:   #A8A800
+           URxvt*color4:   #0000A8
+           URxvt*color5:   #A800A8
+           URxvt*color6:   #00A8A8
+           URxvt*color7:   #A8A8A8
+
+           URxvt*color8:   #000054
+           URxvt*color9:   #FF0054
+           URxvt*color10:  #00FF54
+           URxvt*color11:  #FFFF54
+           URxvt*color12:  #0000FF
+           URxvt*color13:  #FF00FF
+           URxvt*color14:  #00FFFF
+           URxvt*color15:  #FFFFFF
+
+        And here is a more complete set of non-standard colors described as
+        "pretty girly":
+
+           URxvt.cursorColor:  #dc74d1
+           URxvt.pointerColor: #dc74d1
+           URxvt.background:   #0e0e0e
+           URxvt.foreground:   #4ad5e1
+           URxvt.color0:       #000000
+           URxvt.color8:       #8b8f93
+           URxvt.color1:       #dc74d1
+           URxvt.color9:       #dc74d1
+           URxvt.color2:       #0eb8c7
+           URxvt.color10:      #0eb8c7
+           URxvt.color3:       #dfe37e
+           URxvt.color11:      #dfe37e
+           URxvt.color5:       #9e88f0
+           URxvt.color13:      #9e88f0
+           URxvt.color6:       #73f7ff
+           URxvt.color14:      #73f7ff
+           URxvt.color7:       #e1dddd
+           URxvt.color15:      #e1dddd
+
+    What's with the strange Backspace/Delete key behaviour?
+        Assuming that the physical Backspace key corresponds to the
+        BackSpace keysym (not likely for Linux ... see the following
+        question) there are two standard values that can be used for
+        Backspace: "^H" and "^?".
+
+        Historically, either value is correct, but rxvt-unicode adopts the
+        debian policy of using "^?" when unsure, because it's the one only
+        only correct choice :).
+
+        Rxvt-unicode tries to inherit the current stty settings and uses the
+        value of `erase' to guess the value for backspace. If rxvt-unicode
+        wasn't started from a terminal (say, from a menu or by remote
+        shell), then the system value of `erase', which corresponds to
+        CERASE in <termios.h>, will be used (which may not be the same as
+        your stty setting).
+
+        For starting a new rxvt-unicode:
+
+           # use Backspace = ^H
+           $ stty erase ^H
+           $ rxvt
+
+           # use Backspace = ^?
+           $ stty erase ^?
+           $ rxvt
+
+        Toggle with "ESC[36h" / "ESC[36l" as documented in rxvt(7).
+
+        For an existing rxvt-unicode:
+
+           # use Backspace = ^H
+           $ stty erase ^H
+           $ echo -n "^[[36h"
+
+           # use Backspace = ^?
+           $ stty erase ^?
+           $ echo -n "^[[36l"
+
+        This helps satisfy some of the Backspace discrepancies that occur,
+        but if you use Backspace = "^H", make sure that the termcap/terminfo
+        value properly reflects that.
+
+        The Delete key is a another casualty of the ill-defined Backspace
+        problem. To avoid confusion between the Backspace and Delete keys,
+        the Delete key has been assigned an escape sequence to match the
+        vt100 for Execute (ESC[3~) and is in the supplied termcap/terminfo.
+
+        Some other Backspace problems:
+
+        some editors use termcap/terminfo, some editors (vim I'm told)
+        expect Backspace = ^H, GNU Emacs (and Emacs-like editors) use ^H for
+        help.
+
+        Perhaps someday this will all be resolved in a consistent manner.
+
+    I don't like the key-bindings. How do I change them?
+        There are some compile-time selections available via configure.
+        Unless you have run "configure" with the "--disable-resources"
+        option you can use the `keysym' resource to alter the keystrings
+        associated with keysym 0xFF00 - 0xFFFF (function, cursor keys, etc).
+
+        Here's an example for a tn3270 session started using `rxvt -name
+        tn3270'
+
+           !#  ----- special uses ------:
+           ! tn3270 login, remap function and arrow keys.
+           tn3270*font:      *clean-bold-*-*--15-*
+
+           ! keysym - used by rxvt only
+           ! Delete - ^D
+           tn3270*keysym.0xFFFF:      \004
+
+           ! Home - ^A
+           tn3270*keysym.0xFF50:      \001
+           ! Left - ^B
+           tn3270*keysym.0xFF51:      \002
+           ! Up - ^P
+           tn3270*keysym.0xFF52:      \020
+           ! Right - ^F
+           tn3270*keysym.0xFF53:      \006
+           ! Down - ^N
+           tn3270*keysym.0xFF54:      \016
+           ! End - ^E
+           tn3270*keysym.0xFF57:      \005
+
+           ! F1 - F12
+           tn3270*keysym.0xFFBE:      \e1
+           tn3270*keysym.0xFFBF:      \e2
+           tn3270*keysym.0xFFC0:      \e3
+           tn3270*keysym.0xFFC1:      \e4
+           tn3270*keysym.0xFFC2:      \e5
+           tn3270*keysym.0xFFC3:      \e6
+           tn3270*keysym.0xFFC4:      \e7
+           tn3270*keysym.0xFFC5:      \e8
+           tn3270*keysym.0xFFC6:      \e9
+           tn3270*keysym.0xFFC7:      \e0
+           tn3270*keysym.0xFFC8:      \e-
+           tn3270*keysym.0xFFC9:      \e=
+
+           ! map Prior/Next to F7/F8
+           tn3270*keysym.0xFF55:      \e7
+           tn3270*keysym.0xFF56:      \e8
+
+    I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How
+    do I make use of them? For example, the Sun Keyboard type 4 has the
+    following mappings that rxvt-unicode doesn't recognize.
+           KP_Insert == Insert
+           F22 == Print
+           F27 == Home
+           F29 == Prior
+           F33 == End
+           F35 == Next
+
+        Rather than have rxvt-unicode try to accommodate all the various
+        possible keyboard mappings, it is better to use `xmodmap' to remap
+        the keys as required for your particular machine.
+
+    How do I distinguish if I'm running rxvt-unicode or a regular xterm? I
+    need this to decide about setting colors etc.
+        rxvt and rxvt-unicode always export the variable "COLORTERM", so you
+        can check and see if that is set. Note that several programs, JED,
+        slrn, Midnight Commander automatically check this variable to decide
+        whether or not to use color.
+
+    How do I set the correct, full IP address for the DISPLAY variable?
+        If you've compiled rxvt-unicode with DISPLAY_IS_IP and have enabled
+        insecure mode then it is possible to use the following shell script
+        snippets to correctly set the display. If your version of
+        rxvt-unicode wasn't also compiled with ESCZ_ANSWER (as assumed in
+        these snippets) then the COLORTERM variable can be used to
+        distinguish rxvt-unicode from a regular xterm.
+
+        Courtesy of Chuck Blake <cblake@BBN.COM> with the following shell
+        script snippets:
+
+           # Bourne/Korn/POSIX family of shells:
+           [ ${TERM:-foo} = foo ] && TERM=xterm # assume an xterm if we don't know
+           if [ ${TERM:-foo} = xterm ]; then
+              stty -icanon -echo min 0 time 15 # see if enhanced rxvt or not
+              echo -n '^[Z'
+              read term_id
+              stty icanon echo
+              if [ ""${term_id} = '^[[?1;2C' -a ${DISPLAY:-foo} = foo ]; then
+                 echo -n '^[[7n'        # query the rxvt we are in for the DISPLAY string
+                 read DISPLAY           # set it in our local shell
+              fi
+           fi
+
+    How do I compile the manual pages for myself?
+        You need to have a recent version of perl installed as
+        /usr/bin/perl, one that comes with pod2man, pod2text and pod2html.
+        Then go to the doc subdirectory and enter "make alldoc".
+
+    My question isn't answered here, can I ask a human?
+        Before sending me mail, you could go to IRC: "irc.freenode.net",
+        channel "#rxvt-unicode" has some rxvt-unicode enthusiasts that might
+        be interested in learning about new and exciting problems (but not
+        FAQs :).
+

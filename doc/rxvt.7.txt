@@ -1,0 +1,1806 @@
+NAME
+    RXVT REFERENCE - FAQ, command sequences and other background information
+
+FREQUENTLY ASKED QUESTIONS
+    How do I know which rxvt-unicode version I'm using?
+        The version number is displayed with the usage (-h). Also the escape
+        sequence "ESC[8n" sets the window title to the version number.
+
+    When I log-in to another system it tells me about missing terminfo data?
+        The terminal description used by rxvt-unicode is not as widely
+        available as that for xterm, or even rxvt (for which the same
+        problem often arises).
+
+        The correct solution for this problem is to install the terminfo,
+        this can be done like this (with ncurses' infocmp):
+
+           REMOTE=remotesystem.domain
+           infocmp rxvt-unicode | ssh $REMOTE "cat >/tmp/ti && tic /tmp/ti"
+
+        ... or by installing rxvt-unicode normally on the remote system,
+
+        If you cannot or do not want to do this, then you can simply set
+        "TERM=rxvt" or even "TERM=xterm", and live with the small number of
+        problems arising, which includes wrong keymapping, less and
+        different colours and some refresh errors in fullscreen
+        applications. It's a nice quick-and-dirty workaround for rare cases,
+        though.
+
+        If you always want to do this you can either recompile rxvt-unicode
+        with the desired TERM value or use a resource to set it:
+
+           URxvt.termName: rxvt
+
+        If you don't plan to use rxvt (quite common...) you could also
+        replace the rxvt terminfo file with the rxvt-unicode one.
+
+    I need a termcap file entry.
+        You could use rxvt's termcap entry with resonable results in many
+        cases. You can also create a termcap entry by using terminfo's
+        infocmp program like this:
+
+           infocmp -C rxvt-unicode
+
+        OR you could this termcap entry:
+
+           rxvt-unicode|rxvt-unicode terminal (X Window System):\
+                   :am:bw:eo:km:mi:ms:xn:xo:\
+                   :co#80:it#8:li#24:\
+                   :AL=\E[%dL:DC=\E[%dP:DL=\E[%dM:DO=\E[%dB:IC=\E[%d@:\
+                   :K1=\EOw:K2=\EOu:K3=\EOy:K4=\EOq:K5=\EOs:LE=\E[%dD:\
+                   :RI=\E[%dC:SF=\E[%dS:SR=\E[%dT:UP=\E[%dA:ae=^O:al=\E[L:\
+                   :as=^N:bl=^G:cd=\E[J:ce=\E[K:cl=\E[H\E[2J:cm=\E[%i%d;%dH:\
+                   :cr=^M:cs=\E[%i%d;%dr:ct=\E[3g:dc=\E[P:dl=\E[M:do=^J:\
+                   :ec=\E[%dX:ei=\E[4l:ho=\E[H:i1=\E[?47l\E=\E[?1l:ic=\E[@:\
+                   :im=\E[4h:is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;3;4;6l\E[4l:\
+                   :k0=\E[21~:k1=\E[11~:k2=\E[12~:k3=\E[13~:k4=\E[14~:\
+                   :k5=\E[15~:k6=\E[17~:k7=\E[18~:k8=\E[19~:k9=\E[20~:\
+                   :kD=\E[3~:kI=\E[2~:kN=\E[6~:kP=\E[5~:kb=\177:kd=\EOB:\
+                   :ke=\E[?1l\E>:kh=\E[7~:kl=\EOD:kr=\EOC:ks=\E[?1h\E=:\
+                   :ku=\EOA:le=^H:mb=\E[5m:md=\E[1m:me=\E[m\017:mr=\E[7m:\
+                   :nd=\E[C:rc=\E8:sc=\E7:se=\E[27m:sf=^J:so=\E[7m:sr=\EM:\
+                   :st=\EH:ta=^I:te=\E[r\E[?1049l:ti=\E[?1049h:ue=\E[24m:\
+                   :up=\E[A:us=\E[4m:vb=\E[?5h\E[?5l:ve=\E[?25h:vi=\E[?25l:\
+                   :vs=\E[?25h:
+
+    Why does "ls" no longer have coloured output?
+        The "ls" in the GNU coreutils unfortunately doesn't use terminfo to
+        decide wether a terminal has colour, but uses it's own configuration
+        file. Needless to say, "rxvt-unicode" is not in it's default file
+        (among with most other terminals supporting colour). Either add:
+
+           TERM rxvt-unicode
+
+        to "/etc/DIR_COLORS" or simply add:
+
+           alias ls='ls --color=auto'
+
+        to your ".profile" or ".bashrc".
+
+    Why doesn't vim/emacs etc. use the 88 colour mode?
+    Why doesn't vim/emacs etc. make use of italic?
+    Why are the secondary screen-related options not working properly?
+        Make sure you are using "TERM=rxvt-unicode". Some pre-packaged
+        distributions (most notably Debian GNU/Linux) break rxvt-unicode by
+        setting "TERM" to "rxvt", which doesn't have these extra features.
+        Unfortunately, some of these (most notably, again, Debian GNU/Linux)
+        furthermore fail to even install the "rxvt-unicode" terminfo file,
+        so you will need to install it on your own (See the question When I
+        log-in to another system it tells me about missing terminfo data? on
+        how to do this).
+
+    Rxvt-unicode does not seem to understand the selected encoding?
+    Unicode does not seem to work?
+        If you encounter strange problems like typing an accented character
+        but getting two unrelated other characters or similar, or if program
+        output is subtly garbled, then you should check your locale
+        settings.
+
+        Rxvt-unicode must be started with the same "LC_CTYPE" setting as the
+        programs. Often rxvt-unicode is started in the "C" locale, while the
+        login script running within the rxvt-unicode window changes the
+        locale to sth. else, e.h. "en_GB.UTF-8". Needless to say, this is
+        not going to work.
+
+        The best thing is to fix your startup environment, as you will
+        likely run into other problems. If nothing works you can try this in
+        your .profile.
+
+          printf '\e]701;%s\007' "$LC_CTYPE"
+
+        If this doesn't work, then maybe you use a "LC_CTYPE" specification
+        not supported on your systems. Some systems have a "locale" command
+        which displays this. If it displays sth. like:
+
+          locale: Cannot set LC_CTYPE to default locale: ...
+
+        Then the locale you specified is not supported on your system.
+
+        If nothing works and you are sure that everything is set correctly
+        then you will need to remember a little known fact: Some programs
+        just don't support locales :(
+
+    Why do some characters look so much different than others?
+    How does rxvt-unicode choose fonts?
+        Most fonts do not contain the full range of Unicode, which is fine.
+        Chances are that the font you (or the admin/package maintainer of
+        your system/os) have specified does not cover all the characters you
+        want to display.
+
+        rxvt-unicode makes a best-effort try at finding a replacement font.
+        Often the result is fine, but sometimes the chosen font looks bad.
+        Many fonts have totally strange characters that don't resemble the
+        correct glyph at all, and rxvt-unicode lacks the artificial
+        intelligence to detect that a specific glyph is wrong: it has to
+        believe the font that the characters it contains indeed look
+        correct.
+
+        In that case, select a font of your taste and add it to the font
+        list, e.g.:
+
+           rxvt -fn basefont,font2,font3...
+
+        When rxvt-unicode sees a character, it will first look at the base
+        font. If the base font does not contain the character, it will go to
+        the next font, and so on. Specifying your own fonts will also speed
+        up this search and use less resources within rxvt-unicode and the
+        X-server.
+
+        The only limitation is that all the fonts must not be larger than
+        the base font, as the base font defines the principal cell size,
+        which must be the same due to the way terminals work.
+
+    Why do some chinese characters look so different than others?
+        This is because there is a difference between script and language --
+        rxvt-unicode does not know which language the text that is output
+        is, as it only knows the unicode character codes. If rxvt-unicode
+        first sees a japanese character, it might choose a japanese font for
+        it. Subsequent japanese characters will take that font. Now, many
+        chinese characters aren't represented in japanese fonts, so when the
+        first non-japanese character comes up, rxvt-unicode will look for a
+        chinese font -- unfortunately at this point, it will still use the
+        japanese font for japanese characters that are also chinese.
+
+        The workaround is easy: just tag a chinese font at the end of your
+        font list (see the previous question). The key is to view the font
+        list as a preference list: If you expect more japanese, list a
+        japanese font first. If you expect more chinese, put a chinese font
+        first.
+
+        In the future it might be possible to switch preferences at runtime
+        (the internal data structure has no problem with using different
+        fonts for the same character at the same time, but no interface for
+        this has been designed yet).
+
+    Why does rxvt-unicode sometimes leave pixel droppings?
+        Most fonts were not designed for terminal use, which means that
+        character size varies a lot. A font that is otherwise fine for
+        terminal use might contain some characters that are simply too wide.
+        Rxvt-unicode will avoid these characters. For characters that are
+        just "a bit" too wide a special "careful" rendering mode is used
+        that redraws adjacent characters.
+
+        All of this requires that fonts do not lie about character sizes,
+        however: Xft fonts often draw glyphs larger than their acclaimed
+        bounding box, and rxvt-unicode has no way of detecting this (the
+        correct way is to ask for the character bounding box, which
+        unfortunately is wrong in these cases).
+
+        It's not clear (to me at least), wether this is a bug in Xft,
+        freetype, or the respective font. If you encounter this problem you
+        might try using the "-lsp" option to give the font more height. If
+        that doesn't work, you might be forced to use a different font.
+
+        All of this is not a problem when using X11 core fonts, as their
+        bounding box data is correct.
+
+    My Compose (Multi_key) key is no longer working.
+        The most common causes for this are that either your locale is not
+        set correctly, or you specified a preeditStyle that is not supported
+        by your input method. For example, if you specified OverTheSpot and
+        your input method (e.g. the default input method handling Compose
+        keys) does not support this (for instance because it is not visual),
+        then rxvt-unicode will continue without an input method.
+
+        In this case either do not specify a preeditStyle or specify more
+        than one pre-edit style, such as OverTheSpot,Root,None.
+
+    I cannot type "Ctrl-Shift-2" to get an ASCII NUL character due to ISO
+    14755
+        Either try "Ctrl-2" alone (it often is mapped to ASCII NUL even on
+        international keyboards) or simply use ISO 14755 support to your
+        advantage, typing <Ctrl-Shift-0> to get a ASCII NUL. This works for
+        other codes, too, such as "Ctrl-Shift-1-d" to type the default
+        telnet escape character and so on.
+
+    How can I keep rxvt-unicode from using reverse video so much?
+        First of all, make sure you are running with the right terminfo
+        ("urxvt"), which will get rid of most of these effects. Then make
+        sure you have specified colours for italic and bold, as otherwise
+        rxvt-unicode might use reverse video to simulate the effect:
+
+           URxvt*colorBD:  white
+           URxvt*colorIT:  green
+
+    Some programs assume totally weird colours (red instead of blue), how
+    can I fix that?
+        For some unexplainable reason, some programs (i.e. irssi) assume a
+        very weird colour palette when confronted with a terminal with more
+        than the standard 8 colours (rxvt-unicode supports 88). The right
+        fix is, of course, to fix these programs not to assume non-ISO
+        colours without very good reasons.
+
+        In the meantime, you can either edit your "urxvt" terminfo
+        definition to only claim 8 colour support or use "TERM=rxvt", which
+        will fix colours but keep you from using other rxvt-unicode
+        features.
+
+    I am on FreeBSD and rxvt-unicode does not seem to work at all.
+        Rxvt-unicode requires the symbol "__STDC_ISO_10646__" to be defined
+        in your compile environment, or an implementation that implements
+        it, wether it defines the symbol or not. "__STDC_ISO_10646__"
+        requires that wchar_t is represented as unicode.
+
+        As you might have guessed, FreeBSD does neither define this symobl
+        nor does it support it. Instead, it uses it's own internal
+        representation of wchar_t. This is, of course, completely legal.
+
+        However, "__STDC_ISO_10646__" is the only sane way to support
+        multi-language apps in an OS, as using a locale-dependent (and
+        non-standardized) representation of wchar_t makes it impossible to
+        convert between wchar_t (as used by X11 and your applications) and
+        any other encoding without implementing OS-specific-wrappers for
+        each and every locale. There simply are no APIs to convert wchar_t
+        into anything except the current locale encoding.
+
+        Some applications (such as the formidable mlterm) work around this
+        by carrying their own replacement functions for character set
+        handling with them, and either implementing OS-dependent hacks or
+        doing multiple conversions (which is slow and unreliable in case the
+        OS implements encodings slightly different than the terminal
+        emulator).
+
+        The rxvt-unicode author insists that the right way to fix this is in
+        the system libraries once and for all, instead of forcing every app
+        to carry complete replacements.
+
+    How does rxvt-unicode determine the encoding to use?
+    Is there an option to switch encodings?
+        Unlike some other terminals, rxvt-unicode has no encoding switch,
+        and no specific "utf-8" mode, such as xterm. In fact, it doesn't
+        even know about UTF-8 or any other encodings with respect to
+        terminal I/O.
+
+        The reasons is that there exists a perfectly fine mechanism for
+        selecting the encoding, doing I/O and (most important) communicating
+        this to all applications so everybody agrees on character properties
+        such as width and code number. This mechanism is the *locale*.
+
+        Rxvt-unicode uses the "LC_CTYPE" locale category to select encoding.
+        All programs doing the same (that is, most) will automatically agree
+        in the interpretation of characters.
+
+        Unfortunately, there is no system-independent way to select locales,
+        nor is there a standard on how locale specifiers will look like.
+
+        On most systems, the content of the "LC_CTYPE" environment variable
+        contains an arbitrary string which corresponds to an
+        already-installed locale. Common names for locales are
+        "en_US.UTF-8", "de_DE.ISO-8859-15", "ja_JP.EUC-JP", i.e.
+        "language_country.encoding", but other forms (i.e. "de" or "german")
+        are also common.
+
+        Rxvt-unicode ignores all other locale categories, and except for the
+        encoding, ignores country or language-specific settings, i.e.
+        "de_DE.UTF-8" and "ja_JP.UTF-8" are the same for rxvt-unicode.
+
+        If you want to use a specific encoding you have to make sure you
+        start rxvt-unicode with the correct "LC_CTYPE" category.
+
+    Can I switch locales at runtime?
+        Yes, using an escape sequence. Try sth. like this, which sets
+        rxvt-unicode's idea of "LC_CTYPE".
+
+          printf '\e]701;%s\007' ja_JP.SJIS
+
+        See also the previous question.
+
+        Sometimes this capability is rather handy when you want to work in
+        one locale (e.g. "de_DE.UTF-8") but some programs don't support
+        UTF-8. For example, I use this script to start "xjdic", which first
+        switches to a locale supported by xjdic and back later:
+
+           printf '\e]701;%s\007' ja_JP.SJIS
+           xjdic -js
+           printf '\e]701;%s\007' de_DE.UTF-8
+
+    Can I switch the fonts at runtime?
+        Yes, using an escape sequence. Try sth. like this, which has the
+        same effect as using the "-fn" switch, and takes effect immediately:
+
+           printf '\e]50;%s\007' "9x15bold,xft:Kochi Gothic"
+
+        This is useful if you e.g. work primarily with japanese (and prefer
+        a japanese font), but you have to switch to chinese temporarily,
+        where japanese fonts would only be in your way.
+
+        You can think of this as a kind of manual ISO-2022 switching.
+
+    Why do italic characters look as if clipped?
+        Many fonts have difficulties with italic characters and hinting. For
+        example, the otherwise very nicely hinted font "xft:Bitstream Vera
+        Sans Mono" completely fails in it's italic face. A workaround is to
+        enable freetype autohinting, i.e. like this:
+
+           URxvt*italicFont:        xft:Bitstream Vera Sans Mono:italic:autohint=true
+           URxvt*boldItalicFont:    xft:Bitstream Vera Sans Mono:bold:italic:autohint=true
+
+    My input method wants <some encoding> but I want UTF-8, what can I do?
+        You can specify separate locales for the input method and the rest
+        of the terminal, using the resource "imlocale":
+
+           URxvt*imlocale: ja_JP.EUC-JP
+
+        Now you can start your terminal with "LC_CTYPE=ja_JP.UTF-8" and
+        still use your input method. Please note, however, that you will not
+        be able to input characters outside "EUC-JP" in a normal way then,
+        as your input method limits you.
+
+    Rxvt-unicode uses gobs of memory, how can I reduce that?
+        Rxvt-unicode tries to obey the rule of not charging you for sth. you
+        don't use. One thing you should try is to configure out all settings
+        that you don't need, for example, Xft support is a resource hog by
+        design, when used. Compiling it out ensures that no Xft font will be
+        loaded accidentally when rxvt-unicode tries to find a font for your
+        characters.
+
+        Also, many people (me included) like large windows and even larger
+        scrollback buffers: Without "--enable-unicode3", rxvt-unicode will
+        use 6 bytes per screen cell. For a 160x?? window this amounts to
+        almost a kilobyte per line. A scrollback buffer of 10000 lines will
+        then (if full) use 10 Megabytes of memory. With "--enable-unicode3"
+        it gets worse, as rxvt-unicode then uses 8 bytes per screen cell.
+
+    Can I speed up Xft rendering somehow?
+        Yes, the most obvious way to speed it up is to avoid Xft entirely,
+        as it is simply slow. If you still want Xft fonts you might try to
+        disable antialiasing (by appending ":antialiasing=false"), which
+        saves lots of memory and also speeds up rendering considerably.
+
+    Rxvt-unicode doesn't seem to anti-alias its fonts, what is wrong?
+        Rxvt-unicode will use whatever you specify as a font. If it needs to
+        fall back to it's default font search list it will prefer X11 core
+        fonts, because they are small and fast, and then use Xft fonts. It
+        has antialiasing disabled for most of them, because the author
+        thinks they look best that way.
+
+        If you want antialiasing, you have to specify the fonts manually.
+
+    Mouse cut/paste suddenly no longer works.
+        Make sure that mouse reporting is actually turned off since killing
+        some editors prematurely may leave the mouse in mouse report mode.
+        I've heard that tcsh may use mouse reporting unless it otherwise
+        specified. A quick check is to see if cut/paste works when the Alt
+        or Shift keys are depressed. See rxvt(7)
+
+    What's with this bold/blink stuff?
+        If no bold colour is set via "colorBD:", bold will invert text using
+        the standard foreground colour.
+
+        For the standard background colour, blinking will actually make the
+        text blink when compiled with "--enable-blinking". with standard
+        colours. Without "--enable-blinking", the blink attribute will be
+        ignored.
+
+        On ANSI colours, bold/blink attributes are used to set
+        high-intensity foreground/background colors.
+
+        color0-7 are the low-intensity colors.
+
+        color8-15 are the corresponding high-intensity colors.
+
+    I don't like the screen colors. How do I change them?
+        You can change the screen colors at run-time using ~/.Xdefaults
+        resources (or as long-options).
+
+        Here are values that are supposed to resemble a VGA screen,
+        including the murky brown that passes for low-intensity yellow:
+
+           URxvt*color0:   #000000
+           URxvt*color1:   #A80000
+           URxvt*color2:   #00A800
+           URxvt*color3:   #A8A800
+           URxvt*color4:   #0000A8
+           URxvt*color5:   #A800A8
+           URxvt*color6:   #00A8A8
+           URxvt*color7:   #A8A8A8
+
+           URxvt*color8:   #000054
+           URxvt*color9:   #FF0054
+           URxvt*color10:  #00FF54
+           URxvt*color11:  #FFFF54
+           URxvt*color12:  #0000FF
+           URxvt*color13:  #FF00FF
+           URxvt*color14:  #00FFFF
+           URxvt*color15:  #FFFFFF
+
+        And here is a more complete set of non-standard colors described as
+        "pretty girly":
+
+           URxvt.cursorColor:  #dc74d1
+           URxvt.pointerColor: #dc74d1
+           URxvt.background:   #0e0e0e
+           URxvt.foreground:   #4ad5e1
+           URxvt.color0:       #000000
+           URxvt.color8:       #8b8f93
+           URxvt.color1:       #dc74d1
+           URxvt.color9:       #dc74d1
+           URxvt.color2:       #0eb8c7
+           URxvt.color10:      #0eb8c7
+           URxvt.color3:       #dfe37e
+           URxvt.color11:      #dfe37e
+           URxvt.color5:       #9e88f0
+           URxvt.color13:      #9e88f0
+           URxvt.color6:       #73f7ff
+           URxvt.color14:      #73f7ff
+           URxvt.color7:       #e1dddd
+           URxvt.color15:      #e1dddd
+
+    What's with the strange Backspace/Delete key behaviour?
+        Assuming that the physical Backspace key corresponds to the
+        BackSpace keysym (not likely for Linux ... see the following
+        question) there are two standard values that can be used for
+        Backspace: "^H" and "^?".
+
+        Historically, either value is correct, but rxvt-unicode adopts the
+        debian policy of using "^?" when unsure, because it's the one only
+        only correct choice :).
+
+        Rxvt-unicode tries to inherit the current stty settings and uses the
+        value of `erase' to guess the value for backspace. If rxvt-unicode
+        wasn't started from a terminal (say, from a menu or by remote
+        shell), then the system value of `erase', which corresponds to
+        CERASE in <termios.h>, will be used (which may not be the same as
+        your stty setting).
+
+        For starting a new rxvt-unicode:
+
+           # use Backspace = ^H
+           $ stty erase ^H
+           $ rxvt
+
+           # use Backspace = ^?
+           $ stty erase ^?
+           $ rxvt
+
+        Toggle with "ESC[36h" / "ESC[36l" as documented in rxvt(7).
+
+        For an existing rxvt-unicode:
+
+           # use Backspace = ^H
+           $ stty erase ^H
+           $ echo -n "^[[36h"
+
+           # use Backspace = ^?
+           $ stty erase ^?
+           $ echo -n "^[[36l"
+
+        This helps satisfy some of the Backspace discrepancies that occur,
+        but if you use Backspace = "^H", make sure that the termcap/terminfo
+        value properly reflects that.
+
+        The Delete key is a another casualty of the ill-defined Backspace
+        problem. To avoid confusion between the Backspace and Delete keys,
+        the Delete key has been assigned an escape sequence to match the
+        vt100 for Execute (ESC[3~) and is in the supplied termcap/terminfo.
+
+        Some other Backspace problems:
+
+        some editors use termcap/terminfo, some editors (vim I'm told)
+        expect Backspace = ^H, GNU Emacs (and Emacs-like editors) use ^H for
+        help.
+
+        Perhaps someday this will all be resolved in a consistent manner.
+
+    I don't like the key-bindings. How do I change them?
+        There are some compile-time selections available via configure.
+        Unless you have run "configure" with the "--disable-resources"
+        option you can use the `keysym' resource to alter the keystrings
+        associated with keysym 0xFF00 - 0xFFFF (function, cursor keys, etc).
+
+        Here's an example for a tn3270 session started using `rxvt -name
+        tn3270'
+
+           !#  ----- special uses ------:
+           ! tn3270 login, remap function and arrow keys.
+           tn3270*font:      *clean-bold-*-*--15-*
+
+           ! keysym - used by rxvt only
+           ! Delete - ^D
+           tn3270*keysym.0xFFFF:      \004
+
+           ! Home - ^A
+           tn3270*keysym.0xFF50:      \001
+           ! Left - ^B
+           tn3270*keysym.0xFF51:      \002
+           ! Up - ^P
+           tn3270*keysym.0xFF52:      \020
+           ! Right - ^F
+           tn3270*keysym.0xFF53:      \006
+           ! Down - ^N
+           tn3270*keysym.0xFF54:      \016
+           ! End - ^E
+           tn3270*keysym.0xFF57:      \005
+
+           ! F1 - F12
+           tn3270*keysym.0xFFBE:      \e1
+           tn3270*keysym.0xFFBF:      \e2
+           tn3270*keysym.0xFFC0:      \e3
+           tn3270*keysym.0xFFC1:      \e4
+           tn3270*keysym.0xFFC2:      \e5
+           tn3270*keysym.0xFFC3:      \e6
+           tn3270*keysym.0xFFC4:      \e7
+           tn3270*keysym.0xFFC5:      \e8
+           tn3270*keysym.0xFFC6:      \e9
+           tn3270*keysym.0xFFC7:      \e0
+           tn3270*keysym.0xFFC8:      \e-
+           tn3270*keysym.0xFFC9:      \e=
+
+           ! map Prior/Next to F7/F8
+           tn3270*keysym.0xFF55:      \e7
+           tn3270*keysym.0xFF56:      \e8
+
+    I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How
+    do I make use of them? For example, the Sun Keyboard type 4 has the
+    following mappings that rxvt-unicode doesn't recognize.
+           KP_Insert == Insert
+           F22 == Print
+           F27 == Home
+           F29 == Prior
+           F33 == End
+           F35 == Next
+
+        Rather than have rxvt-unicode try to accommodate all the various
+        possible keyboard mappings, it is better to use `xmodmap' to remap
+        the keys as required for your particular machine.
+
+    How do I distinguish if I'm running rxvt-unicode or a regular xterm? I
+    need this to decide about setting colors etc.
+        rxvt and rxvt-unicode always export the variable "COLORTERM", so you
+        can check and see if that is set. Note that several programs, JED,
+        slrn, Midnight Commander automatically check this variable to decide
+        whether or not to use color.
+
+    How do I set the correct, full IP address for the DISPLAY variable?
+        If you've compiled rxvt-unicode with DISPLAY_IS_IP and have enabled
+        insecure mode then it is possible to use the following shell script
+        snippets to correctly set the display. If your version of
+        rxvt-unicode wasn't also compiled with ESCZ_ANSWER (as assumed in
+        these snippets) then the COLORTERM variable can be used to
+        distinguish rxvt-unicode from a regular xterm.
+
+        Courtesy of Chuck Blake <cblake@BBN.COM> with the following shell
+        script snippets:
+
+           # Bourne/Korn/POSIX family of shells:
+           [ ${TERM:-foo} = foo ] && TERM=xterm # assume an xterm if we don't know
+           if [ ${TERM:-foo} = xterm ]; then
+              stty -icanon -echo min 0 time 15 # see if enhanced rxvt or not
+              echo -n '^[Z'
+              read term_id
+              stty icanon echo
+              if [ ""${term_id} = '^[[?1;2C' -a ${DISPLAY:-foo} = foo ]; then
+                 echo -n '^[[7n'        # query the rxvt we are in for the DISPLAY string
+                 read DISPLAY           # set it in our local shell
+              fi
+           fi
+
+    How do I compile the manual pages for myself?
+        You need to have a recent version of perl installed as
+        /usr/bin/perl, one that comes with pod2man, pod2text and pod2html.
+        Then go to the doc subdirectory and enter "make alldoc".
+
+    My question isn't answered here, can I ask a human?
+        Before sending me mail, you could go to IRC: "irc.freenode.net",
+        channel "#rxvt-unicode" has some rxvt-unicode enthusiasts that might
+        be interested in learning about new and exciting problems (but not
+        FAQs :).
+
+SYNOPSIS
+       # set a new font set
+       printf '\33]50;%s\007' 9x15,xft:Kochi" Mincho"
+
+       # change the locale and tell rxvt-unicode about it
+       export LC_CTYPE=ja_JP.EUC-JP; printf "\33]701;$LC_CTYPE\007"
+
+       # set window title
+       printf '\33]2;%s\007' "new window title"
+
+DESCRIPTION
+    The rest of this document describes various technical aspects of
+    rxvt-unicode. First the description of supported command sequences,
+    followed by menu and pixmap support and last by a description of all
+    features selectable at "configure" time.
+
+RXVT TECHNICAL REFERENCE
+Definitions
+    "c" The literal character c.
+
+    "C" A single (required) character.
+
+    "Ps"
+        A single (usually optional) numeric parameter, composed of one or
+        more digits.
+
+    "Pm"
+        A multiple numeric parameter composed of any number of single
+        numeric parameters, separated by ";" character(s).
+
+    "Pt"
+        A text parameter composed of printable characters.
+
+Values
+    "ENQ"
+        Enquiry (Ctrl-E) = Send Device Attributes (DA) request attributes
+        from terminal. See "ESC [ Ps c".
+
+    "BEL"
+        Bell (Ctrl-G)
+
+    "BS"
+        Backspace (Ctrl-H)
+
+    "TAB"
+        Horizontal Tab (HT) (Ctrl-I)
+
+    "LF"
+        Line Feed or New Line (NL) (Ctrl-J)
+
+    "VT"
+        Vertical Tab (Ctrl-K) same as "LF"
+
+    "FF"
+        Form Feed or New Page (NP) (Ctrl-L) same as "LF"
+
+    "CR"
+        Carriage Return (Ctrl-M)
+
+    "SO"
+        Shift Out (Ctrl-N), invokes the G1 character set. Switch to
+        Alternate Character Set
+
+    "SI"
+        Shift In (Ctrl-O), invokes the G0 character set (the default).
+        Switch to Standard Character Set
+
+    "SPC"
+        Space Character
+
+Escape Sequences
+    "ESC # 8"
+        DEC Screen Alignment Test (DECALN)
+
+    "ESC 7"
+        Save Cursor (SC)
+
+    "ESC 8"
+        Restore Cursor
+
+    "ESC ="
+        Application Keypad (SMKX). See also next sequence.
+
+    "ESC"
+        Normal Keypad (RMKX)
+
+        Note: If the numeric keypad is activated, eg, Num_Lock has been
+        pressed, numbers or control functions are generated by the numeric
+        keypad (see Key Codes).
+
+    "ESC D"
+        Index (IND)
+
+    "ESC E"
+        Next Line (NEL)
+
+    "ESC H"
+        Tab Set (HTS)
+
+    "ESC M"
+        Reverse Index (RI)
+
+    "ESC N"
+        Single Shift Select of G2 Character Set (SS2): affects next
+        character only *unimplemented*
+
+    "ESC O"
+        Single Shift Select of G3 Character Set (SS3): affects next
+        character only *unimplemented*
+
+    "ESC Z"
+        Obsolete form of returns: "ESC[?1;2C" *rxvt-unicode compile-time
+        option*
+
+    "ESC c"
+        Full reset (RIS)
+
+    "ESC n"
+        Invoke the G2 Character Set (LS2)
+
+    "ESC o"
+        Invoke the G3 Character Set (LS3)
+
+    "ESC" ( C>
+        Designate G0 Character Set (ISO 2022), see below for values of "C".
+
+    "ESC" ) C>
+        Designate G1 Character Set (ISO 2022), see below for values of "C".
+
+    "ESC * C"
+        Designate G2 Character Set (ISO 2022), see below for values of "C".
+
+    "ESC + C"
+        Designate G3 Character Set (ISO 2022), see below for values of "C".
+
+    "ESC $ C"
+        Designate Kanji Character Set
+
+        Where "C" is one of:
+
+           C = 0           DEC Special Character and Line Drawing Set 
+           C = A           United Kingdom (UK) 
+           C = B           United States (USASCII) 
+           C = <           Multinational character set unimplemented 
+           C = 5           Finnish character set unimplemented 
+           C = C           Finnish character set unimplemented 
+           C = K           German character set unimplemented 
+
+
+
+CSI (Command Sequence Introducer) Sequences
+    "ESC [ Ps @"
+        Insert "Ps" (Blank) Character(s) [default: 1] (ICH)
+
+    "ESC [ Ps A"
+        Cursor Up "Ps" Times [default: 1] (CUU)
+
+    "ESC [ Ps B"
+        Cursor Down "Ps" Times [default: 1] (CUD)
+
+    "ESC [ Ps C"
+        Cursor Forward "Ps" Times [default: 1] (CUF)
+
+    "ESC [ Ps D"
+        Cursor Backward "Ps" Times [default: 1] (CUB)
+
+    "ESC [ Ps E"
+        Cursor Down "Ps" Times [default: 1] and to first column
+
+    "ESC [ Ps F"
+        Cursor Up "Ps" Times [default: 1] and to first column
+
+    "ESC [ Ps G"
+        Cursor to Column "Ps" (HPA)
+
+    "ESC [ Ps;Ps H"
+        Cursor Position [row;column] [default: 1;1] (CUP)
+
+    "ESC [ Ps I"
+        Move forward "Ps" tab stops [default: 1]
+
+    "ESC [ Ps J"
+        Erase in Display (ED)
+
+           Ps = 0          Clear Below (default) 
+           Ps = 1          Clear Above     
+           Ps = 2          Clear All       
+
+    "ESC [ Ps K"
+        Erase in Line (EL)
+
+           Ps = 0          Clear to Right (default) 
+           Ps = 1          Clear to Left   
+           Ps = 2          Clear All       
+
+    "ESC [ Ps L"
+        Insert "Ps" Line(s) [default: 1] (IL)
+
+    "ESC [ Ps M"
+        Delete "Ps" Line(s) [default: 1] (DL)
+
+    "ESC [ Ps P"
+        Delete "Ps" Character(s) [default: 1] (DCH)
+
+    "ESC [ Ps;Ps;Ps;Ps;Ps T"
+        Initiate . *unimplemented* Parameters are
+        [func;startx;starty;firstrow;lastrow].
+
+    "ESC [ Ps W"
+        Tabulator functions
+
+           Ps = 0          Tab Set (HTS)   
+           Ps = 2          Tab Clear (TBC), Clear Current Column (default) 
+           Ps = 5          Tab Clear (TBC), Clear All 
+
+    "ESC [ Ps X"
+        Erase "Ps" Character(s) [default: 1] (ECH)
+
+    "ESC [ Ps Z"
+        Move backward "Ps" [default: 1] tab stops
+
+    "ESC [ Ps '"
+        See "ESC [ Ps G"
+
+    "ESC [ Ps a"
+        See "ESC [ Ps C"
+
+    "ESC [ Ps c"
+        Send Device Attributes (DA) "Ps = 0" (or omitted): request
+        attributes from terminal returns: "ESC[?1;2c" (``I am a VT100 with
+        Advanced Video Option'')
+
+    "ESC [ Ps d"
+        Cursor to Line "Ps" (VPA)
+
+    "ESC [ Ps e"
+        See "ESC [ Ps A"
+
+    "ESC [ Ps;Ps f"
+        Horizontal and Vertical Position [row;column] (HVP) [default: 1;1]
+
+    "ESC [ Ps g"
+        Tab Clear (TBC)
+
+           Ps = 0          Clear Current Column (default) 
+           Ps = 3          Clear All (TBC) 
+
+    "ESC [ Pm h"
+        Set Mode (SM). See "ESC [ Pm l" sequence for description of "Pm".
+
+    "ESC [ Ps i"
+        Printing. See also the "print-pipe" resource.
+
+           Ps = 0          print screen (MC0) 
+           Ps = 4          disable transparent print mode (MC4) 
+           Ps = 5          enable transparent print mode (MC5) 
+
+    "ESC [ Pm l"
+        Reset Mode (RM)
+
+        "Ps = 4"
+               h               Insert Mode (SMIR) 
+               l               Replace Mode (RMIR) 
+
+        "Ps = 20" (partially implemented)
+               h               Automatic Newline (LNM) 
+               l               Normal Linefeed (LNM) 
+
+    "ESC [ Pm m"
+        Character Attributes (SGR)
+
+           Ps = 0          Normal (default) 
+           Ps = 1 / 21     On / Off Bold (bright fg) 
+           Ps = 3 / 23     On / Off Italic 
+           Ps = 4 / 24     On / Off Underline 
+           Ps = 5 / 25     On / Off Slow Blink (bright bg) 
+           Ps = 6 / 26     On / Off Rapid Blink (bright bg) 
+           Ps = 7 / 27     On / Off Inverse 
+           Ps = 8 / 27     On / Off Invisible (NYI) 
+           Ps = 30 / 40    fg/bg Black     
+           Ps = 31 / 41    fg/bg Red       
+           Ps = 32 / 42    fg/bg Green     
+           Ps = 33 / 43    fg/bg Yellow    
+           Ps = 34 / 44    fg/bg Blue      
+           Ps = 35 / 45    fg/bg Magenta   
+           Ps = 36 / 46    fg/bg Cyan      
+           Ps = 38;5 / 48;5 set fg/bg to color #m (ISO 8613-6) 
+           Ps = 37 / 47    fg/bg White     
+           Ps = 39 / 49    fg/bg Default   
+           Ps = 90 / 100   fg/bg Bright Black 
+           Ps = 91 / 101   fg/bg Bright Red 
+           Ps = 92 / 102   fg/bg Bright Green 
+           Ps = 93 / 103   fg/bg Bright Yellow 
+           Ps = 94 / 104   fg/bg Bright Blue 
+           Ps = 95 / 105   fg/bg Bright Magenta 
+           Ps = 96 / 106   fg/bg Bright Cyan 
+           Ps = 97 / 107   fg/bg Bright White 
+           Ps = 99 / 109   fg/bg Bright Default 
+
+    "ESC [ Ps n"
+        Device Status Report (DSR)
+
+           Ps = 5          Status Report ESC [ 0 n (``OK'') 
+           Ps = 6          Report Cursor Position (CPR) [row;column] as ESC [ r ; c R 
+           Ps = 7          Request Display Name 
+           Ps = 8          Request Version Number (place in window title) 
+
+    "ESC [ Ps;Ps r"
+        Set Scrolling Region [top;bottom] [default: full size of window]
+        (CSR)
+
+    "ESC [ s"
+        Save Cursor (SC)
+
+    "ESC [ Ps x"
+        Request Terminal Parameters (DECREQTPARM)
+
+    "ESC [ u"
+        Restore Cursor
+
+
+
+DEC Private Modes
+    "ESC [ ? Pm h"
+        DEC Private Mode Set (DECSET)
+
+    "ESC [ ? Pm l"
+        DEC Private Mode Reset (DECRST)
+
+    "ESC [ ? Pm r"
+        Restore previously saved DEC Private Mode Values.
+
+    "ESC [ ? Pm s"
+        Save DEC Private Mode Values.
+
+    "ESC [ ? Pm t"
+        Toggle DEC Private Mode Values (rxvt extension). *where*
+
+        "Ps = 1" (DECCKM)
+               h               Application Cursor Keys 
+               l               Normal Cursor Keys 
+
+        "Ps = 2" (ANSI/VT52 mode)
+               h               Enter VT52 mode 
+               l               Enter VT52 mode 
+
+        "Ps = 3"
+               h               132 Column Mode (DECCOLM) 
+               l               80 Column Mode (DECCOLM) 
+
+        "Ps = 4"
+               h               Smooth (Slow) Scroll (DECSCLM) 
+               l               Jump (Fast) Scroll (DECSCLM) 
+
+        "Ps = 5"
+               h               Reverse Video (DECSCNM) 
+               l               Normal Video (DECSCNM) 
+
+        "Ps = 6"
+               h               Origin Mode (DECOM) 
+               l               Normal Cursor Mode (DECOM) 
+
+        "Ps = 7"
+               h               Wraparound Mode (DECAWM) 
+               l               No Wraparound Mode (DECAWM) 
+
+        "Ps = 8" *unimplemented*
+               h               Auto-repeat Keys (DECARM) 
+               l               No Auto-repeat Keys (DECARM) 
+
+        "Ps = 9" X10 XTerm
+               h               Send Mouse X & Y on button press. 
+               l               No mouse reporting. 
+
+        "Ps = 10" (rxvt)
+               h               menuBar visible 
+               l               menuBar invisible 
+
+        "Ps = 25"
+               h               Visible cursor {cnorm/cvvis} 
+               l               Invisible cursor {civis} 
+
+        "Ps = 30"
+               h               scrollBar visisble 
+               l               scrollBar invisisble 
+
+        "Ps = 35" (rxvt)
+               h               Allow XTerm Shift+key sequences 
+               l               Disallow XTerm Shift+key sequences 
+
+        "Ps = 38" *unimplemented*
+            Enter Tektronix Mode (DECTEK)
+
+        "Ps = 40"
+               h               Allow 80/132 Mode 
+               l               Disallow 80/132 Mode 
+
+        "Ps = 44" *unimplemented*
+               h               Turn On Margin Bell 
+               l               Turn Off Margin Bell 
+
+        "Ps = 45" *unimplemented*
+               h               Reverse-wraparound Mode 
+               l               No Reverse-wraparound Mode 
+
+        "Ps = 46" *unimplemented*
+        "Ps = 47"
+               h               Use Alternate Screen Buffer 
+               l               Use Normal Screen Buffer 
+
+
+
+        "Ps = 66"
+               h               Application Keypad (DECPAM) == ESC = 
+               l               Normal Keypad (DECPNM) == ESC > 
+
+        "Ps = 67"
+               h               Backspace key sends BS (DECBKM) 
+               l               Backspace key sends DEL 
+
+        "Ps = 1000" (X11 XTerm)
+               h               Send Mouse X & Y on button press and release. 
+               l               No mouse reporting. 
+
+        "Ps = 1001" (X11 XTerm) *unimplemented*
+               h               Use Hilite Mouse Tracking. 
+               l               No mouse reporting. 
+
+        "Ps = 1010" (rxvt)
+               h               Don't scroll to bottom on TTY output 
+               l               Scroll to bottom on TTY output 
+
+        "Ps = 1011" (rxvt)
+               h               Scroll to bottom when a key is pressed 
+               l               Don't scroll to bottom when a key is pressed 
+
+        "Ps = 1047"
+               h               Use Alternate Screen Buffer 
+               l               Use Normal Screen Buffer - clear Alternate Screen Buffer if returning from it 
+
+        "Ps = 1048"
+               h               Save cursor position 
+               l               Restore cursor position 
+
+        "Ps = 1049"
+               h               Use Alternate Screen Buffer - clear Alternate Screen Buffer if switching to it 
+               l               Use Normal Screen Buffer 
+
+
+
+XTerm Operating System Commands
+    "ESC ] Ps;Pt ST"
+        Set XTerm Parameters. 8-bit ST: 0x9c, 7-bit ST sequence: ESC \
+        (0x1b, 0x5c), backwards compatible terminator BEL (0x07) is also
+        accepted. any octet can be escaped by prefixing it with SYN (0x16,
+        ^V).
+
+           Ps = 0          Change Icon Name and Window Title to Pt 
+           Ps = 1          Change Icon Name to Pt 
+           Ps = 2          Change Window Title to Pt 
+           Ps = 3          If Pt starts with a ?, query the (STRING) property of the window and return it. If Pt contains a =, set the named property to the given value, else delete the specified property. 
+           Ps = 4          Pt is a semi-colon separated sequence of one or more semi-colon separated number/name pairs, where number is an index to a colour and name is the name of a colour. Each pair causes the numbered colour to be changed to name. Numbers 0-7 corresponds to low-intensity (normal) colours and 8-15 corresponds to high-intensity colours. 0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white 
+           Ps = 10         Change colour of text foreground to Pt (NB: may change in future) 
+           Ps = 11         Change colour of text background to Pt (NB: may change in future) 
+           Ps = 12         Change colour of text cursor foreground to Pt 
+           Ps = 13         Change colour of mouse foreground to Pt 
+           Ps = 17         Change colour of highlight characters to Pt 
+           Ps = 18         Change colour of bold characters to Pt 
+           Ps = 19         Change colour of underlined characters to Pt 
+           Ps = 20         Change default background to Pt 
+           Ps = 39         Change default foreground colour to Pt rxvt compile-time option 
+           Ps = 46         Change Log File to Pt unimplemented 
+           Ps = 49         Change default background colour to Pt rxvt compile-time option 
+           Ps = 50         Set fontset to Pt, with the following special values of Pt (rxvt) #+n change up n #-n change down n if n is missing of 0, a value of 1 is used empty change to font0 n change to font n 
+           Ps = 55         Log all scrollback buffer and all of screen to Pt 
+           Ps = 701        Change current locale to Pt, or, if Pt is ?, return the current locale (rxvt extension) 
+           Ps = 703        Menubar command Pt rxvt compile-time option (rxvt-unicode extension) 
+           Ps = 704        Change colour of italic characters to Pt 
+           Ps = 705        Change background pixmap tint colour to Pt 
+           Ps = 710        Set normal fontset to Pt. Same as Ps = 50. 
+           Ps = 711        Set bold fontset to Pt. Similar to Ps = 50. 
+           Ps = 712        Set italic fontset to Pt. Similar to Ps = 50. 
+           Ps = 713        Set bold-italic fontset to Pt. Similar to Ps = 50. 
+
+
+
+menuBar
+    The exact syntax used is *almost* solidified. In the menus, DON'T try to
+    use menuBar commands that add or remove a menuBar.
+
+    Note that in all of the commands, the */path/* *cannot* be omitted: use
+    ./ to specify a menu relative to the current menu.
+
+  Overview of menuBar operation
+    For the menuBar XTerm escape sequence "ESC ] 703 ; Pt ST", the syntax of
+    "Pt" can be used for a variety of tasks:
+
+    At the top level is the current menuBar which is a member of a circular
+    linked-list of other such menuBars.
+
+    The menuBar acts as a parent for the various drop-down menus, which in
+    turn, may have labels, separator lines, menuItems and subMenus.
+
+    The menuItems are the useful bits: you can use them to mimic keyboard
+    input or even to send text or escape sequences back to rxvt.
+
+    The menuBar syntax is intended to provide a simple yet robust method of
+    constructing and manipulating menus and navigating through the menuBars.
+
+    The first step is to use the tag [menu:*name*] which creates the menuBar
+    called *name* and allows access. You may now or menus, subMenus, and
+    menuItems. Finally, use the tag [done] to set the menuBar access as
+    readonly to prevent accidental corruption of the menus. To re-access the
+    current menuBar for alterations, use the tag [menu], make the
+    alterations and then use [done]
+
+
+
+  Commands
+    [menu:+*name*]
+        access the named menuBar for creation or alteration. If a new
+        menuBar is created, it is called *name* (max of 15 chars) and the
+        current menuBar is pushed onto the stack
+
+    [menu]
+        access the current menuBar for alteration
+
+    [title:+*string*]
+        set the current menuBar's title to *string*, which may contain the
+        following format specifiers: %% : literal % character %n : rxvt name
+        (as per the -name command-line option) %v : rxvt version
+
+    [done]
+        set menuBar access as readonly. End-of-file tag for [read:+*file*]
+        operations.
+
+    [read:+*file*]
+        read menu commands directly from *file* (extension ".menu" will be
+        appended if required.) Start reading at a line with [menu] or
+        [menu:+*name* and continuing until [done] is encountered.
+
+        Blank and comment lines (starting with #) are ignored. Actually,
+        since any invalid menu commands are also ignored, almost anything
+        could be construed as a comment line, but this may be tightened up
+        in the future ... so don't count on it!.
+
+    [read:+*file*;+*name*]
+        The same as [read:+*file*], but start reading at a line with
+        [menu:+*name*] and continuing until [done:+*name*] or [done] is
+        encountered.
+
+    [dump]
+        dump all menuBars to the file /tmp/rxvt-PID in a format suitable for
+        later rereading.
+
+    [rm:name]
+        remove the named menuBar
+
+    [rm] [rm:]
+        remove the current menuBar
+
+    [rm*] [rm:*]
+        remove all menuBars
+
+    [swap]
+        swap the top two menuBars
+
+    [prev]
+        access the previous menuBar
+
+    [next]
+        access the next menuBar
+
+    [show]
+        Enable display of the menuBar
+
+    [hide]
+        Disable display of the menuBar
+
+    [pixmap:+*name*]
+    [pixmap:+*name*;*scaling*]
+        (set the background pixmap globally
+
+        A Future implementation *may* make this local to the menubar)
+
+    [:+*command*:]
+        ignore the menu readonly status and issue a *command* to or a menu
+        or menuitem or change the ; a useful shortcut for setting the quick
+        arrows from a menuBar.
+
+
+
+  Adding and accessing menus
+    The following commands may also be + prefixed.
+
+    /+  access menuBar top level
+
+    ./+ access current menu level
+
+    ../+
+        access parent menu (1 level up)
+
+    ../../
+        access parent menu (multiple levels up)
+
+    */path/*menu
+        add/access menu
+
+    */path/*menu/*
+        add/access menu and clear it if it exists
+
+    */path/*{-}
+        add separator
+
+    */path/*{item}
+        add item as a label
+
+    */path/*{item} action
+        add/alter *menuitem* with an associated *action*
+
+    */path/*{item}{right-text}
+        add/alter *menuitem* with right-text as the right-justified text and
+        as the associated *action*
+
+    */path/*{item}{rtext} action
+        add/alter *menuitem* with an associated *action* and with rtext as
+        the right-justified text.
+
+    Special characters in *action* must be backslash-escaped:
+        \a \b \E \e \n \r \t \octal
+
+    or in control-character notation:
+        ^@, ^A .. ^Z .. ^_, ^?
+
+    To send a string starting with a NUL (^@) character to the program,
+    start *action* with a pair of NUL characters (^@^@), the first of which
+    will be stripped off and the balance directed to the program. Otherwise
+    if *action* begins with NUL followed by non-+NUL characters, the leading
+    NUL is stripped off and the balance is sent back to rxvt.
+
+    As a convenience for the many Emacs-type editors, *action* may start
+    with M- (eg, M-$ is equivalent to \E$) and a CR will be appended if
+    missed from M-x commands.
+
+    As a convenience for issuing XTerm ESC] sequences from a menubar (or
+    quick arrow), a BEL (^G) will be appended if needed.
+
+    For example,
+        M-xapropos is equivalent to \Exapropos\r
+
+    and \E]703;mona;100 is equivalent to \E]703;mona;100\a
+
+    The option {*right-rtext*} will be right-justified. In the absence of a
+    specified action, this text will be used as the *action* as well.
+
+    For example,
+        /File/{Open}{^X^F} is equivalent to /File/{Open}{^X^F} ^X^F
+
+    The left label *is* necessary, since it's used for matching, but
+    implicitly hiding the left label (by using same name for both left and
+    right labels), or explicitly hiding the left label (by preceeding it
+    with a dot), makes it possible to have right-justified text only.
+
+    For example,
+        /File/{Open}{Open} Open-File-Action
+
+    or hiding it
+        /File/{.anylabel}{Open} Open-File-Action
+
+
+
+  Removing menus
+    -/*+
+        remove all menus from the menuBar, the same as [clear]
+
+    -+*/path*menu+
+        remove menu
+
+    -+*/path*{item}+
+        remove item
+
+    -+*/path*{-}
+        remove separator)
+
+    -/path/menu/*
+        remove all items, separators and submenus from menu
+
+
+
+  Quick Arrows
+    The menus also provide a hook for *quick arrows* to provide easier user
+    access. If nothing has been explicitly set, the default is to emulate
+    the curror keys. The syntax permits each arrow to be altered
+    individually or all four at once without re-entering their common
+    beginning/end text. For example, to explicitly associate cursor actions
+    with the arrows, any of the following forms could be used:
+
+    <r>+*Right*
+    <l>+*Left*
+    <u>+*Up*
+    <d>+*Down*
+        Define actions for the respective arrow buttons
+
+    <b>+*Begin*
+    <e>+*End*
+        Define common beginning/end parts for *quick arrows* which used in
+        conjunction with the above <r> <l> <u> <d> constructs
+
+    For example, define arrows individually,
+         <u>\E[A
+
+         <d>\E[B
+
+         <r>\E[C
+
+         <l>\E[D
+
+    or all at once
+         <u>\E[AZ<><d>\E[BZ<><r>\E[CZ<><l>\E[D
+
+    or more compactly (factoring out common parts)
+         <b>\E[<u>AZ<><d>BZ<><r>CZ<><l>D
+
+
+
+  Command Summary
+    A short summary of the most *common* commands:
+
+    [menu:name]
+        use an existing named menuBar or start a new one
+
+    [menu]
+        use the current menuBar
+
+    [title:string]
+        set menuBar title
+
+    [done]
+        set menu access to readonly and, if reading from a file, signal EOF
+
+    [done:name]
+        if reading from a file using [read:file;name] signal EOF
+
+    [rm:name]
+        remove named menuBar(s)
+
+    [rm] [rm:]
+        remove current menuBar
+
+    [rm*] [rm:*]
+        remove all menuBar(s)
+
+    [swap]
+        swap top two menuBars
+
+    [prev]
+        access the previous menuBar
+
+    [next]
+        access the next menuBar
+
+    [show]
+        map menuBar
+
+    [hide]
+        unmap menuBar
+
+    [pixmap;file]
+    [pixmap;file;scaling]
+        set a background pixmap
+
+    [read:file]
+    [read:file;name]
+        read in a menu from a file
+
+    [dump]
+        dump out all menuBars to /tmp/rxvt-PID
+
+    /   access menuBar top level
+
+    ./
+    ../
+    ../../
+        access current or parent menu level
+
+    /path/menu
+        add/access menu
+
+    /path/{-}
+        add separator
+
+    /path/{item}{rtext} action
+        add/alter menu item
+
+    -/* remove all menus from the menuBar
+
+    -/path/menu
+        remove menu items, separators and submenus from menu
+
+    -/path/menu
+        remove menu
+
+    -/path/{item}
+        remove item
+
+    -/path/{-}
+        remove separator
+
+    <b>Begin<r>Right<l>Left<u>Up<d>Down<e>End
+        menu quick arrows
+
+XPM
+    For the XPM XTerm escape sequence "ESC ] 20 ; Pt ST" then value of "Pt"
+    can be the name of the background pixmap followed by a sequence of
+    scaling/positioning commands separated by semi-colons. The
+    scaling/positioning commands are as follows:
+
+    query scale/position
+        ?
+
+    change scale and position
+        WxH+X+Y
+
+        WxH+X (== WxH+X+X)
+
+        WxH (same as WxH+50+50)
+
+        W+X+Y (same as WxW+X+Y)
+
+        W+X (same as WxW+X+X)
+
+        W (same as WxW+50+50)
+
+    change position (absolute)
+        =+X+Y
+
+        =+X (same as =+X+Y)
+
+    change position (relative)
+        +X+Y
+
+        +X (same as +X+Y)
+
+    rescale (relative)
+        Wx0 -> W *= (W/100)
+
+        0xH -> H *= (H/100)
+
+    For example:
+
+    \E]20;funky\a
+        load funky.xpm as a tiled image
+
+    \E]20;mona;100\a
+        load mona.xpm with a scaling of 100%
+
+    \E]20;;200;?\a
+        rescale the current pixmap to 200% and display the image geometry in
+        the title
+
+Mouse Reporting
+    "ESC [ M <b> <x> <y>"
+        report mouse position
+
+    The lower 2 bits of "<b>" indicate the button:
+
+    Button = "(<b> - SPACE) & 3"
+           0               Button1 pressed 
+           1               Button2 pressed 
+           2               Button3 pressed 
+           3               button released (X11 mouse report) 
+
+    The upper bits of "<b>" indicate the modifiers when the button was
+    pressed and are added together (X11 mouse report only):
+
+    State = "(<b> - SPACE) & 60"
+           4               Shift           
+           8               Meta            
+           16              Control         
+           32              Double Click (Rxvt extension) 
+
+        Col = "<x> - SPACE"
+
+        Row = "<y> - SPACE"
+
+Key Codes
+    Note: Shift + F1-F10 generates F11-F20
+
+    For the keypad, use Shift to temporarily override Application-Keypad
+    setting use Num_Lock to toggle Application-Keypad setting if Num_Lock is
+    off, toggle Application-Keypad setting. Also note that values of Home,
+    End, Delete may have been compiled differently on your system.
+
+                       Normal          Shift           Control         Ctrl+Shift      
+       Tab             ^I              ESC [ Z         ^I              ESC [ Z         
+       BackSpace       ^H              ^?              ^?              ^?              
+       Find            ESC [ 1 ~       ESC [ 1 $       ESC [ 1 ^       ESC [ 1 @       
+       Insert          ESC [ 2 ~       paste           ESC [ 2 ^       ESC [ 2 @       
+       Execute         ESC [ 3 ~       ESC [ 3 $       ESC [ 3 ^       ESC [ 3 @       
+       Select          ESC [ 4 ~       ESC [ 4 $       ESC [ 4 ^       ESC [ 4 @       
+       Prior           ESC [ 5 ~       scroll-up       ESC [ 5 ^       ESC [ 5 @       
+       Next            ESC [ 6 ~       scroll-down     ESC [ 6 ^       ESC [ 6 @       
+       Home            ESC [ 7 ~       ESC [ 7 $       ESC [ 7 ^       ESC [ 7 @       
+       End             ESC [ 8 ~       ESC [ 8 $       ESC [ 8 ^       ESC [ 8 @       
+       Delete          ESC [ 3 ~       ESC [ 3 $       ESC [ 3 ^       ESC [ 3 @       
+       F1              ESC [ 11 ~      ESC [ 23 ~      ESC [ 11 ^      ESC [ 23 ^      
+       F2              ESC [ 12 ~      ESC [ 24 ~      ESC [ 12 ^      ESC [ 24 ^      
+       F3              ESC [ 13 ~      ESC [ 25 ~      ESC [ 13 ^      ESC [ 25 ^      
+       F4              ESC [ 14 ~      ESC [ 26 ~      ESC [ 14 ^      ESC [ 26 ^      
+       F5              ESC [ 15 ~      ESC [ 28 ~      ESC [ 15 ^      ESC [ 28 ^      
+       F6              ESC [ 17 ~      ESC [ 29 ~      ESC [ 17 ^      ESC [ 29 ^      
+       F7              ESC [ 18 ~      ESC [ 31 ~      ESC [ 18 ^      ESC [ 31 ^      
+       F8              ESC [ 19 ~      ESC [ 32 ~      ESC [ 19 ^      ESC [ 32 ^      
+       F9              ESC [ 20 ~      ESC [ 33 ~      ESC [ 20 ^      ESC [ 33 ^      
+       F10             ESC [ 21 ~      ESC [ 34 ~      ESC [ 21 ^      ESC [ 34 ^      
+       F11             ESC [ 23 ~      ESC [ 23 $      ESC [ 23 ^      ESC [ 23 @      
+       F12             ESC [ 24 ~      ESC [ 24 $      ESC [ 24 ^      ESC [ 24 @      
+       F13             ESC [ 25 ~      ESC [ 25 $      ESC [ 25 ^      ESC [ 25 @      
+       F14             ESC [ 26 ~      ESC [ 26 $      ESC [ 26 ^      ESC [ 26 @      
+       F15 (Help)      ESC [ 28 ~      ESC [ 28 $      ESC [ 28 ^      ESC [ 28 @      
+       F16 (Menu)      ESC [ 29 ~      ESC [ 29 $      ESC [ 29 ^      ESC [ 29 @      
+       F17             ESC [ 31 ~      ESC [ 31 $      ESC [ 31 ^      ESC [ 31 @      
+       F18             ESC [ 32 ~      ESC [ 32 $      ESC [ 32 ^      ESC [ 32 @      
+       F19             ESC [ 33 ~      ESC [ 33 $      ESC [ 33 ^      ESC [ 33 @      
+       F20             ESC [ 34 ~      ESC [ 34 $      ESC [ 34 ^      ESC [ 34 @      
+                                                                       Application     
+       Up              ESC [ A         ESC [ a         ESC O a         ESC O A         
+       Down            ESC [ B         ESC [ b         ESC O b         ESC O B         
+       Right           ESC [ C         ESC [ c         ESC O c         ESC O C         
+       Left            ESC [ D         ESC [ d         ESC O d         ESC O D         
+       KP_Enter        ^M                                              ESC O M         
+       KP_F1           ESC O P                                         ESC O P         
+       KP_F2           ESC O Q                                         ESC O Q         
+       KP_F3           ESC O R                                         ESC O R         
+       KP_F4           ESC O S                                         ESC O S         
+       XK_KP_Multiply  *                                               ESC O j         
+       XK_KP_Add       +                                               ESC O k         
+       XK_KP_Separator ,                                               ESC O l         
+       XK_KP_Subtract  -                                               ESC O m         
+       XK_KP_Decimal   .                                               ESC O n         
+       XK_KP_Divide    /                                               ESC O o         
+       XK_KP_0         0                                               ESC O p         
+       XK_KP_1         1                                               ESC O q         
+       XK_KP_2         2                                               ESC O r         
+       XK_KP_3         3                                               ESC O s         
+       XK_KP_4         4                                               ESC O t         
+       XK_KP_5         5                                               ESC O u         
+       XK_KP_6         6                                               ESC O v         
+       XK_KP_7         7                                               ESC O w         
+       XK_KP_8         8                                               ESC O x         
+       XK_KP_9         9                                               ESC O y         
+
+CONFIGURE OPTIONS
+    General hint: if you get compile errors, then likely your configuration
+    hasn't been tested well. Either try with --enable-everything or use the
+    ./reconf script as a base for experiments. ./reconf is used by myself,
+    so it should generally be a working config. Of course, you should always
+    report when a combination doesn't work, so it can be fixed. Marc Lehmann
+    <rxvt@schmorp.de>.
+
+    --enable-everything
+        Add support for all non-multichoice options listed in "./configure
+        --help". Note that unlike other enable options this is order
+        dependant. You can specify this and then disable options which this
+        enables by *following* this with the appropriate commands.
+
+    --enable-xft
+        Add support for Xft (anti-aliases, among others) fonts. Xft fonts
+        are slower and require lots of memory, but as long as you don't use
+        them, you don't pay for them.
+
+    --enable-font-styles
+        Add support for bold, *italic* and *bold italic* font styles. The
+        fonts can be set manually or automatically.
+
+    --with-codesets=NAME,...
+        Compile in support for additional codeset (encoding) groups (eu, vn
+        are always compiled in, which includes most 8-bit character sets).
+        These codeset tables are currently only used for driving X11 core
+        fonts, they are not required for Xft fonts. Compiling them in will
+        make your binary bigger (together about 700kB), but it doesn't
+        increase memory usage unless you use an X11 font requiring one of
+        these encodings.
+
+           all             all available codeset groups 
+           zh              common chinese encodings 
+           zh_ext          rarely used but very big chinese encodigs 
+           jp              common japanese encodings 
+           jp_ext          rarely used but big japanese encodings 
+           kr              korean encodings 
+
+    --enable-xim
+        Add support for XIM (X Input Method) protocol. This allows using
+        alternative input methods (e.g. kinput2) and will also correctly set
+        up the input for people using dead keys or compose keys.
+
+    --enable-unicode3
+        Enable direct support for displaying unicode codepoints above 65535
+        (the basic multilingual page). This increases storage requirements
+        per character from 2 to 4 bytes. X11 fonts do not yet support these
+        extra characters, but Xft does.
+
+        Please note that rxvt-unicode can store unicode code points >65535
+        even without this flag, but the number of such characters is limited
+        to a view thousand (shared with combining characters, see next
+        switch), and right now rxvt-unicode cannot display them
+        (input/output and cut&paste still work, though).
+
+    --enable-combining
+        Enable automatic composition of combining characters into composite
+        characters. This is required for proper viewing of text where
+        accents are encoded as seperate unicode characters. This is done by
+        using precomposited characters when available or creating new
+        pseudo-characters when no precomposed form exists.
+
+        Without --enable-unicode3, the number of additional precomposed
+        characters is rather limited (2048, if this is full, rxvt will use
+        the private use area, extending the number of combinations to 8448).
+        With --enable-unicode3, no practical limit exists. This will also
+        enable storage of characters >65535.
+
+        The combining table also contains entries for arabic presentation
+        forms, but these are not currently used. Bug me if you want these to
+        be used.
+
+    --enable-fallback(=CLASS)
+        When reading resource settings, also read settings for class CLASS
+        (default: Rxvt). To disable resource fallback use
+        --disable-fallback.
+
+    --with-res-name=NAME
+        Use the given name (default: urxvt) as default application name when
+        reading resources. Specify --with-res-name=rxvt to replace rxvt.
+
+    --with-res-class=CLASS
+        Use the given class (default: URxvt) as default application class
+        when reading resources. Specify --with-res-class=Rxvt to replace
+        rxvt.
+
+    --enable-utmp
+        Write user and tty to utmp file (used by programs like w) at start
+        of rxvt execution and delete information when rxvt exits.
+
+    --enable-wtmp
+        Write user and tty to wtmp file (used by programs like last) at
+        start of rxvt execution and write logout when rxvt exits. This
+        option requires --enable-utmp to also be specified.
+
+    --enable-lastlog
+        Write user and tty to lastlog file (used by programs like lastlogin)
+        at start of rxvt execution. This option requires --enable-utmp to
+        also be specified.
+
+    --enable-xpm-background
+        Add support for XPM background pixmaps.
+
+    --enable-transparency
+        Add support for inheriting parent backgrounds thus giving a fake
+        transparency to the term.
+
+    --enable-fading
+        Add support for fading the text when focus is lost.
+
+    --enable-tinting
+        Add support for tinting of transparent backgrounds.
+
+    --enable-menubar
+        Add support for our menu bar system (this interacts badly with
+        dynamic locale switching currently).
+
+    --enable-rxvt-scroll
+        Add support for the original rxvt scrollbar.
+
+    --enable-next-scroll
+        Add support for a NeXT-like scrollbar.
+
+    --enable-xterm-scroll
+        Add support for an Xterm-like scrollbar.
+
+    --enable-plain-scroll
+        Add support for a very unobtrusive, plain-looking scrollbar that is
+        the favourite of the rxvt-unicode author, having used it for many
+        years.
+
+    --enable-half-shadow
+        Make shadows on the scrollbar only half the normal width & height.
+        only applicable to rxvt scrollbars.
+
+    --enable-ttygid
+        Change tty device setting to group "tty" - only use this if your
+        system uses this type of security.
+
+    --disable-backspace-key
+        Disable any handling of the backspace key by us - let the X server
+        do it.
+
+    --disable-delete-key
+        Disable any handling of the delete key by us - let the X server do
+        it.
+
+    --disable-resources
+        Remove all resources checking.
+
+    --enable-xgetdefault
+        Make resources checking via XGetDefault() instead of our small
+        version which only checks ~/.Xdefaults, or if that doesn't exist
+        then ~/.Xresources.
+
+    --enable-strings
+        Add support for our possibly faster memset() function and other
+        various routines, overriding your system's versions which may have
+        been hand-crafted in assembly or may require extra libraries to link
+        in. (this breaks ANSI-C rules and has problems on many GNU/Linux
+        systems).
+
+    --disable-swapscreen
+        Remove support for swap screen.
+
+    --enable-frills
+        Add support for many small features that are not essential but nice
+        to have. Normally you want this, but for very small binaries you may
+        want to disable this.
+
+    --enable-iso14755
+        Enable extended ISO 14755 support (see rxvt(1), or doc/rxvt.1.txt).
+        Basic support (section 5.1) is enabled by "--enable-frills", while
+        support for 5.2, 5.3 and 5.4 is enabled with this switch.
+
+    --enable-keepscrolling
+        Add support for continual scrolling of the display when you hold the
+        mouse button down on a scrollbar arrow.
+
+    --enable-mousewheel
+        Add support for scrolling via mouse wheel or buttons 4 & 5.
+
+    --enable-slipwheeling
+        Add support for continual scrolling (using the mouse wheel as an
+        accelerator) while the control key is held down. This option
+        requires --enable-mousewheel to also be specified.
+
+    --disable-new-selection
+        Remove support for mouse selection style like that of xterm.
+
+    --enable-dmalloc
+        Use Gray Watson's malloc - which is good for debugging See
+        http://www.letters.com/dmalloc/ for details If you use either this
+        or the next option, you may need to edit src/Makefile after
+        compiling to point DINCLUDE and DLIB to the right places.
+
+        You can only use either this option and the following (should you
+        use either) .
+
+    --enable-dlmalloc
+        Use Doug Lea's malloc - which is good for a production version See
+        <http://g.oswego.edu/dl/html/malloc.html> for details.
+
+    --enable-smart-resize
+        Add smart growth/shrink behaviour when changing font size via from
+        hot keys. This should keep in a fixed position the rxvt corner which
+        is closest to a corner of the screen.
+
+    --enable-cursor-blink
+        Add support for a blinking cursor.
+
+    --enable-pointer-blank
+        Add support to have the pointer disappear when typing or inactive.
+
+    --with-name=NAME
+        Set the basename for the installed binaries (default: urxvt,
+        resulting in urxvt, urxvtd etc.). Specify --with-name=rxvt to
+        replace rxvt.
+
+    --with-term=NAME
+        Change the environmental variable for the terminal to NAME (default
+        "rxvt")
+
+    --with-terminfo=PATH
+        Change the environmental variable for the path to the terminfo tree
+        to PATH.
+
+    --with-x
+        Use the X Window System (pretty much default, eh?).
+
+    --with-xpm-includes=DIR
+        Look for the XPM includes in DIR.
+
+    --with-xpm-library=DIR
+        Look for the XPM library in DIR.
+
+    --with-xpm
+        Not needed - define via --enable-xpm-background.
+
+AUTHORS
+    Marc Lehmann <rxvt@schmorp.de> converted this document to pod and
+    reworked it from the original Rxvt documentation, which was done by
+    Geoff Wing <gcw@pobox.com>, who in turn used the XTerm documentation and
+    other sources.
+

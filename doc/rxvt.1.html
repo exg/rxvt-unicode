@@ -1,0 +1,1407 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>unicode) -</title>
+<link rev="made" href="mailto:perl-binary@plan9.de" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#frequently_asked_questions">FREQUENTLY ASKED QUESTIONS</a></li>
+	<li><a href="#rxvtunicode_vs__rxvt">RXVT-UNICODE VS. RXVT</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#resources__available_also_as_longoptions_">RESOURCES (available also as long-options)</a></li>
+	<li><a href="#the_scrollbar">THE SCROLLBAR</a></li>
+	<li><a href="#mouse_reporting">MOUSE REPORTING</a></li>
+	<li><a href="#text_selection_and_insertion">TEXT SELECTION AND INSERTION</a></li>
+	<li><a href="#changing_fonts">CHANGING FONTS</a></li>
+	<li><a href="#iso_14755_support">ISO 14755 SUPPORT</a></li>
+	<li><a href="#login_stamp">LOGIN STAMP</a></li>
+	<li><a href="#colors_and_graphics">COLORS AND GRAPHICS</a></li>
+	<li><a href="#environment">ENVIRONMENT</a></li>
+	<li><a href="#files">FILES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#bugs">BUGS</a></li>
+	<li><a href="#current_project_coordinator">CURRENT PROJECT COORDINATOR</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>rxvt-unicode (ouR XVT, unicode) - (a VT102 emulator for the X window system)</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>rxvt</strong> [options] [-e command [ args ]]</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><strong>rxvt-unicode</strong>, version <strong>4.8</strong>, is a colour vt102 terminal
+emulator intended as an <em>xterm</em>(1) replacement for users who do not
+require features such as Tektronix 4014 emulation and toolkit-style
+configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
+a significant advantage on a machine serving many X sessions.</p>
+<p>
+</p>
+<hr />
+<h1><a name="frequently_asked_questions">FREQUENTLY ASKED QUESTIONS</a></h1>
+<p>See <code>rxvt(7)</code> (try <code>man 7 rxvt</code>) for a list of frequently
+asked questions and answer to them and some common problems.</p>
+<p>
+</p>
+<hr />
+<h1><a name="rxvtunicode_vs__rxvt">RXVT-UNICODE VS. RXVT</a></h1>
+<p>Unlike the original rxvt, <strong>rxvt-unicode</strong> stores all text in Unicode
+internally. That means it can store and display most scripts in the
+world. Being a terminal emulator, however, some things are very difficult,
+especially cursive scripts such as arabic, vertically written scripts
+like mongolian or scripts requiring extremely complex combining rules,
+like tibetan or devenagari. Don't expect pretty output when using these
+scripts. Most other scripts, latin, cyrillic, kanji, thai etc. should work
+fine, though. A somewhat difficult case are left-to-right scripts, such
+as hebrew: <strong>rxvt-unicode</strong> adopts the view that bidirectional algorithms
+belong into the application, not the terminal emulator (too many things --
+such as cursor-movement while editing -- break otherwise), but that might
+change.</p>
+<p>If you are looking for a terminal that supports more exotic scripts, let
+me recommend <code>mlterm</code>, which is a very userfriendly, lean and clean
+terminal emulator. In fact, the reason rxvt-unicode was born was solely
+because the author couldn't get <code>mlterm</code> to use one font for latin1 and
+another for japanese.</p>
+<p>Therefore another design rationale was the use of multiple fonts to
+display characters: The idea of a single unicode font which many other
+programs force onto it's users never made sense to me: You should be able
+to choose any font for any script freely.</p>
+<p>Apart from that, rxvt-unicode is also much better internationalised than
+it's predecessor, supports things such as XFT and ISO 14755 that are handy
+in i18n-environments, is faster, and has a lot less bugs than the original
+rxvt. This all in addition to dozens of other small improvements.</p>
+<p>It is still faithfully following the original rxvt idea of being lean
+and nice on resources: for example, you can still configure rxvt-unicode
+without most of it's features to get a lean binary. It also comes with
+a client/daemon pair that lets you open any number of terminal windows
+from within a single process, which makes startup time very fast and
+drastically reduces memory usage. See <code>rxvtd(1)</code> (daemon) and
+<code>rxvtc(1)</code> (client).</p>
+<p>It also makes technical information about escape sequences (which have
+been extended) easier accessible: see <code>rxvt(7)</code> for technical
+reference documentation (escape sequences etc.).</p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<p>The <strong>rxvt</strong> options (mostly a subset of <em>xterm</em>'s) are listed
+below. In keeping with the smaller-is-better philosophy, options may be
+eliminated or default values chosen at compile-time, so options and
+defaults listed may not accurately reflect the version installed on
+your system. `rxvt -h' gives a list of major compile-time options on
+the <em>Options</em> line. Option descriptions may be prefixed with which
+compile option each is dependent upon. e.g. `Compile <em>XIM</em>:' requires
+<em>XIM</em> on the <em>Options</em> line. Note: `rxvt -help' gives a list of all
+command-line options compiled into your version.</p>
+<p>Note that <strong>rxvt</strong> permits the resource name to be used as a
+long-option (--/++ option) so the potential command-line options are
+far greater than those listed. For example: `rxvt --loginShell --color1
+Orange'.</p>
+<p>The following options are available:</p>
+<dl>
+<dt><strong><a name="item__2dhelp_2c__2d_2dhelp"><strong>-help</strong>, <strong>--help</strong></a></strong><br />
+</dt>
+<dd>
+Print out a message describing available options.
+</dd>
+<p></p>
+<dt><strong><a name="item__2ddisplay_displayname"><strong>-display</strong> <em>displayname</em></a></strong><br />
+</dt>
+<dd>
+Attempt to open a window on the named X display (<strong>-d</strong> still
+respected). In the absence of this option, the display specified by the
+<strong>DISPLAY</strong> environment variable is used.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dgeometry_geom"><strong>-geometry</strong> <em>geom</em></a></strong><br />
+</dt>
+<dd>
+Window geometry (<strong>-g</strong> still respected); resource <strong>geometry</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2drv_7c_2brv"><strong>-rv</strong>|<strong>+rv</strong></a></strong><br />
+</dt>
+<dd>
+Turn on/off simulated reverse video; resource <strong>reverseVideo</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dj_7c_2bj"><strong>-j</strong>|<strong>+j</strong></a></strong><br />
+</dt>
+<dd>
+Turn on/off jump scrolling; resource <strong>jumpScroll</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dip_7c_2bip"><strong>-ip</strong>|<strong>+ip</strong></a></strong><br />
+</dt>
+<dd>
+Turn on/off inheriting parent window's pixmap. Alternative form is
+<strong>-tr</strong>; resource <strong>inheritPixmap</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dfade_number"><strong>-fade</strong> <em>number</em></a></strong><br />
+</dt>
+<dd>
+Fade the text by the given percentage when focus is lost. resource <strong>fading</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dtint_colour"><strong>-tint</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Tint the transparent background pixmap with the given colour when
+transparency is enabled with <strong>-tr</strong> or <strong>-ip</strong>. See also the <strong>-sh</strong>
+option that can be used to brighten or darken the image in addition to
+tinting it.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dsh"><strong>-sh</strong></a></strong><br />
+</dt>
+<dd>
+<em>number</em> Darken (0 .. 100) or lighten (-1 .. -100) the transparent
+background image in addition to tinting it (i.e. <strong>-tint</strong> must be
+specified, too, e.g. <code>-tint white</code>).
+</dd>
+<p></p>
+<dt><strong><a name="item__2dbg_colour"><strong>-bg</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Window background colour; resource <strong>background</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dfg_colour"><strong>-fg</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Window foreground colour; resource <strong>foreground</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dpixmap_file_5b_3bgeom_5d"><strong>-pixmap</strong> <em>file[;geom]</em></a></strong><br />
+</dt>
+<dd>
+Compile <em>XPM</em>: Specify XPM file for the background and also optionally
+specify its scaling with a geometry string. Note you may need to add
+quotes to avoid special shell interpretation of the `;' in the
+command-line; resource <strong>backgroundPixmap</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dcr_colour"><strong>-cr</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+The cursor colour; resource <strong>cursorColor</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dpr_colour"><strong>-pr</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+The mouse pointer foreground colour; resource <strong>pointerColor</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dpr2_colour"><strong>-pr2</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+The mouse pointer background colour; resource <strong>pointerColor2</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dbd_colour"><strong>-bd</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+The colour of the border around the text area and between the scrollbar and the text;
+resource <strong>borderColor</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dfn_fontlist"><strong>-fn</strong> <em>fontlist</em></a></strong><br />
+</dt>
+<dd>
+Select the fonts to be used. This is a comma separated list of font names
+that are used in turn when trying to display Unicode characters.  The
+first font defines the cell size for characters; other fonts might be
+smaller, but not (in general) larger. A (hopefully) reasonable default
+font list is always appended to it. See resource <strong>font</strong> for more details.
+</dd>
+<dd>
+<p>In short, to specify an X11 core font, just specify it's name or prefix it
+with <code>x:</code>. To specify an XFT-font, you need to prefix it with <code>xft:</code>,
+e.g.:</p>
+</dd>
+<dd>
+<pre>
+   rxvt -fn &quot;xft:Bitstream Vera Sans Mono:pixelsize=15&quot;
+   rxvt -fn &quot;9x15bold,xft:Bitstream Vera Sans Mono&quot;</pre>
+</dd>
+<dd>
+<p>See also the question ``How does rxvt-unicode choose fonts?'' in the FAQ
+section of rxvt(7).</p>
+</dd>
+<p></p>
+<dt><strong><a name="item__2dfb_fontlist"><strong>-fb</strong> <em>fontlist</em></a></strong><br />
+</dt>
+<dd>
+Compile font-styles: The bold font list to use when bold characters are to
+be printed. See resource <strong>boldFont</strong> for details.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dfi_fontlist"><strong>-fi</strong> <em>fontlist</em></a></strong><br />
+</dt>
+<dd>
+Compile font-styles: The italic font list to use when bold characters are to
+be printed. See resource <strong>italicFont</strong> for details.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dfbi_fontlist"><strong>-fbi</strong> <em>fontlist</em></a></strong><br />
+</dt>
+<dd>
+Compile font-styles: The bold italic font list to use when bold characters are to
+be printed. See resource <strong>boldItalicFont</strong> for details.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dname_name"><strong>-name</strong> <em>name</em></a></strong><br />
+</dt>
+<dd>
+Specify the application name under which resources are to be obtained,
+rather than the default executable file name. Name should not contain
+`.' or `*' characters. Also sets the icon and title name.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dls_7c_2bls"><strong>-ls</strong>|<strong>+ls</strong></a></strong><br />
+</dt>
+<dd>
+Start as a login-shell/sub-shell; resource <strong>loginShell</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dut_7c_2but"><strong>-ut</strong>|<strong>+ut</strong></a></strong><br />
+</dt>
+<dd>
+Compile <em>utmp</em>: Inhibit/enable writing a utmp entry; resource
+<strong>utmpInhibit</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dvb_7c_2bvb"><strong>-vb</strong>|<strong>+vb</strong></a></strong><br />
+</dt>
+<dd>
+Turn on/off visual bell on receipt of a bell character; resource
+<strong>visualBell</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dsb_7c_2bsb"><strong>-sb</strong>|<strong>+sb</strong></a></strong><br />
+</dt>
+<dd>
+Turn on/off scrollbar; resource <strong>scrollBar</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dsi_7c_2bsi"><strong>-si</strong>|<strong>+si</strong></a></strong><br />
+</dt>
+<dd>
+Turn on/off scroll-to-bottom on TTY output inhibit; resource
+<strong>scrollTtyOutput</strong> has opposite effect.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dsk_7c_2bsk"><strong>-sk</strong>|<strong>+sk</strong></a></strong><br />
+</dt>
+<dd>
+Turn on/off scroll-to-bottom on keypress; resource
+<strong>scrollTtyKeypress</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dsw_7c_2bsw"><strong>-sw</strong>|<strong>+sw</strong></a></strong><br />
+</dt>
+<dd>
+Turn on/off scrolling with the scrollback buffer as new lines appear.
+This only takes effect if <strong>-si</strong> is also given; resource
+<strong>scrollWithBuffer</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dsr_7c_2bsr"><strong>-sr</strong>|<strong>+sr</strong></a></strong><br />
+</dt>
+<dd>
+Put scrollbar on right/left; resource <strong>scrollBar_right</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dst_7c_2bst"><strong>-st</strong>|<strong>+st</strong></a></strong><br />
+</dt>
+<dd>
+Display normal (non XTerm/NeXT) scrollbar without/with a trough;
+resource <strong>scrollBar_floating</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dptab_7c_2bptab"><strong>-ptab</strong>|<strong>+ptab</strong></a></strong><br />
+</dt>
+<dd>
+If enabled (default), ``Horizontal Tab'' characters are being stored as
+actual wide characters in the screen buffer, which makes it possible to
+select and paste them. Since a horizontal tab is a cursor movement and
+not an actual glyph, this can sometimes be visually annoying as the cursor
+on a tab character is displayed as a wide cursor; resource <strong>pastableTabs</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dbc_7c_2bbc"><strong>-bc</strong>|<strong>+bc</strong></a></strong><br />
+</dt>
+<dd>
+Blink the cursor; resource <strong>cursorBlink</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2diconic"><strong>-iconic</strong></a></strong><br />
+</dt>
+<dd>
+Start iconified, if the window manager supports that option.
+Alternative form is <strong>-ic</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dsl_number"><strong>-sl</strong> <em>number</em></a></strong><br />
+</dt>
+<dd>
+Save <em>number</em> lines in the scrollback buffer. See resource entry for
+limits; resource <strong>saveLines</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2db_number"><strong>-b</strong> <em>number</em></a></strong><br />
+</dt>
+<dd>
+Compile <em>frills</em>: Internal border of <em>number</em> pixels. See resource
+entry for limits; resource <strong>internalBorder</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dw_number"><strong>-w</strong> <em>number</em></a></strong><br />
+</dt>
+<dd>
+Compile <em>frills</em>: External border of <em>number</em> pixels. Also, <strong>-bw</strong>
+and <strong>-borderwidth</strong>. See resource entry for limits; resource
+<strong>externalBorder</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dbl"><strong>-bl</strong></a></strong><br />
+</dt>
+<dd>
+Compile <em>frills</em>: Set MWM hints to request a borderless window, i.e.
+if honoured by the WM, the rxvt-unicode window will not have window
+decorations; resource <strong>borderLess</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dlsp_number"><strong>-lsp</strong> <em>number</em></a></strong><br />
+</dt>
+<dd>
+Compile <em>frills</em>: Lines (pixel height) to insert between each row of
+the display. Useful to work around font rendering problems; resource
+<strong>linespace</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dtn_termname"><strong>-tn</strong> <em>termname</em></a></strong><br />
+</dt>
+<dd>
+This option specifies the name of the terminal type to be set in the
+<strong>TERM</strong> environment variable. This terminal type must exist in the
+<em>termcap(5)</em> database and should have <em>li#</em> and <em>co#</em> entries;
+resource <strong>termName</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2de_command__5barguments_5d"><strong>-e</strong> <em>command [arguments]</em></a></strong><br />
+</dt>
+<dd>
+Run the command with its command-line arguments in the <strong>rxvt</strong>
+window; also sets the window title and icon name to be the basename of
+the program being executed if neither <em>-title</em> (<em>-T</em>) nor <em>-n</em> are
+given on the command line. If this option is used, it must be the last
+on the command-line. If there is no <strong>-e</strong> option then the default is to
+run the program specified by the <strong>SHELL</strong> environment variable or,
+failing that, <em>sh(1)</em>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dtitle_text"><strong>-title</strong> <em>text</em></a></strong><br />
+</dt>
+<dd>
+Window title (<strong>-T</strong> still respected); the default title is the basename
+of the program specified after the <strong>-e</strong> option, if any, otherwise the
+application name; resource <strong>title</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dn_text"><strong>-n</strong> <em>text</em></a></strong><br />
+</dt>
+<dd>
+Icon name; the default name is the basename of the program specified
+after the <strong>-e</strong> option, if any, otherwise the application name;
+resource <strong>iconName</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dc"><strong>-C</strong></a></strong><br />
+</dt>
+<dd>
+Capture system console messages.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dpt_style"><strong>-pt</strong> <em>style</em></a></strong><br />
+</dt>
+<dd>
+Compile <em>XIM</em>: input style for input method; <strong>OverTheSpot</strong>,
+<strong>OffTheSpot</strong>, <strong>Root</strong>; resource <strong>preeditType</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dim_text"><strong>-im</strong> <em>text</em></a></strong><br />
+</dt>
+<dd>
+Compile <em>XIM</em>: input method name. resource <strong>inputMethod</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dimlocale_string"><strong>-imlocale</strong> <em>string</em></a></strong><br />
+</dt>
+<dd>
+The locale to use for opening the IM. You can use an LC_CTYPE of e.g.
+de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP for the input
+extension to be able to input japanese characters while staying in
+another locale.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dinsecure"><strong>-insecure</strong></a></strong><br />
+</dt>
+<dd>
+Enable ``insecure'' mode, which currently enables most of the escape
+sequences that echo strings. See the resource <strong>insecure</strong> for more
+info.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dmod_modifier"><strong>-mod</strong> <em>modifier</em></a></strong><br />
+</dt>
+<dd>
+Override detection of Meta modifier with specified key: <strong>alt</strong>,
+<strong>meta</strong>, <strong>hyper</strong>, <strong>super</strong>, <strong>mod1</strong>, <strong>mod2</strong>, <strong>mod3</strong>, <strong>mod4</strong>,
+<strong>mod5</strong>; resource <em>modifier</em>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dssc_7c_2bssc"><strong>-ssc</strong>|<strong>+ssc</strong></a></strong><br />
+</dt>
+<dd>
+Turn on/off secondary screen (default enabled); resource
+<strong>secondaryScreen</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dssr_7c_2bssr"><strong>-ssr</strong>|<strong>+ssr</strong></a></strong><br />
+</dt>
+<dd>
+Turn on/off secondary screen scroll (default enabled); resource
+<strong>secondaryScroll</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dxrm_resourcestring"><strong>-xrm</strong> <em>resourcestring</em></a></strong><br />
+</dt>
+<dd>
+No effect on rxvt-unicode. Simply passes through an argument to be made
+available in the instance's argument list. Appears in <em>WM_COMMAND</em> in
+some window managers.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="resources__available_also_as_longoptions_">RESOURCES (available also as long-options)</a></h1>
+<p>Note: `rxvt --help' gives a list of all resources (long
+options) compiled into your version.</p>
+<p>There are two different methods that rxvt can use to get the
+Xresource data: using the X libraries (Xrm*-functions) or internal
+Xresources reader (<strong>~/.Xdefaults</strong>). For the first method (ie.
+<strong>rxvt -h</strong> lists <strong>XGetDefaults</strong>), you can set and change the
+resources using X11 tools like <strong>xset</strong>. Many distribution do also load
+settings from the <strong>~/.Xresources</strong> file when X starts.</p>
+<p>If compiled with internal Xresources support (i.e. <strong>rxvt -h</strong>
+lists <strong>.Xdefaults</strong>) then <strong>rxvt</strong> accepts application defaults
+set in XAPPLOADDIR/URxvt (compile-time defined: usually
+<strong>/usr/lib/X11/app-defaults/URxvt</strong>) and resources set in
+<strong>~/.Xdefaults</strong>, or <strong>~/.Xresources</strong> if <strong>~/.Xdefaults</strong> does not exist.
+Note that when reading X resources, <strong>rxvt</strong> recognizes two
+class names: <strong>XTerm</strong> and <strong>URxvt</strong>. The class name <strong>Rxvt</strong> allows
+resources common to both <strong>rxvt</strong> and the original <em>rxvt</em> to be
+easily configured, while the class name <strong>URxvt</strong> allows resources
+unique to <strong>rxvt</strong>, notably colours and key-handling, to be
+shared between different <strong>rxvt</strong> configurations. If no
+resources are specified, suitable defaults will be used. Command-line
+arguments can be used to override resource settings. The following
+resources are allowed:</p>
+<dl>
+<dt><strong><a name="item_geometry_3a_geom"><strong>geometry:</strong> <em>geom</em></a></strong><br />
+</dt>
+<dd>
+Create the window with the specified X window geometry [default 80x24];
+option <strong>-geometry</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_background_3a_colour"><strong>background:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Use the specified colour as the window's background colour [default
+White]; option <strong>-bg</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_foreground_3a_colour"><strong>foreground:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Use the specified colour as the window's foreground colour [default
+Black]; option <strong>-fg</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_colorn_3a_colour"><strong>color</strong><em>n</em><strong>:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Use the specified colour for the colour value <em>n</em>, where 0-7
+corresponds to low-intensity (normal) colours and 8-15 corresponds to
+high-intensity (bold = bright foreground, blink = bright background)
+colours. The canonical names are as follows: 0=black, 1=red, 2=green,
+3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white, but the actual colour
+names used are listed in the <strong>COLORS AND GRAPHICS</strong> section.
+</dd>
+<dd>
+<p>Colours higher than 15 cannot be set using resources (yet), but can be
+changed using an escape command (see rxvt(7)).</p>
+</dd>
+<dd>
+<p>Colours 16-79 form a standard 4x4x4 colour cube (the same as xterm with
+88 colour support). Colours 80-87 are evenly spaces grey steps.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_colorbd_3a_colour"><strong>colorBD:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dt><strong><a name="item_colorit_3a_colour"><strong>colorIT:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Use the specified colour to display bold or italic characters when the
+foreground colour is the default. If font styles are not available
+(Compile styles) and this option is unset, reverse video is used instead.
+</dd>
+<p></p>
+<dt><strong><a name="item_colorul_3a_colour"><strong>colorUL:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Use the specified colour to display underlined characters when the
+foreground colour is the default.
+</dd>
+<p></p>
+<dt><strong><a name="item_colorrv_3a_colour"><strong>colorRV:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Use the specified colour as the background for reverse video
+characters.
+</dd>
+<p></p>
+<dt><strong><a name="item_underlinecolor_3a_colour"><strong>underlineColor:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+If set, use the specified colour as the colour for the underline
+itself. If unset, use the foreground colour.
+</dd>
+<p></p>
+<dt><strong><a name="item_cursorcolor_3a_colour"><strong>cursorColor:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Use the specified colour for the cursor. The default is to use the
+foreground colour; option <strong>-cr</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_cursorcolor2_3a_colour"><strong>cursorColor2:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Use the specified colour for the colour of the cursor text. For this to
+take effect, <strong>cursorColor</strong> must also be specified. The default is to
+use the background colour.
+</dd>
+<p></p>
+<dt><strong><a name="item_reversevideo_3a_boolean"><strong>reverseVideo:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: simulate reverse video by foreground and background colours;
+option <strong>-rv</strong>. <strong>False</strong>: regular screen colours [default]; option
+<strong>+rv</strong>. See note in <strong>COLORS AND GRAPHICS</strong> section.
+</dd>
+<p></p>
+<dt><strong><a name="item_jumpscroll_3a_boolean"><strong>jumpScroll:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: specify that jump scrolling should be used. When scrolling
+quickly, fewer screen updates are performed [default]; option <strong>-j</strong>.
+<strong>False</strong>: specify that smooth scrolling should be used; option <strong>+j</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_inheritpixmap_3a_boolean"><strong>inheritPixmap:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: make the background inherit the parent windows' pixmap, giving
+artificial transparency. <strong>False</strong>: do not inherit the parent windows'
+pixmap.
+</dd>
+<p></p>
+<dt><strong><a name="item_fading_3a_number"><strong>fading:</strong> <em>number</em></a></strong><br />
+</dt>
+<dd>
+Fade the text by the given percentage when focus is lost.
+</dd>
+<p></p>
+<dt><strong><a name="item_tintcolor_3a_colour"><strong>tintColor:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Tint the transparent background pixmap with the given colour.
+</dd>
+<p></p>
+<dt><strong><a name="item_shading_3a_number"><strong>shading:</strong> <em>number</em></a></strong><br />
+</dt>
+<dd>
+Darken (0 .. 100) or lighten (-1 .. -100) the transparent background
+image in addition to tinting it.
+</dd>
+<p></p>
+<dt><strong><a name="item_scrollcolor_3a_colour"><strong>scrollColor:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Use the specified colour for the scrollbar [default #B2B2B2].
+</dd>
+<p></p>
+<dt><strong><a name="item_troughcolor_3a_colour"><strong>troughColor:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Use the specified colour for the scrollbar's trough area [default
+#969696]. Only relevant for normal (non XTerm/NeXT) scrollbar.
+</dd>
+<p></p>
+<dt><strong><a name="item_bordercolor_3a_colour"><strong>borderColor:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+The colour of the border around the text area and between the scrollbar
+and the text.
+</dd>
+<p></p>
+<dt><strong><a name="item_backgroundpixmap_3a_file_5b_3bgeom_5d"><strong>backgroundPixmap:</strong> <em>file[;geom]</em></a></strong><br />
+</dt>
+<dd>
+Use the specified XPM file (note the `.xpm' extension is optional) for
+the background and also optionally specify its scaling with a geometry
+string <strong>WxH+X+Y</strong>, in which <strong>``W'' / ``H''</strong> specify the
+horizontal/vertical scale (percent) and <strong>``X'' / ``Y''</strong> locate the image
+centre (percent). A scale of 0 displays the image with tiling. A scale
+of 1 displays the image without any scaling. A scale of 2 to 9
+specifies an integer number of images in that direction. No image will
+be magnified beyond 10 times its original size. The maximum permitted
+scale is 1000. [default 0x0+50+50]
+</dd>
+<p></p>
+<dt><strong><a name="item_menu_3a_file_5b_3btag_5d"><strong>menu:</strong> <em>file[;tag]</em></a></strong><br />
+</dt>
+<dd>
+Read in the specified menu file (note the `.menu' extension is
+optional) and also optionally specify a starting tag to find. See the
+reference documentation for details on the syntax for the menuBar.
+</dd>
+<p></p>
+<dt><strong><a name="item_path_3a_path"><strong>path:</strong> <em>path</em></a></strong><br />
+</dt>
+<dd>
+Specify the colon-delimited search path for finding files (XPM and
+menus), in addition to the paths specified by the <strong>RXVTPATH</strong> and
+<strong>PATH</strong> environment variables.
+</dd>
+<p></p>
+<dt><strong><a name="item_font_3a_fontlist"><strong>font:</strong> <em>fontlist</em></a></strong><br />
+</dt>
+<dd>
+Select the fonts to be used. This is a comma separated list of font
+names that are used in turn when trying to display Unicode characters.
+The first font defines the cell size for characters; other fonts might
+be smaller, but not larger. A reasonable default font list is always
+appended to it. option <strong>-fn</strong>.
+</dd>
+<dd>
+<p>Each font can either be a standard X11 core font (XLFD) name, with
+optional prefix <code>x:</code> or a Xft font (Compile xft), prefixed with <code>xft:</code>.</p>
+</dd>
+<dd>
+<p>In addition, each font can be prefixed with additional hints and
+specifications enclosed in square brackets (<code>[]</code>). The only available
+hint currently is <code>codeset=codeset-name</code>, and this is only used for Xft
+fonts.</p>
+</dd>
+<dd>
+<p>For example, this font resource</p>
+</dd>
+<dd>
+<pre>
+   URxvt*font: 9x15bold,\
+               -misc-fixed-bold-r-normal--15-140-75-75-c-90-iso10646-1,\
+               -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1, \
+               [codeset=JISX0208]xft:Kochi Gothic:antialias=false, \
+               xft:Code2000:antialias=false</pre>
+</dd>
+<dd>
+<p>specifies five fonts to be used. The first one is <code>9x15bold</code> (actually
+the iso8859-1 version of the second font), which is the base font (because
+it is named first) and thus defines the character cell grid to be 9 pixels
+wide and 15 pixels high.</p>
+</dd>
+<dd>
+<p>The second font is just used to add additional unicode characters not in
+the base font, likewise the third, which is unfortunately non-bold, but
+the bold version of the font does contain less characters, so this is a
+useful supplement.</p>
+</dd>
+<dd>
+<p>The third font is an Xft font with aliasing turned off, and the characters
+are limited to the <strong>JIS 0208</strong> codeset (i.e. japanese kanji). The font
+contains other characters, but we are not interested in them.</p>
+</dd>
+<dd>
+<p>The last font is a useful catch-all font that supplies most of the
+remaining unicode characters.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_boldfont_3a_fontlist"><strong>boldFont:</strong> <em>fontlist</em></a></strong><br />
+</dt>
+<dt><strong><a name="item_italicfont_3a_fontlist"><strong>italicFont:</strong> <em>fontlist</em></a></strong><br />
+</dt>
+<dt><strong><a name="item_bolditalicfont_3a_fontlist"><strong>boldItalicFont:</strong> <em>fontlist</em></a></strong><br />
+</dt>
+<dd>
+The font list to use for displaying <strong>bold</strong>, <em>italic</em> or <strong><em>bold
+italic</em> </strong>&gt; characters, respectively.
+</dd>
+<dd>
+<p>If specified and non-empty, then the syntax is the same as for the
+<strong>font</strong>-resource, and the given font list will be used as is, which makes
+it possible to substitute completely different font styles for bold and
+italic.</p>
+</dd>
+<dd>
+<p>If unset (the default), a suitable font list will be synthesized by
+``morphing'' the normal text font list into the desired shape. If that is
+not possible, replacement fonts of the desired shape will be tried.</p>
+</dd>
+<dd>
+<p>If set, but empty, then this specific style is disabled and the normal
+text font will being used for the given style.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_selectstyle_3a_mode"><strong>selectstyle:</strong> <em>mode</em></a></strong><br />
+</dt>
+<dd>
+Set mouse selection style to <strong>old</strong> which is 2.20, <strong>oldword</strong> which is
+xterm style with 2.20 old word selection, or anything else which gives
+xterm style selection.
+</dd>
+<p></p>
+<dt><strong><a name="item_scrollstyle_3a_mode"><strong>scrollstyle:</strong> <em>mode</em></a></strong><br />
+</dt>
+<dd>
+Set scrollbar style to <strong>rxvt</strong>, <strong>plain</strong>, <strong>next</strong> or <strong>xterm</strong>. <strong>plain</strong> is
+the author's favourite..
+</dd>
+<p></p>
+<dt><strong><a name="item_title_3a_string"><strong>title:</strong> <em>string</em></a></strong><br />
+</dt>
+<dd>
+Set window title string, the default title is the command-line
+specified after the <strong>-e</strong> option, if any, otherwise the application
+name; option <strong>-title</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_iconname_3a_string"><strong>iconName:</strong> <em>string</em></a></strong><br />
+</dt>
+<dd>
+Set the name used to label the window's icon or displayed in an icon
+manager window, it also sets the window's title unless it is explicitly
+set; option <strong>-n</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_mapalert_3a_boolean"><strong>mapAlert:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: de-iconify (map) on receipt of a bell character. <strong>False</strong>: no
+de-iconify (map) on receipt of a bell character [default].
+</dd>
+<p></p>
+<dt><strong><a name="item_visualbell_3a_boolean"><strong>visualBell:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: use visual bell on receipt of a bell character; option <strong>-vb</strong>.
+<strong>False</strong>: no visual bell [default]; option <strong>+vb</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_loginshell_3a_boolean"><strong>loginShell:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: start as a login shell by prepending a `-' to <strong>argv[0]</strong> of
+the shell; option <strong>-ls</strong>. <strong>False</strong>: start as a normal sub-shell
+[default]; option <strong>+ls</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_utmpinhibit_3a_boolean"><strong>utmpInhibit:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: inhibit writing record into the system log file <strong>utmp</strong>;
+option <strong>-ut</strong>. <strong>False</strong>: write record into the system log file <strong>utmp</strong>
+[default]; option <strong>+ut</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_print_2dpipe_3a_string"><strong>print-pipe:</strong> <em>string</em></a></strong><br />
+</dt>
+<dd>
+Specify a command pipe for vt100 printer [default <em>lpr(1)</em>]. Use
+<strong>Print</strong> to initiate a screen dump to the printer and <strong>Ctrl-Print</strong> or
+<strong>Shift-Print</strong> to include the scrollback as well.
+</dd>
+<p></p>
+<dt><strong><a name="item_scrollbar_3a_boolean"><strong>scrollBar:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: enable the scrollbar [default]; option <strong>-sb</strong>. <strong>False</strong>:
+disable the scrollbar; option <strong>+sb</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_scrollbar_right_3a_boolean"><strong>scrollBar_right:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: place the scrollbar on the right of the window; option <strong>-sr</strong>.
+<strong>False</strong>: place the scrollbar on the left of the window; option <strong>+sr</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_scrollbar_floating_3a_boolean"><strong>scrollBar_floating:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: display an rxvt scrollbar without a trough; option <strong>-st</strong>.
+<strong>False</strong>: display an rxvt scrollbar with a trough; option <strong>+st</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_scrollbar_align_3a_mode"><strong>scrollBar_align:</strong> <em>mode</em></a></strong><br />
+</dt>
+<dd>
+Align the <strong>top</strong>, <strong>bottom</strong> or <strong>centre</strong> [default] of the scrollbar
+thumb with the pointer on middle button press/drag.
+</dd>
+<p></p>
+<dt><strong><a name="item_scrollttyoutput_3a_boolean"><strong>scrollTtyOutput:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: scroll to bottom when tty receives output; option <strong>-si</strong>.
+<strong>False</strong>: do not scroll to bottom when tty receives output; option
+<strong>+si</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_scrollwithbuffer_3a_boolean"><strong>scrollWithBuffer:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: scroll with scrollback buffer when tty receives new lines (and
+<strong>scrollTtyOutput</strong> is False); option <strong>+sw</strong>. <strong>False</strong>: do not scroll
+with scrollback buffer when tty recieves new lines; option <strong>-sw</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_scrollttykeypress_3a_boolean"><strong>scrollTtyKeypress:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: scroll to bottom when a non-special key is pressed. Special keys
+are those which are intercepted by rxvt-unicode for special handling and
+are not passed onto the shell; option <strong>-sk</strong>. <strong>False</strong>: do not scroll to
+bottom when a non-special key is pressed; option <strong>+sk</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_savelines_3a_number"><strong>saveLines:</strong> <em>number</em></a></strong><br />
+</dt>
+<dd>
+Save <em>number</em> lines in the scrollback buffer [default 64]. This
+resource is limited on most machines to 65535; option <strong>-sl</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_internalborder_3a_number"><strong>internalBorder:</strong> <em>number</em></a></strong><br />
+</dt>
+<dd>
+Internal border of <em>number</em> pixels. This resource is limited to 100;
+option <strong>-b</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_externalborder_3a_number"><strong>externalBorder:</strong> <em>number</em></a></strong><br />
+</dt>
+<dd>
+External border of <em>number</em> pixels. This resource is limited to 100;
+option <strong>-w</strong>, <strong>-bw</strong>, <strong>-borderwidth</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_borderless_3a_boolean"><strong>borderLess:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+Set MWM hints to request a borderless window, i.e. if honoured by the
+WM, the rxvt-unicode window will not have window decorations; option <strong>-bl</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_termname_3a_termname"><strong>termName:</strong> <em>termname</em></a></strong><br />
+</dt>
+<dd>
+Specifies the terminal type name to be set in the <strong>TERM</strong> environment
+variable; option <strong>-tn</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_linespace_3a_number"><strong>linespace:</strong> <em>number</em></a></strong><br />
+</dt>
+<dd>
+Specifies number of lines (pixel height) to insert between each row of
+the display [default 0]; option <strong>-lsp</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_meta8_3a_boolean"><strong>meta8:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: handle Meta (Alt) + keypress to set the 8th bit. <strong>False</strong>:
+handle Meta (Alt) + keypress as an escape prefix [default].
+</dd>
+<p></p>
+<dt><strong><a name="item_mousewheelscrollpage_3a_boolean"><strong>mouseWheelScrollPage:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: the mouse wheel scrolls a page full. <strong>False</strong>: the mouse wheel
+scrolls five lines [default].
+</dd>
+<p></p>
+<dt><strong><a name="item_pastabletabs_3a_boolean"><strong>pastableTabs:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: store tabs as wide characters. <strong>False</strong>: interpret tabs as cursor
+movement only; option <code>-ptab</code>.
+</dd>
+<p></p>
+<dt><strong><a name="item_cursorblink_3a_boolean"><strong>cursorBlink:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: blink the cursor. <strong>False</strong>: do not blink the cursor [default];
+option <strong>-bc</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_pointerblank_3a_boolean"><strong>pointerBlank:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+<strong>True</strong>: blank the pointer when a key is pressed or after a set number
+of seconds of inactivity. <strong>False</strong>: the pointer is always visible
+[default].
+</dd>
+<p></p>
+<dt><strong><a name="item_pointercolor_3a_colour"><strong>pointerColor:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Mouse pointer foreground colour.
+</dd>
+<p></p>
+<dt><strong><a name="item_pointercolor2_3a_colour"><strong>pointerColor2:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Mouse pointer background colour.
+</dd>
+<p></p>
+<dt><strong><a name="item_pointerblankdelay_3a_number"><strong>pointerBlankDelay:</strong> <em>number</em></a></strong><br />
+</dt>
+<dd>
+Specifies number of seconds before blanking the pointer [default 2].
+</dd>
+<p></p>
+<dt><strong><a name="item_backspacekey_3a_string"><strong>backspacekey:</strong> <em>string</em></a></strong><br />
+</dt>
+<dd>
+The string to send when the backspace key is pressed. If set to <strong>DEC</strong>
+or unset it will send <strong>Delete</strong> (code 127) or, if shifted, <strong>Backspace</strong>
+(code 8) - which can be reversed with the appropriate DEC private mode
+escape sequence.
+</dd>
+<p></p>
+<dt><strong><a name="item_deletekey_3a_string"><strong>deletekey:</strong> <em>string</em></a></strong><br />
+</dt>
+<dd>
+The string to send when the delete key (not the keypad delete key) is
+pressed. If unset it will send the sequence traditionally associated
+with the <strong>Execute</strong> key.
+</dd>
+<p></p>
+<dt><strong><a name="item_cutchars_3a_string"><strong>cutchars:</strong> <em>string</em></a></strong><br />
+</dt>
+<dd>
+The characters used as delimiters for double-click word selection. The
+built-in default:
+</dd>
+<dd>
+<p><strong>BACKSLASH ```'&amp;()*,;&lt;=</strong>?@[]{|} &gt;&gt;</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_preedittype_3a_style"><strong>preeditType:</strong> <em>style</em></a></strong><br />
+</dt>
+<dd>
+<strong>OverTheSpot</strong>, <strong>OffTheSpot</strong>, <strong>Root</strong>; option <strong>-pt</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_inputmethod_3a_name"><strong>inputMethod:</strong> <em>name</em></a></strong><br />
+</dt>
+<dd>
+<em>name</em> of inputMethod to use; option <strong>-im</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_imlocale_3a_name"><strong>imLocale:</strong> <em>name</em></a></strong><br />
+</dt>
+<dd>
+The locale to use for opening the IM. You can use an LC_CTYPE of e.g.
+de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP for the input
+extension to be able to input japanese characters while staying in
+another locale. option <strong>-imlocale</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_insecure_3a_boolean"><strong>insecure:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+Enables ``insecure'' mode. Rxvt-unicode offers some escape sequences that
+echo arbitrary strings like the icon name or the locale. This could be
+abused if somebody gets 8-bit-clean access to your display, whether
+throuh a mail client displaying mail bodies unfiltered or though
+write(1). Therefore, these sequences are disabled by default. (Note
+that other terminals, including xterm, have these sequences
+enabled by default). You can enable them by setting this boolean
+resource or specifying <strong>-insecure</strong> as an option. At the moment, this
+enabled display-answer, locale, findfont, icon label and window title
+requests as well as dynamic menubar dispatch.
+</dd>
+<p></p>
+<dt><strong><a name="item_modifier_3a_modifier"><strong>modifier:</strong> <em>modifier</em></a></strong><br />
+</dt>
+<dd>
+Set the key to be interpreted as the Meta key to: <strong>alt</strong>, <strong>meta</strong>,
+<strong>hyper</strong>, <strong>super</strong>, <strong>mod1</strong>, <strong>mod2</strong>, <strong>mod3</strong>, <strong>mod4</strong>, <strong>mod5</strong>; option
+<strong>-mod</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_answerbackstring_3a_string"><strong>answerbackString:</strong> <em>string</em></a></strong><br />
+</dt>
+<dd>
+Specify the reply rxvt-unicode sends to the shell when an ENQ (control-E)
+character is passed through. It may contain escape values as described
+in the entry on <strong>keysym</strong> following.
+</dd>
+<p></p>
+<dt><strong><a name="item_secondaryscreen_3a_bool"><strong>secondaryScreen:</strong> <em>bool</em></a></strong><br />
+</dt>
+<dd>
+Turn on/off secondary screen (default enabled).
+</dd>
+<p></p>
+<dt><strong><a name="item_secondaryscroll_3a_bool"><strong>secondaryScroll:</strong> <em>bool</em></a></strong><br />
+</dt>
+<dd>
+Turn on/off secondary screen scroll (default enabled). If the this
+option is enabled, scrolls on the secondary screen will change the
+scrollback buffer and switching to/from the secondary screen will
+instead scroll the screen up.
+</dd>
+<p></p>
+<dt><strong><a name="item_keysym_2esym_3a_string"><strong>keysym.</strong><em>sym</em>: <em>string</em></a></strong><br />
+</dt>
+<dd>
+Associate <em>string</em> with keysym <em>sym</em> (<strong>0xFF00 - 0xFFFF</strong>). It may
+contain escape values (\a: bell, \b: backspace, \e, \E: escape, \n:
+newline, \r: return, \t:
+tab, \000: octal number) or control characters (^?: delete, ^@: null,
+^A ...) and may enclosed with double quotes so that it can start or end
+with whitespace. The intervening resource name <strong>keysym.</strong> cannot be
+omitted. This resource is only available when compiled with
+KEYSYM_RESOURCE.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="the_scrollbar">THE SCROLLBAR</a></h1>
+<p>Lines of text that scroll off the top of the <strong>rxvt</strong> window
+(resource: <strong>saveLines</strong>) and can be scrolled back using the scrollbar
+or by keystrokes. The normal <strong>rxvt</strong> scrollbar has arrows and
+its behaviour is fairly intuitive. The <strong>xterm-scrollbar</strong> is without
+arrows and its behaviour mimics that of <em>xterm</em></p>
+<p>Scroll down with <strong>Button1</strong> (<strong>xterm-scrollbar</strong>) or <strong>Shift-Next</strong>.
+Scroll up with <strong>Button3</strong> (<strong>xterm-scrollbar</strong>) or <strong>Shift-Prior</strong>.
+Continuous scroll with <strong>Button2</strong>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="mouse_reporting">MOUSE REPORTING</a></h1>
+<p>To temporarily override mouse reporting, for either the scrollbar or
+the normal text selection/insertion, hold either the Shift or the Meta
+(Alt) key while performing the desired mouse action.</p>
+<p>If mouse reporting mode is active, the normal scrollbar actions are
+disabled -- on the assumption that we are using a fullscreen
+application. Instead, pressing Button1 and Button3 sends <strong>ESC[6~</strong>
+(Next) and <strong>ESC[5~</strong> (Prior), respectively. Similarly, clicking on the
+up and down arrows sends <strong>ESC[A</strong> (Up) and <strong>ESC[B</strong> (Down),
+respectively.</p>
+<p>
+</p>
+<hr />
+<h1><a name="text_selection_and_insertion">TEXT SELECTION AND INSERTION</a></h1>
+<p>The behaviour of text selection and insertion mechanism is similar to
+<em>xterm</em>(1).</p>
+<dl>
+<dt><strong><a name="item_selection_3a"><strong>Selection</strong>:</a></strong><br />
+</dt>
+<dd>
+Left click at the beginning of the region, drag to the end of the
+region and release; Right click to extend the marked region; Left
+double-click to select a word; Left triple-click to select the entire
+line.
+</dd>
+<dd>
+<p>Starting a selection while pressing the <strong>Meta</strong> key (or <strong>Meta+Ctrl</strong> keys)
+(Compile: frills) will create a rectangular selection instead of a normal
+one.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_insertion_3a"><strong>Insertion</strong>:</a></strong><br />
+</dt>
+<dd>
+Pressing and releasing the Middle mouse button (or <strong>Shift-Insert</strong>) in
+an <strong>rxvt</strong> window causes the current text selection to be
+inserted as if it had been typed on the keyboard.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="changing_fonts">CHANGING FONTS</a></h1>
+<p>Changing fonts (or font sizes, respectively) via the keypad is not yet
+supported in rxvt-unicode. Bug me if you need this.</p>
+<p>You can, however, switch fonts at runtime using escape sequences (and
+therefore using the menubar), e.g.:</p>
+<pre>
+   printf '\e]701;%s\007' &quot;9x15bold,xft:Kochi Gothic&quot;</pre>
+<p>rxvt-unicode will automatically re-apply these fonts to the output so far.</p>
+<p>
+</p>
+<hr />
+<h1><a name="iso_14755_support">ISO 14755 SUPPORT</a></h1>
+<p>ISO 14755 is a standard for entering and viewing unicode characters
+and character codes using the keyboard. It consists of 4 parts. The
+first part is available rxvt-unicode has been compiled with
+<code>--enable-frills</code>, the rest is available when rxvt-unicode was compiled
+with <code>--enable-iso14755</code>.</p>
+<ol>
+<li><strong><a name="item_1_3a_basic_method">1: Basic method</a></strong><br />
+</li>
+This allows you to enter unicode characters using their hexcode.
+<p>Start by pressing and holding both <code>Control</code> and <code>Shift</code>, then enter
+hex-digits (between one and six). Releasing <code>Control</code> and <code>Shift</code> will
+commit the character as if it were typed directly. While holding down
+<code>Control</code> and <code>Shift</code> you can also enter multiple characters by pressing
+<code>Space</code>, which will commit the current character and lets you start a new
+one.</p>
+<p>As an example of use, imagine a business card with a japanese e-mail
+address, which you cannot type. Fortunately, the card has the e-mail
+address printed as hexcodes, e.g. <code>671d 65e5</code>. You can enter this easily
+by pressing <code>Control</code> and <code>Shift</code>, followed by <code>6-7-1-D-SPACE-6-5-E-5</code>,
+followed by releasing the modifier keys.</p>
+<p></p>
+<li><strong><a name="item_2_3a_keyboard_symbols_entry_method">2: Keyboard symbols entry method</a></strong><br />
+</li>
+This mode lets you input characters representing the keycap symbols of
+your keyboard, if representable in the current locale encoding.
+<p>Start by pressing <code>Control</code> and <code>Shift</code> together, then releasing
+them. The next special key (cursor keys, home etc.) you enter will not
+invoke it's usual function but instead will insert the corresponding
+keycap symbol. The symbol will only be entered when the key has been
+released, otherwise pressing e.g. <code>Shift</code> would enter the symbol for
+<code>ISO Level 2 Switch</code>, although your intention might have been to enter a
+reverse tab (Shift-Tab).</p>
+<p></p>
+<li><strong><a name="item_3_3a_screen_2dselection_entry_method">3: Screen-selection entry method</a></strong><br />
+</li>
+While this is implemented already (it's basically the selection
+mechanism), it could be extended by displaying a unicode character map.
+<p></p>
+<li><strong><a name="item_4_3a_feedback_method_for_identifying_displayed_cha">4: Feedback method for identifying displayed characters for later input</a></strong><br />
+</li>
+This method lets you display the unicode character code associated with
+characters already displayed.
+<p>You enter this mode by holding down <code>Control</code> and <code>Shift</code> together, then
+pressing and holding the left mouse button and moving around. The unicode
+hex <code>code(s)</code> (it might be a combining character) of the character under the
+pointer is displayed until you release <code>Control</code> and <code>Shift</code>.</p>
+<p>In addition to the hex codes it will display the font used to draw this
+character - due to implementation reasons, characters combined with
+combining characters, line drawing characters and unknown characters will
+always be drawn using the built-in support font.</p>
+<p></p></ol>
+<p>With respect to conformance, rxvt-unicode is supposed to be compliant to
+both scenario A and B of ISO 14755, including part 5.2.</p>
+<p>
+</p>
+<hr />
+<h1><a name="login_stamp">LOGIN STAMP</a></h1>
+<p><strong>rxvt</strong> tries to write an entry into the <em>utmp</em>(5) file so
+that it can be seen via the <em>who(1)</em> command, and can accept messages.
+To allow this feature, <strong>rxvt</strong> must be installed setuid root on
+some systems.</p>
+<p>
+</p>
+<hr />
+<h1><a name="colors_and_graphics">COLORS AND GRAPHICS</a></h1>
+<p>In addition to the default foreground and background colours,
+<strong>rxvt</strong> can display up to 16 colours (8 ANSI colours plus
+high-intensity bold/blink versions of the same). Here is a list of the
+colours with their <strong>rgb.txt</strong> names.</p>
+<table>
+<tr><td>color0</td><td>(black)</td><td>= Black</td></tr>
+<tr><td>color1</td><td>(red)</td><td>= Red3</td></tr>
+<tr><td>color2</td><td>(green)</td><td>= Green3</td></tr>
+<tr><td>color3</td><td>(yellow)</td><td>= Yellow3</td></tr>
+<tr><td>color4</td><td>(blue)</td><td>= Blue3</td></tr>
+<tr><td>color5</td><td>(magenta)</td><td>= Magenta3</td></tr>
+<tr><td>color6</td><td>(cyan)</td><td>= Cyan3</td></tr>
+<tr><td>color7</td><td>(white)</td><td>= AntiqueWhite</td></tr>
+<tr><td>color8</td><td>(bright black)</td><td>= Grey25</td></tr>
+<tr><td>color9</td><td>(bright red)</td><td>= Red</td></tr>
+<tr><td>color10</td><td>(bright green)</td><td>= Green</td></tr>
+<tr><td>color11</td><td>(bright yellow)</td><td>= Yellow</td></tr>
+<tr><td>color12</td><td>(bright blue)</td><td>= Blue</td></tr>
+<tr><td>color13</td><td>(bright magenta)</td><td>= Magenta</td></tr>
+<tr><td>color14</td><td>(bright cyan)</td><td>= Cyan</td></tr>
+<tr><td>color15</td><td>(bright white)</td><td>= White</td></tr>
+<tr><td>foreground</td><td></td><td>= Black</td></tr>
+<tr><td>background</td><td></td><td>= White</td></tr>
+</table><p>It is also possible to specify the colour values of <strong>foreground</strong>,
+<strong>background</strong>, <strong>cursorColor</strong>, <strong>cursorColor2</strong>, <strong>colorBD</strong>, <strong>colorUL</strong> as
+a number 0-15, as a convenient shorthand to reference the colour name of
+color0-color15.</p>
+<p>Note that <strong>-rv</strong> (<strong>``reverseVideo: True''</strong>) simulates reverse video by
+always swapping the foreground/background colours. This is in contrast to
+<em>xterm</em>(1) where the colours are only swapped if they have not otherwise
+been specified. For example,</p>
+<dl>
+<dt><strong><a name="item_rxvt__2dfg_black__2dbg_white__2drv"><strong>rxvt -fg Black -bg White -rv</strong></a></strong><br />
+</dt>
+<dd>
+would yield White on Black, while on <em>xterm</em>(1) it would yield Black
+on White.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="environment">ENVIRONMENT</a></h1>
+<p><strong>rxvt</strong> sets the environment variables <strong>TERM</strong>, <strong>COLORTERM</strong>
+and <strong>COLORFGBG</strong>. The environment variable <strong>WINDOWID</strong> is set to the X
+window id number of the <strong>rxvt</strong> window and it also uses and
+sets the environment variable <strong>DISPLAY</strong> to specify which display
+terminal to use. <strong>rxvt</strong> uses the environment variables
+<strong>RXVTPATH</strong> and <strong>PATH</strong> to find XPM files.</p>
+<p>
+</p>
+<hr />
+<h1><a name="files">FILES</a></h1>
+<dl>
+<dt><strong><a name="item__2fetc_2futmp"><strong>/etc/utmp</strong></a></strong><br />
+</dt>
+<dd>
+System file for login records.
+</dd>
+<p></p>
+<dt><strong><a name="item__2fusr_2flib_2fx11_2frgb_2etxt"><strong>/usr/lib/X11/rgb.txt</strong></a></strong><br />
+</dt>
+<dd>
+Color names.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p>rxvt(7), xterm(1), sh(1), resize(1), X(1), pty(4), tty(4), <code>utmp(5)</code></p>
+<p>
+</p>
+<hr />
+<h1><a name="bugs">BUGS</a></h1>
+<p>Check the BUGS file for an up-to-date list.</p>
+<p>Cursor change support is not yet implemented.</p>
+<p>Click-and-drag doesn't work with X11 mouse report overriding.</p>
+<p>
+</p>
+<hr />
+<h1><a name="current_project_coordinator">CURRENT PROJECT COORDINATOR</a></h1>
+<dl>
+<dt><strong><a name="item_project_coordinator">Project Coordinator</a></strong><br />
+</dt>
+<dd>
+Marc A. Lehmann <em><a href="mailto:rxvt@schmorp.de">rxvt@schmorp.de</a></em>
+</dd>
+<p></p>
+<dt><strong><a name="item_web_page_maintainter">Web page maintainter</a></strong><br />
+</dt>
+<dd>
+Marc A. Lehmann <em><a href="mailto:rxvt@schmorp.de">rxvt@schmorp.de</a></em>
+</dd>
+<dd>
+<p><a href="http://software.schmorp.de/">http://software.schmorp.de/</a></p>
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<dl>
+<dt><strong><a name="item_john_bovey">John Bovey</a></strong><br />
+</dt>
+<dd>
+University of Kent, 1992, wrote the original Xvt.
+</dd>
+<p></p>
+<dt><strong><a name="item_rob_nation__3cnation_40rocket_2esanders_2elockheed">Rob Nation <em><a href="mailto:<nation@rocket.sanders.lockheed.com"><nation@rocket.sanders.lockheed.com</a></em>&gt;</a></strong><br />
+</dt>
+<dd>
+very heavily modified Xvt and came up with Rxvt
+</dd>
+<p></p>
+<dt><strong><a name="item_angelo_haritsis__3cah_40doc_2eic_2eac_2euk_3e">Angelo Haritsis <em><a href="mailto:<ah@doc.ic.ac.uk"><ah@doc.ic.ac.uk</a></em>&gt;</a></strong><br />
+</dt>
+<dd>
+wrote the Greek Keyboard Input (no longer in code)
+</dd>
+<p></p>
+<dt><strong><a name="item_mj_olesen__3colesen_40me_2equeensu_2eca_3e">mj olesen <em><a href="mailto:<olesen@me.QueensU.CA"><olesen@me.QueensU.CA</a></em>&gt;</a></strong><br />
+</dt>
+<dd>
+Wrote the menu system.
+</dd>
+<dd>
+<p>Project Coordinator (changes.txt 2.11 to 2.21)</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_oezguer_kesim__3ckesim_40math_2efu_2dberlin_2ede_3">Oezguer Kesim <em><a href="mailto:<kesim@math.fu-berlin.de"><kesim@math.fu-berlin.de</a></em>&gt;</a></strong><br />
+</dt>
+<dd>
+Project Coordinator (changes.txt 2.21a to 2.4.5)
+</dd>
+<p></p>
+<dt><strong><a name="item_geoff_wing__3cgcw_40pobox_2ecom_3e">Geoff Wing <em><a href="mailto:<gcw@pobox.com"><gcw@pobox.com</a></em>&gt;</a></strong><br />
+</dt>
+<dd>
+Rewrote screen display and text selection routines. Project Coordinator
+(changes.txt 2.4.6 - rxvt-unicode)
+</dd>
+<p></p>
+<dt><strong><a name="item_marc_alexander_lehmann__3crxvt_40schmorp_2ede_3e">Marc Alexander Lehmann <em><a href="mailto:<rxvt@schmorp.de"><rxvt@schmorp.de</a></em>&gt;</a></strong><br />
+</dt>
+<dd>
+Forked rxvt-unicode, rewrote most of the display code and internal
+character handling to store text in unicode, improve xterm
+compatibility and apply numerous other bugfixes and extensions.
+</dd>
+<dd>
+<p>Project Coordinator (Changes 1.0 -)</p>
+</dd>
+<p></p></dl>
+
+</body>
+
+</html>
