@@ -1242,12 +1242,12 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   if (menuBar_height ())
     {
       menuBar.win = XCreateSimpleWindow (display->display, TermWin.parent[0],
-                                        window_vt_x, 0,
-                                        TermWin_TotalWidth (),
-                                        menuBar_TotalHeight (),
-                                        0,
-                                        PixColors[Color_fg],
-                                        PixColors[Color_scroll]);
+                                         window_vt_x, 0,
+                                         TermWin_TotalWidth (),
+                                         menuBar_TotalHeight (),
+                                         0,
+                                         PixColors[Color_fg],
+                                         PixColors[Color_scroll]);
 
 #ifdef DEBUG_X
       XStoreName (display->display, menuBar.win, "menubar");

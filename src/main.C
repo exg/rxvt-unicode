@@ -120,13 +120,15 @@ rxvt_term::~rxvt_term ()
 
   if (display)
     {
+#if defined(MENUBAR) && (MENUBAR_MAX > 1)
+      delete menuBar.drawable;
+      //if (menuBar.win)
+      //  XDestroyWindow (display->display, menuBar.win);
+#endif
+      delete TermWin.drawable;
+      // destroy all windows
       if (TermWin.parent[0])
         XDestroyWindow (display->display, TermWin.parent[0]);
-#if defined(MENUBAR) && (MENUBAR_MAX > 1)
-      if (menuBar.win)
-        XDestroyWindow (display->display, menuBar.win);
-      delete menuBar.drawable;
-#endif
     }
 
   // TODO: free pixcolours, colours should become part of rxvt_display
