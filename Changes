@@ -1,7 +1,23 @@
 1.4
 	- fix stupid segfault on esc-c.
 
-1.3
-1.2
-1.1
+1.3  2003-12-26
+        - fix a bug in font height selection
+        - autoscale scalable x11 fonts
+        - slow-mode xft rendering centers characters
+        - much faster x11 font selecti
+
+1.2  2003-12-24
+        - fix another segfault-on-resize-bug form the original rxvt
+        - better font matching
+        - better memory management (less memory)
+        - new fallback: gnu freefont
+
+1.1  2003-12-18
+        - Support for XIM in other than the current locale.
+        - Support for non-utf-8-locales
+        - much improved font choosing
+
 1.0
+        - first release
+        - original cloned from rxvt-CVS 2003-11-19 00:26
