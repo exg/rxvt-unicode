@@ -147,25 +147,25 @@ AC_ARG_ENABLE(everything,
 AC_ARG_ENABLE(unicode3,
   [  --enable-unicode3       use 21 instead of 16 bits to represent unicode characters],
   [if test x$enableval = xyes -o x$enableval = xno; then
-    support_unicode3=yes
+    support_unicode3=$enableval
   fi])
 
 AC_ARG_ENABLE(combining,
   [  --enable-combining      enable composition of base and combining characters],
   [if test x$enableval = xyes -o x$enableval = xno; then
-    support_combining=yes
+    support_combining=$enableval
   fi])
 
 AC_ARG_ENABLE(xft,
   [  --enable-xft            enable xft support on systems that have it],
   [if test x$enableval = xyes -o x$enableval = xno; then
-    support_xft=yes
+    support_xft=$enableval
   fi])
 
 AC_ARG_ENABLE(font-styles,
   [  --enable-font-styles    enable bold and italic support],
   [if test x$enableval = xyes -o x$enableval = xno; then
-    support_styles=yes
+    support_styles=$enableval
   fi])
 
 AC_ARG_ENABLE(utmp,
@@ -289,7 +289,7 @@ AC_ARG_ENABLE(xgetdefault,
 AC_ARG_ENABLE(8bitctrls,
   [  --enable-8bitctrls      enable 8 bit control sequences (not recommended)],
   [if test x$enableval = xyes -o x$enableval = xno; then
-    support_8bitctrls=yes
+    support_8bitctrls=$enableval
   fi])
 
 RESFALLBACK=Rxvt
