@@ -444,7 +444,7 @@ bool
 rxvt_font_x11::set_properties (rxvt_fontprop &p, const char *name)
 {
   int slashes = 0;
-  const char *comp[12];
+  const char *comp[13];
 
   for (const char *c = name; *c; c++)
     if (*c == '-')
