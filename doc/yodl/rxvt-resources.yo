@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-resources.yo,v 1.14 2004/07/26 14:57:12 root Exp $ --)
+COMMENT(-- $Id: rxvt-resources.yo,v 1.15 2004/07/29 13:30:39 root Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpagesection(RESOURCES (available also as long-options))
 
@@ -73,7 +73,7 @@ startdit()
 	bf(True): make the background inherit the parent windows' pixmap,
 	giving artificial transparency.
 	bf(False): do not inherit the parent windows' pixmap.
-    dit(bf(tintColor) em(colour))
+    dit(bf(tintColor:) em(colour))
         Tint the transparent background pixmap with the given colour.
     dit(bf(scrollColor:) em(colour))
 	Use the specified colour for the scrollbar [default #B2B2B2].
