@@ -22,18 +22,8 @@
  *---------------------------------------------------------------------*/
 
 #include "../config.h"		/* NECESSARY */
+#include "rxvt.h"
 
-/*
- * Try to be self-contained except for the above autoconfig'd defines
- */
-
-#if 0
-#ifdef HAVE_GETPT
-# define _GNU_SOURCE
-#endif
-#endif
-
-#include <cstdio>
 #ifdef HAVE_STDLIB_H
 # include <cstdlib>
 #endif
@@ -59,11 +49,13 @@
 # include <stropts.h>
 #endif
 
-#ifdef DEBUG_TTY
-# define D_TTY(x)		fprintf x ; fputc('\n', stderr) ; fflush(stderr)
-#else
-# define D_TTY(x)
+#if defined( __FreeBSD__)
+// better do this via configure, but....
+# include <libutil.h>
 #endif
+
+#include <cstdio>
+#include <grp.h>
 
 /* ------------------------------------------------------------------------- *
  *                  GET PSEUDO TELETYPE - MASTER AND SLAVE                   *
@@ -73,14 +65,12 @@
  * If successful, ttydev is set to the name of the slave device.
  * fd_tty _may_ also be set to an open fd to the slave device
  */
-/* EXTPROTO */
-int
-rxvt_get_pty (int *fd_tty, const char **ttydev)
+static int
+get_pty (int *fd_tty, char **ttydev)
 {
   int pfd;
 
 #ifdef PTYS_ARE_OPENPTY
-
   char tty_name[sizeof "/dev/pts/????\0"];
 
   if (openpty (&pfd, fd_tty, tty_name, NULL, NULL) != -1)
@@ -115,7 +105,6 @@ rxvt_get_pty (int *fd_tty, const char **ttydev)
 #  ifdef PTYS_ARE_GETPT
     pfd = getpt ();
 #  else
-
     pfd = open ("/dev/ptmx", O_RDWR | O_NOCTTY, 0);
 #  endif
 
@@ -124,7 +113,7 @@ rxvt_get_pty (int *fd_tty, const char **ttydev)
         if (grantpt (pfd) == 0	/* change slave permissions */
             && unlockpt (pfd) == 0)
           {	/* slave now unlocked */
-            *ttydev = ptsname (pfd);	/* get slave's name */
+            *ttydev = strdup (ptsname (pfd));	/* get slave's name */
             return pfd;
           }
         close (pfd);
@@ -136,7 +125,7 @@ rxvt_get_pty (int *fd_tty, const char **ttydev)
 #ifdef PTYS_ARE_PTC
   if ((pfd = open ("/dev/ptc", O_RDWR | O_NOCTTY, 0)) >= 0)
     {
-      *ttydev = ttyname (pfd);
+      *ttydev = strdup (ttyname (pfd));
       return pfd;
     }
 #endif
@@ -144,20 +133,20 @@ rxvt_get_pty (int *fd_tty, const char **ttydev)
 #ifdef PTYS_ARE_CLONE
   if ((pfd = open ("/dev/ptym/clone", O_RDWR | O_NOCTTY, 0)) >= 0)
     {
-      *ttydev = ptsname (pfd);
+      *ttydev = strdup (ptsname (pfd));
       return pfd;
     }
 #endif
 
 #ifdef PTYS_ARE_NUMERIC
   {
-    int             idx;
-    char           *c1, *c2;
-    char            pty_name[] = "/dev/ptyp???";
-    char            tty_name[] = "/dev/ttyp???";
+    int idx;
+    char *c1, *c2;
+    char pty_name[] = "/dev/ptyp???";
+    char tty_name[] = "/dev/ttyp???";
 
-    c1 = & (pty_name[sizeof (pty_name) - 4]);
-    c2 = & (tty_name[sizeof (tty_name) - 4]);
+    c1 = &(pty_name[sizeof (pty_name) - 4]);
+    c2 = &(tty_name[sizeof (tty_name) - 4]);
     for (idx = 0; idx < 256; idx++)
       {
         sprintf (c1, "%d", idx);
@@ -167,6 +156,7 @@ rxvt_get_pty (int *fd_tty, const char **ttydev)
             idx = 256;
             break;
           }
+
         if ((pfd = open (pty_name, O_RDWR | O_NOCTTY, 0)) >= 0)
           {
             if (access (tty_name, R_OK | W_OK) == 0)
@@ -174,16 +164,18 @@ rxvt_get_pty (int *fd_tty, const char **ttydev)
                 *ttydev = strdup (tty_name);
                 return pfd;
               }
+
             close (pfd);
           }
       }
   }
 #endif
+
 #ifdef PTYS_ARE_SEARCHED
   {
-    const char     *c1, *c2;
-    char            pty_name[] = "/dev/pty??";
-    char            tty_name[] = "/dev/tty??";
+    const char *c1, *c2;
+    char pty_name[] = "/dev/pty??";
+    char tty_name[] = "/dev/tty??";
 
 # ifndef PTYCHAR1
 #  define PTYCHAR1	"pqrstuvwxyz"
@@ -207,12 +199,14 @@ rxvt_get_pty (int *fd_tty, const char **ttydev)
                     *ttydev = strdup (tty_name);
                     return pfd;
                   }
+
                 close (pfd);
               }
           }
       }
   }
 #endif
+
   return -1;
 }
 
@@ -220,9 +214,8 @@ rxvt_get_pty (int *fd_tty, const char **ttydev)
 /*
  * Returns tty file descriptor, or -1 on failure 
  */
-/* EXTPROTO */
-int
-rxvt_get_tty (const char *ttydev)
+static int
+get_tty (char *ttydev)
 {
   return open (ttydev, O_RDWR | O_NOCTTY, 0);
 }
@@ -231,14 +224,12 @@ rxvt_get_tty (const char *ttydev)
 /*
  * Make our tty a controlling tty so that /dev/tty points to us
  */
-/* EXTPROTO */
-int
-rxvt_control_tty (int fd_tty, const char *ttydev)
+static int
+control_tty (int fd_tty, const char *ttydev)
 {
 #ifndef __QNX__
   int fd;
 
-  D_TTY ((stderr, "rxvt_control_tty (): pid: %d, tty fd: %d, dev: %s", getpid (), fd_tty, ttydev));
   /* ---------------------------------------- */
 # ifdef HAVE_SETSID
   setsid ();
@@ -248,22 +239,22 @@ rxvt_control_tty (int fd_tty, const char *ttydev)
 # elif defined(HAVE_SETPGRP)
   setpgrp (0, 0);
 # endif
+
   /* ---------------------------------------- */
 # ifdef TIOCNOTTY
-
   fd = open ("/dev/tty", O_RDWR | O_NOCTTY);
-  D_TTY ((stderr, "rxvt_control_tty (): Voiding tty associations: previous=%s", fd < 0 ? "no" : "yes"));
   if (fd >= 0)
     {
       ioctl (fd, TIOCNOTTY, NULL);	/* void tty associations */
       close (fd);
     }
 # endif
+
   /* ---------------------------------------- */
   fd = open ("/dev/tty", O_RDWR | O_NOCTTY);
-  D_TTY ((stderr, "rxvt_control_tty (): /dev/tty has controlling tty? %s", fd < 0 ? "no (good)" : "yes (bad)"));
   if (fd >= 0)
     close (fd);		/* ouch: still have controlling tty */
+
   /* ---------------------------------------- */
 #if defined(PTYS_ARE_PTMX) && defined(I_PUSH)
   /*
@@ -287,7 +278,6 @@ rxvt_control_tty (int fd_tty, const char *ttydev)
   if (isastream (fd_tty) == 1)
 # endif
     {
-      D_TTY ((stderr, "rxvt_control_tty (): Pushing STREAMS modules"));
       ioctl (fd_tty, I_PUSH, "ptem");
       ioctl (fd_tty, I_PUSH, "ldterm");
       ioctl (fd_tty, I_PUSH, "ttcompat");
@@ -296,27 +286,155 @@ rxvt_control_tty (int fd_tty, const char *ttydev)
   /* ---------------------------------------- */
 # if defined(TIOCSCTTY)
   fd = ioctl (fd_tty, TIOCSCTTY, NULL);
-  D_TTY ((stderr, "rxvt_control_tty (): ioctl (..,TIOCSCTTY): %d", fd));
 # elif defined(TIOCSETCTTY)
   fd = ioctl (fd_tty, TIOCSETCTTY, NULL);
-  D_TTY ((stderr, "rxvt_control_tty (): ioctl (..,TIOCSETCTTY): %d", fd));
 # else
   fd = open (ttydev, O_RDWR);
-  D_TTY ((stderr, "rxvt_control_tty (): tty open%s", fd < 0 ? " failure" : "ed OK"));
   if (fd >= 0)
     close (fd);
 # endif
   /* ---------------------------------------- */
   fd = open ("/dev/tty", O_WRONLY);
-  D_TTY ((stderr, "rxvt_control_tty (): do we have controlling tty now: %s", fd < 0 ? "no (fatal)" : "yes (good)"));
   if (fd < 0)
     return -1;		/* fatal */
   close (fd);
-  /* ---------------------------------------- */
-  D_TTY ((stderr, "rxvt_control_tty (): tcgetpgrp (): %d  getpgrp (): %d", tcgetpgrp (fd_tty), getpgrp ()));
   /* ---------------------------------------- */
 #endif				/* ! __QNX__ */
 
   return 0;
 }
+
+#ifndef NO_SETOWNER_TTYDEV
+static struct ttyconf {
+  gid_t gid;
+  mode_t mode;
+
+  ttyconf ()
+    {
+#ifdef TTY_GID_SUPPORT
+      struct group *gr = getgrnam ("tty");
+
+      if (gr)
+        {           /* change group ownership of tty to "tty" */
+          mode = S_IRUSR | S_IWUSR | S_IWGRP;
+          gid = gr->gr_gid;
+        }
+      else
+#endif                          /* TTY_GID_SUPPORT */
+        {
+          mode = S_IRUSR | S_IWUSR | S_IWGRP | S_IWOTH;
+          gid = getgid ();
+        }
+    }
+} ttyconf;
+
+void
+rxvt_ptytty::privileges (rxvt_privaction action)
+{
+  rxvt_privileges (RESTORE);
+
+  if (action == SAVE)
+    {
+      //next_tty_action = RESTORE;
+# ifndef RESET_TTY_TO_COMMON_DEFAULTS
+      /* store original tty status for restoration rxvt_clean_exit () -- rgg 04/12/95 */
+      if (lstat (name, &savestat) < 0)       /* you lose out */
+        ;//next_tty_action = IGNORE;
+      else
+# endif
+
+        {
+          chown (name, getuid (), ttyconf.gid);      /* fail silently */
+          chmod (name, ttyconf.mode);
+# ifdef HAVE_REVOKE
+          revoke (name);
+# endif
+
+        }
+    }
+  else
+    {                    /* action == RESTORE */
+      //next_tty_action = IGNORE;
+# ifndef RESET_TTY_TO_COMMON_DEFAULTS
+      chmod (name, savestat.st_mode);
+      chown (name, savestat.st_uid, savestat.st_gid);
+# else
+      chmod (name, (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH));
+      chown (name, 0, 0);
+# endif
+
+    }
+
+  rxvt_privileges (IGNORE);
+}
+#endif
+
+rxvt_ptytty::rxvt_ptytty ()
+{
+  pty = tty = -1;
+  name = 0;
+}
+
+rxvt_ptytty::~rxvt_ptytty ()
+{
+  put ();
+}
+
+void
+
+rxvt_ptytty::close_tty ()
+{
+  if (tty >= 0) close (tty);
+  tty = -1;
+}
+
+void
+rxvt_ptytty::put ()
+{
+#ifndef NO_SETOWNER_TTYDEV
+  if (tty >= 0)
+    privileges (RESTORE);
+#endif
+
+  if (pty >= 0) close (pty);
+  close_tty ();
+  free (name);
+
+  pty = tty = -1;
+  name = 0;
+}
+
+bool
+rxvt_ptytty::make_controlling_tty ()
+{
+  return control_tty (tty, name) >= 0;
+}
+
+bool
+rxvt_ptytty::get ()
+{
+  /* get master (pty) */
+  if ((pty = get_pty (&tty, &name)) < 0)
+    return false;
+
+  fcntl (pty, F_SETFL, O_NONBLOCK);
+
+  /* get slave (tty) */
+  if (tty < 0)
+    {
+#ifndef NO_SETOWNER_TTYDEV
+      privileges (SAVE);
+#endif
+
+      if ((tty = get_tty (name)) < 0)
+        {
+          put ();
+          return false;
+        }
+    }
+
+  return true;
+}
+
 /*----------------------- end-of-file (C source) -----------------------*/
+
