@@ -459,6 +459,7 @@ AC_PATH_PROG(SED, sed, sed)
 AC_PATH_PROG(ECHO, echo, echo)
 AC_PATH_PROG(CMP, cmp, cmp)
 AC_PATH_PROG(TBL, tbl)
+AC_PATH_PROG(TIC, tic)
 
 dnl# need a neat way to detect SVR4 or its features
 dnl# in src/command.c we use these functions:
