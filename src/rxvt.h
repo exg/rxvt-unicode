@@ -1294,20 +1294,17 @@ struct rxvt_term : rxvt_vars {
   void init_scrollbar_stuff ();
   void drawBevel (Drawable d, int x1, int y1, int w, int h);
   int scrollbar_show_next (int update, int last_top, int last_bot, int scrollbar_len);
-# define scrollbar_update scrollbar_show_next // HACK
 #endif
 
 #if defined(RXVT_SCROLLBAR)
   // scrollbar-rxvt.C
   void Draw_button (int x, int y, int state, int dirn);
   int scrollbar_show_rxvt (int update, int last_top, int last_bot, int scrollbar_len);
-# define scrollbar_update scrollbar_show_rxvt // HACK
 #endif
 
 #if defined(XTERM_SCROLLBAR)
   // scrollbar-xterm.C
   int scrollbar_show_xterm (int update, int last_top, int last_bot, int scrollbar_len);
-# define scrollbar_update scrollbar_show_xterm // HACK
 #endif
 
   // scrollbar.C

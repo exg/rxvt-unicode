@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xpm.c
  *----------------------------------------------------------------------*
- * $Id: xpm.C,v 1.5 2004/01/31 00:20:21 pcg Exp $
+ * $Id: xpm.C,v 1.6 2004/01/31 02:15:02 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1997      Carsten Haitzler <raster@zip.com.au>
@@ -245,7 +245,8 @@ rxvt_term::resize_pixmap ()
  * Calculate tiling sizes and increments
  * At start, p == 0, incr == xpmwidthheight
  */
-void
+/* INTPROTO */
+static void
 rxvt_pixmap_incr(unsigned int *wh, unsigned int *xy, float *incr, float *p, unsigned int widthheight, unsigned int xpmwidthheight)
 {
     unsigned int    cwh, cxy;

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	scrollbar.c
  *----------------------------------------------------------------------*
- * $Id: scrollbar.C,v 1.8 2004/01/31 00:20:21 pcg Exp $
+ * $Id: scrollbar.C,v 1.9 2004/01/31 02:15:02 pcg Exp $
  *
  * Copyright (c) 1997,1998 mj olesen <olesen@me.QueensU.CA>
  * Copyright (c) 1998      Alfredo K. Kojima <kojima@windowmaker.org>
@@ -74,21 +74,21 @@ rxvt_term::resize_scrollbar ()
     if (scrollBar.style == R_SB_XTERM) {
 	scrollBar.beg = R_SCROLLBEG_XTERM;
 	scrollBar.end = R_SCROLLEND_XTERM;
-	//scrollBar.update = rxvt_scrollbar_show_xterm;
+	scrollBar.update = &rxvt_term::scrollbar_show_xterm;
     }
 #endif
 #if defined(NEXT_SCROLLBAR)
     if (scrollBar.style == R_SB_NEXT) {
 	scrollBar.beg = R_SCROLLBEG_NEXT;
 	scrollBar.end = R_SCROLLEND_NEXT;
-	//scrollBar.update = rxvt_scrollbar_show_next;
+	scrollBar.update = &rxvt_term::scrollbar_show_next;
     }
 #endif
 #if defined(RXVT_SCROLLBAR)
     if (scrollBar.style == R_SB_RXVT) {
 	scrollBar.beg = R_SCROLLBEG_RXVT;
 	scrollBar.end = R_SCROLLEND_RXVT;
-	//scrollBar.update = rxvt_scrollbar_show_rxvt;
+	scrollBar.update = &rxvt_term::scrollbar_show_rxvt;
     }
 #endif
 
@@ -148,7 +148,7 @@ rxvt_term::scrollbar_show (int update)
 	    return 0;
     }
 
-    ret = scrollbar_update (update, last_top, last_bot, scrollbar_len);
+    ret = (this->*scrollBar.update) (update, last_top, last_bot, scrollbar_len);
 
     last_top = scrollBar.top;
     last_bot = scrollBar.bot;

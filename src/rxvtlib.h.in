@@ -249,7 +249,7 @@ typedef struct {
   short           style;        /* style: rxvt, xterm, next                 */
   short           width;        /* scrollbar width                          */
   Window          win;
-  //int             (*update)(int, int, int, int);
+  int             (rxvt_term::*update)(int, int, int, int);
 
   void setIdle()   { state =  1 ; }
   void setMotion() { state = 'm'; }

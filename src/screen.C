@@ -1873,10 +1873,10 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
         refresh_type &= ~REFRESH_BOUNDS;
       }
 
-#if defined(XPM_BACKGROUND)
+#ifdef XPM_BACKGROUND
     must_clear |= (bgPixmap.pixmap != None);
 #endif
-#if defined(TRANSPARENT)
+#ifdef TRANSPARENT
     must_clear |= ((Options & Opt_transparent) && am_transparent);
 #endif
     ocrow = oldcursor.row; /* is there an old outline cursor on screen? */
@@ -2168,15 +2168,14 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
               {
                 if (must_clear)
                   {
+                    CLEAR_CHARS (xpixel, ypixel, count);
+
                     for (i = 0; i < count; i++) /* don't draw empty strings */
                       if (text[i] != ' ')
                         {
                           font->draw (xpixel, ypixel, text, count, fore, -1);
-                          goto nodraw;
+                          break;
                         }
-
-                    CLEAR_CHARS (xpixel, ypixel, count);
-nodraw: ;
                   }
                 else
                   font->draw (xpixel, ypixel, text, count, fore, Color_bg);
