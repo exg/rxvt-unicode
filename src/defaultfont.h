@@ -100,6 +100,8 @@ struct rxvt_font {
 struct rxvt_fallback_font;
 
 struct rxvt_fontset {
+  char *fontdesc;
+
   rxvt_fontset (rxvt_t r);
   ~rxvt_fontset ();
 

@@ -1000,7 +1000,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 /////////////////////////////////////////////////////////////////////////////
 
 rxvt_fontset::rxvt_fontset (rxvt_t r)
-: r (r)
+: r (r), fontdesc (0)
 {
   clear ();
 }
@@ -1015,6 +1015,8 @@ rxvt_fontset::clear ()
 {
   for (rxvt_font **i = fonts.begin (); i != fonts.end (); i++)
     FONT_UNREF (*i);
+
+  free (fontdesc); fontdesc = 0;
 
   fonts.clear ();
   base_id = 0;
@@ -1131,6 +1133,8 @@ bool
 rxvt_fontset::populate (const char *desc)
 {
   clear ();
+
+  fontdesc = strdup (desc);
 
   fonts.push_back (new_font (0, CS_UNICODE));
   realize_font (0);

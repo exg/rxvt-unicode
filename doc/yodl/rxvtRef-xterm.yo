@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvtRef-xterm.yo,v 1.4 2004/03/05 21:26:01 pcg Exp $ --)
+COMMENT(-- $Id: rxvtRef-xterm.yo,v 1.5 2004/04/02 00:51:09 pcg Exp $ --)
 COMMENT(OSC: Operating System Commands)
 label(XTerm)
 nsect(XTerm Operating System Commands)
@@ -27,8 +27,9 @@ startdl()
 		    0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, \
 		    6=cyan, 7=white))\
 	    row(cell(bf(tt(Ps = 10)) bf((NB: may change in future)))\
-		cell(link(menuBar)(menuBar) command bf(tt(Pt)) \
-		    em(rxvt compile-time option)))\
+		cell(Change colour of text foreground to bf(tt(Pt))))\
+	    row(cell(bf(tt(Ps = 11)) bf((NB: may change in future)))\
+		cell(Change colour of text background to bf(tt(Pt))))\
 	    row(cell(bf(tt(Ps = 12)))\
 		cell(Change colour of text cursor foreground to bf(tt(Pt))))\
 	    row(cell(bf(tt(Ps = 13)))\
@@ -65,5 +66,10 @@ startdl()
 		    bf(tt(Pt))))\
 	    row(cell(bf(tt(Ps = 701)))\
 		cell(Change current locale to bf(tt(Pt)), or, if bf(tt(Pt)) is bf(tt(?)), return the current locale))\
+	    row(cell(bf(tt(Ps = 702)))\
+		cell(find font for character, used for debugging)\
+	    row(cell(bf(tt(Ps = 703)))\
+		cell(link(menuBar)(menuBar) command bf(tt(Pt)) \
+		    em(rxvt compile-time option)))\
 	endtable())
 enddl()

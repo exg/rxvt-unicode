@@ -11,7 +11,7 @@ rxvt-unicode (ouR XVT, unicode) \- a VT102 emulator for the X window system
 .PP 
 .SH "DESCRIPTION" 
 .PP 
-\fBrxvt-unicode\fP, version \fB2\&.5\fP, is a colour vt102 terminal emulator
+\fBrxvt-unicode\fP, version \fB2\&.6\fP, is a colour vt102 terminal emulator
 intended as an \fIxterm\fP(1) replacement for users who do not require
 features such as Tektronix 4014 emulation and toolkit-style configurability\&.
 As a result, \fBrxvt-unicode\fP uses much less swap space -- a significant
@@ -56,6 +56,8 @@ resource \fBjumpScroll\fP\&.
 Turn on/off inheriting parent window\&'s pixmap\&.  Alternative form
 is \fB-tr\fP;
 resource \fBinheritPixmap\fP\&.
+.IP "\fB-tint\fP \fIcolour\fP" 
+Tint the transparent background pixmap with the given colour\&.
 .IP "\fB-bg\fP \fIcolour\fP" 
 Window background colour;
 resource \fBbackground\fP\&.
@@ -258,6 +260,8 @@ option \fB+j\fP\&.
 \fBTrue\fP: make the background inherit the parent windows\&' pixmap,
 giving artificial transparency\&.
 \fBFalse\fP: do not inherit the parent windows\&' pixmap\&.
+.IP "\fBtintColor\fP \fIcolour\fP" 
+Tint the transparent background pixmap with the given colour\&.
 .IP "\fBscrollColor:\fP \fIcolour\fP" 
 Use the specified colour for the scrollbar [default #B2B2B2]\&.
 .IP "\fBtroughColor:\fP \fIcolour\fP" 
@@ -1031,7 +1035,7 @@ Click-and-drag doesn\&'t work with X11 mouse report overriding\&.
 .PP 
 .SH "FTP LOCATION" 
 .PP 
-rxvt-2\&.5\&.tar\&.gz can be found at the following ftp sites
+rxvt-2\&.6\&.tar\&.gz can be found at the following ftp sites
 ftp://ftp\&.rxvt\&.org/pub/rxvt
 .PP 
 .SH "CURRENT PROJECT COORDINATOR" 
