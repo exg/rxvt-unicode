@@ -3,6 +3,7 @@
  *---------------------------------------------------------------------------*
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
+ * Copyright (c) 2003-2004 Marc Lehmann <pcg@goof.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +19,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *--------------------------------------------------------------------------*/
+
 /*
- * We handle _all_ screen updates and selections
+ * This file handles _all_ screen updates and selections
  */
 
 #include "../config.h"          /* NECESSARY */
@@ -32,7 +34,7 @@
 #include <stdint.h>
 #include <wchar.h>
 
-#include "salloc.C" // HACK!!
+#include "salloc.C" // HACK, should be a seperate compile!
 
 inline void fill_text (text_t *start, text_t value, int len)
 {
@@ -2490,10 +2492,10 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
   for (;;)
     {
       if (XGetWindowProperty (display->display, win, prop, (long) (nread / 4),
-                             (long) (PROP_SIZE / 4), delete_prop,
-                             AnyPropertyType, &ct.encoding, &ct.format,
-                             &ct.nitems, &bytes_after,
-                             &ct.value) != Success)
+                              (long) (PROP_SIZE / 4), delete_prop,
+                              AnyPropertyType, &ct.encoding, &ct.format,
+                              &ct.nitems, &bytes_after,
+                              &ct.value) != Success)
         break;
 
       if (ct.encoding == 0)
@@ -2511,7 +2513,8 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
       if (ct.nitems == 0)
         {
           D_SELECT ((stderr, "rxvt_selection_paste: property empty - also INCR end"));
-          if (selection_wait == Sel_normal && nread == 0)
+          if (selection_wait == Sel_normal && nread == 0
+              && (win != display->root || prop != XA_CUT_BUFFER0)) // avoid recursion
             {
               /*
                * pass through again trying CUT_BUFFER0 if we've come from
