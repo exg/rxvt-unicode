@@ -360,7 +360,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                     if ((PrivateModes & PrivMode_aplKP) ? !shft : shft)
                       {
                         STRCPY (kbuf, "\033OZ");
-                        kbuf[2] = ("txvr"[keysym - XK_KP_Left]);
+                        kbuf[2] = "txvr"[keysym - XK_KP_Left];
                         break;
                       }
                     else
