@@ -1,5 +1,5 @@
 Name: rxvt-unicode
-Version: 4.1
+Version: 4.2
 Release: 1
 Summary: rxvt-unicode is an unicode version of rxvt
 License: GPL
@@ -43,6 +43,10 @@ tic -o $RPM_BUILD_ROOT/%_datadir/terminfo doc/etc/rxvt-unicode.terminfo
 %{_mandir}/man7/*
 %{_datadir}/terminfo/r/*
 
+
 %changelog
+* Mon Dec 01 2004 vherva@babbage 4.2-1
+- 4.2
+
 * Mon Nov 27 2004 vherva@babbage 4.1-1
 - 4.1
