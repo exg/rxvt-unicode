@@ -956,6 +956,8 @@ struct mbstate {
   mbstate () { reset (); }
 };
 
+#define UNICODE_MASK 0x1fffffUL
+
 #if UNICODE3
 # define COMPOSE_LO 0x40000000UL
 # define COMPOSE_HI 0x400fffffUL

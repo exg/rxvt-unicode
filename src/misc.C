@@ -73,7 +73,7 @@ rxvt_wcstoutf8 (const wchar_t *str, int len)
 
   while (len--)
     {
-      unicode_t w = *str++;
+      unicode_t w = *str++ & UNICODE_MASK;
 
       if      (w < 0x000080)
         *p++ = w;
