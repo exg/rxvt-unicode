@@ -1383,13 +1383,17 @@ else
 "
 fi
 if test x$term != x; then
-  echo "  set TERM to:                $term
-"
+  echo "  set TERM to:                $term"
 fi
 if test x$terminfo != x; then
-  echo "  set TERMINFO to:            $terminfo
-"
+  echo "  set TERMINFO to:            $terminfo"
 fi
+echo "  default resource name:      $RESNAME"
+echo "  resource class:             $RESCLASS"
+if test x$RESFALLBACK != x; then
+   echo "  resource class fallback:    $RESFALLBACK"
+fi
+echo
 if test x$rxvt_cv_ptys = xUNKNOWN; then
   echo ".----------------------------------------------------------------."
   echo ". WARNING: could not determine pty/tty type.  Do not build until ."
