@@ -69,248 +69,81 @@ const char *const def_colorName[] =
     "Magenta",                  /* 5/13: bright magenta (#FF00FF) */
     "Cyan",                     /* 6/14: bright cyan    (#00FFFF) */
     "White",                    /* 7/15: bright white   (#FFFFFF) */
-#ifdef TTY_256COLOR
-    "rgbi:0/0/0",               /* default 16-255 color table     */
-    "rgbi:0/0/.2",              /* consists of 6 6x6 colour cubes */
-    "rgbi:0/0/.4",              /* and a 24 greyscale ramp w/o    */
-    "rgbi:0/0/.6",              /* black or white                 */
-    "rgbi:0/0/.8",
-    "rgbi:0/0/1",
-    "rgbi:0/.2/0",
-    "rgbi:0/.2/.2",
-    "rgbi:0/.2/.4",
-    "rgbi:0/.2/.6",
-    "rgbi:0/.2/.8",
-    "rgbi:0/.2/1",
-    "rgbi:0/.4/0",
-    "rgbi:0/.4/.2",
-    "rgbi:0/.4/.4",
-    "rgbi:0/.4/.6",
-    "rgbi:0/.4/.8",
-    "rgbi:0/.4/1",
-    "rgbi:0/.6/0",
-    "rgbi:0/.6/.2",
-    "rgbi:0/.6/.4",
-    "rgbi:0/.6/.6",
-    "rgbi:0/.6/.8",
-    "rgbi:0/.6/1",
-    "rgbi:0/.8/0",
-    "rgbi:0/.8/.2",
-    "rgbi:0/.8/.4",
-    "rgbi:0/.8/.6",
-    "rgbi:0/.8/.8",
-    "rgbi:0/.8/1",
-    "rgbi:0/1/0",
-    "rgbi:0/1/.2",
-    "rgbi:0/1/.4",
-    "rgbi:0/1/.6",
-    "rgbi:0/1/.8",
-    "rgbi:0/1/1",
-    "rgbi:.2/0/0",
-    "rgbi:.2/0/.2",
-    "rgbi:.2/0/.4",
-    "rgbi:.2/0/.6",
-    "rgbi:.2/0/.8",
-    "rgbi:.2/0/1",
-    "rgbi:.2/.2/0",
-    "rgbi:.2/.2/.2",
-    "rgbi:.2/.2/.4",
-    "rgbi:.2/.2/.6",
-    "rgbi:.2/.2/.8",
-    "rgbi:.2/.2/1",
-    "rgbi:.2/.4/0",
-    "rgbi:.2/.4/.2",
-    "rgbi:.2/.4/.4",
-    "rgbi:.2/.4/.6",
-    "rgbi:.2/.4/.8",
-    "rgbi:.2/.4/1",
-    "rgbi:.2/.6/0",
-    "rgbi:.2/.6/.2",
-    "rgbi:.2/.6/.4",
-    "rgbi:.2/.6/.6",
-    "rgbi:.2/.6/.8",
-    "rgbi:.2/.6/1",
-    "rgbi:.2/.8/0",
-    "rgbi:.2/.8/.2",
-    "rgbi:.2/.8/.4",
-    "rgbi:.2/.8/.6",
-    "rgbi:.2/.8/.8",
-    "rgbi:.2/.8/1",
-    "rgbi:.2/1/0",
-    "rgbi:.2/1/.2",
-    "rgbi:.2/1/.4",
-    "rgbi:.2/1/.6",
-    "rgbi:.2/1/.8",
-    "rgbi:.2/1/1",
-    "rgbi:.4/0/0",
-    "rgbi:.4/0/.2",
-    "rgbi:.4/0/.4",
-    "rgbi:.4/0/.6",
-    "rgbi:.4/0/.8",
-    "rgbi:.4/0/1",
-    "rgbi:.4/.2/0",
-    "rgbi:.4/.2/.2",
-    "rgbi:.4/.2/.4",
-    "rgbi:.4/.2/.6",
-    "rgbi:.4/.2/.8",
-    "rgbi:.4/.2/1",
-    "rgbi:.4/.4/0",
-    "rgbi:.4/.4/.2",
-    "rgbi:.4/.4/.4",
-    "rgbi:.4/.4/.6",
-    "rgbi:.4/.4/.8",
-    "rgbi:.4/.4/1",
-    "rgbi:.4/.6/0",
-    "rgbi:.4/.6/.2",
-    "rgbi:.4/.6/.4",
-    "rgbi:.4/.6/.6",
-    "rgbi:.4/.6/.8",
-    "rgbi:.4/.6/1",
-    "rgbi:.4/.8/0",
-    "rgbi:.4/.8/.2",
-    "rgbi:.4/.8/.4",
-    "rgbi:.4/.8/.6",
-    "rgbi:.4/.8/.8",
-    "rgbi:.4/.8/1",
-    "rgbi:.4/1/0",
-    "rgbi:.4/1/.2",
-    "rgbi:.4/1/.4",
-    "rgbi:.4/1/.6",
-    "rgbi:.4/1/.8",
-    "rgbi:.4/1/1",
-    "rgbi:.6/0/0",
-    "rgbi:.6/0/.2",
-    "rgbi:.6/0/.4",
-    "rgbi:.6/0/.6",
-    "rgbi:.6/0/.8",
-    "rgbi:.6/0/1",
-    "rgbi:.6/.2/0",
-    "rgbi:.6/.2/.2",
-    "rgbi:.6/.2/.4",
-    "rgbi:.6/.2/.6",
-    "rgbi:.6/.2/.8",
-    "rgbi:.6/.2/1",
-    "rgbi:.6/.4/0",
-    "rgbi:.6/.4/.2",
-    "rgbi:.6/.4/.4",
-    "rgbi:.6/.4/.6",
-    "rgbi:.6/.4/.8",
-    "rgbi:.6/.4/1",
-    "rgbi:.6/.6/0",
-    "rgbi:.6/.6/.2",
-    "rgbi:.6/.6/.4",
-    "rgbi:.6/.6/.6",
-    "rgbi:.6/.6/.8",
-    "rgbi:.6/.6/1",
-    "rgbi:.6/.8/0",
-    "rgbi:.6/.8/.2",
-    "rgbi:.6/.8/.4",
-    "rgbi:.6/.8/.6",
-    "rgbi:.6/.8/.8",
-    "rgbi:.6/.8/1",
-    "rgbi:.6/1/0",
-    "rgbi:.6/1/.2",
-    "rgbi:.6/1/.4",
-    "rgbi:.6/1/.6",
-    "rgbi:.6/1/.8",
-    "rgbi:.6/1/1",
-    "rgbi:.8/0/0",
-    "rgbi:.8/0/.2",
-    "rgbi:.8/0/.4",
-    "rgbi:.8/0/.6",
-    "rgbi:.8/0/.8",
-    "rgbi:.8/0/1",
-    "rgbi:.8/.2/0",
-    "rgbi:.8/.2/.2",
-    "rgbi:.8/.2/.4",
-    "rgbi:.8/.2/.6",
-    "rgbi:.8/.2/.8",
-    "rgbi:.8/.2/1",
-    "rgbi:.8/.4/0",
-    "rgbi:.8/.4/.2",
-    "rgbi:.8/.4/.4",
-    "rgbi:.8/.4/.6",
-    "rgbi:.8/.4/.8",
-    "rgbi:.8/.4/1",
-    "rgbi:.8/.6/0",
-    "rgbi:.8/.6/.2",
-    "rgbi:.8/.6/.4",
-    "rgbi:.8/.6/.6",
-    "rgbi:.8/.6/.8",
-    "rgbi:.8/.6/1",
-    "rgbi:.8/.8/0",
-    "rgbi:.8/.8/.2",
-    "rgbi:.8/.8/.4",
-    "rgbi:.8/.8/.6",
-    "rgbi:.8/.8/.8",
-    "rgbi:.8/.8/1",
-    "rgbi:.8/1/0",
-    "rgbi:.8/1/.2",
-    "rgbi:.8/1/.4",
-    "rgbi:.8/1/.6",
-    "rgbi:.8/1/.8",
-    "rgbi:.8/1/1",
-    "rgbi:1/0/0",
-    "rgbi:1/0/.2",
-    "rgbi:1/0/.4",
-    "rgbi:1/0/.6",
-    "rgbi:1/0/.8",
-    "rgbi:1/0/1",
-    "rgbi:1/.2/0",
-    "rgbi:1/.2/.2",
-    "rgbi:1/.2/.4",
-    "rgbi:1/.2/.6",
-    "rgbi:1/.2/.8",
-    "rgbi:1/.2/1",
-    "rgbi:1/.4/0",
-    "rgbi:1/.4/.2",
-    "rgbi:1/.4/.4",
-    "rgbi:1/.4/.6",
-    "rgbi:1/.4/.8",
-    "rgbi:1/.4/1",
-    "rgbi:1/.6/0",
-    "rgbi:1/.6/.2",
-    "rgbi:1/.6/.4",
-    "rgbi:1/.6/.6",
-    "rgbi:1/.6/.8",
-    "rgbi:1/.6/1",
-    "rgbi:1/.8/0",
-    "rgbi:1/.8/.2",
-    "rgbi:1/.8/.4",
-    "rgbi:1/.8/.6",
-    "rgbi:1/.8/.8",
-    "rgbi:1/.8/1",
-    "rgbi:1/1/0",
-    "rgbi:1/1/.2",
-    "rgbi:1/1/.4",
-    "rgbi:1/1/.6",
-    "rgbi:1/1/.8",
-    "rgbi:1/1/1",
-    "rgb:08/08/08",
-    "rgb:12/12/12",
-    "rgb:1c/1c/1c",
-    "rgb:26/26/26",
-    "rgb:30/30/30",
-    "rgb:3a/3a/3a",
-    "rgb:44/44/44",
-    "rgb:4e/4e/4e",
-    "rgb:58/58/58",
-    "rgb:62/62/62",
-    "rgb:6c/6c/6c",
-    "rgb:76/76/76",
-    "rgb:80/80/80",
-    "rgb:8a/8a/8a",
-    "rgb:94/94/94",
-    "rgb:9e/9e/9e",
-    "rgb:a8/a8/a8",
-    "rgb:b2/b2/b2",
-    "rgb:bc/bc/bc",
-    "rgb:c6/c6/c6",
+
+    // 88 xterm colours
+    "rgb:00/00/00",
+    "rgb:00/00/8b",
+    "rgb:00/00/cd",
+    "rgb:00/00/ff",
+    "rgb:00/8b/00",
+    "rgb:00/8b/8b",
+    "rgb:00/8b/cd",
+    "rgb:00/8b/ff",
+    "rgb:00/cd/00",
+    "rgb:00/cd/8b",
+    "rgb:00/cd/cd",
+    "rgb:00/cd/ff",
+    "rgb:00/ff/00",
+    "rgb:00/ff/8b",
+    "rgb:00/ff/cd",
+    "rgb:00/ff/ff",
+    "rgb:8b/00/00",
+    "rgb:8b/00/8b",
+    "rgb:8b/00/cd",
+    "rgb:8b/00/ff",
+    "rgb:8b/8b/00",
+    "rgb:8b/8b/8b",
+    "rgb:8b/8b/cd",
+    "rgb:8b/8b/ff",
+    "rgb:8b/cd/00",
+    "rgb:8b/cd/8b",
+    "rgb:8b/cd/cd",
+    "rgb:8b/cd/ff",
+    "rgb:8b/ff/00",
+    "rgb:8b/ff/8b",
+    "rgb:8b/ff/cd",
+    "rgb:8b/ff/ff",
+    "rgb:cd/00/00",
+    "rgb:cd/00/8b",
+    "rgb:cd/00/cd",
+    "rgb:cd/00/ff",
+    "rgb:cd/8b/00",
+    "rgb:cd/8b/8b",
+    "rgb:cd/8b/cd",
+    "rgb:cd/8b/ff",
+    "rgb:cd/cd/00",
+    "rgb:cd/cd/8b",
+    "rgb:cd/cd/cd",
+    "rgb:cd/cd/ff",
+    "rgb:cd/ff/00",
+    "rgb:cd/ff/8b",
+    "rgb:cd/ff/cd",
+    "rgb:cd/ff/ff",
+    "rgb:ff/00/00",
+    "rgb:ff/00/8b",
+    "rgb:ff/00/cd",
+    "rgb:ff/00/ff",
+    "rgb:ff/8b/00",
+    "rgb:ff/8b/8b",
+    "rgb:ff/8b/cd",
+    "rgb:ff/8b/ff",
+    "rgb:ff/cd/00",
+    "rgb:ff/cd/8b",
+    "rgb:ff/cd/cd",
+    "rgb:ff/cd/ff",
+    "rgb:ff/ff/00",
+    "rgb:ff/ff/8b",
+    "rgb:ff/ff/cd",
+    "rgb:ff/ff/ff",
+    "rgb:2e/2e/2e",
+    "rgb:5c/5c/5c",
+    "rgb:73/73/73",
+    "rgb:8b/8b/8b",
+    "rgb:a2/a2/a2",
+    "rgb:b9/b9/b9",
     "rgb:d0/d0/d0",
-    "rgb:da/da/da",
-    "rgb:e4/e4/e4",
-    "rgb:ee/ee/ee",
-#endif
+    "rgb:e7/e7/e7",
+
 #ifndef NO_CURSORCOLOR
     COLOR_CURSOR_BACKGROUND,
     COLOR_CURSOR_FOREGROUND,
@@ -320,6 +153,7 @@ const char *const def_colorName[] =
     NULL,                       /* Color_border                   */
 #ifndef NO_BOLD_UNDERLINE_REVERSE
     NULL,                       /* Color_BD                       */
+    NULL,                       /* Color_IT                       */
     NULL,                       /* Color_UL                       */
     NULL,                       /* Color_RV                       */
 #endif                          /* ! NO_BOLD_UNDERLINE_REVERSE */
@@ -387,10 +221,6 @@ rxvt_term::init_vars ()
   TermWin.lineSpace = LINESPACE;
   TermWin.saveLines = SAVELINES;
   numpix_colors = TOTAL_COLORS;
-
-#ifndef NO_BRIGHTCOLOR
-  colorfgbg = DEFAULT_RSTYLE;
-#endif
 
   refresh_limit = 1;
   refresh_type = SLOW_REFRESH;
@@ -601,8 +431,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     }
 
 #ifdef HAVE_SCROLLBARS
-  setup_scrollbar (rs[Rs_scrollBar_align], rs[Rs_scrollstyle],
-                   rs[Rs_scrollBar_thickness]);
+  setup_scrollbar (rs[Rs_scrollBar_align], rs[Rs_scrollstyle], rs[Rs_scrollBar_thickness]);
 #endif
 
 #ifdef XTERM_REVERSE_VIDEO
@@ -641,6 +470,9 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   color_aliases (Color_UL);
   color_aliases (Color_RV);
 #endif                          /* ! NO_BOLD_UNDERLINE_REVERSE */
+
+  if (!rs[Rs_color + Color_border])
+    rs[Rs_color + Color_border] = rs[Rs_color + Color_bg];
 
   return cmd_argv;
 }
@@ -987,7 +819,6 @@ rxvt_term::color_aliases (int idx)
           rs[Rs_color + idx] = rs[Rs_color + minBrightCOLOR + i];
           return;
 #endif
-
         }
 
       if (i >= 0 && i <= 7)   /* normal colors */
@@ -1115,12 +946,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   /* grab colors before netscape does */
   Get_Colours ();
 
-  if (!change_font (rs[Rs_font]))
-    {
-      fprintf (stderr, "unable to load a base font, please provide one using -fn fontname\n");
-      destroy ();
-      return;
-    }
+  if (!set_fonts ())
+    rxvt_fatal ("unable to load base fontset, please specify one using -fn, aborting.\n");
 
   window_calc (0, 0);
   old_width = szHint.width;
@@ -1129,8 +956,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   /* sub-window placement & size in rxvt_resize_subwindows () */
 
 #ifdef PREFER_24BIT
-  attributes.background_pixel = pix_colors[Color_bg];
-  attributes.border_pixel = pix_colors[Color_border];
+  attributes.background_pixel = pix_colors_focused[Color_border];
+  attributes.border_pixel = pix_colors_focused[Color_border];
   attributes.colormap = display->cmap;
   TermWin.parent[0] = XCreateWindow (display->display, DefaultRootWindow (display->display),
                                      szHint.x, szHint.y,
@@ -1144,8 +971,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                                            szHint.x, szHint.y,
                                            szHint.width, szHint.height,
                                            TermWin.ext_bwidth,
-                                           pix_colors[Color_border],
-                                           pix_colors[Color_bg]);
+                                           pix_colors_focused[Color_border],
+                                           pix_colors_focused[Color_border]);
 #endif
 
   process_xterm_seq (XTerm_title, rs[Rs_title], CHAR_ST);
@@ -1171,7 +998,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   XSelectInput (display->display, TermWin.parent[0],
                 KeyPressMask
-#if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
+#if (MOUSE_WHEEL && MOUSE_SLIP_WHEELING) || ENABLE_FRILLS || ISO_14755
                 | KeyReleaseMask
 #endif
                 | FocusChangeMask | VisibilityChangeMask
@@ -1182,8 +1009,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #if ENABLE_FRILLS
   if (mwmhints.flags)
     {
-      prop = XInternAtom(display->display, "_MOTIF_WM_HINTS", False);
-      XChangeProperty(display->display, TermWin.parent[0], prop, prop, 32, PropModeReplace, (unsigned char *) &mwmhints, PROP_MWM_HINTS_ELEMENTS);
+      prop = XInternAtom (display->display, "_MOTIF_WM_HINTS", False);
+      XChangeProperty (display->display, TermWin.parent[0], prop, prop, 32, PropModeReplace, (unsigned char *) &mwmhints, PROP_MWM_HINTS_ELEMENTS);
     }
 #endif
 
@@ -1215,8 +1042,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                                    TermWin_TotalWidth (),
                                    TermWin_TotalHeight (),
                                    0,
-                                   pix_colors[Color_fg],
-                                   pix_colors[Color_bg]);
+                                   pix_colors_focused[Color_fg],
+                                   pix_colors_focused[Color_bg]);
 #ifdef DEBUG_X
   XStoreName (display->display, TermWin.vt, "vt window");
 #endif
@@ -1246,8 +1073,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                                          TermWin_TotalWidth (),
                                          menuBar_TotalHeight (),
                                          0,
-                                         pix_colors[Color_fg],
-                                         pix_colors[Color_scroll]);
+                                         pix_colors_focused[Color_fg],
+                                         pix_colors_focused[Color_scroll]);
 
 #ifdef DEBUG_X
       XStoreName (display->display, menuBar.win, "menubar");
@@ -1276,8 +1103,9 @@ rxvt_term::create_windows (int argc, const char *const *argv)
           p++;
           scale_pixmap (p);
         }
+
       set_bgPixmap (rs[Rs_backgroundPixmap]);
-      scr_touch (True);
+      scr_touch (true);
     }
 #endif
 
@@ -1305,6 +1133,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   if (rs[Rs_fade])
     pix_colors = pix_colors_unfocused;
 #endif
+
+  scr_recolour ();
 }
 
 /* ------------------------------------------------------------------------- *

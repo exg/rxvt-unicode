@@ -135,7 +135,8 @@ rxvt_term::iso14755_54 (int x, int y)
 
       if (t != NOCHAR || !x)
         {
-          iso14755_51 (screen.text[y + TermWin.saveLines - TermWin.view_start][x]);
+          iso14755_51 (screen.text[y + TermWin.saveLines - TermWin.view_start][x],
+                       screen.rend[y + TermWin.saveLines - TermWin.view_start][x]);
           iso14755buf = ISO_14755_54;
           break;
         }
@@ -148,9 +149,11 @@ rxvt_term::iso14755_54 (int x, int y)
 
 #if ENABLE_OVERLAY
 void
-rxvt_term::iso14755_51 (wchar_t ch)
+rxvt_term::iso14755_51 (unicode_t ch, rend_t r)
 {
-  wchar_t *chr, *alloc;
+  rxvt_fontset *fs = FONTSET (r);
+  rxvt_font *f = (*fs)[fs->find_font (ch)];
+  wchar_t *chr, *alloc, ch2;
   int len;
 
 #if ENABLE_COMBINING
@@ -163,12 +166,18 @@ rxvt_term::iso14755_51 (wchar_t ch)
   else
 #endif
     {
+      ch2 = ch;
+
       alloc = 0;
-      chr = &ch;
+      chr = &ch2;
       len = 1;
     }
 
-  scr_overlay_new (0, -1, 8 + 5, len);
+  int width = strlen (f->name);
+
+  scr_overlay_new (0, -1, width < 8+5 ? 8+5 : width, len + 1);
+
+  r = SET_STYLE (OVERLAY_RSTYLE, GET_STYLE (r));
 
   for (int y = 0; y < len; y++)
     {
@@ -183,9 +192,11 @@ rxvt_term::iso14755_51 (wchar_t ch)
       if (ch >= 0x10000)
         ch = 0xfffd;
 #endif
-      scr_overlay_set (11, y, ch);
-      scr_overlay_set (12, y, NOCHAR);
+      scr_overlay_set (11, y, ch, r);
+      scr_overlay_set (12, y, NOCHAR, r);
     }
+
+  scr_overlay_set (0, len, f->name);
 
 #if ENABLE_COMBINING
   if (alloc)
@@ -1139,10 +1150,9 @@ rxvt_term::mouse_report (XButtonEvent &ev)
 #ifdef MOUSE_REPORT_DOUBLECLICK
       key_state += ((MEvent.clicks > 1) ? 32 : 0);
 #endif
-
     }
 
-#ifdef DEBUG_MOUSEREPORT
+#if DEBUG_MOUSEREPORT
   fprintf (stderr, "Mouse [");
   if (key_state & 16)
     fputc ('C', stderr);
@@ -1156,12 +1166,12 @@ rxvt_term::mouse_report (XButtonEvent &ev)
           button_number,
           x + 1,
           y + 1);
-#else
+#endif
+
   tt_printf ("\033[M%c%c%c",
             (32 + button_number + key_state),
             (32 + x + 1),
             (32 + y + 1));
-#endif
 }
 
 #ifdef USING_W11LIB
@@ -1229,7 +1239,7 @@ rxvt_term::x_cb (XEvent &ev)
 
       case KeyRelease:
         {
-#if (defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)) || defined (ENABLE_FRILLS)
+#if (MOUSE_WHEEL && MOUSE_SLIP_WHEELING) || ISO_14755
           KeySym ks;
 
           ks = XLookupKeysym (&ev.xkey, ev.xkey.state & ShiftMask ? 1 : 0); // sorry, only shift supported :/
@@ -1390,9 +1400,7 @@ rxvt_term::x_cb (XEvent &ev)
             if (rs[Rs_fade])
               {
                 pix_colors = pix_colors_focused;
-                set_colorfgbg ();
-                scr_clear ();
-                scr_touch (true);
+                scr_recolour ();
               }
 #endif
 
@@ -1404,6 +1412,13 @@ rxvt_term::x_cb (XEvent &ev)
           {
             TermWin.focus = 0;
             want_refresh = 1;
+
+#if ENABLE_FRILLS || ISO_14755
+            iso14755buf = 0;
+#endif
+#if ENABLE_OVERLAY
+            scr_overlay_off ();
+#endif
 #ifdef USE_XIM
             if (Input_Context != NULL)
               XUnsetICFocus (Input_Context);
@@ -1417,12 +1432,9 @@ rxvt_term::x_cb (XEvent &ev)
             if (rs[Rs_fade])
               {
                 pix_colors = pix_colors_unfocused;
-                set_colorfgbg ();
-                scr_clear ();
-                scr_touch (true);
+                scr_recolour ();
               }
 #endif
-
           }
         break;
 
@@ -1440,7 +1452,10 @@ rxvt_term::x_cb (XEvent &ev)
             while (XCheckTypedWindowEvent (display->display, ev.xconfigure.window, ConfigureNotify, &ev));
 
             if (szHint.width != width || szHint.height != height)
-              resize_all_windows (width, height, 1);
+              {
+                seen_resize = 1;
+                resize_all_windows (width, height, 1);
+              }
 
 #ifdef TRANSPARENT		/* XXX: maybe not needed - leave in for now */
             if (options & Opt_transparent)
@@ -2517,11 +2532,9 @@ rxvt_term::check_our_parents ()
         TermWin.parent[i] = None;
     }
 
-  // this is experimental
   if (scrollBar.win)
     {
       XSetWindowBackgroundPixmap (display->display, scrollBar.win, ParentRelative);
-      XClearWindow (display->display, scrollBar.win);
       scrollBar.setIdle ();
       scrollbar_show (0);
     }
@@ -2559,7 +2572,11 @@ rxvt_term::cmd_parse ()
               // they first read the screensize and then install a SIGWINCH handler.
               // some window managers resize the window early, and these programs
               // then sometimes get the size wrong.
-              kill (-cmd_pid, SIGWINCH);
+              // unfortunately other programs are even more buggy and dislike
+              // being sent SIGWINCH, so only do it when we were in fact being
+              // resized.
+              if (seen_resize)
+                kill (-cmd_pid, SIGWINCH);
             }
 
           /* Read a text string from the input buffer */
@@ -3489,36 +3506,40 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
 unsigned char *
 rxvt_term::get_to_st (unicode_t &ends_how)
 {
-  unicode_t prev = 0, ch;
+  unicode_t seen_esc = 0, ch;
   unsigned int n = 0;
   unsigned char *s;
   unsigned char string[STRING_MAX];
 
   while ((ch = cmd_getc ()) != NOCHAR)
     {
-      if (prev == C0_ESC)
+      if (seen_esc)
         {
           if (ch == 0x5c)	/* 7bit ST */
             break;
           else
             return NULL;
         }
+      else if (ch == C0_ESC)
+        {
+          seen_esc = 1;
+          continue;
+        }
       else if (ch == C0_BEL || ch == CHAR_ST)
         break;
       else if (ch < 0x20)
         return NULL;	/* other control character - exit */
+
+      seen_esc = 0;
 
       if (n >= sizeof (string) - 1)
         // stop at some sane length
         return NULL;
 
       if (ch == C0_SYN)
-        {
-          string[n++] = cmd_get8 ();
-          prev = 0;
-        }
+        string[n++] = cmd_get8 ();
       else
-        string[n++] = prev = ch;
+        string[n++] = ch;
     }
 
   string[n++] = '\0';
@@ -3622,6 +3643,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
   int color;
   char *buf, *name;
   bool query = str[0] == '?' && !str[1];
+  int saveop = op;
 
   assert (str != NULL);
   switch (op)
@@ -3723,11 +3745,22 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
       case XTerm_Color_BD:
         process_color_seq (XTerm_Color_BD, Color_BD, str, resp);
         break;
+      case XTerm_Color_IT:
+        process_color_seq (XTerm_Color_IT, Color_IT, str, resp);
+        break;
       case XTerm_Color_UL:
         process_color_seq (XTerm_Color_UL, Color_UL, str, resp);
         break;
       case XTerm_Color_RV:
         process_color_seq (XTerm_Color_RV, Color_RV, str, resp);
+        break;
+#endif
+#if TRANSPARENT || TINTING
+      case XTerm_Color_tint:
+        process_color_seq (XTerm_Color_tint, Color_tint, str, resp);
+        check_our_parents ();
+        if (am_transparent)
+          want_full_refresh = want_refresh = 1;
         break;
 #endif
 
@@ -3769,13 +3802,26 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
         break;
 
       case XTerm_font:
+        op = URxvt_font;
+      case URxvt_font:
+#if ENABLE_STYLES
+      case URxvt_boldFont:
+      case URxvt_italicFont:
+      case URxvt_boldItalicFont:
+#endif
         if (query)
-          tt_printf ("\33]%d;%-.250s%c", XTerm_font,
-                     (options & Opt_insecure) && TermWin.fontset->fontdesc
-                       ? TermWin.fontset->fontdesc : "",
+          tt_printf ("\33]%d;%-.250s%c", saveop,
+                     (options & Opt_insecure) && TermWin.fontset[op - URxvt_font]->fontdesc
+                       ? TermWin.fontset[op - URxvt_font]->fontdesc : "",
                      resp);
         else
-          change_font (str);
+          {
+            const char *&res = rs[Rs_font + (op - URxvt_font)];
+
+            res = strdup (str);
+            allocated.push_back ((void *)res);
+            set_fonts ();
+          }
         break;
 
 #if ENABLE_FRILLS
@@ -3789,16 +3835,6 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
             im_cb ();
 # endif
           }
-        break;
-
-      case XTerm_findfont:
-        {
-          int fid = TermWin.fontset->find_font (atoi (str));
-          tt_printf ("\33]%d;%d;%-.250s%c", XTerm_findfont,
-                     fid,
-                     (options & Opt_insecure) ? (*TermWin.fontset)[fid]->name : "",
-                     resp);
-        }
         break;
 #endif
 
@@ -3937,6 +3973,7 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
       switch (arg[i])
         {
           case 1048:		/* alternative cursor save */
+          case 1049:
             if (options & Opt_secondaryScreen)
               if (mode == 0)
                 scr_cursor (RESTORE);
@@ -4071,8 +4108,10 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 1:
             rendset = 1, rendstyle = RS_Bold;
             break;
-          //case 2: // faint or second colour
-          //case 3: // italic
+          //case 2: // low intensity
+          case 3:
+            rendset = 1, rendstyle = RS_Italic;
+            break;
           case 4:
             rendset = 1, rendstyle = RS_Uline;
             break;
@@ -4094,20 +4133,22 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           //...
           //case 19: // ninth alt font
           //case 20: // gothic
-          case 21: // disable bold, faint
+          case 21: // disable bold, faint, sometimes doubly underlined (iso 8613)
             rendset = 0, rendstyle = RS_Bold;
             break;
-          case 22:
+          case 22: // normal intensity
             rendset = 0, rendstyle = RS_Bold;
             break;
-          //case 23: disable italic
+          case 23: // disable italic
+            rendset = 0, rendstyle = RS_Italic;
+            break;
           case 24:
             rendset = 0, rendstyle = RS_Uline;
             break;
           case 25:
             rendset = 0, rendstyle = RS_Blink;
             break;
-          case 26:
+          case 26: // variable spacing (iso 8613)
             rendset = 0, rendstyle = RS_Blink;
             break;
           case 27:
@@ -4135,15 +4176,13 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 37:
             scr_color ((unsigned int) (minCOLOR + (arg[i] - 30)), Color_fg);
             break;
-#ifdef TTY_256COLOR
-          case 38:
+          case 38: // set fg color, ISO 8613-6
             if (nargs > i + 2 && arg[i + 1] == 5)
               {
                 scr_color ((unsigned int) (minCOLOR + arg[i + 2]), Color_fg);
                 i += 2;
               }
             break;
-#endif
           case 39:		/* default fg */
             scr_color (Color_fg, Color_fg);
             break;
@@ -4158,18 +4197,18 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 47:
             scr_color ((unsigned int) (minCOLOR + (arg[i] - 40)), Color_bg);
             break;
-#ifdef TTY_256COLOR
-          case 48:
+          case 48: // set bg color, ISO 8613-6
             if (nargs > i + 2 && arg[i + 1] == 5)
               {
                 scr_color ((unsigned int) (minCOLOR + arg[i + 2]), Color_bg);
                 i += 2;
               }
             break;
-#endif
           case 49:		/* default bg */
             scr_color (Color_bg, Color_bg);
             break;
+
+          //case 50: // not variable spacing
 
 #ifndef NO_BRIGHTCOLOR
           case 90:
@@ -4180,8 +4219,7 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 95:
           case 96:
           case 97:
-            scr_color ((unsigned int) (minBrightCOLOR + (arg[i] - 90)),
-                       Color_fg);
+            scr_color ((unsigned int) (minBrightCOLOR + (arg[i] - 90)), Color_fg);
             break;
           case 100:
           case 101:		/* set bright bg color */
@@ -4191,8 +4229,7 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 105:
           case 106:
           case 107:
-            scr_color ((unsigned int) (minBrightCOLOR + (arg[i] - 100)),
-                       Color_bg);
+            scr_color ((unsigned int) (minBrightCOLOR + (arg[i] - 100)), Color_bg);
             break;
 #endif
 
@@ -4244,7 +4281,7 @@ rxvt_term::tt_printf (const char *fmt,...)
 void
 rxvt_term::tt_write (const unsigned char *data, unsigned int len)
 {
-  enum { MAX_PTY_WRITE = 255 }; // minimum MAX_INPUT
+  const unsigned int MAX_PTY_WRITE = 255; // minimum MAX_INPUT
 
   if (len)
     {
@@ -4268,7 +4305,7 @@ rxvt_term::tt_write (const unsigned char *data, unsigned int len)
 
   for (;;)
     {
-      int written = write (pty.pty, v_buffer, min (MAX_PTY_WRITE, v_buflen));
+      int written = write (pty.pty, v_buffer, min (v_buflen, MAX_PTY_WRITE));
 
       if (written > 0)
         {
