@@ -313,6 +313,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 
   while (len--)
     {
+      compose_char *cc;
       text_t t = *text++;
 
       // is it in our linedrawing table?
@@ -351,10 +352,11 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
           gcv.line_width = 0;
           XChangeGC (d.display->display, GC, GCLineWidth, &gcv);
         }
-      else if (IS_COMPOSE (t))
+      else if (IS_COMPOSE (t) && (cc = rxvt_composite[t]))
         {
-          const compose_char &cc = rxvt_composite[t];
-          (void)0; //D ADD pseudo handling here
+          (*fs)[fs->find_font (cc->c1)]->draw (d, x, y, &(t = cc->c1), 1, fg, bg);
+          if (cc->c2 != NOCHAR)
+            (*fs)[fs->find_font (cc->c2)]->draw (d, x, y, &(t = cc->c2), 1, fg, -1);
         }
       else
         switch (t)
@@ -1028,6 +1030,7 @@ rxvt_fontset::new_font (const char *name, codeset cs)
   else
     f = new rxvt_font_x11;
 
+  f->fs = this;
   f->set_term (r);
   f->set_name (strdup (name));
 

@@ -57,6 +57,7 @@ struct rxvt_drawable {
 };
 
 struct rxvt_font {
+  struct rxvt_fontset *fs;
   // managed by the fontset
   rxvt_t r;
   void set_term (rxvt_t r) { this->r = r; }
