@@ -312,13 +312,16 @@ As you might have guessed, FreeBSD does neither define this symobl nor
 does it support it. Instead, it uses it's own internal representation of
 B<wchar_t>. This is, of course, completely fine with respect to standards.
 
-However, C<__STDC_ISO_10646__> is the only sane way to support
-multi-language apps in an OS, as using a locale-dependent (and
-non-standardized) representation of B<wchar_t> makes it impossible to
-convert between B<wchar_t> (as used by X11 and your applications) and any
-other encoding without implementing OS-specific-wrappers for each and
-every locale. There simply are no APIs to convert B<wchar_t> into anything
-except the current locale encoding.
+However, that means rxvt-unicode only works in C<POSIX>, C<ISO-8859-1> and
+C<UTF-8> locales under FreeBSD (which all use Unicode as B<wchar_t>.
+
+C<__STDC_ISO_10646__> is the only sane way to support multi-language
+apps in an OS, as using a locale-dependent (and non-standardized)
+representation of B<wchar_t> makes it impossible to convert between
+B<wchar_t> (as used by X11 and your applications) and any other encoding
+without implementing OS-specific-wrappers for each and every locale. There
+simply are no APIs to convert B<wchar_t> into anything except the current
+locale encoding.
 
 Some applications (such as the formidable B<mlterm>) work around this
 by carrying their own replacement functions for character set handling
