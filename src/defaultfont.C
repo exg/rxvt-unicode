@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*;
  * File:	defaultfont.C
  *----------------------------------------------------------------------*
- * Copyright (c) 2003      Marc Lehmann rxvt@plan9.de>
+ * Copyright (c) 2003-2004 Marc Lehmann <pcg@goof.com>
  *				- original version.
  *
  * This program is free software; you can redistribute it and/or modify

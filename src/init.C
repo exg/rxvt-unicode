@@ -11,6 +11,7 @@
  *                              - extensive modifications
  * Copyright (c) 1999      D J Hawkey Jr <hawkeyd@visi.com>
  *                              - QNX support
+ * Copyright (c) 2003-2004 Marc Lehmann <pcg@goof.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -27,6 +27,7 @@
  * Copyright (c) 2001      Marius Gedminas
  *				- Ctrl/Mod4+Tab works like Meta+Tab (options)
  * Copyright (c) 2003      Rob McMullen <robm@flipturn.org>
+ * Copyright (c) 2003-2004 Marc Lehmann <pcg@goof.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,13 +58,13 @@
 void
 rxvt_term::lookup_key (XKeyEvent &ev)
 {
-  int             ctrl, meta, shft, len;
-  unsigned int    newlen;
-  KeySym          keysym;
+  int ctrl, meta, shft, len;
+  unsigned int newlen;
+  KeySym keysym;
 #ifdef DEBUG_CMD
-  static int      debug_key = 1;	/* accessible by a debugger only */
+  static int debug_key = 1;	/* accessible by a debugger only */
 #endif
-  int             valid_keysym;
+  int valid_keysym;
   unsigned char kbuf[KBUFSZ];
 
   /*
@@ -95,7 +96,6 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                                  KBUFSZ, &keysym, &status_return);
       else
 #endif
-
         {
           wchar_t wkbuf[KBUFSZ + 1];
 
@@ -110,7 +110,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
             SET_LOCALE (locale);
 
           if (status_return == XLookupChars
-                            || status_return == XLookupBoth)
+              || status_return == XLookupBoth)
             {
               wkbuf[len] = 0;
               len = wcstombs ((char *)kbuf, wkbuf, KBUFSZ);
@@ -122,14 +122,13 @@ rxvt_term::lookup_key (XKeyEvent &ev)
         }
 
       valid_keysym = status_return == XLookupKeySym
-                                   || status_return == XLookupBoth;
+                     || status_return == XLookupBoth;
     }
   else
 #endif
-
     {
       len = XLookupString (&ev, (char *)kbuf, KBUFSZ, &keysym, &compose);
-      valid_keysym = !len;
+      valid_keysym = keysym != NoSymbol;
     }
 
   if (valid_keysym)
@@ -164,7 +163,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
           if (IS_SCROLL_MOD)
             {
 #endif
-              int             lnsppg;
+              int lnsppg;
 
 #ifdef PAGING_CONTEXT_LINES
               lnsppg = TermWin.nrow - PAGING_CONTEXT_LINES;
@@ -212,7 +211,6 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                 }
             }
 #endif
-
         }
 
       if (shft)
@@ -288,7 +286,6 @@ rxvt_term::lookup_key (XKeyEvent &ev)
             }
           else
 #endif
-
             {
               newlen = 1;
               switch (keysym)
@@ -350,7 +347,6 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                         newlen = 0;
                       }
                     break;
-
 
 #ifdef XK_KP_Left
                   case XK_KP_Up:		/* \033Ox or standard */
@@ -484,7 +480,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                     break;
 
                   case XK_KP_Multiply:	/* "\033Oj" : "*" */
-                  case XK_KP_Add:		/* "\033Ok" : "+" */
+                  case XK_KP_Add:	/* "\033Ok" : "+" */
                   case XK_KP_Separator:	/* "\033Ol" : "," */
                   case XK_KP_Subtract:	/* "\033Om" : "-" */
                   case XK_KP_Decimal:	/* "\033On" : "." */

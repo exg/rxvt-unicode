@@ -8,6 +8,9 @@
           crashes when you kill your input method (xterm et al. also crash).
         - fix bugs in x flushing, causing an empty screen after startup
         - fix various memleaks in rxvtd.
+        - fix a bug that kept escape codes to be generated for some
+          keysyms that also have string translations, when not --enable-xim.
+          reported by joel reed.
         - countless minor bugfixes.
 
 1.8  Mon Feb  2 20:09:18 CET 2004
