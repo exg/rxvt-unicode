@@ -74,15 +74,16 @@ const struct rxvt_fallback_font {
   { CS_GB2312_1980_0,  "xft:AR PL KaitiM GB"                       },
   { CS_GB2312_1980_0,  "xft:AR PL SungtiL GB"                      },
 # endif
-  { CS_CNS11643_1992_1, "-*-*-*-*-*-*-*-*-*-*-c-*-gb2312*-0" },
-  { CS_CNS11643_1992_1, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-1" },
-  { CS_CNS11643_1992_2, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-2" },
-  { CS_CNS11643_1992_3, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-3" },
-  { CS_CNS11643_1992_4, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-4" },
-  { CS_CNS11643_1992_5, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-5" },
-  { CS_CNS11643_1992_6, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-6" },
-  { CS_CNS11643_1992_7, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-7" },
-  { CS_CNS11643_1992_F, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-f" },
+  { CS_BIG5_EXT,        "-*-*-*-*-*-*-*-*-*-*-c-*-big5*-0"         },
+  { CS_CNS11643_1992_1, "-*-*-*-*-*-*-*-*-*-*-c-*-gb2312*-0"       },
+  { CS_CNS11643_1992_1, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-1"     },
+  { CS_CNS11643_1992_2, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-2"     },
+  { CS_CNS11643_1992_3, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-3"     },
+  { CS_CNS11643_1992_4, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-4"     },
+  { CS_CNS11643_1992_5, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-5"     },
+  { CS_CNS11643_1992_6, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-6"     },
+  { CS_CNS11643_1992_7, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-7"     },
+  { CS_CNS11643_1992_F, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-f"     },
 #endif
 
 #if XFT
@@ -304,6 +305,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
     {
       text_t t = *text++;
 
+      // is it in our linedrawing table?
       if (t >= 0x2500 & t <= 0x2580 && linedraw_cmds[t - 0x2500])
         {
           const char *p = linedraw_cmds[t - 0x2500];
@@ -340,13 +342,22 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
           XChangeGC (d.display->display, GC, GCLineWidth, &gcv);
         }
       else
-        switch (*text++)
+        switch (t)
           {
-            case NOCHAR:
             case ZERO_WIDTH_CHAR:
               break;
             default:
-              XDrawRectangle (d.display->display, d, GC, x + 2, y + 2, r->TermWin.fwidth - 5, r->TermWin.fheight - 5);
+              int w = 0;
+              while (len > 0 && *text == NOCHAR)
+                {
+                  ++text;
+                  --len;
+                  w += r->TermWin.fwidth;
+                }
+
+              XDrawRectangle (d.display->display, d, GC, x + 2, y + 2,
+                              w + r->TermWin.fwidth - 5, r->TermWin.fheight - 5);
+              x += w;
           }
 
       x += r->TermWin.fwidth;

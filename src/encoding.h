@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+// order must match the table in encoding.C(!)
 enum codeset {
   CS_UNKNOWN = 0,
   CS_SPECIAL,
@@ -46,6 +47,7 @@ enum codeset {
   CS_CNS11643_1992_7,
   CS_CNS11643_1992_F,
 
+  CS_BIG5,
   CS_BIG5_EXT,
   CS_BIG5_PLUS,
 

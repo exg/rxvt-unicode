@@ -262,6 +262,7 @@ CN_EXT		cns11643_1992_5		cns11643-5
 CN_EXT		cns11643_1992_6		cns11643-6
 CN_EXT		cns11643_1992_7		cns11643-7
 CN_EXT		cns11643_1992_f		cns11643-f
+CN		big5			big5
 CN_EXT		big5_ext		big5ext
 CN_EXT		big5_plus		big5plus
 EU		koi8_r			koi8-r
