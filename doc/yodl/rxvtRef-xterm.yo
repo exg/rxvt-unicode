@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvtRef-xterm.yo,v 1.7 2004/04/24 05:52:44 pcg Exp $ --)
+COMMENT(-- $Id: rxvtRef-xterm.yo,v 1.8 2004/07/10 20:59:39 root Exp $ --)
 COMMENT(OSC: Operating System Commands)
 label(XTerm)
 nsect(XTerm Operating System Commands)
@@ -8,7 +8,8 @@ startdl()
 	(Set XTerm Parameters nl()\
 	8-bit ST: 0x9c, nl()\
 	7-bit ST sequence: ESC \ (0x1b, 0x5c), nl()\
-	backwards compatible terminator BEL (0x07) is also accepted. nl()\
+	backwards compatible terminator BEL (0x07) is also accepted. nl()
+        any b(octet) can be escaped by prefixing it with SYN (0x16, ^V). nl()\
 	starttable(2)(l l)(0)\
 	    row(cell(bf(tt(Ps = 0)))\
 		cell(Change Icon Name and Window Title to bf(tt(Pt))))\

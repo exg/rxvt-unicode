@@ -1051,6 +1051,7 @@ Optional Features:
   --disable-delete-key    disable handling of the delete key
   --disable-resources     disable all resource checking
   --enable-xgetdefault    enable resources via X instead of our small version
+  --enable-8bitctrls      enable 8 bit control sequences (not recommended)
   --enable-fallback(=CLASS) fall back on CLASS resources in addition to URxvt ones (default: Rxvt)
   --enable-strings        enable some replacement system functions
   --disable-swapscreen    disable swap screen support
@@ -5236,7 +5237,7 @@ test "x$enable_libtool_lock" != xno && enable_libtool_lock=yes
 case "$host" in
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5239 "configure"' > conftest.$ac_ext
+  echo '#line 5240 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -5787,7 +5788,7 @@ chmod -w .
 save_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -o out/conftest2.$ac_objext"
 compiler_c_o=no
-if { (eval echo configure:5790: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>out/conftest.err; } && test -s out/conftest2.$ac_objext; then
+if { (eval echo configure:5791: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>out/conftest.err; } && test -s out/conftest2.$ac_objext; then
   # The compiler can only warn and ignore the option if not recognized
   # So say no if there are warnings
   if test -s out/conftest.err; then
@@ -7403,7 +7404,7 @@ else
     lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 7406 "configure"
+#line 7407 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -7501,7 +7502,7 @@ else
     lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 7504 "configure"
+#line 7505 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -8255,6 +8256,7 @@ support_xpm=no
 support_xft=no
 support_unicode3=no
 support_combining=no
+support_8bitctrls=no
 codesets=
 
 
@@ -8297,6 +8299,7 @@ if test "${enable_everything+set}" = set; then
     support_xft=yes
     support_unicode3=yes
     support_combining=yes
+    #support_8bitctrls=yes
     codesets=all
   fi
 fi;
@@ -8497,6 +8500,14 @@ cat >>confdefs.h <<\_ACEOF
 #define USE_XGETDEFAULT 1
 _ACEOF
 
+  fi
+fi;
+
+# Check whether --enable-8bitctrls or --disable-8bitctrls was given.
+if test "${enable_8bitctrls+set}" = set; then
+  enableval="$enable_8bitctrls"
+  if test x$enableval = xyes -o x$enableval = xno; then
+    support_8bitctrls=yes
   fi
 fi;
 
@@ -16366,6 +16377,13 @@ _ACEOF
 
 fi
 
+if test x$support_8bitctrls = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define EIGHT_BIT_CONTROLS 1
+_ACEOF
+
+fi
 if test x$support_tinting = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
