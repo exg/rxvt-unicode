@@ -978,10 +978,12 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #if ENABLE_FRILLS
   if (rs[Rs_embed])
     {
+      XWindowAttributes wattr;
+
       top = strtol (rs[Rs_embed], 0, 0);
 
-      XWindowAttributes wattr;
-      XGetWindowAttributes (disp, top, &wattr);
+      if (!XGetWindowAttributes (disp, top, &wattr))
+        rxvt_fatal ("invalid window-id specified with -embed, aborting.\n");
 
       window_calc (wattr.width, wattr.height);
 
