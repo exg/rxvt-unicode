@@ -11,6 +11,8 @@ FEAT: double-click: more intelligent (urls etc.)
 FEAT: OnTheSpot editing.
 FEAT: tabbed windows (hey, just use screen...)
 
+4.5  Mon Dec 13 07:47:16 CET 2004
+	- fix an extremely nasty bug in utf8-conversion. upgrade is advised.
         - completely re-wrote selection pasting. This should fix garbled
           incomplete characters at 32k boundaries and too-short INCR
           selections, and more. Increases memory requirements considerably
