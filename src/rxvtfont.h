@@ -100,14 +100,12 @@ struct rxvt_fallback_font;
 
 struct rxvt_fontset {
   char *fontdesc;
-  rxvt_fontprop prop;
 
   rxvt_fontset (rxvt_term *r);
   ~rxvt_fontset ();
 
-  rxvt_font *new_font (const char *name, codeset cs);
-
-  bool populate (const char *desc, const rxvt_fontprop &prop);
+  bool populate (const char *desc);
+  void set_prop (const rxvt_fontprop &prop) { this->prop = prop; }
   int find_font (uint32_t unicode);
   int find_font (const char *name) const;
   bool realize_font (int i);
@@ -120,14 +118,16 @@ struct rxvt_fontset {
 
 private:
   rxvt_term *r;
+  rxvt_fontprop prop;
   simplevec<rxvt_font *> fonts;
   const rxvt_fallback_font *fallback;
 
   typedef unsigned char pagemap[256];
   vector<pagemap *> fmap;
 
-  void add_fonts (const char *desc);
   void clear ();
+  rxvt_font *new_font (const char *name, codeset cs);
+  void add_fonts (const char *desc);
 };
 
 #endif /* _DEFAULTFONT_H_ */
