@@ -1,0 +1,350 @@
+#!/usr/bin/perl
+
+open TABLE, ">", "table/linedraw.h";
+select TABLE;
+
+my $ch = 0x2500;
+
+# coordinate system:
+# 
+# 0..8 (equally spaced) 9,11 mid-1,mid+1, makes 4 bit
+# one point = 8 bit, two points = 16 bit
+
+# 8 bit opcode 0 line, 1 rect, 2 arc
+# 8 bit opcode arg
+
+# OOOOOOOO AAAABBBB X1X1Y1Y1 X2X2Y2Y2
+
+my $offs = 0;
+my @offs;
+
+sub emit {
+   my ($code, $x1, $y1, $x2, $y2, $a, $b) = @_;
+   $offs++;
+   printf " 0x%08lx,", ($code << 24)
+             | ($x1 << 12)
+             | ($y1 <<  8)
+             | ($x2 <<  4)
+             | ($y2 <<  0)
+             | ($a  << 20)
+             | ($b  << 16);
+}
+
+print "static uint32_t linedraw_command[] = {\n";
+
+while (<DATA>) {
+   next if /^\//;
+   next unless /\S/;
+
+   push @offs, $offs;
+
+   my ($v, $V, $h, $H, $s);
+
+   for (;;) {
+      /\G-/gc and last;
+      /\G$/gc and last;
+
+      /\G([123])/gc and $w = $1;
+
+      /\Gh/gc and $h = $w;
+      /\GH/gc and $H = $w;
+      /\Gv/gc and $v = $w;
+      /\GV/gc and $V = $w;
+
+      /\G\//gc and emit 0, 0, 8, 8, 0;
+      /\G\\/gc and emit 0, 0, 0, 8, 8;
+
+      /\GA/gc and emit 2, 8, 8, 0, 0, 2, 2;
+      /\GB/gc and emit 2, 0, 8, 0, 0, 1, 2;
+      /\GC/gc and emit 2, 0, 0, 0, 0, 1, 0;
+      /\GD/gc and emit 2, 8, 0, 0, 0, 0, 0;
+
+      /\Gi/gc and emit 1, 0, 0, 4, 4;
+      /\Gj/gc and emit 1, 4, 0, 8, 4;
+      /\Gk/gc and emit 1, 0, 4, 4, 8;
+      /\Gl/gc and emit 1, 4, 4, 8, 8;
+
+      /\Gs(\d)/gc and $s = $1;
+
+      /\Gr(\d+),(\d+),(\d+),(\d+)/gc and emit 1, $1, $2, $3, $4, $s;
+
+      /\G\s/gc;
+   }
+
+   if ($h) {
+      emit 0, 0,  9,10,  9 if $h > 1;
+      emit 0, 0, 10,10, 10 if $h & 1;
+      emit 0, 0, 11,10, 11 if $h > 1;
+   }
+   
+   if ($H) {
+      emit 0,10,  9, 8,  9 if $H > 1;
+      emit 0,10, 10, 8, 10 if $H & 1;
+      emit 0,10, 11, 8, 11 if $H > 1;
+   }
+   
+   if ($v) {
+      emit 0, 9,  0, 9, 10 if $v > 1;
+      emit 0,10,  0,10, 10 if $v & 1;
+      emit 0,11,  0,11, 10 if $v > 1;
+   }
+   
+   if ($V) {
+      emit 0, 9, 10, 9,  8 if $V > 1;
+      emit 0,10, 10,10,  8 if $V & 1;
+      emit 0,11, 10,11,  8 if $V > 1;
+   }
+
+   $offs[-1] = ($offs[-1] << 4) | ($offs - $offs[-1]);
+   
+   printf " // %04x\n", $ch;
+   $ch++;
+}
+
+print <<EOF;
+};
+
+static uint16_t linedraw_offs[] = {
+EOF
+
+for (@offs) {
+   printf " 0x%04x,", $_;
+   print "\n" if ++$cnt % 5 == 0;
+}
+
+print <<EOF;
+};
+
+EOF
+
+__END__
+// 2500
+
+1hH
+3hH
+1vV
+3vV
+
+r0,10,1,10 r3,10,5,10 r7,10,8,10
+r0,9,1,11 r3,9,5,11 r7,9,8,11
+r10,0,10,1 r10,3,10,5 r10,7,10,8
+r9,0,11,1 r9,3,11,5 r9,7,11,8
+
+r0,10,1,10 r2,10,3,10 r4,10,5,10 r6,10,7,10
+r0,9,1,11 r2,9,3,11 r4,9,5,11 r6,9,7,11
+r10,0,10,1 r10,2,10,3 r10,4,10,5 r10,6,10,7
+r9,0,11,1 r9,2,11,3 r9,4,11,5 r9,6,11,7
+
+1HV
+3H1V
+1H3V
+3HV
+
+
+// 2510
+
+1hV
+3h1V
+1h3V
+3hV
+
+1Hv
+3H1v
+1H3v
+3Hv
+
+1hv
+3h1v
+1h3v
+3hv
+
+1HvV
+3H1vV
+1HV3v
+1Hv3V
+
+
+// 2530
+
+1H3vV
+3Hv1V
+3HV1v
+3HvV
+
+1hvV
+3h1vV
+1hV3v
+1hv3V
+
+1h3vV
+3hv1V
+1v3hV
+3hvV
+
+1hHV
+3h1HV
+3H1hV
+3hH1V
+
+
+// 2530
+
+1hH3V
+3hV1H
+1h3HV
+3hHV
+
+1hHv
+1vH3h
+1hv3H
+1v3hH
+
+1hH3v
+1H3hv
+1h3Hv
+3hHv
+
+1hHvV
+1vVH3h
+1hvV3H
+1vV3hH
+
+
+// 2540
+
+1hHV3v
+1hHv3V
+1hH3vV
+1HV3hv
+
+1hV3Hv
+1Hv3hV
+1hv3HV
+1V3hHv
+
+1v3hHV
+1H3hvV
+1h3HvV
+3hHvV
+
+-
+-
+-
+-
+
+
+// 2550
+
+2hH
+2vV
+1V2H
+2V1H
+
+2VH
+2h1V
+1h2V
+2hV
+
+1v2H
+2v1H
+2vH
+2h1v
+
+1h2v
+2hv
+1vV2H
+2vV1H
+
+
+// 2560
+
+2vVH
+2h1vV
+1h2vV
+2hvV
+
+2hH1V
+2V1hH
+2hHV
+1v2hH
+
+2v1hH
+2vhH
+1vV2hH
+1hH2vV
+
+2hHvV
+A
+B
+C
+
+
+// 2570
+
+D
+1/
+1\
+1/\
+
+1h
+1v
+1H
+1V
+
+3h
+3v
+3H
+3V
+
+1h3H
+1v3V
+1H3h
+1V3v
+
+
+// 2580
+
+r0,0,8,4
+r0,7,8,8
+r0,6,8,8
+r0,5,8,8
+
+r0,4,8,8
+r0,3,8,8
+r0,2,8,8
+r0,1,8,8
+
+r0,0,8,8
+r0,0,7,8
+r0,0,6,8
+r0,0,5,8
+
+r0,0,4,8
+r0,0,3,8
+r0,0,2,8
+r0,0,1,8
+
+
+// 2590
+
+r4,0,8,8
+s3r0,0,8,8
+s2r0,0,8,8
+s1r0,0,8,8
+
+r0,0,8,1
+r7,0,8,8
+k
+l
+
+i
+ikl
+il
+ijk
+
+ijl
+j
+jk
+jkl
+
+
