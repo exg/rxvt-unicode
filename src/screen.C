@@ -991,24 +991,23 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
             {
               tp = stp + screen.cur.col - 1;
               rp = srp + screen.cur.col - 1;
+
+              while (*tp == NOCHAR && tp > stp)
+                tp--, rp--;
             }
           else if (screen.cur.row > 0
                    && screen.tlen [screen.cur.row - 1 + TermWin.saveLines] == -1)
             {
-              tp = screen.text[screen.cur.row - 1 + TermWin.saveLines] + last_col - 1;
-              rp = screen.rend[screen.cur.row - 1 + TermWin.saveLines] + last_col - 1;
+              int line = screen.cur.row - 1 + TermWin.saveLines;
+
+              tp = screen.text[line] + last_col - 1;
+              rp = screen.rend[line] + last_col - 1;
+
+              while (*tp == NOCHAR && tp > screen.text[line])
+                tp--, rp--;
             }
           else
             continue;
-
-          // handle double-width-chars by making them look extremely ugly
-          if (*tp == NOCHAR)
-            {
-              // hack //D //TODO //--tp, --rp;
-              *tp = ' ';
-              *rp &= ~RS_baseattrMask;
-              *rp = SET_FONT (*rp, FONTSET (*rp)->find_font (*tp));
-            }
 
           // first try to find a precomposed character
           unicode_t n = rxvt_compose (*tp, c);
@@ -1489,8 +1488,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
   switch (insdel)
     {
       case INSERT:
-        for (col = TermWin.ncol - 1; (col - count) >= screen.cur.col;
-             col--)
+        for (col = TermWin.ncol - 1; (col - count) >= screen.cur.col; col--)
           {
             stp[col] = stp[col - count];
             srp[col] = srp[col - count];
@@ -1510,13 +1508,13 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
               CLEAR_SELECTION ();
             else
               {              /* shift selection */
-                selection.beg.col += count;
+                selection.beg.col  += count;
                 selection.mark.col += count; /* XXX: yes? */
-                selection.end.col += count;
+                selection.end.col  += count;
               }
           }
 
-        scr_blank_line (& (stp[screen.cur.col]), & (srp[screen.cur.col]),
+        scr_blank_line (&stp[screen.cur.col], &srp[screen.cur.col],
                         (unsigned int)count, rstyle);
         break;
 
@@ -1524,7 +1522,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
         screen.cur.col += count;     /* don't worry if > TermWin.ncol */
         selection_check (1);
         screen.cur.col -= count;
-        scr_blank_line (& (stp[screen.cur.col]), & (srp[screen.cur.col]),
+        scr_blank_line (&stp[screen.cur.col], &srp[screen.cur.col],
                         (unsigned int)count, rstyle);
         break;
 
@@ -1537,8 +1535,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
             srp[col] = srp[col + count];
           }
 
-        scr_blank_line (& (stp[TermWin.ncol - count]),
-                        & (srp[TermWin.ncol - count]),
+        scr_blank_line (&stp[TermWin.ncol - count], &srp[TermWin.ncol - count],
                         (unsigned int)count, tr);
 
         if (*slp == -1) /* break line continuation */
@@ -1557,9 +1554,9 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
             else
               {
                 /* shift selection */
-                selection.beg.col -= count;
+                selection.beg.col  -= count;
                 selection.mark.col -= count; /* XXX: yes? */
-                selection.end.col -= count;
+                selection.end.col  -= count;
               }
           }
 
@@ -1753,10 +1750,10 @@ rxvt_term::set_font_style ()
  */
 void
 rxvt_term::scr_charset_choose (int set)
-  {
-    screen.charset = set;
-    set_font_style ();
-  }
+{
+  screen.charset = set;
+  set_font_style ();
+}
 
 /* ------------------------------------------------------------------------- */
 /*
@@ -1769,10 +1766,10 @@ rxvt_term::scr_charset_choose (int set)
  */
 void
 rxvt_term::scr_charset_set (int set, unsigned int ch)
-  {
-    charsets[set] = (unsigned char)ch;
-    set_font_style ();
-  }
+{
+  charsets[set] = (unsigned char)ch;
+  set_font_style ();
+}
 
 
 /* ------------------------------------------------------------------------- *
@@ -2037,6 +2034,8 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
   rend_t cc1;         /* store colours at cursor position (s)      */
 #endif
   rend_t *crp;        // cursor rendition pointer
+
+  want_refresh = 0;        /* screen is current */
 
   if (refresh_type == NO_REFRESH || !TermWin.mapped)
     return;
@@ -2449,7 +2448,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 
   num_scr = 0;
   num_scr_allow = 1;
-  want_refresh = 0;        /* screen is current */
 }
 
 void
@@ -2546,22 +2544,36 @@ rxvt_term::scr_reverse_selection ()
       int col, row = selection.end.row + TermWin.saveLines;
       rend_t *srp;
 
-      if (i >= end_row)
-        col = selection.beg.col;
-      else
+#if ENABLE_FRILLS
+      if (selection.rect)
         {
-          col = 0;
-          i = end_row;
+          end_row += TermWin.nrow;
+
+          for (; i <= row && i <= end_row; i++)
+            for (srp = screen.rend[i], col = selection.beg.col; col < selection.end.col; col++)
+              srp[col] ^= RS_RVid;
         }
+      else
+#endif
+        {
+          if (i >= end_row)
+            col = selection.beg.col;
+          else
+            {
+              col = 0;
+              i = end_row;
+            }
 
-      end_row += TermWin.nrow;
-      for (; i < row && i < end_row; i++, col = 0)
-        for (srp = screen.rend[i]; col < TermWin.ncol; col++)
-          srp[col] ^= RS_RVid;
+          end_row += TermWin.nrow;
 
-      if (i == row && i < end_row)
-        for (srp = screen.rend[i]; col < selection.end.col; col++)
-          srp[col] ^= RS_RVid;
+          for (; i < row && i < end_row; i++, col = 0)
+            for (srp = screen.rend[i]; col < TermWin.ncol; col++)
+              srp[col] ^= RS_RVid;
+
+          if (i == row && i < end_row)
+            for (srp = screen.rend[i]; col < selection.end.col; col++)
+              srp[col] ^= RS_RVid;
+        }
     }
 }
 
@@ -2921,7 +2933,6 @@ rxvt_term::selection_make (Time tm)
   new_selection_text = (wchar_t *)rxvt_malloc ((i + 4) * sizeof (wchar_t));
 
   col = selection.beg.col;
-  MAX_IT (col, 0);
   row = selection.beg.row + TermWin.saveLines;
   end_row = selection.end.row + TermWin.saveLines;
   int ofs = 0;
@@ -2929,16 +2940,25 @@ rxvt_term::selection_make (Time tm)
 
   for (; row <= end_row; row++, col = 0)
     {
-      t = &screen.text[row][col];
-
       end_col = screen.tlen[row];
+
+#if ENABLE_FRILLS
+      if (selection.rect)
+        {
+          col = selection.beg.col;
+          end_col = TermWin.ncol + 1;
+        }
+#endif
+
+      MAX_IT (col, 0);
 
       if (end_col == -1)
         end_col = TermWin.ncol;
 
-      if (row == end_row)
+      if (row == end_row || selection.rect)
         MIN_IT (end_col, selection.end.col);
 
+      t = &screen.text[row][col];
       for (; col < end_col; col++)
         {
           if (*t == NOCHAR)
@@ -3208,6 +3228,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
   } closeto = RIGHT;
 
   want_refresh = 1;
+
   switch (selection.op)
     {
       case SELECTION_INIT:
@@ -3230,6 +3251,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
       default:
         return;
     }
+
   if (selection.beg.col == selection.end.col
       && selection.beg.col != selection.mark.col
       && selection.beg.row == selection.end.row
@@ -3289,9 +3311,10 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
     { /* button1 drag or button3 drag */
       if (ROWCOL_IS_AFTER (selection.mark, pos))
         {
-          if ((selection.mark.row == selection.end.row)
-              && (selection.mark.col == selection.end.col)
-              && clickchange && selection.clicks == 2)
+          if (selection.mark.row == selection.end.row
+              && selection.mark.col == selection.end.col
+              && clickchange
+              && selection.clicks == 2)
             selection.mark.col--;
 
           selection.beg.row = pos.row;
@@ -3312,21 +3335,23 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
     {
       end_col = screen.tlen[selection.beg.row + TermWin.saveLines];
 
-      if (end_col != -1 && selection.beg.col > end_col)
-        {
-#if 1
-          selection.beg.col = ncol;
-#else
-          if (selection.beg.row != selection.end.row)
-            selection.beg.col = ncol;
-          else
-            selection.beg.col = selection.mark.col;
+      if (selection.beg.col > end_col
+          && end_col != -1
+#if ENABLE_FRILLS
+          && !selection.rect
 #endif
-        }
+         )
+        selection.beg.col = ncol;
 
       end_col = screen.tlen[selection.end.row + TermWin.saveLines];
 
-      if (end_col != -1 && selection.end.col > end_col)
+      if (
+          selection.end.col > end_col
+          && end_col != -1
+#if ENABLE_FRILLS
+          && !selection.rect
+#endif
+         )
         selection.end.col = ncol;
     }
   else if (selection.clicks == 2)
@@ -3334,8 +3359,8 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
       if (ROWCOL_IS_AFTER (selection.end, selection.beg))
         selection.end.col--;
 
-      selection_delimit_word (UP, & (selection.beg), & (selection.beg));
-      selection_delimit_word (DN, & (selection.end), & (selection.end));
+      selection_delimit_word (UP, &selection.beg, &selection.beg);
+      selection_delimit_word (DN, &selection.end, &selection.end);
     }
   else if (selection.clicks == 3)
     {
@@ -3365,6 +3390,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
         {
           if (ROWCOL_IS_AFTER (selection.mark, selection.beg))
             selection.mark.col++;
+
           selection.beg.col = 0;
           selection.end.col = ncol;
         }
@@ -3383,25 +3409,35 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
           selection.mark.col = selection.beg.col;
         }
     }
+
+#if ENABLE_FRILLS
+  if (selection.rect && selection.beg.col > selection.end.col)
+    SWAP_IT (selection.beg.col, selection.end.col, int);
+#endif
 }
 
 #if ENABLE_FRILLS
 void
 rxvt_term::selection_remove_trailing_spaces ()
 {
-  int32_t         end_col, end_row;
-  text_t         *stp;
+  int32_t end_col, end_row;
+  text_t *stp;
 
   end_col = selection.end.col;
   end_row = selection.end.row;
+
   for ( ; end_row >= selection.beg.row; )
     {
       stp = screen.text[end_row + TermWin.saveLines];
+
       while (--end_col >= 0)
         {
-          if (stp[end_col] != ' ' && stp[end_col] != '\t')
+          if (stp[end_col] != ' '
+              && stp[end_col] != '\t'
+              && stp[end_col] != NOCHAR)
             break;
         }
+
       if (end_col >= 0
           || screen.tlen[end_row - 1 + TermWin.saveLines] != -1)
         {
@@ -3409,9 +3445,11 @@ rxvt_term::selection_remove_trailing_spaces ()
           selection.end.row = end_row;
           break;
         }
+
       end_row--;
       end_col = TermWin.ncol;
     }
+
   if (selection.mark.row > selection.end.row)
     {
       selection.mark.row = selection.end.row;
