@@ -1896,13 +1896,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
      */
     clearfirst = clearlast = must_clear = 0;
 
-    if (currmaxcol < TermWin.ncol)
-      {
-        currmaxcol = TermWin.ncol;
-        buffer = (char *)rxvt_realloc (buffer,
-                                          sizeof(char) * (currmaxcol + 1) * MB_CUR_MAX);
-      }
-
     refresh_count = 0;
 
     row_offset = TermWin.saveLines - TermWin.view_start;
@@ -1955,7 +1948,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
               *srp ^= RS_RVid;
 #ifndef NO_CURSORCOLOR
               cc1 = *srp & (RS_fgMask | RS_bgMask);
-              if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_cursor))
+              if (ISSET_PIXCOLOR (this, Color_cursor))
                   ccol1 = Color_cursor;
               else
 #ifdef CURSOR_COLOR_IS_RENDITION_COLOR
@@ -1963,7 +1956,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 #else
                   ccol1 = Color_fg;
 #endif
-              if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_cursor2))
+              if (ISSET_PIXCOLOR (this, Color_cursor2))
                   ccol2 = Color_cursor2;
               else
 #ifdef CURSOR_COLOR_IS_RENDITION_COLOR
@@ -2170,21 +2163,13 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                 else if (hidden_text)
                   fore = back;
               }
-#elif OPTION_HC
-            if (!rvid && (rend & RS_Blink))
-              {
-                if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_HC))
-                  back = Color_HC;
-                else
-                  rvid = !rvid; /* fall back */
-              }
 #endif
             if (rvid)
               {
                 SWAP_IT(fore, back, int);
 
 #ifndef NO_BOLD_UNDERLINE_REVERSE
-                if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_RV)
+                if (ISSET_PIXCOLOR (this, Color_RV)
 # ifndef NO_CURSORCOLOR
                     && !ISSET_PIXCOLOR (this, Color_cursor)
 # endif
@@ -2195,15 +2180,14 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 #ifndef NO_BOLD_UNDERLINE_REVERSE
             else if (rend & RS_Bold)
               {
-                if (Xdepth > 2)
-                  if (ISSET_PIXCOLOR (this, Color_BD))
-                    fore = Color_BD;
-                  else
-                    fore = Color_White;
+                if (ISSET_PIXCOLOR (this, Color_BD))
+                  fore = Color_BD;
+                else if (fore == Color_fg)
+                  fore = Color_White;
               }
             else if (rend & RS_Uline)
               {
-                if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_UL))
+                if (ISSET_PIXCOLOR (this, Color_UL))
                   fore = Color_UL;
               }
 #endif
@@ -2255,7 +2239,7 @@ nodraw: ;
 #ifndef NO_CURSORCOLOR
             unsigned long   gcmask;     /* Graphics Context mask */
 
-            if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_cursor))
+            if (ISSET_PIXCOLOR (this, Color_cursor))
               XSetForeground (Xdisplay, TermWin.gc, PixColors[Color_cursor]);
 #endif
             XDrawRectangle(Xdisplay, drawBuffer, TermWin.gc,
@@ -2348,18 +2332,10 @@ rxvt_scr_reverse_selection(pR)
         end_row += R->TermWin.nrow;
         for (; i < row && i < end_row; i++, col = 0)
             for (srp = R->screen.rend[i]; col < R->TermWin.ncol; col++)
-#ifndef OPTION_HC
                 srp[col] ^= RS_RVid;
-#else
-                srp[col] ^= RS_Blink;
-#endif
         if (i == row && i < end_row)
             for (srp = R->screen.rend[i]; col < R->selection.end.col; col++)
-#ifndef OPTION_HC
                 srp[col] ^= RS_RVid;
-#else
-                srp[col] ^= RS_Blink;
-#endif
     }
 }
 

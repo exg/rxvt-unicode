@@ -900,7 +900,6 @@ struct rxvt_term : rxvt_vars {
                   last_top,   /* scrollbar last top position               */
                   last_state, /* scrollbar last state                      */
                   scrollbar_len,
-                  currmaxcol,
 #ifdef MENUBAR
                   menu_readonly,      /* okay to alter menu? */
                   Arrows_x,
@@ -1040,7 +1039,6 @@ struct rxvt_term : rxvt_vars {
   char           *env_display;        /* environmental variable DISPLAY  */
   char           *env_term;           /* environmental variable TERM     */
   char           *env_colorfgbg;
-  char           *buffer;
   char           *locale;
   char           *codeset;
   char            charsets[4];

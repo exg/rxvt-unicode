@@ -72,11 +72,6 @@
 #define NO_PIXEL_DROPPING_AVOIDANCE
 
 /*
- * Add support for '-hc colour' for background highlight of selection
- */
-#define OPTION_HC
-
-/*
  * Define maximum possible columns and rows
  */
 #define MAX_COLS	4000

@@ -1,4 +1,10 @@
-1.7
+1.7  Fri Jan 30 16:50:11 CET 2004
+	- further cleanups.
+        - never do last-minute-changes: restore ability to have
+          color + bold ass high-intensity, and let the selection
+          use reverse video, not _blink_.
+        - remove OPTION_HC, at least temporarily. If you want it back,
+          please drop me a note.
 
 1.6  Fri Jan 30 00:34:01 CET 2004
 	- cleanups, minor bugfixes.
