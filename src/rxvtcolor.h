@@ -96,6 +96,8 @@ struct rxvt_display : refcounted {
 
   rxvt_xim *get_xim (const char *locale, const char *modifiers);
   void put_xim (rxvt_xim *xim);
+
+  Atom atom (const char *name);
 };
 
 struct im_watcher : watcher, callback0<void> {

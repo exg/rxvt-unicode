@@ -274,6 +274,11 @@ void rxvt_display::put_xim (rxvt_xim *xim)
   xims.put (xim);
 }
 
+Atom rxvt_display::atom (const char *name)
+{
+  return XInternAtom (display, name, False);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 template refcache<rxvt_display>;
