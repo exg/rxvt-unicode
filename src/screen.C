@@ -766,11 +766,11 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
 void
 rxvt_term::scr_add_lines (const uint32_t *str, int nlines, int len)
 {
-  unsigned char   checksel, clearsel;
-  uint32_t        c;
-  int             i, row, last_col;
-  text_t         *stp;
-  rend_t         *srp;
+  unsigned char checksel, clearsel;
+  uint32_t c;
+  int i, row, last_col;
+  text_t *stp;
+  rend_t *srp;
 
   if (len <= 0)               /* sanity */
     return;
@@ -848,6 +848,7 @@ rxvt_term::scr_add_lines (const uint32_t *str, int nlines, int len)
           checksel = 0;
           clearsel = 1;
         }
+
       if (screen.flags & Screen_WrapNext)
         {
           screen.tlen[row] = -1;
@@ -855,22 +856,27 @@ rxvt_term::scr_add_lines (const uint32_t *str, int nlines, int len)
             scr_scroll_text (screen.tscroll, screen.bscroll, 1, 0);
           else if (screen.cur.row < (TermWin.nrow - 1))
             row = (++screen.cur.row) + TermWin.saveLines;
+
           stp = screen.text[row];  /* _must_ refresh */
           srp = screen.rend[row];  /* _must_ refresh */
           screen.cur.col = 0;
           screen.flags &= ~Screen_WrapNext;
         }
+
       if (screen.flags & Screen_Insert)
         scr_insdel_chars (1, INSERT);
+
+      if (IS_COMPOSE (c))
+        c = REPLACEMENT_CHAR;
+
+      // rely on wcwidth to tell us the character width, at least for non-latin1
+      // do wcwidth before further replacements, as wcwidth says that line-drawing
+      // characters have width -1 (DOH!) on gnu/linux sometimes.
+      int width = c < 256 ? 1 : wcwidth (c);
 
       if (charsets[screen.charset] == '0') // DEC SPECIAL
         switch (c)
           {
-            // dunno where these come from
-#if 0
-            case '+': c = 0x2192; break; case ',': c = 0x2190; break; case '-': c = 0x2191; break;
-            case '.': c = 0x2193; break; case '0': c = 0x25ae; break;
-#endif
             // vt100 special graphics and line drawing
             case '`': c = 0x25c6; break; case '_': c = 0x0020; break;
             case 'a': c = 0x2592; break; case 'b': c = 0x2409; break; case 'c': c = 0x240c; break;
@@ -884,14 +890,17 @@ rxvt_term::scr_add_lines (const uint32_t *str, int nlines, int len)
             case 'y': c = 0x2264; break; case 'z': c = 0x2265; break; case '{': c = 0x03c0; break;
             case '|': c = 0x2260; break; case '}': c = 0x00a3; break; case '~': c = 0x00b7; break;
           }
+      
 
-      rend_t rend = SET_FONT (rstyle, TermWin.fontset->find_font (c));
-      // rely on wcwidth to tell us the character width, at least for non-ascii
-      int width = c <= 128 ? 1 : wcwidth (c);
-
-      // width -1 characters (e.g. combining chars) are ignored currently.
       if (width > 0)
         {
+#if !UNICODE_3
+          // trim characters we can't store directly :(
+          if (c >= 0x10000)
+            c = rxvt_composite.compose (c); // map to lower 16 bits
+#endif
+          rend_t rend = SET_FONT (rstyle, TermWin.fontset->find_font (c));
+
           do
             {
               stp[screen.cur.col] = c;
@@ -912,14 +921,50 @@ rxvt_term::scr_add_lines (const uint32_t *str, int nlines, int len)
           while (--width > 0);
 
           // pad with spaces when overwriting wide character with smaller one
-          for (int c = screen.cur.col; stp[c] == NOCHAR && c < last_col; c++)
+          for (int c = screen.cur.col; c < last_col && stp[c] == NOCHAR; c++)
             {
               stp[c] = ' ';
               srp[c] = rend;
             }
         }
-      else
-        (void)0; /* handle combining character etc. here. */
+      else if (width == 0)
+        {
+#if ENCODING_COMPOSE
+          // handle combining characters
+          // we just tag the accent on the previous on-screen character.
+          // this is arguably not correct, but also arguably not wrong.
+          // we don't handle double-width characters nicely yet.
+
+          text_t *tp;
+          rend_t *rp;
+
+          if (screen.cur.col > 0)
+            {
+              tp = stp + screen.cur.col - 1;
+              rp = srp + screen.cur.col - 1;
+            }
+          else if (screen.cur.row > 0
+                   && screen.tlen [screen.cur.row - 1 + TermWin.saveLines] == -1)
+            {
+              tp = screen.text[screen.cur.row - 1 + TermWin.saveLines] + last_col - 1;
+              rp = screen.rend[screen.cur.row - 1 + TermWin.saveLines] + last_col - 1;
+            }
+          else
+            continue;
+
+          // handle double-width-chars by making them look extremely ugly
+          if (*tp == NOCHAR)
+            *tp = ' '; // hack //D //TODO //--tp, --rp;
+
+          // first try to find a precomposed character
+          uint32_t n = rxvt_compose (*tp, c);
+          if (n == NOCHAR)
+            n = rxvt_composite.compose (*tp, c);
+
+          *tp = n;
+          *rp = SET_FONT (*rp, TermWin.fontset->find_font (*tp));
+#endif
+        }
     }
 
   if (screen.tlen[row] != -1)      /* XXX: think about this */
@@ -2531,6 +2576,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
       if (ct.nitems == 0)
         {
           D_SELECT ((stderr, "rxvt_selection_paste: property empty - also INCR end"));
+
           if (selection_wait == Sel_normal && nread == 0
               && (win != display->root || prop != XA_CUT_BUFFER0)) // avoid recursion
             {
@@ -2595,13 +2641,14 @@ rxvt_term::selection_property (Window win, Atom prop)
 
   if (prop == None)
     return;
+
   D_SELECT ((stderr, "rxvt_selection_property (%08lx, %lu)", win, (unsigned long)prop));
   if (selection_wait == Sel_normal)
     {
-      int             a, afmt;
-      Atom            atype;
-      unsigned long   bytes_after, nitems;
-      unsigned char  *s = NULL;
+      int a, afmt;
+      Atom atype;
+      unsigned long bytes_after, nitems;
+      unsigned char *s = NULL;
 
       a = XGetWindowProperty (display->display, win, prop, 0L, 1L, False,
                              xa[XA_INCR], &atype, &afmt, &nitems,
@@ -2610,6 +2657,7 @@ rxvt_term::selection_property (Window win, Atom prop)
         XFree (s);
       if (a != Success)
         return;
+
 #ifndef __CYGWIN32__
       if (atype == xa[XA_INCR])
         {  /* start an INCR transfer */
@@ -2625,6 +2673,7 @@ rxvt_term::selection_property (Window win, Atom prop)
   else if (selection_wait == Sel_incr)
     {
       reget_time = 1;
+
       if (selection_paste (win, prop, True) == -1)
         {
           D_SELECT ((stderr, "rxvt_selection_property: INCR: clean end"));
@@ -2635,6 +2684,7 @@ rxvt_term::selection_property (Window win, Atom prop)
   if (reget_time) /* received more data so reget time */
     incr_ev.start (NOW + 10);
 }
+
 /* ------------------------------------------------------------------------- */
 /*
  * Request the current selection: 
@@ -2649,18 +2699,21 @@ void
 rxvt_term::selection_request (Time tm, int x, int y)
 {
   D_SELECT ((stderr, "rxvt_selection_request (%lu, %d, %d)", tm, x, y));
+
   if (x < 0 || x >= TermWin.width || y < 0 || y >= TermWin.height)
     return;                 /* outside window */
 
-  if (selection.text != NULL)
-    {    /* internal selection */
+  if (selection.text)
+    { /* internal selection */
       D_SELECT ((stderr, "rxvt_selection_request: pasting internal"));
-      paste (selection.text, selection.len);
+      char *str = rxvt_wcstombs (selection.text, selection.len);
+      paste ((unsigned char *)str, strlen (str));
+      free (str);
       return;
     }
   else
     {
-      int             i;
+      int i;
 
       selection_request_time = tm;
       selection_wait = Sel_normal;
@@ -2678,6 +2731,7 @@ rxvt_term::selection_request (Time tm, int x, int y)
 
         }
     }
+
   selection_wait = Sel_none;       /* don't loop in rxvt_selection_paste () */
   D_SELECT ((stderr, "rxvt_selection_request: pasting CUT_BUFFER0"));
   selection_paste (display->root, XA_CUT_BUFFER0, False);
@@ -2686,25 +2740,28 @@ rxvt_term::selection_request (Time tm, int x, int y)
 int
 rxvt_term::selection_request_other (Atom target, int selnum)
 {
-  Atom            sel;
+  Atom sel;
 #ifdef DEBUG_SELECT
-  char           *debug_xa_names[] = { "PRIMARY", "SECONDARY", "CLIPBOARD" };
+  char *debug_xa_names[] = { "PRIMARY", "SECONDARY", "CLIPBOARD" };
 #endif
 
   selection_type |= selnum;
+
   if (selnum == Sel_Primary)
     sel = XA_PRIMARY;
   else if (selnum == Sel_Secondary)
     sel = XA_SECONDARY;
   else
     sel = xa[XA_CLIPBOARD];
+
   if (XGetSelectionOwner (display->display, sel) != None)
     {
       D_SELECT ((stderr, "rxvt_selection_request_other: pasting %s", debug_xa_names[selnum]));
       XConvertSelection (display->display, sel, target, xa[XA_VT_SELECTION],
-                        TermWin.vt, selection_request_time);
+                         TermWin.vt, selection_request_time);
       return 1;
     }
+
   return 0;
 }
 
@@ -2734,8 +2791,7 @@ void
 rxvt_term::selection_make (Time tm)
 {
   int i, col, end_col, row, end_row;
-  unsigned char *new_selection_text;
-  char *str;
+  wchar_t *new_selection_text;
   text_t *t;
 
   D_SELECT ((stderr, "rxvt_selection_make (): selection.op=%d, selection.clicks=%d", selection.op, selection.clicks));
@@ -2758,20 +2814,19 @@ rxvt_term::selection_make (Time tm)
   if (selection.clicks == 4)
     return;                 /* nothing selected, go away */
 
-  i = (selection.end.row - selection.beg.row + 1) * (TermWin.ncol + 1) + 1;
-  str = (char *)rxvt_malloc ((i + 2) * MB_CUR_MAX + 1);
-
-  new_selection_text = (unsigned char *)str;
+  i = (selection.end.row - selection.beg.row + 1) * (TermWin.ncol + 1);
+  new_selection_text = (wchar_t *)rxvt_malloc ((i + 4) * sizeof (wchar_t));
 
   col = selection.beg.col;
   MAX_IT (col, 0);
   row = selection.beg.row + TermWin.saveLines;
   end_row = selection.end.row + TermWin.saveLines;
-  struct mbstate mbs;
+  int ofs = 0;
+  int extra = 0;
 
   for (; row <= end_row; row++, col = 0)
     {
-      t = & (screen.text[row][col]);
+      t = &(screen.text[row][col]);
 
       end_col = screen.tlen[row];
 
@@ -2782,48 +2837,55 @@ rxvt_term::selection_make (Time tm)
         MIN_IT (end_col, selection.end.col);
 
       for (; col < end_col; col++)
-        if (*t == NOCHAR)
-          t++;
-        else
-          {
-            int len = wcrtomb (str, *t++, mbs);
-            if (len > 0)
-              str += len;
-          }
+        {
+          if (*t == NOCHAR)
+            t++;
+          else if (IS_COMPOSE (*t))
+            {
+              int len = rxvt_composite.expand (*t, 0);
+
+              extra -= (len - 1);
+
+              if (extra < 0)
+                {
+                  extra += i;
+                  i += i;
+                  new_selection_text = (wchar_t *)rxvt_realloc (new_selection_text, (i + 4) * sizeof (wchar_t));
+                }
+
+              ofs += rxvt_composite.expand (*t++, new_selection_text + ofs);
+            }
+          else
+            new_selection_text[ofs++] = *t++;
+        }
 
       if (screen.tlen[row] != -1 && row != end_row)
-        *str++ = '\n';
+        new_selection_text[ofs++] = L'\n';
     }
 
 #ifndef NO_OLD_SELECTION
   if (selection_style == OLD_SELECT)
     if (end_col == TermWin.ncol)
-      *str++ = '\n';
+      new_selection_text[ofs++] = L'\n';
 #endif
 #ifndef NO_NEW_SELECTION
   if (selection_style != OLD_SELECT)
     if (end_col != selection.end.col)
-      *str++ = '\n';
+      new_selection_text[ofs++] = L'\n';
 #endif
-  *str = '\0';
+  new_selection_text[ofs] = 0;
 
-  i = str - (char *)new_selection_text;
-  if (i == 0)
+  if (ofs == 0)
     {
       free (new_selection_text);
       return;
     }
 
-  // due to MB_CUR_MAX, selection wastage is usually high, so realloc
-  if (str - (char *)new_selection_text > 1024)
-    new_selection_text = (unsigned char *)rxvt_realloc (new_selection_text, i + 1);
+  free (selection.text);
 
-  selection.len = i;
-
-  if (selection.text)
-    free (selection.text);
-
-  selection.text = new_selection_text;
+  // we usually allocate much more than necessary, so realloc it smaller again
+  selection.len = ofs;
+  selection.text = (wchar_t *)rxvt_realloc (new_selection_text, (ofs + 1) * sizeof (wchar_t));
 
   XSetSelectionOwner (display->display, XA_PRIMARY, TermWin.vt, tm);
   if (XGetSelectionOwner (display->display, XA_PRIMARY) == TermWin.vt)
@@ -2831,20 +2893,16 @@ rxvt_term::selection_make (Time tm)
   else
     rxvt_print_error ("can't get primary selection");
 
-  {
-    XTextProperty ct;
-    char *cl = (char *)selection.text;
+#if 0
+  XTextProperty ct;
 
-    if (XmbTextListToTextProperty (display->display, &cl, 1, XStringStyle, &ct) >= 0)
-      {
-        XChangeProperty (display->display, display->root, XA_CUT_BUFFER0, XA_STRING, 8,
-                         PropModeReplace, ct.value, ct.nitems);
-        XFree (ct.value);
-      }
-    else
+  if (XwcTextListToTextProperty (display->display, &selection.text, 1, XStringStyle, &ct) >= 0)
+    {
       XChangeProperty (display->display, display->root, XA_CUT_BUFFER0, XA_STRING, 8,
-                       PropModeReplace, selection.text, (int)selection.len);
-  }
+                       PropModeReplace, ct.value, ct.nitems);
+      XFree (ct.value);
+    }
+#endif
 
   selection_time = tm;
   D_SELECT ((stderr, "rxvt_selection_make (): selection.len=%d", selection.len));
@@ -3383,20 +3441,22 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq)
 
   if (rq.target == xa[XA_TARGETS])
     {
-      Atom32 target_list[5];
+      Atom32 target_list[6];
       Atom32 *target = target_list;
 
       *target++ = (Atom32) xa[XA_TARGETS];
+      *target++ = (Atom32) xa[XA_TIMESTAMP];
       *target++ = (Atom32) XA_STRING;
       *target++ = (Atom32) xa[XA_TEXT];
       *target++ = (Atom32) xa[XA_COMPOUND_TEXT];
 #if X_HAVE_UTF8_STRING
       *target++ = (Atom32) xa[XA_UTF8_STRING];
 #endif
+
       XChangeProperty (display->display, rq.requestor, rq.property, XA_ATOM,
-                      (8 * sizeof (target_list[0])), PropModeReplace,
-                      (unsigned char *)target_list,
-                      target - target_list);
+                       (8 * sizeof (target_list[0])), PropModeReplace,
+                       (unsigned char *)target_list,
+                       target - target_list);
       ev.property = rq.property;
     }
   else if (rq.target == xa[XA_MULTIPLE])
@@ -3418,7 +3478,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq)
     {
       short freect = 0;
       int selectlen;
-      char *cl;
+      wchar_t *cl;
 
       target = rq.target;
 
@@ -3427,7 +3487,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq)
         // will ask for another format anyways.
         style = XStringStyle;
       else if (target == xa[XA_TEXT])
-        style = XTextStyle;
+        style = XStdICCTextStyle;
       else if (target == xa[XA_COMPOUND_TEXT])
         style = XCompoundTextStyle;
 #if X_HAVE_UTF8_STRING
@@ -3442,16 +3502,18 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq)
 
       if (selection.text)
         {
-          cl = (char *)selection.text;
+          cl = selection.text;
           selectlen = selection.len;
         }
       else
         {
-          cl = "";
+          cl = L"";
           selectlen = 0;
         }
 
-      if (XmbTextListToTextProperty (display->display, &cl, 1, style, &ct) >= 0)
+      // Xwc doesn't handle iso-10646 in wchar_t gracefully, so maybe recode it
+      // manually for XUTF8StringStyle.
+      if (XwcTextListToTextProperty (display->display, &cl, 1, style, &ct) >= 0)
         freect = 1;
       else
         {
@@ -3468,6 +3530,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq)
       if (freect)
         XFree (ct.value);
     }
+
   XSendEvent (display->display, rq.requestor, False, 0L, (XEvent *)&ev);
 }
 

@@ -1936,30 +1936,33 @@ rxvt_term::check_our_parents ()
       /*
        * Copy display->root pixmap transparency
        */
-      int             sx, sy, nx, ny;
-      unsigned int    nw, nh;
-      Window          cr;
-      XImage         *image;
-      GC              gc;
-      XGCValues       gcvalue;
+      int sx, sy, nx, ny;
+      unsigned int nw, nh;
+      Window cr;
+      XImage *image;
+      GC gc;
+      XGCValues gcvalue;
 
       XTranslateCoordinates (display->display, TermWin.parent[0], display->root,
                             0, 0, &sx, &sy, &cr);
       nw = (unsigned int)szHint.width;
       nh = (unsigned int)szHint.height;
       nx = ny = 0;
+
       if (sx < 0)
         {
           nw += sx;
           nx = -sx;
           sx = 0;
         }
+
       if (sy < 0)
         {
           nh += sy;
           ny = -sy;
           sy = 0;
         }
+
       MIN_IT (nw, (unsigned int) (wrootattr.width - sx));
       MIN_IT (nh, (unsigned int) (wrootattr.height - sy));
       allowedxerror = -1;
@@ -2002,6 +2005,7 @@ rxvt_term::check_our_parents ()
           am_transparent = am_pixmap_trans = 1;
         }
     }
+
   if (!am_pixmap_trans)
     {
       unsigned int    n;
@@ -2026,7 +2030,9 @@ rxvt_term::check_our_parents ()
           if (oldp != TermWin.parent[i])
             pchanged = 1;
         }
+
       n = 0;
+
       if (pchanged)
         {
           for (; n < (unsigned int)i; n++)
@@ -2040,6 +2046,7 @@ rxvt_term::check_our_parents ()
                 }
             }
         }
+
       if (n > (int) (sizeof (TermWin.parent)
                     / sizeof (TermWin.parent[0])))
         {
@@ -2072,6 +2079,7 @@ rxvt_term::check_our_parents ()
                                      ParentRelative);
           am_transparent = 1;
         }
+
       for (; i < (int) (sizeof (TermWin.parent) / sizeof (Window)); i++)
         TermWin.parent[i] = None;
     }
@@ -2087,7 +2095,7 @@ rxvt_term::check_our_parents ()
 FILE *
 rxvt_term::popen_printer ()
 {
-  FILE           *stream = popen (rs[Rs_print_pipe], "w");
+  FILE *stream = popen (rs[Rs_print_pipe], "w");
 
   if (stream == NULL)
     rxvt_print_error ("can't open printer pipe");
@@ -2938,12 +2946,13 @@ rxvt_term::process_osc_seq ()
  *      50 = change font
  *
  * rxvt extensions:
- *       9 = change locale (NYI)
  *      10 = menu (may change in future)
  *      20 = bg pixmap
  *      39 = change default fg color
  *      49 = change default bg color
  *      55 = dump scrollback buffer and all of screen
+ *     701 = change locale
+ *     702 = find font
  */
 void
 rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ ((unused)))
@@ -3051,11 +3060,13 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
 # ifdef USE_XIM
             im_cb ();
 # endif
-            // TODO: call selection_make with the right values set
-            // to re-fresh the selection.
-            if (display->selection_owner == this)
-              display->set_selection_owner (0);
           }
+        break;
+      case XTerm_findfont:
+        {
+          int fid = TermWin.fontset->find_font (atoi (str));
+          tt_printf ("%d %-.250s\n", fid, (*TermWin.fontset)[fid]->name);
+        }
         break;
 #endif
 #if 0
@@ -3195,8 +3206,7 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
             break;
           case 3:			/* 80/132 */
             if (PrivateModes & PrivMode_132OK)
-              set_widthheight (		    (unsigned int) ((state ? 132 : 80) * TermWin.fwidth),
-                                     (unsigned int)TermWin.height);
+              set_widthheight (((state ? 132 : 80) * TermWin.fwidth), TermWin.height);
             break;
           case 4:			/* smooth scrolling */
             if (state)
