@@ -204,6 +204,8 @@ typedef struct _mwmhints {
 # define XEMBED_FOCUS_CURRENT            0 
 # define XEMBED_FOCUS_FIRST              1 
 # define XEMBED_FOCUS_LAST               2
+
+# define XEMBED_MAPPED			(1 << 0)
 #endif
 
 /*
@@ -698,6 +700,7 @@ enum {
 #endif
 #if ENABLE_XEMBED
   XA_XEMBED,
+  XA_XEMBED_INFO,
 #endif
   NUM_XA
 };

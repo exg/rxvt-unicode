@@ -1,0 +1,142 @@
+#!/usr/bin/perl
+
+# I tried to write this with Tk, as it uses elss memory and is
+# more widely available. Alas, Tk is rather broken with respect to embedding.
+
+# on debian, do:
+# apt-get install libgtk2-perl
+
+my $RXVT_BASENAME = "rxvt";
+
+use Gtk2;
+use Encode;
+
+my $event_cb; # $wid => $cb
+
+init Gtk2;
+
+my $window = new Gtk2::Window 'toplevel';
+
+my $vbox = new Gtk2::VBox;
+$window->add ($vbox);
+
+my $notebook = new Gtk2::Notebook;
+$vbox->pack_start ($notebook, 1, 1, 0);
+
+$notebook->can_focus (0);
+$notebook->set (scrollable => 1);
+
+sub new_terminal {
+   my ($title, @args) = @_;
+
+   my $label = new Gtk2::Label $title;
+
+   my $rxvt = new Gtk2::Socket;
+   $rxvt->can_focus (1);
+
+   my $wm_normal_hints = sub {
+      my ($window) = @_;
+      my ($type, $format, @data)
+         = $window->property_get (
+              Gtk2::Gdk::Atom->intern ("WM_NORMAL_HINTS", 0),
+              Gtk2::Gdk::Atom->intern ("WM_SIZE_HINTS", 0),
+              0, 70*4, 0
+           );
+      my ($width_inc, $height_inc, $base_width, $base_height) = @data[9,10,15,16];
+
+      my $hints = new Gtk2::Gdk::Geometry;
+      $hints->base_width  ($base_width); $hints->base_height ($base_height);
+      $hints->width_inc   ($width_inc);  $hints->height_inc  ($height_inc);
+
+      $rxvt->get_toplevel->set_geometry_hints ($rxvt, $hints, [qw(base-size resize-inc)]);
+   };
+   
+   $rxvt->signal_connect_after (realize => sub {
+      my $win = $_[0]->window;
+
+      if (fork == 0) {
+         exec $RXVT_BASENAME,
+                 -embed => $win->get_xid, @args;
+         exit (255);
+      }
+
+      0
+   });
+
+   $rxvt->signal_connect_after (plug_added => sub {
+      my ($socket) = @_;
+      my $plugged = ($socket->window->get_children)[0];
+
+      $plugged->set_events ($plugged->get_events + ["property-change-mask"]);
+
+      $wm_normal_hints->($plugged);
+
+      $event_cb{$plugged} = sub {
+         my ($event) = @_;
+         my $window = $event->window;
+
+         if (Gtk2::Gdk::Event::Configure:: eq ref $event) {
+            $wm_normal_hints->($window);
+         } elsif (Gtk2::Gdk::Event::Property:: eq ref $event) {
+            my $atom = $event->atom;
+            my $name = $atom->name;
+
+            return if $event->state; # GDK_PROPERTY_NEW_VALUE == 0
+
+
+            if ($name eq "_NET_WM_NAME") {
+               my ($type, $format, $data)
+                  = $window->property_get (
+                       $atom,
+                       Gtk2::Gdk::Atom->intern ("UTF8_STRING", 0),
+                       0, 128, 0
+                    );
+
+               $label->set_text (Encode::decode_utf8 $data);
+            }
+         }
+
+         0;
+      };
+
+      0;
+   });
+
+   $rxvt->signal_connect_after (map_event => sub {
+      $_[0]->grab_focus;
+      0
+   });
+
+   $notebook->append_page ($rxvt, $label);
+
+   $rxvt->show_all;
+
+   $notebook->set_current_page ($notebook->page_num ($rxvt));
+
+   $rxvt;
+}
+
+my $new = new Gtk2::Frame;
+$notebook->prepend_page ($new, "New");
+
+$notebook->signal_connect_after (switch_page => sub {
+   if ($_[2] == 0) {
+      new_terminal $RXVT_BASENAME;
+   }
+});
+
+$window->set_default_size (700, 400);
+$window->show_all;
+
+# ugly, but gdk_window_filters are ot available in perl
+
+Gtk2::Gdk::Event->handler_set (sub {
+   my ($event) = @_;
+   my $window = $event->window;
+
+   ($event_cb{$window} && $event_cb{$window}->($event))
+      or Gtk2->main_do_event ($event);
+});
+
+main Gtk2;
+

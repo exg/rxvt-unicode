@@ -205,6 +205,7 @@ const char *const xa_names[] =
 #endif
 #if ENABLE_XEMBED
     "_XEMBED",
+    "_XEMBED_INFO",
 #endif
   };
 
@@ -931,7 +932,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   long vt_emask;
   XSetWindowAttributes attributes;
   XWindowAttributes gattr;
-  Window top;
+  Window top, parent;
   dDisp;
 
 #ifdef USING_W11LIB
@@ -979,59 +980,44 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   if (!set_fonts ())
     rxvt_fatal ("unable to load base fontset, please specify a valid one using -fn, aborting.\n");
 
+  parent = DefaultRootWindow (disp);
+
 #if ENABLE_XEMBED
   if (rs[Rs_embed])
     {
       XWindowAttributes wattr;
 
-      top = strtol (rs[Rs_embed], 0, 0);
+      parent = strtol (rs[Rs_embed], 0, 0);
 
-      if (!XGetWindowAttributes (disp, top, &wattr))
+      if (!XGetWindowAttributes (disp, parent, &wattr))
         rxvt_fatal ("invalid window-id specified with -embed, aborting.\n");
 
       window_calc (wattr.width, wattr.height);
-
-#if 0
-      if (wattr.map_state == IsViewable)
-        {
-          TermWin.mapped = 1;
-          refresh_type = FAST_REFRESH;
-          XClearWindow (disp, top);
-          // TODO: make XMapNotify-event-code a function and call it
-          // TODO: how can I detect visibility without unmap/map?
-          // TODO: focusin etc.
-        }
-#else
-      // it's easiest just to unmap/map to get all state correctly set-up
-      XUnmapWindow (disp, top);
-#endif
     }
-  else
-#endif
-    {
-      window_calc (0, 0);
 
-      /* sub-window placement & size in rxvt_resize_subwindows () */
+#endif
+  window_calc (0, 0);
+
+  /* sub-window placement & size in rxvt_resize_subwindows () */
 #ifdef PREFER_24BIT
-      attributes.background_pixel = pix_colors_focused[Color_border];
-      attributes.border_pixel = pix_colors_focused[Color_border];
-      attributes.colormap = display->cmap;
-      top = XCreateWindow (disp, DefaultRootWindow (disp),
-                           szHint.x, szHint.y,
-                           szHint.width, szHint.height,
-                           TermWin.ext_bwidth,
-                           display->depth, InputOutput,
-                           display->visual,
-                           CWColormap | CWBackPixel | CWBorderPixel, &attributes);
+  attributes.background_pixel = pix_colors_focused[Color_border];
+  attributes.border_pixel = pix_colors_focused[Color_border];
+  attributes.colormap = display->cmap;
+  top = XCreateWindow (disp, parent,
+                       szHint.x, szHint.y,
+                       szHint.width, szHint.height,
+                       TermWin.ext_bwidth,
+                       display->depth, InputOutput,
+                       display->visual,
+                       CWColormap | CWBackPixel | CWBorderPixel, &attributes);
 #else
-      top = XCreateSimpleWindow (disp, DefaultRootWindow (disp),
-                                 szHint.x, szHint.y,
-                                 szHint.width, szHint.height,
-                                 TermWin.ext_bwidth,
-                                 pix_colors_focused[Color_border],
-                                 pix_colors_focused[Color_border]);
+  top = XCreateSimpleWindow (disp, parent,
+                             szHint.x, szHint.y,
+                             szHint.width, szHint.height,
+                             TermWin.ext_bwidth,
+                             pix_colors_focused[Color_border],
+                             pix_colors_focused[Color_border]);
 #endif
-    }
 
   TermWin.parent[0] = top;
 
@@ -1187,8 +1173,13 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   scr_recolour ();
 
 #if ENABLE_XEMBED
-  // why this is necessary, I don't know, race condition??
-  XMoveWindow (disp, TermWin.vt, window_vt_x, window_vt_y);
+  if (rs[Rs_embed])
+    {
+      long info[2] = { 0, XEMBED_MAPPED };
+
+      XChangeProperty (disp, parent, xa[XA_XEMBED_INFO], xa[XA_XEMBED_INFO],
+                       32, PropModeReplace, (unsigned char *)&info, 2);
+    }
 #endif
 }
 

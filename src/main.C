@@ -254,11 +254,7 @@ rxvt_term::~rxvt_term ()
 #endif
       delete TermWin.drawable;
       // destroy all windows
-      if (TermWin.parent[0]
-#if ENABLE_XEMBED
-          && !rs[Rs_embed]
-#endif
-          )
+      if (TermWin.parent[0])
         XDestroyWindow (disp, TermWin.parent[0]);
     }
 

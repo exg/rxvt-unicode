@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+
+# sample script to illustrate the -embed option
+# using Tk
+# resizes do not work yet.
+
+use Tk;
+
+my $mw = new MainWindow;
+
+my $frame = $mw->Frame (width => 700, height => 400, container => 1)
+               ->pack (fill => "both", expand => 1);
+
+system "rxvt -embed " . ($frame->id) . " &";
+
+MainLoop;
