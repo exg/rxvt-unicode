@@ -707,19 +707,14 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
       /* A: scroll up */
 
       /* A1: Copy lines that will get clobbered by the rotation */
-      for (i = 0, j = row1; i < count; i++, j++)
-        {
-          buf_text[i] = screen.text[j];
-          buf_rend[i] = screen.rend[j];
-        }
+      memcpy (buf_text, screen.text + row1, count * sizeof (text_t *));
+      memcpy (buf_rend, screen.rend + row1, count * sizeof (rend_t *));
 
       /* A2: Rotate lines */
-      for (j = row1, i = j + count; i <= row2; i++, j++)
-        {
-          screen.tlen[j] = screen.tlen[i];
-          screen.text[j] = screen.text[i];
-          screen.rend[j] = screen.rend[i];
-        }
+      i = row2 - row1 - count + 1;
+      memmove (screen.tlen + row1, screen.tlen + row1 + count, i * sizeof (int16_t));
+      memmove (screen.text + row1, screen.text + row1 + count, i * sizeof (text_t *));
+      memmove (screen.rend + row1, screen.rend + row1 + count, i * sizeof (rend_t *));
 
       j = row2 - count + 1, i = count;
     }
@@ -747,15 +742,12 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
     }
 
   /* C: Resurrect lines */
-  for (; i--; j++)
-    {
-      screen.tlen[j] = 0;
-      screen.text[j] = buf_text[i];
-      screen.rend[j] = buf_rend[i];
-
-      if (!spec)              /* line length may not equal TermWin.ncol */
-        scr_blank_screen_mem (screen.text, screen.rend, (unsigned int)j, rstyle);
-    }
+  memset (screen.tlen + j, 0, i * sizeof (int16_t));
+  memcpy (screen.text + j, buf_text, i * sizeof (text_t *));
+  memcpy (screen.rend + j, buf_rend, i * sizeof (text_t *));
+  if (!spec) /* line length may not equal TermWin.ncol */
+    for (; i--; j++)
+      scr_blank_screen_mem (screen.text, screen.rend, (unsigned int)j, rstyle);
 
   return count;
 }
@@ -783,7 +775,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
   ZERO_SCROLLBACK ();
   if (nlines > 0)
     {
-      nlines += (screen.cur.row - screen.bscroll);
+      nlines += screen.cur.row - screen.bscroll;
       if ((nlines > 0)
           && (screen.tscroll == 0)
           && (screen.bscroll == (TermWin.nrow - 1)))
@@ -873,7 +865,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
       // rely on wcwidth to tell us the character width, at least for non-latin1
       // do wcwidth before further replacements, as wcwidth says that line-drawing
       // characters have width -1 (DOH!) on GNU/Linux sometimes.
-      int width = c < 256 ? 1 : wcwidth (c);
+      int width = c < 0x100 ? 1 : wcwidth (c);
 
       if (charsets[screen.charset] == '0') // DEC SPECIAL
         {
@@ -1293,8 +1285,6 @@ rxvt_term::scr_erase_screen (int mode)
       default:
         return;
     }
-
-  refresh_type |= REFRESH_BOUNDS;
 
   if (selection.op && current_screen == selection.screen
       && ((selection.beg.row >= row && selection.beg.row <= row + num)
@@ -1787,7 +1777,7 @@ rxvt_term::scr_expose (int x, int y, int width, int height, bool refresh)
     fill_text (&drawn_text[i][rc[PART_BEG].col], 0, rc[PART_END].col - rc[PART_BEG].col + 1);
 
   if (refresh)
-    scr_refresh (SLOW_REFRESH | REFRESH_BOUNDS);
+    scr_refresh (SLOW_REFRESH);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1832,8 +1822,8 @@ rxvt_term::scr_move_to (int y, int len)
 int
 rxvt_term::scr_page (enum page_dirn direction, int nlines)
 {
-  int             n;
-  uint16_t       oldviewstart;
+  int n;
+  uint16_t oldviewstart;
 
   D_SCREEN ((stderr, "rxvt_scr_page (%s, %d) view_start:%d", ((direction == UP) ? "UP" : "DN"), nlines, TermWin.view_start));
 #ifdef DEBUG_STRICT
@@ -1939,9 +1929,7 @@ rxvt_term::scr_printscreen (int fullhist)
 void
 rxvt_term::scr_refresh (unsigned char refresh_type)
 {
-  unsigned char clearfirst, /* first character writes before cell        */
-                clearlast,  /* last character writes beyond cell         */
-                must_clear, /* use draw_string not draw_image_string     */
+  unsigned char must_clear, /* use draw_string not draw_image_string     */
                 rvid,       /* reverse video this position               */
                 showcursor; /* show the cursor                           */
   int16_t col, row,   /* column/row we're processing               */
@@ -1960,17 +1948,11 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
   /*
    * A: set up vars
    */
-  clearfirst = clearlast = must_clear = 0;
+  must_clear = 0;
 
   refresh_count = 0;
 
   row_offset = TermWin.saveLines - TermWin.view_start;
-
-  if ((refresh_type & REFRESH_BOUNDS))
-    {
-      clearfirst = clearlast = 1;
-      refresh_type &= ~REFRESH_BOUNDS;
-    }
 
 #ifdef XPM_BACKGROUND
   must_clear |= (bgPixmap.pixmap != None);
@@ -2333,30 +2315,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
    * H: cleanup selection
    */
   scr_reverse_selection ();
-
-  /*
-   * I: other general cleanup
-   */
-#if 0
-  if (clearfirst && TermWin.int_bwidth)
-    /*
-     * clear the whole screen height, note that width == 0 is treated
-     * specially by XClearArea
-     */
-    XClearArea (display->display, TermWin.vt, 0, 0,
-                (unsigned int)TermWin.int_bwidth,
-                (unsigned int)TermWin_TotalHeight (), False);
-
-  if (clearlast && TermWin.int_bwidth)
-    /*
-     * clear the whole screen height, note that width == 0 is treated
-     * specially by XClearArea
-     */
-    XClearArea (display->display, TermWin.vt,
-                TermWin.width + TermWin.int_bwidth, 0,
-                (unsigned int)TermWin.int_bwidth,
-                (unsigned int)TermWin_TotalHeight (), False);
-#endif
 
   if (refresh_type & SMOOTH_REFRESH)
     XFlush (display->display);
