@@ -1,7 +1,6 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	logging.c
  *----------------------------------------------------------------------*
- * $Id: logging.C,v 1.4 2004/01/31 00:20:21 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey <jdb@ukc.ac.uk>

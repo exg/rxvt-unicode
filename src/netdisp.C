@@ -1,7 +1,6 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	netdisp.c
  *----------------------------------------------------------------------*
- * $Id: netdisp.C,v 1.3 2004/01/31 00:20:21 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1996      Chuck Blake <cblake@BBN.COM>

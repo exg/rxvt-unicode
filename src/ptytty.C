@@ -1,7 +1,6 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	ptytty.c
  *----------------------------------------------------------------------*
- * $Id: ptytty.C,v 1.4 2003/12/02 21:49:46 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1999-2001 Geoff Wing <gcw@pobox.com>
