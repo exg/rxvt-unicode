@@ -52,8 +52,6 @@ struct rxvt_xim : refcounted {
 struct rxvt_display : refcounted {
   Atom xa_xim_servers;
 
-  rxvt_term *selection_owner;
-  
   io_manager_vec<xevent_watcher> xw;
 
   io_watcher x_ev; void x_cb (io_watcher &w, short revents);
@@ -70,6 +68,7 @@ struct rxvt_display : refcounted {
   Visual   *visual;
   Colormap cmap;
   Window   root;
+  rxvt_term *selection_owner;
 
   rxvt_display (const char *id);
   bool init ();

@@ -2737,6 +2737,7 @@ rxvt_term::selection_make (Time tm)
       default:
         return;
     }
+
   selection.op = SELECTION_DONE;
 
   if (selection.clicks == 4)
@@ -2797,7 +2798,7 @@ rxvt_term::selection_make (Time tm)
       return;
     }
 
-  // due to MB_MAX_CUR, selection wastage is usually high, so realloc
+  // due to MB_CUR_MAX, selection wastage is usually high, so realloc
   if (str - (char *)new_selection_text > 1024)
     new_selection_text = (unsigned char *)rxvt_realloc (new_selection_text, i + 1);
 
@@ -2821,12 +2822,12 @@ rxvt_term::selection_make (Time tm)
     if (XmbTextListToTextProperty (display->display, &cl, 1, XStringStyle, &ct) >= 0)
       {
         XChangeProperty (display->display, display->root, XA_CUT_BUFFER0, XA_STRING, 8,
-                        PropModeReplace, ct.value, ct.nitems);
+                         PropModeReplace, ct.value, ct.nitems);
         XFree (ct.value);
       }
     else
       XChangeProperty (display->display, display->root, XA_CUT_BUFFER0, XA_STRING, 8,
-                      PropModeReplace, selection.text, (int)selection.len);
+                       PropModeReplace, selection.text, (int)selection.len);
   }
 
   selection_time = tm;

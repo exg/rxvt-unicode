@@ -3106,6 +3106,9 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
           {
             set_locale (str);
             im_cb ();
+
+            if (display->selection_owner == this)
+              display->set_selection_owner (0);
           }
         break;
 #if 0
