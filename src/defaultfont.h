@@ -1,5 +1,5 @@
 /*
- * $Id: defaultfont.h,v 1.2 2003/11/24 17:31:27 pcg Exp $
+ * $Id: defaultfont.h,v 1.3 2003/11/25 09:29:11 pcg Exp $
  */
 
 #ifndef _DEFAULTFONT_H_
@@ -22,8 +22,6 @@
 #include "feature.h"
 #include "encoding.h"
 #include "rxvtvec.h"
-
-#include "defaultfont.intpro"	/* PROTOS for internal routines */
 
 typedef struct rxvt_vars rxvt_t;
 
