@@ -25,6 +25,7 @@
 #include "../config.h"		/* NECESSARY */
 
 #include <stdlib.h>
+#include <wchar.h>
 
 #include "rxvt.h"		/* NECESSARY */
 #ifdef MENUBAR

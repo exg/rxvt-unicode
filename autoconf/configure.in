@@ -30,6 +30,25 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_AWK
 
+AC_LANG(C)
+
+LINKER="$CXX"
+if test x$GCC = xyes && test x$GXX = xyes; then
+   AC_CHECK_LIB(supc++, main, [
+      LINKER="$CC"
+      LIBS="$LIBS -lsupc++"
+   ])
+fi
+AC_SUBST(LINKER,[$LINKER])
+
+CPPFLAGS="-D_GNU_SOURCE -D_XOPEN_SOURCE"
+
+if test x$GXX = xyes; then
+   CXXFLAGS="$CXXFLAGS -fno-exceptions"
+fi
+
+AC_LANG(C++)
+
 dnl# system hacks
 AC_AIX
 AC_ISC_POSIX
@@ -120,7 +139,7 @@ AC_ARG_ENABLE(xft,
   fi])
 
 AC_ARG_WITH(codesets,
-  [  --with-codesets=NAME,...    compile in additional codesets (jp,jp_ext,kr,cn,cn_ext,vn,all)],
+  [  --with-codesets=NAME,...    compile in additional codesets (jp,jp_ext,kr,cn,cn_ext,all)],
   [codesets="$withval"])
 
 AC_ARG_ENABLE(utmp,
@@ -1186,8 +1205,8 @@ if test x$codesets = xall; then
 fi
 for codeset in `echo $codesets | tr "[a-z,\\-]" "[A-Z _]"`; do
   AC_DEFINE(ENCODING_EU, 1, Define if you want european extended codesets)
+  AC_DEFINE(ENCODING_VN, 1, Define if you want vietnamese codesets)
   case "$codeset" in
-    VN     ) AC_DEFINE(ENCODING_VN,     1, Define if you want vietnamese codesets) ;;
     JP     ) AC_DEFINE(ENCODING_JP,     1, Define if you want japanese codesets) ;;
     JP_EXT ) AC_DEFINE(ENCODING_JP_EXT, 1, Define if you want extended japanese codesets) ;;
     KR     ) AC_DEFINE(ENCODING_KR,     1, Define if you want korean codesets) ;;
@@ -1287,8 +1306,9 @@ echo "Configuration:
   Rxvt version:               $VERSION : $DATE
   Source code location:       $srcdir
   Install path:               ${prefix}/bin
-  Compiler:                   $CC
-  Compiler flags:             $CFLAGS"
+  Compiler:                   $CXX
+  Compiler flags:             $CFLAGS
+  Linker:                     $LINKER"
 
 if test "$MALLOC_TYPE" = S; then
   echo "  malloc support:             system default"

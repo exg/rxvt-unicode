@@ -1,3 +1,13 @@
+2.0  Sun Feb 29 23:59:58 CET 2004
+	- do not blink text when background colour is not set explicitly.
+        - some doc cleanup
+        - configure cleanup
+        - viscii enabled by default
+        - better support for non-g++-3.2+ systems (tested with g++-2.95).
+
+1.91 Fri Feb 27 03:57:44 CET 2004
+	- build fixes for !xft and !im, reported by various people.
+
 1.9  Wed Feb 25 16:46:05 CET 2004
 	- fixed bug in plain scrollbar causing X errors in XCreateGC.
         - implemented sharing of X connections. will be used to speed

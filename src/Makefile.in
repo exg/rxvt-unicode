@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.12 2004/02/22 08:09:36 pcg Exp $
+# $Id: Makefile.in,v 1.13 2004/03/01 01:06:46 pcg Exp $
 @MCOMMON@
 
 LINT = lint -DNARROWPROTO=1 $(XINC) -chapbxz
@@ -11,8 +11,6 @@ top_builddir = ..
 basedir = ..
 thisdir = src
 MKDIR = @top_srcdir@/autoconf/mkinstalldirs
-
-SUPLIB = -fno-exceptions -lsupc++ # TODO: only for g++
 
 # for developers: the following debug options may be used
 #	-DDEBUG_CMD -DDEBUG_MAIN -DDEBUG_MENU -DDEBUG_MENUARROWS
@@ -107,25 +105,29 @@ DIST = $(HDRS) $(SRCS) Makefile.in gcc-Wall rxvtlib.h.in .indent.pro \
 	@$(AWK) -f $(srcdir)/makeextprotos-awk $< > $@.tmp
 	@if $(CMP) -s $@ $@.tmp ; then : ; else $(ECHO) "$(AWK) -f $(srcdir)/makeextprotos-awk $< > $@"; $(CP) $@.tmp $@; fi
 	@$(RMF) $@.tmp
+
 #-------------------------------------------------------------------------
+
 all: allbin
 
 rxvt: version.h rxvt.o librxvt.la
-	$(LIBTOOL) --mode=link $(LINK) rxvt.o librxvt.la $(LIBS) $(XLIB) $(DLIB) $(SUPLIB) -o $@
+	$(LIBTOOL) --mode=link $(LINK) rxvt.o librxvt.la $(LIBS) $(XLIB) $(DLIB) -o $@
 
 rxvtd: version.h rxvtd.o librxvt.la rxvtdaemon.o
-	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o librxvt.la $(LIBS) $(XLIB) $(DLIB) $(SUPLIB) -o $@
+	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o librxvt.la $(LIBS) $(XLIB) $(DLIB) -o $@
 
 rxvtc: version.h rxvtc.o rxvtdaemon.o
-	$(LIBTOOL) --mode=link $(LINK) rxvtc.o rxvtdaemon.o $(LIBS) $(DLIB) $(SUPLIB) -o $@
+	$(LIBTOOL) --mode=link $(LINK) rxvtc.o rxvtdaemon.o $(LIBS) $(DLIB) -o $@
 
 .protos: $(EXTPROS)
 	@$(RMF) .protos
 	date >.protos
 
 librxvt.la: $(LIBOBJS)
-	$(LIBTOOL) --mode=link $(LINK) -rpath $(libdir) -version-info $(LIBVERSION) $(LIBOBJS) $(LIBS) $(SUPLIB) -o $@
+	$(LIBTOOL) --mode=link $(LINK) -rpath $(libdir) -version-info $(LIBVERSION) $(LIBOBJS) $(LIBS) -o $@
+
 #-------------------------------------------------------------------------
+
 tags: $(SRCS) $(HDRS) $(EXTRAHDRS)
 	ctags $(SRCS) $(HDRS) $(EXTRAHDRS)
 
@@ -187,7 +189,7 @@ distcopy: .protos $(INTPROS)
 
 defaultfont.h: encoding.h rxvtstl.h
 rxvtlib.h: rxvtcolor.h defaultfont.h
-rxvtdaemon.o:       rxvtdaemon.C	rxvtdaemon.h
+rxvtdaemon.o:       rxvtdaemon.C $(DEPS) rxvtdaemon.h
 rxvtd.o:            rxvtd.C     $(DEPS) rxvtdaemon.h rxvtstl.h
 rxvtc.o:            rxvtc.C     $(DEPS) rxvtdaemon.h rxvtstl.h
 

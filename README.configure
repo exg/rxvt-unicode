@@ -1,9 +1,8 @@
 --enable-everything
-	add support for all enable options marked with an asterisk listed
-	in "./configure --help".  Note that unlike other enable options this
-	is order dependant.  You can specify this and then disable options
-	which this enables by _following_ this with the appropriate
-	commands.
+        add support for all non-multichoice options listed in "./configure
+        --help".  Note that unlike other enable options this is order
+        dependant.  You can specify this and then disable options which
+        this enables by _following_ this with the appropriate commands.
 --enable-xft
 	add support for xft (anti-aliases, among others) fonts. xft fonts are
         slower and require lots of memory, but as long as you don't use them,
@@ -15,8 +14,7 @@
         kr	korean encodings
         cn	common chinese encodings
         cn_ext	rarely used but very big chinese encodigs
-        vn	vietnamese (not well-supported, though)
-        all	all of the above.
+        all	all of the above
 --enable-unicode3
 	enable support for unicode codepoints above 65535 (the basic
         multilingual page). This increases storage requirements per character
@@ -40,7 +38,8 @@
 	add support for inheriting parent backgrounds thus giving a fake
 	transparency to the term
 --enable-menubar
-	add support for our menu bar system
+	add support for our menu bar system (this interacts badly with
+        dynamic locale switching currently)
 --enable-rxvt-scroll
 	add support for the original rxvt scrollbar
 --enable-next-scroll
@@ -48,7 +47,9 @@
 --enable-xterm-scroll
 	add support for an Xterm-like scrollbar
 --enable-plain-scroll
-	add support for a very plain-looking scrollbar that I used for many years
+        add support for a very unobtrusive, plain-looking scrollbar that
+        is the favourite of the rxvt-unicode author, having used it for
+        many years.
 --enable-half-shadow
 	make shadows on the scrollbar only half the normal width & height.
 	only applicable to rxvt scrollbars
@@ -75,7 +76,8 @@
 	add support for our possibly faster memset() function and other
 	various routines, overriding your system's versions which may
 	have been hand-crafted in assembly or may require extra libraries
-	to link in.  (This has header problems on some Linux systems).
+	to link in. (this breaks ANSI-C rules and has problems on many
+        GNU/Linux systems).
 --disable-swapscreen
 	remove support for swap screen
 --enable-frills
@@ -131,3 +133,4 @@
 	look for the XPM library in DIR
 --with-xpm
 	not needed - define via --enable-xpm-background
+

@@ -26,6 +26,12 @@
  * Try to be self-contained except for the above autoconfig'd defines
  */
 
+#if 0
+#ifdef HAVE_GETPT
+# define _GNU_SOURCE
+#endif
+#endif
+
 #include <stdio.h>
 #ifdef HAVE_STDLIB_H
 # include <stdlib.h>
