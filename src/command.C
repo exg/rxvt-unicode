@@ -1550,6 +1550,7 @@ rxvt_term::x_cb (XEvent &ev)
     }
 }
 
+#ifdef TRANSPARENT
 void
 rxvt_term::rootwin_cb (XEvent &ev)
 {
@@ -1575,6 +1576,7 @@ rxvt_term::rootwin_cb (XEvent &ev)
         want_full_refresh = 1;
     }
 }
+#endif
 
 void
 rxvt_term::button_press (const XButtonEvent &ev)
