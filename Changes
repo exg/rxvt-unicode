@@ -22,6 +22,9 @@ FEAT: tabbed windows (hey, just use screen...)
         - do not use XSETROOTPMAP_ID anymore, support ESETROOT_PMAP_ID
           instead.
         - implement underlineColor resource when ENABLE_FRILLS.
+        - iom left it's signal pipe handle open in the child
+          process. Fortunately not security-relevant as the pipe data gets
+          ignored.
 
 4.5  Mon Dec 13 07:47:16 CET 2004
 	- fix an extremely nasty bug in utf8-conversion. upgrade is advised.

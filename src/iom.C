@@ -125,8 +125,8 @@ static struct init {
         abort ();
       }
 
-    fcntl (sigpipe[0], F_SETFL, O_NONBLOCK);
-    fcntl (sigpipe[1], F_SETFL, O_NONBLOCK);
+    fcntl (sigpipe[0], F_SETFL, O_NONBLOCK); fcntl (sigpipe[0], F_SETFD, FD_CLOEXEC);
+    fcntl (sigpipe[1], F_SETFL, O_NONBLOCK); fcntl (sigpipe[1], F_SETFD, FD_CLOEXEC);
 #endif
 
     iom_valid = true;
