@@ -1,0 +1,915 @@
+=head1 NAME
+
+rxvt-unicode (ouR XVT, unicode) - (a VT102 emulator for the X window system)
+
+=head1 SYNOPSIS
+
+B<@@RXVTNAME@@> [options] [-e command [ args ]]
+
+=head1 DESCRIPTION
+
+B<rxvt-unicode>, version B<@@RXVTVERSION@@>, is a colour vt102 terminal
+emulator intended as an I<xterm>(1) replacement for users who do not
+require features such as Tektronix 4014 emulation and toolkit-style
+configurability. As a result, B<rxvt-unicode> uses much less swap space --
+a significant advantage on a machine serving many X sessions.
+
+=head1 OPTIONS
+
+The B<@@RXVTNAME@@> options (mostly a subset of I<xterm>'s) are listed
+below. In keeping with the smaller-is-better philosophy, options may be
+eliminated or default values chosen at compile-time, so options and
+defaults listed may not accurately reflect the version installed on
+your system. `rxvt -h' gives a list of major compile-time options on
+the I<Options> line. Option descriptions may be prefixed with which
+compile option each is dependent upon. e.g. `Compile I<XIM>:' requires
+I<XIM> on the I<Options> line. Note: `rxvt -help' gives a list of all
+command-line options compiled into your version.
+
+Note that B<@@RXVTNAME@@> permits the resource name to be used as a
+long-option (--/++ option) so the potential command-line options are
+far greater than those listed. For example: `rxvt --loginShell --color1
+Orange'.
+
+The following options are available:
+
+=over 4
+
+=item B<-help>, B<--help>
+
+Print out a message describing available options.
+
+=item B<-display> I<displayname>
+
+Attempt to open a window on the named X display (B<-d> still
+respected). In the absence of this option, the display specified by the
+B<DISPLAY> environment variable is used.
+
+=item B<-geometry> I<geom>
+
+Window geometry (B<-g> still respected); resource B<geometry>.
+
+=item B<-rv>|B<+rv>
+
+Turn on/off simulated reverse video; resource B<reverseVideo>.
+
+=item B<-j>|B<+j>
+
+Turn on/off jump scrolling; resource B<jumpScroll>.
+
+=item B<-ip>|B<+ip>
+
+Turn on/off inheriting parent window's pixmap. Alternative form is
+B<-tr>; resource B<inheritPixmap>.
+
+=item B<-fade> I<number>
+
+Fade the text by the given percentage when focus is lost.
+
+=item B<-tint> I<colour>
+
+Tint the transparent background pixmap with the given colour when
+transparency is enabled with B<-tr> or B<-ip>. See also the B<-sh>
+option that can be used to brighten or darken the image in addition to
+tinting it.
+
+=item B<-sh>
+
+I<number> Darken (0 .. 100) or lighten (-1 .. -100) the transparent
+background image in addition to tinting it (i.e. B<-tint> must be
+specified, too).
+
+=item B<-bg> I<colour>
+
+Window background colour; resource B<background>.
+
+=item B<-fg> I<colour>
+
+Window foreground colour; resource B<foreground>.
+
+=item B<-pixmap> I<file[;geom]>
+
+Compile I<XPM>: Specify XPM file for the background and also optionally
+specify its scaling with a geometry string. Note you may need to add
+quotes to avoid special shell interpretation of the `;' in the
+command-line; resource B<backgroundPixmap>.
+
+=item B<-cr> I<colour>
+
+The cursor colour; resource B<cursorColor>.
+
+=item B<-pr> I<colour>
+
+The mouse pointer foreground colour; resource B<pointerColor>.
+
+=item B<-pr2> I<colour>
+
+The mouse pointer background colour; resource B<pointerColor2>.
+
+=item B<-bd> I<colour>
+
+The colour of the border between the xterm scrollbar and the text;
+resource B<borderColor>.
+
+=item B<-fn> I<fontname>
+
+Select the fonts to be used. This is a comma seperated list of font
+names that are used in turn when trying to display Unicode characters.
+The first font defines the cell size for characters; other fonts might
+be smaller, but not larger. A reasonable default font list is always
+appended to it. resource B<font>.
+
+=item B<-rb>|B<+rb>
+
+Enable "real bold" support. When this option is on, bold text will be
+displayed using the first available bold font in the font list. Bold
+fonts should thus be specified in the font list after their
+corresponding regular fonts. If no bold font can be found, a regular
+font will be used. resource B<realBold>.
+
+=item B<-name> I<name>
+
+Specify the application name under which resources are to be obtained,
+rather than the default executable file name. Name should not contain
+`.' or `*' characters. Also sets the icon and title name.
+
+=item B<-ls>|B<+ls>
+
+Start as a login-shell/sub-shell; resource B<loginShell>.
+
+=item B<-ut>|B<+ut>
+
+Compile I<utmp>: Inhibit/enable writing a utmp entry; resource
+B<utmpInhibit>.
+
+=item B<-vb>|B<+vb>
+
+Turn on/off visual bell on receipt of a bell character; resource
+B<visualBell>.
+
+=item B<-sb>|B<+sb>
+
+Turn on/off scrollbar; resource B<scrollBar>.
+
+=item B<-si>|B<+si>
+
+Turn on/off scroll-to-bottom on TTY output inhibit; resource
+B<scrollTtyOutput> has opposite effect.
+
+=item B<-sk>|B<+sk>
+
+Turn on/off scroll-to-bottom on keypress; resource
+B<scrollTtyKeypress>.
+
+=item B<-sw>|B<+sw>
+
+Turn on/off scrolling with the scrollback buffer as new lines appear.
+This only takes effect if B<-si> is also given; resource
+B<scrollWithBuffer>.
+
+=item B<-sr>|B<+sr>
+
+Put scrollbar on right/left; resource B<scrollBar_right>.
+
+=item B<-st>|B<+st>
+
+Display normal (non XTerm/NeXT) scrollbar without/with a trough;
+resource B<scrollBar_floating>.
+
+=item B<-bc>|B<+bc>
+
+Blink the cursor; resource B<cursorBlink>.
+
+=item B<-iconic>
+
+Start iconified, if the window manager supports that option.
+Alternative form is B<-ic>.
+
+=item B<-sl> I<number>
+
+Save I<number> lines in the scrollback buffer. See resource entry for
+limits; resource B<saveLines>.
+
+=item B<-b> I<number>
+
+Compile I<frills>: Internal border of I<number> pixels. See resource
+entry for limits; resource B<internalBorder>.
+
+=item B<-w> I<number>
+
+Compile I<frills>: External border of I<number> pixels. Also, B<-bw>
+and B<-borderwidth>. See resource entry for limits; resource
+B<externalBorder>.
+
+=item B<-bl>
+
+Compile I<frills>: Set MWM hints to request a borderless window, i.e.
+if honoured by the WM, the rxvt window will not have window
+decorations; resource B<borderLess>.
+
+=item B<-lsp> I<number>
+
+Compile I<linespace>: Lines (pixel height) to insert between each row
+of the display; resource B<linespace>.
+
+=item B<-tn> I<termname>
+
+This option specifies the name of the terminal type to be set in the
+B<TERM> environment variable. This terminal type must exist in the
+I<termcap(5)> database and should have I<li#> and I<co#> entries;
+resource B<termName>.
+
+=item B<-e> I<command [arguments]>
+
+Run the command with its command-line arguments in the B<@@RXVTNAME@@>
+window; also sets the window title and icon name to be the basename of
+the program being executed if neither I<-title> (I<-T>) nor I<-n> are
+given on the command line. If this option is used, it must be the last
+on the command-line. If there is no B<-e> option then the default is to
+run the program specified by the B<SHELL> environment variable or,
+failing that, I<sh(1)>.
+
+=item B<-title> I<text>
+
+Window title (B<-T> still respected); the default title is the basename
+of the program specified after the B<-e> option, if any, otherwise the
+application name; resource B<title>.
+
+=item B<-n> I<text>
+
+Icon name; the default name is the basename of the program specified
+after the B<-e> option, if any, otherwise the application name;
+resource B<iconName>.
+
+=item B<-C>
+
+Capture system console messages.
+
+=item B<-pt> I<style>
+
+Compile I<XIM>: input style for input method; B<OverTheSpot>,
+B<OffTheSpot>, B<Root>; resource B<preeditType>.
+
+=item B<-im> I<text>
+
+Compile I<XIM>: input method name. resource B<inputMethod>.
+
+=item B<-imlocale> I<string>
+
+The locale to use for opening the IM. You can use an LC_CTYPE of e.g.
+de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP for the input
+extension to be able to input japanese characters while staying in
+another locale.
+
+=item B<-insecure>
+
+Enable "insecure" mode, which currently enables most of the escape
+sequences that echo strings. See the resource B<insecure> for more
+info.
+
+=item B<-mod> I<modifier>
+
+Override detection of Meta modifier with specified key: B<alt>,
+B<meta>, B<hyper>, B<super>, B<mod1>, B<mod2>, B<mod3>, B<mod4>,
+B<mod5>; resource I<modifier>.
+
+=item B<-ssc>|B<+ssc>
+
+Turn on/off secondary screen (default enabled); resource
+B<secondaryScreen>.
+
+=item B<-ssr>|B<+ssr>
+
+Turn on/off secondary screen scroll (default enabled); resource
+B<secondaryScroll>.
+
+=item B<-xrm> I<resourcestring>
+
+No effect on rxvt. Simply passes through an argument to be made
+available in the instance's argument list. Appears in I<WM_COMMAND> in
+some window managers.
+
+=back
+
+=head1 RESOURCES (available also as long-options)
+
+Note: `@@RXVTNAME@@ --help' gives a list of all resources (long
+options) compiled into your version.
+
+There are two different methods that @@RXVTNAME@@ can use to get the
+Xresource data: using the X libraries (Xrm*-functions) or internal
+Xresources reader (B<~/.Xdefaults>). For the first method (ie.
+B<@@RXVTNAME@@ -h> lists B<XGetDefaults>), you can set and change the
+resources using X11 tools like B<xset>. Many distribution do also load
+settings from the B<~/.Xresources> file when X starts.
+
+If compiled with internal Xresources support (i.e. B<@@RXVTNAME@@ -h>
+lists B<.Xdefaults>) then B<@@RXVTNAME@@> accepts application defaults
+set in XAPPLOADDIR/URxvt (compile-time defined: usually
+B</usr/lib/X11/app-defaults/URxvt>) and resources set in
+B<~/.Xdefaults>, or B<~/.Xresources> if B<~/.Xdefaults> does not exist.
+Note that when reading X resources, B<@@RXVTNAME@@> recognizes two
+class names: B<XTerm> and B<URxvt>. The class name B<Rxvt> allows
+resources common to both B<@@RXVTNAME@@> and the original I<rxvt> to be
+easily configured, while the class name B<URxvt> allows resources
+unique to B<@@RXVTNAME@@>, notably colours and key-handling, to be
+shared between different B<@@RXVTNAME@@> configurations. If no
+resources are specified, suitable defaults will be used. Command-line
+arguments can be used to override resource settings. The following
+resources are allowed:
+
+=over 4
+
+=item B<geometry:> I<geom>
+
+Create the window with the specified X window geometry [default 80x24];
+option B<-geometry>.
+
+=item B<background:> I<colour>
+
+Use the specified colour as the window's background colour [default
+White]; option B<-bg>.
+
+=item B<foreground:> I<colour>
+
+Use the specified colour as the window's foreground colour [default
+Black]; option B<-fg>.
+
+=item B<color>I<n>B<:> I<colour>
+
+Use the specified colour for the colour value I<n>, where 0-7
+corresponds to low-intensity (normal) colours and 8-15 corresponds to
+high-intensity (bold = bright foreground, blink = bright background)
+colours. The canonical names are as follows: 0=black, 1=red, 2=green,
+3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white, but the actual colour
+names used are listed in the B<COLORS AND GRAPHICS> section.
+
+=item B<colorBD:> I<colour>
+
+Use the specified colour to display bold characters when the foreground
+colour is the default. This option will be ignored if B<realBold> is
+enabled.
+
+=item B<colorUL:> I<colour>
+
+Use the specified colour to display underlined characters when the
+foreground colour is the default.
+
+=item B<colorRV:> I<colour>
+
+Use the specified colour as the background for reverse video
+characters.
+
+=item B<cursorColor:> I<colour>
+
+Use the specified colour for the cursor. The default is to use the
+foreground colour; option B<-cr>.
+
+=item B<cursorColor2:> I<colour>
+
+Use the specified colour for the colour of the cursor text. For this to
+take effect, B<cursorColor> must also be specified. The default is to
+use the background colour.
+
+=item B<reverseVideo:> I<boolean>
+
+B<True>: simulate reverse video by foreground and background colours;
+option B<-rv>. B<False>: regular screen colours [default]; option
+B<+rv>. See note in B<COLORS AND GRAPHICS> section.
+
+=item B<jumpScroll:> I<boolean>
+
+B<True>: specify that jump scrolling should be used. When scrolling
+quickly, fewer screen updates are performed [default]; option B<-j>.
+B<False>: specify that smooth scrolling should be used; option B<+j>.
+
+=item B<inheritPixmap:> I<boolean>
+
+B<True>: make the background inherit the parent windows' pixmap, giving
+artificial transparency. B<False>: do not inherit the parent windows'
+pixmap.
+
+=item B<fading:> I<number>
+
+Fade the text by the given percentage when focus is lost.
+
+=item B<tintColor:> I<colour>
+
+Tint the transparent background pixmap with the given colour.
+
+=item B<shading:> I<number>
+
+Darken (0 .. 100) or lighten (-1 .. -100) the transparent background
+image in addition to tinting it.
+
+=item B<fading:> I<number>
+
+Scale the tint colour by the given percentage.
+
+=item B<scrollColor:> I<colour>
+
+Use the specified colour for the scrollbar [default #B2B2B2].
+
+=item B<troughColor:> I<colour>
+
+Use the specified colour for the scrollbar's trough area [default
+#969696]. Only relevant for normal (non XTerm/NeXT) scrollbar.
+
+=item B<backgroundPixmap:> I<file[;geom]>
+
+Use the specified XPM file (note the `.xpm' extension is optional) for
+the background and also optionally specify its scaling with a geometry
+string B<WxH+X+Y>, in which B<"W" / "H"> specify the
+horizontal/vertical scale (percent) and B<"X" / "Y"> locate the image
+centre (percent). A scale of 0 displays the image with tiling. A scale
+of 1 displays the image without any scaling. A scale of 2 to 9
+specifies an integer number of images in that direction. No image will
+be magnified beyond 10 times its original size. The maximum permitted
+scale is 1000. [default 0x0+50+50]
+
+=item B<menu:> I<file[;tag]>
+
+Read in the specified menu file (note the `.menu' extension is
+optional) and also optionally specify a starting tag to find. See the
+reference documentation for details on the syntax for the menuBar.
+
+=item B<path:> I<path>
+
+Specify the colon-delimited search path for finding files (XPM and
+menus), in addition to the paths specified by the B<RXVTPATH> and
+B<PATH> environment variables.
+
+=item B<font:> I<fontname>
+
+Select the fonts to be used. This is a comma seperated list of font
+names that are used in turn when trying to display Unicode characters.
+The first font defines the cell size for characters; other fonts might
+be smaller, but not larger. A reasonable default font list is always
+appended to it. option B<-fn>.
+
+=item B<realBold:> I<boolean>
+
+B<True>: Enable "real bold" support. When this option is on, bold text
+will be displayed using the first available bold font in the font list.
+Bold fonts should thus be specified in the font list after their
+corresponding regular fonts. If no bold font can be found, a regular
+font will be used. option B<-rb>. B<False>: Display bold text in a
+regular font, using the color specified with B<colorBD>; option B<+rb>.
+
+=item B<selectstyle:> I<mode>
+
+Set mouse selection style to B<old> which is 2.20, B<oldword> which is
+xterm style with 2.20 old word selection, or anything else which gives
+xterm style selection.
+
+=item B<scrollstyle:> I<mode>
+
+Set scrollbar style to B<@@RXVTNAME@@>, B<rxvt>, B<plain>, B<next> or
+B<xterm>
+
+=item B<title:> I<string>
+
+Set window title string, the default title is the command-line
+specified after the B<-e> option, if any, otherwise the application
+name; option B<-title>.
+
+=item B<iconName:> I<string>
+
+Set the name used to label the window's icon or displayed in an icon
+manager window, it also sets the window's title unless it is explicitly
+set; option B<-n>.
+
+=item B<mapAlert:> I<boolean>
+
+B<True>: de-iconify (map) on receipt of a bell character. B<False>: no
+de-iconify (map) on receipt of a bell character [default].
+
+=item B<visualBell:> I<boolean>
+
+B<True>: use visual bell on receipt of a bell character; option B<-vb>.
+B<False>: no visual bell [default]; option B<+vb>.
+
+=item B<loginShell:> I<boolean>
+
+B<True>: start as a login shell by prepending a `-' to B<argv[0]> of
+the shell; option B<-ls>. B<False>: start as a normal sub-shell
+[default]; option B<+ls>.
+
+=item B<utmpInhibit:> I<boolean>
+
+B<True>: inhibit writing record into the system log file B<utmp>;
+option B<-ut>. B<False>: write record into the system log file B<utmp>
+[default]; option B<+ut>.
+
+=item B<print-pipe:> I<string>
+
+Specify a command pipe for vt100 printer [default I<lpr(1)>]. Use
+B<Print> to initiate a screen dump to the printer and B<Ctrl-Print> or
+B<Shift-Print> to include the scrollback as well.
+
+=item B<scrollBar:> I<boolean>
+
+B<True>: enable the scrollbar [default]; option B<-sb>. B<False>:
+disable the scrollbar; option B<+sb>.
+
+=item B<scrollBar_right:> I<boolean>
+
+B<True>: place the scrollbar on the right of the window; option B<-sr>.
+B<False>: place the scrollbar on the left of the window; option B<+sr>.
+
+=item B<scrollBar_floating:> I<boolean>
+
+B<True>: display an rxvt scrollbar without a trough; option B<-st>.
+B<False>: display an rxvt scrollbar with a trough; option B<+st>.
+
+=item B<scrollBar_align:> I<mode>
+
+Align the B<top>, B<bottom> or B<centre> [default] of the scrollbar
+thumb with the pointer on middle button press/drag.
+
+=item B<scrollTtyOutput:> I<boolean>
+
+B<True>: scroll to bottom when tty receives output; option B<+si>.
+B<False>: do not scroll to bottom when tty receives output; option
+B<-si>.
+
+=item B<scrollWithBuffer:> I<boolean>
+
+B<True>: scroll with scrollback buffer when tty recieves new lines (and
+B<scrollTtyOutput> is False); option B<+sw>. B<False>: do not scroll
+with scrollback buffer when tty recieves new lines; option B<-sw>.
+
+=item B<scrollTtyKeypress:> I<boolean>
+
+B<True>: scroll to bottom when a non-special key is pressed. Special
+keys are those which are intercepted by rxvt for special handling and
+are not passed onto the shell; option B<-sk>. B<False>: do not scroll
+to bottom when a non-special key is pressed; option B<+sk>.
+
+=item B<smallfont_key:> I<keysym>
+
+If enabled, use B<@@HOTKEY@@->I<keysym> to toggle to a smaller font
+[default B<@@HOTKEY@@-@@SMALLFONT@@>]
+
+=item B<bigfont_key:> I<keysym>
+
+If enabled, use B<@@HOTKEY@@->I<keysym> to toggle to a bigger font
+[default B<@@HOTKEY@@-@@BIGFONT@@>]
+
+=item B<saveLines:> I<number>
+
+Save I<number> lines in the scrollback buffer [default 64]. This
+resource is limited on most machines to 65535; option B<-sl>.
+
+=item B<internalBorder:> I<number>
+
+Internal border of I<number> pixels. This resource is limited to 100;
+option B<-b>.
+
+=item B<externalBorder:> I<number>
+
+External border of I<number> pixels. This resource is limited to 100;
+option B<-w>, B<-bw>, B<-borderwidth>.
+
+=item B<borderLess:> I<boolean>
+
+Set MWM hints to request a borderless window, i.e. if honoured by the
+WM, the rxvt window will not have window decorations; option B<-bl>.
+
+=item B<termName:> I<termname>
+
+Specifies the terminal type name to be set in the B<TERM> environment
+variable; option B<-tn>.
+
+=item B<linespace:> I<number>
+
+Specifies number of lines (pixel height) to insert between each row of
+the display [default 0]; option B<-lsp>.
+
+=item B<meta8:> I<boolean>
+
+B<True>: handle Meta (Alt) + keypress to set the 8th bit. B<False>:
+handle Meta (Alt) + keypress as an escape prefix [default].
+
+=item B<mouseWheelScrollPage:> I<boolean>
+
+B<True>: the mouse wheel scrolls a page full. B<False>: the mouse wheel
+scrolls five lines [default].
+
+=item B<cursorBlink:> I<boolean>
+
+B<True>: blink the cursor. B<False>: do not blink the cursor [default];
+option B<-bc>.
+
+=item B<pointerBlank:> I<boolean>
+
+B<True>: blank the pointer when a key is pressed or after a set number
+of seconds of inactivity. B<False>: the pointer is always visible
+[default].
+
+=item B<pointerColor:> I<colour>
+
+Mouse pointer foreground colour.
+
+=item B<pointerColor2:> I<colour>
+
+Mouse pointer background colour.
+
+=item B<pointerBlankDelay:> I<number>
+
+Specifies number of seconds before blanking the pointer [default 2].
+
+=item B<backspacekey:> I<string>
+
+The string to send when the backspace key is pressed. If set to B<DEC>
+or unset it will send B<Delete> (code 127) or, if shifted, B<Backspace>
+(code 8) - which can be reversed with the appropriate DEC private mode
+escape sequence.
+
+=item B<deletekey:> I<string>
+
+The string to send when the delete key (not the keypad delete key) is
+pressed. If unset it will send the sequence traditionally associated
+with the B<Execute> key.
+
+=item B<cutchars:> I<string>
+
+The characters used as delimiters for double-click word selection. The
+built-in default:
+
+B<< BACKSLASH `"'&()*,;<=>?@[]{|} >>
+
+=item B<preeditType:> I<style>
+
+B<OverTheSpot>, B<OffTheSpot>, B<Root>; option B<-pt>.
+
+=item B<inputMethod:> I<name>
+
+I<name> of inputMethod to use; option B<-im>.
+
+=item B<imLocale:> I<name>
+
+The locale to use for opening the IM. You can use an LC_CTYPE of e.g.
+de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP for the input
+extension to be able to input japanese characters while staying in
+another locale. option B<-imlocale>.
+
+=item B<insecure>
+
+Enables "insecure" mode. Rxvt-unicode offers some escape sequences that
+echo arbitrary strings like the icon name or the locale. This could be
+abused if somebody gets 8-bit-clean access to your display, wether
+throuh a mail client displaying mail bodies unfiltered or though
+write(1). Therefore, these sequences are disabled by default. (Note
+that other terminals, including xterm, have these sequences
+enabled by default). You can enable them by setting this boolean
+resource or specifying B<-insecure> as an option. At the moment, this
+enabled display-answer, locale, findfont, icon label and window title
+requests as well as dynamic menubar dispatch.
+
+=item B<modifier:> I<modifier>
+
+Set the key to be interpreted as the Meta key to: B<alt>, B<meta>,
+B<hyper>, B<super>, B<mod1>, B<mod2>, B<mod3>, B<mod4>, B<mod5>; option
+B<-mod>.
+
+=item B<answerbackString:> I<string>
+
+Specify the reply rxvt sends to the shell when an ENQ (control-E)
+character is passed through. It may contain escape values as described
+in the entry on B<keysym> following.
+
+=item B<secondaryScreen:> I<bool>
+
+Turn on/off secondary screen (default enabled).
+
+=item B<secondaryScroll:> I<bool>
+
+Turn on/off secondary screen scroll (default enabled). If the this
+option is enabled, scrolls on the secondary screen will change the
+scrollback buffer and switching to/from the secondary screen will
+instead scroll the screen up.
+
+=item B<keysym.>I<sym>: I<string>
+
+Associate I<string> with keysym I<sym> (B<0xFF00 - 0xFFFF>). It may
+contain escape values (\a: bell, \b: backspace, \e, \E: escape, \n:
+newline, \r: return, \t:
+tab, \000: octal number) or control characters (^?: delete, ^@: null,
+^A ...) and may enclosed with double quotes so that it can start or end
+with whitespace. The intervening resource name B<keysym.> cannot be
+omitted. This resource is only available when compiled with
+KEYSYM_RESOURCE.
+
+=back
+
+=head1 THE SCROLLBAR
+
+Lines of text that scroll off the top of the B<@@RXVTNAME@@> window
+(resource: B<saveLines>) and can be scrolled back using the scrollbar
+or by keystrokes. The normal B<@@RXVTNAME@@> scrollbar has arrows and
+its behaviour is fairly intuitive. The B<xterm-scrollbar> is without
+arrows and its behaviour mimics that of I<xterm>
+
+Scroll down with B<Button1> (B<xterm-scrollbar>) or B<Shift-Next>.
+Scroll up with B<Button3> (B<xterm-scrollbar>) or B<Shift-Prior>.
+Continuous scroll with B<Button2>.
+
+=head1 MOUSE REPORTING
+
+To temporarily override mouse reporting, for either the scrollbar or
+the normal text selection/insertion, hold either the Shift or the Meta
+(Alt) key while performing the desired mouse action.
+
+If mouse reporting mode is active, the normal scrollbar actions are
+disabled -- on the assumption that we are using a fullscreen
+application. Instead, pressing Button1 and Button3 sends B<ESC[6~>
+(Next) and B<ESC[5~> (Prior), respectively. Similarly, clicking on the
+up and down arrows sends B<ESC[A> (Up) and B<ESC[B> (Down),
+respectively.
+
+=head1 TEXT SELECTION AND INSERTION
+
+The behaviour of text selection and insertion mechanism is similar to
+I<xterm>(1).
+
+=over 4
+
+=item B<Selection>:
+
+Left click at the beginning of the region, drag to the end of the
+region and release; Right click to extend the marked region; Left
+double-click to select a word; Left triple-click to select the entire
+line.
+
+=item B<Insertion>:
+
+Pressing and releasing the Middle mouse button (or B<Shift-Insert>) in
+an B<@@RXVTNAME@@> window causes the current text selection to be
+inserted as if it had been typed on the keyboard.
+
+=back
+
+=head1 CHANGING FONTS
+
+You can change fonts on-the-fly, which is to say cycle through the
+default font and others of various sizes, by using B<Shift-KP_Add> and
+B<Shift-KP_Subtract>. Or, alternatively (if enabled) with
+B<@@HOTKEY@@-@@BIGFONT@@> and B<@@HOTKEY@@-@@SMALLFONT@@>, where the
+actual key can be selected using resources
+B<smallfont_key>/B<bigfont_key>.
+
+=head1 LOGIN STAMP
+
+B<@@RXVTNAME@@> tries to write an entry into the I<utmp>(5) file so
+that it can be seen via the I<who(1)> command, and can accept messages.
+To allow this feature, B<@@RXVTNAME@@> must be installed setuid root on
+some systems.
+
+=head1 COLORS AND GRAPHICS
+
+In addition to the default foreground and background colours,
+B<@@RXVTNAME@@> can display up to 16 colours (8 ANSI colours plus
+high-intensity bold/blink versions of the same). Here is a list of the
+colours with their B<rgb.txt> names.
+
+=begin table
+
+	B<color0>	(black)	= Black
+	B<color1>	(red)	= Red3
+	B<color2>	(green)	= Green3
+	B<color3>	(yellow)	= Yellow3
+	B<color4>	(blue)	= Blue3
+	B<color5>	(magenta)	= Magenta3
+	B<color6>	(cyan)	= Cyan3
+	B<color7>	(white)	= AntiqueWhite
+	B<color8>	(bright black)	= Grey25
+	B<color9>	(bright red)	= Red
+	B<color10>	(bright green)	= Green
+	B<color11>	(bright yellow)	= Yellow
+	B<color12>	(bright blue)	= Blue
+	B<color13>	(bright magenta)	= Magenta
+	B<color14>	(bright cyan)	= Cyan
+	B<color15>	(bright white)	= White
+	B<foreground>		= Black
+	B<background>		= White
+
+=end table
+
+It is also possible to specify the colour values of B<foreground>,
+B<background>, B<cursorColor>, B<cursorColor2>, B<colorBD>, B<colorUL> as
+a number 0-15, as a convenient shorthand to reference the colour name of
+color0-color15.
+
+Note that B<-rv> (B<"reverseVideo: True">) simulates reverse video by
+always swapping the foreground/background colours. This is in contrast to
+I<xterm>(1) where the colours are only swapped if they have not otherwise
+been specified. For example,
+
+=over 4
+
+=item B<rxvt -fg Black -bg White -rv>
+
+would yield White on Black, while on I<xterm>(1) it would yield Black
+on White.
+
+=back
+
+=head1 ENVIRONMENT
+
+B<@@RXVTNAME@@> sets the environment variables B<TERM>, B<COLORTERM>
+and B<COLORFGBG>. The environment variable B<WINDOWID> is set to the X
+window id number of the B<@@RXVTNAME@@> window and it also uses and
+sets the environment variable B<DISPLAY> to specify which display
+terminal to use. B<@@RXVTNAME@@> uses the environment variables
+B<RXVTPATH> and B<PATH> to find XPM files.
+
+=head1 FILES
+
+=over 4
+
+=item B</etc/utmp>
+
+System file for login records.
+
+=item B</usr/lib/X11/rgb.txt>
+
+Color names.
+
+=back
+
+=head1 SEEALSO
+
+I<xterm>(1), I<sh>(1), I<resize>(1), I<X>(1), I<pty>(4), I<tty>(4), I<utmp>(5)
+
+See rxvtRef.html rxvtRef.txt for detailed information on recognized escape sequences and menuBar syntax, etc.
+
+=head1 BUGS
+
+Check the BUGS file for an up-to-date list.
+
+Cursor change support is not yet implemented.
+
+Click-and-drag doesn't work with X11 mouse report overriding.
+
+=head1 FTP LOCATION
+
+rxvt-+@@RXVTVERSION@@.tar.gz can be found at the following ftp sites L<@@RXVTFTPSITE@@>(@@RXVTFTPSITE@@)
+
+=head1 CURRENT PROJECT COORDINATOR
+
+=over 4
+
+=item Project Coordinator
+
+@@RXVTMAINT@@ L<@@RXVTMAINTEMAIL@@>
+
+=item Web page maintainter
+
+@@RXVTWEBMAINT@@ L<@@RXVTWEBMAINTEMAIL@@>
+
+L<@@RXVTWEBPAGE@@>(@@RXVTWEBPAGE@@)
+
+=back
+
+=head1 AUTHORS
+
+=over 4
+
+=item John Bovey
+
+University of Kent, 1992, wrote the original Xvt.
+
+=item Rob Nation L<< <nation@rocket.sanders.lockheed.com> >>
+
+very heavily modified Xvt and came up with Rxvt
+
+=item Angelo Haritsis L<< <ah@doc.ic.ac.uk> >>
+
+wrote the Greek Keyboard Input (no longer in code)
+
+=item mj olesen L<< <olesen@me.QueensU.CA> >>
+
+Wrote the menu system.
+
+Project Coordinator (changes.txt 2.11 to 2.21)
+
+=item Oezguer Kesim L<< <kesim@math.fu-berlin.de> >>
+
+Project Coordinator (changes.txt 2.21a to 2.4.5)
+
+=item Geoff Wing L<< <gcw@pobox.com> >>
+
+Rewrote screen display and text selection routines. Project Coordinator
+(changes.txt 2.4.6 - rxvt-unicode)
+
+=item Marc Alexander Lehmann L<< <rxvt@schmorp.de> >>
+
+Forked rxvt-unicode, rewrote most of the display code and internal
+character handling to store text in unicode, improve xterm
+compatibility and apply numerous other bugfixes and extensions.
+
+Project Coordinator (Changes 1.0 -)
+
+=back
+
