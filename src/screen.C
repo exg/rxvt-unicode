@@ -2164,7 +2164,11 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
              */
             rxvt_font *font = (*TermWin.fontset)[fid];
 
-            if (back == Color_bg)
+            if (back == fore)
+              font->clear_rect (xpixel, ypixel,
+                                TermWin.fwidth * count, TermWin.fheight,
+                                back);
+            else if (back == Color_bg)
               {
                 if (must_clear)
                   {
