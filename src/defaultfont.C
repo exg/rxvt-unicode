@@ -1164,7 +1164,7 @@ rxvt_fontset::populate (const char *desc)
 }
 
 int
-rxvt_fontset::find_font (unicode_t unicode)
+rxvt_fontset::find_font (unicode_t unicode, bool bold)
 {
   for (unsigned int i = !!(0x20 <= unicode && unicode <= 0x7f); // skip pseudo-font for ascii
        i < fonts.size ();
@@ -1181,7 +1181,13 @@ rxvt_fontset::find_font (unicode_t unicode)
             goto next_font;
         }
 
-      if (f->cs != CS_UNKNOWN && f->has_codepoint (unicode))
+      if (f->cs == CS_UNKNOWN)
+        goto next_font;
+
+      if (bold && f->properties ().weight < rxvt_fontprop::bold)
+        goto next_font;
+
+      if (f->has_codepoint (unicode))
         return i;
 
     next_font:
@@ -1192,6 +1198,10 @@ rxvt_fontset::find_font (unicode_t unicode)
           i = 0;
         }
     }
+
+  // if no bold font found, use a regular one
+  if (bold)
+    return find_font (unicode);
 
   return 0; /* we must return SOME font */
 }

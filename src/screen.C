@@ -50,41 +50,41 @@ inline void fill_text (text_t *start, text_t value, int len)
  *             GENERAL SCREEN AND SELECTION UPDATE ROUTINES                  *
  * ------------------------------------------------------------------------- */
 #define ZERO_SCROLLBACK()                                              \
-    if ((Options & Opt_scrollTtyOutput) == Opt_scrollTtyOutput)    \
+    if (Options & Opt_scrollTtyOutput)                                 \
         TermWin.view_start = 0
 #define CLEAR_SELECTION()                                              \
-    selection.beg.row = selection.beg.col                     \
+    selection.beg.row = selection.beg.col                              \
         = selection.end.row = selection.end.col = 0
 #define CLEAR_ALL_SELECTION()                                          \
-    selection.beg.row = selection.beg.col                     \
-        = selection.mark.row = selection.mark.col             \
+    selection.beg.row = selection.beg.col                              \
+        = selection.mark.row = selection.mark.col                      \
         = selection.end.row = selection.end.col = 0
 
-#define ROW_AND_COL_IS_AFTER(A, B, C, D)                                \
+#define ROW_AND_COL_IS_AFTER(A, B, C, D)                               \
     (((A) > (C)) || (((A) == (C)) && ((B) > (D))))
-#define ROW_AND_COL_IS_BEFORE(A, B, C, D)                               \
+#define ROW_AND_COL_IS_BEFORE(A, B, C, D)                              \
     (((A) < (C)) || (((A) == (C)) && ((B) < (D))))
-#define ROW_AND_COL_IN_ROW_AFTER(A, B, C, D)                            \
+#define ROW_AND_COL_IN_ROW_AFTER(A, B, C, D)                           \
     (((A) == (C)) && ((B) > (D)))
-#define ROW_AND_COL_IN_ROW_AT_OR_AFTER(A, B, C, D)                      \
+#define ROW_AND_COL_IN_ROW_AT_OR_AFTER(A, B, C, D)                     \
     (((A) == (C)) && ((B) >= (D)))
-#define ROW_AND_COL_IN_ROW_BEFORE(A, B, C, D)                           \
+#define ROW_AND_COL_IN_ROW_BEFORE(A, B, C, D)                          \
     (((A) == (C)) && ((B) < (D)))
-#define ROW_AND_COL_IN_ROW_AT_OR_BEFORE(A, B, C, D)                     \
+#define ROW_AND_COL_IN_ROW_AT_OR_BEFORE(A, B, C, D)                    \
     (((A) == (C)) && ((B) <= (D)))
 
 /* these must be row_col_t */
-#define ROWCOL_IS_AFTER(X, Y)                                           \
+#define ROWCOL_IS_AFTER(X, Y)                                          \
     ROW_AND_COL_IS_AFTER ((X).row, (X).col, (Y).row, (Y).col)
-#define ROWCOL_IS_BEFORE(X, Y)                                          \
+#define ROWCOL_IS_BEFORE(X, Y)                                         \
     ROW_AND_COL_IS_BEFORE ((X).row, (X).col, (Y).row, (Y).col)
-#define ROWCOL_IN_ROW_AFTER(X, Y)                                       \
+#define ROWCOL_IN_ROW_AFTER(X, Y)                                      \
     ROW_AND_COL_IN_ROW_AFTER ((X).row, (X).col, (Y).row, (Y).col)
-#define ROWCOL_IN_ROW_BEFORE(X, Y)                                      \
+#define ROWCOL_IN_ROW_BEFORE(X, Y)                                     \
     ROW_AND_COL_IN_ROW_BEFORE ((X).row, (X).col, (Y).row, (Y).col)
-#define ROWCOL_IN_ROW_AT_OR_AFTER(X, Y)                                 \
+#define ROWCOL_IN_ROW_AT_OR_AFTER(X, Y)                                \
     ROW_AND_COL_IN_ROW_AT_OR_AFTER ((X).row, (X).col, (Y).row, (Y).col)
-#define ROWCOL_IN_ROW_AT_OR_BEFORE(X, Y)                                \
+#define ROWCOL_IN_ROW_AT_OR_BEFORE(X, Y)                               \
     ROW_AND_COL_IN_ROW_AT_OR_BEFORE ((X).row, (X).col, (Y).row, (Y).col)
 
 /*
@@ -94,22 +94,22 @@ inline void fill_text (text_t *start, text_t value, int len)
  */
 #define drawBuffer      TermWin.vt
 
-#define CLEAR_ROWS(row, num)                                            \
-    if (TermWin.mapped)                                              \
-        XClearArea (display->display, drawBuffer, TermWin.int_bwidth,      \
+#define CLEAR_ROWS(row, num)                                           \
+    if (TermWin.mapped)                                                \
+        XClearArea (display->display, drawBuffer, 0,                   \
                     Row2Pixel (row), (unsigned int)TermWin.width,      \
                     (unsigned int)Height2Pixel (num), False)
 
-#define CLEAR_CHARS(x, y, num)                                          \
-    if (TermWin.mapped)                                              \
-        XClearArea (display->display, drawBuffer, x, y,                       \
-                    (unsigned int)Width2Pixel (num),                      \
+#define CLEAR_CHARS(x, y, num)                                         \
+    if (TermWin.mapped)                                                \
+        XClearArea (display->display, drawBuffer, x, y,                \
+                    (unsigned int)Width2Pixel (num),                   \
                     (unsigned int)Height2Pixel (1), False)
 
-#define ERASE_ROWS(row, num)                                            \
-    XFillRectangle (display->display, drawBuffer, TermWin.gc,              \
-                    TermWin.int_bwidth, Row2Pixel (row),               \
-                    (unsigned int)TermWin.width,                      \
+#define ERASE_ROWS(row, num)                                           \
+    XFillRectangle (display->display, drawBuffer, TermWin.gc,          \
+                    0, Row2Pixel (row),                                \
+                    (unsigned int)TermWin.width,                       \
                     (unsigned int)Height2Pixel (num))
 
 /* ------------------------------------------------------------------------- *
@@ -899,7 +899,8 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
           if (c >= 0x10000)
             c = rxvt_composite.compose (c); // map to lower 16 bits
 #endif
-          rend_t rend = SET_FONT (rstyle, TermWin.fontset->find_font (c));
+          bool bold = (Options & Opt_realBold) && ((rstyle & RS_Bold) != 0);
+          rend_t rend = SET_FONT (rstyle, TermWin.fontset->find_font (c, bold));
 
           do
             {
@@ -1749,9 +1750,9 @@ rxvt_term::scr_expose (int x, int y, int width, int height, bool refresh)
     return;
 
 #ifdef DEBUG_STRICT
-  x = max (x, (int)TermWin.int_bwidth);
+  x = max (x, 0);
   x = min (x, (int)TermWin.width);
-  y = max (y, (int)TermWin.int_bwidth);
+  y = max (y, 0);
   y = min (y, (int)TermWin.height);
 #endif
 
@@ -2208,7 +2209,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
           rvid = !!(rend & RS_RVid);
 
 #ifndef NO_BOLD_UNDERLINE_REVERSE
-          if (rend & RS_Bold && fore == Color_fg)
+          if (rend & RS_Bold && fore == Color_fg && !(Options & Opt_realBold))
             {
               if (ISSET_PIXCOLOR (Color_BD))
                 fore = Color_BD;
@@ -2324,6 +2325,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
   /*
    * I: other general cleanup
    */
+#if 0
   if (clearfirst && TermWin.int_bwidth)
     /*
      * clear the whole screen height, note that width == 0 is treated
@@ -2342,6 +2344,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                 TermWin.width + TermWin.int_bwidth, 0,
                 (unsigned int)TermWin.int_bwidth,
                 (unsigned int)TermWin_TotalHeight (), False);
+#endif
 
   if (refresh_type & SMOOTH_REFRESH)
     XSync (display->display, False);

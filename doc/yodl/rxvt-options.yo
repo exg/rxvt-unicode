@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-options.yo,v 1.11 2004/04/02 19:15:57 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-options.yo,v 1.12 2004/07/26 14:57:12 root Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpageoptions()
 
@@ -66,12 +66,21 @@ startdit()
 	The colour of the border between the xterm scrollbar and the text;
 	resource bf(borderColor).
     dit(bf(-fn) em(fontname))
-	Select the fonts to be used used. This is a comma seperated
-        list of font names that are used in turn when trying to display
-        unicode characters. The first font defines the cell size for characters,
-        other fonts might be smaller, but not larger. A reasonable default font list
-        is always appended to it.
+	Select the fonts to be used.
+	This is a comma seperated list of font names that are used in turn when
+	trying to display Unicode characters.
+	The first font defines the cell size for characters; other fonts might
+	be smaller, but not larger.
+	A reasonable default font list is always appended to it.
 	resource bf(font).
+    dit(bf(-rb)|bf(+rb))
+	Enable "real bold" support.
+	When this option is on, bold text will be displayed using the first
+	available bold font in the font list.
+	Bold fonts should thus be specified in the font list after their
+	corresponding regular fonts.
+	If no bold font can be found, a regular font will be used.
+	resource bf(realBold).
     dit(bf(-name) em(name))
 	Specify the application name under which resources
 	are to be obtained, rather than the default executable file name.

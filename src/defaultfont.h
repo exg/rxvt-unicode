@@ -108,7 +108,7 @@ struct rxvt_fontset {
   rxvt_font *new_font (const char *name, codeset cs);
 
   bool populate (const char *desc);
-  int find_font (uint32_t unicode);
+  int find_font (uint32_t unicode, bool bold = false);
 
   rxvt_font *operator [] (int id) const
   {

@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-resources.yo,v 1.13 2004/06/21 22:24:07 root Exp $ --)
+COMMENT(-- $Id: rxvt-resources.yo,v 1.14 2004/07/26 14:57:12 root Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpagesection(RESOURCES (available also as long-options))
 
@@ -42,6 +42,7 @@ startdit()
     dit(bf(colorBD:) em(colour))
 	Use the specified colour to display bold characters when the
 	foreground colour is the default.
+	This option will be ignored if bf(realBold) is enabled.
     dit(bf(colorUL:) em(colour))
 	Use the specified colour to display underlined characters when the
 	foreground colour is the default.
@@ -98,12 +99,24 @@ startdit()
 	menus), in addition to the paths specified by the bf(RXVTPATH) and
 	bf(PATH) environment variables.
     dit(bf(font:) em(fontname))
-	Select the fonts to be used used. This is a comma seperated
-        list of font names that are used in turn when trying to display
-        unicode characters. The first font defines the cell size for characters,
-        other fonts might be smaller, but not larger. A reasonable default font list
-        is always appended to this list.
+	Select the fonts to be used.
+	This is a comma seperated list of font names that are used in turn when
+	trying to display Unicode characters.
+	The first font defines the cell size for characters; other fonts might
+	be smaller, but not larger.
+	A reasonable default font list is always appended to it.
 	option bf(-fn).
+    dit(bf(realBold:) em(boolean))
+	bf(True): Enable "real bold" support.
+	When this option is on, bold text will be displayed using the first
+	available bold font in the font list.
+	Bold fonts should thus be specified in the font list after their
+	corresponding regular fonts.
+	If no bold font can be found, a regular font will be used.
+	option bf(-rb).
+	bf(False): Display bold text in a regular font, using the color
+	specified with bf(colorBD);
+	option bf(+rb).
     dit(bf(selectstyle:) em(mode))
 	Set mouse selection style to bf(old) which is 2.20, bf(oldword) which
 	is xterm style with 2.20 old word selection, or anything else which

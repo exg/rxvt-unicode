@@ -155,6 +155,7 @@ optList[] = {
               RSTRG (Rs_color + minBrightCOLOR + 7, "color15", "color"),
 #endif				/* NO_BRIGHTCOLOR */
 #ifndef NO_BOLD_UNDERLINE_REVERSE
+              BOOL (Rs_realBold, "realBold", "rb", Opt_realBold, "use bold fonts for bold text"),
               RSTRG (Rs_color + Color_BD, "colorBD", "color"),
               RSTRG (Rs_color + Color_UL, "colorUL", "color"),
               RSTRG (Rs_color + Color_RV, "colorRV", "color"),
