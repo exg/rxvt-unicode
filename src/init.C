@@ -950,7 +950,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   Get_Colours ();
 
   if (!set_fonts ())
-    rxvt_fatal ("unable to load base fontset, please specify one using -fn, aborting.\n");
+    rxvt_fatal ("unable to load base fontset, please specify a valid one using -fn, aborting.\n");
 
   window_calc (0, 0);
   old_width = szHint.width;
