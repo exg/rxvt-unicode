@@ -52,7 +52,7 @@ static struct tw0 : time_watcher
     {
       // should never get called
       // reached end-of-time, or tstamp has a bogus definition,
-      // or compiler initilization order broken, or somethine else :)
+      // or compiler initialisation order broken, or something else :)
       abort ();
     }
 

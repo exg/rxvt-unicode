@@ -203,6 +203,9 @@ rxvt_term::~rxvt_term ()
     {
       selection_clear ();
 
+#ifdef USE_XIM
+      im_destroy ();
+#endif
 #ifdef MENUBAR
       if (menubarGC) XFreeGC (display->display, menubarGC);
 #endif
@@ -276,13 +279,12 @@ rxvt_term::~rxvt_term ()
 void
 rxvt_term::destroy ()
 {
+  if (destroy_ev.active)
+    return;
+
   if (display)
     {
-      rootwin_ev.stop (display);
-      termwin_ev.stop (display);
-      vt_ev.stop (display);
 #ifdef USE_XIM
-      im_destroy ();
       im_ev.stop (display);
 #endif
 #ifdef HAVE_SCROLLBARS
@@ -291,6 +293,9 @@ rxvt_term::destroy ()
 #ifdef MENUBAR
       menubar_ev.stop (display);
 #endif
+      rootwin_ev.stop (display);
+      termwin_ev.stop (display);
+      vt_ev.stop (display);
     }
 
   check_ev.stop ();

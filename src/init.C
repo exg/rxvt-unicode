@@ -1352,6 +1352,7 @@ rxvt_term::run_command (const char *const *argv)
           rxvt_fatal ("can't open slave tty %s", ttydev);
         }
     }
+
 #ifndef NO_BACKSPACE_KEY
   if (key_backspace[0] && !key_backspace[1])
     er = key_backspace[0];
@@ -1359,10 +1360,9 @@ rxvt_term::run_command (const char *const *argv)
     er = '\177';            /* the initial state anyway */
   else
 #endif
-
     er = -1;
 
-  rxvt_get_ttymode (& (tio), er);
+  rxvt_get_ttymode (&tio, er);
 
 #ifndef __QNX__
   /* spin off the command interpreter */
@@ -1453,10 +1453,8 @@ rxvt_term::run_child (const char *const *argv)
 
       fd = open (CONSOLE, O_WRONLY, 0);
       if (fd >= 0)
-        {
-          if (ioctl (fd, SRIOCSREDIR, NULL) < 0)
-            close (fd);
-        }
+        if (ioctl (fd, SRIOCSREDIR, NULL) < 0)
+          close (fd);
 #endif                          /* SRIOCSREDIR */
 
     }

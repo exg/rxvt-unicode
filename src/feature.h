@@ -171,7 +171,7 @@
 #endif
 
 /*
- * Modifier/s to use to allow up/down arrows and Priot/Next keys
+ * Modifier/s to use to allow up/down arrows and Prior/Next keys
  * to scroll single or page-fulls
  */
 #define SCROLL_ON_SHIFT
@@ -217,7 +217,7 @@
  * Default separating chars for multiple-click selection
  * Space and tab are separate separating characters and are not settable
  */
-#define CUTCHARS	"\"&'()*,;<=>?@[\\]^`{|}~"
+#define CUTCHARS	"\"&'()*,;<=>?@[\\]^`{|}"
 
 /*
  * Add run-time support for changing the cutchars for double click selection
