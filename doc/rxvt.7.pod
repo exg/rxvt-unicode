@@ -1550,9 +1550,10 @@ access the current menuBar for alteration
 
 set the current menuBar's title to I<string>, which may contain the
 following format specifiers:
-B<%%> : literal B<%> character
-B<%n> : rxvt name (as per the B<-name> command-line option)
-B<%v> : rxvt version
+
+   B<%n>  rxvt name (as per the B<-name> command-line option)
+   B<%v>  rxvt version
+   B<%%>  literal B<%> character
 
 =item B<[done]>
 
@@ -2227,14 +2228,17 @@ where accents are encoded as seperate unicode characters. This is
 done by using precomposited characters when available or creating
 new pseudo-characters when no precomposed form exists.
 
-Without --enable-unicode3, the number of additional precomposed
-characters is rather limited (2048, if this is full, rxvt will use the
+Without --enable-unicode3, the number of additional precomposed characters
+is rather limited (2048, if this is full, rxvt-unicode will use the
 private use area, extending the number of combinations to 8448). With
---enable-unicode3, no practical limit exists. This will also enable
-storage of characters >65535.
+--enable-unicode3, no practical limit exists.
+
+This option will also enable storage (but not display) of characters
+beyond plane 0 (>65535) when --enable-unicode3 was not specified.
 
 The combining table also contains entries for arabic presentation forms,
-but these are not currently used. Bug me if you want these to be used.
+but these are not currently used. Bug me if you want these to be used (and
+tell me how these are to be used...).
 
 =item --enable-fallback(=CLASS)
 

@@ -3178,7 +3178,7 @@ rxvt_term::process_csi_seq ()
         {
           case '>':
             if (ch == CSI_DA)	/* secondary device attributes */
-              tt_printf ("\033[>%d;%-.8s;0c", 'R', VSTRING);
+              tt_printf ("\033[>%d;%c%c;0c", 'U', VERSION[0], VERSION[2]);
             break;
           case '?':
             if (ch == 'h' || ch == 'l' || ch == 'r' || ch == 's' || ch == 't')

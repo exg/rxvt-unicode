@@ -1220,9 +1220,9 @@ Click-and-drag doesn't work with X11 mouse report overriding.
 
 =item Project Coordinator
 
-@@RXVT_MAINT@@ L<@@RXVT_MAINTEMAIL@@>
+Marc A. Lehmann L<< <rxvt-unicode@schmorp.de> >>
 
-L<@@RXVT_WEBPAGE@@>
+L<http://software.schmorp.de/#rxvt-unicode>
 
 =back
 
@@ -1257,7 +1257,7 @@ Project Coordinator (changes.txt 2.21a to 2.4.5)
 Rewrote screen display and text selection routines. Project Coordinator
 (changes.txt 2.4.6 - rxvt-unicode)
 
-=item Marc Alexander Lehmann L<< <rxvt@schmorp.de> >>
+=item Marc Alexander Lehmann L<< <rxvt-unicode@schmorp.de> >>
 
 Forked rxvt-unicode, rewrote most of the display code and internal
 character handling to store text in unicode, improve xterm

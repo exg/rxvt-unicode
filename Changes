@@ -1,5 +1,6 @@
 TODO: manpage 900mb update
 TODO: safer command: keymap processing.
+TODO: "slow" rendering mode for bidi and scripts
 TODO: read property sequence is broken with respect to utf-8 etc.
 WISH: keyboard modification via esc-sequences.
 WISH: line-rewrapping on resize
@@ -16,6 +17,8 @@ WISH: just for fun, do shade and tint with XRender.
           (Kuang-che Wu).
         - only warn on X errors, *try* to continue (frills).
         - add COPYING back, which got lost somehow.
+        - after deciding that LSM is dead, remove all traces of it,
+          along with other, similar, cleanups.
 
 5.0  Fri Feb 11 18:31:48 CET 2005
 	- document a race-free hack to start urxvtd.

@@ -6,11 +6,11 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 5.0, is a colour vt102 terminal emulator intended
-    as an *xterm*(1) replacement for users who do not require features such
-    as Tektronix 4014 emulation and toolkit-style configurability. As a
-    result, rxvt-unicode uses much less swap space -- a significant
-    advantage on a machine serving many X sessions.
+    rxvt-unicode, version , is a colour vt102 terminal emulator intended as
+    an *xterm*(1) replacement for users who do not require features such as
+    Tektronix 4014 emulation and toolkit-style configurability. As a result,
+    rxvt-unicode uses much less swap space -- a significant advantage on a
+    machine serving many X sessions.
 
 FREQUENTLY ASKED QUESTIONS
     See rxvt(7) (try "man 7 rxvt") for a list of frequently asked questions
@@ -1027,9 +1027,9 @@ BUGS
 
 CURRENT PROJECT COORDINATOR
     Project Coordinator
-        Marc A. Lehmann rxvt@schmorp.de
+        Marc A. Lehmann <rxvt-unicode@schmorp.de>
 
-        <http://software.schmorp.de/>
+        <http://software.schmorp.de/#rxvt-unicode>
 
 AUTHORS
     John Bovey
@@ -1053,7 +1053,7 @@ AUTHORS
         Rewrote screen display and text selection routines. Project
         Coordinator (changes.txt 2.4.6 - rxvt-unicode)
 
-    Marc Alexander Lehmann <rxvt@schmorp.de>
+    Marc Alexander Lehmann <rxvt-unicode@schmorp.de>
         Forked rxvt-unicode, rewrote most of the display code and internal
         character handling to store text in unicode, improve xterm
         compatibility and apply numerous other bugfixes and extensions.

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2005-02-13" "5.1" "RXVT-UNICODE"
+.TH rxvt 7 "2005-02-14" "" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -1681,9 +1681,12 @@ access the current menuBar for alteration
 .IX Item "[title:+string]"
 set the current menuBar's title to \fIstring\fR, which may contain the
 following format specifiers:
-\&\fB%%\fR : literal \fB%\fR character
-\&\fB%n\fR : rxvt name (as per the \fB\-name\fR command-line option)
-\&\fB%v\fR : rxvt version
+.Sp
+.Vb 3
+\&   B<%n>  rxvt name (as per the B<-name> command-line option)
+\&   B<%v>  rxvt version
+\&   B<%%>  literal B<%> character
+.Ve
 .IP "\fB[done]\fR" 4
 .IX Item "[done]"
 set menuBar access as \fBreadonly\fR.
@@ -2224,14 +2227,17 @@ where accents are encoded as seperate unicode characters. This is
 done by using precomposited characters when available or creating
 new pseudo-characters when no precomposed form exists.
 .Sp
-Without \-\-enable\-unicode3, the number of additional precomposed
-characters is rather limited (2048, if this is full, rxvt will use the
+Without \-\-enable\-unicode3, the number of additional precomposed characters
+is rather limited (2048, if this is full, rxvt-unicode will use the
 private use area, extending the number of combinations to 8448). With
-\&\-\-enable\-unicode3, no practical limit exists. This will also enable
-storage of characters >65535.
+\&\-\-enable\-unicode3, no practical limit exists.
+.Sp
+This option will also enable storage (but not display) of characters
+beyond plane 0 (>65535) when \-\-enable\-unicode3 was not specified.
 .Sp
 The combining table also contains entries for arabic presentation forms,
-but these are not currently used. Bug me if you want these to be used.
+but these are not currently used. Bug me if you want these to be used (and
+tell me how these are to be used...).
 .IP "\-\-enable\-fallback(=CLASS)" 4
 .IX Item "--enable-fallback(=CLASS)"
 When reading resource settings, also read settings for class \s-1CLASS\s0

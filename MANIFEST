@@ -10,18 +10,16 @@ configure
 reconf
 genac
 
-doc/etc/XTerm.ad
-doc/etc/rclock
-doc/etc/rxvt.termcap
 doc/etc/rxvt-unicode.terminfo
+doc/etc/rxvt-unicode.termcap
 doc/menu/example.menu
 doc/menu/jedmenu.sl
 doc/menu/menu
 doc/menu/rxvt.menu
 doc/menu/rxvt.zh-menu
 doc/menu/terminal.menu
+
 doc/.cvsignore
-doc/LSM.in
 doc/Makefile.in
 doc/README.menu
 doc/README.xvt

@@ -1216,8 +1216,11 @@ menuBar
 
     [title:+*string*]
         set the current menuBar's title to *string*, which may contain the
-        following format specifiers: %% : literal % character %n : rxvt name
-        (as per the -name command-line option) %v : rxvt version
+        following format specifiers:
+
+           B<%n>  rxvt name (as per the B<-name> command-line option)
+           B<%v>  rxvt version
+           B<%%>  literal B<%> character
 
     [done]
         set menuBar access as readonly. End-of-file tag for [read:+*file*]
@@ -1703,14 +1706,16 @@ CONFIGURE OPTIONS
         pseudo-characters when no precomposed form exists.
 
         Without --enable-unicode3, the number of additional precomposed
-        characters is rather limited (2048, if this is full, rxvt will use
-        the private use area, extending the number of combinations to 8448).
-        With --enable-unicode3, no practical limit exists. This will also
-        enable storage of characters >65535.
+        characters is rather limited (2048, if this is full, rxvt-unicode
+        will use the private use area, extending the number of combinations
+        to 8448). With --enable-unicode3, no practical limit exists.
+
+        This option will also enable storage (but not display) of characters
+        beyond plane 0 (>65535) when --enable-unicode3 was not specified.
 
         The combining table also contains entries for arabic presentation
         forms, but these are not currently used. Bug me if you want these to
-        be used.
+        be used (and tell me how these are to be used...).
 
     --enable-fallback(=CLASS)
         When reading resource settings, also read settings for class CLASS

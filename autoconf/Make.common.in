@@ -1,26 +1,12 @@
 # autoconf/Make.common.in	 -*- Makefile -*-
-# release date (man), LSM date, version number/name, current maintainer
+# release date (man), version number/name
 DATE=@DATE@
-LSMDATE=@LSMDATE@
 VERSION=@VERSION@
-VERNAME=rxvt-unicode-$(VERSION)
-MAINT=Marc A. Lehmann
-MAINTEMAIL=rxvt@schmorp.de
-WEBMAINT=Marc A. Lehmann
-WEBMAINTEMAIL=rxvt@schmorp.de
-WEBPAGE=http://software.schmorp.de/#rxvt-unicode
 
 #-------------------------------------------------------------------------
 RXVTNAME=@RXVTNAME@
 
 SHELL = /bin/sh
-
-# This variable makes it possible to move the installation root to another
-# directory. This is useful when you're creating a binary distribution
-# If empty, normal root will be used.
-# You can run eg. 'make install DESTDIR=/packages/rxvt-xx' to accomplish
-# that.
-# DESTDIR = /usr/local/X11/$(VERNAME)
 
 # Installation target directories & other installation stuff
 prefix = @prefix@

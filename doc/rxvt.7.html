@@ -1779,9 +1779,12 @@ access the current menuBar for alteration
 <dd>
 set the current menuBar's title to <em>string</em>, which may contain the
 following format specifiers:
-<strong>%%</strong> : literal <strong>%</strong> character
-<strong>%n</strong> : rxvt name (as per the <strong>-name</strong> command-line option)
-<strong>%v</strong> : rxvt version
+</dd>
+<dd>
+<pre>
+   B&lt;%n&gt;  rxvt name (as per the B&lt;-name&gt; command-line option)
+   B&lt;%v&gt;  rxvt version
+   B&lt;%%&gt;  literal B&lt;%&gt; character</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item__5bdone_5d"><strong>[done]</strong></a></strong><br />
@@ -2574,15 +2577,19 @@ done by using precomposited characters when available or creating
 new pseudo-characters when no precomposed form exists.
 </dd>
 <dd>
-<p>Without --enable-unicode3, the number of additional precomposed
-characters is rather limited (2048, if this is full, rxvt will use the
+<p>Without --enable-unicode3, the number of additional precomposed characters
+is rather limited (2048, if this is full, rxvt-unicode will use the
 private use area, extending the number of combinations to 8448). With
---enable-unicode3, no practical limit exists. This will also enable
-storage of characters &gt;65535.</p>
+--enable-unicode3, no practical limit exists.</p>
+</dd>
+<dd>
+<p>This option will also enable storage (but not display) of characters
+beyond plane 0 (&gt;65535) when --enable-unicode3 was not specified.</p>
 </dd>
 <dd>
 <p>The combining table also contains entries for arabic presentation forms,
-but these are not currently used. Bug me if you want these to be used.</p>
+but these are not currently used. Bug me if you want these to be used (and
+tell me how these are to be used...).</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_fallback">--enable-fallback(=CLASS)</a></strong><br />

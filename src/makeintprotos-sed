@@ -1,5 +1,4 @@
 # Get prototypes from a .c file
-# $Id: makeintprotos-sed,v 1.2 2003/11/24 17:31:27 pcg Exp $
 # /* INTPROTO */   must be above return type which are above function.
 #		Args are on one line
 # eg.

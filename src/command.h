@@ -1,5 +1,5 @@
 /*
- * $Id: command.h,v 1.14 2004/08/15 00:37:04 root Exp $
+ * command.h
  */
 
 #ifndef COMMAND_H_

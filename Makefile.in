@@ -1,6 +1,7 @@
 # ./Makefile.in			-*- Makefile -*-
-# $Id: Makefile.in,v 1.10 2005/02/02 08:09:23 root Exp $
 @MCOMMON@
+
+VERNAME = rxvt-unicode-$(VERSION)
 
 srcdir =	@srcdir@
 VPATH =		@srcdir@
