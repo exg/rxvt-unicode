@@ -2696,6 +2696,10 @@ rxvt_term::process_csi_seq ()
             case 8:			/* unofficial extension */
               xterm_seq (XTerm_title, APL_NAME "-" VERSION, CHAR_ST);
               break;
+
+            case XTerm_locale:		/* unofficial extension */
+              tt_printf ("%-.250s\n", locale);
+              break;
           }
         break;
 
