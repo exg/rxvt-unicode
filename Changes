@@ -1,3 +1,6 @@
+1.6
+	- nothing yet
+
 1.5  Thu Jan 29 00:43:48 CET 2004
 	- share io manager between rxvt-unicode and vpe
         - bugfix for --disable-utmp, reported by fefe himself
