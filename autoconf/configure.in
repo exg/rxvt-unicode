@@ -78,7 +78,6 @@ AC_PROG_LIBTOOL()dnl#		libtool
 MALLOC_TYPE=S
 support_addstrings=no
 support_frills=no
-support_linespace=no
 support_inheritpixmap=no
 support_tinting=no
 support_fading=no
@@ -124,7 +123,6 @@ AC_ARG_ENABLE(everything,
   [if test x$enableval = xyes; then
     support_24bit=yes
     support_frills=yes
-    support_linespace=yes
     support_inheritpixmap=yes
     support_tinting=yes
     support_fading=yes
@@ -358,12 +356,6 @@ AC_ARG_ENABLE(frills,
   [  --enable-frills         enable support for rarely used features],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_frills=$enableval
-  fi])
-
-AC_ARG_ENABLE(linespace,
-  [  --enable-linespace      enable support for linespace],
-  [if test x$enableval = xyes -o x$enableval = xno; then
-    support_linespace=$enableval
   fi])
 
 AC_ARG_ENABLE(24bit,
@@ -1234,9 +1226,6 @@ if test x$support_menubar = xyes; then
 fi
 if test x$support_frills = xyes; then
   AC_DEFINE(ENABLE_FRILLS, 1, Define if you want handling for rarely used but handy features)
-fi
-if test x$support_linespace = xno; then
-  AC_DEFINE(NO_LINESPACE, 1, Define if you don't want support linespace)
 fi
 if test x$support_24bit = xyes; then
   AC_DEFINE(PREFER_24BIT, 1, Define to use a 24 bit visual if the screen has 24 bit mode, even if the default is 8 bit)
