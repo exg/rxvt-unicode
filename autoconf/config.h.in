@@ -109,6 +109,9 @@
 /* Define if you have the updwtmp function.  */
 #undef HAVE_UPDWTMP
 
+/* Define if you have the updwtmpx function.  */
+#undef HAVE_UPDWTMPX
+
 /* Define if you have the <X11/Xft/Xft.h> header file.  */
 #undef HAVE_X11_XFT_XFT_H
 
@@ -267,6 +270,9 @@
 
 /* Define if struct utmpx contains ut_host */
 #undef HAVE_UTMPX_HOST
+
+/* Define if struct utmpx contains ut_session */
+#undef HAVE_UTMPX_SESSION
 
 /* Define if utmp.h or lastlog.h has struct lastlog */
 #undef HAVE_STRUCT_LASTLOG

@@ -139,7 +139,9 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
   strncpy (utx->ut_user, (pwent && pwent->pw_name) ? pwent->pw_name : "?",
           sizeof (utx->ut_user));
   strncpy (utx->ut_id, ut_id, sizeof (utx->ut_id));
+# if HAVE_UTMPX_SESSION
   utx->ut_session = getsid (0);
+# endif
   utx->ut_tv.tv_sec = time (NULL);
   utx->ut_tv.tv_usec = 0;
   utx->ut_pid = cmd_pid;
@@ -210,7 +212,9 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
 #  endif
 # endif
 # ifdef HAVE_STRUCT_UTMPX
+#  if HAVE_UPDWTMPX
       updwtmpx (RXVT_WTMPX_FILE, utx);
+#  endif
 # endif
     }
 #endif
@@ -264,7 +268,9 @@ rxvt_term::cleanutent ()
   if ((tmputx = getutxid (utx)))	/* position to entry in utmp file */
     utx = tmputx;
   utx->ut_type = DEAD_PROCESS;
+# if HAVE_UTMPX_SESSION
   utx->ut_session = getsid (0);
+# endif
   utx->ut_tv.tv_sec = time (NULL);
   utx->ut_tv.tv_usec = 0;
 #endif
@@ -285,7 +291,9 @@ rxvt_term::cleanutent ()
 #  endif
 # endif
 # ifdef HAVE_STRUCT_UTMPX
+#  if HAVE_UPDWTMPX
       updwtmpx (RXVT_WTMPX_FILE, utx);
+#  endif
 # endif
     }
 #endif

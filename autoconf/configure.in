@@ -709,6 +709,7 @@ AC_CHECK_FUNCS( \
 	on_exit \
 	nanosleep \
 	updwtmp \
+	updwtmpx \
 	ttyslot \
 )
 dnl# Note: On NetBSD, openpty() exists in libutil.  Don't pull it in
@@ -761,8 +762,16 @@ AC_CACHE_CHECK(for host in utmpx struct, rxvt_cv_struct_utmpx_host,
 if test x$rxvt_cv_struct_utmpx_host = xyes; then
   AC_DEFINE(HAVE_UTMPX_HOST, 1, Define if struct utmpx contains ut_host)
 fi
-) dnl# AC_CHECK_HEADER(utmpx.h
 
+AC_CACHE_CHECK(for session in utmpx struct, rxvt_cv_struct_utmpx_session,
+[AC_TRY_COMPILE([#include <sys/types.h>
+#include <utmpx.h>],
+[struct utmpx utx; utx.ut_session;],
+rxvt_cv_struct_utmpx_session=yes, rxvt_cv_struct_utmpx_session=no)])
+if test x$rxvt_cv_struct_utmpx_session = xyes; then
+  AC_DEFINE(HAVE_UTMPX_SESSION, 1, Define if struct utmpx contains ut_session)
+fi
+) dnl# AC_CHECK_HEADER(utmpx.h
 
 dnl# --------------------------------------------------------------------------
 dnl# check for struct lastlog
