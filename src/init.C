@@ -404,12 +404,6 @@ rxvt_term::init_vars ()
   refresh_limit = 1;
   refresh_type = SLOW_REFRESH;
   prev_nrow = prev_ncol = 0;
-#ifdef MULTICHAR_SET
-# ifdef MULTICHAR_ENCODING
-  encoding_method = MULTICHAR_ENCODING;
-# endif
-  multichar_decode = rxvt_euc2jis;
-#endif
 
   oldcursor.row = oldcursor.col = -1;
 #ifdef XPM_BACKGROUND
@@ -1258,7 +1252,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
       XStoreName (display->display, menuBar.win, "menubar");
 #endif
 
-      XDefineCursor (display->display, menuBar.win, pointer_leftptr);
+      XDefineCursor (display->display, menuBar.win,
+                     XCreateFontCursor (display->display, XC_left_ptr));
 
       XSelectInput (display->display, menuBar.win,
                    (ExposureMask | ButtonPressMask | ButtonReleaseMask

@@ -1165,9 +1165,9 @@ struct rxvt_term : rxvt_vars {
   void lookup_key (XKeyEvent &ev);
   unsigned int cmd_write (const unsigned char *str, unsigned int count);
   uint32_t cmd_getc ();
-  void mouse_report (const XButtonEvent &ev);
-  void button_press (const XButtonEvent &ev);
-  void button_release (const XButtonEvent &ev);
+  void mouse_report (XButtonEvent &ev);
+  void button_press (XButtonEvent &ev);
+  void button_release (XButtonEvent &ev);
   int check_our_parents ();
 #ifdef PRINTPIPE
   FILE *popen_printer ();
@@ -1212,19 +1212,19 @@ struct rxvt_term : rxvt_vars {
   int action_dispatch (action_t *action);
   void menuarrow_free (char name);
   void menuarrow_add (char *string);
-  char * menu_find_base (menu_t **menu, char *path);
-  menu_t * menu_delete (menu_t *menu);
-  menu_t * menu_add (menu_t *parent, char *path);
+  char *menu_find_base (menu_t **menu, char *path);
+  menu_t *menu_delete (menu_t *menu);
+  menu_t *menu_add (menu_t *parent, char *path);
   void drawbox_menubar (int x, int len, int state);
   void drawtriangle (int x, int y, int state);
   void drawbox_menuitem (int y, int state);
   void menu_show ();
-  void menu_display (void (*update) (rxvt_t *));
+  void menu_display (void (rxvt_term::*update) ());
   void menu_hide_all ();
   void menu_hide ();
   void menu_clear (menu_t *menu);
   void menubar_clear ();
-  bar_t * menubar_find (const char *name);
+  bar_t *menubar_find (const char *name);
   int menubar_push (const char *name);
   void menubar_remove (const char *name);
   void menubar_dump (FILE *fp);
@@ -1233,9 +1233,9 @@ struct rxvt_term : rxvt_vars {
   void draw_Arrows (int name, int state);
   void menubar_expose ();
   int menubar_mapping (int map);
-  int menu_select (XButtonEvent *ev);
-  void menubar_select (XButtonEvent *ev);
-  void menubar_control (XButtonEvent *ev);
+  int menu_select (XButtonEvent &ev);
+  void menubar_select (XButtonEvent &ev);
+  void menubar_control (XButtonEvent &ev);
   void map_menuBar (int map);
 #endif
 

@@ -82,7 +82,7 @@ rxvt_term::rxvt_term ()
     scrollbar_ev (this, &rxvt_term::x_cb),
 #endif
 #ifdef MENUBAR
-    menubar_ev (this, &rxvt_term::x_cb), fixme
+    menubar_ev (this, &rxvt_term::x_cb),
 #endif
 #ifdef CURSOR_BLINK
     cursor_blink_ev (this, &rxvt_term::cursor_blink_cb),
@@ -274,7 +274,7 @@ rxvt_term::init (int argc, const char *const *argv)
     resize_scrollbar ();      /* create and map scrollbar */
 #endif
 #if (MENUBAR_MAX)
-  if (menubar_visible (r))
+  if (menubar_visible ())
     XMapWindow (display->display, menuBar.win);
 #endif
 #ifdef TRANSPARENT

@@ -330,7 +330,7 @@ rxvt_term::menuarrow_add (char *string)
       if (!parse[i].len)
         continue;
 
-      str = rxvt_malloc (parse[i].len + xtra_len + 1);
+      str = (unsigned char *) rxvt_malloc (parse[i].len + xtra_len + 1);
 
       len = 0;
       if (beg.len)
@@ -408,7 +408,7 @@ rxvt_menuitem_add (menu_t *menu, const char *name, const char *name2, const char
   item->name2 = NULL;
 
   len = STRLEN (name);
-  item->name = rxvt_malloc (len + 1);
+  item->name = (char *)rxvt_malloc (len + 1);
   STRCPY (item->name, name);
   if (name[0] == '.' && name[1] != '.')
     len = 0;		/* hidden menu name */
@@ -436,7 +436,7 @@ Item_Found:
         item->name2 = NULL;
       else
         {
-          item->name2 = rxvt_malloc (len + 1);
+          item->name2 = (char *)rxvt_malloc (len + 1);
           STRCPY (item->name2, name2);
         }
       item->len2 = len;
@@ -451,7 +451,7 @@ Item_Found:
     }
   if (len)
     {
-      unsigned char  *str = rxvt_malloc (len + 1);
+      unsigned char *str = (unsigned char *)rxvt_malloc (len + 1);
 
       STRCPY (str, action);
 
@@ -675,7 +675,7 @@ rxvt_term::menu_add (menu_t *parent, char *path)
   menu->width = 0;
   menu->parent = parent;
   menu->len = STRLEN (path);
-  menu->name = rxvt_malloc ((menu->len + 1));
+  menu->name = (char *)rxvt_malloc ((menu->len + 1));
   STRCPY (menu->name, path);
 
   /* initialize head/tail */
@@ -1005,40 +1005,19 @@ rxvt_term::menu_show ()
             name = NULL;
 
           if (len && name)
-            {
-#ifdef USE_XIM
-              if (TermWin.fontset)
-                XmbDrawString (display->display,
-                              ActiveMenu->win, TermWin.fontset,
-                              gc, xoff,
-                              2 * SHADOW + y + TermWin.font->ascent + 1,
-                              name, len);
-              else
-#endif
-                XDrawString (display->display, ActiveMenu->win, gc, xoff,
-                            2 * SHADOW + y + TermWin.font->ascent + 1,
-                            name, len);
-            }
+            draw_string (display->display, ActiveMenu->win, gc, xoff,
+                         2 * SHADOW + y + TermWin.font->ascent + 1,
+                         name, len);
 
           len = item->len2;
           name = item->name2;
+
           if (len && name)
-            {
-#ifdef USE_XIM
-              if (TermWin.fontset)
-                XmbDrawString (display->display,
-                              ActiveMenu->win, TermWin.fontset,
-                              gc,
-                              ActiveMenu->w - (xoff + Width2Pixel (xright)),
-                              2 * SHADOW + y + TermWin.font->ascent + 1,
-                              name, len);
-              else
-#endif
-                XDrawString (display->display, ActiveMenu->win, gc,
-                            ActiveMenu->w - (xoff + Width2Pixel (xright)),
-                            2 * SHADOW + y + TermWin.font->ascent + 1,
-                            name, len);
-            }
+            draw_string (display->display, ActiveMenu->win, gc,
+                         ActiveMenu->w - (xoff + Width2Pixel (xright)),
+                         2 * SHADOW + y + TermWin.font->ascent + 1,
+                         name, len);
+
           h = HEIGHT_TEXT + 2 * SHADOW;
         }
       y += h;
@@ -1046,7 +1025,7 @@ rxvt_term::menu_show ()
 }
 
 void
-rxvt_term::menu_display (void (*update) (rxvt_t *))
+rxvt_term::menu_display (void (rxvt_term::*update) ())
 {
   menu_t         *ActiveMenu = ActiveMenu;
 
@@ -1060,19 +1039,19 @@ rxvt_term::menu_display (void (*update) (rxvt_t *))
   if (ActiveMenu->parent == NULL)
     drawbox_menubar (ActiveMenu->x, ActiveMenu->len, +1);
   ActiveMenu = ActiveMenu->parent;
-  update (r);
+  (this->*update) ();
 }
 
 void
 rxvt_term::menu_hide_all ()
 {
-  menu_display (rxvt_menu_hide_all);
+  menu_display (&rxvt_term::menu_hide_all);
 }
 
 void
 rxvt_term::menu_hide ()
 {
-  menu_display (rxvt_menu_show);
+  menu_display (&rxvt_term::menu_show);
 }
 
 void
@@ -1578,7 +1557,7 @@ rxvt_term::menubar_dispatch (char *str)
   int             n, cmd;
   char           *path, *name, *name2;
 
-  if (menubar_visible (r) && ActiveMenu != NULL)
+  if (menubar_visible () && ActiveMenu != NULL)
     menubar_expose ();
   else
     ActiveMenu = NULL;
@@ -1676,8 +1655,7 @@ rxvt_term::menubar_dispatch (char *str)
                   {
                     if (*str)
                       {
-                        name = rxvt_realloc (CurrentBar->title,
-                                            STRLEN (str) + 1);
+                        name = (char *)rxvt_realloc (CurrentBar->title, STRLEN (str) + 1);
                         if (name != NULL)
                           {
                             STRCPY (name, str);
@@ -2015,7 +1993,7 @@ rxvt_term::menubar_expose ()
   menu_t         *menu;
   int             x;
 
-  if (!menubar_visible (r) || menuBar.win == 0)
+  if (!menubar_visible () || menuBar.win == 0)
     return;
 
   if (menubarGC == None)
@@ -2055,18 +2033,9 @@ rxvt_term::menubar_expose ()
             len = (TermWin.ncol - (menu->x + HSPACE));
 
           drawbox_menubar (menu->x, len, +1);
-#ifdef USE_XIM
-          if (TermWin.fontset)
-            XmbDrawString (display->display,
-                          menuBar.win, TermWin.fontset,
-                          menubarGC,
-                          (Width2Pixel (menu->x) + Width2Pixel (HSPACE) / 2),
-                          menuBar_height () - SHADOW, menu->name, len);
-          else
-#endif
-            XDrawString (display->display, menuBar.win, menubarGC,
-                        (Width2Pixel (menu->x) + Width2Pixel (HSPACE) / 2),
-                        menuBar_height () - SHADOW, menu->name, len);
+          draw_string (display->display, menuBar.win, menubarGC,
+                       (Width2Pixel (menu->x) + Width2Pixel (HSPACE) / 2),
+                       menuBar_height () - SHADOW, menu->name, len);
 
           if (x >= TermWin.ncol)
             break;
@@ -2127,20 +2096,9 @@ rxvt_term::menubar_expose ()
 
       ncol -= (x + len + HSPACE);
       if (len > 0 && ncol >= 0)
-        {
-#ifdef USE_XIM
-          if (TermWin.fontset)
-            XmbDrawString (display->display,
-                          menuBar.win, TermWin.fontset,
-                          menubarGC,
-                          Width2Pixel (x) + Width2Pixel (ncol + HSPACE) / 2,
-                          menuBar_height () - SHADOW, title, len);
-          else
-#endif
-            XDrawString (display->display, menuBar.win, menubarGC,
-                        Width2Pixel (x) + Width2Pixel (ncol + HSPACE) / 2,
-                        menuBar_height () - SHADOW, title, len);
-        }
+        draw_string (display->display, menuBar.win, menubarGC,
+                     Width2Pixel (x) + Width2Pixel (ncol + HSPACE) / 2,
+                     menuBar_height () - SHADOW, title, len);
     }
 }
 
@@ -2149,7 +2107,7 @@ rxvt_term::menubar_mapping (int map)
 {
   int             change = 0;
 
-  if (map && !menubar_visible (r))
+  if (map && !menubar_visible ())
     {
       menuBar.state = 1;
       if (menuBar.win == 0)
@@ -2157,7 +2115,7 @@ rxvt_term::menubar_mapping (int map)
       XMapWindow (display->display, menuBar.win);
       change = 1;
     }
-  else if (!map && menubar_visible (r))
+  else if (!map && menubar_visible ())
     {
       menubar_expose ();
       menuBar.state = 0;
@@ -2171,7 +2129,7 @@ rxvt_term::menubar_mapping (int map)
 }
 
 int
-rxvt_term::menu_select (XButtonEvent *ev)
+rxvt_term::menu_select (XButtonEvent &ev)
 {
   menuitem_t     *thisitem, *item = NULL;
   int             this_y, y;
@@ -2187,16 +2145,16 @@ rxvt_term::menu_select (XButtonEvent *ev)
   XQueryPointer (display->display, ActiveMenu->win,
                 &unused_root, &unused_child,
                 &unused_root_x, &unused_root_y,
-                & (ev->x), & (ev->y), &unused_mask);
+                &ev.x, &ev.y, &unused_mask);
 
-  if (ActiveMenu->parent != NULL && (ev->x < 0 || ev->y < 0))
+  if (ActiveMenu->parent != NULL && (ev.x < 0 || ev.y < 0))
     {
       menu_hide ();
       return 1;
     }
   /* determine the menu item corresponding to the Y index */
   y = SHADOW;
-  if (ev->x >= 0 && ev->x <= (ActiveMenu->w - SHADOW))
+  if (ev.x >= 0 && ev.x <= (ActiveMenu->w - SHADOW))
     {
       for (item = ActiveMenu->head; item != NULL; item = item->next)
         {
@@ -2204,12 +2162,12 @@ rxvt_term::menu_select (XButtonEvent *ev)
 
           if (isSeparator (item->name))
             h = HEIGHT_SEPARATOR;
-          else if (ev->y >= y && ev->y < (y + h))
+          else if (ev.y >= y && ev.y < (y + h))
             break;
           y += h;
         }
     }
-  if (item == NULL && ev->type == ButtonRelease)
+  if (item == NULL && ev.type == ButtonRelease)
     {
       menu_hide_all ();
       return 0;
@@ -2244,7 +2202,7 @@ rxvt_term::menu_select (XButtonEvent *ev)
         }
       else
         {
-          switch (ev->type)
+          switch (ev.type)
             {
               case ButtonRelease:
                 switch (item->entry.type)
@@ -2256,7 +2214,7 @@ rxvt_term::menu_select (XButtonEvent *ev)
 
                     case MenuAction:
                     case MenuTerminalAction:
-                      drawbox_menuitem (_y, -1);
+                      drawbox_menuitem (this_y, -1);
                       {
 #ifdef HAVE_NANOSLEEP
                         struct timespec rqt;
@@ -2308,7 +2266,7 @@ DoMenu:
 
           drawtriangle (ActiveMenu->w, y, -1);
 
-          x = ev->x + (ActiveMenu->parent
+          x = ev.x + (ActiveMenu->parent
                        ? ActiveMenu->x
                        : Width2Pixel (ActiveMenu->x));
 
@@ -2324,37 +2282,37 @@ DoMenu:
 }
 
 void
-rxvt_term::menubar_select (XButtonEvent *ev)
+rxvt_term::menubar_select (XButtonEvent &ev)
 {
   menu_t         *menu = NULL;
 
   /* determine the pulldown menu corresponding to the X index */
-  if (ev->y >= 0 && ev->y <= menuBar_height () && CurrentBar != NULL)
+  if (ev.y >= 0 && ev.y <= menuBar_height () && CurrentBar != NULL)
     {
       for (menu = CurrentBar->head; menu != NULL; menu = menu->next)
         {
           int             x = Width2Pixel (menu->x);
           int             w = Width2Pixel (menu->len + HSPACE);
 
-          if ((ev->x >= x && ev->x < x + w))
+          if ((ev.x >= x && ev.x < x + w))
             break;
         }
     }
-  switch (ev->type)
+  switch (ev.type)
     {
       case ButtonRelease:
         menu_hide_all ();
         break;
 
       case ButtonPress:
-        if (menu == NULL && Arrows_x && ev->x >= Arrows_x)
+        if (menu == NULL && Arrows_x && ev.x >= Arrows_x)
           {
             int             i;
 
             for (i = 0; i < NARROWS; i++)
               {
-                if (ev->x >= (Arrows_x + (Width2Pixel (4 * i + i)) / 4)
-                    && ev->x < (Arrows_x
+                if (ev.x >= (Arrows_x + (Width2Pixel (4 * i + i)) / 4)
+                    && ev.x < (Arrows_x
                                 + (Width2Pixel (4 * i + i + 4)) / 4))
                   {
                     draw_Arrows (Arrows[i].name, -1);
@@ -2394,10 +2352,7 @@ rxvt_term::menubar_select (XButtonEvent *ev)
                                 CurrentBar->arrows[i].str);
                       }
 #else				/* DEBUG_MENUARROWS */
-                    if (CurrentBar == NULL
-                        || rxvt_action_dispatch (r,
-                                                & (CurrentBar->arrows[i]))
-                       )
+                    if (CurrentBar == NULL || action_dispatch (&CurrentBar->arrows[i]))
                       {
                         if (Arrows[i].str != NULL && Arrows[i].str[0] != 0)
                           tt_write ((Arrows[i].str + 1),
@@ -2429,29 +2384,29 @@ rxvt_term::menubar_select (XButtonEvent *ev)
  * it would be nice to have `sticky' menus
  */
 void
-rxvt_term::menubar_control (XButtonEvent *ev)
+rxvt_term::menubar_control (XButtonEvent &ev)
 {
-  switch (ev->type)
+  switch (ev.type)
     {
       case ButtonPress:
-        if (ev->button == Button1)
+        if (ev.button == Button1)
           menubar_select (ev);
         break;
 
       case ButtonRelease:
-        if (ev->button == Button1)
+        if (ev.button == Button1)
           menu_select (ev);
         break;
 
       case MotionNotify:
         while (XCheckTypedWindowEvent (display->display, TermWin.parent[0],
-                                      MotionNotify, (XEvent *) ev)) ;
+                                      MotionNotify, (XEvent *)&ev)) ;
 
         if (ActiveMenu)
           while (menu_select (ev)) ;
         else
-          ev->y = -1;
-        if (ev->y < 0)
+          ev.y = -1;
+        if (ev.y < 0)
           {
             Window          unused_root, unused_child;
             int             unused_root_x, unused_root_y;
@@ -2460,7 +2415,7 @@ rxvt_term::menubar_control (XButtonEvent *ev)
             XQueryPointer (display->display, menuBar.win,
                           &unused_root, &unused_child,
                           &unused_root_x, &unused_root_y,
-                          & (ev->x), & (ev->y), &unused_mask);
+                          &ev.x, &ev.y, &unused_mask);
             menubar_select (ev);
           }
         break;

@@ -1006,10 +1006,10 @@ rxvt_term::pointer_cb (time_watcher &w)
 #endif
 
 void
-rxvt_term::mouse_report (const XButtonEvent &ev)
+rxvt_term::mouse_report (XButtonEvent &ev)
 {
-  int             button_number, key_state = 0;
-  int             x, y;
+  int button_number, key_state = 0;
+  int x, y;
 
   x = ev.x;
   y = ev.y;
@@ -1424,7 +1424,7 @@ rxvt_term::x_cb (XEvent &ev)
 #if MENUBAR
         if (isMenuBarWindow (ev.xany.window))
           {
-            menubar_control (& (ev.xbutton));
+            menubar_control (ev.xbutton);
             break;
           }
 #endif
@@ -1563,7 +1563,7 @@ rxvt_term::rootwin_cb (XEvent &ev)
 }
 
 void
-rxvt_term::button_press (const XButtonEvent &ev)
+rxvt_term::button_press (XButtonEvent &ev)
 {
   int reportmode = 0, clickintime;
 
@@ -1801,7 +1801,7 @@ rxvt_term::button_press (const XButtonEvent &ev)
 }
 
 void
-rxvt_term::button_release (const XButtonEvent &ev)
+rxvt_term::button_release (XButtonEvent &ev)
 {
   int reportmode = 0;
 
