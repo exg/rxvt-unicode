@@ -357,7 +357,7 @@ rxvt_term::init (int argc, const char *const *argv)
 
   scr_reset ();         /* initialize screen */
 
-#if 1
+#if 0
   XSynchronize (display->display, True);
 #endif
 
