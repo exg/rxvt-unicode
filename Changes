@@ -19,6 +19,7 @@
         - removed greek support.
         - allow NUL bytes (ctrl-@) to be entered even with XIM enabled.
         - correct cursor width if !focus.
+        - fixed --enable-xgetdefault, reported by eduard bloch.
         - many other minor bugfixes.
 
 1.8  Mon Feb  2 20:09:18 CET 2004
