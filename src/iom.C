@@ -41,19 +41,20 @@
 // time watcher is _always_ valid, this gets rid of a lot
 // of null-pointer-checks
 // (must come _before_ iom is being defined)
-static struct tw0 : time_watcher {
-  void cb (time_watcher &w)
+static struct tw0 : time_watcher
   {
-    // should never get called
-    // reached end-of-time, or tstamp has a bogus definition,
-    // or compiler initilization order broken, or somethine else :)
-    abort ();
-  }
+    void cb (time_watcher &w)
+    {
+      // should never get called
+      // reached end-of-time, or tstamp has a bogus definition,
+      // or compiler initilization order broken, or somethine else :)
+      abort ();
+    }
 
-  tw0()
-  : time_watcher (this, &tw0::cb)
-  { }
-} tw0;
+    tw0()
+        : time_watcher (this, &tw0::cb)
+    { }}
+tw0;
 
 tstamp NOW;
 static bool iom_valid;
@@ -101,7 +102,7 @@ void io_manager::unreg (time_watcher *w) { unreg (w, tw); }
 #endif
 
 #if IOM_IO
-void io_manager::reg (io_watcher *w) { reg (w, iow); } 
+void io_manager::reg (io_watcher *w) { reg (w, iow); }
 void io_manager::unreg (io_watcher *w) { unreg (w, iow); }
 #endif
 
@@ -146,6 +147,7 @@ void io_manager::loop ()
         }
       else
 #endif
+
         {
 #if IOM_TIME
           time_watcher *next;
@@ -178,6 +180,7 @@ void io_manager::loop ()
                 }
             }
 #endif
+
         }
 
 #if IOM_CHECK
@@ -259,6 +262,7 @@ void io_manager::loop ()
 #else
       break;
 #endif
+
     }
 }
 

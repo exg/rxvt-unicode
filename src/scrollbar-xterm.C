@@ -34,50 +34,52 @@ const unsigned char x_stp_bits[] = { 0xaa, 0x55 };
 int
 rxvt_term::scrollbar_show_xterm (int update __attribute__((unused)), int last_top, int last_bot, int scrollbar_len)
 {
-    int             xsb = 0;
-    int             sbwidth = scrollBar.width - 1;
+  int             xsb = 0;
+  int             sbwidth = scrollBar.width - 1;
 
-    if ((scrollBar.init & R_SB_XTERM) == 0) {
-	XGCValues       gcvalue;
+  if ((scrollBar.init & R_SB_XTERM) == 0)
+    {
+      XGCValues       gcvalue;
 
-	scrollBar.init |= R_SB_XTERM;
-	gcvalue.stipple = XCreateBitmapFromData(Xdisplay, scrollBar.win,
-						(char *)x_stp_bits, x_stp_width,
-						x_stp_height);
-	if (!gcvalue.stipple) {
-	    rxvt_print_error("can't create bitmap");
-	    exit(EXIT_FAILURE);
-	}
-	gcvalue.fill_style = FillOpaqueStippled;
-	gcvalue.foreground = PixColors[Color_fg];
-	gcvalue.background = PixColors[Color_bg];
+      scrollBar.init |= R_SB_XTERM;
+      gcvalue.stipple = XCreateBitmapFromData(Xdisplay, scrollBar.win,
+                                              (char *)x_stp_bits, x_stp_width,
+                                              x_stp_height);
+      if (!gcvalue.stipple)
+        {
+          rxvt_print_error("can't create bitmap");
+          exit(EXIT_FAILURE);
+        }
+      gcvalue.fill_style = FillOpaqueStippled;
+      gcvalue.foreground = PixColors[Color_fg];
+      gcvalue.background = PixColors[Color_bg];
 
-	xscrollbarGC = XCreateGC(Xdisplay, scrollBar.win,
-			         GCForeground | GCBackground
-			         | GCFillStyle | GCStipple, &gcvalue);
-	gcvalue.foreground = PixColors[Color_border];
-	ShadowGC = XCreateGC(Xdisplay, scrollBar.win, GCForeground, &gcvalue);
+      xscrollbarGC = XCreateGC(Xdisplay, scrollBar.win,
+                               GCForeground | GCBackground
+                               | GCFillStyle | GCStipple, &gcvalue);
+      gcvalue.foreground = PixColors[Color_border];
+      ShadowGC = XCreateGC(Xdisplay, scrollBar.win, GCForeground, &gcvalue);
     }
-/* instead of XClearWindow (Xdisplay, scrollBar.win); */
-    xsb = (Options & Opt_scrollBar_right) ? 1 : 0;
-    if (last_top < scrollBar.top)
-	XClearArea(Xdisplay, scrollBar.win,
-		   sb_shadow + xsb, last_top,
-		   sbwidth, (scrollBar.top - last_top), False);
+  /* instead of XClearWindow (Xdisplay, scrollBar.win); */
+  xsb = (Options & Opt_scrollBar_right) ? 1 : 0;
+  if (last_top < scrollBar.top)
+    XClearArea(Xdisplay, scrollBar.win,
+               sb_shadow + xsb, last_top,
+               sbwidth, (scrollBar.top - last_top), False);
 
-    if (scrollBar.bot < last_bot)
-	XClearArea(Xdisplay, scrollBar.win,
-		   sb_shadow + xsb, scrollBar.bot,
-		   sbwidth, (last_bot - scrollBar.bot), False);
+  if (scrollBar.bot < last_bot)
+    XClearArea(Xdisplay, scrollBar.win,
+               sb_shadow + xsb, scrollBar.bot,
+               sbwidth, (last_bot - scrollBar.bot), False);
 
-/* scrollbar slider */
-    XFillRectangle(Xdisplay, scrollBar.win, xscrollbarGC,
-		   xsb + 1, scrollBar.top, sbwidth - 2, scrollbar_len);
+  /* scrollbar slider */
+  XFillRectangle(Xdisplay, scrollBar.win, xscrollbarGC,
+                 xsb + 1, scrollBar.top, sbwidth - 2, scrollbar_len);
 
-    XDrawLine(Xdisplay, scrollBar.win, ShadowGC,
-	      xsb ? 0 : sbwidth, scrollBar.beg,
-	      xsb ? 0 : sbwidth, scrollBar.end);
-    return 1;
+  XDrawLine(Xdisplay, scrollBar.win, ShadowGC,
+            xsb ? 0 : sbwidth, scrollBar.beg,
+            xsb ? 0 : sbwidth, scrollBar.end);
+  return 1;
 }
 #endif				/* XTERM_SCROLLBAR */
 /*----------------------- end-of-file (C source) -----------------------*/
