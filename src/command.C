@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.7 2003/11/25 17:34:47 pcg Exp $
+ * $Id: command.C,v 1.8 2003/11/26 10:42:34 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -709,7 +709,7 @@ rxvt_term::blink_cb (time_watcher &w)
   w.at += BLINK_INTERVAL;
   hidden_cursor = !hidden_cursor;
   want_refresh = 1;
-  flush();
+  flush ();
 }
 
 void
@@ -776,7 +776,7 @@ rxvt_term::next_char ()
 }
 
 bool
-rxvt_term::pty_fill (size_t count)
+rxvt_term::pty_fill ()
 {
   ssize_t n = cmdbuf_endp - cmdbuf_ptr;
 
@@ -784,7 +784,7 @@ rxvt_term::pty_fill (size_t count)
   cmdbuf_ptr = cmdbuf_base;
   cmdbuf_endp = cmdbuf_ptr + n;
  
-  n = read (cmd_fd, cmdbuf_endp, count);
+  n = read (cmd_fd, cmdbuf_endp, BUFSIZ - n);
 
   if (n > 0)
     {
@@ -794,15 +794,18 @@ rxvt_term::pty_fill (size_t count)
   else if (n < 0 && errno == EAGAIN)
     return false;
 
-  rxvt_clean_exit();
-  exit(EXIT_FAILURE);	/* bad order of events? */
+  rxvt_clean_exit ();
+  exit (EXIT_FAILURE);	/* bad order of events? */
 }
 
 void
 rxvt_term::pty_cb (io_watcher &w, short revents)
 {
-  while (pty_fill (BUFSIZ - (cmdbuf_endp - cmdbuf_ptr)))
+  // loop, but don't allow a single term to monopolize us
+  // the number of loops is fully arbitrary, and thus wrong
+  for (int i = 7; i-- && pty_fill (); )
     {
+      //TODO:
       /* once we know the shell is running, send the screen size.  Again! */
       //ch = rxvt_cmd_getc(aR);	/* wait for something */
       //rxvt_tt_winsize(cmd_fd, TermWin.ncol, TermWin.nrow, cmd_pid);
@@ -923,7 +926,9 @@ rxvt_term::flush ()
 #endif
     }
 
+  if (XPending (Xdisplay)) process_x_events ();
   XFlush (Xdisplay);
+  if (XPending (Xdisplay)) process_x_events ();
 }
 
 /* rxvt_cmd_getc() - Return next input character */
@@ -944,7 +949,7 @@ rxvt_cmd_getc(pR)
       // incomplete sequences should occur rarely, still, a better solution
       // would be preferred. either setjmp/longjmp or better design.
       fcntl (R->cmd_fd, F_SETFL, 0);
-      R->pty_fill (1);
+      R->pty_fill ();
       fcntl (R->cmd_fd, F_SETFL, O_NONBLOCK);
     }
 
@@ -1291,17 +1296,18 @@ rxvt_process_x_event(pR_ XEvent *ev)
      * which ought to make things real slow!
      */
     case VisibilityNotify:
-	switch (ev->xvisibility.state) {
-	case VisibilityUnobscured:
-	    R->refresh_type = FAST_REFRESH;
-	    break;
-	case VisibilityPartiallyObscured:
-	    R->refresh_type = SLOW_REFRESH;
-	    break;
-	default:
-	    R->refresh_type = NO_REFRESH;
-	    break;
-	}
+	switch (ev->xvisibility.state)
+          {
+            case VisibilityUnobscured:
+              R->refresh_type = FAST_REFRESH;
+              break;
+            case VisibilityPartiallyObscured:
+              R->refresh_type = SLOW_REFRESH;
+              break;
+            default:
+              R->refresh_type = NO_REFRESH;
+              break;
+          }
 	break;
 
     case FocusIn:

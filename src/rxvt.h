@@ -1,5 +1,5 @@
 /*
- * $Id: rxvt.h,v 1.6 2003/11/25 17:11:33 pcg Exp $
+ * $Id: rxvt.h,v 1.7 2003/11/26 10:42:34 pcg Exp $
  */
 
 #ifndef _RXVT_H_                /* include once only */
@@ -1138,7 +1138,7 @@ struct rxvt_term : rxvt_vars {
 
   uint32_t next_char ();
 
-  bool pty_fill (size_t count);
+  bool pty_fill ();
   void process_x_events ();
 
   void *operator new (size_t s);

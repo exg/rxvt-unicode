@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.6 2003/11/25 17:11:33 pcg Exp $
+ * $Id: main.C,v 1.7 2003/11/26 10:42:34 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -163,6 +163,8 @@ rxvt_term::init (int argc, const char *const *argv)
 
   x_ev.start (Xfd, EVENT_READ);
   pty_ev.start (cmd_fd, EVENT_READ);
+
+  flush ();
 
   return true;
 }

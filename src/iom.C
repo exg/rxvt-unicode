@@ -30,6 +30,39 @@ tstamp NOW;
 bool iom_valid;
 io_manager iom;
 
+template<class watcher>
+void io_manager::reg (watcher *w, simplevec<watcher *> &queue)
+{
+  if (find (queue.begin (), queue.end (), w) == queue.end ())
+    queue.push_back (w);
+}
+
+template<class watcher>
+void io_manager::unreg (watcher *w, simplevec<watcher *> &queue)
+{
+  queue.erase (find (queue.begin (), queue.end (), w));
+}
+
+#if IOM_IO
+io_watcher::~io_watcher ()
+{
+  if (iom_valid)
+    iom.unreg (this);
+}
+
+void io_manager::reg (io_watcher *w)
+{
+  reg (w, iow);
+}
+
+void io_manager::unreg (io_watcher *w)
+{
+  unreg (w, iow);
+}
+
+#endif
+
+#if IOM_TIME
 void time_watcher::trigger ()
 {
   call (*this);
@@ -45,34 +78,36 @@ time_watcher::~time_watcher ()
   at = TSTAMP_CANCEL;
 }
 
-io_watcher::~io_watcher ()
+void io_manager::reg (time_watcher *w)
+{
+  reg (w, tw);
+}
+
+void io_manager::unreg (time_watcher *w)
+{
+  unreg (w, tw);
+}
+#endif
+
+#if IOM_CHECK
+check_watcher::~check_watcher ()
 {
   if (iom_valid)
     iom.unreg (this);
 }
 
-void io_manager::reg (io_watcher *w)
+void io_manager::reg (check_watcher *w)
 {
-  if (find (iow.begin (), iow.end (), w) == iow.end ())
-    iow.push_back (w);
+  reg (w, cw);
 }
 
-void io_manager::unreg (io_watcher *w)
+void io_manager::unreg (check_watcher *w)
 {
-  iow.erase (find (iow.begin (), iow.end (), w));
+  unreg (w, cw);
 }
+#endif
 
-void io_manager::reg (time_watcher *w)
-{
-  if (find (tw.begin (), tw.end (), w) == tw.end ())
-    tw.push_back (w);
-}
-
-void io_manager::unreg (time_watcher *w)
-{
-  tw.erase (find (tw.begin (), tw.end (), w));
-}
-
+#if IOM_TIME
 inline void set_now (void)
 {
   struct timeval tv;
@@ -80,21 +115,30 @@ inline void set_now (void)
   gettimeofday (&tv, 0);
 
   NOW = (tstamp)tv.tv_sec + (tstamp)tv.tv_usec / 1000000;
+#endif
 }
 
 void io_manager::loop ()
 {
+#if IOM_TIME
   set_now ();
+#endif
 
   for (;;)
     {
+#if IOM_CHECK
+      for (int i = 0; i < cw.size (); ++i)
+        cw[i]->call (*cw[i]);
+#endif
+
+#if IOM_TIME
       time_watcher *w;
 
       for (;;)
         {
           w = tw[0];
 
-          for (time_watcher **i = tw.begin (); i != tw.end (); ++i)
+          for (time_watcher **i = tw.begin (); i < tw.end (); ++i)
             if ((*i)->at < w->at)
               w = *i;
 
@@ -108,11 +152,13 @@ void io_manager::loop ()
             unreg (w);
         }
 
-      struct timeval to;
       double diff = w->at - NOW;
+      struct timeval to;
       to.tv_sec  = (int)diff;
       to.tv_usec = (int)((diff - to.tv_sec) * 1000000);
+#endif
 
+#if IOM_IO
       fd_set rfd, wfd;
 
       FD_ZERO (&rfd);
@@ -128,22 +174,31 @@ void io_manager::loop ()
           if ((*w)->fd > fds) fds = (*w)->fd;
         }
 
+# if IOM_TIME
       fds = select (fds + 1, &rfd, &wfd, 0, &to);
-
       set_now ();
+# else
+      fds = select (fds + 1, &rfd, &wfd, 0, 0);
+# endif
 
       if (fds > 0)
-        for (io_watcher **w = iow.begin (); w < iow.end (); ++w)
+        for (int i = 0; i < iow.size (); ++i)
           {
-            short revents = (*w)->events;
+            io_watcher *w = iow[i];
 
-            if (!FD_ISSET ((*w)->fd, &rfd)) revents &= ~EVENT_READ;
-            if (!FD_ISSET ((*w)->fd, &wfd)) revents &= ~EVENT_WRITE;
+            short revents = w->events;
+
+            if (!FD_ISSET (w->fd, &rfd)) revents &= ~EVENT_READ;
+            if (!FD_ISSET (w->fd, &wfd)) revents &= ~EVENT_WRITE;
 
             if (revents)
-              (*w)->call (**w, revents);
+              w->call (*w, revents);
           }
     }
+#elif IOM_TIME
+      select (0, 0, 0, 0, &to);
+      set_now ();
+#endif
 }
 
 void io_manager::idle_cb (time_watcher &w)
@@ -157,8 +212,10 @@ io_manager::io_manager ()
 
   iom_valid = true;
 
+#if IOM_TIME
   idle = new time_watcher (this, &io_manager::idle_cb);
   idle->start (0);
+#endif
 }
 
 io_manager::~io_manager ()

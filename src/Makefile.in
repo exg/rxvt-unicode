@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.3 2003/11/25 11:52:42 pcg Exp $
+# $Id: Makefile.in,v 1.4 2003/11/26 10:42:34 pcg Exp $
 @MCOMMON@
 
 LINT = lint -DNARROWPROTO=1 $(XINC) -chapbxz
@@ -183,7 +183,6 @@ distcopy: .protos $(INTPROS)
 
 defaultfont.h: encoding.h rxvtvec.h
 rxvtlib.h: rxvtcolor.h defaultfont.h
-iom.o:              iom.C		iom.h
 rxvtdaemon.o:       rxvtdaemon.C	rxvtdaemon.h
 rxvtd.o:            rxvtd.C     $(DEPS) rxvtdaemon.h rxvtvec.h
 rxvtc.o:            rxvtc.C     $(DEPS) rxvtdaemon.h rxvtvec.h
@@ -210,6 +209,7 @@ xdefaults.o:        xdefaults.C $(DEPS) xdefaults.intpro	  version.h
 xpm.o:              xpm.C       $(DEPS) xpm.intpro
 encoding.o:         encoding.C	$(DEPS) encoding.h
 rxvtcolor.o:        rxvtcolor.C	$(DEPS)
+iom.o:              iom.C	$(DEPS)	iom.h
 
 command.lo:         command.C   $(DEPS) command.intpro	command.h version.h
 defaultfont.lo:     defaultfont.C $(DEPS) defaultfont.intpro defaultfont.h encoding.h
@@ -233,5 +233,6 @@ xdefaults.lo:       xdefaults.C $(DEPS) xdefaults.intpro	  version.h
 xpm.lo:             xpm.C       $(DEPS) xpm.intpro
 encoding.lo:        encoding.C	$(DEPS) encoding.h
 rxvtcolor.lo:       rxvtcolor.C	$(DEPS)
+iom.lo:             iom.C	$(DEPS)	iom.h
 
 

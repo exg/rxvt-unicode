@@ -25,24 +25,53 @@
 #include "rxvtvec.h"
 #include "callback.h"
 
-typedef double tstamp;
+#define IOM_IO 1
+#define IOM_TIME 1
+#undef IOM_CHECK
 
-extern tstamp NOW;
+#if IOM_IO
+  typedef double tstamp;
+  extern tstamp NOW;
 
-struct io_watcher;
-struct time_watcher;
+  struct io_watcher;
+#endif
+#if IOM_TIME
+  struct time_watcher;
+#endif
+#if IOM_CHECK
+  struct check_watcher;
+#endif
 
 class io_manager {
-  simplevec<io_watcher *> iow;
-  simplevec<time_watcher *> tw; // actually a heap
+#if IOM_IO
+  simplevec<io_watcher *>    iow;
+#endif
+#if IOM_CHECK
+  simplevec<check_watcher *> cw;
+#endif
+#if IOM_TIME
+  simplevec<time_watcher *>  tw;
 
   void idle_cb (time_watcher &w); time_watcher *idle;
+#endif
+
+  template<class watcher>
+  void reg (watcher *w, simplevec<watcher *> &queue);
+
+  template<class watcher>
+  void unreg (watcher *w, simplevec<watcher *> &queue);
+
 public:
   // register a watcher
-  void reg (io_watcher *w);
-  void unreg (io_watcher *w);
-  void reg (time_watcher *w);
-  void unreg (time_watcher *w);
+#if IOM_IO
+  void reg (io_watcher   *w);  void unreg (io_watcher   *w);
+#endif
+#if IOM_TIME
+  void reg (time_watcher *w);  void unreg (time_watcher *w);
+#endif
+#if IOM_CHECK
+  void reg (check_watcher *w); void unreg (check_watcher *w);
+#endif
   
   void loop ();
 
@@ -52,6 +81,7 @@ public:
 
 extern io_manager iom; // a singleton, together with it's construction/destruction problems.
 
+#if IOM_IO
 enum { EVENT_READ = 1, EVENT_WRITE = 2 };
 
 struct io_watcher : callback2<void, io_watcher &, short> {
@@ -71,8 +101,10 @@ struct io_watcher : callback2<void, io_watcher &, short> {
   void start (int fd_, short events_) { set (fd_, events_); iom.reg (this); }
   void stop () { iom.unreg (this); }
 };
+#endif
 
-#define TSTAMP_CANCEL -1.
+#if IOM_TIME
+enum { TSTAMP_CANCEL = -1 };
 
 struct time_watcher : callback1<void, time_watcher &> {
   tstamp at;
@@ -98,6 +130,22 @@ struct time_watcher : callback1<void, time_watcher &> {
       at = when;
     }
 };
+#endif
+
+#if IOM_CHECK
+// run before checking for new events
+struct check_watcher : callback1<void, check_watcher &> {
+  template<class O1, class O2>
+  check_watcher (O1 *object, void (O2::*method)(check_watcher &))
+    : callback1<void, check_watcher &>(object,method)
+    { }
+
+  ~check_watcher ();
+
+  void start () { iom.reg (this); }
+  void stop () { iom.unreg (this); }
+};
+#endif
 
 #endif
 
