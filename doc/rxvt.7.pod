@@ -137,7 +137,7 @@ only I<unimplemented>
 
 =item B<< C<ESC Z> >>
 
-Obsolete form of returns: B<< C<ESC[?1;2C> >> I<rxvt compile-time option>
+Obsolete form of returns: B<< C<ESC[?1;2C> >> I<rxvt-unicode compile-time option>
 
 =item B<< C<ESC c> >>
 

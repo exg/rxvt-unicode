@@ -8,14 +8,14 @@ B<@@RXVT_NAME@@> [options] [-e command [ args ]]
 
 =head1 DESCRIPTION
 
-B<rxvt-unicode>, version B<@@RXVTVERSION@@>, is a colour vt102 terminal
+B<rxvt-unicode>, version B<@@RXVT_VERSION@@>, is a colour vt102 terminal
 emulator intended as an I<xterm>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, B<rxvt-unicode> uses much less swap space --
 a significant advantage on a machine serving many X sessions.
 
 See also @@RXVT_NAME@@(7) for technical reference documentation (escape
-sequences etc.).
+sequences etc.) and the FAQ section at the end of this document.
 
 =head1 OPTIONS
 
@@ -23,15 +23,15 @@ The B<@@RXVT_NAME@@> options (mostly a subset of I<xterm>'s) are listed
 below. In keeping with the smaller-is-better philosophy, options may be
 eliminated or default values chosen at compile-time, so options and
 defaults listed may not accurately reflect the version installed on
-your system. `rxvt -h' gives a list of major compile-time options on
+your system. `@@RXVT_NAME@@ -h' gives a list of major compile-time options on
 the I<Options> line. Option descriptions may be prefixed with which
 compile option each is dependent upon. e.g. `Compile I<XIM>:' requires
-I<XIM> on the I<Options> line. Note: `rxvt -help' gives a list of all
+I<XIM> on the I<Options> line. Note: `@@RXVT_NAME@@ -help' gives a list of all
 command-line options compiled into your version.
 
 Note that B<@@RXVT_NAME@@> permits the resource name to be used as a
 long-option (--/++ option) so the potential command-line options are
-far greater than those listed. For example: `rxvt --loginShell --color1
+far greater than those listed. For example: `@@RXVT_NAME@@ --loginShell --color1
 Orange'.
 
 The following options are available:
@@ -207,7 +207,7 @@ B<externalBorder>.
 =item B<-bl>
 
 Compile I<frills>: Set MWM hints to request a borderless window, i.e.
-if honoured by the WM, the rxvt window will not have window
+if honoured by the WM, the rxvt-unicode window will not have window
 decorations; resource B<borderLess>.
 
 =item B<-lsp> I<number>
@@ -288,7 +288,7 @@ B<secondaryScroll>.
 
 =item B<-xrm> I<resourcestring>
 
-No effect on rxvt. Simply passes through an argument to be made
+No effect on rxvt-unicode. Simply passes through an argument to be made
 available in the instance's argument list. Appears in I<WM_COMMAND> in
 some window managers.
 
@@ -467,8 +467,8 @@ xterm style selection.
 
 =item B<scrollstyle:> I<mode>
 
-Set scrollbar style to B<@@RXVT_NAME@@>, B<rxvt>, B<plain>, B<next> or
-B<xterm>
+Set scrollbar style to B<rxvt>, B<plain>, B<next> or B<xterm>. B<plain> is
+the author's favourite..
 
 =item B<title:> I<string>
 
@@ -544,10 +544,10 @@ with scrollback buffer when tty recieves new lines; option B<-sw>.
 
 =item B<scrollTtyKeypress:> I<boolean>
 
-B<True>: scroll to bottom when a non-special key is pressed. Special
-keys are those which are intercepted by rxvt for special handling and
-are not passed onto the shell; option B<-sk>. B<False>: do not scroll
-to bottom when a non-special key is pressed; option B<+sk>.
+B<True>: scroll to bottom when a non-special key is pressed. Special keys
+are those which are intercepted by rxvt-unicode for special handling and
+are not passed onto the shell; option B<-sk>. B<False>: do not scroll to
+bottom when a non-special key is pressed; option B<+sk>.
 
 =item B<smallfont_key:> I<keysym>
 
@@ -577,7 +577,7 @@ option B<-w>, B<-bw>, B<-borderwidth>.
 =item B<borderLess:> I<boolean>
 
 Set MWM hints to request a borderless window, i.e. if honoured by the
-WM, the rxvt window will not have window decorations; option B<-bl>.
+WM, the rxvt-unicode window will not have window decorations; option B<-bl>.
 
 =item B<termName:> I<termname>
 
@@ -678,7 +678,7 @@ B<-mod>.
 
 =item B<answerbackString:> I<string>
 
-Specify the reply rxvt sends to the shell when an ENQ (control-E)
+Specify the reply rxvt-unicode sends to the shell when an ENQ (control-E)
 character is passed through. It may contain escape values as described
 in the entry on B<keysym> following.
 
@@ -825,7 +825,7 @@ been specified. For example,
 
 =over 4
 
-=item B<rxvt -fg Black -bg White -rv>
+=item B<@@RXVT_NAME@@ -fg Black -bg White -rv>
 
 would yield White on Black, while on I<xterm>(1) it would yield Black
 on White.
@@ -855,11 +855,230 @@ Color names.
 
 =back
 
-=head1 SEEALSO
+=head1 FREQUENTLY ASKED QUESTIONS (FAQ)
 
-I<xterm>(1), I<sh>(1), I<resize>(1), I<X>(1), I<pty>(4), I<tty>(4), I<utmp>(5)
+=over 4
 
-See rxvtRef.html rxvtRef.txt for detailed information on recognized escape sequences and menuBar syntax, etc.
+=item How do I know which rxvt-unicode version I'm using?
+
+The version number is displayed with the usage (-h).  For rxvt-unicode
+version 2.14 and later, the escape sequence C<ESC[8n> sets the window
+title to the version number.
+
+=item Mouse cut/paste suddenly no longer works.
+
+Make sure that mouse reporting is actually turned off since killing
+some editors prematurely may leave the mouse in mouse report mode. I've
+heard that tcsh may use mouse reporting unless it otherwise specified. A
+quick check is to see if cut/paste works when the Alt or Shift keys are
+depressed. See @@RXVT_NAME@@(7)
+
+=item What's with this bold/blink stuff?
+
+If no bold colour is set via C<colorBD:>, bold will invert text using the
+standard foreground colour.
+
+For the standard background colour, blinking will actually make the
+text blink when compiled with C<--enable-blinking>. with standard
+colours. Without C<--enable-blinking>, the blink attribute will be
+ignored.
+
+On ANSI colours, bold/blink attributes are used to set high-intensity
+foreground/background colors.
+
+color0-7 are the low-intensity colors.
+
+color8-15 are the corresponding high-intensity colors.
+
+=item I don't like the screen colors.  How do I change them?
+
+You can change the screen colors at run-time using F<~/.Xdefaults>
+resources (or as long-options).
+
+Here are values that are supposed to resemble a VGA screen,
+including the murky brown that passes for low-intensity yellow:
+
+   Rxvt*color0:   #000000
+   Rxvt*color1:   #A80000
+   Rxvt*color2:   #00A800
+   Rxvt*color3:   #A8A800
+   Rxvt*color4:   #0000A8
+   Rxvt*color5:   #A800A8
+   Rxvt*color6:   #00A8A8
+   Rxvt*color7:   #A8A8A8
+                  
+   Rxvt*color8:   #000054
+   Rxvt*color9:   #FF0054
+   Rxvt*color10:  #00FF54
+   Rxvt*color11:  #FFFF54
+   Rxvt*color12:  #0000FF
+   Rxvt*color13:  #FF00FF
+   Rxvt*color14:  #00FFFF
+   Rxvt*color15:  #FFFFFF
+
+=item What's with the strange Backspace/Delete key behaviour?
+
+Assuming that the physical Backspace key corresponds to the
+BackSpace keysym (not likely for Linux ... see the following
+question) there are two standard values that can be used for
+Backspace: C<^H> and C<^?>.
+
+Historically, either value is correct, but rxvt-unicode adopts the debian
+policy of using C<^?> when unsure, because it's the one only only correct
+choice :).
+
+Rxvt-unicode tries to inherit the current stty settings and uses the value
+of `erase' to guess the value for backspace.  If rxvt-unicode wasn't
+started from a terminal (say, from a menu or by remote shell), then the
+system value of `erase', which corresponds to CERASE in <termios.h>, will
+be used (which may not be the same as your stty setting).
+
+For starting a new rxvt-unicode:
+
+   # use Backspace = ^H
+   $ stty erase ^H
+   $ @@RXVT_NAME@@
+
+   # use Backspace = ^?
+   $ stty erase ^?
+   $ @@RXVT_NAME@@
+
+Toggle with "ESC[36h" / "ESC[36l" as documented in @@RXVT_NAME@@(7).
+
+For an existing rxvt-unicode:
+
+   # use Backspace = ^H
+   $ stty erase ^H
+   $ echo -n "^[[36h"
+
+   # use Backspace = ^?
+   $ stty erase ^?
+   $ echo -n "^[[36l"
+
+This helps satisfy some of the Backspace discrepancies that occur, but
+if you use Backspace = C<^H>, make sure that the termcap/terminfo value
+properly reflects that.
+
+The Delete key is a another casualty of the ill-defined Backspace problem.
+To avoid confusion between the Backspace and Delete keys, the Delete
+key has been assigned an escape sequence to match the vt100 for Execute
+(ESC[3~) and is in the supplied termcap/terminfo.
+
+Some other Backspace problems:
+
+some editors use termcap/terminfo,
+some editors (vim I'm told) expect Backspace = ^H,
+GNU Emacs (and Emacs-like editors) use ^H for help.
+
+Perhaps someday this will all be resolved in a consistent manner.
+
+=item I don't like the key-bindings.  How do I change them?
+
+There are some compile-time selections available via configure. Unless
+you have run "configure" with the C<--disable-resources> option you can
+use the `keysym' resource to alter the keystrings associated with keysym
+0xFF00 - 0xFFFF (function, cursor keys, etc).
+
+Here's an example for a tn3270 session started using `@@RXVT_NAME@@ -name tn3270'
+
+   !#  ----- special uses ------:
+   ! tn3270 login, remap function and arrow keys.
+   tn3270*font:      *clean-bold-*-*--15-*
+
+   ! keysym - used by rxvt only
+   ! Delete - ^D
+   tn3270*keysym.0xFFFF:      \004
+
+   ! Home - ^A
+   tn3270*keysym.0xFF50:      \001
+   ! Left - ^B
+   tn3270*keysym.0xFF51:      \002
+   ! Up - ^P
+   tn3270*keysym.0xFF52:      \020
+   ! Right - ^F
+   tn3270*keysym.0xFF53:      \006
+   ! Down - ^N
+   tn3270*keysym.0xFF54:      \016
+   ! End - ^E
+   tn3270*keysym.0xFF57:      \005
+
+   ! F1 - F12
+   tn3270*keysym.0xFFBE:      \e1
+   tn3270*keysym.0xFFBF:      \e2
+   tn3270*keysym.0xFFC0:      \e3
+   tn3270*keysym.0xFFC1:      \e4
+   tn3270*keysym.0xFFC2:      \e5
+   tn3270*keysym.0xFFC3:      \e6
+   tn3270*keysym.0xFFC4:      \e7
+   tn3270*keysym.0xFFC5:      \e8
+   tn3270*keysym.0xFFC6:      \e9
+   tn3270*keysym.0xFFC7:      \e0
+   tn3270*keysym.0xFFC8:      \e-
+   tn3270*keysym.0xFFC9:      \e=
+
+   ! map Prior/Next to F7/F8
+   tn3270*keysym.0xFF55:      \e7
+   tn3270*keysym.0xFF56:      \e8
+
+=item I'm using keyboard model XXX that has extra Prior/Next/Insert keys.
+How do I make use of them?  For example, the Sun Keyboard type 4
+has the following mappings that rxvt-unicode doesn't recognize.
+
+   KP_Insert == Insert
+   F22 == Print
+   F27 == Home
+   F29 == Prior
+   F33 == End
+   F35 == Next
+
+Rather than have rxvt-unicode try to accomodate all the various possible keyboard
+mappings, it is better to use `xmodmap' to remap the keys as required for
+your particular machine.
+
+=item How do I distinguish if I'm running rxvt-unicode or a regular xterm?
+I need this to decide about setting colors etc.
+
+rxvt and rxvt-unicode always export the variable "COLORTERM", so you can
+check and see if that is set. Note that several programs, JED, slrn,
+Midnight Commander automatically check this variable to decide whether or
+not to use color.
+
+=item How do I set the correct, full IP address for the DISPLAY variable?
+
+If you've compiled rxvt-unicode with DISPLAY_IS_IP and ahve enabled
+insecure mode then it is possible to use the following shell script
+snippets to correctly set the display. If your version of rxvt-unicode
+wasn't also compiled with ESCZ_ANSWER (as assumed in these snippets) then
+the COLORTERM variable can be used to distinguish rxvt-unicode from a
+regular xterm.
+
+Courtesy of Chuck Blake <cblake@BBN.COM> with the following shell script
+snippets:
+
+   # Bourne/Korn/POSIX family of shells:
+   [ ${TERM:-foo} = foo ] && TERM=xterm # assume an xterm if we don't know
+   if [ ${TERM:-foo} = xterm ]; then
+      stty -icanon -echo min 0 time 15 # see if enhanced rxvt or not
+      echo -n '^[Z'
+      read term_id
+      stty icanon echo
+      if [ ""${term_id} = '^[[?1;2C' -a ${DISPLAY:-foo} = foo ]; then
+         echo -n '^[[7n'     	# query the rxvt we are in for the DISPLAY string
+         read DISPLAY     	# set it in our local shell
+      fi
+   fi
+
+=item How do I compile the manual pages for myself?
+
+You need to have a recent version of perl installed as F</usr/bin/perl>,
+one that comes with F<pod2man>, F<pod2text> and F<pod2html>. Then go to
+the doc subdirectory and enter C<make alldoc>.
+
+=back
+
+=head1 SEE ALSO
+
+@@RXVT_NAME@@(7), xterm(1), sh(1), resize(1), X(1), pty(4), tty(4), utmp(5)
 
 =head1 BUGS
 
