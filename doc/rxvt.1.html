@@ -582,11 +582,9 @@ longer example is in <em>doc/pty-fd</em>):</p>
 <dd>
 <pre>
    my $pty = new IO::Pty;
-   fcntl $pty, F_SETFD, 0; # clear close-on-exec</pre>
-</dd>
-<dd>
-<pre>
-   system &quot;rxvt -pty-fd &quot; . (fileno $pty) . &quot;&amp;&quot;;</pre>
+   fcntl $pty, F_SETFD, 0; # clear close-on-exec
+   system &quot;rxvt -pty-fd &quot; . (fileno $pty) . &quot;&amp;&quot;;
+   close $pty;</pre>
 </dd>
 <dd>
 <pre>

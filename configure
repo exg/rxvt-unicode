@@ -13420,12 +13420,17 @@ if test x$support_xim = xyes -a x$rxvt_cv_func_xlocale = xno; then
   echo ".----------------------------------------------------------------."
 fi
 
-echo "  *** Please check src/feature.h for further options ***"
+echo "  *** Optionally check src/feature.h for further options ***"
 echo
 
 echo ".----------------------------------------------------------------."
 echo ". NOTE: most features are disabled by default, try               ."
-echo ". configure --help to get an idea of the optional features       ."
+echo ". configure --help to get an idea of the optional features,      ."
+echo ". or read ./README.configure                                     ."
+echo ".                                                                ."
+echo ". The script ./reconf gives a reasonable baseline, try it if     ."
+echo ". you do not want to read documentation and still want some      ."
+echo ". useful features.                                               ."
 echo ".----------------------------------------------------------------."
 echo
 

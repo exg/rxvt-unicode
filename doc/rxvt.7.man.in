@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2005-02-17" "5.2" "RXVT-UNICODE"
+.TH rxvt 7 "2005-02-18" "5.2" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -2344,7 +2344,7 @@ disable this.
 A non-exhaustive list of features enabled by \f(CW\*(C`\-\-enable\-frills\*(C'\fR (possibly
 in combination with other switches) is:
 .Sp
-.Vb 11
+.Vb 12
 \&  MWM-hints
 \&  seperate underline colour
 \&  settable border widths and borderless switch
@@ -2356,6 +2356,7 @@ in combination with other switches) is:
 \&  tripleclickwords
 \&  settable insecure mode
 \&  keysym remapping support
+\&  -embed and -pty-fd options
 .Ve
 .IP "\-\-enable\-iso14755" 4
 .IX Item "--enable-iso14755"

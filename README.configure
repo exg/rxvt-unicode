@@ -189,6 +189,7 @@ CONFIGURE OPTIONS
           tripleclickwords
           settable insecure mode
           keysym remapping support
+          -embed and -pty-fd options
 
     --enable-iso14755
         Enable extended ISO 14755 support (see rxvt(1), or doc/rxvt.1.txt).

@@ -2380,6 +2380,7 @@ in combination with other switches) is:
   tripleclickwords
   settable insecure mode
   keysym remapping support
+  -embed and -pty-fd options
 
 =item --enable-iso14755
 

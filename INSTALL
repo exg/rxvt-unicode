@@ -1,18 +1,14 @@
-See README.unicode for rxvt-unicode specific documentation.
-
 --------------------------------------------------------------------------
 Using GNU autoconfig
 --------------------------------------------------------------------------
   1.	If you retrieved a CVS version of this package, you need the GNU
 	autoconf package to generate the configure script.  This is done
-	by running   ./.prebuild   in this directory which will automatically
+	by running   ./genac   in this directory which will automatically
 	run autoconf with the appropriate options.
 
   2.	Run   ./configure   to generate config.h and the various Makefiles.
 	./configure --help   gives a list of possible options with slightly
 	longer descriptions in README.configure
-
-	Note that configure options have changed since 2.6.x series.
 
 	Some systems require unusual options for compilation or linking that
 	the `configure' script does not know about.  You can give `configure'
@@ -50,24 +46,15 @@ Using GNU autoconfig
 	    (cd src; make install)
 	    (cd rclock; make install)
 
-	you may also want to install doc/etc/rxvt.terminfo and 
-	doc/etc/rxvt.termcap
+	you may also want to install doc/etc/rxvt-unicode.terminfo and 
+	doc/etc/rxvt-unicode.termcap
 
   7 a.	If compiled with UTMP_SUPPORT, you may need to install rxvt setuid
 	root or setuid/setgid to match the file permissions on /etc/utmp
   7 b.  You may need to install setuid root anyway for some systems so that
 	they can give you ownership of the tty devices.
 
-  8.	On systems which dislike doc/rxvt.1
-	    (cd doc; rm rxvt.1; make rxvt.1)
-
 		 ===================================
-
-NB:	If you were able to compile OK but running rxvt prints out
-		"rxvt: could not obtain control of tty"
-	running "make tests" from this directory (or from src/test)
-	should give you a breakdown of the failure point which is
-	useful to the developers in fixing the problem
 
 NB:	SunOS (with/without gcc?) gets reported by configure as
 
@@ -91,3 +78,4 @@ NB:	SunOS (with/without gcc?) gets reported by configure as
 
 --
 EOF
+

@@ -361,8 +361,8 @@ OPTIONS
 
            my $pty = new IO::Pty;
            fcntl $pty, F_SETFD, 0; # clear close-on-exec
-
            system "rxvt -pty-fd " . (fileno $pty) . "&";
+           close $pty;
 
            # now communicate with rxvt
            my $slave = $pty->slave;
