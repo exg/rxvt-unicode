@@ -261,6 +261,7 @@ rxvt_term::~rxvt_term ()
   free (env_term);
   free (env_colorfgbg);
   free (locale);
+  free (v_buffer);
   free (incr_buf);
 
   delete envv;

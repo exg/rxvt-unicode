@@ -1202,7 +1202,8 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 # endif
 #endif
 
-  void paste (const unsigned char *data, unsigned int len);
+  // modifies first argument(!)
+  void paste (unsigned char *data, unsigned int len);
 
   void flush ();
 

@@ -2658,25 +2658,14 @@ rxvt_term::selection_check (int check_more)
  * Paste a selection direct to the command fd
  */
 void
-rxvt_term::paste (const unsigned char *data, unsigned int len)
+rxvt_term::paste (unsigned char *data, unsigned int len)
 {
-  unsigned int i, j, n;
-  unsigned char *ds = (unsigned char *)rxvt_malloc (PASTE_SIZE);
-
   /* convert normal newline chars into common keyboard Return key sequence */
-  for (i = 0; i < len; i += PASTE_SIZE)
-    {
-      n = min (len - i, PASTE_SIZE);
-      memcpy (ds, data + i, n);
+  for (unsigned int i = 0; i < len; i++)
+    if (data[i] == C0_LF)
+      data[i] = C0_CR;
 
-      for (j = 0; j < n; j++)
-        if (ds[j] == C0_LF)
-          ds[j] = C0_CR;
-
-      tt_write (ds, (int)n);
-    }
-
-  free (ds);
+  tt_write (data, len);
 }
 
 /* ------------------------------------------------------------------------- */
