@@ -1,5 +1,5 @@
 /*--------------------------------*-C-*---------------------------------*
- * File:	rxvtcolor.C
+ * File:	rxvttoolkit.C
  *----------------------------------------------------------------------*
  *
  * All portions of code are copyright by their respective author/s.
@@ -103,8 +103,9 @@ im_destroy_cb (XIM unused1, XPointer client_data, XPointer unused3)
   rxvt_xim *xim = (rxvt_xim *)client_data;
   rxvt_display *display = xim->display;
 
-  display->xims.erase (find (display->xims.begin (), display->xims.end (), xim));
+  xim->xim = 0;
 
+  display->xims.erase (find (display->xims.begin (), display->xims.end (), xim));
   display->im_change_cb ();
 }
 
@@ -215,6 +216,31 @@ void rxvt_display::im_change_cb ()
   for (im_watcher **i = imw.begin (); i != imw.end (); ++i)
     (*i)->call ();
 }
+
+void rxvt_display::im_change_check ()
+{
+  // make sure we only call im_change_cb when a new input method
+  // registers, as xlib crashes due to a race otherwise.
+  Atom actual_type, *atoms;
+  int actual_format;
+  unsigned long nitems, bytes_after;
+
+  if (XGetWindowProperty (display, root, xa_xim_servers, 0L, 1000000L,
+                          False, XA_ATOM, &actual_type, &actual_format,
+                          &nitems, &bytes_after, (unsigned char **)&atoms)
+      != Success )
+    return;
+
+  if (actual_type == XA_ATOM  && actual_format == 32)
+    for (int i = 0; i < nitems; i++)
+      if (XGetSelectionOwner (display, atoms[i]))
+        {
+          im_change_cb ();
+          break;
+        }
+
+  XFree (atoms);
+}
 #endif
 
 void rxvt_display::x_cb (io_watcher &w, short revents)
@@ -224,22 +250,25 @@ void rxvt_display::x_cb (io_watcher &w, short revents)
       XEvent xev;
       XNextEvent (display, &xev);
 
-      //printf ("T %d w %lx\n", xev.type, xev.xany.window);//D
-
 #ifdef USE_XIM
-      if (xev.type == PropertyNotify
-          && xev.xany.window == root
-          && xev.xproperty.atom == xa_xim_servers)
-        im_change_cb ();
-#endif
-
-      for (int i = xw.size (); i--; )
+      if (!XFilterEvent (&xev, None))
         {
-          if (!xw[i])
-            xw.erase_unordered (i);
-          else if (xw[i]->window == xev.xany.window)
-            xw[i]->call (xev);
+
+          if (xev.type == PropertyNotify
+              && xev.xany.window == root
+              && xev.xproperty.atom == xa_xim_servers)
+            im_change_check ();
+#endif
+          for (int i = xw.size (); i--; )
+            {
+              if (!xw[i])
+                xw.erase_unordered (i);
+              else if (xw[i]->window == xev.xany.window)
+                xw[i]->call (xev);
+            }
+#ifdef USE_XIM
         }
+#endif
     }
   while (XPending (display));
 

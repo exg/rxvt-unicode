@@ -67,6 +67,7 @@ struct rxvt_display : refcounted {
   vector<im_watcher *> imw;
 
   void im_change_cb ();
+  void im_change_check ();
 #endif
 
 //public
