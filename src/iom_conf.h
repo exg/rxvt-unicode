@@ -20,7 +20,7 @@
 #ifndef RXVT_IOM_CONF_H__
 #define RXVT_IOM_CONF_H__
 
-#include <rxvtstl.h>
+#include <rxvtutil.h>
 
 #define IOM_IO 1
 #define IOM_TIME 1

@@ -31,7 +31,6 @@
 #ifdef MENUBAR
 #include "version.h"
 #include "menubar.h"
-#include "menubar.intpro"	/* PROTOS for internal routines */
 
 #define Menu_PixelWidth(menu)					\
     (2 * SHADOW + Width2Pixel ((menu)->width + 3 * HSPACE))

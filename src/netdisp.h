@@ -14,5 +14,3 @@
 #include <arpa/inet.h>
 #include <net/if.h>
 #include <net/if_arp.h>
-
-#include "netdisp.intpro"	/* PROTOS for internal routines */

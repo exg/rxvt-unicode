@@ -24,7 +24,7 @@
 #include "rxvtlib.h"
 #include "feature.h"
 #include "encoding.h"
-#include "rxvtstl.h"
+#include "rxvtutil.h"
 
 struct rxvt_fontprop {
   enum {

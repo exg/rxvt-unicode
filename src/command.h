@@ -1,5 +1,5 @@
 /*
- * $Id: command.h,v 1.13 2004/08/10 20:39:19 root Exp $
+ * $Id: command.h,v 1.14 2004/08/15 00:37:04 root Exp $
  */
 
 #ifndef COMMAND_H_
@@ -89,5 +89,4 @@
 # define ESCZ_ANSWER	VT100_ANS	/* obsolete ANSI ESC[c */
 #endif
 
-#include "command.intpro"	/* PROTOS for internal routines */
 #endif	/* _COMMAND_H_ */

@@ -23,7 +23,6 @@
 
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
-#include "strings.intpro"	/* PROTOS for internal routines */
 
 #ifndef NO_STRINGS
 /*----------------------------------------------------------------------*/

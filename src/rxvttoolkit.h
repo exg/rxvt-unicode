@@ -1,5 +1,8 @@
-#ifndef RXVT_COLOR_H
-#define RXVT_COLOR_H
+/*
+ * rxvttoolkit.h - provide toolkit-functionality for rxvt.
+ */
+#ifndef RXVT_TOOLKIT_H
+#define RXVT_TOOLKIT_H
 
 #include <X11/Xlib.h>
 
@@ -10,20 +13,9 @@
 #include "iom.h"
 
 #include "rxvtlib.h"
-#include "rxvtstl.h"
+#include "rxvtutil.h"
 
 #include "callback.h"
-
-extern class byteorder {
-  uint32_t e;
-public:
-  byteorder ();
-
-  bool big_endian    () { return e == 0x11223344; };
-  bool network       () { return e == 0x11223344; };
-  bool little_endian () { return e == 0x44332211; };
-  bool vax           () { return e == 0x44332211; };
-} byteorder;
 
 struct rxvt_term;
 

@@ -21,7 +21,7 @@
 
 #include "../config.h"
 #include "rxvt.h"
-#include "defaultfont.h"
+#include "rxvtfont.h"
 
 #include <cstdlib>
 

@@ -1,5 +1,16 @@
-#ifndef RXVT_STL_H
-#define RXVT_STL_H
+#ifndef RXVT_UTIL_H
+#define RXVT_UTIL_H
+
+extern class byteorder {
+  static unsigned int e; // at least 32 bits
+public:
+  byteorder ();
+
+  static bool big_endian    () { return e == 0x11223344; };
+  static bool network       () { return e == 0x11223344; };
+  static bool little_endian () { return e == 0x44332211; };
+  static bool vax           () { return e == 0x44332211; };
+} byteorder;
 
 template<typename T, typename U> static inline T min (T a, U b) { return a < b ? a : b; }
 template<typename T, typename U> static inline T max (T a, U b) { return a > b ? a : b; }
@@ -103,6 +114,5 @@ struct stringvec : simplevec<char *>
       delete [] *c;
   }
 };
-
 #endif
 
