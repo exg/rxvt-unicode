@@ -195,7 +195,7 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
 #  endif
 #  ifdef PLAIN_SCROLLBAR
 	if (STRNCASECMP(scrollstyle, "plain", 5) == 0)
-	    style = R_SB_XTERM;
+	    style = R_SB_PLAIN;
 #  endif
     }
 # endif
