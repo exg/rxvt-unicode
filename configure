@@ -10914,6 +10914,7 @@ fi
 
 
 
+
 for ac_header in \
 	assert.h \
 	fcntl.h \
@@ -10930,6 +10931,7 @@ for ac_header in \
 	sys/select.h \
 	sys/sockio.h \
 	sys/strredir.h \
+        sys/stropts.h \
 	sys/time.h \
 	utmp.h \
 	utmpx.h \

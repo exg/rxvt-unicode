@@ -254,26 +254,52 @@ optList[] = {
 
 static const char releasestring[] = "Rxvt v" VERSION " - released: " DATE "\n";
 static const char optionsstring[] = "Options: "
+#if XFT
+                                    "xft,"
+#endif
+#if UNICODE_3
+                                    "unicode3,"
+#endif
+                                    "encodings=eu+vn"
+#if ENCODING_JP
+                                    "+jp"
+#endif
+#if ENCODING_JP_EXT
+                                    "+jp-ext"
+#endif
+#if ENCODING_KR
+                                    "+kr"
+#endif
+#if ENCODING_CN
+                                    "+cn"
+#endif
+#if ENCODING_CN_EXT
+                                    "+cn-ext"
+#endif
+                                    ","
+#if ENABLE_COMBINING
+                                    "combining,"
+#endif
+#if TEXT_BLINK
+                                    "blink,"
+#endif
+#if OFF_FOCUS_FADING
+                                    "fade,"
+#endif
 #if defined(XPM_BACKGROUND)
                                     "XPM,"
 #endif
 #if defined(TRANSPARENT)
                                     "transparent,"
 #endif
+#if TINTING
+                                    "tint,"
+#endif
 #if defined(UTMP_SUPPORT)
                                     "utmp,"
 #endif
 #if defined(MENUBAR)
                                     "menubar,"
-#endif
-#if !defined(NO_FRILLS)
-                                    "frills,"
-#endif
-#if !defined(NO_LINESPACE)
-                                    "linespace,"
-#endif
-#if defined(PREFER_24BIT)
-                                    "24bit,"
 #endif
 #if defined(USE_XIM)
                                     "XIM,"
@@ -311,11 +337,41 @@ static const char optionsstring[] = "Options: "
 #if defined(NO_DELETE_KEY)
                                     "no_delete,"
 #endif
+#if EIGHT_BIT_CONTROLS
+                                    "8bitctrls,"
+#endif
 #if !defined(NO_STRINGS)
                                     "strings,"
 #endif
+#if !defined(NO_FRILLS)
+                                    "frills,"
+#endif
+#if !defined(NO_LINESPACE)
+                                    "linespace,"
+#endif
+#if defined(PREFER_24BIT)
+                                    "24bit,"
+#endif
+#if defined(SELECTION_SCROLLING)
+                                    "selectionscrolling,"
+#endif
+#if MOUSE_WHEEL
+                                    "wheel,"
+#endif
+#if MOUSE_SLIP_WHEELING
+                                    "slipwheel,"
+#endif
+#if defined(SMART_RESIZE)
+                                    "smart-resize,"
+#endif
 #if defined(TTY_256COLOR)
                                     "256colour,"
+#endif
+#if defined(CURSOR_BLINK)
+                                    "cursorBlink,"
+#endif
+#if defined(POINTER_BLANK)
+                                    "pointerBlank,"
 #endif
 #if defined(NO_RESOURCES)
                                     "NoResources"

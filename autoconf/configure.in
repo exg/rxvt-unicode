@@ -503,6 +503,7 @@ AC_CHECK_HEADERS( \
 	sys/select.h \
 	sys/sockio.h \
 	sys/strredir.h \
+        sys/stropts.h \
 	sys/time.h \
 	utmp.h \
 	utmpx.h \
@@ -1259,9 +1260,9 @@ fi
 if test x$codesets = xall; then
   codesets=jp,jp-ext,kr,cn,cn-ext
 fi
+AC_DEFINE(ENCODING_EU, 1, Define if you want european extended codesets)
+AC_DEFINE(ENCODING_VN, 1, Define if you want vietnamese codesets)
 for codeset in `echo $codesets | tr "[a-z,\\-]" "[A-Z _]"`; do
-  AC_DEFINE(ENCODING_EU, 1, Define if you want european extended codesets)
-  AC_DEFINE(ENCODING_VN, 1, Define if you want vietnamese codesets)
   case "$codeset" in
     JP     ) AC_DEFINE(ENCODING_JP,     1, Define if you want japanese codesets) ;;
     JP_EXT ) AC_DEFINE(ENCODING_JP_EXT, 1, Define if you want extended japanese codesets) ;;
