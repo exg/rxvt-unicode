@@ -1,6 +1,7 @@
-1.4
+1.4  Fri Jan 16 23:03:22 CET 2004
 	- fix stupid segfault on esc-c.
         - small font tunings.
+        - much better io manager, less bugs, higher speed.
 
 1.3  2003-12-26
         - fix a bug in font height selection

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.6 2003/12/18 00:56:51 pcg Exp $
+# $Id: Makefile.in,v 1.7 2004/01/16 22:11:09 pcg Exp $
 @MCOMMON@
 
 LINT = lint -DNARROWPROTO=1 $(XINC) -chapbxz
@@ -12,7 +12,7 @@ basedir = ..
 thisdir = src
 MKDIR = @top_srcdir@/autoconf/mkinstalldirs
 
-SUPLIB = -lsupc++
+SUPLIB = -fno-exceptions -lsupc++ # TODO: only for g++
 
 # for developers: the following debug options may be used
 #	-DDEBUG_CMD -DDEBUG_MAIN -DDEBUG_MENU -DDEBUG_MENUARROWS

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.27 2003/12/30 01:35:58 pcg Exp $
+ * $Id: command.C,v 1.28 2004/01/16 22:11:09 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -758,9 +758,10 @@ rxvt_term::process_x_events ()
 void
 rxvt_term::blink_cb (time_watcher &w)
 {
-  w.at += BLINK_INTERVAL;
   hidden_cursor = !hidden_cursor;
   want_refresh = 1;
+
+  w.start (w.at + BLINK_INTERVAL);
 }
 #endif
 
@@ -1039,8 +1040,6 @@ rxvt_term::pointer_unblank ()
 void
 rxvt_term::pointer_blank ()
 {
-  pointer_ev.stop ();
-
   if (!(Options & Opt_pointerBlank))
     return;
 

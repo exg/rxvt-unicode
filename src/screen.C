@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*--------------------------------------*
  * File:        screen.c
  *---------------------------------------------------------------------------*
- * $Id: screen.C,v 1.15 2004/01/16 16:34:56 pcg Exp $
+ * $Id: screen.C,v 1.16 2004/01/16 22:11:09 pcg Exp $
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
  *
@@ -2567,10 +2567,9 @@ rxvt_selection_paste(pR_ Window win, Atom prop, Bool delete_prop)
 void
 rxvt_term::incr_cb (time_watcher &w)
 {
-  w.stop ();
   selection_wait = Sel_none;
 
-  rxvt_print_error("data loss: timeout on INCR selection paste");
+  rxvt_print_error ("data loss: timeout on INCR selection paste");
 }
 
 /*
