@@ -1258,6 +1258,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 
   void tt_printf (const char *fmt,...);
   void tt_write (const unsigned char *data, unsigned int len);
+  void pty_write ();
 
   void tt_winch ();
 
