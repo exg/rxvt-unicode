@@ -1,4 +1,4 @@
-.TH "RXVT" "1" "2004-07-31" "X Version 11" "X Tools" 
+.TH "RXVT" "1" "2004-08-06" "X Version 11" "X Tools" 
 .SH "NAME" 
 rxvt-unicode (ouR XVT, unicode) \- a VT102 emulator for the X window system
 .PP 
@@ -154,6 +154,10 @@ resource \fBinternalBorder\fP\&.
 Compile \fIfrills\fP: External border of \fInumber\fP pixels\&. 
 Also, \fB-bw\fP and \fB-borderwidth\fP\&.  See resource entry for limits;
 resource \fBexternalBorder\fP\&.
+.IP "\fB-bl\fP" 
+Compile \fIfrills\fP: Set MWM hints to request a borderless window,
+i\&.e\&. if honoured by the WM, the rxvt window will not have window
+decorations; resource \fBborderLess\fP\&.
 .IP "\fB-lsp\fP \fInumber\fP" 
 Compile \fIlinespace\fP: Lines (pixel height) to insert between each
 row of the display;
@@ -438,6 +442,10 @@ option \fB-b\fP\&.
 .IP "\fBexternalBorder:\fP \fInumber\fP" 
 External border of \fInumber\fP pixels\&.  This resource is limited to 100;
 option \fB-w\fP, \fB-bw\fP, \fB-borderwidth\fP\&.
+.IP "\fBborderLess:\fP \fIboolean\fP" 
+Set MWM hints to request a borderless window,
+i\&.e\&. if honoured by the WM, the rxvt window will not have window
+decorations; option \fB-bl\fP\&.
 .IP "\fBtermName:\fP \fItermname\fP" 
 Specifies the terminal type name to be set in the \fBTERM\fP
 environment variable;

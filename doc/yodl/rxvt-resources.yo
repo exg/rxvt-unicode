@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-resources.yo,v 1.18 2004/07/31 15:32:50 root Exp $ --)
+COMMENT(-- $Id: rxvt-resources.yo,v 1.19 2004/08/08 16:43:55 root Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpagesection(RESOURCES (available also as long-options))
 
@@ -226,6 +226,10 @@ startdit()
     dit(bf(externalBorder:) em(number))
 	External border of em(number) pixels.  This resource is limited to 100;
 	option bf(-w), bf(-bw), bf(-borderwidth).
+    dit(bf(borderLess:) em(boolean))
+        Set MWM hints to request a borderless window,
+        i.e. if honoured by the WM, the rxvt window will not have window
+        decorations; option bf(-bl).
     dit(bf(termName:) em(termname))
 	Specifies the terminal type name to be set in the bf(TERM)
 	environment variable;

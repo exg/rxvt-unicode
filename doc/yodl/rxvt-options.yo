@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-options.yo,v 1.18 2004/08/01 15:06:02 root Exp $ --)
+COMMENT(-- $Id: rxvt-options.yo,v 1.19 2004/08/08 16:43:55 root Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpageoptions()
 
@@ -139,6 +139,10 @@ startdit()
 	Compile em(frills): External border of em(number) pixels. 
 	Also, bf(-bw) and bf(-borderwidth).  See resource entry for limits;
 	resource bf(externalBorder).
+    dit(bf(-bl))
+        Compile em(frills): Set MWM hints to request a borderless window,
+        i.e. if honoured by the WM, the rxvt window will not have window
+        decorations; resource bf(borderLess).
     dit(bf(-lsp) em(number))
 	Compile em(linespace): Lines (pixel height) to insert between each
 	row of the display;
