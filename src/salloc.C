@@ -51,6 +51,7 @@ rxvt_salloc::alloc ()
 void
 rxvt_salloc::free (void *data)
 {
+return;//D
   chain *line = (chain *)data;
   line->next = firstline;
   firstline = line;

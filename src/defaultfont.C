@@ -229,7 +229,7 @@ struct rxvt_font_default : rxvt_font {
   {
     rxvt_fontprop p;
 
-    p.height = 1;
+    p.width = p.height = 1;
     p.weight = rxvt_fontprop::medium;
     p.slant = rxvt_fontprop::roman;
 
@@ -381,6 +381,10 @@ rxvt_font_x11::properties (XFontStruct *f)
   const char *weight = get_property (f, "WEIGHT_NAME", "medium");
   const char *slant  = get_property (f, "SLANT", "r");
 
+  unsigned long avgwidth;
+  p.width = XGetFontProperty (f, XInternAtom (DISPLAY, "AVERAGE_WIDTH", 0), &avgwidth)
+            ? avgwidth / 10
+            : (height + 1) / 2;
   p.height = height;
   p.weight = *weight == 'B' || *weight == 'b' ? rxvt_fontprop::bold : rxvt_fontprop::medium;
   p.slant = *slant == 'r' || *slant == 'R' ? rxvt_fontprop::roman : rxvt_fontprop::italic;
@@ -660,32 +664,6 @@ rxvt_font_x11::draw (int x, int y,
 #endif
 
 struct rxvt_font_xft : rxvt_font {
-#if 0
-  enum {
-    SWATHCOUNT = 1 << (21 - UNIBITS),
-    SWATHSIZE  = 1 << (SWATHBITS - 5)
-  };
-  typedef uint32_t swath[SWATHSIZE];
-
-  swath *cvr[SWATHCOUNT];
-#endif
-
-#if 0
-  void gen_coverage_swath (unsigned int page);
-
-  bool has_char (uint32_t ch)
-    {
-      unsigned int page = ch >> SWATHBITS;
-      unsigned int idx  = ch & ((1 << SWATHBITS) - 1);
-
-      if (page >= SWATHCOUNT)
-        return false;
-
-      if (!cvr[page]) gen_coverage_swath (page);
-
-      return cvr[page][idx >> 5] & (1 << (idx & 31));
-    }
-#endif
   rxvt_font_xft () { f = 0; d = 0; }
 
   void clear ();
@@ -703,14 +681,6 @@ struct rxvt_font_xft : rxvt_font {
 protected:
   XftFont *f;
   XftDraw *d;
-
-#if 0
-  virtual void populate_coverage_swath (uint32_t lo, uint32_t hi) = 0;
-  void set_swath (uint32_t ch)
-    {
-      cvr[ch >> SWATHBITS] |= 1 << (ch & ((1 << SWATHBITS) - 1));
-    }
-#endif
 };
 
 void
@@ -727,11 +697,6 @@ rxvt_font_xft::clear ()
       XftDrawDestroy (d);
       d = 0;
     }
-
-#if 0
-  for (int i = 0; i < SWATHCOUNT; i++)
-    delete cvr[i];
-#endif
 }
 
 rxvt_fontprop
@@ -741,7 +706,7 @@ rxvt_font_xft::properties ()
 
   FT_Face face = XftLockFace (f);
 
-  p.height = height;
+  p.width = width; p.height = height;
   p.weight = face->style_flags & FT_STYLE_FLAG_BOLD ? rxvt_fontprop::bold : rxvt_fontprop::medium;
   p.slant = face->style_flags & FT_STYLE_FLAG_ITALIC ? rxvt_fontprop::italic : rxvt_fontprop::roman;
 
@@ -772,6 +737,10 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
 
   if (FcPatternGet (p, FC_SLANT, 0, &v) != FcResultMatch)
     FcPatternAddInteger (p, FC_SLANT, prop.slant);
+
+  // clip width, we can't do better, or can we?
+  if (FcPatternGet (p, FC_CHAR_WIDTH, 0, &v) != FcResultMatch)
+    FcPatternAddInteger (p, FC_CHAR_WIDTH, prop.width);
 
   //FcPatternAddBool (p, FC_MINSPACE, 1);
 
@@ -833,18 +802,6 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
 
   return true;
 }
-
-#if 0
-void rxvt_font::gen_coverage_swath (unsigned int page)
-{
-  cvr[page] = new swath;
-
-  for (int i = 0; i < SWATHSIZE; i++)
-    cvr[page][i] = 0;
-
-  populate_coverage_swath (cvr[page], page << SWATHBITS, ((page + 1) << SWATHBITS) - 1);
-}
-#endif
 
 bool
 rxvt_font_xft::has_codepoint (uint32_t unicode)

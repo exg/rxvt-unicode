@@ -1,5 +1,5 @@
 /*
- * $Id: defaultfont.h,v 1.7 2003/12/18 04:14:30 pcg Exp $
+ * $Id: defaultfont.h,v 1.8 2003/12/24 09:07:01 pcg Exp $
  */
 
 #ifndef _DEFAULTFONT_H_
@@ -28,9 +28,8 @@ struct rxvt_fontprop {
     medium = 100, bold = 200,
     roman  = 0, italic = 100,
   };
-  int height;
-  int weight;
-  int slant;
+  int width, height;
+  int weight, slant;
 };
 
 struct rxvt_font {
