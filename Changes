@@ -2,13 +2,19 @@ Lines marked with "xterm:" indicate either xterm features ported to rxvt
 or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
+2.9  Sat May  8 19:13:41 CEST 2004
+        - fix some minor doc issues + some generated doc files are now
+          getting distributed (closes debian bug #246035).
+        - minor i18n issue fixes.
+
 2.8  Thu Apr  8 22:44:36 CEST 2004
 	- replace PF_LOCAL by PF_UNIX (portability).
         - try to detect -lnsl and -lsocket (portability).
         - fix some minor bugs.
 
 2.7  Mon Apr  5 02:11:15 CEST 2004
-	- this version should now work fine with TERM=xterm.
+	- this version should now work fine with TERM=xterm, except
+          for the keymappings.
         - don't leave the X or rxvtd sockets open in child processes.
           (inherited fd's stay open - different to rxvt).
 	- xterm: implemented OSC3, set/get window property. get is an
