@@ -277,13 +277,7 @@ void rxvt_display::x_cb (io_watcher &w, short revents)
 
 void rxvt_display::flush ()
 {
-  for (;;)
-    {
-      if (!XPending (display))
-        break;
-
-      x_cb (x_ev, 0);
-    }
+  XFlush (display);
 }
 
 void rxvt_display::reg (xevent_watcher *w)
