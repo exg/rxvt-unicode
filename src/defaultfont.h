@@ -1,6 +1,11 @@
 #ifndef DEFAULTFONT_H_
 #define DEFAULTFONT_H_
 
+#include <X11/Xlib.h>
+#if XFT
+# include <X11/Xft/Xft.h>
+#endif
+
 #ifdef HAVE_XSETLOCALE
 # define X_LOCALE
 # include <X11/Xlocale.h>
@@ -28,6 +33,20 @@ struct rxvt_fontprop {
   int weight, slant;
 };
 
+struct rxvt_drawable {
+  rxvt_display *display;
+  Drawable drawable;
+# if XFT
+  XftDraw *xftdrawable;
+#endif
+  rxvt_drawable (rxvt_display *display, Drawable drawable)
+  : display(display), drawable(drawable), xftdrawable(0) { }
+  ~rxvt_drawable ();
+
+  operator Drawable() { return drawable; }
+  operator XftDraw *();
+};
+
 struct rxvt_font {
   // managed by the fontset
   rxvt_t r;
@@ -51,7 +70,7 @@ struct rxvt_font {
   rxvt_font () { name = 0; }
   ~rxvt_font () { free (name); };
 
-  void clear_rect (int x, int y, int w, int h, int color);
+  void clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color);
 
   virtual void clear () { };
 
@@ -60,7 +79,8 @@ struct rxvt_font {
   virtual bool load (const rxvt_fontprop &prop) = 0;
   virtual bool has_codepoint (uint32_t unicode) = 0;
 
-  virtual void draw (int x, int y,
+  virtual void draw (rxvt_drawable &d,
+                     int x, int y,
                      const text_t *text, int len,
                      int fg, int bg) = 0;
 };

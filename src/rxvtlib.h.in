@@ -46,6 +46,7 @@ struct rxvt_vars;               /* defined later on */
 struct rxvt_term;
 struct rxvt_display;
 struct rxvt_im;
+struct rxvt_drawable;
 
 typedef struct rxvt_term *rxvt_t;
 
@@ -102,6 +103,7 @@ typedef struct {
   GC             gc;            /* GC for drawing                           */
   Pixmap         pixmap;
   rxvt_fontset  *fontset;
+  rxvt_drawable *drawable;
 } TermWin_t;
 
 /*

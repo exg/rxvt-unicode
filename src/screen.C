@@ -2171,7 +2171,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
           rxvt_font *font = (*TermWin.fontset)[fid];
 
           if (back == fore)
-            font->clear_rect (xpixel, ypixel,
+            font->clear_rect (*TermWin.drawable, xpixel, ypixel,
                               TermWin.fwidth * count, TermWin.fheight,
                               back);
           else if (back == Color_bg)
@@ -2183,15 +2183,15 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                   for (i = 0; i < count; i++) /* don't draw empty strings */
                     if (text[i] != ' ')
                       {
-                        font->draw (xpixel, ypixel, text, count, fore, -1);
+                        font->draw (*TermWin.drawable, xpixel, ypixel, text, count, fore, -1);
                         break;
                       }
                 }
               else
-                font->draw (xpixel, ypixel, text, count, fore, Color_bg);
+                font->draw (*TermWin.drawable, xpixel, ypixel, text, count, fore, Color_bg);
             }
           else
-            font->draw (xpixel, ypixel, text, count, fore, back);
+            font->draw (*TermWin.drawable, xpixel, ypixel, text, count, fore, back);
 
           if ((rend & RS_Uline) && (font->descent > 1))
             XDrawLine (display->display, drawBuffer, TermWin.gc,

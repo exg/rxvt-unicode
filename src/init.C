@@ -1286,17 +1286,15 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                          GCForeground | GCBackground
                          | GCGraphicsExposures, &gcvalue);
 
+  TermWin.drawable = new rxvt_drawable (display, TermWin.vt);
+
 #if defined(MENUBAR) || defined(RXVT_SCROLLBAR)
   gcvalue.foreground = PixColors[Color_topShadow];
-  topShadowGC = XCreateGC (display->display, TermWin.vt,
-                          GCForeground, &gcvalue);
+  topShadowGC = XCreateGC (display->display, TermWin.vt, GCForeground, &gcvalue);
   gcvalue.foreground = PixColors[Color_bottomShadow];
-  botShadowGC = XCreateGC (display->display, TermWin.vt,
-                          GCForeground, &gcvalue);
-  gcvalue.foreground = PixColors[ (XDEPTH <= 2 ? Color_fg
-                                  : Color_scroll)];
-  scrollbarGC = XCreateGC (display->display, TermWin.vt,
-                          GCForeground, &gcvalue);
+  botShadowGC = XCreateGC (display->display, TermWin.vt, GCForeground, &gcvalue);
+  gcvalue.foreground = PixColors[ (XDEPTH <= 2 ? Color_fg : Color_scroll)];
+  scrollbarGC = XCreateGC (display->display, TermWin.vt, GCForeground, &gcvalue);
 #endif
 }
 
