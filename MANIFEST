@@ -60,6 +60,7 @@ doc/rxvt.7.html
 doc/rxvt.1.txt
 doc/rxvt.7.txt
 doc/rxvtc.1
+doc/rxvt-unicode.spec
 
 autoconf/.cvsignore
 autoconf/Make.common.in
