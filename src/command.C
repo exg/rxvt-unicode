@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.12 2003/12/05 04:05:13 pcg Exp $
+ * $Id: command.C,v 1.13 2003/12/05 04:27:20 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -774,10 +774,10 @@ rxvt_term::pty_fill ()
       cmdbuf_endp += n;
       return true;
     }
-  else if (n < 0 && errno == EAGAIN)
-    return false;
+  else if (n < 0 && errno != EAGAIN)
+    destroy ();
 
-  destroy ();
+  return false;
 }
 
 void
