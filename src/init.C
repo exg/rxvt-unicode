@@ -359,7 +359,12 @@ const char *const xa_names[NUM_XA] =
 bool
 rxvt_term::init_vars ()
 {
-  PixColors = new rxvt_color [TOTAL_COLORS];
+  PixColorsFocused = new rxvt_color [TOTAL_COLORS];
+#ifdef OFF_FOCUS_FADING
+  PixColorsUnFocused = new rxvt_color [TOTAL_COLORS];
+#endif
+  PixColors = PixColorsFocused;
+
   if (PixColors == NULL)
     return false;
 
@@ -875,6 +880,10 @@ rxvt_term::Get_Colours ()
 {
   int i;
 
+#ifdef OFF_FOCUS_FADING
+  PixColors = PixColorsFocused;
+#endif
+  
   for (i = 0; i < (XDEPTH <= 2 ? 2 : NRS_COLORS); i++)
     {
       rxvt_color xcol;
@@ -920,6 +929,10 @@ rxvt_term::Get_Colours ()
         }
 
       PixColors[i] = xcol;
+#ifdef OFF_FOCUS_FADING
+      if (rs[Rs_fade])
+        PixColorsUnFocused[i] = xcol.fade (display, atoi (rs[Rs_fade]));
+#endif
       SET_PIXCOLOR (i);
     }
 
@@ -946,29 +959,20 @@ rxvt_term::Get_Colours ()
     }
   else
     {
-      rxvt_color xcol[3];
+      rxvt_color xcol[2];
       /* xcol[0] == white
        * xcol[1] == top shadow
        * xcol[2] == bot shadow */
 
       xcol[1] = PixColors[Color_scroll];
-# ifdef PREFER_24BIT
       xcol[0].set (display, 65535, 65535, 65535);
-      /*        XFreeColors (display->display, XCMAP, & (xcol[0].pixel), 1, ~0); */
-# else
-      xcol[0].set (display, WhitePixel (display->display, display->screen));
-# endif
 
       unsigned short pr1, pg1, pb1, pr0, pg0, pb0;
 
       xcol[0].get (display, pr0, pg0, pb0);
       xcol[1].get (display, pr1, pg1, pb1);
 
-      /* bottomShadowColor */
-      if (!xcol[2].set (display, pr1 / 2, pg1 / 2, pb1 / 2))
-        xcol[2] = PixColors[Color_Black];
-
-      PixColors[Color_bottomShadow] = xcol[2];
+      PixColors[Color_bottomShadow] = xcol[1].fade (display, 50);
 
       /* topShadowColor */
       if (!xcol[1].set (display,
@@ -1153,12 +1157,12 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #endif
 
   XSelectInput (display->display, TermWin.parent[0],
-               KeyPressMask
+                KeyPressMask
 #if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
-               | KeyReleaseMask
+                | KeyReleaseMask
 #endif
-               | FocusChangeMask | VisibilityChangeMask
-               | StructureNotifyMask);
+                | FocusChangeMask | VisibilityChangeMask
+                | StructureNotifyMask);
   termwin_ev.start (display, TermWin.parent[0]);
 
   /* vt cursor: Black-on-White is standard, but this is more popular */
@@ -1191,7 +1195,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                                    0,
                                    PixColors[Color_fg],
                                    PixColors[Color_bg]);
-
 #ifdef DEBUG_X
   XStoreName (display->display, TermWin.vt, "vt window");
 #endif
@@ -1201,9 +1204,9 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   vt_emask = ExposureMask | ButtonPressMask | ButtonReleaseMask | PropertyChangeMask;
 
-#ifdef POINTER_BLANK
   pointer_unblank ();
 
+#ifdef POINTER_BLANK
   if (Options & Opt_pointerBlank)
     vt_emask |= PointerMotionMask;
   else
@@ -1244,7 +1247,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   if (rs[Rs_backgroundPixmap] != NULL
       && ! (Options & Opt_transparent))
     {
-      const char     *p = rs[Rs_backgroundPixmap];
+      const char *p = rs[Rs_backgroundPixmap];
 
       if ((p = STRCHR (p, ';')) != NULL)
         {
@@ -1273,6 +1276,12 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   botShadowGC = XCreateGC (display->display, TermWin.vt, GCForeground, &gcvalue);
   gcvalue.foreground = PixColors[ (XDEPTH <= 2 ? Color_fg : Color_scroll)];
   scrollbarGC = XCreateGC (display->display, TermWin.vt, GCForeground, &gcvalue);
+#endif
+
+#ifdef OFF_FOCUS_FADING
+  // initially we are in unfocused state
+  if (rs[Rs_fade])
+    PixColors = PixColorsUnFocused;
 #endif
 }
 
