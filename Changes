@@ -4,8 +4,66 @@ xfree86's xterm).
 
 TODO: implement xterm keymap option, for full TERM=xterm compliance.
 TODO: multibyte support for setwmname et al.
-TODO: there are other todo items, but they are not in this file.
 TODO: tabbed windows
+TODO: there are other todo items, but they are not in this file.
+
+3.8  Wed Aug 25 05:46:56 CEST 2004
+        - WARNING: TERM=rxvt-unicode is now *default* unless compiled
+          differently. A terminfo entry will automatically be compiled and
+          installed if tic is available.
+        - fixed some --disable switches that didn't work.
+        - tweaked src/features.h a bit.
+        - removed README.unicode.
+        - support select&paste of tab characters.
+        - fixed a segfault when trying to load nonexistant fonts (reported
+          by Eduard Bloch and Mikael Magnusson).
+        - fixed a long-standing rxvt bug in which rxvt failed to save
+          and restore the correct cursor position on the secondary screen.
+        - reworked rxvt-unicode terminfo to allow more efficient and less flickering
+          screen updates with curses.
+        - wide characters that are being halfway overwritten are now replaced
+          by spaces.
+        - urxvtc now transmits urxvt as default name, not urxvtc anymore
+          (likewise for other names chosen at configure time).
+        - disabled the automatic font lookup for unknown characters. xft
+          is just too slow for this to work.
+        - changed realbold code, implemented _real_ bold and italic support,
+          where _real_ means the symbiosis of what I want with what I can
+          implement. use --enable-styles.
+        - removed 256 color mode, but enable 88 colours in all modes
+          (88 to be compatible with 88 colour xterm which is widely
+          supported, and most programs assume a non-iso colourtable
+          for terminals with "odd" number of colours).
+        - added doc/etc/rxvt-unicode.terminfo which is a big overhaul
+          compared to the old rxvt terminfo.
+	- sped up xft rendering by 30% *iff* the font allows it (i.e. is
+          monospaced "enough") *and* matches the base font in width.
+        - implement positive and negative character-font caching, which
+          speeds up output immensely in case a character cannot be found
+          (only for non-bold right now).
+        - fix segfault in fading code on certain escape sequences.
+        - better default font size and style.
+        - rxvt-unicode is now much more picky about fonts not fitting
+          into the base font, but to offset this it will check each
+          single character against the base font extents and will only
+          use the characters fitting into the bounding box (+ some fudge).
+        - characters not fitting into the base boundary box will now often
+          be used anyways, but the following characters will be redrawn
+          more often to avoid pixel-droppings. This is like the original
+          rxvt pixel-dropping pass but it's much faster.
+        - scrollColor now affects plain scrollbar (Mikael Magnusson).
+        - fixed segfault in overlay code when height was larger than the
+          screen height.
+        - cursor no longer shines "through" the overlay.
+        - 7-bit ST marker detection was broken.
+        - scrollbar didn't come back sometimes when switching it
+          off/on using escape sequences (Mikael Magnusson).
+        - fix lots of colour problems with focus fading.
+        - $COLORFGBG was not set as documented.
+        - fix iso 14755 5.1 support when --enable-frills but --disable-iso14755.
+        - removed OSC 702.
+        - disabled MOUSE_REPORT_DOUBLECLICK by default, as programs seem to be
+          confused by it rather than using it.
 
 3.7  Tue Aug 17 04:22:25 CEST 2004
 	- new configure option --enable-iso14755.

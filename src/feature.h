@@ -120,7 +120,7 @@
  * Define to remove support for XCopyArea () support.  XCopyArea () is useful
  * for scrolling on non-local X displays
  */
-/* #define NO_SLOW_LINK_SUPPORT */
+#define NO_SLOW_LINK_SUPPORT
 
 /*
  * Printer pipe which will be used for emulation of attached vt100 printer
@@ -227,7 +227,7 @@
 /*
  * Have mouse reporting include double-click info for button1
  */
-/* #define MOUSE_REPORT_DOUBLECLICK */
+//#define MOUSE_REPORT_DOUBLECLICK
 
 /*
  * Set delay between multiple click events [default: 500 milliseconds]
@@ -257,14 +257,14 @@
  * the mouse pointer is out of the text window.  This is the max
  * number of lines to scroll at a time.
  */
-#define SELECTION_SCROLL_MAX_LINES 2
+#define SELECTION_SCROLL_MAX_LINES 8
 
 /*
  * The number of lines (measured in character's heights, not pixels)
  * the pointer must be out of the window for each increase in the
  * number of lines scrolled.
  */
-#define SELECTION_SCROLL_LINE_SPEEDUP 4
+#define SELECTION_SCROLL_LINE_SPEEDUP 3
 
 /*--------------------------------MISC----------------------------------*/
 /*
@@ -400,7 +400,7 @@
 /*
  * Provide termcap/terminfo bw support (wrap backwards on cub1)
  */
-/* #define TERMCAP_HAS_BW */
+#define TERMCAP_HAS_BW
 
 /*
  * Some (older, e.g. fvwm 2.2.2) window managers need some time when
@@ -410,3 +410,4 @@
 /* #define WAIT_FOR_WM */
 
 #endif
+
