@@ -2,10 +2,45 @@ Lines marked with "xterm:" indicate either xterm features ported to rxvt
 or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
-TODO: implement xterm keymap option, for full TERM=xterm compliance.
 TODO: multibyte support for setwmname et al.
 TODO: tabbed windows
+TODO: ignore user-supplied preedit-type, or augment with default list.
 TODO: there are other todo items, but they are not in this file.
+TODO: OnTheSpot editing.
+
+4.0  Mon Sep 13 01:10:26 CEST 2004
+	- turn off autohinting for some badly-hinted fallback fonts.
+        - mnaapge tpyo crorcetoins by Bastian Kleineidam.
+        - implemented rectangular selections (button+meta), experimental.
+        - implement race-free signal handling in iom.C.
+        - use iom.C signal handling to avoid races in signal handling.
+        - use default action on SIGINT and SIGQUIT, instead of terminating.
+        - "the return of the 100 times per second refresh bug".
+          ... terminated by a fix.
+        - new supported preeeditType "None".
+        - added FAQ about possible compose key problems.
+        - changed CN to ZH everywhere (sorry for the confusion).
+        - move XFilterEvent up, as some input method seem to want events
+          for windows not requesting XIM. Please report if this change
+          causes any harm (specially with pointerblanking)
+          (patch by Kuang-che Wu).
+        - send the input method spot position on every refresh, not just
+          when rxvt thinks it should (which was not often enough...).
+        - fix double-wide combining characters (it might look a bit ugly,
+          though, but common cases are handled by normalization anyways).
+        - moved FAQ to rxvt(7), also made a copy into README.FAQ.
+        - fix a bug(?) in the XIM destroy callback.
+        - be more conservative when trying to register new input methods,
+          as Xlib races might make rxvt crash. When two or more
+          input methods are active, killing one probably still crashes rxvt
+          due to that bug :( Thanks a lot to Kuang-che Wu for immense help
+          in tracking this down.
+        - manpages (but not .txt and .html versions) will be patched (during
+          make install) with the correct program name and other info.
+
+3.9  Wed Aug 25 19:24:04 CEST 2004
+	- the change to unsigned int from unsigned short broke
+          many signed comparisons, resulting in failed assertions.
 
 3.8  Wed Aug 25 05:46:56 CEST 2004
         - WARNING: TERM=rxvt-unicode is now *default* unless compiled
