@@ -2,7 +2,6 @@ Lines marked with "xterm:" indicate either xterm features ported to rxvt
 or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
-TODO: configurable underline line colour.
 TODO: read property sequence is broken with respect to utf-8 etc.
 FEAT: hotkey font resizing
 FEAT: searchable backlog
