@@ -1,11 +1,13 @@
 /*
- * $Id: command.h,v 1.7 2004/03/29 16:28:29 pcg Exp $
+ * $Id: command.h,v 1.8 2004/04/08 20:22:25 pcg Exp $
  */
 
 #ifndef COMMAND_H_
 #define COMMAND_H_
 
+// STRING_MAX __MUST__ not be larger than what CBUFSIZ can hold.
 #define STRING_MAX	1024	/* max string size for process_rxvt_xterm_seq() */
+
 #define ESC_ARGS	32	/* max # of args for esc sequences */
 
 #ifdef OFFIX_DND

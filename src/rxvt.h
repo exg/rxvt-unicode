@@ -911,9 +911,8 @@ struct rxvt_term : rxvt_vars {
 #ifdef POINTER_BLANK
                   hidden_pointer:1,
 #endif
-                  parsed_geometry:1,
 //                  enc_utf8:1,		/* wether terminal reads/writes utf-8 */
-                  seen_input:1;		/* wether any input has been seen so far */
+                  parsed_geometry:1;
 
   unsigned char   refresh_type,
 #ifdef UTMP_SUPPORT
