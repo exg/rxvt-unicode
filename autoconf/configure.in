@@ -247,7 +247,7 @@ AC_ARG_ENABLE(half-shadow,
   fi])
 
 AC_ARG_WITH(codesets,
-  [  --with-codesets=NAME,.. compile in additional codesets (jp,jp_ext,kr,cn,cn_ext,all)],
+  [  --with-codesets=NAME,.. compile in additional codesets (jp,jp_ext,kr,zh,zh_ext,all)],
   [codesets="$withval"])
 
 AC_ARG_ENABLE(xim,

@@ -1078,7 +1078,7 @@ Optional Packages:
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-gnu-ld           assume the C compiler uses GNU ld default=no
   --with-pic              try to use only PIC/non-PIC objects default=use both
-  --with-codesets=NAME,.. compile in additional codesets (jp,jp_ext,kr,cn,cn_ext,all)
+  --with-codesets=NAME,.. compile in additional codesets (jp,jp_ext,kr,zh,zh_ext,all)
   --with-res-name=NAME    use this as default resource name (default: urxvt)
   --with-res-class=CLASS  use this as the resource class (default: URxvt)
   --with-name=NAME        set the basename for the installed binaries (default: urxvt)
