@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.17 2004/08/15 03:19:04 root Exp $
+# $Id: Makefile.in,v 1.19 2004/08/20 02:19:38 root Exp $
 @MCOMMON@
 
 LINT = lint -DNARROWPROTO=1 $(XINC) -chapbxz
