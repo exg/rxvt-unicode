@@ -953,8 +953,7 @@ struct rxvt_term : rxvt_vars {
                   ShadowGC;
 #endif
 #ifdef PLAIN_SCROLLBAR
-  GC              pscrollbarGC,
-                  pShadowGC;
+  GC              pscrollbarGC;
 #endif
 #ifdef NEXT_SCROLLBAR
   GC              blackGC,

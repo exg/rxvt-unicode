@@ -43,8 +43,6 @@ rxvt_term::scrollbar_show_plain (int update __attribute__((unused)), int last_to
 	pscrollbarGC = XCreateGC(Xdisplay, scrollBar.win,
 				       GCForeground | GCBackground
 				       | GCFillStyle, &gcvalue);
-	gcvalue.foreground = PixColors[Color_border];
-	pShadowGC = XCreateGC(Xdisplay, scrollBar.win, GCForeground, &gcvalue);
     }
 /* instead of XClearWindow (Xdisplay, scrollBar.win); */
     xsb = (Options & Opt_scrollBar_right) ? 1 : 0;
@@ -59,7 +57,7 @@ rxvt_term::scrollbar_show_plain (int update __attribute__((unused)), int last_to
 		   sbwidth + 1, (last_bot - scrollBar.bot), False);
 
 /* scrollbar slider */
-    XFillRectangle(Xdisplay, scrollBar.win, xscrollbarGC,
+    XFillRectangle(Xdisplay, scrollBar.win, pscrollbarGC,
 		   xsb + 1, scrollBar.top, sbwidth, scrollbar_len);
 
     return 1;
