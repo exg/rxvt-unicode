@@ -40,6 +40,9 @@
 #ifndef IOM_IDLE
 # define IOM_IDLE 0
 #endif
+#ifndef IOM_SIG
+# define IOM_SIG 0
+#endif
 
 typedef double tstamp;
 extern tstamp NOW;
@@ -56,6 +59,9 @@ struct check_watcher;
 #endif
 #if IOM_IDLE
 struct idle_watcher;
+#endif
+#if IOM_SIG
+struct sig_watcher;
 #endif
 
 template<class watcher>
@@ -88,6 +94,11 @@ class io_manager {
 #if IOM_IDLE
   io_manager_vec<idle_watcher>  iw;
 #endif
+#if IOM_SIG
+  typedef io_manager_vec<sig_watcher> sig_vec;
+  vector<sig_vec *> sw;
+  static void sighandler (int signum);
+#endif
 
   template<class watcher>
   void reg (watcher *w, io_manager_vec<watcher> &queue);
@@ -108,6 +119,9 @@ public:
 #endif
 #if IOM_IDLE
   void reg (idle_watcher  *w); void unreg (idle_watcher  *w);
+#endif
+#if IOM_SIG
+  void reg (sig_watcher   *w); void unreg (sig_watcher   *w);
 #endif
   
   void loop ();
@@ -191,6 +205,21 @@ struct idle_watcher : watcher, callback1<void, idle_watcher &> {
     : callback1<void, idle_watcher &> (object,method)
     { }
   ~idle_watcher () { stop (); }
+};
+#endif
+
+#if IOM_SIG
+struct sig_watcher : watcher, callback1<void, sig_watcher &> {
+  int signum;
+
+  void start (int signum);
+  void stop () { iom.unreg (this); }
+
+  template<class O1, class O2>
+  sig_watcher (O1 *object, void (O2::*method) (sig_watcher &))
+  : callback1<void, sig_watcher &> (object,method), signum (-1)
+  { }
+  ~sig_watcher () { stop (); }
 };
 #endif
 

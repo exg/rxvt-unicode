@@ -23,6 +23,8 @@
 
 #include <sys/time.h>
 
+#include <assert.h>
+
 #if 1 // older unices need these includes for select (2)
 # include <unistd.h>
 # include <sys/types.h>
@@ -31,6 +33,9 @@
 // if the BSDs would at least be marginally POSIX-compatible.. *sigh*
 // until that happens, sys/select.h must come last
 #include <sys/select.h>
+
+// for IOM_SIG
+#include <signal.h>
 
 #include "iom.h"
 
@@ -53,8 +58,8 @@ static struct tw0 : time_watcher
 
     tw0 ()
         : time_watcher (this, &tw0::cb)
-    { }}
-tw0;
+    { }
+  } tw0;
 
 tstamp NOW;
 static bool iom_valid;
@@ -124,9 +129,67 @@ inline void set_now (void)
   gettimeofday (&tv, 0);
 
   NOW = (tstamp)tv.tv_sec + (tstamp)tv.tv_usec / 1000000;
+}
 #endif
+
+#if IOM_SIG
+// race conditions galore
+
+void io_manager::sighandler (int signum)
+{
+  assert (0 < signum && signum <= iom.sw.size ());
+
+  sig_vec &sv = *iom.sw [signum - 1];
+
+  for (int i = sv.size (); i--; )
+    if (!sv[i])
+      sv.erase_unordered (i);
+    else
+      sv[i]->call (*sv[i]);
 }
 
+void io_manager::reg (sig_watcher *w)
+{
+  assert (0 < w->signum);
+
+  sw.reserve (w->signum);
+
+  sig_vec *&sv = sw [w->signum - 1];
+
+  if (!sv)
+    {
+      sv = new sig_vec;
+
+      struct sigaction sa;
+      sa.sa_handler = io_manager::sighandler;
+      sigfillset (&sa.sa_mask);
+      sa.sa_flags = 0;
+
+      if (sigaction (w->signum, &sa, 0))
+        {
+          perror ("Error while installing signal handler");
+          abort ();
+        }
+    }
+
+  reg (w, *sv);
+}
+
+void io_manager::unreg (sig_watcher *w)
+{
+  assert (0 < w->signum && w->signum <= sw.size ());
+  
+  unreg (w, *sw [w->signum - 1]);
+}
+
+void sig_watcher::start (int signum)
+{
+  stop ();
+  this->signum = signum;
+  iom.reg (this);
+}
+#endif
+  
 void io_manager::loop ()
 {
 #if IOM_TIME
