@@ -3,12 +3,13 @@
 # this is the configure script I use. It represents most of the features I
 # support and is a good baseline :)
 
+CXX=ccache\ g++-3.4 \
 ./configure --prefix=/opt/rxvt --enable-utmp \
             --enable-wtmp --enable-lastlog --disable-strings --enable-xim \
             --disable-keepscrolling --enable-xft --enable-mousewheel \
             --with-name=rxvt --enable-selectionscrolling --enable-pointer-blank \
             --enable-frills --enable-swapscreen --enable-transparency --enable-slipwheeling \
-            --with-codesets=cn,jp,kr --enable-menubar --enable-tinting \
+            --with-codesets=zh,jp,kr --enable-menubar --enable-tinting \
             --enable-cursor-blink --enable-text-blink --enable-fading \
             --enable-plain-scroll --enable-rxvt-scroll --enable-combining --enable-iso14755 \
             --enable-font-styles \

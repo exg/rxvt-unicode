@@ -1,5 +1,5 @@
 # doc/Makefile.in	-*- Makefile -*-
-# $Id: Makefile.in,v 1.16 2004/08/22 22:25:11 root Exp $
+# $Id: Makefile.in,v 1.19 2004/09/08 17:22:35 root Exp $
 @MCOMMON@
 
 srcdir =	@srcdir@
@@ -34,30 +34,30 @@ SEDREPLACE = -e 's%@@RXVT_VERSION@@%$(VERSION)%g;'\
 	     -e 's%@@RXVT_WEBMAINTEMAIL@@%$(WEBMAINTEMAIL)%g;'\
 	     -e 's%@@RXVT_WEBMAINT@@%$(WEBMAINT)%g;'
 
-rxvt.1.man: rxvt.1.pod
-	$(SED) $(SEDREPLACE) < $< | ./podtbl | pod2man -n rxvt -qnone -s1 -c "RXVT-UNICODE" >$@
+%.tbl: %.pod
+	./podtbl <$< >$@
 
-rxvt.7.man: rxvt.7.pod
-	$(SED) $(SEDREPLACE) < $< | ./podtbl | pod2man -n rxvt -qnone -s7 -c "RXVT-UNICODE" >$@
+%.1.man.in: %.1.tbl
+	pod2man -n rxvt -r"$(VERSION)" -qnone -s1 -c "RXVT-UNICODE" <$< >$@
 
-rxvt.1.html: rxvt.1.pod
-	$(SED) $(SEDREPLACE) < $< | ./podtbl | pod2html >$@
+%.7.man.in: %.7.tbl
+	pod2man -n rxvt -r"$(VERSION)" -qnone -s7 -c "RXVT-UNICODE" <$< >$@
 
-rxvt.7.html: rxvt.7.pod
-	$(SED) $(SEDREPLACE) < $< | ./podtbl | pod2html >$@
+%.html: %.tbl
+	$(SED) $(SEDREPLACE) <$< | pod2html >$@
 
-rxvt.1.txt: rxvt.1.pod
-	$(SED) $(SEDREPLACE) < $< | ./podtbl | pod2text >$@
+%.txt: %.tbl
+	$(SED) $(SEDREPLACE) <$< | pod2text >$@
 
-rxvt.7.txt: rxvt.7.pod
-	$(SED) $(SEDREPLACE) < $< | ./podtbl | pod2text >$@
+../README.configure: rxvt.7.tbl
+	$(SED) $(SEDREPLACE) <$< | podselect -section "CONFIGURE OPTIONS" | pod2text >$@
 
-../README.configure: rxvt.7.pod
-	$(SED) $(SEDREPLACE) < $< | ./podtbl | podselect -section "CONFIGURE OPTIONS" | pod2text >$@
+../README.FAQ: rxvt.7.tbl
+	$(SED) $(SEDREPLACE) <$< | podselect -section "FREQUENTLY ASKED QUESTIONS" | pod2text >$@
 
 tags allbin:
 
-alldoc:	$(basedir)/$(VERNAME).lsm rxvt.1.man rxvt.7.man rxvt.1.html rxvt.7.html rxvt.1.txt rxvt.7.txt ../README.configure
+alldoc:	$(basedir)/$(VERNAME).lsm rxvt.1.man.in rxvt.7.man.in rxvt.1.html rxvt.7.html rxvt.1.txt rxvt.7.txt ../README.configure ../README.FAQ
 
 $(basedir)/$(VERNAME).lsm: LSM.in $(srcdir)/../autoconf/Make.common.in
 	$(SED) $(SEDREPLACE) < $(srcdir)/LSM.in > $@
@@ -66,7 +66,7 @@ clean:
 	$(RMF) *~
 
 realclean: clean
-	$(RMF) tags rxvt.1.man rxvt.7.man rxvt.1.html rxvt.7.htmlrxvt.1.txt rxvt.7.txt
+	$(RMF) tags rxvt.1.man.in rxvt.7.man.in rxvt.1.html rxvt.7.html rxvt.1.txt rxvt.7.txt  ../README.configure ../README.FAQ
 
 cleandir: realclean
 
@@ -75,7 +75,9 @@ distclean:
 install:
 	$(INSTALL) -d $(DESTDIR)$(man1dir)
 	$(INSTALL) -d $(DESTDIR)$(man7dir)
+	$(SED) $(SEDREPLACE) < rxvt.1.man.in >rxvt.1.man
 	$(INSTALL_DATA) rxvt.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME).$(man1ext)
+	$(SED) $(SEDREPLACE) < rxvt.7.man.in >rxvt.7.man
 	$(INSTALL_DATA) rxvt.7.man $(DESTDIR)$(man7dir)/$(RXVTNAME).$(man7ext)
 	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(man1dir)/$(RXVTNAME)c.$(man1ext)
 	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(man1dir)/$(RXVTNAME)d.$(man1ext)
