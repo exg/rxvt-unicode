@@ -106,7 +106,11 @@ refcache<T>::~refcache ()
 
 #ifdef USE_XIM
 static void
+#if XIMCB_PROTO_BROKEN
+im_destroy_cb (XIC unused1, XPointer client_data, XPointer unused3)
+#else
 im_destroy_cb (XIM unused1, XPointer client_data, XPointer unused3)
+#endif
 {
   rxvt_xim *xim = (rxvt_xim *)client_data;
   rxvt_display *display = xim->display;

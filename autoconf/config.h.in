@@ -292,6 +292,9 @@
 /* Define if nl_langinfo(CODESET) works */
 #undef HAVE_NL_LANGINFO
 
+/* Define if your XIMCallback specifies XIC as first type. */
+#undef XIMCB_PROTO_BROKEN
+
 /* Define if you have _GNU_SOURCE getpt()  */
 #undef HAVE_GETPT
 
