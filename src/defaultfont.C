@@ -430,7 +430,7 @@ rxvt_font_x11::set_properties (rxvt_fontprop &p, const char *name)
 
   if (f)
     {
-      // the font should really exists now. if not, we have a problem
+      // the font should really exist now. if not, we have a problem
       // (e.g. if the user did xset fp rehash just when we were searching fonts).
       // in that case, just return garbage.
       bool ret = set_properties (p, f);

@@ -1,4 +1,5 @@
-#include "rxvtlib.h"
+#include "../config.h"
+#include "rxvt.h"
 #include "rxvtdaemon.h"
 #include "iom.h"
 
@@ -107,8 +108,8 @@ void server::read_cb (io_watcher &w, short revents)
     {
       if (!strcmp (tok, "NEW"))
         {
-          stringvec argv;
-          stringvec envv;
+          stringvec *argv = new stringvec;
+          stringvec *envv = new stringvec;
             
           for (;;)
             {
@@ -118,7 +119,7 @@ void server::read_cb (io_watcher &w, short revents)
               if (!strcmp (tok, "END"))
                 break;
               else if (!strcmp (tok, "ENV") && recv (tok))
-                envv.push_back (tok.get ());
+                envv->push_back (tok.get ());
               else if (!strcmp (tok, "CWD") && recv (tok))
                 {
                   if (chdir (tok))
@@ -126,21 +127,23 @@ void server::read_cb (io_watcher &w, short revents)
                          (char *)tok, strerror (errno));
                 }
               else if (!strcmp (tok, "ARG") && recv (tok))
-                argv.push_back (tok.get ());
+                argv->push_back (tok.get ());
               else
                 return err ("protocol error: unexpected NEW token");
             }
 
-          envv.push_back (0);
+          envv->push_back (0);
 
           {
             char **old_environ = environ;
-            environ = envv.begin ();
+            environ = envv->begin ();
 
-            rxvt_init (argv.size (), argv.begin ());
+            rxvt_term *term = rxvt_init (argv->size (), argv->begin ());
+
+            term->argv = argv;
+            term->envv = envv;
 
             environ = old_environ;
-            envv.clear (); // can't yet save the env 'cause rxvt modifies it : (
           }
         }
       else

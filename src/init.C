@@ -764,9 +764,12 @@ rxvt_term::init_env ()
    * @ COLORTERM: terminal sub-name and also indicates its color
    * @ TERM:      terminal name
    * @ TERMINFO:  path to terminfo directory
+   * @ COLORFGBG: fg;bg color codes
    */
   putenv (env_display);
   putenv (env_windowid);
+  if (env_colorfgbg)
+    putenv (env_colorfgbg);
 
 #ifdef RXVT_TERMINFO
   putenv ("TERMINFO=" RXVT_TERMINFO);
@@ -1362,6 +1365,8 @@ rxvt_term::run_command (const char *const *argv)
         return -1;
       case 0:
         close (cfd);             /* only keep tty_fd and STDERR open */
+
+        init_env ();
 
         if (rxvt_control_tty (tty_fd, ttydev) < 0)
           rxvt_print_error ("could not obtain control of tty");

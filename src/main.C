@@ -110,6 +110,10 @@ rxvt_term::~rxvt_term ()
 
   scr_release ();
 
+  free (env_windowid);
+  free (env_display);
+  free (env_term);
+  free (env_colorfgbg);
   free (locale);
   free (codeset);
 
@@ -126,6 +130,9 @@ rxvt_term::~rxvt_term ()
   delete TermWin.fontset;
 
   displays.put (display);
+
+  delete envv;
+  delete argv;
 }
 
 void
@@ -286,7 +293,6 @@ rxvt_term::init (int argc, const char *const *argv)
   XMapWindow (display->display, TermWin.vt);
   XMapWindow (display->display, TermWin.parent[0]);
 
-  init_env ();
   init_command (cmd_argv);
 
   pty_ev.start (cmd_fd, EVENT_READ);
@@ -875,8 +881,8 @@ rxvt_term::set_colorfgbg ()
 #endif
         break;
       }
+
   sprintf (env_colorfgbg, "COLORFGBG=%s;%s%s", fstr, xpmb, bstr);
-  putenv (env_colorfgbg);
 
 #ifndef NO_BRIGHTCOLOR
   colorfgbg = DEFAULT_RSTYLE;

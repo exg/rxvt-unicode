@@ -1059,6 +1059,7 @@ struct rxvt_term : rxvt_vars {
   unsigned char  *v_buffer;   /* pointer to physical buffer */
   unsigned int    v_buflen;   /* size of area to write */
   char           *newfont[MAX_NFONTS];
+  stringvec      *argv, *envv;       /* if != 0, will be freed on destroy time */
 #ifdef KEYSYM_RESOURCE
   const unsigned char *Keysym_map[256];
 #endif

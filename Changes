@@ -8,7 +8,7 @@
           crashes when you kill your input method (xterm crashes, too).
         - fix bugs in x flushing, causing an empty screen after startup
           the first until the first event arives.
-        - fix ~15kb memleak per term in rxvtd.
+        - fix various memleaks in rxvtd.
 
 1.8  Mon Feb  2 20:09:18 CET 2004
 	- almost total conversion to C++. Except for introducing
