@@ -68,13 +68,35 @@ OR you could this termcap entry:
            :up=\E[A:us=\E[4m:vb=\E[?5h\E[?5l:ve=\E[?25h:vi=\E[?25l:\
            :vs=\E[?25h:
 
-=item How can I configure rxvt-unicode so that it looks similar to the original rxvt?
+=item Why does C<ls> no longer have coloured output?
 
-Felix von Leitner says that these two lines, in your F<.Xdefaults>, will make rxvt-unicode
-behave similar to the original rxvt:
+The C<ls> in the GNU coreutils unfortunately doesn't use terminfo to
+decide wether a terminal has colour, but uses it's own configuration
+file. Needless to say, C<rxvt-unicode> is not in it's default file (among
+with most other terminals supporting colour). Either add:
 
-   URxvt.font: -misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso8859-1
-   URxvt.boldFont: -misc-fixed-bold-r-semicondensed--13-120-75-75-c-60-iso8859-1
+   TERM rxvt-unicode
+
+to C</etc/DIR_COLORS> or simply add:
+
+   alias ls='ls --color=auto'
+
+to your C<.profile> or C<.bashrc>.
+
+=item Why doesn't vim/emacs etc. use the 88 colour mode?
+
+=item Why doesn't vim/emacs etc. make use of italic?
+
+=item Why are the secondary screen-related options not working properly?
+
+Make sure you are using C<TERM=rxvt-unicode>. Some pre-packaged
+distributions (most notably Debian GNU/Linux) break rxvt-unicode
+by setting C<TERM> to C<rxvt>, which doesn't have these extra
+features. Unfortunately, some of these (most notably, again, Debian
+GNU/Linux) furthermore fail to even install the C<rxvt-unicode> terminfo
+file, so you will need to install it on your own (See the question B<When
+I log-in to another system it tells me about missing terminfo data?> on
+how to do this).
 
 =item Rxvt-unicode does not seem to understand the selected encoding?
 
@@ -172,9 +194,10 @@ box, and rxvt-unicode has no way of detecting this (the correct way is to
 ask for the character bounding box, which unfortunately is wrong in these
 cases).
 
-It's not clear (to me at least), wether this is a bug in Xft, freetype, or
-the respective font. If you encounter this problem there is no way to work
-around this except by using a different font.
+It's not clear (to me at least), wether this is a bug in Xft, freetype,
+or the respective font. If you encounter this problem you might try using
+the C<-lsp> option to give the font more height. If that doesn't work, you
+might be forced to use a different font.
 
 All of this is not a problem when using X11 core fonts, as their bounding
 box data is correct.
@@ -501,49 +524,30 @@ Perhaps someday this will all be resolved in a consistent manner.
 
 There are some compile-time selections available via configure. Unless
 you have run "configure" with the C<--disable-resources> option you can
-use the `keysym' resource to alter the keystrings associated with keysym
-0xFF00 - 0xFFFF (function, cursor keys, etc).
+use the `keysym' resource to alter the keystrings associated with keysyms.
 
-Here's an example for a tn3270 session started using `@@RXVT_NAME@@ -name tn3270'
+Here's an example for a URxvt session started using `@@RXVT_NAME@@ -name URxvt'
 
-   !#  ----- special uses ------:
-   ! tn3270 login, remap function and arrow keys.
-   tn3270*font:      *clean-bold-*-*--15-*
-
-   ! keysym - used by rxvt only
-   ! Delete - ^D
-   tn3270*keysym.0xFFFF:      \004
-
-   ! Home - ^A
-   tn3270*keysym.0xFF50:      \001
-   ! Left - ^B
-   tn3270*keysym.0xFF51:      \002
-   ! Up - ^P
-   tn3270*keysym.0xFF52:      \020
-   ! Right - ^F
-   tn3270*keysym.0xFF53:      \006
-   ! Down - ^N
-   tn3270*keysym.0xFF54:      \016
-   ! End - ^E
-   tn3270*keysym.0xFF57:      \005
-
-   ! F1 - F12
-   tn3270*keysym.0xFFBE:      \e1
-   tn3270*keysym.0xFFBF:      \e2
-   tn3270*keysym.0xFFC0:      \e3
-   tn3270*keysym.0xFFC1:      \e4
-   tn3270*keysym.0xFFC2:      \e5
-   tn3270*keysym.0xFFC3:      \e6
-   tn3270*keysym.0xFFC4:      \e7
-   tn3270*keysym.0xFFC5:      \e8
-   tn3270*keysym.0xFFC6:      \e9
-   tn3270*keysym.0xFFC7:      \e0
-   tn3270*keysym.0xFFC8:      \e-
-   tn3270*keysym.0xFFC9:      \e=
-
-   ! map Prior/Next to F7/F8
-   tn3270*keysym.0xFF55:      \e7
-   tn3270*keysym.0xFF56:      \e8
+        URxvt*keysym.Home:          \e[1~
+        URxvt*keysym.End:           \e[4~
+        URxvt*keysym.C-apostrophe:  \e<C-'>
+        URxvt*keysym.C-slash:       \e<C-/>
+        URxvt*keysym.C-semicolon:   \e<C-;>
+        URxvt*keysym.C-grave:       \e<C-`>
+        URxvt*keysym.C-comma:       \e<C-,>
+        URxvt*keysym.C-period:      \e<C-.>
+        URxvt*keysym.C-0x60:        \e<C-`>
+        URxvt*keysym.C-Tab:         \e<C-Tab>
+        URxvt*keysym.C-Return:      \e<C-Return>
+        URxvt*keysym.S-Return:      \e<S-Return>
+        URxvt*keysym.S-space:       \e<S-Space>
+        URxvt*keysym.M-Up:          \e<M-Up>
+        URxvt*keysym.M-Down:        \e<M-Down>
+        URxvt*keysym.M-Left:        \e<M-Left>
+        URxvt*keysym.M-Right:       \e<M-Right>
+        URxvt*keysym.M-C-0:         list.0123456789.\e<M-C-.>
+        URxvt*keysym.M-C-a:         list.abcdefghijklmnopqrstuvwxyz.\033<M-C-.>
+        URxvt*keysym.F12:           proto:\033]701;zh_CN.GBK\007
 
 =item I'm using keyboard model XXX that has extra Prior/Next/Insert keys.
 How do I make use of them?  For example, the Sun Keyboard type 4
@@ -2251,16 +2255,26 @@ Add support for many small features that are not essential but nice to
 have. Normally you want this, but for very small binaries you may want to
 disable this.
 
+A non-exhaustive list of features enabled by C<--enable-frills> (possibly
+in combination with other switches) is:
+
+  MWM-hints
+  seperate underline colour
+  settable border widths and borderless switch
+  settable extra linespacing
+  extra window properties (e.g. UTF-8 window names and PID)
+  iso-14755-2 and -3, and visual feedback
+  backindex and forwardindex escape sequence
+  window op and locale change escape sequences
+  tripleclickwords
+  settable insecure mode
+
 =item --enable-iso14755
 
 Enable extended ISO 14755 support (see @@RXVT_NAME@@(1), or
 F<doc/rxvt.1.txt>). Basic support (section 5.1) is enabled by
 C<--enable-frills>, while support for 5.2, 5.3 and 5.4 is enabled with
 this switch.
-
-=item --enable-linespace
-
-Add support to provide user specified line spacing between text rows.
 
 =item --enable-keepscrolling
 
@@ -2312,13 +2326,14 @@ Add support to have the pointer disappear when typing or inactive.
 
 =item --with-name=NAME
 
-Set the basename for the installed binaries (default: urxvt, resulting in
-urxvt, urxvtd etc.). Specify --with-name=rxvt to replace rxvt.
+Set the basename for the installed binaries (default: C<urxvt>, resulting
+in C<urxvt>, C<urxvtd> etc.). Specify C<--with-name=rxvt> to replace with
+C<rxvt>.
 
 =item --with-term=NAME
 
 Change the environmental variable for the terminal to NAME (default
-"rxvt")
+C<rxvt-unicode>)
 
 =item --with-terminfo=PATH
 

@@ -230,29 +230,6 @@ keyboard_manager::register_done ()
 
   purge_duplicate_keymap ();
 
-#if TO_BE_DONE_INSIDE_dispatch
-  for (i = 0; i < keymap.size (); ++i)
-    {
-      keysym_t *key = keymap[i];
-
-      assert (bitcount (term_->ModMetaMask) == 1 && "call me after ModMetaMask was set!");
-
-      if (key->state & MetaMask)
-        {
-          //key->state &= ~MetaMask;
-          key->state |= term_->ModMetaMask;
-        }
-
-      assert (bitcount (term_->ModNumLockMask) == 1 && "call me after ModNumLockMask was set!");
-
-      if (key->state & NumLockMask)
-        {
-          //key->state &= ~NumLockMask;
-          key->state |= term_->ModNumLockMask;
-        }
-    }
-#endif
-
   setup_hash ();
 }
 
@@ -260,6 +237,15 @@ bool
 keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
 {
   assert (hash[0] == 0 && "register_done() need to be called");
+
+  if (state & term->ModMetaMask)
+    state |= MetaMask;
+
+  if (state & term->ModNumLockMask)
+    state |= NumLockMask;
+
+  if (!!(term->priv_modes & PrivMode_aplKP) != !!(state & ShiftMask))
+    state |= AppKeypadMask;
 
   int index = find_keysym (keysym, state);
 
