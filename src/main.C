@@ -255,7 +255,7 @@ rxvt_term::~rxvt_term ()
 #endif
       delete TermWin.drawable;
       // destroy all windows
-      if (TermWin.parent[0])
+      if (TermWin.parent[0] && !rs[Rs_embed])
         XDestroyWindow (disp, TermWin.parent[0]);
     }
 
@@ -714,16 +714,19 @@ rxvt_term::window_calc (unsigned int width, unsigned int height)
       parsed_geometry = 1;
       if (rs[Rs_geometry])
         flags = XParseGeometry (rs[Rs_geometry], &x, &y, &w, &h);
+
       if (flags & WidthValue)
         {
           TermWin.ncol = BOUND_POSITIVE_INT16 (w);
           szHint.flags |= USSize;
         }
+
       if (flags & HeightValue)
         {
           TermWin.nrow = BOUND_POSITIVE_INT16 (h);
           szHint.flags |= USSize;
         }
+
       if (flags & XValue)
         {
           szHint.x = x;
@@ -734,6 +737,7 @@ rxvt_term::window_calc (unsigned int width, unsigned int height)
               szHint.win_gravity = NorthEastGravity;
             }
         }
+
       if (flags & YValue)
         {
           szHint.y = y;

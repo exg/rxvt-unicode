@@ -928,6 +928,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   long vt_emask;
   XSetWindowAttributes attributes;
   XWindowAttributes gattr;
+  Window top;
   dDisp;
 
 #ifdef USING_W11LIB
@@ -975,31 +976,62 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   if (!set_fonts ())
     rxvt_fatal ("unable to load base fontset, please specify a valid one using -fn, aborting.\n");
 
-  window_calc (0, 0);
+#if ENABLE_FRILLS
+  if (rs[Rs_embed])
+    {
+      top = strtol (rs[Rs_embed], 0, 0);
+
+      XWindowAttributes wattr;
+      XGetWindowAttributes (disp, top, &wattr);
+
+      window_calc (wattr.width, wattr.height);
+
+#if 0
+      if (wattr.map_state == IsViewable)
+        {
+          TermWin.mapped = 1;
+          refresh_type = FAST_REFRESH;
+          XClearWindow (disp, top);
+          // TODO: make XMapNotify-event-code a function and call it
+          // TODO: how can I detetc visibility without unmpa/map?
+          // TODO: focusin etc.
+        }
+#else
+      // it'S easiets just to unmap/map to get all state correctly set-up
+      XUnmapWindow (disp, top);
+#endif
+    }
+  else
+#endif
+    {
+      window_calc (0, 0);
+
+      /* sub-window placement & size in rxvt_resize_subwindows () */
+#ifdef PREFER_24BIT
+      attributes.background_pixel = pix_colors_focused[Color_border];
+      attributes.border_pixel = pix_colors_focused[Color_border];
+      attributes.colormap = display->cmap;
+      top = XCreateWindow (disp, DefaultRootWindow (disp),
+                                         szHint.x, szHint.y,
+                                         szHint.width, szHint.height,
+                                         TermWin.ext_bwidth,
+                                         display->depth, InputOutput,
+                                         display->visual,
+                                         CWColormap | CWBackPixel | CWBorderPixel, &attributes);
+#else
+      top = XCreateSimpleWindow (disp, DefaultRootWindow (disp),
+                                               szHint.x, szHint.y,
+                                               szHint.width, szHint.height,
+                                               TermWin.ext_bwidth,
+                                               pix_colors_focused[Color_border],
+                                               pix_colors_focused[Color_border]);
+#endif
+    }
+
+  TermWin.parent[0] = top;
+
   old_width = szHint.width;
   old_height = szHint.height;
-
-  /* sub-window placement & size in rxvt_resize_subwindows () */
-
-#ifdef PREFER_24BIT
-  attributes.background_pixel = pix_colors_focused[Color_border];
-  attributes.border_pixel = pix_colors_focused[Color_border];
-  attributes.colormap = display->cmap;
-  TermWin.parent[0] = XCreateWindow (disp, DefaultRootWindow (disp),
-                                     szHint.x, szHint.y,
-                                     szHint.width, szHint.height,
-                                     TermWin.ext_bwidth,
-                                     display->depth, InputOutput,
-                                     display->visual,
-                                     CWColormap | CWBackPixel | CWBorderPixel, &attributes);
-#else
-  TermWin.parent[0] = XCreateSimpleWindow (disp, DefaultRootWindow (disp),
-                                           szHint.x, szHint.y,
-                                           szHint.width, szHint.height,
-                                           TermWin.ext_bwidth,
-                                           pix_colors_focused[Color_border],
-                                           pix_colors_focused[Color_border]);
-#endif
 
   process_xterm_seq (XTerm_title, rs[Rs_title], CHAR_ST);
   process_xterm_seq (XTerm_iconName, rs[Rs_iconName], CHAR_ST);
@@ -1010,24 +1042,23 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   wmHint.flags = InputHint | StateHint | WindowGroupHint;
   wmHint.input = True;
   wmHint.initial_state = options & Opt_iconic ? IconicState : NormalState;
-  wmHint.window_group = TermWin.parent[0];
+  wmHint.window_group = top;
 
-  XSetWMProperties (disp, TermWin.parent[0], NULL, NULL,
+  XSetWMProperties (disp, top, NULL, NULL,
                     (char **)argv, argc, &szHint, &wmHint, &classHint);
 
   /* Enable delete window protocol */
-  XSetWMProtocols (disp, TermWin.parent[0],
-                   &xa[XA_WMDELETEWINDOW], 1);
+  XSetWMProtocols (disp, top, &xa[XA_WMDELETEWINDOW], 1);
 
 #if ENABLE_FRILLS
   long pid = getpid ();
 
-  XChangeProperty (disp, TermWin.parent[0],
+  XChangeProperty (disp, top,
                    xa[XA_NET_WM_PID], XA_CARDINAL, 32,
                    PropModeReplace, (unsigned char *)&pid, 1);
 #endif
 
-  XSelectInput (disp, TermWin.parent[0],
+  XSelectInput (disp, top,
                 KeyPressMask
 #if (MOUSE_WHEEL && MOUSE_SLIP_WHEELING) || ENABLE_FRILLS || ISO_14755
                 | KeyReleaseMask
@@ -1035,11 +1066,11 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                 | FocusChangeMask | VisibilityChangeMask
                 | ExposureMask
                 | StructureNotifyMask);
-  termwin_ev.start (display, TermWin.parent[0]);
+  termwin_ev.start (display, top);
 
 #if ENABLE_FRILLS
   if (mwmhints.flags)
-    XChangeProperty (disp, TermWin.parent[0], xa[XA_MOTIF_WM_HINTS], xa[XA_MOTIF_WM_HINTS], 32,
+    XChangeProperty (disp, top, xa[XA_MOTIF_WM_HINTS], xa[XA_MOTIF_WM_HINTS], 32,
                      PropModeReplace, (unsigned char *)&mwmhints, PROP_MWM_HINTS_ELEMENTS);
 #endif
 
@@ -1052,7 +1083,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #endif
 
   /* the vt window */
-  TermWin.vt = XCreateSimpleWindow (disp, TermWin.parent[0],
+  TermWin.vt = XCreateSimpleWindow (disp, top,
                                     window_vt_x,
                                     window_vt_y,
                                     TermWin_TotalWidth (),
@@ -1084,7 +1115,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #if defined(MENUBAR) && (MENUBAR_MAX > 1)
   if (menuBar_height ())
     {
-      menuBar.win = XCreateSimpleWindow (disp, TermWin.parent[0],
+      menuBar.win = XCreateSimpleWindow (disp, top,
                                          window_vt_x, 0,
                                          TermWin_TotalWidth (),
                                          menuBar_TotalHeight (),

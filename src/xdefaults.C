@@ -219,6 +219,7 @@ optList[] = {
               STRG (Rs_iconName, "iconName", "n", "string", "icon name for window"),
               STRG (Rs_saveLines, "saveLines", "sl", "number", "number of scrolled lines to save"),
 #if ENABLE_FRILLS
+              STRG (Rs_embed, NULL, "embed", "windowid", "window id to embed terminal in"),
               STRG (Rs_ext_bwidth, "externalBorder", "w", "number", "external border in pixels"),
               STRG (Rs_ext_bwidth, NULL, "bw", NULL, NULL),
               STRG (Rs_ext_bwidth, NULL, "borderwidth", NULL, NULL),

@@ -6,11 +6,11 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version , is a colour vt102 terminal emulator intended as
-    an *xterm*(1) replacement for users who do not require features such as
-    Tektronix 4014 emulation and toolkit-style configurability. As a result,
-    rxvt-unicode uses much less swap space -- a significant advantage on a
-    machine serving many X sessions.
+    rxvt-unicode, version 5.1, is a colour vt102 terminal emulator intended
+    as an *xterm*(1) replacement for users who do not require features such
+    as Tektronix 4014 emulation and toolkit-style configurability. As a
+    result, rxvt-unicode uses much less swap space -- a significant
+    advantage on a machine serving many X sessions.
 
 FREQUENTLY ASKED QUESTIONS
     See rxvt(7) (try "man 7 rxvt") for a list of frequently asked questions
@@ -316,10 +316,20 @@ OPTIONS
     -keysym.*sym*: *string*
         Remap a key symbol. See resource keysym.
 
-    -xrm *resourcestring*
-        No effect on rxvt-unicode. Simply passes through an argument to be
-        made available in the instance's argument list. Appears in
-        *WM_COMMAND* in some window managers.
+    -embed: *windowid*
+        Tells rxvt to embed it's windows into an already-existing window,
+        which enables applications to easily embed a terminal.
+
+        Right now, rxvt will first unmap/map the specified window, so it
+        shouldn't be a top-level window. rxvt will also reconfigure it quite
+        a bit, so don't expect it to keep some specific state. It's best to
+        create an extra subwindow for rxvt and leave it alone.
+
+        It might be useful to know that rxvt will not close file descriptors
+        passed to it (except for stdin/out/err, of course), so you can use
+        file descriptors to communicate with the programs within the
+        terminal. This works regardless of wether the "-embed" option was
+        used or not.
 
 RESOURCES (available also as long-options)
     Note: `rxvt --help' gives a list of all resources (long options)

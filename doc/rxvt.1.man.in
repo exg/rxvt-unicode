@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-02-14" "" "RXVT-UNICODE"
+.TH rxvt 1 "2005-02-14" "5.1" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -446,11 +446,21 @@ Turn on/off secondary screen scroll (default enabled); resource
 .IP "\fB\-keysym.\fR\fIsym\fR: \fIstring\fR" 4
 .IX Item "-keysym.sym: string"
 Remap a key symbol. See resource \fBkeysym\fR.
-.IP "\fB\-xrm\fR \fIresourcestring\fR" 4
-.IX Item "-xrm resourcestring"
-No effect on rxvt\-unicode. Simply passes through an argument to be made
-available in the instance's argument list. Appears in \fI\s-1WM_COMMAND\s0\fR in
-some window managers.
+.IP "\fB\-embed\fR: \fIwindowid\fR" 4
+.IX Item "-embed: windowid"
+Tells @@RXVT_NAME@@ to embed it's windows into an already-existing window,
+which enables applications to easily embed a terminal.
+.Sp
+Right now, @@RXVT_NAME@@ will first unmap/map the specified window, so it
+shouldn't be a top-level window. @@RXVT_NAME@@ will also reconfigure it
+quite a bit, so don't expect it to keep some specific state. It's best to
+create an extra subwindow for @@RXVT_NAME@@ and leave it alone.
+.Sp
+It might be useful to know that @@RXVT_NAME@@ will not close file
+descriptors passed to it (except for stdin/out/err, of course), so you
+can use file descriptors to communicate with the programs within the
+terminal. This works regardless of wether the \f(CW\*(C`\-embed\*(C'\fR option was used or
+not.
 .SH "RESOURCES (available also as long\-options)"
 .IX Header "RESOURCES (available also as long-options)"
 Note: `@@RXVT_NAME@@ \-\-help' gives a list of all resources (long

@@ -49,7 +49,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong></strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>5.1</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -519,12 +519,24 @@ Turn on/off secondary screen scroll (default enabled); resource
 Remap a key symbol. See resource <strong>keysym</strong>.
 </dd>
 <p></p>
-<dt><strong><a name="item__2dxrm_resourcestring"><strong>-xrm</strong> <em>resourcestring</em></a></strong><br />
+<dt><strong><a name="item__2dembed_3a_windowid"><strong>-embed</strong>: <em>windowid</em></a></strong><br />
 </dt>
 <dd>
-No effect on rxvt-unicode. Simply passes through an argument to be made
-available in the instance's argument list. Appears in <em>WM_COMMAND</em> in
-some window managers.
+Tells rxvt to embed it's windows into an already-existing window,
+which enables applications to easily embed a terminal.
+</dd>
+<dd>
+<p>Right now, rxvt will first unmap/map the specified window, so it
+shouldn't be a top-level window. rxvt will also reconfigure it
+quite a bit, so don't expect it to keep some specific state. It's best to
+create an extra subwindow for rxvt and leave it alone.</p>
+</dd>
+<dd>
+<p>It might be useful to know that rxvt will not close file
+descriptors passed to it (except for stdin/out/err, of course), so you
+can use file descriptors to communicate with the programs within the
+terminal. This works regardless of wether the <code>-embed</code> option was used or
+not.</p>
 </dd>
 <p></p></dl>
 <p>

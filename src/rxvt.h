@@ -605,9 +605,8 @@ enum {
   Rs_ext_bwidth,
   Rs_int_bwidth,
   Rs_borderLess,
-#endif
-#if ENABLE_FRILLS
   Rs_lineSpace,
+  Rs_embed,
 #endif
   Rs_cutchars,
   Rs_modifier,
