@@ -968,8 +968,8 @@ ENVIRONMENT
         string "default" to indicate that the default-colour escape sequence
         is to be used), "bg" is the colour code used as default background
         colour (or the string "default"), and "xpm" is the string "default"
-        if rxvt was compiled with XPM support. Libraries like "slang" can
-        (and do) use this information to optimize screen output.
+        if rxvt was compiled with XPM support. Libraries like "ncurses" and
+        "slang" can (and do) use this information to optimize screen output.
 
     WINDOWID
         Set to the (decimal) X Window ID of the rxvt window (the toplevel

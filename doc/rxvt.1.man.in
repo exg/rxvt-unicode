@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-02-11" "5.0" "RXVT-UNICODE"
+.TH rxvt 1 "2005-02-12" "5.0" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -1120,8 +1120,8 @@ the colour code used as default foreground/text colour (or the string
 \&\f(CW\*(C`default\*(C'\fR to indicate that the default-colour escape sequence is to be
 used), \f(CW\*(C`bg\*(C'\fR is the colour code used as default background colour (or the
 string \f(CW\*(C`default\*(C'\fR), and \f(CW\*(C`xpm\*(C'\fR is the string \f(CW\*(C`default\*(C'\fR if @@RXVT_NAME@@
-was compiled with \s-1XPM\s0 support. Libraries like \f(CW\*(C`slang\*(C'\fR can (and do) use
-this information to optimize screen output.
+was compiled with \s-1XPM\s0 support. Libraries like \f(CW\*(C`ncurses\*(C'\fR and \f(CW\*(C`slang\*(C'\fR can
+(and do) use this information to optimize screen output.
 .IP "\fB\s-1WINDOWID\s0\fR" 4
 .IX Item "WINDOWID"
 Set to the (decimal) X Window \s-1ID\s0 of the @@RXVT_NAME@@ window (the toplevel

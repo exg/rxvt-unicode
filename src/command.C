@@ -54,7 +54,6 @@
 # include "keyboard.h"
 #endif
 
-#include <cwchar>
 #include <csignal>
 
 /*----------------------------------------------------------------------*/

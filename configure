@@ -10984,6 +10984,9 @@ fi
 
 
 
+
+
+
 for ac_header in \
 	assert.h \
 	fcntl.h \
@@ -11006,6 +11009,9 @@ for ac_header in \
 	utmpx.h \
         stdint.h \
         pty.h \
+        wchar.h \
+        cwchar \
+        clocale \
 
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
@@ -13471,19 +13477,19 @@ else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-if test $ac_cv_sizeof_char -ge 2; then
+if test "$ac_cv_sizeof_char" -ge 2; then
   rxvt_cv_int16_t=" char"
 else
-  if test $ac_cv_sizeof_short -ge 2; then
+  if test "$ac_cv_sizeof_short" -ge 2; then
     rxvt_cv_int16_t=" short"
   else
-    if test $ac_cv_sizeof_int -ge 2; then
+    if test "$ac_cv_sizeof_int" -ge 2; then
       rxvt_cv_int16_t=" int"
     else
-      if test $ac_cv_sizeof_long -ge 2; then
+      if test "$ac_cv_sizeof_long" -ge 2; then
         rxvt_cv_int16_t=" long"
       else
-        if test $ac_cv_sizeof_long_long -ge 2; then
+        if test "$ac_cv_sizeof_long_long" -ge 2; then
           rxvt_cv_int16_t=" long long"
         else
           rxvt_cv_int16_t=" short" # we _must_ have a (possibly wrong) default
@@ -13553,19 +13559,19 @@ else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-if test $ac_cv_sizeof_char -ge 2; then
+if test "$ac_cv_sizeof_char" -ge 2; then
   rxvt_cv_uint16_t="unsigned char"
 else
-  if test $ac_cv_sizeof_short -ge 2; then
+  if test "$ac_cv_sizeof_short" -ge 2; then
     rxvt_cv_uint16_t="unsigned short"
   else
-    if test $ac_cv_sizeof_int -ge 2; then
+    if test "$ac_cv_sizeof_int" -ge 2; then
       rxvt_cv_uint16_t="unsigned int"
     else
-      if test $ac_cv_sizeof_long -ge 2; then
+      if test "$ac_cv_sizeof_long" -ge 2; then
         rxvt_cv_uint16_t="unsigned long"
       else
-        if test $ac_cv_sizeof_long_long -ge 2; then
+        if test "$ac_cv_sizeof_long_long" -ge 2; then
           rxvt_cv_uint16_t="unsigned long long"
         else
           rxvt_cv_uint16_t="unsigned short" # we _must_ have a (possibly wrong) default
@@ -13635,19 +13641,19 @@ else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-if test $ac_cv_sizeof_char -ge 4; then
+if test "$ac_cv_sizeof_char" -ge 4; then
   rxvt_cv_int32_t=" char"
 else
-  if test $ac_cv_sizeof_short -ge 4; then
+  if test "$ac_cv_sizeof_short" -ge 4; then
     rxvt_cv_int32_t=" short"
   else
-    if test $ac_cv_sizeof_int -ge 4; then
+    if test "$ac_cv_sizeof_int" -ge 4; then
       rxvt_cv_int32_t=" int"
     else
-      if test $ac_cv_sizeof_long -ge 4; then
+      if test "$ac_cv_sizeof_long" -ge 4; then
         rxvt_cv_int32_t=" long"
       else
-        if test $ac_cv_sizeof_long_long -ge 4; then
+        if test "$ac_cv_sizeof_long_long" -ge 4; then
           rxvt_cv_int32_t=" long long"
         else
           rxvt_cv_int32_t=" int" # we _must_ have a (possibly wrong) default
@@ -13717,19 +13723,19 @@ else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-if test $ac_cv_sizeof_char -ge 4; then
+if test "$ac_cv_sizeof_char" -ge 4; then
   rxvt_cv_uint32_t="unsigned char"
 else
-  if test $ac_cv_sizeof_short -ge 4; then
+  if test "$ac_cv_sizeof_short" -ge 4; then
     rxvt_cv_uint32_t="unsigned short"
   else
-    if test $ac_cv_sizeof_int -ge 4; then
+    if test "$ac_cv_sizeof_int" -ge 4; then
       rxvt_cv_uint32_t="unsigned int"
     else
-      if test $ac_cv_sizeof_long -ge 4; then
+      if test "$ac_cv_sizeof_long" -ge 4; then
         rxvt_cv_uint32_t="unsigned long"
       else
-        if test $ac_cv_sizeof_long_long -ge 4; then
+        if test "$ac_cv_sizeof_long_long" -ge 4; then
           rxvt_cv_uint32_t="unsigned long long"
         else
           rxvt_cv_uint32_t="unsigned int" # we _must_ have a (possibly wrong) default
@@ -13753,15 +13759,15 @@ else
   fi
 fi
 
-if test $ac_cv_sizeof_int_p -eq 8; then
+if test "$ac_cv_sizeof_int_p" -eq 8; then
   rxvt_intp_define="#define intp_t int64_t"
   rxvt_u_intp_define="#define u_intp_t u_int64_t"
 else
-  if test $ac_cv_sizeof_int_p -eq 4; then
+  if test "$ac_cv_sizeof_int_p" -eq 4; then
     rxvt_intp_define="#define intp_t int32_t"
     rxvt_u_intp_define="#define u_intp_t u_int32_t"
   else
-    if test $ac_cv_sizeof_int_p -eq 2; then
+    if test "$ac_cv_sizeof_int_p" -eq 2; then
       rxvt_intp_define="#define intp_t int16_t"
       rxvt_u_intp_define="#define u_intp_t u_int16_t"
     else

@@ -521,6 +521,9 @@ AC_CHECK_HEADERS( \
 	utmpx.h \
         stdint.h \
         pty.h \
+        wchar.h \
+        cwchar \
+        clocale \
 )
 
 AC_HEADER_TIME
@@ -608,19 +611,19 @@ dnl# see usage below
 AC_DEFUN(RXVT_CHECK_SIZE,
   [AC_CACHE_CHECK([for $2], $1,
     [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdint.h>]], [[$2 dummy;]])],[$1=yes],[dnl
-if test $ac_cv_sizeof_char -ge $3; then
+if test "$ac_cv_sizeof_char" -ge $3; then
   $1="$4 char"
 else
-  if test $ac_cv_sizeof_short -ge $3; then
+  if test "$ac_cv_sizeof_short" -ge $3; then
     $1="$4 short"
   else
-    if test $ac_cv_sizeof_int -ge $3; then
+    if test "$ac_cv_sizeof_int" -ge $3; then
       $1="$4 int"
     else
-      if test $ac_cv_sizeof_long -ge $3; then
+      if test "$ac_cv_sizeof_long" -ge $3; then
         $1="$4 long"
       else
-        if test $ac_cv_sizeof_long_long -ge $3; then
+        if test "$ac_cv_sizeof_long_long" -ge $3; then
           $1="$4 long long"
         else
           $1="$4 $5" # we _must_ have a (possibly wrong) default
@@ -657,15 +660,15 @@ dnl AC_SUBST(rxvt_uint64_typedef)
 dnl#
 dnl# Now look for another we use
 dnl#
-if test $ac_cv_sizeof_int_p -eq 8; then
+if test "$ac_cv_sizeof_int_p" -eq 8; then
   rxvt_intp_define="#define intp_t int64_t"
   rxvt_u_intp_define="#define u_intp_t u_int64_t"
 else
-  if test $ac_cv_sizeof_int_p -eq 4; then
+  if test "$ac_cv_sizeof_int_p" -eq 4; then
     rxvt_intp_define="#define intp_t int32_t"
     rxvt_u_intp_define="#define u_intp_t u_int32_t"
   else
-    if test $ac_cv_sizeof_int_p -eq 2; then
+    if test "$ac_cv_sizeof_int_p" -eq 2; then
       rxvt_intp_define="#define intp_t int16_t"
       rxvt_u_intp_define="#define u_intp_t u_int16_t"
     else

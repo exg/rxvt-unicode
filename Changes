@@ -2,8 +2,19 @@ Lines marked with "xterm:" indicate either xterm features ported to rxvt
 or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
-TODO: VERIFY bugfix for keyboard.C changes.
-TODO: maybe just output the error and continue on x errors
+TODO: manpage 900mb update
+TODO: openbsd
+checking for int16_t... ./configure[13497]: test: 2: unexpected operator/operand
+ short
+checking for uint16_t... ./configure[13579]: test: 2: unexpected operator/operand
+unsigned short
+checking for int32_t... ./configure[13661]: test: 4: unexpected operator/operand
+ int
+checking for uint32_t... ./configure[13743]: test: 4: unexpected operator/operand
+unsigned int
+checking return type of signal handlers... void
+./configure[13848]: break: cannot break
+TODO: maybe just output the error and continue on x errors, especially for XIM-management
 TODO: safer command: keymap processing.
 TODO: read property sequence is broken with respect to utf-8 etc.
 WISH: keyboard modification via esc-sequences.
