@@ -157,6 +157,8 @@ rxvt_term::rxvt_term ()
 #ifdef USE_XIM
     im_ev (this, &rxvt_term::im_cb),
 #endif
+    sw_term (this, &rxvt_term::sig_term),
+    sw_chld (this, &rxvt_term::sig_chld),
     termwin_ev (this, &rxvt_term::x_cb),
     vt_ev (this, &rxvt_term::x_cb),
     check_ev (this, &rxvt_term::check_cb),
@@ -395,13 +397,6 @@ static int (*old_xerror_handler) (Display *dpy, XErrorEvent *event);
 void
 rxvt_init ()
 {
-  /* install exit handler for cleanup */
-#if 0
-#ifdef HAVE_ATEXIT
-  atexit (rxvt_clean_exit);
-#else
-#endif
-#endif
   /*
    * Save and then give up any super-user privileges
    * If we need privileges in any area then we must specifically request it.
@@ -412,21 +407,14 @@ rxvt_init ()
   rxvt_privileges (SAVE);
   rxvt_privileges (IGNORE);
 
-  struct sigaction sa;
-
-  sigfillset (&sa.sa_mask);
-  sa.sa_flags = SA_NOCLDSTOP | SA_RESTART;
-  sa.sa_handler = SIG_IGN;           sigaction (SIGHUP , &sa, 0);
-  sa.sa_handler = SIG_IGN;           sigaction (SIGPIPE, &sa, 0);
-  sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGINT , &sa, 0);
-  sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGQUIT, &sa, 0);
-  sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGTERM, &sa, 0);
-  sa.sa_handler = rxvt_Child_signal; sigaction (SIGCHLD, &sa, 0);
+  signal (SIGHUP,  SIG_IGN);
+  signal (SIGPIPE, SIG_IGN);
 
   /* need to trap SIGURG for SVR4 (Unixware) rlogin */
   /* signal (SIGURG, SIG_DFL); */
 
   old_xerror_handler = XSetErrorHandler ((XErrorHandler) rxvt_xerror_handler);
+  // TODO: handle this with exceptions and tolerate the memory loss
   //XSetIOErrorHandler ((XErrorHandler) rxvt_xioerror_handler);
 }
 
@@ -437,42 +425,46 @@ rxvt_init ()
  * Catch a SIGCHLD signal and exit if the direct child has died
  */
 
-void rxvt_term::child_exited (int pid)
+void
+rxvt_term::sig_chld (sig_watcher &w)
 {
-  for (rxvt_term **t = termlist.begin (); t < termlist.end (); t++)
-    if (pid == (*t)->cmd_pid)
-      {
-        (*t)->destroy ();
-        break;
-      }
-}
-
-/* ARGSUSED */
-/* INTPROTO */
-RETSIGTYPE
-rxvt_Child_signal (int sig __attribute__ ((unused)))
-{
-  int pid, save_errno = errno;
+  // we are being called for every SIGCHLD, not just ours
+  int pid;
 
   while ((pid = waitpid (-1, NULL, WNOHANG)) > 0)
-    rxvt_term::child_exited (pid);
+    for (rxvt_term **t = termlist.begin (); t < termlist.end (); t++)
+      if (pid == (*t)->cmd_pid)
+        {
+          (*t)->destroy ();
+          break;
+        }
+}
 
-  errno = save_errno;
+/*----------------------------------------------------------------------*/
+/*
+ * Exit gracefully, clearing the utmp entry and restoring tty attributes
+ * TODO: if debugging, this should free up any known resources if we can
+ */
+void
+rxvt_destroy_all ()
+{
+  // TODO: rxvtd should clean up all ressources
+  for (rxvt_term **t = rxvt_term::termlist.begin (); t < rxvt_term::termlist.end (); t++)
+    (*t)->destroy ();
 }
 
 /*
  * Catch a fatal signal and tidy up before quitting
  */
-/* INTPROTO */
-RETSIGTYPE
-rxvt_Exit_signal (int sig)
+void
+rxvt_term::sig_term (sig_watcher &w)
 {
-  signal (sig, SIG_DFL);
 #ifdef DEBUG_CMD
-  rxvt_warn ("caught signal %d, exiting.\n", sig);
+  rxvt_warn ("caught signal %d, exiting.\n", w.signum);
 #endif
-  rxvt_clean_exit ();
-  kill (getpid (), sig);
+  rxvt_destroy_all ();
+  signal (w.signum, SIG_DFL);
+  kill (getpid (), w.signum);
 }
 
 /* INTPROTO */
@@ -490,67 +482,42 @@ rxvt_xerror_handler (Display *display, XErrorEvent *event)
   return 0;
 }
 
-/*----------------------------------------------------------------------*/
-/*
- * Exit gracefully, clearing the utmp entry and restoring tty attributes
- * TODO: if debugging, this should free up any known resources if we can
- */
-/* INTPROTO */
-void
-rxvt_clean_exit ()
-{
-  // TODO: rxvtd should clean up all ressources
-  if (GET_R)
-    GET_R->destroy ();
-}
-
 /* ------------------------------------------------------------------------- *
  *                         MEMORY ALLOCATION WRAPPERS                        *
  * ------------------------------------------------------------------------- */
-/* INTPROTO */
-void           *
+void *
 rxvt_malloc (size_t size)
 {
-  void *p;
+  void *p = malloc (size);
 
-  p = malloc (size);
-  if (p)
-    return p;
+  if (!p)
+    rxvt_fatal ("memory allocation failure. aborting.\n");
 
-  rxvt_fatal ("memory allocation failure. aborting.\n");
-  /* NOTREACHED */
+  return p;
 }
 
 /* INTPROTO */
 void           *
 rxvt_calloc (size_t number, size_t size)
 {
-  void *p;
+  void *p = calloc (number, size);
 
-  p = calloc (number, size);
-  if (p)
-    return p;
+  if (!p)
+    rxvt_fatal ("memory allocation failure. aborting.\n");
 
-  rxvt_fatal ("memory allocation failure. aborting.\n");
-  /* NOTREACHED */
+  return p;
 }
 
 /* INTPROTO */
 void           *
 rxvt_realloc (void *ptr, size_t size)
 {
-  void           *p;
+  void *p = realloc (ptr, size);
 
-  if (ptr)
-    p = realloc (ptr, size);
-  else
-    p = malloc (size);
+  if (!p)
+    rxvt_fatal ("memory allocation failure. aborting.\n");
 
-  if (p)
-    return p;
-
-  rxvt_fatal ("memory allocation failure. aborting.\n");
-  /* NOTREACHED */
+  return p;
 }
 
 /* ------------------------------------------------------------------------- *
@@ -800,11 +767,8 @@ rxvt_term::set_fonts ()
   rxvt_fontset *fs = new rxvt_fontset (this);
   rxvt_fontprop prop;
 
-  prop.width = prop.height = prop.weight = prop.slant
-    = rxvt_fontprop::unset;
-
   if (!fs
-      || !fs->populate (rs[Rs_font] ? rs[Rs_font] : "fixed", prop)
+      || !fs->populate (rs[Rs_font] ? rs[Rs_font] : "fixed")
       || !fs->realize_font (1))
     {
       delete fs;
@@ -820,7 +784,8 @@ rxvt_term::set_fonts ()
   delete TermWin.fontset[0];
   TermWin.fontset[0] = fs;
 
-  fs->prop = prop = (*fs)[1]->properties ();
+  prop = (*fs)[1]->properties ();
+  fs->set_prop (prop);
 
   TermWin.fwidth  = prop.width;
   TermWin.fheight = prop.height;
@@ -850,7 +815,8 @@ rxvt_term::set_fonts ()
               if (SET_STYLE (0, style) & RS_Italic) prop2.slant  = rxvt_fontprop::italic;
             }
 
-          fs->populate (res, prop2);
+          fs->populate (res);
+          fs->set_prop (prop2);
         }
 #else
       TermWin.fontset[style] = TermWin.fontset[0];
@@ -1265,23 +1231,20 @@ rxvt_term::IMisRunning ()
 void
 rxvt_term::IMSendSpot ()
 {
-  XPoint spot;
+  XPoint nspot;
   XVaNestedList preedit_attr;
 
   if (!Input_Context
       || !TermWin.focus
-      || !(input_style & XIMPreeditPosition)
-#if 0
-      || !(event_type == KeyPress
-           || event_type == Expose
-           || event_type == NoExpose
-           || event_type == SelectionNotify
-           || event_type == ButtonRelease || event_type == FocusIn)
-#endif
-      || !IMisRunning ())
+      || !(input_style & XIMPreeditPosition))
     return;
 
-  im_set_position (spot);
+  im_set_position (nspot);
+
+  if (nspot.x == spot.x && nspot.y == spot.y)
+    return;
+
+  spot = nspot;
 
   preedit_attr = XVaCreateNestedList (0, XNSpotLocation, &spot, NULL);
   XSetICValues (Input_Context, XNPreeditAttributes, preedit_attr, NULL);
@@ -1291,17 +1254,16 @@ rxvt_term::IMSendSpot ()
 void
 rxvt_term::im_destroy ()
 {
-  if (Input_Context)
-    {
-      XDestroyIC (Input_Context);
-      Input_Context = 0;
-    }
-
   if (input_method)
     {
+      if (Input_Context && input_method->xim)
+        XDestroyIC (Input_Context);
+
       display->put_xim (input_method);
       input_method = 0;
     }
+
+  Input_Context = 0;
 }
 
 /*
@@ -1329,6 +1291,7 @@ rxvt_term::IM_get_IC (const char *modifiers)
     return false;
 
   xim = input_method->xim;
+  spot.x = spot.y = -1;
 
   xim_styles = NULL;
   if (XGetIMValues (xim, XNQueryInputStyle, &xim_styles, NULL)
@@ -1338,7 +1301,7 @@ rxvt_term::IM_get_IC (const char *modifiers)
       return false;
     }
 
-  p = rs[Rs_preeditType] ? rs[Rs_preeditType] : "OverTheSpot,OffTheSpot,Root";
+  p = rs[Rs_preeditType] ? rs[Rs_preeditType] : "OverTheSpot,OffTheSpot,Root,None";
   s = rxvt_splitcommastring (p);
 
   for (i = found = 0; !found && s[i]; i++)
@@ -1349,6 +1312,8 @@ rxvt_term::IM_get_IC (const char *modifiers)
         input_style = (XIMPreeditArea | XIMStatusArea);
       else if (!strcmp (s[i], "Root"))
         input_style = (XIMPreeditNothing | XIMStatusNothing);
+      else if (!strcmp (s[i], "None"))
+        input_style = (XIMPreeditNone | XIMStatusNone);
 
       for (j = 0; j < xim_styles->count_styles; j++)
         if (input_style == xim_styles->supported_styles[j])
