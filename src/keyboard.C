@@ -241,9 +241,8 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
       int keysym_offset = keysym - key.keysym;
 
       wchar_t *wc = rxvt_utf8towcs (key.str);
-
       char *str = rxvt_wcstombs (wc);
-      // TODO: do translations, unescaping etc, here (allow \u escape etc.)
+      // TODO: do (some) translations, unescaping etc, here (allow \u escape etc.)
       free (wc);
 
       switch (key.type)
@@ -296,10 +295,7 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
       return true;
     }
   else
-    {
-      // fprintf(stderr,"[%x:%x]",state,keysym);
-      return false;
-    }
+    return false;
 }
 
 // purge duplicate keymap entries
@@ -319,6 +315,7 @@ void keyboard_manager::purge_duplicate_keymap ()
                   keymap[i] = keymap.back ();
                   keymap.pop_back ();
                 }
+
               break;
             }
         }
@@ -336,27 +333,13 @@ keyboard_manager::setup_hash ()
   memset (hash_budget_size, 0, sizeof (hash_budget_size));
   memset (hash_budget_counter, 0, sizeof (hash_budget_counter));
 
-  // count keysyms for corresponding hash budgets
+  // determine hash bucket size
   for (i = 0; i < keymap.size (); ++i)
-    {
-      hashkey = keymap [i]->keysym & KEYSYM_HASH_MASK;
-      ++hash_budget_size [hashkey];
-    }
-
-  // a keysym_t with range>1 is counted one more time for every keysym that
-  // lies in its range
-  for (i = 0; i < keymap.size (); ++i)
-    {
-      if (keymap[i]->range > 1)
-        {
-          for (int j = min (keymap [i]->range, KEYSYM_HASH_BUDGETS) - 1; j > 0; --j)
-            {
-              hashkey = ((keymap [i]->keysym + j) & KEYSYM_HASH_MASK);
-              if (hash_budget_size [hashkey])
-                ++hash_budget_size [hashkey];
-            }
-        }
-    }
+    for (int j = min (keymap [i]->range, KEYSYM_HASH_BUDGETS) - 1; j >= 0; --j)
+      {
+        hashkey = (keymap [i]->keysym + j) & KEYSYM_HASH_MASK;
+        ++hash_budget_size [hashkey];
+      }
 
   // now we know the size of each budget
   // compute the index of each budget
@@ -364,7 +347,7 @@ keyboard_manager::setup_hash ()
   for (index = 0, i = 1; i < KEYSYM_HASH_BUDGETS; ++i)
     {
       index += hash_budget_size [i - 1];
-      hash[i] = (hash_budget_size [i] ? index : hash [i - 1]);
+      hash [i] = index;
     }
 
   // and allocate just enough space
@@ -373,27 +356,22 @@ keyboard_manager::setup_hash ()
   // fill in sorted_keymap
   // it is sorted in each budget
   for (i = 0; i < keymap.size (); ++i)
-    {
-      for (int j = min (keymap [i]->range, KEYSYM_HASH_BUDGETS) - 1; j >= 0; --j)
-        {
-          hashkey = ((keymap [i]->keysym + j) & KEYSYM_HASH_MASK);
+    for (int j = min (keymap [i]->range, KEYSYM_HASH_BUDGETS) - 1; j >= 0; --j)
+      {
+        hashkey = (keymap [i]->keysym + j) & KEYSYM_HASH_MASK;
 
-          if (hash_budget_size [hashkey])
-            {
-              index = hash [hashkey] + hash_budget_counter [hashkey];
+        index = hash [hashkey] + hash_budget_counter [hashkey];
 
-              while (index > hash [hashkey]
-                     && compare_priority (keymap [i], sorted_keymap [index - 1]) > 0)
-                {
-                  sorted_keymap [index] = sorted_keymap [index - 1];
-                  --index;
-                }
+        while (index > hash [hashkey]
+               && compare_priority (keymap [i], sorted_keymap [index - 1]) > 0)
+          {
+            sorted_keymap [index] = sorted_keymap [index - 1];
+            --index;
+          }
 
-              sorted_keymap [index] = keymap [i];
-              ++hash_budget_counter [hashkey];
-            }
-        }
-    }
+        sorted_keymap [index] = keymap [i];
+        ++hash_budget_counter [hashkey];
+      }
 
   keymap.swap (sorted_keymap);
 
@@ -435,17 +413,18 @@ keyboard_manager::find_keysym (KeySym keysym, unsigned int state)
 {
   int hashkey = keysym & KEYSYM_HASH_MASK;
   unsigned int index = hash [hashkey];
+  unsigned int end = hashkey < KEYSYM_HASH_BUDGETS - 1
+                     ? hash [hashkey + 1] 
+                     : keymap.size ();
 
-  for (; index < keymap.size (); ++index)
+  for (; index < end; ++index)
     {
       keysym_t *key = keymap [index];
 
-      if (key->keysym <= keysym && key->keysym + key->range > keysym
+      if (key->keysym <= keysym && keysym < key->keysym + key->range
           // match only the specified bits in state and ignore others
           && (key->state & state) == key->state)
         return index;
-      else if ((key->keysym & KEYSYM_HASH_MASK) > hashkey && key->range == 1)
-        return -1;
     }
 
   return -1;
