@@ -382,7 +382,17 @@ void io_manager::loop ()
 # endif
 
 # if IOM_TIME
-      set_now ();
+      {
+        // update time, try to compensate for gross non-monotonic time changes
+        tstamp diff = NOW;
+        set_now ();
+        diff = NOW - diff;
+
+        if (diff < 0)
+          for (io_manager_vec<time_watcher>::const_iterator i = tw.end (); i-- > tw.begin (); )
+            if (*i)
+              (*i)->at += diff;
+      }
 # endif
 
       if (fds > 0)
