@@ -4,8 +4,6 @@ xfree86's xterm).
 
 TODO: settable ressource for input method fonts
 TODO: read property sequence is broken with respect to utf-8 etc.
-TODO: shift-tab etc. xterm keycodes
-WISH: extend keysym resource mechanism to include modifiers.
 WISH; line-rewrapping on resize
 WISH: just for fun, do shade and tint with XRender.
 WISH: hotkey font resizing
@@ -15,6 +13,33 @@ WISH: triple-click == select full output line
 WISH: double-click: more intelligent (urls etc.)
 WISH: OnTheSpot editing.
 WISH: tabbed windows (hey, just use screen...)
+
+4.8  Tue Jan 18 02:23:57 CET 2005
+        - added a patch by WU Fengguang that makes the keyboard
+          highly configurable (e.g. locale changes, custom escape
+          sequences, and more). See keysym resource in rxvt(1).
+        - remove default key sequence for unknown keys again, as this
+          can be achieved by customizing the keyboard now.
+        - fix some freeing problems when destroying the rxvt_display,
+          resulting in segfaults.
+        - don't crash when the saved cursor position doesn't fit on the
+          screen (wrong assert in original rxvt, reported by ikaro).
+        - fix signed/unsigned bugs on wc<->mb conversions.
+        - reset slipwheel scrolling speed when reaching the top or bottom
+          (Mikael Magnusson).
+        - for core fonts, use ascent + descent when a font is loaded,
+          and PIXEL_SIZE when not. when loading a font, iterate until a
+          font has been found that _really_ fits the height (reported and
+          tested by Roch).
+        - set IUTF8 input flag, when defined (linux-2.6.5+).
+        - only define _XOPEN_SOURCE on solaris.
+        - autogenerate src/* dependency list.
+        - fixed linespace option, which ought to work now (and is dependent
+          on frills, not on it's own configure option).
+        - include pty.h, if available (cygwin).
+        - removed W11 directory from dist, it wasn't used anyway.
+        - initialize the locale much earlier.
+        - fixed two tiny per-instance memory leaks.
 
 4.7  Wed Dec 29 20:54:24 CET 2004
         - fix a bug in the event logic that could cause the temrinal to be
