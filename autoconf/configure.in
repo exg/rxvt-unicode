@@ -67,7 +67,6 @@ support_selectionscrolling=no
 support_menubar=no 
 support_mousewheel=no
 support_mouseslipwheel=no
-support_oldselection=no
 support_utmp=no
 support_wtmp=no
 support_lastlog=no
@@ -110,7 +109,6 @@ AC_ARG_ENABLE(everything,
     support_menubar=yes
     support_mousewheel=yes
     support_mouseslipwheel=yes
-    support_oldselection=yes
     support_cursor_blink=yes
     support_text_blink=yes
     support_pointer_blank=yes
@@ -337,18 +335,6 @@ AC_ARG_ENABLE(slipwheeling,
   [  --enable-slipwheeling   enable slip wheel scrolling     (requires previous)],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_mouseslipwheel=$enableval
-  fi])
-
-AC_ARG_ENABLE(old-selection,
-  [  --enable-old-selection  enable v2.20 (& prior) mouse selection style support],
-  [if test x$enableval = xyes -o x$enableval = xno; then
-    support_oldselection=$enableval
-  fi])
-
-AC_ARG_ENABLE(new-selection,
-  [  --disable-new-selection disable new mouse (xterm) selection style support],
-  [if test x$enableval = xno; then
-    AC_DEFINE(NO_NEW_SELECTION, 1, Define to remove xterm style mouse selection)
   fi])
 
 AC_ARG_ENABLE(dmalloc,
@@ -1192,9 +1178,6 @@ if test x$support_mousewheel = xyes; then
 fi
 if test x$support_mouseslipwheel = xyes; then
   AC_DEFINE(MOUSE_SLIP_WHEELING, 1, Define to have CTRL cause wheel events to accelerate scrolling. Release CTRL to halt scrolling)
-fi
-if test x$support_oldselection = xno; then
-  AC_DEFINE(NO_OLD_SELECTION, 1, Define to remove old rxvt (ver 2.20 and before) style selection)
 fi
 if test x$support_utmp = xyes; then
   AC_DEFINE(UTMP_SUPPORT, 1, Define if you want to have utmp/utmpx support)

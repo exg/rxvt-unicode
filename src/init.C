@@ -386,12 +386,6 @@ rxvt_term::init_vars ()
   TermWin.saveLines = SAVELINES;
   numPixColors = TOTAL_COLORS;
 
-#ifndef NO_NEW_SELECTION
-  selection_style = NEW_SELECT;
-#else
-  selection_style = OLD_SELECT;
-#endif
-
 #ifndef NO_BRIGHTCOLOR
   colorfgbg = DEFAULT_RSTYLE;
 #endif
@@ -624,18 +618,6 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     {
       rxvt_Str_trim ((char *)rs[Rs_answerbackstring]);
       rxvt_Str_escaped ((char *)rs[Rs_answerbackstring]);
-    }
-
-  if (rs[Rs_selectstyle])
-    {
-      if (STRNCASECMP (rs[Rs_selectstyle], "oldword", 7) == 0)
-        selection_style = OLD_WORD_SELECT;
-#ifndef NO_OLD_SELECTION
-
-      else if (STRNCASECMP (rs[Rs_selectstyle], "old", 3) == 0)
-        selection_style = OLD_SELECT;
-#endif
-
     }
 
 #ifdef HAVE_SCROLLBARS

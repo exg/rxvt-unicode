@@ -1060,8 +1060,6 @@ Optional Features:
   --enable-selectionscrolling  enable scrolling during selections
   --enable-mousewheel     enable scrolling via mouse wheel or buttons 4 & 5
   --enable-slipwheeling   enable slip wheel scrolling     (requires previous)
-  --enable-old-selection  enable v2.20 (& prior) mouse selection style support
-  --disable-new-selection disable new mouse (xterm) selection style support
   --enable-dmalloc        enable Gray Watson's malloc - for debugging use
   --enable-dlmalloc       enable Doug Lea's malloc - for production use
                      NOTE: enable only one malloc package
@@ -5037,7 +5035,7 @@ test "x$enable_libtool_lock" != xno && enable_libtool_lock=yes
 case "$host" in
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5040 "configure"' > conftest.$ac_ext
+  echo '#line 5038 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -5588,7 +5586,7 @@ chmod -w .
 save_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -o out/conftest2.$ac_objext"
 compiler_c_o=no
-if { (eval echo configure:5591: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>out/conftest.err; } && test -s out/conftest2.$ac_objext; then
+if { (eval echo configure:5589: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>out/conftest.err; } && test -s out/conftest2.$ac_objext; then
   # The compiler can only warn and ignore the option if not recognized
   # So say no if there are warnings
   if test -s out/conftest.err; then
@@ -7204,7 +7202,7 @@ else
     lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 7207 "configure"
+#line 7205 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -7302,7 +7300,7 @@ else
     lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 7305 "configure"
+#line 7303 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -8040,7 +8038,6 @@ support_selectionscrolling=no
 support_menubar=no
 support_mousewheel=no
 support_mouseslipwheel=no
-support_oldselection=no
 support_utmp=no
 support_wtmp=no
 support_lastlog=no
@@ -8083,7 +8080,6 @@ if test "${enable_everything+set}" = set; then
     support_menubar=yes
     support_mousewheel=yes
     support_mouseslipwheel=yes
-    support_oldselection=yes
     support_cursor_blink=yes
     support_text_blink=yes
     support_pointer_blank=yes
@@ -8422,26 +8418,6 @@ if test "${enable_slipwheeling+set}" = set; then
   enableval="$enable_slipwheeling"
   if test x$enableval = xyes -o x$enableval = xno; then
     support_mouseslipwheel=$enableval
-  fi
-fi;
-
-# Check whether --enable-old-selection or --disable-old-selection was given.
-if test "${enable_old_selection+set}" = set; then
-  enableval="$enable_old_selection"
-  if test x$enableval = xyes -o x$enableval = xno; then
-    support_oldselection=$enableval
-  fi
-fi;
-
-# Check whether --enable-new-selection or --disable-new-selection was given.
-if test "${enable_new_selection+set}" = set; then
-  enableval="$enable_new_selection"
-  if test x$enableval = xno; then
-
-cat >>confdefs.h <<\_ACEOF
-#define NO_NEW_SELECTION 1
-_ACEOF
-
   fi
 fi;
 
@@ -16299,13 +16275,6 @@ if test x$support_mouseslipwheel = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
 #define MOUSE_SLIP_WHEELING 1
-_ACEOF
-
-fi
-if test x$support_oldselection = xno; then
-
-cat >>confdefs.h <<\_ACEOF
-#define NO_OLD_SELECTION 1
 _ACEOF
 
 fi

@@ -241,12 +241,6 @@
 /* Define if you don't want support linespace */
 #undef NO_LINESPACE
 
-/* Define to remove xterm style mouse selection */
-#undef NO_NEW_SELECTION
-
-/* Define to remove old rxvt (ver 2.20 and before) style selection */
-#undef NO_OLD_SELECTION
-
 /* Define if you don't want any resources read */
 #undef NO_RESOURCES
 

@@ -171,10 +171,6 @@ typedef struct {
   row_col_t       end;        /* one character past end point              */
 } selection_t;
 
-typedef enum {
-    OLD_SELECT, OLD_WORD_SELECT, NEW_SELECT
-} sstyle_t;
-
 /* ------------------------------------------------------------------------- */
 
 /* screen_t flags */
@@ -263,7 +259,6 @@ struct rxvt_vars {
   screen_t        screen;
   screen_t        swap;
   selection_t     selection;
-  sstyle_t        selection_style;
 };
 
 void rxvt_init_signals ();
