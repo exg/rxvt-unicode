@@ -55,12 +55,13 @@ See also the FAQ section in doc/rxvt.1.txt, and README.configure.
 - src/defaultfont.C lists the fallback fonts that are tried when a
   character cannot be displayed with the current list of fonts.
 
-- using bold fonts for the bold attribute is not supported by xft
-  and will not be supported by rxvt-unicode, either, even for normal X11
-  fonts.
+- if the realBold resource has been set, bold fonts will be used to
+  display text with the bold attribute; you should specify the bold fonts
+  you want to use in the list of fonts after the normal fonts
 
-- normal bold text will use reverse video unless the colorBD resource has
-  been set. coloured text will use high-intensity colours for bold.
+- otherwise, normal bold text will use reverse video unless the colorBD
+  resource has been set. coloured text will use high-intensity colours for
+  bold.
 
 Marc <rxvt@plan9.de>
 
