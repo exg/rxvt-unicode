@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.16 2003/12/17 09:00:35 pcg Exp $
+ * $Id: command.C,v 1.17 2003/12/18 00:29:29 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -90,19 +90,31 @@ rxvt_lookup_key(pR_ XKeyEvent *ev)
 	Status status_return;
 
 #ifdef X_HAVE_UTF8_STRING
-	len = Xutf8LookupString(R->Input_Context, ev, (char *)kbuf,
-			      KBUFSZ, &keysym, &status_return);
+	len = Xutf8LookupString (R->Input_Context, ev, (char *)kbuf,
+			         KBUFSZ, &keysym, &status_return);
 #else
-	len = XmbLookupString(R->Input_Context, ev, (char *)kbuf,
-			      KBUFSZ, &keysym, &status_return);
+        wchar_t wkbuf[KBUFSZ + 1];
+
+        // assume wchar_t == unicode or better
+	len = XwcLookupString (R->Input_Context, ev, wkbuf,
+			       KBUFSZ, &keysym, &status_return);
+
+        if (status_return == XLookupChars
+            || status_return == XLookupBoth)
+          {
+            wkbuf[len] = 0;
+            len = wcstombs ((char *)kbuf, wkbuf, KBUFSZ);
+          }
+        else
+          len = 0;
 #endif
-	valid_keysym = ((status_return == XLookupKeySym)
-			|| (status_return == XLookupBoth));
+	valid_keysym = status_return == XLookupKeySym
+		       || status_return == XLookupBoth;
       }
     else
 #endif
       {
-	len = XLookupString(ev, (char *)kbuf, KBUFSZ, &keysym, &R->compose);
+	len = XLookupString (ev, (char *)kbuf, KBUFSZ, &keysym, &R->compose);
 	valid_keysym = !len;
       }
 

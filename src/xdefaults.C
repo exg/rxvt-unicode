@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xdefaults.c
  *----------------------------------------------------------------------*
- * $Id: xdefaults.C,v 1.4 2003/12/17 09:00:35 pcg Exp $
+ * $Id: xdefaults.C,v 1.5 2003/12/18 00:29:29 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994      Robert Nation <nation@rocket.sanders.lockheed.com>
@@ -200,6 +200,9 @@ static const struct {
     STRG(Rs_inputMethod, "inputMethod", "im", "name", "name of input method"),
     STRG(Rs_preeditType, "preeditType", "pt", "style",
 	 "input style: style = OverTheSpot|OffTheSpot|Root"),
+#if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
+    STRG(Rs_imLocale, "imLocale", "imlocale", "string", "locale to use for input method"),
+#endif
 #endif				/* USE_XIM */
 #ifdef GREEK_SUPPORT
     STRG(Rs_greek_keyboard, "greek_keyboard", "grk", "mode",

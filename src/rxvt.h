@@ -1,5 +1,5 @@
 /*
- * $Id: rxvt.h,v 1.12 2003/12/17 09:00:35 pcg Exp $
+ * $Id: rxvt.h,v 1.13 2003/12/18 00:29:29 pcg Exp $
  */
 
 #ifndef _RXVT_H_                /* include once only */
@@ -554,6 +554,7 @@ enum {
   Rs_cursorBlink,
   Rs_pointerBlank,
   Rs_pointerBlankDelay,
+  Rs_imLocale,
   NUM_RESOURCES
 };
 

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.13 2003/12/17 09:00:35 pcg Exp $
+ * $Id: main.C,v 1.14 2003/12/18 00:29:29 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -79,6 +79,9 @@ rxvt_term::~rxvt_term ()
 {
   scr_release ();
 
+#if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
+  free (locale);
+#endif
 #ifndef NO_SETOWNER_TTYDEV
   rxvt_privileged_ttydev (this, RESTORE);
 #endif
@@ -1133,6 +1136,11 @@ rxvt_IMInstantiateCallback(Display * unused
   if (R->Input_Context)
     return;
 
+#if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
+  if (R->rs[Rs_imLocale])
+    setlocale (LC_CTYPE, R->rs[Rs_imLocale]);
+#endif
+
   p = R->rs[Rs_inputMethod];
   if (p && *p)
     {
@@ -1158,18 +1166,24 @@ rxvt_IMInstantiateCallback(Display * unused
       free(s);
 
       if (found)
-        return;
+        goto done;
     }
 
 /* try with XMODIFIERS env. var. */
   if ((p = XSetLocaleModifiers ("")) && *p
       && rxvt_IM_get_IC (aR))
-    return;
+    goto done;
 
 /* try with no modifiers base IF the user didn't specify an IM */
   if ((p = XSetLocaleModifiers ("@im=none")) && *p
       && rxvt_IM_get_IC (aR) == True)
-    return;
+    goto done;
+
+done:
+#if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
+  if (R->rs[Rs_imLocale])
+    setlocale (LC_CTYPE, R->locale);
+#endif
 }
 
 /*

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        init.c
  *----------------------------------------------------------------------*
- * $Id: init.C,v 1.11 2003/12/17 09:00:35 pcg Exp $
+ * $Id: init.C,v 1.12 2003/12/18 00:29:29 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -457,7 +457,7 @@ rxvt_init_secondary (pR)
     }
 
 #if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
-  R->locale = setlocale (LC_CTYPE, "");
+  R->locale = strdup (setlocale (LC_CTYPE, ""));
 #endif
 
   /*
