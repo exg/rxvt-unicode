@@ -1,3 +1,4 @@
+TODO: switch default keypad mode to cope for broken apps.
 TODO: http://cvs.sourceforge.net/viewcvs.py/rxvt/rxvt/src/init.c?r1=1.123&r2=1.124&sortby=date
       http://cvs.sourceforge.net/viewcvs.py/rxvt/rxvt/src/scrollbar.c?r1=1.44&r2=1.45&sortby=date
       Pull more events to all windows so that we don't miss out in
