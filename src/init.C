@@ -315,7 +315,8 @@ const char *const def_colorName[] =
     COLOR_CURSOR_BACKGROUND,
     COLOR_CURSOR_FOREGROUND,
 #endif                          /* ! NO_CURSORCOLOR */
-    NULL,                       /* Color_pointer                  */
+    NULL,                       /* Color_pointer_fg               */
+    NULL,                       /* Color_pointer_bg               */
     NULL,                       /* Color_border                   */
 #ifndef NO_BOLD_UNDERLINE_REVERSE
     NULL,                       /* Color_BD                       */
@@ -323,6 +324,9 @@ const char *const def_colorName[] =
     NULL,                       /* Color_RV                       */
 #endif                          /* ! NO_BOLD_UNDERLINE_REVERSE */
 #ifdef OPTION_HC
+    NULL,
+#endif
+#if TINTING
     NULL,
 #endif
 #ifdef KEEP_SCROLLCOLOR
@@ -646,7 +650,8 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   color_aliases (Color_cursor);
   color_aliases (Color_cursor2);
 #endif                          /* NO_CURSORCOLOR */
-  color_aliases (Color_pointer);
+  color_aliases (Color_pointer_fg);
+  color_aliases (Color_pointer_bg);
   color_aliases (Color_border);
 #ifndef NO_BOLD_UNDERLINE_REVERSE
   color_aliases (Color_BD);
@@ -896,7 +901,7 @@ rxvt_term::Get_Colours ()
                     xcol = PixColors[Color_fg];
                     break;
 #endif                          /* ! NO_CURSORCOLOR */
-                  case Color_pointer:
+                  case Color_pointer_fg:
                     xcol = PixColors[Color_fg];
                     break;
                   default:
@@ -910,10 +915,12 @@ rxvt_term::Get_Colours ()
       SET_PIXCOLOR (i);
     }
 
-  if (XDEPTH <= 2 || !rs[Rs_color + Color_pointer])
-    PixColors[Color_pointer] = PixColors[Color_fg];
-  if (XDEPTH <= 2 || !rs[Rs_color + Color_border])
-    PixColors[Color_border] = PixColors[Color_fg];
+  if (XDEPTH <= 2)
+    {
+      if (!rs[Rs_color + Color_pointer_fg]) PixColors[Color_pointer_fg] = PixColors[Color_fg];
+      if (!rs[Rs_color + Color_pointer_bg]) PixColors[Color_pointer_bg] = PixColors[Color_bg];
+      if (!rs[Rs_color + Color_border]    ) PixColors[Color_border]     = PixColors[Color_fg];
+    }
 
   /*
    * get scrollBar/menuBar shadow colors
@@ -1121,8 +1128,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                       PixColors[Color_fg]);
 #endif
 
-  xterm_seq (XTerm_title, rs[Rs_title], CHAR_ST);
-  xterm_seq (XTerm_iconName, rs[Rs_iconName], CHAR_ST);
+  process_xterm_seq (XTerm_title, rs[Rs_title], CHAR_ST);
+  process_xterm_seq (XTerm_iconName, rs[Rs_iconName], CHAR_ST);
 
   classHint.res_name = (char *)rs[Rs_name];
   classHint.res_class = (char *)RESCLASS;
@@ -1134,7 +1141,14 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   wmHint.window_group = TermWin.parent[0];
 
   XSetWMProperties (display->display, TermWin.parent[0], NULL, NULL,
-                   (char **)argv, argc, &szHint, &wmHint, &classHint);
+                    (char **)argv, argc, &szHint, &wmHint, &classHint);
+
+#ifndef NO_FRILLS
+  long pid = getpid ();
+  XChangeProperty (display->display, TermWin.parent[0],
+                   display->atom ("_NET_WM_PID"), XA_CARDINAL, 32,
+                   PropModeReplace, (unsigned char *)&pid, 1);
+#endif
 
   XSelectInput (display->display, TermWin.parent[0],
                KeyPressMask

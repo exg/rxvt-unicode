@@ -46,16 +46,19 @@
 
 #include <cstring>
 
+vector<rxvt_term *> rxvt_term::termlist;
+
 static char curlocale[128];
 
-void
+bool
 rxvt_set_locale (const char *locale)
 {
-  if (locale && STRNCMP (locale, curlocale, 128))
-    {
-      STRNCPY (curlocale, locale, 128);
-      setlocale (LC_CTYPE, curlocale);
-    }
+  if (!locale || !STRNCMP (locale, curlocale, 128))
+    return false;
+
+  STRNCPY (curlocale, locale, 128);
+  setlocale (LC_CTYPE, curlocale);
+  return true;
 }
 
 #if ENABLE_COMBINING
@@ -166,10 +169,14 @@ rxvt_term::rxvt_term ()
     incr_ev (this, &rxvt_term::incr_cb)
 {
   cmdbuf_ptr = cmdbuf_endp = cmdbuf_base;
+
+  termlist.push_back (this);
 }
 
 rxvt_term::~rxvt_term ()
 {
+  termlist.erase (find (termlist.begin (), termlist.end(), this));
+
   if (cmd_fd >= 0)
     close (cmd_fd);
 
@@ -407,20 +414,28 @@ rxvt_init_signals ()
 /*
  * Catch a SIGCHLD signal and exit if the direct child has died
  */
+
+void rxvt_term::child_exited (int pid)
+{
+  for (rxvt_term **t = termlist.begin (); t < termlist.end (); t++)
+    if (pid == (*t)->cmd_pid)
+      {
+        (*t)->destroy ();
+        break;
+      }
+}
+
 /* ARGSUSED */
 /* EXTPROTO */
 RETSIGTYPE
 rxvt_Child_signal (int sig __attribute__ ((unused)))
 {
   int pid, save_errno = errno;
-  while ((pid = waitpid (-1, NULL, WNOHANG)) == -1 && errno == EINTR)
-    ;
-  errno = save_errno;
 
-#if 0
-  if (pid == cmd_pid)
-    exit (EXIT_SUCCESS);
-#endif
+  while ((pid = waitpid (-1, NULL, WNOHANG)) > 0)
+    rxvt_term::child_exited (pid);
+
+  errno = save_errno;
 }
 
 /*
@@ -869,17 +884,17 @@ rxvt_term::font_up_down (int n, int direction)
 void
 rxvt_term::set_title (const char *str)
 {
-#ifndef SMART_WINDOW_TITLE
-  XStoreName (display->display, TermWin.parent[0], str);
-#else
+#ifdef SMART_WINDOW_TITLE
   char *name;
 
   if (!XFetchName (display->display, TermWin.parent[0], &name))
     name = NULL;
 
   if (name == NULL || STRCMP (name, str))
+#endif
     XStoreName (display->display, TermWin.parent[0], str);
 
+#ifdef SMART_WINDOW_TITLE
   if (name)
     XFree (name);
 #endif
@@ -888,17 +903,17 @@ rxvt_term::set_title (const char *str)
 void
 rxvt_term::set_icon_name (const char *str)
 {
-#ifndef SMART_WINDOW_TITLE
-  XSetIconName (display->display, TermWin.parent[0], str);
-#else
+#ifdef SMART_WINDOW_TITLE
   char *name;
 
   if (!XGetIconName (display->display, TermWin.parent[0], &name))
     name = NULL;
 
   if (name == NULL || STRCMP (name, str))
+#endif
     XSetIconName (display->display, TermWin.parent[0], str);
 
+#ifdef SMART_WINDOW_TITLE
   if (name)
     XFree (name);
 #endif
@@ -935,8 +950,10 @@ rxvt_term::set_window_color (int idx, const char *color)
           goto Done;
         }
     }
+
   if (!rXParseAllocColor (& xcol, color))
     return;
+
   /* XStoreColor (display->display, XCMAP, XColor*); */
 
   /*
@@ -969,8 +986,7 @@ Done:
 
   set_colorfgbg ();
   recolour_cursor ();
-  /* the only reasonable way to enforce a clean update */
-  scr_poweron ();
+  scr_touch (true);
 }
 
 #else
@@ -980,14 +996,12 @@ Done:
 void
 rxvt_term::recolour_cursor ()
 {
-#if TODO
-  rxvt_color xcol[2];
+  XColor xcol[2];
 
-  xcol[0] = PixColors[Color_pointer];
-  xcol[1] = PixColors[Color_bg];
+  xcol[0].pixel = ISSET_PIXCOLOR (Color_pointer_fg) ? PixColors[Color_pointer_fg] : PixColors[Color_fg];
+  xcol[1].pixel = ISSET_PIXCOLOR (Color_pointer_bg) ? PixColors[Color_pointer_bg] : PixColors[Color_bg];
   XQueryColors (display->display, XCMAP, xcol, 2);
-  XRecolorCursor (display->display, TermWin_cursor, & (xcol[0]), & (xcol[1]));
-#endif
+  XRecolorCursor (display->display, TermWin_cursor, xcol + 0, xcol + 1);
 }
 
 /*----------------------------------------------------------------------*/
