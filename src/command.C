@@ -90,7 +90,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
       Status status_return;
 
 #ifdef X_HAVE_UTF8_STRING
-      if (enc_utf8 && 0)
+      if (enc_utf8 && 0) // currently disabled, doesn't seem to work, nor is useful
         len = Xutf8LookupString (Input_Context, &ev, (char *)kbuf,
                                  KBUFSZ, &keysym, &status_return);
       else
