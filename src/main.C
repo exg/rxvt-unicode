@@ -92,13 +92,13 @@ rxvt_term::rxvt_term ()
 #ifdef POINTER_BLANK
     pointer_ev (this, &rxvt_term::pointer_cb),
 #endif
+#ifdef USE_XIM
+    im_ev (this, &rxvt_term::im_cb),
+#endif
     check_ev (this, &rxvt_term::check_cb),
     destroy_ev (this, &rxvt_term::destroy_cb),
     pty_ev (this, &rxvt_term::pty_cb),
-    incr_ev (this, &rxvt_term::incr_cb),
-#ifdef USE_XIM
-    im_ev (this, &rxvt_term::im_cb)
-#endif
+    incr_ev (this, &rxvt_term::incr_cb)
 {
   cmdbuf_ptr = cmdbuf_endp = cmdbuf_base;
 }
