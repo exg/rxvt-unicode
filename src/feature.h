@@ -66,14 +66,6 @@
 /* #define NO_BOLD_UNDERLINE_REVERSE */
 
 /*
- * Disable using simulated bold using overstrike.  You can also turn off
- * overstrike just for multi char fonts
- * Note: NO_BOLDOVERSTRIKE implies NO_BOLDOVERSTRIKE_MULTI
- */
-/* #define NO_BOLDOVERSTRIKE */
-/* #define NO_BOLDOVERSTRIKE_MULTI */
-
-/*
  * Don't bother cleaning up pixel droppings.  If you don't use bold
  * overstrike then you don't usually need this
  */

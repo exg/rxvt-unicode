@@ -1,7 +1,6 @@
 /*--------------------------------*-C-*--------------------------------------*
  * File:        screen.c
  *---------------------------------------------------------------------------*
- * $Id: screen.C,v 1.16 2004/01/16 22:11:09 pcg Exp $
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
  *
@@ -904,27 +903,32 @@ rxvt_scr_add_lines(pR_ const uint32_t *str, int nlines, int len)
         // rely on wcwidth to tell us the character width, at least for non-ascii
         int width = c <= 128 ? 1 : wcwidth (c);
 
-        // width 0 characters (e.g. combining chars) are ignored. your problem, really
-        while (width-- > 0)
-          {
-            stp[R->screen.cur.col] = c;
-            srp[R->screen.cur.col] = rend;
+        // width -1 characters (e.g. combining chars) are ignored currently.
+        if (width > 0)
+          do
+            {
+              stp[R->screen.cur.col] = c;
+              srp[R->screen.cur.col] = rend;
 
-            if (R->screen.cur.col < last_col - 1)
-              R->screen.cur.col++;
-            else
-              {
-                R->screen.tlen[row] = last_col;
-                if (R->screen.flags & Screen_Autowrap)
-                  R->screen.flags |= Screen_WrapNext;
-                break;
-              }
+              if (R->screen.cur.col < last_col - 1)
+                R->screen.cur.col++;
+              else
+                {
+                  R->screen.tlen[row] = last_col;
+                  if (R->screen.flags & Screen_Autowrap)
+                    R->screen.flags |= Screen_WrapNext;
+                  break;
+                }
 
-            c = NOCHAR;
-          }
+              c = NOCHAR;
+            }
+          while (--width > 0);
+        else
+          1; /* handle combining character etc. here. */
     }
+
     if (R->screen.tlen[row] != -1)      /* XXX: think about this */
-        MAX_IT(R->screen.tlen[row], R->screen.cur.col);
+      MAX_IT(R->screen.tlen[row], R->screen.cur.col);
 
 /*
  * If we wrote anywhere in the selected area, kill the selection
@@ -1643,27 +1647,6 @@ rxvt_scr_charset_set(pR_ int set, unsigned int ch)
 
 
 /* ------------------------------------------------------------------------- *
- *                           GRAPHICS COLOURS                                *
- * ------------------------------------------------------------------------- */
-
-#ifdef RXVT_GRAPHICS
-/* EXTPROTO */
-int
-rxvt_scr_get_fgcolor(pR)
-{
-    return GET_FGCOLOR(R->rstyle);
-}
-
-/* ------------------------------------------------------------------------- */
-/* EXTPROTO */
-int
-rxvt_scr_get_bgcolor(pR)
-{
-    return GET_BGCOLOR(R->rstyle);
-}
-#endif
-
-/* ------------------------------------------------------------------------- *
  *                        MAJOR SCREEN MANIPULATION                          *
  * ------------------------------------------------------------------------- */
 
@@ -1852,15 +1835,6 @@ rxvt_scr_printscreen(pR_ int fullhist)
  * R->screen.text/R->screen.rend contain what the screen will change to.
  */
 
-#if defined (NO_BRIGHTCOLOR) || defined (VERYBOLD)
-# define MONO_BOLD(x)           ((x) & (RS_Bold|RS_Blink))
-# define MONO_BOLD_FG(x, fg)    MONO_BOLD(x)
-#else
-# define MONO_BOLD(x)                                           \
-    (((x) & (RS_Bold | RS_fgMask)) == (RS_Bold | Color_fg))
-# define MONO_BOLD_FG(x, fg)    (((x) & RS_Bold) && (fg) == Color_fg)
-#endif
-
 #define FONT_WIDTH(X, Y)                                                \
     (X)->per_char[(Y) - (X)->min_char_or_byte2].width
 #define FONT_RBEAR(X, Y)                                                \
@@ -1876,13 +1850,8 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
     unsigned char   clearfirst, /* first character writes before cell        */
                     clearlast,  /* last character writes beyond cell         */
                     must_clear, /* use draw_string not draw_image_string     */
-#ifndef NO_BOLDFONT
-                    bfont,      /* we've changed font to bold font           */
-#endif
                     rvid,       /* reverse video this position               */
-                    wbyte,      /* we're in multibyte                        */
                     showcursor; /* show the cursor                           */
-    int             fore, back; /* desired foreground/background             */
     int16_t         col, row,   /* column/row we're processing               */
                     ocrow;      /* old cursor row                            */
     int             cursorwidth;
@@ -1901,10 +1870,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
     /*
      * A: set up vars
      */
-    clearfirst = clearlast = must_clear = wbyte = 0;
-#ifndef NO_BOLDFONT
-    bfont = 0;
-#endif
+    clearfirst = clearlast = must_clear = 0;
 
     if (currmaxcol < TermWin.ncol)
       {
@@ -1985,9 +1951,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
               *srp = SET_BGCOLOR(*srp, ccol2);
 #endif
             }
-
-          while (IS_WIDE (*srp))
-            cursorwidth++, srp++;
         }
 
       /* make sure no outline cursor is left around */
@@ -2140,7 +2103,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                     continue;
                   }
 
-                if (((rend ^ srp[col]) & ~RS_wide) != 0)
+                if (rend != srp[col])
                   break;
 
                 count++;
@@ -2165,12 +2128,13 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
             /*
              * Determine the attributes for the string
              */
-            int fid = GET_FONT(rend);
-            fore = GET_FGCOLOR(rend);
-            back = GET_BGCOLOR(rend);
-            rend = GET_ATTR(rend);
+            int fid = GET_FONT (rend);
+            int fore = GET_FGCOLOR (rend); // desired foreground
+            int back = GET_BGCOLOR (rend); // desired background
 
-            rvid = (rend & RS_RVid) ? 1 : 0;
+            rend = GET_ATTR (rend);
+
+            rvid = !!(rend & RS_RVid);
 #ifdef OPTION_HC
             if (!rvid && (rend & RS_Blink))
               {
@@ -2197,20 +2161,12 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
             else if (rend & RS_Bold)
               {
                 if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_BD))
-                  {
-                    fore = Color_BD;
-# ifndef VERYBOLD
-                    rend &= ~RS_Bold;   /* we've taken care of it */
-# endif
-                  }
+                  fore = Color_BD;
               }
             else if (rend & RS_Uline)
               {
                 if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_UL))
-                  {
-                    fore = Color_UL;
-                    rend &= ~RS_Uline;  /* we've taken care of it */
-                  }
+                  fore = Color_UL;
               }
 #endif
 

@@ -316,13 +316,7 @@ enum {
   SECONDARY
 };
 
-enum {
-  SBYTE = 0,
-  WBYTE
-};
-
-
-#define RS_None                 0       /* Normal */
+#define RS_None                 0               /* Normal */
 
 #define RS_fgMask               0x000001FFu     /* 512 colors */
 #define RS_bgMask               0x0003FE00u     /* 512 colors */
@@ -331,14 +325,11 @@ enum {
 #define RS_RVid                 0x00100000u     /* reverse video */
 #define RS_Uline                0x00200000u     /* underline */
 
-#define RS_wide                 0x00400000u     /* only multibyte characters */
-#define IS_WIDE(r)              ((r) & RS_wide)
-
-#define RS_fontMask             0xff000000u     /* plenty(?) of fonts */
-#define RS_fontShift            24
+#define RS_fontMask             0xffc00000u     /* plenty(?) of fonts */
+#define RS_fontShift            22
 
 #define RS_baseattrMask         (RS_Bold|RS_Blink|RS_RVid|RS_Uline)
-#define RS_attrMask             (RS_baseattrMask|RS_fontMask|RS_wide)
+#define RS_attrMask             (RS_baseattrMask|RS_fontMask)
 
 #define Sel_none                0       /* Not waiting */
 #define Sel_normal              0x01    /* normal selection */
@@ -453,10 +444,10 @@ enum colour_list {
 };
 
 #define Color_Bits      9
-#define NPIXCLR_SETS    9       /* (256 + 14) bits / 32 bits */
+#define NPIXCLR_SETS    ((TOTAL_COLORS + 31) / 32)
 #define NPIXCLR_BITS    32
 
-#define DEFAULT_RSTYLE          (RS_None | (Color_fg) | (Color_bg<<Color_Bits))
+#define DEFAULT_RSTYLE  (RS_None | (Color_fg) | (Color_bg<<Color_Bits))
 
 /*
  * Resource list
@@ -619,24 +610,15 @@ enum {
 (PrivMode_Autowrap|PrivMode_aplKP|PrivMode_ShiftKeys|PrivMode_VisibleCursor)
 #endif
 
-#ifdef PREFER_24BIT
-# define XDEPTH                 R->Xdepth
-# define XCMAP                  R->Xcmap
-# define XVISUAL                R->Xvisual
-#else
-# ifdef DEBUG_DEPTH
-#  define XDEPTH                DEBUG_DEPTH
-# else
-#  define XDEPTH                DefaultDepth(R->Xdisplay,Xscreen)
-#  define XCMAP                 DefaultColormap(R->Xdisplay,Xscreen)
-#  define XVISUAL               DefaultVisual(R->Xdisplay,Xscreen)
-# endif
-#endif
-#define IMBUFSIZ                128     /* input modifier buffer sizes */
+#define XDEPTH                 R->Xdepth
+#define XCMAP                  R->Xcmap
+#define XVISUAL                R->Xvisual
+
+#define IMBUFSIZ               128     /* input modifier buffer sizes */
 #ifndef BUFSIZ
-# define BUFSIZ                 4096
+# define BUFSIZ                4096
 #endif
-#define KBUFSZ                  512     /* size of keyboard mapping buffer */
+#define KBUFSZ                 512     /* size of keyboard mapping buffer */
 
 /*
  *****************************************************************************
@@ -672,7 +654,6 @@ enum {
 #define TermWin_TotalWidth()    ((int32_t)TermWin.width  + 2 * (int32_t)TermWin.int_bwidth)
 #define TermWin_TotalHeight()   ((int32_t)TermWin.height + 2 * (int32_t)TermWin.int_bwidth)
 
-#define Xscreen                 DefaultScreen(R->Xdisplay)
 #define Xroot                   DefaultRootWindow(R->Xdisplay)
 
 /* how to build & extract colors and attributes */
@@ -709,7 +690,7 @@ enum {
 #define SET_ATTR(x,a)           (((x) & ~RS_attrMask)| (a))
 
 #define SET_PIXCOLOR(h, x)      ((h)->pixcolor_set[(x) / NPIXCLR_BITS] |= (1 << ((x) % NPIXCLR_BITS)))
-#define ISSET_PIXCOLOR(h, x)    ((h)->pixcolor_set[(x) / NPIXCLR_BITS] & (1 << ((x) % NPIXCLR_BITS)))
+#define ISSET_PIXCOLOR(h, x)    ((h)->pixcolor_set[(x) / NPIXCLR_BITS] &  (1 << ((x) % NPIXCLR_BITS)))
 
 #ifdef HAVE_SCROLLBARS
 # define scrollbar_TotalWidth() (scrollBar.width + sb_shadow * 2)
@@ -945,10 +926,6 @@ struct rxvt_term : rxvt_vars {
                   ttymode;
   unsigned long   PrivateModes,
                   SavedModes;
-/* ---------- */
-#ifdef PREFER_24BIT
-  Visual         *Xvisual;
-#endif
 /* ---------- */
   Atom            xa[NUM_XA];
 /* ---------- */

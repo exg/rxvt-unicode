@@ -1,5 +1,5 @@
 /*
- * $Id: rxvtlib.h.in,v 1.7 2003/12/18 05:45:11 pcg Exp $
+ * $Id: rxvtlib.h.in,v 1.8 2004/01/19 17:26:43 pcg Exp $
  */
 
 #ifndef _RXVTLIB_H_             /* include once only */
@@ -292,14 +292,16 @@ struct rxvt_vars {
   TermWin_t       TermWin;
   scrollBar_t     scrollBar;
   menuBar_t       menuBar;
-  Display        *Xdisplay;
   unsigned long   Options;
   XSizeHints      szHint;
+  Display        *Xdisplay;
+  int             Xdepth;
+  int             Xscreen;
+  Visual         *Xvisual;
   Colormap        Xcmap;
   rxvt_color     *PixColors;
   short           numPixColors;
   Cursor          TermWin_cursor;       /* cursor for vt window */
-  int             Xdepth;
   int             sb_shadow;    /* scrollbar shadow width                    */
   int             Xfd;          /* file descriptor of X server connection    */
   int             cmd_fd;       /* pty file descriptor; connected to command */

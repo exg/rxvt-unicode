@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        init.c
  *----------------------------------------------------------------------*
- * $Id: init.C,v 1.16 2003/12/18 13:33:02 pcg Exp $
+ * $Id: init.C,v 1.17 2004/01/19 17:26:43 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -1044,12 +1044,11 @@ rxvt_term::color_aliases(int idx)
         {        /* bright colors */
           i -= 8;
 #ifndef NO_BRIGHTCOLOR
-
           rs[Rs_color + idx] = rs[Rs_color + minBrightCOLOR + i];
           return;
 #endif
-
         }
+
       if (i >= 0 && i <= 7)   /* normal colors */
         rs[Rs_color + idx] = rs[Rs_color + minCOLOR + i];
     }
@@ -1137,40 +1136,40 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   XGCValues       gcvalue;
   long            vt_emask;
 
-#ifdef PREFER_24BIT
   XSetWindowAttributes attributes;
   XWindowAttributes gattr;
 
-  XCMAP = DefaultColormap(Xdisplay, Xscreen);
-  XVISUAL = DefaultVisual(Xdisplay, Xscreen);
+  Xcmap   = DefaultColormap (Xdisplay, Xscreen);
+  Xvisual = DefaultVisual (Xdisplay, Xscreen);
+  Xscreen = DefaultScreen (Xdisplay);
 
   if (Options & Opt_transparent)
     {
-      XGetWindowAttributes(Xdisplay, RootWindow(Xdisplay, Xscreen),
-                           &gattr);
-      XDEPTH = gattr.depth;
+      XGetWindowAttributes (Xdisplay, RootWindow(Xdisplay, Xscreen), &gattr);
+      Xdepth = gattr.depth;
     }
   else
     {
-      XDEPTH = DefaultDepth(Xdisplay, Xscreen);
+      Xdepth = DefaultDepth(Xdisplay, Xscreen);
+#ifdef PREFER_24BIT
       /*
        * If depth is not 24, look for a 24bit visual.
        */
-      if (XDEPTH != 24)
+      if (Xdepth != 24)
         {
           XVisualInfo     vinfo;
 
           if (XMatchVisualInfo(Xdisplay, Xscreen, 24, TrueColor, &vinfo))
             {
-              XDEPTH = 24;
-              XVISUAL = vinfo.visual;
-              XCMAP = XCreateColormap(Xdisplay,
+              Xdepth = 24;
+              Xvisual = vinfo.visual;
+              Xcmap = XCreateColormap(Xdisplay,
                                       RootWindow(Xdisplay, Xscreen),
-                                      XVISUAL, AllocNone);
+                                      Xvisual, AllocNone);
             }
         }
-    }
 #endif
+    }
 
   /* grab colors before netscape does */
   rxvt_Get_Colours (this);
@@ -1259,22 +1258,21 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                                       PixColors[Color_fg],
                                       PixColors[Color_bg]);
 #ifdef DEBUG_X
-
   XStoreName(Xdisplay, TermWin.vt, "vt window");
 #endif
 
-  pointer_unblank ();
-
   vt_emask = (ExposureMask | ButtonPressMask | ButtonReleaseMask
               | PropertyChangeMask);
+
 #ifdef POINTER_BLANK
+  pointer_unblank ();
 
   if ((Options & Opt_pointerBlank))
     vt_emask |= PointerMotionMask;
   else
 #endif
-
     vt_emask |= (Button1MotionMask | Button3MotionMask);
+
   XSelectInput(Xdisplay, TermWin.vt, vt_emask);
 
 #if defined(MENUBAR) && (MENUBAR_MAX > 1)
@@ -1428,7 +1426,10 @@ rxvt_term::run_command (const char *const *argv)
         dup2 (tty_fd, STDIN_FILENO);
 #endif
 
+#ifdef UTMP_SUPPORT
         rxvt_privileged_utmp (this, SAVE);
+#endif
+
 #if defined(HAVE_STRUCT_UTMP) && defined(HAVE_TTYSLOT)
 
         dup2 (fdstdin, STDIN_FILENO);

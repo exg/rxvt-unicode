@@ -1,5 +1,11 @@
 1.5
 	- share io manager between rxvt-unicode and vpe
+        - bugfix for --disable-utmp, reported by fefe himsel.
+        - colors were sometimes not used correctly because
+          parts of the code expected a monochrome display.
+          reported by fefe.
+        - make it compile without pointer_blank, reported by
+          Markus Demleitner.
 
 1.4  Fri Jan 16 23:03:22 CET 2004
 	- fix stupid segfault on esc-c

@@ -10,7 +10,7 @@ rxvt_color::set (pR_ Pixel p)
   XColor xc;
 
   xc.pixel = p;
-  if (!XQueryColor (R->Xdisplay, XCMAP, &xc))
+  if (!XQueryColor (R->Xdisplay, R->Xcmap, &xc))
     return false;
 
   XRenderColor d;
@@ -22,8 +22,8 @@ rxvt_color::set (pR_ Pixel p)
 
   return
     XftColorAllocValue (R->Xdisplay, 
-                        XVISUAL,
-                        XCMAP,
+                        R->Xvisual,
+                        R->Xcmap,
                         &d,
                         &c);
 #else
@@ -38,7 +38,7 @@ rxvt_color::set (pR_ const char *name)
 {
   XColor xc;
 
-  if (XParseColor (R->Xdisplay, XCMAP, name, &xc))
+  if (XParseColor (R->Xdisplay, R->Xcmap, name, &xc))
     return set (aR_ xc.red, xc.green, xc.blue);
 
   return false;
@@ -54,7 +54,7 @@ rxvt_color::set (pR_ unsigned short cr, unsigned short cg, unsigned short cb)
   xc.blue  = cb;
   xc.flags = DoRed | DoGreen | DoBlue;
 
-  if (XAllocColor (R->Xdisplay, XCMAP, &xc))
+  if (XAllocColor (R->Xdisplay, R->Xcmap, &xc))
     return set (aR_ xc.pixel);
 
   return false;
@@ -71,7 +71,7 @@ rxvt_color::get (pR_ unsigned short &cr, unsigned short &cg, unsigned short &cb)
   XColor c;
 
   c.pixel = p;
-  XQueryColor (R->Xdisplay, XCMAP, &c);
+  XQueryColor (R->Xdisplay, R->Xcmap, &c);
 
   cr = c.red;
   cg = c.green;
