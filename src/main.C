@@ -35,6 +35,7 @@
 #include "main.intpro"          /* PROTOS for internal routines */
 
 #include <csignal>
+#include <cstring>
 
 #ifdef TTY_GID_SUPPORT
 # include <grp.h>
@@ -44,7 +45,9 @@
 # include <termios.h>
 #endif
 
-#include <cstring>
+#ifdef KEYSYM_RESOURCE
+# include "keyboard.h"
+#endif
 
 vector<rxvt_term *> rxvt_term::termlist;
 
@@ -170,6 +173,13 @@ rxvt_term::rxvt_term ()
   cmdbuf_ptr = cmdbuf_endp = cmdbuf_base;
 
   termlist.push_back (this);
+
+#ifdef KEYSYM_RESOURCE
+  keyboard = new keyboard_manager;
+
+  if (!keyboard)
+    rxvt_fatal ("out of memory, aborting.\n");
+#endif
 }
 
 rxvt_term::~rxvt_term ()
@@ -266,6 +276,10 @@ rxvt_term::~rxvt_term ()
 
   delete envv;
   delete argv;
+
+#ifdef KEYSYM_RESOURCE
+   delete keyboard;
+#endif
 }
 
 void
@@ -333,6 +347,8 @@ rxvt_term::init (int argc, const char *const *argv)
 {
   SET_R (this);
 
+  set_locale ("");
+
   if (!init_vars ())
     return false;
 
@@ -340,7 +356,9 @@ rxvt_term::init (int argc, const char *const *argv)
 
   const char **cmd_argv = init_resources (argc, argv);
 
-  set_locale ("");
+#ifdef KEYSYM_RESOURCE
+  keyboard->register_done ();
+#endif
 
 #if MENUBAR_MAX
   menubar_read (rs[Rs_menu]);
@@ -383,6 +401,8 @@ rxvt_term::init (int argc, const char *const *argv)
   set_colorfgbg ();
 
   init_command (cmd_argv);
+
+  free (cmd_argv);
 
   pty_ev.start (pty.pty, EVENT_READ);
 
@@ -784,6 +804,7 @@ rxvt_term::set_fonts ()
   TermWin.fontset[0] = fs;
 
   prop = (*fs)[1]->properties ();
+  prop.height += TermWin.lineSpace;
   fs->set_prop (prop);
 
   TermWin.fwidth  = prop.width;

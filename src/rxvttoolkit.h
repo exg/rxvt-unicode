@@ -36,7 +36,12 @@ template<class T>
 struct refcache : vector<T *> {
   T *get (const char *id);
   void put (T *obj);
-  ~refcache ();
+  void clear ();
+
+  ~refcache ()
+  {
+    clear ();
+  }
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -71,15 +76,18 @@ struct rxvt_display : refcounted {
 #endif
 
 //public
-  Display  *display;
-  int      depth;
-  int      screen;
-  Visual   *visual;
-  Colormap cmap;
-  Window   root;
+  Display   *display;
+  int       depth;
+  int       screen;
+  Visual    *visual;
+  Colormap  cmap;
+  Window    root;
   rxvt_term *selection_owner;
 #ifndef NO_SLOW_LINK_SUPPORT
-  bool     is_local;
+  bool      is_local;
+#endif
+#ifdef POINTER_BLANK
+  Cursor    blank_cursor;
 #endif
 
   rxvt_display (const char *id);

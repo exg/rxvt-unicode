@@ -84,7 +84,7 @@ void refcache<T>::put (T *obj)
 }
 
 template<class T>
-refcache<T>::~refcache ()
+void refcache<T>::clear ()
 {
   while (this->size ())
     put (*this->begin ());
@@ -170,6 +170,17 @@ bool rxvt_display::init ()
     is_local = sa.sun_family == AF_LOCAL;
 #endif
 
+#ifdef POINTER_BLANK
+  XColor blackcolour;
+  blackcolour.red   = 0;
+  blackcolour.green = 0;
+  blackcolour.blue  = 0;
+  Font f = XLoadFont (display, "fixed");
+  blank_cursor = XCreateGlyphCursor (display, f, f, ' ', ' ',
+                                     &blackcolour, &blackcolour);
+  XUnloadFont (display, f);
+#endif
+
 #ifdef PREFER_24BIT
   /*
    * If depth is not 24, look for a 24bit visual.
@@ -205,6 +216,9 @@ bool rxvt_display::init ()
 rxvt_display::~rxvt_display ()
 {
   x_ev.stop ();
+#ifdef USE_XIM
+  xims.clear ();
+#endif
 
   if (display)
     XCloseDisplay (display);

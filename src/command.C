@@ -50,6 +50,10 @@
 #include "version.h"
 #include "command.h"
 
+#ifdef KEYSYM_RESOURCE
+# include "keyboard.h"
+#endif
+
 #include <cwchar>
 #include <csignal>
 
@@ -346,6 +350,11 @@ rxvt_term::lookup_key (XKeyEvent &ev)
 
   if (valid_keysym)
     {
+#ifdef KEYSYM_RESOURCE
+      if (keyboard->dispatch (this, keysym, ev.state))
+        return;
+#endif
+
       if (TermWin.saveLines)
         {
 #ifdef UNSHIFTED_SCROLLKEYS
@@ -489,31 +498,6 @@ rxvt_term::lookup_key (XKeyEvent &ev)
 
       if (keysym >= 0xFF00 && keysym <= 0xFFFF)
         {
-#ifdef KEYSYM_RESOURCE
-          if (!(shft | ctrl) && Keysym_map[keysym & 0xFF] != NULL)
-            {
-              unsigned int    l;
-              const unsigned char *kbuf0;
-
-              kbuf0 = (Keysym_map[keysym & 0xFF]);
-              l = (unsigned int)*kbuf0++;
-
-              /* escape prefix */
-              if (meta
-# ifdef META8_OPTION
-                  && meta_char == C0_ESC
-# endif
-                 )
-                {
-                  const unsigned char ch = C0_ESC;
-                  tt_write (&ch, 1);
-                }
-
-              tt_write (kbuf0, l);
-              return;
-            }
-          else
-#endif
             {
               newlen = 1;
               switch (keysym)
@@ -787,11 +771,8 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                     break;
 #undef FKEY
                   default:
-                    if (len == 0 
-                        && (keysym & 0xfff0) != 0xff70
-                        && (keysym & 0xfff0) != 0xffe0)
-                      /* generate a keycode for every remaining keypress */
-                      sprintf ((char *)kbuf, "\033[%x;%xA", (unsigned char)ev.state, (unsigned short)keysym);
+                    newlen = 0;
+                    break;
                 }
 
               if (newlen)
@@ -816,13 +797,6 @@ rxvt_term::lookup_key (XKeyEvent &ev)
         {
           strcpy (kbuf, "\033[Z");
           len = 3;
-        }
-      else if (len == 0
-               && (keysym & 0xffe0) != 0xfe00
-               && (keysym < 0xfe50 || keysym > 0xfe6f))
-        {
-          /* generate a keycode for every remaining keypress */
-          len = sprintf ((char *)kbuf, "\033[%x;%xA", (unsigned char)ev.state, (unsigned short)keysym);
         }
       else
         {
@@ -891,7 +865,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
 }
 /*}}} */
 
-#if (MENUBAR_MAX)
+#if MENUBAR_MAX || defined (KEYSYM_RESOURCE)
 /*{{{ rxvt_cmd_write (), rxvt_cmd_getc () */
 /* attempt to `write' count to the input buffer */
 unsigned int
@@ -924,7 +898,7 @@ rxvt_term::cmd_write (const unsigned char *str, unsigned int count)
 
   return 0;
 }
-#endif				/* MENUBAR_MAX */
+#endif
 
 void
 rxvt_term::flush ()
@@ -1035,6 +1009,10 @@ rxvt_term::slip_wheel_cb (time_watcher &w)
       || mouse_slip_wheel_speed < 0 ? scr_page (DN, -mouse_slip_wheel_speed)
                                     : scr_page (UP,  mouse_slip_wheel_speed))
     {
+      if (TermWin.view_start == TermWin.nscrolled ||
+          TermWin.view_start == 0)
+        mouse_slip_wheel_speed = 0;
+
       refresh_type |= SMOOTH_REFRESH;
       want_refresh = 1;
       w.start (w.at + SCROLLBAR_CONTINUOUS_DELAY);
@@ -1107,7 +1085,7 @@ rxvt_term::pointer_blank ()
   if (! (options & Opt_pointerBlank))
     return;
 
-  XDefineCursor (display->display, TermWin.vt, blank_cursor);
+  XDefineCursor (display->display, TermWin.vt, display->blank_cursor);
   XFlush (display->display);
 
   hidden_pointer = 1;
@@ -1769,7 +1747,7 @@ rxvt_term::button_press (XButtonEvent &ev)
                 /* allow meta + click to select rectangular areas */
                 /* should be done in screen.C */
 #if ENABLE_FRILLS
-                selection.rect = !! (ev.state & ModMetaMask);
+                selection.rect = !!(ev.state & ModMetaMask);
 #else
                 selection.rect = false;
 #endif
@@ -3852,6 +3830,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
         else
           {
             set_locale (str);
+            pty.set_utf8_mode (enc_utf8);
 # ifdef USE_XIM
             im_cb ();
 # endif

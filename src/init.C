@@ -33,6 +33,7 @@
 
 #include "../config.h"          /* NECESSARY */
 #include "rxvt.h"               /* NECESSARY */
+#include "rxvtutil.h"
 #include "init.h"
 
 #include <csignal>
@@ -382,9 +383,6 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     TermWin.int_bwidth = min (i, 100);    /* arbitrary limit */
   if (rs[Rs_ext_bwidth] && (i = atoi (rs[Rs_ext_bwidth])) >= 0)
     TermWin.ext_bwidth = min (i, 100);    /* arbitrary limit */
-#endif
-
-#ifndef NO_LINESPACE
   if (rs[Rs_lineSpace] && (i = atoi (rs[Rs_lineSpace])) >= 0)
     TermWin.lineSpace = min (i, 100);     /* arbitrary limit */
 #endif
@@ -606,15 +604,16 @@ rxvt_term::set_locale (const char *locale)
   mbstate.reset ();
 #endif
 
-#if 0
 #if HAVE_NL_LANGINFO
   char *codeset = strdup (nl_langinfo (CODESET));
-  enc_utf8 = !strcasecmp (codeset, "UTF-8")
-             || !strcasecmp (codeset, "UTF8");
+  // /^UTF.?8/i
+  enc_utf8 = (codeset[0] == 'U' || codeset[0] == 'u')
+          && (codeset[1] == 'T' || codeset[1] == 't')
+          && (codeset[2] == 'F' || codeset[2] == 'f')
+          && (codeset[3] == '8' || codeset[4] == '8');
   free (codeset);
 #else
   enc_utf8 = 0;
-#endif
 #endif
 }
 
@@ -844,53 +843,71 @@ rxvt_term::get_ourmods ()
 
   requestedmeta = realmeta = realalt = 0;
   rsmod = rs[Rs_modifier];
+
   if (rsmod
       && strcasecmp (rsmod, "mod1") >= 0 && strcasecmp (rsmod, "mod5") <= 0)
     requestedmeta = rsmod[3] - '0';
 
   map = XGetModifierMapping (display->display);
   kc = map->modifiermap;
+
   for (i = 1; i < 6; i++)
     {
       k = (i + 2) * map->max_keypermod;       /* skip shift/lock/control */
+
       for (j = map->max_keypermod; j--; k++)
         {
           if (kc[k] == 0)
             break;
+
           switch (XKeycodeToKeysym (display->display, kc[k], 0))
             {
               case XK_Num_Lock:
                 ModNumLockMask = modmasks[i - 1];
-                /* FALLTHROUGH */
-              default:
-                continue;       /* for (;;) */
+                continue;
+
+              case XK_ISO_Level3_Shift:
+                ModLevel3Mask = modmasks[i - 1];
+                continue;
+
               case XK_Meta_L:
               case XK_Meta_R:
                 cm = "meta";
                 realmeta = i;
                 break;
+
               case XK_Alt_L:
               case XK_Alt_R:
                 cm = "alt";
                 realalt = i;
                 break;
+
               case XK_Super_L:
               case XK_Super_R:
                 cm = "super";
                 break;
+
               case XK_Hyper_L:
               case XK_Hyper_R:
                 cm = "hyper";
                 break;
+
+              default:
+                continue;
             }
+
           if (rsmod && strncasecmp (rsmod, cm, strlen (cm)) == 0)
             requestedmeta = i;
         }
     }
+
   XFreeModifiermap (map);
-  i = (requestedmeta ? requestedmeta
-       : (realmeta ? realmeta
-          : (realalt ? realalt : 0)));
+
+  i = requestedmeta ? requestedmeta
+    : realmeta      ? realmeta
+    : realalt       ? realalt
+    : 0;
+
   if (i)
     ModMetaMask = modmasks[i - 1];
 }
@@ -1030,19 +1047,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #if defined(HAVE_SCROLLBARS) || defined(MENUBAR)
   /* cursor (menuBar/scrollBar): Black-on-White */
   leftptr_cursor = XCreateFontCursor (display->display, XC_left_ptr);
-#endif
-
-#ifdef POINTER_BLANK
-  {
-    XColor blackcolour;
-    blackcolour.red   = 0;
-    blackcolour.green = 0;
-    blackcolour.blue  = 0;
-    Font f = XLoadFont (display->display, "fixed");
-    blank_cursor = XCreateGlyphCursor (display->display, f, f, ' ', ' ',
-                                       &blackcolour, &blackcolour);
-    XUnloadFont (display->display, f);
-  }
 #endif
 
   /* the vt window */
@@ -1383,10 +1387,15 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
 void
 rxvt_term::run_command (const char *const *argv)
 {
-  int er;
-
   if (!pty.get ())
     rxvt_fatal ("can't initialize pseudo-tty, aborting.\n");
+
+  pty.set_utf8_mode (enc_utf8);
+
+  /* set initial window size */
+  tt_winch ();
+
+  int er;
 
 #ifndef NO_BACKSPACE_KEY
   if (key_backspace[0] && !key_backspace[1])
@@ -1398,9 +1407,6 @@ rxvt_term::run_command (const char *const *argv)
     er = -1;
 
   rxvt_get_ttymode (&tio, er);
-
-  /* set initial window size */
-  tt_winch ();
 
   sw_chld.start (SIGCHLD);
 

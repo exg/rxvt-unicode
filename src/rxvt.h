@@ -12,7 +12,7 @@
 #include <X11/keysymdef.h>
 #include <X11/Xatom.h>
 #if ENABLE_FRILLS
-#include <X11/Xmd.h>
+# include <X11/Xmd.h>
 #endif
 
 #include "encoding.h"
@@ -606,7 +606,7 @@ enum {
   Rs_borderLess,
 #endif
   Rs_scrollBar_thickness,
-#ifndef NO_LINESPACE
+#if ENABLE_FRILLS
   Rs_lineSpace,
 #endif
   Rs_cutchars,
@@ -996,6 +996,10 @@ extern class rxvt_composite_vec rxvt_composite;
 #endif
 
 
+#ifdef KEYSYM_RESOURCE
+  class keyboard_manager;
+#endif
+
 struct rxvt_term : zero_initialized, rxvt_vars {
   log_callback *log_hook;               // log error messages through this hook, if != 0
 
@@ -1022,7 +1026,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 #ifdef POINTER_BLANK
                   hidden_pointer:1,
 #endif
-//                  enc_utf8:1,		/* wether locale uses utf-8 */
+                  enc_utf8:1,		/* wether locale uses utf-8 */
                   seen_input:1,         /* wether we have seen some program output yet */
                   seen_resize:1,	/* wether we had a resize event */
                   parsed_geometry:1;
@@ -1078,7 +1082,8 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 # endif
                   allowedxerror;
 /* ---------- */
-  unsigned int    ModMetaMask,
+  unsigned int    ModLevel3Mask,
+                  ModMetaMask,
                   ModNumLockMask;
   int             old_width,  /* last used width in screen resize          */
                   old_height; /* last used height in screen resize         */
@@ -1122,9 +1127,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   size_t          incr_buf_size, incr_buf_fill;
 /* ---------- */
   Cursor          leftptr_cursor;
-#ifdef POINTER_BLANK
-  Cursor          blank_cursor;
-#endif
 /* ---------- */
 #ifndef NO_BACKSPACE_KEY
   const char     *key_backspace;
@@ -1192,9 +1194,11 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   unsigned char  *v_buffer;           /* pointer to physical buffer */
   unsigned int    v_buflen;           /* size of area to write */
   stringvec      *argv, *envv;        /* if != 0, will be freed on destroy time */
+
 #ifdef KEYSYM_RESOURCE
-  const unsigned char *Keysym_map[256];
+  keyboard_manager *keyboard;
 #endif
+
   const char     *rs[NUM_RESOURCES];
   /* command input buffering */
   unsigned char  *cmdbuf_ptr, *cmdbuf_endp;

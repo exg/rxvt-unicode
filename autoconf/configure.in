@@ -2,6 +2,8 @@ dnl# -*- sh -*-
 dnl#
 dnl# Process this file with autoconf to produce a configure script.
 dnl#
+orig_CXXFLAGS="$CXXFLAGS"
+
 AC_INIT
 AC_CONFIG_SRCDIR([src/feature.h])
 AC_CONFIG_AUX_DIR(autoconf)
@@ -34,6 +36,17 @@ AC_PROG_INSTALL
 AC_PROG_AWK
 
 AC_LANG(C)
+
+dnl# --------------------------------------------------------------------------
+dnl# Supply default CFLAGS, if not specified by `CFLAGS=flags ./configure'
+dnl#
+if test -z "$orig_CXXFLAGS"; then
+  CXXFLAGS='-O'
+  if test x$GCC = xyes && test "x$GXX" = xyes; then
+    CXXFLAGS="-g -O3"
+  fi
+  CFLAGS="$CXXFLAGS"
+fi
 
 LINKER="$CXX"
 if test x$GCC = xyes && test x$GXX = xyes; then
@@ -446,21 +459,6 @@ AC_ARG_WITH(terminfo,
 dnl# --------------------------------------------------------------------------
 
 AC_DEFINE(PROTOTYPES, 1, Define if you need function prototypes)
-
-dnl# --------------------------------------------------------------------------
-dnl# Supply default CFLAGS, if not specified by `CFLAGS=flags ./configure'
-dnl#
-if test -z "$CFLAGS"; then
-    if test -z "$CCOPTS"; then
-	CCOPTS='-O'
-dnl>	if test "x$GCC" = xyes; then
-dnl>	    if test x$system = xLinux; then
-dnl>		CCOPTS="$CCOPTS "'-O2 -fno-strength-reduce'
-dnl>	    fi
-dnl>	fi
-    fi
-    CFLAGS="$CCOPTS"
-fi
 
 AC_PATH_PROG(MV, mv, mv)
 AC_PATH_PROG(RM, rm, rm)
