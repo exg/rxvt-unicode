@@ -384,6 +384,8 @@ shouldn't be a top-level window. @@RXVT_NAME@@ will also reconfigure it
 quite a bit, so don't expect it to keep some specific state. It's best to
 create an extra subwindow for @@RXVT_NAME@@ and leave it alone.
 
+The window will not be destroyed when @@RXVT_NAME@@ exits.
+
 It might be useful to know that @@RXVT_NAME@@ will not close file
 descriptors passed to it (except for stdin/out/err, of course), so you
 can use file descriptors to communicate with the programs within the

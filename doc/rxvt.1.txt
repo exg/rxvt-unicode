@@ -325,6 +325,8 @@ OPTIONS
         a bit, so don't expect it to keep some specific state. It's best to
         create an extra subwindow for rxvt and leave it alone.
 
+        The window will not be destroyed when rxvt exits.
+
         It might be useful to know that rxvt will not close file descriptors
         passed to it (except for stdin/out/err, of course), so you can use
         file descriptors to communicate with the programs within the
