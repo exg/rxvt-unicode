@@ -345,8 +345,13 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
           uint32_t *a = linedraw_command + (offs >> 4);
           uint32_t *b = a + (offs & 15);
 
-          int W = r->TermWin.fwidth * wcwidth (t);
+          int W = r->TermWin.fwidth;
           int H = r->TermWin.fheight;
+
+          // support double-width (but not more) graphics chars
+          // TODO: do this outside the if/elsif.. statement for all cases
+          if (len && *text == NOCHAR)
+            W += r->TermWin.fwidth;
 
           int x_[16];
           int y_[16];
