@@ -2,11 +2,23 @@ Lines marked with "xterm:" indicate either xterm features ported to rxvt
 or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
+TODO: hotkey font resizing
+TODO: +ssc -ssr seems to scroll at wrong time, scrolling up the empty sec. scr.
 TODO: multibyte support for setwmname et al.
 TODO: tabbed windows
-TODO: ignore user-supplied preedit-type, or augment with default list.
 TODO: there are other todo items, but they are not in this file.
 TODO: OnTheSpot editing.
+
+4.1  Sun Nov 21 21:10:19 CET 2004
+	- save and restore cursor position in secondary screen regardless of
+          -ssc/-ssr settings.
+	- fix some 64-bit bugs that lead to crashes with certain other
+          programs like vncviewer (original rxvt also affected).
+	- added doc/podtbl to the dist tarball.
+        - add compile fix for darwin.
+        - configure fix for transparency without tinting.
+        - changed CN to ZH _really_ everywhere.
+        - upgraded iom.[Ch].
 
 4.0  Mon Sep 13 01:10:26 CEST 2004
 	- turn off autohinting for some badly-hinted fallback fonts.

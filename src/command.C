@@ -419,7 +419,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                   case XK_Insert:	/* Shift+Insert = paste mouse selection */
                     selection_request (ev.time, 0, 0);
                     return;
-#if TODO // TODO
+#if TODO
                     /* rxvt extras */
                   case XK_KP_Add:	/* Shift+KP_Add = bigger font */
                     change_font (FONT_UP);
@@ -3763,7 +3763,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
         process_color_seq (XTerm_Color_RV, Color_RV, str, resp);
         break;
 #endif
-#if TRANSPARENT || TINTING
+#if TRANSPARENT && TINTING
       case XTerm_Color_tint:
         process_color_seq (XTerm_Color_tint, Color_tint, str, resp);
         check_our_parents ();
