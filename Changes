@@ -1,3 +1,20 @@
+2.1  Wed Mar  3 21:48:39 CET 2004
+	- NOTE: the name of the binary and ressources were changed in
+          this version, see README.configure if you want the old
+          settings.
+        - added plain "big5" encoding into CN.
+        - make cns11643 and big5* encodings actually visible to rxvt.
+        - fix a bug when a multibyte character fell onto a buffer boundary,
+          causing the incomplete character to be presented twice to
+          mbrtowc.
+        - more robust encoding name matching.
+        - fix cursor placement on multibyte characters.
+        - when overwriting wide with narrow chars, pad with spaces.
+        - fix various refresh and display issues for wide chars.
+        - remove multibyte_cursor hack (it was a hack) and associated
+          resources and docs.
+        - fixed memory corruption bug with XLFD fontname parsing.
+
 2.0  Sun Feb 29 23:59:58 CET 2004
 	- do not blink text when background colour is not set explicitly.
         - some doc cleanup
