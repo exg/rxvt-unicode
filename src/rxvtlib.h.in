@@ -1,5 +1,5 @@
 /*
- * $Id: rxvtlib.h.in,v 1.5 2003/12/02 21:49:46 pcg Exp $
+ * $Id: rxvtlib.h.in,v 1.6 2003/12/17 09:00:35 pcg Exp $
  */
 
 #ifndef _RXVTLIB_H_             /* include once only */
@@ -186,8 +186,8 @@ typedef struct {
  *     normal `unscrolled' screen region
  */
 typedef struct {
-  text_t        **text; /* _all_ the text                            */
   int16_t        *tlen; /* length of each text line                  */
+  text_t        **text; /* _all_ the text                            */
   rend_t        **rend; /* rendition, uses RS_ flags                 */
   row_col_t       cur;  /* cursor position on the screen             */
   uint16_t        tscroll;      /* top of settable scroll region             */

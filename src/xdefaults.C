@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xdefaults.c
  *----------------------------------------------------------------------*
- * $Id: xdefaults.C,v 1.3 2003/11/25 11:52:42 pcg Exp $
+ * $Id: xdefaults.C,v 1.4 2003/12/17 09:00:35 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994      Robert Nation <nation@rocket.sanders.lockheed.com>
@@ -683,7 +683,7 @@ rxvt_get_xdefaults(pR_ FILE *stream, const char *name)
 
 		if (kw == NULL)
 		    continue;
-		n = STRLEN(kw);
+		n = STRLEN (kw);
 		if (str[n] == ':' && rxvt_Str_match(str, kw)) {
 		    /* skip `keyword:' */
 		    str += (n + 1);

@@ -1,5 +1,5 @@
 /*
- * $Id: rxvt.h,v 1.11 2003/12/16 23:04:13 pcg Exp $
+ * $Id: rxvt.h,v 1.12 2003/12/17 09:00:35 pcg Exp $
  */
 
 #ifndef _RXVT_H_                /* include once only */
@@ -17,6 +17,7 @@
 #include "defaultfont.h"
 #include "rxvtcolor.h"
 #include "iom.h"
+#include "salloc.h"
 
 /*
  *****************************************************************************
@@ -1087,6 +1088,9 @@ struct rxvt_term : rxvt_vars {
   unsigned char   cmdbuf_base[BUFSIZ];
   unsigned char   kbuf[KBUFSZ];
 
+  rxvt_salloc *ralloc;
+  rxvt_salloc *talloc;
+
   void paste (const unsigned char *data, unsigned int len);
 
   void flush ();
@@ -1128,6 +1132,14 @@ struct rxvt_term : rxvt_vars {
 
   void *operator new (size_t s);
   void operator delete (void *p, size_t s);
+
+  /* screen(!) */
+  void scr_blank_line (text_t *et, rend_t *er, unsigned int width, rend_t efs);
+  void scr_blank_screen_mem (text_t **tp, rend_t **rp, unsigned int row, rend_t efs);
+  int scr_scroll_text (int row1, int row2, int count, int spec);
+  void scr_reset ();
+  void scr_reset_realloc ();
+  void scr_release ();
 };
 
 #ifndef __attribute__

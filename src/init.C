@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        init.c
  *----------------------------------------------------------------------*
- * $Id: init.C,v 1.10 2003/12/08 23:14:40 pcg Exp $
+ * $Id: init.C,v 1.11 2003/12/17 09:00:35 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -359,15 +359,12 @@ rxvt_term::init_vars()
     return false;
 
 #if defined(XPM_BACKGROUND) || defined(TRANSPARENT)
-
   TermWin.pixmap = None;
 #endif
 #ifdef UTMP_SUPPORT
-
   next_utmp_action = SAVE;
 #endif
 #ifndef NO_SETOWNER_TTYDEV
-
   next_tty_action = SAVE;
 #endif
 

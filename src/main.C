@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.12 2003/12/16 23:04:13 pcg Exp $
+ * $Id: main.C,v 1.13 2003/12/17 09:00:35 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -77,7 +77,7 @@ rxvt_term::rxvt_term ()
 
 rxvt_term::~rxvt_term ()
 {
-  rxvt_scr_release (this);
+  scr_release ();
 
 #ifndef NO_SETOWNER_TTYDEV
   rxvt_privileged_ttydev (this, RESTORE);
@@ -205,7 +205,7 @@ rxvt_term::init (int argc, const char *const *argv)
 
   rxvt_init_xlocale (this);
 
-  rxvt_scr_reset (this);         /* initialize screen */
+  scr_reset ();         /* initialize screen */
 #ifdef RXVT_GRAPHICS
   rxvt_Gr_reset (this);          /* reset graphics */
 #endif
@@ -942,7 +942,9 @@ rxvt_resize_all_windows(pR_ unsigned int width, unsigned int height,
     /* scr_reset only works on the primary screen */
         if (R->old_height)      /* this is not the first time through */
             curr_screen = rxvt_scr_change_screen(aR_ PRIMARY);
-        rxvt_scr_reset(aR);
+
+        R->scr_reset();
+
         if (curr_screen >= 0) { /* this is not the first time through */
             rxvt_scr_change_screen(aR_ curr_screen);
             rxvt_selection_check(aR_(old_ncol != R->TermWin.ncol ? 4 : 0));

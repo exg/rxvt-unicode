@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.15 2003/12/16 23:04:13 pcg Exp $
+ * $Id: command.C,v 1.16 2003/12/17 09:00:35 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -2584,7 +2584,7 @@ rxvt_process_csi_seq(pR)
 	arg[0] = -arg[0];
     /* FALLTHROUGH */
     case CSI_SU:		/* 8.3.148: (1) SCROLL UP */
-	rxvt_scroll_text(aR_ R->screen.tscroll, R->screen.bscroll, arg[0], 0);
+	R->scr_scroll_text (R->screen.tscroll, R->screen.bscroll, arg[0], 0);
 	break;
 
     case CSI_DA:		/* 8.3.24: (0) DEVICE ATTRIBUTES */
