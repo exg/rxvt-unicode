@@ -1,6 +1,8 @@
 #include "../config.h"
 #include "rxvtdaemon.h"
 
+#include "rxvt.h"
+
 #include <cstdio>
 #include <cstdlib>
 

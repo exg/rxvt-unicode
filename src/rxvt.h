@@ -5,6 +5,8 @@
 
 #include "feature.h"
 
+#include <limits.h>
+
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
@@ -354,13 +356,13 @@ enum {
   XTerm_name             =  0,
   XTerm_iconName         =  1,
   XTerm_title            =  2,
-  XTerm_property         =  3,      // change X property, not yet implemented
+  XTerm_property         =  3,      // change X property
   XTerm_Color            =  4,      // change colors
   XTerm_Color00          = 10,      // not implemented, CLASH!
   XTerm_Color01          = 11,      // not implemented
   XTerm_Color_cursor     = 12,      // change actual 'Cursor' color
-  XTerm_Color_pointer    = 13,      // change actual 'Pointer' color
-  XTerm_Color04          = 14,      // not implemented
+  XTerm_Color_pointer_fg = 13,      // change actual 'Pointer' color
+  XTerm_Color_pointer_bg = 14,      // not implemented
   XTerm_Color05          = 15,      // not implemented
   XTerm_Color06          = 16,      // not implemented
   XTerm_Color_RV         = 17,      // change actual 'Highlight' color
@@ -373,7 +375,6 @@ enum {
   /*
    * rxvt extensions of XTerm OSCs: ESC ] Ps;Pt (ST|BEL)
    */
-  XTerm_Menu             = 10,      // set menu item
   XTerm_Color_BD         = 18,      // change actual 'Bold' color
   XTerm_Color_UL         = 19,      // change actual 'Underline' color
   XTerm_Pixmap           = 20,      // new bg pixmap
@@ -382,6 +383,7 @@ enum {
   XTerm_dumpscreen       = 55,      // dump scrollback and all of screen
   XTerm_locale           = 701,     // change locale
   XTerm_findfont         = 702,     // find font of given character (in decimal)
+  XTerm_Menu             = 703,     // set menu item
 };
 
 /* Words starting with `Color_' are colours.  Others are counts */
@@ -428,7 +430,8 @@ enum colour_list {
   Color_cursor,
   Color_cursor2,
 #endif
-  Color_pointer,
+  Color_pointer_fg,
+  Color_pointer_bg,
   Color_border,
 #ifndef NO_BOLD_UNDERLINE_REVERSE
   Color_BD,
@@ -441,6 +444,9 @@ enum colour_list {
 #ifdef KEEP_SCROLLCOLOR
   Color_scroll,
   Color_trough,
+#endif
+#if TINTING
+  Color_tint,
 #endif
   NRS_COLORS,                 /* */
 #ifdef KEEP_SCROLLCOLOR
@@ -535,10 +541,15 @@ enum {
   Rs_modifier,
   Rs_answerbackstring,
   Rs_tripleclickwords,
+  Rs_insecure,
   Rs_cursorBlink,
   Rs_pointerBlank,
   Rs_pointerBlankDelay,
   Rs_imLocale,
+#ifndef NO_SECONDARY_SCREEN
+  Rs_secondaryScreen,
+  Rs_secondaryScroll,
+#endif
   NUM_RESOURCES
 };
 
@@ -555,6 +566,7 @@ enum {
   XA_WMDELETEWINDOW,
 #ifdef TRANSPARENT
   XA_XROOTPMAPID,
+  XA_XSETROOTID,
 #endif
 #ifdef OFFIX_DND                /* OffiX Dnd (drag 'n' drop) support */
   XA_DNDPROTOCOL,
@@ -609,6 +621,10 @@ enum {
 #define KBUFSZ                 512     // size of keyboard mapping buffer
 #define CBUFSIZ                4096    // size of command buffer
 #define UBUFSIZ                4096    // character buffer
+
+#ifndef PATH_MAX
+# define PATH_MAX 16384
+#endif
 
 /*
  *****************************************************************************
@@ -799,7 +815,7 @@ extern void rxvt_fatal (const char *fmt, ...) __attribute__ ((noreturn));
 extern void rxvt_exit_failure () __attribute__ ((noreturn));
 
 #define SET_LOCALE(locale) rxvt_set_locale (locale)
-extern void rxvt_set_locale (const char *locale);
+extern bool rxvt_set_locale (const char *locale);
 
 /*
  *****************************************************************************
@@ -870,9 +886,9 @@ extern class rxvt_composite_vec rxvt_composite;
 
 
 struct rxvt_term : rxvt_vars {
-  log_callback *log_hook;
+  log_callback *log_hook;               // log error messages through this hook, if != 0
 
-  struct mbstate mbstate;
+  struct mbstate  mbstate;              // current input multibyte state
 
   unsigned char   want_refresh:1,
 #ifdef TRANSPARENT
@@ -907,16 +923,16 @@ struct rxvt_term : rxvt_vars {
                   next_tty_action,
 #endif
 #ifdef META8_OPTION
-                  meta_char,  /* Alt-key prefix                            */
+                  meta_char,            /* Alt-key prefix */
 #endif
                   scrollbar_align,
                   selection_wait,
                   selection_type;
 /* ---------- */
   short           rvideo;
-  int16_t         num_scr;    /* screen: number lines scrolled             */
-  unsigned int    prev_ncol,  /* screen: previous number of columns        */
-                  prev_nrow;  /* screen: previous number of rows           */
+  int16_t         num_scr;              /* screen: number lines scrolled */
+  unsigned int    prev_ncol,            /* screen: previous number of columns */
+                  prev_nrow;            /* screen: previous number of rows */
 /* ---------- */
   rend_t          rstyle;
 /* ---------- */
@@ -1069,7 +1085,7 @@ struct rxvt_term : rxvt_vars {
   struct timeval  lastmotion;
 #endif
 
-  vector<void *> allocated; // free these memory blocks
+  vector<void *> allocated;           // free these memory blocks with free()
 
   char           *env_windowid;       /* environmental variable WINDOWID */
   char           *env_display;        /* environmental variable DISPLAY  */
@@ -1080,9 +1096,9 @@ struct rxvt_term : rxvt_vars {
   char           *codeset;
 #endif
   char            charsets[4];
-  unsigned char  *v_buffer;   /* pointer to physical buffer */
-  unsigned int    v_buflen;   /* size of area to write */
-  stringvec      *argv, *envv;       /* if != 0, will be freed on destroy time */
+  unsigned char  *v_buffer;           /* pointer to physical buffer */
+  unsigned int    v_buflen;           /* size of area to write */
+  stringvec      *argv, *envv;        /* if != 0, will be freed on destroy time */
 #ifdef KEYSYM_RESOURCE
   const unsigned char *Keysym_map[256];
 #endif
@@ -1091,8 +1107,10 @@ struct rxvt_term : rxvt_vars {
   unsigned char  *cmdbuf_ptr, *cmdbuf_endp;
   unsigned char   cmdbuf_base[CBUFSIZ];
 
-  rxvt_salloc *ralloc;
-  rxvt_salloc *talloc;
+  rxvt_salloc    *talloc;             // text line allocator
+  rxvt_salloc    *ralloc;             // rend line allocator
+
+  static vector<rxvt_term *> termlist; // a vector of all running rxvt_term's
 
   void paste (const unsigned char *data, unsigned int len);
 
@@ -1158,6 +1176,7 @@ struct rxvt_term : rxvt_vars {
   void init_command (const char *const *argv);
   int run_command (const char *const *argv);
   int run_child (const char *const *argv);
+  static void child_exited (int pid);
 
   void color_aliases (int idx);
   void recolour_cursor ();
@@ -1227,7 +1246,8 @@ struct rxvt_term : rxvt_vars {
   unsigned char *get_to_st (unicode_t &ends_how);
   void process_dcs_seq ();
   void process_osc_seq ();
-  void xterm_seq (int op, const char *str, unsigned char resp __attribute__ ((unused)));
+  void process_color_seq (int report, int color, const char *str, unsigned char resp);
+  void process_xterm_seq (int op, const char *str, unsigned char resp);
   int privcases (int mode, unsigned long bit);
   void process_terminal_mode (int mode, int priv, unsigned int nargs, const int *arg);
   void process_sgr_mode (unsigned int nargs, const int *arg);

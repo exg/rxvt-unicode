@@ -256,11 +256,17 @@ void rxvt_display::set_selection_owner (rxvt_term *owner)
 
 rxvt_xim *rxvt_display::get_xim (const char *locale, const char *modifiers)
 {
-  // asprintf is a GNU and *BSD extension.. sorry...
   char *id;
+  int l, m;
 
-  if (asprintf (&id, "%s\n%s", locale, modifiers) < 0)
+  l = strlen (locale);
+  m = strlen (modifiers);
+
+  if (!(id = (char *)malloc (l + m + 2)))
     return 0;
+
+  memcpy (id, locale, l); id[l] = '\n';
+  memcpy (id + l + 1, modifiers, m); id[l + m + 1] = 0;
 
   rxvt_xim *xim = xims.get (id);
 

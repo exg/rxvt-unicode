@@ -1,8 +1,5 @@
 Sketchy overview of the details:
 
-- gcc-3.x is probably required to compile this release, g++-3.x, too, as it
-  has been re-written in C++ (and a corresponding version of libstdc++).
-
 - the options used in the ./reconf script should work. everything else
   might work and might be broken.
 
@@ -24,9 +21,9 @@ Sketchy overview of the details:
   using the imLocale ressource or switch, e.g.:
   LC_CTYPE=ja_JP.UTF-8 rxvt -imlocale ja_JP.EUC-JP
 
-- keyboard input is limited by the selected locale (and X's support for it),
-  tty input and output likewise. selection support is mostly independent
-  of the locale.
+- keyboard input is limited by the selected locale (and X's support for
+  it), tty input and output likewise. Selection support is independent of
+  the locale.
 
 - "-fn" commandline switch and *.font ressource accepts a comma
   seperated list of fontnames:
@@ -35,6 +32,7 @@ Sketchy overview of the details:
   9x15bold			the same
   xft:Andale Mono		a xft font
   xft:Andale Mono:pixelsize=20
+  9x15bold,terminus-15
 
 - the _first_ font in the list selects the cell width/height. All other
   fonts must be smaller or same sized, or they will be ignored or worse.
@@ -42,21 +40,21 @@ Sketchy overview of the details:
   size is not specified in the XLFD.
 
 - the fonts will be tried in the order given when searching for a font
-  to display a specific character. if you are e.g. mainly interested in
-  japanese you might want to put a japanese font first to get the ascii
-  characters in it. If you are mainly interested in a text terminal and
-  only want to display other characters you should put a ascii/is8859 text
-  font first (e.g. "9x15bold") and let rxvt sort it out.
+  to display a specific character. if you are e.g. mainly interested
+  in japanese you might want to put a japanese font first to get the
+  ascii characters glyphs from it. If you are mainly interested in a text
+  terminal and only want to display other characters you should put a
+  ascii/is8859 text font first (e.g. "9x15bold") and let rxvt sort it out.
 
 - xft fonts require gobs of memory and generally are slow. try not to
-  antialias them ("Font:antialias=false") when possible. Often looks
+  antialias them ("Font:antialias=false") when possible. Might look
   better, too, as they then match other fonts in weight.
 
 - src/defaultfont.C lists the fallback fonts that are tried when a
   character cannot be displayed with the current list of fonts.
 
 - using bold fonts for the bold attribute is not supported by xft
-  and will not be supported by rxvt-unicode, either, even for normal x11
+  and will not be supported by rxvt-unicode, either, even for normal X11
   fonts.
 
 - normal bold text will use reverse video unless the colorBD resource has

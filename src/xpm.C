@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xpm.c
  *----------------------------------------------------------------------*
- * $Id: xpm.C,v 1.10 2004/03/17 03:47:14 pcg Exp $
+ * $Id: xpm.C,v 1.11 2004/04/02 20:41:01 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1997      Carsten Haitzler <raster@zip.com.au>
@@ -69,7 +69,7 @@ rxvt_term::scale_pixmap (const char *geom)
       sprintf (str, "[%dx%d+%d+%d]",	/* can't presume snprintf () ! */
               min (bgpixmap->w, 9999), min (bgpixmap->h, 9999),
               min (bgpixmap->x, 9999), min (bgpixmap->y, 9999));
-      xterm_seq (XTerm_title, str, CHAR_ST);
+      process_xterm_seq (XTerm_title, str, CHAR_ST);
       free (str);
       return 0;
     }
