@@ -1,5 +1,5 @@
 /*--------------------------------*-C-*---------------------------------*
- * File:	defaultfont.C
+ * File:	rxvtfont.C
  *----------------------------------------------------------------------*
  * Copyright (c) 2003-2004 Marc Lehmann <pcg@goof.com>
  *				- original version.
@@ -333,9 +333,11 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
                          const text_t *text, int len,
                          int fg, int bg)
 {
+  Display *disp = d.display->display;
+
   clear_rect (d, x, y, r->TermWin.fwidth * len, r->TermWin.fheight, bg);
 
-  XSetForeground (d.display->display, TGC, r->pix_colors[fg]);
+  XSetForeground (disp, TGC, r->pix_colors[fg]);
 
   while (len)
     {
@@ -376,7 +378,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 
           gcv.cap_style = CapButt;
           gcv.line_width = 0;
-          XChangeGC (d.display->display, TGC, GCLineWidth | GCCapStyle, &gcv);
+          XChangeGC (disp, TGC, GCLineWidth | GCCapStyle, &gcv);
 
           while (a < b)
             {
@@ -393,7 +395,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
               switch (op)
                 {
                   case 0: // line
-                    XDrawLine (d.display->display, d, TGC, x1, y1, x2, y2);
+                    XDrawLine (disp, d, TGC, x1, y1, x2, y2);
                     break;
 
                   case 1: // rectangle, possibly stippled
@@ -402,27 +404,27 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
                         static char bm[] = { 0,0 , 3,1 , 1,2 , 1,0 };
  
                         gcv.fill_style = FillStippled;
-                        gcv.stipple = XCreateBitmapFromData (d.display->display, d, bm + a * 2, 2, 2);
+                        gcv.stipple = XCreateBitmapFromData (disp, d, bm + a * 2, 2, 2);
                         gcv.ts_x_origin = x;
                         gcv.ts_y_origin = y;
 
-                        XChangeGC (d.display->display, TGC,
+                        XChangeGC (disp, TGC,
                                    GCFillStyle | GCStipple | GCTileStipXOrigin | GCTileStipYOrigin,
                                    &gcv);
                       }
 
-                    XFillRectangle (d.display->display, d, TGC, x1, y1, x2 - x1 + 1, y2 - y1 + 1);
+                    XFillRectangle (disp, d, TGC, x1, y1, x2 - x1 + 1, y2 - y1 + 1);
 
                     if (a)
                       {
-                        XFreePixmap (d.display->display, gcv.stipple);
+                        XFreePixmap (disp, gcv.stipple);
                         gcv.stipple = 0;
                         gcv.fill_style = FillSolid;
-                        XChangeGC (d.display->display, TGC, GCFillStyle, &gcv);
+                        XChangeGC (disp, TGC, GCFillStyle, &gcv);
                       }
                     break;
                   case 2: // arc
-                    XDrawArc (d.display->display, d, TGC,
+                    XDrawArc (disp, d, TGC,
                               x1 - W/2, y1 - H/2, W-1, H-1,
                               (a - 1) * 90*64, (b - 1) * 90*64);
                     break;
@@ -463,7 +465,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
               break;
 
             default:
-              XDrawRectangle (d.display->display, d, TGC, x + 2, y + 2,
+              XDrawRectangle (disp, d, TGC, x + 2, y + 2,
                               fwidth - 4, r->TermWin.fheight - 4);
           }
 
@@ -632,6 +634,8 @@ replace_field (char *buf, const char *name, int index, const char old, const cha
 bool
 rxvt_font_x11::load (const rxvt_fontprop &prop)
 {
+  Display *disp = DISPLAY;
+
   clear ();
 
   char field_str[64]; // enough for 128 bits
@@ -644,7 +648,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
 
       if (name[0] != '-')
         {
-          f = XLoadQueryFont (DISPLAY, name);
+          f = XLoadQueryFont (disp, name);
 
           if (!f)
             return false;
@@ -656,7 +660,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
           else
             rxvt_warn ("font '%s' has no FONT property, continuing without.", name);
 
-          XFreeFont (DISPLAY, f);
+          XFreeFont (disp, f);
           f = 0;
         }
 
@@ -696,7 +700,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
 
   char **list;
   int count;
-  list = XListFonts (DISPLAY, name, 4000, &count);
+  list = XListFonts (disp, name, 4000, &count);
 
   set_name (0);
 
@@ -743,7 +747,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
           best = w;
 
       if (!best->name
-          || !(f = XLoadQueryFont (DISPLAY, best->name)))
+          || !(f = XLoadQueryFont (disp, best->name)))
         break;
 
       set_name (best->name);
@@ -1082,6 +1086,8 @@ rxvt_font_xft::properties ()
 bool
 rxvt_font_xft::load (const rxvt_fontprop &prop)
 {
+  Display *disp = DISPLAY;
+
   clear ();
 
   FcPattern *p = FcNameParse ((FcChar8 *) name);
@@ -1117,7 +1123,7 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
   set_name ((char *)FcNameUnparse (p));
 
   XftResult result;
-  FcPattern *match = XftFontMatch (DISPLAY, DefaultScreen (DISPLAY), p, &result);
+  FcPattern *match = XftFontMatch (disp, r->display->screen, p, &result);
 
   FcPatternDestroy (p);
 
@@ -1129,7 +1135,7 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
 
   for (;;)
     {
-      f = XftFontOpenPattern (DISPLAY, FcPatternDuplicate (match));
+      f = XftFontOpenPattern (disp, FcPatternDuplicate (match));
 
       if (!f)
         {
@@ -1163,7 +1169,7 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
             continue;
 
           XGlyphInfo g;
-          XftTextExtents16 (DISPLAY, f, &ch, 1, &g);
+          XftTextExtents16 (disp, f, &ch, 1, &g);
 
           int wcw = wcwidth (ch);
           if (wcw > 0) g.width = g.width / wcw;
@@ -1190,7 +1196,7 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
       else
         ftheight = prop.height - 1;
 
-        XftFontClose (DISPLAY, f);
+        XftFontClose (disp, f);
         FcPatternDel (match, FC_PIXEL_SIZE);
         FcPatternAddInteger (match, FC_PIXEL_SIZE, ftheight);
     }
@@ -1545,7 +1551,7 @@ rxvt_fontset::find_font (unicode_t unicode)
               //FcPatternAddBool    (p, FC_ANTIALIAS, 1);
 
               XftResult result;
-              FcPattern *match = XftFontMatch (DISPLAY, DefaultScreen (DISPLAY), p, &result);
+              FcPattern *match = XftFontMatch (DISPLAY, r->display->screen, p, &result);
 
               FcPatternDestroy (p);
 
