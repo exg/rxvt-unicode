@@ -9,11 +9,12 @@ FEAT: meta-tagging of data by regex (my dream project)
 FEAT: triple-click == select full output line
 FEAT: double-click: more intelligent (urls etc.)
 FEAT: OnTheSpot editing.
-FEAT: tabbed windows
+FEAT: tabbed windows (hey, just use screen...)
 
-	- completely re-wrote selection pasting. This should fix
-          garbled incomplete characters at 32k boundaries and too-short
-          INCR selections.
+        - completely re-wrote selection pasting. This should fix garbled
+          incomplete characters at 32k boundaries and too-short INCR
+          selections, and more. Increases memory requirements considerably
+          for large selections, but that seems unavoidable.
 
 4.4  Sun Dec 12 22:10:06 CET 2004
 	- rewrote handling of default-char width.
