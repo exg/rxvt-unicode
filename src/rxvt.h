@@ -1017,8 +1017,8 @@ struct rxvt_term : zero_initialized, rxvt_vars {
                   selection_type;
 /* ---------- */
   short           rvideo;
-  int16_t         num_scr;              /* screen: number lines scrolled */
-  unsigned int    prev_ncol,            /* screen: previous number of columns */
+  int             num_scr;              /* screen: number lines scrolled */
+  int             prev_ncol,            /* screen: previous number of columns */
                   prev_nrow;            /* screen: previous number of rows */
 /* ---------- */
   rend_t          rstyle;
@@ -1060,8 +1060,8 @@ struct rxvt_term : zero_initialized, rxvt_vars {
                   allowedxerror;
 /* ---------- */
   unsigned int    ModMetaMask,
-                  ModNumLockMask,
-                  old_width,  /* last used width in screen resize          */
+                  ModNumLockMask;
+  int             old_width,  /* last used width in screen resize          */
                   old_height; /* last used height in screen resize         */
   unsigned long   priv_modes,
                   SavedModes;
@@ -1110,11 +1110,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 #endif
 #ifndef NO_DELETE_KEY
   const char     *key_delete;
-#endif
-#ifdef USE_XIM
-  rxvt_xim       *input_method;
-  XIC             Input_Context;
-  XIMStyle        input_style;
 #endif
   struct mouse_event MEvent;
   XComposeStatus  compose;
@@ -1212,6 +1207,10 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   xevent_watcher rootwin_ev;
 #endif
 
+
+  void sig_term (sig_watcher &w); sig_watcher sw_term;
+  void sig_chld (sig_watcher &w); sig_watcher sw_chld;
+
   void x_cb (XEvent &xev);
   xevent_watcher termwin_ev;
   xevent_watcher vt_ev;
@@ -1275,7 +1274,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void init_command (const char *const *argv);
   void run_command (const char *const *argv);
   int run_child (const char *const *argv);
-  static void child_exited (int pid);
 
   void color_aliases (int idx);
   void recolour_cursor ();
@@ -1284,6 +1282,11 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void window_calc (unsigned int width, unsigned int height);
 
 #if USE_XIM
+  rxvt_xim       *input_method;
+  XIC             Input_Context;
+  XIMStyle        input_style;
+  XPoint          spot; // most recently sent spot position
+
   void im_destroy ();
   void im_cb (); im_watcher im_ev;
   void im_set_size (XRectangle &size);
