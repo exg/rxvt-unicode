@@ -2,6 +2,9 @@ Lines marked with "xterm:" indicate either xterm features ported to rxvt
 or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
+TODO: VERIFY bugfix for keyboard.C changes.
+TODO: maybe just output the error and continue on x errors
+TODO: safer command: keymap processing.
 TODO: read property sequence is broken with respect to utf-8 etc.
 WISH: keyboard modification via esc-sequences.
 WISH: line-rewrapping on resize
@@ -12,6 +15,26 @@ WISH: double-click: more intelligent (urls etc.)
 WISH: OnTheSpot editing.
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
+
+5.0  Fri Feb 11 18:31:48 CET 2005
+	- document a race-free hack to start urxvtd.
+        - document all(?) environment variables used and set by rxvt.
+        - bring xgetdefault-style resource file ordering more in line with
+          Xt, and document it in rxvt(1).
+        - correctly use screen-dependent resources when --enable-xgetdefault,
+          and also fix some memory bugs (thanks to Thierry Reding for
+          his patience and time in tracking this down).
+        - bring own resource parsing more in line with X resource parsing,
+          most notably, don't remove double quotes.
+	- compile fix for freebsd (no ut_id) (Thierry Thomas).
+        - clean up utmp and pty on X I/O errors and signals (idea
+          by Joël Riou).
+        - "un"document -xrm, it never really worked, was only
+          available with --enable-xgetdefault, is not necessary
+          and is surprisingly hard to implement.
+        - shaved off some code segment size.
+        - various code cleanups.
+        - more keysym-mapping fixes.
 
 4.9  Thu Feb  3 09:52:03 CET 2005
         - nuke out utmp entries completely. Should be fixed in
@@ -46,7 +69,7 @@ WISH: just for fun, do shade and tint with XRender.
         - for core fonts, use ascent + descent when a font is loaded,
           and PIXEL_SIZE when not. when loading a font, iterate until a
           font has been found that _really_ fits the height (reported and
-          tested by Roch).
+          tested by Olivier Wittenberg).
         - set IUTF8 input flag, when defined (linux-2.6.5+).
         - only define _XOPEN_SOURCE on solaris.
         - autogenerate src/* dependency list.

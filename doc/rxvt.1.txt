@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 4.9, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 5.0, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -14,7 +14,9 @@ DESCRIPTION
 
 FREQUENTLY ASKED QUESTIONS
     See rxvt(7) (try "man 7 rxvt") for a list of frequently asked questions
-    and answer to them and some common problems.
+    and answer to them and some common problems. That document is also
+    accessible on the World-Wide-Web at
+    <http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html>.
 
 RXVT-UNICODE VS. RXVT
     Unlike the original rxvt, rxvt-unicode stores all text in Unicode
@@ -311,6 +313,9 @@ OPTIONS
         Turn on/off secondary screen scroll (default enabled); resource
         secondaryScroll.
 
+    -keysym.*sym*: *string*
+        Remap a key symbol. See resource keysym.
+
     -xrm *resourcestring*
         No effect on rxvt-unicode. Simply passes through an argument to be
         made available in the instance's argument list. Appears in
@@ -324,8 +329,15 @@ RESOURCES (available also as long-options)
     data: using the X libraries (Xrm*-functions) or internal Xresources
     reader (~/.Xdefaults). For the first method (ie. rxvt -h lists
     XGetDefaults), you can set and change the resources using X11 tools like
-    xset. Many distribution do also load settings from the ~/.Xresources
-    file when X starts.
+    xrdb. Many distribution do also load settings from the ~/.Xresources
+    file when X starts. rxvt will consult the following files/resources in
+    order, with later settings overwriting earlier ones:
+
+      1. system-wide app-defaults file, either locale-dependent OR global
+      2. app-defaults file in $XAPPLRESDIR
+      3. RESOURCE_MANAGER property on root-window OR $HOME/.Xdefaults
+      4. SCREEN_RESOURCES for the current screen
+      5. $XENVIRONMENT file OR $HOME/.Xdefaults-<nodename>
 
     If compiled with internal Xresources support (i.e. rxvt -h lists
     .Xdefaults) then rxvt accepts application defaults set in
@@ -741,36 +753,44 @@ RESOURCES (available also as long-options)
         "^@": null, "^A" ...) and may be enclosed with double quotes so that
         it can start or end with whitespace.
 
+        Please note that you need to double the "\" when using
+        "--enable-xgetdefault", as X itself does it's own de-escaping (you
+        can use "\033" instead of "\e" (and so on), which will work with
+        both Xt and rxvt's own processing).
+
         You can define a range of keysyms in one shot by providing a
         *string* with pattern list/PREFIX/MIDDLE/SUFFIX, where the delimeter
         `/' should be a character not used by the strings.
 
         Its usage can be demonstrated by an example:
 
-          URxvt.keysym.M-C-0x61:    list|\e<M-C-|abc|>
+          URxvt.keysym.M-C-0x61:    list|\033<M-C-|abc|>
 
         The above line is equivalent to the following three lines:
 
-          URxvt.keysym.Meta-Control-0x61:    \e<M-C-a>
-          URxvt.keysym.Meta-Control-0x62:    \e<M-C-b>
-          URxvt.keysym.Meta-Control-0x63:    \e<M-C-c>
+          URxvt.keysym.Meta-Control-0x61:    \033<M-C-a>
+          URxvt.keysym.Meta-Control-0x62:    \033<M-C-b>
+          URxvt.keysym.Meta-Control-0x63:    \033<M-C-c>
 
-        If *string* takes the form of "proto:STRING", the specified STRING
+        If *string* takes the form of "command:STRING", the specified STRING
         is interpreted and executed as rxvt's control sequence. For example
         the following means "change the current locale to "zh_CN.GBK" when
         Control-Meta-c is being pressed":
 
-          URxvt.keysym.M-C-c: proto:\033]701;zh_CN.GBK\007
+          URxvt.keysym.M-C-c: command:\033]701;zh_CN.GBK\007
 
         The following example will map Control-Meta-1 and Control-Meta-2 to
-        the fonts "suxuseuro" and "9x15bold", so you cna have some limited
+        the fonts "suxuseuro" and "9x15bold", so you can have some limited
         font-switching at runtime:
 
-          URxvt.keysym.M-C-1: proto:\033]50;suxuseuro\007
-          URxvt.keysym.M-C-2: proto:\033]50;9x15bold\007
+          URxvt.keysym.M-C-1: command:\033]50;suxuseuro\007
+          URxvt.keysym.M-C-2: command:\033]50;9x15bold\007
 
-        "proto:\033]701;zh_CN.GBK\007" means: change the current locale to
-        "zh_CN.GBK".
+        Other things are possible, e.g. resizing (see rxvt(7) for more
+        info):
+
+          URxvt.keysym.M-C-3: command:\033[8;25;80t
+          URxvt.keysym.M-C-4: command:\033[8;48;110t
 
 THE SCROLLBAR
     Lines of text that scroll off the top of the rxvt window (resource:
@@ -790,9 +810,9 @@ MOUSE REPORTING
 
     If mouse reporting mode is active, the normal scrollbar actions are
     disabled -- on the assumption that we are using a fullscreen
-    application. Instead, pressing Button1 and Button3 sends ESC[6~ (Next)
-    and ESC[5~ (Prior), respectively. Similarly, clicking on the up and down
-    arrows sends ESC[A (Up) and ESC[B (Down), respectively.
+    application. Instead, pressing Button1 and Button3 sends ESC [ 6 ~
+    (Next) and ESC [ 5 ~ (Prior), respectively. Similarly, clicking on the
+    up and down arrows sends ESC [ A (Up) and ESC [ B (Down), respectively.
 
 TEXT SELECTION AND INSERTION
     The behaviour of text selection and insertion mechanism is similar to
@@ -931,11 +951,65 @@ COLORS AND GRAPHICS
         on White.
 
 ENVIRONMENT
-    rxvt sets the environment variables TERM, COLORTERM and COLORFGBG. The
-    environment variable WINDOWID is set to the X window id number of the
-    rxvt window and it also uses and sets the environment variable DISPLAY
-    to specify which display terminal to use. rxvt uses the environment
-    variables RXVTPATH and PATH to find XPM files.
+    rxvt sets and/or uses the following environment variables:
+
+    TERM
+        Normally set to "rxvt-unicode", unless overwritten at configure
+        time, via resources or on the commandline.
+
+    COLORTERM
+        Either "rxvt", "rxvt-xpm", depending on wether rxvt was compiled
+        with XPM support, and optionally with the added extension "-mono" to
+        indicate that rxvt-unicode runs on a monochrome screen.
+
+    COLORFGBG
+        Set to a string of the form "fg;bg" or "fg;xpm;bg", where "fg" is
+        the colour code used as default foreground/text colour (or the
+        string "default" to indicate that the default-colour escape sequence
+        is to be used), "bg" is the colour code used as default background
+        colour (or the string "default"), and "xpm" is the string "default"
+        if rxvt was compiled with XPM support. Libraries like "slang" can
+        (and do) use this information to optimize screen output.
+
+    WINDOWID
+        Set to the (decimal) X Window ID of the rxvt window (the toplevel
+        window, which usually has subwindows for the scrollbar, the terminal
+        window and so on).
+
+    TERMINFO
+        Set to the terminfo directory iff rxvt was configured with
+        "--with-terminfo=PATH".
+
+    DISPLAY
+        Used by rxvt to connect to the display and set to the correct
+        display in it's child processes.
+
+    SHELL
+        The shell to be used for command execution, defaults to "/bin/sh".
+
+    RXVTPATH
+        The path where rxvt looks for support files such as menu and xpm
+        files.
+
+    PATH
+        Used in the same way as "RXVTPATH".
+
+    RXVT_SOCKET
+        The unix domain socket path used by rxvtc(1) and rxvtd(1).
+
+        Default "$HOME/.rxvt-unicode-<nodename".
+
+    HOME
+        Used to locate the default directory for the unix domain socket for
+        daemon communications and to locate various resource files (such as
+        ".Xdefaults")
+
+    XAPPLRESDIR
+        Directory where various X resource files are being located.
+
+    XENVIRONMENT
+        If set and accessible, gives the name of a X resource file to be
+        loaded by rxvt.
 
 FILES
     /usr/lib/X11/rgb.txt
@@ -953,9 +1027,6 @@ BUGS
 
 CURRENT PROJECT COORDINATOR
     Project Coordinator
-        Marc A. Lehmann rxvt@schmorp.de
-
-    Web page maintainter
         Marc A. Lehmann rxvt@schmorp.de
 
         <http://software.schmorp.de/>

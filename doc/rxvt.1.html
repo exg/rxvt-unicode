@@ -49,7 +49,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>4.9</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>5.0</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -58,8 +58,10 @@ a significant advantage on a machine serving many X sessions.</p>
 </p>
 <hr />
 <h1><a name="frequently_asked_questions">FREQUENTLY ASKED QUESTIONS</a></h1>
-<p>See <code>rxvt(7)</code> (try <code>man 7 rxvt</code>) for a list of frequently
-asked questions and answer to them and some common problems.</p>
+<p>See <code>rxvt(7)</code> (try <code>man 7 rxvt</code>) for a list of
+frequently asked questions and answer to them and some common
+problems. That document is also accessible on the World-Wide-Web at
+<a href="http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html">http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html</a>.</p>
 <p>
 </p>
 <hr />
@@ -511,6 +513,12 @@ Turn on/off secondary screen scroll (default enabled); resource
 <strong>secondaryScroll</strong>.
 </dd>
 <p></p>
+<dt><strong><a name="item__2dkeysym_2esym_3a_string"><strong>-keysym.</strong><em>sym</em>: <em>string</em></a></strong><br />
+</dt>
+<dd>
+Remap a key symbol. See resource <strong>keysym</strong>.
+</dd>
+<p></p>
 <dt><strong><a name="item__2dxrm_resourcestring"><strong>-xrm</strong> <em>resourcestring</em></a></strong><br />
 </dt>
 <dd>
@@ -529,8 +537,16 @@ options) compiled into your version.</p>
 Xresource data: using the X libraries (Xrm*-functions) or internal
 Xresources reader (<strong>~/.Xdefaults</strong>). For the first method (ie.
 <strong>rxvt -h</strong> lists <strong>XGetDefaults</strong>), you can set and change the
-resources using X11 tools like <strong>xset</strong>. Many distribution do also load
-settings from the <strong>~/.Xresources</strong> file when X starts.</p>
+resources using X11 tools like <strong>xrdb</strong>. Many distribution do also load
+settings from the <strong>~/.Xresources</strong> file when X starts. rxvt
+will consult the following files/resources in order, with later settings
+overwriting earlier ones:</p>
+<pre>
+  1. system-wide app-defaults file, either locale-dependent OR global
+  2. app-defaults file in $XAPPLRESDIR
+  3. RESOURCE_MANAGER property on root-window OR $HOME/.Xdefaults
+  4. SCREEN_RESOURCES for the current screen
+  5. $XENVIRONMENT file OR $HOME/.Xdefaults-&lt;nodename&gt;</pre>
 <p>If compiled with internal Xresources support (i.e. <strong>rxvt -h</strong>
 lists <strong>.Xdefaults</strong>) then <strong>rxvt</strong> accepts application defaults
 set in XAPPLOADDIR/URxvt (compile-time defined: usually
@@ -1168,6 +1184,12 @@ performed in an exact manner; however, the closest match is assured.</p>
 can start or end with whitespace.</p>
 </dd>
 <dd>
+<p>Please note that you need to double the <code>\</code> when using
+<code>--enable-xgetdefault</code>, as X itself does it's own de-escaping (you can
+use <code>\033</code> instead of <code>\e</code> (and so on), which will work with both Xt and
+rxvt's own processing).</p>
+</dd>
+<dd>
 <p>You can define a range of keysyms in one shot by providing a <em>string</em>
 with pattern <strong>list/PREFIX/MIDDLE/SUFFIX</strong>, where the delimeter `/'
 should be a character not used by the strings.</p>
@@ -1177,40 +1199,45 @@ should be a character not used by the strings.</p>
 </dd>
 <dd>
 <pre>
-  URxvt.keysym.M-C-0x61:    list|\e&lt;M-C-|abc|&gt;</pre>
+  URxvt.keysym.M-C-0x61:    list|\033&lt;M-C-|abc|&gt;</pre>
 </dd>
 <dd>
 <p>The above line is equivalent to the following three lines:</p>
 </dd>
 <dd>
 <pre>
-  URxvt.keysym.Meta-Control-0x61:    \e&lt;M-C-a&gt;
-  URxvt.keysym.Meta-Control-0x62:    \e&lt;M-C-b&gt;
-  URxvt.keysym.Meta-Control-0x63:    \e&lt;M-C-c&gt;</pre>
+  URxvt.keysym.Meta-Control-0x61:    \033&lt;M-C-a&gt;
+  URxvt.keysym.Meta-Control-0x62:    \033&lt;M-C-b&gt;
+  URxvt.keysym.Meta-Control-0x63:    \033&lt;M-C-c&gt;</pre>
 </dd>
 <dd>
-<p>If <em>string</em> takes the form of <code>proto:STRING</code>, the specified <strong>STRING</strong>
+<p>If <em>string</em> takes the form of <code>command:STRING</code>, the specified <strong>STRING</strong>
 is interpreted and executed as rxvt's control sequence. For
 example the following means ``change the current locale to <code>zh_CN.GBK</code>
 when Control-Meta-c is being pressed'':</p>
 </dd>
 <dd>
 <pre>
-  URxvt.keysym.M-C-c: proto:\033]701;zh_CN.GBK\007</pre>
+  URxvt.keysym.M-C-c: command:\033]701;zh_CN.GBK\007</pre>
 </dd>
 <dd>
 <p>The following example will map Control-Meta-1 and Control-Meta-2 to
-the fonts <code>suxuseuro</code> and <code>9x15bold</code>, so you cna have some limited
+the fonts <code>suxuseuro</code> and <code>9x15bold</code>, so you can have some limited
 font-switching at runtime:</p>
 </dd>
 <dd>
 <pre>
-  URxvt.keysym.M-C-1: proto:\033]50;suxuseuro\007
-  URxvt.keysym.M-C-2: proto:\033]50;9x15bold\007</pre>
+  URxvt.keysym.M-C-1: command:\033]50;suxuseuro\007
+  URxvt.keysym.M-C-2: command:\033]50;9x15bold\007</pre>
 </dd>
 <dd>
-<p><code>proto:\033]701;zh_CN.GBK\007</code> means: change the current locale to
-<code>zh_CN.GBK</code>.</p>
+<p>Other things are possible, e.g. resizing (see <code>rxvt(7)</code> for more
+info):</p>
+</dd>
+<dd>
+<pre>
+  URxvt.keysym.M-C-3: command:\033[8;25;80t
+  URxvt.keysym.M-C-4: command:\033[8;48;110t</pre>
 </dd>
 <p></p></dl>
 <p>
@@ -1234,9 +1261,9 @@ the normal text selection/insertion, hold either the Shift or the Meta
 (Alt) key while performing the desired mouse action.</p>
 <p>If mouse reporting mode is active, the normal scrollbar actions are
 disabled -- on the assumption that we are using a fullscreen
-application. Instead, pressing Button1 and Button3 sends <strong>ESC[6~</strong>
-(Next) and <strong>ESC[5~</strong> (Prior), respectively. Similarly, clicking on the
-up and down arrows sends <strong>ESC[A</strong> (Up) and <strong>ESC[B</strong> (Down),
+application. Instead, pressing Button1 and Button3 sends <strong>ESC [ 6 ~</strong>
+(Next) and <strong>ESC [ 5 ~</strong> (Prior), respectively. Similarly, clicking on the
+up and down arrows sends <strong>ESC [ A</strong> (Up) and <strong>ESC [ B</strong> (Down),
 respectively.</p>
 <p>
 </p>
@@ -1391,12 +1418,107 @@ on White.
 </p>
 <hr />
 <h1><a name="environment">ENVIRONMENT</a></h1>
-<p><strong>rxvt</strong> sets the environment variables <strong>TERM</strong>, <strong>COLORTERM</strong>
-and <strong>COLORFGBG</strong>. The environment variable <strong>WINDOWID</strong> is set to the X
-window id number of the <strong>rxvt</strong> window and it also uses and
-sets the environment variable <strong>DISPLAY</strong> to specify which display
-terminal to use. <strong>rxvt</strong> uses the environment variables
-<strong>RXVTPATH</strong> and <strong>PATH</strong> to find XPM files.</p>
+<p><strong>rxvt</strong> sets and/or uses the following environment variables:</p>
+<dl>
+<dt><strong><a name="item_term"><strong>TERM</strong></a></strong><br />
+</dt>
+<dd>
+Normally set to <code>rxvt-unicode</code>, unless overwritten at configure time, via
+resources or on the commandline.
+</dd>
+<p></p>
+<dt><strong><a name="item_colorterm"><strong>COLORTERM</strong></a></strong><br />
+</dt>
+<dd>
+Either <code>rxvt</code>, <code>rxvt-xpm</code>, depending on wether rxvt was
+compiled with XPM support, and optionally with the added extension
+<code>-mono</code> to indicate that rxvt-unicode runs on a monochrome screen.
+</dd>
+<p></p>
+<dt><strong><a name="item_colorfgbg"><strong>COLORFGBG</strong></a></strong><br />
+</dt>
+<dd>
+Set to a string of the form <code>fg;bg</code> or <code>fg;xpm;bg</code>, where <code>fg</code> is
+the colour code used as default foreground/text colour (or the string
+<code>default</code> to indicate that the default-colour escape sequence is to be
+used), <code>bg</code> is the colour code used as default background colour (or the
+string <code>default</code>), and <code>xpm</code> is the string <code>default</code> if rxvt
+was compiled with XPM support. Libraries like <code>slang</code> can (and do) use
+this information to optimize screen output.
+</dd>
+<p></p>
+<dt><strong><a name="item_windowid"><strong>WINDOWID</strong></a></strong><br />
+</dt>
+<dd>
+Set to the (decimal) X Window ID of the rxvt window (the toplevel
+window, which usually has subwindows for the scrollbar, the terminal
+window and so on).
+</dd>
+<p></p>
+<dt><strong><a name="item_terminfo"><strong>TERMINFO</strong></a></strong><br />
+</dt>
+<dd>
+Set to the terminfo directory iff rxvt was configured with
+<code>--with-terminfo=PATH</code>.
+</dd>
+<p></p>
+<dt><strong><a name="item_display"><strong>DISPLAY</strong></a></strong><br />
+</dt>
+<dd>
+Used by rxvt to connect to the display and set to the correct
+display in it's child processes.
+</dd>
+<p></p>
+<dt><strong><a name="item_shell"><strong>SHELL</strong></a></strong><br />
+</dt>
+<dd>
+The shell to be used for command execution, defaults to <code>/bin/sh</code>.
+</dd>
+<p></p>
+<dt><strong><a name="item_rxvtpath"><strong>RXVTPATH</strong></a></strong><br />
+</dt>
+<dd>
+The path where rxvt looks for support files such as menu and xpm
+files.
+</dd>
+<p></p>
+<dt><strong><a name="item_path"><strong>PATH</strong></a></strong><br />
+</dt>
+<dd>
+Used in the same way as <a href="#item_rxvtpath"><code>RXVTPATH</code></a>.
+</dd>
+<p></p>
+<dt><strong><a name="item_rxvt_socket"><strong>RXVT_SOCKET</strong></a></strong><br />
+</dt>
+<dd>
+The unix domain socket path used by <code>rxvtc(1)</code> and
+rxvtd(1).
+</dd>
+<dd>
+<p>Default <code>$HOME/.rxvt-unicode-&lt;nodename</code>.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_home"><strong>HOME</strong></a></strong><br />
+</dt>
+<dd>
+Used to locate the default directory for the unix domain socket for
+daemon communications and to locate various resource files (such as
+<code>.Xdefaults</code>)
+</dd>
+<p></p>
+<dt><strong><a name="item_xapplresdir"><strong>XAPPLRESDIR</strong></a></strong><br />
+</dt>
+<dd>
+Directory where various X resource files are being located.
+</dd>
+<p></p>
+<dt><strong><a name="item_xenvironment"><strong>XENVIRONMENT</strong></a></strong><br />
+</dt>
+<dd>
+If set and accessible, gives the name of a X resource file to be loaded by
+rxvt.
+</dd>
+<p></p></dl>
 <p>
 </p>
 <hr />
@@ -1426,12 +1548,6 @@ Color names.
 <h1><a name="current_project_coordinator">CURRENT PROJECT COORDINATOR</a></h1>
 <dl>
 <dt><strong><a name="item_project_coordinator">Project Coordinator</a></strong><br />
-</dt>
-<dd>
-Marc A. Lehmann <em><a href="mailto:rxvt@schmorp.de">rxvt@schmorp.de</a></em>
-</dd>
-<p></p>
-<dt><strong><a name="item_web_page_maintainter">Web page maintainter</a></strong><br />
 </dt>
 <dd>
 Marc A. Lehmann <em><a href="mailto:rxvt@schmorp.de">rxvt@schmorp.de</a></em>

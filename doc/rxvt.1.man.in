@@ -38,8 +38,8 @@
 .    if (\n(.H=4u)&(1m=20u) .ds -- \(*W\h'-12u'\(*W\h'-8u'-\"  diablo 12 pitch
 .    ds L" ""
 .    ds R" ""
-.    ds C` 
-.    ds C' 
+.    ds C` ""
+.    ds C' ""
 'br\}
 .el\{\
 .    ds -- \|\(em\|
@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-02-03" "4.9" "RXVT-UNICODE"
+.TH rxvt 1 "2005-02-11" "5.0" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -144,8 +144,10 @@ configurability. As a result, \fBrxvt-unicode\fR uses much less swap space \*(--
 a significant advantage on a machine serving many X sessions.
 .SH "FREQUENTLY ASKED QUESTIONS"
 .IX Header "FREQUENTLY ASKED QUESTIONS"
-See @@RXVT_NAME@@(7) (try \f(CW\*(C`man 7 @@RXVT_NAME@@\*(C'\fR) for a list of frequently
-asked questions and answer to them and some common problems.
+See @@RXVT_NAME@@(7) (try \f(CW\*(C`man 7 @@RXVT_NAME@@\*(C'\fR) for a list of
+frequently asked questions and answer to them and some common
+problems. That document is also accessible on the World-Wide-Web at
+<http://cvs.schmorp.de/browse/*checkout*/rxvt\-unicode/doc/rxvt.7.html>.
 .SH "RXVT-UNICODE VS. RXVT"
 .IX Header "RXVT-UNICODE VS. RXVT"
 Unlike the original rxvt, \fBrxvt-unicode\fR stores all text in Unicode
@@ -441,6 +443,9 @@ Turn on/off secondary screen (default enabled); resource
 .IX Item "-ssr|+ssr"
 Turn on/off secondary screen scroll (default enabled); resource
 \&\fBsecondaryScroll\fR.
+.IP "\fB\-keysym.\fR\fIsym\fR: \fIstring\fR" 4
+.IX Item "-keysym.sym: string"
+Remap a key symbol. See resource \fBkeysym\fR.
 .IP "\fB\-xrm\fR \fIresourcestring\fR" 4
 .IX Item "-xrm resourcestring"
 No effect on rxvt\-unicode. Simply passes through an argument to be made
@@ -455,8 +460,18 @@ There are two different methods that @@RXVT_NAME@@ can use to get the
 Xresource data: using the X libraries (Xrm*\-functions) or internal
 Xresources reader (\fB~/.Xdefaults\fR). For the first method (ie.
 \&\fB@@RXVT_NAME@@ \-h\fR lists \fBXGetDefaults\fR), you can set and change the
-resources using X11 tools like \fBxset\fR. Many distribution do also load
-settings from the \fB~/.Xresources\fR file when X starts.
+resources using X11 tools like \fBxrdb\fR. Many distribution do also load
+settings from the \fB~/.Xresources\fR file when X starts. @@RXVT_NAME@@
+will consult the following files/resources in order, with later settings
+overwriting earlier ones:
+.PP
+.Vb 5
+\&  1. system-wide app-defaults file, either locale-dependent OR global
+\&  2. app-defaults file in $XAPPLRESDIR
+\&  3. RESOURCE_MANAGER property on root-window OR $HOME/.Xdefaults
+\&  4. SCREEN_RESOURCES for the current screen
+\&  5. $XENVIRONMENT file OR $HOME/.Xdefaults-<nodename>
+.Ve
 .PP
 If compiled with internal Xresources support (i.e. \fB@@RXVT_NAME@@ \-h\fR
 lists \fB.Xdefaults\fR) then \fB@@RXVT_NAME@@\fR accepts application defaults
@@ -878,6 +893,11 @@ performed in an exact manner; however, the closest match is assured.
 \&\f(CW\*(C`^@\*(C'\fR: null, \f(CW\*(C`^A\*(C'\fR ...) and may be enclosed with double quotes so that it
 can start or end with whitespace.
 .Sp
+Please note that you need to double the \f(CW\*(C`\e\*(C'\fR when using
+\&\f(CW\*(C`\-\-enable\-xgetdefault\*(C'\fR, as X itself does it's own de-escaping (you can
+use \f(CW\*(C`\e033\*(C'\fR instead of \f(CW\*(C`\ee\*(C'\fR (and so on), which will work with both Xt and
+@@RXVT_NAME@@'s own processing).
+.Sp
 You can define a range of keysyms in one shot by providing a \fIstring\fR
 with pattern \fBlist/PREFIX/MIDDLE/SUFFIX\fR, where the delimeter `/'
 should be a character not used by the strings.
@@ -885,37 +905,42 @@ should be a character not used by the strings.
 Its usage can be demonstrated by an example:
 .Sp
 .Vb 1
-\&  URxvt.keysym.M-C-0x61:    list|\ee<M-C-|abc|>
+\&  URxvt.keysym.M-C-0x61:    list|\e033<M-C-|abc|>
 .Ve
 .Sp
 The above line is equivalent to the following three lines:
 .Sp
 .Vb 3
-\&  URxvt.keysym.Meta-Control-0x61:    \ee<M-C-a>
-\&  URxvt.keysym.Meta-Control-0x62:    \ee<M-C-b>
-\&  URxvt.keysym.Meta-Control-0x63:    \ee<M-C-c>
+\&  URxvt.keysym.Meta-Control-0x61:    \e033<M-C-a>
+\&  URxvt.keysym.Meta-Control-0x62:    \e033<M-C-b>
+\&  URxvt.keysym.Meta-Control-0x63:    \e033<M-C-c>
 .Ve
 .Sp
-If \fIstring\fR takes the form of \f(CW\*(C`proto:STRING\*(C'\fR, the specified \fB\s-1STRING\s0\fR
+If \fIstring\fR takes the form of \f(CW\*(C`command:STRING\*(C'\fR, the specified \fB\s-1STRING\s0\fR
 is interpreted and executed as @@RXVT_NAME@@'s control sequence. For
 example the following means "change the current locale to \f(CW\*(C`zh_CN.GBK\*(C'\fR
 when Control-Meta-c is being pressed":
 .Sp
 .Vb 1
-\&  URxvt.keysym.M-C-c: proto:\e033]701;zh_CN.GBK\e007
+\&  URxvt.keysym.M-C-c: command:\e033]701;zh_CN.GBK\e007
 .Ve
 .Sp
 The following example will map Control\-Meta\-1 and Control\-Meta\-2 to
-the fonts \f(CW\*(C`suxuseuro\*(C'\fR and \f(CW\*(C`9x15bold\*(C'\fR, so you cna have some limited
+the fonts \f(CW\*(C`suxuseuro\*(C'\fR and \f(CW\*(C`9x15bold\*(C'\fR, so you can have some limited
 font-switching at runtime:
 .Sp
 .Vb 2
-\&  URxvt.keysym.M-C-1: proto:\e033]50;suxuseuro\e007
-\&  URxvt.keysym.M-C-2: proto:\e033]50;9x15bold\e007
+\&  URxvt.keysym.M-C-1: command:\e033]50;suxuseuro\e007
+\&  URxvt.keysym.M-C-2: command:\e033]50;9x15bold\e007
 .Ve
 .Sp
-\&\f(CW\*(C`proto:\e033]701;zh_CN.GBK\e007\*(C'\fR means: change the current locale to
-\&\f(CW\*(C`zh_CN.GBK\*(C'\fR.
+Other things are possible, e.g. resizing (see @@RXVT_NAME@@(7) for more
+info):
+.Sp
+.Vb 2
+\&  URxvt.keysym.M-C-3: command:\e033[8;25;80t
+\&  URxvt.keysym.M-C-4: command:\e033[8;48;110t
+.Ve
 .SH "THE SCROLLBAR"
 .IX Header "THE SCROLLBAR"
 Lines of text that scroll off the top of the \fB@@RXVT_NAME@@\fR window
@@ -935,9 +960,9 @@ the normal text selection/insertion, hold either the Shift or the Meta
 .PP
 If mouse reporting mode is active, the normal scrollbar actions are
 disabled \*(-- on the assumption that we are using a fullscreen
-application. Instead, pressing Button1 and Button3 sends \fBESC[6~\fR
-(Next) and \fBESC[5~\fR (Prior), respectively. Similarly, clicking on the
-up and down arrows sends \fBESC[A\fR (Up) and \fBESC[B\fR (Down),
+application. Instead, pressing Button1 and Button3 sends \fB\s-1ESC\s0 [ 6 ~\fR
+(Next) and \fB\s-1ESC\s0 [ 5 ~\fR (Prior), respectively. Similarly, clicking on the
+up and down arrows sends \fB\s-1ESC\s0 [ A\fR (Up) and \fB\s-1ESC\s0 [ B\fR (Down),
 respectively.
 .SH "TEXT SELECTION AND INSERTION"
 .IX Header "TEXT SELECTION AND INSERTION"
@@ -1078,12 +1103,66 @@ would yield White on Black, while on \fIxterm\fR(1) it would yield Black
 on White.
 .SH "ENVIRONMENT"
 .IX Header "ENVIRONMENT"
-\&\fB@@RXVT_NAME@@\fR sets the environment variables \fB\s-1TERM\s0\fR, \fB\s-1COLORTERM\s0\fR
-and \fB\s-1COLORFGBG\s0\fR. The environment variable \fB\s-1WINDOWID\s0\fR is set to the X
-window id number of the \fB@@RXVT_NAME@@\fR window and it also uses and
-sets the environment variable \fB\s-1DISPLAY\s0\fR to specify which display
-terminal to use. \fB@@RXVT_NAME@@\fR uses the environment variables
-\&\fB\s-1RXVTPATH\s0\fR and \fB\s-1PATH\s0\fR to find \s-1XPM\s0 files.
+\&\fB@@RXVT_NAME@@\fR sets and/or uses the following environment variables:
+.IP "\fB\s-1TERM\s0\fR" 4
+.IX Item "TERM"
+Normally set to \f(CW\*(C`rxvt\-unicode\*(C'\fR, unless overwritten at configure time, via
+resources or on the commandline.
+.IP "\fB\s-1COLORTERM\s0\fR" 4
+.IX Item "COLORTERM"
+Either \f(CW\*(C`rxvt\*(C'\fR, \f(CW\*(C`rxvt\-xpm\*(C'\fR, depending on wether @@RXVT_NAME@@ was
+compiled with \s-1XPM\s0 support, and optionally with the added extension
+\&\f(CW\*(C`\-mono\*(C'\fR to indicate that rxvt-unicode runs on a monochrome screen.
+.IP "\fB\s-1COLORFGBG\s0\fR" 4
+.IX Item "COLORFGBG"
+Set to a string of the form \f(CW\*(C`fg;bg\*(C'\fR or \f(CW\*(C`fg;xpm;bg\*(C'\fR, where \f(CW\*(C`fg\*(C'\fR is
+the colour code used as default foreground/text colour (or the string
+\&\f(CW\*(C`default\*(C'\fR to indicate that the default-colour escape sequence is to be
+used), \f(CW\*(C`bg\*(C'\fR is the colour code used as default background colour (or the
+string \f(CW\*(C`default\*(C'\fR), and \f(CW\*(C`xpm\*(C'\fR is the string \f(CW\*(C`default\*(C'\fR if @@RXVT_NAME@@
+was compiled with \s-1XPM\s0 support. Libraries like \f(CW\*(C`slang\*(C'\fR can (and do) use
+this information to optimize screen output.
+.IP "\fB\s-1WINDOWID\s0\fR" 4
+.IX Item "WINDOWID"
+Set to the (decimal) X Window \s-1ID\s0 of the @@RXVT_NAME@@ window (the toplevel
+window, which usually has subwindows for the scrollbar, the terminal
+window and so on).
+.IP "\fB\s-1TERMINFO\s0\fR" 4
+.IX Item "TERMINFO"
+Set to the terminfo directory iff @@RXVT_NAME@@ was configured with
+\&\f(CW\*(C`\-\-with\-terminfo=PATH\*(C'\fR.
+.IP "\fB\s-1DISPLAY\s0\fR" 4
+.IX Item "DISPLAY"
+Used by @@RXVT_NAME@@ to connect to the display and set to the correct
+display in it's child processes.
+.IP "\fB\s-1SHELL\s0\fR" 4
+.IX Item "SHELL"
+The shell to be used for command execution, defaults to \f(CW\*(C`/bin/sh\*(C'\fR.
+.IP "\fB\s-1RXVTPATH\s0\fR" 4
+.IX Item "RXVTPATH"
+The path where @@RXVT_NAME@@ looks for support files such as menu and xpm
+files.
+.IP "\fB\s-1PATH\s0\fR" 4
+.IX Item "PATH"
+Used in the same way as \f(CW\*(C`RXVTPATH\*(C'\fR.
+.IP "\fB\s-1RXVT_SOCKET\s0\fR" 4
+.IX Item "RXVT_SOCKET"
+The unix domain socket path used by @@RXVT_NAME@@c(1) and
+@@RXVT_NAME@@d(1).
+.Sp
+Default \f(CW\*(C`$HOME/.rxvt\-unicode\-<nodename\*(C'\fR.
+.IP "\fB\s-1HOME\s0\fR" 4
+.IX Item "HOME"
+Used to locate the default directory for the unix domain socket for
+daemon communications and to locate various resource files (such as
+\&\f(CW\*(C`.Xdefaults\*(C'\fR)
+.IP "\fB\s-1XAPPLRESDIR\s0\fR" 4
+.IX Item "XAPPLRESDIR"
+Directory where various X resource files are being located.
+.IP "\fB\s-1XENVIRONMENT\s0\fR" 4
+.IX Item "XENVIRONMENT"
+If set and accessible, gives the name of a X resource file to be loaded by
+@@RXVT_NAME@@.
 .SH "FILES"
 .IX Header "FILES"
 .IP "\fB/usr/lib/X11/rgb.txt\fR" 4
@@ -1104,9 +1183,6 @@ Click-and-drag doesn't work with X11 mouse report overriding.
 .IP "Project Coordinator" 4
 .IX Item "Project Coordinator"
 @@RXVT_MAINT@@ @@RXVT_MAINTEMAIL@@
-.IP "Web page maintainter" 4
-.IX Item "Web page maintainter"
-@@RXVT_WEBMAINT@@ @@RXVT_WEBMAINTEMAIL@@
 .Sp
 @@RXVT_WEBPAGE@@
 .SH "AUTHORS"
