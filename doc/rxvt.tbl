@@ -1,6 +1,6 @@
-.TH "RXVT" "1" "RXVTDATE()" "X Version 11" "X Tools" 
+.TH "RXVT" "1" "2004-03-14" "X Version 11" "X Tools" 
 .SH "NAME" 
-rxvt (ouR XVT) \- a VT102 emulator for the X window system
+rxvt-unicode (ouR XVT, unicode) \- a VT102 emulator for the X window system
 .PP 
 .SH "SYNOPSIS" 
 .PP 
@@ -8,10 +8,10 @@ rxvt (ouR XVT) \- a VT102 emulator for the X window system
 .PP 
 .SH "DESCRIPTION" 
 .PP 
-\fBrxvt\fP, version \fBRXVTVERSION()\fP, is a colour vt102 terminal emulator
+\fBrxvt-unicode\fP, version \fB2\&.4\fP, is a colour vt102 terminal emulator
 intended as an \fIxterm\fP(1) replacement for users who do not require
 features such as Tektronix 4014 emulation and toolkit-style configurability\&.
-As a result, \fBrxvt\fP uses much less swap space -- a significant
+As a result, \fBrxvt-unicode\fP uses much less swap space -- a significant
 advantage on a machine serving many X sessions\&.
 .PP 
 .PP 
@@ -567,27 +567,19 @@ Click-and-drag doesn\&'t work with X11 mouse report overriding\&.
 .PP 
 .SH "FTP LOCATION" 
 .PP 
-rxvt-+RXVTVERSION()\&.tar\&.gz can be found at the following ftp sites
-RXVTFTPSITE()
+rxvt-2\&.4\&.tar\&.gz can be found at the following ftp sites
+ftp://ftp\&.rxvt\&.org/pub/rxvt
 .PP 
 .SH "CURRENT PROJECT COORDINATOR" 
 .PP 
 .IP "Project Coordinator" 
-RXVTMAINT() RXVTMAINTEMAIL()
+Marc A\&. Lehmann <rxvt@schmorp\&.de>
 .br 
 .IP "Web page maintainter" 
-RXVTWEBMAINT() RXVTWEBMAINTEMAIL()
+Marc A\&. Lehmann <rxvt@schmorp\&.de>
 .br 
-RXVTWEBPAGE()
+<http://www\&.sourceforge\&.net/projects/rxvt-unicode/>
 .br 
-.IP "Mailing list" 
-The Rxvt Workers <rxvt-workers@rxvt\&.org>
-mailing list has also been established for rxvt development, to
-subscribe, email to 
-<rxvt-workers-subscribe@rxvt\&.org>\&.
-There is also a mailing list for announcements of new releases of
-rxvt\&. To subscribe, email to
-<rxvt-announce-subscribe@rxvt\&.org>\&.
 .PP 
 .SH "AUTHORS" 
 .PP 

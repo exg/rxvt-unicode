@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt.yo,v 1.4 2004/02/22 12:58:02 pcg Exp $ --)
+COMMENT(-- $Id: rxvt.yo,v 1.5 2004/03/14 21:59:58 pcg Exp $ --)
 includefile(versioninfo.yo)
 includefile(masonyodl.yo)
 mailto(gcw@pobox.com)
@@ -9,6 +9,7 @@ DEFINEMACRO(SMALLFONT)(0)(<)
 
 COMMENT(-----------------------------------------------------------------------
 -- We want the following macro's to be pre-defined
+--  RXVTNAME()
 --  RXVTDATE()
 --  RXVTVERSION()
 --  RXVTMAINT()
@@ -21,20 +22,20 @@ COMMENT(-----------------------------------------------------------------------
 
 COMMENT(----------------------------------------------------------------------)
 manpage(RXVT)(1)(RXVTDATE())(X Version 11)(X Tools)
-manpagename(rxvt (ouR XVT))(a VT102 emulator for the X window system)
+manpagename(rxvt-unicode (ouR XVT, unicode))(a VT102 emulator for the X window system)
 
 COMMENT(----------------------------------------------------------------------)
 manpagesynopsis()
 
-bf(rxvt) [options] [-e command [ args ]]
+bf(RXVTNAME()) [options] [-e command [ args ]]
 
 COMMENT(----------------------------------------------------------------------)
 manpagedescription()
 
-bf(rxvt), version bf(RXVTVERSION()), is a colour vt102 terminal emulator
+bf(rxvt-unicode), version bf(RXVTVERSION()), is a colour vt102 terminal emulator
 intended as an em(xterm)(1) replacement for users who do not require
 features such as Tektronix 4014 emulation and toolkit-style configurability.
-As a result, bf(rxvt) uses much less swap space -- a significant
+As a result, bf(rxvt-unicode) uses much less swap space -- a significant
 advantage on a machine serving many X sessions.
 
 COMMENT(----------------------------------------------------------------------)
@@ -84,14 +85,6 @@ startdit()
     dit(Web page maintainter)
 	RXVTWEBMAINT() email(RXVTWEBMAINTEMAIL())nl()\
 	url(RXVTWEBPAGE())(RXVTWEBPAGE())nl()\
-    dit(Mailing list)
-	The Rxvt Workers email(<rxvt-workers@rxvt.org>)
-	mailing list has also been established for rxvt development, to
-	subscribe, email to 
-	email(<rxvt-workers-subscribe@rxvt.org>).
-	There is also a mailing list for announcements of new releases of
-	rxvt. To subscribe, email to
-	email(<rxvt-announce-subscribe@rxvt.org>).
 enddit()
 
 COMMENT(----------------------------------------------------------------------)

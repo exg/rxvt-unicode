@@ -1,8 +1,8 @@
-COMMENT(-- $Id: rxvt-colours.yo,v 1.3 2004/02/22 08:36:11 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-colours.yo,v 1.4 2004/03/14 21:59:58 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpagesection(COLORS AND GRAPHICS)
 
-In addition to the default foreground and background colours, bf(rxvt)
+In addition to the default foreground and background colours, bf(RXVTNAME())
 can display up to 16 colours (8 ANSI colours plus high-intensity bold/blink
 versions of the same).
 Here is a list of the colours with their bf(rgb.txt) names.

@@ -1,19 +1,19 @@
-COMMENT(-- $Id: rxvt-resources.yo,v 1.5 2004/03/03 01:45:14 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-resources.yo,v 1.6 2004/03/14 21:59:58 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpagesection(RESOURCES (available also as long-options))
 
 Note: `rxvt --help' gives a list of all resources (long options) compiled
 into your version.
 If compiled with internal Xresources support (i.e. bf(rxvt -h) lists 
-bf(.Xdefaults)) then bf(rxvt) accepts application defaults set in
+bf(.Xdefaults)) then bf(RXVTNAME()) accepts application defaults set in
 XAPPLOADDIR/Rxvt (compile-time defined: usually
 bf(/usr/lib/X11/app-defaults/Rxvt)) and resources set in bf(~/.Xdefaults),
 or bf(~/.Xresources) if bf(~/.Xdefaults) does not exist.  Note that when
-reading X resources, bf(rxvt) recognizes two class names: bf(XTerm) and
+reading X resources, bf(RXVTNAME()) recognizes two class names: bf(XTerm) and
 bf(Rxvt).  The class name bf(XTerm) allows resources common to both
-bf(rxvt) and em(xterm) to be easily configured, while the class name
-bf(Rxvt) allows resources unique to bf(rxvt), notably colours and
-key-handling, to be shared between different bf(rxvt) configurations. 
+bf(RXVTNAME()) and em(xterm) to be easily configured, while the class name
+bf(Rxvt) allows resources unique to bf(RXVTNAME()), notably colours and
+key-handling, to be shared between different bf(RXVTNAME()) configurations. 
 If no resources are specified, suitable defaults will be used. 
 Command-line arguments can be used to override resource settings.  The
 following resources are allowed:
@@ -107,7 +107,7 @@ startdit()
 	is xterm style with 2.20 old word selection, or anything else which
 	gives xterm style selection.
     dit(bf(scrollstyle:) em(mode))
-	Set scrollbar style to bf(rxvt), bf(next) or bf(xterm)
+	Set scrollbar style to bf(RXVTNAME()), bf(next) or bf(xterm)
     dit(bf(title:) em(string))
 	Set window title string, the default title is the command-line
 	specified after the bf(-e) option, if any, otherwise the application

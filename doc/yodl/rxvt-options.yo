@@ -1,8 +1,8 @@
-COMMENT(-- $Id: rxvt-options.yo,v 1.5 2004/03/03 01:45:14 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-options.yo,v 1.6 2004/03/14 21:59:58 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpageoptions()
 
-The bf(rxvt) options (mostly a subset of em(xterm)'s) are listed below.
+The bf(RXVTNAME()) options (mostly a subset of em(xterm)'s) are listed below.
 In keeping with the smaller-is-better philosophy, options may be eliminated
 or default values chosen at compile-time, so options and defaults listed
 may not accurately reflect the version installed on your system.  
@@ -12,7 +12,7 @@ dependent upon.  e.g. `Compile em(XIM):' requires em(XIM) on the em(Options)
 line.  Note: `rxvt -help' gives a list of all command-line options compiled
 into your version.
 
-Note that bf(rxvt) permits the resource name to be used as a long-option
+Note that bf(RXVTNAME()) permits the resource name to be used as a long-option
 (--/++ option) so the potential command-line options are far greater than
 those listed.
 For example: `rxvt --loginShell --color1 Orange'.
@@ -127,7 +127,7 @@ startdit()
 	em(termcap(5)) database and should have em(li#) and em(co#) entries;
 	resource bf(termName).
     dit(bf(-e) em(command [arguments]))
-	Run the command with its command-line arguments in the bf(rxvt)
+	Run the command with its command-line arguments in the bf(RXVTNAME())
 	window; also sets the window title and icon name to be the basename
 	of the program being executed if neither em(-title) (em(-T)) nor
 	em(-n) are given on the command line.  If this option is used, it

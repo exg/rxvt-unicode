@@ -1,5 +1,5 @@
 # doc/Makefile.in	-*- Makefile -*-
-# $Id: Makefile.in,v 1.5 2004/03/03 04:07:52 pcg Exp $
+# $Id: Makefile.in,v 1.6 2004/03/14 21:59:57 pcg Exp $
 @MCOMMON@
 
 srcdir =	@srcdir@
@@ -45,6 +45,7 @@ rxvt.1: rxvt.tbl Makefile
 
 SEDREPLACE = -e 's%@RXVT_VERSION@%$(VERSION)%g;'\
 	     -e 's%@RXVT_LSMDATE@%$(LSMDATE)%g;'\
+	     -e 's%@RXVT_NAME@%$(RXVTNAME)%g;'\
 	     -e 's%@RXVT_DATE@%$(DATE)%g;'\
 	     -e 's%@RXVT_MAINTEMAIL@%$(MAINTEMAIL)%g;'\
 	     -e 's%@RXVT_MAINT@%$(MAINT)%g;'\
