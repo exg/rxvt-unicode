@@ -60,24 +60,21 @@ void
 rxvt_term::makeutent (const char *pty, const char *hostname)
 {
 #ifdef HAVE_STRUCT_UTMP
-  struct utmp    *ut = & (this->ut);
+  struct utmp *ut = &this->ut;
 #endif
 #ifdef HAVE_STRUCT_UTMPX
-  struct utmpx   *utx = & (this->utx);
+  struct utmpx *utx = &this->utx;
 #endif
 #ifdef HAVE_UTMP_PID
-  int             i;
+  int i;
 #endif
-  char            ut_id[5];
   struct passwd  *pwent = getpwuid (getuid ());
 
   if (!strncmp (pty, "/dev/", 5))
     pty += 5;		/* skip /dev/ prefix */
 
   if (!strncmp (pty, "pty", 3) || !strncmp (pty, "tty", 3))
-    {
-      strncpy (ut_id, (pty + 3), sizeof (ut_id));
-    }
+    strncpy (ut_id, (pty + 3), sizeof (ut_id));
 #ifdef HAVE_UTMP_PID
   else if (sscanf (pty, "pts/%d", &i) == 1)
     sprintf (ut_id, "vt%02x", (i & 0xff));	/* sysv naming */
@@ -227,10 +224,10 @@ void
 rxvt_term::cleanutent ()
 {
 #ifdef HAVE_STRUCT_UTMP
-  struct utmp    *ut = & (this->ut);
+  struct utmp *ut = &this->ut;
 #endif
 #ifdef HAVE_STRUCT_UTMPX
-  struct utmpx   *tmputx, *utx = & (this->utx);
+  struct utmpx *tmputx, *utx = &this->utx;
 #endif
 
 #ifdef HAVE_STRUCT_UTMP
