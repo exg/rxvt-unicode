@@ -834,6 +834,9 @@ struct rxvt_term : rxvt_vars {
 #ifdef CURSOR_BLINK
                   hidden_cursor:1,
 #endif
+#ifdef TEXT_BLINK
+                  hidden_text:1,
+#endif
 #ifdef POINTER_BLANK
                   hidden_pointer:1,
 #endif

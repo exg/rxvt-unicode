@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.29 2004/01/19 17:26:43 pcg Exp $
+ * $Id: command.C,v 1.30 2004/01/29 21:35:58 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -2693,7 +2693,7 @@ rxvt_process_csi_seq(pR)
 
     case CSI_78:		/* DECREQTPARM */
 	if (arg[0] == 0 || arg[0] == 1)
-	    R->tt_printf("\033[%d;1;1;112;112;1;0x", arg[0] + 2);
+	    R->tt_printf("\033[%d;1;1;128;128;1;0x", arg[0] + 2);
     /* FALLTHROUGH */
 
     default:
