@@ -339,7 +339,6 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     rs[Rs_display_name] = ":0";
 
   get_options (r_argc, r_argv);
-  free (r_argv);
 
 #ifdef LOCAL_X_IS_UNIX
   if (rs[Rs_display_name][0] == ':')
@@ -356,7 +355,8 @@ rxvt_term::init_resources (int argc, const char *const *argv)
       && ! (display = displays.get (rs[Rs_display_name])))
     rxvt_fatal ("can't open display %s, aborting.\n", rs[Rs_display_name]);
 
-  extract_resources (display->display, rs[Rs_name]);
+  extract_resources ();
+  free (r_argv);
 
   /*
    * set any defaults not already set
@@ -832,11 +832,11 @@ rxvt_term::color_aliases (int idx)
 void
 rxvt_term::get_ourmods ()
 {
-  int             i, j, k;
-  int             requestedmeta, realmeta, realalt;
-  const char     *cm, *rsmod;
+  int i, j, k;
+  int requestedmeta, realmeta, realalt;
+  const char *cm, *rsmod;
   XModifierKeymap *map;
-  KeyCode        *kc;
+  KeyCode *kc;
   const unsigned int modmasks[] =
     {
       Mod1Mask, Mod2Mask, Mod3Mask, Mod4Mask, Mod5Mask
@@ -928,25 +928,26 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   long vt_emask;
   XSetWindowAttributes attributes;
   XWindowAttributes gattr;
+  dDisp;
 
 #ifdef USING_W11LIB
   /* enable W11 callbacks */
-  W11AddEventHandler (display->display, rxvt_W11_process_x_event);
+  W11AddEventHandler (disp, rxvt_W11_process_x_event);
 #endif
 
   assert (sizeof (xa_names) / sizeof (char *) == NUM_XA);
-  XInternAtoms (display->display, (char **)xa_names, NUM_XA, False, xa);
+  XInternAtoms (disp, (char **)xa_names, NUM_XA, False, xa);
 
   if (options & Opt_transparent)
     {
-      XGetWindowAttributes (display->display, RootWindow (display->display, display->screen), &gattr);
+      XGetWindowAttributes (disp, RootWindow (disp, display->screen), &gattr);
       display->depth = gattr.depth; // doh //TODO, per-term not per-display?
     }
 
 #if ENABLE_FRILLS
   if (options & Opt_borderLess)
     {
-      prop = XInternAtom(display->display, "_MOTIF_WM_INFO", True);
+      prop = XInternAtom(disp, "_MOTIF_WM_INFO", True);
 
       if (prop == None)
         {
@@ -984,7 +985,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   attributes.background_pixel = pix_colors_focused[Color_border];
   attributes.border_pixel = pix_colors_focused[Color_border];
   attributes.colormap = display->cmap;
-  TermWin.parent[0] = XCreateWindow (display->display, DefaultRootWindow (display->display),
+  TermWin.parent[0] = XCreateWindow (disp, DefaultRootWindow (disp),
                                      szHint.x, szHint.y,
                                      szHint.width, szHint.height,
                                      TermWin.ext_bwidth,
@@ -992,7 +993,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                                      display->visual,
                                      CWColormap | CWBackPixel | CWBorderPixel, &attributes);
 #else
-  TermWin.parent[0] = XCreateSimpleWindow (display->display, DefaultRootWindow (display->display),
+  TermWin.parent[0] = XCreateSimpleWindow (disp, DefaultRootWindow (disp),
                                            szHint.x, szHint.y,
                                            szHint.width, szHint.height,
                                            TermWin.ext_bwidth,
@@ -1011,22 +1012,22 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   wmHint.initial_state = options & Opt_iconic ? IconicState : NormalState;
   wmHint.window_group = TermWin.parent[0];
 
-  XSetWMProperties (display->display, TermWin.parent[0], NULL, NULL,
+  XSetWMProperties (disp, TermWin.parent[0], NULL, NULL,
                     (char **)argv, argc, &szHint, &wmHint, &classHint);
 
   /* Enable delete window protocol */
-  XSetWMProtocols (display->display, TermWin.parent[0],
+  XSetWMProtocols (disp, TermWin.parent[0],
                    &xa[XA_WMDELETEWINDOW], 1);
 
 #if ENABLE_FRILLS
   long pid = getpid ();
 
-  XChangeProperty (display->display, TermWin.parent[0],
+  XChangeProperty (disp, TermWin.parent[0],
                    xa[XA_NET_WM_PID], XA_CARDINAL, 32,
                    PropModeReplace, (unsigned char *)&pid, 1);
 #endif
 
-  XSelectInput (display->display, TermWin.parent[0],
+  XSelectInput (disp, TermWin.parent[0],
                 KeyPressMask
 #if (MOUSE_WHEEL && MOUSE_SLIP_WHEELING) || ENABLE_FRILLS || ISO_14755
                 | KeyReleaseMask
@@ -1038,33 +1039,33 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
 #if ENABLE_FRILLS
   if (mwmhints.flags)
-    XChangeProperty (display->display, TermWin.parent[0], xa[XA_MOTIF_WM_HINTS], xa[XA_MOTIF_WM_HINTS], 32,
+    XChangeProperty (disp, TermWin.parent[0], xa[XA_MOTIF_WM_HINTS], xa[XA_MOTIF_WM_HINTS], 32,
                      PropModeReplace, (unsigned char *)&mwmhints, PROP_MWM_HINTS_ELEMENTS);
 #endif
 
   /* vt cursor: Black-on-White is standard, but this is more popular */
-  TermWin_cursor = XCreateFontCursor (display->display, XC_xterm);
+  TermWin_cursor = XCreateFontCursor (disp, XC_xterm);
 
 #if defined(HAVE_SCROLLBARS) || defined(MENUBAR)
   /* cursor (menuBar/scrollBar): Black-on-White */
-  leftptr_cursor = XCreateFontCursor (display->display, XC_left_ptr);
+  leftptr_cursor = XCreateFontCursor (disp, XC_left_ptr);
 #endif
 
   /* the vt window */
-  TermWin.vt = XCreateSimpleWindow (display->display, TermWin.parent[0],
-                                   window_vt_x,
-                                   window_vt_y,
-                                   TermWin_TotalWidth (),
-                                   TermWin_TotalHeight (),
-                                   0,
-                                   pix_colors_focused[Color_fg],
-                                   pix_colors_focused[Color_bg]);
+  TermWin.vt = XCreateSimpleWindow (disp, TermWin.parent[0],
+                                    window_vt_x,
+                                    window_vt_y,
+                                    TermWin_TotalWidth (),
+                                    TermWin_TotalHeight (),
+                                    0,
+                                    pix_colors_focused[Color_fg],
+                                    pix_colors_focused[Color_bg]);
 #ifdef DEBUG_X
-  XStoreName (display->display, TermWin.vt, "vt window");
+  XStoreName (disp, TermWin.vt, "vt window");
 #endif
 
   attributes.bit_gravity = NorthWestGravity;
-  XChangeWindowAttributes (display->display, TermWin.vt, CWBitGravity, &attributes);
+  XChangeWindowAttributes (disp, TermWin.vt, CWBitGravity, &attributes);
 
   vt_emask = ExposureMask | ButtonPressMask | ButtonReleaseMask | PropertyChangeMask;
 
@@ -1077,13 +1078,13 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #endif
     vt_emask |= Button1MotionMask | Button3MotionMask;
 
-  XSelectInput (display->display, TermWin.vt, vt_emask);
+  XSelectInput (disp, TermWin.vt, vt_emask);
   vt_ev.start (display, TermWin.vt);
 
 #if defined(MENUBAR) && (MENUBAR_MAX > 1)
   if (menuBar_height ())
     {
-      menuBar.win = XCreateSimpleWindow (display->display, TermWin.parent[0],
+      menuBar.win = XCreateSimpleWindow (disp, TermWin.parent[0],
                                          window_vt_x, 0,
                                          TermWin_TotalWidth (),
                                          menuBar_TotalHeight (),
@@ -1092,17 +1093,16 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                                          pix_colors_focused[Color_scroll]);
 
 #ifdef DEBUG_X
-      XStoreName (display->display, menuBar.win, "menubar");
+      XStoreName (disp, menuBar.win, "menubar");
 #endif
 
       menuBar.drawable = new rxvt_drawable (display, menuBar.win);
 
-      XDefineCursor (display->display, menuBar.win,
-                     XCreateFontCursor (display->display, XC_left_ptr));
+      XDefineCursor (disp, menuBar.win,
+                     XCreateFontCursor (disp, XC_left_ptr));
 
-      XSelectInput (display->display, menuBar.win,
-                   (ExposureMask | ButtonPressMask | ButtonReleaseMask
-                    | Button1MotionMask));
+      XSelectInput (disp, menuBar.win,
+                    (ExposureMask | ButtonPressMask | ButtonReleaseMask | Button1MotionMask));
       menubar_ev.start (display, menuBar.win);
     }
 #endif
@@ -1128,7 +1128,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   gcvalue.foreground = pix_colors[Color_fg];
   gcvalue.background = pix_colors[Color_bg];
   gcvalue.graphics_exposures = 1;
-  TermWin.gc = XCreateGC (display->display, TermWin.vt,
+  TermWin.gc = XCreateGC (disp, TermWin.vt,
                           GCForeground | GCBackground | GCGraphicsExposures,
                           &gcvalue);
 
@@ -1136,11 +1136,11 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
 #if defined(MENUBAR) || defined(RXVT_SCROLLBAR)
   gcvalue.foreground = pix_colors[Color_topShadow];
-  topShadowGC = XCreateGC (display->display, TermWin.vt, GCForeground, &gcvalue);
+  topShadowGC = XCreateGC (disp, TermWin.vt, GCForeground, &gcvalue);
   gcvalue.foreground = pix_colors[Color_bottomShadow];
-  botShadowGC = XCreateGC (display->display, TermWin.vt, GCForeground, &gcvalue);
+  botShadowGC = XCreateGC (disp, TermWin.vt, GCForeground, &gcvalue);
   gcvalue.foreground = pix_colors[ (display->depth <= 2 ? Color_fg : Color_scroll)];
-  scrollbarGC = XCreateGC (display->display, TermWin.vt, GCForeground, &gcvalue);
+  scrollbarGC = XCreateGC (disp, TermWin.vt, GCForeground, &gcvalue);
 #endif
 
 #ifdef OFF_FOCUS_FADING

@@ -137,6 +137,7 @@ rxvt_term::renderPixmap (const char *const *data, int width, int height)
             pointcolour = darkGC;
           else		/* if (a == '#' || a == 'b' || a) */
             pointcolour = blackGC;
+
           XDrawPoint (display->display, d, pointcolour, x, y);
         }
     }
@@ -150,15 +151,16 @@ rxvt_term::init_scrollbar_stuff ()
   XColor          xcol;
   Pixmap          stipple;
   unsigned long   light, dark;
+  dDisp;
 
   gcvalue.graphics_exposures = False;
 
   gcvalue.foreground = pix_colors_focused[Color_Black];
-  blackGC = XCreateGC (display->display, scrollBar.win,
+  blackGC = XCreateGC (disp, scrollBar.win,
                       GCForeground | GCGraphicsExposures, &gcvalue);
 
   gcvalue.foreground = pix_colors_focused[Color_White];
-  whiteGC = XCreateGC (display->display, scrollBar.win,
+  whiteGC = XCreateGC (disp, scrollBar.win,
                       GCForeground | GCGraphicsExposures, &gcvalue);
 
   xcol.red = 0xaeba;
@@ -167,7 +169,7 @@ rxvt_term::init_scrollbar_stuff ()
   //if (!rXAllocColor (&xcol, "light gray"))//TODO//D//
   xcol.pixel = pix_colors_focused[Color_AntiqueWhite];
   light = gcvalue.foreground = xcol.pixel;
-  grayGC = XCreateGC (display->display, scrollBar.win,
+  grayGC = XCreateGC (disp, scrollBar.win,
                      GCForeground | GCGraphicsExposures, &gcvalue);
 
   xcol.red = 0x51aa;
@@ -176,10 +178,10 @@ rxvt_term::init_scrollbar_stuff ()
   //if (!rXAllocColor (&xcol, "dark gray"))//TODO//D//
   xcol.pixel = pix_colors_focused[Color_Grey25];
   dark = gcvalue.foreground = xcol.pixel;
-  darkGC = XCreateGC (display->display, scrollBar.win,
+  darkGC = XCreateGC (disp, scrollBar.win,
                      GCForeground | GCGraphicsExposures, &gcvalue);
 
-  stipple = XCreateBitmapFromData (display->display, scrollBar.win,
+  stipple = XCreateBitmapFromData (disp, scrollBar.win,
                                   (char *)n_stp_bits, n_stp_width,
                                   n_stp_height);
 
@@ -188,9 +190,9 @@ rxvt_term::init_scrollbar_stuff ()
   gcvalue.fill_style = FillOpaqueStippled;
   gcvalue.stipple = stipple;
 
-  /*    XSetWindowBackground (display->display, scrollBar.win, pix_colors_focused[Color_Red]); */
+  /*    XSetWindowBackground (disp, scrollBar.win, pix_colors_focused[Color_Red]); */
 
-  stippleGC = XCreateGC (display->display, scrollBar.win,
+  stippleGC = XCreateGC (disp, scrollBar.win,
                         GCForeground | GCBackground | GCStipple
                         | GCFillStyle | GCGraphicsExposures, &gcvalue);
 
@@ -211,20 +213,21 @@ rxvt_term::init_scrollbar_stuff ()
 void
 rxvt_term::drawBevel (Drawable d, int x1, int y1, int w, int h)
 {
-  int             x2, y2;
+  int x2, y2;
+  dDisp;
 
   x2 = x1 + w - 1;		/* right  point */
   y2 = y1 + h - 1;		/* bottom point */
   /* white top and left */
-  XDrawLine (display->display, d, whiteGC, x1, y1, x2, y1);
-  XDrawLine (display->display, d, whiteGC, x1, y1, x1, y2);
+  XDrawLine (disp, d, whiteGC, x1, y1, x2, y1);
+  XDrawLine (disp, d, whiteGC, x1, y1, x1, y2);
   /* black bottom and right */
-  XDrawLine (display->display, d, blackGC, x1, y2, x2, y2);
-  XDrawLine (display->display, d, blackGC, x2, y1, x2, y2);
+  XDrawLine (disp, d, blackGC, x1, y2, x2, y2);
+  XDrawLine (disp, d, blackGC, x2, y1, x2, y2);
   /* dark inside bottom and right */
   x1++, y1++, x2--, y2--;	/* move in one point */
-  XDrawLine (display->display, d, darkGC, x1, y2, x2, y2);
-  XDrawLine (display->display, d, darkGC, x2, y1, x2, y2);
+  XDrawLine (disp, d, darkGC, x1, y2, x2, y2);
+  XDrawLine (disp, d, darkGC, x2, y1, x2, y2);
 }
 
 int
@@ -232,6 +235,7 @@ rxvt_term::scrollbar_show_next (int update, int last_top, int last_bot, int scro
 {
   int height = scrollBar.end + SB_BUTTON_TOTAL_HEIGHT + SB_PADDING;
   Drawable s;
+  dDisp;
 
   if ((scrollBar.init & R_SB_NEXT) == 0)
     {
@@ -241,32 +245,32 @@ rxvt_term::scrollbar_show_next (int update, int last_top, int last_bot, int scro
 
   if (TermWin.nscrolled == 0 || !update)
     {
-      XFillRectangle (display->display, scrollBar.win, grayGC, 0, 0,
+      XFillRectangle (disp, scrollBar.win, grayGC, 0, 0,
                      SB_WIDTH_NEXT + 1, height);
-      XDrawRectangle (display->display, scrollBar.win, blackGC, 0,
+      XDrawRectangle (disp, scrollBar.win, blackGC, 0,
                      -SB_BORDER_WIDTH, SB_WIDTH_NEXT,
                      height + SB_BORDER_WIDTH);
-      XFillRectangle (display->display, scrollBar.win, stippleGC,
+      XFillRectangle (disp, scrollBar.win, stippleGC,
                      SB_LEFT_PADDING, 0, SB_BUTTON_WIDTH, height);
     }
 
   if (TermWin.nscrolled)
     {
       if (last_top < scrollBar.top || !update)
-        XFillRectangle (display->display, scrollBar.win, stippleGC,
+        XFillRectangle (disp, scrollBar.win, stippleGC,
                        SB_LEFT_PADDING, SB_PADDING + last_top,
                        SB_BUTTON_WIDTH, scrollBar.top - last_top);
 
       if (scrollBar.bot < last_bot || !update)
-        XFillRectangle (display->display, scrollBar.win, stippleGC,
+        XFillRectangle (disp, scrollBar.win, stippleGC,
                        SB_LEFT_PADDING, scrollBar.bot + SB_PADDING,
                        SB_BUTTON_WIDTH, (last_bot - scrollBar.bot));
 
-      XFillRectangle (display->display, scrollBar.win, grayGC,
+      XFillRectangle (disp, scrollBar.win, grayGC,
                      SB_LEFT_PADDING, scrollBar.top + SB_PADDING,
                      SB_BUTTON_WIDTH, scrollbar_len);
 
-      XCopyArea (display->display, dimple, scrollBar.win, whiteGC, 0, 0,
+      XCopyArea (disp, dimple, scrollBar.win, whiteGC, 0, 0,
                 SCROLLER_DIMPLE_WIDTH, SCROLLER_DIMPLE_HEIGHT,
                 (SB_WIDTH_NEXT - SCROLLER_DIMPLE_WIDTH) / 2,
                 scrollBar.top + SB_BEVEL_WIDTH_UPPER_LEFT +
@@ -283,12 +287,12 @@ rxvt_term::scrollbar_show_next (int update, int last_top, int last_bot, int scro
                  SB_BUTTON_HEIGHT);
 
       s = (scrollbar_isUp ()) ? upArrowHi : upArrow;
-      XCopyArea (display->display, s, scrollBar.win, whiteGC, 0, 0,
+      XCopyArea (disp, s, scrollBar.win, whiteGC, 0, 0,
                 ARROW_WIDTH, ARROW_HEIGHT, SB_BUTTON_FACE_X,
                 height - SB_BUTTON_BOTH_HEIGHT + SB_BEVEL_WIDTH_UPPER_LEFT);
 
       s = (scrollbar_isDn ()) ? downArrowHi : downArrow;
-      XCopyArea (display->display, s, scrollBar.win, whiteGC, 0, 0,
+      XCopyArea (disp, s, scrollBar.win, whiteGC, 0, 0,
                 ARROW_WIDTH, ARROW_HEIGHT, SB_BUTTON_FACE_X,
                 height - SB_BUTTON_SINGLE_HEIGHT + SB_BEVEL_WIDTH_UPPER_LEFT);
     }

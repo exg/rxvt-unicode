@@ -957,11 +957,11 @@ rxvt_term::menu_show ()
   if (ActiveMenu->win == None)
     {
       ActiveMenu->win = XCreateSimpleWindow (display->display, TermWin.vt,
-                                            x, ActiveMenu->y,
-                                            ActiveMenu->w, ActiveMenu->h,
-                                            0,
-                                            pix_colors[Color_fg],
-                                            pix_colors[Color_scroll]);
+                                             x, ActiveMenu->y,
+                                             ActiveMenu->w, ActiveMenu->h,
+                                             0,
+                                             pix_colors[Color_fg],
+                                             pix_colors[Color_scroll]);
       ActiveMenu->drawable = new rxvt_drawable (display, ActiveMenu->win);
       XMapWindow (display->display, ActiveMenu->win);
     }
@@ -984,9 +984,9 @@ rxvt_term::menu_show ()
       if (isSeparator (item->name))
         {
           rxvt_Draw_Shadow (display->display, ActiveMenu->win,
-                           topShadowGC, botShadowGC,
-                           SHADOW, y + SHADOW + 1,
-                           ActiveMenu->w - 2 * SHADOW, 0);
+                            topShadowGC, botShadowGC,
+                            SHADOW, y + SHADOW + 1,
+                            ActiveMenu->w - 2 * SHADOW, 0);
           h = HEIGHT_SEPARATOR;
         }
       else
@@ -2017,7 +2017,7 @@ rxvt_term::draw_Arrows (int name, int state)
 
       if (!name || name == Arrows[i].name)
         rxvt_Draw_Triangle (display->display, menuBar.win, top, bot, x, y, w,
-                           Arrows[i].name);
+                            Arrows[i].name);
     }
   XFlush (display->display);
 }

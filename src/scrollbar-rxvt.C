@@ -83,6 +83,7 @@ rxvt_term::Draw_button (int x, int y, int state, int dirn)
 #if (SHADOW > 1)
   /* doubled */
   pt[0].x++;
+
   if (dirn == UP)
     {
       pt[0].y--;
@@ -93,6 +94,7 @@ rxvt_term::Draw_button (int x, int y, int state, int dirn)
       pt[0].y++;
       pt[1].y--;
     }
+
   XDrawLine (display->display, scrollBar.win, top,
              pt[0].x, pt[0].y, pt[1].x, pt[1].y);
 #endif
@@ -103,6 +105,7 @@ rxvt_term::Draw_button (int x, int y, int state, int dirn)
   pt[2].y = y + (dirn == UP ? 0 : sz - 1);
   XDrawLine (display->display, scrollBar.win, bot,
              pt[2].x, pt[2].y, pt[1].x, pt[1].y);
+
 #if (SHADOW > 1)
   /* doubled */
   pt[1].x--;

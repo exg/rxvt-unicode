@@ -761,6 +761,8 @@ enum {
 #define strchr(x, y)            strchr((const char *)(x), (int)(y))
 #define strrchr(x, y)           strrchr((const char *)(x), (int)(y))
 
+#define dDisp			Display *disp = display->display
+
 /* convert pixel dimensions to row/column values.  Everything as int32_t */
 #define Pixel2Col(x)            Pixel2Width((int32_t)(x))
 #define Pixel2Row(y)            Pixel2Height((int32_t)(y))
@@ -867,13 +869,6 @@ enum {
 #else
 # define XPMClearArea(a, b, c, d, e, f, g)
 #endif
-
-#ifndef STRICT_FONT_CHECKING
-# define rxvt_get_fontwidest(font)      ((font)->max_bounds.width)
-#endif
-
-#define rxvt_Gr_ButtonPress(x,y)        rxvt_Gr_ButtonReport (R, 'P',(x),(y))
-#define rxvt_Gr_ButtonRelease(x,y)      rxvt_Gr_ButtonReport (R, 'R',(x),(y))
 
 #ifdef UTMP_SUPPORT
 # if !defined(RXVT_UTMPX_FILE) || !defined(HAVE_STRUCT_UTMPX)
@@ -1285,6 +1280,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   rxvt_term ();
   ~rxvt_term ();
   void destroy ();
+  void emergency_cleanup ();
 
   bool init (int argc, const char *const *argv);
   bool init_vars ();
@@ -1518,7 +1514,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void get_options (int argc, const char *const *argv);
   int parse_keysym (const char *str, const char *arg);
   void get_xdefaults (FILE *stream, const char *name);
-  void extract_resources (Display *display, const char *name);
+  void extract_resources ();
   // xpm.C
   int scale_pixmap (const char *geom);
   void resize_pixmap ();
