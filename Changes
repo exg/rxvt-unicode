@@ -7,6 +7,45 @@ TODO: multibyte support for setwmname et al.
 TODO: there are other todo items, but they are not in this file.
 TODO: tabbed windows
 
+3.7  Tue Aug 17 04:22:25 CEST 2004
+	- new configure option --enable-iso14755.
+        - full iso 14755 conformance (at least I claim so :).
+        - extended the FAQ section in the manpage.
+	- fix OverTheSpot and OffTheSpot editing, which was broken since ages,
+          due to no fontset being available. The fontset used is a very rough
+          approximation to the rxvt font, though. This fixes the
+          "cannot create input context" in most cases.
+        - fix coordinates used for Over && OffTheSpot editing to fit directly
+          at the cursor (Over) or into the top line (Off).
+        - reset SIGHUP and SIGPIPE handlers to default values (they were
+          previously being ignored, causing programs not to exit on windoe
+          close).
+        - implemented simple overlays for feedback messages. believe it or
+          not, this was a major blocker in implementign tabbed termianls.
+        - fix compiling with --disable-frills (Adam Sampson).
+        - clarify bold docs in README.unicode (Adam Sampson).
+	- fix crash on window close when the input method or context
+          could not be created.
+        - add work around for badly written programs (see debian bug
+          #202497). This is _not_ a bug in rxvt but rather a race
+          condition in other programs (e.g. jed). It works by forcefully
+          sending SIGWINCH when rxvt sees the first output from the
+          command. This workaround isn't perfect (a slight cost to
+          wellbehaving programs who need to resize twice), but it usually
+          works.
+	- set correct pixel size in struct winsize.
+        - document more escape sequences.
+        - fix leftover macros and a few minor doc glitches in rxvt(1).
+        - work around bash's assumption that stepping into the middle of a
+          character is a sensible operation.
+        - fix some corner cases in autowrap handling.
+        - remove various useless make cruft, renamed files to better
+          reflect on their function, renamed many variables.
+        - fixed printscreen functionality, as noted by Jinesh Choksi.
+        - fix a problem where redraws of double-width characters sometimes
+          made the last character draw with normal width (especially visible
+          with selections).
+
 3.6  Sat Aug 14 04:55:26 CEST 2004
         - SECURITY FIX: rxvtd kept open filehandles to other terminal
           windows when spawning children. Actual risk is low (attacker
@@ -37,7 +76,7 @@ TODO: tabbed windows
         - fixed sourceforge bug 998970, reported against aterm:
           "crash on -sl 0 on super small windows".
         - decreased memory and code size when !--enable-transparency.
-        - SYNC. backported changes done to rxvt, except for Color_ufbg,
+        - SYNCCVS. backported changes done to rxvt, except for Color_ufbg,
           which I think is better done through fading, and libW11, which
           needs testing anyways.
           - more complete compile options help output.
@@ -337,6 +376,7 @@ TODO: tabbed windows
 
 1.0
         - first release
-        - original cloned from rxvt-CVS 2003-11-19 00:26
+        - originally cloned from rxvt-CVS 2003-11-19 00:26
         - removed rclock et al.
         - initial conversion to C++
+
