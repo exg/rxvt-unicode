@@ -1,3 +1,5 @@
+The changes for rxvt-unicode are summarized in the file ../Changes.
+
 2.7.10 to 2.7.11
 \-----------------------------------
 
