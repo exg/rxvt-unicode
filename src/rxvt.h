@@ -10,6 +10,7 @@
 #include <X11/keysymdef.h>
 #include <X11/Xatom.h>
 
+#include "encoding.h"
 #include "defaultfont.h"
 #include "rxvtcolor.h"
 #include "iom.h"
@@ -136,10 +137,6 @@ struct mouse_event {
  * NORMAL DEFINES
  *****************************************************************************
  */
-
-#if defined (NO_OLD_SELECTION) && defined(NO_NEW_SELECTION)
-# error if you disable both selection styles, how can you select, silly?
-#endif
 
 /* COLORTERM, TERM environment variables */
 #define COLORTERMENV    "rxvt"
@@ -838,8 +835,8 @@ struct mbstate {
 // that are not representable in unicode, as well as characters
 // not fitting in the BMP.
 struct compose_char {
-  uint32_t c1, c2; // any chars != NOCHAR are valid
-  compose_char (uint32_t c1, uint32_t c2)
+  unicode_t c1, c2; // any chars != NOCHAR are valid
+  compose_char (unicode_t c1, unicode_t c2)
   : c1(c1), c2(c2)
   { }
 };
@@ -847,8 +844,8 @@ struct compose_char {
 class rxvt_composite_vec {
   vector<compose_char> v;
 public:
-  text_t compose (uint32_t c1, uint32_t c2 = NOCHAR);
-  int expand (uint32_t c, wchar_t *r);
+  text_t compose (unicode_t c1, unicode_t c2 = NOCHAR);
+  int expand (unicode_t c, wchar_t *r);
   compose_char *operator [](text_t c)
   {
     return c >= COMPOSE_LO && c < COMPOSE_LO + v.size ()
@@ -1130,7 +1127,7 @@ struct rxvt_term : rxvt_vars {
   bool init (int argc, const char *const *argv);
   bool init_vars ();
 
-  uint32_t next_char ();
+  unicode_t next_char ();
 
   bool pty_fill ();
 
@@ -1195,7 +1192,7 @@ struct rxvt_term : rxvt_vars {
   // command.C
   void lookup_key (XKeyEvent &ev);
   unsigned int cmd_write (const unsigned char *str, unsigned int count);
-  uint32_t cmd_getc ();
+  unicode_t cmd_getc ();
   bool cmd_parse ();
   void mouse_report (XButtonEvent &ev);
   void button_press (XButtonEvent &ev);
@@ -1277,7 +1274,7 @@ struct rxvt_term : rxvt_vars {
   int scr_change_screen (int scrn);
   void scr_color (unsigned int color, int fgbg);
   void scr_rendition (int set, int style);
-  void scr_add_lines (const uint32_t *str, int nlines, int len);
+  void scr_add_lines (const unicode_t *str, int nlines, int len);
   void scr_backspace ();
   void scr_tab (int count);
   void scr_backindex ();

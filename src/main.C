@@ -61,7 +61,7 @@ rxvt_set_locale (const char *locale)
 #if ENABLE_COMBINING
 class rxvt_composite_vec rxvt_composite;
 
-text_t rxvt_composite_vec::compose (uint32_t c1, uint32_t c2)
+text_t rxvt_composite_vec::compose (unicode_t c1, unicode_t c2)
 {
   compose_char *cc;
   
@@ -97,7 +97,7 @@ text_t rxvt_composite_vec::compose (uint32_t c1, uint32_t c2)
   return v.size () - 1 + COMPOSE_LO;
 }
 
-int rxvt_composite_vec::expand (uint32_t c, wchar_t *r)
+int rxvt_composite_vec::expand (unicode_t c, wchar_t *r)
 {
   compose_char *cc = (*this)[c];
 

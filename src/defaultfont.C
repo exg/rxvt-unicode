@@ -275,7 +275,7 @@ struct rxvt_font_default : rxvt_font {
     return true;
   }
 
-  bool has_codepoint (uint32_t unicode)
+  bool has_codepoint (unicode_t unicode)
   {
     if (unicode <= 0x001f)
       return true;
@@ -406,7 +406,7 @@ struct rxvt_font_x11 : rxvt_font {
 
   bool load (const rxvt_fontprop &prop);
 
-  bool has_codepoint (uint32_t unicode);
+  bool has_codepoint (unicode_t unicode);
 
   void draw (rxvt_drawable &d, int x, int y,
              const text_t *text, int len,
@@ -663,7 +663,7 @@ rxvt_font_x11::clear ()
 }
 
 bool
-rxvt_font_x11::has_codepoint (uint32_t unicode)
+rxvt_font_x11::has_codepoint (unicode_t unicode)
 {
   uint32_t ch = FROM_UNICODE (cs, unicode);
 
@@ -815,7 +815,7 @@ struct rxvt_font_xft : rxvt_font {
              const text_t *text, int len,
              int fg, int bg);
 
-  bool has_codepoint (uint32_t unicode);
+  bool has_codepoint (unicode_t unicode);
 
 protected:
   XftFont *f;
@@ -938,7 +938,7 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
 }
 
 bool
-rxvt_font_xft::has_codepoint (uint32_t unicode)
+rxvt_font_xft::has_codepoint (unicode_t unicode)
 {
   return XftCharExists (DISPLAY, f, unicode);
 }
@@ -1151,7 +1151,7 @@ rxvt_fontset::populate (const char *desc)
 }
 
 int
-rxvt_fontset::find_font (uint32_t unicode)
+rxvt_fontset::find_font (unicode_t unicode)
 {
   for (unsigned int i = 0; i < fonts.size (); i++)
     {

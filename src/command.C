@@ -761,7 +761,7 @@ bool
 rxvt_term::cmd_parse ()
 {
   bool flag = false;
-  uint32_t ch = NOCHAR;
+  unicode_t ch = NOCHAR;
 
   for (;;)
     {
@@ -774,10 +774,10 @@ rxvt_term::cmd_parse ()
       if (ch >= ' ' || ch == '\t' || ch == '\n' || ch == '\r')
         {
           /* Read a text string from the input buffer */
-          uint32_t buf[BUFSIZ];
+          unicode_t buf[BUFSIZ];
           bool refreshnow = false;
           int nlines = 0;
-          uint32_t *str = buf;
+          unicode_t *str = buf;
 
           *str++ = ch;
 
@@ -865,7 +865,7 @@ rxvt_term::cmd_parse ()
 
 // read the next character, currently handles UTF-8
 // will probably handle all sorts of other stuff in the future
-uint32_t
+unicode_t
 rxvt_term::next_char ()
 {
   while (cmdbuf_ptr < cmdbuf_endp)
@@ -901,12 +901,12 @@ rxvt_term::next_char ()
  * Return the next input character after first passing any keyboard input
  * to the command.
  */
-uint32_t
+unicode_t
 rxvt_term::cmd_getc ()
 {
   for (;;)
     {
-      uint32_t c = next_char ();
+      unicode_t c = next_char ();
       if (c != NOCHAR)
         return c;
 
@@ -2333,7 +2333,7 @@ rxvt_term::process_escape_seq ()
         /* 8.3.87: NEXT LINE */
       case C1_NEL:		/* ESC E */
         {
-          uint32_t nlcr[] = { '\n', '\r' };
+          unicode_t nlcr[] = { L'\n', L'\r' };
           scr_add_lines (nlcr, 1, 2);
         }
         break;
@@ -3128,19 +3128,32 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
 #ifdef scrollBar_esc
                   { scrollBar_esc, PrivMode_scrollBar },
 #endif
+                 // 18, 19 printing-related
                   { 25, PrivMode_VisibleCursor },
-                  { 35, PrivMode_ShiftKeys },
+                 // 30 show scrollbar rxvt. extension
+                  { 35, PrivMode_ShiftKeys }, // rxvt extension
                   { 40, PrivMode_132OK },
+                 // 41 xterm more fixes NYI
+                 // 45 margin bell NYI
+                 // 46 start logging
                   { 47, PrivMode_Screen },
                   { 66, PrivMode_aplKP },
 #ifndef NO_BACKSPACE_KEY
                   { 67, PrivMode_BackSpace },
 #endif
                   { 1000, PrivMode_MouseX11 },
-                  { 1010, PrivMode_TtyOutputInh },
-                  { 1011, PrivMode_Keypress },
+                 // 1001 Use Hilite Mouse Tracking. NYI, TODO
+                 // 1002 Use Cell Motion Mouse Tracking. NYI, TODO
+                 // 1003 Use All Motion Mouse Tracking. NYI, TODO
+                  { 1010, PrivMode_TtyOutputInh }, // rxvt extension
+                  { 1011, PrivMode_Keypress }, // rxvt extension
+                 // 1035 enable modifiers for alt, numlock NYI
+                 // 1036 send ESC for meta keys NYI
+                 // 1037 send DEL for keypad delete NYI
                   { 1047, PrivMode_Screen },
+                 // 1048 save and restore cursor
                   { 1049, PrivMode_Screen }, /* xterm extension, not fully implemented */
+                 // 1051, 1052, 1060, 1061 keyboard emulation NYI
                 };
 
   if (nargs == 0)
@@ -3165,109 +3178,108 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
           }
 
       /* extra handling for values with state unkept  */
-      if (state == -1)
-        switch (arg[i])
-          {
-            case 1048:		/* alternative cursor save */
-              if (mode == 0)
-                scr_cursor (RESTORE);
-              else if (mode == 1)
-                scr_cursor (SAVE);
-              /* FALLTHROUGH */
-            default:
-              continue;	/* for (;i;) */
-          }
-
-      /* extra handling for values with valid 0 or 1 state */
       switch (arg[i])
         {
-            /* case 1:	- application cursor keys */
-          case 2:			/* VT52 mode */
-            /* oddball mode.  should be set regardless of set/reset
-             * parameter.  Return from VT52 mode with an ESC < from
-             * within VT52 mode
-             */
-            PrivMode (1, PrivMode_vt52);
-            break;
-          case 3:			/* 80/132 */
-            if (PrivateModes & PrivMode_132OK)
-              set_widthheight (((state ? 132 : 80) * TermWin.fwidth), TermWin.height);
-            break;
-          case 4:			/* smooth scrolling */
-            if (state)
-              Options &= ~Opt_jumpScroll;
-            else
-              Options |= Opt_jumpScroll;
-            break;
-          case 5:			/* reverse video */
-            scr_rvideo_mode (state);
-            break;
-          case 6:			/* relative/absolute origins  */
-            scr_relative_origin (state);
-            break;
-          case 7:			/* autowrap */
-            scr_autowrap (state);
-            break;
-            /* case 8:	- auto repeat, can't do on a per window basis */
-          case 9:			/* X10 mouse reporting */
-            if (state)		/* orthogonal */
-              PrivateModes &= ~ (PrivMode_MouseX11);
-            break;
+          case 1048:		/* alternative cursor save */
+          case 1049:
+            if (mode == 0)
+              scr_cursor (RESTORE);
+            else if (mode == 1)
+              scr_cursor (SAVE);
+            /* FALLTHROUGH */
+        }
+
+      if (state >= 0)
+        /* extra handling for values with valid 0 or 1 state */
+        switch (arg[i])
+          {
+              /* case 1:	- application cursor keys */
+            case 2:			/* VT52 mode */
+              /* oddball mode.  should be set regardless of set/reset
+               * parameter.  Return from VT52 mode with an ESC < from
+               * within VT52 mode
+               */
+              PrivMode (1, PrivMode_vt52);
+              break;
+            case 3:			/* 80/132 */
+              if (PrivateModes & PrivMode_132OK)
+                set_widthheight (((state ? 132 : 80) * TermWin.fwidth), TermWin.height);
+              break;
+            case 4:			/* smooth scrolling */
+              if (state)
+                Options &= ~Opt_jumpScroll;
+              else
+                Options |= Opt_jumpScroll;
+              break;
+            case 5:			/* reverse video */
+              scr_rvideo_mode (state);
+              break;
+            case 6:			/* relative/absolute origins  */
+              scr_relative_origin (state);
+              break;
+            case 7:			/* autowrap */
+              scr_autowrap (state);
+              break;
+              /* case 8:	- auto repeat, can't do on a per window basis */
+            case 9:			/* X10 mouse reporting */
+              if (state)		/* orthogonal */
+                PrivateModes &= ~ (PrivMode_MouseX11);
+              break;
 #ifdef menuBar_esc
-          case menuBar_esc:
+            case menuBar_esc:
 #ifdef MENUBAR
-            map_menuBar (state);
+              map_menuBar (state);
 #endif
-            break;
+              break;
 #endif
 #ifdef scrollBar_esc
-          case scrollBar_esc:
-            if (scrollbar_mapping (state))
-              {
-                resize_all_windows (0, 0, 0);
-                scr_touch (true);
-              }
-            break;
+            case scrollBar_esc:
+              if (scrollbar_mapping (state))
+                {
+                  resize_all_windows (0, 0, 0);
+                  scr_touch (true);
+                }
+              break;
 #endif
-          case 25:		/* visible/invisible cursor */
-            scr_cursor_visible (state);
-            break;
-            /* case 35:	- shift keys */
-            /* case 40:	- 80 <--> 132 mode */
-          case 47:		/* secondary screen */
-            scr_change_screen (state);
-            break;
-            /* case 66:	- application key pad */
-            /* case 67:	- backspace key */
-          case 1000:		/* X11 mouse reporting */
-            if (state)		/* orthogonal */
-              PrivateModes &= ~ (PrivMode_MouseX10);
-            break;
+            case 25:		/* visible/invisible cursor */
+              scr_cursor_visible (state);
+              break;
+              /* case 35:	- shift keys */
+              /* case 40:	- 80 <--> 132 mode */
+            case 47:		/* secondary screen */
+              scr_change_screen (state);
+              break;
+              /* case 66:	- application key pad */
+              /* case 67:	- backspace key */
+            case 1000:		/* X11 mouse reporting */
+              if (state)		/* orthogonal */
+                PrivateModes &= ~ (PrivMode_MouseX10);
+              break;
 #if 0
-          case 1001:
-            break;		/* X11 mouse highlighting */
+            case 1001:
+              break;		/* X11 mouse highlighting */
 #endif
-          case 1010:		/* scroll to bottom on TTY output inhibit */
-            if (state)
-              Options &= ~Opt_scrollTtyOutput;
-            else
-              Options |= Opt_scrollTtyOutput;
-            break;
-          case 1011:		/* scroll to bottom on key press */
-            if (state)
-              Options |= Opt_scrollTtyKeypress;
-            else
-              Options &= ~Opt_scrollTtyKeypress;
-            break;
-          case 1047:		/* secondary screen w/ clearing */
-          case 1049:		/* better secondary screen w/ clearing, but not fully implemented */
-            if (current_screen != PRIMARY)
-              scr_erase_screen (2);
-            scr_change_screen (state);
-            /* FALLTHROUGH */
-          default:
-            break;
-        }
+            case 1010:		/* scroll to bottom on TTY output inhibit */
+              if (state)
+                Options &= ~Opt_scrollTtyOutput;
+              else
+                Options |= Opt_scrollTtyOutput;
+              break;
+            case 1011:		/* scroll to bottom on key press */
+              if (state)
+                Options |= Opt_scrollTtyKeypress;
+              else
+                Options &= ~Opt_scrollTtyKeypress;
+              break;
+            case 1047:		/* secondary screen w/ clearing */
+            case 1049:		/* better secondary screen w/ clearing, but not fully implemented */
+              if (current_screen != PRIMARY)
+                scr_erase_screen (2);
+              scr_change_screen (state);
+              /* FALLTHROUGH */
+            default:
+              break;
+          }
     }
 }
 /*}}} */
@@ -3305,6 +3317,9 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 7:
             rendset = 1, rendstyle = RS_RVid;
             break;
+          case 8:
+            // invisible. NYI
+            break;
           case 22:
             rendset = 0, rendstyle = RS_Bold;
             break;
@@ -3317,7 +3332,11 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 27:
             rendset = 0, rendstyle = RS_RVid;
             break;
+          case 28:
+            // visible. NYI
+            break;
         }
+
       if (rendset != -1)
         {
           scr_rendition (rendset, rendstyle);
@@ -3334,15 +3353,13 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 35:
           case 36:
           case 37:
-            scr_color ((unsigned int) (minCOLOR + (arg[i] - 30)),
-                       Color_fg);
+            scr_color ((unsigned int) (minCOLOR + (arg[i] - 30)), Color_fg);
             break;
 #ifdef TTY_256COLOR
           case 38:
             if (nargs > i + 2 && arg[i + 1] == 5)
               {
-                scr_color ((unsigned int) (minCOLOR + arg[i + 2]),
-                           Color_fg);
+                scr_color ((unsigned int) (minCOLOR + arg[i + 2]), Color_fg);
                 i += 2;
               }
             break;
@@ -3359,15 +3376,13 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 45:
           case 46:
           case 47:
-            scr_color ((unsigned int) (minCOLOR + (arg[i] - 40)),
-                       Color_bg);
+            scr_color ((unsigned int) (minCOLOR + (arg[i] - 40)), Color_bg);
             break;
 #ifdef TTY_256COLOR
           case 48:
             if (nargs > i + 2 && arg[i + 1] == 5)
               {
-                scr_color ((unsigned int) (minCOLOR + arg[i + 2]),
-                           Color_bg);
+                scr_color ((unsigned int) (minCOLOR + arg[i + 2]), Color_bg);
                 i += 2;
               }
             break;

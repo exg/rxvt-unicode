@@ -764,10 +764,10 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
  * Add text given in <str> of length <len> to screen struct
  */
 void
-rxvt_term::scr_add_lines (const uint32_t *str, int nlines, int len)
+rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 {
   unsigned char checksel, clearsel;
-  uint32_t c;
+  unicode_t c;
   int i, row, last_col;
   text_t *stp;
   rend_t *srp;
@@ -953,7 +953,7 @@ rxvt_term::scr_add_lines (const uint32_t *str, int nlines, int len)
             *tp = ' '; // hack //D //TODO //--tp, --rp;
 
           // first try to find a precomposed character
-          uint32_t n = rxvt_compose (*tp, c);
+          unicode_t n = rxvt_compose (*tp, c);
           if (n == NOCHAR)
             n = rxvt_composite.compose (*tp, c);
 
@@ -2859,16 +2859,9 @@ rxvt_term::selection_make (Time tm)
         new_selection_text[ofs++] = L'\n';
     }
 
-#ifndef NO_OLD_SELECTION
-  if (selection_style == OLD_SELECT)
-    if (end_col == TermWin.ncol)
-      new_selection_text[ofs++] = L'\n';
-#endif
-#ifndef NO_NEW_SELECTION
-  if (selection_style != OLD_SELECT)
-    if (end_col != selection.end.col)
-      new_selection_text[ofs++] = L'\n';
-#endif
+  if (end_col != selection.end.col)
+    new_selection_text[ofs++] = L'\n';
+
   new_selection_text[ofs] = 0;
 
   if (ofs == 0)
@@ -2937,16 +2930,22 @@ rxvt_term::selection_start_colrow (int col, int row)
   want_refresh = 1;
   selection.mark.col = col;
   selection.mark.row = row - TermWin.view_start;
+
   MAX_IT (selection.mark.row, - (int32_t)TermWin.nscrolled);
   MIN_IT (selection.mark.row, (int32_t)TermWin.nrow - 1);
   MAX_IT (selection.mark.col, 0);
   MIN_IT (selection.mark.col, (int32_t)TermWin.ncol - 1);
 
+  while (selection.mark.col > 0
+         && screen.text[selection.mark.row + TermWin.saveLines][selection.mark.col] == NOCHAR)
+    --selection.mark.col;
+  
   if (selection.op)
     {      /* clear the old selection */
       selection.beg.row = selection.end.row = selection.mark.row;
       selection.beg.col = selection.end.col = selection.mark.col;
     }
+
   selection.op = SELECTION_INIT;
   selection.screen = current_screen;
 }
@@ -2958,17 +2957,17 @@ rxvt_term::selection_start_colrow (int col, int row)
  */
 
 /* what do we want: spaces/tabs are delimiters or cutchars or non-cutchars */
-#define DELIMIT_TEXT(x) \
-    (((x) == ' ' || (x) == '\t') ? 2 : (STRCHR (rs[Rs_cutchars], (x)) != NULL))
+#define DELIMIT_TEXT(x) 		\
+    (unicode::is_space (x) ? 2 : (x) <= 0xff && !!STRCHR (rs[Rs_cutchars], (x)))
 #define DELIMIT_REND(x)        1
 
 void
 rxvt_term::selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, row_col_t *ret)
 {
-  int             col, row, dirnadd, tcol, trow, w1, w2;
-  row_col_t       bound;
-  text_t         *stp;
-  rend_t         *srp;
+  int col, row, dirnadd, tcol, trow, w1, w2;
+  row_col_t bound;
+  text_t *stp;
+  rend_t *srp;
 
   if (dirn == UP)
     {
@@ -2982,6 +2981,7 @@ rxvt_term::selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, r
       bound.col = TermWin.ncol - 1;
       dirnadd = 1;
     }
+
   row = mark->row + TermWin.saveLines;
   col = mark->col;
   MAX_IT (col, 0);
@@ -2989,17 +2989,6 @@ rxvt_term::selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, r
   stp = & (screen.text[row][col]);
   w1 = DELIMIT_TEXT (*stp);
 
-  if (selection_style != NEW_SELECT)
-    {
-      if (w1 == 1)
-        {
-          stp += dirnadd;
-          if (DELIMIT_TEXT (*stp) == 1)
-            goto Old_Word_Selection_You_Die;
-          col += dirnadd;
-        }
-      w1 = 0;
-    }
   srp = (&screen.rend[row][col]);
   w2 = DELIMIT_REND (*srp);
 
@@ -3008,24 +2997,33 @@ rxvt_term::selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, r
       for (; col != bound.col; col += dirnadd)
         {
           stp += dirnadd;
+          srp += dirnadd;
+
+          if (*stp == NOCHAR)
+            continue;
+
           if (DELIMIT_TEXT (*stp) != w1)
             break;
-          srp += dirnadd;
           if (DELIMIT_REND (*srp) != w2)
             break;
         }
+
       if ((col == bound.col) && (row != bound.row))
         {
           if (screen.tlen[ (row - (dirn == UP ? 1 : 0))] == -1)
             {
               trow = row + dirnadd;
               tcol = dirn == UP ? TermWin.ncol - 1 : 0;
+
               if (screen.text[trow] == NULL)
                 break;
+
               stp = & (screen.text[trow][tcol]);
               srp = & (screen.rend[trow][tcol]);
+
               if (DELIMIT_TEXT (*stp) != w1 || DELIMIT_REND (*srp) != w2)
                 break;
+
               row = trow;
               col = tcol;
               continue;
@@ -3033,6 +3031,7 @@ rxvt_term::selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, r
         }
       break;
     }
+
 Old_Word_Selection_You_Die:
   D_SELECT ((stderr, "rxvt_selection_delimit_word (%s,...) @ (r:%3d, c:%3d) has boundary (r:%3d, c:%3d)", (dirn == UP ? "up     " : "down"), mark->row, mark->col, row - TermWin.saveLines, col));
 
@@ -3064,29 +3063,25 @@ rxvt_term::selection_extend (int x, int y, int flag)
   MAX_IT (col, 0);
   MIN_IT (col, (int)TermWin.ncol);
 
-#ifndef NO_NEW_SELECTION
   /*
   * If we're selecting characters (single click) then we must check first
   * if we are at the same place as the original mark.  If we are then
   * select nothing.  Otherwise, if we're to the right of the mark, you have to
   * be _past_ a character for it to be selected.
   */
-  if (selection_style != OLD_SELECT)
+  if (((selection.clicks % 3) == 1) && !flag
+      && (col == selection.mark.col
+          && (row == selection.mark.row + TermWin.view_start)))
     {
-      if (((selection.clicks % 3) == 1) && !flag
-          && (col == selection.mark.col
-              && (row == selection.mark.row + TermWin.view_start)))
-        {
-          /* select nothing */
-          selection.beg.row = selection.end.row = 0;
-          selection.beg.col = selection.end.col = 0;
-          selection.clicks = 4;
-          want_refresh = 1;
-          D_SELECT ((stderr, "rxvt_selection_extend () selection.clicks = 4"));
-          return;
-        }
+      /* select nothing */
+      selection.beg.row = selection.end.row = 0;
+      selection.beg.col = selection.end.col = 0;
+      selection.clicks = 4;
+      want_refresh = 1;
+      D_SELECT ((stderr, "rxvt_selection_extend () selection.clicks = 4"));
+      return;
     }
-#endif
+
   if (selection.clicks == 4)
     selection.clicks = 1;
 
@@ -3150,67 +3145,6 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
 
   pos.row -= TermWin.view_start;   /* adjust for scroll */
 
-#ifndef NO_OLD_SELECTION
-  /*
-   * This mimics some of the selection behaviour of version 2.20 and before.
-   * There are no ``selection modes'', button3 is always character extension.
-   * Note: button3 drag is always available, c.f. v2.20
-   * Selection always terminates (left or right as appropriate) at the mark.
-   */
-  if (selection_style == OLD_SELECT)
-    {
-      if (selection.clicks == 1 || button3)
-        {
-          if (hate_those_clicks)
-            {
-              hate_those_clicks = 0;
-              if (selection.clicks == 1)
-                {
-                  selection.beg.row = selection.mark.row;
-                  selection.beg.col = selection.mark.col;
-                }
-              else
-                {
-                  selection.mark.row = selection.beg.row;
-                  selection.mark.col = selection.beg.col;
-                }
-            }
-          if (ROWCOL_IS_BEFORE (pos, selection.mark))
-            {
-              selection.end.row = selection.mark.row;
-              selection.end.col = selection.mark.col + 1;
-              selection.beg.row = pos.row;
-              selection.beg.col = pos.col;
-            }
-          else
-            {
-              selection.beg.row = selection.mark.row;
-              selection.beg.col = selection.mark.col;
-              selection.end.row = pos.row;
-              selection.end.col = pos.col + 1;
-            }
-        }
-      else if (selection.clicks == 2)
-        {
-          selection_delimit_word (UP, & (selection.mark),
-                                  & (selection.beg));
-          selection_delimit_word (DN, & (selection.mark),
-                                  & (selection.end));
-          hate_those_clicks = 1;
-        }
-      else if (selection.clicks == 3)
-        {
-          selection.beg.row = selection.end.row = selection.mark.row;
-          selection.beg.col = 0;
-          selection.end.col = ncol;
-          hate_those_clicks = 1;
-        }
-      D_SELECT ((stderr, "rxvt_selection_extend_colrow () EXIT b: (r:%d,c:%d) m: (r:%d,c:%d), e: (r:%d,c:%d)", selection.beg.row, selection.beg.col, selection.mark.row, selection.mark.col, selection.end.row, selection.end.col));
-      return;
-    }
-#endif                          /* ! NO_OLD_SELECTION */
-#ifndef NO_NEW_SELECTION
-  /* selection_style must not be OLD_SELECT to get here */
   /*
    * This is mainly xterm style selection with a couple of differences, mainly
    * in the way button3 drag extension works.
@@ -3225,7 +3159,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
    *     time of the most recent button3 press
    */
   if (button3 && buttonpress)
-    {       /* button3 press */
+    { /* button3 press */
       /*
        * first determine which edge of the selection we are closest to
        */
@@ -3236,13 +3170,13 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
                   < ((selection.end.col - pos.col)
                      + ((selection.end.row - pos.row) * ncol)))))
         closeto = LEFT;
+
       if (closeto == LEFT)
         {
           selection.beg.row = pos.row;
           selection.beg.col = pos.col;
           selection.mark.row = selection.end.row;
-          selection.mark.col = selection.end.col
-                               - (selection.clicks == 2);
+          selection.mark.col = selection.end.col - (selection.clicks == 2);
         }
       else
         {
@@ -3253,18 +3187,18 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
         }
     }
   else
-    {                    /* button1 drag or button3 drag */
+    { /* button1 drag or button3 drag */
       if (ROWCOL_IS_AFTER (selection.mark, pos))
         {
           if ((selection.mark.row == selection.end.row)
               && (selection.mark.col == selection.end.col)
               && clickchange && selection.clicks == 2)
             selection.mark.col--;
+
           selection.beg.row = pos.row;
           selection.beg.col = pos.col;
           selection.end.row = selection.mark.row;
-          selection.end.col = selection.mark.col
-                              + (selection.clicks == 2);
+          selection.end.col = selection.mark.col + (selection.clicks == 2);
         }
       else
         {
@@ -3278,6 +3212,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
   if (selection.clicks == 1)
     {
       end_col = screen.tlen[selection.beg.row + TermWin.saveLines];
+
       if (end_col != -1 && selection.beg.col > end_col)
         {
 #if 1
@@ -3288,37 +3223,35 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
           else
             selection.beg.col = selection.mark.col;
 #endif
-
         }
+
       end_col = screen.tlen[selection.end.row + TermWin.saveLines];
+
       if (end_col != -1 && selection.end.col > end_col)
         selection.end.col = ncol;
-
     }
   else if (selection.clicks == 2)
     {
       if (ROWCOL_IS_AFTER (selection.end, selection.beg))
         selection.end.col--;
-      selection_delimit_word (UP, & (selection.beg),
-                              & (selection.beg));
-      selection_delimit_word (DN, & (selection.end),
-                              & (selection.end));
+
+      selection_delimit_word (UP, & (selection.beg), & (selection.beg));
+      selection_delimit_word (DN, & (selection.end), & (selection.end));
     }
   else if (selection.clicks == 3)
     {
 #ifndef NO_FRILLS
       if ((Options & Opt_tripleclickwords))
         {
-          int             end_row;
+          int end_row;
 
-          selection_delimit_word (UP, & (selection.beg),
-                                  & (selection.beg));
-          end_row = screen.tlen[selection.mark.row
-                                + TermWin.saveLines];
-          for (end_row = selection.mark.row; end_row < TermWin.nrow;
-               end_row++)
+          selection_delimit_word (UP, & (selection.beg), & (selection.beg));
+          end_row = screen.tlen[selection.mark.row + TermWin.saveLines];
+
+          for (end_row = selection.mark.row; end_row < TermWin.nrow; end_row++)
             {
               end_col = screen.tlen[end_row + TermWin.saveLines];
+
               if (end_col != -1)
                 {
                   selection.end.row = end_row;
@@ -3330,7 +3263,6 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
         }
       else
 #endif
-
         {
           if (ROWCOL_IS_AFTER (selection.mark, selection.beg))
             selection.mark.col++;
@@ -3338,8 +3270,9 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
           selection.end.col = ncol;
         }
     }
+
   if (button3 && buttonpress)
-    {       /* mark may need to be changed */
+    { /* mark may need to be changed */
       if (closeto == LEFT)
         {
           selection.mark.row = selection.end.row;
@@ -3353,7 +3286,6 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
         }
     }
   D_SELECT ((stderr, "rxvt_selection_extend_colrow () EXIT b: (r:%d,c:%d) m: (r:%d,c:%d), e: (r:%d,c:%d)", selection.beg.row, selection.beg.col, selection.mark.row, selection.mark.col, selection.end.row, selection.end.col));
-#endif                          /* ! NO_NEW_SELECTION */
 }
 
 #ifndef NO_FRILLS

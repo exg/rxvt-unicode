@@ -2900,7 +2900,7 @@ static const uint16_t jis0208_1983_0_t_m[] = {
 };
 
 struct rxvt_codeset_conv_jis0208_1983_0 : rxvt_codeset_conv {
-  uint32_t from_unicode (uint32_t unicode) const {
+  uint32_t from_unicode (unicode_t unicode) const {
     if (unicode == 0x2312) return 0x225e;
     uint8_t  l = unicode;
     uint16_t h = unicode >> 8;
@@ -2912,7 +2912,7 @@ struct rxvt_codeset_conv_jis0208_1983_0 : rxvt_codeset_conv {
              : NOCHAR;
     return NOCHAR;
   }
-  uint32_t to_unicode (uint32_t enc) const {
+  unicode_t to_unicode (uint32_t enc) const {
     if (enc <= 0x2421 && 0x2473 <= enc) return enc + 0x0c20;
     if (enc <= 0x2521 && 0x2576 <= enc) return enc + 0x0b80;
     uint8_t  l = enc;
