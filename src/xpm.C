@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xpm.c
  *----------------------------------------------------------------------*
- * $Id: xpm.C,v 1.9 2004/02/13 12:16:21 pcg Exp $
+ * $Id: xpm.C,v 1.10 2004/03/17 03:47:14 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1997      Carsten Haitzler <raster@zip.com.au>
@@ -377,17 +377,18 @@ rxvt_term::set_bgPixmap (const char *file)
                                  &bgPixmap.pixmap, NULL,
                                  &xpmAttr))
         {
-          char           *p;
+          char *p;
 
           /* semi-colon delimited */
           if ((p = STRCHR (file, ';')) == NULL)
             p = STRCHR (file, '\0');
 
-          rxvt_print_error ("couldn't load XPM file \"%.*s\"", (p - file),
-                           file);
+          rxvt_warn ("couldn't load XPM file \"%.*s\", ignoring.", (p - file), file);
         }
+
       free (f);
     }
+
   resize_pixmap ();
   return bgPixmap.pixmap;
 }

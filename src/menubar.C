@@ -1848,7 +1848,7 @@ rxvt_term::menubar_dispatch (char *str)
                 if (name == NULL || str == NULL || str <= (name + 1)
                     || (name > path && name[-1] != '/'))
                   {
-                    rxvt_print_error ("menu error <%s>\n", path);
+                    rxvt_warn ("menu error A<%s>, continuing.\n", path);
                     break;
                   }
                 if (str[1] == MENUITEM_BEG)
@@ -1858,7 +1858,7 @@ rxvt_term::menubar_dispatch (char *str)
 
                     if (str == NULL)
                       {
-                        rxvt_print_error ("menu error <%s>\n", path);
+                        rxvt_warn ("menu error B<%s>, continuing.\n", path);
                         break;
                       }
                     name2[-2] = '\0';	/* remove prev MENUITEM_END */

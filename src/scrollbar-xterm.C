@@ -46,10 +46,8 @@ rxvt_term::scrollbar_show_xterm (int update __attribute__ ((unused)), int last_t
                                               (char *)x_stp_bits, x_stp_width,
                                               x_stp_height);
       if (!gcvalue.stipple)
-        {
-          rxvt_print_error ("can't create bitmap");
-          exit (EXIT_FAILURE);
-        }
+        rxvt_fatal ("can't create bitmap");
+
       gcvalue.fill_style = FillOpaqueStippled;
       gcvalue.foreground = PixColors[Color_fg];
       gcvalue.background = PixColors[Color_bg];

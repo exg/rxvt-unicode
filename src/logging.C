@@ -83,7 +83,7 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
 #endif
   else if (STRNCMP (pty, "pty", 3) && STRNCMP (pty, "tty", 3))
     {
-      rxvt_print_error ("can't parse tty name \"%s\"", pty);
+      rxvt_warn ("can't parse tty name \"%s\", not adding utmp entry.\n", pty);
       return;
     }
 
@@ -405,9 +405,10 @@ rxvt_update_lastlog (const char *fname, const char *pty, const char *host)
   pwent = getpwuid (getuid ());
   if (!pwent)
     {
-      rxvt_print_error ("no entry in password file");
+      rxvt_warn ("no entry in password file, not updating lastlog.\n");
       return;
     }
+
   MEMSET (&ll, 0, sizeof (ll));
   ll.ll_time = time (NULL);
   STRNCPY (ll.ll_line, pty, sizeof (ll.ll_line));
