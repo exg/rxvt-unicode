@@ -2,17 +2,33 @@ Lines marked with "xterm:" indicate either xterm features ported to rxvt
 or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
-TODO: settable ressource for input method fonts
 TODO: read property sequence is broken with respect to utf-8 etc.
-WISH; line-rewrapping on resize
-WISH: just for fun, do shade and tint with XRender.
-WISH: hotkey font resizing
+WISH: keyboard modification via esc-sequences.
+WISH: line-rewrapping on resize
+WISH: hotkey font resizing (possible via keymaps)
 WISH: searchable backlog
 WISH: meta-tagging of data by regex (my dream project)
-WISH: triple-click == select full output line
 WISH: double-click: more intelligent (urls etc.)
 WISH: OnTheSpot editing.
 WISH: tabbed windows (hey, just use screen...)
+WISH: just for fun, do shade and tint with XRender.
+
+4.9  Thu Feb  3 09:52:03 CET 2005
+        - nuke out utmp entries completely. Should be fixed in
+          original rxvt, too. (reported by James Michael Fultz).
+        - resizes wil now correctly refresh the displayed text when
+          -pixmap is active.
+        - new option/resource imFont.
+        - document --tripleclickwords/-tcw.
+        - select logical instead of physical lines when doing a triple-click.
+        - reordered help listing to group similar options together.
+        - handle SIGINT the same way as SIGTERM (reported by Joël Riou).
+        - fix a bug introduced while applying the keyboard patch
+          (WU Fengguang).
+        - document all window-op sequences (rxvt.7.) and more keysym
+          examples (rxvt.1).
+        - removed src/test completely.
+        - renamed keysym 'proto:'-prefix to 'command:'.
 
 4.8  Tue Jan 18 02:23:57 CET 2005
         - added a patch by WU Fengguang that makes the keyboard
