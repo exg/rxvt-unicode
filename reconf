@@ -3,7 +3,6 @@
 # this is the configure script I use. It represents most of the features I
 # support and is a good baseline :)
 
-CXX=ccache\ g++-3.4 \
 ./configure --prefix=/opt/rxvt --enable-utmp \
             --enable-wtmp --enable-lastlog --disable-strings --enable-xim \
             --disable-keepscrolling --enable-xft --enable-mousewheel \
