@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.16 2003/12/18 07:31:19 pcg Exp $
+ * $Id: main.C,v 1.17 2003/12/18 13:33:02 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -218,7 +218,7 @@ rxvt_term::init (int argc, const char *const *argv)
     scrollBar.setIdle ();    /* set existence for size calculations */
 #endif
 
-  rxvt_Create_Windows (this, argc, argv);
+  create_windows (argc, argv);
 
   init_xlocale ();
 
@@ -235,7 +235,7 @@ rxvt_term::init (int argc, const char *const *argv)
 
 #ifdef HAVE_SCROLLBARS
   if (Options & Opt_scrollBar)
-    rxvt_Resize_scrollBar (this);      /* create and map scrollbar */
+    resize_scrollbar ();      /* create and map scrollbar */
 #endif
 #if (MENUBAR_MAX)
   if (menubar_visible(r))
@@ -523,9 +523,8 @@ rxvt_privileged_ttydev(pR_ char action)
  * window size/position calculcations for XSizeHint and other storage.
  * if width/height are non-zero then override calculated width/height
  */
-/* EXTPROTO */
 void
-rxvt_window_calc(pR_ unsigned int width, unsigned int height)
+rxvt_term::window_calc (unsigned int width, unsigned int height)
 {
     short           recalc_x, recalc_y;
     int             x, y, sb_w, mb_h, flags;
@@ -533,101 +532,101 @@ rxvt_window_calc(pR_ unsigned int width, unsigned int height)
     unsigned int    max_width, max_height;
 
     D_SIZE((stderr, "< Cols/Rows: %3d x %3d ; Width/Height: %4d x %4d",
-            R->TermWin.ncol, R->TermWin.nrow, R->szHint.width,
-            R->szHint.height));
-    R->szHint.flags = PMinSize | PResizeInc | PBaseSize | PWinGravity;
-    R->szHint.win_gravity = NorthWestGravity;
-/* R->szHint.min_aspect.x = R->szHint.min_aspect.y = 1; */
+            TermWin.ncol, TermWin.nrow, szHint.width,
+            szHint.height));
+    szHint.flags = PMinSize | PResizeInc | PBaseSize | PWinGravity;
+    szHint.win_gravity = NorthWestGravity;
+/* szHint.min_aspect.x = szHint.min_aspect.y = 1; */
 
     recalc_x = recalc_y = 0;
     flags = 0;
-    if (!R->parsed_geometry) {
-        R->parsed_geometry = 1;
-        if (R->rs[Rs_geometry])
-            flags = XParseGeometry(R->rs[Rs_geometry], &x, &y, &w, &h);
+    if (!parsed_geometry) {
+        parsed_geometry = 1;
+        if (rs[Rs_geometry])
+            flags = XParseGeometry(rs[Rs_geometry], &x, &y, &w, &h);
         if (flags & WidthValue) {
-            R->TermWin.ncol = BOUND_POSITIVE_INT16(w);
-            R->szHint.flags |= USSize;
+            TermWin.ncol = BOUND_POSITIVE_INT16(w);
+            szHint.flags |= USSize;
         }
         if (flags & HeightValue) {
-            R->TermWin.nrow = BOUND_POSITIVE_INT16(h);
-            R->szHint.flags |= USSize;
+            TermWin.nrow = BOUND_POSITIVE_INT16(h);
+            szHint.flags |= USSize;
         }
         if (flags & XValue) {
-            R->szHint.x = x;
-            R->szHint.flags |= USPosition;
+            szHint.x = x;
+            szHint.flags |= USPosition;
             if (flags & XNegative) {
                 recalc_x = 1;
-                R->szHint.win_gravity = NorthEastGravity;
+                szHint.win_gravity = NorthEastGravity;
             }
         }
         if (flags & YValue) {
-            R->szHint.y = y;
-            R->szHint.flags |= USPosition;
+            szHint.y = y;
+            szHint.flags |= USPosition;
             if (flags & YNegative) {
                 recalc_y = 1;
-                if (R->szHint.win_gravity == NorthEastGravity)
-                    R->szHint.win_gravity = SouthEastGravity;
+                if (szHint.win_gravity == NorthEastGravity)
+                    szHint.win_gravity = SouthEastGravity;
                 else
-                    R->szHint.win_gravity = SouthWestGravity;
+                    szHint.win_gravity = SouthWestGravity;
             }
         }
     }
 /* TODO: BOUNDS */
-    R->TermWin.width = R->TermWin.ncol * R->TermWin.fwidth;
-    R->TermWin.height = R->TermWin.nrow * R->TermWin.fheight;
-    max_width = MAX_COLS * R->TermWin.fwidth;
-    max_height = MAX_ROWS * R->TermWin.fheight;
+    TermWin.width = TermWin.ncol * TermWin.fwidth;
+    TermWin.height = TermWin.nrow * TermWin.fheight;
+    max_width = MAX_COLS * TermWin.fwidth;
+    max_height = MAX_ROWS * TermWin.fheight;
 
-    R->szHint.base_width = R->szHint.base_height = 2 * R->TermWin.int_bwidth;
+    szHint.base_width = szHint.base_height = 2 * TermWin.int_bwidth;
 
     sb_w = mb_h = 0;
-    R->window_vt_x = R->window_vt_y = 0;
-    if (scrollbar_visible(R)) {
+    window_vt_x = window_vt_y = 0;
+    if (scrollbar_visible (this)) {
         sb_w = scrollbar_TotalWidth();
-        R->szHint.base_width += sb_w;
-        if (!(R->Options & Opt_scrollBar_right))
-            R->window_vt_x = sb_w;
+        szHint.base_width += sb_w;
+        if (!(Options & Opt_scrollBar_right))
+            window_vt_x = sb_w;
     }
-    if (menubar_visible(R)) {
+    if (menubar_visible (this)) {
         mb_h = menuBar_TotalHeight();
-        R->szHint.base_height += mb_h;
-        R->window_vt_y = mb_h;
+        szHint.base_height += mb_h;
+        window_vt_y = mb_h;
     }
-    R->szHint.width_inc = R->TermWin.fwidth;
-    R->szHint.height_inc = R->TermWin.fheight;
-    R->szHint.min_width = R->szHint.base_width + R->szHint.width_inc;
-    R->szHint.min_height = R->szHint.base_height + R->szHint.height_inc;
+    szHint.width_inc = TermWin.fwidth;
+    szHint.height_inc = TermWin.fheight;
+    szHint.min_width = szHint.base_width + szHint.width_inc;
+    szHint.min_height = szHint.base_height + szHint.height_inc;
 
-    if (width && width - R->szHint.base_width < max_width) {
-        R->szHint.width = width;
-        R->TermWin.width = width - R->szHint.base_width;
+    if (width && width - szHint.base_width < max_width) {
+        szHint.width = width;
+        TermWin.width = width - szHint.base_width;
     } else {
-        MIN_IT(R->TermWin.width, max_width);
-        R->szHint.width = R->szHint.base_width + R->TermWin.width;
+        MIN_IT(TermWin.width, max_width);
+        szHint.width = szHint.base_width + TermWin.width;
     }
-    if (height && height - R->szHint.base_height < max_height) {
-        R->szHint.height = height;
-        R->TermWin.height = height - R->szHint.base_height;
+    if (height && height - szHint.base_height < max_height) {
+        szHint.height = height;
+        TermWin.height = height - szHint.base_height;
     } else {
-        MIN_IT(R->TermWin.height, max_height);
-        R->szHint.height = R->szHint.base_height + R->TermWin.height;
+        MIN_IT(TermWin.height, max_height);
+        szHint.height = szHint.base_height + TermWin.height;
     }
-    if (scrollbar_visible(R) && (R->Options & Opt_scrollBar_right))
-        R->window_sb_x = R->szHint.width - sb_w;
+    if (scrollbar_visible (this) && (Options & Opt_scrollBar_right))
+        window_sb_x = szHint.width - sb_w;
 
     if (recalc_x)
-        R->szHint.x += (DisplayWidth(R->Xdisplay, Xscreen)
-                        - R->szHint.width - 2 * R->TermWin.ext_bwidth);
+        szHint.x += (DisplayWidth (Xdisplay, DefaultScreen (Xdisplay))
+                        - szHint.width - 2 * TermWin.ext_bwidth);
     if (recalc_y)
-        R->szHint.y += (DisplayHeight(R->Xdisplay, Xscreen)
-                        - R->szHint.height - 2 * R->TermWin.ext_bwidth);
+        szHint.y += (DisplayHeight (Xdisplay, DefaultScreen (Xdisplay))
+                        - szHint.height - 2 * TermWin.ext_bwidth);
 
-    R->TermWin.ncol = R->TermWin.width / R->TermWin.fwidth;
-    R->TermWin.nrow = R->TermWin.height / R->TermWin.fheight;
+    TermWin.ncol = TermWin.width / TermWin.fwidth;
+    TermWin.nrow = TermWin.height / TermWin.fheight;
     D_SIZE((stderr, "> Cols/Rows: %3d x %3d ; Width/Height: %4d x %4d",
-            R->TermWin.ncol, R->TermWin.nrow, R->szHint.width,
-            R->szHint.height));
+            TermWin.ncol, TermWin.nrow, szHint.width,
+            szHint.height));
     return;
 }
 
@@ -866,112 +865,118 @@ rxvt_rXParseAllocColor(pR_ rxvt_color * screen_in_out, const char *colour)
 /* -------------------------------------------------------------------- *
  * -                         WINDOW RESIZING                          - *
  * -------------------------------------------------------------------- */
-/* EXTPROTO */
 void
-rxvt_resize_all_windows(pR_ unsigned int width, unsigned int height,
-                        int ignoreparent)
+rxvt_term::resize_all_windows (unsigned int width, unsigned int height, int ignoreparent)
 {
-    int             fix_screen;
+  int fix_screen;
 
 #ifdef SMART_RESIZE
-    int             old_width = R->szHint.width, old_height = R->szHint.height;
+  int old_width = szHint.width, old_height = szHint.height;
 #endif
 
-    rxvt_window_calc(aR_ width, height);
-    XSetWMNormalHints(R->Xdisplay, R->TermWin.parent[0], &R->szHint);
-    if (!ignoreparent) {
+  window_calc (width, height);
+  XSetWMNormalHints (Xdisplay, TermWin.parent[0], &szHint);
+  if (!ignoreparent)
+    {
 #ifdef SMART_RESIZE
-/*
- * resize by Marius Gedminas <marius.gedminas@uosis.mif.vu.lt>
- * reposition window on resize depending on placement on screen
- */
-        int             x, y, x1, y1;
-        int             dx, dy;
-        unsigned int    unused_w1, unused_h1, unused_b1, unused_d1;
-        Window          unused_cr;
+      /*
+       * resize by Marius Gedminas <marius.gedminas@uosis.mif.vu.lt>
+       * reposition window on resize depending on placement on screen
+       */
+      int x, y, x1, y1;
+      int dx, dy;
+      unsigned int unused_w1, unused_h1, unused_b1, unused_d1;
+      Window unused_cr;
 
-        XTranslateCoordinates(R->Xdisplay, R->TermWin.parent[0], Xroot,
-                              0, 0, &x, &y, &unused_cr);
-        XGetGeometry(R->Xdisplay, R->TermWin.parent[0], &unused_cr, &x1, &y1,
-                     &unused_w1, &unused_h1, &unused_b1, &unused_d1);
-    /*
-     * if Xroot isn't the parent window, a WM will probably have offset
-     * our position for handles and decorations.  Counter it
-     */
-        if (x1 != x || y1 != y) {
-            x -= x1;
-            y -= y1;
-        }
+      XTranslateCoordinates (Xdisplay, TermWin.parent[0], Xroot,
+                             0, 0, &x, &y, &unused_cr);
+      XGetGeometry (Xdisplay, TermWin.parent[0], &unused_cr, &x1, &y1,
+                    &unused_w1, &unused_h1, &unused_b1, &unused_d1);
+      /*
+       * if Xroot isn't the parent window, a WM will probably have offset
+       * our position for handles and decorations.  Counter it
+       */
+      if (x1 != x || y1 != y) {
+          x -= x1;
+          y -= y1;
+      }
 
-        x1 = (DisplayWidth(R->Xdisplay, Xscreen) - old_width) / 2;
-        y1 = (DisplayHeight(R->Xdisplay, Xscreen) - old_height) / 2;
-        dx = old_width - R->szHint.width;
-        dy = old_height - R->szHint.height;
+      x1 = (DisplayWidth (Xdisplay, Xscreen) - old_width) / 2;
+      y1 = (DisplayHeight (Xdisplay, Xscreen) - old_height) / 2;
+      dx = old_width - szHint.width;
+      dy = old_height - szHint.height;
 
-    /* Check position of the center of the window */
-        if (x < x1)             /* left half */
-            dx = 0;
-        else if (x == x1)       /* exact center */
-            dx /= 2;
-        if (y < y1)             /* top half */
-            dy = 0;
-        else if (y == y1)       /* exact center */
-            dy /= 2;
+  /* Check position of the center of the window */
+      if (x < x1)             /* left half */
+          dx = 0;
+      else if (x == x1)       /* exact center */
+          dx /= 2;
+      if (y < y1)             /* top half */
+          dy = 0;
+      else if (y == y1)       /* exact center */
+          dy /= 2;
 
-        XMoveResizeWindow(R->Xdisplay, R->TermWin.parent[0], x + dx, y + dy,
-                          R->szHint.width, R->szHint.height);
+      XMoveResizeWindow (Xdisplay, TermWin.parent[0], x + dx, y + dy,
+                         szHint.width, szHint.height);
 #else
-        XResizeWindow(R->Xdisplay, R->TermWin.parent[0], R->szHint.width,
-                      R->szHint.height);
+      XResizeWindow (Xdisplay, TermWin.parent[0], szHint.width,
+                     szHint.height);
 #endif
     }
 
-    fix_screen = (R->TermWin.ncol != R->prev_ncol
-                  || R->TermWin.nrow != R->prev_nrow);
-    if (fix_screen || width != R->old_width || height != R->old_height) {
-        if (scrollbar_visible(R)) {
-            XMoveResizeWindow(R->Xdisplay, R->scrollBar.win, R->window_sb_x,
-                              0, scrollbar_TotalWidth(), R->szHint.height);
-            rxvt_Resize_scrollBar(aR);
+  fix_screen = (TermWin.ncol != prev_ncol
+                || TermWin.nrow != prev_nrow);
+
+  if (fix_screen || width != old_width || height != old_height)
+    {
+      if (scrollbar_visible (this))
+        {
+          XMoveResizeWindow (Xdisplay, scrollBar.win, window_sb_x,
+                             0, scrollbar_TotalWidth (), szHint.height);
+          resize_scrollbar ();
         }
-        if (menubar_visible(R))
-            XMoveResizeWindow(R->Xdisplay, R->menuBar.win, R->window_vt_x,
-                              0, TermWin_TotalWidth(), menuBar_TotalHeight());
-        XMoveResizeWindow(R->Xdisplay, R->TermWin.vt, R->window_vt_x,
-                          R->window_vt_y, TermWin_TotalWidth(),
-                          TermWin_TotalHeight());
+
+      if (menubar_visible (this))
+        XMoveResizeWindow (Xdisplay, menuBar.win, window_vt_x,
+                           0, TermWin_TotalWidth (), menuBar_TotalHeight ());
+
+      XMoveResizeWindow (Xdisplay, TermWin.vt, window_vt_x,
+                         window_vt_y, TermWin_TotalWidth (),
+                         TermWin_TotalHeight ());
 #ifdef RXVT_GRAPHICS
-        if (R->old_height)
-            rxvt_Gr_Resize(aR_ R->old_width - R->szHint.base_width,
-                           R->old_height - R->szHint.base_height);
+      if (old_height)
+        rxvt_Gr_Resize (this, old_width - szHint.base_width,
+                        old_height - szHint.base_height);
 #endif
-        rxvt_scr_clear(aR);
+      scr_clear ();
 #ifdef XPM_BACKGROUND
-        rxvt_resize_pixmap(aR);
+      rxvt_resize_pixmap (this);
 #endif
     }
 
-    if (fix_screen || R->old_height == 0) {
-        int             curr_screen = -1;
-        uint16_t        old_ncol = R->prev_ncol;
+  if (fix_screen || old_height == 0)
+    {
+      int curr_screen = -1;
+      uint16_t old_ncol = prev_ncol;
 
-    /* scr_reset only works on the primary screen */
-        if (R->old_height)      /* this is not the first time through */
-            curr_screen = rxvt_scr_change_screen(aR_ PRIMARY);
+      /* scr_reset only works on the primary screen */
+      if (old_height)      /* this is not the first time through */
+        curr_screen = rxvt_scr_change_screen (this, PRIMARY);
 
-        R->scr_reset();
+      scr_reset();
 
-        if (curr_screen >= 0) { /* this is not the first time through */
-            rxvt_scr_change_screen(aR_ curr_screen);
-            rxvt_selection_check(aR_(old_ncol != R->TermWin.ncol ? 4 : 0));
+      if (curr_screen >= 0) /* this is not the first time through */
+        {
+          rxvt_scr_change_screen (this, curr_screen);
+          rxvt_selection_check (this, old_ncol != TermWin.ncol ? 4 : 0);
         }
     }
 
-    R->old_width = R->szHint.width;
-    R->old_height = R->szHint.height;
+  old_width = szHint.width;
+  old_height = szHint.height;
 
 #ifdef USE_XIM
-    rxvt_IMSetStatusPosition(aR);
+  rxvt_IMSetStatusPosition (this);
 #endif
 }
 
@@ -995,7 +1000,7 @@ rxvt_set_widthheight(pR_ unsigned int width, unsigned int height)
     if (width != R->TermWin.width || height != R->TermWin.height) {
         width += R->szHint.base_width;
         height += R->szHint.base_height;
-        rxvt_resize_all_windows(aR_ width, height, 0);
+        R->resize_all_windows (width, height, 0);
     }
 }
 
@@ -1003,22 +1008,20 @@ rxvt_set_widthheight(pR_ unsigned int width, unsigned int height)
  * -                      X INPUT METHOD ROUTINES                     - *
  * -------------------------------------------------------------------- */
 #ifdef USE_XIM
-/* INTPROTO */
 void
-rxvt_setSize(pR_ XRectangle * size)
+rxvt_term::set_size (XRectangle *size)
 {
-    size->x = R->TermWin.int_bwidth;
-    size->y = R->TermWin.int_bwidth;
-    size->width = Width2Pixel(R->TermWin.ncol);
-    size->height = Height2Pixel(R->TermWin.nrow);
+  size->x = TermWin.int_bwidth;
+  size->y = TermWin.int_bwidth;
+  size->width = Width2Pixel(TermWin.ncol);
+  size->height = Height2Pixel(TermWin.nrow);
 }
 
-/* INTPROTO */
 void
-rxvt_setColor(pR_ unsigned long *fg, unsigned long *bg)
+rxvt_term::set_color (unsigned long *fg, unsigned long *bg)
 {
-    *fg = R->PixColors[Color_fg];
-    *bg = R->PixColors[Color_bg];
+  *fg = PixColors[Color_fg];
+  *bg = PixColors[Color_bg];
 }
 
 /* Checking whether input method is running. */
@@ -1063,38 +1066,36 @@ rxvt_IMSendSpot(pR)
         || !rxvt_IMisRunning(aR))
         return;
 
-    rxvt_setPosition(aR_ & spot);
+    R->set_position (&spot);
 
     preedit_attr = XVaCreateNestedList(0, XNSpotLocation, &spot, NULL);
     XSetICValues(R->Input_Context, XNPreeditAttributes, preedit_attr, NULL);
     XFree(preedit_attr);
 }
 
-/* INTPROTO */
 void
-rxvt_setPreeditArea (pR_ XRectangle * preedit_rect, XRectangle * status_rect,
-                     XRectangle * needed_rect)
+rxvt_term::set_preedit_area (XRectangle * preedit_rect, XRectangle * status_rect,
+                             XRectangle * needed_rect)
 {
-    int             mbh, vtx = 0;
+  int mbh, vtx = 0;
 
-    if (scrollbar_visible(R) && !(R->Options & Opt_scrollBar_right))
-        vtx = scrollbar_TotalWidth();
-    mbh = menubar_visible(R) ? menuBar_TotalHeight() : 0;
-    mbh -= R->TermWin.lineSpace;
+  if (scrollbar_visible (this) && !(Options & Opt_scrollBar_right))
+    vtx = scrollbar_TotalWidth();
 
-    preedit_rect->x = needed_rect->width + vtx;
-    preedit_rect->y = Height2Pixel(R->TermWin.nrow - 1) + mbh;
+  mbh = menubar_visible (this) ? menuBar_TotalHeight() : 0;
+  mbh -= TermWin.lineSpace;
 
-    preedit_rect->width = Width2Pixel(R->TermWin.ncol + 1) - needed_rect->width
-        + vtx;
-    preedit_rect->height = Height2Pixel(1);
+  preedit_rect->x = needed_rect->width + vtx;
+  preedit_rect->y = Height2Pixel(TermWin.nrow - 1) + mbh;
 
-    status_rect->x = vtx;
-    status_rect->y = Height2Pixel(R->TermWin.nrow - 1) + mbh;
+  preedit_rect->width = Width2Pixel(TermWin.ncol + 1) - needed_rect->width + vtx;
+  preedit_rect->height = Height2Pixel(1);
 
-    status_rect->width = needed_rect->width ? needed_rect->width
-        : Width2Pixel(R->TermWin.ncol + 1);
-    status_rect->height = Height2Pixel(1);
+  status_rect->x = vtx;
+  status_rect->y = Height2Pixel(TermWin.nrow - 1) + mbh;
+
+  status_rect->width = needed_rect->width ? needed_rect->width : Width2Pixel(TermWin.ncol + 1);
+  status_rect->height = Height2Pixel(1);
 }
 
 /* ARGSUSED */
@@ -1178,9 +1179,9 @@ rxvt_IM_get_IC (pR)
     preedit_attr = status_attr = NULL;
 
     if (R->input_style & XIMPreeditPosition) {
-        rxvt_setSize(aR_ & rect);
-        rxvt_setPosition(aR_ & spot);
-        rxvt_setColor(aR_ & fg, &bg);
+        R->set_size (&rect);
+        R->set_position (&spot);
+        R->set_color (&fg, &bg);
 
         preedit_attr = XVaCreateNestedList(0, XNArea, &rect,
                                            XNSpotLocation, &spot,
@@ -1188,7 +1189,7 @@ rxvt_IM_get_IC (pR)
                                        //XNFontSet, R->TermWin.fontset,
                                            NULL);
     } else if (R->input_style & XIMPreeditArea) {
-        rxvt_setColor(aR_ & fg, &bg);
+        R->set_color (&fg, &bg);
 
     /*
      * The necessary width of preedit area is unknown
@@ -1196,7 +1197,7 @@ rxvt_IM_get_IC (pR)
      */
         needed_rect.width = 0;
 
-        rxvt_setPreeditArea(aR_ & rect, &status_rect, &needed_rect);
+        R->set_preedit_area(&rect, &status_rect, &needed_rect);
 
         preedit_attr = XVaCreateNestedList(0, XNArea, &rect,
                                            XNForeground, fg, XNBackground, bg,
@@ -1321,7 +1322,7 @@ rxvt_IMSetStatusPosition(pR)
     XGetICValues(R->Input_Context, XNStatusAttributes, status_attr, NULL);
     XFree(status_attr);
 
-    rxvt_setPreeditArea(aR_ & preedit_rect, &status_rect, needed_rect);
+    R->set_preedit_area(&preedit_rect, &status_rect, needed_rect);
 
     preedit_attr = XVaCreateNestedList(0, XNArea, &preedit_rect, NULL);
     status_attr = XVaCreateNestedList(0, XNArea, &status_rect, NULL);

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.21 2003/12/18 08:06:46 pcg Exp $
+ * $Id: command.C,v 1.22 2003/12/18 13:33:02 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -681,15 +681,15 @@ rxvt_term::flush ()
   if (want_full_refresh)
     {
       want_full_refresh = 0;
-      rxvt_scr_clear (this);
-      rxvt_scr_touch (this, False);
+      scr_clear ();
+      scr_touch (false);
       want_refresh = 1;
     }
 #endif
 
   if (want_refresh)
     {
-      rxvt_scr_refresh (this, refresh_type);
+      scr_refresh (refresh_type);
       rxvt_scrollbar_show (this, 1);
 #ifdef USE_XIM
       rxvt_IMSendSpot (this);
@@ -889,7 +889,7 @@ rxvt_term::pty_cb (io_watcher &w, short revents)
                       if ((Options & Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
                         refresh_limit++;
 
-                      rxvt_scr_refresh (this, refresh_type);
+                      scr_refresh (refresh_type);
                     }
 
                 }
@@ -997,7 +997,7 @@ rxvt_cmd_getc(pR)
 	    if (!R->scroll_selection_delay--
 		&& rxvt_scr_page(aR_ R->scroll_selection_dir,
 		    R->scroll_selection_lines)) {
-		rxvt_selection_extend(aR_ R->selection_save_x,
+		R->selection_extend (R->selection_save_x,
 		    R->selection_save_y, R->selection_save_state);
 		R->scroll_selection_delay = SCROLLBAR_CONTINUOUS_DELAY;
 		R->refresh_type |= SMOOTH_REFRESH;
@@ -1071,7 +1071,7 @@ rxvt_mouse_report(pR_ const XButtonEvent *ev)
 
     x = ev->x;
     y = ev->y;
-    rxvt_pixel_position(aR_ &x, &y);
+    R->pixel_position (&x, &y);
 
     if (R->MEvent.button == AnyButton) {
 	button_number = 3;
@@ -1332,8 +1332,7 @@ rxvt_process_x_event(pR_ XEvent *ev)
 					    ConfigureNotify, ev));
 	    if (R->szHint.width != width || R->szHint.height != height) {
 		D_SIZE((stderr, "Size: Resizing from: %4d x %4d", R->szHint.width, R->szHint.height));
-		rxvt_resize_all_windows(aR_ (unsigned int)width,
-					(unsigned int)height, 1);
+		R->resize_all_windows (width, height, 1);
 	    }
 #ifdef DEBUG_SIZE
 	    else {
@@ -1402,12 +1401,12 @@ rxvt_process_x_event(pR_ XEvent *ev)
     case Expose:
 	if (ev->xany.window == R->TermWin.vt) {
 #ifdef NO_SLOW_LINK_SUPPORT
-	    rxvt_scr_expose(aR_ ev->xexpose.x, ev->xexpose.y,
-			    ev->xexpose.width, ev->xexpose.height, False);
+	    R->scr_expose (ev->xexpose.x, ev->xexpose.y,
+			   ev->xexpose.width, ev->xexpose.height, False);
 #else
             // don't understand this, so commented it out
-	    rxvt_scr_expose(aR_ ev->xexpose.x, ev->xexpose.y,
-			    ev->xexpose.width, ev->xexpose.height, False);
+	    R->scr_expose (ev->xexpose.x, ev->xexpose.y,
+			   ev->xexpose.width, ev->xexpose.height, False);
 	    //rxvt_scr_expose(aR_ ev->xexpose.x, 0,
 	    //		    ev->xexpose.width, R->TermWin.height, False);
 #endif
@@ -1462,7 +1461,7 @@ rxvt_process_x_event(pR_ XEvent *ev)
 	    /* deal with a `jumpy' mouse */
 		if ((ev->xmotion.time - R->MEvent.time) > MOUSE_THRESHOLD) {
 #endif
-		    rxvt_selection_extend(aR_ (ev->xbutton.x), (ev->xbutton.y),
+		    R->selection_extend ((ev->xbutton.x), (ev->xbutton.y),
 				  (ev->xbutton.state & Button3Mask) ? 2 : 0);
 #ifdef SELECTION_SCROLLING
 		    if (ev->xbutton.y<R->TermWin.int_bwidth ||
@@ -1521,7 +1520,7 @@ rxvt_process_x_event(pR_ XEvent *ev)
 			  &unused_mask);
 	    rxvt_scr_move_to(aR_ scrollbar_position(ev->xbutton.y) - R->csrO,
 			     scrollbar_size());
-	    rxvt_scr_refresh(aR_ R->refresh_type);
+	    R->scr_refresh (R->refresh_type);
 	    R->refresh_limit = 0;
 	    rxvt_scrollbar_show(aR_ 1);
 	}
@@ -1594,9 +1593,9 @@ rxvt_button_press(pR_ XButtonEvent *ev)
                         if (ev->state & ShiftMask)
                           {
                             if (R->MEvent.button == Button1 && clickintime)
-                              rxvt_selection_rotate (aR_ ev->x, ev->y);
+                              R->selection_rotate (ev->x, ev->y);
                             else
-                              rxvt_selection_extend (aR_ ev->x, ev->y, 1);
+                              R->selection_extend (ev->x, ev->y, 1);
                           }
                         else
                           {
@@ -1605,7 +1604,7 @@ rxvt_button_press(pR_ XButtonEvent *ev)
                             else
                               R->MEvent.clicks = 1;
 
-                            rxvt_selection_click (aR_ R->MEvent.clicks, ev->x, ev->y);
+                            R->selection_click (R->MEvent.clicks, ev->x, ev->y);
                           }
 
                         R->MEvent.button = Button1;
@@ -1613,9 +1612,9 @@ rxvt_button_press(pR_ XButtonEvent *ev)
 
                     case Button3:
                         if (R->MEvent.button == Button3 && clickintime)
-                          rxvt_selection_rotate(aR_ ev->x, ev->y);
+                          R->selection_rotate (ev->x, ev->y);
                         else
-                          rxvt_selection_extend(aR_ ev->x, ev->y, 1);
+                          R->selection_extend (ev->x, ev->y, 1);
                         R->MEvent.button = Button3;
                         break;
 	          }
@@ -1819,7 +1818,7 @@ rxvt_button_release(pR_ XButtonEvent *ev)
 	    if (R->PrivateModes & PrivMode_mouse_report
 		&& R->bypass_keystate
 		&& ev->button == Button1 && R->MEvent.clicks <= 1)
-		rxvt_selection_extend(aR_ ev->x, ev->y, 0);
+		R->selection_extend (ev->x, ev->y, 0);
 
 	    switch (ev->button) {
 	    case Button1:
@@ -1852,13 +1851,13 @@ rxvt_button_release(pR_ XButtonEvent *ev)
 # endif
 # ifdef JUMP_MOUSE_WHEEL
 		    rxvt_scr_page(aR_ v, i);
-		    rxvt_scr_refresh(aR_ SMOOTH_REFRESH);
+		    R->scr_refresh (SMOOTH_REFRESH);
 		    rxvt_scrollbar_show(aR_ 1);
 # else
-		    for (; i--;)
+		    while (i--)
                       {
 			rxvt_scr_page(aR_ v, 1);
-			rxvt_scr_refresh(aR_ SMOOTH_REFRESH);
+			R->scr_refresh (SMOOTH_REFRESH);
 			rxvt_scrollbar_show(aR_ 1);
 		      }
 # endif
@@ -2222,7 +2221,7 @@ rxvt_process_escape_vt52(pR_ unsigned char ch)
 	rxvt_scr_index(aR_ DN);
 	break;
     case 'J':		/* erase to end of screen */
-	rxvt_scr_erase_screen(aR_ 0);
+	R->scr_erase_screen (0);
 	break;
     case 'K':		/* erase to end of line */
 	rxvt_scr_erase_line(aR_ 0);
@@ -2567,7 +2566,7 @@ rxvt_process_csi_seq(pR)
 	break;
 
     case CSI_ED:		/* 8.3.40: (0) ERASE IN PAGE */
-	rxvt_scr_erase_screen(aR_ arg[0]);
+	R->scr_erase_screen (arg[0]);
 	break;
 
     case CSI_EL:		/* 8.3.42: (0) ERASE IN LINE */
@@ -2747,7 +2746,7 @@ rxvt_process_window_ops(pR_ const int *args, unsigned int nargs)
 	XLowerWindow(R->Xdisplay, R->TermWin.parent[0]);
 	break;
     case 7:			/* refresh window */
-	rxvt_scr_touch(aR_ True);
+	R->scr_touch (true);
 	break;
     case 8:			/* set size (chars) */
 	rxvt_set_widthheight(aR_ (unsigned int)(args[2] * R->TermWin.fwidth),
@@ -2968,7 +2967,7 @@ rxvt_xterm_seq(pR_ int op, const char *str, unsigned char resp __attribute__((un
 	    rxvt_scale_pixmap(aR_ "");	/* reset to default scaling */
 	    rxvt_set_bgPixmap(aR_ str);	/* change pixmap */
 #endif
-	    rxvt_scr_touch(aR_ True);
+	    R->scr_touch (true);
 	}
 	while ((str = STRCHR(str, ';')) != NULL) {
 	    str++;
@@ -2980,7 +2979,7 @@ rxvt_xterm_seq(pR_ int op, const char *str, unsigned char resp __attribute__((un
 #ifdef XPM_BACKGROUND
 	    rxvt_resize_pixmap(aR);
 #endif
-	    rxvt_scr_touch(aR_ True);
+	    R->scr_touch (true);
 	}
 	break;
 
@@ -3156,8 +3155,8 @@ rxvt_process_terminal_mode(pR_ int mode, int priv __attribute__((unused)), unsig
 #ifdef scrollBar_esc
 	case scrollBar_esc:
 	    if (rxvt_scrollbar_mapping(aR_ state)) {
-		rxvt_resize_all_windows(aR_ 0, 0, 0);
-		rxvt_scr_touch(aR_ True);
+		R->resize_all_windows (0, 0, 0);
+                R->scr_touch (true);
 	    }
 	    break;
 #endif
@@ -3193,7 +3192,7 @@ rxvt_process_terminal_mode(pR_ int mode, int priv __attribute__((unused)), unsig
 	    break;
 	case 1047:		/* secondary screen w/ clearing */
 	    if (R->current_screen != PRIMARY)
-		rxvt_scr_erase_screen(aR_ 2);
+		R->scr_erase_screen (2);
 	    rxvt_scr_change_screen(aR_ state);
 	/* FALLTHROUGH */
 	default:

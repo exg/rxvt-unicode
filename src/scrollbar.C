@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	scrollbar.c
  *----------------------------------------------------------------------*
- * $Id: scrollbar.C,v 1.5 2003/12/18 05:45:11 pcg Exp $
+ * $Id: scrollbar.C,v 1.6 2003/12/18 13:33:03 pcg Exp $
  *
  * Copyright (c) 1997,1998 mj olesen <olesen@me.QueensU.CA>
  * Copyright (c) 1998      Alfredo K. Kojima <kojima@windowmaker.org>
@@ -37,12 +37,12 @@ int
 rxvt_scrollbar_mapping(pR_ int map)
 {
     int             change = 0;
-#ifdef HAVE_SCROLLBARS
 
+#ifdef HAVE_SCROLLBARS
     if (map && !scrollbar_visible(R)) {
 	R->scrollBar.setIdle ();
 	if (!R->scrollBar.win)
-	    rxvt_Resize_scrollBar(aR);
+	    R->resize_scrollbar ();
 	if (R->scrollBar.win) {
 	    XMapWindow(R->Xdisplay, R->scrollBar.win);
 	    change = 1;
@@ -56,67 +56,66 @@ rxvt_scrollbar_mapping(pR_ int map)
     return change;
 }
 
-/* EXTPROTO */
 void
-rxvt_Resize_scrollBar(pR)
+rxvt_term::resize_scrollbar ()
 {
 #ifdef HAVE_SCROLLBARS
-    int             delayed_init = 0;
+    int delayed_init = 0;
 
 #define R_SCROLLBEG_XTERM	0
-#define R_SCROLLEND_XTERM	R->szHint.height
+#define R_SCROLLEND_XTERM	szHint.height
 #define R_SCROLLBEG_NEXT	0
-#define R_SCROLLEND_NEXT	R->szHint.height - (SB_BUTTON_TOTAL_HEIGHT + \
+#define R_SCROLLEND_NEXT	szHint.height - (SB_BUTTON_TOTAL_HEIGHT + \
 						    SB_PADDING)
-#define R_SCROLLBEG_RXVT	(R->scrollBar.width + 1) + R->sb_shadow
-#define R_SCROLLEND_RXVT	R->szHint.height - R_SCROLLBEG_RXVT - \
-				    (2 * R->sb_shadow)
+#define R_SCROLLBEG_RXVT	(scrollBar.width + 1) + sb_shadow
+#define R_SCROLLEND_RXVT	szHint.height - R_SCROLLBEG_RXVT - \
+				    (2 * sb_shadow)
 
 #if defined(XTERM_SCROLLBAR)
-    if (R->scrollBar.style == R_SB_XTERM) {
-	R->scrollBar.beg = R_SCROLLBEG_XTERM;
-	R->scrollBar.end = R_SCROLLEND_XTERM;
-	R->scrollBar.update = rxvt_scrollbar_show_xterm;
+    if (scrollBar.style == R_SB_XTERM) {
+	scrollBar.beg = R_SCROLLBEG_XTERM;
+	scrollBar.end = R_SCROLLEND_XTERM;
+	scrollBar.update = rxvt_scrollbar_show_xterm;
     }
 #endif
 #if defined(NEXT_SCROLLBAR)
-    if (R->scrollBar.style == R_SB_NEXT) {
-	R->scrollBar.beg = R_SCROLLBEG_NEXT;
-	R->scrollBar.end = R_SCROLLEND_NEXT;
-	R->scrollBar.update = rxvt_scrollbar_show_next;
+    if (scrollBar.style == R_SB_NEXT) {
+	scrollBar.beg = R_SCROLLBEG_NEXT;
+	scrollBar.end = R_SCROLLEND_NEXT;
+	scrollBar.update = rxvt_scrollbar_show_next;
     }
 #endif
 #if defined(RXVT_SCROLLBAR)
-    if (R->scrollBar.style == R_SB_RXVT) {
-	R->scrollBar.beg = R_SCROLLBEG_RXVT;
-	R->scrollBar.end = R_SCROLLEND_RXVT;
-	R->scrollBar.update = rxvt_scrollbar_show_rxvt;
+    if (scrollBar.style == R_SB_RXVT) {
+	scrollBar.beg = R_SCROLLBEG_RXVT;
+	scrollBar.end = R_SCROLLEND_RXVT;
+	scrollBar.update = rxvt_scrollbar_show_rxvt;
     }
 #endif
 
-    if (!R->scrollBar.win) {
+    if (!scrollBar.win) {
 /* create the scrollbar window */
-	R->scrollBar.win = XCreateSimpleWindow(R->Xdisplay,
-					       R->TermWin.parent[0],
-					       R->window_sb_x, 0,
+	scrollBar.win = XCreateSimpleWindow(Xdisplay,
+					       TermWin.parent[0],
+					       window_sb_x, 0,
 					       scrollbar_TotalWidth(),
-					       R->szHint.height,
+					       szHint.height,
 					       0,
-					       R->PixColors[Color_fg],
-					       R->PixColors[Color_bg]);
+					       PixColors[Color_fg],
+					       PixColors[Color_bg]);
 #ifdef DEBUG_X
-	XStoreName(R->Xdisplay, R->scrollBar.win, "scrollbar");
+	XStoreName(Xdisplay, scrollBar.win, "scrollbar");
 #endif
-	XDefineCursor(R->Xdisplay, R->scrollBar.win, R->leftptr_cursor);
-	XSelectInput(R->Xdisplay, R->scrollBar.win,
+	XDefineCursor(Xdisplay, scrollBar.win, leftptr_cursor);
+	XSelectInput(Xdisplay, scrollBar.win,
 		     (ExposureMask | ButtonPressMask | ButtonReleaseMask
 		      | Button1MotionMask | Button2MotionMask
 		      | Button3MotionMask));
 	delayed_init = 1;
     }
-    rxvt_scrollbar_show(aR_ 1);
+    rxvt_scrollbar_show (this, 1);
     if (delayed_init)
-	XMapWindow(R->Xdisplay, R->scrollBar.win);
+	XMapWindow (Xdisplay, scrollBar.win);
 #endif
 }
 

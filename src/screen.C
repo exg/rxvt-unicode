@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*--------------------------------------*
  * File:        screen.c
  *---------------------------------------------------------------------------*
- * $Id: screen.C,v 1.10 2003/12/18 08:06:46 pcg Exp $
+ * $Id: screen.C,v 1.11 2003/12/18 13:33:03 pcg Exp $
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
  *
@@ -91,25 +91,25 @@ inline void fill_text (text_t *start, text_t value, int len)
  * CLEAR_CHARS: clear <num> chars starting from pixel position <x,y>
  * ERASE_ROWS : set <num> rows starting from row <row> to the foreground colour
  */
-#define drawBuffer      (R->TermWin.vt)
+#define drawBuffer      TermWin.vt
 
 #define CLEAR_ROWS(row, num)                                            \
-    if (R->TermWin.mapped)                                              \
-        XClearArea(R->Xdisplay, drawBuffer, R->TermWin.int_bwidth,      \
-                   Row2Pixel(row), (unsigned int)R->TermWin.width,      \
-                   (unsigned int)Height2Pixel(num), False)
+    if (TermWin.mapped)                                              \
+        XClearArea (Xdisplay, drawBuffer, TermWin.int_bwidth,      \
+                    Row2Pixel(row), (unsigned int)TermWin.width,      \
+                    (unsigned int)Height2Pixel(num), False)
 
 #define CLEAR_CHARS(x, y, num)                                          \
-    if (R->TermWin.mapped)                                              \
-        XClearArea(R->Xdisplay, drawBuffer, x, y,                       \
-                   (unsigned int)Width2Pixel(num),                      \
-                   (unsigned int)Height2Pixel(1), False)
+    if (TermWin.mapped)                                              \
+        XClearArea (Xdisplay, drawBuffer, x, y,                       \
+                    (unsigned int)Width2Pixel(num),                      \
+                    (unsigned int)Height2Pixel(1), False)
 
 #define ERASE_ROWS(row, num)                                            \
-    XFillRectangle(R->Xdisplay, drawBuffer, R->TermWin.gc,              \
-                   R->TermWin.int_bwidth, Row2Pixel(row),               \
-                   (unsigned int)R->TermWin.width,                      \
-                   (unsigned int)Height2Pixel(num))
+    XFillRectangle (Xdisplay, drawBuffer, TermWin.gc,              \
+                    TermWin.int_bwidth, Row2Pixel(row),               \
+                    (unsigned int)TermWin.width,                      \
+                    (unsigned int)Height2Pixel(num))
 
 /* ------------------------------------------------------------------------- *
  *                        SCREEN `COMMON' ROUTINES                           *
@@ -487,8 +487,8 @@ rxvt_scr_poweron(pR)
   R->prev_nrow = R->prev_ncol = 0;
   R->scr_reset ();
 
-  rxvt_scr_clear (aR);
-  rxvt_scr_refresh (aR_ SLOW_REFRESH);
+  R->scr_clear ();
+  R->scr_refresh (SLOW_REFRESH);
 #ifdef RXVT_GRAPHICS
   rxvt_Gr_reset (aR);
 #endif
@@ -1213,72 +1213,71 @@ rxvt_scr_erase_line(pR_ int mode)
  * XTERM_SEQ: Clear screen before cursor: ESC [ 1 J
  * XTERM_SEQ: Clear whole screen        : ESC [ 2 J
  */
-/* EXTPROTO */
 void
-rxvt_scr_erase_screen(pR_ int mode)
+rxvt_term::scr_erase_screen (int mode)
 {
     int             num;
     int32_t         row, row_offset;
     rend_t          ren;
     XGCValues       gcvalue;
 
-    R->want_refresh = 1;
-    D_SCREEN((stderr, "rxvt_scr_erase_screen(%d) at screen row: %d", mode, R->screen.cur.row));
-    ZERO_SCROLLBACK(R);
-    row_offset = (int32_t)R->TermWin.saveLines;
+    want_refresh = 1;
+    D_SCREEN((stderr, "rxvt_scr_erase_screen(%d) at screen row: %d", mode, screen.cur.row));
+    ZERO_SCROLLBACK(this);
+    row_offset = (int32_t)TermWin.saveLines;
 
     switch (mode) {
     case 0:                     /* erase to end of screen */
-        rxvt_selection_check(aR_ 1);
-        rxvt_scr_erase_line(aR_ 0);
-        row = R->screen.cur.row + 1;    /* possible OOB */
-        num = R->TermWin.nrow - row;
+        rxvt_selection_check(this,1);
+        rxvt_scr_erase_line(this,0);
+        row = screen.cur.row + 1;    /* possible OOB */
+        num = TermWin.nrow - row;
         break;
     case 1:                     /* erase to beginning of screen */
-        rxvt_selection_check(aR_ 3);
-        rxvt_scr_erase_line(aR_ 1);
+        rxvt_selection_check(this,3);
+        rxvt_scr_erase_line(this,1);
         row = 0;
-        num = R->screen.cur.row;
+        num = screen.cur.row;
         break;
     case 2:                     /* erase whole screen */
-        rxvt_selection_check(aR_ 3);
+        rxvt_selection_check (this, 3);
 #ifdef RXVT_GRAPHICS
-        rxvt_Gr_ClearScreen(aR);
+        rxvt_Gr_ClearScreen (this);
 #endif
         row = 0;
-        num = R->TermWin.nrow;
+        num = TermWin.nrow;
         break;
     default:
         return;
     }
-    R->refresh_type |= REFRESH_BOUNDS;
-    if (R->selection.op && R->current_screen == R->selection.screen
-        && ((R->selection.beg.row >= row && R->selection.beg.row <= row + num)
-            || (R->selection.end.row >= row
-                && R->selection.end.row <= row + num)))
-        CLEAR_SELECTION(R);
-    if (row >= R->TermWin.nrow) /* Out Of Bounds */
+    refresh_type |= REFRESH_BOUNDS;
+    if (selection.op && current_screen == selection.screen
+        && ((selection.beg.row >= row && selection.beg.row <= row + num)
+            || (selection.end.row >= row
+                && selection.end.row <= row + num)))
+        CLEAR_SELECTION (this);
+    if (row >= TermWin.nrow) /* Out Of Bounds */
         return;
-    MIN_IT(num, (R->TermWin.nrow - row));
-    if (R->rstyle & (RS_RVid | RS_Uline))
+    MIN_IT(num, (TermWin.nrow - row));
+    if (rstyle & (RS_RVid | RS_Uline))
         ren = (rend_t) ~RS_None;
-    else if (GET_BASEBG(R->rstyle) == Color_bg) {
+    else if (GET_BASEBG(rstyle) == Color_bg) {
         ren = DEFAULT_RSTYLE;
         CLEAR_ROWS(row, num);
     } else {
-        ren = (R->rstyle & (RS_fgMask | RS_bgMask));
-        gcvalue.foreground = R->PixColors[GET_BGCOLOR(R->rstyle)];
-        XChangeGC(R->Xdisplay, R->TermWin.gc, GCForeground, &gcvalue);
+        ren = (rstyle & (RS_fgMask | RS_bgMask));
+        gcvalue.foreground = PixColors[GET_BGCOLOR(rstyle)];
+        XChangeGC(Xdisplay, TermWin.gc, GCForeground, &gcvalue);
         ERASE_ROWS(row, num);
-        gcvalue.foreground = R->PixColors[Color_fg];
-        XChangeGC(R->Xdisplay, R->TermWin.gc, GCForeground, &gcvalue);
+        gcvalue.foreground = PixColors[Color_fg];
+        XChangeGC(Xdisplay, TermWin.gc, GCForeground, &gcvalue);
     }
     for (; num--; row++) {
-        R->scr_blank_screen_mem (R->screen.text, R->screen.rend,
-                                 (unsigned int)(row + row_offset), R->rstyle);
-        R->screen.tlen[row + row_offset] = 0;
-        R->scr_blank_line (R->drawn_text[row], R->drawn_rend[row],
-                           (unsigned int)R->TermWin.ncol, ren);
+        scr_blank_screen_mem (screen.text, screen.rend,
+                                 (unsigned int)(row + row_offset), rstyle);
+        screen.tlen[row + row_offset] = 0;
+        scr_blank_line (drawn_text[row], drawn_rend[row],
+                           (unsigned int)TermWin.ncol, ren);
     }
 }
 
@@ -1572,8 +1571,8 @@ rxvt_scr_rvideo_mode(pR_ int mode)
         gcvalue.background = R->PixColors[Color_bg];
         XChangeGC(R->Xdisplay, R->TermWin.gc, GCBackground | GCForeground,
                   &gcvalue);
-        rxvt_scr_clear(aR);
-        rxvt_scr_touch(aR_ True);
+        R->scr_clear ();
+        R->scr_touch (true);
     }
 }
 
@@ -1686,55 +1685,54 @@ enum {
     RC_COUNT
 };
 
-/* EXTPROTO */
 void
-rxvt_scr_expose(pR_ int x, int y, int width, int height, Bool refresh)
+rxvt_term::scr_expose (int x, int y, int width, int height, bool refresh)
 {
-    int             i;
-    row_col_t       rc[RC_COUNT];
+  int i;
+  row_col_t rc[RC_COUNT];
 
-    if (R->drawn_text == NULL)  /* sanity check */
-        return;
+  if (drawn_text == NULL)  /* sanity check */
+    return;
 
 #ifdef DEBUG_STRICT
-    x = max(x, (int)R->TermWin.int_bwidth);
-    x = min(x, (int)R->TermWin.width);
-    y = max(y, (int)R->TermWin.int_bwidth);
-    y = min(y, (int)R->TermWin.height);
+  x = max(x, (int)TermWin.int_bwidth);
+  x = min(x, (int)TermWin.width);
+  y = max(y, (int)TermWin.int_bwidth);
+  y = min(y, (int)TermWin.height);
 #endif
 
 /* round down */
-    rc[PART_BEG].col = Pixel2Col(x);
-    rc[PART_BEG].row = Pixel2Row(y);
+  rc[PART_BEG].col = Pixel2Col(x);
+  rc[PART_BEG].row = Pixel2Row(y);
 /* round up */
-    rc[PART_END].col = Pixel2Width(x + width + R->TermWin.fwidth - 1);
-    rc[PART_END].row = Pixel2Row(y + height + R->TermWin.fheight - 1);
+  rc[PART_END].col = Pixel2Width(x + width + TermWin.fwidth - 1);
+  rc[PART_END].row = Pixel2Row(y + height + TermWin.fheight - 1);
 
 /* sanity checks */
-    for (i = PART_BEG; i < RC_COUNT; i++) {
-        MIN_IT(rc[i].col, R->TermWin.ncol - 1);
-        MIN_IT(rc[i].row, R->TermWin.nrow - 1);
+  for (i = PART_BEG; i < RC_COUNT; i++)
+    {
+      MIN_IT(rc[i].col, TermWin.ncol - 1);
+      MIN_IT(rc[i].row, TermWin.nrow - 1);
     }
 
-    D_SCREEN((stderr, "rxvt_scr_expose(x:%d, y:%d, w:%d, h:%d) area (c:%d,r:%d)-(c:%d,r:%d)", x, y, width, height, rc[PART_BEG].col, rc[PART_BEG].row, rc[PART_END].col, rc[PART_END].row));
+  D_SCREEN((stderr, "rxvt_scr_expose(x:%d, y:%d, w:%d, h:%d) area (c:%d,r:%d)-(c:%d,r:%d)", x, y, width, height, rc[PART_BEG].col, rc[PART_BEG].row, rc[PART_END].col, rc[PART_END].row));
 
-    for (i = rc[PART_BEG].row; i <= rc[PART_END].row; i++)
-        fill_text (&(R->drawn_text[i][rc[PART_BEG].col]), 0,
-                   (rc[PART_END].col - rc[PART_BEG].col + 1));
+  for (i = rc[PART_BEG].row; i <= rc[PART_END].row; i++)
+    fill_text (&(drawn_text[i][rc[PART_BEG].col]), 0,
+               (rc[PART_END].col - rc[PART_BEG].col + 1));
 
-    if (refresh)
-        rxvt_scr_refresh(aR_ SLOW_REFRESH | REFRESH_BOUNDS);
+  if (refresh)
+    scr_refresh (SLOW_REFRESH | REFRESH_BOUNDS);
 }
 
 /* ------------------------------------------------------------------------- */
 /*
  * Refresh the entire screen
  */
-/* EXTPROTO */
 void
-rxvt_scr_touch(pR_ Bool refresh)
+rxvt_term::scr_touch (bool refresh)
 {
-    rxvt_scr_expose(aR_ 0, 0, R->TermWin.width, R->TermWin.height, refresh);
+  scr_expose (0, 0, TermWin.width, TermWin.height, refresh);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1881,9 +1879,8 @@ rxvt_scr_printscreen(pR_ int fullhist)
 #define IS_FONT_CHAR(X, Y)                                              \
     ((Y) >= (X)->min_char_or_byte2 && (Y) <= (X)->max_char_or_byte2)
 
-/* EXTPROTO */
 void
-rxvt_scr_refresh(pR_ unsigned char refresh_type)
+rxvt_term::scr_refresh (unsigned char refresh_type)
 {
     unsigned char   clearfirst, /* first character writes before cell        */
                     clearlast,  /* last character writes beyond cell         */
@@ -1906,9 +1903,9 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
 #endif
     rend_t         *drp, *srp;  /* drawn-rend-pointer, screen-rend-pointer   */
     text_t         *dtp, *stp;  /* drawn-text-pointer, screen-text-pointer   */
-    char           *buffer;     /* local copy of R->buffer                */
+    char           *buffer;     /* local copy of buffer                */
 
-    if (refresh_type == NO_REFRESH || !R->TermWin.mapped)
+    if (refresh_type == NO_REFRESH || !TermWin.mapped)
       return;
 
     /*
@@ -1919,36 +1916,36 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
     bfont = 0;
 #endif
 
-    if (R->currmaxcol < R->TermWin.ncol)
+    if (currmaxcol < TermWin.ncol)
       {
-        R->currmaxcol = R->TermWin.ncol;
-        R->buffer = (char *)rxvt_realloc (R->buffer,
-                                          sizeof(char) * (R->currmaxcol + 1) * MB_CUR_MAX);
+        currmaxcol = TermWin.ncol;
+        buffer = (char *)rxvt_realloc (buffer,
+                                          sizeof(char) * (currmaxcol + 1) * MB_CUR_MAX);
       }
 
-    buffer = R->buffer;
-    R->refresh_count = 0;
+    buffer = buffer;
+    refresh_count = 0;
 
-    row_offset = R->TermWin.saveLines - R->TermWin.view_start;
+    row_offset = TermWin.saveLines - TermWin.view_start;
 
     if ((refresh_type & REFRESH_BOUNDS))
       {
         clearfirst = clearlast = 1;
-        R->refresh_type &= ~REFRESH_BOUNDS;
+        refresh_type &= ~REFRESH_BOUNDS;
       }
 
 #if defined(XPM_BACKGROUND)
-    must_clear |= (R->bgPixmap.pixmap != None);
+    must_clear |= (bgPixmap.pixmap != None);
 #endif
 #if defined(TRANSPARENT)
-    must_clear |= ((R->Options & Opt_transparent) && R->am_transparent);
+    must_clear |= ((Options & Opt_transparent) && am_transparent);
 #endif
-    ocrow = R->oldcursor.row; /* is there an old outline cursor on screen? */
+    ocrow = oldcursor.row; /* is there an old outline cursor on screen? */
 
 /*
  * B: reverse any characters which are selected
  */
-    rxvt_scr_reverse_selection(aR);
+    rxvt_scr_reverse_selection (this);
 
 /*
  * C: set the cursor character(s)
@@ -1958,10 +1955,10 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
       rend_t          ccol1,  /* Cursor colour       */
                       ccol2;  /* Cursor colour2      */
 
-      showcursor = (R->screen.flags & Screen_VisibleCursor);
+      showcursor = (screen.flags & Screen_VisibleCursor);
       cursorwidth = 0;
 #ifdef CURSOR_BLINK
-      if (R->hidden_cursor)
+      if (hidden_cursor)
           showcursor = 0;
 #endif
 
@@ -1971,27 +1968,27 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
         {
           cursorwidth++;
 
-          srp = &(R->screen.rend[R->screen.cur.row + R->TermWin.saveLines]
-                                [R->screen.cur.col]);
+          srp = &(screen.rend[screen.cur.row + TermWin.saveLines]
+                                [screen.cur.col]);
 
-          if (showcursor && R->TermWin.focus)
+          if (showcursor && TermWin.focus)
             {
               *srp ^= RS_RVid;
 #ifndef NO_CURSORCOLOR
               cc1 = *srp & (RS_fgMask | RS_bgMask);
-              if (XDEPTH > 2 && ISSET_PIXCOLOR(R, Color_cursor))
+              if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_cursor))
                   ccol1 = Color_cursor;
               else
 #ifdef CURSOR_COLOR_IS_RENDITION_COLOR
-                  ccol1 = GET_FGCOLOR(R->rstyle);
+                  ccol1 = GET_FGCOLOR(rstyle);
 #else
                   ccol1 = Color_fg;
 #endif
-              if (XDEPTH > 2 && ISSET_PIXCOLOR(R, Color_cursor2))
+              if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_cursor2))
                   ccol2 = Color_cursor2;
               else
 #ifdef CURSOR_COLOR_IS_RENDITION_COLOR
-                  ccol2 = GET_BGCOLOR(R->rstyle);
+                  ccol2 = GET_BGCOLOR(rstyle);
 #else
                   ccol2 = Color_bg;
 #endif
@@ -2007,25 +2004,25 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
       /* make sure no outline cursor is left around */
       setoldcursor = 0;
       if (ocrow != -1) {
-          if (R->screen.cur.row + R->TermWin.view_start != ocrow
-              || R->screen.cur.col != R->oldcursor.col) {
-              if (ocrow < R->TermWin.nrow
-                  && R->oldcursor.col < R->TermWin.ncol) {
-                  R->drawn_rend[ocrow][R->oldcursor.col] ^= (RS_RVid | RS_Uline);
+          if (screen.cur.row + TermWin.view_start != ocrow
+              || screen.cur.col != oldcursor.col) {
+              if (ocrow < TermWin.nrow
+                  && oldcursor.col < TermWin.ncol) {
+                  drawn_rend[ocrow][oldcursor.col] ^= (RS_RVid | RS_Uline);
               }
-              if (R->TermWin.focus || !showcursor)
-                  R->oldcursor.row = -1;
+              if (TermWin.focus || !showcursor)
+                  oldcursor.row = -1;
               else
                   setoldcursor = 1;
           }
-      } else if (!R->TermWin.focus)
+      } else if (!TermWin.focus)
           setoldcursor = 1;
       if (setoldcursor) {
-          if (R->screen.cur.row + R->TermWin.view_start >= R->TermWin.nrow)
-              R->oldcursor.row = -1;
+          if (screen.cur.row + TermWin.view_start >= TermWin.nrow)
+              oldcursor.row = -1;
           else {
-              R->oldcursor.row = R->screen.cur.row + R->TermWin.view_start;
-              R->oldcursor.col = R->screen.cur.col;
+              oldcursor.row = screen.cur.row + TermWin.view_start;
+              oldcursor.col = screen.cur.col;
           }
       }
     }
@@ -2035,9 +2032,9 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
  * D: CopyArea pass - very useful for slower links
  *    This has been deliberately kept simple.
  */
-    i = R->num_scr;
-    if (refresh_type == FAST_REFRESH && R->num_scr_allow && i
-        && abs(i) < R->TermWin.nrow && !must_clear)
+    i = num_scr;
+    if (refresh_type == FAST_REFRESH && num_scr_allow && i
+        && abs(i) < TermWin.nrow && !must_clear)
       {
         int16_t         nits;
         int             j;
@@ -2045,21 +2042,21 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
         text_t         *dtp2;
         int             len, wlen;
 
-        j = R->TermWin.nrow;
+        j = TermWin.nrow;
         wlen = len = -1;
         row = i > 0 ? 0 : j - 1;
         for (; j-- >= 0; row += (i > 0 ? 1 : -1))
           {
-            if (row + i >= 0 && row + i < R->TermWin.nrow && row + i != ocrow)
+            if (row + i >= 0 && row + i < TermWin.nrow && row + i != ocrow)
               {
-                stp = R->screen.text[row + row_offset];
-                srp = R->screen.rend[row + row_offset];
-                dtp = R->drawn_text[row];
-                dtp2 = R->drawn_text[row + i];
-                drp = R->drawn_rend[row];
-                drp2 = R->drawn_rend[row + i];
+                stp = screen.text[row + row_offset];
+                srp = screen.rend[row + row_offset];
+                dtp = drawn_text[row];
+                dtp2 = drawn_text[row + i];
+                drp = drawn_rend[row];
+                drp2 = drawn_rend[row + i];
 
-                for (nits = 0, col = R->TermWin.ncol; col--; )
+                for (nits = 0, col = TermWin.ncol; col--; )
                   if (stp[col] != dtp2[col] || srp[col] != drp2[col])
                     nits--;
                   else if (stp[col] != dtp[col] || srp[col] != drp[col])
@@ -2067,7 +2064,7 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
 
                 if (nits > 8) /* XXX: arbitrary choice */
                   {
-                    for (col = R->TermWin.ncol; col--; )
+                    for (col = TermWin.ncol; col--; )
                       {
                         *dtp++ = *dtp2++;
                         *drp++ = *drp2++;
@@ -2086,12 +2083,13 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
                 /* also comes here at end if needed because of >= above */
                 if (wlen < len)
                   SWAP_IT(wlen, len, int);
+
                 D_SCREEN((stderr, "rxvt_scr_refresh(): XCopyArea: %d -> %d (height: %d)", len + i, len, wlen - len + 1));
-                XCopyArea(R->Xdisplay, R->TermWin.vt, R->TermWin.vt,
-                          R->TermWin.gc, 0, Row2Pixel(len + i),
-                          (unsigned int)TermWin_TotalWidth(),
-                          (unsigned int)Height2Pixel(wlen - len + 1),
-                          0, Row2Pixel(len));
+                XCopyArea (Xdisplay, TermWin.vt, TermWin.vt,
+                           TermWin.gc, 0, Row2Pixel (len + i),
+                           (unsigned int)TermWin_TotalWidth (),
+                           (unsigned int)Height2Pixel (wlen - len + 1),
+                           0, Row2Pixel (len));
                 len = -1;
               }
           }
@@ -2101,19 +2099,19 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
 /*
  * E: main pass across every character
  */
-    for (row = 0; row < R->TermWin.nrow; row++)
+    for (row = 0; row < TermWin.nrow; row++)
       {
-        stp = R->screen.text[row + row_offset];
-        srp = R->screen.rend[row + row_offset];
-        dtp = R->drawn_text[row];
-        drp = R->drawn_rend[row];
+        stp = screen.text[row + row_offset];
+        srp = screen.rend[row + row_offset];
+        dtp = drawn_text[row];
+        drp = drawn_rend[row];
 
 /*
  * E2: OK, now the real pass
  */
         int ypixel = (int)Row2Pixel(row);
 
-        for (col = 0; col < R->TermWin.ncol; col++)
+        for (col = 0; col < TermWin.ncol; col++)
           {
             /* compare new text with old - if exactly the same then continue */
             rend_t rend = srp[col];     /* screen rendition (target rendtion) */
@@ -2139,7 +2137,7 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
 
             // this loop looks very messy, it can probably be optimized
             // and cleaned a bit by you?
-            for (i = 0; ++col < R->TermWin.ncol; )
+            for (i = 0; ++col < TermWin.ncol; )
               {
                 if (stp[col] == NOCHAR)
                   {
@@ -2187,7 +2185,7 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
 #ifdef OPTION_HC
             if (!rvid && (rend & RS_Blink))
               {
-                if (XDEPTH > 2 && ISSET_PIXCOLOR(R, Color_HC))
+                if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_HC))
                   back = Color_HC;
                 else
                   rvid = !rvid; /* fall back */
@@ -2198,9 +2196,9 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
                 SWAP_IT(fore, back, int);
 
 #ifndef NO_BOLD_UNDERLINE_REVERSE
-                if (XDEPTH > 2 && ISSET_PIXCOLOR(R, Color_RV)
+                if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_RV)
 # ifndef NO_CURSORCOLOR
-                    && !ISSET_PIXCOLOR(R, Color_cursor)
+                    && !ISSET_PIXCOLOR (this, Color_cursor)
 # endif
                     )
                   back = Color_RV;
@@ -2209,7 +2207,7 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
 #ifndef NO_BOLD_UNDERLINE_REVERSE
             else if (rend & RS_Bold)
               {
-                if (XDEPTH > 2 && ISSET_PIXCOLOR(R, Color_BD))
+                if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_BD))
                   {
                     fore = Color_BD;
 # ifndef VERYBOLD
@@ -2219,7 +2217,7 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
               }
             else if (rend & RS_Uline)
               {
-                if (XDEPTH > 2 && ISSET_PIXCOLOR(R, Color_UL))
+                if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_UL))
                   {
                     fore = Color_UL;
                     rend &= ~RS_Uline;  /* we've taken care of it */
@@ -2230,7 +2228,7 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
 /*
  * Actually do the drawing of the string here
  */
-            rxvt_font *font = (*R->TermWin.fontset)[fid];
+            rxvt_font *font = (*TermWin.fontset)[fid];
 
             if (back == Color_bg)
               {
@@ -2243,7 +2241,7 @@ rxvt_scr_refresh(pR_ unsigned char refresh_type)
                           goto nodraw;
                         }
 
-                    CLEAR_CHARS(xpixel, ypixel, count);
+                    CLEAR_CHARS (xpixel, ypixel, count);
 nodraw: ;
                   }
                 else
@@ -2253,7 +2251,7 @@ nodraw: ;
               font->draw (xpixel, ypixel, text, count, fore, back);
 
             if ((rend & RS_Uline) && (font->descent > 1))
-                XDrawLine(R->Xdisplay, drawBuffer, R->TermWin.gc,
+                XDrawLine(Xdisplay, drawBuffer, TermWin.gc,
                           xpixel, ypixel + font->ascent + 1,
                           xpixel + Width2Pixel(count) - 1, ypixel + font->ascent + 1);
           }                     /* for (col....) */
@@ -2263,84 +2261,86 @@ nodraw: ;
  * G: cleanup cursor and display outline cursor if necessary
  */
     if (showcursor) {
-        if (R->TermWin.focus) {
-            srp = &(R->screen.rend[R->screen.cur.row + R->TermWin.saveLines]
-                                  [R->screen.cur.col]);
+        if (TermWin.focus) {
+            srp = &(screen.rend[screen.cur.row + TermWin.saveLines]
+                                  [screen.cur.col]);
             *srp ^= RS_RVid;
 #ifndef NO_CURSORCOLOR
             *srp = (*srp & ~(RS_fgMask | RS_bgMask)) | cc1;
 #endif
-        } else if (R->oldcursor.row >= 0) {
+        } else if (oldcursor.row >= 0) {
 #ifndef NO_CURSORCOLOR
             unsigned long   gcmask;     /* Graphics Context mask */
 
-            if (XDEPTH > 2 && ISSET_PIXCOLOR(R, Color_cursor)) {
-                XSetForeground (R->Xdisplay, R->TermWin.gc, R->PixColors[Color_cursor]);
-            }
+            if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_cursor))
+              XSetForeground (Xdisplay, TermWin.gc, PixColors[Color_cursor]);
 #endif
-            XDrawRectangle(R->Xdisplay, drawBuffer, R->TermWin.gc,
-                           Col2Pixel(R->oldcursor.col),
-                           Row2Pixel(R->oldcursor.row),
+            XDrawRectangle(Xdisplay, drawBuffer, TermWin.gc,
+                           Col2Pixel(oldcursor.col),
+                           Row2Pixel(oldcursor.row),
                            (unsigned int)(Width2Pixel(cursorwidth) - 1),
-                           (unsigned int)(Height2Pixel(1) - R->TermWin.lineSpace - 1));
+                           (unsigned int)(Height2Pixel(1) - TermWin.lineSpace - 1));
         }
     }
 /*
  * H: cleanup selection
  */
-    rxvt_scr_reverse_selection(aR);
+    rxvt_scr_reverse_selection (this);
 
 /*
  * I: other general cleanup
  */
-    if (clearfirst && R->TermWin.int_bwidth)
+    if (clearfirst && TermWin.int_bwidth)
         /* 
          * clear the whole screen height, note that width == 0 is treated
          * specially by XClearArea
          */
-        XClearArea(R->Xdisplay, R->TermWin.vt, 0, 0,
-                   (unsigned int)R->TermWin.int_bwidth,
+        XClearArea(Xdisplay, TermWin.vt, 0, 0,
+                   (unsigned int)TermWin.int_bwidth,
                    (unsigned int)TermWin_TotalHeight(), False);
-    if (clearlast && R->TermWin.int_bwidth)
+    if (clearlast && TermWin.int_bwidth)
         /* 
          * clear the whole screen height, note that width == 0 is treated
          * specially by XClearArea
          */
-        XClearArea(R->Xdisplay, R->TermWin.vt,
-                   R->TermWin.width + R->TermWin.int_bwidth, 0,
-                   (unsigned int)R->TermWin.int_bwidth,
+        XClearArea(Xdisplay, TermWin.vt,
+                   TermWin.width + TermWin.int_bwidth, 0,
+                   (unsigned int)TermWin.int_bwidth,
                    (unsigned int)TermWin_TotalHeight(), False);
     if (refresh_type & SMOOTH_REFRESH)
-        XSync(R->Xdisplay, False);
+        XSync(Xdisplay, False);
 
-    R->num_scr = 0;
-    R->num_scr_allow = 1;
-    R->want_refresh = 0;        /* screen is current */
+    num_scr = 0;
+    num_scr_allow = 1;
+    want_refresh = 0;        /* screen is current */
 }
+
 /* ------------------------------------------------------------------------- */
-
-/* EXTPROTO */
 void
-rxvt_scr_clear(pR)
+rxvt_term::scr_clear()
 {
-    if (!R->TermWin.mapped)
-        return;
-    R->num_scr_allow = 0;
-    R->want_refresh = 1;
-#ifdef TRANSPARENT
-    if ((R->Options & Opt_transparent) && (R->am_pixmap_trans == 0)) {
-        int             i;
+  if (!TermWin.mapped)
+    return;
 
-        if (!(R->Options & Opt_transparent_all))
-            i = 0;
-        else
-            i = (int)(sizeof(R->TermWin.parent) / sizeof(Window));
-        for (; i--;)
-            if (R->TermWin.parent[i] != None)
-                XClearWindow(R->Xdisplay, R->TermWin.parent[i]);
+  num_scr_allow = 0;
+  want_refresh = 1;
+#ifdef TRANSPARENT
+  if ((Options & Opt_transparent) && (am_pixmap_trans == 0))
+    {
+      int i;
+
+      if (!(Options & Opt_transparent_all))
+        i = 0;
+      else
+        i = (int)(sizeof(TermWin.parent) / sizeof(Window));
+
+      while (i--)
+        if (TermWin.parent[i] != None)
+          XClearWindow(Xdisplay, TermWin.parent[i]);
     }
 #endif
-    XClearWindow(R->Xdisplay, R->TermWin.vt);
+
+  XClearWindow (Xdisplay, TermWin.vt);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -2824,23 +2824,22 @@ rxvt_selection_make(pR_ Time tm)
  * Mark or select text based upon number of clicks: 1, 2, or 3
  * EXT: button 1 press
  */
-/* EXTPROTO */
 void
-rxvt_selection_click(pR_ int clicks, int x, int y)
+rxvt_term::selection_click (int clicks, int x, int y)
 {
-    D_SELECT((stderr, "rxvt_selection_click(%d, %d, %d)", clicks, x, y));
+  D_SELECT((stderr, "rxvt_selection_click(%d, %d, %d)", clicks, x, y));
 
-    clicks = ((clicks - 1) % 3) + 1;
-    R->selection.clicks = clicks;       /* save clicks so extend will work */
+  clicks = ((clicks - 1) % 3) + 1;
+  selection.clicks = clicks;       /* save clicks so extend will work */
 
-    rxvt_selection_start_colrow(aR_ Pixel2Col(x), Pixel2Row(y));
-    if (clicks == 2 || clicks == 3)
-        rxvt_selection_extend_colrow(aR_ R->selection.mark.col,
-                                     R->selection.mark.row
-                                     + R->TermWin.view_start,
-                                     0, /* button 3     */
-                                     1, /* button press */
-                                     0);        /* click change */
+  rxvt_selection_start_colrow (this, Pixel2Col(x), Pixel2Row(y));
+
+  if (clicks == 2 || clicks == 3)
+    rxvt_selection_extend_colrow (this, selection.mark.col,
+                                  selection.mark.row + TermWin.view_start,
+                                  0, /* button 3     */
+                                  1, /* button press */
+                                  0);        /* click change */
 }
 
 /* ------------------------------------------------------------------------- */
@@ -2960,44 +2959,47 @@ rxvt_selection_delimit_word(pR_ enum page_dirn dirn, const row_col_t *mark, row_
  * flag == 1 ==> button 3 press
  * flag == 2 ==> button 3 motion
  */
-/* EXTPROTO */
 void
-rxvt_selection_extend(pR_ int x, int y, int flag)
+rxvt_term::selection_extend (int x, int y, int flag)
 {
-    int             col, row;
+  int col, row;
 
-    col = Pixel2Col(x);
-    row = Pixel2Row(y);
-    MAX_IT(row, 0);
-    MIN_IT(row, (int)R->TermWin.nrow - 1);
-    MAX_IT(col, 0);
-    MIN_IT(col, (int)R->TermWin.ncol);
+  col = Pixel2Col(x);
+  row = Pixel2Row(y);
+  MAX_IT(row, 0);
+  MIN_IT(row, (int)TermWin.nrow - 1);
+  MAX_IT(col, 0);
+  MIN_IT(col, (int)TermWin.ncol);
+
 #ifndef NO_NEW_SELECTION
-/*
- * If we're selecting characters (single click) then we must check first
- * if we are at the same place as the original mark.  If we are then
- * select nothing.  Otherwise, if we're to the right of the mark, you have to
- * be _past_ a character for it to be selected.
- */
-    if (R->selection_style != OLD_SELECT) {
-        if (((R->selection.clicks % 3) == 1) && !flag
-            && (col == R->selection.mark.col
-                && (row == R->selection.mark.row + R->TermWin.view_start))) {
-            /* select nothing */
-            R->selection.beg.row = R->selection.end.row = 0;
-            R->selection.beg.col = R->selection.end.col = 0;
-            R->selection.clicks = 4;
-            R->want_refresh = 1;
-            D_SELECT((stderr, "rxvt_selection_extend() R->selection.clicks = 4"));
-            return;
+  /*
+  * If we're selecting characters (single click) then we must check first
+  * if we are at the same place as the original mark.  If we are then
+  * select nothing.  Otherwise, if we're to the right of the mark, you have to
+  * be _past_ a character for it to be selected.
+  */
+  if (selection_style != OLD_SELECT)
+    {
+      if (((selection.clicks % 3) == 1) && !flag
+          && (col == selection.mark.col
+              && (row == selection.mark.row + TermWin.view_start)))
+        {
+          /* select nothing */
+          selection.beg.row = selection.end.row = 0;
+          selection.beg.col = selection.end.col = 0;
+          selection.clicks = 4;
+          want_refresh = 1;
+          D_SELECT((stderr, "rxvt_selection_extend() selection.clicks = 4"));
+          return;
         }
     }
 #endif
-    if (R->selection.clicks == 4)
-        R->selection.clicks = 1;
-    rxvt_selection_extend_colrow(aR_ col, row, !!flag,  /* ? button 3      */
-                                 flag == 1 ? 1 : 0,     /* ? button press  */
-                                 0);    /* no click change */
+  if (selection.clicks == 4)
+    selection.clicks = 1;
+
+  rxvt_selection_extend_colrow (this, col, row, !!flag,  /* ? button 3      */
+                                flag == 1 ? 1 : 0,     /* ? button press  */
+                                0);    /* no click change */
 }
 
 /* ------------------------------------------------------------------------- */
@@ -3261,12 +3263,11 @@ rxvt_selection_remove_trailing_spaces(pR)
  * Double click on button 3 when already selected
  * EXT: button 3 double click
  */
-/* EXTPROTO */
 void
-rxvt_selection_rotate(pR_ int x, int y)
+rxvt_term::selection_rotate (int x, int y)
 {
-    R->selection.clicks = R->selection.clicks % 3 + 1;
-    rxvt_selection_extend_colrow(aR_ Pixel2Col(x), Pixel2Row(y), 1, 0, 1);
+  selection.clicks = selection.clicks % 3 + 1;
+  rxvt_selection_extend_colrow (this, Pixel2Col(x), Pixel2Row(y), 1, 0, 1);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -3380,28 +3381,27 @@ rxvt_selection_send(pR_ const XSelectionRequestEvent *rq)
 /*
  * return col/row values corresponding to x/y pixel values
  */
-/* EXTPROTO */
 void
-rxvt_pixel_position(pR_ int *x, int *y)
+rxvt_term::pixel_position (int *x, int *y)
 {
-    *x = Pixel2Col(*x);
-/* MAX_IT(*x, 0); MIN_IT(*x, (int)R->TermWin.ncol - 1); */
-    *y = Pixel2Row(*y);
-/* MAX_IT(*y, 0); MIN_IT(*y, (int)R->TermWin.nrow - 1); */
+  *x = Pixel2Col(*x);
+  /* MAX_IT(*x, 0); MIN_IT(*x, (int)R->TermWin.ncol - 1); */
+  *y = Pixel2Row(*y);
+  /* MAX_IT(*y, 0); MIN_IT(*y, (int)R->TermWin.nrow - 1); */
 }
+
 /* ------------------------------------------------------------------------- */
 #ifdef USE_XIM
-/* EXTPROTO */
 void
-rxvt_setPosition(pR_ XPoint *pos)
+rxvt_term::set_position (XPoint *pos)
 {
-    XWindowAttributes xwa;
+  XWindowAttributes xwa;
 
-    XGetWindowAttributes(R->Xdisplay, R->TermWin.vt, &xwa);
-    pos->x = Col2Pixel(R->screen.cur.col) + xwa.x;
-    pos->y = Height2Pixel((R->screen.cur.row + 1)) + xwa.y
-             - R->TermWin.lineSpace;
+  XGetWindowAttributes (Xdisplay, TermWin.vt, &xwa);
+  pos->x = Col2Pixel (screen.cur.col) + xwa.x;
+  pos->y = Height2Pixel ((screen.cur.row + 1)) + xwa.y - TermWin.lineSpace;
 }
+
 #endif
 /* ------------------------------------------------------------------------- */
 

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        init.c
  *----------------------------------------------------------------------*
- * $Id: init.C,v 1.15 2003/12/18 07:31:19 pcg Exp $
+ * $Id: init.C,v 1.16 2003/12/18 13:33:02 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -1129,9 +1129,8 @@ rxvt_get_ourmods(pR)
 
 /*----------------------------------------------------------------------*/
 /* rxvt_Create_Windows() - Open and map the window */
-/* EXTPROTO */
 void
-rxvt_Create_Windows(pR_ int argc, const char *const *argv)
+rxvt_term::create_windows (int argc, const char *const *argv)
 {
   XClassHint      classHint;
   XWMHints        wmHint;
@@ -1142,18 +1141,18 @@ rxvt_Create_Windows(pR_ int argc, const char *const *argv)
   XSetWindowAttributes attributes;
   XWindowAttributes gattr;
 
-  XCMAP = DefaultColormap(R->Xdisplay, Xscreen);
-  XVISUAL = DefaultVisual(R->Xdisplay, Xscreen);
+  XCMAP = DefaultColormap(Xdisplay, Xscreen);
+  XVISUAL = DefaultVisual(Xdisplay, Xscreen);
 
-  if (R->Options & Opt_transparent)
+  if (Options & Opt_transparent)
     {
-      XGetWindowAttributes(R->Xdisplay, RootWindow(R->Xdisplay, Xscreen),
+      XGetWindowAttributes(Xdisplay, RootWindow(Xdisplay, Xscreen),
                            &gattr);
       XDEPTH = gattr.depth;
     }
   else
     {
-      XDEPTH = DefaultDepth(R->Xdisplay, Xscreen);
+      XDEPTH = DefaultDepth(Xdisplay, Xscreen);
       /*
        * If depth is not 24, look for a 24bit visual.
        */
@@ -1161,12 +1160,12 @@ rxvt_Create_Windows(pR_ int argc, const char *const *argv)
         {
           XVisualInfo     vinfo;
 
-          if (XMatchVisualInfo(R->Xdisplay, Xscreen, 24, TrueColor, &vinfo))
+          if (XMatchVisualInfo(Xdisplay, Xscreen, 24, TrueColor, &vinfo))
             {
               XDEPTH = 24;
               XVISUAL = vinfo.visual;
-              XCMAP = XCreateColormap(R->Xdisplay,
-                                      RootWindow(R->Xdisplay, Xscreen),
+              XCMAP = XCreateColormap(Xdisplay,
+                                      RootWindow(Xdisplay, Xscreen),
                                       XVISUAL, AllocNone);
             }
         }
@@ -1174,56 +1173,54 @@ rxvt_Create_Windows(pR_ int argc, const char *const *argv)
 #endif
 
   /* grab colors before netscape does */
-  rxvt_Get_Colours(aR);
+  rxvt_Get_Colours (this);
 
-  rxvt_change_font(aR_ 1, NULL);
-  rxvt_window_calc(aR_ 0, 0);
-  R->old_width = R->szHint.width;
-  R->old_height = R->szHint.height;
+  rxvt_change_font (this, 1, NULL);
+  window_calc (0, 0);
+  old_width = szHint.width;
+  old_height = szHint.height;
 
   /* parent window - reverse video so we can see placement errors
    * sub-window placement & size in rxvt_resize_subwindows()
    */
 
 #ifdef PREFER_24BIT
-
-  attributes.background_pixel = R->PixColors[Color_fg];
-  attributes.border_pixel = R->PixColors[Color_border];
+  attributes.background_pixel = PixColors[Color_fg];
+  attributes.border_pixel = PixColors[Color_border];
   attributes.colormap = XCMAP;
-  R->TermWin.parent[0] = XCreateWindow(R->Xdisplay, Xroot,
-                                       R->szHint.x, R->szHint.y,
-                                       R->szHint.width, R->szHint.height,
-                                       R->TermWin.ext_bwidth,
+  TermWin.parent[0] = XCreateWindow (Xdisplay, DefaultRootWindow (Xdisplay),
+                                       szHint.x, szHint.y,
+                                       szHint.width, szHint.height,
+                                       TermWin.ext_bwidth,
                                        XDEPTH, InputOutput,
                                        XVISUAL,
                                        CWBackPixel | CWBorderPixel
                                        | CWColormap, &attributes);
 #else
-
-  R->TermWin.parent[0] = XCreateSimpleWindow(R->Xdisplay, Xroot,
-                         R->szHint.x, R->szHint.y,
-                         R->szHint.width,
-                         R->szHint.height,
-                         R->TermWin.ext_bwidth,
-                         R->PixColors[Color_border],
-                         R->PixColors[Color_fg]);
+  TermWin.parent[0] = XCreateSimpleWindow (Xdisplay, DefaultRootWindow (Xdisplay),
+                         szHint.x, szHint.y,
+                         szHint.width,
+                         szHint.height,
+                         TermWin.ext_bwidth,
+                         PixColors[Color_border],
+                         PixColors[Color_fg]);
 #endif
 
-  rxvt_xterm_seq(aR_ XTerm_title, R->rs[Rs_title], CHAR_ST);
-  rxvt_xterm_seq(aR_ XTerm_iconName, R->rs[Rs_iconName], CHAR_ST);
+  rxvt_xterm_seq (this, XTerm_title, rs[Rs_title], CHAR_ST);
+  rxvt_xterm_seq (this, XTerm_iconName, rs[Rs_iconName], CHAR_ST);
 
-  classHint.res_name = (char *)R->rs[Rs_name];
+  classHint.res_name = (char *)rs[Rs_name];
   classHint.res_class = (char *)APL_CLASS;
 
   wmHint.flags = (InputHint | StateHint | WindowGroupHint);
   wmHint.input = True;
-  wmHint.initial_state = (R->Options & Opt_iconic ? IconicState
+  wmHint.initial_state = (Options & Opt_iconic ? IconicState
                           : NormalState);
-  wmHint.window_group = R->TermWin.parent[0];
+  wmHint.window_group = TermWin.parent[0];
 
-  XSetWMProperties(R->Xdisplay, R->TermWin.parent[0], NULL, NULL,
-                   (char **)argv, argc, &R->szHint, &wmHint, &classHint);
-  XSelectInput(R->Xdisplay, R->TermWin.parent[0],
+  XSetWMProperties(Xdisplay, TermWin.parent[0], NULL, NULL,
+                   (char **)argv, argc, &szHint, &wmHint, &classHint);
+  XSelectInput(Xdisplay, TermWin.parent[0],
                (KeyPressMask
 #if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
                 | KeyReleaseMask
@@ -1232,11 +1229,11 @@ rxvt_Create_Windows(pR_ int argc, const char *const *argv)
                 | StructureNotifyMask));
 
   /* vt cursor: Black-on-White is standard, but this is more popular */
-  R->TermWin_cursor = XCreateFontCursor(R->Xdisplay, XC_xterm);
+  TermWin_cursor = XCreateFontCursor(Xdisplay, XC_xterm);
 
 #if defined(HAVE_SCROLLBARS) || defined(MENUBAR)
   /* cursor (menuBar/scrollBar): Black-on-White */
-  R->leftptr_cursor = XCreateFontCursor(R->Xdisplay, XC_left_ptr);
+  leftptr_cursor = XCreateFontCursor(Xdisplay, XC_left_ptr);
 #endif
 
 #ifdef POINTER_BLANK
@@ -1246,97 +1243,97 @@ rxvt_Create_Windows(pR_ int argc, const char *const *argv)
     blackcolour.red   = 0;
     blackcolour.green = 0;
     blackcolour.blue  = 0;
-    Font f = XLoadFont (R->Xdisplay, "fixed");
-    R->blank_cursor = XCreateGlyphCursor (R->Xdisplay, f, f, ' ', ' ',
+    Font f = XLoadFont (Xdisplay, "fixed");
+    blank_cursor = XCreateGlyphCursor (Xdisplay, f, f, ' ', ' ',
                                           &blackcolour, &blackcolour);
-    XUnloadFont (R->Xdisplay, f);
+    XUnloadFont (Xdisplay, f);
   }
 #endif
 
   /* the vt window */
-  R->TermWin.vt = XCreateSimpleWindow(R->Xdisplay, R->TermWin.parent[0],
-                                      R->window_vt_x, R->window_vt_y,
+  TermWin.vt = XCreateSimpleWindow(Xdisplay, TermWin.parent[0],
+                                      window_vt_x, window_vt_y,
                                       TermWin_TotalWidth(),
                                       TermWin_TotalHeight(),
                                       0,
-                                      R->PixColors[Color_fg],
-                                      R->PixColors[Color_bg]);
+                                      PixColors[Color_fg],
+                                      PixColors[Color_bg]);
 #ifdef DEBUG_X
 
-  XStoreName(R->Xdisplay, R->TermWin.vt, "vt window");
+  XStoreName(Xdisplay, TermWin.vt, "vt window");
 #endif
 
-  R->pointer_unblank ();
+  pointer_unblank ();
 
   vt_emask = (ExposureMask | ButtonPressMask | ButtonReleaseMask
               | PropertyChangeMask);
 #ifdef POINTER_BLANK
 
-  if ((R->Options & Opt_pointerBlank))
+  if ((Options & Opt_pointerBlank))
     vt_emask |= PointerMotionMask;
   else
 #endif
 
     vt_emask |= (Button1MotionMask | Button3MotionMask);
-  XSelectInput(R->Xdisplay, R->TermWin.vt, vt_emask);
+  XSelectInput(Xdisplay, TermWin.vt, vt_emask);
 
 #if defined(MENUBAR) && (MENUBAR_MAX > 1)
 
   if (menuBar_height())
     {
-      R->menuBar.win = XCreateSimpleWindow(R->Xdisplay, R->TermWin.parent[0],
-                                           R->window_vt_x, 0,
+      menuBar.win = XCreateSimpleWindow(Xdisplay, TermWin.parent[0],
+                                           window_vt_x, 0,
                                            TermWin_TotalWidth(),
                                            menuBar_TotalHeight(),
                                            0,
-                                           R->PixColors[Color_fg],
-                                           R->PixColors[Color_scroll]);
+                                           PixColors[Color_fg],
+                                           PixColors[Color_scroll]);
 #ifdef DEBUG_X
 
-      XStoreName(R->Xdisplay, R->menuBar.win, "menubar");
+      XStoreName(Xdisplay, menuBar.win, "menubar");
 #endif
 
-      XDefineCursor(R->Xdisplay, R->menuBar.win, R->pointer_leftptr);
-      XSelectInput(R->Xdisplay, R->menuBar.win,
+      XDefineCursor(Xdisplay, menuBar.win, pointer_leftptr);
+      XSelectInput(Xdisplay, menuBar.win,
                    (ExposureMask | ButtonPressMask | ButtonReleaseMask
                     | Button1MotionMask));
     }
 #endif
 #ifdef XPM_BACKGROUND
-  if (R->rs[Rs_backgroundPixmap] != NULL
-      && !(R->Options & Opt_transparent))
+  if (rs[Rs_backgroundPixmap] != NULL
+      && !(Options & Opt_transparent))
     {
-      const char     *p = R->rs[Rs_backgroundPixmap];
+      const char     *p = rs[Rs_backgroundPixmap];
 
       if ((p = STRCHR(p, ';')) != NULL)
         {
           p++;
-          rxvt_scale_pixmap(aR_ p);
+          rxvt_scale_pixmap (this, p);
         }
-      rxvt_set_bgPixmap(aR_ R->rs[Rs_backgroundPixmap]);
-      rxvt_scr_touch(aR_ True);
+      rxvt_set_bgPixmap (this, rs[Rs_backgroundPixmap]);
+      rxvt_scr_touch (this, True);
     }
 #endif
 
   /* graphics context for the vt window */
-  gcvalue.foreground = R->PixColors[Color_fg];
-  gcvalue.background = R->PixColors[Color_bg];
+  gcvalue.foreground = PixColors[Color_fg];
+  gcvalue.background = PixColors[Color_bg];
   gcvalue.graphics_exposures = 1;
-  R->TermWin.gc = XCreateGC(R->Xdisplay, R->TermWin.vt,
+  TermWin.gc = XCreateGC(Xdisplay, TermWin.vt,
                             GCForeground | GCBackground
                             | GCGraphicsExposures, &gcvalue);
 
 #if defined(MENUBAR) || defined(RXVT_SCROLLBAR)
 
-  gcvalue.foreground = R->PixColors[Color_topShadow];
-  R->topShadowGC = XCreateGC(R->Xdisplay, R->TermWin.vt,
+  gcvalue.foreground = PixColors[Color_topShadow];
+  topShadowGC = XCreateGC(Xdisplay, TermWin.vt,
                              GCForeground, &gcvalue);
-  gcvalue.foreground = R->PixColors[Color_bottomShadow];
-  R->botShadowGC = XCreateGC(R->Xdisplay, R->TermWin.vt,
+  gcvalue.foreground = PixColors[Color_bottomShadow];
+  botShadowGC = XCreateGC(Xdisplay, TermWin.vt,
                              GCForeground, &gcvalue);
-  gcvalue.foreground = R->PixColors[(XDEPTH <= 2 ? Color_fg
+  gcvalue.foreground = PixColors[(XDEPTH <= 2 ? Color_fg
                                      : Color_scroll)];
-  R->scrollbarGC = XCreateGC(R->Xdisplay, R->TermWin.vt,
+  scrollbarGC = XCreateGC(Xdisplay, TermWin.vt,
                              GCForeground, &gcvalue);
 #endif
 }

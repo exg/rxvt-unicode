@@ -1,6 +1,6 @@
 /*
  * File:	feature.h
- * $Id: feature.h,v 1.3 2003/12/18 00:38:07 pcg Exp $
+ * $Id: feature.h,v 1.4 2003/12/18 13:33:02 pcg Exp $
  *
  * Compile-time configuration.
  *-----------------------------------------------------------------------
@@ -159,8 +159,8 @@
  * Define defaults for backspace and delete keys - unless they have been
  * configured out with --disable-backspace-key / --disable-delete-key
  */
-/* #define DEFAULT_BACKSPACE	"DEC"		*/ /* SPECIAL */
-#define DEFAULT_BACKSPACE	"\010"
+//#define DEFAULT_BACKSPACE	"DEC"		/* SPECIAL */
+#define DEFAULT_BACKSPACE	"\010"		/* wrong, but match terminfo etc. */
 #define DEFAULT_DELETE	"\033[3~"
 
 /*

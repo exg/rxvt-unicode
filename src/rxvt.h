@@ -1,5 +1,5 @@
 /*
- * $Id: rxvt.h,v 1.17 2003/12/18 07:31:19 pcg Exp $
+ * $Id: rxvt.h,v 1.18 2003/12/18 13:33:03 pcg Exp $
  */
 
 #ifndef _RXVT_H_                /* include once only */
@@ -664,17 +664,17 @@ enum {
 #define STRRCHR(x, y)           strrchr((const char *)(x), (int)(y))
 
 /* convert pixel dimensions to row/column values.  Everything as int32_t */
-#define Pixel2Col(x)            Pixel2Width((int32_t)(x) - (int32_t)R->TermWin.int_bwidth)
-#define Pixel2Row(y)            Pixel2Height((int32_t)(y) - (int32_t)R->TermWin.int_bwidth)
-#define Pixel2Width(x)          ((int32_t)(x) / (int32_t)R->TermWin.fwidth)
-#define Pixel2Height(y)         ((int32_t)(y) / (int32_t)R->TermWin.fheight)
-#define Col2Pixel(col)          ((int32_t)Width2Pixel(col) + (int32_t)R->TermWin.int_bwidth)
-#define Row2Pixel(row)          ((int32_t)Height2Pixel(row) + (int32_t)R->TermWin.int_bwidth)
-#define Width2Pixel(n)          ((int32_t)(n) * (int32_t)R->TermWin.fwidth)
-#define Height2Pixel(n)         ((int32_t)(n) * (int32_t)R->TermWin.fheight)
+#define Pixel2Col(x)            Pixel2Width((int32_t)(x) - (int32_t)TermWin.int_bwidth)
+#define Pixel2Row(y)            Pixel2Height((int32_t)(y) - (int32_t)TermWin.int_bwidth)
+#define Pixel2Width(x)          ((int32_t)(x) / (int32_t)TermWin.fwidth)
+#define Pixel2Height(y)         ((int32_t)(y) / (int32_t)TermWin.fheight)
+#define Col2Pixel(col)          ((int32_t)Width2Pixel(col) + (int32_t)TermWin.int_bwidth)
+#define Row2Pixel(row)          ((int32_t)Height2Pixel(row) + (int32_t)TermWin.int_bwidth)
+#define Width2Pixel(n)          ((int32_t)(n) * (int32_t)TermWin.fwidth)
+#define Height2Pixel(n)         ((int32_t)(n) * (int32_t)TermWin.fheight)
 
-#define TermWin_TotalWidth()    ((int32_t)R->TermWin.width  + 2 * (int32_t)R->TermWin.int_bwidth)
-#define TermWin_TotalHeight()   ((int32_t)R->TermWin.height + 2 * (int32_t)R->TermWin.int_bwidth)
+#define TermWin_TotalWidth()    ((int32_t)TermWin.width  + 2 * (int32_t)TermWin.int_bwidth)
+#define TermWin_TotalHeight()   ((int32_t)TermWin.height + 2 * (int32_t)TermWin.int_bwidth)
 
 #define Xscreen                 DefaultScreen(R->Xdisplay)
 #define Xroot                   DefaultRootWindow(R->Xdisplay)
@@ -716,7 +716,7 @@ enum {
 #define ISSET_PIXCOLOR(h, x)    ((h)->pixcolor_set[(x) / NPIXCLR_BITS] & (1 << ((x) % NPIXCLR_BITS)))
 
 #ifdef HAVE_SCROLLBARS
-# define scrollbar_TotalWidth() (R->scrollBar.width + R->sb_shadow * 2)
+# define scrollbar_TotalWidth() (scrollBar.width + sb_shadow * 2)
 #else
 # define scrollbar_TotalWidth() (0)
 #endif
@@ -747,7 +747,7 @@ enum {
 
 #if (MENUBAR_MAX > 1)
 /* rendition style flags */
-# define menuBar_height()       (R->TermWin.fheight + SHADOW)
+# define menuBar_height()       (TermWin.fheight + SHADOW)
 # define menuBar_TotalHeight()  (menuBar_height() + SHADOW + menuBar_margin)
 # define isMenuBarWindow(w)     ((w) == R->menuBar.win)
 #else
@@ -1139,6 +1139,24 @@ struct rxvt_term : rxvt_vars {
 
   void color_aliases(int idx);
   void recolour_cursor ();
+  void create_windows (int argc, const char *const *argv);
+  void resize_all_windows (unsigned int width, unsigned int height, int ignoreparent);
+  void window_calc (unsigned int width, unsigned int height);
+  void set_preedit_area (XRectangle * preedit_rect, XRectangle * status_rect, XRectangle * needed_rect);
+
+#if USE_XIM
+  void set_size (XRectangle *size);
+  void set_position (XPoint *pos);
+  void set_color (unsigned long *fg, unsigned long *bg);
+#endif
+
+  void resize_scrollbar ();
+
+  void pixel_position (int *x, int *y);
+
+  void selection_click (int clicks, int x, int y);
+  void selection_extend (int x, int y, int flag);
+  void selection_rotate (int x, int y);
 
   /* screen(!) */
   void scr_blank_line (text_t *et, rend_t *er, unsigned int width, rend_t efs);
@@ -1147,6 +1165,11 @@ struct rxvt_term : rxvt_vars {
   void scr_reset ();
   void scr_reset_realloc ();
   void scr_release ();
+  void scr_clear ();
+  void scr_refresh (unsigned char refresh_type);
+  void scr_erase_screen (int mode);
+  void scr_touch (bool refresh);
+  void scr_expose (int x, int y, int width, int height, bool refresh);
 };
 
 #define SET_LOCALE(locale) rxvt_set_locale (locale)
