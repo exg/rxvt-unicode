@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.8 2004/01/17 01:20:01 pcg Exp $
+# $Id: Makefile.in,v 1.9 2004/01/28 23:48:02 pcg Exp $
 @MCOMMON@
 
 LINT = lint -DNARROWPROTO=1 $(XINC) -chapbxz
@@ -24,7 +24,7 @@ DEBUG=-DDEBUG_STRICT @DEBUG@
 first_rule: all
 dummy:
 
-LIBSRCS = command.C defaultfont.C graphics.C grkelot.C init.C logging.C \
+LIBSRCS = command.C defaultfont.C grkelot.C init.C logging.C \
 	main.C menubar.C misc.C netdisp.C ptytty.C screen.C scrollbar.C \
 	scrollbar-rxvt.C scrollbar-next.C scrollbar-xterm.C strings.C \
 	xdefaults.C xpm.C encoding.C rxvtcolor.C rxvtstl.C iom.C
@@ -37,11 +37,11 @@ HDRS =	command.h defaultfont.h feature.h grkelot.h init.h logging.h \
 
 EXTRAHDRS = rxvtlib.h rxvtdaemon.h
 
-OBJS =	command.o defaultfont.o init.o graphics.o grkelot.o logging.o \
+OBJS =	command.o defaultfont.o init.o grkelot.o logging.o \
 	main.o menubar.o misc.o netdisp.o ptytty.o screen.o \
 	scrollbar.o scrollbar-next.o scrollbar-rxvt.o scrollbar-xterm.o \
 	strings.o xdefaults.o xpm.o rxvt.o encoding.o rxvtcolor.o rxvtstl.o iom.o
-LIBOBJS = command.lo defaultfont.lo init.lo graphics.lo grkelot.lo logging.lo \
+LIBOBJS = command.lo defaultfont.lo init.lo grkelot.lo logging.lo \
 	main.lo menubar.lo misc.lo netdisp.lo ptytty.lo screen.lo \
 	scrollbar.lo scrollbar-next.lo scrollbar-rxvt.lo scrollbar-xterm.lo \
 	strings.lo xdefaults.lo xpm.lo encoding.lo rxvt.lo rxvtcolor.lo rxvtstl.lo iom.lo
@@ -58,13 +58,13 @@ RXVTD_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)d$(EXEEXT)
 RXVTD_VERNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)d-$(VERSION)$(EXEEXT)
 RXVT_OLDNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)-old$(EXEEXT)
 
-EXTPROS = command.extpro defaultfont.extpro graphics.extpro grkelot.extpro \
+EXTPROS = command.extpro defaultfont.extpro grkelot.extpro \
 	init.extpro logging.extpro main.extpro menubar.extpro misc.extpro \
 	netdisp.extpro ptytty.extpro screen.extpro scrollbar.extpro \
 	scrollbar-rxvt.extpro scrollbar-next.extpro scrollbar-xterm.extpro \
 	strings.extpro xdefaults.extpro xpm.extpro
 
-INTPROS = command.intpro defaultfont.intpro graphics.intpro grkelot.intpro \
+INTPROS = command.intpro defaultfont.intpro grkelot.intpro \
 	init.intpro logging.intpro main.intpro menubar.intpro misc.intpro \
 	netdisp.intpro ptytty.intpro screen.intpro scrollbar.intpro \
 	scrollbar-rxvt.intpro scrollbar-next.intpro scrollbar-xterm.intpro \
@@ -192,7 +192,6 @@ rxvtc.o:            rxvtc.C     $(DEPS) rxvtdaemon.h rxvtstl.h
 
 command.o:          command.C   $(DEPS) command.intpro	command.h version.h
 defaultfont.o:      defaultfont.C $(DEPS) defaultfont.intpro defaultfont.h
-graphics.o:         graphics.C  $(DEPS) graphics.intpro
 grkelot.o:          grkelot.C   $(DEPS) grkelot.intpro	grkelot.h
 init.o:             init.C      $(DEPS) init.intpro	init.h	defaultfont.h
 logging.o:          logging.C   $(DEPS) logging.intpro	logging.h
@@ -216,7 +215,6 @@ iom.o:              iom.C	$(DEPS)	iom.h
 
 command.lo:         command.C   $(DEPS) command.intpro	command.h version.h
 defaultfont.lo:     defaultfont.C $(DEPS) defaultfont.intpro defaultfont.h encoding.h
-graphics.lo:        graphics.C  $(DEPS) graphics.intpro	defaultfont.h
 grkelot.lo:         grkelot.C   $(DEPS) grkelot.intpro	grkelot.h
 init.lo:            init.C      $(DEPS) init.intpro	init.h	
 logging.lo:         logging.C   $(DEPS) logging.intpro	logging.h

@@ -1,5 +1,5 @@
 # ./Makefile.in			-*- Makefile -*-
-# $Id: Makefile.in,v 1.4 2003/12/18 07:41:39 pcg Exp $
+# $Id: Makefile.in,v 1.5 2004/01/28 23:48:01 pcg Exp $
 @MCOMMON@
 
 srcdir =	@srcdir@
@@ -9,7 +9,7 @@ VPATH =		@srcdir@
 first_rule: all
 dummy:
 
-subdirs = src doc src/graphics src/test
+subdirs = src doc src/test
 allsubdirs = W11 $(subdirs)
 
 DIST =	INSTALL README.configure configure Makefile Makefile.in ChangeLog
@@ -42,12 +42,6 @@ clean:
 #
 rxvt:
 	(cd src; ${MAKE})
-
-clock:
-	(cd rclock; ${MAKE})
-
-graphics qplot:
-	(cd src/graphics; ${MAKE} qplot)
 
 tests:
 	(cd src/test; ${MAKE} tests)

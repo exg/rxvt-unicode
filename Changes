@@ -1,4 +1,4 @@
-1.5
+1.5  Thu Jan 29 00:43:48 CET 2004
 	- share io manager between rxvt-unicode and vpe
         - bugfix for --disable-utmp, reported by fefe himsel.
         - colors were sometimes not used correctly because
@@ -8,6 +8,7 @@
           Markus Demleitner.
         - improved selection support, now supports UTF8_STRING
           and properly encodes CUT_BUFFER0 in iso-8859-1.
+        - completely removed non-working graphics mode.
 
 1.4  Fri Jan 16 23:03:22 CET 2004
 	- fix stupid segfault on esc-c
