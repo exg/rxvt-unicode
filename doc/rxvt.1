@@ -84,11 +84,6 @@ unicode characters\&. The first font defines the cell size for characters,
 pther fonts might be smaller, but not larger\&. A reasonable default list
 is appended\&.
 resource \fBfont\fP\&.
-.IP "\fB-grk\fP \fImode\fP" 
-Compile \fIGreek\fP: Greek keyboard translation;
-\fBiso\fP: ISO-8859 mapping\&.
-\fBibm\fP: IBM-437 mapping;
-resource \fBgreek_keyboard\fP\&.
 .IP "\fB-name\fP \fIname\fP" 
 Specify the application name under which resources
 are to be obtained, rather than the default executable file name\&.
@@ -293,15 +288,6 @@ unicode characters\&. The first font defines the cell size for characters,
 pther fonts might be smaller, but not larger\&. A reasonable default list
 is appended\&.
 option \fB-fn\fP\&.
-.IP "\fBgreek_keyboard:\fP \fImode\fP" 
-Set the Greek keyboard translation mode to be used;
-\fBiso\fP: ISO-8859 mapping (elot-928) [default]\&.
-\fBibm\fP: IBM-437 mapping (DOS codepage 737);
-option \fB-grk\fP\&.
-.IP "\fBgreektoggle_key:\fP \fIkeysym\fP" 
-Set the key to toggle keyboard input between no translation and
-Greek translation  [default \fBMode_switch\fP]\&.
-For more details, see the distributed file \fBREADME\&.greek\fP\&.
 .IP "\fBselectstyle:\fP \fImode\fP" 
 Set mouse selection style to \fBold\fP which is 2\&.20, \fBoldword\fP which
 is xterm style with 2\&.20 old word selection, or anything else which
@@ -519,10 +505,6 @@ can be selected using resources \fBsmallfont_key\fP/\fBbigfont_key\fP\&.
 seen via the \fIwho(1)\fP command, and can accept messages\&.  To allow this
 feature, \fBrxvt\fP must be installed setuid root on some systems\&.
 .SH "COLORS AND GRAPHICS" 
-.PP 
-If graphics support was enabled at compile-time, \fBrxvt\fP can be queried
-with ANSI escape sequences and can address individual pixels instead of
-text characters\&.  Note the graphics support is still considered beta code\&.
 .PP 
 In addition to the default foreground and background colours, \fBrxvt\fP
 can display up to 16 colours (8 ANSI colours plus high-intensity bold/blink
@@ -1076,7 +1058,7 @@ University of Kent, 1992, wrote the original Xvt\&.
 .IP "Rob Nation <nation@rocket\&.sanders\&.lockheed\&.com>" 
 very heavily modified Xvt and came up with Rxvt
 .IP "Angelo Haritsis <ah@doc\&.ic\&.ac\&.uk>" 
-wrote the Greek Keyboard Input
+wrote the Greek Keyboard Input (no longer in code)
 .IP "mj olesen <olesen@me\&.QueensU\&.CA>" 
 Wrote the menu system\&. 
 .br 
@@ -1084,6 +1066,11 @@ Project Coordinator (changes\&.txt 2\&.11 to 2\&.21)
 .IP "Oezguer Kesim <kesim@math\&.fu-berlin\&.de>" 
 Project Coordinator (changes\&.txt 2\&.21a to 2\&.4\&.5)
 .IP "Geoff Wing <gcw@pobox\&.com>" 
-Rewrote screen display and text selection routines\&. 
+Rewrote screen display and text selection routines\&.
+Project Coordinator (changes\&.txt 2\&.4\&.6 - rxvt-unicode)
+.IP "Marc Alexander Lehman <rxvt@schmorp\&.de>" 
+Rewrote most of the display code and internal character handling
+to store text in unicode\&. Numerous other fixes and extensions\&. 
 .br 
-Project Coordinator (changes\&.txt 2\&.4\&.6 - )
+Project Coordinator (Changes 1\&.0 - )
+.PP 

@@ -12,6 +12,10 @@
           keysyms that also have string translations, when not --enable-xim.
           reported by joel reed.
         - countless minor bugfixes.
+        - re-enabled esc-seq. for font-switching (\033 ] 50 ; <fontset> \007).
+        - fix bug in locale-handling that kept the correct locale from
+          being selected.
+        - implemented esc-seq. to switch locales (\033 ] 9 ; <locale> \007).
         - removed greek support.
 
 1.8  Mon Feb  2 20:09:18 CET 2004

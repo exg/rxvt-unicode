@@ -3077,7 +3077,8 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
         change_font (str);
         break;
       case XTerm_locale:
-        /* TODO */
+        set_locale (str);
+        im_cb ();
         break;
 #if 0
       case XTerm_dumpscreen:	/* no error notices */
