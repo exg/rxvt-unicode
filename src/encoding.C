@@ -46,9 +46,11 @@ const struct n2cs {
   { "VISCII*",		CS_VISCII	    },
                                             
   { "JISX0201*",	CS_JIS0201_1976_0   },
-  { "JISX0208*",	CS_JIS0208_1983_0   }, // also wrongly matches -1990-0 (check Encode::JP)
+  { "JISX0208*",	CS_JIS0208_1990_0   }, // also wrongly matches -1987-0? (check Encode::JP)
   { "JISX0212*",	CS_JIS0212_1990_0   },
-  { "JISX0221*",	CS_UNICODE          },
+  { "JISX021320001",	CS_JIS0213_1        },
+  { "JISX021320002",	CS_JIS0213_2        },
+  { "JISX0221*",	CS_UNICODE          }, // _very_ close
                                             
   { "KSC5601*",		CS_KSC5601_1987_0   },
   { "KSX1001*",		CS_KSC5601_1987_0   },
@@ -115,12 +117,12 @@ codeset_from_name (const char *name)
 }
 
 struct rxvt_codeset_conv_unknown : rxvt_codeset_conv {
-  uint32_t to_unicode (uint32_t enc) const { return NOCHAR; }
-  uint32_t from_unicode (uint32_t unicode) const { return NOCHAR; }
+  unicode_t to_unicode (uint32_t enc) const { return NOCHAR; }
+  uint32_t from_unicode (unicode_t unicode) const { return NOCHAR; }
 } rxvt_codeset_conv_unknown;
 
 struct rxvt_codeset_conv_us_ascii : rxvt_codeset_conv {
-  uint32_t from_unicode (uint32_t unicode) const { return unicode <= 127 ? unicode : NOCHAR; }
+  uint32_t from_unicode (unicode_t unicode) const { return unicode <= 127 ? unicode : NOCHAR; }
 } rxvt_codeset_conv_us_ascii;
 
 struct rxvt_codeset_conv_unicode : rxvt_codeset_conv {
@@ -128,8 +130,8 @@ struct rxvt_codeset_conv_unicode : rxvt_codeset_conv {
 } rxvt_codeset_conv_unicode;
 
 struct rxvt_codeset_conv_unicode_16 : rxvt_codeset_conv {
-  uint32_t to_unicode (uint32_t enc) const { return enc; }
-  uint32_t from_unicode (uint32_t unicode) const { return unicode <= 65535 ? unicode : NOCHAR; }
+  unicode_t to_unicode (uint32_t enc) const { return enc; }
+  uint32_t from_unicode (unicode_t unicode) const { return unicode <= 65535 ? unicode : NOCHAR; }
 } rxvt_codeset_conv_unicode_16;
 
 #define ENCODING_DEFAULT
@@ -185,7 +187,7 @@ struct rxvt_codeset_conv_unicode_16 : rxvt_codeset_conv {
 //#define ENCODING_JP
 
 #include "table/jis0201_1976_0.h"
-#include "table/jis0208_1983_0.h"
+#include "table/jis0208_1990_0.h"
 #include "table/jis0212_1990_0.h"
 
 //#define ENCODING_JP_EXT
@@ -219,7 +221,7 @@ const rxvt_codeset_conv *rxvt_codeset[NUM_CODESETS] = {
   &rxvt_codeset_conv_koi8_u,
 
   &rxvt_codeset_conv_jis0201_1976_0,
-  &rxvt_codeset_conv_jis0208_1983_0,
+  &rxvt_codeset_conv_jis0208_1990_0,
   &rxvt_codeset_conv_jis0212_1990_0,
 
   &rxvt_codeset_conv_jis0213_1,
@@ -253,8 +255,8 @@ const rxvt_codeset_conv *rxvt_codeset[NUM_CODESETS] = {
 
 #include "table/compose.h"
 
-uint32_t
-rxvt_compose (uint32_t c1, uint32_t c2)
+unicode_t
+rxvt_compose (unicode_t c1, unicode_t c2)
 {
   int l = 0;
   int r = sizeof (rxvt_compose_table) / sizeof (rxvt_compose_entry) - 1;
@@ -274,4 +276,11 @@ rxvt_compose (uint32_t c1, uint32_t c2)
     }
 
   return NOCHAR;
+}
+
+#include "table/category.h"
+
+bool unicode::is_space (unicode_t c)
+{
+  return IS_SPACE (c);
 }

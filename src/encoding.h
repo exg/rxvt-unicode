@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+typedef uint32_t unicode_t;
+
 // order must match the table in encoding.C(!)
 enum codeset {
   CS_UNKNOWN = 0,
@@ -27,9 +29,8 @@ enum codeset {
   CS_KOI8_R,
   CS_KOI8_U,
   CS_JIS0201_1976_0,
-  CS_JIS0208_1983_0,
+  CS_JIS0208_1990_0,
   CS_JIS0212_1990_0,
-
   CS_JIS0213_1,
   CS_JIS0213_2,
 
@@ -67,16 +68,22 @@ enum {
 };
 
 struct rxvt_codeset_conv {
-  virtual uint32_t from_unicode (uint32_t unicode) const { return unicode; }
-  virtual uint32_t to_unicode (uint32_t enc) const { return enc; }
+  virtual uint32_t from_unicode (unicode_t unicode) const { return unicode; }
+#if ENCODING_TO_UNICODE
+  virtual unicode_t to_unicode (uint32_t enc) const { return enc; }
+#endif
 };
 
 extern const rxvt_codeset_conv *rxvt_codeset[NUM_CODESETS];
 
-extern uint32_t rxvt_compose (uint32_t c1, uint32_t c2);
+extern unicode_t rxvt_compose (unicode_t c1, unicode_t c2);
 
 #define FROM_UNICODE(cs,code) rxvt_codeset[cs]->from_unicode (code)
 #define TO_UNICODE(cs,code)   rxvt_codeset[cs]->to_unicode   (code)
+
+struct unicode { // namespace für arme
+  static bool is_space (unicode_t c);
+};
 
 #endif
 

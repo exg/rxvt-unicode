@@ -63,7 +63,7 @@ const struct rxvt_fallback_font {
   { CS_UNICODE,        "xft:Kochi Gothic:antialias=false"          },
 # endif
   { CS_JIS0201_1976_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0201*-0"  },
-  { CS_JIS0208_1983_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0208*-0"  },
+  { CS_JIS0208_1990_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0208*-0"  },
   { CS_JIS0212_1990_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0212*-0"  },
 #endif
 

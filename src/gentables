@@ -1,12 +1,14 @@
 #!/opt/bin/perl
 
-# the generated tables mostly have NOT been chcked so far!
+# the generated tables mostly have NOT been checked so far!
 
 use v5.8.2;
 use utf8;
 use Encode;
 
 my $gen;
+
+$TO_UNICODE = 0; # also generate to_unicode tables
 
 sub linear {
    my ($a, $l, $h, $b) = @_;
@@ -215,11 +217,12 @@ while (<DATA>) {
       }
    }
 
-   my ($tab1, $fun1) = gen \@enc1, "$base\_f", "unicode";
-   my ($tab2, $fun2) = gen \@enc2, "$base\_t", "enc";
+   my ($tab1, $fun1);
+   my ($tab2, $fun2);
 
-   #$tab1 =~ s/^/  /gm;
-   #$tab2 =~ s/^/  /gm;
+   ($tab1, $fun1) = gen \@enc1, "$base\_f", "unicode";
+   ($tab2, $fun2) = gen \@enc2, "$base\_t", "enc" if $TO_UNICODE;
+
    $fun1 =~ s/^/    /gm;
    $fun2 =~ s/^/    /gm;
 
@@ -234,10 +237,20 @@ while (<DATA>) {
 
 $tab1$tab2
 struct rxvt_codeset_conv_$base : rxvt_codeset_conv {
-  uint32_t from_unicode (uint32_t unicode) const {
+  uint32_t from_unicode (unicode_t unicode) const {
 $fun1  }
-  uint32_t to_unicode (uint32_t enc) const {
+EOF
+
+if ($TO_UNICODE) {
+   print OUT <<EOF
+#if ENCODING_TO_UNICODE
+  unicode_t to_unicode (uint32_t enc) const {
 $fun2  }
+#endif
+EOF
+}
+
+print OUT <<EOF;
 } rxvt_codeset_conv_$base;
 
 #else
@@ -283,7 +296,7 @@ EU		iso8859_14		iso-8859-14
 DEFAULT		iso8859_15		iso-8859-15
 EU		iso8859_16		iso-8859-16
 JP		jis0201_1976_0		jis0201-raw
-JP		jis0208_1983_0		jis0208-raw
+JP		jis0208_1990_0		jis0208-raw
 JP		jis0212_1990_0		jis0212-raw
 JP_EXT		jis0213_1		jis0213-1-raw
 JP_EXT		jis0213_2		jis0213-2-raw
