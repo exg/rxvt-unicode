@@ -925,6 +925,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   if (options & Opt_borderLess)
     {
       prop = XInternAtom(display->display, "_MOTIF_WM_INFO", True);
+
       if (prop == None)
         {
           /*     print_warning("Window Manager does not support MWM hints.  Bypassing window manager control for borderless window.\n");*/
@@ -993,6 +994,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
 #if ENABLE_FRILLS
   long pid = getpid ();
+
   XChangeProperty (display->display, TermWin.parent[0],
                    display->atom ("_NET_WM_PID"), XA_CARDINAL, 32,
                    PropModeReplace, (unsigned char *)&pid, 1);
@@ -1012,7 +1014,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   if (mwmhints.flags)
     {
       prop = XInternAtom (display->display, "_MOTIF_WM_HINTS", False);
-      XChangeProperty (display->display, TermWin.parent[0], prop, prop, 32, PropModeReplace, (unsigned char *) &mwmhints, PROP_MWM_HINTS_ELEMENTS);
+      XChangeProperty (display->display, TermWin.parent[0], prop, prop, 32,
+                       PropModeReplace, (unsigned char *)&mwmhints, PROP_MWM_HINTS_ELEMENTS);
     }
 #endif
 
