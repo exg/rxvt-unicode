@@ -1670,8 +1670,8 @@ rxvt_term::rootwin_cb (XEvent &ev)
          * if user used some Esetroot compatible prog to set the root bg,
          * use the property to determine the pixmap.  We use it later on.
          */
-        if (ev.xproperty.atom == xa[XA_XROOTPMAP_ID]
-            || ev.xproperty.atom == xa[XA_ESETROOT_PMAP_ID])
+        if (ev.xproperty.atom != xa[XA_XROOTPMAP_ID]
+            && ev.xproperty.atom != xa[XA_ESETROOT_PMAP_ID])
           return;
 
         /* FALLTHROUGH */
