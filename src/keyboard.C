@@ -238,11 +238,9 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
 {
   assert (hash[0] == 0 && "register_done() need to be called");
 
-  if (state & term->ModMetaMask)
-    state |= MetaMask;
-
-  if (state & term->ModNumLockMask)
-    state |= NumLockMask;
+  if (state & term->ModMetaMask)    state |= MetaMask;
+  if (state & term->ModNumLockMask) state |= NumLockMask;
+  if (state & term->ModLevel3Mask)  state |= Level3Mask;
 
   if (!!(term->priv_modes & PrivMode_aplKP) != !!(state & ShiftMask))
     state |= AppKeypadMask;
@@ -437,6 +435,7 @@ keyboard_manager::setup_hash ()
       for (int j = 0; j < a->range; ++j)
         {
           int index = find_keysym (a->keysym + j, a->state & OtherModMask);
+
           assert (index >= 0);
           keysym_t *b = keymap [index];
           assert (i == (signed) index ||	// the normally expected result

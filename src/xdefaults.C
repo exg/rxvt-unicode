@@ -31,6 +31,10 @@
 #include "rxvt.h"		/* NECESSARY */
 #include "version.h"
 
+#ifdef KEYSYM_RESOURCE
+#include "keyboard.h"
+#endif
+
 /* #define DEBUG_RESOURCES */
 
 static const char *const xnames[2] = { ".Xdefaults", ".Xresources" };
@@ -218,8 +222,6 @@ optList[] = {
               STRG (Rs_ext_bwidth, NULL, "borderwidth", NULL, NULL),
               STRG (Rs_int_bwidth, "internalBorder", "b", "number", "internal border in pixels"),
               BOOL (Rs_borderLess, "borderLess", "bl", Opt_borderLess, "borderless window"),
-#endif
-#ifndef NO_LINESPACE
               STRG (Rs_lineSpace, "lineSpace", "lsp", "number", "number of extra pixels between rows"),
 #endif
               STRG (Rs_scrollBar_thickness, "thickness", "sbt", "number", "scrollbar thickness/width in pixels"),
@@ -359,9 +361,6 @@ static const char optionsstring[] = "options: "
 #endif
 #if defined(ENABLE_FRILLS)
                                     "frills,"
-#endif
-#if !defined(NO_LINESPACE)
-                                    "linespace,"
 #endif
 #if defined(PREFER_24BIT)
                                     "24bit,"
@@ -627,24 +626,93 @@ rxvt_define_key (XrmDatabase *database __attribute__((unused)),
  *      non-NULL for command-line options (need to allocate)
  */
 #define NEWARGLIM	500	/* `reasonable' size */
+
+struct keysym_vocabulary_t
+{
+  const char    *name;
+  unsigned short len;
+  unsigned short value;
+};
+keysym_vocabulary_t keysym_vocabulary[] =
+{
+  { "ISOLevel3", 9, Level3Mask    },
+  { "AppKeypad", 9, AppKeypadMask },
+  { "Control",   7, ControlMask   },
+  { "NumLock",   7, NumLockMask   },
+  { "Shift",     5, ShiftMask     },
+  { "Meta",      4, MetaMask      },
+  { "Lock",      4, LockMask      },
+  { "Mod1",      4, Mod1Mask      },
+  { "Mod2",      4, Mod2Mask      },
+  { "Mod3",      4, Mod3Mask      },
+  { "Mod4",      4, Mod4Mask      },
+  { "Mod5",      4, Mod5Mask      },
+  { "I",         1, Level3Mask    },
+  { "K",         1, AppKeypadMask },
+  { "C",         1, ControlMask   },
+  { "N",         1, NumLockMask   },
+  { "S",         1, ShiftMask     },
+  { "M",         1, MetaMask      },
+  { "A",         1, MetaMask      },
+  { "L",         1, LockMask      },
+  { "1",         1, Mod1Mask      },
+  { "2",         1, Mod2Mask      },
+  { "3",         1, Mod3Mask      },
+  { "4",         1, Mod4Mask      },
+  { "5",         1, Mod5Mask      },
+};
+
 int
 rxvt_term::parse_keysym (const char *str, const char *arg)
 {
-  int             n, sym;
-  char           *key_string, *newarg = NULL;
-  char            newargstr[NEWARGLIM];
+  int          n, sym;
+  unsigned int state = 0;
+  const char   *pmodend = NULL;
+  char         *newarg = NULL;
+  char         newargstr[NEWARGLIM];
 
   if (arg == NULL)
     {
       if ((n = rxvt_Str_match (str, "keysym.")) == 0)
         return 0;
+
       str += n;		/* skip `keysym.' */
+      if ((pmodend = strchr (str, ':')) < str)
+        return -1;
     }
-  /* some scanf () have trouble with a 0x prefix */
-  if (isdigit (str[0]))
+  else
+    pmodend = str + strlen(str);
+
+  for (--pmodend; str < pmodend; --pmodend)
+    if (*pmodend == '-')
+      break;
+
+  while (str < pmodend)
     {
-      if (str[0] == '0' && toupper (str[1]) == 'X')
-        str += 2;
+      unsigned int i;
+
+      for (i=0; i < sizeof (keysym_vocabulary) / sizeof (keysym_vocabulary_t); ++i)
+        {
+          if (strncmp (str, keysym_vocabulary [i].name, keysym_vocabulary [i].len) == 0)
+            {
+              state |= keysym_vocabulary[i].value;
+              str += keysym_vocabulary[i].len;
+              break;
+            }
+        }
+
+      if (i >= sizeof (keysym_vocabulary) / sizeof (keysym_vocabulary_t))
+        return -1;
+
+      if (*str == '-')
+        ++str;
+    }
+
+  /* some scanf () have trouble with a 0x prefix */
+  if (str[0] == '0' && toupper (str[1]) == 'X')
+    {
+      str += 2;
+
       if (arg)
         {
           if (sscanf (str, (strchr (str, ':') ? "%x:" : "%x"), &sym) != 1)
@@ -668,21 +736,18 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
        */
       strncpy (newargstr, str, NEWARGLIM - 1);
       newargstr[NEWARGLIM - 1] = '\0';
+
       if (arg == NULL)
         {
           if ((newarg = strchr (newargstr, ':')) == NULL)
             return -1;
+
           *newarg++ = '\0';	/* terminate keysym name */
         }
+
       if ((sym = XStringToKeysym (newargstr)) == None)
         return -1;
     }
-
-  if (sym < 0xFF00 || sym > 0xFFFF)	/* we only do extended keys */
-    return -1;
-  sym &= 0xFF;
-  if (Keysym_map[sym] != NULL)	/* already set ? */
-    return -1;
 
   if (newarg == NULL)
     {
@@ -690,16 +755,12 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
       newargstr[NEWARGLIM - 1] = '\0';
       newarg = newargstr;
     }
+
   rxvt_Str_trim (newarg);
   if (*newarg == '\0' || (n = rxvt_Str_escaped (newarg)) == 0)
     return -1;
-  MIN_IT (n, 255);
-  key_string = (char *)rxvt_malloc ((n + 1) * sizeof (char));
 
-  key_string[0] = n;
-  strncpy (key_string + 1, newarg, n);
-  Keysym_map[sym] = (unsigned char *)key_string;
-
+  keyboard->register_user_translation (sym, state, newarg);
   return 1;
 }
 
