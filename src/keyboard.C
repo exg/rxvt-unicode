@@ -38,8 +38,6 @@ keysym_t keyboard_manager::stock_keymap[] = {
 static void
 output_string (rxvt_term *rt, const char *str)
 {
-  assert (rt && str);
-
   if (strncmp (str, "proto:", 6) == 0)
     rt->cmd_write ((unsigned char *)str + 6, strlen (str) - 6);
   else
@@ -103,8 +101,6 @@ bitcount (uint16_t n)
 static int
 compare_priority (keysym_t *a, keysym_t *b)
 {
-  assert (a && b);
-
   // (the more '1's in state; the less range): the greater priority
   int ca = bitcount (a->state /* & OtherModMask */);
   int cb = bitcount (b->state /* & OtherModMask */);
@@ -159,11 +155,8 @@ keyboard_manager::clear ()
 void
 keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, const char *trans)
 {
-  assert (trans);
-
   keysym_t *key = new keysym_t;
   wchar_t *wc = rxvt_mbstowcs (trans);
-printf ("CONV <%s> %x %x %x %x\n", trans, (int)wc[0], (int)wc[1], (int)wc[2], (int)wc[3]);
   const char *translation = rxvt_wcstoutf8 (wc);
   free (wc);
 
@@ -206,9 +199,6 @@ printf ("CONV <%s> %x %x %x %x\n", trans, (int)wc[0], (int)wc[1], (int)wc[2], (i
 void
 keyboard_manager::register_keymap (keysym_t *key)
 {
-  assert (key);
-  assert (key->range >= 1);
-
   if (keymap.size () == keymap.capacity ())
     keymap.reserve (keymap.size () * 2);
 
@@ -349,13 +339,12 @@ keyboard_manager::setup_hash ()
   // count keysyms for corresponding hash budgets
   for (i = 0; i < keymap.size (); ++i)
     {
-      assert (keymap [i]);
-      hashkey = (keymap [i]->keysym & KEYSYM_HASH_MASK);
+      hashkey = keymap [i]->keysym & KEYSYM_HASH_MASK;
       ++hash_budget_size [hashkey];
     }
 
-  // keysym A with range>1 is counted one more time for
-  // every keysym B lies in its range
+  // a keysym_t with range>1 is counted one more time for every keysym that
+  // lies in its range
   for (i = 0; i < keymap.size (); ++i)
     {
       if (keymap[i]->range > 1)
@@ -451,7 +440,6 @@ keyboard_manager::find_keysym (KeySym keysym, unsigned int state)
   for (; index < keymap.size (); ++index)
     {
       keysym_t *key = keymap [index];
-      assert (key);
 
       if (key->keysym <= keysym && key->keysym + key->range > keysym
           // match only the specified bits in state and ignore others
