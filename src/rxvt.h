@@ -565,8 +565,9 @@ enum {
   Rs_scrollBar_right,
   Rs_scrollBar_floating,
   Rs_scrollBar_align,
-#endif
   Rs_scrollstyle,     /* Rs_scrollBar_style */
+  Rs_scrollBar_thickness,
+#endif
   Rs_scrollTtyOutput,
   Rs_scrollTtyKeypress,
   Rs_scrollWithBuffer,
@@ -605,7 +606,6 @@ enum {
   Rs_int_bwidth,
   Rs_borderLess,
 #endif
-  Rs_scrollBar_thickness,
 #if ENABLE_FRILLS
   Rs_lineSpace,
 #endif
@@ -618,6 +618,7 @@ enum {
   Rs_pointerBlank,
   Rs_pointerBlankDelay,
   Rs_imLocale,
+  Rs_imFont,
   Rs_pastableTabs,
 #ifndef NO_SECONDARY_SCREEN
   Rs_secondaryScreen,
@@ -1231,7 +1232,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 #endif
 
 
-  void sig_term (sig_watcher &w); sig_watcher sw_term;
+  void sig_term (sig_watcher &w); sig_watcher sw_term, sw_int;
   void sig_chld (sig_watcher &w); sig_watcher sw_chld;
 
   void x_cb (XEvent &xev);

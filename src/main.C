@@ -161,6 +161,7 @@ rxvt_term::rxvt_term ()
     im_ev (this, &rxvt_term::im_cb),
 #endif
     sw_term (this, &rxvt_term::sig_term),
+    sw_int (this, &rxvt_term::sig_term),
     sw_chld (this, &rxvt_term::sig_chld),
     termwin_ev (this, &rxvt_term::x_cb),
     vt_ev (this, &rxvt_term::x_cb),
@@ -189,11 +190,11 @@ rxvt_term::~rxvt_term ()
   if (cmd_pid)
     kill (-cmd_pid, SIGHUP);
 
-  pty.put ();
-
 #ifdef UTMP_SUPPORT
   privileged_utmp (RESTORE);
 #endif
+
+  pty.put ();
 
 #if ENABLE_STYLES
   for (int i = RS_styleCount; --i; )
@@ -1117,6 +1118,7 @@ rxvt_term::resize_all_windows (unsigned int width, unsigned int height, int igno
       XMoveResizeWindow (display->display, TermWin.vt,
                          window_vt_x, window_vt_y,
                          TermWin_TotalWidth (), TermWin_TotalHeight ());
+
       scr_clear ();
 #ifdef XPM_BACKGROUND
       resize_pixmap ();
@@ -1148,6 +1150,11 @@ rxvt_term::resize_all_windows (unsigned int width, unsigned int height, int igno
 
   old_width = szHint.width;
   old_height = szHint.height;
+
+#ifdef XPM_BACKGROUND
+  if (TermWin.pixmap)
+    scr_touch (false);
+#endif
 
 #ifdef USE_XIM
   IMSetStatusPosition ();
@@ -1387,7 +1394,7 @@ foundpet:
                TermWin.fheight + 1, TermWin.fheight - 1,
                TermWin.fheight - 2, TermWin.fheight + 2);
 
-      fs = XCreateFontSet (display->display, pat,
+      fs = XCreateFontSet (display->display, rs[Rs_imFont] ? rs[Rs_imFont] : pat,
                            &missing_charset_list, &missing_charset_count, &def_string);
 
       if (missing_charset_list)
