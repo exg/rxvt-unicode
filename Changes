@@ -17,7 +17,7 @@ FEAT: tabbed windows (hey, just use screen...)
         - fix atom name enumeration.
         - streamline atom and xft color allocation to reduce startup
           time (12.8s -> 7.8s on my dsl). Still, doing it with only 2-3
-          turnarounds would be much faster, but impossible to implement.
+          turnarounds would be much faster, but impossible to implement(?).
         - do not use XSETROOTPMAP_ID anymore, support ESETROOT_PMAP_ID
           instead.
         - implement underlineColor resource when ENABLE_FRILLS.
