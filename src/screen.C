@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*--------------------------------------*
  * File:        screen.c
  *---------------------------------------------------------------------------*
- * $Id: screen.C,v 1.9 2003/12/18 02:07:12 pcg Exp $
+ * $Id: screen.C,v 1.10 2003/12/18 08:06:46 pcg Exp $
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
  *
@@ -2458,6 +2458,11 @@ rxvt_term::paste (const unsigned char *data, unsigned int len)
   unsigned int i, j, n;
   unsigned char *ds = (unsigned char *)rxvt_malloc (PROP_SIZE);
   
+#if 0
+  /* a paste should act like the user is typing, so check scrollTtyKeypress */
+  ZERO_SCROLLBACK (r);
+#endif
+
   /* convert normal newline chars into common keyboard Return key sequence */
   for (i = 0; i < len; i += PROP_SIZE)
     {

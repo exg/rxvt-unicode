@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.20 2003/12/18 07:31:18 pcg Exp $
+ * $Id: command.C,v 1.21 2003/12/18 08:06:46 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -1590,11 +1590,24 @@ rxvt_button_press(pR_ XButtonEvent *ev)
 		switch (ev->button)
                   {
                     case Button1:
-                        if (R->MEvent.button == Button1 && clickintime)
-                          R->MEvent.clicks++;
+                        /* allow shift+left click to extend selection */
+                        if (ev->state & ShiftMask)
+                          {
+                            if (R->MEvent.button == Button1 && clickintime)
+                              rxvt_selection_rotate (aR_ ev->x, ev->y);
+                            else
+                              rxvt_selection_extend (aR_ ev->x, ev->y, 1);
+                          }
                         else
-                          R->MEvent.clicks = 1;
-                        rxvt_selection_click(aR_ R->MEvent.clicks, ev->x, ev->y);
+                          {
+                            if (R->MEvent.button == Button1 && clickintime)
+                              R->MEvent.clicks++;
+                            else
+                              R->MEvent.clicks = 1;
+
+                            rxvt_selection_click (aR_ R->MEvent.clicks, ev->x, ev->y);
+                          }
+
                         R->MEvent.button = Button1;
                         break;
 
