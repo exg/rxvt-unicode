@@ -191,6 +191,14 @@ rxvt-unicode will continue without an input method.
 In this case either do not specify a B<preeditStyle> or specify more than
 one pre-edit style, such as B<OverTheSpot,Root,None>.
 
+=item I cannot type C<Ctrl-Shift-2> to get an ASCII NUL character due to ISO 14755
+
+Either try C<Ctrl-2> alone (it often is mapped to ASCII NUL even on
+international keyboards) or simply use ISO 14755 support to your
+advantage, typing <Ctrl-Shift-0> to get a ASCII NUL. This works for other
+codes, too, such as C<Ctrl-Shift-1-d> to type the default telnet escape
+character and so on.
+
 =item How can I keep rxvt-unicode from using reverse video so much?
 
 First of all, make sure you are running with the right terminfo
