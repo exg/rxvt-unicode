@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xdefaults.c
  *----------------------------------------------------------------------*
- * $Id: xdefaults.C,v 1.6 2003/12/18 00:38:07 pcg Exp $
+ * $Id: xdefaults.C,v 1.7 2004/01/16 22:26:18 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994      Robert Nation <nation@rocket.sanders.lockheed.com>
@@ -143,7 +143,7 @@ static const struct {
     BOOL(Rs_cursorBlink, "cursorBlink", "bc", Opt_cursorBlink, "blinking cursor"),
 #endif
 #ifdef POINTER_BLANK
-    BOOL(Rs_pointerBlank, "pointerBlank", NULL, Opt_pointerBlank, NULL),
+    BOOL(Rs_pointerBlank, "pointerBlank", "pb", Opt_pointerBlank, "switch off pointer after delay"),
 #endif
     STRG(Rs_color + Color_bg, "background", "bg", "color", "background color"),
     STRG(Rs_color + Color_fg, "foreground", "fg", "color", "foreground color"),
@@ -532,7 +532,7 @@ rxvt_get_options(pR_ int argc, const char *const *argv)
 		rxvt_parse_keysym(aR_ opt + sizeof("keysym.") - 1, str);
 	} else
 #endif
-          ;
+          bad_option = 1;
     }
 
     if (bad_option)
