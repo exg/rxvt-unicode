@@ -1,4 +1,4 @@
-1.9
+1.9  Wed Feb 25 16:46:05 CET 2004
 	- fixed bug in plain scrollbar causing X errors in XCreateGC.
         - implemented sharing of X connections. will be used to speed
           up many x operations considerably. Also saves some memory.
