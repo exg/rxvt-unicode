@@ -2696,10 +2696,6 @@ rxvt_term::process_csi_seq ()
             case 8:			/* unofficial extension */
               xterm_seq (XTerm_title, APL_NAME "-" VERSION, CHAR_ST);
               break;
-
-            case XTerm_locale:		/* unofficial extension */
-              tt_printf ("%-.250s\n", locale);
-              break;
           }
         break;
 
@@ -3081,8 +3077,13 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
         change_font (str);
         break;
       case XTerm_locale:
-        set_locale (str);
-        im_cb ();
+        if (str[0] == '?' && !str[1])
+          tt_printf ("%-.250s\n", locale);
+        else
+          {
+            set_locale (str);
+            im_cb ();
+          }
         break;
 #if 0
       case XTerm_dumpscreen:	/* no error notices */

@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvtRef-xterm.yo,v 1.2 2003/11/24 17:31:27 pcg Exp $ --)
+COMMENT(-- $Id: rxvtRef-xterm.yo,v 1.3 2004/02/22 12:58:02 pcg Exp $ --)
 COMMENT(OSC: Operating System Commands)
 label(XTerm)
 nsect(XTerm Operating System Commands)
@@ -26,6 +26,8 @@ startdl()
 		    and 8-15 corresponds to high-intensity colours. \
 		    0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, \
 		    6=cyan, 7=white))\
+	    row(cell(bf(tt(Ps = 9)))\
+		cell(Change current locale to bf(tt(Pt)), or, if bf(tt(Pt)) is bf(tt(?)), return the current locale))\
 	    row(cell(bf(tt(Ps = 10)) bf((NB: may change in future)))\
 		cell(link(menuBar)(menuBar) command bf(tt(Pt)) \
 		    em(rxvt compile-time option)))\
@@ -52,7 +54,7 @@ startdl()
 		cell(Change default background colour to bf(tt(Pt)) \
 		    em(rxvt compile-time option)))\
 	    row(cell(bf(tt(Ps = 50)))\
-		cell(Set Font to bf(tt(Pt)), with the following special \
+		cell(Set fontset to bf(tt(Pt)), with the following special \
 		    values of \
 		    bf(tt(Pt)) (bf(rxvt)) nl()\
 		    bf(tt(#+n)) change up bf(tt(n)) font(s) nl()\

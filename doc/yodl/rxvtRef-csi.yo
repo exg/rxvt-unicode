@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvtRef-csi.yo,v 1.2 2003/11/24 17:31:27 pcg Exp $ --)
+COMMENT(-- $Id: rxvtRef-csi.yo,v 1.3 2004/02/22 12:58:02 pcg Exp $ --)
 label(CSI)
 nsect(CSI (Code Sequence Introducer) Sequences)
 
@@ -167,3 +167,4 @@ P()\
     dl(bf(tt(ESC [ u)))
 	(Restore Cursor)
 enddl()
+
