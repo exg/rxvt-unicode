@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2005-01-11" "4.8" "RXVT-UNICODE"
+.TH rxvt 7 "2005-01-16" "4.8" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "FREQUENTLY ASKED QUESTIONS"
@@ -680,58 +680,31 @@ Perhaps someday this will all be resolved in a consistent manner.
 .IX Item "I don't like the key-bindings.  How do I change them?"
 There are some compile-time selections available via configure. Unless
 you have run \*(L"configure\*(R" with the \f(CW\*(C`\-\-disable\-resources\*(C'\fR option you can
-use the `keysym' resource to alter the keystrings associated with keysym
-0xFF00 \- 0xFFFF (function, cursor keys, etc).
+use the `keysym' resource to alter the keystrings associated with keysyms.
 .Sp
-Here's an example for a tn3270 session started using `@@RXVT_NAME@@ \-name tn3270'
+Here's an example for a URxvt session started using `@@RXVT_NAME@@ \-name URxvt'
 .Sp
-.Vb 3
-\&   !#  ----- special uses ------:
-\&   ! tn3270 login, remap function and arrow keys.
-\&   tn3270*font:      *clean-bold-*-*--15-*
-.Ve
-.Sp
-.Vb 3
-\&   ! keysym - used by rxvt only
-\&   ! Delete - ^D
-\&   tn3270*keysym.0xFFFF:      \e004
-.Ve
-.Sp
-.Vb 12
-\&   ! Home - ^A
-\&   tn3270*keysym.0xFF50:      \e001
-\&   ! Left - ^B
-\&   tn3270*keysym.0xFF51:      \e002
-\&   ! Up - ^P
-\&   tn3270*keysym.0xFF52:      \e020
-\&   ! Right - ^F
-\&   tn3270*keysym.0xFF53:      \e006
-\&   ! Down - ^N
-\&   tn3270*keysym.0xFF54:      \e016
-\&   ! End - ^E
-\&   tn3270*keysym.0xFF57:      \e005
-.Ve
-.Sp
-.Vb 13
-\&   ! F1 - F12
-\&   tn3270*keysym.0xFFBE:      \ee1
-\&   tn3270*keysym.0xFFBF:      \ee2
-\&   tn3270*keysym.0xFFC0:      \ee3
-\&   tn3270*keysym.0xFFC1:      \ee4
-\&   tn3270*keysym.0xFFC2:      \ee5
-\&   tn3270*keysym.0xFFC3:      \ee6
-\&   tn3270*keysym.0xFFC4:      \ee7
-\&   tn3270*keysym.0xFFC5:      \ee8
-\&   tn3270*keysym.0xFFC6:      \ee9
-\&   tn3270*keysym.0xFFC7:      \ee0
-\&   tn3270*keysym.0xFFC8:      \ee-
-\&   tn3270*keysym.0xFFC9:      \ee=
-.Ve
-.Sp
-.Vb 3
-\&   ! map Prior/Next to F7/F8
-\&   tn3270*keysym.0xFF55:      \ee7
-\&   tn3270*keysym.0xFF56:      \ee8
+.Vb 20
+\&        URxvt*keysym.Home:          \ee[1~
+\&        URxvt*keysym.End:           \ee[4~
+\&        URxvt*keysym.C-apostrophe:  \ee<C-'>
+\&        URxvt*keysym.C-slash:       \ee<C-/>
+\&        URxvt*keysym.C-semicolon:   \ee<C-;>
+\&        URxvt*keysym.C-grave:       \ee<C-`>
+\&        URxvt*keysym.C-comma:       \ee<C-,>
+\&        URxvt*keysym.C-period:      \ee<C-.>
+\&        URxvt*keysym.C-0x60:        \ee<C-`>
+\&        URxvt*keysym.C-Tab:         \ee<C-Tab>
+\&        URxvt*keysym.C-Return:      \ee<C-Return>
+\&        URxvt*keysym.S-Return:      \ee<S-Return>
+\&        URxvt*keysym.S-space:       \ee<S-Space>
+\&        URxvt*keysym.M-Up:          \ee<M-Up>
+\&        URxvt*keysym.M-Down:        \ee<M-Down>
+\&        URxvt*keysym.M-Left:        \ee<M-Left>
+\&        URxvt*keysym.M-Right:       \ee<M-Right>
+\&        URxvt*keysym.M-C-0:         list.0123456789.\ee<M-C-.>
+\&        URxvt*keysym.M-C-a:         list.abcdefghijklmnopqrstuvwxyz.\e033<M-C-.>
+\&        URxvt*keysym.F12:           proto:\e033]701;zh_CN.GBK\e007
 .Ve
 .IP "I'm using keyboard model \s-1XXX\s0 that has extra Prior/Next/Insert keys. How do I make use of them?  For example, the Sun Keyboard type 4 has the following mappings that rxvt-unicode doesn't recognize." 4
 .IX Item "I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How do I make use of them?  For example, the Sun Keyboard type 4 has the following mappings that rxvt-unicode doesn't recognize."
@@ -2256,6 +2229,22 @@ Remove support for swap screen.
 Add support for many small features that are not essential but nice to
 have. Normally you want this, but for very small binaries you may want to
 disable this.
+.Sp
+A non-exhaustive list of features enabled by \f(CW\*(C`\-\-enable\-frills\*(C'\fR (possibly
+in combination with other switches) is:
+.Sp
+.Vb 10
+\&  MWM-hints
+\&  seperate underline colour
+\&  settable border widths and borderless switch
+\&  settable extra linespacing
+\&  extra window properties (e.g. UTF-8 window names and PID)
+\&  iso-14755-2 and -3, and visual feedback
+\&  backindex and forwardindex escape sequence
+\&  window op and locale change escape sequences
+\&  tripleclickwords
+\&  settable insecure mode
+.Ve
 .IP "\-\-enable\-iso14755" 4
 .IX Item "--enable-iso14755"
 Enable extended \s-1ISO\s0 14755 support (see @@RXVT_NAME@@(1), or

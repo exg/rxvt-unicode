@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-01-11" "4.8" "RXVT-UNICODE"
+.TH rxvt 1 "2005-01-16" "4.8" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -830,14 +830,46 @@ scrollback buffer and switching to/from the secondary screen will
 instead scroll the screen up.
 .IP "\fBkeysym.\fR\fIsym\fR: \fIstring\fR" 4
 .IX Item "keysym.sym: string"
-Associate \fIstring\fR with keysym \fIsym\fR (\fB0xFF00 \- 0xFFFF\fR). It may
+Associate \fIstring\fR with keysym \fIsym\fR.  The intervening resource
+name \fBkeysym.\fR cannot be omitted. This resource is only available
+when compiled with \s-1KEYSYM_RESOURCE\s0.
+.Sp
+The format of \fIsym\fR is "\fI(mask\-)key\fR",
+where \fImask\fR can be any combination of \fBControl\fR, \fBNumLock\fR,
+\&\fBShift\fR, \fBMeta\fR, \fBLock\fR, \fBMod1\fR, \fBMod2\fR, \fBMod3\fR, \fBMod4\fR,
+\&\fBMod5\fR, and the abbreviated
+\&\fBC\fR, \fBN\fR, \fBS\fR, \fBM\fR, \fBA\fR, \fBL\fR, \fB1\fR, \fB2\fR, \fB3\fR, \fB4\fR, \fB5\fR.
+The spellings of \fIkey\fR can be obtained by using \fBxev\fR(1)
+command or searching keysym macros from
+\&\fB/usr/X11R6/include/X11/keysymdef.h\fR and omit the prefix \fB\s-1XK_\s0\fR.
+Alternatively you can specify \fIkey\fR by its hex keysym value 
+(\fB0x0000 \- 0xFFFF\fR).
+Note that the lookup of \fIsym\fRs is not performed in an exact manner;
+however, the closest match is assured.
+.Sp
+\&\fIstring\fR may
 contain escape values (\ea: bell, \eb: backspace, \ee, \eE: escape, \en:
 newline, \er: return, \et:
 tab, \e000: octal number) or control characters (^?: delete, ^@: null,
 ^A ...) and may enclosed with double quotes so that it can start or end
-with whitespace. The intervening resource name \fBkeysym.\fR cannot be
-omitted. This resource is only available when compiled with
-\&\s-1KEYSYM_RESOURCE\s0.
+with whitespace.
+.Sp
+You can define a range of keysyms in one shot by providing a \fIstring\fR
+with pattern \fBlist/STRING1/STRING2/STRING3\fR, where the delimeter `/'
+should be a character not used by the \fB\s-1STRING\s0\fRs.
+.Sp
+Its usage can be demonstrated by an example:
+        URxvt.keysym.M\-C\-0x61:    list.abc.\ee<M\-C\-.>
+.Sp
+The above line is equivalent to the following three lines:
+        URxvt.keysym.Meta\-Control\-0x61:    \ee<M\-C\-a>
+        URxvt.keysym.Meta\-Control\-0x62:    \ee<M\-C\-b>
+        URxvt.keysym.Meta\-Control\-0x63:    \ee<M\-C\-c>
+.Sp
+If \fIstring\fR takes the form of \fBproto:STRING\fR,
+the specified \fB\s-1STRING\s0\fR is interpreted and executed as \fB@@RXVT_NAME@@\fR's
+control sequence. For example, \fB\*(L"proto:\e033]701;zh_CN.GBK\e007\*(R"\fR
+means changing the current locale to zh_CN.GBK.
 .SH "THE SCROLLBAR"
 .IX Header "THE SCROLLBAR"
 Lines of text that scroll off the top of the \fB@@RXVT_NAME@@\fR window

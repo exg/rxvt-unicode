@@ -169,6 +169,20 @@ CONFIGURE OPTIONS
         to have. Normally you want this, but for very small binaries you may
         want to disable this.
 
+        A non-exhaustive list of features enabled by "--enable-frills"
+        (possibly in combination with other switches) is:
+
+          MWM-hints
+          seperate underline colour
+          settable border widths and borderless switch
+          settable extra linespacing
+          extra window properties (e.g. UTF-8 window names and PID)
+          iso-14755-2 and -3, and visual feedback
+          backindex and forwardindex escape sequence
+          window op and locale change escape sequences
+          tripleclickwords
+          settable insecure mode
+
     --enable-iso14755
         Enable extended ISO 14755 support (see rxvt(1), or doc/rxvt.1.txt).
         Basic support (section 5.1) is enabled by "--enable-frills", while

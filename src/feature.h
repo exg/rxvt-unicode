@@ -166,7 +166,7 @@
  * with various KeySyms (0xFF00 - 0xFFFF).
  * Only works with the default hand-rolled resources.
  */
-#ifndef NO_RESOURCES
+#if !NO_RESOURCES && ENABLE_FRILLS
 # define KEYSYM_RESOURCE
 #endif
 

@@ -503,49 +503,31 @@ FREQUENTLY ASKED QUESTIONS
         There are some compile-time selections available via configure.
         Unless you have run "configure" with the "--disable-resources"
         option you can use the `keysym' resource to alter the keystrings
-        associated with keysym 0xFF00 - 0xFFFF (function, cursor keys, etc).
+        associated with keysyms.
 
-        Here's an example for a tn3270 session started using `rxvt -name
-        tn3270'
+        Here's an example for a URxvt session started using `rxvt -name
+        URxvt'
 
-           !#  ----- special uses ------:
-           ! tn3270 login, remap function and arrow keys.
-           tn3270*font:      *clean-bold-*-*--15-*
-
-           ! keysym - used by rxvt only
-           ! Delete - ^D
-           tn3270*keysym.0xFFFF:      \004
-
-           ! Home - ^A
-           tn3270*keysym.0xFF50:      \001
-           ! Left - ^B
-           tn3270*keysym.0xFF51:      \002
-           ! Up - ^P
-           tn3270*keysym.0xFF52:      \020
-           ! Right - ^F
-           tn3270*keysym.0xFF53:      \006
-           ! Down - ^N
-           tn3270*keysym.0xFF54:      \016
-           ! End - ^E
-           tn3270*keysym.0xFF57:      \005
-
-           ! F1 - F12
-           tn3270*keysym.0xFFBE:      \e1
-           tn3270*keysym.0xFFBF:      \e2
-           tn3270*keysym.0xFFC0:      \e3
-           tn3270*keysym.0xFFC1:      \e4
-           tn3270*keysym.0xFFC2:      \e5
-           tn3270*keysym.0xFFC3:      \e6
-           tn3270*keysym.0xFFC4:      \e7
-           tn3270*keysym.0xFFC5:      \e8
-           tn3270*keysym.0xFFC6:      \e9
-           tn3270*keysym.0xFFC7:      \e0
-           tn3270*keysym.0xFFC8:      \e-
-           tn3270*keysym.0xFFC9:      \e=
-
-           ! map Prior/Next to F7/F8
-           tn3270*keysym.0xFF55:      \e7
-           tn3270*keysym.0xFF56:      \e8
+                URxvt*keysym.Home:          \e[1~
+                URxvt*keysym.End:           \e[4~
+                URxvt*keysym.C-apostrophe:  \e<C-'>
+                URxvt*keysym.C-slash:       \e<C-/>
+                URxvt*keysym.C-semicolon:   \e<C-;>
+                URxvt*keysym.C-grave:       \e<C-`>
+                URxvt*keysym.C-comma:       \e<C-,>
+                URxvt*keysym.C-period:      \e<C-.>
+                URxvt*keysym.C-0x60:        \e<C-`>
+                URxvt*keysym.C-Tab:         \e<C-Tab>
+                URxvt*keysym.C-Return:      \e<C-Return>
+                URxvt*keysym.S-Return:      \e<S-Return>
+                URxvt*keysym.S-space:       \e<S-Space>
+                URxvt*keysym.M-Up:          \e<M-Up>
+                URxvt*keysym.M-Down:        \e<M-Down>
+                URxvt*keysym.M-Left:        \e<M-Left>
+                URxvt*keysym.M-Right:       \e<M-Right>
+                URxvt*keysym.M-C-0:         list.0123456789.\e<M-C-.>
+                URxvt*keysym.M-C-a:         list.abcdefghijklmnopqrstuvwxyz.\033<M-C-.>
+                URxvt*keysym.F12:           proto:\033]701;zh_CN.GBK\007
 
     I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How
     do I make use of them? For example, the Sun Keyboard type 4 has the
