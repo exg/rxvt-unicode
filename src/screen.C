@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*--------------------------------------*
  * File:        screen.c
  *---------------------------------------------------------------------------*
- * $Id: screen.C,v 1.4 2003/11/25 15:25:17 pcg Exp $
+ * $Id: screen.C,v 1.5 2003/11/27 16:49:45 pcg Exp $
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
  *
@@ -365,7 +365,7 @@ rxvt_scr_reset(pR)
     R->prev_nrow = nrow;
     R->prev_ncol = ncol;
 
-    rxvt_tt_winsize(R->cmd_fd, R->TermWin.ncol, R->TermWin.nrow, R->cmd_pid);
+    rxvt_tt_winsize (R->cmd_fd, R->TermWin.ncol, R->TermWin.nrow, R->cmd_pid);
 }
 
 /* INTPROTO */
@@ -1550,8 +1550,7 @@ rxvt_scr_rvideo_mode(pR_ int mode)
 void
 rxvt_scr_report_position(pR)
 {
-    rxvt_tt_printf(aR_ "\033[%d;%dR", R->screen.cur.row + 1,
-                   R->screen.cur.col + 1);
+    R->tt_printf("\033[%d;%dR", R->screen.cur.row + 1, R->screen.cur.col + 1);
 }
 
 /* ------------------------------------------------------------------------- *
@@ -2419,21 +2418,23 @@ rxvt_selection_check(pR_ int check_more)
  */
 /* INTPROTO */
 void
-rxvt_PasteIt(pR_ const unsigned char *data, unsigned int nitems)
+rxvt_PasteIt (pR_ const unsigned char *data, unsigned int nitems)
 {
-    unsigned int    i, j, n;
-    unsigned char  *ds = (unsigned char *)rxvt_malloc(PROP_SIZE);
-    
-/* convert normal newline chars into common keyboard Return key sequence */
-    for (i = 0; i < nitems; i += PROP_SIZE) {
-        n = min(nitems - i, PROP_SIZE);
-        MEMCPY(ds, data + i, n);
-        for (j = 0; j < n; j++)
-            if (ds[j] == '\n')
-                ds[j] = '\r';
-        rxvt_tt_write(aR_ ds, (int)n);
+  unsigned int i, j, n;
+  unsigned char *ds = (unsigned char *)rxvt_malloc (PROP_SIZE);
+  
+  /* convert normal newline chars into common keyboard Return key sequence */
+  for (i = 0; i < nitems; i += PROP_SIZE)
+    {
+      n = min (nitems - i, PROP_SIZE);
+      MEMCPY (ds, data + i, n);
+      for (j = 0; j < n; j++)
+        if (ds[j] == '\n')
+          ds[j] = '\r';
+      R->tt_write (ds, (int)n);
     }
-    free(ds);
+
+  free(ds);
 }
 
 /* ------------------------------------------------------------------------- */

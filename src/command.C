@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.9 2003/11/27 10:12:10 pcg Exp $
+ * $Id: command.C,v 1.10 2003/11/27 16:49:45 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -239,8 +239,8 @@ rxvt_lookup_key(pR_ XKeyEvent *ev)
 # ifdef META8_OPTION
 		    if (R->meta_char == C0_ESC)
 # endif
-			rxvt_tt_write(aR_ &ch, 1);
-		rxvt_tt_write(aR_ kbuf0, l);
+			R->tt_write(&ch, 1);
+		R->tt_write(kbuf0, l);
 		return;
 	    } else
 #endif
@@ -607,7 +607,7 @@ rxvt_lookup_key(pR_ XKeyEvent *ev)
 	) {
 	const unsigned char ch = C0_ESC;
 
-	rxvt_tt_write(aR_ &ch, 1);
+	R->tt_write(&ch, 1);
     }
 #ifdef DEBUG_CMD
     if (debug_key) {		/* Display keyboard buffer contents */
@@ -620,7 +620,7 @@ rxvt_lookup_key(pR_ XKeyEvent *ev)
 	fprintf(stderr, "'\n");
     }
 #endif				/* DEBUG_CMD */
-    rxvt_tt_write(aR_ kbuf, (unsigned int)len);
+    R->tt_write(kbuf, (unsigned int)len);
 }
 /*}}} */
 
@@ -806,105 +806,108 @@ rxvt_term::pty_cb (io_watcher &w, short revents)
 {
   SET_R (this);
 
-  // loop, but don't allow a single term to monopolize us
-  // the number of loops is fully arbitrary, and thus wrong
-  for (int i = 7; i-- && pty_fill (); )
-    {
-      //TODO:
-      /* once we know the shell is running, send the screen size.  Again! */
-      //ch = rxvt_cmd_getc(aR);	/* wait for something */
-      //rxvt_tt_winsize(cmd_fd, TermWin.ncol, TermWin.nrow, cmd_pid);
+  if (revents & EVENT_WRITE)
+    tt_write (0, 0);
+  else if (revents & EVENT_READ)
+    // loop, but don't allow a single term to monopolize us
+    // the number of loops is fully arbitrary, and thus wrong
+    for (int i = 7; i-- && pty_fill (); )
+      {
+        //TODO:
+        /* once we know the shell is running, send the screen size.  Again! */
+        //ch = rxvt_cmd_getc(aR);	/* wait for something */
+        //rxvt_tt_winsize(cmd_fd, TermWin.ncol, TermWin.nrow, cmd_pid);
 
-      uint32_t ch = NOCHAR;
+        uint32_t ch = NOCHAR;
 
-      for (;;)
-        {
-          if (ch == NOCHAR)
-            ch = next_char ();
+        for (;;)
+          {
+            if (ch == NOCHAR)
+              ch = next_char ();
 
-          if (ch == NOCHAR) // TODO: improve
-            break;
+            if (ch == NOCHAR) // TODO: improve
+              break;
 
-          if (ch >= ' ' || ch == '\t' || ch == '\n' || ch == '\r')
-            {
-              /* Read a text string from the input buffer */
-              uint32_t buf[BUFSIZ];
-              bool refreshnow = false;
-              int nlines = 0;
-              uint32_t *str = buf;
+            if (ch >= ' ' || ch == '\t' || ch == '\n' || ch == '\r')
+              {
+                /* Read a text string from the input buffer */
+                uint32_t buf[BUFSIZ];
+                bool refreshnow = false;
+                int nlines = 0;
+                uint32_t *str = buf;
 
-              *str++ = ch;
+                *str++ = ch;
 
-              for (;;)
-                {
-                  ch = next_char ();
+                for (;;)
+                  {
+                    ch = next_char ();
 
-                  if (ch == NOCHAR || (ch < ' ' && ch != '\t' && ch != '\n' && ch != '\r'))
-                    break;
-                  else
-                    {
-                      *str++ = ch;
+                    if (ch == NOCHAR || (ch < ' ' && ch != '\t' && ch != '\n' && ch != '\r'))
+                      break;
+                    else
+                      {
+                        *str++ = ch;
 
-                      if (ch == '\n')
-                        {
-                          nlines++;
-                          refresh_count++;
+                        if (ch == '\n')
+                          {
+                            nlines++;
+                            refresh_count++;
 
-                          if (!(Options & Opt_jumpScroll)
-                              || (refresh_count >= (refresh_limit * (TermWin.nrow - 1))))
-                            {
-                              refreshnow = true;
-                              ch = NOCHAR;
-                              break;
-                            }
-                        }
+                            if (!(Options & Opt_jumpScroll)
+                                || (refresh_count >= (refresh_limit * (TermWin.nrow - 1))))
+                              {
+                                refreshnow = true;
+                                ch = NOCHAR;
+                                break;
+                              }
+                          }
 
-                      if (str >= buf + BUFSIZ)
-                        {
-                          ch = NOCHAR;
-                          break;
-                        }
-                    }
-                }
+                        if (str >= buf + BUFSIZ)
+                          {
+                            ch = NOCHAR;
+                            break;
+                          }
+                      }
+                  }
 
-              rxvt_scr_add_lines (this, buf, nlines, str - buf);
+                rxvt_scr_add_lines (this, buf, nlines, str - buf);
 
-              /*
-               * If there have been a lot of new lines, then update the screen
-               * What the heck I'll cheat and only refresh less than every page-full.
-               * the number of pages between refreshes is refresh_limit, which
-               * is incremented here because we must be doing flat-out scrolling.
-               *
-               * refreshing should be correct for small scrolls, because of the
-               * time-out
-               */
-              if (refreshnow)
-                {
-                  if ((Options & Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
-                    refresh_limit++;
+                /*
+                 * If there have been a lot of new lines, then update the screen
+                 * What the heck I'll cheat and only refresh less than every page-full.
+                 * the number of pages between refreshes is refresh_limit, which
+                 * is incremented here because we must be doing flat-out scrolling.
+                 *
+                 * refreshing should be correct for small scrolls, because of the
+                 * time-out
+                 */
+                if (refreshnow)
+                  {
+                    if ((Options & Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
+                      refresh_limit++;
 
-                  rxvt_scr_refresh (this, refresh_type);
-                }
+                    rxvt_scr_refresh (this, refresh_type);
+                  }
 
-            }
-          else
-            {
-              switch (ch)
-                {
-                  default:
-                    rxvt_process_nonprinting (this, ch);
-                    break;
-                  case C0_ESC:	/* escape char */
-                    rxvt_process_escape_seq (this);
-                    break;
-                  /*case 0x9b: */	/* CSI */
-                  /*  rxvt_process_csi_seq (this); */
-                }
+              }
+            else
+              {
+                switch (ch)
+                  {
+                    default:
+                      rxvt_process_nonprinting (this, ch);
+                      break;
+                    case C0_ESC:	/* escape char */
+                      rxvt_process_escape_seq (this);
+                      break;
+                    /*case 0x9b: */	/* CSI */
+                    /*  rxvt_process_csi_seq (this); */
+                  }
 
-              ch = NOCHAR;
-            }
-        }
-    }
+                ch = NOCHAR;
+              }
+          }
+      }
 
   flush ();
 }
@@ -972,7 +975,7 @@ rxvt_cmd_getc(pR)
     /* loop until we can return something */
 
 	if (R->v_bufstr < R->v_bufptr)	/* output any pending chars */
-	    rxvt_tt_write(aR_ NULL, 0);
+	    R->tt_write(NULL, 0);
 
 #if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
 	if (R->mouse_slip_wheel_speed) {
@@ -1115,7 +1118,7 @@ rxvt_mouse_report(pR_ const XButtonEvent *ev)
 	    x + 1,
 	    y + 1);
 #else
-    rxvt_tt_printf(aR_ "\033[M%c%c%c",
+    R->tt_printf("\033[M%c%c%c",
 	      (32 + button_number + key_state),
 	      (32 + x + 1),
 	      (32 + y + 1));
@@ -1667,22 +1670,22 @@ rxvt_button_press(pR_ XButtonEvent *ev)
 		 && scrollbarnext_upButton(ev->y))
 		|| (R->scrollBar.style == R_SB_RXVT
 		    && scrollbarrxvt_upButton(ev->y)))
-		rxvt_tt_printf(aR_ "\033[A");
+		R->tt_printf("\033[A");
 	    else if ((R->scrollBar.style == R_SB_NEXT
 		      && scrollbarnext_dnButton(ev->y))
 		     || (R->scrollBar.style == R_SB_RXVT
 			 && scrollbarrxvt_dnButton(ev->y)))
-		rxvt_tt_printf(aR_ "\033[B");
+		R->tt_printf("\033[B");
 	    else
 		switch (ev->button) {
 		case Button2:
-		    rxvt_tt_printf(aR_ "\014");
+		    R->tt_printf("\014");
 		    break;
 		case Button1:
-		    rxvt_tt_printf(aR_ "\033[6~");
+		    R->tt_printf("\033[6~");
 		    break;
 		case Button3:
-		    rxvt_tt_printf(aR_ "\033[5~");
+		    R->tt_printf("\033[5~");
 		    break;
 		}
 	  }
@@ -2174,11 +2177,11 @@ rxvt_process_nonprinting(pR_ unsigned char ch)
     switch (ch) {
     case C0_ENQ:	/* terminal Status */
 	if (R->rs[Rs_answerbackstring])
-	    rxvt_tt_write(aR_
+	    R->tt_write(
 		(const unsigned char *)R->rs[Rs_answerbackstring],
 		(unsigned int)STRLEN(R->rs[Rs_answerbackstring]));
 	else
-	    rxvt_tt_write(aR_ (unsigned char *)VT100_ANS,
+	    R->tt_write((unsigned char *)VT100_ANS,
 			  (unsigned int)STRLEN(VT100_ANS));
 	break;
     case C0_BEL:	/* bell */
@@ -2251,7 +2254,7 @@ rxvt_process_escape_vt52(pR_ unsigned char ch)
 	rxvt_scr_gotorc(aR_ row, col, 0);
 	break;
     case 'Z':		/* identify the terminal type */
-	rxvt_tt_printf(aR_ "\033/Z");	/* I am a VT100 emulating a VT52 */
+	R->tt_printf("\033/Z");	/* I am a VT100 emulating a VT52 */
         break;
     case '<':		/* turn off VT52 mode */
         PrivMode(0, PrivMode_vt52);
@@ -2368,7 +2371,7 @@ rxvt_process_escape_seq(pR)
 
     /* 8.3.110: SINGLE CHARACTER INTRODUCER */
     case C1_SCI:		/* ESC Z */
-	rxvt_tt_write(aR_ (const unsigned char *)ESCZ_ANSWER,
+	R->tt_write((const unsigned char *)ESCZ_ANSWER,
 		      (unsigned int)(sizeof(ESCZ_ANSWER) - 1));
 	break;			/* steal obsolete ESC [ c */
 
@@ -2499,7 +2502,7 @@ rxvt_process_csi_seq(pR)
 	switch (priv) {
 	case '>':
 	    if (ch == CSI_DA)	/* secondary device attributes */
-		rxvt_tt_printf(aR_ "\033[>%d;%-.8s;0c", 'R', VSTRING);
+		R->tt_printf("\033[>%d;%-.8s;0c", 'R', VSTRING);
 	    break;
 	case '?':
 	    if (ch == 'h' || ch == 'l' || ch == 'r' || ch == 's' || ch == 't')
@@ -2616,7 +2619,7 @@ rxvt_process_csi_seq(pR)
 	break;
 
     case CSI_DA:		/* 8.3.24: (0) DEVICE ATTRIBUTES */
-	rxvt_tt_write(aR_ (const unsigned char *)VT100_ANS,
+	R->tt_write((const unsigned char *)VT100_ANS,
 		      (unsigned int)(sizeof(VT100_ANS) - 1));
 	break;
 
@@ -2627,14 +2630,14 @@ rxvt_process_csi_seq(pR)
     case CSI_DSR:		/* 8.3.36: (0) DEVICE STATUS REPORT */
 	switch (arg[0]) {
 	case 5:			/* DSR requested */
-	    rxvt_tt_printf(aR_ "\033[0n");
+	    R->tt_printf("\033[0n");
 	    break;
 	case 6:			/* CPR requested */
 	    rxvt_scr_report_position(aR);
 	    break;
 #if defined (ENABLE_DISPLAY_ANSWER)
 	case 7:			/* unofficial extension */
-	    rxvt_tt_printf(aR_ "%-.250s\n", R->rs[Rs_display_name]);
+	    R->tt_printf("%-.250s\n", R->rs[Rs_display_name]);
 	    break;
 #endif
 	case 8:			/* unofficial extension */
@@ -2713,7 +2716,7 @@ rxvt_process_csi_seq(pR)
 
     case CSI_78:		/* DECREQTPARM */
 	if (arg[0] == 0 || arg[0] == 1)
-	    rxvt_tt_printf(aR_ "\033[%d;1;1;112;112;1;0x", arg[0] + 2);
+	    R->tt_printf("\033[%d;1;1;112;112;1;0x", arg[0] + 2);
     /* FALLTHROUGH */
 
     default:
@@ -2777,30 +2780,30 @@ rxvt_process_window_ops(pR_ const int *args, unsigned int nargs)
      */
     case 11:			/* report window state */
 	XGetWindowAttributes(R->Xdisplay, R->TermWin.parent[0], &wattr);
-	rxvt_tt_printf(aR_ "\033[%dt", wattr.map_state == IsViewable ? 1 : 2);
+	R->tt_printf("\033[%dt", wattr.map_state == IsViewable ? 1 : 2);
 	break;
     case 13:			/* report window position */
 	XGetWindowAttributes(R->Xdisplay, R->TermWin.parent[0], &wattr);
 	XTranslateCoordinates(R->Xdisplay, R->TermWin.parent[0], wattr.root,
 			      -wattr.border_width, -wattr.border_width,
 			      &x, &y, &wdummy);
-	rxvt_tt_printf(aR_ "\033[3;%d;%dt", x, y);
+	R->tt_printf("\033[3;%d;%dt", x, y);
 	break;
     case 14:			/* report window size (pixels) */
 	XGetWindowAttributes(R->Xdisplay, R->TermWin.parent[0], &wattr);
-	rxvt_tt_printf(aR_ "\033[4;%d;%dt", wattr.height, wattr.width);
+	R->tt_printf("\033[4;%d;%dt", wattr.height, wattr.width);
 	break;
     case 18:			/* report window size (chars) */
-	rxvt_tt_printf(aR_ "\033[8;%d;%dt", R->TermWin.nrow, R->TermWin.ncol);
+	R->tt_printf("\033[8;%d;%dt", R->TermWin.nrow, R->TermWin.ncol);
 	break;
 #if 0 /* XXX: currently disabled due to security concerns */
     case 20:			/* report icon label */
 	XGetIconName(R->Xdisplay, R->TermWin.parent[0], &s);
-	rxvt_tt_printf(aR_ "\033]L%-.200s\234", s ? s : "");	/* 8bit ST */
+	R->tt_printf("\033]L%-.200s\234", s ? s : "");	/* 8bit ST */
 	break;
     case 21:			/* report window title */
 	XFetchName(R->Xdisplay, R->TermWin.parent[0], &s);
-	rxvt_tt_printf(aR_ "\033]l%-.200s\234", s ? s : "");	/* 8bit ST */
+	R->tt_printf("\033]l%-.200s\234", s ? s : "");	/* 8bit ST */
 	break;
 #endif
     }
@@ -3353,7 +3356,7 @@ rxvt_process_graphics(pR)
 
 #ifndef RXVT_GRAPHICS
     if (cmd == 'Q') {		/* query graphics */
-	rxvt_tt_printf(aR_ "\033G0\n");	/* no graphics */
+	R->tt_printf("\033G0\n");	/* no graphics */
 	return;
     }
 /* swallow other graphics sequences until terminating ':' */
@@ -3366,7 +3369,7 @@ rxvt_process_graphics(pR)
     unsigned char  *text = NULL;
 
     if (cmd == 'Q') {		/* query graphics */
-	rxvt_tt_printf(aR_ "\033G1\n");	/* yes, graphics (color) */
+	R->tt_printf("\033G1\n");	/* yes, graphics (color) */
 	return;
     }
     for (nargs = 0; nargs < (sizeof(args) / sizeof(args[0])) - 1;) {
@@ -3410,134 +3413,76 @@ rxvt_process_graphics(pR)
  * Send printf() formatted output to the command.
  * Only use for small amounts of data.
  */
-/* EXTPROTO */
 void
-rxvt_tt_printf(pR_ const char *fmt,...)
+rxvt_term::tt_printf (const char *fmt,...)
 {
-    va_list         arg_ptr;
-    unsigned char   buf[256];
+  va_list arg_ptr;
+  unsigned char buf[256];
 
-    va_start(arg_ptr, fmt);
-    vsprintf((char *)buf, fmt, arg_ptr);
-    va_end(arg_ptr);
-    rxvt_tt_write(aR_ buf, (unsigned int)STRLEN(buf));
+  va_start (arg_ptr, fmt);
+  vsnprintf ((char *)buf, 256, fmt, arg_ptr);
+  va_end (arg_ptr);
+  tt_write (buf, STRLEN (buf));
 }
 
 /* ---------------------------------------------------------------------- */
-/* Addresses pasting large amounts of data and rxvt hang
- * code pinched from xterm (v_write()) and applied originally to
- * rxvt-2.18 - Hops
- * Write data to the pty as typed by the user, pasted with the mouse,
+/* Write data to the pty as typed by the user, pasted with the mouse,
  * or generated by us in response to a query ESC sequence.
  */
-/* EXTPROTO */
 void
-rxvt_tt_write(pR_ const unsigned char *d, unsigned int len)
+rxvt_term::tt_write (const unsigned char *data, unsigned int len)
 {
-#define MAX_PTY_WRITE 256	/* POSIX minimum MAX_INPUT */
-    int             riten;
-    unsigned int    p;
-    unsigned char  *v_buffer,	/* start of physical buffer        */
-		   *v_bufstr,	/* start of current buffer pending */
-		   *v_bufptr,	/* end of current buffer pending   */
-		   *v_bufend;	/* end of physical buffer          */
+  enum { MAX_PTY_WRITE = 255 }; // minimum MAX_INPUT
 
-    if (R->v_bufstr == NULL && len > 0) {
-	p = (len / MAX_PTY_WRITE + 1) * MAX_PTY_WRITE;
-	v_buffer = v_bufstr = v_bufptr = (unsigned char *)rxvt_malloc(p);
-	v_bufend = v_buffer + p;
-    } else {
-	v_buffer = R->v_buffer;
-	v_bufstr = R->v_bufstr;
-	v_bufptr = R->v_bufptr;
-	v_bufend = R->v_bufend;
+  if (len)
+    {
+      if (v_buflen == 0)
+        {
+          int written = write (cmd_fd, data, min (MAX_PTY_WRITE, len));
+          if (written == len)
+            return;
+
+          data += written;
+          len -= written;
+        }
+
+
+      v_buffer = (unsigned char *)realloc (v_buffer, v_buflen + len);
+
+      memcpy (v_buffer + v_buflen, data, len);
+      v_buflen += len;
     }
 
-    /*
-     * Append to the block we already have.  Always doing this simplifies the
-     * code, and isn't too bad, either.  If this is a short block, it isn't
-     * too expensive, and if this is a long block, we won't be able to write
-     * it all anyway.
-     */
-    if (len > 0) {
-	if (v_bufend < v_bufptr + len) {	/* run out of room */
-	    if (v_bufstr != v_buffer) {
-	    /* there is unused space, move everything down */
-		MEMMOVE(v_buffer, v_bufstr,
-			(unsigned int)(v_bufptr - v_bufstr));
-		v_bufptr -= v_bufstr - v_buffer;
-		v_bufstr = v_buffer;
-	    }
-	    if (v_bufend < v_bufptr + len) {
-	    /* still won't fit: get more space */
-	    /* use most basic realloc because an error is not fatal. */
-		unsigned int    size = v_bufptr - v_buffer;
-		unsigned int    reallocto;
+  for (;;)
+    {
+      int written = write (cmd_fd, v_buffer, min (MAX_PTY_WRITE, v_buflen));
 
-		reallocto = ((size + len) / MAX_PTY_WRITE + 1) * MAX_PTY_WRITE;
-		v_buffer = (unsigned char *)realloc(v_buffer, reallocto);
-	    /* save across realloc */
-		if (v_buffer) {
-		    v_bufstr = v_buffer;
-		    v_bufptr = v_buffer + size;
-		    v_bufend = v_buffer + reallocto;
-		} else {	/* no memory: ignore entire write request */
-		    rxvt_print_error("data loss: cannot allocate buffer space");
-		    v_buffer = v_bufstr;	/* restore clobbered pointer */
-		}
-	    }
-	}
-	if (v_bufend >= v_bufptr + len) {	/* new stuff will fit */
-	    MEMCPY(v_bufptr, d, len);
-	    v_bufptr += len;
-	}
-    }
+      if (written > 0)
+        {
+          v_buflen -= written;
 
-    /*
-     * Write out as much of the buffer as we can.
-     * Be careful not to overflow the pty's input silo.
-     * We are conservative here and only write a small amount at a time.
-     *
-     * If we can't push all the data into the pty yet, we expect write
-     * to return a non-negative number less than the length requested
-     * (if some data written) or -1 and set errno to EAGAIN,
-     * EWOULDBLOCK, or EINTR (if no data written).
-     *
-     * (Not all systems do this, sigh, so the code is actually
-     * a little more forgiving.)
-     */
-    if ((p = v_bufptr - v_bufstr) > 0) {
-	riten = write(R->cmd_fd, v_bufstr, min(p, MAX_PTY_WRITE));
-	if (riten < 0)
-	    riten = 0;
-	v_bufstr += riten;
-	if (v_bufstr >= v_bufptr)	/* we wrote it all */
-	    v_bufstr = v_bufptr = v_buffer;
+          if (v_buflen == 0)
+            {
+              free (v_buffer);
+              v_buffer = 0;
+              v_buflen = 0;
+
+              pty_ev.set (EVENT_READ);
+              return;
+            }
+
+          memmove (v_buffer, v_buffer + written, v_buflen);
+        }
+      else if (written != -1 || (errno != EAGAIN && errno != EINTR))
+        // original code just ignores this...
+        destroy ();
+      else
+        {
+          pty_ev.set (EVENT_READ | EVENT_WRITE);
+          return;
+        }
     }
-    /*
-     * If we have lots of unused memory allocated, return it
-     */
-    if (v_bufend - v_bufptr > MAX_PTY_WRITE * 8) { /* arbitrary hysteresis */
-    /* save pointers across realloc */
-	unsigned int    start = v_bufstr - v_buffer;
-	unsigned int    size = v_bufptr - v_buffer;
-	unsigned int    reallocto;
-	
-	reallocto = (size / MAX_PTY_WRITE + 1) * MAX_PTY_WRITE;
-	v_buffer = (unsigned char *)realloc(v_buffer, reallocto);
-	if (v_buffer) {
-	    v_bufstr = v_buffer + start;
-	    v_bufptr = v_buffer + size;
-	    v_bufend = v_buffer + reallocto;
-	} else {
-	/* should we print a warning if couldn't return memory? */
-	    v_buffer = v_bufstr - start;	/* restore clobbered pointer */
-	}
-    }
-    R->v_buffer = v_buffer;
-    R->v_bufstr = v_bufstr;
-    R->v_bufptr = v_bufptr;
-    R->v_bufend = v_bufend;
 }
+
 /*----------------------- end-of-file (C source) -----------------------*/
 

@@ -1,5 +1,5 @@
 /*
- * $Id: rxvt.h,v 1.8 2003/11/27 10:12:10 pcg Exp $
+ * $Id: rxvt.h,v 1.9 2003/11/27 16:49:45 pcg Exp $
  */
 
 #ifndef _RXVT_H_                /* include once only */
@@ -1102,9 +1102,7 @@ struct rxvt_term : rxvt_vars {
   char           *locale;
   char            charsets[4];
   unsigned char  *v_buffer;   /* pointer to physical buffer */
-  unsigned char  *v_bufstr;   /* beginning of area to write */
-  unsigned char  *v_bufptr;   /* end of area to write */
-  unsigned char  *v_bufend;   /* end of physical buffer */
+  unsigned int    v_buflen;   /* size of area to write */
   char           *newfont[MAX_NFONTS];
 #ifdef KEYSYM_RESOURCE
   const unsigned char *Keysym_map[256];
@@ -1129,6 +1127,9 @@ struct rxvt_term : rxvt_vars {
   void pointer_blank ();
   void pointer_unblank ();
 #endif
+
+  void tt_printf (const char *fmt,...);
+  void tt_write (const unsigned char *data, unsigned int len);
 
   void flush ();
 
