@@ -31,7 +31,7 @@
 #endif
 #ifndef XAPPLOADDIR
 # define XAPPLOADDIR		X11LIBDIR "/app-defaults" 
-# define XAPPLOADDIRLOCALE	X11LIBDIR "/%-.*s/app-defaults"
+# define XAPPLOADDIRLOCALE	X11LIBDIR "/%s/app-defaults"
 #endif
 
 /*-----------------------SCREEN OPTIONS AND COLOURS---------------------*/
