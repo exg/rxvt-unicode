@@ -23,6 +23,8 @@
 #include "rxvt.h"
 #include "defaultfont.h"
 
+#include <cstdlib>
+
 #define DISPLAY  r->Xdisplay
 #define DRAWABLE r->TermWin.vt
 #define GC       r->TermWin.gc
@@ -59,7 +61,7 @@ const struct rxvt_fallback_font {
 #if ENCODING_JP || ENCODING_JP_EXT
 # if XFT
   // prefer xft for complex scripts
-  { CS_UNICODE,        "xft:Kochi Gothic"                     },
+  { CS_UNICODE,        "xft:Kochi Gothic:antialias=false"     },
 # endif
   { CS_JIS0201_1976_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0201*-0" },
   { CS_JIS0208_1983_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0208*-0" },
@@ -222,7 +224,18 @@ static const char *linedraw_cmds[128] = {
 };
 
 struct rxvt_font_default : rxvt_font {
-  bool load (int maxheight)
+  rxvt_fontprop properties ()
+  {
+    rxvt_fontprop p;
+
+    p.height = 1;
+    p.weight = rxvt_fontprop::medium;
+    p.slant = rxvt_fontprop::roman;
+
+    return p;
+  }
+
+  bool load (const rxvt_fontprop &prop)
   {
     width = 1; height = 1;
     ascent = 1; descent = 0;
@@ -324,7 +337,10 @@ struct rxvt_font_x11 : rxvt_font {
 
   void clear ();
 
-  bool load (int maxheight);
+  rxvt_fontprop properties ();
+  rxvt_fontprop properties (XFontStruct *f);
+
+  bool load (const rxvt_fontprop &prop);
 
   bool has_codepoint (uint32_t unicode);
 
@@ -336,11 +352,11 @@ struct rxvt_font_x11 : rxvt_font {
   codeset cs;
   bool enc2b, encm;
 
-  const char *get_property (const char *property, const char *repl) const;
+  const char *get_property (XFontStruct *f, const char *property, const char *repl) const;
 };
 
 const char *
-rxvt_font_x11::get_property (const char *property, const char *repl) const
+rxvt_font_x11::get_property (XFontStruct *f, const char *property, const char *repl) const
 {
   unsigned long value;
 
@@ -350,8 +366,29 @@ rxvt_font_x11::get_property (const char *property, const char *repl) const
     return repl;
 }
 
+rxvt_fontprop
+rxvt_font_x11::properties ()
+{
+  return properties (f);
+}
+
+rxvt_fontprop
+rxvt_font_x11::properties (XFontStruct *f)
+{
+  rxvt_fontprop p;
+
+  const char *weight = get_property (f, "WEIGHT_NAME", "medium");
+  const char *slant  = get_property (f, "SLANT", "r");
+
+  p.height = height;
+  p.weight = *weight == 'B' || *weight == 'b' ? rxvt_fontprop::bold : rxvt_fontprop::medium;
+  p.slant = *slant == 'r' || *slant == 'R' ? rxvt_fontprop::roman : rxvt_fontprop::italic;
+
+  return p;
+}
+
 bool
-rxvt_font_x11::load (int maxheight)
+rxvt_font_x11::load (const rxvt_fontprop &prop)
 {
   clear ();
 
@@ -363,14 +400,26 @@ rxvt_font_x11::load (int maxheight)
   if (!list)
     return false;
 
+  int bestdiff = 0x7fffffff;
   XFontStruct *best = 0;
   for (int i = 0; i < count; i++)
     {
       XFontStruct *f = info + i;
-      if (f->ascent + f->descent <= maxheight) // weed out too large fonts
-        if (!best // compare against best found so far
-            || best->ascent + best->descent < f->ascent + f->descent)
-          best = f;
+
+      if (f->ascent + f->descent <= prop.height) // weed out too large fonts
+        {
+          rxvt_fontprop p = properties (f);
+          int diff = (prop.height - f->ascent + f->descent) * 32
+                   + abs (prop.weight - p.weight)
+                   + abs (prop.slant  - p.slant );
+
+          if (!best // compare against best found so far
+              || diff < bestdiff)
+            {
+              best = f;
+              bestdiff = diff;
+            }
+        }
     }
 
   set_name (strdup (list[best - info]));
@@ -384,8 +433,8 @@ rxvt_font_x11::load (int maxheight)
 
   unsigned long value;
 
-  const char *registry = get_property ("CHARSET_REGISTRY", 0);
-  const char *encoding = get_property ("CHARSET_ENCODING", 0);
+  const char *registry = get_property (f, "CHARSET_REGISTRY", 0);
+  const char *encoding = get_property (f, "CHARSET_ENCODING", 0);
 
   if (registry && encoding)
     {
@@ -396,7 +445,7 @@ rxvt_font_x11::load (int maxheight)
     }
   else
     {
-      const char *charset = get_property ("FONT", 0);
+      const char *charset = get_property (f, "FONT", 0);
 
       if (!charset)
         charset = name;
@@ -419,7 +468,7 @@ rxvt_font_x11::load (int maxheight)
   descent = f->descent;
   height = ascent + descent;
 
-  prop = false;
+  slow = false;
 
   if (f->min_bounds.width == f->max_bounds.width)
     width = f->min_bounds.width;
@@ -427,7 +476,7 @@ rxvt_font_x11::load (int maxheight)
     width = f->max_bounds.width;
   else
     {
-      prop = true;
+      slow = true;
 
       int N = f->max_char_or_byte2 - f->min_char_or_byte2;
 
@@ -522,7 +571,7 @@ rxvt_font_x11::draw (int x, int y,
   // yet we are trying to be perfect /.
   // but the result still isn't perfect /.
 
-  bool slow = prop
+  bool slow = this->slow
               || width != r->TermWin.fwidth
               || height != r->TermWin.fheight;
 
@@ -637,7 +686,9 @@ struct rxvt_font_xft : rxvt_font {
 
   void clear ();
 
-  bool load (int maxheight);
+  rxvt_fontprop properties ();
+
+  bool load (const rxvt_fontprop &prop);
 
   void draw (int x, int y,
              const text_t *text, int len,
@@ -679,8 +730,24 @@ rxvt_font_xft::clear ()
 #endif
 }
 
+rxvt_fontprop
+rxvt_font_xft::properties ()
+{
+  rxvt_fontprop p;
+
+  FT_Face face = XftLockFace (f);
+
+  p.height = height;
+  p.weight = face->style_flags & FT_STYLE_FLAG_BOLD ? rxvt_fontprop::bold : rxvt_fontprop::medium;
+  p.slant = face->style_flags & FT_STYLE_FLAG_ITALIC ? rxvt_fontprop::italic : rxvt_fontprop::roman;
+
+  XftUnlockFace (f);
+
+  return p;
+}
+
 bool
-rxvt_font_xft::load (int maxheight)
+rxvt_font_xft::load (const rxvt_fontprop &prop)
 {
 #if 0
   for (int i = 0; i < SWATHCOUNT; i++)
@@ -689,14 +756,39 @@ rxvt_font_xft::load (int maxheight)
 
   clear ();
 
-  f = XftFontOpenName (DISPLAY, DefaultScreen (DISPLAY), name);
+  FcPattern *p = FcNameParse ((FcChar8 *) name);
+
+  if (!p)
+    return false;
+
+  FcValue v;
+
+  if (FcPatternGet (p, FC_WEIGHT, 0, &v) != FcResultMatch)
+    FcPatternAddInteger (p, FC_WEIGHT, prop.weight);
+
+  if (FcPatternGet (p, FC_SLANT, 0, &v) != FcResultMatch)
+    FcPatternAddInteger (p, FC_SLANT, prop.slant);
+
+  //FcPatternAddBool (p, FC_MINSPACE, 1);
+
+  XftResult result;
+  FcPattern *match = XftFontMatch (DISPLAY, DefaultScreen (DISPLAY), p, &result);
+
+  FcPatternDestroy (p);
+
+  if (!match)
+    return false;
+
+  f = XftFontOpenPattern (DISPLAY, match);
+
+  FcPatternDestroy (match);
 
   if (!f)
     return false;
 
   FT_Face face = XftLockFace (f);
 
-  prop = !FT_IS_FIXED_WIDTH (face);
+  slow = !FT_IS_FIXED_WIDTH (face);
 
   int ftheight = 0;
 
@@ -708,27 +800,28 @@ rxvt_font_xft::load (int maxheight)
       c = 'i'; XftTextExtents8 (DISPLAY, f, &c, 1, &g1);
       c = 'W'; XftTextExtents8 (DISPLAY, f, &c, 1, &g2);
 
-      prop = prop || g1.xOff != g2.xOff; // don't simply trust the font
+      if (g1.xOff != g2.xOff) // don't simply trust the font
+        slow = true;
 
       width = g2.xOff;
       ascent = (face->size->metrics.ascender + 63) >> 6;
       descent = (-face->size->metrics.descender + 63) >> 6;
       height = ascent + descent;
 
-      if (height <= maxheight || !maxheight)
+      if (height <= prop.height || !prop.height)
         break;
 
       if (ftheight)
         {
           // take smaller steps near the end
-          if (height > maxheight + 1) ftheight++;
-          if (height > maxheight + 2) ftheight++;
-          if (height > maxheight + 3) ftheight++;
+          if (height > prop.height + 1) ftheight++;
+          if (height > prop.height + 2) ftheight++;
+          if (height > prop.height + 3) ftheight++;
 
-          FT_Set_Pixel_Sizes (face, 0, ftheight -= height - maxheight);
+          FT_Set_Pixel_Sizes (face, 0, ftheight -= height - prop.height);
         }
       else
-        FT_Set_Pixel_Sizes (face, 0, ftheight = maxheight);
+        FT_Set_Pixel_Sizes (face, 0, ftheight = prop.height);
     }
 
   XftUnlockFace (f);
@@ -770,7 +863,7 @@ rxvt_font_xft::draw (int x, int y,
   else
     clear_rect (x, y, r->TermWin.fwidth * len, r->TermWin.fheight, bg);
 
-  if (!prop && width == r->TermWin.fwidth)
+  if (!slow && width == r->TermWin.fwidth)
     {
       if (sizeof (text_t) == sizeof (FcChar16))
         XftDrawString16 (d, &r->PixColors[fg].c, f, x, y + r->TermWin.fbase, (const FcChar16 *)text, len);
@@ -820,7 +913,9 @@ rxvt_fontset::clear ()
 
   fonts.clear ();
   base_id = 0;
-  height = 0x7fffffff;
+  base_prop.height = 0x7fffffff;
+  base_prop.weight = rxvt_fontprop::medium;
+  base_prop.slant = rxvt_fontprop::roman;
 
   fallback = fallback_fonts;
 }
@@ -917,7 +1012,7 @@ rxvt_fontset::realize_font (int i)
 
   fonts[i]->loaded = true;
 
-  if (!fonts[i]->load (height))
+  if (!fonts[i]->load (base_prop))
     {
       fonts[i]->cs = CS_UNKNOWN;
       return false;
@@ -940,10 +1035,10 @@ rxvt_fontset::populate (const char *desc)
     base_id = 1;
 
   // we currently need a base-font, no matter what
-  if (fonts.size () <= base_id)
+  if (fonts.size () <= base_id || !realize_font (base_id))
     {
       add_fonts ("fixed");
-      base_id = 1;
+      base_id = fonts.size () - 1;
     }
 
   if (fonts.size () <= base_id || !realize_font (base_id))
@@ -952,9 +1047,7 @@ rxvt_fontset::populate (const char *desc)
       exit (1);
     }
 
-  height = fonts[base_id]->height;
-
-  /*add_fonts ("-efont-fixed-medium-r-normal-*-14-*-*-*-*-*-iso10646-1,"*/
+  base_prop = fonts[base_id]->properties ();
 }
 
 int

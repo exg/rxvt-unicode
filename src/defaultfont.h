@@ -1,5 +1,5 @@
 /*
- * $Id: defaultfont.h,v 1.6 2003/12/04 00:43:26 pcg Exp $
+ * $Id: defaultfont.h,v 1.7 2003/12/18 04:14:30 pcg Exp $
  */
 
 #ifndef _DEFAULTFONT_H_
@@ -23,6 +23,16 @@
 #include "encoding.h"
 #include "rxvtvec.h"
 
+struct rxvt_fontprop {
+  enum {
+    medium = 100, bold = 200,
+    roman  = 0, italic = 100,
+  };
+  int height;
+  int weight;
+  int slant;
+};
+
 struct rxvt_font {
   // managed by the fontset
   rxvt_t r;
@@ -33,7 +43,7 @@ struct rxvt_font {
   bool loaded; // wether we tried loading it before (not wether it's loaded)
 
   // managed by the font object
-  bool prop; // wether this is a proportional font or has other funny characteristics
+  bool slow; // wether this is a proportional font or has other funny characteristics
   int ascent, descent,
       width, height;
 
@@ -50,7 +60,9 @@ struct rxvt_font {
 
   virtual void clear () { };
 
-  virtual bool load (int maxheight) = 0;
+  virtual rxvt_fontprop properties () = 0;
+
+  virtual bool load (const rxvt_fontprop &prop) = 0;
   virtual bool has_codepoint (uint32_t unicode) = 0;
 
   virtual void draw (int x, int y,
@@ -88,7 +100,7 @@ private:
   simplevec<rxvt_font *> fonts;
   const rxvt_fallback_font *fallback;
 
-  int height;
+  rxvt_fontprop base_prop;
   int base_id;
 
   bool realize_font (int i);
