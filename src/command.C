@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.22 2003/12/18 13:33:02 pcg Exp $
+ * $Id: command.C,v 1.23 2003/12/18 14:11:47 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -92,7 +92,7 @@ rxvt_lookup_key(pR_ XKeyEvent *ev)
 	Status status_return;
 
 #ifdef X_HAVE_UTF8_STRING
-        if (R->enc_utf8)
+        if (R->enc_utf8 && 0)
           len = Xutf8LookupString (R->Input_Context, ev, (char *)kbuf,
                                    KBUFSZ, &keysym, &status_return);
         else
@@ -637,7 +637,7 @@ rxvt_lookup_key(pR_ XKeyEvent *ev)
 	fprintf(stderr, "'\n");
     }
 #endif				/* DEBUG_CMD */
-    R->tt_write(kbuf, (unsigned int)len);
+    R->tt_write (kbuf, (unsigned int)len);
 }
 /*}}} */
 

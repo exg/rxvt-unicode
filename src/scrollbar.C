@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	scrollbar.c
  *----------------------------------------------------------------------*
- * $Id: scrollbar.C,v 1.6 2003/12/18 13:33:03 pcg Exp $
+ * $Id: scrollbar.C,v 1.7 2003/12/18 14:11:47 pcg Exp $
  *
  * Copyright (c) 1997,1998 mj olesen <olesen@me.QueensU.CA>
  * Copyright (c) 1998      Alfredo K. Kojima <kojima@windowmaker.org>
@@ -156,8 +156,8 @@ rxvt_scrollbar_show(pR_ int update)
     R->last_top = R->scrollBar.top;
     R->last_bot = R->scrollBar.bot;
     R->last_state = R->scrollBar.state;
-
 #endif
+
     return ret;
 }
 

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*--------------------------------------*
  * File:        screen.c
  *---------------------------------------------------------------------------*
- * $Id: screen.C,v 1.11 2003/12/18 13:33:03 pcg Exp $
+ * $Id: screen.C,v 1.12 2003/12/18 14:11:47 pcg Exp $
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
  *
@@ -1903,7 +1903,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 #endif
     rend_t         *drp, *srp;  /* drawn-rend-pointer, screen-rend-pointer   */
     text_t         *dtp, *stp;  /* drawn-text-pointer, screen-text-pointer   */
-    char           *buffer;     /* local copy of buffer                */
 
     if (refresh_type == NO_REFRESH || !TermWin.mapped)
       return;
@@ -1923,7 +1922,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                                           sizeof(char) * (currmaxcol + 1) * MB_CUR_MAX);
       }
 
-    buffer = buffer;
     refresh_count = 0;
 
     row_offset = TermWin.saveLines - TermWin.view_start;
@@ -1942,14 +1940,14 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 #endif
     ocrow = oldcursor.row; /* is there an old outline cursor on screen? */
 
-/*
- * B: reverse any characters which are selected
- */
+    /*
+     * B: reverse any characters which are selected
+     */
     rxvt_scr_reverse_selection (this);
 
-/*
- * C: set the cursor character(s)
- */
+    /*
+     * C: set the cursor character(s)
+     */
     {
       unsigned char   setoldcursor;
       rend_t          ccol1,  /* Cursor colour       */
@@ -2028,10 +2026,10 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
     }
 
 #ifndef NO_SLOW_LINK_SUPPORT
-/*
- * D: CopyArea pass - very useful for slower links
- *    This has been deliberately kept simple.
- */
+    /*
+     * D: CopyArea pass - very useful for slower links
+     *    This has been deliberately kept simple.
+     */
     i = num_scr;
     if (refresh_type == FAST_REFRESH && num_scr_allow && i
         && abs(i) < TermWin.nrow && !must_clear)
@@ -2096,9 +2094,9 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
     }
 #endif
 
-/*
- * E: main pass across every character
- */
+    /*
+     * E: main pass across every character
+     */
     for (row = 0; row < TermWin.nrow; row++)
       {
         stp = screen.text[row + row_offset];
@@ -2106,9 +2104,9 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
         dtp = drawn_text[row];
         drp = drawn_rend[row];
 
-/*
- * E2: OK, now the real pass
- */
+        /*
+         * E2: OK, now the real pass
+         */
         int ypixel = (int)Row2Pixel(row);
 
         for (col = 0; col < TermWin.ncol; col++)
@@ -2173,9 +2171,9 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
             col--;      /* went one too far.  move back */
             count -= i; /* dump any matching trailing chars */
 
-/*
- * Determine the attributes for the string
- */
+            /*
+             * Determine the attributes for the string
+             */
             int fid = GET_FONT(rend);
             fore = GET_FGCOLOR(rend);
             back = GET_BGCOLOR(rend);
@@ -2225,9 +2223,9 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
               }
 #endif
 
-/*
- * Actually do the drawing of the string here
- */
+            /*
+             * Actually do the drawing of the string here
+             */
             rxvt_font *font = (*TermWin.fontset)[fid];
 
             if (back == Color_bg)
@@ -2257,9 +2255,9 @@ nodraw: ;
           }                     /* for (col....) */
       }                         /* for (row....) */
 
-/*
- * G: cleanup cursor and display outline cursor if necessary
- */
+    /*
+     * G: cleanup cursor and display outline cursor if necessary
+     */
     if (showcursor) {
         if (TermWin.focus) {
             srp = &(screen.rend[screen.cur.row + TermWin.saveLines]
@@ -2282,14 +2280,15 @@ nodraw: ;
                            (unsigned int)(Height2Pixel(1) - TermWin.lineSpace - 1));
         }
     }
-/*
- * H: cleanup selection
- */
+
+    /*
+     * H: cleanup selection
+     */
     rxvt_scr_reverse_selection (this);
 
-/*
- * I: other general cleanup
- */
+    /*
+     * I: other general cleanup
+     */
     if (clearfirst && TermWin.int_bwidth)
         /* 
          * clear the whole screen height, note that width == 0 is treated
