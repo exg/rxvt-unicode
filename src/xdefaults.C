@@ -1,12 +1,12 @@
 /*--------------------------------*-C-*---------------------------------*
- * File:	xdefaults.c
+ * File:	xdefaults.C
  *----------------------------------------------------------------------*
- * $Id: xdefaults.C,v 1.23 2004/04/02 18:00:01 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994      Robert Nation <nation@rocket.sanders.lockheed.com>
  *				- original version
  * Copyright (c) 1997,1998 mj olesen <olesen@me.queensu.ca>
+ * Copyright (c) 2003-2004 Marc Lehmann <pcg@goof.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

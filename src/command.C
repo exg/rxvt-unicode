@@ -1,5 +1,5 @@
 /*--------------------------------*-C-*---------------------------------*
- * File:	command.c
+ * File:	command.C
  *----------------------------------------------------------------------*
  *
  * All portions of code are copyright by their respective author/s.
@@ -674,7 +674,6 @@ rxvt_term::flush ()
 #ifdef USE_XIM
       IMSendSpot ();
 #endif
-
     }
 
   display->flush ();
@@ -718,6 +717,12 @@ rxvt_term::pty_fill ()
 {
   ssize_t n = cmdbuf_endp - cmdbuf_ptr;
 
+  if (CBUFSIZ == n)
+    {
+      rxvt_warn ("pty_fill on full buffer, draining input, continuing.\n");
+      n = 0;
+    }
+
   memmove (cmdbuf_base, cmdbuf_ptr, n);
   cmdbuf_ptr = cmdbuf_base;
   cmdbuf_endp = cmdbuf_ptr + n;
@@ -744,23 +749,10 @@ rxvt_term::pty_cb (io_watcher &w, short revents)
   if (revents & EVENT_WRITE)
     tt_write (0, 0);
   else if (revents & EVENT_READ)
-    {
-      // loop, but don't allow a single term to monopolize us
-      // the number of loops is fully arbitrary, and thus wrong
-      while (pty_fill ())
-        {
-          if (!seen_input)
-            {
-              seen_input = 1;
-              /* once we know the shell is running, send the screen size.  Again! */
-              // I don't know why, btw.
-              tt_winch ();
-            }
-
-          if (cmd_parse ())
-            break;
-        }
-    }
+    // loop, but don't allow a single term to monopolize us
+    while (pty_fill ())
+      if (cmd_parse ())
+        break;
 }
 
 #ifdef POINTER_BLANK
@@ -1015,10 +1007,10 @@ rxvt_term::x_cb (XEvent &ev)
                      || ev.xclient.data.l[0] == DndLink))
           {
             /* Get Dnd data */
-            Atom            ActualType;
-            int             ActualFormat;
-            unsigned char  *data;
-            unsigned long   Size, RemainingBytes;
+            Atom ActualType;
+            int ActualFormat;
+            unsigned char *data;
+            unsigned long Size, RemainingBytes;
 
             XGetWindowProperty (display->display, display->root,
                                xa[XA_DNDSELECTION],
@@ -1031,6 +1023,7 @@ rxvt_term::x_cb (XEvent &ev)
                             XA_CUT_BUFFER0, XA_STRING,
                             8, PropModeReplace,
                             data, STRLEN (data));
+            XFree (data);
             selection_paste (display->root, XA_CUT_BUFFER0, True);
             XSetInputFocus (display->display, display->root, RevertToNone, CurrentTime);
           }
@@ -1998,7 +1991,7 @@ rxvt_term::check_our_parents ()
   else
     {
       have_pixmap = 1;
-      rootpixmap = * ((Pixmap *)prop);
+      rootpixmap = *(Pixmap *)prop;
       XFree (prop);
     }
 
@@ -2193,7 +2186,7 @@ rxvt_term::cmd_parse ()
       if (ch == NOCHAR) // TODO: improve
         break;
 
-      if (!IS_CONTROL (ch) || ch == '\t' || ch == '\n' || ch == '\r')
+      if (!IS_CONTROL (ch) || ch == C0_LF || ch == C0_CR || ch == C0_HT)
         {
           /* Read a text string from the input buffer */
           unicode_t buf[UBUFSIZ];
@@ -2208,12 +2201,12 @@ rxvt_term::cmd_parse ()
               seq_begin = cmdbuf_ptr;
               ch = next_char ();
 
-              if (ch == NOCHAR || (IS_CONTROL (ch) && ch != '\t' && ch != '\n' && ch != '\r'))
+              if (ch == NOCHAR || (IS_CONTROL (ch) && ch != C0_LF && ch != C0_CR && ch != C0_HT))
                 break;
 
               *str++ = ch;
 
-              if (ch == '\n')
+              if (ch == C0_LF)
                 {
                   nlines++;
                   refresh_count++;
@@ -2258,8 +2251,8 @@ rxvt_term::cmd_parse ()
             {
               if ((Options & Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
                 refresh_limit++;
-
-              scr_refresh (refresh_type);
+              else
+                scr_refresh (refresh_type);
             }
 
         }
@@ -2599,7 +2592,7 @@ rxvt_term::process_escape_seq ()
         /* 8.3.87: NEXT LINE */
       case C1_NEL:		/* ESC E */
         {
-          unicode_t nlcr[] = { L'\n', L'\r' };
+          unicode_t nlcr[] = { C0_LF, C0_CR };
           scr_add_lines (nlcr, 1, 2);
         }
         break;
@@ -3094,7 +3087,7 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
 /*----------------------------------------------------------------------*/
 /*
  * get input up until STRING TERMINATOR (or BEL)
- * ends_how is terminator used. returned input must be free ()d
+ * ends_how is terminator used. returned input must be free()'d
  */
 unsigned char *
 rxvt_term::get_to_st (unicode_t &ends_how)
@@ -3121,9 +3114,9 @@ rxvt_term::get_to_st (unicode_t &ends_how)
           seen_esc = 1;
           continue;
         }
-      else if (ch == '\t')
+      else if (ch == C0_HT)
         ch = ' ';	/* translate '\t' to space */
-      else if (ch < 0x20 && (ch != 0x0a && ch != 0x0d))
+      else if (ch < 0x20 && (ch != C0_LF && ch != C0_CR))
         return NULL;	/* other control character - exit */
 
       if (n >= sizeof (string) - 1)
@@ -3702,11 +3695,18 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 5:
             rendset = 1, rendstyle = RS_Blink;
             break;
+          //case 6: // scoansi light background
           case 7:
             rendset = 1, rendstyle = RS_RVid;
             break;
           case 8:
             // invisible. NYI
+            break;
+          //case 10: // scoansi acs off
+          //case 11: // scoansi acs on
+          //case 12: // scoansi acs on, |0x80
+          case 21: // disable bold, blink and invis (some terminals use this)
+            rendset = 0, rendstyle = RS_Bold | RS_Blink;
             break;
           case 22:
             rendset = 0, rendstyle = RS_Bold;
@@ -3809,7 +3809,7 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
 }
 /*}}} */
 
-/*{{{ process Rob Nation's own graphics mode sequences */
+/*{{{ (do not) process Rob Nation's own graphics mode sequences */
 void
 rxvt_term::process_graphics ()
 {

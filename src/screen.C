@@ -1,5 +1,5 @@
 /*--------------------------------*-C-*--------------------------------------*
- * File:        screen.c
+ * File:        screen.C
  *---------------------------------------------------------------------------*
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
@@ -513,6 +513,7 @@ rxvt_term::scr_cursor (int mode)
         s->s_charset = s->charset;
         s->s_charset_char = charsets[s->charset];
         break;
+
       case RESTORE:
         want_refresh = 1;
         s->cur.row = s->s_cur.row;
@@ -812,11 +813,11 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
       if (c < 0x20)
         switch (c)
           {
-            case '\t':
+            case C0_HT:
               scr_tab (1);
               continue;
 
-            case '\n':
+            case C0_LF:
               if (screen.tlen[row] != -1)      /* XXX: think about this */
                 MAX_IT (screen.tlen[row], screen.cur.col);
 
@@ -831,7 +832,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
               srp = screen.rend[row];  /* _must_ refresh */
               continue;
 
-            case '\r':
+            case C0_CR:
               if (screen.tlen[row] != -1)      /* XXX: think about this */
                 MAX_IT (screen.tlen[row], screen.cur.col);
 
@@ -989,6 +990,7 @@ void
 rxvt_term::scr_backspace ()
 {
   want_refresh = 1;
+
   if (screen.cur.col == 0)
     {
       if (screen.cur.row > 0)
@@ -1003,6 +1005,7 @@ rxvt_term::scr_backspace ()
     }
   else if ((screen.flags & Screen_WrapNext) == 0)
     scr_gotorc (0, -1, RELATIVE);
+
   screen.flags &= ~Screen_WrapNext;
 }
 
@@ -1116,8 +1119,7 @@ rxvt_term::scr_gotorc (int row, int col, int relative)
 
   D_SCREEN ((stderr, "rxvt_scr_gotorc (r:%s%d,c:%s%d): from (r:%d,c:%d)", (relative & R_RELATIVE ? "+" : ""), row, (relative & C_RELATIVE ? "+" : ""), col, screen.cur.row, screen.cur.col));
 
-  screen.cur.col = ((relative & C_RELATIVE) ? (screen.cur.col + col)
-                    : col);
+  screen.cur.col = relative & C_RELATIVE ? screen.cur.col + col : col;
   MAX_IT (screen.cur.col, 0);
   MIN_IT (screen.cur.col, (int32_t)TermWin.ncol - 1);
 
@@ -1166,7 +1168,7 @@ rxvt_term::scr_gotorc (int row, int col, int relative)
 void
 rxvt_term::scr_index (enum page_dirn direction)
 {
-  int             dirn;
+  int dirn;
 
   want_refresh = 1;
   dirn = ((direction == UP) ? 1 : -1);
@@ -1519,6 +1521,7 @@ void
 rxvt_term::scr_cursor_visible (int mode)
 {
   want_refresh = 1;
+
   if (mode)
     screen.flags |= Screen_VisibleCursor;
   else
@@ -1844,6 +1847,7 @@ rxvt_term::scr_changeview (uint16_t oldviewstart)
       want_refresh = 1;
       num_scr -= (TermWin.view_start - oldviewstart);
     }
+
   return (int) (TermWin.view_start - oldviewstart);
 }
 
@@ -2519,8 +2523,8 @@ rxvt_term::paste (const unsigned char *data, unsigned int len)
       MEMCPY (ds, data + i, n);
 
       for (j = 0; j < n; j++)
-        if (ds[j] == '\n')
-          ds[j] = '\r';
+        if (ds[j] == C0_LF)
+          ds[j] = C0_CR;
 
       tt_write (ds, (int)n);
     }
@@ -2881,11 +2885,11 @@ rxvt_term::selection_make (Time tm)
         }
 
       if (screen.tlen[row] != -1 && row != end_row)
-        new_selection_text[ofs++] = L'\n';
+        new_selection_text[ofs++] = C0_LF;
     }
 
   if (end_col != selection.end.col)
-    new_selection_text[ofs++] = L'\n';
+    new_selection_text[ofs++] = C0_LF;
 
   new_selection_text[ofs] = 0;
 
@@ -3122,9 +3126,9 @@ rxvt_term::selection_extend (int x, int y, int flag)
 void
 rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int buttonpress, int clickchange)
 {
-  int16_t         ncol = TermWin.ncol;
-  int             end_col;
-  row_col_t       pos;
+  int16_t ncol = TermWin.ncol;
+  int end_col;
+  row_col_t pos;
   enum {
     LEFT, RIGHT
   } closeto = RIGHT;

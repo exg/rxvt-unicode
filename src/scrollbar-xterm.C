@@ -1,9 +1,10 @@
 /*--------------------------------*-C-*---------------------------------*
- * File:	scrollbar-xterm.c
+ * File:	scrollbar-xterm.C
  *----------------------------------------------------------------------*
  *
  * Copyright (c) 1997,1998 mj olesen <olesen@me.QueensU.CA>
  * Copyright (c) 1999-2001 Geoff Wing <gcw@pobox.com>
+ * Copyright (c) 2004      Marc Lehmann <pcg@goof.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,5 +1,5 @@
 /*--------------------------------*-C-*---------------------------------*
- * File:	logging.c
+ * File:	logging.C
  *----------------------------------------------------------------------*
  *
  * All portions of code are copyright by their respective author/s.
@@ -14,6 +14,7 @@
  * 				- extensive modifications
  * Copyright (c) 1999      D J Hawkey Jr <hawkeyd@visi.com>
  *				- lastlog support
+ * Copyright (c) 2004      Marc Lehmann <pcg@goof.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

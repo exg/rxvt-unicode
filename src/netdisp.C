@@ -1,5 +1,5 @@
 /*--------------------------------*-C-*---------------------------------*
- * File:	netdisp.c
+ * File:	netdisp.C
  *----------------------------------------------------------------------*
  *
  * All portions of code are copyright by their respective author/s.
