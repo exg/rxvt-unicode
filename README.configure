@@ -154,6 +154,10 @@ CONFIGURE OPTIONS
         version which only checks ~/.Xdefaults, or if that doesn't exist
         then ~/.Xresources.
 
+        Please note that nowadays, things like XIM will automatically pull
+        in and use the full X resource manager, so the overhead of using it
+        might be very small, if nonexistant.
+
     --enable-strings
         Add support for our possibly faster memset() function and other
         various routines, overriding your system's versions which may have
@@ -182,6 +186,7 @@ CONFIGURE OPTIONS
           window op and locale change escape sequences
           tripleclickwords
           settable insecure mode
+          keysym remapping support
 
     --enable-iso14755
         Enable extended ISO 14755 support (see rxvt(1), or doc/rxvt.1.txt).
