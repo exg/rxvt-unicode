@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-options.yo,v 1.10 2004/04/02 18:00:00 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-options.yo,v 1.11 2004/04/02 19:15:57 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpageoptions()
 
@@ -57,8 +57,11 @@ startdit()
 	The cursor colour;
 	resource bf(cursorColor).
     dit(bf(-pr) em(colour))
-	The mouse pointer colour;
+	The mouse pointer foreground colour;
 	resource bf(pointerColor).
+    dit(bf(-pr2) em(colour))
+	The mouse pointer background colour;
+	resource bf(pointerColor2).
     dit(bf(-bd) em(colour))
 	The colour of the border between the xterm scrollbar and the text;
 	resource bf(borderColor).
