@@ -1,5 +1,5 @@
 # ./Makefile.in			-*- Makefile -*-
-# $Id: Makefile.in,v 1.6 2004/03/14 21:51:38 pcg Exp $
+# $Id: Makefile.in,v 1.7 2004/05/08 17:21:07 pcg Exp $
 @MCOMMON@
 
 srcdir =	@srcdir@
@@ -83,7 +83,7 @@ distclean:
 	(cd $(srcdir); $(RMF) Makefile autoconf/Make.common)
 
 distdir:
-	cd doc && $(MAKE) yodl/versioninfo.yo
+	cd doc && $(MAKE) yodl/versioninfo.yo rxvt.html rxvtRef.txt
 	rm -rf $(VERNAME)
 	mkdir $(VERNAME)
 	rsync -aR `cat MANIFEST` $(VERNAME)/.
