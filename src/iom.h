@@ -28,6 +28,7 @@
 #define IOM_IO 1
 #define IOM_TIME 1
 #define IOM_CHECK 1
+#define IOM_IDLE 0
 
 #if IOM_IO
   typedef double tstamp;
@@ -41,6 +42,9 @@
 #if IOM_CHECK
   struct check_watcher;
 #endif
+#if IOM_IDLE
+  struct idle_watcher;
+#endif
 
 class io_manager {
 #if IOM_IO
@@ -52,6 +56,9 @@ class io_manager {
 #if IOM_TIME
   simplevec<time_watcher *>  tw;
 #endif
+#if IOM_IDLE
+  simplevec<idle_watcher *>  iw;
+#endif
 
   template<class watcher>
   void reg (watcher *w, simplevec<watcher *> &queue);
@@ -62,13 +69,16 @@ class io_manager {
 public:
   // register a watcher
 #if IOM_IO
-  void reg (io_watcher   *w);  void unreg (io_watcher   *w);
+  void reg (io_watcher    *w); void unreg (io_watcher    *w);
 #endif
 #if IOM_TIME
-  void reg (time_watcher *w);  void unreg (time_watcher *w);
+  void reg (time_watcher  *w); void unreg (time_watcher  *w);
 #endif
 #if IOM_CHECK
   void reg (check_watcher *w); void unreg (check_watcher *w);
+#endif
+#if IOM_IDLE
+  void reg (idle_watcher  *w); void unreg (idle_watcher  *w);
 #endif
   
   void loop ();
@@ -93,9 +103,10 @@ struct io_watcher : callback2<void, io_watcher &, short> {
 
   ~io_watcher ();
 
-  void set(int fd_, short events_) { fd = fd_; events = events_; }
+  void set (int fd_, short events_) { fd = fd_; events = events_; }
 
-  void set(short events_) { set (fd, events_); }
+  void set (short events_) { set (fd, events_); }
+  void start () { iom.reg (this); }
   void start (int fd_, short events_) { set (fd_, events_); iom.reg (this); }
   void stop () { iom.unreg (this); }
 };
@@ -139,6 +150,21 @@ struct check_watcher : callback1<void, check_watcher &> {
     { }
 
   ~check_watcher ();
+
+  void start () { iom.reg (this); }
+  void stop () { iom.unreg (this); }
+};
+#endif
+
+#if IOM_IDLE
+// run after checking for any i/o, but before waiting
+struct idle_watcher : callback1<void, idle_watcher &> {
+  template<class O1, class O2>
+  idle_watcher (O1 *object, void (O2::*method)(idle_watcher &))
+    : callback1<void, idle_watcher &>(object,method)
+    { }
+
+  ~idle_watcher ();
 
   void start () { iom.reg (this); }
   void stop () { iom.unreg (this); }

@@ -107,6 +107,24 @@ void io_manager::unreg (check_watcher *w)
 }
 #endif
 
+#if IOM_IDLE
+idle_watcher::~idle_watcher ()
+{
+  if (iom_valid)
+    iom.unreg (this);
+}
+
+void io_manager::reg (idle_watcher *w)
+{
+  reg (w, iw);
+}
+
+void io_manager::unreg (idle_watcher *w)
+{
+  unreg (w, iw);
+}
+#endif
+
 #if IOM_TIME
 inline void set_now (void)
 {
@@ -127,33 +145,44 @@ void io_manager::loop ()
   for (;;)
     {
       struct timeval *to = 0;
-
-#if IOM_TIME
       struct timeval tval;
-      time_watcher *w;
 
-      for (;tw.size ();)
+#if IOM_IDLE
+      if (iw.size ())
         {
-          w = tw[0];
-
-          for (time_watcher **i = tw.begin (); i < tw.end (); ++i)
-            if ((*i)->at < w->at)
-              w = *i;
-
-          if (w->at > NOW)
-            {
-              double diff = w->at - NOW;
-              tval.tv_sec  = (int)diff;
-              tval.tv_usec = (int)((diff - tval.tv_sec) * 1000000);
-              to = &tval;
-              break;
-            }
-          else if (w->at >= 0)
-            w->call (*w);
-          else
-            unreg (w);
+          tval.tv_sec  = 0;
+          tval.tv_usec = 0;
+          to = &tval;
         }
+      else
 #endif
+        {
+#if IOM_TIME
+          time_watcher *w;
+
+          for (;tw.size ();)
+            {
+              w = tw[0];
+
+              for (time_watcher **i = tw.begin (); i < tw.end (); ++i)
+                if ((*i)->at < w->at)
+                  w = *i;
+
+              if (w->at > NOW)
+                {
+                  double diff = w->at - NOW;
+                  tval.tv_sec  = (int)diff;
+                  tval.tv_usec = (int)((diff - tval.tv_sec) * 1000000);
+                  to = &tval;
+                  break;
+                }
+              else if (w->at >= 0)
+                w->call (*w);
+              else
+                unreg (w);
+            }
+#endif
+        }
 
 #if IOM_CHECK
       for (int i = 0; i < cw.size (); ++i)
@@ -197,6 +226,12 @@ void io_manager::loop ()
             if (revents)
               w->call (*w, revents);
           }
+#if IOM_IDLE
+      else if (iw.size ())
+        for (int i = 0; i < iw.size (); ++i)
+          iw[i]->call (*iw[i]);
+#endif
+
 #elif IOM_TIME
       if (!to)
         break;

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.23 2003/12/18 14:11:47 pcg Exp $
+ * $Id: command.C,v 1.24 2003/12/19 06:17:03 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -697,10 +697,6 @@ rxvt_term::flush ()
     }
 
   XFlush (Xdisplay);
-#if 0
-  if (XPending (Xdisplay)) process_x_events ();
-  if (XPending (Xdisplay)) process_x_events ();
-#endif
 }
 
 void
