@@ -966,7 +966,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 {
   clear_rect (d, x, y, r->TermWin.fwidth * len, r->TermWin.fheight, bg);
 
-  if (!slow && width == r->TermWin.fwidth && 0)
+  if (0 && !slow && width == r->TermWin.fwidth)
     {
       if (sizeof (text_t) == sizeof (FcChar16))
         XftDrawString16 (d, &r->pix_colors[fg].c, f, x, y + r->TermWin.fbase, (const FcChar16 *)text, len);
