@@ -3,10 +3,23 @@ or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
 TODO: implement xterm mode to be able to use xfree's TERM=xterm.
+      (except for the keymapping this should be done now).
 TODO: multibyte support for setwmname et al.
 TODO: there are other todo items, but they are not in this file.
 
-3.3
+	- fix inheritpixmap transparency border code.
+        - fix tinting transparency border code, also experimentally
+          make some scrollbars transparent (e.g. plain, my favourite style :).
+        - imported aterm shading code (faster and still portable).
+        - changed interpretation and usage of shading (-sh).
+        - fixed blinking underlined and negative text.
+        - disable slow link support on connections using unix domain sockets,
+          speeding up scrolling immensely.
+        - various other optimizations.
+        - new borderLess switch (ewmh-compliant), by Mikael Magnusson
+          ******************* MISSING DOCS ***********
+
+3.3  Sat Jul 31 15:15:59 CEST 2004
 	- some doc updates (Eduard Bloch).
 	- use faster inheritpixmap method when tinting color not set.
 	- fix pixmap offset when tinting (reported by Eduard Bloch).
