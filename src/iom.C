@@ -1,5 +1,5 @@
 /*
-    iom.C -- generic I/O multiplexor
+    iom.C -- generic I/O multiplexer
     Copyright (C) 2003, 2004 Marc Lehmann <pcg@goof.com>
  
     This program is free software; you can redistribute it and/or modify
@@ -154,9 +154,6 @@ void io_manager::reg (watcher &w, io_manager_vec<watcher> &queue)
 
   if (!w.active)
     {
-#if IOM_CHECK
-      queue.activity = true;
-#endif
       queue.push_back (&w);
       w.active = queue.size ();
     }
@@ -275,6 +272,42 @@ void io_manager::loop ()
 
   for (;;)
     {
+
+#if IOM_TIME
+      // call pending time watchers
+      {
+        bool activity;
+
+        do
+          {
+            activity = false;
+
+            for (int i = tw.size (); i--; )
+              if (!tw[i])
+                tw.erase_unordered (i);
+              else if (tw[i]->at <= NOW)
+                {
+                  time_watcher &w = *tw[i];
+                  
+                  unreg (w);
+                  w.call (w);
+
+                  activity = true;
+                }
+          }
+        while (activity);
+      }
+#endif
+
+#if IOM_CHECK
+      // call all check watchers
+      for (int i = cw.size (); i--; )
+        if (!cw[i])
+          cw.erase_unordered (i);
+        else
+          cw[i]->call (*cw[i]);
+#endif
+
       struct TIMEVAL *to = 0;
       struct TIMEVAL tval;
 
@@ -289,52 +322,20 @@ void io_manager::loop ()
 #endif
         {
 #if IOM_TIME
-          time_watcher *next;
+          // find earliest active watcher
+          time_watcher *next = tw[0]; // the first time-watcher must exist at ALL times
 
-          for (;;)
+          for (io_manager_vec<time_watcher>::const_iterator i = tw.end (); i-- > tw.begin (); )
+            if (*i && (*i)->at < next->at)
+              next = *i;
+
+          if (next->at > NOW && next != tw[0])
             {
-              next = tw[0]; // the first time-watcher must exist at ALL times
-
-              for (int i = tw.size (); i--; )
-                if (!tw[i])
-                  tw.erase_unordered (i);
-                else if (tw[i]->at < next->at)
-                  next = tw[i];
-
-              if (next->at > NOW)
-                {
-                  if (next != tw[0])
-                    {
-                      double diff = next->at - NOW;
-                      tval.tv_sec  = (int)diff;
-                      tval.TV_FRAC = (int) ((diff - tval.tv_sec) * TV_MULT);
-                      to = &tval;
-                    }
-                  break;
-                }
-              else
-                {
-                  unreg (*next);
-                  next->call (*next);
-                }
+              double diff = next->at - NOW;
+              tval.tv_sec  = (int)diff;
+              tval.TV_FRAC = (int) ((diff - tval.tv_sec) * TV_MULT);
+              to = &tval;
             }
-#endif
-        }
-
-#if IOM_CHECK
-      tw.activity = false;
-
-      for (int i = cw.size (); i--; )
-        if (!cw[i])
-          cw.erase_unordered (i);
-        else
-          cw[i]->call (*cw[i]);
-
-      if (tw.activity)
-        {
-          tval.tv_sec  = 0;
-          tval.TV_FRAC = 0;
-          to = &tval;
         }
 #endif
 
@@ -347,7 +348,7 @@ void io_manager::loop ()
       int fds = 0;
 
 # if IOM_IO
-      for (io_manager_vec<io_watcher>::iterator i = iow.end (); i-- > iow.begin (); )
+      for (io_manager_vec<io_watcher>::const_iterator i = iow.end (); i-- > iow.begin (); )
         if (*i)
           {
             if ((*i)->events & EVENT_READ ) FD_SET ((*i)->fd, &rfd);
@@ -357,7 +358,7 @@ void io_manager::loop ()
           }
 # endif
 
-      if (!to && !fds) //TODO: also check idle_watchers and check_watchers
+      if (!to && !fds) //TODO: also check idle_watchers and check_watchers?
         break; // no events
 
 # if IOM_SIG
@@ -389,7 +390,7 @@ void io_manager::loop ()
               while (read (sigpipe[0], &ch, 1) > 0)
                 ;
 
-              for (sig_vec **svp = sw.end (); svp-- > sw.begin (); )
+              for (vector<sig_vec *>::iterator svp = sw.end (); svp-- > sw.begin (); )
                 if (*svp && (*svp)->pending)
                   {
                     sig_vec &sv = **svp;
