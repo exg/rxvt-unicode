@@ -145,7 +145,7 @@ const struct rxvt_fallback_font {
 };
 
 // these characters are used to guess the font height and width
-// pango uses a similar algorithm and eosn't trust the font either.
+// pango uses a similar algorithm and doesn't trust the font either.
 static uint16_t extent_test_chars[] = {
   '0', '1', '8', 'a', 'd', 'x', 'm', 'y', 'g', 'W', 'X', '\'', '_',
   0x00cd, 0x00d5, 0x0114, 0x0177, 0x0643,	// ÍÕĔŷﻙ
@@ -533,8 +533,13 @@ bool
 rxvt_font_x11::set_properties (rxvt_fontprop &p, XFontStruct *f)
 {
   unsigned long height;
+
+#if 0
   if (!XGetFontProperty (f, XInternAtom (DISPLAY, "PIXEL_SIZE", 0), &height))
     return false;
+#else
+  height = f->ascent + f->descent;
+#endif
 
   unsigned long avgwidth;
   if (!XGetFontProperty (f, XInternAtom (DISPLAY, "AVERAGE_WIDTH", 0), &avgwidth))
@@ -672,19 +677,34 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
         }
     }
 
+  sprintf (field_str, "%d", prop.height == rxvt_fontprop::unset
+                              ? 0 : prop.height);
+
+  struct font_weight {
+    char *name;
+    int diff;
+
+    void clear ()
+    {
+      name = 0;
+      diff = 0x7fffffff;
+    }
+
+    font_weight () { clear (); }
+    ~font_weight () { free (name); }
+  };
+
   char **list;
   int count;
-  list = XListFonts (DISPLAY, name, 1024, &count);
+  list = XListFonts (DISPLAY, name, 4000, &count);
 
   set_name (0);
 
   if (!list)
     return false;
 
-  sprintf (field_str, "%d", prop.height == rxvt_fontprop::unset
-                              ? 0 : prop.height);
+  font_weight *fonts = new font_weight[count];
 
-  int bestdiff = 0x7fffffff;
   for (int i = 0; i < count; i++)
     {
       rxvt_fontprop p;
@@ -707,20 +727,41 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
       if (prop.slant  != rxvt_fontprop::unset) diff += abs (prop.slant  - p.slant);
       //if (prop.width  != rxvt_fontprop::unset) diff += abs (prop.width  - p.width);
 
-      if (!name // compare against best found so far
-          || diff < bestdiff)
-        {
-          set_name (strdup (fname));
-          bestdiff = diff;
-        }
+      fonts[i].name = strdup (fname);
+      fonts[i].diff = diff;
     }
 
   XFreeFontNames (list);
 
-  if (!name)
-    return false;
+  // this loop only iterates when the guessed font-size is too small
+  for (;;)
+    {
+      font_weight *best = fonts + count - 1;
 
-  f = XLoadQueryFont (DISPLAY, name);
+      for (font_weight *w = best; w-- > fonts; )
+        if (w->diff < best->diff)
+          best = w;
+
+      if (!best->name
+          || !(f = XLoadQueryFont (DISPLAY, best->name)))
+        break;
+
+      set_name (best->name);
+      best->clear ();
+
+      ascent  = f->ascent;
+      descent = f->descent;
+      height  = ascent + descent;
+
+      if (prop.height == rxvt_fontprop::unset
+          || height <= prop.height)
+        break; // font is ready for use
+
+      // PIXEL_SIZE small enough, but real height too large
+      clear ();
+    }
+
+  delete [] fonts;
 
   if (!f)
     return false;
@@ -758,10 +799,6 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
 
   encm = f->min_byte1 != 0 || f->max_byte1 != 0;
   enc2b = encm || f->max_char_or_byte2 > 255;
-
-  ascent  = f->ascent;
-  descent = f->descent;
-  height  = ascent + descent;
 
   slow = false;
 
