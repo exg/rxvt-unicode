@@ -81,56 +81,34 @@ struct io_manager_vec : vector<watcher *> {
   }
 };
 
+// only used as a namespace, and for initialisation purposes
 class io_manager {
-#if IOM_IO
-  io_manager_vec<io_watcher>    iow;
-#endif
-#if IOM_CHECK
-  io_manager_vec<check_watcher> cw;
-#endif
-#if IOM_TIME
-  io_manager_vec<time_watcher>  tw;
-#endif
-#if IOM_IDLE
-  io_manager_vec<idle_watcher>  iw;
-#endif
-#if IOM_SIG
-  typedef io_manager_vec<sig_watcher> sig_vec;
-  vector<sig_vec *> sw;
-  static void sighandler (int signum);
-#endif
+  template<class watcher>
+  static void reg (watcher &w, io_manager_vec<watcher> &queue);
 
   template<class watcher>
-  void reg (watcher *w, io_manager_vec<watcher> &queue);
-
-  template<class watcher>
-  void unreg (watcher *w, io_manager_vec<watcher> &queue);
+  static void unreg (watcher &w, io_manager_vec<watcher> &queue);
 
 public:
   // register a watcher
 #if IOM_IO
-  void reg (io_watcher    *w); void unreg (io_watcher    *w);
+  static void reg (io_watcher    &w); static void unreg (io_watcher    &w);
 #endif
 #if IOM_TIME
-  void reg (time_watcher  *w); void unreg (time_watcher  *w);
+  static void reg (time_watcher  &w); static void unreg (time_watcher  &w);
 #endif
 #if IOM_CHECK
-  void reg (check_watcher *w); void unreg (check_watcher *w);
+  static void reg (check_watcher &w); static void unreg (check_watcher &w);
 #endif
 #if IOM_IDLE
-  void reg (idle_watcher  *w); void unreg (idle_watcher  *w);
+  static void reg (idle_watcher  &w); static void unreg (idle_watcher  &w);
 #endif
 #if IOM_SIG
-  void reg (sig_watcher   *w); void unreg (sig_watcher   *w);
+  static void reg (sig_watcher   &w); static void unreg (sig_watcher   &w);
 #endif
   
-  void loop ();
-
-  io_manager ();
-  ~io_manager ();
+  static void loop ();
 };
-
-extern io_manager iom; // a singleton, together with it's construction/destruction problems.
 
 struct watcher {
   int active; /* 0 == inactive, else index into respective vector */
@@ -148,9 +126,9 @@ struct io_watcher : watcher, callback2<void, io_watcher &, short> {
   void set (int fd_, short events_) { fd = fd_; events = events_; }
 
   void set (short events_) { set (fd, events_); }
-  void start () { iom.reg (this); }
-  void start (int fd_, short events_) { set (fd_, events_); iom.reg (this); }
-  void stop () { iom.unreg (this); }
+  void start () { io_manager::reg (*this); }
+  void start (int fd_, short events_) { set (fd_, events_); io_manager::reg (*this); }
+  void stop () { io_manager::unreg (*this); }
 
   template<class O1, class O2>
   io_watcher (O1 *object, void (O2::*method) (io_watcher &, short))
@@ -168,9 +146,9 @@ struct time_watcher : watcher, callback1<void, time_watcher &> {
 
   void set (tstamp when) { at = when; }
   void operator () () { trigger (); }
-  void start () { iom.reg (this); }
-  void start (tstamp when) { set (when); iom.reg (this); }
-  void stop () { iom.unreg (this); }
+  void start () { io_manager::reg (*this); }
+  void start (tstamp when) { set (when); io_manager::reg (*this); }
+  void stop () { io_manager::unreg (*this); }
 
   template<class O1, class O2>
   time_watcher (O1 *object, void (O2::*method) (time_watcher &))
@@ -183,8 +161,8 @@ struct time_watcher : watcher, callback1<void, time_watcher &> {
 #if IOM_CHECK
 // run before checking for new events
 struct check_watcher : watcher, callback1<void, check_watcher &> {
-  void start () { iom.reg (this); }
-  void stop () { iom.unreg (this); }
+  void start () { io_manager::reg (*this); }
+  void stop () { io_manager::unreg (*this); }
 
   template<class O1, class O2>
   check_watcher (O1 *object, void (O2::*method) (check_watcher &))
@@ -197,8 +175,8 @@ struct check_watcher : watcher, callback1<void, check_watcher &> {
 #if IOM_IDLE
 // run after checking for any i/o, but before waiting
 struct idle_watcher : watcher, callback1<void, idle_watcher &> {
-  void start () { iom.reg (this); }
-  void stop () { iom.unreg (this); }
+  void start () { io_manager::reg (*this); }
+  void stop () { io_manager::unreg (*this); }
 
   template<class O1, class O2>
   idle_watcher (O1 *object, void (O2::*method) (idle_watcher &))
@@ -213,7 +191,7 @@ struct sig_watcher : watcher, callback1<void, sig_watcher &> {
   int signum;
 
   void start (int signum);
-  void stop () { iom.unreg (this); }
+  void stop () { io_manager::unreg (*this); }
 
   template<class O1, class O2>
   sig_watcher (O1 *object, void (O2::*method) (sig_watcher &))

@@ -220,7 +220,7 @@ main (int argc, const char *const *argv)
   printf ("rxvt-unicode daemon listening on %s.\n", sockname);
   free (sockname);
 
-  iom.loop ();
+  io_manager::loop ();
 
   return EXIT_SUCCESS;
 }
