@@ -70,10 +70,10 @@ rxvt_term::resize_scrollbar ()
 #define R_SCROLLEND_XTERM	szHint.height
 #define R_SCROLLBEG_NEXT	0
 #define R_SCROLLEND_NEXT	szHint.height - (SB_BUTTON_TOTAL_HEIGHT + \
-						    SB_PADDING)
+                                                    SB_PADDING)
 #define R_SCROLLBEG_RXVT	(scrollBar.width + 1) + sb_shadow
 #define R_SCROLLEND_RXVT	szHint.height - R_SCROLLBEG_RXVT - \
-				    (2 * sb_shadow)
+                                    (2 * sb_shadow)
 
 #if defined(PLAIN_SCROLLBAR)
   if (scrollBar.style == R_SB_PLAIN)

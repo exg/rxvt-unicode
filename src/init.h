@@ -33,20 +33,20 @@
 # ifdef TCSANOW			/* POSIX */
 #  define GET_TERMIOS(fd,tios)	tcgetattr (fd, tios)
 #  define SET_TERMIOS(fd,tios)		\
-	cfsetospeed (tios, BAUDRATE),	\
-	cfsetispeed (tios, BAUDRATE),	\
-	tcsetattr (fd, TCSANOW, tios)
+        cfsetospeed (tios, BAUDRATE),	\
+        cfsetispeed (tios, BAUDRATE),	\
+        tcsetattr (fd, TCSANOW, tios)
 # else
 #  ifdef TIOCSETA
 #   define GET_TERMIOS(fd,tios)	ioctl (fd, TIOCGETA, tios)
 #   define SET_TERMIOS(fd,tios)		\
-	tios->c_cflag |= BAUDRATE,	\
-	ioctl (fd, TIOCSETA, tios)
+        tios->c_cflag |= BAUDRATE,	\
+        ioctl (fd, TIOCSETA, tios)
 #  else
 #   define GET_TERMIOS(fd,tios)	ioctl (fd, TCGETS, tios)
 #   define SET_TERMIOS(fd,tios)		\
-	tios->c_cflag |= BAUDRATE,	\
-	ioctl (fd, TCSETS, tios)
+        tios->c_cflag |= BAUDRATE,	\
+        ioctl (fd, TCSETS, tios)
 #  endif
 # endif
 # define SET_TTYMODE(fd,tios)		SET_TERMIOS (fd, tios)
@@ -54,12 +54,12 @@
 /* sgtty interface */
 
 # define SET_TTYMODE(fd,tt)				\
-	tt->sg.sg_ispeed = tt->sg.sg_ospeed = BAUDRATE,	\
-	ioctl (fd, TIOCSETP, & (tt->sg)),		\
-	ioctl (fd, TIOCSETC, & (tt->tc)),		\
-	ioctl (fd, TIOCSLTC, & (tt->lc)),		\
-	ioctl (fd, TIOCSETD, & (tt->line)),		\
-	ioctl (fd, TIOCLSET, & (tt->local))
+        tt->sg.sg_ispeed = tt->sg.sg_ospeed = BAUDRATE,	\
+        ioctl (fd, TIOCSETP, & (tt->sg)),		\
+        ioctl (fd, TIOCSETC, & (tt->tc)),		\
+        ioctl (fd, TIOCSLTC, & (tt->lc)),		\
+        ioctl (fd, TIOCSETD, & (tt->line)),		\
+        ioctl (fd, TIOCLSET, & (tt->local))
 #endif				/* HAVE_TERMIOS_H */
 
 /* use the fastest baud-rate */

@@ -20,9 +20,9 @@ typedef struct menuitem_t {
     short           len;	/* strlen (name) */
     short           len2;	/* strlen (name) */
     union {
-	short           type;	/* must not be changed; first element */
-	action_t        action;
-	submenu_t       submenu;
+        short           type;	/* must not be changed; first element */
+        action_t        action;
+        submenu_t       submenu;
     } entry;
 } menuitem_t;
 
