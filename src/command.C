@@ -308,7 +308,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                     break;
 
 #ifdef XK_KP_Left
-                  case XK_KP_Up:		/* \033Ox or standard */
+                  case XK_KP_Up:	/* \033Ox or standard */
                   case XK_KP_Down:	/* \033Or or standard */
                   case XK_KP_Right:	/* \033Ov or standard */
                   case XK_KP_Left:	/* \033Ot or standard */
@@ -663,7 +663,6 @@ rxvt_term::flush ()
       want_full_refresh = 0;
       scr_clear ();
       scr_touch (false);
-      want_refresh = 1;
     }
 #endif
 
@@ -689,7 +688,7 @@ rxvt_term::check_cb (check_watcher &w)
 
   display->flush ();
 
-  if (!flush_ev.active)
+  if (want_refresh && !flush_ev.active)
     flush_ev.start (NOW + 0.01);
 }
 
@@ -1194,7 +1193,7 @@ rxvt_term::x_cb (XEvent &ev)
               {
                 check_our_parents ();
                 if (am_transparent)
-                  want_full_refresh = 1;
+                  want_refresh = want_full_refresh = 1;
               }
 #endif
           }
@@ -1415,7 +1414,7 @@ rxvt_term::rootwin_cb (XEvent &ev)
         /* FALLTHROUGH */
       case ReparentNotify:
         if ((Options & Opt_transparent) && check_our_parents () && am_transparent)
-          want_full_refresh = 1;
+          want_refresh = want_full_refresh = 1;
         break;
 #endif
     }
@@ -1607,11 +1606,12 @@ rxvt_term::button_press (XButtonEvent &ev)
                         csrO = scrollBar.bot - scrollBar.top;
                         break;
                     }
+
                   if (scrollBar.style == R_SB_XTERM
                       || scrollbar_above_slider (ev.y)
                       || scrollbar_below_slider (ev.y))
-                    scr_move_to (					 scrollbar_position (ev.y) - csrO,
-                                       scrollbar_size ());
+                    scr_move_to (scrollbar_position (ev.y) - csrO, scrollbar_size ());
+
                   scrollBar.setMotion ();
                   break;
 
@@ -1645,6 +1645,7 @@ rxvt_term::button_press (XButtonEvent &ev)
                                  * scrollbar_position (ev.y)
                                  / scrollbar_size ()));
                     }
+
                   break;
               }
         }
@@ -2285,13 +2286,8 @@ rxvt_term::cmd_parse ()
           int nlines = 0;
           unicode_t *str = buf;
 
-          *str++ = ch;
-
           for (;;)
             {
-              seq_begin = cmdbuf_ptr;
-              ch = next_char ();
-
               if (ch == NOCHAR || (IS_CONTROL (ch) && ch != C0_LF && ch != C0_CR && ch != C0_HT))
                 break;
 
@@ -2302,7 +2298,7 @@ rxvt_term::cmd_parse ()
                   nlines++;
                   refresh_count++;
 
-                  if (! (Options & Opt_jumpScroll)
+                  if (!(Options & Opt_jumpScroll)
                       || (refresh_count >= refresh_limit * (TermWin.nrow - 1)))
                     {
                       refreshnow = true;
@@ -2310,7 +2306,7 @@ rxvt_term::cmd_parse ()
                       break;
                     }
 
-                  // scr_add_lines only works for nlines < TermWin.nrow - 1.
+                  // scr_add_lines only works for nlines <= TermWin.nrow - 1.
                   if (nlines >= TermWin.nrow - 1)
                     {
                       scr_add_lines (buf, nlines, str - buf);
@@ -2324,6 +2320,9 @@ rxvt_term::cmd_parse ()
                   ch = NOCHAR;
                   break;
                 }
+
+              seq_begin = cmdbuf_ptr;
+              ch = next_char ();
             }
 
           scr_add_lines (buf, nlines, str - buf);

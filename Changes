@@ -7,6 +7,22 @@ TODO: implement xterm mode to be able to use xfree's TERM=xterm.
 TODO: multibyte support for setwmname et al.
 TODO: there are other todo items, but they are not in this file.
 
+3.5  Wed Aug 11 00:31:34 CEST 2004
+        - UPGRADE ADVISED: rxvt did wake up 100 times per second. did not
+          show in my top (linux...), but it's extremely annoying that I
+          released it with that bug. :( Fixed.
+	- use memove instead of for-loop for large scrollback buffer copies.
+          speeds up large scrollback buffers (on systems with reasonable
+          memmove :)
+	- minor cleanups.
+        - removed ~ from default cutchars, in accordance with the manpage
+          (debian bug #169415).
+        - fix a race condition on exit (debian bug #197265).
+        - change prio/next scrolling modifier handling (debian bug #226386).
+        - updated configure script to current autoconf standards.
+        - updated config.guess.
+
+3.4  Fri Aug  6 19:34:29 CEST 2004
 	- fix inheritpixmap transparency border code.
         - fix tinting transparency border code, also experimentally
           make some scrollbars transparent (e.g. plain, my favourite style :).
@@ -16,8 +32,7 @@ TODO: there are other todo items, but they are not in this file.
         - disable slow link support on connections using unix domain sockets,
           speeding up scrolling immensely.
         - various other optimizations.
-        - new borderLess switch (ewmh-compliant), by Mikael Magnusson
-          ******************* MISSING DOCS ***********
+        - new borderLess switch (ewmh-compliant), by Mikael Magnusson.
 
 3.3  Sat Jul 31 15:15:59 CEST 2004
 	- some doc updates (Eduard Bloch).
