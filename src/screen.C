@@ -174,10 +174,18 @@ rxvt_term::scr_reset ()
   if (ncol == prev_ncol && nrow == prev_nrow)
     return;
 
+  // we need at least two lines for wrapping to work correctly
+  if (nrow + TermWin.saveLines < 2)
+    {
+      TermWin.saveLines++;
+      prev_nrow--;
+      TermWin.nscrolled++;
+    }
+
   want_refresh = 1;
 
-  total_rows = nrow + TermWin.saveLines;
   prev_total_rows = prev_nrow + TermWin.saveLines;
+  total_rows = nrow + TermWin.saveLines;
 
   screen.tscroll = 0;
   screen.bscroll = nrow - 1;
@@ -188,7 +196,7 @@ rxvt_term::scr_reset ()
       ralloc = new rxvt_salloc (ncol * sizeof (rend_t));
     }
 
-  if (prev_nrow == 0)
+  if (!screen.text)
     {
       /*
        * first time called so just malloc everything: don't rely on realloc
@@ -785,6 +793,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
           screen.cur.row -= nlines;
         }
     }
+
 #ifdef DEBUG_STRICT
   assert (screen.cur.col < last_col);
   assert ((screen.cur.row < TermWin.nrow)
@@ -2560,6 +2569,14 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
           D_SELECT ((stderr, "rxvt_selection_paste: property didn't exist!"));
           break;
         }
+      else if (ct.encoding == xa[XA_INCR])
+        {
+          // INCR selection, start handshake
+          XDeleteProperty (display->display, win, prop);
+          selection_wait = Sel_incr;
+          incr_ev.start (NOW + 10);
+          break;
+        }
 
       if (ct.value == NULL)
         {
@@ -2630,52 +2647,16 @@ rxvt_term::incr_cb (time_watcher &w)
 void
 rxvt_term::selection_property (Window win, Atom prop)
 {
-  int             reget_time = 0;
-
-  if (prop == None)
+  if (prop == None || selection_wait != Sel_incr)
     return;
 
-  D_SELECT ((stderr, "rxvt_selection_property (%08lx, %lu)", win, (unsigned long)prop));
-  if (selection_wait == Sel_normal)
-    {
-      int a, afmt;
-      Atom atype;
-      unsigned long bytes_after, nitems;
-      unsigned char *s = NULL;
-
-      a = XGetWindowProperty (display->display, win, prop, 0L, 1L, False,
-                             xa[XA_INCR], &atype, &afmt, &nitems,
-                             &bytes_after, &s);
-      if (s)
-        XFree (s);
-      if (a != Success)
-        return;
-
-#ifndef __CYGWIN32__
-      if (atype == xa[XA_INCR])
-        {  /* start an INCR transfer */
-          D_SELECT ((stderr, "rxvt_selection_property: INCR: starting transfer"));
-          XDeleteProperty (display->display, win, prop);
-          XFlush (display->display);
-          reget_time = 1;
-          selection_wait = Sel_incr;
-        }
-#endif
-
-    }
-  else if (selection_wait == Sel_incr)
-    {
-      reget_time = 1;
-
-      if (selection_paste (win, prop, True) == -1)
-        {
-          D_SELECT ((stderr, "rxvt_selection_property: INCR: clean end"));
-          selection_wait = Sel_none;
-          incr_ev.stop ();
-        }
-    }
-  if (reget_time) /* received more data so reget time */
+  if (selection_paste (win, prop, 1) > 0)
     incr_ev.start (NOW + 10);
+  else
+    {
+      selection_wait = Sel_none;
+      incr_ev.stop ();
+    }
 }
 
 /* ------------------------------------------------------------------------- */
@@ -3390,10 +3371,12 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq)
                        target - target_list);
       ev.property = rq.property;
     }
+#if TODO // TODO
   else if (rq.target == xa[XA_MULTIPLE])
     {
       /* TODO: Handle MULTIPLE */
     }
+#endif
   else if (rq.target == xa[XA_TIMESTAMP] && selection.text)
     {
       XChangeProperty (display->display, rq.requestor, rq.property, XA_INTEGER,

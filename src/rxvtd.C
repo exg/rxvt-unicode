@@ -193,6 +193,8 @@ void server::read_cb (io_watcher &w, short revents)
                 success = false;
               }
 
+            term->log_hook = 0;
+
             environ = old_environ;
 
             if (!success)
@@ -220,13 +222,6 @@ main (int argc, const char *const *argv)
 
   iom.loop ();
 
-#if 0
-  if (rxvt_init (argc, argv) == NULL)
-      return EXIT_FAILURE;
-
-  dR;
-  rxvt_main_loop (aR);	/* main processing loop */
-#endif
   return EXIT_SUCCESS;
 }
 

@@ -59,6 +59,113 @@
 // exception thrown when the command parser runs out of input data
 class out_of_input { } out_of_input;
 
+#ifndef NO_FRILLS
+
+#define ISO_14755_KEYCODE_VALID	0x80000000UL
+#define ISO_14755_ACTIVE	0x40000000UL
+#define ISO_14755_ESCAPE_NEXT	0x20000000UL
+
+static unsigned short iso14755_symtab[] = {
+  // keysym,		unicode
+  XK_Left,		0x2190,
+  XK_KP_Left,		0x2190,
+  XK_Up,		0x2191,
+  XK_KP_Up,		0x2191,
+  XK_Right,		0x2192,
+  XK_KP_Right,		0x2192,
+  XK_Down,		0x2193,
+  XK_KP_Down,		0x2193,
+  XK_Linefeed,		0x21b4,
+  XK_Return,		0x21b5,
+  XK_KP_Enter,		0x21b5,
+
+  XK_Prior,		0x21de,
+  XK_Next,		0x21df,
+  XK_Tab,		0x21e5,
+  XK_ISO_Left_Tab,	0x21e6,
+  XK_Shift_L,		0x21e7,
+  XK_Shift_R,		0x21e7,
+
+  XK_Shift_Lock,	0x21eb,
+  XK_ISO_Lock,		0x21eb,
+  XK_ISO_Lock,		0x21eb,
+  XK_Caps_Lock,		0x21ec,
+  XK_Num_Lock,		0x21ed,
+  XK_ISO_Level3_Shift,	0x21ee,
+  XK_ISO_Level3_Lock,	0x21ef,
+  XK_ISO_Group_Lock,	0x21f0,
+  XK_Home,		0x21f1,
+  XK_End,		0x21f2,
+
+  XK_Execute,		0x2318,
+  XK_Begin,		0x2320,
+  XK_Delete,		0x2326,
+  XK_Clear,		0x2327,
+  XK_BackSpace,		0x232b,
+  XK_Insert,		0x2380,
+  XK_Control_L,		0x2388,
+  XK_Control_R,		0x2388,
+  XK_Pause,		0x2389,
+  XK_Break,		0x238a,
+  XK_Escape,		0x238b,
+  XK_Undo,		0x238c,
+  XK_Print,		0x2399,
+
+  XK_space,		0x2423,
+  XK_KP_Space,		0x2422,
+  0,
+};
+
+void
+rxvt_term::commit_iso14755 ()
+{
+  wchar_t ch[2];
+
+  ch[0] = iso14755buf & 0x1fffffffUL; // actually, unicode needs a 0x1fffff mask
+  ch[1] = 0;
+
+  if (iso14755buf & ISO_14755_KEYCODE_VALID)
+    {
+      char mb[16];
+      int len;
+
+      // allow verbatim 0-bytes and control-bytes to be entered
+      if (ch[0] >= 0x20)
+        len = wcstombs (mb, ch, 16);
+      else
+        {
+          mb[0] = ch[0];
+          len = 1;
+        }
+
+      if (len > 0)
+        tt_write ((unsigned char *)mb, len);
+      else
+        scr_bell ();
+    }
+
+  iso14755buf = 0;
+}
+
+int
+rxvt_term::hex_keyval (XKeyEvent &ev)
+{
+  // check wether this event corresponds to a hex digit
+  // if the modifiers had not been pressed.
+  for (int index = 0; index < 8; index++)
+    {
+      KeySym k = XLookupKeysym (&ev, index);
+
+      if (k >= XK_KP_0 && k <= XK_KP_9) return k - XK_KP_0;
+      else if (k >= XK_0 && k <= XK_9)  return k - XK_0;
+      else if (k >= XK_a && k <= XK_f)  return k - XK_a + 10;
+      else if (k >= XK_A && k <= XK_F)  return k - XK_A + 10;
+    }
+
+  return -1;
+}
+#endif
+
 /*{{{ Convert the keypress event into a string */
 void
 rxvt_term::lookup_key (XKeyEvent &ev)
@@ -153,11 +260,10 @@ rxvt_term::lookup_key (XKeyEvent &ev)
         {
 #ifdef UNSHIFTED_SCROLLKEYS
           if (!ctrl && !meta)
-            {
 #else
           if (IS_SCROLL_MOD)
-            {
 #endif
+            {
               int lnsppg;
 
 #ifdef PAGING_CONTEXT_LINES
@@ -224,6 +330,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                   case XK_Insert:	/* Shift+Insert = paste mouse selection */
                     selection_request (ev.time, 0, 0);
                     return;
+#if TODO // TODO
                     /* rxvt extras */
                   case XK_KP_Add:	/* Shift+KP_Add = bigger font */
                     change_font (FONT_UP);
@@ -231,9 +338,36 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                   case XK_KP_Subtract:	/* Shift+KP_Subtract = smaller font */
                     change_font (FONT_DN);
                     return;
+#endif
                 }
             }
         }
+
+#ifndef NO_FRILLS
+      // ISO 14755 support
+      if (shft && ctrl)
+        {
+          int hv;
+
+          if (keysym == XK_space || keysym == XK_KP_Space
+              || keysym == XK_Return || keysym == XK_KP_Enter)
+            {
+              commit_iso14755 ();
+              return;
+            }
+          else if ((hv = hex_keyval (ev)) >= 0)
+            {
+              iso14755buf = (iso14755buf << 4) | hv | ISO_14755_KEYCODE_VALID;
+              return;
+            }
+          else
+            iso14755buf = 0;
+        }
+      else if ((ctrl && (keysym == XK_Shift_L || keysym == XK_Shift_R))
+               || (shft && (keysym == XK_Control_L || keysym == XK_Control_R)))
+        iso14755buf |= ISO_14755_ACTIVE;
+#endif
+      
 #ifdef PRINTPIPE
       if (keysym == XK_Print)
         {
@@ -1027,25 +1161,64 @@ rxvt_term::x_cb (XEvent &ev)
   switch (ev.type)
     {
       case KeyPress:
-        lookup_key (ev.xkey);
+        if (!(iso14755buf & ISO_14755_ESCAPE_NEXT))
+          lookup_key (ev.xkey);
+
         break;
 
-#if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
       case KeyRelease:
         {
+#if (defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)) || !defined (NO_FRILLS)
+          KeySym ks;
+
+          ks = XLookupKeysym (&ev.xkey, ev.xkey.state & ShiftMask ? 1 : 0); // sorry, only shift supported :/
+#endif
+
+#ifndef NO_FRILLS
+          // ISO 14755 support
+          if (iso14755buf)
+            if (iso14755buf & ISO_14755_ESCAPE_NEXT)
+              {
+                // iso14755 part 5.2 handling: release time
+                // first: controls
+                if ((ev.xkey.state & ControlMask)
+                     && ((ks >= 0x40 && ks <= 0x5f)
+                         || (ks >= 0x61 && ks <= 0x7f)))
+                  {
+                    iso14755buf = ISO_14755_KEYCODE_VALID | 0x2400 | (ks & 0x1f);
+                    commit_iso14755 ();
+                    return; // case-break;
+                  }
+
+                for (unsigned short *i = iso14755_symtab; i[0]; i+= 2)
+                  if (i[0] == ks)
+                    {
+                      iso14755buf = ISO_14755_KEYCODE_VALID | i[1];
+                      commit_iso14755 ();
+                      return; // case-break;
+                    }
+
+                iso14755buf = 0;
+                scr_bell ();
+                break;
+              }
+            else if ((ev.xkey.state & (ShiftMask | ControlMask)) != (ShiftMask | ControlMask))
+              {
+                if (iso14755buf & ISO_14755_KEYCODE_VALID)
+                  commit_iso14755 ();
+                else if (iso14755buf & ISO_14755_ACTIVE)
+                  iso14755buf = ISO_14755_ESCAPE_NEXT; // iso14755 part 5.2: remember empty begin/end pair
+              }
+#endif
+
+#if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
           if (!(ev.xkey.state & ControlMask))
             slip_wheel_ev.stop ();
-          else
-            {
-              KeySym ks;
-
-              ks = XKeycodeToKeysym (display->display, ev.xkey.keycode, 0);
-              if (ks == XK_Control_L || ks == XK_Control_R)
-                mouse_slip_wheel_speed = 0;
-            }
+          else if (ks == XK_Control_L || ks == XK_Control_R)
+            mouse_slip_wheel_speed = 0;
+#endif
           break;
         }
-#endif
 
       case ButtonPress:
         button_press (ev.xbutton);
@@ -1197,6 +1370,13 @@ rxvt_term::x_cb (XEvent &ev)
               }
 #endif
           }
+        break;
+
+      case PropertyNotify:
+        if (ev.xproperty.atom == xa[XA_VT_SELECTION]
+            && ev.xproperty.state == PropertyNewValue)
+          selection_property (ev.xproperty.window, ev.xproperty.atom);
+
         break;
 
       case SelectionClear:
@@ -1382,6 +1562,7 @@ rxvt_term::x_cb (XEvent &ev)
     }
 }
 
+#if TRANSPARENT
 void
 rxvt_term::rootwin_cb (XEvent &ev)
 {
@@ -1391,34 +1572,24 @@ rxvt_term::rootwin_cb (XEvent &ev)
   switch (ev.type)
     {
       case PropertyNotify:
-        if (ev.xproperty.atom == xa[XA_VT_SELECTION])
-          {
-            if (ev.xproperty.state == PropertyNewValue)
-              selection_property (ev.xproperty.window, ev.xproperty.atom);
-            break;
-          }
-#ifdef TRANSPARENT
-        else
-          {
-            /*
-             * if user used some Esetroot compatible prog to set the root bg,
-             * use the property to determine the pixmap.  We use it later on.
-             */
-            if (xa[XA_XROOTPMAPID] == 0)
-              xa[XA_XROOTPMAPID] = XInternAtom (display->display, "_XROOTPMAP_ID", False);
+        /*
+         * if user used some Esetroot compatible prog to set the root bg,
+         * use the property to determine the pixmap.  We use it later on.
+         */
+        if (xa[XA_XROOTPMAPID] == 0)
+          xa[XA_XROOTPMAPID] = XInternAtom (display->display, "_XROOTPMAP_ID", False);
 
-            if (ev.xproperty.atom != xa[XA_XROOTPMAPID])
-              return;
-          }
+        if (ev.xproperty.atom != xa[XA_XROOTPMAPID])
+          return;
 
         /* FALLTHROUGH */
       case ReparentNotify:
         if ((Options & Opt_transparent) && check_our_parents () && am_transparent)
           want_refresh = want_full_refresh = 1;
         break;
-#endif
     }
 }
+#endif
 
 void
 rxvt_term::button_press (XButtonEvent &ev)
@@ -3176,20 +3347,20 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
         tt_printf ("\033[9;%d;%dt", TermWin.nrow, TermWin.ncol);
         break;
       case 20:			/* report icon label */
-        if (Options & Opt_insecure)
-          {
-            char *s;
-            XGetIconName (display->display, TermWin.parent[0], &s);
-            tt_printf ("\033]L%-.200s\234", s ? s : "");	/* 8bit ST */
-          }
+        {
+          char *s;
+          XGetIconName (display->display, TermWin.parent[0], &s);
+          tt_printf ("\033]L%-.250s\234", (Options & Opt_insecure) && s ? s : "");	/* 8bit ST */
+          XFree (s);
+        }
         break;
       case 21:			/* report window title */
-        if (Options & Opt_insecure)
-          {
-            char *s;
-            XFetchName (display->display, TermWin.parent[0], &s);
-            tt_printf ("\033]l%-.200s\234", s ? s : "");	/* 8bit ST */
-          }
+        {
+          char *s;
+          XFetchName (display->display, TermWin.parent[0], &s);
+          tt_printf ("\033]l%-.250s\234", (Options & Opt_insecure) && s ? s : "");	/* 8bit ST */
+          XFree (s);
+        }
         break;
     }
 }
@@ -3296,12 +3467,9 @@ rxvt_term::process_color_seq (int report, int color, const char *str, unsigned c
 {
   if (str[0] == '?' && !str[1])
     {
-      if (Options & Opt_insecure)
-        {
-          unsigned short r, g, b;
-          PixColorsFocused[color].get (display, r, g, b);
-          tt_printf ("\033]%d;rgb:%04x/%04x/%04x%c", report, r, g, b, resp);
-        }
+      unsigned short r, g, b;
+      PixColorsFocused[color].get (display, r, g, b);
+      tt_printf ("\033]%d;rgb:%04x/%04x/%04x%c", report, r, g, b, resp);
     }
   else
     set_window_color (color, str);
@@ -3411,12 +3579,9 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
 
             if (name[0] == '?' && !name[1])
               {
-                if (Options & Opt_insecure)
-                  {
-                    unsigned short r, g, b;
-                    PixColorsFocused[color + minCOLOR].get (display, r, g, b);
-                    tt_printf ("\033]%d;%d;rgb:%04x/%04x/%04x%c", XTerm_Color, color, r, g, b, resp);
-                  }
+                unsigned short r, g, b;
+                PixColorsFocused[color + minCOLOR].get (display, r, g, b);
+                tt_printf ("\033]%d;%d;rgb:%04x/%04x/%04x%c", XTerm_Color, color, r, g, b, resp);
               }
             else
               set_window_color (color + minCOLOR, name);
@@ -3490,14 +3655,10 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
 
       case XTerm_font:
         if (query)
-          {
-            if (Options & Opt_insecure)
-              tt_printf ("\33]%d;%-.250s%c", XTerm_font,
-                         TermWin.fontset->fontdesc
-                           ? TermWin.fontset->fontdesc
-                           : "",
-                         resp);
-          }
+          tt_printf ("\33]%d;%-.250s%c", XTerm_font,
+                     (Options & Opt_insecure) && TermWin.fontset->fontdesc
+                       ? TermWin.fontset->fontdesc : "",
+                     resp);
         else
           change_font (str);
         break;
@@ -3505,10 +3666,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
 #ifndef NO_FRILLS
       case XTerm_locale:
         if (query)
-          {
-            if (Options & Opt_insecure)
-              tt_printf ("\33]%d;%-.250s%c", XTerm_locale, locale, resp);
-          }
+          tt_printf ("\33]%d;%-.250s%c", XTerm_locale, (Options & Opt_insecure) ? locale : "", resp);
         else
           {
             set_locale (str);
@@ -3519,12 +3677,13 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
         break;
 
       case XTerm_findfont:
-        if (Options & Opt_insecure)
-          {
-            int fid = TermWin.fontset->find_font (atoi (str));
-            tt_printf ("\33]%d;%d;%-.250s%c", XTerm_findfont,
-                       fid, (*TermWin.fontset)[fid]->name, resp);
-          }
+        {
+          int fid = TermWin.fontset->find_font (atoi (str));
+          tt_printf ("\33]%d;%d;%-.250s%c", XTerm_findfont,
+                     fid,
+                     (Options & Opt_insecure) ? (*TermWin.fontset)[fid]->name : "",
+                     resp);
+        }
         break;
 #endif
 
