@@ -11,6 +11,11 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
+	- remove shared library (or any library) support - it is
+          of no use currently (and -embed is a better way to embed
+          rxvt-unicode).
+        - get rid of the intpro files.
+
 5.1  Tue Feb 15 17:13:27 CET 2005
 	- fix a bug when parsing fontnames and another one
           for empty keymaps which could result in crashes

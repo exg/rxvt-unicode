@@ -25,6 +25,5 @@
 #  define ut_name		ut_user
 # endif
 
-#include "logging.intpro"		/* PROTOS for internal routines */
 #endif
 #endif /* _LOGGING_H_ */

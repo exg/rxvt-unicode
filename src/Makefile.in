@@ -21,31 +21,11 @@ DEBUG=-DDEBUG_STRICT @DEBUG@
 first_rule: all
 dummy:
 
-LIBSRCS = command.C rxvtfont.C init.C logging.C \
-	main.C menubar.C misc.C netdisp.C ptytty.C screen.C scrollbar.C \
-	scrollbar-rxvt.C scrollbar-next.C scrollbar-xterm.C strings.C \
-	xdefaults.C xpm.C encoding.C rxvttoolkit.C rxvtutil.C iom.C \
-	scrollbar-plain.C keyboard.C
-
-SRCS =  rxvt.C $(LIBSRCS)
-
-HDRS =	command.h rxvtfont.h feature.h init.h logging.h \
-	menubar.h netdisp.h rxvt.h rxvtgrx.h version.h encoding.h \
-	rxvtutil.h iom.h iom_conf.h keyboard.h
-
-EXTRAHDRS = rxvtlib.h rxvtdaemon.h
-
-OBJS =	command.o rxvtfont.o init.o logging.o \
+COMMON = \
+	command.o rxvtfont.o init.o logging.o \
 	main.o menubar.o misc.o netdisp.o ptytty.o screen.o \
 	scrollbar.o scrollbar-next.o scrollbar-rxvt.o scrollbar-xterm.o scrollbar-plain.o \
-	strings.o xdefaults.o xpm.o rxvt.o encoding.o rxvttoolkit.o rxvtutil.o iom.o keyboard.o
-LIBOBJS = command.lo rxvtfont.lo init.lo logging.lo \
-	main.lo menubar.lo misc.lo netdisp.lo ptytty.lo screen.lo \
-	scrollbar.lo scrollbar-next.lo scrollbar-rxvt.lo scrollbar-xterm.lo scrollbar-plain.lo \
-	strings.lo xdefaults.lo xpm.lo encoding.lo rxvt.lo rxvttoolkit.lo rxvtutil.lo iom.lo keyboard.lo
-
-LIBVERSION = @LIBVERSION@
-INSTALL_LIBRXVT = @INSTALL_LIBRXVT@
+	strings.o xdefaults.o xpm.o encoding.o rxvttoolkit.o rxvtutil.o iom.o keyboard.o
 
 RXVT_BASENAME=`$(ECHO) $(RXVTNAME)|$(SED) 's/$(EXEEXT)$$//'|$(SED) '$(transform)'`
 RXVT_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)$(EXEEXT)
@@ -53,57 +33,49 @@ RXVTC_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)c$(EXEEXT)
 RXVTD_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)d$(EXEEXT)
 RXVT_OLDNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)-old$(EXEEXT)
 
-INTPROS = rxvtfont.intpro logging.intpro main.intpro misc.intpro \
-	  ptytty.intpro xpm.intpro
-
 #
 # Distribution variables
 #
 
-DIST = $(HDRS) $(SRCS) Makefile.in gcc-Wall rxvtlib.h.in $(INTPROS)
-
-.SUFFIXES:	.C .o .intpro .lo
+.SUFFIXES:	.C .o
 
 #-------------------------------------------------------------------------
 # inference rules
 .C.o:
 	$(COMPILE) -c $<
 
-.C.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-.s.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-.S.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-.C.intpro:
-	@$(RMF) $@.tmp
-	@$(AWK) -f $(srcdir)/makeintprotos-awk $< > $@.tmp
-	@if $(CMP) -s $@ $@.tmp ; then : ; else $(ECHO) "$(AWK) -f $(srcdir)/makeintprotos-awk $< > $@"; $(CP) $@.tmp $@; fi
-	@$(RMF) $@.tmp
+#.C.lo:
+#	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+#
+#.s.lo:
+#	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+#
+#.S.lo:
+#	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
 
 #-------------------------------------------------------------------------
 
 all: allbin
 
-rxvt: version.h rxvt.o librxvt.la
-	$(LIBTOOL) --mode=link $(LINK) rxvt.o librxvt.la $(LIBS) $(XLIB) $(DLIB) -o $@
+rxvt: rxvt.o $(COMMON)
+	$(LINK) -o $@ $^ $(LIBS) $(XLIB) $(DLIB)
+#	$(LIBTOOL) --mode=link $(LINK) rxvt.o librxvt.la $(LIBS) $(XLIB) $(DLIB) -o $@
 
-rxvtd: version.h rxvtd.o librxvt.la rxvtdaemon.o
-	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o librxvt.la $(LIBS) $(XLIB) $(DLIB) -o $@
+rxvtd: rxvtd.o rxvtdaemon.o $(COMMON)
+	$(LINK) -o $@ $^ $(LIBS) $(XLIB) $(DLIB)
+#	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o librxvt.la $(LIBS) $(XLIB) $(DLIB) -o $@
 
-rxvtc: version.h rxvtc.o rxvtdaemon.o
-	$(LIBTOOL) --mode=link $(LINK) rxvtc.o rxvtdaemon.o $(LIBS) $(DLIB) -o $@
+rxvtc: rxvtc.o rxvtdaemon.o
+	$(LINK) -o $@ $^ $(LIBS) $(DLIB)
+#	$(LIBTOOL) --mode=link $(LINK) rxvtc.o rxvtdaemon.o $(LIBS) $(DLIB) -o $@
 
-librxvt.la: $(LIBOBJS)
-	$(LIBTOOL) --mode=link $(LINK) -rpath $(libdir) -version-info $(LIBVERSION) $(LIBOBJS) $(LIBS) -o $@
+#librxvt.la: $(LIBOBJS)
+#	$(LIBTOOL) --mode=link $(LINK) -rpath $(libdir) -version-info $(LIBVERSION) $(LIBOBJS) $(LIBS) -o $@
 
 #-------------------------------------------------------------------------
 
-tags: $(SRCS) $(HDRS) $(EXTRAHDRS)
-	ctags $(SRCS) $(HDRS) $(EXTRAHDRS)
+tags:
+	ctags *.h *.C
 
 allbin: rxvt rxvtd rxvtc
 
@@ -121,31 +93,13 @@ distclean: realclean
 	(cd $(srcdir); $(RMF) Makefile)
 
 install: allbin alldoc
-	$(MKDIR) $(DESTDIR)$(includedir) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
-	@if test x$(INSTALL_LIBRXVT) = xyes; then \
-	    $(ECHO) "$(LIBTOOL) --mode=install $(INSTALL_DATA) rxvtlib.h $(DESTDIR)$(includedir)/rxvtlib.h"; \
-	    $(LIBTOOL) --mode=install $(INSTALL_DATA) rxvtlib.h $(DESTDIR)$(includedir)/rxvtlib.h; \
-	    $(ECHO) "$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) librxvt.la $(DESTDIR)$(libdir)/librxvt.la"; \
-	    $(LIBTOOL) --mode=install $(INSTALL_PROGRAM) librxvt.la $(DESTDIR)$(libdir)/librxvt.la; \
-	fi
+	$(MKDIR) $(DESTDIR)$(bindir)
 	$(RMF) $(RXVT_BINNAME)
 	$(RMF) $(RXVTC_BINNAME)
 	$(RMF) $(RXVTD_BINNAME)
-	$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) rxvt  $(RXVT_BINNAME)
-	$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) rxvtc $(RXVTC_BINNAME)
-	$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) rxvtd $(RXVTD_BINNAME)
-
-uninstall:
-	@$(ECHO) $(RMF) $(RXVT_VERNAME)
-	@$(RMF) $(RXVT_VERNAME)
-	@$(ECHO) "$(LIBTOOL) --mode=uninstall $(RMF) $(RXVT_BINNAME)"
-	@$(LIBTOOL) --mode=uninstall $(RMF) $(RXVT_BINNAME)
-	@if test x$(INSTALL_LIBRXVT) = xyes; then \
-	    $(ECHO) "$(LIBTOOL) --mode=uninstall $(RMF) $(DESTDIR)$(libdir)/librxvt.la"; \
-	    $(LIBTOOL) --mode=uninstall $(RMF) $(DESTDIR)$(libdir)/librxvt.la; \
-	    $(ECHO) "$(LIBTOOL) --mode=uninstall $(RMF) $(DESTDIR)$(includedir)/rxvtlib.h"; \
-	    $(LIBTOOL) --mode=uninstall $(RMF) $(DESTDIR)$(includedir)/rxvtlib.h; \
-	fi
+	$(INSTALL_PROGRAM) rxvt  $(RXVT_BINNAME)
+	$(INSTALL_PROGRAM) rxvtc $(RXVTC_BINNAME)
+	$(INSTALL_PROGRAM) rxvtd $(RXVTD_BINNAME)
 
 distdirs:
 	mkdir $(basedir)/../$(VERNAME)/$(thisdir)
@@ -186,16 +140,16 @@ keyboard.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 keyboard.o: salloc.h menubar.h keyboard.h command.h
 logging.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 logging.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
-logging.o: salloc.h menubar.h logging.h logging.intpro
+logging.o: salloc.h menubar.h logging.h
 main.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h rxvtfont.h
 main.o: rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h salloc.h
-main.o: menubar.h main.intpro keyboard.h
+main.o: menubar.h keyboard.h
 menubar.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 menubar.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 menubar.o: salloc.h menubar.h version.h
 misc.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h rxvtfont.h
 misc.o: rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h salloc.h
-misc.o: menubar.h misc.intpro
+misc.o: menubar.h
 netdisp.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 netdisp.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 netdisp.o: salloc.h menubar.h
@@ -246,7 +200,7 @@ xdefaults.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 xdefaults.o: salloc.h menubar.h version.h keyboard.h
 xpm.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h rxvtfont.h
 xpm.o: rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h salloc.h
-xpm.o: menubar.h xpm.intpro
+xpm.o: menubar.h
 
 command.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 command.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
@@ -275,16 +229,16 @@ keyboard.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 keyboard.lo: salloc.h menubar.h keyboard.h command.h
 logging.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 logging.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
-logging.lo: salloc.h menubar.h logging.h logging.intpro
+logging.lo: salloc.h menubar.h logging.h
 main.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 main.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
-main.lo: salloc.h menubar.h main.intpro keyboard.h
+main.lo: salloc.h menubar.h keyboard.h
 menubar.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 menubar.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 menubar.lo: salloc.h menubar.h version.h
 misc.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 misc.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
-misc.lo: salloc.h menubar.h misc.intpro
+misc.lo: salloc.h menubar.h
 netdisp.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 netdisp.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 netdisp.lo: salloc.h menubar.h
@@ -335,4 +289,4 @@ xdefaults.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 xdefaults.lo: salloc.h menubar.h version.h keyboard.h
 xpm.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h rxvtfont.h
 xpm.lo: rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h salloc.h
-xpm.lo: menubar.h xpm.intpro
+xpm.lo: menubar.h

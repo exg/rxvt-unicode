@@ -24,9 +24,10 @@
 
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
-#include "xpm.intpro"		/* PROTOS for internal routines */
 
 #ifdef XPM_BACKGROUND
+
+static void      rxvt_pixmap_incr                 (unsigned int *wh, unsigned int *xy, float *incr, float *p, unsigned int widthheight, unsigned int xpmwidthheight);
 
 /*
  * These GEOM strings indicate absolute size/position:

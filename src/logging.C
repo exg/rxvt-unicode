@@ -44,6 +44,10 @@
 #include "logging.h"
 #ifdef UTMP_SUPPORT
 
+int              rxvt_write_bsd_utmp              (int utmp_pos, struct utmp *wu);
+void             rxvt_update_wtmp                 (const char *fname, const struct utmp *putmp);
+void             rxvt_update_lastlog              (const char *fname, const char *pty, const char *host);
+
 /*
  * BSD style utmp entry
  *      ut_line, ut_name, ut_host, ut_time

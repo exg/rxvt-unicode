@@ -67,8 +67,6 @@ src/keyboard.h
 src/logging.C
 src/logging.h
 src/main.C
-src/makeintprotos-awk
-src/makeintprotos-sed
 src/menubar.C
 src/menubar.h
 src/misc.C

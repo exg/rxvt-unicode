@@ -32,7 +32,6 @@
 
 #include "../config.h"          /* NECESSARY */
 #include "rxvt.h"               /* NECESSARY */
-#include "main.intpro"          /* PROTOS for internal routines */
 
 #include <csignal>
 #include <cstring>

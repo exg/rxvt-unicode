@@ -54,7 +54,6 @@ XINC = @X_CFLAGS@ @XPM_CFLAGS@
 # extra libraries needed by X on some systems, X library location
 XLIB = @X_LIBS@ @XPM_LIBS@ -lX11 @X_EXTRA_LIBS@
 
-LIBTOOL = @LIBTOOL@
 COMPILE = $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $(DEBUG) $(DINCLUDE) $(XINC) -I$(basedir) -I$(srcdir) -I.
 LINK = @LINKER@ $(CFLAGS) $(LDFLAGS)
 

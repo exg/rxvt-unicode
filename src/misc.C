@@ -25,7 +25,6 @@
 
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
-#include "misc.intpro"		/* PROTOS for internal routines */
 
 char *
 rxvt_wcstombs (const wchar_t *str, int len)

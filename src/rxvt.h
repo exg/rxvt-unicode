@@ -82,17 +82,23 @@ typedef struct {
  * PROTOTYPES                    
  *****************************************************************************
  */
+// main.C
 RETSIGTYPE       rxvt_Child_signal                (int sig);
 RETSIGTYPE       rxvt_Exit_signal                 (int sig);
 void             rxvt_clean_exit                  ();
 void           * rxvt_malloc                      (size_t size);
 void           * rxvt_calloc                      (size_t number, size_t size);
 void           * rxvt_realloc                     (void *ptr, size_t size);
+void             rxvt_privileges                  (rxvt_privaction action);
+
+// util.C
 char *           rxvt_wcstombs                    (const wchar_t *str, int len = -1);
 wchar_t *        rxvt_mbstowcs                    (const char *str, int len = -1);
 char *           rxvt_wcstoutf8                   (const wchar_t *str, int len = -1);
 wchar_t *        rxvt_utf8towcs                   (const char *str, int len = -1);
 char *           rxvt_strdup                      (const char *str);
+
+// misc.C
 char *           rxvt_r_basename                  (const char *str);
 void             rxvt_vlog                        (const char *fmt, va_list arg_ptr);
 void             rxvt_log                         (const char *fmt,...);
@@ -108,8 +114,6 @@ void             rxvt_freecommastring             (char **cs);
 char           * rxvt_File_find                   (const char *file, const char *ext, const char *path);
 void             rxvt_Draw_Shadow                 (Display *display, Window win, GC topShadow, GC botShadow, int x, int y, int w, int h);
 void             rxvt_Draw_Triangle               (Display *display, Window win, GC topShadow, GC botShadow, int x, int y, int w, int type);
-
-void             rxvt_privileges                  (rxvt_privaction action);
 
 /*
  *****************************************************************************
