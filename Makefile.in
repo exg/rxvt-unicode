@@ -1,5 +1,5 @@
 # ./Makefile.in			-*- Makefile -*-
-# $Id: Makefile.in,v 1.3 2003/12/18 00:56:51 pcg Exp $
+# $Id: Makefile.in,v 1.4 2003/12/18 07:41:39 pcg Exp $
 @MCOMMON@
 
 srcdir =	@srcdir@
@@ -95,9 +95,11 @@ distdir:
 
 tar.gz: distdir
 	tar cvf - $(VERNAME) | gzip -vf9 > $(VERNAME).tar.gz
+	rm -rf $(VERNAME)
 
 tar.bz2: distdir
 	tar cvf - $(VERNAME) | bzip2 -vf9 > $(VERNAME).tar.bz2
+	rm -rf $(VERNAME)
 
 dist: tar.bz2
 
