@@ -932,6 +932,14 @@ rxvt_term::pty_cb (io_watcher &w, short revents)
                                   ch = NOCHAR;
                                   break;
                                 }
+
+                              // scr_add_lines only works for nlines < TermWin.nrow - 1.
+                              if (nlines >= TermWin.nrow - 1)
+                                {
+                                  scr_add_lines (buf, nlines, str - buf);
+                                  nlines = 0;
+                                  str = buf;
+                                }
                             }
 
                           if (str >= buf + BUFSIZ)
