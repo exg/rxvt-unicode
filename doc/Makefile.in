@@ -1,5 +1,5 @@
 # doc/Makefile.in	-*- Makefile -*-
-# $Id: Makefile.in,v 1.6 2004/03/14 21:59:57 pcg Exp $
+# $Id: Makefile.in,v 1.8 2004/07/30 19:54:14 root Exp $
 @MCOMMON@
 
 srcdir =	@srcdir@
@@ -20,12 +20,13 @@ YODL_RXVT = yodl/rxvt-colours.yo yodl/rxvt-environment.yo\
 	    yodl/rxvt-files.yo yodl/rxvt-fonts.yo yodl/rxvt-login.yo\
 	    yodl/rxvt-mousereporting.yo yodl/rxvt-options.yo\
 	    yodl/rxvt-resources.yo yodl/rxvt-scrollbar.yo\
-	    yodl/rxvt-textselection.yo
+	    yodl/rxvt-textselection.yo yodl/versioninfo.yo
 YODL_RREF = yodl/rxvtRef-csi.yo yodl/rxvtRef-definitions.yo\
 	    yodl/rxvtRef-keycodes.yo\
 	    yodl/rxvtRef-menubar.yo yodl/rxvtRef-mouse.yo\
 	    yodl/rxvtRef-privatemodes.yo yodl/rxvtRef-sequences.yo\
-	    yodl/rxvtRef-values.yo yodl/rxvtRef-xpm.yo yodl/rxvtRef-xterm.yo
+	    yodl/rxvtRef-values.yo yodl/rxvtRef-xpm.yo yodl/rxvtRef-xterm.yo\
+	    yodl/versioninfo.yo
 
 DIST_ETC  = etc/rxvt.termcap etc/rxvt.terminfo etc/XTerm.ad
 DIST_YODL = yodl/masonyodl.yo yodl/versioninfo.yo yodl/versioninfo.yo.in\
@@ -87,7 +88,7 @@ cleandir: realclean
 
 distclean:
 
-install:
+install: alldoc
 	$(INSTALL_DATA) rxvt.1 $(DESTDIR)$(mandir)/$(RXVTNAME).$(manext)
 	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(mandir)/$(RXVTNAME)c.$(manext)
 	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(mandir)/$(RXVTNAME)d.$(manext)

@@ -15,7 +15,7 @@ rxvt (ouR XVT) \- a VT102 emulator for the X window system
 .PP 
 \fBrxvtd\fP is a colour vt102 terminal
 emulator intended as an \fIxterm\fP(1) replacement. \fBrxvtd\fP
-implements the actual program that runs runs as daemon in background and
+implements the actual program that runs as daemon in background and
 opens pseudo-ttys. You can run it from your X startup scripts, for
 example, although it is not dependent on a working DISPLAY and, in fact,
 can open windows on multiple X displays.
@@ -32,7 +32,7 @@ also be respected. Currently, it always returns immediately after contacting
 the daemon.
 .PP 
 The positive aspect of this client-server solution is faster creation
-time for terminal windows and a lot of saved memory. The other side is a
+time for terminal windows and a lot of saved memory. The negative side is a
 possible impact on stability - if the main program crashes, all
 processes in the terminal windows are terminated.
 .PP
