@@ -1,14 +1,14 @@
 1.5  Thu Jan 29 00:43:48 CET 2004
 	- share io manager between rxvt-unicode and vpe
-        - bugfix for --disable-utmp, reported by fefe himself.
+        - bugfix for --disable-utmp, reported by fefe himself
         - colors were sometimes not used correctly because
           parts of the code expected a monochrome display.
-          reported by fefe.
+          reported by fefe
         - make it compile without pointer_blank, reported by
-          Markus Demleitner.
+          Markus Demleitner
         - improved selection support, now supports UTF8_STRING
-          and properly encodes CUT_BUFFER0 in iso-8859-1.
-        - completely removed non-working graphics mode.
+          and properly encodes CUT_BUFFER0 in iso-8859-1
+        - completely removed non-working graphics mode
 
 1.4  Fri Jan 16 23:03:22 CET 2004
 	- fix stupid segfault on esc-c
