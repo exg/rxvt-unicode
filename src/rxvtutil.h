@@ -12,8 +12,10 @@ public:
   static bool vax           () { return e == 0x44332211; };
 } byteorder;
 
-template<typename T, typename U> static inline T min (T a, U b) { return a < b ? a : b; }
-template<typename T, typename U> static inline T max (T a, U b) { return a > b ? a : b; }
+template<typename T, typename U>
+static inline T min (T a, U b) { return a < b ? a : (T)b; }
+template<typename T, typename U>
+static inline T max (T a, U b) { return a > b ? a : (T)b; }
 
 #include "simplevec.h"
 
