@@ -1,6 +1,6 @@
 /*
  * File:	grkelot.h
- * $Id: grkelot.h,v 1.1 2003/11/24 17:28:08 pcg Exp $
+ * $Id: grkelot.h,v 1.2 2003/11/24 17:31:27 pcg Exp $
  *
  * Synopsis:	string -> greek ELOT928 string; 4-state FSM.
  *

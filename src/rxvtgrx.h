@@ -1,6 +1,6 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	rxvtgrx.h
- * $Id: rxvtgrx.h,v 1.1 2003/11/24 17:28:08 pcg Exp $
+ * $Id: rxvtgrx.h,v 1.2 2003/11/24 17:31:27 pcg Exp $
  *
  * Stuff for text alignment for rxvt special graphics mode
  *

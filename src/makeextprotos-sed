@@ -1,5 +1,5 @@
 # Get prototypes from a .c file
-# $Id: makeextprotos-sed,v 1.1 2003/11/24 17:28:08 pcg Exp $
+# $Id: makeextprotos-sed,v 1.2 2003/11/24 17:31:27 pcg Exp $
 # /* EXTPROTO */   must be above return type which are above function.
 #		Args are on one line
 # eg.

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	misc.c
  *----------------------------------------------------------------------*
- * $Id: misc.C,v 1.1 2003/11/24 17:28:08 pcg Exp $
+ * $Id: misc.C,v 1.2 2003/11/24 17:31:27 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1996      mj olesen <olesen@me.QueensU.CA> Queen's Univ at Kingston

@@ -1,4 +1,4 @@
-dnl> $Id: xpm.m4,v 1.1 2003/11/24 17:28:08 pcg Exp $
+dnl> $Id: xpm.m4,v 1.2 2003/11/24 17:31:27 pcg Exp $
 dnl> test to find the hard-to-find libXpm
 dnl> mostly copied from AC_PATH_X & AC_PATH_DIRECT, but explictly set
 

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	init.c
  *----------------------------------------------------------------------*
- * $Id: init.C,v 1.1 2003/11/24 17:28:08 pcg Exp $
+ * $Id: init.C,v 1.2 2003/11/24 17:31:27 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
