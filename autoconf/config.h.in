@@ -220,9 +220,6 @@
 /* Define to use smart resize behavior */
 #undef SMART_RESIZE
 
-/* Define if you want 256 colour support */
-#undef TTY_256COLOR
-
 /* Set TERM to the value given by configure */
 #undef TERMENV
 
