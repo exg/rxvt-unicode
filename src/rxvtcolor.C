@@ -249,8 +249,6 @@ void rxvt_display::flush ()
 {
   for (;;)
     {
-      XFlush (display);
-
       if (!XPending (display))
         break;
 
