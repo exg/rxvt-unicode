@@ -3,7 +3,8 @@
           new bugs, this should not change much.
         - fix and re-enable background pixmap and inherit pixmap support.
         - re-enabled multiple scrollbar support.
-        - blinking and selections wrk slightly better now.
+        - added plain scrollbar style and restored xterm scrollbar.
+        - blinking and selections work slightly better now.
 
 1.7  Fri Jan 30 16:50:11 CET 2004
 	- further cleanups.
