@@ -1,5 +1,5 @@
 # doc/Makefile.in	-*- Makefile -*-
-# $Id: Makefile.in,v 1.2 2003/11/24 17:31:27 pcg Exp $
+# $Id: Makefile.in,v 1.4 2004/02/24 21:51:41 pcg Exp $
 @MCOMMON@
 
 srcdir =	@srcdir@
@@ -22,7 +22,7 @@ YODL_RXVT = yodl/rxvt-colours.yo yodl/rxvt-environment.yo\
 	    yodl/rxvt-resources.yo yodl/rxvt-scrollbar.yo\
 	    yodl/rxvt-textselection.yo
 YODL_RREF = yodl/rxvtRef-csi.yo yodl/rxvtRef-definitions.yo\
-	    yodl/rxvtRef-graphics.yo yodl/rxvtRef-keycodes.yo\
+	    yodl/rxvtRef-keycodes.yo\
 	    yodl/rxvtRef-menubar.yo yodl/rxvtRef-mouse.yo\
 	    yodl/rxvtRef-privatemodes.yo yodl/rxvtRef-sequences.yo\
 	    yodl/rxvtRef-values.yo yodl/rxvtRef-xpm.yo yodl/rxvtRef-xterm.yo
@@ -32,7 +32,7 @@ DIST_YODL = yodl/masonyodl.yo yodl/versioninfo.yo yodl/versioninfo.yo.in\
 	    $(YODL_RXVT) yodl/rxvt.yo $(YODL_RREF) yodl/rxvtRef.yo
 DIST_MENU = menu/menu menu/example.menu menu/rxvt.menu menu/rxvt.zh-menu\
 	    menu/terminal.menu menu/jedmenu.sl
-DIST	  = Makefile.in README.greek README.menu README.xvt BUGS FAQ TODO\
+DIST	  = Makefile.in README.menu README.xvt BUGS FAQ TODO\
 	    changes.txt xterm.seq LSM.in rxvt.1 rxvt.tbl rxvtRef.txt\
 	    rxvtRef.html rxvtRef-frame.html rxvtRef-toc.html rxvt.html 
 
@@ -88,6 +88,8 @@ distclean:
 
 install:
 	$(INSTALL_DATA) rxvt.1 $(DESTDIR)$(mandir)/$(RXVTNAME).$(manext)
+	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(mandir)/rxvtc.$(manext)
+	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(mandir)/rxvtd.$(manext)
 
 uninstall:
 	-(cd $(mandir); $(RMF) $(RXVTNAME).$(manext) )
