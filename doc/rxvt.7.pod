@@ -1394,7 +1394,7 @@ your system.
 
 =head1 AUTHORS
 
-Marc Lehmann <rxvt@schmorp.de>, converted this document to pod and
+Marc Lehmann <rxvt@schmorp.de> converted this document to pod and
 reworked it from the original Rxvt documentation, which was done by Geoff
 Wing <gcw@pobox.com>, who in turn used the XTerm documentation and other
 sources.
