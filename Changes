@@ -22,6 +22,11 @@ WISH: just for fun, do shade and tint with XRender.
         - after deciding that LSM is dead, remove all traces of it,
           along with other, similar, cleanups.
         - _try_ to react sensibly to some non-monotonic time changes.
+        - don't crash in urxvtc when getcwd fails (reported by Paco-Paco).
+        - tweak font searching algorithm a bit to get faster and be
+          more compatible with the font older rxvt-unicode versions chose
+          (reported by Paco-Paco).
+        - urxvtd tries to stay in "/" whenever possible.
 
 5.0  Fri Feb 11 18:31:48 CET 2005
 	- document a race-free hack to start urxvtd.

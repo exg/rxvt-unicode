@@ -718,6 +718,8 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
 
       if (replace_field (fname, list[i], 6, '0', field_str))
         diff += 10; // slightly penalize scalable fonts
+      else if (replace_field (fname, list[i], 11, '0', "0"))
+        diff += 300; // more heavily penalize what looks like scaled bitmap fotns
 
       if (!set_properties (p, fname))
         continue;
@@ -743,7 +745,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
       font_weight *best = fonts + count - 1;
 
       for (font_weight *w = best; w-- > fonts; )
-        if (w->diff < best->diff)
+        if (w->diff <= best->diff)
           best = w;
 
       if (!best->name
@@ -1098,7 +1100,7 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
   FcValue v;
 
   if (prop.height != rxvt_fontprop::unset
-      || (FcPatternGet (p, FC_PIXEL_SIZE, 0, &v) != FcResultMatch
+      && (FcPatternGet (p, FC_PIXEL_SIZE, 0, &v) != FcResultMatch
           && FcPatternGet (p, FC_SIZE, 0, &v) != FcResultMatch))
     FcPatternAddInteger (p, FC_PIXEL_SIZE, prop.height);
 

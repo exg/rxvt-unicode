@@ -65,8 +65,6 @@ int
 main (int argc, const char *const *argv)
 {
   client c;
-  char buf[PATH_MAX];
-
   {
     sigset_t ss;
 
@@ -76,8 +74,17 @@ main (int argc, const char *const *argv)
   }
 
   c.send ("NEW");
+
   // instead of getcwd we could opendir (".") and pass the fd for fchdir *g*
-  c.send ("CWD"), c.send (getcwd (buf, sizeof (buf)));
+  char cwd[PATH_MAX];
+
+  if (!getcwd (cwd, sizeof (cwd)))
+    {
+      perror ("unable to determine current working directory");
+      exit (EXIT_FAILURE);
+    }
+
+  c.send ("CWD"), c.send (cwd);
 
   for (char **var = environ; *environ; environ++)
     c.send ("ENV"), c.send (*environ);
