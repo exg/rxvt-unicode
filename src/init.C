@@ -998,11 +998,11 @@ rxvt_term::create_windows (int argc, const char *const *argv)
           refresh_type = FAST_REFRESH;
           XClearWindow (disp, top);
           // TODO: make XMapNotify-event-code a function and call it
-          // TODO: how can I detetc visibility without unmpa/map?
+          // TODO: how can I detect visibility without unmap/map?
           // TODO: focusin etc.
         }
 #else
-      // it'S easiets just to unmap/map to get all state correctly set-up
+      // it's easiest just to unmap/map to get all state correctly set-up
       XUnmapWindow (disp, top);
 #endif
     }
@@ -1105,8 +1105,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   vt_emask = ExposureMask | ButtonPressMask | ButtonReleaseMask | PropertyChangeMask;
 
-  pointer_unblank ();
-
 #ifdef POINTER_BLANK
   if (options & Opt_pointerBlank)
     vt_emask |= PointerMotionMask;
@@ -1185,7 +1183,13 @@ rxvt_term::create_windows (int argc, const char *const *argv)
     pix_colors = pix_colors_unfocused;
 #endif
 
+  pointer_unblank ();
   scr_recolour ();
+
+#if ENABLE_XEMBED
+  // why this is necessary, I don't know, race condition??
+  XMoveWindow (disp, TermWin.vt, window_vt_x, window_vt_y);
+#endif
 }
 
 /* ------------------------------------------------------------------------- *

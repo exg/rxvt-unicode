@@ -1252,6 +1252,7 @@ rxvt_term::set_widthheight (unsigned int width, unsigned int height)
   if (width == 0 || height == 0)
     {
       XGetWindowAttributes (display->display, display->root, &wattr);
+
       if (width == 0)
         width = wattr.width - szHint.base_width;
       if (height == 0)

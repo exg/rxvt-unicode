@@ -1,3 +1,5 @@
+TODO: !! If I resize the urxvt window to be 4 chars high (or less) it seems to 
+> crash when scrolling with the mouse wheel. Mikael Magnusson.
 TODO: do font request caching, might help rxvtd on some machines
 TODO: manpage 900mb update
 TODO: safer command: keymap processing.
