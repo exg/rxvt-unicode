@@ -24,6 +24,7 @@ public:
   void close_tty ();
 
   bool make_controlling_tty ();
+  void set_utf8_mode (bool on);
 };
 
 #endif
