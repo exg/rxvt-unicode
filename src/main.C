@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.20 2004/01/16 16:34:56 pcg Exp $
+ * $Id: main.C,v 1.21 2004/01/29 23:26:01 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -76,7 +76,10 @@ rxvt_term::operator delete (void *p, size_t s)
 rxvt_term::rxvt_term ()
 : destroy_ev (this, &rxvt_term::destroy_cb),
 #ifdef CURSOR_BLINK
-  blink_ev   (this, &rxvt_term::blink_cb),
+  cursor_blink_ev (this, &rxvt_term::cursor_blink_cb),
+#endif
+#ifdef TEXT_BLINK
+  text_blink_ev (this, &rxvt_term::text_blink_cb),
 #endif
 #ifdef POINTER_BLANK
   pointer_ev (this, &rxvt_term::pointer_cb),
@@ -126,7 +129,10 @@ rxvt_term::destroy ()
   pty_ev.stop ();
   x_ev.stop ();
 #ifdef CURSOR_BLINK
-  blink_ev.stop ();
+  cursor_blink_ev.stop ();
+#endif
+#ifdef TEXT_BLINK
+  text_blink_ev.stop ();
 #endif
 #ifdef POINTER_BLANK
   pointer_ev.stop ();

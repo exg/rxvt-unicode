@@ -67,6 +67,9 @@ void io_manager::reg (watcher *w, io_manager_vec<watcher> &queue)
 
   if (!w->active)
     {
+#if IOM_CHECK
+      queue.activity = true;
+#endif
       queue.push_back (w);
       w->active = queue.size ();
     }
@@ -178,11 +181,20 @@ void io_manager::loop ()
         }
 
 #if IOM_CHECK
+      tw.activity = false;
+
       for (int i = cw.size (); i--; )
         if (!cw[i])
           cw.erase_unordered (i);
         else
           cw[i]->call (*cw[i]);
+
+      if (tw.activity)
+        {
+          tval.tv_sec  = 0;
+          tval.tv_usec = 0;
+          to = &tval;
+        }
 #endif
 
 #if IOM_IO

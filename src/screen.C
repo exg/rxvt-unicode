@@ -1651,6 +1651,30 @@ rxvt_scr_charset_set(pR_ int set, unsigned int ch)
  * ------------------------------------------------------------------------- */
 
 /*
+ * refresh matching text.
+ */
+bool
+rxvt_term::scr_refresh_rend (rend_t mask, rend_t value)
+{
+  bool found = false;
+
+  for (int i = 0; i < TermWin.nrow; i++)
+    {
+      int col = 0;
+      rend_t *drp = drawn_rend [i];
+
+      for (; col < TermWin.ncol; col++, drp++)
+        if ((*drp & mask) == value)
+          {
+            found = true;
+            *drp = ~value;
+          }
+    }
+
+  return found;
+}
+
+/*
  * Refresh an area
  */
 enum {
@@ -2135,7 +2159,18 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
             rend = GET_ATTR (rend);
 
             rvid = !!(rend & RS_RVid);
-#ifdef OPTION_HC
+#ifdef TEXT_BLINK
+            if (rend & RS_Blink)
+              {
+                if (!text_blink_ev.active)
+                  {
+                    text_blink_ev.start (NOW + TEXT_BLINK_INTERVAL);
+                    hidden_text = 0;
+                  }
+                else if (hidden_text)
+                  fore = back;
+              }
+#elif OPTION_HC
             if (!rvid && (rend & RS_Blink))
               {
                 if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_HC))
@@ -2160,8 +2195,11 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 #ifndef NO_BOLD_UNDERLINE_REVERSE
             else if (rend & RS_Bold)
               {
-                if (Xdepth > 2 && ISSET_PIXCOLOR (this, Color_BD))
-                  fore = Color_BD;
+                if (Xdepth > 2)
+                  if (ISSET_PIXCOLOR (this, Color_BD))
+                    fore = Color_BD;
+                  else
+                    fore = Color_White;
               }
             else if (rend & RS_Uline)
               {

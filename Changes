@@ -1,5 +1,9 @@
 1.6
-	- nothing yet
+	- cleanups, minor bugfixes.
+        - blinking text.
+        - normal text color + bold gets white text instead of
+          normal text when colorBD is not set.
+        - support double-byte characters (by blocking).
 
 1.5  Thu Jan 29 00:43:48 CET 2004
 	- share io manager between rxvt-unicode and vpe

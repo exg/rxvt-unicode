@@ -62,6 +62,10 @@ template<class watcher>
 struct io_manager_vec : protected vector<watcher *> {
   friend class io_manager;
 protected:
+#if IOM_CHECK
+  bool activity;
+#endif
+
   void erase_unordered (unsigned int pos)
   {
     watcher *w = (*this)[size () - 1];

@@ -806,6 +806,7 @@ enum {
 #endif
 
 #define BLINK_INTERVAL 0.5
+#define TEXT_BLINK_INTERVAL 0.5
 
 struct mbstate {
   mbstate_t mbs;
@@ -1070,7 +1071,10 @@ struct rxvt_term : rxvt_vars {
   void incr_cb (time_watcher &w); time_watcher incr_ev;
 
 #ifdef CURSOR_BLINK
-  void blink_cb (time_watcher &w); time_watcher blink_ev;
+  void cursor_blink_cb (time_watcher &w); time_watcher cursor_blink_ev;
+#endif
+#ifdef TEXT_BLINK
+  void text_blink_cb (time_watcher &w); time_watcher text_blink_ev;
 #endif
 
 #ifdef POINTER_BLANK
@@ -1138,6 +1142,7 @@ struct rxvt_term : rxvt_vars {
   void scr_release ();
   void scr_clear ();
   void scr_refresh (unsigned char refresh_type);
+  bool scr_refresh_rend (rend_t mask, rend_t value);
   void scr_erase_screen (int mode);
   void scr_touch (bool refresh);
   void scr_expose (int x, int y, int width, int height, bool refresh);

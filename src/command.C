@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.30 2004/01/29 21:35:58 pcg Exp $
+ * $Id: command.C,v 1.31 2004/01/29 23:26:01 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -718,8 +718,7 @@ rxvt_term::process_x_events ()
       XNextEvent (Xdisplay, &xev);
 
 #if defined(CURSOR_BLINK)
-      if ((Options & Opt_cursorBlink)
-          && xev.type == KeyPress)
+      if ((Options & Opt_cursorBlink) && xev.type == KeyPress)
         {
           if (hidden_cursor)
             {
@@ -727,13 +726,12 @@ rxvt_term::process_x_events ()
               want_refresh = 1;
             }
 
-          blink_ev.start (NOW + BLINK_INTERVAL);
+          cursor_blink_ev.start (NOW + BLINK_INTERVAL);
         }
 #endif
 
 #if defined(POINTER_BLANK)
-      if ((Options & Opt_pointerBlank)
-          && (pointerBlankDelay > 0))
+      if ((Options & Opt_pointerBlank) && pointerBlankDelay > 0)
         {
           if (xev.type == MotionNotify
               || xev.type == ButtonPress
@@ -756,12 +754,25 @@ rxvt_term::process_x_events ()
 
 #ifdef CURSOR_BLINK
 void
-rxvt_term::blink_cb (time_watcher &w)
+rxvt_term::cursor_blink_cb (time_watcher &w)
 {
   hidden_cursor = !hidden_cursor;
   want_refresh = 1;
 
   w.start (w.at + BLINK_INTERVAL);
+}
+#endif
+
+#ifdef TEXT_BLINK
+void
+rxvt_term::text_blink_cb (time_watcher &w)
+{
+  if (scr_refresh_rend (RS_Blink, RS_Blink))
+    {
+      hidden_text = !hidden_text;
+      want_refresh = 1;
+      w.start (w.at + TEXT_BLINK_INTERVAL);
+    }
 }
 #endif
 
@@ -1294,7 +1305,7 @@ rxvt_process_x_event(pR_ XEvent *ev)
 #endif
 #ifdef CURSOR_BLINK
             if (R->Options & Opt_cursorBlink)
-              R->blink_ev.start (NOW + BLINK_INTERVAL);
+              R->cursor_blink_ev.start (NOW + BLINK_INTERVAL);
 #endif
 	}
 	break;
@@ -1309,7 +1320,7 @@ rxvt_process_x_event(pR_ XEvent *ev)
 #endif
 #ifdef CURSOR_BLINK
             if (R->Options & Opt_cursorBlink)
-              R->blink_ev.stop ();
+              R->cursor_blink_ev.stop ();
             R->hidden_cursor = 0;
 #endif
 	}
@@ -1360,10 +1371,16 @@ rxvt_process_x_event(pR_ XEvent *ev)
 
     case UnmapNotify:
 	R->TermWin.mapped = 0;
+#ifdef TEXT_BLINK
+        R->text_blink_ev.stop ();
+#endif
 	break;
 
     case MapNotify:
 	R->TermWin.mapped = 1;
+#ifdef TEXT_BLINK
+        R->text_blink_ev.start (NOW + TEXT_BLINK_INTERVAL);
+#endif
 	break;
 
     case PropertyNotify:
