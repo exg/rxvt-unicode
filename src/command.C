@@ -3099,20 +3099,23 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
       case XTerm_font:
         change_font (str);
         break;
+#ifndef NO_FRILLS
       case XTerm_locale:
         if (str[0] == '?' && !str[1])
           tt_printf ("%-.250s\n", locale);
         else
           {
             set_locale (str);
+# ifdef USE_XIM
             im_cb ();
-
+# endif
             // TODO: call selection_make with the right values set
             // to re-fresh the selection.
             if (display->selection_owner == this)
               display->set_selection_owner (0);
           }
         break;
+#endif
 #if 0
       case XTerm_dumpscreen:	/* no error notices */
         {

@@ -6,6 +6,7 @@
  * Copyright (c) 1996      mj olesen <olesen@me.QueensU.CA> Queen's Univ at Kingston
  * Copyright (c) 1997,1998 Oezguer Kesim <kesim@math.fu-berlin.de>
  * Copyright (c) 1998-2000 Geoff Wing <gcw@pobox.com>
+ * Copyright (c) 2003-2004 Marc Lehmann <pcg@goof.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,10 +35,10 @@ rxvt_strdup (const char *str)
 }
 
 /* EXTPROTO */
-char           *
+char *
 rxvt_r_basename (const char *str)
 {
-  char           *base = STRRCHR (str, '/');
+  char *base = STRRCHR (str, '/');
 
   return (char *) (base ? base + 1 : str);
 }
@@ -49,7 +50,7 @@ rxvt_r_basename (const char *str)
 void
 rxvt_print_error (const char *fmt,...)
 {
-  va_list         arg_ptr;
+  va_list arg_ptr;
 
   va_start (arg_ptr, fmt);
   fprintf (stderr, APL_NAME ": ");
@@ -70,18 +71,19 @@ rxvt_print_error (const char *fmt,...)
 int
 rxvt_Str_match (const char *s1, const char *s2)
 {
-  int             n = STRLEN (s2);
+  int n = STRLEN (s2);
 
   return ((STRNCMP (s1, s2, n) == 0) ? n : 0);
 }
 
 /* EXTPROTO */
-const char     *
+const char *
 rxvt_Str_skip_space (const char *str)
 {
   if (str)
     while (*str && isspace (*str))
       str++;
+
   return str;
 }
 
@@ -93,8 +95,8 @@ rxvt_Str_skip_space (const char *str)
 char           *
 rxvt_Str_trim (char *str)
 {
-  char           *r, *s;
-  int             n;
+  char *r, *s;
+  int n;
 
   if (!str || !*str)		/* shortcut */
     return str;
@@ -115,6 +117,7 @@ rxvt_Str_trim (char *str)
       s++;
       n -= 2;
     }
+
   /* copy back over: forwards copy */
   for (r = str; n; n--)
     *r++ = *s++;
