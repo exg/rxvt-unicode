@@ -413,13 +413,13 @@ struct rxvt_font_x11 : rxvt_font {
   codeset cs;
   bool enc2b, encm;
 
-  const char *get_property (XFontStruct *f, const char *property, const char *repl) const;
+  char *get_property (XFontStruct *f, const char *property, const char *repl) const;
   bool set_properties (rxvt_fontprop &p, int height, const char *weight, const char *slant, int avgwidth);
   bool set_properties (rxvt_fontprop &p, XFontStruct *f);
   bool set_properties (rxvt_fontprop &p, const char *name);
 };
 
-const char *
+char *
 rxvt_font_x11::get_property (XFontStruct *f, const char *property, const char *repl) const
 {
   unsigned long value;
@@ -427,7 +427,7 @@ rxvt_font_x11::get_property (XFontStruct *f, const char *property, const char *r
   if (XGetFontProperty (f, XInternAtom (DISPLAY, property, 0), &value))
     return XGetAtomName (DISPLAY, value);
   else
-    return repl;
+    return rxvt_strdup (repl);
 }
 
 rxvt_fontprop
@@ -452,9 +452,6 @@ rxvt_font_x11::set_properties (rxvt_fontprop &p, int height, const char *weight,
 bool
 rxvt_font_x11::set_properties (rxvt_fontprop &p, XFontStruct *f)
 {
-  const char *weight = get_property (f, "WEIGHT_NAME", "medium");
-  const char *slant  = get_property (f, "SLANT", "r");
-
   unsigned long height;
   if (!XGetFontProperty (f, XInternAtom (DISPLAY, "PIXEL_SIZE", 0), &height))
     return false;
@@ -463,7 +460,15 @@ rxvt_font_x11::set_properties (rxvt_fontprop &p, XFontStruct *f)
   if (!XGetFontProperty (f, XInternAtom (DISPLAY, "AVERAGE_WIDTH", 0), &avgwidth))
     avgwidth = 0;
 
-  return set_properties (p, height, weight, slant, avgwidth);
+  char *weight = get_property (f, "WEIGHT_NAME", "medium");
+  char *slant  = get_property (f, "SLANT", "r");
+
+  set_properties (p, height, weight, slant, avgwidth);
+
+  free (weight);
+  free (slant);
+
+  return true;
 }
 
 bool
@@ -577,8 +582,8 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
   if (!f)
     return false;
 
-  const char *registry = get_property (f, "CHARSET_REGISTRY", 0);
-  const char *encoding = get_property (f, "CHARSET_ENCODING", 0);
+  char *registry = get_property (f, "CHARSET_REGISTRY", 0);
+  char *encoding = get_property (f, "CHARSET_ENCODING", 0);
 
   if (registry && encoding)
     {
@@ -601,6 +606,9 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
 
       cs = codeset_from_name (charset);
     }
+
+  free (registry);
+  free (encoding);
 
   if (cs == CS_UNICODE)
     cs = CS_UNICODE_16; // X11 can have a max. of 65536 chars per font

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xdefaults.c
  *----------------------------------------------------------------------*
- * $Id: xdefaults.C,v 1.17 2004/03/14 17:33:08 pcg Exp $
+ * $Id: xdefaults.C,v 1.19 2004/03/22 15:15:04 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994      Robert Nation <nation@rocket.sanders.lockheed.com>
@@ -342,16 +342,15 @@ static const char optionsstring[] = "Options: "
 static void
 rxvt_usage (int type)
 {
-  unsigned int    i, col;
+  unsigned int i, col;
 
-  write (STDERR_FILENO, releasestring, sizeof (releasestring) - 1);
-  write (STDERR_FILENO, optionsstring, sizeof (optionsstring) - 1);
-  write (STDERR_FILENO, RESNAME, sizeof (RESNAME) - 1);
+  rxvt_log ("%s%s%s", releasestring, optionsstring, RESNAME);
 
   switch (type)
     {
       case 0:			/* brief listing */
-        fprintf (stderr, " [-help] [--help]\n");
+        rxvt_log (" [-help] [--help]\n");
+
         for (col = 1, i = 0; i < optList_size (); i++)
           if (optList[i].desc != NULL)
             {
@@ -370,59 +369,59 @@ rxvt_usage (int type)
               col += len;
               if (col > 79)
                 {	/* assume regular width */
-                  putc ('\n', stderr);
+                  rxvt_log ("\n");
                   col = 1 + len;
                 }
-              fprintf (stderr, " [-%s%s", (optList_isBool (i) ? "/+" : ""),
-                      optList[i].opt);
+
+              rxvt_log (" [-%s%s", (optList_isBool (i) ? "/+" : ""), optList[i].opt);
               if (optList_strlen (i))
-                fprintf (stderr, " %s]", optList[i].arg);
+                rxvt_log (" %s]", optList[i].arg);
               else
-                fprintf (stderr, "]");
+                rxvt_log ("]");
             }
         break;
 
       case 1:			/* full command-line listing */
-        fprintf (stderr, " [options] [-e command args]\n\n"
-                "where options include:\n");
+        rxvt_log (" [options] [-e command args]\n\nwhere options include:\n");
+
         for (i = 0; i < optList_size (); i++)
           if (optList[i].desc != NULL)
             {
 #ifdef DEBUG_STRICT
               assert (optList[i].opt != NULL);
 #endif
-              fprintf (stderr, "  %s%s %-*s%s%s\n",
-                      (optList_isBool (i) ? "-/+" : "-"), optList[i].opt,
-                      (INDENT - STRLEN (optList[i].opt)
-                       + (optList_isBool (i) ? 0 : 2)),
-                      (optList[i].arg ? optList[i].arg : ""),
-                      (optList_isBool (i) ? "turn on/off " : ""),
-                      optList[i].desc);
+              rxvt_log ("  %s%s %-*s%s%s\n",
+                         (optList_isBool (i) ? "-/+" : "-"), optList[i].opt,
+                         (INDENT - STRLEN (optList[i].opt)
+                          + (optList_isBool (i) ? 0 : 2)),
+                         (optList[i].arg ? optList[i].arg : ""),
+                         (optList_isBool (i) ? "turn on/off " : ""),
+                         optList[i].desc);
             }
-        fprintf (stderr, "\n  --help to list long-options");
+        rxvt_log ("\n  --help to list long-options");
         break;
 
       case 2:			/* full resource listing */
-        fprintf (stderr,
-                " [options] [-e command args]\n\n"
-                "where resources (long-options) include:\n");
+        rxvt_log (" [options] [-e command args]\n\n"
+                   "where resources (long-options) include:\n");
 
         for (i = 0; i < optList_size (); i++)
           if (optList[i].kw != NULL)
-            fprintf (stderr, "  %s: %*s%s\n",
+            rxvt_log ("  %s: %*s%s\n",
                     optList[i].kw,
                     (INDENT - STRLEN (optList[i].kw)), "", /* XXX */
                     (optList_isBool (i) ? "boolean" : optList[i].arg));
 #ifdef KEYSYM_RESOURCE
-        fprintf (stderr, "  " "keysym.sym" ": %*s%s\n",
+        rxvt_log ("  " "keysym.sym" ": %*s%s\n",
                 (INDENT - sizeof ("keysym.sym") + 1), "", /* XXX */
                 "keysym");
 #endif
-        fprintf (stderr, "\n  -help to list options");
+        rxvt_log ("\n  -help to list options");
         break;
     }
-  fprintf (stderr, "\n\n");
-  exit (EXIT_FAILURE);
+
+  rxvt_log ("\n\n");
+  rxvt_exit_failure ();
   /* NOTREACHED */
 }
 
@@ -459,7 +458,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
       else
         {
           bad_option = 1;
-          rxvt_print_error ("bad option \"%s\"", opt);
+          rxvt_warn ("\"%s\": malformed option.\n", opt);
           continue;
         }
 
@@ -526,14 +525,17 @@ rxvt_term::get_options (int argc, const char *const *argv)
         /* if (!STRNCMP (opt, "keysym.", sizeof ("keysym.") - 1)) */
         if (rxvt_Str_match (opt, "keysym."))
           {
-            const char     *str = argv[++i];
+            const char *str = argv[++i];
 
             if (str != NULL)
               parse_keysym (opt + sizeof ("keysym.") - 1, str);
           }
         else
 #endif
-          bad_option = 1;
+          {
+            bad_option = 1;
+            rxvt_warn ("\"%s\": unknown or malformed option.\n", opt);
+          }
     }
 
   if (bad_option)
@@ -670,6 +672,7 @@ rxvt_term::get_xdefaults (FILE *stream, const char *name)
 
   if (stream == NULL)
     return;
+
   len = STRLEN (name);
   while ((str = fgets (buffer, sizeof (buffer), stream)) != NULL)
     {
@@ -688,10 +691,11 @@ rxvt_term::get_xdefaults (FILE *stream, const char *name)
 # endif				/* KEYSYM_RESOURCE */
         for (entry = 0; entry < optList_size (); entry++)
           {
-            const char     *kw = optList[entry].kw;
+            const char *kw = optList[entry].kw;
 
             if (kw == NULL)
               continue;
+
             n = STRLEN (kw);
             if (str[n] == ':' && rxvt_Str_match (str, kw))
               {
@@ -725,24 +729,30 @@ rxvt_term::get_xdefaults (FILE *stream, const char *name)
                       }
 
                     rs[optList[entry].doff] = p;
+                    allocated.push_back (p);
+
                     if (optList_isBool (entry))
                       {
                         s = STRCASECMP (str, "TRUE") == 0
                             || STRCASECMP (str, "YES") == 0
                             || STRCASECMP (str, "ON") == 0
                             || STRCASECMP (str, "1") == 0;
+
                         if (optList_isReverse (entry))
                           s = !s;
+
                         if (s)
-                          Options |= (optList[entry].flag);
+                          Options |= optList[entry].flag;
                         else
-                          Options &= ~ (optList[entry].flag);
+                          Options &= ~optList[entry].flag;
                       }
                   }
+
                 break;
               }
           }
     }
+
   rewind (stream);
 }
 
@@ -763,7 +773,7 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
 # if defined XAPPLOADDIR
 #  if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
   /* Compute the path of the possibly available localized Rxvt file */
-  char           *localepath = NULL;
+  char *localepath = NULL;
 
   if (locale != NULL)
     {	/* XXX: must limit length of string */
@@ -781,15 +791,15 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
     /*
      * get resources using the X library function
      */
-    int             entry;
+    int entry;
 
 #  ifdef XrmEnumOneLevel
-    int             i;
-    char           *displayResource, *xe;
-    XrmName         name_prefix[3];
-    XrmClass        class_prefix[3];
-    XrmDatabase     database, rdb1;
-    char            fname[1024];
+    int i;
+    char *displayResource, *xe;
+    XrmName name_prefix[3];
+    XrmClass class_prefix[3];
+    XrmDatabase database, rdb1;
+    char fname[1024];
 
     XrmInitialize ();
     database = NULL;
@@ -812,7 +822,7 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
         {
           sprintf (fname, "%-.*s/%s", sizeof (fname) - STRLEN (xnames[i]) - 2,
                   ptr, xnames[i]);
-          if ((rdb1 = XrmGetFileDatabase (fname)) != NULL)
+          if ((rdb1 = XrmGetFileDatabase (fname)))
             {
               XrmMergeDatabases (rdb1, &database);
 #    ifndef HAVE_BOTH_XRESOURCE_FILES

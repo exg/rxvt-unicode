@@ -31,7 +31,6 @@
 # define __sun__
 #endif
 
-
 #ifndef HAVE_XPOINTER
 typedef char   *XPointer;
 #endif
@@ -587,7 +586,7 @@ enum {
 #define PrivMode_smoothScroll   (1LU<<18)
 #define PrivMode_vt52           (1LU<<19)
 /* too annoying to implement X11 highlight tracking */
-/* #define PrivMode_MouseX11Track       (1LU<<18) */
+/* #define PrivMode_MouseX11Track       (1LU<<20) */
 
 #define PrivMode_mouse_report   (PrivMode_MouseX10|PrivMode_MouseX11)
 #define PrivMode(test,bit)              \
@@ -606,11 +605,10 @@ enum {
 #define XCMAP                  display->cmap
 #define XVISUAL                display->visual
 
-#define IMBUFSIZ               128     /* input modifier buffer sizes */
-#ifndef BUFSIZ
-# define BUFSIZ                4096
-#endif
-#define KBUFSZ                 512     /* size of keyboard mapping buffer */
+#define IMBUFSIZ               128     // input modifier buffer sizes
+#define KBUFSZ                 512     // size of keyboard mapping buffer
+#define CBUFSIZ                4096    // size of command buffer
+#define UBUFSIZ                4096    // character buffer
 
 /*
  *****************************************************************************
@@ -790,6 +788,19 @@ enum {
 # define D_X(x)
 #endif
 
+extern class rxvt_failure_exception { } rxvt_failure_exception;
+
+typedef callback1<void, const char *> log_callback;
+
+extern void rxvt_vlog (const char *fmt, va_list arg_ptr);
+extern void rxvt_log (const char *fmt, ...);
+extern void rxvt_warn (const char *fmt, ...);
+extern void rxvt_fatal (const char *fmt, ...) __attribute__ ((noreturn));
+extern void rxvt_exit_failure () __attribute__ ((noreturn));
+
+#define SET_LOCALE(locale) rxvt_set_locale (locale)
+extern void rxvt_set_locale (const char *locale);
+
 /*
  *****************************************************************************
  * VARIABLES
@@ -859,6 +870,8 @@ extern class rxvt_composite_vec rxvt_composite;
 
 
 struct rxvt_term : rxvt_vars {
+  log_callback *log_hook;
+
   struct mbstate mbstate;
 
   unsigned char   want_refresh:1,
@@ -883,8 +896,8 @@ struct rxvt_term : rxvt_vars {
                   hidden_pointer:1,
 #endif
                   parsed_geometry:1,
-                  seen_input:1,		/* wether any input has been seen so far */
-                  enc_utf8:1;		/* wether terminal reads/writes utf-8 */
+//                  enc_utf8:1,		/* wether terminal reads/writes utf-8 */
+                  seen_input:1;		/* wether any input has been seen so far */
 
   unsigned char   refresh_type,
 #ifdef UTMP_SUPPORT
@@ -1056,13 +1069,16 @@ struct rxvt_term : rxvt_vars {
   struct timeval  lastmotion;
 #endif
 
-/* these three don't need to be kept but do so to placate some mem checkers */
+  vector<void *> allocated; // free these memory blocks
+
   char           *env_windowid;       /* environmental variable WINDOWID */
   char           *env_display;        /* environmental variable DISPLAY  */
   char           *env_term;           /* environmental variable TERM     */
   char           *env_colorfgbg;
   char           *locale;
+#if 0
   char           *codeset;
+#endif
   char            charsets[4];
   unsigned char  *v_buffer;   /* pointer to physical buffer */
   unsigned int    v_buflen;   /* size of area to write */
@@ -1071,9 +1087,9 @@ struct rxvt_term : rxvt_vars {
   const unsigned char *Keysym_map[256];
 #endif
   const char     *rs[NUM_RESOURCES];
-/* command input buffering */
+  /* command input buffering */
   unsigned char  *cmdbuf_ptr, *cmdbuf_endp;
-  unsigned char   cmdbuf_base[BUFSIZ];
+  unsigned char   cmdbuf_base[CBUFSIZ];
 
   rxvt_salloc *ralloc;
   rxvt_salloc *talloc;
@@ -1203,12 +1219,12 @@ struct rxvt_term : rxvt_vars {
   int pclose_printer (FILE *stream);
 #endif
   void process_print_pipe ();
-  void process_nonprinting (unsigned char ch);
-  void process_escape_vt52 (unsigned char ch);
+  void process_nonprinting (unicode_t ch);
+  void process_escape_vt52 (unicode_t ch);
   void process_escape_seq ();
   void process_csi_seq ();
   void process_window_ops (const int *args, unsigned int nargs);
-  unsigned char * get_to_st (unsigned char *ends_how);
+  unsigned char *get_to_st (unicode_t &ends_how);
   void process_dcs_seq ();
   void process_osc_seq ();
   void xterm_seq (int op, const char *str, unsigned char resp __attribute__ ((unused)));
@@ -1229,7 +1245,7 @@ struct rxvt_term : rxvt_vars {
   bool change_font (const char *fontname);
   bool font_up_down (int n, int direction);
   void set_title (const char *str);
-  void set_iconName (const char *str);
+  void set_icon_name (const char *str);
   void set_window_color (int idx, const char *color);
   void set_colorfgbg ();
   int rXParseAllocColor (rxvt_color * screen_in_out, const char *colour);
@@ -1355,9 +1371,6 @@ struct rxvt_term : rxvt_vars {
   void resize_pixmap ();
   Pixmap set_bgPixmap (const char *file);
 };
-
-#define SET_LOCALE(locale) rxvt_set_locale (locale)
-extern void rxvt_set_locale (const char *locale);
 
 /*
  *****************************************************************************
