@@ -6,7 +6,7 @@
           startup time for new terms in rxvtd. At least xfree86 4.3 is
           rather broken with respect to input methods, though, so expect
           crashes when you kill your input method (xterm et al. also crash).
-        - fix bugs in x flushing, causing an empty screen after startup
+        - fix bugs in X flushing, causing an empty screen after startup.
         - fix various memleaks in rxvtd.
         - fix a bug that kept escape codes to be generated for some
           keysyms that also have string translations, when not --enable-xim.
