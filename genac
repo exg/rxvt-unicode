@@ -1,0 +1,5 @@
+#!/bin/sh
+
+autoheader autoconf/configure.in >autoconf/config.h.in
+autoconf -I autoconf autoconf/configure.in >configure
+
