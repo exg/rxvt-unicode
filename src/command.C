@@ -27,7 +27,7 @@
  * Copyright (c) 2001      Marius Gedminas
  *				- Ctrl/Mod4+Tab works like Meta+Tab (options)
  * Copyright (c) 2003      Rob McMullen <robm@flipturn.org>
- * Copyright (c) 2003-2004 Marc Lehmann <pcg@goof.com>
+ * Copyright (c) 2003-2005 Marc Lehmann <pcg@goof.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -119,7 +119,15 @@ static unsigned short iso14755_symtab[] = {
   XK_Print,		0x2399,
 
   XK_space,		0x2423,
+
+#ifdef XK_KP_Begin
+  XK_KP_Prior,		0x21de,
+  XK_KP_Next,		0x21df,
+  XK_KP_Begin,		0x2320,
+  XK_KP_Insert,		0x2380,
+  XK_KP_Delete,		0x2326,
   XK_KP_Space,		0x2422,
+#endif
   0,
 };
 
@@ -514,6 +522,16 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                     break;
 #endif
 #ifndef NO_DELETE_KEY
+# ifdef XK_KP_Prior
+                  case XK_KP_Delete:
+                    /* allow shift to override */
+                    if ((priv_modes & PrivMode_aplKP) ? !shft : shft)
+                      {
+                        strcpy (kbuf, "\033On");
+                        break;
+                      }
+                    /* FALLTHROUGH */
+# endif
                   case XK_Delete:
                     strcpy (kbuf, key_delete);
                     break;
@@ -626,13 +644,6 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                     strcpy (kbuf, "\033Ou");
                     break;
 
-                  case XK_KP_Insert:
-                    strcpy (kbuf, "\033Op");
-                    break;
-
-                  case XK_KP_Delete:
-                    strcpy (kbuf, "\033On");
-                    break;
 #endif
                   case XK_KP_F1:	/* "\033OP" */
                   case XK_KP_F2:	/* "\033OQ" */
@@ -674,6 +685,17 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                   case XK_Find:
                     strcpy (kbuf, "\033[1~");
                     break;
+
+#ifdef XK_KP_End
+                  case XK_KP_Insert:
+                    /* allow shift to override */
+                    if ((priv_modes & PrivMode_aplKP) ? !shft : shft)
+                      {
+                        strcpy (kbuf, "\033Op");
+                        break;
+                      }
+                    /* FALLTHROUGH */
+#endif
                   case XK_Insert:
                     strcpy (kbuf, "\033[2~");
                     break;
