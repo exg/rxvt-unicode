@@ -20,11 +20,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *----------------------------------------------------------------------*/
 
-#include <stdint.h>
 #include <cstdlib>
 #include <cstring>
 #include <cstdio>
 
+#include <inttypes.h>
 #include <unistd.h>
 #include <sys/utsname.h>
 #include <limits.h>
