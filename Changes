@@ -16,16 +16,16 @@ WISH: just for fun, do shade and tint with XRender.
           for empty keymaps which could result in crashes
           (Kuang-che Wu).
         - new option: -embed (frills). somebody could write a simple
-          tk script to make a tabbable terminal now.
+          tk script to make a tab'able terminal now...
         - only warn on X errors, *try* to continue (frills).
         - add COPYING back, which got lost somehow.
         - after deciding that LSM is dead, remove all traces of it,
           along with other, similar, cleanups.
         - _try_ to react sensibly to some non-monotonic time changes.
         - don't crash in urxvtc when getcwd fails (reported by Paco-Paco).
-        - tweak font searching algorithm a bit to get faster and be
-          more compatible with the font older rxvt-unicode versions chose
-          (reported by Paco-Paco).
+        - tweak font searching algorithm a bit to be faster and more
+          compatible with older rxvt-unicode versions when multiple fonts
+          match (reported by Paco-Paco).
         - urxvtd tries to stay in "/" whenever possible.
 
 5.0  Fri Feb 11 18:31:48 CET 2005
