@@ -1,5 +1,5 @@
 # ./Makefile.in			-*- Makefile -*-
-# $Id: Makefile.in,v 1.8 2004/08/12 21:32:40 root Exp $
+# $Id: Makefile.in,v 1.9 2005/01/17 01:55:12 root Exp $
 @MCOMMON@
 
 srcdir =	@srcdir@
@@ -10,7 +10,7 @@ first_rule: all
 dummy:
 
 subdirs = src doc src/test
-allsubdirs = W11 $(subdirs)
+allsubdirs = $(subdirs)
 
 DIST =	INSTALL README.configure configure Makefile Makefile.in ChangeLog
 
@@ -25,7 +25,6 @@ MKDIR = $(srcdir)/autoconf/mkinstalldirs
 #-------------------------------------------------------------------------
 
 all allbin alldoc tags:
-	@if test x@host_os@ = xcygwin; then (cd W11; ${MAKE} $@) || exit 1; fi
 	@for I in ${subdirs}; do (cd $$I; ${MAKE} $@) || exit 1; done
 
 realclean: clean
@@ -34,7 +33,6 @@ realclean: clean
 clean:
 	$(RMF) *~ config.cache
 	$(RMF) -r autom4te.cache
-	@if test x@host_os@ = xcygwin; then (cd W11; ${MAKE} $@) || exit 1; fi
 	@for I in ${subdirs}; do (cd $$I; ${MAKE} $@) || exit 1; done
 
 #
@@ -64,7 +62,6 @@ installdirs:
 	$(MKDIR) $(DESTDIR)$(mandir)
 
 install: installdirs
-	@if test x@host_os@ = xcygwin; then (cd W11; ${MAKE} $@) || exit 1; fi
 	@for I in $(subdirs); do (cd $$I; $(MAKE) DESTDIR=$(DESTDIR) $@) || exit 1; done
 
 Makefiles:
