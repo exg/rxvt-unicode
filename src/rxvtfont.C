@@ -197,9 +197,9 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color)
   else if (color >= 0)
     {
 #if XFT
-      XftDrawRect (d, &r->PixColors[color].c, x, y, w, h);
+      XftDrawRect (d, &r->pix_colors[color].c, x, y, w, h);
 #else
-      XSetForeground (d.display->display, TGC, r->PixColors[color]);
+      XSetForeground (d.display->display, TGC, r->pix_colors[color]);
       XFillRectangle (d.display->display, d, TGC, x, y, w, h);
 #endif
     }
@@ -268,7 +268,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 {
   clear_rect (d, x, y, r->TermWin.fwidth * len, r->TermWin.fheight, bg);
 
-  XSetForeground (d.display->display, TGC, r->PixColors[fg]);
+  XSetForeground (d.display->display, TGC, r->pix_colors[fg]);
 
   while (len--)
     {
@@ -733,7 +733,7 @@ rxvt_font_x11::draw (rxvt_drawable &d, int x, int y,
   int base = r->TermWin.fbase;
 
   XGCValues v;
-  v.foreground = r->PixColors[fg];
+  v.foreground = r->pix_colors[fg];
   v.font = f->fid;
 
   if (enc2b)
@@ -742,7 +742,7 @@ rxvt_font_x11::draw (rxvt_drawable &d, int x, int y,
 
       if (bg == Color_bg && !slow)
         {
-          v.background = r->PixColors[bg];
+          v.background = r->pix_colors[bg];
           XChangeGC (d.display->display, TGC, GCForeground | GCBackground | GCFont, &v);
           XDrawImageString16 (d.display->display, d, TGC, x, y + base, xc, len);
         }
@@ -774,7 +774,7 @@ rxvt_font_x11::draw (rxvt_drawable &d, int x, int y,
 
       if (bg == Color_bg && !slow)
         {
-          v.background = r->PixColors[bg];
+          v.background = r->pix_colors[bg];
           XChangeGC (d.display->display, TGC, GCForeground | GCBackground | GCFont, &v);
           XDrawImageString (d.display->display, d, TGC, x, y + base, xc, len);
         }
@@ -969,9 +969,9 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
   if (!slow && width == r->TermWin.fwidth && 0)
     {
       if (sizeof (text_t) == sizeof (FcChar16))
-        XftDrawString16 (d, &r->PixColors[fg].c, f, x, y + r->TermWin.fbase, (const FcChar16 *)text, len);
+        XftDrawString16 (d, &r->pix_colors[fg].c, f, x, y + r->TermWin.fbase, (const FcChar16 *)text, len);
       else
-        XftDrawString32 (d, &r->PixColors[fg].c, f, x, y + r->TermWin.fbase, (const FcChar32 *)text, len);
+        XftDrawString32 (d, &r->pix_colors[fg].c, f, x, y + r->TermWin.fbase, (const FcChar32 *)text, len);
     }
   else
     {
@@ -987,14 +987,14 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
               if (sizeof (text_t) == sizeof (FcChar16))
                 {
                   XftTextExtents16 (d.display->display, f, (const FcChar16 *)text, 1, &extents);
-                  XftDrawString16 (d, &r->PixColors[fg].c, f, x + extents.x + (fwidth - extents.width) / 2,
+                  XftDrawString16 (d, &r->pix_colors[fg].c, f, x + extents.x + (fwidth - extents.width) / 2,
                                    y + r->TermWin.fbase, (const FcChar16 *)text, 1);
                 }
               else
                 {
                   XGlyphInfo extents;
                   XftTextExtents32 (d.display->display, f, (const FcChar32 *)text, 1, &extents);
-                  XftDrawString32 (d, &r->PixColors[fg].c, f, x + extents.x + (fwidth - extents.width) / 2,
+                  XftDrawString32 (d, &r->pix_colors[fg].c, f, x + extents.x + (fwidth - extents.width) / 2,
                                    y + r->TermWin.fbase, (const FcChar32 *)text, 1);
                 }
             }

@@ -960,8 +960,8 @@ rxvt_term::menu_show ()
                                             x, ActiveMenu->y,
                                             ActiveMenu->w, ActiveMenu->h,
                                             0,
-                                            PixColors[Color_fg],
-                                            PixColors[Color_scroll]);
+                                            pix_colors[Color_fg],
+                                            pix_colors[Color_scroll]);
       ActiveMenu->drawable = new rxvt_drawable (display, ActiveMenu->win);
       XMapWindow (display->display, ActiveMenu->win);
     }
@@ -2036,8 +2036,8 @@ rxvt_term::menubar_expose ()
       /* Create the graphics context */
       XGCValues       gcvalue;
 
-      gcvalue.foreground = (display->depth <= 2 ? PixColors[Color_fg]
-                            : PixColors[Color_Black]);
+      gcvalue.foreground = (display->depth <= 2 ? pix_colors[Color_fg]
+                            : pix_colors[Color_Black]);
       menubarGC = XCreateGC (display->display, menuBar.win,
                             GCForeground, &gcvalue);
 

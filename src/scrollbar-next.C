@@ -25,7 +25,6 @@
 
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
-#include "scrollbar-next.intpro"	/* PROTOS for internal routines */
 
 /*----------------------------------------------------------------------*/
 #if defined(NEXT_SCROLLBAR)
@@ -154,11 +153,11 @@ rxvt_term::init_scrollbar_stuff ()
 
   gcvalue.graphics_exposures = False;
 
-  gcvalue.foreground = PixColors[Color_Black];
+  gcvalue.foreground = pix_colors[Color_Black];
   blackGC = XCreateGC (display->display, scrollBar.win,
                       GCForeground | GCGraphicsExposures, &gcvalue);
 
-  gcvalue.foreground = PixColors[Color_White];
+  gcvalue.foreground = pix_colors[Color_White];
   whiteGC = XCreateGC (display->display, scrollBar.win,
                       GCForeground | GCGraphicsExposures, &gcvalue);
 
@@ -166,7 +165,7 @@ rxvt_term::init_scrollbar_stuff ()
   xcol.green = 0xaaaa;
   xcol.blue = 0xaeba;
   //if (!rXAllocColor (&xcol, "light gray"))//TODO//D//
-  xcol.pixel = PixColors[Color_AntiqueWhite];
+  xcol.pixel = pix_colors[Color_AntiqueWhite];
   light = gcvalue.foreground = xcol.pixel;
   grayGC = XCreateGC (display->display, scrollBar.win,
                      GCForeground | GCGraphicsExposures, &gcvalue);
@@ -175,7 +174,7 @@ rxvt_term::init_scrollbar_stuff ()
   xcol.green = 0x5555;
   xcol.blue = 0x5144;
   //if (!rXAllocColor (&xcol, "dark gray"))//TODO//D//
-  xcol.pixel = PixColors[Color_Grey25];
+  xcol.pixel = pix_colors[Color_Grey25];
   dark = gcvalue.foreground = xcol.pixel;
   darkGC = XCreateGC (display->display, scrollBar.win,
                      GCForeground | GCGraphicsExposures, &gcvalue);
@@ -189,7 +188,7 @@ rxvt_term::init_scrollbar_stuff ()
   gcvalue.fill_style = FillOpaqueStippled;
   gcvalue.stipple = stipple;
 
-  /*    XSetWindowBackground (display->display, scrollBar.win, PixColors[Color_Red]); */
+  /*    XSetWindowBackground (display->display, scrollBar.win, pix_colors[Color_Red]); */
 
   stippleGC = XCreateGC (display->display, scrollBar.win,
                         GCForeground | GCBackground | GCStipple
