@@ -891,24 +891,33 @@ rxvt_term::scr_add_lines (const uint32_t *str, int nlines, int len)
 
       // width -1 characters (e.g. combining chars) are ignored currently.
       if (width > 0)
-        do
-          {
-            stp[screen.cur.col] = c;
-            srp[screen.cur.col] = rend;
+        {
+          do
+            {
+              stp[screen.cur.col] = c;
+              srp[screen.cur.col] = rend;
 
-            if (screen.cur.col < last_col - 1)
-              screen.cur.col++;
-            else
-              {
-                screen.tlen[row] = last_col;
-                if (screen.flags & Screen_Autowrap)
-                  screen.flags |= Screen_WrapNext;
-                break;
-              }
+              if (screen.cur.col < last_col - 1)
+                screen.cur.col++;
+              else
+                {
+                  screen.tlen[row] = last_col;
+                  if (screen.flags & Screen_Autowrap)
+                    screen.flags |= Screen_WrapNext;
+                  break;
+                }
 
-            c = NOCHAR;
-          }
-        while (--width > 0);
+              c = NOCHAR;
+            }
+          while (--width > 0);
+
+          // pad with spaces when overwriting wide character with smaller one
+          for (int c = screen.cur.col; stp[c] == NOCHAR && c < last_col; c++)
+            {
+              stp[c] = ' ';
+              srp[c] = rend;
+            }
+        }
       else
         (void)0; /* handle combining character etc. here. */
     }
@@ -1100,6 +1109,10 @@ rxvt_term::scr_gotorc (int row, int col, int relative)
     }
   MAX_IT (screen.cur.row, 0);
   MIN_IT (screen.cur.row, (int32_t)TermWin.nrow - 1);
+
+  while (screen.cur.col > 0
+         && screen.text[screen.cur.row + TermWin.saveLines][screen.cur.col] == NOCHAR)
+    screen.cur.col--;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -2056,24 +2069,24 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
       for (col = 0; col < TermWin.ncol; col++)
         {
           /* compare new text with old - if exactly the same then continue */
-          rend_t rend = srp[col];     /* screen rendition (target rendtion) */
-
           if (stp[col] == dtp[col]    /* Must match characters to skip. */
-              && (rend == drp[col]    /* Either rendition the same or   */
+              && (srp[col] == drp[col]    /* Either rendition the same or   */
                   || (stp[col] == ' ' /* space w/ no background change  */
-                      && GET_BGATTR (rend) == GET_BGATTR (drp[col]))))
+                      && GET_BGATTR (srp[col]) == GET_BGATTR (drp[col]))))
             continue;
 
+          // redraw one or more characters
+
+          // seek to the beginning if wide characters
+          while (stp[col] == NOCHAR && col > 0)
+            --col;
+
+          rend_t rend = srp[col];     /* screen rendition (target rendtion) */
           text_t *text = stp + col;
           int count = 1;
 
-          /* redraw one or more characters */
-
           dtp[col] = stp[col];
           drp[col] = rend;
-
-          if (*text == NOCHAR) // never start redrawing at invisible characters. */
-            continue;
 
           int xpixel = Col2Pixel (col);
 
@@ -2199,8 +2212,8 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 
           if ((rend & RS_Uline) && (font->descent > 1))
             XDrawLine (display->display, drawBuffer, TermWin.gc,
-                      xpixel, ypixel + font->ascent + 1,
-                      xpixel + Width2Pixel (count) - 1, ypixel + font->ascent + 1);
+                       xpixel, ypixel + font->ascent + 1,
+                       xpixel + Width2Pixel (count) - 1, ypixel + font->ascent + 1);
         }                     /* for (col....) */
     }                         /* for (row....) */
 
@@ -2230,10 +2243,10 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
             cursorwidth++;
 
           XDrawRectangle (display->display, drawBuffer, TermWin.gc,
-                         Col2Pixel (oldcursor.col),
-                         Row2Pixel (oldcursor.row),
-                         (unsigned int) (Width2Pixel (cursorwidth) - 1),
-                         (unsigned int) (Height2Pixel (1) - TermWin.lineSpace - 1));
+                          Col2Pixel (oldcursor.col),
+                          Row2Pixel (oldcursor.row),
+                          (unsigned int) (Width2Pixel (cursorwidth) - 1),
+                          (unsigned int) (Height2Pixel (1) - TermWin.lineSpace - 1));
         }
     }
 
@@ -2251,17 +2264,19 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
      * specially by XClearArea
      */
     XClearArea (display->display, TermWin.vt, 0, 0,
-               (unsigned int)TermWin.int_bwidth,
-               (unsigned int)TermWin_TotalHeight (), False);
+                (unsigned int)TermWin.int_bwidth,
+                (unsigned int)TermWin_TotalHeight (), False);
+
   if (clearlast && TermWin.int_bwidth)
     /*
      * clear the whole screen height, note that width == 0 is treated
      * specially by XClearArea
      */
     XClearArea (display->display, TermWin.vt,
-               TermWin.width + TermWin.int_bwidth, 0,
-               (unsigned int)TermWin.int_bwidth,
-               (unsigned int)TermWin_TotalHeight (), False);
+                TermWin.width + TermWin.int_bwidth, 0,
+                (unsigned int)TermWin.int_bwidth,
+                (unsigned int)TermWin_TotalHeight (), False);
+
   if (refresh_type & SMOOTH_REFRESH)
     XSync (display->display, False);
 
@@ -2295,13 +2310,14 @@ rxvt_term::scr_remap_chars ()
 
 /* ------------------------------------------------------------------------- */
 void
-rxvt_term::scr_clear ()
+rxvt_term::scr_clear (bool really)
 {
   if (!TermWin.mapped)
     return;
 
   num_scr_allow = 0;
   want_refresh = 1;
+
 #ifdef TRANSPARENT
   if ((Options & Opt_transparent) && (am_pixmap_trans == 0))
     {
@@ -2318,21 +2334,21 @@ rxvt_term::scr_clear ()
     }
 #endif
 
-  XClearWindow (display->display, TermWin.vt);
+  if (really)
+    XClearWindow (display->display, TermWin.vt);
 }
 
 /* ------------------------------------------------------------------------- */
 void
 rxvt_term::scr_reverse_selection ()
 {
-  int             i, col, row, end_row;
-  rend_t         *srp;
-
   if (selection.op && current_screen == selection.screen)
     {
-      end_row = TermWin.saveLines - TermWin.view_start;
-      i = selection.beg.row + TermWin.saveLines;
-      row = selection.end.row + TermWin.saveLines;
+      int end_row = TermWin.saveLines - TermWin.view_start;
+      int i = selection.beg.row + TermWin.saveLines;
+      int col, row = selection.end.row + TermWin.saveLines;
+      rend_t *srp;
+
       if (i >= end_row)
         col = selection.beg.col;
       else
@@ -2340,10 +2356,12 @@ rxvt_term::scr_reverse_selection ()
           col = 0;
           i = end_row;
         }
+
       end_row += TermWin.nrow;
       for (; i < row && i < end_row; i++, col = 0)
         for (srp = screen.rend[i]; col < TermWin.ncol; col++)
           srp[col] ^= RS_RVid;
+
       if (i == row && i < end_row)
         for (srp = screen.rend[i]; col < selection.end.col; col++)
           srp[col] ^= RS_RVid;
@@ -2715,13 +2733,10 @@ rxvt_term::selection_clear ()
 void
 rxvt_term::selection_make (Time tm)
 {
-  int             i, col, end_col, row, end_row;
-  unsigned char  *new_selection_text;
-  char           *str;
-  text_t         *t;
-#ifdef ACS_ASCII
-  rend_t         *re;
-#endif
+  int i, col, end_col, row, end_row;
+  unsigned char *new_selection_text;
+  char *str;
+  text_t *t;
 
   D_SELECT ((stderr, "rxvt_selection_make (): selection.op=%d, selection.clicks=%d", selection.op, selection.clicks));
   switch (selection.op)
@@ -2744,7 +2759,7 @@ rxvt_term::selection_make (Time tm)
     return;                 /* nothing selected, go away */
 
   i = (selection.end.row - selection.beg.row + 1) * (TermWin.ncol + 1) + 1;
-  str = (char *)rxvt_malloc (i * MB_CUR_MAX + 1);
+  str = (char *)rxvt_malloc ((i + 2) * MB_CUR_MAX + 1);
 
   new_selection_text = (unsigned char *)str;
 
@@ -2752,6 +2767,7 @@ rxvt_term::selection_make (Time tm)
   MAX_IT (col, 0);
   row = selection.beg.row + TermWin.saveLines;
   end_row = selection.end.row + TermWin.saveLines;
+  struct mbstate mbs;
 
   for (; row <= end_row; row++, col = 0)
     {
@@ -2770,7 +2786,7 @@ rxvt_term::selection_make (Time tm)
           t++;
         else
           {
-            int len = wctomb (str, *t++);
+            int len = wcrtomb (str, *t++, mbs);
             if (len > 0)
               str += len;
           }
