@@ -158,7 +158,7 @@ struct time_watcher : watcher, callback1<void, time_watcher &> {
 
   template<class O1, class O2>
   time_watcher (O1 *object, void (O2::*method)(time_watcher &))
-  : callback1<void, time_watcher &>(object,method)
+  : callback1<void, time_watcher &>(object,method), at(0)
   { }
   ~time_watcher () { stop (); }
 };

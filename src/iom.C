@@ -29,6 +29,24 @@
 // TSTAMP_MAX must still fit into a positive struct timeval
 #define TSTAMP_MAX (double)(1UL<<31)
 
+// this is a dummy time watcher to ensure that the first
+// time watcher is _always_ valid, this gets rid of a lot
+// of null-pointer-checks
+// (must come _before_ iom is being defined)
+static struct tw0 : time_watcher {
+  void cb (time_watcher &w)
+  {
+    // should never get called
+    // reached end-of-time, or tstamp has a bogus definition,
+    // or compiler initilization order broken, or somethine else :)
+    abort ();
+  }
+
+  tw0()
+  : time_watcher (this, &tw0::cb)
+  { }
+} tw0;
+
 tstamp NOW;
 static bool iom_valid;
 io_manager iom;
@@ -224,22 +242,6 @@ void io_manager::loop ()
     }
 }
 
-// this is a dummy time watcher to ensure that the first
-// time watcher is _always_ valid, this gets rid of a lot
-// of null-pointer-checks
-static struct tw0 : time_watcher {
-  void cb (time_watcher &w)
-  {
-    // should never get called
-    // reached end-of-time, or tstamp has a bogus definition :)
-    abort ();
-  }
-
-  tw0()
-  : time_watcher (this, &tw0::cb)
-  { }
-} tw0;
-
 io_manager::io_manager ()
 {
   iom_valid = true;
@@ -248,6 +250,7 @@ io_manager::io_manager ()
   set_now ();
 
   tw0.start (TSTAMP_MAX);
+  printf ("abort, %f but inly on %f\n", NOW, tw0.at);
 #endif
 }
 
