@@ -108,6 +108,25 @@ rxvt_term::~rxvt_term ()
   if (cmd_fd >= 0)
     close (cmd_fd);
 
+#ifndef NO_SETOWNER_TTYDEV
+  privileged_ttydev (RESTORE);
+#endif
+#ifdef UTMP_SUPPORT
+  privileged_utmp (RESTORE);
+#endif
+
+  delete TermWin.fontset;
+
+  if (display)
+    if (TermWin.parent[0])
+      XDestroyWindow (display->display, TermWin.parent[0]);
+
+  // TODO: free pixcolours, colours should become part of rxvt_display
+
+  delete PixColors;
+
+  displays.put (display);
+
   scr_release ();
 
   free (env_windowid);
@@ -116,20 +135,6 @@ rxvt_term::~rxvt_term ()
   free (env_colorfgbg);
   free (locale);
   free (codeset);
-
-#ifndef NO_SETOWNER_TTYDEV
-  privileged_ttydev (RESTORE);
-#endif
-#ifdef UTMP_SUPPORT
-  privileged_utmp (RESTORE);
-#endif
-
-  // TODO: free pixcolours, colours should become part of rxvt_display
-
-  delete PixColors;
-  delete TermWin.fontset;
-
-  displays.put (display);
 
   delete envv;
   delete argv;
@@ -140,13 +145,9 @@ rxvt_term::destroy ()
 {
   if (display)
     {
-      if (TermWin.parent[0])
-        XDestroyWindow (display->display, TermWin.parent[0]);
-
       rootwin_ev.stop (display);
       termwin_ev.stop (display);
       vt_ev.stop (display);
-
 #ifdef USE_XIM
       im_destroy ();
       im_ev.stop (display);
@@ -266,10 +267,8 @@ rxvt_term::init (int argc, const char *const *argv)
   Gr_reset ();          /* reset graphics */
 #endif
 
-#if 0
-#ifdef DEBUG_X
+#if 1
   XSynchronize (display->display, True);
-#endif
 #endif
 
 #ifdef HAVE_SCROLLBARS

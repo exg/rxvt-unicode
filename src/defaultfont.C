@@ -762,16 +762,16 @@ protected:
 void
 rxvt_font_xft::clear ()
 {
-  if (f)
-    {
-      XftFontClose (DISPLAY, f);
-      f = 0;
-    }
-
   if (d)
     {
       XftDrawDestroy (d);
       d = 0;
+    }
+
+  if (f)
+    {
+      XftFontClose (DISPLAY, f);
+      f = 0;
     }
 }
 
@@ -878,6 +878,10 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
 
   XftUnlockFace (f);
 
+  d = XftDrawCreate (DISPLAY, DRAWABLE, r->display->visual, r->display->cmap);
+  if (!d)
+    return false;
+
   return true;
 }
 
@@ -892,9 +896,6 @@ rxvt_font_xft::draw (int x, int y,
                      const text_t *text, int len,
                      int fg, int bg)
 {
-  if (!d)
-    d = XftDrawCreate (DISPLAY, DRAWABLE, r->display->visual, r->display->cmap);
-
   if (bg >= 0 && bg != Color_bg)
     XftDrawRect (d, &r->PixColors[bg].c, x, y, r->TermWin.fwidth * len, r->TermWin.fheight);
   else
