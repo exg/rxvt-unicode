@@ -1894,10 +1894,8 @@ rxvt_term::scr_page (enum page_dirn direction, int nlines)
   int n;
   unsigned int oldviewstart;
 
-#ifdef DEBUG_STRICT
-  assert ((nlines >= 0) && (nlines <= TermWin.nrow));
-#endif
   oldviewstart = TermWin.view_start;
+
   if (direction == UP)
     {
       n = TermWin.view_start + nlines;
@@ -1908,6 +1906,7 @@ rxvt_term::scr_page (enum page_dirn direction, int nlines)
       n = TermWin.view_start - nlines;
       TermWin.view_start = max (n, 0);
     }
+
   return scr_changeview (oldviewstart);
 }
 

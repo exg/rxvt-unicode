@@ -1,5 +1,3 @@
-TODO: !! If I resize the urxvt window to be 4 chars high (or less) it seems to 
-> crash when scrolling with the mouse wheel. Mikael Magnusson.
 TODO: do font request caching, might help rxvtd on some machines
 TODO: manpage 900mb update
 TODO: safer command: keymap processing.
@@ -19,6 +17,9 @@ WISH: just for fun, do shade and tint with XRender.
           that uses an existing pty for I/O instead of starting
           a command.
         - implement enough of XEMBED to allow for correct focus.
+        - fix assertioan failure ("crash") on mousewheel-scrolling
+          when the terminal height is small, by removing the assert.
+          (reported by Mikael Magnusson).
         - SYNCCVS. backported bugfixes done to rxvt
           (sourceforge bugs #1028739, #1028732), except for
           pts/%s fix as it seems to collide with freebsd,
