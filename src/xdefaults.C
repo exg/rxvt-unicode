@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xdefaults.c
  *----------------------------------------------------------------------*
- * $Id: xdefaults.C,v 1.9 2004/02/01 01:34:41 pcg Exp $
+ * $Id: xdefaults.C,v 1.10 2004/02/13 12:11:05 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994      Robert Nation <nation@rocket.sanders.lockheed.com>
@@ -500,7 +500,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
             flag = flag == On ? Off : On;
           if (optList_strlen(entry))
             {	/* string value */
-              const char     *str = argv[++i];
+              const char *str = argv[++i];
 
 #ifdef DEBUG_RESOURCES
               fprintf(stderr, "string (%s,%s) = ",

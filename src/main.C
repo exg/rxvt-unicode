@@ -123,6 +123,7 @@ rxvt_term::~rxvt_term ()
   // TODO: free pixcolours, colours should become part of rxvt_display
 
   delete PixColors;
+  delete TermWin.fontset;
 
   displays.put (display);
 }
@@ -135,6 +136,7 @@ rxvt_term::destroy ()
       if (TermWin.parent[0])
         XDestroyWindow (display->display, TermWin.parent[0]);
 
+      rootwin_ev.stop (display);
       termwin_ev.stop (display);
       vt_ev.stop (display);
 
