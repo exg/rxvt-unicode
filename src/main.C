@@ -741,7 +741,7 @@ rxvt_term::change_font (const char *fontname)
     {
       rxvt_fontset *fs = new rxvt_fontset (this);
 
-      if (fs && fs->populate (fontname))
+      if (fs && fs->populate (fontname ? fontname : "fixed"))
         {
           delete TermWin.fontset;
           TermWin.fontset = fs;
@@ -749,8 +749,6 @@ rxvt_term::change_font (const char *fontname)
           TermWin.fheight = fs->base_font ()->height;
           TermWin.fbase   = fs->base_font ()->ascent;
 
-          // TODO: screen needs to be told about new fonts
-          
           if (TermWin.parent[0])
             {
               resize_all_windows (0, 0, 0);
@@ -780,7 +778,7 @@ rxvt_term::set_title (const char *str)
 #ifndef SMART_WINDOW_TITLE
   XStoreName (display->display, TermWin.parent[0], str);
 #else
-  char           *name;
+  char *name;
 
   if (XFetchName (display->display, TermWin.parent[0], &name) == 0)
     name = NULL;
@@ -797,7 +795,7 @@ rxvt_term::set_iconName (const char *str)
 #ifndef SMART_WINDOW_TITLE
   XSetIconName (display->display, TermWin.parent[0], str);
 #else
-  char           *name;
+  char *name;
 
   if (XGetIconName (display->display, TermWin.parent[0], &name))
     name = NULL;
@@ -812,8 +810,8 @@ rxvt_term::set_iconName (const char *str)
 void
 rxvt_term::set_window_color (int idx, const char *color)
 {
-  rxvt_color      xcol;
-  int             i;
+  rxvt_color xcol;
+  int i;
 
   if (color == NULL || *color == '\0')
     return;

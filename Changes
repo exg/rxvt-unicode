@@ -22,6 +22,7 @@
         - fixed --enable-xgetdefault, reported by eduard bloch.
         - added manpage for rxvtc/rxvtd based on the one eduard block
           contributed.
+        - use reverse video for normal bold text unless colorBD has been set.
         - many other minor bugfixes.
 
 1.8  Mon Feb  2 20:09:18 CET 2004

@@ -2116,21 +2116,8 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 
           rend = GET_ATTR (rend);
 
-          rvid = !! (rend & RS_RVid);
-          if (rvid)
-            {
-              SWAP_IT (fore, back, int);
+          rvid = !!(rend & RS_RVid);
 
-#ifndef NO_BOLD_UNDERLINE_REVERSE
-              if (ISSET_PIXCOLOR (Color_RV)
-# ifndef NO_CURSORCOLOR
-                  && !ISSET_PIXCOLOR (Color_cursor)
-# endif
-                 )
-                back = Color_RV;
-#endif
-
-            }
 #ifdef TEXT_BLINK
           if (rend & RS_Blink)
             {
@@ -2143,20 +2130,36 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                 fore = back;
             }
 #endif
+
 #ifndef NO_BOLD_UNDERLINE_REVERSE
-          else if (rend & RS_Bold)
+          if (rend & RS_Bold && fore == Color_fg)
             {
               if (ISSET_PIXCOLOR (Color_BD))
                 fore = Color_BD;
-              else if (fore == Color_fg)
-                fore = Color_White;
+              else
+                rvid = !rvid;
             }
-          else if (rend & RS_Uline)
+
+          if (rend & RS_Uline)
             {
               if (ISSET_PIXCOLOR (Color_UL))
                 fore = Color_UL;
             }
 #endif
+
+          if (rvid)
+            {
+              SWAP_IT (fore, back, int);
+
+#ifndef NO_BOLD_UNDERLINE_REVERSE
+              if (ISSET_PIXCOLOR (Color_RV)
+# ifndef NO_CURSORCOLOR
+                  && !ISSET_PIXCOLOR (Color_cursor)
+# endif
+                 )
+                back = Color_RV;
+#endif
+            }
 
           /*
            * Actually do the drawing of the string here
