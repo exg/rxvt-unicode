@@ -3,14 +3,15 @@
 DATE=@DATE@
 LSMDATE=@LSMDATE@
 VERSION=@VERSION@
-VERNAME=rxvt-unicode-$(VERSION)#
-MAINT=Geoff Wing#
-MAINTEMAIL=<gcw@rxvt.org>#
-WEBMAINT=Oezguer Kesim#
-WEBMAINTEMAIL=<oec@rxvt.org>#
-WEBPAGE=<http://www.rxvt.org/>#
-FTPSITENAME=ftp.rxvt.org#
-FTPSITEDIR=/pub/rxvt#
+VERNAME=rxvt-unicode-$(VERSION)
+MAINT=Marc A. Lehmann
+MAINTEMAIL=<rxvt@schmorp.de>
+WEBMAINT=Marc A. Lehmann
+WEBMAINTEMAIL=<rxvt@schmorp.de>
+WEBPAGE=<http://www.sourceforge.net/projects/rxvt-unicode/>
+FTPSITENAME=ftp.rxvt.org
+FTPSITEDIR=/pub/rxvt
+
 #-------------------------------------------------------------------------
 RXVTNAME=@RXVTNAME@
 

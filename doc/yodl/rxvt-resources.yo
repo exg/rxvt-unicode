@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-resources.yo,v 1.3 2003/12/18 00:38:07 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-resources.yo,v 1.4 2004/02/22 08:36:11 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpagesection(RESOURCES (available also as long-options))
 
@@ -102,15 +102,6 @@ startdit()
         pther fonts might be smaller, but not larger. A reasonable default list
         is appended.
 	option bf(-fn).
-    dit(bf(greek_keyboard:) em(mode))
-	Set the Greek keyboard translation mode to be used;
-	bf(iso): ISO-8859 mapping (elot-928) [default].
-	bf(ibm): IBM-437 mapping (DOS codepage 737);
-	option bf(-grk).
-    dit(bf(greektoggle_key:) em(keysym))
-	Set the key to toggle keyboard input between no translation and
-	Greek translation  [default bf(Mode_switch)].
-	For more details, see the distributed file bf(README.greek).
     dit(bf(selectstyle:) em(mode))
 	Set mouse selection style to bf(old) which is 2.20, bf(oldword) which
 	is xterm style with 2.20 old word selection, or anything else which

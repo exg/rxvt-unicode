@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt.yo,v 1.2 2003/11/24 17:31:27 pcg Exp $ --)
+COMMENT(-- $Id: rxvt.yo,v 1.3 2004/02/22 08:36:11 pcg Exp $ --)
 includefile(versioninfo.yo)
 includefile(masonyodl.yo)
 mailto(gcw@pobox.com)
@@ -105,13 +105,18 @@ startdit()
     dit(Rob Nation email(<nation@rocket.sanders.lockheed.com>))
 	very heavily modified Xvt and came up with Rxvt
     dit(Angelo Haritsis email(<ah@doc.ic.ac.uk>))
-	wrote the Greek Keyboard Input
+	wrote the Greek Keyboard Input (no longer in code)
     dit(mj olesen email(<olesen@me.QueensU.CA>))
 	Wrote the menu system. nl()\
 	Project Coordinator (changes.txt 2.11 to 2.21)
     dit(Oezguer Kesim email(<kesim@math.fu-berlin.de>))
 	Project Coordinator (changes.txt 2.21a to 2.4.5)
     dit(Geoff Wing email(<gcw@pobox.com>))
-	Rewrote screen display and text selection routines. nl()\
-	Project Coordinator (changes.txt 2.4.6 - )
+	Rewrote screen display and text selection routines.
+	Project Coordinator (changes.txt 2.4.6 - rxvt-unicode)
+    dit(Marc Alexander Lehman email(<rxvt@schmorp.de>))
+        Rewrote most of the display code and internal character handling
+        to store text in unicode. Numerous other fixes and extensions. nl()\
+	Project Coordinator (Changes 1.0 - )
 enddit()
+

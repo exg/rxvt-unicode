@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-options.yo,v 1.3 2003/12/18 00:38:07 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-options.yo,v 1.4 2004/02/22 08:36:11 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpageoptions()
 
@@ -67,11 +67,6 @@ startdit()
         pther fonts might be smaller, but not larger. A reasonable default list
         is appended.
 	resource bf(font).
-    dit(bf(-grk) em(mode))
-	Compile em(Greek): Greek keyboard translation;
-	bf(iso): ISO-8859 mapping.
-	bf(ibm): IBM-437 mapping;
-	resource bf(greek_keyboard).
     dit(bf(-name) em(name))
 	Specify the application name under which resources
 	are to be obtained, rather than the default executable file name.
