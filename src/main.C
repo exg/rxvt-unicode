@@ -125,21 +125,6 @@ int rxvt_composite_vec::expand (unicode_t c, wchar_t *r)
 }
 #endif
 
-void *
-rxvt_term::operator new (size_t s)
-{
-  void *p = malloc (s);
-
-  memset (p, 0, s);
-  return p;
-}
-
-void
-rxvt_term::operator delete (void *p, size_t s)
-{
-  free (p);
-}
-
 rxvt_term::rxvt_term ()
     :
 #if TRANSPARENT
@@ -198,7 +183,12 @@ rxvt_term::~rxvt_term ()
   privileged_utmp (RESTORE);
 #endif
 
-  delete TermWin.fontset;
+#if ENABLE_STYLES
+  for (int i = RS_styleCount; --i; )
+    if (TermWin.fontset[i] != TermWin.fontset[0])
+      delete TermWin.fontset[i];
+#endif
+  delete TermWin.fontset[0];
 
   if (display)
     {
@@ -388,6 +378,8 @@ rxvt_term::init (int argc, const char *const *argv)
 
   XMapWindow (display->display, TermWin.vt);
   XMapWindow (display->display, TermWin.parent[0]);
+
+  set_colorfgbg ();
 
   init_command (cmd_argv);
 
@@ -795,7 +787,7 @@ rxvt_term::tt_winch ()
 }
 
 /*----------------------------------------------------------------------*/
-/* rxvt_change_font () - Switch to a new font */
+/* set_fonts () - load and set the various fonts
 /*
  * init = 1   - initialize
  *
@@ -803,49 +795,76 @@ rxvt_term::tt_winch ()
  * fontname == FONT_DN  - switch to smaller font
  */
 bool
-rxvt_term::change_font (const char *fontname)
+rxvt_term::set_fonts ()
 {
-  if (fontname == FONT_UP)
-    {
-      // TODO
-    }
-  else if (fontname == FONT_DN)
-    {
-      // TODO
-    }
-  else
-    {
-      rxvt_fontset *fs = new rxvt_fontset (this);
+  rxvt_fontset *fs = new rxvt_fontset (this);
+  rxvt_fontprop prop;
 
-      if (fs && fs->populate (fontname ? fontname : "fixed"))
+  prop.width = prop.height = prop.weight = prop.slant
+    = rxvt_fontprop::unset;
+
+  if (!fs
+      || !fs->populate (rs[Rs_font] ? rs[Rs_font] : "fixed", prop)
+      || !fs->realize_font (1))
+    {
+      delete fs;
+      return false;
+    }
+
+#if ENABLE_STYLES
+  for (int i = RS_styleCount; --i; )
+    if (TermWin.fontset[i] != TermWin.fontset[0])
+      delete TermWin.fontset[i];
+#endif
+
+  delete TermWin.fontset[0];
+  TermWin.fontset[0] = fs;
+
+  fs->prop = prop = (*fs)[1]->properties ();
+
+  TermWin.fwidth  = prop.width;
+  TermWin.fheight = prop.height;
+  TermWin.fweight = prop.weight;
+  TermWin.fslant  = prop.slant;
+  TermWin.fbase   = (*fs)[1]->ascent;
+
+  for (int style = 1; style < 4; style++)
+    {
+#if ENABLE_STYLES
+      const char *res = rs[Rs_font + style];
+
+      if (res && !*res)
+        TermWin.fontset[style] = TermWin.fontset[0];
+      else
         {
-          delete TermWin.fontset;
-          TermWin.fontset = fs;
-          TermWin.fwidth  = fs->base_font ()->width;
-          TermWin.fheight = fs->base_font ()->height;
-          TermWin.fbase   = fs->base_font ()->ascent;
+          TermWin.fontset[style] = fs = new rxvt_fontset (this);
+          rxvt_fontprop prop2 = prop;
 
-          if (TermWin.parent[0])
+          if (res)
+            prop2.weight = prop2.slant = rxvt_fontprop::unset;
+          else
             {
-              resize_all_windows (0, 0, 0);
-              scr_remap_chars ();
-              scr_touch (true);
-            }   
+              res = TermWin.fontset[0]->fontdesc;
 
-          for (unicode_t ch = 0x20; ch <= 0x7f; ch++)
-            TermWin.ascii_map [ch - 0x20] = fs->find_font (ch);
+              if (SET_STYLE (0, style) & RS_Bold)   prop2.weight = rxvt_fontprop::bold;
+              if (SET_STYLE (0, style) & RS_Italic) prop2.slant  = rxvt_fontprop::italic;
+            }
 
-          return true;
+          fs->populate (res, prop2);
         }
+#else
+      TermWin.fontset[style] = TermWin.fontset[0];
+#endif
     }
 
-  return false;
-}
+  if (TermWin.parent[0])
+    {
+      resize_all_windows (0, 0, 0);
+      scr_remap_chars ();
+      scr_touch (true);
+    }   
 
-bool
-rxvt_term::font_up_down (int n, int direction)
-{
-  return false;
+  return true;
 }
 
 /*----------------------------------------------------------------------*/
@@ -949,16 +968,14 @@ rxvt_term::set_window_color (int idx, const char *color)
   /* Cursor cursor; */
 Done:
 #ifdef OFF_FOCUS_FADING
-  pix_colors_unfocused[idx] = pix_colors_focused[idx].fade (display, atoi (rs[Rs_fade]));
+  if (rs[Rs_fade])
+    pix_colors_unfocused[idx] = pix_colors_focused[idx].fade (display, atoi (rs[Rs_fade]));
 #endif
-  if (idx == Color_bg && ! (options & Opt_transparent))
-    XSetWindowBackground (display->display, TermWin.vt, pix_colors[Color_bg]);
 
-  /* handle Color_BD, scrollbar background, etc. */
+  /*TODO: handle Color_BD, scrollbar background, etc. */
 
-  set_colorfgbg ();
   recolour_cursor ();
-  scr_touch (true);
+  scr_recolour ();
 }
 
 #else
@@ -970,8 +987,13 @@ rxvt_term::recolour_cursor ()
 {
   XColor xcol[2];
 
-  xcol[0].pixel = ISSET_PIXCOLOR (Color_pointer_fg) ? pix_colors_focused[Color_pointer_fg] : pix_colors_focused[Color_fg];
-  xcol[1].pixel = ISSET_PIXCOLOR (Color_pointer_bg) ? pix_colors_focused[Color_pointer_bg] : pix_colors_focused[Color_bg];
+  xcol[0].pixel = ISSET_PIXCOLOR (Color_pointer_fg)
+                     ? pix_colors_focused[Color_pointer_fg]
+                     : pix_colors_focused[Color_fg];
+  xcol[1].pixel = ISSET_PIXCOLOR (Color_pointer_bg)
+                     ? pix_colors_focused[Color_pointer_bg]
+                     : pix_colors_focused[Color_bg];
+
   XQueryColors (display->display, display->cmap, xcol, 2);
   XRecolorCursor (display->display, TermWin_cursor, xcol + 0, xcol + 1);
 }
@@ -983,12 +1005,11 @@ rxvt_term::recolour_cursor ()
 void
 rxvt_term::set_colorfgbg ()
 {
-  unsigned int    i;
-  const char     *xpmb = "\0";
-  char            fstr[sizeof ("default") + 1], bstr[sizeof ("default") + 1];
+  unsigned int i;
+  const char *xpmb = "\0";
+  char fstr[sizeof ("default") + 1], bstr[sizeof ("default") + 1];
 
-  env_colorfgbg =
-    (char *)rxvt_malloc (sizeof ("COLORFGBG=default;default;bg") + 1);
+  env_colorfgbg = (char *)rxvt_malloc (sizeof ("COLORFGBG=default;default;bg") + 1);
   strcpy (fstr, "default");
   strcpy (bstr, "default");
   for (i = Color_Black; i <= Color_White; i++)
@@ -997,6 +1018,7 @@ rxvt_term::set_colorfgbg ()
         sprintf (fstr, "%d", (i - Color_Black));
         break;
       }
+
   for (i = Color_Black; i <= Color_White; i++)
     if (pix_colors[Color_bg] == pix_colors[i])
       {
@@ -1008,17 +1030,6 @@ rxvt_term::set_colorfgbg ()
       }
 
   sprintf (env_colorfgbg, "COLORFGBG=%s;%s%s", fstr, xpmb, bstr);
-
-#ifndef NO_BRIGHTCOLOR
-  colorfgbg = DEFAULT_RSTYLE;
-  for (i = minCOLOR; i <= maxCOLOR; i++)
-    {
-      if (pix_colors[Color_fg] == pix_colors[i])
-        colorfgbg = SET_FGCOLOR (colorfgbg, i);
-      if (pix_colors[Color_bg] == pix_colors[i])
-        colorfgbg = SET_BGCOLOR (colorfgbg, i);
-    }
-#endif
 }
 
 /*----------------------------------------------------------------------*/

@@ -21,13 +21,16 @@
 
 #include <inttypes.h>
 
-#include "rxvtlib.h"
 #include "feature.h"
 #include "encoding.h"
 #include "rxvtutil.h"
+#include "rxvttoolkit.h"
+
+struct rxvt_term;
 
 struct rxvt_fontprop {
   enum {
+    unset  = -1,
     medium = 100, bold = 200,
     roman  = 0, italic = 100,
   };
@@ -59,37 +62,31 @@ struct rxvt_drawable {
 };
 
 struct rxvt_font {
-  struct rxvt_fontset *fs;
   // managed by the fontset
-  rxvt_t r;
-  void set_term (rxvt_t r) { this->r = r; }
+  rxvt_term *r;
+  void set_term (rxvt_term *r) { this->r = r; }
 
   char *name;
   codeset cs;
   bool loaded; // wether we tried loading it before (not wether it's loaded)
 
   // managed by the font object
-  bool slow; // wether this is a proportional font or has other funny characteristics
   int ascent, descent,
       width, height;
 
-  void set_name (char *name)
-  {
-    if (this->name) free (this->name); // let the compiler optimize
-    this->name = name;
-  }
+  void set_name (char *name);
 
   rxvt_font () { name = 0; }
-  ~rxvt_font () { free (name); };
-
-  void clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color);
+  virtual ~rxvt_font () { free (name); };
 
   virtual void clear () { };
 
+  void clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color);
+
   virtual rxvt_fontprop properties () = 0;
 
-  virtual bool load (const rxvt_fontprop &prop) = 0;
-  virtual bool has_codepoint (uint32_t unicode) = 0;
+  virtual bool load (const rxvt_fontprop &morph) = 0;
+  virtual bool has_char (uint32_t unicode, const rxvt_fontprop *prop, bool &careful) = 0;
 
   virtual void draw (rxvt_drawable &d,
                      int x, int y,
@@ -103,36 +100,32 @@ struct rxvt_fallback_font;
 
 struct rxvt_fontset {
   char *fontdesc;
+  rxvt_fontprop prop;
 
-  rxvt_fontset (rxvt_t r);
+  rxvt_fontset (rxvt_term *r);
   ~rxvt_fontset ();
 
   rxvt_font *new_font (const char *name, codeset cs);
 
-  bool populate (const char *desc);
-  int find_font (uint32_t unicode, bool bold = false);
+  bool populate (const char *desc, const rxvt_fontprop &prop);
+  int find_font (uint32_t unicode);
   int find_font (const char *name) const;
+  bool realize_font (int i);
 
-  // font-id's MUST fit into a signed 16 bit integer.
+  // font-id's MUST fit into a signed 16 bit integer, and within 0..255
   rxvt_font *operator [] (int id) const
   {
-    return fonts[id];
-  }
-
-  rxvt_font *base_font () const
-  {
-    return fonts[base_id];
+    return fonts[id & 0x7f];
   }
 
 private:
-  rxvt_t r;
+  rxvt_term *r;
   simplevec<rxvt_font *> fonts;
   const rxvt_fallback_font *fallback;
 
-  rxvt_fontprop base_prop;
-  int base_id;
+  typedef unsigned char pagemap[256];
+  vector<pagemap *> fmap;
 
-  bool realize_font (int i);
   void add_fonts (const char *desc);
   void clear ();
 };
