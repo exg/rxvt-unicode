@@ -18,9 +18,14 @@ CONFIGURE OPTIONS
         them, you don't pay for them.
 
     --with-codesets=NAME,...
-        Compile in support for additional codeset groups:
+        Compile in support for additional codeset (encoding) groups. These
+        codeset tables are currently only used for driving X11 core fonts,
+        they are not required for Xft fonts. Compiling them in will make
+        your binary bigger (together about 700kB), but it doesn't increase
+        memory usage unless you use an X11 font requiring one of these
+        encodings.
 
-           all             all of the above 
+           all             all available codeset groups 
            cn              common chinese encodings 
            cn_ext          rarely used but very big chinese encodigs 
            jp              common japanese encodings 
