@@ -15,11 +15,12 @@
 #define MetaMask                0x0100
 #define NumLockMask             0x0200
 #define AppKeypadMask           0x0400
+#define Level3Mask              0x0800 // currently not supported
 #define OtherModMask            (ShiftMask | LockMask | ControlMask \
                                 | Mod1Mask | Mod2Mask | Mod3Mask | Mod4Mask | Mod5Mask)
 
-#if (OtherModMask & (MetaMask | NumLockMask | AppKeypadMask)) != 0
-# error FATAL: MetaMask, NumLockMask and/or AppKeypadMask clashes with X modifiers!
+#if OtherModMask > 0xff
+# error FATAL: X modifiers might clash with rxvt-unicode ones
 #endif
 
 struct rxvt_term;

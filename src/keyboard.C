@@ -121,7 +121,7 @@ compare_priority (keysym_t *a, keysym_t *b)
 keyboard_manager::keyboard_manager ()
 {
   keymap.reserve (256);
-  hash[0] = 1;			// hash[0] != 0 indicates uninitialized data
+  hash [0] = 1;			// hash[0] != 0 indicates uninitialized data
 }
 
 keyboard_manager::~keyboard_manager ()
@@ -324,9 +324,9 @@ void keyboard_manager::purge_duplicate_keymap ()
     {
       for (unsigned int j = 0; j < i; ++j)
         {
-          if (keymap[i] == keymap[j])
+          if (keymap [i] == keymap [j])
             {
-              while (keymap[i] == keymap.back ())
+              while (keymap [i] == keymap.back ())
                 keymap.pop_back ();
 
               if (i < keymap.size ())
@@ -354,9 +354,9 @@ keyboard_manager::setup_hash ()
   // count keysyms for corresponding hash budgets
   for (i = 0; i < keymap.size (); ++i)
     {
-      assert (keymap[i]);
-      hashkey = (keymap[i]->keysym & KEYSYM_HASH_MASK);
-      ++hash_budget_size[hashkey];
+      assert (keymap [i]);
+      hashkey = (keymap [i]->keysym & KEYSYM_HASH_MASK);
+      ++hash_budget_size [hashkey];
     }
 
   // keysym A with range>1 is counted one more time for
@@ -365,49 +365,49 @@ keyboard_manager::setup_hash ()
     {
       if (keymap[i]->range > 1)
         {
-          for (int j = min (keymap[i]->range, KEYSYM_HASH_BUDGETS) - 1; j > 0; --j)
+          for (int j = min (keymap [i]->range, KEYSYM_HASH_BUDGETS) - 1; j > 0; --j)
             {
-              hashkey = ((keymap[i]->keysym + j) & KEYSYM_HASH_MASK);
-              if (hash_budget_size[hashkey])
-                ++hash_budget_size[hashkey];
+              hashkey = ((keymap [i]->keysym + j) & KEYSYM_HASH_MASK);
+              if (hash_budget_size [hashkey])
+                ++hash_budget_size [hashkey];
             }
         }
     }
 
   // now we know the size of each budget
   // compute the index of each budget
-  hash[0] = 0;
+  hash [0] = 0;
   for (index = 0, i = 1; i < KEYSYM_HASH_BUDGETS; ++i)
     {
-      index += hash_budget_size[i - 1];
-      hash[i] = (hash_budget_size[i] ? index : hash[i - 1]);
+      index += hash_budget_size [i - 1];
+      hash[i] = (hash_budget_size [i] ? index : hash [i - 1]);
     }
 
   // and allocate just enough space
   //sorted_keymap.reserve (hash[i - 1] + hash_budget_size[i - 1]);
-  sorted_keymap.insert (sorted_keymap.begin (), index + hash_budget_size[i - 1], 0);
+  sorted_keymap.insert (sorted_keymap.begin (), index + hash_budget_size [i - 1], 0);
 
   // fill in sorted_keymap
   // it is sorted in each budget
   for (i = 0; i < keymap.size (); ++i)
     {
-      for (int j = min (keymap[i]->range, KEYSYM_HASH_BUDGETS) - 1; j >= 0; --j)
+      for (int j = min (keymap [i]->range, KEYSYM_HASH_BUDGETS) - 1; j >= 0; --j)
         {
-          hashkey = ((keymap[i]->keysym + j) & KEYSYM_HASH_MASK);
+          hashkey = ((keymap [i]->keysym + j) & KEYSYM_HASH_MASK);
 
-          if (hash_budget_size[hashkey])
+          if (hash_budget_size [hashkey])
             {
-              index = hash[hashkey] + hash_budget_counter[hashkey];
+              index = hash [hashkey] + hash_budget_counter [hashkey];
 
-              while (index > hash[hashkey]
-                     && compare_priority (keymap[i], sorted_keymap[index - 1]) > 0)
+              while (index > hash [hashkey]
+                     && compare_priority (keymap [i], sorted_keymap [index - 1]) > 0)
                 {
-                  sorted_keymap[index] = sorted_keymap[index - 1];
+                  sorted_keymap [index] = sorted_keymap [index - 1];
                   --index;
                 }
 
-              sorted_keymap[index] = keymap[i];
-              ++hash_budget_counter[hashkey];
+              sorted_keymap [index] = keymap [i];
+              ++hash_budget_counter [hashkey];
             }
         }
     }
@@ -419,14 +419,14 @@ keyboard_manager::setup_hash ()
   for (i = 0; i < KEYSYM_HASH_BUDGETS; ++i)
     {
       index = hash[i];
-      for (int j = 0; j < hash_budget_size[i]; ++j)
+      for (int j = 0; j < hash_budget_size [i]; ++j)
         {
-          if (keymap[index + j]->range == 1)
-            assert (i == (keymap[index + j]->keysym & KEYSYM_HASH_MASK));
+          if (keymap [index + j]->range == 1)
+            assert (i == (keymap [index + j]->keysym & KEYSYM_HASH_MASK));
 
           if (j)
-            assert (compare_priority (keymap[index + j - 1],
-                    keymap[index + j]) >= 0);
+            assert (compare_priority (keymap [index + j - 1],
+                    keymap [index + j]) >= 0);
         }
     }
 
@@ -438,7 +438,7 @@ keyboard_manager::setup_hash ()
         {
           int index = find_keysym (a->keysym + j, a->state & OtherModMask);
           assert (index >= 0);
-          keysym_t *b = keymap[index];
+          keysym_t *b = keymap [index];
           assert (i == (signed) index ||	// the normally expected result
             (a->keysym + j) >= b->keysym && (a->keysym + j) <= (b->keysym + b->range) && compare_priority (a, b) <= 0);	// is effectively the same
         }
@@ -454,7 +454,7 @@ keyboard_manager::find_keysym (KeySym keysym, unsigned int state)
 
   for (; index < keymap.size (); ++index)
     {
-      keysym_t *key = keymap[index];
+      keysym_t *key = keymap [index];
       assert (key);
 
       if (key->keysym <= keysym && key->keysym + key->range > keysym
