@@ -1363,7 +1363,6 @@ AC_CONFIG_FILES([autoconf/Make.common \
 Makefile \
 doc/Makefile \
 src/Makefile \
-src/test/Makefile \
 src/rxvtlib.h \
 ])
 AC_OUTPUT

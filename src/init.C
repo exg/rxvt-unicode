@@ -208,6 +208,7 @@ bool
 rxvt_term::init_vars ()
 {
   sw_term.start (SIGTERM);
+  sw_int.start  (SIGINT);
 
   pix_colors_focused = new rxvt_color [TOTAL_COLORS];
 #ifdef OFF_FOCUS_FADING
@@ -254,7 +255,7 @@ rxvt_term::init_vars ()
 #ifdef MENUBAR
   menu_readonly = 1;
 # if ! (MENUBAR_MAX > 1)
-  CurrentBar = & (BarList);
+  CurrentBar = &BarList;
 # endif                         /* (MENUBAR_MAX > 1) */
 #endif
 

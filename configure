@@ -16302,7 +16302,7 @@ else
   include_time_h="/* #include <time.h> */"
 fi
 
-                                                            ac_config_files="$ac_config_files autoconf/Make.common Makefile doc/Makefile src/Makefile src/test/Makefile src/rxvtlib.h"
+                                                  ac_config_files="$ac_config_files autoconf/Make.common Makefile doc/Makefile src/Makefile src/rxvtlib.h"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -16833,7 +16833,6 @@ do
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "doc/Makefile" ) CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
   "src/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
-  "src/test/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/test/Makefile" ;;
   "src/rxvtlib.h" ) CONFIG_FILES="$CONFIG_FILES src/rxvtlib.h" ;;
   "config.h" ) CONFIG_HEADERS="$CONFIG_HEADERS config.h:autoconf/config.h.in" ;;
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5

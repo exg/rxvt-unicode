@@ -104,11 +104,6 @@ src/version.h
 src/xdefaults.C
 src/xpm.C
 
-src/test/.cvsignore
-src/test/Makefile.in
-src/test/gettty.c
-src/test/strings-memmove.c
-
 src/gentables
 src/gencompose
 src/genlinedraw
