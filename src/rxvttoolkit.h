@@ -18,6 +18,7 @@
 #include "callback.h"
 
 struct rxvt_term;
+struct rxvt_display;
 
 struct im_watcher;
 struct xevent_watcher;
