@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-01-16" "4.8" "RXVT-UNICODE"
+.TH rxvt 1 "2005-01-17" "4.8" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -250,8 +250,8 @@ Window foreground colour; resource \fBforeground\fR.
 .IP "\fB\-pixmap\fR \fIfile[;geom]\fR" 4
 .IX Item "-pixmap file[;geom]"
 Compile \fI\s-1XPM\s0\fR: Specify \s-1XPM\s0 file for the background and also optionally
-specify its scaling with a geometry string. Note you may need to add
-quotes to avoid special shell interpretation of the `;' in the
+specify its scaling with a geometry string. Note you may need to
+add quotes to avoid special shell interpretation of the \f(CW\*(C`;\*(C'\fR in the
 command\-line; resource \fBbackgroundPixmap\fR.
 .IP "\fB\-cr\fR \fIcolour\fR" 4
 .IX Item "-cr colour"
@@ -497,7 +497,7 @@ Colours 16\-79 form a standard 4x4x4 colour cube (the same as xterm with
 .PD
 Use the specified colour to display bold or italic characters when the
 foreground colour is the default. If font styles are not available
-(Compile styles) and this option is unset, reverse video is used instead.
+(Compile \fIstyles\fR) and this option is unset, reverse video is used instead.
 .IP "\fBcolorUL:\fR \fIcolour\fR" 4
 .IX Item "colorUL: colour"
 Use the specified colour to display underlined characters when the
@@ -585,7 +585,7 @@ be smaller, but not larger. A reasonable default font list is always
 appended to it. option \fB\-fn\fR.
 .Sp
 Each font can either be a standard X11 core font (\s-1XLFD\s0) name, with
-optional prefix \f(CW\*(C`x:\*(C'\fR or a Xft font (Compile xft), prefixed with \f(CW\*(C`xft:\*(C'\fR.
+optional prefix \f(CW\*(C`x:\*(C'\fR or a Xft font (Compile \fIxft\fR), prefixed with \f(CW\*(C`xft:\*(C'\fR.
 .Sp
 In addition, each font can be prefixed with additional hints and
 specifications enclosed in square brackets (\f(CW\*(C`[]\*(C'\fR). The only available
@@ -830,46 +830,54 @@ scrollback buffer and switching to/from the secondary screen will
 instead scroll the screen up.
 .IP "\fBkeysym.\fR\fIsym\fR: \fIstring\fR" 4
 .IX Item "keysym.sym: string"
-Associate \fIstring\fR with keysym \fIsym\fR.  The intervening resource
-name \fBkeysym.\fR cannot be omitted. This resource is only available
-when compiled with \s-1KEYSYM_RESOURCE\s0.
+Compile \fIfrills\fR: Associate \fIstring\fR with keysym \fIsym\fR. The
+intervening resource name \fBkeysym.\fR cannot be omitted.
 .Sp
-The format of \fIsym\fR is "\fI(mask\-)key\fR",
-where \fImask\fR can be any combination of \fBControl\fR, \fBNumLock\fR,
-\&\fBShift\fR, \fBMeta\fR, \fBLock\fR, \fBMod1\fR, \fBMod2\fR, \fBMod3\fR, \fBMod4\fR,
-\&\fBMod5\fR, and the abbreviated
-\&\fBC\fR, \fBN\fR, \fBS\fR, \fBM\fR, \fBA\fR, \fBL\fR, \fB1\fR, \fB2\fR, \fB3\fR, \fB4\fR, \fB5\fR.
-The spellings of \fIkey\fR can be obtained by using \fBxev\fR(1)
-command or searching keysym macros from
-\&\fB/usr/X11R6/include/X11/keysymdef.h\fR and omit the prefix \fB\s-1XK_\s0\fR.
-Alternatively you can specify \fIkey\fR by its hex keysym value 
-(\fB0x0000 \- 0xFFFF\fR).
-Note that the lookup of \fIsym\fRs is not performed in an exact manner;
-however, the closest match is assured.
+The format of \fIsym\fR is "\fI(modifiers\-)key\fR", where \fImodifiers\fR can be
+any combination of \fBISOLevel3\fR, \fBAppKeypad\fR, \fBControl\fR, \fBNumLock\fR,
+\&\fBShift\fR, \fBMeta\fR, \fBLock\fR, \fBMod1\fR, \fBMod2\fR, \fBMod3\fR, \fBMod4\fR, \fBMod5\fR,
+and the abbreviated \fBI\fR, \fBK\fR, \fBC\fR, \fBN\fR, \fBS\fR, \fBM\fR, \fBA\fR, \fBL\fR, \fB1\fR,
+\&\fB2\fR, \fB3\fR, \fB4\fR, \fB5\fR.
 .Sp
-\&\fIstring\fR may
-contain escape values (\ea: bell, \eb: backspace, \ee, \eE: escape, \en:
-newline, \er: return, \et:
-tab, \e000: octal number) or control characters (^?: delete, ^@: null,
-^A ...) and may enclosed with double quotes so that it can start or end
-with whitespace.
+The \fBNumLock\fR, \fBMeta\fR and \fBISOLevel3\fR modifiers are usually aliased to
+whatever modifier the NumLock key, Meta/Alt keys or \s-1ISO\s0 Level3 Shift/AltGr
+keys are being mapped. \fBAppKeypad\fR is a artificial modifier mapped to the
+current application keymap mode state.
+.Sp
+The spellings of \fIkey\fR can be obtained by using \fBxev\fR(1) command or
+searching keysym macros from \fB/usr/X11R6/include/X11/keysymdef.h\fR and
+omitting the prefix \fB\s-1XK_\s0\fR. Alternatively you can specify \fIkey\fR by its hex
+keysym value (\fB0x0000 \- 0xFFFF\fR). Note that the lookup of \fIsym\fRs is not
+performed in an exact manner; however, the closest match is assured.
+.Sp
+\&\fIstring\fR may contain escape values (\f(CW\*(C`\ea\*(C'\fR: bell, \f(CW\*(C`\eb\*(C'\fR: backspace,
+\&\f(CW\*(C`\ee\*(C'\fR, \f(CW\*(C`\eE\*(C'\fR: escape, \f(CW\*(C`\en\*(C'\fR: newline, \f(CW\*(C`\er\*(C'\fR: carriage return, \f(CW\*(C`\et\*(C'\fR: tab,
+\&\f(CW\*(C`\e000\*(C'\fR: octal number) or verbatim control characters (\f(CW\*(C`^?\*(C'\fR: delete,
+\&\f(CW\*(C`^@\*(C'\fR: null, \f(CW\*(C`^A\*(C'\fR ...) and may be enclosed with double quotes so that it
+can start or end with whitespace.
 .Sp
 You can define a range of keysyms in one shot by providing a \fIstring\fR
-with pattern \fBlist/STRING1/STRING2/STRING3\fR, where the delimeter `/'
-should be a character not used by the \fB\s-1STRING\s0\fRs.
+with pattern \fBlist/PREFIX/MIDDLE/SUFFIX\fR, where the delimeter `/'
+should be a character not used by the strings.
 .Sp
 Its usage can be demonstrated by an example:
-        URxvt.keysym.M\-C\-0x61:    list.abc.\ee<M\-C\-.>
+.Sp
+.Vb 1
+\&  URxvt.keysym.M-C-0x61:    list|\ee<M-C-|abc|>
+.Ve
 .Sp
 The above line is equivalent to the following three lines:
-        URxvt.keysym.Meta\-Control\-0x61:    \ee<M\-C\-a>
-        URxvt.keysym.Meta\-Control\-0x62:    \ee<M\-C\-b>
-        URxvt.keysym.Meta\-Control\-0x63:    \ee<M\-C\-c>
 .Sp
-If \fIstring\fR takes the form of \fBproto:STRING\fR,
-the specified \fB\s-1STRING\s0\fR is interpreted and executed as \fB@@RXVT_NAME@@\fR's
-control sequence. For example, \fB\*(L"proto:\e033]701;zh_CN.GBK\e007\*(R"\fR
-means changing the current locale to zh_CN.GBK.
+.Vb 3
+\&  URxvt.keysym.Meta-Control-0x61:    \ee<M-C-a>
+\&  URxvt.keysym.Meta-Control-0x62:    \ee<M-C-b>
+\&  URxvt.keysym.Meta-Control-0x63:    \ee<M-C-c>
+.Ve
+.Sp
+If \fIstring\fR takes the form of \f(CW\*(C`proto:STRING\*(C'\fR, the specified \fB\s-1STRING\s0\fR is
+interpreted and executed as @@RXVT_NAME@@'s control sequence. For example,
+\&\f(CW\*(C`proto:\e033]701;zh_CN.GBK\e007\*(C'\fR means: change the current locale to
+\&\f(CW\*(C`zh_CN.GBK\*(C'\fR.
 .SH "THE SCROLLBAR"
 .IX Header "THE SCROLLBAR"
 Lines of text that scroll off the top of the \fB@@RXVT_NAME@@\fR window
@@ -905,7 +913,7 @@ double-click to select a word; Left triple-click to select the entire
 line.
 .Sp
 Starting a selection while pressing the \fBMeta\fR key (or \fBMeta+Ctrl\fR keys)
-(Compile: frills) will create a rectangular selection instead of a normal
+(Compile: \fIfrills\fR) will create a rectangular selection instead of a normal
 one.
 .IP "\fBInsertion\fR:" 4
 .IX Item "Insertion:"

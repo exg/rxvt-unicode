@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2005-01-16" "4.8" "RXVT-UNICODE"
+.TH rxvt 7 "2005-01-17" "4.8" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "FREQUENTLY ASKED QUESTIONS"
@@ -2292,12 +2292,13 @@ Add support for a blinking cursor.
 Add support to have the pointer disappear when typing or inactive.
 .IP "\-\-with\-name=NAME" 4
 .IX Item "--with-name=NAME"
-Set the basename for the installed binaries (default: urxvt, resulting in
-urxvt, urxvtd etc.). Specify \-\-with\-name=rxvt to replace rxvt.
+Set the basename for the installed binaries (default: \f(CW\*(C`urxvt\*(C'\fR, resulting
+in \f(CW\*(C`urxvt\*(C'\fR, \f(CW\*(C`urxvtd\*(C'\fR etc.). Specify \f(CW\*(C`\-\-with\-name=rxvt\*(C'\fR to replace with
+\&\f(CW\*(C`rxvt\*(C'\fR.
 .IP "\-\-with\-term=NAME" 4
 .IX Item "--with-term=NAME"
 Change the environmental variable for the terminal to \s-1NAME\s0 (default
-\&\*(L"rxvt\*(R")
+\&\f(CW\*(C`rxvt\-unicode\*(C'\fR)
 .IP "\-\-with\-terminfo=PATH" 4
 .IX Item "--with-terminfo=PATH"
 Change the environmental variable for the path to the terminfo tree to

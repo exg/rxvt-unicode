@@ -196,8 +196,8 @@ Window foreground colour; resource <strong>foreground</strong>.
 </dt>
 <dd>
 Compile <em>XPM</em>: Specify XPM file for the background and also optionally
-specify its scaling with a geometry string. Note you may need to add
-quotes to avoid special shell interpretation of the `;' in the
+specify its scaling with a geometry string. Note you may need to
+add quotes to avoid special shell interpretation of the <code>;</code> in the
 command-line; resource <strong>backgroundPixmap</strong>.
 </dd>
 <p></p>
@@ -578,7 +578,7 @@ changed using an escape command (see rxvt(7)).</p>
 <dd>
 Use the specified colour to display bold or italic characters when the
 foreground colour is the default. If font styles are not available
-(Compile styles) and this option is unset, reverse video is used instead.
+(Compile <em>styles</em>) and this option is unset, reverse video is used instead.
 </dd>
 <p></p>
 <dt><strong><a name="item_colorul_3a_colour"><strong>colorUL:</strong> <em>colour</em></a></strong><br />
@@ -721,7 +721,7 @@ appended to it. option <strong>-fn</strong>.
 </dd>
 <dd>
 <p>Each font can either be a standard X11 core font (XLFD) name, with
-optional prefix <code>x:</code> or a Xft font (Compile xft), prefixed with <code>xft:</code>.</p>
+optional prefix <code>x:</code> or a Xft font (Compile <em>xft</em>), prefixed with <code>xft:</code>.</p>
 </dd>
 <dd>
 <p>In addition, each font can be prefixed with additional hints and
@@ -1103,52 +1103,62 @@ instead scroll the screen up.
 <dt><strong><a name="item_keysym_2esym_3a_string"><strong>keysym.</strong><em>sym</em>: <em>string</em></a></strong><br />
 </dt>
 <dd>
-Associate <em>string</em> with keysym <em>sym</em>.  The intervening resource
-name <strong>keysym.</strong> cannot be omitted. This resource is only available
-when compiled with KEYSYM_RESOURCE.
+Compile <em>frills</em>: Associate <em>string</em> with keysym <em>sym</em>. The
+intervening resource name <strong>keysym.</strong> cannot be omitted.
 </dd>
 <dd>
-<p>The format of <em>sym</em> is ``<em>(mask-)key</em>'',
-where <em>mask</em> can be any combination of <strong>Control</strong>, <strong>NumLock</strong>,
-<strong>Shift</strong>, <strong>Meta</strong>, <strong>Lock</strong>, <strong>Mod1</strong>, <strong>Mod2</strong>, <strong>Mod3</strong>, <strong>Mod4</strong>,
-<strong>Mod5</strong>, and the abbreviated
-<strong>C</strong>, <strong>N</strong>, <strong>S</strong>, <strong>M</strong>, <strong>A</strong>, <strong>L</strong>, <strong>1</strong>, <strong>2</strong>, <strong>3</strong>, <strong>4</strong>, <strong>5</strong>.
-The spellings of <em>key</em> can be obtained by using <strong>xev</strong>(1)
-command or searching keysym macros from
-<strong>/usr/X11R6/include/X11/keysymdef.h</strong> and omit the prefix <strong>XK_</strong>.
-Alternatively you can specify <em>key</em> by its hex keysym value 
-(<strong>0x0000 - 0xFFFF</strong>).
-Note that the lookup of <em>sym</em>s is not performed in an exact manner;
-however, the closest match is assured.</p>
+<p>The format of <em>sym</em> is ``<em>(modifiers-)key</em>'', where <em>modifiers</em> can be
+any combination of <strong>ISOLevel3</strong>, <strong>AppKeypad</strong>, <strong>Control</strong>, <strong>NumLock</strong>,
+<strong>Shift</strong>, <strong>Meta</strong>, <strong>Lock</strong>, <strong>Mod1</strong>, <strong>Mod2</strong>, <strong>Mod3</strong>, <strong>Mod4</strong>, <strong>Mod5</strong>,
+and the abbreviated <strong>I</strong>, <strong>K</strong>, <strong>C</strong>, <strong>N</strong>, <strong>S</strong>, <strong>M</strong>, <strong>A</strong>, <strong>L</strong>, <strong>1</strong>,
+<strong>2</strong>, <strong>3</strong>, <strong>4</strong>, <strong>5</strong>.</p>
 </dd>
 <dd>
-<p><em>string</em> may
-contain escape values (\a: bell, \b: backspace, \e, \E: escape, \n:
-newline, \r: return, \t:
-tab, \000: octal number) or control characters (^?: delete, ^@: null,
-^A ...) and may enclosed with double quotes so that it can start or end
-with whitespace.</p>
+<p>The <strong>NumLock</strong>, <strong>Meta</strong> and <strong>ISOLevel3</strong> modifiers are usually aliased to
+whatever modifier the NumLock key, Meta/Alt keys or ISO Level3 Shift/AltGr
+keys are being mapped. <strong>AppKeypad</strong> is a artificial modifier mapped to the
+current application keymap mode state.</p>
+</dd>
+<dd>
+<p>The spellings of <em>key</em> can be obtained by using <strong>xev</strong>(1) command or
+searching keysym macros from <strong>/usr/X11R6/include/X11/keysymdef.h</strong> and
+omitting the prefix <strong>XK_</strong>. Alternatively you can specify <em>key</em> by its hex
+keysym value (<strong>0x0000 - 0xFFFF</strong>). Note that the lookup of <em>sym</em>s is not
+performed in an exact manner; however, the closest match is assured.</p>
+</dd>
+<dd>
+<p><em>string</em> may contain escape values (<code>\a</code>: bell, <code>\b</code>: backspace,
+<code>\e</code>, <code>\E</code>: escape, <code>\n</code>: newline, <code>\r</code>: carriage return, <code>\t</code>: tab,
+<code>\000</code>: octal number) or verbatim control characters (<code>^?</code>: delete,
+<code>^@</code>: null, <code>^A</code> ...) and may be enclosed with double quotes so that it
+can start or end with whitespace.</p>
 </dd>
 <dd>
 <p>You can define a range of keysyms in one shot by providing a <em>string</em>
-with pattern <strong>list/STRING1/STRING2/STRING3</strong>, where the delimeter `/'
-should be a character not used by the <strong>STRING</strong>s.</p>
+with pattern <strong>list/PREFIX/MIDDLE/SUFFIX</strong>, where the delimeter `/'
+should be a character not used by the strings.</p>
 </dd>
 <dd>
-<p>Its usage can be demonstrated by an example:
-        URxvt.keysym.M-C-0x61:    list.abc.\e&lt;M-C-.&gt;</p>
+<p>Its usage can be demonstrated by an example:</p>
 </dd>
 <dd>
-<p>The above line is equivalent to the following three lines:
-        URxvt.keysym.Meta-Control-0x61:    \e&lt;M-C-a&gt;
-        URxvt.keysym.Meta-Control-0x62:    \e&lt;M-C-b&gt;
-        URxvt.keysym.Meta-Control-0x63:    \e&lt;M-C-c&gt;</p>
+<pre>
+  URxvt.keysym.M-C-0x61:    list|\e&lt;M-C-|abc|&gt;</pre>
 </dd>
 <dd>
-<p>If <em>string</em> takes the form of <strong>proto:STRING</strong>,
-the specified <strong>STRING</strong> is interpreted and executed as <strong>rxvt</strong>'s
-control sequence. For example, <strong>``proto:\033]701;zh_CN.GBK\007''</strong>
-means changing the current locale to zh_CN.GBK.</p>
+<p>The above line is equivalent to the following three lines:</p>
+</dd>
+<dd>
+<pre>
+  URxvt.keysym.Meta-Control-0x61:    \e&lt;M-C-a&gt;
+  URxvt.keysym.Meta-Control-0x62:    \e&lt;M-C-b&gt;
+  URxvt.keysym.Meta-Control-0x63:    \e&lt;M-C-c&gt;</pre>
+</dd>
+<dd>
+<p>If <em>string</em> takes the form of <code>proto:STRING</code>, the specified <strong>STRING</strong> is
+interpreted and executed as rxvt's control sequence. For example,
+<code>proto:\033]701;zh_CN.GBK\007</code> means: change the current locale to
+<code>zh_CN.GBK</code>.</p>
 </dd>
 <p></p></dl>
 <p>
@@ -1193,7 +1203,7 @@ line.
 </dd>
 <dd>
 <p>Starting a selection while pressing the <strong>Meta</strong> key (or <strong>Meta+Ctrl</strong> keys)
-(Compile: frills) will create a rectangular selection instead of a normal
+(Compile: <em>frills</em>) will create a rectangular selection instead of a normal
 one.</p>
 </dd>
 <p></p>

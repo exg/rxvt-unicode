@@ -1770,13 +1770,13 @@ CONFIGURE OPTIONS
         Add support to have the pointer disappear when typing or inactive.
 
     --with-name=NAME
-        Set the basename for the installed binaries (default: urxvt,
-        resulting in urxvt, urxvtd etc.). Specify --with-name=rxvt to
-        replace rxvt.
+        Set the basename for the installed binaries (default: "urxvt",
+        resulting in "urxvt", "urxvtd" etc.). Specify "--with-name=rxvt" to
+        replace with "rxvt".
 
     --with-term=NAME
         Change the environmental variable for the terminal to NAME (default
-        "rxvt")
+        "rxvt-unicode")
 
     --with-terminfo=PATH
         Change the environmental variable for the path to the terminfo tree

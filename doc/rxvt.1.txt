@@ -120,7 +120,7 @@ OPTIONS
     -pixmap *file[;geom]*
         Compile *XPM*: Specify XPM file for the background and also
         optionally specify its scaling with a geometry string. Note you may
-        need to add quotes to avoid special shell interpretation of the `;'
+        need to add quotes to avoid special shell interpretation of the ";"
         in the command-line; resource backgroundPixmap.
 
     -cr *colour*
@@ -361,7 +361,7 @@ RESOURCES (available also as long-options)
     colorIT: *colour*
         Use the specified colour to display bold or italic characters when
         the foreground colour is the default. If font styles are not
-        available (Compile styles) and this option is unset, reverse video
+        available (Compile *styles*) and this option is unset, reverse video
         is used instead.
 
     colorUL: *colour*
@@ -451,7 +451,7 @@ RESOURCES (available also as long-options)
         font list is always appended to it. option -fn.
 
         Each font can either be a standard X11 core font (XLFD) name, with
-        optional prefix "x:" or a Xft font (Compile xft), prefixed with
+        optional prefix "x:" or a Xft font (Compile *xft*), prefixed with
         "xft:".
 
         In addition, each font can be prefixed with additional hints and
@@ -692,41 +692,50 @@ RESOURCES (available also as long-options)
         instead scroll the screen up.
 
     keysym.*sym*: *string*
-        Associate *string* with keysym *sym*. The intervening resource name
-        keysym. cannot be omitted. This resource is only available when
-        compiled with KEYSYM_RESOURCE.
+        Compile *frills*: Associate *string* with keysym *sym*. The
+        intervening resource name keysym. cannot be omitted.
 
-        The format of *sym* is "*(mask-)key*", where *mask* can be any
-        combination of Control, NumLock, Shift, Meta, Lock, Mod1, Mod2,
-        Mod3, Mod4, Mod5, and the abbreviated C, N, S, M, A, L, 1, 2, 3, 4,
-        5. The spellings of *key* can be obtained by using xev(1) command or
+        The format of *sym* is "*(modifiers-)key*", where *modifiers* can be
+        any combination of ISOLevel3, AppKeypad, Control, NumLock, Shift,
+        Meta, Lock, Mod1, Mod2, Mod3, Mod4, Mod5, and the abbreviated I, K,
+        C, N, S, M, A, L, 1, 2, 3, 4, 5.
+
+        The NumLock, Meta and ISOLevel3 modifiers are usually aliased to
+        whatever modifier the NumLock key, Meta/Alt keys or ISO Level3
+        Shift/AltGr keys are being mapped. AppKeypad is a artificial
+        modifier mapped to the current application keymap mode state.
+
+        The spellings of *key* can be obtained by using xev(1) command or
         searching keysym macros from /usr/X11R6/include/X11/keysymdef.h and
-        omit the prefix XK_. Alternatively you can specify *key* by its hex
-        keysym value (0x0000 - 0xFFFF). Note that the lookup of *sym*s is
-        not performed in an exact manner; however, the closest match is
+        omitting the prefix XK_. Alternatively you can specify *key* by its
+        hex keysym value (0x0000 - 0xFFFF). Note that the lookup of *sym*s
+        is not performed in an exact manner; however, the closest match is
         assured.
 
-        *string* may contain escape values (\a: bell, \b: backspace, \e, \E:
-        escape, \n: newline, \r: return, \t: tab, \000: octal number) or
-        control characters (^?: delete, ^@: null, ^A ...) and may enclosed
-        with double quotes so that it can start or end with whitespace.
+        *string* may contain escape values ("\a": bell, "\b": backspace,
+        "\e", "\E": escape, "\n": newline, "\r": carriage return, "\t": tab,
+        "\000": octal number) or verbatim control characters ("^?": delete,
+        "^@": null, "^A" ...) and may be enclosed with double quotes so that
+        it can start or end with whitespace.
 
         You can define a range of keysyms in one shot by providing a
-        *string* with pattern list/STRING1/STRING2/STRING3, where the
-        delimeter `/' should be a character not used by the STRINGs.
+        *string* with pattern list/PREFIX/MIDDLE/SUFFIX, where the delimeter
+        `/' should be a character not used by the strings.
 
-        Its usage can be demonstrated by an example: URxvt.keysym.M-C-0x61:
-        list.abc.\e<M-C-.>
+        Its usage can be demonstrated by an example:
+
+          URxvt.keysym.M-C-0x61:    list|\e<M-C-|abc|>
 
         The above line is equivalent to the following three lines:
-        URxvt.keysym.Meta-Control-0x61: \e<M-C-a>
-        URxvt.keysym.Meta-Control-0x62: \e<M-C-b>
-        URxvt.keysym.Meta-Control-0x63: \e<M-C-c>
 
-        If *string* takes the form of proto:STRING, the specified STRING is
-        interpreted and executed as rxvt's control sequence. For example,
-        "proto:\033]701;zh_CN.GBK\007" means changing the current locale to
-        zh_CN.GBK.
+          URxvt.keysym.Meta-Control-0x61:    \e<M-C-a>
+          URxvt.keysym.Meta-Control-0x62:    \e<M-C-b>
+          URxvt.keysym.Meta-Control-0x63:    \e<M-C-c>
+
+        If *string* takes the form of "proto:STRING", the specified STRING
+        is interpreted and executed as rxvt's control sequence. For example,
+        "proto:\033]701;zh_CN.GBK\007" means: change the current locale to
+        "zh_CN.GBK".
 
 THE SCROLLBAR
     Lines of text that scroll off the top of the rxvt window (resource:
@@ -761,7 +770,7 @@ TEXT SELECTION AND INSERTION
         entire line.
 
         Starting a selection while pressing the Meta key (or Meta+Ctrl keys)
-        (Compile: frills) will create a rectangular selection instead of a
+        (Compile: *frills*) will create a rectangular selection instead of a
         normal one.
 
     Insertion:
