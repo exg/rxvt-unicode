@@ -1,35 +1,21 @@
-Lines marked with "xterm:" indicate either xterm features ported to rxvt
-or changed rxvt behaviour to make it more compatible to xterm (usually
-xfree86's xterm).
-
 TODO: manpage 900mb update
-TODO: openbsd
-checking for int16_t... ./configure[13497]: test: 2: unexpected operator/operand
- short
-checking for uint16_t... ./configure[13579]: test: 2: unexpected operator/operand
-unsigned short
-checking for int32_t... ./configure[13661]: test: 4: unexpected operator/operand
- int
-checking for uint32_t... ./configure[13743]: test: 4: unexpected operator/operand
-unsigned int
-checking return type of signal handlers... void
-./configure[13848]: break: cannot break
 TODO: maybe just output the error and continue on x errors, especially for XIM-management
 TODO: safer command: keymap processing.
 TODO: read property sequence is broken with respect to utf-8 etc.
 WISH: keyboard modification via esc-sequences.
 WISH: line-rewrapping on resize
-WISH: hotkey font resizing (possible via keymaps)
 WISH: searchable backlog
 WISH: meta-tagging of data by regex (my dream project)
 WISH: double-click: more intelligent (urls etc.)
-WISH: OnTheSpot editing.
+WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
+5.1
 	- fix a bug when parsing fontnames and another one
           for empty keymaps which could result in crashes
           (Kuang-che Wu).
+        - add COPYING back, which got lost somehow.
 
 5.0  Fri Feb 11 18:31:48 CET 2005
 	- document a race-free hack to start urxvtd.
@@ -441,16 +427,16 @@ WISH: just for fun, do shade and tint with XRender.
           for the keymappings.
         - don't leave the X or rxvtd sockets open in child processes.
           (inherited fd's stay open - different to rxvt).
-	- xterm: implemented OSC3, set/get window property. get is an
-          extension and is slightly ugly.
+        - xterm-compat: implemented OSC3, set/get window property. get is
+          an extension and is slightly ugly.
 	- removed --disable-swapscreen and SCROLL_ON_NO_SECONDARY and
           replaced them by runtime-configurable options secondaryScreen and
           secondaryScroll (-ssr and -ssc) (see debian bug #237673).
 	- close down terminal window when child exits. (debian bug #241267).
-        - xterm: enable seperate mouse bg colour setting.
+        - xterm-compat: enable seperate mouse bg colour setting.
         - re-enable mouse cursor colours again, fixing colours when fg/bg are
           overwritten (as is common).
-        - xterm: correctly implement privmodes 1047, 1048, 1049.
+        - xterm-compat: correctly implement privmodes 1047, 1048, 1049.
         - ported to solaris by elmar@math.uni-bremen.de.
 
 2.6  Fri Apr  2 03:24:10 CEST 2004
@@ -458,8 +444,8 @@ WISH: just for fun, do shade and tint with XRender.
         - WARNING: changed menu sequence from ESC ] 10 to ESC ] 703 to
           avoid clashes with xterm.
         - changed OSC701/OSC702 sequence to return standard escaped reports.
-        - xterm: make set window colour and other requests report window
-          colour when arg is "?".
+        - xterm-compat: make set window colour and other requests report
+          window colour when arg is "?".
         - enable colour tinting of "transparent" backgrounds.
         - stop ST sequences earlier, as we now react on 0x90 and thus
           cause conditions more often that look like locks but are, in

@@ -24,7 +24,7 @@
 
 #if HAVE_CWCHAR
 # include <cwchar>
-#elsif HAVE_WCHAR_H
+#elif HAVE_WCHAR_H
 # include <wchar.h>
 #else
 // stdlib.h might provide it

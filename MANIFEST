@@ -1,5 +1,5 @@
 .cvsignore
-.prebuild
+COPYING
 Changes
 INSTALL
 MANIFEST
@@ -8,6 +8,7 @@ README.configure
 README.FAQ
 configure
 reconf
+genac
 
 doc/etc/XTerm.ad
 doc/etc/rclock
