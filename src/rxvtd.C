@@ -77,18 +77,44 @@ void server::err ()
 
 void server::read_cb (io_watcher &w, short revents)
 {
-  token cmd;
+  auto_str tok;
 
-  if (recv (cmd))
+  if (recv (tok))
     {
-      if (!strcmp (cmd, "NEW"))
+      if (!strcmp (tok, "NEW"))
         {
+          auto_str display, cwd;
+          simplevec<auto_str> argv;
+            
+          for (;;)
+            {
+              if (!recv (tok))
+                return err ();
+
+              if (!strcmp (tok, "END"))
+                break;
+              else if (!strcmp (tok, "DISPLAY") && recv (display))
+                ;
+              else if (!strcmp (tok, "CWD") && recv (cwd))
+                ;
+              else if (!strcmp (tok, "ARG") && recv (tok))
+                argv.push_back (tok);
+              else
+                return err ();
+            }
+
+          // TODO: no setenv, please
+          setenv ("DISPLAY", display.get (), 1);
+
+          rxvt_init (argv.size (), reinterpret_cast<char **>(argv.begin ()));
+          dR;
+          rxvt_main_loop (aR);
         }
       else
-        err ();
+        return err ();
     }
   else
-    err ();
+    return err ();
 }
 
 int

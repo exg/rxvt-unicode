@@ -25,7 +25,7 @@ void rxvt_connection::send (const char *data)
   send (data, strlen (data));
 }
 
-bool rxvt_connection::recv (char *&data, int *len)
+bool rxvt_connection::recv (auto_str &data, int *len)
 {
   uint8_t s[2];
   int l;
@@ -51,22 +51,6 @@ bool rxvt_connection::recv (char *&data, int *len)
   data[l] = 0;
 
   return true;
-}
-
-bool rxvt_connection::recv (token &data)
-{
-  char *d;
-  int l;
-
-  if (!recv (d, &l))
-    return false;
-
-  if (l < sizeof (token) - 1)
-    strcpy (data, d);
-
-  delete [] d;
-
-  return l < sizeof (token) - 1;
 }
 
 void rxvt_connection::send (int data)

@@ -38,13 +38,13 @@ main(int argc, const char *const *argv)
   char buf[PATH_MAX];
 
   c.send ("NEW");
-  c.send ("DISPLAY"); c.send (getenv ("DISPLAY"));
+  c.send ("DISPLAY"), c.send (getenv ("DISPLAY"));
   // instead of getcwd we could opendir(".") and pass the fd for fchdir *g*
-  c.send ("CWD"); c.send (getcwd (buf, sizeof (buf)));
+  c.send ("CWD"), c.send (getcwd (buf, sizeof (buf)));
 
-  c.send ("ARGV"); c.send (argc);
   for (int i = 0; i < argc; i++)
-    c.send (argv[i]);
+    c.send ("ARG"), c.send (argv[i]);
+
   c.send ("END");
 }
 
