@@ -355,6 +355,28 @@ rxvt_font_x11::load (int maxheight)
 {
   clear ();
 
+  char **list;
+  int count;
+  XFontStruct *info;
+  list = XListFontsWithInfo (DISPLAY, name, 128, &count, &info);
+
+  if (!list)
+    return false;
+
+  XFontStruct *best = 0;
+  for (int i = 0; i < count; i++)
+    {
+      XFontStruct *f = info + i;
+      if (f->ascent + f->descent <= maxheight) // weed out too large fonts
+        if (!best // compare against best found so far
+            || best->ascent + best->descent < f->ascent + f->descent)
+          best = f;
+    }
+
+  set_name (strdup (list[best - info]));
+
+  XFreeFontInfo (list, info, count);
+
   f = XLoadQueryFont (DISPLAY, name);
 
   if (!f)
