@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-options.yo,v 1.6 2004/03/14 21:59:58 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-options.yo,v 1.7 2004/03/28 14:42:14 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpageoptions()
 
@@ -64,8 +64,8 @@ startdit()
 	Select the fonts to be used used. This is a comma seperated
         list of font names that are used in turn when trying to display
         unicode characters. The first font defines the cell size for characters,
-        pther fonts might be smaller, but not larger. A reasonable default list
-        is appended.
+        other fonts might be smaller, but not larger. A reasonable default font list
+        is always appended to it.
 	resource bf(font).
     dit(bf(-name) em(name))
 	Specify the application name under which resources

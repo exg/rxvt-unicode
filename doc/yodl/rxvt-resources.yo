@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-resources.yo,v 1.6 2004/03/14 21:59:58 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-resources.yo,v 1.7 2004/03/28 14:42:14 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpagesection(RESOURCES (available also as long-options))
 
@@ -99,8 +99,8 @@ startdit()
 	Select the fonts to be used used. This is a comma seperated
         list of font names that are used in turn when trying to display
         unicode characters. The first font defines the cell size for characters,
-        pther fonts might be smaller, but not larger. A reasonable default list
-        is appended.
+        other fonts might be smaller, but not larger. A reasonable default font list
+        is always appended to this list.
 	option bf(-fn).
     dit(bf(selectstyle:) em(mode))
 	Set mouse selection style to bf(old) which is 2.20, bf(oldword) which
