@@ -364,7 +364,7 @@
  * Check the current value of the window-time/icon-name and avoid
  * re-setting it to the same value -- avoids unnecessary window refreshes
  */
-#define SMART_WINDOW_TITLE
+//#define SMART_WINDOW_TITLE // currently disabled, needs to be reimplemented
 
 /*
  * Allow foreground/background colour to be changed with an

@@ -833,44 +833,46 @@ rxvt_term::set_fonts ()
   return true;
 }
 
+void rxvt_term::set_string_property (Atom prop, const char *str, int len)
+{
+  // TODO: SMART_WINDOW_TITLE
+  XChangeProperty (display->display, TermWin.parent[0],
+                   prop, XA_STRING, 8, PropModeReplace,
+                   (const unsigned char *)str, len >= 0 ? len : strlen (str));
+}
+
+void rxvt_term::set_utf8_property (Atom prop, const char *str, int len)
+{
+  // TODO: SMART_WINDOW_TITLE
+  wchar_t *ws = rxvt_mbstowcs (str, len);
+  char *s = rxvt_wcstoutf8 (ws);
+
+  XChangeProperty (display->display, TermWin.parent[0],
+                   prop, xa[XA_UTF8_STRING], 8, PropModeReplace,
+                   (const unsigned char *)s, strlen (s));
+
+  free (s);
+  free (ws);
+}
+
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /* xterm sequences - title, iconName, color (exptl) */
 void
 rxvt_term::set_title (const char *str)
 {
-#ifdef SMART_WINDOW_TITLE
-  char *name;
-
-  if (!XFetchName (display->display, TermWin.parent[0], &name))
-    name = NULL;
-
-  if (name == NULL || strcmp (name, str))
-#endif
-    XStoreName (display->display, TermWin.parent[0], str);
-
-#ifdef SMART_WINDOW_TITLE
-  if (name)
-    XFree (name);
+  set_string_property (XA_WM_NAME, str);
+#if ENABLE_FRILLS
+  set_utf8_property (display->atom ("_NET_WM_NAME"), str);
 #endif
 }
 
 void
 rxvt_term::set_icon_name (const char *str)
 {
-#ifdef SMART_WINDOW_TITLE
-  char *name;
-
-  if (!XGetIconName (display->display, TermWin.parent[0], &name))
-    name = NULL;
-
-  if (name == NULL || strcmp (name, str))
-#endif
-    XSetIconName (display->display, TermWin.parent[0], str);
-
-#ifdef SMART_WINDOW_TITLE
-  if (name)
-    XFree (name);
+  set_string_property (XA_WM_ICON_NAME, str);
+#if ENABLE_FRILLS
+  set_utf8_property (display->atom ("_NET_WM_ICON_NAME"), str);
 #endif
 }
 
