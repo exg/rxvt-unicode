@@ -30,7 +30,6 @@
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
 #include "version.h"
-#include "xdefaults.intpro"	/* PROTOS for internal routines */
 
 /* #define DEBUG_RESOURCES */
 
@@ -65,7 +64,7 @@ static const char *const xnames[2] = { ".Xdefaults", ".Xresources" };
 
 /* convenient macros */
 #define optList_strlen(i)						\
-    (optList[i].flag ? 0 : (optList[i].arg ? STRLEN (optList[i].arg) : 1))
+    (optList[i].flag ? 0 : (optList[i].arg ? strlen (optList[i].arg) : 1))
 #define optList_isBool(i)						\
     (optList[i].flag & Opt_Boolean)
 #define optList_isReverse(i)						\
@@ -130,7 +129,7 @@ optList[] = {
 #ifdef MOUSE_WHEEL
               BOOL (Rs_mouseWheelScrollPage, "mouseWheelScrollPage", NULL, Opt_mouseWheelScrollPage, NULL),
 #endif
-#ifndef NO_FRILLS
+#if ENABLE_FRILLS
               BOOL (Rs_tripleclickwords, "tripleclickwords", "tcw", Opt_tripleclickwords, "triple click word selection"),
               BOOL (Rs_insecure, "insecure", "insecure", Opt_insecure, "enable possibly insecure escape sequences"),
 #endif
@@ -204,7 +203,7 @@ optList[] = {
               STRG (Rs_color + Color_pointer_bg, "pointerColor2", "pr2", "color", "pointer bg color"),
               STRG (Rs_color + Color_border, "borderColor", "bd", "color", "border color"),
               STRG (Rs_saveLines, "saveLines", "sl", "number", "number of scrolled lines to save"),
-#ifndef NO_FRILLS
+#if ENABLE_FRILLS
               STRG (Rs_ext_bwidth, "externalBorder", "w", "number", "external border in pixels"),
               STRG (Rs_ext_bwidth, NULL, "bw", NULL, NULL),
               STRG (Rs_ext_bwidth, NULL, "borderwidth", NULL, NULL),
@@ -253,7 +252,7 @@ optList[] = {
 /*}}} */
 
 static const char releasestring[] = "Rxvt v" VERSION " - released: " DATE "\n";
-static const char optionsstring[] = "Options: "
+static const char optionsstring[] = "options: "
 #if XFT
                                     "xft,"
 #endif
@@ -343,7 +342,7 @@ static const char optionsstring[] = "Options: "
 #if !defined(NO_STRINGS)
                                     "strings,"
 #endif
-#if !defined(NO_FRILLS)
+#if defined(ENABLE_FRILLS)
                                     "frills,"
 #endif
 #if !defined(NO_LINESPACE)
@@ -414,7 +413,7 @@ rxvt_usage (int type)
 #ifdef DEBUG_STRICT
               assert (optList[i].opt != NULL);
 #endif
-              len += 4 + STRLEN (optList[i].opt) + (optList_isBool (i) ? 2: 0);
+              len += 4 + strlen (optList[i].opt) + (optList_isBool (i) ? 2: 0);
               col += len;
               if (col > 79)
                 {	/* assume regular width */
@@ -441,7 +440,7 @@ rxvt_usage (int type)
 #endif
               rxvt_log ("  %s%s %-*s%s%s\n",
                          (optList_isBool (i) ? "-/+" : "-"), optList[i].opt,
-                         (INDENT - STRLEN (optList[i].opt)
+                         (INDENT - strlen (optList[i].opt)
                           + (optList_isBool (i) ? 0 : 2)),
                          (optList[i].arg ? optList[i].arg : ""),
                          (optList_isBool (i) ? "turn on/off " : ""),
@@ -458,7 +457,7 @@ rxvt_usage (int type)
           if (optList[i].kw != NULL)
             rxvt_log ("  %s: %*s%s\n",
                     optList[i].kw,
-                    (INDENT - STRLEN (optList[i].kw)), "", /* XXX */
+                    (INDENT - strlen (optList[i].kw)), "", /* XXX */
                     (optList_isBool (i) ? "boolean" : optList[i].arg));
 #ifdef KEYSYM_RESOURCE
         rxvt_log ("  " "keysym.sym" ": %*s%s\n",
@@ -511,16 +510,16 @@ rxvt_term::get_options (int argc, const char *const *argv)
           continue;
         }
 
-      if (!STRCMP (opt, "help"))
+      if (!strcmp (opt, "help"))
         rxvt_usage (longopt ? 2 : 1);
-      if (!STRCMP (opt, "h"))
+      if (!strcmp (opt, "h"))
         rxvt_usage (0);
 
       /* feature: always try to match long-options */
       for (entry = 0; entry < optList_size (); entry++)
-        if ((optList[entry].kw && !STRCMP (opt, optList[entry].kw))
+        if ((optList[entry].kw && !strcmp (opt, optList[entry].kw))
             || (!longopt
-                && optList[entry].opt && !STRCMP (opt, optList[entry].opt)))
+                && optList[entry].opt && !strcmp (opt, optList[entry].opt)))
           break;
 
       if (entry < optList_size ())
@@ -547,9 +546,9 @@ rxvt_term::get_options (int argc, const char *const *argv)
                       optList[entry].opt, optList[entry].kw, flag);
 #endif
               if (flag == On)
-                Options |= (optList[entry].flag);
+                options |= (optList[entry].flag);
               else
-                Options &= ~ (optList[entry].flag);
+                options &= ~ (optList[entry].flag);
 
               if (optList[entry].doff != -1)
                 rs[optList[entry].doff] = flag;
@@ -557,7 +556,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
         }
       else
 #ifdef KEYSYM_RESOURCE
-        /* if (!STRNCMP (opt, "keysym.", sizeof ("keysym.") - 1)) */
+        /* if (!strncmp (opt, "keysym.", sizeof ("keysym.") - 1)) */
         if (rxvt_Str_match (opt, "keysym."))
           {
             const char *str = argv[++i];
@@ -636,7 +635,7 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
         str += 2;
       if (arg)
         {
-          if (sscanf (str, (STRCHR (str, ':') ? "%x:" : "%x"), &sym) != 1)
+          if (sscanf (str, (strchr (str, ':') ? "%x:" : "%x"), &sym) != 1)
             return -1;
         }
       else
@@ -645,7 +644,7 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
             return -1;
 
           /* cue to ':', it's there since sscanf () worked */
-          STRNCPY (newargstr, STRCHR (str, ':') + 1, NEWARGLIM - 1);
+          strncpy (newargstr, strchr (str, ':') + 1, NEWARGLIM - 1);
           newargstr[NEWARGLIM - 1] = '\0';
           newarg = newargstr;
         }
@@ -655,11 +654,11 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
       /*
        * convert keysym name to keysym number
        */
-      STRNCPY (newargstr, str, NEWARGLIM - 1);
+      strncpy (newargstr, str, NEWARGLIM - 1);
       newargstr[NEWARGLIM - 1] = '\0';
       if (arg == NULL)
         {
-          if ((newarg = STRCHR (newargstr, ':')) == NULL)
+          if ((newarg = strchr (newargstr, ':')) == NULL)
             return -1;
           *newarg++ = '\0';	/* terminate keysym name */
         }
@@ -675,7 +674,7 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
 
   if (newarg == NULL)
     {
-      STRNCPY (newargstr, arg, NEWARGLIM - 1);
+      strncpy (newargstr, arg, NEWARGLIM - 1);
       newargstr[NEWARGLIM - 1] = '\0';
       newarg = newargstr;
     }
@@ -686,7 +685,7 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
   key_string = (char *)rxvt_malloc ((n + 1) * sizeof (char));
 
   key_string[0] = n;
-  STRNCPY (key_string + 1, newarg, n);
+  strncpy (key_string + 1, newarg, n);
   Keysym_map[sym] = (unsigned char *)key_string;
 
   return 1;
@@ -708,7 +707,7 @@ rxvt_term::get_xdefaults (FILE *stream, const char *name)
   if (stream == NULL)
     return;
 
-  len = STRLEN (name);
+  len = strlen (name);
   while ((str = fgets (buffer, sizeof (buffer), stream)) != NULL)
     {
       unsigned int    entry, n;
@@ -717,7 +716,7 @@ rxvt_term::get_xdefaults (FILE *stream, const char *name)
         str++;		/* leading whitespace */
 
       if ((str[len] != '*' && str[len] != '.')
-          || (len && STRNCMP (str, name, len)))
+          || (len && strncmp (str, name, len)))
         continue;
       str += (len + 1);	/* skip `name*' or `name.' */
 
@@ -731,13 +730,13 @@ rxvt_term::get_xdefaults (FILE *stream, const char *name)
             if (kw == NULL)
               continue;
 
-            n = STRLEN (kw);
+            n = strlen (kw);
             if (str[n] == ':' && rxvt_Str_match (str, kw))
               {
                 /* skip `keyword:' */
                 str += n + 1;
                 rxvt_Str_trim (str);
-                n = STRLEN (str);
+                n = strlen (str);
                 if (n && rs[optList[entry].doff] == NULL)
                   {
                     /* not already set */
@@ -747,7 +746,7 @@ rxvt_term::get_xdefaults (FILE *stream, const char *name)
                     for (int o = 0;;)
                       {
                         p = (char *)rxvt_realloc (p, o + n + 1);
-                        MEMCPY (p + o, str, n);
+                        memcpy (p + o, str, n);
                         o += n;
                         p[o] = 0;
 
@@ -760,7 +759,7 @@ rxvt_term::get_xdefaults (FILE *stream, const char *name)
                           break;
 
                         rxvt_Str_trim (str);
-                        n = STRLEN (str);
+                        n = strlen (str);
                       }
 
                     rs[optList[entry].doff] = p;
@@ -768,18 +767,18 @@ rxvt_term::get_xdefaults (FILE *stream, const char *name)
 
                     if (optList_isBool (entry))
                       {
-                        s = STRCASECMP (str, "TRUE") == 0
-                            || STRCASECMP (str, "YES") == 0
-                            || STRCASECMP (str, "ON") == 0
-                            || STRCASECMP (str, "1") == 0;
+                        s = strcasecmp (str, "TRUE") == 0
+                            || strcasecmp (str, "YES") == 0
+                            || strcasecmp (str, "ON") == 0
+                            || strcasecmp (str, "1") == 0;
 
                         if (optList_isReverse (entry))
                           s = !s;
 
                         if (s)
-                          Options |= optList[entry].flag;
+                          options |= optList[entry].flag;
                         else
-                          Options &= ~optList[entry].flag;
+                          options &= ~optList[entry].flag;
                       }
                   }
 
@@ -855,7 +854,7 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
 
       for (i = 0; i < (sizeof (xnames) / sizeof (xnames[0])); i++)
         {
-          sprintf (fname, "%-.*s/%s", sizeof (fname) - STRLEN (xnames[i]) - 2,
+          sprintf (fname, "%-.*s/%s", sizeof (fname) - strlen (xnames[i]) - 2,
                   ptr, xnames[i]);
           if ((rdb1 = XrmGetFileDatabase (fname)))
             {
@@ -910,11 +909,11 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
 
         p = XGetDefault (display, name, kw);
         p0 = XGetDefault (display, "!INVALIDPROGRAMMENAMEDONTMATCH!", kw);
-        if (p == NULL || (p0 && STRCMP (p, p0) == 0))
+        if (p == NULL || (p0 && strcmp (p, p0) == 0))
           {
             p = XGetDefault (display, RESCLASS, kw);
 #ifdef RESFALLBACK
-            if (p == NULL || (p0 && STRCMP (p, p0) == 0))
+            if (p == NULL || (p0 && strcmp (p, p0) == 0))
               p = XGetDefault (display, RESFALLBACK, kw);
 #endif
           }
@@ -928,16 +927,16 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
 
             if (optList_isBool (entry))
               {
-                s = STRCASECMP (p, "TRUE") == 0
-                    || STRCASECMP (p, "YES") == 0
-                    || STRCASECMP (p, "ON") == 0
-                    || STRCASECMP (p, "1") == 0;
+                s = strcasecmp (p, "TRUE") == 0
+                    || strcasecmp (p, "YES") == 0
+                    || strcasecmp (p, "ON") == 0
+                    || strcasecmp (p, "1") == 0;
                 if (optList_isReverse (entry))
                   s = !s;
                 if (s)
-                  Options |= (optList[entry].flag);
+                  options |= (optList[entry].flag);
                 else
-                  Options &= ~ (optList[entry].flag);
+                  options &= ~ (optList[entry].flag);
               }
           }
       }
@@ -975,12 +974,12 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
 
     if ((home = getenv ("HOME")) != NULL)
       {
-        unsigned int    i, len = STRLEN (home) + 2;
+        unsigned int    i, len = strlen (home) + 2;
         char           *f = NULL;
 
         for (i = 0; i < (sizeof (xnames) / sizeof (xnames[0])); i++)
           {
-            f = (char *)rxvt_realloc (f, (len + STRLEN (xnames[i])) * sizeof (char));
+            f = (char *)rxvt_realloc (f, (len + strlen (xnames[i])) * sizeof (char));
 
             sprintf (f, "%s/%s", home, xnames[i]);
 

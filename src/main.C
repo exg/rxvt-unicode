@@ -53,10 +53,10 @@ static char curlocale[128];
 bool
 rxvt_set_locale (const char *locale)
 {
-  if (!locale || !STRNCMP (locale, curlocale, 128))
+  if (!locale || !strncmp (locale, curlocale, 128))
     return false;
 
-  STRNCPY (curlocale, locale, 128);
+  strncpy (curlocale, locale, 128);
   setlocale (LC_CTYPE, curlocale);
   return true;
 }
@@ -130,7 +130,7 @@ rxvt_term::operator new (size_t s)
 {
   void *p = malloc (s);
 
-  MEMSET (p, 0, s);
+  memset (p, 0, s);
   return p;
 }
 
@@ -189,12 +189,11 @@ rxvt_term::~rxvt_term ()
 {
   termlist.erase (find (termlist.begin (), termlist.end(), this));
 
-  if (cmd_fd >= 0)
-    close (cmd_fd);
+  if (cmd_pid)
+    kill (-cmd_pid, SIGHUP);
 
-#ifndef NO_SETOWNER_TTYDEV
-  privileged_ttydev (RESTORE);
-#endif
+  pty.put ();
+
 #ifdef UTMP_SUPPORT
   privileged_utmp (RESTORE);
 #endif
@@ -209,7 +208,7 @@ rxvt_term::~rxvt_term ()
       im_destroy ();
 #endif
 #ifdef MENUBAR
-      if (menubarGC) XFreeGC (display->display, menubarGC);
+      if (menubarGC)    XFreeGC (display->display, menubarGC);
 #endif
 #ifdef XTERM_SCROLLBAR
       if (xscrollbarGC) XFreeGC (display->display, xscrollbarGC);
@@ -250,9 +249,9 @@ rxvt_term::~rxvt_term ()
 
   // TODO: free pixcolours, colours should become part of rxvt_display
 
-  delete PixColorsFocused;
+  delete pix_colors_focused;
 #ifdef OFF_FOCUS_FADING
-  delete PixColorsUnFocused;
+  delete pix_colors_unfocused;
 #endif
 
   displays.put (display);
@@ -283,6 +282,10 @@ rxvt_term::destroy ()
 {
   if (destroy_ev.active)
     return;
+
+#if ENABLE_OVERLAY
+  scr_overlay_off ();
+#endif
 
   if (display)
     {
@@ -342,16 +345,6 @@ rxvt_term::init (int argc, const char *const *argv)
   if (!init_vars ())
     return false;
 
-  /*
-   * Save and then give up any super-user privileges
-   * If we need privileges in any area then we must specifically request it.
-   * We should only need to be root in these cases:
-   *  1.  write utmp entries on some systems
-   *  2.  chown tty on some systems
-   */
-  privileges (SAVE);
-  privileges (IGNORE);
-
   init_secondary ();
 
   const char **cmd_argv = init_resources (argc, argv);
@@ -362,7 +355,7 @@ rxvt_term::init (int argc, const char *const *argv)
   menubar_read (rs[Rs_menu]);
 #endif
 #ifdef HAVE_SCROLLBARS
-  if (Options & Opt_scrollBar)
+  if (options & Opt_scrollBar)
     scrollBar.setIdle ();    /* set existence for size calculations */
 #endif
 
@@ -377,7 +370,7 @@ rxvt_term::init (int argc, const char *const *argv)
 #endif
 
 #ifdef HAVE_SCROLLBARS
-  if (Options & Opt_scrollBar)
+  if (options & Opt_scrollBar)
     resize_scrollbar ();      /* create and map scrollbar */
 #endif
 #if (MENUBAR_MAX)
@@ -385,7 +378,7 @@ rxvt_term::init (int argc, const char *const *argv)
     XMapWindow (display->display, menuBar.win);
 #endif
 #ifdef TRANSPARENT
-  if (Options & Opt_transparent)
+  if (options & Opt_transparent)
     {
       XSelectInput (display->display, display->root, PropertyChangeMask);
       check_our_parents ();
@@ -398,7 +391,7 @@ rxvt_term::init (int argc, const char *const *argv)
 
   init_command (cmd_argv);
 
-  pty_ev.start (cmd_fd, EVENT_READ);
+  pty_ev.start (pty.pty, EVENT_READ);
 
   check_ev.start ();
 
@@ -408,7 +401,7 @@ rxvt_term::init (int argc, const char *const *argv)
 static int (*old_xerror_handler) (Display *dpy, XErrorEvent *event);
 
 void
-rxvt_init_signals ()
+rxvt_init ()
 {
   /* install exit handler for cleanup */
 #if 0
@@ -417,6 +410,15 @@ rxvt_init_signals ()
 #else
 #endif
 #endif
+  /*
+   * Save and then give up any super-user privileges
+   * If we need privileges in any area then we must specifically request it.
+   * We should only need to be root in these cases:
+   *  1.  write utmp entries on some systems
+   *  2.  chown tty on some systems
+   */
+  rxvt_privileges (SAVE);
+  rxvt_privileges (IGNORE);
 
   struct sigaction sa;
 
@@ -454,7 +456,7 @@ void rxvt_term::child_exited (int pid)
 }
 
 /* ARGSUSED */
-/* EXTPROTO */
+/* INTPROTO */
 RETSIGTYPE
 rxvt_Child_signal (int sig __attribute__ ((unused)))
 {
@@ -469,7 +471,7 @@ rxvt_Child_signal (int sig __attribute__ ((unused)))
 /*
  * Catch a fatal signal and tidy up before quitting
  */
-/* EXTPROTO */
+/* INTPROTO */
 RETSIGTYPE
 rxvt_Exit_signal (int sig)
 {
@@ -501,7 +503,7 @@ rxvt_xerror_handler (Display *display, XErrorEvent *event)
  * Exit gracefully, clearing the utmp entry and restoring tty attributes
  * TODO: if debugging, this should free up any known resources if we can
  */
-/* EXTPROTO */
+/* INTPROTO */
 void
 rxvt_clean_exit ()
 {
@@ -513,39 +515,35 @@ rxvt_clean_exit ()
 /* ------------------------------------------------------------------------- *
  *                         MEMORY ALLOCATION WRAPPERS                        *
  * ------------------------------------------------------------------------- */
-/* EXTPROTO */
+/* INTPROTO */
 void           *
 rxvt_malloc (size_t size)
 {
-  void           *p;
+  void *p;
 
   p = malloc (size);
   if (p)
     return p;
 
-  fprintf (stderr, RESNAME ": memory allocation failure.  Aborting");
-  rxvt_clean_exit ();
-  exit (EXIT_FAILURE);
+  rxvt_fatal ("memory allocation failure. aborting.\n");
   /* NOTREACHED */
 }
 
-/* EXTPROTO */
+/* INTPROTO */
 void           *
 rxvt_calloc (size_t number, size_t size)
 {
-  void           *p;
+  void *p;
 
   p = calloc (number, size);
   if (p)
     return p;
 
-  fprintf (stderr, RESNAME ": memory allocation failure.  Aborting");
-  rxvt_clean_exit ();
-  exit (EXIT_FAILURE);
+  rxvt_fatal ("memory allocation failure. aborting.\n");
   /* NOTREACHED */
 }
 
-/* EXTPROTO */
+/* INTPROTO */
 void           *
 rxvt_realloc (void *ptr, size_t size)
 {
@@ -555,12 +553,11 @@ rxvt_realloc (void *ptr, size_t size)
     p = realloc (ptr, size);
   else
     p = malloc (size);
+
   if (p)
     return p;
 
-  fprintf (stderr, RESNAME ": memory allocation failure.  Aborting");
-  rxvt_clean_exit ();
-  exit (EXIT_FAILURE);
+  rxvt_fatal ("memory allocation failure. aborting.\n");
   /* NOTREACHED */
 }
 
@@ -569,8 +566,13 @@ rxvt_realloc (void *ptr, size_t size)
  * ------------------------------------------------------------------------- */
 /* take care of suid/sgid super-user (root) privileges */
 void
-rxvt_term::privileges (int mode)
+rxvt_privileges (rxvt_privaction action)
 {
+#if (defined(HAVE_SETEUID) || defined(HAVE_SETREUID)) && !defined(__CYGWIN32__)
+  static uid_t euid;
+  static gid_t egid;
+#endif
+
 #if ! defined(__CYGWIN32__)
 # if !defined(HAVE_SETEUID) && defined(HAVE_SETREUID)
   /* setreuid () is the poor man's setuid (), seteuid () */
@@ -579,7 +581,7 @@ rxvt_term::privileges (int mode)
 #  define HAVE_SETEUID
 # endif
 # ifdef HAVE_SETEUID
-  switch (mode)
+  switch (action)
     {
       case IGNORE:
         /*
@@ -599,7 +601,7 @@ rxvt_term::privileges (int mode)
         break;
     }
 # else
-  switch (mode)
+  switch (action)
     {
       case IGNORE:
         setuid (getuid ());
@@ -616,86 +618,20 @@ rxvt_term::privileges (int mode)
 
 #ifdef UTMP_SUPPORT
 void
-rxvt_term::privileged_utmp (char action)
+rxvt_term::privileged_utmp (rxvt_privaction action)
 {
-  D_MAIN ((stderr, "rxvt_privileged_utmp (%c); waiting for: %c (pid: %d)",
-          action, next_utmp_action, getpid ()));
-  if (next_utmp_action != action || (action != SAVE && action != RESTORE)
-      || (Options & Opt_utmpInhibit)
-      || ttydev == NULL || *ttydev == '\0')
+  if ((options & Opt_utmpInhibit)
+      || !pty.name || !*pty.name)
     return;
 
-  privileges (RESTORE);
-  if (action == SAVE)
-    {
-      next_utmp_action = RESTORE;
-      makeutent (ttydev, rs[Rs_display_name]);
-    }
-  else
-    {                    /* action == RESTORE */
-      next_utmp_action = IGNORE;
-      cleanutent ();
-    }
-  privileges (IGNORE);
-}
-#endif
-
-#ifndef NO_SETOWNER_TTYDEV
-void
-rxvt_term::privileged_ttydev (char action)
-{
-  D_MAIN ((stderr,
-          "privileged_ttydev (%c); waiting for: %c (pid: %d)",
-          action, next_tty_action, getpid ()));
-  if (next_tty_action != action || (action != SAVE && action != RESTORE)
-      || ttydev == NULL || *ttydev == '\0')
-    return;
-
-  privileges (RESTORE);
+  rxvt_privileges (RESTORE);
 
   if (action == SAVE)
-    {
-      next_tty_action = RESTORE;
-# ifndef RESET_TTY_TO_COMMON_DEFAULTS
-      /* store original tty status for restoration rxvt_clean_exit () -- rgg 04/12/95 */
-      if (lstat (ttydev, &ttyfd_stat) < 0)       /* you lose out */
-        next_tty_action = IGNORE;
-      else
-# endif
-
-        {
-          chown (ttydev, getuid (), ttygid);      /* fail silently */
-          chmod (ttydev, ttymode);
-# ifdef HAVE_REVOKE
-          revoke (ttydev);
-# endif
-
-        }
-    }
+    makeutent (pty.name, rs[Rs_display_name]);
   else
-    {                    /* action == RESTORE */
-      next_tty_action = IGNORE;
-# ifndef RESET_TTY_TO_COMMON_DEFAULTS
-      chmod (ttydev, ttyfd_stat.st_mode);
-      chown (ttydev, ttyfd_stat.st_uid, ttyfd_stat.st_gid);
-# else
-      chmod (ttydev,
-            (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH));
-      chown (ttydev, 0, 0);
-# endif
+    cleanutent ();
 
-    }
-
-  privileges (IGNORE);
-
-# ifndef RESET_TTY_TO_COMMON_DEFAULTS
-  D_MAIN ((stderr, "%s \"%s\": mode %03o, uid %d, gid %d",
-          action == RESTORE ? "Restoring" : (action ==
-                                             SAVE ? "Saving" :
-                                             "UNKNOWN ERROR for"), ttydev,
-          ttyfd_stat.st_mode, ttyfd_stat.st_uid,
-          ttyfd_stat.st_gid));
-# endif
+  rxvt_privileges (IGNORE);
 }
 #endif
 
@@ -776,7 +712,7 @@ rxvt_term::window_calc (unsigned int width, unsigned int height)
     {
       sb_w = scrollbar_TotalWidth ();
       szHint.base_width += sb_w;
-      if (!(Options & Opt_scrollBar_right))
+      if (!(options & Opt_scrollBar_right))
         window_vt_x += sb_w;
     }
 
@@ -814,7 +750,7 @@ rxvt_term::window_calc (unsigned int width, unsigned int height)
       szHint.height = szHint.base_height + TermWin.height;
     }
 
-  if (scrollbar_visible () && (Options & Opt_scrollBar_right))
+  if (scrollbar_visible () && (options & Opt_scrollBar_right))
     window_sb_x = szHint.width - sb_w;
 
   if (recalc_x)
@@ -840,23 +776,21 @@ rxvt_term::window_calc (unsigned int width, unsigned int height)
 void
 rxvt_term::tt_winch ()
 {
-  struct winsize ws;
-
-  if (cmd_fd < 0)
+  if (pty.pty < 0)
     return;
+
+  struct winsize ws;
 
   ws.ws_col = TermWin.ncol;
   ws.ws_row = TermWin.nrow;
-  ws.ws_xpixel = ws.ws_ypixel = 0;
-#ifndef DEBUG_SIZE
-  (void)ioctl (cmd_fd, TIOCSWINSZ, &ws);
-#else
-  if (ioctl (cmd_fd, TIOCSWINSZ, &ws) < 0)
-    D_SIZE ((stderr, "Failed to send TIOCSWINSZ to fd %d", fd));
-# ifdef SIGWINCH
-  else if (cmd_pid)               /* force through to the command */
+  ws.ws_xpixel = TermWin.width;
+  ws.ws_ypixel = TermWin.height;
+  (void)ioctl (pty.pty, TIOCSWINSZ, &ws);
+
+#if 0
+  // TIOCSWINSZ⎈ is supposed to do this automatically and correctly
+  if (cmd_pid)               /* force through to the command */
     kill (cmd_pid, SIGWINCH);
-# endif
 #endif
 }
 
@@ -926,7 +860,7 @@ rxvt_term::set_title (const char *str)
   if (!XFetchName (display->display, TermWin.parent[0], &name))
     name = NULL;
 
-  if (name == NULL || STRCMP (name, str))
+  if (name == NULL || strcmp (name, str))
 #endif
     XStoreName (display->display, TermWin.parent[0], str);
 
@@ -945,7 +879,7 @@ rxvt_term::set_icon_name (const char *str)
   if (!XGetIconName (display->display, TermWin.parent[0], &name))
     name = NULL;
 
-  if (name == NULL || STRCMP (name, str))
+  if (name == NULL || strcmp (name, str))
 #endif
     XSetIconName (display->display, TermWin.parent[0], str);
 
@@ -973,7 +907,7 @@ rxvt_term::set_window_color (int idx, const char *color)
         {        /* bright colors */
           i -= 8;
 # ifndef NO_BRIGHTCOLOR
-          PixColorsFocused[idx] = PixColorsFocused[minBrightCOLOR + i];
+          pix_colors_focused[idx] = pix_colors_focused[minBrightCOLOR + i];
           SET_PIXCOLOR (idx);
           goto Done;
 # endif
@@ -981,7 +915,7 @@ rxvt_term::set_window_color (int idx, const char *color)
         }
       if (i >= 0 && i <= 7)
         { /* normal colors */
-          PixColorsFocused[idx] = PixColorsFocused[minCOLOR + i];
+          pix_colors_focused[idx] = pix_colors_focused[minCOLOR + i];
           SET_PIXCOLOR (idx);
           goto Done;
         }
@@ -998,27 +932,27 @@ rxvt_term::set_window_color (int idx, const char *color)
    */
 # if 0
   for (i = Color_Black; i <= Color_White; i++)
-    if (PixColors[idx] == PixColors[i])
+    if (pix_colors[idx] == pix_colors[i])
       break;
   if (i > Color_White)
     {
-      /* fprintf (stderr, "XFreeColors: PixColors [%d] = %lu\n", idx, PixColors [idx]); */
-      XFreeColors (display->display, display->cmap, (PixColors + idx), 1,
+      /* fprintf (stderr, "XFreeColors: pix_colors [%d] = %lu\n", idx, pix_colors [idx]); */
+      XFreeColors (display->display, display->cmap, (pix_colors + idx), 1,
                   DisplayPlanes (display->display, display->screen));
     }
 # endif
 
-  PixColorsFocused[idx] = xcol;
+  pix_colors_focused[idx] = xcol;
   SET_PIXCOLOR (idx);
 
   /* XSetWindowAttributes attr; */
   /* Cursor cursor; */
 Done:
 #ifdef OFF_FOCUS_FADING
-  PixColorsUnFocused[idx] = PixColorsFocused[idx].fade (display, atoi (rs[Rs_fade]));
+  pix_colors_unfocused[idx] = pix_colors_focused[idx].fade (display, atoi (rs[Rs_fade]));
 #endif
-  if (idx == Color_bg && ! (Options & Opt_transparent))
-    XSetWindowBackground (display->display, TermWin.vt, PixColors[Color_bg]);
+  if (idx == Color_bg && ! (options & Opt_transparent))
+    XSetWindowBackground (display->display, TermWin.vt, pix_colors[Color_bg]);
 
   /* handle Color_BD, scrollbar background, etc. */
 
@@ -1036,8 +970,8 @@ rxvt_term::recolour_cursor ()
 {
   XColor xcol[2];
 
-  xcol[0].pixel = ISSET_PIXCOLOR (Color_pointer_fg) ? PixColorsFocused[Color_pointer_fg] : PixColorsFocused[Color_fg];
-  xcol[1].pixel = ISSET_PIXCOLOR (Color_pointer_bg) ? PixColorsFocused[Color_pointer_bg] : PixColorsFocused[Color_bg];
+  xcol[0].pixel = ISSET_PIXCOLOR (Color_pointer_fg) ? pix_colors_focused[Color_pointer_fg] : pix_colors_focused[Color_fg];
+  xcol[1].pixel = ISSET_PIXCOLOR (Color_pointer_bg) ? pix_colors_focused[Color_pointer_bg] : pix_colors_focused[Color_bg];
   XQueryColors (display->display, display->cmap, xcol, 2);
   XRecolorCursor (display->display, TermWin_cursor, xcol + 0, xcol + 1);
 }
@@ -1055,16 +989,16 @@ rxvt_term::set_colorfgbg ()
 
   env_colorfgbg =
     (char *)rxvt_malloc (sizeof ("COLORFGBG=default;default;bg") + 1);
-  STRCPY (fstr, "default");
-  STRCPY (bstr, "default");
+  strcpy (fstr, "default");
+  strcpy (bstr, "default");
   for (i = Color_Black; i <= Color_White; i++)
-    if (PixColors[Color_fg] == PixColors[i])
+    if (pix_colors[Color_fg] == pix_colors[i])
       {
         sprintf (fstr, "%d", (i - Color_Black));
         break;
       }
   for (i = Color_Black; i <= Color_White; i++)
-    if (PixColors[Color_bg] == PixColors[i])
+    if (pix_colors[Color_bg] == pix_colors[i])
       {
         sprintf (bstr, "%d", (i - Color_Black));
 #ifdef XPM_BACKGROUND
@@ -1079,9 +1013,9 @@ rxvt_term::set_colorfgbg ()
   colorfgbg = DEFAULT_RSTYLE;
   for (i = minCOLOR; i <= maxCOLOR; i++)
     {
-      if (PixColors[Color_fg] == PixColors[i])
+      if (pix_colors[Color_fg] == pix_colors[i])
         colorfgbg = SET_FGCOLOR (colorfgbg, i);
-      if (PixColors[Color_bg] == PixColors[i])
+      if (pix_colors[Color_bg] == pix_colors[i])
         colorfgbg = SET_BGCOLOR (colorfgbg, i);
     }
 #endif
@@ -1257,92 +1191,90 @@ rxvt_term::set_widthheight (unsigned int width, unsigned int height)
 #ifdef USE_XIM
 
 void
-rxvt_term::im_set_size (XRectangle *size)
+rxvt_term::im_set_color (unsigned long &fg, unsigned long &bg)
 {
-  size->x = TermWin.int_bwidth;
-  size->y = TermWin.int_bwidth;
-  size->width = Width2Pixel (TermWin.ncol);
-  size->height = Height2Pixel (TermWin.nrow);
+  fg = pix_colors[Color_fg];
+  bg = pix_colors[Color_bg];
 }
 
 void
-rxvt_term::im_set_color (unsigned long *fg, unsigned long *bg)
+rxvt_term::im_set_size (XRectangle &size)
 {
-  *fg = PixColors[Color_fg];
-  *bg = PixColors[Color_bg];
+  // the int_bwidth terms make no sense to me
+  size.x      = TermWin.int_bwidth;
+  size.y      = TermWin.int_bwidth;
+  size.width  = Width2Pixel (TermWin.ncol) + TermWin.int_bwidth;
+  size.height = Height2Pixel (TermWin.nrow) + TermWin.int_bwidth;
+}
+
+void
+rxvt_term::im_set_preedit_area (XRectangle &preedit_rect,
+                                XRectangle &status_rect,
+                                const XRectangle &needed_rect)
+{
+  preedit_rect.x      = needed_rect.width;
+  preedit_rect.y      = 0;
+  preedit_rect.width  = Width2Pixel (TermWin.ncol) - needed_rect.width + 1;
+  preedit_rect.height = TermWin.fheight;
+
+  status_rect.x       = 0;
+  status_rect.y       = 0;
+  status_rect.width   = needed_rect.width ? needed_rect.width : Width2Pixel (TermWin.ncol) + 1;
+  status_rect.height  = TermWin.fheight;
 }
 
 /* Checking whether input method is running. */
 bool
 rxvt_term::IMisRunning ()
 {
-  char           *p;
-  Atom            atom;
-  Window          win;
-  char            server[IMBUFSIZ];
+  char *p;
+  Atom atom;
+  Window win;
+  char server[IMBUFSIZ];
 
   /* get current locale modifier */
   if ((p = XSetLocaleModifiers (NULL)) != NULL)
     {
-      STRCPY (server, "@server=");
-      STRNCAT (server, & (p[4]), IMBUFSIZ - 9); /* skip "@im=" */
-      if ((p = STRCHR (server + 1, '@')) != NULL)      /* first one only */
+      strcpy (server, "@server=");
+      strncat (server, & (p[4]), IMBUFSIZ - 9); /* skip "@im=" */
+
+      if ((p = strchr (server + 1, '@')) != NULL)      /* first one only */
         *p = '\0';
 
       atom = XInternAtom (display->display, server, False);
       win = XGetSelectionOwner (display->display, atom);
+
       if (win != None)
         return True;
     }
+
   return False;
 }
 
 void
 rxvt_term::IMSendSpot ()
 {
-  XPoint          spot;
-  XVaNestedList   preedit_attr;
+  XPoint spot;
+  XVaNestedList preedit_attr;
 
-  if (Input_Context == NULL
-      || !TermWin.focus || ! (input_style & XIMPreeditPosition)
-      || ! (event_type == KeyPress
+  if (!Input_Context
+      || !TermWin.focus
+      || !(input_style & XIMPreeditPosition)
+#if 0
+      || !(event_type == KeyPress
            || event_type == Expose
            || event_type == NoExpose
            || event_type == SelectionNotify
            || event_type == ButtonRelease || event_type == FocusIn)
+#endif
       || !IMisRunning ())
     return;
 
-  im_set_position (&spot);
+  im_set_position (spot);
 
   preedit_attr = XVaCreateNestedList (0, XNSpotLocation, &spot, NULL);
   XSetICValues (Input_Context, XNPreeditAttributes, preedit_attr, NULL);
   XFree (preedit_attr);
-}
-
-void
-rxvt_term::im_set_preedit_area (XRectangle * preedit_rect, XRectangle * status_rect,
-                                XRectangle * needed_rect)
-{
-  int mbh, vtx = 0;
-
-  if (scrollbar_visible () && ! (Options & Opt_scrollBar_right))
-    vtx = scrollbar_TotalWidth ();
-
-  mbh = menubar_visible () ? menuBar_TotalHeight () : 0;
-  mbh -= TermWin.lineSpace;
-
-  preedit_rect->x = needed_rect->width + vtx;
-  preedit_rect->y = Height2Pixel (TermWin.nrow - 1) + mbh;
-
-  preedit_rect->width = Width2Pixel (TermWin.ncol + 1) - needed_rect->width + vtx;
-  preedit_rect->height = Height2Pixel (1);
-
-  status_rect->x = vtx;
-  status_rect->y = Height2Pixel (TermWin.nrow - 1) + mbh;
-
-  status_rect->width = needed_rect->width ? needed_rect->width : Width2Pixel (TermWin.ncol + 1);
-  status_rect->height = Height2Pixel (1);
 }
 
 void
@@ -1351,7 +1283,7 @@ rxvt_term::im_destroy ()
   if (Input_Context)
     {
       XDestroyIC (Input_Context);
-      Input_Context = NULL;
+      Input_Context = 0;
     }
 
   if (input_method)
@@ -1368,15 +1300,14 @@ rxvt_term::im_destroy ()
 bool
 rxvt_term::IM_get_IC (const char *modifiers)
 {
-  int             i, j, found;
-  XIM             xim;
-  XPoint          spot;
-  XRectangle      rect, status_rect, needed_rect;
-  unsigned long   fg, bg;
-  const char     *p;
-  char          **s;
-  XIMStyles      *xim_styles;
-  XVaNestedList   preedit_attr, status_attr;
+  int i, j, found;
+  XIM xim;
+  XPoint spot;
+  XRectangle rect, status_rect, needed_rect;
+  unsigned long fg, bg;
+  const char *p;
+  char **s;
+  XIMStyles *xim_styles;
 
   if (! ((p = XSetLocaleModifiers (modifiers)) && *p))
     return false;
@@ -1392,19 +1323,20 @@ rxvt_term::IM_get_IC (const char *modifiers)
   if (XGetIMValues (xim, XNQueryInputStyle, &xim_styles, NULL)
       || !xim_styles || !xim_styles->count_styles)
     {
-      display->put_xim (input_method);
+      im_destroy ();
       return false;
     }
 
   p = rs[Rs_preeditType] ? rs[Rs_preeditType] : "OverTheSpot,OffTheSpot,Root";
   s = rxvt_splitcommastring (p);
+
   for (i = found = 0; !found && s[i]; i++)
     {
-      if (!STRCMP (s[i], "OverTheSpot"))
+      if (!strcmp (s[i], "OverTheSpot"))
         input_style = (XIMPreeditPosition | XIMStatusNothing);
-      else if (!STRCMP (s[i], "OffTheSpot"))
+      else if (!strcmp (s[i], "OffTheSpot"))
         input_style = (XIMPreeditArea | XIMStatusArea);
-      else if (!STRCMP (s[i], "Root"))
+      else if (!strcmp (s[i], "Root"))
         input_style = (XIMPreeditNothing | XIMStatusNothing);
 
       for (j = 0; j < xim_styles->count_styles; j++)
@@ -1423,60 +1355,101 @@ rxvt_term::IM_get_IC (const char *modifiers)
 
   if (!found)
     {
-      display->put_xim (input_method);
+      im_destroy ();
       return false;
     }
 
-  preedit_attr = status_attr = NULL;
+  XFontSet fs = 0;
+  XVaNestedList preedit_attr = 0, status_attr = 0;
+
+  if (input_style & (XIMPreeditPosition | XIMPreeditArea))
+    {
+      // fake us a font-set, please
+      char **missing_charset_list;
+      int missing_charset_count;
+      char *def_string;
+      char pat[512];
+
+      sprintf (pat,
+               "-*-*-*-R-*-*-%d-*-*-*-*-*-*,"
+               "-*-*-*-R-*-*-%d-*-*-*-*-*-*,"
+               "-*-*-*-R-*-*-%d-*-*-*-*-*-*,"
+               "-*-*-*-R-*-*-%d-*-*-*-*-*-*,"
+               "-*-*-*-R-*-*-%d-*-*-*-*-*-*,"
+               "*",
+               TermWin.fheight,
+               TermWin.fheight + 1, TermWin.fheight - 1,
+               TermWin.fheight - 2, TermWin.fheight + 2);
+
+      fs = XCreateFontSet (display->display, pat,
+                           &missing_charset_list, &missing_charset_count, &def_string);
+
+      if (missing_charset_list)
+        XFreeStringList (missing_charset_list);
+
+      if (!fs)
+        {
+          input_style &= ~(XIMPreeditPosition | XIMPreeditArea);
+          rxvt_warn ("unable to create fontset for input method, try \"-pt Root\". Continuing.\n");
+        }
+    }
 
   if (input_style & XIMPreeditPosition)
     {
-      im_set_size (&rect);
-      im_set_position (&spot);
-      im_set_color (&fg, &bg);
+      im_set_size (rect);
+      im_set_position (spot);
+      im_set_color (fg, bg);
 
-      preedit_attr = XVaCreateNestedList (0, XNArea, &rect,
-                                         XNSpotLocation, &spot,
-                                         XNForeground, fg, XNBackground, bg,
-                                         //XNFontSet, TermWin.fontset,
-                                         NULL);
+      preedit_attr = XVaCreateNestedList (0,
+                                          XNForeground, fg,
+                                          XNBackground, bg,
+                                          XNArea, &rect,
+                                          XNSpotLocation, &spot,
+                                          XNFontSet, fs,
+                                          NULL);
     }
   else if (input_style & XIMPreeditArea)
     {
-      im_set_color (&fg, &bg);
+      im_set_color (fg, bg);
 
       /*
        * The necessary width of preedit area is unknown
        * until create input context.
        */
       needed_rect.width = 0;
+      im_set_preedit_area (rect, status_rect, needed_rect);
 
-      im_set_preedit_area (&rect, &status_rect, &needed_rect);
-
-      preedit_attr = XVaCreateNestedList (0, XNArea, &rect,
-                                         XNForeground, fg, XNBackground, bg,
-                                         //XNFontSet, TermWin.fontset,
+      preedit_attr = XVaCreateNestedList (0,
+                                          XNForeground, fg,
+                                          XNBackground, bg,
+                                          XNArea, &rect,
+                                          XNFontSet, fs,
+                                          NULL);
+      status_attr = XVaCreateNestedList (0,
+                                         XNForeground, fg,
+                                         XNBackground, bg,
+                                         XNArea, &status_rect,
+                                         XNFontSet, fs,
                                          NULL);
-      status_attr = XVaCreateNestedList (0, XNArea, &status_rect,
-                                        XNForeground, fg, XNBackground, bg,
-                                        //XNFontSet, TermWin.fontset,
-                                        NULL);
     }
 
-  Input_Context = XCreateIC (xim, XNInputStyle, input_style,
-                            XNClientWindow, TermWin.parent[0],
-                            XNFocusWindow, TermWin.parent[0],
-                            preedit_attr ? XNPreeditAttributes : NULL,
-                            preedit_attr,
-                            status_attr ? XNStatusAttributes : NULL,
-                            status_attr, NULL);
+  Input_Context = XCreateIC (xim,
+                             XNInputStyle, input_style,
+                             XNClientWindow, TermWin.vt,
+                             XNFocusWindow, TermWin.parent[0],
+                             preedit_attr ? XNPreeditAttributes : NULL,
+                             preedit_attr,
+                             status_attr ? XNStatusAttributes : NULL,
+                             status_attr, NULL);
+
   if (preedit_attr) XFree (preedit_attr);
   if (status_attr) XFree (status_attr);
+  if (fs) XFreeFontSet (display->display, fs);
 
   if (Input_Context == NULL)
     {
       rxvt_warn ("failed to create input context, continuing without XIM.\n");
-      display->put_xim (input_method);
+      im_destroy ();
       return false;
     }
 
@@ -1516,8 +1489,8 @@ rxvt_term::im_cb ()
         {
           if (*s[i])
             {
-              STRCPY (buf, "@im=");
-              STRNCAT (buf, s[i], IMBUFSIZ - 5);
+              strcpy (buf, "@im=");
+              strncat (buf, s[i], IMBUFSIZ - 5);
               if (IM_get_IC (buf))
                 {
                   found = true;
@@ -1551,11 +1524,12 @@ done:
 void
 rxvt_term::IMSetStatusPosition ()
 {
-  XRectangle      preedit_rect, status_rect, *needed_rect;
-  XVaNestedList   preedit_attr, status_attr;
+  XRectangle preedit_rect, status_rect, *needed_rect;
+  XVaNestedList preedit_attr, status_attr;
 
-  if (Input_Context == NULL
-      || !TermWin.focus || ! (input_style & XIMPreeditArea)
+  if (!Input_Context
+      || !TermWin.focus
+      || !(input_style & XIMPreeditArea)
       || !IMisRunning ())
     return;
 
@@ -1564,14 +1538,15 @@ rxvt_term::IMSetStatusPosition ()
   XGetICValues (Input_Context, XNStatusAttributes, status_attr, NULL);
   XFree (status_attr);
 
-  im_set_preedit_area (&preedit_rect, &status_rect, needed_rect);
+  im_set_preedit_area (preedit_rect, status_rect, *needed_rect);
+  XFree (needed_rect);
 
   preedit_attr = XVaCreateNestedList (0, XNArea, &preedit_rect, NULL);
   status_attr = XVaCreateNestedList (0, XNArea, &status_rect, NULL);
 
   XSetICValues (Input_Context,
-               XNPreeditAttributes, preedit_attr,
-               XNStatusAttributes, status_attr, NULL);
+                XNPreeditAttributes, preedit_attr,
+                XNStatusAttributes, status_attr, NULL);
 
   XFree (preedit_attr);
   XFree (status_attr);

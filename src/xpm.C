@@ -63,7 +63,7 @@ rxvt_term::scale_pixmap (const char *geom)
   if (geom == NULL)
     return 0;
   str = (char *)rxvt_malloc (MAXLEN_GEOM + 1);
-  if (!STRCMP (geom, "?"))
+  if (!strcmp (geom, "?"))
     {
       sprintf (str, "[%dx%d+%d+%d]",	/* can't presume snprintf () ! */
               min (bgpixmap->w, 9999), min (bgpixmap->h, 9999),
@@ -73,12 +73,12 @@ rxvt_term::scale_pixmap (const char *geom)
       return 0;
     }
 
-  if ((p = STRCHR (geom, ';')) == NULL)
-    p = STRCHR (geom, '\0');
+  if ((p = strchr (geom, ';')) == NULL)
+    p = strchr (geom, '\0');
   n = (p - geom);
   if (n <= MAXLEN_GEOM)
     {
-      STRNCPY (str, geom, n);
+      strncpy (str, geom, n);
       str[n] = '\0';
 
       flags = XParseGeometry (str, &x, &y, &w, &h);
@@ -170,13 +170,13 @@ rxvt_term::resize_pixmap ()
   if (bgPixmap.pixmap == None)
     { /* So be it: I'm not using pixmaps */
       TermWin.pixmap = None;
-      if (! (Options & Opt_transparent) || am_transparent == 0)
+      if (! (options & Opt_transparent) || am_transparent == 0)
         XSetWindowBackground (display->display, TermWin.vt,
-                             PixColors[Color_bg]);
+                             pix_colors[Color_bg]);
       return;
     }
 
-  gcvalue.foreground = PixColors[Color_bg];
+  gcvalue.foreground = pix_colors[Color_bg];
   gc = XCreateGC (display->display, TermWin.vt, GCForeground, &gcvalue);
 
   if (bgPixmap.pixmap != None)
@@ -352,7 +352,7 @@ rxvt_term::set_bgPixmap (const char *file)
       XFreePixmap (display->display, bgPixmap.pixmap);
       bgPixmap.pixmap = None;
     }
-  XSetWindowBackground (display->display, TermWin.vt, PixColors[Color_bg]);
+  XSetWindowBackground (display->display, TermWin.vt, pix_colors[Color_bg]);
 
   if (*file != '\0')
     {
@@ -380,8 +380,8 @@ rxvt_term::set_bgPixmap (const char *file)
           char *p;
 
           /* semi-colon delimited */
-          if ((p = STRCHR (file, ';')) == NULL)
-            p = STRCHR (file, '\0');
+          if ((p = strchr (file, ';')) == NULL)
+            p = strchr (file, '\0');
 
           rxvt_warn ("couldn't load XPM file \"%.*s\", ignoring.", (p - file), file);
         }

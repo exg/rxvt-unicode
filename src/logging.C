@@ -71,84 +71,84 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
   char            ut_id[5];
   struct passwd  *pwent = getpwuid (getuid ());
 
-  if (!STRNCMP (pty, "/dev/", 5))
+  if (!strncmp (pty, "/dev/", 5))
     pty += 5;		/* skip /dev/ prefix */
 
-  if (!STRNCMP (pty, "pty", 3) || !STRNCMP (pty, "tty", 3))
+  if (!strncmp (pty, "pty", 3) || !strncmp (pty, "tty", 3))
     {
-      STRNCPY (ut_id, (pty + 3), sizeof (ut_id));
+      strncpy (ut_id, (pty + 3), sizeof (ut_id));
     }
 #ifdef HAVE_UTMP_PID
   else if (sscanf (pty, "pts/%d", &i) == 1)
     sprintf (ut_id, "vt%02x", (i & 0xff));	/* sysv naming */
 #endif
-  else if (STRNCMP (pty, "pty", 3) && STRNCMP (pty, "tty", 3))
+  else if (strncmp (pty, "pty", 3) && strncmp (pty, "tty", 3))
     {
       rxvt_warn ("can't parse tty name \"%s\", not adding utmp entry.\n", pty);
       return;
     }
 
 #ifdef HAVE_STRUCT_UTMP
-  MEMSET (ut, 0, sizeof (struct utmp));
+  memset (ut, 0, sizeof (struct utmp));
 # ifdef HAVE_UTMP_PID
   setutent ();
-  STRNCPY (ut->ut_id, ut_id, sizeof (ut->ut_id));
+  strncpy (ut->ut_id, ut_id, sizeof (ut->ut_id));
   ut->ut_type = DEAD_PROCESS;
   getutid (ut);		/* position to entry in utmp file */
-  STRNCPY (ut_id, ut_id, sizeof (ut_id));
+  strncpy (ut_id, ut_id, sizeof (ut_id));
 # endif
 #endif
 
 #ifdef HAVE_STRUCT_UTMPX
-  MEMSET (utx, 0, sizeof (struct utmpx));
+  memset (utx, 0, sizeof (struct utmpx));
   setutxent ();
-  STRNCPY (utx->ut_id, ut_id, sizeof (utx->ut_id));
+  strncpy (utx->ut_id, ut_id, sizeof (utx->ut_id));
   utx->ut_type = DEAD_PROCESS;
   getutxid (utx);		/* position to entry in utmp file */
-  STRNCPY (ut_id, ut_id, sizeof (ut_id));
+  strncpy (ut_id, ut_id, sizeof (ut_id));
 #endif
 
 #ifdef HAVE_STRUCT_UTMP
-  STRNCPY (ut->ut_line, pty, sizeof (ut->ut_line));
+  strncpy (ut->ut_line, pty, sizeof (ut->ut_line));
   ut->ut_time = time (NULL);
 # ifdef HAVE_UTMP_PID
-  STRNCPY (ut->ut_user, (pwent && pwent->pw_name) ? pwent->pw_name : "?",
+  strncpy (ut->ut_user, (pwent && pwent->pw_name) ? pwent->pw_name : "?",
           sizeof (ut->ut_user));
-  STRNCPY (ut->ut_id, ut_id, sizeof (ut->ut_id));
+  strncpy (ut->ut_id, ut_id, sizeof (ut->ut_id));
   ut->ut_time = time (NULL);
   ut->ut_pid = cmd_pid;
 #  ifdef HAVE_UTMP_HOST
-  STRNCPY (ut->ut_host, hostname, sizeof (ut->ut_host));
+  strncpy (ut->ut_host, hostname, sizeof (ut->ut_host));
 #  endif
   ut->ut_type = USER_PROCESS;
   pututline (ut);
   endutent ();			/* close the file */
   utmp_pos = 0;
 # else
-  STRNCPY (ut->ut_name, (pwent && pwent->pw_name) ? pwent->pw_name : "?",
+  strncpy (ut->ut_name, (pwent && pwent->pw_name) ? pwent->pw_name : "?",
           sizeof (ut->ut_name));
 #  ifdef HAVE_UTMP_HOST
-  STRNCPY (ut->ut_host, hostname, sizeof (ut->ut_host));
+  strncpy (ut->ut_host, hostname, sizeof (ut->ut_host));
 #  endif
 # endif
 #endif
 
 #ifdef HAVE_STRUCT_UTMPX
-  STRNCPY (utx->ut_line, pty, sizeof (utx->ut_line));
-  STRNCPY (utx->ut_user, (pwent && pwent->pw_name) ? pwent->pw_name : "?",
+  strncpy (utx->ut_line, pty, sizeof (utx->ut_line));
+  strncpy (utx->ut_user, (pwent && pwent->pw_name) ? pwent->pw_name : "?",
           sizeof (utx->ut_user));
-  STRNCPY (utx->ut_id, ut_id, sizeof (utx->ut_id));
+  strncpy (utx->ut_id, ut_id, sizeof (utx->ut_id));
   utx->ut_session = getsid (0);
   utx->ut_tv.tv_sec = time (NULL);
   utx->ut_tv.tv_usec = 0;
   utx->ut_pid = cmd_pid;
 # ifdef HAVE_UTMPX_HOST
-  STRNCPY (utx->ut_host, hostname, sizeof (utx->ut_host));
+  strncpy (utx->ut_host, hostname, sizeof (utx->ut_host));
 #  if 0
   {
     char           *colon;
 
-    if ((colon = STRRCHR (ut->ut_host, ':')) != NULL)
+    if ((colon = strrchr (ut->ut_host, ':')) != NULL)
       *colon = '\0';
   }
 #  endif
@@ -179,7 +179,7 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
           {
             if (*buf == '#' || sscanf (buf, "%s", name) != 1)
               continue;
-            if (!STRCMP (ut->ut_line, name))
+            if (!strcmp (ut->ut_line, name))
               {
                 if (!rxvt_write_bsd_utmp (i, ut))
                   i = 0;
@@ -198,7 +198,7 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
 
 #ifdef WTMP_SUPPORT
 # ifdef WTMP_ONLY_ON_LOGIN
-  if (Options & Opt_loginShell)
+  if (options & Opt_loginShell)
 # endif
     {
 # ifdef HAVE_STRUCT_UTMP
@@ -214,7 +214,7 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
     }
 #endif
 #if defined(LASTLOG_SUPPORT) && defined(RXVT_LASTLOG_FILE)
-  if (Options & Opt_loginShell)
+  if (options & Opt_loginShell)
     rxvt_update_lastlog (RXVT_LASTLOG_FILE, pty, hostname);
 #endif
 }
@@ -235,9 +235,9 @@ rxvt_term::cleanutent ()
 
 #ifdef HAVE_STRUCT_UTMP
 # ifdef HAVE_UTMP_PID
-  MEMSET (ut, 0, sizeof (struct utmp));
+  memset (ut, 0, sizeof (struct utmp));
   setutent ();
-  STRNCPY (ut->ut_id, ut_id, sizeof (ut->ut_id));
+  strncpy (ut->ut_id, ut_id, sizeof (ut->ut_id));
   ut->ut_type = USER_PROCESS;
   {
     struct utmp    *tmput = getutid (ut);
@@ -247,18 +247,18 @@ rxvt_term::cleanutent ()
   }
   ut->ut_type = DEAD_PROCESS;
 # else
-  MEMSET (ut->ut_name, 0, sizeof (ut->ut_name));
+  memset (ut->ut_name, 0, sizeof (ut->ut_name));
 #  ifdef HAVE_UTMP_HOST
-  MEMSET (ut->ut_host, 0, sizeof (ut->ut_host));
+  memset (ut->ut_host, 0, sizeof (ut->ut_host));
 #  endif
 # endif
   ut->ut_time = time (NULL);
 #endif
 
 #ifdef HAVE_STRUCT_UTMPX
-  MEMSET (utx, 0, sizeof (struct utmpx));
+  memset (utx, 0, sizeof (struct utmpx));
   setutxent ();
-  STRNCPY (utx->ut_id, ut_id, sizeof (utx->ut_id));
+  strncpy (utx->ut_id, ut_id, sizeof (utx->ut_id));
   utx->ut_type = USER_PROCESS;
   if ((tmputx = getutxid (utx)))	/* position to entry in utmp file */
     utx = tmputx;
@@ -273,7 +273,7 @@ rxvt_term::cleanutent ()
    */
 #ifdef WTMP_SUPPORT
 # ifdef WTMP_ONLY_ON_LOGIN
-  if (Options & Opt_loginShell)
+  if (options & Opt_loginShell)
 # endif
     {
 # ifdef HAVE_STRUCT_UTMP
@@ -298,7 +298,7 @@ rxvt_term::cleanutent ()
     pututline (ut);
   endutent ();
 # else
-  MEMSET (ut, 0, sizeof (struct utmp));
+  memset (ut, 0, sizeof (struct utmp));
   rxvt_write_bsd_utmp (utmp_pos, ut);
 # endif
 #endif
@@ -394,11 +394,11 @@ rxvt_update_lastlog (const char *fname, const char *pty, const char *host)
 # endif
 
 # ifdef HAVE_STRUCT_LASTLOGX
-  MEMSET (&llx, 0, sizeof (llx));
+  memset (&llx, 0, sizeof (llx));
   llx.ll_tv.tv_sec = time (NULL);
   llx.ll_tv.tv_usec = 0;
-  STRNCPY (llx.ll_line, pty, sizeof (llx.ll_line));
-  STRNCPY (llx.ll_host, host, sizeof (llx.ll_host));
+  strncpy (llx.ll_line, pty, sizeof (llx.ll_line));
+  strncpy (llx.ll_host, host, sizeof (llx.ll_host));
   updlastlogx (RXVT_LASTLOGX_FILE, getuid (), &llx);
 # endif
 
@@ -410,10 +410,10 @@ rxvt_update_lastlog (const char *fname, const char *pty, const char *host)
       return;
     }
 
-  MEMSET (&ll, 0, sizeof (ll));
+  memset (&ll, 0, sizeof (ll));
   ll.ll_time = time (NULL);
-  STRNCPY (ll.ll_line, pty, sizeof (ll.ll_line));
-  STRNCPY (ll.ll_host, host, sizeof (ll.ll_host));
+  strncpy (ll.ll_line, pty, sizeof (ll.ll_line));
+  strncpy (ll.ll_host, host, sizeof (ll.ll_host));
 #  ifdef LASTLOG_IS_DIR
   sprintf (lastlogfile, "%.*s/%.*s",
           sizeof (lastlogfile) - sizeof (pwent->pw_name) - 2, fname,

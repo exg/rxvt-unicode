@@ -25,7 +25,6 @@
 
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
-#include "scrollbar.intpro"	/* PROTOS for internal routines */
 
 /*----------------------------------------------------------------------*/
 
@@ -116,8 +115,8 @@ rxvt_term::resize_scrollbar ()
                                           scrollbar_TotalWidth (),
                                           szHint.height,
                                           0,
-                                          PixColors[Color_fg],
-                                          PixColors[Color_bg]);
+                                          pix_colors[Color_fg],
+                                          pix_colors[Color_bg]);
 #ifdef DEBUG_X
       XStoreName (display->display, scrollBar.win, "scrollbar");
 #endif
@@ -203,15 +202,15 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
   if (scrollstyle)
     {
 #  ifdef NEXT_SCROLLBAR
-      if (STRNCASECMP (scrollstyle, "next", 4) == 0)
+      if (strncasecmp (scrollstyle, "next", 4) == 0)
         style = R_SB_NEXT;
 #  endif
 #  ifdef XTERM_SCROLLBAR
-      if (STRNCASECMP (scrollstyle, "xterm", 5) == 0)
+      if (strncasecmp (scrollstyle, "xterm", 5) == 0)
         style = R_SB_XTERM;
 #  endif
 #  ifdef PLAIN_SCROLLBAR
-      if (STRNCASECMP (scrollstyle, "plain", 5) == 0)
+      if (strncasecmp (scrollstyle, "plain", 5) == 0)
         style = R_SB_PLAIN;
 #  endif
 
@@ -231,7 +230,7 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
       width = min (i, SB_WIDTH_MAXIMUM);
 
 # if defined(RXVT_SCROLLBAR)
-  if (! (Options & Opt_scrollBar_floating) && style == R_SB_RXVT)
+  if (! (options & Opt_scrollBar_floating) && style == R_SB_RXVT)
     sb_shadow = SHADOW;
 # endif
 
@@ -241,9 +240,9 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
   /* scrollbar_align = R_SB_ALIGN_CENTRE; */
   if (scrollalign)
     {
-      if (STRNCASECMP (scrollalign, "top", 3) == 0)
+      if (strncasecmp (scrollalign, "top", 3) == 0)
         scrollbar_align = R_SB_ALIGN_TOP;
-      else if (STRNCASECMP (scrollalign, "bottom", 6) == 0)
+      else if (strncasecmp (scrollalign, "bottom", 6) == 0)
         scrollbar_align = R_SB_ALIGN_BOTTOM;
     }
 #endif

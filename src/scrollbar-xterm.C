@@ -23,7 +23,6 @@
 
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
-#include "scrollbar-xterm.intpro"	/* PROTOS for internal routines */
 
 /*----------------------------------------------------------------------*/
 #if defined(XTERM_SCROLLBAR)
@@ -47,20 +46,20 @@ rxvt_term::scrollbar_show_xterm (int update __attribute__ ((unused)), int last_t
                                               (char *)x_stp_bits, x_stp_width,
                                               x_stp_height);
       if (!gcvalue.stipple)
-        rxvt_fatal ("can't create bitmap");
+        rxvt_fatal ("can't create bitmap\n");
 
       gcvalue.fill_style = FillOpaqueStippled;
-      gcvalue.foreground = PixColors[Color_fg];
-      gcvalue.background = PixColors[Color_bg];
+      gcvalue.foreground = pix_colors[Color_fg];
+      gcvalue.background = pix_colors[Color_bg];
 
       xscrollbarGC = XCreateGC (display->display, scrollBar.win,
                                 GCForeground | GCBackground
                                 | GCFillStyle | GCStipple, &gcvalue);
-      gcvalue.foreground = PixColors[Color_border];
+      gcvalue.foreground = pix_colors[Color_border];
       ShadowGC = XCreateGC (display->display, scrollBar.win, GCForeground, &gcvalue);
     }
   /* instead of XClearWindow (display->display, scrollBar.win); */
-  xsb = (Options & Opt_scrollBar_right) ? 1 : 0;
+  xsb = (options & Opt_scrollBar_right) ? 1 : 0;
   if (last_top < scrollBar.top)
     XClearArea (display->display, scrollBar.win,
                sb_shadow + xsb, last_top,

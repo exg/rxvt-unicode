@@ -23,7 +23,6 @@
 
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
-#include "scrollbar-rxvt.intpro"	/* PROTOS for internal routines */
 
 /*----------------------------------------------------------------------*/
 #if defined(RXVT_SCROLLBAR)
@@ -134,7 +133,7 @@ rxvt_term::scrollbar_show_rxvt (int update __attribute__ ((unused)), int last_to
       scrollBar.init |= R_SB_RXVT;
       if (sbshadow)
         {
-          XSetWindowBackground (display->display, scrollBar.win, PixColors[Color_trough]);
+          XSetWindowBackground (display->display, scrollBar.win, pix_colors[Color_trough]);
           XClearWindow (display->display, scrollBar.win);
         }
     }
@@ -159,7 +158,7 @@ rxvt_term::scrollbar_show_rxvt (int update __attribute__ ((unused)), int last_to
   {
     int xofs;
 
-    if (Options & Opt_scrollBar_right)
+    if (options & Opt_scrollBar_right)
       xofs = 0;
     else
       xofs = sbshadow ? sbwidth : sbwidth - 1;
