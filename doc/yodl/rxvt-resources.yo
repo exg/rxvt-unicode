@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-resources.yo,v 1.7 2004/03/28 14:42:14 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-resources.yo,v 1.8 2004/03/29 16:52:06 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpagesection(RESOURCES (available also as long-options))
 
@@ -245,6 +245,16 @@ startdit()
         for the input extension to be able to input japanese characters
         while staying in another locale.
 	option bf(-imlocale).
+    dit(bf(insecure))
+        Enables "insecure" mode. Rxvt-unicode offers some escape sequences
+        that echo arbitrary strings like the icon name or the locale. This
+        could be abused if somebody gets 8-bit-clean access to your display,
+        wether throuh a mail client displaying mail bodies unfiltered or
+        though write(1). Therefore, these sequences are disabled by default.
+        You can enable them by setting this boolean resource or specifying
+        bf(-insecure) as an option. At the moment, this enabled display-answer,
+        locale, findfont, icon label and window title requests as well as
+        dynamic menubar dispatch.
     dit(bf(modifier:) em(modifier))
 	Set the key to be interpreted as the Meta key to:
 	bf(alt), bf(meta), bf(hyper), bf(super), bf(mod1), bf(mod2), bf(mod3),

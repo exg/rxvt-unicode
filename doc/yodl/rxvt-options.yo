@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-options.yo,v 1.7 2004/03/28 14:42:14 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-options.yo,v 1.8 2004/03/29 16:52:06 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpageoptions()
 
@@ -157,6 +157,10 @@ startdit()
         of e.g. de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP
         for the input extension to be able to input japanese characters
         while staying in another locale.
+    dit(bf(-insecure))
+        Enable "insecure" mode, which currently enables most of the escape
+        sequences that echo strings. See the resource bf(insecure) for
+        more info.
     dit(bf(-mod) em(modifier))
 	Override detection of Meta modifier with specified key:
 	bf(alt), bf(meta), bf(hyper), bf(super), bf(mod1), bf(mod2), bf(mod3),

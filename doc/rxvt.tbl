@@ -1,4 +1,4 @@
-.TH "RXVT" "1" "2004-03-14" "X Version 11" "X Tools" 
+.TH "RXVT" "1" "2004-03-28" "X Version 11" "X Tools" 
 .SH "NAME" 
 rxvt-unicode (ouR XVT, unicode) \- a VT102 emulator for the X window system
 .PP 
@@ -8,7 +8,7 @@ rxvt-unicode (ouR XVT, unicode) \- a VT102 emulator for the X window system
 .PP 
 .SH "DESCRIPTION" 
 .PP 
-\fBrxvt-unicode\fP, version \fB2\&.4\fP, is a colour vt102 terminal emulator
+\fBrxvt-unicode\fP, version \fB2\&.5\fP, is a colour vt102 terminal emulator
 intended as an \fIxterm\fP(1) replacement for users who do not require
 features such as Tektronix 4014 emulation and toolkit-style configurability\&.
 As a result, \fBrxvt-unicode\fP uses much less swap space -- a significant
@@ -78,8 +78,8 @@ resource \fBborderColor\fP\&.
 Select the fonts to be used used\&. This is a comma seperated
 list of font names that are used in turn when trying to display
 unicode characters\&. The first font defines the cell size for characters,
-pther fonts might be smaller, but not larger\&. A reasonable default list
-is appended\&.
+other fonts might be smaller, but not larger\&. A reasonable default font list
+is always appended to it\&.
 resource \fBfont\fP\&.
 .IP "\fB-name\fP \fIname\fP" 
 Specify the application name under which resources
@@ -171,6 +171,10 @@ The locale to use for opening the IM\&. You can use an LC_CTYPE
 of e\&.g\&. de_DE\&.UTF-8 for normal text processing but ja_JP\&.EUC-JP
 for the input extension to be able to input japanese characters
 while staying in another locale\&.
+.IP "\fB-insecure\fP" 
+Enable "insecure" mode, which currently enables most of the escape
+sequences that echo strings\&. See the resource \fBinsecure\fP for
+more info\&.
 .IP "\fB-mod\fP \fImodifier\fP" 
 Override detection of Meta modifier with specified key:
 \fBalt\fP, \fBmeta\fP, \fBhyper\fP, \fBsuper\fP, \fBmod1\fP, \fBmod2\fP, \fBmod3\fP,
@@ -278,8 +282,8 @@ menus), in addition to the paths specified by the \fBRXVTPATH\fP and
 Select the fonts to be used used\&. This is a comma seperated
 list of font names that are used in turn when trying to display
 unicode characters\&. The first font defines the cell size for characters,
-pther fonts might be smaller, but not larger\&. A reasonable default list
-is appended\&.
+other fonts might be smaller, but not larger\&. A reasonable default font list
+is always appended to this list\&.
 option \fB-fn\fP\&.
 .IP "\fBselectstyle:\fP \fImode\fP" 
 Set mouse selection style to \fBold\fP which is 2\&.20, \fBoldword\fP which
@@ -425,6 +429,16 @@ of e\&.g\&. de_DE\&.UTF-8 for normal text processing but ja_JP\&.EUC-JP
 for the input extension to be able to input japanese characters
 while staying in another locale\&.
 option \fB-imlocale\fP\&.
+.IP "\fBinsecure\fP" 
+Enables "insecure" mode\&. Rxvt-unicode offers some escape sequences
+that echo arbitrary strings like the icon name or the locale\&. This
+could be abused if somebody gets 8-bit-clean access to your display,
+wether throuh a mail client displaying mail bodies unfiltered or
+though write(1)\&. Therefore, these sequences are disabled by default\&.
+You can enable them by setting this boolean resource or specifying
+\fB-insecure\fP as an option\&. At the moment, this enabled display-answer,
+locale, findfont, icon label and window title requests as well as
+dynamic menubar dispatch\&.
 .IP "\fBmodifier:\fP \fImodifier\fP" 
 Set the key to be interpreted as the Meta key to:
 \fBalt\fP, \fBmeta\fP, \fBhyper\fP, \fBsuper\fP, \fBmod1\fP, \fBmod2\fP, \fBmod3\fP,
@@ -567,7 +581,7 @@ Click-and-drag doesn\&'t work with X11 mouse report overriding\&.
 .PP 
 .SH "FTP LOCATION" 
 .PP 
-rxvt-2\&.4\&.tar\&.gz can be found at the following ftp sites
+rxvt-2\&.5\&.tar\&.gz can be found at the following ftp sites
 ftp://ftp\&.rxvt\&.org/pub/rxvt
 .PP 
 .SH "CURRENT PROJECT COORDINATOR" 
