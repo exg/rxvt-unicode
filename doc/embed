@@ -17,7 +17,7 @@ my $frame = new Gtk2::Frame "embedded rxvt-unicode terminal";
 
 $window->add ($frame);
 
-my $rxvt = new Gtk2::DrawingArea;
+my $rxvt = new Gtk2::Socket;
 $frame->add ($rxvt);
 $frame->set_size_request (700, 400);
 $window->show_all;

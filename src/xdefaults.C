@@ -218,8 +218,10 @@ optList[] = {
               STRG (Rs_title, NULL, "T", NULL, NULL),	/* short form */
               STRG (Rs_iconName, "iconName", "n", "string", "icon name for window"),
               STRG (Rs_saveLines, "saveLines", "sl", "number", "number of scrolled lines to save"),
-#if ENABLE_FRILLS
+#if ENABLE_XEMBED
               STRG (Rs_embed, NULL, "embed", "windowid", "window id to embed terminal in"),
+#endif
+#if ENABLE_FRILLS
               STRG (Rs_pty_fd, NULL, "pty-fd", "fileno", "file descriptor of pty to use"),
               STRG (Rs_ext_bwidth, "externalBorder", "w", "number", "external border in pixels"),
               STRG (Rs_ext_bwidth, NULL, "bw", NULL, NULL),

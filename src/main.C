@@ -255,7 +255,7 @@ rxvt_term::~rxvt_term ()
       delete TermWin.drawable;
       // destroy all windows
       if (TermWin.parent[0]
-#if ENABLE_FRILLS
+#if ENABLE_XEMBED
           && !rs[Rs_embed]
 #endif
           )

@@ -183,6 +183,7 @@ const char *const xa_names[] =
     "TIMESTAMP",
     "VT_SELECTION",
     "INCR",
+    "WM_PROTOCOLS",
     "WM_DELETE_WINDOW",
     "CLIPBOARD",
 #if ENABLE_FRILLS
@@ -201,6 +202,9 @@ const char *const xa_names[] =
 #ifdef OFFIX_DND
     "DndProtocol",
     "DndSelection",
+#endif
+#if ENABLE_XEMBED
+    "_XEMBED",
 #endif
   };
 
@@ -975,7 +979,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   if (!set_fonts ())
     rxvt_fatal ("unable to load base fontset, please specify a valid one using -fn, aborting.\n");
 
-#if ENABLE_FRILLS
+#if ENABLE_XEMBED
   if (rs[Rs_embed])
     {
       XWindowAttributes wattr;
@@ -1013,19 +1017,19 @@ rxvt_term::create_windows (int argc, const char *const *argv)
       attributes.border_pixel = pix_colors_focused[Color_border];
       attributes.colormap = display->cmap;
       top = XCreateWindow (disp, DefaultRootWindow (disp),
-                                         szHint.x, szHint.y,
-                                         szHint.width, szHint.height,
-                                         TermWin.ext_bwidth,
-                                         display->depth, InputOutput,
-                                         display->visual,
-                                         CWColormap | CWBackPixel | CWBorderPixel, &attributes);
+                           szHint.x, szHint.y,
+                           szHint.width, szHint.height,
+                           TermWin.ext_bwidth,
+                           display->depth, InputOutput,
+                           display->visual,
+                           CWColormap | CWBackPixel | CWBorderPixel, &attributes);
 #else
       top = XCreateSimpleWindow (disp, DefaultRootWindow (disp),
-                                               szHint.x, szHint.y,
-                                               szHint.width, szHint.height,
-                                               TermWin.ext_bwidth,
-                                               pix_colors_focused[Color_border],
-                                               pix_colors_focused[Color_border]);
+                                 szHint.x, szHint.y,
+                                 szHint.width, szHint.height,
+                                 TermWin.ext_bwidth,
+                                 pix_colors_focused[Color_border],
+                                 pix_colors_focused[Color_border]);
 #endif
     }
 
@@ -1049,7 +1053,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                     (char **)argv, argc, &szHint, &wmHint, &classHint);
 
   /* Enable delete window protocol */
-  XSetWMProtocols (disp, top, &xa[XA_WMDELETEWINDOW], 1);
+  XSetWMProtocols (disp, top, &xa[XA_WM_DELETE_WINDOW], 1);
 
 #if ENABLE_FRILLS
   long pid = getpid ();
@@ -1065,8 +1069,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                 | KeyReleaseMask
 #endif
                 | FocusChangeMask | VisibilityChangeMask
-                | ExposureMask
-                | StructureNotifyMask);
+                | ExposureMask | StructureNotifyMask);
+
   termwin_ev.start (display, top);
 
 #if ENABLE_FRILLS

@@ -21,6 +21,10 @@
 #include "iom.h"
 #include "salloc.h"
 
+#if ENABLE_FRILLS
+# define ENABLE_XEMBED 1
+#endif
+
 /*
  *****************************************************************************
  * SYSTEM HACKS
@@ -177,6 +181,29 @@ typedef struct _mwmhints {
   INT32  input_mode;
   CARD32 status;
 } MWMHints;
+#endif
+
+#if ENABLE_XEMBED
+// XEMBED messages
+# define XEMBED_EMBEDDED_NOTIFY          0 
+# define XEMBED_WINDOW_ACTIVATE          1 
+# define XEMBED_WINDOW_DEACTIVATE        2 
+# define XEMBED_REQUEST_FOCUS            3 
+# define XEMBED_FOCUS_IN                 4 
+# define XEMBED_FOCUS_OUT                5 
+# define XEMBED_FOCUS_NEXT               6 
+# define XEMBED_FOCUS_PREV               7
+
+# define XEMBED_MODALITY_ON              10 
+# define XEMBED_MODALITY_OFF             11 
+# define XEMBED_REGISTER_ACCELERATOR     12 
+# define XEMBED_UNREGISTER_ACCELERATOR   13 
+# define XEMBED_ACTIVATE_ACCELERATOR     14
+
+// XEMBED detail code
+# define XEMBED_FOCUS_CURRENT            0 
+# define XEMBED_FOCUS_FIRST              1 
+# define XEMBED_FOCUS_LAST               2
 #endif
 
 /*
@@ -610,8 +637,10 @@ enum {
   Rs_int_bwidth,
   Rs_borderLess,
   Rs_lineSpace,
-  Rs_embed,
   Rs_pty_fd,
+#endif
+#if ENABLE_XEMBED
+  Rs_embed,
 #endif
   Rs_cutchars,
   Rs_modifier,
@@ -647,7 +676,8 @@ enum {
   XA_TIMESTAMP,
   XA_VT_SELECTION,
   XA_INCR,
-  XA_WMDELETEWINDOW,
+  XA_WM_PROTOCOLS,
+  XA_WM_DELETE_WINDOW,
   XA_CLIPBOARD,
 #if ENABLE_FRILLS
   XA_NET_WM_PID,
@@ -665,6 +695,9 @@ enum {
 #if OFFIX_DND                /* OffiX Dnd (drag 'n' drop) support */
   XA_DNDPROTOCOL,
   XA_DNDSELECTION,
+#endif
+#if ENABLE_XEMBED
+  XA_XEMBED,
 #endif
   NUM_XA
 };
@@ -1348,6 +1381,8 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void mouse_report (XButtonEvent &ev);
   void button_press (XButtonEvent &ev);
   void button_release (XButtonEvent &ev);
+  void focus_in ();
+  void focus_out ();
   int check_our_parents ();
 #ifdef PRINTPIPE
   FILE *popen_printer ();

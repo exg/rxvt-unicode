@@ -395,12 +395,11 @@ not.
 Here is a short Gtk2-perl snippet that illustrates how this option can be
 used (a longer example is in F<doc/embed>):
 
-   my $rxvt = new Gtk2::DrawingArea;
-   $...->add ($rxvt); # important to add it somewhere first
-   $rxvt->realize; # now it can be realized
-   my $xid = $rxvt->window->get_xid;
-
-   system "@@RXVT_NAME@@ -embed $xid &";
+   my $rxvt = new Gtk2::Socket;
+   $rxvt->signal_connect_after (realize => sub {
+      my $xid = $_[0]->window->get_xid;
+      system "@@RXVT_NAME@@ -embed $xid &";
+   });
 
 =item B<-pty-fd> I<fileno>
 

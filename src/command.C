@@ -1332,14 +1332,25 @@ rxvt_term::x_cb (XEvent &ev)
 
       case ClientMessage:
         if (ev.xclient.format == 32
-            && (Atom)ev.xclient.data.l[0] == xa[XA_WMDELETEWINDOW])
-          destroy ();
+            && ev.xclient.message_type == xa[XA_WM_PROTOCOLS]
+            && ev.xclient.data.l[0] == xa[XA_WM_DELETE_WINDOW])
+           destroy ();
+#if ENABLE_XEMBED
+        else if (ev.xclient.format == 32
+                 && ev.xclient.message_type == xa[XA_XEMBED])
+          {
+            if (ev.xclient.data.l[1] == XEMBED_FOCUS_IN)
+              focus_in ();
+            else if (ev.xclient.data.l[1] == XEMBED_FOCUS_OUT)
+              focus_out ();
+          }
+#endif
 #ifdef OFFIX_DND
         /* OffiX Dnd (drag 'n' drop) protocol */
-        else if (ev.xclient.message_type == xa[XA_DNDPROTOCOL]
-                 && (ev.xclient.data.l[0] == DndFile
-                     || ev.xclient.data.l[0] == DndDir
-                     || ev.xclient.data.l[0] == DndLink))
+          else if (ev.xclient.message_type == xa[XA_DNDPROTOCOL]
+            && (ev.xclient.data.l[0] == DndFile
+                || ev.xclient.data.l[0] == DndDir
+                || ev.xclient.data.l[0] == DndLink))
           {
             /* Get Dnd data */
             Atom ActualType;
@@ -1392,61 +1403,11 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case FocusIn:
-        if (!TermWin.focus)
-          {
-            TermWin.focus = 1;
-            want_refresh = 1;
-#ifdef USE_XIM
-            if (Input_Context != NULL)
-              {
-                IMSetStatusPosition ();
-                XSetICFocus (Input_Context);
-              }
-#endif
-#ifdef CURSOR_BLINK
-            if (options & Opt_cursorBlink)
-              cursor_blink_ev.start (NOW + BLINK_INTERVAL);
-#endif
-#ifdef OFF_FOCUS_FADING
-            if (rs[Rs_fade])
-              {
-                pix_colors = pix_colors_focused;
-                scr_recolour ();
-              }
-#endif
-
-          }
+        focus_in ();
         break;
 
       case FocusOut:
-        if (TermWin.focus)
-          {
-            TermWin.focus = 0;
-            want_refresh = 1;
-
-#if ENABLE_FRILLS || ISO_14755
-            iso14755buf = 0;
-#endif
-#if ENABLE_OVERLAY
-            scr_overlay_off ();
-#endif
-#ifdef USE_XIM
-            if (Input_Context != NULL)
-              XUnsetICFocus (Input_Context);
-#endif
-#ifdef CURSOR_BLINK
-            if (options & Opt_cursorBlink)
-              cursor_blink_ev.stop ();
-            hidden_cursor = 0;
-#endif
-#ifdef OFF_FOCUS_FADING
-            if (rs[Rs_fade])
-              {
-                pix_colors = pix_colors_unfocused;
-                scr_recolour ();
-              }
-#endif
-          }
+        focus_out ();
         break;
 
       case ConfigureNotify:
@@ -1670,6 +1631,67 @@ rxvt_term::x_cb (XEvent &ev)
             scrollbar_show (1);
           }
         break;
+    }
+}
+
+void
+rxvt_term::focus_in ()
+{
+  if (!TermWin.focus)
+    {
+      TermWin.focus = 1;
+      want_refresh = 1;
+#ifdef USE_XIM
+      if (Input_Context != NULL)
+        {
+          IMSetStatusPosition ();
+          XSetICFocus (Input_Context);
+        }
+#endif
+#ifdef CURSOR_BLINK
+      if (options & Opt_cursorBlink)
+        cursor_blink_ev.start (NOW + BLINK_INTERVAL);
+#endif
+#ifdef OFF_FOCUS_FADING
+      if (rs[Rs_fade])
+        {
+          pix_colors = pix_colors_focused;
+          scr_recolour ();
+        }
+#endif
+    }
+}
+
+void
+rxvt_term::focus_out ()
+{
+  if (TermWin.focus)
+    {
+      TermWin.focus = 0;
+      want_refresh = 1;
+
+#if ENABLE_FRILLS || ISO_14755
+      iso14755buf = 0;
+#endif
+#if ENABLE_OVERLAY
+      scr_overlay_off ();
+#endif
+#ifdef USE_XIM
+      if (Input_Context != NULL)
+        XUnsetICFocus (Input_Context);
+#endif
+#ifdef CURSOR_BLINK
+      if (options & Opt_cursorBlink)
+        cursor_blink_ev.stop ();
+      hidden_cursor = 0;
+#endif
+#ifdef OFF_FOCUS_FADING
+      if (rs[Rs_fade])
+        {
+          pix_colors = pix_colors_unfocused;
+          scr_recolour ();
+        }
+#endif
     }
 }
 
