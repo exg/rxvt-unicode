@@ -11,13 +11,14 @@
         - fix a bug that kept escape codes to be generated for some
           keysyms that also have string translations, when not --enable-xim.
           reported by joel reed.
-        - countless minor bugfixes.
         - re-enabled esc-seq. for font-switching (\033 ] 50 ; <fontset> \007).
         - fix bug in locale-handling that kept the correct locale from
           being selected.
         - implemented esc-seq. to switch locales (\033 ] 9 ; <locale> \007).
         - removed greek support.
         - allow NUL bytes (ctrl-@) to be entered even with XIM enabled.
+        - correct cursor width if !focus.
+        - many other minor bugfixes.
 
 1.8  Mon Feb  2 20:09:18 CET 2004
 	- almost total conversion to C++. Except for introducing

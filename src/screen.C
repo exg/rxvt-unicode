@@ -1837,21 +1837,20 @@ rxvt_term::scr_printscreen (int fullhist)
 void
 rxvt_term::scr_refresh (unsigned char refresh_type)
 {
-  unsigned char   clearfirst, /* first character writes before cell        */
-  clearlast,  /* last character writes beyond cell         */
-  must_clear, /* use draw_string not draw_image_string     */
-  rvid,       /* reverse video this position               */
-  showcursor; /* show the cursor                           */
-  int16_t         col, row,   /* column/row we're processing               */
-  ocrow;      /* old cursor row                            */
-  int             cursorwidth;
-  int             i,          /* tmp                                       */
-  row_offset; /* basic offset in screen structure          */
+  unsigned char clearfirst, /* first character writes before cell        */
+                clearlast,  /* last character writes beyond cell         */
+                must_clear, /* use draw_string not draw_image_string     */
+                rvid,       /* reverse video this position               */
+                showcursor; /* show the cursor                           */
+  int16_t col, row,   /* column/row we're processing               */
+          ocrow;      /* old cursor row                            */
+  int i,              /* tmp                                       */
+  row_offset;         /* basic offset in screen structure          */
 #ifndef NO_CURSORCOLOR
-  rend_t          cc1;        /* store colours at cursor position (s)       */
+  rend_t cc1;         /* store colours at cursor position (s)      */
 #endif
-  rend_t         *drp, *srp;  /* drawn-rend-pointer, screen-rend-pointer   */
-  text_t         *dtp, *stp;  /* drawn-text-pointer, screen-text-pointer   */
+  rend_t *drp, *srp;  /* drawn-rend-pointer, screen-rend-pointer   */
+  text_t *dtp, *stp;  /* drawn-text-pointer, screen-text-pointer   */
 
   if (refresh_type == NO_REFRESH || !TermWin.mapped)
     return;
@@ -1893,18 +1892,13 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
     ccol2;  /* Cursor colour2      */
 
     showcursor = (screen.flags & Screen_VisibleCursor);
-    cursorwidth = 0;
 #ifdef CURSOR_BLINK
     if (hidden_cursor)
       showcursor = 0;
 #endif
 
-    cursorwidth = 0;
-
     if (showcursor)
       {
-        cursorwidth++;
-
         srp = & (screen.rend[screen.cur.row + TermWin.saveLines]
                 [screen.cur.col]);
 
@@ -1932,7 +1926,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
             *srp = SET_FGCOLOR (*srp, ccol1);
             *srp = SET_BGCOLOR (*srp, ccol2);
 #endif
-
           }
       }
 
@@ -2213,7 +2206,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 #ifndef NO_CURSORCOLOR
           *srp = (*srp & ~ (RS_fgMask | RS_bgMask)) | cc1;
 #endif
-
         }
       else if (oldcursor.row >= 0)
         {
@@ -2221,6 +2213,11 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
           if (ISSET_PIXCOLOR (Color_cursor))
             XSetForeground (display->display, TermWin.gc, PixColors[Color_cursor]);
 #endif
+          int cursorwidth = 1;
+          while (oldcursor.col + cursorwidth < TermWin.ncol
+                 && drawn_text[oldcursor.row][oldcursor.col + cursorwidth] == NOCHAR)
+            cursorwidth++;
+
           XDrawRectangle (display->display, drawBuffer, TermWin.gc,
                          Col2Pixel (oldcursor.col),
                          Row2Pixel (oldcursor.row),
