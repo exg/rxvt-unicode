@@ -3778,8 +3778,8 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
 #if XPM_BACKGROUND
             changed += scale_pixmap (str);
 #endif
-
           }
+
         if (changed)
           {
 #ifdef XPM_BACKGROUND

@@ -170,9 +170,11 @@ rxvt_term::resize_pixmap ()
   if (bgPixmap.pixmap == None)
     { /* So be it: I'm not using pixmaps */
       TermWin.pixmap = None;
-      if (! (options & Opt_transparent) || am_transparent == 0)
+
+      if (!(options & Opt_transparent) || !am_transparent)
         XSetWindowBackground (display->display, TermWin.vt,
-                             pix_colors[Color_bg]);
+                              pix_colors[Color_bg]);
+
       return;
     }
 
@@ -182,9 +184,9 @@ rxvt_term::resize_pixmap ()
   if (bgPixmap.pixmap != None)
     {	/* we have a specified pixmap */
       unsigned int    w = bgPixmap.w, h = bgPixmap.h,
-                                          x = bgPixmap.x, y = bgPixmap.y;
+                      x = bgPixmap.x, y = bgPixmap.y;
       unsigned int    xpmh = xpmAttr.height,
-                             xpmw = xpmAttr.width;
+                      xpmw = xpmAttr.width;
 
       /*
        * don't zoom pixmap too much nor expand really small pixmaps
@@ -237,19 +239,21 @@ rxvt_term::resize_pixmap ()
           rxvt_pixmap_incr (&h, &y, &incr, &p, height, xpmh);
 
           if (y > 0)
-            XFillRectangle (display->display, TermWin.pixmap, gc, 0, 0, width,
-                           y);
+            XFillRectangle (display->display, TermWin.pixmap, gc, 0, 0, width, y);
+
           if (h < height)
-            XFillRectangle (display->display, TermWin.pixmap, gc, 0, (int)h,
-                           width, height - h + 1);
+            XFillRectangle (display->display, TermWin.pixmap, gc, 0, (int)h, width, height - h + 1);
+
           for ( /*nil */ ; y < h; y++, p += incr)
             {
               if (p >= xpmh)
                 p = 0;
+
               /* copy one row from the tmp pixmap to the main pixmap */
               XCopyArea (display->display, tmp, TermWin.pixmap, gc,
                         0, (int)p, width, 1, 0, (int)y);
             }
+
           XFreePixmap (display->display, tmp);
         }
     }
@@ -257,10 +261,6 @@ rxvt_term::resize_pixmap ()
   XSetWindowBackgroundPixmap (display->display, TermWin.vt, TermWin.pixmap);
   XFreeGC (display->display, gc);
   am_transparent = 0;
-
-  XClearWindow (display->display, TermWin.vt);
-
-  XSync (display->display, False);
 }
 
 /*
