@@ -468,10 +468,6 @@ Tint the transparent background pixmap with the given colour.
 Darken (0 .. 100) or lighten (-1 .. -100) the transparent background
 image in addition to tinting it.
 
-=item B<fading:> I<number>
-
-Scale the tint colour by the given percentage.
-
 =item B<scrollColor:> I<colour>
 
 Use the specified colour for the scrollbar [default #B2B2B2].
