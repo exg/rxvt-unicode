@@ -393,23 +393,45 @@ resources (or as long-options).
 Here are values that are supposed to resemble a VGA screen,
 including the murky brown that passes for low-intensity yellow:
 
-   Rxvt*color0:   #000000
-   Rxvt*color1:   #A80000
-   Rxvt*color2:   #00A800
-   Rxvt*color3:   #A8A800
-   Rxvt*color4:   #0000A8
-   Rxvt*color5:   #A800A8
-   Rxvt*color6:   #00A8A8
-   Rxvt*color7:   #A8A8A8
-                  
-   Rxvt*color8:   #000054
-   Rxvt*color9:   #FF0054
-   Rxvt*color10:  #00FF54
-   Rxvt*color11:  #FFFF54
-   Rxvt*color12:  #0000FF
-   Rxvt*color13:  #FF00FF
-   Rxvt*color14:  #00FFFF
-   Rxvt*color15:  #FFFFFF
+   URxvt*color0:   #000000
+   URxvt*color1:   #A80000
+   URxvt*color2:   #00A800
+   URxvt*color3:   #A8A800
+   URxvt*color4:   #0000A8
+   URxvt*color5:   #A800A8
+   URxvt*color6:   #00A8A8
+   URxvt*color7:   #A8A8A8
+
+   URxvt*color8:   #000054
+   URxvt*color9:   #FF0054
+   URxvt*color10:  #00FF54
+   URxvt*color11:  #FFFF54
+   URxvt*color12:  #0000FF
+   URxvt*color13:  #FF00FF
+   URxvt*color14:  #00FFFF
+   URxvt*color15:  #FFFFFF
+
+And here is a more complete set of non-standard colors described as
+"pretty girly":
+
+   URxvt.cursorColor:  #dc74d1
+   URxvt.pointerColor: #dc74d1
+   URxvt.background:   #0e0e0e
+   URxvt.foreground:   #4ad5e1
+   URxvt.color0:       #000000
+   URxvt.color8:       #8b8f93
+   URxvt.color1:       #dc74d1
+   URxvt.color9:       #dc74d1
+   URxvt.color2:       #0eb8c7
+   URxvt.color10:      #0eb8c7
+   URxvt.color3:       #dfe37e
+   URxvt.color11:      #dfe37e
+   URxvt.color5:       #9e88f0
+   URxvt.color13:      #9e88f0
+   URxvt.color6:       #73f7ff
+   URxvt.color14:      #73f7ff
+   URxvt.color7:       #e1dddd
+   URxvt.color15:      #e1dddd
 
 =item What's with the strange Backspace/Delete key behaviour?
 
