@@ -2,6 +2,7 @@ Lines marked with "xterm:" indicate either xterm features ported to rxvt
 or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
+TODO: configurable underline line colour.
 TODO: read property sequence is broken with respect to utf-8 etc.
 FEAT: hotkey font resizing
 FEAT: searchable backlog
@@ -14,6 +15,8 @@ FEAT: tabbed windows (hey, just use screen...)
 	- try very hard not to exhaust the kernel tty buffers, even
           if it slows down large pastes and is only cosmetic.
         - fix an unlikely memory leak.
+        - fix atom name enumeration.
+        - streamline atom allocation to reduce network latency slightly.
 
 4.5  Mon Dec 13 07:47:16 CET 2004
 	- fix an extremely nasty bug in utf8-conversion. upgrade is advised.

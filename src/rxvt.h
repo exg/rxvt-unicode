@@ -640,15 +640,24 @@ enum {
   XA_VT_SELECTION,
   XA_INCR,
   XA_WMDELETEWINDOW,
-#ifdef TRANSPARENT
+  XA_CLIPBOARD,
+#if ENABLE_FRILLS
+  XA_NET_WM_PID,
+  XA_MOTIF_WM_HINTS,
+  XA_NET_WM_NAME,
+  XA_NET_WM_ICON_NAME,
+#endif
+#if USE_XIM
+  XA_WM_LOCALE_NAME,
+#endif
+#if TRANSPARENT
   XA_XROOTPMAPID,
   XA_XSETROOTID,
 #endif
-#ifdef OFFIX_DND                /* OffiX Dnd (drag 'n' drop) support */
+#if OFFIX_DND                /* OffiX Dnd (drag 'n' drop) support */
   XA_DNDPROTOCOL,
   XA_DNDSELECTION,
 #endif                          /* OFFIX_DND */
-  XA_CLIPBOARD,
   NUM_XA
 };
 

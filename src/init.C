@@ -169,7 +169,7 @@ const char *const def_colorName[] =
 #endif
   };
 
-const char *const xa_names[NUM_XA] =
+const char *const xa_names[] =
   {
     "TEXT",
     "COMPOUND_TEXT",
@@ -180,14 +180,24 @@ const char *const xa_names[NUM_XA] =
     "VT_SELECTION",
     "INCR",
     "WM_DELETE_WINDOW",
+    "CLIPBOARD",
+#if ENABLE_FRILLS
+    "_NET_WM_PID",
+    "_MOTIF_WM_HINTS",
+    "_NET_WM_NAME",
+    "_NET_WM_ICON_NAME",
+#endif
+#if USE_XIM
+    "WM_LOCALE_NAME",
+#endif
 #ifdef TRANSPARENT
     "_XROOTPMAP_ID",
+    "_XSETROOT_ID",
 #endif
 #ifdef OFFIX_DND
     "DndProtocol",
     "DndSelection",
 #endif
-    "CLIPBOARD"
   };
 
 bool
@@ -613,7 +623,7 @@ rxvt_term::init_xlocale ()
     rxvt_warn ("setting locale failed, working without locale support.\n");
   else
     {
-      set_string_property (display->atom ("WM_LOCALE_NAME"), locale);
+      set_string_property (xa[XA_WM_LOCALE_NAME], locale);
 
       if (!XSupportsLocale ())
         {
@@ -898,13 +908,13 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   XSetWindowAttributes attributes;
   XWindowAttributes gattr;
 
-  for (int i = 0; i < NUM_XA; i++)
-    xa[i] = XInternAtom (display->display, xa_names[i], False);
-
 #ifdef USING_W11LIB
   /* enable W11 callbacks */
   W11AddEventHandler (display->display, rxvt_W11_process_x_event);
 #endif
+
+  assert (sizeof (xa_names) / sizeof (char *) == NUM_XA);
+  XInternAtoms (display->display, (char **)xa_names, NUM_XA, False, xa);
 
   if (options & Opt_transparent)
     {
@@ -991,7 +1001,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   long pid = getpid ();
 
   XChangeProperty (display->display, TermWin.parent[0],
-                   display->atom ("_NET_WM_PID"), XA_CARDINAL, 32,
+                   xa[XA_NET_WM_PID], XA_CARDINAL, 32,
                    PropModeReplace, (unsigned char *)&pid, 1);
 #endif
 
@@ -1007,11 +1017,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
 #if ENABLE_FRILLS
   if (mwmhints.flags)
-    {
-      prop = XInternAtom (display->display, "_MOTIF_WM_HINTS", False);
-      XChangeProperty (display->display, TermWin.parent[0], prop, prop, 32,
-                       PropModeReplace, (unsigned char *)&mwmhints, PROP_MWM_HINTS_ELEMENTS);
-    }
+    XChangeProperty (display->display, TermWin.parent[0], xa[XA_MOTIF_WM_HINTS], xa[XA_MOTIF_WM_HINTS], 32,
+                     PropModeReplace, (unsigned char *)&mwmhints, PROP_MWM_HINTS_ELEMENTS);
 #endif
 
   /* vt cursor: Black-on-White is standard, but this is more popular */

@@ -862,7 +862,7 @@ rxvt_term::set_title (const char *str)
 {
   set_string_property (XA_WM_NAME, str);
 #if ENABLE_FRILLS
-  set_utf8_property (display->atom ("_NET_WM_NAME"), str);
+  set_utf8_property (xa[XA_NET_WM_NAME], str);
 #endif
 }
 
@@ -871,7 +871,7 @@ rxvt_term::set_icon_name (const char *str)
 {
   set_string_property (XA_WM_ICON_NAME, str);
 #if ENABLE_FRILLS
-  set_utf8_property (display->atom ("_NET_WM_ICON_NAME"), str);
+  set_utf8_property (xa[XA_NET_WM_ICON_NAME], str);
 #endif
 }
 
