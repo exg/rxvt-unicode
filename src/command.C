@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.11 2003/12/02 21:49:46 pcg Exp $
+ * $Id: command.C,v 1.12 2003/12/05 04:05:13 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -788,107 +788,112 @@ rxvt_term::pty_cb (io_watcher &w, short revents)
   if (revents & EVENT_WRITE)
     tt_write (0, 0);
   else if (revents & EVENT_READ)
-    // loop, but don't allow a single term to monopolize us
-    // the number of loops is fully arbitrary, and thus wrong
-    for (int i = 1; i-- && pty_fill (); )
-      {
-        if (!seen_input)
-          {
-            seen_input = 1;
-            /* once we know the shell is running, send the screen size.  Again! */
-            tt_winch ();
-          }
+    {
+      bool flag = true;
 
-        uint32_t ch = NOCHAR;
+      // loop, but don't allow a single term to monopolize us
+      // the number of loops is fully arbitrary, and thus wrong
+      while (flag && pty_fill ())
+        {
+          if (!seen_input)
+            {
+              seen_input = 1;
+              /* once we know the shell is running, send the screen size.  Again! */
+              tt_winch ();
+            }
 
-        for (;;)
-          {
-            if (ch == NOCHAR)
-              ch = next_char ();
+          uint32_t ch = NOCHAR;
 
-            if (ch == NOCHAR) // TODO: improve
-              break;
+          for (;;)
+            {
+              if (ch == NOCHAR)
+                ch = next_char ();
 
-            if (ch >= ' ' || ch == '\t' || ch == '\n' || ch == '\r')
-              {
-                /* Read a text string from the input buffer */
-                uint32_t buf[BUFSIZ];
-                bool refreshnow = false;
-                int nlines = 0;
-                uint32_t *str = buf;
+              if (ch == NOCHAR) // TODO: improve
+                break;
 
-                *str++ = ch;
+              if (ch >= ' ' || ch == '\t' || ch == '\n' || ch == '\r')
+                {
+                  /* Read a text string from the input buffer */
+                  uint32_t buf[BUFSIZ];
+                  bool refreshnow = false;
+                  int nlines = 0;
+                  uint32_t *str = buf;
 
-                for (;;)
-                  {
-                    ch = next_char ();
+                  *str++ = ch;
 
-                    if (ch == NOCHAR || (ch < ' ' && ch != '\t' && ch != '\n' && ch != '\r'))
-                      break;
-                    else
-                      {
-                        *str++ = ch;
+                  for (;;)
+                    {
+                      ch = next_char ();
 
-                        if (ch == '\n')
-                          {
-                            nlines++;
-                            refresh_count++;
+                      if (ch == NOCHAR || (ch < ' ' && ch != '\t' && ch != '\n' && ch != '\r'))
+                        break;
+                      else
+                        {
+                          *str++ = ch;
 
-                            if (!(Options & Opt_jumpScroll)
-                                || (refresh_count >= (refresh_limit * (TermWin.nrow - 1))))
-                              {
-                                refreshnow = true;
-                                ch = NOCHAR;
-                                break;
-                              }
-                          }
+                          if (ch == '\n')
+                            {
+                              nlines++;
+                              refresh_count++;
 
-                        if (str >= buf + BUFSIZ)
-                          {
-                            ch = NOCHAR;
-                            break;
-                          }
-                      }
-                  }
+                              if (!(Options & Opt_jumpScroll)
+                                  || (refresh_count >= (refresh_limit * (TermWin.nrow - 1))))
+                                {
+                                  refreshnow = true;
+                                  flag = false;
+                                  ch = NOCHAR;
+                                  break;
+                                }
+                            }
 
-                rxvt_scr_add_lines (this, buf, nlines, str - buf);
+                          if (str >= buf + BUFSIZ)
+                            {
+                              ch = NOCHAR;
+                              break;
+                            }
+                        }
+                    }
 
-                /*
-                 * If there have been a lot of new lines, then update the screen
-                 * What the heck I'll cheat and only refresh less than every page-full.
-                 * the number of pages between refreshes is refresh_limit, which
-                 * is incremented here because we must be doing flat-out scrolling.
-                 *
-                 * refreshing should be correct for small scrolls, because of the
-                 * time-out
-                 */
-                if (refreshnow)
-                  {
-                    if ((Options & Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
-                      refresh_limit++;
+                  rxvt_scr_add_lines (this, buf, nlines, str - buf);
 
-                    rxvt_scr_refresh (this, refresh_type);
-                  }
+                  /*
+                   * If there have been a lot of new lines, then update the screen
+                   * What the heck I'll cheat and only refresh less than every page-full.
+                   * the number of pages between refreshes is refresh_limit, which
+                   * is incremented here because we must be doing flat-out scrolling.
+                   *
+                   * refreshing should be correct for small scrolls, because of the
+                   * time-out
+                   */
+                  if (refreshnow)
+                    {
+                      if ((Options & Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
+                        refresh_limit++;
 
-              }
-            else
-              {
-                switch (ch)
-                  {
-                    default:
-                      rxvt_process_nonprinting (this, ch);
-                      break;
-                    case C0_ESC:	/* escape char */
-                      rxvt_process_escape_seq (this);
-                      break;
-                    /*case 0x9b: */	/* CSI */
-                    /*  rxvt_process_csi_seq (this); */
-                  }
+                      rxvt_scr_refresh (this, refresh_type);
+                    }
 
-                ch = NOCHAR;
-              }
-          }
-      }
+                }
+              else
+                {
+                  switch (ch)
+                    {
+                      default:
+                        rxvt_process_nonprinting (this, ch);
+                        break;
+                      case C0_ESC:	/* escape char */
+                        rxvt_process_escape_seq (this);
+                        break;
+                      /*case 0x9b: */	/* CSI */
+                      /*  rxvt_process_csi_seq (this); */
+                    }
+
+                  ch = NOCHAR;
+                }
+            }
+        }
+    }
 }
 
 // read the next character, currently handles UTF-8
