@@ -29,6 +29,28 @@
 
 /* EXTPROTO */
 char *
+rxvt_wcstombs (const wchar_t *str, int len)
+{
+  mbstate mbs;
+  char *r = (char *)rxvt_malloc (len * MB_CUR_MAX + 1);
+
+  char *dst = r;
+  while (len--)
+    {
+      int l = wcrtomb (dst, *str++, mbs);
+      if (l < 0)
+        *dst++ = '?';
+      else
+        dst += l;
+    }
+
+  *dst++ = 0;
+
+  return r;
+}
+
+/* EXTPROTO */
+char *
 rxvt_strdup (const char *str)
 {
   return str ? strdup (str) : 0;

@@ -11,7 +11,7 @@
 # include <X11/Xlocale.h>
 #else
 # ifdef HAVE_SETLOCALE
-#  include <locale.h>
+#  include <clocale>
 # endif
 #endif				/* HAVE_XLOCALE */
 

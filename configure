@@ -1031,6 +1031,7 @@ Optional Features:
                      NOTE: this option is order dependent
                      NOTE: automatically enabled with --enable-shared
   --enable-unicode3       use 21 instead of 16 bits to represent unicode characters
+  --enable-combining      enable composition of base and combining characters
   --enable-xft            enable xft support on systems that have it
   --enable-utmp           enable utmp (utmpx) support
   --enable-wtmp           enable wtmp (wtmpx) support (requires --enable-utmp)
@@ -1077,7 +1078,7 @@ Optional Packages:
   --with-pic              try to use only PIC/non-PIC objects default=use both
   --with-codesets=NAME,.. compile in additional codesets (jp,jp_ext,kr,cn,cn_ext,all)
   --with-res-name=NAME    use this as default resource name (default: urxvt)
-  --with-res-class=NAME   use this as the resource class (default: URxvt)
+  --with-res-class=CLASS  use this as the resource class (default: URxvt)
   --with-name=NAME        set the basename for the installed binaries (default: urxvt)
   --with-term=NAME        set the terminal to NAME (default: rxvt)
   --with-terminfo=PATH    set the path to the terminfo tree to PATH
@@ -5036,7 +5037,7 @@ test "x$enable_libtool_lock" != xno && enable_libtool_lock=yes
 case "$host" in
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5039 "configure"' > conftest.$ac_ext
+  echo '#line 5040 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -5587,7 +5588,7 @@ chmod -w .
 save_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -o out/conftest2.$ac_objext"
 compiler_c_o=no
-if { (eval echo configure:5590: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>out/conftest.err; } && test -s out/conftest2.$ac_objext; then
+if { (eval echo configure:5591: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>out/conftest.err; } && test -s out/conftest2.$ac_objext; then
   # The compiler can only warn and ignore the option if not recognized
   # So say no if there are warnings
   if test -s out/conftest.err; then
@@ -7203,7 +7204,7 @@ else
     lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 7206 "configure"
+#line 7207 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -7301,7 +7302,7 @@ else
     lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 7304 "configure"
+#line 7305 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -8054,6 +8055,7 @@ support_xim=no
 support_xpm=no
 support_xft=no
 support_unicode3=no
+support_combining=no
 codesets=
 
 
@@ -8095,6 +8097,7 @@ if test "${enable_everything+set}" = set; then
     support_xpm=yes
     support_xft=yes
     support_unicode3=yes
+    support_combining=yes
     codesets=all
   fi
 fi;
@@ -8104,6 +8107,14 @@ if test "${enable_unicode3+set}" = set; then
   enableval="$enable_unicode3"
   if test x$enableval = xyes -o x$enableval = xno; then
     support_unicode3=yes
+  fi
+fi;
+
+# Check whether --enable-combining or --disable-combining was given.
+if test "${enable_combining+set}" = set; then
+  enableval="$enable_combining"
+  if test x$enableval = xyes -o x$enableval = xno; then
+    support_combining=yes
   fi
 fi;
 
@@ -15861,7 +15872,7 @@ _ACEOF
 cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
-#include <locale.h>
+#include <clocale>
 int
 main ()
 {
@@ -15985,7 +15996,7 @@ cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 #define _GNU_SOURCE
 #ifdef HAVE_STDLIB_H
-# include <stdlib.h>
+# include <cstdlib>
 #endif
 int
 main ()
@@ -16395,8 +16406,15 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
 fi
+if test x$support_combining = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define ENCODING_COMPOSE 1
+_ACEOF
+
+fi
 if test x$codesets = xall; then
-  codesets=jp,jp-ext,kr,cn,cn-ext,vn
+  codesets=jp,jp-ext,kr,cn,cn-ext
 fi
 for codeset in `echo $codesets | tr "a-z,\\-" "A-Z _"`; do
 
@@ -16496,14 +16514,14 @@ else
   include_stdint_h="/* #include <stdint.h> */"
 fi
 if test "$ac_cv_header_stdarg_h" = "yes" -o "$notset" = "dontmatch"; then
-  include_stdarg_h="#include <stdarg.h>"
+  include_stdarg_h="#include <cstdarg>"
 else
-  include_stdarg_h="/* #include <stdarg.h> */"
+  include_stdarg_h="/* #include <cstdarg> */"
 fi
 if test "$ac_cv_header_stdlib_h" = "yes" -o "$notset" = "dontmatch"; then
-  include_stdlib_h="#include <stdlib.h>"
+  include_stdlib_h="#include <cstdlib>"
 else
-  include_stdlib_h="/* #include <stdlib.h> */"
+  include_stdlib_h="/* #include <cstdlib> */"
 fi
 if test "$ac_cv_header_unistd_h" = "yes" -o "$notset" = "dontmatch"; then
   include_unistd_h="#include <unistd.h>"
@@ -16511,9 +16529,9 @@ else
   include_unistd_h="/* #include <unistd.h> */"
 fi
 if test "$ac_cv_header_string_h" = "yes" -o "$notset" = "dontmatch"; then
-  include_string_h="#include <string.h>"
+  include_string_h="#include <cstring>"
 else
-  include_string_h="/* #include <string.h> */"
+  include_string_h="/* #include <cstring> */"
 fi
 if test "$ac_cv_header_fcntl_h" = "yes" -o "$notset" = "dontmatch"; then
   include_fcntl_h="#include <fcntl.h>"
@@ -18028,13 +18046,17 @@ else
 "
 fi
 if test x$term != x; then
-  echo "  set TERM to:                $term
-"
+  echo "  set TERM to:                $term"
 fi
 if test x$terminfo != x; then
-  echo "  set TERMINFO to:            $terminfo
-"
+  echo "  set TERMINFO to:            $terminfo"
 fi
+echo "  default resource name:      $RESNAME"
+echo "  resource class:             $RESCLASS"
+if test x$RESFALLBACK != x; then
+   echo "  resource class fallback:    $RESFALLBACK"
+fi
+echo
 if test x$rxvt_cv_ptys = xUNKNOWN; then
   echo ".----------------------------------------------------------------."
   echo ". WARNING: could not determine pty/tty type.  Do not build until ."

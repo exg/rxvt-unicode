@@ -15,8 +15,6 @@
 #include "iom.h"
 #include "salloc.h"
 
-#include <wchar.h>
-
 /*
  *****************************************************************************
  * SYSTEM HACKS
@@ -360,33 +358,34 @@ enum {
   XTerm_name             =  0,
   XTerm_iconName         =  1,
   XTerm_title            =  2,
-  XTerm_property         =  3,      /* change X property, not yet implemented */
-  XTerm_Color            =  4,      /* change colors */
-  XTerm_Color00          = 10,      /* not implemented, CLASH! */
-  XTerm_Color01          = 11,      /* not implemented */
-  XTerm_Color_cursor     = 12,      /* change actual 'Cursor' color */
-  XTerm_Color_pointer    = 13,      /* change actual 'Pointer' color */
-  XTerm_Color04          = 14,      /* not implemented */
-  XTerm_Color05          = 15,      /* not implemented */
-  XTerm_Color06          = 16,      /* not implemented */
-  XTerm_Color_RV         = 17,      /* change actual 'Highlight' color */
-  XTerm_logfile          = 46,      /* not implemented */
+  XTerm_property         =  3,      // change X property, not yet implemented
+  XTerm_Color            =  4,      // change colors
+  XTerm_Color00          = 10,      // not implemented, CLASH!
+  XTerm_Color01          = 11,      // not implemented
+  XTerm_Color_cursor     = 12,      // change actual 'Cursor' color
+  XTerm_Color_pointer    = 13,      // change actual 'Pointer' color
+  XTerm_Color04          = 14,      // not implemented
+  XTerm_Color05          = 15,      // not implemented
+  XTerm_Color06          = 16,      // not implemented
+  XTerm_Color_RV         = 17,      // change actual 'Highlight' color
+  XTerm_logfile          = 46,      // not implemented
   XTerm_font             = 50,
 
-  XTerm_konsole30        = 30,      /* reserved for konsole */
-  XTerm_konsole31        = 31,      /* reserved for konsole */
-  XTerm_emacs51          = 51,      /* reserved for emacs shell */
+  XTerm_konsole30        = 30,      // reserved for konsole
+  XTerm_konsole31        = 31,      // reserved for konsole
+  XTerm_emacs51          = 51,      // reserved for emacs shell
   /*
    * rxvt extensions of XTerm OSCs: ESC ] Ps;Pt (ST|BEL)
    */
-  XTerm_locale		=  9,      /* change locale */
-  XTerm_Menu             = 10,     /* set menu item */
-  XTerm_Color_BD         = 18,     /* change actual 'Bold' color */
-  XTerm_Color_UL         = 19,     /* change actual 'Underline' color */
-  XTerm_Pixmap           = 20,     /* new bg pixmap */
-  XTerm_restoreFG        = 39,     /* change default fg color */
-  XTerm_restoreBG        = 49,     /* change default bg color */
-  XTerm_dumpscreen       = 55,     /* dump scrollback and all of screen */
+  XTerm_Menu             = 10,      // set menu item
+  XTerm_Color_BD         = 18,      // change actual 'Bold' color
+  XTerm_Color_UL         = 19,      // change actual 'Underline' color
+  XTerm_Pixmap           = 20,      // new bg pixmap
+  XTerm_restoreFG        = 39,      // change default fg color
+  XTerm_restoreBG        = 49,      // change default bg color
+  XTerm_dumpscreen       = 55,      // dump scrollback and all of screen
+  XTerm_locale           = 701,     // change locale
+  XTerm_findfont         = 702,     // find font of given character (in decimal)
 };
 
 /* Words starting with `Color_' are colours.  Others are counts */
@@ -833,8 +832,46 @@ struct mbstate {
   mbstate () { reset (); }
 };
 
+#if UNICODE3
+# define COMPOSE_LO 0x40000000UL
+# define COMPOSE_HI 0x400fffffUL
+# define IS_COMPOSE(n) ((int32_t)(n) >= COMPOSE_LO)
+#else
+# define COMPOSE_LO 0xd800UL
+# define COMPOSE_HI 0xf8ffUL // dfff should be safer, but...
+# define IS_COMPOSE(n) (COMPOSE_LO <= (n) && (n) <= COMPOSE_HI)
+#endif
+
+#if ENCODING_COMPOSE
+// compose chars are used to represent composite characters
+// that are not representable in unicode, as well as characters
+// not fitting in the BMP.
+struct compose_char {
+  uint32_t c1, c2; // any chars != NOCHAR are valid
+  compose_char (uint32_t c1, uint32_t c2)
+  : c1(c1), c2(c2)
+  { }
+};
+
+class rxvt_composite_vec {
+  vector<compose_char> v;
+public:
+  text_t compose (uint32_t c1, uint32_t c2 = NOCHAR);
+  int expand (uint32_t c, wchar_t *r);
+  compose_char *operator [](text_t c)
+  {
+    return c >= COMPOSE_LO && c < COMPOSE_LO + v.size ()
+           ? &v[c - COMPOSE_LO]
+           : 0;
+  }
+};
+
+extern class rxvt_composite_vec rxvt_composite;
+#endif
+
+
 struct rxvt_term : rxvt_vars {
-  struct          mbstate mbstate;
+  struct mbstate mbstate;
 
   unsigned char   want_refresh:1,
 #ifdef TRANSPARENT

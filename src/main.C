@@ -58,6 +58,69 @@ rxvt_set_locale (const char *locale)
     }
 }
 
+class rxvt_composite_vec rxvt_composite;
+
+text_t rxvt_composite_vec::compose (uint32_t c1, uint32_t c2)
+{
+  compose_char *cc;
+  
+  // break compose chains, as stupid readline really likes to duplicate
+  // composing characters for some reason near the end of a line.
+  cc = (*this)[c1];
+  while (cc)
+    {
+      if (cc->c2 == c2) return c1;
+      cc = (*this)[cc->c1];
+    }
+
+  // check to see wether this combination already exists otherwise
+  for (cc = v.end (); cc-- > v.begin (); )
+    {
+      if (cc->c1 == c1 && cc->c2 == c2)
+        return COMPOSE_LO + (cc - v.begin ());
+    }
+
+  // allocate a new combination
+  if (v.size () == COMPOSE_HI - COMPOSE_LO + 1)
+    {
+      static int seen;
+
+      if (!seen++)
+        fprintf (stderr, "too many unrepresentable composite characters, try --enable-unicode3\n");
+
+      return REPLACEMENT_CHAR;
+    }
+
+  v.push_back (compose_char (c1, c2));
+
+  return v.size () - 1 + COMPOSE_LO;
+}
+
+int rxvt_composite_vec::expand (uint32_t c, wchar_t *r)
+{
+  compose_char *cc = (*this)[c];
+
+  if (!cc)
+    {
+      if (r) *r = c;
+      return 1;
+    }
+
+  int len = expand (cc->c1, r);
+
+  if (r) r += len;
+
+  if (cc->c2 != NOCHAR)
+    {
+      len++;
+      if (r) *r++ = cc->c2;
+    }
+
+  return len;
+
+}
+
+extern struct rxvt_composite_vec rxvt_composite;
 void *
 rxvt_term::operator new (size_t s)
 {

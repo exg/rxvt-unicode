@@ -1060,7 +1060,7 @@ LIBS=$ac_save_LIBS
 CFLAGS=$ac_save_CFLAGS
 
 AC_CACHE_CHECK(for working plain setlocale, rxvt_cv_func_setlocale,
-[AC_TRY_LINK([#include <locale.h>],
+[AC_TRY_LINK([#include <clocale>],
   [setlocale(LC_CTYPE, "");],
   rxvt_cv_func_setlocale=yes, rxvt_cv_func_setlocale=no)])
 if test x$rxvt_cv_func_setlocale = xyes; then
@@ -1078,7 +1078,7 @@ fi
 AC_CACHE_CHECK(for getpt, rxvt_cv_func_getpt,
 [AC_TRY_LINK([#define _GNU_SOURCE
 #ifdef HAVE_STDLIB_H
-# include <stdlib.h>
+# include <cstdlib>
 #endif],
   [(void)getpt();],
   rxvt_cv_func_getpt=yes, rxvt_cv_func_getpt=no)])
@@ -1307,10 +1307,10 @@ fi dnl
 AC_SUBST($1)])
 
 RXVT_DEFINE_TO_INCLUDE(include_stdint_h, stdint.h, ac_cv_header_stdint_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_stdarg_h, stdarg.h, ac_cv_header_stdarg_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_stdlib_h, stdlib.h, ac_cv_header_stdlib_h, yes, notset, dontmatch)
+RXVT_DEFINE_TO_INCLUDE(include_stdarg_h, cstdarg, ac_cv_header_stdarg_h, yes, notset, dontmatch)
+RXVT_DEFINE_TO_INCLUDE(include_stdlib_h, cstdlib, ac_cv_header_stdlib_h, yes, notset, dontmatch)
 RXVT_DEFINE_TO_INCLUDE(include_unistd_h, unistd.h, ac_cv_header_unistd_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_string_h, string.h, ac_cv_header_string_h, yes, notset, dontmatch)
+RXVT_DEFINE_TO_INCLUDE(include_string_h, cstring, ac_cv_header_string_h, yes, notset, dontmatch)
 RXVT_DEFINE_TO_INCLUDE(include_fcntl_h, fcntl.h, ac_cv_header_fcntl_h, yes, notset, dontmatch)
 RXVT_DEFINE_TO_INCLUDE(include_util_h, util.h, ac_cv_header_util_h, yes, notset, dontmatch)
 RXVT_DEFINE_TO_INCLUDE(include_assert_h, assert.h, ac_cv_header_assert_h, yes, notset, dontmatch)

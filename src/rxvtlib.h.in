@@ -1,9 +1,9 @@
 #ifndef _RXVTLIB_H_             /* include once only */
 #define _RXVTLIB_H_
 
-#include <stdio.h>
-#include <ctype.h>
-#include <errno.h>
+#include <cstdio>
+#include <cctype>
+#include <cerrno>
 @include_stdarg_h@
 @include_stdlib_h@
 @include_stdint_h@
@@ -21,6 +21,8 @@
 
 #include <sys/wait.h>
 #include <sys/stat.h>
+
+#include <cwchar>
 
 extern "C" {
 #include <X11/Intrinsic.h>      /* Xlib, Xutil, Xresource, Xfuncproto */
@@ -63,7 +65,7 @@ typedef struct {
   int32_t         col;
 } row_col_t;
 
-#if UNICODE3
+#if UNICODE_3
 typedef uint32_t text_t;
 #else
 typedef uint16_t text_t; // saves lots of memory
@@ -159,7 +161,7 @@ enum selection_op_t {
 };
 
 typedef struct {
-  unsigned char  *text;       /* selected text                             */
+  wchar_t        *text;       /* selected text                             */
   uint32_t        len;        /* length of selected text                   */
   short           screen;     /* screen being used                         */
   short           clicks;     /* number of clicks                          */

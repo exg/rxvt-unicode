@@ -32,9 +32,9 @@
 #endif
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 #ifdef HAVE_STDLIB_H
-# include <stdlib.h>
+# include <cstdlib>
 #endif
 #ifdef HAVE_SYS_TYPES_H
 # include <sys/types.h>
@@ -43,7 +43,7 @@
 # include <unistd.h>
 #endif
 #if defined(HAVE_STRING_H)
-# include <string.h>
+# include <cstring>
 #endif
 #ifdef HAVE_FCNTL_H
 # include <fcntl.h>
