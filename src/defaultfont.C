@@ -277,11 +277,15 @@ struct rxvt_font_default : rxvt_font {
   {
     if (unicode <= 0x001f)
       return true;
+
     if (unicode >= 0x0080 && unicode <= 0x009f)
       return true;
 
     if (unicode >= 0x2500 && unicode <= 0x257f
         && linedraw_cmds[unicode - 0x2500])
+      return true;
+
+    if (IS_PSEUDO (unicode))
       return true;
 
     switch (unicode)
@@ -346,6 +350,11 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 
           gcv.line_width = 0;
           XChangeGC (d.display->display, GC, GCLineWidth, &gcv);
+        }
+      else if (IS_PSEUDO (t))
+        {
+          const compose_char &cc = r->composite (t);
+          (void)0; //D ADD pseudo handling here
         }
       else
         switch (t)
