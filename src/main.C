@@ -58,6 +58,7 @@ rxvt_set_locale (const char *locale)
     }
 }
 
+#if ENABLE_COMBINING
 class rxvt_composite_vec rxvt_composite;
 
 text_t rxvt_composite_vec::compose (uint32_t c1, uint32_t c2)
@@ -119,8 +120,8 @@ int rxvt_composite_vec::expand (uint32_t c, wchar_t *r)
   return len;
 
 }
+#endif
 
-extern struct rxvt_composite_vec rxvt_composite;
 void *
 rxvt_term::operator new (size_t s)
 {
@@ -687,6 +688,7 @@ rxvt_term::window_calc (unsigned int width, unsigned int height)
             }
         }
     }
+
   /* TODO: BOUNDS */
   TermWin.width = TermWin.ncol * TermWin.fwidth;
   TermWin.height = TermWin.nrow * TermWin.fheight;

@@ -396,11 +396,6 @@ rxvt_term::init_vars ()
   colorfgbg = DEFAULT_RSTYLE;
 #endif
 
-#if defined (HOTKEY_CTRL) || defined (HOTKEY_META)
-  ks_bigfont = XK_greater;
-  ks_smallfont = XK_less;
-#endif
-
   refresh_limit = 1;
   refresh_type = SLOW_REFRESH;
   prev_nrow = prev_ncol = 0;
@@ -593,18 +588,6 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
   if (!rs[Rs_cutchars])
     rs[Rs_cutchars] = CUTCHARS;
-
-#ifdef ACS_ASCII
-  if (!rs[Rs_acs_chars])
-    rs[Rs_acs_chars] = ACS_CHARS;
-  if ((i = STRLEN (rs[Rs_acs_chars])) < 0x20)
-    {
-      val = rxvt_realloc ((void *)rs[Rs_acs_chars], 0x20);
-      for (; i < 0x20; )
-        val[i] = ' ';
-      rs[Rs_acs_chars] = val;
-    }
-#endif
 
 #ifndef NO_BACKSPACE_KEY
   if (!rs[Rs_backspace_key])

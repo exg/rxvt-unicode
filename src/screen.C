@@ -866,9 +866,6 @@ rxvt_term::scr_add_lines (const uint32_t *str, int nlines, int len)
       if (screen.flags & Screen_Insert)
         scr_insdel_chars (1, INSERT);
 
-      if (IS_COMPOSE (c))
-        c = REPLACEMENT_CHAR;
-
       // rely on wcwidth to tell us the character width, at least for non-latin1
       // do wcwidth before further replacements, as wcwidth says that line-drawing
       // characters have width -1 (DOH!) on gnu/linux sometimes.
@@ -890,11 +887,10 @@ rxvt_term::scr_add_lines (const uint32_t *str, int nlines, int len)
             case 'y': c = 0x2264; break; case 'z': c = 0x2265; break; case '{': c = 0x03c0; break;
             case '|': c = 0x2260; break; case '}': c = 0x00a3; break; case '~': c = 0x00b7; break;
           }
-      
 
       if (width > 0)
         {
-#if !UNICODE_3
+#if !UNICODE_3 && ENABLE_COMBINING
           // trim characters we can't store directly :(
           if (c >= 0x10000)
             c = rxvt_composite.compose (c); // map to lower 16 bits
@@ -929,7 +925,7 @@ rxvt_term::scr_add_lines (const uint32_t *str, int nlines, int len)
         }
       else if (width == 0)
         {
-#if ENCODING_COMPOSE
+#if ENABLE_COMBINING
           // handle combining characters
           // we just tag the accent on the previous on-screen character.
           // this is arguably not correct, but also arguably not wrong.
@@ -2194,10 +2190,8 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
             }
 
           if (rend & RS_Uline)
-            {
-              if (ISSET_PIXCOLOR (Color_UL))
-                fore = Color_UL;
-            }
+            if (ISSET_PIXCOLOR (Color_UL))
+              fore = Color_UL;
 #endif
 
           if (rvid)
@@ -2840,6 +2834,7 @@ rxvt_term::selection_make (Time tm)
         {
           if (*t == NOCHAR)
             t++;
+#if ENABLE_COMBINING
           else if (IS_COMPOSE (*t))
             {
               int len = rxvt_composite.expand (*t, 0);
@@ -2855,6 +2850,7 @@ rxvt_term::selection_make (Time tm)
 
               ofs += rxvt_composite.expand (*t++, new_selection_text + ofs);
             }
+#endif
           else
             new_selection_text[ofs++] = *t++;
         }

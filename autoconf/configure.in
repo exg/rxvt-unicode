@@ -1242,7 +1242,7 @@ if test x$support_unicode3 = xyes; then
   AC_DEFINE(UNICODE_3, 1, Define if you want to represent unicode characters outside plane 0)
 fi
 if test x$support_combining = xyes; then
-  AC_DEFINE(ENCODING_COMPOSE, 1, Define if you want to automatically compose combining characters)
+  AC_DEFINE(ENABLE_COMBINING, 1, Define if you want to automatically compose combining characters)
 fi
 if test x$codesets = xall; then
   codesets=jp,jp-ext,kr,cn,cn-ext

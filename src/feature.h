@@ -35,6 +35,16 @@
 #endif
 
 /*-----------------------SCREEN OPTIONS AND COLOURS---------------------*/
+
+/*
+ * NOTE:
+ *
+ * Most of these configuration options have not been tested within the new
+ * rxvt-unicode framework. Changing them might work, might have no effect,
+ * destroy your disks or have any other effects. You may freely try (and
+ * report bugs, too!), but don't _expect_ them to work.
+ */
+
 /*
  * Define the name of the environment variable to be used in
  * addition to the "PATH" environment and the `path' resource.
@@ -64,12 +74,6 @@
  * Disable separate colours for bold, underline and reverse video
  */
 /* #define NO_BOLD_UNDERLINE_REVERSE */
-
-/*
- * Don't bother cleaning up pixel droppings.  If you don't use bold
- * overstrike then you don't usually need this
- */
-#define NO_PIXEL_DROPPING_AVOIDANCE
 
 /*
  * Define maximum possible columns and rows
@@ -102,6 +106,7 @@
 #define COLOR_BACKGROUND	"White"
 #define COLOR_SCROLLBAR		"#B2B2B2"	/* scrollColor match Netscape */
 #define COLOR_SCROLLTROUGH	"#969696"
+
 /*
  * The cursor colours are special.  Be very careful about setting these:
  * foreground/background colours may be modified by command line or resources
@@ -132,7 +137,7 @@
  * Define to find installed application defaults for rxvt
  * Only if USE_XGETDEFAULT is not defined.
  */
-/* #define USE_XAPPLOADDIR */
+#define USE_XAPPLOADDIR
 
 /*
  * Add support for the Offix DND (Drag 'n' Drop) protocol
@@ -147,14 +152,7 @@
  */
 //#define DEFAULT_BACKSPACE	"DEC"		/* SPECIAL */
 #define DEFAULT_BACKSPACE	"\010"		/* wrong, but match terminfo etc. */
-#define DEFAULT_DELETE	"\033[3~"
-
-/*
- * Choose one of these values to be the `hotkey' for changing font.
- * This has been superceded and is only for you older users
- */
-/* #define HOTKEY_CTRL */
-/* #define HOTKEY_META */
+#define DEFAULT_DELETE		"\033[3~"
 
 /*
  * To use
@@ -247,7 +245,7 @@
  * If mouse wheel is defined, then scrolling is by 5 lines (or 1 line
  * if the shift key is down).  Scrolling can be smooth or jump scrolling
  */
-/* #define JUMP_MOUSE_WHEEL */
+#define JUMP_MOUSE_WHEEL
 
 /*
  * Set delay periods for continuous scrolling with scrollbar buttons
@@ -279,18 +277,6 @@
  * Only log in wtmp file when we're a login shell (-ls option)
  */
 #define WTMP_ONLY_ON_LOGIN
-
-/*
- * When pasting ACS characters, convert to similar normal characters
- */
-/* #define ACS_ASCII */
-
-/*
- * Default ascii characters to which ACS symbols are converted
- */
-#ifdef ACS_ASCII
-# define ACS_CHARS ".#    o+  ----+---__++--|<> =#. "
-#endif
 
 /*--------------------------------BELL----------------------------------*/
 /*
@@ -341,7 +327,7 @@
  *  A value of 0 disables menuBar all together.
  *  Note that the amount of memory overhead is the same for any value >= 2.
  */
-#define MENUBAR_MAX 8
+#define MENUBAR_MAX 16
 
 /*
  * Change the default shadow style
@@ -425,20 +411,8 @@
 #define SAVELINES	64
 
 /*
- * Provide termcap/terminfo bw support
+ * Provide termcap/terminfo bw support (wrap backwards on cub1)
  */
 /* #define TERMCAP_HAS_BW */
-
-/*
- * MAX_NFONTS is the maximum allowed number of fonts in the list
- * FONT0_IDX is the default font in the list (starting at 0)
- * Sizes between multi-char fonts sets (MFONT_LIST) and single-char font
- * sets (NFONT_LIST) have been matched up
- */
-#define MAX_NFONTS	7
-#define FONT0_IDX	2
-
-#define UNICODE 1 /* TODO */
-#define UTF8 1 /* TODO */
 
 #endif

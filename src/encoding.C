@@ -247,7 +247,9 @@ const rxvt_codeset_conv *rxvt_codeset[NUM_CODESETS] = {
   &rxvt_codeset_conv_unicode
 };
 
-//#define ENCODING_COMPOSE
+#if ENABLE_COMBINING
+# define ENCODING_COMPOSE
+#endif
 
 #include "table/compose.h"
 

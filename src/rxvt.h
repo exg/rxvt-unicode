@@ -523,10 +523,6 @@ enum {
   Rs_preeditType,
   Rs_inputMethod,
 #endif
-#if defined (HOTKEY_CTRL) || defined (HOTKEY_META)
-  Rs_bigfont_key,
-  Rs_smallfont_key,
-#endif
 #ifdef TRANSPARENT
   Rs_transparent,
   Rs_transparent_all,
@@ -540,9 +536,6 @@ enum {
   Rs_lineSpace,
 #endif
   Rs_cutchars,
-#ifdef ACS_ASCII
-  Rs_acs_chars,
-#endif
   Rs_modifier,
   Rs_answerbackstring,
   Rs_tripleclickwords,
@@ -604,14 +597,12 @@ enum {
     if (test)                           \
         PrivateModes |= (bit);          \
     else                                \
-        PrivateModes &= ~ (bit)
+        PrivateModes &= ~(bit)
 
 #ifdef ALLOW_132_MODE
-# define PrivMode_Default                                                \
-(PrivMode_Autowrap|PrivMode_aplKP|PrivMode_ShiftKeys|PrivMode_VisibleCursor|PrivMode_132OK)
+# define PrivMode_Default (PrivMode_Autowrap|PrivMode_aplKP|PrivMode_ShiftKeys|PrivMode_VisibleCursor|PrivMode_132OK)
 #else
-# define PrivMode_Default                                                \
-(PrivMode_Autowrap|PrivMode_aplKP|PrivMode_ShiftKeys|PrivMode_VisibleCursor)
+# define PrivMode_Default (PrivMode_Autowrap|PrivMode_aplKP|PrivMode_ShiftKeys|PrivMode_VisibleCursor)
 #endif
 
 #define XDEPTH                 display->depth
@@ -842,7 +833,7 @@ struct mbstate {
 # define IS_COMPOSE(n) (COMPOSE_LO <= (n) && (n) <= COMPOSE_HI)
 #endif
 
-#if ENCODING_COMPOSE
+#if ENABLE_COMBINING
 // compose chars are used to represent composite characters
 // that are not representable in unicode, as well as characters
 // not fitting in the BMP.
@@ -1024,9 +1015,6 @@ struct rxvt_term : rxvt_vars {
 #ifndef NO_DELETE_KEY
   const char     *key_delete;
 #endif
-#if defined (HOTKEY_CTRL) || defined (HOTKEY_META)
-  KeySym          ks_bigfont, ks_smallfont;
-#endif
 #ifdef USE_XIM
   rxvt_xim       *input_method;
   XIC             Input_Context;
@@ -1081,7 +1069,6 @@ struct rxvt_term : rxvt_vars {
   char            charsets[4];
   unsigned char  *v_buffer;   /* pointer to physical buffer */
   unsigned int    v_buflen;   /* size of area to write */
-  char           *newfont[MAX_NFONTS];
   stringvec      *argv, *envv;       /* if != 0, will be freed on destroy time */
 #ifdef KEYSYM_RESOURCE
   const unsigned char *Keysym_map[256];

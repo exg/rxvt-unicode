@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xdefaults.c
  *----------------------------------------------------------------------*
- * $Id: xdefaults.C,v 1.16 2004/03/04 00:59:10 pcg Exp $
+ * $Id: xdefaults.C,v 1.17 2004/03/14 17:33:08 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994      Robert Nation <nation@rocket.sanders.lockheed.com>
@@ -242,19 +242,12 @@ optList[] = {
 #ifdef PRINTPIPE
               RSTRG (Rs_print_pipe, "print-pipe", "string"),
 #endif
-#if defined (HOTKEY_CTRL) || defined (HOTKEY_META)
-              RSTRG (Rs_bigfont_key, "bigfont_key", "keysym"),
-              RSTRG (Rs_smallfont_key, "smallfont_key", "keysym"),
-#endif
               STRG (Rs_modifier, "modifier", "mod", "modifier",
                    "meta modifier = alt|meta|hyper|super|mod1|...|mod5"),
               INFO ("xrm", "string", "X resource"),
 #ifdef CUTCHAR_RESOURCE
               RSTRG (Rs_cutchars, "cutchars", "string"),
 #endif				/* CUTCHAR_RESOURCE */
-#ifdef ACS_ASCII
-              RSTRG (Rs_acs_chars, "acsChars", "string"),
-#endif				/* ACS_ASCII */
               RSTRG (Rs_answerbackstring, "answerbackString", "string"),
               INFO ("e", "command arg ...", "command to execute")
             };
@@ -980,9 +973,8 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
 #  endif
 
 #  if defined(XAPPLOADDIR) && defined(USE_XAPPLOADDIR)
-
     {
-      FILE           *ad = NULL;
+      FILE *ad = NULL;
 
 #   if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
       if (localepath == NULL || (ad = fopen (localepath, "r")) == NULL)
@@ -1013,22 +1005,6 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
 # endif
 
 #endif				/* NO_RESOURCES */
-
-  /*
-   * even without resources, at least do this setup for command-line
-   * options and command-line long options
-   */
-
-#if defined (HOTKEY_CTRL) || defined (HOTKEY_META)
-  KeySym          sym;
-
-  if (rs[Rs_bigfont_key]
-      && ((sym = XStringToKeysym (rs[Rs_bigfont_key])) != 0))
-    ks_bigfont = sym;
-  if (rs[Rs_smallfont_key]
-      && ((sym = XStringToKeysym (rs[Rs_smallfont_key])) != 0))
-    ks_smallfont = sym;
-#endif
 }
 
 /*}}} */

@@ -3,14 +3,14 @@
 /* Define if you want blinking cursor support */
 #undef CURSOR_BLINK
 
+/* Define if you want to automatically compose combining characters */
+#undef ENABLE_COMBINING
+
 /* Define if you want chinese codesets */
 #undef ENCODING_CN
 
 /* Define if you want extended chinese codesets */
 #undef ENCODING_CN_EXT
-
-/* Define if you want to automatically compose combining characters */
-#undef ENCODING_COMPOSE
 
 /* Define if you want european extended codesets */
 #undef ENCODING_EU

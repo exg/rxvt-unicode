@@ -142,27 +142,6 @@ rxvt_term::lookup_key (XKeyEvent &ev)
 
   if (valid_keysym)
     {
-      /* for some backwards compatibility */
-#if defined(HOTKEY_CTRL) || defined(HOTKEY_META)
-# ifdef HOTKEY_CTRL
-      if (ctrl)
-# else
-      if (meta)
-# endif
-        {
-          if (keysym == ks_bigfont)
-            {
-              change_font (FONT_UP);
-              return;
-            }
-          else if (keysym == ks_smallfont)
-            {
-              change_font (FONT_DN);
-              return;
-            }
-        }
-#endif
-
       if (TermWin.saveLines)
         {
 #ifdef UNSHIFTED_SCROLLKEYS
@@ -263,17 +242,21 @@ rxvt_term::lookup_key (XKeyEvent &ev)
             {
               unsigned int    l;
               const unsigned char *kbuf0;
-              const unsigned char ch = C0_ESC;
 
               kbuf0 = (Keysym_map[keysym & 0xFF]);
               l = (unsigned int)*kbuf0++;
 
               /* escape prefix */
-              if (meta)
+              if (meta
 # ifdef META8_OPTION
-                if (meta_char == C0_ESC)
+                  && meta_char == C0_ESC
 # endif
+                 )
+                {
+                  const unsigned char ch = C0_ESC;
                   tt_write (&ch, 1);
+                }
+
               tt_write (kbuf0, l);
               return;
             }
@@ -547,6 +530,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
               if (newlen)
                 len = STRLEN (kbuf);
             }
+
           /*
            * Pass meta for all function keys, if 'meta' option set
            */
@@ -571,6 +555,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
 
               for (ch = kbuf; ch < kbuf + len; ch++)
                 *ch |= 0x80;
+
               meta = 0;
             }
 #endif

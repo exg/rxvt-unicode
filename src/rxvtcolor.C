@@ -113,6 +113,9 @@ bool rxvt_display::init ()
 {
   display = XOpenDisplay (id);
 
+  if (!display)
+    return false;
+
   screen = DefaultScreen (display);
   root   = DefaultRootWindow (display);
   visual = DefaultVisual (display, screen);
@@ -154,7 +157,8 @@ rxvt_display::~rxvt_display ()
 {
   x_ev.stop ();
 
-  XCloseDisplay (display);
+  if (display)
+    XCloseDisplay (display);
 }
 
 void rxvt_display::im_change_cb ()
