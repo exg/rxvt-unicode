@@ -20,7 +20,7 @@ WISH: just for fun, do shade and tint with XRender.
         - added doc/embed-tk, an embedding example in Perl/Tk,
           and doc/rxvt-tabbed, a primitive tabbed shell implemented
           in Perl/Gtk2.
-        - fix assertioan failure ("crash") on mousewheel-scrolling
+        - fix assertian failure ("crash") on mousewheel-scrolling
           when the terminal height is small, by removing the assert.
           (reported by Mikael Magnusson).
         - SYNCCVS. backported bugfixes done to rxvt
