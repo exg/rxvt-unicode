@@ -837,13 +837,10 @@ rxvt_term::init_xlocale ()
           return;
         }
 
-      /* see if we can connect yet */
-      rxvt_IMInstantiateCallback (display->display, NULL, NULL);
+      im_ev.start (display);
 
-      /* To avoid Segmentation Fault in C locale: Solaris only? */
-      if (STRCMP (locale, "C"))
-        XRegisterIMInstantiateCallback (display->display, NULL, NULL, NULL,
-                                        rxvt_IMInstantiateCallback, NULL);
+      /* see if we can connect already */
+      im_cb ();
     }
 #endif
 }

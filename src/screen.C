@@ -3498,7 +3498,7 @@ rxvt_term::pixel_position (int *x, int *y)
 /* ------------------------------------------------------------------------- */
 #ifdef USE_XIM
 void
-rxvt_term::set_position (XPoint *pos)
+rxvt_term::im_set_position (XPoint *pos)
 {
   XWindowAttributes xwa;
 

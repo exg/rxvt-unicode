@@ -547,7 +547,7 @@ enum {
   NUM_RESOURCES
 };
 
-// see init.C:xa_named, which must be kept in sync
+// see init.C:xa_names, which must be kept in sync
 enum {
   XA_TEXT = 0,
   XA_COMPOUND_TEXT,
@@ -994,6 +994,7 @@ struct rxvt_term : rxvt_vars {
   KeySym          ks_greekmodeswith;
 #endif
 #ifdef USE_XIM
+  rxvt_xim       *input_method;
   XIC             Input_Context;
   XIMStyle        input_style;
   int             event_type;
@@ -1139,12 +1140,19 @@ struct rxvt_term : rxvt_vars {
   void create_windows (int argc, const char *const *argv);
   void resize_all_windows (unsigned int width, unsigned int height, int ignoreparent);
   void window_calc (unsigned int width, unsigned int height);
-  void set_preedit_area (XRectangle * preedit_rect, XRectangle * status_rect, XRectangle * needed_rect);
 
 #if USE_XIM
-  void set_size (XRectangle *size);
-  void set_position (XPoint *pos);
-  void set_color (unsigned long *fg, unsigned long *bg);
+  void im_destroy ();
+  void im_cb (); im_watcher im_ev;
+  void im_set_size (XRectangle *size);
+  void im_set_position (XPoint *pos);
+  void im_set_color (unsigned long *fg, unsigned long *bg);
+  void im_set_preedit_area (XRectangle * preedit_rect, XRectangle * status_rect, XRectangle * needed_rect);
+
+  bool IMisRunning ();
+  void IMSendSpot ();
+  bool IM_get_IC (const char *modifiers);
+  void IMSetStatusPosition ();
 #endif
 
   void resize_scrollbar ();
@@ -1215,10 +1223,6 @@ struct rxvt_term : rxvt_vars {
   void set_colorfgbg ();
   int rXParseAllocColor (rxvt_color * screen_in_out, const char *colour);
   void set_widthheight (unsigned int width, unsigned int height);
-  bool IMisRunning ();
-  void IMSendSpot ();
-  bool IM_get_IC ();
-  void IMSetStatusPosition ();
 
 #ifdef MENUBAR
   // menubar.C

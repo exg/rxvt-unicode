@@ -5,23 +5,113 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+refcounted::refcounted (const char *id)
+{
+  this->id = STRDUP (id);
+}
+
+refcounted::~refcounted ()
+{
+  free (id);
+}
+
+template<class T>
+T *refcache<T>::get (const char *id)
+{
+  for (T **i = begin (); i < end (); ++i)
+    {
+      if (!strcmp (id, (*i)->id))
+        {
+          (*i)->referenced++;
+          return *i;
+        }
+    }
+
+  T *obj = new T (id);
+
+  obj->referenced = 1;
+
+  if (obj && obj->init ())
+    {
+      push_back (obj);
+      return obj;
+    }
+  else
+    {
+      delete obj;
+      return 0;
+    }
+}
+
+template<class T>
+void refcache<T>::put (T *obj)
+{
+  if (!obj)
+    return;
+
+  if (!--obj->referenced)
+    {
+      erase (find (begin (), end (), obj));
+      delete obj;
+    }
+}
+
+template<class T>
+refcache<T>::~refcache ()
+{
+  while (size ())
+    put (*begin ());
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
-rxvt_display::rxvt_display (const char *name)
-: x_watcher (this, &rxvt_display::x_event)
+static void
+im_destroy_cb (XIM unused1, XPointer client_data, XPointer unused3)
+{
+  rxvt_xim *xim = (rxvt_xim *)client_data;
+  rxvt_display *display = xim->display;
+
+  display->xims.erase (find (display->xims.begin (), display->xims.end (), xim));
+
+  display->im_change_cb ();
+}
+
+bool rxvt_xim::init ()
+{
+  display = GET_R->display; //HACK: TODO
+
+  xim = XOpenIM (display->display, NULL, NULL, NULL);
+
+  if (!xim)
+    return false;
+
+  XIMCallback ximcallback;
+  ximcallback.client_data = (XPointer)this;
+  ximcallback.callback = im_destroy_cb;
+
+  XSetIMValues (xim, XNDestroyCallback, &ximcallback, NULL);
+
+  return true;
+}
+
+rxvt_xim::~rxvt_xim ()
+{
+  if (xim)
+    XCloseIM (xim);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+rxvt_display::rxvt_display (const char *id)
+: refcounted (id)
+, x_watcher (this, &rxvt_display::x_event)
 , selection_owner (0)
 {
-  this->name = STRDUP (name);
 }
 
-rxvt_display::~rxvt_display ()
+bool rxvt_display::init ()
 {
-  free (name);
-}
-
-bool rxvt_display::open ()
-{
-  display = XOpenDisplay (name);
+  display = XOpenDisplay (id);
 
   screen = DefaultScreen (display);
   root   = DefaultRootWindow (display);
@@ -52,14 +142,23 @@ bool rxvt_display::open ()
   x_watcher.start (fd, EVENT_READ);
   fcntl (fd, F_SETFL, FD_CLOEXEC);
 
+  XSelectInput (display, root, PropertyChangeMask);
+  xa_xim_servers = XInternAtom (display, "XIM_SERVERS", 0);
+
   return true;
 }
 
-void rxvt_display::close ()
+rxvt_display::~rxvt_display ()
 {
   x_watcher.stop ();
 
   XCloseDisplay (display);
+}
+
+void rxvt_display::im_change_cb ()
+{
+  for (im_watcher **i = imw.begin (); i != imw.end (); ++i)
+    (*i)->call ();
 }
 
 void rxvt_display::x_event (io_watcher &w, short revents)
@@ -68,6 +167,13 @@ void rxvt_display::x_event (io_watcher &w, short revents)
     {
       XEvent xev;
       XNextEvent (display, &xev);
+
+      //printf ("T %d w %lx\n", xev.type, xev.xany.window);//D
+
+      if (xev.type == PropertyNotify
+          && xev.xany.window == root
+          && xev.xproperty.atom == xa_xim_servers)
+        im_change_cb ();
 
       for (int i = xw.size (); i--; )
         {
@@ -92,6 +198,16 @@ void rxvt_display::unreg (xevent_watcher *w)
     xw[w->active - 1] = 0;
 }
 
+void rxvt_display::reg (im_watcher *w)
+{
+  imw.push_back (w);
+}
+
+void rxvt_display::unreg (im_watcher *w)
+{
+  imw.erase (find (imw.begin (), imw.end (), w));
+}
+
 void rxvt_display::set_selection_owner (rxvt_term *owner)
 {
   if (selection_owner && selection_owner != owner)
@@ -100,45 +216,30 @@ void rxvt_display::set_selection_owner (rxvt_term *owner)
   selection_owner = owner;
 }
 
+rxvt_xim *rxvt_display::get_xim (const char *locale, const char *modifiers)
+{
+  // asprintf is a GNU and *BSD extension.. sorry...
+  char *id;
+
+  if (asprintf (&id, "%s\n%s", locale, modifiers) < 0)
+    return 0;
+
+  rxvt_xim *xim = xims.get (id);
+
+  free (id);
+
+  return xim;
+}
+
+void rxvt_display::put_xim (rxvt_xim *xim)
+{
+  xims.put (xim);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
-rxvt_displays displays;
-
-rxvt_display *rxvt_displays::get (const char *name)
-{
-  for (rxvt_display **i = list.begin (); i < list.end (); ++i)
-    {
-      if (!strcmp (name, (*i)->name))
-        {
-          (*i)->referenced++;
-          return *i;
-        }
-    }
-
-  rxvt_display *display = new rxvt_display (name);
-
-  display->referenced = 1;
-
-  if (display && display->open ())
-    list.push_back (display);
-  else
-    {
-      delete display;
-      display = 0;
-    }
-
-  return display;
-}
-
-void rxvt_displays::release (rxvt_display *display)
-{
-  if (!--display->referenced)
-    {
-      display->close ();
-      delete display;
-      list.erase (find (list.begin (), list.end (), display));
-    }
-}
+template refcache<rxvt_display>;
+refcache<rxvt_display> displays;
 
 /////////////////////////////////////////////////////////////////////////////
   

@@ -95,13 +95,19 @@ rxvt_term::rxvt_term ()
     check_ev (this, &rxvt_term::check_cb),
     destroy_ev (this, &rxvt_term::destroy_cb),
     pty_ev (this, &rxvt_term::pty_cb),
-    incr_ev (this, &rxvt_term::incr_cb)
+    incr_ev (this, &rxvt_term::incr_cb),
+#ifdef USE_XIM
+    im_ev (this, &rxvt_term::im_cb)
+#endif
 {
   cmdbuf_ptr = cmdbuf_endp = cmdbuf_base;
 }
 
 rxvt_term::~rxvt_term ()
 {
+  if (cmd_fd >= 0)
+    close (cmd_fd);
+
   scr_release ();
 
   free (locale);
@@ -113,26 +119,12 @@ rxvt_term::~rxvt_term ()
 #ifdef UTMP_SUPPORT
   privileged_utmp (RESTORE);
 #endif
-#ifdef USE_XIM
-  if (Input_Context)
-    {
-      XDestroyIC (Input_Context);
-      Input_Context = NULL;
-    }
-#endif
-
-  if (TermWin.parent[0])
-    XDestroyWindow (display->display, TermWin.parent[0]);
 
   // TODO: free pixcolours, colours should become part of rxvt_display
 
   delete PixColors;
 
-  if (cmd_fd >= 0)
-    close (cmd_fd);
-
-  if (display)
-    displays.release (display);
+  displays.put (display);
 }
 
 void
@@ -140,8 +132,16 @@ rxvt_term::destroy ()
 {
   if (display)
     {
+      if (TermWin.parent[0])
+        XDestroyWindow (display->display, TermWin.parent[0]);
+
       termwin_ev.stop (display);
       vt_ev.stop (display);
+
+#ifdef USE_XIM
+      im_destroy ();
+      im_ev.stop (display);
+#endif
 #ifdef HAVE_SCROLLBARS
       scrollbar_ev.stop (display);
 #endif
@@ -1059,8 +1059,9 @@ rxvt_term::set_widthheight (unsigned int width, unsigned int height)
  * -                      X INPUT METHOD ROUTINES                     - *
  * -------------------------------------------------------------------- */
 #ifdef USE_XIM
+
 void
-rxvt_term::set_size (XRectangle *size)
+rxvt_term::im_set_size (XRectangle *size)
 {
   size->x = TermWin.int_bwidth;
   size->y = TermWin.int_bwidth;
@@ -1069,7 +1070,7 @@ rxvt_term::set_size (XRectangle *size)
 }
 
 void
-rxvt_term::set_color (unsigned long *fg, unsigned long *bg)
+rxvt_term::im_set_color (unsigned long *fg, unsigned long *bg)
 {
   *fg = PixColors[Color_fg];
   *bg = PixColors[Color_bg];
@@ -1116,7 +1117,7 @@ rxvt_term::IMSendSpot ()
       || !IMisRunning ())
     return;
 
-  set_position (&spot);
+  im_set_position (&spot);
 
   preedit_attr = XVaCreateNestedList(0, XNSpotLocation, &spot, NULL);
   XSetICValues(Input_Context, XNPreeditAttributes, preedit_attr, NULL);
@@ -1124,8 +1125,8 @@ rxvt_term::IMSendSpot ()
 }
 
 void
-rxvt_term::set_preedit_area (XRectangle * preedit_rect, XRectangle * status_rect,
-                             XRectangle * needed_rect)
+rxvt_term::im_set_preedit_area (XRectangle * preedit_rect, XRectangle * status_rect,
+                                XRectangle * needed_rect)
 {
   int mbh, vtx = 0;
 
@@ -1148,18 +1149,20 @@ rxvt_term::set_preedit_area (XRectangle * preedit_rect, XRectangle * status_rect
   status_rect->height = Height2Pixel(1);
 }
 
-/* ARGSUSED */
-/* EXTPROTO */
 void
-rxvt_IMDestroyCallback(XIM xim __attribute__ ((unused)), XPointer client_data
-                       __attribute__ ((unused)), XPointer call_data
-                       __attribute__ ((unused)))
+rxvt_term::im_destroy ()
 {
-  GET_R->Input_Context = NULL;
-  /* To avoid Segmentation Fault in C locale: Solaris only? */
-  if (STRCMP (GET_R->locale, "C"))
-    XRegisterIMInstantiateCallback(GET_R->display->display, NULL, NULL, NULL,
-                                   rxvt_IMInstantiateCallback, NULL);
+  if (Input_Context)
+    {
+      XDestroyIC (Input_Context);
+      Input_Context = NULL;
+    }
+
+  if (input_method)
+    {
+      display->put_xim (input_method);
+      input_method = 0;
+    }
 }
 
 /*
@@ -1167,7 +1170,7 @@ rxvt_IMDestroyCallback(XIM xim __attribute__ ((unused)), XPointer client_data
  * open a suitable preedit type
  */
 bool
-rxvt_term::IM_get_IC ()
+rxvt_term::IM_get_IC (const char *modifiers)
 {
   int             i, j, found;
   XIM             xim;
@@ -1178,23 +1181,26 @@ rxvt_term::IM_get_IC ()
   char          **s;
   XIMStyles      *xim_styles;
   XVaNestedList   preedit_attr, status_attr;
-  XIMCallback     ximcallback;
+
+  if (!((p = XSetLocaleModifiers (modifiers)) && *p))
+    return false;
 
   D_MAIN((stderr, "rxvt_IM_get_IC()"));
-  xim = XOpenIM (display->display, NULL, NULL, NULL);
-  if (xim == NULL)
-    return False;
+  input_method = display->get_xim (locale, modifiers);
+  if (input_method == NULL)
+    return false;
+
+  xim = input_method->xim;
 
   xim_styles = NULL;
   if (XGetIMValues (xim, XNQueryInputStyle, &xim_styles, NULL)
       || !xim_styles || !xim_styles->count_styles)
     {
-      XCloseIM(xim);
-      return False;
+      display->put_xim (input_method);
+      return false;
     }
 
-  p = rs[Rs_preeditType] ? rs[Rs_preeditType]
-      : "OverTheSpot,OffTheSpot,Root";
+  p = rs[Rs_preeditType] ? rs[Rs_preeditType] : "OverTheSpot,OffTheSpot,Root";
   s = rxvt_splitcommastring(p);
   for (i = found = 0; !found && s[i]; i++)
     {
@@ -1212,29 +1218,26 @@ rxvt_term::IM_get_IC ()
             break;
           }
     }
+
   for (i = 0; s[i]; i++)
-    free(s[i]);
-  free(s);
-  XFree(xim_styles);
+    free (s[i]);
+
+  free (s);
+  XFree (xim_styles);
 
   if (!found)
     {
-      XCloseIM(xim);
-      return False;
+      display->put_xim (input_method);
+      return false;
     }
-
-  ximcallback.callback = rxvt_IMDestroyCallback;
-
-  /* XXX: not sure why we need this (as well as IC one below) */
-  XSetIMValues(xim, XNDestroyCallback, &ximcallback, NULL);
 
   preedit_attr = status_attr = NULL;
 
   if (input_style & XIMPreeditPosition)
     {
-      set_size (&rect);
-      set_position (&spot);
-      set_color (&fg, &bg);
+      im_set_size (&rect);
+      im_set_position (&spot);
+      im_set_color (&fg, &bg);
 
       preedit_attr = XVaCreateNestedList(0, XNArea, &rect,
                                          XNSpotLocation, &spot,
@@ -1244,7 +1247,7 @@ rxvt_term::IM_get_IC ()
     }
   else if (input_style & XIMPreeditArea)
     {
-      set_color (&fg, &bg);
+      im_set_color (&fg, &bg);
 
       /*
        * The necessary width of preedit area is unknown
@@ -1252,7 +1255,7 @@ rxvt_term::IM_get_IC ()
        */
       needed_rect.width = 0;
 
-      set_preedit_area(&rect, &status_rect, &needed_rect);
+      im_set_preedit_area (&rect, &status_rect, &needed_rect);
 
       preedit_attr = XVaCreateNestedList(0, XNArea, &rect,
                                          XNForeground, fg, XNBackground, bg,
@@ -1263,59 +1266,51 @@ rxvt_term::IM_get_IC ()
                                         //XNFontSet, TermWin.fontset,
                                         NULL);
     }
+
   Input_Context = XCreateIC(xim, XNInputStyle, input_style,
                             XNClientWindow, TermWin.parent[0],
                             XNFocusWindow, TermWin.parent[0],
-                            XNDestroyCallback, &ximcallback,
                             preedit_attr ? XNPreeditAttributes : NULL,
                             preedit_attr,
                             status_attr ? XNStatusAttributes : NULL,
                             status_attr, NULL);
-  if (preedit_attr)
-    XFree(preedit_attr);
-  if (status_attr)
-    XFree(status_attr);
+  if (preedit_attr) XFree(preedit_attr);
+  if (status_attr) XFree(status_attr);
+
   if (Input_Context == NULL)
     {
       rxvt_print_error("failed to create input context");
-      XCloseIM(xim);
-      return False;
+      display->put_xim (input_method);
+      return false;
     }
+
   if (input_style & XIMPreeditArea)
     IMSetStatusPosition ();
+
   D_MAIN((stderr, "rxvt_IM_get_IC() - successful connection"));
-  return True;
+  return true;
 }
 
-/*
- * X manual pages and include files don't match on some systems:
- * some think this is an XIDProc and others an XIMProc so we can't
- * use the first argument - need to update this to be nice for
- * both types via some sort of configure detection
- */
-/* ARGSUSED */
-/* EXTPROTO */
 void
-rxvt_IMInstantiateCallback(Display * unused
-                           __attribute__ ((unused)), XPointer client_data
-                           __attribute__ ((unused)), XPointer call_data
-                           __attribute__ ((unused)))
+rxvt_term::im_cb ()
 {
   int i, found, had_im;
   const char *p;
   char **s;
   char buf[IMBUFSIZ];
 
+  im_destroy ();
+
   D_MAIN((stderr, "rxvt_IMInstantiateCallback()"));
-  if (GET_R->Input_Context)
+  if (Input_Context)
     return;
 
 #if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
-  if (GET_R->rs[Rs_imLocale])
-    setlocale (LC_CTYPE, GET_R->rs[Rs_imLocale]);
+  if (rs[Rs_imLocale])
+    setlocale (LC_CTYPE, rs[Rs_imLocale]);
 #endif
 
-  p = GET_R->rs[Rs_inputMethod];
+  p = rs[Rs_inputMethod];
   if (p && *p)
     {
       bool found = false;
@@ -1327,7 +1322,7 @@ rxvt_IMInstantiateCallback(Display * unused
             {
               STRCPY (buf, "@im=");
               STRNCAT (buf, s[i], IMBUFSIZ - 5);
-              if ((p = XSetLocaleModifiers (buf)) && *p && GET_R->IM_get_IC ())
+              if (IM_get_IC (buf))
                 {
                   found = true;
                   break;
@@ -1343,19 +1338,17 @@ rxvt_IMInstantiateCallback(Display * unused
     }
 
   /* try with XMODIFIERS env. var. */
-  if ((p = XSetLocaleModifiers ("")) && *p
-      && GET_R->IM_get_IC ())
+  if (IM_get_IC (""))
     goto done;
 
   /* try with no modifiers base IF the user didn't specify an IM */
-  if ((p = XSetLocaleModifiers ("@im=none")) && *p
-      && GET_R->IM_get_IC () == True)
+  if (IM_get_IC ("@im=none"))
     goto done;
 
 done:
 #if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
-  if (GET_R->rs[Rs_imLocale])
-    setlocale (LC_CTYPE, GET_R->locale);
+  if (rs[Rs_imLocale])
+    setlocale (LC_CTYPE, locale);
 #endif
 }
 
@@ -1375,7 +1368,7 @@ rxvt_term::IMSetStatusPosition ()
   XGetICValues(Input_Context, XNStatusAttributes, status_attr, NULL);
   XFree(status_attr);
 
-  set_preedit_area(&preedit_rect, &status_rect, needed_rect);
+  im_set_preedit_area (&preedit_rect, &status_rect, needed_rect);
 
   preedit_attr = XVaCreateNestedList(0, XNArea, &preedit_rect, NULL);
   status_attr = XVaCreateNestedList(0, XNArea, &status_rect, NULL);
