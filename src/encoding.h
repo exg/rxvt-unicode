@@ -1,7 +1,7 @@
 #ifndef ENCODING_H
 #define ENCODING_H
 
-#include <stdint.h>
+#include <inttypes.h>
 
 typedef uint32_t unicode_t;
 

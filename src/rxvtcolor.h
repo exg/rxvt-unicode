@@ -48,6 +48,7 @@ struct refcache : vector<T *> {
 
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef USE_XIM
 struct rxvt_xim : refcounted {
   void destroy ();
   rxvt_display *display;
@@ -59,6 +60,7 @@ struct rxvt_xim : refcounted {
   bool init ();
   ~rxvt_xim ();
 };
+#endif
 
 struct rxvt_display : refcounted {
   Atom xa_xim_servers;
@@ -67,10 +69,12 @@ struct rxvt_display : refcounted {
 
   io_watcher x_ev; void x_cb (io_watcher &w, short revents);
 
+#ifdef USE_XIM
   refcache<rxvt_xim> xims;
   vector<im_watcher *> imw;
 
   void im_change_cb ();
+#endif
 
 //public
   Display  *display;
@@ -87,19 +91,23 @@ struct rxvt_display : refcounted {
 
   void flush ();
 
+  void set_selection_owner (rxvt_term *owner);
+
   void reg (xevent_watcher *w);
   void unreg (xevent_watcher *w);
+
+#ifdef USE_XIM
   void reg (im_watcher *w);
   void unreg (im_watcher *w);
 
-  void set_selection_owner (rxvt_term *owner);
-
   rxvt_xim *get_xim (const char *locale, const char *modifiers);
   void put_xim (rxvt_xim *xim);
+#endif
 
   Atom atom (const char *name);
 };
 
+#ifdef USE_XIM
 struct im_watcher : watcher, callback0<void> {
   template<class O1, class O2>
   im_watcher (O1 *object, void (O2::*method) ())
@@ -115,6 +123,7 @@ struct im_watcher : watcher, callback0<void> {
     display->unreg (this);
   }
 };
+#endif
 
 struct xevent_watcher : watcher, callback1<void, XEvent &> {
   Window window;

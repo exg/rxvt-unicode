@@ -104,6 +104,7 @@ refcache<T>::~refcache ()
 
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef USE_XIM
 static void
 im_destroy_cb (XIM unused1, XPointer client_data, XPointer unused3)
 {
@@ -138,6 +139,7 @@ rxvt_xim::~rxvt_xim ()
   if (xim)
     XCloseIM (xim);
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -185,7 +187,9 @@ bool rxvt_display::init ()
   fcntl (fd, F_SETFD, FD_CLOEXEC);
 
   XSelectInput (display, root, PropertyChangeMask);
+#ifdef USE_XIM
   xa_xim_servers = XInternAtom (display, "XIM_SERVERS", 0);
+#endif
 
   flush ();
 
@@ -200,11 +204,13 @@ rxvt_display::~rxvt_display ()
     XCloseDisplay (display);
 }
 
+#ifdef USE_XIM
 void rxvt_display::im_change_cb ()
 {
   for (im_watcher **i = imw.begin (); i != imw.end (); ++i)
     (*i)->call ();
 }
+#endif
 
 void rxvt_display::x_cb (io_watcher &w, short revents)
 {
@@ -215,10 +221,12 @@ void rxvt_display::x_cb (io_watcher &w, short revents)
 
       //printf ("T %d w %lx\n", xev.type, xev.xany.window);//D
 
+#ifdef USE_XIM
       if (xev.type == PropertyNotify
           && xev.xany.window == root
           && xev.xproperty.atom == xa_xim_servers)
         im_change_cb ();
+#endif
 
       for (int i = xw.size (); i--; )
         {
@@ -258,6 +266,15 @@ void rxvt_display::unreg (xevent_watcher *w)
     xw[w->active - 1] = 0;
 }
 
+void rxvt_display::set_selection_owner (rxvt_term *owner)
+{
+  if (selection_owner && selection_owner != owner)
+    selection_owner->selection_clear ();
+
+  selection_owner = owner;
+}
+
+#ifdef USE_XIM
 void rxvt_display::reg (im_watcher *w)
 {
   imw.push_back (w);
@@ -266,14 +283,6 @@ void rxvt_display::reg (im_watcher *w)
 void rxvt_display::unreg (im_watcher *w)
 {
   imw.erase (find (imw.begin (), imw.end (), w));
-}
-
-void rxvt_display::set_selection_owner (rxvt_term *owner)
-{
-  if (selection_owner && selection_owner != owner)
-    selection_owner->selection_clear ();
-
-  selection_owner = owner;
 }
 
 rxvt_xim *rxvt_display::get_xim (const char *locale, const char *modifiers)
@@ -301,6 +310,7 @@ void rxvt_display::put_xim (rxvt_xim *xim)
 {
   xims.put (xim);
 }
+#endif
 
 Atom rxvt_display::atom (const char *name)
 {
