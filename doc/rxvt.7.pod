@@ -189,7 +189,7 @@ Where B<< C<C> >> is one of:
 
 X<CSI>
 
-=head1 CSI (Code Sequence Introducer) Sequences
+=head1 CSI (Command Sequence Introducer) Sequences
 
 =over 4
 
@@ -362,12 +362,12 @@ Reset Mode (RM)
 
 =end table
 
-=item B<< C<Ps = 20> >> I<unimplemented>
+=item B<< C<Ps = 20> >> (partially implemented)
 
 =begin table
 
 	B<< C<h> >>	Automatic Newline (LNM)
-	B<< C<h> >>	Normal Linefeed (LNM)
+	B<< C<l> >>	Normal Linefeed (LNM)
 
 =end table
 
@@ -380,10 +380,13 @@ Character Attributes (SGR)
 =begin table
 
 	B<< C<Ps = 0> >>	Normal (default)
-	B<< C<Ps = 1 / 22> >>	On / Off Bold (bright fg)
+	B<< C<Ps = 1 / 21> >>	On / Off Bold (bright fg)
+	B<< C<Ps = 3 / 23> >>	On / Off Italic (NYI)
 	B<< C<Ps = 4 / 24> >>	On / Off Underline
-	B<< C<Ps = 5 / 25> >>	On / Off Blink (bright bg)
-	B<< C<Ps = 7 / 27> >>	On / Off Inverse
+	B<< C<Ps = 5 / 25> >>	On / Off Slow Blink (bright bg)
+	B<< C<Ps = 6 / 26> >>	On / Off Rapid Blink (bright bg)
+	B<< C<Ps = 7 / 27> >>	On / Off Invisible (NYI)
+	B<< C<Ps = 8 / 27> >>	On / Off Inverse
 	B<< C<Ps = 30 / 40> >>	fg/bg Black
 	B<< C<Ps = 31 / 41> >>	fg/bg Red
 	B<< C<Ps = 32 / 42> >>	fg/bg Green
@@ -393,6 +396,15 @@ Character Attributes (SGR)
 	B<< C<Ps = 36 / 46> >>	fg/bg Cyan
 	B<< C<Ps = 37 / 47> >>	fg/bg White
 	B<< C<Ps = 39 / 49> >>	fg/bg Default
+	B<< C<Ps = 90 / 100> >>	fg/bg Bright Black
+	B<< C<Ps = 91 / 101> >>	fg/bg Bright Red
+	B<< C<Ps = 92 / 102> >>	fg/bg Bright Green
+	B<< C<Ps = 93 / 103> >>	fg/bg Bright Yellow
+	B<< C<Ps = 94 / 104> >>	fg/bg Bright Blue
+	B<< C<Ps = 95 / 105> >>	fg/bg Bright Magenta
+	B<< C<Ps = 96 / 106> >>	fg/bg Bright Cyan
+	B<< C<Ps = 97 / 107> >>	fg/bg Bright White
+	B<< C<Ps = 99 / 109> >>	fg/bg Bright Default
 
 =end table
 
@@ -537,14 +549,12 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-X<Priv10>
-
 =item B<< C<Ps = 10> >> (B<rxvt>)
 
 =begin table
 
-	B<< C<h> >>	visible
-	B<< C<l> >>	invisible
+	B<< C<h> >>	menuBar visible
+	B<< C<l> >>	menuBar invisible
 
 =end table
 
@@ -655,7 +665,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Ps = 1010> >>
+=item B<< C<Ps = 1010> >> (B<rxvt>)
 
 =begin table
 
@@ -664,7 +674,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Ps = 1011> >>
+=item B<< C<Ps = 1011> >> (B<rxvt>)
 
 =begin table
 
@@ -688,6 +698,15 @@ X<Priv66>
 
 	B<< C<h> >>	Save cursor position
 	B<< C<l> >>	Restore cursor position
+
+=end table
+
+=item B<< C<Ps = 1049> >>
+
+=begin table
+
+	B<< C<h> >>	Use Alternate Screen Buffer - clear Alternate Screen Buffer if switching to it
+	B<< C<l> >>	Use Normal Screen Buffer
 
 =end table
 
@@ -729,7 +748,7 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 	B<< C<Ps = 55> >>	Log all scrollback buffer and all of screen to B<< C<Pt> >>
 	B<< C<Ps = 701> >>	Change current locale to B<< C<Pt> >>, or, if B<< C<Pt> >> is B<< C<?> >>, return the current locale (@@RXVT_NAME@@ extension)
 	B<< C<Ps = 702> >>	find font for character, used for debugging (@@RXVT_NAME@@ extension)
-	B<< C<Ps = 703> >>	command B<< C<Pt> >> I<rxvt compile-time option> (@@RXVT_NAME@@ extension)
+	B<< C<Ps = 703> >>	menubar command B<< C<Pt> >> I<rxvt compile-time option> (@@RXVT_NAME@@ extension)
 
 =end table
 
@@ -1418,11 +1437,15 @@ don't pay for them.
 
 =item --with-codesets=NAME,...
 
-Compile in support for additional codeset groups:
+Compile in support for additional codeset (encoding) groups. These codeset
+tables are currently only used for driving X11 core fonts, they are not
+required for Xft fonts. Compiling them in will make your binary bigger
+(together about 700kB), but it doesn't increase memory usage unless you
+use an X11 font requiring one of these encodings.
 
 =begin table
 
-	all	all of the above
+	all	all available codeset groups
 	cn	common chinese encodings
 	cn_ext	rarely used but very big chinese encodigs
 	jp	common japanese encodings
@@ -1587,6 +1610,13 @@ Remove support for swap screen.
 Add support for many small features that are not essential but nice to
 have. Normally you want this, but for very small binaries you may want to
 disable this.
+
+=item --enable-iso14755
+
+Enable extended ISO 14755 support (see @@RXVT_NAME@@(1), or
+F<doc/rxvt.1.txt>). Basic support (section 5.1) is enabled by
+C<--enable-frills>, while support for 5.2, 5.3 and 5.4 is enabled with
+this switch.
 
 =item --enable-linespace
 

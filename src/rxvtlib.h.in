@@ -24,6 +24,8 @@
 
 #include <cwchar>
 
+#include "ptytty.h"
+
 extern "C" {
 #include <X11/Intrinsic.h>      /* Xlib, Xutil, Xresource, Xfuncproto */
 }
@@ -182,7 +184,7 @@ typedef struct {
 #define Screen_WrapNext         (1<<4)  /* need to wrap for next char?       */
 #define Screen_DefaultFlags     (Screen_VisibleCursor|Screen_Autowrap)
 
-/* rxvt_vars.Options */
+/* rxvt_vars.options */
 #define Opt_console             (1UL<<0)
 #define Opt_loginShell          (1UL<<1)
 #define Opt_iconic              (1UL<<2)
@@ -207,12 +209,12 @@ typedef struct {
 #define Opt_cursorBlink         (1UL<<21)
 #define Opt_secondaryScreen	(1UL<<22)
 #define Opt_secondaryScroll	(1UL<<23)
-#ifdef NO_FRILLS
-# define Opt_insecure		0
-# define Opt_borderLess		0
-#else
+#if ENABLE_FRILLS
 # define Opt_insecure		(1UL<<24) // insecure esc sequences
 # define Opt_borderLess		(1UL<<25) // mem borderless hints
+#else
+# define Opt_insecure		0
+# define Opt_borderLess		0
 #endif
 /* place holder used for parsing command-line options */
 #define Opt_Reverse             (1UL<<30)
@@ -251,19 +253,18 @@ struct rxvt_vars {
   TermWin_t       TermWin;
   scrollBar_t     scrollBar;
   menuBar_t       menuBar;
-  unsigned long   Options;
+  unsigned long   options;
   XSizeHints      szHint;
   rxvt_display   *display;
-  rxvt_color     *PixColors;
-  rxvt_color     *PixColorsFocused;
+  rxvt_color     *pix_colors;
+  rxvt_color     *pix_colors_focused;
 #ifdef OFF_FOCUS_FADING
-  rxvt_color     *PixColorsUnFocused;
+  rxvt_color     *pix_colors_unfocused;
 #endif
-  short           numPixColors;
+  short           numpix_colors;
   Cursor          TermWin_cursor;       /* cursor for vt window */
   int             sb_shadow;    /* scrollbar shadow width                    */
-  int             cmd_fd;       /* pty file descriptor; connected to command */
-  int             tty_fd;       /* tty file descriptor; connected to child   */
+  rxvt_ptytty     pty;
   int             numlock_state;
   text_t        **drawn_text;   /* text drawn on screen (characters)         */
   rend_t        **drawn_rend;   /* text drawn on screen (rendition)          */
@@ -275,8 +276,7 @@ struct rxvt_vars {
   selection_t     selection;
 };
 
-void rxvt_init_signals ();
-rxvt_t rxvt_init (int argc, const char *const *argv);
+void rxvt_init ();
 
 #endif                          /* _RXVTLIB_H_ */
 
