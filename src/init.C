@@ -374,7 +374,7 @@ rxvt_term::init_vars ()
   Options = DEFAULT_OPTIONS;
   want_refresh = 1;
   cmd_pid = -1;
-  cmd_fd = tty_fd = Xfd = -1;
+  cmd_fd = tty_fd = -1;
   PrivateModes = SavedModes = PrivMode_Default;
   TermWin.focus = 0;
   TermWin.ncol = 80;
@@ -537,19 +537,19 @@ rxvt_term::init_resources (int argc, const char *const *argv)
       val = rxvt_malloc (5 + STRLEN (rs[Rs_display_name]));
       STRCPY (val, "unix");
       STRCAT (val, rs[Rs_display_name]);
-      Xdisplay = XOpenDisplay (val);
+      display = displays.get (val);
       free (val);
     }
 #endif
 
-  if (Xdisplay == NULL
-      && (Xdisplay = XOpenDisplay (rs[Rs_display_name])) == NULL)
+  if (!display
+      && !(display = displays.get (rs[Rs_display_name])))
     {
       rxvt_print_error ("can't open display %s", rs[Rs_display_name]);
       exit (EXIT_FAILURE);
     }
 
-  extract_resources (Xdisplay, rs[Rs_name]);
+  extract_resources (display->display, rs[Rs_name]);
 
   /*
    * set any defaults not already set
@@ -738,7 +738,7 @@ rxvt_term::init_env ()
 
   if (val == NULL)
 #endif                          /* DISPLAY_IS_IP */
-    val = XDisplayString(Xdisplay);
+    val = XDisplayString(display->display);
 
   if (rs[Rs_display_name] == NULL)
     rs[Rs_display_name] = val;   /* use broken `:0' value */
@@ -772,7 +772,7 @@ rxvt_term::init_env ()
   putenv ("TERMINFO=" RXVT_TERMINFO);
 #endif
 
-  if (Xdepth <= 2)
+  if (display->depth <= 2)
     putenv ("COLORTERM=" COLORTERMENV "-mono");
   else
     putenv ("COLORTERM=" COLORTERMENVFULL);
@@ -826,8 +826,8 @@ rxvt_term::init_xlocale ()
     {
       Atom wmlocale;
 
-      wmlocale = XInternAtom (Xdisplay, "WM_LOCALE_NAME", False);
-      XChangeProperty (Xdisplay, TermWin.parent[0], wmlocale,
+      wmlocale = XInternAtom (display->display, "WM_LOCALE_NAME", False);
+      XChangeProperty (display->display, TermWin.parent[0], wmlocale,
                        XA_STRING, 8, PropModeReplace,
                        (unsigned char *)locale, STRLEN(locale));
 
@@ -838,11 +838,11 @@ rxvt_term::init_xlocale ()
         }
 
       /* see if we can connect yet */
-      rxvt_IMInstantiateCallback (Xdisplay, NULL, NULL);
+      rxvt_IMInstantiateCallback (display->display, NULL, NULL);
 
       /* To avoid Segmentation Fault in C locale: Solaris only? */
       if (STRCMP (locale, "C"))
-        XRegisterIMInstantiateCallback (Xdisplay, NULL, NULL, NULL,
+        XRegisterIMInstantiateCallback (display->display, NULL, NULL, NULL,
                                         rxvt_IMInstantiateCallback, NULL);
     }
 #endif
@@ -859,15 +859,15 @@ rxvt_term::init_command(const char *const *argv)
   int i;
 
   for (i = 0; i < NUM_XA; i++)
-    xa[i] = XInternAtom(Xdisplay, xa_names[i], False);
+    xa[i] = XInternAtom(display->display, xa_names[i], False);
 
   /* Enable delete window protocol */
-  XSetWMProtocols (Xdisplay, TermWin.parent[0],
+  XSetWMProtocols (display->display, TermWin.parent[0],
                    &(xa[XA_WMDELETEWINDOW]), 1);
 
 #ifdef USING_W11LIB
   /* enable W11 callbacks */
-  W11AddEventHandler (Xdisplay, rxvt_W11_process_x_event);
+  W11AddEventHandler (display->display, rxvt_W11_process_x_event);
 #endif
 
 #ifdef META8_OPTION
@@ -904,10 +904,7 @@ rxvt_term::init_command(const char *const *argv)
   greek_init();
 #endif
 
-  Xfd = XConnectionNumber (Xdisplay);
-
 #ifdef CURSOR_BLINK
-
   if (Options & Opt_cursorBlink)
     (void)gettimeofday (&lastcursorchange, NULL);
 #endif
@@ -936,9 +933,7 @@ rxvt_term::Get_Colours ()
         {
 #ifndef XTERM_REVERSE_VIDEO
           if (i < 2 && (Options & Opt_reverseVideo))
-            {
-              rs[Rs_color + i] = def_colorName[!i];
-            }
+            rs[Rs_color + i] = def_colorName[!i];
           else
 #endif
             rs[Rs_color + i] = def_colorName[i];
@@ -1004,25 +999,25 @@ rxvt_term::Get_Colours ()
 
       xcol[1] = PixColors[Color_scroll];
 # ifdef PREFER_24BIT
-      xcol[0].set (this, 65535, 65535, 65535);
-      /*        XFreeColors(Xdisplay, XCMAP, &(xcol[0].pixel), 1, ~0); */
+      xcol[0].set (display, 65535, 65535, 65535);
+      /*        XFreeColors(display->display, XCMAP, &(xcol[0].pixel), 1, ~0); */
 # else
-      xcol[0].set (this, WhitePixel (Xdisplay, Xscreen));
+      xcol[0].set (display, WhitePixel (display->display, display->screen));
 # endif
 
       unsigned short pr1, pg1, pb1, pr0, pg0, pb0;
 
-      xcol[0].get (this, pr0, pg0, pb0);
-      xcol[1].get (this, pr1, pg1, pb1);
+      xcol[0].get (display, pr0, pg0, pb0);
+      xcol[1].get (display, pr1, pg1, pb1);
 
       /* bottomShadowColor */
-      if (!xcol[2].set (this, pr1 / 2, pg1 / 2, pb1 / 2))
+      if (!xcol[2].set (display, pr1 / 2, pg1 / 2, pb1 / 2))
         xcol[2] = PixColors[Color_Black];
 
       PixColors[Color_bottomShadow] = xcol[2];
 
       /* topShadowColor */
-      if (!xcol[1].set (this,
+      if (!xcol[1].set (display,
                         min (pr0, max (pr0 / 5, pr1) * 7 / 5),
                         min (pg0, max (pg0 / 5, pg1) * 7 / 5),
                         min (pb0, max (pb0 / 5, pb1) * 7 / 5)))
@@ -1081,7 +1076,7 @@ rxvt_term::get_ourmods ()
       && STRCASECMP(rsmod, "mod1") >= 0 && STRCASECMP(rsmod, "mod5") <= 0)
     requestedmeta = rsmod[3] - '0';
 
-  map = XGetModifierMapping(Xdisplay);
+  map = XGetModifierMapping(display->display);
   kc = map->modifiermap;
   for (i = 1; i < 6; i++)
     {
@@ -1090,7 +1085,7 @@ rxvt_term::get_ourmods ()
         {
           if (kc[k] == 0)
             break;
-          switch (XKeycodeToKeysym(Xdisplay, kc[k], 0))
+          switch (XKeycodeToKeysym(display->display, kc[k], 0))
             {
               case XK_Num_Lock:
                 ModNumLockMask = modmasks[i - 1];
@@ -1140,37 +1135,10 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   XWindowAttributes gattr;
 
-  Xcmap   = DefaultColormap (Xdisplay, Xscreen);
-  Xvisual = DefaultVisual (Xdisplay, Xscreen);
-  Xscreen = DefaultScreen (Xdisplay);
-
   if (Options & Opt_transparent)
     {
-      XGetWindowAttributes (Xdisplay, RootWindow(Xdisplay, Xscreen), &gattr);
-      Xdepth = gattr.depth;
-    }
-  else
-    {
-      Xdepth = DefaultDepth(Xdisplay, Xscreen);
-#ifdef PREFER_24BIT
-      /*
-       * If depth is not 24, look for a 24bit visual.
-       */
-      if (Xdepth != 24)
-        {
-          XVisualInfo     vinfo;
-
-          if (XMatchVisualInfo(Xdisplay, Xscreen, 24, TrueColor, &vinfo))
-            {
-              Xdepth = 24;
-              Xvisual = vinfo.visual;
-              Xcmap = XCreateColormap(Xdisplay,
-                                      RootWindow(Xdisplay, Xscreen),
-                                      Xvisual, AllocNone);
-            }
-        }
-#endif
-
+      XGetWindowAttributes (display->display, RootWindow(display->display, display->screen), &gattr);
+      display->depth = gattr.depth; // doh //TODO, per-term not per-display?
     }
 
   /* grab colors before netscape does */
@@ -1190,17 +1158,16 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   attributes.background_pixel = PixColors[Color_fg];
   attributes.border_pixel = PixColors[Color_border];
-  attributes.colormap = Xcmap;
-  TermWin.parent[0] = XCreateWindow (Xdisplay, DefaultRootWindow (Xdisplay),
+  attributes.colormap = display->cmap;
+  TermWin.parent[0] = XCreateWindow (display->display, DefaultRootWindow (display->display),
                                      szHint.x, szHint.y,
                                      szHint.width, szHint.height,
                                      TermWin.ext_bwidth,
-                                     Xdepth, InputOutput,
-                                     Xvisual,
-                                     CWBackPixel | CWBorderPixel
-                                     | CWColormap, &attributes);
+                                     display->depth, InputOutput,
+                                     display->visual,
+                                     CWBackPixel | CWBorderPixel | CWColormap, &attributes);
 #else
-  TermWin.parent[0] = XCreateSimpleWindow (Xdisplay, DefaultRootWindow (Xdisplay),
+  TermWin.parent[0] = XCreateSimpleWindow (display->display, DefaultRootWindow (display->display),
                       szHint.x, szHint.y,
                       szHint.width,
                       szHint.height,
@@ -1221,48 +1188,50 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                           : NormalState);
   wmHint.window_group = TermWin.parent[0];
 
-  XSetWMProperties(Xdisplay, TermWin.parent[0], NULL, NULL,
+  XSetWMProperties(display->display, TermWin.parent[0], NULL, NULL,
                    (char **)argv, argc, &szHint, &wmHint, &classHint);
-  XSelectInput(Xdisplay, TermWin.parent[0],
-               (KeyPressMask
+
+  XSelectInput(display->display, TermWin.parent[0],
+               KeyPressMask
 #if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
-                | KeyReleaseMask
+               | KeyReleaseMask
 #endif
-                | FocusChangeMask | VisibilityChangeMask
-                | StructureNotifyMask));
+               | FocusChangeMask | VisibilityChangeMask
+               | StructureNotifyMask);
+  termwin_ev.start (display, TermWin.parent[0]);
 
   /* vt cursor: Black-on-White is standard, but this is more popular */
-  TermWin_cursor = XCreateFontCursor(Xdisplay, XC_xterm);
+  TermWin_cursor = XCreateFontCursor(display->display, XC_xterm);
 
 #if defined(HAVE_SCROLLBARS) || defined(MENUBAR)
   /* cursor (menuBar/scrollBar): Black-on-White */
-  leftptr_cursor = XCreateFontCursor(Xdisplay, XC_left_ptr);
+  leftptr_cursor = XCreateFontCursor(display->display, XC_left_ptr);
 #endif
 
 #ifdef POINTER_BLANK
-
   {
     XColor blackcolour;
     blackcolour.red   = 0;
     blackcolour.green = 0;
     blackcolour.blue  = 0;
-    Font f = XLoadFont (Xdisplay, "fixed");
-    blank_cursor = XCreateGlyphCursor (Xdisplay, f, f, ' ', ' ',
+    Font f = XLoadFont (display->display, "fixed");
+    blank_cursor = XCreateGlyphCursor (display->display, f, f, ' ', ' ',
                                        &blackcolour, &blackcolour);
-    XUnloadFont (Xdisplay, f);
+    XUnloadFont (display->display, f);
   }
 #endif
 
   /* the vt window */
-  TermWin.vt = XCreateSimpleWindow(Xdisplay, TermWin.parent[0],
+  TermWin.vt = XCreateSimpleWindow(display->display, TermWin.parent[0],
                                    window_vt_x, window_vt_y,
                                    TermWin_TotalWidth(),
                                    TermWin_TotalHeight(),
                                    0,
                                    PixColors[Color_fg],
                                    PixColors[Color_bg]);
+
 #ifdef DEBUG_X
-  XStoreName(Xdisplay, TermWin.vt, "vt window");
+  XStoreName(display->display, TermWin.vt, "vt window");
 #endif
 
   vt_emask = (ExposureMask | ButtonPressMask | ButtonReleaseMask
@@ -1277,13 +1246,13 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #endif
     vt_emask |= (Button1MotionMask | Button3MotionMask);
 
-  XSelectInput(Xdisplay, TermWin.vt, vt_emask);
+  XSelectInput(display->display, TermWin.vt, vt_emask);
+  vt_ev.start (display, TermWin.vt);
 
 #if defined(MENUBAR) && (MENUBAR_MAX > 1)
-
   if (menuBar_height())
     {
-      menuBar.win = XCreateSimpleWindow(Xdisplay, TermWin.parent[0],
+      menuBar.win = XCreateSimpleWindow(display->display, TermWin.parent[0],
                                         window_vt_x, 0,
                                         TermWin_TotalWidth(),
                                         menuBar_TotalHeight(),
@@ -1291,16 +1260,18 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                                         PixColors[Color_fg],
                                         PixColors[Color_scroll]);
 #ifdef DEBUG_X
-
-      XStoreName(Xdisplay, menuBar.win, "menubar");
+      XStoreName(display->display, menuBar.win, "menubar");
 #endif
 
-      XDefineCursor(Xdisplay, menuBar.win, pointer_leftptr);
-      XSelectInput(Xdisplay, menuBar.win,
+      XDefineCursor(display->display, menuBar.win, pointer_leftptr);
+
+      XSelectInput(display->display, menuBar.win,
                    (ExposureMask | ButtonPressMask | ButtonReleaseMask
                     | Button1MotionMask));
+      menubar_ev.start (display, menuBar.win);
     }
 #endif
+
 #ifdef XPM_BACKGROUND
   if (rs[Rs_backgroundPixmap] != NULL
       && !(Options & Opt_transparent))
@@ -1321,21 +1292,20 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   gcvalue.foreground = PixColors[Color_fg];
   gcvalue.background = PixColors[Color_bg];
   gcvalue.graphics_exposures = 1;
-  TermWin.gc = XCreateGC(Xdisplay, TermWin.vt,
+  TermWin.gc = XCreateGC(display->display, TermWin.vt,
                          GCForeground | GCBackground
                          | GCGraphicsExposures, &gcvalue);
 
 #if defined(MENUBAR) || defined(RXVT_SCROLLBAR)
-
   gcvalue.foreground = PixColors[Color_topShadow];
-  topShadowGC = XCreateGC(Xdisplay, TermWin.vt,
+  topShadowGC = XCreateGC(display->display, TermWin.vt,
                           GCForeground, &gcvalue);
   gcvalue.foreground = PixColors[Color_bottomShadow];
-  botShadowGC = XCreateGC(Xdisplay, TermWin.vt,
+  botShadowGC = XCreateGC(display->display, TermWin.vt,
                           GCForeground, &gcvalue);
   gcvalue.foreground = PixColors[(XDEPTH <= 2 ? Color_fg
                                   : Color_scroll)];
-  scrollbarGC = XCreateGC(Xdisplay, TermWin.vt,
+  scrollbarGC = XCreateGC(display->display, TermWin.vt,
                           GCForeground, &gcvalue);
 #endif
 }
@@ -1357,15 +1327,6 @@ rxvt_term::run_command (const char *const *argv)
       rxvt_print_error("can't open pseudo-tty");
       return -1;
     }
-
-#ifdef FD_SETSIZE
-  if (Xfd > FD_SETSIZE || cfd > FD_SETSIZE)
-    {
-      rxvt_print_error("fd too high: %d max", FD_SETSIZE);
-      rxvt_clean_exit();
-      exit(EXIT_FAILURE);
-    }
-#endif
 
   fcntl (cfd, F_SETFL, O_NONBLOCK);
 
@@ -1404,7 +1365,7 @@ rxvt_term::run_command (const char *const *argv)
         return -1;
       case 0:
         close (cfd);             /* only keep tty_fd and STDERR open */
-        close (Xfd);
+
         if (rxvt_control_tty (tty_fd, ttydev) < 0)
           rxvt_print_error ("could not obtain control of tty");
         else
@@ -1441,7 +1402,7 @@ rxvt_term::run_command (const char *const *argv)
 #endif
 
         }
-        close (tty_fd);       /* keep STDERR_FILENO, cmd_fd, Xfd open */
+        close (tty_fd);       /* keep STDERR_FILENO, cmd_fd, display->fd () open */
         break;
     }
 #else                           /* __QNX__ uses qnxspawn() */

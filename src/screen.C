@@ -94,18 +94,18 @@ inline void fill_text (text_t *start, text_t value, int len)
 
 #define CLEAR_ROWS(row, num)                                            \
     if (TermWin.mapped)                                              \
-        XClearArea (Xdisplay, drawBuffer, TermWin.int_bwidth,      \
+        XClearArea (display->display, drawBuffer, TermWin.int_bwidth,      \
                     Row2Pixel(row), (unsigned int)TermWin.width,      \
                     (unsigned int)Height2Pixel(num), False)
 
 #define CLEAR_CHARS(x, y, num)                                          \
     if (TermWin.mapped)                                              \
-        XClearArea (Xdisplay, drawBuffer, x, y,                       \
+        XClearArea (display->display, drawBuffer, x, y,                       \
                     (unsigned int)Width2Pixel(num),                      \
                     (unsigned int)Height2Pixel(1), False)
 
 #define ERASE_ROWS(row, num)                                            \
-    XFillRectangle (Xdisplay, drawBuffer, TermWin.gc,              \
+    XFillRectangle (display->display, drawBuffer, TermWin.gc,              \
                     TermWin.int_bwidth, Row2Pixel(row),               \
                     (unsigned int)TermWin.width,                      \
                     (unsigned int)Height2Pixel(num))
@@ -1281,10 +1281,10 @@ rxvt_term::scr_erase_screen (int mode)
     {
       ren = (rstyle & (RS_fgMask | RS_bgMask));
       gcvalue.foreground = PixColors[GET_BGCOLOR(rstyle)];
-      XChangeGC(Xdisplay, TermWin.gc, GCForeground, &gcvalue);
+      XChangeGC(display->display, TermWin.gc, GCForeground, &gcvalue);
       ERASE_ROWS(row, num);
       gcvalue.foreground = PixColors[Color_fg];
-      XChangeGC(Xdisplay, TermWin.gc, GCForeground, &gcvalue);
+      XChangeGC(display->display, TermWin.gc, GCForeground, &gcvalue);
     }
   for (; num--; row++)
     {
@@ -1580,12 +1580,12 @@ rxvt_term::scr_rvideo_mode (int mode)
 #if defined(TRANSPARENT)
         if (!(Options & Opt_transparent) || am_transparent == 0)
 #endif
-          XSetWindowBackground(Xdisplay, TermWin.vt,
+          XSetWindowBackground(display->display, TermWin.vt,
                                PixColors[Color_bg]);
 
       gcvalue.foreground = PixColors[Color_fg];
       gcvalue.background = PixColors[Color_bg];
-      XChangeGC(Xdisplay, TermWin.gc, GCBackground | GCForeground,
+      XChangeGC(display->display, TermWin.gc, GCBackground | GCForeground,
                 &gcvalue);
       scr_clear ();
       scr_touch (true);
@@ -1828,7 +1828,7 @@ rxvt_term::scr_bell ()
 #  ifdef MAPALERT_OPTION
   if (Options & Opt_mapAlert)
 #  endif
-    XMapWindow(Xdisplay, TermWin.parent[0]);
+    XMapWindow(display->display, TermWin.parent[0]);
 # endif
   if (Options & Opt_visualBell)
     {
@@ -1836,7 +1836,7 @@ rxvt_term::scr_bell ()
       scr_rvideo_mode (!rvideo); /* refresh also done */
     }
   else
-    XBell(Xdisplay, 0);
+    XBell(display->display, 0);
 #endif
 }
 
@@ -2082,7 +2082,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                 SWAP_IT(wlen, len, int);
 
               D_SCREEN((stderr, "rxvt_scr_refresh(): XCopyArea: %d -> %d (height: %d)", len + i, len, wlen - len + 1));
-              XCopyArea (Xdisplay, TermWin.vt, TermWin.vt,
+              XCopyArea (display->display, TermWin.vt, TermWin.vt,
                          TermWin.gc, 0, Row2Pixel (len + i),
                          (unsigned int)TermWin_TotalWidth (),
                          (unsigned int)Height2Pixel (wlen - len + 1),
@@ -2250,7 +2250,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
             font->draw (xpixel, ypixel, text, count, fore, back);
 
           if ((rend & RS_Uline) && (font->descent > 1))
-            XDrawLine(Xdisplay, drawBuffer, TermWin.gc,
+            XDrawLine(display->display, drawBuffer, TermWin.gc,
                       xpixel, ypixel + font->ascent + 1,
                       xpixel + Width2Pixel(count) - 1, ypixel + font->ascent + 1);
         }                     /* for (col....) */
@@ -2275,9 +2275,9 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
         {
 #ifndef NO_CURSORCOLOR
           if (ISSET_PIXCOLOR (Color_cursor))
-            XSetForeground (Xdisplay, TermWin.gc, PixColors[Color_cursor]);
+            XSetForeground (display->display, TermWin.gc, PixColors[Color_cursor]);
 #endif
-          XDrawRectangle(Xdisplay, drawBuffer, TermWin.gc,
+          XDrawRectangle(display->display, drawBuffer, TermWin.gc,
                          Col2Pixel(oldcursor.col),
                          Row2Pixel(oldcursor.row),
                          (unsigned int)(Width2Pixel(cursorwidth) - 1),
@@ -2298,7 +2298,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
      * clear the whole screen height, note that width == 0 is treated
      * specially by XClearArea
      */
-    XClearArea(Xdisplay, TermWin.vt, 0, 0,
+    XClearArea(display->display, TermWin.vt, 0, 0,
                (unsigned int)TermWin.int_bwidth,
                (unsigned int)TermWin_TotalHeight(), False);
   if (clearlast && TermWin.int_bwidth)
@@ -2306,12 +2306,12 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
      * clear the whole screen height, note that width == 0 is treated
      * specially by XClearArea
      */
-    XClearArea(Xdisplay, TermWin.vt,
+    XClearArea(display->display, TermWin.vt,
                TermWin.width + TermWin.int_bwidth, 0,
                (unsigned int)TermWin.int_bwidth,
                (unsigned int)TermWin_TotalHeight(), False);
   if (refresh_type & SMOOTH_REFRESH)
-    XSync(Xdisplay, False);
+    XSync(display->display, False);
 
   num_scr = 0;
   num_scr_allow = 1;
@@ -2339,11 +2339,11 @@ rxvt_term::scr_clear()
 
       while (i--)
         if (TermWin.parent[i] != None)
-          XClearWindow(Xdisplay, TermWin.parent[i]);
+          XClearWindow(display->display, TermWin.parent[i]);
     }
 #endif
 
-  XClearWindow (Xdisplay, TermWin.vt);
+  XClearWindow (display->display, TermWin.vt);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -2516,7 +2516,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
 
   for (;;)
     {
-      if (XGetWindowProperty(Xdisplay, win, prop, (long)(nread / 4),
+      if (XGetWindowProperty(display->display, win, prop, (long)(nread / 4),
                              (long)(PROP_SIZE / 4), delete_prop,
                              AnyPropertyType, &ct.encoding, &ct.format,
                              &ct.nitems, &bytes_after,
@@ -2545,7 +2545,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
                * XConvertSelection() but nothing was presented
                */
               D_SELECT((stderr, "rxvt_selection_request: pasting CUT_BUFFER0"));
-              selection_paste (Xroot, XA_CUT_BUFFER0, False);
+              selection_paste (display->root, XA_CUT_BUFFER0, False);
             }
 
           nread = -1;         /* discount any previous stuff */
@@ -2556,7 +2556,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
 
       char **cl;
       int cr;
-      if (XmbTextPropertyToTextList (Xdisplay, &ct, &cl,
+      if (XmbTextPropertyToTextList (display->display, &ct, &cl,
                                      &cr) >= 0 && cl)
         {
           for (int i = 0; i < cr; i++)
@@ -2609,7 +2609,7 @@ rxvt_term::selection_property (Window win, Atom prop)
       unsigned long   bytes_after, nitems;
       unsigned char  *s = NULL;
 
-      a = XGetWindowProperty(Xdisplay, win, prop, 0L, 1L, False,
+      a = XGetWindowProperty(display->display, win, prop, 0L, 1L, False,
                              xa[XA_INCR], &atype, &afmt, &nitems,
                              &bytes_after, &s);
       if (s)
@@ -2620,8 +2620,8 @@ rxvt_term::selection_property (Window win, Atom prop)
       if (atype == xa[XA_INCR])
         {  /* start an INCR transfer */
           D_SELECT((stderr, "rxvt_selection_property: INCR: starting transfer"));
-          XDeleteProperty(Xdisplay, win, prop);
-          XFlush(Xdisplay);
+          XDeleteProperty(display->display, win, prop);
+          XFlush(display->display);
           reget_time = 1;
           selection_wait = Sel_incr;
         }
@@ -2686,7 +2686,7 @@ rxvt_term::selection_request (Time tm, int x, int y)
     }
   selection_wait = Sel_none;       /* don't loop in rxvt_selection_paste() */
   D_SELECT((stderr, "rxvt_selection_request: pasting CUT_BUFFER0"));
-  selection_paste (Xroot, XA_CUT_BUFFER0, False);
+  selection_paste (display->root, XA_CUT_BUFFER0, False);
 }
 
 int
@@ -2704,10 +2704,10 @@ rxvt_term::selection_request_other (Atom target, int selnum)
     sel = XA_SECONDARY;
   else
     sel = xa[XA_CLIPBOARD];
-  if (XGetSelectionOwner(Xdisplay, sel) != None)
+  if (XGetSelectionOwner(display->display, sel) != None)
     {
       D_SELECT((stderr, "rxvt_selection_request_other: pasting %s", debug_xa_names[selnum]));
-      XConvertSelection(Xdisplay, sel, target, xa[XA_VT_SELECTION],
+      XConvertSelection(display->display, sel, target, xa[XA_VT_SELECTION],
                         TermWin.vt, selection_request_time);
       return 1;
     }
@@ -2833,8 +2833,8 @@ rxvt_term::selection_make (Time tm)
 
   selection.text = new_selection_text;
 
-  XSetSelectionOwner(Xdisplay, XA_PRIMARY, TermWin.vt, tm);
-  if (XGetSelectionOwner(Xdisplay, XA_PRIMARY) != TermWin.vt)
+  XSetSelectionOwner(display->display, XA_PRIMARY, TermWin.vt, tm);
+  if (XGetSelectionOwner(display->display, XA_PRIMARY) != TermWin.vt)
     rxvt_print_error("can't get primary selection");
 
 
@@ -2842,14 +2842,14 @@ rxvt_term::selection_make (Time tm)
     XTextProperty ct;
     char *cl = (char *)selection.text;
 
-    if (XmbTextListToTextProperty(Xdisplay, &cl, 1, XStringStyle, &ct) >= 0)
+    if (XmbTextListToTextProperty(display->display, &cl, 1, XStringStyle, &ct) >= 0)
       {
-        XChangeProperty(Xdisplay, Xroot, XA_CUT_BUFFER0, XA_STRING, 8,
+        XChangeProperty(display->display, display->root, XA_CUT_BUFFER0, XA_STRING, 8,
                         PropModeReplace, ct.value, ct.nitems);
         XFree (ct.value);
       }
     else
-      XChangeProperty(Xdisplay, Xroot, XA_CUT_BUFFER0, XA_STRING, 8,
+      XChangeProperty(display->display, display->root, XA_CUT_BUFFER0, XA_STRING, 8,
                       PropModeReplace, selection.text, (int)selection.len);
   }
 
@@ -3373,7 +3373,7 @@ typedef CARD32 Atom32;
  * EXT: SelectionRequest
  */
 void
-rxvt_term::selection_send (const XSelectionRequestEvent *rq)
+rxvt_term::selection_send (const XSelectionRequestEvent &rq)
 {
   XSelectionEvent ev;
   XTextProperty ct;
@@ -3382,13 +3382,13 @@ rxvt_term::selection_send (const XSelectionRequestEvent *rq)
 
   ev.type = SelectionNotify;
   ev.property = None;
-  ev.display = rq->display;
-  ev.requestor = rq->requestor;
-  ev.selection = rq->selection;
-  ev.target = rq->target;
-  ev.time = rq->time;
+  ev.display = rq.display;
+  ev.requestor = rq.requestor;
+  ev.selection = rq.selection;
+  ev.target = rq.target;
+  ev.time = rq.time;
 
-  if (rq->target == xa[XA_TARGETS])
+  if (rq.target == xa[XA_TARGETS])
     {
       Atom32 target_list[5];
       Atom32 *target = target_list;
@@ -3400,34 +3400,34 @@ rxvt_term::selection_send (const XSelectionRequestEvent *rq)
 #if X_HAVE_UTF8_STRING
       *target++ = (Atom32) xa[XA_UTF8_STRING];
 #endif
-      XChangeProperty(Xdisplay, rq->requestor, rq->property, XA_ATOM,
+      XChangeProperty(display->display, rq.requestor, rq.property, XA_ATOM,
                       (8 * sizeof(target_list[0])), PropModeReplace,
                       (unsigned char *)target_list,
                       target - target_list);
-      ev.property = rq->property;
+      ev.property = rq.property;
     }
-  else if (rq->target == xa[XA_MULTIPLE])
+  else if (rq.target == xa[XA_MULTIPLE])
     {
       /* TODO: Handle MULTIPLE */
     }
-  else if (rq->target == xa[XA_TIMESTAMP] && selection.text)
+  else if (rq.target == xa[XA_TIMESTAMP] && selection.text)
     {
-      XChangeProperty(Xdisplay, rq->requestor, rq->property, XA_INTEGER,
+      XChangeProperty(display->display, rq.requestor, rq.property, XA_INTEGER,
                       (8 * sizeof(Time)), PropModeReplace,
                       (unsigned char *)&selection_time, 1);
-      ev.property = rq->property;
+      ev.property = rq.property;
     }
-  else if (rq->target == XA_STRING
-           || rq->target == xa[XA_TEXT]
-           || rq->target == xa[XA_COMPOUND_TEXT]
-           || rq->target == xa[XA_UTF8_STRING]
+  else if (rq.target == XA_STRING
+           || rq.target == xa[XA_TEXT]
+           || rq.target == xa[XA_COMPOUND_TEXT]
+           || rq.target == xa[XA_UTF8_STRING]
           )
     {
       short freect = 0;
       int selectlen;
       char *cl;
 
-      target = rq->target;
+      target = rq.target;
 
       if (target == XA_STRING)
         // we actually don't do XA_STRING, but who cares, as i18n clients
@@ -3458,7 +3458,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent *rq)
           selectlen = 0;
         }
 
-      if (XmbTextListToTextProperty(Xdisplay, &cl, 1, style, &ct) >= 0)
+      if (XmbTextListToTextProperty(display->display, &cl, 1, style, &ct) >= 0)
         freect = 1;
       else
         {
@@ -3467,15 +3467,15 @@ rxvt_term::selection_send (const XSelectionRequestEvent *rq)
           ct.nitems = selectlen;
         }
 
-      XChangeProperty(Xdisplay, rq->requestor, rq->property,
-                      target, 8, PropModeReplace,
-                      ct.value, (int)ct.nitems);
-      ev.property = rq->property;
+      XChangeProperty (display->display, rq.requestor, rq.property,
+                       target, 8, PropModeReplace,
+                       ct.value, (int)ct.nitems);
+      ev.property = rq.property;
 
       if (freect)
         XFree (ct.value);
     }
-  XSendEvent(Xdisplay, rq->requestor, False, 0L, (XEvent *)&ev);
+  XSendEvent (display->display, rq.requestor, False, 0L, (XEvent *)&ev);
 }
 
 /* ------------------------------------------------------------------------- *
@@ -3501,7 +3501,7 @@ rxvt_term::set_position (XPoint *pos)
 {
   XWindowAttributes xwa;
 
-  XGetWindowAttributes (Xdisplay, TermWin.vt, &xwa);
+  XGetWindowAttributes (display->display, TermWin.vt, &xwa);
   pos->x = Col2Pixel (screen.cur.col) + xwa.x;
   pos->y = Height2Pixel ((screen.cur.row + 1)) + xwa.y - TermWin.lineSpace;
 }

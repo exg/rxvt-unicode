@@ -8,8 +8,7 @@ template<typename T, typename U> static inline T max (T a, U b) { return a > b ?
 
 template<typename T>
 struct vector : simplevec<T>
-{
-};
+{ };
 
 #if 0
 template<typename T>

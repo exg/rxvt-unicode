@@ -608,9 +608,9 @@ enum {
 (PrivMode_Autowrap|PrivMode_aplKP|PrivMode_ShiftKeys|PrivMode_VisibleCursor)
 #endif
 
-#define XDEPTH                 Xdepth
-#define XCMAP                  Xcmap
-#define XVISUAL                Xvisual
+#define XDEPTH                 display->depth
+#define XCMAP                  display->cmap
+#define XVISUAL                display->visual
 
 #define IMBUFSIZ               128     /* input modifier buffer sizes */
 #ifndef BUFSIZ
@@ -651,8 +651,6 @@ enum {
 
 #define TermWin_TotalWidth()    ((int32_t)TermWin.width  + 2 * (int32_t)TermWin.int_bwidth)
 #define TermWin_TotalHeight()   ((int32_t)TermWin.height + 2 * (int32_t)TermWin.int_bwidth)
-
-#define Xroot                   DefaultRootWindow(Xdisplay)
 
 /* how to build & extract colors and attributes */
 #define GET_BASEFG(x)           (((x) & RS_fgMask))
@@ -1075,11 +1073,25 @@ struct rxvt_term : rxvt_vars {
 
   void flush ();
 
+#ifdef TRANSPARENT
+  void rootwin_cb (XEvent &xev);
+  xevent_watcher rootwin_ev;
+#endif
+
+  void x_cb (XEvent &xev);
+  xevent_watcher termwin_ev;
+  xevent_watcher vt_ev;
+#ifdef HAVE_SCROLLBARS
+  xevent_watcher scrollbar_ev;
+#endif
+#ifdef MENUBAR
+  xevent_watcher menubar_ev;
+#endif
+
   void check_cb   (check_watcher &w); check_watcher check_ev;
   void destroy_cb (time_watcher &w); time_watcher destroy_ev;
 
   void pty_cb (io_watcher &w, short revents); io_watcher pty_ev;
-  void x_cb   (io_watcher &w, short revents); io_watcher x_ev;
 
   void incr_cb (time_watcher &w); time_watcher incr_ev;
 
@@ -1111,7 +1123,6 @@ struct rxvt_term : rxvt_vars {
   uint32_t next_char ();
 
   bool pty_fill ();
-  void process_x_events ();
 
   void *operator new (size_t s);
   void operator delete (void *p, size_t s);
@@ -1163,13 +1174,12 @@ struct rxvt_term : rxvt_vars {
   /* autoconvert */
 
   // command.C
-  void lookup_key (XKeyEvent *ev);
+  void lookup_key (XKeyEvent &ev);
   unsigned int cmd_write (const unsigned char *str, unsigned int count);
   uint32_t cmd_getc ();
-  void mouse_report (const XButtonEvent *ev);
-  void process_x_event (XEvent *ev);
-  void button_press (XButtonEvent *ev);
-  void button_release (XButtonEvent *ev);
+  void mouse_report (const XButtonEvent &ev);
+  void button_press (const XButtonEvent &ev);
+  void button_release (const XButtonEvent &ev);
   int check_our_parents ();
 #ifdef PRINTPIPE
   FILE * popen_printer ();
@@ -1291,7 +1301,7 @@ struct rxvt_term : rxvt_vars {
   void selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, row_col_t *ret);
   void selection_extend_colrow (int32_t col, int32_t row, int button3, int buttonpress, int clickchange);
   void selection_remove_trailing_spaces ();
-  void selection_send (const XSelectionRequestEvent *rq);
+  void selection_send (const XSelectionRequestEvent &rq);
 
 #if defined(NEXT_SCROLLBAR)
   // scrollbar-next.C

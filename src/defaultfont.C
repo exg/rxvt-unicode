@@ -25,7 +25,7 @@
 
 #include <cstdlib>
 
-#define DISPLAY  r->Xdisplay
+#define DISPLAY  r->display->display
 #define DRAWABLE r->TermWin.vt
 #define GC       r->TermWin.gc
 
@@ -893,7 +893,7 @@ rxvt_font_xft::draw (int x, int y,
                      int fg, int bg)
 {
   if (!d)
-    d = XftDrawCreate (DISPLAY, DRAWABLE, r->Xvisual, r->Xcmap);
+    d = XftDrawCreate (DISPLAY, DRAWABLE, r->display->visual, r->display->cmap);
 
   if (bg >= 0 && bg != Color_bg)
     XftDrawRect (d, &r->PixColors[bg].c, x, y, r->TermWin.fwidth * len, r->TermWin.fheight);

@@ -748,7 +748,7 @@ rxvt_term::drawbox_menubar (int x, int len, int state)
         break;			/* neutral */
     }
 
-  rxvt_Draw_Shadow(Xdisplay, menuBar.win, top, bot,
+  rxvt_Draw_Shadow(display->display, menuBar.win, top, bot,
                    x, 0, len, menuBar_TotalHeight());
 }
 
@@ -781,7 +781,7 @@ rxvt_term::drawtriangle (int x, int y, int state)
   x -= SHADOW + (3 * w / 2);
   y += SHADOW * 3;
 
-  rxvt_Draw_Triangle(Xdisplay, ActiveMenu->win, top, bot, x, y, w,
+  rxvt_Draw_Triangle(display->display, ActiveMenu->win, top, bot, x, y, w,
                      'r');
 }
 
@@ -808,11 +808,11 @@ rxvt_term::drawbox_menuitem (int y, int state)
         break;			/* neutral */
     }
 
-  rxvt_Draw_Shadow(Xdisplay, ActiveMenu->win, top, bot,
+  rxvt_Draw_Shadow(display->display, ActiveMenu->win, top, bot,
                    SHADOW + 0, SHADOW + y,
                    ActiveMenu->w - 2 * (SHADOW),
                    HEIGHT_TEXT + 2 * SHADOW);
-  XFlush(Xdisplay);
+  XFlush(display->display);
 }
 
 #ifdef DEBUG_MENU_LAYOUT
@@ -924,15 +924,15 @@ rxvt_term::menu_show ()
     }
   if (ActiveMenu->win == None)
     {
-      ActiveMenu->win = XCreateSimpleWindow(Xdisplay, TermWin.vt,
+      ActiveMenu->win = XCreateSimpleWindow(display->display, TermWin.vt,
                                             x, ActiveMenu->y,
                                             ActiveMenu->w, ActiveMenu->h,
                                             0,
                                             PixColors[Color_fg],
                                             PixColors[Color_scroll]);
-      XMapWindow(Xdisplay, ActiveMenu->win);
+      XMapWindow(display->display, ActiveMenu->win);
     }
-  rxvt_Draw_Shadow(Xdisplay, ActiveMenu->win,
+  rxvt_Draw_Shadow(display->display, ActiveMenu->win,
                    topShadowGC, botShadowGC,
                    0, 0, ActiveMenu->w, ActiveMenu->h);
 
@@ -949,7 +949,7 @@ rxvt_term::menu_show ()
 
       if (isSeparator(item->name))
         {
-          rxvt_Draw_Shadow(Xdisplay, ActiveMenu->win,
+          rxvt_Draw_Shadow(display->display, ActiveMenu->win,
                            topShadowGC, botShadowGC,
                            SHADOW, y + SHADOW + 1,
                            ActiveMenu->w - 2 * SHADOW, 0);
@@ -1008,14 +1008,14 @@ rxvt_term::menu_show ()
             {
 #ifdef USE_XIM
               if (TermWin.fontset)
-                XmbDrawString(Xdisplay,
+                XmbDrawString(display->display,
                               ActiveMenu->win, TermWin.fontset,
                               gc, xoff,
                               2 * SHADOW + y + TermWin.font->ascent + 1,
                               name, len);
               else
 #endif
-                XDrawString(Xdisplay, ActiveMenu->win, gc, xoff,
+                XDrawString(display->display, ActiveMenu->win, gc, xoff,
                             2 * SHADOW + y + TermWin.font->ascent + 1,
                             name, len);
             }
@@ -1026,7 +1026,7 @@ rxvt_term::menu_show ()
             {
 #ifdef USE_XIM
               if (TermWin.fontset)
-                XmbDrawString(Xdisplay,
+                XmbDrawString(display->display,
                               ActiveMenu->win, TermWin.fontset,
                               gc,
                               ActiveMenu->w - (xoff + Width2Pixel(xright)),
@@ -1034,7 +1034,7 @@ rxvt_term::menu_show ()
                               name, len);
               else
 #endif
-                XDrawString(Xdisplay, ActiveMenu->win, gc,
+                XDrawString(display->display, ActiveMenu->win, gc,
                             ActiveMenu->w - (xoff + Width2Pixel(xright)),
                             2 * SHADOW + y + TermWin.font->ascent + 1,
                             name, len);
@@ -1053,7 +1053,7 @@ rxvt_term::menu_display (void (*update)(rxvt_t *))
   if (ActiveMenu == NULL)
     return;
   if (ActiveMenu->win != None)
-    XDestroyWindow(Xdisplay, ActiveMenu->win);
+    XDestroyWindow(display->display, ActiveMenu->win);
   ActiveMenu->win = None;
   ActiveMenu->item = NULL;
 
@@ -2003,10 +2003,10 @@ rxvt_term::draw_Arrows (int name, int state)
       int             x = Arrows_x + (5 * Width2Pixel(i)) / 4;
 
       if (!name || name == Arrows[i].name)
-        rxvt_Draw_Triangle(Xdisplay, menuBar.win, top, bot, x, y, w,
+        rxvt_Draw_Triangle(display->display, menuBar.win, top, bot, x, y, w,
                            Arrows[i].name);
     }
-  XFlush(Xdisplay);
+  XFlush(display->display);
 }
 
 void
@@ -2027,14 +2027,14 @@ rxvt_term::menubar_expose ()
 
       gcvalue.foreground = (XDEPTH <= 2 ? PixColors[Color_fg]
                             : PixColors[Color_Black]);
-      menubarGC = XCreateGC(Xdisplay, menuBar.win,
+      menubarGC = XCreateGC(display->display, menuBar.win,
                             GCForeground | GCFont, &gcvalue);
 
     }
   /* make sure the font is correct */
-  XSetFont(Xdisplay, menubarGC, TermWin.font->fid);
-  XSetFont(Xdisplay, botShadowGC, TermWin.font->fid);
-  XClearWindow(Xdisplay, menuBar.win);
+  XSetFont(display->display, menubarGC, TermWin.font->fid);
+  XSetFont(display->display, botShadowGC, TermWin.font->fid);
+  XClearWindow(display->display, menuBar.win);
 
   menu_hide_all ();
 
@@ -2057,14 +2057,14 @@ rxvt_term::menubar_expose ()
           drawbox_menubar (menu->x, len, +1);
 #ifdef USE_XIM
           if (TermWin.fontset)
-            XmbDrawString(Xdisplay,
+            XmbDrawString(display->display,
                           menuBar.win, TermWin.fontset,
                           menubarGC,
                           (Width2Pixel(menu->x) + Width2Pixel(HSPACE) / 2),
                           menuBar_height() - SHADOW, menu->name, len);
           else
 #endif
-            XDrawString(Xdisplay, menuBar.win, menubarGC,
+            XDrawString(display->display, menuBar.win, menubarGC,
                         (Width2Pixel(menu->x) + Width2Pixel(HSPACE) / 2),
                         menuBar_height() - SHADOW, menu->name, len);
 
@@ -2130,14 +2130,14 @@ rxvt_term::menubar_expose ()
         {
 #ifdef USE_XIM
           if (TermWin.fontset)
-            XmbDrawString(Xdisplay,
+            XmbDrawString(display->display,
                           menuBar.win, TermWin.fontset,
                           menubarGC,
                           Width2Pixel(x) + Width2Pixel(ncol + HSPACE) / 2,
                           menuBar_height() - SHADOW, title, len);
           else
 #endif
-            XDrawString(Xdisplay, menuBar.win, menubarGC,
+            XDrawString(display->display, menuBar.win, menubarGC,
                         Width2Pixel(x) + Width2Pixel(ncol + HSPACE) / 2,
                         menuBar_height() - SHADOW, title, len);
         }
@@ -2154,14 +2154,14 @@ rxvt_term::menubar_mapping (int map)
       menuBar.state = 1;
       if (menuBar.win == 0)
         return 0;
-      XMapWindow(Xdisplay, menuBar.win);
+      XMapWindow(display->display, menuBar.win);
       change = 1;
     }
   else if (!map && menubar_visible(r))
     {
       menubar_expose ();
       menuBar.state = 0;
-      XUnmapWindow(Xdisplay, menuBar.win);
+      XUnmapWindow(display->display, menuBar.win);
       change = 1;
     }
   else
@@ -2184,7 +2184,7 @@ rxvt_term::menu_select (XButtonEvent *ev)
   if (ActiveMenu == NULL)
     return 0;
 
-  XQueryPointer(Xdisplay, ActiveMenu->win,
+  XQueryPointer(display->display, ActiveMenu->win,
                 &unused_root, &unused_child,
                 &unused_root_x, &unused_root_y,
                 &(ev->x), &(ev->y), &unused_mask);
@@ -2444,7 +2444,7 @@ rxvt_term::menubar_control (XButtonEvent *ev)
         break;
 
       case MotionNotify:
-        while (XCheckTypedWindowEvent(Xdisplay, TermWin.parent[0],
+        while (XCheckTypedWindowEvent(display->display, TermWin.parent[0],
                                       MotionNotify, (XEvent *) ev)) ;
 
         if (ActiveMenu)
@@ -2457,7 +2457,7 @@ rxvt_term::menubar_control (XButtonEvent *ev)
             int             unused_root_x, unused_root_y;
             unsigned int    unused_mask;
 
-            XQueryPointer(Xdisplay, menuBar.win,
+            XQueryPointer(display->display, menuBar.win,
                           &unused_root, &unused_child,
                           &unused_root_x, &unused_root_y,
                           &(ev->x), &(ev->y), &unused_mask);

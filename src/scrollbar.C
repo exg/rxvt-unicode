@@ -44,14 +44,14 @@ rxvt_term::scrollbar_mapping (int map)
         resize_scrollbar ();
       if (scrollBar.win)
         {
-          XMapWindow(Xdisplay, scrollBar.win);
+          XMapWindow(display->display, scrollBar.win);
           change = 1;
         }
     }
   else if (!map && scrollbar_visible())
     {
       scrollBar.state = 0;
-      XUnmapWindow(Xdisplay, scrollBar.win);
+      XUnmapWindow(display->display, scrollBar.win);
       change = 1;
     }
 #endif
@@ -109,7 +109,7 @@ rxvt_term::resize_scrollbar ()
   if (!scrollBar.win)
     {
       /* create the scrollbar window */
-      scrollBar.win = XCreateSimpleWindow(Xdisplay,
+      scrollBar.win = XCreateSimpleWindow(display->display,
                                           TermWin.parent[0],
                                           window_sb_x, 0,
                                           scrollbar_TotalWidth(),
@@ -118,18 +118,23 @@ rxvt_term::resize_scrollbar ()
                                           PixColors[Color_fg],
                                           PixColors[Color_bg]);
 #ifdef DEBUG_X
-      XStoreName(Xdisplay, scrollBar.win, "scrollbar");
+      XStoreName(display->display, scrollBar.win, "scrollbar");
 #endif
-      XDefineCursor(Xdisplay, scrollBar.win, leftptr_cursor);
-      XSelectInput(Xdisplay, scrollBar.win,
-                   (ExposureMask | ButtonPressMask | ButtonReleaseMask
-                    | Button1MotionMask | Button2MotionMask
-                    | Button3MotionMask));
+      XDefineCursor(display->display, scrollBar.win, leftptr_cursor);
+
+      XSelectInput(display->display, scrollBar.win,
+                   ExposureMask | ButtonPressMask | ButtonReleaseMask
+                   | Button1MotionMask | Button2MotionMask
+                   | Button3MotionMask);
+      scrollbar_ev.start (display, scrollBar.win);
+
       delayed_init = 1;
     }
+
   scrollbar_show (1);
+
   if (delayed_init)
-    XMapWindow (Xdisplay, scrollBar.win);
+    XMapWindow (display->display, scrollBar.win);
 #endif
 }
 

@@ -59,9 +59,7 @@ struct idle_watcher;
 #endif
 
 template<class watcher>
-struct io_manager_vec : protected vector<watcher *> {
-  friend class io_manager;
-protected:
+struct io_manager_vec : vector<watcher *> {
 #if IOM_CHECK
   bool activity;
 #endif

@@ -366,7 +366,7 @@ rxvt_File_find(const char *file, const char *ext, const char *path)
 #if defined(RXVT_SCROLLBAR) || defined(MENUBAR)
 /* EXTPROTO */
 void
-rxvt_Draw_Shadow(Display *Xdisplay, Window win, GC topShadow, GC botShadow, int x, int y, int w, int h)
+rxvt_Draw_Shadow(Display *display, Window win, GC topShadow, GC botShadow, int x, int y, int w, int h)
 {
   int             shadow;
 
@@ -375,10 +375,10 @@ rxvt_Draw_Shadow(Display *Xdisplay, Window win, GC topShadow, GC botShadow, int 
   h += y - 1;
   for (; shadow-- > 0; x++, y++, w--, h--)
     {
-      XDrawLine(Xdisplay, win, topShadow, x, y, w, y);
-      XDrawLine(Xdisplay, win, topShadow, x, y, x, h);
-      XDrawLine(Xdisplay, win, botShadow, w, h, w, y + 1);
-      XDrawLine(Xdisplay, win, botShadow, w, h, x + 1, h);
+      XDrawLine(display, win, topShadow, x, y, w, y);
+      XDrawLine(display, win, topShadow, x, y, x, h);
+      XDrawLine(display, win, botShadow, w, h, w, y + 1);
+      XDrawLine(display, win, botShadow, w, h, x + 1, h);
     }
 }
 #endif
@@ -387,39 +387,39 @@ rxvt_Draw_Shadow(Display *Xdisplay, Window win, GC topShadow, GC botShadow, int 
 #ifdef MENUBAR
 /* EXTPROTO */
 void
-rxvt_Draw_Triangle(Display *Xdisplay, Window win, GC topShadow, GC botShadow, int x, int y, int w, int type)
+rxvt_Draw_Triangle(Display *display, Window win, GC topShadow, GC botShadow, int x, int y, int w, int type)
 {
   switch (type)
     {
       case 'r':			/* right triangle */
-        XDrawLine(Xdisplay, win, topShadow, x, y, x, y + w);
-        XDrawLine(Xdisplay, win, topShadow, x, y, x + w, y + w / 2);
-        XDrawLine(Xdisplay, win, botShadow, x, y + w, x + w, y + w / 2);
+        XDrawLine(display, win, topShadow, x, y, x, y + w);
+        XDrawLine(display, win, topShadow, x, y, x + w, y + w / 2);
+        XDrawLine(display, win, botShadow, x, y + w, x + w, y + w / 2);
         break;
 
       case 'l':			/* left triangle */
-        XDrawLine(Xdisplay, win, botShadow, x + w, y + w, x + w, y);
-        XDrawLine(Xdisplay, win, botShadow, x + w, y + w, x, y + w / 2);
-        XDrawLine(Xdisplay, win, topShadow, x, y + w / 2, x + w, y);
+        XDrawLine(display, win, botShadow, x + w, y + w, x + w, y);
+        XDrawLine(display, win, botShadow, x + w, y + w, x, y + w / 2);
+        XDrawLine(display, win, topShadow, x, y + w / 2, x + w, y);
         break;
 
       case 'd':			/* down triangle */
-        XDrawLine(Xdisplay, win, topShadow, x, y, x + w / 2, y + w);
-        XDrawLine(Xdisplay, win, topShadow, x, y, x + w, y);
-        XDrawLine(Xdisplay, win, botShadow, x + w, y, x + w / 2, y + w);
+        XDrawLine(display, win, topShadow, x, y, x + w / 2, y + w);
+        XDrawLine(display, win, topShadow, x, y, x + w, y);
+        XDrawLine(display, win, botShadow, x + w, y, x + w / 2, y + w);
         break;
 
       case 'u':			/* up triangle */
-        XDrawLine(Xdisplay, win, botShadow, x + w, y + w, x + w / 2, y);
-        XDrawLine(Xdisplay, win, botShadow, x + w, y + w, x, y + w);
-        XDrawLine(Xdisplay, win, topShadow, x, y + w, x + w / 2, y);
+        XDrawLine(display, win, botShadow, x + w, y + w, x + w / 2, y);
+        XDrawLine(display, win, botShadow, x + w, y + w, x, y + w);
+        XDrawLine(display, win, topShadow, x, y + w, x + w / 2, y);
         break;
 #if 0
       case 's':			/* square */
-        XDrawLine(Xdisplay, win, topShadow, x + w, y, x, y);
-        XDrawLine(Xdisplay, win, topShadow, x, y, x, y + w);
-        XDrawLine(Xdisplay, win, botShadow, x, y + w, x + w, y + w);
-        XDrawLine(Xdisplay, win, botShadow, x + w, y + w, x + w, y);
+        XDrawLine(display, win, topShadow, x + w, y, x, y);
+        XDrawLine(display, win, topShadow, x, y, x, y + w);
+        XDrawLine(display, win, botShadow, x, y + w, x + w, y + w);
+        XDrawLine(display, win, botShadow, x + w, y + w, x + w, y);
         break;
 #endif
 

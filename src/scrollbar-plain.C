@@ -1,4 +1,4 @@
-/*--------------------------------*-C-*---------------------------------*
+/*----------------------------------------------------------------------*
  * File:	scrollbar-plain.c
  *----------------------------------------------------------------------*
  *
@@ -30,38 +30,38 @@
 int
 rxvt_term::scrollbar_show_plain (int update __attribute__((unused)), int last_top, int last_bot, int scrollbar_len)
 {
-  int             xsb = 0;
-  int             sbwidth = scrollBar.width - 1;
+  int xsb = 0;
+  int sbwidth = scrollBar.width - 1;
 
   if ((scrollBar.init & R_SB_PLAIN) == 0)
     {
-      XGCValues       gcvalue;
+      XGCValues gcvalue;
 
       scrollBar.init |= R_SB_PLAIN;
       gcvalue.foreground = PixColors[Color_fg];
       gcvalue.background = PixColors[Color_bg];
 
-      pscrollbarGC = XCreateGC(Xdisplay, scrollBar.win,
-                               GCForeground | GCBackground
-                               | GCFillStyle, &gcvalue);
+      pscrollbarGC = XCreateGC (display->display, scrollBar.win,
+                                GCForeground | GCBackground, &gcvalue);
     }
-  /* instead of XClearWindow (Xdisplay, scrollBar.win); */
+  /* instead of XClearWindow (display->display, scrollBar.win); */
   xsb = (Options & Opt_scrollBar_right) ? 1 : 0;
   if (last_top < scrollBar.top)
-    XClearArea(Xdisplay, scrollBar.win,
-               sb_shadow + xsb, last_top,
-               sbwidth + 1, (scrollBar.top - last_top), False);
+    XClearArea (display->display, scrollBar.win,
+                sb_shadow + xsb, last_top,
+                sbwidth + 1, (scrollBar.top - last_top), False);
 
   if (scrollBar.bot < last_bot)
-    XClearArea(Xdisplay, scrollBar.win,
-               sb_shadow + xsb, scrollBar.bot,
-               sbwidth + 1, (last_bot - scrollBar.bot), False);
+    XClearArea (display->display, scrollBar.win,
+                sb_shadow + xsb, scrollBar.bot,
+                sbwidth + 1, (last_bot - scrollBar.bot), False);
 
   /* scrollbar slider */
-  XFillRectangle(Xdisplay, scrollBar.win, pscrollbarGC,
-                 xsb + 1, scrollBar.top, sbwidth, scrollbar_len);
+  XFillRectangle (display->display, scrollBar.win, pscrollbarGC,
+                  xsb + 1, scrollBar.top, sbwidth, scrollbar_len);
 
   return 1;
 }
-#endif				/* XTERM_SCROLLBAR */
-/*----------------------- end-of-file (C source) -----------------------*/
+
+#endif
+

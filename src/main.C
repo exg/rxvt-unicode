@@ -74,6 +74,17 @@ rxvt_term::operator delete (void *p, size_t s)
 
 rxvt_term::rxvt_term ()
     :
+#ifdef TRANSPARENT
+    rootwin_ev (this, &rxvt_term::rootwin_cb),
+#endif
+    termwin_ev (this, &rxvt_term::x_cb),
+    vt_ev (this, &rxvt_term::x_cb),
+#ifdef HAVE_SCROLLBARS
+    scrollbar_ev (this, &rxvt_term::x_cb),
+#endif
+#ifdef MENUBAR
+    menubar_ev (this, &rxvt_term::x_cb), fixme
+#endif
 #ifdef CURSOR_BLINK
     cursor_blink_ev (this, &rxvt_term::cursor_blink_cb),
 #endif
@@ -86,7 +97,6 @@ rxvt_term::rxvt_term ()
     check_ev (this, &rxvt_term::check_cb),
     destroy_ev (this, &rxvt_term::destroy_cb),
     pty_ev (this, &rxvt_term::pty_cb),
-    x_ev (this, &rxvt_term::x_cb),
     incr_ev (this, &rxvt_term::incr_cb)
 {
   cmdbuf_ptr = cmdbuf_endp = cmdbuf_base;
@@ -106,28 +116,44 @@ rxvt_term::~rxvt_term ()
   privileged_utmp (RESTORE);
 #endif
 #ifdef USE_XIM
-  if (Input_Context != NULL)
+  if (Input_Context)
     {
       XDestroyIC (Input_Context);
       Input_Context = NULL;
     }
 #endif
 
+  if (TermWin.parent[0])
+    XDestroyWindow (display->display, TermWin.parent[0]);
+
+  // TODO: free pixcolours, colours should become part of rxvt_display
+
+  delete PixColors;
+
   if (cmd_fd >= 0)
     close (cmd_fd);
 
-  if (Xfd >= 0)
-    XCloseDisplay (Xdisplay);
-
-  delete PixColors;
+  if (display)
+    displays.release (display);
 }
 
 void
 rxvt_term::destroy ()
 {
+  if (display)
+    {
+      termwin_ev.stop (display);
+      vt_ev.stop (display);
+#ifdef HAVE_SCROLLBARS
+      scrollbar_ev.stop (display);
+#endif
+#ifdef MENUBAR
+      menubar_ev.stop (display);
+#endif
+    }
+
   check_ev.stop ();
   pty_ev.stop ();
-  x_ev.stop ();
 #ifdef CURSOR_BLINK
   cursor_blink_ev.stop ();
 #endif
@@ -166,6 +192,8 @@ rxvt_init (int argc, const char *const *argv)
   return GET_R;
 }
 
+static int (*old_xerror_handler)(Display *dpy, XErrorEvent *event);
+
 void
 rxvt_init_signals ()
 {
@@ -191,7 +219,7 @@ rxvt_init_signals ()
   /* need to trap SIGURG for SVR4 (Unixware) rlogin */
   /* signal (SIGURG, SIG_DFL); */
 
-  XSetErrorHandler ((XErrorHandler) rxvt_xerror_handler);
+  old_xerror_handler = XSetErrorHandler ((XErrorHandler) rxvt_xerror_handler);
   //XSetIOErrorHandler ((XErrorHandler) rxvt_xioerror_handler);
 }
 
@@ -233,7 +261,7 @@ rxvt_term::init (int argc, const char *const *argv)
 
 #if 0
 #ifdef DEBUG_X
-  XSynchronize(Xdisplay, True);
+  XSynchronize(display->display, True);
 #endif
 #endif
 
@@ -243,27 +271,25 @@ rxvt_term::init (int argc, const char *const *argv)
 #endif
 #if (MENUBAR_MAX)
   if (menubar_visible(r))
-    XMapWindow (Xdisplay, menuBar.win);
+    XMapWindow (display->display, menuBar.win);
 #endif
 #ifdef TRANSPARENT
   if (Options & Opt_transparent)
     {
-      XSelectInput (Xdisplay, Xroot, PropertyChangeMask);
+      XSelectInput (display->display, display->root, PropertyChangeMask);
+      rootwin_ev.start (display, display->root);
       check_our_parents ();
     }
 #endif
-  XMapWindow (Xdisplay, TermWin.vt);
-  XMapWindow (Xdisplay, TermWin.parent[0]);
+  XMapWindow (display->display, TermWin.vt);
+  XMapWindow (display->display, TermWin.parent[0]);
 
   init_env ();
   init_command (cmd_argv);
 
-  x_ev.start (Xfd, EVENT_READ);
   pty_ev.start (cmd_fd, EVENT_READ);
 
   check_ev.start ();
-
-  process_x_events ();
 
   return true;
 }
@@ -305,20 +331,15 @@ rxvt_Exit_signal(int sig)
   kill(getpid(), sig);
 }
 
-/* ARGSUSED */
-/* EXTPROTO */
+/* INTPROTO */
 int
-rxvt_xerror_handler(const Display * display
-                    __attribute__ ((unused)), const XErrorEvent * event)
+rxvt_xerror_handler (Display *display, XErrorEvent *event)
 {
   if (GET_R->allowedxerror == -1)
     GET_R->allowedxerror = event->error_code;
   else
     {
-      rxvt_print_error("XError: Request: %d . %d, Error: %d",
-                       event->request_code, event->minor_code,
-                       event->error_code);
-
+      old_xerror_handler (display, event);
       GET_R->destroy ();
     }
 
@@ -639,10 +660,10 @@ rxvt_term::window_calc (unsigned int width, unsigned int height)
     window_sb_x = szHint.width - sb_w;
 
   if (recalc_x)
-    szHint.x += (DisplayWidth (Xdisplay, DefaultScreen (Xdisplay))
+    szHint.x += (DisplayWidth (display->display, DefaultScreen (display->display))
                  - szHint.width - 2 * TermWin.ext_bwidth);
   if (recalc_y)
-    szHint.y += (DisplayHeight (Xdisplay, DefaultScreen (Xdisplay))
+    szHint.y += (DisplayHeight (display->display, DefaultScreen (display->display))
                  - szHint.height - 2 * TermWin.ext_bwidth);
 
   TermWin.ncol = TermWin.width / TermWin.fwidth;
@@ -704,14 +725,14 @@ void
 rxvt_term::set_title (const char *str)
 {
 #ifndef SMART_WINDOW_TITLE
-  XStoreName(Xdisplay, TermWin.parent[0], str);
+  XStoreName(display->display, TermWin.parent[0], str);
 #else
   char           *name;
 
-  if (XFetchName(Xdisplay, TermWin.parent[0], &name) == 0)
+  if (XFetchName(display->display, TermWin.parent[0], &name) == 0)
     name = NULL;
   if (name == NULL || STRCMP(name, str))
-    XStoreName(Xdisplay, TermWin.parent[0], str);
+    XStoreName(display->display, TermWin.parent[0], str);
   if (name)
     XFree(name);
 #endif
@@ -721,14 +742,14 @@ void
 rxvt_term::set_iconName (const char *str)
 {
 #ifndef SMART_WINDOW_TITLE
-  XSetIconName(Xdisplay, TermWin.parent[0], str);
+  XSetIconName(display->display, TermWin.parent[0], str);
 #else
   char           *name;
 
-  if (XGetIconName(Xdisplay, TermWin.parent[0], &name))
+  if (XGetIconName(display->display, TermWin.parent[0], &name))
     name = NULL;
   if (name == NULL || STRCMP(name, str))
-    XSetIconName(Xdisplay, TermWin.parent[0], str);
+    XSetIconName(display->display, TermWin.parent[0], str);
   if (name)
     XFree(name);
 #endif
@@ -767,7 +788,7 @@ rxvt_term::set_window_color (int idx, const char *color)
     }
   if (!rXParseAllocColor (& xcol, color))
     return;
-  /* XStoreColor (Xdisplay, XCMAP, XColor*); */
+  /* XStoreColor (display->display, XCMAP, XColor*); */
 
   /*
    * FIXME: should free colors here, but no idea how to do it so instead,
@@ -780,8 +801,8 @@ rxvt_term::set_window_color (int idx, const char *color)
   if (i > Color_White)
     {
       /* fprintf (stderr, "XFreeColors: PixColors [%d] = %lu\n", idx, PixColors [idx]); */
-      XFreeColors(Xdisplay, XCMAP, (PixColors + idx), 1,
-                  DisplayPlanes(Xdisplay, Xscreen));
+      XFreeColors(display->display, XCMAP, (PixColors + idx), 1,
+                  DisplayPlanes(display->display, display->screen));
     }
 # endif
 
@@ -792,7 +813,7 @@ rxvt_term::set_window_color (int idx, const char *color)
   /* Cursor cursor; */
 Done:
   if (idx == Color_bg && !(Options & Opt_transparent))
-    XSetWindowBackground(Xdisplay, TermWin.vt,
+    XSetWindowBackground(display->display, TermWin.vt,
                          PixColors[Color_bg]);
 
   /* handle Color_BD, scrollbar background, etc. */
@@ -815,8 +836,8 @@ rxvt_term::recolour_cursor ()
 
   xcol[0] = PixColors[Color_pointer];
   xcol[1] = PixColors[Color_bg];
-  XQueryColors (Xdisplay, XCMAP, xcol, 2);
-  XRecolorCursor (Xdisplay, TermWin_cursor, &(xcol[0]), &(xcol[1]));
+  XQueryColors (display->display, XCMAP, xcol, 2);
+  XRecolorCursor (display->display, TermWin_cursor, &(xcol[0]), &(xcol[1]));
 #endif
 }
 
@@ -874,7 +895,7 @@ rxvt_term::set_colorfgbg ()
 int
 rxvt_term::rXParseAllocColor (rxvt_color *screen_in_out, const char *colour)
 {
-  if (!screen_in_out->set (this, colour))
+  if (!screen_in_out->set (display, colour))
     {
       rxvt_print_error("can't allocate colour: %s", colour);
       return false;
@@ -896,7 +917,7 @@ rxvt_term::resize_all_windows (unsigned int width, unsigned int height, int igno
 #endif
 
   window_calc (width, height);
-  XSetWMNormalHints (Xdisplay, TermWin.parent[0], &szHint);
+  XSetWMNormalHints (display->display, TermWin.parent[0], &szHint);
   if (!ignoreparent)
     {
 #ifdef SMART_RESIZE
@@ -909,12 +930,12 @@ rxvt_term::resize_all_windows (unsigned int width, unsigned int height, int igno
       unsigned int unused_w1, unused_h1, unused_b1, unused_d1;
       Window unused_cr;
 
-      XTranslateCoordinates (Xdisplay, TermWin.parent[0], Xroot,
+      XTranslateCoordinates (display->display, TermWin.parent[0], display->root,
                              0, 0, &x, &y, &unused_cr);
-      XGetGeometry (Xdisplay, TermWin.parent[0], &unused_cr, &x1, &y1,
+      XGetGeometry (display->display, TermWin.parent[0], &unused_cr, &x1, &y1,
                     &unused_w1, &unused_h1, &unused_b1, &unused_d1);
       /*
-       * if Xroot isn't the parent window, a WM will probably have offset
+       * if display->root isn't the parent window, a WM will probably have offset
        * our position for handles and decorations.  Counter it
        */
       if (x1 != x || y1 != y)
@@ -923,8 +944,8 @@ rxvt_term::resize_all_windows (unsigned int width, unsigned int height, int igno
           y -= y1;
         }
 
-      x1 = (DisplayWidth (Xdisplay, Xscreen) - old_width) / 2;
-      y1 = (DisplayHeight (Xdisplay, Xscreen) - old_height) / 2;
+      x1 = (DisplayWidth (display->display, display->screen) - old_width) / 2;
+      y1 = (DisplayHeight (display->display, display->screen) - old_height) / 2;
       dx = old_width - szHint.width;
       dy = old_height - szHint.height;
 
@@ -938,10 +959,10 @@ rxvt_term::resize_all_windows (unsigned int width, unsigned int height, int igno
       else if (y == y1)       /* exact center */
         dy /= 2;
 
-      XMoveResizeWindow (Xdisplay, TermWin.parent[0], x + dx, y + dy,
+      XMoveResizeWindow (display->display, TermWin.parent[0], x + dx, y + dy,
                          szHint.width, szHint.height);
 #else
-      XResizeWindow (Xdisplay, TermWin.parent[0], szHint.width,
+      XResizeWindow (display->display, TermWin.parent[0], szHint.width,
                      szHint.height);
 #endif
 
@@ -954,16 +975,16 @@ rxvt_term::resize_all_windows (unsigned int width, unsigned int height, int igno
     {
       if (scrollbar_visible ())
         {
-          XMoveResizeWindow (Xdisplay, scrollBar.win, window_sb_x,
+          XMoveResizeWindow (display->display, scrollBar.win, window_sb_x,
                              0, scrollbar_TotalWidth (), szHint.height);
           resize_scrollbar ();
         }
 
       if (menubar_visible ())
-        XMoveResizeWindow (Xdisplay, menuBar.win, window_vt_x,
+        XMoveResizeWindow (display->display, menuBar.win, window_vt_x,
                            0, TermWin_TotalWidth (), menuBar_TotalHeight ());
 
-      XMoveResizeWindow (Xdisplay, TermWin.vt, window_vt_x,
+      XMoveResizeWindow (display->display, TermWin.vt, window_vt_x,
                          window_vt_y, TermWin_TotalWidth (),
                          TermWin_TotalHeight ());
 #ifdef RXVT_GRAPHICS
@@ -1020,7 +1041,7 @@ rxvt_term::set_widthheight (unsigned int width, unsigned int height)
 
   if (width == 0 || height == 0)
     {
-      XGetWindowAttributes(Xdisplay, Xroot, &wattr);
+      XGetWindowAttributes(display->display, display->root, &wattr);
       if (width == 0)
         width = wattr.width - szHint.base_width;
       if (height == 0)
@@ -1071,8 +1092,8 @@ rxvt_term::IMisRunning ()
       if ((p = STRCHR(server + 1, '@')) != NULL)      /* first one only */
         *p = '\0';
 
-      atom = XInternAtom(Xdisplay, server, False);
-      win = XGetSelectionOwner(Xdisplay, atom);
+      atom = XInternAtom(display->display, server, False);
+      win = XGetSelectionOwner(display->display, atom);
       if (win != None)
         return True;
     }
@@ -1137,7 +1158,7 @@ rxvt_IMDestroyCallback(XIM xim __attribute__ ((unused)), XPointer client_data
   GET_R->Input_Context = NULL;
   /* To avoid Segmentation Fault in C locale: Solaris only? */
   if (STRCMP (GET_R->locale, "C"))
-    XRegisterIMInstantiateCallback(GET_R->Xdisplay, NULL, NULL, NULL,
+    XRegisterIMInstantiateCallback(GET_R->display->display, NULL, NULL, NULL,
                                    rxvt_IMInstantiateCallback, NULL);
 }
 
@@ -1160,7 +1181,7 @@ rxvt_term::IM_get_IC ()
   XIMCallback     ximcallback;
 
   D_MAIN((stderr, "rxvt_IM_get_IC()"));
-  xim = XOpenIM (Xdisplay, NULL, NULL, NULL);
+  xim = XOpenIM (display->display, NULL, NULL, NULL);
   if (xim == NULL)
     return False;
 

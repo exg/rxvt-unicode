@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.10 2004/01/31 04:12:10 pcg Exp $
+# $Id: Makefile.in,v 1.11 2004/02/09 07:11:49 pcg Exp $
 @MCOMMON@
 
 LINT = lint -DNARROWPROTO=1 $(XINC) -chapbxz
@@ -71,7 +71,7 @@ INTPROS = command.intpro defaultfont.intpro grkelot.intpro \
 	scrollbar-rxvt.intpro scrollbar-next.intpro scrollbar-xterm.intpro scrollbar-plain.intpro \
 	strings.intpro xdefaults.intpro xpm.intpro
 
-DEPS =  rxvt.h rxvtlib.h ${basedir}/config.h feature.h .protos
+DEPS =  rxvt.h rxvtlib.h ${basedir}/config.h feature.h rxvtcolor.h .protos
 
 #
 # Distribution variables
