@@ -1,22 +1,30 @@
-COMMENT(-- $Id: rxvt-resources.yo,v 1.15 2004/07/29 13:30:39 root Exp $ --)
+COMMENT(-- $Id: rxvt-resources.yo,v 1.16 2004/07/30 22:32:33 root Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpagesection(RESOURCES (available also as long-options))
 
-Note: `rxvt --help' gives a list of all resources (long options) compiled
+Note: `RXVTNAME() --help' gives a list of all resources (long options) compiled
 into your version.
-If compiled with internal Xresources support (i.e. bf(rxvt -h) lists 
-bf(.Xdefaults)) then bf(RXVTNAME()) accepts application defaults set in
-XAPPLOADDIR/Rxvt (compile-time defined: usually
-bf(/usr/lib/X11/app-defaults/Rxvt)) and resources set in bf(~/.Xdefaults),
-or bf(~/.Xresources) if bf(~/.Xdefaults) does not exist.  Note that when
-reading X resources, bf(RXVTNAME()) recognizes two class names: bf(XTerm) and
-bf(Rxvt).  The class name bf(XTerm) allows resources common to both
-bf(RXVTNAME()) and em(xterm) to be easily configured, while the class name
-bf(Rxvt) allows resources unique to bf(RXVTNAME()), notably colours and
-key-handling, to be shared between different bf(RXVTNAME()) configurations. 
-If no resources are specified, suitable defaults will be used. 
-Command-line arguments can be used to override resource settings.  The
-following resources are allowed:
+
+There are two different methods that RXVTNAME() can use to get the
+Xresource data: using the X libraries (Xrm*-functions) or internal Xresources
+reader (bf(~/.Xdefaults)).  For the first method (ie. bf(RXVTNAME() -h) lists
+bf(XGetDefaults)), you can set and change the resources using X11
+tools like bf(xset). Many distribution do also load settings from the
+bf(~/.Xresources) file when X starts.
+
+If compiled with internal Xresources support (i.e. bf(RXVTNAME()
+-h) lists bf(.Xdefaults)) then bf(RXVTNAME()) accepts application
+defaults set in XAPPLOADDIR/URxvt (compile-time defined: usually
+bf(/usr/lib/X11/app-defaults/URxvt)) and resources set in
+bf(~/.Xdefaults), or bf(~/.Xresources) if bf(~/.Xdefaults) does not exist.
+Note that when reading X resources, bf(RXVTNAME()) recognizes two class
+names: bf(XTerm) and bf(URxvt).  The class name bf(Rxvt) allows resources
+common to both bf(RXVTNAME()) and the original em(rxvt) to be easily configured,
+while the class name bf(URxvt) allows resources unique to bf(RXVTNAME()),
+notably colours and key-handling, to be shared between different
+bf(RXVTNAME()) configurations.  If no resources are specified, suitable
+defaults will be used.  Command-line arguments can be used to override
+resource settings.  The following resources are allowed:
 
 startdit()
     dit(bf(geometry:) em(geom))

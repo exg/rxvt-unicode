@@ -57,7 +57,10 @@ resource \fBinheritPixmap\fP\&.
 Fade the text by the given percentage when focus is lost\&.
 .IP "\fB-tint\fP \fIcolour\fP" 
 Tint the transparent background pixmap with the given colour when
-transparency is enabled with \fB-tr\fP or \fB-ip\fP\&.
+transparency is enabled with \fB-tr\fP or \fB-ip\fP\&. You can also
+emulate the "shading" or "brigthness change" option known from
+other terminal programs using gray10 (gray20, etc\&.) colour
+strings\&.
 .IP "\fB-bg\fP \fIcolour\fP" 
 Window background colour;
 resource \fBbackground\fP\&.
@@ -211,19 +214,27 @@ in some window managers\&.
 .PP 
 Note: `rxvt --help\&' gives a list of all resources (long options) compiled
 into your version\&.
-If compiled with internal Xresources support (i\&.e\&. \fBrxvt -h\fP lists 
-\fB\&.Xdefaults\fP) then \fBrxvt\fP accepts application defaults set in
-XAPPLOADDIR/Rxvt (compile-time defined: usually
-\fB/usr/lib/X11/app-defaults/Rxvt\fP) and resources set in \fB~/\&.Xdefaults\fP,
-or \fB~/\&.Xresources\fP if \fB~/\&.Xdefaults\fP does not exist\&.  Note that when
-reading X resources, \fBrxvt\fP recognizes two class names: \fBXTerm\fP and
-\fBRxvt\fP\&.  The class name \fBXTerm\fP allows resources common to both
-\fBrxvt\fP and \fIxterm\fP to be easily configured, while the class name
-\fBRxvt\fP allows resources unique to \fBrxvt\fP, notably colours and
-key-handling, to be shared between different \fBrxvt\fP configurations\&. 
-If no resources are specified, suitable defaults will be used\&. 
-Command-line arguments can be used to override resource settings\&.  The
-following resources are allowed:
+.PP 
+There are two different methods that rxvt can use to get the
+Xresource data: using the X libraries (Xrm*-functions) or internal Xresources
+reader (\fB~/\&.Xdefaults\fP)\&.  For the first method (ie\&. \fBrxvt -h\fP lists
+\fBXGetDefaults\fP), you can set and change the resources using X11
+tools like \fBxset\fP\&. Many distribution do also load settings from the
+\fB~/\&.Xresources\fP file when X starts\&.
+.PP 
+If compiled with internal Xresources support (i\&.e\&. \fBrxvt
+-h\fP lists \fB\&.Xdefaults\fP) then \fBrxvt\fP accepts application
+defaults set in XAPPLOADDIR/URxvt (compile-time defined: usually
+\fB/usr/lib/X11/app-defaults/URxvt\fP) and resources set in
+\fB~/\&.Xdefaults\fP, or \fB~/\&.Xresources\fP if \fB~/\&.Xdefaults\fP does not exist\&.
+Note that when reading X resources, \fBrxvt\fP recognizes two class
+names: \fBXTerm\fP and \fBURxvt\fP\&.  The class name \fBRxvt\fP allows resources
+common to both \fBrxvt\fP and the original \fIrxvt\fP to be easily configured,
+while the class name \fBURxvt\fP allows resources unique to \fBrxvt\fP,
+notably colours and key-handling, to be shared between different
+\fBrxvt\fP configurations\&.  If no resources are specified, suitable
+defaults will be used\&.  Command-line arguments can be used to override
+resource settings\&.  The following resources are allowed:
 .PP 
 .IP "\fBgeometry:\fP \fIgeom\fP" 
 Create the window with the specified X window geometry [default
