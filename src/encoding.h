@@ -6,7 +6,6 @@
 // order must match the table in encoding.C(!)
 enum codeset {
   CS_UNKNOWN = 0,
-  CS_SPECIAL,
   CS_US_ASCII,
 
   CS_ISO8859_1,
@@ -63,6 +62,7 @@ codeset codeset_from_name (const char *name);
 
 enum {
   ZERO_WIDTH_CHAR = 0x200b,
+  REPLACEMENT_CHAR = 0xfffd,
   NOCHAR = 65535, // must be invalid in ANY codeset (!)
 };
 
@@ -72,6 +72,8 @@ struct rxvt_codeset_conv {
 };
 
 extern const rxvt_codeset_conv *rxvt_codeset[NUM_CODESETS];
+
+extern uint32_t rxvt_compose (uint32_t c1, uint32_t c2);
 
 #define FROM_UNICODE(cs,code) rxvt_codeset[cs]->from_unicode (code)
 #define TO_UNICODE(cs,code)   rxvt_codeset[cs]->to_unicode   (code)
