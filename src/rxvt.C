@@ -27,7 +27,7 @@ int
 main (int argc, const char *const *argv)
 try
   {
-    rxvt_init_signals ();
+    rxvt_init ();
 
     rxvt_term *t = new rxvt_term;
 

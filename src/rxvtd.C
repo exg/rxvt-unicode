@@ -213,7 +213,7 @@ void server::read_cb (io_watcher &w, short revents)
 int
 main (int argc, const char *const *argv)
 {
-  rxvt_init_signals ();
+  rxvt_init ();
 
   char *sockname = rxvt_connection::unix_sockname ();
   unix_listener l (sockname);

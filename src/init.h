@@ -148,5 +148,4 @@
 
 #define CONSOLE		"/dev/console"	/* console device */
 
-#include "init.intpro"	/* PROTOS for internal routines */
 #endif	/* _INIT_H_ */
