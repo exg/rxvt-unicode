@@ -270,7 +270,7 @@ void rxvt_display::x_cb (io_watcher &w, short revents)
         }
 #endif
     }
-  while (XPending (display));
+  while (XEventsQueued (display, QueuedAlready));
 
   flush ();
 }

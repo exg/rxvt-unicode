@@ -86,6 +86,14 @@ class io_manager {
   static void unreg (watcher &w, io_manager_vec<watcher> &queue);
 
 public:
+#if IOM_TIME
+  // fetch time only
+  static tstamp now ();
+
+  // set NOW
+  static void set_now ();
+#endif
+
   // register a watcher
 #if IOM_IO
   static void reg (io_watcher    &w); static void unreg (io_watcher    &w);

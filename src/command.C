@@ -1219,9 +1219,9 @@ rxvt_term::x_cb (XEvent &ev)
     }
 #endif
 
-  Window          unused_root, unused_child;
-  int             unused_root_x, unused_root_y;
-  unsigned int    unused_mask;
+  Window unused_root, unused_child;
+  int unused_root_x, unused_root_y;
+  unsigned int unused_mask;
 
   switch (ev.type)
     {
@@ -1336,10 +1336,7 @@ rxvt_term::x_cb (XEvent &ev)
                                &ActualType, &ActualFormat,
                                &Size, &RemainingBytes,
                                &data);
-            XChangeProperty (display->display, display->root,
-                            XA_CUT_BUFFER0, XA_STRING,
-                            8, PropModeReplace,
-                            data, strlen (data));
+            set_string_property (XA_CUT_BUFFER0, data);
             XFree (data);
             selection_paste (display->root, XA_CUT_BUFFER0, True);
             XSetInputFocus (display->display, display->root, RevertToNone, CurrentTime);
@@ -1455,11 +1452,7 @@ rxvt_term::x_cb (XEvent &ev)
 
 #ifdef TRANSPARENT		/* XXX: maybe not needed - leave in for now */
             if (options & Opt_transparent)
-              {
-                check_our_parents ();
-                if (am_transparent)
-                  want_refresh = want_full_refresh = 1;
-              }
+              check_our_parents ();
 #endif
           }
         break;
@@ -2418,6 +2411,8 @@ rxvt_term::check_our_parents ()
 
       MIN_IT (nw, (unsigned int) (wrootattr.width - sx));
       MIN_IT (nh, (unsigned int) (wrootattr.height - sy));
+
+      XSync (display->display, False);
       allowedxerror = -1;
       image = XGetImage (display->display, rootpixmap, sx, sy, nw, nh, AllPlanes, ZPixmap);
 
@@ -2473,7 +2468,9 @@ rxvt_term::check_our_parents ()
         }
     }
 
-  if (!am_pixmap_trans)
+  if (am_pixmap_trans)
+    XSetWindowBackgroundPixmap (display->display, TermWin.vt, ParentRelative);
+  else
     {
       unsigned int n;
       /*
@@ -2546,6 +2543,13 @@ rxvt_term::check_our_parents ()
       XSetWindowBackgroundPixmap (display->display, scrollBar.win, ParentRelative);
       scrollBar.setIdle ();
       scrollbar_show (0);
+    }
+
+  if (am_transparent)
+    {
+      want_refresh = want_full_refresh = 1;
+      if (am_pixmap_trans)
+        flush ();
     }
 
   return pchanged;
@@ -3515,10 +3519,10 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
 unsigned char *
 rxvt_term::get_to_st (unicode_t &ends_how)
 {
-  unicode_t seen_esc = 0, ch;
+  unicode_t ch;
+  bool seen_esc = false;
   unsigned int n = 0;
-  unsigned char *s;
-  unsigned char string[STRING_MAX];
+  wchar_t string[STRING_MAX];
 
   while ((ch = cmd_getc ()) != NOCHAR)
     {
@@ -3531,7 +3535,7 @@ rxvt_term::get_to_st (unicode_t &ends_how)
         }
       else if (ch == C0_ESC)
         {
-          seen_esc = 1;
+          seen_esc = true;
           continue;
         }
       else if (ch == C0_BEL || ch == CHAR_ST)
@@ -3539,7 +3543,7 @@ rxvt_term::get_to_st (unicode_t &ends_how)
       else if (ch < 0x20)
         return NULL;	/* other control character - exit */
 
-      seen_esc = 0;
+      seen_esc = false;
 
       if (n >= sizeof (string) - 1)
         // stop at some sane length
@@ -3553,12 +3557,9 @@ rxvt_term::get_to_st (unicode_t &ends_how)
 
   string[n++] = '\0';
 
-  if ((s = (unsigned char *)rxvt_malloc (n)) == NULL)
-    return NULL;
-
   ends_how = (ch == 0x5c ? C0_ESC : ch);
-  strncpy (s, string, n);
-  return s;
+
+  return (unsigned char *)rxvt_wcstombs (string);
 }
 
 /*----------------------------------------------------------------------*/
@@ -3669,7 +3670,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
       case XTerm_property:
         if (str[0] == '?')
           {
-            Atom prop = XInternAtom (display->display, str + 1, True);
+            Atom prop = display->atom (str + 1);
             Atom actual_type;
             int actual_format;
             unsigned long nitems;
@@ -3697,10 +3698,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
             if (eq)
               {
                 *eq = 0;
-                XChangeProperty (display->display, TermWin.parent[0],
-                                 display->atom (str), XA_STRING, 8,
-                                 PropModeReplace, (unsigned char *)eq + 1,
-                                 strlen (eq + 1));
+                set_utf8_property (display->atom (str), eq + 1);
               }
             else
               XDeleteProperty (display->display, TermWin.parent[0],
