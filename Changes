@@ -13,6 +13,15 @@ TODO: meta-tagging of data by regex (my dream project)
 TODO: triple-click == select full output line
 TODO: double-click: more intelligent (urls etc.)
 
+4.3  Sat Dec  4 04:58:37 CET 2004
+        - unapply the "emulated graphical chars. respect wcwidth" patch.
+          obviously in locales not having these characters they should
+          still have a width. Solve it correctly by not relying on wcwidth.
+          Note to self: do not ever apply patches without checking them
+          thoroughly.
+   	- updated .spec file, it's included in the release tarball
+          now, too.
+
 4.2  Wed Dec  1 03:30:22 CET 2004
 	- make emulated graphical characters respect wcwidth
           (forgot who reported this).

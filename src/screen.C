@@ -890,15 +890,12 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
       // characters have width -1 (DOH!) on GNU/Linux sometimes.
       int width = c < 0x100 ? 1 : wcwidth (c);
 
-      if (screen.flags & Screen_Insert)
-        scr_insdel_chars (width, INSERT);
-
       if (charsets[screen.charset] == '0') // DEC SPECIAL
         {
           // vt100 special graphics and line drawing
           // 5f-7e standard vt100
           // 40-5e rxvt extension for extra curses acs chars
-          static uint16_t vt100_0[63] = { // 5f .. 7e
+          static uint16_t vt100_0[63] = { // 40 .. 7e
             0x0000, 0x2191, 0x2193, 0x2192, 0x2190, 0x2588, 0x259a, 0x2603, // 40-47 hi mr. snowman!
             0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, // 48-4f
             0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, // 50-57
@@ -915,6 +912,9 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
               width = 1;
             }
         }
+
+      if (screen.flags & Screen_Insert)
+        scr_insdel_chars (width, INSERT);
 
       if (width != 0)
         {
