@@ -323,12 +323,12 @@ rxvt_Child_signal(int sig __attribute__ ((unused)))
 RETSIGTYPE
 rxvt_Exit_signal(int sig)
 {
-  signal(sig, SIG_DFL);
+  signal (sig, SIG_DFL);
 #ifdef DEBUG_CMD
-  rxvt_print_error("signal %d", sig);
+  rxvt_print_error ("signal %d", sig);
 #endif
   rxvt_clean_exit();
-  kill(getpid(), sig);
+  kill (getpid (), sig);
 }
 
 /* INTPROTO */
@@ -355,7 +355,9 @@ rxvt_xerror_handler (Display *display, XErrorEvent *event)
 void
 rxvt_clean_exit ()
 {
-  GET_R->destroy ();
+  // TODO: rxvtd should clean up all ressources
+  if (GET_R)
+    GET_R->destroy ();
 }
 
 /* ------------------------------------------------------------------------- *
