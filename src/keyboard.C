@@ -59,8 +59,7 @@ output_string_meta8 (rxvt_term *rt, unsigned int state, char *buf, int buflen)
       else if (rt->meta_char == C0_ESC)	/* escape prefix */
 #endif
         {
-          const unsigned char
-            ch = C0_ESC;
+          const unsigned char ch = C0_ESC;
           rt->tt_write (&ch, 1);
         }
     }
@@ -75,12 +74,13 @@ format_keyrange_string (const char *str, int keysym_offset, char *buf, int bufsi
 
   if (len >= bufsize)
     {
-      fprintf (stderr, "buffer overflowed!\n");
-      buf[bufsize - 1] = '\0';
+      rxvt_warn ("buffer overflowed!\n");
+      *buf = 0;
     }
   else if (len < 0)
     {
-      perror ("keyrange_translator()");
+      rxvt_warn ("keyrange_translator(), snprintf error");
+      *buf = 0;
     }
 
   return len;
