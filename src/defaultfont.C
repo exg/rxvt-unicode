@@ -32,28 +32,28 @@ const struct rxvt_fallback_font {
   codeset cs;
   const char *name;
 } fallback_fonts[] = {
-  { CS_ISO8859_1,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-1"  },
-  { CS_ISO8859_15,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-15" },
-  { CS_ISO8859_15,   "-*-*-*-r-*--*-*-*-*-c-*-fcd8859-15" },
-
-#if ENCODING_EU
-  // cyrillic
-  { CS_KOI8_R,        "-*-*-*-r-*--*-*-*-*-c-*-koi8-r"    },
-  { CS_KOI8_U,        "-*-*-*-r-*--*-*-*-*-c-*-koi8-u"    },
-
-  { CS_ISO8859_2,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-2"  },
-  { CS_ISO8859_3,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-3"  },
-  { CS_ISO8859_4,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-4"  },
-  { CS_ISO8859_5,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-5"  },
-  { CS_ISO8859_6,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-6"  },
-  { CS_ISO8859_7,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-7"  },
-  { CS_ISO8859_8,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-8"  },
-  { CS_ISO8859_9,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-9"  },
-  { CS_ISO8859_10,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-10" },
-  { CS_ISO8859_11,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-11" },
-  { CS_ISO8859_13,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-13" },
-  { CS_ISO8859_14,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-14" },
-  { CS_ISO8859_16,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-16" },
+  { CS_ISO8859_1,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-1"           },
+  { CS_ISO8859_15,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-15"          },
+  { CS_ISO8859_15,   "-*-*-*-r-*--*-*-*-*-c-*-fcd8859-15"          },
+                                                                   
+#if ENCODING_EU                                                    
+  // cyrillic                                                      
+  { CS_KOI8_R,        "-*-*-*-r-*--*-*-*-*-c-*-koi8-r"             },
+  { CS_KOI8_U,        "-*-*-*-r-*--*-*-*-*-c-*-koi8-u"             },
+                                                                   
+  { CS_ISO8859_2,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-2"           },
+  { CS_ISO8859_3,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-3"           },
+  { CS_ISO8859_4,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-4"           },
+  { CS_ISO8859_5,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-5"           },
+  { CS_ISO8859_6,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-6"           },
+  { CS_ISO8859_7,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-7"           },
+  { CS_ISO8859_8,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-8"           },
+  { CS_ISO8859_9,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-9"           },
+  { CS_ISO8859_10,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-10"          },
+  { CS_ISO8859_11,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-11"          },
+  { CS_ISO8859_13,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-13"          },
+  { CS_ISO8859_14,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-14"          },
+  { CS_ISO8859_16,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-16"          },
 #endif
 
   // japanese
@@ -62,9 +62,9 @@ const struct rxvt_fallback_font {
   // prefer xft for complex scripts
   { CS_UNICODE,        "xft:Kochi Gothic:antialias=false"          },
 # endif
-  { CS_JIS0201_1976_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0201*-0"  },
-  { CS_JIS0208_1990_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0208*-0"  },
-  { CS_JIS0212_1990_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0212*-0"  },
+  { CS_JIS0201_1976_0, "-*-*-*-r-*--*-*-*-*-c-*-jisx0201*-0"       },
+  { CS_JIS0208_1990_0, "-*-*-*-r-*--*-*-*-*-c-*-jisx0208*-0"       },
+  { CS_JIS0212_1990_0, "-*-*-*-r-*--*-*-*-*-c-*-jisx0212*-0"       },
 #endif
 
 #if ENCODING_CN || ENCODING_CN_EXT
@@ -91,9 +91,9 @@ const struct rxvt_fallback_font {
 #if XFT
   { CS_UNICODE,      "xft:Andale Mono"                             },
   { CS_UNICODE,      "xft:Arial Unicode MS"                        },
+  { CS_UNICODE,      "xft:FreeMono"                                },
 #endif
   { CS_UNICODE,      "-*-lucidatypewriter-*-*-*-*-*-*-*-*-m-*-iso10646-1" },
-  { CS_UNICODE,      "xft:FreeMono"                                },
   { CS_UNICODE,      "-*-unifont-*-*-*-*-*-*-*-*-c-*-iso10646-1"   },
   { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-c-*-iso10646-1"         },
   { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1"         },
