@@ -19,10 +19,14 @@
 extern char **environ;
 
 struct server : rxvt_connection {
+  log_callback log_cb;
+
   void read_cb (io_watcher &w, short revents); io_watcher read_ev;
+  void log_msg (const char *msg);
 
   server (int fd)
-  : read_ev (this, &server::read_cb)
+  : read_ev (this, &server::read_cb),
+    log_cb (this, &server::log_msg)
   {
     this->fd = fd;
     read_ev.start (fd, EVENT_READ);
@@ -82,6 +86,11 @@ void unix_listener::accept_cb (io_watcher &w, short revents)
     new server (fd2);
 }
 
+void server::log_msg (const char *msg)
+{
+  send ("MSG"), send (msg);
+}
+
 void server::err (const char *format, ...)
 {
   if (format)
@@ -93,9 +102,10 @@ void server::err (const char *format, ...)
       vsnprintf (err, 1024, format, ap);
       va_end (ap);
 
-      send ("ERR"), send (err);
+      send ("MSG"), send (err);
     }
 
+  send ("END", 0);
   close (fd);
   delete this;
 }
@@ -138,12 +148,29 @@ void server::read_cb (io_watcher &w, short revents)
             char **old_environ = environ;
             environ = envv->begin ();
 
-            rxvt_term *term = rxvt_init (argv->size (), argv->begin ());
-
+            rxvt_term *term = new rxvt_term;
+            
+            term->log_hook = &log_cb;
             term->argv = argv;
             term->envv = envv;
 
+            bool success;
+            
+            try
+              {
+                success = term->init (argv->size (), argv->begin ());
+              }
+            catch (const class rxvt_failure_exception &e)
+              {
+                success = false;
+              }
+
             environ = old_environ;
+
+            if (!success)
+              term->destroy ();
+
+            send ("END"); send (success ? 1 : 0);
           }
         }
       else

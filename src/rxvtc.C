@@ -1,3 +1,4 @@
+#include "../config.h"
 #include "rxvtdaemon.h"
 
 #include <cstdio>
@@ -60,5 +61,29 @@ main (int argc, const char *const *argv)
     c.send ("ARG"), c.send (argv[i]);
 
   c.send ("END");
+
+  auto_str tok;
+
+  for (;;)
+    if (!c.recv (tok))
+      {
+        fprintf (stderr, "protocol error: unexpected eof from server.\n");
+        break;
+      }
+    else if (!strcmp (tok, "MSG") && c.recv (tok))
+      fprintf (stderr, "%s", (const char *)tok);
+    else if (!strcmp (tok, "END"))
+      {
+        int success;
+        if (c.recv (success))
+          exit (success ? EXIT_SUCCESS : EXIT_FAILURE);
+      }
+    else
+      {
+        fprintf (stderr, "protocol error: received illegal token '%s'.\n", (const char *)tok);
+        break;
+      }
+
+  return EXIT_FAILURE;
 }
 

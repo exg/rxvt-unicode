@@ -77,7 +77,7 @@ void rxvt_connection::send (int data)
 {
   uint8_t s[4];
 
-  s[0] = data >> 24; s[1] = data >> 16; s[0] = data >> 8; s[1] = data;
+  s[0] = data >> 24; s[1] = data >> 16; s[2] = data >> 8; s[3] = data;
 
   write (fd, s, 4);
 }
