@@ -187,10 +187,13 @@ const char *const xa_names[] =
     "WM_DELETE_WINDOW",
     "CLIPBOARD",
 #if ENABLE_FRILLS
-    "_NET_WM_PID",
     "_MOTIF_WM_HINTS",
+#endif
+#if ENABLE_EWMH
+    "_NET_WM_PID",
     "_NET_WM_NAME",
     "_NET_WM_ICON_NAME",
+    "_NET_WM_PING",
 #endif
 #if USE_XIM
     "WM_LOCALE_NAME",
@@ -969,9 +972,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
         }
     }
   else
-    {
-      mwmhints.flags = 0;
-    }
+    mwmhints.flags = 0;
 #endif
 
   /* grab colors before netscape does */
@@ -1038,15 +1039,23 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   XmbSetWMProperties (disp, top, NULL, NULL, (char **)argv, argc,
                       &szHint, &wmHint, &classHint);
 
-  /* Enable delete window protocol */
-  XSetWMProtocols (disp, top, &xa[XA_WM_DELETE_WINDOW], 1);
+  Atom protocols[] = {
+    xa[XA_WM_DELETE_WINDOW],
+#if ENABLE_EWMH
+    xa[XA_NET_WM_PING],
+#endif
+  };
 
-#if ENABLE_FRILLS
+  XSetWMProtocols (disp, top, protocols, sizeof (protocols) / sizeof (protocols[0]));
+
+#if ENABLE_EWMH
   long pid = getpid ();
 
   XChangeProperty (disp, top,
                    xa[XA_NET_WM_PID], XA_CARDINAL, 32,
                    PropModeReplace, (unsigned char *)&pid, 1);
+
+  // _NET_WM_WINDOW_TYPE is NORMAL, which is the default
 #endif
 
   XSelectInput (disp, top,

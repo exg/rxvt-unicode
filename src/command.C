@@ -1332,12 +1332,19 @@ rxvt_term::x_cb (XEvent &ev)
 
       case ClientMessage:
         if (ev.xclient.format == 32
-            && ev.xclient.message_type == xa[XA_WM_PROTOCOLS]
-            && ev.xclient.data.l[0] == xa[XA_WM_DELETE_WINDOW])
-           destroy ();
+            && ev.xclient.message_type == xa[XA_WM_PROTOCOLS])
+          {
+            if (ev.xclient.data.l[0] == xa[XA_WM_DELETE_WINDOW])
+              destroy ();
+#if ENABLE_EWMH
+            else if (ev.xclient.data.l[0] == xa[XA_NET_WM_PING])
+              XSendEvent (disp, ev.xclient.window = display->root,
+                          False, SubstructureRedirectMask | SubstructureNotifyMask,
+                          &ev);
+#endif
+          }
 #if ENABLE_XEMBED
-        else if (ev.xclient.format == 32
-                 && ev.xclient.message_type == xa[XA_XEMBED])
+        else if (ev.xclient.format == 32 && ev.xclient.message_type == xa[XA_XEMBED])
           {
             if (ev.xclient.data.l[1] == XEMBED_FOCUS_IN)
               focus_in ();

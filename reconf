@@ -3,6 +3,13 @@
 # this is the configure script I use. It represents most of the features I
 # support and is a good baseline :)
 
+# just set some compiler options
+if [ "x$HOSTNAME" = xcerebro -o "x$HOSTNAME" = xfuji ]; then
+   CC=ccache\ gcc-3.4
+   CXX=ccache\ g++-3.4
+   export CC CXX
+fi
+
 ./configure --prefix=/opt/rxvt --enable-utmp \
             --enable-wtmp --enable-lastlog --disable-strings --enable-xim \
             --disable-keepscrolling --enable-xft --enable-mousewheel \

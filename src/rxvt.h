@@ -23,7 +23,9 @@
 
 #if ENABLE_FRILLS
 # define ENABLE_XEMBED 1
+# define ENABLE_EWMH   1
 #endif
+
 
 /*
  *****************************************************************************
@@ -682,10 +684,13 @@ enum {
   XA_WM_DELETE_WINDOW,
   XA_CLIPBOARD,
 #if ENABLE_FRILLS
-  XA_NET_WM_PID,
   XA_MOTIF_WM_HINTS,
+#endif
+#if ENABLE_EWMH
+  XA_NET_WM_PID,
   XA_NET_WM_NAME,
   XA_NET_WM_ICON_NAME,
+  XA_NET_WM_PING,
 #endif
 #if USE_XIM
   XA_WM_LOCALE_NAME,
