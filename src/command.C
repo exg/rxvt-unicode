@@ -2371,7 +2371,7 @@ rxvt_term::process_escape_seq ()
         if (cmd_getc () == '8')
           scr_E ();
         break;
-      case ' (':
+      case '(':
         scr_charset_set (0, (unsigned int)cmd_getc ());
         break;
       case ')':
