@@ -3107,6 +3107,8 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
             set_locale (str);
             im_cb ();
 
+            // TODO: call selection_make with the right values set
+            // to re-fresh the selection.
             if (display->selection_owner == this)
               display->set_selection_owner (0);
           }
