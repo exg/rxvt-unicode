@@ -1,0 +1,33 @@
+COMMENT(-- $Id: rxvtRef-graphics.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+label(Graphics)
+nsect(Special Graphics Mode)
+
+Add more documentation here, em(if anyone actually cares.)
+
+startdl()
+    dl(bf(tt(ESC G Q)))
+	(query if graphics are available nl()\
+	returns: bf(tt(ESC G 0)) no graphics available nl()\
+	returns: bf(tt(ESC G 1)) graphics available (colour only))
+P()\
+    dl(bf(tt(ESC G W <;x>;<y>;<w>;<h>:)))
+	(create window)
+P()\
+    dl(bf(tt(ESC G C <id>)))
+	(clear window)
+P()\
+    dl(bf(tt(ESC G G <it>:)))
+	(query window nl()\
+	returns: bf(tt(ESC G <id> <x> <y> <w> <h> <fw> <fh> <nw> <nh>)))
+P()\
+    dl(bf(tt(ESC G L <id>)nl()tt(ESC G P <id>)nl()tt(ESC G F <id>)))
+	(start point nl()\
+	start line nl()\
+	start fill)
+P()\
+    dl(bf(tt(;<x>;<y>)))
+	(extend point/line/fill)
+P()\
+    dl(bf(tt(ESC G T <id>;<x>;<y>;<mode>;<len>:<text>)))
+	(place text)
+enddl()

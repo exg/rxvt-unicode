@@ -1,0 +1,56 @@
+! Put this into ~/.Xdefaults, or to app-defaults/XTerm or wherever
+! xrm will loaded it.
+!
+! This will match the key sequences for a regular xterm to those used
+! by rxvt and the enclosed termcap and terminfo files.
+!
+! As usual, the most annoying xterm keys are Home/End and the ubiquitous
+! BackSpace/Delete confusion.
+
+XTerm*vt100.translations: #override \
+	<Key>BackSpace:	string("\010") \n\
+	Shift<Key>Tab:	string("\033[Z") \n\
+	Ctrl<Key>minus:	string("\037") \n\
+	<Key>Home:	string("\033[1~") \n\
+	<Key>End:	string("\033[4~") \n\
+	<Key>Delete:	string("\033[3~") \n\
+	Shift<Key>Delete:	string("\177") \n\
+	Ctrl<Key>Delete:	string("\010") \n\
+	Alt<Key>Return:	string("\033\015") \n\
+	Alt<Key>space:	string("\033\040") \n\
+	Alt<Key>a:	string("\033a") \n\
+	Alt<Key>b:	string("\033b") \n\
+	Alt<Key>c:	string("\033c") \n\
+	Alt<Key>d:	string("\033d") \n\
+	Alt<Key>e:	string("\033e") \n\
+	Alt<Key>f:	string("\033f") \n\
+	Alt<Key>g:	string("\033g") \n\
+	Alt<Key>h:	string("\033h") \n\
+	Alt<Key>i:	string("\033i") \n\
+	Alt<Key>j:	string("\033j") \n\
+	Alt<Key>k:	string("\033k") \n\
+	Alt<Key>l:	string("\033l") \n\
+	Alt<Key>m:	string("\033m") \n\
+	Alt<Key>n:	string("\033n") \n\
+	Alt<Key>o:	string("\033o") \n\
+	Alt<Key>p:	string("\033p") \n\
+	Alt<Key>q:	string("\033q") \n\
+	Alt<Key>r:	string("\033r") \n\
+	Alt<Key>s:	string("\033s") \n\
+	Alt<Key>t:	string("\033t") \n\
+	Alt<Key>u:	string("\033u") \n\
+	Alt<Key>v:	string("\033v") \n\
+	Alt<Key>w:	string("\033w") \n\
+	Alt<Key>x:	string("\033x") \n\
+	Alt<Key>y:	string("\033y") \n\
+  	Alt<Key>z:	string("\033z") \n\
+	Ctrl<Key>Up:		string("\033Oa") \n\
+	Ctrl<Key>Down:		string("\033Ob") \n\
+	Ctrl<Key>Right:		string("\033Oc") \n\
+	Ctrl<Key>Left:		string("\033Od") \n\
+	Shift<Key>Up:		string("\033[a") \n\
+	Shift<Key>Down:		string("\033[b") \n\
+	Shift<Key>Right:	string("\033[c") \n\
+	Shift<Key>Left:		string("\033[d") \n
+
+!EOF

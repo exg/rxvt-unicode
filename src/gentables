@@ -1,0 +1,288 @@
+#!/opt/bin/perl
+
+# the generated tables mostly have NOT been chcked so far!
+
+use v5.8.2;
+use utf8;
+use Encode;
+
+my $gen;
+
+sub linear {
+   my ($a, $l, $h, $b) = @_;
+   for ($l .. $h) {
+      return unless defined $a->[$_] && $a->[$_] == $_ + ($b -  $l);
+   }
+   1;
+}
+
+sub wrap {
+   my $res = "  ";
+   $res .= "$1\n  " while $_[0] =~ /\G(.{90}\S*?)\s+/gc;
+   $res .= "$1" if $_[0] =~ /\G(.*)$/;
+   $res;
+}
+
+my $last_tab_full; # hack
+
+sub gentab {
+   my ($enc, $l, $h, $f, $rep) = @_;
+   $last_tab_full = 0;
+
+   " = {\n"
+   . (wrap join ", ",
+                            map +(sprintf "0x$f",
+                                          defined $enc->[$_] ? $enc->[$_] : $last_tab_full++ * 0 + $rep
+                                 ), $l..$h)
+   . "\n};\n";
+}
+
+sub gen {
+   my ($enc, $base, $ch) = @_;
+
+   my ($fun, $tab);
+   my (@t1, @t2);
+
+   for (255, 159, 127, 126, 125) {
+      if (linear $enc, 0, $_, 0) {
+         undef $enc->[$_] for 0..$_;
+         $fun .= sprintf "if (· <= 0x%04x) return ·;\n", $_;
+      }
+   }
+
+   for (126, 127, 128) {
+      if (linear $enc, $_, 159, $_) {
+         undef $enc->[$_] for $_..159;
+         $fun .= sprintf "if (0x%04x <= · && · <= 0x%04x) return ·;\n", $_, 159;
+      }
+   }
+
+   for (126, 127) {
+      next unless defined $enc->[$_];
+      $fun .= sprintf "if (· == 0x%04x) return 0x%04x;\n", $_, delete $enc->[$_];
+   }
+
+   my @map;
+   my @map2;
+
+   for (0 .. $#$enc) {
+      if (defined $enc->[$_]) {
+         $map[$_] = $enc->[$_];
+         $map2[$_ >> 8]++;
+      }
+   }
+
+   for my $p (0..255) {
+      if ($map2[$p]) {
+         my $b = $p << 8;
+
+         my ($l, $h);
+         for my $i (0..255) { $l = $i, last if defined $map[$b + $i]; }
+         for my $i (0..255) { $h = 255 - $i, last if defined $map[$b + 255 - $i]; }
+
+         if ($map2[$p] <= 5) {
+            for ($l .. $h) {
+               next unless defined $enc->[$b + $_];
+               $fun .= sprintf "if (· == 0x%04x) return 0x%04x;\n", $b + $_, $enc->[$b + $_];
+            }
+         } elsif (linear $enc, $b + $l, $b + $h, $enc->[$b + $l]) {
+            my $dif = $enc->[$b + $l] - ($b + $l);
+            $dif = $dif < 0 ? sprintf "- 0x%04x", -$dif : sprintf "+ 0x%04x", $dif;
+            $fun .= sprintf "if (· <= 0x%04x && 0x%04x <= ·) return · %s;\n", $b + $l, $b + $h, $dif;
+         } elsif ($map2[$p] <= 5) { # defunct
+            $fun .= "switch (·)\n  {\n";
+            for ($l .. $h) {
+               next unless defined $enc->[$b + $_];
+               $fun .= sprintf "    case 0x%04x: return 0x%04x;\n", $b + $_, $enc->[$b + $_];
+            }
+            $fun .= "  }\n";
+         } else {
+            my ($i, $t, $f) = (0, "uint8_t", "%02x");
+            for ($l .. $h) {
+               if ($enc->[$b + $_] > 255) {
+                  ($i, $t, $f) = (1, "uint16_t", "%04x");
+                  last;
+               }
+            }
+
+            $i ? push @t2, [$p, $l, $h, $t, $f]
+               : push @t1, [$b, $l, $h, $t, $f];
+         }
+
+      }
+   }
+
+   if (@t2 <= 3) {
+      push @t1, @t2;
+      @t2 = ();
+   }
+
+   for (@t1) {
+      my ($b, $l, $h, $t, $f) = @$_;
+      my $rep = $b + $l == 0 ? 128 : 0;
+      $tab .= "static const $t $base\_$b\[]" . gentab $enc, $b + $l, $b + $h, $f;
+      $fun .= sprintf "if (0x%04x <= · && · <= 0x%04x)\n"
+                    . "  return %s$base\_$b\[· - 0x%04x];\n",
+                      $b + $l, $b + $h,
+                      ($last_tab_full ? sprintf "$base\_$b\[· - 0x%04x] == $rep ? NOCHAR : ", $b + $l : ""),
+                      $b + $l;
+   }
+
+   if (@t2) {
+      my ($min, $max) = (255, 0);
+      my ($l, $h) = (255, 0);
+      for (@t2) {
+         my ($p, $L, $H, $t, $f) = @$_;
+         $max = $p if $p > $max;
+         $min = $p if $p < $min;
+         $l = $L if $L < $l;
+         $h = $H if $H > $h;
+      }
+
+      $fun .= "uint8_t  l = ·;\n";
+      $fun .= "uint16_t h = · >> 8;\n";
+
+      if ($h - $l < 200) {
+         my $d = $h - $l + 1;
+
+         my @enc;
+         for $p ($min .. $max) {
+            for $i ($l .. $h) {
+               $enc[($p - $min) * $d + $i - $l] = $enc->[$p * 256 + $i];
+            }
+         }
+         $tab .= "static const uint16_t $base\_m[]" . gentab \@enc, 0, $#enc, "%04x";
+
+         if ($last_tab_full) {
+            $fun .= sprintf "if (0x%02x <= h && h <= 0x%02x\n"
+                          . "    && 0x%02x <= l && l <= 0x%02x)\n"
+                          . "  return $base\_m\[h * 0x%02x + l - 0x%04x]\n"
+                          . "         ? $base\_m\[h * 0x%02x + l - 0x%04x]\n"
+                          . "         : NOCHAR;\n",
+                            $min, $max, $l, $h,
+                            ($d, $min * $d + $l) x 2;
+         } else {
+            $fun .= sprintf "if (0x%02x <= h && h <= 0x%02x\n"
+                          . "    && 0x%02x <= l && l <= 0x%02x)\n"
+                          . "  return $base\_m\[h * 0x%02x + l - 0x%04x];\n",
+                            $min, $max, $l, $h,
+                            $d,
+                            $min * $d + $l;
+         }
+      } else {
+         my @tab = (0) x ($max - $min);
+         for (@t2) {
+            my ($p, undef, undef, $t, $f) = @$_;
+            $tab .= "static const $t $base\_$p\[]" . gentab $enc, $p * 256 + $l, $p * 256 + $h, $f, 0;
+            $tab[$p - $min] = "$base\_$p";
+         }
+
+         $tab .= "const uint16_t *$base\_i[] = {\n"
+                 . (wrap join ", ", @tab)
+                 . "\n};\n\n";
+
+         $fun .= sprintf "if (0x%02x <= h && h <= 0x%02x\n"
+                       . "    && 0x%02x <= l && l <= 0x%02x\n"
+                       . "    && $base\_i[h - 0x%02x])\n"
+                       . "  return $base\_i\[h - 0x%02x][l - 0x%02x]\n"
+                       . "         ? $base\_i\[h - 0x%02x][l - 0x%02x]\n"
+                       . "         : NOCHAR;\n",
+                         $min, $max, $l, $h,
+                         $min, ($min, $l) x 2;
+      }
+   }
+
+   $fun .= "return NOCHAR;\n";
+
+   $fun =~ s/·/$ch/g;
+
+   ($tab, $fun);
+}
+
+while (<DATA>) {
+   my ($group, $base, $cs, $type) = split /\s+/;
+
+   my @enc1;
+   my @enc2;
+
+   for (0 .. 65535) {
+      my $enc = encode $cs, (chr $_), Encode::FB_QUIET;
+
+      if (length $enc) {
+         my $code = hex unpack "H*", $enc;
+         $enc1[$_] = $code;
+         $enc2[$code] = $_ unless defined $enc2[$code];
+      }
+   }
+
+   my ($tab1, $fun1) = gen \@enc1, "$base\_f", "unicode";
+   my ($tab2, $fun2) = gen \@enc2, "$base\_t", "enc";
+
+   #$tab1 =~ s/^/  /gm;
+   #$tab2 =~ s/^/  /gm;
+   $fun1 =~ s/^/    /gm;
+   $fun2 =~ s/^/    /gm;
+
+   print "$base\n";
+   open OUT, ">table/$base.h" or die;
+
+   print OUT <<EOF;
+//
+// AUTOMATICALLLY GENERATED by gentables
+//
+#ifdef ENCODING_$group
+
+$tab1$tab2
+struct rxvt_codeset_conv_$base : rxvt_codeset_conv {
+  uint32_t from_unicode (uint32_t unicode) const {
+$fun1  }
+  uint32_t to_unicode (uint32_t enc) const {
+$fun2  }
+} rxvt_codeset_conv_$base;
+
+#else
+
+#define rxvt_codeset_conv_$base rxvt_codeset_conv_unknown
+
+#endif
+EOF
+
+   close OUT;
+}
+
+__DATA__
+VN		viscii			viscii
+KR		ksc5601_1987_0		ksc5601-raw
+CN		gb2312_1980_0		gb2312-raw
+CN_EXT		cns11643_1992_1		cns11643-1
+CN_EXT		cns11643_1992_2		cns11643-2
+CN_EXT		cns11643_1992_3		cns11643-3
+CN_EXT		cns11643_1992_4		cns11643-4
+CN_EXT		cns11643_1992_5		cns11643-5
+CN_EXT		cns11643_1992_6		cns11643-6
+CN_EXT		cns11643_1992_7		cns11643-7
+CN_EXT		cns11643_1992_f		cns11643-f
+CN_EXT		big5_ext		big5ext
+CN_EXT		big5_plus		big5plus
+EU		koi8_r			koi8-r
+EU		koi8_u			koi8-u
+DEFAULT		iso8859_1		iso-8859-1
+EU		iso8859_2		iso-8859-2
+EU		iso8859_3		iso-8859-3
+EU		iso8859_4		iso-8859-4
+EU		iso8859_5		iso-8859-5
+EU		iso8859_6		iso-8859-6
+EU		iso8859_7		iso-8859-7
+EU		iso8859_8		iso-8859-8
+EU		iso8859_9		iso-8859-9
+EU		iso8859_10		iso-8859-10
+EU		iso8859_11		iso-8859-11
+EU		iso8859_13		iso-8859-13
+EU		iso8859_14		iso-8859-14	
+DEFAULT		iso8859_15		iso-8859-15
+EU		iso8859_16		iso-8859-16
+JP		jis0201_1976_0		jis0201-raw
+JP		jis0208_1983_0		jis0208-raw
+JP		jis0212_1990_0		jis0212-raw
+JP_EXT		jis0213_1		jis0213-1-raw
+JP_EXT		jis0213_2		jis0213-2-raw

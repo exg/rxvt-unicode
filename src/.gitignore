@@ -1,0 +1,10 @@
+*.extpro
+*.intpro
+.protos
+*.lo
+*.org
+.libs
+Makefile
+librxvt.la
+rxvtlib.h
+rxvt

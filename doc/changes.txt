@@ -1,0 +1,1785 @@
+2.7.10 to 2.7.11
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com> et al.
+	fixed handling of cursor colour when reverse colour is displayed
+	fixed utmp writing if we have ttyslot
+	fixed compile when --with-encoding=kr
+	added hiding of mouse pointer while the user is typing or from
+		mouse inactivity, with configure --enable-pointer-blank,
+		resource pointerBlank (default: false) and
+		resource pointerBlankDelay (default: 2 seconds)
+	added "-bc" blinking cursor, configure --enable-cursor-blink
+
+Glyn Kennington <glyn_k@sourceforge>
+	added feature ACS_ASCII which converts ACS line drawing characters
+		to similar ASCII characters, resource acsChars
+
+Rob McMullen <robm@flipturn.org>
+	added selection scrolling - scrolling viewpoint when making a
+		selection and going past top/bottom of window, with
+		configure --enable-selectionscrolling
+
+Chris Wareham <chris.wareham@btinternet.com>
+	added rconf utility for rclock appointment configuration
+
+2.7.9 to 2.7.10
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com> et al.
+	removed screen dump feature as it can aid as a security hole
+	removed menubar escape sequence access as it can aid a security hole
+	removed reporting of title and icon settings as they can aid a security
+		hole
+
+Mikko Leppänen <m.leppanen@iki.fi>
+	fixed clearing problem when internalBorder is zero
+
+Steve O <bub@io.com>
+	added Cygwin port
+
+Rob McMullen <robm@flipturn.org>
+	fixed handling of control characters inside escape sequences
+	added resource "mouseWheelScrollPage" to allow the mouse wheel
+		scroll a page full
+	added support for VT52 commands
+
+2.7.8 to 2.7.9
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com> et al.
+	added -sbt/--thickness to allow user-supplied scrollbar width (not
+		yet available with NeXT style scrollbars)
+
+Matthew W. Roberts <matt@cgijobs.com>
+	fixed rclock -iconic option
+	added rclock day of month on clockface (define DATE_ON_CLOCK_FACE
+		in feature.h)
+	added rclock "-mailspawn cmd" if MAIL_SPAWN is not hard coded in
+		feature.h
+
+Kazutoshi Kubota <tu7k-kbt@asahi-net.or.jp>
+	added 256 colour mode (instead of the base 16 colour mode) with
+		configure --enable-256-color
+
+2.7.7 to 2.7.8
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com> et al.
+	fixed determination of NumLock key, noticed by
+		Matthew Gabeler-Lee <msg2@po.cwru.edu>
+	fixed continual and slipwheel scrolling, noticed by
+		Joshua Swink
+	fixed connecting with IM whenever it is started, partly from
+		Tung-Han Hsieh <thhsieh@linux.org.tw>
+	fixed Ultrix acquiring useful pty/tty pair, noticed by
+		Bert De Knuydt <Bert.Deknuydt@esat.kuleuven.ac.be>
+	fixed CSI sequence parser overriding a 0 parameter with default value
+	changed -ip to not clear ancestor windows when using inherit pixmap
+		transparency type
+	added -ipf/--inheritPixmapforce to clear ancestor windows when -ip
+		and inherit pixmap transparency is used
+	added "-hc colour" (define OPTION_HC in feature.h) to provide
+		background highlighting of selection, partly from
+		Christian W. Zuckschwerdt <zany@triq.net>
+	added -j/--jumpScroll to provide jump or smooth scrolling, defaults to
+		jump scrolling as per previous behaviour
+
+Stephen Isard <S.Isard@ed.ac.uk>
+	fixed DECSTBM sequence default when only one parameter is given
+
+Rudolf Jaksa <jaksa@neuron.tuke.sk>
+	added basic support for $XAPPLRESDIR/Rxvt resources
+
+T. Alexander Popiel <popiel@wolfskeep.com>
+	added --scrollBar_align (top|bottom|...) for alignment of scrollbar
+		thumb with middle button.  Defaults to centre as per prior
+		state.  Supercedes FUNKY_SCROLL_BEHAVIOUR
+
+2.7.6 to 2.7.7
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com> et al.
+	fixed check for GLIBC and STREAMS pty/tty types, noticed by
+		Venkatesh Krishnamurthi <vk@spies.com>
+	fixed check for PTC pty/tty type, noticed by
+		Andreas Bierfert <Andreas.Bierfert@AtosOrigin.com>
+	fixed to not automatically clear selection on screen size change,
+		noticed by Dominik Vogt <d.vogt@lifebits.de>
+	fixed a possible buffer overflow problem, noticed by
+		Samuel Dralet <samuel.dralet@mastersecurity.fr>
+	fixed to reallow parallel builds
+	fixed builds for some SYSV utmp/utmpx systems
+	fixed INCR transfers
+	fixed resource "greektoggle_key" as per doc/README.greek, noticed by
+		Martin Husemann <martin@duskware.de>
+	fixed STREAMS again, hopefully the last time
+	changed overstrike pixel dropping avoidance to speed/size optimise
+	changed define WTMP_ONLY_ON_LOGIN in feature.h to be the default
+	added CSI s & CSI u as alternative save & restore cursor sequences
+	added pasting-only support for SECONDARY and CLIPBOARD selections,
+		automatically tried if internal selection and PRIMARY
+		selections are not present.  CUT_BUFFER0 is tried last
+
+Kazutoshi Kubota <tu7k-kbt@asahi-net.or.jp>
+	added "-lsp <num>" option ("--lineSpace <num>") to give specified
+		spacing between rows with configure --enable-linespace
+		
+Tomohiro KUBOTA <kubota@debian.org>
+	fixed some font default calculations to match previous behaviour
+
+Ali Rahimi <ali@MIT.EDU>
+	added slip wheel support providing continual scrolling with the
+		control key depressed and using the mouse wheel as an
+		accelerator.  Control key release stops scrolling
+
+Mark Schreiber <mark7@andrew.cmu.edu>
+	added -sw/--scrollWithBuffer to try to make views into the
+		scrollback buffer stay unmoving upon new lines (needs -si)
+
+2.7.5 to 2.7.6
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com> et al.
+	fixed build with XTERM_COLOR_CHANGE undefined, noticed by
+		John Waggenspack <jwag@usa.net>
+	fixed build for Solaris/SunOS (maybe others) using STREAMS
+	fixed default icon name, noticed by
+		Jeremy C. Reed <reed@wcug.wwu.edu>
+	fixed setting of icon name with -e argument, noticed by
+		John Waggenspack <John_Waggenspack@adc.com>
+	fixed problems with selection by changing some types and type casting 
+	fixed some parallel build problems
+	fixed text placement in graphics mode
+	fixed some build problems with graphics/qplot
+	fixed reverse video mode to act like the invocation option
+	fixed query of locale ("Setting locale failed.") when locale is set
+	fixed autowrap bug when restoring cursor from last column, noticed by
+		witek@mat.uni.torun.pl
+	fixed build & run when PREFER_24BIT is undefined
+	fixed loading of fonts with noenc multichar encoding, noticed by
+		Mark White <mark.white@st-edmund-hall.oxford.ac.uk>
+	fixed an abort on sending some selections, from
+		Xianping Ge <xge@ics.uci.edu>
+	fixed tty opening for systems with openpty(), e.g. OSF1
+	fixed build for utmpx/wtmpx platforms
+	fixed a bug in memmove() if --enable-strings is given, noticed by
+		Larry W. Virden <lvirden@cas.org>
+	fixed some termcap/terminfo entries
+	fixed some division operations to use the same integer type
+	changed configure detection method for pty/ttys
+	changed handling of ConfigureNotify events for fast event streams
+	changed internal handling of window size calculation
+	changed internal handling of window size and placement manipulation
+	changed define PREFER_24BIT in feature.h to be set via
+		configure --enable-24bit (default is now off)
+	changed screen refresh to optimise X calls more, noticeable with 
+		slower machines or over network displays
+	changed pty/tty code to be able to be built separately for testing
+	changed selection sending to send the original raw form if locale
+		conversion fails
+	updated libtool for configure
+	added DEC private modes 1047 / 1048 (no ti/te handling yet)
+	added SCROLL_ON_HOMEEND_KEYS in feature.h a la SCROLL_ON_UPDOWN_KEYS
+		from Marius Gedminas <marius.gedminas@uosis.mif.vu.lt>
+	added "tests" target in main directory to build and run basic tests
+	added (frills) -tcw (--tripleclickwords) alternative triple click
+		selection which selects words to the end of possibly-wrapped
+		lines with trailing blanks and blank lines removed
+
+Chuan-kai Lin <cklin@oink.cc.ntu.edu.tw> and Brian Mays <brian@debian.org>
+	added -mcc option (--multibyte_cursor) for multibyte cursor movement
+		in legacy programs
+
+Maxime Froment <maxime@turbolinux.co.jp>
+	fixed placement with OverTheSpot input method
+	fixed characters sent through IM being truncated to 4 bytes
+	fixed encoding method being overridden by default encoding method
+	added loading of locale specific app-defaults from directory
+		/usr/X11R6/lib/X11/$LC_CTYPE/app-defaults/Rxvt (see
+		XAPPLOADDIRLOCALE is feature.h)
+
+Tomohiro KUBOTA <kubota@debian.org>
+	added method to provide base font sets based on user's locale
+	added more flexible font allocation, specifying a maximum number of
+		fonts in feature.h instead of a set number
+
+Marius Gedminas <marius.gedminas@uosis.mif.vu.lt>
+	added --enable-smart-resize which may reposition the window on
+		resizing so that we try to stay within the screen boundaries
+
+2.7.3 to 2.7.5
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com> et al.
+	fixed scrollTtyKeypress not active for all keypresses, noticed by
+		Reuben Thomas <Reuben.Thomas@cl.cam.ac.uk>
+	added -xrm option to accept dummy invocation arguments, from
+		Christian W. Zuckschwerdt <zany@triq.net>
+		& Chris Green <cgreen@matthaak.com>
+	fixed documentation for options: -tr, -ic, -pt, -im, -mod, -xrm;
+                and resources: scrollBar_right, scrollBar_floating,
+		scrollTtyOutput, scrollTtyKeypress, preeditType, inputMethod,
+		modifier.
+	fixed OSC sequences to accept 7 and 8 bit ST as well as BEL
+	added MAX_COLS & MAX_ROWS in feature.h to limit columns/rows on resize
+	added copy root pixmap variant of transparency - make this the default
+		with previous method as fallback
+	fixed allocation of new lines to not set base attributes, including
+		underline or reverse video information, noticed by
+		Brian Mays <brian@debian.org>
+	added ability for different scrollbars to be compiled in, determined
+		by --scrollstyle
+	fixed Meta key detection - has priority over Alt, noticed by
+		Paul D. Smith <psmith@baynetworks.com>
+	fixed configure check for mawk/gawk/nawk/awk
+	added use of libtool in build procedure
+	added SCROLL_ON_NO_SECONDARY to feature.h to scroll the screen when no
+		swap is compiled in and a change screen request is made
+	removed slightly buggy ConfigureNotify queue/ignore from our resizes
+	fixed use of extended character classes, from
+		Samoylov Olleg <olleg@faki-campus.mipt.ru>
+	fixed timeout in select() call when unmapped, noticed by
+		Tore Bjorkeli <tore.bjorkeli@runit.no>
+	changed feature.h NO_BOLDUNDERLINE to NO_BOLD_UNDERLINE_REVERSE
+	added support for XCopyArea() on screen display - good for slower links
+	fixed CSI parameter parsing, including omitted parameters
+	fixed allocation of new lines when in reverse video mode
+	added answerbackString resource which sets the reply to ENQ (CTRL-E)
+	fixed InheritPixmap interaction with fvwm2 by delaying a bit to allow
+		the WM to do its stuff before we meddle with its windows
+
+Thomas Woerner <thomas@linux.de>
+	added colorRV resource for reverse video colour (dependent on
+		NO_BOLD_UNDERLINE_REVERSE in feature.h)
+
+Jun Morimoto <morimoto@xantia.citroen.org>
+	fixed argument checking in rclock - ignore bad arguments
+
+Matthew W. Roberts <matt@lehi.tamu.edu>
+	added -mailfile option to rclock
+
+Christian W. Zuckschwerdt <zany@triq.net>
+	added OSC sequences to change base colours; also cursor, highlight,
+		bold, pointer and underline colours.  See rxvtRef
+
+Paul Sheer <psheer@obsidian.co.za>
+	added initial INCR (incremental pasting) support
+	
+2.7.2 to 2.7.3
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>
+	fixed clean up (utmp/wtmp/etc.) on fatal signal, noticed by
+		Jim Diamond <jdiamond@fox.nstn.ca>
+	added use of configure options --program-prefix, --program-suffix &
+		--program-transform-name, allowing, say, Kanji users to do
+		--program-transform-name='s,rxvt,kxvt,;' for installing
+	changed configure --with-encoding value "euckr" to "kr" to match
+		multichar_encoding option and resource values
+	added configure --with-encoding value "noenc" (and multichar_encoding
+		option and resource values) to disable encoding allowing
+		normal eight bit characters in multichar compile
+	fixed -si/+si option, noticed by
+		Thomas Lofgren <tlofgren@cup.hp.com>
+	fixed detection of struct utmpx, noticed by
+		Paul 'TBBle' Hampson <Paul.Hampson@Pobox.Com>
+	added basic support for openpty() which should help with people on
+		Alpha platform using Tru64/<insert new OS name here>
+
+Jun Morimoto <morimoto@xantia.citroen.org>
+        added basic argument checking for rclock to detect missing arguments
+
+Tung-Han Hsieh <thhsieh@linux.org.tw>
+	fixed configure notify bypass checking for self window configurations
+	fixed fontset creation to match sizes properly and recreate fontset
+		on size change
+
+Chih-Wei Huang <cwhuang@linux.org.tw>
+	added fontset (locale dependent) menubars
+	added example Big5 menu
+
+Hans de Goede <hans@highrise.nl>
+	added colour determination for low colour (4 to 8 bit) displays
+
+2.7.1 to 2.7.2
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>
+	fixed screen refresh output to handle more cases
+	changed resource storage to a struct rather than a char* arrary,
+		to aid debugging
+	changed how ptys/ttys are opened (again)
+	fixed processing of some resources to strip double-quotes when using
+		XGetDefaults() and also for backspace_key/delete_key
+	fixed large paste problem, noticed by
+		Dominik Vogt <dominik_vogt@agilent.com>
+	fixed utmp removal problem for SYSV style utmps
+	changed BORDERWIDTH in feature.h to EXTERNALBORDERWIDTH to clarify
+		its usage.
+	added (frills) resources "internalBorder" (-b) and
+		"externalBorder" (-w)(-bw)(-borderwidth)
+	added NO_BELL to feature.h to allow disabling all bell indications
+
+D J Hawkey Jr <hawkeyd@visi.com>
+	added QNX support
+	added logging into lastlog in login shells (-ls option)
+
+Oskar Liljeblad <osk@hem.passagen.se>
+	added SCROLL_ON_UPDOWN_KEYS to feature.h to allow scrolling via
+		(shift|meta|ctrl) modifier and up/down keys, default off
+		for backward (2.6.x) compatibility
+
+2.7.0 to 2.7.1
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>
+	cleaned up CSI processing slightly
+	fixed clearing of pixel droppings on right side of cell
+	added clearing of pixel droppings for fonts which exceed the left side
+		of their cells, noticed by J Scott Berg <jsberg@earthlink.net>
+	changed --disable-memset to --enable-strings and not enable by default
+	added LOCAL_X_IS_UNIX to feature.h to work-around Irix problem, opens
+		unix:0.0 instead of :0 or :0.0
+	fixed some configure errors
+	changed how ptys/ttys are opened and which is opened by parent or child
+	added delay to screen refresh when receiving a fast stream of X events
+
+Jim Knoble <jmknoble@pobox.com>
+	fixed scrollbar slider jitter
+	added named constants for scrollbar calculations
+
+MANTANI Nobutaka <nobutaka@nobutaka.com>
+	changed interaction with XIM server to fix several problems
+
+2.6.? to 2.7.0
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>
+	added OSC escape sequence #55 to dump scrollback/screen to a file
+
+SEO Young-Jin <yjseo@mizi.co.kr>
+	fixed XGetDefaults() to use standard files (and then some)
+
+2.6.0 to 2.6.1
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>
+	fixed setting of tty permission/ownership with grantpt(). ie. don't
+	fixed configuration for some systems
+	changed a timeout to previous setting giving smoother scrolling.
+	fixed reversed --scrollTtyOutput (noticed (this time) by
+		Thomas Lofgren <lofgren@sics.se>)
+	fixed offset for writing into BSD utmp file
+	added seperate cursor save/restore information for secondary screen
+	fixed CSI cursor movement
+	fixed typos causing compile failure - reported by various
+	fixed UNSHIFTED_SCROLLKEYS
+
+Mike Hopkirk (Hops) <hops@sco.COM>
+	fixed SB_BORDER scrollbar delineator
+
+2.6.PRE3 to 2.6.0
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>  et al.
+	fixed configuration for many systems
+
+Ha Shao <hashao@china.com>
+	added support for ZH_CN (GB2312) fonts and encoding.
+
+2.6.PRE2 to 2.6.PRE3
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>
+	fixed several OOB memory accesses and leaks (mostly found by
+		Rob Somerville <somervil@cadvision.com>)
+	added shift up/down arrows a la shift prior/next
+	added SCROLL_ON_SHIFT, SCROLL_ON_META, SCROLL_ON_CTRL to feature.h
+
+Vaughn Cato <vcato@bellsouth.net>
+	fixed jerky selection for some people (esp. Linux)
+
+Peter H. Chou <pchou@leland.Stanford.EDU>
+	fixed floating scrollbar (trough) to not affect NeXT scrollbar 
+
+MANTANI Nobutaka <nobutaka@nobutaka.com>
+	fixed two problems on X Input Method: 1) Can't display preedit area
+		in "OverTheSpot" input style with some input methods.
+		2) The location of preedit area in "OffTheSpot" input style
+		is wrong.
+
+Yasuda Tsutomu <_tom_@sf.airnet.ne.jp>
+	fixed some multichar set (Kanji) selection
+	added better selection request type conversion
+
+2.6.PRE1 to 2.6.PRE2
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>
+	fixed declaration position for COLORFGBG env var - really fixed this
+		time (noticed by Rob Somerville <somervil@cadvision.com>)
+	fixed transparent term reparenting/configure issues
+	fixed some documentation (noticed by
+		Richard Browne <richb@timestone.com.au>)
+
+MANTANI Nobutaka <nobutaka@nobutaka.com>
+	added XIM (X Input Method) enhancements
+	added input of multibyte characters with XIM (X Input Method)
+		enhancements via input styles "OverTheSpot",
+		"OffTheSpot" and "Root"
+	added configure option --enable-xim
+	added resources "inputMethod" (-im), "preeditType" (-pt)
+	changed configure to search for libxpg4, needed for FreeBSD's
+		setlocale()
+
+2.4.10 to 2.6.PRE1
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>
+	fixed scrollbar slider drawing to have a minimum size (noticed by
+		Brian Korver <briank@cs.stanford.edu>)
+	fixed backward #ifdef's on JUMP_MOUSE_WHEEL
+	fixed coredump on paste after terminal reset
+	fixed bad marking on selection with old selection (noticed by
+		Paul Slootman <paul@wau.mis.ah.nl>)
+	fixed bad cursor colour setting (noticed by
+		Louis-David Mitterrand <mito@aparima.com>)
+	fixed octal recognition from strings (hopefully no-one noticed)
+	fixed proto generation awk script (noticed by
+		Paul D. Smith <psmith@BayNetworks.COM>)
+	changed distribution to include protos, for bad systems
+	added configure check for XPointer (needed for SunOS; comments by
+		Moritz Barsnick <barsnick@gmx.net>)
+	fixed export of COLORFGBG (noticed by
+		Moritz Barsnick <barsnick@gmx.net>)
+
+Alfredo K. Kojima <kojima@windowmaker.org>
+	changed NEXT_SCROLLBAR code to produce real NEXTSTEP scrollers
+	added inheritPixmap support - terminal window uses parent pixmap
+
+Sasha Vasko <sashav@sprintmail.com>
+	fixed handling of background change via property _XROOTPMAP_ID
+
+2.4.9 to 2.4.10
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>
+	fixed screen refreshing - significant reduction of XDrawString() et al
+		calls in many cases leading to large speed increase,
+		especially for remote X clients
+	fixed source code const stuff
+	fixed DISPLAY_IS_IP feature
+	changed window creation, menubar reading, etc. order and removed one of
+		my earlier hacks
+	changed configure to be less extreme about X libs
+
+2.4.8 to 2.4.9
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>
+	changed screen allocation to be safer
+	added several xterm style window operations and reports DEC style
+		escape sequences
+	fixed handling of some DEC style escape sequences
+	fixed menubar display
+	fixed outline cursor removal
+	fixed clear selection when writing within a selection
+	added resources to handle backspace and delete
+	changed source code organisation again - also be nicer when making
+		in a different directory
+	added probe of ModifierMapping for Meta/Alt and NumLock keys
+	removed resource to set Meta/Alt key
+	added support to allow compilation of both old and new selection
+		styles
+	changed internals - allocate rs_* as rs[Rs_*]
+
+Stanislav Meduna <stano@trillian.eunet.sk>
+	fixed checking of Xsetlocale(), setlocale() in configure
+
+2.4.7 to 2.4.8
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>
+	fixed XPM handling of position in geometry
+	changed XPM tiling to have the X server tile in the basic case
+	moved several configuration options from feature.h to configure
+	fixed introduced pixel dropping bug when RS_DIRTY was removed
+	added `troughColor' resource - the original patch written by
+		Reid D Rivenburgh (noted below) was lost and never added
+	fixed border pixel colour - if not set, use foreground not background
+	fixed handling of cursorColor/cursorColor/colorBD/colorUL to always
+		use the _current_ fg/bg colours appropriately if unset
+	changed source code organisation - moved some things into screen.h -
+		to allow other add-ons to access screen structures without
+		including all of rxvt.h
+	changed internals - ripped out RS_Cursor/RS_Select to make basic
+		multichar sets (not Kanji/Big5) always enabled - thus handle
+		selection and cursor display differently
+	fixed bug on scroll lines affecting selection
+	changed rmemset to use a type which is the same size as an (int *) -
+		based on comments by Paul Slootman <paul@wurtel.demon.nl>
+	fixed pointer colour change on default fg colour change
+	changed handling of backspace/delete keys - if not disabled during
+		./configure then settable via resources - defaults similar
+		to previous
+
+2.4.6 to 2.4.7
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>
+	moved several configuration options from feature.h to configure
+	added configure option to use system memset()
+	added support for no multichar sets to allow 2 byte rendition type
+	changed rmemset for slightly more optimised execution
+	changed source code organisation slightly
+
+Guillaume Laurent <glaurent@worldnet.fr>
+	added Meta modifier selectable via resource ``modifier''
+
+John E. Davis <davis@space.mit.edu>
+	added print mode to accept ESC sequence variation
+
+2.4.5 to 2.4.6
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>
+	merged support for Big5 & Kanji.
+	changed short option: fk --> fm
+	changed long options: kfont/cfont --> mfont
+	changed long option: kanji_encoding --> multichar_encoding
+	changed font list in feature.h - user define list of fonts
+	fixed configure check for Xlocale()
+	added configure option --enable-dmalloc (Gray Watson's malloc)
+	added configure option --enable-dlmalloc (Doug Lea's malloc)
+	added support for Cygnus Solution's GNU-Win32 extensions (b18 tested)
+	fixed utmp/wtmp handling on machines with updwtmpx()
+	added support for old rxvt style selection - OLD_SELECTION
+	changed define of struct screen_t to rxvt.h
+	changed internal handling of bold overstrike pixel dropping - prescan
+	      line
+	changed internal handling of selection mechanism to properly support
+	      multiple methods - and optimized
+	changed internal handling of selection sync'ing - and optimized
+	added assert()s via DEBUG_STRICT define to catch some possible bugs
+	fixed scrollbar colour on mono displays
+	changed privilege revocation to before we do anything
+	fixed selection clearing when across the screen boundary and we swap
+	      screens
+	fixed resize / screen refresh order when changing scrollbar display
+	fixed font handling when we're given  per_char of NULL
+	changed internal handling of row width - maximum line length is now
+	      bound by a short - not enforced
+	changed rxvt.1 and refer.html to yodl source
+	
+Bruce Stephens <bruce@cenderis.demon.co.uk>
+	added support for buttons 4 and 5 (eg. on a mouse with wheel) to
+	      scroll screen
+
+Frank Chen Hsiung Chan <frankch@life.nthu.edu.tw>
+	fixed clash of use of BIG5 as define and enum.  Also typo fix.
+
+John Eikenberry <jae@ai.uga.edu>
+	added window_group use to window manager properties
+	added NeXT scrollbar style - group up and down buttons together
+
+Denis N. Antonioli <antonio@ifi.unizh.ch>
+	fixed setting of application icon name and title
+
+Adam Spiers <adam@thelonious.new.ox.ac.uk>
+	fixed enumeration of *.keysym.* in resources
+
+
+2.4.4 to 2.4.5 *_Official Release_*
+\-----------------------------------
+
+Geoff Wing <gcw@pobox.com>
+	changed the approach at the Boldoverstrike-Pixeldroppings front
+	temporarily fixed a bug in the exposure handling
+	added the --enable-ttygid
+	
+Oezguer Kesim <kesim@math.fu-berlin.de>
+	switched rxvt licence to GPL
+	changed copyrights of the modules
+	fixed the terminfo/termcap entries
+
+Mark Olesen <olesen@me.queensu.ca>
+	FINALLY added Double-Click mouse reporting.  Uses the upper bits
+	of the Button character for X11 reporting so should cause no 
+	compatibility problems.
+	     * State = (<b> - SPACE) & 60
+		4    = Shift
+		8    = Meta
+		16   = Control
+		32   = Double Click (Rxvt extension)
+	NOTE: no Release is reported after a double-click and the
+	Release for the first click of a double-click is not reported.
+	This also means the Release event of a very fast click/release
+	won't be reported.
+
+2.4.3 to 2.4.4
+\-----------------------------------
+
+Geoff Wing <mason@primenet.com.au>
+	fixed a bug in the selection mechanism
+
+Oezguer Kesim <kesim@math.fu-berlin.de>
+	fixed the fontchange-windowresize-racecondition-bug (thanks Geoff!)
+	fixed the broken console-support under solaris
+	added a new terminfo entry for rxvt, based on the one which comes
+	      with ncurses (thanks Larry!)
+	some changes on aclocal.m4 and configure
+	removed the XTERM_COLOR_TERM option from feature.h - use
+	      --with-term=NAME instead
+	updated the man-page
+
+Kikutani Makoto <kikutani@jdc.ericsson.se>
+	fixed a bug when copy&paste with kanji
+
+Paul D. Smith <psmith@BayNetworks.COM>
+	fixed a bug which prevented rxvt to compile when configured with
+	      --enable-xterm-scroll
+
+2.4.2 to 2.4.3
+\-----------------------------------
+
+Geoff Wing <mason@primenet.com.au>
+	fixed a bug in scrolling lots of text
+	more work on avoiding the pixel droppings
+	further cleanups
+
+Oezguer Kesim <kesim@math.fu-berlin.de>
+	some changes on the configure script
+
+Frank Chen Hsiung Chan <frankch@waru.life.nthu.edu.tw>
+	added experimental big5 support
+
+Reid D Rivenburgh <reid@lanl.gov>
+	added the "troughColor" resource
+
+Mike Hopkirk (Hops) <hops@sco.COM>
+	added support of SCO OSr5 pty naming (also UW SysVr5)
+        correction of pty hang with large paste buffer
+            (happens on on all tested platforms)
+        fixed Weird default scroll thumb behaviour
+        fixed incorrect setting of WM_COMMAND if specified with -e switch
+        fixed # of lines of context between screen pages (Shift-Prior/Next)
+        Visual delineation of Scrollbar and vt wdw with dark internal border    
+
+2.4.1 to 2.4.2
+\-----------------------------------
+
+Geoff Wing <mason@primnet.com.au>
+	new anti-bold-overstrike-pixel-dropping (plan 3)
+
+Oezguer Kesim <kesim@math.fu-berlin.de>
+	fixed a bug which caused rxvt to dump core after resizing and
+	      selecting
+
+2.4.0 to 2.4.1
+\-----------------------------------
+
+Geoff Wing  <mason@primnet.com.au>
+	added --with-xpm-{include,library} to autoconf/a4local.m4
+	added VERYBOLD feature
+	fixed some misspelling in autoconf/configure.in
+	added `DEC private modes' 1010 and 1011 for scroll-to-bottom on
+	      TTY output inhibit and scroll-to-bottom on keypress
+	      together with resources and switches
+	fixed Bold Overstrike Pixel Dropping (Yes Sir!)
+	fixed a bug in scr_E()
+	fixed ^[[*J behaviour - clear to end, clear to beginning, clear
+	      whole screen was broken
+
+Oezguer Kesim <kesim@math.fu-berlin.de>
+	removed DONT_GUESS_BACKSPACE. Instead, you may define either
+	        FORCE_BACKSPACE or FORCE_DELETE or leave both undefined
+		in order to get ^H, ^? or the current stty settings for
+		'erase'
+	fixed positioning of text in the top menubar.
+	fixed some missing #define's
+	fixed conditions for MONO_BOLD in scr_refresh() to make 
+	      VERYBOLD work.
+
+Christoph L. Spiel <Christoph_Spiel@physik.tu-muenchen.de>
+	fixed usage of KEYSYM_RESOURCE only when NO_RESOURCES is
+	      *not* defined
+	
+Paul Slootman <paul@wau.mis.ah.nl>
+	added a few XK_KP_* ifdef's in order to get rxvt work with X11R4
+
+
+Major changes from 2.21b* to 2.4.0
+\-----------------------------------
+
+Geoff Wing  <mason@primenet.com.au>
+	screen.c rewritten with changes including:
+		internal management of screen lines changed
+		rmemset() used as a fast memset() replacement
+		selection now the same as XTerm selection
+		several Kanji display fixes
+		Kanji properly selectable for EUC JP encoding
+	added continuous scrolling with scrollbar buttons
+	fixed colours when using XPM background pixmaps smaller than the window
+	added resources -sr/+sr, -st/+st
+	fixed application Cursor Keys
+	added many configure enhancements
+	added delimiting line between XTerm scrollbars as per XTerm
+	fixed utmp support
+	added minimal support for proportional fonts
+	added integrated use for Gray Watson's dmalloc package
+	added automatic prototype generation via src/makeprotos-sed
+
+Grant McDorman  <grant@isgtec.com>
+	added PREFER_24BIT: if the screen is 24 bit, then use 24 bit windows
+	      even if default is 8 bit
+	fixed utmpx support
+	added handling for Keypad left/right/up/down, etc.
+	added META8_OPTION for all function keys
+	added RXVT_TERMINFO for setting TERMINFO
+	fixed some bugs in menubar
+	added expanded keysym support
+
+Paul D. Smith  <psmith@BayNetworks.COM>
+	fixed title setting
+	fixed for building in other directories
+	added pointerColor for changing pointer colour
+	added borderColor for changing border line colour in XTerm scrollbar
+
+
+2.21a3 to 2.21b*
+\---------------
+     1. From: Conrad Link <conrad@akira.resnet.rochester.edu>
+	Fixed a bug in the OffiX Drag and Drop support.
+	rxvt inserted two instances of directories or links when they 
+	were dropped onto rxvt.
+	
+     2. From: <aner@zenith.att.com>
+	Fixed a bug that makes rxvt getting constantly "NoExpose" events
+	which it is not handling.
+
+     3. From: Mark Olesen <olesen@weber.me.queensu.ca>
+	Fixed a bug that caused rxvt to hang indefinitly waiting for a 
+	terminating ^G on an XTerm `ESC]' sequence.
+
+     4. From: Bernard PERROT <perrot@lal.in2p3.fr>
+	      Mark Olesen <olesen@weber.me.queensu.ca>
+	Fixed a bug that prevented to handle DEC VT2xx's ApLineDel correctly
+
+     5. From: <vikas@insight.att.com>
+	      Mark Olesen <olesen@weber.me.queensu.ca>
+	Now the Shift/Ctrl cursor key mappings are enabled regardless of
+	App-Cursor settings
+
+     6. From: Kai Petzke <wpp@mail.physik.TU-Berlin.DE>
+	Fixed a bug with respect to cursor movement. rxvt now handles the
+	'G' and 'd' sequences correctly
+
+     7. From: Geoff Wing <mason@primenet.com.au>
+	Fixed a couple of things in utmp.c 
+
+     8. From: Denis N. Antonioli <antonio@ifi.unizh.ch>
+	Added the "-tn" option and corresponding Xresource variable "termcap".
+	This option specifies the name of the terminal type to be set in the
+	TERM environment variable. 
+
+2.20 to 2.21a*
+\-------------
+     1.	Oops, forgot to include time headers in menubar.c
+
+     2.	Finally got the correct DEC sequence to toggling the behaviour
+	of the backspace key and removed the other non-standard ones.
+	If anyone has a listing of DEC escape sequences they'd like to
+	donate ...
+
+     3.	Fixed a bug that prevented an XPM file from being found if it
+	were specified with an absolute path and a geometry string.
+	Made the default scaling zero (tiled) since this is by far the
+	most popular use.
+
+     4.	The Motif-style scrollbar is back as a compile-time option.
+
+     5.	Added BUGS file and (thankfully) moved coordination of the
+	project to Oezguer Kesim <kesim@math.fu-berlin.de> who also
+	has a mailing list for rxvt development
+
+	Rxvt Workers <rxvt-workers@math.fu-berlin.de>
+
+	To subscribe to the list send email to
+	<rxvt@math.fu-berlin.de> with the body: subscribe
+
+     6.	Semi-retirement and finish my thesis ... bye for now - /mark
+
+   --- Oezguer started working on rxvt
+
+     7. Fixed a bug in the new menubar-feature. There were several unchecked
+	strings strcpy'ed which caused rxvt immediately to dump core.
+
+     8. From: Robert Bihlmeyer <robbe@orcus.priv.at>
+        Fixed a bug in rclock.c which prevented it to compile correctly.
+
+     9. From: Mark Olesen <olesen@weber.me.queensu.ca>
+        Overstrike boldfonts and pixmaps now work together without pixel
+        droppings on the screen (at least under Linux).
+
+    10. From: Mark Olesen <olesen@weber.me.queensu.ca>
+	Modified autoconf support: memmove() replacement function
+	supplied for those systems that need it, libXpm should now be
+	correctly found (set in src/Makefile *not* in config.h)
+
+    11.	From: Mark Olesen <olesen@weber.me.queensu.ca>
+	Converted doc/rxvt.ref to HTML format.
+		doc/html/refer.html = master copy
+		doc/refer.txt  = text version saved using Netscape.
+
+	All HTML documents are put in here, to ease installation
+	elsewhere.
+
+    12.	From: Mark Olesen <olesen@weber.me.queensu.ca>
+	Moved some file search function from main.c and some string
+	functions from xdefaults.c to misc.c.
+
+	Changed the implementation details so that `keysym' resource
+	is also available as a command-line long option ... even if
+	you have compiled with USE_XGETDEFAULT.
+
+    13.	From: Mark Olesen <olesen@weber.me.queensu.ca>
+	When a new pixmap is loaded, revert to the default scaling.
+
+    14.	From: Mark Olesen <olesen@weber.me.queensu.ca>
+	Reworked the menubar to permit multiple menubars in a circular
+	linked list (and all the management functions that entains)
+	and new functions including the following:
+
+		* reading from files
+		* dumping all the menubars
+		* clearing a menu (without removing it)
+		* setting a backgroudPixmap
+		* and many other features.
+
+	The menu syntax has changed very slightly from the last
+	version, but now provides greater flexibility ... see
+	refer.html for details.
+
+	Added the `menu' resource/long-option so a startup menu
+	can be specified. eg,
+		rxvt -menu my.menu -e rlogin machine -l user
+
+2.19 to 2.20
+\-----------
+     1.	You can now add snazzy looking menus to any plain (non-X) text
+	application.  At the moment, the menuing system is simple but
+	functional.
+
+	The syntax for controlling the menubar is documented in
+	doc/rxvt.doc, but note that an XTerm sequence `ESC ] 10; Pt
+	BEL' is used so menus created for rxvt will be ignored by an
+	ordinary XTerm.
+
+	It provides sub-menus, click-and-drag, and even some user
+	definable `quick' arrows keys.  However menu manipulation
+	could use refinement to permit multiple menus to be defined --
+	and the menu refreshing could also use some improvement, but
+	it can be extended and refined later as required/desired.
+
+	The files doc/menu.sh and doc/jedmenu.sl show sample
+	implementations of menus.
+
+	  -->	It compiles and runs on my machine (AIX 3.2.5)
+		but THIS IS CONSIDERED BETA (or even ALPHA) CODE!
+
+     2.	DEC private modes: Bug fix for 's'ave and 'r'estore parameters,
+	added a 't'oggle parameter to DEC private modes.
+
+     3.	Made Backspace key selectable with DEC private mode
+	ESC [ ? 36 h/l/s/r/t (high/low/save/restore/toggle)
+
+     4.	Changed the way the scrollBar is realized to permit on-the-fly
+	toggling of the scrollBar display and added a DEC private mode
+	escape sequence for that.  Smoother redraw of scrollBar.
+	Better proportions for the arrows allows a slightly narrower
+	scrollBar.
+
+     5.	Added support for XTerm font changing sequence:
+	`ESC ] 50; Pt BEL', with (as usual) a few extras.
+	See doc/rxvt.ref
+
+     6.	Adapted experimental XPM buffering from that supplied by
+	Carsten Haitzler <raster@zip.com.au>.
+
+     7.	Replaced `wait' with `waitpid' in src/command.c::Child_signal
+	to avoid a race condition and permit use of pclose() on SunOS.
+	Patch provided by <davis@space.mit.edu>, Thanks John!
+
+     8.	For easier XPM handling, added `path' resource/long-option and
+	substantially enhanced pixmap scaling to provide very exact
+	control over scaling and positioning of the XPM background
+	image.  The XPM XTerm escape sequence has been extended to
+	provide a convenient facility for on-the-fly rescaling.
+	Export COLORTERM="rxvt-xpm" instead of COLORTERM="rxvt"
+
+     9.	Added export COLORFGBG to give hints to color applications.
+	Typically one of these values is exported, in which `fg' and
+	`bg' are numbers 00-15:
+
+	COLORFGBG="default;default"
+		-fg -bg colors don't match any of color 0-15
+
+	COLORFGBG="fg;default"
+		-fg color matches color 0-15, but -bg color doesn't
+
+	COLORFGBG="default;bg"
+		-bg color matches color 0-15, but -fg color doesn't
+
+	COLORFGBG="fg;bg"
+		-fg -bg colors match color 0-15
+
+	When compiled with XPM support, the last two values are
+	rendered as follows:
+
+	COLORFGBG="default;default;bg"
+		-bg color matches color 0-15, but -fg color doesn't
+
+	COLORFGBG="fg;default;bg"
+		-fg -bg colors match color 0-15
+
+    10.	Disable Shift+Prior/Next and scrollBar if saveLines == 0.
+	Slight change to key-processing so `shift+meta+key' and
+	`shift+ctrl+key' gets processed as `shift+key'.  This provides
+	a way to avoid interpretating `Shift+Prior', `Shift+Next', and
+	`Shift+Insert'.
+
+	Also, added DEC private mode sequence `ESC [ ? 35 h/l/s/r/t'
+	to disable Shift+key interpretation.
+
+	Provide for Ctrl+Shift+<KEY> combinations for function keys.
+	See doc/rxvt.ref
+
+    11.	Always match long-option names, even when only preceded by a
+	single -/+.
+
+2.18 to 2.19
+\-----------
+     1.	Minor alteration to input mode for Kanji processing.
+
+     2.	rclock: -adjust option, support for exec on startup syntax,
+	date format may now also include the century
+
+     3.	Made mouse double-click respect autowrap lines.
+
+     4.	Added marks for folded editing.
+
+     5.	Added Offix DND (Drag 'n' Drop) protocol.
+	Added support for XA_TARGETS.
+
+     6.	added Carsten Haitzler <raster@zip.com.au> XPM patches to load
+	an XPM file for the background of the terminal window.
+	Uses resource `Rxvt.backgroundPixmap' or long-option
+	`--backgroundPixmap'
+
+     7.	Use these (XTerm) keybindings exclusively and remove the old
+	equivalent bindings:
+		Shift-Prior  = scroll up
+		Shift-Next   = scroll down
+		Shift-Insert = paste mouse selection
+
+		Shift-KP_Add      = bigger font
+		Shift-KP_Subtract = smaller font
+
+2.17 to 2.18
+\-----------
+     1.	Check for NULL pointers in command-line processing (oops)
+	Also fixed processing of `hidden' arguments such as -d, -g, -T
+
+     2.	Fixed terminfo hpa/vpa: was `\E..' instead of `\E[..'
+	added invisible cursor (ESC[?25h / ESC[?25l)
+
+     3.	Fixed broken kanji characters (?? and disappeared cursor box ??)
+	thanks to <manabe@Roy.dsl.tutics.tut.ac.jp>
+
+     4.	In privileges(), changed setuid/setgid to seteuid/seteguid so that
+	it's possible to switch back to root later.
+
+	Perhaps fixed svr4 problems (reports no tty, no job control) in
+	get_tty() ... need to detect these SVR4 features in the configure
+	script.
+
+     5.	Restored scrollColor, topShadowColor, bottomShadowColor resources
+	that somehow got lost between the beta and release versions.  For
+	monochrome displays, fixed scrollbar so it will be visible and
+	suppress color changes.
+
+     6.	Final? iteration on selection.  Store selection text with LF
+	line-endings but paste into rxvt with CR endings.  Selection now
+	preserves the newline when trailing space is stripped from
+	non-autowrap lines.  Compile-time support for using a keystroke to
+	paste from the cut-buffer.
+
+     7.	Fixed utmp.c to handle both sysv and bsd pty names.  More changes in
+	the works to improve documentation and eliminate race conditions ...
+	this, thankfully, is being done by someone else.
+
+     8.	Added European language support (X11R6) - let me know of problems
+	and fixes since I only have X11R5.
+
+     9.	Changed names of color10-color17 to color8-color15 to match with
+	those used by color_xterm ... sorry for the inconvenience, but I
+	didn't have an X11R6 xterm manpage until now and long-term
+	compatibility is quite important.
+
+	Added a real bold font (define USE_BOLDFONT).  I still think it's
+	too much work to avoid pixel droppings for overstrike fonts.
+	Added support for specifying colors for bold/underline
+	(colorBD/colorUL) but it's only done when the foreground = the default
+	foreground ... see the manpage.
+
+	Compile-time selection of TERM="xterm-color".
+
+	Reduced the number of rarely-used command-line options since they
+	are accessible on the command-line via their resource names as long
+	options.  More rigid differentiation between long and short options:
+	long options are --/++ prefixed; short options -/+ prefixed.  Added
+	long-option help to give the resource names.
+	Removed run-time selection of right-hand scrollbar and arrows.
+	Removed run-time selection of (pageup_key/pagedown_key/alert_key).
+
+    10.	Changed Ctrl-Up,Down,Left,Right to emit "\EOa,b,c,d" instead of the
+	previous "\E[^A,^B,^C,^D" to avoid problems associated with having
+	an embedded "^C" in a key-sequence.  Disallow 80/132 column
+	switching as the default (same as xterm).
+
+    11.	Check for seteuid().  Add "ttcompat" module for SVR4.
+
+    12.	A few people suggested removing the keystroke for toggling MapAlert
+	and so I have.  I agree that it was pointless and/or annoying since
+	there was no way of determining the current toggled state anyhow.
+
+    13.	Fixed missing `ttydev' for _sgi.  Fixes for BSD utmp support.
+	Exported WINDOWID before the window was created (oops).
+
+    14.	Mouse cut&paste of autowrapped lines should be improved, fixed
+	bug in screen.c::scroll_text().
+
+    15.	As was pointed by a user -->> in keeping with X conventions, only an
+	application that starts with 'x' should capitalize the first two
+	letters of the resource file, so the rxvt resource file (and class
+	name) should be named Rxvt not RXvt, this is a minor point.
+
+    16.	rclock: As well as message reminders, rclock can launch programs and
+	(if no message text is given) act as a cron-type of program.  Made
+	default font `7x14'.  Fixed graphics context when mail is waiting
+	and a reminder is issued - so the message is actually visible!
+
+    17.	As suggested by a user, changed the bolding algorithm to be slightly
+	more intuitive:
+		1. colorBD (if specified)
+		2. color0-7 -> color8-15 (if possible)
+		3. boldFont (if specified and found)
+		4. overstrike (last resort)
+
+	This takes advantage of the color capability and is the most
+	consistent when toggling font sizes on-the-fly.  If you never want
+	overstrike (looks ugly and leaves pixel droppings) or boldFont (you
+	like to switch font sizes on-the-fly), you can remove them at
+	compile-time.  The other elements are similarly compile-time
+	selectable.
+
+    18.	Another user suggestion: scrollbar made more distinct by having the
+	`trough' a different color from the slider -- I opted for making it
+	the same as the default background color so that the slider and
+	arrows appear to `float' on the window.  Also removed topShadowColor,
+	bottomShadowColor resources as unnecessary.
+
+    19.	Dropped distribution of vttest since Tom Dickey <dickey@clark.net>
+	is working on an improved version.
+
+2.16 to 2.17
+\-----------
+     1.	Fixed problem in scr_refesh_region() that was introduced in v2.16
+	The problem of `pixel droppings' continues when bold is simulated
+	using overstrike.  Using XCopyArea() sometimes helps, but the
+	preferred and simplest solution is item 4 below.
+
+    2.	Removed 7bit mode.
+
+	Changed definition of meta so that the ESCAPE is the default and
+	using meta to set the 8bit on an option that can be made run-time
+	configurable (assuming people still use this).
+
+	Added -/+rv command-line option, resource reverseVideo.  NB: it works
+	slightly differently from xterm's in that foreground/background are
+	swapped even if they have been explicitly set.
+
+	Removed NO_COLOR option -- no more monochrome rxvt (one too #ifdef's).
+
+	Inherit existing stty settings (at least for control characters)
+	and set value of BackSpace appropriately.
+
+	Added defines DONT_GUESS_BACKSPACE and NO_DELETE_KEY
+
+    3.	Added 3D style scrollbar and removed all the old bitmapped
+	scrollbars and arrows with the only exception being the xterm
+	lookalike XTERM_SCROLLBAR which is available in a single width.
+	With arrows, scrollbar behaviour somewhat resembles Motif
+	behaviour.  Without arrows, it's the standard xterm behaviour.
+
+	The default scrollbar (defined at compile-time or set by using
+	scrollBar: True) is to have a scrollbar with arrows arranged on the
+	right-hand side. The scrollBar resource is now exclusively a boolean
+	value
+
+	scrollbar resources:
+
+		scrollColor
+		topShadowColor
+		bottomShadowColor
+
+	NB: if topShadowColor/bottomShadowColor are unset, their values are
+	    calculated from scrollColor using an algorithm adapted from
+	    fvwm so it shouldn't be too hard to find scrollbar colours that
+	    look good with your window manager and don't consume an entire
+	    colormap.
+
+    4.	Added smarter handling of bold/blink when applied to the default
+	fg/bg colours:
+
+	If the pixel value of fg/bg matches the pixel value of colour COLOR0
+	through COLOR7, then applying bold/blink to the default fg/bg will
+	select the appropriate colour from BOLD0 through BOLD7 instead of
+	using the overstrike bold.
+
+	This seems to be the best way to handle bold/blink attributes when
+	the foreground/background match and ANSI colour anyhow.  For
+	convenience, it is possible to use colour aliases (next item) for
+	the foreground/background colours instead.
+
+	My preference is a dull Canadian look:
+
+		RXvt*foreground:	7
+		RXvt*background:	10
+
+    5.	Changed colour aliases (item 7 of last change) and dropped the `#'
+	prefix.  This avoids confusion with the regular #rrggbb format of
+	specifying colours and is unambiguous since there are no X11 colours
+	starting with a digit.  This also avoids the need to quote the `#'
+	to protect against shell interpretation.
+
+    6.	Added colour cursor support.
+	    -cr (cursorColor), as per XTerm -> the (rectangle) cursor colour
+	    -cr2 (cursorColor2), only RXvt -> the text colour.
+
+	The cursorColor2 maintains contrast in a colour environment and
+	is optional.
+
+	Thanks Raul Garcia Garcia <rgg@tid.es> for the idea.
+	Cleaned up scr_refresh (again <sigh>) to avoid some unnecessary
+	colour changes and removed the reverse video graphics context and
+	just swap foreground/background colours instead.
+
+    7.	Typo in command.c: had seteuid() instead of seteguid() <sigh>
+	Use cfsetospeed()/cfsetispeed() for POSIX termios handling.
+
+    8.	Ignore the loginShell option/resource for programs that DON'T end
+	with "sh".  A hack but it keeps `rxvt -ls -e rlogin machine' from
+	failing and I don't know of (m)any shells that don't end in "sh".
+
+    9.	Hard-code dependencies in Makefiles to avoid using X11 makedepend.
+	Added check for atexit() to catch the problem that exists on SunOS
+	but not on Solaris.
+
+   10.  Collected command-line option parsing and X11 resources into a
+	single file (xdefaults.c), and introduced a monolithic structure
+	(with bit-flags for logical options) to eliminate the massive
+	if-else-if parsing and to reduce possible overlaps/oversights
+
+	Short help provided for an incorrect argument.
+
+	For more consistency, more flexibility, and fewer switches,
+	made -grk4/-grk9 options obsolete, and replaced with `-grk mode'.
+	Added the resource `greek_keyboard' while I was there.
+
+	It is also possible to use a `--' or `++' prefix to get so-called
+	`long options' that correspond to the resource name.
+	For example,
+
+		rxvt +ls -bg Blue
+		rxvt +loginShell -background Blue
+		rxvt ++loginShell --background Blue
+
+		rxvt ++ls --bg Blue		Error!
+
+   11.	Changed REFRESH_PERIOD to 1 in command.c, the old idea of providing
+	for fast and furious scrolling needs to be reconsidered so that `cat'
+	works.  Still needs some investigation.
+
+   12.	Changed scr_poweron(), which corresponds to `ESC c', to also reset
+	the scrollback buffer.
+
+   13.	Changed scr_change_screen() (when compiled with NO_SECONDARY_SCREEN)
+	so that switching from the secondary to primary screen will push the
+	old secondary screen into the scrollback buffer.  This is fairly
+	useful if your terminfo has have rmcup=\E[?47l\E8, smcup=\E7\E[?47h.
+	It is NOT particularly useful if rmcup includes \E[2J, like some do.
+
+	Running with NO_SECONDARY_SCREEN provides faster switching than
+	with a real secondary screen and saves memory too.
+
+   14.	Now that key values have mostly stabilized, moved the compile-time
+	key choices to "feature.h" ("keys.h" now obsolete).
+
+2.15 to 2.16
+\-----------
+    1.	Misc cleanup, rxvt once again passes the vttest (and reverse video
+	works again).  Kanji support tested and seems to be okay.  Finally,
+	an okay set of regular/bold colours.  Compile-time option for a
+	right-side scrollbar.
+
+    2.	Ctrl-minus now (correctly) generates ^_ [0x1F].
+	Changed termcap/terminfo to use normal cursor keys instead of
+	application cursor keys (rmkx/smkx, ke/ks) -- otherwise subsequent
+	rxvt/xterm starts with the application cursor keys active.
+
+    3.	Fixed scr_reset() so that resizing is a lot more sensible.
+	Implemented the equivalent SouthWest resizeGravity (xterm X11R5) so
+	the bottom line of text on the screen stays fixed.  If the window is
+	made taller, additional saved lines will be scrolled down onto the
+	screen; if the window is made shorter, lines will be scrolled off
+	the top of the screen, and the top saved lines will be dropped. The
+	old resizing code is available with -DOLD_UGLY_RESIZE.
+
+    4.	Altered code so all man-page documented command-line options will
+	not trigger errors even if the feature wasn't compiled into rxvt.
+	Added old, backward compatibility command-line options, but they're
+	simply ignored. Eventually they can be removed -- perhaps Jan'97?
+
+		`-8':		use `+7'
+		`-fat':		use `-sb'
+		`-thin':	use `-arrows'
+		`-meta8thbit'	use `-meta8'
+		`-metaescape'	use `-meta'
+		`-font_list'	use `-font1', `-font2', etc.
+
+	These ones are just too weird to support:
+
+		`-ls-':		use `+ls'
+		`-ma-':		use `+ma'
+
+    5.	Removed secure-keyboard option, too problematic and obscure.
+
+    6.	First attempt at GNU autoconfig.
+	Still needs some work, but it's mostly okay.
+
+    7.	Added minor aliases for foreground/background colours.  This permits
+	colour specifications like -fg "#13" -bg "#10", which would set the
+	foreground to colour 13 (bright yellow) and the background to colour
+	10 (bright black).  It's not terribly useful yet, but might
+	eventually be a nice way to have bold/blink colour work even on with
+	the standard fg/bg colours.
+
+2.14 to 2.15
+\-----------
+    1.	Small bug: initial width incorrect when there was no scrollBar.
+
+    2.	Close the gaping security hole.  Renounce setuid/setgid privileges
+	immediately and only take them up as needed -- chown() or writing
+	into /etc/utmp.
+
+    3.	Reverted to using `<' and '>' to toggle smaller/bigger fonts. It
+	seems that many didn't like KP_Subtract/XK_KP_Add -- conflicts with
+	some editors, and not all terminals have a Keypad anyhow.
+
+    4.	Man page reformatted by Piercarlo Grandi <piercarl@sabi.demon.co.uk>
+	so that it "now is done in the most delightful [sic] elegant 'roff
+	style :-)"
+
+    5.	Started to integrate the Kanji support based on old patches from the
+	Linux-JE (Japanese Extensions) project.  Consider it alpha until one
+	of the JE authors gives it a thorough check.
+
+    6.	Added compile-time selection of a few different scrollbar widths.
+
+    7.	When reading X resources, rxvt now recognizes two class names:
+	"XTerm" and "RXvt".  The reason for two distinct names is that there
+	are many options common between rxvt and xterm -- to which the class
+	name "XTerm" permits easy access and configuration -- but there are
+	also several options, notably colours and key-handling, unique to
+	rxvt but which are useful to share between different rxvt
+	configurations; the class name "RXvt" permits this.
+
+	NB: The "RXvt" class takes precedence (in the event of a clash) and
+	    is the only one ever used for the application defaults file.
+
+    8.	The initial value used for the Backspace key (^H or ^?) is now
+	determined from the value of CERASE used to set the termios
+	structures.  This removes the need for the BACKSPACE_AS_DELETE
+	compile-time option.
+
+2.13 to 2.14
+\-----------
+    1.	Default HOTKEY prefix can now be choosen as `meta', `ctrl' or
+	`shift'. Moved font toggle to KP_Add/KP_Subtract to resemble
+	resolution toggling of the XFree86 server (Linux) and so that Alt-<
+	can generate ESC-< for Emacs usage.  Man page and usage() reflect
+	the changes. Note that if you choose the hotkey to be `shift', to
+	mimic the Linux console scrollback, you'll probably want different
+	keybindings for mapAlert and Secure.
+
+	The choice of the HOTKEY (ctrl or meta) prefix and some of the
+	key-strings can be compile-time defined in "rxvtkeys.h", although
+	probably the only changes desired will be in the string value
+	associated with XK_Delete and in the choice of a HOTKEY (ctrl or
+	meta) prefix.
+
+	Use shift or ctrl to temporarily toggle Backspace from ^H to ^?.
+	Use shift to temporarily toggle the application keypad.
+
+    2.	Patch so that setting bold or blink works before or after changing
+	the colour (it used to only work before changing the colour). Also
+	added the option of having DOS VGA colours.
+	Thanks Avery Pennarun <apenwarr@foxnet.net>
+
+    3.	Extensive reworking of pseudo-tty handling and addition of BSD sgtty
+	terminal handling and new utmpx (Solaris 2.x) support. MANY thanks
+	to Raul Garcia Garcia (rgg@tid.es).
+
+	POSIX wtmp support added by Piet W. Plomp (piet@icce.rug.nl)
+
+	Added -/+ut option (resource: utmpInhibit) so you can sometimes be
+	harder to find :)
+
+    4.	Finally? cleaned-up selection so that it works properly -- clears a
+	previously selected region without causing a core dump -- define
+	NEW_SELECTION.
+
+	I believe that this should fix a long-standing problem with the
+	selection mechanism -- probably back from when selection of the
+	scrollback was added -- whereby all accounting was done in terms of
+	screen row values [0 .. RxvtWin.rows-1] plus the current offset
+	value.  The anchor and end points were scrolled with the screen, but
+	the beginning point wasn't and extending a region that had its
+	anchor scrolled-off would give complete garbage.  The new selection
+	scheme has lots of bounds-checking (too much?) to prevent these
+	problems.  If PRINT_PIPE is not defined, then you can use
+	PrintScreen to dump some of the current selection state -- this
+	should help debugging.
+
+	Thanks to John Davis (davis@space.mit.edu) and Piet W. Plomp
+	(piet@icce.rug.nl) for helping to diagnose the problem.
+
+    5.	Use information request `ESC [ 8 n' to change the window title
+	to the current rxvt version so you can find out what version you
+	have.
+
+    6.	Added simple code to permit run-time definition of the keysyms
+	0xFF00 - 0xFFFF if KEYSYM_RESOURCE (for FAKE_RESOURCES only) is
+	defined.  It's not as pretty as that used by xterm since it only
+	works with keysym values rather that key names, but the impact on
+	code size is quite minimal.  I use it in conjunction with `-name vm'
+	to remap arrow and function keys for tn3270 ... quite handy.
+	At the moment the string length is only limited by the line length
+	(currently 256) used in "resources.c"
+
+	The syntax (at the moment) is
+
+		rxvt*keysym.0xFFnn:	"a string value"
+
+	where `nn' is a 2 digit hex value 00 to FF.  Of course if there were
+	an easy and small means of converting key names to keysym values,
+	then that would be better.
+
+	The enclosing quotes are required to start/end with whitespace.
+	Most of the usual escape values can be used:
+
+		\b - backspace
+		\e - escape
+		\n - newline
+		\r - carriage return
+		\t - tab
+		\000 - octal number
+
+	Anyhow, here's a brief example of what it looks like
+	in ~/.Xdefaults:
+
+	! F11 key - mimic the output of F1
+	rxvt*keysym.0xFFC8: \e[11~
+
+	! F12 key - whatever
+	rxvt*keysym.0xFFC9: Hello World!\n"\"String\" ends with whitespace  "
+
+	! Delete key - remap
+	rxvt*keysym.0xFFFF: "Delete :)"
+
+	!Scroll_Lock as flow-control (^S)
+	rxvt*keysym.0xFF14: \023
+
+    7.	Oops -- fixed resource name from scrollbar to scrollBar. Fixed
+	cursor colours to black on white (like xterm) for the scrollbar
+	cursors, but I've left the xterm (`I'-bar) cursor as foreground on
+	background because it looks so nice.  Allocate all colours when
+	creating the window so that we don't have to worry about it later
+	and so that we can avoid potential hassles with colour-hungry
+	applications like Netscape.
+
+    8.  Added a way to distinguish an rxvt from an xterm via the obsolete
+	ESC Z sending the vt100 answer string with 'c' -> 'C'.
+
+	Added support for resolving the actual IP number of the host for
+	remote DISPLAYs.  Changed the answer back for ESC[7n to add a
+	trailing newline to support easier input into the shell.  When the
+	display is local (i.e. :0), we add support for sending the first
+	non-loopback interface IP number as the DISPLAY instead of just
+	sending the incorrect ":0".  This way telnet/rlogin shells can
+	actually get the correct information into DISPLAY for xclients.
+
+	Courtesy of Chuck Blake <cblake@BBN.COM>
+	[Note: I've not had a chance to thoroughly test this -- mjo]
+
+2.12 to 2.13
+\-----------
+    1.	Shift and Control now only work for non-application mode cursor
+	keys and with function keys.
+
+    2.	Override XTerm mouse reporting with either Mod1 or Shift.  X11
+	mouse reporting now properly includes modifier keys (see rxvt.ref).
+	Although this effectively degenerates to the Control modifier alone
+	since both Shift and Meta are used to temporarily disable mouse
+	reporting -- I don't know an easy way around this but that's what
+	XTerm does, although since it uses Control to pop-up menus, that
+	doesn't get transmitted either.
+
+    3.  Moved a few more configuration items from Imakefile to configure.h
+
+    4.	Added XAPPLOADDIR define to the Imakefile to allow use of the
+	application defaults file XAPPLOADDIR/RXvt when rxvt has been
+	compiled with FAKE_RESOURCES.  Now, the following files are
+	checked:
+		XAPPLOADDIR/RXvt	(compile-time defined)
+		$HOME/.Xdefaults or $HOME/.Xresources
+	suggested by John Gotts <jgotts@engin.umich.edu>
+
+    5.	Applied patches by Edward D.H. Liu <dhliu@solar.csie.ntu.edu.tw>
+	to fix the speed of pasting rxvt's selection to motif, xew or tk.
+	Finally! reasonable pasting speed to these applications.
+
+    6.	patches by Gregory Margo <gmargo@newton.vip.best.com>
+	for xterm-style proportional scrollbar behaviour:
+		If pointer is near top, scroll one line.
+		If pointer is near bottom, scroll full page.
+	refreshPeriod resource and -refresh option ... still wishing
+	for faster screen refreshing.
+
+    7.	Bug fix for partial matches (FAKE_RESOURCES).  In addition to
+	resources for resource name `rxvt', also get resources for class
+	name `XTerm' as well.  Remove checking for `command' resource since
+	it's not found in xterm nor was there any code in place to parse the
+	command arguments ... better just to use the command-line -e option.
+	Replace `fontList' with font1, font2, ... etc. for better xterm
+	compatibility and for ease of configuration.  Changed processing of
+	string resources and command-line string options to avoid allocating
+	redundant memory.
+
+    8.	Previously selected region is now properly cleared when Button1 is
+	pressed.  Still have problems with click-and-drag when Mod1 or Shift
+	is used to override mouse reporting -- argh!  Until someone gets
+	this properly patched, use Button1 followed by Button3 (to extend
+	region) in these instances.
+
+    9.	Understands ANSI set default fg/bg colour (\E[39m / \E[49m)
+
+   10.	In the screen accounting used in screen.c, use a '\n' to terminate
+	wrapped lines instead of '\0'.  This should avoid mouse selection of
+	wrapped lines from including a bogus newline.  No known
+	side-effects, but changes isolated by #define NEW_WRAPTYPE.
+
+2.11 to 2.12
+\-----------
+    1.	Extra functionality for XTerm mouse report mode.  If mouse reporting
+	is enabled (the application will handle mouse events) the normal
+	scrollbar operation is disabled -- instead rxvt sends UP/DOWN for
+	the arrow buttons and PageUp/PageDown when Button1 or Button3 are
+	clicked on the scrollbar.  Use Mod1 (Alt) key to get the normal
+	scrollbar/arrow button actions and also to get the normal selection
+	functions -- so that you can still cut/paste between X applications.
+
+    2.	New colour possibilities -- 16 colours.  Instead of using fatter
+	characters, a bold attribute now uses a brighter foreground colour.
+	Similarly, a blink attribute will use a brighter background colour.
+	It is also possible to choose these colours through the resources
+	(color0 -- color7) permit specification of the ANSI colours (black,
+	red, green, yellow, blue, magenta, cyan, white), the resources
+	(color10 -- color17) are the brighter bold/blink equivalents.
+	Define USE_FAKE_BOLD to disable.
+
+    3.	Extensive clean-up of source and headers to separate
+	interdependencies, remove unused variables.  Introduced static
+	variables wherever possible to limit scoping and reduced the number
+	of external variables.
+
+    4.	Allow NumLock to toggle on/off the application keypad.
+
+	Backspace sends '\b', Ctrl-Backspace sends '\177'.
+	Define BACKSPACE_AS_DELETE to reverse these values or use the
+	escape sequence:
+
+		ESC [ 36 h		Backspace key sends BS
+		ESC [ 36 l		Backspace key sends DEL
+
+	XK_End used to send "\033Ow", which is identical to XK_KP_7 and
+	confuses EDT-type editors. Now,
+	Home = "\033[7~"
+	End  = "\033[8~"
+
+	Changed Alert & Secure keys from Alt-i & Alt-s to Alt-I & Alt-S so
+	they aren't so easily toggled.
+
+    5.	Extra keystroke info.  Pass Control and Shift indicators for
+	function keys (similar to the XJed editor)
+	eg,
+		F1	= ESC [11~
+		C-F1	= ESC [11^
+		S-F1	= ESC [11$
+
+	also, pass indication of shift status for arrow-keys
+	eg,
+		Up, Down, Right, Left
+		  = ESC [A, ESC [B, ESC [C, ESC [D
+		S-Up, S-Down, S-Right, S-Left
+		  = ESC [a, ESC [b, ESC [c, ESC [d
+
+	You wouldn't be able to use these keys for termcap/terminfo
+	applications, but the key sequences are available for remapping
+	within an application.
+
+    6.	Added configure.h which is included by each source file and by the
+	Imakefile.  Common compilation defines are now all contained in
+	configure.h with minor system defines remaining in Imakefile --
+	makes it much easier to configure.  Used XCOMM macro in Imakefile so
+	that it actually works.  Also added defaults.h for defining
+	user-specific startup defaults.
+
+    7.	Added rxvt.ref to provide documentation of the various terminal
+	sequences that are processed.  Updated man page to reflect changes.
+
+    8.	Use xterm-style -/+ to turn on/off options, rationalized resource
+	names to more closely resemble xterm.
+
+		Option			Resource
+		-help			-
+		-display displayname	-
+		-geometry geom		geometry:
+		-bg color		background:
+		-fg color		foreground:
+          	-color<n> color		color<n>: <string>
+					where <n> = [0-7], 1[0-7]
+		-fn fontname		font: <string>
+		-fontList names		fontList: <string> <string> ...
+		-name string		-
+		-/+ls			loginShell: True/False
+		-/+ma			mapAlert: True/False
+		-/+vb			visualBell: True/False
+		-/+sb			scrollbar: True/False
+		-/+arrows		scrollbar: Arrows/True/False
+		-ic			-
+		-meta8			meta: 8bit
+		-/+meta			meta: True/False
+		-sl number		saveLines: <num>
+		-grk4			-
+		-grk9			-
+		-print-pipe name	pipe-pipe: <string>
+		-e command arg ...	command: <string>
+		-T string		title: <string>
+		-n string		iconName: <string>
+		-C			-
+		-/+7                    bits: 7/8
+		-secure keysym		secure_key: <string>
+		-pageup keysym		pageup_key: <string>
+		-pagedown keysym	pagedown_key: <string>
+		-bigfont keysym		bigfont_key: <string>
+		-smallfont keysym	smallfont_key: <string>
+		-prkey keysym		printscreen_key: <string>
+          				greektoggle_key: <string>
+          				cutchars: <string>
+
+    9.	Fixed Button actions for XTerm-style scrollbar so that Button1 and
+	Button3 do different things as they are supposed to.  Replace -/+fat
+	with -/+sb and -/+arrows for more consistency with XTerm. Decreased
+	width of `fat' scrollbar (make closer to xterm) and increased width
+	of `thin' scrollbar (arrows too small) -- they are now the same
+	width.  Also made it possible to remove the scrollbar altogether.
+	Added a visual bell.
+
+	Added many more defines to further reduce code size for various
+	cases, see "configure.h".  It is also possible to alter settings in
+	"defaults.h" for configuration options that will only affect
+	screen.c and xsetup.c, this should help with compile-time
+	customization for those who don't want to use Xdefaults.
+
+	Added the define REPLACE_SELECTION_NEWLINE to make the substitution
+	of newlines with carriage returns for selection pasting a
+	compile-time option.
+
+   10.	Fixed the graphics samples so that if you want to it's actually
+	possible to compile them.  Added -name command-line option so that
+	it's possible to select different sets of resources.
+
+   11.  Integrated initial support for X11 mouse reporting and added
+	Shift + Function Keys support.
+
+2.10 to 2.11
+    1.	If NEW_COLOR_MODEL is defined in screen.c, the new model I described
+	in an earlier email is used. (apparantly there are two, slightly
+	differnt models for using color extensions in a vt-compatible
+	terminal. This flag lets you switch.
+
+    2.	If XTERM_MOUSE_REPORT is defined in command.c, mouse reporting is
+	turned on/off via the appropriate escape sequences.  XTerm already
+	provides this support.
+
+    3.	If .Xdefaults does not exist, .Xresources is searched for.  It seems
+	that many here use .Xresources.
+
+2.09 to 2.10
+    1.	Really fixed the color problem (?) Got color-ls, and it works now.
+    2.	Added patch to allow run-time selection of font list.
+
+2.07 to 2.09
+    1.	Fixed some color-usage errors.
+    2.	Added double and triple-click support
+	compliments of ah@doc.ic.ac.uk (Angelo Haritsis)
+    3.	Added Print Screen capability, as in most vt-100's
+2.06 to 2.07
+    1.	Fixed problems with rxvt screwing up tty permisssions (?)
+2.03 to 2.06
+    1.	Fixed a limit which imposed a maximum width for the
+	terminal window of 255 characters. There is no limit now.
+    2.	Made provision for applications to get mouse-click feedback
+	when user clicks in a graphics window. See graphics_sample
+2.02 to 2.03
+    1.	Fixed memory management just a little.
+
+2.0 to 2.02
+    1.	Bug fixes for color and graphics.
+
+1.97 to 2.0
+    1.	Added ANSI color support. Compile with -DCOLOR
+    2.	Added a graphics mode. Compile with -DGRAPHICS
+1.96 to 1.97
+    1.	Bug in refresh() which was causing slow refreshes after
+	clear-screens was fixed. Showed up during emacs start-up.
+
+1.95 to 1.96
+    1.	rxvt did bad things if it received mouse - Motion events
+	without a preceeding button-press. Fixed.
+1.94 to 1.95
+    1.	Created a substitute for XGetDefaults, which seemed to account for
+	1/2 to 2/3 of the memory used by rxvt (according to the SIZE field
+	of ps output). My substitute only reads the .Xdefaults file. Compile
+	with -DFAKE_RESOURCES to get my mini- XDefaults handling,
+	-DREAL_RESOURCES to keep XGetDefault.
+
+1.93 to 1.94
+    1.	Fixed some minor long-standing errors in the vt100 emulation.
+    2.	Fixed ALT-<char> handling in command.c
+    3.	Fixed minor bug with start-of-selection location.
+    4.	Added xterm-type "extend selection" feature using
+	mouse button 3. Button 1 always starts a new selection. Button3
+	tries to extend the current selection if possible.
+    5.	Fixed problem with bold-face fonts overflowing into
+    	the next character for some fonts.
+
+1.92 to 1.93
+    1.	ran gprof to find bottle-necks in the code. Halved user
+	time, but had little effect on total time required to
+	update the display. Seems worth keeping for the more efficient
+	user-time, though. At this point, I think that most of the elapsed
+	time is spent waiting for input or waiting for the X buffers
+	to flush.
+    2.	Used to refresh the screen every 2.2 screen-fulls during
+	flat-out scrolling. Really cuts down on scroll-time. Now,
+	refresh every screen-full (or when there's a pause in activity),
+	but when flat-out scrolling starts, decrease the refresh period,
+	so that its every 10th screenful after a little while. This has
+	no noticeable visible effect, since the scrolling text is
+	absolutely unintelligible anyway, but will improve the scroll
+	"feel" when doing just one or two screenfulls, ie in an ls -l.
+    3.	Surrounded  the code which uses XCopyArea with #ifdef's
+	I have never seen this help performance, but I think that there
+	may be some video-systems which benefit from this, particularly
+	in a full-screen editor or slow scrolling type of setting.
+    4.	Performance in flat out scrolling, text only, on a sparc-10,
+	displaying rxvt on an HDS x-terminal:
+	  nation@snoopy>/usr/bin/time rxvt -e cat k
+		6.1 real         3.1 user         2.5 sys
+	  nation@snoopy>/usr/bin/time xterm -e cat k
+		40.8 real         4.6 user         3.4 sys
+
+1.91 to 1.92
+    1.	Added greek-keyboard support patches.
+1.85 to 1.91
+    1.	assorted minor patches
+1.82 to 1.85
+    1.	Fixed ESC c handling.
+    2.	Fixed minor selection handling bug.
+
+1.81 to 1.82
+    1.	Fixed slow refresh during selection process
+    2.	Fixed problem of not correctly clearing selections of 1 character.
+
+1.80 to 1.81
+    1.	Fixed some scrolling problems, problems with partially obscured
+	windows.
+    2.	Added some neat debugging capability in debug.c
+    3.	Patched up rclock.
+
+1.74 to 1.80
+    1.	Fixed core dump from selecting past the bottom of the screen
+    2.	Fixed a few escape sequences, per the vttest program
+    3.	Broke and fixed handling of moved/resize/new-font handling.
+    4.	Still can't change tab stops correctly.
+    5.	Ran vt-100 test suite. Added capability to change tab stops
+	and enter reverse video, and to switch from 80 to 132
+	columns and back. Fixed a seg-fault in scroll().
+
+1.70 to 1.74
+    1.	Fixed cursor drawing errors.
+    2.	Improved smoothness of scroll-back operations.
+    3.	Applied some SVR4 patches.
+    4.	Applied HPUX patches, and a few cursor display patches
+    5.	Fixed up font-changing routines a bit.
+    6.	Fixed a scrolling problem for windows taller than the scroll-back
+	buffer.
+
+1.6 to 1.7
+    1.	Fixed the problem with random rendition flags in the scroll
+	back buffer
+    2.	Fiddled with re-drawing on the scroll-bar, and with
+	how often refreshing occurs.
+    3.	Incorporated some AIX patches.
+    4.	Included #ifdef'd changes to support vt100 printer.
+    5.	Fixed send_string routine, so that it doesn't loose
+	data.
+    6.	Complete re-write of screen.c
+1.5 to 1.6
+    1.	Removed all use of a seperate bold font. Now uses
+	over-striking exclusively.
+    2.	Added some more optimizations for drawing speed when
+	the window is re-sized or moved.
+    3.	Implemented speed ups in screen.c
+
+1.47 to 1.48
+    1.	Cleaned up re-drawing on expose events, so rxvt only
+	re-draws the newly exposed parts of the screen.
+    2.	Fixed backspace, which must have broken in 1.45.
+    3.	Added command line option of iconic startup.
+
+from 1.45 to 1.47
+    1.	Incorporated improved bsd utmp handling from
+        dperry@ringer.cs.utsa.edu (David Perry)
+    2.	Fixed a very minor bug where the solid-cursor can leave a
+    	a bit of a ghost when you resize the window. Its stupid,
+	but it always bothered me.
+
+from 1.4 to 1.45
+    1.	Fixed scrolling error when switching to larger fonts
+    2.	Fixed utmp-entry removal for SYSV type systems.
+    3.	Icorportated patches for FreeBSD and svr4

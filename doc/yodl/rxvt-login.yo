@@ -1,0 +1,7 @@
+COMMENT(-- $Id: rxvt-login.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+COMMENT(----------------------------------------------------------------------)
+manpagesection(LOGIN STAMP)
+
+bf(rxvt) tries to write an entry into the em(utmp)(5) file so that it can be
+seen via the em(who(1)) command, and can accept messages.  To allow this
+feature, bf(rxvt) must be installed setuid root on some systems.

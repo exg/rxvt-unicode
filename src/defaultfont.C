@@ -1,0 +1,874 @@
+/*--------------------------------*-C-*---------------------------------*;
+ * File:	defaultfont.C
+ *----------------------------------------------------------------------*
+ * Copyright (c) 2003      Marc Lehmann rxvt@plan9.de>
+ *				- original version.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *---------------------------------------------------------------------*/
+
+#include "../config.h"
+#include "rxvt.h"
+#include "defaultfont.h"
+
+#define DISPLAY  R->Xdisplay
+#define DRAWABLE R->TermWin.vt
+#define GC       R->TermWin.gc
+
+const struct rxvt_fallback_font {
+  codeset cs;
+  const char *name;
+} fallback_fonts[] = {
+  { CS_ISO8859_1,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-1"  },
+  { CS_ISO8859_15,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-15" },
+  { CS_ISO8859_15,   "-*-*-*-r-*--*-*-*-*-c-*-fcd8859-15" },
+
+#if ENCODING_EU
+  // cyrillic
+  { CS_KOI8_R,        "-*-*-*-r-*--*-*-*-*-c-*-koi8-r"    },
+  { CS_KOI8_U,        "-*-*-*-r-*--*-*-*-*-c-*-koi8-u"    },
+
+  { CS_ISO8859_2,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-2"  },
+  { CS_ISO8859_3,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-3"  },
+  { CS_ISO8859_4,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-4"  },
+  { CS_ISO8859_5,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-5"  },
+  { CS_ISO8859_6,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-6"  },
+  { CS_ISO8859_7,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-7"  },
+  { CS_ISO8859_8,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-8"  },
+  { CS_ISO8859_9,    "-*-*-*-r-*--*-*-*-*-c-*-iso8859-9"  },
+  { CS_ISO8859_10,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-10" },
+  { CS_ISO8859_11,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-11" },
+  { CS_ISO8859_13,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-13" },
+  { CS_ISO8859_14,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-14" },
+  { CS_ISO8859_16,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-16" },
+#endif
+
+  // japanese
+#if ENCODING_JP || ENCODING_JP_EXT
+# if XFT
+  // prefer xft for complex scripts
+  { CS_UNICODE,        "xft:Kochi Gothic"                     },
+# endif
+  { CS_JIS0201_1976_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0201*-0" },
+  { CS_JIS0208_1983_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0208*-0" },
+  { CS_JIS0212_1990_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0212*-0" },
+#endif
+
+#if ENCODING_CN || ENCODING_CN_EXT
+# if XFT
+  { CS_BIG5_EXT,       "xft:AR PL Mingti2L Big5"              },
+  { CS_BIG5_EXT,       "xft:AR PL KaitiM Big5"                },
+  { CS_GB2312_1980_0,  "xft:AR PL KaitiM GB"                  },
+  { CS_GB2312_1980_0,  "xft:AR PL SungtiL GB"                 },
+# endif
+  { CS_CNS11643_1992_1, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-1" },
+  { CS_CNS11643_1992_2, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-2" },
+  { CS_CNS11643_1992_3, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-3" },
+  { CS_CNS11643_1992_4, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-4" },
+  { CS_CNS11643_1992_5, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-5" },
+  { CS_CNS11643_1992_6, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-6" },
+  { CS_CNS11643_1992_7, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-7" },
+  { CS_CNS11643_1992_F, "-*-*-*-r-*-*-*-*-*-*-c-*-cns11643.1992-f" },
+#endif
+
+#if XFT
+  { CS_UNICODE,      "xft:Andale Mono"                        },
+  { CS_UNICODE,      "xft:Arial Unicode MS"                   },
+#endif
+  { CS_UNICODE,      "-*-lucidatypewriter-*-r-*-*-*-*-*-*-m-*-iso10646-1" },
+  { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1" },
+  { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1" },
+  { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1" },
+
+  { CS_UNKNOWN, 0 }
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+static void *enc_buf;
+static uint32_t enc_len;
+
+static inline void *
+get_enc_buf (int len)
+{
+  if (len > enc_len)
+    {
+      free (enc_buf);
+      enc_buf = malloc (len);
+    }
+
+  return enc_buf;
+}
+
+static const char *
+enc_char (const text_t *text, int len, codeset cs, bool &zero)
+{
+  uint8_t *buf = (uint8_t *)get_enc_buf (len);
+
+  while (len--)
+    {
+      uint32_t c = FROM_UNICODE (cs, *text++);
+
+      if (c == NOCHAR)
+        {
+          c = 0;
+          zero = true;
+        }
+
+      *buf++ = c;
+    }
+
+  return (const char *)enc_buf;
+}
+
+static const XChar2b *
+enc_xchar2b (const text_t *text, int len, codeset cs, bool &zero)
+{
+  XChar2b *buf = (XChar2b *)get_enc_buf (len * sizeof (XChar2b));
+
+  while (len--)
+    {
+      uint32_t c = FROM_UNICODE (cs, *text++);
+
+      if (c == NOCHAR)
+        {
+          c = 0;
+          zero = true;
+        }
+
+      buf->byte1 = c >> 8;
+      buf->byte2 = c;
+      buf++;
+    }
+
+  return (XChar2b *)enc_buf;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void
+rxvt_font::clear_rect (int x, int y, int w, int h, int color)
+{
+  if (color == Color_bg)
+    XClearArea (DISPLAY, DRAWABLE, x, y, w, h, FALSE);
+  else if (color >= 0)
+    {
+      XSetForeground (DISPLAY, GC, R->PixColors[color]);
+      XFillRectangle (DISPLAY, DRAWABLE, GC, x, y, w, h);
+    }
+}
+
+struct rxvt_font_default : rxvt_font {
+  bool load (int maxheight)
+  {
+    width = 1; height = 1;
+    ascent = 1; descent = 0;
+
+    return true;
+  }
+
+  bool has_codepoint (uint32_t unicode)
+  {
+    if (unicode <= 0x001f
+        || (unicode >= 0x80 && unicode <= 0x9f))
+      return true;
+
+    switch (unicode)
+      {
+        case ZERO_WIDTH_CHAR:
+          return true;
+      }
+
+    return false;
+  }
+
+  void draw (int x, int y,
+             const text_t *text, int len,
+             int fg, int bg);
+};
+
+void
+rxvt_font_default::draw (int x, int y,
+                         const text_t *text, int len,
+                         int fg, int bg)
+{
+  clear_rect (x, y, R->TermWin.fwidth * len, R->TermWin.fheight, bg);
+
+  while (len--)
+    {
+      switch (*text++)
+        {
+          case NOCHAR:
+          case ZERO_WIDTH_CHAR:
+            break;
+          default:
+            XSetForeground (DISPLAY, GC, R->PixColors[fg]);
+            XDrawRectangle (DISPLAY, DRAWABLE, GC, x + 2, y + 2, R->TermWin.fwidth - 5, R->TermWin.fheight - 5);
+        }
+
+      x += R->TermWin.fwidth;
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+struct rxvt_font_x11 : rxvt_font {
+  rxvt_font_x11 () { f = 0; }
+
+  void clear ();
+
+  bool load (int maxheight);
+
+  bool has_codepoint (uint32_t unicode);
+
+  void draw (int x, int y,
+             const text_t *text, int len,
+             int fg, int bg);
+
+  XFontStruct *f;
+  codeset cs;
+  bool enc2b, encm;
+
+  const char *get_property (const char *property, const char *repl) const;
+};
+
+const char *
+rxvt_font_x11::get_property (const char *property, const char *repl) const
+{
+  unsigned long value;
+
+  if (XGetFontProperty (f, XInternAtom (DISPLAY, property, 0), &value))
+    return XGetAtomName (DISPLAY, value);
+  else
+    return repl;
+}
+
+bool
+rxvt_font_x11::load (int maxheight)
+{
+  clear ();
+
+  f = XLoadQueryFont (DISPLAY, name);
+
+  if (!f)
+    return false;
+
+  unsigned long value;
+
+  const char *registry = get_property ("CHARSET_REGISTRY", 0);
+  const char *encoding = get_property ("CHARSET_ENCODING", 0);
+
+  if (registry && encoding)
+    {
+      char charset[64];
+      snprintf (charset, 64, "%s-%s", registry, encoding);
+
+      cs = codeset_from_name (charset);
+    }
+  else
+    {
+      const char *charset = get_property ("FONT", 0);
+
+      if (!charset)
+        charset = name;
+
+      int count = 13;
+      while (*charset)
+        if (*charset++ == '-' && !--count)
+          break;
+
+      cs = codeset_from_name (charset);
+    }
+
+  if (cs == CS_UNICODE)
+    cs = CS_UNICODE_16; // X11 can have a max. of 65536 chars per font
+
+  encm = f->min_byte1 != 0 || f->max_byte1 != 0;
+  enc2b = encm || f->max_char_or_byte2 > 255;
+
+  ascent = f->ascent;
+  descent = f->descent;
+  height = ascent + descent;
+
+  prop = false;
+
+  if (f->min_bounds.width == f->max_bounds.width)
+    width = f->min_bounds.width;
+  else if (f->per_char == NULL)
+    width = f->max_bounds.width;
+  else
+    {
+      prop = true;
+
+      int N = f->max_char_or_byte2 - f->min_char_or_byte2;
+
+      if (encm)
+        N += (f->max_byte1 - f->min_byte1)
+             * (f->max_char_or_byte2 - f->min_char_or_byte2 + 1);
+       
+      while (N)
+        {
+          if (f->per_char[N].width > width)
+            width = f->per_char[N].width;
+
+          --N;
+        }
+    }
+
+  if (cs == CS_UNKNOWN)
+    {
+      fprintf (stderr, "unable to deduce codeset, ignoring font '%s'\n", name);
+
+      clear ();
+
+      return false;
+    }
+
+  return true;
+}
+
+void
+rxvt_font_x11::clear ()
+{
+  if (f)
+    {
+      XFreeFont (DISPLAY, f);
+      f = 0;
+    }
+}
+
+bool
+rxvt_font_x11::has_codepoint (uint32_t unicode)
+{
+  uint32_t ch = FROM_UNICODE (cs, unicode);
+
+  if (ch == NOCHAR)
+    return false;
+
+  /* check wether the character exists in _this_ font. horrible. */
+  XCharStruct *xcs;
+
+  if (encm)
+    {
+      int byte1 = ch >> 8;
+      int byte2 = ch & 255;
+
+      if (byte1 < f->min_byte1 || byte1 > f->max_byte1
+          || byte2 < f->min_char_or_byte2 || byte2 > f->max_char_or_byte2)
+        return false;
+
+      if (!f->per_char)
+        return true;
+
+      int D = f->max_char_or_byte2 - f->min_char_or_byte2 + 1;
+      int N = (byte1 - f->min_byte1) * D + byte2 - f->min_char_or_byte2;
+
+      xcs = f->per_char + N;
+    }
+  else
+    {
+      if (ch < f->min_char_or_byte2 || ch > f->max_char_or_byte2)
+        return false;
+
+      if (!f->per_char)
+        return true;
+
+      xcs = f->per_char + (ch - f->min_char_or_byte2);
+    }
+
+  if (xcs->lbearing == 0 && xcs->rbearing == 0 && xcs->width == 0
+      && xcs->ascent == 0 && xcs->descent == 0)
+    return false;
+
+  return true;
+}
+
+void
+rxvt_font_x11::draw (int x, int y,
+                     const text_t *text, int len,
+                     int fg, int bg)
+{
+  // this looks like a mess /.
+  // and it is a mess /.
+  // yet we are trying to be perfect /.
+  // but the result still isn't perfect /.
+
+  bool slow = prop
+              || width != R->TermWin.fwidth
+              || height != R->TermWin.fheight;
+
+  int base = R->TermWin.fbase;
+
+  XGCValues v;
+  v.foreground = R->PixColors[fg];
+  v.background = R->PixColors[bg];
+  v.font = f->fid;
+
+  if (enc2b)
+    {
+      const XChar2b *xc = enc_xchar2b (text, len, cs, slow);
+
+      if (bg == Color_bg && !slow)
+        {
+          XChangeGC (DISPLAY, GC, GCForeground | GCBackground | GCFont, &v);
+          XDrawImageString16 (DISPLAY, DRAWABLE, GC, x, y + base, xc, len);
+        }
+      else
+        {
+          clear_rect (x, y, R->TermWin.fwidth * len, R->TermWin.fheight, bg);
+
+          XChangeGC (DISPLAY, GC, GCForeground | GCFont, &v);
+          
+          if (slow)
+            {
+              do
+                {
+                  if (xc->byte1 || xc->byte2)
+                    XDrawString16 (DISPLAY, DRAWABLE, GC, x, y + base, xc, 1);
+
+                  x += R->TermWin.fwidth;
+                  xc++; len--;
+                }
+              while (len);
+            }
+          else
+            XDrawString16 (DISPLAY, DRAWABLE, GC, x, y + base, xc, len);
+        }
+    }
+  else
+    {
+      const char *xc = enc_char (text, len, cs, slow);
+
+      if (bg == Color_bg && !slow)
+        {
+          XChangeGC (DISPLAY, GC, GCForeground | GCBackground | GCFont, &v);
+          XDrawImageString (DISPLAY, DRAWABLE, GC, x, y + base, xc, len);
+        }
+      else
+        {
+          clear_rect (x, y, R->TermWin.fwidth * len, R->TermWin.fheight, bg);
+
+          XChangeGC (DISPLAY, GC, GCForeground | GCFont, &v);
+          
+          if (slow)
+            {
+              do
+                {
+                  if (*xc)
+                    XDrawString (DISPLAY, DRAWABLE, GC, x, y + base, xc, 1);
+
+                  x += R->TermWin.fwidth;
+                  xc++; len--;
+                }
+              while (len);
+            }
+          else
+            XDrawString (DISPLAY, DRAWABLE, GC, x, y + base, xc, len);
+        }
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+#if XFT
+#if 0
+#define UNIBITS 21
+//#define SWATHBITS (UNIBITS / 2 + 3) // minimum size for "full" tables
+#define SWATHBITS 8
+#endif
+
+struct rxvt_font_xft : rxvt_font {
+#if 0
+  enum {
+    SWATHCOUNT = 1 << (21 - UNIBITS),
+    SWATHSIZE  = 1 << (SWATHBITS - 5)
+  };
+  typedef uint32_t swath[SWATHSIZE];
+
+  swath *cvr[SWATHCOUNT];
+#endif
+
+#if 0
+  void gen_coverage_swath (unsigned int page);
+
+  bool has_char (uint32_t ch)
+    {
+      unsigned int page = ch >> SWATHBITS;
+      unsigned int idx  = ch & ((1 << SWATHBITS) - 1);
+
+      if (page >= SWATHCOUNT)
+        return false;
+
+      if (!cvr[page]) gen_coverage_swath (page);
+
+      return cvr[page][idx >> 5] & (1 << (idx & 31));
+    }
+#endif
+  rxvt_font_xft () { f = 0; d = 0; }
+
+  void clear ();
+
+  bool load (int maxheight);
+
+  void draw (int x, int y,
+             const text_t *text, int len,
+             int fg, int bg);
+
+  bool has_codepoint (uint32_t unicode);
+
+protected:
+  XftFont *f;
+  XftDraw *d;
+
+#if 0
+  virtual void populate_coverage_swath (uint32_t lo, uint32_t hi) = 0;
+  void set_swath (uint32_t ch)
+    {
+      cvr[ch >> SWATHBITS] |= 1 << (ch & ((1 << SWATHBITS) - 1));
+    }
+#endif
+};
+
+void
+rxvt_font_xft::clear ()
+{
+  if (f)
+    {
+      XftFontClose (R->Xdisplay, f);
+      f = 0;
+    }
+
+  if (d)
+    {
+      XftDrawDestroy (d);
+      d = 0;
+    }
+
+#if 0
+  for (int i = 0; i < SWATHCOUNT; i++)
+    delete cvr[i];
+#endif
+}
+
+bool
+rxvt_font_xft::load (int maxheight)
+{
+#if 0
+  for (int i = 0; i < SWATHCOUNT; i++)
+    cvr[i] = 0;
+#endif
+
+  clear ();
+
+  f = XftFontOpenName (R->Xdisplay, DefaultScreen (R->Xdisplay), name);
+
+  if (!f)
+    return false;
+
+  FT_Face face = XftLockFace (f);
+
+  prop = !FT_IS_FIXED_WIDTH (face);
+
+  int ftheight = 0;
+
+  for (;;)
+    {
+      XGlyphInfo g1, g2;
+      FcChar8 c;
+
+      c = 'i'; XftTextExtents8 (R->Xdisplay, f, &c, 1, &g1);
+      c = 'W'; XftTextExtents8 (R->Xdisplay, f, &c, 1, &g2);
+
+      prop = prop || g1.xOff != g2.xOff; // don't simply trust the font
+
+      width = g2.xOff;
+      ascent = (face->size->metrics.ascender + 63) >> 6;
+      descent = (-face->size->metrics.descender + 63) >> 6;
+      height = ascent + descent;
+
+      if (height <= maxheight || !maxheight)
+        break;
+
+      if (ftheight)
+        {
+          // take smaller steps near the end
+          if (height > maxheight + 1) ftheight++;
+          if (height > maxheight + 2) ftheight++;
+          if (height > maxheight + 3) ftheight++;
+
+          FT_Set_Pixel_Sizes (face, 0, ftheight -= height - maxheight);
+        }
+      else
+        FT_Set_Pixel_Sizes (face, 0, ftheight = maxheight);
+    }
+
+  XftUnlockFace (f);
+
+  return true;
+}
+
+#if 0
+void rxvt_font::gen_coverage_swath (unsigned int page)
+{
+  cvr[page] = new swath;
+
+  for (int i = 0; i < SWATHSIZE; i++)
+    cvr[page][i] = 0;
+
+  populate_coverage_swath (cvr[page], page << SWATHBITS, ((page + 1) << SWATHBITS) - 1);
+}
+#endif
+
+bool
+rxvt_font_xft::has_codepoint (uint32_t unicode)
+{
+  return XftCharExists (R->Xdisplay, f, unicode);
+}
+
+void
+rxvt_font_xft::draw (int x, int y,
+                     const text_t *text, int len,
+                     int fg, int bg)
+{
+  if (!d)
+    d = XftDrawCreate (R->Xdisplay, DRAWABLE, XVISUAL, XCMAP);
+
+  if (bg >= 0 && bg != Color_bg)
+    XftDrawRect (d, &R->PixColors[bg].c, x, y, R->TermWin.fwidth * len, R->TermWin.fheight);
+  else
+    clear_rect (x, y, R->TermWin.fwidth * len, R->TermWin.fheight, bg);
+
+  if (!prop && width == R->TermWin.fwidth)
+    {
+      if (sizeof (text_t) == sizeof (FcChar16))
+        XftDrawString16 (d, &R->PixColors[fg].c, f, x, y + R->TermWin.fbase, (const FcChar16 *)text, len);
+      else
+        XftDrawString32 (d, &R->PixColors[fg].c, f, x, y + R->TermWin.fbase, (const FcChar32 *)text, len);
+    }
+  else
+    {
+      while (len)
+        {
+          if (*text != NOCHAR && *text != ' ')
+            {
+              if (sizeof (text_t) == sizeof (FcChar16))
+                XftDrawString16 (d, &R->PixColors[fg].c, f, x, y + R->TermWin.fbase, (const FcChar16 *)text, 1);
+              else
+                XftDrawString32 (d, &R->PixColors[fg].c, f, x, y + R->TermWin.fbase, (const FcChar32 *)text, 1);
+            }
+
+          x += R->TermWin.fwidth;
+          text++;
+          len--;
+        }
+    }
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+rxvt_fontset::rxvt_fontset (pR)
+#ifdef EXPLICIT_CONTEXT
+: rxvt_term(R)
+#endif
+{
+  clear ();
+}
+
+rxvt_fontset::~rxvt_fontset ()
+{
+  clear ();
+}
+
+void
+rxvt_fontset::clear ()
+{
+  for (rxvt_font **i = fonts.begin (); i != fonts.end(); i++)
+    FONT_UNREF (*i);
+
+  fonts.clear ();
+  base_id = 0;
+  height = 0x7fffffff;
+
+  fallback = fallback_fonts;
+}
+
+rxvt_font *
+rxvt_fontset::new_font (const char *name, codeset cs)
+{
+  rxvt_font *f;
+  
+  if (!name || !*name)
+    {
+      name = "";
+      f = new rxvt_font_default;
+    }
+#if XFT
+  else if (!strncmp (name, "xft:", 4))
+    {
+      name += 4;
+      f = new rxvt_font_xft;
+    }
+#endif
+  else if (!strncmp (name, "x:", 2))
+    {
+      name += 2;
+      f = new rxvt_font_x11;
+    }
+  else
+    f = new rxvt_font_x11;
+
+  f->set_term (aR);
+  f->set_name (strdup (name));
+
+  f->cs = cs;
+  f->loaded = false;
+
+  return f;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void
+rxvt_fontset::add_fonts (const char *desc)
+{
+  if (desc)
+    {
+      char buf[512];
+      const char *end;
+
+      do
+        {
+          while (*desc <= ' ') desc++;
+
+          if (*desc == '[')
+            {
+              fprintf (stderr, "extra font parameters not yet supported, skipping.\n");
+
+              const char *extra = desc++;
+
+              desc = strchr (desc, ']');
+
+              if (!desc)
+                {
+                  fprintf (stderr, "ERROR: opening '[' without closing ']' in font specification.\n");
+                  break;
+                }
+
+              desc++;
+              while (*desc <= ' ') desc++;
+            }
+
+          end = strchr (desc, ',');
+          if (!end)
+            end = desc + strlen (desc);
+
+          if (end - desc < 511)
+            {
+              strncpy (buf, desc, end - desc);
+              buf[end - desc] = 0;
+
+              fonts.push_back (new_font (buf, CS_UNICODE));
+            }
+
+          desc = end + 1;
+        }
+      while (*end);
+    }
+}
+
+bool
+rxvt_fontset::realize_font (int i)
+{
+  if (fonts[i]->loaded)
+    return true;
+
+  if (fonts[i]->load (height))
+    return fonts[i]->loaded = true;
+
+  delete fonts[i];
+  fonts.erase (fonts.begin () + i);
+
+  return false;
+}
+
+void
+rxvt_fontset::populate (const char *desc)
+{
+  clear ();
+
+  fonts.push_back (new_font (0, CS_UNICODE));
+  realize_font (0);
+
+  add_fonts (desc);
+
+  if (!base_id)
+    base_id = 1;
+
+  // we currently need a base-font, no matter what
+  if (fonts.size () <= base_id)
+    {
+      add_fonts ("fixed");
+      base_id = 1;
+    }
+
+  if (fonts.size () <= base_id || !realize_font (base_id))
+    {
+      fprintf (stderr, "unable to load a base font, please provide one using -fn fontname\n");
+      exit (1);
+    }
+
+  height = fonts[base_id]->height;
+
+  /*add_fonts ("-efont-fixed-medium-r-normal-*-14-*-*-*-*-*-iso10646-1,"*/
+}
+
+int
+rxvt_fontset::find_font (uint32_t unicode)
+{
+  for (int i = 0; i < fonts.size (); i++)
+    {
+      rxvt_font *f = fonts[i];
+
+      if (!f->loaded)
+        {
+          if (FROM_UNICODE (f->cs, unicode) == NOCHAR)
+            goto next_font;
+
+          if (!realize_font (i))
+            {
+              --i;
+              goto next_font;
+            }
+
+          //printf ("added font %s for %04lx\n", f->name, unicode);
+        }
+
+      if (f->has_codepoint (unicode))
+        return i;
+
+    next_font:
+      if (i == fonts.size () - 1 && fallback->name)
+        {
+          fonts.push_back (new_font (fallback->name, fallback->cs));
+          fallback++;
+        }
+    }
+
+  return 0; /* we must return SOME font */
+}
+
+
+

@@ -1,0 +1,119 @@
+#!/bin/sh --
+# an example of having different menus (even different pixmaps)
+# show up depending on the machine you are rlogin/telnet connecting to
+
+menu="$0"	# or any convenient database
+exe="../../src/rxvt"	# default program to execute
+# exe="/usr/local/bin/rxvt-2.21"	# default program to execute
+
+if test $# -gt 0; then
+    # if first argument contains "rxvt" use that instead
+    case $1 in *rxvt*) exe="$1" shift;; esac
+fi
+
+while [ $# -gt 0 ]
+do
+    case $1 in
+	-h)		# give usage
+	echo "
+Usage:	`basename $0` [rxvt-prgm] [options]
+
+	start rxvt
+	and load a menu corresponding to \"machine\" if the option
+	    -e {rlogin|telnet|tn3270} Machine.Domain ...
+	was used"
+	exit
+	;;	# don't bother if we've already set it
+
+	-menu) break;;	# don't bother if we've already set it
+
+	-e)
+	if test $# -ge 3;
+	then
+	    case $2 in
+		# try to find menu for these cases
+		*rlogin | *telnet | *tn3270)
+		# strip domain & convert case
+		mach=`echo $3 | sed -e 's/\..*$//' | tr [A-Z] [a-z]`
+		if test ! -z "$mach";
+		then
+		    found=`egrep "^\[menu:$mach\]" $menu`
+		    if test ! -z "$found";
+		    then
+			mach="$menu;$mach"
+			exe="$exe -menu $mach"
+		    fi
+ 		fi
+		;;
+	    esac
+	fi
+	break
+	;;
+
+	*)
+	exe="$exe $1"
+	;;
+    esac
+    shift
+done
+
+# echo "$exe $@"
+$exe $@ &
+exit	# stop shell here!
+#-------------------------------------------------------------------------
+[menu:weber]
+#[menu:machine1]
+[clear]
+# [pixmap:machine1.xpm]
+
+/Programs/*
+{Edit}		${EDITOR:-vi}\r
+{Mail}		Mail\r
+{News}		News\r
+{-}
+{Exit}		exit\r
+
+/Jobs/*
+{Top}		top\r
+{Ps u}		ps aux|egrep ^$USER
+{Ps aux}	ps aux|egrep -v "(root|ps)"
+# who's REALLY logged on (even with utmp logging turned off)
+{Who}		ps aux|egrep "\-bash"|egrep -v "grep"
+{-}
+{Background}	^Z bg\r
+{Kill}		^C\r
+
+/Misc/*
+{Dir}		ls -la|${PAGER:-more}\r
+{Dir-Time}	ls -lat|${PAGER:-more}\r
+{Space Left}	df\r
+
+[read:terminal]
+[show]
+#[done:machine1]
+[done:weber]
+
+#-------------------------------------------------------------------------
+[menu:conn]
+#[menu:machine2]
+[clear]
+# [pixmap:machine2.xpm]
+
+/Programs/*
+{Edit}		${EDITOR:-vi}\r
+{Checkmail}	checkmail\r
+{Dir}		ls -la|${PAGER:-more}\r
+{Dir-Time}	ls -lat|${PAGER:-more}\r
+{Space Left}	df\r
+{-}
+{Exit}		exit\r
+
+/Jobs/*
+{Background}	^Z bg\r
+{Kill}		^C\r
+
+[read:terminal]
+[show]
+#[done:machine2]
+[done:conn]
+#--------------------------------------------------------------------- eof

@@ -1,0 +1,8 @@
+first_rule: all
+
+all allbin alldoc:
+	-mkdir lib
+	cd xpm-3.4k/lib; make -f Makefile.noX CC=gcc INCLUDES=-I../.. DESTLIBDIR=../../lib DESTINCLUDEDIR=../../X11 all install
+
+tags clean:
+	cd xpm-3.4k/lib; make -f Makefile.noX $@

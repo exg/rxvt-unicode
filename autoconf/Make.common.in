@@ -1,0 +1,75 @@
+# autoconf/Make.common.in	 -*- Makefile -*-
+# release date (man), LSM date, version number/name, current maintainer
+DATE=@DATE@
+LSMDATE=@LSMDATE@
+VERSION=@VERSION@
+VERNAME=rxvt-$(VERSION)#
+MAINT=Geoff Wing#
+MAINTEMAIL=<gcw@rxvt.org>#
+WEBMAINT=Oezguer Kesim#
+WEBMAINTEMAIL=<oec@rxvt.org>#
+WEBPAGE=<http://www.rxvt.org/>#
+FTPSITENAME=ftp.rxvt.org#
+FTPSITEDIR=/pub/rxvt#
+#-------------------------------------------------------------------------
+RXVTNAME=@RXVTNAME@
+
+SHELL = /bin/sh
+
+# This variable makes it possible to move the installation root to another
+# directory. This is useful when you're creating a binary distribution
+# If empty, normal root will be used.
+# You can run eg. 'make install DESTDIR=/packages/rxvt-xx' to accomplish
+# that.
+# DESTDIR = /usr/local/X11/$(VERNAME)
+
+# Installation target directories & other installation stuff
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+libdir = @libdir@
+includedir = @includedir@
+mandir = @mandir@/man1
+manext = 1
+
+# Tools & program stuff
+CC = @CC@
+CXX = @CXX@
+CPP = @CPP@
+MV = @MV@
+RM = @RM@
+RMF = @RM@ -f
+CP = @CP@
+LN = @LN@
+SED = @SED@
+AWK = @AWK@
+ECHO = @ECHO@
+CMP = @CMP@
+TBL = @TBL@
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL@ -m 755
+INSTALL_DATA = @INSTALL@ -m 644
+
+# Flags & libs
+# add -DBINDIR=\""$(bindir)/"\" to CPPFLAGS, if we need to spawn a program
+
+CFLAGS = @CFLAGS@ 
+CPPFLAGS = @CPPFLAGS@ @XPM_CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+DEFS = @DEFS@
+LIBS = @LIBS@
+DINCLUDE = @DINCLUDE@
+DLIB = @DLIB@
+
+# X Include directory
+XINC = @X_CFLAGS@ @XPM_CFLAGS@
+
+# extra libraries needed by X on some systems, X library location
+XLIB = @X_LIBS@ @XPM_LIBS@ -lX11 @X_EXTRA_LIBS@
+
+LIBTOOL = @LIBTOOL@
+COMPILE = $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $(DEBUG) $(DINCLUDE) $(XINC) -I$(basedir) -I$(srcdir) -I.
+LINK = $(CC) $(CFLAGS) $(LDFLAGS)
+
+# End of common section of the Makefile
+#-------------------------------------------------------------------------

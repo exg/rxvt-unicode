@@ -1,0 +1,4 @@
+#!/bin/sh -x
+strip rxvt
+chmod 755 rxvt
+mv rxvt /opt/rxvt/bin

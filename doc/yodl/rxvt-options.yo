@@ -1,0 +1,191 @@
+COMMENT(-- $Id: rxvt-options.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+COMMENT(----------------------------------------------------------------------)
+manpageoptions()
+
+The bf(rxvt) options (mostly a subset of em(xterm)'s) are listed below.
+In keeping with the smaller-is-better philosophy, options may be eliminated
+or default values chosen at compile-time, so options and defaults listed
+may not accurately reflect the version installed on your system.  
+`rxvt -h' gives a list of major compile-time options on the em(Options) line.
+Option descriptions may be prefixed with which compile option each is
+dependent upon.  e.g. `Compile em(XIM):' requires em(XIM) on the em(Options)
+line.  Note: `rxvt -help' gives a list of all command-line options compiled
+into your version.
+
+Note that bf(rxvt) permits the resource name to be used as a long-option
+(--/++ option) so the potential command-line options are far greater than
+those listed.
+For example: `rxvt --loginShell --color1 Orange'.
+
+Also note that if you do not explictly specify a font (bf(-fn) and bf(-fm))
+or a multichar encoding method (bf(-km)), rxvt will select a font for the
+preferable encoding according to your locale.  Supported encodings are:
+bf(ISO-8859-)n (n=bf(1)...bf(15)), bf(KOI8-R), bf(KOI8-U), bf(EUC-JP),
+bf(Shift_JIS), bf(EUC-KR), bf(EUC-CN) (aka bf(GB)), and bf(Big5).
+
+The following options are available:
+
+startdit()
+    dit(bf(-help), bf(--help))
+	Print out a message describing available options.
+    dit(bf(-display) em(displayname))
+	Attempt to open a window on the named X display (bf(-d) still
+	respected).  In the absence of this option, the display specified
+	by the bf(DISPLAY) environment variable is used.
+    dit(bf(-geometry) em(geom))
+	Window geometry (bf(-g) still respected);
+        resource bf(geometry).
+    dit(bf(-rv)|bf(+rv))
+	Turn on/off simulated reverse video;
+        resource bf(reverseVideo).
+    dit(bf(-j)|bf(+j))
+	Turn on/off jump scrolling;
+        resource bf(jumpScroll).
+    dit(bf(-ip)|bf(+ip))
+	Turn on/off inheriting parent window's pixmap.  Alternative form
+	is bf(-tr);
+	resource bf(inheritPixmap).
+    dit(bf(-bg) em(colour))
+	Window background colour;
+        resource bf(background).
+    dit(bf(-fg) em(colour))
+	Window foreground colour;
+	resource bf(foreground).
+    dit(bf(-pixmap:) em(file[;geom]))
+	Compile em(XPM): Specify XPM file for the background and also
+	optionally specify its scaling with a geometry string.  Note you
+	may need to add quotes to avoid special shell interpretation of
+	the `;' in the command-line;
+	resource bf(backgroundPixmap).
+    dit(bf(-cr) em(colour))
+	The cursor colour;
+	resource bf(cursorColor).
+    dit(bf(-pr) em(colour))
+	The mouse pointer colour;
+	resource bf(pointerColor).
+    dit(bf(-bd) em(colour))
+	The colour of the border between the xterm scrollbar and the text;
+	resource bf(borderColor).
+    dit(bf(-fn) em(fontname))
+	Main normal text font;
+	resource bf(font).
+    dit(bf(-fb) em(fontname))
+	Main bold text font;
+	resource bf(boldFont).
+    dit(bf(-fm) em(fontname))
+	Main multicharacter font;
+	resource bf(mfont).
+    dit(bf(-km) em(mode))
+	Compile em(multichar_languages): 
+	Multiple-character font-set encoding mode;
+	bf(eucj): EUC Japanese encoding.
+	bf(sjis): Shift JIS encoding.
+	bf(big5): BIG5 encoding.
+	bf(gb): GB encoding.
+	bf(kr): EUC Korean encoding.
+	bf(noenc): no encoding;
+	resource bf(multichar_encoding).
+    dit(bf(-grk) em(mode))
+	Compile em(Greek): Greek keyboard translation;
+	bf(iso): ISO-8859 mapping.
+	bf(ibm): IBM-437 mapping;
+	resource bf(greek_keyboard).
+    dit(bf(-name) em(name))
+	Specify the application name under which resources
+	are to be obtained, rather than the default executable file name.
+	Name should not contain `.' or `*' characters.
+	Also sets the icon and title name.
+    dit(bf(-ls)|bf(+ls))
+	Start as a login-shell/sub-shell;
+	resource bf(loginShell).
+    dit(bf(-ut)|bf(+ut))
+	Compile em(utmp): Inhibit/enable writing a utmp entry;
+	resource bf(utmpInhibit).
+    dit(bf(-vb)|bf(+vb))
+	Turn on/off visual bell on receipt of a bell character;
+	resource bf(visualBell).
+    dit(bf(-sb)|bf(+sb))
+	Turn on/off scrollbar;
+	resource bf(scrollBar).
+    dit(bf(-si)|bf(+si))
+	Turn on/off scroll-to-bottom on TTY output inhibit;
+	resource bf(scrollTtyOutput) has opposite effect.
+    dit(bf(-sk)|bf(+sk))
+	Turn on/off scroll-to-bottom on keypress;
+	resource bf(scrollTtyKeypress).
+    dit(bf(-sw)|bf(+sw))
+	Turn on/off scrolling with the scrollback buffer as new
+	lines appear.  This only takes effect if bf(-si) is also given;
+	resource bf(scrollWithBuffer).
+    dit(bf(-sr)|bf(+sr)) 
+	Put scrollbar on right/left;
+	resource bf(scrollBar_right).
+    dit(bf(-st)|bf(+st)) 
+	Display normal (non XTerm/NeXT) scrollbar without/with a trough;
+	resource bf(scrollBar_floating).
+    dit(bf(-mcc)|bf(+mcc))
+	Compile em(multichar_languages): treat multibyte glyphs as single
+	character for backspace, delete and cursor movement keys;
+	resource bf(multibyte_cursor).
+    dit(bf(-bc)|bf(+bc))
+	Blink the cursor; resource bf(cursorBlink).
+    dit(bf(-iconic)) 
+	Start iconified, if the window manager supports that option.
+	Alternative form is bf(-ic).
+    dit(bf(-sl) em(number))
+	Save em(number) lines in the scrollback buffer.  See resource entry
+	for limits; 
+	resource bf(saveLines).
+    dit(bf(-b) em(number))
+	Compile em(frills): Internal border of em(number) pixels.  See
+	resource entry for limits;
+	resource bf(internalBorder).
+    dit(bf(-w) em(number))
+	Compile em(frills): External border of em(number) pixels. 
+	Also, bf(-bw) and bf(-borderwidth).  See resource entry for limits;
+	resource bf(externalBorder).
+    dit(bf(-lsp) em(number))
+	Compile em(linespace): Lines (pixel height) to insert between each
+	row of the display;
+	resource bf(linespace).
+    dit(bf(-tn) em(termname)) 
+	This option specifies the name of the terminal type to be set in the
+	bf(TERM) environment variable. This terminal type must exist in the
+	em(termcap(5)) database and should have em(li#) and em(co#) entries;
+	resource bf(termName).
+    dit(bf(-e) em(command [arguments]))
+	Run the command with its command-line arguments in the bf(rxvt)
+	window; also sets the window title and icon name to be the basename
+	of the program being executed if neither em(-title) (em(-T)) nor
+	em(-n) are given on the command line.  If this option is used, it
+	must be the last on the command-line.  If there is no bf(-e) option
+	then the default is to run the program specified by the bf(SHELL)
+	environment variable or, failing that, em(sh(1)).
+    dit(bf(-title) em(text))
+	Window title (bf(-T) still respected); the default title is the
+	basename of the program specified after the bf(-e) option, if
+	any, otherwise the application name;
+	resource bf(title).
+    dit(bf(-n) em(text))
+	Icon name; the default name is the basename of the program specified
+	after the bf(-e) option, if any, otherwise the application name;
+	resource bf(iconName).
+    dit(bf(-C))
+	Capture system console messages.
+    dit(bf(-pt) em(style))
+	Compile em(XIM): input style for input method;
+	bf(OverTheSpot), bf(OffTheSpot), bf(Root);
+	resource bf(preeditType).
+    dit(bf(-im) em(text))
+	Compile em(XIM): input method name.
+	resource bf(inputMethod).
+    dit(bf(-mod) em(modifier))
+	Override detection of Meta modifier with specified key:
+	bf(alt), bf(meta), bf(hyper), bf(super), bf(mod1), bf(mod2), bf(mod3),
+	bf(mod4), bf(mod5);
+	resource em(modifier).
+    dit(bf(-xrm) em(resourcestring))
+	No effect on rxvt.  Simply passes through an argument to be made
+	available in the instance's argument list.  Appears in em(WM_COMMAND)
+	in some window managers.
+enddit()

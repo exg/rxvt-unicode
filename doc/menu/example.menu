@@ -1,0 +1,95 @@
+This example illustrates how several menus could be combined together
+
+command = "[read:example]"
+
+	read the file starting at "[menu]" or "[menu:???]"
+	and continue until it "[done]"
+
+command = "[read:example;pico]" or "[read:example;shell]"
+
+	read the file starting at "[menu:pico]" or "[menu:shell]",
+	respectively and continue until "[done:pico]" or [done:shell]",
+	respectively.
+
+#-------------------------------------------------------------------------
+
+[menu:pico]
+[clear]
+[title:Pico (%n-%v)]
+
+# a menu for the pico editor
+# mostly a demonstration, I don't know why anyone would need it
+
+# Prior/Next & Home/End are messed up
+<l>^A<r>^E<u>^Y<d>^V
+
+/File/*
+{Insert File}{^R}
+{Save As}{^O}
+{-}
+{Suspend}{^Z}
+{Exit}{^X}
+
+/Edit/*
+{Find}{^W}
+{-}
+{Del Char}{^D}
+{Mark}{^^}
+{Kill Line}{^K}
+{Paste}{^U}
+
+/Basics/*
+{Forward}{^F}
+{Backward}{^B}
+{-}
+{Prev}{^P}
+{Next}{^N}
+{-}
+{Beg-of-Line}{^A}
+{End-of-Line}{^E}
+{-}
+{Prev Page}{^Y}
+{Next Page}{^V}
+
+/Buffer/*
+{Reformat}{^J}
+{Position}{^C}
+{Refresh}{^L}
+{Spell}{^T}
+
+[read:terminal]
+
+/?/*
+{Help}{^G}
+
+[show]
+[done:pico]
+
+#-------------------------------------------------------------------------
+
+[menu:shell]
+[clear]
+[title:shell]
+# [pixmap:name]
+
+# not necessarily useful, but an example of using the rxvt menuBar
+
+# assuming we have ksh with Emacs bindings
+<u>^P<d>^N<r>^F<l>^B
+
+/Programs/*
+{Edit}		${EDITOR:-vi}\r
+{Mail}		Mail\r
+{News}		slrn\r
+{Rxvt-News}	rxvt -e slrn&
+{Commander}	mc\r
+
+/Shell/{finger} finger\r
+{.name}	invisible label!
+/
+
+[read:terminal]
+[show]
+[done:shell]
+
+#--------------------------------------------------------------------- eof

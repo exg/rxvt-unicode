@@ -1,0 +1,5 @@
+Makefile
+*.lo
+*.org
+.libs
+qplot

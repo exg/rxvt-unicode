@@ -1,0 +1,235 @@
+# $Id: Makefile.in,v 1.1 2003/11/24 17:28:08 pcg Exp $
+@MCOMMON@
+
+LINT = lint -DNARROWPROTO=1 $(XINC) -chapbxz
+
+srcdir =	@srcdir@
+VPATH =		@srcdir@
+.PATH:		@srcdir@
+
+top_builddir = ..
+basedir = ..
+thisdir = src
+MKDIR = @top_srcdir@/autoconf/mkinstalldirs
+
+SUPLIB = -lsupc++
+
+# for developers: the following debug options may be used
+#	-DDEBUG_CMD -DDEBUG_MAIN -DDEBUG_MENU -DDEBUG_MENUARROWS
+#	-DDEBUG_MENUBAR_STACKING -DDEBUG_MENU_LAYOUT -DDEBUG_RESOURCES
+#	-DDEBUG_SCREEN -DDEBUG_SEARCH_PATH -DDEBUG_SELECT -DDEBUG_SIZE
+#	-DDEBUG_TTY -DDEBUG_TTYMODE -DDEBUG_X
+DEBUG=-DDEBUG_STRICT @DEBUG@
+
+first_rule: all
+dummy:
+
+LIBSRCS = command.C defaultfont.C graphics.C grkelot.C init.C logging.C \
+	main.C menubar.C misc.C netdisp.C ptytty.C screen.C scrollbar.C \
+	scrollbar-rxvt.C scrollbar-next.C scrollbar-xterm.C strings.C \
+	xdefaults.C xpm.C encoding.C rxvtcolor.C rxvtvec.C
+
+SRCS =  rxvt.C $(LIBSRCS)
+
+HDRS =	command.h defaultfont.h feature.h grkelot.h init.h logging.h \
+	menubar.h netdisp.h protos.h rxvt.h rxvtgrx.h version.h encoding.h rxvtvec.h
+
+EXTRAHDRS = rxvtlib.h rxvtdaemon.h
+
+OBJS =	command.o defaultfont.o init.o graphics.o grkelot.o logging.o \
+	main.o menubar.o misc.o netdisp.o ptytty.o screen.o \
+	scrollbar.o scrollbar-next.o scrollbar-rxvt.o scrollbar-xterm.o \
+	strings.o xdefaults.o xpm.o rxvt.o encoding.o rxvtcolor.o rxvtvec.o
+LIBOBJS = command.lo defaultfont.lo init.lo graphics.lo grkelot.lo logging.lo \
+	main.lo menubar.lo misc.lo netdisp.lo ptytty.lo screen.lo \
+	scrollbar.lo scrollbar-next.lo scrollbar-rxvt.lo scrollbar-xterm.lo \
+	strings.lo xdefaults.lo xpm.lo encoding.lo rxvt.lo rxvtcolor.lo rxvtvec.lo
+
+LIBVERSION = @LIBVERSION@
+INSTALL_LIBRXVT = @INSTALL_LIBRXVT@
+
+RXVT_BASENAME=`$(ECHO) $(RXVTNAME)|$(SED) 's/$(EXEEXT)$$//'|$(SED) '$(transform)'`
+RXVT_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)$(EXEEXT)
+RXVT_VERNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)-$(VERSION)$(EXEEXT)
+RXVT_OLDNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)-old$(EXEEXT)
+
+EXTPROS = command.extpro defaultfont.extpro graphics.extpro grkelot.extpro \
+	init.extpro logging.extpro main.extpro menubar.extpro misc.extpro \
+	netdisp.extpro ptytty.extpro screen.extpro scrollbar.extpro \
+	scrollbar-rxvt.extpro scrollbar-next.extpro scrollbar-xterm.extpro \
+	strings.extpro xdefaults.extpro xpm.extpro
+
+INTPROS = command.intpro defaultfont.intpro graphics.intpro grkelot.intpro \
+	init.intpro logging.intpro main.intpro menubar.intpro misc.intpro \
+	netdisp.intpro ptytty.intpro screen.intpro scrollbar.intpro \
+	scrollbar-rxvt.intpro scrollbar-next.intpro scrollbar-xterm.intpro \
+	strings.intpro xdefaults.intpro xpm.intpro
+
+DEPS =  rxvt.h rxvtlib.h ${basedir}/config.h feature.h .protos
+
+#
+# Distribution variables
+#
+
+DIST = $(HDRS) $(SRCS) Makefile.in gcc-Wall rxvtlib.h.in .indent.pro \
+	makeintprotos-awk makeextprotos-awk $(INTPROS) $(EXTPROS) .protos
+
+.SUFFIXES:	.C .o .extpro .intpro .lo
+
+#-------------------------------------------------------------------------
+# inference rules
+.C.o:
+	$(COMPILE) -c $<
+
+.C.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.s.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.S.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.C.intpro:
+	@$(RMF) $@.tmp
+	@$(AWK) -f $(srcdir)/makeintprotos-awk $< > $@.tmp
+	@if $(CMP) -s $@ $@.tmp ; then : ; else $(ECHO) "$(AWK) -f $(srcdir)/makeintprotos-awk $< > $@"; $(CP) $@.tmp $@; fi
+	@$(RMF) $@.tmp
+
+.C.extpro:
+	@$(RMF) $@.tmp
+	@$(AWK) -f $(srcdir)/makeextprotos-awk $< > $@.tmp
+	@if $(CMP) -s $@ $@.tmp ; then : ; else $(ECHO) "$(AWK) -f $(srcdir)/makeextprotos-awk $< > $@"; $(CP) $@.tmp $@; fi
+	@$(RMF) $@.tmp
+#-------------------------------------------------------------------------
+all: allbin
+
+rxvt: version.h rxvt.o librxvt.la
+	$(LIBTOOL) --mode=link $(LINK) rxvt.o librxvt.la $(LIBS) $(XLIB) $(DLIB) $(SUPLIB) -o $@
+
+rxvtd: version.h rxvtd.o librxvt.la iom.o rxvtdaemon.o
+	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o iom.o librxvt.la $(LIBS) $(XLIB) $(DLIB) $(SUPLIB) -o $@
+
+rxvtc: version.h rxvtc.o rxvtdaemon.o
+	$(LIBTOOL) --mode=link $(LINK) rxvtc.o rxvtdaemon.o $(LIBS) $(DLIB) $(SUPLIB) -o $@
+
+.protos: $(EXTPROS)
+	@$(RMF) .protos
+	date >.protos
+
+librxvt.la: $(LIBOBJS)
+	$(LIBTOOL) --mode=link $(LINK) -rpath $(libdir) -version-info $(LIBVERSION) $(LIBOBJS) $(LIBS) $(SUPLIB) -o $@
+#-------------------------------------------------------------------------
+tags: $(SRCS) $(HDRS) $(EXTRAHDRS)
+	ctags $(SRCS) $(HDRS) $(EXTRAHDRS)
+
+allbin: .protos rxvt rxvtd rxvtc
+
+alldoc:
+
+clean:
+	$(RMF) rxvt core a.out *.o *.lo *.bak *~ *.intpro *.extpro .libs/* librxvt.la tmpproto .protos *.tmp
+
+realclean: clean
+	$(RMF) tags librxvt.h
+
+cleandir: realclean
+
+distclean: realclean
+	if test $(srcdir) = .; then $(MAKE) realclean; fi
+	(cd $(srcdir); $(RMF) Makefile)
+
+install: allbin alldoc
+	$(MKDIR) $(DESTDIR)$(includedir) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
+	@if test x$(INSTALL_LIBRXVT) = xyes; then \
+	    $(ECHO) "$(LIBTOOL) --mode=install $(INSTALL_DATA) rxvtlib.h $(DESTDIR)$(includedir)/rxvtlib.h"; \
+	    $(LIBTOOL) --mode=install $(INSTALL_DATA) rxvtlib.h $(DESTDIR)$(includedir)/rxvtlib.h; \
+	    $(ECHO) "$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) librxvt.la $(DESTDIR)$(libdir)/librxvt.la"; \
+	    $(LIBTOOL) --mode=install $(INSTALL_PROGRAM) librxvt.la $(DESTDIR)$(libdir)/librxvt.la; \
+	fi
+	@if test -f $(RXVT_BINNAME); then \
+	    $(ECHO) "$(RMF) $(RXVT_OLDNAME)"; \
+	    $(RMF) $(RXVT_OLDNAME); \
+	    $(ECHO) "$(MV) $(RXVT_BINNAME) $(RXVT_OLDNAME)"; \
+	    $(MV) $(RXVT_BINNAME) $(RXVT_OLDNAME); \
+	fi
+	@$(ECHO) "$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) rxvt $(RXVT_VERNAME)"
+	@$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) rxvt $(RXVT_VERNAME)
+	@$(ECHO) "$(LN) $(RXVT_VERNAME) $(RXVT_BINNAME)"
+	@$(LN) $(RXVT_VERNAME) $(RXVT_BINNAME)
+
+uninstall:
+	@$(ECHO) $(RMF) $(RXVT_VERNAME)
+	@$(RMF) $(RXVT_VERNAME)
+	@$(ECHO) "$(LIBTOOL) --mode=uninstall $(RMF) $(RXVT_BINNAME)"
+	@$(LIBTOOL) --mode=uninstall $(RMF) $(RXVT_BINNAME)
+	@if test x$(INSTALL_LIBRXVT) = xyes; then \
+	    $(ECHO) "$(LIBTOOL) --mode=uninstall $(RMF) $(DESTDIR)$(libdir)/librxvt.la"; \
+	    $(LIBTOOL) --mode=uninstall $(RMF) $(DESTDIR)$(libdir)/librxvt.la; \
+	    $(ECHO) "$(LIBTOOL) --mode=uninstall $(RMF) $(DESTDIR)$(includedir)/rxvtlib.h"; \
+	    $(LIBTOOL) --mode=uninstall $(RMF) $(DESTDIR)$(includedir)/rxvtlib.h; \
+	fi
+
+distdirs:
+	mkdir $(basedir)/../$(VERNAME)/$(thisdir)
+
+distcopy: .protos $(INTPROS)
+	$(CP) -p $(DIST) $(basedir)/../$(VERNAME)/$(thisdir)
+
+# -----------------------------------------------------------------------
+# DO NOT DELETE: nice dependency list follows
+#
+
+defaultfont.h: encoding.h rxvtvec.h
+rxvtlib.h: rxvtcolor.h defaultfont.h
+
+command.o:          command.C   $(DEPS) command.intpro	command.h version.h
+defaultfont.o:      defaultfont.C $(DEPS) defaultfont.intpro defaultfont.h
+graphics.o:         graphics.C  $(DEPS) graphics.intpro
+grkelot.o:          grkelot.C   $(DEPS) grkelot.intpro	grkelot.h
+init.o:             init.C      $(DEPS) init.intpro	init.h	defaultfont.h
+logging.o:          logging.C   $(DEPS) logging.intpro	logging.h
+main.o:             main.C      $(DEPS) main.intpro
+menubar.o:          menubar.C   $(DEPS) menubar.intpro	menubar.h version.h
+misc.o:             misc.C      $(DEPS) misc.intpro
+netdisp.o:          netdisp.C   $(DEPS) netdisp.intpro	netdisp.h
+ptytty.o:           ptytty.C    $(DEPS) ptytty.intpro
+rxvt.o:             rxvt.C      $(DEPS) 
+rxvtd.o:            rxvtd.C     $(DEPS) rxvtdaemon.h
+screen.o:           screen.C    $(DEPS) screen.intpro	defaultfont.h
+scrollbar.o:        scrollbar.C $(DEPS) scrollbar.intpro
+scrollbar-rxvt.o:   scrollbar-rxvt.C  $(DEPS) scrollbar-rxvt.intpro
+scrollbar-next.o:   scrollbar-next.C  $(DEPS) scrollbar-next.intpro
+scrollbar-xterm.o:  scrollbar-xterm.C $(DEPS) scrollbar-xterm.intpro
+strings.o:          strings.C   $(DEPS) strings.intpro
+xdefaults.o:        xdefaults.C $(DEPS) xdefaults.intpro	  version.h
+xpm.o:              xpm.C       $(DEPS) xpm.intpro
+encoding.o:         encoding.C	$(DEPS) encoding.h
+rxvtcolor.o:        rxvtcolor.C	$(DEPS)
+
+command.lo:         command.C   $(DEPS) command.intpro	command.h version.h
+defaultfont.lo:     defaultfont.C $(DEPS) defaultfont.intpro defaultfont.h encoding.h
+graphics.lo:        graphics.C  $(DEPS) graphics.intpro	defaultfont.h
+grkelot.lo:         grkelot.C   $(DEPS) grkelot.intpro	grkelot.h
+init.lo:            init.C      $(DEPS) init.intpro	init.h	
+logging.lo:         logging.C   $(DEPS) logging.intpro	logging.h
+main.lo:            main.C      $(DEPS) main.intpro
+menubar.lo:         menubar.C   $(DEPS) menubar.intpro	menubar.h version.h
+misc.lo:            misc.C      $(DEPS) misc.intpro
+netdisp.lo:         netdisp.C   $(DEPS) netdisp.intpro	netdisp.h
+ptytty.lo:          ptytty.C    $(DEPS) ptytty.intpro
+rxvt.lo:            rxvt.C      $(DEPS) 
+screen.lo:          screen.C    $(DEPS) screen.intpro	defaultfont.h
+scrollbar.lo:       scrollbar.C $(DEPS) scrollbar.intpro
+scrollbar-rxvt.lo:  scrollbar-rxvt.C  $(DEPS) scrollbar-rxvt.intpro
+scrollbar-next.lo:  scrollbar-next.C  $(DEPS) scrollbar-next.intpro
+scrollbar-xterm.lo: scrollbar-xterm.C $(DEPS) scrollbar-xterm.intpro
+strings.lo:         strings.C   $(DEPS) strings.intpro
+xdefaults.lo:       xdefaults.C $(DEPS) xdefaults.intpro	  version.h
+xpm.lo:             xpm.C       $(DEPS) xpm.intpro
+encoding.lo:        encoding.C	$(DEPS) encoding.h
+rxvtcolor.lo:       rxvtcolor.C	$(DEPS)
+
+iom.o:              iom.C		iom.h
+rxvtdaemon.o:       rxvtdaemon.C	rxvtdaemon.h
+

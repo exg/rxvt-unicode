@@ -1,0 +1,18 @@
+# Get prototypes from a .c file
+# $Id: makeintprotos-sed,v 1.1 2003/11/24 17:28:08 pcg Exp $
+# /* INTPROTO */   must be above return type which are above function.
+#		Args are on one line
+# eg.
+# /* INTPROTO */
+# void                           ------>   void main(int argc, char **argv);
+# main(int argc, char **argv)
+# {
+# }
+#
+/^[/][*] INTPROTO [*][/]$/{
+n
+N
+s/\n\([_a-zA-Z][_a-zA-Z0-9]* *\)(/ \1 __PROTO((/
+s/$/);/
+p
+}

@@ -1,0 +1,28 @@
+# ~/.rclock - My appointment file
+
+# startup functions
+
+; xsetroot -solid Black &
+
+# daily functions
+
+9:00; xsetroot -solid Black &
+17:30; xsetroot -solid Red &
+
+# daily/weekly reminders
+
+09:30 mtwrf *      Good Morning!\nRead News?; rxvt -e News
+13:30 mtwrf *      Lunch Time
+17:30 mtwrf *      Home Time
+15:00 f     *      Do timesheet
+*:00  us    *      It's the weekend, why are you here?
+9:30  f     */13/* Friday the 13th, be careful!
+
+# annual reminders
+
+16:00    12/24/*   Vale's Birthday (next week)
+16:00    12/27/*   Vale's Birthday (in four days)
+
+# one-off reminders
+
+08:30    03/15/2004  Dentist appointment

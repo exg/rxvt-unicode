@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#
+# run autoheader
+#
+newah=0
+autoheader --version | grep -q autoheader && newah=1
+
+if test $newah = 1; then
+  cmd="autoheader --include=autoconf autoconf/configure.in"
+else
+  cmd="autoheader --localdir=autoconf autoconf/configure.in > autoconf/config.h.in"
+fi
+echo $cmd
+eval $cmd
+chmod 644 autoconf/config.h.in
+
+#
+# run autoconf
+#
+newac=0
+autoconf --version | grep -q autoconf && newac=1
+
+if test $newac = 1; then
+  cmd="autoconf --include=autoconf autoconf/configure.in > configure"
+else
+  cmd="autoconf --localdir=autoconf autoconf/configure.in > configure"
+fi
+echo $cmd
+eval $cmd
+chmod 755 configure

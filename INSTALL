@@ -1,0 +1,91 @@
+--------------------------------------------------------------------------
+Using GNU autoconfig
+--------------------------------------------------------------------------
+  1.	If you retrieved a CVS version of this package, you need the GNU
+	autoconf package to generate the configure script.  This is done
+	by running   ./.prebuild   in this directory which will automatically
+	run autoconf with the appropriate options.
+
+  2.	Run   ./configure   to generate config.h and the various Makefiles.
+	./configure --help   gives a list of possible options with slightly
+	longer descriptions in README.configure
+
+	Note that configure options have changed since 2.6.x series.
+
+	Some systems require unusual options for compilation or linking that
+	the `configure' script does not know about.  You can give `configure'
+	initial values for variables by setting them in the environment.  Using
+	a Bourne-compatible shell, you can do that on the command line like
+	this:
+	        CC=c89 CFLAGS=-O2 LIBS=-lposix ./configure
+	Or on systems that have the `env' program, you can do it like this:
+		env CPPFLAGS=-I/usr/local/include LDFLAGS=-s ./configure
+	Or if you're using a non Bourne-compatible shell, you can do:
+		sh -c 'CFLAGS="-O2 -g" ./configure
+
+	If you are making different versions of rxvt you can configure them
+	to be installed with different names using configure arguments, e.g.
+	./configure --enable-languages --program-transform-name='s,rxvt,kxvt,;'
+
+  3.	set any other main preferences:
+    	    Edit "src/feature.h"
+	    Edit "config.h"   if you didn't use ./configure options
+	    If you're cross-compiling, edit the following in "config.h"
+		NO_XLOCALE
+		SIZEOF_*	# sizeof some types
+
+  4.	Build it (repeat step 2 as desired):
+	    make
+
+  5.	build rclock (small xclock with biff & appointments) and
+	optionally edit rclock/feature.h to add/remove features:
+	    make clock
+
+  6. 	Install both rxvt and rclock:
+	    make install
+
+	or install them separately
+	    (cd src; make install)
+	    (cd rclock; make install)
+
+	you may also want to install doc/etc/rxvt.terminfo and 
+	doc/etc/rxvt.termcap
+
+  7 a.	If compiled with UTMP_SUPPORT, you may need to install rxvt setuid
+	root or setuid/setgid to match the file permissions on /etc/utmp
+  7 b.  You may need to install setuid root anyway for some systems so that
+	they can give you ownership of the tty devices.
+
+  8.	On systems which dislike doc/rxvt.1
+	    (cd doc; rm rxvt.1; make rxvt.1)
+
+		 ===================================
+
+NB:	If you were able to compile OK but running rxvt prints out
+		"rxvt: could not obtain control of tty"
+	running "make tests" from this directory (or from src/test)
+	should give you a breakdown of the failure point which is
+	useful to the developers in fixing the problem
+
+NB:	SunOS (with/without gcc?) gets reported by configure as
+
+		#undef STDC_HEADERS
+		#define HAVE_SYS_IOCTL_H 1
+
+	but the ioctl() defines aren't protected against multiple
+	inclusion, in this case by <termios.h> so use a hack in
+	"feature.h" to avoid the problem.
+
+	Gave up checking for `STDC_HEADERS', since they really should be
+	there and I don't want to deal with the problems when they don't
+	exist.
+
+	SunOS users might complain to the right places and get their
+	system headers fixed so that one day the rest of us won't have
+	to keep compensating :(
+
+	SVR4 users (that aren't using gcc) will have to add -DSVR4 to
+	CPPFLAGS for configure.
+
+--
+EOF

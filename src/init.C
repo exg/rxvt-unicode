@@ -1,0 +1,1701 @@
+/*--------------------------------*-C-*---------------------------------*
+ * File:	init.c
+ *----------------------------------------------------------------------*
+ * $Id: init.C,v 1.1 2003/11/24 17:28:08 pcg Exp $
+ *
+ * All portions of code are copyright by their respective author/s.
+ * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
+ *				- original version
+ * Copyright (c) 1994      Robert Nation <nation@rocket.sanders.lockheed.com>
+ * 				- extensive modifications
+ * Copyright (c) 1998-2001 Geoff Wing <gcw@pobox.com>
+ * 				- extensive modifications
+ * Copyright (c) 1999      D J Hawkey Jr <hawkeyd@visi.com>
+ *				- QNX support
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *---------------------------------------------------------------------*/
+/*
+ * Initialisation routines.
+ */
+
+#include "../config.h"		/* NECESSARY */
+#include "rxvt.h"		/* NECESSARY */
+#include "init.h"
+
+#include <signal.h>
+
+const char *const def_colorName[] = {
+    COLOR_FOREGROUND,
+    COLOR_BACKGROUND,
+/* low-intensity colors */
+    "Black",			/* 0: black             (#000000) */
+#ifndef NO_BRIGHTCOLOR
+    "Red3",			/* 1: red               (#CD0000) */
+    "Green3",			/* 2: green             (#00CD00) */
+    "Yellow3",			/* 3: yellow            (#CDCD00) */
+    "Blue3",			/* 4: blue              (#0000CD) */
+    "Magenta3",			/* 5: magenta           (#CD00CD) */
+    "Cyan3",			/* 6: cyan              (#00CDCD) */
+# ifdef XTERM_COLORS
+    "Grey90",			/* 7: white             (#E5E5E5) */
+# else
+    "AntiqueWhite",		/* 7: white             (#FAEBD7) */
+# endif
+/* high-intensity colors */
+# ifdef XTERM_COLORS
+    "Grey30",			/* 8: bright black      (#4D4D4D) */
+# else
+    "Grey25",			/* 8: bright black      (#404040) */
+# endif
+#endif				/* NO_BRIGHTCOLOR */
+    "Red",			/* 1/9: bright red      (#FF0000) */
+    "Green",			/* 2/10: bright green   (#00FF00) */
+    "Yellow",			/* 3/11: bright yellow  (#FFFF00) */
+    "Blue",			/* 4/12: bright blue    (#0000FF) */
+    "Magenta",			/* 5/13: bright magenta (#FF00FF) */
+    "Cyan",			/* 6/14: bright cyan    (#00FFFF) */
+    "White",			/* 7/15: bright white   (#FFFFFF) */
+#ifdef TTY_256COLOR
+    "rgb:00/00/00",		/* default 16-255 color table     */
+    "rgb:00/00/2a",
+    "rgb:00/00/55",
+    "rgb:00/00/7f",
+    "rgb:00/00/aa",
+    "rgb:00/00/d4",
+    "rgb:00/2a/00",
+    "rgb:00/2a/2a",
+    "rgb:00/2a/55",
+    "rgb:00/2a/7f",
+    "rgb:00/2a/aa",
+    "rgb:00/2a/d4",
+    "rgb:00/55/00",
+    "rgb:00/55/2a",
+    "rgb:00/55/55",
+    "rgb:00/55/7f",
+    "rgb:00/55/aa",
+    "rgb:00/55/d4",
+    "rgb:00/7f/00",
+    "rgb:00/7f/2a",
+    "rgb:00/7f/55",
+    "rgb:00/7f/7f",
+    "rgb:00/7f/aa",
+    "rgb:00/7f/d4",
+    "rgb:00/aa/00",
+    "rgb:00/aa/2a",
+    "rgb:00/aa/55",
+    "rgb:00/aa/7f",
+    "rgb:00/aa/aa",
+    "rgb:00/aa/d4",
+    "rgb:00/d4/00",
+    "rgb:00/d4/2a",
+    "rgb:00/d4/55",
+    "rgb:00/d4/7f",
+    "rgb:00/d4/aa",
+    "rgb:00/d4/d4",
+    "rgb:2a/00/00",
+    "rgb:2a/00/2a",
+    "rgb:2a/00/55",
+    "rgb:2a/00/7f",
+    "rgb:2a/00/aa",
+    "rgb:2a/00/d4",
+    "rgb:2a/2a/00",
+    "rgb:2a/2a/2a",
+    "rgb:2a/2a/55",
+    "rgb:2a/2a/7f",
+    "rgb:2a/2a/aa",
+    "rgb:2a/2a/d4",
+    "rgb:2a/55/00",
+    "rgb:2a/55/2a",
+    "rgb:2a/55/55",
+    "rgb:2a/55/7f",
+    "rgb:2a/55/aa",
+    "rgb:2a/55/d4",
+    "rgb:2a/7f/00",
+    "rgb:2a/7f/2a",
+    "rgb:2a/7f/55",
+    "rgb:2a/7f/7f",
+    "rgb:2a/7f/aa",
+    "rgb:2a/7f/d4",
+    "rgb:2a/aa/00",
+    "rgb:2a/aa/2a",
+    "rgb:2a/aa/55",
+    "rgb:2a/aa/7f",
+    "rgb:2a/aa/aa",
+    "rgb:2a/aa/d4",
+    "rgb:2a/d4/00",
+    "rgb:2a/d4/2a",
+    "rgb:2a/d4/55",
+    "rgb:2a/d4/7f",
+    "rgb:2a/d4/aa",
+    "rgb:2a/d4/d4",
+    "rgb:55/00/00",
+    "rgb:55/00/2a",
+    "rgb:55/00/55",
+    "rgb:55/00/7f",
+    "rgb:55/00/aa",
+    "rgb:55/00/d4",
+    "rgb:55/2a/00",
+    "rgb:55/2a/2a",
+    "rgb:55/2a/55",
+    "rgb:55/2a/7f",
+    "rgb:55/2a/aa",
+    "rgb:55/2a/d4",
+    "rgb:55/55/00",
+    "rgb:55/55/2a",
+    "rgb:55/55/55",
+    "rgb:55/55/7f",
+    "rgb:55/55/aa",
+    "rgb:55/55/d4",
+    "rgb:55/7f/00",
+    "rgb:55/7f/2a",
+    "rgb:55/7f/55",
+    "rgb:55/7f/7f",
+    "rgb:55/7f/aa",
+    "rgb:55/7f/d4",
+    "rgb:55/aa/00",
+    "rgb:55/aa/2a",
+    "rgb:55/aa/55",
+    "rgb:55/aa/7f",
+    "rgb:55/aa/aa",
+    "rgb:55/aa/d4",
+    "rgb:55/d4/00",
+    "rgb:55/d4/2a",
+    "rgb:55/d4/55",
+    "rgb:55/d4/7f",
+    "rgb:55/d4/aa",
+    "rgb:55/d4/d4",
+    "rgb:7f/00/00",
+    "rgb:7f/00/2a",
+    "rgb:7f/00/55",
+    "rgb:7f/00/7f",
+    "rgb:7f/00/aa",
+    "rgb:7f/00/d4",
+    "rgb:7f/2a/00",
+    "rgb:7f/2a/2a",
+    "rgb:7f/2a/55",
+    "rgb:7f/2a/7f",
+    "rgb:7f/2a/aa",
+    "rgb:7f/2a/d4",
+    "rgb:7f/55/00",
+    "rgb:7f/55/2a",
+    "rgb:7f/55/55",
+    "rgb:7f/55/7f",
+    "rgb:7f/55/aa",
+    "rgb:7f/55/d4",
+    "rgb:7f/7f/00",
+    "rgb:7f/7f/2a",
+    "rgb:7f/7f/55",
+    "rgb:7f/7f/7f",
+    "rgb:7f/7f/aa",
+    "rgb:7f/7f/d4",
+    "rgb:7f/aa/00",
+    "rgb:7f/aa/2a",
+    "rgb:7f/aa/55",
+    "rgb:7f/aa/7f",
+    "rgb:7f/aa/aa",
+    "rgb:7f/aa/d4",
+    "rgb:7f/d4/00",
+    "rgb:7f/d4/2a",
+    "rgb:7f/d4/55",
+    "rgb:7f/d4/7f",
+    "rgb:7f/d4/aa",
+    "rgb:7f/d4/d4",
+    "rgb:aa/00/00",
+    "rgb:aa/00/2a",
+    "rgb:aa/00/55",
+    "rgb:aa/00/7f",
+    "rgb:aa/00/aa",
+    "rgb:aa/00/d4",
+    "rgb:aa/2a/00",
+    "rgb:aa/2a/2a",
+    "rgb:aa/2a/55",
+    "rgb:aa/2a/7f",
+    "rgb:aa/2a/aa",
+    "rgb:aa/2a/d4",
+    "rgb:aa/55/00",
+    "rgb:aa/55/2a",
+    "rgb:aa/55/55",
+    "rgb:aa/55/7f",
+    "rgb:aa/55/aa",
+    "rgb:aa/55/d4",
+    "rgb:aa/7f/00",
+    "rgb:aa/7f/2a",
+    "rgb:aa/7f/55",
+    "rgb:aa/7f/7f",
+    "rgb:aa/7f/aa",
+    "rgb:aa/7f/d4",
+    "rgb:aa/aa/00",
+    "rgb:aa/aa/2a",
+    "rgb:aa/aa/55",
+    "rgb:aa/aa/7f",
+    "rgb:aa/aa/aa",
+    "rgb:aa/aa/d4",
+    "rgb:aa/d4/00",
+    "rgb:aa/d4/2a",
+    "rgb:aa/d4/55",
+    "rgb:aa/d4/7f",
+    "rgb:aa/d4/aa",
+    "rgb:aa/d4/d4",
+    "rgb:d4/00/00",
+    "rgb:d4/00/2a",
+    "rgb:d4/00/55",
+    "rgb:d4/00/7f",
+    "rgb:d4/00/aa",
+    "rgb:d4/00/d4",
+    "rgb:d4/2a/00",
+    "rgb:d4/2a/2a",
+    "rgb:d4/2a/55",
+    "rgb:d4/2a/7f",
+    "rgb:d4/2a/aa",
+    "rgb:d4/2a/d4",
+    "rgb:d4/55/00",
+    "rgb:d4/55/2a",
+    "rgb:d4/55/55",
+    "rgb:d4/55/7f",
+    "rgb:d4/55/aa",
+    "rgb:d4/55/d4",
+    "rgb:d4/7f/00",
+    "rgb:d4/7f/2a",
+    "rgb:d4/7f/55",
+    "rgb:d4/7f/7f",
+    "rgb:d4/7f/aa",
+    "rgb:d4/7f/d4",
+    "rgb:d4/aa/00",
+    "rgb:d4/aa/2a",
+    "rgb:d4/aa/55",
+    "rgb:d4/aa/7f",
+    "rgb:d4/aa/aa",
+    "rgb:d4/aa/d4",
+    "rgb:d4/d4/00",
+    "rgb:d4/d4/2a",
+    "rgb:d4/d4/55",
+    "rgb:d4/d4/7f",
+    "rgb:d4/d4/aa",
+    "rgb:d4/d4/d4",
+    "rgb:08/08/08",
+    "rgb:12/12/12",
+    "rgb:1c/1c/1c",
+    "rgb:26/26/26",
+    "rgb:30/30/30",
+    "rgb:3a/3a/3a",
+    "rgb:44/44/44",
+    "rgb:4e/4e/4e",
+    "rgb:58/58/58",
+    "rgb:62/62/62",
+    "rgb:6c/6c/6c",
+    "rgb:76/76/76",
+    "rgb:80/80/80",
+    "rgb:8a/8a/8a",
+    "rgb:94/94/94",
+    "rgb:9e/9e/9e",
+    "rgb:a8/a8/a8",
+    "rgb:b2/b2/b2",
+    "rgb:bc/bc/bc",
+    "rgb:c6/c6/c6",
+    "rgb:d0/d0/d0",
+    "rgb:da/da/da",
+    "rgb:e4/e4/e4",
+    "rgb:ee/ee/ee",
+#endif
+#ifndef NO_CURSORCOLOR
+    COLOR_CURSOR_BACKGROUND,
+    COLOR_CURSOR_FOREGROUND,
+#endif				/* ! NO_CURSORCOLOR */
+    NULL,			/* Color_pointer                  */
+    NULL,			/* Color_border                   */
+#ifndef NO_BOLD_UNDERLINE_REVERSE
+    NULL,			/* Color_BD                       */
+    NULL,			/* Color_UL                       */
+    NULL,			/* Color_RV                       */
+#endif				/* ! NO_BOLD_UNDERLINE_REVERSE */
+#ifdef OPTION_HC
+    NULL,
+#endif
+#ifdef KEEP_SCROLLCOLOR
+    COLOR_SCROLLBAR,
+    COLOR_SCROLLTROUGH,
+#endif				/* KEEP_SCROLLCOLOR */
+};
+
+const char *const xa_names[NUM_XA] = {
+    "COMPOUND_TEXT",
+    "MULTIPLE",	
+    "TARGETS",	
+    "TEXT",
+    "TIMESTAMP",
+    "VT_SELECTION",
+    "INCR",
+    "WM_DELETE_WINDOW",
+#ifdef TRANSPARENT
+    "_XROOTPMAP_ID",
+#endif
+#ifdef OFFIX_DND
+    "DndProtocol",
+    "DndSelection",
+#endif
+    "CLIPBOARD"
+};
+
+/*----------------------------------------------------------------------*/
+/* substitute system functions */
+#if defined(__svr4__) && ! defined(_POSIX_VERSION)
+/* INTPROTO */
+int
+rxvt_getdtablesize(void)
+{
+    struct rlimit   rlim;
+
+    getrlimit(RLIMIT_NOFILE, &rlim);
+    return rlim.rlim_cur;
+}
+#endif
+/*----------------------------------------------------------------------*/
+/* EXTPROTO */
+int
+rxvt_init_vars(pR)
+{
+    struct rxvt_hidden *h;
+
+#ifndef NULLS_ARE_NOT_ZEROS
+    MEMSET(R, 0, sizeof(rxvt_t));
+#endif
+    h = R->h = (struct rxvt_hidden *)rxvt_calloc(1, sizeof(struct rxvt_hidden));
+
+    R->PixColors = (rxvt_color *)rxvt_malloc(sizeof(rxvt_color) * TOTAL_COLORS);
+    if (R->h == NULL || R->PixColors == NULL)
+	return -1;
+
+#if defined(XPM_BACKGROUND) || defined(TRANSPARENT)
+    R->TermWin.pixmap = None;
+#endif
+#ifdef UTMP_SUPPORT
+    h->next_utmp_action = SAVE;
+#endif
+#ifndef NO_SETOWNER_TTYDEV
+    h->next_tty_action = SAVE;
+#endif
+    h->MEvent.time = CurrentTime;
+    h->MEvent.button = AnyButton;
+    R->Options = DEFAULT_OPTIONS;
+    h->want_refresh = 1;
+    h->cmd_pid = -1;
+    R->cmd_fd = R->tty_fd = R->Xfd = -1;
+    h->PrivateModes = h->SavedModes = PrivMode_Default;
+    R->TermWin.focus = 1;
+    R->TermWin.ncol = 80;
+    R->TermWin.nrow = 24;
+    R->TermWin.int_bwidth = INTERNALBORDERWIDTH;
+    R->TermWin.ext_bwidth = EXTERNALBORDERWIDTH;
+    R->TermWin.lineSpace = LINESPACE;
+    R->TermWin.saveLines = SAVELINES;
+    R->numPixColors = TOTAL_COLORS;
+#ifndef NO_NEW_SELECTION
+    R->selection_style = NEW_SELECT;
+#else
+    R->selection_style = OLD_SELECT;
+#endif
+#ifndef NO_BRIGHTCOLOR
+    h->colorfgbg = DEFAULT_RSTYLE;
+#endif
+#if defined (HOTKEY_CTRL) || defined (HOTKEY_META)
+    h->ks_bigfont = XK_greater;
+    h->ks_smallfont = XK_less;
+#endif
+#ifdef GREEK_SUPPORT
+    h->ks_greekmodeswith = GREEK_KEYBOARD_MODESWITCH;
+#endif
+    h->refresh_limit = 1;
+    h->refresh_type = SLOW_REFRESH;
+    h->prev_nrow = h->prev_ncol = 0;
+#ifdef MULTICHAR_SET
+# ifdef MULTICHAR_ENCODING
+    R->encoding_method = MULTICHAR_ENCODING;
+# endif
+    h->multichar_decode = rxvt_euc2jis;
+#endif
+    h->oldcursor.row = h->oldcursor.col = -1;
+#ifdef XPM_BACKGROUND
+/*  h->bgPixmap.w = h->bgPixmap.h = 0; */
+    h->bgPixmap.x = h->bgPixmap.y = 50;
+    h->bgPixmap.pixmap = None;
+#endif
+    h->last_bot = h->last_state = -1;
+#ifdef MENUBAR
+    h->menu_readonly = 1;
+# if !(MENUBAR_MAX > 1)
+    h->CurrentBar = &(h->BarList);
+# endif				/* (MENUBAR_MAX > 1) */
+#endif
+    return 0;
+}
+
+/* EXTPROTO */
+void
+rxvt_init_secondary(pR)
+{
+    int             i;
+#ifdef TTY_GID_SUPPORT
+    struct group   *gr = getgrnam("tty");
+
+    if (gr) {		/* change group ownership of tty to "tty" */
+	R->h->ttymode = S_IRUSR | S_IWUSR | S_IWGRP;
+	R->h->ttygid = gr->gr_gid;
+    } else
+#endif				/* TTY_GID_SUPPORT */
+    {
+	R->h->ttymode = S_IRUSR | S_IWUSR | S_IWGRP | S_IWOTH;
+	R->h->ttygid = getgid();
+    }
+#if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
+    R->h->locale = setlocale(LC_CTYPE, "");
+#endif
+
+/* get number of available file descriptors */
+#if defined(_POSIX_VERSION) || ! defined(__svr4__)
+    R->num_fds = (int)sysconf(_SC_OPEN_MAX);
+#else
+    R->num_fds = rxvt_getdtablesize();
+#endif
+
+/*
+ * Close all unused file descriptors
+ * We don't want them, we don't need them.
+ */
+    if ((i = open("/dev/null", O_RDONLY)) < 0) {
+	/* TODO: BOO HISS */
+	dup2(STDERR_FILENO, STDIN_FILENO);
+    } else if (i > STDIN_FILENO) {
+	dup2(i, STDIN_FILENO);
+	close(i);
+    }
+    dup2(STDERR_FILENO, STDOUT_FILENO);
+    for (i = STDERR_FILENO + 1; i < R->num_fds; i++) {
+#ifdef __sgi			/* Alex Coventry says we need 4 & 7 too */
+	if (i == 4 || i == 7)
+	    continue;
+#endif
+	close(i);
+    }
+}
+
+/*----------------------------------------------------------------------*/
+/* EXTPROTO */
+const char    **
+rxvt_init_resources(pR_ int argc, const char *const *argv)
+{
+    int             i, r_argc;
+    char           *val;
+    const char    **cmd_argv, **r_argv;
+    const char    **rs;
+
+/*
+ * Look for -exec option.  Find => split and make cmd_argv[] of command args
+ */
+    for (r_argc = 0; r_argc < argc; r_argc++)
+	if (!STRCMP(argv[r_argc], "-e") || !STRCMP(argv[r_argc], "-exec"))
+	    break;
+    r_argv = (const char **)rxvt_malloc(sizeof(char *) * (r_argc + 1));
+
+    for (i = 0; i < r_argc; i++)
+	r_argv[i] = (const char *)argv[i];
+    r_argv[i] = NULL;
+    if (r_argc == argc)
+	cmd_argv = NULL;
+    else {
+	cmd_argv = (const char **)rxvt_malloc(sizeof(char *) * (argc - r_argc));
+
+	for (i = 0; i < argc - r_argc - 1; i++)
+	    cmd_argv[i] = (const char *)argv[i + r_argc + 1];
+	cmd_argv[i] = NULL;
+    }
+
+/* clear all resources */
+    rs = R->h->rs;
+    for (i = 0; i < NUM_RESOURCES;)
+	rs[i++] = NULL;
+
+    rs[Rs_name] = rxvt_r_basename(argv[0]);
+/*
+ * Open display, get options/resources and create the window
+ */
+    if ((rs[Rs_display_name] = getenv("DISPLAY")) == NULL)
+	rs[Rs_display_name] = ":0";
+
+    rxvt_get_options(aR_ r_argc, r_argv);
+    free(r_argv);
+
+#ifdef LOCAL_X_IS_UNIX
+    if (rs[Rs_display_name][0] == ':') {
+	val = rxvt_malloc(5 + STRLEN(rs[Rs_display_name]));
+	STRCPY(val, "unix");
+	STRCAT(val, rs[Rs_display_name]);
+	R->Xdisplay = XOpenDisplay(val);
+	free(val);
+    }
+#endif
+
+    if (R->Xdisplay == NULL
+	&& (R->Xdisplay = XOpenDisplay(rs[Rs_display_name])) == NULL) {
+	rxvt_print_error("can't open display %s", rs[Rs_display_name]);
+	exit(EXIT_FAILURE);
+    }
+
+    rxvt_extract_resources(aR_ R->Xdisplay, rs[Rs_name]);
+
+/*
+ * set any defaults not already set
+ */
+    if (cmd_argv && cmd_argv[0]) {
+	if (!rs[Rs_title])
+	    rs[Rs_title] = rxvt_r_basename(cmd_argv[0]);
+	if (!rs[Rs_iconName])
+	    rs[Rs_iconName] = rs[Rs_title];
+    } else {
+	if (!rs[Rs_title])
+	    rs[Rs_title] = rs[Rs_name];
+	if (!rs[Rs_iconName])
+	    rs[Rs_iconName] = rs[Rs_name];
+    }
+    if (rs[Rs_saveLines] && (i = atoi(rs[Rs_saveLines])) >= 0)
+	R->TermWin.saveLines = BOUND_POSITIVE_INT16(i);
+#ifndef NO_FRILLS
+    if (rs[Rs_int_bwidth] && (i = atoi(rs[Rs_int_bwidth])) >= 0)
+	R->TermWin.int_bwidth = min(i, 100);	/* arbitrary limit */
+    if (rs[Rs_ext_bwidth] && (i = atoi(rs[Rs_ext_bwidth])) >= 0)
+	R->TermWin.ext_bwidth = min(i, 100);	/* arbitrary limit */
+#endif
+#ifndef NO_LINESPACE
+    if (rs[Rs_lineSpace] && (i = atoi(rs[Rs_lineSpace])) >= 0)
+	R->TermWin.lineSpace = min(i, 100);	/* arbitrary limit */
+#endif
+
+#ifdef POINTER_BLANK
+    if (rs[Rs_pointerBlankDelay] && (i = atoi(rs[Rs_pointerBlankDelay])) >= 0)
+	R->h->pointerBlankDelay = i;
+    else
+	R->h->pointerBlankDelay = 2;
+#endif
+
+/* no point having a scrollbar without having any scrollback! */
+    if (!R->TermWin.saveLines)
+	R->Options &= ~Opt_scrollBar;
+
+#ifdef PRINTPIPE
+    if (!rs[Rs_print_pipe])
+	rs[Rs_print_pipe] = PRINTPIPE;
+#endif
+    if (!rs[Rs_cutchars])
+	rs[Rs_cutchars] = CUTCHARS;
+#ifdef ACS_ASCII
+    if (!rs[Rs_acs_chars])
+	rs[Rs_acs_chars] = ACS_CHARS;
+    if ((i = STRLEN(rs[Rs_acs_chars])) < 0x20) {
+	val = rxvt_realloc((void *)rs[Rs_acs_chars], 0x20);
+	for (; i < 0x20; )
+	    val[i] = ' ';
+	rs[Rs_acs_chars] = val;
+    }
+#endif
+#ifndef NO_BACKSPACE_KEY
+    if (!rs[Rs_backspace_key])
+# ifdef DEFAULT_BACKSPACE
+	R->h->key_backspace = DEFAULT_BACKSPACE;
+# else
+	R->h->key_backspace = "DEC";	/* can toggle between \010 or \177 */
+# endif
+    else {
+	val = STRDUP(rs[Rs_backspace_key]);
+	rxvt_Str_trim(val);
+	rxvt_Str_escaped(val);
+	R->h->key_backspace = val;
+    }
+#endif
+#ifndef NO_DELETE_KEY
+    if (!rs[Rs_delete_key])
+# ifdef DEFAULT_DELETE
+	R->h->key_delete = DEFAULT_DELETE;
+# else
+	R->h->key_delete = "\033[3~";
+# endif
+    else {
+	val = STRDUP(rs[Rs_delete_key]);
+	rxvt_Str_trim(val);
+	rxvt_Str_escaped(val);
+	R->h->key_delete = val;
+    }
+#endif
+    if (rs[Rs_answerbackstring]) {
+	rxvt_Str_trim((char *)rs[Rs_answerbackstring]);
+	rxvt_Str_escaped((char *)rs[Rs_answerbackstring]);
+    }
+
+    if (rs[Rs_selectstyle]) {
+	if (STRNCASECMP(rs[Rs_selectstyle], "oldword", 7) == 0)
+	    R->selection_style = OLD_WORD_SELECT;
+#ifndef NO_OLD_SELECTION
+	else if (STRNCASECMP(rs[Rs_selectstyle], "old", 3) == 0)
+	    R->selection_style = OLD_SELECT;
+#endif
+    }
+
+#ifdef HAVE_SCROLLBARS
+    rxvt_setup_scrollbar(aR_ rs[Rs_scrollBar_align], rs[Rs_scrollstyle],
+			 rs[Rs_scrollBar_thickness]);
+#endif
+
+    R->TermWin.fontset = new rxvt_fontset (aR);
+    R->TermWin.fontset->populate (rs[Rs_font]);
+    R->TermWin.fwidth  = R->TermWin.fontset->base_font ()->width;
+    R->TermWin.fheight = R->TermWin.fontset->base_font ()->height;
+    R->TermWin.fbase   = R->TermWin.fontset->base_font ()->ascent;
+
+#ifdef XTERM_REVERSE_VIDEO
+/* this is how xterm implements reverseVideo */
+    if (R->Options & Opt_reverseVideo) {
+	if (!rs[Rs_color + Color_fg])
+	    rs[Rs_color + Color_fg] = def_colorName[Color_bg];
+	if (!rs[Rs_color + Color_bg])
+	    rs[Rs_color + Color_bg] = def_colorName[Color_fg];
+    }
+#endif
+
+    for (i = 0; i < NRS_COLORS; i++)
+	if (!rs[Rs_color + i])
+	    rs[Rs_color + i] = def_colorName[i];
+
+#ifndef XTERM_REVERSE_VIDEO
+/* this is how we implement reverseVideo */
+    if (R->Options & Opt_reverseVideo)
+	SWAP_IT(rs[Rs_color + Color_fg], rs[Rs_color + Color_bg], const char *);
+#endif
+
+/* convenient aliases for setting fg/bg to colors */
+    rxvt_color_aliases(aR_ Color_fg);
+    rxvt_color_aliases(aR_ Color_bg);
+#ifndef NO_CURSORCOLOR
+    rxvt_color_aliases(aR_ Color_cursor);
+    rxvt_color_aliases(aR_ Color_cursor2);
+#endif				/* NO_CURSORCOLOR */
+    rxvt_color_aliases(aR_ Color_pointer);
+    rxvt_color_aliases(aR_ Color_border);
+#ifndef NO_BOLD_UNDERLINE_REVERSE
+    rxvt_color_aliases(aR_ Color_BD);
+    rxvt_color_aliases(aR_ Color_UL);
+    rxvt_color_aliases(aR_ Color_RV);
+#endif				/* ! NO_BOLD_UNDERLINE_REVERSE */
+
+    return cmd_argv;
+}
+
+/*----------------------------------------------------------------------*/
+/* EXTPROTO */
+void
+rxvt_init_env(pR)
+{
+    int             i;
+    unsigned int    u;
+    char           *val;
+
+#ifdef DISPLAY_IS_IP
+/* Fixup display_name for export over pty to any interested terminal
+ * clients via "ESC[7n" (e.g. shells).  Note we use the pure IP number
+ * (for the first non-loopback interface) that we get from
+ * rxvt_network_display().  This is more "name-resolution-portable", if you
+ * will, and probably allows for faster x-client startup if your name
+ * server is beyond a slow link or overloaded at client startup.  Of
+ * course that only helps the shell's child processes, not us.
+ *
+ * Giving out the display_name also affords a potential security hole
+ */
+    val = rxvt_network_display(R->h->rs[Rs_display_name]);
+    R->h->rs[Rs_display_name] = (const char *)val;
+    if (val == NULL)
+#endif				/* DISPLAY_IS_IP */
+	val = XDisplayString(R->Xdisplay);
+    if (R->h->rs[Rs_display_name] == NULL)
+	R->h->rs[Rs_display_name] = val;	/* use broken `:0' value */
+
+    i = STRLEN(val);
+    R->h->env_display = (char *)rxvt_malloc((i + 9) * sizeof(char));
+
+    sprintf(R->h->env_display, "DISPLAY=%s", val);
+
+    /* avoiding the math library:
+     * i = (int)(ceil(log10((unsigned int)R->TermWin.parent[0]))) */
+    for (i = 0, u = (unsigned int)R->TermWin.parent[0]; u; u /= 10, i++) ;
+    MAX_IT(i, 1);
+    R->h->env_windowid = (char *)rxvt_malloc((i + 10) * sizeof(char));
+
+    sprintf(R->h->env_windowid, "WINDOWID=%u",
+	    (unsigned int)R->TermWin.parent[0]);
+
+/* add entries to the environment:
+ * @ DISPLAY:   in case we started with -display
+ * @ WINDOWID:  X window id number of the window
+ * @ COLORTERM: terminal sub-name and also indicates its color
+ * @ TERM:      terminal name
+ * @ TERMINFO:	path to terminfo directory
+ */
+    putenv(R->h->env_display);
+    putenv(R->h->env_windowid);
+#ifdef RXVT_TERMINFO
+    putenv("TERMINFO=" RXVT_TERMINFO);
+#endif
+    if (XDEPTH <= 2)
+	putenv("COLORTERM=" COLORTERMENV "-mono");
+    else
+	putenv("COLORTERM=" COLORTERMENVFULL);
+    if (R->h->rs[Rs_term_name] != NULL) {
+	R->h->env_term = (char *)rxvt_malloc((STRLEN(R->h->rs[Rs_term_name]) + 6) * sizeof(char));
+	sprintf(R->h->env_term, "TERM=%s", R->h->rs[Rs_term_name]);
+	putenv(R->h->env_term);
+    } else
+	putenv("TERM=" TERMENV);
+
+#ifdef HAVE_UNSETENV
+/* avoid passing old settings and confusing term size */
+    unsetenv("LINES");
+    unsetenv("COLUMNS");
+    unsetenv("TERMCAP");	/* terminfo should be okay */
+#endif				/* HAVE_UNSETENV */
+}
+
+/*----------------------------------------------------------------------*/
+/*
+ * This is more or less stolen straight from XFree86 xterm.
+ * This should support all European type languages.
+ */
+/* EXTPROTO */
+void
+rxvt_init_xlocale(pR)
+{
+#ifdef USE_XIM
+    if (R->h->locale == NULL)
+	rxvt_print_error("Setting locale failed.");
+    else {
+	Atom            wmlocale;
+
+	wmlocale = XInternAtom(R->Xdisplay, "WM_LOCALE_NAME", False);
+	XChangeProperty(R->Xdisplay, R->TermWin.parent[0], wmlocale,
+			XA_STRING, 8, PropModeReplace,
+			(unsigned char *)R->h->locale, STRLEN(R->h->locale));
+
+	if (XSupportsLocale() != True) {
+	    rxvt_print_error("The locale is not supported by Xlib");
+	    return;
+	}
+	rxvt_setTermFontSet(aR_ 0);
+
+	/* see if we can connect yet */
+	rxvt_IMInstantiateCallback(R->Xdisplay, NULL, NULL);
+
+	/* To avoid Segmentation Fault in C locale: Solaris only? */
+	if (STRCMP(R->h->locale, "C"))
+	    XRegisterIMInstantiateCallback(R->Xdisplay, NULL, NULL, NULL,
+					   rxvt_IMInstantiateCallback, NULL);
+    }
+#endif
+}
+
+/*----------------------------------------------------------------------*/
+/* EXTPROTO */
+void
+rxvt_init_command(pR_ const char *const *argv)
+{
+/*
+ * Initialize the command connection.
+ * This should be called after the X server connection is established.
+ */
+    int             i;
+
+    for (i = 0; i < NUM_XA; i++)
+	R->h->xa[i] = XInternAtom(R->Xdisplay, xa_names[i], False);
+
+/* Enable delete window protocol */
+    XSetWMProtocols(R->Xdisplay, R->TermWin.parent[0],
+		    &(R->h->xa[XA_WMDELETEWINDOW]), 1);
+
+#ifdef USING_W11LIB
+/* enable W11 callbacks */
+    W11AddEventHandler(R->Xdisplay, rxvt_W11_process_x_event);
+#endif
+
+#ifdef META8_OPTION
+    R->h->meta_char = (R->Options & Opt_meta8 ? 0x80 : C0_ESC);
+#endif
+    rxvt_get_ourmods(aR);
+    if (!(R->Options & Opt_scrollTtyOutput))
+	R->h->PrivateModes |= PrivMode_TtyOutputInh;
+    if (R->Options & Opt_scrollTtyKeypress)
+	R->h->PrivateModes |= PrivMode_Keypress;
+    if (!(R->Options & Opt_jumpScroll))
+	R->h->PrivateModes |= PrivMode_smoothScroll;
+#ifndef NO_BACKSPACE_KEY
+    if (STRCMP(R->h->key_backspace, "DEC") == 0)
+	R->h->PrivateModes |= PrivMode_HaveBackSpace;
+#endif
+/* add value for scrollBar */
+    if (scrollbar_visible(R)) {
+	R->h->PrivateModes |= PrivMode_scrollBar;
+	R->h->SavedModes |= PrivMode_scrollBar;
+    }
+    if (menubar_visible(R)) {
+	R->h->PrivateModes |= PrivMode_menuBar;
+	R->h->SavedModes |= PrivMode_menuBar;
+    }
+#ifdef GREEK_SUPPORT
+    greek_init();
+#endif
+
+    R->Xfd = XConnectionNumber(R->Xdisplay);
+
+#ifdef CURSOR_BLINK
+    if (R->Options & Opt_cursorBlink)
+	(void)gettimeofday(&R->h->lastcursorchange, NULL);
+#endif
+
+    if ((R->cmd_fd = rxvt_run_command(aR_ argv)) < 0) {
+	rxvt_print_error("aborting");
+	exit(EXIT_FAILURE);
+    }
+}
+
+/*----------------------------------------------------------------------*/
+/* INTPROTO */
+void
+rxvt_Get_Colours(pR)
+{
+    int             i;
+
+    for (i = 0; i < (XDEPTH <= 2 ? 2 : NRS_COLORS); i++) {
+	rxvt_color          xcol;
+
+	if (!R->h->rs[Rs_color + i])
+	    continue;
+
+	if (!rxvt_rXParseAllocColor(aR_ &xcol, R->h->rs[Rs_color + i])) {
+#ifndef XTERM_REVERSE_VIDEO
+	    if (i < 2 && (R->Options & Opt_reverseVideo)) {
+		R->h->rs[Rs_color + i] = def_colorName[!i];
+	    } else
+#endif
+		R->h->rs[Rs_color + i] = def_colorName[i];
+	    if (!R->h->rs[Rs_color + i])
+		continue;
+	    if (!rxvt_rXParseAllocColor(aR_ &xcol, R->h->rs[Rs_color + i])) {
+		switch (i) {
+		case Color_fg:
+		case Color_bg:
+		    /* fatal: need bg/fg color */
+		    rxvt_print_error("aborting");
+		    exit(EXIT_FAILURE);
+		/* NOTREACHED */
+		    break;
+#ifndef NO_CURSORCOLOR
+		case Color_cursor2:
+		    xcol = R->PixColors[Color_fg];
+		    break;
+#endif				/* ! NO_CURSORCOLOR */
+		case Color_pointer:
+		    xcol = R->PixColors[Color_fg];
+		    break;
+		default:
+		    xcol = R->PixColors[Color_bg];	/* None */
+		    break;
+		}
+	    }
+	}
+	R->PixColors[i] = xcol;
+	SET_PIXCOLOR(R->h, i);
+    }
+
+    if (XDEPTH <= 2 || !R->h->rs[Rs_color + Color_pointer])
+	R->PixColors[Color_pointer] = R->PixColors[Color_fg];
+    if (XDEPTH <= 2 || !R->h->rs[Rs_color + Color_border])
+	R->PixColors[Color_border] = R->PixColors[Color_fg];
+
+/*
+ * get scrollBar/menuBar shadow colors
+ *
+ * The calculations of topShadow/bottomShadow values are adapted
+ * from the fvwm window manager.
+ */
+#ifdef KEEP_SCROLLCOLOR
+    if (XDEPTH <= 2) {	/* Monochrome */
+	R->PixColors[Color_scroll] = R->PixColors[Color_fg];
+	R->PixColors[Color_topShadow] = R->PixColors[Color_bg];
+	R->PixColors[Color_bottomShadow] = R->PixColors[Color_bg];
+    } else {
+	rxvt_color          xcol[3];
+	/* xcol[0] == white
+	 * xcol[1] == top shadow
+	 * xcol[2] == bot shadow */
+
+	xcol[1] = R->PixColors[Color_scroll];
+# ifdef PREFER_24BIT
+        xcol[0].set (r, -1, -1, -1);
+/*        XFreeColors(R->Xdisplay, XCMAP, &(xcol[0].pixel), 1, ~0); */
+# else
+        xcol[0].set (WhitePixel(R->Xdisplay, Xscreen));
+# endif
+
+        unsigned short R1, G1, B1, R0, G0, B0;
+
+        xcol[0].get (r, R0, G0, B0);
+        xcol[1].get (r, R1, G1, B1);
+
+	/* bottomShadowColor */
+        if (!xcol[2].set (aR_ R1 / 2, G1 / 2, B1 / 2))
+	    xcol[2] = R->PixColors[Color_Black];
+
+	R->PixColors[Color_bottomShadow] = xcol[2];
+
+	/* topShadowColor */
+        if (!xcol[1].set (aR_
+                          min (R0, max (R0 / 5, R1) * 7 / 5),
+                          min (G0, max (G0 / 5, G1) * 7 / 5),
+                          min (B0, max (B0 / 5, B1) * 7 / 5)))
+	    xcol[1] = R->PixColors[Color_White];
+
+	R->PixColors[Color_topShadow] = xcol[1];
+    }
+#endif				/* KEEP_SCROLLCOLOR */
+}
+
+/*----------------------------------------------------------------------*/
+/* color aliases, fg/bg bright-bold */
+/* INTPROTO */
+void
+rxvt_color_aliases(pR_ int idx)
+{
+    if (R->h->rs[Rs_color + idx] && isdigit(*(R->h->rs[Rs_color + idx]))) {
+	int             i = atoi(R->h->rs[Rs_color + idx]);
+
+	if (i >= 8 && i <= 15) {	/* bright colors */
+	    i -= 8;
+#ifndef NO_BRIGHTCOLOR
+	    R->h->rs[Rs_color + idx] = R->h->rs[Rs_color + minBrightCOLOR + i];
+	    return;
+#endif
+	}
+	if (i >= 0 && i <= 7)	/* normal colors */
+	    R->h->rs[Rs_color + idx] = R->h->rs[Rs_color + minCOLOR + i];
+    }
+}
+
+/*----------------------------------------------------------------------*/
+/*
+ * Probe the modifier keymap to get the Meta (Alt) and Num_Lock settings
+ * Use resource ``modifier'' to override the Meta modifier
+ */
+/* INTPROTO */
+void
+rxvt_get_ourmods(pR)
+{
+    int             i, j, k;
+    int             requestedmeta, realmeta, realalt;
+    const char     *cm, *rsmod;
+    XModifierKeymap *map;
+    KeyCode        *kc;
+    const unsigned int modmasks[] =
+	{ Mod1Mask, Mod2Mask, Mod3Mask, Mod4Mask, Mod5Mask };
+
+    requestedmeta = realmeta = realalt = 0;
+    rsmod = R->h->rs[Rs_modifier];
+    if (rsmod
+	&& STRCASECMP(rsmod, "mod1") >= 0 && STRCASECMP(rsmod, "mod5") <= 0)
+	requestedmeta = rsmod[3] - '0';
+
+    map = XGetModifierMapping(R->Xdisplay);
+    kc = map->modifiermap;
+    for (i = 1; i < 6; i++) {
+	k = (i + 2) * map->max_keypermod;	/* skip shift/lock/control */
+	for (j = map->max_keypermod; j--; k++) {
+	    if (kc[k] == 0)
+		break;
+	    switch (XKeycodeToKeysym(R->Xdisplay, kc[k], 0)) {
+	    case XK_Num_Lock:
+		R->h->ModNumLockMask = modmasks[i - 1];
+		/* FALLTHROUGH */
+	    default:
+		continue;	/* for(;;) */
+	    case XK_Meta_L:
+	    case XK_Meta_R:
+		cm = "meta";
+		realmeta = i;
+		break;
+	    case XK_Alt_L:
+	    case XK_Alt_R:
+		cm = "alt";
+		realalt = i;
+		break;
+	    case XK_Super_L:
+	    case XK_Super_R:
+		cm = "super";
+		break;
+	    case XK_Hyper_L:
+	    case XK_Hyper_R:
+		cm = "hyper";
+		break;
+	    }
+	    if (rsmod && STRNCASECMP(rsmod, cm, STRLEN(cm)) == 0)
+		requestedmeta = i;
+	}
+    }
+    XFreeModifiermap(map);
+    i = (requestedmeta ? requestedmeta
+		       : (realmeta ? realmeta
+				   : (realalt ? realalt : 0)));
+    if (i)
+	R->h->ModMetaMask = modmasks[i - 1];
+}
+
+/*----------------------------------------------------------------------*/
+/* rxvt_Create_Windows() - Open and map the window */
+/* EXTPROTO */
+void
+rxvt_Create_Windows(pR_ int argc, const char *const *argv)
+{
+    XClassHint      classHint;
+    XWMHints        wmHint;
+    XGCValues       gcvalue;
+    long            vt_emask;
+
+#ifdef PREFER_24BIT
+    XSetWindowAttributes attributes;
+    XWindowAttributes gattr;
+
+    XCMAP = DefaultColormap(R->Xdisplay, Xscreen);
+    XVISUAL = DefaultVisual(R->Xdisplay, Xscreen);
+
+#ifdef POINTER_BLANK
+    static rxvt_color blackcolour;
+    blackcolour.set (r, 0, 0, 0);
+#endif
+    if (R->Options & Opt_transparent) {
+	XGetWindowAttributes(R->Xdisplay, RootWindow(R->Xdisplay, Xscreen),
+			     &gattr);
+	XDEPTH = gattr.depth;
+    } else {
+	XDEPTH = DefaultDepth(R->Xdisplay, Xscreen);
+/*
+ * If depth is not 24, look for a 24bit visual.
+ */
+	if (XDEPTH != 24) {
+	    XVisualInfo     vinfo;
+
+	    if (XMatchVisualInfo(R->Xdisplay, Xscreen, 24, TrueColor, &vinfo)) {
+		XDEPTH = 24;
+		XVISUAL = vinfo.visual;
+		XCMAP = XCreateColormap(R->Xdisplay,
+					RootWindow(R->Xdisplay, Xscreen),
+					XVISUAL, AllocNone);
+	    }
+	}
+    }
+#endif
+
+/* grab colors before netscape does */
+    rxvt_Get_Colours(aR);
+
+    rxvt_change_font(aR_ 1, NULL);
+    rxvt_window_calc(aR_ 0, 0);
+    R->h->old_width = R->szHint.width;
+    R->h->old_height = R->szHint.height;
+
+/* parent window - reverse video so we can see placement errors
+ * sub-window placement & size in rxvt_resize_subwindows()
+ */
+
+#ifdef PREFER_24BIT
+    attributes.background_pixel = R->PixColors[Color_fg];
+    attributes.border_pixel = R->PixColors[Color_border];
+    attributes.colormap = XCMAP;
+    R->TermWin.parent[0] = XCreateWindow(R->Xdisplay, Xroot,
+					 R->szHint.x, R->szHint.y,
+					 R->szHint.width, R->szHint.height,
+					 R->TermWin.ext_bwidth,
+					 XDEPTH, InputOutput,
+					 XVISUAL,
+					 CWBackPixel | CWBorderPixel
+					 | CWColormap, &attributes);
+#else
+    R->TermWin.parent[0] = XCreateSimpleWindow(R->Xdisplay, Xroot,
+					       R->szHint.x, R->szHint.y,
+					       R->szHint.width,
+					       R->szHint.height,
+					       R->TermWin.ext_bwidth,
+					       R->PixColors[Color_border],
+					       R->PixColors[Color_fg]);
+#endif
+    rxvt_xterm_seq(aR_ XTerm_title, R->h->rs[Rs_title], CHAR_ST);
+    rxvt_xterm_seq(aR_ XTerm_iconName, R->h->rs[Rs_iconName], CHAR_ST);
+
+    classHint.res_name = (char *)R->h->rs[Rs_name];
+    classHint.res_class = (char *)APL_CLASS;
+
+    wmHint.flags = (InputHint | StateHint | WindowGroupHint);
+    wmHint.input = True;
+    wmHint.initial_state = (R->Options & Opt_iconic ? IconicState
+						    : NormalState);
+    wmHint.window_group = R->TermWin.parent[0];
+
+    XSetWMProperties(R->Xdisplay, R->TermWin.parent[0], NULL, NULL,
+		     (char **)argv, argc, &R->szHint, &wmHint, &classHint);
+    XSelectInput(R->Xdisplay, R->TermWin.parent[0],
+		 (KeyPressMask
+#if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
+		  | KeyReleaseMask
+#endif
+		  | FocusChangeMask | VisibilityChangeMask
+		  | StructureNotifyMask));
+
+/* vt cursor: Black-on-White is standard, but this is more popular */
+    R->TermWin_cursor = XCreateFontCursor(R->Xdisplay, XC_xterm);
+
+#if defined(HAVE_SCROLLBARS) || defined(MENUBAR)
+/* cursor (menuBar/scrollBar): Black-on-White */
+    R->h->pointer_leftptr = XCreateFontCursor(R->Xdisplay, XC_left_ptr);
+#endif
+
+#ifdef POINTER_BLANK
+    R->h->pointer_blank = XCreateGlyphCursor(R->Xdisplay, R->TermWin.font->fid,
+					     R->TermWin.font->fid, ' ', ' ',
+					     &blackcolour, &blackcolour);
+#endif
+
+/* the vt window */
+    R->TermWin.vt = XCreateSimpleWindow(R->Xdisplay, R->TermWin.parent[0],
+					R->h->window_vt_x, R->h->window_vt_y,
+					TermWin_TotalWidth(),
+					TermWin_TotalHeight(),
+					0,
+					R->PixColors[Color_fg],
+					R->PixColors[Color_bg]);
+#ifdef DEBUG_X
+    XStoreName(R->Xdisplay, R->TermWin.vt, "vt window");
+#endif
+    rxvt_pointer_unblank(aR);
+    vt_emask = (ExposureMask | ButtonPressMask | ButtonReleaseMask
+		| PropertyChangeMask);
+#ifdef POINTER_BLANK
+    if ((R->Options & Opt_pointerBlank))
+	vt_emask |= PointerMotionMask;
+    else
+#endif
+	vt_emask |= (Button1MotionMask | Button3MotionMask);
+    XSelectInput(R->Xdisplay, R->TermWin.vt, vt_emask);
+
+#if defined(MENUBAR) && (MENUBAR_MAX > 1)
+    if (menuBar_height()) {
+	R->menuBar.win = XCreateSimpleWindow(R->Xdisplay, R->TermWin.parent[0],
+					     R->h->window_vt_x, 0,
+					     TermWin_TotalWidth(),
+					     menuBar_TotalHeight(),
+					     0,
+					     R->PixColors[Color_fg],
+					     R->PixColors[Color_scroll]);
+#ifdef DEBUG_X
+    XStoreName(R->Xdisplay, R->menuBar.win, "menubar");
+#endif
+	XDefineCursor(R->Xdisplay, R->menuBar.win, R->h->pointer_leftptr);
+	XSelectInput(R->Xdisplay, R->menuBar.win,
+		     (ExposureMask | ButtonPressMask | ButtonReleaseMask
+		      | Button1MotionMask));
+    }
+#endif
+#ifdef XPM_BACKGROUND
+    if (R->h->rs[Rs_backgroundPixmap] != NULL
+	&& !(R->Options & Opt_transparent)) {
+	const char     *p = R->h->rs[Rs_backgroundPixmap];
+
+	if ((p = STRCHR(p, ';')) != NULL) {
+	    p++;
+	    rxvt_scale_pixmap(aR_ p);
+	}
+	rxvt_set_bgPixmap(aR_ R->h->rs[Rs_backgroundPixmap]);
+	rxvt_scr_touch(aR_ True);
+    }
+#endif
+
+/* graphics context for the vt window */
+    gcvalue.foreground = R->PixColors[Color_fg];
+    gcvalue.background = R->PixColors[Color_bg];
+    gcvalue.graphics_exposures = 1;
+    R->TermWin.gc = XCreateGC(R->Xdisplay, R->TermWin.vt,
+			      GCForeground | GCBackground
+			      | GCGraphicsExposures, &gcvalue);
+
+#if defined(MENUBAR) || defined(RXVT_SCROLLBAR)
+    gcvalue.foreground = R->PixColors[Color_topShadow];
+    R->h->topShadowGC = XCreateGC(R->Xdisplay, R->TermWin.vt,
+				  GCForeground, &gcvalue);
+    gcvalue.foreground = R->PixColors[Color_bottomShadow];
+    R->h->botShadowGC = XCreateGC(R->Xdisplay, R->TermWin.vt,
+				  GCForeground, &gcvalue);
+    gcvalue.foreground = R->PixColors[(XDEPTH <= 2 ? Color_fg
+						   : Color_scroll)];
+    R->h->scrollbarGC = XCreateGC(R->Xdisplay, R->TermWin.vt,
+				  GCForeground, &gcvalue);
+#endif
+}
+
+/*----------------------------------------------------------------------*/
+/*
+ * Run the command in a subprocess and return a file descriptor for the
+ * master end of the pseudo-teletype pair with the command talking to
+ * the slave.
+ */
+/* INTPROTO */
+int
+rxvt_run_command(pR_ const char *const *argv)
+{
+    int             cfd, er;
+
+/* get master (pty) */
+    if ((cfd = rxvt_get_pty(&(R->tty_fd), &(R->h->ttydev))) < 0) {
+	rxvt_print_error("can't open pseudo-tty");
+	return -1;
+    }
+#ifdef FD_SETSIZE
+    if (R->Xfd > FD_SETSIZE || cfd > FD_SETSIZE) {
+	rxvt_print_error("fd too high: %d max", FD_SETSIZE);
+	rxvt_clean_exit();
+	exit(EXIT_FAILURE);
+    }
+#endif
+    fcntl(cfd, F_SETFL, O_NDELAY);
+
+/* get slave (tty) */
+    if (R->tty_fd < 0) {
+#ifndef NO_SETOWNER_TTYDEV
+	rxvt_privileged_ttydev(aR_ SAVE);
+#endif
+	if ((R->tty_fd = rxvt_get_tty(R->h->ttydev)) < 0) {
+	    close(cfd);
+	    rxvt_print_error("can't open slave tty %s", R->h->ttydev);
+	    return -1;
+	}
+    }
+#ifndef NO_BACKSPACE_KEY
+    if (R->h->key_backspace[0] && !R->h->key_backspace[1])
+	er = R->h->key_backspace[0];
+    else if (STRCMP(R->h->key_backspace, "DEC") == 0)
+	er = '\177';		/* the initial state anyway */
+    else
+#endif
+	er = -1;
+    rxvt_get_ttymode(&(R->h->tio), er);
+
+/* install exit handler for cleanup */
+#ifdef HAVE_ATEXIT
+    atexit(rxvt_clean_exit);
+#else
+# ifdef HAVE_ON_EXIT
+    on_exit(rxvt_clean_exit, NULL);	/* non-ANSI exit handler */
+# endif
+#endif
+
+    signal(SIGHUP, rxvt_Exit_signal);
+#ifndef __svr4__
+    signal(SIGINT, rxvt_Exit_signal);
+#endif
+    signal(SIGQUIT, rxvt_Exit_signal);
+    signal(SIGTERM, rxvt_Exit_signal);
+    signal(SIGCHLD, rxvt_Child_signal);
+
+/* need to trap SIGURG for SVR4 (Unixware) rlogin */
+/* signal (SIGURG, SIG_DFL); */
+
+#ifndef __QNX__
+/* spin off the command interpreter */
+    switch (R->h->cmd_pid = fork()) {
+    case -1:
+	rxvt_print_error("can't fork");
+	return -1;
+    case 0:
+	close(cfd);		/* only keep R->tty_fd and STDERR open */
+	close(R->Xfd);
+	if (rxvt_control_tty(R->tty_fd, R->h->ttydev) < 0)
+	    rxvt_print_error("could not obtain control of tty");
+	else {
+	/* Reopen stdin, stdout and stderr over the tty file descriptor */
+	    dup2(R->tty_fd, STDIN_FILENO);
+	    dup2(R->tty_fd, STDOUT_FILENO);
+	    dup2(R->tty_fd, STDERR_FILENO);
+	    if (R->tty_fd > 2)
+		close(R->tty_fd);
+	    rxvt_run_child(aR_ argv);
+	}
+	exit(EXIT_FAILURE);
+	/* NOTREACHED */
+    default:
+	{
+#if defined(HAVE_STRUCT_UTMP) && defined(HAVE_TTYSLOT)
+	    int             fdstdin;
+
+	    fdstdin = dup(STDIN_FILENO);
+	    dup2(R->tty_fd, STDIN_FILENO);
+#endif
+	    rxvt_privileged_utmp(aR_ SAVE);
+#if defined(HAVE_STRUCT_UTMP) && defined(HAVE_TTYSLOT)
+	    dup2(fdstdin, STDIN_FILENO);
+	    close(fdstdin);
+#endif
+	}
+	close(R->tty_fd);	/* keep STDERR_FILENO, R->cmd_fd, R->Xfd open */
+	break;
+    }
+#else				/* __QNX__ uses qnxspawn() */
+    fchmod(R->tty_fd, 0622);
+    fcntl(R->tty_fd, F_SETFD, FD_CLOEXEC);
+    fcntl(cfd, F_SETFD, FD_CLOEXEC);
+
+    if (rxvt_run_child(aR_ argv) == -1)
+	exit(EXIT_FAILURE);
+#endif
+/*
+ * Reduce R->num_fds to what we use, so select() is more efficient
+ */
+    R->num_fds = max(STDERR_FILENO, cfd);
+    MAX_IT(R->num_fds, R->Xfd);
+#ifdef __sgi			/* Alex Coventry says we need 4 & 7 too */
+    MAX_IT(R->num_fds, 7);
+#endif
+    R->num_fds++;		/* counts from 0 */
+
+    return cfd;
+}
+
+/* ------------------------------------------------------------------------- *
+ *                          CHILD PROCESS OPERATIONS                         *
+ * ------------------------------------------------------------------------- */
+/*
+ * The only open file descriptor is the slave tty - so no error messages.
+ * returns are fatal
+ */
+/* INTPROTO */
+int
+rxvt_run_child(pR_ const char *const *argv)
+{
+    char           *login;
+
+    SET_TTYMODE(STDIN_FILENO, &(R->h->tio));	/* init terminal attributes */
+
+    if (R->Options & Opt_console) {	/* be virtual console, fail silently */
+#ifdef TIOCCONS
+	unsigned int    on = 1;
+
+	ioctl(STDIN_FILENO, TIOCCONS, &on);
+#elif defined (SRIOCSREDIR)
+	int             fd;
+
+	fd = open(CONSOLE, O_WRONLY, 0);
+	if (fd >= 0) {
+	    if (ioctl(fd, SRIOCSREDIR, NULL) < 0)
+		close(fd);
+	}
+#endif				/* SRIOCSREDIR */
+    }
+
+/* reset signals and spin off the command interpreter */
+    signal(SIGINT, SIG_DFL);
+    signal(SIGQUIT, SIG_DFL);
+    signal(SIGCHLD, SIG_DFL);
+/*
+ * mimick login's behavior by disabling the job control signals
+ * a shell that wants them can turn them back on
+ */
+#ifdef SIGTSTP
+    signal(SIGTSTP, SIG_IGN);
+    signal(SIGTTIN, SIG_IGN);
+    signal(SIGTTOU, SIG_IGN);
+#endif				/* SIGTSTP */
+
+    /* set window size */
+    rxvt_tt_winsize(STDIN_FILENO, R->TermWin.ncol, R->TermWin.nrow, 0);
+
+#ifndef __QNX__
+/* command interpreter path */
+    if (argv != NULL) {
+# ifdef DEBUG_CMD
+	int             i;
+
+	for (i = 0; argv[i]; i++)
+	    fprintf(stderr, "argv [%d] = \"%s\"\n", i, argv[i]);
+# endif
+	execvp(argv[0], (char *const *)argv);
+	/* no error message: STDERR is closed! */
+    } else {
+	const char     *argv0, *shell;
+
+	if ((shell = getenv("SHELL")) == NULL || *shell == '\0')
+	    shell = "/bin/sh";
+
+	argv0 = (const char *)rxvt_r_basename(shell);
+	if (R->Options & Opt_loginShell) {
+	    login = (char *)rxvt_malloc((STRLEN(argv0) + 2) * sizeof(char));
+
+	    login[0] = '-';
+	    STRCPY(&login[1], argv0);
+	    argv0 = login;
+	}
+	execlp(shell, argv0, NULL);
+	/* no error message: STDERR is closed! */
+    }
+#else				/* __QNX__ uses qnxspawn() */
+    {
+	char            iov_a[10] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+	char           *command = NULL, fullcommand[_MAX_PATH];
+	char          **arg_v, *arg_a[2] = { NULL, NULL };
+
+	if (argv != NULL) {
+	    if (access(argv[0], X_OK) == -1) {
+		if (STRCHR(argv[0], '/') == NULL) {
+		    searchenv(argv[0], "PATH", fullcommand);
+		    if (fullcommand[0] != '\0')
+			command = fullcommand;
+		}
+		if (access(command, X_OK) == -1)
+		    return -1;
+	    } else
+		command = argv[0];
+	    arg_v = argv;
+	} else {
+	    if ((command = getenv("SHELL")) == NULL || *command == '\0')
+		command = "/bin/sh";
+
+	    arg_a[0] = my_basename(command);
+	    if (R->Options & Opt_loginShell) {
+		login = rxvt_malloc((STRLEN(arg_a[0]) + 2) * sizeof(char));
+
+		login[0] = '-';
+		STRCPY(&login[1], arg_a[0]);
+		arg_a[0] = login;
+	    }
+	    arg_v = arg_a;
+	}
+	iov_a[0] = iov_a[1] = iov_a[2] = R->tty_fd;
+	R->h->cmd_pid = qnx_spawn(0, 0, 0, -1, -1,
+				  _SPAWN_SETSID | _SPAWN_TCSETPGRP,
+				  command, arg_v, environ, iov_a, 0);
+	if (login)
+	    free(login);
+	close(R->tty_fd);
+	return R->cmd_fd;
+    }
+#endif
+    return -1;
+}
+
+/* ------------------------------------------------------------------------- *
+ *                            GET TTY CURRENT STATE                          *
+ * ------------------------------------------------------------------------- */
+/* rxvt_get_ttymode() */
+/* INTPROTO */
+void
+rxvt_get_ttymode(ttymode_t *tio, int erase)
+{
+#ifdef HAVE_TERMIOS_H
+/*
+ * standard System V termios interface
+ */
+    if (GET_TERMIOS(STDIN_FILENO, tio) < 0) {
+	/* return error - use system defaults */
+	tio->c_cc[VINTR] = CINTR;
+	tio->c_cc[VQUIT] = CQUIT;
+	tio->c_cc[VERASE] = CERASE;
+	tio->c_cc[VKILL] = CKILL;
+	tio->c_cc[VSTART] = CSTART;
+	tio->c_cc[VSTOP] = CSTOP;
+	tio->c_cc[VSUSP] = CSUSP;
+# ifdef VDSUSP
+	tio->c_cc[VDSUSP] = CDSUSP;
+# endif
+# ifdef VREPRINT
+	tio->c_cc[VREPRINT] = CRPRNT;
+# endif
+# ifdef VDISCRD
+	tio->c_cc[VDISCRD] = CFLUSH;
+# endif
+# ifdef VWERSE
+	tio->c_cc[VWERSE] = CWERASE;
+# endif
+# ifdef VLNEXT
+	tio->c_cc[VLNEXT] = CLNEXT;
+# endif
+    }
+    tio->c_cc[VEOF] = CEOF;
+    tio->c_cc[VEOL] = VDISABLE;
+# ifdef VEOL2
+    tio->c_cc[VEOL2] = VDISABLE;
+# endif
+# ifdef VSWTC
+    tio->c_cc[VSWTC] = VDISABLE;
+# endif
+# ifdef VSWTCH
+    tio->c_cc[VSWTCH] = VDISABLE;
+# endif
+# if VMIN != VEOF
+    tio->c_cc[VMIN] = 1;
+# endif
+# if VTIME != VEOL
+    tio->c_cc[VTIME] = 0;
+# endif
+    if (erase != -1)
+	tio->c_cc[VERASE] = (char)erase;
+
+/* input modes */
+    tio->c_iflag = (BRKINT | IGNPAR | ICRNL
+# ifdef IMAXBEL
+		    | IMAXBEL
+# endif
+	            | IXON);
+
+/* output modes */
+    tio->c_oflag = (OPOST | ONLCR);
+
+/* control modes */
+    tio->c_cflag = (CS8 | CREAD);
+
+/* line discipline modes */
+    tio->c_lflag = (ISIG | ICANON | IEXTEN | ECHO
+# if defined (ECHOCTL) && defined (ECHOKE)
+		    | ECHOCTL | ECHOKE
+# endif
+	            | ECHOE | ECHOK);
+# else				/* HAVE_TERMIOS_H */
+
+/*
+ * sgtty interface
+ */
+
+/* get parameters -- gtty */
+    if (ioctl(STDIN_FILENO, TIOCGETP, &(tio->sg)) < 0) {
+	tio->sg.sg_erase = CERASE;	/* ^H */
+	tio->sg.sg_kill = CKILL;	/* ^U */
+    }
+    if (erase != -1)
+	tio->sg.sg_erase = (char)erase;
+
+    tio->sg.sg_flags = (CRMOD | ECHO | EVENP | ODDP);
+
+/* get special characters */
+    if (ioctl(STDIN_FILENO, TIOCGETC, &(tio->tc)) < 0) {
+	tio->tc.t_intrc = CINTR;	/* ^C */
+	tio->tc.t_quitc = CQUIT;	/* ^\ */
+	tio->tc.t_startc = CSTART;	/* ^Q */
+	tio->tc.t_stopc = CSTOP;	/* ^S */
+	tio->tc.t_eofc = CEOF;	/* ^D */
+	tio->tc.t_brkc = -1;
+    }
+/* get local special chars */
+    if (ioctl(STDIN_FILENO, TIOCGLTC, &(tio->lc)) < 0) {
+	tio->lc.t_suspc = CSUSP;	/* ^Z */
+	tio->lc.t_dsuspc = CDSUSP;	/* ^Y */
+	tio->lc.t_rprntc = CRPRNT;	/* ^R */
+	tio->lc.t_flushc = CFLUSH;	/* ^O */
+	tio->lc.t_werasc = CWERASE;	/* ^W */
+	tio->lc.t_lnextc = CLNEXT;	/* ^V */
+    }
+/* get line discipline */
+    ioctl(STDIN_FILENO, TIOCGETD, &(tio->line));
+# ifdef NTTYDISC
+    tio->line = NTTYDISC;
+# endif				/* NTTYDISC */
+    tio->local = (LCRTBS | LCRTERA | LCTLECH | LPASS8 | LCRTKIL);
+#endif				/* HAVE_TERMIOS_H */
+
+/*
+ * Debugging
+ */
+#ifdef DEBUG_TTYMODE
+#ifdef HAVE_TERMIOS_H
+/* c_iflag bits */
+    fprintf(stderr, "Input flags\n");
+
+/* cpp token stringize doesn't work on all machines <sigh> */
+# define FOO(flag,name)			\
+    if ((tio->c_iflag) & flag)		\
+	fprintf (stderr, "%s ", name)
+
+/* c_iflag bits */
+    FOO(IGNBRK, "IGNBRK");
+    FOO(BRKINT, "BRKINT");
+    FOO(IGNPAR, "IGNPAR");
+    FOO(PARMRK, "PARMRK");
+    FOO(INPCK, "INPCK");
+    FOO(ISTRIP, "ISTRIP");
+    FOO(INLCR, "INLCR");
+    FOO(IGNCR, "IGNCR");
+    FOO(ICRNL, "ICRNL");
+    FOO(IXON, "IXON");
+    FOO(IXOFF, "IXOFF");
+# ifdef IUCLC
+    FOO(IUCLC, "IUCLC");
+# endif
+# ifdef IXANY
+    FOO(IXANY, "IXANY");
+# endif
+# ifdef IMAXBEL
+    FOO(IMAXBEL, "IMAXBEL");
+# endif
+    fprintf(stderr, "\n");
+
+# undef FOO
+# define FOO(entry, name)					\
+    fprintf(stderr, "%-8s = %#04o\n", name, tio->c_cc [entry])
+
+    FOO(VINTR, "VINTR");
+    FOO(VQUIT, "VQUIT");
+    FOO(VERASE, "VERASE");
+    FOO(VKILL, "VKILL");
+    FOO(VEOF, "VEOF");
+    FOO(VEOL, "VEOL");
+# ifdef VEOL2
+    FOO(VEOL2, "VEOL2");
+# endif
+# ifdef VSWTC
+    FOO(VSWTC, "VSWTC");
+# endif
+# ifdef VSWTCH
+    FOO(VSWTCH, "VSWTCH");
+# endif
+    FOO(VSTART, "VSTART");
+    FOO(VSTOP, "VSTOP");
+    FOO(VSUSP, "VSUSP");
+# ifdef VDSUSP
+    FOO(VDSUSP, "VDSUSP");
+# endif
+# ifdef VREPRINT
+    FOO(VREPRINT, "VREPRINT");
+# endif
+# ifdef VDISCRD
+    FOO(VDISCRD, "VDISCRD");
+# endif
+# ifdef VWERSE
+    FOO(VWERSE, "VWERSE");
+# endif
+# ifdef VLNEXT
+    FOO(VLNEXT, "VLNEXT");
+# endif
+    fprintf(stderr, "\n");
+# undef FOO
+# endif				/* HAVE_TERMIOS_H */
+#endif				/* DEBUG_TTYMODE */
+}
+
+/*----------------------- end-of-file (C source) -----------------------*/

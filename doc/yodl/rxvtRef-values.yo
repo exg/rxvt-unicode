@@ -1,0 +1,41 @@
+COMMENT(-- $Id: rxvtRef-values.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+label(Values)
+nsect(Values)
+
+startdl()
+    dl(bf(tt(ENQ)))
+	(Enquiry (Ctrl-E) = Send Device Attributes (DA) nl()\
+	request attributes from terminal == link(ESC[Psc)(ESCOBPsc))
+P()\
+    dl(bf(tt(BEL)))
+	(Bell (Ctrl-G))
+P()\
+    dl(bf(tt(BS)))
+	(Backspace (Ctrl-H))
+P()\
+    dl(bf(tt(TAB)))
+	(Horizontal Tab (HT) (Ctrl-I))
+P()\
+    dl(bf(tt(LF)))
+	(Line Feed or New Line (NL) (Ctrl-J))
+P()\
+    dl(bf(tt(VT)))
+	(Vertical Tab (Ctrl-K) same as bf(tt(LF)))
+P()\
+    dl(bf(tt(FF)))
+	(Form Feed or New Page (NP) (Ctrl-L) same as bf(tt(LF)))
+P()\
+    dl(bf(tt(CR)))
+	(Carriage Return (Ctrl-M))
+P()\
+    dl(bf(tt(SO)))
+	(Shift Out (Ctrl-N), invokes the G1 character set. nl()\
+	Switch to Alternate Character Set)
+P()\
+    dl(bf(tt(SI)))
+	(Shift In (Ctrl-O), invokes the G0 character set (the default) nl()\
+	Switch to Standard Character Set)
+P()\
+    dl(bf(tt(SPC)))
+	(Space Character)
+enddl()

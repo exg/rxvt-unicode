@@ -1,0 +1,22 @@
+COMMENT(-- $Id: rxvtRef-definitions.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+label(Definitions)
+nsect(Definitions)
+
+startdl()
+    dl(bf(tt(c)))
+	(The literal character c.)
+P()\
+    dl(bf(tt(C)))
+	(A single (required) character.)
+P()\
+    dl(bf(tt(Ps)))
+	(A single (usually optional) numeric parameter, composed of one or
+	more digits.)
+P()\
+    dl(bf(tt(Pm)))
+	(A multiple numeric parameter composed of any number of single numeric
+	parameters, separated by ; character(s).)
+P()\
+    dl(bf(tt(Pt)))
+	(A text parameter composed of printable characters.)
+enddl()

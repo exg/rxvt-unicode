@@ -1,0 +1,40 @@
+Sketchy overview of the details:
+
+- gcc is probably required to compile this release, g++, too, as it has
+  been re-written in C++.
+
+- the options used in the ./reconf script should work. everything else
+  might be broken.
+
+- wchar_t MUST be UNICODE or ISO-10646-1 on your system, or various
+  things will break down.
+
+- rxvt ALWAYS expects utf-8 input, regardless of the locale, currently.
+  so only start it in a utf-8-locale: "LC_CTYPE=en_US.UTF-8 rxvt" etc..
+
+- "-fn" commandline switch and *.font ressource accepts a comma
+  seperated list of fontnames:
+
+  x:9x15bold			a x11 font
+  9x15bold			the same
+  xft:Andale Mono		a xft font
+  xft:Andale Mono:pixelsize=20
+
+- the _first_ font in the list selects the cell width/height. All other fonts
+  must be smaller or same sized, or they will be ignored or worse. xft fonts
+  will automatically be rescaled.
+
+- the fonts will be tried in the order given when searching for a font
+  to display a specific character. if you are e.g. mainly interested in
+  japanese you might want to put a japanese font first to get the ascii
+  characters in it. If you are mainly interested in a text terminal and
+  only want to display other characters you should put a ascii/is8859 text
+  font first (e.g. "9x15bold") and let rxvt sort it out.
+
+- xft fonts require gobs of memory and generally are slow
+
+- src/defaultfont.C lists the fallback fonts that are tried when a character cannot
+  be displayed with the current list of fonts.
+
+Marc <rxvt@plan9.de>
+

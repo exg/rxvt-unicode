@@ -1,0 +1,23 @@
+#include "wrap.h"
+
+IDI_RXVT ICON    DISCARDABLE PRELOAD     "rxvt.ico"
+
+
+1 VERSIONINFO 
+FILEVERSION 2, 7, 10, 2
+PRODUCTVERSION 2, 7, 10, 2
+FILESUBTYPE 0
+BEGIN
+ BLOCK "StringFileInfo"
+ BEGIN
+  BLOCK "04090000"
+  BEGIN
+   VALUE "FileDescription", "rxvt\000"
+   VALUE "FileVersion", "2.7.10-2\000"
+   VALUE "InternalName", "rxvt\000"
+   VALUE "OriginalFilename", "rxvt.exe\000"
+   VALUE "ProductName","rxvt\000"
+   VALUE "ProductVersion","2.7.10-2\000"
+  END
+ END
+END

@@ -1,0 +1,125 @@
+--enable-everything
+	add support for all enable options marked with an asterisk listed
+	in "./configure --help".  Note that unlike other enable options this
+	is order dependant.  You can specify this and then disable options
+	which this enables by _following_ this with the appropriate
+	commands.
+--enable-languages
+	add support for languages which require multiple character glyphs
+	to display.
+--with-encoding=NAME
+	set the default encoding for multi-char glyph languages to NAME.
+	Options are: "eucj" EUC Japanese encoding; "sjis" Shift JIS encoding;
+	"big5" BIG5 encoding; "gb" GB encoding; "kr" EUC Korean encoding;
+	"noenc" no encoding.  This option requires --enable-languages to
+	also be specified.
+--enable-utmp
+	write user and tty to utmp file (used by programs like ``w'') at
+	start of rxvt execution and delete information when rxvt exits.
+--enable-wtmp
+	write user and tty to wtmp file (used by programs like ``last'') at
+	start of rxvt execution and write logout when rxvt exits.  This
+	option requires --enable-utmp to also be specified.
+--enable-lastlog
+	write user and tty to lastlog file (used by programs like
+	``lastlogin'') at start of rxvt execution.  This option requires
+	--enable-utmp to also be specified.
+--enable-xpm-background
+ 	add support for XPM background pixmaps
+--enable-transparency
+	add support for inheriting parent backgrounds thus giving a fake
+	transparency to the term
+--enable-menubar
+	add support for our menu bar system
+--enable-graphics
+	add support for our graphics mode (see src/graphics)
+--enable-rxvt-scroll
+	add support for the original rxvt scrollbar
+--enable-next-scroll
+	add support for a NeXT-like scrollbar
+--enable-xterm-scroll
+	add support for an Xterm-like scrollbar
+--enable-half-shadow
+	make shadows on the scrollbar only half the normal width & height.
+	only applicable to rxvt scrollbars
+--enable-xim
+	add support for XIM (X Input Method) protocol.  This allows using
+	alternative input methods (e.g. kinput2) and will also correctly
+	set up the input for people using dead keys.
+--enable-greek
+	add support for greek keyboard
+--enable-ttygid
+	change tty device setting to group "tty" - only use this if
+        your system uses this type of security
+--disable-backspace-key
+	disable any handling of the backspace key by us - let the X server
+	do it
+--disable-delete-key
+	disable any handling of the delete key by us - let the X server
+	do it
+--disable-resources
+	remove all resources checking
+--enable-xgetdefault
+	make resources checking via XGetDefault() instead of our small
+	version which only checks ~/.Xdefaults, or if that doesn't exist
+	then ~/.Xresources
+--enable-strings
+	add support for our possibly faster memset() function and other
+	various routines, overriding your system's versions which may
+	have been hand-crafted in assembly or may require extra libraries
+	to link in.  (This has header problems on some Linux systems).
+--disable-swapscreen
+	remove support for swap screen
+--enable-frills
+	add support for some lesser used features
+--enable-linespace
+	add support to provide user specified line spacing between text rows
+--enable-keepscrolling
+	add support for continual scrolling of the display when you hold
+	the mouse button down on a scrollbar arrow
+--enable-mousewheel
+	add support for scrolling via mouse wheel or buttons 4 & 5
+-enable-slipwheeling
+	add support for continual scrolling (using the mouse wheel as an
+	accelerator) while the control key is held down.  This option
+	requires --enable-mousewheel to also be specified.
+--enable-old-selection
+	remove support for reverting the mouse selection style to that
+	of v2.20 (and prior)
+--disable-new-selection
+	remove support for mouse selection style like that of xterm
+--enable-dmalloc
+	use Gray Watson's malloc - which is good for debugging
+	See  http://www.letters.com/dmalloc/  for details
+        If you use either this or the next option, you may need to
+	edit src/Makefile after compiling to point DINCLUDE and DLIB to
+	the right places.
+        You can only use either this option and the following (should
+	you use either) 
+--enable-dlmalloc
+	use Doug Lea's malloc - which is good for a production version
+	See  http://g.oswego.edu/dl/html/malloc.html  for details
+--enable-smart-resize
+	add smart growth/shrink behaviour when changing font size
+	via from hot keys.  This should keep in a fixed position the
+	rxvt corner which is closest to a corner of the screen
+--enable-256-color
+	add support for 256 colours rather than the base 16 colours
+--enable-cursor-blink
+	add support for a blinking cursor
+--enable-pointer-blank
+	add support to have the pointer disappear when typing or inactive
+--with-term=NAME
+	change the environmental variable for the terminal to NAME
+	(default "xterm")
+--with-terminfo=PATH
+	change the environmental variable for the path to the terminfo
+	tree to PATH
+--with-x
+	use the X Window System (pretty much default, eh?)
+--with-xpm-includes=DIR
+	look for the XPM includes in DIR
+--with-xpm-library=DIR
+	look for the XPM library in DIR
+--with-xpm
+	not needed - define via --enable-xpm-background

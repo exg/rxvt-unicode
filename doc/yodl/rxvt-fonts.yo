@@ -1,0 +1,9 @@
+COMMENT(-- $Id: rxvt-fonts.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+COMMENT(----------------------------------------------------------------------)
+manpagesection(CHANGING FONTS)
+
+You can change fonts on-the-fly, which is to say cycle through the default
+font and others of various sizes, by using bf(Shift-KP_Add) and
+bf(Shift-KP_Subtract).  Or, alternatively (if enabled) with
+bf(HOTKEY()-BIGFONT()) and bf(HOTKEY()-SMALLFONT()), where the actual key
+can be selected using resources bf(smallfont_key)/bf(bigfont_key).

@@ -1,0 +1,66 @@
+# test/graphics/Makefile.in	-*- Makefile -*-
+# $Id: Makefile.in,v 1.1 2003/11/24 17:28:08 pcg Exp $
+@MCOMMON@
+
+srcdir =	@srcdir@
+VPATH =		@srcdir@
+.PATH:		@srcdir@
+
+basedir = ../..
+thisdir = src/graphics
+
+first_rule: qplot
+dummy:
+
+SRCS = grxlib.c qplot.c
+OBJS = grxlib.o qplot.o
+HDRS = grxlib.h
+
+#
+# Distribution variables
+#
+
+DIST = $(HDRS) $(SRCS) README data Makefile.in
+
+# inference rules
+.c.o:
+	$(COMPILE) -I$(srcdir)/.. -c $<
+
+#-------------------------------------------------------------------------
+all:
+
+graphics: qplot
+
+qplot: $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS) -lm
+
+tags: $(SRCS)
+	ctags $(SRCS)
+
+alldoc:
+
+allbin: qplot
+
+clean:
+	$(RMF) qplot core a.out *.o *.bak *~
+
+realclean: clean
+	$(RMF) tags
+
+cleandir: realclean
+
+distclean:
+	(cd $(srcdir); $(RMF) qplot *~ *.o core a.out)
+	if test $(srcdir) = .; then $(MAKE) realclean; fi
+	(cd $(srcdir); $(RMF) Makefile)
+
+install uninstall:
+
+distdirs:
+	mkdir $(basedir)/../$(VERNAME)/$(thisdir)
+
+distcopy:
+	$(CP) -p $(DIST) $(basedir)/../$(VERNAME)/$(thisdir)
+
+# -----------------------------------------------------------------------
+# forget dependencies, there are too few

@@ -1,0 +1,283 @@
+COMMENT(-- $Id: rxvtRef-menubar.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+label(menuBar)
+nsect(menuBar)
+
+bf(The exact syntax used is em(almost) solidified.) nl()\
+In the menus, bf(DON'T) try to use menuBar commands that add or remove a
+menuBar.
+
+Note that in all of the commands, the bf(em(/path/)) em(cannot) be omitted:
+use bf(./) to specify a menu relative to the current menu.
+
+nsubsect(Overview of menuBar operation)
+
+For the menuBar XTerm escape sequence tt(ESC ] 10 ; Pt ST), the
+syntax of tt(Pt) can be used for a variety of tasks:
+startit()
+    it()link(Commands)(menuBarCommands)
+    it()link(Adding and accessing menus)(menuBarAdd)
+    it()link(Removing menus)(menuBarRemove)
+    it()link(Quick Arrows)(menuBarArrows)
+    it()link(Command Summary)(menuBarSummary)
+endit()
+
+At the top level is the current menuBar which is a member of a circular
+linked-list of other such menuBars.
+
+The menuBar acts as a parent for the various drop-down menus, which in turn,
+may have labels, separator lines, menuItems and subMenus.
+
+The menuItems are the useful bits: you can use them to mimic keyboard input
+or even to send text or escape sequences back to rxvt.
+
+The menuBar syntax is intended to provide a simple yet robust method of
+constructing and manipulating menus and navigating through the menuBars.
+
+The first step is to use the tag bf([menu:em(name)]) which creates the
+menuBar called em(name) and allows access.
+You may now link(add)(menuBarAdd) or link(remove)(menuBarRemove) menus,
+subMenus, and menuItems. Finally, use the tag bf([done]) to set the menuBar
+access as bf(readonly) to prevent accidental corruption of the menus.
+To re-access the current menuBar for alterations, use the tag bf([menu]),
+make the alterations and then use bf([done])
+
+label(menuBarCommands)
+nsubsect(Commands)
+
+startdl()
+    dl(bf([menu:+em(name)]))
+	(access the named menuBar for creation or alteration. If a new menuBar
+	is created, it is called em(name) (max of 15 chars) and the current
+	menuBar is pushed onto the stack)
+P()\
+    dl(bf([menu]))
+	(access the current menuBar for alteration)
+P()\
+    dl(bf([title:+em(string)]))
+	(set the current menuBar's title to em(string), which may contain the
+	following format specifiers: nl()\
+	bf(%%) : literal bf(%) character nl()\
+	bf(%n) : rxvt name (as per the bf(-name) command-line option) nl()\
+	bf(%v) : rxvt version)
+P()\
+    dl(bf([done]))
+	(set menuBar access as bf(readonly). nl()\
+	End-of-file tag for bf([read:+em(file)]) operations.)
+P()\
+    dl(bf([read:+em(file)]))
+	(read menu commands directly from em(file) (extension ".menu" will be
+	appended if required.) Start reading at a line with bf([menu]) or
+	bf([menu:+em(name)) and continuing until bf([done]) is encountered.
+
+	Blank and comment lines (starting with bf(#)) are ignored.
+	Actually, since any invalid menu commands are also ignored, almost
+	anything could be construed as a comment line, but this may be
+	tightened up in the future ... so don't count on it!.)
+P()\
+    dl(bf([read:+em(file);+em(name)]))
+	(The same as bf([read:+em(file)]), but start reading at a line with
+	bf([menu:+em(name)]) and continuing until bf([done:+em(name)]) or
+	bf([done]) is encountered.)
+P()\
+    dl(bf([dump]))
+	(dump all menuBars to the file bf(/tmp/rxvt-PID) in a format suitable
+	for later rereading.)
+P()\
+    dl(bf([rm:name]nl()[rm] [rm:]nl()[rm*] [rm:*]))
+	(remove the named menuBar nl()\
+	remove the current menuBar nl()\
+	remove all menuBars)
+P()\
+    dl(bf([swap]))
+	(swap the top two menuBars)
+P()\
+    dl(bf([prev]nl()[next]))
+	(access the previous or next menuBar)
+P()\
+    dl(bf([show]nl()[hide]))
+	(control display of the menuBar ... just like
+	link(ESC[?10 h/l)(Priv10))
+P()\
+    dl(bf([pixmap:+em(name)]nl()[pixmap:+em(name);em(scaling)]))
+	(set the background pixmap globally ... just like
+	link(ESC ] 20 ; Pt ST)(XPM)
+
+	bf(A Future implementation em(may) make this local to the menubar))
+P()\
+    dl(bf([:+em(command):]))
+	(ignore the menu readonly status and issue a em(command) to
+	link(Add/Modify)(menuBarAdd) or link(Remove)(menuBarRemove) a menu or
+	menuitem or change the link(Quick Arrows)(menuBarArrows); a useful
+	shortcut for setting the quick arrows from a menuBar.)
+enddl()
+
+label(menuBarAdd)
+nsubsect(Adding and accessing menus)
+
+The following commands may also be bf(+) prefixed.
+startdl()
+    dl(bf(/+nl()./+nl()../+nl()../../))
+	(access menuBar top level nl()\
+	access current menu level nl()\
+	access parent menu (1 level up) nl()\
+	access parent menu (multiple levels up))
+    dl(bf(em(/path/)menu))
+	(add/access menu)
+    dl(bf(em(/path/)menu/*))
+	(add/access menu and clear it if it exists)
+    dl(bf(em(/path/){-}))
+	(add separator)
+    dl(bf(em(/path/){item}))
+	(add bf(item) as a label)
+    dl(bf(em(/path/){item} action))
+	(add/alter em(menuitem) with an associated em(action))
+    dl(bf(em(/path/){item}{right-text}))
+	(add/alter em(menuitem) with bf(right-text) as the right-justified
+	text and as the associated em(action))
+    dl(bf(em(/path/){item}{rtext} action))
+	(add/alter em(menuitem) with an associated em(action) and with
+	bf(rtext) as the right-justified text.)
+enddl()
+startdl()
+    dl(Special characters in em(action) must be backslash-escaped:)
+	(bf(\a \b \E \e \n \r \t \octal))
+    dl(or in control-character notation:)
+	(bf(^@, ^A .. ^Z .. ^_, ^?))
+enddl()
+
+To send a string starting with a bf(NUL) (bf(^@)) character to the program,
+start em(action) with a pair of bf(NUL) characters (bf(^@^@)), the first of
+which will be stripped off and the balance directed to the program.
+Otherwise if em(action) begins with bf(NUL) followed by non-+bf(NUL)
+characters, the leading bf(NUL) is stripped off and the balance is sent back
+to rxvt.
+
+As a convenience for the many Emacs-type editors, em(action) may start
+with bf(M-) (eg, bf(M-$) is equivalent to bf(\E$)) and a bf(CR) will be
+appended if missed from bf(M-x) commands.
+
+As a convenience for issuing XTerm bf(ESC]) sequences from a menubar
+(or quick arrow), a bf(BEL) (bf(^G)) will be appended if needed.
+
+startdl()
+    dl(For example,)
+	(bf(M-xapropos) is equivalent to bf(\Exapropos\r))
+    dl(and)
+	(bf(\E]10;mona;100) is equivalent to bf(\E]10;mona;100\a))
+enddl()
+
+The option bf({em(right-rtext)}) will be right-justified.  In the absence of
+a specified action, this text will be used as the em(action) as well.
+
+startdl()
+    dl(For example,)
+    	(bf(/File/{Open}{^X^F}) is equivalent to bf(/File/{Open}{^X^F} ^X^F))
+enddl()
+
+The left label em(is) necessary, since it's used for matching,
+but implicitly hiding the left label (by using same name for both left
+and right labels), or explicitly hiding the left label (by preceeding
+it with a dot), makes it possible to have right-justified text only.
+startdl()
+    dl(For example,)
+	(bf(/File/{Open}{Open} Open-File-Action))
+    dl(or hiding it)
+	(bf(/File/{.anylabel}{Open} Open-File-Action))
+enddl()
+
+label(menuBarRemove)
+nsubsect(Removing menus)
+
+startdl()
+    dl(bf(-/*+nl()-+em(/path)menu+nl()-+em(/path){item}+nl()-+em(/path){-}))
+	(remove all menus from the menuBar, the same as bf([clear])nl()\
+	remove menu nl()\
+	remove item nl()\
+	remove separator)
+    dl(bf(-/path/menu/*))
+	(remove all items, separators and submenus from menu)
+enddl()
+
+label(menuBarArrows)
+nsubsect(Quick Arrows)
+
+The menus also provide a hook for em(quick arrows) to provide easier user
+access. If nothing has been explicitly set, the default is to emulate the
+curror keys. The syntax permits each arrow to be altered individually or
+all four at once without re-entering their common beginning/end text. For
+example, to explicitly associate cursor actions with the arrows, any of
+the following forms could be used:
+
+startdl()
+    dl(bf(<r>+em(Right)nl()<l>+em(Left)nl()<u>+em(Up)nl()<d>+em(Down)))
+	(Define actions for the respective arrow buttons)
+    dl(bf(<b>+em(Begin)nl()<e>+em(End)))
+	(Define common beginning/end parts for em(quick arrows) which used
+	in conjunction with the above <r> <l> <u> <d> constructs)
+enddl()
+
+startdl()
+    dl(For example, define arrows individually,)
+	(bf(<u>\E[A nl()\
+	<d>\E[B nl()\
+	<r>\E[C nl()\
+	<l>\E[D))
+    dl(or all at once)
+        (bf(<u>\E[A<d>\E[B<r>\E[C<l>\E[D))
+    dl(or more compactly (factoring out common parts))
+	(bf(<b>\E[<u>A<d>B<r>C<l>D))
+enddl()
+
+label(menuBarSummary)
+nsubsect(Command Summary)
+
+A short summary of the most em(common) commands:
+
+startdl()
+    dl([menu:name])
+	(use an existing named menuBar or start a new one)
+    dl([menu])
+	(use the current menuBar)
+    dl([title:string])
+	(set menuBar title)
+    dl([done])
+	(set menu access to readonly and, if reading from a file, signal EOF)
+    dl([done:name])
+	(if reading from a file using [read:file;name] signal EOF)
+    dl([rm:name]+nl()[rm] [rm:]+nl()[rm*] [rm:*])
+	(remove named, current, or all menuBar(s))
+    dl([swap])
+	(swap top two menuBars)
+    dl([prev]+nl()[next])
+	(access the previous/next menuBar)
+    dl([show]+nl()[hide])
+	(map/unmap menuBar)
+    dl([pixmap;file]+nl()[pixmap;file;scaling])
+	(set a background pixmap)
+    dl([read:file]+nl()[read:file;name])
+	(read in a menu from a file)
+    dl([dump])
+	(dump out all menuBars to /tmp/rxvt-PID)
+    dl(/)
+	(access menuBar top level)
+    dl(./+nl()../+nl()../../)
+	(access current or parent menu level)
+    dl(/path/menu)
+	(add/access menu)
+    dl(/path/{-})
+	(add separator)
+    dl(/path/{item}{rtext} action)
+	(add/alter menu item+nl()({rtext} and/or action, may be omitted))
+    dl(-/*)
+	(remove all menus from the menuBar)
+    dl(-/path/menu)
+	(remove menu items, separators and submenus from menu)
+    dl(-/path/menu)
+	(remove menu)
+    dl(-/path/{item})
+	(remove item)
+    dl(-/path/{-})
+	(remove separator)
+    dl(<b>Begin<r>Right<l>Left<u>Up<d>Down<e>End)
+	(menu quick arrows)
+enddl()

@@ -1,0 +1,20 @@
+/^\/\* INTPROTO \*\/$/ {
+    getline     # function return
+    printf "%-16s ", $0
+    cline=""
+    while (index(cline, "{") == 0 && index(cline, "#") == 0) {
+	getline # function name and args
+        cline=cline $0
+    }
+    gsub(/[\t\n]/, " ", cline)
+    gsub(/[ ]+/, " ", cline)
+    l = index(cline, "(")
+    m = index(cline, "{")
+    n = index(cline, "#")
+    if (n > 0) { m = n }
+    outstring = sprintf("%%-32.%ds __PROTO(", l - 1)
+    printf outstring, cline
+    reststring = substr(cline, l, m - l)
+    printf reststring
+    print ");"
+}

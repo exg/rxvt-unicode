@@ -1,0 +1,29 @@
+COMMENT(-- $Id: rxvtRef-mouse.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+label(Mouse)
+nsect(Mouse Reporting)
+
+startdl()
+    dl(bf(tt(ESC [ M <b> <x> <y>)))
+	(report mouse position)
+enddl()
+The lower 2 bits of bf(tt(<b>)) indicate the button:
+startdl()
+    dl(Button = bf(tt((<b> - SPACE) & 3)))
+	(0 = Button1 pressed nl()\
+	1 = Button2 pressed nl()\
+	2 = Button3 pressed nl()\
+	3 = button released (X11 mouse report))
+enddl()
+
+The upper bits of bf(tt(<b>)) indicate the modifiers when the button was
+pressed and are added together (X11 mouse report only):
+
+startdl()
+    dl(State = bf(tt((<b> - SPACE) & 60)))
+        (4 = Shift nl()\
+	8 = Meta nl()\
+	16 = Control nl()\
+	32 = Double Click em((Rxvt extension)) nl()\
+	Col = bf(tt(<x> - SPACE)) nl()\
+	Row = bf(tt(<y> - SPACE)))
+enddl()

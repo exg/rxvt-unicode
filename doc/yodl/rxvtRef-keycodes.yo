@@ -1,0 +1,73 @@
+COMMENT(-- $Id: rxvtRef-keycodes.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+label(KeyCodes)
+nsect(Key Codes)
+
+Note: bf(Shift) + bf(F1)-bf(F10) generates bf(F11)-bf(F20)
+
+For the keypad, use bf(Shift) to temporarily override Application-Keypad
+setting use bf(Num_Lock) to toggle Application-Keypad setting if bf(Num_Lock)
+is off, link(escape sequences)(ESCequals) toggle Application-Keypad setting.
+Also note that values of bf(Home), bf(End), bf(Delete) may have been compiled
+differently on your system.
+
+COMMENT(-- Edited in a wide window --)
+starttable(5)(l l l l l)(1)\
+    row(cell(               )cell(bf(Normal)     )cell(bf(Shift)      )cell(bf(Control)    )cell(bf(Ctrl+Shift)))\
+    row(cell(Tab            )cell(^I         )cell(ESC [ Z    )cell(^I         )cell(ESC [ Z))\
+    row(cell(BackSpace      )cell(^H         )cell(^?         )cell(^?         )cell(^?))\
+    row(cell(Find           )cell(ESC [ 1 ~  )cell(ESC [ 1 $  )cell(ESC [ 1 ^  )cell(ESC [ 1 @))\
+    row(cell(Insert         )cell(ESC [ 2 ~  )cell(em(paste)      )cell(ESC [ 2 ^  )cell(ESC [ 2 @))\
+    row(cell(Execute        )cell(ESC [ 3 ~  )cell(ESC [ 3 $  )cell(ESC [ 3 ^  )cell(ESC [ 3 @))\
+    row(cell(Select         )cell(ESC [ 4 ~  )cell(ESC [ 4 $  )cell(ESC [ 4 ^  )cell(ESC [ 4 @))\
+    row(cell(Prior          )cell(ESC [ 5 ~  )cell(em(scroll-up)  )cell(ESC [ 5 ^  )cell(ESC [ 5 @))\
+    row(cell(Next           )cell(ESC [ 6 ~  )cell(em(scroll-down))cell(ESC [ 6 ^  )cell(ESC [ 6 @))\
+    row(cell(Home           )cell(ESC [ 7 ~  )cell(ESC [ 7 $  )cell(ESC [ 7 ^  )cell(ESC [ 7 @))\
+    row(cell(End            )cell(ESC [ 8 ~  )cell(ESC [ 8 $  )cell(ESC [ 8 ^  )cell(ESC [ 8 @))\
+    row(cell(Delete         )cell(ESC [ 3 ~  )cell(ESC [ 3 $  )cell(ESC [ 3 ^  )cell(ESC [ 3 @))\
+    row(cell(F1             )cell(ESC [ 11 ~ )cell(ESC [ 23 ~ )cell(ESC [ 11 ^ )cell(ESC [ 23 ^))\
+    row(cell(F2             )cell(ESC [ 12 ~ )cell(ESC [ 24 ~ )cell(ESC [ 12 ^ )cell(ESC [ 24 ^))\
+    row(cell(F3             )cell(ESC [ 13 ~ )cell(ESC [ 25 ~ )cell(ESC [ 13 ^ )cell(ESC [ 25 ^))\
+    row(cell(F4             )cell(ESC [ 14 ~ )cell(ESC [ 26 ~ )cell(ESC [ 14 ^ )cell(ESC [ 26 ^))\
+    row(cell(F5             )cell(ESC [ 15 ~ )cell(ESC [ 28 ~ )cell(ESC [ 15 ^ )cell(ESC [ 28 ^))\
+    row(cell(F6             )cell(ESC [ 17 ~ )cell(ESC [ 29 ~ )cell(ESC [ 17 ^ )cell(ESC [ 29 ^))\
+    row(cell(F7             )cell(ESC [ 18 ~ )cell(ESC [ 31 ~ )cell(ESC [ 18 ^ )cell(ESC [ 31 ^))\
+    row(cell(F8             )cell(ESC [ 19 ~ )cell(ESC [ 32 ~ )cell(ESC [ 19 ^ )cell(ESC [ 32 ^))\
+    row(cell(F9             )cell(ESC [ 20 ~ )cell(ESC [ 33 ~ )cell(ESC [ 20 ^ )cell(ESC [ 33 ^))\
+    row(cell(F10            )cell(ESC [ 21 ~ )cell(ESC [ 34 ~ )cell(ESC [ 21 ^ )cell(ESC [ 34 ^))\
+    row(cell(F11            )cell(ESC [ 23 ~ )cell(ESC [ 23 $ )cell(ESC [ 23 ^ )cell(ESC [ 23 @))\
+    row(cell(F12            )cell(ESC [ 24 ~ )cell(ESC [ 24 $ )cell(ESC [ 24 ^ )cell(ESC [ 24 @))\
+    row(cell(F13            )cell(ESC [ 25 ~ )cell(ESC [ 25 $ )cell(ESC [ 25 ^ )cell(ESC [ 25 @))\
+    row(cell(F14            )cell(ESC [ 26 ~ )cell(ESC [ 26 $ )cell(ESC [ 26 ^ )cell(ESC [ 26 @))\
+    row(cell(F15 (Help)     )cell(ESC [ 28 ~ )cell(ESC [ 28 $ )cell(ESC [ 28 ^ )cell(ESC [ 28 @))\
+    row(cell(F16 (Menu)     )cell(ESC [ 29 ~ )cell(ESC [ 29 $ )cell(ESC [ 29 ^ )cell(ESC [ 29 @))\
+    row(cell(F17            )cell(ESC [ 31 ~ )cell(ESC [ 31 $ )cell(ESC [ 31 ^ )cell(ESC [ 31 @))\
+    row(cell(F18            )cell(ESC [ 32 ~ )cell(ESC [ 32 $ )cell(ESC [ 32 ^ )cell(ESC [ 32 @))\
+    row(cell(F19            )cell(ESC [ 33 ~ )cell(ESC [ 33 $ )cell(ESC [ 33 ^ )cell(ESC [ 33 @))\
+    row(cell(F20            )cell(ESC [ 34 ~ )cell(ESC [ 34 $ )cell(ESC [ 34 ^ )cell(ESC [ 34 @))\
+    row(cell(               )cell(           )cell(           )cell(           )cell(bf(Application)))\
+    row(cell(Up             )cell(ESC [ A    )cell(ESC [ a    )cell(ESC O a    )cell(ESC O A))\
+    row(cell(Down           )cell(ESC [ B    )cell(ESC [ b    )cell(ESC O b    )cell(ESC O B))\
+    row(cell(Right          )cell(ESC [ C    )cell(ESC [ c    )cell(ESC O c    )cell(ESC O C))\
+    row(cell(Left           )cell(ESC [ D    )cell(ESC [ d    )cell(ESC O d    )cell(ESC O D))\
+    row(cell(KP_Enter       )cell(^M         )cell(           )cell(           )cell(ESC O M))\
+    row(cell(KP_F1          )cell(ESC O P    )cell(           )cell(           )cell(ESC O P))\
+    row(cell(KP_F2          )cell(ESC O Q    )cell(           )cell(           )cell(ESC O Q))\
+    row(cell(KP_F3          )cell(ESC O R    )cell(           )cell(           )cell(ESC O R))\
+    row(cell(KP_F4          )cell(ESC O S    )cell(           )cell(           )cell(ESC O S))\
+    row(cell(XK_KP_Multiply )cell(*          )cell(           )cell(           )cell(ESC O j))\
+    row(cell(XK_KP_Add      )cell(+          )cell(           )cell(           )cell(ESC O k))\
+    row(cell(XK_KP_Separator)cell(,          )cell(           )cell(           )cell(ESC O l))\
+    row(cell(XK_KP_Subtract )cell(-          )cell(           )cell(           )cell(ESC O m))\
+    row(cell(XK_KP_Decimal  )cell(.          )cell(           )cell(           )cell(ESC O n))\
+    row(cell(XK_KP_Divide   )cell(/          )cell(           )cell(           )cell(ESC O o))\
+    row(cell(XK_KP_0        )cell(0          )cell(           )cell(           )cell(ESC O p))\
+    row(cell(XK_KP_1        )cell(1          )cell(           )cell(           )cell(ESC O q))\
+    row(cell(XK_KP_2        )cell(2          )cell(           )cell(           )cell(ESC O r))\
+    row(cell(XK_KP_3        )cell(3          )cell(           )cell(           )cell(ESC O s))\
+    row(cell(XK_KP_4        )cell(4          )cell(           )cell(           )cell(ESC O t))\
+    row(cell(XK_KP_5        )cell(5          )cell(           )cell(           )cell(ESC O u))\
+    row(cell(XK_KP_6        )cell(6          )cell(           )cell(           )cell(ESC O v))\
+    row(cell(XK_KP_7        )cell(7          )cell(           )cell(           )cell(ESC O w))\
+    row(cell(XK_KP_8        )cell(8          )cell(           )cell(           )cell(ESC O x))\
+    row(cell(XK_KP_9        )cell(9          )cell(           )cell(           )cell(ESC O y))\
+endtable()

@@ -1,0 +1,117 @@
+COMMENT(-- $Id: rxvt.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+includefile(versioninfo.yo)
+includefile(masonyodl.yo)
+mailto(gcw@pobox.com)
+
+DEFINEMACRO(HOTKEY)(0)(Alt)
+DEFINEMACRO(BIGFONT)(0)(>)
+DEFINEMACRO(SMALLFONT)(0)(<)
+
+COMMENT(-----------------------------------------------------------------------
+-- We want the following macro's to be pre-defined
+--  RXVTDATE()
+--  RXVTVERSION()
+--  RXVTMAINT()
+--  RXVTMAINTEMAIL()
+--  RXVTWEBPAGE()
+--  RXVTWEBMAINT()
+--  RXVTWEBMAINTEMAIL()
+--  RXVTFTPSITE()
+------------------------------------------------------------------------------)
+
+COMMENT(----------------------------------------------------------------------)
+manpage(RXVT)(1)(RXVTDATE())(X Version 11)(X Tools)
+manpagename(rxvt (ouR XVT))(a VT102 emulator for the X window system)
+
+COMMENT(----------------------------------------------------------------------)
+manpagesynopsis()
+
+bf(rxvt) [options] [-e command [ args ]]
+
+COMMENT(----------------------------------------------------------------------)
+manpagedescription()
+
+bf(rxvt), version bf(RXVTVERSION()), is a colour vt102 terminal emulator
+intended as an em(xterm)(1) replacement for users who do not require
+features such as Tektronix 4014 emulation and toolkit-style configurability.
+As a result, bf(rxvt) uses much less swap space -- a significant
+advantage on a machine serving many X sessions.
+
+COMMENT(----------------------------------------------------------------------)
+
+includefile(rxvt-options.yo)
+includefile(rxvt-resources.yo)
+includefile(rxvt-scrollbar.yo)
+includefile(rxvt-mousereporting.yo)
+includefile(rxvt-textselection.yo)
+includefile(rxvt-fonts.yo)
+includefile(rxvt-login.yo)
+includefile(rxvt-colours.yo)
+includefile(rxvt-environment.yo)
+includefile(rxvt-files.yo)
+
+COMMENT(----------------------------------------------------------------------)
+manpageseealso()
+
+em(xterm)(1), em(sh)(1), em(resize)(1), em(X)(1), em(pty)(4), em(tty)(4),
+em(utmp)(5)
+
+See rxvtRef.html rxvtRef.txt for detailed information on recognized escape
+sequences and menuBar syntax, etc.
+
+COMMENT(----------------------------------------------------------------------)
+manpagebugs()
+
+Check the BUGS file for an up-to-date list.
+
+Cursor change support is not yet implemented.
+
+Click-and-drag doesn't work with X11 mouse report overriding.
+
+Graphics support is fairly crude.
+
+
+COMMENT(----------------------------------------------------------------------)
+manpagesection(FTP LOCATION)
+
+rxvt-+RXVTVERSION().tar.gz can be found at the following ftp sites
+url(RXVTFTPSITE())(RXVTFTPSITE())
+
+COMMENT(----------------------------------------------------------------------)
+manpagesection(CURRENT PROJECT COORDINATOR)
+
+startdit()
+    dit(Project Coordinator)
+	RXVTMAINT() email(RXVTMAINTEMAIL())nl()\
+    dit(Web page maintainter)
+	RXVTWEBMAINT() email(RXVTWEBMAINTEMAIL())nl()\
+	url(RXVTWEBPAGE())(RXVTWEBPAGE())nl()\
+    dit(Mailing list)
+	The Rxvt Workers email(<rxvt-workers@rxvt.org>)
+	mailing list has also been established for rxvt development, to
+	subscribe, email to 
+	email(<rxvt-workers-subscribe@rxvt.org>).
+	There is also a mailing list for announcements of new releases of
+	rxvt. To subscribe, email to
+	email(<rxvt-announce-subscribe@rxvt.org>).
+enddit()
+
+COMMENT(----------------------------------------------------------------------)
+manpageauthors()
+
+startdit()
+    dit(John Bovey)
+	University of Kent, 1992, wrote the original Xvt.
+    dit(Rob Nation email(<nation@rocket.sanders.lockheed.com>))
+	very heavily modified Xvt and came up with Rxvt
+    dit(Angelo Haritsis email(<ah@doc.ic.ac.uk>))
+	wrote the Greek Keyboard Input
+    dit(mj olesen email(<olesen@me.QueensU.CA>))
+	Wrote the menu system. nl()\
+	Project Coordinator (changes.txt 2.11 to 2.21)
+    dit(Oezguer Kesim email(<kesim@math.fu-berlin.de>))
+	Project Coordinator (changes.txt 2.21a to 2.4.5)
+    dit(Geoff Wing email(<gcw@pobox.com>))
+	Rewrote screen display and text selection routines. nl()\
+	Project Coordinator (changes.txt 2.4.6 - )
+enddit()

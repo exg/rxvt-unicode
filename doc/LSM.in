@@ -1,0 +1,51 @@
+Begin3
+Title:		rxvt
+Version:	@RXVT_VERSION@
+Entered-date:	@RXVT_LSMDATE@
+
+Description:	@RXVT_WEBPAGE@
+		Rxvt is an 8-bit clean, colour xterm replacement that uses
+		significantly less memory than a conventional xterm, mostly
+		since it doesn't support toolkit configurability or Tek
+		graphics, but also since features can be removed at
+		compile-time to reflect your needs.  Some rxvt features
+		(compilation dependent): ANSI-color, bold/blink attributes
+		modify foreground/background colours, scrollbars with arrow
+		buttons, kanji and greek support, printer-pipe, XPM
+		backgrounds with on-the-fly scaling, user-definable menus.
+
+		The distribution also includes rclock, the smaller/better
+		xclock replacement with appointment scheduling and xbiff
+		functionality.
+
+Keywords:	rxvt colour color kanji xterm X11 vt100 terminal-emulator
+		rclock xbiff xpm menu
+
+Author:		* John Bovey [Univ. Kent at Canterbury] was the creator of
+		  the original xvt.
+
+		* Rob Nation [Lockheed] re-wrote most of xvt to make a
+		  substantiallly enhanced version called rxvt (Rob's xvt)
+		  and also wrote rclock (Rob's clock).
+
+		* Mark Olesen [Queen's Univ. at Kingston] made various
+		  improvements and cleanups. 
+		  Coordinated development, versions 2.11 - 2.21
+
+		* Oezguer Kesim [FU Berlin] 
+		  Coordinated development, versions 2.21a - 2.4.5
+
+		* Geoff Wing rewrote much of the screen refreshing routines
+		  and mouse selection.
+		  Coordinated development, versions 2.4.6 - 
+
+Maintained-by:	@RXVT_MAINT@ @RXVT_MAINTEMAIL@ Project Coordinator
+
+Original-site:	@RXVT_FTPSITENAME@ @RXVT_FTPSITEDIR@
+		582k	rxvt-@RXVT_VERSION@.tar.gz
+
+Platforms:	requires X11 installed
+
+Copying-policy:	GPL
+
+End

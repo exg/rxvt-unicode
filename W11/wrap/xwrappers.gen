@@ -1,0 +1,1134 @@
+
+typedef StatusDef (proto_XAllocColor)( Display *display, Colormap cmap, XColor *xc);
+static proto_XAllocColor *func_XAllocColor = NULL;
+StatusDef XAllocColor( Display *display, Colormap cmap, XColor *xc) {
+	if (!func_XAllocColor) func_XAllocColor=(proto_XAllocColor *)_loadfunc("XAllocColor");
+	return (func_XAllocColor)( display, cmap, xc);
+}
+
+typedef StatusDef (proto_XAllocColorCells)( Display *display, Colormap cmap, BoolDef cont, unsigned long *pmasks, unsigned int np, unsigned long *pixels, unsigned int nc);
+static proto_XAllocColorCells *func_XAllocColorCells = NULL;
+StatusDef XAllocColorCells( Display *display, Colormap cmap, BoolDef cont, unsigned long *pmasks, unsigned int np, unsigned long *pixels, unsigned int nc) {
+	if (!func_XAllocColorCells) func_XAllocColorCells=(proto_XAllocColorCells *)_loadfunc("XAllocColorCells");
+	return (func_XAllocColorCells)( display, cmap, cont, pmasks, np, pixels, nc);
+}
+
+typedef StatusDef (proto_XAllocColorPlanes)( Display *display, Colormap cmap, BoolDef cont, unsigned long *pixels, int nc, int nr,int ng,int nb, unsigned long *rmask, unsigned long *gmask, unsigned long *bmask);
+static proto_XAllocColorPlanes *func_XAllocColorPlanes = NULL;
+StatusDef XAllocColorPlanes( Display *display, Colormap cmap, BoolDef cont, unsigned long *pixels, int nc, int nr,int ng,int nb, unsigned long *rmask, unsigned long *gmask, unsigned long *bmask) {
+	if (!func_XAllocColorPlanes) func_XAllocColorPlanes=(proto_XAllocColorPlanes *)_loadfunc("XAllocColorPlanes");
+	return (func_XAllocColorPlanes)( display, cmap, cont, pixels, nc, nr,ng,nb, rmask, gmask, bmask);
+}
+
+typedef StatusDef (proto_XAllocNamedColor)(Display *display, Colormap cmap, const char *cname, XColor *cell, XColor *rgb);
+static proto_XAllocNamedColor *func_XAllocNamedColor = NULL;
+StatusDef XAllocNamedColor(Display *display, Colormap cmap, const char *cname, XColor *cell, XColor *rgb) {
+	if (!func_XAllocNamedColor) func_XAllocNamedColor=(proto_XAllocNamedColor *)_loadfunc("XAllocNamedColor");
+	return (func_XAllocNamedColor)(display, cmap, cname, cell, rgb);
+}
+
+typedef int (proto_XBell)( Display *display, int pc);
+static proto_XBell *func_XBell = NULL;
+int XBell( Display *display, int pc) {
+	if (!func_XBell) func_XBell=(proto_XBell *)_loadfunc("XBell");
+	return (func_XBell)( display, pc);
+}
+
+typedef int (proto_XChangeGC)( Display* display, GC gc, unsigned long mask, XGCValues* gc_values);
+static proto_XChangeGC *func_XChangeGC = NULL;
+int XChangeGC( Display* display, GC gc, unsigned long mask, XGCValues* gc_values) {
+	if (!func_XChangeGC) func_XChangeGC=(proto_XChangeGC *)_loadfunc("XChangeGC");
+	return (func_XChangeGC)( display, gc, mask, gc_values);
+}
+
+typedef int (proto_XChangeProperty)( Display *display, Window window, Atom property, Atom type, int format, int mode, const unsigned char *data, int nelements);
+static proto_XChangeProperty *func_XChangeProperty = NULL;
+int XChangeProperty( Display *display, Window window, Atom property, Atom type, int format, int mode, const unsigned char *data, int nelements) {
+	if (!func_XChangeProperty) func_XChangeProperty=(proto_XChangeProperty *)_loadfunc("XChangeProperty");
+	return (func_XChangeProperty)( display, window, property, type, format, mode, data, nelements);
+}
+
+typedef int (proto_XChangeWindowAttributes)( Display *display, Window w, unsigned long vmask, XSetWindowAttributes *attr);
+static proto_XChangeWindowAttributes *func_XChangeWindowAttributes = NULL;
+int XChangeWindowAttributes( Display *display, Window w, unsigned long vmask, XSetWindowAttributes *attr) {
+	if (!func_XChangeWindowAttributes) func_XChangeWindowAttributes=(proto_XChangeWindowAttributes *)_loadfunc("XChangeWindowAttributes");
+	return (func_XChangeWindowAttributes)( display, w, vmask, attr);
+}
+
+typedef BoolDef (proto_XCheckTypedEvent)( Display *display, int ev, XEvent *rep);
+static proto_XCheckTypedEvent *func_XCheckTypedEvent = NULL;
+BoolDef XCheckTypedEvent( Display *display, int ev, XEvent *rep) {
+	if (!func_XCheckTypedEvent) func_XCheckTypedEvent=(proto_XCheckTypedEvent *)_loadfunc("XCheckTypedEvent");
+	return (func_XCheckTypedEvent)( display, ev, rep);
+}
+
+typedef BoolDef (proto_XCheckTypedWindowEvent)( Display* display, Window w, int event_type, XEvent* event_return);
+static proto_XCheckTypedWindowEvent *func_XCheckTypedWindowEvent = NULL;
+BoolDef XCheckTypedWindowEvent( Display* display, Window w, int event_type, XEvent* event_return) {
+	if (!func_XCheckTypedWindowEvent) func_XCheckTypedWindowEvent=(proto_XCheckTypedWindowEvent *)_loadfunc("XCheckTypedWindowEvent");
+	return (func_XCheckTypedWindowEvent)( display, w, event_type, event_return);
+}
+
+typedef BoolDef (proto_XCheckWindowEvent)( Display *display, Window w, long emask, XEvent *ev);
+static proto_XCheckWindowEvent *func_XCheckWindowEvent = NULL;
+BoolDef XCheckWindowEvent( Display *display, Window w, long emask, XEvent *ev) {
+	if (!func_XCheckWindowEvent) func_XCheckWindowEvent=(proto_XCheckWindowEvent *)_loadfunc("XCheckWindowEvent");
+	return (func_XCheckWindowEvent)( display, w, emask, ev);
+}
+
+typedef int (proto_XClearArea)( Display *display, Window w, int x, int y, unsigned int width, unsigned int height, BoolDef exposures);
+static proto_XClearArea *func_XClearArea = NULL;
+int XClearArea( Display *display, Window w, int x, int y, unsigned int width, unsigned int height, BoolDef exposures) {
+	if (!func_XClearArea) func_XClearArea=(proto_XClearArea *)_loadfunc("XClearArea");
+	return (func_XClearArea)( display, w, x, y, width, height, exposures);
+}
+
+typedef int (proto_XClearWindow)(Display *display, Window w);
+static proto_XClearWindow *func_XClearWindow = NULL;
+int XClearWindow(Display *display, Window w) {
+	if (!func_XClearWindow) func_XClearWindow=(proto_XClearWindow *)_loadfunc("XClearWindow");
+	return (func_XClearWindow)(display, w);
+}
+
+typedef int (proto_XClipBox)( Region hrgn, XRectangle *rect);
+static proto_XClipBox *func_XClipBox = NULL;
+int XClipBox( Region hrgn, XRectangle *rect) {
+	if (!func_XClipBox) func_XClipBox=(proto_XClipBox *)_loadfunc("XClipBox");
+	return (func_XClipBox)( hrgn, rect);
+}
+
+typedef int (proto_XCloseDisplay)(Display *display);
+static proto_XCloseDisplay *func_XCloseDisplay = NULL;
+int XCloseDisplay(Display *display) {
+	if (!func_XCloseDisplay) func_XCloseDisplay=(proto_XCloseDisplay *)_loadfunc("XCloseDisplay");
+	return (func_XCloseDisplay)(display);
+}
+
+typedef StatusDef (proto_XCloseIM)(XIM im);
+static proto_XCloseIM *func_XCloseIM = NULL;
+StatusDef XCloseIM(XIM im) {
+	if (!func_XCloseIM) func_XCloseIM=(proto_XCloseIM *)_loadfunc("XCloseIM");
+	return (func_XCloseIM)(im);
+}
+
+typedef int (proto_XConnectionNumber)(Display* display);
+static proto_XConnectionNumber *func_XConnectionNumber = NULL;
+int XConnectionNumber(Display* display) {
+	if (!func_XConnectionNumber) func_XConnectionNumber=(proto_XConnectionNumber *)_loadfunc("XConnectionNumber");
+	return (func_XConnectionNumber)(display);
+}
+
+typedef int (proto_XConvertSelection)( Display *display, Atom sel, Atom target, Atom prop, Window req, Time time);
+static proto_XConvertSelection *func_XConvertSelection = NULL;
+int XConvertSelection( Display *display, Atom sel, Atom target, Atom prop, Window req, Time time) {
+	if (!func_XConvertSelection) func_XConvertSelection=(proto_XConvertSelection *)_loadfunc("XConvertSelection");
+	return (func_XConvertSelection)( display, sel, target, prop, req, time);
+}
+
+typedef int (proto_XCopyArea)( Display *display, Drawable src, Drawable dest, GC gc, int src_x, int src_y, unsigned int width, unsigned int height, int dest_x, int dest_y);
+static proto_XCopyArea *func_XCopyArea = NULL;
+int XCopyArea( Display *display, Drawable src, Drawable dest, GC gc, int src_x, int src_y, unsigned int width, unsigned int height, int dest_x, int dest_y) {
+	if (!func_XCopyArea) func_XCopyArea=(proto_XCopyArea *)_loadfunc("XCopyArea");
+	return (func_XCopyArea)( display, src, dest, gc, src_x, src_y, width, height, dest_x, dest_y);
+}
+
+typedef int (proto_XCopyGC)( Display *display, GC sgc, unsigned long vmask, GC dgc);
+static proto_XCopyGC *func_XCopyGC = NULL;
+int XCopyGC( Display *display, GC sgc, unsigned long vmask, GC dgc) {
+	if (!func_XCopyGC) func_XCopyGC=(proto_XCopyGC *)_loadfunc("XCopyGC");
+	return (func_XCopyGC)( display, sgc, vmask, dgc);
+}
+
+typedef Pixmap (proto_XCreateBitmapFromData)(Display *display, Drawable drawable, const char *data, unsigned int width, unsigned int height);
+static proto_XCreateBitmapFromData *func_XCreateBitmapFromData = NULL;
+Pixmap XCreateBitmapFromData(Display *display, Drawable drawable, const char *data, unsigned int width, unsigned int height) {
+	if (!func_XCreateBitmapFromData) func_XCreateBitmapFromData=(proto_XCreateBitmapFromData *)_loadfunc("XCreateBitmapFromData");
+	return (func_XCreateBitmapFromData)(display, drawable, data, width, height);
+}
+
+typedef Colormap (proto_XCreateColormap)( Display *display, Window w, Visual *visual, int alloc);
+static proto_XCreateColormap *func_XCreateColormap = NULL;
+Colormap XCreateColormap( Display *display, Window w, Visual *visual, int alloc) {
+	if (!func_XCreateColormap) func_XCreateColormap=(proto_XCreateColormap *)_loadfunc("XCreateColormap");
+	return (func_XCreateColormap)( display, w, visual, alloc);
+}
+
+typedef Cursor (proto_XCreateFontCursor)( Display *display, unsigned int shape);
+static proto_XCreateFontCursor *func_XCreateFontCursor = NULL;
+Cursor XCreateFontCursor( Display *display, unsigned int shape) {
+	if (!func_XCreateFontCursor) func_XCreateFontCursor=(proto_XCreateFontCursor *)_loadfunc("XCreateFontCursor");
+	return (func_XCreateFontCursor)( display, shape);
+}
+
+typedef GC (proto_XCreateGC)( Display *display, Drawable window, unsigned long mask, XGCValues *gc_values);
+static proto_XCreateGC *func_XCreateGC = NULL;
+GC XCreateGC( Display *display, Drawable window, unsigned long mask, XGCValues *gc_values) {
+	if (!func_XCreateGC) func_XCreateGC=(proto_XCreateGC *)_loadfunc("XCreateGC");
+	return (func_XCreateGC)( display, window, mask, gc_values);
+}
+
+typedef XImage * (proto_XCreateImage)( Display *display, Visual *visual, unsigned int depth, int format, int offset, char *data, unsigned int width, unsigned int height, int bitmap_pad, int bytes_per_line);
+static proto_XCreateImage *func_XCreateImage = NULL;
+XImage * XCreateImage( Display *display, Visual *visual, unsigned int depth, int format, int offset, char *data, unsigned int width, unsigned int height, int bitmap_pad, int bytes_per_line) {
+	if (!func_XCreateImage) func_XCreateImage=(proto_XCreateImage *)_loadfunc("XCreateImage");
+	return (func_XCreateImage)( display, visual, depth, format, offset, data, width, height, bitmap_pad, bytes_per_line);
+}
+
+typedef Pixmap (proto_XCreatePixmap)( Display *display, Drawable drawable, unsigned int width, unsigned int height, unsigned int depth);
+static proto_XCreatePixmap *func_XCreatePixmap = NULL;
+Pixmap XCreatePixmap( Display *display, Drawable drawable, unsigned int width, unsigned int height, unsigned int depth) {
+	if (!func_XCreatePixmap) func_XCreatePixmap=(proto_XCreatePixmap *)_loadfunc("XCreatePixmap");
+	return (func_XCreatePixmap)( display, drawable, width, height, depth);
+}
+
+typedef Region (proto_XCreateRegion)();
+static proto_XCreateRegion *func_XCreateRegion = NULL;
+Region XCreateRegion() {
+	if (!func_XCreateRegion) func_XCreateRegion=(proto_XCreateRegion *)_loadfunc("XCreateRegion");
+	return (func_XCreateRegion)();
+}
+
+typedef Window (proto_XCreateSimpleWindow)( Display *display, Window parent, int x, int y, unsigned int brd, unsigned int w, unsigned int h, unsigned long bg, unsigned long brd_col);
+static proto_XCreateSimpleWindow *func_XCreateSimpleWindow = NULL;
+Window XCreateSimpleWindow( Display *display, Window parent, int x, int y, unsigned int brd, unsigned int w, unsigned int h, unsigned long bg, unsigned long brd_col) {
+	if (!func_XCreateSimpleWindow) func_XCreateSimpleWindow=(proto_XCreateSimpleWindow *)_loadfunc("XCreateSimpleWindow");
+	return (func_XCreateSimpleWindow)( display, parent, x, y, brd, w, h, bg, brd_col);
+}
+
+typedef Window (proto_XCreateWindow)( Display *display, Window parent, int x, int y, unsigned int width, unsigned int height, unsigned int bw, int depth, unsigned int class, Visual *visual, unsigned long valuemask, XSetWindowAttributes *attr);
+static proto_XCreateWindow *func_XCreateWindow = NULL;
+Window XCreateWindow( Display *display, Window parent, int x, int y, unsigned int width, unsigned int height, unsigned int bw, int depth, unsigned int class, Visual *visual, unsigned long valuemask, XSetWindowAttributes *attr) {
+	if (!func_XCreateWindow) func_XCreateWindow=(proto_XCreateWindow *)_loadfunc("XCreateWindow");
+	return (func_XCreateWindow)( display, parent, x, y, width, height, bw, depth, class, visual, valuemask, attr);
+}
+
+typedef Colormap (proto_XDefaultColormap)( Display *display, int screen);
+static proto_XDefaultColormap *func_XDefaultColormap = NULL;
+Colormap XDefaultColormap( Display *display, int screen) {
+	if (!func_XDefaultColormap) func_XDefaultColormap=(proto_XDefaultColormap *)_loadfunc("XDefaultColormap");
+	return (func_XDefaultColormap)( display, screen);
+}
+
+typedef int (proto_XDefaultDepth)( Display *display, int screen);
+static proto_XDefaultDepth *func_XDefaultDepth = NULL;
+int XDefaultDepth( Display *display, int screen) {
+	if (!func_XDefaultDepth) func_XDefaultDepth=(proto_XDefaultDepth *)_loadfunc("XDefaultDepth");
+	return (func_XDefaultDepth)( display, screen);
+}
+
+typedef int (proto_XDefaultScreen)(Display *display);
+static proto_XDefaultScreen *func_XDefaultScreen = NULL;
+int XDefaultScreen(Display *display) {
+	if (!func_XDefaultScreen) func_XDefaultScreen=(proto_XDefaultScreen *)_loadfunc("XDefaultScreen");
+	return (func_XDefaultScreen)(display);
+}
+
+typedef Visual * (proto_XDefaultVisual)( Display *display, int screen);
+static proto_XDefaultVisual *func_XDefaultVisual = NULL;
+Visual * XDefaultVisual( Display *display, int screen) {
+	if (!func_XDefaultVisual) func_XDefaultVisual=(proto_XDefaultVisual *)_loadfunc("XDefaultVisual");
+	return (func_XDefaultVisual)( display, screen);
+}
+
+typedef int (proto_XDefineCursor)(Display* display,Window w,Cursor cursor);
+static proto_XDefineCursor *func_XDefineCursor = NULL;
+int XDefineCursor(Display* display,Window w,Cursor cursor) {
+	if (!func_XDefineCursor) func_XDefineCursor=(proto_XDefineCursor *)_loadfunc("XDefineCursor");
+	return (func_XDefineCursor)(display,w,cursor);
+}
+
+typedef int (proto_XDestroyRegion)(Region hrgn);
+static proto_XDestroyRegion *func_XDestroyRegion = NULL;
+int XDestroyRegion(Region hrgn) {
+	if (!func_XDestroyRegion) func_XDestroyRegion=(proto_XDestroyRegion *)_loadfunc("XDestroyRegion");
+	return (func_XDestroyRegion)(hrgn);
+}
+
+typedef int (proto_XDestroyWindow)( Display *display, Window w);
+static proto_XDestroyWindow *func_XDestroyWindow = NULL;
+int XDestroyWindow( Display *display, Window w) {
+	if (!func_XDestroyWindow) func_XDestroyWindow=(proto_XDestroyWindow *)_loadfunc("XDestroyWindow");
+	return (func_XDestroyWindow)( display, w);
+}
+
+typedef char * (proto_XDisplayString)(Display *display);
+static proto_XDisplayString *func_XDisplayString = NULL;
+char * XDisplayString(Display *display) {
+	if (!func_XDisplayString) func_XDisplayString=(proto_XDisplayString *)_loadfunc("XDisplayString");
+	return (func_XDisplayString)(display);
+}
+
+typedef int (proto_XDoesBackingStore)(Screen *scr);
+static proto_XDoesBackingStore *func_XDoesBackingStore = NULL;
+int XDoesBackingStore(Screen *scr) {
+	if (!func_XDoesBackingStore) func_XDoesBackingStore=(proto_XDoesBackingStore *)_loadfunc("XDoesBackingStore");
+	return (func_XDoesBackingStore)(scr);
+}
+
+typedef int (proto_XDrawArc)( Display *display, Drawable w, GC gc, int x, int y, unsigned int width,unsigned int height, int a1, int a2);
+static proto_XDrawArc *func_XDrawArc = NULL;
+int XDrawArc( Display *display, Drawable w, GC gc, int x, int y, unsigned int width,unsigned int height, int a1, int a2) {
+	if (!func_XDrawArc) func_XDrawArc=(proto_XDrawArc *)_loadfunc("XDrawArc");
+	return (func_XDrawArc)( display, w, gc, x, y, width,height, a1, a2);
+}
+
+typedef int (proto_XDrawImageString)( Display* display, Drawable d, GC gc, int x, int y, const char* string, int length);
+static proto_XDrawImageString *func_XDrawImageString = NULL;
+int XDrawImageString( Display* display, Drawable d, GC gc, int x, int y, const char* string, int length) {
+	if (!func_XDrawImageString) func_XDrawImageString=(proto_XDrawImageString *)_loadfunc("XDrawImageString");
+	return (func_XDrawImageString)( display, d, gc, x, y, string, length);
+}
+
+typedef int (proto_XDrawImageString16)(Display *display, Drawable window, GC gc, int x, int y, const XChar2b* str, int len);
+static proto_XDrawImageString16 *func_XDrawImageString16 = NULL;
+int XDrawImageString16(Display *display, Drawable window, GC gc, int x, int y, const XChar2b* str, int len) {
+	if (!func_XDrawImageString16) func_XDrawImageString16=(proto_XDrawImageString16 *)_loadfunc("XDrawImageString16");
+	return (func_XDrawImageString16)(display, window, gc, x, y, str, len);
+}
+
+typedef int (proto_XDrawLine)( Display *display, Drawable w, GC gc, int x1,int y1, int x2,int y2);
+static proto_XDrawLine *func_XDrawLine = NULL;
+int XDrawLine( Display *display, Drawable w, GC gc, int x1,int y1, int x2,int y2) {
+	if (!func_XDrawLine) func_XDrawLine=(proto_XDrawLine *)_loadfunc("XDrawLine");
+	return (func_XDrawLine)( display, w, gc, x1,y1, x2,y2);
+}
+
+typedef int (proto_XDrawLines)( Display *display, Drawable w, GC gc, XPoint *points, int nps,int mode);
+static proto_XDrawLines *func_XDrawLines = NULL;
+int XDrawLines( Display *display, Drawable w, GC gc, XPoint *points, int nps,int mode) {
+	if (!func_XDrawLines) func_XDrawLines=(proto_XDrawLines *)_loadfunc("XDrawLines");
+	return (func_XDrawLines)( display, w, gc, points, nps,mode);
+}
+
+typedef int (proto_XDrawPoint)( Display *display, Drawable w, GC gc, int x, int y);
+static proto_XDrawPoint *func_XDrawPoint = NULL;
+int XDrawPoint( Display *display, Drawable w, GC gc, int x, int y) {
+	if (!func_XDrawPoint) func_XDrawPoint=(proto_XDrawPoint *)_loadfunc("XDrawPoint");
+	return (func_XDrawPoint)( display, w, gc, x, y);
+}
+
+typedef int (proto_XDrawPoints)( Display *display, Drawable w, GC gc, XPoint *points, int nps, int mode);
+static proto_XDrawPoints *func_XDrawPoints = NULL;
+int XDrawPoints( Display *display, Drawable w, GC gc, XPoint *points, int nps, int mode) {
+	if (!func_XDrawPoints) func_XDrawPoints=(proto_XDrawPoints *)_loadfunc("XDrawPoints");
+	return (func_XDrawPoints)( display, w, gc, points, nps, mode);
+}
+
+typedef int (proto_XDrawRectangle)( Display *display, Drawable w, GC gc, int x, int y, unsigned int width, unsigned int height);
+static proto_XDrawRectangle *func_XDrawRectangle = NULL;
+int XDrawRectangle( Display *display, Drawable w, GC gc, int x, int y, unsigned int width, unsigned int height) {
+	if (!func_XDrawRectangle) func_XDrawRectangle=(proto_XDrawRectangle *)_loadfunc("XDrawRectangle");
+	return (func_XDrawRectangle)( display, w, gc, x, y, width, height);
+}
+
+typedef int (proto_XDrawSegments)( Display *display, Drawable w, GC gc, XSegment *segs, int nsegs);
+static proto_XDrawSegments *func_XDrawSegments = NULL;
+int XDrawSegments( Display *display, Drawable w, GC gc, XSegment *segs, int nsegs) {
+	if (!func_XDrawSegments) func_XDrawSegments=(proto_XDrawSegments *)_loadfunc("XDrawSegments");
+	return (func_XDrawSegments)( display, w, gc, segs, nsegs);
+}
+
+typedef int (proto_XDrawString)(Display *display, Drawable window, GC gc, int x, int y, const char* str, int len);
+static proto_XDrawString *func_XDrawString = NULL;
+int XDrawString(Display *display, Drawable window, GC gc, int x, int y, const char* str, int len) {
+	if (!func_XDrawString) func_XDrawString=(proto_XDrawString *)_loadfunc("XDrawString");
+	return (func_XDrawString)(display, window, gc, x, y, str, len);
+}
+
+typedef int (proto_XDrawString16)(Display *display, Drawable window, GC gc, int x, int y, const XChar2b* str, int len);
+static proto_XDrawString16 *func_XDrawString16 = NULL;
+int XDrawString16(Display *display, Drawable window, GC gc, int x, int y, const XChar2b* str, int len) {
+	if (!func_XDrawString16) func_XDrawString16=(proto_XDrawString16 *)_loadfunc("XDrawString16");
+	return (func_XDrawString16)(display, window, gc, x, y, str, len);
+}
+
+typedef StatusDef (proto_XFetchName)( Display *display, Window w, char **window_name_return);
+static proto_XFetchName *func_XFetchName = NULL;
+StatusDef XFetchName( Display *display, Window w, char **window_name_return) {
+	if (!func_XFetchName) func_XFetchName=(proto_XFetchName *)_loadfunc("XFetchName");
+	return (func_XFetchName)( display, w, window_name_return);
+}
+
+typedef int (proto_XFillArc)( Display *display, Drawable w, GC gc, int x, int y, unsigned int width,unsigned height, int a1, int a2);
+static proto_XFillArc *func_XFillArc = NULL;
+int XFillArc( Display *display, Drawable w, GC gc, int x, int y, unsigned int width,unsigned height, int a1, int a2) {
+	if (!func_XFillArc) func_XFillArc=(proto_XFillArc *)_loadfunc("XFillArc");
+	return (func_XFillArc)( display, w, gc, x, y, width,height, a1, a2);
+}
+
+typedef int (proto_XFillPolygon)( Display *display, Drawable w, GC gc, XPoint *points, int nps, int shape, int mode);
+static proto_XFillPolygon *func_XFillPolygon = NULL;
+int XFillPolygon( Display *display, Drawable w, GC gc, XPoint *points, int nps, int shape, int mode) {
+	if (!func_XFillPolygon) func_XFillPolygon=(proto_XFillPolygon *)_loadfunc("XFillPolygon");
+	return (func_XFillPolygon)( display, w, gc, points, nps, shape, mode);
+}
+
+typedef int (proto_XFillRectangle)( Display *display, Drawable window, GC gc, int x, int y, unsigned int w, unsigned int h);
+static proto_XFillRectangle *func_XFillRectangle = NULL;
+int XFillRectangle( Display *display, Drawable window, GC gc, int x, int y, unsigned int w, unsigned int h) {
+	if (!func_XFillRectangle) func_XFillRectangle=(proto_XFillRectangle *)_loadfunc("XFillRectangle");
+	return (func_XFillRectangle)( display, window, gc, x, y, w, h);
+}
+
+typedef BoolDef (proto_XFilterEvent)(XEvent* event,Window window);
+static proto_XFilterEvent *func_XFilterEvent = NULL;
+BoolDef XFilterEvent(XEvent* event,Window window) {
+	if (!func_XFilterEvent) func_XFilterEvent=(proto_XFilterEvent *)_loadfunc("XFilterEvent");
+	return (func_XFilterEvent)(event,window);
+}
+
+typedef int (proto_XFlush)(Display *display);
+static proto_XFlush *func_XFlush = NULL;
+int XFlush(Display *display) {
+	if (!func_XFlush) func_XFlush=(proto_XFlush *)_loadfunc("XFlush");
+	return (func_XFlush)(display);
+}
+
+typedef int (proto_XFree)(void *data);
+static proto_XFree *func_XFree = NULL;
+int XFree(void *data) {
+	if (!func_XFree) func_XFree=(proto_XFree *)_loadfunc("XFree");
+	return (func_XFree)(data);
+}
+
+typedef int (proto_XFreeColors)(Display *display, Colormap cmap, unsigned long pixels[], int npixels, unsigned long planes);
+static proto_XFreeColors *func_XFreeColors = NULL;
+int XFreeColors(Display *display, Colormap cmap, unsigned long pixels[], int npixels, unsigned long planes) {
+	if (!func_XFreeColors) func_XFreeColors=(proto_XFreeColors *)_loadfunc("XFreeColors");
+	return (func_XFreeColors)(display, cmap, pixels, npixels, planes);
+}
+
+typedef int (proto_XFreeExtensionList)(char **list);
+static proto_XFreeExtensionList *func_XFreeExtensionList = NULL;
+int XFreeExtensionList(char **list) {
+	if (!func_XFreeExtensionList) func_XFreeExtensionList=(proto_XFreeExtensionList *)_loadfunc("XFreeExtensionList");
+	return (func_XFreeExtensionList)(list);
+}
+
+typedef int (proto_XFreeFont)(Display* display,XFontStruct* font_struct);
+static proto_XFreeFont *func_XFreeFont = NULL;
+int XFreeFont(Display* display,XFontStruct* font_struct) {
+	if (!func_XFreeFont) func_XFreeFont=(proto_XFreeFont *)_loadfunc("XFreeFont");
+	return (func_XFreeFont)(display,font_struct);
+}
+
+typedef int (proto_XFreeGC)( Display *display, GC gc);
+static proto_XFreeGC *func_XFreeGC = NULL;
+int XFreeGC( Display *display, GC gc) {
+	if (!func_XFreeGC) func_XFreeGC=(proto_XFreeGC *)_loadfunc("XFreeGC");
+	return (func_XFreeGC)( display, gc);
+}
+
+typedef int (proto_XFreeModifiermap)(XModifierKeymap *modmap);
+static proto_XFreeModifiermap *func_XFreeModifiermap = NULL;
+int XFreeModifiermap(XModifierKeymap *modmap) {
+	if (!func_XFreeModifiermap) func_XFreeModifiermap=(proto_XFreeModifiermap *)_loadfunc("XFreeModifiermap");
+	return (func_XFreeModifiermap)(modmap);
+}
+
+typedef int (proto_XFreePixmap)( Display *display, Pixmap pixmap);
+static proto_XFreePixmap *func_XFreePixmap = NULL;
+int XFreePixmap( Display *display, Pixmap pixmap) {
+	if (!func_XFreePixmap) func_XFreePixmap=(proto_XFreePixmap *)_loadfunc("XFreePixmap");
+	return (func_XFreePixmap)( display, pixmap);
+}
+
+typedef void (proto_XFreeStringList)(char **list);
+static proto_XFreeStringList *func_XFreeStringList = NULL;
+void XFreeStringList(char **list) {
+	if (!func_XFreeStringList) func_XFreeStringList=(proto_XFreeStringList *)_loadfunc("XFreeStringList");
+	(func_XFreeStringList)(list);
+}
+
+typedef char * (proto_XGetAtomName)( Display *display, Atom atom);
+static proto_XGetAtomName *func_XGetAtomName = NULL;
+char * XGetAtomName( Display *display, Atom atom) {
+	if (!func_XGetAtomName) func_XGetAtomName=(proto_XGetAtomName *)_loadfunc("XGetAtomName");
+	return (func_XGetAtomName)( display, atom);
+}
+
+typedef int (proto_XGetErrorDatabaseText)( Display *display, const char *name, const char *msg, const char *defstr, char *buf, int len);
+static proto_XGetErrorDatabaseText *func_XGetErrorDatabaseText = NULL;
+int XGetErrorDatabaseText( Display *display, const char *name, const char *msg, const char *defstr, char *buf, int len) {
+	if (!func_XGetErrorDatabaseText) func_XGetErrorDatabaseText=(proto_XGetErrorDatabaseText *)_loadfunc("XGetErrorDatabaseText");
+	return (func_XGetErrorDatabaseText)( display, name, msg, defstr, buf, len);
+}
+
+typedef int (proto_XGetErrorText)( Display *display, int code, char *buf, int len);
+static proto_XGetErrorText *func_XGetErrorText = NULL;
+int XGetErrorText( Display *display, int code, char *buf, int len) {
+	if (!func_XGetErrorText) func_XGetErrorText=(proto_XGetErrorText *)_loadfunc("XGetErrorText");
+	return (func_XGetErrorText)( display, code, buf, len);
+}
+
+typedef char ** (proto_XGetFontPath)( Display *display, int *nps);
+static proto_XGetFontPath *func_XGetFontPath = NULL;
+char ** XGetFontPath( Display *display, int *nps) {
+	if (!func_XGetFontPath) func_XGetFontPath=(proto_XGetFontPath *)_loadfunc("XGetFontPath");
+	return (func_XGetFontPath)( display, nps);
+}
+
+typedef BoolDef (proto_XGetFontProperty)( XFontStruct *fstruct, Atom atom, unsigned long *val);
+static proto_XGetFontProperty *func_XGetFontProperty = NULL;
+BoolDef XGetFontProperty( XFontStruct *fstruct, Atom atom, unsigned long *val) {
+	if (!func_XGetFontProperty) func_XGetFontProperty=(proto_XGetFontProperty *)_loadfunc("XGetFontProperty");
+	return (func_XGetFontProperty)( fstruct, atom, val);
+}
+
+typedef StatusDef (proto_XGetGeometry)( Display *display, Drawable w, Window *root, int *x, int *y, unsigned int *width, unsigned int *height, unsigned int *bw, unsigned int *depth);
+static proto_XGetGeometry *func_XGetGeometry = NULL;
+StatusDef XGetGeometry( Display *display, Drawable w, Window *root, int *x, int *y, unsigned int *width, unsigned int *height, unsigned int *bw, unsigned int *depth) {
+	if (!func_XGetGeometry) func_XGetGeometry=(proto_XGetGeometry *)_loadfunc("XGetGeometry");
+	return (func_XGetGeometry)( display, w, root, x, y, width, height, bw, depth);
+}
+
+typedef int (proto_XGetIconName)( Display *display, Window w, char **iname);
+static proto_XGetIconName *func_XGetIconName = NULL;
+int XGetIconName( Display *display, Window w, char **iname) {
+	if (!func_XGetIconName) func_XGetIconName=(proto_XGetIconName *)_loadfunc("XGetIconName");
+	return (func_XGetIconName)( display, w, iname);
+}
+
+typedef XImage * (proto_XGetImage)( Display *display, Drawable drawable, int x, int y, unsigned int width, unsigned int height, unsigned long plane_mask, int format);
+static proto_XGetImage *func_XGetImage = NULL;
+XImage * XGetImage( Display *display, Drawable drawable, int x, int y, unsigned int width, unsigned int height, unsigned long plane_mask, int format) {
+	if (!func_XGetImage) func_XGetImage=(proto_XGetImage *)_loadfunc("XGetImage");
+	return (func_XGetImage)( display, drawable, x, y, width, height, plane_mask, format);
+}
+
+typedef int (proto_XGetInputFocus)( Display *display, Window *focus, int *revto);
+static proto_XGetInputFocus *func_XGetInputFocus = NULL;
+int XGetInputFocus( Display *display, Window *focus, int *revto) {
+	if (!func_XGetInputFocus) func_XGetInputFocus=(proto_XGetInputFocus *)_loadfunc("XGetInputFocus");
+	return (func_XGetInputFocus)( display, focus, revto);
+}
+
+typedef XModifierKeymap * (proto_XGetModifierMapping)(Display *display);
+static proto_XGetModifierMapping *func_XGetModifierMapping = NULL;
+XModifierKeymap * XGetModifierMapping(Display *display) {
+	if (!func_XGetModifierMapping) func_XGetModifierMapping=(proto_XGetModifierMapping *)_loadfunc("XGetModifierMapping");
+	return (func_XGetModifierMapping)(display);
+}
+
+typedef Window (proto_XGetSelectionOwner)( Display* display, Atom selection);
+static proto_XGetSelectionOwner *func_XGetSelectionOwner = NULL;
+Window XGetSelectionOwner( Display* display, Atom selection) {
+	if (!func_XGetSelectionOwner) func_XGetSelectionOwner=(proto_XGetSelectionOwner *)_loadfunc("XGetSelectionOwner");
+	return (func_XGetSelectionOwner)( display, selection);
+}
+
+typedef StatusDef (proto_XGetStandardColormap)( Display *display, Window w, XStandardColormap *cmapinf, Atom prop);
+static proto_XGetStandardColormap *func_XGetStandardColormap = NULL;
+StatusDef XGetStandardColormap( Display *display, Window w, XStandardColormap *cmapinf, Atom prop) {
+	if (!func_XGetStandardColormap) func_XGetStandardColormap=(proto_XGetStandardColormap *)_loadfunc("XGetStandardColormap");
+	return (func_XGetStandardColormap)( display, w, cmapinf, prop);
+}
+
+typedef XVisualInfo * (proto_XGetVisualInfo)( Display *display, long vinm, XVisualInfo *vint, int *n);
+static proto_XGetVisualInfo *func_XGetVisualInfo = NULL;
+XVisualInfo * XGetVisualInfo( Display *display, long vinm, XVisualInfo *vint, int *n) {
+	if (!func_XGetVisualInfo) func_XGetVisualInfo=(proto_XGetVisualInfo *)_loadfunc("XGetVisualInfo");
+	return (func_XGetVisualInfo)( display, vinm, vint, n);
+}
+
+typedef StatusDef (proto_XGetWindowAttributes)(Display *display, Window w, XWindowAttributes *wattr);
+static proto_XGetWindowAttributes *func_XGetWindowAttributes = NULL;
+StatusDef XGetWindowAttributes(Display *display, Window w, XWindowAttributes *wattr) {
+	if (!func_XGetWindowAttributes) func_XGetWindowAttributes=(proto_XGetWindowAttributes *)_loadfunc("XGetWindowAttributes");
+	return (func_XGetWindowAttributes)(display, w, wattr);
+}
+
+typedef int (proto_XGetWindowProperty)( Display *display, Window window, Atom property, long long_offset, long long_length, BoolDef delete, Atom req_type, Atom *actual_type_return, int *actual_format_return, unsigned long *nitems_return, unsigned long *bytes_after_return, unsigned char **prop_return);
+static proto_XGetWindowProperty *func_XGetWindowProperty = NULL;
+int XGetWindowProperty( Display *display, Window window, Atom property, long long_offset, long long_length, BoolDef delete, Atom req_type, Atom *actual_type_return, int *actual_format_return, unsigned long *nitems_return, unsigned long *bytes_after_return, unsigned char **prop_return) {
+	if (!func_XGetWindowProperty) func_XGetWindowProperty=(proto_XGetWindowProperty *)_loadfunc("XGetWindowProperty");
+	return (func_XGetWindowProperty)( display, window, property, long_offset, long_length, delete, req_type, actual_type_return, actual_format_return, nitems_return, bytes_after_return, prop_return);
+}
+
+typedef int (proto_XGrabServer)(Display *display);
+static proto_XGrabServer *func_XGrabServer = NULL;
+int XGrabServer(Display *display) {
+	if (!func_XGrabServer) func_XGrabServer=(proto_XGrabServer *)_loadfunc("XGrabServer");
+	return (func_XGrabServer)(display);
+}
+
+typedef int (proto_XIconifyWindow)(Display *display, Window w, int screen_number);
+static proto_XIconifyWindow *func_XIconifyWindow = NULL;
+int XIconifyWindow(Display *display, Window w, int screen_number) {
+	if (!func_XIconifyWindow) func_XIconifyWindow=(proto_XIconifyWindow *)_loadfunc("XIconifyWindow");
+	return (func_XIconifyWindow)(display, w, screen_number);
+}
+
+typedef XExtCodes * (proto_XInitExtension)(Display *display, const char *name);
+static proto_XInitExtension *func_XInitExtension = NULL;
+XExtCodes * XInitExtension(Display *display, const char *name) {
+	if (!func_XInitExtension) func_XInitExtension=(proto_XInitExtension *)_loadfunc("XInitExtension");
+	return (func_XInitExtension)(display, name);
+}
+
+typedef Atom (proto_XInternAtom)( Display *display, const char *property_name, BoolDef only_if_exists);
+static proto_XInternAtom *func_XInternAtom = NULL;
+Atom XInternAtom( Display *display, const char *property_name, BoolDef only_if_exists) {
+	if (!func_XInternAtom) func_XInternAtom=(proto_XInternAtom *)_loadfunc("XInternAtom");
+	return (func_XInternAtom)( display, property_name, only_if_exists);
+}
+
+typedef KeySym (proto_XKeycodeToKeysym)( Display *display, unsigned int keycode, int index);
+static proto_XKeycodeToKeysym *func_XKeycodeToKeysym = NULL;
+KeySym XKeycodeToKeysym( Display *display, unsigned int keycode, int index) {
+	if (!func_XKeycodeToKeysym) func_XKeycodeToKeysym=(proto_XKeycodeToKeysym *)_loadfunc("XKeycodeToKeysym");
+	return (func_XKeycodeToKeysym)( display, keycode, index);
+}
+
+typedef KeyCode (proto_XKeysymToKeycode)( Display *display, KeySym keysym);
+static proto_XKeysymToKeycode *func_XKeysymToKeycode = NULL;
+KeyCode XKeysymToKeycode( Display *display, KeySym keysym) {
+	if (!func_XKeysymToKeycode) func_XKeysymToKeycode=(proto_XKeysymToKeycode *)_loadfunc("XKeysymToKeycode");
+	return (func_XKeysymToKeycode)( display, keysym);
+}
+
+typedef char ** (proto_XListExtensions)( Display *display, int *ret_num);
+static proto_XListExtensions *func_XListExtensions = NULL;
+char ** XListExtensions( Display *display, int *ret_num) {
+	if (!func_XListExtensions) func_XListExtensions=(proto_XListExtensions *)_loadfunc("XListExtensions");
+	return (func_XListExtensions)( display, ret_num);
+}
+
+typedef XFontStruct * (proto_XLoadQueryFont)(Display *display, const char *name);
+static proto_XLoadQueryFont *func_XLoadQueryFont = NULL;
+XFontStruct * XLoadQueryFont(Display *display, const char *name) {
+	if (!func_XLoadQueryFont) func_XLoadQueryFont=(proto_XLoadQueryFont *)_loadfunc("XLoadQueryFont");
+	return (func_XLoadQueryFont)(display, name);
+}
+
+typedef int (proto_XLookupString)( XKeyEvent *event, char *buf, int nbytes, KeySym *keysym, XComposeStatus *status);
+static proto_XLookupString *func_XLookupString = NULL;
+int XLookupString( XKeyEvent *event, char *buf, int nbytes, KeySym *keysym, XComposeStatus *status) {
+	if (!func_XLookupString) func_XLookupString=(proto_XLookupString *)_loadfunc("XLookupString");
+	return (func_XLookupString)( event, buf, nbytes, keysym, status);
+}
+
+typedef int (proto_XLowerWindow)(Display *display, Window w);
+static proto_XLowerWindow *func_XLowerWindow = NULL;
+int XLowerWindow(Display *display, Window w) {
+	if (!func_XLowerWindow) func_XLowerWindow=(proto_XLowerWindow *)_loadfunc("XLowerWindow");
+	return (func_XLowerWindow)(display, w);
+}
+
+typedef int (proto_XMapRaised)( Display *display, Window w);
+static proto_XMapRaised *func_XMapRaised = NULL;
+int XMapRaised( Display *display, Window w) {
+	if (!func_XMapRaised) func_XMapRaised=(proto_XMapRaised *)_loadfunc("XMapRaised");
+	return (func_XMapRaised)( display, w);
+}
+
+typedef int (proto_XMapSubwindows)( Display *display, Window w);
+static proto_XMapSubwindows *func_XMapSubwindows = NULL;
+int XMapSubwindows( Display *display, Window w) {
+	if (!func_XMapSubwindows) func_XMapSubwindows=(proto_XMapSubwindows *)_loadfunc("XMapSubwindows");
+	return (func_XMapSubwindows)( display, w);
+}
+
+typedef int (proto_XMapWindow)(Display *display, Window window);
+static proto_XMapWindow *func_XMapWindow = NULL;
+int XMapWindow(Display *display, Window window) {
+	if (!func_XMapWindow) func_XMapWindow=(proto_XMapWindow *)_loadfunc("XMapWindow");
+	return (func_XMapWindow)(display, window);
+}
+
+typedef StatusDef (proto_XMatchVisualInfo)( Display* display, int screen, int depth, int class, XVisualInfo* vinfo_return);
+static proto_XMatchVisualInfo *func_XMatchVisualInfo = NULL;
+StatusDef XMatchVisualInfo( Display* display, int screen, int depth, int class, XVisualInfo* vinfo_return) {
+	if (!func_XMatchVisualInfo) func_XMatchVisualInfo=(proto_XMatchVisualInfo *)_loadfunc("XMatchVisualInfo");
+	return (func_XMatchVisualInfo)( display, screen, depth, class, vinfo_return);
+}
+
+typedef int (proto_XMoveResizeWindow)( Display* display, Window w, int x, int y, unsigned int width, unsigned int height);
+static proto_XMoveResizeWindow *func_XMoveResizeWindow = NULL;
+int XMoveResizeWindow( Display* display, Window w, int x, int y, unsigned int width, unsigned int height) {
+	if (!func_XMoveResizeWindow) func_XMoveResizeWindow=(proto_XMoveResizeWindow *)_loadfunc("XMoveResizeWindow");
+	return (func_XMoveResizeWindow)( display, w, x, y, width, height);
+}
+
+typedef int (proto_XMoveWindow)( Display* display, Window w, int x, int y);
+static proto_XMoveWindow *func_XMoveWindow = NULL;
+int XMoveWindow( Display* display, Window w, int x, int y) {
+	if (!func_XMoveWindow) func_XMoveWindow=(proto_XMoveWindow *)_loadfunc("XMoveWindow");
+	return (func_XMoveWindow)( display, w, x, y);
+}
+
+typedef int (proto_XNextEvent)( Display *display, XEvent *event);
+static proto_XNextEvent *func_XNextEvent = NULL;
+int XNextEvent( Display *display, XEvent *event) {
+	if (!func_XNextEvent) func_XNextEvent=(proto_XNextEvent *)_loadfunc("XNextEvent");
+	return (func_XNextEvent)( display, event);
+}
+
+typedef XIM (proto_XOpenIM)( Display* dpy, struct _XrmHashBucketRec* rdb, char* res_name, char* res_class);
+static proto_XOpenIM *func_XOpenIM = NULL;
+XIM XOpenIM( Display* dpy, struct _XrmHashBucketRec* rdb, char* res_name, char* res_class) {
+	if (!func_XOpenIM) func_XOpenIM=(proto_XOpenIM *)_loadfunc("XOpenIM");
+	return (func_XOpenIM)( dpy, rdb, res_name, res_class);
+}
+
+typedef StatusDef (proto_XParseColor)( Display *display, Colormap map, const char* spec, XColor *colorPtr);
+static proto_XParseColor *func_XParseColor = NULL;
+StatusDef XParseColor( Display *display, Colormap map, const char* spec, XColor *colorPtr) {
+	if (!func_XParseColor) func_XParseColor=(proto_XParseColor *)_loadfunc("XParseColor");
+	return (func_XParseColor)( display, map, spec, colorPtr);
+}
+
+typedef int (proto_XParseGeometry)( const char* string, int* x, int* y, unsigned int* width, unsigned int* height);
+static proto_XParseGeometry *func_XParseGeometry = NULL;
+int XParseGeometry( const char* string, int* x, int* y, unsigned int* width, unsigned int* height) {
+	if (!func_XParseGeometry) func_XParseGeometry=(proto_XParseGeometry *)_loadfunc("XParseGeometry");
+	return (func_XParseGeometry)( string, x, y, width, height);
+}
+
+typedef int (proto_XPending)(Display *display);
+static proto_XPending *func_XPending = NULL;
+int XPending(Display *display) {
+	if (!func_XPending) func_XPending=(proto_XPending *)_loadfunc("XPending");
+	return (func_XPending)(display);
+}
+
+typedef int (proto_XPutBackEvent)(Display *display, XEvent *event);
+static proto_XPutBackEvent *func_XPutBackEvent = NULL;
+int XPutBackEvent(Display *display, XEvent *event) {
+	if (!func_XPutBackEvent) func_XPutBackEvent=(proto_XPutBackEvent *)_loadfunc("XPutBackEvent");
+	return (func_XPutBackEvent)(display, event);
+}
+
+typedef int (proto_XPutImage)( Display *display, Drawable w, GC gc, XImage *image, int sx,int sy,int dx,int dy, unsigned int width,unsigned int height);
+static proto_XPutImage *func_XPutImage = NULL;
+int XPutImage( Display *display, Drawable w, GC gc, XImage *image, int sx,int sy,int dx,int dy, unsigned int width,unsigned int height) {
+	if (!func_XPutImage) func_XPutImage=(proto_XPutImage *)_loadfunc("XPutImage");
+	return (func_XPutImage)( display, w, gc, image, sx,sy,dx,dy, width,height);
+}
+
+typedef int (proto_XQueryColor)( Display *display, Colormap cmap, XColor *cell);
+static proto_XQueryColor *func_XQueryColor = NULL;
+int XQueryColor( Display *display, Colormap cmap, XColor *cell) {
+	if (!func_XQueryColor) func_XQueryColor=(proto_XQueryColor *)_loadfunc("XQueryColor");
+	return (func_XQueryColor)( display, cmap, cell);
+}
+
+typedef int (proto_XQueryColors)( Display *display, Colormap cmap, XColor *cells, int nc);
+static proto_XQueryColors *func_XQueryColors = NULL;
+int XQueryColors( Display *display, Colormap cmap, XColor *cells, int nc) {
+	if (!func_XQueryColors) func_XQueryColors=(proto_XQueryColors *)_loadfunc("XQueryColors");
+	return (func_XQueryColors)( display, cmap, cells, nc);
+}
+
+typedef XFontStruct * (proto_XQueryFont)( Display *display, XID font_id);
+static proto_XQueryFont *func_XQueryFont = NULL;
+XFontStruct * XQueryFont( Display *display, XID font_id) {
+	if (!func_XQueryFont) func_XQueryFont=(proto_XQueryFont *)_loadfunc("XQueryFont");
+	return (func_XQueryFont)( display, font_id);
+}
+
+typedef BoolDef (proto_XQueryPointer)( Display* display, Window w, Window* root_return, Window* child_return, int* root_x_return, int* root_y_return, int* win_x_return, int* win_y_return, unsigned int* mask_return);
+static proto_XQueryPointer *func_XQueryPointer = NULL;
+BoolDef XQueryPointer( Display* display, Window w, Window* root_return, Window* child_return, int* root_x_return, int* root_y_return, int* win_x_return, int* win_y_return, unsigned int* mask_return) {
+	if (!func_XQueryPointer) func_XQueryPointer=(proto_XQueryPointer *)_loadfunc("XQueryPointer");
+	return (func_XQueryPointer)( display, w, root_return, child_return, root_x_return, root_y_return, win_x_return, win_y_return, mask_return);
+}
+
+typedef StatusDef (proto_XQueryTree)( Display *display, Window w, Window* root, Window* parent, Window** ch, unsigned int *n);
+static proto_XQueryTree *func_XQueryTree = NULL;
+StatusDef XQueryTree( Display *display, Window w, Window* root, Window* parent, Window** ch, unsigned int *n) {
+	if (!func_XQueryTree) func_XQueryTree=(proto_XQueryTree *)_loadfunc("XQueryTree");
+	return (func_XQueryTree)( display, w, root, parent, ch, n);
+}
+
+typedef int (proto_XRaiseWindow)( Display *display, Window w);
+static proto_XRaiseWindow *func_XRaiseWindow = NULL;
+int XRaiseWindow( Display *display, Window w) {
+	if (!func_XRaiseWindow) func_XRaiseWindow=(proto_XRaiseWindow *)_loadfunc("XRaiseWindow");
+	return (func_XRaiseWindow)( display, w);
+}
+
+typedef int (proto_XRecolorCursor)( Display *display, Cursor cursor, XColor *fg,XColor *bg);
+static proto_XRecolorCursor *func_XRecolorCursor = NULL;
+int XRecolorCursor( Display *display, Cursor cursor, XColor *fg,XColor *bg) {
+	if (!func_XRecolorCursor) func_XRecolorCursor=(proto_XRecolorCursor *)_loadfunc("XRecolorCursor");
+	return (func_XRecolorCursor)( display, cursor, fg,bg);
+}
+
+typedef int (proto_XRefreshKeyboardMapping)(XMappingEvent *event);
+static proto_XRefreshKeyboardMapping *func_XRefreshKeyboardMapping = NULL;
+int XRefreshKeyboardMapping(XMappingEvent *event) {
+	if (!func_XRefreshKeyboardMapping) func_XRefreshKeyboardMapping=(proto_XRefreshKeyboardMapping *)_loadfunc("XRefreshKeyboardMapping");
+	return (func_XRefreshKeyboardMapping)(event);
+}
+
+typedef int (proto_XResizeWindow)( Display* display, Window w, unsigned int width, unsigned int height);
+static proto_XResizeWindow *func_XResizeWindow = NULL;
+int XResizeWindow( Display* display, Window w, unsigned int width, unsigned int height) {
+	if (!func_XResizeWindow) func_XResizeWindow=(proto_XResizeWindow *)_loadfunc("XResizeWindow");
+	return (func_XResizeWindow)( display, w, width, height);
+}
+
+typedef Window (proto_XRootWindow)( Display *display, int scr);
+static proto_XRootWindow *func_XRootWindow = NULL;
+Window XRootWindow( Display *display, int scr) {
+	if (!func_XRootWindow) func_XRootWindow=(proto_XRootWindow *)_loadfunc("XRootWindow");
+	return (func_XRootWindow)( display, scr);
+}
+
+typedef Window (proto_XRootWindowOfScreen)(Screen *scr);
+static proto_XRootWindowOfScreen *func_XRootWindowOfScreen = NULL;
+Window XRootWindowOfScreen(Screen *scr) {
+	if (!func_XRootWindowOfScreen) func_XRootWindowOfScreen=(proto_XRootWindowOfScreen *)_loadfunc("XRootWindowOfScreen");
+	return (func_XRootWindowOfScreen)(scr);
+}
+
+typedef Screen * (proto_XScreenOfDisplay)( Display *display, int scr);
+static proto_XScreenOfDisplay *func_XScreenOfDisplay = NULL;
+Screen * XScreenOfDisplay( Display *display, int scr) {
+	if (!func_XScreenOfDisplay) func_XScreenOfDisplay=(proto_XScreenOfDisplay *)_loadfunc("XScreenOfDisplay");
+	return (func_XScreenOfDisplay)( display, scr);
+}
+
+typedef int (proto_XSelectInput)(Display *display, Window window, long mask);
+static proto_XSelectInput *func_XSelectInput = NULL;
+int XSelectInput(Display *display, Window window, long mask) {
+	if (!func_XSelectInput) func_XSelectInput=(proto_XSelectInput *)_loadfunc("XSelectInput");
+	return (func_XSelectInput)(display, window, mask);
+}
+
+typedef StatusDef (proto_XSendEvent)( Display *display, Window w, BoolDef prop, long emask, XEvent *event);
+static proto_XSendEvent *func_XSendEvent = NULL;
+StatusDef XSendEvent( Display *display, Window w, BoolDef prop, long emask, XEvent *event) {
+	if (!func_XSendEvent) func_XSendEvent=(proto_XSendEvent *)_loadfunc("XSendEvent");
+	return (func_XSendEvent)( display, w, prop, emask, event);
+}
+
+typedef char * (proto_XServerVendor)(Display *display);
+static proto_XServerVendor *func_XServerVendor = NULL;
+char * XServerVendor(Display *display) {
+	if (!func_XServerVendor) func_XServerVendor=(proto_XServerVendor *)_loadfunc("XServerVendor");
+	return (func_XServerVendor)(display);
+}
+
+typedef int (proto_XSetClassHint)( Display *display, Window w, XClassHint *chints);
+static proto_XSetClassHint *func_XSetClassHint = NULL;
+int XSetClassHint( Display *display, Window w, XClassHint *chints) {
+	if (!func_XSetClassHint) func_XSetClassHint=(proto_XSetClassHint *)_loadfunc("XSetClassHint");
+	return (func_XSetClassHint)( display, w, chints);
+}
+
+typedef int (proto_XSetClipMask)( Display *display, GC gc, Pixmap cmask);
+static proto_XSetClipMask *func_XSetClipMask = NULL;
+int XSetClipMask( Display *display, GC gc, Pixmap cmask) {
+	if (!func_XSetClipMask) func_XSetClipMask=(proto_XSetClipMask *)_loadfunc("XSetClipMask");
+	return (func_XSetClipMask)( display, gc, cmask);
+}
+
+typedef int (proto_XSetClipRectangles)( Display *display, GC gc, int clx, int cly, XRectangle *rs, int n, int order);
+static proto_XSetClipRectangles *func_XSetClipRectangles = NULL;
+int XSetClipRectangles( Display *display, GC gc, int clx, int cly, XRectangle *rs, int n, int order) {
+	if (!func_XSetClipRectangles) func_XSetClipRectangles=(proto_XSetClipRectangles *)_loadfunc("XSetClipRectangles");
+	return (func_XSetClipRectangles)( display, gc, clx, cly, rs, n, order);
+}
+
+typedef int (proto_XSetDashes)(Display *display, GC gc, int dash_offset, const char * dash_list, int n);
+static proto_XSetDashes *func_XSetDashes = NULL;
+int XSetDashes(Display *display, GC gc, int dash_offset, const char * dash_list, int n) {
+	if (!func_XSetDashes) func_XSetDashes=(proto_XSetDashes *)_loadfunc("XSetDashes");
+	return (func_XSetDashes)(display, gc, dash_offset, dash_list, n);
+}
+
+typedef XErrorHandler (proto_XSetErrorHandler)(XErrorHandler handler);
+static proto_XSetErrorHandler *func_XSetErrorHandler = NULL;
+XErrorHandler XSetErrorHandler(XErrorHandler handler) {
+	if (!func_XSetErrorHandler) func_XSetErrorHandler=(proto_XSetErrorHandler *)_loadfunc("XSetErrorHandler");
+	return (func_XSetErrorHandler)(handler);
+}
+
+typedef int (proto_XSetFillStyle)( Display *display, GC gc, int fs);
+static proto_XSetFillStyle *func_XSetFillStyle = NULL;
+int XSetFillStyle( Display *display, GC gc, int fs) {
+	if (!func_XSetFillStyle) func_XSetFillStyle=(proto_XSetFillStyle *)_loadfunc("XSetFillStyle");
+	return (func_XSetFillStyle)( display, gc, fs);
+}
+
+typedef int (proto_XSetFont)( Display *display, GC gc, Font font);
+static proto_XSetFont *func_XSetFont = NULL;
+int XSetFont( Display *display, GC gc, Font font) {
+	if (!func_XSetFont) func_XSetFont=(proto_XSetFont *)_loadfunc("XSetFont");
+	return (func_XSetFont)( display, gc, font);
+}
+
+typedef int (proto_XSetFontPath)( Display *display, char **dirs, int nd);
+static proto_XSetFontPath *func_XSetFontPath = NULL;
+int XSetFontPath( Display *display, char **dirs, int nd) {
+	if (!func_XSetFontPath) func_XSetFontPath=(proto_XSetFontPath *)_loadfunc("XSetFontPath");
+	return (func_XSetFontPath)( display, dirs, nd);
+}
+
+typedef int (proto_XSetForeground)( Display *display, GC gc, unsigned long color);
+static proto_XSetForeground *func_XSetForeground = NULL;
+int XSetForeground( Display *display, GC gc, unsigned long color) {
+	if (!func_XSetForeground) func_XSetForeground=(proto_XSetForeground *)_loadfunc("XSetForeground");
+	return (func_XSetForeground)( display, gc, color);
+}
+
+typedef int (proto_XSetFunction)( Display *display, GC gc, int fn);
+static proto_XSetFunction *func_XSetFunction = NULL;
+int XSetFunction( Display *display, GC gc, int fn) {
+	if (!func_XSetFunction) func_XSetFunction=(proto_XSetFunction *)_loadfunc("XSetFunction");
+	return (func_XSetFunction)( display, gc, fn);
+}
+
+typedef void (proto_XSetICFocus)(XIC ic);
+static proto_XSetICFocus *func_XSetICFocus = NULL;
+void XSetICFocus(XIC ic) {
+	if (!func_XSetICFocus) func_XSetICFocus=(proto_XSetICFocus *)_loadfunc("XSetICFocus");
+	(func_XSetICFocus)(ic);
+}
+
+typedef int (proto_XSetIconName)(Display *display, Window w, const char *iname);
+static proto_XSetIconName *func_XSetIconName = NULL;
+int XSetIconName(Display *display, Window w, const char *iname) {
+	if (!func_XSetIconName) func_XSetIconName=(proto_XSetIconName *)_loadfunc("XSetIconName");
+	return (func_XSetIconName)(display, w, iname);
+}
+
+typedef int (proto_XSetInputFocus)( Display *display, Window focus, int revto, Time time);
+static proto_XSetInputFocus *func_XSetInputFocus = NULL;
+int XSetInputFocus( Display *display, Window focus, int revto, Time time) {
+	if (!func_XSetInputFocus) func_XSetInputFocus=(proto_XSetInputFocus *)_loadfunc("XSetInputFocus");
+	return (func_XSetInputFocus)( display, focus, revto, time);
+}
+
+typedef int (proto_XSetLineAttributes)( Display *display, GC gc, unsigned int lw, int ls, int cs, int js);
+static proto_XSetLineAttributes *func_XSetLineAttributes = NULL;
+int XSetLineAttributes( Display *display, GC gc, unsigned int lw, int ls, int cs, int js) {
+	if (!func_XSetLineAttributes) func_XSetLineAttributes=(proto_XSetLineAttributes *)_loadfunc("XSetLineAttributes");
+	return (func_XSetLineAttributes)( display, gc, lw, ls, cs, js);
+}
+
+typedef char * (proto_XSetLocaleModifiers)(const char* modifier_list);
+static proto_XSetLocaleModifiers *func_XSetLocaleModifiers = NULL;
+char * XSetLocaleModifiers(const char* modifier_list) {
+	if (!func_XSetLocaleModifiers) func_XSetLocaleModifiers=(proto_XSetLocaleModifiers *)_loadfunc("XSetLocaleModifiers");
+	return (func_XSetLocaleModifiers)(modifier_list);
+}
+
+typedef int (proto_XSetNormalHints)( Display *display, Window w, XSizeHints *hints);
+static proto_XSetNormalHints *func_XSetNormalHints = NULL;
+int XSetNormalHints( Display *display, Window w, XSizeHints *hints) {
+	if (!func_XSetNormalHints) func_XSetNormalHints=(proto_XSetNormalHints *)_loadfunc("XSetNormalHints");
+	return (func_XSetNormalHints)( display, w, hints);
+}
+
+typedef int (proto_XSetPlaneMask)( Display *display, GC gc, unsigned long pmask);
+static proto_XSetPlaneMask *func_XSetPlaneMask = NULL;
+int XSetPlaneMask( Display *display, GC gc, unsigned long pmask) {
+	if (!func_XSetPlaneMask) func_XSetPlaneMask=(proto_XSetPlaneMask *)_loadfunc("XSetPlaneMask");
+	return (func_XSetPlaneMask)( display, gc, pmask);
+}
+
+typedef int (proto_XSetRegion)( Display *display, GC gc, Region hrgn);
+static proto_XSetRegion *func_XSetRegion = NULL;
+int XSetRegion( Display *display, GC gc, Region hrgn) {
+	if (!func_XSetRegion) func_XSetRegion=(proto_XSetRegion *)_loadfunc("XSetRegion");
+	return (func_XSetRegion)( display, gc, hrgn);
+}
+
+typedef int (proto_XSetSelectionOwner)( Display* display, Atom sel, Window owner, Time time);
+static proto_XSetSelectionOwner *func_XSetSelectionOwner = NULL;
+int XSetSelectionOwner( Display* display, Atom sel, Window owner, Time time) {
+	if (!func_XSetSelectionOwner) func_XSetSelectionOwner=(proto_XSetSelectionOwner *)_loadfunc("XSetSelectionOwner");
+	return (func_XSetSelectionOwner)( display, sel, owner, time);
+}
+
+typedef int (proto_XSetTile)( Display *display, GC gc, Pixmap tile);
+static proto_XSetTile *func_XSetTile = NULL;
+int XSetTile( Display *display, GC gc, Pixmap tile) {
+	if (!func_XSetTile) func_XSetTile=(proto_XSetTile *)_loadfunc("XSetTile");
+	return (func_XSetTile)( display, gc, tile);
+}
+
+typedef int (proto_XSetWMHints)( Display *display, Window w, XWMHints *wmhints);
+static proto_XSetWMHints *func_XSetWMHints = NULL;
+int XSetWMHints( Display *display, Window w, XWMHints *wmhints) {
+	if (!func_XSetWMHints) func_XSetWMHints=(proto_XSetWMHints *)_loadfunc("XSetWMHints");
+	return (func_XSetWMHints)( display, w, wmhints);
+}
+
+typedef void (proto_XSetWMNormalHints)(Display* display,Window w,XSizeHints* hints);
+static proto_XSetWMNormalHints *func_XSetWMNormalHints = NULL;
+void XSetWMNormalHints(Display* display,Window w,XSizeHints* hints) {
+	if (!func_XSetWMNormalHints) func_XSetWMNormalHints=(proto_XSetWMNormalHints *)_loadfunc("XSetWMNormalHints");
+	(func_XSetWMNormalHints)(display,w,hints);
+}
+
+typedef void (proto_XSetWMProperties)( Display* display, Window w, XTextProperty* window_name, XTextProperty* icon_name, char** argv, int argc, XSizeHints* normal_hints, XWMHints* wm_hints, XClassHint* class_hints);
+static proto_XSetWMProperties *func_XSetWMProperties = NULL;
+void XSetWMProperties( Display* display, Window w, XTextProperty* window_name, XTextProperty* icon_name, char** argv, int argc, XSizeHints* normal_hints, XWMHints* wm_hints, XClassHint* class_hints) {
+	if (!func_XSetWMProperties) func_XSetWMProperties=(proto_XSetWMProperties *)_loadfunc("XSetWMProperties");
+	(func_XSetWMProperties)( display, w, window_name, icon_name, argv, argc, normal_hints, wm_hints, class_hints);
+}
+
+typedef StatusDef (proto_XSetWMProtocols)( Display *display, Window w, Atom *prots, int co);
+static proto_XSetWMProtocols *func_XSetWMProtocols = NULL;
+StatusDef XSetWMProtocols( Display *display, Window w, Atom *prots, int co) {
+	if (!func_XSetWMProtocols) func_XSetWMProtocols=(proto_XSetWMProtocols *)_loadfunc("XSetWMProtocols");
+	return (func_XSetWMProtocols)( display, w, prots, co);
+}
+
+typedef int (proto_XSetWindowBackground)( Display *display, Window w, unsigned long bg);
+static proto_XSetWindowBackground *func_XSetWindowBackground = NULL;
+int XSetWindowBackground( Display *display, Window w, unsigned long bg) {
+	if (!func_XSetWindowBackground) func_XSetWindowBackground=(proto_XSetWindowBackground *)_loadfunc("XSetWindowBackground");
+	return (func_XSetWindowBackground)( display, w, bg);
+}
+
+typedef int (proto_XSetWindowBackgroundPixmap)( Display *display, Window w, Pixmap background_tile);
+static proto_XSetWindowBackgroundPixmap *func_XSetWindowBackgroundPixmap = NULL;
+int XSetWindowBackgroundPixmap( Display *display, Window w, Pixmap background_tile) {
+	if (!func_XSetWindowBackgroundPixmap) func_XSetWindowBackgroundPixmap=(proto_XSetWindowBackgroundPixmap *)_loadfunc("XSetWindowBackgroundPixmap");
+	return (func_XSetWindowBackgroundPixmap)( display, w, background_tile);
+}
+
+typedef int (proto_XStoreColor)( Display *display, Colormap cmap, XColor *cell);
+static proto_XStoreColor *func_XStoreColor = NULL;
+int XStoreColor( Display *display, Colormap cmap, XColor *cell) {
+	if (!func_XStoreColor) func_XStoreColor=(proto_XStoreColor *)_loadfunc("XStoreColor");
+	return (func_XStoreColor)( display, cmap, cell);
+}
+
+typedef int (proto_XStoreColors)( Display *display, Colormap cmap, XColor *cells, int nc);
+static proto_XStoreColors *func_XStoreColors = NULL;
+int XStoreColors( Display *display, Colormap cmap, XColor *cells, int nc) {
+	if (!func_XStoreColors) func_XStoreColors=(proto_XStoreColors *)_loadfunc("XStoreColors");
+	return (func_XStoreColors)( display, cmap, cells, nc);
+}
+
+typedef int (proto_XStoreName)(Display *display, Window w, const char *wname);
+static proto_XStoreName *func_XStoreName = NULL;
+int XStoreName(Display *display, Window w, const char *wname) {
+	if (!func_XStoreName) func_XStoreName=(proto_XStoreName *)_loadfunc("XStoreName");
+	return (func_XStoreName)(display, w, wname);
+}
+
+typedef KeySym (proto_XStringToKeysym)(const char *str);
+static proto_XStringToKeysym *func_XStringToKeysym = NULL;
+KeySym XStringToKeysym(const char *str) {
+	if (!func_XStringToKeysym) func_XStringToKeysym=(proto_XStringToKeysym *)_loadfunc("XStringToKeysym");
+	return (func_XStringToKeysym)(str);
+}
+
+typedef int (proto_XSync)(Display *display,int discard);
+static proto_XSync *func_XSync = NULL;
+int XSync(Display *display,int discard) {
+	if (!func_XSync) func_XSync=(proto_XSync *)_loadfunc("XSync");
+	return (func_XSync)(display,discard);
+}
+
+typedef int (proto_XTextExtents)( XFontStruct *fstruct, const char *str, int nc, int *dir,int *ascent,int *descent, XCharStruct *overall);
+static proto_XTextExtents *func_XTextExtents = NULL;
+int XTextExtents( XFontStruct *fstruct, const char *str, int nc, int *dir,int *ascent,int *descent, XCharStruct *overall) {
+	if (!func_XTextExtents) func_XTextExtents=(proto_XTextExtents *)_loadfunc("XTextExtents");
+	return (func_XTextExtents)( fstruct, str, nc, dir,ascent,descent, overall);
+}
+
+typedef int (proto_XTextExtents16)( XFontStruct *fstruct, const XChar2b *str, int nc, int *dir, int *ascent, int *descent, XCharStruct *overall);
+static proto_XTextExtents16 *func_XTextExtents16 = NULL;
+int XTextExtents16( XFontStruct *fstruct, const XChar2b *str, int nc, int *dir, int *ascent, int *descent, XCharStruct *overall) {
+	if (!func_XTextExtents16) func_XTextExtents16=(proto_XTextExtents16 *)_loadfunc("XTextExtents16");
+	return (func_XTextExtents16)( fstruct, str, nc, dir, ascent, descent, overall);
+}
+
+typedef int (proto_XTextWidth)( XFontStruct *fstruct, const char *str, int co);
+static proto_XTextWidth *func_XTextWidth = NULL;
+int XTextWidth( XFontStruct *fstruct, const char *str, int co) {
+	if (!func_XTextWidth) func_XTextWidth=(proto_XTextWidth *)_loadfunc("XTextWidth");
+	return (func_XTextWidth)( fstruct, str, co);
+}
+
+typedef int (proto_XTextWidth16)( XFontStruct *fstruct, const XChar2b *str, int co);
+static proto_XTextWidth16 *func_XTextWidth16 = NULL;
+int XTextWidth16( XFontStruct *fstruct, const XChar2b *str, int co) {
+	if (!func_XTextWidth16) func_XTextWidth16=(proto_XTextWidth16 *)_loadfunc("XTextWidth16");
+	return (func_XTextWidth16)( fstruct, str, co);
+}
+
+typedef BoolDef (proto_XTranslateCoordinates)( Display *display, Window sw, Window dw, int sx, int sy, int *dx, int *dy, Window *ch);
+static proto_XTranslateCoordinates *func_XTranslateCoordinates = NULL;
+BoolDef XTranslateCoordinates( Display *display, Window sw, Window dw, int sx, int sy, int *dx, int *dy, Window *ch) {
+	if (!func_XTranslateCoordinates) func_XTranslateCoordinates=(proto_XTranslateCoordinates *)_loadfunc("XTranslateCoordinates");
+	return (func_XTranslateCoordinates)( display, sw, dw, sx, sy, dx, dy, ch);
+}
+
+typedef int (proto_XUngrabServer)(Display *display);
+static proto_XUngrabServer *func_XUngrabServer = NULL;
+int XUngrabServer(Display *display) {
+	if (!func_XUngrabServer) func_XUngrabServer=(proto_XUngrabServer *)_loadfunc("XUngrabServer");
+	return (func_XUngrabServer)(display);
+}
+
+typedef int (proto_XUnionRectWithRegion)(XRectangle *rect, Region hrgnsrc, Region hrgndest);
+static proto_XUnionRectWithRegion *func_XUnionRectWithRegion = NULL;
+int XUnionRectWithRegion(XRectangle *rect, Region hrgnsrc, Region hrgndest) {
+	if (!func_XUnionRectWithRegion) func_XUnionRectWithRegion=(proto_XUnionRectWithRegion *)_loadfunc("XUnionRectWithRegion");
+	return (func_XUnionRectWithRegion)(rect, hrgnsrc, hrgndest);
+}
+
+typedef int (proto_XUnmapWindow)(Display *display, Window w);
+static proto_XUnmapWindow *func_XUnmapWindow = NULL;
+int XUnmapWindow(Display *display, Window w) {
+	if (!func_XUnmapWindow) func_XUnmapWindow=(proto_XUnmapWindow *)_loadfunc("XUnmapWindow");
+	return (func_XUnmapWindow)(display, w);
+}
+
+typedef void (proto_XUnsetICFocus)(XIC ic);
+static proto_XUnsetICFocus *func_XUnsetICFocus = NULL;
+void XUnsetICFocus(XIC ic) {
+	if (!func_XUnsetICFocus) func_XUnsetICFocus=(proto_XUnsetICFocus *)_loadfunc("XUnsetICFocus");
+	(func_XUnsetICFocus)(ic);
+}
+
+typedef int (proto_XWarpPointer)( Display *display, Window sw,Window dw, int sx,int sy, unsigned int swidth,unsigned int sheight, int dx, int dy);
+static proto_XWarpPointer *func_XWarpPointer = NULL;
+int XWarpPointer( Display *display, Window sw,Window dw, int sx,int sy, unsigned int swidth,unsigned int sheight, int dx, int dy) {
+	if (!func_XWarpPointer) func_XWarpPointer=(proto_XWarpPointer *)_loadfunc("XWarpPointer");
+	return (func_XWarpPointer)( display, sw,dw, sx,sy, swidth,sheight, dx, dy);
+}
+
+typedef int (proto_XWindowEvent)( Display *display, Window w, long emask, XEvent *rep);
+static proto_XWindowEvent *func_XWindowEvent = NULL;
+int XWindowEvent( Display *display, Window w, long emask, XEvent *rep) {
+	if (!func_XWindowEvent) func_XWindowEvent=(proto_XWindowEvent *)_loadfunc("XWindowEvent");
+	return (func_XWindowEvent)( display, w, emask, rep);
+}
+
+typedef int (proto_XmbLookupString)( XIC ic, XKeyPressedEvent* event, char* buffer_return, int bytes_buffer, KeySym* keysym_return, StatusDef* status_return);
+static proto_XmbLookupString *func_XmbLookupString = NULL;
+int XmbLookupString( XIC ic, XKeyPressedEvent* event, char* buffer_return, int bytes_buffer, KeySym* keysym_return, StatusDef* status_return) {
+	if (!func_XmbLookupString) func_XmbLookupString=(proto_XmbLookupString *)_loadfunc("XmbLookupString");
+	return (func_XmbLookupString)( ic, event, buffer_return, bytes_buffer, keysym_return, status_return);
+}
+
+typedef int (proto_XmbTextListToTextProperty)( Display *display, char **list, int count, XICCEncodingStyle style, XTextProperty *text_prop_return);
+static proto_XmbTextListToTextProperty *func_XmbTextListToTextProperty = NULL;
+int XmbTextListToTextProperty( Display *display, char **list, int count, XICCEncodingStyle style, XTextProperty *text_prop_return) {
+	if (!func_XmbTextListToTextProperty) func_XmbTextListToTextProperty=(proto_XmbTextListToTextProperty *)_loadfunc("XmbTextListToTextProperty");
+	return (func_XmbTextListToTextProperty)( display, list, count, style, text_prop_return);
+}
+
+typedef int (proto_XmbTextPropertyToTextList)( Display *display, XTextProperty *text_prop, char ***list_return, int *count_return);
+static proto_XmbTextPropertyToTextList *func_XmbTextPropertyToTextList = NULL;
+int XmbTextPropertyToTextList( Display *display, XTextProperty *text_prop, char ***list_return, int *count_return) {
+	if (!func_XmbTextPropertyToTextList) func_XmbTextPropertyToTextList=(proto_XmbTextPropertyToTextList *)_loadfunc("XmbTextPropertyToTextList");
+	return (func_XmbTextPropertyToTextList)( display, text_prop, list_return, count_return);
+}
+
+typedef char * (proto_XrmQuarkToString)(void *quark);
+static proto_XrmQuarkToString *func_XrmQuarkToString = NULL;
+char * XrmQuarkToString(void *quark) {
+	if (!func_XrmQuarkToString) func_XrmQuarkToString=(proto_XrmQuarkToString *)_loadfunc("XrmQuarkToString");
+	return (func_XrmQuarkToString)(quark);
+}

@@ -1,0 +1,14 @@
+COMMENT(-- $Id: rxvt-mousereporting.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+COMMENT(----------------------------------------------------------------------)
+manpagesection(MOUSE REPORTING)
+
+To temporarily override mouse reporting, for either the scrollbar or the
+normal text selection/insertion, hold either the Shift or the Meta (Alt) key
+while performing the desired mouse action.
+
+If mouse reporting mode is active, the normal scrollbar actions are disabled
+-- on the assumption that we are using a fullscreen application.
+Instead, pressing Button1 and Button3 sends
+bf(ESC[6~) (Next) and bf(ESC[5~) (Prior), respectively.
+Similarly, clicking on the up and down arrows sends bf(ESC[A) (Up) and
+bf(ESC[B) (Down), respectively.

@@ -1,0 +1,303 @@
+COMMENT(-- $Id: rxvt-resources.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+COMMENT(----------------------------------------------------------------------)
+manpagesection(RESOURCES (available also as long-options))
+
+Note: `rxvt --help' gives a list of all resources (long options) compiled
+into your version.
+If compiled with internal Xresources support (i.e. bf(rxvt -h) lists 
+bf(.Xdefaults)) then bf(rxvt) accepts application defaults set in
+XAPPLOADDIR/Rxvt (compile-time defined: usually
+bf(/usr/lib/X11/app-defaults/Rxvt)) and resources set in bf(~/.Xdefaults),
+or bf(~/.Xresources) if bf(~/.Xdefaults) does not exist.  Note that when
+reading X resources, bf(rxvt) recognizes two class names: bf(XTerm) and
+bf(Rxvt).  The class name bf(XTerm) allows resources common to both
+bf(rxvt) and em(xterm) to be easily configured, while the class name
+bf(Rxvt) allows resources unique to bf(rxvt), notably colours and
+key-handling, to be shared between different bf(rxvt) configurations. 
+If no resources are specified, suitable defaults will be used. 
+Command-line arguments can be used to override resource settings.  The
+following resources are allowed:
+
+startdit()
+    dit(bf(geometry:) em(geom))
+	Create the window with the specified X window geometry [default
+	80x24];
+	option bf(-geometry).
+    dit(bf(background:) em(colour))
+	Use the specified colour as the window's background colour [default
+	White];
+	option bf(-bg).
+    dit(bf(foreground:) em(colour))
+	Use the specified colour as the window's foreground colour [default
+	Black];
+	option bf(-fg).
+    dit(bf(color)em(n)bf(:) em(colour))
+	Use the specified colour for the colour value em(n), where 0-7
+	corresponds to low-intensity (normal) colours and 8-15 corresponds to
+	high-intensity (bold = bright foreground, blink = bright
+	background) colours.  The canonical names are as follows:
+	0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white,
+	but the actual colour names used are listed in the
+	bf(COLORS AND GRAPHICS) section.
+    dit(bf(colorBD:) em(colour))
+	Use the specified colour to display bold characters when the
+	foreground colour is the default.
+    dit(bf(colorUL:) em(colour))
+	Use the specified colour to display underlined characters when the
+	foreground colour is the default.
+    dit(bf(colorRV:) em(colour))
+	Use the specified colour as the background for reverse video
+	characters.
+    dit(bf(cursorColor:) em(colour))
+	Use the specified colour for the cursor.  The default is to use the
+	foreground colour;
+	option bf(-cr).
+    dit(bf(cursorColor2:) em(colour))
+	Use the specified colour for the colour of the cursor text.  For this
+	to take effect, bf(cursorColor) must also be specified.  The default
+	is to use the background colour.
+    dit(bf(reverseVideo:) em(boolean))
+	bf(True): simulate reverse video by foreground and background colours;
+	option bf(-rv).
+	bf(False): regular screen colours [default];
+	option bf(+rv).
+	See note in bf(COLORS AND GRAPHICS) section.
+    dit(bf(jumpScroll:) em(boolean))
+	bf(True): specify that jump scrolling should be used.  When scrolling
+	quickly, fewer screen updates are performed [default];
+	option bf(-j).
+	bf(False): specify that smooth scrolling should be used;
+	option bf(+j).
+    dit(bf(inheritPixmap:) em(boolean))
+	bf(True): make the background inherit the parent windows' pixmap,
+	giving artificial transparency.
+	bf(False): do not inherit the parent windows' pixmap.
+    dit(bf(scrollColor:) em(colour))
+	Use the specified colour for the scrollbar [default #B2B2B2].
+    dit(bf(troughColor:) em(colour))
+	Use the specified colour for the scrollbar's trough area [default
+	#969696].  Only relevant for normal (non XTerm/NeXT) scrollbar.
+    dit(bf(backgroundPixmap:) em(file[;geom]))
+	Use the specified XPM file (note the `.xpm' extension is optional)
+	for the background and also optionally specify its scaling with a
+	geometry string bf(WxH+X+Y), in which bf("W" / "H") specify the
+	horizontal/vertical scale (percent) and bf("X" / "Y") locate the
+	image centre (percent).  A scale of 0 displays the image with tiling.
+	A scale of 1 displays the image without any scaling.  A scale of 2 to
+	9 specifies an integer number of images in that direction.  No image
+	will be magnified beyond 10 times its original size.  The maximum
+	permitted scale is 1000.  [default 0x0+50+50]
+    dit(bf(menu:) em(file[;tag]))
+	Read in the specified menu file (note the `.menu' extension is
+	optional) and also optionally specify a starting tag to find.  See
+	the reference documentation for details on the syntax for the menuBar.
+    dit(bf(path:) em(path))
+	Specify the colon-delimited search path for finding files (XPM and
+	menus), in addition to the paths specified by the bf(RXVTPATH) and
+	bf(PATH) environment variables.
+    dit(bf(font:) em(fontname))
+	Select the main text font used [default 7x14];
+	option bf(-fn).
+    dit(bf(font)em(n)bf(:) em(fontname))
+	Specify the alternative font em(n).  The default font values: nl()\
+	indent(\
+	    starttable(2)(l l)(0)\
+		row(cell(bf(font):)cell(7x14))\
+		row(cell(bf(font1):)cell(6x10))\
+		row(cell(bf(font2):)cell(6x13))\
+		row(cell(bf(font3):)cell(8x13))\
+		row(cell(bf(font4):)cell(9x15))\
+	    endtable())
+    dit(bf(boldFont:) em(fontname))
+	Specify the name of the bold font to use if bf(colorBD) has not been
+	specified and it is not possible to map the default foreground colour
+	to colour 8-15 [default NONE].  This font must be the same height and
+	width as the normal font;
+	option bf(-fb).
+    dit(bf(mfont:) em(fontname))
+	Select the main multiple-character text font used [default k14];
+	option bf(-fk).
+    dit(bf(mfont)em(n)bf(:) em(fontname))
+	Specify the alternative multiple-character font em(n).  If compiled
+	for multiple-character fonts, the Roman and multiple-character font
+	sizes should match.
+    dit(bf(multichar_encoding:) em(mode))
+	Set the encoding mode to be used when multicharacter encoding is
+	received;
+	bf(eucj): EUC Japanese encoding [default for Kanji].
+	bf(sjis): Shift JIS encoding.
+	bf(big5): BIG5 encoding.
+	bf(gb): GB encoding.
+	bf(kr): EUC Korean encoding.
+	bf(noenc): no encoding;
+	option bf(-km).
+    dit(bf(greek_keyboard:) em(mode))
+	Set the Greek keyboard translation mode to be used;
+	bf(iso): ISO-8859 mapping (elot-928) [default].
+	bf(ibm): IBM-437 mapping (DOS codepage 737);
+	option bf(-grk).
+    dit(bf(greektoggle_key:) em(keysym))
+	Set the key to toggle keyboard input between no translation and
+	Greek translation  [default bf(Mode_switch)].
+	For more details, see the distributed file bf(README.greek).
+    dit(bf(selectstyle:) em(mode))
+	Set mouse selection style to bf(old) which is 2.20, bf(oldword) which
+	is xterm style with 2.20 old word selection, or anything else which
+	gives xterm style selection.
+    dit(bf(scrollstyle:) em(mode))
+	Set scrollbar style to bf(rxvt), bf(next) or bf(xterm)
+    dit(bf(title:) em(string))
+	Set window title string, the default title is the command-line
+	specified after the bf(-e) option, if any, otherwise the application
+	name;
+	option bf(-title).
+    dit(bf(iconName:) em(string))
+	Set the name used to label the window's icon or displayed in an icon
+	manager window, it also sets the window's title unless it is
+	explicitly set;
+	option bf(-n).
+    dit(bf(mapAlert:) em(boolean))
+	bf(True): de-iconify (map) on receipt of a bell character.
+	bf(False): no de-iconify (map) on receipt of a bell character
+	[default].
+    dit(bf(visualBell:) em(boolean))
+	bf(True): use visual bell on receipt of a bell character;
+	option bf(-vb).
+	bf(False): no visual bell [default];
+	option bf(+vb).
+    dit(bf(loginShell:) em(boolean))
+	bf(True): start as a login shell by prepending a `-' to bf(argv[0])
+	of the shell;
+	option bf(-ls).
+	bf(False): start as a normal sub-shell [default];
+	option bf(+ls).
+    dit(bf(utmpInhibit:) em(boolean))
+	bf(True): inhibit writing record into the system log file bf(utmp);
+	option bf(-ut).
+	bf(False): write record into the system log file bf(utmp) [default];
+	option bf(+ut).
+    dit(bf(print-pipe:) em(string))
+	Specify a command pipe for vt100 printer [default em(lpr(1))].  Use
+	bf(Print) to initiate a screen dump to the printer and bf(Ctrl-Print)
+	or bf(Shift-Print) to include the scrollback as well.
+    dit(bf(scrollBar:) em(boolean))
+	bf(True): enable the scrollbar [default];
+	option bf(-sb).
+	bf(False): disable the scrollbar;
+	option bf(+sb).
+    dit(bf(scrollBar_right:) em(boolean))
+	bf(True): place the scrollbar on the right of the window;
+	option bf(-sr).
+	bf(False): place the scrollbar on the left of the window;
+	option bf(+sr).
+    dit(bf(scrollBar_floating:) em(boolean))
+	bf(True): display an rxvt scrollbar without a trough;
+	option bf(-st).
+	bf(False): display an rxvt scrollbar with a trough;
+	option bf(+st).
+    dit(bf(scrollBar_align:) em(mode))
+	Align the bf(top), bf(bottom) or bf(centre) [default] of
+	the scrollbar thumb with the pointer on middle button
+	press/drag.
+    dit(bf(scrollTtyOutput:) em(boolean))
+	bf(True): scroll to bottom when tty receives output;
+	option(+si).
+	bf(False): do not scroll to bottom when tty receives output;
+	option(-si).
+    dit(bf(scrollWithBuffer:) em(boolean))
+	bf(True): scroll with scrollback buffer when tty recieves
+	new lines (and bf(scrollTtyOutput) is False);
+	option(+sw).
+	bf(False): do not scroll with scrollback buffer when tty
+	recieves new lines;
+	option(-sw).
+    dit(bf(scrollTtyKeypress:) em(boolean))
+	bf(True): scroll to bottom when a non-special key is pressed.
+	Special keys are those which are intercepted by rxvt for special
+	handling and are not passed onto the shell;
+	option(-sk).
+	bf(False): do not scroll to bottom when a non-special key is pressed;
+	option(+sk).
+    dit(bf(smallfont_key:) em(keysym))
+	If enabled, use bf(HOTKEY()-)em(keysym) to toggle to a smaller font
+	[default bf(HOTKEY()-SMALLFONT())]
+    dit(bf(bigfont_key:) em(keysym))
+	If enabled, use bf(HOTKEY()-)em(keysym) to toggle to a bigger font
+	[default bf(HOTKEY()-BIGFONT())]
+    dit(bf(saveLines:) em(number))
+	Save em(number) lines in the scrollback buffer [default 64].  This
+	resource is limited on most machines to 65535;
+	option bf(-sl).
+    dit(bf(internalBorder:) em(number))
+	Internal border of em(number) pixels. This resource is limited to 100;
+	option bf(-b).
+    dit(bf(externalBorder:) em(number))
+	External border of em(number) pixels.  This resource is limited to 100;
+	option bf(-w), bf(-bw), bf(-borderwidth).
+    dit(bf(termName:) em(termname))
+	Specifies the terminal type name to be set in the bf(TERM)
+	environment variable;
+	option bf(-tn).
+    dit(bf(linespace:) em(number))
+	Specifies number of lines (pixel height) to insert between each row
+	of the display [default 0];
+	option bf(-lsp).
+    dit(bf(meta8:) em(boolean))
+	bf(True): handle Meta (Alt) + keypress to set the 8th bit.
+	bf(False): handle Meta (Alt) + keypress as an escape prefix [default].
+    dit(bf(mouseWheelScrollPage:) em(boolean))
+	bf(True): the mouse wheel scrolls a page full.
+	bf(False): the mouse wheel scrolls five lines [default].
+    dit(bf(cursorBlink:) em(boolean))
+	bf(True): blink the cursor.
+	bf(False): do not blink the cursor [default];
+	option bf(-bc).
+    dit(bf(pointerBlank:) em(boolean))
+	bf(True): blank the pointer when a key is pressed or after a set number
+	of seconds of inactivity.
+	bf(False): the pointer is always visible [default].
+    dit(bf(pointerBlankDelay:) em(number))
+	Specifies number of seconds before blanking the pointer [default 2].
+    dit(bf(multibyte_cursor:) em(boolean))
+	bf(True): consider multibyte glyphs as single character for backspace,
+	delete and cursor movement keys;
+	option bf(-mcc).
+	bf(False): move through all components of all glyphs;
+	option bf(+mcc).
+    dit(bf(backspacekey:) em(string))
+	The string to send when the backspace key is pressed.  If set to
+	bf(DEC) or unset it will send bf(Delete) (code 127) or, if shifted,
+	bf(Backspace) (code 8) - which can be reversed with the appropriate
+	DEC private mode escape sequence.
+    dit(bf(deletekey:) em(string))
+	The string to send when the delete key (not the keypad delete key) is
+	pressed.  If unset it will send the sequence traditionally associated
+	with the bf(Execute) key.
+    dit(bf(cutchars:) em(string))
+	The characters used as delimiters for double-click word selection. 
+	The built-in default: nl()\
+	bf(BACKSLASH `"'&()*,;<=>?@[]{|})
+    dit(bf(preeditType:) em(style))
+	bf(OverTheSpot), bf(OffTheSpot), bf(Root);
+	option bf(-pt).
+    dit(bf(inputMethod:) em(name))
+	em(name) of inputMethod to use;
+	option bf(-im).
+    dit(bf(modifier:) em(modifier))
+	Set the key to be interpreted as the Meta key to:
+	bf(alt), bf(meta), bf(hyper), bf(super), bf(mod1), bf(mod2), bf(mod3),
+	bf(mod4), bf(mod5);
+	option bf(-mod).
+    dit(bf(answerbackString:) em(string))
+	Specify the reply rxvt sends to the shell when an ENQ (control-E)
+	character is passed through.  It may contain escape values as
+	described in the entry on bf(keysym) following.
+    dit(bf(keysym.)em(sym): em(string))
+	Associate em(string) with keysym em(sym) (bf(0xFF00 - 0xFFFF)).  It
+	may contain escape values (\a: bell, \b: backspace, \e, \E: escape,
+	\n: newline, \r: return, \t: tab, \000: octal number) or control
+	characters (^?: delete, ^@: null, ^A ...) and may enclosed with
+	double quotes so that it can start or end with whitespace.  The
+	intervening resource name bf(keysym.) cannot be omitted.  This
+	resource is only available when compiled with KEYSYM_RESOURCE.
+enddit()

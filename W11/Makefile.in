@@ -1,0 +1,59 @@
+
+@MCOMMON@
+
+srcdir =	@srcdir@
+VPATH =		@srcdir@
+.PATH:		@srcdir@
+
+top_builddir = ..
+basedir = ..
+thisdir = W11
+XPMDIR=xpm-3.4k
+MKDIR = @top_srcdir@/autoconf/mkinstalldirs
+
+first_rule: all
+
+all allbin alldoc:
+	-mkdir lib
+	cd wrap; make $@
+	cd w32; make $@
+	if test -d $(XPMDIR); then make -f Makefile.xpm; fi
+
+tags clean:
+	cd wrap; make $@
+	cd w32; make $@
+	if test -d $(XPMDIR); then make -f Makefile.xpm $@; fi
+
+realclean: clean
+
+cleandir: realclean
+
+install:
+	$(INSTALL_PROGRAM) lib/libW11.dll $(bindir)/libW11.dll
+
+#
+# Distribution variables
+#
+
+DIST = Makefile.in Makefile.xpm
+DISTX11 = X11/Intrinsic.h X11/Xatom.h X11/Xlib.h X11/Xlocale.h X11/Xmd.h \
+	X11/Xutil.h X11/cursorfont.h X11/keysym.h X11/keysymdef.h
+DISTw32 = w32/Makefile w32/event.c w32/ntdef.h w32/ntutil.c w32/xlib.c
+DISTwrap = wrap/Makefile wrap/mkproxy.pl wrap/rxtv.ico wrap/rxvt.ico \
+	wrap/rxvt.rc wrap/wrap.c wrap/wrap.h wrap/xwrappers.gen
+
+distclean: realclean
+	if test $(srcdir) = .; then $(MAKE) realclean; fi
+	(cd $(srcdir); $(RMF) Makefile)
+
+distdirs:
+	mkdir $(basedir)/../$(VERNAME)/$(thisdir)
+	mkdir $(basedir)/../$(VERNAME)/$(thisdir)/X11
+	mkdir $(basedir)/../$(VERNAME)/$(thisdir)/w32
+	mkdir $(basedir)/../$(VERNAME)/$(thisdir)/wrap
+
+distcopy:
+	$(CP) -p $(DIST) $(basedir)/../$(VERNAME)/$(thisdir)
+	$(CP) -p $(DISTX11) $(basedir)/../$(VERNAME)/$(thisdir)/X11
+	$(CP) -p $(DISTw32) $(basedir)/../$(VERNAME)/$(thisdir)/w32
+	$(CP) -p $(DISTwrap) $(basedir)/../$(VERNAME)/$(thisdir)/wrap

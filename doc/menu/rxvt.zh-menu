@@ -1,0 +1,168 @@
+#-------------------------------------------------------------------------
+[menu:big5]
+#[menu:machine2]
+[clear]
+# [pixmap:machine2.xpm]
+
+/匡虫/*
+{絪胯}		${EDITOR:-vi}\r
+{ヘ魁}		ls -la|${PAGER:-more}\r
+#{Dir-Time}	ls -lat|${PAGER:-more}\r
+{合盒丁}	df\r
+{-}
+{闽超 Ctrl-D}		exit\r
+
+//*
+{Top}           top\r
+{Ps u}          ps aux|egrep $USER|${PAGER:-more}\r
+{Ps aux}        ps aux|egrep -v "(root|ps)"|${PAGER:-more}\r
+# who's REALLY logged on (even with utmp logging turned off)
+{Who}           w\r
+{-}
+{璉春}	^Z bg\r
+{沧挡}	^C\r
+
+# standard settings for a `terminal' control menu
+# only attach to an existing menubar
+/沧狠诀/*
+./ /*
+{タ盽}	^@\E]50;#
+{耕}	^@\E]50;#+
+{耕}	^@\E]50;#-
+{-}
+{ 1}	^@\E]50;#1
+{ 2}	^@\E]50;#2
+{ 3}	^@\E]50;#3
+{ 4}	^@\E]50;#4
+{ 5}	^@\E]50;#5
+{ 6}	^@\E]50;#6
+../棵辊/*
+{璉春は锣}	^@\E[?5t
+#{Toggle Width}	^@\E[?3t
+{村夹}	^@\E[?25t
+{ち传}	^@\E[?47t
+{-}
+{留旅匡虫}	^@\E[?10t
+{穝匡虫}	^@\E[?10h
+{ち传辈禸}	^@\E[?30t
+#{-}
+#{Toggle scroll-on-TTY}	^@\E[?1010t
+#{Toggle scroll-on-Key}	^@\E[?1011t
+../龄絃 /*
+{XTerm}	^@\E[?35t
+{Backspace}	^@\E[?67t
+{Cursor}	^@\E[?1t
+{KeyPad}	^@\E[?66t
+../
+{-}
+./璉春 /*
+{礚}		^@\E[m\E]20;\a
+{-}
+# load .xpm files (assuming Rxvt*path: has been properly set)
+# notice there are 2 ways to do this task
+{background5}	^@\E]20;background5
+{Mona}		^@\E]10;[pixmap:monalisa;100]
+{-}
+./妮┦ /*
+{}		^@\E]20;;100x100+50+50;?
+{}		^@\E]20;;0
+{いァ}	^@\E]20;;=+50+50;?
+{-}
+# set `quick arrow' keys
+{罽}{200/50%}	^@\E]10;[:<b>\^@\\E]20;;<r>200x0<l>50x0<u>0x200<d>0x50<e>;?:]
+#{Pos}{5%}	^@\E]10;[:<b>\^@\\E]20;;<r>+5+0<l>-5+0<u>+0-5<d>+0+5<e>;?:]
+../
+../
+{-}
+{セ}	^@\E[8n
+/
+
+[show]
+#[done:machine2]
+[done:big5]
+#--------------------------------------------------------------------- eof
+
+#-------------------------------------------------------------------------
+[menu:gb]
+#[menu:machine2]
+[clear]
+# [pixmap:machine2.xpm]
+
+/选单/*
+{编辑}		${EDITOR:-vi}\r
+{列出目录}		ls -la|${PAGER:-more}\r
+#{Dir-Time}	ls -lat|${PAGER:-more}\r
+{磁碟空间}	df\r
+{-}
+{关闭 Ctrl-D}		exit\r
+
+/工作/*
+{Top}           top\r
+{Ps u}          ps aux|egrep $USER|${PAGER:-more}\r
+{Ps aux}        ps aux|egrep -v "(root|ps)"|${PAGER:-more}\r
+# who's REALLY logged on (even with utmp logging turned off)
+{Who}           w\r
+{-}
+{背景}	^Z bg\r
+{终结}	^C\r
+
+# standard settings for a `terminal' control menu
+# only attach to an existing menubar
+/终端机/*
+./字型 /*
+{正常}	^@\E]50;#
+{较大}	^@\E]50;#+
+{较小}	^@\E]50;#-
+{-}
+{字型 1}	^@\E]50;#1
+{字型 2}	^@\E]50;#2
+{字型 3}	^@\E]50;#3
+{字型 4}	^@\E]50;#4
+{字型 5}	^@\E]50;#5
+{字型 6}	^@\E]50;#6
+../萤幕/*
+{背景反转}	^@\E[?5t
+#{Toggle Width}	^@\E[?3t
+{游标}	^@\E[?25t
+{切换}	^@\E[?47t
+{-}
+{隐藏选单}	^@\E[?10t
+{更新选单}	^@\E[?10h
+{切换卷轴}	^@\E[?30t
+#{-}
+#{Toggle scroll-on-TTY}	^@\E[?1010t
+#{Toggle scroll-on-Key}	^@\E[?1011t
+../键盘 /*
+{XTerm}	^@\E[?35t
+{Backspace}	^@\E[?67t
+{Cursor}	^@\E[?1t
+{KeyPad}	^@\E[?66t
+../
+{-}
+./背景 /*
+{无}		^@\E[m\E]20;\a
+{-}
+# load .xpm files (assuming Rxvt*path: has been properly set)
+# notice there are 2 ways to do this task
+{background5}	^@\E]20;background5
+{Mona}		^@\E]10;[pixmap:monalisa;100]
+{-}
+./属性 /*
+{放大}		^@\E]20;;100x100+50+50;?
+{并列}		^@\E]20;;0
+{中央}	^@\E]20;;=+50+50;?
+{-}
+# set `quick arrow' keys
+{伸缩}{200/50%}	^@\E]10;[:<b>\^@\\E]20;;<r>200x0<l>50x0<u>0x200<d>0x50<e>;?:]
+#{Pos}{5%}	^@\E]10;[:<b>\^@\\E]20;;<r>+5+0<l>-5+0<u>+0-5<d>+0+5<e>;?:]
+../
+../
+{-}
+{版本}	^@\E[8n
+/
+
+[show]
+#[done:machine2]
+[done:gb]
+#--------------------------------------------------------------------- eof
+

@@ -1,0 +1,8 @@
+COMMENT(-- $Id: rxvt-files.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+COMMENT(----------------------------------------------------------------------)
+manpagesection(FILES)
+
+startdit()
+    dit(bf(/etc/utmp)) System file for login records.
+    dit(bf(/usr/lib/X11/rgb.txt)) Color names.
+enddit()

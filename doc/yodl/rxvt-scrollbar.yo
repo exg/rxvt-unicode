@@ -1,0 +1,13 @@
+COMMENT(-- $Id: rxvt-scrollbar.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+COMMENT(----------------------------------------------------------------------)
+manpagesection(THE SCROLLBAR)
+
+Lines of text that scroll off the top of the bf(rxvt) window (resource:
+bf(saveLines)) and can be scrolled back using the scrollbar or by keystrokes. 
+The normal bf(rxvt) scrollbar has arrows and its behaviour is fairly
+intuitive.  The bf(xterm-scrollbar) is without arrows and its behaviour
+mimics that of em(xterm)
+
+Scroll down with bf(Button1) (bf(xterm-scrollbar)) or bf(Shift-Next).
+Scroll up with bf(Button3) (bf(xterm-scrollbar)) or bf(Shift-Prior).
+Continuous scroll with bf(Button2).

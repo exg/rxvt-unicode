@@ -1,0 +1,164 @@
+COMMENT(-- $Id: rxvtRef-privatemodes.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+label(PrivateModes)
+nsect(DEC Private Modes)
+
+startdl()
+    dl(bf(tt(ESC [ ? Pm h)))
+        (DEC Private Mode Set (DECSET))
+P()\
+    dl(bf(tt(ESC [ ? Pm l)))
+        (DEC Private Mode Reset (DECRST))
+P()\
+    dl(bf(tt(ESC [ ? Pm r)))
+        (Restore previously saved DEC Private Mode Values.)
+P()\
+    dl(bf(tt(ESC [ ? Pm s)))
+        (Save DEC Private Mode Values.)
+P()\
+    dl(bf(tt(ESC [ ? Pm t)))
+        (Toggle DEC Private Mode Values (rxvt extension).)
+    em(where) nl()\
+startdl()
+        dl(bf(tt(Ps = 1)) (DECCKM))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Application Cursor Keys))\
+                row(cell(bf(tt(l)))cell(Normal Cursor Keys))\
+            endtable())
+        dl(bf(tt(Ps = 2)) (ANSI/VT52 mode))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Enter VT52 mode))\
+                row(cell(bf(tt(l)))cell(Enter VT52 mode))\
+            endtable())
+        dl(bf(tt(Ps = 3)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(132 Column Mode (DECCOLM)))\
+                row(cell(bf(tt(l)))cell(80 Column Mode (DECCOLM)))\
+            endtable())
+        dl(bf(tt(Ps = 4)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Smooth (Slow) Scroll (DECSCLM)))\
+                row(cell(bf(tt(l)))cell(Jump (Fast) Scroll (DECSCLM)))\
+            endtable())
+        dl(bf(tt(Ps = 5)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Reverse Video (DECSCNM)))\
+                row(cell(bf(tt(l)))cell(Normal Video (DECSCNM)))\
+            endtable())
+        dl(bf(tt(Ps = 6)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Origin Mode (DECOM)))\
+                row(cell(bf(tt(l)))cell(Normal Cursor Mode (DECOM)))\
+            endtable())
+        dl(bf(tt(Ps = 7)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Wraparound Mode (DECAWM)))\
+                row(cell(bf(tt(l)))cell(No Wraparound Mode (DECAWM)))\
+            endtable())
+        dl(bf(tt(Ps = 8)) em(unimplemented))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Auto-repeat Keys (DECARM)))\
+                row(cell(bf(tt(l)))cell(No Auto-repeat Keys (DECARM)))\
+            endtable())
+        dl(bf(tt(Ps = 9)) X10 XTerm link(mouse reporting)(Mouse))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Send Mouse X & Y on button press.))\
+                row(cell(bf(tt(l)))cell(No mouse reporting.))\
+            endtable())\
+label(Priv10)
+        dl(bf(tt(Ps = 10)) (bf(rxvt)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(link(menuBar)(menuBar) visible))\
+                row(cell(bf(tt(l)))cell(link(menuBar)(menuBar) invisible))\
+            endtable())
+        dl(bf(tt(Ps = 25)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Visible cursor {cnorm/cvvis}))\
+                row(cell(bf(tt(l)))cell(Invisible cursor {civis}))\
+            endtable())
+        dl(bf(tt(Ps = 30)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(scrollBar visisble))\
+                row(cell(bf(tt(l)))cell(scrollBar invisisble))\
+            endtable())
+        dl(bf(tt(Ps = 35)) (bf(rxvt)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Allow XTerm Shift+key sequences))\
+                row(cell(bf(tt(l)))cell(Disallow XTerm Shift+key sequences))\
+            endtable())
+        dl(bf(tt(Ps = 38)) em(unimplemented))
+            (Enter Tektronix Mode (DECTEK))
+        dl(bf(tt(Ps = 40)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Allow 80/132 Mode))\
+                row(cell(bf(tt(l)))cell(Disallow 80/132 Mode))\
+            endtable())
+        dl(bf(tt(Ps = 44)) em(unimplemented))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Turn On Margin Bell))\
+                row(cell(bf(tt(l)))cell(Turn Off Margin Bell))\
+            endtable())
+        dl(bf(tt(Ps = 45)) em(unimplemented))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Reverse-wraparound Mode))\
+                row(cell(bf(tt(l)))cell(No Reverse-wraparound Mode))\
+            endtable())
+        dl(bf(tt(Ps = 46)) em(unimplemented))
+            ()
+P()\
+        dl(bf(tt(Ps = 47)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Use Alternate Screen Buffer))\
+                row(cell(bf(tt(l)))cell(Use Normal Screen Buffer))\
+            endtable())
+label(Priv66)   
+        dl(bf(tt(Ps = 66)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Application Keypad (DECPAM) == \
+                    link(tt(ESC =))(ESCequals)))\
+                row(cell(bf(tt(l)))cell(Normal Keypad (DECPNM) == \
+                    link(tt(ESC >))(ESCequals)))\
+            endtable())
+        dl(bf(tt(Ps = 67)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Backspace key sends bf(tt(BS) \
+		    (DECBKM))))\
+                row(cell(bf(tt(l)))cell(Backspace key sends bf(tt(DEL))))\
+            endtable())
+        dl(bf(tt(Ps = 1000)) (X11 XTerm link(mouse reporting)(Mouse)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Send Mouse X & Y on button press and \
+                    release.))\
+                row(cell(bf(tt(l)))cell(No mouse reporting.))\
+            endtable())
+        dl(bf(tt(Ps = 1001)) (X11 XTerm link(mouse tracking)(Mouse)) \
+            em(unimplemented))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Use Hilite Mouse Tracking.))\
+                row(cell(bf(tt(l)))cell(No mouse reporting.))\
+            endtable())
+        dl(bf(tt(Ps = 1010)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Don't scroll to bottom on TTY output))\
+                row(cell(bf(tt(l)))cell(Scroll to bottom on TTY output))\
+            endtable())
+        dl(bf(tt(Ps = 1011)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Scroll to bottom when a key is \
+		    pressed))\
+                row(cell(bf(tt(l)))cell(Don't scroll to bottom when a key is \
+                    pressed))\
+            endtable())
+        dl(bf(tt(Ps = 1047)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Use Alternate Screen Buffer))\
+                row(cell(bf(tt(l)))cell(Use Normal Screen Buffer - clear \
+		    Alternate Screen Buffer if returning from it))\
+            endtable())
+        dl(bf(tt(Ps = 1048)))
+            (starttable(2)(l l)(0)\
+                row(cell(bf(tt(h)))cell(Save cursor position))\
+                row(cell(bf(tt(l)))cell(Restore cursor position))\
+            endtable())
+   enddl()
+enddl()
+    

@@ -1,0 +1,18 @@
+COMMENT(-- $Id: rxvt-textselection.yo,v 1.1 2003/11/24 17:28:08 pcg Exp $ --)
+COMMENT(----------------------------------------------------------------------)
+manpagesection(TEXT SELECTION AND INSERTION)
+
+The behaviour of text selection and insertion mechanism is similar to
+em(xterm)(1).
+
+startdit()
+    dit(bf(Selection):)
+	Left click at the beginning of the region, drag to the end of the
+	region and release; Right click to extend the marked region;
+	Left double-click to select a word; Left triple-click to select
+	the entire line.
+    dit(bf(Insertion):)
+	Pressing and releasing the Middle mouse button (or bf(Shift-Insert))
+	in an bf(rxvt) window causes the current text selection to be inserted
+	as if it had been typed on the keyboard.
+enddit()
