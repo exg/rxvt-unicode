@@ -1099,6 +1099,7 @@ bool
 rxvt_fontset::populate (const char *desc)
 {
   clear ();
+  printf ("P(%s)\n",desc);
 
   fonts.push_back (new_font (0, CS_UNICODE));
   realize_font (0);

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xdefaults.c
  *----------------------------------------------------------------------*
- * $Id: xdefaults.C,v 1.15 2004/03/03 04:07:52 pcg Exp $
+ * $Id: xdefaults.C,v 1.16 2004/03/04 00:59:10 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994      Robert Nation <nation@rocket.sanders.lockheed.com>
@@ -672,8 +672,8 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
 void
 rxvt_term::get_xdefaults (FILE *stream, const char *name)
 {
-  unsigned int    len;
-  char           *str, buffer[256];
+  unsigned int len;
+  char *str, buffer[256];
 
   if (stream == NULL)
     return;
@@ -703,16 +703,34 @@ rxvt_term::get_xdefaults (FILE *stream, const char *name)
             if (str[n] == ':' && rxvt_Str_match (str, kw))
               {
                 /* skip `keyword:' */
-                str += (n + 1);
+                str += n + 1;
                 rxvt_Str_trim (str);
                 n = STRLEN (str);
                 if (n && rs[optList[entry].doff] == NULL)
                   {
                     /* not already set */
-                    int             s;
-                    char           *p = (char *)rxvt_malloc ((n + 1) * sizeof (char));
+                    int s;
+                    char *p = 0;
 
-                    STRCPY (p, str);
+                    for (int o = 0;;)
+                      {
+                        p = (char *)rxvt_realloc (p, o + n + 1);
+                        MEMCPY (p + o, str, n);
+                        o += n;
+                        p[o] = 0;
+
+                        if (o == 0 || p[o - 1] != '\\') // continuation line
+                          break;
+
+                        o--; // eat "\"
+
+                        if ((str = fgets (buffer, sizeof (buffer), stream)) == NULL)
+                          break;
+
+                        rxvt_Str_trim (str);
+                        n = STRLEN (str);
+                      }
+
                     rs[optList[entry].doff] = p;
                     if (optList_isBool (entry))
                       {
