@@ -33,9 +33,9 @@
  *
  * The FSM can have MAX_STATES states (change it for more).
  * Each state contains:
- * 1.  many tranlsation tables (registered via kstate_add_xlat())
+ * 1.  many tranlsation tables (registered via kstate_add_xlat ())
  * 2.  many switch codes for transition to other states (registered via
- *      kstate_add_switcher()) : limit is static now: MAX_SWITCHER
+ *      kstate_add_switcher ()) : limit is static now: MAX_SWITCHER
  * 3.   life: the number of xlations allowed in a state (0 = unlimited)
  *
  * Format of tranlation strings:
@@ -166,13 +166,13 @@ static XLAT_TYPE *xlat_now = &xlat_type[GREEK_ELOT928];
 
 #define NUM_XLAT_TYPES	(sizeof(xlat_type) / sizeof(xlat_type[0]))
 
-static void     kstate_add_xlat(char *str);
-static void     kstate_add_switcher(char *str);
-static void     kstate_set_life(char *str);
+static void     kstate_add_xlat (char *str);
+static void     kstate_add_switcher (char *str);
+static void     kstate_set_life (char *str);
 
 /* --- Functions ------------- */
 void
-kstate_setcurr(int stateno)
+kstate_setcurr (int stateno)
 {
   u_char          prev_state;
 
@@ -187,21 +187,21 @@ kstate_setcurr(int stateno)
 }
 
 void
-kstate_init(void)
+kstate_init (void)
 {
   pStateNow->num_xlat = pStateNow->num_switcher = pStateNow->life = pStateNow->prev_state = 0;
   pStateNow->xlat = NULL;
 }
 
 void
-kstate_end(void)
+kstate_end (void)
 {
   int             i;
 
   for (i = 0; i < pStateNow->num_xlat; i++)
-    free(pStateNow->xlat[i].pval);
+    free (pStateNow->xlat[i].pval);
   if (pStateNow->num_xlat > 0)
-    free(pStateNow->xlat);
+    free (pStateNow->xlat);
 }
 
 /*
@@ -209,65 +209,65 @@ kstate_end(void)
  * to support other remappers.
  */
 void
-kstate_init_all(int greek_mode)
+kstate_init_all (int greek_mode)
 {
   /* the translation tables for the 4 FSM states for ELOT-928 mappings */
   int             i;
 
   for (i = 0; i < MAX_STATES; i++)
     {
-      kstate_setcurr(i);
-      kstate_init();
+      kstate_setcurr (i);
+      kstate_init ();
     }
   if (greek_mode < 0 || greek_mode >= NUM_XLAT_TYPES)		/* avoid death */
     greek_mode = GREEK_ELOT928;
   xlat_now = &xlat_type[greek_mode];
-  kstate_setcurr(0);
-  kstate_add_xlat(xlat_now->plain);
-  kstate_add_switcher("A;:1");
-  kstate_add_switcher("A::2");
-  kstate_set_life("L0");
+  kstate_setcurr (0);
+  kstate_add_xlat (xlat_now->plain);
+  kstate_add_switcher ("A;:1");
+  kstate_add_switcher ("A::2");
+  kstate_set_life ("L0");
 
-  kstate_setcurr(1);
-  kstate_add_xlat(xlat_now->accent);
-  kstate_add_xlat(xlat_now->accent_xtra);
-  kstate_add_switcher("A::3");
-  kstate_set_life("L1");
+  kstate_setcurr (1);
+  kstate_add_xlat (xlat_now->accent);
+  kstate_add_xlat (xlat_now->accent_xtra);
+  kstate_add_switcher ("A::3");
+  kstate_set_life ("L1");
 
-  kstate_setcurr(2);
-  kstate_add_xlat(xlat_now->umlaut);
-  kstate_add_switcher("A;:3");
-  kstate_set_life("L1");
+  kstate_setcurr (2);
+  kstate_add_xlat (xlat_now->umlaut);
+  kstate_add_switcher ("A;:3");
+  kstate_set_life ("L1");
 
-  kstate_setcurr(3);
-  kstate_add_xlat(xlat_now->acc_uml);
-  kstate_set_life("L1");
+  kstate_setcurr (3);
+  kstate_add_xlat (xlat_now->acc_uml);
+  kstate_set_life ("L1");
 }
 
 void
-kstate_end_all(void)
+kstate_end_all (void)
 {
   int             i;
 
   for (i = 0; i < MAX_STATES; i++)
     {
-      kstate_setcurr(i);
-      kstate_end();
+      kstate_setcurr (i);
+      kstate_end ();
     }
-  kstate_setcurr(0);
+  kstate_setcurr (0);
 }
 
 /*
  * reset FSM
  */
 void
-kstate_reset(void)
+kstate_reset (void)
 {
-  kstate_setcurr(0);
+  kstate_setcurr (0);
 }
 
 void
-kstate_add_xlat(char *str)
+kstate_add_xlat (char *str)
 {
   K_XLAT         *xlat;
   u_int          *pval_tmp;
@@ -279,22 +279,22 @@ kstate_add_xlat(char *str)
   /* add a new xlat table in state */
   if (pStateNow->num_xlat == 0)
     {
-      pStateNow->xlat = malloc(sizeof(K_XLAT));
+      pStateNow->xlat = malloc (sizeof (K_XLAT));
     }
   else			/* prefer contiguous data, realloc */
-    pStateNow->xlat = realloc(pStateNow->xlat, (pStateNow->num_xlat + 1) * sizeof(K_XLAT));
+    pStateNow->xlat = realloc (pStateNow->xlat, (pStateNow->num_xlat + 1) * sizeof (K_XLAT));
   xlat = &pStateNow->xlat[pStateNow->num_xlat];
   /* parse str and derive first, last, values */
-  xlat->first = (u_int) atoi(strtok(str, "-"));
-  xlat->last = (u_int) atoi(strtok(NULL, ":"));
+  xlat->first = (u_int) atoi (strtok (str, "-"));
+  xlat->last = (u_int) atoi (strtok (NULL, ":"));
   i = 0;
-  pval_tmp = calloc(MAX_VAL, sizeof(K_XLAT));
-  while ((sval = strtok(NULL, ",")) != NULL)
-    pval_tmp[i++] = (u_int) (atoi(sval));
-  xlat->pval = calloc(i, sizeof(K_XLAT));
+  pval_tmp = calloc (MAX_VAL, sizeof (K_XLAT));
+  while ((sval = strtok (NULL, ",")) != NULL)
+    pval_tmp[i++] = (u_int) (atoi (sval));
+  xlat->pval = calloc (i, sizeof (K_XLAT));
   if (xlat->pval != NULL)
-    memcpy(xlat->pval, pval_tmp, i * sizeof(u_int));
-  free(pval_tmp);
+    memcpy (xlat->pval, pval_tmp, i * sizeof (u_int));
+  free (pval_tmp);
   pStateNow->num_xlat++;
 }
 
@@ -302,7 +302,7 @@ kstate_add_xlat(char *str)
  * Ascii only for this implementation
  */
 void
-kstate_add_switcher(char *str)
+kstate_add_switcher (char *str)
 {
   K_SWITCH       *switcher;
 
@@ -315,7 +315,7 @@ kstate_add_switcher(char *str)
     {
       case 'A':			/* ascii eg: A;:2 */
         switcher->code = str[1];
-        switcher->nextstate = atoi(&str[3]);
+        switcher->nextstate = atoi (&str[3]);
         break;
     }
   switcher->on = 0;
@@ -324,13 +324,13 @@ kstate_add_switcher(char *str)
 
 /* L1 or L0 */
 void
-kstate_set_life(char *str)
+kstate_set_life (char *str)
 {
-  pStateNow->life = atoi(&str[1]);
+  pStateNow->life = atoi (&str[1]);
 }
 
 unsigned int
-kstate_cxlat(unsigned int c)
+kstate_cxlat (unsigned int c)
 {
   int             i;
 
@@ -339,7 +339,7 @@ kstate_cxlat(unsigned int c)
     if (pStateNow->switcher[i].type == 'A' &&	/* only ascii here */
         c == pStateNow->switcher[i].code)
       {
-        kstate_setcurr(pStateNow->switcher[i].nextstate);
+        kstate_setcurr (pStateNow->switcher[i].nextstate);
         pStateNow->switcher[i].on = 1;
         return ((unsigned int)-1);
       }
@@ -352,37 +352,37 @@ kstate_cxlat(unsigned int c)
       }
   /* switch back to previous state if life of current is 1 */
   if (pStateNow->life == 1)
-    kstate_setcurr(pStateNow->prev_state);
+    kstate_setcurr (pStateNow->prev_state);
   return (c);
 }
 
 #ifdef RXVT
 void
-greek_init(void)
+greek_init (void)
 {
-  kstate_init_all(GreekMode);
+  kstate_init_all (GreekMode);
 }
 
 void
-greek_end(void)
+greek_end (void)
 {
-  kstate_end_all();
+  kstate_end_all ();
 }
 
 void
-greek_reset(void)
+greek_reset (void)
 {
-  kstate_reset();
+  kstate_reset ();
 }
 
 void
-greek_setmode(int greek_mode)
+greek_setmode (int greek_mode)
 {
   GreekMode = greek_mode;
 }
 
 int
-greek_getmode(void)
+greek_getmode (void)
 {
   return (GreekMode);
 }
@@ -391,14 +391,14 @@ greek_getmode(void)
  * xlate a given string in-place - return new string length
  */
 int
-greek_xlat(char *s, int num_chars)
+greek_xlat (char *s, int num_chars)
 {
   int             i, count;
   unsigned int    c;
 
   for (i = 0, count = 0; i < num_chars; i++)
     {
-      c = kstate_cxlat((unsigned int)s[i]);
+      c = kstate_cxlat ((unsigned int)s[i]);
       if (c != -1)
         s[count++] = (char)c;
     }
@@ -409,16 +409,16 @@ greek_xlat(char *s, int num_chars)
 
 #ifdef TEST
 int
-main(void)
+main (void)
 {
   /*char text[] = "abcdef;aGDZXC"; */
   char            text[] = "abcdef;a:ibgdezhuiklmnjoprstyfxcv";
 
-  kstate_init_all(GREEK_ELOT928);
-  printf("text: %s\n", text);
-  greek_xlat(text, strlen(text));
-  printf("xlat'ed text: %s\n", text);
-  kstate_end_all();
+  kstate_init_all (GREEK_ELOT928);
+  printf ("text: %s\n", text);
+  greek_xlat (text, strlen (text));
+  printf ("xlat'ed text: %s\n", text);
+  kstate_end_all ();
   return 0;
 }
 #endif

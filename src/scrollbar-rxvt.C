@@ -66,17 +66,17 @@ rxvt_term::Draw_button (int x, int y, int state, int dirn)
       pt[0].y = pt[1].y = y;
       pt[2].y = y + sz - 1;
     }
-  XFillPolygon(display->display, scrollBar.win, scrollbarGC,
+  XFillPolygon (display->display, scrollBar.win, scrollbarGC,
                pt, 3, Convex, CoordModeOrigin);
 
   /* draw base */
-  XDrawLine(display->display, scrollBar.win, (dirn == UP ? bot : top),
+  XDrawLine (display->display, scrollBar.win, (dirn == UP ? bot : top),
             pt[0].x, pt[0].y, pt[1].x, pt[1].y);
 
   /* draw shadow on left */
   pt[1].x = x + sz2 - 1;
   pt[1].y = y + (dirn == UP ? 0 : sz - 1);
-  XDrawLine(display->display, scrollBar.win, top,
+  XDrawLine (display->display, scrollBar.win, top,
             pt[0].x, pt[0].y, pt[1].x, pt[1].y);
 
 #if (SHADOW > 1)
@@ -92,7 +92,7 @@ rxvt_term::Draw_button (int x, int y, int state, int dirn)
       pt[0].y++;
       pt[1].y--;
     }
-  XDrawLine(display->display, scrollBar.win, top,
+  XDrawLine (display->display, scrollBar.win, top,
             pt[0].x, pt[0].y, pt[1].x, pt[1].y);
 #endif
   /* draw shadow on right */
@@ -100,7 +100,7 @@ rxvt_term::Draw_button (int x, int y, int state, int dirn)
   /*  pt[2].x = x + sz2; */
   pt[1].y = y + (dirn == UP ? sz - 1 : 0);
   pt[2].y = y + (dirn == UP ? 0 : sz - 1);
-  XDrawLine(display->display, scrollBar.win, bot,
+  XDrawLine (display->display, scrollBar.win, bot,
             pt[2].x, pt[2].y, pt[1].x, pt[1].y);
 #if (SHADOW > 1)
   /* doubled */
@@ -115,13 +115,13 @@ rxvt_term::Draw_button (int x, int y, int state, int dirn)
       pt[2].y--;
       pt[1].y++;
     }
-  XDrawLine(display->display, scrollBar.win, bot,
+  XDrawLine (display->display, scrollBar.win, bot,
             pt[2].x, pt[2].y, pt[1].x, pt[1].y);
 #endif
 }
 
 int
-rxvt_term::scrollbar_show_rxvt (int update __attribute__((unused)), int last_top, int last_bot, int scrollbar_len)
+rxvt_term::scrollbar_show_rxvt (int update __attribute__ ((unused)), int last_top, int last_bot, int scrollbar_len)
 {
   int             sbshadow = sb_shadow;
   int             sbwidth = (int)scrollBar.width;
@@ -134,22 +134,22 @@ rxvt_term::scrollbar_show_rxvt (int update __attribute__((unused)), int last_top
       gcvalue.foreground = PixColors[Color_trough];
       if (sbshadow)
         {
-          XSetWindowBackground(display->display, scrollBar.win,
+          XSetWindowBackground (display->display, scrollBar.win,
                                gcvalue.foreground);
-          XClearWindow(display->display, scrollBar.win);
+          XClearWindow (display->display, scrollBar.win);
         }
     }
   else
     {
       /* instead of XClearWindow (display->display, scrollBar.win); */
       if (last_top < scrollBar.top)
-        XClearArea(display->display, scrollBar.win,
+        XClearArea (display->display, scrollBar.win,
                    sbshadow, last_top,
                    sbwidth, (scrollBar.top - last_top),
                    False);
 
       if (scrollBar.bot < last_bot)
-        XClearArea(display->display, scrollBar.win,
+        XClearArea (display->display, scrollBar.win,
                    sbshadow, scrollBar.bot,
                    sbwidth, (last_bot - scrollBar.bot),
                    False);
@@ -165,23 +165,23 @@ rxvt_term::scrollbar_show_rxvt (int update __attribute__((unused)), int last_top
     else
       xofs = sbshadow ? sbwidth : sbwidth - 1;
 
-    XDrawLine(display->display, scrollBar.win, botShadowGC,
+    XDrawLine (display->display, scrollBar.win, botShadowGC,
               xofs, 0, xofs, scrollBar.end + sbwidth);
   }
 #endif
-  XFillRectangle(display->display, scrollBar.win, scrollbarGC,
+  XFillRectangle (display->display, scrollBar.win, scrollbarGC,
                  sbshadow, scrollBar.top, sbwidth,
                  scrollbar_len);
 
   if (sbshadow)
     /* trough shadow */
-    rxvt_Draw_Shadow(display->display, scrollBar.win,
+    rxvt_Draw_Shadow (display->display, scrollBar.win,
                      botShadowGC, topShadowGC,
                      0, 0,
-                     sbwidth + 2 * sbshadow, /* scrollbar_TotalWidth() */
+                     sbwidth + 2 * sbshadow, /* scrollbar_TotalWidth () */
                      scrollBar.end + (sbwidth + 1) + sbshadow);
   /* shadow for scrollbar slider */
-  rxvt_Draw_Shadow(display->display, scrollBar.win,
+  rxvt_Draw_Shadow (display->display, scrollBar.win,
                    topShadowGC, botShadowGC,
                    sbshadow, scrollBar.top, sbwidth,
                    scrollbar_len);
@@ -190,9 +190,9 @@ rxvt_term::scrollbar_show_rxvt (int update __attribute__((unused)), int last_top
    * Redraw scrollbar arrows
    */
   Draw_button (sbshadow, sbshadow,
-               (scrollbar_isUp() ? -1 : +1), UP);
+               (scrollbar_isUp () ? -1 : +1), UP);
   Draw_button (sbshadow, (scrollBar.end + 1),
-               (scrollbar_isDn() ? -1 : +1), DN);
+               (scrollbar_isDn () ? -1 : +1), DN);
   return 1;
 }
 #endif				/* RXVT_SCROLLBAR */

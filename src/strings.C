@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	strings.c
  *----------------------------------------------------------------------*
- * $Id: strings.C,v 1.4 2004/02/01 01:34:41 pcg Exp $
+ * $Id: strings.C,v 1.5 2004/02/13 12:16:21 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
@@ -28,31 +28,31 @@
 #ifndef NO_STRINGS
 /*----------------------------------------------------------------------*/
 /*
- * a replacement for strcasecmp() to avoid linking an entire library.
+ * a replacement for strcasecmp () to avoid linking an entire library.
  * Mark Olesen added this in 2.15 but for which OS & library? - Geoff Wing
  */
 int
-strcasecmp(const char *s1, const char *s2)
+strcasecmp (const char *s1, const char *s2)
 {
-  for ( ; tolower(*s1) == tolower(*s2); s1++, s2++)
+  for ( ; tolower (*s1) == tolower (*s2); s1++, s2++)
     if (!*s1)
       return 0;
-  return (int)(tolower(*s1) - tolower(*s2));
+  return (int) (tolower (*s1) - tolower (*s2));
 }
 
 int
-strncasecmp(const char *s1, const char *s2, size_t n)
+strncasecmp (const char *s1, const char *s2, size_t n)
 {
-  for ( ; n-- && (tolower(*s1) == tolower(*s2)); s1++, s2++)
+  for ( ; n-- && (tolower (*s1) == tolower (*s2)); s1++, s2++)
     if (!*s1)
       return 0;
   if (n == 0)
     return 0;
-  return (int)(tolower(*s1) - tolower(*s2));
+  return (int) (tolower (*s1) - tolower (*s2));
 }
 
 char           *
-strcpy(char *d, const char *s)
+strcpy (char *d, const char *s)
 {
   char          *r = d;
 
@@ -61,7 +61,7 @@ strcpy(char *d, const char *s)
 }
 
 char           *
-strncpy(char *d, const char *s, size_t len)
+strncpy (char *d, const char *s, size_t len)
 {
   char          *r = d;
 
@@ -77,7 +77,7 @@ strncpy(char *d, const char *s, size_t len)
 }
 
 int
-strcmp(const char *s1, const char *s2)
+strcmp (const char *s1, const char *s2)
 {
   for ( ; (*s1 == *s2++); )
     if (*s1++ == '\0')
@@ -86,7 +86,7 @@ strcmp(const char *s1, const char *s2)
 }
 
 int
-strncmp(const char *s1, const char *s2, size_t len)
+strncmp (const char *s1, const char *s2, size_t len)
 {
   if (len)
     {
@@ -98,7 +98,7 @@ strncmp(const char *s1, const char *s2, size_t len)
 }
 
 char           *
-strcat(char *s1, const char *s2)
+strcat (char *s1, const char *s2)
 {
   char           *r = s1;
 
@@ -110,7 +110,7 @@ strcat(char *s1, const char *s2)
 }
 
 char           *
-strncat(char *s1, const char *s2, size_t len)
+strncat (char *s1, const char *s2, size_t len)
 {
   char           *r = s1;
 
@@ -123,7 +123,7 @@ strncat(char *s1, const char *s2, size_t len)
 }
 
 size_t
-strlen(const char *s)
+strlen (const char *s)
 {
   size_t         len = 0;
 
@@ -132,24 +132,24 @@ strlen(const char *s)
 }
 
 char           *
-strdup(const char *s)
+strdup (const char *s)
 {
-  size_t         len = STRLEN(s) + 1;
+  size_t         len = STRLEN (s) + 1;
   char          *c;
 
-  if ((c = malloc(len)) != NULL)
-    MEMCPY(c, s, len);
+  if ((c = malloc (len)) != NULL)
+    MEMCPY (c, s, len);
   return c;
 }
 
 char           *
-index(const char *s, int c)
+index (const char *s, int c)
 {
-  return STRCHR(s, c);
+  return STRCHR (s, c);
 }
 
 char           *
-strchr(const char *s, int c)
+strchr (const char *s, int c)
 {
   char          *p = NULL;
 
@@ -168,13 +168,13 @@ strchr(const char *s, int c)
 }
 
 char           *
-rindex(const char *s, int c)
+rindex (const char *s, int c)
 {
-  return STRRCHR(s, c);
+  return STRRCHR (s, c);
 }
 
 char           *
-strrchr(const char *s, int c)
+strrchr (const char *s, int c)
 {
   char          *p = NULL;
 
@@ -189,17 +189,17 @@ strrchr(const char *s, int c)
 }
 
 void           *
-memcpy(void *s1, const void *s2, size_t len)
+memcpy (void *s1, const void *s2, size_t len)
 {
   /* has extra stack and time but less code space */
-  return MEMMOVE(s1, s2, len);
+  return MEMMOVE (s1, s2, len);
 }
 
 /*--------------------------------------------------------------------------*
- * Possibly faster memmove() by Geoff Wing <mason@primenet.com.au>
+ * Possibly faster memmove () by Geoff Wing <mason@primenet.com.au>
  *--------------------------------------------------------------------------*/
 void           *
-memmove(void *d, const void *s, size_t len)
+memmove (void *d, const void *s, size_t len)
 {
   u_intp_t        i;
   unsigned char  *dst = (unsigned char *)d;
@@ -210,15 +210,15 @@ memmove(void *d, const void *s, size_t len)
       if ((u_intp_t)d < (u_intp_t)s)
         {
           /* forwards */
-          i = (-(u_intp_t)dst) & (SIZEOF_INT_P - 1);
-          if (len >= 16 && i == ((-(u_intp_t)src) & (SIZEOF_INT_P - 1)))
+          i = (- (u_intp_t)dst) & (SIZEOF_INT_P - 1);
+          if (len >= 16 && i == ((- (u_intp_t)src) & (SIZEOF_INT_P - 1)))
             {
               /* speed up since src & dst are offset correctly */
               len -= (size_t)i;
               for ( ; i--; )
                 *dst++ = *src++;
-              for (i = (u_intp_t)(len / SIZEOF_INT_P); i--; )
-                *((u_intp_t *)dst)++ = *((const u_intp_t *)src)++;
+              for (i = (u_intp_t) (len / SIZEOF_INT_P); i--; )
+                * ((u_intp_t *)dst)++ = * ((const u_intp_t *)src)++;
               len &= (SIZEOF_INT_P - 1);
             }
           for ( ; len--; )
@@ -236,8 +236,8 @@ memmove(void *d, const void *s, size_t len)
               len -= (size_t)i;
               for ( ; i--; )
                 *--dst = *--src;
-              for (i = (u_intp_t)(len / SIZEOF_INT_P); i--; )
-                *--((u_intp_t *)dst) = *--((const u_intp_t *)src);
+              for (i = (u_intp_t) (len / SIZEOF_INT_P); i--; )
+                *-- ((u_intp_t *)dst) = *-- ((const u_intp_t *)src);
               len &= (SIZEOF_INT_P - 1);
             }
           for ( ; len--; )
@@ -248,20 +248,20 @@ memmove(void *d, const void *s, size_t len)
 }
 
 /*--------------------------------------------------------------------------*
- * Possibly faster memset() by Geoff Wing <mason@primenet.com.au>
+ * Possibly faster memset () by Geoff Wing <mason@primenet.com.au>
  * presumptions:
  *   1) intp_t write the best
  *   2) SIZEOF_INT_P == power of 2
  *--------------------------------------------------------------------------*/
 
 void
-bzero(void *b, size_t len)
+bzero (void *b, size_t len)
 {
-  MEMSET(b, 0, len);
+  MEMSET (b, 0, len);
 }
 
 void           *
-memset(void *p, int c1, size_t len)
+memset (void *p, int c1, size_t len)
 {
   u_intp_t        i, val;
   unsigned char   c = (unsigned char) c1;
@@ -272,7 +272,7 @@ memset(void *p, int c1, size_t len)
       if (len >= 16)
         { /* < 16 probably not worth all the calculations */
           /* write out preceding characters so we align on an integer boundary */
-          if ((i = ((-(u_intp_t)p) & (SIZEOF_INT_P - 1))))
+          if ((i = ((- (u_intp_t)p) & (SIZEOF_INT_P - 1))))
             {
               len -= (size_t)i;
               for (; i--;)
@@ -290,8 +290,8 @@ memset(void *p, int c1, size_t len)
 #if SIZEOF_INT_P == 16
           val |= (val << 64);
 #endif
-          for (i = (u_intp_t)(len / SIZEOF_INT_P); i--;)
-            *((u_intp_t *)lp)++ = val;
+          for (i = (u_intp_t) (len / SIZEOF_INT_P); i--;)
+            * ((u_intp_t *)lp)++ = val;
           len &= (SIZEOF_INT_P - 1);
         }
       /* write trailing characters */

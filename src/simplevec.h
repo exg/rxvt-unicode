@@ -65,7 +65,7 @@ public:
 private:
     static T *alloc (size_type n)
     {
-	return (T *)::operator new ((size_t)(n * sizeof (T)));
+	return (T *)::operator new ((size_t) (n * sizeof (T)));
     }
     static void dealloc (T *buf)
     {
@@ -76,15 +76,15 @@ private:
     void reserve (iterator where, size_type n)
     {
 	if (_last + n <= _size) {
-	    memmove (where+n, where, (end()-where)*sizeof(T));
+	    memmove (where+n, where, (end ()-where)*sizeof (T));
 	} else {
 	    size_type sz = _last+n;
-	    sz = (_size == 0) ? max(sz, 5) : max(sz, 2*_size);
+	    sz = (_size == 0) ? max (sz, 5) : max (sz, 2*_size);
 	    T *nbuf = alloc (sz);
 	    if (_buf) {
-		memcpy (nbuf, begin(), (where-begin())*sizeof(T));
-		memcpy (nbuf + (where-begin()) + n, where,
-			(end()-where)*sizeof(T));
+		memcpy (nbuf, begin (), (where-begin ())*sizeof (T));
+		memcpy (nbuf + (where-begin ()) + n, where,
+			(end ()-where)*sizeof (T));
 		dealloc (_buf);
 	    }
 	    _buf = nbuf;
@@ -95,10 +95,10 @@ public:
     void reserve (size_type sz)
     {
 	if (_size < sz) {
-	    sz = (_size == 0) ? max(sz, 5) : max(sz, 2*_size);
+	    sz = (_size == 0) ? max (sz, 5) : max (sz, 2*_size);
 	    T *nbuf = alloc (sz);
 	    if (_buf) {
-		memcpy (nbuf, begin(), size()*sizeof(T));
+		memcpy (nbuf, begin (), size ()*sizeof (T));
 		dealloc (_buf);
 	    }
 	    _buf = nbuf;
@@ -109,21 +109,21 @@ public:
 	: _last (0), _size (0), _buf (0)
     {
     }
-    simplevec (size_type n, const T& t = T())
+    simplevec (size_type n, const T& t = T ())
 	: _last (0), _size (0), _buf (0)
     {
-	insert (begin(), n, t);
+	insert (begin (), n, t);
     }
     simplevec (const_iterator first, const_iterator last)
 	: _last (0), _size (0), _buf (0)
     {
-	insert (begin(), first, last);
+	insert (begin (), first, last);
     }
     simplevec (const simplevec<T> &v)
 	: _last (0), _size (0), _buf (0)
     {
 	reserve (v._last);
-	memcpy (_buf, v.begin(), v.size()*sizeof(T));
+	memcpy (_buf, v.begin (), v.size ()*sizeof (T));
 	_last = v._last;
     }
     simplevec<T> &operator= (const simplevec<T> &v)
@@ -131,7 +131,7 @@ public:
 	if (this != &v) {
 	    _last = 0;
 	    reserve (v._last);
-	    memcpy (_buf, v.begin(), v.size()*sizeof(T));
+	    memcpy (_buf, v.begin (), v.size ()*sizeof (T));
 	    _last = v._last;
 	}
         return *this;
@@ -142,22 +142,22 @@ public:
     }
     const T &front () const
     {
-	//ministl_assert (size() > 0);
+	//ministl_assert (size () > 0);
 	return _buf[0];
     }
     T &front ()
     {
-	//ministl_assert (size() > 0);
+	//ministl_assert (size () > 0);
 	return _buf[0];
     }
     const T &back () const
     {
-	//ministl_assert (size() > 0);
+	//ministl_assert (size () > 0);
 	return _buf[_last-1];
     }
     T &back ()
     {
-	//ministl_assert (size() > 0);
+	//ministl_assert (size () > 0);
 	return _buf[_last-1];
     }
     bool empty () const
@@ -171,60 +171,60 @@ public:
     void push_back (const T &t)
     {
 	reserve (_last+1);
-	*end() = t;
+	*end () = t;
 	++_last;
     }
     void push_back (T &t)
     {
 	reserve (_last+1);
-	*end() = t;
+	*end () = t;
 	++_last;
     }
     void pop_back ()
     {
-	//ministl_assert (size() > 0);
+	//ministl_assert (size () > 0);
 	--_last;
     }
     const T &operator[] (size_type idx) const
     {
-	//ministl_assert (idx < size());
+	//ministl_assert (idx < size ());
 	return _buf[idx];
     }
     T &operator[] (size_type idx)
     {
-	//ministl_assert (idx < size());
+	//ministl_assert (idx < size ());
 	return _buf[idx];
     }
     iterator insert (iterator pos, const T &t)
     {
-	//ministl_assert (pos <= end());
-	long at = pos - begin();
+	//ministl_assert (pos <= end ());
+	long at = pos - begin ();
 	reserve (pos, 1);
-	pos = begin()+at;
+	pos = begin ()+at;
 	*pos = t;
 	++_last;
 	return pos;
     }
     iterator insert (iterator pos, const_iterator first, const_iterator last)
     {
-        //ministl_assert (pos <= end());
+        //ministl_assert (pos <= end ());
 	long n = last - first;
-	long at = pos - begin();
+	long at = pos - begin ();
 	if (n > 0) {
 	    reserve (pos, n);
-	    pos = begin()+at;
-	    memcpy (pos, first, (last-first)*sizeof(T));
+	    pos = begin ()+at;
+	    memcpy (pos, first, (last-first)*sizeof (T));
 	    _last += n;
 	}
 	return pos;
     }
     iterator insert (iterator pos, size_type n, const T &t)
     {
-        //ministl_assert (pos <= end());
-	long at = pos - begin();
+        //ministl_assert (pos <= end ());
+	long at = pos - begin ();
 	if (n > 0) {
 	    reserve (pos, n);
-	    pos = begin()+at;
+	    pos = begin ()+at;
 	    for (int i = 0; i < n; ++i)
 		pos[i] = t;
 	    _last += n;
@@ -234,14 +234,14 @@ public:
     void erase (iterator first, iterator last)
     {
 	if (last != first) {
-	    memmove (first, last, (end()-last)*sizeof(T));
+	    memmove (first, last, (end ()-last)*sizeof (T));
 	    _last -= last - first;
 	}
     }
     void erase (iterator pos)
     {
-        if (pos != end()) {
-	    memmove (pos, pos+1, (end()-(pos+1))*sizeof(T));
+        if (pos != end ()) {
+	    memmove (pos, pos+1, (end ()- (pos+1))*sizeof (T));
             --_last;
         }
     }
@@ -250,22 +250,22 @@ public:
 template<class T>
 bool operator== (const simplevec<T> &v1, const simplevec<T> &v2)
 {
-    if (v1.size() != v2.size())
+    if (v1.size () != v2.size ())
 	return false;
-    return !v1.size() || !memcmp (&v1[0], &v2[0], v1.size()*sizeof(T));
+    return !v1.size () || !memcmp (&v1[0], &v2[0], v1.size ()*sizeof (T));
 }
 
 template<class T>
 bool operator< (const simplevec<T> &v1, const simplevec<T> &v2)
 {
-    unsigned long minlast = min (v1.size(), v2.size());
+    unsigned long minlast = min (v1.size (), v2.size ());
     for (unsigned long i = 0; i < minlast; ++i) {
         if (v1[i] < v2[i])
 	    return true;
 	if (v2[i] < v1[i])
 	    return false;
     }
-    return v1.size() < v2.size();
+    return v1.size () < v2.size ();
 }
 
 #endif

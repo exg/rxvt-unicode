@@ -112,7 +112,7 @@
 #define COLOR_CURSOR_BACKGROUND	NULL	/* if NULL, use foreground colour */
 
 /*
- * Define to remove support for XCopyArea() support.  XCopyArea() is useful
+ * Define to remove support for XCopyArea () support.  XCopyArea () is useful
  * for scrolling on non-local X displays
  */
 /* #define NO_SLOW_LINK_SUPPORT */

@@ -1,5 +1,5 @@
 /*
- * $Id: command.h,v 1.5 2004/01/17 01:20:01 pcg Exp $
+ * $Id: command.h,v 1.6 2004/02/13 12:16:21 pcg Exp $
  */
 
 #ifndef COMMAND_H_
@@ -75,7 +75,7 @@
  * software in question is broken enough to be case insensitive to the 'c'
  * character in the answerback string, we make the distinguishing
  * characteristic be capitalization of that character. The length of the
- * two strings should be the same so that identical read(2) calls may be
+ * two strings should be the same so that identical read (2) calls may be
  * used.
  */
 #define VT100_ANS	"\033[?1;2c"	/* vt100 answerback */

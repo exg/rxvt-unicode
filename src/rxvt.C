@@ -2,13 +2,13 @@
 #include "iom.h"
 
 /*----------------------------------------------------------------------*/
-/* main() */
+/* main () */
 int
-main(int argc, const char *const *argv)
+main (int argc, const char *const *argv)
 {
   rxvt_init_signals ();
 
-  if (!rxvt_init(argc, argv))
+  if (!rxvt_init (argc, argv))
     return EXIT_FAILURE;
 
   iom.loop ();

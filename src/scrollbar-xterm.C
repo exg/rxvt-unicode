@@ -32,7 +32,7 @@
 const unsigned char x_stp_bits[] = { 0xaa, 0x55 };
 
 int
-rxvt_term::scrollbar_show_xterm (int update __attribute__((unused)), int last_top, int last_bot, int scrollbar_len)
+rxvt_term::scrollbar_show_xterm (int update __attribute__ ((unused)), int last_top, int last_bot, int scrollbar_len)
 {
   int             xsb = 0;
   int             sbwidth = scrollBar.width - 1;
@@ -42,41 +42,41 @@ rxvt_term::scrollbar_show_xterm (int update __attribute__((unused)), int last_to
       XGCValues       gcvalue;
 
       scrollBar.init |= R_SB_XTERM;
-      gcvalue.stipple = XCreateBitmapFromData(display->display, scrollBar.win,
+      gcvalue.stipple = XCreateBitmapFromData (display->display, scrollBar.win,
                                               (char *)x_stp_bits, x_stp_width,
                                               x_stp_height);
       if (!gcvalue.stipple)
         {
-          rxvt_print_error("can't create bitmap");
-          exit(EXIT_FAILURE);
+          rxvt_print_error ("can't create bitmap");
+          exit (EXIT_FAILURE);
         }
       gcvalue.fill_style = FillOpaqueStippled;
       gcvalue.foreground = PixColors[Color_fg];
       gcvalue.background = PixColors[Color_bg];
 
-      xscrollbarGC = XCreateGC(display->display, scrollBar.win,
+      xscrollbarGC = XCreateGC (display->display, scrollBar.win,
                                GCForeground | GCBackground
                                | GCFillStyle | GCStipple, &gcvalue);
       gcvalue.foreground = PixColors[Color_border];
-      ShadowGC = XCreateGC(display->display, scrollBar.win, GCForeground, &gcvalue);
+      ShadowGC = XCreateGC (display->display, scrollBar.win, GCForeground, &gcvalue);
     }
   /* instead of XClearWindow (display->display, scrollBar.win); */
   xsb = (Options & Opt_scrollBar_right) ? 1 : 0;
   if (last_top < scrollBar.top)
-    XClearArea(display->display, scrollBar.win,
+    XClearArea (display->display, scrollBar.win,
                sb_shadow + xsb, last_top,
                sbwidth, (scrollBar.top - last_top), False);
 
   if (scrollBar.bot < last_bot)
-    XClearArea(display->display, scrollBar.win,
+    XClearArea (display->display, scrollBar.win,
                sb_shadow + xsb, scrollBar.bot,
                sbwidth, (last_bot - scrollBar.bot), False);
 
   /* scrollbar slider */
-  XFillRectangle(display->display, scrollBar.win, xscrollbarGC,
+  XFillRectangle (display->display, scrollBar.win, xscrollbarGC,
                  xsb + 1, scrollBar.top, sbwidth - 2, scrollbar_len);
 
-  XDrawLine(display->display, scrollBar.win, ShadowGC,
+  XDrawLine (display->display, scrollBar.win, ShadowGC,
             xsb ? 0 : sbwidth, scrollBar.beg,
             xsb ? 0 : sbwidth, scrollBar.end);
   return 1;

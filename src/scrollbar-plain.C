@@ -28,7 +28,7 @@
 #if defined(PLAIN_SCROLLBAR)
 
 int
-rxvt_term::scrollbar_show_plain (int update __attribute__((unused)), int last_top, int last_bot, int scrollbar_len)
+rxvt_term::scrollbar_show_plain (int update __attribute__ ((unused)), int last_top, int last_bot, int scrollbar_len)
 {
   int xsb = 0;
   int sbwidth = scrollBar.width - 1;

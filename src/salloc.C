@@ -40,7 +40,7 @@ rxvt_salloc::alloc ()
           firstfree = sizeof (chain);
         }
 
-      r = (void *)((char *)firstblock + firstfree);
+      r = (void *) ((char *)firstblock + firstfree);
 
       firstfree += size;
     }

@@ -36,7 +36,7 @@ client::client ()
 extern char **environ;
 
 int
-main(int argc, const char *const *argv)
+main (int argc, const char *const *argv)
 {
   client c;
   char buf[PATH_MAX];
@@ -50,7 +50,7 @@ main(int argc, const char *const *argv)
   }
 
   c.send ("NEW");
-  // instead of getcwd we could opendir(".") and pass the fd for fchdir *g*
+  // instead of getcwd we could opendir (".") and pass the fd for fchdir *g*
   c.send ("CWD"), c.send (getcwd (buf, sizeof (buf)));
 
   for (char **var = environ; *environ; environ++)

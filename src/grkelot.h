@@ -33,8 +33,8 @@ extern "C" {
    extern void	greek_init (void);
    extern void	greek_end (void);
    extern void	greek_reset (void);
-   extern void  greek_setmode(int greek_mode);
-   extern int   greek_getmode(void);
+   extern void  greek_setmode (int greek_mode);
+   extern int   greek_getmode (void);
    extern int	greek_xlat (char *s, int num_chars);
 #ifdef __cplusplus
 }

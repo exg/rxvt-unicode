@@ -90,8 +90,8 @@ struct rxvt_display : refcounted {
 
 struct im_watcher : watcher, callback0<void> {
   template<class O1, class O2>
-  im_watcher (O1 *object, void (O2::*method)())
-  : callback0<void>(object,method)
+  im_watcher (O1 *object, void (O2::*method) ())
+  : callback0<void> (object,method)
   { }
 
   void start (rxvt_display *display)
@@ -108,8 +108,8 @@ struct xevent_watcher : watcher, callback1<void, XEvent &> {
   Window window;
 
   template<class O1, class O2>
-  xevent_watcher (O1 *object, void (O2::*method)(XEvent &))
-  : callback1<void, XEvent &>(object,method)
+  xevent_watcher (O1 *object, void (O2::*method) (XEvent &))
+  : callback1<void, XEvent &> (object,method)
   { }
 
   void start (rxvt_display *display, Window window)
@@ -132,14 +132,14 @@ typedef unsigned long Pixel;
 struct rxvt_color {
 #if XFT
   XftColor c;
-  operator Pixel() const { return c.pixel; }
+  operator Pixel () const { return c.pixel; }
 #else
   Pixel p;
-  operator Pixel() const { return p; }
+  operator Pixel () const { return p; }
 #endif
 
-  bool operator == (const rxvt_color &b) const { return Pixel(*this) == Pixel(b); }
-  bool operator != (const rxvt_color &b) const { return Pixel(*this) != Pixel(b); }
+  bool operator == (const rxvt_color &b) const { return Pixel (*this) == Pixel (b); }
+  bool operator != (const rxvt_color &b) const { return Pixel (*this) != Pixel (b); }
 
   void get (rxvt_display *display, unsigned short &cr, unsigned short &cg, unsigned short &cb);
  

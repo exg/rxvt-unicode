@@ -80,7 +80,7 @@ struct rxvt_fontset {
   void populate (const char *desc);
   int find_font (uint32_t unicode);
 
-  rxvt_font *operator [](int id) const
+  rxvt_font *operator [] (int id) const
   {
     return fonts[id];
   }

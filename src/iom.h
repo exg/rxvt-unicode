@@ -121,7 +121,7 @@ extern io_manager iom; // a singleton, together with it's construction/destructi
 struct watcher {
   int active; /* 0 == inactive, else index into respective vector */
 
-  watcher() : active(0) { }
+  watcher () : active (0) { }
 };
 
 #if IOM_IO
@@ -139,8 +139,8 @@ struct io_watcher : watcher, callback2<void, io_watcher &, short> {
   void stop () { iom.unreg (this); }
 
   template<class O1, class O2>
-  io_watcher (O1 *object, void (O2::*method)(io_watcher &, short))
-  : callback2<void, io_watcher &, short>(object,method)
+  io_watcher (O1 *object, void (O2::*method) (io_watcher &, short))
+  : callback2<void, io_watcher &, short> (object,method)
   { }
   ~io_watcher () { stop (); }
 };
@@ -153,14 +153,14 @@ struct time_watcher : watcher, callback1<void, time_watcher &> {
   void trigger ();
 
   void set (tstamp when) { at = when; }
-  void operator ()() { trigger (); }
+  void operator () () { trigger (); }
   void start () { iom.reg (this); }
   void start (tstamp when) { set (when); iom.reg (this); }
   void stop () { iom.unreg (this); }
 
   template<class O1, class O2>
-  time_watcher (O1 *object, void (O2::*method)(time_watcher &))
-  : callback1<void, time_watcher &>(object,method), at(0)
+  time_watcher (O1 *object, void (O2::*method) (time_watcher &))
+  : callback1<void, time_watcher &> (object,method), at (0)
   { }
   ~time_watcher () { stop (); }
 };
@@ -173,8 +173,8 @@ struct check_watcher : watcher, callback1<void, check_watcher &> {
   void stop () { iom.unreg (this); }
 
   template<class O1, class O2>
-  check_watcher (O1 *object, void (O2::*method)(check_watcher &))
-  : callback1<void, check_watcher &>(object,method)
+  check_watcher (O1 *object, void (O2::*method) (check_watcher &))
+  : callback1<void, check_watcher &> (object,method)
   { }
   ~check_watcher () { stop (); }
 };
@@ -187,8 +187,8 @@ struct idle_watcher : watcher, callback1<void, idle_watcher &> {
   void stop () { iom.unreg (this); }
 
   template<class O1, class O2>
-  idle_watcher (O1 *object, void (O2::*method)(idle_watcher &))
-    : callback1<void, idle_watcher &>(object,method)
+  idle_watcher (O1 *object, void (O2::*method) (idle_watcher &))
+    : callback1<void, idle_watcher &> (object,method)
     { }
   ~idle_watcher () { stop (); }
 };

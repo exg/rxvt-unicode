@@ -132,9 +132,9 @@ struct mouse_event {
         (swapittmp) = (one); (one) = (two); (two) = (swapittmp);        \
     } while (/* CONSTCOND */ 0)
 #define BOUND_POSITIVE_INT16(val)                       \
-    (int16_t)((val) <= 0                                \
+    (int16_t) ((val) <= 0                                \
               ? 0                                       \
-              : min((val), (((uint16_t)-1)>>1)))
+              : min ((val), (((uint16_t)-1)>>1)))
 
 /*
  *****************************************************************************
@@ -243,7 +243,7 @@ struct mouse_event {
   *    | +---------+ |
   *    | | ......%%| |
   *    | | ......%%| |
-  *    | | ..()..%%| |
+  *    | | .. ()..%%| |
   *    | | ......%%| |
   *    | | %%%%%%%%| |
   *    | +---------+ | <.........................
@@ -295,24 +295,24 @@ struct mouse_event {
 #define FONT_DN                 "#-"
 #define FONT_UP                 "#+"
 
-/* flags for rxvt_scr_gotorc() */
+/* flags for rxvt_scr_gotorc () */
 #define C_RELATIVE              1       /* col movement is relative */
 #define R_RELATIVE              2       /* row movement is relative */
 #define RELATIVE                (R_RELATIVE|C_RELATIVE)
 
-/* modes for rxvt_scr_insdel_chars(), rxvt_scr_insdel_lines() */
+/* modes for rxvt_scr_insdel_chars (), rxvt_scr_insdel_lines () */
 #define INSERT                  -1      /* don't change these values */
 #define DELETE                  +1
 #define ERASE                   +2
 
-/* modes for rxvt_scr_page() - scroll page. used by scrollbar window */
+/* modes for rxvt_scr_page () - scroll page. used by scrollbar window */
 enum page_dirn {
   UP,
   DN,
   NO_DIR
 };
 
-/* arguments for rxvt_scr_change_screen() */
+/* arguments for rxvt_scr_change_screen () */
 enum {
   PRIMARY = 0,
   SECONDARY
@@ -598,7 +598,7 @@ enum {
     if (test)                           \
         PrivateModes |= (bit);          \
     else                                \
-        PrivateModes &= ~(bit)
+        PrivateModes &= ~ (bit)
 
 #ifdef ALLOW_132_MODE
 # define PrivMode_Default                                                \
@@ -658,16 +658,16 @@ enum {
 #ifndef NO_BRIGHTCOLOR
 # define GET_FGCOLOR(x)                                         \
     ((((x) & RS_Bold) == 0                                      \
-      || GET_BASEFG(x) < minCOLOR                               \
-      || GET_BASEFG(x) >= minBrightCOLOR)                       \
-     ? GET_BASEFG(x)                                            \
-     : (GET_BASEFG(x) + (minBrightCOLOR - minCOLOR)))
+      || GET_BASEFG (x) < minCOLOR                               \
+      || GET_BASEFG (x) >= minBrightCOLOR)                       \
+     ? GET_BASEFG (x)                                            \
+     : (GET_BASEFG (x) + (minBrightCOLOR - minCOLOR)))
 # define GET_BGCOLOR(x)                                         \
     ((((x) & RS_Blink) == 0                                     \
-      || GET_BASEBG(x) < minCOLOR                               \
-      || GET_BASEBG(x) >= minBrightCOLOR)                       \
-     ? GET_BASEBG(x)                                            \
-     : (GET_BASEBG(x) + (minBrightCOLOR - minCOLOR)))
+      || GET_BASEBG (x) < minCOLOR                               \
+      || GET_BASEBG (x) >= minBrightCOLOR)                       \
+     ? GET_BASEBG (x)                                            \
+     : (GET_BASEBG (x) + (minBrightCOLOR - minCOLOR)))
 #else
 # define GET_FGCOLOR(x)         GET_BASEFG(x)
 # define GET_BGCOLOR(x)         GET_BASEBG(x)
@@ -701,7 +701,7 @@ enum {
 
 #define scrollbarnext_dnval()   (scrollBar.end + (scrollBar.width + 1))
 #define scrollbarnext_upButton(y)       ((y) > scrollBar.end \
-                                         && (y) <= scrollbarnext_dnval())
+                                         && (y) <= scrollbarnext_dnval ())
 #define scrollbarnext_dnButton(y)       ((y) > scrollbarnext_dnval())
 #define SCROLLNEXT_MINHEIGHT    SB_THUMB_MIN_HEIGHT
 #define scrollbarrxvt_upButton(y)       ((y) < scrollBar.beg)
@@ -716,7 +716,7 @@ enum {
 #define scrollbar_below_slider(y)       ((y) > scrollBar.bot)
 #define scrollbar_position(y)           ((y) - scrollBar.beg)
 #define scrollbar_size()                (scrollBar.end - scrollBar.beg \
-                                         - scrollbar_minheight())
+                                         - scrollbar_minheight ())
 
 #if (MENUBAR_MAX > 1)
 /* rendition style flags */
@@ -1025,7 +1025,7 @@ struct rxvt_term : rxvt_vars {
 #endif
 #ifdef MULTICHAR_SET
   int             oldcursormulti;
-  void            (*multichar_decode)(unsigned char *str, int len);
+  void            (*multichar_decode) (unsigned char *str, int len);
 #endif
 #ifndef RESET_TTY_TO_COMMON_DEFAULTS
   struct stat     ttyfd_stat; /* original status of our tty */
@@ -1034,7 +1034,7 @@ struct rxvt_term : rxvt_vars {
   menu_t         *ActiveMenu,         /* currently active menu */
                  *BuildMenu;          /* the menu currently being built */
   bar_t          *CurrentBar;
-# if !(MENUBAR_MAX > 1)
+# if ! (MENUBAR_MAX > 1)
   bar_t           BarList;
 # endif                         /* (MENUBAR_MAX > 1) */
 #endif
@@ -1135,7 +1135,7 @@ struct rxvt_term : rxvt_vars {
   int run_command (const char *const *argv);
   int run_child (const char *const *argv);
 
-  void color_aliases(int idx);
+  void color_aliases (int idx);
   void recolour_cursor ();
   void create_windows (int argc, const char *const *argv);
   void resize_all_windows (unsigned int width, unsigned int height, int ignoreparent);
@@ -1163,7 +1163,7 @@ struct rxvt_term : rxvt_vars {
   void selection_extend (int x, int y, int flag);
   void selection_rotate (int x, int y);
 
-  /* screen(!) */
+  /* screen (!) */
   void scr_blank_line (text_t *et, rend_t *er, unsigned int width, rend_t efs);
   void scr_blank_screen_mem (text_t **tp, rend_t **rp, unsigned int row, rend_t efs);
   int scr_scroll_text (int row1, int row2, int count, int spec);
@@ -1200,7 +1200,7 @@ struct rxvt_term : rxvt_vars {
   unsigned char * get_to_st (unsigned char *ends_how);
   void process_dcs_seq ();
   void process_osc_seq ();
-  void xterm_seq (int op, const char *str, unsigned char resp __attribute__((unused)));
+  void xterm_seq (int op, const char *str, unsigned char resp __attribute__ ((unused)));
   int privcases (int mode, unsigned long bit);
   void process_terminal_mode (int mode, int priv, unsigned int nargs, const int *arg);
   void process_sgr_mode (unsigned int nargs, const int *arg);
@@ -1237,7 +1237,7 @@ struct rxvt_term : rxvt_vars {
   void drawtriangle (int x, int y, int state);
   void drawbox_menuitem (int y, int state);
   void menu_show ();
-  void menu_display (void (*update)(rxvt_t *));
+  void menu_display (void (*update) (rxvt_t *));
   void menu_hide_all ();
   void menu_hide ();
   void menu_clear (menu_t *menu);

@@ -140,7 +140,7 @@ void server::read_cb (io_watcher &w, short revents)
             rxvt_init (argv.size (), argv.begin ());
 
             environ = old_environ;
-            envv.clear (); // can't yet save the env 'cause rxvt modifies it :(
+            envv.clear (); // can't yet save the env 'cause rxvt modifies it : (
           }
         }
       else
@@ -151,7 +151,7 @@ void server::read_cb (io_watcher &w, short revents)
 }
 
 int
-main(int argc, const char *const *argv)
+main (int argc, const char *const *argv)
 {
   rxvt_init_signals ();
 
@@ -163,11 +163,11 @@ main(int argc, const char *const *argv)
   iom.loop ();
 
 #if 0
-  if (rxvt_init(argc, argv) == NULL)
+  if (rxvt_init (argc, argv) == NULL)
       return EXIT_FAILURE;
 
   dR;
-  rxvt_main_loop(aR);	/* main processing loop */
+  rxvt_main_loop (aR);	/* main processing loop */
 #endif
   return EXIT_SUCCESS;
 }
