@@ -111,7 +111,7 @@ optList[] = {
 #endif
 #endif
 #ifdef OFF_FOCUS_FADING
-              STRG (Rs_fade, "fading", "fade", "%", "make colors x% darker when urxvt is losing focus."),
+              STRG (Rs_fade, "fading", "fade", "%", "make colors x% darker when rxvt-unicode is losing focus."),
 #endif
 #ifdef TINTING
               STRG (Rs_shade, "shading", "sh", "%", "shade background by x% when tinting."),
@@ -160,8 +160,8 @@ optList[] = {
               RSTRG (Rs_color + minBrightCOLOR + 7, "color15", "color"),
 #endif				/* NO_BRIGHTCOLOR */
 #ifndef NO_BOLD_UNDERLINE_REVERSE
-              BOOL (Rs_realBold, "realBold", "rb", Opt_realBold, "use bold fonts for bold text"),
               RSTRG (Rs_color + Color_BD, "colorBD", "color"),
+              RSTRG (Rs_color + Color_IT, "colorIT", "color"),
               RSTRG (Rs_color + Color_UL, "colorUL", "color"),
               RSTRG (Rs_color + Color_RV, "colorRV", "color"),
 #endif				/* ! NO_BOLD_UNDERLINE_REVERSE */
@@ -181,8 +181,13 @@ optList[] = {
 #if (MENUBAR_MAX)
               RSTRG (Rs_menu, "menu", "name[;tag]"),
 #endif
-              STRG (Rs_font, "font", "fn", "fontname", "normal text font"),
               /* fonts: command-line option = resource name */
+              STRG (Rs_font, "font", "fn", "fontname", "normal text font"),
+#if ENABLE_STYLES
+              STRG (Rs_boldFont, "boldFont", "fb", "fontname", "bold font"),
+              STRG (Rs_italicFont, "italicFont", "fi", "fontname", "italic font"),
+              STRG (Rs_boldItalicFont, "boldItalicFont", "fbi", "fontname", "bold italic font"),
+#endif
 #ifdef USE_XIM
               STRG (Rs_inputMethod, "inputMethod", "im", "name", "name of input method"),
               STRG (Rs_preeditType, "preeditType", "pt", "style", "input style: style = OverTheSpot|OffTheSpot|Root"),
@@ -251,10 +256,22 @@ optList[] = {
 #undef BOOL
 /*}}} */
 
-static const char releasestring[] = "Rxvt v" VERSION " - released: " DATE "\n";
+static const char releasestring[] = "rxvt-unicode (" RXVTNAME ") v" VERSION " - released: " DATE "\n";
 static const char optionsstring[] = "options: "
 #if XFT
                                     "xft,"
+#endif
+#if ENABLE_STYLES
+                                    "styles,"
+#endif
+#if ENABLE_COMBINING
+                                    "combining,"
+#endif
+#if TEXT_BLINK
+                                    "blink,"
+#endif
+#if ISO_14755
+                                    "iso14755,"
 #endif
 #if UNICODE_3
                                     "unicode3,"
@@ -276,12 +293,6 @@ static const char optionsstring[] = "options: "
                                     "+cn-ext"
 #endif
                                     ","
-#if ENABLE_COMBINING
-                                    "combining,"
-#endif
-#if TEXT_BLINK
-                                    "blink,"
-#endif
 #if OFF_FOCUS_FADING
                                     "fade,"
 #endif
@@ -362,9 +373,6 @@ static const char optionsstring[] = "options: "
 #endif
 #if defined(SMART_RESIZE)
                                     "smart-resize,"
-#endif
-#if defined(TTY_256COLOR)
-                                    "256colour,"
 #endif
 #if defined(CURSOR_BLINK)
                                     "cursorBlink,"
@@ -847,7 +855,7 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
 #   ifdef HAVE_EXTRA_XRESOURCE_FILES
     /* Add in ~/.Xdefaults or ~/.Xresources */
     {
-      char           *ptr;
+      char *ptr;
 
       if ((ptr = (char *)getenv ("HOME")) == NULL)
         ptr = ".";
