@@ -252,6 +252,10 @@ struct rxvt_vars {
   XSizeHints      szHint;
   rxvt_display   *display;
   rxvt_color     *PixColors;
+  rxvt_color     *PixColorsFocused;
+#ifdef OFF_FOCUS_FADING
+  rxvt_color     *PixColorsUnFocused;
+#endif
   short           numPixColors;
   Cursor          TermWin_cursor;       /* cursor for vt window */
   int             sb_shadow;    /* scrollbar shadow width                    */

@@ -53,6 +53,8 @@ resource \fBjumpScroll\fP\&.
 Turn on/off inheriting parent window\&'s pixmap\&.  Alternative form
 is \fB-tr\fP;
 resource \fBinheritPixmap\fP\&.
+.IP "\fB-fade\fP \fInumber\fP" 
+Fade the text by the given percentage when focus is lost\&.
 .IP "\fB-tint\fP \fIcolour\fP" 
 Tint the transparent background pixmap with the given colour\&.
 .IP "\fB-bg\fP \fIcolour\fP" 

@@ -244,7 +244,10 @@ rxvt_term::~rxvt_term ()
 
   // TODO: free pixcolours, colours should become part of rxvt_display
 
-  delete PixColors;
+  delete PixColorsFocused;
+#ifdef OFF_FOCUS_FADING
+  delete PixColorsUnFocused;
+#endif
 
   displays.put (display);
 
@@ -957,7 +960,7 @@ rxvt_term::set_window_color (int idx, const char *color)
         {        /* bright colors */
           i -= 8;
 # ifndef NO_BRIGHTCOLOR
-          PixColors[idx] = PixColors[minBrightCOLOR + i];
+          PixColorsFocused[idx] = PixColorsFocused[minBrightCOLOR + i];
           SET_PIXCOLOR (idx);
           goto Done;
 # endif
@@ -965,7 +968,7 @@ rxvt_term::set_window_color (int idx, const char *color)
         }
       if (i >= 0 && i <= 7)
         { /* normal colors */
-          PixColors[idx] = PixColors[minCOLOR + i];
+          PixColorsFocused[idx] = PixColorsFocused[minCOLOR + i];
           SET_PIXCOLOR (idx);
           goto Done;
         }
@@ -992,15 +995,17 @@ rxvt_term::set_window_color (int idx, const char *color)
     }
 # endif
 
-  PixColors[idx] = xcol;
+  PixColorsFocused[idx] = xcol;
   SET_PIXCOLOR (idx);
 
   /* XSetWindowAttributes attr; */
   /* Cursor cursor; */
 Done:
+#ifdef OFF_FOCUS_FADING
+  PixColorsUnFocused[idx] = PixColorsFocused[idx].fade (display, atoi (rs[Rs_fade]));
+#endif
   if (idx == Color_bg && ! (Options & Opt_transparent))
-    XSetWindowBackground (display->display, TermWin.vt,
-                         PixColors[Color_bg]);
+    XSetWindowBackground (display->display, TermWin.vt, PixColors[Color_bg]);
 
   /* handle Color_BD, scrollbar background, etc. */
 
@@ -1018,8 +1023,8 @@ rxvt_term::recolour_cursor ()
 {
   XColor xcol[2];
 
-  xcol[0].pixel = ISSET_PIXCOLOR (Color_pointer_fg) ? PixColors[Color_pointer_fg] : PixColors[Color_fg];
-  xcol[1].pixel = ISSET_PIXCOLOR (Color_pointer_bg) ? PixColors[Color_pointer_bg] : PixColors[Color_bg];
+  xcol[0].pixel = ISSET_PIXCOLOR (Color_pointer_fg) ? PixColorsFocused[Color_pointer_fg] : PixColorsFocused[Color_fg];
+  xcol[1].pixel = ISSET_PIXCOLOR (Color_pointer_bg) ? PixColorsFocused[Color_pointer_bg] : PixColorsFocused[Color_bg];
   XQueryColors (display->display, XCMAP, xcol, 2);
   XRecolorCursor (display->display, TermWin_cursor, xcol + 0, xcol + 1);
 }

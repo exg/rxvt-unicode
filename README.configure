@@ -73,6 +73,8 @@ report when a combination doesn't work, so it can be fixed. Marc Lehmann
 --enable-transparency
 	add support for inheriting parent backgrounds thus giving a fake
 	transparency to the term
+--enable-fading
+	add support for fading the text when focus is lost.
 --enable-tinting
 	add support for tinting of transparent backgrounds.
 --enable-menubar

@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-options.yo,v 1.12 2004/07/26 14:57:12 root Exp $ --)
+COMMENT(-- $Id: rxvt-options.yo,v 1.13 2004/07/30 14:59:12 root Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpageoptions()
 
@@ -39,6 +39,8 @@ startdit()
 	Turn on/off inheriting parent window's pixmap.  Alternative form
 	is bf(-tr);
 	resource bf(inheritPixmap).
+    dit(bf(-fade) em(number))
+    	Fade the text by the given percentage when focus is lost.
     dit(bf(-tint) em(colour))
         Tint the transparent background pixmap with the given colour.
     dit(bf(-bg) em(colour))

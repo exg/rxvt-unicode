@@ -409,3 +409,18 @@ rxvt_color::free (rxvt_display *display)
 #endif
 }
 
+rxvt_color
+rxvt_color::fade (rxvt_display *display, int percent)
+{
+  unsigned short cr, cg, cb;
+  rxvt_color faded;
+
+  get (display, cr, cg, cb);
+  faded.set (display,
+             cr * percent / 100,
+             cg * percent / 100,
+             cb * percent / 100);
+
+  return faded;
+}
+

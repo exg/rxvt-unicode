@@ -6,9 +6,9 @@
 ./configure --prefix=/opt/rxvt --enable-utmp \
             --enable-wtmp --enable-lastlog --enable-xim --disable-strings \
             --with-term=rxvt --disable-keepscrolling --enable-xft --enable-mousewheel \
-            --with-name=rxvt --enable-selectionscrolling \
-            --enable-frills --enable-swapscreen --enable-transparency \
+            --with-name=rxvt --enable-selectionscrolling --enable-pointer-blank \
+            --enable-frills --enable-swapscreen --enable-transparency --enable-slipwheeling \
             --with-codesets=eu,jp --enable-menubar --enable-tinting \
-            --enable-cursor-blink --enable-pointer-blank --enable-text-blink \
+            --enable-cursor-blink --enable-text-blink --enable-fading \
             --enable-plain-scroll --enable-rxvt-scroll --enable-combining \
             "$@"

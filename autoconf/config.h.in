@@ -331,6 +331,9 @@
 /* Define if you want 8 bit control sequences */
 #undef EIGHT_BIT_CONTROLS
 
+/* Define if you want faded colors when focus is lost */
+#undef OFF_FOCUS_FADING
+
 /* Define if you want your background to be tinted */
 #undef TINTING
 
