@@ -336,10 +336,10 @@ rxvt_term::scr_reset ()
               screen.s_cur.row += k;
               TermWin.nscrolled -= k;
             }
+
 #ifdef DEBUG_STRICT
           assert (screen.cur.row < TermWin.nrow);
 #else                           /* drive with your eyes closed */
-
           MIN_IT (screen.cur.row, nrow - 1);
 #endif
           TermWin.ncol =  ncol; // save b/c scr_blank_screen_mem uses this
@@ -3411,7 +3411,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
   else if (selection.clicks == 3)
     {
 #if ENABLE_FRILLS
-      if ((options & Opt_tripleclickwords))
+      if (options & Opt_tripleclickwords)
         {
           int end_row;
 
@@ -3439,6 +3439,15 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
 
           selection.beg.col = 0;
           selection.end.col = ncol;
+
+          // select a complete logical line
+          while (selection.beg.row > -TermWin.saveLines
+                 && screen.tlen[selection.beg.row - 1 + TermWin.saveLines] == -1)
+            selection.beg.row--;
+
+          while (selection.end.row < TermWin.nrow
+                 && screen.tlen[selection.end.row + TermWin.saveLines] == -1)
+            selection.end.row++;
         }
     }
 
