@@ -284,32 +284,31 @@ char           *
 rxvt_Str_trim (char *str)
 {
   char *r, *s;
-  int n;
 
   if (!str || !*str)		/* shortcut */
     return str;
 
   /* skip leading spaces */
   for (s = str; *s && isspace (*s); s++) ;
+
   /* goto end of string */
-  for (n = 0, r = s; *r++; n++) ;
-  r -= 2;
-  /* dump return */
-  if (n > 0 && *r == '\n')
-    n--, r--;
-  /* backtrack along trailing spaces */
-  for (; n > 0 && isspace (*r); r--, n--) ;
+  r = s + strlen (s) - 1;
+
+  /* dump return and other trailing whitespace */
+  while (r > s && isspace (*r))
+    r--;
+
+#if 0
   /* skip matching leading/trailing quotes */
   if (*s == '"' && *r == '"' && n > 1)
     {
       s++;
       n -= 2;
     }
+#endif
 
-  /* copy back over: forwards copy */
-  for (r = str; n; n--)
-    *r++ = *s++;
-  *r = '\0';
+  memmove (str, s, r + 1 - s);
+  str[r + 1 - s] = 0;
 
   return str;
 }
@@ -402,8 +401,7 @@ rxvt_Str_escaped (char *str)
 
 /*
  * Split a comma-separated string into an array, stripping leading and
- * trailing spaces (and paired quotes) from each entry.  Empty strings
- * are properly returned
+ * trailing spaces from each entry.  Empty strings are properly returned
  * Caller should free each entry and array when done
  */
 /* INTPROTO */
@@ -420,6 +418,7 @@ rxvt_splitcommastring (const char *cs)
   for (n = 1, t = s; *t; t++)
     if (*t == ',')
       n++;
+
   ret = (char **)malloc ((n + 1) * sizeof (char *));
   ret[n] = NULL;
 
@@ -433,6 +432,7 @@ rxvt_splitcommastring (const char *cs)
       rxvt_Str_trim (ret[l]);
       s = ++t;
     }
+
   return ret;
 }
 

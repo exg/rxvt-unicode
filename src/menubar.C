@@ -1565,9 +1565,9 @@ rxvt_term::menubar_read (const char *filename)
                 }
             }
         }
+
       /*
        * remove leading/trailing space
-       * and strip-off leading/trailing quotes
        * skip blank or comment lines
        */
       rxvt_Str_trim (p);
