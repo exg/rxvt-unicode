@@ -10,5 +10,5 @@
             --enable-frills --enable-swapscreen --enable-transparency --enable-slipwheeling \
             --with-codesets=all --enable-menubar --enable-tinting \
             --enable-cursor-blink --enable-text-blink --enable-fading \
-            --enable-plain-scroll --enable-rxvt-scroll --enable-combining \
+            --enable-plain-scroll --enable-rxvt-scroll --enable-combining --enable-iso14755 \
             "$@"

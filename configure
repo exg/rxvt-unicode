@@ -1056,6 +1056,7 @@ Optional Features:
   --enable-fallback(=CLASS) fall back on CLASS resources in addition to URxvt ones (default: Rxvt)
   --enable-strings        enable some replacement system functions
   --disable-swapscreen    disable swap screen support
+  --enable-iso14755       enable support for extended ISO 14755 modes
   --enable-frills         enable support for rarely used features
   --enable-linespace      enable support for linespace
   --enable-24bit          enable support for using 24bit visuals if available
@@ -5239,7 +5240,7 @@ test "x$enable_libtool_lock" != xno && enable_libtool_lock=yes
 case "$host" in
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5242 "configure"' > conftest.$ac_ext
+  echo '#line 5243 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -5790,7 +5791,7 @@ chmod -w .
 save_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -o out/conftest2.$ac_objext"
 compiler_c_o=no
-if { (eval echo configure:5793: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>out/conftest.err; } && test -s out/conftest2.$ac_objext; then
+if { (eval echo configure:5794: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>out/conftest.err; } && test -s out/conftest2.$ac_objext; then
   # The compiler can only warn and ignore the option if not recognized
   # So say no if there are warnings
   if test -s out/conftest.err; then
@@ -7406,7 +7407,7 @@ else
     lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 7409 "configure"
+#line 7410 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -7504,7 +7505,7 @@ else
     lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 7507 "configure"
+#line 7508 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -8260,6 +8261,7 @@ support_xft=no
 support_unicode3=no
 support_combining=no
 support_8bitctrls=no
+support_iso14755=no
 codesets=
 
 
@@ -8304,6 +8306,7 @@ if test "${enable_everything+set}" = set; then
     support_unicode3=yes
     support_combining=yes
     #support_8bitctrls=yes
+    support_iso14755=yes
     codesets=all
   fi
 fi;
@@ -8596,6 +8599,14 @@ cat >>confdefs.h <<\_ACEOF
 #define NO_SECONDARY_SCREEN 1
 _ACEOF
 
+  fi
+fi;
+
+# Check whether --enable-iso14755 or --disable-iso14755 was given.
+if test "${enable_iso14755+set}" = set; then
+  enableval="$enable_iso14755"
+  if test x$enableval = xyes -o x$enableval = xno; then
+    support_iso14755=$enableval
   fi
 fi;
 
@@ -11727,7 +11738,6 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
 fi
-
 
 
 echo "$as_me:$LINENO: checking for char" >&5
@@ -16449,6 +16459,13 @@ _ACEOF
 
 fi
 
+if test x$support_iso14755 = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define ISO_14755 1
+_ACEOF
+
+fi
 if test x$support_8bitctrls = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
@@ -16498,10 +16515,10 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
 fi
-if test x$support_frills = xno; then
+if test x$support_frills = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
-#define NO_FRILLS 1
+#define ENABLE_FRILLS 1
 _ACEOF
 
 fi
@@ -16640,7 +16657,6 @@ fi
 if test x$codesets = xall; then
   codesets=jp,jp-ext,kr,cn,cn-ext
 fi
-for codeset in `echo $codesets | tr "a-z,\\-" "A-Z _"`; do
 
 cat >>confdefs.h <<\_ACEOF
 #define ENCODING_EU 1
@@ -16651,6 +16667,7 @@ cat >>confdefs.h <<\_ACEOF
 #define ENCODING_VN 1
 _ACEOF
 
+for codeset in `echo $codesets | tr "a-z,\\-" "A-Z _"`; do
   case "$codeset" in
     JP     )
 cat >>confdefs.h <<\_ACEOF

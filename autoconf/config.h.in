@@ -334,6 +334,9 @@
 /* Define for second char in devptyXX */
 #undef PTYCHAR2
 
+/* Define if you want ISO 14755 extended support */
+#undef ISO_14755
+
 /* Define if you want 8 bit control sequences */
 #undef EIGHT_BIT_CONTROLS
 
@@ -355,8 +358,8 @@
 /* Define if you want Menubar support */
 #undef MENUBAR
 
-/* Define if you don't want handling for rarely used features */
-#undef NO_FRILLS
+/* Define if you want handling for rarely used but handy features */
+#undef ENABLE_FRILLS
 
 /* Define if you don't want support linespace */
 #undef NO_LINESPACE
