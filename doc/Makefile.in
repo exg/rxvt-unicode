@@ -1,5 +1,5 @@
 # doc/Makefile.in	-*- Makefile -*-
-# $Id: Makefile.in,v 1.19 2004/09/08 17:22:35 root Exp $
+# $Id: Makefile.in,v 1.20 2005/02/11 18:06:44 root Exp $
 @MCOMMON@
 
 srcdir =	@srcdir@
@@ -38,10 +38,10 @@ SEDREPLACE = -e 's%@@RXVT_VERSION@@%$(VERSION)%g;'\
 	./podtbl <$< >$@
 
 %.1.man.in: %.1.tbl
-	pod2man -n rxvt -r"$(VERSION)" -qnone -s1 -c "RXVT-UNICODE" <$< >$@
+	pod2man -n rxvt -r"$(VERSION)" -q\" -s1 -c "RXVT-UNICODE" <$< >$@
 
 %.7.man.in: %.7.tbl
-	pod2man -n rxvt -r"$(VERSION)" -qnone -s7 -c "RXVT-UNICODE" <$< >$@
+	pod2man -n rxvt -r"$(VERSION)" -q\" -s7 -c "RXVT-UNICODE" <$< >$@
 
 %.html: %.tbl
 	$(SED) $(SEDREPLACE) <$< | pod2html >$@
