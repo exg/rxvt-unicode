@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt.yo,v 1.6 2004/04/02 19:15:57 pcg Exp $ --)
+COMMENT(-- $Id: rxvt.yo,v 1.7 2004/04/02 19:16:48 pcg Exp $ --)
 includefile(versioninfo.yo)
 includefile(masonyodl.yo)
 mailto(gcw@pobox.com)
@@ -106,9 +106,9 @@ startdit()
 	Rewrote screen display and text selection routines.
 	Project Coordinator (changes.txt 2.4.6 - rxvt-unicode)
     dit(Marc Alexander Lehmann email(<rxvt@schmorp.de>))
-        Forked rxvt-unicode. Rewrote most of the display code and
+        Forked rxvt-unicode, rewrote most of the display code and
         internal character handling to store text in unicode,
-        improve xterm compatibility and numerous other buffixes
+        improve xterm compatibility and apply numerous other bugfixes
         and extensions. nl()\
 	Project Coordinator (Changes 1.0 - )
 enddit()
