@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	graphics.c
  *----------------------------------------------------------------------*
- * $Id: graphics.C,v 1.3 2003/11/25 11:52:42 pcg Exp $
+ * $Id: graphics.C,v 1.4 2003/12/18 02:07:12 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994      Rob Nation <nation@rocket.sanders.lockheed.com>
@@ -113,7 +113,7 @@ rxvt_Gr_NewWindow(pR_ int nargs, int args[])
     grwin->graphics = NULL;
     R->graphics_up++;
 
-    rxvt_tt_printf(aR_ "\033W%ld\n", (long)grwin->win);
+    R->tt_printf("\033W%ld\n", (long)grwin->win);
 }
 
 /* ARGSUSED */

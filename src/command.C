@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.17 2003/12/18 00:29:29 pcg Exp $
+ * $Id: command.C,v 1.18 2003/12/18 02:07:12 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -1557,7 +1557,7 @@ rxvt_button_press(pR_ XButtonEvent *ev)
       {
 #if RXVT_GRAPHICS
 	if (ev->subwindow != None)
-	  rxvt_Gr_ButtonPress(ev->x, ev->y);
+	  rxvt_Gr_ButtonPress (ev->x, ev->y);
 	else
 #endif
           {
@@ -1832,7 +1832,8 @@ rxvt_button_release(pR_ XButtonEvent *ev)
 	    case Button4:
 	    case Button5:
 		  {
-		    int             i, v;
+		    int i;
+                    page_dirn v;
 
 		    v = (ev->button == Button4) ? UP : DN;
 		    if (ev->state & ShiftMask)
@@ -2017,7 +2018,7 @@ rxvt_check_our_parents(pR)
 	    for (; n < (unsigned int)i; n++) {
 		XGetWindowAttributes(R->Xdisplay, R->TermWin.parent[n], &wattr);
 		D_X((stderr, "InheritPixmap Checking Parent[%d]: %s", n, (wattr.depth == rootdepth && wattr.class != InputOnly) ? "OK" : "FAIL"));
-		if (wattr.depth != rootdepth || wattr.class == InputOnly) {
+		if (wattr.depth != rootdepth || wattr.c_class == InputOnly) {
 		    n = (int)(sizeof(R->TermWin.parent) / sizeof(Window)) + 1;
 		    break;
 		}
@@ -3375,7 +3376,7 @@ rxvt_process_graphics(pR)
     if ((cmd == 'T') && (nargs >= 5)) {
 	int             i, len = args[4];
 
-	text = rxvt_malloc((len + 1) * sizeof(char));
+	text = (unsigned char *)rxvt_malloc((len + 1) * sizeof(char));
 
 	if (text != NULL) {
 	    for (i = 0; i < len; i++)

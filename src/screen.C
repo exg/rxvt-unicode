@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*--------------------------------------*
  * File:        screen.c
  *---------------------------------------------------------------------------*
- * $Id: screen.C,v 1.8 2003/12/17 09:00:35 pcg Exp $
+ * $Id: screen.C,v 1.9 2003/12/18 02:07:12 pcg Exp $
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
  *
@@ -229,7 +229,7 @@ rxvt_term::scr_reset ()
       swap.cur.row = swap.cur.col = 0;
       swap.charset = 0;
       current_screen = SECONDARY;
-      rxvt_scr_cursor(aR_ SAVE);
+      rxvt_scr_cursor (this, SAVE);
       current_screen = PRIMARY;
 #endif
 

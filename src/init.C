@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        init.c
  *----------------------------------------------------------------------*
- * $Id: init.C,v 1.12 2003/12/18 00:29:29 pcg Exp $
+ * $Id: init.C,v 1.13 2003/12/18 02:07:12 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -1005,30 +1005,28 @@ rxvt_Get_Colours(pR)
 
       xcol[1] = R->PixColors[Color_scroll];
 # ifdef PREFER_24BIT
-
-      xcol[0].set (r, -1, -1, -1);
+      xcol[0].set (R, 65535, 65535, 65535);
       /*        XFreeColors(R->Xdisplay, XCMAP, &(xcol[0].pixel), 1, ~0); */
 # else
-
       xcol[0].set (WhitePixel(R->Xdisplay, Xscreen));
 # endif
 
-      unsigned short R1, G1, B1, R0, G0, B0;
+      unsigned short pr1, pg1, pb1, pr0, pg0, pb0;
 
-      xcol[0].get (r, R0, G0, B0);
-      xcol[1].get (r, R1, G1, B1);
+      xcol[0].get (R, pr0, pg0, pb0);
+      xcol[1].get (R, pr1, pg1, pb1);
 
       /* bottomShadowColor */
-      if (!xcol[2].set (aR_ R1 / 2, G1 / 2, B1 / 2))
+      if (!xcol[2].set (aR_ pr1 / 2, pg1 / 2, pb1 / 2))
         xcol[2] = R->PixColors[Color_Black];
 
       R->PixColors[Color_bottomShadow] = xcol[2];
 
       /* topShadowColor */
       if (!xcol[1].set (aR_
-                        min (R0, max (R0 / 5, R1) * 7 / 5),
-                        min (G0, max (G0 / 5, G1) * 7 / 5),
-                        min (B0, max (B0 / 5, B1) * 7 / 5)))
+                        min (pr0, max (pr0 / 5, pr1) * 7 / 5),
+                        min (pg0, max (pg0 / 5, pg1) * 7 / 5),
+                        min (pb0, max (pb0 / 5, pb1) * 7 / 5)))
         xcol[1] = R->PixColors[Color_White];
 
       R->PixColors[Color_topShadow] = xcol[1];

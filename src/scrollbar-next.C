@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	scrollbar-next.c
  *----------------------------------------------------------------------*
- * $Id: scrollbar-next.C,v 1.3 2003/11/25 11:52:42 pcg Exp $
+ * $Id: scrollbar-next.C,v 1.4 2003/12/18 02:07:12 pcg Exp $
  *
  * Copyright (c) 1997,1998 mj olesen <olesen@me.QueensU.CA>
  * Copyright (c) 1998      Alfredo K. Kojima <kojima@windowmaker.org>
@@ -160,7 +160,7 @@ rxvt_init_scrollbar_stuff(pR)
     xcol.red = 0xaeba;
     xcol.green = 0xaaaa;
     xcol.blue = 0xaeba;
-    if (!rxvt_rXAllocColor(aR_ &xcol, "light gray"))
+    //if (!rxvt_rXAllocColor(aR_ &xcol, "light gray"))//TODO//D//
 	xcol.pixel = R->PixColors[Color_AntiqueWhite];
     light = gcvalue.foreground = xcol.pixel;
     R->grayGC = XCreateGC(R->Xdisplay, R->scrollBar.win,
@@ -169,7 +169,7 @@ rxvt_init_scrollbar_stuff(pR)
     xcol.red = 0x51aa;
     xcol.green = 0x5555;
     xcol.blue = 0x5144;
-    if (!rxvt_rXAllocColor(aR_ &xcol, "dark gray"))
+    //if (!rxvt_rXAllocColor(aR_ &xcol, "dark gray"))//TODO//D//
 	xcol.pixel = R->PixColors[Color_Grey25];
     dark = gcvalue.foreground = xcol.pixel;
     R->darkGC = XCreateGC(R->Xdisplay, R->scrollBar.win,
