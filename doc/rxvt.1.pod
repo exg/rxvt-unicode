@@ -1136,8 +1136,8 @@ the colour code used as default foreground/text colour (or the string
 C<default> to indicate that the default-colour escape sequence is to be
 used), C<bg> is the colour code used as default background colour (or the
 string C<default>), and C<xpm> is the string C<default> if @@RXVT_NAME@@
-was compiled with XPM support. Libraries like C<slang> can (and do) use
-this information to optimize screen output.
+was compiled with XPM support. Libraries like C<ncurses> and C<slang> can
+(and do) use this information to optimize screen output.
 
 =item B<WINDOWID>
 
