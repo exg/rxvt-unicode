@@ -26,7 +26,7 @@
 #include <cstdlib>
 
 #define DISPLAY  r->display->display
-#define GC       r->TermWin.gc
+#define TGC      r->TermWin.gc
 
 const struct rxvt_fallback_font {
   codeset cs;
@@ -196,13 +196,13 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color)
 #if XFT
       XftDrawRect (d, &r->PixColors[color].c, x, y, w, h);
 #else
-      XSetForeground (d.display->display, GC, r->PixColors[color]);
-      XFillRectangle (d.display->display, d, GC, x, y, w, h);
+      XSetForeground (d.display->display, TGC, r->PixColors[color]);
+      XFillRectangle (d.display->display, d, TGC, x, y, w, h);
 #endif
     }
 }
 
-static const char *linedraw_cmds[128] = {
+static const char *linedraw_cmds[128 + 32] = {
   "1-", "2-", "1|", "2|",
   0, 0, 0, 0,
   0, 0, 0, 0,
@@ -248,7 +248,19 @@ static const char *linedraw_cmds[128] = {
   "D", "1/", "1\\", "1/\\",
   "1h", "1v", "1H", "1V",
   "2h", "2v", "2H", "2V",
-  "1h2H", "1v2V", "1H2h", "1V2v"
+  "1h2H", "1v2V", "1H2h", "1V2v",
+
+  // 2580
+  0, 0, 0, 0,
+  0, 0, 0, 0,
+  0, 0, 0, 0,
+  0, 0, 0, 0,
+
+  // 2590
+  0, 0, 0, 0,
+  0, 0, "k", "l",
+  "i", "ikl", "il", "ijk",
+  "ijl", "j", "jk", "jkl",
 
   // to be done
 };
@@ -287,6 +299,9 @@ struct rxvt_font_default : rxvt_font {
         && linedraw_cmds[unicode - 0x2500])
       return true;
 
+    if (unicode >= 0x2580 && unicode <= 0x259f)
+      return true;
+
     if (IS_COMPOSE (unicode))
       return true;
 
@@ -304,6 +319,28 @@ struct rxvt_font_default : rxvt_font {
              int fg, int bg);
 };
 
+static void rect_stipple (Display *display, Drawable d, GC gc, int s1, int s2, int x, int y, int w, int h)
+{
+  XGCValues gcv; 
+  char bm[2] = { s1, s2 };
+
+  gcv.fill_style = FillStippled;
+  gcv.stipple = XCreateBitmapFromData (display, d, bm, 2, 2);
+  gcv.ts_x_origin = x;
+  gcv.ts_y_origin = y;
+
+  if (!gcv.stipple)
+    return;
+
+  XChangeGC (display, gc, GCFillStyle | GCStipple | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
+  XFillRectangle (display, d, gc, x, y, w, h);
+
+  XFreePixmap (display, gcv.stipple);
+
+  gcv.fill_style = FillSolid;
+  XChangeGC (display, gc, GCFillStyle, &gcv);
+}
+
 void
 rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
                          const text_t *text, int len,
@@ -311,7 +348,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 {
   clear_rect (d, x, y, r->TermWin.fwidth * len, r->TermWin.fheight, bg);
 
-  XSetForeground (d.display->display, GC, r->PixColors[fg]);
+  XSetForeground (d.display->display, TGC, r->PixColors[fg]);
 
   while (len--)
     {
@@ -320,20 +357,20 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 #endif
       text_t t = *text++;
 
+      int W = r->TermWin.fwidth , w = (W - 1) / 2;
+      int H = r->TermWin.fheight, h = (H - 1) / 2;
+      int x0 = x, x1 = x + w, x2 = x + r->TermWin.fwidth ;
+      int y0 = y, y1 = y + h, y2 = y + r->TermWin.fheight;
+
       // is it in our linedrawing table?
-      if (t >= 0x2500 & t <= 0x2580 && linedraw_cmds[t - 0x2500])
+      if (t >= 0x2500 & t <= 0x259f && linedraw_cmds[t - 0x2500])
         {
           const char *p = linedraw_cmds[t - 0x2500];
-
-          int W = r->TermWin.fwidth , w = (W - 1) / 2;
-          int H = r->TermWin.fheight, h = (H - 1) / 2;
-          int x0 = x, x1 = x + w, x2 = x + r->TermWin.fwidth ;
-          int y0 = y, y1 = y + h, y2 = y + r->TermWin.fheight;
 
           XGCValues gcv;
 
           gcv.cap_style = CapNotLast;
-          XChangeGC (d.display->display, GC, GCCapStyle, &gcv);
+          XChangeGC (d.display->display, TGC, GCCapStyle, &gcv);
 
           while (*p)
             {
@@ -341,33 +378,38 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
                 {
                   case '1':
                     gcv.line_width = 0;
-                    XChangeGC (d.display->display, GC, GCLineWidth, &gcv);
+                    XChangeGC (d.display->display, TGC, GCLineWidth, &gcv);
                     break;
 
                   case '2':
                     gcv.line_width = 3;
-                    XChangeGC (d.display->display, GC, GCLineWidth, &gcv);
+                    XChangeGC (d.display->display, TGC, GCLineWidth, &gcv);
                     break;
 
-                  case 'h': XDrawLine (d.display->display, d, GC, x0, y1, x1+1, y1  ); break;
-                  case 'H': XDrawLine (d.display->display, d, GC, x2, y1, x1-1, y1  ); break;
-                  case '-': XDrawLine (d.display->display, d, GC, x0, y1, x2  , y1  ); break;
-                  case 'v': XDrawLine (d.display->display, d, GC, x1, y0, x1  , y1+1); break;
-                  case 'V': XDrawLine (d.display->display, d, GC, x1, y2, x1  , y1-1); break;
-                  case '|': XDrawLine (d.display->display, d, GC, x1, y0, x1  , y2  ); break;
+                  case 'h': XDrawLine (d.display->display, d, TGC, x0, y1, x1+1, y1  ); break;
+                  case 'H': XDrawLine (d.display->display, d, TGC, x1, y1, x2  , y1  ); break;
+                  case '-': XDrawLine (d.display->display, d, TGC, x0, y1, x2  , y1  ); break;
+                  case 'v': XDrawLine (d.display->display, d, TGC, x1, y0, x1  , y1+1); break;
+                  case 'V': XDrawLine (d.display->display, d, TGC, x1, y1, x1  , y2  ); break;
+                  case '|': XDrawLine (d.display->display, d, TGC, x1, y0, x1  , y2  ); break;
 
-                  case '/' : XDrawLine (d.display->display, d, GC, x0, y2, x2  , y0  ); break;
-                  case '\\': XDrawLine (d.display->display, d, GC, x0, y0, x2  , y2  ); break;
+                  case '/' : XDrawLine (d.display->display, d, TGC, x0, y2, x2  , y0  ); break;
+                  case '\\': XDrawLine (d.display->display, d, TGC, x0, y0, x2  , y2  ); break;
 
-                  case 'A': XDrawArc (d.display->display, d, GC, x1    , y1    , W-1, H-1,  90*64,  90*64); break;
-                  case 'B': XDrawArc (d.display->display, d, GC, x1-W+1, y1    , W-1, H-1,   0*64,  90*64); break;
-                  case 'C': XDrawArc (d.display->display, d, GC, x1-W+1, y1-H+1, W-1, H-1,   0*64, -90*64); break;
-                  case 'D': XDrawArc (d.display->display, d, GC, x1    , y1-H+1, W-1, H-1, -90*64, -90*64); break;
+                  case 'A': XDrawArc (d.display->display, d, TGC, x1    , y1    , W-1, H-1,  90*64,  90*64); break;
+                  case 'B': XDrawArc (d.display->display, d, TGC, x1-W+1, y1    , W-1, H-1,   0*64,  90*64); break;
+                  case 'C': XDrawArc (d.display->display, d, TGC, x1-W+1, y1-H+1, W-1, H-1,   0*64, -90*64); break;
+                  case 'D': XDrawArc (d.display->display, d, TGC, x1    , y1-H+1, W-1, H-1, -90*64, -90*64); break;
+
+                  case 'i': XFillRectangle (d.display->display, d, TGC, x0, y0, x1 - x0 + 1, y1 - y0 + 1); break;
+                  case 'j': XFillRectangle (d.display->display, d, TGC, x1, y0, x2 - x1, y1 - y0 + 1); break;
+                  case 'k': XFillRectangle (d.display->display, d, TGC, x0, y1, x1 - x0 + 1, y2 - y1); break;
+                  case 'l': XFillRectangle (d.display->display, d, TGC, x1, y1, x2 - x1, y2 - y1); break;
                 }
             }
 
           gcv.line_width = 0;
-          XChangeGC (d.display->display, GC, GCLineWidth, &gcv);
+          XChangeGC (d.display->display, TGC, GCLineWidth, &gcv);
         }
 
 #if ENABLE_COMBINING
@@ -391,6 +433,32 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
           {
             case ZERO_WIDTH_CHAR:
               break;
+
+            case 0x2580: XFillRectangle (d.display->display, d, TGC, x0, y0, W, y1 - y0 + 1); break;
+            case 0x2581: XFillRectangle (d.display->display, d, TGC, x0, y0 + (H * 7 - 1) / 8, W, H - (H * 7 - 1) / 8); break;
+            case 0x2582: XFillRectangle (d.display->display, d, TGC, x0, y0 + (H * 6 - 2) / 8, W, H - (H * 6 - 2) / 8); break;
+            case 0x2583: XFillRectangle (d.display->display, d, TGC, x0, y0 + (H * 5 - 3) / 8, W, H - (H * 5 - 3) / 8); break;
+            case 0x2584: XFillRectangle (d.display->display, d, TGC, x0, y0 + (H * 4 - 4) / 8, W, H - (H * 4 - 4) / 8); break;
+            case 0x2585: XFillRectangle (d.display->display, d, TGC, x0, y0 + (H * 3 - 5) / 8, W, H - (H * 3 - 5) / 8); break;
+            case 0x2586: XFillRectangle (d.display->display, d, TGC, x0, y0 + (H * 2 - 6) / 8, W, H - (H * 2 - 6) / 8); break;
+            case 0x2587: XFillRectangle (d.display->display, d, TGC, x0, y0 + (H * 1 - 7) / 8, W, H - (H * 1 - 7) / 8); break;
+            case 0x2588: XFillRectangle (d.display->display, d, TGC, x0, y0, W, H); break;
+            case 0x2589: XFillRectangle (d.display->display, d, TGC, x0, y0, (W * 7 - 1) / 8, H); break;
+            case 0x258a: XFillRectangle (d.display->display, d, TGC, x0, y0, (W * 6 - 2) / 8, H); break;
+            case 0x258b: XFillRectangle (d.display->display, d, TGC, x0, y0, (W * 5 - 3) / 8, H); break;
+            case 0x258c: XFillRectangle (d.display->display, d, TGC, x0, y0, (W * 4 - 4) / 8, H); break;
+            case 0x258d: XFillRectangle (d.display->display, d, TGC, x0, y0, (W * 3 - 5) / 8, H); break;
+            case 0x258e: XFillRectangle (d.display->display, d, TGC, x0, y0, (W * 2 - 6) / 8, H); break;
+            case 0x258f: XFillRectangle (d.display->display, d, TGC, x0, y0, (W * 1 - 7) / 8, H); break;
+            case 0x2590: XFillRectangle (d.display->display, d, TGC, x1, y0, x2 - x1, H); break;
+
+            case 0x2591: rect_stipple (d.display->display, d, TGC, 0x00, 0x01, x0, y0, W, H); break;
+            case 0x2592: rect_stipple (d.display->display, d, TGC, 0x02, 0x01, x0, y0, W, H); break;
+            case 0x2593: rect_stipple (d.display->display, d, TGC, 0x01, 0x03, x0, y0, W, H); break;
+
+            case 0x2594: XFillRectangle (d.display->display, d, TGC, x0, y0, W, (H * 1 - 7) / 8); break;
+            case 0x2595: XFillRectangle (d.display->display, d, TGC, x0 + (W * 7 - 1) / 8, y0, W - (W * 7 - 1) / 8, H); break;
+
             default:
               int w = 0;
               while (len > 0 && *text == NOCHAR)
@@ -400,8 +468,8 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
                   w += r->TermWin.fwidth;
                 }
 
-              XDrawRectangle (d.display->display, d, GC, x + 2, y + 2,
-                              w + r->TermWin.fwidth - 5, r->TermWin.fheight - 5);
+              XDrawRectangle (d.display->display, d, TGC, x + 2, y + 2,
+                              w + r->TermWin.fwidth - 4, r->TermWin.fheight - 4);
               x += w;
           }
 
@@ -749,21 +817,21 @@ rxvt_font_x11::draw (rxvt_drawable &d, int x, int y,
 
       if (bg == Color_bg && !slow)
         {
-          XChangeGC (d.display->display, GC, GCForeground | GCBackground | GCFont, &v);
-          XDrawImageString16 (d.display->display, d, GC, x, y + base, xc, len);
+          XChangeGC (d.display->display, TGC, GCForeground | GCBackground | GCFont, &v);
+          XDrawImageString16 (d.display->display, d, TGC, x, y + base, xc, len);
         }
       else
         {
           clear_rect (d, x, y, r->TermWin.fwidth * len, r->TermWin.fheight, bg);
 
-          XChangeGC (d.display->display, GC, GCForeground | GCFont, &v);
+          XChangeGC (d.display->display, TGC, GCForeground | GCFont, &v);
           
           if (slow)
             {
               do
                 {
                   if (xc->byte1 || xc->byte2)
-                    XDrawString16 (d.display->display, d, GC, x, y + base, xc, 1);
+                    XDrawString16 (d.display->display, d, TGC, x, y + base, xc, 1);
 
                   x += r->TermWin.fwidth;
                   xc++; len--;
@@ -771,7 +839,7 @@ rxvt_font_x11::draw (rxvt_drawable &d, int x, int y,
               while (len);
             }
           else
-            XDrawString16 (d.display->display, d, GC, x, y + base, xc, len);
+            XDrawString16 (d.display->display, d, TGC, x, y + base, xc, len);
         }
     }
   else
@@ -780,21 +848,21 @@ rxvt_font_x11::draw (rxvt_drawable &d, int x, int y,
 
       if (bg == Color_bg && !slow)
         {
-          XChangeGC (d.display->display, GC, GCForeground | GCBackground | GCFont, &v);
-          XDrawImageString (d.display->display, d, GC, x, y + base, xc, len);
+          XChangeGC (d.display->display, TGC, GCForeground | GCBackground | GCFont, &v);
+          XDrawImageString (d.display->display, d, TGC, x, y + base, xc, len);
         }
       else
         {
           clear_rect (d, x, y, r->TermWin.fwidth * len, r->TermWin.fheight, bg);
 
-          XChangeGC (d.display->display, GC, GCForeground | GCFont, &v);
+          XChangeGC (d.display->display, TGC, GCForeground | GCFont, &v);
           
           if (slow)
             {
               do
                 {
                   if (*xc)
-                    XDrawString (d.display->display, d, GC, x, y + base, xc, 1);
+                    XDrawString (d.display->display, d, TGC, x, y + base, xc, 1);
 
                   x += r->TermWin.fwidth;
                   xc++; len--;
@@ -802,7 +870,7 @@ rxvt_font_x11::draw (rxvt_drawable &d, int x, int y,
               while (len);
             }
           else
-            XDrawString (d.display->display, d, GC, x, y + base, xc, len);
+            XDrawString (d.display->display, d, TGC, x, y + base, xc, len);
         }
     }
 }
