@@ -235,8 +235,7 @@ struct rxvt_font_default : rxvt_font {
     if (unicode >= 0x0080 && unicode <= 0x009f)
       return true;
 
-    if (unicode >= 0x2500 && unicode <= 0x259f
-        && linedraw_offs[unicode - 0x2500] & 15)
+    if (unicode >= 0x2500 && unicode <= 0x259f)
       return true;
 
     if (IS_COMPOSE (unicode))
@@ -272,17 +271,14 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 #endif
       text_t t = *text++;
 
-      int W = r->TermWin.fwidth , w = (W - 1) / 2;
-      int H = r->TermWin.fheight, h = (H - 1) / 2;
-      int x0 = x, x1 = x + w, x2 = x + r->TermWin.fwidth ;
-      int y0 = y, y1 = y + h, y2 = y + r->TermWin.fheight;
-
-      if (0x2500 <= t && t <= 0x259f
-          && linedraw_offs[t - 0x2500] & 15)
+      if (0x2500 <= t && t <= 0x259f)
         {
           uint16_t offs = linedraw_offs[t - 0x2500];
           uint32_t *a = linedraw_command + (offs >> 4);
           uint32_t *b = a + (offs & 15);
+
+          int W = r->TermWin.fwidth;
+          int H = r->TermWin.fheight;
 
           int x_[16];
           int y_[16];
@@ -335,7 +331,6 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
                                    &gcv);
                       }
 
-
                     XFillRectangle (d.display->display, d, TGC, x1, y1, x2 - x1 + 1, y2 - y1 + 1);
 
                     if (a)
@@ -345,7 +340,6 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
                         gcv.fill_style = FillSolid;
                         XChangeGC (d.display->display, TGC, GCFillStyle, &gcv);
                       }
-
                     break;
                   case 2: // arc
                     XDrawArc (d.display->display, d, TGC,
