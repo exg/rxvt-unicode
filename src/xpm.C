@@ -200,7 +200,7 @@ rxvt_term::resize_pixmap ()
           /* basic X tiling - let the X server do it */
           TermWin.pixmap = XCreatePixmap (display->display, TermWin.vt,
                                          xpmw, xpmh,
-                                         (unsigned int)XDEPTH);
+                                         (unsigned int)display->depth);
           XCopyArea (display->display, bgPixmap.pixmap, TermWin.pixmap, gc,
                     0, 0, xpmw, xpmh, 0, 0);
         }
@@ -211,14 +211,14 @@ rxvt_term::resize_pixmap ()
 
           TermWin.pixmap = XCreatePixmap (display->display, TermWin.vt,
                                          width, height,
-                                         (unsigned int)XDEPTH);
+                                         (unsigned int)display->depth);
           /*
            * horizontal scaling
            */
           rxvt_pixmap_incr (&w, &x, &incr, &p, width, xpmw);
 
           tmp = XCreatePixmap (display->display, TermWin.vt,
-                              width, xpmh, (unsigned int)XDEPTH);
+                              width, xpmh, (unsigned int)display->depth);
           XFillRectangle (display->display, tmp, gc, 0, 0, width,
                          xpmh);
 
@@ -253,6 +253,7 @@ rxvt_term::resize_pixmap ()
           XFreePixmap (display->display, tmp);
         }
     }
+
   XSetWindowBackgroundPixmap (display->display, TermWin.vt, TermWin.pixmap);
   XFreeGC (display->display, gc);
   am_transparent = 0;
@@ -363,9 +364,9 @@ rxvt_term::set_bgPixmap (const char *file)
       /*      XGetWindowAttributes (display->display, TermWin.vt, &attr); */
 
       xpmAttr.closeness = 30000;
-      xpmAttr.colormap = XCMAP;
-      xpmAttr.visual = XVISUAL;
-      xpmAttr.depth = XDEPTH;
+      xpmAttr.colormap = display->cmap;
+      xpmAttr.visual = display->visual;
+      xpmAttr.depth = display->depth;
       xpmAttr.valuemask = (XpmCloseness | XpmColormap | XpmVisual |
                            XpmDepth | XpmSize | XpmReturnPixels);
 
