@@ -73,6 +73,8 @@ report when a combination doesn't work, so it cnya be fixed. Marc Lehmann
 --enable-transparency
 	add support for inheriting parent backgrounds thus giving a fake
 	transparency to the term
+--enable-tinting
+	add support for tinting of transparent backgrounds.
 --enable-menubar
 	add support for our menu bar system (this interacts badly with
         dynamic locale switching currently)

@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-options.yo,v 1.8 2004/03/29 16:52:06 pcg Exp $ --)
+COMMENT(-- $Id: rxvt-options.yo,v 1.9 2004/03/29 21:02:11 pcg Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpageoptions()
 
@@ -39,6 +39,8 @@ startdit()
 	Turn on/off inheriting parent window's pixmap.  Alternative form
 	is bf(-tr);
 	resource bf(inheritPixmap).
+    dit(bf(-tint) em(colour))
+        Tint the transparent background pixmap with the given colour.
     dit(bf(-bg) em(colour))
 	Window background colour;
         resource bf(background).

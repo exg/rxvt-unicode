@@ -388,6 +388,9 @@
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
 #undef TIME_WITH_SYS_TIME
 
+/* Define if you want your background to be tinted */
+#undef TINTING
+
 /* Define if you want your background to use the parent window background */
 #undef TRANSPARENT
 
