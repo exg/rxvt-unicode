@@ -738,9 +738,11 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
   if (FcPatternGet (p, FC_SLANT, 0, &v) != FcResultMatch)
     FcPatternAddInteger (p, FC_SLANT, prop.slant);
 
+#if 0 // clipping unfortunately destroys our precious double-width-characters
   // clip width, we can't do better, or can we?
   if (FcPatternGet (p, FC_CHAR_WIDTH, 0, &v) != FcResultMatch)
     FcPatternAddInteger (p, FC_CHAR_WIDTH, prop.width);
+#endif
 
   //FcPatternAddBool (p, FC_MINSPACE, 1);
 
