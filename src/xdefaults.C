@@ -209,6 +209,7 @@ optList[] = {
               STRG (Rs_ext_bwidth, NULL, "bw", NULL, NULL),
               STRG (Rs_ext_bwidth, NULL, "borderwidth", NULL, NULL),
               STRG (Rs_int_bwidth, "internalBorder", "b", "number", "internal border in pixels"),
+              BOOL (Rs_borderLess, "borderLess", "bl", Opt_borderLess, "borderless window"),
 #endif
 #ifndef NO_LINESPACE
               STRG (Rs_lineSpace, "lineSpace", "lsp", "number", "number of extra pixels between rows"),

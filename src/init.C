@@ -884,7 +884,7 @@ rxvt_term::Get_Colours ()
   PixColors = PixColorsFocused;
 #endif
   
-  for (i = 0; i < (XDEPTH <= 2 ? 2 : NRS_COLORS); i++)
+  for (i = 0; i < (display->depth <= 2 ? 2 : NRS_COLORS); i++)
     {
       rxvt_color xcol;
 
@@ -936,7 +936,7 @@ rxvt_term::Get_Colours ()
       SET_PIXCOLOR (i);
     }
 
-  if (XDEPTH <= 2)
+  if (display->depth <= 2)
     {
       if (!rs[Rs_color + Color_pointer_fg]) PixColors[Color_pointer_fg] = PixColors[Color_fg];
       if (!rs[Rs_color + Color_pointer_bg]) PixColors[Color_pointer_bg] = PixColors[Color_bg];
@@ -951,7 +951,7 @@ rxvt_term::Get_Colours ()
    */
 #ifdef KEEP_SCROLLCOLOR
 
-  if (XDEPTH <= 2)
+  if (display->depth <= 2)
     {  /* Monochrome */
       PixColors[Color_scroll]       = PixColors[Color_fg];
       PixColors[Color_topShadow]    = PixColors[Color_bg];
@@ -1088,6 +1088,10 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 {
   XClassHint classHint;
   XWMHints wmHint;
+#ifndef NO_FRILLS
+  Atom prop = None;
+  MWMHints mwmhints;
+#endif
   XGCValues gcvalue;
   long vt_emask;
   XSetWindowAttributes attributes;
@@ -1098,6 +1102,30 @@ rxvt_term::create_windows (int argc, const char *const *argv)
       XGetWindowAttributes (display->display, RootWindow (display->display, display->screen), &gattr);
       display->depth = gattr.depth; // doh //TODO, per-term not per-display?
     }
+
+#ifndef NO_FRILLS
+  if (Options & Opt_borderLess)
+    {
+      prop = XInternAtom(display->display, "_MOTIF_WM_INFO", True);
+      if (prop == None)
+        {
+          /*     print_warning("Window Manager does not support MWM hints.  Bypassing window manager control for borderless window.\n");*/
+#ifdef PREFER_24BIT
+          attributes.override_redirect = TRUE;
+#endif
+          mwmhints.flags = 0;
+        }
+      else
+        {
+          mwmhints.flags = MWM_HINTS_DECORATIONS;
+          mwmhints.decorations = 0;
+        }
+    }
+  else
+    {
+      mwmhints.flags = 0;
+    }
+#endif
 
   /* grab colors before netscape does */
   Get_Colours ();
@@ -1162,8 +1190,17 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                 | KeyReleaseMask
 #endif
                 | FocusChangeMask | VisibilityChangeMask
+                | ExposureMask
                 | StructureNotifyMask);
   termwin_ev.start (display, TermWin.parent[0]);
+
+#ifndef NO_FRILLS
+  if (mwmhints.flags)
+    {
+      prop = XInternAtom(display->display, "_MOTIF_WM_HINTS", False);
+      XChangeProperty(display->display, TermWin.parent[0], prop, prop, 32, PropModeReplace, (unsigned char *) &mwmhints, PROP_MWM_HINTS_ELEMENTS);
+    }
+#endif
 
   /* vt cursor: Black-on-White is standard, but this is more popular */
   TermWin_cursor = XCreateFontCursor (display->display, XC_xterm);
@@ -1274,7 +1311,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   topShadowGC = XCreateGC (display->display, TermWin.vt, GCForeground, &gcvalue);
   gcvalue.foreground = PixColors[Color_bottomShadow];
   botShadowGC = XCreateGC (display->display, TermWin.vt, GCForeground, &gcvalue);
-  gcvalue.foreground = PixColors[ (XDEPTH <= 2 ? Color_fg : Color_scroll)];
+  gcvalue.foreground = PixColors[ (display->depth <= 2 ? Color_fg : Color_scroll)];
   scrollbarGC = XCreateGC (display->display, TermWin.vt, GCForeground, &gcvalue);
 #endif
 
