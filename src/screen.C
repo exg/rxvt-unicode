@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*--------------------------------------*
  * File:        screen.c
  *---------------------------------------------------------------------------*
- * $Id: screen.C,v 1.6 2003/12/02 21:49:46 pcg Exp $
+ * $Id: screen.C,v 1.7 2003/12/16 23:04:13 pcg Exp $
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
  *
@@ -2397,22 +2397,23 @@ rxvt_selection_check(pR_ int check_more)
 /*
  * Paste a selection direct to the command fd
  */
-/* INTPROTO */
 void
-rxvt_PasteIt (pR_ const unsigned char *data, unsigned int nitems)
+rxvt_term::paste (const unsigned char *data, unsigned int len)
 {
   unsigned int i, j, n;
   unsigned char *ds = (unsigned char *)rxvt_malloc (PROP_SIZE);
   
   /* convert normal newline chars into common keyboard Return key sequence */
-  for (i = 0; i < nitems; i += PROP_SIZE)
+  for (i = 0; i < len; i += PROP_SIZE)
     {
-      n = min (nitems - i, PROP_SIZE);
+      n = min (len - i, PROP_SIZE);
       MEMCPY (ds, data + i, n);
+
       for (j = 0; j < n; j++)
         if (ds[j] == '\n')
           ds[j] = '\r';
-      R->tt_write (ds, (int)n);
+
+      tt_write (ds, (int)n);
     }
 
   free(ds);
@@ -2427,75 +2428,99 @@ rxvt_PasteIt (pR_ const unsigned char *data, unsigned int nitems)
 int
 rxvt_selection_paste(pR_ Window win, Atom prop, Bool delete_prop)
 {
-    long            nread = 0;
-    unsigned long   bytes_after;
-    XTextProperty   ct;
-#ifdef MULTICHAR_SET
-    int             dummy_count;
-    char          **cl;
-#endif
+  long nread = 0;
+  unsigned long bytes_after;
+  XTextProperty ct;
+  int dummy_count;
+  char **cl;
 
-    D_SELECT((stderr, "rxvt_selection_paste(%08lx, %lu, %d), wait=%2x", win, (unsigned long)prop, (int)delete_prop, R->selection_wait));
+  D_SELECT((stderr, "rxvt_selection_paste(%08lx, %lu, %d), wait=%2x", win, (unsigned long)prop, (int)delete_prop, R->selection_wait));
 
-    if (prop == None) {         /* check for failed XConvertSelection */
-#ifdef MULTICHAR_SET
-        if ((R->selection_type & Sel_CompoundText)) {
-            int             selnum = R->selection_type & Sel_whereMask;
+  if (prop == None)         /* check for failed XConvertSelection */
+    {
+      if ((R->selection_type & Sel_CompoundText))
+        {
+          int selnum = R->selection_type & Sel_whereMask;
 
-            R->selection_type = 0;
-            if (selnum != Sel_direct)
-                rxvt_selection_request_other(aR_ XA_STRING, selnum);
+          R->selection_type = 0;
+          if (selnum != Sel_direct)
+            rxvt_selection_request_other(aR_ XA_STRING, selnum);
         }
-#endif
-        return 0;
+      
+      return 0;
     }
-    for (;;) {
-        if (XGetWindowProperty(R->Xdisplay, win, prop, (long)(nread / 4),
-                               (long)(PROP_SIZE / 4), delete_prop,
-                               AnyPropertyType, &ct.encoding, &ct.format,
-                               &ct.nitems, &bytes_after,
-                               &ct.value) != Success)
-            break;
-        if (ct.encoding == 0) {
-            D_SELECT((stderr, "rxvt_selection_paste: property didn't exist!"));
-            break;
+
+  for (;;)
+    {
+      if (XGetWindowProperty(R->Xdisplay, win, prop, (long)(nread / 4),
+                             (long)(PROP_SIZE / 4), delete_prop,
+                             AnyPropertyType, &ct.encoding, &ct.format,
+                             &ct.nitems, &bytes_after,
+                             &ct.value) != Success)
+        break;
+
+      if (ct.encoding == 0)
+        {
+          D_SELECT((stderr, "rxvt_selection_paste: property didn't exist!"));
+          break;
         }
-        if (ct.value == NULL) {
-            D_SELECT((stderr, "rxvt_selection_paste: property shooting blanks!"));
-            continue;
+
+      if (ct.value == NULL)
+        {
+          D_SELECT((stderr, "rxvt_selection_paste: property shooting blanks!"));
+          continue;
         }
-        if (ct.nitems == 0) {
-            D_SELECT((stderr, "rxvt_selection_paste: property empty - also INCR end"));
-            if (R->selection_wait == Sel_normal && nread == 0) {
-            /*
-             * pass through again trying CUT_BUFFER0 if we've come from
-             * XConvertSelection() but nothing was presented
-             */
-                D_SELECT((stderr, "rxvt_selection_request: pasting CUT_BUFFER0"));
-                rxvt_selection_paste(aR_ Xroot, XA_CUT_BUFFER0, False);
+
+      if (ct.nitems == 0)
+        {
+          D_SELECT((stderr, "rxvt_selection_paste: property empty - also INCR end"));
+          if (R->selection_wait == Sel_normal && nread == 0)
+            {
+              /*
+               * pass through again trying CUT_BUFFER0 if we've come from
+               * XConvertSelection() but nothing was presented
+               */
+              D_SELECT((stderr, "rxvt_selection_request: pasting CUT_BUFFER0"));
+              rxvt_selection_paste (aR_ Xroot, XA_CUT_BUFFER0, False);
             }
-            nread = -1;         /* discount any previous stuff */
-            break;
+
+          nread = -1;         /* discount any previous stuff */
+          break;
         }
-        nread += ct.nitems;
-#ifdef MULTICHAR_SET
-        if (XmbTextPropertyToTextList(R->Xdisplay, &ct, &cl,
-                                      &dummy_count) == Success && cl) {
-            rxvt_PasteIt(aR_ cl[0], STRLEN(cl[0]));
-            XFreeStringList(cl);
-        } else
-#endif
-            rxvt_PasteIt(aR_ ct.value, (unsigned int)ct.nitems);
-        if (bytes_after == 0)
-            break;
-        XFree(ct.value);
+
+      nread += ct.nitems;
+      if (XmbTextPropertyToTextList (R->Xdisplay, &ct, &cl,
+                                     &dummy_count) == Success && cl)
+        {
+          R->paste ((unsigned char *)cl[0], STRLEN (cl[0]));
+          XFreeStringList (cl);
+        }
+      else
+        R->paste (ct.value, ct.nitems);
+
+      if (bytes_after == 0)
+        break;
+
+      XFree (ct.value);
     }
-    if (ct.value)
-        XFree(ct.value);
-    if (R->selection_wait == Sel_normal)
-        R->selection_wait = Sel_none;
-    D_SELECT((stderr, "rxvt_selection_paste: bytes written: %ld", nread));
-    return (int)nread;
+
+  if (ct.value)
+    XFree (ct.value);
+
+  if (R->selection_wait == Sel_normal)
+    R->selection_wait = Sel_none;
+
+  D_SELECT((stderr, "rxvt_selection_paste: bytes written: %ld", nread));
+  return (int)nread;
+}
+
+void
+rxvt_term::incr_cb (time_watcher &w)
+{
+  w.stop ();
+  selection_wait = Sel_none;
+
+  rxvt_print_error("data loss: timeout on INCR selection paste");
 }
 
 /*
@@ -2537,13 +2562,11 @@ rxvt_selection_property(pR_ Window win, Atom prop)
         if (rxvt_selection_paste(aR_ win, prop, True) == -1) {
             D_SELECT((stderr, "rxvt_selection_property: INCR: clean end"));
             R->selection_wait = Sel_none;
-            R->timeout[TIMEOUT_INCR].tv_sec = 0;        /* turn off timer */
+            R->incr_ev.stop ();
         }
     }
-    if (reget_time) {   /* received more data so reget time */
-        (void)gettimeofday(&(R->timeout[TIMEOUT_INCR]), NULL);
-        R->timeout[TIMEOUT_INCR].tv_sec += 10;  /* ten seconds wait */
-    }
+    if (reget_time) /* received more data so reget time */
+      R->incr_ev.start (NOW + 10);
 }
 /* ------------------------------------------------------------------------- */
 /*
@@ -2565,7 +2588,7 @@ rxvt_selection_request(pR_ Time tm, int x, int y)
 
     if (R->selection.text != NULL) {    /* internal selection */
         D_SELECT((stderr, "rxvt_selection_request: pasting internal"));
-        rxvt_PasteIt(aR_ R->selection.text, R->selection.len);
+        R->paste (R->selection.text, R->selection.len);
         return;
     } else {
         int             i;
@@ -2573,18 +2596,8 @@ rxvt_selection_request(pR_ Time tm, int x, int y)
         R->selection_request_time = tm;
         R->selection_wait = Sel_normal;
         for (i = Sel_Primary; i <= Sel_Clipboard; i++) {
-#ifdef MULTICHAR_SET
             R->selection_type = Sel_CompoundText;
-#else
-            R->selection_type = 0;
-#endif
-            if (rxvt_selection_request_other(aR_
-#ifdef MULTICHAR_SET
-                                             R->xa[XA_COMPOUND_TEXT],
-#else
-                                             XA_STRING,
-#endif
-                                             i))
+            if (rxvt_selection_request_other(aR_ R->xa[XA_COMPOUND_TEXT], i))
                 return;
         }
     }
@@ -2803,11 +2816,7 @@ rxvt_selection_start_colrow(pR_ int col, int row)
 /* what do we want: spaces/tabs are delimiters or cutchars or non-cutchars */
 #define DELIMIT_TEXT(x) \
     (((x) == ' ' || (x) == '\t') ? 2 : (STRCHR(R->rs[Rs_cutchars], (x)) != NULL))
-#ifdef MULTICHAR_SET
-# define DELIMIT_REND(x)        (((x) & RS_multiMask) ? 1 : 0)
-#else
-# define DELIMIT_REND(x)        1
-#endif
+#define DELIMIT_REND(x)        1
 
 /* INTPROTO */
 void

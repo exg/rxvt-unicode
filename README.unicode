@@ -7,7 +7,8 @@ Sketchy overview of the details:
   might be broken.
 
 - wchar_t MUST be UNICODE or ISO-10646-1 on your system, or various
-  things will break down.
+  things will break down. On GNU/Linux, this is true, on Solaris,
+  this is true only for "@ucs" locales, but you should have plenty of them.
 
 - rxvt ALWAYS expects utf-8 input, regardless of the locale, currently.
   so only start it in a utf-8-locale: "LC_CTYPE=en_US.UTF-8 rxvt" etc..

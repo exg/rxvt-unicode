@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.14 2003/12/08 23:14:40 pcg Exp $
+ * $Id: command.C,v 1.15 2003/12/16 23:04:13 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -1148,7 +1148,6 @@ rxvt_process_x_event(pR_ XEvent *ev)
     Window          unused_root, unused_child;
     int             unused_root_x, unused_root_y;
     unsigned int    unused_mask;
-    struct timeval  tp;
 
 #ifdef DEBUG_X
     const char *const eventnames[] =
@@ -1189,48 +1188,15 @@ rxvt_process_x_event(pR_ XEvent *ev)
 	"ClientMessage",
 	"MappingNotify"
     };
-    struct tm      *ltt;
 #endif
-
-    /*
-     * check if we need to get the time for any timeouts
-     */
-
-    for (i = NUM_TIMEOUTS; i--; )
-	if (R->timeout[i].tv_sec) {
-	    want_timeout = 1;
-	    break;
-	}
-
-#ifndef DEBUG_X
-    if (want_timeout)
-#endif
-	(void)gettimeofday(&tp, NULL);
 
 #ifdef DEBUG_X
+    struct timeval  tp;
+    struct tm      *ltt;
+    (void)gettimeofday(&tp, NULL);
     ltt = localtime(&(tp.tv_sec));
     D_X((stderr, "Event: %-16s %-7s %08lx (%4d-%02d-%02d %02d:%02d:%02d.%.6ld) %s %lu", eventnames[ev->type], (ev->xany.window == R->TermWin.parent[0] ? "parent" : (ev->xany.window == R->TermWin.vt ? "vt" : (ev->xany.window == R->scrollBar.win ? "scroll" : (ev->xany.window == R->menuBar.win ? "menubar" : "UNKNOWN")))), (ev->xany.window == R->TermWin.parent[0] ? R->TermWin.parent[0] : (ev->xany.window == R->TermWin.vt ? R->TermWin.vt : (ev->xany.window == R->scrollBar.win ? R->scrollBar.win : (ev->xany.window == R->menuBar.win ? R->menuBar.win : 0)))), ltt->tm_year + 1900, ltt->tm_mon + 1, ltt->tm_mday, ltt->tm_hour, ltt->tm_min, ltt->tm_sec, tp.tv_usec, ev->xany.send_event ? "S" : " ", ev->xany.serial));
 #endif
-
-    /* X event timeouts */
-    if (want_timeout)
-	for (i = NUM_TIMEOUTS; i--; ) {
-	    if (R->timeout[i].tv_sec == 0)
-		continue;
-	    if ((tp.tv_sec < R->timeout[i].tv_sec)
-		|| (tp.tv_sec == R->timeout[i].tv_sec
-		    && tp.tv_usec < R->timeout[i].tv_usec))
-		continue;
-	    R->timeout[i].tv_sec = 0;
-	    switch(i) {
-	    case TIMEOUT_INCR:
-		rxvt_print_error("data loss: timeout on INCR selection paste");
-		R->selection_wait = Sel_none;
-		break;
-	    default:
-		break;
-	    }
-	}
 
     switch (ev->type) {
     case KeyPress:

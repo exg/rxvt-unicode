@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.11 2003/12/08 23:14:40 pcg Exp $
+ * $Id: main.C,v 1.12 2003/12/16 23:04:13 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -69,7 +69,8 @@ rxvt_term::rxvt_term ()
 #endif
   x_ev       (this, &rxvt_term::x_cb),
   destroy_ev (this, &rxvt_term::destroy_cb),
-  check_ev   (this, &rxvt_term::check_cb)
+  check_ev   (this, &rxvt_term::check_cb),
+  incr_ev    (this, &rxvt_term::incr_cb)
 {
   cmdbuf_ptr = cmdbuf_endp = cmdbuf_base;
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: rxvt.h,v 1.10 2003/12/02 21:49:46 pcg Exp $
+ * $Id: rxvt.h,v 1.11 2003/12/16 23:04:13 pcg Exp $
  */
 
 #ifndef _RXVT_H_                /* include once only */
@@ -557,11 +557,6 @@ enum {
 };
 
 enum {
-  TIMEOUT_INCR = 0,
-  NUM_TIMEOUTS
-};
-
-enum {
   XA_COMPOUND_TEXT = 0,
   XA_MULTIPLE,
   XA_TARGETS,
@@ -1071,7 +1066,6 @@ struct rxvt_term : rxvt_vars {
 #ifdef POINTER_BLANK
   struct timeval  lastmotion;
 #endif
-  struct timeval  timeout[NUM_TIMEOUTS];
 
 /* these three don't need to be kept but do so to placate some mem checkers */
   char           *env_windowid;       /* environmental variable WINDOWID */
@@ -1093,6 +1087,8 @@ struct rxvt_term : rxvt_vars {
   unsigned char   cmdbuf_base[BUFSIZ];
   unsigned char   kbuf[KBUFSZ];
 
+  void paste (const unsigned char *data, unsigned int len);
+
   void flush ();
 
   void check_cb   (check_watcher &w); check_watcher check_ev;
@@ -1100,6 +1096,8 @@ struct rxvt_term : rxvt_vars {
 
   void pty_cb (io_watcher &w, short revents); io_watcher pty_ev;
   void x_cb   (io_watcher &w, short revents); io_watcher x_ev;
+
+  void incr_cb (time_watcher &w); time_watcher incr_ev;
 
 #ifdef CURSOR_BLINK
   void blink_cb (time_watcher &w); time_watcher blink_ev;
