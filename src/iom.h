@@ -1,5 +1,5 @@
 /*
-    iom.h -- generic I/O multiplexor
+    iom.h -- generic I/O multiplexer
     Copyright (C) 2003, 2004 Marc Lehmann <pcg@goof.com>
  
     This program is free software; you can redistribute it and/or modify
@@ -66,17 +66,13 @@ struct sig_watcher;
 
 template<class watcher>
 struct io_manager_vec : vector<watcher *> {
-#if IOM_CHECK
-  bool activity;
-#endif
-
   void erase_unordered (unsigned int pos)
   {
     watcher *w = (*this)[this->size () - 1];
     this->pop_back ();
 
-    if (this->size ())
-      if ((*this)[pos] = w)
+    if (!this->empty ())
+      if (((*this)[pos] = w)) // '=' is correct!
         w->active = pos + 1;
   }
 };
