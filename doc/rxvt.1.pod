@@ -164,8 +164,15 @@ resource B<borderColor>.
 Select the fonts to be used. This is a comma separated list of font names
 that are used in turn when trying to display Unicode characters.  The
 first font defines the cell size for characters; other fonts might be
-smaller, but not (in general) larger. A reasonable default font list is
-always appended to it. See resource B<font> for details.
+smaller, but not (in general) larger. A (hopefully) reasonable default
+font list is always appended to it. See resource B<font> for more details.
+
+In short, to specify an X11 core font, just specify it's name or prefix it
+with C<x:>. To specify an XFT-font, you need to prefix it with C<xft:>,
+e.g.:
+
+   @@RXVT_NAME@@ -fn "xft:Bitstream Vera Sans Mono:pixelsize=15"
+   @@RXVT_NAME@@ -fn "9x15bold,xft:Bitstream Vera Sans Mono"
 
 See also the question "How does rxvt-unicode choose fonts?" in the FAQ
 section of @@RXVT_NAME@@(7).
@@ -233,6 +240,14 @@ Put scrollbar on right/left; resource B<scrollBar_right>.
 
 Display normal (non XTerm/NeXT) scrollbar without/with a trough;
 resource B<scrollBar_floating>.
+
+=item B<-ptab>|B<+ptab>
+
+If enabled (default), "Horizontal Tab" characters are being stored as
+actual wide characters in the screen buffer, which makes it possible to
+select and paste them. Since a horizontal tab is a cursor movement and
+not an actual glyph, this can sometimes be visually annoying as the cursor
+on a tab character is displayed as a wide cursor; resource B<pastableTabs>.
 
 =item B<-bc>|B<+bc>
 
@@ -535,7 +550,7 @@ the iso8859-1 version of the second font), which is the base font (because
 it is named first) and thus defines the character cell grid to be 9 pixels
 wide and 15 pixels high.
 
-the second font is just used to add additional unicode characters not in
+The second font is just used to add additional unicode characters not in
 the base font, likewise the third, which is unfortunately non-bold, but
 the bold version of the font does contain less characters, so this is a
 useful supplement.
@@ -697,6 +712,11 @@ handle Meta (Alt) + keypress as an escape prefix [default].
 
 B<True>: the mouse wheel scrolls a page full. B<False>: the mouse wheel
 scrolls five lines [default].
+
+=item B<pastableTabs:> I<boolean>
+
+B<True>: store tabs as wide characters. B<False>: interpret tabs as cursor
+movement only; option C<-ptab>.
 
 =item B<cursorBlink:> I<boolean>
 

@@ -345,7 +345,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
           uint32_t *a = linedraw_command + (offs >> 4);
           uint32_t *b = a + (offs & 15);
 
-          int W = r->TermWin.fwidth;
+          int W = r->TermWin.fwidth * wcwidth (t);
           int H = r->TermWin.fheight;
 
           int x_[16];
@@ -1058,7 +1058,8 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
   FcValue v;
 
   if (prop.height != rxvt_fontprop::unset
-      || FcPatternGet (p, FC_PIXEL_SIZE, 0, &v) != FcResultMatch)
+      || (FcPatternGet (p, FC_PIXEL_SIZE, 0, &v) != FcResultMatch
+          && FcPatternGet (p, FC_SIZE, 0, &v) != FcResultMatch))
     FcPatternAddInteger (p, FC_PIXEL_SIZE, prop.height);
 
   if (prop.weight != rxvt_fontprop::unset
