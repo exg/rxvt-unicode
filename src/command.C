@@ -1133,7 +1133,6 @@ rxvt_term::x_cb (XEvent &ev)
                   want_full_refresh = 1;
               }
 #endif
-
           }
         break;
 
@@ -1347,9 +1346,8 @@ rxvt_term::rootwin_cb (XEvent &ev)
 
         /* FALLTHROUGH */
       case ReparentNotify:
-        if ((Options & Opt_transparent) && check_our_parents ())
-          if (am_transparent)
-            want_full_refresh = 1;
+        if ((Options & Opt_transparent) && check_our_parents () && am_transparent)
+          want_full_refresh = 1;
         break;
 #endif
     }
@@ -1703,8 +1701,242 @@ rxvt_term::button_release (XButtonEvent &ev)
 #endif
 }
 
-
 #ifdef TRANSPARENT
+#if TINTING
+/* shading taken from eterm-0.9.2 */
+/* RGB 15 */
+
+static void
+shade_ximage_15(void *data, int bpl, int w, int h, int rm, int gm, int bm)
+{
+    unsigned char  *ptr;
+    int             x, y;
+
+    ptr = (unsigned char *)data + (w * sizeof(uint16_t));
+    if ((rm <= 256) && (gm <= 256) && (bm <= 256)) {
+    /* No saturation */
+        for (y = h; --y >= 0;) {
+            for (x = -w; x < 0; x++) {
+                int             r, g, b;
+
+                b = ((uint16_t *) ptr)[x];
+                r = (b & 0x7c00) * rm;
+                g = (b & 0x3e0) * gm;
+                b = (b & 0x1f) * bm;
+                ((uint16_t *) ptr)[x] = ((r >> 8) & 0x7c00)
+                    | ((g >> 8) & 0x3e0)
+                    | ((b >> 8) & 0x1f);
+            }
+            ptr += bpl;
+        }
+    } else {
+        for (y = h; --y >= 0;) {
+            for (x = -w; x < 0; x++) {
+                int             r, g, b;
+
+                b = ((uint16_t *) ptr)[x];
+                r = (b & 0x7c00) * rm;
+                g = (b & 0x3e0) * gm;
+                b = (b & 0x1f) * bm;
+                r |= (!(r >> 15) - 1);
+                g |= (!(g >> 10) - 1);
+                b |= (!(b >> 5) - 1);
+                ((uint16_t *) ptr)[x] = ((r >> 8) & 0x7c00)
+                    | ((g >> 8) & 0x3e0)
+                    | ((b >> 8) & 0x1f);
+            }
+            ptr += bpl;
+        }
+    }
+}
+
+/* RGB 16 */
+static void
+shade_ximage_16(void *data, int bpl, int w, int h, int rm, int gm, int bm)
+{
+    unsigned char  *ptr;
+    int             x, y;
+
+    ptr = (unsigned char *)data + (w * sizeof(uint16_t));
+    if ((rm <= 256) && (gm <= 256) && (bm <= 256)) {
+    /* No saturation */
+        for (y = h; --y >= 0;) {
+            for (x = -w; x < 0; x++) {
+                int             r, g, b;
+
+                b = ((uint16_t *) ptr)[x];
+                r = (b & 0xf800) * rm;
+                g = (b & 0x7e0) * gm;
+                b = (b & 0x1f) * bm;
+                ((uint16_t *) ptr)[x] = ((r >> 8) & 0xf800)
+                    | ((g >> 8) & 0x7e0)
+                    | ((b >> 8) & 0x1f);
+            }
+            ptr += bpl;
+        }
+    } else {
+        for (y = h; --y >= 0;) {
+            for (x = -w; x < 0; x++) {
+                int             r, g, b;
+
+                b = ((uint16_t *) ptr)[x];
+                r = (b & 0xf800) * rm;
+                g = (b & 0x7e0) * gm;
+                b = (b & 0x1f) * bm;
+                r |= (!(r >> 16) - 1);
+                g |= (!(g >> 11) - 1);
+                b |= (!(b >> 5) - 1);
+                ((uint16_t *) ptr)[x] = ((r >> 8) & 0xf800)
+                    | ((g >> 8) & 0x7e0)
+                    | ((b >> 8) & 0x1f);
+            }
+            ptr += bpl;
+        }
+    }
+}
+
+/* RGB 24 */
+static void
+shade_ximage_24(void *data, int bpl, int w, int h, int rm, int gm, int bm)
+{
+    unsigned char  *ptr;
+    int             x, y;
+
+    ptr = (unsigned char *)data + (w * 3);
+    if ((rm <= 256) && (gm <= 256) && (bm <= 256)) {
+    /* No saturation */
+        for (y = h; --y >= 0;) {
+            for (x = -(w * 3); x < 0; x += 3) {
+                int             r, g, b;
+
+                if (byteorder.big_endian()) {
+                    r = (ptr[x + 0] * rm) >> 8;
+                    g = (ptr[x + 1] * gm) >> 8;
+                    b = (ptr[x + 2] * bm) >> 8;
+                    ptr[x + 0] = r;
+                    ptr[x + 1] = g;
+                    ptr[x + 2] = b;
+                } else {
+                    r = (ptr[x + 2] * rm) >> 8;
+                    g = (ptr[x + 1] * gm) >> 8;
+                    b = (ptr[x + 0] * bm) >> 8;
+                    ptr[x + 2] = r;
+                    ptr[x + 1] = g;
+                    ptr[x + 0] = b;
+                }
+            }
+            ptr += bpl;
+        }
+    } else {
+        for (y = h; --y >= 0;) {
+            for (x = -(w * 3); x < 0; x += 3) {
+                int             r, g, b;
+
+                if (byteorder.big_endian()) {
+                    r = (ptr[x + 0] * rm) >> 8;
+                    g = (ptr[x + 1] * gm) >> 8;
+                    b = (ptr[x + 2] * bm) >> 8;
+
+                    r |= (!(r >> 8) - 1);
+                    g |= (!(g >> 8) - 1);
+                    b |= (!(b >> 8) - 1);
+
+                    ptr[x + 0] = r;
+                    ptr[x + 1] = g;
+                    ptr[x + 2] = b;
+                } else {
+                    r = (ptr[x + 2] * rm) >> 8;
+                    g = (ptr[x + 1] * gm) >> 8;
+                    b = (ptr[x + 0] * bm) >> 8;
+
+                    r |= (!(r >> 8) - 1);
+                    g |= (!(g >> 8) - 1);
+                    b |= (!(b >> 8) - 1);
+
+                    ptr[x + 2] = r;
+                    ptr[x + 1] = g;
+                    ptr[x + 0] = b;
+                }
+            }
+            ptr += bpl;
+        }
+    }
+}
+
+/* RGB 32 */
+static void
+shade_ximage_32(void *data, int bpl, int w, int h, int rm, int gm, int bm)
+{
+    unsigned char  *ptr;
+    int             x, y;
+
+    ptr = (unsigned char *)data + (w * 4);
+    if ((rm <= 256) && (gm <= 256) && (bm <= 256)) {
+    /* No saturation */
+        for (y = h; --y >= 0;) {
+            if (byteorder.big_endian()) {
+                for (x = -(w * 4); x < 0; x += 4) {
+                    int             r, g, b;
+
+                    r = (ptr[x + 1] * rm) >> 8;
+                    g = (ptr[x + 2] * gm) >> 8;
+                    b = (ptr[x + 3] * bm) >> 8;
+                    ptr[x + 1] = r;
+                    ptr[x + 2] = g;
+                    ptr[x + 3] = b;
+                }
+            } else {
+                for (x = -(w * 4); x < 0; x += 4) {
+                    int             r, g, b;
+
+                    r = (ptr[x + 2] * rm) >> 8;
+                    g = (ptr[x + 1] * gm) >> 8;
+                    b = (ptr[x + 0] * bm) >> 8;
+                    ptr[x + 2] = r;
+                    ptr[x + 1] = g;
+                    ptr[x + 0] = b;
+                }
+            }
+            ptr += bpl;
+        }
+    } else {
+        for (y = h; --y >= 0;) {
+            for (x = -(w * 4); x < 0; x += 4) {
+                int             r, g, b;
+
+                if (byteorder.big_endian()) {
+                    r = (ptr[x + 1] * rm) >> 8;
+                    g = (ptr[x + 2] * gm) >> 8;
+                    b = (ptr[x + 3] * bm) >> 8;
+
+                    r |= (!(r >> 8) - 1);
+                    g |= (!(g >> 8) - 1);
+                    b |= (!(b >> 8) - 1);
+
+                    ptr[x + 1] = r;
+                    ptr[x + 2] = g;
+                    ptr[x + 3] = b;
+                } else {
+                    r = (ptr[x + 2] * rm) >> 8;
+                    g = (ptr[x + 1] * gm) >> 8;
+                    b = (ptr[x + 0] * bm) >> 8;
+
+                    r |= (!(r >> 8) - 1);
+                    g |= (!(g >> 8) - 1);
+                    b |= (!(b >> 8) - 1);
+
+                    ptr[x + 2] = r;
+                    ptr[x + 1] = g;
+                    ptr[x + 0] = b;
+                }
+            }
+            ptr += bpl;
+        }
+    }
+}
+
+#endif
+
 /*
  * Check our parents are still who we think they are.
  * Do transparency updates if required
@@ -1712,32 +1944,33 @@ rxvt_term::button_release (XButtonEvent &ev)
 int
 rxvt_term::check_our_parents ()
 {
-  int             i, pchanged, aformat, have_pixmap, rootdepth;
-  unsigned long   nitems, bytes_after;
-  Atom            atype;
-  unsigned char   *prop = NULL;
-  Window          root, oldp, *list;
-  Pixmap          rootpixmap = None;
+  int i, pchanged, aformat, have_pixmap, rootdepth;
+  unsigned long nitems, bytes_after;
+  Atom atype;
+  unsigned char *prop = NULL;
+  Window root, oldp, *list;
+  Pixmap rootpixmap = None;
   XWindowAttributes wattr, wrootattr;
 
   pchanged = 0;
 
-  if (! (Options & Opt_transparent))
+  if (!(Options & Opt_transparent))
     return pchanged;	/* Don't try any more */
 
   XGetWindowAttributes (display->display, display->root, &wrootattr);
   rootdepth = wrootattr.depth;
 
   XGetWindowAttributes (display->display, TermWin.parent[0], &wattr);
+
   if (rootdepth != wattr.depth)
     {
       if (am_transparent)
         {
           pchanged = 1;
-          XSetWindowBackground (display->display, TermWin.vt,
-                               PixColors[Color_bg]);
+          XSetWindowBackground (display->display, TermWin.vt, PixColors[Color_bg]);
           am_transparent = am_pixmap_trans = 0;
         }
+
       return pchanged;	/* Don't try any more */
     }
 
@@ -1749,10 +1982,17 @@ rxvt_term::check_our_parents ()
    * the root background. Some window managers put multiple nested frame
    * windows for each client, so we have to take care about that.
    */
-  i = (xa[XA_XROOTPMAPID] != 0
-       && (XGetWindowProperty (display->display, display->root, xa[XA_XROOTPMAPID],
+  i = (xa[XA_XROOTPMAPID]
+       && XGetWindowProperty (display->display, display->root, xa[XA_XROOTPMAPID],
                               0L, 1L, False, XA_PIXMAP, &atype, &aformat,
-                              &nitems, &bytes_after, &prop) == Success));
+                              &nitems, &bytes_after, &prop) == Success);
+
+  if (!i || prop == NULL)
+     i = (xa[XA_XSETROOTID]
+          && XGetWindowProperty (display->display, display->root, xa[XA_XSETROOTID],
+                                 0L, 1L, False, XA_PIXMAP, &atype, &aformat,
+                                 &nitems, &bytes_after, &prop) == Success);
+
   if (!i || prop == NULL)
     have_pixmap = 0;
   else
@@ -1761,6 +2001,7 @@ rxvt_term::check_our_parents ()
       rootpixmap = * ((Pixmap *)prop);
       XFree (prop);
     }
+
   if (have_pixmap)
     {
       /*
@@ -1774,7 +2015,7 @@ rxvt_term::check_our_parents ()
       XGCValues gcvalue;
 
       XTranslateCoordinates (display->display, TermWin.parent[0], display->root,
-                            0, 0, &sx, &sy, &cr);
+                             0, 0, &sx, &sy, &cr);
       nw = (unsigned int)szHint.width;
       nh = (unsigned int)szHint.height;
       nx = ny = 0;
@@ -1796,11 +2037,12 @@ rxvt_term::check_our_parents ()
       MIN_IT (nw, (unsigned int) (wrootattr.width - sx));
       MIN_IT (nh, (unsigned int) (wrootattr.height - sy));
       allowedxerror = -1;
-      image = XGetImage (display->display, rootpixmap, sx, sy, nw, nh, AllPlanes,
-                        ZPixmap);
+      image = XGetImage (display->display, rootpixmap, sx, sy, nw, nh, AllPlanes, ZPixmap);
+
       /* XXX: handle BadMatch - usually because we're outside the pixmap */
       /* XXX: may need a delay here? */
       allowedxerror = 0;
+
       if (image == NULL)
         {
           if (am_transparent && am_pixmap_trans)
@@ -1812,51 +2054,74 @@ rxvt_term::check_our_parents ()
                   TermWin.pixmap = None;
                 }
             }
+
           am_pixmap_trans = 0;
         }
       else
         {
           if (TermWin.pixmap != None)
             XFreePixmap (display->display, TermWin.pixmap);
+
+#if TINTING
+          if (ISSET_PIXCOLOR (Color_tint))
+            {
+              unsigned short shade, rm, gm, bm;
+
+              PixColors[Color_tint].get (display, rm, gm, bm);
+
+              rm >>= 8; gm >>= 8; bm >>= 8; // not 100% correct, but...
+
+              /* Determine bitshift and bitmask values */
+              switch (image->bits_per_pixel)
+                {
+                  case 15: shade_ximage_15 (image->data, image->bytes_per_line, image->width, image->height, rm, gm, bm); break;
+                  case 16: shade_ximage_16 (image->data, image->bytes_per_line, image->width, image->height, rm, gm, bm); break;
+                  case 24: shade_ximage_24 (image->data, image->bytes_per_line, image->width, image->height, rm, gm, bm); break;
+                  case 32: shade_ximage_32 (image->data, image->bytes_per_line, image->width, image->height, rm, gm, bm); break;
+                }
+            }
+#endif
+
           TermWin.pixmap = XCreatePixmap (display->display, TermWin.vt,
-                                         (unsigned int)szHint.width,
-                                         (unsigned int)szHint.height,
-                                         (unsigned int)image->depth);
+                                          szHint.width, szHint.height, image->depth);
           gc = XCreateGC (display->display, TermWin.vt, 0UL, &gcvalue);
           XPutImage (display->display, TermWin.pixmap, gc, image, 0, 0,
-                    nx, ny, (unsigned int)image->width,
-                    (unsigned int)image->height);
+                     nx, ny, image->width, image->height);
           XFreeGC (display->display, gc);
           XDestroyImage (image);
           XSetWindowBackgroundPixmap (display->display, TermWin.vt,
                                      TermWin.pixmap);
+
           if (!am_transparent || !am_pixmap_trans)
             pchanged = 1;
+
           am_transparent = am_pixmap_trans = 1;
         }
     }
 
   if (!am_pixmap_trans)
     {
-      unsigned int    n;
+      unsigned int n;
       /*
        * InheritPixmap transparency
        */
       D_X ((stderr, "InheritPixmap Seeking to  %08lx", display->root));
-      for (i = 1; i < (int) (sizeof (TermWin.parent) / sizeof (Window));
-           i++)
+      for (i = 1; i < (int) (sizeof (TermWin.parent) / sizeof (Window)); i++)
         {
           oldp = TermWin.parent[i];
           XQueryTree (display->display, TermWin.parent[i - 1], &root,
-                     &TermWin.parent[i], &list, &n);
+                      &TermWin.parent[i], &list, &n);
           XFree (list);
           D_X ((stderr, "InheritPixmap Parent[%d] = %08lx", i, TermWin.parent[i]));
+
           if (TermWin.parent[i] == display->root)
             {
               if (oldp != None)
                 pchanged = 1;
+
               break;
             }
+
           if (oldp != TermWin.parent[i])
             pchanged = 1;
         }
@@ -1877,42 +2142,33 @@ rxvt_term::check_our_parents ()
             }
         }
 
-      if (n > (int) (sizeof (TermWin.parent)
-                    / sizeof (TermWin.parent[0])))
+      if (n > (int) (sizeof (TermWin.parent) / sizeof (TermWin.parent[0])))
         {
           D_X ((stderr, "InheritPixmap Turning off"));
-          XSetWindowBackground (display->display, TermWin.parent[0],
-                               PixColors[Color_fg]);
-          XSetWindowBackground (display->display, TermWin.vt,
-                               PixColors[Color_bg]);
+          XSetWindowBackground (display->display, TermWin.parent[0], PixColors[Color_fg]);
+          XSetWindowBackground (display->display, TermWin.vt, PixColors[Color_bg]);
           am_transparent = 0;
           /* XXX: also turn off Opt_transparent? */
         }
       else
         {
+#if WAIT_FOR_WM
           /* wait (an arbitrary period) for the WM to do its thing
            * needed for fvwm2.2.2 (and before?) */
-# ifdef HAVE_NANOSLEEP
-          struct timespec rqt;
-
-          rqt.tv_sec = 1;
-          rqt.tv_nsec = 0;
-          nanosleep (&rqt, NULL);
-# else
           sleep (1);
-# endif
+#endif
           D_X ((stderr, "InheritPixmap Turning on (%d parents)", i - 1));
           for (n = 0; n < (unsigned int)i; n++)
-            XSetWindowBackgroundPixmap (display->display, TermWin.parent[n],
-                                       ParentRelative);
-          XSetWindowBackgroundPixmap (display->display, TermWin.vt,
-                                     ParentRelative);
+            XSetWindowBackgroundPixmap (display->display, TermWin.parent[n], ParentRelative);
+
+          XSetWindowBackgroundPixmap (display->display, TermWin.vt, ParentRelative);
           am_transparent = 1;
         }
 
       for (; i < (int) (sizeof (TermWin.parent) / sizeof (Window)); i++)
         TermWin.parent[i] = None;
     }
+
   return pchanged;
 }
 #endif
@@ -2158,10 +2414,10 @@ rxvt_term::process_print_pipe ()
 /* *INDENT-OFF* */
 enum {
   C1_40 = 0x40,
-  C1_41 , C1_BPH, C1_NBH, C1_44 , C1_NEL, C1_SSA, C1_ESA,
+          C1_41 , C1_BPH, C1_NBH, C1_44 , C1_NEL, C1_SSA, C1_ESA,
   C1_HTS, C1_HTJ, C1_VTS, C1_PLD, C1_PLU, C1_RI , C1_SS2, C1_SS3,
   C1_DCS, C1_PU1, C1_PU2, C1_STS, C1_CCH, C1_MW , C1_SPA, C1_EPA,
-  C1_SOS, C1_59 , C1_SCI, C1_CSI, CS_ST , C1_OSC, C1_PM , C1_APC
+  C1_SOS, C1_59 , C1_SCI, C1_CSI, CS_ST , C1_OSC, C1_PM , C1_APC,
 };
 /* *INDENT-ON* */
 
@@ -2176,12 +2432,11 @@ rxvt_term::process_nonprinting (unicode_t ch)
         break;
       case C0_ENQ:	/* terminal Status */
         if (rs[Rs_answerbackstring])
-          tt_write (
-            (const unsigned char *)rs[Rs_answerbackstring],
-            (unsigned int)STRLEN (rs[Rs_answerbackstring]));
+          tt_write ((const unsigned char *)rs[Rs_answerbackstring],
+                    (unsigned int)STRLEN (rs[Rs_answerbackstring]));
         else
           tt_write ((unsigned char *)VT100_ANS,
-                   (unsigned int)STRLEN (VT100_ANS));
+                    (unsigned int)STRLEN (VT100_ANS));
         break;
       case C0_BEL:	/* bell */
         scr_bell ();
@@ -2365,10 +2620,10 @@ rxvt_term::process_escape_seq ()
         break;
 
         /* 8.3.142: SINGLE-SHIFT TWO */
-        /*case C1_SS2: scr_single_shift (2);   break; */
+      /*case C1_SS2: scr_single_shift (2);   break; */
 
         /* 8.3.143: SINGLE-SHIFT THREE */
-        /*case C1_SS3: scr_single_shift (3);   break; */
+      /*case C1_SS3: scr_single_shift (3);   break; */
 
         /* 8.3.27: DEVICE CONTROL STRING */
       case C1_DCS:		/* ESC P */
@@ -2393,6 +2648,7 @@ rxvt_term::process_escape_seq ()
 
         /* 8.3.106: RESET TO INITIAL STATE */
       case 'c':
+        mbstate.reset ();
         scr_poweron ();
         scrollbar_show (1);
         break;
@@ -2439,7 +2695,7 @@ const unsigned char csi_defaults[] =
     make_byte (1,1,1,0,1,1,1,0),	/* `, a, b, c, d, e, f, g, */
     make_byte (0,0,1,1,0,0,0,0),	/* h, i, j, k, l, m, n, o, */
     make_byte (0,0,0,0,0,0,0,0),	/* p, q, r, s, t, u, v, w, */
-    make_byte (0,0,0,0,0,0,0,0)	/* x, y, z, {, |, }, ~,    */
+    make_byte (0,0,0,0,0,0,0,0),	/* x, y, z, {, |, }, ~,    */
   };
 /* *INDENT-ON* */
 
@@ -2648,13 +2904,12 @@ rxvt_term::process_csi_seq ()
             case 6:			/* CPR requested */
               scr_report_position ();
               break;
-#if defined (ENABLE_DISPLAY_ANSWER)
             case 7:			/* unofficial extension */
-              tt_printf ("%-.250s\n", rs[Rs_display_name]);
+              if (Options & Opt_insecure)
+                tt_printf ("%-.250s\n", rs[Rs_display_name]);
               break;
-#endif
             case 8:			/* unofficial extension */
-              xterm_seq (XTerm_title, RESNAME "-" VERSION, CHAR_ST);
+              process_xterm_seq (XTerm_title, RESNAME "-" VERSION, CHAR_ST);
               break;
           }
         break;
@@ -2802,8 +3057,8 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
       case 13:			/* report window position */
         XGetWindowAttributes (display->display, TermWin.parent[0], &wattr);
         XTranslateCoordinates (display->display, TermWin.parent[0], wattr.root,
-                              -wattr.border_width, -wattr.border_width,
-                              &x, &y, &wdummy);
+                               -wattr.border_width, -wattr.border_width,
+                               &x, &y, &wdummy);
         tt_printf ("\033[3;%d;%dt", x, y);
         break;
       case 14:			/* report window size (pixels) */
@@ -2816,16 +3071,22 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
       case 19:			/* report window size (chars) */
         tt_printf ("\033[9;%d;%dt", TermWin.nrow, TermWin.ncol);
         break;
-#if 0 /* XXX: currently disabled due to security concerns */
       case 20:			/* report icon label */
-        XGetIconName (display->display, TermWin.parent[0], &s);
-        tt_printf ("\033]L%-.200s\234", s ? s : "");	/* 8bit ST */
+        if (Options & Opt_insecure)
+          {
+            char *s;
+            XGetIconName (display->display, TermWin.parent[0], &s);
+            tt_printf ("\033]L%-.200s\234", s ? s : "");	/* 8bit ST */
+          }
         break;
       case 21:			/* report window title */
-        XFetchName (display->display, TermWin.parent[0], &s);
-        tt_printf ("\033]l%-.200s\234", s ? s : "");	/* 8bit ST */
+        if (Options & Opt_insecure)
+          {
+            char *s;
+            XFetchName (display->display, TermWin.parent[0], &s);
+            tt_printf ("\033]l%-.200s\234", s ? s : "");	/* 8bit ST */
+          }
         break;
-#endif
     }
 }
 #endif
@@ -2846,10 +3107,14 @@ rxvt_term::get_to_st (unicode_t &ends_how)
 
   while ((ch = cmd_getc ()))
     {
-      if (ch == C0_BEL
-          || ch == CHAR_ST
-          || (ch == 0x5c && seen_esc))	/* 7bit ST */
+      if (ch == C0_BEL || ch == CHAR_ST)
         break;
+
+      if (seen_esc)
+        if (ch == 0x5c)	/* 7bit ST */
+          break;
+        else
+          return NULL;
 
       if (ch == C0_ESC)
         {
@@ -2858,12 +3123,14 @@ rxvt_term::get_to_st (unicode_t &ends_how)
         }
       else if (ch == '\t')
         ch = ' ';	/* translate '\t' to space */
-      else if (ch < 0x08 || (ch > 0x0d && ch < 0x20))
+      else if (ch < 0x20 && (ch != 0x0a && ch != 0x0d))
         return NULL;	/* other control character - exit */
 
-      if (n < sizeof (string) - 1)
-        string[n++] = ch;
+      if (n >= sizeof (string) - 1)
+        // stop at some sane length
+        return NULL;
 
+      string[n++] = ch;
       seen_esc = 0;
     }
 
@@ -2917,29 +3184,36 @@ rxvt_term::process_osc_seq ()
 
       if (s)
         {
-          /*
-           * rxvt_menubar_dispatch () violates the constness of the string,
-           * so do it here
-           */
-          if (arg == XTerm_Menu)
-#if 0 /* XXX: currently disabled due to security concerns */
-            menubar_dispatch ((char *)s);
-#else
-            (void)0;
-#endif
-          else
-            xterm_seq (arg, (char *)s, eh);
-
+          process_xterm_seq (arg, (char *)s, eh);
           free (s);
         }
     }
 }
+
+void
+rxvt_term::process_color_seq (int report, int color, const char *str, unsigned char resp)
+{
+  if (str[0] == '?' && !str[1])
+    {
+      if (Options & Opt_insecure)
+        {
+          unsigned short r, g, b;
+          PixColors[color].get (display, r, g, b);
+          tt_printf ("\033]%d;rgb:%04x/%04x/%04x%c", report, r, g, b, resp);
+        }
+    }
+  else
+    set_window_color (color, str);
+}
+
 /*
  * XTerm escape sequences: ESC ] Ps;Pt (ST|BEL)
  *       0 = change iconName/title
  *       1 = change iconName
  *       2 = change title
  *       4 = change color
+ *      10 = change fg color
+ *      11 = change bg color
  *      12 = change text color
  *      13 = change mouse foreground color 
  *      17 = change highlight character colour
@@ -2949,20 +3223,21 @@ rxvt_term::process_osc_seq ()
  *      50 = change font
  *
  * rxvt extensions:
- *      10 = menu (may change in future)
  *      20 = bg pixmap
  *      39 = change default fg color
  *      49 = change default bg color
  *      55 = dump scrollback buffer and all of screen
  *     701 = change locale
  *     702 = find font
+ *     703 = menu
  */
 void
-rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ ((unused)))
+rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
 {
   int changed = 0;
   int color;
   char *buf, *name;
+  bool query = str[0] == '?' && !str[1];
 
   assert (str != NULL);
   switch (op)
@@ -2976,6 +3251,48 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
       case XTerm_title:
         set_title (str);
         break;
+      case XTerm_property:
+        if (str[0] == '?')
+          {
+            Atom prop = XInternAtom (display->display, str + 1, True);
+            Atom actual_type;
+            int actual_format;
+            unsigned long nitems;
+            unsigned long bytes_after;
+            unsigned char *value = 0;
+            const char *str = "";
+
+            if (prop
+                && XGetWindowProperty (display->display, TermWin.parent[0],
+                                       prop, 0, 1<<16, 0, AnyPropertyType,
+                                       &actual_type, &actual_format,
+                                       &nitems, &bytes_after, &value) == Success
+                && actual_type != None
+                && actual_format == 8)
+              str = (const char *)(value);
+
+            tt_printf ("\033]%d;%s%c", XTerm_property, str, resp);
+
+            XFree (value);
+          }
+        else
+          {
+            char *eq = strchr (str, '='); // constness lost, but verified to be ok
+
+            if (eq)
+              {
+                *eq = 0;
+                XChangeProperty (display->display, TermWin.parent[0],
+                                 display->atom (str), XA_STRING, 8,
+                                 PropModeReplace, (unsigned char *)eq + 1,
+                                 strlen (eq + 1));
+              }
+            else
+              XDeleteProperty (display->display, TermWin.parent[0],
+                               display->atom (str));
+          }
+        break;
+
       case XTerm_Color:
         for (buf = (char *)str; buf && *buf;)
           {
@@ -2991,35 +3308,48 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
             if ((buf = STRCHR (name, ';')) != NULL)
               *buf++ = '\0';
 
-            set_window_color (color + minCOLOR, name);
+            if (name[0] == '?' && !name[1])
+              {
+                if (Options & Opt_insecure)
+                  {
+                    unsigned short r, g, b;
+                    PixColors[color + minCOLOR].get (display, r, g, b);
+                    tt_printf ("\033]%d;%d;rgb:%04x/%04x/%04x%c", XTerm_Color, color, r, g, b, resp);
+                  }
+              }
+            else
+              set_window_color (color + minCOLOR, name);
           }
+        break;
+      case XTerm_Color00:
+        process_color_seq (XTerm_Color00, Color_fg, str, resp);
+        break;
+      case XTerm_Color01:
+        process_color_seq (XTerm_Color00, Color_bg, str, resp);
         break;
 #ifndef NO_CURSORCOLOR
       case XTerm_Color_cursor:
-        set_window_color (Color_cursor, str);
+        process_color_seq (XTerm_Color_cursor, Color_cursor, str, resp);
         break;
 #endif
-      case XTerm_Color_pointer:
-        set_window_color (Color_pointer, str);
+      case XTerm_Color_pointer_fg:
+        process_color_seq (XTerm_Color_pointer_fg, Color_pointer_fg, str, resp);
+        break;
+      case XTerm_Color_pointer_bg:
+        process_color_seq (XTerm_Color_pointer_bg, Color_pointer_bg, str, resp);
         break;
 #ifndef NO_BOLD_UNDERLINE_REVERSE
       case XTerm_Color_BD:
-        set_window_color (Color_BD, str);
+        process_color_seq (XTerm_Color_BD, Color_BD, str, resp);
         break;
       case XTerm_Color_UL:
-        set_window_color (Color_UL, str);
+        process_color_seq (XTerm_Color_UL, Color_UL, str, resp);
         break;
       case XTerm_Color_RV:
-        set_window_color (Color_RV, str);
+        process_color_seq (XTerm_Color_RV, Color_RV, str, resp);
         break;
 #endif
 
-      case XTerm_Menu:
-        /*
-         * rxvt_menubar_dispatch () violates the constness of the string,
-         * so DON'T do it here
-         */
-        break;
       case XTerm_Pixmap:
         if (*str != ';')
           {
@@ -3052,16 +3382,32 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
       case XTerm_restoreBG:
         set_window_color (Color_bg, str);
         break;
+
       case XTerm_logfile:
         // TODO, when secure mode?
         break;
+
       case XTerm_font:
-        change_font (str);
+        if (query)
+          {
+            if (Options & Opt_insecure)
+              tt_printf ("\33]%d;%-.250s%c", XTerm_font,
+                         TermWin.fontset->fontdesc
+                           ? TermWin.fontset->fontdesc
+                           : "",
+                         resp);
+          }
+        else
+          change_font (str);
         break;
+
 #ifndef NO_FRILLS
       case XTerm_locale:
-        if (str[0] == '?' && !str[1])
-          tt_printf ("%-.250s\n", locale);
+        if (query)
+          {
+            if (Options & Opt_insecure)
+              tt_printf ("\33]%d;%-.250s%c", XTerm_locale, locale, resp);
+          }
         else
           {
             set_locale (str);
@@ -3070,17 +3416,27 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
 # endif
           }
         break;
+
       case XTerm_findfont:
-        {
-          int fid = TermWin.fontset->find_font (atoi (str));
-          tt_printf ("%d %-.250s\n", fid, (*TermWin.fontset)[fid]->name);
-        }
+        if (Options & Opt_insecure)
+          {
+            int fid = TermWin.fontset->find_font (atoi (str));
+            tt_printf ("\33]%d;%d;%-.250s%c", XTerm_findfont,
+                       fid, (*TermWin.fontset)[fid]->name, resp);
+          }
         break;
+#endif
+
+#ifdef MENUBAR
+     case XTerm_Menu:
+       if (Options & Opt_insecure)
+         menubar_dispatch (const_cast<char *>(str)); // casting away constness is checked
+       break;
 #endif
 #if 0
       case XTerm_dumpscreen:	/* no error notices */
         {
-          int             fd;
+          int fd;
           if ((fd = open (str, O_RDWR | O_CREAT | O_EXCL, 0600)) >= 0)
             {
               scr_dump (fd);
@@ -3177,7 +3533,7 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
                  // 1037 send DEL for keypad delete NYI
                   { 1047, PrivMode_Screen },
                  // 1048 save and restore cursor
-                  { 1049, PrivMode_Screen }, /* xterm extension, not fully implemented */
+                  { 1049, PrivMode_Screen }, /* xterm extension, clear screen on ti rather than te */
                  // 1051, 1052, 1060, 1061 keyboard emulation NYI
                 };
 
@@ -3206,12 +3562,12 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
       switch (arg[i])
         {
           case 1048:		/* alternative cursor save */
-          case 1049:
-            if (mode == 0)
-              scr_cursor (RESTORE);
-            else if (mode == 1)
-              scr_cursor (SAVE);
-            /* FALLTHROUGH */
+            if (Options & Opt_secondaryScreen)
+              if (mode == 0)
+                scr_cursor (RESTORE);
+              else if (mode == 1)
+                scr_cursor (SAVE);
+            break;
         }
 
       if (state >= 0)
@@ -3245,7 +3601,7 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
             case 7:			/* autowrap */
               scr_autowrap (state);
               break;
-              /* case 8:	- auto repeat, can't do on a per window basis */
+            /* case 8:	- auto repeat, can't do on a per window basis */
             case 9:			/* X10 mouse reporting */
               if (state)		/* orthogonal */
                 PrivateModes &= ~PrivMode_MouseX11;
@@ -3269,13 +3625,13 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
             case 25:		/* visible/invisible cursor */
               scr_cursor_visible (state);
               break;
-              /* case 35:	- shift keys */
-              /* case 40:	- 80 <--> 132 mode */
+            /* case 35:	- shift keys */
+            /* case 40:	- 80 <--> 132 mode */
             case 47:		/* secondary screen */
               scr_change_screen (state);
               break;
-              /* case 66:	- application key pad */
-              /* case 67:	- backspace key */
+            /* case 66:	- application key pad */
+            /* case 67:	- backspace key */
             case 1000:		/* X11 mouse reporting */
               if (state)		/* orthogonal */
                 PrivateModes &= ~PrivMode_MouseX10;
@@ -3296,13 +3652,18 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
               else
                 Options &= ~Opt_scrollTtyKeypress;
               break;
-            case 1047:		/* secondary screen w/ clearing */
-            case 1049:		/* better secondary screen w/ clearing, but not fully implemented */
-              if (current_screen != PRIMARY)
-                scr_erase_screen (2);
-
+            case 1047:		/* secondary screen w/ clearing last */
+              if (Options & Opt_secondaryScreen)
+                if (current_screen != PRIMARY)
+                  scr_erase_screen (2);
               scr_change_screen (state);
-              /* FALLTHROUGH */
+              break;
+            case 1049:		/* secondary screen w/ clearing first */
+              scr_change_screen (state);
+              if (Options & Opt_secondaryScreen)
+                if (current_screen != PRIMARY)
+                  scr_erase_screen (2);
+              break;
             default:
               break;
           }

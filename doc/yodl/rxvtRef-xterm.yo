@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvtRef-xterm.yo,v 1.5 2004/04/02 00:51:09 pcg Exp $ --)
+COMMENT(-- $Id: rxvtRef-xterm.yo,v 1.6 2004/04/02 19:09:52 pcg Exp $ --)
 COMMENT(OSC: Operating System Commands)
 label(XTerm)
 nsect(XTerm Operating System Commands)
@@ -16,6 +16,11 @@ startdl()
 		cell(Change Icon Name to bf(tt(Pt))))\
 	    row(cell(bf(tt(Ps = 2)))\
 		cell(Change Window Title to bf(tt(Pt))))\
+	    row(cell(bf(tt(Ps = 3)))\
+		cell(If bf(tt(Pt)) starts with a bf(tt(?)), query the
+                   (STRING) property of the window and return it. If
+                   bf(tt(Pt)) contains a bf(tt(=)), set the named property
+                   to the given value, else delete the specified property.))\
 	    row(cell(bf(tt(Ps = 4)))\
 		cell(bf(tt(Pt)) is a semi-colon separated sequence of one \
 		    or more semi-colon separated bf(number)/bf(name) pairs, \
