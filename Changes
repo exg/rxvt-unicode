@@ -1,3 +1,13 @@
+2.3  Sun Mar 14 19:00:07 CET 2004
+	- code cleanup release.
+	- fix compile problems without --enable-combining.
+        - fix segfault when DISPLAY cannot be opened.
+        - removed HOTKEY_CTRL and HOTKEY_SHIFT, ACS_*, FONT0_IDX,
+          MAX_NFONTS. UNICODE and UTF8 defines and references from
+          all files.
+        - default config now reads an app-defaults file even without
+          --enable-xgetdefaults.
+
 2.2  Thu Mar 11 01:41:56 CET 2004
         - implement autocompositing of characters by either using an existing
           precomposed unicode character or by graphical overlay. this is
