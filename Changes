@@ -1,6 +1,6 @@
 1.5  Thu Jan 29 00:43:48 CET 2004
 	- share io manager between rxvt-unicode and vpe
-        - bugfix for --disable-utmp, reported by fefe himsel.
+        - bugfix for --disable-utmp, reported by fefe himself.
         - colors were sometimes not used correctly because
           parts of the code expected a monochrome display.
           reported by fefe.
