@@ -204,17 +204,17 @@ rxvt_term::scr_reset ()
        * Note: this is still needed so that all the scrollback lines are NULL
        */
       screen.text = (text_t **)rxvt_calloc (total_rows, sizeof (text_t *));
-      buf_text = (text_t **)rxvt_calloc (total_rows, sizeof (text_t *));
-      drawn_text = (text_t **)rxvt_calloc (nrow, sizeof (text_t *));
-      swap.text = (text_t **)rxvt_calloc (nrow, sizeof (text_t *));
+      buf_text    = (text_t **)rxvt_calloc (total_rows, sizeof (text_t *));
+      drawn_text  = (text_t **)rxvt_calloc (nrow, sizeof (text_t *));
+      swap.text   = (text_t **)rxvt_calloc (nrow, sizeof (text_t *));
 
       screen.tlen = (int16_t *)rxvt_calloc (total_rows, sizeof (int16_t));
-      swap.tlen = (int16_t *)rxvt_calloc (nrow, sizeof (int16_t));
+      swap.tlen   = (int16_t *)rxvt_calloc (nrow, sizeof (int16_t));
 
       screen.rend = (rend_t **)rxvt_calloc (total_rows, sizeof (rend_t *));
-      buf_rend = (rend_t **)rxvt_calloc (total_rows, sizeof (rend_t *));
-      drawn_rend = (rend_t **)rxvt_calloc (nrow, sizeof (rend_t *));
-      swap.rend = (rend_t **)rxvt_calloc (nrow, sizeof (rend_t *));
+      buf_rend    = (rend_t **)rxvt_calloc (total_rows, sizeof (rend_t *));
+      drawn_rend  = (rend_t **)rxvt_calloc (nrow, sizeof (rend_t *));
+      swap.rend   = (rend_t **)rxvt_calloc (nrow, sizeof (rend_t *));
 
       for (p = 0; p < nrow; p++)
         {
@@ -701,8 +701,8 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
       else if (j >= row1 && j <= row2)
         {
           /* move selected region too */
-          selection.beg.row -= count;
-          selection.end.row -= count;
+          selection.beg.row  -= count;
+          selection.end.row  -= count;
           selection.mark.row -= count;
         }
     }
@@ -720,13 +720,13 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
 
   if (j > 0)
     {
-      /* A: scroll up */
+      /* scroll up */
 
-      /* A1: Copy lines that will get clobbered by the rotation */
+      /* Copy lines that will get clobbered by the rotation */
       memcpy (buf_text, screen.text + row1, count * sizeof (text_t *));
       memcpy (buf_rend, screen.rend + row1, count * sizeof (rend_t *));
 
-      /* A2: Rotate lines */
+      /* Rotate lines */
       i = row2 - row1 - count + 1;
       memmove (screen.tlen + row1, screen.tlen + row1 + count, i * sizeof (int16_t));
       memmove (screen.text + row1, screen.text + row1 + count, i * sizeof (text_t *));
@@ -736,16 +736,16 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
     }
   else /* if (j < 0) */
     {
-      /* B: scroll down */
+      /* scroll down */
 
-      /* B1: Copy lines that will get clobbered by the rotation */
+      /* Copy lines that will get clobbered by the rotation */
       for (i = 0, j = row2; i < count; i++, j--)
         {
           buf_text[i] = screen.text[j];
           buf_rend[i] = screen.rend[j];
         }
 
-      /* B2: Rotate lines */
+      /* Rotate lines */
       for (j = row2, i = j - count; i >= row1; i--, j--)
         {
           screen.tlen[j] = screen.tlen[i];
@@ -757,7 +757,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
       count = -count;
     }
 
-  /* C: Resurrect lines */
+  /* Resurrect lines */
   memset (screen.tlen + j, 0, i * sizeof (int16_t));
   memcpy (screen.text + j, buf_text, i * sizeof (text_t *));
   memcpy (screen.rend + j, buf_rend, i * sizeof (text_t *));
@@ -1392,6 +1392,20 @@ rxvt_term::scr_erase_screen (int mode)
     }
 }
 
+void
+rxvt_term::scr_erase_savelines ()
+{
+  want_refresh = 1;
+  ZERO_SCROLLBACK ();
+
+  for (int i = 0; i < TermWin.saveLines; ++i)
+    if (screen.text [i])
+      {
+        screen.tlen[i] = 0;
+        scr_blank_line (screen.text [i], screen.rend [i], (unsigned int)TermWin.ncol, DEFAULT_RSTYLE);
+      }
+}
+
 /* ------------------------------------------------------------------------- */
 /*
  * Fill the screen with `E's
@@ -1400,8 +1414,8 @@ rxvt_term::scr_erase_screen (int mode)
 void
 rxvt_term::scr_E ()
 {
-  int             i, j, k;
-  rend_t         *r1, fs;
+  int i, j, k;
+  rend_t *r1, fs;
 
   want_refresh = 1;
   ZERO_SCROLLBACK ();

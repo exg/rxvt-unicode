@@ -1477,19 +1477,21 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 	B<< C<Ps = 18> >>	Change colour of bold characters to B<< C<Pt> >>
 	B<< C<Ps = 19> >>	Change colour of underlined characters to B<< C<Pt> >>
 	B<< C<Ps = 20> >>	Change default background to B<< C<Pt> >>
-	B<< C<Ps = 39> >>	Change default foreground colour to B<< C<Pt> >> I<rxvt compile-time option>
+	B<< C<Ps = 39> >>	Change default foreground colour to B<< C<Pt> >>.
 	B<< C<Ps = 46> >>	Change Log File to B<< C<Pt> >> I<unimplemented>
-	B<< C<Ps = 49> >>	Change default background colour to B<< C<Pt> >> I<rxvt compile-time option>
+	B<< C<Ps = 49> >>	Change default background colour to B<< C<Pt> >>.
 	B<< C<Ps = 50> >>	Set fontset to B<< C<Pt> >>, with the following special values of B<< C<Pt> >> (B<rxvt>) B<< C<#+n> >> change up B<< C<n> >> B<< C<#-n> >> change down B<< C<n> >> if B<< C<n> >> is missing of 0, a value of 1 is used I<empty> change to font0 B<< C<n> >> change to font B<< C<n> >>
 	B<< C<Ps = 55> >>	Log all scrollback buffer and all of screen to B<< C<Pt> >>
-	B<< C<Ps = 701> >>	Change current locale to B<< C<Pt> >>, or, if B<< C<Pt> >> is B<< C<?> >>, return the current locale (@@RXVT_NAME@@ extension)
-	B<< C<Ps = 703> >>	Menubar command B<< C<Pt> >> I<rxvt compile-time option> (rxvt-unicode extension)
+	B<< C<Ps = 701> >>	Change current locale to B<< C<Pt> >>, or, if B<< C<Pt> >> is B<< C<?> >>, return the current locale (Compile frills).
+	B<< C<Ps = 703> >>	Menubar command B<< C<Pt> >> (Compile menubar).
 	B<< C<Ps = 704> >>	Change colour of italic characters to B<< C<Pt> >>
-	B<< C<Ps = 705> >>	Change background pixmap tint colour to B<< C<Pt> >>
+	B<< C<Ps = 705> >>	Change background pixmap tint colour to B<< C<Pt> >> (Compile transparency).
 	B<< C<Ps = 710> >>	Set normal fontset to B<< C<Pt> >>. Same as C<Ps = 50>.
-	B<< C<Ps = 711> >>	Set bold fontset to B<< C<Pt> >>. Similar to C<Ps = 50>.
-	B<< C<Ps = 712> >>	Set italic fontset to B<< C<Pt> >>. Similar to C<Ps = 50>.
-	B<< C<Ps = 713> >>	Set bold-italic fontset to B<< C<Pt> >>. Similar to C<Ps = 50>.
+	B<< C<Ps = 711> >>	Set bold fontset to B<< C<Pt> >>. Similar to C<Ps = 50> (Compile styles).
+	B<< C<Ps = 712> >>	Set italic fontset to B<< C<Pt> >>. Similar to C<Ps = 50> (Compile styles).
+	B<< C<Ps = 713> >>	Set bold-italic fontset to B<< C<Pt> >>. Similar to C<Ps = 50> (Compile styles).
+	B<< C<Ps = 720> >>	Move viewing window up by B<< C<Pt> >> lines, or clear scrollback buffer if C<Pt = 0> (Compile frills).
+	B<< C<Ps = 721> >>	Move viewing window down by B<< C<Pt> >> lines, or clear scrollback buffer if C<Pt = 0> (Compile frills).
 
 =end table
 
@@ -2376,7 +2378,7 @@ in combination with other switches) is:
   settable extra linespacing
   iso-14755-2 and -3, and visual feedback
   backindex and forwardindex escape sequence
-  window op and locale change escape sequences
+  window op and some xterm/OSC escape sequences
   tripleclickwords
   settable insecure mode
   keysym remapping support

@@ -3668,28 +3668,6 @@ rxvt_term::process_color_seq (int report, int color, const char *str, unsigned c
 
 /*
  * XTerm escape sequences: ESC ] Ps;Pt (ST|BEL)
- *       0 = change iconName/title
- *       1 = change iconName
- *       2 = change title
- *       4 = change color
- *      10 = change fg color
- *      11 = change bg color
- *      12 = change text color
- *      13 = change mouse foreground color 
- *      17 = change highlight character colour
- *      18 = change bold character color
- *      19 = change underlined character color 
- *      46 = change logfile (not implemented)
- *      50 = change font
- *
- * rxvt extensions:
- *      20 = bg pixmap
- *      39 = change default fg color
- *      49 = change default bg color
- *      55 = dump scrollback buffer and all of screen
- *     701 = change locale
- *     702 = find font
- *     703 = menu
  */
 void
 rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
@@ -3798,19 +3776,19 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
       case XTerm_Color_BD:
         process_color_seq (XTerm_Color_BD, Color_BD, str, resp);
         break;
-      case XTerm_Color_IT:
-        process_color_seq (XTerm_Color_IT, Color_IT, str, resp);
-        break;
       case XTerm_Color_UL:
         process_color_seq (XTerm_Color_UL, Color_UL, str, resp);
         break;
       case XTerm_Color_RV:
         process_color_seq (XTerm_Color_RV, Color_RV, str, resp);
         break;
+      case URxvt_Color_IT:
+        process_color_seq (URxvt_Color_IT, Color_IT, str, resp);
+        break;
 #endif
 #if TRANSPARENT && TINTING
-      case XTerm_Color_tint:
-        process_color_seq (XTerm_Color_tint, Color_tint, str, resp);
+      case URxvt_Color_tint:
+        process_color_seq (URxvt_Color_tint, Color_tint, str, resp);
         check_our_parents ();
         if (am_transparent)
           want_full_refresh = want_refresh = 1;
@@ -3854,6 +3832,24 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
         // TODO, when secure mode?
         break;
 
+#ifdef MENUBAR
+     case URxvt_Menu:
+       if (options & Opt_insecure)
+         menubar_dispatch (const_cast<char *>(str)); // casting away constness is checked
+       break;
+#endif
+#if 0
+      case XTerm_dumpscreen:	/* no error notices */
+        {
+          int fd;
+          if ((fd = open (str, O_RDWR | O_CREAT | O_EXCL, 0600)) >= 0)
+            {
+              scr_dump (fd);
+              close (fd);
+            }
+        }
+        break;
+#endif
       case XTerm_font:
         op = URxvt_font;
       case URxvt_font:
@@ -3878,9 +3874,9 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
         break;
 
 #if ENABLE_FRILLS
-      case XTerm_locale:
+      case URxvt_locale:
         if (query)
-          tt_printf ("\33]%d;%-.250s%c", XTerm_locale, (options & Opt_insecure) ? locale : "", resp);
+          tt_printf ("\33]%d;%-.250s%c", URxvt_locale, (options & Opt_insecure) ? locale : "", resp);
         else
           {
             set_locale (str);
@@ -3888,24 +3884,18 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
             init_xlocale ();
           }
         break;
-#endif
 
-#ifdef MENUBAR
-     case XTerm_Menu:
-       if (options & Opt_insecure)
-         menubar_dispatch (const_cast<char *>(str)); // casting away constness is checked
-       break;
-#endif
-#if 0
-      case XTerm_dumpscreen:	/* no error notices */
-        {
-          int fd;
-          if ((fd = open (str, O_RDWR | O_CREAT | O_EXCL, 0600)) >= 0)
-            {
-              scr_dump (fd);
-              close (fd);
-            }
-        }
+      case URxvt_view_up:
+      case URxvt_view_down:
+        int lines = atoi (str);
+
+        if (lines)
+          scr_page (op == URxvt_view_up ? UP : DN, lines);
+        else
+          {
+            scr_erase_savelines ();
+          }
+
         break;
 #endif
     }

@@ -26,7 +26,6 @@
 # define ENABLE_EWMH   1
 #endif
 
-
 /*
  *****************************************************************************
  * SYSTEM HACKS
@@ -475,15 +474,19 @@ enum {
   XTerm_restoreFG        = 39,      // change default fg color
   XTerm_restoreBG        = 49,      // change default bg color
   XTerm_dumpscreen       = 55,      // dump scrollback and all of screen
-  XTerm_locale           = 701,     // change locale
-  XTerm_Menu             = 703,     // set menu item
-  XTerm_Color_IT         = 704,     // change actual 'Italic' colour
-  XTerm_Color_tint       = 705,     // change actual tint colour
+
+  URxvt_locale           = 701,     // change locale
+  URxvt_Menu             = 703,     // set menu item
+  URxvt_Color_IT         = 704,     // change actual 'Italic' colour
+  URxvt_Color_tint       = 705,     // change actual tint colour
 
   URxvt_font             = 710,
   URxvt_boldFont         = 711,
   URxvt_italicFont       = 712,
   URxvt_boldItalicFont   = 713,
+
+  URxvt_view_up          = 720,
+  URxvt_view_down        = 721,
 };
 
 /* Words starting with `Color_' are colours.  Others are counts */
@@ -1473,6 +1476,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void scr_refresh (unsigned char refresh_type);
   bool scr_refresh_rend (rend_t mask, rend_t value);
   void scr_erase_screen (int mode);
+  void scr_erase_savelines ();
   void scr_touch (bool refresh);
   void scr_expose (int x, int y, int width, int height, bool refresh);
   rxvt_fontset *scr_find_fontset (rend_t r = DEFAULT_RSTYLE);

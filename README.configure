@@ -185,7 +185,7 @@ CONFIGURE OPTIONS
           settable extra linespacing
           iso-14755-2 and -3, and visual feedback
           backindex and forwardindex escape sequence
-          window op and locale change escape sequences
+          window op and some xterm/OSC escape sequences
           tripleclickwords
           settable insecure mode
           keysym remapping support

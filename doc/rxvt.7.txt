@@ -1158,19 +1158,21 @@ XTerm Operating System Commands
            Ps = 18         Change colour of bold characters to Pt 
            Ps = 19         Change colour of underlined characters to Pt 
            Ps = 20         Change default background to Pt 
-           Ps = 39         Change default foreground colour to Pt rxvt compile-time option 
+           Ps = 39         Change default foreground colour to Pt. 
            Ps = 46         Change Log File to Pt unimplemented 
-           Ps = 49         Change default background colour to Pt rxvt compile-time option 
+           Ps = 49         Change default background colour to Pt. 
            Ps = 50         Set fontset to Pt, with the following special values of Pt (rxvt) #+n change up n #-n change down n if n is missing of 0, a value of 1 is used empty change to font0 n change to font n 
            Ps = 55         Log all scrollback buffer and all of screen to Pt 
-           Ps = 701        Change current locale to Pt, or, if Pt is ?, return the current locale (rxvt extension) 
-           Ps = 703        Menubar command Pt rxvt compile-time option (rxvt-unicode extension) 
+           Ps = 701        Change current locale to Pt, or, if Pt is ?, return the current locale (Compile frills). 
+           Ps = 703        Menubar command Pt (Compile menubar). 
            Ps = 704        Change colour of italic characters to Pt 
-           Ps = 705        Change background pixmap tint colour to Pt 
+           Ps = 705        Change background pixmap tint colour to Pt (Compile transparency). 
            Ps = 710        Set normal fontset to Pt. Same as Ps = 50. 
-           Ps = 711        Set bold fontset to Pt. Similar to Ps = 50. 
-           Ps = 712        Set italic fontset to Pt. Similar to Ps = 50. 
-           Ps = 713        Set bold-italic fontset to Pt. Similar to Ps = 50. 
+           Ps = 711        Set bold fontset to Pt. Similar to Ps = 50 (Compile styles). 
+           Ps = 712        Set italic fontset to Pt. Similar to Ps = 50 (Compile styles). 
+           Ps = 713        Set bold-italic fontset to Pt. Similar to Ps = 50 (Compile styles). 
+           Ps = 720        Move viewing window up by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills). 
+           Ps = 721        Move viewing window down by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills). 
 
 
 
@@ -1830,7 +1832,7 @@ CONFIGURE OPTIONS
           settable extra linespacing
           iso-14755-2 and -3, and visual feedback
           backindex and forwardindex escape sequence
-          window op and locale change escape sequences
+          window op and some xterm/OSC escape sequences
           tripleclickwords
           settable insecure mode
           keysym remapping support
