@@ -53,6 +53,13 @@ dnl# system hacks
 AC_AIX
 AC_ISC_POSIX
 
+dnl# FreeBSD needs to link libxpg4
+AC_CHECK_LIB(xpg4, setlocale, [LIBS="$LIBS -lxpg4"])
+
+dnl solaris needs to link libnsl and socket
+AC_CHECK_LIB(nsl, gethostbyname, [LIBS="$LIBS -lnsl"])
+AC_CHECK_LIB(socket, socket, [LIBS="$LIBS -lsocket"])
+
 AC_ENABLE_SHARED(no)dnl#	libtool
 AC_ENABLE_STATIC(yes)dnl#	libtool
 AC_PROG_LIBTOOL()dnl#		libtool
@@ -1153,9 +1160,6 @@ fi
 if test x$pch2 != x; then
   AC_DEFINE_UNQUOTED(PTYCHAR2, "$pch2", Define for second char in devptyXX)
 fi
-
-dnl# FreeBSD needs to link libxpg4
-AC_CHECK_LIB(xpg4, setlocale, [LIBS="$LIBS -lxpg4"])
 
 dnl# --------------------------------------------------------------------------
 dnl# now add and remove other stuff
