@@ -2,6 +2,10 @@
 	- fixed bug in plain scrollbar causing x errors in XCreateGC.
         - implemented sharing of X connections. will be used to speed
           up many x operations considerably. Also saves some memory.
+        - implemented caching of input methods. This immensely shortens
+          startup time for new terms in rxvtd. At least xfree86 4.3 is
+          rather broken with respect to input methods, though, so expect
+          crashes when you kill your input method (xterm crashes, too).
 
 1.8  Mon Feb  2 20:09:18 CET 2004
 	- almost total conversion to C++. Except for introducing
