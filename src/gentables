@@ -5,6 +5,11 @@
 use v5.8.2;
 use utf8;
 use Encode;
+use Encode::JP;
+use Encode::CN;
+use Encode::KR;
+use Encode::HanExtra;
+use Encode::JIS2K;
 
 my $gen;
 
