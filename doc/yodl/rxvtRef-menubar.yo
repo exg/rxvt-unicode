@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvtRef-menubar.yo,v 1.3 2004/04/02 00:51:09 pcg Exp $ --)
+COMMENT(-- $Id: rxvtRef-menubar.yo,v 1.4 2004/04/24 05:52:44 pcg Exp $ --)
 label(menuBar)
 nsect(menuBar)
 
@@ -96,7 +96,7 @@ P()\
 P()\
     dl(bf([show]nl()[hide]))
 	(control display of the menuBar ... just like
-	link(ESC[?703 h/l)(Priv703))
+	link(ESC[ ? 10 h/l)(Priv10))
 P()\
     dl(bf([pixmap:+em(name)]nl()[pixmap:+em(name);em(scaling)]))
 	(set the background pixmap globally ... just like

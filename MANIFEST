@@ -59,6 +59,9 @@ doc/rxvt.tbl
 doc/rxvtRef-frame.html
 doc/rxvtRef-toc.html
 doc/xterm.seq
+doc/rxvt.html
+doc/rxvtRef.txt
+doc/rxvtRef.html
 
 doc/yodl/rxvt-options.yo
 doc/yodl/.cvsignore

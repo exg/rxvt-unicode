@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvtRef-xterm.yo,v 1.6 2004/04/02 19:09:52 pcg Exp $ --)
+COMMENT(-- $Id: rxvtRef-xterm.yo,v 1.7 2004/04/24 05:52:44 pcg Exp $ --)
 COMMENT(OSC: Operating System Commands)
 label(XTerm)
 nsect(XTerm Operating System Commands)
@@ -72,7 +72,8 @@ startdl()
 	    row(cell(bf(tt(Ps = 701)))\
 		cell(Change current locale to bf(tt(Pt)), or, if bf(tt(Pt)) is bf(tt(?)), return the current locale))\
 	    row(cell(bf(tt(Ps = 702)))\
-		cell(find font for character, used for debugging)\
+		cell(find font for character, used for debugging))\
+label(OSC703)
 	    row(cell(bf(tt(Ps = 703)))\
 		cell(link(menuBar)(menuBar) command bf(tt(Pt)) \
 		    em(rxvt compile-time option)))\
