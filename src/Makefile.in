@@ -101,12 +101,6 @@ install: allbin alldoc
 	$(INSTALL_PROGRAM) rxvtc $(RXVTC_BINNAME)
 	$(INSTALL_PROGRAM) rxvtd $(RXVTD_BINNAME)
 
-distdirs:
-	mkdir $(basedir)/../$(VERNAME)/$(thisdir)
-
-distcopy: $(INTPROS)
-	$(CP) -p $(DIST) $(basedir)/../$(VERNAME)/$(thisdir)
-
 depend:
 	makedepend -f Makefile.in -I. -Y *.C >/dev/null 2>&1
 	makedepend -f Makefile.in -I. -Y *.C -a -o .lo >/dev/null 2>&1

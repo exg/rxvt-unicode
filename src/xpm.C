@@ -269,7 +269,6 @@ rxvt_term::resize_pixmap ()
  * Calculate tiling sizes and increments
  * At start, p == 0, incr == xpmwidthheight
  */
-/* INTPROTO */
 static void
 rxvt_pixmap_incr (unsigned int *wh, unsigned int *xy, float *incr, float *p, unsigned int widthheight, unsigned int xpmwidthheight)
 {

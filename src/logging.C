@@ -44,8 +44,11 @@
 #include "logging.h"
 #ifdef UTMP_SUPPORT
 
+#if HAVE_STRUCT_UTMP
 int              rxvt_write_bsd_utmp              (int utmp_pos, struct utmp *wu);
 void             rxvt_update_wtmp                 (const char *fname, const struct utmp *putmp);
+#endif
+
 void             rxvt_update_lastlog              (const char *fname, const char *pty, const char *host);
 
 /*
@@ -214,6 +217,8 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
 # ifdef HAVE_STRUCT_UTMPX
 #  if HAVE_UPDWTMPX
       updwtmpx (RXVT_WTMPX_FILE, utx);
+#  else
+      pututxline (utx);
 #  endif
 # endif
     }
@@ -293,6 +298,8 @@ rxvt_term::cleanutent ()
 # ifdef HAVE_STRUCT_UTMPX
 #  if HAVE_UPDWTMPX
       updwtmpx (RXVT_WTMPX_FILE, utx);
+#  else
+      pututxline (utx);
 #  endif
 # endif
     }
@@ -323,7 +330,6 @@ rxvt_term::cleanutent ()
  * Write a BSD style utmp entry
  */
 #ifdef HAVE_UTMP_H
-/* INTPROTO */
 int
 rxvt_write_bsd_utmp (int utmp_pos, struct utmp *wu)
 {
@@ -343,8 +349,7 @@ rxvt_write_bsd_utmp (int utmp_pos, struct utmp *wu)
 /*
  * Update a BSD style wtmp entry
  */
-#if defined(WTMP_SUPPORT) && !defined(HAVE_UPDWTMP)
-/* INTPROTO */
+#if defined(WTMP_SUPPORT) && !defined(HAVE_UPDWTMP) && defined(HAVE_STRUCT_UTMP)
 void
 rxvt_update_wtmp (const char *fname, const struct utmp *putmp)
 {
@@ -386,7 +391,6 @@ rxvt_update_wtmp (const char *fname, const struct utmp *putmp)
 
 /* ------------------------------------------------------------------------- */
 #ifdef LASTLOG_SUPPORT
-/* INTPROTO */
 void
 rxvt_update_lastlog (const char *fname, const char *pty, const char *host)
 {

@@ -169,7 +169,6 @@ rxvt_strdup (const char *str)
   return str ? strdup (str) : 0;
 }
 
-/* INTPROTO */
 char *
 rxvt_r_basename (const char *str)
 {
@@ -181,7 +180,6 @@ rxvt_r_basename (const char *str)
 /*
  * Print an error message
  */
-/* INTPROTO */
 void
 rxvt_vlog (const char *fmt, va_list arg_ptr)
 {
@@ -195,7 +193,6 @@ rxvt_vlog (const char *fmt, va_list arg_ptr)
     write (STDOUT_FILENO, msg, strlen (msg));
 }
 
-/* INTPROTO */
 void
 rxvt_log (const char *fmt,...)
 {
@@ -209,7 +206,6 @@ rxvt_log (const char *fmt,...)
 /*
  * Print an error message
  */
-/* INTPROTO */
 void
 rxvt_warn (const char *fmt,...)
 {
@@ -222,7 +218,6 @@ rxvt_warn (const char *fmt,...)
   va_end (arg_ptr);
 }
 
-/* INTPROTO */
 void
 rxvt_fatal (const char *fmt,...)
 {
@@ -239,7 +234,6 @@ rxvt_fatal (const char *fmt,...)
 
 class rxvt_failure_exception rxvt_failure_exception;
 
-/* INTPROTO */
 void
 rxvt_exit_failure ()
 {
@@ -254,7 +248,6 @@ rxvt_exit_failure ()
  * Match
  *      return: strlen (S2)
  */
-/* INTPROTO */
 int
 rxvt_Str_match (const char *s1, const char *s2)
 {
@@ -263,7 +256,6 @@ rxvt_Str_match (const char *s1, const char *s2)
   return ((strncmp (s1, s2, n) == 0) ? n : 0);
 }
 
-/* INTPROTO */
 const char *
 rxvt_Str_skip_space (const char *str)
 {
@@ -278,7 +270,6 @@ rxvt_Str_skip_space (const char *str)
  * remove leading/trailing space and strip-off leading/trailing quotes.
  * in place.
  */
-/* INTPROTO */
 char           *
 rxvt_Str_trim (char *str)
 {
@@ -326,7 +317,6 @@ rxvt_Str_trim (char *str)
  *
  * returns the converted string length
  */
-/* INTPROTO */
 int
 rxvt_Str_escaped (char *str)
 {
@@ -403,7 +393,6 @@ rxvt_Str_escaped (char *str)
  * trailing spaces from each entry.  Empty strings are properly returned
  * Caller should free each entry and array when done
  */
-/* INTPROTO */
 char          **
 rxvt_splitcommastring (const char *cs)
 {
@@ -457,7 +446,6 @@ rxvt_freecommastring (char **cs)
  *
  * FILE is either semi-colon or zero terminated
  */
-/* INTPROTO */
 char           *
 rxvt_File_search_path (const char *pathlist, const char *file, const char *ext)
 {
@@ -530,7 +518,6 @@ rxvt_File_search_path (const char *pathlist, const char *file, const char *ext)
   return NULL;
 }
 
-/* INTPROTO */
 char           *
 rxvt_File_find (const char *file, const char *ext, const char *path)
 {
@@ -563,7 +550,6 @@ rxvt_File_find (const char *file, const char *ext, const char *path)
  * Draw top/left and bottom/right border shadows around windows
  */
 #if defined(RXVT_SCROLLBAR) || defined(MENUBAR)
-/* INTPROTO */
 void
 rxvt_Draw_Shadow (Display *display, Window win, GC topShadow, GC botShadow, int x, int y, int w, int h)
 {
@@ -584,7 +570,6 @@ rxvt_Draw_Shadow (Display *display, Window win, GC topShadow, GC botShadow, int 
 
 /* button shapes */
 #ifdef MENUBAR
-/* INTPROTO */
 void
 rxvt_Draw_Triangle (Display *display, Window win, GC topShadow, GC botShadow, int x, int y, int w, int type)
 {

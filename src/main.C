@@ -591,7 +591,6 @@ rxvt_malloc (size_t size)
   return p;
 }
 
-/* INTPROTO */
 void           *
 rxvt_calloc (size_t number, size_t size)
 {
@@ -603,7 +602,6 @@ rxvt_calloc (size_t number, size_t size)
   return p;
 }
 
-/* INTPROTO */
 void           *
 rxvt_realloc (void *ptr, size_t size)
 {
