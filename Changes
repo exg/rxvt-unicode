@@ -12,6 +12,7 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
+5.2
         - SYNCCVS. backported bugfixes done to rxvt
           (sourceforge bugs #1028739, #1028732), except for
           pts/%s fix as it seems to collide with freebsd,
