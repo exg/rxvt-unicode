@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.2 2003/11/24 17:31:27 pcg Exp $
+# $Id: Makefile.in,v 1.3 2003/11/25 11:52:42 pcg Exp $
 @MCOMMON@
 
 LINT = lint -DNARROWPROTO=1 $(XINC) -chapbxz
@@ -27,23 +27,24 @@ dummy:
 LIBSRCS = command.C defaultfont.C graphics.C grkelot.C init.C logging.C \
 	main.C menubar.C misc.C netdisp.C ptytty.C screen.C scrollbar.C \
 	scrollbar-rxvt.C scrollbar-next.C scrollbar-xterm.C strings.C \
-	xdefaults.C xpm.C encoding.C rxvtcolor.C rxvtvec.C
+	xdefaults.C xpm.C encoding.C rxvtcolor.C rxvtvec.C iom.C
 
 SRCS =  rxvt.C $(LIBSRCS)
 
 HDRS =	command.h defaultfont.h feature.h grkelot.h init.h logging.h \
-	menubar.h netdisp.h protos.h rxvt.h rxvtgrx.h version.h encoding.h rxvtvec.h
+	menubar.h netdisp.h protos.h rxvt.h rxvtgrx.h version.h encoding.h \
+	rxvtvec.h iom.h
 
 EXTRAHDRS = rxvtlib.h rxvtdaemon.h
 
 OBJS =	command.o defaultfont.o init.o graphics.o grkelot.o logging.o \
 	main.o menubar.o misc.o netdisp.o ptytty.o screen.o \
 	scrollbar.o scrollbar-next.o scrollbar-rxvt.o scrollbar-xterm.o \
-	strings.o xdefaults.o xpm.o rxvt.o encoding.o rxvtcolor.o rxvtvec.o
+	strings.o xdefaults.o xpm.o rxvt.o encoding.o rxvtcolor.o rxvtvec.o iom.o
 LIBOBJS = command.lo defaultfont.lo init.lo graphics.lo grkelot.lo logging.lo \
 	main.lo menubar.lo misc.lo netdisp.lo ptytty.lo screen.lo \
 	scrollbar.lo scrollbar-next.lo scrollbar-rxvt.lo scrollbar-xterm.lo \
-	strings.lo xdefaults.lo xpm.lo encoding.lo rxvt.lo rxvtcolor.lo rxvtvec.lo
+	strings.lo xdefaults.lo xpm.lo encoding.lo rxvt.lo rxvtcolor.lo rxvtvec.lo iom.lo
 
 LIBVERSION = @LIBVERSION@
 INSTALL_LIBRXVT = @INSTALL_LIBRXVT@
@@ -107,8 +108,8 @@ all: allbin
 rxvt: version.h rxvt.o librxvt.la
 	$(LIBTOOL) --mode=link $(LINK) rxvt.o librxvt.la $(LIBS) $(XLIB) $(DLIB) $(SUPLIB) -o $@
 
-rxvtd: version.h rxvtd.o librxvt.la iom.o rxvtdaemon.o
-	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o iom.o librxvt.la $(LIBS) $(XLIB) $(DLIB) $(SUPLIB) -o $@
+rxvtd: version.h rxvtd.o librxvt.la rxvtdaemon.o
+	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o librxvt.la $(LIBS) $(XLIB) $(DLIB) $(SUPLIB) -o $@
 
 rxvtc: version.h rxvtc.o rxvtdaemon.o
 	$(LIBTOOL) --mode=link $(LINK) rxvtc.o rxvtdaemon.o $(LIBS) $(DLIB) $(SUPLIB) -o $@
@@ -182,6 +183,10 @@ distcopy: .protos $(INTPROS)
 
 defaultfont.h: encoding.h rxvtvec.h
 rxvtlib.h: rxvtcolor.h defaultfont.h
+iom.o:              iom.C		iom.h
+rxvtdaemon.o:       rxvtdaemon.C	rxvtdaemon.h
+rxvtd.o:            rxvtd.C     $(DEPS) rxvtdaemon.h rxvtvec.h
+rxvtc.o:            rxvtc.C     $(DEPS) rxvtdaemon.h rxvtvec.h
 
 command.o:          command.C   $(DEPS) command.intpro	command.h version.h
 defaultfont.o:      defaultfont.C $(DEPS) defaultfont.intpro defaultfont.h
@@ -195,7 +200,6 @@ misc.o:             misc.C      $(DEPS) misc.intpro
 netdisp.o:          netdisp.C   $(DEPS) netdisp.intpro	netdisp.h
 ptytty.o:           ptytty.C    $(DEPS) ptytty.intpro
 rxvt.o:             rxvt.C      $(DEPS) 
-rxvtd.o:            rxvtd.C     $(DEPS) rxvtdaemon.h
 screen.o:           screen.C    $(DEPS) screen.intpro	defaultfont.h
 scrollbar.o:        scrollbar.C $(DEPS) scrollbar.intpro
 scrollbar-rxvt.o:   scrollbar-rxvt.C  $(DEPS) scrollbar-rxvt.intpro
@@ -230,6 +234,4 @@ xpm.lo:             xpm.C       $(DEPS) xpm.intpro
 encoding.lo:        encoding.C	$(DEPS) encoding.h
 rxvtcolor.lo:       rxvtcolor.C	$(DEPS)
 
-iom.o:              iom.C		iom.h
-rxvtdaemon.o:       rxvtdaemon.C	rxvtdaemon.h
 

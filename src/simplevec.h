@@ -174,6 +174,12 @@ public:
 	*end() = t;
 	++_last;
     }
+    void push_back (T &t)
+    {
+	reserve (_last+1);
+	*end() = t;
+	++_last;
+    }
     void pop_back ()
     {
 	//ministl_assert (size() > 0);

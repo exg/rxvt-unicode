@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	scrollbar-xterm.c
  *----------------------------------------------------------------------*
- * $Id: scrollbar-xterm.C,v 1.2 2003/11/24 17:31:28 pcg Exp $
+ * $Id: scrollbar-xterm.C,v 1.3 2003/11/25 11:52:42 pcg Exp $
  *
  * Copyright (c) 1997,1998 mj olesen <olesen@me.QueensU.CA>
  * Copyright (c) 1999-2001 Geoff Wing <gcw@pobox.com>
@@ -54,11 +54,11 @@ rxvt_scrollbar_show_xterm(pR_ int update __attribute__((unused)), int last_top, 
 	gcvalue.foreground = R->PixColors[Color_fg];
 	gcvalue.background = R->PixColors[Color_bg];
 
-	R->h->xscrollbarGC = XCreateGC(R->Xdisplay, R->scrollBar.win,
+	R->xscrollbarGC = XCreateGC(R->Xdisplay, R->scrollBar.win,
 				       GCForeground | GCBackground
 				       | GCFillStyle | GCStipple, &gcvalue);
 	gcvalue.foreground = R->PixColors[Color_border];
-	R->h->ShadowGC = XCreateGC(R->Xdisplay, R->scrollBar.win, GCForeground,
+	R->ShadowGC = XCreateGC(R->Xdisplay, R->scrollBar.win, GCForeground,
 				   &gcvalue);
     }
 /* instead of XClearWindow (R->Xdisplay, R->scrollBar.win); */
@@ -74,10 +74,10 @@ rxvt_scrollbar_show_xterm(pR_ int update __attribute__((unused)), int last_top, 
 		   sbwidth + 1, (last_bot - R->scrollBar.bot), False);
 
 /* scrollbar slider */
-    XFillRectangle(R->Xdisplay, R->scrollBar.win, R->h->xscrollbarGC,
+    XFillRectangle(R->Xdisplay, R->scrollBar.win, R->xscrollbarGC,
 		   xsb + 1, R->scrollBar.top, sbwidth, scrollbar_len);
 
-    /*XDrawLine(R->Xdisplay, R->scrollBar.win, R->h->ShadowGC,
+    /*XDrawLine(R->Xdisplay, R->scrollBar.win, R->ShadowGC,
 	      xsb ? 0 : sbwidth, R->scrollBar.beg,
 	      xsb ? 0 : sbwidth, R->scrollBar.end);*/
     return 1;

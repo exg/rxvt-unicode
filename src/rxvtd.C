@@ -4,10 +4,16 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <cstdarg>
+#include <cstring>
 
 #include <unistd.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+
+#include <cerrno>
+
+extern char **environ;
 
 struct server : rxvt_connection {
   void read_cb (io_watcher &w, short revents); io_watcher read_ev;
@@ -19,7 +25,7 @@ struct server : rxvt_connection {
     read_ev.start (fd, EVENT_READ);
   }
 
-  void err ();
+  void err (const char *format = 0, ...);
 };
 
 struct listener {
@@ -69,8 +75,20 @@ void listener::accept_cb (io_watcher &w, short revents)
     new server (fd2);
 }
 
-void server::err ()
+void server::err (const char *format, ...)
 {
+  if (format)
+    {
+      char err[1024];
+
+      va_list ap;
+      va_start (ap, format);
+      vsnprintf (err, 1024, format, ap);
+      va_end (ap);
+
+      send ("ERR"), send (err);
+    }
+
   close (fd);
   delete this;
 }
@@ -83,8 +101,8 @@ void server::read_cb (io_watcher &w, short revents)
     {
       if (!strcmp (tok, "NEW"))
         {
-          auto_str display, cwd;
-          simplevec<auto_str> argv;
+          stringvec argv;
+          stringvec envv;
             
           for (;;)
             {
@@ -93,25 +111,35 @@ void server::read_cb (io_watcher &w, short revents)
 
               if (!strcmp (tok, "END"))
                 break;
-              else if (!strcmp (tok, "DISPLAY") && recv (display))
-                ;
-              else if (!strcmp (tok, "CWD") && recv (cwd))
-                ;
+              else if (!strcmp (tok, "ENV") && recv (tok))
+                envv.push_back (tok.get ());
+              else if (!strcmp (tok, "CWD") && recv (tok))
+                {
+                  if (chdir (tok))
+                    err ("unable to change to working directory to '%s': %s",
+                         (char *)tok, strerror (errno));
+                }
               else if (!strcmp (tok, "ARG") && recv (tok))
-                argv.push_back (tok);
+                argv.push_back (tok.get ());
               else
-                return err ();
+                return err ("protocol error: unexpected NEW token");
             }
 
-          // TODO: no setenv, please
-          setenv ("DISPLAY", display.get (), 1);
+          envv.push_back (0);
 
-          rxvt_init (argv.size (), reinterpret_cast<char **>(argv.begin ()));
-          dR;
-          rxvt_main_loop (aR);
+          {
+            char **old_environ = environ;
+            environ = envv.begin ();
+
+            rxvt_init (argv.size (), argv.begin ());
+            //dR;
+            //rxvt_main_loop (aR);
+
+            environ = old_environ;
+          }
         }
       else
-        return err ();
+        return err ("protocol error: request '%s' unsupported.", (char *)tok);
     }
   else
     return err ();
@@ -121,6 +149,15 @@ int
 main(int argc, const char *const *argv)
 {
   listener l;
+
+  {
+    sigset_t ss;
+
+    sigaddset (&ss, SIGHUP);
+    sigprocmask (SIG_BLOCK, &ss, 0);
+  }
+
+  printf ("rxvtd running.\n");
   iom.loop ();
 
 #if 0

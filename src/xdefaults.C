@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xdefaults.c
  *----------------------------------------------------------------------*
- * $Id: xdefaults.C,v 1.2 2003/11/24 17:31:28 pcg Exp $
+ * $Id: xdefaults.C,v 1.3 2003/11/25 11:52:42 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994      Robert Nation <nation@rocket.sanders.lockheed.com>
@@ -502,7 +502,7 @@ rxvt_get_options(pR_ int argc, const char *const *argv)
 #ifdef DEBUG_RESOURCES
 		    fprintf(stderr, "\"%s\"\n", str);
 #endif
-		    R->h->rs[optList[entry].doff] = str;
+		    R->rs[optList[entry].doff] = str;
 		    /*
 		     * special cases are handled in main.c:main() to allow
 		     * X resources to set these values before we settle for
@@ -524,7 +524,7 @@ rxvt_get_options(pR_ int argc, const char *const *argv)
 		    R->Options &= ~(optList[entry].flag);
 
 		if (optList[entry].doff != -1)
-		    R->h->rs[optList[entry].doff] = flag;
+		    R->rs[optList[entry].doff] = flag;
 	    }
 	} else
 #ifdef KEYSYM_RESOURCE
@@ -626,7 +626,7 @@ rxvt_parse_keysym(pR_ const char *str, const char *arg)
     if (sym < 0xFF00 || sym > 0xFFFF)	/* we only do extended keys */
 	return -1;
     sym &= 0xFF;
-    if (R->h->Keysym_map[sym] != NULL)	/* already set ? */
+    if (R->Keysym_map[sym] != NULL)	/* already set ? */
 	return -1;
 
     if (newarg == NULL) {
@@ -642,7 +642,7 @@ rxvt_parse_keysym(pR_ const char *str, const char *arg)
 
     key_string[0] = n;
     STRNCPY(key_string + 1, newarg, n);
-    R->h->Keysym_map[sym] = (unsigned char *)key_string;
+    R->Keysym_map[sym] = (unsigned char *)key_string;
 
     return 1;
 }
@@ -689,13 +689,13 @@ rxvt_get_xdefaults(pR_ FILE *stream, const char *name)
 		    str += (n + 1);
 		    rxvt_Str_trim(str);
 		    n = STRLEN(str);
-		    if (n && R->h->rs[optList[entry].doff] == NULL) {
+		    if (n && R->rs[optList[entry].doff] == NULL) {
 			/* not already set */
 			int             s;
 			char           *p = (char *)rxvt_malloc((n + 1) * sizeof(char));
 
 			STRCPY(p, str);
-			R->h->rs[optList[entry].doff] = p;
+			R->rs[optList[entry].doff] = p;
 			if (optList_isBool(entry)) {
 			    s = STRCASECMP(str, "TRUE") == 0
 				|| STRCASECMP(str, "YES") == 0
@@ -736,11 +736,11 @@ rxvt_extract_resources(pR_ Display *display __attribute__((unused)), const char 
     /* Compute the path of the possibly available localized Rxvt file */ 
     char           *localepath = NULL;
 
-    if (R->h->locale != NULL) {	/* XXX: must limit length of string */
+    if (R->locale != NULL) {	/* XXX: must limit length of string */
 	localepath = (char *)rxvt_malloc(256); 
 	sprintf(localepath, XAPPLOADDIRLOCALE "/" APL_SUBCLASS,
 		(int)(258 - sizeof(XAPPLOADDIRLOCALE) - sizeof(APL_SUBCLASS)),
-		R->h->locale);	/* 258 = 255 + 4 (-.*s) - 1 (/) */
+		R->locale);	/* 258 = 255 + 4 (-.*s) - 1 (/) */
     }
 
     {
@@ -824,7 +824,7 @@ rxvt_extract_resources(pR_ Display *display __attribute__((unused)), const char 
 	char           *p, *p0;
 	const char     *kw = optList[entry].kw;
 
-	if (kw == NULL || R->h->rs[optList[entry].doff] != NULL)
+	if (kw == NULL || R->rs[optList[entry].doff] != NULL)
 	    continue;		/* previously set */
 
 	p = XGetDefault(display, name, kw);
@@ -837,7 +837,7 @@ rxvt_extract_resources(pR_ Display *display __attribute__((unused)), const char 
 	if (p == NULL && p0)
 	    p = p0;
 	if (p) {
-	    R->h->rs[optList[entry].doff] = p;
+	    R->rs[optList[entry].doff] = p;
 
 	    if (optList_isBool(entry)) {
 		s = STRCASECMP(p, "TRUE") == 0
@@ -960,23 +960,23 @@ rxvt_extract_resources(pR_ Display *display __attribute__((unused)), const char 
  * options and command-line long options
  */
 #ifdef MULTICHAR_SET
-    rxvt_set_multichar_encoding(aR_ R->h->rs[Rs_multichar_encoding]);
+    rxvt_set_multichar_encoding(aR_ R->rs[Rs_multichar_encoding]);
 #endif
 #ifdef GREEK_SUPPORT
 /* this could be a function in grkelot.c */
 /* void set_greek_keyboard (const char * str); */
-    if (R->h->rs[Rs_greek_keyboard]) {
-	if (!STRCMP(R->h->rs[Rs_greek_keyboard], "iso"))
+    if (R->rs[Rs_greek_keyboard]) {
+	if (!STRCMP(R->rs[Rs_greek_keyboard], "iso"))
 	    greek_setmode(GREEK_ELOT928);	/* former -grk9 */
-	else if (!STRCMP(R->h->rs[Rs_greek_keyboard], "ibm"))
+	else if (!STRCMP(R->rs[Rs_greek_keyboard], "ibm"))
 	    greek_setmode(GREEK_IBM437);	/* former -grk4 */
     }
     {
 	KeySym          sym;
 
-	if (R->h->rs[Rs_greektoggle_key]
-	    && ((sym = XStringToKeysym(R->h->rs[Rs_greektoggle_key])) != 0))
-	    R->h->ks_greekmodeswith = sym;
+	if (R->rs[Rs_greektoggle_key]
+	    && ((sym = XStringToKeysym(R->rs[Rs_greektoggle_key])) != 0))
+	    R->ks_greekmodeswith = sym;
     }
 #endif				/* GREEK_SUPPORT */
 
@@ -984,12 +984,12 @@ rxvt_extract_resources(pR_ Display *display __attribute__((unused)), const char 
     {
 	KeySym          sym;
 
-	if (R->h->rs[Rs_bigfont_key]
-	    && ((sym = XStringToKeysym(R->h->rs[Rs_bigfont_key])) != 0))
-	    R->h->ks_bigfont = sym;
-	if (R->h->rs[Rs_smallfont_key]
-	    && ((sym = XStringToKeysym(R->h->rs[Rs_smallfont_key])) != 0))
-	    R->h->ks_smallfont = sym;
+	if (R->rs[Rs_bigfont_key]
+	    && ((sym = XStringToKeysym(R->rs[Rs_bigfont_key])) != 0))
+	    R->ks_bigfont = sym;
+	if (R->rs[Rs_smallfont_key]
+	    && ((sym = XStringToKeysym(R->rs[Rs_smallfont_key])) != 0))
+	    R->ks_smallfont = sym;
     }
 #endif
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: defaultfont.h,v 1.3 2003/11/25 09:29:11 pcg Exp $
+ * $Id: defaultfont.h,v 1.4 2003/11/25 11:52:42 pcg Exp $
  */
 
 #ifndef _DEFAULTFONT_H_
@@ -23,12 +23,10 @@
 #include "encoding.h"
 #include "rxvtvec.h"
 
-typedef struct rxvt_vars rxvt_t;
-
 struct rxvt_font {
   // managed by the fontset
 #if EXPLICIT_CONTEXT
-  rxvt_t *rxvt_term;
+  rxvt_t rxvt_term;
   void set_term (pR) { this->rxvt_term = R; }
 #else
   void set_term (pR) { }
@@ -90,7 +88,7 @@ struct rxvt_fontset {
 
 private:
 #ifdef EXPLICIT_CONTEXT
-  rxvt_t *rxvt_term;
+  rxvt_t rxvt_term;
 #endif
   simplevec<rxvt_font *> fonts;
   const rxvt_fallback_font *fallback;

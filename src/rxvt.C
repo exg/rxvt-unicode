@@ -1,4 +1,5 @@
 #include "rxvtlib.h"
+#include "iom.h"
 
 /*----------------------------------------------------------------------*/
 /* main() */
@@ -9,7 +10,7 @@ main(int argc, const char *const *argv)
     if (rxvt_init(argc, argv) == NULL)
 	return EXIT_FAILURE;
 
-    dR;
-    rxvt_main_loop(aR);	/* main processing loop */
+    iom.loop ();
+
     return EXIT_SUCCESS;
 }

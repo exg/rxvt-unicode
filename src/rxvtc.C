@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 #include <unistd.h>
+#include <signal.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 
@@ -31,16 +32,27 @@ client::client ()
     }
 }
 
+extern char **environ;
+
 int
 main(int argc, const char *const *argv)
 {
   client c;
   char buf[PATH_MAX];
 
+  {
+    sigset_t ss;
+
+    sigaddset (&ss, SIGHUP);
+    sigprocmask (SIG_BLOCK, &ss, 0);
+  }
+
   c.send ("NEW");
-  c.send ("DISPLAY"), c.send (getenv ("DISPLAY"));
   // instead of getcwd we could opendir(".") and pass the fd for fchdir *g*
   c.send ("CWD"), c.send (getcwd (buf, sizeof (buf)));
+
+  for (char **var = environ; *environ; environ++)
+    c.send ("ENV"), c.send (*environ);
 
   for (int i = 0; i < argc; i++)
     c.send ("ARG"), c.send (argv[i]);

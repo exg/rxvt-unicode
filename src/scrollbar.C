@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	scrollbar.c
  *----------------------------------------------------------------------*
- * $Id: scrollbar.C,v 1.2 2003/11/24 17:31:28 pcg Exp $
+ * $Id: scrollbar.C,v 1.3 2003/11/25 11:52:42 pcg Exp $
  *
  * Copyright (c) 1997,1998 mj olesen <olesen@me.QueensU.CA>
  * Copyright (c) 1998      Alfredo K. Kojima <kojima@windowmaker.org>
@@ -98,7 +98,7 @@ rxvt_Resize_scrollBar(pR)
 /* create the scrollbar window */
 	R->scrollBar.win = XCreateSimpleWindow(R->Xdisplay,
 					       R->TermWin.parent[0],
-					       R->h->window_sb_x, 0,
+					       R->window_sb_x, 0,
 					       scrollbar_TotalWidth(),
 					       R->szHint.height,
 					       0,
@@ -107,7 +107,7 @@ rxvt_Resize_scrollBar(pR)
 #ifdef DEBUG_X
 	XStoreName(R->Xdisplay, R->scrollBar.win, "scrollbar");
 #endif
-	XDefineCursor(R->Xdisplay, R->scrollBar.win, R->h->pointer_leftptr);
+	XDefineCursor(R->Xdisplay, R->scrollBar.win, R->pointer_leftptr);
 	XSelectInput(R->Xdisplay, R->scrollBar.win,
 		     (ExposureMask | ButtonPressMask | ButtonReleaseMask
 		      | Button1MotionMask | Button2MotionMask
@@ -141,22 +141,22 @@ rxvt_scrollbar_show(pR_ int update)
 	adj = (((bot - top) * scrollbar_size()) % len) > 0 ? 1 : 0;
 
 	R->scrollBar.top = (R->scrollBar.beg + (top * scrollbar_size()) / len);
-	R->h->scrollbar_len = ((bot - top) * scrollbar_size()) / len +
+	R->scrollbar_len = ((bot - top) * scrollbar_size()) / len +
 			      scrollbar_minheight() + adj;
-	R->scrollBar.bot = (R->scrollBar.top + R->h->scrollbar_len);
+	R->scrollBar.bot = (R->scrollBar.top + R->scrollbar_len);
 	/* no change */
-	if (R->scrollBar.top == R->h->last_top
-	    && R->scrollBar.bot == R->h->last_bot
-	    && (R->scrollBar.state == R->h->last_state || !scrollbar_isUpDn()))
+	if (R->scrollBar.top == R->last_top
+	    && R->scrollBar.bot == R->last_bot
+	    && (R->scrollBar.state == R->last_state || !scrollbar_isUpDn()))
 	    return 0;
     }
 
-    ret = R->scrollBar.update(aR_ update, R->h->last_top, R->h->last_bot,
-			      R->h->scrollbar_len);
+    ret = R->scrollBar.update(aR_ update, R->last_top, R->last_bot,
+			      R->scrollbar_len);
 
-    R->h->last_top = R->scrollBar.top;
-    R->h->last_bot = R->scrollBar.bot;
-    R->h->last_state = R->scrollBar.state;
+    R->last_top = R->scrollBar.top;
+    R->last_bot = R->scrollBar.bot;
+    R->last_state = R->scrollBar.state;
 
 #endif
     return ret;
@@ -211,12 +211,12 @@ rxvt_setup_scrollbar(pR_ const char *scrollalign, const char *scrollstyle, const
     R->scrollBar.style = style;
     R->scrollBar.width = width;
 
-    /* R->h->scrollbar_align = R_SB_ALIGN_CENTRE; */
+    /* R->scrollbar_align = R_SB_ALIGN_CENTRE; */
     if (scrollalign) {
 	if (STRNCASECMP(scrollalign, "top", 3) == 0)
-	    R->h->scrollbar_align = R_SB_ALIGN_TOP;
+	    R->scrollbar_align = R_SB_ALIGN_TOP;
 	else if (STRNCASECMP(scrollalign, "bottom", 6) == 0)
-	    R->h->scrollbar_align = R_SB_ALIGN_BOTTOM;
+	    R->scrollbar_align = R_SB_ALIGN_BOTTOM;
     }
 #endif
 }

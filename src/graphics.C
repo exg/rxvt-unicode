@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	graphics.c
  *----------------------------------------------------------------------*
- * $Id: graphics.C,v 1.2 2003/11/24 17:31:27 pcg Exp $
+ * $Id: graphics.C,v 1.3 2003/11/25 11:52:42 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994      Rob Nation <nation@rocket.sanders.lockheed.com>
@@ -106,12 +106,12 @@ rxvt_Gr_NewWindow(pR_ int nargs, int args[])
     grwin->h = h;
     grwin->screen = 0;
     grwin->prev = NULL;
-    grwin->next = R->h->gr_root;
+    grwin->next = R->gr_root;
     if (grwin->next)
 	grwin->next->prev = grwin;
-    R->h->gr_root = grwin;
+    R->gr_root = grwin;
     grwin->graphics = NULL;
-    R->h->graphics_up++;
+    R->graphics_up++;
 
     rxvt_tt_printf(aR_ "\033W%ld\n", (long)grwin->win);
 }
@@ -223,10 +223,10 @@ rxvt_Gr_DestroyWindow(pR_ grwin_t *grwin)
     if (grwin->prev != NULL)
 	grwin->prev->next = grwin->next;
     else
-	R->h->gr_root = grwin->next;
+	R->gr_root = grwin->next;
     free(grwin);
 
-    R->h->graphics_up--;
+    R->graphics_up--;
 }
 
 /* ARGSUSED */
@@ -327,7 +327,7 @@ rxvt_Gr_ButtonReport(pR_ int but, int x, int y)
 {
     grwin_t        *grwin;
 
-    for (grwin = R->h->gr_root; grwin != NULL; grwin = grwin->next)
+    for (grwin = R->gr_root; grwin != NULL; grwin = grwin->next)
 	if ((x > grwin->x)
 	    && (y > grwin->y)
 	    && ((unsigned int)x < grwin->x + grwin->w)
@@ -362,13 +362,13 @@ rxvt_Gr_do_graphics(pR_ int cmd, unsigned int nargs, int args[], unsigned char *
 	rxvt_Gr_Geometry(aR_ NULL, NULL);
 	return;
     }
-    if ((win_id == None) && (R->h->gr_last_id != None))
-	win_id = R->h->gr_last_id;
+    if ((win_id == None) && (R->gr_last_id != None))
+	win_id = R->gr_last_id;
 
     if (win_id == None)
 	return;
 
-    grwin = R->h->gr_root;
+    grwin = R->gr_root;
     while ((grwin != NULL) && (grwin->win != win_id))
 	grwin = grwin->next;
 
@@ -436,12 +436,12 @@ rxvt_Gr_scroll(pR_ int count)
 {
     grwin_t        *grwin, *next;
 
-    if ((count == 0) && (R->h->gr_prev_start == R->TermWin.view_start))
+    if ((count == 0) && (R->gr_prev_start == R->TermWin.view_start))
 	return;
 
-    R->h->gr_prev_start = R->TermWin.view_start;
+    R->gr_prev_start = R->TermWin.view_start;
 
-    for (grwin = R->h->gr_root; grwin != NULL; grwin = next) {
+    for (grwin = R->gr_root; grwin != NULL; grwin = next) {
 	next = grwin->next;
 	grwin->y -= (count * R->TermWin.fheight);
 	if ((long)(grwin->y + grwin->h)
@@ -460,7 +460,7 @@ rxvt_Gr_ClearScreen(pR)
 {
     grwin_t        *grwin, *next;
 
-    for (grwin = R->h->gr_root; grwin != NULL; grwin = next) {
+    for (grwin = R->gr_root; grwin != NULL; grwin = next) {
 	next = grwin->next;
 	if ((grwin->screen == 0) && (grwin->y + grwin->h > 0)) {
 	    if (grwin->y >= 0)
@@ -478,7 +478,7 @@ rxvt_Gr_ChangeScreen(pR)
 {
     grwin_t        *grwin, *next;
 
-    for (grwin = R->h->gr_root; grwin != NULL; grwin = next) {
+    for (grwin = R->gr_root; grwin != NULL; grwin = next) {
 	next = grwin->next;
 	if (grwin->y + grwin->h > 0) {
 	    if (grwin->screen == 1) {
@@ -499,7 +499,7 @@ rxvt_Gr_expose(pR_ Window win)
 {
     grwin_t        *grwin;
 
-    for (grwin = R->h->gr_root; grwin != NULL; grwin = grwin->next) {
+    for (grwin = R->gr_root; grwin != NULL; grwin = grwin->next) {
 	if (grwin->win == win) {
 	    rxvt_Gr_Redraw(aR_ grwin);
 	    break;
@@ -514,7 +514,7 @@ rxvt_Gr_Resize(pR_ int w __attribute__((unused)), int h)
 {
     grwin_t        *grwin;
 
-    for (grwin = R->h->gr_root; grwin != NULL; grwin = grwin->next) {
+    for (grwin = R->gr_root; grwin != NULL; grwin = grwin->next) {
 	if (R->TermWin.height != h) {
 	    grwin->y += (R->TermWin.height - h);
 	    XMoveWindow(R->Xdisplay, grwin->win,
@@ -531,19 +531,19 @@ rxvt_Gr_reset(pR)
 {
     grwin_t        *grwin, *next;
 
-    for (grwin = R->h->gr_root; grwin != NULL; grwin = next) {
+    for (grwin = R->gr_root; grwin != NULL; grwin = next) {
 	next = grwin->next;
 	rxvt_Gr_DestroyWindow(aR_ grwin);
     }
 
-    R->h->graphics_up = 0;
+    R->graphics_up = 0;
 }
 
 /* EXTPROTO */
 int
 rxvt_Gr_Displayed(pR)
 {
-    return R->h->graphics_up;
+    return R->graphics_up;
 }
 #endif
 /*----------------------- end-of-file (C source) -----------------------*/

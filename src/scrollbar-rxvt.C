@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	scrollbar-rxvt.c
  *----------------------------------------------------------------------*
- * $Id: scrollbar-rxvt.C,v 1.2 2003/11/24 17:31:28 pcg Exp $
+ * $Id: scrollbar-rxvt.C,v 1.3 2003/11/25 11:52:42 pcg Exp $
  *
  * Copyright (c) 1997,1998 mj olesen <olesen@me.QueensU.CA>
  * Copyright (c) 1999-2001 Geoff Wing <gcw@pobox.com>
@@ -41,15 +41,15 @@ rxvt_Draw_button(pR_ int x, int y, int state, int dirn)
     sz2 = sz / 2;
     switch (state) {
     case +1:
-	top = R->h->topShadowGC;
-	bot = R->h->botShadowGC;
+	top = R->topShadowGC;
+	bot = R->botShadowGC;
 	break;
     case -1:
-	top = R->h->botShadowGC;
-	bot = R->h->topShadowGC;
+	top = R->botShadowGC;
+	bot = R->topShadowGC;
 	break;
     default:
-	top = bot = R->h->scrollbarGC;
+	top = bot = R->scrollbarGC;
 	break;
     }
 
@@ -64,7 +64,7 @@ rxvt_Draw_button(pR_ int x, int y, int state, int dirn)
 	pt[0].y = pt[1].y = y;
 	pt[2].y = y + sz - 1;
     }
-    XFillPolygon(R->Xdisplay, R->scrollBar.win, R->h->scrollbarGC,
+    XFillPolygon(R->Xdisplay, R->scrollBar.win, R->scrollbarGC,
 		 pt, 3, Convex, CoordModeOrigin);
 
 /* draw base */
@@ -154,24 +154,24 @@ rxvt_scrollbar_show_rxvt(pR_ int update __attribute__((unused)), int last_top, i
 	else
 	    xofs = sbshadow ? sbwidth : sbwidth - 1;
 
-	XDrawLine(R->Xdisplay, R->scrollBar.win, R->h->botShadowGC,
+	XDrawLine(R->Xdisplay, R->scrollBar.win, R->botShadowGC,
 		  xofs, 0, xofs, R->scrollBar.end + sbwidth);
     }
 #endif
-    XFillRectangle(R->Xdisplay, R->scrollBar.win, R->h->scrollbarGC,
+    XFillRectangle(R->Xdisplay, R->scrollBar.win, R->scrollbarGC,
 		   sbshadow, R->scrollBar.top, sbwidth,
 		   scrollbar_len);
 
     if (sbshadow)
 	/* trough shadow */
 	rxvt_Draw_Shadow(R->Xdisplay, R->scrollBar.win,
-			 R->h->botShadowGC, R->h->topShadowGC,
+			 R->botShadowGC, R->topShadowGC,
 			 0, 0,
 			 sbwidth + 2 * sbshadow, /* scrollbar_TotalWidth() */
 			 R->scrollBar.end + (sbwidth + 1) + sbshadow);
 /* shadow for scrollbar slider */
     rxvt_Draw_Shadow(R->Xdisplay, R->scrollBar.win,
-		     R->h->topShadowGC, R->h->botShadowGC,
+		     R->topShadowGC, R->botShadowGC,
 		     sbshadow, R->scrollBar.top, sbwidth,
 		     scrollbar_len);
 

@@ -7,6 +7,8 @@ template<typename T> static inline T max (T a, long b) { return a > b ? a : b; }
 #include <cstring>
 #include "simplevec.h"
 
+#include <cstdio>
+
 #if 0
 template<typename T>
 struct rxvt_vec : simplevec<void *> {
@@ -39,6 +41,12 @@ struct auto_ptr {
   auto_ptr() : p(0) { }
   auto_ptr(T *a) : p(a) { }
 
+  auto_ptr(auto_ptr &a)
+  {
+    p = a.p;
+    a.p = 0;
+  }
+
   template<typename A>
   auto_ptr(auto_ptr<A> &a)
   {
@@ -46,11 +54,22 @@ struct auto_ptr {
     a.p = 0;
   }
 
+  ~auto_ptr()
+  {
+    delete p;
+  }
+
   // void because it makes sense in our context
   void operator =(T *a)
   {
     delete p;
     p = a;
+  }
+
+  void operator =(auto_ptr &a)
+  {
+    *this = a.p;
+    a.p = 0;
   }
 
   template<typename A>
@@ -75,4 +94,14 @@ struct auto_ptr {
 
 typedef auto_ptr<char> auto_str;
 
+struct stringvec : simplevec<char *>
+{
+  ~stringvec ()
+  {
+    for (char **c = begin(); c != end(); c++)
+      delete [] *c;
+  }
+};
+
 #endif
+

@@ -1,8 +1,8 @@
 /*
- * $Id: rxvtlib.h.in,v 1.2 2003/11/24 17:31:27 pcg Exp $
+ * $Id: rxvtlib.h.in,v 1.3 2003/11/25 11:52:42 pcg Exp $
  */
 
-#ifndef _RXVTLIB_H_		/* include once only */
+#ifndef _RXVTLIB_H_             /* include once only */
 #define _RXVTLIB_H_
 
 /*
@@ -45,7 +45,7 @@
 #include <sys/stat.h>
 
 extern "C" {
-#include <X11/Intrinsic.h>	/* Xlib, Xutil, Xresource, Xfuncproto */
+#include <X11/Intrinsic.h>      /* Xlib, Xutil, Xresource, Xfuncproto */
 }
 
 /*
@@ -69,14 +69,18 @@ extern "C" {
 
 struct rxvt_fontset;
 struct rxvt_color;
-struct rxvt_vars;		/* defined later on */
-struct rxvt_hidden;		/* not defined here */
+struct rxvt_vars;               /* defined later on */
+struct rxvt_term;
 
-extern struct rxvt_vars *rxvt_current_term;
+typedef struct rxvt_term *rxvt_t;
+
+extern rxvt_t rxvt_current_term;
+
+#define EXPLICIT_CONTEXT 1
 
 #if EXPLICIT_CONTEXT
 
-# define pR struct rxvt_vars *rxvt_term
+# define pR rxvt_t rxvt_term
 # define aR rxvt_term
 # define pR_ pR,
 # define aR_ aR,
@@ -100,14 +104,14 @@ extern struct rxvt_vars *rxvt_current_term;
 
 #endif
 
-#define dR rxvt_t *rxvt_term = GET_R
+#define dR rxvt_t rxvt_term = GET_R
 
-#define scrollbar_visible(rxvtvars)	((rxvtvars)->scrollBar.state)
-#define menubar_visible(rxvtvars)	((rxvtvars)->menuBar.state)
+#define scrollbar_visible(rxvtvars)     ((rxvtvars)->scrollBar.state)
+#define menubar_visible(rxvtvars)       ((rxvtvars)->menuBar.state)
 
 typedef struct {
-    int32_t         row;
-    int32_t         col;
+  int32_t         row;
+  int32_t         col;
 } row_col_t;
 
 #if UNICODE3
@@ -129,27 +133,27 @@ typedef uint32_t rend_t;
  */
 
 typedef struct {
-    uint16_t       width;	/* window width                    [pixels] */
-    uint16_t       height;	/* window height                   [pixels] */
-    uint16_t       fwidth;	/* font width                      [pixels] */
-    uint16_t       fheight;	/* font height                     [pixels] */
-    uint16_t       fbase;      /* font ascent (baseline)          [pixels] */
-    uint16_t       propfont;	/* font proportional flags                  */
-    uint16_t       ncol;	/* window columns              [characters] */
-    uint16_t       nrow;	/* window rows                 [characters] */
-    uint16_t       focus;	/* window has focus                         */
-    uint16_t       mapped;	/* window state mapped?                     */
-    uint16_t       int_bwidth; /* internal border width                    */
-    uint16_t       ext_bwidth; /* external border width                    */
-    uint16_t       lineSpace;	/* number of extra pixels between rows      */
-    uint16_t       saveLines;	/* number of lines that fit in scrollback   */
-    uint16_t       nscrolled;	/* number of line actually scrolled         */
-    uint16_t       view_start;	/* scrollback view starts here              */
-    Window          parent[6];	/* parent identifiers - we're parent[0]     */
-    Window          vt;		/* vt100 window                             */
-    GC              gc;		/* GC for drawing                           */
-    Pixmap          pixmap;
-    rxvt_fontset   *fontset;
+  uint16_t       width; /* window width                    [pixels] */
+  uint16_t       height;        /* window height                   [pixels] */
+  uint16_t       fwidth;        /* font width                      [pixels] */
+  uint16_t       fheight;       /* font height                     [pixels] */
+  uint16_t       fbase;      /* font ascent (baseline)          [pixels] */
+  uint16_t       propfont;      /* font proportional flags                  */
+  uint16_t       ncol;  /* window columns              [characters] */
+  uint16_t       nrow;  /* window rows                 [characters] */
+  uint16_t       focus; /* window has focus                         */
+  uint16_t       mapped;        /* window state mapped?                     */
+  uint16_t       int_bwidth; /* internal border width                    */
+  uint16_t       ext_bwidth; /* external border width                    */
+  uint16_t       lineSpace;     /* number of extra pixels between rows      */
+  uint16_t       saveLines;     /* number of lines that fit in scrollback   */
+  uint16_t       nscrolled;     /* number of line actually scrolled         */
+  uint16_t       view_start;    /* scrollback view starts here              */
+  Window         parent[6];     /* parent identifiers - we're parent[0]     */
+  Window         vt;            /* vt100 window                             */
+  GC             gc;            /* GC for drawing                           */
+  Pixmap         pixmap;
+  rxvt_fontset  *fontset;
 } TermWin_t;
 
 /*
@@ -182,37 +186,37 @@ typedef struct {
  *     normal `unscrolled' screen region
  */
 typedef struct {
-    text_t        **text;	/* _all_ the text                            */
-    int16_t	   *tlen;	/* length of each text line                  */
-    rend_t        **rend;	/* rendition, uses RS_ flags                 */
-    row_col_t       cur;	/* cursor position on the screen             */
-    uint16_t       tscroll;	/* top of settable scroll region             */
-    uint16_t       bscroll;	/* bottom of settable scroll region          */
-    uint16_t       charset;	/* character set number [0..3]               */
-    unsigned int    flags;	/* see below                                 */
-    row_col_t	    s_cur;	/* saved cursor position                     */
-    uint16_t	    s_charset;	/* saved character set number [0..3]         */
-    char            s_charset_char;
-    rend_t          s_rstyle;	/* saved rendition style                     */
+  text_t        **text; /* _all_ the text                            */
+  int16_t        *tlen; /* length of each text line                  */
+  rend_t        **rend; /* rendition, uses RS_ flags                 */
+  row_col_t       cur;  /* cursor position on the screen             */
+  uint16_t        tscroll;      /* top of settable scroll region             */
+  uint16_t        bscroll;      /* bottom of settable scroll region          */
+  uint16_t        charset;      /* character set number [0..3]               */
+  unsigned int    flags;        /* see below                                 */
+  row_col_t       s_cur;        /* saved cursor position                     */
+  uint16_t        s_charset;    /* saved character set number [0..3]         */
+  char            s_charset_char;
+  rend_t          s_rstyle;     /* saved rendition style                     */
 } screen_t;
 
 enum selection_op_t {
-    SELECTION_CLEAR = 0,	/* nothing selected                          */
-    SELECTION_INIT,		/* marked a point                            */
-    SELECTION_BEGIN,	/* started a selection                       */
-    SELECTION_CONT,		/* continued selection                       */
-    SELECTION_DONE		/* selection put in CUT_BUFFER0              */
+  SELECTION_CLEAR = 0,  /* nothing selected                          */
+  SELECTION_INIT,       /* marked a point                            */
+  SELECTION_BEGIN,      /* started a selection                       */
+  SELECTION_CONT,       /* continued selection                       */
+  SELECTION_DONE        /* selection put in CUT_BUFFER0              */
 };
 
 typedef struct {
-    unsigned char  *text;	/* selected text                             */
-    uint32_t       len;	/* length of selected text                   */
-    short           screen;	/* screen being used                         */
-    short           clicks;	/* number of clicks                          */
-    selection_op_t  op;		/* current operation			     */
-    row_col_t       beg;	/* beginning of selection   <= mark          */
-    row_col_t       mark;	/* point of initial click   <= end           */
-    row_col_t       end;	/* one character past end point              */
+  unsigned char  *text;       /* selected text                             */
+  uint32_t        len;        /* length of selected text                   */
+  short           screen;     /* screen being used                         */
+  short           clicks;     /* number of clicks                          */
+  selection_op_t  op;         /* current operation                         */
+  row_col_t       beg;        /* beginning of selection   <= mark          */
+  row_col_t       mark;       /* point of initial click   <= end           */
+  row_col_t       end;        /* one character past end point              */
 } selection_t;
 
 typedef enum {
@@ -222,124 +226,93 @@ typedef enum {
 /* ------------------------------------------------------------------------- */
 
 /* screen_t flags */
-#define Screen_Relative		(1<<0)	/* relative origin mode flag         */
-#define Screen_VisibleCursor	(1<<1)	/* cursor visible?                   */
-#define Screen_Autowrap		(1<<2)	/* auto-wrap flag                    */
-#define Screen_Insert		(1<<3)	/* insert mode (vs. overstrike)      */
-#define Screen_WrapNext		(1<<4)	/* need to wrap for next char?       */
-#define Screen_DefaultFlags	(Screen_VisibleCursor|Screen_Autowrap)
+#define Screen_Relative         (1<<0)  /* relative origin mode flag         */
+#define Screen_VisibleCursor    (1<<1)  /* cursor visible?                   */
+#define Screen_Autowrap         (1<<2)  /* auto-wrap flag                    */
+#define Screen_Insert           (1<<3)  /* insert mode (vs. overstrike)      */
+#define Screen_WrapNext         (1<<4)  /* need to wrap for next char?       */
+#define Screen_DefaultFlags     (Screen_VisibleCursor|Screen_Autowrap)
 
 /* rxvt_vars.Options */
-#define	Opt_console		(1LU<<0)
-#define Opt_loginShell		(1LU<<1)
-#define Opt_iconic		(1LU<<2)
-#define Opt_visualBell		(1LU<<3)
-#define Opt_mapAlert		(1LU<<4)
-#define Opt_reverseVideo	(1LU<<5)
-#define Opt_utmpInhibit		(1LU<<6)
-#define Opt_scrollBar		(1LU<<7)
-#define Opt_scrollBar_right	(1LU<<8)
-#define Opt_scrollBar_floating	(1LU<<9)
-#define Opt_meta8		(1LU<<10)
-#define Opt_scrollTtyOutput	(1LU<<11)
-#define Opt_scrollTtyKeypress	(1LU<<12)
-#define Opt_transparent		(1LU<<13)
-#define Opt_transparent_all	(1LU<<14)
-#define Opt_mc_hack		(1LU<<15)
-#define Opt_tripleclickwords	(1LU<<16)
-#define Opt_scrollWithBuffer	(1LU<<17)
-#define Opt_jumpScroll		(1LU<<18)
+#define Opt_console             (1LU<<0)
+#define Opt_loginShell          (1LU<<1)
+#define Opt_iconic              (1LU<<2)
+#define Opt_visualBell          (1LU<<3)
+#define Opt_mapAlert            (1LU<<4)
+#define Opt_reverseVideo        (1LU<<5)
+#define Opt_utmpInhibit         (1LU<<6)
+#define Opt_scrollBar           (1LU<<7)
+#define Opt_scrollBar_right     (1LU<<8)
+#define Opt_scrollBar_floating  (1LU<<9)
+#define Opt_meta8               (1LU<<10)
+#define Opt_scrollTtyOutput     (1LU<<11)
+#define Opt_scrollTtyKeypress   (1LU<<12)
+#define Opt_transparent         (1LU<<13)
+#define Opt_transparent_all     (1LU<<14)
+#define Opt_mc_hack             (1LU<<15)
+#define Opt_tripleclickwords    (1LU<<16)
+#define Opt_scrollWithBuffer    (1LU<<17)
+#define Opt_jumpScroll          (1LU<<18)
 #define Opt_mouseWheelScrollPage (1LU<<19)
-#define Opt_pointerBlank	(1LU<<20)
-#define Opt_cursorBlink		(1LU<<21)
+#define Opt_pointerBlank        (1LU<<20)
+#define Opt_cursorBlink         (1LU<<21)
 /* place holder used for parsing command-line options */
-#define Opt_Reverse		(1LU<<30)
-#define Opt_Boolean		(1LU<<31)
+#define Opt_Reverse             (1LU<<30)
+#define Opt_Boolean             (1LU<<31)
 
-#define DEFAULT_OPTIONS		(Opt_scrollBar | Opt_scrollTtyOutput \
-				 | Opt_jumpScroll)
-
-#define PROPFONT_NORMAL		(1<<0)
-#define PROPFONT_BOLD		(1<<1)
+#define DEFAULT_OPTIONS         (Opt_scrollBar | Opt_scrollTtyOutput \
+                                 | Opt_jumpScroll)
 
 /* ------------------------------------------------------------------------- */
 
-typedef enum {
-    EUCJ, SJIS,			/* Japanese KANJI methods                    */
-    BIG5, CNS,			/* Chinese BIG5 methods: CNS not implemented */
-    GB,				/* Chinese GB method                         */
-    KR,				/* Korean method                             */
-    NOENC			/* no encoding                               */
-} ENC_METHOD;
-
 typedef struct {
-    short          method;
-    void           (*func)(unsigned char *, int);
-    char          *name;
-} KNOWN_ENCODINGS;
-
-typedef struct {
-    short           state;
-    Window          win;
+  short           state;
+  Window          win;
 } menuBar_t;
 
 typedef struct {
-    char            state;	/* scrollbar state                          */
-    char            init;	/* scrollbar has been initialised           */
-    short           beg;	/* slider sub-window begin height           */
-    short           end;	/* slider sub-window end height             */
-    short           top;	/* slider top position                      */
-    short           bot;	/* slider bottom position                   */
-    short           style;	/* style: rxvt, xterm, next                 */
-    short           width;	/* scrollbar width                          */
-    Window          win;
-    int             (*update)(pR_ int, int, int, int);
+  char            state;        /* scrollbar state                          */
+  char            init;         /* scrollbar has been initialised           */
+  short           beg;          /* slider sub-window begin height           */
+  short           end;          /* slider sub-window end height             */
+  short           top;          /* slider top position                      */
+  short           bot;          /* slider bottom position                   */
+  short           style;        /* style: rxvt, xterm, next                 */
+  short           width;        /* scrollbar width                          */
+  Window          win;
+  int             (*update)(pR_ int, int, int, int);
 } scrollBar_t;
 
-typedef struct rxvt_vars {
-/*
- * These ``hidden'' items are not for public consumption and
- * must not be accessed externally
- */
-    struct rxvt_hidden *h;
+struct rxvt_vars {
+  TermWin_t       TermWin;
+  scrollBar_t     scrollBar;
+  menuBar_t       menuBar;
+  Display        *Xdisplay;
+  unsigned long   Options;
+  XSizeHints      szHint;
+  Colormap        Xcmap;
+  rxvt_color     *PixColors;
+  short           numPixColors;
+  Cursor          TermWin_cursor;       /* cursor for vt window */
+  int             Xdepth;
+  int             sb_shadow;    /* scrollbar shadow width                    */
+  int             Xfd;          /* file descriptor of X server connection    */
+  int             cmd_fd;       /* pty file descriptor; connected to command */
+  int             tty_fd;       /* tty file descriptor; connected to child   */
+  int             num_fds;      /* number of file descriptors being used     */
+  int             numlock_state;
+  text_t        **drawn_text;   /* text drawn on screen (characters)         */
+  rend_t        **drawn_rend;   /* text drawn on screen (rendition)          */
+  text_t        **buf_text;
+  rend_t        **buf_rend;
+  char           *tabs;         /* per location: 1 == tab-stop               */
+  screen_t        screen;
+  screen_t        swap;
+  selection_t     selection;
+  sstyle_t        selection_style;
+};
 
-/*
- * Exposed items
- *   Changes to structure here require library version number change
- */
-    TermWin_t       TermWin;
-    scrollBar_t     scrollBar;
-    menuBar_t       menuBar;
-    Display        *Xdisplay;
-    unsigned long   Options;
-    XSizeHints      szHint;
-    Colormap        Xcmap;
-    rxvt_color     *PixColors;
-    short           numPixColors;
-    Cursor          TermWin_cursor;	/* cursor for vt window */
-    int             Xdepth;
-    int             sb_shadow;	/* scrollbar shadow width                    */
-    int             Xfd;	/* file descriptor of X server connection    */
-    int             cmd_fd;	/* pty file descriptor; connected to command */
-    int             tty_fd;	/* tty file descriptor; connected to child   */
-    int             num_fds;	/* number of file descriptors being used     */
-    int             numlock_state;
-    text_t        **drawn_text;	/* text drawn on screen (characters)         */
-    rend_t        **drawn_rend;	/* text drawn on screen (rendition)          */
-    text_t        **buf_text;
-    rend_t        **buf_rend;
-    char           *tabs;	/* per location: 1 == tab-stop               */
-    screen_t        screen;
-    screen_t        swap;
-    selection_t     selection;
-    sstyle_t        selection_style;
-    ENC_METHOD      encoding_method;
-} rxvt_t;
+rxvt_t rxvt_init (int argc, const char *const *argv);
 
-/*****************************************************************************
- *                                PROTOTYPES                                 *
- *****************************************************************************/
-void             rxvt_main_loop(pR);
-rxvt_t          *rxvt_init(int, const char *const *);
+#endif                          /* _RXVTLIB_H_ */
 
-#endif				/* _RXVTLIB_H_ */

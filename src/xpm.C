@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xpm.c
  *----------------------------------------------------------------------*
- * $Id: xpm.C,v 1.2 2003/11/24 17:31:28 pcg Exp $
+ * $Id: xpm.C,v 1.3 2003/11/25 11:52:42 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1997      Carsten Haitzler <raster@zip.com.au>
@@ -58,7 +58,7 @@ rxvt_scale_pixmap(pR_ const char *geom)
     unsigned int    w = 0, h = 0;
     unsigned int    n;
     char           *p, *str;
-    bgPixmap_t     *bgpixmap = &(R->h->bgPixmap);
+    bgPixmap_t     *bgpixmap = &(R->bgPixmap);
 
 #define MAXLEN_GEOM		sizeof("[1000x1000+1000+1000]")
 
@@ -155,9 +155,9 @@ rxvt_resize_pixmap(pR)
     if (R->TermWin.pixmap != None)
 	XFreePixmap(R->Xdisplay, R->TermWin.pixmap);
 
-    if (R->h->bgPixmap.pixmap == None) { /* So be it: I'm not using pixmaps */
+    if (R->bgPixmap.pixmap == None) { /* So be it: I'm not using pixmaps */
 	R->TermWin.pixmap = None;
-	if (!(R->Options & Opt_transparent) || R->h->am_transparent == 0)
+	if (!(R->Options & Opt_transparent) || R->am_transparent == 0)
 	    XSetWindowBackground(R->Xdisplay, R->TermWin.vt,
 				 R->PixColors[Color_bg]);
 	return;
@@ -166,11 +166,11 @@ rxvt_resize_pixmap(pR)
     gcvalue.foreground = R->PixColors[Color_bg];
     gc = XCreateGC(R->Xdisplay, R->TermWin.vt, GCForeground, &gcvalue);
 
-    if (R->h->bgPixmap.pixmap != None) {	/* we have a specified pixmap */
-	unsigned int    w = R->h->bgPixmap.w, h = R->h->bgPixmap.h,
-			x = R->h->bgPixmap.x, y = R->h->bgPixmap.y;
-        unsigned int    xpmh = R->h->xpmAttr.height,
-			xpmw = R->h->xpmAttr.width;
+    if (R->bgPixmap.pixmap != None) {	/* we have a specified pixmap */
+	unsigned int    w = R->bgPixmap.w, h = R->bgPixmap.h,
+			x = R->bgPixmap.x, y = R->bgPixmap.y;
+        unsigned int    xpmh = R->xpmAttr.height,
+			xpmw = R->xpmAttr.width;
 
 	/*
 	 * don't zoom pixmap too much nor expand really small pixmaps
@@ -186,7 +186,7 @@ rxvt_resize_pixmap(pR)
 	    R->TermWin.pixmap = XCreatePixmap(R->Xdisplay, R->TermWin.vt,
 					      xpmw, xpmh,
 					      (unsigned int)XDEPTH);
-	    XCopyArea(R->Xdisplay, R->h->bgPixmap.pixmap, R->TermWin.pixmap, gc,
+	    XCopyArea(R->Xdisplay, R->bgPixmap.pixmap, R->TermWin.pixmap, gc,
 		      0, 0, xpmw, xpmh, 0, 0);
 	} else {
 	    float           incr, p;
@@ -209,7 +209,7 @@ rxvt_resize_pixmap(pR)
 		if (p >= xpmw)
 		    p = 0;
 		/* copy one column from the original pixmap to the tmp pixmap */
-		XCopyArea(R->Xdisplay, R->h->bgPixmap.pixmap, tmp, gc,
+		XCopyArea(R->Xdisplay, R->bgPixmap.pixmap, tmp, gc,
 			  (int)p, 0, 1, xpmh, (int)x, 0);
 	    }
 
@@ -236,7 +236,7 @@ rxvt_resize_pixmap(pR)
     }
     XSetWindowBackgroundPixmap(R->Xdisplay, R->TermWin.vt, R->TermWin.pixmap);
     XFreeGC(R->Xdisplay, gc);
-    R->h->am_transparent = 0;
+    R->am_transparent = 0;
 
     XClearWindow(R->Xdisplay, R->TermWin.vt);
 
@@ -316,9 +316,9 @@ rxvt_set_bgPixmap(pR_ const char *file)
 
     assert(file != NULL);
 
-    if (R->h->bgPixmap.pixmap != None) {
-	XFreePixmap(R->Xdisplay, R->h->bgPixmap.pixmap);
-	R->h->bgPixmap.pixmap = None;
+    if (R->bgPixmap.pixmap != None) {
+	XFreePixmap(R->Xdisplay, R->bgPixmap.pixmap);
+	R->bgPixmap.pixmap = None;
     }
     XSetWindowBackground(R->Xdisplay, R->TermWin.vt, R->PixColors[Color_bg]);
 
@@ -330,19 +330,19 @@ rxvt_set_bgPixmap(pR_ const char *file)
 	 */
 /*      XGetWindowAttributes(R->Xdisplay, R->TermWin.vt, &attr); */
 
-	R->h->xpmAttr.closeness = 30000;
-	R->h->xpmAttr.colormap = XCMAP;
-	R->h->xpmAttr.visual = XVISUAL;
-	R->h->xpmAttr.depth = XDEPTH;
-	R->h->xpmAttr.valuemask = (XpmCloseness | XpmColormap | XpmVisual |
+	R->xpmAttr.closeness = 30000;
+	R->xpmAttr.colormap = XCMAP;
+	R->xpmAttr.visual = XVISUAL;
+	R->xpmAttr.depth = XDEPTH;
+	R->xpmAttr.valuemask = (XpmCloseness | XpmColormap | XpmVisual |
 				   XpmDepth | XpmSize | XpmReturnPixels);
 
 	/* search environment variables here too */
-	f = (char *)rxvt_File_find(file, ".xpm", R->h->rs[Rs_path]);
+	f = (char *)rxvt_File_find(file, ".xpm", R->rs[Rs_path]);
 	if (f == NULL
 	    || XpmReadFileToPixmap(R->Xdisplay, Xroot, f,
-				   &R->h->bgPixmap.pixmap, NULL,
-				   &R->h->xpmAttr)) {
+				   &R->bgPixmap.pixmap, NULL,
+				   &R->xpmAttr)) {
 	    char           *p;
 
 	    /* semi-colon delimited */
@@ -355,7 +355,7 @@ rxvt_set_bgPixmap(pR_ const char *file)
 	free(f);
     }
     rxvt_resize_pixmap(aR);
-    return R->h->bgPixmap.pixmap;
+    return R->bgPixmap.pixmap;
 }
 
 #endif				/* XPM_BACKGROUND */
