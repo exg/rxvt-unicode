@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.5 2003/11/25 15:44:38 pcg Exp $
+ * $Id: command.C,v 1.6 2003/11/25 17:11:33 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -668,28 +668,31 @@ rxvt_term::process_x_events ()
 
 #if defined(CURSOR_BLINK)
       if ((Options & Opt_cursorBlink)
-          && xev.type == KeyPress) {
-          if (hidden_cursor) {
+          && xev.type == KeyPress)
+        {
+          if (hidden_cursor)
+            {
               hidden_cursor = 0;
               want_refresh = 1;
-          }
+            }
+
           blink_ev.start (NOW + BLINK_INTERVAL);
-      }
+        }
 #endif
 
 #if defined(POINTER_BLANK)
       if ((Options & Opt_pointerBlank)
-          && (pointerBlankDelay > 0)) {
+          && (pointerBlankDelay > 0))
+        {
           if (xev.type == MotionNotify
               || xev.type == ButtonPress
-              || xev.type == ButtonRelease) {
-              if (hidden_pointer)
-                  rxvt_pointer_unblank(aR);
-              want_motion_time = 1;
-          }
+              || xev.type == ButtonRelease)
+            if (hidden_pointer)
+              pointer_unblank ();
+
           if (xev.type == KeyPress && hidden_pointer == 0)
-              rxvt_pointer_blank (this);
-      }
+            pointer_blank ();
+        }
 #endif
 
 #ifdef USE_XIM
@@ -945,6 +948,7 @@ rxvt_cmd_getc(pR)
       fcntl (R->cmd_fd, F_SETFL, O_NONBLOCK);
     }
 
+#if 0
 #define TIMEOUT_USEC	5000
     fd_set          readfds;
     int             quick_timeout, select_res;
@@ -959,46 +963,6 @@ rxvt_cmd_getc(pR)
 
 	if (R->v_bufstr < R->v_bufptr)	/* output any pending chars */
 	    rxvt_tt_write(aR_ NULL, 0);
-
-#if defined(POINTER_BLANK) || defined(CURSOR_BLINK)
-	tp.tv_sec = 0;		/* presume == 0 implies time not yet retrieved */
-#endif
-#if defined(CURSOR_BLINK)
-	want_keypress_time = 0;
-#endif
-#if defined(POINTER_BLANK)
-	want_motion_time = 0;
-#endif
-
-	if (XPending (R->Xdisplay))
-          {
-            R->process_x_events ();
-
-	    /* in case button actions pushed chars to cmdbuf */
-	    if (R->cmdbuf_ptr < R->cmdbuf_endp)
-		return *R->cmdbuf_ptr++;
-	  }
-
-#if defined(CURSOR_BLINK)
-	if (want_keypress_time) {
-	    (void)gettimeofday(&tp, NULL);
-	    R->lastcursorchange.tv_sec = tp.tv_sec;
-	    R->lastcursorchange.tv_usec = tp.tv_usec;
-	}
-#endif
-#if defined(POINTER_BLANK)
-	if (want_motion_time) {
-	    if (!tp.tv_sec)
-		(void)gettimeofday(&tp, NULL);
-	    R->lastmotion.tv_sec = tp.tv_sec;
-	    R->lastmotion.tv_usec = tp.tv_usec;
-	}
-#endif
-
-/*
- * the command input buffer is empty and we have no pending X events
- */
-	quick_timeout = 0;
 
 #if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
 	if (R->mouse_slip_wheel_speed) {
@@ -1038,114 +1002,44 @@ rxvt_cmd_getc(pR)
 	}
 #endif				/* NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING */
 
-	FD_ZERO(&readfds);
-	FD_SET(R->cmd_fd, &readfds);
-	FD_SET(R->Xfd, &readfds);
-	value.tv_usec = TIMEOUT_USEC;
-	value.tv_sec = 0;
-
-	if (!R->TermWin.mapped)
-	    quick_timeout = 0;
-	else {
-	    quick_timeout |= R->want_refresh;
 #ifdef TRANSPARENT
 	    quick_timeout |= R->want_full_refresh;
 #endif
-	}
-
-#if defined(POINTER_BLANK) || defined(CURSOR_BLINK)
-	{
-	    int             set_quick_timeout = 0;
-	    long            csdiff, psdiff;
-
-#define BLINK_TIME	500000L
-	    csdiff = psdiff = 60000000L;	/* or, say, LONG_MAX */
-# if defined(CURSOR_BLINK)
-	    if (R->Options & Opt_cursorBlink) {
-		if (!tp.tv_sec)	/* didn't get it before so get it now */
-		    (void)gettimeofday(&tp, NULL);
-
-		csdiff = (tp.tv_sec - R->lastcursorchange.tv_sec) * 1000000L
-			 + tp.tv_usec - R->lastcursorchange.tv_usec;
-		if (csdiff > BLINK_TIME) { /* XXX: settable blink times */
-		    R->lastcursorchange.tv_sec = tp.tv_sec;
-		    R->lastcursorchange.tv_usec = tp.tv_usec;
-		    R->hidden_cursor = !R->hidden_cursor;
-		    csdiff = 0;
-		} else
-		    csdiff = BLINK_TIME - csdiff;
-		set_quick_timeout = 1;
-	    }
-# endif
-# if defined(POINTER_BLANK)
-	/*
-	 * If we haven't moved the pointer for a while
-	 */
-	    if ((R->Options & Opt_pointerBlank)
-		&& (R->pointerBlankDelay > 0)
-		&& (R->hidden_pointer == 0)) {
-		long            pdelay;
-
-		if (!tp.tv_sec)	/* didn't get it before so get it now */
-		    (void)gettimeofday(&tp, NULL);
-		psdiff = (tp.tv_sec - R->lastmotion.tv_sec) * 1000000L
-			 + tp.tv_usec - R->lastmotion.tv_usec;
-		pdelay = R->pointerBlankDelay * 1000000L;
-		if (psdiff >= pdelay)
-		    rxvt_pointer_blank(aR);
-		else {
-		    set_quick_timeout = 1;
-		    psdiff = pdelay - psdiff;
-		}
-	    }
-# endif
-	    if (!quick_timeout && set_quick_timeout) {
-		MIN_IT(csdiff, psdiff);
-		value.tv_sec =  csdiff / 1000000L;
-		value.tv_usec = csdiff % 1000000L;
-		quick_timeout = 1;
-	    }
-	}
-#endif
-
-	if ((select_res = select(R->num_fds, &readfds, NULL, NULL,
-				 (quick_timeout ? &value : NULL))) == 0) {
-	/* select statement timed out - we're not hard and fast scrolling */
-	    R->refresh_limit = 1;
-	}
-#if defined(CURSOR_BLINK)
-	if (R->Options & Opt_cursorBlink)
-	    R->want_refresh = 1;
-#endif
-    }
-}
-
-/* EXTPROTO */
-void
-rxvt_pointer_unblank(pR)
-{
-    XDefineCursor(R->Xdisplay, R->TermWin.vt, R->TermWin_cursor);
-    rxvt_recolour_cursor(aR);
-#ifdef POINTER_BLANK
-    R->hidden_pointer = 0;
-    if (R->pointerBlankDelay > 0) {
-	struct timeval  tp;
-
-	(void)gettimeofday(&tp, NULL);
-	R->lastmotion.tv_sec = tp.tv_sec;
-	R->lastmotion.tv_usec = tp.tv_usec;
-    }
 #endif
 }
 
 #ifdef POINTER_BLANK
-/* INTPROTO */
 void
-rxvt_pointer_blank(pR)
+rxvt_term::pointer_unblank ()
 {
-    XDefineCursor(R->Xdisplay, R->TermWin.vt, R->pointer_blank);
-    XFlush(R->Xdisplay);
-    R->hidden_pointer = 1;
+  if (!(Options & Opt_pointerBlank))
+    return;
+
+  XDefineCursor (Xdisplay, TermWin.vt, TermWin_cursor);
+  rxvt_recolour_cursor (this);
+  hidden_pointer = 0;
+
+  pointer_ev.start (NOW + pointerBlankDelay);
+}
+
+void
+rxvt_term::pointer_blank ()
+{
+  pointer_ev.stop ();
+
+  if (!(Options & Opt_pointerBlank))
+    return;
+
+  XDefineCursor (Xdisplay, TermWin.vt, blank_cursor);
+  XFlush (Xdisplay);
+
+  hidden_pointer = 1;
+}
+
+void
+rxvt_term::pointer_cb (time_watcher &w)
+{
+  pointer_blank ();
 }
 #endif
 
@@ -1558,7 +1452,7 @@ rxvt_process_x_event(pR_ XEvent *ev)
     case MotionNotify:
 #ifdef POINTER_BLANK
 	if (R->hidden_pointer)
-	    rxvt_pointer_unblank(aR);
+	    R->pointer_unblank ();
 #endif
 #if MENUBAR
 	if (isMenuBarWindow(ev->xany.window)) {

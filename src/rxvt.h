@@ -1,5 +1,5 @@
 /*
- * $Id: rxvt.h,v 1.5 2003/11/25 15:44:39 pcg Exp $
+ * $Id: rxvt.h,v 1.6 2003/11/25 17:11:33 pcg Exp $
  */
 
 #ifndef _RXVT_H_                /* include once only */
@@ -1020,9 +1020,9 @@ struct rxvt_term : rxvt_vars {
   gid_t           egid;
 #endif
 /* ---------- */
-  Cursor          pointer_leftptr;
+  Cursor          leftptr_cursor;
 #ifdef POINTER_BLANK
-  Cursor          pointer_blank;
+  Cursor          blank_cursor;
 #endif
 /* ---------- */
   const char     *ttydev;     /* pty/tty name */
@@ -1120,6 +1120,12 @@ struct rxvt_term : rxvt_vars {
 
 #ifdef CURSOR_BLINK
   void blink_cb (time_watcher &w); time_watcher blink_ev;
+#endif
+
+#ifdef POINTER_BLANK
+  void pointer_cb (time_watcher &w); time_watcher pointer_ev;
+  void pointer_blank ();
+  void pointer_unblank ();
 #endif
 
   void flush ();

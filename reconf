@@ -3,5 +3,4 @@
             --with-term=xterm --enable-keepscrolling --enable-xft \
             --enable-frills --disable-swapscreen \
             --with-codesets=eu,jp \
-            --enable-cursor-blink
-            #--enable-pointer-blank --enable-cursor-blink
+            --enable-cursor-blink --enable-pointer-blank --enable-cursor-blink

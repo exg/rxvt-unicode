@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	scrollbar.c
  *----------------------------------------------------------------------*
- * $Id: scrollbar.C,v 1.3 2003/11/25 11:52:42 pcg Exp $
+ * $Id: scrollbar.C,v 1.4 2003/11/25 17:11:33 pcg Exp $
  *
  * Copyright (c) 1997,1998 mj olesen <olesen@me.QueensU.CA>
  * Copyright (c) 1998      Alfredo K. Kojima <kojima@windowmaker.org>
@@ -107,7 +107,7 @@ rxvt_Resize_scrollBar(pR)
 #ifdef DEBUG_X
 	XStoreName(R->Xdisplay, R->scrollBar.win, "scrollbar");
 #endif
-	XDefineCursor(R->Xdisplay, R->scrollBar.win, R->pointer_leftptr);
+	XDefineCursor(R->Xdisplay, R->scrollBar.win, R->leftptr_cursor);
 	XSelectInput(R->Xdisplay, R->scrollBar.win,
 		     (ExposureMask | ButtonPressMask | ButtonReleaseMask
 		      | Button1MotionMask | Button2MotionMask

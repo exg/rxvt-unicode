@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        init.c
  *----------------------------------------------------------------------*
- * $Id: init.C,v 1.5 2003/11/25 15:44:38 pcg Exp $
+ * $Id: init.C,v 1.6 2003/11/25 17:11:33 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -1079,10 +1079,6 @@ rxvt_Create_Windows(pR_ int argc, const char *const *argv)
     XCMAP = DefaultColormap(R->Xdisplay, Xscreen);
     XVISUAL = DefaultVisual(R->Xdisplay, Xscreen);
 
-#ifdef POINTER_BLANK
-    static rxvt_color blackcolour;
-    blackcolour.set (r, 0, 0, 0);
-#endif
     if (R->Options & Opt_transparent) {
         XGetWindowAttributes(R->Xdisplay, RootWindow(R->Xdisplay, Xscreen),
                              &gattr);
@@ -1166,13 +1162,20 @@ rxvt_Create_Windows(pR_ int argc, const char *const *argv)
 
 #if defined(HAVE_SCROLLBARS) || defined(MENUBAR)
 /* cursor (menuBar/scrollBar): Black-on-White */
-    R->pointer_leftptr = XCreateFontCursor(R->Xdisplay, XC_left_ptr);
+    R->leftptr_cursor = XCreateFontCursor(R->Xdisplay, XC_left_ptr);
 #endif
 
 #ifdef POINTER_BLANK
-    R->pointer_blank = XCreateGlyphCursor(R->Xdisplay, R->TermWin.font->fid,
-                                             R->TermWin.font->fid, ' ', ' ',
-                                             &blackcolour, &blackcolour);
+    {
+      XColor blackcolour;
+      blackcolour.red   = 0;
+      blackcolour.green = 0;
+      blackcolour.blue  = 0;
+      Font f = XLoadFont (R->Xdisplay, "fixed");
+      R->blank_cursor = XCreateGlyphCursor (R->Xdisplay, f, f, ' ', ' ',
+                                            &blackcolour, &blackcolour);
+      XUnloadFont (R->Xdisplay, f);
+    }
 #endif
 
 /* the vt window */
@@ -1186,7 +1189,9 @@ rxvt_Create_Windows(pR_ int argc, const char *const *argv)
 #ifdef DEBUG_X
     XStoreName(R->Xdisplay, R->TermWin.vt, "vt window");
 #endif
-    rxvt_pointer_unblank(aR);
+
+    R->pointer_unblank ();
+
     vt_emask = (ExposureMask | ButtonPressMask | ButtonReleaseMask
                 | PropertyChangeMask);
 #ifdef POINTER_BLANK

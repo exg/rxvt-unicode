@@ -41,6 +41,8 @@ time_watcher::~time_watcher ()
 {
   if (iom_valid)
     iom.unreg (this);
+
+  at = TSTAMP_CANCEL;
 }
 
 io_watcher::~io_watcher ()
@@ -102,9 +104,8 @@ void io_manager::loop ()
           // call it
           w->call (*w);
 
-          // re-add it if necessary
-          if (w->at >= 0)
-            reg (w);
+          if (w->at < 0)
+            unreg (w);
         }
 
       struct timeval to;
