@@ -9,6 +9,7 @@
 #include <cstring>
 
 #include <unistd.h>
+#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/socket.h>
@@ -52,6 +53,8 @@ unix_listener::unix_listener (const char *sockname)
       exit (EXIT_FAILURE);
     }
 
+  fcntl (fd, F_SETFD, FD_CLOEXEC);
+
   sockaddr_un sa;
 
   sa.sun_family = AF_UNIX;
@@ -83,7 +86,10 @@ void unix_listener::accept_cb (io_watcher &w, short revents)
   int fd2 = accept (fd, 0, 0);
 
   if (fd2 >= 0)
-    new server (fd2);
+    {
+      fcntl (fd2, F_SETFD, FD_CLOEXEC);
+      new server (fd2);
+    }
 }
 
 void server::log_msg (const char *msg)
