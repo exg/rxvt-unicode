@@ -90,7 +90,7 @@ const struct rxvt_fallback_font {
   { CS_JIS0212_1990_0, "-*-*-*-r-*--*-*-*-*-c-*-jisx0212*-0"       },
 #endif
 
-#if ENCODING_CN || ENCODING_CN_EXT
+#if ENCODING_ZH || ENCODING_ZH_EXT
 # if XFT
   { CS_BIG5_EXT,       "xft:AR PL Mingti2L Big5"                   },
   { CS_BIG5_EXT,       "xft:AR PL KaitiM Big5"                     },
@@ -127,13 +127,13 @@ const struct rxvt_fallback_font {
   { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-c-*-iso10646-1"         },
   { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1"         },
 #if XFT
-  { CS_UNICODE,      "xft:Bitstream Vera Sans Mono:antialias=false"},
+  { CS_UNICODE,      "xft:Bitstream Vera Sans Mono:antialias=false:autohint=true"},
+  { CS_UNICODE,      "xft:Courier New:antialias=false:autohint=true" },
   { CS_UNICODE,      "xft:Andale Mono:antialias=false"             },
   { CS_UNICODE,      "xft:Arial Unicode MS:antialias=false"        },
-  { CS_UNICODE,      "xft:Courier New:antialias=false"             },
 
   // FreeMono is usually uglier than x fonts, so try last only.
-  { CS_UNICODE,      "xft:FreeMono"                                },
+  { CS_UNICODE,      "xft:FreeMono:autohint=true"                  },
 #endif
 
   { CS_UNKNOWN, 0 }
@@ -420,17 +420,31 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 #if ENABLE_COMBINING
       else if (IS_COMPOSE (t) && (cc = rxvt_composite[t]))
         {
-          rxvt_font *f1 = (*fs)[fs->find_font (cc->c1)];
-          f1->draw (d, x, y, &(t = cc->c1), 1, fg, bg);
+          text_t c2[2];
+          int len2 = 1;
+          
+          // support double-width (but not more) combining characters
+          if (len && *text == NOCHAR)
+            {
+              c2[1] = *text; // not text++ to get correct x-width
+              len2++;
+            }
+
+          c2[0] = cc->c1;
+          rxvt_font *f1 = (*fs)[fs->find_font (c2[0])];
+          f1->draw (d, x, y, c2, len2, fg, bg);
+
           if (cc->c2 != NOCHAR)
             {
-              // prefer font of first character, for no good reasons
               bool careful;
-              rxvt_font *f2 = f1->has_char (cc->c2, 0, careful)
-                                ? f1
-                                : (*fs)[fs->find_font (cc->c2)];
 
-              f2->draw (d, x, y, &(t = cc->c2), 1, fg, -1);
+              // prefer font of first character, for no good reasons
+              c2[0] = cc->c2;
+              rxvt_font *f2 = (f1->has_char (c2[0], 0, careful) && !careful)
+                                ? f1
+                                : (*fs)[fs->find_font (c2[0])];
+
+              f2->draw (d, x, y, c2, len2, fg, -1);
             }
         }
 #endif
@@ -1266,6 +1280,9 @@ rxvt_fontset::~rxvt_fontset ()
 void
 rxvt_fontset::clear ()
 {
+  prop.width = prop.height = prop.weight = prop.slant
+    = rxvt_fontprop::unset;
+
   for (rxvt_font **i = fonts.begin (); i != fonts.end (); i++)
     FONT_UNREF (*i);
 
@@ -1395,7 +1412,7 @@ rxvt_fontset::realize_font (int i)
 }
 
 bool
-rxvt_fontset::populate (const char *desc, const rxvt_fontprop &prop)
+rxvt_fontset::populate (const char *desc)
 {
   clear ();
 
@@ -1403,8 +1420,6 @@ rxvt_fontset::populate (const char *desc, const rxvt_fontprop &prop)
 
   fonts.push_back (new_font (0, CS_UNICODE));
   realize_font (0);
-
-  this->prop = prop;
 
   add_fonts (desc);
 
