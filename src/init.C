@@ -35,7 +35,7 @@
 #include "rxvt.h"               /* NECESSARY */
 #include "init.h"
 
-#include <signal.h>
+#include <csignal>
 
 const char *const def_colorName[] =
   {

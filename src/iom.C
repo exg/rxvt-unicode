@@ -35,7 +35,7 @@
 
 // for IOM_SIG
 #if IOM_SIG
-# include <signal.h>
+# include <csignal>
 # include <fcntl.h>
 #endif
 
@@ -416,13 +416,14 @@ void io_manager::loop ()
               iow.erase_unordered (i);
             else
               {
-                short revents = iow[i]->events;
+                io_watcher &w = *iow[i];
+                short revents = w.events;
 
-                if (!FD_ISSET (iow[i]->fd, &rfd)) revents &= ~EVENT_READ;
-                if (!FD_ISSET (iow[i]->fd, &wfd)) revents &= ~EVENT_WRITE;
+                if (!FD_ISSET (w.fd, &rfd)) revents &= ~EVENT_READ;
+                if (!FD_ISSET (w.fd, &wfd)) revents &= ~EVENT_WRITE;
 
                 if (revents)
-                  iow[i]->call (*iow[i], revents);
+                  w.call (w, revents);
               }
 #endif
         }

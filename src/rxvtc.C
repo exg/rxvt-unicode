@@ -28,9 +28,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <csignal>
 
 #include <unistd.h>
-#include <signal.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 

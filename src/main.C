@@ -34,7 +34,7 @@
 #include "rxvt.h"               /* NECESSARY */
 #include "main.intpro"          /* PROTOS for internal routines */
 
-#include <signal.h>
+#include <csignal>
 
 #ifdef TTY_GID_SUPPORT
 # include <grp.h>
