@@ -54,6 +54,11 @@
 
 /*----------------------------------------------------------------------*/
 
+#define IS_CONTROL(ch) !((ch) & 0xffffff60UL)
+
+// exception thrown when the command parser runs out of input data
+class out_of_input { } out_of_input;
+
 /*{{{ Convert the keypress event into a string */
 void
 rxvt_term::lookup_key (XKeyEvent &ev)
@@ -90,11 +95,13 @@ rxvt_term::lookup_key (XKeyEvent &ev)
     {
       Status status_return;
 
+#if 0
 #ifdef X_HAVE_UTF8_STRING
       if (enc_utf8 && 0) // currently disabled, doesn't seem to work, nor is useful
         len = Xutf8LookupString (Input_Context, &ev, (char *)kbuf,
                                  KBUFSZ, &keysym, &status_return);
       else
+#endif
 #endif
         {
           wchar_t wkbuf[KBUFSZ + 1];
@@ -618,10 +625,10 @@ rxvt_term::lookup_key (XKeyEvent &ev)
 unsigned int
 rxvt_term::cmd_write (const unsigned char *str, unsigned int count)
 {
-  unsigned int    n, s;
+  unsigned int n, s;
 
   n = cmdbuf_ptr - cmdbuf_base;
-  s = cmdbuf_base + BUFSIZ - 1 - cmdbuf_endp;
+  s = cmdbuf_base + CBUFSIZ - 1 - cmdbuf_endp;
 
   if (n > 0 && s < count)
     {
@@ -634,7 +641,7 @@ rxvt_term::cmd_write (const unsigned char *str, unsigned int count)
 
   if (count > s)
     {
-      rxvt_print_error ("data loss: cmd_write too large");
+      rxvt_warn ("data loss: cmd_write too large, continuing.\n");
       count = s;
     }
 
@@ -715,7 +722,7 @@ rxvt_term::pty_fill ()
   cmdbuf_ptr = cmdbuf_base;
   cmdbuf_endp = cmdbuf_ptr + n;
 
-  n = read (cmd_fd, cmdbuf_endp, BUFSIZ - n);
+  n = read (cmd_fd, cmdbuf_endp, CBUFSIZ - n);
 
   if (n > 0)
     {
@@ -738,183 +745,21 @@ rxvt_term::pty_cb (io_watcher &w, short revents)
     tt_write (0, 0);
   else if (revents & EVENT_READ)
     {
-      bool flag = true;
-
       // loop, but don't allow a single term to monopolize us
       // the number of loops is fully arbitrary, and thus wrong
-      while (flag && pty_fill ())
+      while (pty_fill ())
         {
           if (!seen_input)
             {
               seen_input = 1;
               /* once we know the shell is running, send the screen size.  Again! */
+              // I don't know why, btw.
               tt_winch ();
             }
 
           if (cmd_parse ())
             break;
         }
-    }
-}
-
-bool
-rxvt_term::cmd_parse ()
-{
-  bool flag = false;
-  unicode_t ch = NOCHAR;
-
-  for (;;)
-    {
-      if (ch == NOCHAR)
-        ch = next_char ();
-
-      if (ch == NOCHAR) // TODO: improve
-        break;
-
-      if (ch >= ' ' || ch == '\t' || ch == '\n' || ch == '\r')
-        {
-          /* Read a text string from the input buffer */
-          unicode_t buf[BUFSIZ];
-          bool refreshnow = false;
-          int nlines = 0;
-          unicode_t *str = buf;
-
-          *str++ = ch;
-
-          for (;;)
-            {
-              ch = next_char ();
-
-              if (ch == NOCHAR || (ch < ' ' && ch != '\t' && ch != '\n' && ch != '\r'))
-                break;
-              else
-                {
-                  *str++ = ch;
-
-                  if (ch == '\n')
-                    {
-                      nlines++;
-                      refresh_count++;
-
-                      if (! (Options & Opt_jumpScroll)
-                          || (refresh_count >= (refresh_limit * (TermWin.nrow - 1))))
-                        {
-                          refreshnow = true;
-                          flag = false;
-                          ch = NOCHAR;
-                          break;
-                        }
-
-                      // scr_add_lines only works for nlines < TermWin.nrow - 1.
-                      if (nlines >= TermWin.nrow - 1)
-                        {
-                          scr_add_lines (buf, nlines, str - buf);
-                          nlines = 0;
-                          str = buf;
-                        }
-                    }
-
-                  if (str >= buf + BUFSIZ)
-                    {
-                      ch = NOCHAR;
-                      break;
-                    }
-                }
-            }
-
-          scr_add_lines (buf, nlines, str - buf);
-
-          /*
-           * If there have been a lot of new lines, then update the screen
-           * What the heck I'll cheat and only refresh less than every page-full.
-           * the number of pages between refreshes is refresh_limit, which
-           * is incremented here because we must be doing flat-out scrolling.
-           *
-           * refreshing should be correct for small scrolls, because of the
-           * time-out
-           */
-          if (refreshnow)
-            {
-              if ((Options & Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
-                refresh_limit++;
-
-              scr_refresh (refresh_type);
-            }
-
-        }
-      else
-        {
-          switch (ch)
-            {
-              default:
-                process_nonprinting (ch);
-                break;
-              case C0_ESC:	/* escape char */
-                process_escape_seq ();
-                break;
-                /*case 0x9b: */	/* CSI */
-                /*  process_csi_seq (); */
-            }
-
-          ch = NOCHAR;
-        }
-    }
-
-  return flag;
-}
-
-// read the next character, currently handles UTF-8
-// will probably handle all sorts of other stuff in the future
-unicode_t
-rxvt_term::next_char ()
-{
-  while (cmdbuf_ptr < cmdbuf_endp)
-    {
-      // assume 0x20 .. 0x7f to be ascii ALWAYS (all shift-states etc.) uh-oh
-      if ((*cmdbuf_ptr <= 0x7f && 0x20 <= *cmdbuf_ptr)
-          || !*cmdbuf_ptr)
-        return *cmdbuf_ptr++;
-
-      wchar_t wc;
-      size_t len = mbrtowc (&wc, (char *)cmdbuf_ptr, cmdbuf_endp - cmdbuf_ptr, mbstate);
-
-      if (len == (size_t)-2)
-        {
-          // the mbstate stores incomplete sequences. didn't know this :/
-          cmdbuf_ptr = cmdbuf_endp;
-          break;
-        }
-
-      if (len == (size_t)-1)
-        return *cmdbuf_ptr++; // the _occasional_ latin1 character is allowed to slip through
-
-      // assume wchar == unicode
-      cmdbuf_ptr += len;
-      return wc;
-    }
-
-  return NOCHAR;
-}
-
-/* rxvt_cmd_getc () - Return next input character */
-/*
- * Return the next input character after first passing any keyboard input
- * to the command.
- */
-unicode_t
-rxvt_term::cmd_getc ()
-{
-  for (;;)
-    {
-      unicode_t c = next_char ();
-      if (c != NOCHAR)
-        return c;
-
-      // incomplete sequences should occur rarely, still, a better solution
-      // would be preferred. either setjmp/longjmp or better design.
-      fcntl (cmd_fd, F_SETFL, 0);
-      pty_fill ();
-      fcntl (cmd_fd, F_SETFL, O_NONBLOCK);
     }
 }
 
@@ -1293,7 +1138,7 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case SelectionClear:
-        display->set_selection_owner (0);
+        selection_clear ();
         break;
 
       case SelectionNotify:
@@ -2074,6 +1919,161 @@ rxvt_term::check_our_parents ()
 
 /*}}} */
 
+bool
+rxvt_term::cmd_parse ()
+{
+  bool flag = false;
+  unicode_t ch = NOCHAR;
+  unsigned char *seq_begin; // remember start of esc-sequence here
+
+  for (;;)
+    {
+      if (ch == NOCHAR)
+        {
+          seq_begin = cmdbuf_ptr;
+          ch = next_char ();
+        }
+
+      if (ch == NOCHAR) // TODO: improve
+        break;
+
+      if (!IS_CONTROL (ch) || ch == '\t' || ch == '\n' || ch == '\r')
+        {
+          /* Read a text string from the input buffer */
+          unicode_t buf[UBUFSIZ];
+          bool refreshnow = false;
+          int nlines = 0;
+          unicode_t *str = buf;
+
+          *str++ = ch;
+
+          for (;;)
+            {
+              seq_begin = cmdbuf_ptr;
+              ch = next_char ();
+
+              if (ch == NOCHAR || (IS_CONTROL (ch) && ch != '\t' && ch != '\n' && ch != '\r'))
+                break;
+
+              *str++ = ch;
+
+              if (ch == '\n')
+                {
+                  nlines++;
+                  refresh_count++;
+
+                  if (! (Options & Opt_jumpScroll)
+                      || (refresh_count >= (refresh_limit * (TermWin.nrow - 1))))
+                    {
+                      refreshnow = true;
+                      flag = true;
+                      ch = NOCHAR;
+                      break;
+                    }
+
+                  // scr_add_lines only works for nlines < TermWin.nrow - 1.
+                  if (nlines >= TermWin.nrow - 1)
+                    {
+                      scr_add_lines (buf, nlines, str - buf);
+                      nlines = 0;
+                      str = buf;
+                    }
+                }
+
+              if (str >= buf + UBUFSIZ)
+                {
+                  ch = NOCHAR;
+                  break;
+                }
+            }
+
+          scr_add_lines (buf, nlines, str - buf);
+
+          /*
+           * If there have been a lot of new lines, then update the screen
+           * What the heck I'll cheat and only refresh less than every page-full.
+           * the number of pages between refreshes is refresh_limit, which
+           * is incremented here because we must be doing flat-out scrolling.
+           *
+           * refreshing should be correct for small scrolls, because of the
+           * time-out
+           */
+          if (refreshnow)
+            {
+              if ((Options & Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
+                refresh_limit++;
+
+              scr_refresh (refresh_type);
+            }
+
+        }
+      else
+        {
+          try
+            {
+              process_nonprinting (ch);
+            }
+          catch (const class out_of_input &o)
+            {
+              // we ran out of input, retry later
+              cmdbuf_ptr = seq_begin;
+              break;
+            }
+
+          ch = NOCHAR;
+        }
+    }
+
+  return flag;
+}
+
+// read the next character
+unicode_t
+rxvt_term::next_char ()
+{
+  while (cmdbuf_ptr < cmdbuf_endp)
+    {
+      // assume 7-bit to be ascii ALWAYS
+      if (*cmdbuf_ptr <= 0x7f && *cmdbuf_ptr != 0x1b)
+        return *cmdbuf_ptr++;
+
+      wchar_t wc;
+      size_t len = mbrtowc (&wc, (char *)cmdbuf_ptr, cmdbuf_endp - cmdbuf_ptr, mbstate);
+
+      if (len == (size_t)-2)
+        {
+          // the mbstate stores incomplete sequences. didn't know this :/
+          cmdbuf_ptr = cmdbuf_endp;
+          break;
+        }
+
+      if (len == (size_t)-1)
+        return *cmdbuf_ptr++; // the _occasional_ latin1 character is allowed to slip through
+
+      // assume wchar == unicode
+      cmdbuf_ptr += len;
+      return wc;
+    }
+
+  return NOCHAR;
+}
+
+/* rxvt_cmd_getc () - Return next input character */
+/*
+ * Return the next input character after first passing any keyboard input
+ * to the command.
+ */
+unicode_t
+rxvt_term::cmd_getc ()
+{
+  unicode_t c = next_char ();
+
+  if (c == NOCHAR)
+    throw out_of_input;
+
+  return c;
+}
+
 /*{{{ print pipe */
 /*----------------------------------------------------------------------*/
 #ifdef PRINTPIPE
@@ -2083,7 +2083,8 @@ rxvt_term::popen_printer ()
   FILE *stream = popen (rs[Rs_print_pipe], "w");
 
   if (stream == NULL)
-    rxvt_print_error ("can't open printer pipe");
+    rxvt_warn ("can't open printer pipe, not printing.\n");
+
   return stream;
 }
 
@@ -2091,13 +2092,7 @@ int
 rxvt_term::pclose_printer (FILE *stream)
 {
   fflush (stream);
-  /* pclose () reported not to work on SunOS 4.1.3 */
-# if defined (__sun__)		/* TODO: RESOLVE THIS */
-  /* pclose works provided SIGCHLD handler uses waitpid */
-  return pclose (stream);	/* return fclose (stream); */
-# else
   return pclose (stream);
-# endif
 }
 
 /*
@@ -2106,8 +2101,8 @@ rxvt_term::pclose_printer (FILE *stream)
 void
 rxvt_term::process_print_pipe ()
 {
-  int             done;
-  FILE           *fd;
+  int done;
+  FILE *fd;
 
   if ((fd = popen_printer ()) == NULL)
     return;
@@ -2118,9 +2113,9 @@ rxvt_term::process_print_pipe ()
    */
   for (done = 0; !done;)
     {
-      unsigned char   buf[8];
-      unsigned char   ch;
-      unsigned int    i, len;
+      unsigned char buf[8];
+      unicode_t ch;
+      unsigned int i, len;
 
       if ((ch = cmd_getc ()) != C0_ESC)
         {
@@ -2145,6 +2140,7 @@ rxvt_term::process_print_pipe ()
                     break;	/* done = 1 */
                 }
             }
+          
           for (i = 0; i < len; i++)
             if (putc (buf[i], fd) == EOF)
               {
@@ -2153,6 +2149,7 @@ rxvt_term::process_print_pipe ()
               }
         }
     }
+
   pclose_printer (fd);
 }
 #endif				/* PRINTPIPE */
@@ -2170,10 +2167,13 @@ enum {
 
 /*{{{ process non-printing single characters */
 void
-rxvt_term::process_nonprinting (unsigned char ch)
+rxvt_term::process_nonprinting (unicode_t ch)
 {
   switch (ch)
     {
+      case C0_ESC:
+        process_escape_seq ();
+        break;
       case C0_ENQ:	/* terminal Status */
         if (rs[Rs_answerbackstring])
           tt_write (
@@ -2206,6 +2206,17 @@ rxvt_term::process_nonprinting (unsigned char ch)
       case C0_SI:		/* shift in - acs */
         scr_charset_choose (0);
         break;
+
+      // 8-bit controls
+      case 0x90: 	/* DCS */
+        process_dcs_seq ();
+        break;
+      case 0x9b: 	/* CSI */
+        process_csi_seq ();
+        break;
+      case 0x9d: 	/* CSI */
+        process_osc_seq ();
+        break;
     }
 }
 /*}}} */
@@ -2213,7 +2224,7 @@ rxvt_term::process_nonprinting (unsigned char ch)
 
 /*{{{ process VT52 escape sequences */
 void
-rxvt_term::process_escape_vt52 (unsigned char ch)
+rxvt_term::process_escape_vt52 (unicode_t ch)
 {
   int row, col;
 
@@ -2275,7 +2286,7 @@ rxvt_term::process_escape_vt52 (unsigned char ch)
 void
 rxvt_term::process_escape_seq ()
 {
-  unsigned char   ch = cmd_getc ();
+  unicode_t ch = cmd_getc ();
 
   if (PrivateModes & PrivMode_vt52)
     {
@@ -2435,10 +2446,10 @@ const unsigned char csi_defaults[] =
 void
 rxvt_term::process_csi_seq ()
 {
-  unsigned char   ch, priv, i;
-  unsigned int    nargs, p;
-  int             n, ndef;
-  int             arg[ESC_ARGS];
+  unicode_t ch, priv, i;
+  unsigned int nargs, p;
+  int n, ndef;
+  int arg[ESC_ARGS];
 
   for (nargs = ESC_ARGS; nargs > 0;)
     arg[--nargs] = 0;
@@ -2450,6 +2461,7 @@ rxvt_term::process_csi_seq ()
       priv = ch;
       ch = cmd_getc ();
     }
+
   /* read any numerical arguments */
   for (n = -1; ch < CSI_ICH; )
     {
@@ -2466,19 +2478,9 @@ rxvt_term::process_csi_seq ()
             arg[nargs++] = n;
           n = -1;
         }
-      else if (ch == '\b')
-        {
-          scr_backspace ();
-        }
-      else if (ch == C0_ESC)
-        {
-          process_escape_seq ();
-          return;
-        }
-      else if (ch < ' ')
-        {
-          process_nonprinting (ch);
-        }
+      else if (IS_CONTROL (ch))
+        process_nonprinting (ch);
+
       ch = cmd_getc ();
     }
 
@@ -2730,7 +2732,7 @@ rxvt_term::process_csi_seq ()
       case CSI_78:		/* DECREQTPARM */
         if (arg[0] == 0 || arg[0] == 1)
           tt_printf ("\033[%d;1;1;128;128;1;0x", arg[0] + 2);
-        /* FALLTHROUGH */
+        break;
 
       default:
         break;
@@ -2743,20 +2745,18 @@ rxvt_term::process_csi_seq ()
 void
 rxvt_term::process_window_ops (const int *args, unsigned int nargs)
 {
-  int             x, y;
-#if 0
-  char           *s;
-#endif
+  int x, y;
   XWindowAttributes wattr;
-  Window          wdummy;
+  Window wdummy;
 
   if (nargs == 0)
     return;
+
   switch (args[0])
     {
-        /*
-         * commands
-         */
+      /*
+       * commands
+       */
       case 1:			/* deiconify window */
         XMapWindow (display->display, TermWin.parent[0]);
         break;
@@ -2783,14 +2783,18 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
         set_widthheight ((unsigned int) (args[2] * TermWin.fwidth),
                          (unsigned int) (args[1] * TermWin.fheight));
         break;
+
+      //case 9: NYI, TODO, restore maximized window or maximize window
       default:
         if (args[0] >= 24)	/* set height (chars) */
           set_widthheight ((unsigned int)TermWin.width,
                            (unsigned int) (args[1] * TermWin.fheight));
         break;
-        /*
-         * reports - some output format copied from XTerm
-         */
+
+
+      /*
+       * reports - some output format copied from XTerm
+       */
       case 11:			/* report window state */
         XGetWindowAttributes (display->display, TermWin.parent[0], &wattr);
         tt_printf ("\033[%dt", wattr.map_state == IsViewable ? 1 : 2);
@@ -2806,8 +2810,11 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
         XGetWindowAttributes (display->display, TermWin.parent[0], &wattr);
         tt_printf ("\033[4;%d;%dt", wattr.height, wattr.width);
         break;
-      case 18:			/* report window size (chars) */
+      case 18:			/* report text area size (chars) */
         tt_printf ("\033[8;%d;%dt", TermWin.nrow, TermWin.ncol);
+        break;
+      case 19:			/* report window size (chars) */
+        tt_printf ("\033[9;%d;%dt", TermWin.nrow, TermWin.ncol);
         break;
 #if 0 /* XXX: currently disabled due to security concerns */
       case 20:			/* report icon label */
@@ -2819,7 +2826,6 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
         tt_printf ("\033]l%-.200s\234", s ? s : "");	/* 8bit ST */
         break;
 #endif
-
     }
 }
 #endif
@@ -2827,22 +2833,24 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
 /*----------------------------------------------------------------------*/
 /*
  * get input up until STRING TERMINATOR (or BEL)
- * ends_how is terminator used.  returned input must be free ()d
+ * ends_how is terminator used. returned input must be free ()d
  */
-unsigned char  *
-rxvt_term::get_to_st (unsigned char *ends_how)
+unsigned char *
+rxvt_term::get_to_st (unicode_t &ends_how)
 {
-  int             seen_esc = 0;	/* seen escape? */
-  unsigned int    n = 0;
-  unsigned char  *s;
-  unsigned char   ch, string[STRING_MAX];
+  int seen_esc = 0;	/* seen escape? */
+  unsigned int n = 0;
+  unsigned char *s;
+  unicode_t ch;
+  unsigned char string[STRING_MAX];
 
-  for (; (ch = cmd_getc ());)
+  while ((ch = cmd_getc ()))
     {
       if (ch == C0_BEL
           || ch == CHAR_ST
           || (ch == 0x5c && seen_esc))	/* 7bit ST */
         break;
+
       if (ch == C0_ESC)
         {
           seen_esc = 1;
@@ -2852,14 +2860,19 @@ rxvt_term::get_to_st (unsigned char *ends_how)
         ch = ' ';	/* translate '\t' to space */
       else if (ch < 0x08 || (ch > 0x0d && ch < 0x20))
         return NULL;	/* other control character - exit */
+
       if (n < sizeof (string) - 1)
         string[n++] = ch;
+
       seen_esc = 0;
     }
+
   string[n++] = '\0';
+
   if ((s = (unsigned char *)rxvt_malloc (n)) == NULL)
     return NULL;
-  *ends_how = (ch == 0x5c ? C0_ESC : ch);
+
+  ends_how = (ch == 0x5c ? C0_ESC : ch);
   STRNCPY (s, string, n);
   return s;
 }
@@ -2871,13 +2884,16 @@ rxvt_term::get_to_st (unsigned char *ends_how)
 void
 rxvt_term::process_dcs_seq ()
 {
-  unsigned char    eh, *s;
+  unsigned char *s;
+  unicode_t eh;
+
   /*
    * Not handled yet
    */
-  s = get_to_st (&eh);
+  s = get_to_st (eh);
   if (s)
     free (s);
+
   return;
 }
 
@@ -2888,8 +2904,8 @@ rxvt_term::process_dcs_seq ()
 void
 rxvt_term::process_osc_seq ()
 {
-  unsigned char   ch, eh, *s;
-  int             arg;
+  unicode_t ch, eh;
+  int arg;
 
   ch = cmd_getc ();
   for (arg = 0; isdigit (ch); ch = cmd_getc ())
@@ -2897,7 +2913,8 @@ rxvt_term::process_osc_seq ()
 
   if (ch == ';')
     {
-      s = get_to_st (&eh);
+      unsigned char *s = get_to_st (eh);
+
       if (s)
         {
           /*
@@ -2912,6 +2929,7 @@ rxvt_term::process_osc_seq ()
 #endif
           else
             xterm_seq (arg, (char *)s, eh);
+
           free (s);
         }
     }
@@ -2942,9 +2960,9 @@ rxvt_term::process_osc_seq ()
 void
 rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ ((unused)))
 {
-  int             changed = 0;
-  int             color;
-  char           *buf, *name;
+  int changed = 0;
+  int color;
+  char *buf, *name;
 
   assert (str != NULL);
   switch (op)
@@ -2953,7 +2971,7 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
         set_title (str);
         /* FALLTHROUGH */
       case XTerm_iconName:
-        set_iconName (str);
+        set_icon_name (str);
         break;
       case XTerm_title:
         set_title (str);
@@ -2963,12 +2981,16 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
           {
             if ((name = STRCHR (buf, ';')) == NULL)
               break;
+
             *name++ = '\0';
             color = atoi (buf);
+
             if (color < 0 || color >= TOTAL_COLORS)
               break;
+
             if ((buf = STRCHR (name, ';')) != NULL)
               *buf++ = '\0';
+
             set_window_color (color + minCOLOR, name);
           }
         break;
@@ -3031,6 +3053,7 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
         set_window_color (Color_bg, str);
         break;
       case XTerm_logfile:
+        // TODO, when secure mode?
         break;
       case XTerm_font:
         change_font (str);
@@ -3066,7 +3089,6 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
         }
         break;
 #endif
-
     }
 }
 /*----------------------------------------------------------------------*/
@@ -3084,7 +3106,7 @@ rxvt_term::xterm_seq (int op, const char *str, unsigned char resp __attribute__ 
 int
 rxvt_term::privcases (int mode, unsigned long bit)
 {
-  int             state;
+  int state;
 
   if (mode == 's')
     {
@@ -3099,6 +3121,7 @@ rxvt_term::privcases (int mode, unsigned long bit)
         state = (mode == 't') ? ! (PrivateModes & bit) : mode;
       PrivMode (state, bit);
     }
+
   return state;
 }
 
@@ -3106,13 +3129,15 @@ rxvt_term::privcases (int mode, unsigned long bit)
 void
 rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), unsigned int nargs, const int *arg)
 {
-  unsigned int    i, j;
-  int             state;
+  unsigned int i, j;
+  int state;
+
   static const struct
     {
       const int       argval;
       const unsigned long bit;
     }
+
   argtopriv[] = {
                   { 1, PrivMode_aplCUR },
                   { 2, PrivMode_vt52 },
@@ -3223,7 +3248,7 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
               /* case 8:	- auto repeat, can't do on a per window basis */
             case 9:			/* X10 mouse reporting */
               if (state)		/* orthogonal */
-                PrivateModes &= ~ (PrivMode_MouseX11);
+                PrivateModes &= ~PrivMode_MouseX11;
               break;
 #ifdef menuBar_esc
             case menuBar_esc:
@@ -3253,7 +3278,7 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
               /* case 67:	- backspace key */
             case 1000:		/* X11 mouse reporting */
               if (state)		/* orthogonal */
-                PrivateModes &= ~ (PrivMode_MouseX10);
+                PrivateModes &= ~PrivMode_MouseX10;
               break;
 #if 0
             case 1001:
@@ -3275,6 +3300,7 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
             case 1049:		/* better secondary screen w/ clearing, but not fully implemented */
               if (current_screen != PRIMARY)
                 scr_erase_screen (2);
+
               scr_change_screen (state);
               /* FALLTHROUGH */
             default:
@@ -3288,15 +3314,16 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
 void
 rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
 {
-  unsigned int    i;
-  short           rendset;
-  int             rendstyle;
+  unsigned int i;
+  short rendset;
+  int rendstyle;
 
   if (nargs == 0)
     {
       scr_rendition (0, ~RS_None);
       return;
     }
+
   for (i = 0; i < nargs; i++)
     {
       rendset = -1;
@@ -3425,7 +3452,7 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
 void
 rxvt_term::process_graphics ()
 {
-  unsigned char   ch, cmd = cmd_getc ();
+  unicode_t ch, cmd = cmd_getc ();
 
   if (cmd == 'Q')
     {		/* query graphics */

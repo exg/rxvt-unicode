@@ -1,3 +1,13 @@
+2.5  Sun Mar 28 04:05:51 CEST 2004
+	- the usual sprinkled little code cleanups.
+        - support more 8-bit controls.
+        - more informative error messages.
+        - fix some minor memleaks and possible memory corruptions.
+        - the use of exception handling allowed the following improvements:
+        - no longer block when waiting for completion of escape sequences
+          (e.g. printf '\e';sleep 3;printf 'c' will no longer block).
+        - rxvtc usage errors should no longer kill rxvtd (debian bug #237510).
+
 2.4  Tue Mar 16 07:06:51 CET 2004
 	- fix stupid double-free() bug on exit.
 	- implement xterm private mode 1049.

@@ -184,6 +184,37 @@ rxvt_term::~rxvt_term ()
 
   if (display)
     {
+      selection_clear ();
+
+#ifdef MENUBAR
+      if (menubarGC) XFreeGC (display->display, menubarGC);
+#endif
+#ifdef XTERM_SCROLLBAR
+      if (xscrollbarGC) XFreeGC (display->display, xscrollbarGC);
+      if (ShadowGC)     XFreeGC (display->display, ShadowGC);
+#endif
+#ifdef PLAIN_SCROLLBAR
+      if (pscrollbarGC) XFreeGC (display->display, pscrollbarGC);
+#endif
+#ifdef NEXT_SCROLLBAR
+      if (blackGC)      XFreeGC (display->display, blackGC);
+      if (whiteGC)      XFreeGC (display->display, whiteGC);
+      if (grayGC)       XFreeGC (display->display, grayGC);
+      if (darkGC)       XFreeGC (display->display, darkGC);
+      if (stippleGC)    XFreeGC (display->display, stippleGC);
+      if (dimple)       XFreePixmap (display->display, dimple);
+      if (upArrow)      XFreePixmap (display->display, upArrow);
+      if (downArrow)    XFreePixmap (display->display, downArrow);
+      if (upArrowHi)    XFreePixmap (display->display, upArrowHi);
+      if (downArrowHi)  XFreePixmap (display->display, downArrowHi);
+#endif
+#if defined(MENUBAR) || defined(RXVT_SCROLLBAR)
+      if (topShadowGC)  XFreeGC (display->display, topShadowGC);
+      if (botShadowGC)  XFreeGC (display->display, botShadowGC);
+      if (scrollbarGC)  XFreeGC (display->display, scrollbarGC);
+#endif
+      if (TermWin.gc)   XFreeGC (display->display, TermWin.gc);
+
 #if defined(MENUBAR) && (MENUBAR_MAX > 1)
       delete menuBar.drawable;
       //if (menuBar.win)
@@ -203,12 +234,20 @@ rxvt_term::~rxvt_term ()
 
   scr_release ();
 
+  /* clear all resources */
+  for (int i = 0; i < allocated.size (); i++)
+    free (allocated[i]);
+
+  free (selection.text);
+  // TODO: manage env vars in child only(!)
   free (env_windowid);
   free (env_display);
   free (env_term);
   free (env_colorfgbg);
   free (locale);
+#if 0
   free (codeset);
+#endif
 
   delete envv;
   delete argv;
@@ -259,55 +298,14 @@ rxvt_term::destroy_cb (time_watcher &w)
 
 /*----------------------------------------------------------------------*/
 /* rxvt_init () */
-/* LIBPROTO */
-rxvt_t
-rxvt_init (int argc, const char *const *argv)
-{
-  SET_R (new rxvt_term);
-
-  if (!GET_R->init_vars () || !GET_R->init (argc, argv))
-    {
-      delete GET_R;
-      SET_R (0);
-    }
-
-  return GET_R;
-}
-
-static int (*old_xerror_handler) (Display *dpy, XErrorEvent *event);
-
-void
-rxvt_init_signals ()
-{
-  /* install exit handler for cleanup */
-#if 0
-#ifdef HAVE_ATEXIT
-  atexit (rxvt_clean_exit);
-#else
-#endif
-#endif
-
-  struct sigaction sa;
-
-  sigfillset (&sa.sa_mask);
-  sa.sa_flags = SA_NOCLDSTOP | SA_RESTART;
-  sa.sa_handler = SIG_IGN;           sigaction (SIGHUP , &sa, 0);
-  sa.sa_handler = SIG_IGN;           sigaction (SIGPIPE, &sa, 0);
-  sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGINT , &sa, 0);
-  sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGQUIT, &sa, 0);
-  sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGTERM, &sa, 0);
-  sa.sa_handler = rxvt_Child_signal; sigaction (SIGCHLD, &sa, 0);
-
-  /* need to trap SIGURG for SVR4 (Unixware) rlogin */
-  /* signal (SIGURG, SIG_DFL); */
-
-  old_xerror_handler = XSetErrorHandler ((XErrorHandler) rxvt_xerror_handler);
-  //XSetIOErrorHandler ((XErrorHandler) rxvt_xioerror_handler);
-}
-
 bool
 rxvt_term::init (int argc, const char *const *argv)
 {
+  SET_R (this);
+
+  if (!init_vars ())
+    return false;
+
   /*
    * Save and then give up any super-user privileges
    * If we need privileges in any area then we must specifically request it.
@@ -372,6 +370,37 @@ rxvt_term::init (int argc, const char *const *argv)
   return true;
 }
 
+static int (*old_xerror_handler) (Display *dpy, XErrorEvent *event);
+
+void
+rxvt_init_signals ()
+{
+  /* install exit handler for cleanup */
+#if 0
+#ifdef HAVE_ATEXIT
+  atexit (rxvt_clean_exit);
+#else
+#endif
+#endif
+
+  struct sigaction sa;
+
+  sigfillset (&sa.sa_mask);
+  sa.sa_flags = SA_NOCLDSTOP | SA_RESTART;
+  sa.sa_handler = SIG_IGN;           sigaction (SIGHUP , &sa, 0);
+  sa.sa_handler = SIG_IGN;           sigaction (SIGPIPE, &sa, 0);
+  sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGINT , &sa, 0);
+  sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGQUIT, &sa, 0);
+  sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGTERM, &sa, 0);
+  sa.sa_handler = rxvt_Child_signal; sigaction (SIGCHLD, &sa, 0);
+
+  /* need to trap SIGURG for SVR4 (Unixware) rlogin */
+  /* signal (SIGURG, SIG_DFL); */
+
+  old_xerror_handler = XSetErrorHandler ((XErrorHandler) rxvt_xerror_handler);
+  //XSetIOErrorHandler ((XErrorHandler) rxvt_xioerror_handler);
+}
+
 /* ------------------------------------------------------------------------- *
  *                       SIGNAL HANDLING & EXIT HANDLER                      *
  * ------------------------------------------------------------------------- */
@@ -403,7 +432,7 @@ rxvt_Exit_signal (int sig)
 {
   signal (sig, SIG_DFL);
 #ifdef DEBUG_CMD
-  rxvt_print_error ("signal %d", sig);
+  rxvt_warn ("caught signal %d, exiting.\n", sig);
 #endif
   rxvt_clean_exit ();
   kill (getpid (), sig);
@@ -845,27 +874,31 @@ rxvt_term::set_title (const char *str)
 #else
   char *name;
 
-  if (XFetchName (display->display, TermWin.parent[0], &name) == 0)
+  if (!XFetchName (display->display, TermWin.parent[0], &name))
     name = NULL;
+
   if (name == NULL || STRCMP (name, str))
     XStoreName (display->display, TermWin.parent[0], str);
+
   if (name)
     XFree (name);
 #endif
 }
 
 void
-rxvt_term::set_iconName (const char *str)
+rxvt_term::set_icon_name (const char *str)
 {
 #ifndef SMART_WINDOW_TITLE
   XSetIconName (display->display, TermWin.parent[0], str);
 #else
   char *name;
 
-  if (XGetIconName (display->display, TermWin.parent[0], &name))
+  if (!XGetIconName (display->display, TermWin.parent[0], &name))
     name = NULL;
+
   if (name == NULL || STRCMP (name, str))
     XSetIconName (display->display, TermWin.parent[0], str);
+
   if (name)
     XFree (name);
 #endif
@@ -1013,7 +1046,7 @@ rxvt_term::rXParseAllocColor (rxvt_color *screen_in_out, const char *colour)
 {
   if (!screen_in_out->set (display, colour))
     {
-      rxvt_print_error ("can't allocate colour: %s", colour);
+      rxvt_warn ("can't get colour '%s', continuing without.\n", colour);
       return false;
     }
 
@@ -1390,7 +1423,7 @@ rxvt_term::IM_get_IC (const char *modifiers)
 
   if (Input_Context == NULL)
     {
-      rxvt_print_error ("failed to create input context");
+      rxvt_warn ("failed to create input context, continuing without XIM.\n");
       display->put_xim (input_method);
       return false;
     }
