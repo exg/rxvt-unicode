@@ -138,6 +138,7 @@ get_enc_buf (uint32_t len)
     {
       free (enc_buf);
       enc_buf = malloc (len);
+      enc_len = len;
     }
 
   return enc_buf;
