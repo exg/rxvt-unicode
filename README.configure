@@ -41,14 +41,14 @@
 	transparency to the term
 --enable-menubar
 	add support for our menu bar system
---enable-graphics
-	add support for our graphics mode (see src/graphics)
 --enable-rxvt-scroll
 	add support for the original rxvt scrollbar
 --enable-next-scroll
 	add support for a NeXT-like scrollbar
 --enable-xterm-scroll
 	add support for an Xterm-like scrollbar
+--enable-plain-scroll
+	add support for a very plain-looking scrollbar that I used for many years
 --enable-half-shadow
 	make shadows on the scrollbar only half the normal width & height.
 	only applicable to rxvt scrollbars
@@ -56,8 +56,6 @@
 	add support for XIM (X Input Method) protocol. This allows using
 	alternative input methods (e.g. kinput2) and will also correctly
 	set up the input for people using dead keys or compose keys.
---enable-greek
-	add support for greek keyboard
 --enable-ttygid
 	change tty device setting to group "tty" - only use this if
         your system uses this type of security
@@ -121,7 +119,7 @@
 	add support to have the pointer disappear when typing or inactive
 --with-term=NAME
 	change the environmental variable for the terminal to NAME
-	(default "xterm")
+	(default "rxvt")
 --with-terminfo=PATH
 	change the environmental variable for the path to the terminfo
 	tree to PATH

@@ -351,7 +351,7 @@ AC_ARG_ENABLE(pointer-blank,
   fi])
 
 AC_ARG_WITH(term,
-  [  --with-term=NAME        set the terminal to NAME (default \"xterm\")],
+  [  --with-term=NAME        set the terminal to NAME (default \"rxvt\")],
   [if test x$withval != x; then
     AC_DEFINE_UNQUOTED(TERMENV, "$withval",Set TERM to the value given by configure) term="$withval"
   fi])

@@ -24,6 +24,7 @@
           contributed.
         - use reverse video for normal bold text unless colorBD has been set.
         - fixed endless loop when selection is valid but empty.
+        - changed default terminal name to "rxvt".
         - many other minor bugfixes.
 
 1.8  Mon Feb  2 20:09:18 CET 2004
