@@ -50,8 +50,8 @@
 #include "version.h"
 #include "command.h"
 
-#include <wchar.h>
-#include <signal.h>
+#include <cwchar>
+#include <csignal>
 
 /*----------------------------------------------------------------------*/
 
@@ -490,7 +490,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
       if (keysym >= 0xFF00 && keysym <= 0xFFFF)
         {
 #ifdef KEYSYM_RESOURCE
-          if (! (shft | ctrl) && Keysym_map[keysym & 0xFF] != NULL)
+          if (!(shft | ctrl) && Keysym_map[keysym & 0xFF] != NULL)
             {
               unsigned int    l;
               const unsigned char *kbuf0;
@@ -787,9 +787,13 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                     break;
 #undef FKEY
                   default:
-                    newlen = 0;
-                    break;
+                    if (len == 0 
+                        && (keysym & 0xfff0) != 0xff70
+                        && (keysym & 0xfff0) != 0xffe0)
+                      /* generate a keycode for every remaining keypress */
+                      sprintf ((char *)kbuf, "\033[%x;%xA", (unsigned char)ev.state, (unsigned short)keysym);
                 }
+
               if (newlen)
                 len = strlen (kbuf);
             }
@@ -807,6 +811,18 @@ rxvt_term::lookup_key (XKeyEvent &ev)
         {
           len = 1;
           kbuf[0] = '\037';	/* Ctrl-Minus generates ^_ (31) */
+        }
+      else if (keysym == XK_ISO_Left_Tab)
+        {
+          strcpy (kbuf, "\033[Z");
+          len = 3;
+        }
+      else if (len == 0
+               && (keysym & 0xffe0) != 0xfe00
+               && (keysym < 0xfe50 || keysym > 0xfe6f))
+        {
+          /* generate a keycode for every remaining keypress */
+          len = sprintf ((char *)kbuf, "\033[%x;%xA", (unsigned char)ev.state, (unsigned short)keysym);
         }
       else
         {
@@ -2709,7 +2725,7 @@ rxvt_term::next_char ()
 
       // assume wchar == unicode
       cmdbuf_ptr += len;
-      return wc;
+      return wc & UNICODE_MASK;
     }
 
   return NOCHAR;
