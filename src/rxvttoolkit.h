@@ -86,6 +86,8 @@ struct rxvt_display : refcounted {
   bool init ();
   ~rxvt_display ();
 
+  operator Display *() const { return display; }
+
   void flush ();
 
   void set_selection_owner (rxvt_term *owner);

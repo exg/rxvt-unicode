@@ -88,7 +88,10 @@ void             rxvt_clean_exit                  ();
 void           * rxvt_malloc                      (size_t size);
 void           * rxvt_calloc                      (size_t number, size_t size);
 void           * rxvt_realloc                     (void *ptr, size_t size);
-char *           rxvt_wcstombs                    (const wchar_t *str, int len);
+char *           rxvt_wcstombs                    (const wchar_t *str, int len = -1);
+wchar_t *        rxvt_mbstowcs                    (const char *str, int len = -1);
+char *           rxvt_wcstoutf8                   (const wchar_t *str, int len = -1);
+wchar_t *        rxvt_utf8towcs                   (const char *str, int len = -1);
 char *           rxvt_strdup                      (const char *str);
 char *           rxvt_r_basename                  (const char *str);
 void             rxvt_vlog                        (const char *fmt, va_list arg_ptr);
@@ -134,8 +137,8 @@ struct grwin_t;
 
 #ifdef XPM_BACKGROUND
 typedef struct {
-  short           w, h, x, y;
-  Pixmap          pixmap;
+  short w, h, x, y;
+  Pixmap pixmap;
 } bgPixmap_t;
 #endif
 
@@ -144,10 +147,10 @@ typedef struct {
  * pared down from XButtonEvent
  */
 struct mouse_event {
-  int             clicks;
-  Time            time;       /* milliseconds */
-  unsigned int    state;      /* key or button mask */
-  unsigned int    button;     /* detail */
+  int clicks;
+  Time time;             /* milliseconds */
+  unsigned int state;    /* key or button mask */
+  unsigned int button;   /* detail */
 };
 
 #define MAX_IT(current, other)  if ((other) > (current)) (current) = (other)
@@ -1005,7 +1008,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 #ifdef POINTER_BLANK
                   hidden_pointer:1,
 #endif
-//                  enc_utf8:1,		/* wether terminal reads/writes utf-8 */
+//                  enc_utf8:1,		/* wether locale uses utf-8 */
                   seen_input:1,         /* wether we have seen some program output yet */
                   seen_resize:1,	/* wether we had a resize event */
                   parsed_geometry:1;
@@ -1169,9 +1172,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   char           *env_term;           /* environmental variable TERM     */
   char           *env_colorfgbg;
   char           *locale;
-#if 0
-  char           *codeset;
-#endif
   char            charsets[4];
   unsigned char  *v_buffer;           /* pointer to physical buffer */
   unsigned int    v_buflen;           /* size of area to write */
@@ -1354,6 +1354,8 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   // main.C
   void privileged_utmp (rxvt_privaction action);
   bool set_fonts ();
+  void set_string_property (Atom prop, const char *str, int len = -1);
+  void set_utf8_property (Atom prop, const char *str, int len = -1);
   void set_title (const char *str);
   void set_icon_name (const char *str);
   void set_window_color (int idx, const char *color);

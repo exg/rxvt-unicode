@@ -592,14 +592,15 @@ rxvt_term::set_locale (const char *locale)
   SET_LOCALE (this->locale);
   mbstate.reset ();
 #endif
+
 #if 0
 #if HAVE_NL_LANGINFO
-  free (codeset);
-  codeset = strdup (nl_langinfo (CODESET));
+  char *codeset = strdup (nl_langinfo (CODESET));
   enc_utf8 = !strcasecmp (codeset, "UTF-8")
              || !strcasecmp (codeset, "UTF8");
+  free (codeset);
 #else
-  enc_utf8 = 1;
+  enc_utf8 = 0;
 #endif
 #endif
 }
@@ -612,12 +613,7 @@ rxvt_term::init_xlocale ()
     rxvt_warn ("setting locale failed, working without locale support.\n");
   else
     {
-      Atom wmlocale;
-
-      wmlocale = XInternAtom (display->display, "WM_LOCALE_NAME", False);
-      XChangeProperty (display->display, TermWin.parent[0], wmlocale,
-                       XA_STRING, 8, PropModeReplace,
-                       (unsigned char *)locale, strlen (locale));
+      set_string_property (display->atom ("WM_LOCALE_NAME"), locale);
 
       if (!XSupportsLocale ())
         {
@@ -641,19 +637,6 @@ rxvt_term::init_command (const char *const *argv)
    * Initialize the command connection.
    * This should be called after the X server connection is established.
    */
-  int i;
-
-  for (i = 0; i < NUM_XA; i++)
-    xa[i] = XInternAtom (display->display, xa_names[i], False);
-
-  /* Enable delete window protocol */
-  XSetWMProtocols (display->display, TermWin.parent[0],
-                   & (xa[XA_WMDELETEWINDOW]), 1);
-
-#ifdef USING_W11LIB
-  /* enable W11 callbacks */
-  W11AddEventHandler (display->display, rxvt_W11_process_x_event);
-#endif
 
 #ifdef META8_OPTION
   meta_char = (options & Opt_meta8 ? 0x80 : C0_ESC);
@@ -915,6 +898,14 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   XSetWindowAttributes attributes;
   XWindowAttributes gattr;
 
+  for (int i = 0; i < NUM_XA; i++)
+    xa[i] = XInternAtom (display->display, xa_names[i], False);
+
+#ifdef USING_W11LIB
+  /* enable W11 callbacks */
+  W11AddEventHandler (display->display, rxvt_W11_process_x_event);
+#endif
+
   if (options & Opt_transparent)
     {
       XGetWindowAttributes (display->display, RootWindow (display->display, display->screen), &gattr);
@@ -991,6 +982,10 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   XSetWMProperties (display->display, TermWin.parent[0], NULL, NULL,
                     (char **)argv, argc, &szHint, &wmHint, &classHint);
+
+  /* Enable delete window protocol */
+  XSetWMProtocols (display->display, TermWin.parent[0],
+                   &xa[XA_WMDELETEWINDOW], 1);
 
 #if ENABLE_FRILLS
   long pid = getpid ();
