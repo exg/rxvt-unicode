@@ -701,9 +701,9 @@ enum {
         priv_modes &= ~(bit)
 
 #ifdef ALLOW_132_MODE
-# define PrivMode_Default (PrivMode_Autowrap|PrivMode_aplKP|PrivMode_ShiftKeys|PrivMode_VisibleCursor|PrivMode_132OK)
+# define PrivMode_Default (PrivMode_Autowrap|PrivMode_ShiftKeys|PrivMode_VisibleCursor|PrivMode_132OK)
 #else
-# define PrivMode_Default (PrivMode_Autowrap|PrivMode_aplKP|PrivMode_ShiftKeys|PrivMode_VisibleCursor)
+# define PrivMode_Default (PrivMode_Autowrap|PrivMode_ShiftKeys|PrivMode_VisibleCursor)
 #endif
 
 // do not change these constants lightly, there are many interdependencies

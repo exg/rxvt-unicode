@@ -278,9 +278,9 @@ rxvt_term::lookup_key (XKeyEvent &ev)
    *
    * Always permit `shift' to override the current setting
    */
-  shft = (ev.state & ShiftMask);
-  ctrl = (ev.state & ControlMask);
-  meta = (ev.state & ModMetaMask);
+  shft = ev.state & ShiftMask;
+  ctrl = ev.state & ControlMask;
+  meta = ev.state & ModMetaMask;
 
   if (numlock_state || (ev.state & ModNumLockMask))
     {

@@ -12,18 +12,20 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
-	- remove shared library (or any library) support - it is
-          of no use currently (and -embed is a better way to embed
-          rxvt-unicode).
-        - get rid of the intpro files.
         - SYNCCVS. backported bugfixes done to rxvt
           (sourceforge bugs #1028739, #1028732), except for
           pts/%s fix as it seems to collide with freebsd,
-          and sourceforge bug #954654, which is unreproducible.
+          and sourceforge bug #954654, which is not neccessary.
         - change terminfo file to not clobber G1 when using
           line-drawing characters, as this seems to mess
           with EUC-JP (it will clobber G0, but G0 practically
           needs to be US-ASCII all the time).
+        - toggle default application keypad/cursor mode to help
+          some apps who fail to set the correct mode.
+	- remove shared library (or any library) support - it is
+          of no use currently (and -embed is a better way to embed
+          rxvt-unicode).
+        - get rid of the intpro files.
 
 5.1  Tue Feb 15 17:13:27 CET 2005
 	- fix a bug when parsing fontnames and another one
