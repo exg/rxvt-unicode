@@ -660,7 +660,7 @@ enum {
 #if OFFIX_DND                /* OffiX Dnd (drag 'n' drop) support */
   XA_DNDPROTOCOL,
   XA_DNDSELECTION,
-#endif                          /* OFFIX_DND */
+#endif
   NUM_XA
 };
 
