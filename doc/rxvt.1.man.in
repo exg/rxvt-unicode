@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-02-14" "5.1" "RXVT-UNICODE"
+.TH rxvt 1 "2005-02-16" "5.2" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -742,8 +742,8 @@ thumb with the pointer on middle button press/drag.
 .IP "\fBscrollWithBuffer:\fR \fIboolean\fR" 4
 .IX Item "scrollWithBuffer: boolean"
 \&\fBTrue\fR: scroll with scrollback buffer when tty receives new lines (and
-\&\fBscrollTtyOutput\fR is False); option \fB+sw\fR. \fBFalse\fR: do not scroll
-with scrollback buffer when tty recieves new lines; option \fB\-sw\fR.
+\&\fBscrollTtyOutput\fR is False); option \fB\-sw\fR. \fBFalse\fR: do not scroll
+with scrollback buffer when tty recieves new lines; option \fB+sw\fR.
 .IP "\fBscrollTtyKeypress:\fR \fIboolean\fR" 4
 .IX Item "scrollTtyKeypress: boolean"
 \&\fBTrue\fR: scroll to bottom when a non-special key is pressed. Special keys

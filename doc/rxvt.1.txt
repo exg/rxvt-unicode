@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 5.1, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 5.2, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -602,8 +602,8 @@ RESOURCES (available also as long-options)
 
     scrollWithBuffer: *boolean*
         True: scroll with scrollback buffer when tty receives new lines (and
-        scrollTtyOutput is False); option +sw. False: do not scroll with
-        scrollback buffer when tty recieves new lines; option -sw.
+        scrollTtyOutput is False); option -sw. False: do not scroll with
+        scrollback buffer when tty recieves new lines; option +sw.
 
     scrollTtyKeypress: *boolean*
         True: scroll to bottom when a non-special key is pressed. Special
