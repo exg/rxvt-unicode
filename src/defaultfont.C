@@ -270,6 +270,8 @@ struct rxvt_font_default : rxvt_font {
     width = 1; height = 1;
     ascent = 1; descent = 0;
 
+    set_name ("built-in pseudofont");
+
     return true;
   }
 
