@@ -2037,7 +2037,7 @@ rxvt_term::menubar_expose ()
       /* Create the graphics context */
       XGCValues       gcvalue;
 
-      gcvalue.foreground = (XDEPTH <= 2 ? PixColors[Color_fg]
+      gcvalue.foreground = (display->depth <= 2 ? PixColors[Color_fg]
                             : PixColors[Color_Black]);
       menubarGC = XCreateGC (display->display, menuBar.win,
                             GCForeground, &gcvalue);

@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-options.yo,v 1.16 2004/07/31 13:40:46 root Exp $ --)
+COMMENT(-- $Id: rxvt-options.yo,v 1.17 2004/07/31 15:32:50 root Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpageoptions()
 
@@ -43,10 +43,12 @@ startdit()
     	Fade the text by the given percentage when focus is lost.
     dit(bf(-tint) em(colour))
         Tint the transparent background pixmap with the given colour when
-        transparency is enabled with bf(-tr) or bf(-ip). You can also
-        emulate the "shading" or "brigthness change" option known from
-        other terminal programs using gray10 (gray20, etc.) colour
-        strings.
+        transparency is enabled with bf(-tr) or bf(-ip). See also
+        the bf(-sh) option that cna be used to brighten or darken
+        the image in addition to tinting it.
+    dot(bf(-sh)) em(number)
+        Darken (0 .. 100) or lighten (-1 .. -100) the transparent background
+        image in addition to tinting it.
     dit(bf(-bg) em(colour))
 	Window background colour;
         resource bf(background).

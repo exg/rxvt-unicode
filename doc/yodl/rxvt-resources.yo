@@ -1,4 +1,4 @@
-COMMENT(-- $Id: rxvt-resources.yo,v 1.17 2004/07/30 22:36:42 root Exp $ --)
+COMMENT(-- $Id: rxvt-resources.yo,v 1.18 2004/07/31 15:32:50 root Exp $ --)
 COMMENT(----------------------------------------------------------------------)
 manpagesection(RESOURCES (available also as long-options))
 
@@ -85,6 +85,9 @@ startdit()
     	Fade the text by the given percentage when focus is lost.
     dit(bf(tintColor:) em(colour))
         Tint the transparent background pixmap with the given colour.
+    dit(bf(shading:) em(number))
+        Darken (0 .. 100) or lighten (-1 .. -100) the transparent background
+        image in addition to tinting it.
     dit(bf(fading:) em(number))
         Scale the tint colour by the given percentage.
     dit(bf(scrollColor:) em(colour))

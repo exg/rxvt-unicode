@@ -1,4 +1,4 @@
-.TH "RXVT" "1" "2004-07-26" "X Version 11" "X Tools" 
+.TH "RXVT" "1" "2004-07-31" "X Version 11" "X Tools" 
 .SH "NAME" 
 rxvt-unicode (ouR XVT, unicode) \- a VT102 emulator for the X window system
 .PP 
@@ -67,7 +67,7 @@ resource \fBbackground\fP\&.
 .IP "\fB-fg\fP \fIcolour\fP" 
 Window foreground colour;
 resource \fBforeground\fP\&.
-.IP "\fB-pixmap:\fP \fIfile[;geom]\fP" 
+.IP "\fB-pixmap\fP \fIfile[;geom]\fP" 
 Compile \fIXPM\fP: Specify XPM file for the background and also
 optionally specify its scaling with a geometry string\&.  Note you
 may need to add quotes to avoid special shell interpretation of
