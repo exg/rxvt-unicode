@@ -1,5 +1,5 @@
 # doc/Makefile.in	-*- Makefile -*-
-# $Id: Makefile.in,v 1.4 2004/02/24 21:51:41 pcg Exp $
+# $Id: Makefile.in,v 1.5 2004/03/03 04:07:52 pcg Exp $
 @MCOMMON@
 
 srcdir =	@srcdir@
@@ -88,8 +88,8 @@ distclean:
 
 install:
 	$(INSTALL_DATA) rxvt.1 $(DESTDIR)$(mandir)/$(RXVTNAME).$(manext)
-	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(mandir)/rxvtc.$(manext)
-	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(mandir)/rxvtd.$(manext)
+	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(mandir)/$(RXVTNAME)c.$(manext)
+	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(mandir)/$(RXVTNAME)d.$(manext)
 
 uninstall:
 	-(cd $(mandir); $(RMF) $(RXVTNAME).$(manext) )

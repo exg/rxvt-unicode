@@ -6,7 +6,9 @@
 ./configure --prefix=/opt/rxvt --enable-utmp \
             --enable-wtmp --enable-lastlog --enable-xim --disable-strings \
             --with-term=rxvt --enable-keepscrolling --enable-xft \
+            --with-name=rxvt \
             --enable-frills --enable-swapscreen --enable-transparency \
             --with-codesets=eu,jp --enable-menubar \
             --enable-cursor-blink --enable-pointer-blank --enable-text-blink \
-            --enable-plain-scroll
+            --enable-plain-scroll \
+            "$@"

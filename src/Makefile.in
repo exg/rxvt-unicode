@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.13 2004/03/01 01:06:46 pcg Exp $
+# $Id: Makefile.in,v 1.14 2004/03/03 04:07:52 pcg Exp $
 @MCOMMON@
 
 LINT = lint -DNARROWPROTO=1 $(XINC) -chapbxz
@@ -50,11 +50,8 @@ INSTALL_LIBRXVT = @INSTALL_LIBRXVT@
 
 RXVT_BASENAME=`$(ECHO) $(RXVTNAME)|$(SED) 's/$(EXEEXT)$$//'|$(SED) '$(transform)'`
 RXVT_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)$(EXEEXT)
-RXVT_VERNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)-$(VERSION)$(EXEEXT)
 RXVTC_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)c$(EXEEXT)
-RXVTC_VERNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)c-$(VERSION)$(EXEEXT)
 RXVTD_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)d$(EXEEXT)
-RXVTD_VERNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)d-$(VERSION)$(EXEEXT)
 RXVT_OLDNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)-old$(EXEEXT)
 
 EXTPROS = command.extpro defaultfont.extpro \
@@ -158,12 +155,9 @@ install: allbin alldoc
 	$(RMF) $(RXVT_BINNAME)
 	$(RMF) $(RXVTC_BINNAME)
 	$(RMF) $(RXVTD_BINNAME)
-	$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) rxvt  $(RXVT_VERNAME)
-	$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) rxvtc $(RXVTC_VERNAME)
-	$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) rxvtd $(RXVTD_VERNAME)
-	$(LN) $(RXVT_VERNAME)  $(RXVT_BINNAME)
-	$(LN) $(RXVTC_VERNAME) $(RXVTC_BINNAME)
-	$(LN) $(RXVTD_VERNAME) $(RXVTD_BINNAME)
+	$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) rxvt  $(RXVT_BINNAME)
+	$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) rxvtc $(RXVTC_BINNAME)
+	$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) rxvtd $(RXVTD_BINNAME)
 
 uninstall:
 	@$(ECHO) $(RMF) $(RXVT_VERNAME)

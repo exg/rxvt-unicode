@@ -293,35 +293,11 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                       }
                     else
                       STRCPY (kbuf, key_backspace);
-# ifdef MULTICHAR_SET
-                    if ((Options & Opt_mc_hack) && screen.cur.col > 0)
-                      {
-                        int             col, row;
-
-                        newlen = STRLEN (kbuf);
-                        col = screen.cur.col - 1;
-                        row = screen.cur.row + TermWin.saveLines;
-                        if (IS_MULTI2 (screen.rend[row][col]))
-                          MEMMOVE (kbuf + newlen, kbuf, newlen + 1);
-                      }
-# endif
                     break;
 #endif
 #ifndef NO_DELETE_KEY
                   case XK_Delete:
                     STRCPY (kbuf, key_delete);
-# ifdef MULTICHAR_SET
-                    if (Options & Opt_mc_hack)
-                      {
-                        int             col, row;
-
-                        newlen = STRLEN (kbuf);
-                        col = screen.cur.col;
-                        row = screen.cur.row + TermWin.saveLines;
-                        if (IS_MULTI1 (screen.rend[row][col]))
-                          MEMMOVE (kbuf + newlen, kbuf, newlen + 1);
-                      }
-# endif
                     break;
 #endif
                   case XK_Tab:
@@ -373,41 +349,6 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                       }
                     else if (PrivateModes & PrivMode_aplCUR)
                       kbuf[1] = 'O';
-#ifdef MULTICHAR_SET
-                    //TODO: ??
-                    if (Options & Opt_mc_hack)
-                      {
-                        int             col, row, m;
-
-                        col = screen.cur.col;
-                        row = screen.cur.row + TermWin.saveLines;
-                        m = 0;
-                        if (keysym == XK_Right
-                            && IS_MULTI1 (screen.rend[row][col]))
-                          m = 1;
-                        else if (keysym == XK_Left)
-                          {
-                            if (col > 0)
-                              {
-                                if (IS_MULTI2 (screen.rend[row][col - 1]))
-                                  m = 1;
-                              }
-                            else if (screen.cur.row > 0)
-                              {
-                                col = screen.tlen[--row];
-                                if (col == -1)
-                                  col = TermWin.ncol - 1;
-                                else
-                                  col--;
-                                if (col > 0
-                                    && IS_MULTI2 (screen.rend[row][col]))
-                                  m = 1;
-                              }
-                          }
-                        if (m)
-                          MEMMOVE (kbuf + 3, kbuf, 3 + 1);
-                      }
-#endif
                     break;
 
 #ifndef UNSHIFTED_SCROLLKEYS
@@ -944,14 +885,20 @@ rxvt_term::next_char ()
 {
   while (cmdbuf_ptr < cmdbuf_endp)
     {
-      if (*cmdbuf_ptr < 0x80) // assume < 0x80 to be ascii ALWAYS (all shift-states etc.) uh-oh
+      // assume 0x20 .. 0x7f to be ascii ALWAYS (all shift-states etc.) uh-oh
+      if ((*cmdbuf_ptr <= 0x7f && 0x20 <= *cmdbuf_ptr)
+          || !*cmdbuf_ptr)
         return *cmdbuf_ptr++;
 
       wchar_t wc;
       size_t len = mbrtowc (&wc, (char *)cmdbuf_ptr, cmdbuf_endp - cmdbuf_ptr, mbstate);
 
       if (len == (size_t)-2)
-        return NOCHAR;
+        {
+          // the mbstate stores incomplete sequences. didn't know this :/
+          cmdbuf_ptr = cmdbuf_endp;
+          break;
+        }
 
       if (len == (size_t)-1)
         return *cmdbuf_ptr++; // the _occasional_ latin1 character is allowed to slip through
@@ -2362,11 +2309,6 @@ rxvt_term::process_escape_seq ()
       case '+':
         scr_charset_set (3, (unsigned int)cmd_getc ());
         break;
-#ifdef MULTICHAR_SET
-      case '$':
-        scr_charset_set (-2, (unsigned int)cmd_getc ());
-        break;
-#endif
 #ifndef NO_FRILLS
       case '6':
         scr_backindex ();
@@ -2717,7 +2659,7 @@ rxvt_term::process_csi_seq ()
               break;
 #endif
             case 8:			/* unofficial extension */
-              xterm_seq (XTerm_title, APL_NAME "-" VERSION, CHAR_ST);
+              xterm_seq (XTerm_title, RESNAME "-" VERSION, CHAR_ST);
               break;
           }
         break;

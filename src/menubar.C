@@ -1410,7 +1410,7 @@ rxvt_term::menubar_dump (FILE *fp)
   time (&t);
 
   fprintf (fp,
-          "# " APL_SUBCLASS " (%s)  Pid: %u\n# Date: %s\n\n",
+          "# " RESCLASS " (%s)  Pid: %u\n# Date: %s\n\n",
           rs[Rs_name], (unsigned int)getpid (), ctime (&t));
 
   /* dump in reverse order */
@@ -1757,7 +1757,7 @@ rxvt_term::menubar_dispatch (char *str)
                 /* enough space to hold the results */
                 char            buffer[32];
 
-                sprintf (buffer, "/tmp/" APL_SUBCLASS "-%u",
+                sprintf (buffer, "/tmp/" RESCLASS "-%u",
                         (unsigned int)getpid ());
 
                 if ((fp = fopen (buffer, "wb")) != NULL)

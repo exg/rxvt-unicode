@@ -15,12 +15,27 @@
         cn	common chinese encodings
         cn_ext	rarely used but very big chinese encodigs
         all	all of the above
+--enable-xim
+	add support for XIM (X Input Method) protocol. This allows using
+	alternative input methods (e.g. kinput2) and will also correctly
+	set up the input for people using dead keys or compose keys.
 --enable-unicode3
 	enable support for unicode codepoints above 65535 (the basic
         multilingual page). This increases storage requirements per character
         from 2 to 4 bytes and is not too useful as font support in X11 and Xft
         is largely missing, although cut & paste will work correctly, as will
         displaying, if you have the right font(s).
+--enable-fallback(=CLASS)
+	when reading resource settings, also read settings for class CLASS
+        (default: Rxvt). To disable resource fallback use --disable-fallback.
+--with-res-name=NAME
+        use the given name (default: urxvt) as default application name
+        when reading resources.  Specify --with-res-name=rxvt to replace
+        rxvt.
+--with-res-class=CLASS
+        use the given class (default: URxvt) as default application class
+        when reading resources.  Specify --with-res-class=Rxvt to replace
+        rxvt.
 --enable-utmp
 	write user and tty to utmp file (used by programs like ``w'') at
 	start of rxvt execution and delete information when rxvt exits.
@@ -53,10 +68,6 @@
 --enable-half-shadow
 	make shadows on the scrollbar only half the normal width & height.
 	only applicable to rxvt scrollbars
---enable-xim
-	add support for XIM (X Input Method) protocol. This allows using
-	alternative input methods (e.g. kinput2) and will also correctly
-	set up the input for people using dead keys or compose keys.
 --enable-ttygid
 	change tty device setting to group "tty" - only use this if
         your system uses this type of security
@@ -119,6 +130,9 @@
 	add support for a blinking cursor
 --enable-pointer-blank
 	add support to have the pointer disappear when typing or inactive
+--with-name=NAME
+	set the basename for the installed binaries (default: urxvt, resulting
+        in urxvt, urxvtd etc.). Specify --with-name=rxvt to replace rxvt.
 --with-term=NAME
 	change the environmental variable for the terminal to NAME
 	(default "rxvt")

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	xdefaults.c
  *----------------------------------------------------------------------*
- * $Id: xdefaults.C,v 1.13 2004/02/24 21:41:16 pcg Exp $
+ * $Id: xdefaults.C,v 1.15 2004/03/03 04:07:52 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994      Robert Nation <nation@rocket.sanders.lockheed.com>
@@ -132,10 +132,6 @@ optList[] = {
 #ifdef MOUSE_WHEEL
               BOOL (Rs_mouseWheelScrollPage, "mouseWheelScrollPage", NULL, Opt_mouseWheelScrollPage,
                    NULL),
-#endif
-#ifdef MULTICHAR_SET
-              BOOL (Rs_mc_hack, "multibyte_cursor", "mcc", Opt_mc_hack,
-                   "Multibyte character cursor movement"),
 #endif
 #ifndef NO_FRILLS
               BOOL (Rs_tripleclickwords, "tripleclickwords", "tcw", Opt_tripleclickwords,
@@ -296,13 +292,16 @@ static const char optionsstring[] = "Options: "
 #if defined(USE_XIM)
                                     "XIM,"
 #endif
-#if defined(MULTICHAR_SET)
-                                    "multichar_languages,"
-#endif
                                     "scrollbars="
 #if !defined(HAVE_SCROLLBARS)
                                     "NONE"
 #else
+# if defined(PLAIN_SCROLLBAR)
+                                    "plain"
+#  if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR)
+                                    "+"
+#  endif
+# endif
 # if defined(RXVT_SCROLLBAR)
                                     "rxvt"
 #  if defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR)
@@ -354,7 +353,7 @@ rxvt_usage (int type)
 
   write (STDERR_FILENO, releasestring, sizeof (releasestring) - 1);
   write (STDERR_FILENO, optionsstring, sizeof (optionsstring) - 1);
-  write (STDERR_FILENO, APL_NAME, sizeof (APL_NAME) - 1);
+  write (STDERR_FILENO, RESNAME, sizeof (RESNAME) - 1);
 
   switch (type)
     {
@@ -758,8 +757,8 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
   if (locale != NULL)
     {	/* XXX: must limit length of string */
       localepath = (char *)rxvt_malloc (256);
-      sprintf (localepath, XAPPLOADDIRLOCALE "/" APL_SUBCLASS,
-              (int) (258 - sizeof (XAPPLOADDIRLOCALE) - sizeof (APL_SUBCLASS)),
+      sprintf (localepath, XAPPLOADDIRLOCALE "/" RESCLASS,
+              (int) (258 - sizeof (XAPPLOADDIRLOCALE) - sizeof (RESCLASS)),
               locale);	/* 258 = 255 + 4 (-.*s) - 1 (/) */
     }
 
@@ -824,15 +823,16 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
 #   if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
     if (localepath == NULL || (rdb1 = XrmGetFileDatabase (localepath)) == NULL)
 #   endif
-      rdb1 = XrmGetFileDatabase (XAPPLOADDIR "/" APL_SUBCLASS);
+      rdb1 = XrmGetFileDatabase (XAPPLOADDIR "/" RESCLASS);
+
     if (rdb1 != NULL)
       XrmMergeDatabases (rdb1, &database);
 
     /* Add in $XAPPLRESDIR/Rxvt only; not bothering with XUSERFILESEARCHPATH */
     if ((xe = (char *)getenv ("XAPPLRESDIR")) != NULL)
       {
-        sprintf (fname, "%-.*s/" APL_SUBCLASS, sizeof (fname)
-                - sizeof (APL_SUBCLASS) - 2, xe);
+        sprintf (fname, "%-.*s/" RESCLASS, sizeof (fname)
+                - sizeof (RESCLASS) - 2, xe);
         if ((rdb1 = XrmGetFileDatabase (fname)) != NULL)
           XrmMergeDatabases (rdb1, &database);
       }
@@ -856,12 +856,16 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
         p0 = XGetDefault (display, "!INVALIDPROGRAMMENAMEDONTMATCH!", kw);
         if (p == NULL || (p0 && STRCMP (p, p0) == 0))
           {
-            p = XGetDefault (display, APL_SUBCLASS, kw);
+            p = XGetDefault (display, RESCLASS, kw);
+#ifdef RESFALLBACK
             if (p == NULL || (p0 && STRCMP (p, p0) == 0))
-              p = XGetDefault (display, APL_CLASS, kw);
+              p = XGetDefault (display, RESFALLBACK, kw);
+#endif
           }
+
         if (p == NULL && p0)
           p = p0;
+
         if (p)
           {
             rs[optList[entry].doff] = p;
@@ -890,19 +894,21 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
     name_prefix[0] = XrmStringToName (name);
     name_prefix[1] = XrmStringToName ("keysym");
     name_prefix[2] = NULLQUARK;
-    class_prefix[0] = XrmStringToName (APL_SUBCLASS);
+    class_prefix[0] = XrmStringToName (RESCLASS);
     class_prefix[1] = XrmStringToName ("Keysym");
     class_prefix[2] = NULLQUARK;
     /* XXX: Need to check sizeof (rxvt_t) == sizeof (XPointer) */
     XrmEnumerateDatabase (XrmGetDatabase (display), name_prefix, class_prefix,
                           XrmEnumOneLevel, rxvt_define_key, NULL);
-    name_prefix[0] = XrmStringToName (APL_CLASS);
+#    ifdef RESFALLBACK
+    name_prefix[0] = XrmStringToName (RESFALLBACK);
     name_prefix[1] = XrmStringToName ("keysym");
-    class_prefix[0] = XrmStringToName (APL_CLASS);
+    class_prefix[0] = XrmStringToName (RESFALLBACK);
     class_prefix[1] = XrmStringToName ("Keysym");
     /* XXX: Need to check sizeof (rxvt_t) == sizeof (XPointer) */
     XrmEnumerateDatabase (XrmGetDatabase (display), name_prefix, class_prefix,
                           XrmEnumOneLevel, rxvt_define_key, NULL);
+#    endif
 #   endif
 #  endif
 
@@ -950,7 +956,10 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
     */
 
     get_xdefaults (fd, name);
-    get_xdefaults (fd, APL_SUBCLASS);
+    get_xdefaults (fd, RESCLASS);
+#  ifdef RESFALLBACK
+    get_xdefaults (fd, RESFALLBACK);
+#  endif
 
 #  if defined(XAPPLOADDIR) && defined(USE_XAPPLOADDIR)
 
@@ -960,17 +969,16 @@ rxvt_term::extract_resources (Display *display __attribute__ ((unused)), const c
 #   if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
       if (localepath == NULL || (ad = fopen (localepath, "r")) == NULL)
 #   endif
-        ad = fopen (XAPPLOADDIR "/" APL_SUBCLASS, "r");
+        ad = fopen (XAPPLOADDIR "/" RESCLASS, "r");
       if (ad != NULL)
         {
-          get_xdefaults (ad, APL_SUBCLASS);
+          get_xdefaults (ad, RESCLASS);
           get_xdefaults (ad, "");
           fclose (ad);
         }
     }
 #  endif			/* XAPPLOADDIR */
 
-    get_xdefaults (fd, APL_CLASS);
     get_xdefaults (fd, "");	/* partial match */
     if (fd != NULL)
       fclose (fd);

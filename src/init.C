@@ -1169,7 +1169,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   xterm_seq (XTerm_iconName, rs[Rs_iconName], CHAR_ST);
 
   classHint.res_name = (char *)rs[Rs_name];
-  classHint.res_class = (char *)APL_CLASS;
+  classHint.res_class = (char *)RESCLASS;
 
   wmHint.flags = (InputHint | StateHint | WindowGroupHint);
   wmHint.input = True;

@@ -387,7 +387,7 @@ rxvt_malloc (size_t size)
   if (p)
     return p;
 
-  fprintf (stderr, APL_NAME ": memory allocation failure.  Aborting");
+  fprintf (stderr, RESNAME ": memory allocation failure.  Aborting");
   rxvt_clean_exit ();
   exit (EXIT_FAILURE);
   /* NOTREACHED */
@@ -403,7 +403,7 @@ rxvt_calloc (size_t number, size_t size)
   if (p)
     return p;
 
-  fprintf (stderr, APL_NAME ": memory allocation failure.  Aborting");
+  fprintf (stderr, RESNAME ": memory allocation failure.  Aborting");
   rxvt_clean_exit ();
   exit (EXIT_FAILURE);
   /* NOTREACHED */
@@ -422,7 +422,7 @@ rxvt_realloc (void *ptr, size_t size)
   if (p)
     return p;
 
-  fprintf (stderr, APL_NAME ": memory allocation failure.  Aborting");
+  fprintf (stderr, RESNAME ": memory allocation failure.  Aborting");
   rxvt_clean_exit ();
   exit (EXIT_FAILURE);
   /* NOTREACHED */
@@ -1038,7 +1038,7 @@ rxvt_term::resize_all_windows (unsigned int width, unsigned int height, int igno
       XMoveResizeWindow (display->display, TermWin.vt, window_vt_x,
                          window_vt_y, TermWin_TotalWidth (),
                          TermWin_TotalHeight ());
-      scr_clear ();
+      scr_clear (height != old_height);
 #ifdef XPM_BACKGROUND
       resize_pixmap ();
 #endif

@@ -143,10 +143,6 @@ struct mouse_event {
 # error if you disable both selection styles, how can you select, silly?
 #endif
 
-#define APL_CLASS       "XTerm" /* class name */
-#define APL_SUBCLASS    "Rxvt"  /* also check resources under this name */
-#define APL_NAME        "rxvt"  /* normal name */
-
 /* COLORTERM, TERM environment variables */
 #define COLORTERMENV    "rxvt"
 #ifdef XPM_BACKGROUND
@@ -1161,7 +1157,7 @@ struct rxvt_term : rxvt_vars {
   void scr_reset ();
   void scr_reset_realloc ();
   void scr_release ();
-  void scr_clear ();
+  void scr_clear (bool really = true);
   void scr_refresh (unsigned char refresh_type);
   bool scr_refresh_rend (rend_t mask, rend_t value);
   void scr_erase_screen (int mode);

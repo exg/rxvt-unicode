@@ -53,7 +53,7 @@ rxvt_print_error (const char *fmt,...)
   va_list arg_ptr;
 
   va_start (arg_ptr, fmt);
-  fprintf (stderr, APL_NAME ": ");
+  fprintf (stderr, RESNAME ": ");
   vfprintf (stderr, fmt, arg_ptr);
   fprintf (stderr, "\n");
   va_end (arg_ptr);

@@ -1,401 +1,16 @@
-/* autoconf/config.h.in.  Generated automatically from autoconf/configure.in by autoheader 2.13.  */
-
-/* Define if on AIX 3.
-   System headers sometimes define this.
-   We just want to avoid a redefinition error message.  */
-#ifndef _ALL_SOURCE
-#undef _ALL_SOURCE
-#endif
-
-/* Define to empty if the keyword does not work.  */
-#undef const
-
-/* Define to `int' if <sys/types.h> doesn't define.  */
-#undef gid_t
-
-/* Define if you have <sys/wait.h> that is POSIX.1 compatible.  */
-#undef HAVE_SYS_WAIT_H
-
-/* Define as __inline if that's what the C compiler calls it.  */
-#undef inline
-
-/* Define to `int' if <sys/types.h> doesn't define.  */
-#undef mode_t
-
-/* Define to `int' if <sys/types.h> doesn't define.  */
-#undef pid_t
-
-/* Define if you need to in order for stat and other things to work.  */
-#undef _POSIX_SOURCE
-
-/* Define as the return type of signal handlers (int or void).  */
-#undef RETSIGTYPE
-
-/* Define if you have the ANSI C header files.  */
-#undef STDC_HEADERS
-
-/* Define if you can safely include both <sys/time.h> and <time.h>.  */
-#undef TIME_WITH_SYS_TIME
-
-/* Define to `int' if <sys/types.h> doesn't define.  */
-#undef uid_t
-
-/* Define if the X Window System is missing or not being used.  */
-#undef X_DISPLAY_MISSING
-
-/* The number of bytes in a char.  */
-#undef SIZEOF_CHAR
-
-/* The number of bytes in a int.  */
-#undef SIZEOF_INT
-
-/* The number of bytes in a int *.  */
-#undef SIZEOF_INT_P
-
-/* The number of bytes in a long.  */
-#undef SIZEOF_LONG
-
-/* The number of bytes in a long long.  */
-#undef SIZEOF_LONG_LONG
-
-/* The number of bytes in a short.  */
-#undef SIZEOF_SHORT
-
-/* Define if you have the _getpty function.  */
-#undef HAVE__GETPTY
-
-/* Define if you have the atexit function.  */
-#undef HAVE_ATEXIT
-
-/* Define if you have the grantpt function.  */
-#undef HAVE_GRANTPT
-
-/* Define if you have the isastream function.  */
-#undef HAVE_ISASTREAM
-
-/* Define if you have the nanosleep function.  */
-#undef HAVE_NANOSLEEP
-
-/* Define if you have the on_exit function.  */
-#undef HAVE_ON_EXIT
-
-/* Define if you have the openpty function.  */
-#undef HAVE_OPENPTY
-
-/* Define if you have the revoke function.  */
-#undef HAVE_REVOKE
-
-/* Define if you have the seteuid function.  */
-#undef HAVE_SETEUID
-
-/* Define if you have the setpgid function.  */
-#undef HAVE_SETPGID
-
-/* Define if you have the setpgrp function.  */
-#undef HAVE_SETPGRP
-
-/* Define if you have the setreuid function.  */
-#undef HAVE_SETREUID
-
-/* Define if you have the setsid function.  */
-#undef HAVE_SETSID
-
-/* Define if you have the setutent function.  */
-#undef HAVE_SETUTENT
-
-/* Define if you have the ttyslot function.  */
-#undef HAVE_TTYSLOT
-
-/* Define if you have the unlockpt function.  */
-#undef HAVE_UNLOCKPT
-
-/* Define if you have the unsetenv function.  */
-#undef HAVE_UNSETENV
-
-/* Define if you have the updwtmp function.  */
-#undef HAVE_UPDWTMP
-
-/* Define if you have the <X11/Xft/Xft.h> header file.  */
-#undef HAVE_X11_XFT_XFT_H
-
-/* Define if you have the <assert.h> header file.  */
-#undef HAVE_ASSERT_H
-
-/* Define if you have the <dlfcn.h> header file.  */
-#undef HAVE_DLFCN_H
-
-/* Define if you have the <fcntl.h> header file.  */
-#undef HAVE_FCNTL_H
-
-/* Define if you have the <grp.h> header file.  */
-#undef HAVE_GRP_H
-
-/* Define if you have the <lastlog.h> header file.  */
-#undef HAVE_LASTLOG_H
-
-/* Define if you have the <libc.h> header file.  */
-#undef HAVE_LIBC_H
-
-/* Define if you have the <stdarg.h> header file.  */
-#undef HAVE_STDARG_H
-
-/* Define if you have the <stdint.h> header file.  */
-#undef HAVE_STDINT_H
-
-/* Define if you have the <stdlib.h> header file.  */
-#undef HAVE_STDLIB_H
-
-/* Define if you have the <string.h> header file.  */
-#undef HAVE_STRING_H
-
-/* Define if you have the <sys/byteorder.h> header file.  */
-#undef HAVE_SYS_BYTEORDER_H
-
-/* Define if you have the <sys/ioctl.h> header file.  */
-#undef HAVE_SYS_IOCTL_H
-
-/* Define if you have the <sys/select.h> header file.  */
-#undef HAVE_SYS_SELECT_H
-
-/* Define if you have the <sys/sockio.h> header file.  */
-#undef HAVE_SYS_SOCKIO_H
-
-/* Define if you have the <sys/strredir.h> header file.  */
-#undef HAVE_SYS_STRREDIR_H
-
-/* Define if you have the <sys/time.h> header file.  */
-#undef HAVE_SYS_TIME_H
-
-/* Define if you have the <termios.h> header file.  */
-#undef HAVE_TERMIOS_H
-
-/* Define if you have the <unistd.h> header file.  */
-#undef HAVE_UNISTD_H
-
-/* Define if you have the <utmp.h> header file.  */
-#undef HAVE_UTMP_H
-
-/* Define if you have the <utmpx.h> header file.  */
-#undef HAVE_UTMPX_H
-
-/* Define if you have the Xft library (-lXft).  */
-#undef HAVE_LIBXFT
-
-/* Build shared library version - specify via configure only */
-#undef LIBRXVT
-
-/* Define if you want the depth of scrollbars and menus to be less */
-#undef HALFSHADOW
-
-/* Define to change gid of ttys to group tty */
-#undef TTY_GID_SUPPORT
-
-/* Define if you don't want support for the backspace key */
-#undef NO_BACKSPACE_KEY
-
-/* Define if you don't want support for the (non-keypad) delete key */
-#undef NO_DELETE_KEY
-
-/* Define if you don't want any resources read */
-#undef NO_RESOURCES
-
-/* Define if you want to use XGetDefault instead of our internal version */
-#undef USE_XGETDEFAULT
-
-/* Disable the secondary screen. Many programs use the secondary screen as their workplace */
-#undef NO_SECONDARY_SCREEN
-
-/* Define to remove xterm style mouse selection */
-#undef NO_NEW_SELECTION
-
-/* Define to use smart resize behavior */
-#undef SMART_RESIZE
-
-/* Define if you want 256 colour support */
-#undef TTY_256COLOR
-
-/* Set TERM to the value given by configure */
-#undef TERMENV
-
-/* Set TERMINFO value to the value given by configure */
-#undef RXVT_TERMINFO
-
-/* Define if you need function prototypes */
-#undef PROTOTYPES
-
-/* Define if you include <X11/xpm.h> on a normal include path (be careful) */
-#undef XPM_INC_X11
-
-/* Define if you have XPointer typedef */
-#undef HAVE_XPOINTER
-
-/* Define if utmp.h has struct utmp */
-#undef HAVE_STRUCT_UTMP
-
-/* Define if struct utmp contains ut_host */
-#undef HAVE_UTMP_HOST
-
-/* Define if struct utmp contains ut_pid */
-#undef HAVE_UTMP_PID
-
-/* Define if utmpx.h has struct utmpx */
-#undef HAVE_STRUCT_UTMPX
-
-/* Define if struct utmpx contains ut_host */
-#undef HAVE_UTMPX_HOST
-
-/* Define if utmp.h or lastlog.h has struct lastlog */
-#undef HAVE_STRUCT_LASTLOG
-
-/* Define if utmpx.h or lastlog.h has struct lastlogx */
-#undef HAVE_STRUCT_LASTLOGX
-
-/* Define location of utmp */
-#undef RXVT_UTMP_FILE
-
-/* Define location of utmpx */
-#undef RXVT_UTMPX_FILE
-
-/* Define location of wtmp */
-#undef RXVT_WTMP_FILE
-
-/* Define location of wtmpx */
-#undef RXVT_WTMPX_FILE
-
-/* Define location of lastlog */
-#undef RXVT_LASTLOG_FILE
-
-/* Define if lastlog is provided via a directory */
-#undef LASTLOG_IS_DIR
-
-/* Define location of lastlogx */
-#undef RXVT_LASTLOGX_FILE
-
-/* Define location of ttys/ttytab */
-#undef TTYTAB_FILENAME
-
-/* Define if Xlocale support works */
-#undef HAVE_XLOCALE
-
-/* Define if setlocale (defined to Xsetlocale) works */
-#undef HAVE_XSETLOCALE
-
-/* Define if plain old setlocale works */
-#undef HAVE_SETLOCALE
-
-/* Define if nl_langinfo(CODESET) works */
-#undef HAVE_NL_LANGINFO
-
-/* Define if you have _GNU_SOURCE getpt()  */
-#undef HAVE_GETPT
-
-/* Define for this pty type */
-#undef PTYS_ARE_OPENPTY
-
-/* Define for this pty type */
-#undef PTYS_ARE_NUMERIC
-
-/* Define for this pty type */
-#undef PTYS_ARE_PTMX
-
-/* Define for this pty type */
-#undef PTYS_ARE_PTC
-
-/* Define for this pty type */
-#undef PTYS_ARE__GETPTY
-
-/* Define for this pty type */
-#undef PTYS_ARE_GETPTY
-
-/* Define for this pty type */
-#undef PTYS_ARE_GETPT
-
-/* Define for this pty type */
-#undef PTYS_ARE_CLONE
-
-/* Define for this pty type */
-#undef PTYS_ARE_SEARCHED
-
-/* Define for first char in devptyXX */
-#undef PTYCHAR1
-
-/* Define for second char in devptyXX */
-#undef PTYCHAR2
-
-/* Define if you want your background to use the parent window background */
-#undef TRANSPARENT
-
-/* Define for continual scrolling when you keep the scrollbar button pressed */
-#undef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
-
-/* Define to allow scrolling when the selection moves to the top or bottom of the screen */
-#undef SELECTION_SCROLLING
-
-/* Define if you want Menubar support */
-#undef MENUBAR
-
-/* Define if you don't want handling for rarely used features */
-#undef NO_FRILLS
-
-/* Define if you don't want support linespace */
-#undef NO_LINESPACE
-
-/* Define to use a 24 bit visual if the screen has 24 bit mode */
-#undef PREFER_24BIT
-
-/* Define to use wheel events (button4 and button5) to scroll */
-#undef MOUSE_WHEEL
-
-/* Define to have CTRL cause wheel events to accelerate scrolling. Release CTRL to halt scrolling */
-#undef MOUSE_SLIP_WHEELING
-
-/* Define to remove old rxvt (ver 2.20 and before) style selection */
-#undef NO_OLD_SELECTION
-
-/* Define if you want to have utmp/utmpx support */
-#undef UTMP_SUPPORT
-
-/* Define if you want to have wtmp support when utmp/utmpx is enabled */
-#undef WTMP_SUPPORT
-
-/* Define if you want to have lastlog support when utmp/utmpx is enabled */
-#undef LASTLOG_SUPPORT
-
-/* Define if you want to have XIM (X Input Method) protocol support - required for multibyte characters input */
-#undef USE_XIM
-
-/* Define if you want to have sexy-looking background pixmaps. Needs libXpm */
-#undef XPM_BACKGROUND
-
-/* Support Rxvt original style scrollbars */
-#undef RXVT_SCROLLBAR
-
-/* Support NeXT style scrollbars */
-#undef NEXT_SCROLLBAR
-
-/* Support Xterm style scrollbars */
-#undef XTERM_SCROLLBAR
-
-/* Support plain style scrollbars */
-#undef PLAIN_SCROLLBAR
-
-/* Define if you want hide the pointer while typing */
-#undef POINTER_BLANK
+/* autoconf/config.h.in.  Generated from autoconf/configure.in by autoheader.  */
 
 /* Define if you want blinking cursor support */
 #undef CURSOR_BLINK
 
-/* Define if you want blinking text support */
-#undef TEXT_BLINK
+/* Define if you want chinese codesets */
+#undef ENCODING_CN
 
-/* Define if you want to represent unicode characters outside plane 0 */
-#undef UNICODE_3
+/* Define if you want extended chinese codesets */
+#undef ENCODING_CN_EXT
 
 /* Define if you want european extended codesets */
 #undef ENCODING_EU
-
-/* Define if you want vietnamese codesets */
-#undef ENCODING_VN
 
 /* Define if you want japanese codesets */
 #undef ENCODING_JP
@@ -406,15 +21,443 @@
 /* Define if you want korean codesets */
 #undef ENCODING_KR
 
-/* Define if you want chinese codesets */
-#undef ENCODING_CN
+/* Define if you want vietnamese codesets */
+#undef ENCODING_VN
 
-/* Define if you want extended chinese codesets */
-#undef ENCODING_CN_EXT
+/* Define if you want the depth of scrollbars and menus to be less */
+#undef HALFSHADOW
+
+/* Define to 1 if you have the <assert.h> header file. */
+#undef HAVE_ASSERT_H
+
+/* Define to 1 if you have the `atexit' function. */
+#undef HAVE_ATEXIT
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define to 1 if you have the <fcntl.h> header file. */
+#undef HAVE_FCNTL_H
+
+/* Define if you have _GNU_SOURCE getpt() */
+#undef HAVE_GETPT
+
+/* Define to 1 if you have the `grantpt' function. */
+#undef HAVE_GRANTPT
+
+/* Define to 1 if you have the <grp.h> header file. */
+#undef HAVE_GRP_H
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the `isastream' function. */
+#undef HAVE_ISASTREAM
+
+/* Define to 1 if you have the <lastlog.h> header file. */
+#undef HAVE_LASTLOG_H
+
+/* Define to 1 if you have the <libc.h> header file. */
+#undef HAVE_LIBC_H
+
+/* Define to 1 if you have the `Xft' library (-lXft). */
+#undef HAVE_LIBXFT
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the `nanosleep' function. */
+#undef HAVE_NANOSLEEP
+
+/* Define if nl_langinfo(CODESET) works */
+#undef HAVE_NL_LANGINFO
+
+/* Define to 1 if you have the `on_exit' function. */
+#undef HAVE_ON_EXIT
+
+/* Define to 1 if you have the `openpty' function. */
+#undef HAVE_OPENPTY
+
+/* Define to 1 if you have the `revoke' function. */
+#undef HAVE_REVOKE
+
+/* Define to 1 if you have the `seteuid' function. */
+#undef HAVE_SETEUID
+
+/* Define if plain old setlocale works */
+#undef HAVE_SETLOCALE
+
+/* Define to 1 if you have the `setpgid' function. */
+#undef HAVE_SETPGID
+
+/* Define to 1 if you have the `setpgrp' function. */
+#undef HAVE_SETPGRP
+
+/* Define to 1 if you have the `setreuid' function. */
+#undef HAVE_SETREUID
+
+/* Define to 1 if you have the `setsid' function. */
+#undef HAVE_SETSID
+
+/* Define to 1 if you have the `setutent' function. */
+#undef HAVE_SETUTENT
+
+/* Define to 1 if you have the <stdarg.h> header file. */
+#undef HAVE_STDARG_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define if utmp.h or lastlog.h has struct lastlog */
+#undef HAVE_STRUCT_LASTLOG
+
+/* Define if utmpx.h or lastlog.h has struct lastlogx */
+#undef HAVE_STRUCT_LASTLOGX
+
+/* Define if utmp.h has struct utmp */
+#undef HAVE_STRUCT_UTMP
+
+/* Define if utmpx.h has struct utmpx */
+#undef HAVE_STRUCT_UTMPX
+
+/* Define to 1 if you have the <sys/byteorder.h> header file. */
+#undef HAVE_SYS_BYTEORDER_H
+
+/* Define to 1 if you have the <sys/ioctl.h> header file. */
+#undef HAVE_SYS_IOCTL_H
+
+/* Define to 1 if you have the <sys/select.h> header file. */
+#undef HAVE_SYS_SELECT_H
+
+/* Define to 1 if you have the <sys/sockio.h> header file. */
+#undef HAVE_SYS_SOCKIO_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/strredir.h> header file. */
+#undef HAVE_SYS_STRREDIR_H
+
+/* Define to 1 if you have the <sys/time.h> header file. */
+#undef HAVE_SYS_TIME_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have <sys/wait.h> that is POSIX.1 compatible. */
+#undef HAVE_SYS_WAIT_H
+
+/* Define to 1 if you have the <termios.h> header file. */
+#undef HAVE_TERMIOS_H
+
+/* Define to 1 if you have the `ttyslot' function. */
+#undef HAVE_TTYSLOT
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the `unlockpt' function. */
+#undef HAVE_UNLOCKPT
+
+/* Define to 1 if you have the `unsetenv' function. */
+#undef HAVE_UNSETENV
+
+/* Define to 1 if you have the `updwtmp' function. */
+#undef HAVE_UPDWTMP
+
+/* Define to 1 if you have the <utmpx.h> header file. */
+#undef HAVE_UTMPX_H
+
+/* Define if struct utmpx contains ut_host */
+#undef HAVE_UTMPX_HOST
+
+/* Define to 1 if you have the <utmp.h> header file. */
+#undef HAVE_UTMP_H
+
+/* Define if struct utmp contains ut_host */
+#undef HAVE_UTMP_HOST
+
+/* Define if struct utmp contains ut_pid */
+#undef HAVE_UTMP_PID
+
+/* Define to 1 if you have the <X11/Xft/Xft.h> header file. */
+#undef HAVE_X11_XFT_XFT_H
+
+/* Define if Xlocale support works */
+#undef HAVE_XLOCALE
+
+/* Define if you have XPointer typedef */
+#undef HAVE_XPOINTER
+
+/* Define if setlocale (defined to Xsetlocale) works */
+#undef HAVE_XSETLOCALE
+
+/* Define to 1 if you have the `_getpty' function. */
+#undef HAVE__GETPTY
+
+/* Define if lastlog is provided via a directory */
+#undef LASTLOG_IS_DIR
+
+/* Define if you want to have lastlog support when utmp/utmpx is enabled */
+#undef LASTLOG_SUPPORT
+
+/* Build shared library version - specify via configure only */
+#undef LIBRXVT
+
+/* Define if you want Menubar support */
+#undef MENUBAR
+
+/* Define to have CTRL cause wheel events to accelerate scrolling. Release
+   CTRL to halt scrolling */
+#undef MOUSE_SLIP_WHEELING
+
+/* Define to use wheel events (button4 and button5) to scroll */
+#undef MOUSE_WHEEL
+
+/* Support NeXT style scrollbars */
+#undef NEXT_SCROLLBAR
+
+/* Define if you don't want support for the backspace key */
+#undef NO_BACKSPACE_KEY
+
+/* Define if you don't want support for the (non-keypad) delete key */
+#undef NO_DELETE_KEY
+
+/* Define if you don't want handling for rarely used features */
+#undef NO_FRILLS
+
+/* Define if you don't want support linespace */
+#undef NO_LINESPACE
+
+/* Define to remove xterm style mouse selection */
+#undef NO_NEW_SELECTION
+
+/* Define to remove old rxvt (ver 2.20 and before) style selection */
+#undef NO_OLD_SELECTION
+
+/* Define if you don't want any resources read */
+#undef NO_RESOURCES
+
+/* Define for continual scrolling when you keep the scrollbar button pressed
+   */
+#undef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
+
+/* Disable the secondary screen. Many programs use the secondary screen as
+   their workplace */
+#undef NO_SECONDARY_SCREEN
 
 /* Define if you don't need to use our replacement string functions */
 #undef NO_STRINGS
 
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Support plain style scrollbars */
+#undef PLAIN_SCROLLBAR
+
+/* Define if you want hide the pointer while typing */
+#undef POINTER_BLANK
+
+/* Define to use a 24 bit visual if the screen has 24 bit mode */
+#undef PREFER_24BIT
+
+/* Define if you need function prototypes */
+#undef PROTOTYPES
+
+/* Define for first char in devptyXX */
+#undef PTYCHAR1
+
+/* Define for second char in devptyXX */
+#undef PTYCHAR2
+
+/* Define for this pty type */
+#undef PTYS_ARE_CLONE
+
+/* Define for this pty type */
+#undef PTYS_ARE_GETPT
+
+/* Define for this pty type */
+#undef PTYS_ARE_GETPTY
+
+/* Define for this pty type */
+#undef PTYS_ARE_NUMERIC
+
+/* Define for this pty type */
+#undef PTYS_ARE_OPENPTY
+
+/* Define for this pty type */
+#undef PTYS_ARE_PTC
+
+/* Define for this pty type */
+#undef PTYS_ARE_PTMX
+
+/* Define for this pty type */
+#undef PTYS_ARE_SEARCHED
+
+/* Define for this pty type */
+#undef PTYS_ARE__GETPTY
+
+/* Resource class */
+#undef RESCLASS
+
+/* Fallback resource class */
+#undef RESFALLBACK
+
+/* Default resource name */
+#undef RESNAME
+
+/* Define as the return type of signal handlers (`int' or `void'). */
+#undef RETSIGTYPE
+
+/* Define location of lastlogx */
+#undef RXVT_LASTLOGX_FILE
+
+/* Define location of lastlog */
+#undef RXVT_LASTLOG_FILE
+
+/* Support Rxvt original style scrollbars */
+#undef RXVT_SCROLLBAR
+
+/* Set TERMINFO value to the value given by configure */
+#undef RXVT_TERMINFO
+
+/* Define location of utmpx */
+#undef RXVT_UTMPX_FILE
+
+/* Define location of utmp */
+#undef RXVT_UTMP_FILE
+
+/* Define location of wtmpx */
+#undef RXVT_WTMPX_FILE
+
+/* Define location of wtmp */
+#undef RXVT_WTMP_FILE
+
+/* Define to allow scrolling when the selection moves to the top or bottom of
+   the screen */
+#undef SELECTION_SCROLLING
+
+/* The size of a `char', as computed by sizeof. */
+#undef SIZEOF_CHAR
+
+/* The size of a `int', as computed by sizeof. */
+#undef SIZEOF_INT
+
+/* The size of a `int *', as computed by sizeof. */
+#undef SIZEOF_INT_P
+
+/* The size of a `long', as computed by sizeof. */
+#undef SIZEOF_LONG
+
+/* The size of a `long long', as computed by sizeof. */
+#undef SIZEOF_LONG_LONG
+
+/* The size of a `short', as computed by sizeof. */
+#undef SIZEOF_SHORT
+
+/* Define to use "smart" resize behavior */
+#undef SMART_RESIZE
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Set TERM to the value given by configure */
+#undef TERMENV
+
+/* Define if you want blinking text support */
+#undef TEXT_BLINK
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+#undef TIME_WITH_SYS_TIME
+
+/* Define if you want your background to use the parent window background */
+#undef TRANSPARENT
+
+/* Define location of ttys/ttytab */
+#undef TTYTAB_FILENAME
+
+/* Define if you want 256 colour support */
+#undef TTY_256COLOR
+
+/* Define to change gid of ttys to group tty */
+#undef TTY_GID_SUPPORT
+
+/* Define if you want to represent unicode characters outside plane 0 */
+#undef UNICODE_3
+
+/* Define if you want to use XGetDefault instead of our internal version */
+#undef USE_XGETDEFAULT
+
+/* Define if you want to have XIM (X Input Method) protocol support - required
+   for multibyte characters input */
+#undef USE_XIM
+
+/* Define if you want to have utmp/utmpx support */
+#undef UTMP_SUPPORT
+
+/* Define if you want to have wtmp support when utmp/utmpx is enabled */
+#undef WTMP_SUPPORT
+
 /* Define to enable xft support */
 #undef XFT
 
+/* Define if you want to have sexy-looking background pixmaps. Needs libXpm */
+#undef XPM_BACKGROUND
+
+/* Define if you include <X11/xpm.h> on a normal include path (be careful) */
+#undef XPM_INC_X11
+
+/* Support Xterm style scrollbars */
+#undef XTERM_SCROLLBAR
+
+/* Define to 1 if the X Window System is missing or not being used. */
+#undef X_DISPLAY_MISSING
+
+/* Define to 1 if on AIX 3.
+   System headers sometimes define this.
+   We just want to avoid a redefinition error message.  */
+#ifndef _ALL_SOURCE
+# undef _ALL_SOURCE
+#endif
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#undef const
+
+/* Define to `int' if <sys/types.h> doesn't define. */
+#undef gid_t
+
+/* Define to `__inline__' or `__inline' if that's what the C compiler
+   calls it, or to nothing if 'inline' is not supported under any name.  */
+#ifndef __cplusplus
+#undef inline
+#endif
+
+/* Define to `int' if <sys/types.h> does not define. */
+#undef mode_t
+
+/* Define to `int' if <sys/types.h> does not define. */
+#undef pid_t
+
+/* Define to `int' if <sys/types.h> doesn't define. */
+#undef uid_t
