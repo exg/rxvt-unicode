@@ -43,6 +43,7 @@ SEDREPLACE = -e 's%@@RXVT_VERSION@@%$(VERSION)%g;'\
 tags allbin:
 
 alldoc:	rxvt.1.man.in rxvt.7.man.in rxvt.1.html rxvt.7.html rxvt.1.txt rxvt.7.txt ../README.configure ../README.FAQ
+	infocmp -C rxvt-unicode >etc/rxvt-unicode.termcap
 
 clean:
 	$(RMF) *~
