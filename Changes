@@ -6,6 +6,8 @@
           reported by fefe.
         - make it compile without pointer_blank, reported by
           Markus Demleitner.
+        - improved selection support, now supports UTF8_STRING
+          and properly encodes CUT_BUFFER0 in iso-8859-1.
 
 1.4  Fri Jan 16 23:03:22 CET 2004
 	- fix stupid segfault on esc-c

@@ -2437,8 +2437,6 @@ rxvt_selection_paste(pR_ Window win, Atom prop, Bool delete_prop)
   long nread = 0;
   unsigned long bytes_after;
   XTextProperty ct;
-  int dummy_count;
-  char **cl;
 
   D_SELECT((stderr, "rxvt_selection_paste(%08lx, %lu, %d), wait=%2x", win, (unsigned long)prop, (int)delete_prop, R->selection_wait));
 
@@ -2451,6 +2449,17 @@ rxvt_selection_paste(pR_ Window win, Atom prop, Bool delete_prop)
           R->selection_type = 0;
           if (selnum != Sel_direct)
             rxvt_selection_request_other(aR_ XA_STRING, selnum);
+        }
+      
+      if ((R->selection_type & Sel_UTF8String))
+        {
+          int selnum = R->selection_type & Sel_whereMask;
+
+          R->selection_type = Sel_CompoundText;
+          if (selnum != Sel_direct)
+            rxvt_selection_request_other(aR_ R->xa[XA_COMPOUND_TEXT], selnum);
+          else
+            R->selection_type = 0;
         }
       
       return 0;
@@ -2495,10 +2504,15 @@ rxvt_selection_paste(pR_ Window win, Atom prop, Bool delete_prop)
         }
 
       nread += ct.nitems;
+
+      char **cl;
+      int cr;
       if (XmbTextPropertyToTextList (R->Xdisplay, &ct, &cl,
-                                     &dummy_count) == Success && cl)
+                                     &cr) >= 0 && cl)
         {
-          R->paste ((unsigned char *)cl[0], STRLEN (cl[0]));
+          for (int i = 0; i < cr; i++)
+            R->paste ((unsigned char *)cl[i], STRLEN (cl[i]));
+
           XFreeStringList (cl);
         }
       else
@@ -2601,9 +2615,15 @@ rxvt_selection_request(pR_ Time tm, int x, int y)
         R->selection_request_time = tm;
         R->selection_wait = Sel_normal;
         for (i = Sel_Primary; i <= Sel_Clipboard; i++) {
+#if X_HAVE_UTF8_STRING
+            R->selection_type = Sel_UTF8String;
+            if (rxvt_selection_request_other(aR_ R->xa[XA_UTF8_STRING], i))
+                return;
+#else
             R->selection_type = Sel_CompoundText;
             if (rxvt_selection_request_other(aR_ R->xa[XA_COMPOUND_TEXT], i))
                 return;
+#endif
         }
     }
     R->selection_wait = Sel_none;       /* don't loop in rxvt_selection_paste() */
@@ -2745,11 +2765,12 @@ rxvt_selection_make(pR_ Time tm)
         return;
       }
 
-    // due to MB_MAX_CUR, selection wastage is usually high
+    // due to MB_MAX_CUR, selection wastage is usually high, so realloc
     if (str - (char *)new_selection_text > 1024)
       new_selection_text = (unsigned char *)rxvt_realloc (new_selection_text, i + 1);
 
     R->selection.len = i;
+
     if (R->selection.text)
         free (R->selection.text);
 
@@ -2758,8 +2779,23 @@ rxvt_selection_make(pR_ Time tm)
     XSetSelectionOwner(R->Xdisplay, XA_PRIMARY, R->TermWin.vt, tm);
     if (XGetSelectionOwner(R->Xdisplay, XA_PRIMARY) != R->TermWin.vt)
         rxvt_print_error("can't get primary selection");
-    XChangeProperty(R->Xdisplay, Xroot, XA_CUT_BUFFER0, XA_STRING, 8,
-                    PropModeReplace, R->selection.text, (int)R->selection.len);
+
+
+    {
+      XTextProperty ct;
+      char *cl = (char *)R->selection.text;
+
+      if (XmbTextListToTextProperty(R->Xdisplay, &cl, 1, XStringStyle, &ct) >= 0)
+        {
+          XChangeProperty(R->Xdisplay, Xroot, XA_CUT_BUFFER0, XA_STRING, 8,
+                          PropModeReplace, ct.value, ct.nitems);
+          XFree (ct.value);
+        }
+      else
+        XChangeProperty(R->Xdisplay, Xroot, XA_CUT_BUFFER0, XA_STRING, 8,
+                        PropModeReplace, R->selection.text, (int)R->selection.len);
+    }
+
     R->selection_time = tm;
     D_SELECT((stderr, "rxvt_selection_make(): R->selection.len=%d", R->selection.len));
 }
@@ -3221,7 +3257,7 @@ rxvt_term::selection_rotate (int x, int y)
  * that is exactly 32 bits wide, because a format of 64 is not allowed by
  * the X11 protocol.
  */
-typedef CARD32  Atom32;
+typedef CARD32 Atom32;
 
 /* ------------------------------------------------------------------------- */
 /*
@@ -3233,15 +3269,9 @@ void
 rxvt_selection_send(pR_ const XSelectionRequestEvent *rq)
 {
     XSelectionEvent ev;
-#ifdef USE_XIM
-    Atom32          target_list[4];
-#else
-    Atom32          target_list[3];
-#endif
-    Atom            target;
-    XTextProperty   ct;
+    XTextProperty ct;
     XICCEncodingStyle style;
-    char           *cl[2], dummy[1];
+    Atom target;
 
     ev.type = SelectionNotify;
     ev.property = None;
@@ -3252,16 +3282,20 @@ rxvt_selection_send(pR_ const XSelectionRequestEvent *rq)
     ev.time = rq->time;
 
     if (rq->target == R->xa[XA_TARGETS]) {
-        target_list[0] = (Atom32) R->xa[XA_TARGETS];
-        target_list[1] = (Atom32) XA_STRING;
-        target_list[2] = (Atom32) R->xa[XA_TEXT];
-#ifdef USE_XIM
-        target_list[3] = (Atom32) R->xa[XA_COMPOUND_TEXT];
+        Atom32 target_list[5];
+        Atom32 *target = target_list;
+
+        *target++ = (Atom32) R->xa[XA_TARGETS];
+        *target++ = (Atom32) XA_STRING;
+        *target++ = (Atom32) R->xa[XA_TEXT];
+        *target++ = (Atom32) R->xa[XA_COMPOUND_TEXT];
+#if X_HAVE_UTF8_STRING
+        *target++ = (Atom32) R->xa[XA_UTF8_STRING];
 #endif
         XChangeProperty(R->Xdisplay, rq->requestor, rq->property, XA_ATOM,
                         (8 * sizeof(target_list[0])), PropModeReplace,
                         (unsigned char *)target_list,
-                        (sizeof(target_list) / sizeof(target_list[0])));
+                        target - target_list);
         ev.property = rq->property;
     } else if (rq->target == R->xa[XA_MULTIPLE]) {
         /* TODO: Handle MULTIPLE */
@@ -3271,50 +3305,58 @@ rxvt_selection_send(pR_ const XSelectionRequestEvent *rq)
                         (unsigned char *)&R->selection_time, 1);
         ev.property = rq->property;
     } else if (rq->target == XA_STRING
+               || rq->target == R->xa[XA_TEXT]
                || rq->target == R->xa[XA_COMPOUND_TEXT]
-               || rq->target == R->xa[XA_TEXT]) {
-#ifdef USE_XIM
-        short           freect = 0;
-#endif
-        int             selectlen;
+               || rq->target == R->xa[XA_UTF8_STRING]
+              ) {
+        short freect = 0;
+        int selectlen;
+        char *cl;
 
-#ifdef USE_XIM
-        if (rq->target != XA_STRING) {
-            target = R->xa[XA_COMPOUND_TEXT];
-            style = (rq->target == R->xa[XA_COMPOUND_TEXT])
-                    ? XCompoundTextStyle : XStdICCTextStyle;
-        } else
+        target = rq->target;
+
+        if (target == XA_STRING)
+          // we actually don't do XA_STRING, but who cares, as i18n clients
+          // will ask for another format anyways.
+          style = XStringStyle;
+        else if (target == R->xa[XA_TEXT])
+          style = XTextStyle;
+        else if (target == R->xa[XA_COMPOUND_TEXT])
+          style = XCompoundTextStyle;
+#if X_HAVE_UTF8_STRING
+        else if (target == R->xa[XA_UTF8_STRING])
+          style = XUTF8StringStyle;
 #endif
-        {
-            target = XA_STRING;
-            style = XStringStyle;
-        }
+        else
+          {
+            target = R->xa[XA_COMPOUND_TEXT];
+            style = XCompoundTextStyle;
+          }
+
         if (R->selection.text) {
-            cl[0] = (char *)R->selection.text;
+            cl = (char *)R->selection.text;
             selectlen = R->selection.len;
         } else {
-            cl[0] = dummy;
-            *dummy = '\0';
+            cl = "";
             selectlen = 0;
         }
-#ifdef USE_XIM
-        if (XmbTextListToTextProperty(R->Xdisplay, cl, 1, style, &ct)
-            == Success)         /* if we failed to convert then send it raw */
+
+        if (XmbTextListToTextProperty(R->Xdisplay, &cl, 1, style, &ct) >= 0)
             freect = 1;
         else
-#endif
-        {
-            ct.value = (unsigned char *)cl[0];
+          {
+            /* if we failed to convert then send it raw */
+            ct.value = (unsigned char *)cl;
             ct.nitems = selectlen;
-        }
+          }
+
         XChangeProperty(R->Xdisplay, rq->requestor, rq->property,
                         target, 8, PropModeReplace,
                         ct.value, (int)ct.nitems);
         ev.property = rq->property;
-#ifdef USE_XIM
+
         if (freect)
-            XFree(ct.value);
-#endif
+            XFree (ct.value);
     }
     XSendEvent(R->Xdisplay, rq->requestor, False, 0L, (XEvent *)&ev);
 }

@@ -339,7 +339,8 @@ enum {
 #define Sel_Secondary           0x02
 #define Sel_Clipboard           0x03
 #define Sel_whereMask           0x0f
-#define Sel_CompoundText        0x10    /* last request was Compound */
+#define Sel_CompoundText        0x10    /* last request was COMPOUND_TEXT */
+#define Sel_UTF8String          0x20    /* last request was UTF8_STRING */
 
 enum {
   C0_NUL = 0x00,
@@ -544,11 +545,13 @@ enum {
   NUM_RESOURCES
 };
 
+// see init.C:xa_named, which must be kept in sync
 enum {
-  XA_COMPOUND_TEXT = 0,
+  XA_TEXT = 0,
+  XA_COMPOUND_TEXT,
+  XA_UTF8_STRING,
   XA_MULTIPLE,
   XA_TARGETS,
-  XA_TEXT,
   XA_TIMESTAMP,
   XA_VT_SELECTION,
   XA_INCR,
@@ -563,13 +566,6 @@ enum {
   XA_CLIPBOARD,
   NUM_XA
 };
-
-/*
- * number of graphics points
- * divisible by 2 (num lines)
- * divisible by 4 (num rect)
- */
-#define NGRX_PTS        1000
 
 /* DEC private modes */
 #define PrivMode_132            (1LU<<0)

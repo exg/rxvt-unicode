@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        init.c
  *----------------------------------------------------------------------*
- * $Id: init.C,v 1.18 2004/01/20 01:35:39 pcg Exp $
+ * $Id: init.C,v 1.19 2004/01/28 23:40:50 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -333,10 +333,11 @@ const char *const def_colorName[] =
 
 const char *const xa_names[NUM_XA] =
   {
+    "TEXT",
     "COMPOUND_TEXT",
+    "UTF8_STRING",
     "MULTIPLE",
     "TARGETS",
-    "TEXT",
     "TIMESTAMP",
     "VT_SELECTION",
     "INCR",
