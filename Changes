@@ -5,10 +5,10 @@
         - implemented caching of input methods. This immensely shortens
           startup time for new terms in rxvtd. At least xfree86 4.3 is
           rather broken with respect to input methods, though, so expect
-          crashes when you kill your input method (xterm crashes, too).
+          crashes when you kill your input method (xterm et al. also crash).
         - fix bugs in x flushing, causing an empty screen after startup
-          the first until the first event arives.
         - fix various memleaks in rxvtd.
+        - countless minor bugfixes.
 
 1.8  Mon Feb  2 20:09:18 CET 2004
 	- almost total conversion to C++. Except for introducing
