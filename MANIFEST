@@ -5,6 +5,7 @@ INSTALL
 MANIFEST
 Makefile.in
 README.configure
+README.FAQ
 configure
 reconf
 
@@ -51,8 +52,8 @@ doc/README.xvt
 doc/changes.txt
 doc/rxvt.1.pod
 doc/rxvt.7.pod
-doc/rxvt.1.man
-doc/rxvt.7.man
+doc/rxvt.1.man.in
+doc/rxvt.7.man.in
 doc/rxvt.1.html
 doc/rxvt.7.html
 doc/rxvt.1.txt
@@ -119,7 +120,6 @@ src/scrollbar-rxvt.C
 src/scrollbar-xterm.C
 src/scrollbar-plain.C
 src/scrollbar.C
-src/simplevec.h
 src/strings.C
 src/version.h
 src/xdefaults.C
