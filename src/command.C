@@ -798,19 +798,21 @@ rxvt_term::pty_cb (io_watcher &w, short revents)
         break;
 }
 
-#ifdef POINTER_BLANK
 void
 rxvt_term::pointer_unblank ()
 {
   XDefineCursor (display->display, TermWin.vt, TermWin_cursor);
   recolour_cursor ();
 
+#ifdef POINTER_BLANK
   hidden_pointer = 0;
 
   if (Options & Opt_pointerBlank)
     pointer_ev.start (NOW + pointerBlankDelay);
+#endif
 }
 
+#ifdef POINTER_BLANK
 void
 rxvt_term::pointer_blank ()
 {
@@ -1115,6 +1117,15 @@ rxvt_term::x_cb (XEvent &ev)
             if (Options & Opt_cursorBlink)
               cursor_blink_ev.start (NOW + BLINK_INTERVAL);
 #endif
+#ifdef OFF_FOCUS_FADING
+            if (rs[Rs_fade])
+              {
+                PixColors = PixColorsFocused;
+                set_colorfgbg ();
+                scr_clear ();
+                scr_touch (true);
+              }
+#endif
 
           }
         break;
@@ -1132,6 +1143,15 @@ rxvt_term::x_cb (XEvent &ev)
             if (Options & Opt_cursorBlink)
               cursor_blink_ev.stop ();
             hidden_cursor = 0;
+#endif
+#ifdef OFF_FOCUS_FADING
+            if (rs[Rs_fade])
+              {
+                PixColors = PixColorsUnFocused;
+                set_colorfgbg ();
+                scr_clear ();
+                scr_touch (true);
+              }
 #endif
 
           }
@@ -1710,26 +1730,35 @@ rxvt_term::button_release (XButtonEvent &ev)
               if (ev.state & ControlMask)
                 {
                   mouse_slip_wheel_speed += v ? -1 : 1;
-                  slip_wheel_ev.start (NOW + SCROLLBAR_CONTINUOUS_DELAY);
+                  if (mouse_slip_wheel_speed < -TermWin.nrow) mouse_slip_wheel_speed = -TermWin.nrow;
+                  if (mouse_slip_wheel_speed > +TermWin.nrow) mouse_slip_wheel_speed = +TermWin.nrow;
+
+                  if (slip_wheel_ev.at < NOW)
+                    slip_wheel_ev.at = NOW + SCROLLBAR_CONTINUOUS_DELAY;
+
+                  slip_wheel_ev.start ();
                 }
+              else
+                {
 # endif
 # ifdef JUMP_MOUSE_WHEEL
-              scr_page (v, i);
-              scr_refresh (SMOOTH_REFRESH);
-              scrollbar_show (1);
-# else
-              while (i--)
-                {
-                  scr_page (v, 1);
+                  scr_page (v, i);
                   scr_refresh (SMOOTH_REFRESH);
                   scrollbar_show (1);
-                }
+# else
+                  while (i--)
+                    {
+                      scr_page (v, 1);
+                      scr_refresh (SMOOTH_REFRESH);
+                      scrollbar_show (1);
+                    }
 # endif
-
+# ifdef MOUSE_SLIP_WHEELING
+                }
+#endif
             }
             break;
 #endif
-
         }
     }
 #ifdef MENUBAR
@@ -2004,7 +2033,7 @@ rxvt_term::check_our_parents ()
       if (am_transparent)
         {
           pchanged = 1;
-          XSetWindowBackground (display->display, TermWin.vt, PixColors[Color_bg]);
+          XSetWindowBackground (display->display, TermWin.vt, PixColorsFocused[Color_bg]);
           am_transparent = am_pixmap_trans = 0;
         }
 
@@ -2030,7 +2059,7 @@ rxvt_term::check_our_parents ()
                                  0L, 1L, False, XA_PIXMAP, &atype, &aformat,
                                  &nitems, &bytes_after, &prop) == Success);
 
-  if (!i || prop == NULL)
+  if (!i || prop == NULL || !rs[Rs_color + Color_tint])
     have_pixmap = 0;
   else
     {
@@ -2051,7 +2080,7 @@ rxvt_term::check_our_parents ()
       GC gc;
       XGCValues gcvalue;
 
-      XTranslateCoordinates (display->display, TermWin.parent[0], display->root,
+      XTranslateCoordinates (display->display, TermWin.vt, display->root,
                              0, 0, &sx, &sy, &cr);
       nw = (unsigned int)szHint.width;
       nh = (unsigned int)szHint.height;
@@ -2102,9 +2131,11 @@ rxvt_term::check_our_parents ()
 #if TINTING
           if (ISSET_PIXCOLOR (Color_tint))
             {
-              unsigned short shade, rm, gm, bm;
-
-              PixColors[Color_tint].get (display, rm, gm, bm);
+              unsigned short rm, gm, bm;
+              if (rs[Rs_shade])
+                PixColorsFocused[Color_tint].fade (display, atoi (rs[Rs_shade])).get (display, rm, gm, bm);
+              else
+                PixColorsFocused[Color_tint].get (display, rm, gm, bm);
 
               rm >>= 8; gm >>= 8; bm >>= 8; // not 100% correct, but...
 
@@ -2126,8 +2157,7 @@ rxvt_term::check_our_parents ()
                      nx, ny, image->width, image->height);
           XFreeGC (display->display, gc);
           XDestroyImage (image);
-          XSetWindowBackgroundPixmap (display->display, TermWin.vt,
-                                     TermWin.pixmap);
+          XSetWindowBackgroundPixmap (display->display, TermWin.vt, TermWin.pixmap);
 
           if (!am_transparent || !am_pixmap_trans)
             pchanged = 1;
@@ -2181,9 +2211,9 @@ rxvt_term::check_our_parents ()
 
       if (n > (int) (sizeof (TermWin.parent) / sizeof (TermWin.parent[0])))
         {
-          D_X ((stderr, "InheritPixmap Turning off"));
-          XSetWindowBackground (display->display, TermWin.parent[0], PixColors[Color_fg]);
-          XSetWindowBackground (display->display, TermWin.vt, PixColors[Color_bg]);
+          D_X ((stderr, "InheritPixmap Turning off"));             /* Mikachu? */
+          XSetWindowBackground (display->display, TermWin.parent[0], PixColorsFocused[Color_fg]);
+          XSetWindowBackground (display->display, TermWin.vt, PixColorsFocused[Color_bg]);
           am_transparent = 0;
           /* XXX: also turn off Opt_transparent? */
         }
@@ -3254,7 +3284,7 @@ rxvt_term::process_color_seq (int report, int color, const char *str, unsigned c
       if (Options & Opt_insecure)
         {
           unsigned short r, g, b;
-          PixColors[color].get (display, r, g, b);
+          PixColorsFocused[color].get (display, r, g, b);
           tt_printf ("\033]%d;rgb:%04x/%04x/%04x%c", report, r, g, b, resp);
         }
     }
@@ -3369,7 +3399,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
                 if (Options & Opt_insecure)
                   {
                     unsigned short r, g, b;
-                    PixColors[color + minCOLOR].get (display, r, g, b);
+                    PixColorsFocused[color + minCOLOR].get (display, r, g, b);
                     tt_printf ("\033]%d;%d;rgb:%04x/%04x/%04x%c", XTerm_Color, color, r, g, b, resp);
                   }
               }
@@ -3752,10 +3782,12 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 1:
             rendset = 1, rendstyle = RS_Bold;
             break;
+          //case 2: // faint or second colour
           case 4:
             rendset = 1, rendstyle = RS_Uline;
             break;
-          case 5:
+          case 5: // slowly blinking
+          case 6: // rapidly blinking
             rendset = 1, rendstyle = RS_Blink;
             break;
           //case 6: // scoansi light background
@@ -3765,15 +3797,20 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 8:
             // invisible. NYI
             break;
-          //case 10: // scoansi acs off
-          //case 11: // scoansi acs on
-          //case 12: // scoansi acs on, |0x80
-          case 21: // disable bold, blink and invis (some terminals use this)
-            rendset = 0, rendstyle = RS_Bold | RS_Blink;
+          //case 9: // crossed out
+          //case 10: // scoansi acs off, primary font
+          //case 11: // scoansi acs on, first alt font
+          //case 12: // scoansi acs on, |0x80, second alt font
+          //...
+          //case 19: // ninth alt font
+          //case 20: // gothic
+          case 21: // disable bold, faint
+            rendset = 0, rendstyle = RS_Bold;
             break;
           case 22:
             rendset = 0, rendstyle = RS_Bold;
             break;
+          //case 23: disable italic
           case 24:
             rendset = 0, rendstyle = RS_Uline;
             break;
@@ -3783,9 +3820,8 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 27:
             rendset = 0, rendstyle = RS_RVid;
             break;
-          case 28:
-            // visible. NYI
-            break;
+          //case 28: // visible. NYI
+          //case 29: // not crossed-out
         }
 
       if (rendset != -1)
