@@ -8,6 +8,38 @@
 #include "keyboard.h"
 #include "command.h"
 
+/* an intro to the data structure:
+ *
+ * vector keymap[] is grouped.
+ *
+ * inside each group, elements are sorted by the criteria given by compare_priority().
+ * the lookup of keysym is done in two steps:
+ * 1) locate the group corresponds to the keysym;
+ * 2) do a linear search inside the group.
+ *
+ * array hash[] effectively defines a map from a keysym to a group in keymap[].
+ *
+ * each group has its address(the index of first group element in keymap[]),
+ * which is computed and stored in hash[].
+ * hash[] stores the addresses in the form of:
+ * index: 0      I1       I2       I3            In
+ * value: 0...0, A1...A1, A2...A2, A3...A3, ..., An...An
+ * where
+ * A1 = 0;
+ * Ai+1 = N1 + N2 + ... + Ni.
+ * it is computed from hash_budget_size[]:
+ * index: 0      I1         I2         I3             In
+ * value: 0...0, N1, 0...0, N2, 0...0, N3,    ...,    Nn, 0...0
+ *        0...0, 0.......0, N1.....N1, N1+N2...N1+N2, ... (the compution of hash[])
+ * or we can say
+ * hash_budget_size[Ii] = Ni; hash_budget_size[elsewhere] = 0,
+ * where
+ * set {I1, I2, ..., In} = { hashkey of keymap[0]->keysym, ..., keymap[keymap.size-1]->keysym }
+ * where hashkey of keymap[i]->keysym = keymap[i]->keysym & KEYSYM_HASH_MASK
+ *       n(the number of groups) = the number of non-zero member of hash_budget_size[];
+ *       Ni(the size of group i) = hash_budget_size[Ii].
+ */
+
 #if STOCK_KEYMAP
 ////////////////////////////////////////////////////////////////////////////////
 // default keycode translation map and keyevent handlers
