@@ -1,3 +1,23 @@
+2.2  Thu Mar 11 01:41:56 CET 2004
+        - implement autocompositing of characters by either using an existing
+          precomposed unicode character or by graphical overlay. this is
+          also used to store characters >16bit without --enable-unicode3.
+        - selection now based on wchar_t, so that it can offer UTF-8
+          selections even in locales unable to represent full unicode.
+	- tis620-2529 is, of course, thai, not vietnamese...
+        - a typoe prevented characters >65535 to be stored properly.
+        - wcwidth is unreliable in non-unicode-locales on GNU/Linux.
+          working around this fixes line-drawing characters in on-utf-8 mode.
+        - improve rounding when emulating line-drawing characters.
+        - implement continuation lines in xresource parsing when
+          --disable-xgetdefault.
+        - changed locale-setting esc-sequence from code 9 to code 701.
+          also added 702 that returns the font selected for a specific
+          unicode character.
+        - no longer set XA_CUT_BUFFER0. this is confusing and clients WILL
+          get it wrong.
+        - don't use XTextStyle for XA_TEXT, instead use XStdICCTextStyle.
+
 2.1  Wed Mar  3 21:48:39 CET 2004
 	- NOTE: the name of the binary and ressources were changed in
           this version, see README.configure if you want the old
