@@ -68,6 +68,7 @@ const struct n2cs {
   { "VISCII*",		CS_VISCII	    },
                                             
   { "JISX0201*",	CS_JIS0201_1976_0   },
+  { "JISC6226*",	CS_JIS0208_1990_0   }, // also wrongly matches -1987-0? (check Encode::JP)
   { "JISX0208*",	CS_JIS0208_1990_0   }, // also wrongly matches -1987-0? (check Encode::JP)
   { "JISX0212*",	CS_JIS0212_1990_0   },
   { "JISX021320001",	CS_JIS0213_1        },
