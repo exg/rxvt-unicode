@@ -1035,8 +1035,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   wmHint.initial_state = options & Opt_iconic ? IconicState : NormalState;
   wmHint.window_group = top;
 
-  XSetWMProperties (disp, top, NULL, NULL,
-                    (char **)argv, argc, &szHint, &wmHint, &classHint);
+  XmbSetWMProperties (disp, top, NULL, NULL, (char **)argv, argc,
+                      &szHint, &wmHint, &classHint);
 
   /* Enable delete window protocol */
   XSetWMProtocols (disp, top, &xa[XA_WM_DELETE_WINDOW], 1);

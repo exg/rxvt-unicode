@@ -3878,9 +3878,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
           {
             set_locale (str);
             pty.set_utf8_mode (enc_utf8);
-# ifdef USE_XIM
-            im_cb ();
-# endif
+            init_xlocale ();
           }
         break;
 #endif

@@ -12,6 +12,9 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
+	- use XmbSetWMProperties instead of XSetWMProperties.
+	- properly update WM_LOCALE.
+
 5.2  Sun Feb 20 01:48:59 CET 2005
 	- new option -pty-fd that makes the terminal a slave
           that uses an existing pty for I/O instead of starting
