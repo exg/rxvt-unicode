@@ -496,10 +496,6 @@ rxvt_term::init_resources (int argc, const char *const *argv)
       cmd_argv[i] = NULL;
     }
 
-  /* clear all resources */
-  for (i = 0; i < NUM_RESOURCES;)
-    rs[i++] = NULL;
-
   rs[Rs_name] = rxvt_r_basename (argv[0]);
 
   /*
@@ -524,10 +520,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
   if (!display
       && ! (display = displays.get (rs[Rs_display_name])))
-    {
-      rxvt_print_error ("can't open display %s", rs[Rs_display_name]);
-      exit (EXIT_FAILURE);
-    }
+    rxvt_fatal ("can't open display %s", rs[Rs_display_name]);
 
   extract_resources (display->display, rs[Rs_name]);
 
@@ -761,6 +754,7 @@ rxvt_term::set_locale (const char *locale)
   SET_LOCALE (this->locale);
   mbstate.reset ();
 #endif
+#if 0
 #if HAVE_NL_LANGINFO
   free (codeset);
   codeset = strdup (nl_langinfo (CODESET));
@@ -769,6 +763,7 @@ rxvt_term::set_locale (const char *locale)
 #else
   enc_utf8 = 1;
 #endif
+#endif
 }
 
 void
@@ -776,7 +771,7 @@ rxvt_term::init_xlocale ()
 {
 #ifdef USE_XIM
   if (!locale)
-    rxvt_print_error ("Setting locale failed.");
+    rxvt_warn ("setting locale failed, working without locale support.\n");
   else
     {
       Atom wmlocale;
@@ -788,7 +783,7 @@ rxvt_term::init_xlocale ()
 
       if (!XSupportsLocale ())
         {
-          rxvt_print_error ("The locale is not supported by Xlib");
+          rxvt_warn ("the locale is not supported by Xlib, working withotu locale support.\n");
           return;
         }
 
@@ -858,10 +853,7 @@ rxvt_term::init_command (const char *const *argv)
 #endif
 
   if ((cmd_fd = run_command (argv)) < 0)
-    {
-      rxvt_print_error ("aborting");
-      exit (EXIT_FAILURE);
-    }
+    rxvt_fatal ("failure while running command, aborting");
 }
 
 /*----------------------------------------------------------------------*/
@@ -896,8 +888,7 @@ rxvt_term::Get_Colours ()
                   case Color_fg:
                   case Color_bg:
                     /* fatal: need bg/fg color */
-                    rxvt_print_error ("aborting");
-                    exit (EXIT_FAILURE);
+                    rxvt_fatal ("unable to get foreground/background colour, aborting");
                     /* NOTREACHED */
                     break;
 #ifndef NO_CURSORCOLOR
@@ -1251,8 +1242,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   gcvalue.background = PixColors[Color_bg];
   gcvalue.graphics_exposures = 1;
   TermWin.gc = XCreateGC (display->display, TermWin.vt,
-                         GCForeground | GCBackground
-                         | GCGraphicsExposures, &gcvalue);
+                          GCForeground | GCBackground | GCGraphicsExposures,
+                          &gcvalue);
 
   TermWin.drawable = new rxvt_drawable (display, TermWin.vt);
 
@@ -1279,10 +1270,7 @@ rxvt_term::run_command (const char *const *argv)
 
   /* get master (pty) */
   if ((cfd = rxvt_get_pty (& (tty_fd), & (ttydev))) < 0)
-    {
-      rxvt_print_error ("can't open pseudo-tty");
-      return -1;
-    }
+    rxvt_fatal ("can't open pseudo-tty");
 
   fcntl (cfd, F_SETFL, O_NONBLOCK);
 
@@ -1296,8 +1284,7 @@ rxvt_term::run_command (const char *const *argv)
       if ((tty_fd = rxvt_get_tty (ttydev)) < 0)
         {
           close (cfd);
-          rxvt_print_error ("can't open slave tty %s", ttydev);
-          return -1;
+          rxvt_fatal ("can't open slave tty %s", ttydev);
         }
     }
 #ifndef NO_BACKSPACE_KEY
@@ -1317,15 +1304,14 @@ rxvt_term::run_command (const char *const *argv)
   switch (cmd_pid = fork ())
     {
       case -1:
-        rxvt_print_error ("can't fork");
-        return -1;
+        rxvt_fatal ("can't fork");
       case 0:
         close (cfd);             /* only keep tty_fd and STDERR open */
 
         init_env ();
 
         if (rxvt_control_tty (tty_fd, ttydev) < 0)
-          rxvt_print_error ("could not obtain control of tty");
+          fprintf (stderr, "%s: could not obtain control of tty.", RESNAME);
         else
           {
             /* Reopen stdin, stdout and stderr over the tty file descriptor */
@@ -1337,9 +1323,11 @@ rxvt_term::run_command (const char *const *argv)
               close (tty_fd);
 
             run_child (argv);
+            fprintf (stderr, "%s: unable to exec child.", RESNAME);
           }
-        exit (EXIT_FAILURE);
-        /* NOTREACHED */
+
+        _exit (EXIT_FAILURE);
+
       default:
         {
 #if defined(HAVE_STRUCT_UTMP) && defined(HAVE_TTYSLOT)
@@ -1358,8 +1346,8 @@ rxvt_term::run_command (const char *const *argv)
           dup2 (fdstdin, STDIN_FILENO);
           close (fdstdin);
 #endif
-
         }
+
         close (tty_fd);       /* keep STDERR_FILENO, cmd_fd, display->fd () open */
         break;
     }
