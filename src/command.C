@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.32 2004/01/29 23:31:45 pcg Exp $
+ * $Id: command.C,v 1.33 2004/01/30 18:12:17 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -1476,8 +1476,8 @@ rxvt_process_x_event(pR_ XEvent *ev)
 		    R->selection_extend ((ev->xbutton.x), (ev->xbutton.y),
 				  (ev->xbutton.state & Button3Mask) ? 2 : 0);
 #ifdef SELECTION_SCROLLING
-		    if (ev->xbutton.y<R->TermWin.int_bwidth ||
-			Pixel2Row(ev->xbutton.y)>(R->TermWin.nrow-1)) {
+		    if (ev->xbutton.y < R->TermWin.int_bwidth
+                        || Pixel2Row(ev->xbutton.y) > (R->TermWin.nrow-1)) {
 			int dist;
 			
 			R->pending_scroll_selection=1;
