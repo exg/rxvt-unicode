@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.5 2003/11/27 10:12:10 pcg Exp $
+# $Id: Makefile.in,v 1.6 2003/12/18 00:56:51 pcg Exp $
 @MCOMMON@
 
 LINT = lint -DNARROWPROTO=1 $(XINC) -chapbxz
@@ -133,7 +133,7 @@ allbin: .protos rxvt rxvtd rxvtc
 alldoc:
 
 clean:
-	$(RMF) rxvt core a.out *.o *.lo *.bak *~ *.intpro *.extpro .libs/* librxvt.la tmpproto .protos *.tmp
+	$(RMF) rxvt rxvtc rxvtd core a.out *.o *.lo *.bak *~ *.intpro *.extpro .libs/* librxvt.la tmpproto .protos *.tmp
 
 realclean: clean
 	$(RMF) tags librxvt.h

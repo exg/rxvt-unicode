@@ -1,3 +1,8 @@
+#!/bin/sh
+
+# this is the configure script I use. It represents most of the features I
+# support and is a good baseline :)
+
 ./configure --prefix=/opt/rxvt --enable-utmp \
             --enable-wtmp --enable-lastlog --enable-xim --disable-strings --enable-xterm-scroll \
             --with-term=xterm --enable-keepscrolling --enable-xft \

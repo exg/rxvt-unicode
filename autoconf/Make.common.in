@@ -3,7 +3,7 @@
 DATE=@DATE@
 LSMDATE=@LSMDATE@
 VERSION=@VERSION@
-VERNAME=rxvt-$(VERSION)#
+VERNAME=rxvt-unicode-$(VERSION)#
 MAINT=Geoff Wing#
 MAINTEMAIL=<gcw@rxvt.org>#
 WEBMAINT=Oezguer Kesim#
