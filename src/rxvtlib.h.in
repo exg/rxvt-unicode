@@ -86,29 +86,28 @@ typedef uint32_t rend_t;
  */
 
 typedef struct {
-  uint16_t       width;         /* window width                    [pixels] */
-  uint16_t       height;        /* window height                   [pixels] */
-  uint16_t       fwidth;        /* font width                      [pixels] */
-  uint16_t       fheight;       /* font height                     [pixels] */
-  uint16_t       fbase;         /* font ascent (baseline)          [pixels] */
-  uint16_t       propfont;      /* font proportional flags                  */
-  uint16_t       ncol;          /* window columns              [characters] */
-  uint16_t       nrow;          /* window rows                 [characters] */
-  uint16_t       focus;         /* window has focus                         */
-  uint16_t       mapped;        /* window state mapped?                     */
-  uint16_t       int_bwidth;    /* internal border width                    */
-  uint16_t       ext_bwidth;    /* external border width                    */
-  uint16_t       lineSpace;     /* number of extra pixels between rows      */
-  uint16_t       saveLines;     /* number of lines that fit in scrollback   */
-  uint16_t       nscrolled;     /* number of line actually scrolled         */
-  uint16_t       view_start;    /* scrollback view starts here              */
+  unsigned int   width;         /* window width                    [pixels] */
+  unsigned int   height;        /* window height                   [pixels] */
+  unsigned int   fwidth;        /* font width                      [pixels] */
+  unsigned int   fheight;       /* font height                     [pixels] */
+  unsigned int   fweight, fslant;
+  unsigned int   fbase;         /* font ascent (baseline)          [pixels] */
+  unsigned int   ncol;          /* window columns              [characters] */
+  unsigned int   nrow;          /* window rows                 [characters] */
+  unsigned int   focus;         /* window has focus                         */
+  unsigned int   mapped;        /* window state mapped?                     */
+  unsigned int   int_bwidth;    /* internal border width                    */
+  unsigned int   ext_bwidth;    /* external border width                    */
+  unsigned int   lineSpace;     /* number of extra pixels between rows      */
+  unsigned int   saveLines;     /* number of lines that fit in scrollback   */
+  unsigned int   nscrolled;     /* number of line actually scrolled         */
+  unsigned int   view_start;    /* scrollback view starts here              */
   Window         parent[6];     /* parent identifiers - we're parent[0]     */
   Window         vt;            /* vt100 window                             */
   GC             gc;            /* GC for drawing                           */
   Pixmap         pixmap;
-  rxvt_fontset  *fontset;
   rxvt_drawable *drawable;
-  uint16_t       ascii_map[0x7f - 0x20]; // map ascii chars to fonts for speed
+  rxvt_fontset  *fontset[4];
 } TermWin_t;
 
 /*
@@ -145,12 +144,12 @@ typedef struct {
   text_t        **text; /* _all_ the text                            */
   rend_t        **rend; /* rendition, uses RS_ flags                 */
   row_col_t       cur;  /* cursor position on the screen             */
-  uint16_t        tscroll;      /* top of settable scroll region             */
-  uint16_t        bscroll;      /* bottom of settable scroll region          */
-  uint16_t        charset;      /* character set number [0..3]               */
+  unsigned int    tscroll;      /* top of settable scroll region             */
+  unsigned int    bscroll;      /* bottom of settable scroll region          */
+  unsigned int    charset;      /* character set number [0..3]               */
   unsigned int    flags;        /* see below                                 */
   row_col_t       s_cur;        /* saved cursor position                     */
-  uint16_t        s_charset;    /* saved character set number [0..3]         */
+  unsigned int    s_charset;    /* saved character set number [0..3]         */
   char            s_charset_char;
   rend_t          s_rstyle;     /* saved rendition style                     */
 } screen_t;
@@ -165,9 +164,9 @@ enum selection_op_t {
 
 typedef struct {
   wchar_t        *text;       /* selected text                             */
-  uint32_t        len;        /* length of selected text                   */
-  short           screen;     /* screen being used                         */
-  short           clicks;     /* number of clicks                          */
+  unsigned int    len;        /* length of selected text                   */
+  unsigned int    screen;     /* screen being used                         */
+  unsigned int    clicks;     /* number of clicks                          */
   selection_op_t  op;         /* current operation                         */
   row_col_t       beg;        /* beginning of selection   <= mark          */
   row_col_t       mark;       /* point of initial click   <= end           */
@@ -200,18 +199,17 @@ typedef struct {
 #define Opt_scrollTtyKeypress   (1UL<<12)
 #define Opt_transparent         (1UL<<13)
 #define Opt_transparent_all     (1UL<<14)
-#define Opt_realBold            (1UL<<15)
-#define Opt_tripleclickwords    (1UL<<16)
-#define Opt_scrollWithBuffer    (1UL<<17)
-#define Opt_jumpScroll          (1UL<<18)
-#define Opt_mouseWheelScrollPage (1UL<<19)
-#define Opt_pointerBlank        (1UL<<20)
-#define Opt_cursorBlink         (1UL<<21)
-#define Opt_secondaryScreen	(1UL<<22)
-#define Opt_secondaryScroll	(1UL<<23)
+#define Opt_tripleclickwords    (1UL<<15)
+#define Opt_scrollWithBuffer    (1UL<<16)
+#define Opt_jumpScroll          (1UL<<17)
+#define Opt_mouseWheelScrollPage (1UL<<18)
+#define Opt_pointerBlank        (1UL<<19)
+#define Opt_cursorBlink         (1UL<<20)
+#define Opt_secondaryScreen	(1UL<<21)
+#define Opt_secondaryScroll	(1UL<<22)
 #if ENABLE_FRILLS
-# define Opt_insecure		(1UL<<24) // insecure esc sequences
-# define Opt_borderLess		(1UL<<25) // mem borderless hints
+# define Opt_insecure		(1UL<<23) // insecure esc sequences
+# define Opt_borderLess		(1UL<<24) // mem borderless hints
 #else
 # define Opt_insecure		0
 # define Opt_borderLess		0
@@ -234,12 +232,12 @@ typedef struct {
 typedef struct {
   char            state;        /* scrollbar state                          */
   char            init;         /* scrollbar has been initialised           */
-  short           beg;          /* slider sub-window begin height           */
-  short           end;          /* slider sub-window end height             */
-  short           top;          /* slider top position                      */
-  short           bot;          /* slider bottom position                   */
-  short           style;        /* style: rxvt, xterm, next                 */
-  short           width;        /* scrollbar width                          */
+  unsigned int    beg;          /* slider sub-window begin height           */
+  unsigned int    end;          /* slider sub-window end height             */
+  unsigned int    top;          /* slider top position                      */
+  unsigned int    bot;          /* slider bottom position                   */
+  unsigned int    style;        /* style: rxvt, xterm, next                 */
+  unsigned int    width;        /* scrollbar width                          */
   Window          win;
   int             (rxvt_term::*update)(int, int, int, int);
 

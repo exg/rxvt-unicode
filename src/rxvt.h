@@ -125,7 +125,7 @@ struct grwin_t;
 /* If we're using either the rxvt scrollbar or menu bars, keep the
  * scrollColor resource.
  */
-#if defined(RXVT_SCROLLBAR) || defined(MENUBAR)
+#if defined(RXVT_SCROLLBAR) || defined(MENUBAR) || defined(PLAIN_SCROLLBAR)
 # define KEEP_SCROLLCOLOR 1
 #else
 # undef KEEP_SCROLLCOLOR
@@ -185,7 +185,7 @@ typedef struct _mwmhints {
 # define COLORTERMENVFULL COLORTERMENV
 #endif
 #ifndef TERMENV
-# define TERMENV        "rxvt"
+# define TERMENV        "rxvt-unicode"
 #endif
 
 #if defined (NO_MOUSE_REPORT) && !defined (NO_MOUSE_REPORT_SCROLLBAR)
@@ -352,20 +352,36 @@ enum {
 
 #define RS_None                 0               /* Normal */
 
-#define RS_fgMask               0x000001FFUL    /* 512 colors */
-#define RS_bgMask               0x0003FE00UL    /* 512 colors */
-#define RS_Bold                 0x00040000UL    /* bold */
-#define RS_Italic		0x00080000UL
-#define RS_Blink                0x00100000UL    /* blink */
-#define RS_RVid                 0x00200000UL    /* reverse video */
-#define RS_Uline                0x00400000UL    /* underline */
+#define RS_fgMask               0x0000007fUL    /* 128 colors */
+#define RS_bgMask               0x00003f80UL    /* 128 colors */
 
-#define RS_fontCount		512
-#define RS_fontMask             0xff800000UL    /* plenty(?) of fonts */
-#define RS_fontShift            23
+// font styles
+#define RS_Bold                 0x00004000UL    // value 1
+#define RS_Italic		0x00008000UL    // value 2
 
-#define RS_baseattrMask         (RS_Bold|RS_Blink|RS_RVid|RS_Uline)
-#define RS_attrMask             (RS_baseattrMask|RS_fontMask)
+// fake styles
+#define RS_Blink                0x00010000UL    /* blink */
+#define RS_RVid                 0x00020000UL    /* reverse video */
+#define RS_Uline                0x00040000UL    /* underline */
+
+// 5 bits still to go
+
+// other flags
+#define RS_Careful		0x80000000UL	/* be careful when drawing these */
+
+#define RS_styleCount		4
+#define RS_styleMask		(RS_Bold | RS_Italic)
+#define RS_styleShift		14
+
+#define RS_baseattrMask         (RS_Italic | RS_Bold | RS_Blink | RS_RVid | RS_Uline)
+#define RS_attrMask             (RS_baseattrMask | RS_fontMask)
+
+#define RS_fontCount		127		// not 127 or 256, see rxvtfont.h
+#define RS_fontMask             0xff000000UL    // plenty(?) of fonts, includes RS_Careful
+#define RS_fontShift            24
+
+#define DEFAULT_RSTYLE  (RS_None | Color_fg | (Color_bg << Color_Bits))
+#define OVERLAY_RSTYLE  (RS_None | Color_Black | (Color_Yellow << Color_Bits))
 
 #define Sel_none                0       /* Not waiting */
 #define Sel_normal              0x01    /* normal selection */
@@ -421,8 +437,14 @@ enum {
   XTerm_restoreBG        = 49,      // change default bg color
   XTerm_dumpscreen       = 55,      // dump scrollback and all of screen
   XTerm_locale           = 701,     // change locale
-  XTerm_findfont         = 702,     // find font of given character (in decimal)
   XTerm_Menu             = 703,     // set menu item
+  XTerm_Color_IT         = 704,     // change actual 'Italic' colour
+  XTerm_Color_tint       = 705,     // change actual tint colour
+
+  URxvt_font             = 710,
+  URxvt_boldFont         = 711,
+  URxvt_italicFont       = 712,
+  URxvt_boldItalicFont   = 713,
 };
 
 /* Words starting with `Color_' are colours.  Others are counts */
@@ -461,10 +483,8 @@ enum colour_list {
 #else
   Color_White = maxCOLOR,
 #endif
-#ifdef TTY_256COLOR
-  min256COLOR = Color_White + 1,
-  max256COLOR = minCOLOR + 255,
-#endif
+  minTermCOLOR = Color_White + 1,
+  maxTermCOLOR = Color_White + 72,
 #ifndef NO_CURSORCOLOR
   Color_cursor,
   Color_cursor2,
@@ -474,6 +494,7 @@ enum colour_list {
   Color_border,
 #ifndef NO_BOLD_UNDERLINE_REVERSE
   Color_BD,
+  Color_IT,
   Color_UL,
   Color_RV,
 #endif
@@ -491,17 +512,16 @@ enum colour_list {
 #ifdef KEEP_SCROLLCOLOR
   Color_topShadow = NRS_COLORS,
   Color_bottomShadow,
-  TOTAL_COLORS                /* upto 30 */
+  TOTAL_COLORS
 #else
-  TOTAL_COLORS = NRS_COLORS   /* */
+  TOTAL_COLORS = NRS_COLORS
 #endif
 };
 
-#define Color_Bits      9
+#define Color_Bits      7 // 0 .. maxTermCOLOR
+
 #define NPIXCLR_SETS    ((TOTAL_COLORS + 31) / 32)
 #define NPIXCLR_BITS    32
-
-#define DEFAULT_RSTYLE  (RS_None | (Color_fg) | (Color_bg<<Color_Bits))
 
 /*
  * Resource list
@@ -515,6 +535,11 @@ enum {
   Rs_color,
   _Rs_color = Rs_color + NRS_COLORS - 1,
   Rs_font,
+#if ENABLE_STYLES
+  Rs_boldFont,
+  Rs_italicFont,
+  Rs_boldItalicFont,
+#endif
   Rs_name,
   Rs_title,
 #if defined (XPM_BACKGROUND) || (MENUBAR_MAX)
@@ -589,9 +614,6 @@ enum {
 #ifndef NO_SECONDARY_SCREEN
   Rs_secondaryScreen,
   Rs_secondaryScroll,
-#endif
-#ifndef NO_BOLD_UNDERLINE_REVERSE
-  Rs_realBold,
 #endif
 #ifdef OFF_FOCUS_FADING
   Rs_fade,
@@ -756,19 +778,30 @@ enum {
 #endif
 
 #define GET_FONT(x)             (((x) & RS_fontMask) >> RS_fontShift)
-#define SET_FONT(x,fid)         ((x) & ~RS_fontMask) | ((fid) << RS_fontShift)
+#define SET_FONT(x,fid)         (((x) & ~RS_fontMask) | ((fid) << RS_fontShift))
+
+#define GET_STYLE(x)		(((x) & RS_styleMask) >> RS_styleShift)
+#define SET_STYLE(x,style)	(((x) & ~RS_styleMask) | ((style) << RS_styleShift))
 
 #define GET_ATTR(x)             (((x) & RS_attrMask))
 #define GET_BGATTR(x)                                                   \
     (((x) & RS_RVid) ? (((x) & (RS_attrMask & ~RS_RVid))                \
                         | (((x) & RS_fgMask)<<Color_Bits))              \
                      : ((x) & (RS_attrMask | RS_bgMask)))
-#define SET_FGCOLOR(x,fg)       (((x) & ~RS_fgMask)  | (fg))
-#define SET_BGCOLOR(x,bg)       (((x) & ~RS_bgMask)  | ((bg)<<Color_Bits))
-#define SET_ATTR(x,a)           (((x) & ~RS_attrMask)| (a))
+#define SET_FGCOLOR(x,fg)       (((x) & ~RS_fgMask)   | (fg))
+#define SET_BGCOLOR(x,bg)       (((x) & ~RS_bgMask)   | ((bg)<<Color_Bits))
+#define SET_ATTR(x,a)           (((x) & ~RS_attrMask) | (a))
+
+#define RS_SAME(a,b)		(!(((a) ^ (b)) & ~RS_Careful))
 
 #define SET_PIXCOLOR(x)         (pixcolor_set[(x) / NPIXCLR_BITS] |= (1 << ((x) % NPIXCLR_BITS)))
 #define ISSET_PIXCOLOR(x)       (pixcolor_set[(x) / NPIXCLR_BITS] &  (1 << ((x) % NPIXCLR_BITS)))
+
+#if ENABLE_STYLES
+# define FONTSET(style) TermWin.fontset[GET_STYLE (style)]
+#else
+# define FONTSET(style) TermWin.fontset[0]
+#endif
 
 #ifdef HAVE_SCROLLBARS
 # define scrollbar_TotalWidth() (scrollBar.width + sb_shadow * 2)
@@ -944,7 +977,7 @@ extern class rxvt_composite_vec rxvt_composite;
 #endif
 
 
-struct rxvt_term : rxvt_vars {
+struct rxvt_term : zero_initialized, rxvt_vars {
   log_callback *log_hook;               // log error messages through this hook, if != 0
 
   struct mbstate  mbstate;              // current input multibyte state
@@ -972,6 +1005,7 @@ struct rxvt_term : rxvt_vars {
 #endif
 //                  enc_utf8:1,		/* wether terminal reads/writes utf-8 */
                   seen_input:1,         /* wether we have seen some program output yet */
+                  seen_resize:1,	/* wether we had a resize event */
                   parsed_geometry:1;
 
   unsigned char   refresh_type,
@@ -1027,9 +1061,6 @@ struct rxvt_term : rxvt_vars {
 /* ---------- */
   unsigned int    ModMetaMask,
                   ModNumLockMask,
-#ifndef NO_BRIGHTCOLOR
-                  colorfgbg,
-#endif
                   old_width,  /* last used width in screen resize          */
                   old_height; /* last used height in screen resize         */
   unsigned long   priv_modes,
@@ -1130,7 +1161,7 @@ struct rxvt_term : rxvt_vars {
   void scr_overlay_off ();
   void scr_overlay_set (int x, int y,
                         text_t text,
-                        rend_t rend = SET_BGCOLOR (SET_FGCOLOR (RS_None, Color_bg), Color_fg));
+                        rend_t rend = OVERLAY_RSTYLE);
   void scr_overlay_set (int x, int y, const char *s);
 #endif
 
@@ -1167,7 +1198,7 @@ struct rxvt_term : rxvt_vars {
   void commit_iso14755 ();
   int hex_keyval (XKeyEvent &ev);
 # if ISO_14755
-  void iso14755_51 (wchar_t ch);
+  void iso14755_51 (unicode_t ch, rend_t r = DEFAULT_RSTYLE);
   void iso14755_54 (int x, int y);
 # endif
 #endif
@@ -1235,9 +1266,6 @@ struct rxvt_term : rxvt_vars {
   bool init_vars ();
 
   bool pty_fill ();
-
-  void *operator new (size_t s);
-  void operator delete (void *p, size_t s);
 
   void init_secondary ();
   const char **init_resources (int argc, const char *const *argv);
@@ -1320,8 +1348,7 @@ struct rxvt_term : rxvt_vars {
   void cleanutent ();
   // main.C
   void privileged_utmp (rxvt_privaction action);
-  bool change_font (const char *fontname);
-  bool font_up_down (int n, int direction);
+  bool set_fonts ();
   void set_title (const char *str);
   void set_icon_name (const char *str);
   void set_window_color (int idx, const char *color);
@@ -1375,6 +1402,8 @@ struct rxvt_term : rxvt_vars {
   void scr_erase_screen (int mode);
   void scr_touch (bool refresh);
   void scr_expose (int x, int y, int width, int height, bool refresh);
+  rxvt_fontset *scr_find_fontset (rend_t r = DEFAULT_RSTYLE);
+  void scr_recolour ();
   void scr_remap_chars ();
   void scr_remap_chars (text_t *tp, rend_t *rp);
 
@@ -1386,7 +1415,7 @@ struct rxvt_term : rxvt_vars {
   void scr_rendition (int set, int style);
   void scr_add_lines (const unicode_t *str, int nlines, int len);
   void scr_backspace ();
-  void scr_tab (int count);
+  void scr_tab (int count, bool ht = false);
   void scr_backindex ();
   void scr_forwardindex ();
   void scr_gotorc (int row, int col, int relative);
@@ -1408,7 +1437,7 @@ struct rxvt_term : rxvt_vars {
   void scr_charset_set (int set, unsigned int ch);
   int scr_move_to (int y, int len);
   int scr_page (enum page_dirn direction, int nlines);
-  int scr_changeview (uint16_t oldviewstart);
+  int scr_changeview (unsigned int oldviewstart);
   void scr_bell ();
   void scr_printscreen (int fullhist);
   void scr_reverse_selection ();

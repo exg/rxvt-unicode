@@ -25,7 +25,6 @@
  */
 
 #include "../config.h"          /* NECESSARY */
-#define INTERN_SCREEN
 #include "rxvt.h"               /* NECESSARY */
 
 #include <X11/Xmd.h>            /* get the typedef for CARD32 */
@@ -114,12 +113,13 @@ inline void fill_text (text_t *start, text_t value, int len)
 /* ------------------------------------------------------------------------- *
  *                        SCREEN `COMMON' ROUTINES                           *
  * ------------------------------------------------------------------------- */
+
 /* Fill part/all of a line with blanks. */
 void
 rxvt_term::scr_blank_line (text_t *et, rend_t *er, unsigned int width, rend_t efs)
 {
   efs &= ~RS_baseattrMask;
-  efs = SET_FONT (efs, TermWin.ascii_map [' ' - 0x20]);
+  efs = SET_FONT (efs, FONTSET (efs)->find_font (' '));
 
   while (width--)
     {
@@ -419,7 +419,7 @@ rxvt_term::scr_reset ()
 void
 rxvt_term::scr_reset_realloc ()
 {
-  uint16_t total_rows, nrow;
+  unsigned int total_rows, nrow;
 
   nrow = TermWin.nrow;
   total_rows = nrow + TermWin.saveLines;
@@ -446,7 +446,7 @@ rxvt_term::scr_reset_realloc ()
 void
 rxvt_term::scr_release ()
 {
-  uint16_t total_rows;
+  unsigned int total_rows;
   int i;
 
   total_rows = TermWin.nrow + TermWin.saveLines;
@@ -513,21 +513,21 @@ rxvt_term::scr_cursor (int mode)
   switch (mode)
     {
       case SAVE:
-        s->s_cur.row = s->cur.row;
-        s->s_cur.col = s->cur.col;
+        s->s_cur.row = screen.cur.row;
+        s->s_cur.col = screen.cur.col;
         s->s_rstyle = rstyle;
-        s->s_charset = s->charset;
-        s->s_charset_char = charsets[s->charset];
+        s->s_charset = screen.charset;
+        s->s_charset_char = charsets[screen.charset];
         break;
 
       case RESTORE:
         want_refresh = 1;
-        s->cur.row = s->s_cur.row;
-        s->cur.col = s->s_cur.col;
-        s->flags &= ~Screen_WrapNext;
+        screen.cur.row = s->s_cur.row;
+        screen.cur.col = s->s_cur.col;
+        screen.flags &= ~Screen_WrapNext;
         rstyle = s->s_rstyle;
-        s->charset = s->s_charset;
-        charsets[s->charset] = s->s_charset_char;
+        screen.charset = s->s_charset;
+        charsets[screen.charset] = s->s_charset_char;
         set_font_style ();
         break;
     }
@@ -627,7 +627,9 @@ rxvt_term::scr_do_wrap ()
 void
 rxvt_term::scr_color (unsigned int color, int fgbg)
 {
-  color &= RS_fgMask;
+  if (color > maxTermCOLOR)
+    color = fgbg;
+
   if (fgbg == Color_fg)
     rstyle = SET_FGCOLOR (rstyle, color);
   else
@@ -675,7 +677,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
       if (nscrolled > (long)TermWin.saveLines)
         TermWin.nscrolled = TermWin.saveLines;
       else
-        TermWin.nscrolled = (uint16_t)nscrolled;
+        TermWin.nscrolled = (unsigned int)nscrolled;
 
       if ((options & Opt_scrollWithBuffer)
           && TermWin.view_start != 0
@@ -828,7 +830,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
         switch (c)
           {
             case C0_HT:
-              scr_tab (1);
+              scr_tab (1, true);
               continue;
 
             case C0_LF:
@@ -889,22 +891,32 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
       if (charsets[screen.charset] == '0') // DEC SPECIAL
         {
           // vt100 special graphics and line drawing
-          static uint16_t vt100_0[32] = { // 5f .. 7e
-            0x0020, 0x25c6, 0x2592, 0x2409, 0x240c, 0x240d, 0x240a, 0x00b0,
-            0x00b1, 0x2424, 0x240b, 0x2518, 0x2510, 0x250c, 0x2514, 0x253c,
-            0x23ba, 0x23bb, 0x2500, 0x23bc, 0x23bd, 0x251c, 0x2524, 0x2534,
-            0x252c, 0x2502, 0x2264, 0x2265, 0x03c0, 0x2260, 0x00a3, 0x00b7,
+          // 5f-7e standard vt100
+          // 40-5e rxvt extension for extra curses acs chars
+          static uint16_t vt100_0[63] = { // 5f .. 7e
+            0x0000, 0x2191, 0x2193, 0x2192, 0x2190, 0x2588, 0x259a, 0x2603, // 40-47 hi mr. snowman!
+            0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, // 48-4f
+            0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, // 50-57
+            0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0020, // 58-5f
+            0x25c6, 0x2592, 0x2409, 0x240c, 0x240d, 0x240a, 0x00b0, 0x00b1, // 60-67
+            0x2424, 0x240b, 0x2518, 0x2510, 0x250c, 0x2514, 0x253c, 0x23ba, // 68-6f
+            0x23bb, 0x2500, 0x23bc, 0x23bd, 0x251c, 0x2524, 0x2534, 0x252c, // 70-77
+            0x2502, 0x2264, 0x2265, 0x03c0, 0x2260, 0x00a3, 0x00b7,         // 78-7e
           };
 
-          if (c >= 0x5f && c <= 0x7e)
+          if (c >= 0x40 && c <= 0x7e && vt100_0[c - 0x40])
             {
-              c = vt100_0[c - 0x5f];
+              c = vt100_0[c - 0x40];
               width = 1;
             }
         }
 
       if (width != 0)
         {
+          // some utf-8 decoders decode surrogate characters.
+          if (0xd800 <= c && c <= 0xdfff)
+            c = 0xfffd;
+
 #if !UNICODE_3
           // trim characters we can't store directly :(
           if (c >= 0x10000)
@@ -914,11 +926,29 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
             c = 0xfffd;
 # endif
 #endif
-          bool bold = (options & Opt_realBold) && ((rstyle & RS_Bold) != 0);
-          rend_t rend = SET_FONT (rstyle,
-                                  c > 0x7f || bold || c < 0x20
-                                     ? TermWin.fontset->find_font (c, bold)
-                                     : TermWin.ascii_map [c - 0x20]);
+
+          // nuke the character at this position, if required
+          if (stp[screen.cur.col] == NOCHAR
+              || (screen.cur.col < TermWin.ncol - 1
+                  && stp[screen.cur.col + 1] == NOCHAR))
+            {
+              int col = screen.cur.col;
+
+              // find begin
+              while (col > 0 && stp[col] == NOCHAR)
+                col--;
+
+              rend_t rend = SET_FONT (srp[col], FONTSET (srp[col])->find_font (' '));
+
+              // found begin, nuke
+              do {
+                stp[col] = ' ';
+                srp[col] = rend;
+                col++;
+              } while (col < TermWin.ncol && stp[col] == NOCHAR);
+            }
+
+          rend_t rend = SET_FONT (rstyle, FONTSET (rstyle)->find_font (c));
 
           do
             {
@@ -973,7 +1003,12 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
           // handle double-width-chars by making them look extremely ugly
           if (*tp == NOCHAR)
-            *tp = ' '; // hack //D //TODO //--tp, --rp;
+            {
+              // hack //D //TODO //--tp, --rp;
+              *tp = ' ';
+              *rp &= ~RS_baseattrMask;
+              *rp = SET_FONT (*rp, FONTSET (*rp)->find_font (*tp));
+            }
 
           // first try to find a precomposed character
           unicode_t n = rxvt_compose (*tp, c);
@@ -981,7 +1016,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
             n = rxvt_composite.compose (*tp, c);
 
           *tp = n;
-          *rp = SET_FONT (*rp, TermWin.fontset->find_font (*tp));
+          *rp = SET_FONT (*rp, FONTSET (*rp)->find_font (*tp));
 #endif
         }
     }
@@ -1030,7 +1065,7 @@ rxvt_term::scr_backspace ()
  * XTERM_SEQ: CTRL-I
  */
 void
-rxvt_term::scr_tab (int count)
+rxvt_term::scr_tab (int count, bool ht)
 {
   int i, x;
 
@@ -1041,6 +1076,12 @@ rxvt_term::scr_tab (int count)
     return;
   else if (count > 0)
     {
+      int row = TermWin.saveLines + screen.cur.row;
+      text_t *tp = screen.text[row];
+      rend_t *rp = screen.rend[row];
+      rend_t base_rend = rp[i];
+      ht &= tp[i] == ' ';
+
       for (; ++i < TermWin.ncol; )
         if (tabs[i])
           {
@@ -1048,9 +1089,33 @@ rxvt_term::scr_tab (int count)
             if (!--count)
               break;
           }
+        else 
+          ht &= tp[i] == ' '
+                && RS_SAME (rp[i], base_rend);
 
       if (count)
         x = TermWin.ncol - 1;
+
+      // store horizontal tab commands as characters inside the text
+      // buffer so they can be selected and pasted.
+      if (ht)
+        {
+          base_rend = SET_FONT (base_rend, 0);
+
+          if (screen.tlen[row] != -1)      /* XXX: think about this */
+            MAX_IT (screen.tlen[row], x);
+
+          i = screen.cur.col;
+
+          tp[i] = '\t';
+          rp[i] = base_rend;
+
+          while (++i < x)
+            {
+              tp[i] = NOCHAR;
+              rp[i] = base_rend;
+            }
+        }
     }
   else /* if (count < 0) */
     {
@@ -1351,7 +1416,7 @@ rxvt_term::scr_E ()
   num_scr_allow = 0;
   selection_check (3);
 
-  fs = SET_FONT (rstyle, TermWin.fontset->find_font ('E'));
+  fs = SET_FONT (rstyle, FONTSET (rstyle)->find_font ('E'));
   for (k = TermWin.saveLines, i = TermWin.nrow; i--; k++)
     {
       screen.tlen[k] = TermWin.ncol;    /* make the `E's selectable */
@@ -1570,6 +1635,7 @@ rxvt_term::scr_relative_origin (int mode)
     screen.flags |= Screen_Relative;
   else
     screen.flags &= ~Screen_Relative;
+
   scr_gotorc (0, 0, 0);
 }
 
@@ -1619,10 +1685,10 @@ rxvt_term::scr_rvideo_mode (int mode)
     {
       rvideo = mode;
       SWAP_IT (pix_colors[Color_fg], pix_colors[Color_bg], rxvt_color);
-#if defined(XPM_BACKGROUND)
+#if XPM_BACKGROUND
       if (bgPixmap.pixmap == None)
 #endif
-#if defined(TRANSPARENT)
+#if TRANSPARENT
         if (! (options & Opt_transparent) || am_transparent == 0)
 #endif
           XSetWindowBackground (display->display, TermWin.vt,
@@ -1810,7 +1876,7 @@ int
 rxvt_term::scr_move_to (int y, int len)
 {
   long p = 0;
-  uint16_t oldviewstart;
+  unsigned int oldviewstart;
 
   oldviewstart = TermWin.view_start;
 
@@ -1821,7 +1887,7 @@ rxvt_term::scr_move_to (int y, int len)
       p = max (p, 0);
     }
 
-  TermWin.view_start = (uint16_t)min (p, TermWin.nscrolled);
+  TermWin.view_start = (unsigned int)min (p, TermWin.nscrolled);
 
   return scr_changeview (oldviewstart);
 }
@@ -1835,7 +1901,7 @@ int
 rxvt_term::scr_page (enum page_dirn direction, int nlines)
 {
   int n;
-  uint16_t oldviewstart;
+  unsigned int oldviewstart;
 
 #ifdef DEBUG_STRICT
   assert ((nlines >= 0) && (nlines <= TermWin.nrow));
@@ -1855,7 +1921,7 @@ rxvt_term::scr_page (enum page_dirn direction, int nlines)
 }
 
 int
-rxvt_term::scr_changeview (uint16_t oldviewstart)
+rxvt_term::scr_changeview (unsigned int oldviewstart)
 {
   if (TermWin.view_start != oldviewstart)
     {
@@ -1962,7 +2028,6 @@ void
 rxvt_term::scr_refresh (unsigned char refresh_type)
 {
   unsigned char must_clear, /* use draw_string not draw_image_string     */
-                rvid,       /* reverse video this position               */
                 showcursor; /* show the cursor                           */
   int16_t col, row,   /* column/row we're processing               */
           ocrow;      /* old cursor row                            */
@@ -1984,10 +2049,10 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 
   row_offset = TermWin.saveLines - TermWin.view_start;
 
-#ifdef XPM_BACKGROUND
+#if XPM_BACKGROUND
   must_clear |= (bgPixmap.pixmap != None);
 #endif
-#ifdef TRANSPARENT
+#if TRANSPARENT
   must_clear |= ((options & Opt_transparent) && am_transparent);
 #endif
   ocrow = oldcursor.row; /* is there an old outline cursor on screen? */
@@ -1996,9 +2061,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
    * B: reverse any characters which are selected
    */
   scr_reverse_selection ();
-#if ENABLE_OVERLAY
-  scr_swap_overlay ();
-#endif
 
   /*
    * C: set the cursor character (s)
@@ -2082,8 +2144,13 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
       }
   }
 
+#if ENABLE_OVERLAY
+  scr_swap_overlay ();
+#endif
+
   rend_t *drp, *srp;  /* drawn-rend-pointer, screen-rend-pointer   */
   text_t *dtp, *stp;  /* drawn-text-pointer, screen-text-pointer   */
+
 #ifndef NO_SLOW_LINK_SUPPORT
   /*
    * D: CopyArea pass - very useful for slower links
@@ -2170,7 +2237,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
         {
           /* compare new text with old - if exactly the same then continue */
           if (stp[col] == dtp[col]    /* Must match characters to skip. */
-              && (srp[col] == drp[col]    /* Either rendition the same or   */
+              && (RS_SAME (srp[col], drp[col])    /* Either rendition the same or   */
                   || (stp[col] == ' ' /* space w/ no background change  */
                       && GET_BGATTR (srp[col]) == GET_BGATTR (drp[col]))))
             continue;
@@ -2190,8 +2257,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 
           int xpixel = Col2Pixel (col);
 
-          // this loop looks very messy, it can probably be optimized
-          // and cleaned a bit by you?
           for (i = 0; ++col < TermWin.ncol; )
             {
               if (stp[col] == NOCHAR)
@@ -2204,13 +2269,13 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                   continue;
                 }
 
-              if (rend != srp[col])
+              if (!RS_SAME (rend, srp[col]))
                 break;
 
               count++;
 
               if (stp[col] != dtp[col]
-                  || srp[col] != drp[col])
+                  || !RS_SAME (srp[col], drp[col]))
                 {
                   if (must_clear && (i++ > count / 2))
                     break;
@@ -2230,62 +2295,84 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
           while (i && text[count] == NOCHAR)
             count++, i--;
 
+#if ENABLE_STYLES
+          // force redraw after "careful" characters to avoid pixel droppings
+          if (srp[col] & RS_Careful && col < TermWin.ncol - 1 && 0)
+            drp[col + 1] = ~srp[col + 1];
+
+          // include previous careful character(s) if possible, looks nicer (best effort...)
+          while (text > stp
+              && srp[text - stp - 1] & RS_Careful
+              && RS_SAME (rend, srp[text - stp - 1]))
+            text--, count++, xpixel -= TermWin.fwidth;
+#endif
+
           /*
            * Determine the attributes for the string
            */
-          int fid = GET_FONT (rend);
           int fore = GET_FGCOLOR (rend); // desired foreground
           int back = GET_BGCOLOR (rend); // desired background
 
-          rend = GET_ATTR (rend);
-
-          rvid = !!(rend & RS_RVid);
+          // only do special processing if ana attributes are set, which is rare
+          if (rend & (RS_Bold | RS_Italic | RS_Uline | RS_RVid | RS_Blink))
+            {
+              bool invert = rend & RS_RVid;
 
 #ifndef NO_BOLD_UNDERLINE_REVERSE
-          if (rend & RS_Bold && fore == Color_fg && !(options & Opt_realBold))
-            {
-              if (ISSET_PIXCOLOR (Color_BD))
-                fore = Color_BD;
-              else
-                rvid = !rvid;
-            }
-
-          if (rend & RS_Uline)
-            if (ISSET_PIXCOLOR (Color_UL))
-              fore = Color_UL;
-#endif
-
-          if (rvid)
-            {
-              SWAP_IT (fore, back, int);
-
-#ifndef NO_BOLD_UNDERLINE_REVERSE
-              if (ISSET_PIXCOLOR (Color_RV)
-# ifndef NO_CURSORCOLOR
-                  && !ISSET_PIXCOLOR (Color_cursor)
+              if (rend & RS_Bold
+                  && fore == Color_fg)
+                {
+                  if (ISSET_PIXCOLOR (Color_BD))
+                    fore = Color_BD;
+# if !ENABLE_STYLES
+                  else
+                    invert = !invert;
 # endif
-                 )
-                back = Color_RV;
+                }
+
+              if (rend & RS_Italic
+                  && fore == Color_fg)
+                {
+                  if (ISSET_PIXCOLOR (Color_IT))
+                    fore = Color_IT;
+# if !ENABLE_STYLES
+                  else
+                    invert = !invert;
+# endif
+                }
+
+              if (rend & RS_Uline && ISSET_PIXCOLOR (Color_UL))
+                fore = Color_UL;
 #endif
-            }
+
+              if (invert)
+                {
+                  SWAP_IT (fore, back, int);
+
+#ifndef NO_BOLD_UNDERLINE_REVERSE
+                  if (ISSET_PIXCOLOR (Color_RV))
+                    back = Color_RV;
+#endif
+                }
 
 #ifdef TEXT_BLINK
-          if (rend & RS_Blink && (back == Color_bg || fore == Color_bg))
-            {
-              if (!text_blink_ev.active)
+              if (rend & RS_Blink && (back == Color_bg || fore == Color_bg))
                 {
-                  text_blink_ev.start (NOW + TEXT_BLINK_INTERVAL);
-                  hidden_text = 0;
+                  if (!text_blink_ev.active)
+                    {
+                      text_blink_ev.start (NOW + TEXT_BLINK_INTERVAL);
+                      hidden_text = 0;
+                    }
+                  else if (hidden_text)
+                    fore = back;
                 }
-              else if (hidden_text)
-                fore = back;
-            }
 #endif
+            }
 
           /*
            * Actually do the drawing of the string here
            */
-          rxvt_font *font = (*TermWin.fontset)[fid];
+          rxvt_font *font = (*TermWin.fontset[GET_STYLE (rend)])[GET_FONT (rend)];
 
           if (back == fore)
             font->clear_rect (*TermWin.drawable, xpixel, ypixel,
@@ -2316,6 +2403,10 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                        xpixel + Width2Pixel (count) - 1, ypixel + font->ascent + 1);
         }                     /* for (col....) */
     }                         /* for (row....) */
+
+#if ENABLE_OVERLAY
+  scr_swap_overlay ();
+#endif
 
   /*
    * G: cleanup cursor and display outline cursor if necessary
@@ -2351,9 +2442,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
   /*
    * H: cleanup selection
    */
-#if ENABLE_OVERLAY
-  scr_swap_overlay ();
-#endif
   scr_reverse_selection ();
 
   if (refresh_type & SMOOTH_REFRESH)
@@ -2371,7 +2459,7 @@ rxvt_term::scr_remap_chars (text_t *tp, rend_t *rp)
     return;
 
   for (int i = TermWin.ncol; i; i--, rp++, tp++)
-    *rp = SET_FONT (*rp, TermWin.fontset->find_font (*tp));
+    *rp = SET_FONT (*rp, FONTSET (*rp)->find_font (*tp));
 }
 
 void
@@ -2387,6 +2475,36 @@ rxvt_term::scr_remap_chars ()
     }
 }
 
+void
+rxvt_term::scr_recolour ()
+{
+  if (1
+#if TRANSPARENT
+      && !am_transparent
+#endif
+#if XPM_BACKGROUND
+      && !bgPixmap.pixmap
+#endif
+      )
+    {
+      XSetWindowBackground (display->display, TermWin.parent[0], pix_colors[Color_border]);
+      XClearWindow (display->display, TermWin.parent[0]);
+      XSetWindowBackground (display->display, TermWin.vt, pix_colors[Color_bg]);
+#if HAVE_SCROLLBARS
+      if (scrollBar.win)
+        {
+          XSetWindowBackground (display->display, scrollBar.win, pix_colors[Color_border]);
+          scrollBar.setIdle ();
+          scrollbar_show (0);
+        }
+#endif
+    }
+
+  scr_clear ();
+  scr_touch (true);
+  want_refresh = 1;
+}
+
 /* ------------------------------------------------------------------------- */
 void
 rxvt_term::scr_clear (bool really)
@@ -2397,12 +2515,12 @@ rxvt_term::scr_clear (bool really)
   num_scr_allow = 0;
   want_refresh = 1;
 
-#ifdef TRANSPARENT
+#if TRANSPARENT
   if ((options & Opt_transparent) && (am_pixmap_trans == 0))
     {
       int i;
 
-      if (! (options & Opt_transparent_all))
+      if (!(options & Opt_transparent_all))
         i = 0;
       else
         i = (int) (sizeof (TermWin.parent) / sizeof (Window));
@@ -3509,7 +3627,7 @@ rxvt_term::scr_overlay_new (int x, int y, int w, int h)
       rend_t *rp = ov_rend[y] = new rend_t[w];
 
       text_t t0, t1, t2;
-      rend_t r = SET_BGCOLOR (SET_FGCOLOR (RS_None, Color_bg), Color_fg);
+      rend_t r = OVERLAY_RSTYLE;
 
       if (y == 0)
         t0 = 0x2554, t1 = 0x2550, t2 = 0x2557;
@@ -3553,7 +3671,7 @@ rxvt_term::scr_overlay_off ()
 void
 rxvt_term::scr_overlay_set (int x, int y, text_t text, rend_t rend)
 {
-  if (!ov_text || x >= ov_w - 2 || y >= ov_h)
+  if (!ov_text || x >= ov_w - 2 || y >= ov_h - 2)
     return;
 
   x++, y++;
@@ -3589,7 +3707,7 @@ rxvt_term::scr_swap_overlay ()
       for (int x = ov_w; x--; )
         {
           text_t t = *t1; *t1++ = *t2; *t2++ = t;
-          rend_t r = *r1; *r1++ = *r2; *r2++ = SET_FONT (r, TermWin.fontset->find_font (t, false));
+          rend_t r = *r1; *r1++ = *r2; *r2++ = SET_FONT (r, FONTSET (r)->find_font (t));
         }
     }
 }
