@@ -1,5 +1,5 @@
 /*
- * $Id: defaultfont.h,v 1.5 2003/11/25 15:25:17 pcg Exp $
+ * $Id: defaultfont.h,v 1.6 2003/12/04 00:43:26 pcg Exp $
  */
 
 #ifndef _DEFAULTFONT_H_
@@ -30,7 +30,7 @@ struct rxvt_font {
 
   char *name;
   codeset cs;
-  bool loaded;
+  bool loaded; // wether we tried loading it before (not wether it's loaded)
 
   // managed by the font object
   bool prop; // wether this is a proportional font or has other funny characteristics

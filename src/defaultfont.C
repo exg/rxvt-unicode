@@ -893,13 +893,15 @@ rxvt_fontset::realize_font (int i)
   if (fonts[i]->loaded)
     return true;
 
-  if (fonts[i]->load (height))
-    return fonts[i]->loaded = true;
+  fonts[i]->loaded = true;
 
-  delete fonts[i];
-  fonts.erase (fonts.begin () + i);
+  if (!fonts[i]->load (height))
+    {
+      fonts[i]->cs = CS_UNKNOWN;
+      return false;
+    }
 
-  return false;
+  return true;
 }
 
 void
@@ -946,15 +948,10 @@ rxvt_fontset::find_font (uint32_t unicode)
             goto next_font;
 
           if (!realize_font (i))
-            {
-              --i;
-              goto next_font;
-            }
-
-          //printf ("added font %s for %04lx\n", f->name, unicode);
+            goto next_font;
         }
 
-      if (f->has_codepoint (unicode))
+      if (f->cs != CS_UNKNOWN && f->has_codepoint (unicode))
         return i;
 
     next_font:
@@ -962,6 +959,7 @@ rxvt_fontset::find_font (uint32_t unicode)
         {
           fonts.push_back (new_font (fallback->name, fallback->cs));
           fallback++;
+          i = 0;
         }
     }
 
