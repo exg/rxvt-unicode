@@ -296,7 +296,6 @@ rxvt_term::scr_reset ()
 
           /* we have fewer rows so fix up cursor position */
           MIN_IT (screen.cur.row, (int32_t)nrow - 1);
-          MIN_IT (swap.cur.row, (int32_t)nrow - 1);
 
           scr_reset_realloc (); /* realloc _last_ */
         }
@@ -339,11 +338,9 @@ rxvt_term::scr_reset ()
             }
 #ifdef DEBUG_STRICT
           assert (screen.cur.row < TermWin.nrow);
-          assert (swap.cur.row < TermWin.nrow);
 #else                           /* drive with your eyes closed */
 
           MIN_IT (screen.cur.row, nrow - 1);
-          MIN_IT (swap.cur.row, nrow - 1);
 #endif
           TermWin.ncol =  ncol; // save b/c scr_blank_screen_mem uses this
         }
@@ -396,7 +393,6 @@ rxvt_term::scr_reset ()
             }
 
           MIN_IT (screen.cur.col, (int16_t)ncol - 1);
-          MIN_IT (swap.cur.col, (int16_t)ncol - 1);
 
           delete talloc; talloc = ta;
           delete ralloc; ralloc = ra;
@@ -568,19 +564,14 @@ rxvt_term::scr_change_screen (int scrn)
 
   selection_check (2);        /* check for boundary cross */
 
-  SWAP_IT (current_screen, scrn, int);
+  i = current_screen; current_screen = scrn; scrn = i;
 
   SWAP_IT (screen.cur.row, swap.cur.row, int16_t);
   SWAP_IT (screen.cur.col, swap.cur.col, int16_t);
-# ifdef DEBUG_STRICT
-  assert (screen.cur.row >= 0 && screen.cur.row < prev_nrow);
-  assert (screen.cur.col >= 0 && screen.cur.col < prev_ncol);
-# else                          /* drive with your eyes closed */
   MAX_IT (screen.cur.row, 0);
   MIN_IT (screen.cur.row, (int32_t)prev_nrow - 1);
   MAX_IT (screen.cur.col, 0);
   MIN_IT (screen.cur.col, (int32_t)prev_ncol - 1);
-# endif
 
 #if NSCREENS
   if (options & Opt_secondaryScreen)
