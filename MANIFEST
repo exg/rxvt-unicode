@@ -50,6 +50,7 @@ doc/Makefile.in
 doc/README.menu
 doc/README.xvt
 doc/changes.txt
+doc/podtbl
 doc/rxvt.1.pod
 doc/rxvt.7.pod
 doc/rxvt.1.man.in
