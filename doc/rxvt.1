@@ -11,7 +11,7 @@ rxvt-unicode (ouR XVT, unicode) \- a VT102 emulator for the X window system
 .PP 
 .SH "DESCRIPTION" 
 .PP 
-\fBrxvt-unicode\fP, version \fB3\&.3\fP, is a colour vt102 terminal emulator
+\fBrxvt-unicode\fP, version \fB3\&.4\fP, is a colour vt102 terminal emulator
 intended as an \fIxterm\fP(1) replacement for users who do not require
 features such as Tektronix 4014 emulation and toolkit-style configurability\&.
 As a result, \fBrxvt-unicode\fP uses much less swap space -- a significant
@@ -60,10 +60,12 @@ resource \fBinheritPixmap\fP\&.
 Fade the text by the given percentage when focus is lost\&.
 .IP "\fB-tint\fP \fIcolour\fP" 
 Tint the transparent background pixmap with the given colour when
-transparency is enabled with \fB-tr\fP or \fB-ip\fP\&. You can also
-emulate the "shading" or "brigthness change" option known from
-other terminal programs using gray10 (gray20, etc\&.) colour
-strings\&.
+transparency is enabled with \fB-tr\fP or \fB-ip\fP\&. See also
+the \fB-sh\fP option that cna be used to brighten or darken
+the image in addition to tinting it\&.
+dot(\fB-sh\fP) \fInumber\fP
+Darken (0 \&.\&. 100) or lighten (-1 \&.\&. -100) the transparent background
+image in addition to tinting it\&.
 .IP "\fB-bg\fP \fIcolour\fP" 
 Window background colour;
 resource \fBbackground\fP\&.
@@ -297,6 +299,9 @@ giving artificial transparency\&.
 Fade the text by the given percentage when focus is lost\&.
 .IP "\fBtintColor:\fP \fIcolour\fP" 
 Tint the transparent background pixmap with the given colour\&.
+.IP "\fBshading:\fP \fInumber\fP" 
+Darken (0 \&.\&. 100) or lighten (-1 \&.\&. -100) the transparent background
+image in addition to tinting it\&.
 .IP "\fBfading:\fP \fInumber\fP" 
 Scale the tint colour by the given percentage\&.
 .IP "\fBscrollColor:\fP \fIcolour\fP" 
@@ -1097,7 +1102,7 @@ Click-and-drag doesn\&'t work with X11 mouse report overriding\&.
 .PP 
 .SH "FTP LOCATION" 
 .PP 
-rxvt-3\&.3\&.tar\&.gz can be found at the following ftp sites
+rxvt-3\&.4\&.tar\&.gz can be found at the following ftp sites
 ftp://ftp\&.rxvt\&.org/pub/rxvt
 .PP 
 .SH "CURRENT PROJECT COORDINATOR" 
