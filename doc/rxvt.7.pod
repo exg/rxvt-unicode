@@ -537,7 +537,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-)X<Priv10>
+X<Priv10>
 
 =item B<< C<Ps = 10> >> (B<rxvt>)
 
