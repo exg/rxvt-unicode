@@ -5,7 +5,8 @@
         - blinking text.
         - normal text color + bold gets white text instead of
           normal text when colorBD is not set.
-        - support double-byte characters (by blocking).
+        (- support double-byte characters (by blocking).)
+          was not implemented
 
 1.5  Thu Jan 29 00:43:48 CET 2004
 	- share io manager between rxvt-unicode and vpe
