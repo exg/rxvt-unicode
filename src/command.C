@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.18 2003/12/18 02:07:12 pcg Exp $
+ * $Id: command.C,v 1.19 2003/12/18 05:45:11 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -693,6 +693,7 @@ void
 rxvt_term::check_cb (check_watcher &w)
 {
   SET_R (this);
+  SET_LOCALE (locale);
 
   flush ();
 }
@@ -746,8 +747,6 @@ rxvt_term::process_x_events ()
 void
 rxvt_term::blink_cb (time_watcher &w)
 {
-  SET_R (this);
-
   w.at += BLINK_INTERVAL;
   hidden_cursor = !hidden_cursor;
   want_refresh = 1;
@@ -757,6 +756,7 @@ void
 rxvt_term::x_cb (io_watcher &w, short revents)
 {
   SET_R (this);
+  SET_LOCALE (locale);
 
   process_x_events ();
 }
@@ -787,6 +787,7 @@ void
 rxvt_term::pty_cb (io_watcher &w, short revents)
 {
   SET_R (this);
+  SET_LOCALE (locale);
 
   if (revents & EVENT_WRITE)
     tt_write (0, 0);
@@ -1040,7 +1041,7 @@ void
 rxvt_term::pointer_unblank ()
 {
   XDefineCursor (Xdisplay, TermWin.vt, TermWin_cursor);
-  rxvt_recolour_cursor (this);
+  recolour_cursor ();
 
 #ifdef POINTER_BLANK
   hidden_pointer = 0;
@@ -1069,6 +1070,7 @@ void
 rxvt_term::pointer_cb (time_watcher &w)
 {
   SET_R (this);
+  SET_LOCALE (locale);
 
   pointer_blank ();
 }
@@ -1434,7 +1436,7 @@ rxvt_process_x_event(pR_ XEvent *ev)
 					  GraphicsExpose,
 					  &unused_xevent)) ;
 	    if (isScrollbarWindow(ev->xany.window)) {
-		scrollbar_setIdle();
+		R->scrollBar.setIdle();
 		rxvt_scrollbar_show(aR_ 0);
 	    }
 #ifdef MENUBAR
@@ -1629,7 +1631,7 @@ rxvt_button_press(pR_ XButtonEvent *ev)
  */
     if (isScrollbarWindow(ev->window))
       {
-	scrollbar_setIdle();
+	R->scrollBar.setIdle ();
 	/*
 	 * Rxvt-style scrollbar:
 	 * move up if mouse is above slider
@@ -1692,9 +1694,9 @@ rxvt_button_press(pR_ XButtonEvent *ev)
 #endif
 		if (rxvt_scr_page(aR_ upordown < 0 ? UP : DN, 1)) {
 		    if (upordown < 0)
-			scrollbar_setUp();
+			R->scrollBar.setUp ();
 		    else
-			scrollbar_setDn();
+			R->scrollBar.setDn ();
 		}
 	    } else
 		switch (ev->button) {
@@ -1716,7 +1718,7 @@ rxvt_button_press(pR_ XButtonEvent *ev)
 			rxvt_scr_move_to(aR_
 					 scrollbar_position(ev->y) - R->csrO,
 					 scrollbar_size());
-		    scrollbar_setMotion();
+		    R->scrollBar.setMotion ();
 		    break;
 
 		case Button1:
@@ -1739,7 +1741,7 @@ rxvt_button_press(pR_ XButtonEvent *ev)
 			    rxvt_scr_page(aR_ DN, R->TermWin.nrow / 4);
 # endif
 			else
-			    scrollbar_setMotion();
+			    R->scrollBar.setMotion ();
 		    } else {
 			rxvt_scr_page(aR_ (ev->button == Button1 ? DN : UP),
 				      (R->TermWin.nrow
@@ -1771,7 +1773,7 @@ rxvt_button_release(pR_ XButtonEvent *ev)
 	reportmode = !!(R->PrivateModes & PrivMode_mouse_report);
 
     if (scrollbar_isUpDn()) {
-	scrollbar_setIdle();
+	R->scrollBar.setIdle ();
 	rxvt_scrollbar_show(aR_ 0);
 #ifndef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
 	R->refresh_type &= ~SMOOTH_REFRESH;

@@ -1,5 +1,5 @@
 /*
- * $Id: rxvt.h,v 1.15 2003/12/18 02:07:12 pcg Exp $
+ * $Id: rxvt.h,v 1.16 2003/12/18 05:45:11 pcg Exp $
  */
 
 #ifndef _RXVT_H_                /* include once only */
@@ -724,11 +724,6 @@ enum {
 #define scrollbar_isUpDn()      isupper (R->scrollBar.state)
 #define isScrollbarWindow(w)    (R->scrollBar.state && (w) == R->scrollBar.win)
 
-#define scrollbar_setIdle()     R->scrollBar.state = 1
-#define scrollbar_setMotion()   R->scrollBar.state = 'm'
-#define scrollbar_setUp()       R->scrollBar.state = 'U'
-#define scrollbar_setDn()       R->scrollBar.state = 'D'
-
 #define scrollbarnext_dnval()   (R->scrollBar.end + (R->scrollBar.width + 1))
 #define scrollbarnext_upButton(y)       ((y) > R->scrollBar.end \
                                          && (y) <= scrollbarnext_dnval())
@@ -1073,6 +1068,7 @@ struct rxvt_term : rxvt_vars {
   char           *env_colorfgbg;
   char           *buffer;
   char           *locale;
+  char           *codeset;
   char            charsets[4];
   unsigned char  *v_buffer;   /* pointer to physical buffer */
   unsigned int    v_buflen;   /* size of area to write */
@@ -1131,6 +1127,17 @@ struct rxvt_term : rxvt_vars {
   void *operator new (size_t s);
   void operator delete (void *p, size_t s);
 
+  void init_secondary ();
+  const char **init_resources (int argc, const char *const *argv);
+  void init_env ();
+  void init_xlocale ();
+  void init_command (const char *const *argv);
+  int run_command (const char *const *argv);
+  int run_child (const char *const *argv);
+
+  void color_aliases(int idx);
+  void recolour_cursor ();
+
   /* screen(!) */
   void scr_blank_line (text_t *et, rend_t *er, unsigned int width, rend_t efs);
   void scr_blank_screen_mem (text_t **tp, rend_t **rp, unsigned int row, rend_t efs);
@@ -1139,6 +1146,9 @@ struct rxvt_term : rxvt_vars {
   void scr_reset_realloc ();
   void scr_release ();
 };
+
+#define SET_LOCALE(locale) rxvt_set_locale (locale)
+extern void rxvt_set_locale (const char *locale);
 
 #ifndef __attribute__
 # ifdef __GNUC__

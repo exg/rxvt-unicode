@@ -1,5 +1,5 @@
 /*
- * $Id: rxvtlib.h.in,v 1.6 2003/12/17 09:00:35 pcg Exp $
+ * $Id: rxvtlib.h.in,v 1.7 2003/12/18 05:45:11 pcg Exp $
  */
 
 #ifndef _RXVTLIB_H_             /* include once only */
@@ -281,6 +281,11 @@ typedef struct {
   short           width;        /* scrollbar width                          */
   Window          win;
   int             (*update)(pR_ int, int, int, int);
+
+  void setIdle()   { state =  1 ; }
+  void setMotion() { state = 'm'; }
+  void setUp()     { state = 'U'; }
+  void setDn()     { state = 'D'; }
 } scrollBar_t;
 
 struct rxvt_vars {

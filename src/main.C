@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.14 2003/12/18 00:29:29 pcg Exp $
+ * $Id: main.C,v 1.15 2003/12/18 05:45:11 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -44,6 +44,20 @@
 # include <termios.h>
 #endif
 
+#include <cstring>
+
+static char curlocale[128];
+
+void
+rxvt_set_locale (const char *locale)
+{
+  if (locale && strncmp (locale, curlocale, 128))
+    {
+      strncpy (curlocale, locale, 128);
+      setlocale (LC_CTYPE, curlocale);
+    }
+}
+
 void *
 rxvt_term::operator new (size_t s)
 {
@@ -79,9 +93,9 @@ rxvt_term::~rxvt_term ()
 {
   scr_release ();
 
-#if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
   free (locale);
-#endif
+  free (codeset);
+
 #ifndef NO_SETOWNER_TTYDEV
   rxvt_privileged_ttydev (this, RESTORE);
 #endif
@@ -180,8 +194,6 @@ rxvt_init_signals ()
 bool
 rxvt_term::init (int argc, const char *const *argv)
 {
-  dR;//TODO (scrollbar, setidle)
-
   /*
    * Save and then give up any super-user privileges
    * If we need privileges in any area then we must specifically request it.
@@ -192,21 +204,28 @@ rxvt_term::init (int argc, const char *const *argv)
   rxvt_privileges (this, SAVE);
   rxvt_privileges (this, IGNORE);
 
-  rxvt_init_secondary (this);
+#if HAVE_XSETLOCALE || HAVE_SETLOCALE
+  locale = strdup (setlocale (LC_CTYPE, ""));
+#endif
+#if HAVE_NL_LANGINFO
+  codeset = strdup (nl_langinfo (CODESET));
+#endif
 
-  const char **cmd_argv = rxvt_init_resources (this, argc, argv);
+  init_secondary ();
+
+  const char **cmd_argv = init_resources (argc, argv);
 
 #if (MENUBAR_MAX)
   rxvt_menubar_read (this, rs[Rs_menu]);
 #endif
 #ifdef HAVE_SCROLLBARS
   if (Options & Opt_scrollBar)
-    scrollbar_setIdle ();    /* set existence for size calculations */
+    scrollBar.setIdle ();    /* set existence for size calculations */
 #endif
 
   rxvt_Create_Windows (this, argc, argv);
 
-  rxvt_init_xlocale (this);
+  init_xlocale ();
 
   scr_reset ();         /* initialize screen */
 #ifdef RXVT_GRAPHICS
@@ -237,8 +256,8 @@ rxvt_term::init (int argc, const char *const *argv)
   XMapWindow (Xdisplay, TermWin.vt);
   XMapWindow (Xdisplay, TermWin.parent[0]);
 
-  rxvt_init_env (this);
-  rxvt_init_command (this, cmd_argv);
+  init_env ();
+  init_command (cmd_argv);
 
   x_ev.start (Xfd, EVENT_READ);
   pty_ev.start (cmd_fd, EVENT_READ);
@@ -763,27 +782,26 @@ rxvt_set_window_color(pR_ int idx, const char *color)
 
 /* handle Color_BD, scrollbar background, etc. */
 
-    rxvt_set_colorfgbg(aR);
-    rxvt_recolour_cursor(aR);
+    rxvt_set_colorfgbg (aR);
+    R->recolour_cursor ();
 /* the only reasonable way to enforce a clean update */
-    rxvt_scr_poweron(aR);
+    rxvt_scr_poweron (aR);
 }
 
 #else
 # define rxvt_set_window_color(aR_ idx,color)   ((void)0)
 #endif                          /* XTERM_COLOR_CHANGE */
 
-/* EXTPROTO */
 void
-rxvt_recolour_cursor(pR)
+rxvt_term::recolour_cursor ()
 {
-    rxvt_color      xcol[2];
-
 #if TODO
-    xcol[0] = R->PixColors[Color_pointer];
-    xcol[1] = R->PixColors[Color_bg];
-    XQueryColors(R->Xdisplay, XCMAP, xcol, 2);
-    XRecolorCursor(R->Xdisplay, R->TermWin_cursor, &(xcol[0]), &(xcol[1]));
+    rxvt_color xcol[2];
+
+    xcol[0] = PixColors[Color_pointer];
+    xcol[1] = PixColors[Color_bg];
+    XQueryColors (Xdisplay, XCMAP, xcol, 2);
+    XRecolorCursor (Xdisplay, TermWin_cursor, &(xcol[0]), &(xcol[1]));
 #endif
 }
 

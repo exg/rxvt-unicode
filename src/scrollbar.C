@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	scrollbar.c
  *----------------------------------------------------------------------*
- * $Id: scrollbar.C,v 1.4 2003/11/25 17:11:33 pcg Exp $
+ * $Id: scrollbar.C,v 1.5 2003/12/18 05:45:11 pcg Exp $
  *
  * Copyright (c) 1997,1998 mj olesen <olesen@me.QueensU.CA>
  * Copyright (c) 1998      Alfredo K. Kojima <kojima@windowmaker.org>
@@ -40,7 +40,7 @@ rxvt_scrollbar_mapping(pR_ int map)
 #ifdef HAVE_SCROLLBARS
 
     if (map && !scrollbar_visible(R)) {
-	scrollbar_setIdle();
+	R->scrollBar.setIdle ();
 	if (!R->scrollBar.win)
 	    rxvt_Resize_scrollBar(aR);
 	if (R->scrollBar.win) {
