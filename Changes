@@ -2,9 +2,7 @@ Lines marked with "xterm:" indicate either xterm features ported to rxvt
 or changed rxvt behaviour to make it more compatible to xterm (usually
 xfree86's xterm).
 
-TODO: underline colour changes?
 TODO: read property sequence is broken with respect to utf-8 etc.
-TODO: +ssc -ssr seems to scroll at wrong time, scrolling up the empty sec. scr.
 FEAT: hotkey font resizing
 FEAT: searchable backlog
 FEAT: meta-tagging of data by regex (my dream project)
@@ -13,7 +11,11 @@ FEAT: double-click: more intelligent (urls etc.)
 FEAT: OnTheSpot editing.
 FEAT: tabbed windows
 
-4.4
+	- completely re-wrote selection pasting. This should fix
+          garbled incomplete characters at 32k boundaries and too-short
+          INCR selections.
+
+4.4  Sun Dec 12 22:10:06 CET 2004
 	- rewrote handling of default-char width.
         - implement _NET_WM_NAME et al., and also use UTF8_STRING
           for the xterm property esc. sequence. Allows i18n window

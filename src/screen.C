@@ -41,7 +41,8 @@ inline void fill_text (text_t *start, text_t value, int len)
 }
 
 /* ------------------------------------------------------------------------- */
-#define PROP_SIZE               16384
+#define PROP_SIZE               256*1024
+#define PASTE_SIZE		32768
 #define TABSIZE                 8       /* default tab size */
 
 /* ------------------------------------------------------------------------- *
@@ -602,8 +603,7 @@ rxvt_term::scr_change_screen (int scrn)
   else
 #endif
     if (options & Opt_secondaryScroll)
-      //if (current_screen == PRIMARY)
-        scr_scroll_text (0, prev_nrow - 1, prev_nrow, 0);
+      scr_scroll_text (0, prev_nrow - 1, prev_nrow, 0);
 
   return scrn;
 }
@@ -2661,12 +2661,12 @@ void
 rxvt_term::paste (const unsigned char *data, unsigned int len)
 {
   unsigned int i, j, n;
-  unsigned char *ds = (unsigned char *)rxvt_malloc (PROP_SIZE);
+  unsigned char *ds = (unsigned char *)rxvt_malloc (PASTE_SIZE);
 
   /* convert normal newline chars into common keyboard Return key sequence */
-  for (i = 0; i < len; i += PROP_SIZE)
+  for (i = 0; i < len; i += PASTE_SIZE)
     {
-      n = min (len - i, PROP_SIZE);
+      n = min (len - i, PASTE_SIZE);
       memcpy (ds, data + i, n);
 
       for (j = 0; j < n; j++)
@@ -2684,13 +2684,9 @@ rxvt_term::paste (const unsigned char *data, unsigned int len)
  * Respond to a notification that a primary selection has been sent
  * EXT: SelectionNotify
  */
-int
+void
 rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
 {
-  long nread = 0;
-  unsigned long bytes_after;
-  XTextProperty ct;
-
   if (prop == None)         /* check for failed XConvertSelection */
     {
       if ((selection_type & Sel_CompoundText))
@@ -2713,36 +2709,83 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
             selection_type = 0;
         }
 
-      return 0;
+      return;
     }
 
-  for (;;)
+  unsigned long bytes_after;
+  XTextProperty ct;
+
+  if (XGetWindowProperty (display->display, win, prop,
+                          0, (long)(PROP_SIZE / 4),
+                          delete_prop, AnyPropertyType,
+                          &ct.encoding, &ct.format,
+                          &ct.nitems, &bytes_after,
+                          &ct.value) != Success)
     {
-      if (XGetWindowProperty (display->display, win, prop, (long) (nread / 4),
-                              (long) (PROP_SIZE / 4), delete_prop,
-                              AnyPropertyType, &ct.encoding, &ct.format,
-                              &ct.nitems, &bytes_after,
-                              &ct.value) != Success)
-        break;
+      ct.value = 0;
+      goto bailout;
+    }
 
-      if (ct.encoding == 0)
-        break;
+  if (ct.encoding == None)
+    goto bailout;
 
-      if (ct.encoding == xa[XA_INCR])
+  if (bytes_after)
+    {
+      // fetch and append remaining data
+      XTextProperty ct2;
+      unsigned long bytes_after2;
+
+      if (XGetWindowProperty (display->display, win, prop,
+                              ct.nitems / 4, (long) (bytes_after + 3) / 4,
+                              delete_prop, AnyPropertyType,
+                              &ct2.encoding, &ct2.format,
+                              &ct2.nitems, &bytes_after2,
+                              &ct2.value) != Success)
+        goto bailout;
+
+      // realloc should be compatible to XFree, here, and elsewhere, too
+      ct.value = (unsigned char *)realloc (ct.value, ct.nitems + bytes_after);
+      memcpy (ct.value + ct.nitems, ct2.value, ct2.nitems);
+      ct.nitems += ct2.nitems;
+
+      XFree (ct2.value);
+    }
+  else if (delete_prop)
+    XDeleteProperty (display->display, win, prop);
+
+  if (ct.value == 0)
+    goto bailout;
+
+  if (ct.encoding == xa[XA_INCR])
+    {
+      // INCR selection, start handshake
+      if (!delete_prop)
+        XDeleteProperty (display->display, win, prop);
+
+      selection_wait = Sel_incr;
+      incr_buf_fill = 0;
+      incr_ev.start (NOW + 10);
+
+      goto bailout;
+    }
+
+  if (ct.nitems == 0)
+    {
+      if (selection_wait == Sel_incr)
         {
-          // INCR selection, start handshake
-          XDeleteProperty (display->display, win, prop);
-          selection_wait = Sel_incr;
-          incr_ev.start (NOW + 10);
-          break;
+          XFree (ct.value);
+
+          // finally complete, now paste the whole thing
+          selection_wait = Sel_normal;
+          ct.value = (unsigned char *)incr_buf;
+          ct.nitems = incr_buf_fill;
+          incr_buf = 0;
+          incr_buf_size = 0;
+          incr_ev.stop ();
         }
-
-      if (ct.value == NULL)
-        continue;
-
-      if (ct.nitems == 0)
+      else 
         {
-          if (selection_wait == Sel_normal && nread == 0
+          if (selection_wait == Sel_normal
               && (win != display->root || prop != XA_CUT_BUFFER0)) // avoid recursion
             {
               /*
@@ -2752,54 +2795,58 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
               selection_paste (display->root, XA_CUT_BUFFER0, False);
             }
 
-          nread = -1;         /* discount any previous stuff */
-          break;
+          goto bailout;
         }
+    }
+  else if (selection_wait == Sel_incr)
+    {
+      incr_ev.start (NOW + 10);
 
-      nread += ct.nitems;
-
-      char **cl;
-      int cr;
-
-#if ENABLE_FRILLS
-      // xlib is horribly broken with respect to UTF8_STRING, and nobody cares to fix it
-      // so recode it manually
-      if (ct.encoding == xa[XA_UTF8_STRING])
+      while (incr_buf_fill + ct.nitems > incr_buf_size)
         {
-          wchar_t *w = rxvt_utf8towcs ((const char *)ct.value, ct.nitems);
-          char *s = rxvt_wcstombs (w);
-
-          // TODO: strlen == only the first element will be converted. well...
-          paste ((unsigned char *)s, strlen (s));
-
-          free (s);
-          free (w);
+          incr_buf_size = incr_buf_size ? incr_buf_size * 2 : 128*1024;
+          incr_buf = (char *)realloc (incr_buf, incr_buf_size);
         }
-      else
-#endif
-      if (XmbTextPropertyToTextList (display->display, &ct, &cl, &cr) >= 0 && cl)
-        {
-          for (int i = 0; i < cr; i++)
-            paste ((unsigned char *)cl[i], strlen (cl[i]));
 
-          XFreeStringList (cl);
-        }
-      else
-        paste (ct.value, ct.nitems);
+      memcpy (incr_buf + incr_buf_fill, ct.value, ct.nitems);
+      incr_buf_fill += ct.nitems;
 
-      if (bytes_after == 0)
-        break;
-
-      XFree (ct.value);
+      goto bailout;
     }
 
-  if (ct.value)
-    XFree (ct.value);
+  char **cl;
+  int cr;
+
+#if ENABLE_FRILLS
+  // xlib is horribly broken with respect to UTF8_STRING, and nobody cares to fix it
+  // so recode it manually
+  if (ct.encoding == xa[XA_UTF8_STRING])
+    {
+      wchar_t *w = rxvt_utf8towcs ((const char *)ct.value, ct.nitems);
+      char *s = rxvt_wcstombs (w);
+      free (w);
+      // TODO: strlen == only the first element will be converted. well...
+      paste ((unsigned char *)s, strlen (s));
+      free (s);
+    }
+  else
+#endif
+  if (XmbTextPropertyToTextList (display->display, &ct, &cl, &cr) >= 0
+      && cl)
+    {
+      for (int i = 0; i < cr; i++)
+        paste ((unsigned char *)cl[i], strlen (cl[i]));
+
+      XFreeStringList (cl);
+    }
+  else
+    paste (ct.value, ct.nitems); // paste raw
+
+bailout:
+  XFree (ct.value);
 
   if (selection_wait == Sel_normal)
     selection_wait = Sel_none;
-
-  return (int)nread;
 }
 
 void
@@ -2807,25 +2854,19 @@ rxvt_term::incr_cb (time_watcher &w)
 {
   selection_wait = Sel_none;
 
+  incr_buf_size = 0;
+  free (incr_buf);
+
   rxvt_warn ("data loss: timeout on INCR selection paste, ignoring.\n");
 }
 
-/*
- * INCR support originally provided by Paul Sheer <psheer@obsidian.co.za>
- */
 void
 rxvt_term::selection_property (Window win, Atom prop)
 {
   if (prop == None || selection_wait != Sel_incr)
     return;
 
-  if (selection_paste (win, prop, 1) > 0)
-    incr_ev.start (NOW + 10);
-  else
-    {
-      selection_wait = Sel_none;
-      incr_ev.stop ();
-    }
+  selection_paste (win, prop, true);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -2872,8 +2913,8 @@ rxvt_term::selection_request (Time tm, int x, int y)
         }
     }
 
-  selection_wait = Sel_none;       /* don't loop in rxvt_selection_paste () */
-  selection_paste (display->root, XA_CUT_BUFFER0, False);
+  selection_wait = Sel_none;       /* don't loop in selection_paste () */
+  selection_paste (display->root, XA_CUT_BUFFER0, false);
 }
 
 int

@@ -1338,7 +1338,7 @@ rxvt_term::x_cb (XEvent &ev)
                                &data);
             set_string_property (XA_CUT_BUFFER0, data);
             XFree (data);
-            selection_paste (display->root, XA_CUT_BUFFER0, True);
+            selection_paste (display->root, XA_CUT_BUFFER0, true);
             XSetInputFocus (display->display, display->root, RevertToNone, CurrentTime);
           }
 #endif				/* OFFIX_DND */
@@ -1470,8 +1470,7 @@ rxvt_term::x_cb (XEvent &ev)
 
       case SelectionNotify:
         if (selection_wait == Sel_normal)
-          selection_paste (ev.xselection.requestor,
-                           ev.xselection.property, True);
+          selection_paste (ev.xselection.requestor, ev.xselection.property, true);
         break;
 
       case SelectionRequest:

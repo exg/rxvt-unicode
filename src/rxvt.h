@@ -1104,6 +1104,8 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   Time            selection_time,
                   selection_request_time;
   pid_t           cmd_pid;    /* process id of child */
+  char *          incr_buf;
+  size_t          incr_buf_size, incr_buf_fill;
 /* ---------- */
   Cursor          leftptr_cursor;
 #ifdef POINTER_BLANK
@@ -1450,7 +1452,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void scr_reverse_selection ();
   void scr_dump (int fd);
   void selection_check (int check_more);
-  int selection_paste (Window win, Atom prop, bool delete_prop);
+  void selection_paste (Window win, Atom prop, bool delete_prop);
   void selection_property (Window win, Atom prop);
   void selection_request (Time tm, int x, int y);
   int selection_request_other (Atom target, int selnum);
