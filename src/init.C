@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        init.c
  *----------------------------------------------------------------------*
- * $Id: init.C,v 1.17 2004/01/19 17:26:43 pcg Exp $
+ * $Id: init.C,v 1.18 2004/01/20 01:35:39 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -1186,13 +1186,13 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #ifdef PREFER_24BIT
   attributes.background_pixel = PixColors[Color_fg];
   attributes.border_pixel = PixColors[Color_border];
-  attributes.colormap = XCMAP;
+  attributes.colormap = Xcmap;
   TermWin.parent[0] = XCreateWindow (Xdisplay, DefaultRootWindow (Xdisplay),
                                        szHint.x, szHint.y,
                                        szHint.width, szHint.height,
                                        TermWin.ext_bwidth,
-                                       XDEPTH, InputOutput,
-                                       XVISUAL,
+                                       Xdepth, InputOutput,
+                                       Xvisual,
                                        CWBackPixel | CWBorderPixel
                                        | CWColormap, &attributes);
 #else
