@@ -125,7 +125,7 @@ tinting it.
 
 I<number> Darken (0 .. 100) or lighten (-1 .. -100) the transparent
 background image in addition to tinting it (i.e. B<-tint> must be
-specified, too).
+specified, too, e.g. C<-tint white>).
 
 =item B<-bg> I<colour>
 
