@@ -187,7 +187,7 @@ typedef struct _mwmhints {
 #define menuBar_margin          2       /* margin below text */
 
 #if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR) || defined(PLAIN_SCROLLBAR)
-# define HAVE_SCROLLBARS
+# define HAVE_SCROLLBARS 1
 #endif
 
 /* width of scrollBar, menuBar shadow, must be 1 or 2 */
@@ -1150,12 +1150,21 @@ struct rxvt_term : rxvt_vars {
 
   static vector<rxvt_term *> termlist; // a vector of all running rxvt_term's
 
+#ifndef NO_FRILLS
+  // ISO 14755 entry support
+  unicode_t iso14755buf;
+  void commit_iso14755 ();
+  int hex_keyval (XKeyEvent &ev);
+#endif
+
   void paste (const unsigned char *data, unsigned int len);
 
   void flush ();
 
+#if TRANSPARENT
   void rootwin_cb (XEvent &xev);
   xevent_watcher rootwin_ev;
+#endif
 
   void x_cb (XEvent &xev);
   xevent_watcher termwin_ev;
@@ -1221,7 +1230,7 @@ struct rxvt_term : rxvt_vars {
   void set_locale (const char *locale);
   void init_xlocale ();
   void init_command (const char *const *argv);
-  int run_command (const char *const *argv);
+  void run_command (const char *const *argv);
   int run_child (const char *const *argv);
   static void child_exited (int pid);
 
