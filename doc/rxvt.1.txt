@@ -336,12 +336,11 @@ OPTIONS
         Here is a short Gtk2-perl snippet that illustrates how this option
         can be used (a longer example is in doc/embed):
 
-           my $rxvt = new Gtk2::DrawingArea;
-           $...->add ($rxvt); # important to add it somewhere first
-           $rxvt->realize; # now it can be realized
-           my $xid = $rxvt->window->get_xid;
-
-           system "rxvt -embed $xid &";
+           my $rxvt = new Gtk2::Socket;
+           $rxvt->signal_connect_after (realize => sub {
+              my $xid = $_[0]->window->get_xid;
+              system "rxvt -embed $xid &";
+           });
 
     -pty-fd *fileno*
         Tells rxvt NOT to execute any commands or create a new pty/tty pair

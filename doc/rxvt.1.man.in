@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-02-18" "5.2" "RXVT-UNICODE"
+.TH rxvt 1 "2005-02-19" "5.2" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -467,15 +467,12 @@ not.
 Here is a short Gtk2\-perl snippet that illustrates how this option can be
 used (a longer example is in \fIdoc/embed\fR):
 .Sp
-.Vb 4
-\&   my $rxvt = new Gtk2::DrawingArea;
-\&   $...->add ($rxvt); # important to add it somewhere first
-\&   $rxvt->realize; # now it can be realized
-\&   my $xid = $rxvt->window->get_xid;
-.Ve
-.Sp
-.Vb 1
-\&   system "@@RXVT_NAME@@ -embed $xid &";
+.Vb 5
+\&   my $rxvt = new Gtk2::Socket;
+\&   $rxvt->signal_connect_after (realize => sub {
+\&      my $xid = $_[0]->window->get_xid;
+\&      system "@@RXVT_NAME@@ -embed $xid &";
+\&   });
 .Ve
 .IP "\fB\-pty\-fd\fR \fIfileno\fR" 4
 .IX Item "-pty-fd fileno"

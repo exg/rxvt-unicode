@@ -547,14 +547,11 @@ used (a longer example is in <em>doc/embed</em>):</p>
 </dd>
 <dd>
 <pre>
-   my $rxvt = new Gtk2::DrawingArea;
-   $...-&gt;add ($rxvt); # important to add it somewhere first
-   $rxvt-&gt;realize; # now it can be realized
-   my $xid = $rxvt-&gt;window-&gt;get_xid;</pre>
-</dd>
-<dd>
-<pre>
-   system &quot;rxvt -embed $xid &amp;&quot;;</pre>
+   my $rxvt = new Gtk2::Socket;
+   $rxvt-&gt;signal_connect_after (realize =&gt; sub {
+      my $xid = $_[0]-&gt;window-&gt;get_xid;
+      system &quot;rxvt -embed $xid &amp;&quot;;
+   });</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item__2dpty_2dfd_fileno"><strong>-pty-fd</strong> <em>fileno</em></a></strong><br />
