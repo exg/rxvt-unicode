@@ -160,7 +160,7 @@ bool rxvt_display::init ()
 
   int fd = XConnectionNumber (display);
   x_ev.start (fd, EVENT_READ);
-  fcntl (fd, F_SETFL, FD_CLOEXEC);
+  fcntl (fd, F_SETFD, FD_CLOEXEC);
 
   XSelectInput (display, root, PropertyChangeMask);
   xa_xim_servers = XInternAtom (display, "XIM_SERVERS", 0);
