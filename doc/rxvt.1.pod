@@ -421,8 +421,8 @@ longer example is in F<doc/pty-fd>):
 
    my $pty = new IO::Pty;
    fcntl $pty, F_SETFD, 0; # clear close-on-exec
-
    system "@@RXVT_NAME@@ -pty-fd " . (fileno $pty) . "&";
+   close $pty;
 
    # now communicate with rxvt
    my $slave = $pty->slave;
