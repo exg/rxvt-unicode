@@ -34,7 +34,7 @@
 
 refcounted::refcounted (const char *id)
 {
-  this->id = STRDUP (id);
+  this->id = strdup (id);
 }
 
 refcounted::~refcounted ()

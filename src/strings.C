@@ -133,18 +133,18 @@ strlen (const char *s)
 char           *
 strdup (const char *s)
 {
-  size_t         len = STRLEN (s) + 1;
+  size_t         len = strlen (s) + 1;
   char          *c;
 
   if ((c = malloc (len)) != NULL)
-    MEMCPY (c, s, len);
+    memcpy (c, s, len);
   return c;
 }
 
 char           *
 index (const char *s, int c)
 {
-  return STRCHR (s, c);
+  return strchr (s, c);
 }
 
 char           *
@@ -169,7 +169,7 @@ strchr (const char *s, int c)
 char           *
 rindex (const char *s, int c)
 {
-  return STRRCHR (s, c);
+  return strrchr (s, c);
 }
 
 char           *
@@ -191,7 +191,7 @@ void           *
 memcpy (void *s1, const void *s2, size_t len)
 {
   /* has extra stack and time but less code space */
-  return MEMMOVE (s1, s2, len);
+  return memmove (s1, s2, len);
 }
 
 /*--------------------------------------------------------------------------*
@@ -256,7 +256,7 @@ memmove (void *d, const void *s, size_t len)
 void
 bzero (void *b, size_t len)
 {
-  MEMSET (b, 0, len);
+  memset (b, 0, len);
 }
 
 void           *

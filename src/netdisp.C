@@ -47,7 +47,7 @@ rxvt_network_display (const char *display)
   struct ifreq   *ifr;
   int             i, skfd;
 
-  if (display[0] != ':' && STRNCMP (display, "unix:", 5))
+  if (display[0] != ':' && strncmp (display, "unix:", 5))
     return (char *) display;		/* nothing to do */
 
   ifc.ifc_len = sizeof (buffer);	/* Get names of all ifaces */
@@ -70,7 +70,7 @@ rxvt_network_display (const char *display)
     {
       struct ifreq    ifr2;
 
-      STRCPY (ifr2.ifr_name, ifr->ifr_name);
+      strcpy (ifr2.ifr_name, ifr->ifr_name);
       if (ioctl (skfd, SIOCGIFADDR, &ifr2) >= 0)
         {
           unsigned long   addr;
@@ -84,12 +84,12 @@ rxvt_network_display (const char *display)
            */
           if (addr && addr != 0x7F000001)
             {
-              char           *colon = STRCHR (display, ':');
+              char           *colon = strchr (display, ':');
 
               if (colon == NULL)
                 colon = ":0.0";
 
-              rval = rxvt_malloc (STRLEN (colon) + 16);
+              rval = rxvt_malloc (strlen (colon) + 16);
               sprintf (rval, "%d.%d.%d.%d%s",
                       (int) ((addr >> 030) & 0xFF),
                       (int) ((addr >> 020) & 0xFF),
