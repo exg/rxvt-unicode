@@ -202,69 +202,6 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color)
     }
 }
 
-static const char *linedraw_cmds[128 + 32] = {
-  "1-", "2-", "1|", "2|",
-  0, 0, 0, 0,
-  0, 0, 0, 0,
-  "1HV", "2H1V", "1H2V", "2HV",
-
-  // 2510
-  "1hV", "2h1V", "1h2V", "2hV",
-  "1Hv", "2H1v", "1H2v", "2Hv",
-  "1hv", "2h1v", "1h2v", "2hv",
-  "1H|", "2H1|", "1HV2v", "1Hv2V",
-
-  // 2520
-  "1H2|", "2Hv1V", "2HV1v", "2H|",
-  "1h|", "2h1|", "1hV2v", "1hv2V",
-  "1h2|", "2hv1V", "1v2hV", "2h|",
-  "1-V", "2h1HV", "2H1hV", "2-1V",
-
-  // 2530
-  "1-2V", "2hV1H", "1h2HV", "2-V",
-  "1-v", "1vH2h", "1hv2H", "1v2-",
-  "1-2v", "1H2hv", "1h2Hv", "2-v",
-  "1-|", "1|H2h", "1h|2H", "1|2-",
-
-  // 2540
-  "1-V2v", "1-v2V", "1-2|", "1HV2hv",
-  "1hV2Hv", "1Hv2hV", "1hv2HV", "1V2-v",
-  "1v2-V", "1H2h|", "1h2H|", "2-|",
-  0, 0, 0, 0,
-
-  // 2550
-  0, 0, 0, 0,
-  0, 0, 0, 0,
-  0, 0, 0, 0,
-  0, 0, 0, 0,
-
-  // 2560
-  0, 0, 0, 0,
-  0, 0, 0, 0,
-  0, 0, 0, 0,
-  0, "A", "B", "C",
-
-  // 2570
-  "D", "1/", "1\\", "1/\\",
-  "1h", "1v", "1H", "1V",
-  "2h", "2v", "2H", "2V",
-  "1h2H", "1v2V", "1H2h", "1V2v",
-
-  // 2580
-  0, 0, 0, 0,
-  0, 0, 0, 0,
-  0, 0, 0, 0,
-  0, 0, 0, 0,
-
-  // 2590
-  0, 0, 0, 0,
-  0, 0, "k", "l",
-  "i", "ikl", "il", "ijk",
-  "ijl", "j", "jk", "jkl",
-
-  // to be done
-};
-
 struct rxvt_font_default : rxvt_font {
   rxvt_fontprop properties ()
   {
@@ -295,11 +232,7 @@ struct rxvt_font_default : rxvt_font {
     if (unicode >= 0x0080 && unicode <= 0x009f)
       return true;
 
-    if (unicode >= 0x2500 && unicode <= 0x257f
-        && linedraw_cmds[unicode - 0x2500])
-      return true;
-
-    if (unicode >= 0x2580 && unicode <= 0x259f)
+    if (unicode >= 0x2500 && unicode <= 0x259f)
       return true;
 
     if (IS_COMPOSE (unicode))
@@ -341,6 +274,8 @@ static void rect_stipple (Display *display, Drawable d, GC gc, int s1, int s2, i
   XChangeGC (display, gc, GCFillStyle, &gcv);
 }
 
+#include "table/linedraw.h"
+
 void
 rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
                          const text_t *text, int len,
@@ -357,45 +292,84 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 #endif
       text_t t = *text++;
 
+      int x_[16];
+      int y_[16];
+
       int W = r->TermWin.fwidth , w = (W - 1) / 2;
       int H = r->TermWin.fheight, h = (H - 1) / 2;
       int x0 = x, x1 = x + w, x2 = x + r->TermWin.fwidth ;
       int y0 = y, y1 = y + h, y2 = y + r->TermWin.fheight;
 
-      // is it in our linedrawing table?
-      if (t >= 0x2500 & t <= 0x259f && linedraw_cmds[t - 0x2500])
+      for (int i = 0; i <= 8; i++)
         {
-          const char *p = linedraw_cmds[t - 0x2500];
+          x_[i] = x + ((W-1) * i + (i*7/8)) / 8;
+          y_[i] = y + ((H-1) * i + (i*7/8)) / 8;
+        }
 
-          XGCValues gcv;
+      x_[10] = x + (W - 1) / 2; x_[9] = x_[10] - 1; x_[11] = x_[10] + 1;
+      y_[10] = y + (H - 1) / 2; y_[9] = y_[10] - 1; y_[11] = y_[10] + 1;
 
-          gcv.cap_style = CapNotLast;
-          XChangeGC (d.display->display, TGC, GCCapStyle, &gcv);
+      int i1 = linedraw_offs[t - 0x2500];
+      int i2 = linedraw_offs[t - 0x2500 + 1];
 
-          while (*p)
+      XGCValues gcv;
+
+      gcv.cap_style = CapButt;
+      gcv.line_width = 0;
+      XChangeGC (d.display->display, TGC, GCLineWidth | GCCapStyle, &gcv);
+
+      if (i1 != i2)
+        {
+          while (i1 < i2)
             {
-              switch (*p++)
+              uint32_t command = linedraw_command [i1++];
+
+              int op = (command >> 24) & 255;
+              int a  = (command >> 20) & 15;
+              int b  = (command >> 16) & 15;
+              int x1 = x_[(command >> 12) & 15];
+              int y1 = y_[(command >>  8) & 15];
+              int x2 = x_[(command >>  4) & 15];
+              int y2 = y_[(command >>  0) & 15];
+
+              switch (op)
                 {
-                  case '1':
-                    gcv.line_width = 0;
-                    XChangeGC (d.display->display, TGC, GCLineWidth, &gcv);
+                  case 0: // line
+                    XDrawLine (d.display->display, d, TGC, x1, y1, x2, y2);
                     break;
 
-                  case '2':
-                    gcv.line_width = 3;
-                    XChangeGC (d.display->display, TGC, GCLineWidth, &gcv);
+                  case 1: // rectangle, possibly stippled
+                    if (a)
+                      {
+                        static char bm[] = { 0,0 , 1,3 , 2,1 , 0,1 };
+ 
+                        gcv.fill_style = FillStippled;
+                        gcv.stipple = XCreateBitmapFromData (d.display->display, d, bm + a * 2, 2, 2);
+                        gcv.ts_x_origin = x;
+                        gcv.ts_y_origin = y;
+
+                        XChangeGC (d.display->display, TGC,
+                                   GCFillStyle | GCStipple | GCTileStipXOrigin | GCTileStipYOrigin,
+                                   &gcv);
+                      }
+
+
+                    XFillRectangle (d.display->display, d, TGC, x1, y1, x2 - x1 + 1, y2 - y1 + 1);
+
+                    if (a)
+                      {
+                        XFreePixmap (d.display->display, gcv.stipple);
+                        gcv.fill_style = FillSolid;
+                        XChangeGC (d.display->display, TGC, GCFillStyle, &gcv);
+                      }
+
                     break;
+                  case 2: // arc
+                    break;
+                }
+            }
 
-                  case 'h': XDrawLine (d.display->display, d, TGC, x0, y1, x1+1, y1  ); break;
-                  case 'H': XDrawLine (d.display->display, d, TGC, x1, y1, x2  , y1  ); break;
-                  case '-': XDrawLine (d.display->display, d, TGC, x0, y1, x2  , y1  ); break;
-                  case 'v': XDrawLine (d.display->display, d, TGC, x1, y0, x1  , y1+1); break;
-                  case 'V': XDrawLine (d.display->display, d, TGC, x1, y1, x1  , y2  ); break;
-                  case '|': XDrawLine (d.display->display, d, TGC, x1, y0, x1  , y2  ); break;
-
-                  case '/' : XDrawLine (d.display->display, d, TGC, x0, y2, x2  , y0  ); break;
-                  case '\\': XDrawLine (d.display->display, d, TGC, x0, y0, x2  , y2  ); break;
-
+#if 0
                   case 'A': XDrawArc (d.display->display, d, TGC, x1    , y1    , W-1, H-1,  90*64,  90*64); break;
                   case 'B': XDrawArc (d.display->display, d, TGC, x1-W+1, y1    , W-1, H-1,   0*64,  90*64); break;
                   case 'C': XDrawArc (d.display->display, d, TGC, x1-W+1, y1-H+1, W-1, H-1,   0*64, -90*64); break;
@@ -407,11 +381,9 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
                   case 'l': XFillRectangle (d.display->display, d, TGC, x1, y1, x2 - x1, y2 - y1); break;
                 }
             }
+#endif
 
-          gcv.line_width = 0;
-          XChangeGC (d.display->display, TGC, GCLineWidth, &gcv);
         }
-
 #if ENABLE_COMBINING
       else if (IS_COMPOSE (t) && (cc = rxvt_composite[t]))
         {
@@ -434,6 +406,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
             case ZERO_WIDTH_CHAR:
               break;
 
+#if 0
             case 0x2580: XFillRectangle (d.display->display, d, TGC, x0, y0, W, y1 - y0 + 1); break;
             case 0x2581: XFillRectangle (d.display->display, d, TGC, x0, y0 + (H * 7 - 1) / 8, W, H - (H * 7 - 1) / 8); break;
             case 0x2582: XFillRectangle (d.display->display, d, TGC, x0, y0 + (H * 6 - 2) / 8, W, H - (H * 6 - 2) / 8); break;
@@ -458,6 +431,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 
             case 0x2594: XFillRectangle (d.display->display, d, TGC, x0, y0, W, (H * 1 - 7) / 8); break;
             case 0x2595: XFillRectangle (d.display->display, d, TGC, x0 + (W * 7 - 1) / 8, y0, W - (W * 7 - 1) / 8, H); break;
+#endif
 
             default:
               int w = 0;
