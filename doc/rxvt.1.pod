@@ -152,27 +152,34 @@ The mouse pointer background colour; resource B<pointerColor2>.
 
 =item B<-bd> I<colour>
 
-The colour of the border between the xterm scrollbar and the text;
+The colour of the border around the text area and between the scrollbar and the text;
 resource B<borderColor>.
 
-=item B<-fn> I<fontname>
+=item B<-fn> I<fontlist>
 
-Select the fonts to be used. This is a comma seperated list of font
-names that are used in turn when trying to display Unicode characters.
-The first font defines the cell size for characters; other fonts might
-be smaller, but not larger. A reasonable default font list is always
-appended to it. resource B<font>.
+Select the fonts to be used. This is a comma separated list of font names
+that are used in turn when trying to display Unicode characters.  The
+first font defines the cell size for characters; other fonts might be
+smaller, but not (in general) larger. A reasonable default font list is
+always appended to it. See resource B<font> for details.
 
 See also the question "How does rxvt-unicode choose fonts?" in the FAQ
 section.
 
-=item B<-rb>|B<+rb>
+=item B<-fb> I<fontlist>
 
-Enable "real bold" support. When this option is on, bold text will be
-displayed using the first available bold font in the font list. Bold
-fonts should thus be specified in the font list after their
-corresponding regular fonts. If no bold font can be found, a regular
-font will be used. resource B<realBold>.
+Compile font-styles: The bold font list to use when bold characters are to
+be printed. See resource B<boldFont> for details.
+
+=item B<-fi> I<fontlist>
+
+Compile font-styles: The italic font list to use when bold characters are to
+be printed. See resource B<italicFont> for details.
+
+=item B<-fbi> I<fontlist>
+
+Compile font-styles: The bold italic font list to use when bold characters are to
+be printed. See resource B<boldItalicFont> for details.
 
 =item B<-name> I<name>
 
@@ -391,11 +398,19 @@ colours. The canonical names are as follows: 0=black, 1=red, 2=green,
 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white, but the actual colour
 names used are listed in the B<COLORS AND GRAPHICS> section.
 
+Colours higher than 15 cannot be set using resources (yet), but can be
+changed using an escape command (see @@RXVT_NAME@@(7)).
+
+Colours 16-79 form a standard 4x4x4 colour cube (the same as xterm with
+88 colour support). Colours 80-87 are evenly spaces grey steps.
+
 =item B<colorBD:> I<colour>
 
-Use the specified colour to display bold characters when the foreground
-colour is the default. This option will be ignored if B<realBold> is
-enabled.
+=item B<colorIT:> I<colour>
+
+Use the specified colour to display bold or italic characters when the
+foreground colour is the default. If font styles are not available
+(Compile styles) and this option is unset, reverse video is used instead.
 
 =item B<colorUL:> I<colour>
 
@@ -462,6 +477,11 @@ Use the specified colour for the scrollbar [default #B2B2B2].
 Use the specified colour for the scrollbar's trough area [default
 #969696]. Only relevant for normal (non XTerm/NeXT) scrollbar.
 
+=item B<borderColor:> I<colour>
+
+The colour of the border around the text area and between the scrollbar
+and the text.
+
 =item B<backgroundPixmap:> I<file[;geom]>
 
 Use the specified XPM file (note the `.xpm' extension is optional) for
@@ -486,22 +506,67 @@ Specify the colon-delimited search path for finding files (XPM and
 menus), in addition to the paths specified by the B<RXVTPATH> and
 B<PATH> environment variables.
 
-=item B<font:> I<fontname>
+=item B<font:> I<fontlist>
 
-Select the fonts to be used. This is a comma seperated list of font
+Select the fonts to be used. This is a comma separated list of font
 names that are used in turn when trying to display Unicode characters.
 The first font defines the cell size for characters; other fonts might
 be smaller, but not larger. A reasonable default font list is always
 appended to it. option B<-fn>.
 
-=item B<realBold:> I<boolean>
+Each font can either be a standard X11 core font (XLFD) name, with
+optional prefix C<x:> or a Xft font (Compile xft), prefixed with C<xft:>.
 
-B<True>: Enable "real bold" support. When this option is on, bold text
-will be displayed using the first available bold font in the font list.
-Bold fonts should thus be specified in the font list after their
-corresponding regular fonts. If no bold font can be found, a regular
-font will be used. option B<-rb>. B<False>: Display bold text in a
-regular font, using the color specified with B<colorBD>; option B<+rb>.
+In addition, each font can be prefixed with additional hints and
+specifications enclosed in square brackets (C<[]>). The only available
+hint currently is C<codeset=codeset-name>, and this is only used for Xft
+fonts.
+
+For example, this font resource
+
+   URxvt*font: 9x15bold,\
+               -misc-fixed-bold-r-normal--15-140-75-75-c-90-iso10646-1,\
+               -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1, \
+               [codeset=JISX0208]xft:Kochi Gothic:antialias=false, \
+               xft:Code2000:antialias=false
+
+specifies five fonts to be used. The first one is C<9x15bold> (actually
+the iso8859-1 version of the second font), which is the base font (because
+it is named first) and thus defines the character cell grid to be 9 pixels
+wide and 15 pixels high.
+
+the second font is just used to add additional unicode characters not in
+the base font, likewise the third, which is unfortunately non-bold, but
+the bold version of the font does contain less characters, so this is a
+useful supplement.
+
+The third font is an Xft font with aliasing turned off, and the characters
+are limited to the B<JIS 0208> codeset (i.e. japanese kanji). The font
+contains other characters, but we are not interested in them.
+
+The last font is a useful catch-all font that supplies most of the
+remaining unicode characters.
+
+=item B<boldFont:> I<fontlist>
+
+=item B<italicFont:> I<fontlist>
+
+=item B<boldItalicFont:> I<fontlist>
+
+The font list to use for displaying B<bold>, I<italic> or B<< I<bold
+italic> >> characters, respectively.
+
+If specified and non-empty, then the syntax is the same as for the
+B<font>-resource, and the given font list will be used as is, which makes
+it possible to substitute completely different font styles for bold and
+italic.
+
+If unset (the default), a suitable font list will be synthesized by
+"morphing" the normal text font list into the desired shape. If that is
+not possible, replacement fonts of the desired shape will be tried.
+
+If set, but empty, then this specific style is disabled and the normal
+text font will being used for the given style.
 
 =item B<selectstyle:> I<mode>
 
@@ -691,7 +756,7 @@ de_DE.UTF-8 for normal text processing but ja_JP.EUC-JP for the input
 extension to be able to input japanese characters while staying in
 another locale. option B<-imlocale>.
 
-=item B<insecure>
+=item B<insecure:> I<boolean>
 
 Enables "insecure" mode. Rxvt-unicode offers some escape sequences that
 echo arbitrary strings like the icon name or the locale. This could be
@@ -854,6 +919,11 @@ pressing and holding the left mouse button and moving around. The unicode
 hex code(s) (it might be a combining character) of the character under the
 pointer is displayed until you release C<Control> and C<Shift>.
 
+In addition to the hex codes it will display the font used to draw this
+character - due to implementation reasons, characters combined with
+combining characters, line drawing characters and unknown characters will
+always be drawn using the built-in support font.
+
 =back
 
 With respect to conformance, rxvt-unicode is supposed to be compliant to
@@ -921,9 +991,41 @@ on White.
 
 =item How do I know which rxvt-unicode version I'm using?
 
-The version number is displayed with the usage (-h).  For rxvt-unicode
-version 2.14 and later, the escape sequence C<ESC[8n> sets the window
-title to the version number.
+The version number is displayed with the usage (-h). Also the escape
+sequence C<ESC[8n> sets the window title to the version number.
+
+=item When I log-in to another system it tells me about missing terminfo data?
+
+The terminal description used by rxvt-unicode is not as widely available
+as that for xterm, or even rxvt (for which the same problem often arises).
+
+The correct solution for this problem is to install the terminfo, this can be done
+like this:
+
+   infocmp rxvt-unicode >rxvt.unicode.tic
+   scp rxvt-unicode.tic remotesystem:
+   ssh remotesystem tic rxvt-unicode.tic
+ 
+... or by installing rxvt-unicode normally on the remote system,
+
+If you cannot or do not want to do this, then you can simply set
+C<TERM=rxvt> or even C<TERM=xterm>, and live with the small number of
+problems arising, which includes wrong keymapping, less and different
+colours and some refresh errors in fullscreen applications. It's a nice
+quick-and-dirty workaround for rare cases, though.
+
+If you always want to do this you can either recompile rxvt-unicode with
+the desired TERM value or use a resource to set it:
+
+   URxvt.termName: rxvt
+
+=item How can I configure rxvt-unicode so that it looks similar to the original rxvt?
+
+Felix von Leitner says that these two lines, in your F<.Xdefaults>, will make rxvt-unicode
+behave similar to the original rxvt:
+
+   URxvt.font: -misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso8859-1
+   URxvt.boldFont: -misc-fixed-bold-r-semicondensed--13-120-75-75-c-60-iso8859-1
 
 =item Rxvt-unicode does not seem to understand the selected encoding?
 
@@ -966,14 +1068,20 @@ to display.
 
 B<rxvt-unicode> makes a best-effort try at finding a replacement
 font. Often the result is fine, but sometimes the chosen font looks
-bad. In that case, select a font of your taste and add it to the font
-list, e.g.:
+bad. Many fonts have totally strange characters that don't resemble the
+correct glyph at all, and rxvt-unicode lacks the artificial intelligence
+to detetc that a specific glyph is wrong: it has to believe the font that
+the characters it contains indeed look correct.
+
+In that case, select a font of your taste and add it to the font list,
+e.g.:
 
    @@RXVT_NAME@@ -fn basefont,font2,font3...
 
 When rxvt-unicode sees a character, it will first look at the base
 font. If the base font does not contain the character, it will go to the
-next font, and so on.
+next font, and so on. Specifying your own fonts will also speed up this
+search and use less resources within rxvt-unicode and the X-server.
 
 The only limitation is that all the fonts must not be larger than the base
 font, as the base font defines the principial cell size, which must be the
@@ -1000,6 +1108,28 @@ In the future it might be possible to switch preferences at runtime (the
 internal data structure has no problem with using different fonts for
 the same character at the same time, but no interface for this has been
 designed yet).
+
+=item How can I keep rxvt-unicode from using reverse video so much?
+
+First of all, make sure you are running with the right terminfo
+(C<urxvt>), which will get rid of most of these effects. Then make sure
+you have specified colours for italic and bold, as otherwise rxvt-unicode
+might use reverse video to simulate the effect:
+
+   URxvt*colorBD:  white
+   URxvt*colorIT:  green
+
+=item Some programs assume totally weird colours (red instead of blue), how can I fix that?
+
+For some unexplainable reason, some programs (i.e. irssi) assume a very
+weird colour palette when confronted with a terminal with more than the
+standard 8 colours (rxvt-unicode supports 88). The right fix is, of
+course, to fix these programs not to assume non-ISO colours without very
+good reasons.
+
+In the meantime, you can either edit your C<urxvt> terminfo definition to
+only claim 8 colour support or use C<TERM=rxvt>, which will fix colours
+but keep you from using other rxvt-unicode features.
 
 =item How does rxvt-unicode determine the encoding to use?
 
@@ -1064,6 +1194,60 @@ japanese font), but you have to switch to chinese temporarily, where
 japanese fonts would only be in your way.
 
 You can think of this as a kind of manual ISO-2022 switching.
+
+=item Why do italic characters look as if clipped?
+
+Many fonts have difficulties with italic characters and hinting. For
+example, the otherwise very nicely hinted font C<xft:Bitstream Vera Sans
+Mono> completely fails in it's italic face. A workaround is to enable
+freetype autohinting, i.e. like this:
+
+   URxvt*italicFont:        xft:Bitstream Vera Sans Mono:italic:autohint=true
+   URxvt*boldItalicFont:    xft:Bitstream Vera Sans Mono:bold:italic:autohint=true
+
+=item My input method wants <some encoding> but I want UTF-8, what can I do?
+
+You cna specify separate locales for the input method and the rest of the
+terminal, using the resource C<imlocale>:
+
+   URxvt*imlocale: ja_JP.EUC-JP
+
+Now you can start your terminal with C<LC_CTYPE=ja_JP.UTF-8> and still
+use your input method. Please note, however, that you will not be able to
+input characters outside C<EUC-JP> in a normal way then, as your input
+method limits you.
+
+=item Rxvt-unicode uses gobs of memory, how can I reduce that?
+
+Rxvt-unicode tries to obey the rule of not charging you for sth. you
+don't use. One thing you should try is to configure out all settings that
+you don't need, for example, Xft support is a resource hog by design,
+when used. Compiling it out ensures that no Xft font will be loaded
+accidentally when rxvt-unicode tries to find a font for your characters.
+
+Also, many people (me included) like large windows and even larger
+scrollback buffers: Without C<--enable-unicode3>, rxvt-unicode will use
+6 bytes per screen cell. For a 160x?? window this amounts to almost a
+kilobyte per line. A scorllback buffer of 10000 lines will then (if full)
+use 10 Megabytes of memory. With C<--enable-unicode3> it gets worse, as
+rxvt-unicode then uses 8 bytes per screen cell.
+
+=item Can I speed up Xft rendering somehow?
+
+Yes, the most obvious way to speed it up is to avoid Xft entirely, as
+it is simply slow. If you still want Xft fonts you might try to disable
+antialiasing (by appending C<:antialiasing=false>), which saves lots of
+memory and also speeds up rendering considerably.
+
+=item Rxvt-unicode doesn't seem to anti-alias its fonts, what is wrong?
+
+Rxvt-unicode will use whatever you specify as a font. If it needs to
+fall back to it's default font search list it will prefer X11 core
+fonts, because they are small and fast, and then use Xft fonts. It has
+antialiaisng disabled for most of them, because the author thinks they
+look best that way.
+
+If you want antialiasing, you have to specify the fonts manually.
 
 =item Mouse cut/paste suddenly no longer works.
 
