@@ -286,11 +286,11 @@ static const char optionsstring[] = "options: "
 #if ENCODING_KR
                                     "+kr"
 #endif
-#if ENCODING_CN
-                                    "+cn"
+#if ENCODING_ZH
+                                    "+zh"
 #endif
-#if ENCODING_CN_EXT
-                                    "+cn-ext"
+#if ENCODING_ZH_EXT
+                                    "+zh-ext"
 #endif
                                     ","
 #if OFF_FOCUS_FADING

@@ -437,10 +437,10 @@
 #undef ENCODING_KR
 
 /* Define if you want chinese codesets */
-#undef ENCODING_CN
+#undef ENCODING_ZH
 
 /* Define if you want extended chinese codesets */
-#undef ENCODING_CN_EXT
+#undef ENCODING_ZH_EXT
 
 /* Define if you don't need to use our replacement string functions */
 #undef NO_STRINGS

@@ -16944,7 +16944,7 @@ _ACEOF
 
 fi
 if test x$codesets = xall; then
-  codesets=jp,jp-ext,kr,cn,cn-ext
+  codesets=jp,jp-ext,kr,zh,zh-ext
 fi
 
 cat >>confdefs.h <<\_ACEOF
@@ -16973,14 +16973,14 @@ cat >>confdefs.h <<\_ACEOF
 #define ENCODING_KR 1
 _ACEOF
  ;;
-    CN     )
+    ZH     )
 cat >>confdefs.h <<\_ACEOF
-#define ENCODING_CN 1
+#define ENCODING_ZH 1
 _ACEOF
  ;;
-    CN_EXT )
+    ZH_EXT )
 cat >>confdefs.h <<\_ACEOF
-#define ENCODING_CN_EXT 1
+#define ENCODING_ZH_EXT 1
 _ACEOF
  ;;
   esac

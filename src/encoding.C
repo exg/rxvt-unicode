@@ -179,12 +179,12 @@ static uint32_t cs_unicode_16_from_unicode (unicode_t unicode) { return unicode 
 
 #include "table/ksc5601_1987_0.h"
 
-//#define ENCODING_CN
+//#define ENCODING_ZH
 
 #include "table/gb2312_1980_0.h"
 #include "table/big5.h"
 
-//#define ENCODING_CN_EXT
+//#define ENCODING_ZH_EXT
 
 #include "table/cns11643_1992_1.h"
 #include "table/cns11643_1992_2.h"

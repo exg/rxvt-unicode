@@ -1287,7 +1287,7 @@ if test x$support_combining = xyes; then
   AC_DEFINE(ENABLE_COMBINING, 1, Define if you want to automatically compose combining characters)
 fi
 if test x$codesets = xall; then
-  codesets=jp,jp-ext,kr,cn,cn-ext
+  codesets=jp,jp-ext,kr,zh,zh-ext
 fi
 AC_DEFINE(ENCODING_EU, 1, Define if you want european extended codesets)
 AC_DEFINE(ENCODING_VN, 1, Define if you want vietnamese codesets)
@@ -1296,8 +1296,8 @@ for codeset in `echo $codesets | tr "[a-z,\\-]" "[A-Z _]"`; do
     JP     ) AC_DEFINE(ENCODING_JP,     1, Define if you want japanese codesets) ;;
     JP_EXT ) AC_DEFINE(ENCODING_JP_EXT, 1, Define if you want extended japanese codesets) ;;
     KR     ) AC_DEFINE(ENCODING_KR,     1, Define if you want korean codesets) ;;
-    CN     ) AC_DEFINE(ENCODING_CN,     1, Define if you want chinese codesets) ;;
-    CN_EXT ) AC_DEFINE(ENCODING_CN_EXT, 1, Define if you want extended chinese codesets) ;;
+    ZH     ) AC_DEFINE(ENCODING_ZH,     1, Define if you want chinese codesets) ;;
+    ZH_EXT ) AC_DEFINE(ENCODING_ZH_EXT, 1, Define if you want extended chinese codesets) ;;
   esac
 done
 

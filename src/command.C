@@ -912,6 +912,8 @@ rxvt_term::cmd_write (const unsigned char *str, unsigned int count)
 void
 rxvt_term::flush ()
 {
+  flush_ev.stop ();
+
 #ifdef TRANSPARENT
   if (want_full_refresh)
     {
@@ -931,8 +933,6 @@ rxvt_term::flush ()
     }
 
   display->flush ();
-
-  flush_ev.stop ();
 }
 
 void
@@ -1216,11 +1216,6 @@ rxvt_term::x_cb (XEvent &ev)
       if (ev.type == KeyPress && hidden_pointer == 0)
         pointer_blank ();
     }
-#endif
-
-#ifdef USE_XIM
-  if (XFilterEvent (&ev, None))
-    return;
 #endif
 
   Window          unused_root, unused_child;
@@ -1564,7 +1559,7 @@ rxvt_term::x_cb (XEvent &ev)
             break;
           }
 #endif
-        if ((priv_modes & PrivMode_mouse_report) && ! (bypass_keystate))
+        if ((priv_modes & PrivMode_mouse_report) && !bypass_keystate)
           break;
 
         if (ev.xany.window == TermWin.vt)
@@ -1577,8 +1572,8 @@ rxvt_term::x_cb (XEvent &ev)
                 XQueryPointer (display->display, TermWin.vt,
                                &unused_root, &unused_child,
                                &unused_root_x, &unused_root_y,
-                               & (ev.xbutton.x), & (ev.xbutton.y),
-                               &unused_mask);
+                               &ev.xbutton.x, &ev.xbutton.y,
+                               &ev.xbutton.state);
 #ifdef MOUSE_THRESHOLD
                 /* deal with a `jumpy' mouse */
                 if ((ev.xmotion.time - MEvent.time) > MOUSE_THRESHOLD)
@@ -1593,7 +1588,8 @@ rxvt_term::x_cb (XEvent &ev)
                       }
 #endif
                     selection_extend (ev.xbutton.x, ev.xbutton.y,
-                                      (ev.xbutton.state & Button3Mask) ? 2 : 0);
+                                      ev.xbutton.state & Button3Mask ? 2 : 0);
+
 #ifdef SELECTION_SCROLLING
                     if (ev.xbutton.y < TermWin.int_bwidth
                         || Pixel2Row (ev.xbutton.y) > (TermWin.nrow-1))
@@ -1614,7 +1610,7 @@ rxvt_term::x_cb (XEvent &ev)
                         selection_save_state = (ev.xbutton.state & Button3Mask) ? 2 : 0;
 
                         /* calc number of lines to scroll */
-                        if (ev.xbutton.y<TermWin.int_bwidth)
+                        if (ev.xbutton.y < TermWin.int_bwidth)
                           {
                             scroll_selection_dir = UP;
                             dist = TermWin.int_bwidth - ev.xbutton.y;
@@ -1648,11 +1644,13 @@ rxvt_term::x_cb (XEvent &ev)
         else if (isScrollbarWindow (ev.xany.window) && scrollbar_isMotion ())
           {
             while (XCheckTypedWindowEvent (display->display, scrollBar.win,
-                                           MotionNotify, &ev)) ;
+                                           MotionNotify, &ev))
+              ;
+
             XQueryPointer (display->display, scrollBar.win,
                           &unused_root, &unused_child,
                           &unused_root_x, &unused_root_y,
-                          & (ev.xbutton.x), & (ev.xbutton.y),
+                          &ev.xbutton.x, &ev.xbutton.y,
                           &unused_mask);
             scr_move_to (scrollbar_position (ev.xbutton.y) - csrO,
                          scrollbar_size ());
@@ -1717,6 +1715,7 @@ rxvt_term::button_press (XButtonEvent &ev)
 #endif
 
       clickintime = ev.time - MEvent.time < MULTICLICK_TIME;
+
       if (reportmode)
         {
           /* mouse report from vt window */
@@ -1755,9 +1754,18 @@ rxvt_term::button_press (XButtonEvent &ev)
         {
           if (ev.button != MEvent.button)
             MEvent.clicks = 0;
+
           switch (ev.button)
             {
               case Button1:
+                /* allow meta + click to select rectangular areas */
+                /* should be done in screen.C */
+#if ENABLE_FRILLS
+                selection.rect = !! (ev.state & ModMetaMask);
+#else
+                selection.rect = false;
+#endif
+
                 /* allow shift+left click to extend selection */
                 if (ev.state & ShiftMask && ! (priv_modes & PrivMode_mouse_report))
                   {
