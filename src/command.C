@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.6 2003/11/25 17:11:33 pcg Exp $
+ * $Id: command.C,v 1.7 2003/11/25 17:34:47 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -1008,20 +1008,21 @@ rxvt_cmd_getc(pR)
 #endif
 }
 
-#ifdef POINTER_BLANK
 void
 rxvt_term::pointer_unblank ()
 {
-  if (!(Options & Opt_pointerBlank))
-    return;
-
   XDefineCursor (Xdisplay, TermWin.vt, TermWin_cursor);
   rxvt_recolour_cursor (this);
+
+#ifdef POINTER_BLANK
   hidden_pointer = 0;
 
-  pointer_ev.start (NOW + pointerBlankDelay);
+  if (Options & Opt_pointerBlank)
+    pointer_ev.start (NOW + pointerBlankDelay);
+#endif
 }
 
+#ifdef POINTER_BLANK
 void
 rxvt_term::pointer_blank ()
 {

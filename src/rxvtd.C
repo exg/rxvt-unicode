@@ -132,10 +132,9 @@ void server::read_cb (io_watcher &w, short revents)
             environ = envv.begin ();
 
             rxvt_init (argv.size (), argv.begin ());
-            //dR;
-            //rxvt_main_loop (aR);
 
             environ = old_environ;
+            envv.clear (); // can't yet save the env 'cause rxvt modifies it :(
           }
         }
       else
