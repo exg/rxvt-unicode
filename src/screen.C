@@ -1399,12 +1399,7 @@ rxvt_term::scr_erase_savelines ()
   want_refresh = 1;
   ZERO_SCROLLBACK ();
 
-  for (int i = 0; i < TermWin.saveLines; ++i)
-    if (screen.text [i])
-      {
-        screen.tlen[i] = 0;
-        scr_blank_line (screen.text [i], screen.rend [i], (unsigned int)TermWin.ncol, DEFAULT_RSTYLE);
-      }
+  TermWin.nscrolled = 0;
 }
 #endif
 
@@ -2918,9 +2913,6 @@ int
 rxvt_term::selection_request_other (Atom target, int selnum)
 {
   Atom sel;
-#ifdef DEBUG_SELECT
-  char *debug_xa_names[] = { "PRIMARY", "SECONDARY", "CLIPBOARD" };
-#endif
 
   selection_type |= selnum;
 
