@@ -1,11 +1,12 @@
 #include "../config.h"
 #include "rxvt.h"
-#include "keyboard.h"
-#include "command.h"
-#include <string.h>
-#include <X11/X.h>
 
 #ifdef KEYSYM_RESOURCE
+
+#include <cstring>
+
+#include "keyboard.h"
+#include "command.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // default keycode translation map and keyevent handlers
@@ -70,16 +71,11 @@ output_string_meta8 (rxvt_term *rt, unsigned int state, char *buf, int buflen)
 static int
 format_keyrange_string (const char *str, int keysym_offset, char *buf, int bufsize)
 {
-  int len = snprintf (buf, bufsize, str + 1, keysym_offset + str [0]);
+  size_t len = snprintf (buf, bufsize, str + 1, keysym_offset + str [0]);
 
-  if (len >= bufsize)
+  if (len >= (size_t)bufsize)
     {
-      rxvt_warn ("buffer overflowed!\n");
-      *buf = 0;
-    }
-  else if (len < 0)
-    {
-      rxvt_warn ("keyrange_translator(), snprintf error");
+      rxvt_warn ("format_keyrange_string: formatting failed, ignoring key.\n");
       *buf = 0;
     }
 
@@ -88,16 +84,20 @@ format_keyrange_string (const char *str, int keysym_offset, char *buf, int bufsi
 
 ////////////////////////////////////////////////////////////////////////////////
 // return: #bits of '1'
+#if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ > 3)
+# define bitcount(n) (__extension__ ({ uint32_t n__ = (n); __builtin_popcount (n); }))
+#else
 static int
-bitcount (unsigned int n)
+bitcount (uint16_t n)
 {
   int i;
 
-  for (i = 0; n; ++i, n &= (n - 1))
+  for (i = 0; n; ++i, n &= n - 1)
     ;
 
   return i;
 }
+#endif
 
 // return: priority_of_a - priority_of_b
 static int
@@ -163,6 +163,7 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
 
   keysym_t *key = new keysym_t;
   wchar_t *wc = rxvt_mbstowcs (trans);
+printf ("CONV <%s> %x %x %x %x\n", trans, (int)wc[0], (int)wc[1], (int)wc[2], (int)wc[3]);
   const char *translation = rxvt_wcstoutf8 (wc);
   free (wc);
 
@@ -187,12 +188,8 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
               strcpy (translation, translation + 4);
             }
           else
-            {
-              key->range = 1;
-              rxvt_warn ("cannot parse list-type keysym '%s', treating as normal keysym.\n", translation);
-            }
+            rxvt_warn ("cannot parse list-type keysym '%s', treating as normal keysym.\n", translation);
         }
-      else
 
       user_keymap.push_back (key);
       user_translations.push_back (translation);
@@ -249,12 +246,12 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
 
   if (index >= 0)
     {
-      assert (term && keymap [index]);
       const keysym_t &key = *keymap [index];
 
       int keysym_offset = keysym - key.keysym;
 
       wchar_t *wc = rxvt_utf8towcs (key.str);
+
       char *str = rxvt_wcstombs (wc);
       // TODO: do translations, unescaping etc, here (allow \u escape etc.)
       free (wc);
@@ -434,7 +431,7 @@ keyboard_manager::setup_hash ()
       keysym_t *a = sorted_keymap[i];
       for (int j = 0; j < a->range; ++j)
         {
-          int index = find_keysym (a->keysym + j, a->state & OtherModMask);
+          int index = find_keysym (a->keysym + j, a->state);
 
           assert (index >= 0);
           keysym_t *b = keymap [index];
@@ -458,7 +455,7 @@ keyboard_manager::find_keysym (KeySym keysym, unsigned int state)
 
       if (key->keysym <= keysym && key->keysym + key->range > keysym
           // match only the specified bits in state and ignore others
-          && (key->state & OtherModMask) == (key->state & state))
+          && (key->state & state) == key->state)
         return index;
       else if (key->keysym > keysym && key->range == 1)
         return -1;

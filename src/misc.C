@@ -38,7 +38,7 @@ rxvt_wcstombs (const wchar_t *str, int len)
   char *dst = r;
   while (len--)
     {
-      int l = wcrtomb (dst, *str++, mbs);
+      ssize_t l = wcrtomb (dst, *str++, mbs);
       if (l < 0)
         *dst++ = '?';
       else
@@ -47,7 +47,7 @@ rxvt_wcstombs (const wchar_t *str, int len)
 
   *dst++ = 0;
 
-  return r;
+  return (char *)rxvt_realloc (r, dst - r);
 }
 
 wchar_t *
@@ -57,7 +57,7 @@ rxvt_mbstowcs (const char *str, int len)
 
   wchar_t *r = (wchar_t *)rxvt_malloc ((len + 1) * sizeof (wchar_t));
 
-  if (mbstowcs (r, str, len + 1) < 0)
+  if ((ssize_t)mbstowcs (r, str, len + 1) < 0)
     *r = 0;
 
   return r;
@@ -93,9 +93,9 @@ rxvt_wcstoutf8 (const wchar_t *str, int len)
         *p++ = '?';
     }
 
-  *p = 0;
+  *p++ = 0;
 
-  return r;
+  return (char *)rxvt_realloc (r, p - r);
 }
 
 wchar_t *
