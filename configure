@@ -16409,7 +16409,7 @@ fi
 if test x$support_combining = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
-#define ENCODING_COMPOSE 1
+#define ENABLE_COMBINING 1
 _ACEOF
 
 fi
@@ -18033,8 +18033,8 @@ The following are set in config.h
 "
 echo "  pty/tty type:               "$rxvt_cv_ptys
 if test x$support_utmp != xyes; then
-  echo "  utmp support:               disabled
-"
+  echo "  utmp support:               disabled"
+  echo
 else
   echo "  utmp support:               enabled
   utmp file:                  $rxvt_cv_path_utmp
@@ -18042,8 +18042,8 @@ else
   wtmp file:                  $rxvt_cv_path_wtmp
   wtmpx file:                 $rxvt_cv_path_wtmpx
   lastlog file:               $rxvt_cv_path_lastlog
-  ttys/ttytab file:           $rxvt_cv_path_ttytab
-"
+  ttys/ttytab file:           $rxvt_cv_path_ttytab"
+  echo
 fi
 if test x$term != x; then
   echo "  set TERM to:                $term"
@@ -18080,5 +18080,13 @@ if test x$support_xim = xyes -a x$rxvt_cv_func_xlocale = xno; then
   echo ".          XIM is now being DISABLED!                            ."
   echo ".----------------------------------------------------------------."
 fi
-echo "  *** Please check src/feature.h for further options ***
-"
+
+echo "  *** Please check src/feature.h for further options ***"
+echo
+
+echo ".----------------------------------------------------------------."
+echo ". NOTE: most features are disabled by default, try               ."
+echo ". configure --help to get an idea of the optional features       ."
+echo ".----------------------------------------------------------------."
+echo
+
