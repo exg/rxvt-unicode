@@ -43,9 +43,9 @@ AC_SUBST(LINKER,[$LINKER])
 
 CPPFLAGS="-D_GNU_SOURCE -D_XOPEN_SOURCE"
 
-if test x$GXX = xyes; then
-   CXXFLAGS="$CXXFLAGS -fno-exceptions"
-fi
+dnl if test x$GXX = xyes; then
+dnl    CXXFLAGS="$CXXFLAGS" dnl I once had -fno-exceptions, but I am using them now...
+dnl fi
 
 AC_LANG(C++)
 
