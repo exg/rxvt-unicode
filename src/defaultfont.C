@@ -339,7 +339,6 @@ struct rxvt_font_x11 : rxvt_font {
   void clear ();
 
   rxvt_fontprop properties ();
-  rxvt_fontprop properties (XFontStruct *f);
 
   bool load (const rxvt_fontprop &prop);
 
@@ -354,6 +353,9 @@ struct rxvt_font_x11 : rxvt_font {
   bool enc2b, encm;
 
   const char *get_property (XFontStruct *f, const char *property, const char *repl) const;
+  bool set_properties (rxvt_fontprop &p, int height, const char *weight, const char *slant, int avgwidth);
+  bool set_properties (rxvt_fontprop &p, XFontStruct *f);
+  bool set_properties (rxvt_fontprop &p, const char *name);
 };
 
 const char *
@@ -370,26 +372,100 @@ rxvt_font_x11::get_property (XFontStruct *f, const char *property, const char *r
 rxvt_fontprop
 rxvt_font_x11::properties ()
 {
-  return properties (f);
+  rxvt_fontprop p;
+  set_properties (p, f);
+  return p;
 }
 
-rxvt_fontprop
-rxvt_font_x11::properties (XFontStruct *f)
+bool
+rxvt_font_x11::set_properties (rxvt_fontprop &p, int height, const char *weight, const char *slant, int avgwidth)
 {
-  rxvt_fontprop p;
+  p.width = avgwidth ? (avgwidth + 1) / 10 : (height + 1) / 2;
+  p.height = height;
+  p.weight = *weight == 'B' || *weight == 'b' ? rxvt_fontprop::bold : rxvt_fontprop::medium;
+  p.slant  = *slant == 'r' || *slant == 'R' ? rxvt_fontprop::roman : rxvt_fontprop::italic;
 
+  return true;
+}
+
+bool
+rxvt_font_x11::set_properties (rxvt_fontprop &p, XFontStruct *f)
+{
   const char *weight = get_property (f, "WEIGHT_NAME", "medium");
   const char *slant  = get_property (f, "SLANT", "r");
 
-  unsigned long avgwidth;
-  p.width = XGetFontProperty (f, XInternAtom (DISPLAY, "AVERAGE_WIDTH", 0), &avgwidth)
-            ? avgwidth / 10
-            : (height + 1) / 2;
-  p.height = height;
-  p.weight = *weight == 'B' || *weight == 'b' ? rxvt_fontprop::bold : rxvt_fontprop::medium;
-  p.slant = *slant == 'r' || *slant == 'R' ? rxvt_fontprop::roman : rxvt_fontprop::italic;
+  unsigned long height;
+  if (!XGetFontProperty (f, XInternAtom (DISPLAY, "PIXEL_SIZE", 0), &height))
+    return false;
 
-  return p;
+  unsigned long avgwidth;
+  if (!XGetFontProperty (f, XInternAtom (DISPLAY, "AVERAGE_WIDTH", 0), &avgwidth))
+    avgwidth = 0;
+
+  return set_properties (p, height, weight, slant, avgwidth);
+}
+
+bool
+rxvt_font_x11::set_properties (rxvt_fontprop &p, const char *name)
+{
+  int slashes = 0;
+  const char *comp[12];
+
+  for (const char *c = name; *c; c++)
+    if (*c == '-')
+      {
+        comp[slashes++] = c + 1;
+        if (slashes >= 13)
+          break;
+      }
+
+  /* can we short-circuit the costly XLoadQueryFont? */
+  if (slashes >= 13
+      && (*comp[ 6] >= '1' && *comp[ 6] <= '9')
+      && (*comp[11] >= '0' && *comp[11] <= '9'))
+    return set_properties (p, atoi (comp[6]), comp[2], comp[3], atoi (comp[11]));
+
+  XFontStruct *f = XLoadQueryFont (DISPLAY, name);
+
+  if (f)
+    {
+      // the font should really exists now. if not, we have a problem
+      // (e.g. if the user did xset fp rehash just when we were searching fonts).
+      // in that case, just return garbage.
+      bool ret = set_properties (p, f);
+      XFreeFont (DISPLAY, f);
+      return ret;
+    }
+  else
+    return false;
+}
+
+// fix the size of scalable fonts
+static void
+fix_scalable (char *buf, const char *name, const rxvt_fontprop &prop)
+{
+  int slashes = 0;
+  const char *size;
+
+  for (const char *c = name; *c; c++)
+    if (*c == '-')
+      {
+        if (slashes == 6)
+          size = c + 1;
+
+        if (++slashes >= 13)
+          break;
+      }
+
+  if (slashes >= 13 && size[0] == '0')
+    {
+      strncpy (buf, name, size - name);
+      buf += size - name;
+      buf += sprintf (buf, "%d", prop.height);
+      strcpy (buf, size + 1);
+    }
+  else
+    strcpy (buf, name);
 }
 
 bool
@@ -399,40 +475,41 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
 
   char **list;
   int count;
-  XFontStruct *info;
-  list = XListFontsWithInfo (DISPLAY, name, 128, &count, &info);
+  list = XListFonts (DISPLAY, name, 512, &count);
+  set_name (0);
 
   if (!list)
     return false;
 
   int bestdiff = 0x7fffffff;
-  XFontStruct *best = 0;
   for (int i = 0; i < count; i++)
     {
-      XFontStruct *f = info + i;
+      rxvt_fontprop p;
+      char fname[1024];
+      fix_scalable (fname, list[i], prop);
 
-      if (f->ascent + f->descent <= prop.height) // weed out too large fonts
+      if (!set_properties (p, fname))
+        continue;
+
+      if (p.height > prop.height) // weed out too large fonts
+        continue;
+
+      int diff = (prop.height - p.height) * 32
+               + abs (prop.weight - p.weight)
+               + abs (prop.slant  - p.slant );
+
+      if (!name // compare against best found so far
+          || diff < bestdiff)
         {
-          rxvt_fontprop p = properties (f);
-          int diff = (prop.height - f->ascent + f->descent) * 32
-                   + abs (prop.weight - p.weight)
-                   + abs (prop.slant  - p.slant );
-
-          if (!best // compare against best found so far
-              || diff < bestdiff)
-            {
-              best = f;
-              bestdiff = diff;
-            }
+          set_name (strdup (fname));
+          bestdiff = diff;
         }
     }
 
-  if (!best)
+  XFreeFontNames (list);
+
+  if (!name)
     return false;
-
-  set_name (strdup (list[best - info]));
-
-  XFreeFontInfo (list, info, count);
 
   f = XLoadQueryFont (DISPLAY, name);
 
@@ -827,7 +904,7 @@ rxvt_font_xft::draw (int x, int y,
   else
     clear_rect (x, y, r->TermWin.fwidth * len, r->TermWin.fheight, bg);
 
-  if (!slow && width == r->TermWin.fwidth)
+  if (!slow && width == r->TermWin.fwidth && 0)
     {
       if (sizeof (text_t) == sizeof (FcChar16))
         XftDrawString16 (d, &r->PixColors[fg].c, f, x, y + r->TermWin.fbase, (const FcChar16 *)text, len);
@@ -840,10 +917,20 @@ rxvt_font_xft::draw (int x, int y,
         {
           if (*text != NOCHAR && *text != ' ')
             {
+              XGlyphInfo extents;
               if (sizeof (text_t) == sizeof (FcChar16))
-                XftDrawString16 (d, &r->PixColors[fg].c, f, x, y + r->TermWin.fbase, (const FcChar16 *)text, 1);
+                {
+                  XftTextExtents16 (DISPLAY, f, (const FcChar16 *)text, 1, &extents);
+                  XftDrawString16 (d, &r->PixColors[fg].c, f, x + extents.x + (r->TermWin.fwidth - extents.width) / 2,
+                                   y + r->TermWin.fbase, (const FcChar16 *)text, 1);
+                }
               else
-                XftDrawString32 (d, &r->PixColors[fg].c, f, x, y + r->TermWin.fbase, (const FcChar32 *)text, 1);
+                {
+                  XGlyphInfo extents;
+                  XftTextExtents32 (DISPLAY, f, (const FcChar32 *)text, 1, &extents);
+                  XftDrawString32 (d, &r->PixColors[fg].c, f, x + extents.x + (r->TermWin.fwidth - extents.width) / 2,
+                                   y + r->TermWin.fbase, (const FcChar32 *)text, 1);
+                }
             }
 
           x += r->TermWin.fwidth;

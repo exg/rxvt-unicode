@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*--------------------------------------*
  * File:        screen.c
  *---------------------------------------------------------------------------*
- * $Id: screen.C,v 1.13 2003/12/24 09:22:29 pcg Exp $
+ * $Id: screen.C,v 1.14 2003/12/26 07:42:23 pcg Exp $
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
  *
@@ -901,36 +901,27 @@ rxvt_scr_add_lines(pR_ const uint32_t *str, int nlines, int len)
             }
 
         rend_t rend = SET_FONT (R->rstyle, R->TermWin.fontset->find_font (c));
+        // rely on wcwidth to tell us the character width, at least for non-ascii
+        int width = c <= 128 ? 1 : wcwidth (c);
 
-        stp[R->screen.cur.col] = c;
-        srp[R->screen.cur.col] = rend;
-
-        if (c > 255)
+        // width 0 characters (e.g. combining chars) are ignored. your problem, really
+        while (width-- > 0)
           {
-            // rely on wcwidth to tell us the character width, at least for non iso-8859-1
-            int width = wcwidth (c);
-            
-            if (width > 1)
+            stp[R->screen.cur.col] = c;
+            srp[R->screen.cur.col] = rend;
+
+            if (R->screen.cur.col < last_col - 1)
+              R->screen.cur.col++;
+            else
               {
-                while (--width > 0 && R->screen.cur.col < last_col - 1)
-                  {
-
-                    srp[R->screen.cur.col] |= RS_wide;
-
-                    R->screen.cur.col++;
-                    stp[R->screen.cur.col] = NOCHAR;
-                    srp[R->screen.cur.col] = rend;
-                  }
+                R->screen.tlen[row] = last_col;
+                if (R->screen.flags & Screen_Autowrap)
+                  R->screen.flags |= Screen_WrapNext;
+                break;
               }
-          }
 
-        if (R->screen.cur.col < last_col - 1)
-            R->screen.cur.col++;
-        else {
-            R->screen.tlen[row] = last_col;
-            if (R->screen.flags & Screen_Autowrap)
-                R->screen.flags |= Screen_WrapNext;
-        }
+            c = NOCHAR;
+          }
     }
     if (R->screen.tlen[row] != -1)      /* XXX: think about this */
         MAX_IT(R->screen.tlen[row], R->screen.cur.col);
