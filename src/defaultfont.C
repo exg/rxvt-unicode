@@ -98,6 +98,10 @@ const struct rxvt_fallback_font {
   { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-c-*-iso10646-1"         },
   { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1"         },
 
+#if UNICODE_3 && XFT
+  { CS_UNICODE,      "xft:Code2001"                                }, // contains many plane-1 characters
+#endif
+
   { CS_UNKNOWN, 0 }
 };
 
