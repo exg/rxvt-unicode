@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2005-01-17" "4.8" "RXVT-UNICODE"
+.TH rxvt 7 "2005-01-18" "4.8" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "FREQUENTLY ASKED QUESTIONS"
