@@ -1,0 +1,28 @@
+#!/usr/bin/perl
+
+# embed a rxvt inside another X app
+# see also pty-fd
+
+# doesn't handle sigchld
+
+use Gtk2;
+
+init Gtk2;
+
+my $window = new Gtk2::Window 'toplevel';
+
+my $frame = new Gtk2::Frame "embedded rxvt-unicode terminal";
+
+$window->add ($frame);
+
+my $rxvt = new Gtk2::DrawingArea;
+$frame->add ($rxvt);
+$frame->set_size_request (700, 400);
+$window->show_all;
+my $xid = $rxvt->window->get_xid;
+
+system "rxvt -embed $xid &";
+
+$window->show_all;
+
+main Gtk2;

@@ -313,10 +313,10 @@ OPTIONS
         Turn on/off secondary screen scroll (default enabled); resource
         secondaryScroll.
 
-    -keysym.*sym*: *string*
+    -keysym.*sym* *string*
         Remap a key symbol. See resource keysym.
 
-    -embed: *windowid*
+    -embed *windowid*
         Tells rxvt to embed it's windows into an already-existing window,
         which enables applications to easily embed a terminal.
 
@@ -332,6 +332,41 @@ OPTIONS
         file descriptors to communicate with the programs within the
         terminal. This works regardless of wether the "-embed" option was
         used or not.
+
+        Here is a short Gtk2-perl snippet that illustrates how this option
+        can be used (a longer example is in doc/embed):
+
+           my $rxvt = new Gtk2::DrawingArea;
+           $...->add ($rxvt); # important to add it somewhere first
+           $rxvt->realize; # now it can be realized
+           my $xid = $rxvt->window->get_xid;
+
+           system "rxvt -embed $xid &";
+
+    -pty-fd *fileno*
+        Tells rxvt NOT to execute any commands or create a new pty/tty pair
+        but instead use the given filehandle as the tty master. This is
+        useful if you want to drive rxvt as a generic terminal emulator
+        without having to run a program within it.
+
+        If this switch is given, rxvt will not create any utmp/wtmp entries
+        and will not tinker with pty/tty permissions - you have to do that
+        yourself if you want that.
+
+        Here is a example in perl that illustrates how this option can be
+        used (a longer example is in doc/pty-fd):
+
+           use IO::Pty;
+           use Fcntl;
+
+           my $pty = new IO::Pty;
+           fcntl $pty, F_SETFD, 0; # clear close-on-exec
+
+           system "rxvt -pty-fd " . (fileno $pty) . "&";
+
+           # now communicate with rxvt
+           my $slave = $pty->slave;
+           while (<$slave>) { print $slave "got <$_>\n" }
 
 RESOURCES (available also as long-options)
     Note: `rxvt --help' gives a list of all resources (long options)

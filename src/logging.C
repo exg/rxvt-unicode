@@ -75,7 +75,7 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
 #ifdef HAVE_UTMP_PID
   int i;
 #endif
-  struct passwd  *pwent = getpwuid (getuid ());
+  struct passwd *pwent = getpwuid (getuid ());
 
   if (!strncmp (pty, "/dev/", 5))
     pty += 5;		/* skip /dev/ prefix */

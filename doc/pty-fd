@@ -1,0 +1,19 @@
+#!/usr/bin/perl
+
+use IO::Pty;
+use Fcntl;
+
+my $pty = new IO::Pty;
+fcntl $pty, F_SETFD, 0; # clear close-on-exec
+
+system "rxvt -pty-fd " . (fileno $pty) . "&";
+
+# now communicate with rxvt
+my $slave = $pty->slave;
+
+print $slave "hi! please enter something and press return (ctrl-d to exit):\n";
+
+while (<$slave>) {
+   print $slave "you entered: $_";
+}
+

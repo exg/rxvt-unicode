@@ -611,6 +611,7 @@ enum {
   Rs_borderLess,
   Rs_lineSpace,
   Rs_embed,
+  Rs_pty_fd,
 #endif
   Rs_cutchars,
   Rs_modifier,

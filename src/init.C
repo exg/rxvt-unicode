@@ -227,8 +227,6 @@ rxvt_term::init_vars ()
   MEvent.button = AnyButton;
   options = DEFAULT_OPTIONS;
   want_refresh = 1;
-  cmd_pid = -1;
-  pty.pty = pty.tty = -1;
   priv_modes = SavedModes = PrivMode_Default;
   TermWin.focus = 0;
   TermWin.ncol = 80;
@@ -675,6 +673,7 @@ rxvt_term::init_command (const char *const *argv)
       priv_modes |= PrivMode_scrollBar;
       SavedModes |= PrivMode_scrollBar;
     }
+
   if (menubar_visible ())
     {
       priv_modes |= PrivMode_menuBar;
@@ -1419,8 +1418,16 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
 void
 rxvt_term::run_command (const char *const *argv)
 {
-  if (!pty.get ())
-    rxvt_fatal ("can't initialize pseudo-tty, aborting.\n");
+#if ENABLE_FRILLS
+  if (rs[Rs_pty_fd])
+    {
+      pty.pty = atoi (rs[Rs_pty_fd]);
+      fcntl (pty.pty, F_SETFL, O_NONBLOCK);
+    }
+  else
+#endif
+    if (!pty.get ())
+      rxvt_fatal ("can't initialize pseudo-tty, aborting.\n");
 
   pty.set_utf8_mode (enc_utf8);
 
@@ -1440,6 +1447,11 @@ rxvt_term::run_command (const char *const *argv)
 
   rxvt_get_ttymode (&tio, er);
 
+#if ENABLE_FRILLS
+  if (rs[Rs_pty_fd])
+    return;
+#endif
+
   sw_chld.start (SIGCHLD);
 
 #ifndef __QNX__
@@ -1447,7 +1459,10 @@ rxvt_term::run_command (const char *const *argv)
   switch (cmd_pid = fork ())
     {
       case -1:
-        rxvt_fatal ("can't fork, aborting.\n");
+        {
+          cmd_pid = 0;
+          rxvt_fatal ("can't fork, aborting.\n");
+        }
       case 0:
         init_env ();
 

@@ -2604,7 +2604,7 @@ rxvt_term::cmd_parse ()
               // unfortunately other programs are even more buggy and dislike
               // being sent SIGWINCH, so only do it when we were in fact being
               // resized.
-              if (seen_resize)
+              if (seen_resize && cmd_pid)
                 kill (-cmd_pid, SIGWINCH);
             }
 

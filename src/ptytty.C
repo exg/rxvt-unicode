@@ -336,6 +336,9 @@ static struct ttyconf {
 void
 rxvt_ptytty::privileges (rxvt_privaction action)
 {
+  if (tty < 0)
+    return;
+
   rxvt_privileges (RESTORE);
 
   if (action == SAVE)
@@ -347,14 +350,12 @@ rxvt_ptytty::privileges (rxvt_privaction action)
         ;//next_tty_action = IGNORE;
       else
 # endif
-
         {
           chown (name, getuid (), ttyconf.gid);      /* fail silently */
           chmod (name, ttyconf.mode);
 # ifdef HAVE_REVOKE
           revoke (name);
 # endif
-
         }
     }
   else

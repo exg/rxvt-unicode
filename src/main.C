@@ -847,7 +847,7 @@ rxvt_term::tt_winch ()
 #if 0
   // TIOCSWINSZ⎈ is supposed to do this automatically and correctly
   if (cmd_pid)               /* force through to the command */
-    kill (cmd_pid, SIGWINCH);
+    kill (-cmd_pid, SIGWINCH);
 #endif
 }
 

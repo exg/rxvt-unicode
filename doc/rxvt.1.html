@@ -513,13 +513,13 @@ Turn on/off secondary screen scroll (default enabled); resource
 <strong>secondaryScroll</strong>.
 </dd>
 <p></p>
-<dt><strong><a name="item__2dkeysym_2esym_3a_string"><strong>-keysym.</strong><em>sym</em>: <em>string</em></a></strong><br />
+<dt><strong><a name="item__2dkeysym_2esym_string"><strong>-keysym.</strong><em>sym</em> <em>string</em></a></strong><br />
 </dt>
 <dd>
 Remap a key symbol. See resource <strong>keysym</strong>.
 </dd>
 <p></p>
-<dt><strong><a name="item__2dembed_3a_windowid"><strong>-embed</strong>: <em>windowid</em></a></strong><br />
+<dt><strong><a name="item__2dembed_windowid"><strong>-embed</strong> <em>windowid</em></a></strong><br />
 </dt>
 <dd>
 Tells rxvt to embed it's windows into an already-existing window,
@@ -540,6 +540,59 @@ descriptors passed to it (except for stdin/out/err, of course), so you
 can use file descriptors to communicate with the programs within the
 terminal. This works regardless of wether the <code>-embed</code> option was used or
 not.</p>
+</dd>
+<dd>
+<p>Here is a short Gtk2-perl snippet that illustrates how this option can be
+used (a longer example is in <em>doc/embed</em>):</p>
+</dd>
+<dd>
+<pre>
+   my $rxvt = new Gtk2::DrawingArea;
+   $...-&gt;add ($rxvt); # important to add it somewhere first
+   $rxvt-&gt;realize; # now it can be realized
+   my $xid = $rxvt-&gt;window-&gt;get_xid;</pre>
+</dd>
+<dd>
+<pre>
+   system &quot;rxvt -embed $xid &amp;&quot;;</pre>
+</dd>
+<p></p>
+<dt><strong><a name="item__2dpty_2dfd_fileno"><strong>-pty-fd</strong> <em>fileno</em></a></strong><br />
+</dt>
+<dd>
+Tells rxvt NOT to execute any commands or create a new pty/tty
+pair but instead use the given filehandle as the tty master. This is
+useful if you want to drive rxvt as a generic terminal emulator
+without having to run a program within it.
+</dd>
+<dd>
+<p>If this switch is given, rxvt will not create any utmp/wtmp
+entries and will not tinker with pty/tty permissions - you have to do that
+yourself if you want that.</p>
+</dd>
+<dd>
+<p>Here is a example in perl that illustrates how this option can be used (a
+longer example is in <em>doc/pty-fd</em>):</p>
+</dd>
+<dd>
+<pre>
+   use IO::Pty;
+   use Fcntl;</pre>
+</dd>
+<dd>
+<pre>
+   my $pty = new IO::Pty;
+   fcntl $pty, F_SETFD, 0; # clear close-on-exec</pre>
+</dd>
+<dd>
+<pre>
+   system &quot;rxvt -pty-fd &quot; . (fileno $pty) . &quot;&amp;&quot;;</pre>
+</dd>
+<dd>
+<pre>
+   # now communicate with rxvt
+   my $slave = $pty-&gt;slave;
+   while (&lt;$slave&gt;) { print $slave &quot;got &lt;$_&gt;\n&quot; }</pre>
 </dd>
 <p></p></dl>
 <p>

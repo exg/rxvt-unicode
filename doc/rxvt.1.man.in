@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-02-16" "5.2" "RXVT-UNICODE"
+.TH rxvt 1 "2005-02-17" "5.2" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -443,11 +443,11 @@ Turn on/off secondary screen (default enabled); resource
 .IX Item "-ssr|+ssr"
 Turn on/off secondary screen scroll (default enabled); resource
 \&\fBsecondaryScroll\fR.
-.IP "\fB\-keysym.\fR\fIsym\fR: \fIstring\fR" 4
-.IX Item "-keysym.sym: string"
+.IP "\fB\-keysym.\fR\fIsym\fR \fIstring\fR" 4
+.IX Item "-keysym.sym string"
 Remap a key symbol. See resource \fBkeysym\fR.
-.IP "\fB\-embed\fR: \fIwindowid\fR" 4
-.IX Item "-embed: windowid"
+.IP "\fB\-embed\fR \fIwindowid\fR" 4
+.IX Item "-embed windowid"
 Tells @@RXVT_NAME@@ to embed it's windows into an already-existing window,
 which enables applications to easily embed a terminal.
 .Sp
@@ -463,6 +463,53 @@ descriptors passed to it (except for stdin/out/err, of course), so you
 can use file descriptors to communicate with the programs within the
 terminal. This works regardless of wether the \f(CW\*(C`\-embed\*(C'\fR option was used or
 not.
+.Sp
+Here is a short Gtk2\-perl snippet that illustrates how this option can be
+used (a longer example is in \fIdoc/embed\fR):
+.Sp
+.Vb 4
+\&   my $rxvt = new Gtk2::DrawingArea;
+\&   $...->add ($rxvt); # important to add it somewhere first
+\&   $rxvt->realize; # now it can be realized
+\&   my $xid = $rxvt->window->get_xid;
+.Ve
+.Sp
+.Vb 1
+\&   system "@@RXVT_NAME@@ -embed $xid &";
+.Ve
+.IP "\fB\-pty\-fd\fR \fIfileno\fR" 4
+.IX Item "-pty-fd fileno"
+Tells @@RXVT_NAME@@ \s-1NOT\s0 to execute any commands or create a new pty/tty
+pair but instead use the given filehandle as the tty master. This is
+useful if you want to drive @@RXVT_NAME@@ as a generic terminal emulator
+without having to run a program within it.
+.Sp
+If this switch is given, @@RXVT_NAME@@ will not create any utmp/wtmp
+entries and will not tinker with pty/tty permissions \- you have to do that
+yourself if you want that.
+.Sp
+Here is a example in perl that illustrates how this option can be used (a
+longer example is in \fIdoc/pty\-fd\fR):
+.Sp
+.Vb 2
+\&   use IO::Pty;
+\&   use Fcntl;
+.Ve
+.Sp
+.Vb 2
+\&   my $pty = new IO::Pty;
+\&   fcntl $pty, F_SETFD, 0; # clear close-on-exec
+.Ve
+.Sp
+.Vb 1
+\&   system "@@RXVT_NAME@@ -pty-fd " . (fileno $pty) . "&";
+.Ve
+.Sp
+.Vb 3
+\&   # now communicate with rxvt
+\&   my $slave = $pty->slave;
+\&   while (<$slave>) { print $slave "got <$_>\en" }
+.Ve
 .SH "RESOURCES (available also as long\-options)"
 .IX Header "RESOURCES (available also as long-options)"
 Note: `@@RXVT_NAME@@ \-\-help' gives a list of all resources (long
