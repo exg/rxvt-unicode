@@ -193,6 +193,8 @@ const char *const xa_names[NUM_XA] =
 bool
 rxvt_term::init_vars ()
 {
+  sw_term.start (SIGTERM);
+
   pix_colors_focused = new rxvt_color [TOTAL_COLORS];
 #ifdef OFF_FOCUS_FADING
   pix_colors_unfocused = new rxvt_color [TOTAL_COLORS];
@@ -619,7 +621,7 @@ rxvt_term::init_xlocale ()
 
       if (!XSupportsLocale ())
         {
-          rxvt_warn ("the locale is not supported by Xlib, working withotu locale support.\n");
+          rxvt_warn ("the locale is not supported by Xlib, working without locale support.\n");
           return;
         }
 
@@ -1391,6 +1393,8 @@ rxvt_term::run_command (const char *const *argv)
 
   /* set initial window size */
   tt_winch ();
+
+  sw_chld.start (SIGCHLD);
 
 #ifndef __QNX__
   /* spin off the command interpreter */
