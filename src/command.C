@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.19 2003/12/18 05:45:11 pcg Exp $
+ * $Id: command.C,v 1.20 2003/12/18 07:31:18 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -50,6 +50,8 @@
 #include "version.h"
 #include "command.h"
 
+#include <wchar.h>
+
 /*----------------------------------------------------------------------*/
 
 /*{{{ Convert the keypress event into a string */
@@ -90,24 +92,36 @@ rxvt_lookup_key(pR_ XKeyEvent *ev)
 	Status status_return;
 
 #ifdef X_HAVE_UTF8_STRING
-	len = Xutf8LookupString (R->Input_Context, ev, (char *)kbuf,
-			         KBUFSZ, &keysym, &status_return);
-#else
-        wchar_t wkbuf[KBUFSZ + 1];
-
-        // assume wchar_t == unicode or better
-	len = XwcLookupString (R->Input_Context, ev, wkbuf,
-			       KBUFSZ, &keysym, &status_return);
-
-        if (status_return == XLookupChars
-            || status_return == XLookupBoth)
-          {
-            wkbuf[len] = 0;
-            len = wcstombs ((char *)kbuf, wkbuf, KBUFSZ);
-          }
+        if (R->enc_utf8)
+          len = Xutf8LookupString (R->Input_Context, ev, (char *)kbuf,
+                                   KBUFSZ, &keysym, &status_return);
         else
-          len = 0;
 #endif
+          {
+            wchar_t wkbuf[KBUFSZ + 1];
+
+            // the XOpenIM manpage lies about hardcoding the locale
+            // at the point of XOpenIM, so temporarily switch locales
+            if (R->rs[Rs_imLocale])
+              SET_LOCALE (R->rs[Rs_imLocale]);
+            // assume wchar_t == unicode or better
+            len = XwcLookupString (R->Input_Context, ev, wkbuf,
+                                   KBUFSZ, &keysym, &status_return);
+            if (R->rs[Rs_imLocale])
+              SET_LOCALE (R->locale);
+
+            if (status_return == XLookupChars
+                || status_return == XLookupBoth)
+              {
+                wkbuf[len] = 0;
+                len = wcstombs ((char *)kbuf, wkbuf, KBUFSZ);
+                if (len < 0)
+                  len = 0;
+              }
+            else
+              len = 0;
+          }
+
 	valid_keysym = status_return == XLookupKeySym
 		       || status_return == XLookupBoth;
       }
@@ -905,51 +919,23 @@ rxvt_term::pty_cb (io_watcher &w, short revents)
 uint32_t
 rxvt_term::next_char ()
 {
-  struct mbstate &s = mbstate;
-
   while (cmdbuf_ptr < cmdbuf_endp)
     {
-      uint8_t ch = *cmdbuf_ptr;
+      if (*cmdbuf_ptr < 0x80) // assume < 0x80 to be ascii ALWAYS (all shift-states etc.) uh-oh
+        return *cmdbuf_ptr++;
 
-      if (s.cnt)
-        {
-          if ((ch & 0xc0) == 0x80)
-            {
-              cmdbuf_ptr++;
+      wchar_t wc;
+      int len = mbrtowc (&wc, (char *)cmdbuf_ptr, cmdbuf_endp - cmdbuf_ptr, &mbstate.mbs);
 
-              /* continuation */
-              s.reg = (s.reg << 6) | (ch & 0x7f);
+      if (len == (size_t)-2)
+        return NOCHAR;
 
-              if (--s.cnt == 0 && s.reg >= 128) /* if !inrange then corruption or Racking */
-                return s.reg;
+      if (len == (size_t)-1)
+        return *cmdbuf_ptr++; // the _occasional_ latin1 character is allowed to slip through
 
-              continue;
-            }
-          else
-            {
-              s.cnt = 0;
-              return s.orig; /* the _occasional_ non-utf-8 character may slip through... */
-            }
-        }
-      
-      if ((ch & 0xc0) == 0xc0)
-        {
-          cmdbuf_ptr++;
-
-          /* first byte */
-          s.orig = ch; /* for broken encodings */
-          s.reg = ch;
-          if ((ch & 0xe0) == 0xc0) { s.reg &= 0x1f; s.cnt = 1; }
-          if ((ch & 0xf0) == 0xe0) { s.reg &= 0x0f; s.cnt = 2; }
-          if ((ch & 0xf8) == 0xf0) { s.reg &= 0x07; s.cnt = 3; }
-          if ((ch & 0xfc) == 0xf8) { s.reg &= 0x03; s.cnt = 4; }
-          if ((ch & 0xfe) == 0xfc) { s.reg &= 0x01; s.cnt = 5; }
-        }
-      else
-        {
-          cmdbuf_ptr++; /* _occasional_ non-utf8 may slip through... */
-          return ch;
-        }
+      // assume wchar == unicode
+      cmdbuf_ptr += len;
+      return wc;
     }
 
   return NOCHAR;

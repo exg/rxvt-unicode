@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        init.c
  *----------------------------------------------------------------------*
- * $Id: init.C,v 1.14 2003/12/18 05:45:11 pcg Exp $
+ * $Id: init.C,v 1.15 2003/12/18 07:31:19 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -797,6 +797,23 @@ rxvt_term::init_env ()
  * This should support all European type languages.
  */
 void
+rxvt_term::set_locale (const char *locale)
+{
+#if HAVE_XSETLOCALE || HAVE_SETLOCALE
+  free (this->locale);
+  this->locale = strdup (setlocale (LC_CTYPE, ""));
+#endif
+#if HAVE_NL_LANGINFO
+  free (codeset);
+  codeset = strdup (nl_langinfo (CODESET));
+  enc_utf8 = !STRCASECMP (codeset, "UTF-8")
+          || !STRCASECMP (codeset, "UTF8");
+#else
+  enc_utf8 = 1;
+#endif
+}
+
+void
 rxvt_term::init_xlocale ()
 {
 #ifdef USE_XIM
@@ -816,8 +833,6 @@ rxvt_term::init_xlocale ()
           rxvt_print_error ("The locale is not supported by Xlib");
           return;
         }
-
-      rxvt_setTermFontSet (this, 0);
 
       /* see if we can connect yet */
       rxvt_IMInstantiateCallback (Xdisplay, NULL, NULL);
@@ -1124,7 +1139,6 @@ rxvt_Create_Windows(pR_ int argc, const char *const *argv)
   long            vt_emask;
 
 #ifdef PREFER_24BIT
-
   XSetWindowAttributes attributes;
   XWindowAttributes gattr;
 

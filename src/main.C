@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.15 2003/12/18 05:45:11 pcg Exp $
+ * $Id: main.C,v 1.16 2003/12/18 07:31:19 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -51,9 +51,9 @@ static char curlocale[128];
 void
 rxvt_set_locale (const char *locale)
 {
-  if (locale && strncmp (locale, curlocale, 128))
+  if (locale && STRNCMP (locale, curlocale, 128))
     {
-      strncpy (curlocale, locale, 128);
+      STRNCPY (curlocale, locale, 128);
       setlocale (LC_CTYPE, curlocale);
     }
 }
@@ -204,16 +204,11 @@ rxvt_term::init (int argc, const char *const *argv)
   rxvt_privileges (this, SAVE);
   rxvt_privileges (this, IGNORE);
 
-#if HAVE_XSETLOCALE || HAVE_SETLOCALE
-  locale = strdup (setlocale (LC_CTYPE, ""));
-#endif
-#if HAVE_NL_LANGINFO
-  codeset = strdup (nl_langinfo (CODESET));
-#endif
-
   init_secondary ();
 
   const char **cmd_argv = init_resources (argc, argv);
+
+  set_locale ("");
 
 #if (MENUBAR_MAX)
   rxvt_menubar_read (this, rs[Rs_menu]);
@@ -1075,18 +1070,6 @@ rxvt_IMSendSpot(pR)
     XFree(preedit_attr);
 }
 
-/* EXTPROTO */
-void
-rxvt_setTermFontSet(pR_ int idx)
-{
-    char           *string;
-    long            length;
-    int             success = 0;
-
-    if (idx < 0 || idx >= MAX_NFONTS)
-        return;
-}
-
 /* INTPROTO */
 void
 rxvt_setPreeditArea (pR_ XRectangle * preedit_rect, XRectangle * status_rect,
@@ -1128,6 +1111,123 @@ rxvt_IMDestroyCallback(XIM xim __attribute__ ((unused)), XPointer client_data
     if (STRCMP(R->locale, "C"))
         XRegisterIMInstantiateCallback(R->Xdisplay, NULL, NULL, NULL,
                                        rxvt_IMInstantiateCallback, NULL);
+}
+
+/*
+ * Try to open a XIM with the current modifiers, then see if we can
+ * open a suitable preedit type
+ */
+static Bool
+rxvt_IM_get_IC (pR)
+{
+    int             i, j, found;
+    XIM             xim;
+    XPoint          spot;
+    XRectangle      rect, status_rect, needed_rect;
+    unsigned long   fg, bg;
+    const char     *p;
+    char          **s;
+    XIMStyles      *xim_styles;
+    XVaNestedList   preedit_attr, status_attr;
+    XIMCallback     ximcallback;
+
+    D_MAIN((stderr, "rxvt_IM_get_IC()"));
+    xim = XOpenIM (R->Xdisplay, NULL, NULL, NULL);
+    if (xim == NULL)
+        return False;
+
+    xim_styles = NULL;
+    if (XGetIMValues (xim, XNQueryInputStyle, &xim_styles, NULL)
+        || !xim_styles || !xim_styles->count_styles) {
+        XCloseIM(xim);
+        return False;
+    }
+
+    p = R->rs[Rs_preeditType] ? R->rs[Rs_preeditType]
+        : "OverTheSpot,OffTheSpot,Root";
+    s = rxvt_splitcommastring(p);
+    for (i = found = 0; !found && s[i]; i++) {
+        if (!STRCMP(s[i], "OverTheSpot"))
+            R->input_style = (XIMPreeditPosition | XIMStatusNothing);
+        else if (!STRCMP(s[i], "OffTheSpot"))
+            R->input_style = (XIMPreeditArea | XIMStatusArea);
+        else if (!STRCMP(s[i], "Root"))
+            R->input_style = (XIMPreeditNothing | XIMStatusNothing);
+
+        for (j = 0; j < xim_styles->count_styles; j++)
+            if (R->input_style == xim_styles->supported_styles[j]) {
+                found = 1;
+                break;
+            }
+    }
+    for (i = 0; s[i]; i++)
+        free(s[i]);
+    free(s);
+    XFree(xim_styles);
+
+    if (!found) {
+        XCloseIM(xim);
+        return False;
+    }
+
+    ximcallback.callback = rxvt_IMDestroyCallback;
+
+    /* XXX: not sure why we need this (as well as IC one below) */
+    XSetIMValues(xim, XNDestroyCallback, &ximcallback, NULL);
+
+    preedit_attr = status_attr = NULL;
+
+    if (R->input_style & XIMPreeditPosition) {
+        rxvt_setSize(aR_ & rect);
+        rxvt_setPosition(aR_ & spot);
+        rxvt_setColor(aR_ & fg, &bg);
+
+        preedit_attr = XVaCreateNestedList(0, XNArea, &rect,
+                                           XNSpotLocation, &spot,
+                                           XNForeground, fg, XNBackground, bg,
+                                       //XNFontSet, R->TermWin.fontset,
+                                           NULL);
+    } else if (R->input_style & XIMPreeditArea) {
+        rxvt_setColor(aR_ & fg, &bg);
+
+    /*
+     * The necessary width of preedit area is unknown
+     * until create input context.
+     */
+        needed_rect.width = 0;
+
+        rxvt_setPreeditArea(aR_ & rect, &status_rect, &needed_rect);
+
+        preedit_attr = XVaCreateNestedList(0, XNArea, &rect,
+                                           XNForeground, fg, XNBackground, bg,
+                                       //XNFontSet, R->TermWin.fontset,
+                                           NULL);
+        status_attr = XVaCreateNestedList(0, XNArea, &status_rect,
+                                          XNForeground, fg, XNBackground, bg,
+                                      //XNFontSet, R->TermWin.fontset,
+                                          NULL);
+    }
+    R->Input_Context = XCreateIC(xim, XNInputStyle, R->input_style,
+                                 XNClientWindow, R->TermWin.parent[0],
+                                 XNFocusWindow, R->TermWin.parent[0],
+                                 XNDestroyCallback, &ximcallback,
+                                 preedit_attr ? XNPreeditAttributes : NULL,
+                                 preedit_attr,
+                                 status_attr ? XNStatusAttributes : NULL,
+                                 status_attr, NULL);
+    if (preedit_attr)
+        XFree(preedit_attr);
+    if (status_attr)
+        XFree(status_attr);
+    if (R->Input_Context == NULL) {
+        rxvt_print_error("failed to create input context");
+        XCloseIM(xim);
+        return False;
+    }
+    if (R->input_style & XIMPreeditArea)
+        rxvt_IMSetStatusPosition(aR);
+    D_MAIN((stderr, "rxvt_IM_get_IC() - successful connection"));
+    return True;
 }
 
 /*
@@ -1202,124 +1302,6 @@ done:
   if (R->rs[Rs_imLocale])
     setlocale (LC_CTYPE, R->locale);
 #endif
-}
-
-/*
- * Try to open a XIM with the current modifiers, then see if we can
- * open a suitable preedit type
- */
-/* INTPROTO */
-Bool
-rxvt_IM_get_IC(pR)
-{
-    int             i, j, found;
-    XIM             xim;
-    XPoint          spot;
-    XRectangle      rect, status_rect, needed_rect;
-    unsigned long   fg, bg;
-    const char     *p;
-    char          **s;
-    XIMStyles      *xim_styles;
-    XVaNestedList   preedit_attr, status_attr;
-    XIMCallback     ximcallback;
-
-    D_MAIN((stderr, "rxvt_IM_get_IC()"));
-    xim = XOpenIM(R->Xdisplay, NULL, NULL, NULL);
-    if (xim == NULL)
-        return False;
-
-    xim_styles = NULL;
-    if (XGetIMValues(xim, XNQueryInputStyle, &xim_styles, NULL)
-        || !xim_styles || !xim_styles->count_styles) {
-        XCloseIM(xim);
-        return False;
-    }
-
-    p = R->rs[Rs_preeditType] ? R->rs[Rs_preeditType]
-        : "OverTheSpot,OffTheSpot,Root";
-    s = rxvt_splitcommastring(p);
-    for (i = found = 0; !found && s[i]; i++) {
-        if (!STRCMP(s[i], "OverTheSpot"))
-            R->input_style = (XIMPreeditPosition | XIMStatusNothing);
-        else if (!STRCMP(s[i], "OffTheSpot"))
-            R->input_style = (XIMPreeditArea | XIMStatusArea);
-        else if (!STRCMP(s[i], "Root"))
-            R->input_style = (XIMPreeditNothing | XIMStatusNothing);
-
-        for (j = 0; j < xim_styles->count_styles; j++)
-            if (R->input_style == xim_styles->supported_styles[j]) {
-                found = 1;
-                break;
-            }
-    }
-    for (i = 0; s[i]; i++)
-        free(s[i]);
-    free(s);
-    XFree(xim_styles);
-
-    if (!found) {
-        XCloseIM(xim);
-        return False;
-    }
-
-    ximcallback.callback = rxvt_IMDestroyCallback;
-
-/* XXX: not sure why we need this (as well as IC one below) */
-    XSetIMValues(xim, XNDestroyCallback, &ximcallback, NULL);
-
-    preedit_attr = status_attr = NULL;
-
-    if (R->input_style & XIMPreeditPosition) {
-        rxvt_setSize(aR_ & rect);
-        rxvt_setPosition(aR_ & spot);
-        rxvt_setColor(aR_ & fg, &bg);
-
-        preedit_attr = XVaCreateNestedList(0, XNArea, &rect,
-                                           XNSpotLocation, &spot,
-                                           XNForeground, fg, XNBackground, bg,
-                                       //XNFontSet, R->TermWin.fontset,
-                                           NULL);
-    } else if (R->input_style & XIMPreeditArea) {
-        rxvt_setColor(aR_ & fg, &bg);
-
-    /*
-     * The necessary width of preedit area is unknown
-     * until create input context.
-     */
-        needed_rect.width = 0;
-
-        rxvt_setPreeditArea(aR_ & rect, &status_rect, &needed_rect);
-
-        preedit_attr = XVaCreateNestedList(0, XNArea, &rect,
-                                           XNForeground, fg, XNBackground, bg,
-                                       //XNFontSet, R->TermWin.fontset,
-                                           NULL);
-        status_attr = XVaCreateNestedList(0, XNArea, &status_rect,
-                                          XNForeground, fg, XNBackground, bg,
-                                      //XNFontSet, R->TermWin.fontset,
-                                          NULL);
-    }
-    R->Input_Context = XCreateIC(xim, XNInputStyle, R->input_style,
-                                 XNClientWindow, R->TermWin.parent[0],
-                                 XNFocusWindow, R->TermWin.parent[0],
-                                 XNDestroyCallback, &ximcallback,
-                                 preedit_attr ? XNPreeditAttributes : NULL,
-                                 preedit_attr,
-                                 status_attr ? XNStatusAttributes : NULL,
-                                 status_attr, NULL);
-    if (preedit_attr)
-        XFree(preedit_attr);
-    if (status_attr)
-        XFree(status_attr);
-    if (R->Input_Context == NULL) {
-        rxvt_print_error("failed to create input context");
-        XCloseIM(xim);
-        return False;
-    }
-    if (R->input_style & XIMPreeditArea)
-        rxvt_IMSetStatusPosition(aR);
-    D_MAIN((stderr, "rxvt_IM_get_IC() - successful connection"));
-    return True;
 }
 
 /* EXTPROTO */
