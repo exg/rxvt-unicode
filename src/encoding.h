@@ -37,6 +37,7 @@ enum codeset {
   CS_KSC5601_1987_0,
 
   CS_GB2312_1980_0,
+  CS_GBK_0,
 
   CS_CNS11643_1992_1,
   CS_CNS11643_1992_2,

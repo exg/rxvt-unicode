@@ -83,6 +83,7 @@ const struct n2cs {
   { "BIG5ETEN*",	CS_BIG5_EXT         },
   { "BIG5*",		CS_BIG5             },
   { "GB2312*",		CS_GB2312_1980_0    },
+  { "GBK*",		CS_GBK_0            },
   { "GB6345*",		CS_GB2312_1980_0    }, // slightly different to gb2312??
   { "GB8565*",		CS_GB2312_1980_0    }, // a superset of gb2312??
   { "GB13000*",		CS_UNICODE          },
@@ -181,8 +182,9 @@ static uint32_t cs_unicode_16_from_unicode (unicode_t unicode) { return unicode 
 
 //#define ENCODING_ZH
 
-#include "table/gb2312_1980_0.h"
 #include "table/big5.h"
+#include "table/gbk_0.h"
+#include "table/gb2312_1980_0.h"
 
 //#define ENCODING_ZH_EXT
 
@@ -254,6 +256,7 @@ const rxvt_codeset_conv rxvt_codeset[NUM_CODESETS] = {
   ENC (ksc5601_1987_0),
 
   ENC (gb2312_1980_0),
+  ENC (gbk_0),
 
   ENC (cns11643_1992_1),
   ENC (cns11643_1992_2),

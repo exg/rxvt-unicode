@@ -92,15 +92,20 @@ const struct rxvt_fallback_font {
 
 #if ENCODING_ZH || ENCODING_ZH_EXT
 # if XFT
+  { CS_GBK_0,          "xft:AR PL KaitiM GB"                       },
+  { CS_GBK_0,          "xft:AR PL SungtiL GB"                      },
+  { CS_GBK_0,          "xft::spacing=100:lang=zh"                  },
   { CS_BIG5_EXT,       "xft:AR PL Mingti2L Big5"                   },
   { CS_BIG5_EXT,       "xft:AR PL KaitiM Big5"                     },
   { CS_GB2312_1980_0,  "xft:AR PL KaitiM GB"                       },
   { CS_GB2312_1980_0,  "xft:AR PL SungtiL GB"                      },
   { CS_GB2312_1980_0,  "xft::spacing=100:lang=zh"                  },
 # endif
+  { CS_GBK_0,           "-*-*-*-*-*-*-*-*-*-*-c-*-gbk*-0"          },
   { CS_BIG5,            "-*-*-*-*-*-*-*-*-*-*-c-*-big5-0"          },
   { CS_BIG5_PLUS,       "-*-*-*-*-*-*-*-*-*-*-c-*-big5p-0"         },
   { CS_BIG5_EXT,        "-*-*-*-*-*-*-*-*-*-*-c-*-big5.eten-0"     },
+  { CS_GB2312_1980_0,   "-*-*-*-*-*-*-*-*-*-*-c-*-gb2312*-0"       },
   { CS_CNS11643_1992_1, "-*-*-*-*-*-*-*-*-*-*-c-*-gb2312*-0"       },
   { CS_CNS11643_1992_1, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-1"     },
   { CS_CNS11643_1992_2, "-*-*-*-*-*-*-*-*-*-*-c-*-cns11643*-2"     },
@@ -332,12 +337,19 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 
   XSetForeground (d.display->display, TGC, r->pix_colors[fg]);
 
-  while (len--)
+  while (len)
     {
 #if ENABLE_COMBINING
       compose_char *cc;
 #endif
-      text_t t = *text++;
+      const text_t *tp = text;
+      text_t t  = *tp;
+
+      while (++text, --len && *text == NOCHAR)
+        ;
+
+      int width = text - tp;
+      int fwidth = r->TermWin.fwidth * width;
 
       if (0x2500 <= t && t <= 0x259f)
         {
@@ -345,13 +357,8 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
           uint32_t *a = linedraw_command + (offs >> 4);
           uint32_t *b = a + (offs & 15);
 
-          int W = r->TermWin.fwidth;
+          int W = fwidth;
           int H = r->TermWin.fheight;
-
-          // support double-width (but not more) graphics chars
-          // TODO: do this outside the if/elsif.. statement for all cases
-          if (len && *text == NOCHAR)
-            W += r->TermWin.fwidth;
 
           int x_[16];
           int y_[16];
@@ -425,31 +432,25 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 #if ENABLE_COMBINING
       else if (IS_COMPOSE (t) && (cc = rxvt_composite[t]))
         {
-          text_t c2[2];
-          int len2 = 1;
-          
-          // support double-width (but not more) combining characters
-          if (len && *text == NOCHAR)
-            {
-              c2[1] = *text; // not text++ to get correct x-width
-              len2++;
-            }
+          text_t chrs[2];
+          width = min (2, width);
+          chrs [1] = NOCHAR;
 
-          c2[0] = cc->c1;
-          rxvt_font *f1 = (*fs)[fs->find_font (c2[0])];
-          f1->draw (d, x, y, c2, len2, fg, bg);
+          *chrs = cc->c1;
+          rxvt_font *f1 = (*fs)[fs->find_font (cc->c1)];
+          f1->draw (d, x, y, chrs, width, fg, bg);
 
           if (cc->c2 != NOCHAR)
             {
               bool careful;
 
               // prefer font of first character, for no good reasons
-              c2[0] = cc->c2;
-              rxvt_font *f2 = (f1->has_char (c2[0], 0, careful) && !careful)
+              *chrs = cc->c2;
+              rxvt_font *f2 = (f1->has_char (cc->c2, 0, careful) && !careful)
                                 ? f1
-                                : (*fs)[fs->find_font (c2[0])];
+                                : (*fs)[fs->find_font (cc->c2)];
 
-              f2->draw (d, x, y, c2, len2, fg, -1);
+              f2->draw (d, x, y, chrs, width, fg, -1);
             }
         }
 #endif
@@ -462,20 +463,11 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
               break;
 
             default:
-              int w = 0;
-              while (len > 0 && *text == NOCHAR)
-                {
-                  ++text;
-                  --len;
-                  w += r->TermWin.fwidth;
-                }
-
               XDrawRectangle (d.display->display, d, TGC, x + 2, y + 2,
-                              w + r->TermWin.fwidth - 4, r->TermWin.fheight - 4);
-              x += w;
+                              fwidth - 4, r->TermWin.fheight - 4);
           }
 
-      x += r->TermWin.fwidth;
+      x += fwidth;
     }
 }
 

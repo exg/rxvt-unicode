@@ -271,6 +271,7 @@ __DATA__
 VN		viscii			viscii
 KR		ksc5601_1987_0		ksc5601-raw
 ZH		gb2312_1980_0		gb2312-raw
+ZH		gbk_0			gbk
 ZH_EXT		cns11643_1992_1		cns11643-1
 ZH_EXT		cns11643_1992_2		cns11643-2
 ZH_EXT		cns11643_1992_3		cns11643-3
