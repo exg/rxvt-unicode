@@ -612,6 +612,7 @@ enum {
   Rs_pointerBlank,
   Rs_pointerBlankDelay,
   Rs_imLocale,
+  Rs_pastableTabs,
 #ifndef NO_SECONDARY_SCREEN
   Rs_secondaryScreen,
   Rs_secondaryScroll,

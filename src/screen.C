@@ -885,13 +885,13 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
           srp = screen.rend[row];  /* _must_ refresh */
         }
 
-      if (screen.flags & Screen_Insert)
-        scr_insdel_chars (1, INSERT);
-
       // rely on wcwidth to tell us the character width, at least for non-latin1
       // do wcwidth before further replacements, as wcwidth says that line-drawing
       // characters have width -1 (DOH!) on GNU/Linux sometimes.
       int width = c < 0x100 ? 1 : wcwidth (c);
+
+      if (screen.flags & Screen_Insert)
+        scr_insdel_chars (width, INSERT);
 
       if (charsets[screen.charset] == '0') // DEC SPECIAL
         {
@@ -1102,7 +1102,7 @@ rxvt_term::scr_tab (int count, bool ht)
 
       // store horizontal tab commands as characters inside the text
       // buffer so they can be selected and pasted.
-      if (ht)
+      if (ht && options & Opt_pastableTabs)
         {
           base_rend = SET_FONT (base_rend, 0);
 
@@ -2246,7 +2246,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 
           // redraw one or more characters
 
-          // seek to the beginning if wide characters
+          // seek to the beginning of wide characters
           while (stp[col] == NOCHAR && col > 0)
             --col;
 

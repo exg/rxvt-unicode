@@ -215,12 +215,14 @@ typedef struct {
 # define Opt_insecure		0
 # define Opt_borderLess		0
 #endif
+#define Opt_pastableTabs	(1UL<<25)
 /* place holder used for parsing command-line options */
 #define Opt_Reverse             (1UL<<30)
 #define Opt_Boolean             (1UL<<31)
 
-#define DEFAULT_OPTIONS         (Opt_scrollBar | Opt_scrollTtyOutput | \
-                                 Opt_jumpScroll | Opt_secondaryScreen)
+#define DEFAULT_OPTIONS         (Opt_scrollBar | Opt_scrollTtyOutput \
+                                 | Opt_jumpScroll | Opt_secondaryScreen \
+                                 | Opt_pastableTabs)
 
 /* ------------------------------------------------------------------------- */
 

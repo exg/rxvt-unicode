@@ -93,6 +93,7 @@ optList[] = {
               BOOL (Rs_reverseVideo, "reverseVideo", "rv", Opt_reverseVideo, "reverse video"),
               BOOL (Rs_loginShell, "loginShell", "ls", Opt_loginShell, "login shell"),
               BOOL (Rs_jumpScroll, "jumpScroll", "j", Opt_jumpScroll, "jump scrolling"),
+              BOOL (Rs_pastableTabs, "pastableTabs", "ptab", Opt_pastableTabs, "tab characters are pastable"),
 #ifdef HAVE_SCROLLBARS
               BOOL (Rs_scrollBar, "scrollBar", "sb", Opt_scrollBar, "scrollbar"),
               BOOL (Rs_scrollBar_right, "scrollBar_right", "sr", Opt_scrollBar_right, "scrollbar right"),
