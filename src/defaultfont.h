@@ -49,7 +49,7 @@ struct rxvt_font {
   }
 
   rxvt_font () { name = 0; }
-  ~rxvt_font () { free (name); clear (); };
+  ~rxvt_font () { clear (); free (name); };
 
   void clear_rect (int x, int y, int w, int h, int color);
 

@@ -12,10 +12,10 @@ struct rxvt_salloc {
 
   chain *firstblock;
   chain *firstline;
-  int firstfree;
-  int size;
+  unsigned int firstfree;
+  unsigned int size;
 
-  rxvt_salloc (int size);
+  rxvt_salloc (unsigned int size);
   ~rxvt_salloc ();
 
   void *alloc ();

@@ -78,7 +78,7 @@ private:
 	if (_last + n <= _size) {
 	    memmove (where+n, where, (end()-where)*sizeof(T));
 	} else {
-	    long sz = _last+n;
+	    size_type sz = _last+n;
 	    sz = (_size == 0) ? max(sz, 5) : max(sz, 2*_size);
 	    T *nbuf = alloc (sz);
 	    if (_buf) {

@@ -594,9 +594,9 @@ enum {
 #define PrivMode_mouse_report   (PrivMode_MouseX10|PrivMode_MouseX11)
 #define PrivMode(test,bit)              \
     if (test)                           \
-        R->PrivateModes |= (bit);       \
+        PrivateModes |= (bit);          \
     else                                \
-        R->PrivateModes &= ~(bit)
+        PrivateModes &= ~(bit)
 
 #ifdef ALLOW_132_MODE
 # define PrivMode_Default                                                \
@@ -606,9 +606,9 @@ enum {
 (PrivMode_Autowrap|PrivMode_aplKP|PrivMode_ShiftKeys|PrivMode_VisibleCursor)
 #endif
 
-#define XDEPTH                 R->Xdepth
-#define XCMAP                  R->Xcmap
-#define XVISUAL                R->Xvisual
+#define XDEPTH                 Xdepth
+#define XCMAP                  Xcmap
+#define XVISUAL                Xvisual
 
 #define IMBUFSIZ               128     /* input modifier buffer sizes */
 #ifndef BUFSIZ
@@ -650,7 +650,7 @@ enum {
 #define TermWin_TotalWidth()    ((int32_t)TermWin.width  + 2 * (int32_t)TermWin.int_bwidth)
 #define TermWin_TotalHeight()   ((int32_t)TermWin.height + 2 * (int32_t)TermWin.int_bwidth)
 
-#define Xroot                   DefaultRootWindow(R->Xdisplay)
+#define Xroot                   DefaultRootWindow(Xdisplay)
 
 /* how to build & extract colors and attributes */
 #define GET_BASEFG(x)           (((x) & RS_fgMask))
@@ -685,44 +685,44 @@ enum {
 #define SET_BGCOLOR(x,bg)       (((x) & ~RS_bgMask)  | ((bg)<<Color_Bits))
 #define SET_ATTR(x,a)           (((x) & ~RS_attrMask)| (a))
 
-#define SET_PIXCOLOR(h, x)      ((h)->pixcolor_set[(x) / NPIXCLR_BITS] |= (1 << ((x) % NPIXCLR_BITS)))
-#define ISSET_PIXCOLOR(h, x)    ((h)->pixcolor_set[(x) / NPIXCLR_BITS] &  (1 << ((x) % NPIXCLR_BITS)))
+#define SET_PIXCOLOR(x)         (pixcolor_set[(x) / NPIXCLR_BITS] |= (1 << ((x) % NPIXCLR_BITS)))
+#define ISSET_PIXCOLOR(x)       (pixcolor_set[(x) / NPIXCLR_BITS] &  (1 << ((x) % NPIXCLR_BITS)))
 
 #ifdef HAVE_SCROLLBARS
 # define scrollbar_TotalWidth() (scrollBar.width + sb_shadow * 2)
 #else
 # define scrollbar_TotalWidth() (0)
 #endif
-#define scrollbar_isMotion()    (R->scrollBar.state == 'm')
-#define scrollbar_isUp()        (R->scrollBar.state == 'U')
-#define scrollbar_isDn()        (R->scrollBar.state == 'D')
-#define scrollbar_isUpDn()      isupper (R->scrollBar.state)
-#define isScrollbarWindow(w)    (R->scrollBar.state && (w) == R->scrollBar.win)
+#define scrollbar_isMotion()    (scrollBar.state == 'm')
+#define scrollbar_isUp()        (scrollBar.state == 'U')
+#define scrollbar_isDn()        (scrollBar.state == 'D')
+#define scrollbar_isUpDn()      isupper (scrollBar.state)
+#define isScrollbarWindow(w)    (scrollBar.state && (w) == scrollBar.win)
 
-#define scrollbarnext_dnval()   (R->scrollBar.end + (R->scrollBar.width + 1))
-#define scrollbarnext_upButton(y)       ((y) > R->scrollBar.end \
+#define scrollbarnext_dnval()   (scrollBar.end + (scrollBar.width + 1))
+#define scrollbarnext_upButton(y)       ((y) > scrollBar.end \
                                          && (y) <= scrollbarnext_dnval())
 #define scrollbarnext_dnButton(y)       ((y) > scrollbarnext_dnval())
 #define SCROLLNEXT_MINHEIGHT    SB_THUMB_MIN_HEIGHT
-#define scrollbarrxvt_upButton(y)       ((y) < R->scrollBar.beg)
-#define scrollbarrxvt_dnButton(y)       ((y) > R->scrollBar.end)
+#define scrollbarrxvt_upButton(y)       ((y) < scrollBar.beg)
+#define scrollbarrxvt_dnButton(y)       ((y) > scrollBar.end)
 #define SCROLLRXVT_MINHEIGHT    10
 #define SCROLLXTERM_MINHEIGHT   10
 
-#define scrollbar_minheight()   (R->scrollBar.style == R_SB_NEXT        \
+#define scrollbar_minheight()   (scrollBar.style == R_SB_NEXT        \
                                  ? SCROLLNEXT_MINHEIGHT                 \
                                  : SCROLLRXVT_MINHEIGHT)
-#define scrollbar_above_slider(y)       ((y) < R->scrollBar.top)
-#define scrollbar_below_slider(y)       ((y) > R->scrollBar.bot)
-#define scrollbar_position(y)           ((y) - R->scrollBar.beg)
-#define scrollbar_size()                (R->scrollBar.end - R->scrollBar.beg \
+#define scrollbar_above_slider(y)       ((y) < scrollBar.top)
+#define scrollbar_below_slider(y)       ((y) > scrollBar.bot)
+#define scrollbar_position(y)           ((y) - scrollBar.beg)
+#define scrollbar_size()                (scrollBar.end - scrollBar.beg \
                                          - scrollbar_minheight())
 
 #if (MENUBAR_MAX > 1)
 /* rendition style flags */
 # define menuBar_height()       (TermWin.fheight + SHADOW)
 # define menuBar_TotalHeight()  (menuBar_height() + SHADOW + menuBar_margin)
-# define isMenuBarWindow(w)     ((w) == R->menuBar.win)
+# define isMenuBarWindow(w)     ((w) == menuBar.win)
 #else
 # define menuBar_height()       (0)
 # define menuBar_TotalHeight()  (0)
@@ -808,6 +808,16 @@ enum {
 #define BLINK_INTERVAL 0.5
 #define TEXT_BLINK_INTERVAL 0.5
 
+#ifndef __attribute__
+# ifdef __GNUC__
+#  if (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || (__GNUC__ < 2)
+#   define __attribute__(x)
+#  endif
+# endif
+# define __attribute__(x)
+#endif
+
+// primivite wrapper around mbstate_t to ensure initialisation
 struct mbstate {
   mbstate_t mbs;
 
@@ -1144,19 +1154,180 @@ struct rxvt_term : rxvt_vars {
   void scr_erase_screen (int mode);
   void scr_touch (bool refresh);
   void scr_expose (int x, int y, int width, int height, bool refresh);
+
+  /* autoconvert */
+
+  // command.C
+  void lookup_key (XKeyEvent *ev);
+  unsigned int cmd_write (const unsigned char *str, unsigned int count);
+  uint32_t cmd_getc ();
+  void mouse_report (const XButtonEvent *ev);
+  void process_x_event (XEvent *ev);
+  void button_press (XButtonEvent *ev);
+  void button_release (XButtonEvent *ev);
+  int check_our_parents ();
+#ifdef PRINTPIPE
+  FILE * popen_printer ();
+  int pclose_printer (FILE *stream);
+#endif
+  void process_print_pipe ();
+  void process_nonprinting (unsigned char ch);
+  void process_escape_vt52 (unsigned char ch);
+  void process_escape_seq ();
+  void process_csi_seq ();
+  void process_window_ops (const int *args, unsigned int nargs);
+  unsigned char * get_to_st (unsigned char *ends_how);
+  void process_dcs_seq ();
+  void process_osc_seq ();
+  void xterm_seq (int op, const char *str, unsigned char resp __attribute__((unused)));
+  int privcases (int mode, unsigned long bit);
+  void process_terminal_mode (int mode, int priv, unsigned int nargs, const int *arg);
+  void process_sgr_mode (unsigned int nargs, const int *arg);
+  void process_graphics ();
+  // init.C
+  void Get_Colours ();
+  void get_ourmods ();
+  // logging.C
+  void makeutent (const char *pty, const char *hostname);
+  void cleanutent ();
+  // main.C;
+  void privileges (int mode);
+  void privileged_utmp (char action);
+  void privileged_ttydev (char action);
+  void change_font (int init, const char *fontname);
+  void font_up_down (int n, int direction);
+  void set_title (const char *str);
+  void set_iconName (const char *str);
+  void set_window_color (int idx, const char *color);
+  void set_colorfgbg ();
+  int rXParseAllocColor (rxvt_color * screen_in_out, const char *colour);
+  void set_widthheight (unsigned int width, unsigned int height);
+  bool IMisRunning ();
+  void IMSendSpot ();
+  bool IM_get_IC ();
+  void IMSetStatusPosition ();
+
+#ifdef MENUBAR
+  // menubar.C
+  void menuitem_free (menu_t *menu, menuitem_t *item);
+  int action_dispatch (action_t *action);
+  void menuarrow_free (char name);
+  void menuarrow_add (char *string);
+  char * menu_find_base (menu_t **menu, char *path);
+  menu_t * menu_delete (menu_t *menu);
+  menu_t * menu_add (menu_t *parent, char *path);
+  void drawbox_menubar (int x, int len, int state);
+  void drawtriangle (int x, int y, int state);
+  void drawbox_menuitem (int y, int state);
+  void menu_show ();
+  void menu_display (void (*update)(rxvt_t *));
+  void menu_hide_all ();
+  void menu_hide ();
+  void menu_clear (menu_t *menu);
+  void menubar_clear ();
+  bar_t * menubar_find (const char *name);
+  int menubar_push (const char *name);
+  void menubar_remove (const char *name);
+  void menubar_dump (FILE *fp);
+  void menubar_read (const char *filename);
+  void menubar_dispatch (char *str);
+  void draw_Arrows (int name, int state);
+  void menubar_expose ();
+  int menubar_mapping (int map);
+  int menu_select (XButtonEvent *ev);
+  void menubar_select (XButtonEvent *ev);
+  void menubar_control (XButtonEvent *ev);
+  void map_menuBar (int map);
+#endif
+
+  // screen.C
+  void scr_poweron ();
+  void scr_cursor (int mode);
+  int scr_change_screen (int scrn);
+  void scr_color (unsigned int color, int fgbg);
+  void scr_rendition (int set, int style);
+  void scr_add_lines (const uint32_t *str, int nlines, int len);
+  void scr_backspace ();
+  void scr_tab (int count);
+  void scr_backindex ();
+  void scr_forwardindex ();
+  void scr_gotorc (int row, int col, int relative);
+  void scr_index (enum page_dirn direction);
+  void scr_erase_line (int mode);
+  void scr_E ();
+  void scr_insdel_lines (int count, int insdel);
+  void scr_insdel_chars (int count, int insdel);
+  void scr_scroll_region (int top, int bot);
+  void scr_cursor_visible (int mode);
+  void scr_autowrap (int mode);
+  void scr_relative_origin (int mode);
+  void scr_insert_mode (int mode);
+  void scr_set_tab (int mode);
+  void scr_rvideo_mode (int mode);
+  void scr_report_position ();
+  void set_font_style ();
+  void scr_charset_choose (int set);
+  void scr_charset_set (int set, unsigned int ch);
+  int scr_move_to (int y, int len);
+  int scr_page (enum page_dirn direction, int nlines);
+  int scr_changeview (uint16_t oldviewstart);
+  void scr_bell ();
+  void scr_printscreen (int fullhist);
+  void scr_reverse_selection ();
+  void scr_dump (int fd);
+  void selection_check (int check_more);
+  int selection_paste (Window win, Atom prop, bool delete_prop);
+  void selection_property (Window win, Atom prop);
+  void selection_request (Time tm, int x, int y);
+  int selection_request_other (Atom target, int selnum);
+  void selection_clear ();
+  void selection_make (Time tm);
+  void selection_start_colrow (int col, int row);
+  void selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, row_col_t *ret);
+  void selection_extend_colrow (int32_t col, int32_t row, int button3, int buttonpress, int clickchange);
+  void selection_remove_trailing_spaces ();
+  void selection_send (const XSelectionRequestEvent *rq);
+
+#if defined(NEXT_SCROLLBAR)
+  // scrollbar-next.C
+  Pixmap renderPixmap (const char *const *data, int width, int height);
+  void init_scrollbar_stuff ();
+  void drawBevel (Drawable d, int x1, int y1, int w, int h);
+  int scrollbar_show_next (int update, int last_top, int last_bot, int scrollbar_len);
+# define scrollbar_update scrollbar_show_next // HACK
+#endif
+
+#if defined(RXVT_SCROLLBAR)
+  // scrollbar-rxvt.C
+  void Draw_button (int x, int y, int state, int dirn);
+  int scrollbar_show_rxvt (int update, int last_top, int last_bot, int scrollbar_len);
+# define scrollbar_update scrollbar_show_rxvt // HACK
+#endif
+
+#if defined(XTERM_SCROLLBAR)
+  // scrollbar-xterm.C
+  int scrollbar_show_xterm (int update, int last_top, int last_bot, int scrollbar_len);
+# define scrollbar_update scrollbar_show_xterm // HACK
+#endif
+
+  // scrollbar.C
+  int scrollbar_mapping (int map);
+  int scrollbar_show (int update);
+  void setup_scrollbar (const char *scrollalign, const char *scrollstyle, const char *thickness);
+
+  // xdefaults.C
+  void get_options (int argc, const char *const *argv);
+  int parse_keysym (const char *str, const char *arg);
+  void get_xdefaults (FILE *stream, const char *name);
+  void extract_resources (Display *display, const char *name);
+  // xpm.C
+  int scale_pixmap (const char *geom);
+  void resize_pixmap ();
+  Pixmap set_bgPixmap (const char *file);
 };
 
 #define SET_LOCALE(locale) rxvt_set_locale (locale)
 extern void rxvt_set_locale (const char *locale);
-
-#ifndef __attribute__
-# ifdef __GNUC__
-#  if (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || (__GNUC__ < 2)
-#   define __attribute__(x)
-#  endif
-# endif
-# define __attribute__(x)
-#endif
 
 /*
  *****************************************************************************

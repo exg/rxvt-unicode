@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	strings.c
  *----------------------------------------------------------------------*
- * $Id: strings.C,v 1.2 2003/11/24 17:31:28 pcg Exp $
+ * $Id: strings.C,v 1.3 2004/01/31 00:20:21 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
@@ -31,7 +31,6 @@
  * a replacement for strcasecmp() to avoid linking an entire library.
  * Mark Olesen added this in 2.15 but for which OS & library? - Geoff Wing
  */
-/* EXTPROTO */
 int
 strcasecmp(const char *s1, const char *s2)
 {
@@ -41,7 +40,6 @@ strcasecmp(const char *s1, const char *s2)
     return (int)(tolower(*s1) - tolower(*s2));
 }
 
-/* EXTPROTO */
 int
 strncasecmp(const char *s1, const char *s2, size_t n)
 {
@@ -53,7 +51,6 @@ strncasecmp(const char *s1, const char *s2, size_t n)
     return (int)(tolower(*s1) - tolower(*s2));
 }
 
-/* EXTPROTO */
 char           *
 strcpy(char *d, const char *s)
 {
@@ -63,7 +60,6 @@ strcpy(char *d, const char *s)
     return d;
 }
 
-/* EXTPROTO */
 char           *
 strncpy(char *d, const char *s, size_t len)
 {
@@ -79,7 +75,6 @@ strncpy(char *d, const char *s, size_t len)
     return d;
 }
 
-/* EXTPROTO */
 int
 strcmp(const char *s1, const char *s2)
 {
@@ -89,7 +84,6 @@ strcmp(const char *s1, const char *s2)
     return (int) ((unsigned char) *s1 - (unsigned char) *--s2);
 }
 
-/* EXTPROTO */
 int
 strncmp(const char *s1, const char *s2, size_t len)
 {
@@ -101,7 +95,6 @@ strncmp(const char *s1, const char *s2, size_t len)
     return 0;
 }
 
-/* EXTPROTO */
 char           *
 strcat(char *s1, const char *s2)
 {
@@ -114,7 +107,6 @@ strcat(char *s1, const char *s2)
     return s1;
 }
 
-/* EXTPROTO */
 char           *
 strncat(char *s1, const char *s2, size_t len)
 {
@@ -128,7 +120,6 @@ strncat(char *s1, const char *s2, size_t len)
     return s1;
 }
 
-/* EXTPROTO */
 size_t
 strlen(const char *s)
 {
@@ -138,7 +129,6 @@ strlen(const char *s)
     return len;
 }
 
-/* EXTPROTO */
 char           *
 strdup(const char *s)
 {
@@ -150,14 +140,12 @@ strdup(const char *s)
     return c;
 }
 
-/* EXTPROTO */
 char           *
 index(const char *s, int c)
 {
     return STRCHR(s, c);
 }
 
-/* EXTPROTO */
 char           *
 strchr(const char *s, int c)
 {
@@ -175,14 +163,12 @@ strchr(const char *s, int c)
 
 }
 
-/* EXTPROTO */
 char           *
 rindex(const char *s, int c)
 {
     return STRRCHR(s, c);
 }
 
-/* EXTPROTO */
 char           *
 strrchr(const char *s, int c)
 {
@@ -197,7 +183,6 @@ strrchr(const char *s, int c)
     return p;
 }
 
-/* EXTPROTO */
 void           *
 memcpy(void *s1, const void *s2, size_t len)
 {
@@ -208,7 +193,6 @@ memcpy(void *s1, const void *s2, size_t len)
 /*--------------------------------------------------------------------------*
  * Possibly faster memmove() by Geoff Wing <mason@primenet.com.au>
  *--------------------------------------------------------------------------*/
-/* EXTPROTO */
 void           *
 memmove(void *d, const void *s, size_t len)
 {
@@ -259,14 +243,12 @@ memmove(void *d, const void *s, size_t len)
  *   2) SIZEOF_INT_P == power of 2
  *--------------------------------------------------------------------------*/
 
-/* EXTPROTO */
 void
 bzero(void *b, size_t len)
 {
     MEMSET(b, 0, len);
 }
 
-/* EXTPROTO */
 void           *
 memset(void *p, int c1, size_t len)
 {

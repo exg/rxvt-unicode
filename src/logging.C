@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	logging.c
  *----------------------------------------------------------------------*
- * $Id: logging.C,v 1.3 2003/11/25 11:52:42 pcg Exp $
+ * $Id: logging.C,v 1.4 2004/01/31 00:20:21 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey <jdb@ukc.ac.uk>
@@ -56,15 +56,14 @@
 /*
  * make and write utmp and wtmp entries
  */
-/* EXTPROTO */
 void
-rxvt_makeutent(pR_ const char *pty, const char *hostname)
+rxvt_term::makeutent (const char *pty, const char *hostname)
 {
 #ifdef HAVE_STRUCT_UTMP
-    struct utmp    *ut = &(R->ut);
+    struct utmp    *ut = &(this->ut);
 #endif
 #ifdef HAVE_STRUCT_UTMPX
-    struct utmpx   *utx = &(R->utx);
+    struct utmpx   *utx = &(this->utx);
 #endif
 #ifdef HAVE_UTMP_PID
     int             i;
@@ -94,7 +93,7 @@ rxvt_makeutent(pR_ const char *pty, const char *hostname)
     STRNCPY(ut->ut_id, ut_id, sizeof(ut->ut_id));
     ut->ut_type = DEAD_PROCESS;
     getutid(ut);		/* position to entry in utmp file */
-    STRNCPY(R->ut_id, ut_id, sizeof(R->ut_id));
+    STRNCPY(ut_id, ut_id, sizeof(ut_id));
 # endif
 #endif
 
@@ -104,7 +103,7 @@ rxvt_makeutent(pR_ const char *pty, const char *hostname)
     STRNCPY(utx->ut_id, ut_id, sizeof(utx->ut_id));
     utx->ut_type = DEAD_PROCESS;
     getutxid(utx);		/* position to entry in utmp file */
-    STRNCPY(R->ut_id, ut_id, sizeof(R->ut_id));
+    STRNCPY(ut_id, ut_id, sizeof(ut_id));
 #endif
 
 #ifdef HAVE_STRUCT_UTMP
@@ -115,14 +114,14 @@ rxvt_makeutent(pR_ const char *pty, const char *hostname)
 	    sizeof(ut->ut_user));
     STRNCPY(ut->ut_id, ut_id, sizeof(ut->ut_id));
     ut->ut_time = time(NULL);
-    ut->ut_pid = R->cmd_pid;
+    ut->ut_pid = cmd_pid;
 #  ifdef HAVE_UTMP_HOST
     STRNCPY(ut->ut_host, hostname, sizeof(ut->ut_host));
 #  endif
     ut->ut_type = USER_PROCESS;
     pututline(ut);
     endutent();			/* close the file */
-    R->utmp_pos = 0;
+    utmp_pos = 0;
 # else
     STRNCPY(ut->ut_name, (pwent && pwent->pw_name) ? pwent->pw_name : "?",
 	    sizeof(ut->ut_name));
@@ -140,7 +139,7 @@ rxvt_makeutent(pR_ const char *pty, const char *hostname)
     utx->ut_session = getsid(0);
     utx->ut_tv.tv_sec = time(NULL);
     utx->ut_tv.tv_usec = 0;
-    utx->ut_pid = R->cmd_pid;
+    utx->ut_pid = cmd_pid;
 # ifdef HAVE_UTMPX_HOST
     STRNCPY(utx->ut_host, hostname, sizeof(utx->ut_host));
 #  if 0
@@ -155,7 +154,7 @@ rxvt_makeutent(pR_ const char *pty, const char *hostname)
     utx->ut_type = USER_PROCESS;
     pututxline(utx);
     endutxent();		/* close the file */
-    R->utmp_pos = 0;
+    utmp_pos = 0;
 #endif
 
 #if defined(HAVE_STRUCT_UTMP) && !defined(HAVE_UTMP_PID)
@@ -164,7 +163,7 @@ rxvt_makeutent(pR_ const char *pty, const char *hostname)
 # ifdef HAVE_TTYSLOT
 	i = ttyslot();
 	if (rxvt_write_bsd_utmp(i, ut))
-	    R->utmp_pos = i;
+	    utmp_pos = i;
 # else
 	FILE           *fd0;
 
@@ -178,7 +177,7 @@ rxvt_makeutent(pR_ const char *pty, const char *hostname)
 		if (!STRCMP(ut->ut_line, name)) {
 		    if (!rxvt_write_bsd_utmp(i, ut))
 			i = 0;
-		    R->utmp_pos = i;
+		    utmp_pos = i;
 		    fclose(fd0);
 		    break;
 		}
@@ -192,7 +191,7 @@ rxvt_makeutent(pR_ const char *pty, const char *hostname)
 
 #ifdef WTMP_SUPPORT
 # ifdef WTMP_ONLY_ON_LOGIN
-    if (R->Options & Opt_loginShell)
+    if (Options & Opt_loginShell)
 # endif
     {
 # ifdef HAVE_STRUCT_UTMP
@@ -208,7 +207,7 @@ rxvt_makeutent(pR_ const char *pty, const char *hostname)
     }
 #endif
 #if defined(LASTLOG_SUPPORT) && defined(RXVT_LASTLOG_FILE)
-    if (R->Options & Opt_loginShell)
+    if (Options & Opt_loginShell)
 	rxvt_update_lastlog(RXVT_LASTLOG_FILE, pty, hostname);
 #endif
 }
@@ -217,22 +216,21 @@ rxvt_makeutent(pR_ const char *pty, const char *hostname)
 /*
  * remove utmp and wtmp entries
  */
-/* EXTPROTO */
 void
-rxvt_cleanutent(pR)
+rxvt_term::cleanutent ()
 {
 #ifdef HAVE_STRUCT_UTMP
-    struct utmp    *ut = &(R->ut);
+    struct utmp    *ut = &(this->ut);
 #endif
 #ifdef HAVE_STRUCT_UTMPX
-    struct utmpx   *tmputx, *utx = &(R->utx);
+    struct utmpx   *tmputx, *utx = &(this->utx);
 #endif
 
 #ifdef HAVE_STRUCT_UTMP
 # ifdef HAVE_UTMP_PID
     MEMSET(ut, 0, sizeof(struct utmp));
     setutent();
-    STRNCPY(ut->ut_id, R->ut_id, sizeof(ut->ut_id));
+    STRNCPY(ut->ut_id, ut_id, sizeof(ut->ut_id));
     ut->ut_type = USER_PROCESS;
     {
 	struct utmp    *tmput = getutid(ut);
@@ -253,7 +251,7 @@ rxvt_cleanutent(pR)
 #ifdef HAVE_STRUCT_UTMPX
     MEMSET(utx, 0, sizeof(struct utmpx));
     setutxent();
-    STRNCPY(utx->ut_id, R->ut_id, sizeof(utx->ut_id));
+    STRNCPY(utx->ut_id, ut_id, sizeof(utx->ut_id));
     utx->ut_type = USER_PROCESS;
     if ((tmputx = getutxid(utx)))	/* position to entry in utmp file */
 	utx = tmputx;
@@ -268,7 +266,7 @@ rxvt_cleanutent(pR)
      */
 #ifdef WTMP_SUPPORT
 # ifdef WTMP_ONLY_ON_LOGIN
-    if (R->Options & Opt_loginShell)
+    if (Options & Opt_loginShell)
 # endif
     {
 # ifdef HAVE_STRUCT_UTMP
@@ -289,16 +287,16 @@ rxvt_cleanutent(pR)
      */
 #ifdef HAVE_STRUCT_UTMP
 # ifdef HAVE_UTMP_PID
-    if (ut->ut_pid == R->cmd_pid)
+    if (ut->ut_pid == cmd_pid)
 	pututline(ut);
     endutent();
 # else
     MEMSET(ut, 0, sizeof(struct utmp));
-    rxvt_write_bsd_utmp(R->utmp_pos, ut);
+    rxvt_write_bsd_utmp(utmp_pos, ut);
 # endif
 #endif
 #ifdef HAVE_STRUCT_UTMPX
-    if (utx->ut_pid == R->cmd_pid)
+    if (utx->ut_pid == cmd_pid)
 	pututxline(utx);
     endutxent();
 #endif

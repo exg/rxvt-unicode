@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	netdisp.c
  *----------------------------------------------------------------------*
- * $Id: netdisp.C,v 1.2 2003/11/24 17:31:27 pcg Exp $
+ * $Id: netdisp.C,v 1.3 2004/01/31 00:20:21 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1996      Chuck Blake <cblake@BBN.COM>
@@ -40,7 +40,6 @@
 
 /*----------------------------------------------------------------------*/
 /* return NULL a pointer to buffer which may be freed */
-/* EXTPROTO */
 char           *
 rxvt_network_display(const char *display)
 {

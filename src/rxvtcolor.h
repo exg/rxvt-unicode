@@ -25,11 +25,11 @@ struct rxvt_color {
    bool operator == (const rxvt_color &b) const { return Pixel(*this) == Pixel(b); }
    bool operator != (const rxvt_color &b) const { return Pixel(*this) != Pixel(b); }
 
-   void get (pR_ unsigned short &cr, unsigned short &cg, unsigned short &cb);
+   void get (rxvt_term *t, unsigned short &cr, unsigned short &cg, unsigned short &cb);
   
-   bool set (pR_ Pixel p);
-   bool set (pR_ const char *name);
-   bool set (pR_ unsigned short cr, unsigned short cg, unsigned short cb);
+   bool set (rxvt_term *t, Pixel p);
+   bool set (rxvt_term *t, const char *name);
+   bool set (rxvt_term *t, unsigned short cr, unsigned short cg, unsigned short cb);
 };
 
 #endif

@@ -2,7 +2,7 @@
 
 #define SALLOC_BLOCK 65536 // size of basic block to allocate
 
-rxvt_salloc::rxvt_salloc (int size)
+rxvt_salloc::rxvt_salloc (unsigned int size)
 {
   this->size = size < sizeof (chain) ? sizeof (chain) : size;
   firstline = 0;

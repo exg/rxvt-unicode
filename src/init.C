@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        init.c
  *----------------------------------------------------------------------*
- * $Id: init.C,v 1.19 2004/01/28 23:40:50 pcg Exp $
+ * $Id: init.C,v 1.20 2004/01/31 00:20:21 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -527,7 +527,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   if ((rs[Rs_display_name] = getenv ("DISPLAY")) == NULL)
     rs[Rs_display_name] = ":0";
 
-  rxvt_get_options (this, r_argc, r_argv);
+  get_options (r_argc, r_argv);
   free (r_argv);
 
 #ifdef LOCAL_X_IS_UNIX
@@ -548,7 +548,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
       exit (EXIT_FAILURE);
     }
 
-  rxvt_extract_resources (this, Xdisplay, rs[Rs_name]);
+  extract_resources (Xdisplay, rs[Rs_name]);
 
   /*
    * set any defaults not already set
@@ -663,7 +663,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     }
 
 #ifdef HAVE_SCROLLBARS
-  rxvt_setup_scrollbar (this, rs[Rs_scrollBar_align], rs[Rs_scrollstyle],
+  setup_scrollbar (rs[Rs_scrollBar_align], rs[Rs_scrollstyle],
                         rs[Rs_scrollBar_thickness]);
 #endif
 
@@ -802,7 +802,7 @@ rxvt_term::set_locale (const char *locale)
 {
 #if HAVE_XSETLOCALE || HAVE_SETLOCALE
   free (this->locale);
-  this->locale = strdup (setlocale (LC_CTYPE, ""));
+  this->locale = rxvt_strdup (setlocale (LC_CTYPE, ""));
 #endif
 #if HAVE_NL_LANGINFO
   free (codeset);
@@ -872,7 +872,7 @@ rxvt_term::init_command(const char *const *argv)
   meta_char = (Options & Opt_meta8 ? 0x80 : C0_ESC);
 #endif
 
-  rxvt_get_ourmods (this);
+  get_ourmods ();
 
   if (!(Options & Opt_scrollTtyOutput))
     PrivateModes |= PrivMode_TtyOutputInh;
@@ -887,12 +887,12 @@ rxvt_term::init_command(const char *const *argv)
 #endif
 
   /* add value for scrollBar */
-  if (scrollbar_visible (this))
+  if (scrollbar_visible ())
     {
       PrivateModes |= PrivMode_scrollBar;
       SavedModes |= PrivMode_scrollBar;
     }
-  if (menubar_visible (this))
+  if (menubar_visible ())
     {
       PrivateModes |= PrivMode_menuBar;
       SavedModes |= PrivMode_menuBar;
@@ -918,9 +918,8 @@ rxvt_term::init_command(const char *const *argv)
 }
 
 /*----------------------------------------------------------------------*/
-/* INTPROTO */
 void
-rxvt_Get_Colours (pR)
+rxvt_term::Get_Colours ()
 {
   int i;
 
@@ -928,24 +927,24 @@ rxvt_Get_Colours (pR)
     {
       rxvt_color xcol;
 
-      if (!R->rs[Rs_color + i])
+      if (!rs[Rs_color + i])
         continue;
 
-      if (!rxvt_rXParseAllocColor(aR_ &xcol, R->rs[Rs_color + i]))
+      if (!rXParseAllocColor (&xcol, rs[Rs_color + i]))
         {
 #ifndef XTERM_REVERSE_VIDEO
-          if (i < 2 && (R->Options & Opt_reverseVideo))
+          if (i < 2 && (Options & Opt_reverseVideo))
             {
-              R->rs[Rs_color + i] = def_colorName[!i];
+              rs[Rs_color + i] = def_colorName[!i];
             }
           else
 #endif
-            R->rs[Rs_color + i] = def_colorName[i];
+            rs[Rs_color + i] = def_colorName[i];
 
-          if (!R->rs[Rs_color + i])
+          if (!rs[Rs_color + i])
             continue;
 
-          if (!rxvt_rXParseAllocColor(aR_ &xcol, R->rs[Rs_color + i]))
+          if (!rXParseAllocColor (&xcol, rs[Rs_color + i]))
             {
               switch (i)
                 {
@@ -958,27 +957,27 @@ rxvt_Get_Colours (pR)
                   break;
 #ifndef NO_CURSORCOLOR
                 case Color_cursor2:
-                  xcol = R->PixColors[Color_fg];
+                  xcol = PixColors[Color_fg];
                   break;
 #endif                          /* ! NO_CURSORCOLOR */
                 case Color_pointer:
-                  xcol = R->PixColors[Color_fg];
+                  xcol = PixColors[Color_fg];
                   break;
                 default:
-                  xcol = R->PixColors[Color_bg];      /* None */
+                  xcol = PixColors[Color_bg];      /* None */
                   break;
                 }
             }
         }
 
-      R->PixColors[i] = xcol;
-      SET_PIXCOLOR (R, i);
+      PixColors[i] = xcol;
+      SET_PIXCOLOR (i);
     }
 
-  if (XDEPTH <= 2 || !R->rs[Rs_color + Color_pointer])
-    R->PixColors[Color_pointer] = R->PixColors[Color_fg];
-  if (XDEPTH <= 2 || !R->rs[Rs_color + Color_border])
-    R->PixColors[Color_border] = R->PixColors[Color_fg];
+  if (XDEPTH <= 2 || !rs[Rs_color + Color_pointer])
+    PixColors[Color_pointer] = PixColors[Color_fg];
+  if (XDEPTH <= 2 || !rs[Rs_color + Color_border])
+    PixColors[Color_border] = PixColors[Color_fg];
 
   /*
    * get scrollBar/menuBar shadow colors
@@ -990,9 +989,9 @@ rxvt_Get_Colours (pR)
 
   if (XDEPTH <= 2)
     {  /* Monochrome */
-      R->PixColors[Color_scroll] = R->PixColors[Color_fg];
-      R->PixColors[Color_topShadow] = R->PixColors[Color_bg];
-      R->PixColors[Color_bottomShadow] = R->PixColors[Color_bg];
+      PixColors[Color_scroll] = PixColors[Color_fg];
+      PixColors[Color_topShadow] = PixColors[Color_bg];
+      PixColors[Color_bottomShadow] = PixColors[Color_bg];
     }
   else
     {
@@ -1001,12 +1000,12 @@ rxvt_Get_Colours (pR)
        * xcol[1] == top shadow
        * xcol[2] == bot shadow */
 
-      xcol[1] = R->PixColors[Color_scroll];
+      xcol[1] = PixColors[Color_scroll];
 # ifdef PREFER_24BIT
       xcol[0].set (R, 65535, 65535, 65535);
-      /*        XFreeColors(R->Xdisplay, XCMAP, &(xcol[0].pixel), 1, ~0); */
+      /*        XFreeColors(Xdisplay, XCMAP, &(xcol[0].pixel), 1, ~0); */
 # else
-      xcol[0].set (WhitePixel(R->Xdisplay, Xscreen));
+      xcol[0].set (WhitePixel(Xdisplay, Xscreen));
 # endif
 
       unsigned short pr1, pg1, pb1, pr0, pg0, pb0;
@@ -1015,19 +1014,18 @@ rxvt_Get_Colours (pR)
       xcol[1].get (R, pr1, pg1, pb1);
 
       /* bottomShadowColor */
-      if (!xcol[2].set (aR_ pr1 / 2, pg1 / 2, pb1 / 2))
-        xcol[2] = R->PixColors[Color_Black];
+      if (!xcol[2].set (pr1 / 2, pg1 / 2, pb1 / 2))
+        xcol[2] = PixColors[Color_Black];
 
-      R->PixColors[Color_bottomShadow] = xcol[2];
+      PixColors[Color_bottomShadow] = xcol[2];
 
       /* topShadowColor */
-      if (!xcol[1].set (aR_
-                        min (pr0, max (pr0 / 5, pr1) * 7 / 5),
+      if (!xcol[1].set (                        min (pr0, max (pr0 / 5, pr1) * 7 / 5),
                         min (pg0, max (pg0 / 5, pg1) * 7 / 5),
                         min (pb0, max (pb0 / 5, pb1) * 7 / 5)))
-        xcol[1] = R->PixColors[Color_White];
+        xcol[1] = PixColors[Color_White];
 
-      R->PixColors[Color_topShadow] = xcol[1];
+      PixColors[Color_topShadow] = xcol[1];
     }
 #endif                          /* KEEP_SCROLLCOLOR */
 }
@@ -1060,9 +1058,8 @@ rxvt_term::color_aliases(int idx)
  * Probe the modifier keymap to get the Meta (Alt) and Num_Lock settings
  * Use resource ``modifier'' to override the Meta modifier
  */
-/* INTPROTO */
 void
-rxvt_get_ourmods(pR)
+rxvt_term::get_ourmods ()
 {
   int             i, j, k;
   int             requestedmeta, realmeta, realalt;
@@ -1075,12 +1072,12 @@ rxvt_get_ourmods(pR)
     };
 
   requestedmeta = realmeta = realalt = 0;
-  rsmod = R->rs[Rs_modifier];
+  rsmod = rs[Rs_modifier];
   if (rsmod
       && STRCASECMP(rsmod, "mod1") >= 0 && STRCASECMP(rsmod, "mod5") <= 0)
     requestedmeta = rsmod[3] - '0';
 
-  map = XGetModifierMapping(R->Xdisplay);
+  map = XGetModifierMapping(Xdisplay);
   kc = map->modifiermap;
   for (i = 1; i < 6; i++)
     {
@@ -1089,10 +1086,10 @@ rxvt_get_ourmods(pR)
         {
           if (kc[k] == 0)
             break;
-          switch (XKeycodeToKeysym(R->Xdisplay, kc[k], 0))
+          switch (XKeycodeToKeysym(Xdisplay, kc[k], 0))
             {
             case XK_Num_Lock:
-              R->ModNumLockMask = modmasks[i - 1];
+              ModNumLockMask = modmasks[i - 1];
               /* FALLTHROUGH */
             default:
               continue;       /* for(;;) */
@@ -1124,7 +1121,7 @@ rxvt_get_ourmods(pR)
        : (realmeta ? realmeta
           : (realalt ? realalt : 0)));
   if (i)
-    R->ModMetaMask = modmasks[i - 1];
+    ModMetaMask = modmasks[i - 1];
 }
 
 /*----------------------------------------------------------------------*/
@@ -1137,7 +1134,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   XGCValues       gcvalue;
   long            vt_emask;
 
-  XSetWindowAttributes attributes;
   XWindowAttributes gattr;
 
   Xcmap   = DefaultColormap (Xdisplay, Xscreen);
@@ -1173,9 +1169,9 @@ rxvt_term::create_windows (int argc, const char *const *argv)
     }
 
   /* grab colors before netscape does */
-  rxvt_Get_Colours (this);
+  Get_Colours ();
 
-  rxvt_change_font (this, 1, NULL);
+  change_font (1, NULL);
   window_calc (0, 0);
   old_width = szHint.width;
   old_height = szHint.height;
@@ -1185,6 +1181,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
    */
 
 #ifdef PREFER_24BIT
+  XSetWindowAttributes attributes;
+
   attributes.background_pixel = PixColors[Color_fg];
   attributes.border_pixel = PixColors[Color_border];
   attributes.colormap = Xcmap;
@@ -1206,8 +1204,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                          PixColors[Color_fg]);
 #endif
 
-  rxvt_xterm_seq (this, XTerm_title, rs[Rs_title], CHAR_ST);
-  rxvt_xterm_seq (this, XTerm_iconName, rs[Rs_iconName], CHAR_ST);
+  xterm_seq (XTerm_title, rs[Rs_title], CHAR_ST);
+  xterm_seq (XTerm_iconName, rs[Rs_iconName], CHAR_ST);
 
   classHint.res_name = (char *)rs[Rs_name];
   classHint.res_class = (char *)APL_CLASS;
@@ -1307,10 +1305,10 @@ rxvt_term::create_windows (int argc, const char *const *argv)
       if ((p = STRCHR(p, ';')) != NULL)
         {
           p++;
-          rxvt_scale_pixmap (this, p);
+          scale_pixmap (p);
         }
-      rxvt_set_bgPixmap (this, rs[Rs_backgroundPixmap]);
-      rxvt_scr_touch (this, True);
+      set_bgPixmap (rs[Rs_backgroundPixmap]);
+      scr_touch (True);
     }
 #endif
 
@@ -1370,7 +1368,7 @@ rxvt_term::run_command (const char *const *argv)
   if (tty_fd < 0)
     {
 #ifndef NO_SETOWNER_TTYDEV
-      rxvt_privileged_ttydev (aR_ SAVE);
+      privileged_ttydev (SAVE);
 #endif
 
       if ((tty_fd = rxvt_get_tty (ttydev)) < 0)
@@ -1428,7 +1426,7 @@ rxvt_term::run_command (const char *const *argv)
 #endif
 
 #ifdef UTMP_SUPPORT
-        rxvt_privileged_utmp (this, SAVE);
+        privileged_utmp (SAVE);
 #endif
 
 #if defined(HAVE_STRUCT_UTMP) && defined(HAVE_TTYSLOT)
@@ -1603,7 +1601,7 @@ rxvt_term::run_child (const char *const *argv)
  *                            GET TTY CURRENT STATE                          *
  * ------------------------------------------------------------------------- */
 /* rxvt_get_ttymode() */
-/* INTPROTO */
+/* EXTPROTO */
 void
 rxvt_get_ttymode(ttymode_t *tio, int erase)
 {

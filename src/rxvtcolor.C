@@ -4,13 +4,13 @@
 // TODO: free colors again
 
 bool
-rxvt_color::set (pR_ Pixel p)
+rxvt_color::set (rxvt_term *t, Pixel p)
 {
 #if XFT
   XColor xc;
 
   xc.pixel = p;
-  if (!XQueryColor (R->Xdisplay, R->Xcmap, &xc))
+  if (!XQueryColor (t->Xdisplay, t->Xcmap, &xc))
     return false;
 
   XRenderColor d;
@@ -21,9 +21,9 @@ rxvt_color::set (pR_ Pixel p)
   d.alpha = 0xffff;
 
   return
-    XftColorAllocValue (R->Xdisplay, 
-                        R->Xvisual,
-                        R->Xcmap,
+    XftColorAllocValue (t->Xdisplay, 
+                        t->Xvisual,
+                        t->Xcmap,
                         &d,
                         &c);
 #else
@@ -34,18 +34,18 @@ rxvt_color::set (pR_ Pixel p)
 }
 
 bool
-rxvt_color::set (pR_ const char *name)
+rxvt_color::set (rxvt_term *t, const char *name)
 {
   XColor xc;
 
-  if (XParseColor (R->Xdisplay, R->Xcmap, name, &xc))
-    return set (aR_ xc.red, xc.green, xc.blue);
+  if (XParseColor (t->Xdisplay, t->Xcmap, name, &xc))
+    return set (t, xc.red, xc.green, xc.blue);
 
   return false;
 }
 
 bool
-rxvt_color::set (pR_ unsigned short cr, unsigned short cg, unsigned short cb)
+rxvt_color::set (rxvt_term *t, unsigned short cr, unsigned short cg, unsigned short cb)
 {
   XColor xc;
 
@@ -54,14 +54,14 @@ rxvt_color::set (pR_ unsigned short cr, unsigned short cg, unsigned short cb)
   xc.blue  = cb;
   xc.flags = DoRed | DoGreen | DoBlue;
 
-  if (XAllocColor (R->Xdisplay, R->Xcmap, &xc))
-    return set (aR_ xc.pixel);
+  if (XAllocColor (t->Xdisplay, t->Xcmap, &xc))
+    return set (t, xc.pixel);
 
   return false;
 }
 
 void 
-rxvt_color::get (pR_ unsigned short &cr, unsigned short &cg, unsigned short &cb)
+rxvt_color::get (rxvt_term *t, unsigned short &cr, unsigned short &cg, unsigned short &cb)
 {
 #if XFT
   cr = c.color.red;
@@ -71,7 +71,7 @@ rxvt_color::get (pR_ unsigned short &cr, unsigned short &cg, unsigned short &cb)
   XColor c;
 
   c.pixel = p;
-  XQueryColor (R->Xdisplay, R->Xcmap, &c);
+  XQueryColor (t->Xdisplay, t->Xcmap, &c);
 
   cr = c.red;
   cg = c.green;

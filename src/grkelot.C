@@ -1,7 +1,7 @@
 /*---------------------------------*C*--------------------------------------*
  * File:      grkelot.c
  *--------------------------------------------------------------------------*
- * $Id: grkelot.C,v 1.2 2003/11/24 17:31:27 pcg Exp $
+ * $Id: grkelot.C,v 1.3 2004/01/31 00:20:21 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1994,1995 Angelo Haritsis. All rights reserved.
@@ -164,7 +164,6 @@ static void     kstate_add_switcher(char *str);
 static void     kstate_set_life(char *str);
 
 /* --- Functions ------------- */
-/* INTPROTO */
 void
 kstate_setcurr(int stateno)
 {
@@ -180,7 +179,6 @@ kstate_setcurr(int stateno)
     pStateNow->prev_state = prev_state;
 }
 
-/* INTPROTO */
 void
 kstate_init(void)
 {
@@ -188,7 +186,6 @@ kstate_init(void)
     pStateNow->xlat = NULL;
 }
 
-/* INTPROTO */
 void
 kstate_end(void)
 {
@@ -204,7 +201,6 @@ kstate_end(void)
  * Hard coded ELOT-928 translations. Could read these from an rc-type file
  * to support other remappers.
  */
-/* INTPROTO */
 void
 kstate_init_all(int greek_mode)
 {
@@ -240,7 +236,6 @@ kstate_init_all(int greek_mode)
     kstate_set_life("L1");
 }
 
-/* INTPROTO */
 void
 kstate_end_all(void)
 {
@@ -256,14 +251,12 @@ kstate_end_all(void)
 /*
  * reset FSM
  */
-/* INTPROTO */
 void
 kstate_reset(void)
 {
     kstate_setcurr(0);
 }
 
-/* INTPROTO */
 void
 kstate_add_xlat(char *str)
 {
@@ -297,7 +290,6 @@ kstate_add_xlat(char *str)
 /*
  * Ascii only for this implementation
  */
-/* INTPROTO */
 void
 kstate_add_switcher(char *str)
 {
@@ -319,14 +311,12 @@ kstate_add_switcher(char *str)
 }
 
 /* L1 or L0 */
-/* INTPROTO */
 void
 kstate_set_life(char *str)
 {
     pStateNow->life = atoi(&str[1]);
 }
 
-/* INTPROTO */
 unsigned int
 kstate_cxlat(unsigned int c)
 {
@@ -353,35 +343,30 @@ kstate_cxlat(unsigned int c)
 }
 
 #ifdef RXVT
-/* EXTPROTO */
 void
 greek_init(void)
 {
     kstate_init_all(GreekMode);
 }
 
-/* EXTPROTO */
 void
 greek_end(void)
 {
     kstate_end_all();
 }
 
-/* EXTPROTO */
 void
 greek_reset(void)
 {
     kstate_reset();
 }
 
-/* EXTPROTO */
 void
 greek_setmode(int greek_mode)
 {
     GreekMode = greek_mode;
 }
 
-/* EXTPROTO */
 int
 greek_getmode(void)
 {
@@ -391,7 +376,6 @@ greek_getmode(void)
 /*
  * xlate a given string in-place - return new string length
  */
-/* EXTPROTO */
 int
 greek_xlat(char *s, int num_chars)
 {

@@ -105,7 +105,7 @@ static void *enc_buf;
 static uint32_t enc_len;
 
 static inline void *
-get_enc_buf (int len)
+get_enc_buf (uint32_t len)
 {
   if (len > enc_len)
     {
@@ -117,7 +117,7 @@ get_enc_buf (int len)
 }
 
 static const char *
-enc_char (const text_t *text, int len, codeset cs, bool &zero)
+enc_char (const text_t *text, uint32_t len, codeset cs, bool &zero)
 {
   uint8_t *buf = (uint8_t *)get_enc_buf (len);
 
@@ -138,7 +138,7 @@ enc_char (const text_t *text, int len, codeset cs, bool &zero)
 }
 
 static const XChar2b *
-enc_xchar2b (const text_t *text, int len, codeset cs, bool &zero)
+enc_xchar2b (const text_t *text, uint32_t len, codeset cs, bool &zero)
 {
   XChar2b *buf = (XChar2b *)get_enc_buf (len * sizeof (XChar2b));
 
@@ -517,8 +517,6 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
   if (!f)
     return false;
 
-  unsigned long value;
-
   const char *registry = get_property (f, "CHARSET_REGISTRY", 0);
   const char *encoding = get_property (f, "CHARSET_ENCODING", 0);
 
@@ -614,8 +612,8 @@ rxvt_font_x11::has_codepoint (uint32_t unicode)
 
   if (encm)
     {
-      int byte1 = ch >> 8;
-      int byte2 = ch & 255;
+      unsigned char byte1 = ch >> 8;
+      unsigned char byte2 = ch & 255;
 
       if (byte1 < f->min_byte1 || byte1 > f->max_byte1
           || byte2 < f->min_char_or_byte2 || byte2 > f->max_char_or_byte2)
@@ -895,10 +893,7 @@ rxvt_font_xft::draw (int x, int y,
                      int fg, int bg)
 {
   if (!d)
-    {
-      dR;
-      d = XftDrawCreate (DISPLAY, DRAWABLE, XVISUAL, XCMAP);
-    }
+    d = XftDrawCreate (DISPLAY, DRAWABLE, r->Xvisual, r->Xcmap);
 
   if (bg >= 0 && bg != Color_bg)
     XftDrawRect (d, &r->PixColors[bg].c, x, y, r->TermWin.fwidth * len, r->TermWin.fheight);
@@ -949,9 +944,7 @@ rxvt_font_xft::draw (int x, int y,
 /////////////////////////////////////////////////////////////////////////////
 
 rxvt_fontset::rxvt_fontset (rxvt_t r)
-#ifdef EXPLICIT_CONTEXT
 : r(r)
-#endif
 {
   clear ();
 }
@@ -1028,7 +1021,7 @@ rxvt_fontset::add_fonts (const char *desc)
             {
               fprintf (stderr, "extra font parameters not yet supported, skipping.\n");
 
-              const char *extra = desc++;
+              //const char *extra = desc++; // not yet used
 
               desc = strchr (desc, ']');
 
@@ -1091,14 +1084,14 @@ rxvt_fontset::populate (const char *desc)
     base_id = 1;
 
   // we currently need a base-font, no matter what
-  if (fonts.size () <= base_id || !realize_font (base_id))
+  if ((int)fonts.size () <= base_id || !realize_font (base_id))
     {
       puts ("unable to load specified font(s), falling back to 'fixed'\n");
       add_fonts ("fixed");
       base_id = fonts.size () - 1;
     }
 
-  if (fonts.size () <= base_id || !realize_font (base_id))
+  if ((int)fonts.size () <= base_id || !realize_font (base_id))
     {
       fprintf (stderr, "unable to load a base font, please provide one using -fn fontname\n");
       exit (1);
@@ -1110,7 +1103,7 @@ rxvt_fontset::populate (const char *desc)
 int
 rxvt_fontset::find_font (uint32_t unicode)
 {
-  for (int i = 0; i < fonts.size (); i++)
+  for (unsigned int i = 0; i < fonts.size (); i++)
     {
       rxvt_font *f = fonts[i];
 

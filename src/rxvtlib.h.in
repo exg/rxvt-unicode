@@ -1,7 +1,3 @@
-/*
- * $Id: rxvtlib.h.in,v 1.8 2004/01/19 17:26:43 pcg Exp $
- */
-
 #ifndef _RXVTLIB_H_             /* include once only */
 #define _RXVTLIB_H_
 
@@ -76,38 +72,11 @@ typedef struct rxvt_term *rxvt_t;
 
 extern rxvt_t rxvt_current_term;
 
-#define EXPLICIT_CONTEXT 1
-
-#if EXPLICIT_CONTEXT
-
-# define pR rxvt_t rxvt_term
-# define aR rxvt_term
-# define pR_ pR,
-# define aR_ aR,
-
-# define R rxvt_term
-
 # define SET_R(r) rxvt_current_term = (r)
 # define GET_R rxvt_current_term
 
-#else
-
-# define pR
-# define pR_
-# define aR
-# define aR_
-
-# define R rxvt_current_term
-
-# define SET_R(r) rxvt_current_term = (r)
-# define GET_R R
-
-#endif
-
-#define dR rxvt_t rxvt_term = GET_R
-
-#define scrollbar_visible(rxvtvars)     ((rxvtvars)->scrollBar.state)
-#define menubar_visible(rxvtvars)       ((rxvtvars)->menuBar.state)
+#define scrollbar_visible()    scrollBar.state
+#define menubar_visible()      menuBar.state
 
 typedef struct {
   int32_t         row;
@@ -280,7 +249,7 @@ typedef struct {
   short           style;        /* style: rxvt, xterm, next                 */
   short           width;        /* scrollbar width                          */
   Window          win;
-  int             (*update)(pR_ int, int, int, int);
+  //int             (*update)(int, int, int, int);
 
   void setIdle()   { state =  1 ; }
   void setMotion() { state = 'm'; }

@@ -1204,7 +1204,7 @@ if test x$codesets = xall; then
   codesets=jp,jp-ext,kr,cn,cn-ext,vn
 fi
 for codeset in `echo $codesets | tr "[a-z,\\-]" "[A-Z _]"`; do
-  AC_DEFINE(ENCODING_EU, 1, Define if you want europeean extended codesets)
+  AC_DEFINE(ENCODING_EU, 1, Define if you want european extended codesets)
   case "$codeset" in
     VN     ) AC_DEFINE(ENCODING_VN,     1, Define if you want vietnamese codesets) ;;
     JP     ) AC_DEFINE(ENCODING_JP,     1, Define if you want japanese codesets) ;;

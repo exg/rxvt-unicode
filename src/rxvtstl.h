@@ -1,8 +1,8 @@
 #ifndef RXVT_STL_H
 #define RXVT_STL_H
 
-template<typename T> static inline T min (T a, long b) { return a < b ? a : b; }
-template<typename T> static inline T max (T a, long b) { return a > b ? a : b; }
+template<typename T, typename U> static inline T min (T a, U b) { return a < b ? a : b; }
+template<typename T, typename U> static inline T max (T a, U b) { return a > b ? a : b; }
 
 #include "simplevec.h"
 
