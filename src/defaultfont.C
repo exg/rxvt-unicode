@@ -261,7 +261,6 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
                          const text_t *text, int len,
                          int fg, int bg)
 {
-return;
   clear_rect (d, x, y, r->TermWin.fwidth * len, r->TermWin.fheight, bg);
 
   XSetForeground (d.display->display, TGC, r->PixColors[fg]);
