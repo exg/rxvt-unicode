@@ -1215,17 +1215,19 @@ rxvt_fontset::find_font (unicode_t unicode, bool bold)
             }
           else
             {
-              // try to find a new font
+              // try to find a new font.
               // only xft currently supported, as there is no
               // way to configure this and xft is easier to hack in,
               // while x11 has more framework in place already.
 #if XFT
-              // grab the first xft font that is suitable
+              // grab the first xft font that seems suitable
               FcPattern *p = FcPatternCreate ();
 
               FcCharSet *s = FcCharSetCreate ();
               FcCharSetAddChar (s, unicode);
               FcPatternAddCharSet (p, FC_CHARSET, s);
+              // charsets don't help that much, as xft might return
+              // a non-matching font even if a better font is available :/
 
               FcPatternAddInteger (p, FC_PIXEL_SIZE, base_prop.height);
               FcPatternAddInteger (p, FC_WEIGHT, base_prop.weight);
