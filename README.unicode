@@ -1,7 +1,7 @@
 Sketchy overview of the details:
 
-- gcc is probably required to compile this release, g++, too, as it has
-  been re-written in C++.
+- gcc-3.x is probably required to compile this release, g++, too, as it
+  has been re-written in C++.
 
 - the options used in the ./reconf script should work. everything else
   might be broken.

@@ -1,4 +1,4 @@
-1.8
+1.8  Mon Feb  2 20:09:18 CET 2004
 	- almost total conversion to C++. Except for introducing
           new bugs, this should not change much.
         - fix and re-enable background pixmap and inherit pixmap support.
