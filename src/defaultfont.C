@@ -315,7 +315,9 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 
   while (len--)
     {
+#if ENABLE_COMBINING
       compose_char *cc;
+#endif
       text_t t = *text++;
 
       // is it in our linedrawing table?
@@ -354,6 +356,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
           gcv.line_width = 0;
           XChangeGC (d.display->display, GC, GCLineWidth, &gcv);
         }
+#if ENABLE_COMBINING
       else if (IS_COMPOSE (t) && (cc = rxvt_composite[t]))
         {
           rxvt_font *f1 = (*fs)[fs->find_font (cc->c1)];
@@ -368,6 +371,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
               f2->draw (d, x, y, &(t = cc->c2), 1, fg, -1);
             }
         }
+#endif
       else
         switch (t)
           {

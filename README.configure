@@ -1,3 +1,10 @@
+General hint: if you get compile errors, then likely your configuration
+hasn't been tested well. Either try with --enable-everything or use the
+./reconf script as a base for experiments. ./reconf is used by myself,
+so it should generally be a working config. Of course, you should always
+report when a combination doesn't work, so it cnya be fixed. Marc Lehmann
+<rxvt@schmorp.de>.
+
 --enable-everything
         add support for all non-multichoice options listed in "./configure
         --help".  Note that unlike other enable options this is order
