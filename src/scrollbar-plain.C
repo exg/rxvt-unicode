@@ -28,7 +28,7 @@
 #if defined(PLAIN_SCROLLBAR)
 
 int
-rxvt_term::scrollbar_show_plain (int update __attribute__ ((unused)), int last_top, int last_bot, int scrollbar_len)
+rxvt_term::scrollbar_show_plain (int update, int last_top, int last_bot, int scrollbar_len)
 {
   int xsb = 0;
   int sbwidth = scrollBar.width - 1;
@@ -38,23 +38,28 @@ rxvt_term::scrollbar_show_plain (int update __attribute__ ((unused)), int last_t
       XGCValues gcvalue;
 
       scrollBar.init |= R_SB_PLAIN;
-      gcvalue.foreground = pix_colors[Color_fg];
-      gcvalue.background = pix_colors[Color_bg];
+      gcvalue.foreground = pix_colors_focused[Color_scroll];
 
       pscrollbarGC = XCreateGC (display->display, scrollBar.win,
-                                GCForeground | GCBackground, &gcvalue);
+                                GCForeground, &gcvalue);
     }
-  /* instead of XClearWindow (display->display, scrollBar.win); */
-  xsb = (options & Opt_scrollBar_right) ? 1 : 0;
-  if (last_top < scrollBar.top)
-    XClearArea (display->display, scrollBar.win,
-                sb_shadow + xsb, last_top,
-                sbwidth + 1, (scrollBar.top - last_top), False);
 
-  if (scrollBar.bot < last_bot)
-    XClearArea (display->display, scrollBar.win,
-                sb_shadow + xsb, scrollBar.bot,
-                sbwidth + 1, (last_bot - scrollBar.bot), False);
+  xsb = (options & Opt_scrollBar_right) ? 1 : 0;
+
+  if (update)
+    {
+      if (last_top < scrollBar.top)
+        XClearArea (display->display, scrollBar.win,
+                    sb_shadow + xsb, last_top,
+                    sbwidth + 1, (scrollBar.top - last_top), False);
+
+      if (scrollBar.bot < last_bot)
+        XClearArea (display->display, scrollBar.win,
+                    sb_shadow + xsb, scrollBar.bot,
+                    sbwidth + 1, (last_bot - scrollBar.bot), False);
+    }
+  else
+    XClearWindow (display->display, scrollBar.win);
 
   /* scrollbar slider */
   XFillRectangle (display->display, scrollBar.win, pscrollbarGC,

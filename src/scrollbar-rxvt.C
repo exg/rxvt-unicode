@@ -123,34 +123,38 @@ rxvt_term::Draw_button (int x, int y, int state, int dirn)
 }
 
 int
-rxvt_term::scrollbar_show_rxvt (int update __attribute__ ((unused)), int last_top, int last_bot, int scrollbar_len)
+rxvt_term::scrollbar_show_rxvt (int update, int last_top, int last_bot, int scrollbar_len)
 {
-  int             sbshadow = sb_shadow;
-  int             sbwidth = (int)scrollBar.width;
+  int sbshadow = sb_shadow;
+  int sbwidth = (int)scrollBar.width;
 
   if ((scrollBar.init & R_SB_RXVT) == 0)
     {
       scrollBar.init |= R_SB_RXVT;
       if (sbshadow)
         {
-          XSetWindowBackground (display->display, scrollBar.win, pix_colors[Color_trough]);
+          XSetWindowBackground (display->display, scrollBar.win, pix_colors_focused[Color_trough]);
           XClearWindow (display->display, scrollBar.win);
         }
     }
   else
     {
-      /* instead of XClearWindow (display->display, scrollBar.win); */
-      if (last_top < scrollBar.top)
-        XClearArea (display->display, scrollBar.win,
-                    sbshadow, last_top,
-                    sbwidth, (scrollBar.top - last_top),
-                    False);
+      if (update)
+        {
+          if (last_top < scrollBar.top)
+            XClearArea (display->display, scrollBar.win,
+                        sbshadow, last_top,
+                        sbwidth, (scrollBar.top - last_top),
+                        False);
 
-      if (scrollBar.bot < last_bot)
-        XClearArea (display->display, scrollBar.win,
-                    sbshadow, scrollBar.bot,
-                    sbwidth, (last_bot - scrollBar.bot),
-                    False);
+          if (scrollBar.bot < last_bot)
+            XClearArea (display->display, scrollBar.win,
+                        sbshadow, scrollBar.bot,
+                        sbwidth, (last_bot - scrollBar.bot),
+                        False);
+        }
+      else
+        XClearWindow (display->display, scrollBar.win);
     }
 
   /* scrollbar slider */
