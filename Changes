@@ -1,4 +1,4 @@
-1.6
+1.6  Fri Jan 30 00:34:01 CET 2004
 	- cleanups, minor bugfixes.
         - blinking text.
         - normal text color + bold gets white text instead of
