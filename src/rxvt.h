@@ -1,5 +1,5 @@
 /*
- * $Id: rxvt.h,v 1.9 2003/11/27 16:49:45 pcg Exp $
+ * $Id: rxvt.h,v 1.10 2003/12/02 21:49:46 pcg Exp $
  */
 
 #ifndef _RXVT_H_                /* include once only */
@@ -856,47 +856,27 @@ struct mbstate {
 
 struct rxvt_term : rxvt_vars {
   struct          mbstate mbstate;
-#ifdef __GNUC__
+
   unsigned char   want_refresh:1,
-                  want_full_refresh:1,
-                  am_transparent:1,
-                  am_pixmap_trans:1, 
-                  current_screen:1,
-                  hate_those_clicks:1,
+#ifdef TRANSPARENT
+                  want_full_refresh:1,	/* awaiting full screen refresh      */
+#endif
+#if defined(XPM_BACKGROUND) || defined(TRANSPARENT)
+                  am_transparent:1,	/* is a transparent term             */
+                  am_pixmap_trans:1, 	/* transparency w/known root pixmap  */
+#endif
+                  current_screen:1,	/* primary or secondary              */
+                  hate_those_clicks:1,	/* a.k.a. keep mark position         */
                   num_scr_allow:1,
-                  bypass_keystate:1;
-  unsigned char   chstat:1,
-                  lost_multi:1,
-                  multi_byte:1,
+                  bypass_keystate:1,
+#ifdef CURSOR_BLINK
                   hidden_cursor:1,
+#endif
+#ifdef POINTER_BLANK
                   hidden_pointer:1,
-                  parsed_geometry:1;
-#else
-  unsigned char   want_refresh,
-# ifdef TRANSPARENT
-                  want_full_refresh,  /* awaiting full screen refresh      */
-# endif
-# if defined(XPM_BACKGROUND) || defined(TRANSPARENT)
-                  am_transparent,     /* is a transparent term             */
-                  am_pixmap_trans,    /* transparency w/known root pixmap  */
-# endif
-                  current_screen,     /* primary or secondary              */
-                  hate_those_clicks,  /* a.k.a. keep mark position         */
-                  num_scr_allow,
-                  bypass_keystate,
-# ifdef MULTICHAR_SET
-                  chstat,
-                  lost_multi, /* set ==> we only got half a glyph */
-                  multi_byte, /* set ==> currently using 2 bytes per glyph */
-# endif
-# ifdef CURSOR_BLINK
-                  hidden_cursor,
-# endif
-# ifdef POINTER_BLANK
-                  hidden_pointer,
-# endif
-                  parsed_geometry;
-#endif  /* !__GNUC__ */
+#endif
+                  parsed_geometry:1,
+                  seen_input:1;		/* wether any input has been seen so far */
 
   unsigned char   refresh_type,
 #ifdef UTMP_SUPPORT
@@ -958,7 +938,7 @@ struct rxvt_term : rxvt_vars {
                   menu_readonly,      /* okay to alter menu? */
                   Arrows_x,
 #endif
-#if (MENUBAR_MAX > 1)
+#if MENUBAR_MAX > 1
                   Nbars,
 #endif
                   window_vt_x,
@@ -1113,6 +1093,9 @@ struct rxvt_term : rxvt_vars {
   unsigned char   cmdbuf_base[BUFSIZ];
   unsigned char   kbuf[KBUFSZ];
 
+  void flush ();
+
+  void check_cb   (check_watcher &w); check_watcher check_ev;
   void destroy_cb (time_watcher &w); time_watcher destroy_ev;
 
   void pty_cb (io_watcher &w, short revents); io_watcher pty_ev;
@@ -1131,7 +1114,7 @@ struct rxvt_term : rxvt_vars {
   void tt_printf (const char *fmt,...);
   void tt_write (const unsigned char *data, unsigned int len);
 
-  void flush ();
+  void tt_winch ();
 
   rxvt_term ();
   ~rxvt_term ();

@@ -126,11 +126,6 @@ void io_manager::loop ()
 
   for (;;)
     {
-#if IOM_CHECK
-      for (int i = 0; i < cw.size (); ++i)
-        cw[i]->call (*cw[i]);
-#endif
-
       struct timeval *to = 0;
 
 #if IOM_TIME
@@ -158,6 +153,11 @@ void io_manager::loop ()
           else
             unreg (w);
         }
+#endif
+
+#if IOM_CHECK
+      for (int i = 0; i < cw.size (); ++i)
+        cw[i]->call (*cw[i]);
 #endif
 
 #if IOM_IO

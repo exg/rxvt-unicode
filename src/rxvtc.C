@@ -44,6 +44,7 @@ main(int argc, const char *const *argv)
   {
     sigset_t ss;
 
+    sigemptyset (&ss);
     sigaddset (&ss, SIGHUP);
     sigprocmask (SIG_BLOCK, &ss, 0);
   }

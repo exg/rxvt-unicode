@@ -27,7 +27,7 @@
 
 #define IOM_IO 1
 #define IOM_TIME 1
-#undef IOM_CHECK
+#define IOM_CHECK 1
 
 #if IOM_IO
   typedef double tstamp;

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.8 2003/11/27 10:12:10 pcg Exp $
+ * $Id: main.C,v 1.9 2003/12/02 21:49:46 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -68,7 +68,8 @@ rxvt_term::rxvt_term ()
   pointer_ev (this, &rxvt_term::pointer_cb),
 #endif
   x_ev       (this, &rxvt_term::x_cb),
-  destroy_ev (this, &rxvt_term::destroy_cb)
+  destroy_ev (this, &rxvt_term::destroy_cb),
+  check_ev   (this, &rxvt_term::check_cb)
 {
   cmdbuf_ptr = cmdbuf_endp = cmdbuf_base;
 }
@@ -103,6 +104,7 @@ rxvt_term::~rxvt_term ()
 void
 rxvt_term::destroy ()
 {
+  check_ev.stop ();
   pty_ev.stop ();
   x_ev.stop ();
 #ifdef CURSOR_BLINK
@@ -127,9 +129,9 @@ rxvt_term::destroy_cb (time_watcher &w)
 /* rxvt_init() */
 /* LIBPROTO */
 rxvt_t
-rxvt_init(int argc, const char *const *argv)
+rxvt_init (int argc, const char *const *argv)
 {
-  SET_R(new rxvt_term);
+  SET_R (new rxvt_term);
   dR;
 
   if (!R->init_vars () || !R->init (argc, argv))
@@ -150,9 +152,6 @@ rxvt_init_signals ()
 #ifdef HAVE_ATEXIT
   atexit(rxvt_clean_exit);
 #else
-# ifdef HAVE_ON_EXIT
-  on_exit(rxvt_clean_exit, NULL);     /* non-ANSI exit handler */
-# endif
 #endif
 #endif
 
@@ -160,7 +159,8 @@ rxvt_init_signals ()
 
   sigfillset (&sa.sa_mask);
   sa.sa_flags = SA_NOCLDSTOP | SA_RESTART;
-  sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGHUP , &sa, 0); //TODO, also: SIGPIPE
+  sa.sa_handler = SIG_IGN;           sigaction (SIGHUP , &sa, 0);
+  sa.sa_handler = SIG_IGN;           sigaction (SIGPIPE, &sa, 0);
   sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGINT , &sa, 0);
   sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGQUIT, &sa, 0);
   sa.sa_handler = rxvt_Exit_signal;  sigaction (SIGTERM, &sa, 0);
@@ -239,7 +239,7 @@ rxvt_term::init (int argc, const char *const *argv)
   x_ev.start (Xfd, EVENT_READ);
   pty_ev.start (cmd_fd, EVENT_READ);
 
-  flush ();
+  check_ev.start ();
 
   return true;
 }
@@ -616,26 +616,25 @@ rxvt_window_calc(pR_ unsigned int width, unsigned int height)
  * Tell the teletype handler what size the window is.
  * Called after a window size change.
  */
-/* EXTPROTO */
 void
-rxvt_tt_winsize(int fd, unsigned short col, unsigned short row, int pid)
+rxvt_term::tt_winch ()
 {
-    struct winsize  ws;
+  struct winsize  ws;
 
-    if (fd < 0)
-        return;
-    ws.ws_col = col;
-    ws.ws_row = row;
-    ws.ws_xpixel = ws.ws_ypixel = 0;
+  if (cmd_fd < 0)
+    return;
+
+  ws.ws_col = TermWin.ncol;
+  ws.ws_row = TermWin.nrow;
+  ws.ws_xpixel = ws.ws_ypixel = 0;
 #ifndef DEBUG_SIZE
-    (void)ioctl(fd, TIOCSWINSZ, &ws);
+  (void)ioctl (cmd_fd, TIOCSWINSZ, &ws);
 #else
-    if (ioctl(fd, TIOCSWINSZ, &ws) < 0) {
-        D_SIZE((stderr, "Failed to send TIOCSWINSZ to fd %d", fd));
-    }
+  if (ioctl (cmd_fd, TIOCSWINSZ, &ws) < 0)
+    D_SIZE((stderr, "Failed to send TIOCSWINSZ to fd %d", fd));
 # ifdef SIGWINCH
-    else if (pid)               /* force through to the command */
-        kill(pid, SIGWINCH);
+  else if (cmd_pid)               /* force through to the command */
+    kill (cmd_pid, SIGWINCH);
 # endif
 #endif
 }
@@ -1064,8 +1063,8 @@ rxvt_setTermFontSet(pR_ int idx)
 
 /* INTPROTO */
 void
-rxvt_setPreeditArea(pR_ XRectangle * preedit_rect, XRectangle * status_rect,
-                    XRectangle * needed_rect)
+rxvt_setPreeditArea (pR_ XRectangle * preedit_rect, XRectangle * status_rect,
+                     XRectangle * needed_rect)
 {
     int             mbh, vtx = 0;
 

@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:	command.c
  *----------------------------------------------------------------------*
- * $Id: command.C,v 1.10 2003/11/27 16:49:45 pcg Exp $
+ * $Id: command.C,v 1.11 2003/12/02 21:49:46 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -658,6 +658,43 @@ rxvt_cmd_write(pR_ const unsigned char *str, unsigned int count)
 #endif				/* MENUBAR_MAX */
 
 void
+rxvt_term::flush ()
+{
+#ifdef TRANSPARENT
+  if (want_full_refresh)
+    {
+      want_full_refresh = 0;
+      rxvt_scr_clear (this);
+      rxvt_scr_touch (this, False);
+      want_refresh = 1;
+    }
+#endif
+
+  if (want_refresh)
+    {
+      rxvt_scr_refresh (this, refresh_type);
+      rxvt_scrollbar_show (this, 1);
+#ifdef USE_XIM
+      rxvt_IMSendSpot (this);
+#endif
+    }
+
+  XFlush (Xdisplay);
+#if 0
+  if (XPending (Xdisplay)) process_x_events ();
+  if (XPending (Xdisplay)) process_x_events ();
+#endif
+}
+
+void
+rxvt_term::check_cb (check_watcher &w)
+{
+  SET_R (this);
+
+  flush ();
+}
+
+void
 rxvt_term::process_x_events ()
 {
   do
@@ -711,7 +748,6 @@ rxvt_term::blink_cb (time_watcher &w)
   w.at += BLINK_INTERVAL;
   hidden_cursor = !hidden_cursor;
   want_refresh = 1;
-  flush ();
 }
 
 void
@@ -720,63 +756,6 @@ rxvt_term::x_cb (io_watcher &w, short revents)
   SET_R (this);
 
   process_x_events ();
-
-  flush ();
-}
-
-// read the next character, currently handles UTF-8
-// will probably handle all sorts of other stuff in the future
-uint32_t
-rxvt_term::next_char ()
-{
-  struct mbstate &s = mbstate;
-
-  while (cmdbuf_ptr < cmdbuf_endp)
-    {
-      uint8_t ch = *cmdbuf_ptr;
-
-      if (s.cnt)
-        {
-          if ((ch & 0xc0) == 0x80)
-            {
-              cmdbuf_ptr++;
-
-              /* continuation */
-              s.reg = (s.reg << 6) | (ch & 0x7f);
-
-              if (--s.cnt == 0 && s.reg >= 128) /* if !inrange then corruption or Racking */
-                return s.reg;
-
-              continue;
-            }
-          else
-            {
-              s.cnt = 0;
-              return s.orig; /* the _occasional_ non-utf-8 character may slip through... */
-            }
-        }
-      
-      if ((ch & 0xc0) == 0xc0)
-        {
-          cmdbuf_ptr++;
-
-          /* first byte */
-          s.orig = ch; /* for broken encodings */
-          s.reg = ch;
-          if ((ch & 0xe0) == 0xc0) { s.reg &= 0x1f; s.cnt = 1; }
-          if ((ch & 0xf0) == 0xe0) { s.reg &= 0x0f; s.cnt = 2; }
-          if ((ch & 0xf8) == 0xf0) { s.reg &= 0x07; s.cnt = 3; }
-          if ((ch & 0xfc) == 0xf8) { s.reg &= 0x03; s.cnt = 4; }
-          if ((ch & 0xfe) == 0xfc) { s.reg &= 0x01; s.cnt = 5; }
-        }
-      else
-        {
-          cmdbuf_ptr++; /* _occasional_ non-utf8 may slip through... */
-          return ch;
-        }
-    }
-
-  return NOCHAR;
 }
 
 bool
@@ -811,12 +790,14 @@ rxvt_term::pty_cb (io_watcher &w, short revents)
   else if (revents & EVENT_READ)
     // loop, but don't allow a single term to monopolize us
     // the number of loops is fully arbitrary, and thus wrong
-    for (int i = 7; i-- && pty_fill (); )
+    for (int i = 1; i-- && pty_fill (); )
       {
-        //TODO:
-        /* once we know the shell is running, send the screen size.  Again! */
-        //ch = rxvt_cmd_getc(aR);	/* wait for something */
-        //rxvt_tt_winsize(cmd_fd, TermWin.ncol, TermWin.nrow, cmd_pid);
+        if (!seen_input)
+          {
+            seen_input = 1;
+            /* once we know the shell is running, send the screen size.  Again! */
+            tt_winch ();
+          }
 
         uint32_t ch = NOCHAR;
 
@@ -908,35 +889,61 @@ rxvt_term::pty_cb (io_watcher &w, short revents)
               }
           }
       }
-
-  flush ();
 }
 
-void
-rxvt_term::flush ()
+// read the next character, currently handles UTF-8
+// will probably handle all sorts of other stuff in the future
+uint32_t
+rxvt_term::next_char ()
 {
-#ifdef TRANSPARENT
-  if (want_full_refresh)
-    {
-      want_full_refresh = 0;
-      rxvt_scr_clear (this);
-      rxvt_scr_touch (this, False);
-      want_refresh = 1;
-    }
-#endif
+  struct mbstate &s = mbstate;
 
-  if (want_refresh)
+  while (cmdbuf_ptr < cmdbuf_endp)
     {
-      rxvt_scr_refresh (this, refresh_type);
-      rxvt_scrollbar_show (this, 1);
-#ifdef USE_XIM
-      rxvt_IMSendSpot (this);
-#endif
+      uint8_t ch = *cmdbuf_ptr;
+
+      if (s.cnt)
+        {
+          if ((ch & 0xc0) == 0x80)
+            {
+              cmdbuf_ptr++;
+
+              /* continuation */
+              s.reg = (s.reg << 6) | (ch & 0x7f);
+
+              if (--s.cnt == 0 && s.reg >= 128) /* if !inrange then corruption or Racking */
+                return s.reg;
+
+              continue;
+            }
+          else
+            {
+              s.cnt = 0;
+              return s.orig; /* the _occasional_ non-utf-8 character may slip through... */
+            }
+        }
+      
+      if ((ch & 0xc0) == 0xc0)
+        {
+          cmdbuf_ptr++;
+
+          /* first byte */
+          s.orig = ch; /* for broken encodings */
+          s.reg = ch;
+          if ((ch & 0xe0) == 0xc0) { s.reg &= 0x1f; s.cnt = 1; }
+          if ((ch & 0xf0) == 0xe0) { s.reg &= 0x0f; s.cnt = 2; }
+          if ((ch & 0xf8) == 0xf0) { s.reg &= 0x07; s.cnt = 3; }
+          if ((ch & 0xfc) == 0xf8) { s.reg &= 0x03; s.cnt = 4; }
+          if ((ch & 0xfe) == 0xfc) { s.reg &= 0x01; s.cnt = 5; }
+        }
+      else
+        {
+          cmdbuf_ptr++; /* _occasional_ non-utf8 may slip through... */
+          return ch;
+        }
     }
 
-  if (XPending (Xdisplay)) process_x_events ();
-  XFlush (Xdisplay);
-  if (XPending (Xdisplay)) process_x_events ();
+  return NOCHAR;
 }
 
 /* rxvt_cmd_getc() - Return next input character */
@@ -2096,15 +2103,15 @@ rxvt_popen_printer(pR)
 
 /* EXTPROTO */
 int
-rxvt_pclose_printer(FILE *stream)
+rxvt_pclose_printer (FILE *stream)
 {
-    fflush(stream);
+  fflush (stream);
 /* pclose() reported not to work on SunOS 4.1.3 */
 # if defined (__sun__)		/* TODO: RESOLVE THIS */
 /* pclose works provided SIGCHLD handler uses waitpid */
-    return pclose(stream);	/* return fclose (stream); */
+  return pclose (stream);	/* return fclose (stream); */
 # else
-    return pclose(stream);
+  return pclose (stream);
 # endif
 }
 

@@ -153,14 +153,6 @@ void server::read_cb (io_watcher &w, short revents)
 int
 main(int argc, const char *const *argv)
 {
-  {
-    sigset_t ss;
-
-    sigaddset (&ss, SIGHUP);
-    sigaddset (&ss, SIGPIPE);
-    sigprocmask (SIG_BLOCK, &ss, 0);
-  }
-
   rxvt_init_signals ();
 
   char *sockname = rxvt_connection::unix_sockname ();

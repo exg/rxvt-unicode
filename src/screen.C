@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*--------------------------------------*
  * File:        screen.c
  *---------------------------------------------------------------------------*
- * $Id: screen.C,v 1.5 2003/11/27 16:49:45 pcg Exp $
+ * $Id: screen.C,v 1.6 2003/12/02 21:49:46 pcg Exp $
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
  *
@@ -38,10 +38,6 @@ inline void fill_text (text_t *start, text_t value, int len)
   while (len--)
     *start++ = value;
 }
-
-#define RESET_CHSTAT(H)                         \
-    if ((H)->chstat == WBYTE)                   \
-        (H)->chstat = SBYTE, (H)->lost_multi = 1
 
 /* ------------------------------------------------------------------------- */
 #define PROP_SIZE               16384
@@ -166,7 +162,6 @@ rxvt_scr_reset(pR)
     D_SCREEN((stderr, "rxvt_scr_reset()"));
 
     R->TermWin.view_start = 0;
-    RESET_CHSTAT(R);
     R->num_scr = 0;
 
     prev_ncol = R->prev_ncol;
@@ -365,7 +360,7 @@ rxvt_scr_reset(pR)
     R->prev_nrow = nrow;
     R->prev_ncol = ncol;
 
-    rxvt_tt_winsize (R->cmd_fd, R->TermWin.ncol, R->TermWin.nrow, R->cmd_pid);
+    R->tt_winch ();
 }
 
 /* INTPROTO */
@@ -534,7 +529,6 @@ rxvt_scr_change_screen(pR_ int scrn)
     D_SCREEN((stderr, "rxvt_scr_change_screen(%d)", scrn));
 
     R->TermWin.view_start = 0;
-    RESET_CHSTAT(R);
 
     if (R->current_screen == scrn)
         return R->current_screen;
@@ -799,14 +793,12 @@ rxvt_scr_add_lines(pR_ const uint32_t *str, int nlines, int len)
                 row = (++R->screen.cur.row) + R->TermWin.saveLines;
             stp = R->screen.text[row];  /* _must_ refresh */
             srp = R->screen.rend[row];  /* _must_ refresh */
-            RESET_CHSTAT(R);
             continue;
         case '\r':
             if (R->screen.tlen[row] != -1)      /* XXX: think about this */
                 MAX_IT(R->screen.tlen[row], R->screen.cur.col);
             R->screen.flags &= ~Screen_WrapNext;
             R->screen.cur.col = 0;
-            RESET_CHSTAT(R);
             continue;
         default:
             if (c == 127)
@@ -909,7 +901,6 @@ rxvt_scr_add_lines(pR_ const uint32_t *str, int nlines, int len)
 void
 rxvt_scr_backspace(pR)
 {
-    RESET_CHSTAT(R);
     R->want_refresh = 1;
     if (R->screen.cur.col == 0) {
         if (R->screen.cur.row > 0) {
@@ -938,7 +929,6 @@ rxvt_scr_tab(pR_ int count)
 
     D_SCREEN((stderr, "rxvt_scr_tab(%d)", count));
     R->want_refresh = 1;
-    RESET_CHSTAT(R);
     i = x = R->screen.cur.col;
     if (count == 0)
         return;
@@ -1025,7 +1015,6 @@ rxvt_scr_gotorc(pR_ int row, int col, int relative)
 {
     R->want_refresh = 1;
     ZERO_SCROLLBACK(R);
-    RESET_CHSTAT(R);
 #ifdef RXVT_GRAPHICS
     if (rxvt_Gr_Displayed(aR))
         rxvt_Gr_scroll(aR_ 0);
@@ -1079,7 +1068,6 @@ rxvt_scr_index(pR_ enum page_dirn direction)
     D_SCREEN((stderr, "rxvt_scr_index(%d)", dirn));
 
     ZERO_SCROLLBACK(R);
-    RESET_CHSTAT(R);
 
 #ifdef RXVT_GRAPHICS
     if (rxvt_Gr_Displayed(aR))
@@ -1113,7 +1101,6 @@ rxvt_scr_erase_line(pR_ int mode)
     R->want_refresh = 1;
     D_SCREEN((stderr, "rxvt_scr_erase_line(%d) at screen row: %d", mode, R->screen.cur.row));
     ZERO_SCROLLBACK(R);
-    RESET_CHSTAT(R);
 
 #ifdef RXVT_GRAPHICS
     if (rxvt_Gr_Displayed(aR))
@@ -1180,7 +1167,6 @@ rxvt_scr_erase_screen(pR_ int mode)
     R->want_refresh = 1;
     D_SCREEN((stderr, "rxvt_scr_erase_screen(%d) at screen row: %d", mode, R->screen.cur.row));
     ZERO_SCROLLBACK(R);
-    RESET_CHSTAT(R);
     row_offset = (int32_t)R->TermWin.saveLines;
 
     switch (mode) {
@@ -1254,7 +1240,6 @@ rxvt_scr_E(pR)
     R->want_refresh = 1;
     R->num_scr_allow = 0;
     ZERO_SCROLLBACK(R);
-    RESET_CHSTAT(R);
     rxvt_selection_check(aR_ 3);
 
     fs = SET_FONT (R->rstyle, R->TermWin.fontset->find_font ('E'));
@@ -1277,7 +1262,6 @@ rxvt_scr_insdel_lines(pR_ int count, int insdel)
     int             end;
 
     ZERO_SCROLLBACK(R);
-    RESET_CHSTAT(R);
 
 #ifdef RXVT_GRAPHICS
     if (rxvt_Gr_Displayed(aR))
@@ -1318,9 +1302,6 @@ rxvt_scr_insdel_chars(pR_ int count, int insdel)
 
     R->want_refresh = 1;
     ZERO_SCROLLBACK(R);
-#if 0
-    RESET_CHSTAT(R);
-#endif
 
 #ifdef RXVT_GRAPHICS
     if (rxvt_Gr_Displayed(aR))
