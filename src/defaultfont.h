@@ -111,6 +111,7 @@ struct rxvt_fontset {
 
   bool populate (const char *desc);
   int find_font (uint32_t unicode, bool bold = false);
+  int find_font (const char *name) const;
 
   // font-id's MUST fit into a signed 16 bit integer.
   rxvt_font *operator [] (int id) const

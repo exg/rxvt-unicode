@@ -101,10 +101,6 @@ const struct rxvt_fallback_font {
   { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-c-*-iso10646-1"         },
   { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1"         },
 
-#if UNICODE_3 && XFT
-  { CS_UNICODE,      "xft:Code2001"                                }, // contains many plane-1 characters
-#endif
-
   { CS_UNKNOWN, 0 }
 };
 
@@ -545,7 +541,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
 
   char **list;
   int count;
-  list = XListFonts (DISPLAY, name, 512, &count);
+  list = XListFonts (DISPLAY, name, 1024, &count);
   set_name (0);
 
   if (!list)
@@ -848,9 +844,12 @@ rxvt_font_xft::properties ()
 
   FT_Face face = XftLockFace (f);
 
-  p.width = width; p.height = height;
-  p.weight = face->style_flags & FT_STYLE_FLAG_BOLD ? rxvt_fontprop::bold : rxvt_fontprop::medium;
-  p.slant = face->style_flags & FT_STYLE_FLAG_ITALIC ? rxvt_fontprop::italic : rxvt_fontprop::roman;
+  p.width  = width;
+  p.height = height;
+  p.weight = face->style_flags & FT_STYLE_FLAG_BOLD
+               ? rxvt_fontprop::bold : rxvt_fontprop::medium;
+  p.slant  = face->style_flags & FT_STYLE_FLAG_ITALIC
+               ? rxvt_fontprop::italic : rxvt_fontprop::roman;
 
   XftUnlockFace (f);
 
@@ -873,6 +872,9 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
     return false;
 
   FcValue v;
+
+  if (FcPatternGet (p, FC_PIXEL_SIZE, 0, &v) != FcResultMatch)
+    FcPatternAddInteger (p, FC_PIXEL_SIZE, prop.height);
 
   if (FcPatternGet (p, FC_WEIGHT, 0, &v) != FcResultMatch)
     FcPatternAddInteger (p, FC_WEIGHT, prop.weight);
@@ -1165,8 +1167,19 @@ rxvt_fontset::populate (const char *desc)
 }
 
 int
+rxvt_fontset::find_font (const char *name) const
+{
+  for (rxvt_font *const *f = fonts.begin (); f < fonts.end (); f++)
+    if ((*f)->name && !strcmp ((*f)->name, name))
+      return f - fonts.begin ();
+
+  return -1;
+}
+
+int
 rxvt_fontset::find_font (unicode_t unicode, bool bold)
 {
+
   for (unsigned int i = !!(0x20 <= unicode && unicode <= 0x7f); // skip pseudo-font for ascii
        i < fonts.size ();
        i++)
@@ -1192,11 +1205,55 @@ rxvt_fontset::find_font (unicode_t unicode, bool bold)
         return i;
 
     next_font:
-      if (i == fonts.size () - 1 && fallback->name)
+      if (i == fonts.size () - 1)
         {
-          fonts.push_back (new_font (fallback->name, fallback->cs));
-          fallback++;
-          i = 0;
+          if (fallback->name)
+            {
+              // search through the fallback list
+              fonts.push_back (new_font (fallback->name, fallback->cs));
+              fallback++;
+            }
+          else
+            {
+              // try to find a new font
+              // only xft currently supported, as there is no
+              // way to configure this and xft is easier to hack in,
+              // while x11 has more framework in place already.
+#if XFT
+              // grab the first xft font that is suitable
+              FcPattern *p = FcPatternCreate ();
+
+              FcCharSet *s = FcCharSetCreate ();
+              FcCharSetAddChar (s, unicode);
+              FcPatternAddCharSet (p, FC_CHARSET, s);
+
+              FcPatternAddInteger (p, FC_PIXEL_SIZE, base_prop.height);
+              FcPatternAddInteger (p, FC_WEIGHT, base_prop.weight);
+              FcPatternAddInteger (p, FC_SLANT, base_prop.slant);
+
+              XftResult result;
+              FcPattern *match = XftFontMatch (DISPLAY, DefaultScreen (DISPLAY), p, &result);
+
+              FcPatternDestroy (p);
+
+              if (match)
+                {
+                  FcPatternDel (match, FC_CHARSET);
+                  char *font = (char *)FcNameUnparse (match);
+                  FcPatternDestroy (match);
+
+                  if (find_font (font) < 0)
+                    {
+                      char fontname[4096];
+                      sprintf (fontname, "xft:%-.4090s", font);
+
+                      fonts.push_back (new_font (fontname, CS_UNICODE)); 
+                    }
+
+                  free (font);
+                }
+#endif
+            }
         }
     }
 
