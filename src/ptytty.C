@@ -49,9 +49,11 @@
 # include <stropts.h>
 #endif
 
-#if defined( __FreeBSD__)
 // better do this via configure, but....
+#if defined(__FreeBSD__)
 # include <libutil.h>
+#elif defined(__DARWIN__)
+# include <util.h>
 #endif
 
 #include <cstdio>
