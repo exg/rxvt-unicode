@@ -157,6 +157,9 @@ const char *const def_colorName[] =
     NULL,                       /* Color_UL                       */
     NULL,                       /* Color_RV                       */
 #endif                          /* ! NO_BOLD_UNDERLINE_REVERSE */
+#if ENABLE_FRILLS
+    NULL,			// Color_underline
+#endif
 #ifdef OPTION_HC
     NULL,
 #endif
@@ -192,7 +195,7 @@ const char *const xa_names[] =
 #endif
 #ifdef TRANSPARENT
     "_XROOTPMAP_ID",
-    "_XSETROOT_ID",
+    "ESETROOT_PMAP_ID",
 #endif
 #ifdef OFFIX_DND
     "DndProtocol",

@@ -89,7 +89,7 @@ struct rxvt_display : refcounted {
   operator Display *() const { return display; }
 
   void flush ();
-
+  Atom atom (const char *name);
   void set_selection_owner (rxvt_term *owner);
 
   void reg (xevent_watcher *w);
@@ -102,8 +102,6 @@ struct rxvt_display : refcounted {
   rxvt_xim *get_xim (const char *locale, const char *modifiers);
   void put_xim (rxvt_xim *xim);
 #endif
-
-  Atom atom (const char *name);
 };
 
 #ifdef USE_XIM

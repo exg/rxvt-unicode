@@ -1000,10 +1000,6 @@ rxvt_term::set_colorfgbg ()
 }
 
 /*----------------------------------------------------------------------*/
-/*
- * Colour determination for low colour displays, routine from
- *     Hans de Goede <hans@highrise.nl>
- */
 
 int
 rxvt_term::rXParseAllocColor (rxvt_color *screen_in_out, const char *colour)

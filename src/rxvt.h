@@ -502,6 +502,9 @@ enum colour_list {
   Color_UL,
   Color_RV,
 #endif
+#if ENABLE_FRILLS
+  Color_underline,
+#endif
 #ifdef OPTION_HC
   Color_HC,
 #endif
@@ -651,8 +654,8 @@ enum {
   XA_WM_LOCALE_NAME,
 #endif
 #if TRANSPARENT
-  XA_XROOTPMAPID,
-  XA_XSETROOTID,
+  XA_XROOTPMAP_ID,
+  XA_ESETROOT_PMAP_ID,
 #endif
 #if OFFIX_DND                /* OffiX Dnd (drag 'n' drop) support */
   XA_DNDPROTOCOL,

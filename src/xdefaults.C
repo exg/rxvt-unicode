@@ -166,6 +166,9 @@ optList[] = {
               RSTRG (Rs_color + Color_UL, "colorUL", "color"),
               RSTRG (Rs_color + Color_RV, "colorRV", "color"),
 #endif				/* ! NO_BOLD_UNDERLINE_REVERSE */
+#if ENABLE_FRILLS
+              RSTRG (Rs_color + Color_underline, "underlineColor", "color"),
+#endif
 #ifdef KEEP_SCROLLCOLOR
               RSTRG (Rs_color + Color_scroll, "scrollColor", "color"),
               RSTRG (Rs_color + Color_trough, "troughColor", "color"),

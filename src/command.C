@@ -1670,10 +1670,8 @@ rxvt_term::rootwin_cb (XEvent &ev)
          * if user used some Esetroot compatible prog to set the root bg,
          * use the property to determine the pixmap.  We use it later on.
          */
-        if (xa[XA_XROOTPMAPID] == 0)
-          xa[XA_XROOTPMAPID] = XInternAtom (display->display, "_XROOTPMAP_ID", False);
-
-        if (ev.xproperty.atom != xa[XA_XROOTPMAPID])
+        if (ev.xproperty.atom == xa[XA_XROOTPMAP_ID]
+            || ev.xproperty.atom == xa[XA_ESETROOT_PMAP_ID])
           return;
 
         /* FALLTHROUGH */
@@ -2353,14 +2351,14 @@ rxvt_term::check_our_parents ()
    * the root background. Some window managers put multiple nested frame
    * windows for each client, so we have to take care about that.
    */
-  i = (xa[XA_XROOTPMAPID]
-       && XGetWindowProperty (display->display, display->root, xa[XA_XROOTPMAPID],
+  i = (xa[XA_XROOTPMAP_ID]
+       && XGetWindowProperty (display->display, display->root, xa[XA_XROOTPMAP_ID],
                               0L, 1L, False, XA_PIXMAP, &atype, &aformat,
                               &nitems, &bytes_after, &prop) == Success);
 
   if (!i || prop == NULL)
-     i = (xa[XA_XSETROOTID]
-          && XGetWindowProperty (display->display, display->root, xa[XA_XSETROOTID],
+     i = (xa[XA_ESETROOT_PMAP_ID]
+          && XGetWindowProperty (display->display, display->root, xa[XA_ESETROOT_PMAP_ID],
                                  0L, 1L, False, XA_PIXMAP, &atype, &aformat,
                                  &nitems, &bytes_after, &prop) == Success);
 

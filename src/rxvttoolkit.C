@@ -388,12 +388,17 @@ rxvt_color::set (rxvt_display *display, Pixel p)
 bool
 rxvt_color::set (rxvt_display *display, const char *name)
 {
+#if XFT
+  return XftColorAllocName (display->display, display->visual, display->cmap,
+                            name, &c);
+#else
   XColor xc;
 
   if (XParseColor (display->display, display->cmap, name, &xc))
     return set (display, xc.red, xc.green, xc.blue);
 
   return false;
+#endif
 }
 
 bool

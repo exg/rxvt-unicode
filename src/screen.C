@@ -2402,7 +2402,13 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 
           if (rend & RS_Uline && font->descent > 1 && fore != back)
             {
-              XSetForeground (display->display, TermWin.gc, pix_colors[fore]);
+#if ENABLE_FRILLS
+              if (ISSET_PIXCOLOR (Color_underline))
+                XSetForeground (display->display, TermWin.gc, pix_colors[Color_underline]);
+              else
+#endif
+                XSetForeground (display->display, TermWin.gc, pix_colors[fore]);
+
               XDrawLine (display->display, drawBuffer, TermWin.gc,
                          xpixel, ypixel + font->ascent + 1,
                          xpixel + Width2Pixel (count) - 1, ypixel + font->ascent + 1);
