@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*---------------------------------*
  * File:        main.c
  *----------------------------------------------------------------------*
- * $Id: main.C,v 1.18 2003/12/19 06:17:03 pcg Exp $
+ * $Id: main.C,v 1.19 2003/12/24 09:22:29 pcg Exp $
  *
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
@@ -957,11 +957,16 @@ rxvt_term::resize_all_windows (unsigned int width, unsigned int height, int igno
   if (fix_screen || old_height == 0)
     {
       int curr_screen = -1;
-      uint16_t old_ncol = prev_ncol;
+      int old_ncol = prev_ncol;
 
       /* scr_reset only works on the primary screen */
       if (old_height)      /* this is not the first time through */
-        curr_screen = rxvt_scr_change_screen (this, PRIMARY);
+        {
+          unsigned int ncol = TermWin.ncol;
+          TermWin.ncol = prev_ncol; // save b/c scr_blank_screen_mem uses this
+          curr_screen = rxvt_scr_change_screen (this, PRIMARY);
+          TermWin.ncol = ncol;
+        }
 
       scr_reset();
 

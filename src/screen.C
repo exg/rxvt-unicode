@@ -1,7 +1,7 @@
 /*--------------------------------*-C-*--------------------------------------*
  * File:        screen.c
  *---------------------------------------------------------------------------*
- * $Id: screen.C,v 1.12 2003/12/18 14:11:47 pcg Exp $
+ * $Id: screen.C,v 1.13 2003/12/24 09:22:29 pcg Exp $
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
  *
@@ -291,7 +291,7 @@ rxvt_term::scr_reset ()
           /* add rows */
           scr_reset_realloc (); /* realloc _first_ */
 
-          TermWin.ncol =  prev_ncol; // save b/c scr_blank_screen_mem uses this
+          TermWin.ncol = prev_ncol; // save b/c scr_blank_screen_mem uses this
 
           k = min (TermWin.nscrolled, nrow - prev_nrow);
 
