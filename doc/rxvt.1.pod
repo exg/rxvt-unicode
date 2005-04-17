@@ -817,7 +817,8 @@ Mouse pointer background colour.
 
 =item B<pointerBlankDelay:> I<number>
 
-Specifies number of seconds before blanking the pointer [default 2].
+Specifies number of seconds before blanking the pointer [default 2]. Use a
+large number (e.g. C<987654321>) to effectively disable the timeout.
 
 =item B<backspacekey:> I<string>
 

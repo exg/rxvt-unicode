@@ -22,13 +22,14 @@ CONFIGURE OPTIONS
         fonts can be set manually or automatically.
 
     --with-codesets=NAME,...
-        Compile in support for additional codeset (encoding) groups (eu, vn
-        are always compiled in, which includes most 8-bit character sets).
-        These codeset tables are currently only used for driving X11 core
-        fonts, they are not required for Xft fonts. Compiling them in will
-        make your binary bigger (together about 700kB), but it doesn't
-        increase memory usage unless you use an X11 font requiring one of
-        these encodings.
+        Compile in support for additional codeset (encoding) groups ("eu",
+        "vn" are always compiled in, which includes most 8-bit character
+        sets). These codeset tables are used for driving X11 core fonts,
+        they are not required for Xft fonts, although having them compiled
+        in lets rxvt-unicode choose replacement fonts more intelligently.
+        Compiling them in will make your binary bigger (all of together cost
+        about 700kB), but it doesn't increase memory usage unless you use a
+        font requiring one of these encodings.
 
            all             all available codeset groups 
            zh              common chinese encodings 
@@ -189,6 +190,7 @@ CONFIGURE OPTIONS
           tripleclickwords
           settable insecure mode
           keysym remapping support
+          cursor blinking and underline cursor
           -embed and -pty-fd options
 
     --enable-iso14755
@@ -228,9 +230,6 @@ CONFIGURE OPTIONS
         Add smart growth/shrink behaviour when changing font size via from
         hot keys. This should keep in a fixed position the rxvt corner which
         is closest to a corner of the screen.
-
-    --enable-cursor-blink
-        Add support for a blinking cursor.
 
     --enable-pointer-blank
         Add support to have the pointer disappear when typing or inactive.

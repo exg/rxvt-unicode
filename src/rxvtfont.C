@@ -132,10 +132,10 @@ const struct rxvt_fallback_font {
   { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-c-*-iso10646-1"         },
   { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1"         },
 #if XFT
-  { CS_UNICODE,      "xft:Bitstream Vera Sans Mono:antialias=false:autohint=true"},
-  { CS_UNICODE,      "xft:Courier New:antialias=false:autohint=true" },
-  { CS_UNICODE,      "xft:Andale Mono:antialias=false"             },
-  { CS_UNICODE,      "xft:Arial Unicode MS:antialias=false"        },
+  { CS_UNICODE,      "xft:Bitstream Vera Sans Mono:antialias=false:autohint=true" },
+  { CS_UNICODE,      "xft:Courier New:antialias=false:autohint=true"              },
+  { CS_UNICODE,      "xft:Andale Mono:antialias=false:autohint=false"             },
+  { CS_UNICODE,      "xft:Arial Unicode MS:antialias=false:autohint=false"        },
 
   // FreeMono is usually uglier than x fonts, so try last only.
   { CS_UNICODE,      "xft:FreeMono:autohint=true"                  },

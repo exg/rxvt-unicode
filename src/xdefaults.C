@@ -140,8 +140,9 @@ optList[] = {
 #if ENABLE_FRILLS
               BOOL (Rs_tripleclickwords, "tripleclickwords", "tcw", Opt_tripleclickwords, "triple click word selection"),
               BOOL (Rs_insecure, "insecure", "insecure", Opt_insecure, "enable possibly insecure escape sequences"),
+              BOOL (Rs_cursorUnderline, "cursorUnderline", "uc", Opt_cursorUnderline, "underline cursor"),
 #endif
-#ifdef CURSOR_BLINK
+#if CURSOR_BLINK
               BOOL (Rs_cursorBlink, "cursorBlink", "bc", Opt_cursorBlink, "blinking cursor"),
 #endif
 #ifdef POINTER_BLANK

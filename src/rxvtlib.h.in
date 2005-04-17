@@ -222,6 +222,7 @@ typedef struct {
 # define Opt_borderLess		0
 #endif
 #define Opt_pastableTabs	(1UL<<25)
+#define Opt_cursorUnderline	(1UL<<26)
 /* place holder used for parsing command-line options */
 #define Opt_Reverse             (1UL<<30)
 #define Opt_Boolean             (1UL<<31)

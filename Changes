@@ -11,6 +11,16 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
+5.4  Mon Apr 18 00:33:31 CEST 2005
+	- match modifier state exactly in custom keyboard code.
+          this is necessary because it has no knowledge about
+          built-in mappings and so will overwrite them. the priority-code
+          will be re-enabled when this has changed, so watch out.
+	- cursor blinking now depends on frills.
+        - underline cursor mode (frills, -uc).
+	- implement special value (*g*) for pointerBlankDelay
+          to disble it.
+
 5.3  Sun Mar 13 00:20:44 CET 2005
 	- fix a bug that allowed to overflow a buffer via a long
           escape sequence, which is probably exploitable (fix by

@@ -461,8 +461,13 @@ keyboard_manager::find_keysym (KeySym keysym, unsigned int state)
       keysym_t *key = keymap [index];
 
       if (key->keysym <= keysym && keysym < key->keysym + key->range
+#if 0 // disabled because the custom ekymap does not know the builtin keymap
           // match only the specified bits in state and ignore others
-          && (key->state & state) == key->state)
+          && (key->state & state) == key->state
+#else // re-enable this part once the builtin keymap is handled here, too
+          && key->state == state
+#endif
+          )
         return index;
     }
 

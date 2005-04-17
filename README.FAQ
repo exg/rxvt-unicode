@@ -281,13 +281,16 @@ FREQUENTLY ASKED QUESTIONS
         representation of wchar_t. This is, of course, completely fine with
         respect to standards.
 
-        However, "__STDC_ISO_10646__" is the only sane way to support
-        multi-language apps in an OS, as using a locale-dependent (and
-        non-standardized) representation of wchar_t makes it impossible to
-        convert between wchar_t (as used by X11 and your applications) and
-        any other encoding without implementing OS-specific-wrappers for
-        each and every locale. There simply are no APIs to convert wchar_t
-        into anything except the current locale encoding.
+        However, that means rxvt-unicode only works in "POSIX", "ISO-8859-1"
+        and "UTF-8" locales under FreeBSD (which all use Unicode as wchar_t.
+
+        "__STDC_ISO_10646__" is the only sane way to support multi-language
+        apps in an OS, as using a locale-dependent (and non-standardized)
+        representation of wchar_t makes it impossible to convert between
+        wchar_t (as used by X11 and your applications) and any other
+        encoding without implementing OS-specific-wrappers for each and
+        every locale. There simply are no APIs to convert wchar_t into
+        anything except the current locale encoding.
 
         Some applications (such as the formidable mlterm) work around this
         by carrying their own replacement functions for character set

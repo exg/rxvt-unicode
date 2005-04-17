@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 5.2, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 5.3, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -699,6 +699,8 @@ RESOURCES (available also as long-options)
 
     pointerBlankDelay: *number*
         Specifies number of seconds before blanking the pointer [default 2].
+        Use a large number (e.g. 987654321) to effectively disable the
+        timeout.
 
     backspacekey: *string*
         The string to send when the backspace key is pressed. If set to DEC

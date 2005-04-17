@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2005-02-21" "5.2" "RXVT-UNICODE"
+.TH rxvt 7 "2005-04-17" "5.3" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -459,13 +459,16 @@ As you might have guessed, FreeBSD does neither define this symobl nor
 does it support it. Instead, it uses it's own internal representation of
 \&\fBwchar_t\fR. This is, of course, completely fine with respect to standards.
 .Sp
-However, \f(CW\*(C`_\|_STDC_ISO_10646_\|_\*(C'\fR is the only sane way to support
-multi-language apps in an \s-1OS\s0, as using a locale-dependent (and
-non\-standardized) representation of \fBwchar_t\fR makes it impossible to
-convert between \fBwchar_t\fR (as used by X11 and your applications) and any
-other encoding without implementing OS-specific-wrappers for each and
-every locale. There simply are no APIs to convert \fBwchar_t\fR into anything
-except the current locale encoding.
+However, that means rxvt-unicode only works in \f(CW\*(C`POSIX\*(C'\fR, \f(CW\*(C`ISO\-8859\-1\*(C'\fR and
+\&\f(CW\*(C`UTF\-8\*(C'\fR locales under FreeBSD (which all use Unicode as \fBwchar_t\fR.
+.Sp
+\&\f(CW\*(C`_\|_STDC_ISO_10646_\|_\*(C'\fR is the only sane way to support multi-language
+apps in an \s-1OS\s0, as using a locale-dependent (and non\-standardized)
+representation of \fBwchar_t\fR makes it impossible to convert between
+\&\fBwchar_t\fR (as used by X11 and your applications) and any other encoding
+without implementing OS-specific-wrappers for each and every locale. There
+simply are no APIs to convert \fBwchar_t\fR into anything except the current
+locale encoding.
 .Sp
 Some applications (such as the formidable \fBmlterm\fR) work around this
 by carrying their own replacement functions for character set handling
@@ -2189,12 +2192,13 @@ Add support for \fBbold\fR, \fIitalic\fR and \fB\f(BIbold italic\fB\fR font
 styles. The fonts can be set manually or automatically.
 .IP "\-\-with\-codesets=NAME,..." 4
 .IX Item "--with-codesets=NAME,..."
-Compile in support for additional codeset (encoding) groups (eu, vn are
-always compiled in, which includes most 8\-bit character sets). These
-codeset tables are currently only used for driving X11 core fonts, they
-are not required for Xft fonts. Compiling them in will make your binary
-bigger (together about 700kB), but it doesn't increase memory usage unless
-you use an X11 font requiring one of these encodings.
+Compile in support for additional codeset (encoding) groups (\f(CW\*(C`eu\*(C'\fR, \f(CW\*(C`vn\*(C'\fR
+are always compiled in, which includes most 8\-bit character sets). These
+codeset tables are used for driving X11 core fonts, they are not required
+for Xft fonts, although having them compiled in lets rxvt-unicode choose
+replacement fonts more intelligently. Compiling them in will make your
+binary bigger (all of together cost about 700kB), but it doesn't increase
+memory usage unless you use a font requiring one of these encodings.
 .TS
 l l .
 all	all available codeset groups
@@ -2346,7 +2350,7 @@ disable this.
 A non-exhaustive list of features enabled by \f(CW\*(C`\-\-enable\-frills\*(C'\fR (possibly
 in combination with other switches) is:
 .Sp
-.Vb 12
+.Vb 13
 \&  MWM-hints
 \&  EWMH-hints (pid, utf8 names) and protocols (ping)
 \&  seperate underline colour
@@ -2358,6 +2362,7 @@ in combination with other switches) is:
 \&  tripleclickwords
 \&  settable insecure mode
 \&  keysym remapping support
+\&  cursor blinking and underline cursor
 \&  -embed and -pty-fd options
 .Ve
 .IP "\-\-enable\-iso14755" 4
@@ -2399,9 +2404,6 @@ See <http://g.oswego.edu/dl/html/malloc.html> for details.
 Add smart growth/shrink behaviour when changing font size via from hot
 keys. This should keep in a fixed position the rxvt corner which is
 closest to a corner of the screen.
-.IP "\-\-enable\-cursor\-blink" 4
-.IX Item "--enable-cursor-blink"
-Add support for a blinking cursor.
 .IP "\-\-enable\-pointer\-blank" 4
 .IX Item "--enable-pointer-blank"
 Add support to have the pointer disappear when typing or inactive.

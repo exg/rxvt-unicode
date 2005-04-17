@@ -2015,16 +2015,6 @@ rxvt_term::scr_printscreen (int fullhist)
  * drawn_text/drawn_rend contain the screen information before the update.
  * screen.text/screen.rend contain what the screen will change to.
  */
-
-#define FONT_WIDTH(X, Y)                                                \
-    (X)->per_char[ (Y) - (X)->min_char_or_byte2].width
-#define FONT_RBEAR(X, Y)                                                \
-    (X)->per_char[ (Y) - (X)->min_char_or_byte2].rbearing
-#define FONT_LBEAR(X, Y)                                                \
-    (X)->per_char[ (Y) - (X)->min_char_or_byte2].lbearing
-#define IS_FONT_CHAR(X, Y)                                              \
-    ((Y) >= (X)->min_char_or_byte2 && (Y) <= (X)->max_char_or_byte2)
-
 void
 rxvt_term::scr_refresh (unsigned char refresh_type)
 {
@@ -2053,10 +2043,10 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
   row_offset = TermWin.saveLines - TermWin.view_start;
 
 #if XPM_BACKGROUND
-  must_clear |= (bgPixmap.pixmap != None);
+  must_clear |= bgPixmap.pixmap != None;
 #endif
 #if TRANSPARENT
-  must_clear |= ((options & Opt_transparent) && am_transparent);
+  must_clear |= (options & Opt_transparent) && am_transparent;
 #endif
   ocrow = oldcursor.row; /* is there an old outline cursor on screen? */
 
@@ -2090,28 +2080,34 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 
         if (showcursor && TermWin.focus)
           {
-            *crp ^= RS_RVid;
+            if (options & Opt_cursorUnderline)
+              *crp ^= RS_Uline;
+            else
+              {
+                *crp ^= RS_RVid;
+
 #ifndef NO_CURSORCOLOR
-            cc1 = *crp & (RS_fgMask | RS_bgMask);
-            if (ISSET_PIXCOLOR (Color_cursor))
-              ccol1 = Color_cursor;
-            else
+                cc1 = *crp & (RS_fgMask | RS_bgMask);
+                if (ISSET_PIXCOLOR (Color_cursor))
+                  ccol1 = Color_cursor;
+                else
 #ifdef CURSOR_COLOR_IS_RENDITION_COLOR
-              ccol1 = GET_FGCOLOR (rstyle);
+                  ccol1 = GET_FGCOLOR (rstyle);
 #else
-              ccol1 = Color_fg;
+                  ccol1 = Color_fg;
 #endif
-            if (ISSET_PIXCOLOR (Color_cursor2))
-              ccol2 = Color_cursor2;
-            else
+                if (ISSET_PIXCOLOR (Color_cursor2))
+                  ccol2 = Color_cursor2;
+                else
 #ifdef CURSOR_COLOR_IS_RENDITION_COLOR
-              ccol2 = GET_BGCOLOR (rstyle);
+                  ccol2 = GET_BGCOLOR (rstyle);
 #else
-              ccol2 = Color_bg;
+                  ccol2 = Color_bg;
 #endif
-            *crp = SET_FGCOLOR (*crp, ccol1);
-            *crp = SET_BGCOLOR (*crp, ccol2);
+                *crp = SET_FGCOLOR (*crp, ccol1);
+                *crp = SET_BGCOLOR (*crp, ccol2);
 #endif
+              }
           }
       }
 
@@ -2427,10 +2423,15 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
     {
       if (TermWin.focus)
         {
-          *crp ^= RS_RVid;
+          if (options & Opt_cursorUnderline)
+            *crp ^= RS_Uline;
+          else
+            {
+              *crp ^= RS_RVid;
 #ifndef NO_CURSORCOLOR
-          *crp = (*crp & ~ (RS_fgMask | RS_bgMask)) | cc1;
+              *crp = (*crp & ~ (RS_fgMask | RS_bgMask)) | cc1;
 #endif
+            }
         }
       else if (oldcursor.row >= 0)
         {

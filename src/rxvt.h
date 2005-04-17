@@ -24,6 +24,7 @@
 #if ENABLE_FRILLS
 # define ENABLE_XEMBED 1
 # define ENABLE_EWMH   1
+# define CURSOR_BLINK  1
 #endif
 
 /*
@@ -645,6 +646,10 @@ enum {
   Rs_borderLess,
   Rs_lineSpace,
   Rs_pty_fd,
+  Rs_cursorUnderline,
+#endif
+#if CURSOR_BLINK
+  Rs_cursorBlink,
 #endif
 #if ENABLE_XEMBED
   Rs_embed,
@@ -654,7 +659,6 @@ enum {
   Rs_answerbackstring,
   Rs_tripleclickwords,
   Rs_insecure,
-  Rs_cursorBlink,
   Rs_pointerBlank,
   Rs_pointerBlankDelay,
   Rs_imLocale,

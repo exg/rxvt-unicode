@@ -440,13 +440,17 @@ does it support it. Instead, it uses it's own internal representation of
 <strong>wchar_t</strong>. This is, of course, completely fine with respect to standards.</p>
 </dd>
 <dd>
-<p>However, <code>__STDC_ISO_10646__</code> is the only sane way to support
-multi-language apps in an OS, as using a locale-dependent (and
-non-standardized) representation of <strong>wchar_t</strong> makes it impossible to
-convert between <strong>wchar_t</strong> (as used by X11 and your applications) and any
-other encoding without implementing OS-specific-wrappers for each and
-every locale. There simply are no APIs to convert <strong>wchar_t</strong> into anything
-except the current locale encoding.</p>
+<p>However, that means rxvt-unicode only works in <code>POSIX</code>, <code>ISO-8859-1</code> and
+<code>UTF-8</code> locales under FreeBSD (which all use Unicode as <strong>wchar_t</strong>.</p>
+</dd>
+<dd>
+<p><code>__STDC_ISO_10646__</code> is the only sane way to support multi-language
+apps in an OS, as using a locale-dependent (and non-standardized)
+representation of <strong>wchar_t</strong> makes it impossible to convert between
+<strong>wchar_t</strong> (as used by X11 and your applications) and any other encoding
+without implementing OS-specific-wrappers for each and every locale. There
+simply are no APIs to convert <strong>wchar_t</strong> into anything except the current
+locale encoding.</p>
 </dd>
 <dd>
 <p>Some applications (such as the formidable <strong>mlterm</strong>) work around this
@@ -2531,12 +2535,13 @@ styles. The fonts can be set manually or automatically.
 <dt><strong><a name="item__2d_2dwith_2dcodesets_3dname_2c_2e_2e_2e">--with-codesets=NAME,...</a></strong><br />
 </dt>
 <dd>
-Compile in support for additional codeset (encoding) groups (eu, vn are
-always compiled in, which includes most 8-bit character sets). These
-codeset tables are currently only used for driving X11 core fonts, they
-are not required for Xft fonts. Compiling them in will make your binary
-bigger (together about 700kB), but it doesn't increase memory usage unless
-you use an X11 font requiring one of these encodings.
+Compile in support for additional codeset (encoding) groups (<code>eu</code>, <code>vn</code>
+are always compiled in, which includes most 8-bit character sets). These
+codeset tables are used for driving X11 core fonts, they are not required
+for Xft fonts, although having them compiled in lets rxvt-unicode choose
+replacement fonts more intelligently. Compiling them in will make your
+binary bigger (all of together cost about 700kB), but it doesn't increase
+memory usage unless you use a font requiring one of these encodings.
 </dd>
 <table>
 <tr><td>all</td><td>all available codeset groups</td></tr>
@@ -2785,6 +2790,7 @@ in combination with other switches) is:</p>
   tripleclickwords
   settable insecure mode
   keysym remapping support
+  cursor blinking and underline cursor
   -embed and -pty-fd options</pre>
 </dd>
 <p></p>
@@ -2850,12 +2856,6 @@ See <a href="http://g.oswego.edu/dl/html/malloc.html">http://g.oswego.edu/dl/htm
 Add smart growth/shrink behaviour when changing font size via from hot
 keys. This should keep in a fixed position the rxvt corner which is
 closest to a corner of the screen.
-</dd>
-<p></p>
-<dt><strong><a name="item__2d_2denable_2dcursor_2dblink">--enable-cursor-blink</a></strong><br />
-</dt>
-<dd>
-Add support for a blinking cursor.
 </dd>
 <p></p>
 <dt><strong><a name="item__2d_2denable_2dpointer_2dblank">--enable-pointer-blank</a></strong><br />
