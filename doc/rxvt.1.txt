@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 5.3, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 5.5, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -826,6 +826,25 @@ RESOURCES (available also as long-options)
         Control-Meta-c is being pressed":
 
           URxvt.keysym.M-C-c: command:\033]701;zh_CN.GBK\007
+
+        Due the the large number of modifier combinations, a defined key
+        mapping will match if at *at least* the specified identifiers are
+        being set, and no other key mappings with those and more bits are
+        being defined. That means that defining a key map for "a" will
+        automatically provide definitions for "Meta-a", "Shift-a" and so on,
+        unless some of those are defined mappings themselves.
+
+        Unfortunately, this will override built-in key mappings. For example
+        if you overwrite the "Insert" key you will disable rxvt's
+        "Shift-Insert" mapping. To re-enable that, you can poke "holes" into
+        the user-defined keymap using the "builtin:" replacement:
+
+          URxvt.keysym.Insert: <my insert key sequence>
+          URxvt.keysym.S-Insert: builtin:
+
+        The first line defines a mapping for "Insert" and *any* combination
+        of modifiers. The second line re-establishes the default mapping for
+        "Shift-Insert".
 
         The following example will map Control-Meta-1 and Control-Meta-2 to
         the fonts "suxuseuro" and "9x15bold", so you can have some limited

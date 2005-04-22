@@ -217,6 +217,8 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
           else
             rxvt_warn ("cannot parse list-type keysym '%s', treating as normal keysym.\n", translation);
         }
+      else if (strncmp (translation, "builtin:", 8) == 0)
+        key->type = keysym_t::BUILTIN;
 
       user_keymap.push_back (key);
       user_translations.push_back (translation);
@@ -277,64 +279,67 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
     {
       const keysym_t &key = *keymap [index];
 
-      int keysym_offset = keysym - key.keysym;
-
-      wchar_t *wc = rxvt_utf8towcs (key.str);
-      char *str = rxvt_wcstombs (wc);
-      // TODO: do (some) translations, unescaping etc, here (allow \u escape etc.)
-      free (wc);
-
-      switch (key.type)
+      if (key.type != keysym_t::BUILTIN)
         {
-         case keysym_t::NORMAL:
-            output_string (term, str);
-            break;
+          int keysym_offset = keysym - key.keysym;
 
-          case keysym_t::RANGE:
+          wchar_t *wc = rxvt_utf8towcs (key.str);
+          char *str = rxvt_wcstombs (wc);
+          // TODO: do (some) translations, unescaping etc, here (allow \u escape etc.)
+          free (wc);
+
+          switch (key.type)
             {
-              char buf[STRING_MAX];
+              case keysym_t::NORMAL:
+                output_string (term, str);
+                break;
 
-              if (format_keyrange_string (str, keysym_offset, buf, sizeof (buf)) > 0)
-                output_string (term, buf);
+              case keysym_t::RANGE:
+                {
+                  char buf[STRING_MAX];
+
+                  if (format_keyrange_string (str, keysym_offset, buf, sizeof (buf)) > 0)
+                    output_string (term, buf);
+                }
+                break;
+
+              case keysym_t::RANGE_META8:
+                {
+                  int len;
+                  char buf[STRING_MAX];
+
+                  len = format_keyrange_string (str, keysym_offset, buf, sizeof (buf));
+                  if (len > 0)
+                    output_string_meta8 (term, state, buf, len);
+                }
+                break;
+
+              case keysym_t::LIST:
+                {
+                  char buf[STRING_MAX];
+
+                  char *prefix, *middle, *suffix;
+
+                  prefix = str;
+                  middle = strchr  (prefix + 1, *prefix);
+                  suffix = strrchr (middle + 1, *prefix);
+
+                  memcpy (buf, prefix + 1, middle - prefix - 1);
+                  buf [middle - prefix - 1] = middle [keysym_offset + 1];
+                  strcpy (buf + (middle - prefix), suffix + 1);
+
+                  output_string (term, buf);
+                }
+                break;
             }
-            break;
 
-          case keysym_t::RANGE_META8:
-            {
-              int len;
-              char buf[STRING_MAX];
+          free (str);
 
-              len = format_keyrange_string (str, keysym_offset, buf, sizeof (buf));
-              if (len > 0)
-                output_string_meta8 (term, state, buf, len);
-            }
-            break;
-
-          case keysym_t::LIST:
-            {
-              char buf[STRING_MAX];
-
-              char *prefix, *middle, *suffix;
-
-              prefix = str;
-              middle = strchr  (prefix + 1, *prefix);
-              suffix = strrchr (middle + 1, *prefix);
-
-              memcpy (buf, prefix + 1, middle - prefix - 1);
-              buf [middle - prefix - 1] = middle [keysym_offset + 1];
-              strcpy (buf + (middle - prefix), suffix + 1);
-
-              output_string (term, buf);
-            }
-            break;
+          return true;
         }
-
-      free (str);
-
-      return true;
     }
-  else
-    return false;
+
+  return false;
 }
 
 // purge duplicate keymap entries
@@ -461,13 +466,8 @@ keyboard_manager::find_keysym (KeySym keysym, unsigned int state)
       keysym_t *key = keymap [index];
 
       if (key->keysym <= keysym && keysym < key->keysym + key->range
-#if 0 // disabled because the custom ekymap does not know the builtin keymap
           // match only the specified bits in state and ignore others
-          && (key->state & state) == key->state
-#else // re-enable this part once the builtin keymap is handled here, too
-          && key->state == state
-#endif
-          )
+          && (key->state & state) == key->state)
         return index;
     }
 

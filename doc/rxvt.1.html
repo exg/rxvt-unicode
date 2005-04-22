@@ -49,7 +49,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>5.3</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>5.5</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -1283,6 +1283,30 @@ when Control-Meta-c is being pressed'':</p>
 <dd>
 <pre>
   URxvt.keysym.M-C-c: command:\033]701;zh_CN.GBK\007</pre>
+</dd>
+<dd>
+<p>Due the the large number of modifier combinations, a defined key mapping
+will match if at <em>at least</em> the specified identifiers are being set, and
+no other key mappings with those and more bits are being defined. That
+means that defining a key map for <code>a</code> will automatically provide
+definitions for <code>Meta-a</code>, <code>Shift-a</code> and so on, unless some of those are defined
+mappings themselves.</p>
+</dd>
+<dd>
+<p>Unfortunately, this will override built-in key mappings. For example
+if you overwrite the <code>Insert</code> key you will disable rxvt's
+<code>Shift-Insert</code> mapping. To re-enable that, you can poke ``holes'' into the
+user-defined keymap using the <code>builtin:</code> replacement:</p>
+</dd>
+<dd>
+<pre>
+  URxvt.keysym.Insert: &lt;my insert key sequence&gt;
+  URxvt.keysym.S-Insert: builtin:</pre>
+</dd>
+<dd>
+<p>The first line defines a mapping for <code>Insert</code> and <em>any</em> combination
+of modifiers. The second line re-establishes the default mapping for
+<code>Shift-Insert</code>.</p>
 </dd>
 <dd>
 <p>The following example will map Control-Meta-1 and Control-Meta-2 to

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-04-17" "5.3" "RXVT-UNICODE"
+.TH rxvt 1 "2005-04-22" "5.5" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -979,6 +979,27 @@ when Control-Meta-c is being pressed":
 .Vb 1
 \&  URxvt.keysym.M-C-c: command:\e033]701;zh_CN.GBK\e007
 .Ve
+.Sp
+Due the the large number of modifier combinations, a defined key mapping
+will match if at \fIat least\fR the specified identifiers are being set, and
+no other key mappings with those and more bits are being defined. That
+means that defining a key map for \f(CW\*(C`a\*(C'\fR will automatically provide
+definitions for \f(CW\*(C`Meta\-a\*(C'\fR, \f(CW\*(C`Shift\-a\*(C'\fR and so on, unless some of those are defined
+mappings themselves.
+.Sp
+Unfortunately, this will override built-in key mappings. For example
+if you overwrite the \f(CW\*(C`Insert\*(C'\fR key you will disable @@RXVT_NAME@@'s
+\&\f(CW\*(C`Shift\-Insert\*(C'\fR mapping. To re-enable that, you can poke \*(L"holes\*(R" into the
+user-defined keymap using the \f(CW\*(C`builtin:\*(C'\fR replacement:
+.Sp
+.Vb 2
+\&  URxvt.keysym.Insert: <my insert key sequence>
+\&  URxvt.keysym.S-Insert: builtin:
+.Ve
+.Sp
+The first line defines a mapping for \f(CW\*(C`Insert\*(C'\fR and \fIany\fR combination
+of modifiers. The second line re-establishes the default mapping for
+\&\f(CW\*(C`Shift\-Insert\*(C'\fR.
 .Sp
 The following example will map Control\-Meta\-1 and Control\-Meta\-2 to
 the fonts \f(CW\*(C`suxuseuro\*(C'\fR and \f(CW\*(C`9x15bold\*(C'\fR, so you can have some limited

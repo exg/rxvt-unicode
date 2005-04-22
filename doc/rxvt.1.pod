@@ -960,6 +960,25 @@ when Control-Meta-c is being pressed":
 
   URxvt.keysym.M-C-c: command:\033]701;zh_CN.GBK\007
 
+Due the the large number of modifier combinations, a defined key mapping
+will match if at I<at least> the specified identifiers are being set, and
+no other key mappings with those and more bits are being defined. That
+means that defining a key map for C<a> will automatically provide
+definitions for C<Meta-a>, C<Shift-a> and so on, unless some of those are defined
+mappings themselves.
+
+Unfortunately, this will override built-in key mappings. For example
+if you overwrite the C<Insert> key you will disable @@RXVT_NAME@@'s
+C<Shift-Insert> mapping. To re-enable that, you can poke "holes" into the
+user-defined keymap using the C<builtin:> replacement:
+
+  URxvt.keysym.Insert: <my insert key sequence>
+  URxvt.keysym.S-Insert: builtin:
+
+The first line defines a mapping for C<Insert> and I<any> combination
+of modifiers. The second line re-establishes the default mapping for
+C<Shift-Insert>.
+
 The following example will map Control-Meta-1 and Control-Meta-2 to
 the fonts C<suxuseuro> and C<9x15bold>, so you can have some limited
 font-switching at runtime:

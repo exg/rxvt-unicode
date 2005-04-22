@@ -11,6 +11,11 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
+5.5
+	- re-enabled modifer state matching as in 5.3, but implement
+          a new builtin: keysym style that simply reverts to the built-in
+          meaning of the given key.
+
 5.4  Mon Apr 18 00:33:31 CEST 2005
 	- match modifier state exactly in custom keyboard code.
           this is necessary because it has no knowledge about
