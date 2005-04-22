@@ -15,6 +15,8 @@ WISH: just for fun, do shade and tint with XRender.
 	- re-enabled modifer state matching as in 5.3, but implement
           a new builtin: keysym style that simply reverts to the built-in
           meaning of the given key.
+        - use scrollcolor for next scrollbar instead of hardcoded antiquewhite
+          (patch by Martin Edlman).
 
 5.4  Mon Apr 18 00:33:31 CEST 2005
 	- match modifier state exactly in custom keyboard code.

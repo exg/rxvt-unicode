@@ -139,7 +139,7 @@ struct grwin_t;
 /* If we're using either the rxvt scrollbar or menu bars, keep the
  * scrollColor resource.
  */
-#if defined(RXVT_SCROLLBAR) || defined(MENUBAR) || defined(PLAIN_SCROLLBAR)
+#if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(MENUBAR) || defined(PLAIN_SCROLLBAR)
 # define KEEP_SCROLLCOLOR 1
 #else
 # undef KEEP_SCROLLCOLOR

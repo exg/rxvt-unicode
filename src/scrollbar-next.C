@@ -166,8 +166,7 @@ rxvt_term::init_scrollbar_stuff ()
   xcol.red = 0xaeba;
   xcol.green = 0xaaaa;
   xcol.blue = 0xaeba;
-  //if (!rXAllocColor (&xcol, "light gray"))//TODO//D//
-  xcol.pixel = pix_colors_focused[Color_AntiqueWhite];
+  xcol.pixel = pix_colors_focused[Color_scroll];
   light = gcvalue.foreground = xcol.pixel;
   grayGC = XCreateGC (disp, scrollBar.win,
                      GCForeground | GCGraphicsExposures, &gcvalue);
