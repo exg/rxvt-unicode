@@ -1,18 +1,3 @@
-TODO: underline cursor, simply using underline
-TODO: better default settings for hangul: ex. 냻
-22:32 <zrajm> I *really* like the pointerBlank feature -- though I'd like it to *only* 
-              hide the pointer when I hit a key, never on a timeout -- I kinda 
-              expected that it would work this way if I set pointerBlankDelay to 0 but 
-              that more or less turns the pointer completely off inside the urxvt 
-              window.. not the behaviour I expected.
-22:43 <zrajm> E.g. xterm has a couple of settings for when you select using 
-              tripple-clicking (entire lines). I've become quite used to 
-              "xterm*cutToBeginningOfLine: off" (which causes the first line to be 
-              selected only from the beginning of the word under the cursor) and 
-              "xterm*cutNewline: off" (which causes xterm not to include the newline 
-              character of the last line selected) -- these are especially swell when 
-              I select urls (which usually occur on a line by the
-TODO: custom keymap must not "overwrite" default keymap
 TODO: do font request caching, might help rxvtd on some machines
 TODO: safer command: keymap processing.
 TODO: "slow" rendering mode for bidi and scripts
