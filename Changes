@@ -12,6 +12,7 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
+5.6
         - R_SB_RXVT bitset value was 0, so rxvt scrollbar was initialized
           every time (original rxvt also affected). Reported by Jasmin
           Buchert.
@@ -348,7 +349,7 @@ WISH: just for fun, do shade and tint with XRender.
           previously being ignored, causing programs not to exit on windoe
           close).
         - implemented simple overlays for feedback messages. believe it or
-          not, this was a major blocker in implementign tabbed termianls.
+          not, this was a major blocker in implementing tabbed terminals.
         - fix compiling with --disable-frills (Adam Sampson).
         - clarify bold docs in README.unicode (Adam Sampson).
 	- fix crash on window close when the input method or context
