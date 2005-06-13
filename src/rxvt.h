@@ -269,10 +269,10 @@ typedef struct _mwmhints {
 #define R_SB_ALIGN_TOP          1
 #define R_SB_ALIGN_BOTTOM       2
 
-#define R_SB_RXVT               0
 #define R_SB_NEXT               1
 #define R_SB_XTERM              2
 #define R_SB_PLAIN              4
+#define R_SB_RXVT               8
 
 #define SB_WIDTH_NEXT           19
 #define SB_WIDTH_XTERM          15

@@ -134,6 +134,7 @@ rxvt_term::scrollbar_show_rxvt (int update, int last_top, int last_bot, int scro
   if ((scrollBar.init & R_SB_RXVT) == 0)
     {
       scrollBar.init |= R_SB_RXVT;
+
       if (sbshadow)
         {
           XSetWindowBackground (display->display, scrollBar.win, pix_colors_focused[Color_trough]);
@@ -201,3 +202,4 @@ rxvt_term::scrollbar_show_rxvt (int update, int last_top, int last_bot, int scro
 }
 #endif				/* RXVT_SCROLLBAR */
 /*----------------------- end-of-file (C source) -----------------------*/
+
