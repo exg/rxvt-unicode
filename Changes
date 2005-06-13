@@ -13,7 +13,7 @@ WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
 5.6
-        - R_SB_RXVT bitset value was 0, so rxvt scrollbar was initialized
+        - R_SB_RXVT bitset value was 0, so rxvt scrollbar was initialised
           every time (original rxvt also affected). Reported by Jasmin
           Buchert.
 
