@@ -240,7 +240,7 @@ Put scrollbar on right/left; resource B<scrollBar_right>.
 
 =item B<-st>|B<+st>
 
-Display normal (non XTerm/NeXT) scrollbar without/with a trough;
+Display rxvt (non XTerm/NeXT) scrollbar without/with a trough;
 resource B<scrollBar_floating>.
 
 =item B<-ptab>|B<+ptab>
@@ -568,7 +568,7 @@ Use the specified colour for the scrollbar [default #B2B2B2].
 =item B<troughColor:> I<colour>
 
 Use the specified colour for the scrollbar's trough area [default
-#969696]. Only relevant for normal (non XTerm/NeXT) scrollbar.
+#969696]. Only relevant for rxvt (non XTerm/NeXT) scrollbar.
 
 =item B<borderColor:> I<colour>
 
@@ -670,7 +670,7 @@ xterm style selection.
 =item B<scrollstyle:> I<mode>
 
 Set scrollbar style to B<rxvt>, B<plain>, B<next> or B<xterm>. B<plain> is
-the author's favourite..
+the author's favourite.
 
 =item B<title:> I<string>
 
