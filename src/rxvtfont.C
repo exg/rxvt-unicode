@@ -853,7 +853,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
       int dir_ret, asc_ret, des_ret;
       XTextExtents16 (f, &ch, 1, &dir_ret, &asc_ret, &des_ret, &g);
 
-      int wcw = wcwidth (*t); if (wcw > 0) g.width = g.width / wcw;
+      int wcw = wcwidth (*t); if (wcw > 0) g.width = (g.width + wcw - 1) / wcw;
 
       if (width  < g.width)  width  = g.width;
     }
@@ -938,7 +938,7 @@ rxvt_font_x11::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
   // check character against base font bounding box
   int w = xcs->width;
   int wcw = wcwidth (unicode);
-  if (wcw > 0) w /= wcw;
+  if (wcw > 0) w = (w + wcw - 1) / wcw;
 
   careful = w > prop->width;
   if (careful && w > prop->width * MAX_OVERLAP >> 2)
@@ -1156,6 +1156,8 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
 
       XftUnlockFace (f);
 
+      int glheight = height;
+
       for (uint16_t *t = extent_test_chars + NUM_EXTENT_TEST_CHARS; t-- > extent_test_chars; )
         {
           FcChar16 ch = *t;
@@ -1173,15 +1175,18 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
           XGlyphInfo g;
           XftTextExtents16 (disp, f, &ch, 1, &g);
 
-          int wcw = wcwidth (ch);
-          if (wcw > 0) g.width = g.width / wcw;
+          g.width -= g.x;
 
-          if (width  < g.width)  width  = g.width;
-          if (height < g.height) height = g.height;
+          int wcw = wcwidth (ch);
+          if (wcw > 0) g.width = (g.width + wcw - 1) / wcw;
+
+          if (width    < g.width       ) width    = g.width;
+          if (height   < g.height      ) height   = g.height;
+          if (glheight < g.height - g.y) glheight = g.height - g.y;
         }
 
       if (prop.height == rxvt_fontprop::unset
-          || height <= prop.height
+          || (height <= prop.height && glheight <= prop.height)
           || height <= 2
           || !scalable)
         break;
@@ -1232,9 +1237,9 @@ rxvt_font_xft::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
   XGlyphInfo g;
   XftTextExtents32 (DISPLAY, f, &ch, 1, &g);
 
-  int w = g.width;
+  int w = g.width - g.x;
   int wcw = wcwidth (unicode);
-  if (wcw > 0) w /= wcw;
+  if (wcw > 0) w = (w + wcw - 1) / wcw;
 
   careful = w > prop->width;
   if (careful && w > prop->width * MAX_OVERLAP >> 2)

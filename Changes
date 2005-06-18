@@ -22,6 +22,12 @@ WISH: just for fun, do shade and tint with XRender.
         - rewrote the low-level xft drawing function ("xft backend" for the
           hipper parts of the world) to hopefully cope better with proportional
           chars mixed with fixed-width ones.
+        - rxvt is now much more careful (read: slower) with potentially
+          overlapping xft characters. It usually overshoots and redraws
+          more than required, but that's better than undershooting and
+          cutting pieces off of characters.
+        - rxvt is now more restrictive in what font heights it accepts for
+          fonts that will likely overshoot or underhsoot lines.
 
 5.5  Sat Apr 23 22:31:36 CEST 2005
 	- re-enabled modifer state matching as in 5.3, but implement
