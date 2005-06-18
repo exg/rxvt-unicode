@@ -1,4 +1,3 @@
-TODO: F="Monaco CY" rxvt -fn 9x15bold -fb xft:"$F":bold -fi xft:"$F":italic -fbi xft:"$F":bold,italic vi screen.C scroll changed italic N
 TODO: do font request caching, might help rxvtd on some machines
 TODO: safer command: keymap processing.
 TODO: "slow" rendering mode for bidi and scripts
