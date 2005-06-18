@@ -19,6 +19,9 @@ WISH: just for fun, do shade and tint with XRender.
         - font names are now considered to be utf-8 encoded (xft apperently
           uses this convention. X Core fonts might not, but it should be rare).
           Affects display in iso14755 box.
+        - rewrote the low-level xft drawing function ("xft backend" for the
+          hipper parts of the world) to hopefully cope better with proportional
+          chars mixed with fixed-width ones.
 
 5.5  Sat Apr 23 22:31:36 CEST 2005
 	- re-enabled modifer state matching as in 5.3, but implement

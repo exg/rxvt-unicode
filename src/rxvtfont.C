@@ -1256,54 +1256,53 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
   FcChar32 *enc = (FcChar32 *) get_enc_buf (len * sizeof (FcChar32));
   FcChar32 *ep = enc;
   int ewidth = 0;
-  int xoff = 0;
 
   while (len)
     {
       int cwidth = r->TermWin.fwidth;
       FcChar32 fc = *text++; len--;
-      FT_UInt gl;
 
       while (len && *text == NOCHAR)
         text++, len--, cwidth += r->TermWin.fwidth;
       
-      gl = XftCharIndex (d.display->display, f, fc);
-      XftGlyphExtents (d.display->display, f, &gl, 1, &extents);
-
-      if (extents.xOff != cwidth && ep != enc)
-        {
-          if (xoff > ewidth) xoff = ewidth;
-          XftDrawGlyphs (d, &r->pix_colors[fg].c, f,
-                         x + (ewidth - xoff >> 1),
-                         y + base, enc, ep - enc);
-          x += ewidth;
-
-          ep = enc;
-          ewidth = 0;
-          xoff = 0;
-        }
-
       if (fc == ' ' && ep == enc) // skip leading spaces
-        {
-          x += cwidth;
-          continue;
-        }
-
+        x += cwidth;
       else
         {
-          *ep++ = gl;
-          ewidth += cwidth;
-          xoff += extents.xOff;
+          FT_UInt gl = XftCharIndex (d.display->display, f, fc);
+          XftGlyphExtents (d.display->display, f, &gl, 1, &extents);
+
+          if (extents.xOff != cwidth)
+            {
+              if (ewidth)
+                {
+                  XftDrawGlyphs (d, &r->pix_colors[fg].c, f,
+                                 x, y + base, enc, ep - enc);
+                  x += ewidth;
+
+                  ep = enc;
+                  ewidth = 0;
+                }
+
+              if (extents.xOff > cwidth)
+                extents.xOff = cwidth;
+
+              XftDrawGlyphs (d, &r->pix_colors[fg].c, f,
+                             x + (cwidth - extents.xOff >> 1),
+                             y + base, &gl, 1);
+              x += cwidth;
+            }
+          else
+            {
+              *ep++ = gl;
+              ewidth += cwidth;
+            }
         }
     }
 
   if (ep != enc)
-    {
-      if (xoff > ewidth) xoff = ewidth;
-      XftDrawGlyphs (d, &r->pix_colors[fg].c, f,
-                     x + (ewidth - xoff >> 1),
-                     y + base, enc, ep - enc);
-    }
+    XftDrawGlyphs (d, &r->pix_colors[fg].c, f,
+                   x, y + base, enc, ep - enc);
 }
 #endif
 
