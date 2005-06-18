@@ -206,7 +206,7 @@ OPTIONS
         Put scrollbar on right/left; resource scrollBar_right.
 
     -st|+st
-        Display normal (non XTerm/NeXT) scrollbar without/with a trough;
+        Display rxvt (non XTerm/NeXT) scrollbar without/with a trough;
         resource scrollBar_floating.
 
     -ptab|+ptab
@@ -483,7 +483,7 @@ RESOURCES (available also as long-options)
 
     troughColor: *colour*
         Use the specified colour for the scrollbar's trough area [default
-        #969696]. Only relevant for normal (non XTerm/NeXT) scrollbar.
+        #969696]. Only relevant for rxvt (non XTerm/NeXT) scrollbar.
 
     borderColor: *colour*
         The colour of the border around the text area and between the
@@ -579,7 +579,7 @@ RESOURCES (available also as long-options)
 
     scrollstyle: *mode*
         Set scrollbar style to rxvt, plain, next or xterm. plain is the
-        author's favourite..
+        author's favourite.
 
     title: *string*
         Set window title string, the default title is the command-line

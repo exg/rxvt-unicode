@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-04-22" "5.5" "RXVT-UNICODE"
+.TH rxvt 1 "2005-06-18" "5.5" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -336,7 +336,7 @@ This only takes effect if \fB\-si\fR is also given; resource
 Put scrollbar on right/left; resource \fBscrollBar_right\fR.
 .IP "\fB\-st\fR|\fB+st\fR" 4
 .IX Item "-st|+st"
-Display normal (non XTerm/NeXT) scrollbar without/with a trough;
+Display rxvt (non XTerm/NeXT) scrollbar without/with a trough;
 resource \fBscrollBar_floating\fR.
 .IP "\fB\-ptab\fR|\fB+ptab\fR" 4
 .IX Item "-ptab|+ptab"
@@ -628,7 +628,7 @@ Use the specified colour for the scrollbar [default #B2B2B2].
 .IP "\fBtroughColor:\fR \fIcolour\fR" 4
 .IX Item "troughColor: colour"
 Use the specified colour for the scrollbar's trough area [default
-#969696]. Only relevant for normal (non XTerm/NeXT) scrollbar.
+#969696]. Only relevant for rxvt (non XTerm/NeXT) scrollbar.
 .IP "\fBborderColor:\fR \fIcolour\fR" 4
 .IX Item "borderColor: colour"
 The colour of the border around the text area and between the scrollbar
@@ -726,7 +726,7 @@ xterm style selection.
 .IP "\fBscrollstyle:\fR \fImode\fR" 4
 .IX Item "scrollstyle: mode"
 Set scrollbar style to \fBrxvt\fR, \fBplain\fR, \fBnext\fR or \fBxterm\fR. \fBplain\fR is
-the author's favourite..
+the author's favourite.
 .IP "\fBtitle:\fR \fIstring\fR" 4
 .IX Item "title: string"
 Set window title string, the default title is the command-line
