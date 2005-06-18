@@ -165,8 +165,10 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r)
 {
   rxvt_fontset *fs = FONTSET (r);
   rxvt_font *f = (*fs)[fs->find_font (ch)];
-  wchar_t *chr, *alloc, ch2;
+  wchar_t *chr, *alloc, ch2, *fname;
   int len;
+
+  fname = rxvt_utf8towcs (f->name);
 
 #if ENABLE_COMBINING
   if (IS_COMPOSE (ch))
@@ -185,7 +187,7 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r)
       len = 1;
     }
 
-  int width = strlen (f->name);
+  int width = wcswidth (fname, wcslen (fname));
 
   scr_overlay_new (0, -1, width < 8+5 ? 8+5 : width, len + 1);
 
@@ -208,7 +210,9 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r)
       scr_overlay_set (12, y, NOCHAR, r);
     }
 
-  scr_overlay_set (0, len, f->name);
+  scr_overlay_set (0, len, fname);
+
+  free (fname);
 
 #if ENABLE_COMBINING
   if (alloc)

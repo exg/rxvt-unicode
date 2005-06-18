@@ -1229,6 +1229,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
                         text_t text,
                         rend_t rend = OVERLAY_RSTYLE);
   void scr_overlay_set (int x, int y, const char *s);
+  void scr_overlay_set (int x, int y, const wchar_t *s);
 #endif
 
   vector<void *> allocated;           // free these memory blocks with free()

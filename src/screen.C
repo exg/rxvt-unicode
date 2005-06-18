@@ -3798,6 +3798,22 @@ rxvt_term::scr_overlay_set (int x, int y, const char *s)
 }
 
 void
+rxvt_term::scr_overlay_set (int x, int y, const wchar_t *s)
+{
+  while (*s)
+    {
+      text_t t = *s++;
+      int width = wcwidth (t);
+
+      while (width--)
+        {
+          scr_overlay_set (x++, y, t);
+          t = NOCHAR;
+        }
+    }
+}
+
+void
 rxvt_term::scr_swap_overlay ()
 {
   if (!ov_text)
