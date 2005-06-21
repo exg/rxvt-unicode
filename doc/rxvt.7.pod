@@ -260,6 +260,14 @@ might be forced to use a different font.
 All of this is not a problem when using X11 core fonts, as their bounding
 box data is correct.
 
+=item On Solaris 9, many line-drawing characters are too wide.
+
+Seems to be a known bug, read
+L<http://nixdoc.net/files/forum/about34198.html>. Some people use the
+following ugly workaround to get non-double-wide-characters working:
+
+   #define wcwidth(x) wcwidth(x) > 1 ? 1 : wcwidth(x)
+
 =item My Compose (Multi_key) key is no longer working.
 
 The most common causes for this are that either your locale is not set
