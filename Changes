@@ -1,6 +1,4 @@
 TODO: can sth. be done about "double-wide character on last row"
-TODO: when the cursor is out-of-margin to the left, it does not treat double-width
-      chars correctly when unfocused.
 TODO: do font request caching, might help rxvtd on some machines
 TODO: safer command: keymap processing.
 TODO: "slow" rendering mode for bidi and scripts
@@ -30,6 +28,8 @@ WISH: just for fun, do shade and tint with XRender.
           cutting pieces off of characters.
         - rxvt is now more restrictive in what font heights it accepts for
           fonts that will likely overshoot or underhsoot lines.
+        - fix a cosmetic problem with the unfocused cursor on a wide character
+          at the end of the line (reported by Mikachu).
 
 5.5  Sat Apr 23 22:31:36 CEST 2005
 	- re-enabled modifer state matching as in 5.3, but implement

@@ -2435,17 +2435,23 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
         }
       else if (oldcursor.row >= 0)
         {
+          int cursorwidth = 1;
+          int col = oldcursor.col;
+
+          while (col && screen.text[screen.cur.row + TermWin.saveLines][col] == NOCHAR)
+            col--;
+
+          while (col + cursorwidth < TermWin.ncol
+                 && drawn_text[oldcursor.row][col + cursorwidth] == NOCHAR)
+            cursorwidth++;
+
 #ifndef NO_CURSORCOLOR
           if (ISSET_PIXCOLOR (Color_cursor))
             XSetForeground (display->display, TermWin.gc, pix_colors[Color_cursor]);
 #endif
-          int cursorwidth = 1;
-          while (oldcursor.col + cursorwidth < TermWin.ncol
-                 && drawn_text[oldcursor.row][oldcursor.col + cursorwidth] == NOCHAR)
-            cursorwidth++;
 
           XDrawRectangle (display->display, drawBuffer, TermWin.gc,
-                          Col2Pixel (oldcursor.col),
+                          Col2Pixel (col),
                           Row2Pixel (oldcursor.row),
                           (unsigned int) (Width2Pixel (cursorwidth) - 1),
                           (unsigned int) (Height2Pixel (1) - TermWin.lineSpace - 1));
