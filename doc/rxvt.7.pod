@@ -341,6 +341,11 @@ The rxvt-unicode author insists that the right way to fix this is in the
 system libraries once and for all, instead of forcing every app to carry
 complete replacements for them :)
 
+=item I use Solaris 9 and it doesn't compile/work/etc.
+
+Try the diff in F<doc/solaris9.patch> as a base. It fixes the worst
+problems with C<wcwidth> and a compile problem.
+
 =item How does rxvt-unicode determine the encoding to use?
 
 =item Is there an option to switch encodings?

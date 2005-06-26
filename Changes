@@ -11,7 +11,7 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
-5.6
+5.6  Sun Jun 26 22:11:13 CEST 2005
         - R_SB_RXVT bitset value was 0, so rxvt scrollbar was initialised
           every time resulting in display errors (original rxvt also affected).
           Reported by Jasmin Buchert.
@@ -26,7 +26,7 @@ WISH: just for fun, do shade and tint with XRender.
           more than required, but that's better than undershooting and
           cutting pieces off of characters.
         - rxvt is now more restrictive in what font heights it accepts for
-          fonts that will likely overshoot or underhsoot lines.
+          fonts that will likely overshoot or undershoot lines.
         - fix a cosmetic problem with the unfocused cursor on a wide character
           at the end of the line (reported by Mikachu).
         - wide characters not fitting into the end of the line will be
