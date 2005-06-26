@@ -775,14 +775,15 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
 void
 rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 {
+  if (len <= 0)               /* sanity */
+    return;
+
   unsigned char checksel;
   unicode_t c;
   int i, row, last_col;
   text_t *stp;
   rend_t *srp;
-
-  if (len <= 0)               /* sanity */
-    return;
+  const unicode_t *strend = str + len;
 
   want_refresh = 1;
   ZERO_SCROLLBACK ();
@@ -817,39 +818,40 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
   stp = screen.text[row];
   srp = screen.rend[row];
 
-  while (len--)
+  while (str < strend)
     {
       c = *str++;
 
       if (c < 0x20)
-        switch (c)
+        if (c == C0_LF)
+          {          
+            if (screen.tlen[row] != -1)      /* XXX: think about this */
+              MAX_IT (screen.tlen[row], screen.cur.col);
+
+            screen.flags &= ~Screen_WrapNext;
+
+            if (screen.cur.row == screen.bscroll)
+              scr_scroll_text (screen.tscroll, screen.bscroll, 1, 0);
+            else if (screen.cur.row < (TermWin.nrow - 1))
+              row = (++screen.cur.row) + TermWin.saveLines;
+
+            stp = screen.text[row];  /* _must_ refresh */
+            srp = screen.rend[row];  /* _must_ refresh */
+            continue;
+          }
+        else if (c == C0_CR)
           {
-            case C0_HT:
-              scr_tab (1, true);
-              continue;
+            if (screen.tlen[row] != -1)      /* XXX: think about this */
+              MAX_IT (screen.tlen[row], screen.cur.col);
 
-            case C0_LF:
-              if (screen.tlen[row] != -1)      /* XXX: think about this */
-                MAX_IT (screen.tlen[row], screen.cur.col);
-
-              screen.flags &= ~Screen_WrapNext;
-
-              if (screen.cur.row == screen.bscroll)
-                scr_scroll_text (screen.tscroll, screen.bscroll, 1, 0);
-              else if (screen.cur.row < (TermWin.nrow - 1))
-                row = (++screen.cur.row) + TermWin.saveLines;
-
-              stp = screen.text[row];  /* _must_ refresh */
-              srp = screen.rend[row];  /* _must_ refresh */
-              continue;
-
-            case C0_CR:
-              if (screen.tlen[row] != -1)      /* XXX: think about this */
-                MAX_IT (screen.tlen[row], screen.cur.col);
-
-              screen.flags &= ~Screen_WrapNext;
-              screen.cur.col = 0;
-              continue;
+            screen.flags &= ~Screen_WrapNext;
+            screen.cur.col = 0;
+            continue;
+          }
+        else if (c == C0_HT)
+          {
+            scr_tab (1, true);
+            continue;
           }
 
       if (checksel            /* see if we're writing within selection */
@@ -869,15 +871,21 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
         {
           screen.tlen[row] = -1;
 
-          scr_do_wrap (); row = screen.cur.row + TermWin.saveLines;
-
+          scr_do_wrap ();
+          
+          row = screen.cur.row + TermWin.saveLines;
           stp = screen.text[row];  /* _must_ refresh */
           srp = screen.rend[row];  /* _must_ refresh */
         }
 
+      // some utf-8 decoders "decode" surrogate characters: let's fix this.
+      if (IN_RANGE (c, 0xd800, 0xdfff))
+        c = 0xfffd;
+
       // rely on wcwidth to tell us the character width, at least for non-latin1
-      // do wcwidth before further replacements, as wcwidth says that line-drawing
-      // characters have width -1 (DOH!) on GNU/Linux sometimes.
+      // do wcwidth before further replacements, as wcwidth might return -1
+      // for the line drawing characters below as they might be invalid in the current
+      // locale.
       int width = c < 0x100 ? 1 : wcwidth (c);
 
       if (charsets[screen.charset] == '0') // DEC SPECIAL
@@ -885,21 +893,21 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
           // vt100 special graphics and line drawing
           // 5f-7e standard vt100
           // 40-5e rxvt extension for extra curses acs chars
-          static uint16_t vt100_0[63] = { // 40 .. 7e
-            0x0000, 0x2191, 0x2193, 0x2192, 0x2190, 0x2588, 0x259a, 0x2603, // 40-47 hi mr. snowman!
-            0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, // 48-4f
-            0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, // 50-57
-            0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0020, // 58-5f
+          static uint16_t vt100_0[62] = { // 41 .. 7e
+                    0x2191, 0x2193, 0x2192, 0x2190, 0x2588, 0x259a, 0x2603, // 41-47 hi mr. snowman!
+                 0,      0,      0,      0,      0,      0,      0,      0, // 48-4f
+                 0,      0,      0,      0,      0,      0,      0,      0, // 50-57
+                 0,      0,      0,      0,      0,      0,      0, 0x0020, // 58-5f
             0x25c6, 0x2592, 0x2409, 0x240c, 0x240d, 0x240a, 0x00b0, 0x00b1, // 60-67
             0x2424, 0x240b, 0x2518, 0x2510, 0x250c, 0x2514, 0x253c, 0x23ba, // 68-6f
             0x23bb, 0x2500, 0x23bc, 0x23bd, 0x251c, 0x2524, 0x2534, 0x252c, // 70-77
             0x2502, 0x2264, 0x2265, 0x03c0, 0x2260, 0x00a3, 0x00b7,         // 78-7e
           };
 
-          if (c >= 0x40 && c <= 0x7e && vt100_0[c - 0x40])
+          if (c >= 0x41 && c <= 0x7e && vt100_0[c - 0x41])
             {
-              c = vt100_0[c - 0x40];
-              width = 1;
+              c = vt100_0[c - 0x41];
+              width = 1; // vt100 line drawing characters are always single-width
             }
         }
 
@@ -908,10 +916,6 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
       if (width != 0)
         {
-          // some utf-8 decoders decode surrogate characters.
-          if (0xd800 <= c && c <= 0xdfff)
-            c = 0xfffd;
-
 #if !UNICODE_3
           // trim characters we can't store directly :(
           if (c >= 0x10000)
@@ -945,6 +949,15 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
           rend_t rend = SET_FONT (rstyle, FONTSET (rstyle)->find_font (c));
 
+          // if the character doesn't fit into the remaining columns...
+          if (screen.cur.col >= last_col - width && last_col >= width)
+            {
+              // ...output spaces
+              c = ' ';
+              // and try the same character next loop iteration
+              --str;
+            }
+
           do
             {
               stp[screen.cur.col] = c;
@@ -972,14 +985,13 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
                 srp[c] = rend;
               }
         }
-      else if (width == 0)
+      else // width == 0
         {
 #if ENABLE_COMBINING
           // handle combining characters
           // we just tag the accent on the previous on-screen character.
           // this is arguably not correct, but also arguably not wrong.
           // we don't handle double-width characters nicely yet.
-
           text_t *tp;
           rend_t *rp;
 
