@@ -30,7 +30,8 @@ WISH: just for fun, do shade and tint with XRender.
         - fix a cosmetic problem with the unfocused cursor on a wide character
           at the end of the line (reported by Mikachu).
         - wide characters not fitting into the end of the line will be
-          output in the next line if they (reported by Mikachu).
+          output in the next line (reported by Mikachu).
+        - added doc/solaris9.patch by Ewgenij Starostin.
 
 5.5  Sat Apr 23 22:31:36 CEST 2005
 	- re-enabled modifer state matching as in 5.3, but implement

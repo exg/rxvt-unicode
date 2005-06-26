@@ -22,6 +22,7 @@ doc/menu/menu
 doc/menu/rxvt.menu
 doc/menu/rxvt.zh-menu
 doc/menu/terminal.menu
+doc/solaris9.patch
 
 doc/.cvsignore
 doc/Makefile.in

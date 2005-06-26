@@ -950,7 +950,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
           rend_t rend = SET_FONT (rstyle, FONTSET (rstyle)->find_font (c));
 
           // if the character doesn't fit into the remaining columns...
-          if (screen.cur.col >= last_col - width && last_col >= width)
+          if (screen.cur.col > last_col - width && last_col >= width)
             {
               // ...output spaces
               c = ' ';
