@@ -228,6 +228,13 @@ FREQUENTLY ASKED QUESTIONS
         All of this is not a problem when using X11 core fonts, as their
         bounding box data is correct.
 
+    On Solaris 9, many line-drawing characters are too wide.
+        Seems to be a known bug, read
+        <http://nixdoc.net/files/forum/about34198.html>. Some people use the
+        following ugly workaround to get non-double-wide-characters working:
+
+           #define wcwidth(x) wcwidth(x) > 1 ? 1 : wcwidth(x)
+
     My Compose (Multi_key) key is no longer working.
         The most common causes for this are that either your locale is not
         set correctly, or you specified a preeditStyle that is not supported
@@ -302,6 +309,10 @@ FREQUENTLY ASKED QUESTIONS
         The rxvt-unicode author insists that the right way to fix this is in
         the system libraries once and for all, instead of forcing every app
         to carry complete replacements for them :)
+
+    I use Solaris 9 and it doesn't compile/work/etc.
+        Try the diff in doc/solaris9.patch as a base. It fixes the worst
+        problems with "wcwidth" and a compile problem.
 
     How does rxvt-unicode determine the encoding to use?
     Is there an option to switch encodings?

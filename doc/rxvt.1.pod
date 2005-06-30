@@ -712,6 +712,8 @@ Specify a command pipe for vt100 printer [default I<lpr(1)>]. Use
 B<Print> to initiate a screen dump to the printer and B<Ctrl-Print> or
 B<Shift-Print> to include the scrollback as well.
 
+The string will be interpreted as if typed into the shell as-is.
+
 =item B<scrollBar:> I<boolean>
 
 B<True>: enable the scrollbar [default]; option B<-sb>. B<False>:

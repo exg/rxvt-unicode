@@ -373,6 +373,18 @@ might be forced to use a different font.</p>
 box data is correct.</p>
 </dd>
 <p></p>
+<dt><strong><a name="item_on_solaris_9_2c_many_line_2ddrawing_characters_are">On Solaris 9, many line-drawing characters are too wide.</a></strong><br />
+</dt>
+<dd>
+Seems to be a known bug, read
+<a href="http://nixdoc.net/files/forum/about34198.html">http://nixdoc.net/files/forum/about34198.html</a>. Some people use the
+following ugly workaround to get non-double-wide-characters working:
+</dd>
+<dd>
+<pre>
+   #define wcwidth(x) wcwidth(x) &gt; 1 ? 1 : wcwidth(x)</pre>
+</dd>
+<p></p>
 <dt><strong><a name="item_compose">My Compose (Multi_key) key is no longer working.</a></strong><br />
 </dt>
 <dd>
@@ -463,6 +475,13 @@ encodings slightly different than the terminal emulator).</p>
 <p>The rxvt-unicode author insists that the right way to fix this is in the
 system libraries once and for all, instead of forcing every app to carry
 complete replacements for them :)</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_i_use_solaris_9_and_it_doesn_27t_compile_2fwork_2f">I use Solaris 9 and it doesn't compile/work/etc.</a></strong><br />
+</dt>
+<dd>
+Try the diff in <em>doc/solaris9.patch</em> as a base. It fixes the worst
+problems with <code>wcwidth</code> and a compile problem.
 </dd>
 <p></p>
 <dt><strong><a name="item_how_does_rxvt_2dunicode_determine_the_encoding_to_">How does rxvt-unicode determine the encoding to use?</a></strong><br />
