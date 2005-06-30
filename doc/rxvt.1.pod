@@ -714,6 +714,13 @@ B<Shift-Print> to include the scrollback as well.
 
 The string will be interpreted as if typed into the shell as-is.
 
+Example:
+
+   URxvt*print-pipe: cat > $(TMPDIR=$HOME mktemp urxvt.XXXXXX)
+
+This creates a new file in your home directory with the screen contents
+everytime you hit C<Print>.
+
 =item B<scrollBar:> I<boolean>
 
 B<True>: enable the scrollbar [default]; option B<-sb>. B<False>:
