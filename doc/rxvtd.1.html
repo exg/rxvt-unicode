@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>rxvtd - rxvt terminal daemon</title>
+<link rev="made" href="mailto:perl-binary@plan9.de" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#environment">ENVIRONMENT</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>rxvtd - rxvt terminal daemon</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>rxvtd</strong> [-q|--quiet] [-o|--opendisplay] [-f|--fork]</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This manpage describes the rxvtd daemon, which is the same vt102
+terminal emulator as rxvt, but runs as a daemon that can open
+multiple terminal windows within the same process.</p>
+<p>You can run it from your X startup scripts, for example, although it is
+not dependent on a working DISPLAY and, in fact, can open windows on
+multiple X displays on the same time.</p>
+<p>Advantages of running a rxvt daemon include faster creation time
+for terminal windows and a lot of saved memory.</p>
+<p>The disadvantage is a possible impact on stability - if the
+main program crashes, all processes in the terminal windows are
+terminated. For example, as there is no way to cleanly react to abnormal
+connection closes, <code>xkill</code> and server resets/restarts will kill the
+<strong>rxvtd</strong> instance including all windows it has opened.</p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<p><strong>rxvtd</strong> currently understands a few options only. Bundling of
+options is not yet supported.</p>
+<dl>
+<dt><strong><a name="item__2dq_2c__2d_2dquiet"><strong>-q</strong>, <strong>--quiet</strong></a></strong><br />
+</dt>
+<dd>
+Normally, <strong>rxvtd</strong> outputs the message <code>rxvt-unicode daemon
+listening on &lt;path&gt;</code> after binding to its control socket. This option
+will suppress this message (errors and warnings will still be output).
+</dd>
+<p></p>
+<dt><strong><a name="item__2do_2c__2d_2dopendisplay"><strong>-o</strong>, <strong>--opendisplay</strong></a></strong><br />
+</dt>
+<dd>
+This forces <strong>rxvtd</strong> to open a connection to the current
+<code>$DISPLAY</code> and keep it open.
+</dd>
+<dd>
+<p>This is useful if you want to bind an instance of <strong>rxvtd</strong> to
+the lifetime of a specific display/server. If the server does a reset,
+<strong>rxvtd</strong> will be killed automatically.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item__2df_2c__2d_2dfork"><strong>-f</strong>, <strong>--fork</strong></a></strong><br />
+</dt>
+<dd>
+This makes <strong>rxvtd</strong> fork after it has bound itself to its control
+socket.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>This is a useful invocation of <strong>rxvtd</strong> in a <em>.xsession</em>-style
+script:</p>
+<pre>
+   B&lt;rxvtd&gt; -q -f -o</pre>
+<p>This waits till the control socket is available, opens the current display
+and forks into the background. When you log-out, the server is reset and
+<strong>rxvtd</strong> is killed.</p>
+<p>
+</p>
+<hr />
+<h1><a name="environment">ENVIRONMENT</a></h1>
+<dl>
+<dt><strong><a name="item_rxvt_socket"><strong>RXVT_SOCKET</strong></a></strong><br />
+</dt>
+<dd>
+Both <strong>rxvtc</strong> and <strong>rxvtd</strong> use the environment variable
+<em>RXVT_SOCKET</em> to create a listening socket and to contact
+the rxvtd, respectively. If the variable is missing,
+<em>$HOME/.rxvt-unicode-<em>&lt;nodename</em> </em>&gt; &gt;&gt;&gt; is used.
+</dd>
+<p></p>
+<dt><strong><a name="item_display"><strong>DISPLAY</strong></a></strong><br />
+</dt>
+<dd>
+Only used when the <code>--opendisplay</code> option is specified. Must contain a
+valid X display name.
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p>rxvt(7), <code>rxvtc(1)</code></p>
+
+</body>
+
+</html>

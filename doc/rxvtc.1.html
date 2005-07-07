@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>rxvtc - control the rxvtd daemon</title>
+<link rev="made" href="mailto:perl-binary@plan9.de" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#environment">ENVIRONMENT</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>rxvtc - control the rxvtd daemon</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>rxvtc</strong> [same options as for rxvt]</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This manpage describes the <strong>rxvtc</strong> client program. It connects
+to the <strong>rxvtd</strong> daemon and requests a new terminal window. It
+takes the same arguments as the <strong>rxvt</strong> program. The environment
+will also be respected. Currently, it always returns immediately after
+contacting the daemon.</p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<p>All options that are valid for <strong>rxvt</strong> are valid for
+<strong>rxvtc</strong>, too. Please note that all options are currently
+interpreted in the context of the daemon process, which makes a difference
+for options that specify a file descriptor (such as <strong>-pty-fd</strong>).</p>
+<p>
+</p>
+<hr />
+<h1><a name="environment">ENVIRONMENT</a></h1>
+<p>All environment variables of the current process will be made available
+to the new instance, and will be interpreted as if <strong>rxvt</strong> were
+started directly.</p>
+<dl>
+<dt><strong><a name="item_rxvt_socket"><strong>RXVT_SOCKET</strong></a></strong><br />
+</dt>
+<dd>
+Both rxvtc and rxvtd use the environment variable
+<em>RXVT_SOCKET</em> to create a listening socket and to contact
+the rxvtd, respectively. If the variable is missing,
+<em>$HOME/.rxvt-unicode-<em>&lt;nodename</em> </em>&gt; &gt;&gt;&gt; is used.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p>rxvt(7), <code>rxvtd(1)</code></p>
+
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+NAME
+    rxvtc - control the rxvtd daemon
+
+SYNOPSIS
+    rxvtc [same options as for rxvt]
+
+DESCRIPTION
+    This manpage describes the rxvtc client program. It connects to the
+    rxvtd daemon and requests a new terminal window. It takes the same
+    arguments as the rxvt program. The environment will also be respected.
+    Currently, it always returns immediately after contacting the daemon.
+
+OPTIONS
+    All options that are valid for rxvt are valid for rxvtc, too. Please
+    note that all options are currently interpreted in the context of the
+    daemon process, which makes a difference for options that specify a file
+    descriptor (such as -pty-fd).
+
+ENVIRONMENT
+    All environment variables of the current process will be made available
+    to the new instance, and will be interpreted as if rxvt were started
+    directly.
+
+    RXVT_SOCKET
+        Both rxvtc and rxvtd use the environment variable RXVT_SOCKET to
+        create a listening socket and to contact the rxvtd, respectively. If
+        the variable is missing, $HOME/.rxvt-unicode-*<nodename>* is used.
+
+SEE ALSO
+    rxvt(7), rxvtd(1)
+

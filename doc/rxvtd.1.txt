@@ -1,0 +1,67 @@
+NAME
+    rxvtd - rxvt terminal daemon
+
+SYNOPSIS
+    rxvtd [-q|--quiet] [-o|--opendisplay] [-f|--fork]
+
+DESCRIPTION
+    This manpage describes the rxvtd daemon, which is the same vt102
+    terminal emulator as rxvt, but runs as a daemon that can open multiple
+    terminal windows within the same process.
+
+    You can run it from your X startup scripts, for example, although it is
+    not dependent on a working DISPLAY and, in fact, can open windows on
+    multiple X displays on the same time.
+
+    Advantages of running a rxvt daemon include faster creation time for
+    terminal windows and a lot of saved memory.
+
+    The disadvantage is a possible impact on stability - if the main program
+    crashes, all processes in the terminal windows are terminated. For
+    example, as there is no way to cleanly react to abnormal connection
+    closes, "xkill" and server resets/restarts will kill the rxvtd instance
+    including all windows it has opened.
+
+OPTIONS
+    rxvtd currently understands a few options only. Bundling of options is
+    not yet supported.
+
+    -q, --quiet
+        Normally, rxvtd outputs the message "rxvt-unicode daemon listening
+        on <path>" after binding to its control socket. This option will
+        suppress this message (errors and warnings will still be output).
+
+    -o, --opendisplay
+        This forces rxvtd to open a connection to the current $DISPLAY and
+        keep it open.
+
+        This is useful if you want to bind an instance of rxvtd to the
+        lifetime of a specific display/server. If the server does a reset,
+        rxvtd will be killed automatically.
+
+    -f, --fork
+        This makes rxvtd fork after it has bound itself to its control
+        socket.
+
+EXAMPLES
+    This is a useful invocation of rxvtd in a .xsession-style script:
+
+       B<rxvtd> -q -f -o
+
+    This waits till the control socket is available, opens the current
+    display and forks into the background. When you log-out, the server is
+    reset and rxvtd is killed.
+
+ENVIRONMENT
+    RXVT_SOCKET
+        Both rxvtc and rxvtd use the environment variable RXVT_SOCKET to
+        create a listening socket and to contact the rxvtd, respectively. If
+        the variable is missing, $HOME/.rxvt-unicode-*<nodename>* is used.
+
+    DISPLAY
+        Only used when the "--opendisplay" option is specified. Must contain
+        a valid X display name.
+
+SEE ALSO
+            rxvt(7), rxvtc(1)
+
