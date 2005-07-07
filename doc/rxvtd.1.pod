@@ -1,0 +1,88 @@
+=head1 NAME
+
+@@RXVT_NAME@@d - @@RXVT_NAME@@ terminal daemon
+
+=head1 SYNOPSIS
+
+B<@@RXVT_NAME@@d> [-q|--quiet] [-o|--opendisplay] [-f|--fork]
+
+=head1 DESCRIPTION
+
+This manpage describes the @@RXVT_NAME@@d daemon, which is the same vt102
+terminal emulator as @@RXVT_NAME@@, but runs as a daemon that can open
+multiple terminal windows within the same process.
+
+You can run it from your X startup scripts, for example, although it is
+not dependent on a working DISPLAY and, in fact, can open windows on
+multiple X displays on the same time.
+
+Advantages of running a @@RXVT_NAME@@ daemon include faster creation time
+for terminal windows and a lot of saved memory.
+
+The disadvantage is a possible impact on stability - if the
+main program crashes, all processes in the terminal windows are
+terminated. For example, as there is no way to cleanly react to abnormal
+connection closes, C<xkill> and server resets/restarts will kill the
+B<@@RXVT_NAME@@d> instance including all windows it has opened.
+
+=head1 OPTIONS
+
+B<@@RXVT_NAME@@d> currently understands a few options only. Bundling of
+options is not yet supported.
+
+=over 4
+
+=item B<-q>, B<--quiet>
+
+Normally, B<@@RXVT_NAME@@d> outputs the message C<< rxvt-unicode daemon
+listening on <path> >> after binding to its control socket. This option
+will suppress this message (errors and warnings will still be logged).
+
+=item B<-o>, B<--opendisplay>
+
+This forces B<@@RXVT_NAME@@d> to open a connection to the current
+C<$DISPLAY> and keep it open.
+
+This is useful if you want to bind an instance of B<@@RXVT_NAME@@d> to
+the lifetime of a specific display/server. If the server does a reset,
+B<@@RXVT_NAME@@d> will be killed automatically.
+
+=item B<-f>, B<--fork>
+
+This makes B<@@RXVT_NAME@@d> fork after it has bound itself to its control
+socket.
+
+=back
+
+=head1 EXAMPLES
+
+This is a useful invocation of B<@@RXVT_NAME@@d> in a F<.xsession>-style
+script:
+
+   B<@@RXVT_NAME@@d> -q -f -o
+
+This waits till the control socket is available, opens the current display
+and forks into the background. When you log-out, the server is reset and
+B<@@RXVT_NAME@@d> is killed.
+
+=head1 ENVIRONMENT
+
+=over 4
+
+=item B<RXVT_SOCKET>
+
+Both B<@@RXVT_NAME@@c> and B<@@RXVT_NAME@@d> use the environment variable
+F<RXVT_SOCKET> to create a listening socket and to contact
+the @@RXVT_NAME@@d, respectively. If the variable is missing,
+F<<< $HOME/.rxvt-unicode-I<< <nodename> >> >>> is used.
+
+=item B<DISPLAY>
+
+Only used when the C<--opendisplay> option is specified. Must contain a
+valid X display name.
+
+=over
+
+=head1 SEE ALSO
+
+@@RXVT_NAME@@(7), @@RXVT_NAME@@c(1)

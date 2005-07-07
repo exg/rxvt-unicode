@@ -1,0 +1,44 @@
+=head1 NAME
+
+@@RXVT_NAME@@c - control the @@RXVT_NAME@@d daemon
+
+=head1 SYNOPSIS
+
+B<@@RXVT_NAME@@c> [same options as for @@RXVT_NAME@@]
+
+=head1 DESCRIPTION
+
+This manpage describes the B<@@RXVT_NAME@@c> client program. It connects
+to the B<@@RXVT_NAME@@d> daemon and requests a new terminal window. It
+takes the same arguments as the B<@@RXVT_NAME@@> program. The environment
+will also be respected. Currently, it always returns immediately after
+contacting the daemon.
+
+=head1 OPTIONS
+
+All options that are valid for B<@@RXVT_NAME@@> are valid for
+B<@@RXVT_NAME@@c>, too. Please note that all options are currently
+interpreted in the context of the daemon process, which makes a difference
+for options that specify a file descriptor (such as B<-pty-fd>).
+
+=head1 ENVIRONMENT
+
+All environment variables of the current process will be made available
+to the new instance, and will be interpreted as if B<@@RXVT_NAME@@> were
+started directly.
+
+=over 4
+
+=item B<RXVT_SOCKET>
+
+Both @@RXVT_NAME@@c and @@RXVT_NAME@@d use the environment variable
+F<RXVT_SOCKET> to create a listening socket and to contact
+the @@RXVT_NAME@@d, respectively. If the variable is missing,
+F<<< $HOME/.rxvt-unicode-I<< <nodename> >> >>> is used.
+
+=back
+
+=head1 SEE ALSO
+
+@@RXVT_NAME@@(7), @@RXVT_NAME@@d(1)
+

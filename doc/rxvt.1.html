@@ -49,7 +49,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>5.5</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>5.6</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -950,6 +950,20 @@ Specify a command pipe for vt100 printer [default <em>lpr(1)</em>]. Use
 <strong>Print</strong> to initiate a screen dump to the printer and <strong>Ctrl-Print</strong> or
 <strong>Shift-Print</strong> to include the scrollback as well.
 </dd>
+<dd>
+<p>The string will be interpreted as if typed into the shell as-is.</p>
+</dd>
+<dd>
+<p>Example:</p>
+</dd>
+<dd>
+<pre>
+   URxvt*print-pipe: cat &gt; $(TMPDIR=$HOME mktemp urxvt.XXXXXX)</pre>
+</dd>
+<dd>
+<p>This creates a new file in your home directory with the screen contents
+everytime you hit <code>Print</code>.</p>
+</dd>
 <p></p>
 <dt><strong><a name="item_scrollbar_3a_boolean"><strong>scrollBar:</strong> <em>boolean</em></a></strong><br />
 </dt>
@@ -1583,7 +1597,7 @@ The unix domain socket path used by <code>rxvtc(1)</code> and
 rxvtd(1).
 </dd>
 <dd>
-<p>Default <code>$HOME/.rxvt-unicode-&lt;nodename</code>.</p>
+<p>Default <em>$HOME/.rxvt-unicode-<em>&lt;nodename </em></em> &gt;&gt;&gt;.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_home"><strong>HOME</strong></a></strong><br />
@@ -1622,7 +1636,7 @@ Color names.
 </p>
 <hr />
 <h1><a name="see_also">SEE ALSO</a></h1>
-<p>rxvt(7), xterm(1), sh(1), resize(1), X(1), pty(4), tty(4), <code>utmp(5)</code></p>
+<p>rxvt(7), rxvtc(1), rxvtd(1), xterm(1), sh(1), resize(1), X(1), pty(4), tty(4), <code>utmp(5)</code></p>
 <p>
 </p>
 <hr />

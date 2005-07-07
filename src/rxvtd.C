@@ -211,18 +211,56 @@ void server::read_cb (io_watcher &w, short revents)
     return err ();
 }
 
+int opt_fork, opt_opendisplay, opt_quiet;
+
 int
 main (int argc, const char *const *argv)
 {
+  for (int i = 1; i < argc; i++)
+    {
+      if (!strcmp (argv [i], "-f") || !strcmp (argv [i], "--fork"))
+        opt_fork = 1;
+      else if (!strcmp (argv [i], "-o") || !strcmp (argv [i], "--opendisplay"))
+        opt_opendisplay = 1;
+      else if (!strcmp (argv [i], "-q") || !strcmp (argv [i], "--quiet"))
+        opt_quiet = 1;
+      else
+        {
+          rxvt_log ("%s: unknown option '%s', aborting.\n", argv [0], argv [i]);
+          return EXIT_FAILURE;
+        }
+    }
+  
   rxvt_init ();
 
   chdir ("/");
 
+  if (opt_opendisplay)
+    displays.get (getenv ("DISPLAY")); // open display and never release it
+
   char *sockname = rxvt_connection::unix_sockname ();
   unix_listener l (sockname);
-  printf ("rxvt-unicode daemon listening on %s.\n", sockname);
-  fflush (stdout);
+
+  if (!opt_quiet)
+    {
+      printf ("rxvt-unicode daemon listening on %s.\n", sockname);
+      fflush (stdout);
+    }
+
   free (sockname);
+
+  if (opt_fork)
+    {
+      pid_t pid = fork ();
+
+      if (pid < 0)
+        {
+          rxvt_log ("unable to fork daemon, aborting.\n");
+          return EXIT_FAILURE;
+        }
+      else if (pid > 0)
+        _exit (EXIT_SUCCESS);
+    }
 
   io_manager::loop ();
 

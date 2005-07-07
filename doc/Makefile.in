@@ -42,14 +42,21 @@ SEDREPLACE = -e 's%@@RXVT_VERSION@@%$(VERSION)%g;'\
 
 tags allbin:
 
-alldoc:	rxvt.1.man.in rxvt.7.man.in rxvt.1.html rxvt.7.html rxvt.1.txt rxvt.7.txt ../README.configure ../README.FAQ
+alldoc:	rxvt.1.man.in rxvt.7.man.in rxvtc.1.man.in rxvtd.1.man.in \
+	rxvt.1.txt    rxvt.7.txt    rxvtc.1.txt    rxvtd.1.txt \
+	rxvt.1.html   rxvt.7.html   rxvtc.1.html   rxvtd.1.html \
+	../README.configure ../README.FAQ
 	infocmp -C rxvt-unicode >etc/rxvt-unicode.termcap
 
 clean:
 	$(RMF) *~
 
 realclean: clean
-	$(RMF) tags rxvt.1.man.in rxvt.7.man.in rxvt.1.html rxvt.7.html rxvt.1.txt rxvt.7.txt  ../README.configure ../README.FAQ
+	$(RMF) tags ../README.configure ../README.FAQ
+	$(RMF) rxvt.1.man.in rxvt.7.man.in rxvtc.1.man.in rxvtd.1.man.in
+	$(RMF) rxvt.1.man    rxvt.7.man    rxvtc.1.man    rxvtd.1.man   
+	$(RMF) rxvt.1.txt    rxvt.7.txt    rxvtc.1.txt    rxvtd.1.txt
+	$(RMF) rxvt.1.html   rxvt.7.html   rxvtc.1.html   rxvtd.1.html
 
 cleandir: realclean
 
@@ -62,8 +69,10 @@ install:
 	$(INSTALL_DATA) rxvt.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME).$(man1ext)
 	$(SED) $(SEDREPLACE) < rxvt.7.man.in >rxvt.7.man
 	$(INSTALL_DATA) rxvt.7.man $(DESTDIR)$(man7dir)/$(RXVTNAME).$(man7ext)
-	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(man1dir)/$(RXVTNAME)c.$(man1ext)
-	$(INSTALL_DATA) rxvtc.1 $(DESTDIR)$(man1dir)/$(RXVTNAME)d.$(man1ext)
+	$(SED) $(SEDREPLACE) < rxvtc.1.man.in >rxvtc.1.man
+	$(INSTALL_DATA) rxvtc.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME)c.$(man1ext)
+	$(SED) $(SEDREPLACE) < rxvtd.1.man.in >rxvtd.1.man
+	$(INSTALL_DATA) rxvtd.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME)d.$(man1ext)
 	if test -x "@TIC@"; then if test -n "@TIC@"; then @TIC@ etc/rxvt-unicode.terminfo; fi; fi
 
 uninstall:

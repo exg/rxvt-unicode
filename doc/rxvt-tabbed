@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# I tried to write this with Tk, as it uses elss memory and is
+# I tried to write this with Tk, as it uses less memory and is
 # more widely available. Alas, Tk is rather broken with respect to embedding.
 
 # on debian, do:

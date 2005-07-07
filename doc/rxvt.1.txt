@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 5.5, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 5.6, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -614,6 +614,15 @@ RESOURCES (available also as long-options)
         Print to initiate a screen dump to the printer and Ctrl-Print or
         Shift-Print to include the scrollback as well.
 
+        The string will be interpreted as if typed into the shell as-is.
+
+        Example:
+
+           URxvt*print-pipe: cat > $(TMPDIR=$HOME mktemp urxvt.XXXXXX)
+
+        This creates a new file in your home directory with the screen
+        contents everytime you hit "Print".
+
     scrollBar: *boolean*
         True: enable the scrollbar [default]; option -sb. False: disable the
         scrollbar; option +sb.
@@ -1064,7 +1073,7 @@ ENVIRONMENT
     RXVT_SOCKET
         The unix domain socket path used by rxvtc(1) and rxvtd(1).
 
-        Default "$HOME/.rxvt-unicode-<nodename".
+        Default $HOME/.rxvt-unicode-*<nodename*.
 
     HOME
         Used to locate the default directory for the unix domain socket for
@@ -1083,7 +1092,8 @@ FILES
         Color names.
 
 SEE ALSO
-    rxvt(7), xterm(1), sh(1), resize(1), X(1), pty(4), tty(4), utmp(5)
+    rxvt(7), rxvtc(1), rxvtd(1), xterm(1), sh(1), resize(1), X(1), pty(4),
+    tty(4), utmp(5)
 
 BUGS
     Check the BUGS file for an up-to-date list.

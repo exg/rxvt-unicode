@@ -1,3 +1,4 @@
+TODO: Make change? [y... flood freezes until outputter is being killed
 TODO: do font request caching, might help rxvtd on some machines
 TODO: safer command: keymap processing.
 TODO: "slow" rendering mode for bidi and scripts
@@ -10,6 +11,9 @@ WISH: double-click: more intelligent (urls etc.)
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
+
+	- implement some useful (hopefully) options for rxvtd.
+        - seperate and improved rxvtc(1) and rxvtd(1) manpages.
 
 5.6  Sun Jun 26 22:11:13 CEST 2005
         - R_SB_RXVT bitset value was 0, so rxvt scrollbar was initialised

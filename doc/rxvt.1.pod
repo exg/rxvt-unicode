@@ -1249,7 +1249,7 @@ Used in the same way as C<RXVTPATH>.
 The unix domain socket path used by @@RXVT_NAME@@c(1) and
 @@RXVT_NAME@@d(1).
 
-Default C<< $HOME/.rxvt-unicode-<nodename >>.
+Default F<<< $HOME/.rxvt-unicode-I<< <nodename >> >>>.
 
 =item B<HOME>
 
@@ -1280,7 +1280,7 @@ Color names.
 
 =head1 SEE ALSO
 
-@@RXVT_NAME@@(7), xterm(1), sh(1), resize(1), X(1), pty(4), tty(4), utmp(5)
+@@RXVT_NAME@@(7), @@RXVT_NAME@@c(1), @@RXVT_NAME@@d(1), xterm(1), sh(1), resize(1), X(1), pty(4), tty(4), utmp(5)
 
 =head1 BUGS
 

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-06-18" "5.5" "RXVT-UNICODE"
+.TH rxvt 1 "2005-07-07" "5.6" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -760,6 +760,17 @@ option \fB\-ut\fR. \fBFalse\fR: write record into the system log file \fButmp\fR
 Specify a command pipe for vt100 printer [default \fI\fIlpr\fI\|(1)\fR]. Use
 \&\fBPrint\fR to initiate a screen dump to the printer and \fBCtrl-Print\fR or
 \&\fBShift-Print\fR to include the scrollback as well.
+.Sp
+The string will be interpreted as if typed into the shell as\-is.
+.Sp
+Example:
+.Sp
+.Vb 1
+\&   URxvt*print-pipe: cat > $(TMPDIR=$HOME mktemp urxvt.XXXXXX)
+.Ve
+.Sp
+This creates a new file in your home directory with the screen contents
+everytime you hit \f(CW\*(C`Print\*(C'\fR.
 .IP "\fBscrollBar:\fR \fIboolean\fR" 4
 .IX Item "scrollBar: boolean"
 \&\fBTrue\fR: enable the scrollbar [default]; option \fB\-sb\fR. \fBFalse\fR:
@@ -1226,7 +1237,7 @@ Used in the same way as \f(CW\*(C`RXVTPATH\*(C'\fR.
 The unix domain socket path used by @@RXVT_NAME@@c(1) and
 @@RXVT_NAME@@d(1).
 .Sp
-Default \f(CW\*(C`$HOME/.rxvt\-unicode\-<nodename\*(C'\fR.
+Default \fI$HOME/.rxvt\-unicode\-\fI<nodename\fI\fR.
 .IP "\fB\s-1HOME\s0\fR" 4
 .IX Item "HOME"
 Used to locate the default directory for the unix domain socket for
@@ -1246,7 +1257,7 @@ If set and accessible, gives the name of a X resource file to be loaded by
 Color names.
 .SH "SEE ALSO"
 .IX Header "SEE ALSO"
-@@RXVT_NAME@@(7), \fIxterm\fR\|(1), \fIsh\fR\|(1), \fIresize\fR\|(1), X(1), \fIpty\fR\|(4), \fItty\fR\|(4), \fIutmp\fR\|(5)
+@@RXVT_NAME@@(7), @@RXVT_NAME@@c(1), @@RXVT_NAME@@d(1), \fIxterm\fR\|(1), \fIsh\fR\|(1), \fIresize\fR\|(1), X(1), \fIpty\fR\|(4), \fItty\fR\|(4), \fIutmp\fR\|(5)
 .SH "BUGS"
 .IX Header "BUGS"
 Check the \s-1BUGS\s0 file for an up-to-date list.

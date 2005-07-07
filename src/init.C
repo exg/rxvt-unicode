@@ -346,19 +346,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
   get_options (r_argc, r_argv);
 
-#ifdef LOCAL_X_IS_UNIX
-  if (rs[Rs_display_name][0] == ':')
-    {
-      val = rxvt_malloc (5 + strlen (rs[Rs_display_name]));
-      strcpy (val, "unix");
-      strcat (val, rs[Rs_display_name]);
-      display = displays.get (val);
-      free (val);
-    }
-#endif
-
-  if (!display
-      && ! (display = displays.get (rs[Rs_display_name])))
+  if (!(display = displays.get (rs[Rs_display_name])))
     rxvt_fatal ("can't open display %s, aborting.\n", rs[Rs_display_name]);
 
   extract_resources ();

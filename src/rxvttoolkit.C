@@ -145,7 +145,21 @@ rxvt_display::rxvt_display (const char *id)
 
 bool rxvt_display::init ()
 {
-  display = XOpenDisplay (id);
+#ifdef LOCAL_X_IS_UNIX
+  if (id[0] == ':')
+    {
+      val = rxvt_malloc (5 + strlen (id) + 1);
+      strcpy (val, "unix/");
+      strcat (val, id);
+      display = XOpenDisplay (val);
+      free (val);
+    }
+  else
+    display = 0;
+#endif
+
+  if (!display)
+    display = XOpenDisplay (id);
 
   if (!display)
     return false;
