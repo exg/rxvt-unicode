@@ -29,7 +29,7 @@ OPTIONS
     -q, --quiet
         Normally, rxvtd outputs the message "rxvt-unicode daemon listening
         on <path>" after binding to its control socket. This option will
-        suppress this message (errors and warnings will still be output).
+        suppress this message (errors and warnings will still be logged).
 
     -o, --opendisplay
         This forces rxvtd to open a connection to the current $DISPLAY and

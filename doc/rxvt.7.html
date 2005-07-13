@@ -85,13 +85,14 @@ sequence <code>ESC [ 8 n</code> sets the window title to the version number.
 <dt><strong><a name="item_i_am_using_debian_gnu_2flinux_and_have_a_problem_2">I am using Debian GNU/Linux and have a problem...</a></strong><br />
 </dt>
 <dd>
-The Debian GNU/Linux package of rxvt-unicode contains large patches that
-considerably change the behaviour of rxvt-unicode. Before reporting a
-bug to the original rxvt-unicode author please download and install the
-genuine version (<a href="http://software.schmorp.de#rxvt-unicode">http://software.schmorp.de#rxvt-unicode</a>) and try to
-reproduce the problem. If you cannot, chances are that the problems are
-specific to Debian GNU/Linux, in which case it should be reported via the
-Debian Bug Tracking System (use <code>reportbug</code> to report the bug).
+The Debian GNU/Linux package of rxvt-unicode in sarge contains large
+patches that considerably change the behaviour of rxvt-unicode. Before
+reporting a bug to the original rxvt-unicode author please download and
+install the genuine version (<a href="http://software.schmorp.de#rxvt-unicode">http://software.schmorp.de#rxvt-unicode</a>)
+and try to reproduce the problem. If you cannot, chances are that the
+problems are specific to Debian GNU/Linux, in which case it should be
+reported via the Debian Bug Tracking System (use <code>reportbug</code> to report
+the bug).
 </dd>
 <dd>
 <p>For other problems that also affect the Debian package, you can and
@@ -137,6 +138,13 @@ resource to set it:</p>
 <dd>
 <p>If you don't plan to use <strong>rxvt</strong> (quite common...) you could also replace
 the rxvt terminfo file with the rxvt-unicode one.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_tic_outputs_some_error_when_compiling_the_terminfo"><code>tic</code> outputs some error when compiling the terminfo entry.</a></strong><br />
+</dt>
+<dd>
+Most likely it's the empty definition for <code>enacs=</code>. Just replace it by
+<code>enacs=\E[0@</code> and try again.
 </dd>
 <p></p>
 <dt><strong><a name="item_bash_27s_readline_does_not_work_correctly_under_rx"><code>bash</code>'s readline does not work correctly under rxvt.</a></strong><br />
@@ -482,6 +490,22 @@ complete replacements for them :)</p>
 <dd>
 Try the diff in <em>doc/solaris9.patch</em> as a base. It fixes the worst
 problems with <code>wcwidth</code> and a compile problem.
+</dd>
+<p></p>
+<dt><strong><a name="item_how_can_i_use_rxvt_2dunicode_under_cygwin_3f">How can I use rxvt-unicode under cygwin?</a></strong><br />
+</dt>
+<dd>
+rxvt-unicode should compile and run out of the box on cygwin, using
+the X11 libraries that come with cygwin. libW11 emulation is no
+longer supported (and makes no sense, either, as it only supported a
+single font). I recommend starting the X-server in <code>-multiwindow</code> or
+<code>-rootless</code> mode instead, which will result in similar look&amp;feel as the
+old libW11 emulation.
+</dd>
+<dd>
+<p>At the time of this writing, cygwin didn't seem to support any multi-byte
+encodings (you might try <code>LC_CTYPE=C-UTF-8</code>), so you are likely limited
+to 8-bit encodings.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_how_does_rxvt_2dunicode_determine_the_encoding_to_">How does rxvt-unicode determine the encoding to use?</a></strong><br />

@@ -25,10 +25,10 @@ FREQUENTLY ASKED QUESTIONS
         sequence "ESC [ 8 n" sets the window title to the version number.
 
     I am using Debian GNU/Linux and have a problem...
-        The Debian GNU/Linux package of rxvt-unicode contains large patches
-        that considerably change the behaviour of rxvt-unicode. Before
-        reporting a bug to the original rxvt-unicode author please download
-        and install the genuine version
+        The Debian GNU/Linux package of rxvt-unicode in sarge contains large
+        patches that considerably change the behaviour of rxvt-unicode.
+        Before reporting a bug to the original rxvt-unicode author please
+        download and install the genuine version
         (<http://software.schmorp.de#rxvt-unicode>) and try to reproduce the
         problem. If you cannot, chances are that the problems are specific
         to Debian GNU/Linux, in which case it should be reported via the
@@ -67,6 +67,10 @@ FREQUENTLY ASKED QUESTIONS
 
         If you don't plan to use rxvt (quite common...) you could also
         replace the rxvt terminfo file with the rxvt-unicode one.
+
+    "tic" outputs some error when compiling the terminfo entry.
+        Most likely it's the empty definition for "enacs=". Just replace it
+        by "enacs=\E[0@" and try again.
 
     "bash"'s readline does not work correctly under rxvt.
     I need a termcap file entry.
@@ -334,6 +338,18 @@ FREQUENTLY ASKED QUESTIONS
     I use Solaris 9 and it doesn't compile/work/etc.
         Try the diff in doc/solaris9.patch as a base. It fixes the worst
         problems with "wcwidth" and a compile problem.
+
+    How can I use rxvt-unicode under cygwin?
+        rxvt-unicode should compile and run out of the box on cygwin, using
+        the X11 libraries that come with cygwin. libW11 emulation is no
+        longer supported (and makes no sense, either, as it only supported a
+        single font). I recommend starting the X-server in "-multiwindow" or
+        "-rootless" mode instead, which will result in similar look&feel as
+        the old libW11 emulation.
+
+        At the time of this writing, cygwin didn't seem to support any
+        multi-byte encodings (you might try "LC_CTYPE=C-UTF-8"), so you are
+        likely limited to 8-bit encodings.
 
     How does rxvt-unicode determine the encoding to use?
     Is there an option to switch encodings?

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2005-06-26" "5.6" "RXVT-UNICODE"
+.TH rxvt 7 "2005-07-13" "5.7" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -164,13 +164,14 @@ The version number is displayed with the usage (\-h). Also the escape
 sequence \f(CW\*(C`ESC [ 8 n\*(C'\fR sets the window title to the version number.
 .IP "I am using Debian GNU/Linux and have a problem..." 4
 .IX Item "I am using Debian GNU/Linux and have a problem..."
-The Debian GNU/Linux package of rxvt-unicode contains large patches that
-considerably change the behaviour of rxvt\-unicode. Before reporting a
-bug to the original rxvt-unicode author please download and install the
-genuine version (<http://software.schmorp.de#rxvt\-unicode>) and try to
-reproduce the problem. If you cannot, chances are that the problems are
-specific to Debian GNU/Linux, in which case it should be reported via the
-Debian Bug Tracking System (use \f(CW\*(C`reportbug\*(C'\fR to report the bug).
+The Debian GNU/Linux package of rxvt-unicode in sarge contains large
+patches that considerably change the behaviour of rxvt\-unicode. Before
+reporting a bug to the original rxvt-unicode author please download and
+install the genuine version (<http://software.schmorp.de#rxvt\-unicode>)
+and try to reproduce the problem. If you cannot, chances are that the
+problems are specific to Debian GNU/Linux, in which case it should be
+reported via the Debian Bug Tracking System (use \f(CW\*(C`reportbug\*(C'\fR to report
+the bug).
 .Sp
 For other problems that also affect the Debian package, you can and
 probably should use the Debian \s-1BTS\s0, too, because, after all, it's also a
@@ -207,6 +208,11 @@ resource to set it:
 .Sp
 If you don't plan to use \fBrxvt\fR (quite common...) you could also replace
 the rxvt terminfo file with the rxvt-unicode one.
+.ie n .IP """tic"" outputs some error when compiling the terminfo entry." 4
+.el .IP "\f(CWtic\fR outputs some error when compiling the terminfo entry." 4
+.IX Item "tic outputs some error when compiling the terminfo entry."
+Most likely it's the empty definition for \f(CW\*(C`enacs=\*(C'\fR. Just replace it by
+\&\f(CW\*(C`enacs=\eE[0@\*(C'\fR and try again.
 .ie n .IP """bash""'s readline does not work correctly under @@RXVT_NAME@@." 4
 .el .IP "\f(CWbash\fR's readline does not work correctly under @@RXVT_NAME@@." 4
 .IX Item "bash's readline does not work correctly under @@RXVT_NAME@@."
@@ -492,6 +498,18 @@ complete replacements for them :)
 .IX Item "I use Solaris 9 and it doesn't compile/work/etc."
 Try the diff in \fIdoc/solaris9.patch\fR as a base. It fixes the worst
 problems with \f(CW\*(C`wcwidth\*(C'\fR and a compile problem.
+.IP "How can I use rxvt-unicode under cygwin?" 4
+.IX Item "How can I use rxvt-unicode under cygwin?"
+rxvt-unicode should compile and run out of the box on cygwin, using
+the X11 libraries that come with cygwin. libW11 emulation is no
+longer supported (and makes no sense, either, as it only supported a
+single font). I recommend starting the X\-server in \f(CW\*(C`\-multiwindow\*(C'\fR or
+\&\f(CW\*(C`\-rootless\*(C'\fR mode instead, which will result in similar look&feel as the
+old libW11 emulation.
+.Sp
+At the time of this writing, cygwin didn't seem to support any multi-byte
+encodings (you might try \f(CW\*(C`LC_CTYPE=C\-UTF\-8\*(C'\fR), so you are likely limited
+to 8\-bit encodings.
 .IP "How does rxvt-unicode determine the encoding to use?" 4
 .IX Item "How does rxvt-unicode determine the encoding to use?"
 .PD 0
