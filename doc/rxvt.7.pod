@@ -356,7 +356,8 @@ C<-rootless> mode instead, which will result in similar look&feel as the
 old libW11 emulation.
 
 At the time of this writing, cygwin didn't seem to support any multi-byte
-encodings, so you are likely limited to 8-bit encodings.
+encodings (you might try C<LC_CTYPE=C-UTF-8>), so you are likely limited
+to 8-bit encodings.
 
 =item How does rxvt-unicode determine the encoding to use?
 
