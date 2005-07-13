@@ -1,4 +1,3 @@
-TODO: enacs= should contain some dummy sequence
 TODO: Make change? [y... flood freezes until outputter is being killed
 TODO: do font request caching, might help rxvtd on some machines
 TODO: safer command: keymap processing.
@@ -14,8 +13,7 @@ WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
 	- implement some useful (hopefully) options for rxvtd.
-        - seperate and improved rxvtc(1) and rxvtd(1) manpages.
-        - empty enacs= specification caused problems, removed it.
+        - separate and improved rxvtc(1) and rxvtd(1) manpages.
         - fix a bug that caused segfaults on startup on systems that do
           not support local unix connections, e.g cygwin. (btw, I didn't
           even know about the -rootless and -multiwindow Cygwin/X modes).
