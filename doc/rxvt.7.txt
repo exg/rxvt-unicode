@@ -554,14 +554,8 @@ FREQUENTLY ASKED QUESTIONS
            URxvt.color15:      #e1dddd
 
     How can I start rxvtd in a race-free way?
-        Despite it's name, rxvtd is not a real daemon, but more like a
-        server that answers rxvtc's requests, so it doesn't background
-        itself.
-
-        To ensure rxvtd is listening on it's socket, you can use the
-        following method to wait for the startup message before continuing:
-
-          { rxvtd & } | read
+        Try "rxvtd -f -o", which tells rxvtd to open the display, create the
+        listening socket and then fork.
 
     What's with the strange Backspace/Delete key behaviour?
         Assuming that the physical Backspace key corresponds to the

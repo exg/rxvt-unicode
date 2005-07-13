@@ -782,17 +782,8 @@ me) as ``pretty girly''.</p>
 <dt><strong><a name="item_how_can_i_start_rxvtd_in_a_race_2dfree_way_3f">How can I start rxvtd in a race-free way?</a></strong><br />
 </dt>
 <dd>
-Despite it's name, rxvtd is not a real daemon, but more like a
-server that answers rxvtc's requests, so it doesn't background
-itself.
-</dd>
-<dd>
-<p>To ensure rxvtd is listening on it's socket, you can use the
-following method to wait for the startup message before continuing:</p>
-</dd>
-<dd>
-<pre>
-  { rxvtd &amp; } | read</pre>
+Try <code>rxvtd -f -o</code>, which tells rxvtd to open the
+display, create the listening socket and then fork.
 </dd>
 <p></p>
 <dt><strong><a name="item_what_27s_with_the_strange_backspace_2fdelete_key_b">What's with the strange Backspace/Delete key behaviour?</a></strong><br />
