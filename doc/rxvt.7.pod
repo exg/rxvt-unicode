@@ -346,6 +346,18 @@ complete replacements for them :)
 Try the diff in F<doc/solaris9.patch> as a base. It fixes the worst
 problems with C<wcwidth> and a compile problem.
 
+=item How can I use rxvt-unicode under cygwin?
+
+rxvt-unicode should compile and run out of the box on cygwin, using
+the X11 libraries that come with cygwin. libW11 emulation is no
+longer supported (and makes no sense, either, as it only supported a
+single font). I recommend starting the X-server in C<-multiwindow> or
+C<-rootless> mode instead, which will result in similar look&feel as the
+old libW11 emulation.
+
+At the time of this writing, cygwin didn't seem to support any multi-byte
+encodings, so you are likely limited to 8-bit encodings.
+
 =item How does rxvt-unicode determine the encoding to use?
 
 =item Is there an option to switch encodings?
