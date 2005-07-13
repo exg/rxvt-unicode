@@ -152,7 +152,6 @@ bool rxvt_display::init ()
       strcpy (val, "unix/");
       strcat (val, id);
       display = XOpenDisplay (val);
-      printf ("OD %s => %p\n", val, display);//D
       free (val);
     }
   else
@@ -161,7 +160,6 @@ bool rxvt_display::init ()
 
   if (!display)
     display = XOpenDisplay (id);
-      printf ("O2 %s => %p\n", id, display);//D
 
   if (!display)
     return false;
