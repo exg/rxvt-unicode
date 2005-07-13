@@ -1,4 +1,4 @@
-#	Reconstructed via infocmp from file: /etc/terminfo/r/rxvt-unicode
+#	Reconstructed via infocmp from file: /usr/share/terminfo/r/rxvt-unicode
 # (untranslatable capabilities removed to fit entry within 1023 bytes)
 rxvt-unicode|rxvt-unicode terminal (X Window System):\
 	:am:bw:eo:km:mi:ms:xn:xo:\
