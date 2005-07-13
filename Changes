@@ -16,6 +16,9 @@ WISH: just for fun, do shade and tint with XRender.
 	- implement some useful (hopefully) options for rxvtd.
         - seperate and improved rxvtc(1) and rxvtd(1) manpages.
         - empty enacs= specification caused problems, removed it.
+        - fix a bug that caused segfaults on startup on systems that do
+          not support local unix connections, e.g cygwin. (btw, I didn't
+          even know about the -rootless and -multiwindow Cygwin/X modes).
 
 5.6  Sun Jun 26 22:11:13 CEST 2005
         - R_SB_RXVT bitset value was 0, so rxvt scrollbar was initialised
