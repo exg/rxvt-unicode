@@ -2659,7 +2659,9 @@ rxvt_term::cmd_parse ()
 
               if (ch == C0_LF || str >= eol)
                 {
-                  nlines++;
+                  if (ch == C0_LF)
+                    nlines++;
+
                   refresh_count++;
 
                   if (!(options & Opt_jumpScroll)
