@@ -489,7 +489,7 @@ rxvt-unicode then uses 8 bytes per screen cell.
 
 Yes, the most obvious way to speed it up is to avoid Xft entirely, as
 it is simply slow. If you still want Xft fonts you might try to disable
-antialiasing (by appending C<:antialiasing=false>), which saves lots of
+antialiasing (by appending C<:antialias=false>), which saves lots of
 memory and also speeds up rendering considerably.
 
 =item Rxvt-unicode doesn't seem to anti-alias its fonts, what is wrong?
