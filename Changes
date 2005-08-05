@@ -12,6 +12,11 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
+        - slow down the internal visual bell (delay by 20ms) and update
+          the terminfo flash code to use the same delay.  This is
+          synchronous, so many bells might inhibit screen updates in other
+          windows.
+
 5.7  Wed Jul 13 04:46:33 CEST 2005
 	- implement some useful (hopefully) options for rxvtd.
         - separate and improved rxvtc(1) and rxvtd(1) manpages.

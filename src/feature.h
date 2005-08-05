@@ -409,5 +409,11 @@
  */
 /* #define WAIT_FOR_WM */
 
+/*
+ * The duration of the visual bell flash in µs. The default of 20ms
+ * corresponds to the delay given in the terminfo flash code.
+ */
+#define VISUAL_BELL_DURATION 20000
+
 #endif
 

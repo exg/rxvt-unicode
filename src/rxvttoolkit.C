@@ -173,7 +173,7 @@ bool rxvt_display::init ()
   int fd = XConnectionNumber (display);
 
 #ifndef NO_SLOW_LINK_SUPPORT
-  // try to detetc wether we have a local connection.
+  // try to detect wether we have a local connection.
   // assume unix domains socket == local, everything else not
   // TODO: might want to check for inet/127.0.0.1
   is_local = 0;

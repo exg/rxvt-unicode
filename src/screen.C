@@ -1950,19 +1950,23 @@ void
 rxvt_term::scr_bell ()
 {
 #ifndef NO_BELL
+
 # ifndef NO_MAPALERT
 #  ifdef MAPALERT_OPTION
   if (options & Opt_mapAlert)
 #  endif
     XMapWindow (display->display, TermWin.parent[0]);
 # endif
+
   if (options & Opt_visualBell)
     {
       scr_rvideo_mode (!rvideo); /* refresh also done */
+      rxvt_usleep (VISUAL_BELL_DURATION);
       scr_rvideo_mode (!rvideo); /* refresh also done */
     }
   else
     XBell (display->display, 0);
+
 #endif
 }
 

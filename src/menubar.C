@@ -2250,20 +2250,7 @@ rxvt_term::menu_select (XButtonEvent &ev)
                     case MenuAction:
                     case MenuTerminalAction:
                       drawbox_menuitem (this_y, -1);
-#ifdef HAVE_NANOSLEEP
-                      struct timespec rqt;
-
-                      rqt.tv_sec = 0;
-                      rqt.tv_nsec = MENU_DELAY_USEC * 1000;
-                      nanosleep (&rqt, NULL);
-#else
-                      /* use select for timing */
-                      struct timeval  tv;
-
-                      tv.tv_sec = 0;
-                      tv.tv_usec = MENU_DELAY_USEC;
-                      select (0, NULL, NULL, NULL, &tv);
-#endif
+                      rxvt_usleep (MENU_DELAY_USEC);
                       /* remove menu before sending keys to the application */
                       menu_hide_all ();
 #ifndef DEBUG_MENU
@@ -2351,23 +2338,7 @@ rxvt_term::menubar_select (XButtonEvent &ev)
                                 + (Width2Pixel (4 * i + i + 4)) / 4))
                   {
                     draw_Arrows (Arrows[i].name, -1);
-                    {
-#ifdef HAVE_NANOSLEEP
-                      struct timespec rqt;
-
-                      rqt.tv_sec = 0;
-                      rqt.tv_nsec = MENU_DELAY_USEC * 1000;
-                      nanosleep (&rqt, NULL);
-#else
-                      /* use select for timing */
-                      struct timeval  tv;
-
-                      tv.tv_sec = 0;
-                      tv.tv_usec = MENU_DELAY_USEC;
-                      select (0, NULL, NULL, NULL, &tv);
-#endif
-
-                    }
+                    rxvt_usleep (MENU_DELAY_USEC);
                     draw_Arrows (Arrows[i].name, +1);
 #ifdef DEBUG_MENUARROWS
                     fprintf (stderr, "'%c': ", Arrows[i].name);
