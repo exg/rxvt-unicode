@@ -471,8 +471,8 @@ FREQUENTLY ASKED QUESTIONS
     Can I speed up Xft rendering somehow?
         Yes, the most obvious way to speed it up is to avoid Xft entirely,
         as it is simply slow. If you still want Xft fonts you might try to
-        disable antialiasing (by appending ":antialiasing=false"), which
-        saves lots of memory and also speeds up rendering considerably.
+        disable antialiasing (by appending ":antialias=false"), which saves
+        lots of memory and also speeds up rendering considerably.
 
     Rxvt-unicode doesn't seem to anti-alias its fonts, what is wrong?
         Rxvt-unicode will use whatever you specify as a font. If it needs to
