@@ -762,7 +762,8 @@ rxvt_term::Get_Colours ()
 #ifdef KEEP_SCROLLCOLOR
 
   if (display->depth <= 2)
-    {  /* Monochrome */
+    {
+      /* Monochrome */
       pix_colors[Color_scroll]       = pix_colors[Color_fg];
       pix_colors[Color_topShadow]    = pix_colors[Color_bg];
       pix_colors[Color_bottomShadow] = pix_colors[Color_bg];
