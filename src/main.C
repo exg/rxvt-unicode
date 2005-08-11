@@ -261,7 +261,7 @@ rxvt_term::~rxvt_term ()
   // TODO: free pixcolours, colours should become part of rxvt_display
 
   delete pix_colors_focused;
-#ifdef OFF_FOCUS_FADING
+#if OFF_FOCUS_FADING
   delete pix_colors_unfocused;
 #endif
 
@@ -992,7 +992,7 @@ rxvt_term::set_window_color (int idx, const char *color)
 # ifndef NO_BRIGHTCOLOR
           pix_colors_focused[idx] = pix_colors_focused[minBrightCOLOR + i];
           SET_PIXCOLOR (idx);
-          goto Done;
+          goto done;
 # endif
         }
 
@@ -1000,7 +1000,7 @@ rxvt_term::set_window_color (int idx, const char *color)
         { /* normal colors */
           pix_colors_focused[idx] = pix_colors_focused[minCOLOR + i];
           SET_PIXCOLOR (idx);
-          goto Done;
+          goto done;
         }
     }
 
@@ -1030,10 +1030,11 @@ rxvt_term::set_window_color (int idx, const char *color)
 
   /* XSetWindowAttributes attr; */
   /* Cursor cursor; */
-Done:
-#ifdef OFF_FOCUS_FADING
+done:
+
+#if OFF_FOCUS_FADING
   if (rs[Rs_fade])
-    pix_colors_unfocused[idx] = pix_colors_focused[idx].fade (display, atoi (rs[Rs_fade]));
+    pix_colors_unfocused[idx] = pix_colors_focused[idx].fade (display, atoi (rs[Rs_fade]), pix_colors[Color_fade]);
 #endif
 
   /*TODO: handle Color_BD, scrollbar background, etc. */

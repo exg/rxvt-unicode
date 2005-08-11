@@ -1654,18 +1654,18 @@ rxvt_term::focus_in ()
     {
       TermWin.focus = 1;
       want_refresh = 1;
-#ifdef USE_XIM
+#if USE_XIM
       if (Input_Context != NULL)
         {
           IMSetStatusPosition ();
           XSetICFocus (Input_Context);
         }
 #endif
-#ifdef CURSOR_BLINK
+#if CURSOR_BLINK
       if (options & Opt_cursorBlink)
         cursor_blink_ev.start (NOW + BLINK_INTERVAL);
 #endif
-#ifdef OFF_FOCUS_FADING
+#if OFF_FOCUS_FADING
       if (rs[Rs_fade])
         {
           pix_colors = pix_colors_focused;
@@ -1689,16 +1689,16 @@ rxvt_term::focus_out ()
 #if ENABLE_OVERLAY
       scr_overlay_off ();
 #endif
-#ifdef USE_XIM
+#if USE_XIM
       if (Input_Context != NULL)
         XUnsetICFocus (Input_Context);
 #endif
-#ifdef CURSOR_BLINK
+#if CURSOR_BLINK
       if (options & Opt_cursorBlink)
         cursor_blink_ev.stop ();
       hidden_cursor = 0;
 #endif
-#ifdef OFF_FOCUS_FADING
+#if OFF_FOCUS_FADING
       if (rs[Rs_fade])
         {
           pix_colors = pix_colors_unfocused;

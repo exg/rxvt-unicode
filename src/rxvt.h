@@ -493,9 +493,7 @@ enum {
 
 /* Words starting with `Color_' are colours.  Others are counts */
 /*
- * The following comment is mostly obsolete since pixcolor_set was expanded:
- * We're currently upto 29 colours.  Only 3 more available.  The
- * PixColor and rendition colour usage should probably be decoupled
+ * The PixColor and rendition colour usage should probably be decoupled
  * on the unnecessary items, e.g. Color_pointer, but won't bother
  * until we need to.  Also, be aware of usage in pixcolor_set
  */
@@ -554,6 +552,9 @@ enum colour_list {
 #endif
 #if TINTING
   Color_tint,
+#endif
+#if OFF_FOCUS_FADING
+  Color_fade,
 #endif
   NRS_COLORS,                 /* */
 #ifdef KEEP_SCROLLCOLOR

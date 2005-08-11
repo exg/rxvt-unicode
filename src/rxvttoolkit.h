@@ -173,7 +173,8 @@ struct rxvt_color {
   bool set (rxvt_display *display, const char *name);
   bool set (rxvt_display *display, unsigned short cr, unsigned short cg, unsigned short cb);
 
-  rxvt_color fade (rxvt_display *, int percent);
+  rxvt_color fade (rxvt_display *, int percent); // fades to black
+  rxvt_color fade (rxvt_display *, int percent, rxvt_color &fadeto);
 
   void free (rxvt_display *display);
 };

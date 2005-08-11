@@ -114,14 +114,21 @@ B<-tr>; resource B<inheritPixmap>.
 
 =item B<-fade> I<number>
 
-Fade the text by the given percentage when focus is lost. resource B<fading>.
+Fade the text by the given percentage when focus is lost. Small values
+fade a little only, 100 completely replaces all colours by the fade
+colour; resource B<fading>.
+
+=item B<-fadecolor> I<colour>
+
+Fade to this colour when fading is used (see B<-fade>). The default colour
+is black. resource B<fadeColor>.
 
 =item B<-tint> I<colour>
 
 Tint the transparent background pixmap with the given colour when
 transparency is enabled with B<-tr> or B<-ip>. See also the B<-sh>
 option that can be used to brighten or darken the image in addition to
-tinting it.
+tinting it; resource I<tintColor>.
 
 =item B<-sh>
 
@@ -550,11 +557,17 @@ pixmap.
 
 =item B<fading:> I<number>
 
-Fade the text by the given percentage when focus is lost.
+Fade the text by the given percentage when focus is lost; option B<-fade>.
+
+=item B<fadeColor:> I<colour>
+
+Fade to this colour, when fading is used (see B<fading:>). The default
+colour is black; option B<-fadecolor>.
 
 =item B<tintColor:> I<colour>
 
-Tint the transparent background pixmap with the given colour.
+Tint the transparent background pixmap with the given colour; option
+B<-tint>.
 
 =item B<shading:> I<number>
 

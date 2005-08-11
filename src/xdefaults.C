@@ -98,7 +98,7 @@ optList[] = {
               BOOL (Rs_loginShell, "loginShell", "ls", Opt_loginShell, "login shell"),
               BOOL (Rs_jumpScroll, "jumpScroll", "j", Opt_jumpScroll, "jump scrolling"),
               BOOL (Rs_pastableTabs, "pastableTabs", "ptab", Opt_pastableTabs, "tab characters are pastable"),
-#ifdef HAVE_SCROLLBARS
+#if HAVE_SCROLLBARS
               RSTRG (Rs_scrollstyle, "scrollstyle", "mode"),
               BOOL (Rs_scrollBar, "scrollBar", "sb", Opt_scrollBar, "scrollbar"),
               BOOL (Rs_scrollBar_right, "scrollBar_right", "sr", Opt_scrollBar_right, "scrollbar right"),
@@ -110,18 +110,19 @@ optList[] = {
               BOOL (Rs_scrollTtyOutput, NULL, "si", Opt_Reverse | Opt_scrollTtyOutput, "scroll-on-tty-output inhibit"),
               BOOL (Rs_scrollTtyKeypress, "scrollTtyKeypress", "sk", Opt_scrollTtyKeypress, "scroll-on-keypress"),
               BOOL (Rs_scrollWithBuffer, "scrollWithBuffer", "sw", Opt_scrollWithBuffer, "scroll-with-buffer"),
-#ifdef TRANSPARENT
+#if TRANSPARENT
               BOOL (Rs_transparent, "inheritPixmap", "ip", Opt_transparent, "inherit parent pixmap"),
               BOOL (Rs_transparent_all, "inheritPixmapforce", "ipf", Opt_transparent_all, "forcefully inherit root pixmap"),
               SWCH ("tr", Opt_transparent, NULL),
-#if TINTING
+# if TINTING
               STRG (Rs_color + Color_tint, "tintColor", "tint", "color", "tint color"),
+# endif
 #endif
+#if OFF_FOCUS_FADING
+              STRG (Rs_fade, "fading", "fade", "%", "fade colors x% percent when rxvt-unicode is losing focus"),
+              STRG (Rs_color + Color_fade, "fadeColor", "fadecolor", "color", "target color for off-focus fading"),
 #endif
-#ifdef OFF_FOCUS_FADING
-              STRG (Rs_fade, "fading", "fade", "%", "make colors x% darker when rxvt-unicode is losing focus."),
-#endif
-#ifdef TINTING
+#if TINTING
               STRG (Rs_shade, "shading", "sh", "%", "shade background by x% when tinting."),
 #endif
               BOOL (Rs_utmpInhibit, "utmpInhibit", "ut", Opt_utmpInhibit, "utmp inhibit"),
