@@ -15,6 +15,7 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
+5.8
         - INCOMPATIBLE CHANGE: -fade changed it's meaning to comply with
           the documentation and common sense: when upgrading, replace your
           percentage by 100-percentage.
