@@ -2310,27 +2310,27 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
           while (i && text[count] == NOCHAR)
             count++, i--;
 
-#if ENABLE_STYLES
-          // force redraw after "careful" characters to avoid pixel droppings
-          if (srp[col] & RS_Careful && col < TermWin.ncol - 1 && 0)
-            drp[col + 1] = ~srp[col + 1];
-
-          // include previous careful character(s) if possible, looks nicer (best effort...)
-          while (text > stp
-              && srp[text - stp - 1] & RS_Careful
-              && RS_SAME (rend, srp[text - stp - 1]))
-            text--, count++, xpixel -= TermWin.fwidth;
-#endif
-
           /*
            * Determine the attributes for the string
            */
           int fore = GET_FGCOLOR (rend); // desired foreground
           int back = GET_BGCOLOR (rend); // desired background
 
-          // only do special processing if ana attributes are set, which is rare
-          if (rend & (RS_Bold | RS_Italic | RS_Uline | RS_RVid | RS_Blink))
+          // only do special processing if any attributes are set, which is rare
+          if (rend & (RS_Bold | RS_Italic | RS_Uline | RS_RVid | RS_Blink | RS_Careful))
             {
+#if ENABLE_STYLES
+              // force redraw after "careful" characters to avoid pixel droppings
+              if (srp[col] & RS_Careful && col < TermWin.ncol - 1 && 0)
+                drp[col + 1] = ~srp[col + 1];
+
+              // include previous careful character(s) if possible, looks nicer (best effort...)
+              while (text > stp
+                  && srp[text - stp - 1] & RS_Careful
+                  && RS_SAME (rend, srp[text - stp - 1]))
+                text--, count++, xpixel -= TermWin.fwidth;
+#endif
+
               bool invert = rend & RS_RVid;
 
 #ifndef NO_BOLD_UNDERLINE_REVERSE
@@ -2367,6 +2367,12 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 #ifndef NO_BOLD_UNDERLINE_REVERSE
                   if (ISSET_PIXCOLOR (Color_RV))
                     back = Color_RV;
+
+                  if (fore == back)
+                    {
+                      fore = Color_bg;
+                      back = Color_fg;
+                    }
 #endif
                 }
 
