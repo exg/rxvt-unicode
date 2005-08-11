@@ -611,7 +611,7 @@ rxvt_Draw_Triangle (Display *display, Window win, GC topShadow, GC botShadow, in
 }
 #endif
 
-// should nto be use din interactive programs, for obvious reasons
+// should not be used in interactive programs, for obvious reasons
 void rxvt_usleep (int usecs)
 {
 #if HAVE_NANOSLEEP
