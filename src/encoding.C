@@ -60,7 +60,7 @@ const struct n2cs {
   { "USASCII",		CS_US_ASCII         },
   { "ANSIX341968",	CS_US_ASCII         },
                                             
-  { "KOI8R",		CS_KOI8_R           },
+  { "KOI8R*",		CS_KOI8_R           },
   { "GOST1976874*",     CS_KOI8_R           },
   { "KOI8RU",		CS_KOI8_U           },
   { "KOI8U",		CS_KOI8_U           },
