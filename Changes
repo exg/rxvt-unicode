@@ -4,6 +4,7 @@
 15:08 <duke_> # end
 15:08 <duke_> URxvt.keysym.0xff57: \033[4~
 
+TODO: Opt_transparent_all unused?
 TODO: after requesting the selection and getting a timeout, no fuirther requests will be sent.
 TODO: --enable-minimal non-default
 TODO: do font request caching, might help rxvtd on some machines
