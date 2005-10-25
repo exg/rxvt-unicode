@@ -1274,13 +1274,6 @@ Color names.
 .SH "SEE ALSO"
 .IX Header "SEE ALSO"
 @@RXVT_NAME@@(7), @@RXVT_NAME@@c(1), @@RXVT_NAME@@d(1), \fIxterm\fR\|(1), \fIsh\fR\|(1), \fIresize\fR\|(1), X(1), \fIpty\fR\|(4), \fItty\fR\|(4), \fIutmp\fR\|(5)
-.SH "BUGS"
-.IX Header "BUGS"
-Check the \s-1BUGS\s0 file for an up-to-date list.
-.PP
-Cursor change support is not yet implemented.
-.PP
-Click-and-drag doesn't work with X11 mouse report overriding.
 .SH "CURRENT PROJECT COORDINATOR"
 .IX Header "CURRENT PROJECT COORDINATOR"
 .IP "Project Coordinator" 4

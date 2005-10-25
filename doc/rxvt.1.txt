@@ -1109,13 +1109,6 @@ SEE ALSO
     rxvt(7), rxvtc(1), rxvtd(1), xterm(1), sh(1), resize(1), X(1), pty(4),
     tty(4), utmp(5)
 
-BUGS
-    Check the BUGS file for an up-to-date list.
-
-    Cursor change support is not yet implemented.
-
-    Click-and-drag doesn't work with X11 mouse report overriding.
-
 CURRENT PROJECT COORDINATOR
     Project Coordinator
         Marc A. Lehmann <rxvt-unicode@schmorp.de>

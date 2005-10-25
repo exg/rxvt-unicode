@@ -1298,14 +1298,6 @@ Color names.
 
 @@RXVT_NAME@@(7), @@RXVT_NAME@@c(1), @@RXVT_NAME@@d(1), xterm(1), sh(1), resize(1), X(1), pty(4), tty(4), utmp(5)
 
-=head1 BUGS
-
-Check the BUGS file for an up-to-date list.
-
-Cursor change support is not yet implemented.
-
-Click-and-drag doesn't work with X11 mouse report overriding.
-
 =head1 CURRENT PROJECT COORDINATOR
 
 =over 4
