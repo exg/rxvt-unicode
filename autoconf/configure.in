@@ -1480,7 +1480,7 @@ echo "  *** Optionally check src/feature.h for further options ***"
 echo
 
 echo ".----------------------------------------------------------------."
-echo ". NOTE: most features are disabled by default, try               ."
+echo ". NOTE: some features are disabled by default, try               ."
 echo ". configure --help to get an idea of the optional features,      ."
 echo ". or read ./README.configure                                     ."
 echo ".                                                                ."

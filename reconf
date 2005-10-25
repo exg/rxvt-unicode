@@ -10,14 +10,6 @@ if [ "x$HOSTNAME" = xcerebro -o "x$HOSTNAME" = xfuji ]; then
    export CC CXX
 fi
 
-./configure --prefix=/opt/rxvt --enable-utmp \
-            --enable-wtmp --enable-lastlog --disable-strings --enable-xim \
-            --disable-keepscrolling --enable-xft --enable-mousewheel \
-            --with-name=rxvt --enable-selectionscrolling --enable-pointer-blank \
-            --enable-frills --enable-swapscreen --enable-transparency --enable-slipwheeling \
-            --with-codesets=all --enable-menubar --enable-tinting \
-            --enable-text-blink --enable-fading \
-            --enable-plain-scroll --enable-rxvt-scroll --enable-combining --enable-iso14755 \
-            --enable-font-styles --enable-xpm-background --enable-xgetdefault \
-            --enable-next-scroll --enable-xterm-scroll \
+./configure --prefix=/opt/rxvt --with-name=rxvt \
+            --enable-transparency --enable-menubar --enable-xpm-background --enable-xgetdefault \
             "$@"
