@@ -188,7 +188,7 @@ typedef struct {
 #define Screen_Autowrap          (1<<2)  /* auto-wrap flag                    */
 #define Screen_Insert            (1<<3)  /* insert mode (vs. overstrike)      */
 #define Screen_WrapNext          (1<<4)  /* need to wrap for next char?       */
-#define Screen_DefaultFlags      (Screen_VisibleCursor|Screen_Autowrap)
+#define Screen_DefaultFlags      (Screen_VisibleCursor | Screen_Autowrap)
 
 /* rxvt_vars.options */
 #define Opt_console              (1UL<<0)
