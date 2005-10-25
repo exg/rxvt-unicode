@@ -659,10 +659,10 @@ accidentally when rxvt-unicode tries to find a font for your characters.
 </dd>
 <dd>
 <p>Also, many people (me included) like large windows and even larger
-scrollback buffers: Without <a href="#item__2d_2denable_2dunicode3"><code>--enable-unicode3</code></a>, rxvt-unicode will use
+scrollback buffers: Without <code>--enable-unicode3</code>, rxvt-unicode will use
 6 bytes per screen cell. For a 160x?? window this amounts to almost a
 kilobyte per line. A scrollback buffer of 10000 lines will then (if full)
-use 10 Megabytes of memory. With <a href="#item__2d_2denable_2dunicode3"><code>--enable-unicode3</code></a> it gets worse, as
+use 10 Megabytes of memory. With <code>--enable-unicode3</code> it gets worse, as
 rxvt-unicode then uses 8 bytes per screen cell.</p>
 </dd>
 <p></p>
@@ -2536,22 +2536,28 @@ your system.</p>
 <hr />
 <h1><a name="configure_options">CONFIGURE OPTIONS</a></h1>
 <p>General hint: if you get compile errors, then likely your configuration
-hasn't been tested well. Either try with --enable-everything or use the
-./reconf script as a base for experiments. ./reconf is used by myself,
-so it should generally be a working config. Of course, you should always
-report when a combination doesn't work, so it can be fixed. Marc Lehmann
-&lt;<a href="mailto:rxvt@schmorp.de">rxvt@schmorp.de</a>&gt;.</p>
+hasn't been tested well. Either try with <a href="#item__2d_2denable_2deverything"><code>--enable-everything</code></a> or use
+the <em>./reconf</em> script as a base for experiments. <em>./reconf</em> is used by
+myself, so it should generally be a working config. Of course, you should
+always report when a combination doesn't work, so it can be fixed. Marc
+Lehmann &lt;<a href="mailto:rxvt@schmorp.de">rxvt@schmorp.de</a>&gt;.</p>
+<p>All</p>
 <dl>
 <dt><strong><a name="item__2d_2denable_2deverything">--enable-everything</a></strong><br />
 </dt>
 <dd>
-Add support for all non-multichoice options listed in ``./configure
---help''. Note that unlike other enable options this is order dependant.
-You can specify this and then disable options which this enables by
-<em>following</em> this with the appropriate commands.
+Add (or remove) support for all non-multichoice options listed in ``./configure
+--help''.
+</dd>
+<dd>
+<p>You can specify this and then disable options you do not like by
+<em>following</em> this with the appropriate <code>--disable-...</code> arguments,
+or you can start with a minimal configuration by specifying
+<code>--disable-everything</code> and than adding just the <code>--enable-...</code> arguments
+you want.</p>
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dxft">--enable-xft</a></strong><br />
+<dt><strong><a name="item_xft">--enable-xft (default: enabled)</a></strong><br />
 </dt>
 <dd>
 Add support for Xft (anti-aliases, among others) fonts. Xft fonts are
@@ -2559,14 +2565,14 @@ slower and require lots of memory, but as long as you don't use them, you
 don't pay for them.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dfont_2dstyles">--enable-font-styles</a></strong><br />
+<dt><strong><a name="item_styles">--enable-font-styles (default: on)</a></strong><br />
 </dt>
 <dd>
 Add support for <strong>bold</strong>, <em>italic</em> and <strong><em>bold italic</em> </strong>&gt; font
 styles. The fonts can be set manually or automatically.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2dwith_2dcodesets_3dname_2c_2e_2e_2e">--with-codesets=NAME,...</a></strong><br />
+<dt><strong><a name="item__2d_2dwith_2dcodesets_3dname_2c_2e_2e_2e__28defaul">--with-codesets=NAME,... (default: all)</a></strong><br />
 </dt>
 <dd>
 Compile in support for additional codeset (encoding) groups (<code>eu</code>, <code>vn</code>
@@ -2585,7 +2591,7 @@ memory usage unless you use a font requiring one of these encodings.
 <tr><td>jp_ext</td><td>rarely used but big japanese encodings</td></tr>
 <tr><td>kr</td><td>korean encodings</td></tr>
 </table><p></p>
-<dt><strong><a name="item__2d_2denable_2dxim">--enable-xim</a></strong><br />
+<dt><strong><a name="item_xim">--enable-xim (default: on)</a></strong><br />
 </dt>
 <dd>
 Add support for XIM (X Input Method) protocol. This allows using
@@ -2593,7 +2599,7 @@ alternative input methods (e.g. kinput2) and will also correctly
 set up the input for people using dead keys or compose keys.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dunicode3">--enable-unicode3</a></strong><br />
+<dt><strong><a name="item_unicode3">--enable-unicode3 (default: off)</a></strong><br />
 </dt>
 <dd>
 Enable direct support for displaying unicode codepoints above
@@ -2609,7 +2615,7 @@ see next switch), and right now rxvt-unicode cannot display them
 (input/output and cut&amp;paste still work, though).</p>
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dcombining">--enable-combining</a></strong><br />
+<dt><strong><a name="item_combining">--enable-combining (default: on)</a></strong><br />
 </dt>
 <dd>
 Enable automatic composition of combining characters into
@@ -2634,36 +2640,35 @@ but these are not currently used. Bug me if you want these to be used (and
 tell me how these are to be used...).</p>
 </dd>
 <p></p>
-<dt><strong><a name="item_fallback">--enable-fallback(=CLASS)</a></strong><br />
+<dt><strong><a name="item_fallback">--enable-fallback(=CLASS) (default: Rxvt)</a></strong><br />
 </dt>
 <dd>
-When reading resource settings, also read settings for class CLASS
-(default: Rxvt). To disable resource fallback use --disable-fallback.
+When reading resource settings, also read settings for class CLASS. To disable resource fallback use --disable-fallback.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2dwith_2dres_2dname_3dname">--with-res-name=NAME</a></strong><br />
+<dt><strong><a name="item_name">--with-res-name=NAME (default: urxvt)</a></strong><br />
 </dt>
 <dd>
-Use the given name (default: urxvt) as default application name when
+Use the given name as default application name when
 reading resources. Specify --with-res-name=rxvt to replace rxvt.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2dwith_2dres_2dclass_3dclass">--with-res-class=CLASS</a></strong><br />
+<dt><strong><a name="item__2d_2dwith_2dres_2dclass_3dclass__2fdefault_3a_urx">--with-res-class=CLASS /default: URxvt)</a></strong><br />
 </dt>
 <dd>
-Use the given class (default: URxvt) as default application class
-when reading resources.  Specify --with-res-class=Rxvt to replace
+Use the given class as default application class
+when reading resources. Specify --with-res-class=Rxvt to replace
 rxvt.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dutmp">--enable-utmp</a></strong><br />
+<dt><strong><a name="item_utmp">--enable-utmp (default: on)</a></strong><br />
 </dt>
 <dd>
 Write user and tty to utmp file (used by programs like <em>w</em>) at
 start of rxvt execution and delete information when rxvt exits.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dwtmp">--enable-wtmp</a></strong><br />
+<dt><strong><a name="item_wtmp">--enable-wtmp (default: on)</a></strong><br />
 </dt>
 <dd>
 Write user and tty to wtmp file (used by programs like <em>last</em>) at
@@ -2671,7 +2676,7 @@ start of rxvt execution and write logout when rxvt exits.  This
 option requires --enable-utmp to also be specified.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dlastlog">--enable-lastlog</a></strong><br />
+<dt><strong><a name="item_lastlog">--enable-lastlog (default: on)</a></strong><br />
 </dt>
 <dd>
 Write user and tty to lastlog file (used by programs like
@@ -2679,57 +2684,57 @@ Write user and tty to lastlog file (used by programs like
 --enable-utmp to also be specified.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dxpm_2dbackground">--enable-xpm-background</a></strong><br />
+<dt><strong><a name="item_background">--enable-xpm-background (default: off)</a></strong><br />
 </dt>
 <dd>
 Add support for XPM background pixmaps.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dtransparency">--enable-transparency</a></strong><br />
+<dt><strong><a name="item_transparency">--enable-transparency (default: off)</a></strong><br />
 </dt>
 <dd>
 Add support for inheriting parent backgrounds thus giving a fake
 transparency to the term.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dfading">--enable-fading</a></strong><br />
+<dt><strong><a name="item_fading">--enable-fading (default: on)</a></strong><br />
 </dt>
 <dd>
-Add support for fading the text when focus is lost.
+Add support for fading the text when focus is lost (requires <code>--enable-transparency</code>).
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dtinting">--enable-tinting</a></strong><br />
+<dt><strong><a name="item_tinting">--enable-tinting (default: on)</a></strong><br />
 </dt>
 <dd>
-Add support for tinting of transparent backgrounds.
+Add support for tinting of transparent backgrounds (requires <code>--enable-transparency</code>).
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dmenubar">--enable-menubar</a></strong><br />
+<dt><strong><a name="item_menubar">--enable-menubar (default: off)</a></strong><br />
 </dt>
 <dd>
 Add support for our menu bar system (this interacts badly with
 dynamic locale switching currently).
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2drxvt_2dscroll">--enable-rxvt-scroll</a></strong><br />
+<dt><strong><a name="item_scroll">--enable-rxvt-scroll (default: on)</a></strong><br />
 </dt>
 <dd>
 Add support for the original rxvt scrollbar.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dnext_2dscroll">--enable-next-scroll</a></strong><br />
+<dt><strong>--enable-next-scroll (default: on)</strong><br />
 </dt>
 <dd>
 Add support for a NeXT-like scrollbar.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dxterm_2dscroll">--enable-xterm-scroll</a></strong><br />
+<dt><strong>--enable-xterm-scroll (default: on)</strong><br />
 </dt>
 <dd>
 Add support for an Xterm-like scrollbar.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dplain_2dscroll">--enable-plain-scroll</a></strong><br />
+<dt><strong>--enable-plain-scroll (default: on)</strong><br />
 </dt>
 <dd>
 Add support for a very unobtrusive, plain-looking scrollbar that
@@ -2737,14 +2742,14 @@ is the favourite of the rxvt-unicode author, having used it for
 many years.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dhalf_2dshadow">--enable-half-shadow</a></strong><br />
+<dt><strong><a name="item_shadow">--enable-half-shadow (default: off)</a></strong><br />
 </dt>
 <dd>
 Make shadows on the scrollbar only half the normal width &amp; height.
 only applicable to rxvt scrollbars.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dttygid">--enable-ttygid</a></strong><br />
+<dt><strong><a name="item_ttygid">--enable-ttygid (default: off)</a></strong><br />
 </dt>
 <dd>
 Change tty device setting to group ``tty'' - only use this if
@@ -2754,21 +2759,20 @@ your system uses this type of security.
 <dt><strong><a name="item__2d_2ddisable_2dbackspace_2dkey">--disable-backspace-key</a></strong><br />
 </dt>
 <dd>
-Disable any handling of the backspace key by us - let the X server
-do it.
+Removes any handling of the backspace key by us - let the X server do it.
 </dd>
 <p></p>
 <dt><strong><a name="item__2d_2ddisable_2ddelete_2dkey">--disable-delete-key</a></strong><br />
 </dt>
 <dd>
-Disable any handling of the delete key by us - let the X server
+Removes any handling of the delete key by us - let the X server
 do it.
 </dd>
 <p></p>
 <dt><strong><a name="item__2d_2ddisable_2dresources">--disable-resources</a></strong><br />
 </dt>
 <dd>
-Remove all resources checking.
+Removes any support for resource checking.
 </dd>
 <p></p>
 <dt><strong><a name="item__2d_2denable_2dxgetdefault">--enable-xgetdefault</a></strong><br />
@@ -2784,7 +2788,7 @@ use the full X resource manager, so the overhead of using it might be very
 small, if nonexistant.</p>
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dstrings">--enable-strings</a></strong><br />
+<dt><strong><a name="item_strings">--enable-strings (default: off)</a></strong><br />
 </dt>
 <dd>
 Add support for our possibly faster <code>memset()</code> function and other
@@ -2797,10 +2801,10 @@ GNU/Linux systems).
 <dt><strong><a name="item__2d_2ddisable_2dswapscreen">--disable-swapscreen</a></strong><br />
 </dt>
 <dd>
-Remove support for swap screen.
+Remove support for secondary/swap screen.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dfrills">--enable-frills</a></strong><br />
+<dt><strong><a name="item_frills">--enable-frills (default: on)</a></strong><br />
 </dt>
 <dd>
 Add support for many small features that are not essential but nice to
@@ -2808,7 +2812,7 @@ have. Normally you want this, but for very small binaries you may want to
 disable this.
 </dd>
 <dd>
-<p>A non-exhaustive list of features enabled by <a href="#item__2d_2denable_2dfrills"><code>--enable-frills</code></a> (possibly
+<p>A non-exhaustive list of features enabled by <code>--enable-frills</code> (possibly
 in combination with other switches) is:</p>
 </dd>
 <dd>
@@ -2828,29 +2832,29 @@ in combination with other switches) is:</p>
   -embed and -pty-fd options</pre>
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2diso14755">--enable-iso14755</a></strong><br />
+<dt><strong><a name="item_iso14755">--enable-iso14755 (default: on)</a></strong><br />
 </dt>
 <dd>
 Enable extended ISO 14755 support (see rxvt(1), or
 <em>doc/rxvt.1.txt</em>). Basic support (section 5.1) is enabled by
-<a href="#item__2d_2denable_2dfrills"><code>--enable-frills</code></a>, while support for 5.2, 5.3 and 5.4 is enabled with
+<code>--enable-frills</code>, while support for 5.2, 5.3 and 5.4 is enabled with
 this switch.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dkeepscrolling">--enable-keepscrolling</a></strong><br />
+<dt><strong><a name="item_keepscrolling">--enable-keepscrolling (default: on)</a></strong><br />
 </dt>
 <dd>
 Add support for continual scrolling of the display when you hold
 the mouse button down on a scrollbar arrow.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dmousewheel">--enable-mousewheel</a></strong><br />
+<dt><strong><a name="item_mousewheel">--enable-mousewheel (default: on)</a></strong><br />
 </dt>
 <dd>
 Add support for scrolling via mouse wheel or buttons 4 &amp; 5.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dslipwheeling">--enable-slipwheeling</a></strong><br />
+<dt><strong><a name="item_slipwheeling">--enable-slipwheeling (default: on)</a></strong><br />
 </dt>
 <dd>
 Add support for continual scrolling (using the mouse wheel as an
@@ -2864,7 +2868,7 @@ requires --enable-mousewheel to also be specified.
 Remove support for mouse selection style like that of xterm.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2ddmalloc">--enable-dmalloc</a></strong><br />
+<dt><strong><a name="item_dmalloc">--enable-dmalloc (default: off)</a></strong><br />
 </dt>
 <dd>
 Use Gray Watson's malloc - which is good for debugging See
@@ -2877,14 +2881,14 @@ DINCLUDE and DLIB to the right places.
 you use either) .</p>
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2ddlmalloc">--enable-dlmalloc</a></strong><br />
+<dt><strong><a name="item_dlmalloc">--enable-dlmalloc (default: off)</a></strong><br />
 </dt>
 <dd>
 Use Doug Lea's malloc - which is good for a production version
 See <a href="http://g.oswego.edu/dl/html/malloc.html">http://g.oswego.edu/dl/html/malloc.html</a> for details.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dsmart_2dresize">--enable-smart-resize</a></strong><br />
+<dt><strong><a name="item_resize">--enable-smart-resize (default: on)</a></strong><br />
 </dt>
 <dd>
 Add smart growth/shrink behaviour when changing font size via from hot
@@ -2892,25 +2896,24 @@ keys. This should keep in a fixed position the rxvt corner which is
 closest to a corner of the screen.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2denable_2dpointer_2dblank">--enable-pointer-blank</a></strong><br />
+<dt><strong><a name="item_blank">--enable-pointer-blank (default: on)</a></strong><br />
 </dt>
 <dd>
 Add support to have the pointer disappear when typing or inactive.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2dwith_2dname_3dname">--with-name=NAME</a></strong><br />
+<dt><strong>--with-name=NAME (default: urxvt)</strong><br />
 </dt>
 <dd>
-Set the basename for the installed binaries (default: <code>urxvt</code>, resulting
+Set the basename for the installed binaries, resulting
 in <code>urxvt</code>, <code>urxvtd</code> etc.). Specify <code>--with-name=rxvt</code> to replace with
 <code>rxvt</code>.
 </dd>
 <p></p>
-<dt><strong><a name="item__2d_2dwith_2dterm_3dname">--with-term=NAME</a></strong><br />
+<dt><strong>--with-term=NAME (default: rxvt-unicode)</strong><br />
 </dt>
 <dd>
-Change the environmental variable for the terminal to NAME (default
-<code>rxvt-unicode</code>)
+Change the environmental variable for the terminal to NAME.
 </dd>
 <p></p>
 <dt><strong><a name="item__2d_2dwith_2dterminfo_3dpath">--with-terminfo=PATH</a></strong><br />

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-07-07" "5.6" "RXVT-UNICODE"
+.TH rxvt 1 "2005-10-25" "5.8" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -225,19 +225,30 @@ Turn on/off simulated reverse video; resource \fBreverseVideo\fR.
 .IP "\fB\-j\fR|\fB+j\fR" 4
 .IX Item "-j|+j"
 Turn on/off jump scrolling; resource \fBjumpScroll\fR.
-.IP "\fB\-ip\fR|\fB+ip\fR" 4
-.IX Item "-ip|+ip"
+.IP "\fB\-ip\fR|\fB+ip\fR | \fB\-tr\fR|\fB+tr\fR" 4
+.IX Item "-ip|+ip | -tr|+tr"
 Turn on/off inheriting parent window's pixmap. Alternative form is
 \&\fB\-tr\fR; resource \fBinheritPixmap\fR.
 .IP "\fB\-fade\fR \fInumber\fR" 4
 .IX Item "-fade number"
-Fade the text by the given percentage when focus is lost. resource \fBfading\fR.
+Fade the text by the given percentage when focus is lost. Small values
+fade a little only, 100 completely replaces all colours by the fade
+colour; resource \fBfading\fR.
+.IP "\fB\-fadecolor\fR \fIcolour\fR" 4
+.IX Item "-fadecolor colour"
+Fade to this colour when fading is used (see \fB\-fade\fR). The default colour
+is black. resource \fBfadeColor\fR.
 .IP "\fB\-tint\fR \fIcolour\fR" 4
 .IX Item "-tint colour"
 Tint the transparent background pixmap with the given colour when
-transparency is enabled with \fB\-tr\fR or \fB\-ip\fR. See also the \fB\-sh\fR
-option that can be used to brighten or darken the image in addition to
-tinting it.
+transparency is enabled with \fB\-tr\fR or \fB\-ip\fR. This only works for
+non-tiled backgrounds, currently. See also the \fB\-sh\fR option that can be
+used to brighten or darken the image in addition to tinting it; resource
+\&\fItintColor\fR. Example:
+.Sp
+.Vb 1
+\&   @@RXVT_NAME@@ -tr -tint blue -sh 40
+.Ve
 .IP "\fB\-sh\fR" 4
 .IX Item "-sh"
 \&\fInumber\fR Darken (0 .. 100) or lighten (\-1 .. \-100) the transparent
@@ -614,10 +625,15 @@ artificial transparency. \fBFalse\fR: do not inherit the parent windows'
 pixmap.
 .IP "\fBfading:\fR \fInumber\fR" 4
 .IX Item "fading: number"
-Fade the text by the given percentage when focus is lost.
+Fade the text by the given percentage when focus is lost; option \fB\-fade\fR.
+.IP "\fBfadeColor:\fR \fIcolour\fR" 4
+.IX Item "fadeColor: colour"
+Fade to this colour, when fading is used (see \fBfading:\fR). The default
+colour is black; option \fB\-fadecolor\fR.
 .IP "\fBtintColor:\fR \fIcolour\fR" 4
 .IX Item "tintColor: colour"
-Tint the transparent background pixmap with the given colour.
+Tint the transparent background pixmap with the given colour; option
+\&\fB\-tint\fR.
 .IP "\fBshading:\fR \fInumber\fR" 4
 .IX Item "shading: number"
 Darken (0 .. 100) or lighten (\-1 .. \-100) the transparent background

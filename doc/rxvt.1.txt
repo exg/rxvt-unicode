@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 5.6, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 5.8, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -95,19 +95,27 @@ OPTIONS
     -j|+j
         Turn on/off jump scrolling; resource jumpScroll.
 
-    -ip|+ip
+    -ip|+ip | -tr|+tr
         Turn on/off inheriting parent window's pixmap. Alternative form is
         -tr; resource inheritPixmap.
 
     -fade *number*
-        Fade the text by the given percentage when focus is lost. resource
-        fading.
+        Fade the text by the given percentage when focus is lost. Small
+        values fade a little only, 100 completely replaces all colours by
+        the fade colour; resource fading.
+
+    -fadecolor *colour*
+        Fade to this colour when fading is used (see -fade). The default
+        colour is black. resource fadeColor.
 
     -tint *colour*
         Tint the transparent background pixmap with the given colour when
-        transparency is enabled with -tr or -ip. See also the -sh option
-        that can be used to brighten or darken the image in addition to
-        tinting it.
+        transparency is enabled with -tr or -ip. This only works for
+        non-tiled backgrounds, currently. See also the -sh option that can
+        be used to brighten or darken the image in addition to tinting it;
+        resource *tintColor*. Example:
+
+           rxvt -tr -tint blue -sh 40
 
     -sh *number* Darken (0 .. 100) or lighten (-1 .. -100) the transparent
         background image in addition to tinting it (i.e. -tint must be
@@ -469,10 +477,16 @@ RESOURCES (available also as long-options)
         pixmap.
 
     fading: *number*
-        Fade the text by the given percentage when focus is lost.
+        Fade the text by the given percentage when focus is lost; option
+        -fade.
+
+    fadeColor: *colour*
+        Fade to this colour, when fading is used (see fading:). The default
+        colour is black; option -fadecolor.
 
     tintColor: *colour*
-        Tint the transparent background pixmap with the given colour.
+        Tint the transparent background pixmap with the given colour; option
+        -tint.
 
     shading: *number*
         Darken (0 .. 100) or lighten (-1 .. -100) the transparent background

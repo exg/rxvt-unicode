@@ -1671,28 +1671,34 @@ Key Codes
 
 CONFIGURE OPTIONS
     General hint: if you get compile errors, then likely your configuration
-    hasn't been tested well. Either try with --enable-everything or use the
-    ./reconf script as a base for experiments. ./reconf is used by myself,
-    so it should generally be a working config. Of course, you should always
-    report when a combination doesn't work, so it can be fixed. Marc Lehmann
-    <rxvt@schmorp.de>.
+    hasn't been tested well. Either try with "--enable-everything" or use
+    the ./reconf script as a base for experiments. ./reconf is used by
+    myself, so it should generally be a working config. Of course, you
+    should always report when a combination doesn't work, so it can be
+    fixed. Marc Lehmann <rxvt@schmorp.de>.
+
+    All
 
     --enable-everything
-        Add support for all non-multichoice options listed in "./configure
-        --help". Note that unlike other enable options this is order
-        dependant. You can specify this and then disable options which this
-        enables by *following* this with the appropriate commands.
+        Add (or remove) support for all non-multichoice options listed in
+        "./configure --help".
 
-    --enable-xft
+        You can specify this and then disable options you do not like by
+        *following* this with the appropriate "--disable-..." arguments, or
+        you can start with a minimal configuration by specifying
+        "--disable-everything" and than adding just the "--enable-..."
+        arguments you want.
+
+    --enable-xft (default: enabled)
         Add support for Xft (anti-aliases, among others) fonts. Xft fonts
         are slower and require lots of memory, but as long as you don't use
         them, you don't pay for them.
 
-    --enable-font-styles
+    --enable-font-styles (default: on)
         Add support for bold, *italic* and *bold italic* font styles. The
         fonts can be set manually or automatically.
 
-    --with-codesets=NAME,...
+    --with-codesets=NAME,... (default: all)
         Compile in support for additional codeset (encoding) groups ("eu",
         "vn" are always compiled in, which includes most 8-bit character
         sets). These codeset tables are used for driving X11 core fonts,
@@ -1709,12 +1715,12 @@ CONFIGURE OPTIONS
            jp_ext          rarely used but big japanese encodings 
            kr              korean encodings 
 
-    --enable-xim
+    --enable-xim (default: on)
         Add support for XIM (X Input Method) protocol. This allows using
         alternative input methods (e.g. kinput2) and will also correctly set
         up the input for people using dead keys or compose keys.
 
-    --enable-unicode3
+    --enable-unicode3 (default: off)
         Enable direct support for displaying unicode codepoints above 65535
         (the basic multilingual page). This increases storage requirements
         per character from 2 to 4 bytes. X11 fonts do not yet support these
@@ -1726,7 +1732,7 @@ CONFIGURE OPTIONS
         switch), and right now rxvt-unicode cannot display them
         (input/output and cut&paste still work, though).
 
-    --enable-combining
+    --enable-combining (default: on)
         Enable automatic composition of combining characters into composite
         characters. This is required for proper viewing of text where
         accents are encoded as seperate unicode characters. This is done by
@@ -1745,83 +1751,83 @@ CONFIGURE OPTIONS
         forms, but these are not currently used. Bug me if you want these to
         be used (and tell me how these are to be used...).
 
-    --enable-fallback(=CLASS)
-        When reading resource settings, also read settings for class CLASS
-        (default: Rxvt). To disable resource fallback use
-        --disable-fallback.
+    --enable-fallback(=CLASS) (default: Rxvt)
+        When reading resource settings, also read settings for class CLASS.
+        To disable resource fallback use --disable-fallback.
 
-    --with-res-name=NAME
-        Use the given name (default: urxvt) as default application name when
-        reading resources. Specify --with-res-name=rxvt to replace rxvt.
+    --with-res-name=NAME (default: urxvt)
+        Use the given name as default application name when reading
+        resources. Specify --with-res-name=rxvt to replace rxvt.
 
-    --with-res-class=CLASS
-        Use the given class (default: URxvt) as default application class
-        when reading resources. Specify --with-res-class=Rxvt to replace
-        rxvt.
+    --with-res-class=CLASS /default: URxvt)
+        Use the given class as default application class when reading
+        resources. Specify --with-res-class=Rxvt to replace rxvt.
 
-    --enable-utmp
+    --enable-utmp (default: on)
         Write user and tty to utmp file (used by programs like w) at start
         of rxvt execution and delete information when rxvt exits.
 
-    --enable-wtmp
+    --enable-wtmp (default: on)
         Write user and tty to wtmp file (used by programs like last) at
         start of rxvt execution and write logout when rxvt exits. This
         option requires --enable-utmp to also be specified.
 
-    --enable-lastlog
+    --enable-lastlog (default: on)
         Write user and tty to lastlog file (used by programs like lastlogin)
         at start of rxvt execution. This option requires --enable-utmp to
         also be specified.
 
-    --enable-xpm-background
+    --enable-xpm-background (default: off)
         Add support for XPM background pixmaps.
 
-    --enable-transparency
+    --enable-transparency (default: off)
         Add support for inheriting parent backgrounds thus giving a fake
         transparency to the term.
 
-    --enable-fading
-        Add support for fading the text when focus is lost.
+    --enable-fading (default: on)
+        Add support for fading the text when focus is lost (requires
+        "--enable-transparency").
 
-    --enable-tinting
-        Add support for tinting of transparent backgrounds.
+    --enable-tinting (default: on)
+        Add support for tinting of transparent backgrounds (requires
+        "--enable-transparency").
 
-    --enable-menubar
+    --enable-menubar (default: off)
         Add support for our menu bar system (this interacts badly with
         dynamic locale switching currently).
 
-    --enable-rxvt-scroll
+    --enable-rxvt-scroll (default: on)
         Add support for the original rxvt scrollbar.
 
-    --enable-next-scroll
+    --enable-next-scroll (default: on)
         Add support for a NeXT-like scrollbar.
 
-    --enable-xterm-scroll
+    --enable-xterm-scroll (default: on)
         Add support for an Xterm-like scrollbar.
 
-    --enable-plain-scroll
+    --enable-plain-scroll (default: on)
         Add support for a very unobtrusive, plain-looking scrollbar that is
         the favourite of the rxvt-unicode author, having used it for many
         years.
 
-    --enable-half-shadow
+    --enable-half-shadow (default: off)
         Make shadows on the scrollbar only half the normal width & height.
         only applicable to rxvt scrollbars.
 
-    --enable-ttygid
+    --enable-ttygid (default: off)
         Change tty device setting to group "tty" - only use this if your
         system uses this type of security.
 
     --disable-backspace-key
-        Disable any handling of the backspace key by us - let the X server
+        Removes any handling of the backspace key by us - let the X server
         do it.
 
     --disable-delete-key
-        Disable any handling of the delete key by us - let the X server do
+        Removes any handling of the delete key by us - let the X server do
         it.
 
     --disable-resources
-        Remove all resources checking.
+        Removes any support for resource checking.
 
     --enable-xgetdefault
         Make resources checking via XGetDefault() instead of our small
@@ -1832,7 +1838,7 @@ CONFIGURE OPTIONS
         in and use the full X resource manager, so the overhead of using it
         might be very small, if nonexistant.
 
-    --enable-strings
+    --enable-strings (default: off)
         Add support for our possibly faster memset() function and other
         various routines, overriding your system's versions which may have
         been hand-crafted in assembly or may require extra libraries to link
@@ -1840,9 +1846,9 @@ CONFIGURE OPTIONS
         systems).
 
     --disable-swapscreen
-        Remove support for swap screen.
+        Remove support for secondary/swap screen.
 
-    --enable-frills
+    --enable-frills (default: on)
         Add support for many small features that are not essential but nice
         to have. Normally you want this, but for very small binaries you may
         want to disable this.
@@ -1864,19 +1870,19 @@ CONFIGURE OPTIONS
           cursor blinking and underline cursor
           -embed and -pty-fd options
 
-    --enable-iso14755
+    --enable-iso14755 (default: on)
         Enable extended ISO 14755 support (see rxvt(1), or doc/rxvt.1.txt).
         Basic support (section 5.1) is enabled by "--enable-frills", while
         support for 5.2, 5.3 and 5.4 is enabled with this switch.
 
-    --enable-keepscrolling
+    --enable-keepscrolling (default: on)
         Add support for continual scrolling of the display when you hold the
         mouse button down on a scrollbar arrow.
 
-    --enable-mousewheel
+    --enable-mousewheel (default: on)
         Add support for scrolling via mouse wheel or buttons 4 & 5.
 
-    --enable-slipwheeling
+    --enable-slipwheeling (default: on)
         Add support for continual scrolling (using the mouse wheel as an
         accelerator) while the control key is held down. This option
         requires --enable-mousewheel to also be specified.
@@ -1884,7 +1890,7 @@ CONFIGURE OPTIONS
     --disable-new-selection
         Remove support for mouse selection style like that of xterm.
 
-    --enable-dmalloc
+    --enable-dmalloc (default: off)
         Use Gray Watson's malloc - which is good for debugging See
         http://www.letters.com/dmalloc/ for details If you use either this
         or the next option, you may need to edit src/Makefile after
@@ -1893,26 +1899,24 @@ CONFIGURE OPTIONS
         You can only use either this option and the following (should you
         use either) .
 
-    --enable-dlmalloc
+    --enable-dlmalloc (default: off)
         Use Doug Lea's malloc - which is good for a production version See
         <http://g.oswego.edu/dl/html/malloc.html> for details.
 
-    --enable-smart-resize
+    --enable-smart-resize (default: on)
         Add smart growth/shrink behaviour when changing font size via from
         hot keys. This should keep in a fixed position the rxvt corner which
         is closest to a corner of the screen.
 
-    --enable-pointer-blank
+    --enable-pointer-blank (default: on)
         Add support to have the pointer disappear when typing or inactive.
 
-    --with-name=NAME
-        Set the basename for the installed binaries (default: "urxvt",
-        resulting in "urxvt", "urxvtd" etc.). Specify "--with-name=rxvt" to
-        replace with "rxvt".
+    --with-name=NAME (default: urxvt)
+        Set the basename for the installed binaries, resulting in "urxvt",
+        "urxvtd" etc.). Specify "--with-name=rxvt" to replace with "rxvt".
 
-    --with-term=NAME
-        Change the environmental variable for the terminal to NAME (default
-        "rxvt-unicode")
+    --with-term=NAME (default: rxvt-unicode)
+        Change the environmental variable for the terminal to NAME.
 
     --with-terminfo=PATH
         Change the environmental variable for the path to the terminfo tree

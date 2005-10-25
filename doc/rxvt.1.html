@@ -49,7 +49,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>5.6</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>5.8</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -152,7 +152,7 @@ Turn on/off simulated reverse video; resource <strong>reverseVideo</strong>.
 Turn on/off jump scrolling; resource <strong>jumpScroll</strong>.
 </dd>
 <p></p>
-<dt><strong><a name="item__2dip_7c_2bip"><strong>-ip</strong>|<strong>+ip</strong></a></strong><br />
+<dt><strong><a name="item__2dip_7c_2bip__7c__2dtr_7c_2btr"><strong>-ip</strong>|<strong>+ip</strong> | <strong>-tr</strong>|<strong>+tr</strong></a></strong><br />
 </dt>
 <dd>
 Turn on/off inheriting parent window's pixmap. Alternative form is
@@ -162,16 +162,30 @@ Turn on/off inheriting parent window's pixmap. Alternative form is
 <dt><strong><a name="item__2dfade_number"><strong>-fade</strong> <em>number</em></a></strong><br />
 </dt>
 <dd>
-Fade the text by the given percentage when focus is lost. resource <strong>fading</strong>.
+Fade the text by the given percentage when focus is lost. Small values
+fade a little only, 100 completely replaces all colours by the fade
+colour; resource <strong>fading</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dfadecolor_colour"><strong>-fadecolor</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Fade to this colour when fading is used (see <strong>-fade</strong>). The default colour
+is black. resource <strong>fadeColor</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item__2dtint_colour"><strong>-tint</strong> <em>colour</em></a></strong><br />
 </dt>
 <dd>
 Tint the transparent background pixmap with the given colour when
-transparency is enabled with <strong>-tr</strong> or <strong>-ip</strong>. See also the <strong>-sh</strong>
-option that can be used to brighten or darken the image in addition to
-tinting it.
+transparency is enabled with <strong>-tr</strong> or <strong>-ip</strong>. This only works for
+non-tiled backgrounds, currently. See also the <strong>-sh</strong> option that can be
+used to brighten or darken the image in addition to tinting it; resource
+<em>tintColor</em>. Example:
+</dd>
+<dd>
+<pre>
+   rxvt -tr -tint blue -sh 40</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item__2dsh"><strong>-sh</strong></a></strong><br />
@@ -738,13 +752,21 @@ pixmap.
 <dt><strong><a name="item_fading_3a_number"><strong>fading:</strong> <em>number</em></a></strong><br />
 </dt>
 <dd>
-Fade the text by the given percentage when focus is lost.
+Fade the text by the given percentage when focus is lost; option <strong>-fade</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_fadecolor_3a_colour"><strong>fadeColor:</strong> <em>colour</em></a></strong><br />
+</dt>
+<dd>
+Fade to this colour, when fading is used (see <strong>fading:</strong>). The default
+colour is black; option <strong>-fadecolor</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item_tintcolor_3a_colour"><strong>tintColor:</strong> <em>colour</em></a></strong><br />
 </dt>
 <dd>
-Tint the transparent background pixmap with the given colour.
+Tint the transparent background pixmap with the given colour; option
+<strong>-tint</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item_shading_3a_number"><strong>shading:</strong> <em>number</em></a></strong><br />

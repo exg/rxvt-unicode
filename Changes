@@ -1,28 +1,23 @@
-15:08 <duke_> URxvt.keysym.0xff08: ^H
-15:08 <duke_> # home
-15:08 <duke_> URxvt.keysym.0xff50: \033[1~
-15:08 <duke_> # end
-15:08 <duke_> URxvt.keysym.0xff57: \033[4~
-
-TODO: Opt_transparent_all unused?
-TODO: after requesting the selection and getting a timeout, no fuirther requests will be sent.
-TODO: --enable-minimal non-default
+TODO: harmonize --dsiable-options into position-dependent options.
+TODO: after requesting the selection and getting a timeout, no further requests will be sent.
 TODO: do font request caching, might help rxvtd on some machines
 TODO: safer command: keymap processing.
 TODO: "slow" rendering mode for bidi and scripts
 TODO: read property sequence is broken with respect to utf-8 etc.
 TODO: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 WISH: /usr/share/doc/libdisplaymigration0-dev/spec.txt
-WISH: keyboard modification via esc-sequences.
+WISH: keymap modification via esc-sequences.
 WISH: line-rewrapping on resize
 WISH: searchable backlog
-WISH: meta-tagging of data by regex (my dream project)
-WISH: double-click: more intelligent (urls etc.)
+WISH: meta-tagging of data by regex/master process (my dream project)
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
 
-5.8
+5.8  Tue Oct 25 22:03:57 CEST 2005
+	- INCOMPATIBLE CHANGE: many configure options are now on by default.
+          If you want the old behaviour, try:
+          configure --disable-everything <your enable options>
         - INCOMPATIBLE CHANGE: -fade changed it's meaning to comply with
           the documentation and common sense: when upgrading, replace your
           percentage by 100-percentage.
