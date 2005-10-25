@@ -126,9 +126,10 @@ is black. resource B<fadeColor>.
 =item B<-tint> I<colour>
 
 Tint the transparent background pixmap with the given colour when
-transparency is enabled with B<-tr> or B<-ip>. See also the B<-sh>
-option that can be used to brighten or darken the image in addition to
-tinting it; resource I<tintColor>. Example:
+transparency is enabled with B<-tr> or B<-ip>. This only works for
+non-tiled backgrounds, currently. See also the B<-sh> option that can be
+used to brighten or darken the image in addition to tinting it; resource
+I<tintColor>. Example:
 
    @@RXVT_NAME@@ -tr -tint blue -sh 40
 
