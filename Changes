@@ -16,515 +16,515 @@ WISH: just for fun, do shade and tint with XRender.
 
 5.8  Tue Oct 25 22:21:45 CEST 2005
 	- INCOMPATIBLE CHANGE: many configure options are now on by default.
-          If you want the old behaviour, try:
-          configure --disable-everything <your enable options>
-        - INCOMPATIBLE CHANGE: -fade changed it's meaning to comply with
-          the documentation and common sense: when upgrading, replace your
-          percentage by 100-percentage.
-        - integrated "fade to specific colour" patch by Martin Parm.
-        - slow down the internal visual bell (delay by 20ms) and update
-          the terminfo flash code to use the same delay.  This is
-          synchronous, so many bells might inhibit screen updates in other
-          windows.
-        - text with background==foreground colour gets displayed with default
-          bg/fg now when in reverse video, so it can be seen when selecting.
-        - allow koi8r* as x11 encoding name for koi8r (Nikita Danilov).
-        - removed undocumented inheritPixmapforce option.
-        - replaced INSTALL file.
-        
+	  If you want the old behaviour, try:
+	  configure --disable-everything <your enable options>
+	- INCOMPATIBLE CHANGE: -fade changed it's meaning to comply with
+	  the documentation and common sense: when upgrading, replace your
+	  percentage by 100-percentage.
+	- integrated "fade to specific colour" patch by Martin Parm.
+	- slow down the internal visual bell (delay by 20ms) and update
+	  the terminfo flash code to use the same delay.  This is
+	  synchronous, so many bells might inhibit screen updates in other
+	  windows.
+	- text with background==foreground colour gets displayed with default
+	  bg/fg now when in reverse video, so it can be seen when selecting.
+	- allow koi8r* as x11 encoding name for koi8r (Nikita Danilov).
+	- removed undocumented inheritPixmapforce option.
+	- replaced INSTALL file.
+
 5.7  Wed Jul 13 04:46:33 CEST 2005
 	- implement some useful (hopefully) options for rxvtd.
-        - separate and improved rxvtc(1) and rxvtd(1) manpages.
-        - fix a bug that caused segfaults on startup on systems that do
-          not support local unix connections, e.g cygwin. (btw, I didn't
-          even know about the -rootless and -multiwindow Cygwin/X modes).
-        - large amounts of text without control sequences or newlines
-          could almost freeze output. This has been fixed by adding extra
-          refreshes in these cases (also a problem in oriignal rxvt).
+	- separate and improved rxvtc(1) and rxvtd(1) manpages.
+	- fix a bug that caused segfaults on startup on systems that do
+	  not support local unix connections, e.g cygwin. (btw, I didn't
+	  even know about the -rootless and -multiwindow Cygwin/X modes).
+	- large amounts of text without control sequences or newlines
+	  could almost freeze output. This has been fixed by adding extra
+	  refreshes in these cases (also a problem in oriignal rxvt).
 
 5.6  Sun Jun 26 22:11:13 CEST 2005
-        - R_SB_RXVT bitset value was 0, so rxvt scrollbar was initialised
-          every time resulting in display errors (original rxvt also affected).
-          Reported by Jasmin Buchert.
-        - font names are now considered to be utf-8 encoded (xft apperently
-          uses this convention. X Core fonts might not, but it should be rare).
-          Affects display in iso14755 box.
-        - rewrote the low-level xft drawing function ("xft backend" for the
-          hipper parts of the world) to hopefully cope better with proportional
-          chars mixed with fixed-width ones.
-        - rxvt is now much more careful (read: slower) with potentially
-          overlapping xft characters. It usually overshoots and redraws
-          more than required, but that's better than undershooting and
-          cutting pieces off of characters.
-        - rxvt is now more restrictive in what font heights it accepts for
-          fonts that will likely overshoot or undershoot lines.
-        - fix a cosmetic problem with the unfocused cursor on a wide character
-          at the end of the line (reported by Mikachu).
-        - wide characters not fitting into the end of the line will be
-          output in the next line (reported by Mikachu).
-        - added doc/solaris9.patch by Ewgenij Starostin.
+	- R_SB_RXVT bitset value was 0, so rxvt scrollbar was initialised
+	  every time resulting in display errors (original rxvt also affected).
+	  Reported by Jasmin Buchert.
+	- font names are now considered to be utf-8 encoded (xft apperently
+	  uses this convention. X Core fonts might not, but it should be rare).
+	  Affects display in iso14755 box.
+	- rewrote the low-level xft drawing function ("xft backend" for the
+	  hipper parts of the world) to hopefully cope better with proportional
+	  chars mixed with fixed-width ones.
+	- rxvt is now much more careful (read: slower) with potentially
+	  overlapping xft characters. It usually overshoots and redraws
+	  more than required, but that's better than undershooting and
+	  cutting pieces off of characters.
+	- rxvt is now more restrictive in what font heights it accepts for
+	  fonts that will likely overshoot or undershoot lines.
+	- fix a cosmetic problem with the unfocused cursor on a wide character
+	  at the end of the line (reported by Mikachu).
+	- wide characters not fitting into the end of the line will be
+	  output in the next line (reported by Mikachu).
+	- added doc/solaris9.patch by Ewgenij Starostin.
 
 5.5  Sat Apr 23 22:31:36 CEST 2005
 	- re-enabled modifer state matching as in 5.3, but implement
-          a new builtin: keysym style that simply reverts to the built-in
-          meaning of the given key.
-        - use scrollcolor for next scrollbar instead of hardcoded antiquewhite
-          (patch by Martin Edlman).
+	  a new builtin: keysym style that simply reverts to the built-in
+	  meaning of the given key.
+	- use scrollcolor for next scrollbar instead of hardcoded antiquewhite
+	  (patch by Martin Edlman).
 
 5.4  Mon Apr 18 00:33:31 CEST 2005
 	- match modifier state exactly in custom keyboard code.
-          this is necessary because it has no knowledge about
-          built-in mappings and so will overwrite them. the priority-code
-          will be re-enabled when this has changed, so watch out.
+	  this is necessary because it has no knowledge about
+	  built-in mappings and so will overwrite them. the priority-code
+	  will be re-enabled when this has changed, so watch out.
 	- cursor blinking now depends on frills.
-        - underline cursor mode (frills, -uc).
+	- underline cursor mode (frills, -uc).
 	- implement special value (*g*) for pointerBlankDelay
-          to disble it.
+	  to disble it.
 
 5.3  Sun Mar 13 00:20:44 CET 2005
 	- fix a bug that allowed to overflow a buffer via a long
-          escape sequence, which is probably exploitable (fix by
-          Rob Holland / Yoann Vandoorselaere / Gentoo Audit Team).
-        - Custom key mappings no longer confuse mouse buttons
-          with modifiers.
+	  escape sequence, which is probably exploitable (fix by
+	  Rob Holland / Yoann Vandoorselaere / Gentoo Audit Team).
+	- Custom key mappings no longer confuse mouse buttons
+	  with modifiers.
 	- use XmbSetWMProperties instead of XSetWMProperties.
 	- properly update WM_LOCALE.
-        - implement _NET_WM_PING protocol.
-        - implemented escape sequences to move the scrollback buffer view
-          and clear the scrollback buffer.
+	- implement _NET_WM_PING protocol.
+	- implemented escape sequences to move the scrollback buffer view
+	  and clear the scrollback buffer.
 
 5.2  Sun Feb 20 01:48:59 CET 2005
 	- new option -pty-fd that makes the terminal a slave
-          that uses an existing pty for I/O instead of starting
-          a command.
-        - implement enough of XEMBED to allow for correct focus.
-        - added doc/embed-tk, an embedding example in Perl/Tk,
-          and doc/rxvt-tabbed, a primitive tabbed shell implemented
-          in Perl/Gtk2.
-        - fix assertion failure ("crash") on mousewheel-scrolling
-          when the terminal height is small, by removing the assert.
-          (reported by Mikael Magnusson).
-        - SYNCCVS. backported bugfixes done to rxvt
-          (sourceforge bugs #1028739, #1028732), except for
-          pts/%s fix as it seems to collide with freebsd,
-          and sourceforge bug #954654, which is not neccessary.
-        - change terminfo file to not clobber G1 when using
-          line-drawing characters, as this seems to mess
-          with EUC-JP (it will clobber G0, but G0 practically
-          needs to be US-ASCII all the time).
-        - toggle default application keypad/cursor mode to help
-          some apps who fail to set the correct mode.
-        - check for WM_PROTOCOLS type in ClientMessage as to
-          not destroy the window for other types of messages.
+	  that uses an existing pty for I/O instead of starting
+	  a command.
+	- implement enough of XEMBED to allow for correct focus.
+	- added doc/embed-tk, an embedding example in Perl/Tk,
+	  and doc/rxvt-tabbed, a primitive tabbed shell implemented
+	  in Perl/Gtk2.
+	- fix assertion failure ("crash") on mousewheel-scrolling
+	  when the terminal height is small, by removing the assert.
+	  (reported by Mikael Magnusson).
+	- SYNCCVS. backported bugfixes done to rxvt
+	  (sourceforge bugs #1028739, #1028732), except for
+	  pts/%s fix as it seems to collide with freebsd,
+	  and sourceforge bug #954654, which is not neccessary.
+	- change terminfo file to not clobber G1 when using
+	  line-drawing characters, as this seems to mess
+	  with EUC-JP (it will clobber G0, but G0 practically
+	  needs to be US-ASCII all the time).
+	- toggle default application keypad/cursor mode to help
+	  some apps who fail to set the correct mode.
+	- check for WM_PROTOCOLS type in ClientMessage as to
+	  not destroy the window for other types of messages.
 	- remove shared library (or any library) support - it is
-          of no use currently (and -embed is a better way to embed
-          rxvt-unicode).
-        - get rid of the intpro files.
+	  of no use currently (and -embed is a better way to embed
+	  rxvt-unicode).
+	- get rid of the intpro files.
 
 5.1  Tue Feb 15 17:13:27 CET 2005
 	- fix a bug when parsing fontnames and another one
-          for empty keymaps which could result in crashes
-          (Kuang-che Wu).
-        - new option: -embed (frills). somebody could write a simple
-          tk script to make a tab'able terminal now...
-        - only warn on X errors and _try_ to continue (frills).
-        - add COPYING back, which got lost somehow.
-        - after deciding that LSM is dead, remove all traces of it,
-          along with other, similar, cleanups.
-        - _try_ to react sensibly to some non-monotonic time changes.
-        - don't crash in urxvtc when getcwd fails (reported by Paco-Paco).
-        - tweak font searching algorithm a bit to be faster and more
-          compatible with older rxvt-unicode versions when multiple fonts
-          match (reported by Paco-Paco).
-        - urxvtd tries to stay in "/" whenever possible.
+	  for empty keymaps which could result in crashes
+	  (Kuang-che Wu).
+	- new option: -embed (frills). somebody could write a simple
+	  tk script to make a tab'able terminal now...
+	- only warn on X errors and _try_ to continue (frills).
+	- add COPYING back, which got lost somehow.
+	- after deciding that LSM is dead, remove all traces of it,
+	  along with other, similar, cleanups.
+	- _try_ to react sensibly to some non-monotonic time changes.
+	- don't crash in urxvtc when getcwd fails (reported by Paco-Paco).
+	- tweak font searching algorithm a bit to be faster and more
+	  compatible with older rxvt-unicode versions when multiple fonts
+	  match (reported by Paco-Paco).
+	- urxvtd tries to stay in "/" whenever possible.
 
 5.0  Fri Feb 11 18:31:48 CET 2005
 	- document a race-free hack to start urxvtd.
-        - document all(?) environment variables used and set by rxvt.
-        - bring xgetdefault-style resource file ordering more in line with
-          Xt, and document it in rxvt(1).
-        - correctly use screen-dependent resources when --enable-xgetdefault,
-          and also fix some memory bugs (thanks to Thierry Reding for
-          his patience and time in tracking this down).
-        - bring own resource parsing more in line with X resource parsing,
-          most notably, don't remove double quotes.
+	- document all(?) environment variables used and set by rxvt.
+	- bring xgetdefault-style resource file ordering more in line with
+	  Xt, and document it in rxvt(1).
+	- correctly use screen-dependent resources when --enable-xgetdefault,
+	  and also fix some memory bugs (thanks to Thierry Reding for
+	  his patience and time in tracking this down).
+	- bring own resource parsing more in line with X resource parsing,
+	  most notably, don't remove double quotes.
 	- compile fix for freebsd (no ut_id) (Thierry Thomas).
-        - clean up utmp and pty on X I/O errors and signals (idea
-          by Joël Riou).
-        - "un"document -xrm, it never really worked, was only
-          available with --enable-xgetdefault, is not necessary
-          and is surprisingly hard to implement.
-        - shaved off some code segment size.
-        - various code cleanups.
-        - more keysym-mapping fixes.
+	- clean up utmp and pty on X I/O errors and signals (idea
+	  by Joël Riou).
+	- "un"document -xrm, it never really worked, was only
+	  available with --enable-xgetdefault, is not necessary
+	  and is surprisingly hard to implement.
+	- shaved off some code segment size.
+	- various code cleanups.
+	- more keysym-mapping fixes.
 
 4.9  Thu Feb  3 09:52:03 CET 2005
-        - nuke out utmp entries completely. Should be fixed in
-          original rxvt, too. (reported by James Michael Fultz).
-        - resizes wil now correctly refresh the displayed text when
-          -pixmap is active.
-        - new option/resource imFont.
-        - document --tripleclickwords/-tcw.
-        - select logical instead of physical lines when doing a triple-click.
-        - reordered help listing to group similar options together.
-        - handle SIGINT the same way as SIGTERM (reported by Joël Riou).
-        - fix a bug introduced while applying the keyboard patch
-          (WU Fengguang).
-        - document all window-op sequences (rxvt.7.) and more keysym
-          examples (rxvt.1).
-        - removed src/test completely.
-        - renamed keysym 'proto:'-prefix to 'command:'.
+	- nuke out utmp entries completely. Should be fixed in
+	  original rxvt, too. (reported by James Michael Fultz).
+	- resizes wil now correctly refresh the displayed text when
+	  -pixmap is active.
+	- new option/resource imFont.
+	- document --tripleclickwords/-tcw.
+	- select logical instead of physical lines when doing a triple-click.
+	- reordered help listing to group similar options together.
+	- handle SIGINT the same way as SIGTERM (reported by Joël Riou).
+	- fix a bug introduced while applying the keyboard patch
+	  (WU Fengguang).
+	- document all window-op sequences (rxvt.7.) and more keysym
+	  examples (rxvt.1).
+	- removed src/test completely.
+	- renamed keysym 'proto:'-prefix to 'command:'.
 
 4.8  Tue Jan 18 02:23:57 CET 2005
-        - added a patch by WU Fengguang that makes the keyboard
-          highly configurable (e.g. locale changes, custom escape
-          sequences, and more). See keysym resource in rxvt(1).
-        - remove default key sequence for unknown keys again, as this
-          can be achieved by customizing the keyboard now.
-        - fix some freeing problems when destroying the rxvt_display,
-          resulting in segfaults.
-        - don't crash when the saved cursor position doesn't fit on the
-          screen (wrong assert in original rxvt, reported by ikaro).
-        - fix signed/unsigned bugs on wc<->mb conversions.
-        - reset slipwheel scrolling speed when reaching the top or bottom
-          (Mikael Magnusson).
-        - for core fonts, use ascent + descent when a font is loaded,
-          and PIXEL_SIZE when not. when loading a font, iterate until a
-          font has been found that _really_ fits the height (reported and
-          tested by Olivier Wittenberg).
-        - set IUTF8 input flag, when defined (linux-2.6.5+).
-        - only define _XOPEN_SOURCE on solaris.
-        - autogenerate src/* dependency list.
-        - fixed linespace option, which ought to work now (and is dependent
-          on frills, not on it's own configure option).
-        - include pty.h, if available (cygwin).
-        - removed W11 directory from dist, it wasn't used anyway.
-        - initialize the locale much earlier.
-        - fixed two tiny per-instance memory leaks.
+	- added a patch by WU Fengguang that makes the keyboard
+	  highly configurable (e.g. locale changes, custom escape
+	  sequences, and more). See keysym resource in rxvt(1).
+	- remove default key sequence for unknown keys again, as this
+	  can be achieved by customizing the keyboard now.
+	- fix some freeing problems when destroying the rxvt_display,
+	  resulting in segfaults.
+	- don't crash when the saved cursor position doesn't fit on the
+	  screen (wrong assert in original rxvt, reported by ikaro).
+	- fix signed/unsigned bugs on wc<->mb conversions.
+	- reset slipwheel scrolling speed when reaching the top or bottom
+	  (Mikael Magnusson).
+	- for core fonts, use ascent + descent when a font is loaded,
+	  and PIXEL_SIZE when not. when loading a font, iterate until a
+	  font has been found that _really_ fits the height (reported and
+	  tested by Olivier Wittenberg).
+	- set IUTF8 input flag, when defined (linux-2.6.5+).
+	- only define _XOPEN_SOURCE on solaris.
+	- autogenerate src/* dependency list.
+	- fixed linespace option, which ought to work now (and is dependent
+	  on frills, not on it's own configure option).
+	- include pty.h, if available (cygwin).
+	- removed W11 directory from dist, it wasn't used anyway.
+	- initialize the locale much earlier.
+	- fixed two tiny per-instance memory leaks.
 
 4.7  Wed Dec 29 20:54:24 CET 2004
-        - fix a bug in the event logic that could cause the temrinal to be
-          black on initial startup.
-        - do NOT call XCloseIM, ever. This causes way to many crashes due to
-          races in the protocol and within Xlib.
+	- fix a bug in the event logic that could cause the temrinal to be
+	  black on initial startup.
+	- do NOT call XCloseIM, ever. This causes way to many crashes due to
+	  races in the protocol and within Xlib.
 	- map iso-left-tab to the same sequence as shift-tab.
-        - generate a unique escape sequence for many unknown keys, such as
-          additional multimedia keys.
-        - mask out high (non-unicode) bits on wide characters, to cope with
-          implementations that store tag info in the high bits.
+	- generate a unique escape sequence for many unknown keys, such as
+	  additional multimedia keys.
+	- mask out high (non-unicode) bits on wide characters, to cope with
+	  implementations that store tag info in the high bits.
 
 4.6  Thu Dec 16 07:54:23 CET 2004
 	- try very hard not to exhaust the kernel tty buffers, even
-          if it slows down large pastes and is only cosmetic.
-        - streamline atom and xft color allocation to reduce startup
-          time (12.8s -> 7.8s on my dsl). Still, doing it with only 2-3
-          turnarounds would be much faster, but impossible to implement(?).
-        - implement underlineColor resource when ENABLE_FRILLS.
-        - iom left it's signal pipe handle open in the child
-          process. Fortunately not security-relevant as the pipe data gets
-          ignored.
-        - do not use XSETROOTPMAP_ID anymore, support ESETROOT_PMAP_ID
-          instead.
-        - fix a crash in rxvtd when the last window was being closed
-          (reported by hednod).
-        - fix an unlikely memory leak.
-        - fix atom name enumeration.
+	  if it slows down large pastes and is only cosmetic.
+	- streamline atom and xft color allocation to reduce startup
+	  time (12.8s -> 7.8s on my dsl). Still, doing it with only 2-3
+	  turnarounds would be much faster, but impossible to implement(?).
+	- implement underlineColor resource when ENABLE_FRILLS.
+	- iom left it's signal pipe handle open in the child
+	  process. Fortunately not security-relevant as the pipe data gets
+	  ignored.
+	- do not use XSETROOTPMAP_ID anymore, support ESETROOT_PMAP_ID
+	  instead.
+	- fix a crash in rxvtd when the last window was being closed
+	  (reported by hednod).
+	- fix an unlikely memory leak.
+	- fix atom name enumeration.
 
 4.5  Mon Dec 13 07:47:16 CET 2004
 	- fix an extremely nasty bug in utf8-conversion. upgrade is advised.
-        - completely re-wrote selection pasting. This should fix garbled
-          incomplete characters at 32k boundaries and too-short INCR
-          selections, and more. Increases memory requirements considerably
-          for large selections, but that seems unavoidable.
+	- completely re-wrote selection pasting. This should fix garbled
+	  incomplete characters at 32k boundaries and too-short INCR
+	  selections, and more. Increases memory requirements considerably
+	  for large selections, but that seems unavoidable.
 
 4.4  Sun Dec 12 22:10:06 CET 2004
 	- rewrote handling of default-char width.
-        - implement _NET_WM_NAME et al., and also use UTF8_STRING
-          for the xterm property esc. sequence. Allows i18n window
-          titles etc.
-        - SMART_WINDOW_TITLE removed, pls. complain if you need this.
-        - added GBK encoding (formidable patch by WU Fengguang).
-        - fixed a bug in the transparency code.
-        - upgraded iom.[Ch].
-        - force slower (but more responsive) transparency update.
-        - fix off-by-one bug with wide characters at the end of a line,
-          which got partially overwritten by spaces.
-        - as xlib is completely broken with respect to utf-8 handling
-          and nobody is going to fix it, that part has been re-implemented.
-          should fix most paste problems between apps that use UTF8 encoding
-          and rxvt running in a lesser-supported locale (thanks to Robin Redeker
-          for writing utf8towcs). Only enabled with ENABLE_FRILLS.
-        - darwin compile fix by Ethan Blanton.
-        - fix the colour of the underline, which was rather random before.
+	- implement _NET_WM_NAME et al., and also use UTF8_STRING
+	  for the xterm property esc. sequence. Allows i18n window
+	  titles etc.
+	- SMART_WINDOW_TITLE removed, pls. complain if you need this.
+	- added GBK encoding (formidable patch by WU Fengguang).
+	- fixed a bug in the transparency code.
+	- upgraded iom.[Ch].
+	- force slower (but more responsive) transparency update.
+	- fix off-by-one bug with wide characters at the end of a line,
+	  which got partially overwritten by spaces.
+	- as xlib is completely broken with respect to utf-8 handling
+	  and nobody is going to fix it, that part has been re-implemented.
+	  should fix most paste problems between apps that use UTF8 encoding
+	  and rxvt running in a lesser-supported locale (thanks to Robin Redeker
+	  for writing utf8towcs). Only enabled with ENABLE_FRILLS.
+	- darwin compile fix by Ethan Blanton.
+	- fix the colour of the underline, which was rather random before.
 
 4.3  Sat Dec  4 04:58:37 CET 2004
-        - unapply the "emulated graphical chars. respect wcwidth" patch.
-          obviously in locales not having these characters they should
-          still have a width. Solve it correctly by not relying on wcwidth.
-          Note to self: do not ever apply patches without checking them
-          thoroughly.
-   	- updated .spec file, it's included in the release tarball
-          now, too.
+	- unapply the "emulated graphical chars. respect wcwidth" patch.
+	  obviously in locales not having these characters they should
+	  still have a width. Solve it correctly by not relying on wcwidth.
+	  Note to self: do not ever apply patches without checking them
+	  thoroughly.
+	- updated .spec file, it's included in the release tarball
+	  now, too.
 
 4.2  Wed Dec  1 03:30:22 CET 2004
 	- make emulated graphical characters respect wcwidth (Kuang-che Wu).
-        - remove debugging code that caused major slowdowns
-          on high-latency networks.
-        - wide characters shift the correct number of characters
-          in insert mode now. Reported by Gunnar Ritter.
-        - doc/rxvt-unicode.spec file contributed by Ville Herva.
-        - make storage of tab movements as characters optional
-          on the -ptab option and pastableTabs: resource. On request
-          by Gunnar Ritter.
-        - fix a bug where :size= argument for xft fonts was ignored
-          or used incorrectly. Reported by Ville Herva.
+	- remove debugging code that caused major slowdowns
+	  on high-latency networks.
+	- wide characters shift the correct number of characters
+	  in insert mode now. Reported by Gunnar Ritter.
+	- doc/rxvt-unicode.spec file contributed by Ville Herva.
+	- make storage of tab movements as characters optional
+	  on the -ptab option and pastableTabs: resource. On request
+	  by Gunnar Ritter.
+	- fix a bug where :size= argument for xft fonts was ignored
+	  or used incorrectly. Reported by Ville Herva.
 
 4.1  Sun Nov 21 21:10:19 CET 2004
 	- save and restore cursor position in secondary screen regardless of
-          -ssc/-ssr settings.
+	  -ssc/-ssr settings.
 	- fix some 64-bit bugs that lead to crashes with certain other
-          programs like vncviewer (original rxvt also affected).
+	  programs like vncviewer (original rxvt also affected).
 	- added doc/podtbl to the dist tarball.
-        - add compile fix for darwin.
-        - configure fix for transparency without tinting.
-        - changed CN to ZH _really_ everywhere.
-        - upgraded iom.[Ch].
+	- add compile fix for darwin.
+	- configure fix for transparency without tinting.
+	- changed CN to ZH _really_ everywhere.
+	- upgraded iom.[Ch].
 
 4.0  Mon Sep 13 01:10:26 CEST 2004
 	- turn off autohinting for some badly-hinted fallback fonts.
-        - mnaapge tpyo crorcetoins by Bastian Kleineidam.
-        - implemented rectangular selections (button+meta), experimental.
-        - implement race-free signal handling in iom.C.
-        - use iom.C signal handling to avoid races in signal handling.
-        - use default action on SIGINT and SIGQUIT, instead of terminating.
-        - "the return of the 100 times per second refresh bug".
-          ... terminated by a fix.
-        - new supported preeeditType "None".
-        - added FAQ about possible compose key problems.
-        - changed CN to ZH everywhere (sorry for the confusion).
-        - move XFilterEvent up, as some input method seem to want events
-          for windows not requesting XIM. Please report if this change
-          causes any harm (specially with pointerblanking)
-          (patch by Kuang-che Wu).
-        - send the input method spot position on every refresh, not just
-          when rxvt thinks it should (which was not often enough...).
-        - fix double-wide combining characters (it might look a bit ugly,
-          though, but common cases are handled by normalization anyways).
-        - moved FAQ to rxvt(7), also made a copy into README.FAQ.
-        - fix a bug(?) in the XIM destroy callback.
-        - be more conservative when trying to register new input methods,
-          as Xlib races might make rxvt crash. When two or more
-          input methods are active, killing one probably still crashes rxvt
-          due to that bug :( Thanks a lot to Kuang-che Wu for immense help
-          in tracking this down.
-        - manpages (but not .txt and .html versions) will be patched (during
-          make install) with the correct program name and other info.
+	- mnaapge tpyo crorcetoins by Bastian Kleineidam.
+	- implemented rectangular selections (button+meta), experimental.
+	- implement race-free signal handling in iom.C.
+	- use iom.C signal handling to avoid races in signal handling.
+	- use default action on SIGINT and SIGQUIT, instead of terminating.
+	- "the return of the 100 times per second refresh bug".
+	  ... terminated by a fix.
+	- new supported preeeditType "None".
+	- added FAQ about possible compose key problems.
+	- changed CN to ZH everywhere (sorry for the confusion).
+	- move XFilterEvent up, as some input method seem to want events
+	  for windows not requesting XIM. Please report if this change
+	  causes any harm (specially with pointerblanking)
+	  (patch by Kuang-che Wu).
+	- send the input method spot position on every refresh, not just
+	  when rxvt thinks it should (which was not often enough...).
+	- fix double-wide combining characters (it might look a bit ugly,
+	  though, but common cases are handled by normalization anyways).
+	- moved FAQ to rxvt(7), also made a copy into README.FAQ.
+	- fix a bug(?) in the XIM destroy callback.
+	- be more conservative when trying to register new input methods,
+	  as Xlib races might make rxvt crash. When two or more
+	  input methods are active, killing one probably still crashes rxvt
+	  due to that bug :( Thanks a lot to Kuang-che Wu for immense help
+	  in tracking this down.
+	- manpages (but not .txt and .html versions) will be patched (during
+	  make install) with the correct program name and other info.
 
 3.9  Wed Aug 25 19:24:04 CEST 2004
 	- the change to unsigned int from unsigned short broke
-          many signed comparisons, resulting in failed assertions.
+	  many signed comparisons, resulting in failed assertions.
 
 3.8  Wed Aug 25 05:46:56 CEST 2004
-        - WARNING: TERM=rxvt-unicode is now *default* unless compiled
-          differently. A terminfo entry will automatically be compiled and
-          installed if tic is available.
-        - fixed some --disable switches that didn't work.
-        - tweaked src/features.h a bit.
-        - removed README.unicode.
-        - support select&paste of tab characters.
-        - fixed a segfault when trying to load nonexistant fonts (reported
-          by Eduard Bloch and Mikael Magnusson).
-        - fixed a long-standing rxvt bug in which rxvt failed to save
-          and restore the correct cursor position on the secondary screen.
-        - reworked rxvt-unicode terminfo to allow more efficient and less flickering
-          screen updates with curses.
-        - wide characters that are being halfway overwritten are now replaced
-          by spaces.
-        - urxvtc now transmits urxvt as default name, not urxvtc anymore
-          (likewise for other names chosen at configure time).
-        - disabled the automatic font lookup for unknown characters. xft
-          is just too slow for this to work.
-        - changed realbold code, implemented _real_ bold and italic support,
-          where _real_ means the symbiosis of what I want with what I can
-          implement. use --enable-styles.
-        - removed 256 color mode, but enable 88 colours in all modes
-          (88 to be compatible with 88 colour xterm which is widely
-          supported, and most programs assume a non-iso colourtable
-          for terminals with "odd" number of colours).
-        - added doc/etc/rxvt-unicode.terminfo which is a big overhaul
-          compared to the old rxvt terminfo.
+	- WARNING: TERM=rxvt-unicode is now *default* unless compiled
+	  differently. A terminfo entry will automatically be compiled and
+	  installed if tic is available.
+	- fixed some --disable switches that didn't work.
+	- tweaked src/features.h a bit.
+	- removed README.unicode.
+	- support select&paste of tab characters.
+	- fixed a segfault when trying to load nonexistant fonts (reported
+	  by Eduard Bloch and Mikael Magnusson).
+	- fixed a long-standing rxvt bug in which rxvt failed to save
+	  and restore the correct cursor position on the secondary screen.
+	- reworked rxvt-unicode terminfo to allow more efficient and less flickering
+	  screen updates with curses.
+	- wide characters that are being halfway overwritten are now replaced
+	  by spaces.
+	- urxvtc now transmits urxvt as default name, not urxvtc anymore
+	  (likewise for other names chosen at configure time).
+	- disabled the automatic font lookup for unknown characters. xft
+	  is just too slow for this to work.
+	- changed realbold code, implemented _real_ bold and italic support,
+	  where _real_ means the symbiosis of what I want with what I can
+	  implement. use --enable-styles.
+	- removed 256 color mode, but enable 88 colours in all modes
+	  (88 to be compatible with 88 colour xterm which is widely
+	  supported, and most programs assume a non-iso colourtable
+	  for terminals with "odd" number of colours).
+	- added doc/etc/rxvt-unicode.terminfo which is a big overhaul
+	  compared to the old rxvt terminfo.
 	- sped up xft rendering by 30% *iff* the font allows it (i.e. is
-          monospaced "enough") *and* matches the base font in width.
-        - implement positive and negative character-font caching, which
-          speeds up output immensely in case a character cannot be found
-          (only for non-bold right now).
-        - fix segfault in fading code on certain escape sequences.
-        - better default font size and style.
-        - rxvt-unicode is now much more picky about fonts not fitting
-          into the base font, but to offset this it will check each
-          single character against the base font extents and will only
-          use the characters fitting into the bounding box (+ some fudge).
-        - characters not fitting into the base boundary box will now often
-          be used anyways, but the following characters will be redrawn
-          more often to avoid pixel-droppings. This is like the original
-          rxvt pixel-dropping pass but it's much faster.
-        - scrollColor now affects plain scrollbar (Mikael Magnusson).
-        - fixed segfault in overlay code when height was larger than the
-          screen height.
-        - cursor no longer shines "through" the overlay.
-        - 7-bit ST marker detection was broken.
-        - scrollbar didn't come back sometimes when switching it
-          off/on using escape sequences (Mikael Magnusson).
-        - fix lots of colour problems with focus fading.
-        - $COLORFGBG was not set as documented.
-        - fix iso 14755 5.1 support when --enable-frills but --disable-iso14755.
-        - removed OSC 702.
-        - disabled MOUSE_REPORT_DOUBLECLICK by default, as programs seem to be
-          confused by it rather than using it.
+	  monospaced "enough") *and* matches the base font in width.
+	- implement positive and negative character-font caching, which
+	  speeds up output immensely in case a character cannot be found
+	  (only for non-bold right now).
+	- fix segfault in fading code on certain escape sequences.
+	- better default font size and style.
+	- rxvt-unicode is now much more picky about fonts not fitting
+	  into the base font, but to offset this it will check each
+	  single character against the base font extents and will only
+	  use the characters fitting into the bounding box (+ some fudge).
+	- characters not fitting into the base boundary box will now often
+	  be used anyways, but the following characters will be redrawn
+	  more often to avoid pixel-droppings. This is like the original
+	  rxvt pixel-dropping pass but it's much faster.
+	- scrollColor now affects plain scrollbar (Mikael Magnusson).
+	- fixed segfault in overlay code when height was larger than the
+	  screen height.
+	- cursor no longer shines "through" the overlay.
+	- 7-bit ST marker detection was broken.
+	- scrollbar didn't come back sometimes when switching it
+	  off/on using escape sequences (Mikael Magnusson).
+	- fix lots of colour problems with focus fading.
+	- $COLORFGBG was not set as documented.
+	- fix iso 14755 5.1 support when --enable-frills but --disable-iso14755.
+	- removed OSC 702.
+	- disabled MOUSE_REPORT_DOUBLECLICK by default, as programs seem to be
+	  confused by it rather than using it.
 
 3.7  Tue Aug 17 04:22:25 CEST 2004
 	- new configure option --enable-iso14755.
-        - full iso 14755 conformance (at least I claim so :).
-        - extended the FAQ section in the manpage.
+	- full iso 14755 conformance (at least I claim so :).
+	- extended the FAQ section in the manpage.
 	- fix OverTheSpot and OffTheSpot editing, which was broken since ages,
-          due to no fontset being available. The fontset used is a very rough
-          approximation to the rxvt font, though. This fixes the
-          "cannot create input context" in most cases.
-        - fix coordinates used for Over && OffTheSpot editing to fit directly
-          at the cursor (Over) or into the top line (Off).
-        - reset SIGHUP and SIGPIPE handlers to default values (they were
-          previously being ignored, causing programs not to exit on windoe
-          close).
-        - implemented simple overlays for feedback messages. believe it or
-          not, this was a major blocker in implementing tabbed terminals.
-        - fix compiling with --disable-frills (Adam Sampson).
-        - clarify bold docs in README.unicode (Adam Sampson).
+	  due to no fontset being available. The fontset used is a very rough
+	  approximation to the rxvt font, though. This fixes the
+	  "cannot create input context" in most cases.
+	- fix coordinates used for Over && OffTheSpot editing to fit directly
+	  at the cursor (Over) or into the top line (Off).
+	- reset SIGHUP and SIGPIPE handlers to default values (they were
+	  previously being ignored, causing programs not to exit on windoe
+	  close).
+	- implemented simple overlays for feedback messages. believe it or
+	  not, this was a major blocker in implementing tabbed terminals.
+	- fix compiling with --disable-frills (Adam Sampson).
+	- clarify bold docs in README.unicode (Adam Sampson).
 	- fix crash on window close when the input method or context
-          could not be created.
-        - add work around for badly written programs (see debian bug
-          #202497). This is _not_ a bug in rxvt but rather a race
-          condition in other programs (e.g. jed). It works by forcefully
-          sending SIGWINCH when rxvt sees the first output from the
-          command. This workaround isn't perfect (a slight cost to
-          wellbehaving programs who need to resize twice), but it usually
-          works.
+	  could not be created.
+	- add work around for badly written programs (see debian bug
+	  #202497). This is _not_ a bug in rxvt but rather a race
+	  condition in other programs (e.g. jed). It works by forcefully
+	  sending SIGWINCH when rxvt sees the first output from the
+	  command. This workaround isn't perfect (a slight cost to
+	  wellbehaving programs who need to resize twice), but it usually
+	  works.
 	- set correct pixel size in struct winsize.
-        - document more escape sequences.
-        - fix leftover macros and a few minor doc glitches in rxvt(1).
-        - work around bash's assumption that stepping into the middle of a
-          character is a sensible operation.
-        - fix some corner cases in autowrap handling.
-        - remove various useless make cruft, renamed files to better
-          reflect on their function, renamed many variables.
-        - fixed printscreen functionality, as noted by Jinesh Choksi.
-        - fix a problem where redraws of double-width characters sometimes
-          made the last character draw with normal width (especially visible
-          with selections).
+	- document more escape sequences.
+	- fix leftover macros and a few minor doc glitches in rxvt(1).
+	- work around bash's assumption that stepping into the middle of a
+	  character is a sensible operation.
+	- fix some corner cases in autowrap handling.
+	- remove various useless make cruft, renamed files to better
+	  reflect on their function, renamed many variables.
+	- fixed printscreen functionality, as noted by Jinesh Choksi.
+	- fix a problem where redraws of double-width characters sometimes
+	  made the last character draw with normal width (especially visible
+	  with selections).
 
 3.6  Sat Aug 14 04:55:26 CEST 2004
-        - SECURITY FIX: rxvtd kept open filehandles to other terminal
-          windows when spawning children. Actual risk is low (attacker
-          needs access to a local shell window).
-        - implemented parts 5.1 and 5.2 of ISO 14755 (i.e. hold down
-          Ctrl+Shift and enter hex numbers. space commits it as a unicode
-          character, or press and release Crl+Shift and then enter a
-          function key to get it's picture). patches for 5.3 (or 5.4 with
-          a little window or so) would be welcome.
-        - fixed large pastes (INCR selections, debian bug #191456).
-        - fixed longstanding bug in which rxvtd crashed when
-          a message was logged after startup (a rare case).
-        - got rid of yodl completely by converting to pod.
-        - integrated the FAQ into the manpage. In the future, more will be
-          added there.
-        - reference documentation is now installed as rxvt(7).
-        - rxvt(7) now contains README.configure, which is autogenerated.
+	- SECURITY FIX: rxvtd kept open filehandles to other terminal
+	  windows when spawning children. Actual risk is low (attacker
+	  needs access to a local shell window).
+	- implemented parts 5.1 and 5.2 of ISO 14755 (i.e. hold down
+	  Ctrl+Shift and enter hex numbers. space commits it as a unicode
+	  character, or press and release Crl+Shift and then enter a
+	  function key to get it's picture). patches for 5.3 (or 5.4 with
+	  a little window or so) would be welcome.
+	- fixed large pastes (INCR selections, debian bug #191456).
+	- fixed longstanding bug in which rxvtd crashed when
+	  a message was logged after startup (a rare case).
+	- got rid of yodl completely by converting to pod.
+	- integrated the FAQ into the manpage. In the future, more will be
+	  added there.
+	- reference documentation is now installed as rxvt(7).
+	- rxvt(7) now contains README.configure, which is autogenerated.
 	- fix memory leak in insecure mode on certain display echos.
-        - report sequences now report empty strings in secure mode
-          instead of being ignored.
-        - enable some report sequences even in secure mode, such as colour
-          queries, as they are harmless(tm).
-        - rxvt-unicode will now try to find a matching xft font if it can't
-          find a matching font from the fallback list. It might look ugly,
-          but if a xft font with our character exists, rxvt will find it.
-        - moved FreeMono to the very back of the fallback list, as some
-          people complain it looks ugly. This is a no-win situation, though.
-        - fixed sourceforge bug 998970, reported against aterm:
-          "crash on -sl 0 on super small windows".
-        - decreased memory and code size when !--enable-transparency.
-        - SYNCCVS. backported changes done to rxvt, except for Color_ufbg,
-          which I think is better done through fading, and libW11, which
-          needs testing anyways.
-          - more complete compile options help output.
-          - Provide linear scaled colour cubes for 256 colour mode.
-            Pass them through as rgbi rather than rgb so that Xlib can
-            provide gamma (from per visual intensity lists) rather than
-            providing constant gamma ourselves.  Noticed by and ideas from
-            Christopher Casey <realchriscasey@hotmail.com>
-          - minor doc fix.
+	- report sequences now report empty strings in secure mode
+	  instead of being ignored.
+	- enable some report sequences even in secure mode, such as colour
+	  queries, as they are harmless(tm).
+	- rxvt-unicode will now try to find a matching xft font if it can't
+	  find a matching font from the fallback list. It might look ugly,
+	  but if a xft font with our character exists, rxvt will find it.
+	- moved FreeMono to the very back of the fallback list, as some
+	  people complain it looks ugly. This is a no-win situation, though.
+	- fixed sourceforge bug 998970, reported against aterm:
+	  "crash on -sl 0 on super small windows".
+	- decreased memory and code size when !--enable-transparency.
+	- SYNCCVS. backported changes done to rxvt, except for Color_ufbg,
+	  which I think is better done through fading, and libW11, which
+	  needs testing anyways.
+	  - more complete compile options help output.
+	  - Provide linear scaled colour cubes for 256 colour mode.
+	    Pass them through as rgbi rather than rgb so that Xlib can
+	    provide gamma (from per visual intensity lists) rather than
+	    providing constant gamma ourselves.  Noticed by and ideas from
+	    Christopher Casey <realchriscasey@hotmail.com>
+	  - minor doc fix.
 
 3.5  Wed Aug 11 00:31:34 CEST 2004
-        - UPGRADE ADVISED: rxvt did wake up 100 times per second. did not
-          show in my top (linux...), but it's extremely annoying that I
-          released it with that bug. :( Fixed.
+	- UPGRADE ADVISED: rxvt did wake up 100 times per second. did not
+	  show in my top (linux...), but it's extremely annoying that I
+	  released it with that bug. :( Fixed.
 	- use memove instead of for-loop for large scrollback buffer copies.
-          speeds up large scrollback buffers (on systems with reasonable
-          memmove :)
+	  speeds up large scrollback buffers (on systems with reasonable
+	  memmove :)
 	- minor cleanups.
-        - removed ~ from default cutchars, in accordance with the manpage
-          (debian bug #169415).
-        - fix a race condition on exit (debian bug #197265).
-        - change prio/next scrolling modifier handling (debian bug #226386).
-        - updated configure script to current autoconf standards.
-        - updated config.guess.
+	- removed ~ from default cutchars, in accordance with the manpage
+	  (debian bug #169415).
+	- fix a race condition on exit (debian bug #197265).
+	- change prio/next scrolling modifier handling (debian bug #226386).
+	- updated configure script to current autoconf standards.
+	- updated config.guess.
 
 3.4  Fri Aug  6 19:34:29 CEST 2004
 	- fix inheritpixmap transparency border code.
-        - fix tinting transparency border code, also experimentally
-          make some scrollbars transparent (e.g. plain, my favourite style :).
-        - imported aterm shading code (faster and still portable).
-        - changed interpretation and usage of shading (-sh).
-        - fixed blinking underlined and negative text.
-        - disable slow link support on connections using unix domain sockets,
-          speeding up scrolling immensely.
-        - various other optimizations.
-        - new borderLess switch (ewmh-compliant), by Mikael Magnusson.
+	- fix tinting transparency border code, also experimentally
+	  make some scrollbars transparent (e.g. plain, my favourite style :).
+	- imported aterm shading code (faster and still portable).
+	- changed interpretation and usage of shading (-sh).
+	- fixed blinking underlined and negative text.
+	- disable slow link support on connections using unix domain sockets,
+	  speeding up scrolling immensely.
+	- various other optimizations.
+	- new borderLess switch (ewmh-compliant), by Mikael Magnusson.
 
 3.3  Sat Jul 31 15:15:59 CEST 2004
 	- some doc updates (Eduard Bloch).
 	- use faster inheritpixmap method when tinting color not set.
 	- fix pixmap offset when tinting (reported by Eduard Bloch).
-        - new -sh option by Mikael Magnusson.
+	- new -sh option by Mikael Magnusson.
 	- off-focus-fading (--enable-fading) support (patch by
-          Mikael Magnusson).
-      	- cursor now set correctly on --disable-blank (reported by
-          Mikael Magnusson).
-        - better (and non-crashing) slipwheeling (Mikael Magnusson).
+	  Mikael Magnusson).
+	- cursor now set correctly on --disable-blank (reported by
+	  Mikael Magnusson).
+	- better (and non-crashing) slipwheeling (Mikael Magnusson).
 	- solaris 2.8 portability changes (reported by Colin Marquardt).
-      	- disable-xim now really disables xim code.
+	- disable-xim now really disables xim code.
 
 3.2  Mon Jul 26 19:57:32 CEST 2004
-        - support real bold fonts (patch by Adam Sampson <azz@us-lot.org>),
-          if specified in the font list (and enabled by -rb).
-        - fixed --enable-keepscrolling and --enable-selectionscrolling, which
-          was broken since 1.8. Patch by Hans de Goede <j.w.r.degoede@hhs.nl>.
-        - fixed --enable-slipwheeling, see above.
+	- support real bold fonts (patch by Adam Sampson <azz@us-lot.org>),
+	  if specified in the font list (and enabled by -rb).
+	- fixed --enable-keepscrolling and --enable-selectionscrolling, which
+	  was broken since 1.8. Patch by Hans de Goede <j.w.r.degoede@hhs.nl>.
+	- fixed --enable-slipwheeling, see above.
 	- sequences ended by ST can now contain any octet by quoting it
-          with ^V (SYN).
-        - 8-bit-controls disabled by default (compiletime option).
+	  with ^V (SYN).
+	- 8-bit-controls disabled by default (compiletime option).
 
 3.1  Sat Jun 26 23:38:07 CEST 2004
 	- set default backspace sequence to "DEC" (which defaults to \177)
-          as opposed to \010 as before, which was incorrect (ahem :).
-        - updated doc/etc/rxvt.* to reflect the change. This brings rxvt
-          in line with many existing rxvt terminfo and termcap entries as
-          well as with other terminal emulators.
+	  as opposed to \010 as before, which was incorrect (ahem :).
+	- updated doc/etc/rxvt.* to reflect the change. This brings rxvt
+	  in line with many existing rxvt terminfo and termcap entries as
+	  well as with other terminal emulators.
 	- fix a segfault when trying to set a nonexistant locale
-          (reported by elmex).
-        - find more fonts by default for japanese.
-        - the internal border wasn't always cleared. This is fixed by moving
-          the window relative to it's frame and simplifies a lot of code, too.
-        - fixed quite hard to find scrollbar colour bug, reported by Eduard
-          Bloch.
+	  (reported by elmex).
+	- find more fonts by default for japanese.
+	- the internal border wasn't always cleared. This is fixed by moving
+	  the window relative to it's frame and simplifies a lot of code, too.
+	- fixed quite hard to find scrollbar colour bug, reported by Eduard
+	  Bloch.
 
 3.0  Mon May 10 20:47:23 CEST 2004
 	- experimental flickerfree resize mode (I tried to get even
@@ -534,224 +534,224 @@ WISH: just for fun, do shade and tint with XRender.
 	  make it a little bit more correct c++).
 
 2.9  Sat May  8 19:13:41 CEST 2004
-        - fix some minor doc issues + some generated doc files are now
-          getting distributed (closes debian bug #246035).
-        - minor i18n issue fixes.
+	- fix some minor doc issues + some generated doc files are now
+	  getting distributed (closes debian bug #246035).
+	- minor i18n issue fixes.
 
 2.8  Thu Apr  8 22:44:36 CEST 2004
 	- replace PF_LOCAL by PF_UNIX (portability).
-        - try to detect -lnsl and -lsocket (portability).
-        - fix some minor bugs.
+	- try to detect -lnsl and -lsocket (portability).
+	- fix some minor bugs.
 
 2.7  Mon Apr  5 02:11:15 CEST 2004
 	- this version should now work fine with TERM=xterm, except
-          for the keymappings.
-        - don't leave the X or rxvtd sockets open in child processes.
-          (inherited fd's stay open - different to rxvt).
-        - xterm-compat: implemented OSC3, set/get window property. get is
-          an extension and is slightly ugly.
+	  for the keymappings.
+	- don't leave the X or rxvtd sockets open in child processes.
+	  (inherited fd's stay open - different to rxvt).
+	- xterm-compat: implemented OSC3, set/get window property. get is
+	  an extension and is slightly ugly.
 	- removed --disable-swapscreen and SCROLL_ON_NO_SECONDARY and
-          replaced them by runtime-configurable options secondaryScreen and
-          secondaryScroll (-ssr and -ssc) (see debian bug #237673).
+	  replaced them by runtime-configurable options secondaryScreen and
+	  secondaryScroll (-ssr and -ssc) (see debian bug #237673).
 	- close down terminal window when child exits. (debian bug #241267).
-        - xterm-compat: enable seperate mouse bg colour setting.
-        - re-enable mouse cursor colours again, fixing colours when fg/bg are
-          overwritten (as is common).
-        - xterm-compat: correctly implement privmodes 1047, 1048, 1049.
-        - ported to solaris by elmar@math.uni-bremen.de.
+	- xterm-compat: enable seperate mouse bg colour setting.
+	- re-enable mouse cursor colours again, fixing colours when fg/bg are
+	  overwritten (as is common).
+	- xterm-compat: correctly implement privmodes 1047, 1048, 1049.
+	- ported to solaris by elmar@math.uni-bremen.de.
 
 2.6  Fri Apr  2 03:24:10 CEST 2004
 	- minor doc corrections.
-        - WARNING: changed menu sequence from ESC ] 10 to ESC ] 703 to
-          avoid clashes with xterm.
-        - changed OSC701/OSC702 sequence to return standard escaped reports.
-        - xterm-compat: make set window colour and other requests report
-          window colour when arg is "?".
-        - enable colour tinting of "transparent" backgrounds.
-        - stop ST sequences earlier, as we now react on 0x90 and thus
-          cause conditions more often that look like locks but are, in
-          fact, just rxvt waiting for a ST/BEL etc.
-        - re-enabled most of the "dangerous" echo escapes, but only
-          when -insecure is specified as option or resource (see reference).
-          (FRILLS).
-        - disables sleep(1) on transparency updates on default.
-        - fixes to make it compile better on solaris 2.9 (at least).
-          asprintf replacement is still missing(!).
-        - set _NET_WM_PID.
+	- WARNING: changed menu sequence from ESC ] 10 to ESC ] 703 to
+	  avoid clashes with xterm.
+	- changed OSC701/OSC702 sequence to return standard escaped reports.
+	- xterm-compat: make set window colour and other requests report
+	  window colour when arg is "?".
+	- enable colour tinting of "transparent" backgrounds.
+	- stop ST sequences earlier, as we now react on 0x90 and thus
+	  cause conditions more often that look like locks but are, in
+	  fact, just rxvt waiting for a ST/BEL etc.
+	- re-enabled most of the "dangerous" echo escapes, but only
+	  when -insecure is specified as option or resource (see reference).
+	  (FRILLS).
+	- disables sleep(1) on transparency updates on default.
+	- fixes to make it compile better on solaris 2.9 (at least).
+	  asprintf replacement is still missing(!).
+	- set _NET_WM_PID.
 
 2.5  Sun Mar 28 04:05:51 CEST 2004
 	- the usual sprinkled little code cleanups.
-        - support more 8-bit controls.
-        - more informative error messages.
-        - fix some minor memleaks and possible memory corruptions.
-        - the use of exception handling allowed the following improvements:
-        - no longer block when waiting for completion of escape sequences
-          (e.g. printf '\e';sleep 3;printf 'c' will no longer block).
-        - rxvtc usage errors should no longer kill rxvtd (debian bug #237510).
+	- support more 8-bit controls.
+	- more informative error messages.
+	- fix some minor memleaks and possible memory corruptions.
+	- the use of exception handling allowed the following improvements:
+	- no longer block when waiting for completion of escape sequences
+	  (e.g. printf '\e';sleep 3;printf 'c' will no longer block).
+	- rxvtc usage errors should no longer kill rxvtd (debian bug #237510).
 
 2.4  Tue Mar 16 07:06:51 CET 2004
 	- fix stupid double-free() bug on exit.
 	- implement xterm private mode 1049.
-        - fix manpages (debian bug #236824).
-        - removed old selection style completely.
-        - selection works _better_ for non-8-bit and double-width chars.
-        - remove native->unicode translation tables. they aren't used anymore.
-          reduces binary and distro size a bit.
-        - add string representation for JIS X 0213:2000 so these fonts can
-          be used from within rxvt.
-        - less buggy complete set of line-drawing-characters (0x2500-0x259f).
+	- fix manpages (debian bug #236824).
+	- removed old selection style completely.
+	- selection works _better_ for non-8-bit and double-width chars.
+	- remove native->unicode translation tables. they aren't used anymore.
+	  reduces binary and distro size a bit.
+	- add string representation for JIS X 0213:2000 so these fonts can
+	  be used from within rxvt.
+	- less buggy complete set of line-drawing-characters (0x2500-0x259f).
 
 2.3  Sun Mar 14 19:00:07 CET 2004
 	- code cleanup release.
 	- fix compile problems without --enable-combining.
-        - fix segfault when DISPLAY cannot be opened.
-        - removed HOTKEY_CTRL and HOTKEY_SHIFT, ACS_*, FONT0_IDX,
-          MAX_NFONTS. UNICODE and UTF8 defines and references from
-          all files.
-        - default config now reads an app-defaults file even without
-          --enable-xgetdefaults.
+	- fix segfault when DISPLAY cannot be opened.
+	- removed HOTKEY_CTRL and HOTKEY_SHIFT, ACS_*, FONT0_IDX,
+	  MAX_NFONTS. UNICODE and UTF8 defines and references from
+	  all files.
+	- default config now reads an app-defaults file even without
+	  --enable-xgetdefaults.
 
 2.2  Thu Mar 11 01:41:56 CET 2004
-        - implement autocompositing of characters by either using an existing
-          precomposed unicode character or by graphical overlay. this is
-          also used to store characters >16bit without --enable-unicode3.
-        - selection now based on wchar_t, so that it can offer UTF-8
-          selections even in locales unable to represent full unicode.
+	- implement autocompositing of characters by either using an existing
+	  precomposed unicode character or by graphical overlay. this is
+	  also used to store characters >16bit without --enable-unicode3.
+	- selection now based on wchar_t, so that it can offer UTF-8
+	  selections even in locales unable to represent full unicode.
 	- tis620-2529 is, of course, thai, not vietnamese...
-        - a typoe prevented characters >65535 to be stored properly.
-        - wcwidth is unreliable in non-unicode-locales on GNU/Linux.
-          working around this fixes line-drawing characters in non-utf-8 mode.
-        - improved rounding when emulating line-drawing characters.
-        - implement continuation lines in xresource parsing when
-          --disable-xgetdefault.
-        - changed locale-setting esc-sequence from code 9 to code 701.
-          also added 702 that returns the font selected for a specific
-          unicode character.
-        - no longer set XA_CUT_BUFFER0. this is confusing and clients WILL
-          get it wrong.
-        - don't use XTextStyle for XA_TEXT, instead use XStdICCTextStyle.
+	- a typoe prevented characters >65535 to be stored properly.
+	- wcwidth is unreliable in non-unicode-locales on GNU/Linux.
+	  working around this fixes line-drawing characters in non-utf-8 mode.
+	- improved rounding when emulating line-drawing characters.
+	- implement continuation lines in xresource parsing when
+	  --disable-xgetdefault.
+	- changed locale-setting esc-sequence from code 9 to code 701.
+	  also added 702 that returns the font selected for a specific
+	  unicode character.
+	- no longer set XA_CUT_BUFFER0. this is confusing and clients WILL
+	  get it wrong.
+	- don't use XTextStyle for XA_TEXT, instead use XStdICCTextStyle.
 
 2.1  Wed Mar  3 21:48:39 CET 2004
 	- NOTE: the name of the binary and ressources were changed in
-          this version, see README.configure if you want the old
-          settings.
-        - added plain "big5" encoding into CN.
-        - make cns11643 and big5* encodings actually visible to rxvt.
-        - fix a bug when a multibyte character fell onto a buffer boundary,
-          causing the incomplete character to be presented twice to
-          mbrtowc.
-        - more robust encoding name matching.
-        - fix cursor placement on multibyte characters.
-        - when overwriting wide with narrow chars, pad with spaces.
-        - fix various refresh and display issues for wide chars.
-        - remove multibyte_cursor hack (it was a hack) and associated
-          resources and docs.
-        - fixed memory corruption bug with XLFD fontname parsing.
+	  this version, see README.configure if you want the old
+	  settings.
+	- added plain "big5" encoding into CN.
+	- make cns11643 and big5* encodings actually visible to rxvt.
+	- fix a bug when a multibyte character fell onto a buffer boundary,
+	  causing the incomplete character to be presented twice to
+	  mbrtowc.
+	- more robust encoding name matching.
+	- fix cursor placement on multibyte characters.
+	- when overwriting wide with narrow chars, pad with spaces.
+	- fix various refresh and display issues for wide chars.
+	- remove multibyte_cursor hack (it was a hack) and associated
+	  resources and docs.
+	- fixed memory corruption bug with XLFD fontname parsing.
 
 2.0  Sun Feb 29 23:59:58 CET 2004
 	- do not blink text when background colour is not set explicitly.
-        - some doc cleanup
-        - configure cleanup
-        - viscii enabled by default
-        - better support for non-g++-3.2+ systems (tested with g++-2.95).
+	- some doc cleanup
+	- configure cleanup
+	- viscii enabled by default
+	- better support for non-g++-3.2+ systems (tested with g++-2.95).
 
 1.91 Fri Feb 27 03:57:44 CET 2004
 	- build fixes for !xft and !im, reported by various people.
 
 1.9  Wed Feb 25 16:46:05 CET 2004
 	- fixed bug in plain scrollbar causing X errors in XCreateGC.
-        - implemented sharing of X connections. will be used to speed
-          up many x operations considerably. Also saves some memory.
-        - implemented caching of input methods. This immensely shortens
-          startup time for new terms in rxvtd. At least XFree86 4.3 is
-          rather broken with respect to input methods, though, so expect
-          crashes when you kill your input method (xterm et al. also crash).
-        - fix bugs in X flushing, causing an empty screen after startup.
-        - fix various memleaks in rxvtd.
-        - fix a bug that kept escape codes to be generated for some
-          keysyms that also have string translations, when not --enable-xim.
-          reported by joel reed.
-        - re-enabled esc-seq. for font-switching (\033 ] 50 ; <fontset> \007).
-        - re-enabled menubar (experimental!).
-        - fix bug in locale-handling that kept the correct locale from
-          being selected.
-        - implemented esc-seq. to switch locales (\033 ] 9 ; <locale> \007).
-        - removed greek support.
-        - allow NUL bytes (ctrl-@) to be entered even with XIM enabled.
-        - correct cursor width if !focus.
-        - fixed --enable-xgetdefault, reported by eduard bloch.
-        - added manpage for rxvtc/rxvtd based on the one eduard block
-          contributed.
-        - use reverse video for normal bold text unless colorBD has been set.
-        - fixed endless loop when selection is valid but empty.
-        - changed default terminal name to "rxvt".
-        - many other minor bugfixes.
+	- implemented sharing of X connections. will be used to speed
+	  up many x operations considerably. Also saves some memory.
+	- implemented caching of input methods. This immensely shortens
+	  startup time for new terms in rxvtd. At least XFree86 4.3 is
+	  rather broken with respect to input methods, though, so expect
+	  crashes when you kill your input method (xterm et al. also crash).
+	- fix bugs in X flushing, causing an empty screen after startup.
+	- fix various memleaks in rxvtd.
+	- fix a bug that kept escape codes to be generated for some
+	  keysyms that also have string translations, when not --enable-xim.
+	  reported by joel reed.
+	- re-enabled esc-seq. for font-switching (\033 ] 50 ; <fontset> \007).
+	- re-enabled menubar (experimental!).
+	- fix bug in locale-handling that kept the correct locale from
+	  being selected.
+	- implemented esc-seq. to switch locales (\033 ] 9 ; <locale> \007).
+	- removed greek support.
+	- allow NUL bytes (ctrl-@) to be entered even with XIM enabled.
+	- correct cursor width if !focus.
+	- fixed --enable-xgetdefault, reported by eduard bloch.
+	- added manpage for rxvtc/rxvtd based on the one eduard block
+	  contributed.
+	- use reverse video for normal bold text unless colorBD has been set.
+	- fixed endless loop when selection is valid but empty.
+	- changed default terminal name to "rxvt".
+	- many other minor bugfixes.
 
 1.8  Mon Feb  2 20:09:18 CET 2004
 	- almost total conversion to C++. Except for introducing
-          new bugs, this should not change much.
-        - fix and re-enable background pixmap and inherit pixmap support.
-        - re-enabled multiple scrollbar support.
-        - added plain scrollbar style and restored xterm scrollbar.
-        - blinking and selections work slightly better now.
-        - fix an error condition when rxvt receives more than one screenful
-          of output. should occur with original rxvt, too, but very rarely.
-          (I guess the code contains more surprises of this sort...)
+	  new bugs, this should not change much.
+	- fix and re-enable background pixmap and inherit pixmap support.
+	- re-enabled multiple scrollbar support.
+	- added plain scrollbar style and restored xterm scrollbar.
+	- blinking and selections work slightly better now.
+	- fix an error condition when rxvt receives more than one screenful
+	  of output. should occur with original rxvt, too, but very rarely.
+	  (I guess the code contains more surprises of this sort...)
 
 1.7  Fri Jan 30 16:50:11 CET 2004
 	- further cleanups.
-        - never do last-minute-changes: restore ability to have
-          color + bold as high-intensity, and let the selection
-          use reverse video, not _blink_.
-        - remove OPTION_HC, at least temporarily. If you want it back,
-          please drop me a note.
+	- never do last-minute-changes: restore ability to have
+	  color + bold as high-intensity, and let the selection
+	  use reverse video, not _blink_.
+	- remove OPTION_HC, at least temporarily. If you want it back,
+	  please drop me a note.
 
 1.6  Fri Jan 30 00:34:01 CET 2004
 	- cleanups, minor bugfixes.
-        - blinking text.
-        - normal text color + bold gets white text instead of
-          normal text when colorBD is not set.
-        (- support double-wide characters (by blocking).)
-          was never implemented
+	- blinking text.
+	- normal text color + bold gets white text instead of
+	  normal text when colorBD is not set.
+	(- support double-wide characters (by blocking).)
+	  was never implemented
 
 1.5  Thu Jan 29 00:43:48 CET 2004
 	- share io manager between rxvt-unicode and vpe
-        - bugfix for --disable-utmp, reported by fefe himself
-        - colors were sometimes not used correctly because
-          parts of the code expected a monochrome display.
-          reported by fefe
-        - make it compile without pointer_blank, reported by
-          Markus Demleitner
-        - improved selection support, now supports UTF8_STRING
-          and properly encodes CUT_BUFFER0 in iso-8859-1
-        - completely removed non-working graphics mode
+	- bugfix for --disable-utmp, reported by fefe himself
+	- colors were sometimes not used correctly because
+	  parts of the code expected a monochrome display.
+	  reported by fefe
+	- make it compile without pointer_blank, reported by
+	  Markus Demleitner
+	- improved selection support, now supports UTF8_STRING
+	  and properly encodes CUT_BUFFER0 in iso-8859-1
+	- completely removed non-working graphics mode
 
 1.4  Fri Jan 16 23:03:22 CET 2004
 	- fix stupid segfault on esc-c
-        - small font tunings
-        - much better io manager, less bugs, higher speed
-        - better error reporting for unknown options
+	- small font tunings
+	- much better io manager, less bugs, higher speed
+	- better error reporting for unknown options
 
 1.3  2003-12-26
-        - fix a bug in font height selection
-        - autoscale scalable x11 fonts
-        - slow-mode xft rendering centers characters
-        - much faster x11 font selection
+	- fix a bug in font height selection
+	- autoscale scalable x11 fonts
+	- slow-mode xft rendering centers characters
+	- much faster x11 font selection
 
 1.2  2003-12-24
-        - fix another segfault-on-resize-bug form the original rxvt
-        - better font matching
-        - better memory management (less memory)
-        - new fallback: gnu freefont
+	- fix another segfault-on-resize-bug form the original rxvt
+	- better font matching
+	- better memory management (less memory)
+	- new fallback: gnu freefont
 
 1.1  2003-12-18
-        - Support for XIM in other than the current locale.
-        - Support for non-utf-8-locales
-        - much improved font choosing
+	- Support for XIM in other than the current locale.
+	- Support for non-utf-8-locales
+	- much improved font choosing
 
 1.0
-        - first release
-        - originally cloned from rxvt-CVS 2003-11-19 00:26
-        - removed rclock et al.
-        - initial conversion to C++
+	- first release
+	- originally cloned from rxvt-CVS 2003-11-19 00:26
+	- removed rclock et al.
+	- initial conversion to C++
 
