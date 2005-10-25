@@ -427,9 +427,6 @@
 /* Define if you want hide the pointer while typing */
 #undef POINTER_BLANK
 
-/* Define if you want blinking cursor support */
-#undef CURSOR_BLINK
-
 /* Define if you want blinking text support */
 #undef TEXT_BLINK
 

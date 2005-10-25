@@ -906,7 +906,6 @@ Optional Features:
   --enable-dlmalloc       enable Doug Lea's malloc - for production use
                      NOTE: enable only one malloc package
   --enable-smart-resize   enable smart growth/shrink behaviour
-  --enable-cursor-blink   enable blinking cursor
   --enable-text-blink     enable blinking text
   --enable-pointer-blank  enable pointer blank when typing or inactive pointer
 
@@ -3820,35 +3819,35 @@ fi
 
 
 MALLOC_TYPE=S
+
 support_addstrings=no
-support_frills=no
+support_frills=yes
 support_inheritpixmap=no
-support_tinting=no
-support_fading=no
-support_keepscrolling=no
-support_selectionscrolling=no
+support_tinting=yes
+support_fading=yes
+support_keepscrolling=yes
+support_selectionscrolling=yes
 support_menubar=no
-support_mousewheel=no
-support_mouseslipwheel=no
-support_utmp=no
-support_wtmp=no
-support_lastlog=no
-support_cursor_blink=no
-support_text_blink=no
-support_pointer_blank=no
-support_scroll_rxvt=no
-support_scroll_next=no
-support_scroll_xterm=no
-support_scroll_plain=no
-support_xim=no
+support_mousewheel=yes
+support_mouseslipwheel=yes
+support_utmp=yes
+support_wtmp=yes
+support_lastlog=yes
+support_text_blink=yes
+support_pointer_blank=yes
+support_scroll_rxvt=yes
+support_scroll_next=yes
+support_scroll_xterm=yes
+support_scroll_plain=yes
+support_xim=yes
 support_xpm=no
-support_xft=no
+support_xft=yes
 support_unicode3=no
-support_combining=no
+support_combining=yes
 support_8bitctrls=no
-support_iso14755=no
-support_styles=no
-codesets=
+support_iso14755=yes
+support_styles=yes
+codesets=all
 
 
 if test "x$enable_shared" = xyes; then
@@ -3864,37 +3863,68 @@ fi
 # Check whether --enable-everything or --disable-everything was given.
 if test "${enable_everything+set}" = set; then
   enableval="$enable_everything"
-  if test x$enableval = xyes; then
-    support_24bit=yes
-    support_frills=yes
-    support_inheritpixmap=yes
-    support_tinting=yes
-    support_fading=yes
-    support_keepscrolling=yes
-    support_selectionscrolling=yes
-    support_lastlog=yes
-    support_menubar=yes
-    support_mousewheel=yes
-    support_mouseslipwheel=yes
-    support_cursor_blink=yes
-    support_text_blink=yes
-    support_pointer_blank=yes
-    support_scroll_rxvt=yes
-    support_scroll_next=yes
-    support_scroll_xterm=yes
-    support_scroll_plain=yes
-    support_utmp=yes
-    support_wtmp=yes
-    support_xim=yes
-    support_xpm=yes
-    support_xft=yes
-    support_unicode3=yes
-    support_combining=yes
-    #support_8bitctrls=yes
-    support_iso14755=yes
-    support_styles=yes
-    codesets=all
-  fi
+
+    if test x$enableval = xno; then
+       support_24bit=no
+       support_frills=no
+       support_inheritpixmap=no
+       support_tinting=no
+       support_fading=no
+       support_keepscrolling=no
+       support_selectionscrolling=no
+       support_lastlog=no
+       support_menubar=no
+       support_mousewheel=no
+       support_mouseslipwheel=no
+       support_text_blink=no
+       support_pointer_blank=no
+       support_scroll_rxvt=no
+       support_scroll_next=no
+       support_scroll_xterm=no
+       support_scroll_plain=no
+       support_utmp=no
+       support_wtmp=no
+       support_xim=no
+       support_xpm=no
+       support_xft=no
+       support_unicode3=no
+       support_combining=no
+       support_8bitctrls=no
+       support_iso14755=no
+       support_styles=no
+       codesets=
+    fi
+    if test x$enableval = xyes; then
+       support_24bit=yes
+       support_frills=yes
+       support_inheritpixmap=yes
+       support_tinting=yes
+       support_fading=yes
+       support_keepscrolling=yes
+       support_selectionscrolling=yes
+       support_lastlog=yes
+       support_menubar=yes
+       support_mousewheel=yes
+       support_mouseslipwheel=yes
+       support_text_blink=yes
+       support_pointer_blank=yes
+       support_scroll_rxvt=yes
+       support_scroll_next=yes
+       support_scroll_xterm=yes
+       support_scroll_plain=yes
+       support_utmp=yes
+       support_wtmp=yes
+       support_xim=yes
+       support_xpm=yes
+       support_xft=yes
+       support_unicode3=yes
+       support_combining=yes
+       #support_8bitctrls=yes
+       support_iso14755=yes
+       support_styles=yes
+       codesets=all
+    fi
+
 fi;
 
 # Check whether --enable-unicode3 or --disable-unicode3 was given.
@@ -4288,14 +4318,6 @@ cat >>confdefs.h <<\_ACEOF
 #define SMART_RESIZE 1
 _ACEOF
 
-  fi
-fi;
-
-# Check whether --enable-cursor-blink or --disable-cursor-blink was given.
-if test "${enable_cursor_blink+set}" = set; then
-  enableval="$enable_cursor_blink"
-  if test x$enableval = xyes -o x$enableval = xno; then
-    support_cursor_blink=$enableval
   fi
 fi;
 
@@ -4815,7 +4837,7 @@ _ACEOF
 cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
-#include <X11/Intrinsic.h>
+#include <X11/Xlib.h>
 _ACEOF
 if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
   (eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
@@ -4842,7 +4864,7 @@ else
 sed 's/^/| /' conftest.$ac_ext >&5
 
   for ac_dir in $ac_x_header_dirs; do
-  if test -r "$ac_dir/X11/Intrinsic.h"; then
+  if test -r "$ac_dir/X11/Xlib.h"; then
     ac_x_includes=$ac_dir
     break
   fi
@@ -4856,18 +4878,18 @@ if test "$ac_x_libraries" = no; then
   # See if we find them without any special options.
   # Don't add to $LIBS permanently.
   ac_save_LIBS=$LIBS
-  LIBS="-lXt $LIBS"
+  LIBS="-lX11 $LIBS"
   cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
 cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
-#include <X11/Intrinsic.h>
+#include <X11/Xlib.h>
 int
 main ()
 {
-XtMalloc (0)
+XrmInitialize ()
   ;
   return 0;
 }
@@ -4905,7 +4927,7 @@ for ac_dir in `echo "$ac_x_includes $ac_x_header_dirs" | sed s/include/lib/g`
 do
   # Don't even attempt the hair of trying to link an X program!
   for ac_extension in a so sl; do
-    if test -r $ac_dir/libXt.$ac_extension; then
+    if test -r $ac_dir/libX11.$ac_extension; then
       ac_x_libraries=$ac_dir
       break 2
     fi
@@ -11968,13 +11990,6 @@ if test x$support_pointer_blank = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
 #define POINTER_BLANK 1
-_ACEOF
-
-fi
-if test x$support_cursor_blink = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define CURSOR_BLINK 1
 _ACEOF
 
 fi
