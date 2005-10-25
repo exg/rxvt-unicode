@@ -2563,7 +2563,7 @@ rxvt_term::check_our_parents ()
 
       if (n > (int) (sizeof (TermWin.parent) / sizeof (TermWin.parent[0])))
         {
-          XSetWindowBackground (disp, TermWin.parent[0], pix_colors_focused[Color_fg]);
+          XSetWindowBackground (disp, TermWin.parent[0], pix_colors_focused[Color_border]);
           XSetWindowBackground (disp, TermWin.vt, pix_colors_focused[Color_bg]);
           am_transparent = 0;
           /* XXX: also turn off Opt_transparent? */

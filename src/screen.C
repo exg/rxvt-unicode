@@ -2555,22 +2555,6 @@ rxvt_term::scr_clear (bool really)
   num_scr_allow = 0;
   want_refresh = 1;
 
-#if TRANSPARENT
-  if ((options & Opt_transparent) && (am_pixmap_trans == 0))
-    {
-      int i;
-
-      if (!(options & Opt_transparent_all))
-        i = 0;
-      else
-        i = (int) (sizeof (TermWin.parent) / sizeof (Window));
-
-      while (i--)
-        if (TermWin.parent[i] != None)
-          XClearWindow (display->display, TermWin.parent[i]);
-    }
-#endif
-
   if (really)
     XClearWindow (display->display, TermWin.vt);
 }

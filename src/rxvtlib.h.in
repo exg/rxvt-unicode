@@ -183,53 +183,52 @@ typedef struct {
 /* ------------------------------------------------------------------------- */
 
 /* screen_t flags */
-#define Screen_Relative         (1<<0)  /* relative origin mode flag         */
-#define Screen_VisibleCursor    (1<<1)  /* cursor visible?                   */
-#define Screen_Autowrap         (1<<2)  /* auto-wrap flag                    */
-#define Screen_Insert           (1<<3)  /* insert mode (vs. overstrike)      */
-#define Screen_WrapNext         (1<<4)  /* need to wrap for next char?       */
-#define Screen_DefaultFlags     (Screen_VisibleCursor|Screen_Autowrap)
+#define Screen_Relative          (1<<0)  /* relative origin mode flag         */
+#define Screen_VisibleCursor     (1<<1)  /* cursor visible?                   */
+#define Screen_Autowrap          (1<<2)  /* auto-wrap flag                    */
+#define Screen_Insert            (1<<3)  /* insert mode (vs. overstrike)      */
+#define Screen_WrapNext          (1<<4)  /* need to wrap for next char?       */
+#define Screen_DefaultFlags      (Screen_VisibleCursor|Screen_Autowrap)
 
 /* rxvt_vars.options */
-#define Opt_console             (1UL<<0)
-#define Opt_loginShell          (1UL<<1)
-#define Opt_iconic              (1UL<<2)
-#define Opt_visualBell          (1UL<<3)
-#define Opt_mapAlert            (1UL<<4)
-#define Opt_reverseVideo        (1UL<<5)
-#define Opt_utmpInhibit         (1UL<<6)
-#define Opt_scrollBar           (1UL<<7)
-#define Opt_scrollBar_right     (1UL<<8)
-#define Opt_scrollBar_floating  (1UL<<9)
-#define Opt_meta8               (1UL<<10)
-#define Opt_scrollTtyOutput     (1UL<<11)
-#define Opt_scrollTtyKeypress   (1UL<<12)
-#define Opt_transparent         (1UL<<13)
-#define Opt_transparent_all     (1UL<<14)
-#define Opt_tripleclickwords    (1UL<<15)
-#define Opt_scrollWithBuffer    (1UL<<16)
-#define Opt_jumpScroll          (1UL<<17)
-#define Opt_mouseWheelScrollPage (1UL<<18)
-#define Opt_pointerBlank        (1UL<<19)
-#define Opt_cursorBlink         (1UL<<20)
-#define Opt_secondaryScreen	(1UL<<21)
-#define Opt_secondaryScroll	(1UL<<22)
+#define Opt_console              (1UL<<0)
+#define Opt_loginShell           (1UL<<1)
+#define Opt_iconic               (1UL<<2)
+#define Opt_visualBell           (1UL<<3)
+#define Opt_mapAlert             (1UL<<4)
+#define Opt_reverseVideo         (1UL<<5)
+#define Opt_utmpInhibit          (1UL<<6)
+#define Opt_scrollBar            (1UL<<7)
+#define Opt_scrollBar_right      (1UL<<8)
+#define Opt_scrollBar_floating   (1UL<<9)
+#define Opt_meta8                (1UL<<10)
+#define Opt_scrollTtyOutput      (1UL<<11)
+#define Opt_scrollTtyKeypress    (1UL<<12)
+#define Opt_transparent          (1UL<<13)
+#define Opt_tripleclickwords     (1UL<<14)
+#define Opt_scrollWithBuffer     (1UL<<15)
+#define Opt_jumpScroll           (1UL<<16)
+#define Opt_mouseWheelScrollPage (1UL<<17)
+#define Opt_pointerBlank         (1UL<<18)
+#define Opt_cursorBlink          (1UL<<19)
+#define Opt_secondaryScreen      (1UL<<20)
+#define Opt_secondaryScroll      (1UL<<21)
+#define Opt_pastableTabs         (1UL<<22)
+#define Opt_cursorUnderline      (1UL<<23)
 #if ENABLE_FRILLS
-# define Opt_insecure		(1UL<<23) // insecure esc sequences
-# define Opt_borderLess		(1UL<<24) // mem borderless hints
+# define Opt_insecure		 (1UL<<24) // insecure esc sequences
+# define Opt_borderLess		 (1UL<<25) // mem borderless hints
 #else
-# define Opt_insecure		0
-# define Opt_borderLess		0
+# define Opt_insecure		 0
+# define Opt_borderLess		 0
 #endif
-#define Opt_pastableTabs	(1UL<<25)
-#define Opt_cursorUnderline	(1UL<<26)
 /* place holder used for parsing command-line options */
-#define Opt_Reverse             (1UL<<30)
-#define Opt_Boolean             (1UL<<31)
+#define Opt_Reverse              (1UL<<30)
+#define Opt_Boolean              (1UL<<31)
 
-#define DEFAULT_OPTIONS         (Opt_scrollBar | Opt_scrollTtyOutput \
-                                 | Opt_jumpScroll | Opt_secondaryScreen \
-                                 | Opt_pastableTabs)
+#define DEFAULT_OPTIONS          (Opt_scrollBar | Opt_scrollTtyOutput \
+                                  | Opt_jumpScroll | Opt_secondaryScreen \
+                                  | Opt_pastableTabs)
 
 /* ------------------------------------------------------------------------- */
 

@@ -107,7 +107,7 @@ Turn on/off simulated reverse video; resource B<reverseVideo>.
 
 Turn on/off jump scrolling; resource B<jumpScroll>.
 
-=item B<-ip>|B<+ip>
+=item B<-ip>|B<+ip> | B<-tr>|B<+tr>
 
 Turn on/off inheriting parent window's pixmap. Alternative form is
 B<-tr>; resource B<inheritPixmap>.
@@ -128,7 +128,9 @@ is black. resource B<fadeColor>.
 Tint the transparent background pixmap with the given colour when
 transparency is enabled with B<-tr> or B<-ip>. See also the B<-sh>
 option that can be used to brighten or darken the image in addition to
-tinting it; resource I<tintColor>.
+tinting it; resource I<tintColor>. Example:
+
+   @@RXVT_NAME@@ -tr -tint blue -sh 40
 
 =item B<-sh>
 
