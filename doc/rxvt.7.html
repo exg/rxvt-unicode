@@ -147,7 +147,7 @@ Most likely it's the empty definition for <code>enacs=</code>. Just replace it b
 <code>enacs=\E[0@</code> and try again.
 </dd>
 <p></p>
-<dt><strong><a name="item_bash_27s_readline_does_not_work_correctly_under_rx"><code>bash</code>'s readline does not work correctly under rxvt.</a></strong><br />
+<dt><strong><a name="item_bash_27s_readline_does_not_work_correctly_under_ur"><code>bash</code>'s readline does not work correctly under urxvt.</a></strong><br />
 </dt>
 <dt><strong><a name="item_i_need_a_termcap_file_entry_2e">I need a termcap file entry.</a></strong><br />
 </dt>
@@ -311,7 +311,7 @@ e.g.:</p>
 </dd>
 <dd>
 <pre>
-   rxvt -fn basefont,font2,font3...</pre>
+   urxvt -fn basefont,font2,font3...</pre>
 </dd>
 <dd>
 <p>When rxvt-unicode sees a character, it will first look at the base
@@ -695,7 +695,7 @@ Make sure that mouse reporting is actually turned off since killing
 some editors prematurely may leave the mouse in mouse report mode. I've
 heard that tcsh may use mouse reporting unless it otherwise specified. A
 quick check is to see if cut/paste works when the Alt or Shift keys are
-depressed. See <code>rxvt(7)</code>
+depressed. See <code>urxvt(7)</code>
 </dd>
 <p></p>
 <dt><strong><a name="item_what_27s_with_this_bold_2fblink_stuff_3f">What's with this bold/blink stuff?</a></strong><br />
@@ -779,10 +779,10 @@ me) as ``pretty girly''.</p>
    URxvt.color15:      #e1dddd</pre>
 </dd>
 <p></p>
-<dt><strong><a name="item_how_can_i_start_rxvtd_in_a_race_2dfree_way_3f">How can I start rxvtd in a race-free way?</a></strong><br />
+<dt><strong><a name="item_how_can_i_start_urxvtd_in_a_race_2dfree_way_3f">How can I start urxvtd in a race-free way?</a></strong><br />
 </dt>
 <dd>
-Try <code>rxvtd -f -o</code>, which tells rxvtd to open the
+Try <code>urxvtd -f -o</code>, which tells urxvtd to open the
 display, create the listening socket and then fork.
 </dd>
 <p></p>
@@ -813,16 +813,16 @@ be used (which may not be the same as your stty setting).</p>
 <pre>
    # use Backspace = ^H
    $ stty erase ^H
-   $ rxvt</pre>
+   $ urxvt</pre>
 </dd>
 <dd>
 <pre>
    # use Backspace = ^?
    $ stty erase ^?
-   $ rxvt</pre>
+   $ urxvt</pre>
 </dd>
 <dd>
-<p>Toggle with <code>ESC [ 36 h</code> / <code>ESC [ 36 l</code> as documented in rxvt(7).</p>
+<p>Toggle with <code>ESC [ 36 h</code> / <code>ESC [ 36 l</code> as documented in urxvt(7).</p>
 </dd>
 <dd>
 <p>For an existing rxvt-unicode:</p>
@@ -870,7 +870,7 @@ you have run ``configure'' with the <a href="#item__2d_2ddisable_2dresources"><c
 use the `keysym' resource to alter the keystrings associated with keysyms.
 </dd>
 <dd>
-<p>Here's an example for a URxvt session started using <code>rxvt -name URxvt</code></p>
+<p>Here's an example for a URxvt session started using <code>urxvt -name URxvt</code></p>
 </dd>
 <dd>
 <pre>
@@ -2835,7 +2835,7 @@ in combination with other switches) is:</p>
 <dt><strong><a name="item_iso14755">--enable-iso14755 (default: on)</a></strong><br />
 </dt>
 <dd>
-Enable extended ISO 14755 support (see rxvt(1), or
+Enable extended ISO 14755 support (see urxvt(1), or
 <em>doc/rxvt.1.txt</em>). Basic support (section 5.1) is enabled by
 <code>--enable-frills</code>, while support for 5.2, 5.3 and 5.4 is enabled with
 this switch.
@@ -2891,8 +2891,8 @@ See <a href="http://g.oswego.edu/dl/html/malloc.html">http://g.oswego.edu/dl/htm
 <dt><strong><a name="item_resize">--enable-smart-resize (default: on)</a></strong><br />
 </dt>
 <dd>
-Add smart growth/shrink behaviour when changing font size via from hot
-keys. This should keep in a fixed position the rxvt corner which is
+Add smart growth/shrink behaviour when changing font size via hot
+keys. This should keep in a fixed position the urxvt corner which is
 closest to a corner of the screen.
 </dd>
 <p></p>

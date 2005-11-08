@@ -2462,9 +2462,9 @@ See L<http://g.oswego.edu/dl/html/malloc.html> for details.
 
 =item --enable-smart-resize (default: on)
 
-Add smart growth/shrink behaviour when changing font size via from hot
-keys. This should keep in a fixed position the rxvt corner which is
-closest to a corner of the screen.
+Add smart growth/shrink behaviour when changing font size via hot
+keys. This should keep the window corner which is closest to a corner of
+the screen in a fixed position.
 
 =item --enable-pointer-blank (default: on)
 

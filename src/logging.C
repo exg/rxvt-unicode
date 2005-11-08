@@ -178,7 +178,7 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
 
     if ((fd0 = fopen (TTYTAB_FILENAME, "r")) != NULL)
       {
-        char            buf[256], name[256];
+        char buf[256], name[256];
 
         buf[sizeof (buf) - 1] = '\0';
         for (i = 1; (fgets (buf, sizeof (buf) - 1, fd0) != NULL);)

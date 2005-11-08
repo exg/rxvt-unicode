@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2005-10-25" "5.8" "RXVT-UNICODE"
+.TH rxvt 7 "2005-11-08" "5.8" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -2428,8 +2428,8 @@ Use Doug Lea's malloc \- which is good for a production version
 See <http://g.oswego.edu/dl/html/malloc.html> for details.
 .IP "\-\-enable\-smart\-resize (default: on)" 4
 .IX Item "--enable-smart-resize (default: on)"
-Add smart growth/shrink behaviour when changing font size via from hot
-keys. This should keep in a fixed position the rxvt corner which is
+Add smart growth/shrink behaviour when changing font size via hot
+keys. This should keep in a fixed position the @@RXVT_NAME@@ corner which is
 closest to a corner of the screen.
 .IP "\-\-enable\-pointer\-blank (default: on)" 4
 .IX Item "--enable-pointer-blank (default: on)"
