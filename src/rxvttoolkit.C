@@ -493,7 +493,7 @@ rxvt_color::fade (rxvt_display *display, int percent)
   return faded;
 }
 
-#define LERP(a,b,p) (a * p / 100 + b * (100 - p) / 100)
+#define LERP(a,b,p) (a * p + b * (100 - p)) / 100
 
 rxvt_color
 rxvt_color::fade (rxvt_display *display, int percent, rxvt_color &fadeto)
