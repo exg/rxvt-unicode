@@ -419,8 +419,8 @@ rxvt_xerror_handler (Display *display, XErrorEvent *event)
     GET_R->allowedxerror = event->error_code;
   else
     {
-      //TODO: GET_R is most likely not the terminal which caused the error
-      //TODO: maybe just output the error and continue?
+      // GET_R is most likely not the terminal which caused the error,
+      // so just output the error and continue
 #if ENABLE_FRILLS
       print_x_error (display, event);
 #else

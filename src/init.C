@@ -1207,47 +1207,37 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
       tio->c_cc[VSTOP] = CSTOP;
       tio->c_cc[VSUSP] = CSUSP;
 # ifdef VDSUSP
-
       tio->c_cc[VDSUSP] = CDSUSP;
 # endif
 # ifdef VREPRINT
-
       tio->c_cc[VREPRINT] = CRPRNT;
 # endif
 # ifdef VDISCRD
-
       tio->c_cc[VDISCRD] = CFLUSH;
 # endif
 # ifdef VWERSE
-
       tio->c_cc[VWERSE] = CWERASE;
 # endif
 # ifdef VLNEXT
-
       tio->c_cc[VLNEXT] = CLNEXT;
 # endif
-
     }
+
   tio->c_cc[VEOF] = CEOF;
   tio->c_cc[VEOL] = VDISABLE;
 # ifdef VEOL2
-
   tio->c_cc[VEOL2] = VDISABLE;
 # endif
 # ifdef VSWTC
-
   tio->c_cc[VSWTC] = VDISABLE;
 # endif
 # ifdef VSWTCH
-
   tio->c_cc[VSWTCH] = VDISABLE;
 # endif
 # if VMIN != VEOF
-
   tio->c_cc[VMIN] = 1;
 # endif
 # if VTIME != VEOL
-
   tio->c_cc[VTIME] = 0;
 # endif
 
@@ -1285,6 +1275,7 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
       tio->sg.sg_erase = CERASE;      /* ^H */
       tio->sg.sg_kill = CKILL;        /* ^U */
     }
+
   if (erase != -1)
     tio->sg.sg_erase = (char)erase;
 
@@ -1300,6 +1291,7 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
       tio->tc.t_eofc = CEOF;  /* ^D */
       tio->tc.t_brkc = -1;
     }
+
   /* get local special chars */
   if (ioctl (STDIN_FILENO, TIOCGLTC, & (tio->lc)) < 0)
     {
@@ -1313,7 +1305,6 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
   /* get line discipline */
   ioctl (STDIN_FILENO, TIOCGETD, & (tio->line));
 # ifdef NTTYDISC
-
   tio->line = NTTYDISC;
 # endif                         /* NTTYDISC */
 
@@ -1346,15 +1337,12 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
   FOO (IXON, "IXON");
   FOO (IXOFF, "IXOFF");
 # ifdef IUCLC
-
   FOO (IUCLC, "IUCLC");
 # endif
 # ifdef IXANY
-
   FOO (IXANY, "IXANY");
 # endif
 # ifdef IMAXBEL
-
   FOO (IMAXBEL, "IMAXBEL");
 # endif
 
@@ -1371,39 +1359,30 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
   FOO (VEOF, "VEOF");
   FOO (VEOL, "VEOL");
 # ifdef VEOL2
-
   FOO (VEOL2, "VEOL2");
 # endif
 # ifdef VSWTC
-
   FOO (VSWTC, "VSWTC");
 # endif
 # ifdef VSWTCH
-
   FOO (VSWTCH, "VSWTCH");
 # endif
-
   FOO (VSTART, "VSTART");
   FOO (VSTOP, "VSTOP");
   FOO (VSUSP, "VSUSP");
 # ifdef VDSUSP
-
   FOO (VDSUSP, "VDSUSP");
 # endif
 # ifdef VREPRINT
-
   FOO (VREPRINT, "VREPRINT");
 # endif
 # ifdef VDISCRD
-
   FOO (VDISCRD, "VDISCRD");
 # endif
 # ifdef VWERSE
-
   FOO (VWERSE, "VWERSE");
 # endif
 # ifdef VLNEXT
-
   FOO (VLNEXT, "VLNEXT");
 # endif
 
