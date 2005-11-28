@@ -117,7 +117,7 @@ format_keyrange_string (const char *str, int keysym_offset, char *buf, int bufsi
 ////////////////////////////////////////////////////////////////////////////////
 // return: #bits of '1'
 #if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ > 3)
-# define bitcount(n) (__extension__ ({ uint32_t n__ = (n); __builtin_popcount (n); }))
+# define bitcount(n) (__extension__ ({ uint32_t n__ = (n); __builtin_popcount (n__); }))
 #else
 static int
 bitcount (uint16_t n)

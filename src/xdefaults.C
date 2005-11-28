@@ -909,7 +909,6 @@ rxvt_term::extract_resources ()
   int entry;
 
 #  ifdef XrmEnumOneLevel
-  int i;
   char *displayResource, *xe;
   XrmName name_prefix[3];
   XrmClass class_prefix[3];

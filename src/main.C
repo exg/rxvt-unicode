@@ -849,7 +849,7 @@ rxvt_term::tt_winch ()
 
 /*----------------------------------------------------------------------*/
 /* set_fonts () - load and set the various fonts
-/*
+ *
  * init = 1   - initialize
  *
  * fontname == FONT_UP  - switch to bigger font
@@ -1553,7 +1553,7 @@ foundpet:
 void
 rxvt_term::im_cb ()
 {
-  int i, found, had_im;
+  int i;
   const char *p;
   char **s;
   char buf[IMBUFSIZ];

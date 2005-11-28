@@ -443,7 +443,6 @@ void
 rxvt_term::scr_release ()
 {
   unsigned int total_rows;
-  int i;
 
   total_rows = TermWin.nrow + TermWin.saveLines;
 
@@ -780,7 +779,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
   unsigned char checksel;
   unicode_t c;
-  int i, row, last_col;
+  int row, last_col;
   text_t *stp;
   rend_t *srp;
   const unicode_t *strend = str + len;
@@ -2162,9 +2161,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 #if ENABLE_OVERLAY
   scr_swap_overlay ();
 #endif
-
-  rend_t *drp, *srp;  /* drawn-rend-pointer, screen-rend-pointer   */
-  text_t *dtp, *stp;  /* drawn-text-pointer, screen-text-pointer   */
 
 #ifndef NO_SLOW_LINK_SUPPORT
   /*

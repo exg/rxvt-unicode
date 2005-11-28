@@ -1314,7 +1314,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 /////////////////////////////////////////////////////////////////////////////
 
 rxvt_fontset::rxvt_fontset (rxvt_t r)
-: r (r), fontdesc (0)
+: fontdesc (0), r (r)
 {
   clear ();
 }

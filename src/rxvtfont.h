@@ -40,11 +40,11 @@ struct rxvt_fontprop {
 
 struct rxvt_drawable {
   rxvt_display *display;
-  Drawable drawable;
 #if XFT
   XftDraw *xftdrawable;
   operator XftDraw *();
 #endif
+  Drawable drawable;
 
   rxvt_drawable (rxvt_display *display, Drawable drawable)
   : display(display),

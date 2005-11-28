@@ -86,8 +86,8 @@ main (int argc, const char *const *argv)
 
   c.send ("CWD"), c.send (cwd);
 
-  for (char **var = environ; *environ; environ++)
-    c.send ("ENV"), c.send (*environ);
+  for (char **var = environ; *var; var++)
+    c.send ("ENV"), c.send (*var);
 
   const char *base = strrchr (argv[0], '/');
   base = base ? base + 1 : argv[0];
