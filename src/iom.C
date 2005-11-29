@@ -1,8 +1,10 @@
 /*
     iom.C -- generic I/O multiplexer
-    Copyright (C) 2003, 2004 Marc Lehmann <pcg@goof.com>
+    Copyright (C) 2003, 2004 Marc Lehmann <gvpe@schmorp.de>
  
-    This program is free software; you can redistribute it and/or modify
+    This file is part of GVPE.
+
+    GVPE is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
@@ -13,7 +15,7 @@
     GNU General Public License for more details.
  
     You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
+    along with gvpe; if not, write to the Free Software
     Foundation, Inc. 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
@@ -42,9 +44,6 @@
 // if the BSDs would at least be marginally POSIX-compatible.. *sigh*
 // until that happens, sys/select.h must come last
 #include <sys/select.h>
-
-// TSTAMP_MAX must still fit into a positive struct timeval
-#define TSTAMP_MAX (double)(1UL<<31)
 
 #define TIMEVAL timeval
 #define TV_FRAC tv_usec
