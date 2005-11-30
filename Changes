@@ -1,3 +1,4 @@
+TOD: closing all shells on rxvtd might leave the last shell as zombie?
 TODO: harmonize --dsiable-options into position-dependent options.
 TODO: after requesting the selection and getting a timeout, no further requests will be sent.
 TODO: do font request caching, might help rxvtd on some machines
@@ -13,6 +14,8 @@ WISH: meta-tagging of data by regex/master process (my dream project)
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: tabbed windows (hey, just use screen...)
 WISH: just for fun, do shade and tint with XRender.
+
+	- fix a bug in the menu code of unknown impatc, found by darix.
 
 5.8  Tue Oct 25 22:21:45 CEST 2005
 	- INCOMPATIBLE CHANGE: many configure options are now on by default.

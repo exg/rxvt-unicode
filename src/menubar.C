@@ -1946,6 +1946,7 @@ rxvt_term::menubar_dispatch (char *str)
                   else
                     BuildMenu = menu;
                 }
+
               if (BuildMenu != NULL)
                 {
                   if (name == NULL || name[0] == '\0')
@@ -1954,7 +1955,6 @@ rxvt_term::menubar_dispatch (char *str)
                     {
                       const char     *n1;
                       menuitem_t     *item;
-                      menu_t         *BuildMenu = BuildMenu;
 
                       n1 = strcmp (name, SEPARATOR_NAME) ? name : "";
                       item = rxvt_menuitem_find (BuildMenu, n1);
@@ -1973,6 +1973,7 @@ rxvt_term::menubar_dispatch (char *str)
                             }
                         }
                     }
+
                   menubar_expose ();
                 }
               break;
