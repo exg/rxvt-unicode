@@ -218,9 +218,6 @@ const char *const xa_names[] =
 bool
 rxvt_term::init_vars ()
 {
-  sw_term.start (SIGTERM);
-  sw_int.start  (SIGINT);
-
   pix_colors_focused = new rxvt_color [TOTAL_COLORS];
 #ifdef OFF_FOCUS_FADING
   pix_colors_unfocused = new rxvt_color [TOTAL_COLORS];
@@ -1434,8 +1431,6 @@ rxvt_term::run_command (const char *const *argv)
   if (rs[Rs_pty_fd])
     return;
 #endif
-
-  sw_chld.start (SIGCHLD);
 
 #ifndef __QNX__
   /* spin off the command interpreter */

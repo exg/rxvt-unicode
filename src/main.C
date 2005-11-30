@@ -159,9 +159,6 @@ rxvt_term::rxvt_term ()
 #ifdef USE_XIM
     im_ev (this, &rxvt_term::im_cb),
 #endif
-    sw_term (this, &rxvt_term::sig_term),
-    sw_int (this, &rxvt_term::sig_term),
-    sw_chld (this, &rxvt_term::sig_chld),
     termwin_ev (this, &rxvt_term::x_cb),
     vt_ev (this, &rxvt_term::x_cb),
     check_ev (this, &rxvt_term::check_cb),
@@ -440,22 +437,7 @@ rxvt_xioerror_handler (Display *display)
   _exit (EXIT_FAILURE);
 }
 
-/*
- * Catch a fatal signal and tidy up before quitting
- */
-void
-rxvt_term::sig_term (sig_watcher &w)
-{
-#ifdef DEBUG_CMD
-  rxvt_warn ("caught signal %d, exiting.\n", w.signum);
-#endif
-  rxvt_emergency_cleanup ();
-  signal (w.signum, SIG_DFL);
-  kill (getpid (), w.signum);
-}
-
 /*----------------------------------------------------------------------*/
-/* rxvt_init () */
 bool
 rxvt_term::init (int argc, const char *const *argv)
 {
@@ -527,6 +509,46 @@ rxvt_term::init (int argc, const char *const *argv)
   return true;
 }
 
+static struct sig_handlers
+{
+  sig_watcher sw_chld, sw_term, sw_int;
+  
+  void sig_chld (sig_watcher &w)
+  {
+    // we are being called for every SIGCHLD, find the corresponding term
+    int pid;
+
+    while ((pid = waitpid (-1, NULL, WNOHANG)) > 0)
+      for (rxvt_term **t = rxvt_term::termlist.begin (); t < rxvt_term::termlist.end (); t++)
+        if (pid == (*t)->cmd_pid)
+          {
+            (*t)->destroy ();
+            break;
+          }
+  }
+
+  /*
+   * Catch a fatal signal and tidy up before quitting
+   */
+  void
+  sig_term (sig_watcher &w)
+  {
+#ifdef DEBUG_CMD
+    rxvt_warn ("caught signal %d, exiting.\n", w.signum);
+#endif
+    rxvt_emergency_cleanup ();
+    signal (w.signum, SIG_DFL);
+    kill (getpid (), w.signum);
+  }
+
+  sig_handlers ()
+  : sw_chld (this, &sig_handlers::sig_chld),
+    sw_term (this, &sig_handlers::sig_term),
+    sw_int  (this, &sig_handlers::sig_term)
+  {
+  }
+} sig_handlers;
+
 void
 rxvt_init ()
 {
@@ -543,34 +565,16 @@ rxvt_init ()
   signal (SIGHUP,  SIG_IGN);
   signal (SIGPIPE, SIG_IGN);
 
+  sig_handlers.sw_chld.start (SIGCHLD);
+  sig_handlers.sw_term.start (SIGTERM);
+  sig_handlers.sw_int.start  (SIGINT);
+
   /* need to trap SIGURG for SVR4 (Unixware) rlogin */
   /* signal (SIGURG, SIG_DFL); */
 
   old_xerror_handler = XSetErrorHandler ((XErrorHandler) rxvt_xerror_handler);
   // TODO: handle this with exceptions and tolerate the memory loss
   XSetIOErrorHandler (rxvt_xioerror_handler);
-}
-
-/* ------------------------------------------------------------------------- *
- *                       SIGNAL HANDLING & EXIT HANDLER                      *
- * ------------------------------------------------------------------------- */
-/*
- * Catch a SIGCHLD signal and exit if the direct child has died
- */
-
-void
-rxvt_term::sig_chld (sig_watcher &w)
-{
-  // we are being called for every SIGCHLD, not just ours
-  int pid;
-
-  while ((pid = waitpid (-1, NULL, WNOHANG)) > 0)
-    for (rxvt_term **t = termlist.begin (); t < termlist.end (); t++)
-      if (pid == (*t)->cmd_pid)
-        {
-          (*t)->destroy ();
-          break;
-        }
 }
 
 /* ------------------------------------------------------------------------- *
@@ -587,7 +591,7 @@ rxvt_malloc (size_t size)
   return p;
 }
 
-void           *
+void *
 rxvt_calloc (size_t number, size_t size)
 {
   void *p = calloc (number, size);

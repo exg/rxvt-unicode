@@ -1281,10 +1281,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   xevent_watcher rootwin_ev;
 #endif
 
-
-  void sig_term (sig_watcher &w); sig_watcher sw_term, sw_int;
-  void sig_chld (sig_watcher &w); sig_watcher sw_chld;
-
   void x_cb (XEvent &xev);
   xevent_watcher termwin_ev;
   xevent_watcher vt_ev;
