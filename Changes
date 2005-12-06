@@ -17,6 +17,9 @@ WISH: just for fun, do shade and tint with XRender.
 	- fix a bug in the menu code of unknown impact, found by darix.
         - clean up signal handling to be global, not per terminal
           (matters only for rxvtd).
+        - don't crash when broken xft/fontconfig/freetype versions return
+          bogus data, ignore the xft font instead (experienced on a suse 10.1
+          alpha).
 
 5.8  Tue Oct 25 22:21:45 CEST 2005
 	- INCOMPATIBLE CHANGE: many configure options are now on by default.
@@ -83,7 +86,7 @@ WISH: just for fun, do shade and tint with XRender.
 	- cursor blinking now depends on frills.
 	- underline cursor mode (frills, -uc).
 	- implement special value (*g*) for pointerBlankDelay
-	  to disble it.
+	  to disable it.
 
 5.3  Sun Mar 13 00:20:44 CET 2005
 	- fix a bug that allowed to overflow a buffer via a long

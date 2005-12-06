@@ -1185,6 +1185,17 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
           if (glheight < g.height - g.y) glheight = g.height - g.y;
         }
 
+      if (!width)
+        {
+          rxvt_warn ("unable to calculate font width for '%s', ignoring.\n", name);
+
+          XftFontClose (disp, f);
+          f = 0;
+
+          success = false;
+          break;
+        }
+
       if (prop.height == rxvt_fontprop::unset
           || (height <= prop.height && glheight <= prop.height)
           || height <= 2
@@ -1203,9 +1214,9 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
       else
         ftheight = prop.height - 1;
 
-        XftFontClose (disp, f);
-        FcPatternDel (match, FC_PIXEL_SIZE);
-        FcPatternAddInteger (match, FC_PIXEL_SIZE, ftheight);
+      XftFontClose (disp, f);
+      FcPatternDel (match, FC_PIXEL_SIZE);
+      FcPatternAddInteger (match, FC_PIXEL_SIZE, ftheight);
     }
 
   FcPatternDestroy (match);
