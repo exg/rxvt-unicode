@@ -1079,7 +1079,7 @@ supported in rxvt-unicode. Bug me if you need this.
 You can, however, switch fonts at runtime using escape sequences (and
 therefore using the menubar), e.g.:
 
-   printf '\e]701;%s\007' "9x15bold,xft:Kochi Gothic"
+   printf '\e]710;%s\007' "9x15bold,xft:Kochi Gothic"
 
 rxvt-unicode will automatically re-apply these fonts to the output so far.
 

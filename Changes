@@ -17,9 +17,9 @@ WISH: just for fun, do shade and tint with XRender.
 	- fix a bug in the menu code of unknown impact, found by darix.
         - clean up signal handling to be global, not per terminal
           (matters only for rxvtd).
+        - fix small typoe in rxvt.1 (found by Mike Fabian).
         - don't crash when broken xft/fontconfig/freetype versions return
-          bogus data, ignore the xft font instead (experienced on a suse 10.1
-          alpha).
+          bogus data, ignore the xft font instead (experienced on suse).
 
 5.8  Tue Oct 25 22:21:45 CEST 2005
 	- INCOMPATIBLE CHANGE: many configure options are now on by default.
