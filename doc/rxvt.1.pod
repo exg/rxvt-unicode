@@ -900,13 +900,15 @@ the end of the logical line only. option B<-tcw>.
 Enables "insecure" mode. Rxvt-unicode offers some escape sequences that
 echo arbitrary strings like the icon name or the locale. This could be
 abused if somebody gets 8-bit-clean access to your display, whether
-throuh a mail client displaying mail bodies unfiltered or though
-write(1). Therefore, these sequences are disabled by default. (Note
-that other terminals, including xterm, have these sequences
-enabled by default). You can enable them by setting this boolean
-resource or specifying B<-insecure> as an option. At the moment, this
-enabled display-answer, locale, findfont, icon label and window title
-requests as well as dynamic menubar dispatch.
+through a mail client displaying mail bodies unfiltered or through
+write(1) or any other means. Therefore, these sequences are disabled by
+default. (Note that many other terminals, including xterm, have these
+sequences enabled by default, which doesn't make it safer, though).
+
+You can enable them by setting this boolean resource or specifying
+B<-insecure> as an option. At the moment, this enables display-answer,
+locale, findfont, icon label and window title requests as well as dynamic
+menubar dispatch.
 
 =item B<modifier:> I<modifier>
 
