@@ -262,6 +262,7 @@ rxvt_term::scr_reset ()
         {
           /* delete rows */
           k = min (TermWin.nscrolled, prev_nrow - nrow);
+          // k = max (0, - ( (nrow - 1) - r->screen.cur.row)); // mmc's http://maruska.dyndns.org/wiki/scrolling-bug //make configurable? //D TODO
           scr_scroll_text (0, (int)prev_nrow - 1, k, 1);
 
           for (p = nrow; p < prev_nrow; p++)
