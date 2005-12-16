@@ -6,6 +6,9 @@
 # on debian, do:
 # apt-get install libgtk2-perl
 
+# Also see the Gtk2::URxvt module family, which does this much cleaner
+# and provides a real tabbed-terminal.
+
 my $RXVT_BASENAME = "rxvt";
 
 use Gtk2;
