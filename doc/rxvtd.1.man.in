@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-07-13" "5.7" "RXVT-UNICODE"
+.TH rxvt 1 "2005-12-17" "5.9" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@d \- @@RXVT_NAME@@ terminal daemon
 .SH "SYNOPSIS"
@@ -190,10 +190,11 @@ and forks into the background. When you log\-out, the server is reset and
 .IX Header "ENVIRONMENT"
 .IP "\fB\s-1RXVT_SOCKET\s0\fR" 4
 .IX Item "RXVT_SOCKET"
-Both \fB@@RXVT_NAME@@c\fR and \fB@@RXVT_NAME@@d\fR use the environment variable
-\&\fI\s-1RXVT_SOCKET\s0\fR to create a listening socket and to contact
+Both \fB@@RXVT_NAME@@c\fR and \fB@@RXVT_NAME@@d\fR use the environment
+variable \fI\s-1RXVT_SOCKET\s0\fR to create a listening socket and to contact
 the @@RXVT_NAME@@d, respectively. If the variable is missing,
-\&\fI$HOME/.rxvt\-unicode\-\fI<nodename>\fI\fR is used.
+\&\fI$HOME/.rxvt\-unicode\-\fI<nodename>\fI\fR is used. The variable must
+specify the absolute path of the socket to create.
 .IP "\fB\s-1DISPLAY\s0\fR" 4
 .IX Item "DISPLAY"
 Only used when the \f(CW\*(C`\-\-opendisplay\*(C'\fR option is specified. Must contain a

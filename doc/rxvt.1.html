@@ -48,7 +48,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>5.8</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>5.9</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -1209,13 +1209,16 @@ the end of the logical line only. option <strong>-tcw</strong>.
 Enables ``insecure'' mode. Rxvt-unicode offers some escape sequences that
 echo arbitrary strings like the icon name or the locale. This could be
 abused if somebody gets 8-bit-clean access to your display, whether
-throuh a mail client displaying mail bodies unfiltered or though
-write(1). Therefore, these sequences are disabled by default. (Note
-that other terminals, including xterm, have these sequences
-enabled by default). You can enable them by setting this boolean
-resource or specifying <strong>-insecure</strong> as an option. At the moment, this
-enabled display-answer, locale, findfont, icon label and window title
-requests as well as dynamic menubar dispatch.
+through a mail client displaying mail bodies unfiltered or through
+<code>write(1)</code> or any other means. Therefore, these sequences are disabled by
+default. (Note that many other terminals, including xterm, have these
+sequences enabled by default, which doesn't make it safer, though).
+</dd>
+<dd>
+<p>You can enable them by setting this boolean resource or specifying
+<strong>-insecure</strong> as an option. At the moment, this enables display-answer,
+locale, findfont, icon label and window title requests as well as dynamic
+menubar dispatch.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_modifier_3a_modifier"><strong>modifier:</strong> <em>modifier</em></a></strong><br />
@@ -1427,7 +1430,7 @@ supported in rxvt-unicode. Bug me if you need this.</p>
 <p>You can, however, switch fonts at runtime using escape sequences (and
 therefore using the menubar), e.g.:</p>
 <pre>
-   printf '\e]701;%s\007' &quot;9x15bold,xft:Kochi Gothic&quot;</pre>
+   printf '\e]710;%s\007' &quot;9x15bold,xft:Kochi Gothic&quot;</pre>
 <p>rxvt-unicode will automatically re-apply these fonts to the output so far.</p>
 <p>
 </p>

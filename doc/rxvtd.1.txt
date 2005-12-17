@@ -57,6 +57,7 @@ ENVIRONMENT
         Both rxvtc and rxvtd use the environment variable RXVT_SOCKET to
         create a listening socket and to contact the rxvtd, respectively. If
         the variable is missing, $HOME/.rxvt-unicode-*<nodename>* is used.
+        The variable must specify the absolute path of the socket to create.
 
     DISPLAY
         Only used when the "--opendisplay" option is specified. Must contain

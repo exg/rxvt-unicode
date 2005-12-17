@@ -102,10 +102,11 @@ and forks into the background. When you log-out, the server is reset and
 <dt><strong><a name="item_rxvt_socket"><strong>RXVT_SOCKET</strong></a></strong><br />
 </dt>
 <dd>
-Both <strong>rxvtc</strong> and <strong>rxvtd</strong> use the environment variable
-<em>RXVT_SOCKET</em> to create a listening socket and to contact
+Both <strong>rxvtc</strong> and <strong>rxvtd</strong> use the environment
+variable <em>RXVT_SOCKET</em> to create a listening socket and to contact
 the rxvtd, respectively. If the variable is missing,
-<em>$HOME/.rxvt-unicode-<em>&lt;nodename</em> </em>&gt; &gt;&gt;&gt; is used.
+<em>$HOME/.rxvt-unicode-<em>&lt;nodename</em> </em>&gt; &gt;&gt;&gt; is used. The variable must
+specify the absolute path of the socket to create.
 </dd>
 <p></p>
 <dt><strong><a name="item_display"><strong>DISPLAY</strong></a></strong><br />
