@@ -29,7 +29,7 @@
 #include <inttypes.h>
 
 #define DISPLAY  r->display->display
-#define TGC      r->TermWin.gc
+#define TGC      r->gc
 
 #define MAX_OVERLAP (4 + 1)	// max. character width in 4ths of the base width
 
@@ -335,7 +335,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 {
   Display *disp = d.display->display;
 
-  clear_rect (d, x, y, r->TermWin.fwidth * len, r->TermWin.fheight, bg);
+  clear_rect (d, x, y, r->fwidth * len, r->fheight, bg);
 
   XSetForeground (disp, TGC, r->pix_colors[fg]);
 
@@ -351,7 +351,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
         ;
 
       int width = text - tp;
-      int fwidth = r->TermWin.fwidth * width;
+      int fwidth = r->fwidth * width;
 
       if (0x2500 <= t && t <= 0x259f)
         {
@@ -360,7 +360,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
           uint32_t *b = a + (offs & 15);
 
           int W = fwidth;
-          int H = r->TermWin.fheight;
+          int H = r->fheight;
 
           int x_[16];
           int y_[16];
@@ -466,7 +466,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 
             default:
               XDrawRectangle (disp, d, TGC, x + 2, y + 2,
-                              fwidth - 4, r->TermWin.fheight - 4);
+                              fwidth - 4, r->fheight - 4);
           }
 
       x += fwidth;
@@ -958,10 +958,10 @@ rxvt_font_x11::draw (rxvt_drawable &d, int x, int y,
   // but the result still isn't perfect /.
 
   bool slow = this->slow
-              || width != r->TermWin.fwidth
-              || height != r->TermWin.fheight;
+              || width != r->fwidth
+              || height != r->fheight;
 
-  int base = ascent; // sorry, incorrect: r->TermWin.fbase;
+  int base = ascent; // sorry, incorrect: r->fbase;
 
   XGCValues v;
   v.foreground = r->pix_colors[fg];
@@ -979,7 +979,7 @@ rxvt_font_x11::draw (rxvt_drawable &d, int x, int y,
         }
       else
         {
-          clear_rect (d, x, y, r->TermWin.fwidth * len, r->TermWin.fheight, bg);
+          clear_rect (d, x, y, r->fwidth * len, r->fheight, bg);
 
           XChangeGC (d.display->display, TGC, GCForeground | GCFont, &v);
           
@@ -990,7 +990,7 @@ rxvt_font_x11::draw (rxvt_drawable &d, int x, int y,
                   if (xc->byte1 || xc->byte2)
                     XDrawString16 (d.display->display, d, TGC, x, y + base, xc, 1);
 
-                  x += r->TermWin.fwidth;
+                  x += r->fwidth;
                   xc++; len--;
                 }
               while (len);
@@ -1011,7 +1011,7 @@ rxvt_font_x11::draw (rxvt_drawable &d, int x, int y,
         }
       else
         {
-          clear_rect (d, x, y, r->TermWin.fwidth * len, r->TermWin.fheight, bg);
+          clear_rect (d, x, y, r->fwidth * len, r->fheight, bg);
 
           XChangeGC (d.display->display, TGC, GCForeground | GCFont, &v);
           
@@ -1022,7 +1022,7 @@ rxvt_font_x11::draw (rxvt_drawable &d, int x, int y,
                   if (*xc)
                     XDrawString (d.display->display, d, TGC, x, y + base, xc, 1);
 
-                  x += r->TermWin.fwidth;
+                  x += r->fwidth;
                   xc++; len--;
                 }
               while (len);
@@ -1264,7 +1264,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                      const text_t *text, int len,
                      int fg, int bg)
 {
-  clear_rect (d, x, y, r->TermWin.fwidth * len, r->TermWin.fheight, bg);
+  clear_rect (d, x, y, r->fwidth * len, r->fheight, bg);
 
   int base = ascent; // should be fbase, but that is incorrect
 
@@ -1275,11 +1275,11 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
   while (len)
     {
-      int cwidth = r->TermWin.fwidth;
+      int cwidth = r->fwidth;
       FcChar32 fc = *text++; len--;
 
       while (len && *text == NOCHAR)
-        text++, len--, cwidth += r->TermWin.fwidth;
+        text++, len--, cwidth += r->fwidth;
       
       if (fc == ' ' && ep == enc) // skip leading spaces
         x += cwidth;

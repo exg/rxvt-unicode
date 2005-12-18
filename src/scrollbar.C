@@ -112,13 +112,13 @@ rxvt_term::resize_scrollbar ()
     {
       /* create the scrollbar window */
       scrollBar.win = XCreateSimpleWindow (display->display,
-                                          TermWin.parent[0],
-                                          window_sb_x, 0,
-                                          scrollbar_TotalWidth (),
-                                          szHint.height,
-                                          0,
-                                          pix_colors[Color_fg],
-                                          pix_colors[Color_border]);
+                                           parent[0],
+                                           window_sb_x, 0,
+                                           scrollbar_TotalWidth (),
+                                           szHint.height,
+                                           0,
+                                           pix_colors[Color_fg],
+                                           pix_colors[Color_border]);
 #ifdef DEBUG_X
       XStoreName (display->display, scrollBar.win, "scrollbar");
 #endif
@@ -155,9 +155,9 @@ rxvt_term::scrollbar_show (int update)
 
   if (update)
     {
-      top = (TermWin.nscrolled - TermWin.view_start);
-      bot = top + (TermWin.nrow - 1);
-      len = max ((TermWin.nscrolled + (TermWin.nrow - 1)), 1);
+      top = nscrolled - view_start;
+      bot = top + (nrow - 1);
+      len = max (nscrolled + (nrow - 1), 1);
       adj = (((bot - top) * scrollbar_size ()) % len) > 0 ? 1 : 0;
 
       scrollBar.top = (scrollBar.beg + (top * scrollbar_size ()) / len);

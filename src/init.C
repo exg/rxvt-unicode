@@ -228,7 +228,7 @@ rxvt_term::init_vars ()
     return false;
 
 #if defined(XPM_BACKGROUND) || defined(TRANSPARENT)
-  TermWin.pixmap = None;
+  pixmap = None;
 #endif
 
   MEvent.time = CurrentTime;
@@ -236,13 +236,13 @@ rxvt_term::init_vars ()
   options = DEFAULT_OPTIONS;
   want_refresh = 1;
   priv_modes = SavedModes = PrivMode_Default;
-  TermWin.focus = 0;
-  TermWin.ncol = 80;
-  TermWin.nrow = 24;
-  TermWin.int_bwidth = INTERNALBORDERWIDTH;
-  TermWin.ext_bwidth = EXTERNALBORDERWIDTH;
-  TermWin.lineSpace = LINESPACE;
-  TermWin.saveLines = SAVELINES;
+  focus = 0;
+  ncol = 80;
+  nrow = 24;
+  int_bwidth = INTERNALBORDERWIDTH;
+  ext_bwidth = EXTERNALBORDERWIDTH;
+  lineSpace = LINESPACE;
+  saveLines = SAVELINES;
   numpix_colors = TOTAL_COLORS;
 
   refresh_limit = 1;
@@ -371,15 +371,15 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     }
 
   if (rs[Rs_saveLines] && (i = atoi (rs[Rs_saveLines])) >= 0)
-    TermWin.saveLines = BOUND_POSITIVE_INT16 (i);
+    saveLines = BOUND_POSITIVE_INT16 (i);
 
 #if ENABLE_FRILLS
   if (rs[Rs_int_bwidth] && (i = atoi (rs[Rs_int_bwidth])) >= 0)
-    TermWin.int_bwidth = min (i, 100);    /* arbitrary limit */
+    int_bwidth = min (i, 100);    /* arbitrary limit */
   if (rs[Rs_ext_bwidth] && (i = atoi (rs[Rs_ext_bwidth])) >= 0)
-    TermWin.ext_bwidth = min (i, 100);    /* arbitrary limit */
+    ext_bwidth = min (i, 100);    /* arbitrary limit */
   if (rs[Rs_lineSpace] && (i = atoi (rs[Rs_lineSpace])) >= 0)
-    TermWin.lineSpace = min (i, 100);     /* arbitrary limit */
+    lineSpace = min (i, 100);     /* arbitrary limit */
 #endif
 
 #ifdef POINTER_BLANK
@@ -390,7 +390,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 #endif
 
   /* no point having a scrollbar without having any scrollback! */
-  if (!TermWin.saveLines)
+  if (!saveLines)
     options &= ~Opt_scrollBar;
 
 #ifdef PRINTPIPE
@@ -520,14 +520,14 @@ rxvt_term::init_env ()
   sprintf (env_display, "DISPLAY=%s", val);
 
   /* avoiding the math library:
-   * i = (int) (ceil (log10 ((unsigned int)TermWin.parent[0]))) */
-  for (i = 0, u = (unsigned int)TermWin.parent[0]; u; u /= 10, i++)
+   * i = (int) (ceil (log10 ((unsigned int)parent[0]))) */
+  for (i = 0, u = (unsigned int)parent[0]; u; u /= 10, i++)
     ;
   MAX_IT (i, 1);
   env_windowid = (char *)rxvt_malloc ((i + 10) * sizeof (char));
 
   sprintf (env_windowid, "WINDOWID=%u",
-           (unsigned int)TermWin.parent[0]);
+           (unsigned int)parent[0]);
 
   /* add entries to the environment:
    * @ DISPLAY:   in case we started with -display
@@ -986,8 +986,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
       window_calc (wattr.width, wattr.height);
     }
-
 #endif
+
   window_calc (0, 0);
 
   /* sub-window placement & size in rxvt_resize_subwindows () */
@@ -998,7 +998,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   top = XCreateWindow (disp, parent,
                        szHint.x, szHint.y,
                        szHint.width, szHint.height,
-                       TermWin.ext_bwidth,
+                       ext_bwidth,
                        display->depth, InputOutput,
                        display->visual,
                        CWColormap | CWBackPixel | CWBorderPixel, &attributes);
@@ -1006,12 +1006,12 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   top = XCreateSimpleWindow (disp, parent,
                              szHint.x, szHint.y,
                              szHint.width, szHint.height,
-                             TermWin.ext_bwidth,
+                             ext_bwidth,
                              pix_colors_focused[Color_border],
                              pix_colors_focused[Color_border]);
 #endif
 
-  TermWin.parent[0] = top;
+  this->parent[0] = top;
 
   old_width = szHint.width;
   old_height = szHint.height;
@@ -1074,7 +1074,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #endif
 
   /* the vt window */
-  TermWin.vt = XCreateSimpleWindow (disp, top,
+  vt = XCreateSimpleWindow (disp, top,
                                     window_vt_x,
                                     window_vt_y,
                                     TermWin_TotalWidth (),
@@ -1083,11 +1083,11 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                                     pix_colors_focused[Color_fg],
                                     pix_colors_focused[Color_bg]);
 #ifdef DEBUG_X
-  XStoreName (disp, TermWin.vt, "vt window");
+  XStoreName (disp, vt, "vt window");
 #endif
 
   attributes.bit_gravity = NorthWestGravity;
-  XChangeWindowAttributes (disp, TermWin.vt, CWBitGravity, &attributes);
+  XChangeWindowAttributes (disp, vt, CWBitGravity, &attributes);
 
   vt_emask = ExposureMask | ButtonPressMask | ButtonReleaseMask | PropertyChangeMask;
 
@@ -1098,8 +1098,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #endif
     vt_emask |= Button1MotionMask | Button3MotionMask;
 
-  XSelectInput (disp, TermWin.vt, vt_emask);
-  vt_ev.start (display, TermWin.vt);
+  XSelectInput (disp, vt, vt_emask);
+  vt_ev.start (display, vt);
 
 #if defined(MENUBAR) && (MENUBAR_MAX > 1)
   if (menuBar_height ())
@@ -1148,19 +1148,19 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   gcvalue.foreground = pix_colors[Color_fg];
   gcvalue.background = pix_colors[Color_bg];
   gcvalue.graphics_exposures = 1;
-  TermWin.gc = XCreateGC (disp, TermWin.vt,
+  gc = XCreateGC (disp, vt,
                           GCForeground | GCBackground | GCGraphicsExposures,
                           &gcvalue);
 
-  TermWin.drawable = new rxvt_drawable (display, TermWin.vt);
+  drawable = new rxvt_drawable (display, vt);
 
 #if defined(MENUBAR) || defined(RXVT_SCROLLBAR)
   gcvalue.foreground = pix_colors[Color_topShadow];
-  topShadowGC = XCreateGC (disp, TermWin.vt, GCForeground, &gcvalue);
+  topShadowGC = XCreateGC (disp, vt, GCForeground, &gcvalue);
   gcvalue.foreground = pix_colors[Color_bottomShadow];
-  botShadowGC = XCreateGC (disp, TermWin.vt, GCForeground, &gcvalue);
+  botShadowGC = XCreateGC (disp, vt, GCForeground, &gcvalue);
   gcvalue.foreground = pix_colors[ (display->depth <= 2 ? Color_fg : Color_scroll)];
-  scrollbarGC = XCreateGC (disp, TermWin.vt, GCForeground, &gcvalue);
+  scrollbarGC = XCreateGC (disp, vt, GCForeground, &gcvalue);
 #endif
 
 #ifdef OFF_FOCUS_FADING

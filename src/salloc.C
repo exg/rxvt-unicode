@@ -89,6 +89,9 @@ rxvt_salloc::alloc (void *data, unsigned int datalen)
 void
 rxvt_salloc::free (void *data)
 {
+  if (!data)
+    return;
+
   chain *line = (chain *)data;
   line->next = firstline;
   firstline = line;

@@ -49,7 +49,7 @@ inline void fill_text (text_t *start, text_t value, int len)
  * ------------------------------------------------------------------------- */
 #define ZERO_SCROLLBACK()                                              \
     if (options & Opt_scrollTtyOutput)                                 \
-        TermWin.view_start = 0
+        view_start = 0
 #define CLEAR_SELECTION()                                              \
     selection.beg.row = selection.beg.col                              \
         = selection.end.row = selection.end.col = 0
@@ -90,24 +90,24 @@ inline void fill_text (text_t *start, text_t value, int len)
  * CLEAR_CHARS: clear <num> chars starting from pixel position <x,y>
  * ERASE_ROWS : set <num> rows starting from row <row> to the foreground colour
  */
-#define drawBuffer      TermWin.vt
+#define drawBuffer      vt
 
 #define CLEAR_ROWS(row, num)                                           \
-    if (TermWin.mapped)                                                \
+    if (mapped)                                                \
         XClearArea (display->display, drawBuffer, 0,                   \
-                    Row2Pixel (row), (unsigned int)TermWin.width,      \
+                    Row2Pixel (row), (unsigned int)width,      \
                     (unsigned int)Height2Pixel (num), False)
 
 #define CLEAR_CHARS(x, y, num)                                         \
-    if (TermWin.mapped)                                                \
+    if (mapped)                                                \
         XClearArea (display->display, drawBuffer, x, y,                \
                     (unsigned int)Width2Pixel (num),                   \
                     (unsigned int)Height2Pixel (1), False)
 
 #define ERASE_ROWS(row, num)                                           \
-    XFillRectangle (display->display, drawBuffer, TermWin.gc,          \
+    XFillRectangle (display->display, drawBuffer, gc,          \
                     0, Row2Pixel (row),                                \
-                    (unsigned int)TermWin.width,                       \
+                    (unsigned int)width,                       \
                     (unsigned int)Height2Pixel (num))
 
 /* ------------------------------------------------------------------------- *
@@ -116,10 +116,13 @@ inline void fill_text (text_t *start, text_t value, int len)
 
 /* Fill part/all of a line with blanks. */
 void
-rxvt_term::scr_blank_line (text_t *et, rend_t *er, unsigned int width, rend_t efs)
+rxvt_term::scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs)
 {
   efs &= ~RS_baseattrMask;
   efs = SET_FONT (efs, FONTSET (efs)->find_font (' '));
+
+  text_t *et = l.t + col;
+  rend_t *er = l.r + col;
 
   while (width--)
     {
@@ -131,18 +134,12 @@ rxvt_term::scr_blank_line (text_t *et, rend_t *er, unsigned int width, rend_t ef
 /* ------------------------------------------------------------------------- */
 /* Fill a full line with blanks - make sure it is allocated first */
 void
-rxvt_term::scr_blank_screen_mem (text_t **tp, rend_t **rp, unsigned int row, rend_t efs)
+rxvt_term::scr_blank_screen_mem (line_t &l, rend_t efs)
 {
-#ifdef DEBUG_STRICT
-  assert ((tp[row] && rp[row]) || (tp[row] == NULL && rp[row] == NULL));
-#endif
-  if (tp[row] == NULL)
-    {
-      tp[row] = (text_t *)talloc->alloc ();
-      rp[row] = (rend_t *)ralloc->alloc ();
-    }
+  if (!l.t)
+    lalloc (l);
 
-  scr_blank_line (tp[row], rp[row], TermWin.ncol, efs);
+  scr_blank_line (l, 0, ncol, efs);
 }
 
 /* ------------------------------------------------------------------------- *
@@ -151,82 +148,71 @@ rxvt_term::scr_blank_screen_mem (text_t **tp, rend_t **rp, unsigned int row, ren
 void
 rxvt_term::scr_reset ()
 {
-  unsigned int ncol, nrow, total_rows, prev_total_rows;
   unsigned int p, q;
   int k;
-  rend_t setrstyle;
 
 #if ENABLE_OVERLAY
   scr_overlay_off ();
 #endif
 
-  TermWin.view_start = 0;
+  view_start = 0;
   num_scr = 0;
 
-  if (TermWin.ncol == 0)
-    TermWin.ncol = 80;
+  if (ncol == 0)
+    ncol = 80;
 
-  if (TermWin.nrow == 0)
-    TermWin.nrow = 24;
-
-  ncol = TermWin.ncol;
-  nrow = TermWin.nrow;
+  if (nrow == 0)
+    nrow = 24;
 
   if (ncol == prev_ncol && nrow == prev_nrow)
     return;
 
   // we need at least two lines for wrapping to work correctly
-  if (nrow + TermWin.saveLines < 2)
+  if (nrow + saveLines < 2)
     {
-      TermWin.saveLines++;
+      saveLines++;
       prev_nrow--;
-      TermWin.nscrolled++;
+      nscrolled++;
     }
 
   want_refresh = 1;
 
-  prev_total_rows = prev_nrow + TermWin.saveLines;
-  total_rows = nrow + TermWin.saveLines;
+  int prev_total_rows = prev_nrow + saveLines;
+  int total_rows = nrow + saveLines;
 
   screen.tscroll = 0;
   screen.bscroll = nrow - 1;
 
-  if (!talloc)
-    {
-      talloc = new rxvt_salloc (ncol * sizeof (text_t));
-      ralloc = new rxvt_salloc (ncol * sizeof (rend_t));
-    }
-
-  if (!screen.text)
+  if (!save)
     {
       /*
        * first time called so just malloc everything: don't rely on realloc
        * Note: this is still needed so that all the scrollback lines are NULL
        */
-      screen.text = (text_t **)rxvt_calloc (total_rows, sizeof (text_t *));
-      buf_text    = (text_t **)rxvt_calloc (total_rows, sizeof (text_t *));
-      drawn_text  = (text_t **)rxvt_calloc (nrow, sizeof (text_t *));
-      swap.text   = (text_t **)rxvt_calloc (nrow, sizeof (text_t *));
+      nscrolled = 0;       /* no saved lines */
+      term_start = 0;
+      nsaved = 0;
 
-      screen.tlen = (int16_t *)rxvt_calloc (total_rows, sizeof (int16_t));
-      swap.tlen   = (int16_t *)rxvt_calloc (nrow, sizeof (int16_t));
+      talloc = new rxvt_salloc (ncol * sizeof (text_t));
+      ralloc = new rxvt_salloc (ncol * sizeof (rend_t));
 
-      screen.rend = (rend_t **)rxvt_calloc (total_rows, sizeof (rend_t *));
-      buf_rend    = (rend_t **)rxvt_calloc (total_rows, sizeof (rend_t *));
-      drawn_rend  = (rend_t **)rxvt_calloc (nrow, sizeof (rend_t *));
-      swap.rend   = (rend_t **)rxvt_calloc (nrow, sizeof (rend_t *));
+      save      = (line_t *)rxvt_calloc (total_rows, sizeof (line_t));
+      buf       = (line_t *)rxvt_calloc (total_rows, sizeof (line_t));
+      drawn     = (line_t *)rxvt_calloc (nrow, sizeof (line_t));
+      swap_save = (line_t *)rxvt_calloc (nrow, sizeof (line_t));
 
-      for (p = 0; p < nrow; p++)
+      screen.line = (line_t **)rxvt_calloc (nrow, sizeof (line_t *));
+
+      scr_update_term ();
+
+      for (p = nrow; p--; )
         {
-          q = p + TermWin.saveLines;
-          scr_blank_screen_mem (screen.text, screen.rend, q, DEFAULT_RSTYLE);
-          scr_blank_screen_mem (swap.text, swap.rend, p, DEFAULT_RSTYLE);
-          screen.tlen[q] = swap.tlen[p] = 0;
-          scr_blank_screen_mem (drawn_text, drawn_rend, p, DEFAULT_RSTYLE);
+          scr_blank_screen_mem (*screen.line[p], DEFAULT_RSTYLE);
+          scr_blank_screen_mem (swap_save[p], DEFAULT_RSTYLE);
+          scr_blank_screen_mem (drawn[p], DEFAULT_RSTYLE);
         }
 
       memset (charsets, 'B', sizeof (charsets));
-      TermWin.nscrolled = 0;       /* no saved lines */
       rstyle = DEFAULT_RSTYLE;
       screen.flags = Screen_DefaultFlags;
       screen.cur.row = screen.cur.col = 0;
@@ -256,42 +242,22 @@ rxvt_term::scr_reset ()
       /*
        * add or delete rows as appropriate
        */
-      setrstyle = DEFAULT_RSTYLE;
+
+      rxvt_salloc *old_ta;
+      rxvt_salloc *old_ra;
 
       if (nrow < prev_nrow)
         {
           /* delete rows */
-          k = min (TermWin.nscrolled, prev_nrow - nrow);
+          k = min (nscrolled, prev_nrow - nrow);
           // k = max (0, - ( (nrow - 1) - r->screen.cur.row)); // mmc's http://maruska.dyndns.org/wiki/scrolling-bug //make configurable? //D TODO
           scr_scroll_text (0, (int)prev_nrow - 1, k, 1);
 
           for (p = nrow; p < prev_nrow; p++)
             {
-              q = p + TermWin.saveLines;
-
-              if (screen.text[q])
-                {
-#ifdef DEBUG_STRICT
-                  assert (screen.rend[q]);
-#endif
-                  talloc->free (screen.text[q]);
-                  ralloc->free (screen.rend[q]);
-                }
-
-              if (swap.text[p])
-                {
-#ifdef DEBUG_STRICT
-                  assert (swap.rend[p]);
-#endif
-                  talloc->free (swap.text[p]);
-                  ralloc->free (swap.rend[p]);
-                }
-
-#ifdef DEBUG_STRICT
-              assert (drawn_text[p] && drawn_rend[p]);
-#endif
-              talloc->free (drawn_text[p]);
-              ralloc->free (drawn_rend[p]);
+              lfree (save[p + saveLines]);
+              lfree (swap_save[p]);
+              lfree (drawn[p]);
             }
 
           /* we have fewer rows so fix up cursor position */
@@ -304,29 +270,23 @@ rxvt_term::scr_reset ()
           /* add rows */
           scr_reset_realloc (); /* realloc _first_ */
 
-          TermWin.ncol = prev_ncol; // save b/c scr_blank_screen_mem uses this
+          int ocol = ncol;
+          ncol = prev_ncol; // save b/c scr_blank_screen_mem uses this
 
-          k = min (TermWin.nscrolled, nrow - prev_nrow);
+          k = min (nscrolled, nrow - prev_nrow);
 
           for (p = prev_total_rows; p < total_rows; p++)
-            {
-              screen.tlen[p] = 0;
-              screen.text[p] = NULL;
-              screen.rend[p] = NULL;
-            }
+            save[p].clear ();
 
           for (p = prev_total_rows; p < total_rows - k; p++)
-            scr_blank_screen_mem (screen.text, screen.rend, p, setrstyle);
+            scr_blank_screen_mem (save[p], DEFAULT_RSTYLE);
+
+          scr_update_term ();
 
           for (p = prev_nrow; p < nrow; p++)
             {
-              swap.tlen[p] = 0;
-              swap.text[p] = NULL;
-              swap.rend[p] = NULL;
-              drawn_text[p] = NULL;
-              drawn_rend[p] = NULL;
-              scr_blank_screen_mem (swap.text,  swap.rend,  p, setrstyle);
-              scr_blank_screen_mem (drawn_text, drawn_rend, p, setrstyle);
+              swap_save[p].clear (); scr_blank_screen_mem (swap_save[p], DEFAULT_RSTYLE);
+              drawn[p].clear ();     scr_blank_screen_mem (drawn[p], DEFAULT_RSTYLE);
             }
 
           if (k > 0)
@@ -334,69 +294,132 @@ rxvt_term::scr_reset ()
               scr_scroll_text (0, (int)nrow - 1, -k, 1);
               screen.cur.row += k;
               screen.s_cur.row += k;
-              TermWin.nscrolled -= k;
+              nscrolled -= k;
             }
 
 #ifdef DEBUG_STRICT
-          assert (screen.cur.row < TermWin.nrow);
+          assert (screen.cur.row < nrow);
 #else                           /* drive with your eyes closed */
           MIN_IT (screen.cur.row, nrow - 1);
 #endif
-          TermWin.ncol =  ncol; // save b/c scr_blank_screen_mem uses this
+          ncol =  ocol; // save b/c scr_blank_screen_mem uses this
         }
 
       /* resize columns */
       if (ncol != prev_ncol)
         {
-          rxvt_salloc *ta = new rxvt_salloc (ncol * sizeof (text_t));
-          rxvt_salloc *ra = new rxvt_salloc (ncol * sizeof (rend_t));
+          old_ta = talloc; talloc = new rxvt_salloc (ncol * sizeof (text_t));
+          old_ra = ralloc; ralloc = new rxvt_salloc (ncol * sizeof (rend_t));
 
-          for (p = 0; p < total_rows; p++)
+          for (p = total_rows; p--; )
+            lresize (save[p]);
+
+          for (p = nrow; p--; )
             {
-              if (screen.text[p])
-                {
-                  screen.text[p] = (text_t *)ta->alloc (screen.text[p], prev_ncol * sizeof (text_t));
-                  screen.rend[p] = (rend_t *)ra->alloc (screen.rend[p], prev_ncol * sizeof (rend_t));
-
-                  MIN_IT (screen.tlen[p], (int16_t)ncol);
-
-                  if (ncol > prev_ncol)
-                    scr_blank_line (&screen.text[p][prev_ncol],
-                                    &screen.rend[p][prev_ncol],
-                                    ncol - prev_ncol, setrstyle);
-                }
-            }
-
-          for (p = 0; p < nrow; p++)
-            {
-              drawn_text[p] = (text_t *)ta->alloc (drawn_text[p], prev_ncol * sizeof (text_t));
-              drawn_rend[p] = (rend_t *)ra->alloc (drawn_rend[p], prev_ncol * sizeof (rend_t));
-
-              if (ncol > prev_ncol)
-                scr_blank_line (&drawn_text[p][prev_ncol],
-                                &drawn_rend[p][prev_ncol],
-                                ncol - prev_ncol, setrstyle);
-
-              if (swap.text[p])
-                {
-                  swap.text[p] = (text_t *)ta->alloc (swap.text[p], prev_ncol * sizeof (text_t));
-                  swap.rend[p] = (rend_t *)ra->alloc (swap.rend[p], prev_ncol * sizeof (rend_t));
-
-                  MIN_IT (swap.tlen[p], (int16_t)ncol);
-
-                  if (ncol > prev_ncol)
-                    scr_blank_line (&swap.text[p][prev_ncol],
-                                    &swap.rend[p][prev_ncol],
-                                    ncol - prev_ncol, setrstyle);
-                }
-
+              lresize (drawn[p]);
+              lresize (swap_save[p]);
             }
 
           MIN_IT (screen.cur.col, (int16_t)ncol - 1);
 
-          delete talloc; talloc = ta;
-          delete ralloc; ralloc = ra;
+          delete old_ta;
+          delete old_ra;
         }
+
+#if 0
+      // re-wrap lines, this is rather ugly, possibly because I am too dumb
+      // to come up with a lean and mean algorithm.
+      rxvt_salloc *ta = new rxvt_salloc (ncol * sizeof (text_t));
+      rxvt_salloc *ra = new rxvt_salloc (ncol * sizeof (rend_t));
+      
+      text_t **tp = (text_t **)rxvt_calloc (total_rows, sizeof (text_t *));
+      rend_t **rp = (rend_t **)rxvt_calloc (total_rows, sizeof (rend_t *));
+      tlen_t *tl  = (tlen_t *) rxvt_calloc (total_rows, sizeof (tlen_t));
+
+      for (p = 0; p < prev_total_rows; p++) printf ("P %p %d\n", save[p].t, save[p].l);//D
+
+      p = prev_total_rows;
+      q = total_rows;
+
+      while (p > 0 && q > 0)
+        {
+          --p;
+
+          printf ("pq %d:%d\n", p, q);
+          if (save[p].t)
+            {
+              int llen = save[p].l;
+
+              assert (llen >= 0);
+
+              while (p && save[p - 1].l < 0)
+                {
+                  --p;
+                  llen += prev_ncol;
+                }
+
+              int qlines = llen / ncol + 1;
+              int lofs = 0;
+
+              q -= qlines;
+
+              int qrow = q;
+
+                 printf ("QL %d llen %d\n", qlines, llen);//D
+              for (; qlines--; qrow++)
+                {
+                  if (qrow >= 0)
+                    {
+                      tp [qrow] = (text_t *)ta->alloc ();
+                      rp [qrow] = (rend_t *)ra->alloc ();
+                      tl [qrow] = -1;
+
+                      int qcol = 0;
+
+                      for (;;)
+                        {
+                          int prow = lofs / prev_ncol + p;
+                          int pcol = lofs % prev_ncol;
+
+                          int len = min (min (prev_ncol - pcol, ncol - qcol), llen - lofs);
+
+                          printf ("q %d lofs %d>%d len %d pq %d:%d p %d:%d q :%d\n", q, llen, lofs, len, prev_ncol, ncol, prow, pcol, qcol);
+
+                          if (len <= 0)
+                            {
+                              tl [qrow] = qcol;
+
+                              TODO
+                              scr_blank_line (tp [qrow] + qcol, rp [qrow] + qcol,
+                                              ncol - qcol, DEFAULT_RSTYLE);
+
+                              break;
+                            }
+
+                          assert (lofs < 1000);
+
+                          memcpy (tp [qrow] + qcol, save[prow].t + pcol, len * sizeof (text_t));
+                          memcpy (rp [qrow] + qcol, save[prow].r + pcol, len * sizeof (rend_t));
+
+                          lofs += len;
+                          qcol += len;
+
+                          if (qcol == ncol)
+                            break;
+                        }
+                    }
+                  else
+                    lofs += ncol;
+                }
+            }
+        }
+
+      free (screen.text); screen.text = tp;
+      free (screen.rend); screen.rend = rp;
+      free (screen.tlen); screen.tlen = tl;
+
+      for (p = 0; p < total_rows; p++) printf ("P %p %d\n", save[p].t, save[p].l);//D
+#endif
 
       if (tabs)
         free (tabs);
@@ -416,24 +439,13 @@ rxvt_term::scr_reset ()
 void
 rxvt_term::scr_reset_realloc ()
 {
-  unsigned int total_rows, nrow;
+  unsigned int total_rows = nrow + saveLines;
 
-  nrow = TermWin.nrow;
-  total_rows = nrow + TermWin.saveLines;
-  /* *INDENT-OFF* */
-  screen.text = (text_t **)rxvt_realloc (screen.text, total_rows * sizeof (text_t *));
-  buf_text    = (text_t **)rxvt_realloc (buf_text   , total_rows * sizeof (text_t *));
-  drawn_text  = (text_t **)rxvt_realloc (drawn_text , nrow       * sizeof (text_t *));
-  swap.text   = (text_t **)rxvt_realloc (swap.text  , nrow       * sizeof (text_t *));
-
-  screen.tlen = (int16_t *)rxvt_realloc (screen.tlen, total_rows * sizeof (int16_t));
-  swap.tlen   = (int16_t *)rxvt_realloc (swap.tlen  , total_rows * sizeof (int16_t));
-
-  screen.rend = (rend_t **)rxvt_realloc (screen.rend, total_rows * sizeof (rend_t *));
-  buf_rend    = (rend_t **)rxvt_realloc (buf_rend   , total_rows * sizeof (rend_t *));
-  drawn_rend  = (rend_t **)rxvt_realloc (drawn_rend , nrow       * sizeof (rend_t *));
-  swap.rend   = (rend_t **)rxvt_realloc (swap.rend  , nrow       * sizeof (rend_t *));
-  /* *INDENT-ON* */
+  screen.line = (line_t **)rxvt_realloc (screen.line, nrow       * sizeof (line_t *));
+  swap_save   = (line_t *) rxvt_realloc (swap_save  , nrow       * sizeof (line_t));
+  drawn       = (line_t *) rxvt_realloc (drawn      , nrow       * sizeof (line_t));
+  save        = (line_t *) rxvt_realloc (save       , total_rows * sizeof (line_t));
+  buf         = (line_t *) rxvt_realloc (buf        , total_rows * sizeof (line_t));
 }
 
 /* ------------------------------------------------------------------------- */
@@ -445,30 +457,17 @@ rxvt_term::scr_release ()
 {
   unsigned int total_rows;
 
-  total_rows = TermWin.nrow + TermWin.saveLines;
+  total_rows = nrow + saveLines;
 
   delete talloc; talloc = 0;
   delete ralloc; ralloc = 0;
 
-  free (screen.text);
-  free (screen.tlen);
-  free (screen.rend);
-  free (drawn_text);
-  free (drawn_rend);
-  free (swap.text);
-  free (swap.tlen);
-  free (swap.rend);
-  free (buf_text);
-  free (buf_rend);
+  free (screen.line);
+  free (save);
+  free (swap_save);
+  free (drawn);
+  free (buf);
   free (tabs);
-
-  /* NULL these so if anything tries to use them, we'll know about it */
-  screen.text = drawn_text = swap.text = NULL;
-  screen.rend = drawn_rend = swap.rend = NULL;
-  screen.tlen = swap.tlen = NULL;
-  buf_text = NULL;
-  buf_rend = NULL;
-  tabs = NULL;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -529,8 +528,8 @@ rxvt_term::scr_cursor (int mode)
     }
 
   /* boundary check in case screen size changed between SAVE and RESTORE */
-  MIN_IT (s->cur.row, TermWin.nrow - 1);
-  MIN_IT (s->cur.col, TermWin.ncol - 1);
+  MIN_IT (s->cur.row, nrow - 1);
+  MIN_IT (s->cur.col, ncol - 1);
 #ifdef DEBUG_STRICT
   assert (s->cur.row >= 0);
   assert (s->cur.col >= 0);
@@ -556,7 +555,7 @@ rxvt_term::scr_change_screen (int scrn)
 
   want_refresh = 1;
 
-  TermWin.view_start = 0;
+  view_start = 0;
 
   if (current_screen == scrn)
     return scrn;
@@ -576,14 +575,10 @@ rxvt_term::scr_change_screen (int scrn)
   if (options & Opt_secondaryScreen)
     {
       num_scr = 0;
-      offset = TermWin.saveLines;
+      offset = saveLines;
 
       for (i = prev_nrow; i--;)
-        {
-          SWAP_IT (screen.text[i + offset], swap.text[i], text_t *);
-          SWAP_IT (screen.tlen[i + offset], swap.tlen[i], int16_t);
-          SWAP_IT (screen.rend[i + offset], swap.rend[i], rend_t *);
-        }
+        SWAP_IT (*(screen.line[i]), swap_save[i], line_t);
 
       SWAP_IT (screen.charset, swap.charset, int16_t);
       SWAP_IT (screen.flags, swap.flags, int);
@@ -611,7 +606,7 @@ rxvt_term::scr_do_wrap ()
 
   if (screen.cur.row == screen.bscroll)
     scr_scroll_text (screen.tscroll, screen.bscroll, 1, 0);
-  else if (screen.cur.row < TermWin.nrow - 1)
+  else if (screen.cur.row < nrow - 1)
     screen.cur.row++;
 }
 
@@ -646,6 +641,14 @@ rxvt_term::scr_rendition (int set, int style)
       rstyle &= ~style;
   }
 
+// set screen.line pointers to the actual lines in the save buffer
+void
+rxvt_term::scr_update_term ()
+{
+  for (int i = nrow; i--; )
+    screen.line[i] = save + saveLines + i;
+}
+
 /* ------------------------------------------------------------------------- */
 /*
  * Scroll text between <row1> and <row2> inclusive, by <count> lines
@@ -657,7 +660,6 @@ int
 rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
 {
   int i, j;
-  long nscrolled;
 
   if (count == 0 || (row1 > row2))
     return 0;
@@ -667,27 +669,26 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
   if (row1 == 0 && count > 0
       && (current_screen == PRIMARY || options & Opt_secondaryScroll))
     {
-      nscrolled = (long)TermWin.nscrolled + (long)count;
+      nscrolled += count;
 
-      if (nscrolled > (long)TermWin.saveLines)
-        TermWin.nscrolled = TermWin.saveLines;
-      else
-        TermWin.nscrolled = (unsigned int)nscrolled;
+      if (nscrolled > saveLines)
+        nscrolled = saveLines;
 
       if ((options & Opt_scrollWithBuffer)
-          && TermWin.view_start != 0
-          && TermWin.view_start != TermWin.saveLines)
+          && view_start != 0
+          && view_start != saveLines)
         scr_page (UP, count);
     }
   else if (!spec)
-    row1 += TermWin.saveLines;
+    row1 += saveLines;
 
-  row2 += TermWin.saveLines;
+  row2 += saveLines;
 
   if (selection.op && current_screen == selection.screen)
     {
-      i = selection.beg.row + TermWin.saveLines;
-      j = selection.end.row + TermWin.saveLines;
+      i = selection.beg.row + saveLines;
+      j = selection.end.row + saveLines;
+
       if ((i < row1 && j > row1)
           || (i < row2 && j > row2)
           || (i - count < row1 && i >= row1)
@@ -707,7 +708,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
         }
     }
 
-  selection_check (0);        /* _after_ TermWin.nscrolled update */
+  selection_check (0);        /* _after_ nscrolled update */
 
   num_scr += count;
   j = count;
@@ -723,14 +724,11 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
       /* scroll up */
 
       /* Copy lines that will get clobbered by the rotation */
-      memcpy (buf_text, screen.text + row1, count * sizeof (text_t *));
-      memcpy (buf_rend, screen.rend + row1, count * sizeof (rend_t *));
+      memcpy (buf, save + row1, count * sizeof (line_t));
 
       /* Rotate lines */
       i = row2 - row1 - count + 1;
-      memmove (screen.tlen + row1, screen.tlen + row1 + count, i * sizeof (int16_t));
-      memmove (screen.text + row1, screen.text + row1 + count, i * sizeof (text_t *));
-      memmove (screen.rend + row1, screen.rend + row1 + count, i * sizeof (rend_t *));
+      memmove (save + row1, save + row1 + count, i * sizeof (line_t));
 
       j = row2 - count + 1, i = count;
     }
@@ -740,30 +738,24 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
 
       /* Copy lines that will get clobbered by the rotation */
       for (i = 0, j = row2; i < count; i++, j--)
-        {
-          buf_text[i] = screen.text[j];
-          buf_rend[i] = screen.rend[j];
-        }
+        buf[i] = save[j];
 
       /* Rotate lines */
       for (j = row2, i = j - count; i >= row1; i--, j--)
-        {
-          screen.tlen[j] = screen.tlen[i];
-          screen.text[j] = screen.text[i];
-          screen.rend[j] = screen.rend[i];
-        }
+        save[j] = save[i];
 
       j = row1, i = count;
       count = -count;
     }
 
   /* Resurrect lines */
-  memset (screen.tlen + j, 0, i * sizeof (int16_t));
-  memcpy (screen.text + j, buf_text, i * sizeof (text_t *));
-  memcpy (screen.rend + j, buf_rend, i * sizeof (text_t *));
-  if (!spec) /* line length may not equal TermWin.ncol */
+  memcpy (save + j, buf, i * sizeof (line_t));
+
+  scr_update_term ();
+
+  if (!spec) /* line length may not equal ncol */
     for (; i--; j++)
-      scr_blank_screen_mem (screen.text, screen.rend, (unsigned int)j, rstyle);
+      scr_blank_screen_mem (save[j], rstyle);
 
   return count;
 }
@@ -781,20 +773,18 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
   unsigned char checksel;
   unicode_t c;
   int row, last_col;
-  text_t *stp;
-  rend_t *srp;
   const unicode_t *strend = str + len;
 
   want_refresh = 1;
   ZERO_SCROLLBACK ();
-  last_col = TermWin.ncol;
+  last_col = ncol;
 
   if (nlines > 0)
     {
       nlines += screen.cur.row - screen.bscroll;
       if ((nlines > 0)
           && (screen.tscroll == 0)
-          && (screen.bscroll == (TermWin.nrow - 1)))
+          && (screen.bscroll == (nrow - 1)))
         {
           /* _at least_ this many lines need to be scrolled */
           scr_scroll_text (screen.tscroll, screen.bscroll, nlines, 0);
@@ -804,19 +794,18 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
 #ifdef DEBUG_STRICT
   assert (screen.cur.col < last_col);
-  assert ((screen.cur.row < TermWin.nrow)
-          && (screen.cur.row >= - (int32_t)TermWin.nscrolled));
+  assert ((screen.cur.row < nrow)
+          && (screen.cur.row >= - (int32_t)nscrolled));
 #else                           /* drive with your eyes closed */
   MIN_IT (screen.cur.col, last_col - 1);
-  MIN_IT (screen.cur.row, (int32_t)TermWin.nrow - 1);
-  MAX_IT (screen.cur.row, - (int32_t)TermWin.nscrolled);
+  MIN_IT (screen.cur.row, (int32_t)nrow - 1);
+  MAX_IT (screen.cur.row, - (int32_t)nscrolled);
 #endif
-  row = screen.cur.row + TermWin.saveLines;
+  row = screen.cur.row + saveLines;
 
   checksel = selection.op && current_screen == selection.screen ? 1 : 0;
 
-  stp = screen.text[row];
-  srp = screen.rend[row];
+  line_t *line = save + row;
 
   while (str < strend)
     {
@@ -825,24 +814,23 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
       if (c < 0x20)
         if (c == C0_LF)
           {          
-            if (screen.tlen[row] != -1)      /* XXX: think about this */
-              MAX_IT (screen.tlen[row], screen.cur.col);
+            if (line->l != -1)      /* XXX: think about this */
+              MAX_IT (line->l, screen.cur.col);
 
             screen.flags &= ~Screen_WrapNext;
 
             if (screen.cur.row == screen.bscroll)
               scr_scroll_text (screen.tscroll, screen.bscroll, 1, 0);
-            else if (screen.cur.row < (TermWin.nrow - 1))
-              row = (++screen.cur.row) + TermWin.saveLines;
+            else if (screen.cur.row < (nrow - 1))
+              row = (++screen.cur.row) + saveLines;
 
-            stp = screen.text[row];  /* _must_ refresh */
-            srp = screen.rend[row];  /* _must_ refresh */
+            line = save + row;  /* _must_ refresh */
             continue;
           }
         else if (c == C0_CR)
           {
-            if (screen.tlen[row] != -1)      /* XXX: think about this */
-              MAX_IT (screen.tlen[row], screen.cur.col);
+            if (line->l != -1)      /* XXX: think about this */
+              MAX_IT (line->l, screen.cur.col);
 
             screen.flags &= ~Screen_WrapNext;
             screen.cur.col = 0;
@@ -869,13 +857,12 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
       if (screen.flags & Screen_WrapNext)
         {
-          screen.tlen[row] = -1;
+          line->l = -1;
 
           scr_do_wrap ();
           
-          row = screen.cur.row + TermWin.saveLines;
-          stp = screen.text[row];  /* _must_ refresh */
-          srp = screen.rend[row];  /* _must_ refresh */
+          row = screen.cur.row + saveLines;
+          line = save + row;   /* _must_ refresh */
         }
 
       // some utf-8 decoders "decode" surrogate characters: let's fix this.
@@ -927,24 +914,24 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 #endif
 
           // nuke the character at this position, if required
-          if (stp[screen.cur.col] == NOCHAR
-              || (screen.cur.col < TermWin.ncol - 1
-                  && stp[screen.cur.col + 1] == NOCHAR))
+          if (line->t[screen.cur.col] == NOCHAR
+              || (screen.cur.col < ncol - 1
+                  && line->t[screen.cur.col + 1] == NOCHAR))
             {
               int col = screen.cur.col;
 
               // find begin
-              while (col > 0 && stp[col] == NOCHAR)
+              while (col > 0 && line->t[col] == NOCHAR)
                 col--;
 
-              rend_t rend = SET_FONT (srp[col], FONTSET (srp[col])->find_font (' '));
+              rend_t rend = SET_FONT (line->r[col], FONTSET (line->r[col])->find_font (' '));
 
               // found begin, nuke
               do {
-                stp[col] = ' ';
-                srp[col] = rend;
+                line->t[col] = ' ';
+                line->r[col] = rend;
                 col++;
-              } while (col < TermWin.ncol && stp[col] == NOCHAR);
+              } while (col < ncol && line->t[col] == NOCHAR);
             }
 
           rend_t rend = SET_FONT (rstyle, FONTSET (rstyle)->find_font (c));
@@ -960,14 +947,14 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
           do
             {
-              stp[screen.cur.col] = c;
-              srp[screen.cur.col] = rend;
+              line->t[screen.cur.col] = c;
+              line->r[screen.cur.col] = rend;
 
               if (screen.cur.col < last_col - 1)
                 screen.cur.col++;
               else
                 {
-                  screen.tlen[row] = last_col;
+                  line->l = last_col;
                   if (screen.flags & Screen_Autowrap)
                     screen.flags |= Screen_WrapNext;
                   break;
@@ -979,10 +966,10 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
           // pad with spaces when overwriting wide character with smaller one
           if (!width)
-            for (int c = screen.cur.col; c < last_col && stp[c] == NOCHAR; c++)
+            for (int c = screen.cur.col; c < last_col && line->t[c] == NOCHAR; c++)
               {
-                stp[c] = ' ';
-                srp[c] = rend;
+                line->t[c] = ' ';
+                line->r[c] = rend;
               }
         }
       else // width == 0
@@ -997,21 +984,21 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
           if (screen.cur.col > 0)
             {
-              tp = stp + screen.cur.col - 1;
-              rp = srp + screen.cur.col - 1;
+              tp = line->t + screen.cur.col - 1;
+              rp = line->r + screen.cur.col - 1;
 
-              while (*tp == NOCHAR && tp > stp)
+              while (*tp == NOCHAR && tp > line->t)
                 tp--, rp--;
             }
           else if (screen.cur.row > 0
-                   && screen.tlen [screen.cur.row - 1 + TermWin.saveLines] == -1)
+                   && save [screen.cur.row - 1 + saveLines].l == -1)
             {
-              int line = screen.cur.row - 1 + TermWin.saveLines;
+              line_t *line = save + (screen.cur.row - 1 + saveLines);
 
-              tp = screen.text[line] + last_col - 1;
-              rp = screen.rend[line] + last_col - 1;
+              tp = line->t + last_col - 1;
+              rp = line->r + last_col - 1;
 
-              while (*tp == NOCHAR && tp > screen.text[line])
+              while (*tp == NOCHAR && tp > line->t)
                 tp--, rp--;
             }
           else
@@ -1028,8 +1015,8 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
         }
     }
 
-  if (screen.tlen[row] != -1)      /* XXX: think about this */
-    MAX_IT (screen.tlen[row], screen.cur.col);
+  if (line->l != -1)      /* XXX: think about this */
+    MAX_IT (line->l, screen.cur.col);
 
 #ifdef DEBUG_STRICT
   assert (screen.cur.row >= 0);
@@ -1053,7 +1040,7 @@ rxvt_term::scr_backspace ()
       if (screen.cur.row > 0)
         {
 #ifdef TERMCAP_HAS_BW
-          screen.cur.col = TermWin.ncol - 1;
+          screen.cur.col = ncol - 1;
           screen.cur.row--;
           return;
 #endif
@@ -1083,13 +1070,13 @@ rxvt_term::scr_tab (int count, bool ht)
     return;
   else if (count > 0)
     {
-      int row = TermWin.saveLines + screen.cur.row;
-      text_t *tp = screen.text[row];
-      rend_t *rp = screen.rend[row];
-      rend_t base_rend = rp[i];
-      ht &= tp[i] == ' ';
+      int row = saveLines + screen.cur.row;
 
-      for (; ++i < TermWin.ncol; )
+      line_t &l = save[row];
+      rend_t base_rend = l.r[i];
+      ht &= l.t[i] == ' ';
+
+      for (; ++i < ncol; )
         if (tabs[i])
           {
             x = i;
@@ -1097,11 +1084,11 @@ rxvt_term::scr_tab (int count, bool ht)
               break;
           }
         else 
-          ht &= tp[i] == ' '
-                && RS_SAME (rp[i], base_rend);
+          ht &= l.t[i] == ' '
+                && RS_SAME (l.r[i], base_rend);
 
       if (count)
-        x = TermWin.ncol - 1;
+        x = ncol - 1;
 
       // store horizontal tab commands as characters inside the text
       // buffer so they can be selected and pasted.
@@ -1109,18 +1096,18 @@ rxvt_term::scr_tab (int count, bool ht)
         {
           base_rend = SET_FONT (base_rend, 0);
 
-          if (screen.tlen[row] != -1)      /* XXX: think about this */
-            MAX_IT (screen.tlen[row], x);
+          if (l.l != -1)      /* XXX: think about this */
+            MAX_IT (l.l, x);
 
           i = screen.cur.col;
 
-          tp[i] = '\t';
-          rp[i] = base_rend;
+          l.t[i] = '\t';
+          l.r[i] = base_rend;
 
           while (++i < x)
             {
-              tp[i] = NOCHAR;
-              rp[i] = base_rend;
+              l.t[i] = NOCHAR;
+              l.r[i] = base_rend;
             }
         }
     }
@@ -1157,7 +1144,7 @@ rxvt_term::scr_backindex ()
     scr_gotorc (0, -1, R_RELATIVE | C_RELATIVE);
   else
     {
-      if (screen.tlen[screen.cur.row + TermWin.saveLines] == 0)
+      if (save[screen.cur.row + saveLines].l == 0)
         return;             /* um, yeah? */
 
       scr_insdel_chars (1, INSERT);
@@ -1177,20 +1164,20 @@ rxvt_term::scr_forwardindex ()
 {
   int row;
 
-  if (screen.cur.col < TermWin.ncol - 1)
+  if (screen.cur.col < ncol - 1)
     scr_gotorc (0, 1, R_RELATIVE | C_RELATIVE);
   else
     {
-      row = screen.cur.row + TermWin.saveLines;
+      row = screen.cur.row + saveLines;
 
-      if (screen.tlen[row] == 0)
+      if (save[row].l == 0)
         return;             /* um, yeah? */
-      else if (screen.tlen[row] == -1)
-        screen.tlen[row] = TermWin.ncol;
+      else if (save[row].l == -1)
+        save[row].l = ncol;
 
       scr_gotorc (0, 0, R_RELATIVE);
       scr_insdel_chars (1, DELETE);
-      scr_gotorc (0, TermWin.ncol - 1, R_RELATIVE);
+      scr_gotorc (0, ncol - 1, R_RELATIVE);
     }
 }
 #endif
@@ -1207,7 +1194,7 @@ rxvt_term::scr_gotorc (int row, int col, int relative)
 
   screen.cur.col = relative & C_RELATIVE ? screen.cur.col + col : col;
   MAX_IT (screen.cur.col, 0);
-  MIN_IT (screen.cur.col, (int32_t)TermWin.ncol - 1);
+  MIN_IT (screen.cur.col, (int32_t)ncol - 1);
 
   screen.flags &= ~Screen_WrapNext;
 
@@ -1242,7 +1229,7 @@ rxvt_term::scr_gotorc (int row, int col, int relative)
     }
 
   MAX_IT (screen.cur.row, 0);
-  MIN_IT (screen.cur.row, (int32_t)TermWin.nrow - 1);
+  MIN_IT (screen.cur.row, (int32_t)nrow - 1);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1268,7 +1255,7 @@ rxvt_term::scr_index (enum page_dirn direction)
     screen.cur.row += dirn;
 
   MAX_IT (screen.cur.row, 0);
-  MIN_IT (screen.cur.row, (int32_t)TermWin.nrow - 1);
+  MIN_IT (screen.cur.row, (int32_t)nrow - 1);
   selection_check (0);
 }
 
@@ -1289,13 +1276,14 @@ rxvt_term::scr_erase_line (int mode)
 
   selection_check (1);
 
-  row = TermWin.saveLines + screen.cur.row;
+  row = saveLines + screen.cur.row;
+
   switch (mode)
     {
       case 0:                     /* erase to end of line */
         col = screen.cur.col;
-        num = TermWin.ncol - col;
-        MIN_IT (screen.tlen[row], (int16_t)col);
+        num = ncol - col;
+        MIN_IT (save[row].l, (int16_t)col);
         if (ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur)
             || ROWCOL_IN_ROW_AT_OR_AFTER (selection.end, screen.cur))
           CLEAR_SELECTION ();
@@ -1309,8 +1297,8 @@ rxvt_term::scr_erase_line (int mode)
         break;
       case 2:                     /* erase whole line */
         col = 0;
-        num = TermWin.ncol;
-        screen.tlen[row] = 0;
+        num = ncol;
+        save[row].l = 0;
         if (selection.beg.row <= screen.cur.row
             && selection.end.row >= screen.cur.row)
           CLEAR_SELECTION ();
@@ -1319,10 +1307,10 @@ rxvt_term::scr_erase_line (int mode)
         return;
     }
 
-  if (screen.text[row])
-    scr_blank_line (&screen.text[row][col], &screen.rend[row][col], num, rstyle);
+  if (save[row].t)
+    scr_blank_line (save[row], col, num, rstyle);
   else
-    scr_blank_screen_mem (screen.text, screen.rend, row, rstyle);
+    scr_blank_screen_mem (save[row], rstyle);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1343,7 +1331,7 @@ rxvt_term::scr_erase_screen (int mode)
   want_refresh = 1;
   ZERO_SCROLLBACK ();
 
-  row_offset = (int32_t)TermWin.saveLines;
+  row_offset = (int32_t)saveLines;
 
   switch (mode)
     {
@@ -1351,7 +1339,7 @@ rxvt_term::scr_erase_screen (int mode)
         selection_check (1);
         scr_erase_line (0);
         row = screen.cur.row + 1;    /* possible OOB */
-        num = TermWin.nrow - row;
+        num = nrow - row;
         break;
       case 1:                     /* erase to beginning of screen */
         selection_check (3);
@@ -1362,7 +1350,7 @@ rxvt_term::scr_erase_screen (int mode)
       case 2:                     /* erase whole screen */
         selection_check (3);
         row = 0;
-        num = TermWin.nrow;
+        num = nrow;
         break;
       default:
         return;
@@ -1374,10 +1362,10 @@ rxvt_term::scr_erase_screen (int mode)
               && selection.end.row <= row + num)))
     CLEAR_SELECTION ();
 
-  if (row >= TermWin.nrow) /* Out Of Bounds */
+  if (row >= nrow) /* Out Of Bounds */
     return;
 
-  MIN_IT (num, (TermWin.nrow - row));
+  MIN_IT (num, (nrow - row));
 
   if (rstyle & (RS_RVid | RS_Uline))
     ren = (rend_t) ~RS_None;
@@ -1390,17 +1378,17 @@ rxvt_term::scr_erase_screen (int mode)
     {
       ren = rstyle & (RS_fgMask | RS_bgMask);
       gcvalue.foreground = pix_colors[GET_BGCOLOR (rstyle)];
-      XChangeGC (display->display, TermWin.gc, GCForeground, &gcvalue);
+      XChangeGC (display->display, gc, GCForeground, &gcvalue);
       ERASE_ROWS (row, num);
       gcvalue.foreground = pix_colors[Color_fg];
-      XChangeGC (display->display, TermWin.gc, GCForeground, &gcvalue);
+      XChangeGC (display->display, gc, GCForeground, &gcvalue);
     }
 
   for (; num--; row++)
     {
-      scr_blank_screen_mem (screen.text, screen.rend, (unsigned int) (row + row_offset), rstyle);
-      screen.tlen[row + row_offset] = 0;
-      scr_blank_line (drawn_text[row], drawn_rend[row], (unsigned int)TermWin.ncol, ren);
+      scr_blank_screen_mem (save[row + row_offset], rstyle);
+      save[row + row_offset].l = 0;
+      scr_blank_line (drawn[row], 0, ncol, ren);
     }
 }
 
@@ -1411,7 +1399,7 @@ rxvt_term::scr_erase_savelines ()
   want_refresh = 1;
   ZERO_SCROLLBACK ();
 
-  TermWin.nscrolled = 0;
+  nscrolled = 0;
 }
 #endif
 
@@ -1433,11 +1421,11 @@ rxvt_term::scr_E ()
   selection_check (3);
 
   fs = SET_FONT (rstyle, FONTSET (rstyle)->find_font ('E'));
-  for (k = TermWin.saveLines, i = TermWin.nrow; i--; k++)
+  for (k = saveLines, i = nrow; i--; k++)
     {
-      screen.tlen[k] = TermWin.ncol;    /* make the `E's selectable */
-      fill_text (screen.text[k], 'E', TermWin.ncol);
-      for (r1 = screen.rend[k], j = TermWin.ncol; j--; )
+      save[k].l = ncol;    /* make the `E's selectable */
+      fill_text (save[k].t, 'E', ncol);
+      for (r1 = save[k].r, j = ncol; j--; )
         *r1++ = fs;
     }
 }
@@ -1481,9 +1469,6 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
 {
   int col, row;
   rend_t tr;
-  text_t *stp;
-  rend_t *srp;
-  int16_t *slp;
 
   want_refresh = 1;
   ZERO_SCROLLBACK ();
@@ -1494,34 +1479,32 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
   scr_do_wrap ();
 
   selection_check (1);
-  MIN_IT (count, (TermWin.ncol - screen.cur.col));
+  MIN_IT (count, (ncol - screen.cur.col));
 
-  row = screen.cur.row + TermWin.saveLines;
+  row = screen.cur.row + saveLines;
 
-  stp = screen.text[row];
-  srp = screen.rend[row];
-  slp = &screen.tlen[row];
+  line_t *line = save + row;
 
   switch (insdel)
     {
       case INSERT:
-        for (col = TermWin.ncol - 1; (col - count) >= screen.cur.col; col--)
+        for (col = ncol - 1; (col - count) >= screen.cur.col; col--)
           {
-            stp[col] = stp[col - count];
-            srp[col] = srp[col - count];
+            line->t[col] = line->t[col - count];
+            line->r[col] = line->r[col - count];
           }
 
-        if (*slp != -1)
+        if (line->l != -1)
           {
-            *slp += count;
-            MIN_IT (*slp, TermWin.ncol);
+            line->l += count;
+            MIN_IT (line->l, ncol);
           }
 
         if (selection.op && current_screen == selection.screen
             && ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur))
           {
             if (selection.end.row != screen.cur.row
-                || (selection.end.col + count >= TermWin.ncol))
+                || (selection.end.col + count >= ncol))
               CLEAR_SELECTION ();
             else
               {              /* shift selection */
@@ -1531,42 +1514,39 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
               }
           }
 
-        scr_blank_line (&stp[screen.cur.col], &srp[screen.cur.col],
-                        (unsigned int)count, rstyle);
+        scr_blank_line (save[row], screen.cur.col, count, rstyle);
         break;
 
       case ERASE:
-        screen.cur.col += count;     /* don't worry if > TermWin.ncol */
+        screen.cur.col += count;     /* don't worry if > ncol */
         selection_check (1);
         screen.cur.col -= count;
-        scr_blank_line (&stp[screen.cur.col], &srp[screen.cur.col],
-                        (unsigned int)count, rstyle);
+        scr_blank_line (save[row], screen.cur.col, count, rstyle);
         break;
 
       case DELETE:
-        tr = srp[TermWin.ncol - 1] & (RS_fgMask | RS_bgMask | RS_baseattrMask);
+        tr = line->r[ncol - 1] & (RS_fgMask | RS_bgMask | RS_baseattrMask);
 
-        for (col = screen.cur.col; (col + count) < TermWin.ncol; col++)
+        for (col = screen.cur.col; (col + count) < ncol; col++)
           {
-            stp[col] = stp[col + count];
-            srp[col] = srp[col + count];
+            line->t[col] = line->t[col + count];
+            line->r[col] = line->r[col + count];
           }
 
-        scr_blank_line (&stp[TermWin.ncol - count], &srp[TermWin.ncol - count],
-                        (unsigned int)count, tr);
+        scr_blank_line (*line, ncol - count, count, tr);
 
-        if (*slp == -1) /* break line continuation */
-          *slp = TermWin.ncol;
+        if (line->l == -1) /* break line continuation */
+          line->l = ncol;
         
-        *slp -= count;
-        MAX_IT (*slp, 0);
+        line->l -= count;
+        MAX_IT (line->l, 0);
 
         if (selection.op && current_screen == selection.screen
             && ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur))
           {
             if (selection.end.row != screen.cur.row
                 || (screen.cur.col >= selection.beg.col - count)
-                || selection.end.col >= TermWin.ncol)
+                || selection.end.col >= ncol)
               CLEAR_SELECTION ();
             else
               {
@@ -1590,7 +1570,7 @@ void
 rxvt_term::scr_scroll_region (int top, int bot)
 {
   MAX_IT (top, 0);
-  MIN_IT (bot, (int)TermWin.nrow - 1);
+  MIN_IT (bot, (int)nrow - 1);
 
   if (top > bot)
     return;
@@ -1679,8 +1659,8 @@ void
 rxvt_term::scr_set_tab (int mode)
 {
   if (mode < 0)
-    memset (tabs, 0, TermWin.ncol * sizeof (char));
-  else if (screen.cur.col < TermWin.ncol)
+    memset (tabs, 0, ncol * sizeof (char));
+  else if (screen.cur.col < ncol)
     tabs[screen.cur.col] = (mode ? 1 : 0);
 }
 
@@ -1705,12 +1685,12 @@ rxvt_term::scr_rvideo_mode (int mode)
 #if TRANSPARENT
         if (! (options & Opt_transparent) || am_transparent == 0)
 #endif
-          XSetWindowBackground (display->display, TermWin.vt,
+          XSetWindowBackground (display->display, vt,
                                pix_colors[Color_bg]);
 
       gcvalue.foreground = pix_colors[Color_fg];
       gcvalue.background = pix_colors[Color_bg];
-      XChangeGC (display->display, TermWin.gc, GCBackground | GCForeground,
+      XChangeGC (display->display, gc, GCBackground | GCForeground,
                 &gcvalue);
       scr_clear ();
       scr_touch (true);
@@ -1801,12 +1781,12 @@ rxvt_term::scr_refresh_rend (rend_t mask, rend_t value)
 {
   bool found = false;
 
-  for (int i = 0; i < TermWin.nrow; i++)
+  for (int i = 0; i < nrow; i++)
     {
       int col = 0;
-      rend_t *drp = drawn_rend [i];
+      rend_t *drp = drawn[i].r;
 
-      for (; col < TermWin.ncol; col++, drp++)
+      for (; col < ncol; col++, drp++)
         if ((*drp & mask) == value)
           {
             found = true;
@@ -1827,45 +1807,45 @@ enum {
 };
 
 void
-rxvt_term::scr_expose (int x, int y, int width, int height, bool refresh)
+rxvt_term::scr_expose (int x, int y, int ewidth, int eheight, bool refresh)
 {
   int i;
   row_col_t rc[RC_COUNT];
 
-  if (drawn_text == NULL)  /* sanity check */
+  if (!drawn)  /* sanity check */
     return;
 
 #ifndef NO_SLOW_LINK_SUPPORT
   if (refresh_type == FAST_REFRESH && !display->is_local)
     {
       y = 0;
-      height = TermWin.height;
+      eheight = height;
     }
 #endif
 
 #ifdef DEBUG_STRICT
   x = max (x, 0);
-  x = min (x, (int)TermWin.width);
+  x = min (x, (int)width);
   y = max (y, 0);
-  y = min (y, (int)TermWin.height);
+  y = min (y, (int)height);
 #endif
 
   /* round down */
   rc[PART_BEG].col = Pixel2Col (x);
   rc[PART_BEG].row = Pixel2Row (y);
   /* round up */
-  rc[PART_END].col = Pixel2Width (x + width + TermWin.fwidth - 1);
-  rc[PART_END].row = Pixel2Row (y + height + TermWin.fheight - 1);
+  rc[PART_END].col = Pixel2Width (x + ewidth  + fwidth  - 1);
+  rc[PART_END].row = Pixel2Row   (y + eheight + fheight - 1);
 
   /* sanity checks */
   for (i = PART_BEG; i < RC_COUNT; i++)
     {
-      MIN_IT (rc[i].col, TermWin.ncol - 1);
-      MIN_IT (rc[i].row, TermWin.nrow - 1);
+      MIN_IT (rc[i].col, ncol - 1);
+      MIN_IT (rc[i].row, nrow - 1);
     }
 
   for (i = rc[PART_BEG].row; i <= rc[PART_END].row; i++)
-    fill_text (&drawn_text[i][rc[PART_BEG].col], 0, rc[PART_END].col - rc[PART_BEG].col + 1);
+    fill_text (&drawn[i].t[rc[PART_BEG].col], 0, rc[PART_END].col - rc[PART_BEG].col + 1);
 
   if (refresh)
     scr_refresh (SLOW_REFRESH);
@@ -1878,7 +1858,7 @@ rxvt_term::scr_expose (int x, int y, int width, int height, bool refresh)
 void
 rxvt_term::scr_touch (bool refresh)
 {
-  scr_expose (0, 0, TermWin.width, TermWin.height, refresh);
+  scr_expose (0, 0, width, height, refresh);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1892,16 +1872,16 @@ rxvt_term::scr_move_to (int y, int len)
   long p = 0;
   unsigned int oldviewstart;
 
-  oldviewstart = TermWin.view_start;
+  oldviewstart = view_start;
 
   if (y < len)
     {
-      p = (TermWin.nrow + TermWin.nscrolled) * (len - y) / len;
-      p -= (long) (TermWin.nrow - 1);
+      p = (nrow + nscrolled) * (len - y) / len;
+      p -= (long) (nrow - 1);
       p = max (p, 0);
     }
 
-  TermWin.view_start = (unsigned int)min (p, TermWin.nscrolled);
+  view_start = (unsigned int)min (p, nscrolled);
 
   return scr_changeview (oldviewstart);
 }
@@ -1917,17 +1897,17 @@ rxvt_term::scr_page (enum page_dirn direction, int nlines)
   int n;
   unsigned int oldviewstart;
 
-  oldviewstart = TermWin.view_start;
+  oldviewstart = view_start;
 
   if (direction == UP)
     {
-      n = TermWin.view_start + nlines;
-      TermWin.view_start = min (n, TermWin.nscrolled);
+      n = view_start + nlines;
+      view_start = min (n, nscrolled);
     }
   else
     {
-      n = TermWin.view_start - nlines;
-      TermWin.view_start = max (n, 0);
+      n = view_start - nlines;
+      view_start = max (n, 0);
     }
 
   return scr_changeview (oldviewstart);
@@ -1936,13 +1916,13 @@ rxvt_term::scr_page (enum page_dirn direction, int nlines)
 int
 rxvt_term::scr_changeview (unsigned int oldviewstart)
 {
-  if (TermWin.view_start != oldviewstart)
+  if (view_start != oldviewstart)
     {
       want_refresh = 1;
-      num_scr -= (TermWin.view_start - oldviewstart);
+      num_scr -= (view_start - oldviewstart);
     }
 
-  return (int) (TermWin.view_start - oldviewstart);
+  return (int) (view_start - oldviewstart);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1955,7 +1935,7 @@ rxvt_term::scr_bell ()
 #  ifdef MAPALERT_OPTION
   if (options & Opt_mapAlert)
 #  endif
-    XMapWindow (display->display, TermWin.parent[0]);
+    XMapWindow (display->display, parent[0]);
 # endif
 
   if (options & Opt_visualBell)
@@ -1982,25 +1962,25 @@ rxvt_term::scr_printscreen (int fullhist)
   if ((fd = popen_printer ()) == NULL)
     return;
 
-  nrows = TermWin.nrow;
-  row_offset = TermWin.saveLines;
+  nrows = nrow;
+  row_offset = saveLines;
 
   if (!fullhist)
-    row_offset -= TermWin.view_start;
+    row_offset -= view_start;
   else
     {
-      nrows += TermWin.nscrolled;
-      row_offset -= TermWin.nscrolled;
+      nrows += nscrolled;
+      row_offset -= nscrolled;
     }
 
   wctomb (0, 0);
 
   for (r1 = 0; r1 < nrows; r1++)
     {
-      text_t *tp = screen.text[r1 + row_offset];
-      int len = screen.tlen[r1 + row_offset];
+      text_t *tp = save[r1 + row_offset].t;
+      int len = save[r1 + row_offset].l;
 
-      for (i = len >= 0 ? len : TermWin.ncol - 1; i--; )
+      for (i = len >= 0 ? len : ncol - 1; i--; )
         {
           char mb[MB_LEN_MAX];
           text_t t = *tp++;
@@ -2047,7 +2027,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 
   want_refresh = 0;        /* screen is current */
 
-  if (refresh_type == NO_REFRESH || !TermWin.mapped)
+  if (refresh_type == NO_REFRESH || !mapped)
     return;
 
   /*
@@ -2056,7 +2036,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
   must_clear = 0;
   refresh_count = 0;
 
-  row_offset = TermWin.saveLines - TermWin.view_start;
+  row_offset = saveLines - view_start;
 
 #if XPM_BACKGROUND
   must_clear |= bgPixmap.pixmap != None;
@@ -2089,12 +2069,12 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
       {
         int col = screen.cur.col;
 
-        while (col && screen.text[screen.cur.row + TermWin.saveLines][col] == NOCHAR)
+        while (col && screen.line[screen.cur.row]->t[col] == NOCHAR)
           col--;
 
-        crp = &screen.rend[screen.cur.row + TermWin.saveLines][col];
+        crp = &screen.line[screen.cur.row]->r[col];
 
-        if (showcursor && TermWin.focus)
+        if (showcursor && focus)
           {
             if (options & Opt_cursorUnderline)
               *crp ^= RS_Uline;
@@ -2131,29 +2111,29 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
     setoldcursor = 0;
     if (ocrow != -1)
       {
-        if (screen.cur.row + TermWin.view_start != ocrow
+        if (screen.cur.row + view_start != ocrow
             || screen.cur.col != oldcursor.col)
           {
-            if (ocrow < TermWin.nrow
-                && oldcursor.col < TermWin.ncol)
-              drawn_rend[ocrow][oldcursor.col] ^= (RS_RVid | RS_Uline);
+            if (ocrow < nrow
+                && oldcursor.col < ncol)
+              drawn[ocrow].r[oldcursor.col] ^= (RS_RVid | RS_Uline);
 
-            if (TermWin.focus || !showcursor)
+            if (focus || !showcursor)
               oldcursor.row = -1;
             else
               setoldcursor = 1;
           }
       }
-    else if (!TermWin.focus)
+    else if (!focus)
       setoldcursor = 1;
 
     if (setoldcursor)
       {
-        if (screen.cur.row + TermWin.view_start >= TermWin.nrow)
+        if (screen.cur.row + view_start >= nrow)
           oldcursor.row = -1;
         else
           {
-            oldcursor.row = screen.cur.row + TermWin.view_start;
+            oldcursor.row = screen.cur.row + view_start;
             oldcursor.col = screen.cur.col;
           }
       }
@@ -2171,38 +2151,35 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
   i = num_scr;
   if (!display->is_local
       && refresh_type == FAST_REFRESH && num_scr_allow && i
-      && abs (i) < TermWin.nrow && !must_clear)
+      && abs (i) < nrow && !must_clear)
     {
       int16_t nits;
       int j;
       int len, wlen;
 
-      j = TermWin.nrow;
+      j = nrow;
       wlen = len = -1;
       row = i > 0 ? 0 : j - 1;
       for (; j-- >= 0; row += (i > 0 ? 1 : -1))
         {
-          if (row + i >= 0 && row + i < TermWin.nrow && row + i != ocrow)
+          if (row + i >= 0 && row + i < nrow && row + i != ocrow)
             {
-              text_t *stp  = screen.text[row + row_offset];
-              rend_t *srp  = screen.rend[row + row_offset];
-              text_t *dtp  = drawn_text[row];
-              text_t *dtp2 = drawn_text[row + i];
-              rend_t *drp  = drawn_rend[row];
-              rend_t *drp2 = drawn_rend[row + i];
+              line_t s  = save[row + row_offset];
+              line_t d  = drawn[row];
+              line_t d2 = drawn[row + i];
 
-              for (nits = 0, col = TermWin.ncol; col--; )
-                if (stp[col] != dtp2[col] || srp[col] != drp2[col])
+              for (nits = 0, col = ncol; col--; )
+                if (s.t[col] != d2.t[col] || s.r[col] != d2.r[col])
                   nits--;
-                else if (stp[col] != dtp[col] || srp[col] != drp[col])
+                else if (s.t[col] != d.t[col] || s.r[col] != d.r[col])
                   nits++;
 
               if (nits > 8) /* XXX: arbitrary choice */
                 {
-                  for (col = TermWin.ncol; col--; )
+                  for (col = ncol; col--; )
                     {
-                      *dtp++ = *dtp2++;
-                      *drp++ = *drp2++;
+                      *d.t++ = *d2.t++;
+                      *d.r++ = *d2.r++;
                     }
 
                   if (len == -1)
@@ -2219,8 +2196,8 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
               if (wlen < len)
                 SWAP_IT (wlen, len, int);
 
-              XCopyArea (display->display, TermWin.vt, TermWin.vt,
-                         TermWin.gc, 0, Row2Pixel (len + i),
+              XCopyArea (display->display, vt, vt,
+                         gc, 0, Row2Pixel (len + i),
                          (unsigned int)TermWin_TotalWidth (),
                          (unsigned int)Height2Pixel (wlen - len + 1),
                          0, Row2Pixel (len));
@@ -2233,19 +2210,19 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
   /*
    * E: main pass across every character
    */
-  for (row = 0; row < TermWin.nrow; row++)
+  for (row = 0; row < nrow; row++)
     {
-      text_t *stp = screen.text[row + row_offset];
-      rend_t *srp = screen.rend[row + row_offset];
-      text_t *dtp = drawn_text[row];
-      rend_t *drp = drawn_rend[row];
+      text_t *stp = save[row + row_offset].t;
+      rend_t *srp = save[row + row_offset].r;
+      text_t *dtp = drawn[row].t;
+      rend_t *drp = drawn[row].r;
 
       /*
        * E2: OK, now the real pass
        */
       int ypixel = (int)Row2Pixel (row);
 
-      for (col = 0; col < TermWin.ncol; col++)
+      for (col = 0; col < ncol; col++)
         {
           /* compare new text with old - if exactly the same then continue */
           if (stp[col] == dtp[col]    /* Must match characters to skip. */
@@ -2269,7 +2246,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 
           int xpixel = Col2Pixel (col);
 
-          for (i = 0; ++col < TermWin.ncol; )
+          for (i = 0; ++col < ncol; )
             {
               if (stp[col] == NOCHAR)
                 {
@@ -2318,14 +2295,14 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
             {
 #if ENABLE_STYLES
               // force redraw after "careful" characters to avoid pixel droppings
-              if (srp[col] & RS_Careful && col < TermWin.ncol - 1 && 0)
+              if (srp[col] & RS_Careful && col < ncol - 1 && 0)
                 drp[col + 1] = ~srp[col + 1];
 
               // include previous careful character(s) if possible, looks nicer (best effort...)
               while (text > stp
                   && srp[text - stp - 1] & RS_Careful
                   && RS_SAME (rend, srp[text - stp - 1]))
-                text--, count++, xpixel -= TermWin.fwidth;
+                text--, count++, xpixel -= fwidth;
 #endif
 
               bool invert = rend & RS_RVid;
@@ -2390,11 +2367,11 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
           /*
            * Actually do the drawing of the string here
            */
-          rxvt_font *font = (*TermWin.fontset[GET_STYLE (rend)])[GET_FONT (rend)];
+          rxvt_font *font = (*fontset[GET_STYLE (rend)])[GET_FONT (rend)];
 
           if (back == fore)
-            font->clear_rect (*TermWin.drawable, xpixel, ypixel,
-                              TermWin.fwidth * count, TermWin.fheight,
+            font->clear_rect (*drawable, xpixel, ypixel,
+                              fwidth * count, fheight,
                               back);
           else if (back == Color_bg)
             {
@@ -2405,26 +2382,26 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                   for (i = 0; i < count; i++) /* don't draw empty strings */
                     if (text[i] != ' ')
                       {
-                        font->draw (*TermWin.drawable, xpixel, ypixel, text, count, fore, -1);
+                        font->draw (*drawable, xpixel, ypixel, text, count, fore, -1);
                         break;
                       }
                 }
               else
-                font->draw (*TermWin.drawable, xpixel, ypixel, text, count, fore, Color_bg);
+                font->draw (*drawable, xpixel, ypixel, text, count, fore, Color_bg);
             }
           else
-            font->draw (*TermWin.drawable, xpixel, ypixel, text, count, fore, back);
+            font->draw (*drawable, xpixel, ypixel, text, count, fore, back);
 
           if (rend & RS_Uline && font->descent > 1 && fore != back)
             {
 #if ENABLE_FRILLS
               if (ISSET_PIXCOLOR (Color_underline))
-                XSetForeground (display->display, TermWin.gc, pix_colors[Color_underline]);
+                XSetForeground (display->display, gc, pix_colors[Color_underline]);
               else
 #endif
-                XSetForeground (display->display, TermWin.gc, pix_colors[fore]);
+                XSetForeground (display->display, gc, pix_colors[fore]);
 
-              XDrawLine (display->display, drawBuffer, TermWin.gc,
+              XDrawLine (display->display, drawBuffer, gc,
                          xpixel, ypixel + font->ascent + 1,
                          xpixel + Width2Pixel (count) - 1, ypixel + font->ascent + 1);
             }
@@ -2440,7 +2417,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
    */
   if (showcursor)
     {
-      if (TermWin.focus)
+      if (focus)
         {
           if (options & Opt_cursorUnderline)
             *crp ^= RS_Uline;
@@ -2457,23 +2434,23 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
           int cursorwidth = 1;
           int col = oldcursor.col;
 
-          while (col && screen.text[screen.cur.row + TermWin.saveLines][col] == NOCHAR)
+          while (col && save[screen.cur.row + saveLines].t[col] == NOCHAR)
             col--;
 
-          while (col + cursorwidth < TermWin.ncol
-                 && drawn_text[oldcursor.row][col + cursorwidth] == NOCHAR)
+          while (col + cursorwidth < ncol
+                 && drawn[oldcursor.row].t[col + cursorwidth] == NOCHAR)
             cursorwidth++;
 
 #ifndef NO_CURSORCOLOR
           if (ISSET_PIXCOLOR (Color_cursor))
-            XSetForeground (display->display, TermWin.gc, pix_colors[Color_cursor]);
+            XSetForeground (display->display, gc, pix_colors[Color_cursor]);
 #endif
 
-          XDrawRectangle (display->display, drawBuffer, TermWin.gc,
+          XDrawRectangle (display->display, drawBuffer, gc,
                           Col2Pixel (col),
                           Row2Pixel (oldcursor.row),
                           (unsigned int) (Width2Pixel (cursorwidth) - 1),
-                          (unsigned int) (Height2Pixel (1) - TermWin.lineSpace - 1));
+                          (unsigned int) (Height2Pixel (1) - lineSpace - 1));
         }
     }
 
@@ -2490,25 +2467,25 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 }
 
 void
-rxvt_term::scr_remap_chars (text_t *tp, rend_t *rp)
+rxvt_term::scr_remap_chars (const line_t &l)
 {
-  if (!rp || !tp)
+  if (!l.t)
     return;
 
-  for (int i = TermWin.ncol; i; i--, rp++, tp++)
-    *rp = SET_FONT (*rp, FONTSET (*rp)->find_font (*tp));
+  for (int i = ncol; i--; )
+    l.r[i] = SET_FONT (l.r[i], FONTSET (l.r[i])->find_font (l.t[i]));
 }
 
 void
 rxvt_term::scr_remap_chars ()
 {
-  for (int i = TermWin.nrow + TermWin.saveLines; i--; )
-    scr_remap_chars (screen.text[i], screen.rend[i]);
+  for (int i = nrow + saveLines; i--; )
+    scr_remap_chars (save[i]);
 
-  for (int i = TermWin.nrow; i--; )
+  for (int i = nrow; i--; )
     {
-      scr_remap_chars (drawn_text[i], drawn_rend[i]);
-      scr_remap_chars (swap.text[i], swap.rend[i]);
+      scr_remap_chars (drawn[i]);
+      scr_remap_chars (swap_save[i]);
     }
 }
 
@@ -2524,9 +2501,9 @@ rxvt_term::scr_recolour ()
 #endif
       )
     {
-      XSetWindowBackground (display->display, TermWin.parent[0], pix_colors[Color_border]);
-      XClearWindow (display->display, TermWin.parent[0]);
-      XSetWindowBackground (display->display, TermWin.vt, pix_colors[Color_bg]);
+      XSetWindowBackground (display->display, parent[0], pix_colors[Color_border]);
+      XClearWindow (display->display, parent[0]);
+      XSetWindowBackground (display->display, vt, pix_colors[Color_bg]);
 #if HAVE_SCROLLBARS
       if (scrollBar.win)
         {
@@ -2546,14 +2523,14 @@ rxvt_term::scr_recolour ()
 void
 rxvt_term::scr_clear (bool really)
 {
-  if (!TermWin.mapped)
+  if (!mapped)
     return;
 
   num_scr_allow = 0;
   want_refresh = 1;
 
   if (really)
-    XClearWindow (display->display, TermWin.vt);
+    XClearWindow (display->display, vt);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -2562,18 +2539,18 @@ rxvt_term::scr_reverse_selection ()
 {
   if (selection.op && current_screen == selection.screen)
     {
-      int end_row = TermWin.saveLines - TermWin.view_start;
-      int i = selection.beg.row + TermWin.saveLines;
-      int col, row = selection.end.row + TermWin.saveLines;
+      int end_row = saveLines - view_start;
+      int i = selection.beg.row + saveLines;
+      int col, row = selection.end.row + saveLines;
       rend_t *srp;
 
 #if ENABLE_FRILLS
       if (selection.rect)
         {
-          end_row += TermWin.nrow;
+          end_row += nrow;
 
           for (; i <= row && i <= end_row; i++)
-            for (srp = screen.rend[i], col = selection.beg.col; col < selection.end.col; col++)
+            for (srp = save[i].r, col = selection.beg.col; col < selection.end.col; col++)
               srp[col] ^= RS_RVid;
         }
       else
@@ -2587,14 +2564,14 @@ rxvt_term::scr_reverse_selection ()
               i = end_row;
             }
 
-          end_row += TermWin.nrow;
+          end_row += nrow;
 
           for (; i < row && i < end_row; i++, col = 0)
-            for (srp = screen.rend[i]; col < TermWin.ncol; col++)
+            for (srp = save[i].r; col < ncol; col++)
               srp[col] ^= RS_RVid;
 
           if (i == row && i < end_row)
-            for (srp = screen.rend[i]; col < selection.end.col; col++)
+            for (srp = save[i].r; col < selection.end.col; col++)
               srp[col] ^= RS_RVid;
         }
     }
@@ -2613,19 +2590,19 @@ rxvt_term::scr_dump (int fd)
   unsigned int    width, towrite;
   char            r1[] = "\n";
 
-  for (row = TermWin.saveLines - TermWin.nscrolled;
-       row < TermWin.saveLines + TermWin.nrow - 1; row++)
+  for (row = saveLines - nscrolled;
+       row < saveLines + nrow - 1; row++)
     {
-      width = screen.tlen[row] >= 0 ? screen.tlen[row]
-              : TermWin.ncol;
+      width = save[row].l >= 0 ? save[row].l
+              : ncol;
       for (towrite = width; towrite; towrite -= wrote)
         {
-          wrote = write (fd, & (screen.text[row][width - towrite]),
+          wrote = write (fd, & (save[row].t[width - towrite]),
                         towrite);
           if (wrote < 0)
             return;         /* XXX: death, no report */
         }
-      if (screen.tlen[row] >= 0)
+      if (save[row].l >= 0)
         if (write (fd, r1, 1) <= 0)
           return; /* XXX: death, no report */
     }
@@ -2637,7 +2614,7 @@ rxvt_term::scr_dump (int fd)
  * ------------------------------------------------------------------------- */
 
 /*
- * -TermWin.nscrolled <= (selection row) <= TermWin.nrow - 1
+ * -nscrolled <= (selection row) <= nrow - 1
  */
 void
 rxvt_term::selection_check (int check_more)
@@ -2648,12 +2625,12 @@ rxvt_term::selection_check (int check_more)
     return;
 
   pos.row = pos.col = 0;
-  if ((selection.beg.row < - (int32_t)TermWin.nscrolled)
-      || (selection.beg.row >= TermWin.nrow)
-      || (selection.mark.row < - (int32_t)TermWin.nscrolled)
-      || (selection.mark.row >= TermWin.nrow)
-      || (selection.end.row < - (int32_t)TermWin.nscrolled)
-      || (selection.end.row >= TermWin.nrow)
+  if ((selection.beg.row < - (int32_t)nscrolled)
+      || (selection.beg.row >= nrow)
+      || (selection.mark.row < - (int32_t)nscrolled)
+      || (selection.mark.row >= nrow)
+      || (selection.end.row < - (int32_t)nscrolled)
+      || (selection.end.row >= nrow)
       || (check_more == 1
           && current_screen == selection.screen
           && !ROWCOL_IS_BEFORE (screen.cur, selection.beg)
@@ -2665,7 +2642,7 @@ rxvt_term::selection_check (int check_more)
           && ROWCOL_IS_AFTER (selection.end, pos))
       || (check_more == 4     /* screen width change */
           && (selection.beg.row != selection.end.row
-              || selection.end.col > TermWin.ncol)))
+              || selection.end.col > ncol)))
     CLEAR_SELECTION ();
 }
 
@@ -2884,7 +2861,7 @@ rxvt_term::selection_property (Window win, Atom prop)
 void
 rxvt_term::selection_request (Time tm, int x, int y)
 {
-  if (x < 0 || x >= TermWin.width || y < 0 || y >= TermWin.height)
+  if (x < 0 || x >= width || y < 0 || y >= height)
     return;                 /* outside window */
 
   if (selection.text)
@@ -2936,7 +2913,7 @@ rxvt_term::selection_request_other (Atom target, int selnum)
   if (XGetSelectionOwner (display->display, sel) != None)
     {
       XConvertSelection (display->display, sel, target, xa[XA_VT_SELECTION],
-                         TermWin.vt, selection_request_time);
+                         vt, selection_request_time);
       return 1;
     }
 
@@ -2992,36 +2969,36 @@ rxvt_term::selection_make (Time tm)
   if (selection.clicks == 4)
     return;                 /* nothing selected, go away */
 
-  i = (selection.end.row - selection.beg.row + 1) * (TermWin.ncol + 1);
+  i = (selection.end.row - selection.beg.row + 1) * (ncol + 1);
   new_selection_text = (wchar_t *)rxvt_malloc ((i + 4) * sizeof (wchar_t));
 
   col = selection.beg.col;
-  row = selection.beg.row + TermWin.saveLines;
-  end_row = selection.end.row + TermWin.saveLines;
+  row = selection.beg.row + saveLines;
+  end_row = selection.end.row + saveLines;
   int ofs = 0;
   int extra = 0;
 
   for (; row <= end_row; row++, col = 0)
     {
-      end_col = screen.tlen[row];
+      end_col = save[row].l;
 
 #if ENABLE_FRILLS
       if (selection.rect)
         {
           col = selection.beg.col;
-          end_col = TermWin.ncol + 1;
+          end_col = ncol + 1;
         }
 #endif
 
       MAX_IT (col, 0);
 
       if (end_col == -1)
-        end_col = TermWin.ncol;
+        end_col = ncol;
 
       if (row == end_row || selection.rect)
         MIN_IT (end_col, selection.end.col);
 
-      t = &screen.text[row][col];
+      t = &save[row].t[col];
       for (; col < end_col; col++)
         {
           if (*t == NOCHAR)
@@ -3047,7 +3024,7 @@ rxvt_term::selection_make (Time tm)
             new_selection_text[ofs++] = *t++;
         }
 
-      if (screen.tlen[row] != -1 && row != end_row)
+      if (save[row].l != -1 && row != end_row)
         new_selection_text[ofs++] = C0_LF;
     }
 
@@ -3068,8 +3045,8 @@ rxvt_term::selection_make (Time tm)
   selection.len = ofs;
   selection.text = (wchar_t *)rxvt_realloc (new_selection_text, (ofs + 1) * sizeof (wchar_t));
 
-  XSetSelectionOwner (display->display, XA_PRIMARY, TermWin.vt, tm);
-  if (XGetSelectionOwner (display->display, XA_PRIMARY) == TermWin.vt)
+  XSetSelectionOwner (display->display, XA_PRIMARY, vt, tm);
+  if (XGetSelectionOwner (display->display, XA_PRIMARY) == vt)
     display->set_selection_owner (this);
   else
     rxvt_warn ("can't get primary selection, ignoring.\n");
@@ -3102,7 +3079,7 @@ rxvt_term::selection_click (int clicks, int x, int y)
 
   if (clicks == 2 || clicks == 3)
     selection_extend_colrow (selection.mark.col,
-                             selection.mark.row + TermWin.view_start,
+                             selection.mark.row + view_start,
                              0, /* button 3     */
                              1, /* button press */
                              0);        /* click change */
@@ -3117,15 +3094,15 @@ rxvt_term::selection_start_colrow (int col, int row)
 {
   want_refresh = 1;
   selection.mark.col = col;
-  selection.mark.row = row - TermWin.view_start;
+  selection.mark.row = row - view_start;
 
-  MAX_IT (selection.mark.row, - (int32_t)TermWin.nscrolled);
-  MIN_IT (selection.mark.row, (int32_t)TermWin.nrow - 1);
+  MAX_IT (selection.mark.row, - (int32_t)nscrolled);
+  MIN_IT (selection.mark.row, (int32_t)nrow - 1);
   MAX_IT (selection.mark.col, 0);
-  MIN_IT (selection.mark.col, (int32_t)TermWin.ncol - 1);
+  MIN_IT (selection.mark.col, (int32_t)ncol - 1);
 
   while (selection.mark.col > 0
-         && screen.text[selection.mark.row + TermWin.saveLines][selection.mark.col] == NOCHAR)
+         && save[selection.mark.row + saveLines].t[selection.mark.col] == NOCHAR)
     --selection.mark.col;
   
   if (selection.op)
@@ -3159,25 +3136,25 @@ rxvt_term::selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, r
 
   if (dirn == UP)
     {
-      bound.row = TermWin.saveLines - TermWin.nscrolled - 1;
+      bound.row = saveLines - nscrolled - 1;
       bound.col = 0;
       dirnadd = -1;
     }
   else
     {
-      bound.row = TermWin.saveLines + TermWin.nrow;
-      bound.col = TermWin.ncol - 1;
+      bound.row = saveLines + nrow;
+      bound.col = ncol - 1;
       dirnadd = 1;
     }
 
-  row = mark->row + TermWin.saveLines;
+  row = mark->row + saveLines;
   col = mark->col;
   MAX_IT (col, 0);
   /* find the edge of a word */
-  stp = &screen.text[row][col];
+  stp = &save[row].t[col];
   w1 = DELIMIT_TEXT (*stp);
 
-  srp = &screen.rend[row][col];
+  srp = &save[row].r[col];
   w2 = DELIMIT_REND (*srp);
 
   for (;;)
@@ -3198,16 +3175,16 @@ rxvt_term::selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, r
 
       if ((col == bound.col) && (row != bound.row))
         {
-          if (screen.tlen[ (row - (dirn == UP ? 1 : 0))] == -1)
+          if (save[ (row - (dirn == UP ? 1 : 0))].l == -1)
             {
               trow = row + dirnadd;
-              tcol = dirn == UP ? TermWin.ncol - 1 : 0;
+              tcol = dirn == UP ? ncol - 1 : 0;
 
-              if (screen.text[trow] == NULL)
+              if (save[trow].t == NULL)
                 break;
 
-              stp = & (screen.text[trow][tcol]);
-              srp = & (screen.rend[trow][tcol]);
+              stp = & (save[trow].t[tcol]);
+              srp = & (save[trow].r[tcol]);
 
               if (DELIMIT_TEXT (*stp) != w1 || DELIMIT_REND (*srp) != w2)
                 break;
@@ -3225,7 +3202,7 @@ Old_Word_Selection_You_Die:
     col++;                  /* put us on one past the end */
 
   /* Poke the values back in */
-  ret->row = row - TermWin.saveLines;
+  ret->row = row - saveLines;
   ret->col = col;
 }
 
@@ -3245,9 +3222,9 @@ rxvt_term::selection_extend (int x, int y, int flag)
   col = Pixel2Col (x);
   row = Pixel2Row (y);
   MAX_IT (row, 0);
-  MIN_IT (row, (int)TermWin.nrow - 1);
+  MIN_IT (row, (int)nrow - 1);
   MAX_IT (col, 0);
-  MIN_IT (col, (int)TermWin.ncol);
+  MIN_IT (col, (int)ncol);
 
   /*
   * If we're selecting characters (single click) then we must check first
@@ -3257,7 +3234,7 @@ rxvt_term::selection_extend (int x, int y, int flag)
   */
   if (((selection.clicks % 3) == 1) && !flag
       && (col == selection.mark.col
-          && (row == selection.mark.row + TermWin.view_start)))
+          && (row == selection.mark.row + view_start)))
     {
       /* select nothing */
       selection.beg.row = selection.end.row = 0;
@@ -3282,7 +3259,6 @@ rxvt_term::selection_extend (int x, int y, int flag)
 void
 rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int buttonpress, int clickchange)
 {
-  int16_t ncol = TermWin.ncol;
   int end_col;
   row_col_t pos;
   enum {
@@ -3326,7 +3302,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
   pos.col = col;
   pos.row = row;
 
-  pos.row -= TermWin.view_start;   /* adjust for scroll */
+  pos.row -= view_start;   /* adjust for scroll */
 
   /*
    * This is mainly xterm style selection with a couple of differences, mainly
@@ -3395,7 +3371,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
 
   if (selection.clicks == 1)
     {
-      end_col = screen.tlen[selection.beg.row + TermWin.saveLines];
+      end_col = save[selection.beg.row + saveLines].l;
 
       if (selection.beg.col > end_col
           && end_col != -1
@@ -3405,7 +3381,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
          )
         selection.beg.col = ncol;
 
-      end_col = screen.tlen[selection.end.row + TermWin.saveLines];
+      end_col = save[selection.end.row + saveLines].l;
 
       if (
           selection.end.col > end_col
@@ -3432,11 +3408,11 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
           int end_row;
 
           selection_delimit_word (UP, &selection.beg, &selection.beg);
-          end_row = screen.tlen[selection.mark.row + TermWin.saveLines];
+          end_row = save[selection.mark.row + saveLines].l;
 
-          for (end_row = selection.mark.row; end_row < TermWin.nrow; end_row++)
+          for (end_row = selection.mark.row; end_row < nrow; end_row++)
             {
-              end_col = screen.tlen[end_row + TermWin.saveLines];
+              end_col = save[end_row + saveLines].l;
 
               if (end_col != -1)
                 {
@@ -3457,12 +3433,12 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
           selection.end.col = ncol;
 
           // select a complete logical line
-          while (selection.beg.row > -TermWin.saveLines
-                 && screen.tlen[selection.beg.row - 1 + TermWin.saveLines] == -1)
+          while (selection.beg.row > -saveLines
+                 && save[selection.beg.row - 1 + saveLines].l == -1)
             selection.beg.row--;
 
-          while (selection.end.row < TermWin.nrow
-                 && screen.tlen[selection.end.row + TermWin.saveLines] == -1)
+          while (selection.end.row < nrow
+                 && save[selection.end.row + saveLines].l == -1)
             selection.end.row++;
         }
     }
@@ -3499,7 +3475,7 @@ rxvt_term::selection_remove_trailing_spaces ()
 
   for ( ; end_row >= selection.beg.row; )
     {
-      stp = screen.text[end_row + TermWin.saveLines];
+      stp = save[end_row + saveLines].t;
 
       while (--end_col >= 0)
         {
@@ -3510,7 +3486,7 @@ rxvt_term::selection_remove_trailing_spaces ()
         }
 
       if (end_col >= 0
-          || screen.tlen[end_row - 1 + TermWin.saveLines] != -1)
+          || save[end_row - 1 + saveLines].l != -1)
         {
           selection.end.col = end_col + 1;
           selection.end.row = end_row;
@@ -3518,7 +3494,7 @@ rxvt_term::selection_remove_trailing_spaces ()
         }
 
       end_row--;
-      end_col = TermWin.ncol;
+      end_col = ncol;
     }
 
   if (selection.mark.row > selection.end.row)
@@ -3691,9 +3667,9 @@ void
 rxvt_term::pixel_position (int *x, int *y)
 {
   *x = Pixel2Col (*x);
-  /* MAX_IT (*x, 0); MIN_IT (*x, (int)TermWin.ncol - 1); */
+  /* MAX_IT (*x, 0); MIN_IT (*x, (int)ncol - 1); */
   *y = Pixel2Row (*y);
-  /* MAX_IT (*y, 0); MIN_IT (*y, (int)TermWin.nrow - 1); */
+  /* MAX_IT (*y, 0); MIN_IT (*y, (int)nrow - 1); */
 }
 
 /* ------------------------------------------------------------------------- */
@@ -3703,10 +3679,10 @@ rxvt_term::im_set_position (XPoint &pos)
 {
   XWindowAttributes xwa;
 
-  XGetWindowAttributes (display->display, TermWin.vt, &xwa);
+  XGetWindowAttributes (display->display, vt, &xwa);
 
   pos.x = xwa.x + Col2Pixel    (screen.cur.col);
-  pos.y = xwa.y + Height2Pixel (screen.cur.row) + TermWin.fbase;
+  pos.y = xwa.y + Height2Pixel (screen.cur.row) + fbase;
 }
 #endif
 
@@ -3714,25 +3690,25 @@ rxvt_term::im_set_position (XPoint &pos)
 void
 rxvt_term::scr_overlay_new (int x, int y, int w, int h)
 {
-  if (TermWin.nrow < 3 || TermWin.ncol < 3)
+  if (nrow < 3 || ncol < 3)
     return;
 
   want_refresh = 1;
 
   scr_overlay_off ();
 
-  if (x < 0) x = TermWin.ncol - w;
-  if (y < 0) y = TermWin.nrow - h;
+  if (x < 0) x = ncol - w;
+  if (y < 0) y = nrow - h;
 
   // make space for border
-  w += 2; MIN_IT (w, TermWin.ncol);
-  h += 2; MIN_IT (h, TermWin.nrow);
+  w += 2; MIN_IT (w, ncol);
+  h += 2; MIN_IT (h, nrow);
 
   x -= 1; MAX_IT (x, 0);
   y -= 1; MAX_IT (y, 0);
 
-  MIN_IT (x, TermWin.ncol - w);
-  MIN_IT (y, TermWin.nrow - h);
+  MIN_IT (x, ncol - w);
+  MIN_IT (y, nrow - h);
 
   ov_x = x; ov_y = y;
   ov_w = w; ov_h = h;
@@ -3828,7 +3804,7 @@ rxvt_term::scr_swap_overlay ()
   if (!ov_text)
     return;
 
-  int row_offset = ov_y + TermWin.saveLines - TermWin.view_start;
+  int row_offset = ov_y + saveLines - view_start;
 
   // swap screen mem with overlay
   for (int y = ov_h; y--; )
@@ -3836,8 +3812,8 @@ rxvt_term::scr_swap_overlay ()
       text_t *t1 = ov_text[y];
       rend_t *r1 = ov_rend[y];
 
-      text_t *t2 = screen.text[y + row_offset] + ov_x;
-      rend_t *r2 = screen.rend[y + row_offset] + ov_x;
+      text_t *t2 = save[y + row_offset].t + ov_x;
+      rend_t *r2 = save[y + row_offset].r + ov_x;
 
       for (int x = ov_w; x--; )
         {

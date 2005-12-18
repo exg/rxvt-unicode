@@ -820,15 +820,15 @@ enum {
 /* convert pixel dimensions to row/column values.  Everything as int32_t */
 #define Pixel2Col(x)            Pixel2Width((int32_t)(x))
 #define Pixel2Row(y)            Pixel2Height((int32_t)(y))
-#define Pixel2Width(x)          ((int32_t)(x) / (int32_t)TermWin.fwidth)
-#define Pixel2Height(y)         ((int32_t)(y) / (int32_t)TermWin.fheight)
+#define Pixel2Width(x)          ((int32_t)(x) / (int32_t)fwidth)
+#define Pixel2Height(y)         ((int32_t)(y) / (int32_t)fheight)
 #define Col2Pixel(col)          ((int32_t)Width2Pixel(col))
 #define Row2Pixel(row)          ((int32_t)Height2Pixel(row))
-#define Width2Pixel(n)          ((int32_t)(n) * (int32_t)TermWin.fwidth)
-#define Height2Pixel(n)         ((int32_t)(n) * (int32_t)TermWin.fheight)
+#define Width2Pixel(n)          ((int32_t)(n) * (int32_t)fwidth)
+#define Height2Pixel(n)         ((int32_t)(n) * (int32_t)fheight)
 
-#define TermWin_TotalWidth()    ((int32_t)TermWin.width)
-#define TermWin_TotalHeight()   ((int32_t)TermWin.height)
+#define TermWin_TotalWidth()    ((int32_t)width)
+#define TermWin_TotalHeight()   ((int32_t)height)
 
 /* how to build & extract colors and attributes */
 #define GET_BASEFG(x)           (((x) & RS_fgMask))
@@ -872,9 +872,9 @@ enum {
 #define ISSET_PIXCOLOR(x)       (pixcolor_set[(x) / NPIXCLR_BITS] &  (1 << ((x) % NPIXCLR_BITS)))
 
 #if ENABLE_STYLES
-# define FONTSET(style) TermWin.fontset[GET_STYLE (style)]
+# define FONTSET(style) fontset[GET_STYLE (style)]
 #else
-# define FONTSET(style) TermWin.fontset[0]
+# define FONTSET(style) fontset[0]
 #endif
 
 #ifdef HAVE_SCROLLBARS
@@ -909,7 +909,7 @@ enum {
 
 #if (MENUBAR_MAX > 1)
 /* rendition style flags */
-# define menuBar_height()       (TermWin.fheight + SHADOW)
+# define menuBar_height()       (fheight + SHADOW)
 # define menuBar_TotalHeight()  (menuBar_height() + SHADOW + menuBar_margin)
 # define isMenuBarWindow(w)     ((w) == menuBar.win)
 #else
@@ -1350,8 +1350,8 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void color_aliases (int idx);
   void recolour_cursor ();
   void create_windows (int argc, const char *const *argv);
-  void resize_all_windows (unsigned int width, unsigned int height, int ignoreparent);
-  void window_calc (unsigned int width, unsigned int height);
+  void resize_all_windows (unsigned int newwidth, unsigned int newheight, int ignoreparent);
+  void window_calc (unsigned int newwidth, unsigned int newheight);
 
 #if USE_XIM
   rxvt_xim       *input_method;
@@ -1433,7 +1433,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void set_window_color (int idx, const char *color);
   void set_colorfgbg ();
   int rXParseAllocColor (rxvt_color * screen_in_out, const char *colour);
-  void set_widthheight (unsigned int width, unsigned int height);
+  void set_widthheight (unsigned int newwidth, unsigned int newheight);
 
 #ifdef MENUBAR
   // menubar.C
@@ -1469,8 +1469,36 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 #endif
 
   // screen.C
-  void scr_blank_line (text_t *et, rend_t *er, unsigned int width, rend_t efs);
-  void scr_blank_screen_mem (text_t **tp, rend_t **rp, unsigned int row, rend_t efs);
+
+  void lalloc (line_t &l)
+  {
+    l.t = (text_t *)talloc->alloc ();
+    l.r = (rend_t *)ralloc->alloc ();
+  }
+
+  void lfree (line_t &l)
+  {
+    talloc->free (l.t);
+    ralloc->free (l.r);
+  }
+
+  void lresize (line_t &l)
+  {
+    if (!l.t)
+      return;
+
+    l.t = (text_t *)talloc->alloc (l.t, prev_ncol * sizeof (text_t));
+    l.r = (rend_t *)ralloc->alloc (l.r, prev_ncol * sizeof (rend_t));
+
+    MIN_IT (l.l, (int16_t)ncol);
+
+    if (ncol > prev_ncol)
+      scr_blank_line (l, prev_ncol, ncol - prev_ncol, DEFAULT_RSTYLE);
+  }
+
+  void scr_update_term ();
+  void scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs);
+  void scr_blank_screen_mem (line_t &l, rend_t efs);
   int scr_scroll_text (int row1, int row2, int count, int spec);
   void scr_reset ();
   void scr_reset_realloc ();
@@ -1489,7 +1517,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   rxvt_fontset *scr_find_fontset (rend_t r = DEFAULT_RSTYLE);
   void scr_recolour ();
   void scr_remap_chars ();
-  void scr_remap_chars (text_t *tp, rend_t *rp);
+  void scr_remap_chars (const line_t &l);
 
   void scr_poweron ();
   void scr_cursor (int mode);

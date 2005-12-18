@@ -11,6 +11,8 @@ WISH: meta-tagging of data by regex/master process (my dream project)
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 
+	- make it compile without SMART_RESIZE again.
+
 5.9  Sat Dec 17 21:53:17 CET 2005
 	- fix a bug in the menu code of unknown impact, found by darix.
         - clean up signal handling to be global, not per terminal

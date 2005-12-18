@@ -755,9 +755,9 @@ rxvt_term::drawbox_menubar (int x, int len, int state)
 
   x = Width2Pixel (x);
   len = Width2Pixel (len + HSPACE);
-  if (x >= TermWin.width)
+  if (x >= width)
     return;
-  else if (x + len >= TermWin.width)
+  else if (x + len >= width)
     len = (TermWin_TotalWidth () - x);
 
 #ifdef MENUBAR_SHADOW_IN
@@ -944,7 +944,7 @@ rxvt_term::menu_show ()
       ActiveMenu->y = 1;
       ActiveMenu->w = Menu_PixelWidth (ActiveMenu);
 
-      if ((x + ActiveMenu->w) >= TermWin.width)
+      if ((x + ActiveMenu->w) >= width)
         x = (TermWin_TotalWidth () - ActiveMenu->w);
 
       /* find the height */
@@ -956,7 +956,7 @@ rxvt_term::menu_show ()
 
   if (ActiveMenu->win == None)
     {
-      ActiveMenu->win = XCreateSimpleWindow (display->display, TermWin.vt,
+      ActiveMenu->win = XCreateSimpleWindow (display->display, vt,
                                              x, ActiveMenu->y,
                                              ActiveMenu->w, ActiveMenu->h,
                                              0,
@@ -1024,10 +1024,10 @@ rxvt_term::menu_show ()
               menu->h = h + 2 * SHADOW;
 
               /* ensure menu is in window limits */
-              if ((x1 + menu->w) >= TermWin.width)
+              if ((x1 + menu->w) >= width)
                 x1 = (TermWin_TotalWidth () - menu->w);
 
-              if ((y1 + menu->h) >= TermWin.height)
+              if ((y1 + menu->h) >= height)
                 y1 = (TermWin_TotalHeight () - menu->h);
 
               menu->x = (x1 < 0 ? 0 : x1);
@@ -1037,14 +1037,14 @@ rxvt_term::menu_show ()
             name = NULL;
 
           if (len && name)
-            draw_string (*ActiveMenu->drawable, gc, TermWin.fontset[0],
+            draw_string (*ActiveMenu->drawable, gc, fontset[0],
                          xoff, 2 * SHADOW + y, name, len);
 
           len = item->len2;
           name = item->name2;
 
           if (len && name)
-            draw_string (*ActiveMenu->drawable, gc, TermWin.fontset[0],
+            draw_string (*ActiveMenu->drawable, gc, fontset[0],
                          ActiveMenu->w - (xoff + Width2Pixel (xright)), 2 * SHADOW + y, name, len);
 
           h = HEIGHT_TEXT + 2 * SHADOW;
@@ -2061,30 +2061,30 @@ rxvt_term::menubar_expose ()
           rxvt_print_menu_descendants (menu);
 #endif
 
-          if (x >= TermWin.ncol)
-            len = (TermWin.ncol - (menu->x + HSPACE));
+          if (x >= ncol)
+            len = (ncol - (menu->x + HSPACE));
 
           drawbox_menubar (menu->x, len, +1);
-          draw_string (*menuBar.drawable, menubarGC, TermWin.fontset[0],
+          draw_string (*menuBar.drawable, menubarGC, fontset[0],
                        (Width2Pixel (menu->x) + Width2Pixel (HSPACE) / 2),
                        SHADOW, menu->name, len);
 
-          if (x >= TermWin.ncol)
+          if (x >= ncol)
             break;
         }
     }
-  drawbox_menubar (x, TermWin.ncol, (CurrentBar ? +1 : -1));
+  drawbox_menubar (x, ncol, (CurrentBar ? +1 : -1));
 
   /* add the menuBar title, if it exists and there's plenty of room */
   Arrows_x = 0;
-  if (x < TermWin.ncol)
+  if (x < ncol)
     {
       const char     *str;
       int             ncol;
       unsigned int    len;
       char            title[256];
 
-      ncol = (int)TermWin.ncol;
+      ncol = (int)ncol;
       if (x < (ncol - (NARROWS + 1)))
         {
           ncol -= (NARROWS + 1);
@@ -2128,7 +2128,7 @@ rxvt_term::menubar_expose ()
 
       ncol -= (x + len + HSPACE);
       if (len > 0 && ncol >= 0)
-        draw_string (*menuBar.drawable, menubarGC, TermWin.fontset[0],
+        draw_string (*menuBar.drawable, menubarGC, fontset[0],
                      Width2Pixel (x) + Width2Pixel (ncol + HSPACE) / 2,
                      SHADOW, title, len);
     }
@@ -2406,8 +2406,8 @@ rxvt_term::menubar_control (XButtonEvent &ev)
         break;
 
       case MotionNotify:
-        while (XCheckTypedWindowEvent (display->display, TermWin.parent[0],
-                                       MotionNotify, (XEvent *)&ev)) ;
+        while (XCheckTypedWindowEvent (display->display, parent[0],
+                                       MotionNotify, (XEvent *)&ev));
 
         if (ActiveMenu)
           while (menu_select (ev)) ;
