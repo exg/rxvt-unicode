@@ -991,7 +991,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
                 tp--, rp--;
             }
           else if (screen.cur.row > 0
-                   && save [screen.cur.row - 1 + saveLines].l == -1)
+                   && save [screen.cur.row - 1 + saveLines].is_cont ())
             {
               line_t *line = save + (screen.cur.row - 1 + saveLines);
 
@@ -1172,7 +1172,7 @@ rxvt_term::scr_forwardindex ()
 
       if (save[row].l == 0)
         return;             /* um, yeah? */
-      else if (save[row].l == -1)
+      else if (save[row].is_cont ())
         save[row].l = ncol;
 
       scr_gotorc (0, 0, R_RELATIVE);
@@ -1535,7 +1535,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
 
         scr_blank_line (*line, ncol - count, count, tr);
 
-        if (line->l == -1) /* break line continuation */
+        if (line->is_cont ()) /* break line continuation */
           line->l = ncol;
         
         line->l -= count;
@@ -2980,20 +2980,17 @@ rxvt_term::selection_make (Time tm)
 
   for (; row <= end_row; row++, col = 0)
     {
-      end_col = save[row].l;
-
 #if ENABLE_FRILLS
       if (selection.rect)
         {
           col = selection.beg.col;
           end_col = ncol + 1;
         }
+      else
 #endif
+        end_col = save[row].is_cont () ? ncol : save[row].l; //TODO//FIXME
 
       MAX_IT (col, 0);
-
-      if (end_col == -1)
-        end_col = ncol;
 
       if (row == end_row || selection.rect)
         MIN_IT (end_col, selection.end.col);
@@ -3175,7 +3172,7 @@ rxvt_term::selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, r
 
       if ((col == bound.col) && (row != bound.row))
         {
-          if (save[ (row - (dirn == UP ? 1 : 0))].l == -1)
+          if (save[ (row - (dirn == UP ? 1 : 0))].is_cont ())
             {
               trow = row + dirnadd;
               tcol = dirn == UP ? ncol - 1 : 0;
@@ -3434,11 +3431,11 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
 
           // select a complete logical line
           while (selection.beg.row > -saveLines
-                 && save[selection.beg.row - 1 + saveLines].l == -1)
+                 && save[selection.beg.row - 1 + saveLines].is_cont ())
             selection.beg.row--;
 
           while (selection.end.row < nrow
-                 && save[selection.end.row + saveLines].l == -1)
+                 && save[selection.end.row + saveLines].is_cont ())
             selection.end.row++;
         }
     }
