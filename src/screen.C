@@ -372,7 +372,7 @@ rxvt_term::scr_reset ()
                     {
                       tp [qrow] = (text_t *)ta->alloc ();
                       rp [qrow] = (rend_t *)ra->alloc ();
-                      tl [qrow] = -1;
+                      tl [qrow] = LINE_CONT1;
 
                       int qcol = 0;
 
@@ -814,7 +814,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
       if (c < 0x20)
         if (c == C0_LF)
           {          
-            if (line->l != -1)      /* XXX: think about this */
+            if (!line->is_longer ())      /* XXX: think about this */
               MAX_IT (line->l, screen.cur.col);
 
             screen.flags &= ~Screen_WrapNext;
@@ -829,7 +829,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
           }
         else if (c == C0_CR)
           {
-            if (line->l != -1)      /* XXX: think about this */
+            if (!line->is_longer ())      /* XXX: think about this */
               MAX_IT (line->l, screen.cur.col);
 
             screen.flags &= ~Screen_WrapNext;
@@ -857,7 +857,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
       if (screen.flags & Screen_WrapNext)
         {
-          line->l = -1;
+          line->set_is_longer ();
 
           scr_do_wrap ();
           
@@ -991,7 +991,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
                 tp--, rp--;
             }
           else if (screen.cur.row > 0
-                   && save [screen.cur.row - 1 + saveLines].is_cont ())
+                   && save [screen.cur.row - 1 + saveLines].is_longer ())
             {
               line_t *line = save + (screen.cur.row - 1 + saveLines);
 
@@ -1015,7 +1015,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
         }
     }
 
-  if (line->l != -1)      /* XXX: think about this */
+  if (!line->is_longer ())      /* XXX: think about this */
     MAX_IT (line->l, screen.cur.col);
 
 #ifdef DEBUG_STRICT
@@ -1096,7 +1096,7 @@ rxvt_term::scr_tab (int count, bool ht)
         {
           base_rend = SET_FONT (base_rend, 0);
 
-          if (l.l != -1)      /* XXX: think about this */
+          if (!l.is_longer ())      /* XXX: think about this */
             MAX_IT (l.l, x);
 
           i = screen.cur.col;
@@ -1144,7 +1144,7 @@ rxvt_term::scr_backindex ()
     scr_gotorc (0, -1, R_RELATIVE | C_RELATIVE);
   else
     {
-      if (save[screen.cur.row + saveLines].l == 0)
+      if (!save[screen.cur.row + saveLines].l)
         return;             /* um, yeah? */
 
       scr_insdel_chars (1, INSERT);
@@ -1170,9 +1170,10 @@ rxvt_term::scr_forwardindex ()
     {
       row = screen.cur.row + saveLines;
 
-      if (save[row].l == 0)
+      if (!save[row].l)
         return;             /* um, yeah? */
-      else if (save[row].is_cont ())
+
+      if (save[row].is_longer ()) //TODO//FIXME//LEN
         save[row].l = ncol;
 
       scr_gotorc (0, 0, R_RELATIVE);
@@ -1423,10 +1424,14 @@ rxvt_term::scr_E ()
   fs = SET_FONT (rstyle, FONTSET (rstyle)->find_font ('E'));
   for (k = saveLines, i = nrow; i--; k++)
     {
-      save[k].l = ncol;    /* make the `E's selectable */
-      fill_text (save[k].t, 'E', ncol);
-      for (r1 = save[k].r, j = ncol; j--; )
+      line_t &line = save[k];
+
+      fill_text (line.t, 'E', ncol);
+
+      for (r1 = line.r, j = ncol; j--; )
         *r1++ = fs;
+
+      line.l = ncol;    /* make the `E's selectable */
     }
 }
 
@@ -1494,7 +1499,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
             line->r[col] = line->r[col - count];
           }
 
-        if (line->l != -1)
+        if (!line->is_longer ())
           {
             line->l += count;
             MIN_IT (line->l, ncol);
@@ -1535,7 +1540,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
 
         scr_blank_line (*line, ncol - count, count, tr);
 
-        if (line->is_cont ()) /* break line continuation */
+        if (line->is_longer ()) /* break line continuation */
           line->l = ncol;
         
         line->l -= count;
@@ -1978,9 +1983,9 @@ rxvt_term::scr_printscreen (int fullhist)
   for (r1 = 0; r1 < nrows; r1++)
     {
       text_t *tp = save[r1 + row_offset].t;
-      int len = save[r1 + row_offset].l;
+      int len    = save[r1 + row_offset].l;
 
-      for (i = len >= 0 ? len : ncol - 1; i--; )
+      for (i = len >= 0 ? len : ncol - 1; i--; ) //TODO//FIXME//LEN
         {
           char mb[MB_LEN_MAX];
           text_t t = *tp++;
@@ -2988,14 +2993,14 @@ rxvt_term::selection_make (Time tm)
         }
       else
 #endif
-        end_col = save[row].is_cont () ? ncol : save[row].l; //TODO//FIXME
+        end_col = save[row].is_longer () ? ncol : save[row].l; //TODO//FIXME//LEN
 
       MAX_IT (col, 0);
 
       if (row == end_row || selection.rect)
         MIN_IT (end_col, selection.end.col);
 
-      t = &save[row].t[col];
+      t = save[row].t + col;
       for (; col < end_col; col++)
         {
           if (*t == NOCHAR)
@@ -3021,7 +3026,7 @@ rxvt_term::selection_make (Time tm)
             new_selection_text[ofs++] = *t++;
         }
 
-      if (save[row].l != -1 && row != end_row)
+      if (!save[row].is_longer () && row != end_row)
         new_selection_text[ofs++] = C0_LF;
     }
 
@@ -3148,11 +3153,8 @@ rxvt_term::selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, r
   col = mark->col;
   MAX_IT (col, 0);
   /* find the edge of a word */
-  stp = &save[row].t[col];
-  w1 = DELIMIT_TEXT (*stp);
-
-  srp = &save[row].r[col];
-  w2 = DELIMIT_REND (*srp);
+  stp = save[row].t + col; w1 = DELIMIT_TEXT (*stp);
+  srp = save[row].r + col; w2 = DELIMIT_REND (*srp);
 
   for (;;)
     {
@@ -3172,16 +3174,16 @@ rxvt_term::selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, r
 
       if ((col == bound.col) && (row != bound.row))
         {
-          if (save[ (row - (dirn == UP ? 1 : 0))].is_cont ())
+          if (save[ (row - (dirn == UP ? 1 : 0))].is_longer ())
             {
               trow = row + dirnadd;
               tcol = dirn == UP ? ncol - 1 : 0;
 
-              if (save[trow].t == NULL)
+              if (!save[trow].t)
                 break;
 
-              stp = & (save[trow].t[tcol]);
-              srp = & (save[trow].r[tcol]);
+              stp = save[trow].t + tcol;
+              srp = save[trow].r + tcol;
 
               if (DELIMIT_TEXT (*stp) != w1 || DELIMIT_REND (*srp) != w2)
                 break;
@@ -3256,7 +3258,6 @@ rxvt_term::selection_extend (int x, int y, int flag)
 void
 rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int buttonpress, int clickchange)
 {
-  int end_col;
   row_col_t pos;
   enum {
     LEFT, RIGHT
@@ -3368,21 +3369,17 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
 
   if (selection.clicks == 1)
     {
-      end_col = save[selection.beg.row + saveLines].l;
-
-      if (selection.beg.col > end_col
-          && end_col != -1
+      if (selection.beg.col > save[selection.beg.row + saveLines].l //TODO//FIXME//LEN
+          && !save[selection.beg.row + saveLines].is_longer ()
 #if ENABLE_FRILLS
           && !selection.rect
 #endif
          )
         selection.beg.col = ncol;
 
-      end_col = save[selection.end.row + saveLines].l;
-
       if (
-          selection.end.col > end_col
-          && end_col != -1
+          selection.end.col > save[selection.end.row + saveLines].l //TODO//FIXME//LEN
+          && !save[selection.end.row + saveLines].is_longer ()
 #if ENABLE_FRILLS
           && !selection.rect
 #endif
@@ -3402,19 +3399,14 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
 #if ENABLE_FRILLS
       if (options & Opt_tripleclickwords)
         {
-          int end_row;
-
           selection_delimit_word (UP, &selection.beg, &selection.beg);
-          end_row = save[selection.mark.row + saveLines].l;
 
-          for (end_row = selection.mark.row; end_row < nrow; end_row++)
+          for (int end_row = selection.mark.row; end_row < nrow; end_row++)
             {
-              end_col = save[end_row + saveLines].l;
-
-              if (end_col != -1)
+              if (!save[end_row + saveLines].is_longer ())
                 {
                   selection.end.row = end_row;
-                  selection.end.col = end_col;
+                  selection.end.col = save[end_row + saveLines].l;
                   selection_remove_trailing_spaces ();
                   break;
                 }
@@ -3431,11 +3423,11 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
 
           // select a complete logical line
           while (selection.beg.row > -saveLines
-                 && save[selection.beg.row - 1 + saveLines].is_cont ())
+                 && save[selection.beg.row - 1 + saveLines].is_longer ())
             selection.beg.row--;
 
           while (selection.end.row < nrow
-                 && save[selection.end.row + saveLines].is_cont ())
+                 && save[selection.end.row + saveLines].is_longer ())
             selection.end.row++;
         }
     }
@@ -3483,7 +3475,7 @@ rxvt_term::selection_remove_trailing_spaces ()
         }
 
       if (end_col >= 0
-          || save[end_row - 1 + saveLines].l != -1)
+          || !save[end_row - 1 + saveLines].is_longer ())
         {
           selection.end.col = end_col + 1;
           selection.end.row = end_row;

@@ -88,9 +88,14 @@ struct line_t {
    rend_t *r; // rendition, uses RS_ flags
    tlen_t l;  // length of each text line, LINE_CONT == continued on next line
 
-   bool is_cont ()
+   bool is_longer ()
    {
      return l < 0;
+   }
+
+   void set_is_longer ()
+   {
+     l = LINE_CONT;
    }
 
    void clear ()
