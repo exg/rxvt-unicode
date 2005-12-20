@@ -827,8 +827,11 @@ enum {
 #define Width2Pixel(n)          ((int32_t)(n) * (int32_t)fwidth)
 #define Height2Pixel(n)         ((int32_t)(n) * (int32_t)fheight)
 
-#define TermWin_TotalWidth()    ((int32_t)width)
-#define TermWin_TotalHeight()   ((int32_t)height)
+#define TermWin_TotalWidth()    ((int32_t)this->width)
+#define TermWin_TotalHeight()   ((int32_t)this->height)
+
+#define LINENO(n) (((n) + term_start + total_rows) % total_rows)
+#define ROW(n) (save [LINENO (n)])
 
 /* how to build & extract colors and attributes */
 #define GET_BASEFG(x)           (((x) & RS_fgMask))

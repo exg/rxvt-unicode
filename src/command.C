@@ -137,13 +137,13 @@ rxvt_term::iso14755_54 (int x, int y)
   x = Pixel2Col (x);
   y = Pixel2Row (y);
 
-  if (x < 0 || x >= ncol
-      || y < 0 || y >= nrow)
+  if (!IN_RANGE_EXC (x, 0, ncol)
+      || !IN_RANGE_EXC (y, 0, nrow))
     return;
 
   for (;;)
     {
-      const line_t &l = save[y + saveLines - view_start];
+      const line_t &l = ROW(-view_start);
 
       text_t t = l.t[x];
 
@@ -156,7 +156,6 @@ rxvt_term::iso14755_54 (int x, int y)
 
       x--;
     }
-
 }
 #endif
 

@@ -85,9 +85,6 @@ inline void fill_text (text_t *start, text_t value, int len)
 #define ROWCOL_IN_ROW_AT_OR_BEFORE(X, Y)                               \
     ROW_AND_COL_IN_ROW_AT_OR_BEFORE ((X).row, (X).col, (Y).row, (Y).col)
 
-#define LINENO(n) (((n) + term_start + total_rows) % total_rows)
-#define ROW(n) (save [LINENO (n)])
-
 /*
  * CLEAR_ROWS : clear <num> rows starting from row <row>
  * CLEAR_CHARS: clear <num> chars starting from pixel position <x,y>
@@ -3149,8 +3146,8 @@ Old_Word_Selection_You_Die:
 void
 rxvt_term::selection_extend (int x, int y, int flag)
 {
-  int col = min (max (Pixel2Col (x), 0), nrow - 1);
-  int row = min (max (Pixel2Row (y), 0), ncol);
+  int col = min (max (Pixel2Col (x), 0), ncol);
+  int row = min (max (Pixel2Row (y), 0), nrow - 1);
 
   /*
   * If we're selecting characters (single click) then we must check first
