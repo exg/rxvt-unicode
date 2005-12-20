@@ -12,11 +12,14 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 
 	- make it compile without SMART_RESIZE again.
+        - enable slow link support by default.
         - _major_ rewrite of internal line handling logic:
 #	- re-flow on resize, lines get wrapped instead of winged.
 #	- circular line buffer (substantially speeds up scrolling).
 #       - slightly less memory usage.
 #	- slight overall speed improvements.
+        - partial-screen scrolls no longer end up in the scrollback
+          buffer.
 
 5.9  Sat Dec 17 21:53:17 CET 2005
 	- fix a bug in the menu code of unknown impact, found by darix.

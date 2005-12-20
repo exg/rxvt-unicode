@@ -641,7 +641,9 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
   want_refresh = 1;
   num_scr += count;
 
-  if (row1 == 0 && count > 0
+  if (count > 0
+      && row1 == 0
+      && row2 == nrow - 1
       && (current_screen == PRIMARY || options & Opt_secondaryScroll))
     {
       nsaved = min (nsaved + count, saveLines);
