@@ -3354,7 +3354,7 @@ rxvt_term::process_csi_seq ()
         arg[0] = -arg[0];
         /* FALLTHROUGH */
       case CSI_SU:		/* 8.3.148: (1) SCROLL UP */
-        scr_scroll_text (screen.tscroll, screen.bscroll, arg[0], 0);
+        scr_scroll_text (screen.tscroll, screen.bscroll, arg[0]);
         break;
 
       case CSI_DA:		/* 8.3.24: (0) DEVICE ATTRIBUTES */

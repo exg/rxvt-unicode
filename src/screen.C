@@ -253,7 +253,7 @@ rxvt_term::scr_reset ()
           /* delete rows */
           k = min (nsaved, prev_nrow - nrow);
           // k = max (0, - ( (nrow - 1) - r->screen.cur.row)); // mmc's http://maruska.dyndns.org/wiki/scrolling-bug //make configurable? //D TODO
-          scr_scroll_text (0, (int)prev_nrow - 1, k, 1);
+          scr_scroll_text (0, (int)prev_nrow - 1, k);
 
           for (p = nrow; p < prev_nrow; p++)
             {
@@ -291,7 +291,7 @@ rxvt_term::scr_reset ()
 
           if (k > 0)
             {
-              scr_scroll_text (0, (int)nrow - 1, -k, 1);
+              scr_scroll_text (0, (int)nrow - 1, -k);
               screen.cur.row += k;
               screen.s_cur.row += k;
               nsaved -= k;
@@ -540,13 +540,7 @@ rxvt_term::scr_cursor (int mode)
 int
 rxvt_term::scr_change_screen (int scrn)
 {
-  int i;
-#if NSCREENS
-  int offset;
-#endif
-
   want_refresh = 1;
-
   view_start = 0;
 
   if (current_screen == scrn)
@@ -554,7 +548,7 @@ rxvt_term::scr_change_screen (int scrn)
 
   selection_check (2);        /* check for boundary cross */
 
-  i = current_screen; current_screen = scrn; scrn = i;
+  SWAP_IT (scrn, current_screen, int);
 
   SWAP_IT (screen.cur.row, swap.cur.row, int16_t);
   SWAP_IT (screen.cur.col, swap.cur.col, int16_t);
@@ -567,9 +561,8 @@ rxvt_term::scr_change_screen (int scrn)
   if (options & Opt_secondaryScreen)
     {
       num_scr = 0;
-      offset = saveLines;
 
-      for (i = prev_nrow; i--;)
+      for (int i = nrow; i--; )
         SWAP_IT (ROW(i), swap_save[i], line_t);
 
       SWAP_IT (screen.charset, swap.charset, int16_t);
@@ -580,7 +573,7 @@ rxvt_term::scr_change_screen (int scrn)
   else
 #endif
     if (options & Opt_secondaryScroll)
-      scr_scroll_text (0, prev_nrow - 1, prev_nrow, 0);
+      scr_scroll_text (0, prev_nrow - 1, prev_nrow);
 
   return scrn;
 }
@@ -597,7 +590,7 @@ rxvt_term::scr_do_wrap ()
   screen.cur.col = 0;
 
   if (screen.cur.row == screen.bscroll)
-    scr_scroll_text (screen.tscroll, screen.bscroll, 1, 0);
+    scr_scroll_text (screen.tscroll, screen.bscroll, 1);
   else if (screen.cur.row < nrow - 1)
     screen.cur.row++;
 }
@@ -638,17 +631,15 @@ rxvt_term::scr_rendition (int set, int style)
  * Scroll text between <row1> and <row2> inclusive, by <count> lines
  * count positive ==> scroll up
  * count negative ==> scroll down
- * spec == 0 for normal routines
  */
 int
-rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
+rxvt_term::scr_scroll_text (int row1, int row2, int count)
 {
-  int i, j;
-
   if (count == 0 || (row1 > row2))
     return 0;
 
   want_refresh = 1;
+  num_scr += count;
 
   if (row1 == 0 && count > 0
       && (current_screen == PRIMARY || options & Opt_secondaryScroll))
@@ -661,6 +652,8 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
           selection.beg.row  -= count;
           selection.end.row  -= count;
           selection.mark.row -= count;
+
+          selection_check (0);
         }
 
       for (int i = count; i--; )
@@ -673,15 +666,10 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
     }
   else
     {
-      if (!spec)
-        row1 += saveLines;
-
-      row2 += saveLines;
-
       if (selection.op && current_screen == selection.screen)
         {
-          i = selection.beg.row + saveLines;
-          j = selection.end.row + saveLines;
+          int i = selection.beg.row;
+          int j = selection.end.row;
 
           if ((i < row1 && j > row1)
               || (i < row2 && j > row2)
@@ -699,55 +687,26 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count, int spec)
               selection.beg.row  -= count;
               selection.end.row  -= count;
               selection.mark.row -= count;
+              
+              selection_check (0);
             }
         }
 
-      selection_check (0);        /* _after_ nsaved update */
+      // use a simple and robust scrolling algorithm, this
+      // part of scr_scroll_text is not time-critical.
 
-      num_scr += count;
-      j = count;
+      int rows = row2 - row1 + 1;
 
-      if (count < 0)
-        count = -count;
-
-      i = row2 - row1 + 1;
-      MIN_IT (count, i);
-
-      if (j > 0)
+      for (int row = 0; row < rows; row++)
         {
-          /* scroll up */
+          buf [row] = ROW(row1 + (row + count + rows) % rows);
 
-          /* Copy lines that will get clobbered by the rotation */
-          memcpy (buf, save + row1, count * sizeof (line_t));
-
-          /* Rotate lines */
-          i = row2 - row1 - count + 1;
-          memmove (save + row1, save + row1 + count, i * sizeof (line_t));
-
-          j = row2 - count + 1, i = count;
-        }
-      else /* if (j < 0) */
-        {
-          /* scroll down */
-
-          /* Copy lines that will get clobbered by the rotation */
-          for (i = 0, j = row2; i < count; i++, j--)
-            buf[i] = save[j];
-
-          /* Rotate lines */
-          for (j = row2, i = j - count; i >= row1; i--, j--)
-            save[j] = save[i];
-
-          j = row1, i = count;
-          count = -count;
+          if (!IN_RANGE_EXC (row + count, 0, rows))
+            scr_blank_screen_mem (buf [row], rstyle);
         }
 
-      /* Resurrect lines */
-      memcpy (save + j, buf, i * sizeof (line_t));
-
-      if (!spec) /* line length may not equal ncol */
-        for (; i--; j++)
-          scr_blank_screen_mem (save[j], rstyle);
+      for (int row = 0; row < rows; row++)
+        ROW(row1 + row) = buf [row];
     }
 
   return count;
@@ -780,7 +739,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
           && (screen.bscroll == (nrow - 1)))
         {
           /* _at least_ this many lines need to be scrolled */
-          scr_scroll_text (screen.tscroll, screen.bscroll, nlines, 0);
+          scr_scroll_text (screen.tscroll, screen.bscroll, nlines);
           screen.cur.row -= nlines;
         }
     }
@@ -813,7 +772,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
             screen.flags &= ~Screen_WrapNext;
 
             if (screen.cur.row == screen.bscroll)
-              scr_scroll_text (screen.tscroll, screen.bscroll, 1, 0);
+              scr_scroll_text (screen.tscroll, screen.bscroll, 1);
             else if (screen.cur.row < (nrow - 1))
               row = ++screen.cur.row;
 
@@ -1236,7 +1195,7 @@ rxvt_term::scr_index (enum page_dirn direction)
 
   if ((screen.cur.row == screen.bscroll && direction == UP)
       || (screen.cur.row == screen.tscroll && direction == DN))
-    scr_scroll_text (screen.tscroll, screen.bscroll, dirn, 0);
+    scr_scroll_text (screen.tscroll, screen.bscroll, dirn);
   else
     screen.cur.row += dirn;
 
@@ -1307,14 +1266,12 @@ void
 rxvt_term::scr_erase_screen (int mode)
 {
   int num;
-  int32_t row, row_offset;
+  int32_t row;
   rend_t ren;
   XGCValues gcvalue;
 
   want_refresh = 1;
   ZERO_SCROLLBACK ();
-
-  row_offset = (int32_t)saveLines;
 
   switch (mode)
     {
@@ -1369,8 +1326,8 @@ rxvt_term::scr_erase_screen (int mode)
 
   for (; num--; row++)
     {
-      scr_blank_screen_mem (save[row + row_offset], rstyle);
-      save[row + row_offset].l = 0;
+      scr_blank_screen_mem (ROW (row), rstyle);
+      ROW (row).l = 0;
       scr_blank_line (drawn[row], 0, ncol, ren);
     }
 }
@@ -1394,8 +1351,7 @@ rxvt_term::scr_erase_savelines ()
 void
 rxvt_term::scr_E ()
 {
-  int i, j, k;
-  rend_t *r1, fs;
+  rend_t fs;
 
   want_refresh = 1;
   ZERO_SCROLLBACK ();
@@ -1404,13 +1360,14 @@ rxvt_term::scr_E ()
   selection_check (3);
 
   fs = SET_FONT (rstyle, FONTSET (rstyle)->find_font ('E'));
-  for (k = saveLines, i = nrow; i--; k++)
+  for (int row = nrow; row--; )
     {
-      line_t &line = save[k];
+      line_t &line = ROW(row);
 
       fill_text (line.t, 'E', ncol);
+      rend_t *r1 = line.r;
 
-      for (r1 = line.r, j = ncol; j--; )
+      for (int j = ncol; j--; )
         *r1++ = fs;
 
       line.l = ncol;    /* make the `E's selectable */
@@ -1444,7 +1401,7 @@ rxvt_term::scr_insdel_lines (int count, int insdel)
 
   scr_do_wrap ();
 
-  scr_scroll_text (screen.cur.row, screen.bscroll, insdel * count, 0);
+  scr_scroll_text (screen.cur.row, screen.bscroll, insdel * count);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1468,9 +1425,9 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
   selection_check (1);
   MIN_IT (count, (ncol - screen.cur.col));
 
-  row = screen.cur.row + saveLines;
+  row = screen.cur.row;
 
-  line_t *line = save + row;
+  line_t *line = &ROW(row);
 
   switch (insdel)
     {
@@ -1501,14 +1458,14 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
               }
           }
 
-        scr_blank_line (save[row], screen.cur.col, count, rstyle);
+        scr_blank_line (*line, screen.cur.col, count, rstyle);
         break;
 
       case ERASE:
         screen.cur.col += count;     /* don't worry if > ncol */
         selection_check (1);
         screen.cur.col -= count;
-        scr_blank_line (save[row], screen.cur.col, count, rstyle);
+        scr_blank_line (*line, screen.cur.col, count, rstyle);
         break;
 
       case DELETE:
@@ -1525,8 +1482,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
         if (line->is_longer ()) /* break line continuation */
           line->l = ncol;
         
-        line->l -= count;
-        MAX_IT (line->l, 0);
+        line->l = max (line->l - count, 0);
 
         if (selection.op && current_screen == selection.screen
             && ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur))
@@ -1943,31 +1899,31 @@ void
 rxvt_term::scr_printscreen (int fullhist)
 {
 #ifdef PRINTPIPE
-  int i, r1, nrows, row_offset;
+  int nrows, row_start;
   FILE *fd;
 
   if ((fd = popen_printer ()) == NULL)
     return;
 
-  nrows = nrow;
-  row_offset = saveLines;
-
-  if (!fullhist)
-    row_offset -= view_start;
+  if (fullhist)
+    {
+      nrows = nrow + nsaved;
+      row_start = -nsaved;
+    }
   else
     {
-      nrows += nsaved;
-      row_offset -= nsaved;
+      nrows = nrow;
+      row_start = -view_start;
     }
 
   wctomb (0, 0);
 
-  for (r1 = 0; r1 < nrows; r1++)
+  for (int r1 = 0; r1 < nrows; r1++)
     {
-      text_t *tp = save[r1 + row_offset].t;
-      int len    = save[r1 + row_offset].l;
+      text_t *tp = ROW(r1).t;
+      int len    = ROW(r1).l;
 
-      for (i = len >= 0 ? len : ncol - 1; i--; ) //TODO//FIXME//LEN
+      for (int i = len >= 0 ? len : ncol - 1; i--; ) //TODO//FIXME//LEN
         {
           char mb[MB_LEN_MAX];
           text_t t = *tp++;
@@ -2137,8 +2093,8 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
    */
   i = num_scr;
   if (!display->is_local
-      && refresh_type == FAST_REFRESH && num_scr_allow && i
-      && abs (i) < nrow && !must_clear)
+      && refresh_type == FAST_REFRESH && num_scr_allow && num_scr
+      && abs (num_scr) < nrow && !must_clear)
     {
       int16_t nits;
       int j;
@@ -2151,7 +2107,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
         {
           if (row + i >= 0 && row + i < nrow && row + i != ocrow)
             {
-              line_t s  = save[(row + row_offset) % nlines];
+              line_t s  = save[(row + row_offset) % total_rows];
               line_t d  = drawn[row];
               line_t d2 = drawn[row + i];
 
@@ -3373,7 +3329,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
               if (!ROW(end_row).is_longer ())
                 {
                   selection.end.row = end_row;
-                  selection.end.col = save[end_row + saveLines].l;
+                  selection.end.col = ROW(end_row).l;
                   selection_remove_trailing_spaces ();
                   break;
                 }
