@@ -1037,7 +1037,7 @@ rxvt_term::slip_wheel_cb (time_watcher &w)
       || mouse_slip_wheel_speed < 0 ? scr_page (DN, -mouse_slip_wheel_speed)
                                     : scr_page (UP,  mouse_slip_wheel_speed))
     {
-      if (view_start == nscrolled ||
+      if (view_start == nsaved ||
           view_start == 0)
         mouse_slip_wheel_speed = 0;
 

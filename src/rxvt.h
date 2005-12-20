@@ -1496,7 +1496,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
       scr_blank_line (l, prev_ncol, ncol - prev_ncol, DEFAULT_RSTYLE);
   }
 
-  void scr_update_term ();
   void scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs);
   void scr_blank_screen_mem (line_t &l, rend_t efs);
   int scr_scroll_text (int row1, int row2, int count, int spec);

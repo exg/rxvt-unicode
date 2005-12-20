@@ -21,8 +21,13 @@ static inline T max (T a, U b) { return a > (T)b ? a : (T)b; }
 template<typename T>
 static inline void swap (T& a, T& b) { T t=a; a=b; b=t; }
 
-#define IN_RANGE(val,beg,end) \
+// in range including end
+#define IN_RANGE_INC(val,beg,end) \
   ((unsigned int)(val) - (unsigned int)(beg) <= (unsigned int)(end) - (unsigned int)(beg))
+
+// in range excluding end
+#define IN_RANGE_EXC(val,beg,end) \
+  ((unsigned int)(val) - (unsigned int)(beg) <  (unsigned int)(end) - (unsigned int)(beg))
 
 struct zero_initialized {
   void *operator new (size_t s);

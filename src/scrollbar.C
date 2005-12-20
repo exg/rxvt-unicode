@@ -155,9 +155,9 @@ rxvt_term::scrollbar_show (int update)
 
   if (update)
     {
-      top = nscrolled - view_start;
+      top = nsaved - view_start;
       bot = top + (nrow - 1);
-      len = max (nscrolled + (nrow - 1), 1);
+      len = max (nsaved + (nrow - 1), 1);
       adj = (((bot - top) * scrollbar_size ()) % len) > 0 ? 1 : 0;
 
       scrollBar.top = (scrollBar.beg + (top * scrollbar_size ()) / len);

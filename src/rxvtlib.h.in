@@ -113,7 +113,8 @@ struct line_t {
  *  ncol      : 1 <= ncol       <= MAX(int16_t)
  *  nrow      : 1 <= nrow       <= MAX(int16_t)
  *  saveLines : 0 <= saveLines  <= MAX(int16_t)
- *  nsaved    : 0 <= nscrolled  <= saveLines
+ *  nlines    : nrow + saveLines
+ *  nsaved    : 0 <= nsaved  <= saveLines
  *  term_start: 0 <= term_start < saveLines
  *  view_start: 0 <= view_start < saveLines
  */
@@ -133,8 +134,8 @@ struct TermWin_t {
   int            ext_bwidth;    /* external border width                    */
   int            lineSpace;     /* number of extra pixels between rows      */
   int            saveLines;     /* number of lines that fit in scrollback   */
-  int            nsaved;        /* number of line actually scrolled         */
-  int nscrolled; /*D*///TODO remove
+  int            total_rows;    /* total number of rows in this terminal    */
+  int            nsaved;        /* number of rows saved to scrollback       */
   int            term_start;    /* term lines start here                    */
   int            view_start;    /* scrollback view starts here              */
   Window         parent[6];     /* parent identifiers - we're parent[0]     */
@@ -165,14 +166,14 @@ struct TermWin_t {
  *   beg:       row/column of beginning of selection  : never past mark
  *   mark:      row/column of initial click           : never past end
  *   end:       row/column of one character past end of selection
- * * Note: -nscrolled <= beg.row <= mark.row <= end.row < nrow
+ * * Note: -nsaved <= beg.row <= mark.row <= end.row < nrow
  * * Note: col == -1 ==> we're left of screen
  *
  * Layout of text/rend information in the screen_t text/rend structures:
  *   Rows [0] ... [saveLines - 1]
  *     scrollback region : we're only here if view_start != 0
  *   Rows [saveLines] ... [saveLines + nrow - 1]
- *     normal `unscrolled' screen region
+ *     normal `unsaved' screen region
  */
 typedef struct {
   line_t        **line;
