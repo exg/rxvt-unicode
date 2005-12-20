@@ -1960,8 +1960,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                 showcursor; /* show the cursor                           */
   int16_t col, row,   /* column/row we're processing               */
           ocrow;      /* old cursor row                            */
-  int i,              /* tmp                                       */
-  row_offset;         /* basic offset in screen structure          */
+  int i;              /* tmp                                       */
 #ifndef NO_CURSORCOLOR
   rend_t cc1;         /* store colours at cursor position (s)      */
 #endif
@@ -1977,8 +1976,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
    */
   must_clear = 0;
   refresh_count = 0;
-
-  row_offset = term_start - view_start;
 
 #if XPM_BACKGROUND
   must_clear |= bgPixmap.pixmap != None;
@@ -2106,7 +2103,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
         {
           if (row + i >= 0 && row + i < nrow && row + i != ocrow)
             {
-              line_t s  = save[(row + row_offset) % total_rows];
+              line_t s  = ROW(row - view_start);
               line_t d  = drawn[row];
               line_t d2 = drawn[row + i];
 
@@ -2154,8 +2151,8 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
    */
   for (row = 0; row < nrow; row++)
     {
-      text_t *stp = save[(row + row_offset) % total_rows].t;
-      rend_t *srp = save[(row + row_offset) % total_rows].r;
+      text_t *stp = ROW(row - view_start).t;
+      rend_t *srp = ROW(row - view_start).r;
       text_t *dtp = drawn[row].t;
       rend_t *drp = drawn[row].r;
 
