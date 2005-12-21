@@ -1480,7 +1480,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
         if (line->is_longer ()) /* break line continuation */
           line->l = ncol;
         
-        max_it (line->l - count, 0);
+        line->l = max (line->l - count, 0);
 
         if (selection.op && current_screen == selection.screen
             && ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur))
