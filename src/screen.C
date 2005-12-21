@@ -1619,7 +1619,7 @@ rxvt_term::scr_rvideo_mode (int mode)
   if (rvideo != mode)
     {
       rvideo = mode;
-      SWAP_IT (pix_colors[Color_fg], pix_colors[Color_bg], rxvt_color);
+      ::swap (pix_colors[Color_fg], pix_colors[Color_bg]);
 #if XPM_BACKGROUND
       if (bgPixmap.pixmap == None)
 #endif
