@@ -1602,7 +1602,7 @@ rxvt_term::x_cb (XEvent &ev)
                         scroll_selection_lines = Pixel2Height (dist)
                                                  / SELECTION_SCROLL_LINE_SPEEDUP
                                                  + 1;
-                        MIN_IT (scroll_selection_lines,
+                        min_it (scroll_selection_lines,
                                 SELECTION_SCROLL_MAX_LINES);
                       }
                     else
@@ -2453,8 +2453,8 @@ rxvt_term::check_our_parents ()
           sy = 0;
         }
 
-      MIN_IT (nw, (unsigned int) (wrootattr.width - sx));
-      MIN_IT (nh, (unsigned int) (wrootattr.height - sy));
+      min_it (nw, (unsigned int) (wrootattr.width - sx));
+      min_it (nh, (unsigned int) (wrootattr.height - sy));
 
       XSync (disp, False);
       allowedxerror = -1;

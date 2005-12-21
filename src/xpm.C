@@ -138,10 +138,10 @@ rxvt_term::scale_pixmap (const char *geom)
           if (flags & YNegative)
             y += 100;
         }
-      MIN_IT (x, 100);
-      MIN_IT (y, 100);
-      MAX_IT (x, 0);
-      MAX_IT (y, 0);
+      min_it (x, 100);
+      min_it (y, 100);
+      max_it (x, 0);
+      max_it (y, 0);
       if (bgpixmap->x != x)
         {
           bgpixmap->x = x;

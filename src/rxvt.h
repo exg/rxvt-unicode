@@ -164,17 +164,7 @@ struct mouse_event {
   unsigned int button;   /* detail */
 };
 
-#define MAX_IT(current, other)  if ((other) > (current)) (current) = (other)
-#define MIN_IT(current, other)  if ((other) < (current)) (current) = (other)
-#define SWAP_IT(one, two, typeof)                                       \
-    do {                                                                \
-        typeof          swapittmp;                                      \
-        (swapittmp) = (one); (one) = (two); (two) = (swapittmp);        \
-    } while (/* CONSTCOND */ 0)
-#define BOUND_POSITIVE_INT16(val)                       \
-    (int16_t) ((val) <= 0                                \
-              ? 0                                       \
-              : min ((val), (((uint16_t)-1)>>1)))
+#define MAX_POSITIVE_INT16 (((uint16_t)-1)>>1)  // TODO: configure/limits
 
 #if ENABLE_FRILLS
 typedef struct _mwmhints {
@@ -1493,7 +1483,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
     l.t = (text_t *)talloc->alloc (l.t, prev_ncol * sizeof (text_t));
     l.r = (rend_t *)ralloc->alloc (l.r, prev_ncol * sizeof (rend_t));
 
-    MIN_IT (l.l, (int16_t)ncol);
+    l.l = min (l.l, ncol);
 
     if (ncol > prev_ncol)
       scr_blank_line (l, prev_ncol, ncol - prev_ncol, DEFAULT_RSTYLE);

@@ -371,15 +371,17 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     }
 
   if (rs[Rs_saveLines] && (i = atoi (rs[Rs_saveLines])) >= 0)
-    saveLines = BOUND_POSITIVE_INT16 (i);
+    saveLines = min (i, MAX_POSITIVE_INT16);
 
 #if ENABLE_FRILLS
   if (rs[Rs_int_bwidth] && (i = atoi (rs[Rs_int_bwidth])) >= 0)
-    int_bwidth = min (i, 100);    /* arbitrary limit */
+    int_bwidth = min (i, MAX_POSITIVE_INT16);
+
   if (rs[Rs_ext_bwidth] && (i = atoi (rs[Rs_ext_bwidth])) >= 0)
-    ext_bwidth = min (i, 100);    /* arbitrary limit */
+    ext_bwidth = min (i, MAX_POSITIVE_INT16);
+
   if (rs[Rs_lineSpace] && (i = atoi (rs[Rs_lineSpace])) >= 0)
-    lineSpace = min (i, 100);     /* arbitrary limit */
+    lineSpace = min (i, MAX_POSITIVE_INT16);
 #endif
 
 #ifdef POINTER_BLANK
@@ -523,7 +525,7 @@ rxvt_term::init_env ()
    * i = (int) (ceil (log10 ((unsigned int)parent[0]))) */
   for (i = 0, u = (unsigned int)parent[0]; u; u /= 10, i++)
     ;
-  MAX_IT (i, 1);
+  max_it (i, 1);
   env_windowid = (char *)rxvt_malloc ((i + 10) * sizeof (char));
 
   sprintf (env_windowid, "WINDOWID=%u",

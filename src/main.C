@@ -720,13 +720,13 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
 
       if (flags & WidthValue)
         {
-          ncol = BOUND_POSITIVE_INT16 (w);
+          ncol = clamp (w, 0, MAX_POSITIVE_INT16);
           szHint.flags |= USSize;
         }
 
       if (flags & HeightValue)
         {
-          nrow = BOUND_POSITIVE_INT16 (h);
+          nrow = clamp (h, 0, MAX_POSITIVE_INT16);
           szHint.flags |= USSize;
         }
 
@@ -797,7 +797,7 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
     }
   else
     {
-      MIN_IT (width, max_width);
+      min_it (width, max_width);
       szHint.width = szHint.base_width + width;
     }
 
@@ -808,7 +808,7 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
     }
   else
     {
-      MIN_IT (height, max_height);
+      min_it (height, max_height);
       szHint.height = szHint.base_height + height;
     }
 

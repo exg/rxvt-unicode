@@ -260,7 +260,7 @@ rxvt_term::scr_reset ()
             }
 
           /* we have fewer rows so fix up cursor position */
-          MIN_IT (screen.cur.row, (int32_t)nrow - 1);
+          min_it (screen.cur.row, (int32_t)nrow - 1);
 
           scr_reset_realloc (); /* realloc _last_ */
         }
@@ -297,7 +297,7 @@ rxvt_term::scr_reset ()
 #ifdef DEBUG_STRICT
           assert (screen.cur.row < nrow);
 #else                           /* drive with your eyes closed */
-          MIN_IT (screen.cur.row, nrow - 1);
+          min_it (screen.cur.row, nrow - 1);
 #endif
           ncol =  ocol; // save b/c scr_blank_screen_mem uses this
         }
@@ -317,7 +317,7 @@ rxvt_term::scr_reset ()
               lresize (swap_save[p]);
             }
 
-          MIN_IT (screen.cur.col, (int16_t)ncol - 1);
+          min_it (screen.cur.col, (int16_t)ncol - 1);
 
           delete old_ta;
           delete old_ra;
@@ -517,14 +517,14 @@ rxvt_term::scr_cursor (int mode)
     }
 
   /* boundary check in case screen size changed between SAVE and RESTORE */
-  MIN_IT (s->cur.row, nrow - 1);
-  MIN_IT (s->cur.col, ncol - 1);
+  min_it (s->cur.row, nrow - 1);
+  min_it (s->cur.col, ncol - 1);
 #ifdef DEBUG_STRICT
   assert (s->cur.row >= 0);
   assert (s->cur.col >= 0);
 #else                           /* drive with your eyes closed */
-  MAX_IT (s->cur.row, 0);
-  MAX_IT (s->cur.col, 0);
+  max_it (s->cur.row, 0);
+  max_it (s->cur.col, 0);
 #endif
 }
 
@@ -747,9 +747,9 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
   assert ((screen.cur.row < nrow)
           && (screen.cur.row >= - (int32_t)nsaved));
 #else                           /* drive with your eyes closed */
-  MIN_IT (screen.cur.col, last_col - 1);
-  MIN_IT (screen.cur.row, (int32_t)nrow - 1);
-  MAX_IT (screen.cur.row, - (int32_t)nsaved);
+  min_it (screen.cur.col, last_col - 1);
+  min_it (screen.cur.row, (int32_t)nrow - 1);
+  max_it (screen.cur.row, - (int32_t)nsaved);
 #endif
   row = screen.cur.row;
 
@@ -765,7 +765,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
         if (c == C0_LF)
           {          
             if (!line->is_longer ())      /* XXX: think about this */
-              MAX_IT (line->l, screen.cur.col);
+              max_it (line->l, screen.cur.col);
 
             screen.flags &= ~Screen_WrapNext;
 
@@ -780,7 +780,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
         else if (c == C0_CR)
           {
             if (!line->is_longer ())      /* XXX: think about this */
-              MAX_IT (line->l, screen.cur.col);
+              max_it (line->l, screen.cur.col);
 
             screen.flags &= ~Screen_WrapNext;
             screen.cur.col = 0;
@@ -966,12 +966,12 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
     }
 
   if (!line->is_longer ())      /* XXX: think about this */
-    MAX_IT (line->l, screen.cur.col);
+    max_it (line->l, screen.cur.col);
 
 #ifdef DEBUG_STRICT
   assert (screen.cur.row >= 0);
 #else                           /* drive with your eyes closed */
-  MAX_IT (screen.cur.row, 0);
+  max_it (screen.cur.row, 0);
 #endif
 }
 
@@ -1047,7 +1047,7 @@ rxvt_term::scr_tab (int count, bool ht)
           base_rend = SET_FONT (base_rend, 0);
 
           if (!l.is_longer ())      /* XXX: think about this */
-            MAX_IT (l.l, x);
+            max_it (l.l, x);
 
           i = screen.cur.col;
 
@@ -1136,8 +1136,8 @@ rxvt_term::scr_gotorc (int row, int col, int relative)
   ZERO_SCROLLBACK ();
 
   screen.cur.col = relative & C_RELATIVE ? screen.cur.col + col : col;
-  MAX_IT (screen.cur.col, 0);
-  MIN_IT (screen.cur.col, (int32_t)ncol - 1);
+  max_it (screen.cur.col, 0);
+  min_it (screen.cur.col, (int32_t)ncol - 1);
 
   screen.flags &= ~Screen_WrapNext;
 
@@ -1165,14 +1165,14 @@ rxvt_term::scr_gotorc (int row, int col, int relative)
       if (screen.flags & Screen_Relative)
         {        /* relative origin mode */
           screen.cur.row = row + screen.tscroll;
-          MIN_IT (screen.cur.row, screen.bscroll);
+          min_it (screen.cur.row, screen.bscroll);
         }
       else
         screen.cur.row = row;
     }
 
-  MAX_IT (screen.cur.row, 0);
-  MIN_IT (screen.cur.row, (int32_t)nrow - 1);
+  max_it (screen.cur.row, 0);
+  min_it (screen.cur.row, (int32_t)nrow - 1);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1197,8 +1197,8 @@ rxvt_term::scr_index (enum page_dirn direction)
   else
     screen.cur.row += dirn;
 
-  MAX_IT (screen.cur.row, 0);
-  MIN_IT (screen.cur.row, (int32_t)nrow - 1);
+  max_it (screen.cur.row, 0);
+  min_it (screen.cur.row, (int32_t)nrow - 1);
   selection_check (0);
 }
 
@@ -1226,7 +1226,7 @@ rxvt_term::scr_erase_line (int mode)
       case 0:                     /* erase to end of line */
         col = screen.cur.col;
         num = ncol - col;
-        MIN_IT (ROW(row).l, (int16_t)col);
+        min_it (ROW(row).l, (int16_t)col);
         if (ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur)
             || ROWCOL_IN_ROW_AT_OR_AFTER (selection.end, screen.cur))
           CLEAR_SELECTION ();
@@ -1303,7 +1303,7 @@ rxvt_term::scr_erase_screen (int mode)
   if (row >= nrow) /* Out Of Bounds */
     return;
 
-  MIN_IT (num, (nrow - row));
+  min_it (num, (nrow - row));
 
   if (rstyle & (RS_RVid | RS_Uline))
     ren = (rend_t) ~RS_None;
@@ -1421,7 +1421,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
   scr_do_wrap ();
 
   selection_check (1);
-  MIN_IT (count, (ncol - screen.cur.col));
+  min_it (count, (ncol - screen.cur.col));
 
   row = screen.cur.row;
 
@@ -1439,7 +1439,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
         if (!line->is_longer ())
           {
             line->l += count;
-            MIN_IT (line->l, ncol);
+            min_it (line->l, ncol);
           }
 
         if (selection.op && current_screen == selection.screen
@@ -1510,8 +1510,8 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
 void
 rxvt_term::scr_scroll_region (int top, int bot)
 {
-  MAX_IT (top, 0);
-  MIN_IT (bot, (int)nrow - 1);
+  max_it (top, 0);
+  min_it (bot, (int)nrow - 1);
 
   if (top > bot)
     return;
@@ -1781,8 +1781,8 @@ rxvt_term::scr_expose (int x, int y, int ewidth, int eheight, bool refresh)
   /* sanity checks */
   for (i = PART_BEG; i < RC_COUNT; i++)
     {
-      MIN_IT (rc[i].col, ncol - 1);
-      MIN_IT (rc[i].row, nrow - 1);
+      min_it (rc[i].col, ncol - 1);
+      min_it (rc[i].row, nrow - 1);
     }
 
   for (i = rc[PART_BEG].row; i <= rc[PART_END].row; i++)
@@ -3574,9 +3574,9 @@ void
 rxvt_term::pixel_position (int *x, int *y)
 {
   *x = Pixel2Col (*x);
-  /* MAX_IT (*x, 0); MIN_IT (*x, (int)ncol - 1); */
+  /* max_it (*x, 0); min_it (*x, (int)ncol - 1); */
   *y = Pixel2Row (*y);
-  /* MAX_IT (*y, 0); MIN_IT (*y, (int)nrow - 1); */
+  /* max_it (*y, 0); min_it (*y, (int)nrow - 1); */
 }
 
 /* ------------------------------------------------------------------------- */
@@ -3608,14 +3608,14 @@ rxvt_term::scr_overlay_new (int x, int y, int w, int h)
   if (y < 0) y = nrow - h;
 
   // make space for border
-  w += 2; MIN_IT (w, ncol);
-  h += 2; MIN_IT (h, nrow);
+  w += 2; min_it (w, ncol);
+  h += 2; min_it (h, nrow);
 
-  x -= 1; MAX_IT (x, 0);
-  y -= 1; MAX_IT (y, 0);
+  x -= 1; max_it (x, 0);
+  y -= 1; max_it (y, 0);
 
-  MIN_IT (x, ncol - w);
-  MIN_IT (y, nrow - h);
+  min_it (x, ncol - w);
+  min_it (y, nrow - h);
 
   ov_x = x; ov_y = y;
   ov_w = w; ov_h = h;

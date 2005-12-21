@@ -1969,7 +1969,7 @@ rxvt_term::menubar_dispatch (char *str)
                             {
                               short           l = item->len + item->len2;
 
-                              MAX_IT (BuildMenu->width, l);
+                              max_it (BuildMenu->width, l);
                             }
                         }
                     }
