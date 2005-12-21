@@ -111,9 +111,9 @@ struct line_t {
  *
  *  width      : 1 <= width
  *  height     : 1 <= height
- *  ncol       : 1 <= ncol       <= MAX(int16_t)
- *  nrow       : 1 <= nrow       <= MAX(int16_t)
- *  saveLines  : 0 <= saveLines  <= MAX(int16_t)
+ *  ncol       : 1 <= ncol       <= MAX(tlen_t)
+ *  nrow       : 1 <= nrow       <= MAX(int)
+ *  saveLines  : 0 <= saveLines  <= MAX(int)
  *  total_rows : nrow + saveLines
  *  nsaved     : 0 <= nsaved     <= saveLines
  *  term_start : 0 <= term_start < saveLines

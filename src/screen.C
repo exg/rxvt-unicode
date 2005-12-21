@@ -241,8 +241,6 @@ rxvt_term::scr_reset ()
        * add or delete rows as appropriate
        */
 
-     printf ("resize %d:%d => %d:%d\n", prev_nrow, prev_ncol, nrow, ncol);//D
-
       rxvt_salloc *old_ta = talloc; talloc = new rxvt_salloc (ncol * sizeof (text_t));
       rxvt_salloc *old_ra = ralloc; ralloc = new rxvt_salloc (ncol * sizeof (rend_t));
 
@@ -257,9 +255,9 @@ rxvt_term::scr_reset ()
         }
 #endif
 
-      drawn_buf = (line_t *) rxvt_realloc (drawn_buf, nrow * sizeof (line_t));
-      temp_buf  = (line_t *) rxvt_realloc (temp_buf , nrow * sizeof (line_t));
-      swap_buf  = (line_t *) rxvt_realloc (swap_buf , nrow * sizeof (line_t));
+      drawn_buf = (line_t *)rxvt_realloc (drawn_buf, nrow * sizeof (line_t));
+      temp_buf  = (line_t *)rxvt_realloc (temp_buf , nrow * sizeof (line_t));
+      swap_buf  = (line_t *)rxvt_realloc (swap_buf , nrow * sizeof (line_t));
 
       for (int row = min (nrow, prev_nrow); row--; )
         {
@@ -278,16 +276,16 @@ rxvt_term::scr_reset ()
       // re-wrap lines, this is rather ugly, possibly because I am too dumb
       // to come up with a lean and mean algorithm.
 
-      int p    = MOD (term_start + nrow  , prev_total_rows);  // previous row
-      int pend = MOD (term_start - nsaved, prev_total_rows);
+      int p    = MOD (term_start + prev_nrow, prev_total_rows);  // previous row
+      int pend = MOD (term_start - nsaved   , prev_total_rows);
       int q    = total_rows; // rewrapped row
 
       while (p != pend && q > 0)
         {
           p = MOD (p - 1, prev_total_rows);
-
+#ifdef DEBUG_STRICT
           assert (old_buf [MOD (p, prev_total_rows)].t);
-          assert (!old_buf [MOD (p, prev_total_rows)].is_longer ());
+#endif
 
           int llen = old_buf [MOD (p, prev_total_rows)].l;
 
@@ -298,58 +296,61 @@ rxvt_term::scr_reset ()
               llen += prev_ncol;
             }
 
-          int qlines = llen / ncol + 1;
-          int lofs = 0;
+          int qlines = max (0, (llen - 1) / ncol) + 1;
+
+          // drop partial lines completely
+          if (q < qlines)
+            break;
 
           q -= qlines;
 
-          int qrow = q;
+          int lofs = 0;
+          line_t *qline;
 
-          for (; qlines--; qrow++)
+          // re-assemble the full line by destination lines
+          for (int qrow = q; qlines--; qrow++)
             {
-              if (qrow >= 0)
+              qline = row_buf + qrow;
+              lalloc (*qline);
+              qline->set_is_longer ();
+
+              int qcol = 0;
+
+              // fill a single destination line
+              while (lofs < llen && qcol < ncol)
                 {
-                  line_t &qline = row_buf [qrow];
+                  int prow = lofs / prev_ncol;
+                  int pcol = lofs % prev_ncol;
 
-                  lalloc (qline);
-                  qline.set_is_longer ();
+                  line_t &pline = old_buf [MOD (p + prow, prev_total_rows)];
 
-                  int qcol = 0;
+                  int len = min (min (prev_ncol - pcol, ncol - qcol), llen - lofs);
 
-                  for (;;)
-                    {
-                      int prow = lofs / prev_ncol + p;
-                      int pcol = lofs % prev_ncol;
+                  assert (len);
+                  assert (pline.t);
 
-                      line_t &pline = old_buf [p];
+                  memcpy (qline->t + qcol, pline.t + pcol, len * sizeof (text_t));
+                  memcpy (qline->r + qcol, pline.r + pcol, len * sizeof (rend_t));
 
-                      int len = min (min (prev_ncol - pcol, ncol - qcol), llen - lofs);
-
-                      printf ("q %d lofs %d>%d len %d pq %d:%d p %d:%d q :%d\n", q, llen, lofs, len, prev_ncol, ncol, prow, pcol, qcol);
-
-                      if (len <= 0)
-                        {
-                          qline.l = qcol;
-                          scr_blank_line (qline, qcol, ncol - qcol, DEFAULT_RSTYLE);
-                          break;
-                        }
-
-                      assert (lofs < 1000);
-
-                      memcpy (qline.t + qcol, pline.t + pcol, len * sizeof (text_t));
-                      memcpy (qline.r + qcol, pline.r + pcol, len * sizeof (rend_t));
-
-                      lofs += len;
-                      qcol += len;
-
-                      if (qcol == ncol)
-                        break;
-                    }
+                  lofs += len;
+                  qcol += len;
                 }
-              else
-                lofs += ncol;
             }
+
+          qline->l = llen < ncol ? llen : MOD (llen - 1, ncol) + 1;
+          scr_blank_line (*qline, qline->l, ncol - qline->l, DEFAULT_RSTYLE);
         }
+
+      term_start = total_rows - nrow;
+      view_start = 0;
+      nsaved = term_start - q;
+
+      // make sure all terminal lines exist
+      while (nsaved < 0)
+        scr_blank_screen_mem (ROW (-++nsaved), DEFAULT_RSTYLE);
+
+      for (int i = -nsaved; i < nrow; i++)
+        assert (ROW (i).t);//D
 
       free (old_buf);
       delete old_ta;
@@ -388,6 +389,8 @@ rxvt_term::scr_release ()
   free (drawn_buf);
   free (temp_buf);
   free (tabs);
+
+  row_buf = 0; // signal that we freed all the arrays
 }
 
 /* ------------------------------------------------------------------------- */
@@ -453,9 +456,6 @@ rxvt_term::scr_cursor (int mode)
 #ifdef DEBUG_STRICT
   assert (s->cur.row >= 0);
   assert (s->cur.col >= 0);
-#else                           /* drive with your eyes closed */
-  max_it (s->cur.row, 0);
-  max_it (s->cur.col, 0);
 #endif
 }
 
@@ -679,9 +679,6 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
   assert (screen.cur.col < last_col);
   assert (screen.cur.row < nrow
           && screen.cur.row >= -nsaved);
-#else                           /* drive with your eyes closed */
-  min_it (screen.cur.col, last_col - 1);
-  clamp_it (screen.cur.row, -nsaved, nrow - 1);
 #endif
   row = screen.cur.row;
 
@@ -902,8 +899,6 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
 #ifdef DEBUG_STRICT
   assert (screen.cur.row >= 0);
-#else                           /* drive with your eyes closed */
-  max_it (screen.cur.row, 0);
 #endif
 }
 
@@ -1691,14 +1686,6 @@ rxvt_term::scr_expose (int x, int y, int ewidth, int eheight, bool refresh)
       y = 0;
       eheight = height;
     }
-#endif
-
-#ifdef DEBUG_STRICT
-#if 0
-  // that's not debugging //TODO //FIXME
-  clamp_it (x, 0, width);
-  clamp_it (y, 0, height);
-#endif
 #endif
 
   /* round down */

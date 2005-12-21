@@ -3,6 +3,7 @@ TODO: after requesting the selection and getting a timeout, no further requests 
 TODO: safer command: keymap processing.
 TODO: "slow" rendering mode for bidi and scripts
 TODO: read property sequence is broken with respect to utf-8 etc.
+WISH: xterm's -hold
 TODO: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 WISH: keymap modification via esc-sequences.
 WISH: searchable backlog
@@ -15,6 +16,11 @@ WISH: just for fun, do shade and tint with XRender.
         - enable slow link support by default.
         - fix relative cursor-positioning not respecting scrolling regions
           (also a bug in original rxvt).
+        - initialize termios structure to zero when fetching it fails
+          (see http://www.freebsd.org/cgi/query-pr.cgi?pr=84647 for a
+          partial patch).
+        - bump max columns/rows to 10000 each.
+        - bump max savelines to 10000000.
         - major code cleanup (still not complete, though).
         - _major_ rewrite of internal buffer handling:
 #	- re-flow on resize, lines get wrapped instead of winged.

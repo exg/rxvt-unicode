@@ -78,8 +78,13 @@
 /*
  * Define maximum possible columns and rows
  */
-#define MAX_COLS	4000
-#define MAX_ROWS	1000
+#define MAX_COLS	10000
+#define MAX_ROWS	10000
+
+/*
+ * Define maximum possible savelines
+ */
+#define MAX_SAVELINES   10000000
 
 /*
  * Define default colours for certain items.  If you have a low colour
