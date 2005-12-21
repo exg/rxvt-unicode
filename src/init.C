@@ -36,6 +36,8 @@
 #include "rxvtutil.h"
 #include "init.h"
 
+#include <limits>
+
 #include <csignal>
 
 const char *const def_colorName[] =
@@ -371,17 +373,17 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     }
 
   if (rs[Rs_saveLines] && (i = atoi (rs[Rs_saveLines])) >= 0)
-    saveLines = min (i, MAX_POSITIVE_INT16);
+    saveLines = min (i, std::numeric_limits<int16_t>::max ());
 
 #if ENABLE_FRILLS
   if (rs[Rs_int_bwidth] && (i = atoi (rs[Rs_int_bwidth])) >= 0)
-    int_bwidth = min (i, MAX_POSITIVE_INT16);
+    int_bwidth = min (i, std::numeric_limits<int16_t>::max ());
 
   if (rs[Rs_ext_bwidth] && (i = atoi (rs[Rs_ext_bwidth])) >= 0)
-    ext_bwidth = min (i, MAX_POSITIVE_INT16);
+    ext_bwidth = min (i, std::numeric_limits<int16_t>::max ());
 
   if (rs[Rs_lineSpace] && (i = atoi (rs[Rs_lineSpace])) >= 0)
-    lineSpace = min (i, MAX_POSITIVE_INT16);
+    lineSpace = min (i, std::numeric_limits<int16_t>::max ());
 #endif
 
 #ifdef POINTER_BLANK

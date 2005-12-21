@@ -13,7 +13,10 @@ WISH: just for fun, do shade and tint with XRender.
 6.0
 	- make it compile without SMART_RESIZE again.
         - enable slow link support by default.
-        - _major_ rewrite of internal line handling logic:
+        - fix relative cursor-positioning not respecting scrolling regions
+          (also a bug in original rxvt).
+        - major code cleanup (still not complete, though).
+        - _major_ rewrite of internal buffer handling:
 #	- re-flow on resize, lines get wrapped instead of winged.
 	- circular line buffer (substantially speeds up scrolling).
         - slightly less code + data memory usage per terminal.
@@ -56,7 +59,7 @@ WISH: just for fun, do shade and tint with XRender.
 	  even know about the -rootless and -multiwindow Cygwin/X modes).
 	- large amounts of text without control sequences or newlines
 	  could almost freeze output. This has been fixed by adding extra
-	  refreshes in these cases (also a problem in oriignal rxvt).
+	  refreshes in these cases (also a problem in original rxvt).
 
 5.6  Sun Jun 26 22:11:13 CEST 2005
 	- R_SB_RXVT bitset value was 0, so rxvt scrollbar was initialised
@@ -755,7 +758,7 @@ WISH: just for fun, do shade and tint with XRender.
 	- much faster x11 font selection
 
 1.2  2003-12-24
-	- fix another segfault-on-resize-bug form the original rxvt
+	- fix another segfault-on-resize-bug from the original rxvt
 	- better font matching
 	- better memory management (less memory)
 	- new fallback: gnu freefont

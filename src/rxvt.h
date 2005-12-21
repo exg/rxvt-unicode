@@ -164,8 +164,6 @@ struct mouse_event {
   unsigned int button;   /* detail */
 };
 
-#define MAX_POSITIVE_INT16 (((uint16_t)-1)>>1)  // TODO: configure/limits
-
 #if ENABLE_FRILLS
 typedef struct _mwmhints {
   CARD32 flags;
@@ -355,9 +353,9 @@ enum {
 
 /* flags for rxvt_scr_gotorc () */
 enum {
-  C_RELATIVE = 1    ,       /* col movement is relative */
-  R_RELATIVE =     2,       /* row movement is relative */
-  RELATIVE   = 1 | 2,
+  C_RELATIVE = 1,       /* col movement is relative */
+  R_RELATIVE = 2,       /* row movement is relative */
+  RELATIVE   = C_RELATIVE | R_RELATIVE,
 };
 
 /* modes for rxvt_scr_insdel_chars (), rxvt_scr_insdel_lines () */
@@ -820,21 +818,24 @@ enum {
 #define TermWin_TotalWidth()    ((int32_t)this->width)
 #define TermWin_TotalHeight()   ((int32_t)this->height)
 
-#define LINENO(n) (((n) + term_start + total_rows) % total_rows)
-#define ROW(n) (save [LINENO (n)])
+// for m >= -n, ensure remainder lies between 0..n-1
+#define MOD(m,n) (((m) + (n)) % (n))
+
+#define LINENO(n) MOD (term_start + int(n), total_rows)
+#define ROW(n) row_buf [LINENO (n)]
 
 /* how to build & extract colors and attributes */
 #define GET_BASEFG(x)           (((x) & RS_fgMask))
 #define GET_BASEBG(x)           (((x) & RS_bgMask)>>Color_Bits)
 #ifndef NO_BRIGHTCOLOR
-# define GET_FGCOLOR(x)                                         \
-    ((((x) & RS_Bold) == 0                                      \
+# define GET_FGCOLOR(x)                                          \
+    ((((x) & RS_Bold) == 0                                       \
       || GET_BASEFG (x) < minCOLOR                               \
       || GET_BASEFG (x) >= minBrightCOLOR)                       \
      ? GET_BASEFG (x)                                            \
      : (GET_BASEFG (x) + (minBrightCOLOR - minCOLOR)))
-# define GET_BGCOLOR(x)                                         \
-    ((((x) & RS_Blink) == 0                                     \
+# define GET_BGCOLOR(x)                                          \
+    ((((x) & RS_Blink) == 0                                      \
       || GET_BASEBG (x) < minCOLOR                               \
       || GET_BASEBG (x) >= minBrightCOLOR)                       \
      ? GET_BASEBG (x)                                            \
@@ -1493,7 +1494,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void scr_blank_screen_mem (line_t &l, rend_t efs);
   int scr_scroll_text (int row1, int row2, int count);
   void scr_reset ();
-  void scr_reset_realloc ();
   void scr_release ();
   void scr_clear (bool really = false);
   void scr_refresh (unsigned char refresh_type);

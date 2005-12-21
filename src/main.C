@@ -33,6 +33,8 @@
 #include "../config.h"          /* NECESSARY */
 #include "rxvt.h"               /* NECESSARY */
 
+#include <limits>
+
 #include <csignal>
 #include <cstring>
 
@@ -720,13 +722,13 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
 
       if (flags & WidthValue)
         {
-          ncol = clamp (w, 0, MAX_POSITIVE_INT16);
+          ncol = clamp (w, 0, std::numeric_limits<int16_t>::max ());
           szHint.flags |= USSize;
         }
 
       if (flags & HeightValue)
         {
-          nrow = clamp (h, 0, MAX_POSITIVE_INT16);
+          nrow = clamp (h, 0, std::numeric_limits<int16_t>::max ());
           szHint.flags |= USSize;
         }
 
@@ -891,8 +893,6 @@ rxvt_term::set_fonts ()
 
   fwidth  = prop.width;
   fheight = prop.height;
-  fweight = prop.weight;
-  fslant  = prop.slant;
   fbase   = (*fs)[1]->ascent;
 
   for (int style = 1; style < 4; style++)
