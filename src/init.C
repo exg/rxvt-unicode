@@ -373,7 +373,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     }
 
   if (rs[Rs_saveLines] && (i = atoi (rs[Rs_saveLines])) >= 0)
-    saveLines = min (i, std::numeric_limits<int16_t>::max ());
+    saveLines = min (i, MAX_SAVELINES);
 
 #if ENABLE_FRILLS
   if (rs[Rs_int_bwidth] && (i = atoi (rs[Rs_int_bwidth])) >= 0)
@@ -1199,10 +1199,16 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
    */
   if (GET_TERMIOS (STDIN_FILENO, tio) < 0)
     {
-      /* return error - use system defaults */
+      // return error - use system defaults,
+      // where possible, and zero elsewhere
+      memset (tio, 0, sizeof (ttymode_t));
+
       tio->c_cc[VINTR] = CINTR;
       tio->c_cc[VQUIT] = CQUIT;
       tio->c_cc[VERASE] = CERASE;
+#ifdef VERASE2
+      tio->c_cc[VERASE2] = CERASE2;
+#endif
       tio->c_cc[VKILL] = CKILL;
       tio->c_cc[VSTART] = CSTART;
       tio->c_cc[VSTOP] = CSTOP;
