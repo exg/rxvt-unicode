@@ -3,8 +3,8 @@ TODO: after requesting the selection and getting a timeout, no further requests 
 TODO: safer command: keymap processing.
 TODO: "slow" rendering mode for bidi and scripts
 TODO: read property sequence is broken with respect to utf-8 etc.
-WISH: xterm's -hold
 TODO: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
+WISH: xterm's -hold
 WISH: keymap modification via esc-sequences.
 WISH: searchable backlog
 WISH: meta-tagging of data by regex/master process (my dream project)
@@ -23,7 +23,7 @@ WISH: just for fun, do shade and tint with XRender.
         - bump max savelines to 10000000.
         - major code cleanup (still not complete, though).
         - _major_ rewrite of internal buffer handling:
-#	- re-flow on resize, lines get wrapped instead of winged.
+	- re-flow on resize, lines get wrapped instead of winged.
 	- circular line buffer (substantially speeds up scrolling).
         - slightly less code + data memory usage per terminal.
 	- slight overall speed improvements.
