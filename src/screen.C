@@ -1480,7 +1480,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
         if (line->is_longer ()) /* break line continuation */
           line->l = ncol;
         
-        line->l = max (line->l - count, 0);
+        max_it (line->l - count, 0);
 
         if (selection.op && current_screen == selection.screen
             && ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur))
@@ -1765,10 +1765,11 @@ rxvt_term::scr_expose (int x, int y, int ewidth, int eheight, bool refresh)
 #endif
 
 #ifdef DEBUG_STRICT
-  x = max (x, 0);
-  x = min (x, (int)width);
-  y = max (y, 0);
-  y = min (y, (int)height);
+#if 0
+  // that's not debugging //TODO //FIXME
+  clamp_it (x, 0, width);
+  clamp_it (y, 0, height);
+#endif
 #endif
 
   /* round down */
