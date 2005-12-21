@@ -2132,7 +2132,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
             {
               /* also comes here at end if needed because of >= above */
               if (wlen < len)
-                SWAP_IT (wlen, len, int);
+                ::swap (wlen, len);
 
               XCopyArea (display->display, vt, vt,
                          gc, 0, Row2Pixel (len + i),
@@ -2274,7 +2274,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 
               if (invert)
                 {
-                  SWAP_IT (fore, back, int);
+                  ::swap (fore, back);
 
 #ifndef NO_BOLD_UNDERLINE_REVERSE
                   if (ISSET_PIXCOLOR (Color_RV))
@@ -3366,7 +3366,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
 
 #if ENABLE_FRILLS
   if (selection.rect && selection.beg.col > selection.end.col)
-    SWAP_IT (selection.beg.col, selection.end.col, int);
+    ::swap (selection.beg.col, selection.end.col);
 #endif
 }
 

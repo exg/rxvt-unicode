@@ -460,7 +460,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 #ifndef XTERM_REVERSE_VIDEO
   /* this is how we implement reverseVideo */
   if (options & Opt_reverseVideo)
-    SWAP_IT (rs[Rs_color + Color_fg], rs[Rs_color + Color_bg], const char *);
+    ::swap (rs[Rs_color + Color_fg], rs[Rs_color + Color_bg]);
 #endif
 
   /* convenient aliases for setting fg/bg to colors */
