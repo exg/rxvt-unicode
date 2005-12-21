@@ -545,14 +545,13 @@ rxvt_term::scr_change_screen (int scrn)
 
   selection_check (2);        /* check for boundary cross */
 
-  SWAP_IT (scrn, current_screen, int);
+  int i = current_screen; current_screen = scrn; scrn = i;
 
-  SWAP_IT (screen.cur.row, swap.cur.row, int16_t);
-  SWAP_IT (screen.cur.col, swap.cur.col, int16_t);
-  MAX_IT (screen.cur.row, 0);
-  MIN_IT (screen.cur.row, (int32_t)prev_nrow - 1);
-  MAX_IT (screen.cur.col, 0);
-  MIN_IT (screen.cur.col, (int32_t)prev_ncol - 1);
+  ::swap (screen.cur.row, swap.cur.row);
+  ::swap (screen.cur.col, swap.cur.col);
+
+  screen.cur.row = clamp (screen.cur.row, 0, prev_nrow - 1);
+  screen.cur.col = clamp (screen.cur.col, 0, prev_ncol - 1);
 
 #if NSCREENS
   if (options & Opt_secondaryScreen)
@@ -560,10 +559,10 @@ rxvt_term::scr_change_screen (int scrn)
       num_scr = 0;
 
       for (int i = nrow; i--; )
-        SWAP_IT (ROW(i), swap_save[i], line_t);
+        ::swap (ROW(i), swap_save[i]);
 
-      SWAP_IT (screen.charset, swap.charset, int16_t);
-      SWAP_IT (screen.flags, swap.flags, int);
+      ::swap (screen.charset, swap.charset);
+      ::swap (screen.flags, swap.flags);
       screen.flags |= Screen_VisibleCursor;
       swap.flags |= Screen_VisibleCursor;
     }
@@ -3027,8 +3026,8 @@ rxvt_term::selection_start_colrow (int col, int row)
   selection.mark.row = row - view_start;
   selection.mark.col = col;
 
-  selection.mark.row = min (max (selection.mark.row, -nsaved), nrow - 1);
-  selection.mark.col = min (max (selection.mark.col,       0), ncol - 1);
+  selection.mark.row = clamp (selection.mark.row, -nsaved, nrow - 1);
+  selection.mark.col = clamp (selection.mark.col,       0, ncol - 1);
 
   while (selection.mark.col > 0
          && ROW(selection.mark.row).t[selection.mark.col] == NOCHAR)
@@ -3143,8 +3142,8 @@ Old_Word_Selection_You_Die:
 void
 rxvt_term::selection_extend (int x, int y, int flag)
 {
-  int col = min (max (Pixel2Col (x), 0), ncol);
-  int row = min (max (Pixel2Row (y), 0), nrow - 1);
+  int col = clamp (Pixel2Col (x), 0, ncol);
+  int row = clamp (Pixel2Row (y), 0, nrow - 1);
 
   /*
   * If we're selecting characters (single click) then we must check first
