@@ -143,7 +143,7 @@ rxvt_term::iso14755_54 (int x, int y)
 
   for (;;)
     {
-      const line_t &l = ROW(-view_start);
+      const line_t &l = ROW(y - view_start);
 
       text_t t = l.t[x];
 
