@@ -282,6 +282,9 @@ rxvt_term::scr_reset ()
           // re-wrap lines, this is rather ugly, possibly because I am too dumb
           // to come up with a lean and mean algorithm.
 
+          row_col_t ocur = screen.cur;
+          ocur.row = MOD (term_start + ocur.row, prev_total_rows);
+
           while (p != pend && q > 0)
             {
               p = MOD (p - 1, prev_total_rows);
@@ -289,12 +292,14 @@ rxvt_term::scr_reset ()
               assert (old_buf [MOD (p, prev_total_rows)].t);
 #endif
 
+              int plines = 1;
               int llen = old_buf [MOD (p, prev_total_rows)].l;
 
               while (p != pend && old_buf [MOD (p - 1, prev_total_rows)].is_longer ())
                 {
                   p = MOD (p - 1, prev_total_rows);
 
+                  plines++;
                   llen += prev_ncol;
                 }
 
@@ -324,7 +329,14 @@ rxvt_term::scr_reset ()
                       int prow = lofs / prev_ncol;
                       int pcol = lofs % prev_ncol;
 
-                      line_t &pline = old_buf [MOD (p + prow, prev_total_rows)];
+                      prow = MOD (p + prow, prev_total_rows);
+
+                      // we only adjust the cursor _row_, as this seems to upset
+                      // applications/shells/readline least.
+                      if (prow == ocur.row)
+                        screen.cur.row = qrow - (total_rows - nrow);
+
+                      line_t &pline = old_buf [prow];
 
                       int len = min (min (prev_ncol - pcol, ncol - qcol), llen - lofs);
 
