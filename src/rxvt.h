@@ -1472,11 +1472,13 @@ struct rxvt_term : zero_initialized, rxvt_vars {
     l.r = (rend_t *)ralloc->alloc ();
   }
 
+#if 0
   void lfree (line_t &l)
   {
     talloc->free (l.t);
     ralloc->free (l.r);
   }
+#endif
 
   void lresize (line_t &l)
   {
