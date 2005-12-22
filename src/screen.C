@@ -273,91 +273,118 @@ rxvt_term::scr_reset ()
 
       line_t *old_buf = row_buf; row_buf = (line_t *)rxvt_calloc (total_rows, sizeof (line_t));
         
-      // re-wrap lines, this is rather ugly, possibly because I am too dumb
-      // to come up with a lean and mean algorithm.
-
       int p    = MOD (term_start + prev_nrow, prev_total_rows);  // previous row
       int pend = MOD (term_start - nsaved   , prev_total_rows);
       int q    = total_rows; // rewrapped row
 
-      while (p != pend && q > 0)
+      if (nsaved)
         {
-          p = MOD (p - 1, prev_total_rows);
-#ifdef DEBUG_STRICT
-          assert (old_buf [MOD (p, prev_total_rows)].t);
-#endif
+          // re-wrap lines, this is rather ugly, possibly because I am too dumb
+          // to come up with a lean and mean algorithm.
 
-          int llen = old_buf [MOD (p, prev_total_rows)].l;
-
-          while (p != pend && old_buf [MOD (p - 1, prev_total_rows)].is_longer ())
+          while (p != pend && q > 0)
             {
               p = MOD (p - 1, prev_total_rows);
+#ifdef DEBUG_STRICT
+              assert (old_buf [MOD (p, prev_total_rows)].t);
+#endif
 
-              llen += prev_ncol;
-            }
+              int llen = old_buf [MOD (p, prev_total_rows)].l;
 
-          int qlines = max (0, (llen - 1) / ncol) + 1;
-
-          // drop partial lines completely
-          if (q < qlines)
-            break;
-
-          q -= qlines;
-
-          int lofs = 0;
-          line_t *qline;
-
-          // re-assemble the full line by destination lines
-          for (int qrow = q; qlines--; qrow++)
-            {
-              qline = row_buf + qrow;
-              lalloc (*qline);
-              qline->set_is_longer ();
-
-              int qcol = 0;
-
-              // fill a single destination line
-              while (lofs < llen && qcol < ncol)
+              while (p != pend && old_buf [MOD (p - 1, prev_total_rows)].is_longer ())
                 {
-                  int prow = lofs / prev_ncol;
-                  int pcol = lofs % prev_ncol;
+                  p = MOD (p - 1, prev_total_rows);
 
-                  line_t &pline = old_buf [MOD (p + prow, prev_total_rows)];
-
-                  int len = min (min (prev_ncol - pcol, ncol - qcol), llen - lofs);
-
-                  assert (len);
-                  assert (pline.t);
-
-                  memcpy (qline->t + qcol, pline.t + pcol, len * sizeof (text_t));
-                  memcpy (qline->r + qcol, pline.r + pcol, len * sizeof (rend_t));
-
-                  lofs += len;
-                  qcol += len;
+                  llen += prev_ncol;
                 }
+
+              int qlines = max (0, (llen - 1) / ncol) + 1;
+
+              // drop partial lines completely
+              if (q < qlines)
+                break;
+
+              q -= qlines;
+
+              int lofs = 0;
+              line_t *qline;
+
+              // re-assemble the full line by destination lines
+              for (int qrow = q; qlines--; qrow++)
+                {
+                  qline = row_buf + qrow;
+                  lalloc (*qline);
+                  qline->set_is_longer ();
+
+                  int qcol = 0;
+
+                  // fill a single destination line
+                  while (lofs < llen && qcol < ncol)
+                    {
+                      int prow = lofs / prev_ncol;
+                      int pcol = lofs % prev_ncol;
+
+                      line_t &pline = old_buf [MOD (p + prow, prev_total_rows)];
+
+                      int len = min (min (prev_ncol - pcol, ncol - qcol), llen - lofs);
+
+                      assert (len);
+                      assert (pline.t);
+
+                      memcpy (qline->t + qcol, pline.t + pcol, len * sizeof (text_t));
+                      memcpy (qline->r + qcol, pline.r + pcol, len * sizeof (rend_t));
+
+                      lofs += len;
+                      qcol += len;
+                    }
+                }
+
+              qline->l = llen < ncol ? llen : MOD (llen - 1, ncol) + 1;
+              scr_blank_line (*qline, qline->l, ncol - qline->l, DEFAULT_RSTYLE);
             }
 
-          qline->l = llen < ncol ? llen : MOD (llen - 1, ncol) + 1;
-          scr_blank_line (*qline, qline->l, ncol - qline->l, DEFAULT_RSTYLE);
+          term_start = total_rows - nrow;
+          view_start = 0;
+          nsaved = term_start - q;
+ 
+          // make sure all terminal lines exist
+          while (nsaved < 0)
+            scr_blank_screen_mem (ROW (-++nsaved), DEFAULT_RSTYLE);
+
+        }
+      else
+        {
+          // if no scrollback exists (yet), wing, instead of wrap
+          
+          for (int row = min (nrow, prev_nrow); row--; )
+            {
+              line_t &pline = old_buf [MOD (term_start + row, prev_total_rows)];
+              line_t &qline = row_buf [row];
+
+              qline = pline;
+              lresize (qline);
+            }
+
+          for (int row = prev_nrow; row < nrow; row++)
+            {
+              row_buf [row].clear (); scr_blank_screen_mem (row_buf [row], DEFAULT_RSTYLE);
+            }
+
+          term_start = 0;
+          view_start = 0;
         }
 
-      term_start = total_rows - nrow;
-      view_start = 0;
-      nsaved = term_start - q;
-
-      // make sure all terminal lines exist
-      while (nsaved < 0)
-        scr_blank_screen_mem (ROW (-++nsaved), DEFAULT_RSTYLE);
-
+#ifdef DEBUG_STRICT
       for (int i = -nsaved; i < nrow; i++)
-        assert (ROW (i).t);//D
+        assert (ROW (i).t);
+#endif
 
       free (old_buf);
       delete old_ta;
       delete old_ra;
 
-      min_it (screen.cur.row, nrow - 1);
-      min_it (screen.cur.col, ncol - 1);
+      clamp_it (screen.cur.row, 0, nrow - 1);
+      clamp_it (screen.cur.col, 0, ncol - 1);
 
       if (tabs)
         free (tabs);

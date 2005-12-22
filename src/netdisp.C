@@ -58,25 +58,28 @@ rxvt_network_display (const char *display)
       perror ("socket");
       return NULL;
     }
+
   if (ioctl (skfd, SIOCGIFCONF, &ifc) < 0)
     {
       perror ("SIOCGIFCONF");
       close (skfd);
       return NULL;
     }
+
   for (i = 0, ifr = ifc.ifc_req;
        i < (ifc.ifc_len / sizeof (struct ifreq));
        i++, ifr++)
     {
-      struct ifreq    ifr2;
+      struct ifreq ifr2;
 
       strcpy (ifr2.ifr_name, ifr->ifr_name);
+
       if (ioctl (skfd, SIOCGIFADDR, &ifr2) >= 0)
         {
-          unsigned long   addr;
+          unsigned long addr;
           struct sockaddr_in *p_addr;
 
-          p_addr = (struct sockaddr_in *)& (ifr2.ifr_addr);
+          p_addr = (struct sockaddr_in *) &ifr2.ifr_addr;
           addr = htonl ((unsigned long)p_addr->sin_addr.s_addr);
 
           /*
@@ -84,7 +87,7 @@ rxvt_network_display (const char *display)
            */
           if (addr && addr != 0x7F000001)
             {
-              char           *colon = strchr (display, ':');
+              char *colon = strchr (display, ':');
 
               if (colon == NULL)
                 colon = ":0.0";
@@ -101,6 +104,7 @@ rxvt_network_display (const char *display)
     }
 
   close (skfd);
+
   return rval;
 }
 #endif				/* DISPLAY_IS_IP */
