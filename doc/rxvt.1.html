@@ -48,7 +48,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>5.9</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>6.0</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -436,6 +436,14 @@ on the command-line. If there is no <strong>-e</strong> option then the default 
 run the program specified by the <strong>SHELL</strong> environment variable or,
 failing that, <em>sh(1)</em>.
 </dd>
+<dd>
+<p>Please note that you must specify a program with arguments. If you want to
+run shell commands, you have to specify the shell, like this:</p>
+</dd>
+<dd>
+<pre>
+  rxvt -e sh -c &quot;shell commands&quot;</pre>
+</dd>
 <p></p>
 <dt><strong><a name="item__2dtitle_text"><strong>-title</strong> <em>text</em></a></strong><br />
 </dt>
@@ -524,6 +532,15 @@ Turn on/off secondary screen (default enabled); resource
 <dd>
 Turn on/off secondary screen scroll (default enabled); resource
 <strong>secondaryScroll</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dhold_7c_2bhold"><strong>-hold</strong>|<strong>+hold</strong></a></strong><br />
+</dt>
+<dd>
+Turn on/off hold window after exit support. If enabled, rxvt
+will not immediately destroy its window when the program executed within
+it exits. Instead, it will wait till it is being killed or closed by the
+user; resource <strong>hold</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item__2dkeysym_2esym_string"><strong>-keysym.</strong><em>sym</em> <em>string</em></a></strong><br />
@@ -1250,6 +1267,15 @@ Turn on/off secondary screen scroll (default enabled). If the this
 option is enabled, scrolls on the secondary screen will change the
 scrollback buffer and switching to/from the secondary screen will
 instead scroll the screen up.
+</dd>
+<p></p>
+<dt><strong><a name="item_hold_3a_bool"><strong>hold</strong>: <em>bool</em></a></strong><br />
+</dt>
+<dd>
+Turn on/off hold window after exit support. If enabled, rxvt
+will not immediately destroy its window when the program executed within
+it exits. Instead, it will wait till it is being killed or closed by the
+user.
 </dd>
 <p></p>
 <dt><strong><a name="item_keysym_2esym_3a_string"><strong>keysym.</strong><em>sym</em>: <em>string</em></a></strong><br />

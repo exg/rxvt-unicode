@@ -2417,7 +2417,7 @@ in combination with other switches) is:
   settable insecure mode
   keysym remapping support
   cursor blinking and underline cursor
-  -embed and -pty-fd options
+  -embed, -pty-fd and -hold options
 
 =item --enable-iso14755 (default: on)
 

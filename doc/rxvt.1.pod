@@ -315,6 +315,11 @@ on the command-line. If there is no B<-e> option then the default is to
 run the program specified by the B<SHELL> environment variable or,
 failing that, I<sh(1)>.
 
+Please note that you must specify a program with arguments. If you want to
+run shell commands, you have to specify the shell, like this:
+
+  @@RXVT_NAME@@ -e sh -c "shell commands"
+
 =item B<-title> I<text>
 
 Window title (B<-T> still respected); the default title is the basename
@@ -379,6 +384,13 @@ B<secondaryScreen>.
 
 Turn on/off secondary screen scroll (default enabled); resource
 B<secondaryScroll>.
+
+=item B<-hold>|B<+hold>
+
+Turn on/off hold window after exit support. If enabled, @@RXVT_NAME@@
+will not immediately destroy its window when the program executed within
+it exits. Instead, it will wait till it is being killed or closed by the
+user; resource B<hold>.
 
 =item B<-keysym.>I<sym> I<string>
 
@@ -932,6 +944,13 @@ Turn on/off secondary screen scroll (default enabled). If the this
 option is enabled, scrolls on the secondary screen will change the
 scrollback buffer and switching to/from the secondary screen will
 instead scroll the screen up.
+
+=item B<hold>: I<bool>
+
+Turn on/off hold window after exit support. If enabled, @@RXVT_NAME@@
+will not immediately destroy its window when the program executed within
+it exits. Instead, it will wait till it is being killed or closed by the
+user.
 
 =item B<keysym.>I<sym>: I<string>
 

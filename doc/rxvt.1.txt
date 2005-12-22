@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 5.9, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 6.0, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -269,6 +269,12 @@ OPTIONS
         run the program specified by the SHELL environment variable or,
         failing that, *sh(1)*.
 
+        Please note that you must specify a program with arguments. If you
+        want to run shell commands, you have to specify the shell, like
+        this:
+
+          rxvt -e sh -c "shell commands"
+
     -title *text*
         Window title (-T still respected); the default title is the basename
         of the program specified after the -e option, if any, otherwise the
@@ -320,6 +326,12 @@ OPTIONS
     -ssr|+ssr
         Turn on/off secondary screen scroll (default enabled); resource
         secondaryScroll.
+
+    -hold|+hold
+        Turn on/off hold window after exit support. If enabled, rxvt will
+        not immediately destroy its window when the program executed within
+        it exits. Instead, it will wait till it is being killed or closed by
+        the user; resource hold.
 
     -keysym.*sym* *string*
         Remap a key symbol. See resource keysym.
@@ -799,6 +811,12 @@ RESOURCES (available also as long-options)
         option is enabled, scrolls on the secondary screen will change the
         scrollback buffer and switching to/from the secondary screen will
         instead scroll the screen up.
+
+    hold: *bool*
+        Turn on/off hold window after exit support. If enabled, rxvt will
+        not immediately destroy its window when the program executed within
+        it exits. Instead, it will wait till it is being killed or closed by
+        the user.
 
     keysym.*sym*: *string*
         Compile *frills*: Associate *string* with keysym *sym*. The

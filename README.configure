@@ -197,7 +197,7 @@ CONFIGURE OPTIONS
           settable insecure mode
           keysym remapping support
           cursor blinking and underline cursor
-          -embed and -pty-fd options
+          -embed, -pty-fd and -hold options
 
     --enable-iso14755 (default: on)
         Enable extended ISO 14755 support (see rxvt(1), or doc/rxvt.1.txt).

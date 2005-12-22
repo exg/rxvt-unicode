@@ -631,11 +631,12 @@ enum {
   Rs_transparent_all,
 #endif
 #if ENABLE_FRILLS
+  Rs_pty_fd,
+  Rs_hold,
   Rs_ext_bwidth,
   Rs_int_bwidth,
   Rs_borderLess,
   Rs_lineSpace,
-  Rs_pty_fd,
   Rs_cursorUnderline,
 #endif
 #if CURSOR_BLINK
@@ -1324,6 +1325,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 
   rxvt_term ();
   ~rxvt_term ();
+  void child_exit (); // child has exited, usually destroys
   void destroy ();
   void emergency_cleanup ();
 

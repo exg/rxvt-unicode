@@ -291,6 +291,15 @@ rxvt_term::~rxvt_term ()
 }
 
 void
+rxvt_term::child_exit ()
+{
+  cmd_pid = 0;
+
+  if (!(options & Opt_hold))
+    destroy ();
+}
+
+void
 rxvt_term::destroy ()
 {
   if (destroy_ev.active)
@@ -524,7 +533,7 @@ static struct sig_handlers
       for (rxvt_term **t = rxvt_term::termlist.begin (); t < rxvt_term::termlist.end (); t++)
         if (pid == (*t)->cmd_pid)
           {
-            (*t)->destroy ();
+            (*t)->child_exit ();
             break;
           }
   }

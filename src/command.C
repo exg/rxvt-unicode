@@ -1069,8 +1069,8 @@ rxvt_term::pty_fill ()
       cmdbuf_endp += n;
       return true;
     }
-  else if (n < 0 && errno != EAGAIN)
-    destroy ();
+  else if (n < 0 && errno != EAGAIN && errno != EINTR)
+    pty_ev.stop ();
   
   return false;
 }
@@ -4374,8 +4374,7 @@ void rxvt_term::pty_write ()
       memmove (v_buffer, v_buffer + written, v_buflen);
     }
   else if (written != -1 || (errno != EAGAIN && errno != EINTR))
-    // original code just ignores this...
-    destroy ();
+    pty_ev.set (EVENT_READ);
 }
 
 /*----------------------- end-of-file (C source) -----------------------*/

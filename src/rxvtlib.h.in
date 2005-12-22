@@ -255,9 +255,11 @@ typedef struct {
 #if ENABLE_FRILLS
 # define Opt_insecure		 (1UL<<24) // insecure esc sequences
 # define Opt_borderLess		 (1UL<<25) // mem borderless hints
+# define Opt_hold		 (1UL<<26) // hold window open after exit
 #else
 # define Opt_insecure		 0
 # define Opt_borderLess		 0
+# define Opt_hold		 0
 #endif
 /* place holder used for parsing command-line options */
 #define Opt_Reverse              (1UL<<30)
