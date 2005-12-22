@@ -285,7 +285,7 @@ rxvt_term::scr_reset ()
           row_col_t ocur = screen.cur;
           ocur.row = MOD (term_start + ocur.row, prev_total_rows);
 
-          while (p != pend && q > 0)
+          do
             {
               p = MOD (p - 1, prev_total_rows);
 #ifdef DEBUG_STRICT
@@ -356,9 +356,9 @@ rxvt_term::scr_reset ()
               qline->l = llen < ncol ? llen : MOD (llen - 1, ncol) + 1;
               scr_blank_line (*qline, qline->l, ncol - qline->l, DEFAULT_RSTYLE);
             }
+          while (p != pend && q > 0);
 
           term_start = total_rows - nrow;
-          view_start = 0;
           nsaved = term_start - q;
  
           // make sure all terminal lines exist
@@ -385,7 +385,6 @@ rxvt_term::scr_reset ()
             }
 
           term_start = 0;
-          view_start = 0;
         }
 
 #ifdef DEBUG_STRICT
