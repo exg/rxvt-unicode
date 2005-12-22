@@ -387,7 +387,7 @@ rxvt_term::scr_reset ()
           term_start = 0;
         }
 
-#ifdef DEBUG_STRICT
+#ifdef DEBUG_STRICT //TODO: remove
       for (int i = -nsaved; i < nrow; i++)
         assert (ROW (i).t);
 #endif
@@ -695,7 +695,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
   unsigned char checksel;
   unicode_t c;
-  int row, last_col;
+  int last_col;
   const unicode_t *strend = str + len;
 
   want_refresh = 1;
@@ -720,7 +720,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
   assert (screen.cur.row < nrow
           && screen.cur.row >= -nsaved);
 #endif
-  row = screen.cur.row;
+  int row = screen.cur.row;
 
   checksel = selection.op && current_screen == selection.screen ? 1 : 0;
 
@@ -987,9 +987,7 @@ rxvt_term::scr_tab (int count, bool ht)
     return;
   else if (count > 0)
     {
-      int row = screen.cur.row;
-
-      line_t &l = ROW(row);
+      line_t &l = ROW(screen.cur.row);
       rend_t base_rend = l.r[i];
       ht &= l.t[i] == ' ';
 
@@ -1074,16 +1072,12 @@ rxvt_term::scr_backindex ()
 void
 rxvt_term::scr_forwardindex ()
 {
-  int row;
-
   if (screen.cur.col < ncol - 1)
     scr_gotorc (0, 1, R_RELATIVE | C_RELATIVE);
   else
     {
-      row = screen.cur.row;
-
-      if (ROW(row).is_longer ()) //TODO//FIXME//LEN
-        ROW(row).l = ncol;
+      if (ROW(screen.cur.row).is_longer ()) //TODO//FIXME//LEN
+        ROW(screen.cur.row).l = ncol;
 
       scr_gotorc (0, 0, R_RELATIVE);
       scr_insdel_chars (1, DELETE);
@@ -1176,21 +1170,21 @@ rxvt_term::scr_index (enum page_dirn direction)
 void
 rxvt_term::scr_erase_line (int mode)
 {
-  unsigned int row, col, num;
+  unsigned int col, num;
 
   want_refresh = 1;
   ZERO_SCROLLBACK ();
 
   selection_check (1);
 
-  row = screen.cur.row;
+  line_t &line = ROW(screen.cur.row);
 
   switch (mode)
     {
       case 0:                     /* erase to end of line */
         col = screen.cur.col;
         num = ncol - col;
-        min_it (ROW(row).l, col);
+        min_it (line.l, col);
         if (ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur)
             || ROWCOL_IN_ROW_AT_OR_AFTER (selection.end, screen.cur))
           CLEAR_SELECTION ();
@@ -1205,7 +1199,7 @@ rxvt_term::scr_erase_line (int mode)
       case 2:                     /* erase whole line */
         col = 0;
         num = ncol;
-        ROW(row).l = 0;
+        line.l = 0;
         if (selection.beg.row <= screen.cur.row
             && selection.end.row >= screen.cur.row)
           CLEAR_SELECTION ();
@@ -1214,7 +1208,7 @@ rxvt_term::scr_erase_line (int mode)
         return;
     }
 
-  scr_blank_line (ROW(row), col, num, rstyle);
+  scr_blank_line (line, col, num, rstyle);
 }
 
 /* ------------------------------------------------------------------------- */
