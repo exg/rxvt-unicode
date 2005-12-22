@@ -657,7 +657,7 @@ WISH: just for fun, do shade and tint with XRender.
 	- don't use XTextStyle for XA_TEXT, instead use XStdICCTextStyle.
 
 2.1  Wed Mar  3 21:48:39 CET 2004
-	- NOTE: the name of the binary and ressources were changed in
+	- NOTE: the name of the binary and resources were changed in
 	  this version, see README.configure if you want the old
 	  settings.
 	- added plain "big5" encoding into CN.
@@ -705,7 +705,7 @@ WISH: just for fun, do shade and tint with XRender.
 	- allow NUL bytes (ctrl-@) to be entered even with XIM enabled.
 	- correct cursor width if !focus.
 	- fixed --enable-xgetdefault, reported by eduard bloch.
-	- added manpage for rxvtc/rxvtd based on the one eduard block
+	- added manpage for rxvtc/rxvtd based on the one eduard bloch
 	  contributed.
 	- use reverse video for normal bold text unless colorBD has been set.
 	- fixed endless loop when selection is valid but empty.
