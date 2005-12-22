@@ -489,7 +489,7 @@ rxvt_term::scr_change_screen (int scrn)
     {
       num_scr = 0;
 
-      for (int i = nrow; i--; )
+      for (int i = prev_nrow; i--; )
         ::swap (ROW(i), swap_buf [i]);
 
       ::swap (screen.charset, swap.charset);
