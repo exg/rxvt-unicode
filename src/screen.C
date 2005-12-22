@@ -331,10 +331,12 @@ rxvt_term::scr_reset ()
 
                       prow = MOD (p + prow, prev_total_rows);
 
-                      // we only adjust the cursor _row_, as this seems to upset
-                      // applications/shells/readline least.
+                      // we only adjust the cursor _row_ and put it into
+                      // the topmost line of "long line" it was in, as
+                      // this seems to upset applications/shells/readline
+                      // least.
                       if (prow == ocur.row)
-                        screen.cur.row = qrow - (total_rows - nrow);
+                        screen.cur.row = q - (total_rows - nrow);
 
                       line_t &pline = old_buf [prow];
 
