@@ -156,12 +156,12 @@ ptytty.o: salloc.h menubar.h
 rxvt.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h rxvtfont.h
 rxvt.o: rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h salloc.h
 rxvt.o: menubar.h
-rxvtc.o: ../config.h rxvtdaemon.h rxvtutil.h rxvt.h rxvtlib.h ptytty.h
-rxvtc.o: feature.h encoding.h rxvtfont.h rxvttoolkit.h iom.h iom_conf.h
-rxvtc.o: callback.h salloc.h menubar.h
+rxvtc.o: ../config.h rxvtdaemon.h rxvtutil.h fdpass.h rxvt.h rxvtlib.h
+rxvtc.o: ptytty.h feature.h encoding.h rxvtfont.h rxvttoolkit.h iom.h
+rxvtc.o: iom_conf.h callback.h salloc.h menubar.h
 rxvtd.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 rxvtd.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
-rxvtd.o: salloc.h menubar.h rxvtdaemon.h
+rxvtd.o: salloc.h menubar.h rxvtdaemon.h fdpass.h
 rxvtdaemon.o: rxvtdaemon.h rxvtutil.h
 rxvtfont.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 rxvtfont.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
@@ -246,12 +246,12 @@ ptytty.lo: salloc.h menubar.h
 rxvt.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 rxvt.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 rxvt.lo: salloc.h menubar.h
-rxvtc.lo: ../config.h rxvtdaemon.h rxvtutil.h rxvt.h rxvtlib.h ptytty.h
-rxvtc.lo: feature.h encoding.h rxvtfont.h rxvttoolkit.h iom.h iom_conf.h
-rxvtc.lo: callback.h salloc.h menubar.h
+rxvtc.lo: ../config.h rxvtdaemon.h rxvtutil.h fdpass.h rxvt.h rxvtlib.h
+rxvtc.lo: ptytty.h feature.h encoding.h rxvtfont.h rxvttoolkit.h iom.h
+rxvtc.lo: iom_conf.h callback.h salloc.h menubar.h
 rxvtd.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 rxvtd.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
-rxvtd.lo: salloc.h menubar.h rxvtdaemon.h
+rxvtd.lo: salloc.h menubar.h rxvtdaemon.h fdpass.h
 rxvtdaemon.lo: rxvtdaemon.h rxvtutil.h
 rxvtfont.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 rxvtfont.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
