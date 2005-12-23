@@ -27,6 +27,8 @@ COMMON = \
 	scrollbar.o scrollbar-next.o scrollbar-rxvt.o scrollbar-xterm.o scrollbar-plain.o \
 	strings.o xdefaults.o xpm.o encoding.o rxvttoolkit.o rxvtutil.o iom.o keyboard.o
 
+COMMON_DAEMON = rxvtdaemon.o fdpass.o
+
 RXVT_BASENAME=`$(ECHO) $(RXVTNAME)|$(SED) 's/$(EXEEXT)$$//'|$(SED) '$(transform)'`
 RXVT_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)$(EXEEXT)
 RXVTC_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)c$(EXEEXT)
@@ -61,11 +63,11 @@ rxvt: rxvt.o $(COMMON)
 	$(LINK) -o $@ $^ $(LIBS) $(XLIB) $(DLIB)
 #	$(LIBTOOL) --mode=link $(LINK) rxvt.o librxvt.la $(LIBS) $(XLIB) $(DLIB) -o $@
 
-rxvtd: rxvtd.o rxvtdaemon.o $(COMMON)
+rxvtd: rxvtd.o $(COMMON) $(COMMON_DAEMON)
 	$(LINK) -o $@ $^ $(LIBS) $(XLIB) $(DLIB)
 #	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o librxvt.la $(LIBS) $(XLIB) $(DLIB) -o $@
 
-rxvtc: rxvtc.o rxvtdaemon.o
+rxvtc: rxvtc.o $(COMMON_DAEMON)
 	$(LINK) -o $@ $^ $(LIBS) $(DLIB)
 #	$(LIBTOOL) --mode=link $(LINK) rxvtc.o rxvtdaemon.o $(LIBS) $(DLIB) -o $@
 
@@ -125,6 +127,7 @@ encoding.o: table/cns11643_1992_f.h table/big5_ext.h table/big5_plus.h
 encoding.o: table/viscii.h table/jis0201_1976_0.h table/jis0208_1990_0.h
 encoding.o: table/jis0212_1990_0.h table/jis0213_1.h table/jis0213_2.h
 encoding.o: table/compose.h table/category.h
+fdpass.o: ../config.h fdpass.h
 init.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h rxvtfont.h
 init.o: rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h salloc.h
 init.o: menubar.h init.h
@@ -214,6 +217,7 @@ encoding.lo: table/cns11643_1992_f.h table/big5_ext.h table/big5_plus.h
 encoding.lo: table/viscii.h table/jis0201_1976_0.h table/jis0208_1990_0.h
 encoding.lo: table/jis0212_1990_0.h table/jis0213_1.h table/jis0213_2.h
 encoding.lo: table/compose.h table/category.h
+fdpass.lo: ../config.h fdpass.h
 init.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 init.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 init.lo: salloc.h menubar.h init.h

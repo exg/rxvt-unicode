@@ -1412,7 +1412,12 @@ rxvt_term::run_command (const char *const *argv)
   if (rs[Rs_pty_fd])
     {
       pty.pty = atoi (rs[Rs_pty_fd]);
-      fcntl (pty.pty, F_SETFL, O_NONBLOCK);
+
+      if (getfd_hook)
+        pty.pty = (*getfd_hook) (pty.pty);
+
+      if (pty.pty < 0 || fcntl (pty.pty, F_SETFL, O_NONBLOCK))
+        rxvt_fatal ("unusable pty-fd filehandle, aborting.\n");
     }
   else
 #endif

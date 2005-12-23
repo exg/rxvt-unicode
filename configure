@@ -11340,6 +11340,94 @@ _ACEOF
 
 fi
 
+echo "$as_me:$LINENO: checking for unix-compliant filehandle passing ability" >&5
+echo $ECHO_N "checking for unix-compliant filehandle passing ability... $ECHO_C" >&6
+if test "${rxvt_can_pass_fds+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int
+main ()
+{
+
+{
+  msghdr msg;
+  iovec iov;
+  char buf [100];
+  char data = 0;
+
+  iov.iov_base = &data;
+  iov.iov_len  = 1;
+
+  msg.msg_iov        = &iov;
+  msg.msg_iovlen     = 1;
+  msg.msg_control    = buf;
+  msg.msg_controllen = sizeof buf;
+
+  cmsghdr *cmsg = CMSG_FIRSTHDR (&msg);
+  cmsg->cmsg_level = SOL_SOCKET;
+  cmsg->cmsg_type  = SCM_RIGHTS;
+  cmsg->cmsg_len   = 100;
+
+  *(int *)CMSG_DATA (cmsg) = 5;
+
+  return sendmsg (3, &msg, 0);
+}
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_cxx_werror_flag"			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  rxvt_can_pass_fds=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+rxvt_can_pass_fds=no
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+fi
+echo "$as_me:$LINENO: result: $rxvt_can_pass_fds" >&5
+echo "${ECHO_T}$rxvt_can_pass_fds" >&6
+if test x$rxvt_can_pass_fds = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_UNIX_FDPASS 1
+_ACEOF
+
+fi
+
 echo "$as_me:$LINENO: checking for broken XIM callback" >&5
 echo $ECHO_N "checking for broken XIM callback... $ECHO_C" >&6
 if test "${rxvt_broken_ximcb+set}" = set; then

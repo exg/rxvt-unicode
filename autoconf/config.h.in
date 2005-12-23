@@ -316,6 +316,9 @@
 /* Define if nl_langinfo(CODESET) works */
 #undef HAVE_NL_LANGINFO
 
+/* Define if sys/socket.h defines the necessary macros/functions for file handle passing */
+#undef HAVE_UNIX_FDPASS
+
 /* Define if your XIMCallback specifies XIC as first type. */
 #undef XIMCB_PROTO_BROKEN
 

@@ -68,6 +68,8 @@ src/command.C
 src/command.h
 src/encoding.C
 src/encoding.h
+src/fdpass.h
+src/fdpass.C
 src/feature.h
 src/init.C
 src/init.h

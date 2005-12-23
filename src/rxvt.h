@@ -961,6 +961,7 @@ enum {
 extern class rxvt_failure_exception { } rxvt_failure_exception;
 
 typedef callback1<void, const char *> log_callback;
+typedef callback1<int, int> getfd_callback;
 
 extern void rxvt_vlog (const char *fmt, va_list arg_ptr);
 extern void rxvt_log (const char *fmt, ...);
@@ -1047,6 +1048,7 @@ extern class rxvt_composite_vec rxvt_composite;
 
 struct rxvt_term : zero_initialized, rxvt_vars {
   log_callback *log_hook;               // log error messages through this hook, if != 0
+  getfd_callback *getfd_hook;           // convert remote to local fd, if != 0
 
   struct mbstate  mbstate;              // current input multibyte state
 

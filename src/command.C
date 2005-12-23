@@ -1069,8 +1069,13 @@ rxvt_term::pty_fill ()
       cmdbuf_endp += n;
       return true;
     }
-  else if (n < 0 && errno != EAGAIN && errno != EINTR)
-    pty_ev.stop ();
+  else if ((n < 0 && errno != EAGAIN && errno != EINTR) || n == 0)
+    {
+      pty_ev.stop ();
+
+      if (!(options & Opt_hold))
+        destroy ();
+    }
   
   return false;
 }
