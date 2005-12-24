@@ -21,6 +21,7 @@ WISH: just for fun, do shade and tint with XRender.
         - bump max columns/rows to 10000 each.
         - bump max savelines to 10000000.
         - -pty-fd now passes the urxvtc fd to the urxvtd process.
+        - avoid linking against -lnsl/-lsocket/-lxpg4 unless neccessary.
         - major code cleanup (still not complete, though).
         - implement -hold option.
         - _major_ rewrite of internal buffer handling:

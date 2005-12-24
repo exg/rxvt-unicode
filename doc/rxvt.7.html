@@ -75,11 +75,120 @@ also available on the World Wide Web at
 <hr />
 <h1><a name="frequently_asked_questions">FREQUENTLY ASKED QUESTIONS</a></h1>
 <dl>
+<dt><strong><a name="item_isn_27t_rxvt_supposed_to_be_small_3f_don_27t_all_t">Isn't rxvt supposed to be small? Don't all those features bloat?</a></strong><br />
+</dt>
+<dd>
+I often get asked about this, and I think, no, they didn't cause extra
+bloat. If you compare a minimal rxvt and a minimal urxvt, you can see
+that the urxvt binary is larger (due to some encoding tables always being
+compiled in), but it actually uses less memory (RSS) after startup. Even
+with <code>--disable-everything</code>, this comparison is a bit unfair, as many
+features unique to urxvt (locale, encoding conversion, iso14755 etc.) are
+already in use in this mode.
+</dd>
+<dd>
+<pre>
+    text    data     bss     drs     rss filename
+   98398    1664      24   15695    1824 rxvt --disable-everything
+  188985    9048   66616   18222    1788 urxvt --disable-everything</pre>
+</dd>
+<dd>
+<p>When you <a href="#item__2d_2denable_2deverything"><code>--enable-everything</code></a> (which _is_ unfair, as this involves xft
+and full locale/XIM support which are quite bloaty inside libX11 and my
+libc), the two diverge, but not unreasnobaly so.</p>
+</dd>
+<dd>
+<pre>
+    text    data     bss     drs     rss filename
+  163431    2152      24   20123    2060 rxvt --enable-everything
+ 1035683   49680   66648   29096    3680 urxvt --enable-everything</pre>
+</dd>
+<dd>
+<p>The very large size of the text section is explained by the east-asian
+encoding tables, which, if unused, take up disk space but nothing else
+and can be compiled out unless you rely on X11 core fonts that use those
+encodings. The BSS size comes from the 64k emergency buffer that my c++
+compiler allocates (but of course doesn't use unless you are out of
+memory). Also, using an xft font instead of a core font immediately adds a
+few megabytes of RSS. Xft indeed is responsible for a lot of RSS even when
+not used.</p>
+</dd>
+<dd>
+<p>Of course, due to every character using two or four bytes instead of one,
+a large scrollback buffer will ultimately make rxvt-unicode use more
+memory.</p>
+</dd>
+<dd>
+<p>Compared to e.g. Eterm (5112k), aterm (3132k) and xterm (4680k), this
+still fares rather well. And compared to some monsters like gnome-terminal
+(21152k + extra 4204k in separate processes) or konsole (22200k + extra
+43180k in daemons that stay around after exit, plus half aminute of
+startup time, including the hundreds of warnings it spits out), it fares
+extremely well *g*.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_why_c_2b_2b_2c_isn_27t_that_unportable_2fbloated_2">Why C++, isn't that unportable/bloated/uncool?</a></strong><br />
+</dt>
+<dd>
+Is this a question? :) It comes up very often. The simple answer is: I had
+to write it, and C++ allowed me to write and maintain it in a fraction
+of the time and effort (which is a scarce resource for me). Put even
+shorter: It simply wouldn't exist without C++.
+</dd>
+<dd>
+<p>My personal stance on this is that C++ is less portable than C, but in
+the case of rxvt-unicode this hardly matters, as its portability limits
+are defined by things like X11, pseudo terminals, locale support and unix
+domain sockets, which are all less portable than C++ itself.</p>
+</dd>
+<dd>
+<p>Regarding the bloat, see the above question: It's easy to write programs
+in C that use gobs of memory, an certainly possible to write programs in
+C++ that don't. C++ also often comes with large libraries, but this is
+not necessarily the case with GCC. Here is what rxvt links against on my
+system with a minimal config:</p>
+</dd>
+<dd>
+<pre>
+   libX11.so.6 =&gt; /usr/X11R6/lib/libX11.so.6 (0x00002aaaaabc3000)
+   libc.so.6 =&gt; /lib/libc.so.6 (0x00002aaaaadde000)
+   libdl.so.2 =&gt; /lib/libdl.so.2 (0x00002aaaab01d000)
+   /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)</pre>
+</dd>
+<dd>
+<p>And here is rxvt-unicode:</p>
+</dd>
+<dd>
+<pre>
+   libX11.so.6 =&gt; /usr/X11R6/lib/libX11.so.6 (0x00002aaaaabc3000)
+   libgcc_s.so.1 =&gt; /lib/libgcc_s.so.1 (0x00002aaaaada2000)
+   libc.so.6 =&gt; /lib/libc.so.6 (0x00002aaaaaeb0000)     
+   libdl.so.2 =&gt; /lib/libdl.so.2 (0x00002aaaab0ee000)   
+   /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)</pre>
+</dd>
+<dd>
+<p>No large bloated libraries (of course, none were linked in statically),
+except maybe libX11 :)</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_does_it_support_tabs_2c_can_i_have_a_tabbed_rxvt_2">Does it support tabs, can I have a tabbed rxvt-unicode?</a></strong><br />
+</dt>
+<dd>
+rxvt-unicode does not directly support tabs. It will work fine with
+tabbing functionality of many window managers or similar tabbing programs,
+and its embedding-features allow it to be embedded into other programs,
+as witnessed by <em>doc/rxvt-tabbed</em> or the upcoming <code>Gtk2::URxvt</code> perl
+module, which features a tabbed urxvt (murxvt) terminal as an example
+embedding application.
+</dd>
+<p></p>
 <dt><strong><a name="item_how_do_i_know_which_rxvt_2dunicode_version_i_27m_u">How do I know which rxvt-unicode version I'm using?</a></strong><br />
 </dt>
 <dd>
 The version number is displayed with the usage (-h). Also the escape
-sequence <code>ESC [ 8 n</code> sets the window title to the version number.
+sequence <code>ESC [ 8 n</code> sets the window title to the version number. When
+using the urxvtc client, the version displayed is that of the
+daemon.
 </dd>
 <p></p>
 <dt><strong><a name="item_i_am_using_debian_gnu_2flinux_and_have_a_problem_2">I am using Debian GNU/Linux and have a problem...</a></strong><br />
@@ -147,7 +256,7 @@ Most likely it's the empty definition for <code>enacs=</code>. Just replace it b
 <code>enacs=\E[0@</code> and try again.
 </dd>
 <p></p>
-<dt><strong><a name="item_bash_27s_readline_does_not_work_correctly_under_rx"><code>bash</code>'s readline does not work correctly under rxvt.</a></strong><br />
+<dt><strong><a name="item_bash_27s_readline_does_not_work_correctly_under_ur"><code>bash</code>'s readline does not work correctly under urxvt.</a></strong><br />
 </dt>
 <dt><strong><a name="item_i_need_a_termcap_file_entry_2e">I need a termcap file entry.</a></strong><br />
 </dt>
@@ -311,7 +420,7 @@ e.g.:</p>
 </dd>
 <dd>
 <pre>
-   rxvt -fn basefont,font2,font3...</pre>
+   urxvt -fn basefont,font2,font3...</pre>
 </dd>
 <dd>
 <p>When rxvt-unicode sees a character, it will first look at the base
@@ -695,7 +804,7 @@ Make sure that mouse reporting is actually turned off since killing
 some editors prematurely may leave the mouse in mouse report mode. I've
 heard that tcsh may use mouse reporting unless it otherwise specified. A
 quick check is to see if cut/paste works when the Alt or Shift keys are
-depressed. See <code>rxvt(7)</code>
+depressed. See <code>urxvt(7)</code>
 </dd>
 <p></p>
 <dt><strong><a name="item_what_27s_with_this_bold_2fblink_stuff_3f">What's with this bold/blink stuff?</a></strong><br />
@@ -779,10 +888,10 @@ me) as ``pretty girly''.</p>
    URxvt.color15:      #e1dddd</pre>
 </dd>
 <p></p>
-<dt><strong><a name="item_how_can_i_start_rxvtd_in_a_race_2dfree_way_3f">How can I start rxvtd in a race-free way?</a></strong><br />
+<dt><strong><a name="item_how_can_i_start_urxvtd_in_a_race_2dfree_way_3f">How can I start urxvtd in a race-free way?</a></strong><br />
 </dt>
 <dd>
-Try <code>rxvtd -f -o</code>, which tells rxvtd to open the
+Try <code>urxvtd -f -o</code>, which tells urxvtd to open the
 display, create the listening socket and then fork.
 </dd>
 <p></p>
@@ -813,16 +922,16 @@ be used (which may not be the same as your stty setting).</p>
 <pre>
    # use Backspace = ^H
    $ stty erase ^H
-   $ rxvt</pre>
+   $ urxvt</pre>
 </dd>
 <dd>
 <pre>
    # use Backspace = ^?
    $ stty erase ^?
-   $ rxvt</pre>
+   $ urxvt</pre>
 </dd>
 <dd>
-<p>Toggle with <code>ESC [ 36 h</code> / <code>ESC [ 36 l</code> as documented in rxvt(7).</p>
+<p>Toggle with <code>ESC [ 36 h</code> / <code>ESC [ 36 l</code> as documented in urxvt(7).</p>
 </dd>
 <dd>
 <p>For an existing rxvt-unicode:</p>
@@ -870,7 +979,7 @@ you have run ``configure'' with the <a href="#item__2d_2ddisable_2dresources"><c
 use the `keysym' resource to alter the keystrings associated with keysyms.
 </dd>
 <dd>
-<p>Here's an example for a URxvt session started using <code>rxvt -name URxvt</code></p>
+<p>Here's an example for a URxvt session started using <code>urxvt -name URxvt</code></p>
 </dd>
 <dd>
 <pre>
@@ -2835,7 +2944,7 @@ in combination with other switches) is:</p>
 <dt><strong><a name="item_iso14755">--enable-iso14755 (default: on)</a></strong><br />
 </dt>
 <dd>
-Enable extended ISO 14755 support (see rxvt(1), or
+Enable extended ISO 14755 support (see urxvt(1), or
 <em>doc/rxvt.1.txt</em>). Basic support (section 5.1) is enabled by
 <code>--enable-frills</code>, while support for 5.2, 5.3 and 5.4 is enabled with
 this switch.

@@ -26,10 +26,97 @@ L<http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html>.
 
 =over 4
 
+=item Isn't rxvt supposed to be small? Don't all those features bloat?
+
+I often get asked about this, and I think, no, they didn't cause extra
+bloat. If you compare a minimal rxvt and a minimal urxvt, you can see
+that the urxvt binary is larger (due to some encoding tables always being
+compiled in), but it actually uses less memory (RSS) after startup. Even
+with C<--disable-everything>, this comparison is a bit unfair, as many
+features unique to urxvt (locale, encoding conversion, iso14755 etc.) are
+already in use in this mode.
+
+    text    data     bss     drs     rss filename
+   98398    1664      24   15695    1824 rxvt --disable-everything
+  188985    9048   66616   18222    1788 urxvt --disable-everything
+
+When you C<--enable-everything> (which _is_ unfair, as this involves xft
+and full locale/XIM support which are quite bloaty inside libX11 and my
+libc), the two diverge, but not unreasnobaly so.
+
+    text    data     bss     drs     rss filename
+  163431    2152      24   20123    2060 rxvt --enable-everything
+ 1035683   49680   66648   29096    3680 urxvt --enable-everything
+
+The very large size of the text section is explained by the east-asian
+encoding tables, which, if unused, take up disk space but nothing else
+and can be compiled out unless you rely on X11 core fonts that use those
+encodings. The BSS size comes from the 64k emergency buffer that my c++
+compiler allocates (but of course doesn't use unless you are out of
+memory). Also, using an xft font instead of a core font immediately adds a
+few megabytes of RSS. Xft indeed is responsible for a lot of RSS even when
+not used.
+
+Of course, due to every character using two or four bytes instead of one,
+a large scrollback buffer will ultimately make rxvt-unicode use more
+memory.
+
+Compared to e.g. Eterm (5112k), aterm (3132k) and xterm (4680k), this
+still fares rather well. And compared to some monsters like gnome-terminal
+(21152k + extra 4204k in separate processes) or konsole (22200k + extra
+43180k in daemons that stay around after exit, plus half aminute of
+startup time, including the hundreds of warnings it spits out), it fares
+extremely well *g*.
+
+=item Why C++, isn't that unportable/bloated/uncool?
+
+Is this a question? :) It comes up very often. The simple answer is: I had
+to write it, and C++ allowed me to write and maintain it in a fraction
+of the time and effort (which is a scarce resource for me). Put even
+shorter: It simply wouldn't exist without C++.
+
+My personal stance on this is that C++ is less portable than C, but in
+the case of rxvt-unicode this hardly matters, as its portability limits
+are defined by things like X11, pseudo terminals, locale support and unix
+domain sockets, which are all less portable than C++ itself.
+
+Regarding the bloat, see the above question: It's easy to write programs
+in C that use gobs of memory, an certainly possible to write programs in
+C++ that don't. C++ also often comes with large libraries, but this is
+not necessarily the case with GCC. Here is what rxvt links against on my
+system with a minimal config:
+
+   libX11.so.6 => /usr/X11R6/lib/libX11.so.6 (0x00002aaaaabc3000)
+   libc.so.6 => /lib/libc.so.6 (0x00002aaaaadde000)
+   libdl.so.2 => /lib/libdl.so.2 (0x00002aaaab01d000)
+   /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)
+
+And here is rxvt-unicode:
+
+   libX11.so.6 => /usr/X11R6/lib/libX11.so.6 (0x00002aaaaabc3000)
+   libgcc_s.so.1 => /lib/libgcc_s.so.1 (0x00002aaaaada2000)
+   libc.so.6 => /lib/libc.so.6 (0x00002aaaaaeb0000)     
+   libdl.so.2 => /lib/libdl.so.2 (0x00002aaaab0ee000)   
+   /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)     
+
+No large bloated libraries (of course, none were linked in statically),
+except maybe libX11 :)
+
+=item Does it support tabs, can I have a tabbed rxvt-unicode?
+
+rxvt-unicode does not directly support tabs. It will work fine with
+tabbing functionality of many window managers or similar tabbing programs,
+and its embedding-features allow it to be embedded into other programs,
+as witnessed by F<doc/rxvt-tabbed> or the upcoming C<Gtk2::URxvt> perl
+module, which features a tabbed urxvt (murxvt) terminal as an example
+embedding application.
+
 =item How do I know which rxvt-unicode version I'm using?
 
 The version number is displayed with the usage (-h). Also the escape
-sequence C<ESC [ 8 n> sets the window title to the version number.
+sequence C<ESC [ 8 n> sets the window title to the version number. When
+using the @@RXVT_NAME@@c client, the version displayed is that of the
+daemon.
 
 =item I am using Debian GNU/Linux and have a problem...
 

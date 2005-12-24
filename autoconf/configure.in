@@ -77,11 +77,11 @@ AC_AIX
 AC_ISC_POSIX
 
 dnl# FreeBSD needs to link libxpg4
-AC_CHECK_LIB(xpg4, setlocale, [LIBS="$LIBS -lxpg4"])
+AC_CHECK_FUNC(setlocale,     [], [AC_CHECK_LIB(xpg4,   setlocale,     [LIBS="$LIBS -lxpg4"])])
 
 dnl solaris needs to link libnsl and socket
-AC_CHECK_LIB(nsl, gethostbyname, [LIBS="$LIBS -lnsl"])
-AC_CHECK_LIB(socket, socket, [LIBS="$LIBS -lsocket"])
+AC_CHECK_FUNC(gethostbyname, [], [AC_CHECK_LIB(nsl,    gethostbyname, [LIBS="$LIBS -lnsl"])])
+AC_CHECK_FUNC(socket,        [], [AC_CHECK_LIB(socket, socket,        [LIBS="$LIBS -lsocket"])])
 
 dnl AC_ENABLE_SHARED(no)dnl#	libtool
 dnl AC_ENABLE_STATIC(yes)dnl#	libtool
