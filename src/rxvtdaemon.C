@@ -33,19 +33,6 @@
 
 #include "rxvtdaemon.h"
 
-// works around linux kernel bug, returns EAGAIN on a blocking socket
-static ssize_t
-read_ (int fd, void *buf, size_t count)
-{
-  int ret;
-
-  do
-    ret = read (fd, buf, count);
-  while (ret < 0 && errno == EAGAIN);
-
-  return ret;
-}
-
 char *rxvt_connection::unix_sockname ()
 {
   char name[PATH_MAX];
@@ -87,7 +74,7 @@ bool rxvt_connection::recv (auto_str &data, int *len)
   uint8_t s[2];
   int l;
 
-  if (read_ (fd, s, 2) != 2)
+  if (read (fd, s, 2) != 2)
     return false;
 
   l = (s[0] << 8) + s[1];
@@ -102,7 +89,7 @@ bool rxvt_connection::recv (auto_str &data, int *len)
   if (!data)
     return false;
 
-  if (read_ (fd, data, l) != l)
+  if (read (fd, data, l) != l)
     return false;
 
   data[l] = 0;
@@ -123,7 +110,7 @@ bool rxvt_connection::recv (int &data)
 {
   uint8_t s[4];
 
-  if (read_ (fd, s, 4) != 4)
+  if (read (fd, s, 4) != 4)
     return false;
 
   data = (((((s[0] << 8) | s[1]) << 8) | s[2]) << 8) | s[3];

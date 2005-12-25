@@ -10,8 +10,6 @@ WISH: meta-tagging of data by regex/master process (my dream project)
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 
-	- workaround for possible linux-kernel bug, details pending.
-
 6.0  Sat Dec 24 13:58:56 CET 2005
 	- make it compile without SMART_RESIZE again.
         - enable slow link support by default.
