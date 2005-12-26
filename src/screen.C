@@ -622,7 +622,13 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
           selection.end.row  -= count;
           selection.mark.row -= count;
 
-          selection_check (0);
+          if (selection.beg.row < -nsaved
+              || selection.end.row < -nsaved
+              || selection.mark.row < -nsaved)
+            {
+              CLEAR_ALL_SELECTION ();
+              selection.op = SELECTION_CLEAR;
+            }
         }
 
       for (int i = count; i--; )
@@ -637,20 +643,17 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
     {
       if (selection.op && current_screen == selection.screen)
         {
-          int i = selection.beg.row;
-          int j = selection.end.row;
-
-          if ((i < row1 && j > row1)
-              || (i < row2 && j > row2)
-              || (i - count < row1 && i >= row1)
-              || (i - count > row2 && i <= row2)
-              || (j - count < row1 && j >= row1)
-              || (j - count > row2 && j <= row2))
+          if ((selection.beg.row < row1 && selection.end.row > row1)
+              || (selection.beg.row < row2 && selection.end.row > row2)
+              || (selection.beg.row - count < row1 && selection.beg.row >= row1)
+              || (selection.beg.row - count > row2 && selection.beg.row <= row2)
+              || (selection.end.row - count < row1 && selection.end.row >= row1)
+              || (selection.end.row - count > row2 && selection.end.row <= row2))
             {
               CLEAR_ALL_SELECTION ();
-              selection.op = SELECTION_CLEAR;  /* XXX: too aggressive? */
+              selection.op = SELECTION_CLEAR;
             }
-          else if (j >= row1 && j <= row2)
+          else if (selection.end.row >= row1 && selection.end.row <= row2)
             {
               /* move selected region too */
               selection.beg.row  -= count;
