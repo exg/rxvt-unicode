@@ -16,6 +16,8 @@ WISH: just for fun, do shade and tint with XRender.
           while the user still drags.
         - selections that were partially scrolled out of the window were
           not drawn correctly.
+        - lines newly scrolled in were not initialized properly, leading
+          to extremely long lines and (hopefully) some segfaults.
 
 6.0  Sat Dec 24 13:58:56 CET 2005
 	- make it compile without SMART_RESIZE again.

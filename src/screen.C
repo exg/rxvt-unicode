@@ -353,8 +353,14 @@ rxvt_term::scr_reset ()
                     }
                 }
 
-              qline->l = llen < ncol ? llen : MOD (llen - 1, ncol) + 1;
-              printf ("qline->l %d = llen %d < ncol %d ? %d : MOD %d\n", qline->l,llen,ncol,llen,MOD (llen - 1, ncol) + 1);//D
+              qline->l = llen ? MOD (llen - 1, ncol) + 1 : 0;
+#ifdef DEBUG_STRICT //TODO//FIXME//TEMPORARY
+              if (qline->l < 0)
+                {
+                  fprintf (stderr, "ERROR, PLEASE REPORT to rxvt-unicode@plan9.de: qline->l %d = llen %d < ncol %d ? %d : MOD %d\n", qline->l,llen,ncol,llen,MOD (llen - 1, ncol) + 1);//D
+                  qline->l = 0;
+                }
+#endif
               scr_blank_line (*qline, qline->l, ncol - qline->l, DEFAULT_RSTYLE);
             }
           while (p != pend && q > 0);
