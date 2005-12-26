@@ -11,6 +11,7 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 
 6.1
+	- update iso8859-7 table (euro and drachma round-trip et al.).
 	- fix a crash when the selection scrolls out of the scrollback
           while the user still drags.
         - selections that were partially scrolled out of the window were
