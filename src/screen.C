@@ -354,6 +354,7 @@ rxvt_term::scr_reset ()
                 }
 
               qline->l = llen < ncol ? llen : MOD (llen - 1, ncol) + 1;
+              printf ("qline->l %d = llen %d < ncol %d ? %d : MOD %d\n", qline->l,llen,ncol,llen,MOD (llen - 1, ncol) + 1);//D
               scr_blank_line (*qline, qline->l, ncol - qline->l, DEFAULT_RSTYLE);
             }
           while (p != pend && q > 0);
@@ -632,7 +633,10 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
         }
 
       for (int i = count; i--; )
-        scr_blank_screen_mem (ROW(row2 - i), rstyle);
+        {
+          ROW(row2 - i).l = 0;
+          scr_blank_screen_mem (ROW(row2 - i), rstyle);
+        }
       
       if ((options & Opt_scrollWithBuffer)
           && view_start != 0
@@ -735,7 +739,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
       if (c < 0x20)
         if (c == C0_LF)
-          {          
+          {
             if (!line->is_longer ())      /* XXX: think about this */
               max_it (line->l, screen.cur.col);
 
@@ -1285,8 +1289,8 @@ rxvt_term::scr_erase_screen (int mode)
 
   for (; num--; row++)
     {
-      scr_blank_screen_mem (ROW (row), rstyle);
       ROW (row).l = 0;
+      scr_blank_screen_mem (ROW (row), rstyle);
       scr_blank_line (drawn_buf [row], 0, ncol, ren);
     }
 }
@@ -2454,7 +2458,7 @@ rxvt_term::scr_reverse_selection ()
           else
             {
               col = 0;
-              row = view_start;
+              row = -view_start;
             }
 
           for (; row < min (selection.end.row, view_end); row++, col = 0)

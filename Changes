@@ -13,6 +13,8 @@ WISH: just for fun, do shade and tint with XRender.
 6.1
 	- fix a crash when the selection scrolls out of the scrollback
           while the user still drags.
+        - selections that were partially scrolled out of the window were
+          not drawn correctly.
 
 6.0  Sat Dec 24 13:58:56 CET 2005
 	- make it compile without SMART_RESIZE again.
