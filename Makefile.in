@@ -65,6 +65,9 @@ installdirs:
 install: installdirs
 	@for I in $(subdirs); do (cd $$I; $(MAKE) DESTDIR=$(DESTDIR) $@) || exit 1; done
 
+check: all
+	echo "no tests"
+
 Makefiles:
 	$(SHELL) config.status
 
