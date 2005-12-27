@@ -23,6 +23,7 @@ WISH: just for fun, do shade and tint with XRender.
         - use unicode white space class instead of hardcoded values for
           stripping whitespace.
         - do whitespace stripping on rectangular selections.
+        - slight cleanups in src/features.h.
 
 6.0  Sat Dec 24 13:58:56 CET 2005
 	- make it compile without SMART_RESIZE again.

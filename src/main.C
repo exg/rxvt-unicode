@@ -946,7 +946,6 @@ rxvt_term::set_fonts ()
 
 void rxvt_term::set_string_property (Atom prop, const char *str, int len)
 {
-  // TODO: SMART_WINDOW_TITLE
   XChangeProperty (display->display, parent[0],
                    prop, XA_STRING, 8, PropModeReplace,
                    (const unsigned char *)str, len >= 0 ? len : strlen (str));
@@ -954,7 +953,6 @@ void rxvt_term::set_string_property (Atom prop, const char *str, int len)
 
 void rxvt_term::set_utf8_property (Atom prop, const char *str, int len)
 {
-  // TODO: SMART_WINDOW_TITLE
   wchar_t *ws = rxvt_mbstowcs (str, len);
   char *s = rxvt_wcstoutf8 (ws);
 

@@ -40,7 +40,7 @@
  * NOTE:
  *
  * Most of these configuration options have not been tested within the new
- * rxvt-unicode framework. Changing them might work, might have no effect,
+ * rxvt-unicode framework. Changing them should work, might have no effect,
  * destroy your disks or have any other effects. You may freely try (and
  * report bugs, too!), but don't _expect_ them to work.
  */
@@ -366,14 +366,8 @@
 /* #define ESCZ_ANSWER	"\033[?1;2C" */
 
 /*
- * Check the current value of the window-time/icon-name and avoid
- * re-setting it to the same value -- avoids unnecessary window refreshes
- */
-//#define SMART_WINDOW_TITLE // currently disabled, needs to be reimplemented
-
-/*
  * Allow foreground/background colour to be changed with an
- * xterm escape sequence "\E]39;colour^G" -- still experimental
+ * xterm escape sequence "\E]39;colour^G"
  */
 #define XTERM_COLOR_CHANGE
 
@@ -400,7 +394,7 @@
 /*
  * Default number of lines in the scrollback buffer
  */
-#define SAVELINES	64
+#define SAVELINES	1000
 
 /*
  * Provide termcap/terminfo bw support (wrap backwards on cub1)
