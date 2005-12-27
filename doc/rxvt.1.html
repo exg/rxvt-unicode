@@ -48,7 +48,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>6.0</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>6.1</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -1435,8 +1435,10 @@ to select a word; Left triple-click to select the entire logical line
 </dd>
 <dd>
 <p>Starting a selection while pressing the <strong>Meta</strong> key (or <strong>Meta+Ctrl</strong> keys)
-(Compile: <em>frills</em>) will create a rectangular selection instead of a normal
-one.</p>
+(Compile: <em>frills</em>) will create a rectangular selection instead of a
+normal one. In this mode, every selected row becomes its own line in the
+selection, and trailing whitespace is visually underlined and removed from
+the selection.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_insertion_3a"><strong>Insertion</strong>:</a></strong><br />

@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 6.0, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 6.1, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -938,7 +938,9 @@ TEXT SELECTION AND INSERTION
 
         Starting a selection while pressing the Meta key (or Meta+Ctrl keys)
         (Compile: *frills*) will create a rectangular selection instead of a
-        normal one.
+        normal one. In this mode, every selected row becomes its own line in
+        the selection, and trailing whitespace is visually underlined and
+        removed from the selection.
 
     Insertion:
         Pressing and releasing the Middle mouse button (or Shift-Insert) in
