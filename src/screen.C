@@ -2896,7 +2896,11 @@ rxvt_term::selection_make (Time tm)
 
       col = max (col, 0);
 
-      if (row == selection.end.row || selection.rect)
+      if (row == selection.end.row
+#if ENABLE_FRILLS
+          || selection.rect
+#endif
+          )
         min_it (end_col, selection.end.col);
 
       t = ROW(row).t + col;
