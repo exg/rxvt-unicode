@@ -2192,7 +2192,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
           int fore = GET_FGCOLOR (rend); // desired foreground
           int back = GET_BGCOLOR (rend); // desired background
 
-          // only do special processing if any attributes are set, which is rare
+          // only do special processing if any attributes are set, which is unlikely
           if (rend & (RS_Bold | RS_Italic | RS_Uline | RS_RVid | RS_Blink | RS_Careful))
             {
 #if ENABLE_STYLES
