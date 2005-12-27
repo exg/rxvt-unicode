@@ -1081,8 +1081,10 @@ to select a word; Left triple-click to select the entire logical line
 B<tripleclickwords>.
 
 Starting a selection while pressing the B<Meta> key (or B<Meta+Ctrl> keys)
-(Compile: I<frills>) will create a rectangular selection instead of a normal
-one.
+(Compile: I<frills>) will create a rectangular selection instead of a
+normal one. In this mode, every selected row becomes its own line in the
+selection, and trailing whitespace is visually underlined and removed from
+the selection.
 
 =item B<Insertion>:
 
