@@ -41,7 +41,7 @@ class callback0 {
   struct proxy : proxy_base {
     virtual R call (void *obj, R (object::*meth)())
       {
-        ((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)()>(meth)))
+        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)()>(meth)))
           ();
       }
   };
@@ -84,7 +84,7 @@ class callback1 {
   struct proxy : proxy_base {
     virtual R call (void *obj, R (object::*meth)(A1), A1 a1)
       {
-        ((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1)>(meth)))
+        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1)>(meth)))
           (a1);
       }
   };
@@ -127,7 +127,7 @@ class callback2 {
   struct proxy : proxy_base {
     virtual R call (void *obj, R (object::*meth)(A1, A2), A1 a1, A2 a2)
       {
-        ((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2)>(meth)))
+        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2)>(meth)))
           (a1, a2);
       }
   };
@@ -170,7 +170,7 @@ class callback3 {
   struct proxy : proxy_base {
     virtual R call (void *obj, R (object::*meth)(A1, A2, A3), A1 a1, A2 a2, A3 a3)
       {
-        ((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3)>(meth)))
+        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3)>(meth)))
           (a1, a2, a3);
       }
   };
@@ -213,7 +213,7 @@ class callback4 {
   struct proxy : proxy_base {
     virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4), A1 a1, A2 a2, A3 a3, A4 a4)
       {
-        ((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4)>(meth)))
+        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4)>(meth)))
           (a1, a2, a3, a4);
       }
   };
@@ -256,7 +256,7 @@ class callback5 {
   struct proxy : proxy_base {
     virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5)
       {
-        ((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5)>(meth)))
+        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5)>(meth)))
           (a1, a2, a3, a4, a5);
       }
   };
@@ -299,7 +299,7 @@ class callback6 {
   struct proxy : proxy_base {
     virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6)
       {
-        ((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5, A6)>(meth)))
+        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5, A6)>(meth)))
           (a1, a2, a3, a4, a5, a6);
       }
   };
@@ -342,7 +342,7 @@ class callback7 {
   struct proxy : proxy_base {
     virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6, A7), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7)
       {
-        ((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5, A6, A7)>(meth)))
+        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5, A6, A7)>(meth)))
           (a1, a2, a3, a4, a5, a6, a7);
       }
   };

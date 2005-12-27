@@ -12,6 +12,10 @@ WISH: meta-tagging of data by regex/master process (my dream project)
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 
+6.2
+	- replaced callback.h by a fixed version from gvpe that correctly
+          returns the callback result. Reported by darix.
+
 6.1  Tue Dec 27 13:23:40 CET 2005
 	- update iso8859-7 table (euro and drachma round-trip et al.).
 	- fix a crash when the selection scrolls out of the scrollback

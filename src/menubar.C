@@ -2080,16 +2080,15 @@ rxvt_term::menubar_expose ()
   if (x < ncol)
     {
       const char     *str;
-      int             ncol;
       unsigned int    len;
       char            title[256];
 
-      ncol = (int)ncol;
       if (x < (ncol - (NARROWS + 1)))
         {
           ncol -= (NARROWS + 1);
           Arrows_x = Width2Pixel (ncol);
         }
+
       draw_Arrows (0, +1);
 
       str = (CurrentBar
