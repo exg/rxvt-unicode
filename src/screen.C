@@ -2450,8 +2450,16 @@ rxvt_term::scr_reverse_selection ()
       if (selection.rect)
         {
           for (row = max (selection.beg.row, -view_start); row <= min (selection.end.row, view_end); row++)
-            for (rend_t *srp = ROW(row).r, col = selection.beg.col; col < selection.end.col; col++)
-              srp[col] ^= RS_RVid;
+            {
+              text_t *stp = ROW(row).t;
+              rend_t *srp = ROW(row).r;
+
+              for (col = selection.beg.col; col < selection.end.col; col++)
+                srp[col] ^= RS_RVid;
+
+              while (col-- > selection.beg.col && (stp[col] == NOCHAR || unicode::is_space (stp[col])))
+                srp[col] ^= RS_RVid | RS_Uline;
+            }
         }
       else
 #endif
@@ -2889,7 +2897,7 @@ rxvt_term::selection_make (Time tm)
       col = max (col, 0);
 
       if (row == selection.end.row || selection.rect)
-        end_col = min (end_col, selection.end.col);
+        min_it (end_col, selection.end.col);
 
       t = ROW(row).t + col;
       for (; col < end_col; col++)
@@ -2917,8 +2925,20 @@ rxvt_term::selection_make (Time tm)
             new_selection_text[ofs++] = *t++;
         }
 
-      if (!ROW(row).is_longer () && row != selection.end.row)
-        new_selection_text[ofs++] = C0_LF;
+#if ENABLE_FRILLS
+      if (selection.rect)
+        {
+          while (ofs
+                 && new_selection_text[ofs - 1] != C0_LF
+                 && unicode::is_space (new_selection_text[ofs - 1]))
+            --ofs;
+
+          new_selection_text[ofs++] = C0_LF;
+        }
+      else
+#endif
+        if (!ROW(row).is_longer () && row != selection.end.row)
+          new_selection_text[ofs++] = C0_LF;
     }
 
   if (end_col != selection.end.col)
@@ -3350,9 +3370,8 @@ rxvt_term::selection_remove_trailing_spaces ()
 
       while (--end_col >= 0)
         {
-          if (stp[end_col] != ' '
-              && stp[end_col] != '\t'
-              && stp[end_col] != NOCHAR)
+          if (stp[end_col] != NOCHAR
+              && !unicode::is_space (stp[end_col]))
             break;
         }
 
