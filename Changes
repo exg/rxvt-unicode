@@ -11,7 +11,6 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 
 6.1
-TODO: is14755 feedback for all redn_t attributes
 TODO: trailing spaces rmeoval for rect selections
 	- update iso8859-7 table (euro and drachma round-trip et al.).
 	- fix a crash when the selection scrolls out of the scrollback
@@ -20,6 +19,8 @@ TODO: trailing spaces rmeoval for rect selections
           not drawn correctly.
         - lines newly scrolled in were not initialized properly, leading
           to extremely long lines and (hopefully) some segfaults.
+        - iso14755 overlay position was wrong.
+        - iso14755 overlay now displays rendition info, too.
 
 6.0  Sat Dec 24 13:58:56 CET 2005
 	- make it compile without SMART_RESIZE again.

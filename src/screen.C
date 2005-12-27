@@ -3678,8 +3678,8 @@ rxvt_term::scr_swap_overlay ()
       text_t *t1 = ov_text[y];
       rend_t *r1 = ov_rend[y];
 
-      text_t *t2 = ROW(y - view_start).t + ov_x;
-      rend_t *r2 = ROW(y - view_start).r + ov_x;
+      text_t *t2 = ROW(y + ov_y - view_start).t + ov_x;
+      rend_t *r2 = ROW(y + ov_y - view_start).r + ov_x;
 
       for (int x = ov_w; x--; )
         {

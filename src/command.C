@@ -187,9 +187,24 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r)
       len = 1;
     }
 
+  char attr[80]; // plenty
+
+  sprintf (attr, "%08x = fg %d bg %d%s%s%s%s%s%s",
+           (int)r,
+           GET_FGCOLOR (r), GET_BGCOLOR (r),
+           r & RS_Bold    ? " bold"    : "",
+           r & RS_Italic  ? " italic"  : "",
+           r & RS_Blink   ? " blink"   : "",
+           r & RS_RVid    ? " rvid"    : "",
+           r & RS_Uline   ? " uline"   : "",
+           r & RS_Careful ? " careful" : "");
+
   int width = wcswidth (fname, wcslen (fname));
 
-  scr_overlay_new (0, -1, width < 8+5 ? 8+5 : width, len + 1);
+  max_it (width, 8+5); // for char + hey
+  max_it (width, strlen (attr));
+
+  scr_overlay_new (0, -1, width, len + 2);
 
   r = SET_STYLE (OVERLAY_RSTYLE, GET_STYLE (r));
 
@@ -210,7 +225,8 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r)
       scr_overlay_set (12, y, NOCHAR, r);
     }
 
-  scr_overlay_set (0, len, fname);
+  scr_overlay_set (0, len    , attr);
+  scr_overlay_set (0, len + 1, fname);
 
   free (fname);
 
