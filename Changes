@@ -20,8 +20,8 @@ WISH: just for fun, do shade and tint with XRender.
           to extremely long lines and (hopefully) some segfaults.
         - iso14755 overlay position was wrong.
         - iso14755 overlay now displays rendition info, too.
-        - use unicode white space instead of hardcoded values for stripping
-          whitespace.
+        - use unicode white space class instead of hardcoded values for
+          stripping whitespace.
         - do whitespace stripping on rectangular selections.
 
 6.0  Sat Dec 24 13:58:56 CET 2005
