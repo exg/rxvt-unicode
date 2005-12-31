@@ -575,6 +575,7 @@ enum {
   Rs_boldFont,
   Rs_italicFont,
   Rs_boldItalicFont,
+  Rs_intensityStyles,
 #endif
   Rs_name,
   Rs_title,
@@ -638,7 +639,6 @@ enum {
   Rs_borderLess,
   Rs_lineSpace,
   Rs_cursorUnderline,
-  Rs_intensityStyles,
 #endif
 #if CURSOR_BLINK
   Rs_cursorBlink,
@@ -1485,7 +1485,9 @@ struct rxvt_term : zero_initialized, rxvt_vars {
     int base = GET_BASEFG (r);
 #ifndef NO_BRIGHTCOLOR
     if (r & RS_Bold
-        && (!ENABLE_STYLES || OPTION (Opt_intensityStyles))
+# if ENABLE_STYLES
+        && OPTION (Opt_intensityStyles)
+# endif
         && IN_RANGE_INC (base, minCOLOR, minBrightCOLOR))
       base += minBrightCOLOR - minCOLOR;
 #endif
@@ -1497,7 +1499,9 @@ struct rxvt_term : zero_initialized, rxvt_vars {
     int base = GET_BASEBG (r);
 #ifndef NO_BRIGHTCOLOR
     if (r & RS_Blink
-        && (!ENABLE_STYLES || OPTION (Opt_intensityStyles))
+# if ENABLE_STYLES
+        && OPTION (Opt_intensityStyles)
+# endif
         && IN_RANGE_INC (base, minCOLOR, minBrightCOLOR))
       base += minBrightCOLOR - minCOLOR;
 #endif

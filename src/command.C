@@ -157,12 +157,10 @@ rxvt_term::iso14755_54 (int x, int y)
       x--;
     }
 }
-#endif
 
 void
 rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
 {
-#if ENABLE_OVERLAY
   rxvt_fontset *fs = FONTSET (r);
   rxvt_font *f = (*fs)[fs->find_font (ch)];
   wchar_t *chr, *alloc, ch2, *fname;
@@ -240,8 +238,8 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
   if (alloc)
     delete [] alloc;
 # endif
-#endif
 }
+#endif
 
 void
 rxvt_term::commit_iso14755 ()
@@ -4050,6 +4048,13 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
       /* extra handling for values with state unkept  */
       switch (arg[i])
         {
+#if ENABLE_STYLES
+          case 1021:
+            if (mode)
+              SET_OPTION (Opt_intensityStyles);
+            else
+              CLR_OPTION (Opt_intensityStyles);
+#endif
           case 1048:		/* alternative cursor save */
           case 1049:
             if (OPTION (Opt_secondaryScreen))
@@ -4142,13 +4147,6 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
               else
                 CLR_OPTION (Opt_scrollTtyKeypress);
               break;
-#if ENABLE_STYLES
-            case 1021:
-              if (state)
-                SET_OPTION (Opt_intensityStyles);
-              else
-                CLR_OPTION (Opt_intensityStyles);
-#endif
             case 1047:		/* secondary screen w/ clearing last */
               if (OPTION (Opt_secondaryScreen))
                 if (current_screen != PRIMARY)
