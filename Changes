@@ -25,6 +25,8 @@ WISH: just for fun, do shade and tint with XRender.
 	- replaced callback.h by a fixed version from gvpe that correctly
           returns the callback result (affects new -pty-fd semantics in urxvtc
           on a few architectures). Reported by darix.
+        - include one trailing space in rectangular selections to indicate
+          the inserted newline (yeah, weird, but visually more pleasing).
         - further minor cleanups.
 
 6.1  Tue Dec 27 13:23:40 CET 2005

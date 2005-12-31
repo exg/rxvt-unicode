@@ -2459,6 +2459,9 @@ rxvt_term::scr_reverse_selection ()
 
               while (col-- > selection.beg.col && (stp[col] == NOCHAR || unicode::is_space (stp[col])))
                 srp[col] ^= RS_RVid | RS_Uline;
+
+              if (++col < selection.end.col)
+                srp[col] ^= RS_RVid | RS_Uline;
             }
         }
       else

@@ -378,21 +378,24 @@ enum {
   SECONDARY,
 };
 
-#define RS_None                 0               /* Normal */
+#define RS_None                 0
 
-#define RS_fgMask               0x0000007fUL    /* 128 colors */
-#define RS_bgMask               0x00003f80UL    /* 128 colors */
+#define RS_fgMask               0x0000007fUL    // 128 colors
+#define RS_bgMask               0x00003f80UL    // 128 colors
 
 // font styles
 #define RS_Bold                 0x00004000UL    // value 1
 #define RS_Italic		0x00008000UL    // value 2
 
 // fake styles
-#define RS_Blink                0x00010000UL    /* blink */
-#define RS_RVid                 0x00020000UL    /* reverse video */
-#define RS_Uline                0x00040000UL    /* underline */
+#define RS_Blink                0x00010000UL    // blink
+#define RS_RVid                 0x00020000UL    // reverse video
+#define RS_Uline                0x00040000UL    // underline
 
-// 5 bits still to go
+// 5 custom bits for extensions
+#define RS_customCount          32
+#define RS_customMask           0x00f80000UL
+#define RS_customShift          19
 
 // other flags
 #define RS_Careful		0x80000000UL	/* be careful when drawing these */
