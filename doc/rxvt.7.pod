@@ -1540,7 +1540,7 @@ X<Priv66>
 =begin table
 
 	B<< C<h> >>	Bold/italic implies high intensity (see option B<-is>)
-	B<< C<l> >>	Font styles have no effect on intensity.
+	B<< C<l> >>	Font styles have no effect on intensity (Compile styles)
 
 =end table
 

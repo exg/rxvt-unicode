@@ -4054,6 +4054,10 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
               SET_OPTION (Opt_intensityStyles);
             else
               CLR_OPTION (Opt_intensityStyles);
+
+            want_refresh = 1;
+            want_full_refresh = 1;
+            break;
 #endif
           case 1048:		/* alternative cursor save */
           case 1049:
