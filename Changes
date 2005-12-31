@@ -21,6 +21,8 @@ WISH: just for fun, do shade and tint with XRender.
         - implemented intensityStyles option which enables/disables bold/blink
           selecting high intensity foreground/background colours, suggested by
           Chuck Blake.
+        - move iso14755 character feedback box out of the way if it would
+          obscure the mouse cursor position.
 	- replaced callback.h by a fixed version from gvpe that correctly
           returns the callback result (affects new -pty-fd semantics in urxvtc
           on a few architectures). Reported by darix.

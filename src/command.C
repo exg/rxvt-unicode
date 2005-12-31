@@ -149,7 +149,7 @@ rxvt_term::iso14755_54 (int x, int y)
 
       if (t != NOCHAR || !x)
         {
-          iso14755_51 (l.t[x], l.r[x]);
+          iso14755_51 (l.t[x], l.r[x], x, y);
           iso14755buf = ISO_14755_54;
           break;
         }
@@ -159,10 +159,10 @@ rxvt_term::iso14755_54 (int x, int y)
 }
 #endif
 
-#if ENABLE_OVERLAY
 void
-rxvt_term::iso14755_51 (unicode_t ch, rend_t r)
+rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
 {
+#if ENABLE_OVERLAY
   rxvt_fontset *fs = FONTSET (r);
   rxvt_font *f = (*fs)[fs->find_font (ch)];
   wchar_t *chr, *alloc, ch2, *fname;
@@ -170,7 +170,7 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r)
 
   fname = rxvt_utf8towcs (f->name);
 
-#if ENABLE_COMBINING
+# if ENABLE_COMBINING
   if (IS_COMPOSE (ch))
     {
       len = rxvt_composite.expand (ch, 0);
@@ -178,7 +178,7 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r)
       rxvt_composite.expand (ch, chr);
     }
   else
-#endif
+# endif
     {
       ch2 = ch;
 
@@ -204,7 +204,13 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r)
   max_it (width, 8+5); // for char + hey
   max_it (width, strlen (attr));
 
-  scr_overlay_new (0, -1, width, len + 2);
+  if (y >= 0)
+    {
+      y = (y >= nrow - len - 4 && x < width + 2) ? 0 : -1;
+      x = 0;
+    }
+
+  scr_overlay_new (x, y, width, len + 2);
 
   r = SET_STYLE (OVERLAY_RSTYLE, GET_STYLE (r));
 
@@ -217,10 +223,10 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r)
       sprintf (buf, "%8x", ch);
       scr_overlay_set (0, y, buf);
       scr_overlay_set (9, y, '=');
-#if !UNICODE3
+# if !UNICODE3
       if (ch >= 0x10000)
         ch = 0xfffd;
-#endif
+# endif
       scr_overlay_set (11, y, ch, r);
       scr_overlay_set (12, y, NOCHAR, r);
     }
@@ -230,12 +236,12 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r)
 
   free (fname);
 
-#if ENABLE_COMBINING
+# if ENABLE_COMBINING
   if (alloc)
     delete [] alloc;
+# endif
 #endif
 }
-#endif
 
 void
 rxvt_term::commit_iso14755 ()
