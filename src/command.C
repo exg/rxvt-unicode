@@ -4315,7 +4315,6 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
             scr_color ((unsigned int) (minBrightCOLOR + (arg[i] - 100)), Color_bg);
             break;
 #endif
-
         }
     }
 }
