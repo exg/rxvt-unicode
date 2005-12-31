@@ -829,23 +829,6 @@ enum {
 /* how to build & extract colors and attributes */
 #define GET_BASEFG(x)           (((x) & RS_fgMask))
 #define GET_BASEBG(x)           (((x) & RS_bgMask)>>Color_Bits)
-#ifndef NO_BRIGHTCOLOR
-# define GET_FGCOLOR(x) (                                        \
-     !((x) & RS_Bold)                                            \
-     || (ENABLE_STYLES && !(options & Opt_intensityStyles))      \
-     || !IN_RANGE_INC (GET_BASEFG (x), minCOLOR, minBrightCOLOR) \
-       ? GET_BASEFG (x)                                          \
-       : (GET_BASEFG (x) + (minBrightCOLOR - minCOLOR)))
-# define GET_BGCOLOR(x) (                                        \
-     !((x) & RS_Blink)                                           \
-     || (ENABLE_STYLES && !(options & Opt_intensityStyles))      \
-     || !IN_RANGE_INC (GET_BASEBG (x), minCOLOR, minBrightCOLOR) \
-       ? GET_BASEBG (x)                                          \
-       : (GET_BASEBG (x) + (minBrightCOLOR - minCOLOR)))
-#else
-# define GET_FGCOLOR(x)         GET_BASEFG(x)
-# define GET_BGCOLOR(x)         GET_BASEBG(x)
-#endif
 
 #define GET_FONT(x)             (((x) & RS_fontMask) >> RS_fontShift)
 #define SET_FONT(x,fid)         (((x) & ~RS_fontMask) | ((fid) << RS_fontShift))
@@ -1495,6 +1478,30 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 
     if (ncol > prev_ncol)
       scr_blank_line (l, prev_ncol, ncol - prev_ncol, DEFAULT_RSTYLE);
+  }
+
+  int fgcolor_of (rend_t r)
+  {
+    int base = GET_BASEFG (r);
+#ifndef NO_BRIGHTCOLOR
+    if (r & RS_Bold
+        && (!ENABLE_STYLES || options & Opt_intensityStyles)
+        && IN_RANGE_INC (base, minCOLOR, minBrightCOLOR))
+      base += minBrightCOLOR - minCOLOR;
+#endif
+    return base;
+  }
+
+  int bgcolor_of (rend_t r)
+  {
+    int base = GET_BASEBG (r);
+#ifndef NO_BRIGHTCOLOR
+    if (r & RS_Blink
+        && (!ENABLE_STYLES || options & Opt_intensityStyles)
+        && IN_RANGE_INC (base, minCOLOR, minBrightCOLOR))
+      base += minBrightCOLOR - minCOLOR;
+#endif
+    return base;
   }
 
   void scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs);

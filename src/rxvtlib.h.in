@@ -270,6 +270,7 @@ typedef struct {
 #define Opt_Reverse              (1UL<<30)
 #define Opt_Boolean              (1UL<<31)
 
+#define OPTION(opt)              (options && (opt))
 #define DEFAULT_OPTIONS          (Opt_scrollBar | Opt_scrollTtyOutput \
                                   | Opt_jumpScroll | Opt_secondaryScreen \
                                   | Opt_pastableTabs | Opt_intensityStyles)

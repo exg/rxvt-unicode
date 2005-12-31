@@ -1286,7 +1286,7 @@ rxvt_term::scr_erase_screen (int mode)
   else
     {
       ren = rstyle & (RS_fgMask | RS_bgMask);
-      gcvalue.foreground = pix_colors[GET_BGCOLOR (rstyle)];
+      gcvalue.foreground = pix_colors[bgcolor_of (rstyle)];
       XChangeGC (display->display, gc, GCForeground, &gcvalue);
       ERASE_ROWS (row, num);
       gcvalue.foreground = pix_colors[Color_fg];
@@ -1990,7 +1990,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                   ccol1 = Color_cursor;
                 else
 #ifdef CURSOR_COLOR_IS_RENDITION_COLOR
-                  ccol1 = GET_FGCOLOR (rstyle);
+                  ccol1 = fgcolor_of (rstyle);
 #else
                   ccol1 = Color_fg;
 #endif
@@ -1998,7 +1998,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
                   ccol2 = Color_cursor2;
                 else
 #ifdef CURSOR_COLOR_IS_RENDITION_COLOR
-                  ccol2 = GET_BGCOLOR (rstyle);
+                  ccol2 = bgcolor_of (rstyle);
 #else
                   ccol2 = Color_bg;
 #endif
@@ -2189,8 +2189,8 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
           /*
            * Determine the attributes for the string
            */
-          int fore = GET_FGCOLOR (rend); // desired foreground
-          int back = GET_BGCOLOR (rend); // desired background
+          int fore = fgcolor_of (rend); // desired foreground
+          int back = bgcolor_of (rend); // desired background
 
           // only do special processing if any attributes are set, which is unlikely
           if (rend & (RS_Bold | RS_Italic | RS_Uline | RS_RVid | RS_Blink | RS_Careful))

@@ -191,7 +191,7 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
 
   sprintf (attr, "%08x = fg %d bg %d%s%s%s%s%s%s",
            (int)r,
-           GET_FGCOLOR (r), GET_BGCOLOR (r),
+           fgcolor_of (r), bgcolor_of (r),
            r & RS_Bold    ? " bold"    : "",
            r & RS_Italic  ? " italic"  : "",
            r & RS_Blink   ? " blink"   : "",
