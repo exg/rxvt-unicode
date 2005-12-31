@@ -204,6 +204,12 @@ be printed. See resource B<italicFont> for details.
 Compile font-styles: The bold italic font list to use when bold characters are to
 be printed. See resource B<boldItalicFont> for details.
 
+=item B<-is>|B<+is>
+
+Compile font-styles: Bold/Italic font styles imply high intensity
+foreground/background (default). See resource B<intensityStyles> for
+details.
+
 =item B<-name> I<name>
 
 Specify the application name under which resources are to be obtained,
@@ -688,6 +694,14 @@ not possible, replacement fonts of the desired shape will be tried.
 
 If set, but empty, then this specific style is disabled and the normal
 text font will being used for the given style.
+
+=item B<intensityStyles:> I<boolean>
+
+When font styles are not enabled, or this option is enabled (B<True>,
+option B<-is>, the default), bold and italic font styles imply high
+intensity foreground/backround colours. Disabling this option (B<False>,
+option B<+is>) disables this behaviour, the high intensity colours are not
+reachable.
 
 =item B<selectstyle:> I<mode>
 
