@@ -18,6 +18,9 @@ WISH: just for fun, do shade and tint with XRender.
           most BSDs), privileges weren't dropped before opening the pty,
           resulting in wrong permissions on the pseudo terminal.
           Reported and fixed by Ryan Beasley.
+        - implemented intensityStyles option which enables/disables bold/blink
+          selecting high intensity foreground/background colours, suggested by
+          Chuck Blake.
 	- replaced callback.h by a fixed version from gvpe that correctly
           returns the callback result (affects new -pty-fd semantics in urxvtc
           on a few architectures). Reported by darix.
