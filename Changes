@@ -1,6 +1,5 @@
 rxvt-unicode changelog <= google-friendly title
 
-TODO: move iso14755 box away from the mouse
 TODO: harmonize --disable-options into position-dependent options.
 TODO: after requesting the selection and getting a timeout, no further requests will be sent.
 TODO: safer command: keymap processing.
