@@ -1485,7 +1485,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
     int base = GET_BASEFG (r);
 #ifndef NO_BRIGHTCOLOR
     if (r & RS_Bold
-        && (!ENABLE_STYLES || options & Opt_intensityStyles)
+        && (!ENABLE_STYLES || OPTION (Opt_intensityStyles))
         && IN_RANGE_INC (base, minCOLOR, minBrightCOLOR))
       base += minBrightCOLOR - minCOLOR;
 #endif
@@ -1497,7 +1497,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
     int base = GET_BASEBG (r);
 #ifndef NO_BRIGHTCOLOR
     if (r & RS_Blink
-        && (!ENABLE_STYLES || options & Opt_intensityStyles)
+        && (!ENABLE_STYLES || OPTION (Opt_intensityStyles))
         && IN_RANGE_INC (base, minCOLOR, minBrightCOLOR))
       base += minBrightCOLOR - minCOLOR;
 #endif

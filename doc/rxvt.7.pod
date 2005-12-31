@@ -1535,6 +1535,15 @@ X<Priv66>
 
 =end table
 
+=item B<< C<Ps = 1021> >> (B<rxvt>)
+
+=begin table
+
+	B<< C<h> >>	Bold/italic implies high intensity (see option B<-is>)
+	B<< C<l> >>	Font styles have no effect on intensity.
+
+=end table
+
 =item B<< C<Ps = 1047> >>
 
 =begin table

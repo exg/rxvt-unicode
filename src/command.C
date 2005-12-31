@@ -868,7 +868,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
   if (len <= 0)
     return;			/* not mapped */
 
-  if (options & Opt_scrollTtyKeypress)
+  if (OPTION (Opt_scrollTtyKeypress))
     if (view_start)
       {
         view_start = 0;
@@ -1095,7 +1095,7 @@ rxvt_term::pty_fill ()
     {
       pty_ev.stop ();
 
-      if (!(options & Opt_hold))
+      if (!OPTION (Opt_hold))
         destroy ();
     }
   
@@ -1127,7 +1127,7 @@ rxvt_term::pointer_unblank ()
 #ifdef POINTER_BLANK
   hidden_pointer = 0;
 
-  if (options & Opt_pointerBlank)
+  if (OPTION (Opt_pointerBlank))
     pointer_ev.start (NOW + pointerBlankDelay);
 #endif
 }
@@ -1136,7 +1136,7 @@ rxvt_term::pointer_unblank ()
 void
 rxvt_term::pointer_blank ()
 {
-  if (! (options & Opt_pointerBlank))
+  if (! OPTION (Opt_pointerBlank))
     return;
 
   XDefineCursor (display->display, vt, display->blank_cursor);
@@ -1244,7 +1244,7 @@ rxvt_term::x_cb (XEvent &ev)
   SET_LOCALE (locale);
 
 #if defined(CURSOR_BLINK)
-  if ((options & Opt_cursorBlink) && ev.type == KeyPress)
+  if (OPTION (Opt_cursorBlink) && ev.type == KeyPress)
     {
       if (hidden_cursor)
         {
@@ -1257,7 +1257,7 @@ rxvt_term::x_cb (XEvent &ev)
 #endif
 
 #if defined(POINTER_BLANK)
-  if ((options & Opt_pointerBlank) && pointerBlankDelay > 0)
+  if (OPTION (Opt_pointerBlank) && pointerBlankDelay > 0)
     {
       if (ev.type == MotionNotify
           || ev.type == ButtonPress
@@ -1463,7 +1463,7 @@ rxvt_term::x_cb (XEvent &ev)
               }
 
 #ifdef TRANSPARENT		/* XXX: maybe not needed - leave in for now */
-            if (options & Opt_transparent)
+            if (OPTION (Opt_transparent))
               check_our_parents ();
 #endif
           }
@@ -1682,7 +1682,7 @@ rxvt_term::focus_in ()
         }
 #endif
 #if CURSOR_BLINK
-      if (options & Opt_cursorBlink)
+      if (OPTION (Opt_cursorBlink))
         cursor_blink_ev.start (NOW + BLINK_INTERVAL);
 #endif
 #if OFF_FOCUS_FADING
@@ -1714,7 +1714,7 @@ rxvt_term::focus_out ()
         XUnsetICFocus (Input_Context);
 #endif
 #if CURSOR_BLINK
-      if (options & Opt_cursorBlink)
+      if (OPTION (Opt_cursorBlink))
         cursor_blink_ev.stop ();
       hidden_cursor = 0;
 #endif
@@ -1748,7 +1748,7 @@ rxvt_term::rootwin_cb (XEvent &ev)
 
         /* FALLTHROUGH */
       case ReparentNotify:
-        if ((options & Opt_transparent) && check_our_parents () && am_transparent)
+        if (OPTION (Opt_transparent) && check_our_parents () && am_transparent)
           want_refresh = want_full_refresh = 1;
         break;
     }
@@ -2100,7 +2100,7 @@ rxvt_term::button_release (XButtonEvent &ev)
 
               if (ev.state & ShiftMask)
                 i = 1;
-              else if (options & Opt_mouseWheelScrollPage)
+              else if (OPTION (Opt_mouseWheelScrollPage))
                 i = nrow - 1;
               else
                 i = 5;
@@ -2396,7 +2396,7 @@ rxvt_term::check_our_parents ()
 
   pchanged = 0;
 
-  if (!(options & Opt_transparent))
+  if (!OPTION (Opt_transparent))
     return pchanged;	/* Don't try any more */
 
   XGetWindowAttributes (disp, display->root, &wrootattr);
@@ -2684,7 +2684,7 @@ rxvt_term::cmd_parse ()
 
                   refresh_count++;
 
-                  if (!(options & Opt_jumpScroll)
+                  if (!OPTION (Opt_jumpScroll)
                       || (refresh_count >= refresh_limit * (nrow - 1)))
                     {
                       refreshnow = true;
@@ -2728,7 +2728,7 @@ rxvt_term::cmd_parse ()
            */
           if (refreshnow)
             {
-              if ((options & Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
+              if (OPTION (Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
                 refresh_limit++;
               else
                 {
@@ -3402,7 +3402,7 @@ rxvt_term::process_csi_seq ()
               scr_report_position ();
               break;
             case 7:			/* unofficial extension */
-              if (options & Opt_insecure)
+              if (OPTION (Opt_insecure))
                 tt_printf ("%-.250s\012", rs[Rs_display_name]);
               break;
             case 8:			/* unofficial extension */
@@ -3576,7 +3576,7 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
         {
           char *s;
           XGetIconName (disp, parent[0], &s);
-          tt_printf ("\033]L%-.250s\234", (options & Opt_insecure) && s ? s : "");	/* 8bit ST */
+          tt_printf ("\033]L%-.250s\234", OPTION (Opt_insecure) && s ? s : "");	/* 8bit ST */
           XFree (s);
         }
         break;
@@ -3584,7 +3584,7 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
         {
           char *s;
           XFetchName (disp, parent[0], &s);
-          tt_printf ("\033]l%-.250s\234", (options & Opt_insecure) && s ? s : "");	/* 8bit ST */
+          tt_printf ("\033]l%-.250s\234", OPTION (Opt_insecure) && s ? s : "");	/* 8bit ST */
           XFree (s);
         }
         break;
@@ -3870,7 +3870,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
 
 #ifdef MENUBAR
      case URxvt_Menu:
-       if (options & Opt_insecure)
+       if (OPTION (Opt_insecure))
          menubar_dispatch (const_cast<char *>(str)); // casting away constness is checked
        break;
 #endif
@@ -3896,7 +3896,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
 #endif
         if (query)
           tt_printf ("\33]%d;%-.250s%c", saveop,
-                     (options & Opt_insecure) && fontset[op - URxvt_font]->fontdesc
+                     OPTION (Opt_insecure) && fontset[op - URxvt_font]->fontdesc
                        ? fontset[op - URxvt_font]->fontdesc : "",
                      resp);
         else
@@ -3912,7 +3912,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
 #if ENABLE_FRILLS
       case URxvt_locale:
         if (query)
-          tt_printf ("\33]%d;%-.250s%c", URxvt_locale, (options & Opt_insecure) ? locale : "", resp);
+          tt_printf ("\33]%d;%-.250s%c", URxvt_locale, OPTION (Opt_insecure) ? locale : "", resp);
         else
           {
             set_locale (str);
@@ -4052,7 +4052,7 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
         {
           case 1048:		/* alternative cursor save */
           case 1049:
-            if (options & Opt_secondaryScreen)
+            if (OPTION (Opt_secondaryScreen))
               if (mode == 0)
                 scr_cursor (RESTORE);
               else if (mode == 1)
@@ -4077,10 +4077,10 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
                 set_widthheight (((state ? 132 : 80) * fwidth), height);
               break;
             case 4:			/* smooth scrolling */
-              if (state)
-                options &= ~Opt_jumpScroll;
+              if (!state)
+                SET_OPTION (Opt_jumpScroll);
               else
-                options |= Opt_jumpScroll;
+                CLR_OPTION (Opt_jumpScroll);
               break;
             case 5:			/* reverse video */
               scr_rvideo_mode (state);
@@ -4131,26 +4131,33 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
               break;		/* X11 mouse highlighting */
 #endif
             case 1010:		/* scroll to bottom on TTY output inhibit */
-              if (state)
-                options &= ~Opt_scrollTtyOutput;
+              if (!state)
+                SET_OPTION (Opt_scrollTtyOutput);
               else
-                options |= Opt_scrollTtyOutput;
+                CLR_OPTION (Opt_scrollTtyOutput);
               break;
             case 1011:		/* scroll to bottom on key press */
               if (state)
-                options |= Opt_scrollTtyKeypress;
+                SET_OPTION (Opt_scrollTtyKeypress);
               else
-                options &= ~Opt_scrollTtyKeypress;
+                CLR_OPTION (Opt_scrollTtyKeypress);
               break;
+#if ENABLE_STYLES
+            case 1021:
+              if (state)
+                SET_OPTION (Opt_intensityStyles);
+              else
+                CLR_OPTION (Opt_intensityStyles);
+#endif
             case 1047:		/* secondary screen w/ clearing last */
-              if (options & Opt_secondaryScreen)
+              if (OPTION (Opt_secondaryScreen))
                 if (current_screen != PRIMARY)
                   scr_erase_screen (2);
               scr_change_screen (state);
               break;
             case 1049:		/* secondary screen w/ clearing first */
               scr_change_screen (state);
-              if (options & Opt_secondaryScreen)
+              if (OPTION (Opt_secondaryScreen))
                 if (current_screen != PRIMARY)
                   scr_erase_screen (2);
               break;

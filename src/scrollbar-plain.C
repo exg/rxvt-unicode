@@ -44,7 +44,7 @@ rxvt_term::scrollbar_show_plain (int update, int last_top, int last_bot, int scr
                                 GCForeground, &gcvalue);
     }
 
-  xsb = (options & Opt_scrollBar_right) ? 1 : 0;
+  xsb = OPTION (Opt_scrollBar_right) ? 1 : 0;
 
   if (update)
     {

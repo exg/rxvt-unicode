@@ -295,7 +295,7 @@ rxvt_term::child_exit ()
 {
   cmd_pid = 0;
 
-  if (!(options & Opt_hold))
+  if (!OPTION (Opt_hold))
     destroy ();
 }
 
@@ -471,7 +471,7 @@ rxvt_term::init (int argc, const char *const *argv)
   menubar_read (rs[Rs_menu]);
 #endif
 #ifdef HAVE_SCROLLBARS
-  if (options & Opt_scrollBar)
+  if (OPTION (Opt_scrollBar))
     scrollBar.setIdle ();    /* set existence for size calculations */
 #endif
 
@@ -488,7 +488,7 @@ rxvt_term::init (int argc, const char *const *argv)
 #endif
 
 #ifdef HAVE_SCROLLBARS
-  if (options & Opt_scrollBar)
+  if (OPTION (Opt_scrollBar))
     resize_scrollbar ();      /* create and map scrollbar */
 #endif
 #if (MENUBAR_MAX)
@@ -496,7 +496,7 @@ rxvt_term::init (int argc, const char *const *argv)
     XMapWindow (disp, menuBar.win);
 #endif
 #ifdef TRANSPARENT
-  if (options & Opt_transparent)
+  if (OPTION (Opt_transparent))
     {
       XSelectInput (disp, display->root, PropertyChangeMask);
       check_our_parents ();
@@ -683,7 +683,7 @@ rxvt_privileges (rxvt_privaction action)
 void
 rxvt_term::privileged_utmp (rxvt_privaction action)
 {
-  if ((options & Opt_utmpInhibit)
+  if (OPTION (Opt_utmpInhibit)
       || !pty.name || !*pty.name)
     return;
 
@@ -785,7 +785,7 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
     {
       sb_w = scrollbar_TotalWidth ();
       szHint.base_width += sb_w;
-      if (!(options & Opt_scrollBar_right))
+      if (!OPTION (Opt_scrollBar_right))
         window_vt_x += sb_w;
     }
 
@@ -823,7 +823,7 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
       szHint.height = szHint.base_height + height;
     }
 
-  if (scrollbar_visible () && (options & Opt_scrollBar_right))
+  if (scrollbar_visible () && OPTION (Opt_scrollBar_right))
     window_sb_x = szHint.width - sb_w;
 
   if (recalc_x)

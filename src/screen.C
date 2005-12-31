@@ -48,7 +48,7 @@ inline void fill_text (text_t *start, text_t value, int len)
  *             GENERAL SCREEN AND SELECTION UPDATE ROUTINES                  *
  * ------------------------------------------------------------------------- */
 #define ZERO_SCROLLBACK()                                              \
-    if (options & Opt_scrollTtyOutput)                                 \
+    if (OPTION (Opt_scrollTtyOutput))                                  \
         view_start = 0
 #define CLEAR_SELECTION()                                              \
     selection.beg.row = selection.beg.col                              \
@@ -532,7 +532,7 @@ rxvt_term::scr_change_screen (int scrn)
   screen.cur.col = clamp (screen.cur.col, 0, prev_ncol - 1);
 
 #if NSCREENS
-  if (options & Opt_secondaryScreen)
+  if (OPTION (Opt_secondaryScreen))
     {
       num_scr = 0;
 
@@ -546,7 +546,7 @@ rxvt_term::scr_change_screen (int scrn)
     }
   else
 #endif
-    if (options & Opt_secondaryScroll)
+    if (OPTION (Opt_secondaryScroll))
       scr_scroll_text (0, prev_nrow - 1, prev_nrow);
 
   return scrn;
@@ -618,7 +618,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
   if (count > 0
       && row1 == 0
       && row2 == nrow - 1
-      && (current_screen == PRIMARY || options & Opt_secondaryScroll))
+      && (current_screen == PRIMARY || OPTION (Opt_secondaryScroll)))
     {
       nsaved = min (nsaved + count, saveLines);
       term_start = (term_start + count) % total_rows;
@@ -644,7 +644,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
           scr_blank_screen_mem (ROW(row2 - i), rstyle);
         }
       
-      if ((options & Opt_scrollWithBuffer)
+      if (OPTION (Opt_scrollWithBuffer)
           && view_start != 0
           && view_start != saveLines)
         scr_page (UP, count);
@@ -1020,7 +1020,7 @@ rxvt_term::scr_tab (int count, bool ht)
 
       // store horizontal tab commands as characters inside the text
       // buffer so they can be selected and pasted.
-      if (ht && options & Opt_pastableTabs)
+      if (ht && OPTION (Opt_pastableTabs))
         {
           base_rend = SET_FONT (base_rend, 0);
 
@@ -1595,7 +1595,7 @@ rxvt_term::scr_rvideo_mode (int mode)
       if (bgPixmap.pixmap == None)
 #endif
 #if TRANSPARENT
-        if (! (options & Opt_transparent) || am_transparent == 0)
+        if (! OPTION (Opt_transparent) || am_transparent == 0)
 #endif
           XSetWindowBackground (display->display, vt,
                                pix_colors[Color_bg]);
@@ -1838,12 +1838,12 @@ rxvt_term::scr_bell ()
 
 # ifndef NO_MAPALERT
 #  ifdef MAPALERT_OPTION
-  if (options & Opt_mapAlert)
+  if (OPTION (Opt_mapAlert))
 #  endif
     XMapWindow (display->display, parent[0]);
 # endif
 
-  if (options & Opt_visualBell)
+  if (OPTION (Opt_visualBell))
     {
       scr_rvideo_mode (!rvideo); /* refresh also done */
       rxvt_usleep (VISUAL_BELL_DURATION);
@@ -1944,7 +1944,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
   must_clear |= bgPixmap.pixmap != None;
 #endif
 #if TRANSPARENT
-  must_clear |= (options & Opt_transparent) && am_transparent;
+  must_clear |= OPTION (Opt_transparent) && am_transparent;
 #endif
   ocrow = oldcursor.row; /* is there an old outline cursor on screen? */
 
@@ -1978,7 +1978,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 
         if (showcursor && focus)
           {
-            if (options & Opt_cursorUnderline)
+            if (OPTION (Opt_cursorUnderline))
               *crp ^= RS_Uline;
             else
               {
@@ -2321,7 +2321,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
     {
       if (focus)
         {
-          if (options & Opt_cursorUnderline)
+          if (OPTION (Opt_cursorUnderline))
             *crp ^= RS_Uline;
           else
             {
@@ -3303,7 +3303,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
   else if (selection.clicks == 3)
     {
 #if ENABLE_FRILLS
-      if (options & Opt_tripleclickwords)
+      if (OPTION (Opt_tripleclickwords))
         {
           selection_delimit_word (UP, &selection.beg, &selection.beg);
 

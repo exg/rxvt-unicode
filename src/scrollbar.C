@@ -232,7 +232,7 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
       width = min (i, SB_WIDTH_MAXIMUM);
 
 # if defined(RXVT_SCROLLBAR)
-  if (! (options & Opt_scrollBar_floating) && style == R_SB_RXVT)
+  if (! OPTION (Opt_scrollBar_floating) && style == R_SB_RXVT)
     sb_shadow = SHADOW;
 # endif
 

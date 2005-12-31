@@ -173,7 +173,7 @@ rxvt_term::resize_pixmap ()
     { /* So be it: I'm not using pixmaps */
       pixmap = None;
 
-      if (!(options & Opt_transparent) || !am_transparent)
+      if (!OPTION (Opt_transparent) || !am_transparent)
         XSetWindowBackground (disp, vt,
                               pix_colors[Color_bg]);
 

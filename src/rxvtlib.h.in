@@ -266,11 +266,10 @@ typedef struct {
 #else
 # define Opt_intensityStyles	 0
 #endif
-/* place holder used for parsing command-line options */
-#define Opt_Reverse              (1UL<<30)
-#define Opt_Boolean              (1UL<<31)
 
-#define OPTION(opt)              (options && (opt))
+#define SET_OPTION(opt)		 (options |= (opt))
+#define CLR_OPTION(opt)		 (options &= ~(opt))
+#define OPTION(opt)              (options & (opt))
 #define DEFAULT_OPTIONS          (Opt_scrollBar | Opt_scrollTtyOutput \
                                   | Opt_jumpScroll | Opt_secondaryScreen \
                                   | Opt_pastableTabs | Opt_intensityStyles)

@@ -37,6 +37,11 @@
 #include "keyboard.h"
 #endif
 
+/* place holders used for parsing command-line options */
+#define Optflag_Reverse              0x40000000UL
+#define Optflag_Boolean              0x80000000UL
+#define Optflag_mask                 0x3fffffffUL
+
 /* #define DEBUG_RESOURCES */
 
 /*{{{ monolithic option/resource structure: */
@@ -60,7 +65,7 @@
 
 /* BOOL () - regular boolean `-/+' flag */
 #define BOOL(rsp, kw, opt, flag, desc)				\
-    { (Opt_Boolean| (flag)), (rsp), (kw), (opt), NULL, (desc)}
+    { (Optflag_Boolean | (flag)), (rsp), (kw), (opt), NULL, (desc)}
 
 /* SWCH () - `-' flag */
 #define SWCH(opt, flag, desc)					\
@@ -70,9 +75,9 @@
 #define optList_strlen(i)						\
     (optList[i].flag ? 0 : (optList[i].arg ? strlen (optList[i].arg) : 1))
 #define optList_isBool(i)						\
-    (optList[i].flag & Opt_Boolean)
+    (optList[i].flag & Optflag_Boolean)
 #define optList_isReverse(i)						\
-    (optList[i].flag & Opt_Reverse)
+    (optList[i].flag & Optflag_Reverse)
 #define optList_size							\
     (sizeof (optList) / sizeof (optList[0]))
 
@@ -107,7 +112,7 @@ optList[] = {
               STRG (Rs_scrollBar_thickness, "thickness", "sbt", "number", "scrollbar thickness/width in pixels"),
 #endif
               BOOL (Rs_scrollTtyOutput, "scrollTtyOutput", NULL, Opt_scrollTtyOutput, NULL),
-              BOOL (Rs_scrollTtyOutput, NULL, "si", Opt_Reverse | Opt_scrollTtyOutput, "scroll-on-tty-output inhibit"),
+              BOOL (Rs_scrollTtyOutput, NULL, "si", Optflag_Reverse | Opt_scrollTtyOutput, "scroll-on-tty-output inhibit"),
               BOOL (Rs_scrollTtyKeypress, "scrollTtyKeypress", "sk", Opt_scrollTtyKeypress, "scroll-on-keypress"),
               BOOL (Rs_scrollWithBuffer, "scrollWithBuffer", "sw", Opt_scrollWithBuffer, "scroll-with-buffer"),
 #if TRANSPARENT
@@ -565,9 +570,9 @@ rxvt_term::get_options (int argc, const char *const *argv)
                       optList[entry].opt, optList[entry].kw, flag);
 #endif
               if (flag == On)
-                options |= optList[entry].flag;
+                SET_OPTION (optList[entry].flag & Optflag_mask);
               else
-                options &= ~optList[entry].flag;
+                CLR_OPTION (optList[entry].flag & Optflag_mask);
 
               if (optList[entry].doff != -1)
                 rs[optList[entry].doff] = flag;
@@ -859,9 +864,9 @@ rxvt_term::get_xdefaults (FILE *stream, const char *name)
                           s = !s;
 
                         if (s)
-                          options |= optList[entry].flag;
+                          SET_OPTION (optList[entry].flag & Optflag_mask);
                         else
-                          options &= ~optList[entry].flag;
+                          CLR_OPTION (optList[entry].flag & Optflag_mask);
                       }
                   }
 
@@ -1031,9 +1036,9 @@ rxvt_term::extract_resources ()
                 s = !s;
 
               if (s)
-                options |= optList[entry].flag;
+                SET_OPTION (optList[entry].flag & Optflag_mask);
               else
-                options &= ~optList[entry].flag;
+                CLR_OPTION (optList[entry].flag & Optflag_mask);
             }
         }
     }
