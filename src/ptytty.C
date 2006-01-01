@@ -340,7 +340,7 @@ static struct ttyconf {
 void
 rxvt_ptytty::privileges (rxvt_privaction action)
 {
-  if (tty < 0)
+  if (pty < 0)
     return;
 
   rxvt_privileges (RESTORE);
