@@ -753,8 +753,8 @@ enum {
 // do not change these constants lightly, there are many interdependencies
 #define IMBUFSIZ               128     // input modifier buffer sizes
 #define KBUFSZ                 512     // size of keyboard mapping buffer
-#define CBUFSIZ                4096    // size of command buffer
-#define UBUFSIZ                4096    // character buffer
+#define CBUFSIZ                2048    // size of command buffer
+#define UBUFSIZ                2048    // character buffer
 
 #ifndef PATH_MAX
 # define PATH_MAX 16384
