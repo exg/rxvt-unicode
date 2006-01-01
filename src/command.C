@@ -986,7 +986,7 @@ rxvt_term::check_cb (check_watcher &w)
   display->flush ();
 
   if (want_refresh && !flush_ev.active)
-    flush_ev.start (NOW + 0.01);
+    flush_ev.start (NOW + 1. / 60.); // refresh at max. 60 hz normally
 }
 
 void
@@ -2696,6 +2696,7 @@ rxvt_term::cmd_parse ()
                       || (refresh_count >= refresh_limit * (nrow - 1)))
                     {
                       refreshnow = true;
+                      refresh_count = 0;
                       ch = NOCHAR;
                       break;
                     }
@@ -2742,6 +2743,7 @@ rxvt_term::cmd_parse ()
                 {
                   flag = true;
                   scr_refresh (refresh_type);
+                  flush_ev.stop ();
                 }
             }
 
