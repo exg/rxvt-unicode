@@ -28,7 +28,8 @@ WISH: just for fun, do shade and tint with XRender.
           on a few architectures). Reported by darix.
         - include one trailing space in rectangular selections to indicate
           the inserted newline (yeah, weird, but visually more pleasing).
-        - try to use sched_yield to improve terminal data transfer efficiency.
+        - try to use sched_yield to (drastically) improve terminal data
+          transfer efficiency.
         - further minor cleanups.
 
 6.1  Tue Dec 27 13:23:40 CET 2005

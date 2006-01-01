@@ -202,6 +202,9 @@
 /* Needed to get declarations for msg_control and msg_controllen on Solaris */
 #undef __EXTENSIONS__
 
+/* Define if you have sched-h and sched_yield */
+#undef HAVE_SCHED_YIELD
+
 /* Build shared library version - specify via configure only */
 #undef LIBRXVT
 

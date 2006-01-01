@@ -83,6 +83,13 @@ dnl solaris needs to link libnsl and socket
 AC_CHECK_FUNC(gethostbyname, [], [AC_CHECK_LIB(nsl,    gethostbyname, [LIBS="$LIBS -lnsl"])])
 AC_CHECK_FUNC(socket,        [], [AC_CHECK_LIB(socket, socket,        [LIBS="$LIBS -lsocket"])])
 
+dnl sched_yield to improve terminal efficiency
+AC_MSG_CHECKING(for sched_yield support)
+AC_TRY_LINK([#include <sched.h>],[sched_yield ()],
+            [AC_MSG_RESULT(yes)
+             AC_DEFINE(HAVE_SCHED_YIELD, 1, Define if you have sched-h and sched_yield)],
+            [AC_MSG_RESULT(no)])
+
 dnl AC_ENABLE_SHARED(no)dnl#	libtool
 dnl AC_ENABLE_STATIC(yes)dnl#	libtool
 dnl AC_PROG_LIBTOOL()dnl#		libtool

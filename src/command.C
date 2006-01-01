@@ -50,16 +50,15 @@
 #include "version.h"
 #include "command.h"
 
+#if HAVE_SCHED_YIELD
+# include <sched.h>
+#endif
+
 #ifdef KEYSYM_RESOURCE
 # include "keyboard.h"
 #endif
 
 #include <csignal>
-
-#define HAVE_SCHED_YIELD 1 //D//TODO//FIXME
-#if HAVE_SCHED_YIELD
-# include <sched.h>
-#endif
 
 /*----------------------------------------------------------------------*/
 
