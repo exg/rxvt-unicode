@@ -56,6 +56,11 @@
 
 #include <csignal>
 
+#define HAVE_SCHED_YIELD 1 //D//TODO//FIXME
+#if HAVE_SCHED_YIELD
+# include <sched.h>
+#endif
+
 /*----------------------------------------------------------------------*/
 
 #define IS_CONTROL(ch) !((ch) & 0xffffff60UL)
@@ -1082,14 +1087,20 @@ rxvt_term::pty_fill ()
   cmdbuf_ptr = cmdbuf_base;
   cmdbuf_endp = cmdbuf_ptr + n;
 
-  n = read (pty.pty, cmdbuf_endp, CBUFSIZ - n);
+  ssize_t r = read (pty.pty, cmdbuf_endp, CBUFSIZ - n);
 
-  if (n > 0)
+  if (r > 0)
     {
-      cmdbuf_endp += n;
+      cmdbuf_endp += r;
       return true;
     }
-  else if ((n < 0 && errno != EAGAIN && errno != EINTR) || n == 0)
+  else if (r < 0 && (errno == EAGAIN || errno == EINTR))
+    {
+#if HAVE_SCHED_YIELD
+      sched_yield ();
+#endif
+    }
+  else
     {
       pty_ev.stop ();
 
