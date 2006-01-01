@@ -79,7 +79,7 @@ typedef struct {
 #  define NO_SETOWNER_TTYDEV 1
 # endif
 #endif
-#if defined(__CYGWIN32__) || defined(PTYS_ARE_OPENPTY)
+#if defined(__CYGWIN32__)
 # define NO_SETOWNER_TTYDEV 1
 #endif
 
