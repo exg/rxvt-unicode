@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 6.1, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 6.2, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -175,6 +175,11 @@ OPTIONS
     -fbi *fontlist*
         Compile font-styles: The bold italic font list to use when bold
         characters are to be printed. See resource boldItalicFont for
+        details.
+
+    -is|+is
+        Compile font-styles: Bold/Italic font styles imply high intensity
+        foreground/background (default). See resource intensityStyles for
         details.
 
     -name *name*
@@ -597,6 +602,13 @@ RESOURCES (available also as long-options)
 
         If set, but empty, then this specific style is disabled and the
         normal text font will being used for the given style.
+
+    intensityStyles: *boolean*
+        When font styles are not enabled, or this option is enabled (True,
+        option -is, the default), bold and italic font styles imply high
+        intensity foreground/backround colours. Disabling this option
+        (False, option +is) disables this behaviour, the high intensity
+        colours are not reachable.
 
     selectstyle: *mode*
         Set mouse selection style to old which is 2.20, oldword which is

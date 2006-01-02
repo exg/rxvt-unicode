@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2005-12-24" "6.0" "RXVT-UNICODE"
+.TH rxvt 7 "2006-01-02" "6.2" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -1674,6 +1674,15 @@ l	Scroll to bottom on TTY output
 l l .
 h	Scroll to bottom when a key is pressed
 l	Don't scroll to bottom when a key is pressed
+.TE
+
+.ie n .IP "\fB\fB""Ps = 1021""\fB\fR (\fBrxvt\fR)" 4
+.el .IP "\fB\f(CBPs = 1021\fB\fR (\fBrxvt\fR)" 4
+.IX Item "Ps = 1021 (rxvt)"
+.TS
+l l .
+h	Bold/italic implies high intensity (see option -is)
+l	Font styles have no effect on intensity (Compile styles)
 .TE
 
 .ie n .IP "\fB\fB""Ps = 1047""\fB\fR" 4

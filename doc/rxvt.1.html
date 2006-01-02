@@ -48,7 +48,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>6.1</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>6.2</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -284,6 +284,14 @@ be printed. See resource <strong>italicFont</strong> for details.
 <dd>
 Compile font-styles: The bold italic font list to use when bold characters are to
 be printed. See resource <strong>boldItalicFont</strong> for details.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dis_7c_2bis"><strong>-is</strong>|<strong>+is</strong></a></strong><br />
+</dt>
+<dd>
+Compile font-styles: Bold/Italic font styles imply high intensity
+foreground/background (default). See resource <strong>intensityStyles</strong> for
+details.
 </dd>
 <p></p>
 <dt><strong><a name="item__2dname_name"><strong>-name</strong> <em>name</em></a></strong><br />
@@ -918,6 +926,16 @@ not possible, replacement fonts of the desired shape will be tried.</p>
 <dd>
 <p>If set, but empty, then this specific style is disabled and the normal
 text font will being used for the given style.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_intensitystyles_3a_boolean"><strong>intensityStyles:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+When font styles are not enabled, or this option is enabled (<strong>True</strong>,
+option <strong>-is</strong>, the default), bold and italic font styles imply high
+intensity foreground/backround colours. Disabling this option (<strong>False</strong>,
+option <strong>+is</strong>) disables this behaviour, the high intensity colours are not
+reachable.
 </dd>
 <p></p>
 <dt><strong><a name="item_selectstyle_3a_mode"><strong>selectstyle:</strong> <em>mode</em></a></strong><br />

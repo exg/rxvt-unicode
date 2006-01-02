@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2005-12-27" "6.1" "RXVT-UNICODE"
+.TH rxvt 1 "2006-01-02" "6.2" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -310,6 +310,11 @@ be printed. See resource \fBitalicFont\fR for details.
 .IX Item "-fbi fontlist"
 Compile font\-styles: The bold italic font list to use when bold characters are to
 be printed. See resource \fBboldItalicFont\fR for details.
+.IP "\fB\-is\fR|\fB+is\fR" 4
+.IX Item "-is|+is"
+Compile font\-styles: Bold/Italic font styles imply high intensity
+foreground/background (default). See resource \fBintensityStyles\fR for
+details.
 .IP "\fB\-name\fR \fIname\fR" 4
 .IX Item "-name name"
 Specify the application name under which resources are to be obtained,
@@ -747,6 +752,13 @@ not possible, replacement fonts of the desired shape will be tried.
 .Sp
 If set, but empty, then this specific style is disabled and the normal
 text font will being used for the given style.
+.IP "\fBintensityStyles:\fR \fIboolean\fR" 4
+.IX Item "intensityStyles: boolean"
+When font styles are not enabled, or this option is enabled (\fBTrue\fR,
+option \fB\-is\fR, the default), bold and italic font styles imply high
+intensity foreground/backround colours. Disabling this option (\fBFalse\fR,
+option \fB+is\fR) disables this behaviour, the high intensity colours are not
+reachable.
 .IP "\fBselectstyle:\fR \fImode\fR" 4
 .IX Item "selectstyle: mode"
 Set mouse selection style to \fBold\fR which is 2.20, \fBoldword\fR which is
