@@ -58,14 +58,10 @@ thus must be encoded as UTF-8.</p>
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p>On startup, rxvt will scan <em>/opt/rxvt/lib/urxvt/perl-ext/</em>
-for files and will load them. Everytime a terminal object gets created,
-the directory specified by the <code>perl-lib</code> resource will be additionally
-scanned.</p>
+<p>Everytime a terminal object gets created, scripts specified via the
+<code>perl</code> resource are associated with it.</p>
 <p>Each script will only ever be loaded once, even in rxvtd, where
-scripts will be shared for all terminals.</p>
-<p>Hooks in scripts specified by <code>perl-lib</code> will only be called for the
-terminals created with that specific option value.</p>
+scripts will be shared (But not enabled) for all terminals.</p>
 <p>
 </p>
 <h2><a name="general_api_considerations">General API Considerations</a></h2>
@@ -255,8 +251,8 @@ list:</p>
   borderLess color cursorBlink cursorUnderline cutchars delete_key
   display_name embed ext_bwidth fade font geometry hold iconName
   imFont imLocale inputMethod insecure int_bwidth intensityStyles
-  italicFont jumpScroll lineSpace loginShell mapAlert menu meta8
-  modifier mouseWheelScrollPage name pastableTabs path perl perl_eval
+  italicFont jumpScroll lineSpace loginShell mapAlert menu meta8 modifier
+  mouseWheelScrollPage name pastableTabs path perl_eval perl_ext
   perl_lib pointerBlank pointerBlankDelay preeditType print_pipe pty_fd
   reverseVideo saveLines scrollBar scrollBar_align scrollBar_floating
   scrollBar_right scrollBar_thickness scrollTtyKeypress scrollTtyOutput

@@ -18,16 +18,11 @@ thus must be encoded as UTF-8.
 
 =head1 DESCRIPTION
 
-On startup, @@RXVT_NAME@@ will scan F<@@RXVT_LIBDIR@@/urxvt/perl-ext/>
-for files and will load them. Everytime a terminal object gets created,
-the directory specified by the C<perl-lib> resource will be additionally
-scanned.
+Everytime a terminal object gets created, scripts specified via the
+C<perl> resource are associated with it.
 
 Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
-scripts will be shared for all terminals.
-
-Hooks in scripts specified by C<perl-lib> will only be called for the
-terminals created with that specific option value.
+scripts will be shared (But not enabled) for all terminals.
 
 =head2 General API Considerations
 
@@ -176,33 +171,12 @@ BEGIN {
    };
 }
 
+my @hook_count;
 my $verbosity = $ENV{URXVT_PERL_VERBOSITY};
 
 sub verbose {
    my ($level, $msg) = @_;
-   warn "$msg\n" if $level < $verbosity;
-}
-
-my %hook_global;
-my @hook_count;
-
-# called by the rxvt core
-sub invoke {
-   local $term = shift;
-   my $htype = shift;
-
-   verbose 10, "$HOOKNAME[$htype] (" . (join ", ", $term, @_) . ")"
-      if $verbosity >= 10;
-
-   for my $cb ($hook_global{_hook}[$htype], $term->{_hook}[$htype]) {
-      $cb or next;
-
-      while (my ($k, $v) = each %$cb) {
-         return 1 if $v->($term, @_);
-      }
-   }
-
-   0
+   warn "$msg\n" if $level <= $verbosity;
 }
 
 # find on_xxx subs in the package and register them
@@ -230,57 +204,62 @@ sub script_package($) {
    my ($path) = @_;
 
    $script_pkg{$path} ||= do {
-      my $pkg = $script_pkg++;
+      my $pkg = "urxvt::" . ($script_pkg++);
+
       verbose 3, "loading script '$path' into package '$pkg'";
 
       open my $fh, "<:raw", $path
          or die "$path: $!";
 
-      eval "package $pkg; use strict; use utf8;\n"
-         . "#line 1 \"$path\"\n"
-         . do { local $/; <$fh> }
-         or die "$path: $@";
+      my $source = "package $pkg; use strict; use utf8;\n"
+                   . "#line 1 \"$path\"\n{\n"
+                   . (do { local $/; <$fh> })
+                   . "\n};\n1";
+
+      eval $source or die "$path: $@";
 
       $pkg
    }
 }
 
-sub load_scripts($) {
-   my ($dir) = @_;
+# called by the rxvt core
+sub invoke {
+   local $term = shift;
+   my $htype = shift;
 
-   verbose 3, "loading scripts from '$dir'";
+   if ($htype == 0) { # INIT
+      my @dirs = ((split /:/, $term->resource ("perl_lib")), $LIBDIR);
 
-   register_package script_package $_
-      for grep -f $_,
-         <$dir/*>;
-}
+      for my $ext (split /:/, $term->resource ("perl_ext")) {
+         my @files = grep -f $_, map "$_/$ext", @dirs;
 
-sub on_init {
-   my ($term) = @_;
+         if (@files) {
+            register_package script_package $files[0];
+         } else {
+            warn "perl extension '$ext' not found in perl library search path\n";
+         }
+      }
 
-   my $libdir = $term->resource ("perl_lib");
+   } elsif ($htype == 1) { # DESTROY
+      if (my $hook = $term->{_hook}) {
+         for my $htype (0..$#$hook) {
+            $hook_count[$htype] -= scalar keys %{ $hook->[$htype] || {} }
+               or set_should_invoke $htype, 0;
+         }
+      }
+   }
 
-   load_scripts $libdir
-      if defined $libdir;
-}
-
-sub on_destroy {
-   my ($term) = @_;
-
-   my $hook = $term->{_hook}
+   my $cb = $term->{_hook}[$htype]
       or return;
 
-   for my $htype (0..$#$hook) {
-      $hook_count[$htype] -= scalar keys %{ $hook->[$htype] || {} }
-         or set_should_invoke $htype, 0;
+   verbose 10, "$HOOKNAME[$htype] (" . (join ", ", $term, @_) . ")"
+      if $verbosity >= 10;
+
+   while (my ($k, $v) = each %$cb) {
+      return 1 if $v->($term, @_);
    }
-}
 
-{
-   local $term = \%hook_global;
-
-   register_package __PACKAGE__;
-   load_scripts "$LIBDIR/perl-ext";
+   0
 }
 
 =back
@@ -314,8 +293,8 @@ list:
   borderLess color cursorBlink cursorUnderline cutchars delete_key
   display_name embed ext_bwidth fade font geometry hold iconName
   imFont imLocale inputMethod insecure int_bwidth intensityStyles
-  italicFont jumpScroll lineSpace loginShell mapAlert menu meta8
-  modifier mouseWheelScrollPage name pastableTabs path perl perl_eval
+  italicFont jumpScroll lineSpace loginShell mapAlert menu meta8 modifier
+  mouseWheelScrollPage name pastableTabs path perl_eval perl_ext
   perl_lib pointerBlank pointerBlankDelay preeditType print_pipe pty_fd
   reverseVideo saveLines scrollBar scrollBar_align scrollBar_floating
   scrollBar_right scrollBar_thickness scrollTtyKeypress scrollTtyOutput

@@ -16,15 +16,11 @@ SYNOPSIS
        1
 
 DESCRIPTION
-    On startup, rxvt will scan /opt/rxvt/lib/urxvt/perl-ext/ for files and
-    will load them. Everytime a terminal object gets created, the directory
-    specified by the "perl-lib" resource will be additionally scanned.
+    Everytime a terminal object gets created, scripts specified via the
+    "perl" resource are associated with it.
 
     Each script will only ever be loaded once, even in rxvtd, where scripts
-    will be shared for all terminals.
-
-    Hooks in scripts specified by "perl-lib" will only be called for the
-    terminals created with that specific option value.
+    will be shared (But not enabled) for all terminals.
 
   General API Considerations
     All objects (such as terminals, time watchers etc.) are typical
@@ -157,8 +153,8 @@ DESCRIPTION
           borderLess color cursorBlink cursorUnderline cutchars delete_key
           display_name embed ext_bwidth fade font geometry hold iconName
           imFont imLocale inputMethod insecure int_bwidth intensityStyles
-          italicFont jumpScroll lineSpace loginShell mapAlert menu meta8
-          modifier mouseWheelScrollPage name pastableTabs path perl perl_eval
+          italicFont jumpScroll lineSpace loginShell mapAlert menu meta8 modifier
+          mouseWheelScrollPage name pastableTabs path perl_eval perl_ext
           perl_lib pointerBlank pointerBlankDelay preeditType print_pipe pty_fd
           reverseVideo saveLines scrollBar scrollBar_align scrollBar_floating
           scrollBar_right scrollBar_thickness scrollTtyKeypress scrollTtyOutput

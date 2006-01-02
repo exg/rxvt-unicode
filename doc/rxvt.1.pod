@@ -455,9 +455,9 @@ longer example is in F<doc/pty-fd>):
    my $slave = $pty->slave;
    while (<$slave>) { print $slave "got <$_>\n" }
 
-=item B<-perl> I<string>
+=item B<-pe> I<string>
 
-Used by perl extension. See resource B<perl>.
+Colon-separated list of perl extension scripts to use in this terminal instance. See resource B<perl-ext>.
 
 =back
 
@@ -1056,22 +1056,23 @@ info):
   URxvt.keysym.M-C-3: command:\033[8;25;80t
   URxvt.keysym.M-C-4: command:\033[8;48;110t
 
-=item B<perl>: I<string>
+=item B<perl-ext>: I<string>
 
-Used by perl extension and is free for any use, as it is not interpreted
-by rxvt-unicode itself; option B<perl>.
+Colon-separated list of perl extension scripts to use in this terminal
+instance. Each extension is looked up in the library directories, loaded
+if necessary, and bound to the current terminal instance; option B<-pe>.
 
 =item B<perl-eval>: I<string>
 
-Perl code to be evaluated when all extensions have been loaded. See the
+Perl code to be evaluated when all extensions have been registered. See the
 rxvtperl(3) manpage.
 
 =item B<perl-lib>: I<path>
 
-Additional directory that holds extension scripts that are loaded and
-enabled for this terminal instance, in addition to scripts stored in
-F<@@RXVT_LIBDIR@@/urxvt/perl-ext/>, which are global to all terminal
-instances.
+Colon-separated list of additional directories that hold extension
+scripts. When looking for extensions specified by the C<perl> resource,
+@@RXVT_NAME@@ will first look in these directories and then in
+F<@@RXVT_LIBDIR@@/urxvt/perl-ext/>.
 
 See the rxvtperl(3) manpage.
 

@@ -18,12 +18,10 @@ enum data_type {
 };
 
 enum hook_type {
-  HOOK_LOAD,
-
-  HOOK_INIT,
+  HOOK_INIT    = 0, // special, hardcoded
+  HOOK_DESTROY = 1, // values in urxvt.pm
   HOOK_RESET,
   HOOK_START,
-  HOOK_DESTROY,
 
   HOOK_SEL_BEGIN,
   HOOK_SEL_EXTEND,

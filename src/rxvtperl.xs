@@ -210,9 +210,8 @@ rxvt_perl_interp::init ()
 bool
 rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 {
-  // INIT and DESTROY must be requested by the runtime
-
-  if (!perl || !should_invoke [htype])
+  if (!perl
+      || (!should_invoke [htype] && htype != HOOK_INIT && htype != HOOK_DESTROY))
     return false;
   
   if (htype == HOOK_INIT) // first hook ever called
@@ -291,7 +290,6 @@ BOOT:
 {
 # define set_hookname(sym) av_store (hookname, PP_CONCAT(HOOK_, sym), newSVpv (PP_STRINGIFY(sym), 0))
   AV *hookname = get_av ("urxvt::HOOKNAME", 1);
-  set_hookname (LOAD);
   set_hookname (INIT);
   set_hookname (RESET);
   set_hookname (START);

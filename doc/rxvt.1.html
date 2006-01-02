@@ -628,10 +628,10 @@ longer example is in <em>doc/pty-fd</em>):</p>
    while (&lt;$slave&gt;) { print $slave &quot;got &lt;$_&gt;\n&quot; }</pre>
 </dd>
 <p></p>
-<dt><strong><a name="item__2dperl_string"><strong>-perl</strong> <em>string</em></a></strong><br />
+<dt><strong><a name="item__2dpe_string"><strong>-pe</strong> <em>string</em></a></strong><br />
 </dt>
 <dd>
-Used by perl extension. See resource <strong>perl</strong>.
+Colon-separated list of perl extension scripts to use in this terminal instance. See resource <strong>perl-ext</strong>.
 </dd>
 <p></p></dl>
 <p>
@@ -1416,27 +1416,28 @@ info):</p>
   URxvt.keysym.M-C-4: command:\033[8;48;110t</pre>
 </dd>
 <p></p>
-<dt><strong><a name="item_perl_3a_string"><strong>perl</strong>: <em>string</em></a></strong><br />
+<dt><strong><a name="item_perl_2dext_3a_string"><strong>perl-ext</strong>: <em>string</em></a></strong><br />
 </dt>
 <dd>
-Used by perl extension and is free for any use, as it is not interpreted
-by rxvt-unicode itself; option <strong>perl</strong>.
+Colon-separated list of perl extension scripts to use in this terminal
+instance. Each extension is looked up in the library directories, loaded
+if necessary, and bound to the current terminal instance; option <strong>-pe</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item_perl_2deval_3a_string"><strong>perl-eval</strong>: <em>string</em></a></strong><br />
 </dt>
 <dd>
-Perl code to be evaluated when all extensions have been loaded. See the
+Perl code to be evaluated when all extensions have been registered. See the
 <code>rxvtperl(3)</code> manpage.
 </dd>
 <p></p>
 <dt><strong><a name="item_perl_2dlib_3a_path"><strong>perl-lib</strong>: <em>path</em></a></strong><br />
 </dt>
 <dd>
-Additional directory that holds extension scripts that are loaded and
-enabled for this terminal instance, in addition to scripts stored in
-<em>/opt/rxvt/lib/urxvt/perl-ext/</em>, which are global to all terminal
-instances.
+Colon-separated list of additional directories that hold extension
+scripts. When looking for extensions specified by the <code>perl</code> resource,
+rxvt will first look in these directories and then in
+<em>/opt/rxvt/lib/urxvt/perl-ext/</em>.
 </dd>
 <dd>
 <p>See the <code>rxvtperl(3)</code> manpage.</p>

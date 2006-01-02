@@ -151,16 +151,11 @@ thus must be encoded as \s-1UTF\-8\s0.
 .Ve
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-On startup, @@RXVT_NAME@@ will scan \fI@@RXVT_LIBDIR@@/urxvt/perl\-ext/\fR
-for files and will load them. Everytime a terminal object gets created,
-the directory specified by the \f(CW\*(C`perl\-lib\*(C'\fR resource will be additionally
-scanned.
+Everytime a terminal object gets created, scripts specified via the
+\&\f(CW\*(C`perl\*(C'\fR resource are associated with it.
 .PP
 Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
-scripts will be shared for all terminals.
-.PP
-Hooks in scripts specified by \f(CW\*(C`perl\-lib\*(C'\fR will only be called for the
-terminals created with that specific option value.
+scripts will be shared (But not enabled) for all terminals.
 .Sh "General \s-1API\s0 Considerations"
 .IX Subsection "General API Considerations"
 All objects (such as terminals, time watchers etc.) are typical
@@ -308,8 +303,8 @@ list:
 \&  borderLess color cursorBlink cursorUnderline cutchars delete_key
 \&  display_name embed ext_bwidth fade font geometry hold iconName
 \&  imFont imLocale inputMethod insecure int_bwidth intensityStyles
-\&  italicFont jumpScroll lineSpace loginShell mapAlert menu meta8
-\&  modifier mouseWheelScrollPage name pastableTabs path perl perl_eval
+\&  italicFont jumpScroll lineSpace loginShell mapAlert menu meta8 modifier
+\&  mouseWheelScrollPage name pastableTabs path perl_eval perl_ext
 \&  perl_lib pointerBlank pointerBlankDelay preeditType print_pipe pty_fd
 \&  reverseVideo saveLines scrollBar scrollBar_align scrollBar_floating
 \&  scrollBar_right scrollBar_thickness scrollTtyKeypress scrollTtyOutput

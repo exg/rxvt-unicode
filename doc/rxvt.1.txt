@@ -392,8 +392,9 @@ OPTIONS
            my $slave = $pty->slave;
            while (<$slave>) { print $slave "got <$_>\n" }
 
-    -perl *string*
-        Used by perl extension. See resource perl.
+    -pe *string*
+        Colon-separated list of perl extension scripts to use in this
+        terminal instance. See resource perl-ext.
 
 RESOURCES (available also as long-options)
     Note: `rxvt --help' gives a list of all resources (long options)
@@ -918,19 +919,21 @@ RESOURCES (available also as long-options)
           URxvt.keysym.M-C-3: command:\033[8;25;80t
           URxvt.keysym.M-C-4: command:\033[8;48;110t
 
-    perl: *string*
-        Used by perl extension and is free for any use, as it is not
-        interpreted by rxvt-unicode itself; option perl.
+    perl-ext: *string*
+        Colon-separated list of perl extension scripts to use in this
+        terminal instance. Each extension is looked up in the library
+        directories, loaded if necessary, and bound to the current terminal
+        instance; option -pe.
 
     perl-eval: *string*
-        Perl code to be evaluated when all extensions have been loaded. See
-        the rxvtperl(3) manpage.
+        Perl code to be evaluated when all extensions have been registered.
+        See the rxvtperl(3) manpage.
 
     perl-lib: *path*
-        Additional directory that holds extension scripts that are loaded
-        and enabled for this terminal instance, in addition to scripts
-        stored in /opt/rxvt/lib/urxvt/perl-ext/, which are global to all
-        terminal instances.
+        Colon-separated list of additional directories that hold extension
+        scripts. When looking for extensions specified by the "perl"
+        resource, rxvt will first look in these directories and then in
+        /opt/rxvt/lib/urxvt/perl-ext/.
 
         See the rxvtperl(3) manpage.
 
