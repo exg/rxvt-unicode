@@ -15,15 +15,22 @@ dummy:
 
 all:
 
-SEDREPLACE = -e 's%@@RXVT_VERSION@@%$(VERSION)%g;'\
-	     -e 's%@@RXVT_NAME@@%$(RXVTNAME)%g;'\
-	     -e 's%@@RXVT_DATE@@%$(DATE)%g;'
+SEDREPLACE = -e 's%@@RXVT_VERSION@@%$(VERSION)%g;'	\
+	     -e 's%@@RXVT_NAME@@%$(RXVTNAME)%g;'	\
+	     -e 's%@@RXVT_DATE@@%$(DATE)%g;'		\
+	     -e 's%@@RXVT_LIBDIR@@%$(libdir)%g;'
+
+rxvtperl.3.pod: ../src/urxvt.pm
+	cp $< $@
 
 %.tbl: %.pod
 	./podtbl <$< >$@
 
 %.1.man.in: %.1.tbl
 	pod2man -n rxvt -r"$(VERSION)" -q\" -s1 -c "RXVT-UNICODE" <$< >$@
+
+%.3.man.in: %.3.tbl
+	pod2man -n rxvt -r"$(VERSION)" -q\" -s3 -c "RXVT-UNICODE" <$< >$@
 
 %.7.man.in: %.7.tbl
 	pod2man -n rxvt -r"$(VERSION)" -q\" -s7 -c "RXVT-UNICODE" <$< >$@
@@ -42,9 +49,9 @@ SEDREPLACE = -e 's%@@RXVT_VERSION@@%$(VERSION)%g;'\
 
 tags allbin:
 
-alldoc:	rxvt.1.man.in rxvt.7.man.in rxvtc.1.man.in rxvtd.1.man.in \
+alldoc:	rxvt.1.man.in rxvt.7.man.in rxvtc.1.man.in rxvtd.1.man.in rxvtperl.3.man.in \
 	rxvt.1.txt    rxvt.7.txt    rxvtc.1.txt    rxvtd.1.txt \
-	rxvt.1.html   rxvt.7.html   rxvtc.1.html   rxvtd.1.html \
+	rxvt.1.html   rxvt.7.html   rxvtc.1.html   rxvtd.1.html   rxvtperl.3.html \
 	../README.configure ../README.FAQ
 	infocmp -C rxvt-unicode >etc/rxvt-unicode.termcap
 
@@ -64,15 +71,18 @@ distclean:
 
 install:
 	$(INSTALL) -d $(DESTDIR)$(man1dir)
-	$(INSTALL) -d $(DESTDIR)$(man7dir)
 	$(SED) $(SEDREPLACE) < rxvt.1.man.in >rxvt.1.man
 	$(INSTALL_DATA) rxvt.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME).$(man1ext)
-	$(SED) $(SEDREPLACE) < rxvt.7.man.in >rxvt.7.man
-	$(INSTALL_DATA) rxvt.7.man $(DESTDIR)$(man7dir)/$(RXVTNAME).$(man7ext)
 	$(SED) $(SEDREPLACE) < rxvtc.1.man.in >rxvtc.1.man
 	$(INSTALL_DATA) rxvtc.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME)c.$(man1ext)
 	$(SED) $(SEDREPLACE) < rxvtd.1.man.in >rxvtd.1.man
 	$(INSTALL_DATA) rxvtd.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME)d.$(man1ext)
+	$(INSTALL) -d $(DESTDIR)$(man7dir)
+	$(SED) $(SEDREPLACE) < rxvt.7.man.in >rxvt.7.man
+	$(INSTALL_DATA) rxvt.7.man $(DESTDIR)$(man7dir)/$(RXVTNAME).$(man7ext)
+@IF_PERL@	$(INSTALL) -d $(DESTDIR)$(man3dir)
+@IF_PERL@	$(SED) $(SEDREPLACE) < rxvtperl.3.man.in >rxvtperl.3.man
+@IF_PERL@	$(INSTALL_DATA) rxvtperl.3.man $(DESTDIR)$(man3dir)/$(RXVTNAME)perl.$(man3ext)
 	if test -x "@TIC@"; then if test -n "@TIC@"; then @TIC@ etc/rxvt-unicode.terminfo; fi; fi
 
 uninstall:

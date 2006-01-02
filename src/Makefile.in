@@ -94,7 +94,14 @@ cleandir: realclean
 distclean: realclean
 	(cd $(srcdir); $(RMF) Makefile)
 
-install: allbin alldoc
+install-perl:
+@IF_PERL@	$(MKDIR) $(DESTDIR)$(libdir)
+@IF_PERL@	$(MKDIR) $(DESTDIR)$(libdir)/urxvt
+@IF_PERL@	$(MKDIR) $(DESTDIR)$(libdir)/urxvt/perl-ext
+@IF_PERL@	$(INSTALL_DATA) urxvt.pm $(DESTDIR)$(libdir)/urxvt/urxvt.pm
+@IF_PERL@	for ext in perl-ext/*; do $(INSTALL_DATA) "$$ext" $(DESTDIR)$(libdir)/urxvt/"$$ext"; done
+
+install: allbin alldoc install-perl
 	$(MKDIR) $(DESTDIR)$(bindir)
 	$(RMF) $(RXVT_BINNAME)
 	$(RMF) $(RXVTC_BINNAME)

@@ -16,6 +16,8 @@ libdir = @libdir@
 includedir = @includedir@
 man1dir = @mandir@/man1
 man1ext = 1
+man3dir = @mandir@/man3
+man3ext = 3
 man7dir = @mandir@/man7
 man7ext = 7
 

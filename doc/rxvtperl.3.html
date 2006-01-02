@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>rxvtperl - rxvt-unicode's embedded perl interpreter</title>
+<link rev="made" href="mailto:perl-binary@plan9.de" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<ul>
+
+		<li><a href="#hooks">Hooks</a></li>
+		<li><a href="#functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></li>
+		<li><a href="#the_urxvt__term_class">The <code>urxvt::term</code> Class</a></li>
+		<li><a href="#the_urxvt__timer_class">The <code>urxvt::timer</code> Class</a></li>
+		<li><a href="#the_urxvt__iow_class">The <code>urxvt::iow</code> Class</a></li>
+	</ul>
+
+	<li><a href="#author">AUTHOR</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>rxvtperl - rxvt-unicode's embedded perl interpreter</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>* Put your scripts into <em>/opt/rxvt/lib/urxvt/perl-ext/</em>, they will be loaded automatically.</p>
+<p>* Each script will only be loaded once, even in urxvtd, and will be valid
+globally.</p>
+<p>* Scripts are evaluated in a 'use strict' and 'use utf8' environment, and
+thus must be encoded as UTF-8.</p>
+<pre>
+   sub on_sel_grab {
+      warn &quot;you selected &quot;, $_[0]-&gt;selection;
+      ()
+   }</pre>
+<pre>
+   1</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>
+</p>
+<h2><a name="hooks">Hooks</a></h2>
+<p>The following subroutines can be declared in loaded scripts, and will be called
+whenever the relevant event happens.</p>
+<p>All of them must return a boolean value. If it is true, then the event
+counts as being <em>consumed</em>, and the invocation of other hooks is skipped,
+and the relevant action might not be carried out by the C++ code.</p>
+<p>When in doubt, return a false value (preferably <code>()</code>).</p>
+<dl>
+<dt><strong><a name="item_on_init__24term">on_init $term</a></strong><br />
+</dt>
+<dd>
+Called after a new terminal object has been initialized, but before
+windows are created or the command gets run.
+</dd>
+<p></p>
+<dt><strong><a name="item_on_reset__24term">on_reset $term</a></strong><br />
+</dt>
+<dd>
+Called after the screen is ``reset'' for any reason, such as resizing or
+control sequences. Here is where you can react on changes to size-related
+variables.
+</dd>
+<p></p>
+<dt><strong><a name="item_on_start__24term">on_start $term</a></strong><br />
+</dt>
+<dd>
+Called at the very end of initialisation of a new terminal, just before
+returning to the mainloop.
+</dd>
+<p></p>
+<dt><strong><a name="item_on_sel_make__24term_2c__24eventtime">on_sel_make $term, $eventtime</a></strong><br />
+</dt>
+<dd>
+Called whenever a selection has been made by the user, but before the
+selection text is copied, so changes to the beginning, end or type of the
+selection will be honored.
+</dd>
+<dd>
+<p>Returning a true value aborts selection making by urxvt, in which case you
+have to make a selection yourself by calling <a href="#item_selection_grab"><code>$term-&gt;selection_grab</code></a>.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_on_sel_grab__24term_2c__24eventtime">on_sel_grab $term, $eventtime</a></strong><br />
+</dt>
+<dd>
+Called whenever a selection has been copied, but before the selection is
+requested from the server.  The selection text can be queried and changed
+by calling <a href="#item_selection"><code>$term-&gt;selection</code></a>.
+</dd>
+<dd>
+<p>Returning a true value aborts selection grabbing. It will still be hilighted.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_on_focus_in__24term">on_focus_in $term</a></strong><br />
+</dt>
+<dd>
+Called whenever the window gets the keyboard focus, before urxvt does
+focus in processing.
+</dd>
+<p></p>
+<dt><strong><a name="item_on_focus_out__24term">on_focus_out $term</a></strong><br />
+</dt>
+<dd>
+Called wheneever the window loses keyboard focus, before urxvt does focus
+out processing.
+</dd>
+<p></p>
+<dt><strong><a name="item_on_view_change__24term_2c__24offset">on_view_change $term, $offset</a></strong><br />
+</dt>
+<dd>
+Called whenever the view offset changes, i..e the user or program
+scrolls. Offset <code>0</code> means display the normal terminal, positive values
+show this many lines of scrollback.
+</dd>
+<p></p>
+<dt><strong><a name="item_on_scroll_back__24term_2c__24lines_2c__24saved">on_scroll_back $term, $lines, $saved</a></strong><br />
+</dt>
+<dd>
+Called whenever lines scroll out of the terminal area into the scrollback
+buffer. <code>$lines</code> is the number of lines scrolled out and may be larger
+than the scroll back buffer or the terminal.
+</dd>
+<dd>
+<p>It is called before lines are scrolled out (so rows 0 .. min ($lines - 1,
+$nrow - 1) represent the lines to be scrolled out). <code>$saved</code> is the total
+number of lines that will be in the scrollback buffer.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_on_tty_activity__24term__2anyi_2a">on_tty_activity $term *NYI*</a></strong><br />
+</dt>
+<dd>
+Called whenever the <code>program(s)</code> running in the urxvt window send output.
+</dd>
+<p></p>
+<dt><strong><a name="item_on_refresh_begin__24term">on_refresh_begin $term</a></strong><br />
+</dt>
+<dd>
+Called just before the screen gets redrawn. Can be used for overlay
+or similar effects by modify terminal contents in refresh_begin, and
+restoring them in refresh_end. The built-in overlay and selection display
+code is run after this hook, and takes precedence.
+</dd>
+<p></p>
+<dt><strong><a name="item_on_refresh_end__24term">on_refresh_end $term</a></strong><br />
+</dt>
+<dd>
+Called just after the screen gets redrawn. See <code>on_refresh_begin</code>.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<h2><a name="functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></h2>
+<dl>
+<dt><strong><a name="item_urxvt_3a_3afatal__24errormessage">urxvt::fatal $errormessage</a></strong><br />
+</dt>
+<dd>
+Fatally aborts execution with the given error message. Avoid at all
+costs! The only time this is acceptable is when the terminal process
+starts up.
+</dd>
+<p></p>
+<dt><strong><a name="item_urxvt_3a_3awarn__24string">urxvt::warn $string</a></strong><br />
+</dt>
+<dd>
+Calls <code>rxvt_warn</code> witht eh given string which should not include a
+newline. The module also overwrites the <code>warn</code> builtin with a function
+that calls this function.
+</dd>
+<dd>
+<p>Using this function has the advantage that its output ends up in the
+correct place, e.g. on stderr of the connecting urxvtc client.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item__24cellwidth__3d_urxvt_3a_3awcswidth__24string">$cellwidth = urxvt::wcswidth $string</a></strong><br />
+</dt>
+<dd>
+Returns the number of screen-cells this string would need. Correctly
+accounts for wide and combining characters.
+</dd>
+<p></p>
+<dt><strong><a name="item__24time__3d_urxvt_3a_3anow">$time = urxvt::NOW</a></strong><br />
+</dt>
+<dd>
+Returns the ``current time'' (as per the event loop).
+</dd>
+<p></p></dl>
+<p>
+</p>
+<h2><a name="the_urxvt__term_class">The <code>urxvt::term</code> Class</a></h2>
+<dl>
+<dt><strong><a name="item_selection_mark">($row, $col) = $term-&gt;selection_mark ([$row, $col])</a></strong><br />
+</dt>
+<dt><strong><a name="item_selection_beg">($row, $col) = $term-&gt;selection_beg ([$row, $col])</a></strong><br />
+</dt>
+<dt><strong><a name="item_selection_end">($row, $col) = $term-&gt;selection_end ([$row, $col])</a></strong><br />
+</dt>
+<dd>
+Return the current values of the selection mark, begin or end positions,
+and optionally set them to new values.
+</dd>
+<p></p>
+<dt><strong><a name="item_selection_grab">$success = $term-&gt;selection_grab ($eventtime)</a></strong><br />
+</dt>
+<dd>
+Try to request the primary selection from the server (for example, as set
+by the next method).
+</dd>
+<p></p>
+<dt><strong><a name="item_selection">$oldtext = $term-&gt;selection ([$newtext])</a></strong><br />
+</dt>
+<dd>
+Return the current selection text and optionally replace it by <code>$newtext</code>.
+</dd>
+<p></p>
+<dt><strong><a name="item_scr_overlay">$term-&gt;scr_overlay ($x, $y, $text)</a></strong><br />
+</dt>
+<dd>
+Create a simple multi-line overlay box. See the next method for details.
+</dd>
+<p></p>
+<dt><strong><a name="item_scr_overlay_new">$term-&gt;scr_overlay_new ($x, $y, $width, $height)</a></strong><br />
+</dt>
+<dd>
+Create a new (empty) overlay at the given position with the given
+width/height. A border will be put around the box. If either <code>$x</code> or
+<code>$y</code> is negative, then this is counted from the right/bottom side,
+respectively.
+</dd>
+<p></p>
+<dt><strong><a name="item_scr_overlay_off">$term-&gt;scr_overlay_off</a></strong><br />
+</dt>
+<dd>
+Switch the overlay off again.
+</dd>
+<p></p>
+<dt><strong><a name="item_scr_overlay_set_char">$term-&gt;scr_overlay_set_char ($x, $y, $char, $rend = OVERLAY_RSTYLE)</a></strong><br />
+</dt>
+<dd>
+Put a single character (specified numerically) at the given overlay
+position.
+</dd>
+<p></p>
+<dt><strong><a name="item_scr_overlay_set">$term-&gt;scr_overlay_set ($x, $y, $text)</a></strong><br />
+</dt>
+<dd>
+Write a string at the given position into the overlay.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<h2><a name="the_urxvt__timer_class">The <code>urxvt::timer</code> Class</a></h2>
+<p>This class implements timer watchers/events. Time is represented as a
+fractional number of seconds since the epoch. Example:</p>
+<pre>
+   # create a digital clock display in upper right corner
+   $term-&gt;{timer} = urxvt::timer
+                    -&gt;new
+                    -&gt;start (urxvt::NOW)
+                    -&gt;cb (sub {
+                       my ($timer) = @_;
+                       my $time = $timer-&gt;at;
+                       $timer-&gt;start ($time + 1);
+                       $self-&gt;scr_overlay (-1, 0, 
+                          POSIX::strftime &quot;%H:%M:%S&quot;, localtime $time);
+                    });</pre>
+<dl>
+<dt><strong><a name="item__24timer__3d_new_urxvt_3a_3atimer">$timer = new urxvt::timer</a></strong><br />
+</dt>
+<dd>
+Create a new timer object in stopped state.
+</dd>
+<p></p>
+<dt><strong><a name="item_cb">$timer = $timer-&gt;cb (sub { my ($timer) = @_; ... })</a></strong><br />
+</dt>
+<dd>
+Set the callback to be called when the timer triggers.
+</dd>
+<p></p>
+<dt><strong><a name="item_at">$tstamp = $timer-&gt;at</a></strong><br />
+</dt>
+<dd>
+Return the time this watcher will fire next.
+</dd>
+<p></p>
+<dt><strong><a name="item_set">$timer = $timer-&gt;set ($tstamp)</a></strong><br />
+</dt>
+<dd>
+Set the time the event is generated to $tstamp.
+</dd>
+<p></p>
+<dt><strong><a name="item_start">$timer = $timer-&gt;start</a></strong><br />
+</dt>
+<dd>
+Start the timer.
+</dd>
+<p></p>
+<dt><strong>$timer = $timer-&gt;start ($tstamp)</strong><br />
+</dt>
+<dd>
+Set the event trigger time to <code>$tstamp</code> and start the timer.
+</dd>
+<p></p>
+<dt><strong><a name="item_stop">$timer = $timer-&gt;stop</a></strong><br />
+</dt>
+<dd>
+Stop the timer.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<h2><a name="the_urxvt__iow_class">The <code>urxvt::iow</code> Class</a></h2>
+<p>This class implements io watchers/events. Example:</p>
+<pre>
+  $term-&gt;{socket} = ...
+  $term-&gt;{iow} = urxvt::iow
+                 -&gt;new
+                 -&gt;fd (fileno $term-&gt;{socket})
+                 -&gt;events (1) # wait for read data
+                 -&gt;start
+                 -&gt;cb (sub {
+                   my ($iow, $revents) = @_;
+                   # $revents must be 1 here, no need to check
+                   sysread $term-&gt;{socket}, my $buf, 8192
+                      or end-of-file;
+                 });</pre>
+<dl>
+<dt><strong><a name="item__24iow__3d_new_urxvt_3a_3aiow">$iow = new urxvt::iow</a></strong><br />
+</dt>
+<dd>
+Create a new io watcher object in stopped state.
+</dd>
+<p></p>
+<dt><strong>$iow = $iow-&gt;cb (sub { my ($iow, $reventmask) = @_; ... })</strong><br />
+</dt>
+<dd>
+Set the callback to be called when io events are triggered. <code>$reventmask</code>
+is a bitset as described in the <a href="#item_events"><code>events</code></a> method.
+</dd>
+<p></p>
+<dt><strong><a name="item_fd">$iow = $iow-&gt;fd ($fd)</a></strong><br />
+</dt>
+<dd>
+Set the filedescriptor (not handle) to watch.
+</dd>
+<p></p>
+<dt><strong><a name="item_events">$iow = $iow-&gt;events ($eventmask)</a></strong><br />
+</dt>
+<dd>
+Set the event mask to watch. Bit #0 (value <code>1</code>) enables watching for read
+data, Bit #1 (value <code>2</code>) enables watching for write data.
+</dd>
+<p></p>
+<dt><strong>$iow = $iow-&gt;start</strong><br />
+</dt>
+<dd>
+Start watching for requested events on the given handle.
+</dd>
+<p></p>
+<dt><strong>$iow = $iow-&gt;stop</strong><br />
+</dt>
+<dd>
+Stop watching for events on the given filehandle.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<pre>
+ Marc Lehmann &lt;pcg@goof.com&gt;
+ <a href="http://software.schmorp.de/pkg/rxvt-unicode">http://software.schmorp.de/pkg/rxvt-unicode</a></pre>
+
+</body>
+
+</html>

@@ -46,6 +46,8 @@ doc/rxvt.1.txt
 doc/rxvt.7.txt
 doc/rxvtc.1.txt
 doc/rxvtd.1.txt
+doc/rxvtperl.3.man.in
+doc/rxvtperl.3.html
 doc/rxvt-unicode.spec
 
 autoconf/.cvsignore

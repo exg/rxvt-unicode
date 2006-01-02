@@ -1,19 +1,20 @@
 =head1 NAME
 
-urxvt - rxvt-unicode's embedded perl interpreter
+rxvtperl - rxvt-unicode's embedded perl interpreter
 
 =head1 SYNOPSIS
 
-Put your scripts into $LIBDIR/perl-init/, they will be loaded automatically.
+* Put your scripts into F<@@RXVT_LIBDIR@@/urxvt/perl-ext/>, they will be loaded automatically.
 
-Each script will only be loaded once, even in urxvtd, and will be valid
+* Each script will only be loaded once, even in urxvtd, and will be valid
 globally.
 
-Scripts are evaluated in a 'use strict' and 'use utf8' environment, and
-thus must be written in utf-8.
+* Scripts are evaluated in a 'use strict' and 'use utf8' environment, and
+thus must be encoded as UTF-8.
 
    sub on_sel_grab {
       warn "you selected ", $_[0]->selection;
+      ()
    }
 
    1
