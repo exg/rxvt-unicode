@@ -309,7 +309,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os VERSION DATE LSMDATE LIBVERSION CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX CPP INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA AWK LINKER CXXCPP EGREP INSTALL_LIBRXVT RXVTNAME MV RM CP LN SED ECHO CMP TBL TIC X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS XPM_CPPFLAGS XPM_CFLAGS XPM_LIBS rxvt_int16_typedef rxvt_uint16_typedef rxvt_int32_typedef rxvt_uint32_typedef rxvt_intp_define rxvt_u_intp_define PERL PERLLIB PERLFLAGS PERLARCHLIB IF_PERL PERL_O DEBUG DINCLUDE DLIB include_stdint_h include_stdarg_h include_stdlib_h include_unistd_h include_string_h include_fcntl_h include_util_h include_assert_h include_sys_ioctl_h include_sys_select_h include_sys_strredir_h include_sys_time_h include_time_h LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os VERSION DATE LSMDATE LIBVERSION CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX CPP INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA AWK LINKER CXXCPP EGREP INSTALL_LIBRXVT RXVTNAME MV RM CP LN SED ECHO CMP TBL TIC X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS XPM_CPPFLAGS XPM_CFLAGS XPM_LIBS rxvt_int16_typedef rxvt_uint16_typedef rxvt_int32_typedef rxvt_uint32_typedef rxvt_intp_define rxvt_u_intp_define PERL PERLLIB PERLFLAGS PERLPRIVLIBEXP IF_PERL PERL_O DEBUG DINCLUDE DLIB include_stdint_h include_stdarg_h include_stdlib_h include_unistd_h include_string_h include_fcntl_h include_util_h include_assert_h include_sys_ioctl_h include_sys_select_h include_sys_strredir_h include_sys_time_h include_time_h LIBOBJS LTLIBOBJS'
 ac_subst_files='MCOMMON'
 
 # Initialize some variables set by options.
@@ -12749,7 +12749,7 @@ _ACEOF
      PERL_O=rxvtperl.o
      PERLFLAGS="`$PERL -MExtUtils::Embed -e ccopts`"
      PERLLIB="`$PERL -MExtUtils::Embed -e ldopts`"
-     PERLARCHLIB="`$PERL -MConfig -e 'print $Config{archlib}'`"
+     PERLPRIVLIBEXP="`$PERL -MConfig -e 'print $Config{privlibexp}'`"
      echo "$as_me:$LINENO: result: ok" >&5
 echo "${ECHO_T}ok" >&6
   else
@@ -13557,7 +13557,7 @@ s,@rxvt_u_intp_define@,$rxvt_u_intp_define,;t t
 s,@PERL@,$PERL,;t t
 s,@PERLLIB@,$PERLLIB,;t t
 s,@PERLFLAGS@,$PERLFLAGS,;t t
-s,@PERLARCHLIB@,$PERLARCHLIB,;t t
+s,@PERLPRIVLIBEXP@,$PERLPRIVLIBEXP,;t t
 s,@IF_PERL@,$IF_PERL,;t t
 s,@PERL_O@,$PERL_O,;t t
 s,@DEBUG@,$DEBUG,;t t

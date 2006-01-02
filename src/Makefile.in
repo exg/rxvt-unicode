@@ -110,7 +110,7 @@ perlxsi.c: Makefile
 	$(PERL) -MExtUtils::Embed -e xsinit -- -std urxvt
 
 rxvtperl.C: rxvtperl.xs typemap
-	$(PERL) @PERLARCHLIB@/ExtUtils/xsubpp -C++ -typemap @PERLARCHLIB@/ExtUtils/typemap -typemap typemap -prototypes $< >$@
+	$(PERL) @PERLPRIVLIBEXP@/ExtUtils/xsubpp -C++ -typemap @PERLPRIVLIBEXP@/ExtUtils/typemap -typemap typemap -prototypes $< >$@
 
 rxvtperl.o: rxvtperl.C perlxsi.c
 	$(COMPILE) @PERLFLAGS@ -DLIBDIR="\"$(libdir)/urxvt\"" -c $<

@@ -1395,7 +1395,7 @@ if test x$support_perl = xyes; then
      PERL_O=rxvtperl.o
      PERLFLAGS="`$PERL -MExtUtils::Embed -e ccopts`"
      PERLLIB="`$PERL -MExtUtils::Embed -e ldopts`"
-     PERLARCHLIB="`$PERL -MConfig -e 'print $Config{archlib}'`"
+     PERLPRIVLIBEXP="`$PERL -MConfig -e 'print $Config{privlibexp}'`"
      AC_MSG_RESULT(ok)
   else
      AC_MSG_ERROR(no working perl found, or perl not version >= 5.8)
@@ -1403,7 +1403,7 @@ if test x$support_perl = xyes; then
 fi
 AC_SUBST(PERLLIB)
 AC_SUBST(PERLFLAGS)
-AC_SUBST(PERLARCHLIB)
+AC_SUBST(PERLPRIVLIBEXP)
 AC_SUBST(PERL)
 AC_SUBST(IF_PERL)
 AC_SUBST(PERL_O)
