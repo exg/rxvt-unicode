@@ -1,3 +1,5 @@
+#! perl
+
 sub on_keyboard_command {
    my ($term, $cmd) = @_;
 
