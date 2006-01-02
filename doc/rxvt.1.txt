@@ -392,6 +392,9 @@ OPTIONS
            my $slave = $pty->slave;
            while (<$slave>) { print $slave "got <$_>\n" }
 
+    -perl *string*
+        Used by perl extension. See resource perl.
+
 RESOURCES (available also as long-options)
     Note: `rxvt --help' gives a list of all resources (long options)
     compiled into your version.
@@ -547,7 +550,7 @@ RESOURCES (available also as long-options)
         names that are used in turn when trying to display Unicode
         characters. The first font defines the cell size for characters;
         other fonts might be smaller, but not larger. A reasonable default
-        font list is always appended to it. option -fn.
+        font list is always appended to it; option -fn.
 
         Each font can either be a standard X11 core font (XLFD) name, with
         optional prefix "x:" or a Xft font (Compile *xft*), prefixed with
@@ -776,7 +779,7 @@ RESOURCES (available also as long-options)
         The locale to use for opening the IM. You can use an "LC_CTYPE" of
         e.g. "de_DE.UTF-8" for normal text processing but "ja_JP.EUC-JP" for
         the input extension to be able to input japanese characters while
-        staying in another locale. option -imlocale.
+        staying in another locale; option -imlocale.
 
     imFont: *fontset*
         Specify the font-set used for XIM styles "OverTheSpot" or
@@ -789,7 +792,7 @@ RESOURCES (available also as long-options)
     tripleclickwords: *boolean*
         Change the meaning of triple-click selection with the left mouse
         button. Instead of selecting a full line it will extend the
-        selection to the end of the logical line only. option -tcw.
+        selection to the end of the logical line only; option -tcw.
 
     insecure: *boolean*
         Enables "insecure" mode. Rxvt-unicode offers some escape sequences
@@ -914,6 +917,22 @@ RESOURCES (available also as long-options)
 
           URxvt.keysym.M-C-3: command:\033[8;25;80t
           URxvt.keysym.M-C-4: command:\033[8;48;110t
+
+    perl: *string*
+        Used by perl extension and is free for any use, as it is not
+        interpreted by rxvt-unicode itself; option perl.
+
+    perl-eval: *string*
+        Perl code to be evaluated when all extensions have been loaded. See
+        the rxvtperl(3) manpage.
+
+    perl-lib: *path*
+        Additional directory that holds extension scripts that are loaded
+        and enabled for this terminal instance, in addition to scripts
+        stored in /opt/rxvt/lib/urxvt/perl-ext/, which are global to all
+        terminal instances.
+
+        See the rxvtperl(3) manpage.
 
 THE SCROLLBAR
     Lines of text that scroll off the top of the rxvt window (resource:

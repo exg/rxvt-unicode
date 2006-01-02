@@ -627,6 +627,12 @@ longer example is in <em>doc/pty-fd</em>):</p>
    my $slave = $pty-&gt;slave;
    while (&lt;$slave&gt;) { print $slave &quot;got &lt;$_&gt;\n&quot; }</pre>
 </dd>
+<p></p>
+<dt><strong><a name="item__2dperl_string"><strong>-perl</strong> <em>string</em></a></strong><br />
+</dt>
+<dd>
+Used by perl extension. See resource <strong>perl</strong>.
+</dd>
 <p></p></dl>
 <p>
 </p>
@@ -857,7 +863,7 @@ Select the fonts to be used. This is a comma separated list of font
 names that are used in turn when trying to display Unicode characters.
 The first font defines the cell size for characters; other fonts might
 be smaller, but not larger. A reasonable default font list is always
-appended to it. option <strong>-fn</strong>.
+appended to it; option <strong>-fn</strong>.
 </dd>
 <dd>
 <p>Each font can either be a standard X11 core font (XLFD) name, with
@@ -1216,7 +1222,7 @@ built-in default:
 The locale to use for opening the IM. You can use an <code>LC_CTYPE</code> of e.g.
 <code>de_DE.UTF-8</code> for normal text processing but <code>ja_JP.EUC-JP</code> for the
 input extension to be able to input japanese characters while staying in
-another locale. option <strong>-imlocale</strong>.
+another locale; option <strong>-imlocale</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item_imfont_3a_fontset"><strong>imFont:</strong> <em>fontset</em></a></strong><br />
@@ -1235,7 +1241,7 @@ option <strong>-imfont</strong>.
 <dd>
 Change the meaning of triple-click selection with the left mouse
 button. Instead of selecting a full line it will extend the selection to
-the end of the logical line only. option <strong>-tcw</strong>.
+the end of the logical line only; option <strong>-tcw</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item_insecure_3a_boolean"><strong>insecure:</strong> <em>boolean</em></a></strong><br />
@@ -1408,6 +1414,32 @@ info):</p>
 <pre>
   URxvt.keysym.M-C-3: command:\033[8;25;80t
   URxvt.keysym.M-C-4: command:\033[8;48;110t</pre>
+</dd>
+<p></p>
+<dt><strong><a name="item_perl_3a_string"><strong>perl</strong>: <em>string</em></a></strong><br />
+</dt>
+<dd>
+Used by perl extension and is free for any use, as it is not interpreted
+by rxvt-unicode itself; option <strong>perl</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_perl_2deval_3a_string"><strong>perl-eval</strong>: <em>string</em></a></strong><br />
+</dt>
+<dd>
+Perl code to be evaluated when all extensions have been loaded. See the
+<code>rxvtperl(3)</code> manpage.
+</dd>
+<p></p>
+<dt><strong><a name="item_perl_2dlib_3a_path"><strong>perl-lib</strong>: <em>path</em></a></strong><br />
+</dt>
+<dd>
+Additional directory that holds extension scripts that are loaded and
+enabled for this terminal instance, in addition to scripts stored in
+<em>/opt/rxvt/lib/urxvt/perl-ext/</em>, which are global to all terminal
+instances.
+</dd>
+<dd>
+<p>See the <code>rxvtperl(3)</code> manpage.</p>
 </dd>
 <p></p></dl>
 <p>

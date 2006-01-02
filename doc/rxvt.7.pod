@@ -2566,6 +2566,12 @@ the screen in a fixed position.
 
 Add support to have the pointer disappear when typing or inactive.
 
+=item --enable-perl (default: off)
+
+Enable an embedded perl interpreter. See the B<rxvtperl(3)> manpage
+(F<doc/rxvtperl.txt>) for more info on this feature, or the files in
+F<src/perl-ext/> for the extensions that are installed by default.
+
 =item --with-name=NAME (default: urxvt)
 
 Set the basename for the installed binaries, resulting

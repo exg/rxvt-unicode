@@ -240,6 +240,11 @@ CONFIGURE OPTIONS
     --enable-pointer-blank (default: on)
         Add support to have the pointer disappear when typing or inactive.
 
+    --enable-perl (default: off)
+        Enable an embedded perl interpreter. See the rxvtperl(3) manpage
+        (doc/rxvtperl.txt) for more info on this feature, or the files in
+        src/perl-ext/ for the extensions that are installed by default.
+
     --with-name=NAME (default: urxvt)
         Set the basename for the installed binaries, resulting in "urxvt",
         "urxvtd" etc.). Specify "--with-name=rxvt" to replace with "rxvt".

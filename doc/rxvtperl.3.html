@@ -17,6 +17,7 @@
 	<li><a href="#description">DESCRIPTION</a></li>
 	<ul>
 
+		<li><a href="#general_api_considerations">General API Considerations</a></li>
 		<li><a href="#hooks">Hooks</a></li>
 		<li><a href="#functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></li>
 		<li><a href="#the_urxvt__term_class">The <code>urxvt::term</code> Class</a></li>
@@ -44,8 +45,6 @@
 <hr />
 <h1><a name="synopsis">SYNOPSIS</a></h1>
 <p>* Put your scripts into <em>/opt/rxvt/lib/urxvt/perl-ext/</em>, they will be loaded automatically.</p>
-<p>* Each script will only be loaded once, even in urxvtd, and will be valid
-globally.</p>
 <p>* Scripts are evaluated in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as UTF-8.</p>
 <pre>
@@ -59,6 +58,26 @@ thus must be encoded as UTF-8.</p>
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
+<p>On startup, rxvt will scan <em>/opt/rxvt/lib/urxvt/perl-ext/</em>
+for files and will load them. Everytime a terminal object gets created,
+the directory specified by the <code>perl-lib</code> resource will be additionally
+scanned.</p>
+<p>Each script will only ever be loaded once, even in rxvtd, where
+scripts will be shared for all terminals.</p>
+<p>Hooks in scripts specified by <code>perl-lib</code> will only be called for the
+terminals created with that specific option value.</p>
+<p>
+</p>
+<h2><a name="general_api_considerations">General API Considerations</a></h2>
+<p>All objects (such as terminals, time watchers etc.) are typical
+reference-to-hash objects. The hash can be used to store anything you
+like. All members starting with an underscore (such as <code>_ptr</code> or
+<code>_hook</code>) are reserved for internal uses and must not be accessed or
+modified).</p>
+<p>When objects are destroyed on the C++ side, the perl object hashes are
+emptied, so its best to store related objects such as time watchers and
+the like inside the terminal object so they get destroyed as soon as the
+terminal is destroyed.</p>
 <p>
 </p>
 <h2><a name="hooks">Hooks</a></h2>
@@ -185,20 +204,13 @@ starts up.
 <dt><strong><a name="item_urxvt_3a_3awarn__24string">urxvt::warn $string</a></strong><br />
 </dt>
 <dd>
-Calls <code>rxvt_warn</code> witht eh given string which should not include a
+Calls <code>rxvt_warn</code> with the given string which should not include a
 newline. The module also overwrites the <code>warn</code> builtin with a function
 that calls this function.
 </dd>
 <dd>
 <p>Using this function has the advantage that its output ends up in the
 correct place, e.g. on stderr of the connecting urxvtc client.</p>
-</dd>
-<p></p>
-<dt><strong><a name="item__24cellwidth__3d_urxvt_3a_3awcswidth__24string">$cellwidth = urxvt::wcswidth $string</a></strong><br />
-</dt>
-<dd>
-Returns the number of screen-cells this string would need. Correctly
-accounts for wide and combining characters.
 </dd>
 <p></p>
 <dt><strong><a name="item__24time__3d_urxvt_3a_3anow">$time = urxvt::NOW</a></strong><br />
@@ -244,13 +256,13 @@ list:</p>
   display_name embed ext_bwidth fade font geometry hold iconName
   imFont imLocale inputMethod insecure int_bwidth intensityStyles
   italicFont jumpScroll lineSpace loginShell mapAlert menu meta8
-  modifier mouseWheelScrollPage name pastableTabs path pointerBlank
-  pointerBlankDelay preeditType print_pipe pty_fd reverseVideo saveLines
-  scrollBar scrollBar_align scrollBar_floating scrollBar_right
-  scrollBar_thickness scrollTtyKeypress scrollTtyOutput scrollWithBuffer
-  scrollstyle secondaryScreen secondaryScroll selectstyle shade term_name
-  title transparent transparent_all tripleclickwords utmpInhibit
-  visualBell</pre>
+  modifier mouseWheelScrollPage name pastableTabs path perl perl_eval
+  perl_lib pointerBlank pointerBlankDelay preeditType print_pipe pty_fd
+  reverseVideo saveLines scrollBar scrollBar_align scrollBar_floating
+  scrollBar_right scrollBar_thickness scrollTtyKeypress scrollTtyOutput
+  scrollWithBuffer scrollstyle secondaryScreen secondaryScroll selectstyle
+  shade term_name title transparent transparent_all tripleclickwords
+  utmpInhibit visualBell</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_selection_mark">($row, $col) = $term-&gt;selection_mark ([$row, $col])</a></strong><br />
@@ -309,6 +321,33 @@ position.
 </dt>
 <dd>
 Write a string at the given position into the overlay.
+</dd>
+<p></p>
+<dt><strong><a name="item_strwidth">$cellwidth = $term-&gt;strwidth $string</a></strong><br />
+</dt>
+<dd>
+Returns the number of screen-cells this string would need. Correctly
+accounts for wide and combining characters.
+</dd>
+<p></p>
+<dt><strong><a name="item_locale_encode">$octets = $term-&gt;locale_encode $string</a></strong><br />
+</dt>
+<dd>
+Convert the given text string into the corresponding locale encoding.
+</dd>
+<p></p>
+<dt><strong><a name="item_locale_decode">$string = $term-&gt;locale_decode $octets</a></strong><br />
+</dt>
+<dd>
+Convert the given locale-encoded octets into a perl string.
+</dd>
+<p></p>
+<dt><strong><a name="item_tt_write">$term-&gt;tt_write ($octets)</a></strong><br />
+</dt>
+<dd>
+Write the octets given in <code>$data</code> to the tty (i.e. as program input). To
+pass characters instead of octets, you should convetr you strings first to
+the locale-specific encoding using <a href="#item_locale_encode"><code>$term-&gt;locale_encode</code></a>.
 </dd>
 <p></p></dl>
 <p>

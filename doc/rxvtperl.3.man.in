@@ -136,9 +136,6 @@ rxvtperl \- rxvt\-unicode's embedded perl interpreter
 .IX Header "SYNOPSIS"
 * Put your scripts into \fI@@RXVT_LIBDIR@@/urxvt/perl\-ext/\fR, they will be loaded automatically.
 .PP
-* Each script will only be loaded once, even in urxvtd, and will be valid
-globally.
-.PP
 * Scripts are evaluated in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as \s-1UTF\-8\s0.
 .PP
@@ -154,6 +151,28 @@ thus must be encoded as \s-1UTF\-8\s0.
 .Ve
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
+On startup, @@RXVT_NAME@@ will scan \fI@@RXVT_LIBDIR@@/urxvt/perl\-ext/\fR
+for files and will load them. Everytime a terminal object gets created,
+the directory specified by the \f(CW\*(C`perl\-lib\*(C'\fR resource will be additionally
+scanned.
+.PP
+Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
+scripts will be shared for all terminals.
+.PP
+Hooks in scripts specified by \f(CW\*(C`perl\-lib\*(C'\fR will only be called for the
+terminals created with that specific option value.
+.Sh "General \s-1API\s0 Considerations"
+.IX Subsection "General API Considerations"
+All objects (such as terminals, time watchers etc.) are typical
+reference-to-hash objects. The hash can be used to store anything you
+like. All members starting with an underscore (such as \f(CW\*(C`_ptr\*(C'\fR or
+\&\f(CW\*(C`_hook\*(C'\fR) are reserved for internal uses and must not be accessed or
+modified).
+.PP
+When objects are destroyed on the \*(C+ side, the perl object hashes are
+emptied, so its best to store related objects such as time watchers and
+the like inside the terminal object so they get destroyed as soon as the
+terminal is destroyed.
 .Sh "Hooks"
 .IX Subsection "Hooks"
 The following subroutines can be declared in loaded scripts, and will be called
@@ -250,17 +269,12 @@ starts up.
 .ie n .IP "urxvt::warn $string" 4
 .el .IP "urxvt::warn \f(CW$string\fR" 4
 .IX Item "urxvt::warn $string"
-Calls \f(CW\*(C`rxvt_warn\*(C'\fR witht eh given string which should not include a
+Calls \f(CW\*(C`rxvt_warn\*(C'\fR with the given string which should not include a
 newline. The module also overwrites the \f(CW\*(C`warn\*(C'\fR builtin with a function
 that calls this function.
 .Sp
 Using this function has the advantage that its output ends up in the
 correct place, e.g. on stderr of the connecting urxvtc client.
-.ie n .IP "$cellwidth = urxvt::wcswidth $string" 4
-.el .IP "$cellwidth = urxvt::wcswidth \f(CW$string\fR" 4
-.IX Item "$cellwidth = urxvt::wcswidth $string"
-Returns the number of screen-cells this string would need. Correctly
-accounts for wide and combining characters.
 .IP "$time = urxvt::NOW" 4
 .IX Item "$time = urxvt::NOW"
 Returns the \*(L"current time\*(R" (as per the event loop).
@@ -295,13 +309,13 @@ list:
 \&  display_name embed ext_bwidth fade font geometry hold iconName
 \&  imFont imLocale inputMethod insecure int_bwidth intensityStyles
 \&  italicFont jumpScroll lineSpace loginShell mapAlert menu meta8
-\&  modifier mouseWheelScrollPage name pastableTabs path pointerBlank
-\&  pointerBlankDelay preeditType print_pipe pty_fd reverseVideo saveLines
-\&  scrollBar scrollBar_align scrollBar_floating scrollBar_right
-\&  scrollBar_thickness scrollTtyKeypress scrollTtyOutput scrollWithBuffer
-\&  scrollstyle secondaryScreen secondaryScroll selectstyle shade term_name
-\&  title transparent transparent_all tripleclickwords utmpInhibit
-\&  visualBell
+\&  modifier mouseWheelScrollPage name pastableTabs path perl perl_eval
+\&  perl_lib pointerBlank pointerBlankDelay preeditType print_pipe pty_fd
+\&  reverseVideo saveLines scrollBar scrollBar_align scrollBar_floating
+\&  scrollBar_right scrollBar_thickness scrollTtyKeypress scrollTtyOutput
+\&  scrollWithBuffer scrollstyle secondaryScreen secondaryScroll selectstyle
+\&  shade term_name title transparent transparent_all tripleclickwords
+\&  utmpInhibit visualBell
 .Ve
 .ie n .IP "($row, $col\fR) = \f(CW$term\fR\->selection_mark ([$row, \f(CW$col])" 4
 .el .IP "($row, \f(CW$col\fR) = \f(CW$term\fR\->selection_mark ([$row, \f(CW$col\fR])" 4
@@ -348,6 +362,24 @@ position.
 .el .IP "$term\->scr_overlay_set ($x, \f(CW$y\fR, \f(CW$text\fR)" 4
 .IX Item "$term->scr_overlay_set ($x, $y, $text)"
 Write a string at the given position into the overlay.
+.ie n .IP "$cellwidth = $term\fR\->strwidth \f(CW$string" 4
+.el .IP "$cellwidth = \f(CW$term\fR\->strwidth \f(CW$string\fR" 4
+.IX Item "$cellwidth = $term->strwidth $string"
+Returns the number of screen-cells this string would need. Correctly
+accounts for wide and combining characters.
+.ie n .IP "$octets = $term\fR\->locale_encode \f(CW$string" 4
+.el .IP "$octets = \f(CW$term\fR\->locale_encode \f(CW$string\fR" 4
+.IX Item "$octets = $term->locale_encode $string"
+Convert the given text string into the corresponding locale encoding.
+.ie n .IP "$string = $term\fR\->locale_decode \f(CW$octets" 4
+.el .IP "$string = \f(CW$term\fR\->locale_decode \f(CW$octets\fR" 4
+.IX Item "$string = $term->locale_decode $octets"
+Convert the given locale-encoded octets into a perl string.
+.IP "$term\->tt_write ($octets)" 4
+.IX Item "$term->tt_write ($octets)"
+Write the octets given in \f(CW$data\fR to the tty (i.e. as program input). To
+pass characters instead of octets, you should convetr you strings first to
+the locale-specific encoding using \f(CW\*(C`$term\->locale_encode\*(C'\fR.
 .ie n .Sh "The ""urxvt::timer"" Class"
 .el .Sh "The \f(CWurxvt::timer\fP Class"
 .IX Subsection "The urxvt::timer Class"

@@ -1,0 +1,304 @@
+NAME
+    rxvtperl - rxvt-unicode's embedded perl interpreter
+
+SYNOPSIS
+    * Put your scripts into /opt/rxvt/lib/urxvt/perl-ext/, they will be
+    loaded automatically.
+
+    * Scripts are evaluated in a 'use strict' and 'use utf8' environment,
+    and thus must be encoded as UTF-8.
+
+       sub on_sel_grab {
+          warn "you selected ", $_[0]->selection;
+          ()
+       }
+
+       1
+
+DESCRIPTION
+    On startup, rxvt will scan /opt/rxvt/lib/urxvt/perl-ext/ for files and
+    will load them. Everytime a terminal object gets created, the directory
+    specified by the "perl-lib" resource will be additionally scanned.
+
+    Each script will only ever be loaded once, even in rxvtd, where scripts
+    will be shared for all terminals.
+
+    Hooks in scripts specified by "perl-lib" will only be called for the
+    terminals created with that specific option value.
+
+  General API Considerations
+    All objects (such as terminals, time watchers etc.) are typical
+    reference-to-hash objects. The hash can be used to store anything you
+    like. All members starting with an underscore (such as "_ptr" or
+    "_hook") are reserved for internal uses and must not be accessed or
+    modified).
+
+    When objects are destroyed on the C++ side, the perl object hashes are
+    emptied, so its best to store related objects such as time watchers and
+    the like inside the terminal object so they get destroyed as soon as the
+    terminal is destroyed.
+
+  Hooks
+    The following subroutines can be declared in loaded scripts, and will be
+    called whenever the relevant event happens.
+
+    All of them must return a boolean value. If it is true, then the event
+    counts as being *consumed*, and the invocation of other hooks is
+    skipped, and the relevant action might not be carried out by the C++
+    code.
+
+    When in doubt, return a false value (preferably "()").
+
+    on_init $term
+        Called after a new terminal object has been initialized, but before
+        windows are created or the command gets run.
+
+    on_reset $term
+        Called after the screen is "reset" for any reason, such as resizing
+        or control sequences. Here is where you can react on changes to
+        size-related variables.
+
+    on_start $term
+        Called at the very end of initialisation of a new terminal, just
+        before returning to the mainloop.
+
+    on_sel_make $term, $eventtime
+        Called whenever a selection has been made by the user, but before
+        the selection text is copied, so changes to the beginning, end or
+        type of the selection will be honored.
+
+        Returning a true value aborts selection making by urxvt, in which
+        case you have to make a selection yourself by calling
+        "$term->selection_grab".
+
+    on_sel_grab $term, $eventtime
+        Called whenever a selection has been copied, but before the
+        selection is requested from the server. The selection text can be
+        queried and changed by calling "$term->selection".
+
+        Returning a true value aborts selection grabbing. It will still be
+        hilighted.
+
+    on_focus_in $term
+        Called whenever the window gets the keyboard focus, before urxvt
+        does focus in processing.
+
+    on_focus_out $term
+        Called wheneever the window loses keyboard focus, before urxvt does
+        focus out processing.
+
+    on_view_change $term, $offset
+        Called whenever the view offset changes, i..e the user or program
+        scrolls. Offset 0 means display the normal terminal, positive values
+        show this many lines of scrollback.
+
+    on_scroll_back $term, $lines, $saved
+        Called whenever lines scroll out of the terminal area into the
+        scrollback buffer. $lines is the number of lines scrolled out and
+        may be larger than the scroll back buffer or the terminal.
+
+        It is called before lines are scrolled out (so rows 0 .. min ($lines
+        - 1, $nrow - 1) represent the lines to be scrolled out). $saved is
+        the total number of lines that will be in the scrollback buffer.
+
+    on_tty_activity $term *NYI*
+        Called whenever the program(s) running in the urxvt window send
+        output.
+
+    on_refresh_begin $term
+        Called just before the screen gets redrawn. Can be used for overlay
+        or similar effects by modify terminal contents in refresh_begin, and
+        restoring them in refresh_end. The built-in overlay and selection
+        display code is run after this hook, and takes precedence.
+
+    on_refresh_end $term
+        Called just after the screen gets redrawn. See "on_refresh_begin".
+
+  Functions in the "urxvt" Package
+    urxvt::fatal $errormessage
+        Fatally aborts execution with the given error message. Avoid at all
+        costs! The only time this is acceptable is when the terminal process
+        starts up.
+
+    urxvt::warn $string
+        Calls "rxvt_warn" with the given string which should not include a
+        newline. The module also overwrites the "warn" builtin with a
+        function that calls this function.
+
+        Using this function has the advantage that its output ends up in the
+        correct place, e.g. on stderr of the connecting urxvtc client.
+
+    $time = urxvt::NOW
+        Returns the "current time" (as per the event loop).
+
+  The "urxvt::term" Class
+    $value = $term->resource ($name[, $newval])
+        Returns the current resource value associated with a given name and
+        optionally sets a new value. Setting values is most useful in the
+        "init" hook. Unset resources are returned and accepted as "undef".
+
+        The new value must be properly encoded to a suitable character
+        encoding before passing it to this method. Similarly, the returned
+        value may need to be converted from the used encoding to text.
+
+        Resource names are as defined in src/rsinc.h. Colours can be
+        specified as resource names of the form "color+<index>", e.g.
+        "color+5". (will likely change).
+
+        Please note that resource strings will currently only be freed when
+        the terminal is destroyed, so changing options frequently will eat
+        memory.
+
+        Here is a a likely non-exhaustive list of resource names, not all of
+        which are supported in every build, please see the source to see the
+        actual list:
+
+          answerbackstring backgroundPixmap backspace_key boldFont boldItalicFont
+          borderLess color cursorBlink cursorUnderline cutchars delete_key
+          display_name embed ext_bwidth fade font geometry hold iconName
+          imFont imLocale inputMethod insecure int_bwidth intensityStyles
+          italicFont jumpScroll lineSpace loginShell mapAlert menu meta8
+          modifier mouseWheelScrollPage name pastableTabs path perl perl_eval
+          perl_lib pointerBlank pointerBlankDelay preeditType print_pipe pty_fd
+          reverseVideo saveLines scrollBar scrollBar_align scrollBar_floating
+          scrollBar_right scrollBar_thickness scrollTtyKeypress scrollTtyOutput
+          scrollWithBuffer scrollstyle secondaryScreen secondaryScroll selectstyle
+          shade term_name title transparent transparent_all tripleclickwords
+          utmpInhibit visualBell
+
+    ($row, $col) = $term->selection_mark ([$row, $col])
+    ($row, $col) = $term->selection_beg ([$row, $col])
+    ($row, $col) = $term->selection_end ([$row, $col])
+        Return the current values of the selection mark, begin or end
+        positions, and optionally set them to new values.
+
+    $success = $term->selection_grab ($eventtime)
+        Try to request the primary selection from the server (for example,
+        as set by the next method).
+
+    $oldtext = $term->selection ([$newtext])
+        Return the current selection text and optionally replace it by
+        $newtext.
+
+    $term->scr_overlay ($x, $y, $text)
+        Create a simple multi-line overlay box. See the next method for
+        details.
+
+    $term->scr_overlay_new ($x, $y, $width, $height)
+        Create a new (empty) overlay at the given position with the given
+        width/height. A border will be put around the box. If either $x or
+        $y is negative, then this is counted from the right/bottom side,
+        respectively.
+
+    $term->scr_overlay_off
+        Switch the overlay off again.
+
+    $term->scr_overlay_set_char ($x, $y, $char, $rend = OVERLAY_RSTYLE)
+        Put a single character (specified numerically) at the given overlay
+        position.
+
+    $term->scr_overlay_set ($x, $y, $text)
+        Write a string at the given position into the overlay.
+
+    $cellwidth = $term->strwidth $string
+        Returns the number of screen-cells this string would need. Correctly
+        accounts for wide and combining characters.
+
+    $octets = $term->locale_encode $string
+        Convert the given text string into the corresponding locale
+        encoding.
+
+    $string = $term->locale_decode $octets
+        Convert the given locale-encoded octets into a perl string.
+
+    $term->tt_write ($octets)
+        Write the octets given in $data to the tty (i.e. as program input).
+        To pass characters instead of octets, you should convetr you strings
+        first to the locale-specific encoding using "$term->locale_encode".
+
+  The "urxvt::timer" Class
+    This class implements timer watchers/events. Time is represented as a
+    fractional number of seconds since the epoch. Example:
+
+       # create a digital clock display in upper right corner
+       $term->{timer} = urxvt::timer
+                        ->new
+                        ->start (urxvt::NOW)
+                        ->cb (sub {
+                           my ($timer) = @_;
+                           my $time = $timer->at;
+                           $timer->start ($time + 1);
+                           $self->scr_overlay (-1, 0, 
+                              POSIX::strftime "%H:%M:%S", localtime $time);
+                        });
+
+    $timer = new urxvt::timer
+        Create a new timer object in stopped state.
+
+    $timer = $timer->cb (sub { my ($timer) = @_; ... })
+        Set the callback to be called when the timer triggers.
+
+    $tstamp = $timer->at
+        Return the time this watcher will fire next.
+
+    $timer = $timer->set ($tstamp)
+        Set the time the event is generated to $tstamp.
+
+    $timer = $timer->start
+        Start the timer.
+
+    $timer = $timer->start ($tstamp)
+        Set the event trigger time to $tstamp and start the timer.
+
+    $timer = $timer->stop
+        Stop the timer.
+
+  The "urxvt::iow" Class
+    This class implements io watchers/events. Example:
+
+      $term->{socket} = ...
+      $term->{iow} = urxvt::iow
+                     ->new
+                     ->fd (fileno $term->{socket})
+                     ->events (1) # wait for read data
+                     ->start
+                     ->cb (sub {
+                       my ($iow, $revents) = @_;
+                       # $revents must be 1 here, no need to check
+                       sysread $term->{socket}, my $buf, 8192
+                          or end-of-file;
+                     });
+
+    $iow = new urxvt::iow
+        Create a new io watcher object in stopped state.
+
+    $iow = $iow->cb (sub { my ($iow, $reventmask) = @_; ... })
+        Set the callback to be called when io events are triggered.
+        $reventmask is a bitset as described in the "events" method.
+
+    $iow = $iow->fd ($fd)
+        Set the filedescriptor (not handle) to watch.
+
+    $iow = $iow->events ($eventmask)
+        Set the event mask to watch. Bit #0 (value 1) enables watching for
+        read data, Bit #1 (value 2) enables watching for write data.
+
+    $iow = $iow->start
+        Start watching for requested events on the given handle.
+
+    $iow = $iow->stop
+        Stop watching for events on the given filehandle.
+
+ENVIRONMENT
+  URXVT_PERL_VERBOSITY
+    This variable controls the verbosity level of the perl extension. Higher
+    numbers indicate more verbose output.
+
+    0 - only fatal messages
+    3 - script loading and management
+    10 - all events received
+
+AUTHOR
+     Marc Lehmann <pcg@goof.com>
+     http://software.schmorp.de/pkg/rxvt-unicode
+

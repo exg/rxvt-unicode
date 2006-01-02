@@ -455,6 +455,10 @@ longer example is in F<doc/pty-fd>):
    my $slave = $pty->slave;
    while (<$slave>) { print $slave "got <$_>\n" }
 
+=item B<-perl> I<string>
+
+Used by perl extension. See resource B<perl>.
+
 =back
 
 =head1 RESOURCES (available also as long-options)
@@ -639,7 +643,7 @@ Select the fonts to be used. This is a comma separated list of font
 names that are used in turn when trying to display Unicode characters.
 The first font defines the cell size for characters; other fonts might
 be smaller, but not larger. A reasonable default font list is always
-appended to it. option B<-fn>.
+appended to it; option B<-fn>.
 
 Each font can either be a standard X11 core font (XLFD) name, with
 optional prefix C<x:> or a Xft font (Compile I<xft>), prefixed with C<xft:>.
@@ -904,7 +908,7 @@ I<name> of inputMethod to use; option B<-im>.
 The locale to use for opening the IM. You can use an C<LC_CTYPE> of e.g.
 C<de_DE.UTF-8> for normal text processing but C<ja_JP.EUC-JP> for the
 input extension to be able to input japanese characters while staying in
-another locale. option B<-imlocale>.
+another locale; option B<-imlocale>.
 
 =item B<imFont:> I<fontset>
 
@@ -919,7 +923,7 @@ option B<-imfont>.
 
 Change the meaning of triple-click selection with the left mouse
 button. Instead of selecting a full line it will extend the selection to
-the end of the logical line only. option B<-tcw>.
+the end of the logical line only; option B<-tcw>.
 
 =item B<insecure:> I<boolean>
 
@@ -1051,6 +1055,25 @@ info):
 
   URxvt.keysym.M-C-3: command:\033[8;25;80t
   URxvt.keysym.M-C-4: command:\033[8;48;110t
+
+=item B<perl>: I<string>
+
+Used by perl extension and is free for any use, as it is not interpreted
+by rxvt-unicode itself; option B<perl>.
+
+=item B<perl-eval>: I<string>
+
+Perl code to be evaluated when all extensions have been loaded. See the
+rxvtperl(3) manpage.
+
+=item B<perl-lib>: I<path>
+
+Additional directory that holds extension scripts that are loaded and
+enabled for this terminal instance, in addition to scripts stored in
+F<@@RXVT_LIBDIR@@/urxvt/perl-ext/>, which are global to all terminal
+instances.
+
+See the rxvtperl(3) manpage.
 
 =back
 

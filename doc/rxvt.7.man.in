@@ -2535,6 +2535,11 @@ the screen in a fixed position.
 .IP "\-\-enable\-pointer\-blank (default: on)" 4
 .IX Item "--enable-pointer-blank (default: on)"
 Add support to have the pointer disappear when typing or inactive.
+.IP "\-\-enable\-perl (default: off)" 4
+.IX Item "--enable-perl (default: off)"
+Enable an embedded perl interpreter. See the \fB\f(BIrxvtperl\fB\|(3)\fR manpage
+(\fIdoc/rxvtperl.txt\fR) for more info on this feature, or the files in
+\&\fIsrc/perl\-ext/\fR for the extensions that are installed by default.
 .IP "\-\-with\-name=NAME (default: urxvt)" 4
 .IX Item "--with-name=NAME (default: urxvt)"
 Set the basename for the installed binaries, resulting

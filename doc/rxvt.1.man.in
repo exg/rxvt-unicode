@@ -534,6 +534,9 @@ longer example is in \fIdoc/pty\-fd\fR):
 \&   my $slave = $pty->slave;
 \&   while (<$slave>) { print $slave "got <$_>\en" }
 .Ve
+.IP "\fB\-perl\fR \fIstring\fR" 4
+.IX Item "-perl string"
+Used by perl extension. See resource \fBperl\fR.
 .SH "RESOURCES (available also as long\-options)"
 .IX Header "RESOURCES (available also as long-options)"
 Note: `@@RXVT_NAME@@ \-\-help' gives a list of all resources (long
@@ -694,7 +697,7 @@ Select the fonts to be used. This is a comma separated list of font
 names that are used in turn when trying to display Unicode characters.
 The first font defines the cell size for characters; other fonts might
 be smaller, but not larger. A reasonable default font list is always
-appended to it. option \fB\-fn\fR.
+appended to it; option \fB\-fn\fR.
 .Sp
 Each font can either be a standard X11 core font (\s-1XLFD\s0) name, with
 optional prefix \f(CW\*(C`x:\*(C'\fR or a Xft font (Compile \fIxft\fR), prefixed with \f(CW\*(C`xft:\*(C'\fR.
@@ -927,7 +930,7 @@ built-in default:
 The locale to use for opening the \s-1IM\s0. You can use an \f(CW\*(C`LC_CTYPE\*(C'\fR of e.g.
 \&\f(CW\*(C`de_DE.UTF\-8\*(C'\fR for normal text processing but \f(CW\*(C`ja_JP.EUC\-JP\*(C'\fR for the
 input extension to be able to input japanese characters while staying in
-another locale. option \fB\-imlocale\fR.
+another locale; option \fB\-imlocale\fR.
 .IP "\fBimFont:\fR \fIfontset\fR" 4
 .IX Item "imFont: fontset"
 Specify the font-set used for \s-1XIM\s0 styles \f(CW\*(C`OverTheSpot\*(C'\fR or
@@ -940,7 +943,7 @@ option \fB\-imfont\fR.
 .IX Item "tripleclickwords: boolean"
 Change the meaning of triple-click selection with the left mouse
 button. Instead of selecting a full line it will extend the selection to
-the end of the logical line only. option \fB\-tcw\fR.
+the end of the logical line only; option \fB\-tcw\fR.
 .IP "\fBinsecure:\fR \fIboolean\fR" 4
 .IX Item "insecure: boolean"
 Enables \*(L"insecure\*(R" mode. Rxvt-unicode offers some escape sequences that
@@ -1077,6 +1080,22 @@ info):
 \&  URxvt.keysym.M-C-3: command:\e033[8;25;80t
 \&  URxvt.keysym.M-C-4: command:\e033[8;48;110t
 .Ve
+.IP "\fBperl\fR: \fIstring\fR" 4
+.IX Item "perl: string"
+Used by perl extension and is free for any use, as it is not interpreted
+by rxvt-unicode itself; option \fBperl\fR.
+.IP "\fBperl-eval\fR: \fIstring\fR" 4
+.IX Item "perl-eval: string"
+Perl code to be evaluated when all extensions have been loaded. See the
+\&\fIrxvtperl\fR\|(3) manpage.
+.IP "\fBperl-lib\fR: \fIpath\fR" 4
+.IX Item "perl-lib: path"
+Additional directory that holds extension scripts that are loaded and
+enabled for this terminal instance, in addition to scripts stored in
+\&\fI@@RXVT_LIBDIR@@/urxvt/perl\-ext/\fR, which are global to all terminal
+instances.
+.Sp
+See the \fIrxvtperl\fR\|(3) manpage.
 .SH "THE SCROLLBAR"
 .IX Header "THE SCROLLBAR"
 Lines of text that scroll off the top of the \fB@@RXVT_NAME@@\fR window
