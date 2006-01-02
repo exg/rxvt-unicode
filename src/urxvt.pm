@@ -226,7 +226,7 @@ sub load_script($) {
    };
 }
 
-load_script $_ for grep -f $_, <$LIBDIR/perl-init/*>;
+load_script $_ for grep -f $_, <$LIBDIR/perl-ext/*>;
 
 
 =back
