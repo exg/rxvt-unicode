@@ -2,20 +2,15 @@ rxvt-unicode changelog <= google-friendly title
 
 TODO: harmonize --disable-options into position-dependent options.
 TODO: after requesting the selection and getting a timeout, no further requests will be sent.
-TODO: safer command: keymap processing.
 TODO: "slow" rendering mode for bidi and scripts
 TODO: read property sequence is broken with respect to utf-8 etc.
 TODO: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
-WISH: keymap modification via esc-sequences. (obsoleted by embedded perl)
-WISH: searchable backlog (obsoleted by embedded perl)
-WISH: meta-tagging of data by regex/master process (obsoleted by embedded perl)
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 
-TODO: document -pelr options/resources
-	- optionally embed a perl interpreter, which can be used for more
-          intelligent/customized selection support, visual feedback, menus
-          etc. See the urxvtperl manpage.
+        - optionally embed a perl interpreter, which can be used for more
+          intelligent/customized selection support, visual feedback,
+          menus, tabs etc. See the urxvtperl manpage.
         - fix directory permissions on install.
         - improved sched_yield support.
 
