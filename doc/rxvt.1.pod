@@ -1072,7 +1072,7 @@ rxvtperl(3) manpage.
 Colon-separated list of additional directories that hold extension
 scripts. When looking for extensions specified by the C<perl> resource,
 @@RXVT_NAME@@ will first look in these directories and then in
-F<@@RXVT_LIBDIR@@/urxvt/perl-ext/>.
+F<@@RXVT_LIBDIR@@/urxvt/perl/>.
 
 See the rxvtperl(3) manpage.
 

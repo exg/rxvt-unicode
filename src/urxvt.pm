@@ -4,7 +4,7 @@ rxvtperl - rxvt-unicode's embedded perl interpreter
 
 =head1 SYNOPSIS
 
-* Put your scripts into F<@@RXVT_LIBDIR@@/urxvt/perl-ext/>, they will be loaded automatically.
+* Put your scripts into F<@@RXVT_LIBDIR@@/urxvt/perl/>, they will be loaded automatically.
 
 * Scripts are evaluated in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as UTF-8.
@@ -228,7 +228,7 @@ sub invoke {
    my $htype = shift;
 
    if ($htype == 0) { # INIT
-      my @dirs = ((split /:/, $term->resource ("perl_lib")), $LIBDIR);
+      my @dirs = ((split /:/, $term->resource ("perl_lib")), "$LIBDIR/perl");
 
       for my $ext (split /:/, $term->resource ("perl_ext")) {
          my @files = grep -f $_, map "$_/$ext", @dirs;
