@@ -1115,7 +1115,8 @@ rxvt_term::pty_fill ()
   else if (r < 0 && (errno == EAGAIN || errno == EINTR))
     {
 #if HAVE_SCHED_YIELD
-      event_handler.cw_yield.start ();
+      if (display->is_local)
+        event_handler.cw_yield.start ();
 #endif
     }
   else
