@@ -33,7 +33,9 @@ terminals created with that specific option value.
 
 All objects (such as terminals, time watchers etc.) are typical
 reference-to-hash objects. The hash can be used to store anything you
-like. The only reserved member is C<_ptr>, which must not be changed.
+like. All members starting with an underscore (such as C<_ptr> or
+C<_hook>) are reserved for internal uses and must not be accessed or
+modified).
 
 When objects are destroyed on the C++ side, the perl object hashes are
 emptied, so its best to store related objects such as time watchers and
@@ -174,27 +176,30 @@ BEGIN {
    };
 }
 
-my $verbosity = $ENV{URXVT_PERL_VERBOSITY} || 10;
+my $verbosity = $ENV{URXVT_PERL_VERBOSITY};
 
 sub verbose {
    my ($level, $msg) = @_;
-   warn "$msg\n"; #d#
+   warn "$msg\n" if $level < $verbosity;
 }
 
-my @invoke_cb;
+my %hook_global;
+my @hook_count;
 
 # called by the rxvt core
 sub invoke {
    local $term = shift;
    my $htype = shift;
 
-   my $cb = $invoke_cb[$htype];
-
    verbose 10, "$HOOKNAME[$htype] (" . (join ", ", $term, @_) . ")"
       if $verbosity >= 10;
 
-   while (my ($k, $v) = each %$cb) {
-      return 1 if $v->($term, @_);
+   for my $cb ($hook_global{_hook}[$htype], $term->{_hook}[$htype]) {
+      $cb or next;
+
+      while (my ($k, $v) = each %$cb) {
+         return 1 if $v->($term, @_);
+      }
    }
 
    0
@@ -205,14 +210,15 @@ sub invoke {
 sub register_package($) {
    my ($pkg) = @_;
 
-   for my $hook (0.. $#HOOKNAME) {
-      my $name = $HOOKNAME[$hook];
+   for my $htype (0.. $#HOOKNAME) {
+      my $name = $HOOKNAME[$htype];
 
       my $ref = $pkg->can ("on_" . lc $name)
          or next;
 
-      $invoke_cb[$hook]{$ref*1} = $ref;
-      set_should_invoke $hook, 1;
+      $term->{_hook}[$htype]{$ref*1} = $ref;
+      $hook_count[$htype]++
+         or set_should_invoke $htype, 1;
    }
 }
 
@@ -220,7 +226,7 @@ my $script_pkg = "script0000";
 my %script_pkg;
 
 # load a single script into its own package, once only
-sub load_script($) {
+sub script_package($) {
    my ($path) = @_;
 
    $script_pkg{$path} ||= do {
@@ -235,10 +241,8 @@ sub load_script($) {
          . do { local $/; <$fh> }
          or die "$path: $@";
 
-      register_package $pkg;
-
       $pkg
-   };
+   }
 }
 
 sub load_scripts($) {
@@ -246,9 +250,9 @@ sub load_scripts($) {
 
    verbose 3, "loading scripts from '$dir'";
 
-   load_script $_
+   register_package script_package $_
       for grep -f $_,
-         <$dir/perl-ext/*>;
+         <$dir/*>;
 }
 
 sub on_init {
@@ -260,8 +264,24 @@ sub on_init {
       if defined $libdir;
 }
 
-register_package __PACKAGE__;
-load_scripts $LIBDIR;
+sub on_destroy {
+   my ($term) = @_;
+
+   my $hook = $term->{_hook}
+      or return;
+
+   for my $htype (0..$#$hook) {
+      $hook_count[$htype] -= scalar keys %{ $hook->[$htype] || {} }
+         or set_should_invoke $htype, 0;
+   }
+}
+
+{
+   local $term = \%hook_global;
+
+   register_package __PACKAGE__;
+   load_scripts "$LIBDIR/perl-ext";
+}
 
 =back
 

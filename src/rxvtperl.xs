@@ -210,21 +210,14 @@ rxvt_perl_interp::init ()
 bool
 rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 {
-  if (!perl)
-    return false;
+  // INIT and DESTROY must be requested by the runtime
 
-  if (htype == HOOK_INIT) // first hook ever called
-    term->self = (void *)newSVptr ((void *)term, "urxvt::term");
-  else if (htype == HOOK_DESTROY)
-    {
-      // TODO: clear magic
-      hv_clear ((HV *)SvRV ((SV *)term->self));
-      SvREFCNT_dec ((SV *)term->self);
-    }
-
-  if (!should_invoke [htype])
+  if (!perl || !should_invoke [htype])
     return false;
   
+  if (htype == HOOK_INIT) // first hook ever called
+    term->self = (void *)newSVptr ((void *)term, "urxvt::term");
+
   dSP;
   va_list ap;
 
@@ -271,6 +264,13 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 
             if (SvTRUE (ERRSV))
               rxvt_warn ("perl hook %d evaluation error: %s", htype, SvPV_nolen (ERRSV));
+
+            if (htype == HOOK_DESTROY)
+              {
+                // TODO: clear magic
+                hv_clear ((HV *)SvRV ((SV *)term->self));
+                SvREFCNT_dec ((SV *)term->self);
+              }
 
             return count;
           }

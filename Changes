@@ -12,6 +12,7 @@ WISH: meta-tagging of data by regex/master process (obsoleted by embedded perl)
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 
+TODO: document -pelr options/resources
 	- optionally embed a perl interpreter, which can be used for more
           intelligent/customized selection support, visual feedback, menus
           etc. See the urxvtperl manpage.
