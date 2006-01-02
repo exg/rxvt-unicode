@@ -557,109 +557,11 @@ enum colour_list {
  * Resource list
  */
 enum {
-  Rs_display_name = 0,
-  Rs_term_name,
-  Rs_iconName,
-  Rs_geometry,
-  Rs_reverseVideo,
-  Rs_color,
-  _Rs_color = Rs_color + NRS_COLORS - 1,
-  Rs_font,
-#if ENABLE_STYLES
-  Rs_boldFont,
-  Rs_italicFont,
-  Rs_boldItalicFont,
-  Rs_intensityStyles,
-#endif
-  Rs_name,
-  Rs_title,
-#if defined (XPM_BACKGROUND) || (MENUBAR_MAX)
-  Rs_path,
-#endif
-#ifdef XPM_BACKGROUND
-  Rs_backgroundPixmap,
-#endif
-#if (MENUBAR_MAX)
-  Rs_menu,
-#endif
-  Rs_loginShell,
-  Rs_jumpScroll,
-#ifdef HAVE_SCROLLBARS
-  Rs_scrollBar,
-  Rs_scrollBar_right,
-  Rs_scrollBar_floating,
-  Rs_scrollBar_align,
-  Rs_scrollstyle,     /* Rs_scrollBar_style */
-  Rs_scrollBar_thickness,
-#endif
-  Rs_scrollTtyOutput,
-  Rs_scrollTtyKeypress,
-  Rs_scrollWithBuffer,
-  Rs_saveLines,
-  Rs_utmpInhibit,
-  Rs_visualBell,
-#if ! defined(NO_MAPALERT) && defined(MAPALERT_OPTION)
-  Rs_mapAlert,
-#endif
-#ifdef META8_OPTION
-  Rs_meta8,
-#endif
-#ifdef MOUSE_WHEEL
-  Rs_mouseWheelScrollPage,
-#endif
-#ifndef NO_BACKSPACE_KEY
-  Rs_backspace_key,
-#endif
-#ifndef NO_DELETE_KEY
-  Rs_delete_key,
-#endif
-  Rs_selectstyle,
-#ifdef PRINTPIPE
-  Rs_print_pipe,
-#endif
-#ifdef USE_XIM
-  Rs_preeditType,
-  Rs_inputMethod,
-#endif
-#ifdef TRANSPARENT
-  Rs_transparent,
-  Rs_transparent_all,
-#endif
-#if ENABLE_FRILLS
-  Rs_pty_fd,
-  Rs_hold,
-  Rs_ext_bwidth,
-  Rs_int_bwidth,
-  Rs_borderLess,
-  Rs_lineSpace,
-  Rs_cursorUnderline,
-#endif
-#if CURSOR_BLINK
-  Rs_cursorBlink,
-#endif
-#if ENABLE_XEMBED
-  Rs_embed,
-#endif
-  Rs_cutchars,
-  Rs_modifier,
-  Rs_answerbackstring,
-  Rs_tripleclickwords,
-  Rs_insecure,
-  Rs_pointerBlank,
-  Rs_pointerBlankDelay,
-  Rs_imLocale,
-  Rs_imFont,
-  Rs_pastableTabs,
-#ifndef NO_SECONDARY_SCREEN
-  Rs_secondaryScreen,
-  Rs_secondaryScroll,
-#endif
-#ifdef OFF_FOCUS_FADING
-  Rs_fade,
-#endif
-#ifdef TINTING
-  Rs_shade,
-#endif
+#define Rs_def(name) Rs_ ## name,
+#define Rs_reserve(name,count) Rs_ ## name ## _ = Rs_ ## name + (count) - 1,
+#include "rsinc.h"
+#undef Rs_def
+#undef Rs_reserve
   NUM_RESOURCES
 };
 

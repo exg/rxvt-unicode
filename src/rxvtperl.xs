@@ -347,6 +347,46 @@ NOW ()
 MODULE = urxvt             PACKAGE = urxvt::term
 
 void
+rxvt_term::_resource (char *name, int index, SV *newval = 0)
+	PPCODE:
+{
+	struct resval { const char *name; int value; } rslist [] = {
+#	  define Rs_def(name) { # name, Rs_ ## name },
+#	  define Rs_reserve(name,count)
+#	  include "rsinc.h"
+#	  undef Rs_def
+#	  undef Rs_reserve
+        };
+
+        struct resval *rs = rslist + sizeof (rslist) / sizeof (rslist [0]);
+
+        do {
+          if (rs-- == rslist)
+            croak ("no such resource '%s', requested", name);
+        } while (strcmp (name, rs->name));
+
+        index += rs->value;
+
+        if (!IN_RANGE_EXC (index, 0, NUM_RESOURCES))
+          croak ("requested out-of-bound resource %s+%d,", name, index - rs->value);
+
+        if (GIMME_V != G_VOID)
+          XPUSHs (THIS->rs [index] ? sv_2mortal (newSVpv (THIS->rs [index], 0)) : &PL_sv_undef);
+
+        if (newval)
+          {
+            if (SvOK (newval))
+              {
+                char *str = strdup (SvPVbyte_nolen (newval));
+                THIS->rs [index] = str;
+                THIS->allocated.push_back (str);
+              }
+            else
+              THIS->rs [index] = 0;
+          }
+}
+
+void
 rxvt_term::selection_mark (...)
 	PROTOTYPE: $;$$
         ALIAS:

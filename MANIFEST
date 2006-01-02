@@ -98,6 +98,7 @@ src/rxvtfont.C
 src/rxvtfont.h
 src/rxvt.C
 src/rxvt.h
+src/rsinc.h
 src/rxvtc.C
 src/rxvtd.C
 src/rxvtdaemon.C

@@ -229,12 +229,36 @@ sub load_script($) {
 
 load_script $_ for grep -f $_, <$LIBDIR/perl-ext/*>;
 
-
 =back
 
 =head2 The C<urxvt::term> Class
 
 =over 4
+
+=item $value = $term->resource ($name[, $newval])
+
+Returns the current resource value associated with a given name and
+optionally sets a new value. Setting values is most useful in the C<init>
+hook. Unset resources are returned and accepted as C<undef>.
+
+The new value must be properly encoded to a suitable character encoding
+before passing it to this method. Similarly, the returned value may need
+to be converted from the used encoding to text.
+
+Resource names are as defined in F<src/rsinc.h>. Colours can be specified
+as resource names of the form C<< color+<index> >>, e.g. C<color+5>. (will
+likely change).
+
+Please note that resource strings will currently only be freed when the
+terminal is destroyed, so changing options frequently will eat memory.
+
+=cut
+
+sub urxvt::term::resource($$;$) {
+   my ($self, $name) = (shift, shift);
+   unshift @_, $self, $name, ($name =~ s/\s*\+\s*(\d+)$// ? $1 : 0);
+   goto &urxvt::term::_resource;
+}
 
 =item ($row, $col) = $term->selection_mark ([$row, $col])
 
@@ -390,6 +414,23 @@ Start watching for requested events on the given handle.
 =item $iow = $iow->stop
 
 Stop watching for events on the given filehandle.
+
+=back
+
+=head1 ENVIRONMENT
+
+=head2 URXVT_PERL_VERBOSITY
+
+This variable controls the verbosity level of the perl extension. Higher
+numbers indicate more verbose output.
+
+=over 4
+
+=item 0 - only fatal messages
+
+=item 3 - script loading and management
+
+=item 10 - all events received
 
 =back
 

@@ -10,6 +10,6 @@ if [ "x$HOSTNAME" = xcerebro -o "x$HOSTNAME" = xfuji ]; then
    export CC CXX
 fi
 
-./configure --prefix=/opt/rxvt --with-name=rxvt \
+./configure --prefix=/opt/rxvt --with-name=rxvt --enable-perl \
             --enable-transparency --enable-menubar --enable-xpm-background --enable-xgetdefault \
             "$@"
