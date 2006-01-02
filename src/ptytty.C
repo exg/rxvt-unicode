@@ -76,13 +76,9 @@ get_pty (int *fd_tty, char **ttydev)
   int pfd;
 
 #ifdef PTYS_ARE_OPENPTY
-  char tty_name[sizeof "/dev/pts/?????\0"];
+  char tty_name[sizeof "/dev/pts/????\0"];
 
-  rxvt_privileges (RESTORE);
-  int res = openpty (&pfd, fd_tty, tty_name, NULL, NULL);
-  rxvt_privileges (IGNORE);
-
-  if (res != -1)
+  if (openpty (&pfd, fd_tty, tty_name, NULL, NULL) != -1)
     {
       *ttydev = strdup (tty_name);
       return pfd;
@@ -96,7 +92,6 @@ get_pty (int *fd_tty, char **ttydev)
 #endif
 
 #ifdef PTYS_ARE_GETPTY
-
   char           *ptydev;
 
   while ((ptydev = getpty ()) != NULL)
@@ -340,21 +335,21 @@ static struct ttyconf {
 void
 rxvt_ptytty::privileges (rxvt_privaction action)
 {
-  if (pty < 0)
+  if (!name || !*name)
     return;
 
   rxvt_privileges (RESTORE);
 
   if (action == SAVE)
     {
-      //next_tty_action = RESTORE;
 # ifndef RESET_TTY_TO_COMMON_DEFAULTS
       /* store original tty status for restoration rxvt_clean_exit () -- rgg 04/12/95 */
       if (lstat (name, &savestat) < 0)       /* you lose out */
-        ;//next_tty_action = IGNORE;
+        ;
       else
 # endif
         {
+          saved = true;
           chown (name, getuid (), ttyconf.gid);      /* fail silently */
           chmod (name, ttyconf.mode);
 # ifdef HAVE_REVOKE
@@ -364,10 +359,12 @@ rxvt_ptytty::privileges (rxvt_privaction action)
     }
   else
     {                    /* action == RESTORE */
-      //next_tty_action = IGNORE;
 # ifndef RESET_TTY_TO_COMMON_DEFAULTS
-      chmod (name, savestat.st_mode);
-      chown (name, savestat.st_uid, savestat.st_gid);
+      if (saved)
+        {
+          chmod (name, savestat.st_mode);
+          chown (name, savestat.st_uid, savestat.st_gid);
+        }
 # else
       chmod (name, (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH));
       chown (name, 0, 0);
@@ -383,6 +380,9 @@ rxvt_ptytty::rxvt_ptytty ()
 {
   pty = tty = -1;
   name = 0;
+#ifndef NO_SETOWNER_TTYDEV
+  saved = false;
+#endif
 }
 
 rxvt_ptytty::~rxvt_ptytty ()

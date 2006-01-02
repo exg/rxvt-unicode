@@ -74,15 +74,6 @@ typedef struct {
 # define STDERR_FILENO  2
 #endif
 
-#if defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
-# if defined(PTYS_ARE_GETPT) || defined(PTYS_ARE_PTMX)
-#  define NO_SETOWNER_TTYDEV 1
-# endif
-#endif
-#if defined(__CYGWIN32__)
-# define NO_SETOWNER_TTYDEV 1
-#endif
-
 /*
  *****************************************************************************
  * PROTOTYPES                    
