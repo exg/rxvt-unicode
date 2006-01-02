@@ -126,6 +126,7 @@ support_combining=yes
 support_8bitctrls=no
 support_iso14755=yes
 support_styles=yes
+support_perl=no
 codesets=all
 
 dnl# --------------------------------------------------------------------------
@@ -171,6 +172,7 @@ AC_ARG_ENABLE(everything,
        support_8bitctrls=no
        support_iso14755=no
        support_styles=no
+       support_perl=no
        codesets=
     fi
     if test x$enableval = xyes; then
@@ -201,6 +203,7 @@ AC_ARG_ENABLE(everything,
        #support_8bitctrls=yes
        support_iso14755=yes
        support_styles=yes
+       support_perl=yes
        codesets=all
     fi
   ])
@@ -293,6 +296,12 @@ AC_ARG_ENABLE(xterm-scroll,
   [  --enable-xterm-scroll   enable Xterm style scrollbar],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_scroll_xterm=$enableval
+  fi])
+
+AC_ARG_ENABLE(perl,
+  [  --enable-perl           enable embedded perl interpreter],
+  [if test x$enableval = xyes -o x$enableval = xno; then
+    support_perl=$enableval
   fi])
 
 AC_ARG_ENABLE(plain-scroll,
@@ -1374,6 +1383,31 @@ for codeset in `echo $codesets | tr "[a-z,\\-]" "[A-Z _]"`; do
   esac
 done
 
+IF_PERL=\#
+if test x$support_perl = xyes; then
+  AC_PATH_PROG(PERL, perl5)
+  AC_PATH_PROG(PERL, perl)
+
+  AC_MSG_CHECKING(for $PERL suitability)
+  if $PERL -MExtUtils::Embed -e "use v5.8" >/dev/null 2>/dev/null; then
+     AC_DEFINE(ENABLE_PERL, 1, Define if you can embed a perl interpreter)
+     IF_PERL=
+     PERL_O=rxvtperl.o
+     PERLFLAGS="`$PERL -MExtUtils::Embed -e ccopts`"
+     PERLLIB="`$PERL -MExtUtils::Embed -e ldopts`"
+     PERLARCHLIB="`$PERL -MConfig -e 'print $Config{archlib}'`"
+     AC_MSG_RESULT(ok)
+  else
+     AC_MSG_ERROR(no working perl found, or perl not version >= 5.8)
+  fi
+fi
+AC_SUBST(PERLLIB)
+AC_SUBST(PERLFLAGS)
+AC_SUBST(PERLARCHLIB)
+AC_SUBST(PERL)
+AC_SUBST(IF_PERL)
+AC_SUBST(PERL_O)
+
 dnl> AC_CHECK_FUNCS(gettimeofday putenv select socket)
 
 CFLAGS=${CFLAGS--O}
@@ -1480,7 +1514,8 @@ else
   wtmp file:                  $rxvt_cv_path_wtmp
   wtmpx file:                 $rxvt_cv_path_wtmpx
   lastlog file:               $rxvt_cv_path_lastlog
-  ttys/ttytab file:           $rxvt_cv_path_ttytab"
+  ttys/ttytab file:           $rxvt_cv_path_ttytab
+  embedded perl:              $support_perl"
   echo
 fi
 if test x$term != x; then

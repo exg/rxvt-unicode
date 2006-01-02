@@ -22,7 +22,7 @@ first_rule: all
 dummy:
 
 COMMON = \
-	command.o rxvtfont.o init.o logging.o \
+	command.o rxvtfont.o init.o logging.o @PERL_O@ \
 	main.o menubar.o misc.o netdisp.o ptytty.o screen.o \
 	scrollbar.o scrollbar-next.o scrollbar-rxvt.o scrollbar-xterm.o scrollbar-plain.o \
 	strings.o xdefaults.o xpm.o encoding.o rxvttoolkit.o rxvtutil.o iom.o keyboard.o
@@ -60,11 +60,11 @@ RXVT_OLDNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)-old$(EXEEXT)
 all: allbin
 
 rxvt: rxvt.o $(COMMON)
-	$(LINK) -o $@ $^ $(LIBS) $(XLIB) $(DLIB)
+	$(LINK) -o $@ $^ $(LIBS) $(XLIB) $(DLIB) @PERLLIB@
 #	$(LIBTOOL) --mode=link $(LINK) rxvt.o librxvt.la $(LIBS) $(XLIB) $(DLIB) -o $@
 
 rxvtd: rxvtd.o $(COMMON) $(COMMON_DAEMON)
-	$(LINK) -o $@ $^ $(LIBS) $(XLIB) $(DLIB)
+	$(LINK) -o $@ $^ $(LIBS) $(XLIB) $(DLIB) @PERLLIB@
 #	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o librxvt.la $(LIBS) $(XLIB) $(DLIB) -o $@
 
 rxvtc: rxvtc.o $(COMMON_DAEMON)
@@ -103,6 +103,15 @@ install: allbin alldoc
 	$(INSTALL_PROGRAM) rxvtc $(RXVTC_BINNAME)
 	$(INSTALL_PROGRAM) rxvtd $(RXVTD_BINNAME)
 
+perlxsi.c: Makefile
+	$(PERL) -MExtUtils::Embed -e xsinit -- -std urxvt
+
+rxvtperl.C: rxvtperl.xs typemap
+	$(PERL) @PERLARCHLIB@/ExtUtils/xsubpp -C++ -typemap @PERLARCHLIB@/ExtUtils/typemap -typemap typemap -prototypes $< >$@
+
+rxvtperl.o: rxvtperl.C perlxsi.c
+	$(COMPILE) @PERLFLAGS@ -DLIBDIR="\"$(libdir)/urxvt\"" -c $<
+
 depend:
 	makedepend -f Makefile.in -I. -Y *.C >/dev/null 2>&1
 	makedepend -f Makefile.in -I. -Y *.C -a -o .lo >/dev/null 2>&1
@@ -111,7 +120,7 @@ depend:
 
 command.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 command.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
-command.o: salloc.h menubar.h version.h command.h keyboard.h
+command.o: salloc.h menubar.h rxvtperl.h version.h command.h keyboard.h
 encoding.o: ../config.h encoding.h table/iso8859_1.h table/iso8859_15.h
 encoding.o: table/iso8859_2.h table/iso8859_3.h table/iso8859_4.h
 encoding.o: table/iso8859_5.h table/iso8859_6.h table/iso8859_7.h
@@ -140,7 +149,7 @@ logging.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 logging.o: salloc.h menubar.h logging.h
 main.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h rxvtfont.h
 main.o: rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h salloc.h
-main.o: menubar.h keyboard.h
+main.o: menubar.h keyboard.h rxvtperl.h
 menubar.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 menubar.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 menubar.o: salloc.h menubar.h version.h
@@ -166,6 +175,9 @@ rxvtdaemon.o: rxvtdaemon.h rxvtutil.h
 rxvtfont.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 rxvtfont.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 rxvtfont.o: salloc.h menubar.h table/linedraw.h
+rxvtperl.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
+rxvtperl.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
+rxvtperl.o: salloc.h menubar.h rxvtperl.h perlxsi.c
 rxvttoolkit.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 rxvttoolkit.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
 rxvttoolkit.o: callback.h salloc.h menubar.h
@@ -173,7 +185,7 @@ rxvtutil.o: rxvtutil.h
 salloc.o: salloc.h
 screen.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 screen.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
-screen.o: salloc.h menubar.h salloc.C
+screen.o: salloc.h menubar.h rxvtperl.h salloc.C
 scrollbar-next.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 scrollbar-next.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
 scrollbar-next.o: callback.h salloc.h menubar.h
@@ -201,7 +213,7 @@ xpm.o: menubar.h
 
 command.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 command.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
-command.lo: salloc.h menubar.h version.h command.h keyboard.h
+command.lo: salloc.h menubar.h rxvtperl.h version.h command.h keyboard.h
 encoding.lo: ../config.h encoding.h table/iso8859_1.h table/iso8859_15.h
 encoding.lo: table/iso8859_2.h table/iso8859_3.h table/iso8859_4.h
 encoding.lo: table/iso8859_5.h table/iso8859_6.h table/iso8859_7.h
@@ -230,7 +242,7 @@ logging.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 logging.lo: salloc.h menubar.h logging.h
 main.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 main.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
-main.lo: salloc.h menubar.h keyboard.h
+main.lo: salloc.h menubar.h keyboard.h rxvtperl.h
 menubar.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 menubar.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 menubar.lo: salloc.h menubar.h version.h
@@ -256,6 +268,9 @@ rxvtdaemon.lo: rxvtdaemon.h rxvtutil.h
 rxvtfont.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 rxvtfont.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 rxvtfont.lo: salloc.h menubar.h table/linedraw.h
+rxvtperl.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
+rxvtperl.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
+rxvtperl.lo: salloc.h menubar.h rxvtperl.h perlxsi.c
 rxvttoolkit.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 rxvttoolkit.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
 rxvttoolkit.lo: callback.h salloc.h menubar.h
@@ -263,7 +278,7 @@ rxvtutil.lo: rxvtutil.h
 salloc.lo: salloc.h
 screen.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 screen.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
-screen.lo: salloc.h menubar.h salloc.C
+screen.lo: salloc.h menubar.h rxvtperl.h salloc.C
 scrollbar-next.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h encoding.h
 scrollbar-next.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
 scrollbar-next.lo: callback.h salloc.h menubar.h

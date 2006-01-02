@@ -463,6 +463,9 @@
 /* Define if you want extended chinese codesets */
 #undef ENCODING_ZH_EXT
 
+/* Define if you can embed a perl interpreter */
+#undef ENABLE_PERL
+
 /* Define if you don't need to use our replacement string functions */
 #undef NO_STRINGS
 

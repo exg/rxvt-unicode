@@ -26,6 +26,7 @@
 
 #include "../config.h"          /* NECESSARY */
 #include "rxvt.h"               /* NECESSARY */
+#include "rxvtperl.h"           /* NECESSARY */
 
 #include <X11/Xmd.h>            /* get the typedef for CARD32 */
 
@@ -419,6 +420,8 @@ rxvt_term::scr_reset ()
     tabs [col] = col % TABSIZE == 0;
 
   tt_winch ();
+
+  PERL_INVOKE ((this, HOOK_RESET, DT_END));
 }
 
 /* ------------------------------------------------------------------------- */
@@ -621,6 +624,9 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
       && (current_screen == PRIMARY || OPTION (Opt_secondaryScroll)))
     {
       nsaved = min (nsaved + count, saveLines);
+
+      PERL_INVOKE ((this, HOOK_SCROLL_BACK, DT_INT, count, DT_INT, nsaved, DT_END));
+      
       term_start = (term_start + count) % total_rows;
 
       if (selection.op && current_screen == selection.screen)
@@ -1821,6 +1827,8 @@ rxvt_term::scr_page (enum page_dirn direction, int nlines)
 int
 rxvt_term::scr_changeview (unsigned int oldviewstart)
 {
+  PERL_INVOKE ((this, HOOK_VIEW_CHANGE, DT_INT, view_start, DT_END));
+
   if (view_start != oldviewstart)
     {
       want_refresh = 1;
@@ -1951,6 +1959,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
   /*
    * B: reverse any characters which are selected
    */
+  PERL_INVOKE ((this, HOOK_REFRESH_BEGIN, DT_END));
   scr_reverse_selection ();
 
   /*
@@ -2360,6 +2369,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
    * H: cleanup selection
    */
   scr_reverse_selection ();
+  PERL_INVOKE ((this, HOOK_REFRESH_END, DT_END));
 
   if (refresh_type & SMOOTH_REFRESH)
     XFlush (display->display);
@@ -2874,6 +2884,9 @@ rxvt_term::selection_make (Time tm)
   if (selection.clicks == 4)
     return;                 /* nothing selected, go away */
 
+  if (PERL_INVOKE ((this, HOOK_SEL_MAKE, DT_LONG, (long)tm, DT_END)))
+    return;
+
   i = (selection.end.row - selection.beg.row + 1) * (ncol + 1);
   new_selection_text = (wchar_t *)rxvt_malloc ((i + 4) * sizeof (wchar_t));
 
@@ -2965,11 +2978,25 @@ rxvt_term::selection_make (Time tm)
   selection.len = ofs;
   selection.text = (wchar_t *)rxvt_realloc (new_selection_text, (ofs + 1) * sizeof (wchar_t));
 
+  if (PERL_INVOKE ((this, HOOK_SEL_GRAB, DT_LONG, (long)tm, DT_END)))
+    return;
+
+  selection_grab (tm);
+}
+
+bool
+rxvt_term::selection_grab (Time tm)
+{
+  selection_time = tm;
+
   XSetSelectionOwner (display->display, XA_PRIMARY, vt, tm);
   if (XGetSelectionOwner (display->display, XA_PRIMARY) == vt)
-    display->set_selection_owner (this);
+    {
+      display->set_selection_owner (this);
+      return true;
+    }
   else
-    rxvt_warn ("can't get primary selection, ignoring.\n");
+    return false;
 
 #if 0
   XTextProperty ct;
@@ -2980,8 +3007,6 @@ rxvt_term::selection_make (Time tm)
       XFree (ct.value);
     }
 #endif
-
-  selection_time = tm;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -3587,7 +3612,7 @@ rxvt_term::im_set_position (XPoint &pos)
 void
 rxvt_term::scr_overlay_new (int x, int y, int w, int h)
 {
-  if (nrow < 3 || ncol < 3)
+  if (nrow < 1 || ncol < 1)
     return;
 
   want_refresh = 1;

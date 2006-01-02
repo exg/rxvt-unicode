@@ -32,6 +32,8 @@
 
 #include "../config.h"          /* NECESSARY */
 #include "rxvt.h"               /* NECESSARY */
+#include "keyboard.h"
+#include "rxvtperl.h"
 
 #include <limits>
 
@@ -44,10 +46,6 @@
 
 #ifdef HAVE_TERMIOS_H
 # include <termios.h>
-#endif
-
-#ifdef KEYSYM_RESOURCE
-# include "keyboard.h"
 #endif
 
 vector<rxvt_term *> rxvt_term::termlist;
@@ -197,6 +195,8 @@ void rxvt_term::emergency_cleanup ()
 
 rxvt_term::~rxvt_term ()
 {
+  PERL_INVOKE ((this, HOOK_DESTROY, DT_END));
+
   termlist.erase (find (termlist.begin (), termlist.end(), this));
 
   emergency_cleanup ();
@@ -475,6 +475,12 @@ rxvt_term::init (int argc, const char *const *argv)
     scrollBar.setIdle ();    /* set existence for size calculations */
 #endif
 
+#if ENABLE_PERL
+  rxvt_perl.init ();
+#endif
+
+  PERL_INVOKE ((this, HOOK_INIT, DT_END));
+
   create_windows (argc, argv);
 
   dDisp;
@@ -516,6 +522,8 @@ rxvt_term::init (int argc, const char *const *argv)
   pty_ev.start (pty.pty, EVENT_READ);
 
   check_ev.start ();
+
+  PERL_INVOKE ((this, HOOK_START, DT_END));
 
   return true;
 }

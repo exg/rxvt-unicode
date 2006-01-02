@@ -115,6 +115,11 @@ src/version.h
 src/xdefaults.C
 src/xpm.C
 
+src/urxvt.pm
+src/typemap
+src/rxvtperl.h
+src/rxvtperl.C
+
 src/gentables
 src/gencompose
 src/genlinedraw

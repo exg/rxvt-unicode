@@ -45,8 +45,9 @@
  *----------------------------------------------------------------------*/
 
 /*{{{ includes: */
-#include "../config.h"		/* NECESSARY */
-#include "rxvt.h"		/* NECESSARY */
+#include "../config.h"
+#include "rxvt.h"
+#include "rxvtperl.h"
 #include "version.h"
 #include "command.h"
 
@@ -1071,6 +1072,24 @@ rxvt_term::slip_wheel_cb (time_watcher &w)
 }
 #endif
 
+#if HAVE_SCHED_YIELD
+static struct event_handler
+{
+  check_watcher cw_yield;
+  
+  void yield (check_watcher &w)
+  {
+    sched_yield ();
+    w.stop ();
+  }
+
+  event_handler ()
+  : cw_yield (this, &event_handler::yield)
+  {
+  }
+} event_handler;
+#endif
+
 bool
 rxvt_term::pty_fill ()
 {
@@ -1096,7 +1115,7 @@ rxvt_term::pty_fill ()
   else if (r < 0 && (errno == EAGAIN || errno == EINTR))
     {
 #if HAVE_SCHED_YIELD
-      sched_yield ();
+      event_handler.cw_yield.start ();
 #endif
     }
   else
@@ -1682,6 +1701,9 @@ rxvt_term::focus_in ()
     {
       focus = 1;
       want_refresh = 1;
+
+      PERL_INVOKE ((this, HOOK_FOCUS_OUT, DT_END));
+
 #if USE_XIM
       if (Input_Context != NULL)
         {
@@ -1711,11 +1733,16 @@ rxvt_term::focus_out ()
       focus = 0;
       want_refresh = 1;
 
+      PERL_INVOKE ((this, HOOK_FOCUS_OUT, DT_END));
+
 #if ENABLE_FRILLS || ISO_14755
-      iso14755buf = 0;
-#endif
-#if ENABLE_OVERLAY
-      scr_overlay_off ();
+      if (iso14755buf)
+        {
+          iso14755buf = 0;
+# if ENABLE_OVERLAY
+          scr_overlay_off ();
+# endif
+        }
 #endif
 #if USE_XIM
       if (Input_Context != NULL)

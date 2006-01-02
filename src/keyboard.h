@@ -1,12 +1,12 @@
 #ifndef KEYBOARD_H_
 #define KEYBOARD_H_
 
+#ifdef KEYSYM_RESOURCE
+
 #include <inttypes.h>
 
 #include "feature.h"
 #include "rxvtutil.h"
-
-#ifdef KEYSYM_RESOURCE
 
 #define KEYSYM_HASH_BITS        4       /* lowest #bits of keysym is used as hash key */
 #define KEYSYM_HASH_BUDGETS     (1<<KEYSYM_HASH_BITS)
@@ -76,5 +76,5 @@ private:
 };
 
 #endif /* KEYSYM_RESOURCE */
+
 #endif /* KEYBOARD_H_ */
-// vim:et:sw=2

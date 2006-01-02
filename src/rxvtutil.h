@@ -3,6 +3,11 @@
 
 #include <cstring>
 
+#define PP_CONCAT_(a, b) a ## b
+#define PP_CONCAT(a, b) PP_CONCAT_(a, b)
+#define PP_STRINGIFY_(a) #a
+#define PP_STRINGIFY(a) PP_STRINGIFY_(a)
+
 extern class byteorder {
   static unsigned int e; // at least 32 bits
 public:

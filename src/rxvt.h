@@ -215,7 +215,7 @@ typedef struct _mwmhints {
 # undef USE_XGETDEFAULT
 #endif
 
-#if ISO_14755
+#if defined (ISO_14755) || defined (ENABLE_PERL)
 # define ENABLE_OVERLAY 1
 #endif
 
@@ -1028,6 +1028,10 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   log_callback *log_hook;               // log error messages through this hook, if != 0
   getfd_callback *getfd_hook;           // convert remote to local fd, if != 0
 
+#if ENABLE_PERL
+  void *self; // perl's $self
+#endif
+
   struct mbstate  mbstate;              // current input multibyte state
 
   unsigned char   want_refresh:1,
@@ -1563,6 +1567,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   int selection_request_other (Atom target, int selnum);
   void selection_clear ();
   void selection_make (Time tm);
+  bool selection_grab (Time tm);
   void selection_start_colrow (int col, int row);
   void selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, row_col_t *ret);
   void selection_extend_colrow (int32_t col, int32_t row, int button3, int buttonpress, int clickchange);

@@ -12,6 +12,11 @@ WISH: meta-tagging of data by regex/master process (obsoleted by embedded perl)
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 
+	- optionally embed a perl interpreter, which can be used for more
+          intelligent/customized selection support, visual feedback, menus
+          etc. See the urxvtperl manpage.
+        - improved sched_yield support.
+
 6.2  Mon Jan  2 16:03:01 CET 2006
         - implemented intensityStyles option which enables/disables bold/blink
           selecting high intensity foreground/background colours, suggested by
