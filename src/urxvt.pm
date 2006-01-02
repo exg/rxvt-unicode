@@ -4,22 +4,24 @@ rxvtperl - rxvt-unicode's embedded perl interpreter
 
 =head1 SYNOPSIS
 
-* Put your scripts into F<@@RXVT_LIBDIR@@/urxvt/perl/>, they will be loaded automatically.
-
-* Scripts are evaluated in a 'use strict' and 'use utf8' environment, and
-thus must be encoded as UTF-8.
+   # create a file grab_test in $HOME:
 
    sub on_sel_grab {
       warn "you selected ", $_[0]->selection;
       ()
    }
 
-   1
+   # start a @@RXVT_NAME@@ using it:
+
+   @@RXVT_NAME@@ --perl-lib $HOME -pe grab_test
 
 =head1 DESCRIPTION
 
 Everytime a terminal object gets created, scripts specified via the
-C<perl> resource are associated with it.
+C<perl> resource are loaded and associated with it.
+
+Scripts are compiled in a 'use strict' and 'use utf8' environment, and
+thus must be encoded as UTF-8.
 
 Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
 scripts will be shared (But not enabled) for all terminals.
