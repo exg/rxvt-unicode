@@ -24,6 +24,12 @@
 		<li><a href="#the_urxvt__iow_class">The <code>urxvt::iow</code> Class</a></li>
 	</ul>
 
+	<li><a href="#environment">ENVIRONMENT</a></li>
+	<ul>
+
+		<li><a href="#urxvt_perl_verbosity">URXVT_PERL_VERBOSITY</a></li>
+	</ul>
+
 	<li><a href="#author">AUTHOR</a></li>
 </ul>
 <!-- INDEX END -->
@@ -205,6 +211,48 @@ Returns the ``current time'' (as per the event loop).
 </p>
 <h2><a name="the_urxvt__term_class">The <code>urxvt::term</code> Class</a></h2>
 <dl>
+<dt><strong><a name="item_resource">$value = $term-&gt;resource ($name[, $newval])</a></strong><br />
+</dt>
+<dd>
+Returns the current resource value associated with a given name and
+optionally sets a new value. Setting values is most useful in the <code>init</code>
+hook. Unset resources are returned and accepted as <code>undef</code>.
+</dd>
+<dd>
+<p>The new value must be properly encoded to a suitable character encoding
+before passing it to this method. Similarly, the returned value may need
+to be converted from the used encoding to text.</p>
+</dd>
+<dd>
+<p>Resource names are as defined in <em>src/rsinc.h</em>. Colours can be specified
+as resource names of the form <code>color+&lt;index&gt;</code>, e.g. <code>color+5</code>. (will
+likely change).</p>
+</dd>
+<dd>
+<p>Please note that resource strings will currently only be freed when the
+terminal is destroyed, so changing options frequently will eat memory.</p>
+</dd>
+<dd>
+<p>Here is a a likely non-exhaustive list of resource names, not all of which
+are supported in every build, please see the source to see the actual
+list:</p>
+</dd>
+<dd>
+<pre>
+  answerbackstring backgroundPixmap backspace_key boldFont boldItalicFont
+  borderLess color cursorBlink cursorUnderline cutchars delete_key
+  display_name embed ext_bwidth fade font geometry hold iconName
+  imFont imLocale inputMethod insecure int_bwidth intensityStyles
+  italicFont jumpScroll lineSpace loginShell mapAlert menu meta8
+  modifier mouseWheelScrollPage name pastableTabs path pointerBlank
+  pointerBlankDelay preeditType print_pipe pty_fd reverseVideo saveLines
+  scrollBar scrollBar_align scrollBar_floating scrollBar_right
+  scrollBar_thickness scrollTtyKeypress scrollTtyOutput scrollWithBuffer
+  scrollstyle secondaryScreen secondaryScroll selectstyle shade term_name
+  title transparent transparent_all tripleclickwords utmpInhibit
+  visualBell</pre>
+</dd>
+<p></p>
 <dt><strong><a name="item_selection_mark">($row, $col) = $term-&gt;selection_mark ([$row, $col])</a></strong><br />
 </dt>
 <dt><strong><a name="item_selection_beg">($row, $col) = $term-&gt;selection_beg ([$row, $col])</a></strong><br />
@@ -379,6 +427,23 @@ Start watching for requested events on the given handle.
 Stop watching for events on the given filehandle.
 </dd>
 <p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="environment">ENVIRONMENT</a></h1>
+<p>
+</p>
+<h2><a name="urxvt_perl_verbosity">URXVT_PERL_VERBOSITY</a></h2>
+<p>This variable controls the verbosity level of the perl extension. Higher
+numbers indicate more verbose output.</p>
+<ol>
+<li><strong><a name="item__2d_only_fatal_messages">- only fatal messages</a></strong><br />
+</li>
+<li><strong><a name="item__2d_script_loading_and_management">- script loading and management</a></strong><br />
+</li>
+<li><strong><a name="item__2d_all_events_received">- all events received</a></strong><br />
+</li>
+</ol>
 <p>
 </p>
 <hr />

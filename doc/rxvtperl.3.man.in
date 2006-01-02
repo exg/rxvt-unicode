@@ -267,6 +267,42 @@ Returns the \*(L"current time\*(R" (as per the event loop).
 .ie n .Sh "The ""urxvt::term"" Class"
 .el .Sh "The \f(CWurxvt::term\fP Class"
 .IX Subsection "The urxvt::term Class"
+.ie n .IP "$value = $term\fR\->resource ($name[, \f(CW$newval])" 4
+.el .IP "$value = \f(CW$term\fR\->resource ($name[, \f(CW$newval\fR])" 4
+.IX Item "$value = $term->resource ($name[, $newval])"
+Returns the current resource value associated with a given name and
+optionally sets a new value. Setting values is most useful in the \f(CW\*(C`init\*(C'\fR
+hook. Unset resources are returned and accepted as \f(CW\*(C`undef\*(C'\fR.
+.Sp
+The new value must be properly encoded to a suitable character encoding
+before passing it to this method. Similarly, the returned value may need
+to be converted from the used encoding to text.
+.Sp
+Resource names are as defined in \fIsrc/rsinc.h\fR. Colours can be specified
+as resource names of the form \f(CW\*(C`color+<index>\*(C'\fR, e.g. \f(CW\*(C`color+5\*(C'\fR. (will
+likely change).
+.Sp
+Please note that resource strings will currently only be freed when the
+terminal is destroyed, so changing options frequently will eat memory.
+.Sp
+Here is a a likely non-exhaustive list of resource names, not all of which
+are supported in every build, please see the source to see the actual
+list:
+.Sp
+.Vb 12
+\&  answerbackstring backgroundPixmap backspace_key boldFont boldItalicFont
+\&  borderLess color cursorBlink cursorUnderline cutchars delete_key
+\&  display_name embed ext_bwidth fade font geometry hold iconName
+\&  imFont imLocale inputMethod insecure int_bwidth intensityStyles
+\&  italicFont jumpScroll lineSpace loginShell mapAlert menu meta8
+\&  modifier mouseWheelScrollPage name pastableTabs path pointerBlank
+\&  pointerBlankDelay preeditType print_pipe pty_fd reverseVideo saveLines
+\&  scrollBar scrollBar_align scrollBar_floating scrollBar_right
+\&  scrollBar_thickness scrollTtyKeypress scrollTtyOutput scrollWithBuffer
+\&  scrollstyle secondaryScreen secondaryScroll selectstyle shade term_name
+\&  title transparent transparent_all tripleclickwords utmpInhibit
+\&  visualBell
+.Ve
 .ie n .IP "($row, $col\fR) = \f(CW$term\fR\->selection_mark ([$row, \f(CW$col])" 4
 .el .IP "($row, \f(CW$col\fR) = \f(CW$term\fR\->selection_mark ([$row, \f(CW$col\fR])" 4
 .IX Item "($row, $col) = $term->selection_mark ([$row, $col])"
@@ -402,6 +438,20 @@ Start watching for requested events on the given handle.
 .el .IP "$iow = \f(CW$iow\fR\->stop" 4
 .IX Item "$iow = $iow->stop"
 Stop watching for events on the given filehandle.
+.SH "ENVIRONMENT"
+.IX Header "ENVIRONMENT"
+.Sh "\s-1URXVT_PERL_VERBOSITY\s0"
+.IX Subsection "URXVT_PERL_VERBOSITY"
+This variable controls the verbosity level of the perl extension. Higher
+numbers indicate more verbose output.
+.IP "0 \- only fatal messages" 4
+.IX Item "0 - only fatal messages"
+.PD 0
+.IP "3 \- script loading and management" 4
+.IX Item "3 - script loading and management"
+.IP "10 \- all events received" 4
+.IX Item "10 - all events received"
+.PD
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 .Vb 2
