@@ -1024,6 +1024,13 @@ when Control-Meta-c is being pressed":
 
   URxvt.keysym.M-C-c: command:\033]701;zh_CN.GBK\007
 
+If I<string> takes the form C<perl:STRING>, then the specified B<STRING>
+is passed to the C<on_keyboard_command> perl handler. See the rxvtperl(3)
+manpage. For example, the F<selection> extension (activated via
+C<@@RXVT_NAME@@ -pe selection>) listens for C<selection:rot13> events:
+
+  URxvt.keysym.M-C-c: perl:selection:rot13
+
 Due the the large number of modifier combinations, a defined key mapping
 will match if at I<at least> the specified identifiers are being set, and
 no other key mappings with those and more bits are being defined. That
