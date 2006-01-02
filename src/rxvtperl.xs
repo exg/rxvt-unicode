@@ -243,6 +243,10 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
           XPUSHs (sv_2mortal (newSViv (va_arg (ap, long))));
           break;
 
+        case DT_STRING:
+          XPUSHs (sv_2mortal (newSVpv (va_arg (ap, char *), 0)));
+          break;
+
         case DT_END:
           {
             va_end (ap);
@@ -305,6 +309,7 @@ BOOT:
   set_hookname (TTY_ACTIVITY);
   set_hookname (REFRESH_BEGIN);
   set_hookname (REFRESH_END);
+  set_hookname (KEYBOARD_COMMAND);
 
   sv_setpv (get_sv ("urxvt::LIBDIR", 1), LIBDIR);
 }

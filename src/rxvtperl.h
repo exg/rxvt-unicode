@@ -15,6 +15,7 @@ enum data_type {
   DT_END,
   DT_INT,
   DT_LONG,
+  DT_STRING,
 };
 
 enum hook_type {
@@ -37,6 +38,8 @@ enum hook_type {
 
   HOOK_REFRESH_BEGIN,
   HOOK_REFRESH_END,
+
+  HOOK_KEYBOARD_COMMAND,
 
   HOOK_NUM,
 };
