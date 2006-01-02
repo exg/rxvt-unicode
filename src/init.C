@@ -650,7 +650,7 @@ rxvt_term::init_command (const char *const *argv)
    */
 
 #ifdef META8_OPTION
-  meta_char = OPTION ((Opt_meta8) ? 0x80 : C0_ESC);
+  meta_char = OPTION (Opt_meta8) ? 0x80 : C0_ESC;
 #endif
 
   get_ourmods ();

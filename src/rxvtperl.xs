@@ -392,6 +392,28 @@ rxvt_term::locale_decode (SV *octets)
 	OUTPUT:
         RETVAL
 
+int
+rxvt_term::nsaved ()
+	CODE:
+        RETVAL = THIS->nsaved;
+        OUTPUT:
+        RETVAL
+
+int
+rxvt_term::view_start (int newval = -1)
+	CODE:
+{
+        RETVAL = THIS->view_start;
+
+        if (newval >= 0)
+          {
+            THIS->view_start = min (newval, THIS->nsaved);
+            THIS->scr_changeview (RETVAL);
+          }
+}
+        OUTPUT:
+	RETVAL
+
 void
 rxvt_term::_resource (char *name, int index, SV *newval = 0)
 	PPCODE:

@@ -10,9 +10,13 @@ WISH: just for fun, do shade and tint with XRender.
 
         - optionally embed a perl interpreter, which can be used for more
           intelligent/customized selection support, visual feedback,
-          menus, tabs etc. See the urxvtperl manpage.
+          menus, tabs etc. See the the urxvtperl manpage, the -pe option,
+          perl*-resources and keysym resources.
         - fix directory permissions on install.
         - improved sched_yield support.
+        - meta8 support was forcefully enabled in most configurations,
+          restored configurability of this (useless) feature (reported
+          by Mikachu)
 
 6.2  Mon Jan  2 16:03:01 CET 2006
         - implemented intensityStyles option which enables/disables bold/blink

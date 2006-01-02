@@ -392,8 +392,55 @@ Convert the given locale-encoded octets into a perl string.
 =item $term->tt_write ($octets)
 
 Write the octets given in C<$data> to the tty (i.e. as program input). To
-pass characters instead of octets, you should convetr you strings first to
-the locale-specific encoding using C<< $term->locale_encode >>.
+pass characters instead of octets, you should convert your strings first
+to the locale-specific encoding using C<< $term->locale_encode >>.
+
+=item $nsaved = $term->nsaved
+
+Returns the number of lines in the scrollback buffer.
+
+=item $view_start = $term->view_start ([$newvalue])
+
+Returns the negative row number of the topmost line. Minimum value is
+C<0>, which displays the normal terminal contents. Larger values scroll
+this many lines into the scrollback buffer.
+
+=item $text = $term->ROW_t ($row_number[, $new_text])
+
+Returns the text of the entire row with number C<$row_number>. Row C<0>
+is the topmost terminal line, row C<< $term->$ncol-1 >> is the bottommost
+terminal line. The scrollback buffer starts at line C<-1> and extends to
+line C<< -$term->nsaved >>.
+
+If C<$new_text> is specified, it will completely replace the current line.
+
+C<$text> is in a special encoding: tabs and wide characters that use more
+than one cell when displayed are padded with urxvt::NOCHAR characters
+(C<chr 65535>). Characters with combining characters and other characters
+that do not fit into the normal tetx encoding will be replaced with
+characters in the private use area.
+
+You have to obey this encoding when changing text. The advantage is
+that C<substr> and similar functions work on screen cells and not on
+characters.
+
+The methods C<< $term->special_encode >> and C<< $term->special_decode >>
+can be used to convert normal strings into this encoding and vice versa.
+
+=item $rend = $term->ROW_r ($row_number[, $new_rend])
+
+Like C<< $term->ROW_t >>
+
+=item $text = $term->special_encode $string
+
+Converts a perl string into the special encoding used by rxvt-unicode,
+where one character corresponds to one screen cell. See
+C<< $term->ROW_t >> for details.
+
+=item $string = $term->special_decode $text
+
+Converts rxvt-unicodes text reprsentation into a perl string. See
+C<< $term->ROW_t >> for details.
 
 =back
 
