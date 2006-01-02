@@ -1,6 +1,6 @@
 =head1 NAME
 
-rxvtperl - rxvt-unicode's embedded perl interpreter
+@@RXVT_NAME@@perl - rxvt-unicode's embedded perl interpreter
 
 =head1 SYNOPSIS
 
@@ -125,6 +125,12 @@ code is run after this hook, and takes precedence.
 =item on_refresh_end $term
 
 Called just after the screen gets redrawn. See C<on_refresh_begin>.
+
+=item on_keyboard_command $term, $string
+
+Called whenever the user presses a key combination that has a
+C<perl:string> action bound to it (see description of the B<keysym>
+resource in the @@RXVT_NAME@@(1) manpage).
 
 =back
 

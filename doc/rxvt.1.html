@@ -1373,6 +1373,16 @@ when Control-Meta-c is being pressed'':</p>
   URxvt.keysym.M-C-c: command:\033]701;zh_CN.GBK\007</pre>
 </dd>
 <dd>
+<p>If <em>string</em> takes the form <code>perl:STRING</code>, then the specified <strong>STRING</strong>
+is passed to the <code>on_keyboard_command</code> perl handler. See the <code>rxvtperl(3)</code>
+manpage. For example, the <em>selection</em> extension (activated via
+<code>rxvt -pe selection</code>) listens for <code>selection:rot13</code> events:</p>
+</dd>
+<dd>
+<pre>
+  URxvt.keysym.M-C-c: perl:selection:rot13</pre>
+</dd>
+<dd>
 <p>Due the the large number of modifier combinations, a defined key mapping
 will match if at <em>at least</em> the specified identifiers are being set, and
 no other key mappings with those and more bits are being defined. That
@@ -1437,7 +1447,7 @@ Perl code to be evaluated when all extensions have been registered. See the
 Colon-separated list of additional directories that hold extension
 scripts. When looking for extensions specified by the <code>perl</code> resource,
 rxvt will first look in these directories and then in
-<em>/opt/rxvt/lib/urxvt/perl-ext/</em>.
+<em>/opt/rxvt/lib/urxvt/perl/</em>.
 </dd>
 <dd>
 <p>See the <code>rxvtperl(3)</code> manpage.</p>

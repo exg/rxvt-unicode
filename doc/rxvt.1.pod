@@ -1025,7 +1025,7 @@ when Control-Meta-c is being pressed":
   URxvt.keysym.M-C-c: command:\033]701;zh_CN.GBK\007
 
 If I<string> takes the form C<perl:STRING>, then the specified B<STRING>
-is passed to the C<on_keyboard_command> perl handler. See the rxvtperl(3)
+is passed to the C<on_keyboard_command> perl handler. See the @@RXVT_NAME@@perl(3)
 manpage. For example, the F<selection> extension (activated via
 C<@@RXVT_NAME@@ -pe selection>) listens for C<selection:rot13> events:
 
@@ -1072,7 +1072,7 @@ if necessary, and bound to the current terminal instance; option B<-pe>.
 =item B<perl-eval>: I<string>
 
 Perl code to be evaluated when all extensions have been registered. See the
-rxvtperl(3) manpage.
+@@RXVT_NAME@@perl(3) manpage.
 
 =item B<perl-lib>: I<path>
 
@@ -1081,7 +1081,7 @@ scripts. When looking for extensions specified by the C<perl> resource,
 @@RXVT_NAME@@ will first look in these directories and then in
 F<@@RXVT_LIBDIR@@/urxvt/perl/>.
 
-See the rxvtperl(3) manpage.
+See the @@RXVT_NAME@@perl(3) manpage.
 
 =back
 

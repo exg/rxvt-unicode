@@ -131,13 +131,12 @@
 .IX Title "rxvt 3"
 .TH rxvt 3 "2006-01-02" "6.2" "RXVT-UNICODE"
 .SH "NAME"
-rxvtperl \- rxvt\-unicode's embedded perl interpreter
+@@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
-* Put your scripts into \fI@@RXVT_LIBDIR@@/urxvt/perl\-ext/\fR, they will be loaded automatically.
-.PP
-* Scripts are evaluated in a 'use strict' and 'use utf8' environment, and
-thus must be encoded as \s-1UTF\-8\s0.
+.Vb 1
+\&   # create a file grab_test in $HOME:
+.Ve
 .PP
 .Vb 4
 \&   sub on_sel_grab {
@@ -147,12 +146,19 @@ thus must be encoded as \s-1UTF\-8\s0.
 .Ve
 .PP
 .Vb 1
-\&   1
+\&   # start a @@RXVT_NAME@@ using it:
+.Ve
+.PP
+.Vb 1
+\&   @@RXVT_NAME@@ --perl-lib $HOME -pe grab_test
 .Ve
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
 Everytime a terminal object gets created, scripts specified via the
-\&\f(CW\*(C`perl\*(C'\fR resource are associated with it.
+\&\f(CW\*(C`perl\*(C'\fR resource are loaded and associated with it.
+.PP
+Scripts are compiled in a 'use strict' and 'use utf8' environment, and
+thus must be encoded as \s-1UTF\-8\s0.
 .PP
 Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
 scripts will be shared (But not enabled) for all terminals.
@@ -252,6 +258,12 @@ code is run after this hook, and takes precedence.
 .el .IP "on_refresh_end \f(CW$term\fR" 4
 .IX Item "on_refresh_end $term"
 Called just after the screen gets redrawn. See \f(CW\*(C`on_refresh_begin\*(C'\fR.
+.ie n .IP "on_keyboard_command $term\fR, \f(CW$string" 4
+.el .IP "on_keyboard_command \f(CW$term\fR, \f(CW$string\fR" 4
+.IX Item "on_keyboard_command $term, $string"
+Called whenever the user presses a key combination that has a
+\&\f(CW\*(C`perl:string\*(C'\fR action bound to it (see description of the \fBkeysym\fR
+resource in the @@RXVT_NAME@@(1) manpage).
 .ie n .Sh "Functions in the ""urxvt"" Package"
 .el .Sh "Functions in the \f(CWurxvt\fP Package"
 .IX Subsection "Functions in the urxvt Package"

@@ -1043,6 +1043,15 @@ when Control-Meta-c is being pressed":
 \&  URxvt.keysym.M-C-c: command:\e033]701;zh_CN.GBK\e007
 .Ve
 .Sp
+If \fIstring\fR takes the form \f(CW\*(C`perl:STRING\*(C'\fR, then the specified \fB\s-1STRING\s0\fR
+is passed to the \f(CW\*(C`on_keyboard_command\*(C'\fR perl handler. See the @@RXVT_NAME@@\fIperl\fR\|(3)
+manpage. For example, the \fIselection\fR extension (activated via
+\&\f(CW\*(C`@@RXVT_NAME@@ \-pe selection\*(C'\fR) listens for \f(CW\*(C`selection:rot13\*(C'\fR events:
+.Sp
+.Vb 1
+\&  URxvt.keysym.M-C-c: perl:selection:rot13
+.Ve
+.Sp
 Due the the large number of modifier combinations, a defined key mapping
 will match if at \fIat least\fR the specified identifiers are being set, and
 no other key mappings with those and more bits are being defined. That
@@ -1088,15 +1097,15 @@ if necessary, and bound to the current terminal instance; option \fB\-pe\fR.
 .IP "\fBperl-eval\fR: \fIstring\fR" 4
 .IX Item "perl-eval: string"
 Perl code to be evaluated when all extensions have been registered. See the
-\&\fIrxvtperl\fR\|(3) manpage.
+@@RXVT_NAME@@\fIperl\fR\|(3) manpage.
 .IP "\fBperl-lib\fR: \fIpath\fR" 4
 .IX Item "perl-lib: path"
 Colon-separated list of additional directories that hold extension
 scripts. When looking for extensions specified by the \f(CW\*(C`perl\*(C'\fR resource,
 @@RXVT_NAME@@ will first look in these directories and then in
-\&\fI@@RXVT_LIBDIR@@/urxvt/perl\-ext/\fR.
+\&\fI@@RXVT_LIBDIR@@/urxvt/perl/\fR.
 .Sp
-See the \fIrxvtperl\fR\|(3) manpage.
+See the @@RXVT_NAME@@\fIperl\fR\|(3) manpage.
 .SH "THE SCROLLBAR"
 .IX Header "THE SCROLLBAR"
 Lines of text that scroll off the top of the \fB@@RXVT_NAME@@\fR window

@@ -887,6 +887,13 @@ RESOURCES (available also as long-options)
 
           URxvt.keysym.M-C-c: command:\033]701;zh_CN.GBK\007
 
+        If *string* takes the form "perl:STRING", then the specified STRING
+        is passed to the "on_keyboard_command" perl handler. See the
+        rxvtperl(3) manpage. For example, the selection extension (activated
+        via "rxvt -pe selection") listens for "selection:rot13" events:
+
+          URxvt.keysym.M-C-c: perl:selection:rot13
+
         Due the the large number of modifier combinations, a defined key
         mapping will match if at *at least* the specified identifiers are
         being set, and no other key mappings with those and more bits are
@@ -933,7 +940,7 @@ RESOURCES (available also as long-options)
         Colon-separated list of additional directories that hold extension
         scripts. When looking for extensions specified by the "perl"
         resource, rxvt will first look in these directories and then in
-        /opt/rxvt/lib/urxvt/perl-ext/.
+        /opt/rxvt/lib/urxvt/perl/.
 
         See the rxvtperl(3) manpage.
 

@@ -44,22 +44,25 @@
 </p>
 <hr />
 <h1><a name="synopsis">SYNOPSIS</a></h1>
-<p>* Put your scripts into <em>/opt/rxvt/lib/urxvt/perl-ext/</em>, they will be loaded automatically.</p>
-<p>* Scripts are evaluated in a 'use strict' and 'use utf8' environment, and
-thus must be encoded as UTF-8.</p>
+<pre>
+   # create a file grab_test in $HOME:</pre>
 <pre>
    sub on_sel_grab {
       warn &quot;you selected &quot;, $_[0]-&gt;selection;
       ()
    }</pre>
 <pre>
-   1</pre>
+   # start a rxvt using it:</pre>
+<pre>
+   rxvt --perl-lib $HOME -pe grab_test</pre>
 <p>
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
 <p>Everytime a terminal object gets created, scripts specified via the
-<code>perl</code> resource are associated with it.</p>
+<code>perl</code> resource are loaded and associated with it.</p>
+<p>Scripts are compiled in a 'use strict' and 'use utf8' environment, and
+thus must be encoded as UTF-8.</p>
 <p>Each script will only ever be loaded once, even in rxvtd, where
 scripts will be shared (But not enabled) for all terminals.</p>
 <p>
@@ -183,6 +186,14 @@ code is run after this hook, and takes precedence.
 </dt>
 <dd>
 Called just after the screen gets redrawn. See <code>on_refresh_begin</code>.
+</dd>
+<p></p>
+<dt><strong><a name="item_on_keyboard_command__24term_2c__24string">on_keyboard_command $term, $string</a></strong><br />
+</dt>
+<dd>
+Called whenever the user presses a key combination that has a
+<code>perl:string</code> action bound to it (see description of the <strong>keysym</strong>
+resource in the <code>rxvt(1)</code> manpage).
 </dd>
 <p></p></dl>
 <p>

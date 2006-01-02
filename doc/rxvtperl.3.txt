@@ -2,22 +2,23 @@ NAME
     rxvtperl - rxvt-unicode's embedded perl interpreter
 
 SYNOPSIS
-    * Put your scripts into /opt/rxvt/lib/urxvt/perl-ext/, they will be
-    loaded automatically.
-
-    * Scripts are evaluated in a 'use strict' and 'use utf8' environment,
-    and thus must be encoded as UTF-8.
+       # create a file grab_test in $HOME:
 
        sub on_sel_grab {
           warn "you selected ", $_[0]->selection;
           ()
        }
 
-       1
+       # start a rxvt using it:
+
+       rxvt --perl-lib $HOME -pe grab_test
 
 DESCRIPTION
     Everytime a terminal object gets created, scripts specified via the
-    "perl" resource are associated with it.
+    "perl" resource are loaded and associated with it.
+
+    Scripts are compiled in a 'use strict' and 'use utf8' environment, and
+    thus must be encoded as UTF-8.
 
     Each script will only ever be loaded once, even in rxvtd, where scripts
     will be shared (But not enabled) for all terminals.
@@ -109,6 +110,11 @@ DESCRIPTION
 
     on_refresh_end $term
         Called just after the screen gets redrawn. See "on_refresh_begin".
+
+    on_keyboard_command $term, $string
+        Called whenever the user presses a key combination that has a
+        "perl:string" action bound to it (see description of the keysym
+        resource in the rxvt(1) manpage).
 
   Functions in the "urxvt" Package
     urxvt::fatal $errormessage
