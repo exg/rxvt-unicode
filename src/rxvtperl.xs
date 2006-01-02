@@ -326,17 +326,6 @@ fatal (const char *msg)
 	CODE:
         rxvt_fatal ("%s", msg);
 
-int
-wcswidth (SV *str)
-	CODE:
-{
-        wchar_t *wstr = sv2wcs (str);
-        RETVAL = wcswidth (wstr, wcslen (wstr));
-        free (wstr);
-}
-	OUTPUT:
-        RETVAL
-
 NV
 NOW ()
 	CODE:
@@ -345,6 +334,60 @@ NOW ()
         RETVAL
 
 MODULE = urxvt             PACKAGE = urxvt::term
+
+int
+rxvt_term::strwidth (SV *str)
+	CODE:
+{
+        wchar_t *wstr = sv2wcs (str);
+
+	rxvt_push_locale (THIS->locale);
+        RETVAL = wcswidth (wstr, wcslen (wstr));
+        rxvt_pop_locale ();
+
+        free (wstr);
+}
+	OUTPUT:
+        RETVAL
+
+SV *
+rxvt_term::locale_encode (SV *str)
+	CODE:
+{
+        wchar_t *wstr = sv2wcs (str);
+
+	rxvt_push_locale (THIS->locale);
+        char *mbstr = rxvt_wcstombs (wstr);
+        rxvt_pop_locale ();
+
+        free (wstr);
+
+        RETVAL = newSVpv (mbstr, 0);
+        free (mbstr);
+}
+	OUTPUT:
+        RETVAL
+
+SV *
+rxvt_term::locale_decode (SV *octets)
+	CODE:
+{
+	STRLEN len;
+        char *data = SvPVbyte (octets, len);
+
+	rxvt_push_locale (THIS->locale);
+        wchar_t *wstr = rxvt_mbstowcs (data, len);
+        rxvt_pop_locale ();
+
+        char *str = rxvt_wcstoutf8 (wstr);
+        free (wstr);
+
+        RETVAL = newSVpv (str, 0);
+        SvUTF8_on (RETVAL);
+        free (str);
+}
+	OUTPUT:
+        RETVAL
 
 void
 rxvt_term::_resource (char *name, int index, SV *newval = 0)
@@ -459,6 +502,14 @@ rxvt_term::scr_overlay_set (int x, int y, SV *text)
         THIS->scr_overlay_set (x, y, wtext);
         free (wtext);
 }
+
+void
+rxvt_term::tt_write (SV *octets)
+        INIT:
+          STRLEN len;
+          char *str = SvPVbyte (octets, len);
+	C_ARGS:
+          (unsigned char *)str, len
 
 MODULE = urxvt             PACKAGE = urxvt::timer
 

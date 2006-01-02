@@ -103,3 +103,8 @@
 #ifdef TINTING
   Rs_def(shade)
 #endif
+#if ENABLE_PERL
+  Rs_def(perl_lib)
+  Rs_def(perl_eval)
+  Rs_def(perl)
+#endif

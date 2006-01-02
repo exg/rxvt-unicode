@@ -6,9 +6,6 @@ rxvtperl - rxvt-unicode's embedded perl interpreter
 
 * Put your scripts into F<@@RXVT_LIBDIR@@/urxvt/perl-ext/>, they will be loaded automatically.
 
-* Each script will only be loaded once, even in urxvtd, and will be valid
-globally.
-
 * Scripts are evaluated in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as UTF-8.
 
@@ -20,6 +17,28 @@ thus must be encoded as UTF-8.
    1
 
 =head1 DESCRIPTION
+
+On startup, @@RXVT_NAME@@ will scan F<@@RXVT_LIBDIR@@/urxvt/perl-ext/>
+for files and will load them. Everytime a terminal object gets created,
+the directory specified by the C<perl-lib> resource will be additionally
+scanned.
+
+Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
+scripts will be shared for all terminals.
+
+Hooks in scripts specified by C<perl-lib> will only be called for the
+terminals created with that specific option value.
+
+=head2 General API Considerations
+
+All objects (such as terminals, time watchers etc.) are typical
+reference-to-hash objects. The hash can be used to store anything you
+like. The only reserved member is C<_ptr>, which must not be changed.
+
+When objects are destroyed on the C++ side, the perl object hashes are
+emptied, so its best to store related objects such as time watchers and
+the like inside the terminal object so they get destroyed as soon as the
+terminal is destroyed.
 
 =head2 Hooks
 
@@ -122,17 +141,12 @@ starts up.
 
 =item urxvt::warn $string
 
-Calls C<rxvt_warn> witht eh given string which should not include a
+Calls C<rxvt_warn> with the given string which should not include a
 newline. The module also overwrites the C<warn> builtin with a function
 that calls this function.
 
 Using this function has the advantage that its output ends up in the
 correct place, e.g. on stderr of the connecting urxvtc client.
-
-=item $cellwidth = urxvt::wcswidth $string
-
-Returns the number of screen-cells this string would need. Correctly
-accounts for wide and combining characters.
 
 =item $time = urxvt::NOW
 
@@ -227,7 +241,27 @@ sub load_script($) {
    };
 }
 
-load_script $_ for grep -f $_, <$LIBDIR/perl-ext/*>;
+sub load_scripts($) {
+   my ($dir) = @_;
+
+   verbose 3, "loading scripts from '$dir'";
+
+   load_script $_
+      for grep -f $_,
+         <$dir/perl-ext/*>;
+}
+
+sub on_init {
+   my ($term) = @_;
+
+   my $libdir = $term->resource ("perl_lib");
+
+   load_scripts $libdir
+      if defined $libdir;
+}
+
+register_package __PACKAGE__;
+load_scripts $LIBDIR;
 
 =back
 
@@ -261,13 +295,13 @@ list:
   display_name embed ext_bwidth fade font geometry hold iconName
   imFont imLocale inputMethod insecure int_bwidth intensityStyles
   italicFont jumpScroll lineSpace loginShell mapAlert menu meta8
-  modifier mouseWheelScrollPage name pastableTabs path pointerBlank
-  pointerBlankDelay preeditType print_pipe pty_fd reverseVideo saveLines
-  scrollBar scrollBar_align scrollBar_floating scrollBar_right
-  scrollBar_thickness scrollTtyKeypress scrollTtyOutput scrollWithBuffer
-  scrollstyle secondaryScreen secondaryScroll selectstyle shade term_name
-  title transparent transparent_all tripleclickwords utmpInhibit
-  visualBell
+  modifier mouseWheelScrollPage name pastableTabs path perl perl_eval
+  perl_lib pointerBlank pointerBlankDelay preeditType print_pipe pty_fd
+  reverseVideo saveLines scrollBar scrollBar_align scrollBar_floating
+  scrollBar_right scrollBar_thickness scrollTtyKeypress scrollTtyOutput
+  scrollWithBuffer scrollstyle secondaryScreen secondaryScroll selectstyle
+  shade term_name title transparent transparent_all tripleclickwords
+  utmpInhibit visualBell
 
 =cut
 
@@ -307,7 +341,7 @@ sub urxvt::term::scr_overlay {
    my @lines = split /\n/, $text;
 
    my $w = 0;
-   for (map urxvt::wcswidth $_, @lines) {
+   for (map $self->strwidth ($_), @lines) {
       $w = $_ if $w < $_;
    }
 
@@ -334,6 +368,25 @@ position.
 =item $term->scr_overlay_set ($x, $y, $text)
 
 Write a string at the given position into the overlay.
+
+=item $cellwidth = $term->strwidth $string
+
+Returns the number of screen-cells this string would need. Correctly
+accounts for wide and combining characters.
+
+=item $octets = $term->locale_encode $string
+
+Convert the given text string into the corresponding locale encoding.
+
+=item $string = $term->locale_decode $octets
+
+Convert the given locale-encoded octets into a perl string.
+
+=item $term->tt_write ($octets)
+
+Write the octets given in C<$data> to the tty (i.e. as program input). To
+pass characters instead of octets, you should convetr you strings first to
+the locale-specific encoding using C<< $term->locale_encode >>.
 
 =back
 

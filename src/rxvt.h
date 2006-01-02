@@ -851,6 +851,8 @@ extern void rxvt_exit_failure () __attribute__ ((noreturn));
 
 #define SET_LOCALE(locale) rxvt_set_locale (locale)
 extern bool rxvt_set_locale (const char *locale);
+extern bool rxvt_push_locale (const char *locale);
+extern void rxvt_pop_locale ();
 
 /*
  *****************************************************************************

@@ -50,7 +50,7 @@
 
 vector<rxvt_term *> rxvt_term::termlist;
 
-static char curlocale[128];
+static char curlocale[128], savelocale[128];
 
 bool
 rxvt_set_locale (const char *locale)
@@ -61,6 +61,19 @@ rxvt_set_locale (const char *locale)
   strncpy (curlocale, locale, 128);
   setlocale (LC_CTYPE, curlocale);
   return true;
+}
+
+bool
+rxvt_push_locale (const char *locale)
+{
+  strcpy (savelocale, curlocale);
+  rxvt_set_locale (locale);
+}
+
+void
+rxvt_pop_locale ()
+{
+  rxvt_set_locale (savelocale);
 }
 
 #if ENABLE_COMBINING
