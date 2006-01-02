@@ -1,0 +1,19 @@
+rxvt_term *		T_TERM
+timer *			T_TIMER
+iow *			T_IOW
+
+INPUT
+T_TERM
+	$var = SvTERM ($arg);
+T_TIMER
+	$var = SvTIMER ($arg);
+T_IOW
+	$var = SvIOW ($arg);
+
+OUTPUT
+T_TERM
+	$arg = newSVterm ($var);
+T_TIMER
+	$arg = newSVtimer ($var);
+T_IOW
+	$arg = newSViow ($var);
