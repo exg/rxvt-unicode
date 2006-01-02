@@ -125,6 +125,8 @@ src/typemap
 src/rxvtperl.h
 src/rxvtperl.C
 
+src/perl/simple-overlay-clock
+
 src/gentables
 src/gencompose
 src/genlinedraw

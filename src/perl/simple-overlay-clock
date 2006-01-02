@@ -1,0 +1,20 @@
+#! perl
+
+use POSIX ();
+
+sub on_init {
+   my ($self) = @_;
+
+   $self->{timer} = urxvt::timer
+                    ->new
+                    ->start (urxvt::NOW)
+                    ->cb (sub {
+                       my ($timer) = @_;
+                       my $time = $timer->at;
+                       $timer->start ($time + 1);
+                       $self->scr_overlay (-1, 0, POSIX::strftime "%H:%M:%S", localtime $time);
+                    });
+
+   ()
+}
+
