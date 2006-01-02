@@ -1,0 +1,5 @@
+sub on_keyboard_command {
+      my ($term, $cmd) = @_;
+         $cmd eq "selection:rot13"
+                  and $term->selection (map { y/A-Za-z/N-ZA-Mn-za-m/; $_ } $term->selection);
+}
