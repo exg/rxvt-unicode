@@ -57,7 +57,7 @@ struct rxvt_perl_interp
 extern struct rxvt_perl_interp rxvt_perl;
 
 #else
-#define PERL_INVOKE(args) (void)0
+# define PERL_INVOKE(args) false
 #endif
 
 #endif

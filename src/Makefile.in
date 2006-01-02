@@ -9,7 +9,6 @@ VPATH =		@srcdir@
 top_builddir = ..
 basedir = ..
 thisdir = src
-MKDIR = @top_srcdir@/autoconf/mkinstalldirs
 
 # for developers: the following debug options may be used
 #	-DDEBUG_CMD -DDEBUG_MAIN -DDEBUG_MENU -DDEBUG_MENUARROWS
@@ -95,17 +94,14 @@ distclean: realclean
 	(cd $(srcdir); $(RMF) Makefile)
 
 install-perl:
-@IF_PERL@	$(MKDIR) $(DESTDIR)$(libdir)
-@IF_PERL@	$(MKDIR) $(DESTDIR)$(libdir)/urxvt
-@IF_PERL@	$(MKDIR) $(DESTDIR)$(libdir)/urxvt/perl-ext
+@IF_PERL@	$(INSTALL) -d $(DESTDIR)$(libdir)
+@IF_PERL@	$(INSTALL) -d $(DESTDIR)$(libdir)/urxvt
+@IF_PERL@	$(INSTALL) -d $(DESTDIR)$(libdir)/urxvt/perl-ext
 @IF_PERL@	$(INSTALL_DATA) urxvt.pm $(DESTDIR)$(libdir)/urxvt/urxvt.pm
 @IF_PERL@	for ext in perl-ext/*; do $(INSTALL_DATA) "$$ext" $(DESTDIR)$(libdir)/urxvt/"$$ext"; done
 
 install: allbin alldoc install-perl
-	$(MKDIR) $(DESTDIR)$(bindir)
-	$(RMF) $(RXVT_BINNAME)
-	$(RMF) $(RXVTC_BINNAME)
-	$(RMF) $(RXVTD_BINNAME)
+	$(INSTALL) -d $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) rxvt  $(RXVT_BINNAME)
 	$(INSTALL_PROGRAM) rxvtc $(RXVTC_BINNAME)
 	$(INSTALL_PROGRAM) rxvtd $(RXVTD_BINNAME)
