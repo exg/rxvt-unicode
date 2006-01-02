@@ -252,6 +252,23 @@ likely change).
 Please note that resource strings will currently only be freed when the
 terminal is destroyed, so changing options frequently will eat memory.
 
+Here is a a likely non-exhaustive list of resource names, not all of which
+are supported in every build, please see the source to see the actual
+list:
+
+  answerbackstring backgroundPixmap backspace_key boldFont boldItalicFont
+  borderLess color cursorBlink cursorUnderline cutchars delete_key
+  display_name embed ext_bwidth fade font geometry hold iconName
+  imFont imLocale inputMethod insecure int_bwidth intensityStyles
+  italicFont jumpScroll lineSpace loginShell mapAlert menu meta8
+  modifier mouseWheelScrollPage name pastableTabs path pointerBlank
+  pointerBlankDelay preeditType print_pipe pty_fd reverseVideo saveLines
+  scrollBar scrollBar_align scrollBar_floating scrollBar_right
+  scrollBar_thickness scrollTtyKeypress scrollTtyOutput scrollWithBuffer
+  scrollstyle secondaryScreen secondaryScroll selectstyle shade term_name
+  title transparent transparent_all tripleclickwords utmpInhibit
+  visualBell
+
 =cut
 
 sub urxvt::term::resource($$;$) {
