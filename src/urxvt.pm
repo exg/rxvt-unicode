@@ -395,6 +395,13 @@ Write the octets given in C<$data> to the tty (i.e. as program input). To
 pass characters instead of octets, you should convert your strings first
 to the locale-specific encoding using C<< $term->locale_encode >>.
 
+=item $nrow = $term->nrow
+
+=item $ncol = $term->ncol
+
+Return the number of rows/columns of the terminal window (i.e. as
+specified by C<-geometry>, excluding any scrollback).
+
 =item $nsaved = $term->nsaved
 
 Returns the number of lines in the scrollback buffer.
@@ -405,14 +412,17 @@ Returns the negative row number of the topmost line. Minimum value is
 C<0>, which displays the normal terminal contents. Larger values scroll
 this many lines into the scrollback buffer.
 
-=item $text = $term->ROW_t ($row_number[, $new_text])
+=item $text = $term->ROW_t ($row_number[, $new_text[, $start_col]])
 
 Returns the text of the entire row with number C<$row_number>. Row C<0>
 is the topmost terminal line, row C<< $term->$ncol-1 >> is the bottommost
 terminal line. The scrollback buffer starts at line C<-1> and extends to
 line C<< -$term->nsaved >>.
 
-If C<$new_text> is specified, it will completely replace the current line.
+If C<$new_text> is specified, it will replace characters in the current
+line, starting at column C<$start_col> (default C<0>), which is useful
+to replace only parts of a line. The font iindex in the rendition will
+automatically be updated.
 
 C<$text> is in a special encoding: tabs and wide characters that use more
 than one cell when displayed are padded with urxvt::NOCHAR characters
@@ -427,9 +437,21 @@ characters.
 The methods C<< $term->special_encode >> and C<< $term->special_decode >>
 can be used to convert normal strings into this encoding and vice versa.
 
-=item $rend = $term->ROW_r ($row_number[, $new_rend])
+=item $rend = $term->ROW_r ($row_number[, $new_rend[, $start_col]])
 
-Like C<< $term->ROW_t >>
+Like C<< $term->ROW_t >>, but returns an arrayref with rendition
+bitsets. Rendition bitsets contain information about colour, font, font
+styles and similar information. See also C<< $term->ROW_t >>.
+
+When setting rendition, the font mask will be ignored.
+
+See the section on RENDITION, below.
+
+=item $length = $term->ROW_l ($row_number[, $new_length])
+
+Returns the number of screen cells that are in use ("the line length"). If
+it is C<-1>, then the line is part of a multiple-row logical "line", which
+means all characters are in use and it is continued on the next row.
 
 =item $text = $term->special_encode $string
 
@@ -443,6 +465,27 @@ Converts rxvt-unicodes text reprsentation into a perl string. See
 C<< $term->ROW_t >> for details.
 
 =back
+
+=head2 RENDITION
+
+Rendition bitsets contain information about colour, font, font styles and
+similar information for each screen cell.
+
+The following "macros" deal with changes in rendition sets. You should
+never just create a bitset, you should always modify an existing one,
+as they contain important information required for correct operation of
+rxvt-unicode.
+
+=over 4
+
+=item $rend = urxvt::DEFAULT_RSTYLE
+
+Returns the default rendition, as used when the terminal is starting up or
+being reset. Useful as a base
+
+=back
+
+=cut
 
 =head2 The C<urxvt::timer> Class
 

@@ -37,6 +37,11 @@
 
 #include "perlxsi.c"
 
+#undef LINENO
+#define LINENO(n) MOD (THIS->term_start + int(n), THIS->total_rows)
+#undef ROW
+#define ROW(n) THIS->row_buf [LINENO (n)]
+
 /////////////////////////////////////////////////////////////////////////////
 
 static wchar_t *
@@ -413,6 +418,133 @@ rxvt_term::view_start (int newval = -1)
 }
         OUTPUT:
 	RETVAL
+
+int
+rxvt_term::nrow ()
+	CODE:
+        RETVAL = THIS->nrow;
+        OUTPUT:
+        RETVAL
+
+int
+rxvt_term::ncol ()
+	CODE:
+        RETVAL = THIS->ncol;
+        OUTPUT:
+        RETVAL
+
+void
+rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0)
+	PPCODE:
+{
+        if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
+          croak ("row_number number of out range");
+
+        line_t &l = ROW(row_number);
+
+        if (GIMME_V != G_VOID)
+          {
+            wchar_t *wstr = new wchar_t [THIS->ncol];
+
+            for (int col = 0; col <THIS->ncol; col++)
+              wstr [col] = l.t [col];
+
+            char *str = rxvt_wcstoutf8 (wstr, THIS->ncol);
+            free (wstr);
+
+            SV *sv = newSVpv (str, 0);
+            SvUTF8_on (sv);
+            XPUSHs (sv_2mortal (sv));
+            free (str);
+          }
+
+        if (new_text)
+          {
+            STRLEN slen;
+            char *str = SvPVutf8 (new_text, slen);
+            wchar_t *wstr = rxvt_utf8towcs (str, slen);
+
+            int len = wcslen (wstr);
+
+            if (start_col + len > THIS->ncol)
+              {
+                free (wstr);
+                croak ("new_text extends beyond right margin");
+              }
+
+            for (int col = start_col; col < start_col + len; col++)
+              {
+                l.t [col] = wstr [col];
+                l.r [col] = SET_FONT (l.r [col], THIS->fontset [GET_STYLE (l.r [col])]->find_font (l.t [col]));
+              }
+          }
+}
+
+void
+rxvt_term::ROW_r (int row_number, SV *new_rend = 0, int start_col = 0)
+	PPCODE:
+{
+        if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
+          croak ("row_number number of out range");
+
+        line_t &l = ROW(row_number);
+
+        if (GIMME_V != G_VOID)
+          {
+            AV *av = newAV ();
+
+            av_extend (av, THIS->ncol - 1);
+            for (int col = 0; col < THIS->ncol; col++)
+              av_store (av, col, newSViv (l.r [col]));
+
+            XPUSHs (sv_2mortal (newRV_noinc ((SV *)av)));
+          }
+
+        if (new_rend)
+          {
+            if (!SvROK (new_rend) || SvTYPE (SvRV (new_rend)) != SVt_PVAV)
+              croak ("new_rend must be arrayref");
+
+            AV *av = (AV *)SvRV (new_rend);
+            int len = av_len (av) + 1;
+
+            if (start_col + len > THIS->ncol)
+              croak ("new_rend array extends beyond right margin");
+
+            for (int col = start_col; col < start_col + len; col++)
+              {
+                rend_t r = SvIV (*av_fetch (av, col, 1)) & ~RS_fontMask;
+
+                l.r [col] = SET_FONT (r, THIS->fontset [GET_STYLE (r)]->find_font (l.t [col]));
+              }
+          }
+}
+
+int
+rxvt_term::ROW_l (int row_number, int new_length = -2)
+	CODE:
+{
+        if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
+          croak ("row_number number of out range");
+
+        line_t &l = ROW(row_number);
+        RETVAL = l.l;
+
+        if (new_length >= -1)
+          l.l = new_length;
+}
+        OUTPUT:
+        RETVAL
+
+SV *
+rxvt_term::special_encode (SV *str)
+	CODE:
+        abort ();//TODO
+
+SV *
+rxvt_term::special_decode (SV *str)
+	CODE:
+        abort ();//TODO
 
 void
 rxvt_term::_resource (char *name, int index, SV *newval = 0)
