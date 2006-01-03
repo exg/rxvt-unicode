@@ -407,8 +407,8 @@ sub urxvt::term::proxy::AUTOLOAD {
 
    eval qq{
       sub $urxvt::term::proxy::AUTOLOAD {
-         unshift \@_, shift->{term};
-         goto &urxvt::term::$1;
+         my \$proxy = shift;
+         \$proxy->{term}->$1 (\@_)
       }
       1
    } or die "FATAL: unable to compile method forwarder: $@";
@@ -585,7 +585,8 @@ Used after changing terminal contents to display them.
 Returns the text of the entire row with number C<$row_number>. Row C<0>
 is the topmost terminal line, row C<< $term->$ncol-1 >> is the bottommost
 terminal line. The scrollback buffer starts at line C<-1> and extends to
-line C<< -$term->nsaved >>.
+line C<< -$term->nsaved >>. Nothing will be returned if a nonexistent line
+is requested.
 
 If C<$new_text> is specified, it will replace characters in the current
 line, starting at column C<$start_col> (default C<0>), which is useful
@@ -617,10 +618,113 @@ See the section on RENDITION, above.
 
 =item $length = $term->ROW_l ($row_number[, $new_length])
 
-Returns the number of screen cells that are in use ("the line length"). If
-it is C<-1>, then the line is part of a multiple-row logical "line", which
-means all characters are in use and it is continued on the next row.
+Returns the number of screen cells that are in use ("the line
+length"). Unlike the urxvt core, this returns C<< $term->ncol >> if the
+line is joined with the following one.
 
+=item $bool = $term->is_longer ($row_number)
+
+Returns true if the row is part of a multiple-row logical "line" (i.e.
+joined with the following row), which means all characters are in use
+and it is continued on the next row (and possibly a continuation of the
+previous row(s)).
+
+=item $line = $term->line ($row_number)
+
+Create and return a new C<urxvt::line> object that stores information
+about the logical line that row C<$row_number> is part of. It supports the
+following methods:
+
+=over 4
+
+=item $text = $line->t
+
+Returns the full text of the line, similar to C<ROW_t>
+
+=item $rend = $line->r
+
+Returns the full rendition array of the line, similar to C<ROW_r>
+
+=item $length = $line->l
+
+Returns the length of the line in cells, similar to C<ROW_l>.
+
+=item $rownum = $line->beg
+
+=item $rownum = $line->end
+
+Return the row number of the first/last row of the line, respectively.
+
+=item $offset = $line->offset_of ($row, $col)
+
+Returns the character offset of the given row|col pair within the logical
+line.
+
+=item ($row, $col) = $line->coord_of ($offset)
+
+Translates a string offset into terminal coordinates again.
+
+=back
+
+=cut
+
+sub urxvt::term::line {
+   my ($self, $row) = @_;
+
+   my $maxrow = $self->nrow - 1;
+
+   my ($beg, $end) = ($row, $row);
+
+   --$beg while $self->ROW_is_longer ($beg - 1);
+   ++$end while $self->ROW_is_longer ($end) && $end < $maxrow;
+
+   bless {
+      term => $self,
+      beg  => $beg,
+      end  => $end,
+      len  => ($end - $beg) * $self->ncol + $self->ROW_l ($end),
+   }, urxvt::line::
+}
+
+sub urxvt::line::t {
+   my ($self) = @_;
+
+   substr +(join "", map $self->{term}->ROW_t ($_), $self->{beg} .. $self->{end}),
+          0, $self->{len}
+}
+
+sub urxvt::line::r {
+   my ($self) = @_;
+
+   my $rend = [
+      map @{ $self->{term}->ROW_r ($_) }, $self->{beg} .. $self->{end}
+   ];
+   $#$rend = $self->{len} - 1;
+   $rend
+}
+
+sub urxvt::line::beg { $_[0]{beg} }
+sub urxvt::line::end { $_[0]{end} }
+sub urxvt::line::l   { $_[0]{len} }
+
+sub urxvt::line::offset_of {
+   my ($self, $row, $col) = @_;
+
+   ($row - $self->{beg}) * $self->{term}->ncol + $col
+}
+
+sub urxvt::line::coord_of {
+   my ($self, $offset) = @_;
+
+   use integer;
+
+   (
+      $offset / $self->{term}->ncol + $self->{beg},
+      $offset % $self->{term}->ncol
+   )
+}
+
+=item ($row, $col) = $line->coord_of ($offset)
 =item $text = $term->special_encode $string
 
 Converts a perl string into the special encoding used by rxvt-unicode,

@@ -706,7 +706,7 @@ rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0)
 	PPCODE:
 {
         if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
-          croak ("row_number number of out range");
+          XSRETURN_EMPTY;
 
         line_t &l = ROW(row_number);
 
@@ -753,7 +753,7 @@ rxvt_term::ROW_r (int row_number, SV *new_rend = 0, int start_col = 0)
 	PPCODE:
 {
         if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
-          croak ("row_number number of out range");
+          XSRETURN_EMPTY;
 
         line_t &l = ROW(row_number);
 
@@ -793,13 +793,26 @@ rxvt_term::ROW_l (int row_number, int new_length = -2)
 	CODE:
 {
         if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
-          croak ("row_number number of out range");
+          XSRETURN_EMPTY;
 
         line_t &l = ROW(row_number);
-        RETVAL = l.l;
+        RETVAL = l.l < 0 ? THIS->ncol : l.l;
 
         if (new_length >= -1)
           l.l = new_length;
+}
+        OUTPUT:
+        RETVAL
+
+bool
+rxvt_term::ROW_is_longer (int row_number)
+	CODE:
+{
+        if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
+          XSRETURN_EMPTY;
+
+        line_t &l = ROW(row_number);
+        RETVAL = l.l < 0;
 }
         OUTPUT:
         RETVAL
