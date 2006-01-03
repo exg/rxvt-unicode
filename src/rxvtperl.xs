@@ -844,7 +844,7 @@ rxvt_term::selection_mark (...)
 }
 
 int
-rxvt_term::selection_grab (int eventtime)
+rxvt_term::selection_grab (int eventtime = CurrentTime)
 
 void
 rxvt_term::selection (SV *newtext = 0)

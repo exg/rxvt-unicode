@@ -78,7 +78,11 @@ get_pty (int *fd_tty, char **ttydev)
 #ifdef PTYS_ARE_OPENPTY
   char tty_name[sizeof "/dev/pts/????\0"];
 
-  if (openpty (&pfd, fd_tty, tty_name, NULL, NULL) != -1)
+  rxvt_privileges(RESTORE);
+  int res = openpty (&pfd, fd_tty, tty_name, NULL, NULL);
+  rxvt_privileges(IGNORE);
+
+  if (res != -1)
     {
       *ttydev = strdup (tty_name);
       return pfd;
