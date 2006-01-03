@@ -61,7 +61,7 @@ overlays or changes.
 
 =item simple-overlay-clock
 
-Displays a digital clock using the built-in overlay (colorful, useless).
+Displays a digital clock using the built-in overlay (colourful, useless).
 
 =back
 
@@ -195,6 +195,48 @@ correct place, e.g. on stderr of the connecting urxvtc client.
 =item $time = urxvt::NOW
 
 Returns the "current time" (as per the event loop).
+
+=head2 RENDITION
+
+Rendition bitsets contain information about colour, font, font styles and
+similar information for each screen cell.
+
+The following "macros" deal with changes in rendition sets. You should
+never just create a bitset, you should always modify an existing one,
+as they contain important information required for correct operation of
+rxvt-unicode.
+
+=over 4
+
+=item $rend = urxvt::DEFAULT_RSTYLE
+
+Returns the default rendition, as used when the terminal is starting up or
+being reset. Useful as a base to start when creating renditions.
+
+=item $rend = urxvt::OVERLAY_RSTYLE
+
+Return the rendition mask used for overlays by default.
+
+=item $rendbit = urxvt::RS_Bold, RS_Italic, RS_Blink, RS_RVid, RS_Uline
+
+Return the bit that enabled bold, italic, blink, reverse-video and
+underline, respectively. To enable such a style, just or it onto the
+bitset.
+
+=item $foreground = urxvt::GET_BASEFG $rend
+
+=item $background = urxvt::GET_BASEBG $rend
+
+Return the foreground/background colour index, respectively.
+
+=item $rend = urxvt::SET_FGCOLOR ($rend, $new_colour)
+
+=item $rend = urxvt::SET_BGCOLOR ($rend, $new_colour)
+
+Replace the foreground/background colour in the rendition mask with the
+specified one.
+
+=back
 
 =cut
 
@@ -468,7 +510,7 @@ line C<< -$term->nsaved >>.
 
 If C<$new_text> is specified, it will replace characters in the current
 line, starting at column C<$start_col> (default C<0>), which is useful
-to replace only parts of a line. The font iindex in the rendition will
+to replace only parts of a line. The font index in the rendition will
 automatically be updated.
 
 C<$text> is in a special encoding: tabs and wide characters that use more
@@ -492,7 +534,7 @@ styles and similar information. See also C<< $term->ROW_t >>.
 
 When setting rendition, the font mask will be ignored.
 
-See the section on RENDITION, below.
+See the section on RENDITION, above.
 
 =item $length = $term->ROW_l ($row_number[, $new_length])
 
@@ -512,27 +554,6 @@ Converts rxvt-unicodes text reprsentation into a perl string. See
 C<< $term->ROW_t >> for details.
 
 =back
-
-=head2 RENDITION
-
-Rendition bitsets contain information about colour, font, font styles and
-similar information for each screen cell.
-
-The following "macros" deal with changes in rendition sets. You should
-never just create a bitset, you should always modify an existing one,
-as they contain important information required for correct operation of
-rxvt-unicode.
-
-=over 4
-
-=item $rend = urxvt::DEFAULT_RSTYLE
-
-Returns the default rendition, as used when the terminal is starting up or
-being reset. Useful as a base
-
-=back
-
-=cut
 
 =head2 The C<urxvt::timer> Class
 

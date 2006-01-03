@@ -298,6 +298,7 @@ PROTOTYPES: ENABLE
 BOOT:
 {
 # define set_hookname(sym) av_store (hookname, PP_CONCAT(HOOK_, sym), newSVpv (PP_STRINGIFY(sym), 0))
+# define export_const(name) newCONSTSUB (gv_stashpv ("urxvt", 1), #name, newSViv (name));
   AV *hookname = get_av ("urxvt::HOOKNAME", 1);
   set_hookname (INIT);
   set_hookname (RESET);
@@ -316,7 +317,13 @@ BOOT:
   set_hookname (REFRESH_END);
   set_hookname (KEYBOARD_COMMAND);
 
-  newCONSTSUB (gv_stashpv ("urxvt", 1), "DEFAULT_RSTYLE", newSViv (DEFAULT_RSTYLE));
+  export_const (DEFAULT_RSTYLE);
+  export_const (OVERLAY_RSTYLE);
+  export_const (RS_Bold);
+  export_const (RS_Italic);
+  export_const (RS_Blink);
+  export_const (RS_RVid);
+  export_const (RS_Uline);
 
   sv_setpv (get_sv ("urxvt::LIBDIR", 1), LIBDIR);
 }
@@ -341,6 +348,34 @@ NOW ()
 	CODE:
         RETVAL = NOW;
         OUTPUT:
+        RETVAL
+
+int
+GET_BASEFG (int rend)
+	CODE:
+        RETVAL = GET_BASEFG (rend);
+	OUTPUT:
+        RETVAL
+
+int
+GET_BASEBG (int rend)
+	CODE:
+        RETVAL = GET_BASEBG (rend);
+	OUTPUT:
+        RETVAL
+
+int
+SET_FGCOLOR (int rend, int color)
+	CODE:
+        RETVAL = SET_FGCOLOR (rend, color);
+	OUTPUT:
+        RETVAL
+
+int
+SET_BGCOLOR (int rend, int color)
+	CODE:
+        RETVAL = SET_BGCOLOR (rend, color);
+	OUTPUT:
         RETVAL
 
 MODULE = urxvt             PACKAGE = urxvt::term
