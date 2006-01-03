@@ -24,7 +24,7 @@ Scripts are compiled in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as UTF-8.
 
 Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
-scripts will be shared (But not enabled) for all terminals.
+scripts will be shared (but not enabled) for all terminals.
 
 =head1 PACKAGED EXTENSIONS
 
