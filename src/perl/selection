@@ -9,7 +9,7 @@ sub on_keyboard_command {
    ()
 }
 
-sub on_selection_event {
+sub on_sel_extend {
    warn "hiya\n";#d#
    ()
 }
