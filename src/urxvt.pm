@@ -26,6 +26,43 @@ thus must be encoded as UTF-8.
 Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
 scripts will be shared (But not enabled) for all terminals.
 
+=head1 PACKAGED EXTENSIONS
+
+This section describes the extensiosn delivered with this version. You can
+find them in F<@@RXVT_LIBDIR@@/urxvt/perl/>.
+
+You can activate them like this:
+
+  @@RXVT_NAME@@ -pe <extensionname>
+
+=over 4
+
+=item selection
+
+Miscellaneous selection modifications.
+
+=over 4
+
+=item rot13
+
+Rot-13 the selection when activated. Used via keyboard trigger:
+
+   URxvt.keysym.C-M-r: perl:selection:rot13
+
+=back
+
+=item digital-clock
+
+Displays a very simple digital clock in the upper right corner of the
+window. Illustrates overwriting the refresh callbacks to create your own
+overlays or changes.
+
+=item simple-overlay-clock
+
+Displays a digital clock using the built-in overlay (colorful, useless).
+
+=back
+
 =head2 General API Considerations
 
 All objects (such as terminals, time watchers etc.) are typical
