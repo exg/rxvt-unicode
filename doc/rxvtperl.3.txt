@@ -40,13 +40,12 @@ DESCRIPTION
                URxvt.keysym.C-M-r: perl:selection:rot13
 
     digital-clock
+        Displays a digital clock using the built-in overlay.
+
+    example-refresh-hooks
         Displays a very simple digital clock in the upper right corner of
         the window. Illustrates overwriting the refresh callbacks to create
         your own overlays or changes.
-
-    simple-overlay-clock
-        Displays a digital clock using the built-in overlay (colorful,
-        useless).
 
   General API Considerations
     All objects (such as terminals, time watchers etc.) are typical
@@ -158,6 +157,45 @@ DESCRIPTION
     $time = urxvt::NOW
         Returns the "current time" (as per the event loop).
 
+  RENDITION
+    Rendition bitsets contain information about colour, font, font styles
+    and similar information for each screen cell.
+
+    The following "macros" deal with changes in rendition sets. You should
+    never just create a bitset, you should always modify an existing one, as
+    they contain important information required for correct operation of
+    rxvt-unicode.
+
+    $rend = urxvt::DEFAULT_RSTYLE
+        Returns the default rendition, as used when the terminal is starting
+        up or being reset. Useful as a base to start when creating
+        renditions.
+
+    $rend = urxvt::OVERLAY_RSTYLE
+        Return the rendition mask used for overlays by default.
+
+    $rendbit = urxvt::RS_Bold, RS_Italic, RS_Blink, RS_RVid, RS_Uline
+        Return the bit that enabled bold, italic, blink, reverse-video and
+        underline, respectively. To enable such a style, just logically OR
+        it into the bitset.
+
+    $foreground = urxvt::GET_BASEFG $rend
+    $background = urxvt::GET_BASEBG $rend
+        Return the foreground/background colour index, respectively.
+
+    $rend = urxvt::SET_FGCOLOR ($rend, $new_colour)
+    $rend = urxvt::SET_BGCOLOR ($rend, $new_colour)
+        Replace the foreground/background colour in the rendition mask with
+        the specified one.
+
+    $value = urxvt::GET_CUSTOM ($rend)
+        Return the "custom" value: Every rendition has 5 bits for use by
+        extensions. They can be set and changed as you like and are
+        initially zero.
+
+    $rend = urxvt::SET_CUSTOM ($rend, $new_value)
+        Change the custom value.
+
   The "urxvt::term" Class
     $value = $term->resource ($name[, $newval])
         Returns the current resource value associated with a given name and
@@ -207,25 +245,42 @@ DESCRIPTION
         Return the current selection text and optionally replace it by
         $newtext.
 
-    $term->scr_overlay ($x, $y, $text)
-        Create a simple multi-line overlay box. See the next method for
-        details.
+        #=item $term->overlay ($x, $y, $text) # #Create a simple multi-line
+        overlay box. See the next method for details. # #=cut
 
-    $term->scr_overlay_new ($x, $y, $width, $height)
+        sub urxvt::term::scr_overlay { die; my ($self, $x, $y, $text) = @_;
+
+           my @lines = split /\n/, $text;
+
+           my $w = 0;
+           for (map $self->strwidth ($_), @lines) {
+              $w = $_ if $w < $_;
+           }
+
+           $self->scr_overlay_new ($x, $y, $w, scalar @lines);
+           $self->scr_overlay_set (0, $_, $lines[$_]) for 0.. $#lines;
+        }
+
+    $term->overlay ($x, $y, $width, $height[, $rstyle[, $border]])
         Create a new (empty) overlay at the given position with the given
-        width/height. A border will be put around the box. If either $x or
-        $y is negative, then this is counted from the right/bottom side,
-        respectively.
+        width/height. $rstyle defines the initial rendition style (default:
+        "OVERLAY_RSTYLE").
 
-    $term->scr_overlay_off
-        Switch the overlay off again.
+        If $border is 2 (default), then a decorative border will be put
+        around the box.
 
-    $term->scr_overlay_set_char ($x, $y, $char, $rend = OVERLAY_RSTYLE)
-        Put a single character (specified numerically) at the given overlay
-        position.
+        If either $x or $y is negative, then this is counted from the
+        right/bottom side, respectively.
 
-    $term->scr_overlay_set ($x, $y, $text)
-        Write a string at the given position into the overlay.
+        This method returns an urxvt::overlay object. The overlay will be
+        visible as long as the perl object is referenced.
+
+        Currently, the only method on the "urxvt::overlay" object is "set":
+
+    $overlay->set ($x, $y, $text, $rend)
+        Similar to "$term->ROW_t" and "$term->ROW_r" in that it puts text in
+        rxvt-unicode's special encoding and an array of rendition values at
+        a specific position inside the overlay.
 
     $cellwidth = $term->strwidth $string
         Returns the number of screen-cells this string would need. Correctly
@@ -272,7 +327,7 @@ DESCRIPTION
 
         If $new_text is specified, it will replace characters in the current
         line, starting at column $start_col (default 0), which is useful to
-        replace only parts of a line. The font iindex in the rendition will
+        replace only parts of a line. The font index in the rendition will
         automatically be updated.
 
         $text is in a special encoding: tabs and wide characters that use
@@ -295,7 +350,7 @@ DESCRIPTION
 
         When setting rendition, the font mask will be ignored.
 
-        See the section on RENDITION, below.
+        See the section on RENDITION, above.
 
     $length = $term->ROW_l ($row_number[, $new_length])
         Returns the number of screen cells that are in use ("the line
@@ -312,37 +367,22 @@ DESCRIPTION
         Converts rxvt-unicodes text reprsentation into a perl string. See
         "$term->ROW_t" for details.
 
-  RENDITION
-    Rendition bitsets contain information about colour, font, font styles
-    and similar information for each screen cell.
-
-    The following "macros" deal with changes in rendition sets. You should
-    never just create a bitset, you should always modify an existing one, as
-    they contain important information required for correct operation of
-    rxvt-unicode.
-
-    $rend = urxvt::DEFAULT_RSTYLE
-        Returns the default rendition, as used when the terminal is starting
-        up or being reset. Useful as a base
-
   The "urxvt::timer" Class
     This class implements timer watchers/events. Time is represented as a
     fractional number of seconds since the epoch. Example:
 
-       # create a digital clock display in upper right corner
+       $term->{overlay} = $term->overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);
        $term->{timer} = urxvt::timer
                         ->new
-                        ->start (urxvt::NOW)
+                        ->interval (1)
                         ->cb (sub {
-                           my ($timer) = @_;
-                           my $time = $timer->at;
-                           $timer->start ($time + 1);
-                           $self->scr_overlay (-1, 0, 
-                              POSIX::strftime "%H:%M:%S", localtime $time);
-                        });
+                           $term->{overlay}->set (0, 0,
+                              sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2,1,0]);
+                        });                                                                                                                                      
 
     $timer = new urxvt::timer
-        Create a new timer object in stopped state.
+        Create a new timer object in started state. It is scheduled to fire
+        immediately.
 
     $timer = $timer->cb (sub { my ($timer) = @_; ... })
         Set the callback to be called when the timer triggers.
@@ -352,6 +392,11 @@ DESCRIPTION
 
     $timer = $timer->set ($tstamp)
         Set the time the event is generated to $tstamp.
+
+    $timer = $timer->interval ($interval)
+        Normally (and when $interval is 0), the timer will automatically
+        stop after it has fired once. If $interval is non-zero, then the
+        timer is automatically rescheduled at the given intervals.
 
     $timer = $timer->start
         Start the timer.

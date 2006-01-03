@@ -188,12 +188,12 @@ Rot\-13 the selection when activated. Used via keyboard trigger:
 .RE
 .IP "digital-clock" 4
 .IX Item "digital-clock"
+Displays a digital clock using the built-in overlay.
+.IP "example-refresh-hooks" 4
+.IX Item "example-refresh-hooks"
 Displays a very simple digital clock in the upper right corner of the
 window. Illustrates overwriting the refresh callbacks to create your own
 overlays or changes.
-.IP "simple-overlay-clock" 4
-.IX Item "simple-overlay-clock"
-Displays a digital clock using the built-in overlay (colorful, useless).
 .Sh "General \s-1API\s0 Considerations"
 .IX Subsection "General API Considerations"
 All objects (such as terminals, time watchers etc.) are typical
@@ -317,6 +317,55 @@ correct place, e.g. on stderr of the connecting urxvtc client.
 .IP "$time = urxvt::NOW" 4
 .IX Item "$time = urxvt::NOW"
 Returns the \*(L"current time\*(R" (as per the event loop).
+.Sh "\s-1RENDITION\s0"
+.IX Subsection "RENDITION"
+Rendition bitsets contain information about colour, font, font styles and
+similar information for each screen cell.
+.PP
+The following \*(L"macros\*(R" deal with changes in rendition sets. You should
+never just create a bitset, you should always modify an existing one,
+as they contain important information required for correct operation of
+rxvt\-unicode.
+.IP "$rend = urxvt::DEFAULT_RSTYLE" 4
+.IX Item "$rend = urxvt::DEFAULT_RSTYLE"
+Returns the default rendition, as used when the terminal is starting up or
+being reset. Useful as a base to start when creating renditions.
+.IP "$rend = urxvt::OVERLAY_RSTYLE" 4
+.IX Item "$rend = urxvt::OVERLAY_RSTYLE"
+Return the rendition mask used for overlays by default.
+.IP "$rendbit = urxvt::RS_Bold, RS_Italic, RS_Blink, RS_RVid, RS_Uline" 4
+.IX Item "$rendbit = urxvt::RS_Bold, RS_Italic, RS_Blink, RS_RVid, RS_Uline"
+Return the bit that enabled bold, italic, blink, reverse-video and
+underline, respectively. To enable such a style, just logically \s-1OR\s0 it into
+the bitset.
+.ie n .IP "$foreground = urxvt::GET_BASEFG $rend" 4
+.el .IP "$foreground = urxvt::GET_BASEFG \f(CW$rend\fR" 4
+.IX Item "$foreground = urxvt::GET_BASEFG $rend"
+.PD 0
+.ie n .IP "$background = urxvt::GET_BASEBG $rend" 4
+.el .IP "$background = urxvt::GET_BASEBG \f(CW$rend\fR" 4
+.IX Item "$background = urxvt::GET_BASEBG $rend"
+.PD
+Return the foreground/background colour index, respectively.
+.ie n .IP "$rend = urxvt::SET_FGCOLOR ($rend, $new_colour)" 4
+.el .IP "$rend = urxvt::SET_FGCOLOR ($rend, \f(CW$new_colour\fR)" 4
+.IX Item "$rend = urxvt::SET_FGCOLOR ($rend, $new_colour)"
+.PD 0
+.ie n .IP "$rend = urxvt::SET_BGCOLOR ($rend, $new_colour)" 4
+.el .IP "$rend = urxvt::SET_BGCOLOR ($rend, \f(CW$new_colour\fR)" 4
+.IX Item "$rend = urxvt::SET_BGCOLOR ($rend, $new_colour)"
+.PD
+Replace the foreground/background colour in the rendition mask with the
+specified one.
+.IP "$value = urxvt::GET_CUSTOM ($rend)" 4
+.IX Item "$value = urxvt::GET_CUSTOM ($rend)"
+Return the \*(L"custom\*(R" value: Every rendition has 5 bits for use by
+extensions. They can be set and changed as you like and are initially
+zero.
+.ie n .IP "$rend = urxvt::SET_CUSTOM ($rend, $new_value)" 4
+.el .IP "$rend = urxvt::SET_CUSTOM ($rend, \f(CW$new_value\fR)" 4
+.IX Item "$rend = urxvt::SET_CUSTOM ($rend, $new_value)"
+Change the custom value.
 .ie n .Sh "The ""urxvt::term"" Class"
 .el .Sh "The \f(CWurxvt::term\fP Class"
 .IX Subsection "The urxvt::term Class"
@@ -378,29 +427,56 @@ by the next method).
 .el .IP "$oldtext = \f(CW$term\fR\->selection ([$newtext])" 4
 .IX Item "$oldtext = $term->selection ([$newtext])"
 Return the current selection text and optionally replace it by \f(CW$newtext\fR.
-.ie n .IP "$term\->scr_overlay ($x, $y\fR, \f(CW$text)" 4
-.el .IP "$term\->scr_overlay ($x, \f(CW$y\fR, \f(CW$text\fR)" 4
-.IX Item "$term->scr_overlay ($x, $y, $text)"
-Create a simple multi-line overlay box. See the next method for details.
-.ie n .IP "$term\->scr_overlay_new ($x, $y\fR, \f(CW$width\fR, \f(CW$height)" 4
-.el .IP "$term\->scr_overlay_new ($x, \f(CW$y\fR, \f(CW$width\fR, \f(CW$height\fR)" 4
-.IX Item "$term->scr_overlay_new ($x, $y, $width, $height)"
+.Sp
+#=item \f(CW$term\fR\->overlay ($x, \f(CW$y\fR, \f(CW$text\fR)
+#
+#Create a simple multi-line overlay box. See the next method for details.
+#
+#=cut
+.Sp
+sub urxvt::term::scr_overlay {
+die;
+   my ($self, \f(CW$x\fR, \f(CW$y\fR, \f(CW$text\fR) = \f(CW@_\fR;
+.Sp
+.Vb 1
+\&   my @lines = split /\en/, $text;
+.Ve
+.Sp
+.Vb 4
+\&   my $w = 0;
+\&   for (map $self->strwidth ($_), @lines) {
+\&      $w = $_ if $w < $_;
+\&   }
+.Ve
+.Sp
+.Vb 3
+\&   $self->scr_overlay_new ($x, $y, $w, scalar @lines);
+\&   $self->scr_overlay_set (0, $_, $lines[$_]) for 0.. $#lines;
+\&}
+.Ve
+.ie n .IP "$term\->overlay ($x, $y\fR, \f(CW$width\fR, \f(CW$height\fR[, \f(CW$rstyle\fR[, \f(CW$border]])" 4
+.el .IP "$term\->overlay ($x, \f(CW$y\fR, \f(CW$width\fR, \f(CW$height\fR[, \f(CW$rstyle\fR[, \f(CW$border\fR]])" 4
+.IX Item "$term->overlay ($x, $y, $width, $height[, $rstyle[, $border]])"
 Create a new (empty) overlay at the given position with the given
-width/height. A border will be put around the box. If either \f(CW$x\fR or
-\&\f(CW$y\fR is negative, then this is counted from the right/bottom side,
-respectively.
-.IP "$term\->scr_overlay_off" 4
-.IX Item "$term->scr_overlay_off"
-Switch the overlay off again.
-.ie n .IP "$term\->scr_overlay_set_char ($x, $y\fR, \f(CW$char\fR, \f(CW$rend = \s-1OVERLAY_RSTYLE\s0)" 4
-.el .IP "$term\->scr_overlay_set_char ($x, \f(CW$y\fR, \f(CW$char\fR, \f(CW$rend\fR = \s-1OVERLAY_RSTYLE\s0)" 4
-.IX Item "$term->scr_overlay_set_char ($x, $y, $char, $rend = OVERLAY_RSTYLE)"
-Put a single character (specified numerically) at the given overlay
-position.
-.ie n .IP "$term\->scr_overlay_set ($x, $y\fR, \f(CW$text)" 4
-.el .IP "$term\->scr_overlay_set ($x, \f(CW$y\fR, \f(CW$text\fR)" 4
-.IX Item "$term->scr_overlay_set ($x, $y, $text)"
-Write a string at the given position into the overlay.
+width/height. \f(CW$rstyle\fR defines the initial rendition style
+(default: \f(CW\*(C`OVERLAY_RSTYLE\*(C'\fR).
+.Sp
+If \f(CW$border\fR is \f(CW2\fR (default), then a decorative border will be put
+around the box.
+.Sp
+If either \f(CW$x\fR or \f(CW$y\fR is negative, then this is counted from the
+right/bottom side, respectively.
+.Sp
+This method returns an urxvt::overlay object. The overlay will be visible
+as long as the perl object is referenced.
+.Sp
+Currently, the only method on the \f(CW\*(C`urxvt::overlay\*(C'\fR object is \f(CW\*(C`set\*(C'\fR:
+.ie n .IP "$overlay\->set ($x, $y\fR, \f(CW$text\fR, \f(CW$rend)" 4
+.el .IP "$overlay\->set ($x, \f(CW$y\fR, \f(CW$text\fR, \f(CW$rend\fR)" 4
+.IX Item "$overlay->set ($x, $y, $text, $rend)"
+Similar to \f(CW\*(C`$term\->ROW_t\*(C'\fR and \f(CW\*(C`$term\->ROW_r\*(C'\fR in that it puts
+text in rxvt\-unicode's special encoding and an array of rendition values
+at a specific position inside the overlay.
 .ie n .IP "$cellwidth = $term\fR\->strwidth \f(CW$string" 4
 .el .IP "$cellwidth = \f(CW$term\fR\->strwidth \f(CW$string\fR" 4
 .IX Item "$cellwidth = $term->strwidth $string"
@@ -456,7 +532,7 @@ line \f(CW\*(C`\-$term\->nsaved\*(C'\fR.
 .Sp
 If \f(CW$new_text\fR is specified, it will replace characters in the current
 line, starting at column \f(CW$start_col\fR (default \f(CW0\fR), which is useful
-to replace only parts of a line. The font iindex in the rendition will
+to replace only parts of a line. The font index in the rendition will
 automatically be updated.
 .Sp
 \&\f(CW$text\fR is in a special encoding: tabs and wide characters that use more
@@ -480,7 +556,7 @@ styles and similar information. See also \f(CW\*(C`$term\->ROW_t\*(C'\fR.
 .Sp
 When setting rendition, the font mask will be ignored.
 .Sp
-See the section on \s-1RENDITION\s0, below.
+See the section on \s-1RENDITION\s0, above.
 .ie n .IP "$length = $term\fR\->ROW_l ($row_number[, \f(CW$new_length])" 4
 .el .IP "$length = \f(CW$term\fR\->ROW_l ($row_number[, \f(CW$new_length\fR])" 4
 .IX Item "$length = $term->ROW_l ($row_number[, $new_length])"
@@ -498,41 +574,26 @@ where one character corresponds to one screen cell. See
 .IX Item "$string = $term->special_decode $text"
 Converts rxvt-unicodes text reprsentation into a perl string. See
 \&\f(CW\*(C`$term\->ROW_t\*(C'\fR for details.
-.Sh "\s-1RENDITION\s0"
-.IX Subsection "RENDITION"
-Rendition bitsets contain information about colour, font, font styles and
-similar information for each screen cell.
-.PP
-The following \*(L"macros\*(R" deal with changes in rendition sets. You should
-never just create a bitset, you should always modify an existing one,
-as they contain important information required for correct operation of
-rxvt\-unicode.
-.IP "$rend = urxvt::DEFAULT_RSTYLE" 4
-.IX Item "$rend = urxvt::DEFAULT_RSTYLE"
-Returns the default rendition, as used when the terminal is starting up or
-being reset. Useful as a base
 .ie n .Sh "The ""urxvt::timer"" Class"
 .el .Sh "The \f(CWurxvt::timer\fP Class"
 .IX Subsection "The urxvt::timer Class"
 This class implements timer watchers/events. Time is represented as a
 fractional number of seconds since the epoch. Example:
 .PP
-.Vb 11
-\&   # create a digital clock display in upper right corner
+.Vb 8
+\&   $term->{overlay} = $term->overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);
 \&   $term->{timer} = urxvt::timer
 \&                    ->new
-\&                    ->start (urxvt::NOW)
+\&                    ->interval (1)
 \&                    ->cb (sub {
-\&                       my ($timer) = @_;
-\&                       my $time = $timer->at;
-\&                       $timer->start ($time + 1);
-\&                       $self->scr_overlay (-1, 0, 
-\&                          POSIX::strftime "%H:%M:%S", localtime $time);
+\&                       $term->{overlay}->set (0, 0,
+\&                          sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2,1,0]);
 \&                    });
 .Ve
 .IP "$timer = new urxvt::timer" 4
 .IX Item "$timer = new urxvt::timer"
-Create a new timer object in stopped state.
+Create a new timer object in started state. It is scheduled to fire
+immediately.
 .ie n .IP "$timer = $timer\fR\->cb (sub { my ($timer) = \f(CW@_; ... })" 4
 .el .IP "$timer = \f(CW$timer\fR\->cb (sub { my ($timer) = \f(CW@_\fR; ... })" 4
 .IX Item "$timer = $timer->cb (sub { my ($timer) = @_; ... })"
@@ -545,6 +606,12 @@ Return the time this watcher will fire next.
 .el .IP "$timer = \f(CW$timer\fR\->set ($tstamp)" 4
 .IX Item "$timer = $timer->set ($tstamp)"
 Set the time the event is generated to \f(CW$tstamp\fR.
+.ie n .IP "$timer = $timer\->interval ($interval)" 4
+.el .IP "$timer = \f(CW$timer\fR\->interval ($interval)" 4
+.IX Item "$timer = $timer->interval ($interval)"
+Normally (and when \f(CW$interval\fR is \f(CW0\fR), the timer will automatically
+stop after it has fired once. If \f(CW$interval\fR is non\-zero, then the timer
+is automatically rescheduled at the given intervals.
 .ie n .IP "$timer = $timer\->start" 4
 .el .IP "$timer = \f(CW$timer\fR\->start" 4
 .IX Item "$timer = $timer->start"

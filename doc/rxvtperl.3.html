@@ -21,8 +21,8 @@
 		<li><a href="#general_api_considerations">General API Considerations</a></li>
 		<li><a href="#hooks">Hooks</a></li>
 		<li><a href="#functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></li>
-		<li><a href="#the_urxvt__term_class">The <code>urxvt::term</code> Class</a></li>
 		<li><a href="#rendition">RENDITION</a></li>
+		<li><a href="#the_urxvt__term_class">The <code>urxvt::term</code> Class</a></li>
 		<li><a href="#the_urxvt__timer_class">The <code>urxvt::timer</code> Class</a></li>
 		<li><a href="#the_urxvt__iow_class">The <code>urxvt::iow</code> Class</a></li>
 	</ul>
@@ -96,15 +96,15 @@ Rot-13 the selection when activated. Used via keyboard trigger:
 <dt><strong><a name="item_digital_2dclock">digital-clock</a></strong><br />
 </dt>
 <dd>
+Displays a digital clock using the built-in overlay.
+</dd>
+<p></p>
+<dt><strong><a name="item_example_2drefresh_2dhooks">example-refresh-hooks</a></strong><br />
+</dt>
+<dd>
 Displays a very simple digital clock in the upper right corner of the
 window. Illustrates overwriting the refresh callbacks to create your own
 overlays or changes.
-</dd>
-<p></p>
-<dt><strong><a name="item_simple_2doverlay_2dclock">simple-overlay-clock</a></strong><br />
-</dt>
-<dd>
-Displays a digital clock using the built-in overlay (colorful, useless).
 </dd>
 <p></p></dl>
 <p>
@@ -270,6 +270,68 @@ Returns the ``current time'' (as per the event loop).
 <p></p></dl>
 <p>
 </p>
+<h2><a name="rendition">RENDITION</a></h2>
+<p>Rendition bitsets contain information about colour, font, font styles and
+similar information for each screen cell.</p>
+<p>The following ``macros'' deal with changes in rendition sets. You should
+never just create a bitset, you should always modify an existing one,
+as they contain important information required for correct operation of
+rxvt-unicode.</p>
+<dl>
+<dt><strong><a name="item__24rend__3d_urxvt_3a_3adefault_rstyle">$rend = urxvt::DEFAULT_RSTYLE</a></strong><br />
+</dt>
+<dd>
+Returns the default rendition, as used when the terminal is starting up or
+being reset. Useful as a base to start when creating renditions.
+</dd>
+<p></p>
+<dt><strong><a name="item__24rend__3d_urxvt_3a_3aoverlay_rstyle">$rend = urxvt::OVERLAY_RSTYLE</a></strong><br />
+</dt>
+<dd>
+Return the rendition mask used for overlays by default.
+</dd>
+<p></p>
+<dt><strong><a name="item__24rendbit__3d_urxvt_3a_3ars_bold_2c_rs_italic_2c_">$rendbit = urxvt::RS_Bold, RS_Italic, RS_Blink, RS_RVid, RS_Uline</a></strong><br />
+</dt>
+<dd>
+Return the bit that enabled bold, italic, blink, reverse-video and
+underline, respectively. To enable such a style, just logically OR it into
+the bitset.
+</dd>
+<p></p>
+<dt><strong><a name="item__24foreground__3d_urxvt_3a_3aget_basefg__24rend">$foreground = urxvt::GET_BASEFG $rend</a></strong><br />
+</dt>
+<dt><strong><a name="item__24background__3d_urxvt_3a_3aget_basebg__24rend">$background = urxvt::GET_BASEBG $rend</a></strong><br />
+</dt>
+<dd>
+Return the foreground/background colour index, respectively.
+</dd>
+<p></p>
+<dt><strong><a name="item_set_fgcolor">$rend = urxvt::SET_FGCOLOR ($rend, $new_colour)</a></strong><br />
+</dt>
+<dt><strong><a name="item_set_bgcolor">$rend = urxvt::SET_BGCOLOR ($rend, $new_colour)</a></strong><br />
+</dt>
+<dd>
+Replace the foreground/background colour in the rendition mask with the
+specified one.
+</dd>
+<p></p>
+<dt><strong><a name="item_get_custom">$value = urxvt::GET_CUSTOM ($rend)</a></strong><br />
+</dt>
+<dd>
+Return the ``custom'' value: Every rendition has 5 bits for use by
+extensions. They can be set and changed as you like and are initially
+zero.
+</dd>
+<p></p>
+<dt><strong><a name="item_set_custom">$rend = urxvt::SET_CUSTOM ($rend, $new_value)</a></strong><br />
+</dt>
+<dd>
+Change the custom value.
+</dd>
+<p></p></dl>
+<p>
+</p>
 <h2><a name="the_urxvt__term_class">The <code>urxvt::term</code> Class</a></h2>
 <dl>
 <dt><strong><a name="item_resource">$value = $term-&gt;resource ($name[, $newval])</a></strong><br />
@@ -337,39 +399,65 @@ by the next method).
 <dd>
 Return the current selection text and optionally replace it by <code>$newtext</code>.
 </dd>
-<p></p>
-<dt><strong><a name="item_scr_overlay">$term-&gt;scr_overlay ($x, $y, $text)</a></strong><br />
-</dt>
 <dd>
-Create a simple multi-line overlay box. See the next method for details.
+<p>#=item $term-&gt;overlay ($x, $y, $text)
+#
+#Create a simple multi-line overlay box. See the next method for details.
+#
+#=cut</p>
+</dd>
+<dd>
+<p>sub urxvt::term::scr_overlay {
+die;
+   my ($self, $x, $y, $text) = @_;</p>
+</dd>
+<dd>
+<pre>
+   my @lines = split /\n/, $text;</pre>
+</dd>
+<dd>
+<pre>
+   my $w = 0;
+   for (map $self-&gt;strwidth ($_), @lines) {
+      $w = $_ if $w &lt; $_;
+   }</pre>
+</dd>
+<dd>
+<pre>
+   $self-&gt;scr_overlay_new ($x, $y, $w, scalar @lines);
+   $self-&gt;scr_overlay_set (0, $_, $lines[$_]) for 0.. $#lines;
+}</pre>
 </dd>
 <p></p>
-<dt><strong><a name="item_scr_overlay_new">$term-&gt;scr_overlay_new ($x, $y, $width, $height)</a></strong><br />
+<dt><strong><a name="item_overlay">$term-&gt;overlay ($x, $y, $width, $height[, $rstyle[, $border]])</a></strong><br />
 </dt>
 <dd>
 Create a new (empty) overlay at the given position with the given
-width/height. A border will be put around the box. If either <code>$x</code> or
-<code>$y</code> is negative, then this is counted from the right/bottom side,
-respectively.
+width/height. <code>$rstyle</code> defines the initial rendition style
+(default: <code>OVERLAY_RSTYLE</code>).
+</dd>
+<dd>
+<p>If <code>$border</code> is <code>2</code> (default), then a decorative border will be put
+around the box.</p>
+</dd>
+<dd>
+<p>If either <code>$x</code> or <code>$y</code> is negative, then this is counted from the
+right/bottom side, respectively.</p>
+</dd>
+<dd>
+<p>This method returns an urxvt::overlay object. The overlay will be visible
+as long as the perl object is referenced.</p>
+</dd>
+<dd>
+<p>Currently, the only method on the <code>urxvt::overlay</code> object is <a href="#item_set"><code>set</code></a>:</p>
 </dd>
 <p></p>
-<dt><strong><a name="item_scr_overlay_off">$term-&gt;scr_overlay_off</a></strong><br />
+<dt><strong><a name="item_set">$overlay-&gt;set ($x, $y, $text, $rend)</a></strong><br />
 </dt>
 <dd>
-Switch the overlay off again.
-</dd>
-<p></p>
-<dt><strong><a name="item_scr_overlay_set_char">$term-&gt;scr_overlay_set_char ($x, $y, $char, $rend = OVERLAY_RSTYLE)</a></strong><br />
-</dt>
-<dd>
-Put a single character (specified numerically) at the given overlay
-position.
-</dd>
-<p></p>
-<dt><strong><a name="item_scr_overlay_set">$term-&gt;scr_overlay_set ($x, $y, $text)</a></strong><br />
-</dt>
-<dd>
-Write a string at the given position into the overlay.
+Similar to <a href="#item_row_t"><code>$term-&gt;ROW_t</code></a> and <a href="#item_row_r"><code>$term-&gt;ROW_r</code></a> in that it puts
+text in rxvt-unicode's special encoding and an array of rendition values
+at a specific position inside the overlay.
 </dd>
 <p></p>
 <dt><strong><a name="item_strwidth">$cellwidth = $term-&gt;strwidth $string</a></strong><br />
@@ -444,7 +532,7 @@ line <a href="#item_nsaved"><code>-$term-&gt;nsaved</code></a>.
 <dd>
 <p>If <code>$new_text</code> is specified, it will replace characters in the current
 line, starting at column <code>$start_col</code> (default <code>0</code>), which is useful
-to replace only parts of a line. The font iindex in the rendition will
+to replace only parts of a line. The font index in the rendition will
 automatically be updated.</p>
 </dd>
 <dd>
@@ -475,7 +563,7 @@ styles and similar information. See also <a href="#item_row_t"><code>$term-&gt;R
 <p>When setting rendition, the font mask will be ignored.</p>
 </dd>
 <dd>
-<p>See the section on RENDITION, below.</p>
+<p>See the section on RENDITION, above.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_row_l">$length = $term-&gt;ROW_l ($row_number[, $new_length])</a></strong><br />
@@ -503,43 +591,24 @@ Converts rxvt-unicodes text reprsentation into a perl string. See
 <p></p></dl>
 <p>
 </p>
-<h2><a name="rendition">RENDITION</a></h2>
-<p>Rendition bitsets contain information about colour, font, font styles and
-similar information for each screen cell.</p>
-<p>The following ``macros'' deal with changes in rendition sets. You should
-never just create a bitset, you should always modify an existing one,
-as they contain important information required for correct operation of
-rxvt-unicode.</p>
-<dl>
-<dt><strong><a name="item__24rend__3d_urxvt_3a_3adefault_rstyle">$rend = urxvt::DEFAULT_RSTYLE</a></strong><br />
-</dt>
-<dd>
-Returns the default rendition, as used when the terminal is starting up or
-being reset. Useful as a base
-</dd>
-<p></p></dl>
-<p>
-</p>
 <h2><a name="the_urxvt__timer_class">The <code>urxvt::timer</code> Class</a></h2>
 <p>This class implements timer watchers/events. Time is represented as a
 fractional number of seconds since the epoch. Example:</p>
 <pre>
-   # create a digital clock display in upper right corner
+   $term-&gt;{overlay} = $term-&gt;overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);
    $term-&gt;{timer} = urxvt::timer
                     -&gt;new
-                    -&gt;start (urxvt::NOW)
+                    -&gt;interval (1)
                     -&gt;cb (sub {
-                       my ($timer) = @_;
-                       my $time = $timer-&gt;at;
-                       $timer-&gt;start ($time + 1);
-                       $self-&gt;scr_overlay (-1, 0, 
-                          POSIX::strftime &quot;%H:%M:%S&quot;, localtime $time);
+                       $term-&gt;{overlay}-&gt;set (0, 0,
+                          sprintf &quot;%2d:%02d:%02d&quot;, (localtime urxvt::NOW)[2,1,0]);
                     });</pre>
 <dl>
 <dt><strong><a name="item__24timer__3d_new_urxvt_3a_3atimer">$timer = new urxvt::timer</a></strong><br />
 </dt>
 <dd>
-Create a new timer object in stopped state.
+Create a new timer object in started state. It is scheduled to fire
+immediately.
 </dd>
 <p></p>
 <dt><strong><a name="item_cb">$timer = $timer-&gt;cb (sub { my ($timer) = @_; ... })</a></strong><br />
@@ -554,10 +623,18 @@ Set the callback to be called when the timer triggers.
 Return the time this watcher will fire next.
 </dd>
 <p></p>
-<dt><strong><a name="item_set">$timer = $timer-&gt;set ($tstamp)</a></strong><br />
+<dt><strong>$timer = $timer-&gt;set ($tstamp)</strong><br />
 </dt>
 <dd>
 Set the time the event is generated to $tstamp.
+</dd>
+<p></p>
+<dt><strong><a name="item_interval">$timer = $timer-&gt;interval ($interval)</a></strong><br />
+</dt>
+<dd>
+Normally (and when <code>$interval</code> is <code>0</code>), the timer will automatically
+stop after it has fired once. If <code>$interval</code> is non-zero, then the timer
+is automatically rescheduled at the given intervals.
 </dd>
 <p></p>
 <dt><strong><a name="item_start">$timer = $timer-&gt;start</a></strong><br />

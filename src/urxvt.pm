@@ -196,6 +196,8 @@ correct place, e.g. on stderr of the connecting urxvtc client.
 
 Returns the "current time" (as per the event loop).
 
+=back
+
 =head2 RENDITION
 
 Rendition bitsets contain information about colour, font, font styles and
@@ -360,8 +362,6 @@ sub invoke {
 
    0
 }
-
-=back
 
 =head2 The C<urxvt::term> Class
 
