@@ -1797,6 +1797,7 @@ rxvt_term::button_press (XButtonEvent &ev)
   int reportmode = 0, clickintime;
 
   bypass_keystate = ev.state & (ModMetaMask | ShiftMask);
+
   if (!bypass_keystate)
     reportmode = !! (priv_modes & PrivMode_mouse_report);
 
@@ -1855,48 +1856,49 @@ rxvt_term::button_press (XButtonEvent &ev)
           if (ev.button != MEvent.button)
             MEvent.clicks = 0;
 
-          switch (ev.button)
-            {
-              case Button1:
-                /* allow meta + click to select rectangular areas */
-                /* should be done in screen.C */
+          if (!PERL_INVOKE ((this, HOOK_MOUSE_CLICK, DT_XEVENT, &ev, DT_END)))
+            switch (ev.button)
+              {
+                case Button1:
+                  /* allow meta + click to select rectangular areas */
+                  /* should be done in screen.C */
 #if ENABLE_FRILLS
-                selection.rect = !!(ev.state & ModMetaMask);
+                  selection.rect = !!(ev.state & ModMetaMask);
 #else
-                selection.rect = false;
+                  selection.rect = false;
 #endif
 
-                /* allow shift+left click to extend selection */
-                if (ev.state & ShiftMask && ! (priv_modes & PrivMode_mouse_report))
-                  {
-                    if (MEvent.button == Button1 && clickintime)
-                      selection_rotate (ev.x, ev.y);
-                    else
-                      selection_extend (ev.x, ev.y, 1);
-                  }
-                else
-                  {
-                    if (MEvent.button == Button1 && clickintime)
-                      MEvent.clicks++;
-                    else
-                      MEvent.clicks = 1;
+                  /* allow shift+left click to extend selection */
+                  if (ev.state & ShiftMask && ! (priv_modes & PrivMode_mouse_report))
+                    {
+                      if (MEvent.button == Button1 && clickintime)
+                        selection_rotate (ev.x, ev.y);
+                      else
+                        selection_extend (ev.x, ev.y, 1);
+                    }
+                  else
+                    {
+                      if (MEvent.button == Button1 && clickintime)
+                        MEvent.clicks++;
+                      else
+                        MEvent.clicks = 1;
 
-                    selection_click (MEvent.clicks, ev.x, ev.y);
-                  }
+                      selection_click (MEvent.clicks, ev.x, ev.y);
+                    }
 
-                MEvent.button = Button1;
-                break;
+                  MEvent.button = Button1;
+                  break;
 
-              case Button3:
-                if (MEvent.button == Button3 && clickintime)
-                  selection_rotate (ev.x, ev.y);
-                else
-                  selection_extend (ev.x, ev.y, 1);
+                case Button3:
+                  if (MEvent.button == Button3 && clickintime)
+                    selection_rotate (ev.x, ev.y);
+                  else
+                    selection_extend (ev.x, ev.y, 1);
 
-                MEvent.button = Button3;
-                break;
-            }
-        }
+                  MEvent.button = Button3;
+                  break;
+              }
+          }
 
       MEvent.time = ev.time;
       return;

@@ -16,6 +16,7 @@ enum data_type {
   DT_INT,
   DT_LONG,
   DT_STRING,
+  DT_XEVENT,
 };
 
 enum hook_type {
@@ -29,6 +30,8 @@ enum hook_type {
   HOOK_SEL_MAKE,
   HOOK_SEL_GRAB,
 
+  HOOK_SEL_CLICK,
+
   HOOK_FOCUS_IN,
   HOOK_FOCUS_OUT,
 
@@ -40,6 +43,9 @@ enum hook_type {
   HOOK_REFRESH_END,
 
   HOOK_KEYBOARD_COMMAND,
+
+  HOOK_MOUSE_CLICK,
+  HOOK_MOUSE_MOVE,
 
   HOOK_NUM,
 };

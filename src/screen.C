@@ -3325,8 +3325,11 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
       if (ROWCOL_IS_AFTER (selection.end, selection.beg))
         selection.end.col--;
 
-      selection_delimit_word (UP, &selection.beg, &selection.beg);
-      selection_delimit_word (DN, &selection.end, &selection.end);
+      if (!PERL_INVOKE ((this, HOOK_SEL_EXTEND, DT_END)))
+        {
+          selection_delimit_word (UP, &selection.beg, &selection.beg);
+          selection_delimit_word (DN, &selection.end, &selection.end);
+        }
     }
   else if (selection.clicks == 3)
     {

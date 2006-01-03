@@ -474,6 +474,7 @@ BOOT:
   set_hookname (SEL_EXTEND);
   set_hookname (SEL_MAKE);
   set_hookname (SEL_GRAB);
+  set_hookname (SEL_CLICK);
   set_hookname (FOCUS_IN);
   set_hookname (FOCUS_OUT);
   set_hookname (VIEW_CHANGE);
@@ -482,6 +483,8 @@ BOOT:
   set_hookname (REFRESH_BEGIN);
   set_hookname (REFRESH_END);
   set_hookname (KEYBOARD_COMMAND);
+  set_hookname (MOUSE_CLICK);
+  set_hookname (MOUSE_MOVE);
 
   export_const (DEFAULT_RSTYLE);
   export_const (OVERLAY_RSTYLE);
