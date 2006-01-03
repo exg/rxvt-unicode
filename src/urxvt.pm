@@ -41,8 +41,10 @@ You can activate them like this:
 
 =item selection
 
-Intelligent selection. This etxension tries to be more intelligent when the user
-extends selections (double-click).
+Intelligent selection. This extension tries to be more intelligent when
+the user extends selections (double-click). Right now, it tries to select
+urls and complete shell-quoted arguments, which is very convenient, too,
+if your F<ls> supports C<--quoting-style=shell>.
 
 It also offers the following bindable event:
 
