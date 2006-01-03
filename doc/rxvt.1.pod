@@ -1067,7 +1067,9 @@ info):
 
 Colon-separated list of perl extension scripts to use in this terminal
 instance. Each extension is looked up in the library directories, loaded
-if necessary, and bound to the current terminal instance; option B<-pe>.
+if necessary, and bound to the current terminal instance. If this resource
+is empty or missing, then the perl interpreter will not be initialized;
+option B<-pe>.
 
 =item B<perl-eval>: I<string>
 

@@ -489,10 +489,12 @@ rxvt_term::init (int argc, const char *const *argv)
 #endif
 
 #if ENABLE_PERL
-  rxvt_perl.init ();
+  if (rs[Rs_perl_ext] && *rs[Rs_perl_ext])
+    {
+      rxvt_perl.init ();
+      PERL_INVOKE ((this, HOOK_INIT, DT_END));
+    }
 #endif
-
-  PERL_INVOKE ((this, HOOK_INIT, DT_END));
 
   create_windows (argc, argv);
 

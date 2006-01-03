@@ -7,6 +7,7 @@ TODO: read property sequence is broken with respect to utf-8 etc.
 TODO: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
+WISH: make builtin character glyphs optional
 
         - optionally embed a perl interpreter, which can be used for more
           intelligent/customized selection support, visual feedback,
