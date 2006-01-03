@@ -9,10 +9,12 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 WISH: make builtin character glyphs optional
 
-	- SECURITY FIX: on systems using openpty (most BSDs, not GNU/Linux),
-          permissions were not correctly updated on the tty device and
-          were left as world-readable and world-writable (likely in original
-          rxvt, too), and were not restored properly (same as xterm here).
+        - SECURITY FIX: on systems using openpty, permissions were
+          not correctly updated on the tty device and were left as
+          world-readable and world-writable (likely in original rxvt,
+          too), and were not restored properly (same as xterm here).
+          Affected are only systems using non-unix ptys (such as most
+          BSDs, not GNU/Linux).
         - meta8 support was forcefully enabled in most configurations.
           restored configurability of this (useless) feature (reported
           by Mikachu)

@@ -191,18 +191,19 @@ section of @@RXVT_NAME@@(7).
 
 =item B<-fb> I<fontlist>
 
-Compile font-styles: The bold font list to use when bold characters are to
+Compile font-styles: The bold font list to use when B<bold> characters are to
 be printed. See resource B<boldFont> for details.
 
 =item B<-fi> I<fontlist>
 
-Compile font-styles: The italic font list to use when bold characters are to
+Compile font-styles: The italic font list to use when I<italic> characters are to
 be printed. See resource B<italicFont> for details.
 
 =item B<-fbi> I<fontlist>
 
-Compile font-styles: The bold italic font list to use when bold characters are to
-be printed. See resource B<boldItalicFont> for details.
+Compile font-styles: The bold italic font list to use when B<< I<bold
+italic> >> characters are to be printed. See resource B<boldItalicFont>
+for details.
 
 =item B<-is>|B<+is>
 
