@@ -55,13 +55,13 @@ Rot-13 the selection when activated. Used via keyboard trigger:
 
 =item digital-clock
 
+Displays a digital clock using the built-in overlay.
+
+=item example-refresh-hooks
+
 Displays a very simple digital clock in the upper right corner of the
 window. Illustrates overwriting the refresh callbacks to create your own
 overlays or changes.
-
-=item simple-overlay-clock
-
-Displays a digital clock using the built-in overlay (colourful, useless).
 
 =back
 
@@ -427,13 +427,14 @@ by the next method).
 
 Return the current selection text and optionally replace it by C<$newtext>.
 
-=item $term->scr_overlay ($x, $y, $text)
-
-Create a simple multi-line overlay box. See the next method for details.
-
-=cut
+#=item $term->overlay ($x, $y, $text)
+#
+#Create a simple multi-line overlay box. See the next method for details.
+#
+#=cut
 
 sub urxvt::term::scr_overlay {
+die;
    my ($self, $x, $y, $text) = @_;
 
    my @lines = split /\n/, $text;
@@ -447,25 +448,28 @@ sub urxvt::term::scr_overlay {
    $self->scr_overlay_set (0, $_, $lines[$_]) for 0.. $#lines;
 }
 
-=item $term->scr_overlay_new ($x, $y, $width, $height)
+=item $term->overlay ($x, $y, $width, $height[, $rstyle[, $border]])
 
 Create a new (empty) overlay at the given position with the given
-width/height. A border will be put around the box. If either C<$x> or
-C<$y> is negative, then this is counted from the right/bottom side,
-respectively.
+width/height. C<$rstyle> defines the initial rendition style
+(default: C<OVERLAY_RSTYLE>).
 
-=item $term->scr_overlay_off
+If C<$border> is C<2> (default), then a decorative border will be put
+around the box.
 
-Switch the overlay off again.
+If either C<$x> or C<$y> is negative, then this is counted from the
+right/bottom side, respectively.
 
-=item $term->scr_overlay_set_char ($x, $y, $char, $rend = OVERLAY_RSTYLE)
+This method returns an urxvt::overlay object. The overlay will be visible
+as long as the perl object is referenced.
 
-Put a single character (specified numerically) at the given overlay
-position.
+Currently, the only method on the C<urxvt::overlay> object is C<set>:
 
-=item $term->scr_overlay_set ($x, $y, $text)
+=item $overlay->set ($x, $y, $text, $rend)
 
-Write a string at the given position into the overlay.
+Similar to C<< $term->ROW_t >> and C<< $term->ROW_r >> in that it puts
+text in rxvt-unicode's special encoding and an array of rendition values
+at a specific position inside the overlay.
 
 =item $cellwidth = $term->strwidth $string
 
@@ -570,23 +574,21 @@ C<< $term->ROW_t >> for details.
 This class implements timer watchers/events. Time is represented as a
 fractional number of seconds since the epoch. Example:
 
-   # create a digital clock display in upper right corner
+   $term->{overlay} = $term->overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);
    $term->{timer} = urxvt::timer
                     ->new
-                    ->start (urxvt::NOW)
+                    ->interval (1)
                     ->cb (sub {
-                       my ($timer) = @_;
-                       my $time = $timer->at;
-                       $timer->start ($time + 1);
-                       $self->scr_overlay (-1, 0, 
-                          POSIX::strftime "%H:%M:%S", localtime $time);
-                    });
+                       $term->{overlay}->set (0, 0,
+                          sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2,1,0]);
+                    });                                                                                                                                      
 
 =over 4
 
 =item $timer = new urxvt::timer
 
-Create a new timer object in stopped state.
+Create a new timer object in started state. It is scheduled to fire
+immediately.
 
 =item $timer = $timer->cb (sub { my ($timer) = @_; ... })
 
@@ -599,6 +601,12 @@ Return the time this watcher will fire next.
 =item $timer = $timer->set ($tstamp)
 
 Set the time the event is generated to $tstamp.
+
+=item $timer = $timer->interval ($interval)
+
+Normally (and when C<$interval> is C<0>), the timer will automatically
+stop after it has fired once. If C<$interval> is non-zero, then the timer
+is automatically rescheduled at the given intervals.
 
 =item $timer = $timer->start
 

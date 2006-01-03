@@ -141,6 +141,8 @@ perl_watcher::invoke (const char *type, SV *self, int arg)
 
 struct timer : time_watcher, perl_watcher
 {
+  tstamp interval;
+
   timer ()
   : time_watcher (this, &timer::execute)
   {
@@ -148,6 +150,9 @@ struct timer : time_watcher, perl_watcher
 
   void execute (time_watcher &w)
   {
+    if (interval)
+      start (at + interval);
+
     invoke ("urxvt::timer", newSVtimer (this));
   }
 };
@@ -167,6 +172,136 @@ struct iow : io_watcher, perl_watcher
     invoke ("urxvt::iow", newSViow (this), revents);
   }
 };
+
+/////////////////////////////////////////////////////////////////////////////
+
+#define SvOVERLAY(sv) (overlay *)SvPTR (sv, "urxvt::overlay")
+
+struct overlay {
+  HV *self;
+  rxvt_term *THIS;
+  int x, y, w, h;
+  int border;
+  text_t **text;
+  rend_t **rend;
+
+  overlay (rxvt_term *THIS, int x_, int y_, int w_, int h_, rend_t rstyle, int border);
+  ~overlay ();
+
+  void swap ();
+
+  void set (int x, int y, SV *str, SV *rend);
+};
+
+overlay::overlay (rxvt_term *THIS, int x_, int y_, int w_, int h_, rend_t rstyle, int border)
+: THIS(THIS), x(x_), y(y_), w(w_), h(h_), border(border == 2)
+{
+  if (border == 2)
+    {
+      w += 2;
+      h += 2;
+    }
+
+  text = new text_t *[h];
+  rend = new rend_t *[h];
+  
+  for (int y = 0; y < h; y++)
+    { 
+      text_t *tp = text[y] = new text_t[w];
+      rend_t *rp = rend[y] = new rend_t[w];
+      
+      text_t t0, t1, t2;
+      rend_t r = rstyle;
+  
+      if (border == 2)
+        {
+          if (y == 0)
+            t0 = 0x2554, t1 = 0x2550, t2 = 0x2557;
+          else if (y < h - 1)
+            t0 = 0x2551, t1 = 0x0020, t2 = 0x2551;
+          else
+            t0 = 0x255a, t1 = 0x2550, t2 = 0x255d;
+  
+          *tp++ = t0;          
+          *rp++ = r;
+      
+          for (int x = w - 2; x-- > 0; )
+            {
+              *tp++ = t1;
+              *rp++ = r;
+            }                 
+
+          *tp = t2;
+          *rp = r;            
+        }
+      else
+        for (int x = w; x-- > 0; )
+          {
+            *tp++ = 0x0020;
+            *rp++ = r;
+          }                 
+    }                      
+
+  THIS->want_refresh = 1;
+}
+
+overlay::~overlay ()
+{
+  for (int y = h; y--; )
+    {
+      delete [] text[y];
+      delete [] rend[y];
+    }
+
+  delete [] text;
+  delete [] rend;
+
+  THIS->want_refresh = 1;
+}
+
+void overlay::swap ()
+{
+  int ov_x = max (0, min (MOD (x, THIS->ncol), THIS->ncol - w));
+  int ov_y = max (0, min (MOD (y, THIS->nrow), THIS->nrow - h));
+
+  int ov_w = min (w, THIS->ncol - ov_x);
+  int ov_h = min (h, THIS->nrow - ov_y);
+
+  for (int y = ov_h; y--; )
+    {
+      text_t *t1 = text [y];
+      rend_t *r1 = rend [y];
+                       
+      text_t *t2 = ROW(y + ov_y - THIS->view_start).t + ov_x;
+      rend_t *r2 = ROW(y + ov_y - THIS->view_start).r + ov_x;
+
+      for (int x = ov_w; x--; )
+        {                                               
+          text_t t = *t1; *t1++ = *t2; *t2++ = t;
+          rend_t r = *r1; *r1++ = *r2; *r2++ = SET_FONT (r, THIS->fontset [GET_STYLE (r)]->find_font (t));
+        }
+    }
+
+}
+
+void overlay::set (int x, int y, SV *str, SV *rend)
+{
+  x += border;
+  y += border;
+
+  if (!IN_RANGE_EXC (y, 0, h - border))
+    return;
+
+  wchar_t *wstr = sv2wcs (str);
+
+  for (int col = min (wcslen (wstr), w - x - border); col--; )
+    text [y][x + col] = wstr [col];
+  
+  free (wstr);
+
+  THIS->want_refresh = 1;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -215,12 +350,32 @@ rxvt_perl_interp::init ()
 bool
 rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 {
-  if (!perl
-      || (!should_invoke [htype] && htype != HOOK_INIT && htype != HOOK_DESTROY))
+  if (!perl)
     return false;
   
   if (htype == HOOK_INIT) // first hook ever called
-    term->self = (void *)newSVptr ((void *)term, "urxvt::term");
+    {
+      term->self = (void *)newSVptr ((void *)term, "urxvt::term");
+      hv_store ((HV *)SvRV ((SV *)term->self), "_overlay", 8, newRV_noinc ((SV *)newHV ()), 0);
+    }
+  else if (htype == HOOK_DESTROY)
+    {
+      // handled later
+    }
+  else if (htype == HOOK_REFRESH_BEGIN || htype == HOOK_REFRESH_END)
+    {
+      HV *hv = (HV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)term->self), "_overlay", 8, 0));
+
+      if (HvKEYS (hv))
+        {
+          hv_iterinit (hv);
+
+          while (HE *he = hv_iternext (hv))
+            ((overlay *)SvIV (hv_iterval (hv, he)))->swap ();
+        }
+    }
+  else if (!should_invoke [htype])
+    return false;
 
   dSP;
   va_list ap;
@@ -522,9 +677,7 @@ rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0)
 
         if (new_text)
           {
-            STRLEN slen;
-            char *str = SvPVutf8 (new_text, slen);
-            wchar_t *wstr = rxvt_utf8towcs (str, slen);
+            wchar_t *wstr = sv2wcs (new_text);
 
             int len = wcslen (wstr);
 
@@ -705,26 +858,6 @@ rxvt_term::selection (SV *newtext = 0)
 }
         
 void
-rxvt_term::scr_overlay_new (int x, int y, int w, int h)
-
-void
-rxvt_term::scr_overlay_off ()
-
-void
-rxvt_term::scr_overlay_set_char (int x, int y, U32 text, U32 rend = OVERLAY_RSTYLE)
-	CODE:
-        THIS->scr_overlay_set (x, y, text, rend);
-
-void
-rxvt_term::scr_overlay_set (int x, int y, SV *text)
-	CODE:
-{
-        wchar_t *wtext = sv2wcs (text);
-        THIS->scr_overlay_set (x, y, wtext);
-        free (wtext);
-}
-
-void
 rxvt_term::tt_write (SV *octets)
         INIT:
           STRLEN len;
@@ -732,12 +865,48 @@ rxvt_term::tt_write (SV *octets)
 	C_ARGS:
           (unsigned char *)str, len
 
+SV *
+rxvt_term::overlay (int x, int y, int w, int h, int rstyle = OVERLAY_RSTYLE, int border = 2)
+	CODE:
+{
+        overlay *o = new overlay (THIS, x, y, w, h, rstyle, border);
+        RETVAL = newSVptr ((void *)o, "urxvt::overlay");
+        o->self = (HV *)SvRV (RETVAL);
+
+        HV *hv = (HV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)THIS->self), "_overlay", 8, 0));
+        char key[33]; sprintf (key, "%32lx", (long)o);
+        hv_store (hv, key, 32, newSViv ((long)o), 0);
+}
+	OUTPUT:
+        RETVAL
+
+MODULE = urxvt             PACKAGE = urxvt::overlay
+
+void
+overlay::set (int x, int y, SV *text, SV *rend = 0)
+
+void
+overlay::DESTROY ()
+	CODE:
+{
+        SV **ovs = hv_fetch ((HV *)SvRV ((SV *)THIS->THIS->self), "_overlay", 8, 0);
+        if (ovs)
+          {
+            HV *hv = (HV *)SvRV (*ovs);
+            char key[33]; sprintf (key, "%32lx", (long)THIS);
+            hv_delete (hv, key, 32, G_DISCARD);
+          }
+
+        delete THIS;
+}
+
 MODULE = urxvt             PACKAGE = urxvt::timer
 
 SV *
 timer::new ()
 	CODE:
         timer *w =  new timer;
+        w->start (NOW);
         RETVAL = newSVptr ((void *)w, "urxvt::timer");
         w->self = (HV *)SvRV (RETVAL);
         OUTPUT:
@@ -755,6 +924,14 @@ NV
 timer::at ()
 	CODE:
         RETVAL = THIS->at;
+        OUTPUT:
+        RETVAL
+
+timer *
+timer::interval (NV interval)
+	CODE:
+        THIS->interval = interval;
+        RETVAL = THIS;
         OUTPUT:
         RETVAL
 

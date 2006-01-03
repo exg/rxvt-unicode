@@ -125,7 +125,7 @@ src/typemap
 src/rxvtperl.h
 src/rxvtperl.C
 
-src/perl/simple-overlay-clock
+src/perl/example-refresh-hooks
 src/perl/digital-clock
 src/perl/selection
 

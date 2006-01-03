@@ -1959,7 +1959,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
   /*
    * B: reverse any characters which are selected
    */
-  PERL_INVOKE ((this, HOOK_REFRESH_BEGIN, DT_END));
   scr_reverse_selection ();
 
   /*
@@ -2050,6 +2049,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
       }
   }
 
+  PERL_INVOKE ((this, HOOK_REFRESH_BEGIN, DT_END));
 #if ENABLE_OVERLAY
   scr_swap_overlay ();
 #endif
@@ -2322,6 +2322,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 #if ENABLE_OVERLAY
   scr_swap_overlay ();
 #endif
+  PERL_INVOKE ((this, HOOK_REFRESH_END, DT_END));
 
   /*
    * G: cleanup cursor and display outline cursor if necessary
@@ -2369,7 +2370,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
    * H: cleanup selection
    */
   scr_reverse_selection ();
-  PERL_INVOKE ((this, HOOK_REFRESH_END, DT_END));
 
   if (refresh_type & SMOOTH_REFRESH)
     XFlush (display->display);

@@ -1,6 +1,7 @@
 rxvt_term *		T_TERM
 timer *			T_TIMER
 iow *			T_IOW
+overlay *		T_OVERLAY
 
 INPUT
 T_TERM
@@ -9,6 +10,8 @@ T_TIMER
 	$var = SvTIMER ($arg);
 T_IOW
 	$var = SvIOW ($arg);
+T_OVERLAY
+	$var = SvOVERLAY ($arg);
 
 OUTPUT
 T_TERM
