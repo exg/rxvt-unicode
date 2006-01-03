@@ -169,13 +169,13 @@ OPTIONS
         are to be printed. See resource boldFont for details.
 
     -fi *fontlist*
-        Compile font-styles: The italic font list to use when bold
+        Compile font-styles: The italic font list to use when *italic*
         characters are to be printed. See resource italicFont for details.
 
     -fbi *fontlist*
-        Compile font-styles: The bold italic font list to use when bold
-        characters are to be printed. See resource boldItalicFont for
-        details.
+        Compile font-styles: The bold italic font list to use when *bold
+        italic* characters are to be printed. See resource boldItalicFont
+        for details.
 
     -is|+is
         Compile font-styles: Bold/Italic font styles imply high intensity

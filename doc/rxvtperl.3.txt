@@ -32,8 +32,10 @@ DESCRIPTION
       rxvt -pe <extensionname>
 
     selection
-        Intelligent selection. This etxension tries to be more intelligent
-        when the user extends selections (double-click).
+        Intelligent selection. This extension tries to be more intelligent
+        when the user extends selections (double-click). Right now, it tries
+        to select urls and complete shell-quoted arguments, which is very
+        convenient, too, if your ls supports "--quoting-style=shell".
 
         It also offers the following bindable event:
 
@@ -509,9 +511,9 @@ ENVIRONMENT
     This variable controls the verbosity level of the perl extension. Higher
     numbers indicate more verbose output.
 
-    0 - only fatal messages
-    3 - script loading and management
-    10 - all events received
+    =0 - only fatal messages
+    =3 - script loading and management
+    =10 - all events received
 
 AUTHOR
      Marc Lehmann <pcg@goof.com>

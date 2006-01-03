@@ -852,11 +852,11 @@ numbers indicate more verbose output.
 
 =over 4
 
-=item 0 - only fatal messages
+=item =0 - only fatal messages
 
-=item 3 - script loading and management
+=item =3 - script loading and management
 
-=item 10 - all events received
+=item =10 - all events received
 
 =back
 

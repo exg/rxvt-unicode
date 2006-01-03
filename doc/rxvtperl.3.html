@@ -81,8 +81,10 @@ find them in <em>/opt/rxvt/lib/urxvt/perl/</em>.</p>
 <dt><strong><a name="item_selection">selection</a></strong><br />
 </dt>
 <dd>
-Intelligent selection. This etxension tries to be more intelligent when the user
-extends selections (double-click).
+Intelligent selection. This extension tries to be more intelligent when
+the user extends selections (double-click). Right now, it tries to select
+urls and complete shell-quoted arguments, which is very convenient, too,
+if your <em>ls</em> supports <code>--quoting-style=shell</code>.
 </dd>
 <dd>
 <p>It also offers the following bindable event:</p>
@@ -823,14 +825,14 @@ Stop watching for events on the given filehandle.
 <h2><a name="urxvt_perl_verbosity">URXVT_PERL_VERBOSITY</a></h2>
 <p>This variable controls the verbosity level of the perl extension. Higher
 numbers indicate more verbose output.</p>
-<ol>
-<li><strong><a name="item__2d_only_fatal_messages">- only fatal messages</a></strong><br />
-</li>
-<li><strong><a name="item__2d_script_loading_and_management">- script loading and management</a></strong><br />
-</li>
-<li><strong><a name="item__2d_all_events_received">- all events received</a></strong><br />
-</li>
-</ol>
+<dl>
+<dt><strong><a name="item__3d0__2d_only_fatal_messages">=0 - only fatal messages</a></strong><br />
+</dt>
+<dt><strong><a name="item__3d3__2d_script_loading_and_management">=3 - script loading and management</a></strong><br />
+</dt>
+<dt><strong><a name="item__3d10__2d_all_events_received">=10 - all events received</a></strong><br />
+</dt>
+</dl>
 <p>
 </p>
 <hr />

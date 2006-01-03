@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-03" "6.2" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-04" "6.2" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -174,8 +174,10 @@ You can activate them like this:
 .Ve
 .IP "selection" 4
 .IX Item "selection"
-Intelligent selection. This etxension tries to be more intelligent when the user
-extends selections (double\-click).
+Intelligent selection. This extension tries to be more intelligent when
+the user extends selections (double\-click). Right now, it tries to select
+urls and complete shell-quoted arguments, which is very convenient, too,
+if your \fIls\fR supports \f(CW\*(C`\-\-quoting\-style=shell\*(C'\fR.
 .Sp
 It also offers the following bindable event:
 .RS 4
@@ -757,13 +759,13 @@ Stop watching for events on the given filehandle.
 .IX Subsection "URXVT_PERL_VERBOSITY"
 This variable controls the verbosity level of the perl extension. Higher
 numbers indicate more verbose output.
-.IP "0 \- only fatal messages" 4
-.IX Item "0 - only fatal messages"
+.IP "=0 \- only fatal messages" 4
+.IX Item "=0 - only fatal messages"
 .PD 0
-.IP "3 \- script loading and management" 4
-.IX Item "3 - script loading and management"
-.IP "10 \- all events received" 4
-.IX Item "10 - all events received"
+.IP "=3 \- script loading and management" 4
+.IX Item "=3 - script loading and management"
+.IP "=10 \- all events received" 4
+.IX Item "=10 - all events received"
 .PD
 .SH "AUTHOR"
 .IX Header "AUTHOR"
