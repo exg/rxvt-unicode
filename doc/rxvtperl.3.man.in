@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-02" "6.2" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-03" "6.2" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -162,6 +162,38 @@ thus must be encoded as \s-1UTF\-8\s0.
 .PP
 Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
 scripts will be shared (But not enabled) for all terminals.
+.SH "PACKAGED EXTENSIONS"
+.IX Header "PACKAGED EXTENSIONS"
+This section describes the extensiosn delivered with this version. You can
+find them in \fI@@RXVT_LIBDIR@@/urxvt/perl/\fR.
+.PP
+You can activate them like this:
+.PP
+.Vb 1
+\&  @@RXVT_NAME@@ -pe <extensionname>
+.Ve
+.IP "selection" 4
+.IX Item "selection"
+Miscellaneous selection modifications.
+.RS 4
+.IP "rot13" 4
+.IX Item "rot13"
+Rot\-13 the selection when activated. Used via keyboard trigger:
+.Sp
+.Vb 1
+\&   URxvt.keysym.C-M-r: perl:selection:rot13
+.Ve
+.RE
+.RS 4
+.RE
+.IP "digital-clock" 4
+.IX Item "digital-clock"
+Displays a very simple digital clock in the upper right corner of the
+window. Illustrates overwriting the refresh callbacks to create your own
+overlays or changes.
+.IP "simple-overlay-clock" 4
+.IX Item "simple-overlay-clock"
+Displays a digital clock using the built-in overlay (colorful, useless).
 .Sh "General \s-1API\s0 Considerations"
 .IX Subsection "General API Considerations"
 All objects (such as terminals, time watchers etc.) are typical
@@ -385,8 +417,100 @@ Convert the given locale-encoded octets into a perl string.
 .IP "$term\->tt_write ($octets)" 4
 .IX Item "$term->tt_write ($octets)"
 Write the octets given in \f(CW$data\fR to the tty (i.e. as program input). To
-pass characters instead of octets, you should convetr you strings first to
-the locale-specific encoding using \f(CW\*(C`$term\->locale_encode\*(C'\fR.
+pass characters instead of octets, you should convert your strings first
+to the locale-specific encoding using \f(CW\*(C`$term\->locale_encode\*(C'\fR.
+.ie n .IP "$nrow = $term\->nrow" 4
+.el .IP "$nrow = \f(CW$term\fR\->nrow" 4
+.IX Item "$nrow = $term->nrow"
+.PD 0
+.ie n .IP "$ncol = $term\->ncol" 4
+.el .IP "$ncol = \f(CW$term\fR\->ncol" 4
+.IX Item "$ncol = $term->ncol"
+.PD
+Return the number of rows/columns of the terminal window (i.e. as
+specified by \f(CW\*(C`\-geometry\*(C'\fR, excluding any scrollback).
+.ie n .IP "$nsaved = $term\->nsaved" 4
+.el .IP "$nsaved = \f(CW$term\fR\->nsaved" 4
+.IX Item "$nsaved = $term->nsaved"
+Returns the number of lines in the scrollback buffer.
+.ie n .IP "$view_start = $term\->view_start ([$newvalue])" 4
+.el .IP "$view_start = \f(CW$term\fR\->view_start ([$newvalue])" 4
+.IX Item "$view_start = $term->view_start ([$newvalue])"
+Returns the negative row number of the topmost line. Minimum value is
+\&\f(CW0\fR, which displays the normal terminal contents. Larger values scroll
+this many lines into the scrollback buffer.
+.IP "$term\->want_refresh" 4
+.IX Item "$term->want_refresh"
+Requests a screen refresh. At the next opportunity, rxvt-unicode will
+compare the on-screen display with its stored representation. If they
+differ, it redraws the differences.
+.Sp
+Used after changing terminal contents to display them.
+.ie n .IP "$text = $term\fR\->ROW_t ($row_number[, \f(CW$new_text\fR[, \f(CW$start_col]])" 4
+.el .IP "$text = \f(CW$term\fR\->ROW_t ($row_number[, \f(CW$new_text\fR[, \f(CW$start_col\fR]])" 4
+.IX Item "$text = $term->ROW_t ($row_number[, $new_text[, $start_col]])"
+Returns the text of the entire row with number \f(CW$row_number\fR. Row \f(CW0\fR
+is the topmost terminal line, row \f(CW\*(C`$term\->$ncol\-1\*(C'\fR is the bottommost
+terminal line. The scrollback buffer starts at line \f(CW\*(C`\-1\*(C'\fR and extends to
+line \f(CW\*(C`\-$term\->nsaved\*(C'\fR.
+.Sp
+If \f(CW$new_text\fR is specified, it will replace characters in the current
+line, starting at column \f(CW$start_col\fR (default \f(CW0\fR), which is useful
+to replace only parts of a line. The font iindex in the rendition will
+automatically be updated.
+.Sp
+\&\f(CW$text\fR is in a special encoding: tabs and wide characters that use more
+than one cell when displayed are padded with urxvt::NOCHAR characters
+(\f(CW\*(C`chr 65535\*(C'\fR). Characters with combining characters and other characters
+that do not fit into the normal tetx encoding will be replaced with
+characters in the private use area.
+.Sp
+You have to obey this encoding when changing text. The advantage is
+that \f(CW\*(C`substr\*(C'\fR and similar functions work on screen cells and not on
+characters.
+.Sp
+The methods \f(CW\*(C`$term\->special_encode\*(C'\fR and \f(CW\*(C`$term\->special_decode\*(C'\fR
+can be used to convert normal strings into this encoding and vice versa.
+.ie n .IP "$rend = $term\fR\->ROW_r ($row_number[, \f(CW$new_rend\fR[, \f(CW$start_col]])" 4
+.el .IP "$rend = \f(CW$term\fR\->ROW_r ($row_number[, \f(CW$new_rend\fR[, \f(CW$start_col\fR]])" 4
+.IX Item "$rend = $term->ROW_r ($row_number[, $new_rend[, $start_col]])"
+Like \f(CW\*(C`$term\->ROW_t\*(C'\fR, but returns an arrayref with rendition
+bitsets. Rendition bitsets contain information about colour, font, font
+styles and similar information. See also \f(CW\*(C`$term\->ROW_t\*(C'\fR.
+.Sp
+When setting rendition, the font mask will be ignored.
+.Sp
+See the section on \s-1RENDITION\s0, below.
+.ie n .IP "$length = $term\fR\->ROW_l ($row_number[, \f(CW$new_length])" 4
+.el .IP "$length = \f(CW$term\fR\->ROW_l ($row_number[, \f(CW$new_length\fR])" 4
+.IX Item "$length = $term->ROW_l ($row_number[, $new_length])"
+Returns the number of screen cells that are in use (\*(L"the line length\*(R"). If
+it is \f(CW\*(C`\-1\*(C'\fR, then the line is part of a multiple-row logical \*(L"line\*(R", which
+means all characters are in use and it is continued on the next row.
+.ie n .IP "$text = $term\fR\->special_encode \f(CW$string" 4
+.el .IP "$text = \f(CW$term\fR\->special_encode \f(CW$string\fR" 4
+.IX Item "$text = $term->special_encode $string"
+Converts a perl string into the special encoding used by rxvt\-unicode,
+where one character corresponds to one screen cell. See
+\&\f(CW\*(C`$term\->ROW_t\*(C'\fR for details.
+.ie n .IP "$string = $term\fR\->special_decode \f(CW$text" 4
+.el .IP "$string = \f(CW$term\fR\->special_decode \f(CW$text\fR" 4
+.IX Item "$string = $term->special_decode $text"
+Converts rxvt-unicodes text reprsentation into a perl string. See
+\&\f(CW\*(C`$term\->ROW_t\*(C'\fR for details.
+.Sh "\s-1RENDITION\s0"
+.IX Subsection "RENDITION"
+Rendition bitsets contain information about colour, font, font styles and
+similar information for each screen cell.
+.PP
+The following \*(L"macros\*(R" deal with changes in rendition sets. You should
+never just create a bitset, you should always modify an existing one,
+as they contain important information required for correct operation of
+rxvt\-unicode.
+.IP "$rend = urxvt::DEFAULT_RSTYLE" 4
+.IX Item "$rend = urxvt::DEFAULT_RSTYLE"
+Returns the default rendition, as used when the terminal is starting up or
+being reset. Useful as a base
 .ie n .Sh "The ""urxvt::timer"" Class"
 .el .Sh "The \f(CWurxvt::timer\fP Class"
 .IX Subsection "The urxvt::timer Class"

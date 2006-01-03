@@ -15,12 +15,14 @@
 	<li><a href="#name">NAME</a></li>
 	<li><a href="#synopsis">SYNOPSIS</a></li>
 	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#packaged_extensions">PACKAGED EXTENSIONS</a></li>
 	<ul>
 
 		<li><a href="#general_api_considerations">General API Considerations</a></li>
 		<li><a href="#hooks">Hooks</a></li>
 		<li><a href="#functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></li>
 		<li><a href="#the_urxvt__term_class">The <code>urxvt::term</code> Class</a></li>
+		<li><a href="#rendition">RENDITION</a></li>
 		<li><a href="#the_urxvt__timer_class">The <code>urxvt::timer</code> Class</a></li>
 		<li><a href="#the_urxvt__iow_class">The <code>urxvt::iow</code> Class</a></li>
 	</ul>
@@ -65,6 +67,46 @@
 thus must be encoded as UTF-8.</p>
 <p>Each script will only ever be loaded once, even in rxvtd, where
 scripts will be shared (But not enabled) for all terminals.</p>
+<p>
+</p>
+<hr />
+<h1><a name="packaged_extensions">PACKAGED EXTENSIONS</a></h1>
+<p>This section describes the extensiosn delivered with this version. You can
+find them in <em>/opt/rxvt/lib/urxvt/perl/</em>.</p>
+<p>You can activate them like this:</p>
+<pre>
+  rxvt -pe &lt;extensionname&gt;</pre>
+<dl>
+<dt><strong><a name="item_selection">selection</a></strong><br />
+</dt>
+<dd>
+Miscellaneous selection modifications.
+</dd>
+<dl>
+<dt><strong><a name="item_rot13">rot13</a></strong><br />
+</dt>
+<dd>
+Rot-13 the selection when activated. Used via keyboard trigger:
+</dd>
+<dd>
+<pre>
+   URxvt.keysym.C-M-r: perl:selection:rot13</pre>
+</dd>
+<p></p></dl>
+<dt><strong><a name="item_digital_2dclock">digital-clock</a></strong><br />
+</dt>
+<dd>
+Displays a very simple digital clock in the upper right corner of the
+window. Illustrates overwriting the refresh callbacks to create your own
+overlays or changes.
+</dd>
+<p></p>
+<dt><strong><a name="item_simple_2doverlay_2dclock">simple-overlay-clock</a></strong><br />
+</dt>
+<dd>
+Displays a digital clock using the built-in overlay (colorful, useless).
+</dd>
+<p></p></dl>
 <p>
 </p>
 <h2><a name="general_api_considerations">General API Considerations</a></h2>
@@ -290,7 +332,7 @@ Try to request the primary selection from the server (for example, as set
 by the next method).
 </dd>
 <p></p>
-<dt><strong><a name="item_selection">$oldtext = $term-&gt;selection ([$newtext])</a></strong><br />
+<dt><strong>$oldtext = $term-&gt;selection ([$newtext])</strong><br />
 </dt>
 <dd>
 Return the current selection text and optionally replace it by <code>$newtext</code>.
@@ -353,8 +395,127 @@ Convert the given locale-encoded octets into a perl string.
 </dt>
 <dd>
 Write the octets given in <code>$data</code> to the tty (i.e. as program input). To
-pass characters instead of octets, you should convetr you strings first to
-the locale-specific encoding using <a href="#item_locale_encode"><code>$term-&gt;locale_encode</code></a>.
+pass characters instead of octets, you should convert your strings first
+to the locale-specific encoding using <a href="#item_locale_encode"><code>$term-&gt;locale_encode</code></a>.
+</dd>
+<p></p>
+<dt><strong><a name="item_nrow">$nrow = $term-&gt;nrow</a></strong><br />
+</dt>
+<dt><strong><a name="item_ncol">$ncol = $term-&gt;ncol</a></strong><br />
+</dt>
+<dd>
+Return the number of rows/columns of the terminal window (i.e. as
+specified by <code>-geometry</code>, excluding any scrollback).
+</dd>
+<p></p>
+<dt><strong><a name="item_nsaved">$nsaved = $term-&gt;nsaved</a></strong><br />
+</dt>
+<dd>
+Returns the number of lines in the scrollback buffer.
+</dd>
+<p></p>
+<dt><strong><a name="item_view_start">$view_start = $term-&gt;view_start ([$newvalue])</a></strong><br />
+</dt>
+<dd>
+Returns the negative row number of the topmost line. Minimum value is
+<code>0</code>, which displays the normal terminal contents. Larger values scroll
+this many lines into the scrollback buffer.
+</dd>
+<p></p>
+<dt><strong><a name="item_want_refresh">$term-&gt;want_refresh</a></strong><br />
+</dt>
+<dd>
+Requests a screen refresh. At the next opportunity, rxvt-unicode will
+compare the on-screen display with its stored representation. If they
+differ, it redraws the differences.
+</dd>
+<dd>
+<p>Used after changing terminal contents to display them.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_row_t">$text = $term-&gt;ROW_t ($row_number[, $new_text[, $start_col]])</a></strong><br />
+</dt>
+<dd>
+Returns the text of the entire row with number <code>$row_number</code>. Row <code>0</code>
+is the topmost terminal line, row <code>$term-&gt;$ncol-1</code> is the bottommost
+terminal line. The scrollback buffer starts at line <code>-1</code> and extends to
+line <a href="#item_nsaved"><code>-$term-&gt;nsaved</code></a>.
+</dd>
+<dd>
+<p>If <code>$new_text</code> is specified, it will replace characters in the current
+line, starting at column <code>$start_col</code> (default <code>0</code>), which is useful
+to replace only parts of a line. The font iindex in the rendition will
+automatically be updated.</p>
+</dd>
+<dd>
+<p><code>$text</code> is in a special encoding: tabs and wide characters that use more
+than one cell when displayed are padded with urxvt::NOCHAR characters
+(<code>chr 65535</code>). Characters with combining characters and other characters
+that do not fit into the normal tetx encoding will be replaced with
+characters in the private use area.</p>
+</dd>
+<dd>
+<p>You have to obey this encoding when changing text. The advantage is
+that <code>substr</code> and similar functions work on screen cells and not on
+characters.</p>
+</dd>
+<dd>
+<p>The methods <a href="#item_special_encode"><code>$term-&gt;special_encode</code></a> and <a href="#item_special_decode"><code>$term-&gt;special_decode</code></a>
+can be used to convert normal strings into this encoding and vice versa.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_row_r">$rend = $term-&gt;ROW_r ($row_number[, $new_rend[, $start_col]])</a></strong><br />
+</dt>
+<dd>
+Like <a href="#item_row_t"><code>$term-&gt;ROW_t</code></a>, but returns an arrayref with rendition
+bitsets. Rendition bitsets contain information about colour, font, font
+styles and similar information. See also <a href="#item_row_t"><code>$term-&gt;ROW_t</code></a>.
+</dd>
+<dd>
+<p>When setting rendition, the font mask will be ignored.</p>
+</dd>
+<dd>
+<p>See the section on RENDITION, below.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_row_l">$length = $term-&gt;ROW_l ($row_number[, $new_length])</a></strong><br />
+</dt>
+<dd>
+Returns the number of screen cells that are in use (``the line length''). If
+it is <code>-1</code>, then the line is part of a multiple-row logical ``line'', which
+means all characters are in use and it is continued on the next row.
+</dd>
+<p></p>
+<dt><strong><a name="item_special_encode">$text = $term-&gt;special_encode $string</a></strong><br />
+</dt>
+<dd>
+Converts a perl string into the special encoding used by rxvt-unicode,
+where one character corresponds to one screen cell. See
+<a href="#item_row_t"><code>$term-&gt;ROW_t</code></a> for details.
+</dd>
+<p></p>
+<dt><strong><a name="item_special_decode">$string = $term-&gt;special_decode $text</a></strong><br />
+</dt>
+<dd>
+Converts rxvt-unicodes text reprsentation into a perl string. See
+<a href="#item_row_t"><code>$term-&gt;ROW_t</code></a> for details.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<h2><a name="rendition">RENDITION</a></h2>
+<p>Rendition bitsets contain information about colour, font, font styles and
+similar information for each screen cell.</p>
+<p>The following ``macros'' deal with changes in rendition sets. You should
+never just create a bitset, you should always modify an existing one,
+as they contain important information required for correct operation of
+rxvt-unicode.</p>
+<dl>
+<dt><strong><a name="item__24rend__3d_urxvt_3a_3adefault_rstyle">$rend = urxvt::DEFAULT_RSTYLE</a></strong><br />
+</dt>
+<dd>
+Returns the default rendition, as used when the terminal is starting up or
+being reset. Useful as a base
 </dd>
 <p></p></dl>
 <p>
