@@ -284,7 +284,7 @@ void overlay::swap ()
 
 }
 
-void overlay::set (int x, int y, SV *str, SV *rend)
+void overlay::set (int x, int y, SV *text, SV *rend)
 {
   x += border;
   y += border;
@@ -292,12 +292,23 @@ void overlay::set (int x, int y, SV *str, SV *rend)
   if (!IN_RANGE_EXC (y, 0, h - border))
     return;
 
-  wchar_t *wstr = sv2wcs (str);
+  wchar_t *wtext = sv2wcs (text);
 
-  for (int col = min (wcslen (wstr), w - x - border); col--; )
-    text [y][x + col] = wstr [col];
+  for (int col = min (wcslen (wtext), w - x - border); col--; )
+    this->text [y][x + col] = wtext [col];
   
-  free (wstr);
+  free (wtext);
+
+  if (rend)
+    {
+      if (!SvROK (rend) || SvTYPE (SvRV (rend)) != SVt_PVAV)
+        croak ("rend must be arrayref");
+
+      AV *av = (AV *)SvRV (rend);
+
+      for (int col = min (av_len (av) + 1, w - x - border); col--; )
+        this->rend [y][x + col] = SvIV (*av_fetch (av, col, 1));
+    }
 
   THIS->want_refresh = 1;
 }
