@@ -12,6 +12,16 @@ sub on_keyboard_command {
 my @patterns = (
    # urls
    qr{ ([a-z0-9.+\-]+://[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),]+) }x,
+
+   # shell-like argument quoting
+   qr{\G\s*(
+      (?:
+         [^"'\\ \t]+
+         | \\.
+         | " ([^\\"]+ | \\. )* "
+         | ' [^']* '
+      )+
+   )}xs,
 );
 
 sub on_sel_extend {
@@ -24,9 +34,9 @@ sub on_sel_extend {
 
    for my $regex (@patterns) {
       while ($text =~ /$regex/g) {
-         if ($-[0] <= $offset and $offset <= $+[0]) {
-            $self->selection_beg ($line->coord_of ($-[0]));
-            $self->selection_end ($line->coord_of ($+[0]));
+         if ($-[1] <= $offset and $offset <= $+[1]) {
+            $self->selection_beg ($line->coord_of ($-[1]));
+            $self->selection_end ($line->coord_of ($+[1]));
             return 1;
          }
       }

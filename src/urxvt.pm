@@ -386,6 +386,8 @@ sub invoke {
    verbose 10, "$HOOKNAME[$htype] (" . (join ", ", $TERM, @_) . ")"
       if $verbosity >= 10;
 
+   keys %$cb;
+
    while (my ($pkg, $cb) = each %$cb) {
       return 1
          if $cb->(
