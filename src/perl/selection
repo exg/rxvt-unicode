@@ -10,8 +10,11 @@ sub on_keyboard_command {
 }
 
 my @patterns = (
-   # urls
-   qr{ ([a-z0-9.+\-]+://[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),]+) }x,
+   # urls, just a heuristic
+   qr{(
+      (?:https?|ftp|news|mailto|file)://[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),]+
+      [^.]   # do not include a trailing dot, its wrong too often
+   )}x,
 
    # shell-like argument quoting
    qr{\G\s*(

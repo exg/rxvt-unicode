@@ -11,7 +11,8 @@ WISH: make builtin character glyphs optional
 
 	- SECURITY FIX: on systems using openpty (most BSDs, not GNU/Linux),
           permissions were not correctly updated on the tty device and
-          were left as world-readable and world-writable.
+          were left as world-readable and world-writable (likely in original
+          rxvt, too).
         - meta8 support was forcefully enabled in most configurations.
           restored configurability of this (useless) feature (reported
           by Mikachu)
