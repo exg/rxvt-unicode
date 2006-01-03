@@ -8,6 +8,7 @@ sub on_init {
    $self->{digital_clock_overlay} = $self->overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);
    $self->{digital_clock_timer} = urxvt::timer
                     ->new
+                    ->start (int urxvt::NOW) # make sure we update "on" the second
                     ->interval (1)
                     ->cb (sub {
                        $self->{digital_clock_overlay}->set (0, 0,
