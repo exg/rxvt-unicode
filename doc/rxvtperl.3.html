@@ -20,6 +20,7 @@
 		<li><a href="#prepackaged_extensions">Prepackaged Extensions</a></li>
 		<li><a href="#general_api_considerations">General API Considerations</a></li>
 		<li><a href="#hooks">Hooks</a></li>
+		<li><a href="#variables_in_the_urxvt_package">Variables in the <code>urxvt</code> Package</a></li>
 		<li><a href="#functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></li>
 		<li><a href="#rendition">RENDITION</a></li>
 		<li><a href="#the_urxvt__term_class">The <code>urxvt::term</code> Class</a></li>
@@ -80,7 +81,11 @@ find them in <em>/opt/rxvt/lib/urxvt/perl/</em>.</p>
 <dt><strong><a name="item_selection">selection</a></strong><br />
 </dt>
 <dd>
-Miscellaneous selection modifications.
+Intelligent selection. This etxension tries to be more intelligent when the user
+extends selections (double-click).
+</dd>
+<dd>
+<p>It also offers the following bindable event:</p>
 </dd>
 <dl>
 <dt><strong><a name="item_rot13">rot13</a></strong><br />
@@ -113,7 +118,7 @@ overlays or changes.
 <p>All objects (such as terminals, time watchers etc.) are typical
 reference-to-hash objects. The hash can be used to store anything you
 like. All members starting with an underscore (such as <code>_ptr</code> or
-<code>_hook</code>) are reserved for internal uses and must not be accessed or
+<code>_hook</code>) are reserved for internal uses and <strong>MUST NOT</strong> be accessed or
 modified).</p>
 <p>When objects are destroyed on the C++ side, the perl object hashes are
 emptied, so its best to store related objects such as time watchers and
@@ -122,8 +127,13 @@ terminal is destroyed.</p>
 <p>
 </p>
 <h2><a name="hooks">Hooks</a></h2>
-<p>The following subroutines can be declared in loaded scripts, and will be called
-whenever the relevant event happens.</p>
+<p>The following subroutines can be declared in loaded scripts, and will be
+called whenever the relevant event happens.</p>
+<p>The first argument passed to them is an object private to each terminal
+and extension package.  You can call all <code>urxvt::term</code> methods on it, but
+its not a real <code>urxvt::term</code> object. Instead, the real <code>urxvt::term</code>
+object that is shared between all packages is stored in the <code>term</code>
+member.</p>
 <p>All of them must return a boolean value. If it is true, then the event
 counts as being <em>consumed</em>, and the invocation of other hooks is skipped,
 and the relevant action might not be carried out by the C++ code.</p>
@@ -172,6 +182,18 @@ by calling <a href="#item_selection"><code>$term-&gt;selection</code></a>.
 </dd>
 <dd>
 <p>Returning a true value aborts selection grabbing. It will still be hilighted.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_on_sel_extend__24term">on_sel_extend $term</a></strong><br />
+</dt>
+<dd>
+Called whenever the user tries to extend the selection (e.g. with a double
+click) and is either supposed to return false (normal operation), or
+should extend the selection itelf and return true to suppress the built-in
+processing.
+</dd>
+<dd>
+<p>See the <em>selection</em> example extension.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_on_focus_in__24term">on_focus_in $term</a></strong><br />
@@ -236,6 +258,17 @@ Called just after the screen gets redrawn. See <code>on_refresh_begin</code>.
 Called whenever the user presses a key combination that has a
 <code>perl:string</code> action bound to it (see description of the <strong>keysym</strong>
 resource in the <code>rxvt(1)</code> manpage).
+</dd>
+<p></p></dl>
+<p>
+</p>
+<h2><a name="variables_in_the_urxvt_package">Variables in the <code>urxvt</code> Package</a></h2>
+<dl>
+<dt><strong><a name="item__24urxvt_3a_3aterm">$urxvt::TERM</a></strong><br />
+</dt>
+<dd>
+The current terminal. Whenever a callback/Hook is bein executed, this
+variable stores the current <code>urxvt::term</code> object.
 </dd>
 <p></p></dl>
 <p>
@@ -449,9 +482,9 @@ right/bottom side, respectively.</p>
 as long as the perl object is referenced.</p>
 </dd>
 <dd>
-<p>Currently, the only method on the <code>urxvt::overlay</code> object is <a href="#item_set"><code>set</code></a>:</p>
+<p>The methods currently supported on <code>urxvt::overlay</code> objects are:</p>
 </dd>
-<p></p>
+<dl>
 <dt><strong><a name="item_set">$overlay-&gt;set ($x, $y, $text, $rend)</a></strong><br />
 </dt>
 <dd>
@@ -460,6 +493,18 @@ text in rxvt-unicode's special encoding and an array of rendition values
 at a specific position inside the overlay.
 </dd>
 <p></p>
+<dt><strong><a name="item_hide">$overlay-&gt;hide</a></strong><br />
+</dt>
+<dd>
+If visible, hide the overlay, but do not destroy it.
+</dd>
+<p></p>
+<dt><strong><a name="item_show">$overlay-&gt;show</a></strong><br />
+</dt>
+<dd>
+If hidden, display the overlay again.
+</dd>
+<p></p></dl>
 <dt><strong><a name="item_strwidth">$cellwidth = $term-&gt;strwidth $string</a></strong><br />
 </dt>
 <dd>
@@ -527,7 +572,8 @@ differ, it redraws the differences.
 Returns the text of the entire row with number <code>$row_number</code>. Row <code>0</code>
 is the topmost terminal line, row <code>$term-&gt;$ncol-1</code> is the bottommost
 terminal line. The scrollback buffer starts at line <code>-1</code> and extends to
-line <a href="#item_nsaved"><code>-$term-&gt;nsaved</code></a>.
+line <a href="#item_nsaved"><code>-$term-&gt;nsaved</code></a>. Nothing will be returned if a nonexistent line
+is requested.
 </dd>
 <dd>
 <p>If <code>$new_text</code> is specified, it will replace characters in the current
@@ -548,7 +594,7 @@ that <code>substr</code> and similar functions work on screen cells and not on
 characters.</p>
 </dd>
 <dd>
-<p>The methods <a href="#item_special_encode"><code>$term-&gt;special_encode</code></a> and <a href="#item_special_decode"><code>$term-&gt;special_decode</code></a>
+<p>The methods <code>$term-&gt;special_encode</code> and <a href="#item_special_decode"><code>$term-&gt;special_decode</code></a>
 can be used to convert normal strings into this encoding and vice versa.</p>
 </dd>
 <p></p>
@@ -569,12 +615,69 @@ styles and similar information. See also <a href="#item_row_t"><code>$term-&gt;R
 <dt><strong><a name="item_row_l">$length = $term-&gt;ROW_l ($row_number[, $new_length])</a></strong><br />
 </dt>
 <dd>
-Returns the number of screen cells that are in use (``the line length''). If
-it is <code>-1</code>, then the line is part of a multiple-row logical ``line'', which
-means all characters are in use and it is continued on the next row.
+Returns the number of screen cells that are in use (``the line
+length''). Unlike the urxvt core, this returns <a href="#item_ncol"><code>$term-&gt;ncol</code></a> if the
+line is joined with the following one.
 </dd>
 <p></p>
-<dt><strong><a name="item_special_encode">$text = $term-&gt;special_encode $string</a></strong><br />
+<dt><strong><a name="item_is_longer">$bool = $term-&gt;is_longer ($row_number)</a></strong><br />
+</dt>
+<dd>
+Returns true if the row is part of a multiple-row logical ``line'' (i.e.
+joined with the following row), which means all characters are in use
+and it is continued on the next row (and possibly a continuation of the
+previous row(s)).
+</dd>
+<p></p>
+<dt><strong><a name="item_line">$line = $term-&gt;line ($row_number)</a></strong><br />
+</dt>
+<dd>
+Create and return a new <code>urxvt::line</code> object that stores information
+about the logical line that row <code>$row_number</code> is part of. It supports the
+following methods:
+</dd>
+<dl>
+<dt><strong><a name="item_t">$text = $line-&gt;t</a></strong><br />
+</dt>
+<dd>
+Returns the full text of the line, similar to <a href="#item_row_t"><code>ROW_t</code></a>
+</dd>
+<p></p>
+<dt><strong><a name="item_r">$rend = $line-&gt;r</a></strong><br />
+</dt>
+<dd>
+Returns the full rendition array of the line, similar to <a href="#item_row_r"><code>ROW_r</code></a>
+</dd>
+<p></p>
+<dt><strong><a name="item_l">$length = $line-&gt;l</a></strong><br />
+</dt>
+<dd>
+Returns the length of the line in cells, similar to <a href="#item_row_l"><code>ROW_l</code></a>.
+</dd>
+<p></p>
+<dt><strong><a name="item_beg">$rownum = $line-&gt;beg</a></strong><br />
+</dt>
+<dt><strong><a name="item_end">$rownum = $line-&gt;end</a></strong><br />
+</dt>
+<dd>
+Return the row number of the first/last row of the line, respectively.
+</dd>
+<p></p>
+<dt><strong><a name="item_offset_of">$offset = $line-&gt;offset_of ($row, $col)</a></strong><br />
+</dt>
+<dd>
+Returns the character offset of the given row|col pair within the logical
+line.
+</dd>
+<p></p>
+<dt><strong><a name="item_coord_of">($row, $col) = $line-&gt;coord_of ($offset)</a></strong><br />
+</dt>
+<dd>
+Translates a string offset into terminal coordinates again.
+</dd>
+<p></p></dl>
+<dt><strong>($row, $col) = $line-&gt;coord_of ($offset)
+=item $text = $term-&gt;special_encode $string</strong><br />
 </dt>
 <dd>
 Converts a perl string into the special encoding used by rxvt-unicode,

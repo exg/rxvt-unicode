@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2006-01-02" "6.2" "RXVT-UNICODE"
+.TH rxvt 1 "2006-01-03" "6.2" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -1093,7 +1093,9 @@ info):
 .IX Item "perl-ext: string"
 Colon-separated list of perl extension scripts to use in this terminal
 instance. Each extension is looked up in the library directories, loaded
-if necessary, and bound to the current terminal instance; option \fB\-pe\fR.
+if necessary, and bound to the current terminal instance. If this resource
+is empty or missing, then the perl interpreter will not be initialized;
+option \fB\-pe\fR.
 .IP "\fBperl-eval\fR: \fIstring\fR" 4
 .IX Item "perl-eval: string"
 Perl code to be evaluated when all extensions have been registered. See the

@@ -930,7 +930,8 @@ RESOURCES (available also as long-options)
         Colon-separated list of perl extension scripts to use in this
         terminal instance. Each extension is looked up in the library
         directories, loaded if necessary, and bound to the current terminal
-        instance; option -pe.
+        instance. If this resource is empty or missing, then the perl
+        interpreter will not be initialized; option -pe.
 
     perl-eval: *string*
         Perl code to be evaluated when all extensions have been registered.

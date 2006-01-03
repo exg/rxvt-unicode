@@ -1431,7 +1431,9 @@ info):</p>
 <dd>
 Colon-separated list of perl extension scripts to use in this terminal
 instance. Each extension is looked up in the library directories, loaded
-if necessary, and bound to the current terminal instance; option <strong>-pe</strong>.
+if necessary, and bound to the current terminal instance. If this resource
+is empty or missing, then the perl interpreter will not be initialized;
+option <strong>-pe</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item_perl_2deval_3a_string"><strong>perl-eval</strong>: <em>string</em></a></strong><br />

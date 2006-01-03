@@ -32,7 +32,10 @@ DESCRIPTION
       rxvt -pe <extensionname>
 
     selection
-        Miscellaneous selection modifications.
+        Intelligent selection. This etxension tries to be more intelligent
+        when the user extends selections (double-click).
+
+        It also offers the following bindable event:
 
         rot13
             Rot-13 the selection when activated. Used via keyboard trigger:
@@ -51,7 +54,7 @@ DESCRIPTION
     All objects (such as terminals, time watchers etc.) are typical
     reference-to-hash objects. The hash can be used to store anything you
     like. All members starting with an underscore (such as "_ptr" or
-    "_hook") are reserved for internal uses and must not be accessed or
+    "_hook") are reserved for internal uses and MUST NOT be accessed or
     modified).
 
     When objects are destroyed on the C++ side, the perl object hashes are
@@ -62,6 +65,12 @@ DESCRIPTION
   Hooks
     The following subroutines can be declared in loaded scripts, and will be
     called whenever the relevant event happens.
+
+    The first argument passed to them is an object private to each terminal
+    and extension package. You can call all "urxvt::term" methods on it, but
+    its not a real "urxvt::term" object. Instead, the real "urxvt::term"
+    object that is shared between all packages is stored in the "term"
+    member.
 
     All of them must return a boolean value. If it is true, then the event
     counts as being *consumed*, and the invocation of other hooks is
@@ -99,6 +108,14 @@ DESCRIPTION
 
         Returning a true value aborts selection grabbing. It will still be
         hilighted.
+
+    on_sel_extend $term
+        Called whenever the user tries to extend the selection (e.g. with a
+        double click) and is either supposed to return false (normal
+        operation), or should extend the selection itelf and return true to
+        suppress the built-in processing.
+
+        See the selection example extension.
 
     on_focus_in $term
         Called whenever the window gets the keyboard focus, before urxvt
@@ -139,6 +156,11 @@ DESCRIPTION
         Called whenever the user presses a key combination that has a
         "perl:string" action bound to it (see description of the keysym
         resource in the rxvt(1) manpage).
+
+  Variables in the "urxvt" Package
+    $urxvt::TERM
+        The current terminal. Whenever a callback/Hook is bein executed,
+        this variable stores the current "urxvt::term" object.
 
   Functions in the "urxvt" Package
     urxvt::fatal $errormessage
@@ -275,12 +297,18 @@ DESCRIPTION
         This method returns an urxvt::overlay object. The overlay will be
         visible as long as the perl object is referenced.
 
-        Currently, the only method on the "urxvt::overlay" object is "set":
+        The methods currently supported on "urxvt::overlay" objects are:
 
-    $overlay->set ($x, $y, $text, $rend)
-        Similar to "$term->ROW_t" and "$term->ROW_r" in that it puts text in
-        rxvt-unicode's special encoding and an array of rendition values at
-        a specific position inside the overlay.
+        $overlay->set ($x, $y, $text, $rend)
+            Similar to "$term->ROW_t" and "$term->ROW_r" in that it puts
+            text in rxvt-unicode's special encoding and an array of
+            rendition values at a specific position inside the overlay.
+
+        $overlay->hide
+            If visible, hide the overlay, but do not destroy it.
+
+        $overlay->show
+            If hidden, display the overlay again.
 
     $cellwidth = $term->strwidth $string
         Returns the number of screen-cells this string would need. Correctly
@@ -323,7 +351,8 @@ DESCRIPTION
         Returns the text of the entire row with number $row_number. Row 0 is
         the topmost terminal line, row "$term->$ncol-1" is the bottommost
         terminal line. The scrollback buffer starts at line -1 and extends
-        to line "-$term->nsaved".
+        to line "-$term->nsaved". Nothing will be returned if a nonexistent
+        line is requested.
 
         If $new_text is specified, it will replace characters in the current
         line, starting at column $start_col (default 0), which is useful to
@@ -354,11 +383,43 @@ DESCRIPTION
 
     $length = $term->ROW_l ($row_number[, $new_length])
         Returns the number of screen cells that are in use ("the line
-        length"). If it is -1, then the line is part of a multiple-row
-        logical "line", which means all characters are in use and it is
-        continued on the next row.
+        length"). Unlike the urxvt core, this returns "$term->ncol" if the
+        line is joined with the following one.
 
-    $text = $term->special_encode $string
+    $bool = $term->is_longer ($row_number)
+        Returns true if the row is part of a multiple-row logical "line"
+        (i.e. joined with the following row), which means all characters are
+        in use and it is continued on the next row (and possibly a
+        continuation of the previous row(s)).
+
+    $line = $term->line ($row_number)
+        Create and return a new "urxvt::line" object that stores information
+        about the logical line that row $row_number is part of. It supports
+        the following methods:
+
+        $text = $line->t
+            Returns the full text of the line, similar to "ROW_t"
+
+        $rend = $line->r
+            Returns the full rendition array of the line, similar to "ROW_r"
+
+        $length = $line->l
+            Returns the length of the line in cells, similar to "ROW_l".
+
+        $rownum = $line->beg
+        $rownum = $line->end
+            Return the row number of the first/last row of the line,
+            respectively.
+
+        $offset = $line->offset_of ($row, $col)
+            Returns the character offset of the given row|col pair within
+            the logical line.
+
+        ($row, $col) = $line->coord_of ($offset)
+            Translates a string offset into terminal coordinates again.
+
+    ($row, $col) = $line->coord_of ($offset) =item $text =
+    $term->special_encode $string
         Converts a perl string into the special encoding used by
         rxvt-unicode, where one character corresponds to one screen cell.
         See "$term->ROW_t" for details.

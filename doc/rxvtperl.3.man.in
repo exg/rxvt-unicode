@@ -174,7 +174,10 @@ You can activate them like this:
 .Ve
 .IP "selection" 4
 .IX Item "selection"
-Miscellaneous selection modifications.
+Intelligent selection. This etxension tries to be more intelligent when the user
+extends selections (double\-click).
+.Sp
+It also offers the following bindable event:
 .RS 4
 .IP "rot13" 4
 .IX Item "rot13"
@@ -199,7 +202,7 @@ overlays or changes.
 All objects (such as terminals, time watchers etc.) are typical
 reference-to-hash objects. The hash can be used to store anything you
 like. All members starting with an underscore (such as \f(CW\*(C`_ptr\*(C'\fR or
-\&\f(CW\*(C`_hook\*(C'\fR) are reserved for internal uses and must not be accessed or
+\&\f(CW\*(C`_hook\*(C'\fR) are reserved for internal uses and \fB\s-1MUST\s0 \s-1NOT\s0\fR be accessed or
 modified).
 .PP
 When objects are destroyed on the \*(C+ side, the perl object hashes are
@@ -208,8 +211,14 @@ the like inside the terminal object so they get destroyed as soon as the
 terminal is destroyed.
 .Sh "Hooks"
 .IX Subsection "Hooks"
-The following subroutines can be declared in loaded scripts, and will be called
-whenever the relevant event happens.
+The following subroutines can be declared in loaded scripts, and will be
+called whenever the relevant event happens.
+.PP
+The first argument passed to them is an object private to each terminal
+and extension package.  You can call all \f(CW\*(C`urxvt::term\*(C'\fR methods on it, but
+its not a real \f(CW\*(C`urxvt::term\*(C'\fR object. Instead, the real \f(CW\*(C`urxvt::term\*(C'\fR
+object that is shared between all packages is stored in the \f(CW\*(C`term\*(C'\fR
+member.
 .PP
 All of them must return a boolean value. If it is true, then the event
 counts as being \fIconsumed\fR, and the invocation of other hooks is skipped,
@@ -249,6 +258,15 @@ requested from the server.  The selection text can be queried and changed
 by calling \f(CW\*(C`$term\->selection\*(C'\fR.
 .Sp
 Returning a true value aborts selection grabbing. It will still be hilighted.
+.ie n .IP "on_sel_extend $term" 4
+.el .IP "on_sel_extend \f(CW$term\fR" 4
+.IX Item "on_sel_extend $term"
+Called whenever the user tries to extend the selection (e.g. with a double
+click) and is either supposed to return false (normal operation), or
+should extend the selection itelf and return true to suppress the built-in
+processing.
+.Sp
+See the \fIselection\fR example extension.
 .ie n .IP "on_focus_in $term" 4
 .el .IP "on_focus_in \f(CW$term\fR" 4
 .IX Item "on_focus_in $term"
@@ -296,6 +314,13 @@ Called just after the screen gets redrawn. See \f(CW\*(C`on_refresh_begin\*(C'\f
 Called whenever the user presses a key combination that has a
 \&\f(CW\*(C`perl:string\*(C'\fR action bound to it (see description of the \fBkeysym\fR
 resource in the @@RXVT_NAME@@(1) manpage).
+.ie n .Sh "Variables in the ""urxvt"" Package"
+.el .Sh "Variables in the \f(CWurxvt\fP Package"
+.IX Subsection "Variables in the urxvt Package"
+.IP "$urxvt::TERM" 4
+.IX Item "$urxvt::TERM"
+The current terminal. Whenever a callback/Hook is bein executed, this
+variable stores the current \f(CW\*(C`urxvt::term\*(C'\fR object.
 .ie n .Sh "Functions in the ""urxvt"" Package"
 .el .Sh "Functions in the \f(CWurxvt\fP Package"
 .IX Subsection "Functions in the urxvt Package"
@@ -470,13 +495,23 @@ right/bottom side, respectively.
 This method returns an urxvt::overlay object. The overlay will be visible
 as long as the perl object is referenced.
 .Sp
-Currently, the only method on the \f(CW\*(C`urxvt::overlay\*(C'\fR object is \f(CW\*(C`set\*(C'\fR:
+The methods currently supported on \f(CW\*(C`urxvt::overlay\*(C'\fR objects are:
+.RS 4
 .ie n .IP "$overlay\->set ($x, $y\fR, \f(CW$text\fR, \f(CW$rend)" 4
 .el .IP "$overlay\->set ($x, \f(CW$y\fR, \f(CW$text\fR, \f(CW$rend\fR)" 4
 .IX Item "$overlay->set ($x, $y, $text, $rend)"
 Similar to \f(CW\*(C`$term\->ROW_t\*(C'\fR and \f(CW\*(C`$term\->ROW_r\*(C'\fR in that it puts
 text in rxvt\-unicode's special encoding and an array of rendition values
 at a specific position inside the overlay.
+.IP "$overlay\->hide" 4
+.IX Item "$overlay->hide"
+If visible, hide the overlay, but do not destroy it.
+.IP "$overlay\->show" 4
+.IX Item "$overlay->show"
+If hidden, display the overlay again.
+.RE
+.RS 4
+.RE
 .ie n .IP "$cellwidth = $term\fR\->strwidth \f(CW$string" 4
 .el .IP "$cellwidth = \f(CW$term\fR\->strwidth \f(CW$string\fR" 4
 .IX Item "$cellwidth = $term->strwidth $string"
@@ -528,7 +563,8 @@ Used after changing terminal contents to display them.
 Returns the text of the entire row with number \f(CW$row_number\fR. Row \f(CW0\fR
 is the topmost terminal line, row \f(CW\*(C`$term\->$ncol\-1\*(C'\fR is the bottommost
 terminal line. The scrollback buffer starts at line \f(CW\*(C`\-1\*(C'\fR and extends to
-line \f(CW\*(C`\-$term\->nsaved\*(C'\fR.
+line \f(CW\*(C`\-$term\->nsaved\*(C'\fR. Nothing will be returned if a nonexistent line
+is requested.
 .Sp
 If \f(CW$new_text\fR is specified, it will replace characters in the current
 line, starting at column \f(CW$start_col\fR (default \f(CW0\fR), which is useful
@@ -560,12 +596,59 @@ See the section on \s-1RENDITION\s0, above.
 .ie n .IP "$length = $term\fR\->ROW_l ($row_number[, \f(CW$new_length])" 4
 .el .IP "$length = \f(CW$term\fR\->ROW_l ($row_number[, \f(CW$new_length\fR])" 4
 .IX Item "$length = $term->ROW_l ($row_number[, $new_length])"
-Returns the number of screen cells that are in use (\*(L"the line length\*(R"). If
-it is \f(CW\*(C`\-1\*(C'\fR, then the line is part of a multiple-row logical \*(L"line\*(R", which
-means all characters are in use and it is continued on the next row.
-.ie n .IP "$text = $term\fR\->special_encode \f(CW$string" 4
-.el .IP "$text = \f(CW$term\fR\->special_encode \f(CW$string\fR" 4
-.IX Item "$text = $term->special_encode $string"
+Returns the number of screen cells that are in use (\*(L"the line
+length\*(R"). Unlike the urxvt core, this returns \f(CW\*(C`$term\->ncol\*(C'\fR if the
+line is joined with the following one.
+.ie n .IP "$bool = $term\->is_longer ($row_number)" 4
+.el .IP "$bool = \f(CW$term\fR\->is_longer ($row_number)" 4
+.IX Item "$bool = $term->is_longer ($row_number)"
+Returns true if the row is part of a multiple-row logical \*(L"line\*(R" (i.e.
+joined with the following row), which means all characters are in use
+and it is continued on the next row (and possibly a continuation of the
+previous row(s)).
+.ie n .IP "$line = $term\->line ($row_number)" 4
+.el .IP "$line = \f(CW$term\fR\->line ($row_number)" 4
+.IX Item "$line = $term->line ($row_number)"
+Create and return a new \f(CW\*(C`urxvt::line\*(C'\fR object that stores information
+about the logical line that row \f(CW$row_number\fR is part of. It supports the
+following methods:
+.RS 4
+.ie n .IP "$text = $line\->t" 4
+.el .IP "$text = \f(CW$line\fR\->t" 4
+.IX Item "$text = $line->t"
+Returns the full text of the line, similar to \f(CW\*(C`ROW_t\*(C'\fR
+.ie n .IP "$rend = $line\->r" 4
+.el .IP "$rend = \f(CW$line\fR\->r" 4
+.IX Item "$rend = $line->r"
+Returns the full rendition array of the line, similar to \f(CW\*(C`ROW_r\*(C'\fR
+.ie n .IP "$length = $line\->l" 4
+.el .IP "$length = \f(CW$line\fR\->l" 4
+.IX Item "$length = $line->l"
+Returns the length of the line in cells, similar to \f(CW\*(C`ROW_l\*(C'\fR.
+.ie n .IP "$rownum = $line\->beg" 4
+.el .IP "$rownum = \f(CW$line\fR\->beg" 4
+.IX Item "$rownum = $line->beg"
+.PD 0
+.ie n .IP "$rownum = $line\->end" 4
+.el .IP "$rownum = \f(CW$line\fR\->end" 4
+.IX Item "$rownum = $line->end"
+.PD
+Return the row number of the first/last row of the line, respectively.
+.ie n .IP "$offset = $line\fR\->offset_of ($row, \f(CW$col)" 4
+.el .IP "$offset = \f(CW$line\fR\->offset_of ($row, \f(CW$col\fR)" 4
+.IX Item "$offset = $line->offset_of ($row, $col)"
+Returns the character offset of the given row|col pair within the logical
+line.
+.ie n .IP "($row, $col\fR) = \f(CW$line\->coord_of ($offset)" 4
+.el .IP "($row, \f(CW$col\fR) = \f(CW$line\fR\->coord_of ($offset)" 4
+.IX Item "($row, $col) = $line->coord_of ($offset)"
+Translates a string offset into terminal coordinates again.
+.RE
+.RS 4
+.RE
+.ie n .IP "($row, $col\fR) = \f(CW$line\fR\->coord_of ($offset) =item \f(CW$text\fR = \f(CW$term\fR\->special_encode \f(CW$string" 4
+.el .IP "($row, \f(CW$col\fR) = \f(CW$line\fR\->coord_of ($offset) =item \f(CW$text\fR = \f(CW$term\fR\->special_encode \f(CW$string\fR" 4
+.IX Item "($row, $col) = $line->coord_of ($offset) =item $text = $term->special_encode $string"
 Converts a perl string into the special encoding used by rxvt\-unicode,
 where one character corresponds to one screen cell. See
 \&\f(CW\*(C`$term\->ROW_t\*(C'\fR for details.
