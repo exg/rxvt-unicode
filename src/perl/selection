@@ -1,15 +1,16 @@
 #! perl
 
 sub on_keyboard_command {
-   my ($term, $cmd) = @_;
+   my ($self, $cmd) = @_;
 
    $cmd eq "selection:rot13"
-      and $term->selection (map { y/A-Za-z/N-ZA-Mn-za-m/; $_ } $term->selection);
+      and $self->selection (map { y/A-Za-z/N-ZA-Mn-za-m/; $_ } $self->selection);
 
    ()
 }
 
 sub on_sel_extend {
-   warn "hiya\n";#d#
+   my ($self) = @_;
+   warn $self->selection;
    ()
 }

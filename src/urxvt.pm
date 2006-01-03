@@ -73,7 +73,7 @@ overlays or changes.
 All objects (such as terminals, time watchers etc.) are typical
 reference-to-hash objects. The hash can be used to store anything you
 like. All members starting with an underscore (such as C<_ptr> or
-C<_hook>) are reserved for internal uses and must not be accessed or
+C<_hook>) are reserved for internal uses and B<MUST NOT> be accessed or
 modified).
 
 When objects are destroyed on the C++ side, the perl object hashes are
@@ -83,8 +83,14 @@ terminal is destroyed.
 
 =head2 Hooks
 
-The following subroutines can be declared in loaded scripts, and will be called
-whenever the relevant event happens.
+The following subroutines can be declared in loaded scripts, and will be
+called whenever the relevant event happens.
+
+The first argument passed to them is an object private to each terminal
+and extension package.  You can call all C<urxvt::term> methods on it, but
+its not a real C<urxvt::term> object. Instead, the real C<urxvt::term>
+object that is shared between all packages is stored in the C<term>
+member.
 
 All of them must return a boolean value. If it is true, then the event
 counts as being I<consumed>, and the invocation of other hooks is skipped,
@@ -185,6 +191,17 @@ resource in the @@RXVT_NAME@@(1) manpage).
 
 =back
 
+=head2 Variables in the C<urxvt> Package
+
+=over 4
+
+=item $urxvt::TERM
+
+The current terminal. Whenever a callback/Hook is bein executed, this
+variable stores the current C<urxvt::term> object.
+
+=back
+
 =head2 Functions in the C<urxvt> Package
 
 =over 4
@@ -267,8 +284,9 @@ Change the custom value.
 package urxvt;
 
 use strict;
+use Scalar::Util ();
 
-our $term;
+our $TERM;
 our @HOOKNAME;
 our $LIBDIR;
 
@@ -303,7 +321,7 @@ sub register_package($) {
       my $ref = $pkg->can ("on_" . lc $name)
          or next;
 
-      $term->{_hook}[$htype]{$ref*1} = $ref;
+      $TERM->{_hook}[$htype]{$pkg} = $ref;
       $hook_count[$htype]++
          or set_should_invoke $htype, 1;
    }
@@ -337,13 +355,13 @@ sub script_package($) {
 
 # called by the rxvt core
 sub invoke {
-   local $term = shift;
+   local $TERM = shift;
    my $htype = shift;
 
    if ($htype == 0) { # INIT
-      my @dirs = ((split /:/, $term->resource ("perl_lib")), "$LIBDIR/perl");
+      my @dirs = ((split /:/, $TERM->resource ("perl_lib")), "$LIBDIR/perl");
 
-      for my $ext (split /:/, $term->resource ("perl_ext")) {
+      for my $ext (split /:/, $TERM->resource ("perl_ext")) {
          my @files = grep -f $_, map "$_/$ext", @dirs;
 
          if (@files) {
@@ -354,7 +372,7 @@ sub invoke {
       }
 
    } elsif ($htype == 1) { # DESTROY
-      if (my $hook = $term->{_hook}) {
+      if (my $hook = $TERM->{_hook}) {
          for my $htype (0..$#$hook) {
             $hook_count[$htype] -= scalar keys %{ $hook->[$htype] || {} }
                or set_should_invoke $htype, 0;
@@ -362,17 +380,40 @@ sub invoke {
       }
    }
 
-   my $cb = $term->{_hook}[$htype]
+   my $cb = $TERM->{_hook}[$htype]
       or return;
 
-   verbose 10, "$HOOKNAME[$htype] (" . (join ", ", $term, @_) . ")"
+   verbose 10, "$HOOKNAME[$htype] (" . (join ", ", $TERM, @_) . ")"
       if $verbosity >= 10;
 
-   while (my ($k, $v) = each %$cb) {
-      return 1 if $v->($term, @_);
+   while (my ($pkg, $cb) = each %$cb) {
+      return 1
+         if $cb->(
+               $TERM->{$pkg} ||= do {
+                  my $proxy = bless { }, urxvt::term::proxy::;
+                  Scalar::Util::weaken ($proxy->{term} = $TERM);
+                  $proxy
+               },
+               @_,
+            );
    }
 
    0
+}
+
+sub urxvt::term::proxy::AUTOLOAD {
+   $urxvt::term::proxy::AUTOLOAD =~ /:([^:]+)$/
+      or die "FATAL: \$AUTOLOAD '$urxvt::term::proxy::AUTOLOAD' unparsable";
+
+   eval qq{
+      sub $urxvt::term::proxy::AUTOLOAD {
+         unshift \@_, shift->{term};
+         goto &urxvt::term::$1;
+      }
+      1
+   } or die "FATAL: unable to compile method forwarder: $@";
+
+   goto &$urxvt::term::proxy::AUTOLOAD;
 }
 
 =head2 The C<urxvt::term> Class
