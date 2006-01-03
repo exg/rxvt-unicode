@@ -1,3 +1,5 @@
+=encoding utf8
+
 =head1 NAME
 
 @@RXVT_NAME@@perl - rxvt-unicode's embedded perl interpreter
@@ -26,7 +28,7 @@ thus must be encoded as UTF-8.
 Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
 scripts will be shared (but not enabled) for all terminals.
 
-=head1 PACKAGED EXTENSIONS
+=head2 Prepackaged Extensions
 
 This section describes the extensiosn delivered with this version. You can
 find them in F<@@RXVT_LIBDIR@@/urxvt/perl/>.
