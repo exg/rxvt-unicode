@@ -23,6 +23,7 @@ WISH: better support for mixing xft font sizes rxvt -fn "xft:Andale Mono:size=15
           intelligent/customized selection support, visual feedback,
           menus, tabs etc. See the the urxvtperl manpage, the -pe option,
           perl*-resources and keysym resources. Not everything is there yet.
+        - try to be more clever about differing font sizes and their ascent.
         - fix directory permissions on install.
         - improved sched_yield support.
 

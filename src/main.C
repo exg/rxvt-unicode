@@ -925,7 +925,7 @@ rxvt_term::set_fonts ()
 
   fwidth  = prop.width;
   fheight = prop.height;
-  fbase   = (*fs)[1]->ascent;
+  fbase   = prop.ascent;
 
   for (int style = 1; style < 4; style++)
     {
