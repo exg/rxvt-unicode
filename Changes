@@ -9,15 +9,18 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 WISH: make builtin character glyphs optional
 
-        - optionally embed a perl interpreter, which can be used for more
-          intelligent/customized selection support, visual feedback,
-          menus, tabs etc. See the the urxvtperl manpage, the -pe option,
-          perl*-resources and keysym resources.
-        - fix directory permissions on install.
-        - improved sched_yield support.
+	- SECURITY FIX: on systems using openpty (most BSDs, not GNU/Linux),
+          permissions were not correctly updated on the tty device and
+          were left as world-readable and world-writable.
         - meta8 support was forcefully enabled in most configurations.
           restored configurability of this (useless) feature (reported
           by Mikachu)
+        - optionally embed a perl interpreter, which can be used for more
+          intelligent/customized selection support, visual feedback,
+          menus, tabs etc. See the the urxvtperl manpage, the -pe option,
+          perl*-resources and keysym resources. Not everything is there yet.
+        - fix directory permissions on install.
+        - improved sched_yield support.
 
 6.2  Mon Jan  2 16:03:01 CET 2006
         - implemented intensityStyles option which enables/disables bold/blink
