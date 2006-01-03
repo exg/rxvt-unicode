@@ -8,6 +8,7 @@ TODO: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 WISH: make builtin character glyphs optional
+WISH: better support for mixing xft font sizes rxvt -fn "xft:Andale Mono:size=15" -fb "xft:Andale Mono:size=8:bold"
 
         - SECURITY FIX: on systems using openpty, permissions were
           not correctly updated on the tty device and were left as
