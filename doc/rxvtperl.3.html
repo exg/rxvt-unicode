@@ -15,9 +15,9 @@
 	<li><a href="#name">NAME</a></li>
 	<li><a href="#synopsis">SYNOPSIS</a></li>
 	<li><a href="#description">DESCRIPTION</a></li>
-	<li><a href="#packaged_extensions">PACKAGED EXTENSIONS</a></li>
 	<ul>
 
+		<li><a href="#prepackaged_extensions">Prepackaged Extensions</a></li>
 		<li><a href="#general_api_considerations">General API Considerations</a></li>
 		<li><a href="#hooks">Hooks</a></li>
 		<li><a href="#functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></li>
@@ -40,6 +40,7 @@
 <hr />
 <p>
 </p>
+<hr />
 <h1><a name="name">NAME</a></h1>
 <p>rxvtperl - rxvt-unicode's embedded perl interpreter</p>
 <p>
@@ -66,11 +67,10 @@
 <p>Scripts are compiled in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as UTF-8.</p>
 <p>Each script will only ever be loaded once, even in rxvtd, where
-scripts will be shared (But not enabled) for all terminals.</p>
+scripts will be shared (but not enabled) for all terminals.</p>
 <p>
 </p>
-<hr />
-<h1><a name="packaged_extensions">PACKAGED EXTENSIONS</a></h1>
+<h2><a name="prepackaged_extensions">Prepackaged Extensions</a></h2>
 <p>This section describes the extensiosn delivered with this version. You can
 find them in <em>/opt/rxvt/lib/urxvt/perl/</em>.</p>
 <p>You can activate them like this:</p>

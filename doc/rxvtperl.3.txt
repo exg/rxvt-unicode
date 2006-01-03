@@ -21,9 +21,9 @@ DESCRIPTION
     thus must be encoded as UTF-8.
 
     Each script will only ever be loaded once, even in rxvtd, where scripts
-    will be shared (But not enabled) for all terminals.
+    will be shared (but not enabled) for all terminals.
 
-PACKAGED EXTENSIONS
+  Prepackaged Extensions
     This section describes the extensiosn delivered with this version. You
     can find them in /opt/rxvt/lib/urxvt/perl/.
 
