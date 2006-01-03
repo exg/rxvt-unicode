@@ -220,8 +220,8 @@ Return the rendition mask used for overlays by default.
 =item $rendbit = urxvt::RS_Bold, RS_Italic, RS_Blink, RS_RVid, RS_Uline
 
 Return the bit that enabled bold, italic, blink, reverse-video and
-underline, respectively. To enable such a style, just or it onto the
-bitset.
+underline, respectively. To enable such a style, just logically OR it into
+the bitset.
 
 =item $foreground = urxvt::GET_BASEFG $rend
 
@@ -235,6 +235,16 @@ Return the foreground/background colour index, respectively.
 
 Replace the foreground/background colour in the rendition mask with the
 specified one.
+
+=item $value = urxvt::GET_CUSTOM ($rend)
+
+Return the "custom" value: Every rendition has 5 bits for use by
+extensions. They can be set and changed as you like and are initially
+zero.
+
+=item $rend = urxvt::SET_CUSTOM ($rend, $new_value)
+
+Change the custom value.
 
 =back
 

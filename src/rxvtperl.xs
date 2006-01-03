@@ -365,16 +365,36 @@ GET_BASEBG (int rend)
         RETVAL
 
 int
-SET_FGCOLOR (int rend, int color)
+SET_FGCOLOR (int rend, int new_color)
 	CODE:
-        RETVAL = SET_FGCOLOR (rend, color);
+        RETVAL = SET_FGCOLOR (rend, new_color);
 	OUTPUT:
         RETVAL
 
 int
-SET_BGCOLOR (int rend, int color)
+SET_BGCOLOR (int rend, int new_color)
 	CODE:
-        RETVAL = SET_BGCOLOR (rend, color);
+        RETVAL = SET_BGCOLOR (rend, new_color);
+	OUTPUT:
+        RETVAL
+
+int
+GET_CUSTOM (int rend)
+	CODE:
+        RETVAL = (rend && RS_customMask) >> RS_customShift;
+	OUTPUT:
+        RETVAL
+
+int
+SET_CUSTOM (int rend, int new_value)
+	CODE:
+{
+        if (!IN_RANGE_EXC (new_value, 0, RS_customCount))
+          croak ("custom value out of range, must be 0..%d", RS_customCount - 1);
+
+        RETVAL = (rend & ~RS_customMask)
+               | ((new_value << RS_customShift) & RS_customMask);
+}
 	OUTPUT:
         RETVAL
 
