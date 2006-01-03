@@ -8,3 +8,8 @@ sub on_keyboard_command {
 
    ()
 }
+
+sub on_selection_event {
+   warn "hiya\n";#d#
+   ()
+}

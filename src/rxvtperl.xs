@@ -63,8 +63,18 @@ static SV *
 newSVptr (void *ptr, const char *klass)
 {
   HV *hv = newHV ();
-  hv_store (hv, "_ptr", 4, newSViv ((long)ptr), 0);
+  sv_magic ((SV *)hv, 0, PERL_MAGIC_ext, (char *)ptr, 0);
   return sv_bless (newRV_noinc ((SV *)hv), gv_stashpv (klass, 1));
+}
+
+static void
+clearSVptr (SV *sv)
+{
+  if (SvROK (sv))
+    sv = SvRV (sv);
+
+  hv_clear ((HV *)sv);
+  sv_unmagic (sv, PERL_MAGIC_ext);
 }
 
 static long
@@ -73,12 +83,12 @@ SvPTR (SV *sv, const char *klass)
   if (!sv_derived_from (sv, klass))
     croak ("object of type %s expected", klass);
 
-  IV iv = SvIV (*hv_fetch ((HV *)SvRV (sv), "_ptr", 4, 1));
+  MAGIC *mg = mg_find (SvRV (sv), PERL_MAGIC_ext);
 
-  if (!iv)
+  if (!mg)
     croak ("perl code used %s object, but C++ object is already destroyed, caught", klass);
 
-  return (long)iv;
+  return (long)mg->mg_ptr;
 }
 
 #define newSVterm(term) SvREFCNT_inc ((SV *)term->self)
@@ -188,6 +198,9 @@ struct overlay {
   overlay (rxvt_term *THIS, int x_, int y_, int w_, int h_, rend_t rstyle, int border);
   ~overlay ();
 
+  void show ();
+  void hide ();
+
   void swap ();
 
   void set (int x, int y, SV *str, SV *rend);
@@ -242,11 +255,14 @@ overlay::overlay (rxvt_term *THIS, int x_, int y_, int w_, int h_, rend_t rstyle
           }                 
     }                      
 
+  show ();
   THIS->want_refresh = 1;
 }
 
 overlay::~overlay ()
 {
+  hide ();
+
   for (int y = h; y--; )
     {
       delete [] text[y];
@@ -257,6 +273,29 @@ overlay::~overlay ()
   delete [] rend;
 
   THIS->want_refresh = 1;
+}
+
+void
+overlay::show ()
+{
+  char key[33]; sprintf (key, "%32lx", (long)this);
+
+  HV *hv = (HV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)THIS->self), "_overlay", 8, 0));
+  hv_store (hv, key, 32, newSViv ((long)this), 0);
+}
+
+void
+overlay::hide ()
+{
+  SV **ovs = hv_fetch ((HV *)SvRV ((SV *)THIS->self), "_overlay", 8, 0);
+
+  if (ovs)
+    {
+      char key[33]; sprintf (key, "%32lx", (long)this);
+
+      HV *hv = (HV *)SvRV (*ovs);
+      hv_delete (hv, key, 32, G_DISCARD);
+    }
 }
 
 void overlay::swap ()
@@ -443,8 +482,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 
             if (htype == HOOK_DESTROY)
               {
-                // TODO: clear magic
-                hv_clear ((HV *)SvRV ((SV *)term->self));
+                clearSVptr ((SV *)term->self);
                 SvREFCNT_dec ((SV *)term->self);
               }
 
@@ -885,10 +923,6 @@ rxvt_term::overlay (int x, int y, int w, int h, int rstyle = OVERLAY_RSTYLE, int
         overlay *o = new overlay (THIS, x, y, w, h, rstyle, border);
         RETVAL = newSVptr ((void *)o, "urxvt::overlay");
         o->self = (HV *)SvRV (RETVAL);
-
-        HV *hv = (HV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)THIS->self), "_overlay", 8, 0));
-        char key[33]; sprintf (key, "%32lx", (long)o);
-        hv_store (hv, key, 32, newSViv ((long)o), 0);
 }
 	OUTPUT:
         RETVAL
@@ -899,19 +933,13 @@ void
 overlay::set (int x, int y, SV *text, SV *rend = 0)
 
 void
-overlay::DESTROY ()
-	CODE:
-{
-        SV **ovs = hv_fetch ((HV *)SvRV ((SV *)THIS->THIS->self), "_overlay", 8, 0);
-        if (ovs)
-          {
-            HV *hv = (HV *)SvRV (*ovs);
-            char key[33]; sprintf (key, "%32lx", (long)THIS);
-            hv_delete (hv, key, 32, G_DISCARD);
-          }
+overlay::show ()
 
-        delete THIS;
-}
+void
+overlay::hide ()
+
+void
+overlay::DESTROY ()
 
 MODULE = urxvt             PACKAGE = urxvt::timer
 

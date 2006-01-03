@@ -41,7 +41,10 @@ You can activate them like this:
 
 =item selection
 
-Miscellaneous selection modifications.
+Intelligent selection. This etxension tries to be more intelligent when the user
+extends selections (double-click).
+
+It also offers the following bindable event:
 
 =over 4
 
@@ -123,6 +126,15 @@ requested from the server.  The selection text can be queried and changed
 by calling C<< $term->selection >>.
 
 Returning a true value aborts selection grabbing. It will still be hilighted.
+
+=item on_sel_extend $term
+
+Called whenever the user tries to extend the selection (e.g. with a double
+click) and is either supposed to return false (normal operation), or
+should extend the selection itelf and return true to suppress the built-in
+processing.
+
+See the F<selection> example extension.
 
 =item on_focus_in $term
 
@@ -463,13 +475,25 @@ right/bottom side, respectively.
 This method returns an urxvt::overlay object. The overlay will be visible
 as long as the perl object is referenced.
 
-Currently, the only method on the C<urxvt::overlay> object is C<set>:
+The methods currently supported on C<urxvt::overlay> objects are:
+
+=over 4
 
 =item $overlay->set ($x, $y, $text, $rend)
 
 Similar to C<< $term->ROW_t >> and C<< $term->ROW_r >> in that it puts
 text in rxvt-unicode's special encoding and an array of rendition values
 at a specific position inside the overlay.
+
+=item $overlay->hide
+
+If visible, hide the overlay, but do not destroy it.
+
+=item $overlay->show
+
+If hidden, display the overlay again.
+
+=back
 
 =item $cellwidth = $term->strwidth $string
 
