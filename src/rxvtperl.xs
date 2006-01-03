@@ -316,6 +316,8 @@ BOOT:
   set_hookname (REFRESH_END);
   set_hookname (KEYBOARD_COMMAND);
 
+  newCONSTSUB (gv_stashpv ("urxvt", 1), "DEFAULT_RSTYLE", newSViv (DEFAULT_RSTYLE));
+
   sv_setpv (get_sv ("urxvt::LIBDIR", 1), LIBDIR);
 }
 
@@ -434,6 +436,11 @@ rxvt_term::ncol ()
         RETVAL
 
 void
+rxvt_term::want_refresh ()
+	CODE:
+        THIS->want_refresh = 1;
+
+void
 rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0)
 	PPCODE:
 {
@@ -474,9 +481,11 @@ rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0)
 
             for (int col = start_col; col < start_col + len; col++)
               {
-                l.t [col] = wstr [col];
+                l.t [col] = wstr [col - start_col];
                 l.r [col] = SET_FONT (l.r [col], THIS->fontset [GET_STYLE (l.r [col])]->find_font (l.t [col]));
               }
+
+            free (wstr);
           }
 }
 
@@ -513,7 +522,7 @@ rxvt_term::ROW_r (int row_number, SV *new_rend = 0, int start_col = 0)
 
             for (int col = start_col; col < start_col + len; col++)
               {
-                rend_t r = SvIV (*av_fetch (av, col, 1)) & ~RS_fontMask;
+                rend_t r = SvIV (*av_fetch (av, col - start_col, 1)) & ~RS_fontMask;
 
                 l.r [col] = SET_FONT (r, THIS->fontset [GET_STYLE (r)]->find_font (l.t [col]));
               }

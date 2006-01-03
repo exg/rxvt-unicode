@@ -126,6 +126,8 @@ src/rxvtperl.h
 src/rxvtperl.C
 
 src/perl/simple-overlay-clock
+src/perl/digital-clock
+src/perl/selection
 
 src/gentables
 src/gencompose

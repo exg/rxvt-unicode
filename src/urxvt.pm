@@ -412,6 +412,14 @@ Returns the negative row number of the topmost line. Minimum value is
 C<0>, which displays the normal terminal contents. Larger values scroll
 this many lines into the scrollback buffer.
 
+=item $term->want_refresh
+
+Requests a screen refresh. At the next opportunity, rxvt-unicode will
+compare the on-screen display with its stored representation. If they
+differ, it redraws the differences.
+
+Used after changing terminal contents to display them.
+
 =item $text = $term->ROW_t ($row_number[, $new_text[, $start_col]])
 
 Returns the text of the entire row with number C<$row_number>. Row C<0>

@@ -1,0 +1,40 @@
+#! perl
+
+# this creates a simple digital clock by overwriting the refresh hooks
+
+sub on_init {
+   my ($self) = @_;
+
+   $self->{digital_clock_refresh} = urxvt::timer
+                    ->new
+                    ->start (urxvt::NOW)
+                    ->cb (sub {
+                       $self->{timer}->start ($self->{timer}->at + 1);
+                       $self->want_refresh;
+                    });
+
+   ()
+}
+
+sub on_refresh_begin {
+   my ($self) = @_;
+
+   my $time = sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2, 1, 0];
+   my $xpos = $self->ncol - length $time;
+
+   $self->{digital_clock_rend} = $self->ROW_r (0, [(0x00020000 + urxvt::DEFAULT_RSTYLE) x length $time], $xpos);
+   $self->{digital_clock_text} = $self->ROW_t (0, $time, $xpos);
+
+   ()
+}
+
+sub on_refresh_end {
+   my ($self) = @_;
+
+   $self->ROW_r (0, $self->{digital_clock_rend});
+   $self->ROW_t (0, $self->{digital_clock_text});
+
+   ()
+}
+
+
