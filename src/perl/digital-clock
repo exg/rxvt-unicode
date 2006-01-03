@@ -9,7 +9,7 @@ sub on_init {
                     ->new
                     ->start (urxvt::NOW)
                     ->cb (sub {
-                       $self->{timer}->start ($self->{timer}->at + 1);
+                       $self->{digital_clock_refresh}->start ($self->{digital_clock_refresh}->at + 1);
                        $self->want_refresh;
                     });
 
