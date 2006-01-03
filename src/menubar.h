@@ -68,7 +68,7 @@ typedef struct bar_t {
 
 #define HSPACE		1	/* one space */
 #define isSeparator(name)	((name)[0] == '\0')
-#define HEIGHT_SEPARATOR	(SHADOW + 1)
+#define HEIGHT_SEPARATOR	(MENU_SHADOW + 1)
 #define HEIGHT_TEXT		(Height2Pixel(1) + 2)
 
 #define MENU_DELAY_USEC	0	/* no delay */

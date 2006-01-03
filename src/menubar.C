@@ -33,7 +33,7 @@
 #include "menubar.h"
 
 #define Menu_PixelWidth(menu)					\
-    (2 * SHADOW + Width2Pixel ((menu)->width + 3 * HSPACE))
+    (2 * MENU_SHADOW + Width2Pixel ((menu)->width + 3 * HSPACE))
 
 static const struct
   {
@@ -806,10 +806,10 @@ rxvt_term::drawtriangle (int x, int y, int state)
         break;			/* neutral */
     }
 
-  w = Height2Pixel (1) - 2 * SHADOW;
+  w = Height2Pixel (1) - 2 * MENU_SHADOW;
 
-  x -= SHADOW + (3 * w / 2);
-  y += SHADOW * 3;
+  x -= MENU_SHADOW + (3 * w / 2);
+  y += MENU_SHADOW * 3;
 
   rxvt_Draw_Triangle (display->display, ActiveMenu->win, top, bot, x, y, w, 'r');
 }
@@ -838,9 +838,9 @@ rxvt_term::drawbox_menuitem (int y, int state)
     }
 
   rxvt_Draw_Shadow (display->display, ActiveMenu->win, top, bot,
-                   SHADOW + 0, SHADOW + y,
-                   ActiveMenu->w - 2 * (SHADOW),
-                   HEIGHT_TEXT + 2 * SHADOW);
+                   MENU_SHADOW + 0, MENU_SHADOW + y,
+                   ActiveMenu->w - 2 * (MENU_SHADOW),
+                   HEIGHT_TEXT + 2 * MENU_SHADOW);
   XFlush (display->display);
 }
 
@@ -950,8 +950,8 @@ rxvt_term::menu_show ()
       /* find the height */
       for (h = 0, item = ActiveMenu->head; item != NULL; item = item->next)
         h += isSeparator (item->name) ? HEIGHT_SEPARATOR
-             : HEIGHT_TEXT + 2 * SHADOW;
-      ActiveMenu->h = h + 2 * SHADOW;
+             : HEIGHT_TEXT + 2 * MENU_SHADOW;
+      ActiveMenu->h = h + 2 * MENU_SHADOW;
     }
 
   if (ActiveMenu->win == None)
@@ -977,7 +977,7 @@ rxvt_term::menu_show ()
 
   for (y = 0, item = ActiveMenu->head; item != NULL; item = item->next)
     {
-      const int xoff = (SHADOW + Width2Pixel (HSPACE) / 2);
+      const int xoff = (MENU_SHADOW + Width2Pixel (HSPACE) / 2);
       register int h;
       GC gc = menubarGC;
 
@@ -985,8 +985,8 @@ rxvt_term::menu_show ()
         {
           rxvt_Draw_Shadow (display->display, ActiveMenu->win,
                             topShadowGC, botShadowGC,
-                            SHADOW, y + SHADOW + 1,
-                            ActiveMenu->w - 2 * SHADOW, 0);
+                            MENU_SHADOW, y + MENU_SHADOW + 1,
+                            ActiveMenu->w - 2 * MENU_SHADOW, 0);
           h = HEIGHT_SEPARATOR;
         }
       else
@@ -1020,8 +1020,8 @@ rxvt_term::menu_show ()
               /* find the height of this submenu */
               for (h = 0, it = menu->head; it != NULL; it = it->next)
                 h += isSeparator (it->name) ? HEIGHT_SEPARATOR
-                     : HEIGHT_TEXT + 2 * SHADOW;
-              menu->h = h + 2 * SHADOW;
+                     : HEIGHT_TEXT + 2 * MENU_SHADOW;
+              menu->h = h + 2 * MENU_SHADOW;
 
               /* ensure menu is in window limits */
               if ((x1 + menu->w) >= width)
@@ -1038,16 +1038,16 @@ rxvt_term::menu_show ()
 
           if (len && name)
             draw_string (*ActiveMenu->drawable, gc, fontset[0],
-                         xoff, 2 * SHADOW + y, name, len);
+                         xoff, 2 * MENU_SHADOW + y, name, len);
 
           len = item->len2;
           name = item->name2;
 
           if (len && name)
             draw_string (*ActiveMenu->drawable, gc, fontset[0],
-                         ActiveMenu->w - (xoff + Width2Pixel (xright)), 2 * SHADOW + y, name, len);
+                         ActiveMenu->w - (xoff + Width2Pixel (xright)), 2 * MENU_SHADOW + y, name, len);
 
-          h = HEIGHT_TEXT + 2 * SHADOW;
+          h = HEIGHT_TEXT + 2 * MENU_SHADOW;
         }
       y += h;
     }
@@ -2067,7 +2067,7 @@ rxvt_term::menubar_expose ()
           drawbox_menubar (menu->x, len, +1);
           draw_string (*menuBar.drawable, menubarGC, fontset[0],
                        (Width2Pixel (menu->x) + Width2Pixel (HSPACE) / 2),
-                       SHADOW, menu->name, len);
+                       MENU_SHADOW, menu->name, len);
 
           if (x >= ncol)
             break;
@@ -2129,7 +2129,7 @@ rxvt_term::menubar_expose ()
       if (len > 0 && ncol >= 0)
         draw_string (*menuBar.drawable, menubarGC, fontset[0],
                      Width2Pixel (x) + Width2Pixel (ncol + HSPACE) / 2,
-                     SHADOW, title, len);
+                     MENU_SHADOW, title, len);
     }
 }
 
@@ -2184,12 +2184,12 @@ rxvt_term::menu_select (XButtonEvent &ev)
     }
 
   /* determine the menu item corresponding to the Y index */
-  y = SHADOW;
-  if (ev.x >= 0 && ev.x <= (ActiveMenu->w - SHADOW))
+  y = MENU_SHADOW;
+  if (ev.x >= 0 && ev.x <= (ActiveMenu->w - MENU_SHADOW))
     {
       for (item = ActiveMenu->head; item != NULL; item = item->next)
         {
-          int h = HEIGHT_TEXT + 2 * SHADOW;
+          int h = HEIGHT_TEXT + 2 * MENU_SHADOW;
 
           if (isSeparator (item->name))
             h = HEIGHT_SEPARATOR;
@@ -2207,7 +2207,7 @@ rxvt_term::menu_select (XButtonEvent &ev)
     }
 
   thisitem = item;
-  this_y = y - SHADOW;
+  this_y = y - MENU_SHADOW;
 
   /* erase the last item */
   if (ActiveMenu->item != NULL)
@@ -2230,7 +2230,7 @@ rxvt_term::menu_select (XButtonEvent &ev)
                   break;
                 }
               else
-                h = HEIGHT_TEXT + 2 * SHADOW;
+                h = HEIGHT_TEXT + 2 * MENU_SHADOW;
 
               y += h;
             }

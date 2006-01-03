@@ -240,9 +240,9 @@ typedef struct _mwmhints {
 
 /* width of scrollBar, menuBar shadow, must be 1 or 2 */
 #ifdef HALFSHADOW
-# define SHADOW 1
+# define MENU_SHADOW 1
 #else
-# define SHADOW 2
+# define MENU_SHADOW 2
 #endif
 
 #define R_SB_ALIGN_CENTRE       0
@@ -784,8 +784,8 @@ enum {
 
 #if (MENUBAR_MAX > 1)
 /* rendition style flags */
-# define menuBar_height()       (fheight + SHADOW)
-# define menuBar_TotalHeight()  (menuBar_height() + SHADOW + menuBar_margin)
+# define menuBar_height()       (fheight + MENU_SHADOW)
+# define menuBar_TotalHeight()  (menuBar_height() + MENU_SHADOW + menuBar_margin)
 # define isMenuBarWindow(w)     ((w) == menuBar.win)
 #else
 # define menuBar_height()       (0)

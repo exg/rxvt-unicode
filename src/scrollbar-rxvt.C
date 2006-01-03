@@ -27,7 +27,7 @@
 /*----------------------------------------------------------------------*/
 #if defined(RXVT_SCROLLBAR)
 
-/* draw triangular button with a shadow of SHADOW (1 or 2) pixels */
+/* draw triangular button with a shadow of MENU_SHADOW (1 or 2) pixels */
 void
 rxvt_term::Draw_button (int x, int y, int state, int dirn)
 {
@@ -80,7 +80,7 @@ rxvt_term::Draw_button (int x, int y, int state, int dirn)
   XDrawLine (display->display, scrollBar.win, top,
              pt[0].x, pt[0].y, pt[1].x, pt[1].y);
 
-#if (SHADOW > 1)
+#if (MENU_SHADOW > 1)
   /* doubled */
   pt[0].x++;
 
@@ -106,7 +106,7 @@ rxvt_term::Draw_button (int x, int y, int state, int dirn)
   XDrawLine (display->display, scrollBar.win, bot,
              pt[2].x, pt[2].y, pt[1].x, pt[1].y);
 
-#if (SHADOW > 1)
+#if (MENU_SHADOW > 1)
   /* doubled */
   pt[1].x--;
   if (dirn == UP)

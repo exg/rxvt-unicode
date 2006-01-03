@@ -555,7 +555,7 @@ rxvt_Draw_Shadow (Display *display, Window win, GC topShadow, GC botShadow, int 
 {
   int             shadow;
 
-  shadow = (w == 0 || h == 0) ? 1 : SHADOW;
+  shadow = (w == 0 || h == 0) ? 1 : MENU_SHADOW;
   w += x - 1;
   h += y - 1;
   for (; shadow-- > 0; x++, y++, w--, h--)

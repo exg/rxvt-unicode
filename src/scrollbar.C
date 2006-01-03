@@ -233,7 +233,7 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
 
 # if defined(RXVT_SCROLLBAR)
   if (! OPTION (Opt_scrollBar_floating) && style == R_SB_RXVT)
-    sb_shadow = SHADOW;
+    sb_shadow = MENU_SHADOW;
 # endif
 
   scrollBar.style = style;
