@@ -14,7 +14,7 @@ WISH: just for fun, do shade and tint with XRender.
           perl*-resources and keysym resources.
         - fix directory permissions on install.
         - improved sched_yield support.
-        - meta8 support was forcefully enabled in most configurations,
+        - meta8 support was forcefully enabled in most configurations.
           restored configurability of this (useless) feature (reported
           by Mikachu)
 
