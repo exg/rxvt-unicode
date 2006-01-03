@@ -473,10 +473,10 @@ rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0)
 
             int len = wcslen (wstr);
 
-            if (start_col + len > THIS->ncol)
+            if (!IN_RANGE_INC (start_col, 0, THIS->ncol - len))
               {
                 free (wstr);
-                croak ("new_text extends beyond right margin");
+                croak ("new_text extends beyond horizontal margins");
               }
 
             for (int col = start_col; col < start_col + len; col++)
@@ -517,8 +517,8 @@ rxvt_term::ROW_r (int row_number, SV *new_rend = 0, int start_col = 0)
             AV *av = (AV *)SvRV (new_rend);
             int len = av_len (av) + 1;
 
-            if (start_col + len > THIS->ncol)
-              croak ("new_rend array extends beyond right margin");
+            if (!IN_RANGE_INC (start_col, 0, THIS->ncol - len))
+              croak ("new_rend array extends beyond horizontal margins");
 
             for (int col = start_col; col < start_col + len; col++)
               {

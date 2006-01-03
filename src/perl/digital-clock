@@ -24,6 +24,9 @@ sub on_refresh_begin {
    my $time = sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2, 1, 0];
    my $xpos = $self->ncol - length $time;
 
+   $xpos >= 0
+      or return;
+
    $self->{digital_clock_rend} = $self->ROW_r (0, [(urxvt::DEFAULT_RSTYLE) x length $time], $xpos);
    $self->{digital_clock_text} = $self->ROW_t (0, $time, $xpos);
 
@@ -34,8 +37,11 @@ sub on_refresh_begin {
 sub on_refresh_end {
    my ($self) = @_;
 
-   $self->ROW_r (0, $self->{digital_clock_rend});
-   $self->ROW_t (0, $self->{digital_clock_text});
+   exists $self->{digital_clock_text}
+      or return;
+
+   $self->ROW_r (0, delete $self->{digital_clock_rend});
+   $self->ROW_t (0, delete $self->{digital_clock_text});
 
    ()
 }
