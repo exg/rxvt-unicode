@@ -406,8 +406,7 @@ void
 rxvt_ptytty::put ()
 {
 #ifndef NO_SETOWNER_TTYDEV
-  if (tty >= 0)
-    privileges (RESTORE);
+  privileges (RESTORE);
 #endif
 
   if (pty >= 0) close (pty);
