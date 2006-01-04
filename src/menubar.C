@@ -37,8 +37,8 @@
 
 static const struct
   {
-    const char      name;	/* (l)eft, (u)p, (d)own, (r)ight */
-    const unsigned char str[5];	/* str[0] = strlen (str+1) */
+    const char name;	/* (l)eft, (u)p, (d)own, (r)ight */
+    const char str[5];	/* str[0] = strlen (str+1) */
   }
 Arrows[NARROWS] = {
                     { 'l', "\003\033[D" },
@@ -149,7 +149,7 @@ rxvt_term::menuitem_free (menu_t *menu, menuitem_t *item)
  * remove the first character of STR if it's '\0'
  */
 int
-rxvt_action_type (action_t *action, unsigned char *str)
+rxvt_action_type (action_t *action, char *str)
 {
   unsigned int    len;
 
@@ -168,9 +168,9 @@ rxvt_action_type (action_t *action, unsigned char *str)
   if (str[0] == '\0')
     {
       /* the functional equivalent: memmove (str, str+1, len); */
-      unsigned char  *dst = (str);
-      unsigned char  *src = (str + 1);
-      unsigned char  *end = (str + len);
+      char *dst = (str);
+      char *src = (str + 1);
+      char *end = (str + len);
 
       while (src <= end)
         *dst++ = *src++;
@@ -179,6 +179,7 @@ rxvt_action_type (action_t *action, unsigned char *str)
       if (str[0] != '\0')
         action->type = MenuTerminalAction;
     }
+
   action->str = str;
   action->len = len;
 
@@ -351,13 +352,13 @@ rxvt_term::menuarrow_add (char *string)
 
   for (i = 0; i < NARROWS; i++)
     {
-      unsigned char  *str;
-      unsigned int    len;
+      char *str;
+      unsigned int len;
 
       if (!parse[i].len)
         continue;
 
-      str = (unsigned char *) rxvt_malloc (parse[i].len + xtra_len + 1);
+      str = (char *)rxvt_malloc (parse[i].len + xtra_len + 1);
 
       len = 0;
       if (beg.len)
@@ -478,7 +479,7 @@ Item_Found:
     }
   if (len)
     {
-      unsigned char *str = (unsigned char *)rxvt_malloc (len + 1);
+      char *str = (char *)rxvt_malloc (len + 1);
 
       strcpy (str, action);
 
@@ -758,7 +759,7 @@ rxvt_term::drawbox_menubar (int x, int len, int state)
   if (x >= width)
     return;
   else if (x + len >= width)
-    len = (TermWin_TotalWidth () - x);
+    len = (this->width - x);
 
 #ifdef MENUBAR_SHADOW_IN
   state = -state;
@@ -945,7 +946,7 @@ rxvt_term::menu_show ()
       ActiveMenu->w = Menu_PixelWidth (ActiveMenu);
 
       if ((x + ActiveMenu->w) >= width)
-        x = (TermWin_TotalWidth () - ActiveMenu->w);
+        x = (this->width - ActiveMenu->w);
 
       /* find the height */
       for (h = 0, item = ActiveMenu->head; item != NULL; item = item->next)
@@ -1025,10 +1026,10 @@ rxvt_term::menu_show ()
 
               /* ensure menu is in window limits */
               if ((x1 + menu->w) >= width)
-                x1 = (TermWin_TotalWidth () - menu->w);
+                x1 = (this->width - menu->w);
 
               if ((y1 + menu->h) >= height)
-                y1 = (TermWin_TotalHeight () - menu->h);
+                y1 = (this->height - menu->h);
 
               menu->x = (x1 < 0 ? 0 : x1);
               menu->y = (y1 < 0 ? 0 : y1);
@@ -1284,7 +1285,7 @@ rxvt_term::menubar_remove (const char *name)
 void
 rxvt_action_decode (FILE *fp, action_t *act)
 {
-  unsigned char *str;
+  char *str;
   short len;
 
   if (act == NULL || (len = act->len) == 0 || (str = act->str) == NULL)
@@ -1327,7 +1328,7 @@ rxvt_action_decode (FILE *fp, action_t *act)
    */
   while (len > 0)
     {
-      unsigned char   ch = *str++;
+      char ch = *str++;
 
       switch (ch)
         {
@@ -1348,7 +1349,7 @@ rxvt_action_decode (FILE *fp, action_t *act)
           default:
             if (ch <= 31)
               fprintf (fp, "^%c", ('@' + ch));
-            else if (ch > 127)
+            else if ((unsigned char)ch > 127)
               fprintf (fp, "\\%o", ch);
             else
               fprintf (fp, "%c", ch);

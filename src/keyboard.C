@@ -74,11 +74,11 @@ static void
 output_string (rxvt_term *rt, const char *str)
 {
   if (strncmp (str, "command:", 8) == 0)
-    rt->cmd_write ((unsigned char *)str + 8, strlen (str) - 8);
+    rt->cmd_write (str + 8, strlen (str) - 8);
   else if (strncmp (str, "perl:", 5) == 0)
     PERL_INVOKE((rt, HOOK_KEYBOARD_COMMAND, DT_STRING, str + 5, DT_END));
   else
-    rt->tt_write ((unsigned char *)str, strlen (str));
+    rt->tt_write (str, strlen (str));
 }
 
 static void
@@ -95,12 +95,12 @@ output_string_meta8 (rxvt_term *rt, unsigned int state, char *buf, int buflen)
       else if (rt->meta_char == C0_ESC)	/* escape prefix */
 #endif
         {
-          const unsigned char ch = C0_ESC;
+          const char ch = C0_ESC;
           rt->tt_write (&ch, 1);
         }
     }
 
-  rt->tt_write ((unsigned char *) buf, buflen);
+  rt->tt_write (buf, buflen);
 }
 
 static int
@@ -194,7 +194,7 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
 {
   keysym_t *key = new keysym_t;
   wchar_t *wc = rxvt_mbstowcs (trans);
-  const char *translation = rxvt_wcstoutf8 (wc);
+  char *translation = rxvt_wcstoutf8 (wc);
   free (wc);
 
   if (key && translation)

@@ -680,11 +680,6 @@ rxvt_term::init_command (const char *const *argv)
       SavedModes |= PrivMode_menuBar;
     }
 
-#ifdef CURSOR_BLINK
-  if (OPTION (Opt_cursorBlink))
-    (void)gettimeofday (&lastcursorchange, NULL);
-#endif
-
   run_command (argv);
 }
 
@@ -1081,8 +1076,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   vt = XCreateSimpleWindow (disp, top,
                                     window_vt_x,
                                     window_vt_y,
-                                    TermWin_TotalWidth (),
-                                    TermWin_TotalHeight (),
+                                    width,
+                                    height,
                                     0,
                                     pix_colors_focused[Color_fg],
                                     pix_colors_focused[Color_bg]);
@@ -1110,7 +1105,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
     {
       menuBar.win = XCreateSimpleWindow (disp, top,
                                          window_vt_x, 0,
-                                         TermWin_TotalWidth (),
+                                         width,
                                          menuBar_TotalHeight (),
                                          0,
                                          pix_colors_focused[Color_fg],

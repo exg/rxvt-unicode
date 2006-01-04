@@ -270,7 +270,7 @@ rxvt_term::commit_iso14755 ()
         }
 
       if (len > 0)
-        tt_write ((unsigned char *)mb, len);
+        tt_write (mb, len);
       else
         scr_bell ();
     }
@@ -308,7 +308,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
   static int debug_key = 1;	/* accessible by a debugger only */
 #endif
   int valid_keysym;
-  unsigned char kbuf[KBUFSZ];
+  char kbuf[KBUFSZ];
 
   /*
    * use Num_Lock to toggle Keypad on/off.  If Num_Lock is off, allow an
@@ -336,7 +336,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
 #if 0
 #ifdef X_HAVE_UTF8_STRING
       if (enc_utf8 && 0) // currently disabled, doesn't seem to work, nor is useful
-        len = Xutf8LookupString (Input_Context, &ev, (char *)kbuf,
+        len = Xutf8LookupString (Input_Context, &ev, kbuf,
                                  KBUFSZ, &keysym, &status_return);
       else
 #endif
@@ -383,7 +383,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
   else
 #endif
     {
-      len = XLookupString (&ev, (char *)kbuf, KBUFSZ, &keysym, &compose);
+      len = XLookupString (&ev, kbuf, KBUFSZ, &keysym, &compose);
       valid_keysym = keysym != NoSymbol;
     }
 
@@ -857,7 +857,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
           /* set 8-bit on */
           if (meta && (meta_char == 0x80))
             {
-              unsigned char  *ch;
+              char *ch;
 
               for (ch = kbuf; ch < kbuf + len; ch++)
                 *ch |= 0x80;
@@ -900,7 +900,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
 #endif
      )
     {
-      const unsigned char ch = C0_ESC;
+      const char ch = C0_ESC;
       tt_write (&ch, 1);
     }
 
@@ -922,7 +922,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
 /*{{{ rxvt_cmd_write (), rxvt_cmd_getc () */
 /* attempt to `write' count to the input buffer */
 unsigned int
-rxvt_term::cmd_write (const unsigned char *str, unsigned int count)
+rxvt_term::cmd_write (const char *str, unsigned int count)
 {
   unsigned int n, s;
 
@@ -2673,7 +2673,7 @@ rxvt_term::cmd_parse ()
 {
   bool flag = false;
   unicode_t ch = NOCHAR;
-  unsigned char *seq_begin; // remember start of esc-sequence here
+  char *seq_begin; // remember start of esc-sequence here
 
   for (;;)
     {
@@ -2815,11 +2815,11 @@ rxvt_term::next_char ()
   while (cmdbuf_ptr < cmdbuf_endp)
     {
       // assume 7-bit to be ascii ALWAYS
-      if (*cmdbuf_ptr <= 0x7f && *cmdbuf_ptr != 0x1b)
+      if ((unsigned char)*cmdbuf_ptr <= 0x7f && *cmdbuf_ptr != 0x1b)
         return *cmdbuf_ptr++;
 
       wchar_t wc;
-      size_t len = mbrtowc (&wc, (char *)cmdbuf_ptr, cmdbuf_endp - cmdbuf_ptr, mbstate);
+      size_t len = mbrtowc (&wc, cmdbuf_ptr, cmdbuf_endp - cmdbuf_ptr, mbstate);
 
       if (len == (size_t)-2)
         {
@@ -2968,11 +2968,9 @@ rxvt_term::process_nonprinting (unicode_t ch)
         break;
       case C0_ENQ:	/* terminal Status */
         if (rs[Rs_answerbackstring])
-          tt_write ((const unsigned char *)rs[Rs_answerbackstring],
-                    (unsigned int)strlen (rs[Rs_answerbackstring]));
+          tt_write (rs [Rs_answerbackstring], strlen (rs [Rs_answerbackstring]));
         else
-          tt_write ((unsigned char *)VT100_ANS,
-                    (unsigned int)strlen (VT100_ANS));
+          tt_write (VT100_ANS, strlen (VT100_ANS));
         break;
       case C0_BEL:	/* bell */
         scr_bell ();
@@ -3170,8 +3168,7 @@ rxvt_term::process_escape_seq ()
 
         /* 8.3.110: SINGLE CHARACTER INTRODUCER */
       case C1_SCI:		/* ESC Z */
-        tt_write ((const unsigned char *)ESCZ_ANSWER,
-                 (unsigned int) (sizeof (ESCZ_ANSWER) - 1));
+        tt_write (ESCZ_ANSWER, sizeof (ESCZ_ANSWER) - 1);
         break;			/* steal obsolete ESC [ c */
 
         /* 8.3.16: CONTROL SEQUENCE INTRODUCER */
@@ -3425,8 +3422,7 @@ rxvt_term::process_csi_seq ()
         break;
 
       case CSI_DA:		/* 8.3.24: (0) DEVICE ATTRIBUTES */
-        tt_write ((const unsigned char *)VT100_ANS,
-                  (unsigned int) (sizeof (VT100_ANS) - 1));
+        tt_write (VT100_ANS, sizeof (VT100_ANS) - 1);
         break;
 
       case CSI_SGR:		/* 8.3.118: (0) SELECT GRAPHIC RENDITION */
@@ -3638,7 +3634,7 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
  * get input up until STRING TERMINATOR (or BEL)
  * ends_how is terminator used. returned input must be free()'d
  */
-unsigned char *
+char *
 rxvt_term::get_to_st (unicode_t &ends_how)
 {
   unicode_t ch;
@@ -3681,7 +3677,7 @@ rxvt_term::get_to_st (unicode_t &ends_how)
 
   ends_how = (ch == 0x5c ? C0_ESC : ch);
 
-  return (unsigned char *)rxvt_wcstombs (string);
+  return rxvt_wcstombs (string);
 }
 
 /*----------------------------------------------------------------------*/
@@ -3691,7 +3687,7 @@ rxvt_term::get_to_st (unicode_t &ends_how)
 void
 rxvt_term::process_dcs_seq ()
 {
-  unsigned char *s;
+  char *s;
   unicode_t eh;
 
   /*
@@ -3720,18 +3716,18 @@ rxvt_term::process_osc_seq ()
 
   if (ch == ';')
     {
-      unsigned char *s = get_to_st (eh);
+      char *s = get_to_st (eh);
 
       if (s)
         {
-          process_xterm_seq (arg, (char *)s, eh);
+          process_xterm_seq (arg, s, eh);
           free (s);
         }
     }
 }
 
 void
-rxvt_term::process_color_seq (int report, int color, const char *str, unsigned char resp)
+rxvt_term::process_color_seq (int report, int color, const char *str, char resp)
 {
   if (str[0] == '?' && !str[1])
     {
@@ -3747,7 +3743,7 @@ rxvt_term::process_color_seq (int report, int color, const char *str, unsigned c
  * XTerm escape sequences: ESC ] Ps;Pt (ST|BEL)
  */
 void
-rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
+rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 {
   int changed = 0;
   int color;
@@ -4401,7 +4397,7 @@ void
 rxvt_term::tt_printf (const char *fmt,...)
 {
   va_list arg_ptr;
-  unsigned char buf[256];
+  char buf[256];
 
   va_start (arg_ptr, fmt);
   vsnprintf ((char *)buf, 256, fmt, arg_ptr);
@@ -4416,7 +4412,7 @@ rxvt_term::tt_printf (const char *fmt,...)
 const unsigned int MAX_PTY_WRITE = 255; // minimum MAX_INPUT
 
 void
-rxvt_term::tt_write (const unsigned char *data, unsigned int len)
+rxvt_term::tt_write (const char *data, unsigned int len)
 {
   if (v_buflen == 0)
     {
@@ -4429,7 +4425,7 @@ rxvt_term::tt_write (const unsigned char *data, unsigned int len)
       len  -= written;
     }
 
-  v_buffer = (unsigned char *)realloc (v_buffer, v_buflen + len);
+  v_buffer = (char *)realloc (v_buffer, v_buflen + len);
 
   memcpy (v_buffer + v_buflen, data, len);
   v_buflen += len;

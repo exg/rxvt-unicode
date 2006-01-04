@@ -1224,11 +1224,11 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
       if (menubar_visible ())
         XMoveResizeWindow (disp, menuBar.win,
                            window_vt_x, 0,
-                           TermWin_TotalWidth (), menuBar_TotalHeight ());
+                           width, menuBar_TotalHeight ());
 
       XMoveResizeWindow (disp, vt,
                          window_vt_x, window_vt_y,
-                         TermWin_TotalWidth (), TermWin_TotalHeight ());
+                         width, height);
 
       scr_clear ();
 #ifdef XPM_BACKGROUND

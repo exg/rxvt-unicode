@@ -2109,7 +2109,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 
               XCopyArea (display->display, vt, vt,
                          gc, 0, Row2Pixel (len + i),
-                         (unsigned int)TermWin_TotalWidth (),
+                         (unsigned int)this->width,
                          (unsigned int)Height2Pixel (wlen - len + 1),
                          0, Row2Pixel (len));
               len = -1;
@@ -2566,7 +2566,7 @@ rxvt_term::selection_check (int check_more)
  * Paste a selection direct to the command fd
  */
 void
-rxvt_term::paste (unsigned char *data, unsigned int len)
+rxvt_term::paste (char *data, unsigned int len)
 {
   /* convert normal newline chars into common keyboard Return key sequence */
   for (unsigned int i = 0; i < len; i++)
@@ -2720,7 +2720,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
       char *s = rxvt_wcstombs (w);
       free (w);
       // TODO: strlen == only the first element will be converted. well...
-      paste ((unsigned char *)s, strlen (s));
+      paste (s, strlen (s));
       free (s);
     }
   else
@@ -2729,12 +2729,12 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop)
       && cl)
     {
       for (int i = 0; i < cr; i++)
-        paste ((unsigned char *)cl[i], strlen (cl[i]));
+        paste (cl[i], strlen (cl[i]));
 
       XFreeStringList (cl);
     }
   else
-    paste (ct.value, ct.nitems); // paste raw
+    paste ((char *)ct.value, ct.nitems); // paste raw
 
 bailout:
   XFree (ct.value);
@@ -2782,7 +2782,7 @@ rxvt_term::selection_request (Time tm, int x, int y)
   if (selection.text)
     { /* internal selection */
       char *str = rxvt_wcstombs (selection.text, selection.len);
-      paste ((unsigned char *)str, strlen (str));
+      paste (str, strlen (str));
       free (str);
       return;
     }

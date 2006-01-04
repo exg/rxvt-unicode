@@ -913,7 +913,7 @@ rxvt_term::tt_write (SV *octets)
           STRLEN len;
           char *str = SvPVbyte (octets, len);
 	C_ARGS:
-          (unsigned char *)str, len
+          str, len
 
 SV *
 rxvt_term::overlay (int x, int y, int w, int h, int rstyle = OVERLAY_RSTYLE, int border = 2)

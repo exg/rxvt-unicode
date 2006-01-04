@@ -160,10 +160,8 @@ rxvt_term::scale_pixmap (const char *geom)
 void
 rxvt_term::resize_pixmap ()
 {
-  XGCValues       gcvalue;
-  GC              gc;
-  unsigned int    width = TermWin_TotalWidth ();
-  unsigned int    height = TermWin_TotalHeight ();
+  XGCValues gcvalue;
+  GC gc;
   dDisp;
 
   if (pixmap != None)
@@ -174,8 +172,7 @@ rxvt_term::resize_pixmap ()
       pixmap = None;
 
       if (!OPTION (Opt_transparent) || !am_transparent)
-        XSetWindowBackground (disp, vt,
-                              pix_colors[Color_bg]);
+        XSetWindowBackground (disp, vt, pix_colors[Color_bg]);
 
       return;
     }
@@ -202,29 +199,25 @@ rxvt_term::resize_pixmap ()
       if (w == 0)
         {
           /* basic X tiling - let the X server do it */
-          pixmap = XCreatePixmap (disp, vt,
-                                         xpmw, xpmh,
-                                         (unsigned int)display->depth);
+          pixmap = XCreatePixmap (disp, vt, xpmw, xpmh,
+                                  (unsigned int)display->depth);
           XCopyArea (disp, bgPixmap.pixmap, pixmap, gc,
-                    0, 0, xpmw, xpmh, 0, 0);
+                     0, 0, xpmw, xpmh, 0, 0);
         }
       else
         {
-          float           incr, p;
-          Pixmap          tmp;
+          float incr, p;
+          Pixmap tmp;
 
-          pixmap = XCreatePixmap (disp, vt,
-                                         width, height,
-                                         (unsigned int)display->depth);
+          pixmap = XCreatePixmap (disp, vt, width, height,
+                                  (unsigned int)display->depth);
           /*
            * horizontal scaling
            */
           rxvt_pixmap_incr (&w, &x, &incr, &p, width, xpmw);
 
-          tmp = XCreatePixmap (disp, vt,
-                              width, xpmh, (unsigned int)display->depth);
-          XFillRectangle (disp, tmp, gc, 0, 0, width,
-                         xpmh);
+          tmp = XCreatePixmap (disp, vt, width, xpmh, (unsigned int)display->depth);
+          XFillRectangle (disp, tmp, gc, 0, 0, width, xpmh);
 
           for ( /*nil */ ; x < w; x++, p += incr)
             {
