@@ -2008,7 +2008,9 @@ CONFIGURE OPTIONS
     --enable-perl (default: off)
         Enable an embedded perl interpreter. See the rxvtperl(3) manpage
         (doc/rxvtperl.txt) for more info on this feature, or the files in
-        src/perl-ext/ for the extensions that are installed by default.
+        src/perl-ext/ for the extensions that are installed by default. The
+        perl interpreter that is used can be specified via the "PERL"
+        environment variable when running configure.
 
     --with-name=NAME (default: urxvt)
         Set the basename for the installed binaries, resulting in "urxvt",

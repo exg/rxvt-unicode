@@ -2575,7 +2575,9 @@ Add support to have the pointer disappear when typing or inactive.
 
 Enable an embedded perl interpreter. See the B<@@RXVT_NAME@@perl(3)>
 manpage (F<doc/rxvtperl.txt>) for more info on this feature, or the files
-in F<src/perl-ext/> for the extensions that are installed by default.
+in F<src/perl-ext/> for the extensions that are installed by default. The
+perl interpreter that is used can be specified via the C<PERL> environment
+variable when running configure.
 
 =item --with-name=NAME (default: urxvt)
 
