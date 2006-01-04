@@ -20,34 +20,9 @@ enum data_type {
 };
 
 enum hook_type {
-  HOOK_INIT    = 0, // special, hardcoded
-  HOOK_DESTROY = 1, // values in urxvt.pm
-  HOOK_RESET,
-  HOOK_START,
-
-  HOOK_SEL_BEGIN,
-  HOOK_SEL_EXTEND,
-  HOOK_SEL_MAKE,
-  HOOK_SEL_GRAB,
-
-  HOOK_SEL_CLICK,
-
-  HOOK_FOCUS_IN,
-  HOOK_FOCUS_OUT,
-
-  HOOK_VIEW_CHANGE,
-  HOOK_SCROLL_BACK,
-  HOOK_TTY_ACTIVITY,
-  HOOK_OSC_SEQ,
-
-  HOOK_REFRESH_BEGIN,
-  HOOK_REFRESH_END,
-
-  HOOK_KEYBOARD_COMMAND,
-
-  HOOK_MOUSE_CLICK,
-  HOOK_MOUSE_MOVE,
-
+# define def(sym) HOOK_ ## sym,
+# include "hookinc.h"
+# undef def
   HOOK_NUM,
 };
 

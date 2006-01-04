@@ -503,26 +503,11 @@ PROTOTYPES: ENABLE
 
 BOOT:
 {
-# define set_hookname(sym) av_store (hookname, PP_CONCAT(HOOK_, sym), newSVpv (PP_STRINGIFY(sym), 0))
 # define export_const(name) newCONSTSUB (gv_stashpv ("urxvt", 1), #name, newSViv (name));
   AV *hookname = get_av ("urxvt::HOOKNAME", 1);
-  set_hookname (INIT);
-  set_hookname (RESET);
-  set_hookname (START);
-  set_hookname (DESTROY);
-  set_hookname (SEL_BEGIN);
-  set_hookname (SEL_EXTEND);
-  set_hookname (SEL_MAKE);
-  set_hookname (SEL_GRAB);
-  set_hookname (FOCUS_IN);
-  set_hookname (FOCUS_OUT);
-  set_hookname (VIEW_CHANGE);
-  set_hookname (SCROLL_BACK);
-  set_hookname (TTY_ACTIVITY);
-  set_hookname (OSC_SEQ);
-  set_hookname (REFRESH_BEGIN);
-  set_hookname (REFRESH_END);
-  set_hookname (KEYBOARD_COMMAND);
+# define def(sym) av_store (hookname, HOOK_ ## sym, newSVpv (# sym, 0));
+# include "hookinc.h"
+# undef def
 
   export_const (DEFAULT_RSTYLE);
   export_const (OVERLAY_RSTYLE);
@@ -833,11 +818,11 @@ rxvt_term::_resource (char *name, int index, SV *newval = 0)
 	PPCODE:
 {
 	struct resval { const char *name; int value; } rslist [] = {
-#	  define Rs_def(name) { # name, Rs_ ## name },
-#	  define Rs_reserve(name,count)
+#	  define def(name) { # name, Rs_ ## name },
+#	  define reserve(name,count)
 #	  include "rsinc.h"
-#	  undef Rs_def
-#	  undef Rs_reserve
+#	  undef def
+#	  undef reserve
         };
 
         struct resval *rs = rslist + sizeof (rslist) / sizeof (rslist [0]);

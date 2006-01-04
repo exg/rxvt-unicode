@@ -559,11 +559,11 @@ enum colour_list {
  * Resource list
  */
 enum {
-#define Rs_def(name) Rs_ ## name,
-#define Rs_reserve(name,count) Rs_ ## name ## _ = Rs_ ## name + (count) - 1,
-#include "rsinc.h"
-#undef Rs_def
-#undef Rs_reserve
+# define def(name) Rs_ ## name,
+# define reserve(name,count) Rs_ ## name ## _ = Rs_ ## name + (count) - 1,
+# include "rsinc.h"
+# undef def
+# undef reserve
   NUM_RESOURCES
 };
 

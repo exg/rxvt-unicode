@@ -8,23 +8,31 @@ TODO: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 WISH: make builtin character glyphs optional
-WISH: better support for mixing xft font sizes rxvt -fn "xft:Andale Mono:size=15" -fb "xft:Andale Mono:size=8:bold"
 
+SECURITY FIX: systems using openpty (most BSDs) had wrong permissions
+on the tty. Systems using unix pty's (such as GNU/Linux) were not
+affected. Apart from this, the meta8 option is no longer forcefully
+enabled. New features: urxvt now supports embedded perl, which can already
+do useful things and will certainly be extended in the future.
+
+6.3
         - SECURITY FIX: on systems using openpty, permissions were
           not correctly updated on the tty device and were left as
           world-readable and world-writable (likely in original rxvt,
-          too), and were not restored properly (same as xterm here).
-          Affected are only systems using non-unix ptys (such as most
-          BSDs, not GNU/Linux).
+          too), and were not restored properly. Affected are only systems
+          using non-unix ptys (such as most BSDs, not GNU/Linux).
         - meta8 support was forcefully enabled in most configurations.
           restored configurability of this (useless) feature (reported
-          by Mikachu)
+          by Mikachu).
         - optionally embed a perl interpreter, which can be used for more
           intelligent/customized selection support, visual feedback,
           menus, tabs etc. See the the urxvtperl manpage, the -pe option,
           perl*-resources and keysym resources. Not everything is there yet.
         - try to be more clever about differing font sizes and their ascent.
+          Not guarenteed to work, but works better in most cases now.
         - fix directory permissions on install.
+TODO    - implemented option to disable built-in line drawing characters
+          and fall back to the font ones (patch by Martin Pohlack).
         - disabled sched_yield support: the linux version is just too useless
           (it schedules nice'd processes before the own one for extended
           periods). Too bad, it could reduce system time by a factor of 5 here.

@@ -75,6 +75,7 @@ src/encoding.h
 src/fdpass.h
 src/fdpass.C
 src/feature.h
+src/hookinc.h
 src/init.C
 src/init.h
 src/iom.C

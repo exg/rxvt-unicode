@@ -1,110 +1,110 @@
 // all resource indices, used by rxvt.h anf rxvtperl.xs
 
-  Rs_def(display_name)
-  Rs_def(term_name)
-  Rs_def(iconName)
-  Rs_def(geometry)
-  Rs_def(reverseVideo)
-  Rs_def(color)
-  Rs_reserve(color, NRS_COLORS)
-  Rs_def(font)
+  def (display_name)
+  def (term_name)
+  def (iconName)
+  def (geometry)
+  def (reverseVideo)
+  def (color)
+  reserve (color, NRS_COLORS)
+  def (font)
 #if ENABLE_STYLES
-  Rs_def(boldFont)
-  Rs_def(italicFont)
-  Rs_def(boldItalicFont)
-  Rs_def(intensityStyles)
+  def (boldFont)
+  def (italicFont)
+  def (boldItalicFont)
+  def (intensityStyles)
 #endif
-  Rs_def(name)
-  Rs_def(title)
+  def (name)
+  def (title)
 #if defined (XPM_BACKGROUND) || (MENUBAR_MAX)
-  Rs_def(path)
+  def (path)
 #endif
 #ifdef XPM_BACKGROUND
-  Rs_def(backgroundPixmap)
+  def (backgroundPixmap)
 #endif
 #if (MENUBAR_MAX)
-  Rs_def(menu)
+  def (menu)
 #endif
-  Rs_def(loginShell)
-  Rs_def(jumpScroll)
+  def (loginShell)
+  def (jumpScroll)
 #ifdef HAVE_SCROLLBARS
-  Rs_def(scrollBar)
-  Rs_def(scrollBar_right)
-  Rs_def(scrollBar_floating)
-  Rs_def(scrollBar_align)
-  Rs_def(scrollstyle)
-  Rs_def(scrollBar_thickness)
+  def (scrollBar)
+  def (scrollBar_right)
+  def (scrollBar_floating)
+  def (scrollBar_align)
+  def (scrollstyle)
+  def (scrollBar_thickness)
 #endif
-  Rs_def(scrollTtyOutput)
-  Rs_def(scrollTtyKeypress)
-  Rs_def(scrollWithBuffer)
-  Rs_def(saveLines)
-  Rs_def(utmpInhibit)
-  Rs_def(visualBell)
+  def (scrollTtyOutput)
+  def (scrollTtyKeypress)
+  def (scrollWithBuffer)
+  def (saveLines)
+  def (utmpInhibit)
+  def (visualBell)
 #if ! defined(NO_MAPALERT) && defined(MAPALERT_OPTION)
-  Rs_def(mapAlert)
+  def (mapAlert)
 #endif
 #ifdef META8_OPTION
-  Rs_def(meta8)
+  def (meta8)
 #endif
 #ifdef MOUSE_WHEEL
-  Rs_def(mouseWheelScrollPage)
+  def (mouseWheelScrollPage)
 #endif
 #ifndef NO_BACKSPACE_KEY
-  Rs_def(backspace_key)
+  def (backspace_key)
 #endif
 #ifndef NO_DELETE_KEY
-  Rs_def(delete_key)
+  def (delete_key)
 #endif
-  Rs_def(selectstyle)
+  def (selectstyle)
 #ifdef PRINTPIPE
-  Rs_def(print_pipe)
+  def (print_pipe)
 #endif
 #ifdef USE_XIM
-  Rs_def(preeditType)
-  Rs_def(inputMethod)
+  def (preeditType)
+  def (inputMethod)
 #endif
 #ifdef TRANSPARENT
-  Rs_def(transparent)
-  Rs_def(transparent_all)
+  def (transparent)
+  def (transparent_all)
 #endif
 #if ENABLE_FRILLS
-  Rs_def(pty_fd)
-  Rs_def(hold)
-  Rs_def(ext_bwidth)
-  Rs_def(int_bwidth)
-  Rs_def(borderLess)
-  Rs_def(lineSpace)
-  Rs_def(cursorUnderline)
+  def (pty_fd)
+  def (hold)
+  def (ext_bwidth)
+  def (int_bwidth)
+  def (borderLess)
+  def (lineSpace)
+  def (cursorUnderline)
 #endif
 #if CURSOR_BLINK
-  Rs_def(cursorBlink)
+  def (cursorBlink)
 #endif
 #if ENABLE_XEMBED
-  Rs_def(embed)
+  def (embed)
 #endif
-  Rs_def(cutchars)
-  Rs_def(modifier)
-  Rs_def(answerbackstring)
-  Rs_def(tripleclickwords)
-  Rs_def(insecure)
-  Rs_def(pointerBlank)
-  Rs_def(pointerBlankDelay)
-  Rs_def(imLocale)
-  Rs_def(imFont)
-  Rs_def(pastableTabs)
+  def (cutchars)
+  def (modifier)
+  def (answerbackstring)
+  def (tripleclickwords)
+  def (insecure)
+  def (pointerBlank)
+  def (pointerBlankDelay)
+  def (imLocale)
+  def (imFont)
+  def (pastableTabs)
 #ifndef NO_SECONDARY_SCREEN
-  Rs_def(secondaryScreen)
-  Rs_def(secondaryScroll)
+  def (secondaryScreen)
+  def (secondaryScroll)
 #endif
 #ifdef OFF_FOCUS_FADING
-  Rs_def(fade)
+  def (fade)
 #endif
 #ifdef TINTING
-  Rs_def(shade)
+  def (shade)
 #endif
 #if ENABLE_PERL
-  Rs_def(perl_eval)
-  Rs_def(perl_ext)
-  Rs_def(perl_lib)
+  def (perl_eval)
+  def (perl_ext)
+  def (perl_lib)
 #endif
