@@ -105,6 +105,7 @@
 #endif
 #if ENABLE_PERL
   def (perl_eval)
-  def (perl_ext)
+  def (perl_ext_1)
+  def (perl_ext_2)
   def (perl_lib)
 #endif

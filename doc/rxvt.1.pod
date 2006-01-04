@@ -458,7 +458,8 @@ longer example is in F<doc/pty-fd>):
 
 =item B<-pe> I<string>
 
-Colon-separated list of perl extension scripts to use in this terminal instance. See resource B<perl-ext>.
+Colon-separated list of perl extension scripts to use in this terminal
+instance. See resource B<perl-ext>.
 
 =back
 
@@ -1064,13 +1065,17 @@ info):
   URxvt.keysym.M-C-3: command:\033[8;25;80t
   URxvt.keysym.M-C-4: command:\033[8;48;110t
 
+=item B<perl-ext-common>: I<string>
+
 =item B<perl-ext>: I<string>
 
-Colon-separated list of perl extension scripts to use in this terminal
+Colon-separated list(s) of perl extension scripts to use in this terminal
 instance. Each extension is looked up in the library directories, loaded
-if necessary, and bound to the current terminal instance. If this resource
-is empty or missing, then the perl interpreter will not be initialized;
-option B<-pe>.
+if necessary, and bound to the current terminal instance. If this
+resource is empty or missing, then the perl interpreter will not be
+initialized. The idea behind two options is that B<perl-ext-common> will
+be used for extensions that should be available to all instances, while
+B<perl-ext> is used for specific instances; option B<-pe>.
 
 =item B<perl-eval>: I<string>
 

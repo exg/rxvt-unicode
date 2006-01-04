@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 6.2, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 6.3, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -926,12 +926,16 @@ RESOURCES (available also as long-options)
           URxvt.keysym.M-C-3: command:\033[8;25;80t
           URxvt.keysym.M-C-4: command:\033[8;48;110t
 
+    perl-ext-common: *string*
     perl-ext: *string*
-        Colon-separated list of perl extension scripts to use in this
+        Colon-separated list(s) of perl extension scripts to use in this
         terminal instance. Each extension is looked up in the library
         directories, loaded if necessary, and bound to the current terminal
         instance. If this resource is empty or missing, then the perl
-        interpreter will not be initialized; option -pe.
+        interpreter will not be initialized. The idea behind two options is
+        that perl-ext-common will be used for extensions that should be
+        available to all instances, while perl-ext is used for specific
+        instances; option -pe.
 
     perl-eval: *string*
         Perl code to be evaluated when all extensions have been registered.

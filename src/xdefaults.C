@@ -261,9 +261,10 @@ optList[] = {
               BOOL (Rs_secondaryScroll, "secondaryScroll", "ssr", Opt_secondaryScroll, "enable secondary screen scroll"),
 #endif
 #if ENABLE_PERL
-              RSTRG (Rs_perl_lib, "perl-lib", "string"), //, "colon-separated directories with extension scripts"),
-              RSTRG (Rs_perl_eval, "perl-eval", "perl-eval"), // "string", "code to be evaluated after all extensions have been loaded"),
-              STRG (Rs_perl_ext, "perl-ext", "pe", "string", "colon-separated list of perl extensions to enable"),
+              RSTRG (Rs_perl_lib, "perl-lib", "string"), //, "colon-separated directories with extension scripts"),TODO
+              RSTRG (Rs_perl_eval, "perl-eval", "perl-eval"), // "string", "code to be evaluated after all extensions have been loaded"),TODO
+              RSTRG (Rs_perl_ext_1, "perl-ext-common", "string"), //, "colon-separated list of perl extensions to enable"),TODO
+              STRG (Rs_perl_ext_2, "perl-ext", "pe", "string", "colon-separated list of perl extensions to enable for this instance"),
 #endif
 #if 0 && TODO
 #if !defined(NO_RESOURCES) && defined(USE_XGETDEFAULT)

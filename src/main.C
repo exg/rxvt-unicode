@@ -489,7 +489,9 @@ rxvt_term::init (int argc, const char *const *argv)
 #endif
 
 #if ENABLE_PERL
-  if (rs[Rs_perl_ext] && *rs[Rs_perl_ext])
+  if ((rs[Rs_perl_ext_1] && *rs[Rs_perl_ext_1])
+      || (rs[Rs_perl_ext_2] && *rs[Rs_perl_ext_2])
+      || (rs[Rs_perl_eval] && *rs[Rs_perl_eval]))
     {
       rxvt_perl.init ();
       PERL_INVOKE ((this, HOOK_INIT, DT_END));

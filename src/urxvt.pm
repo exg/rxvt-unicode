@@ -376,7 +376,7 @@ sub invoke {
    if ($htype == 0) { # INIT
       my @dirs = ((split /:/, $TERM->resource ("perl_lib")), "$LIBDIR/perl");
 
-      for my $ext (split /:/, $TERM->resource ("perl_ext")) {
+      for my $ext (map { split /:/, $TERM->resource ("perl_ext_$_") } 1, 2) {
          my @files = grep -f $_, map "$_/$ext", @dirs;
 
          if (@files) {
@@ -463,7 +463,7 @@ list:
   display_name embed ext_bwidth fade font geometry hold iconName
   imFont imLocale inputMethod insecure int_bwidth intensityStyles
   italicFont jumpScroll lineSpace loginShell mapAlert menu meta8 modifier
-  mouseWheelScrollPage name pastableTabs path perl_eval perl_ext
+  mouseWheelScrollPage name pastableTabs path perl_eval perl_ext_1 perl_ext_2
   perl_lib pointerBlank pointerBlankDelay preeditType print_pipe pty_fd
   reverseVideo saveLines scrollBar scrollBar_align scrollBar_floating
   scrollBar_right scrollBar_thickness scrollTtyKeypress scrollTtyOutput
