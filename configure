@@ -12187,7 +12187,6 @@ fi
 
 if test x$support_xft = xyes; then
   LIBS="$LIBS `pkg-config xft --libs`"
-  CFLAGS="$CFLAGS `pkg-config xft --cflags`"
   CPPFLAGS="$CPPFLAGS `pkg-config xft --cflags`"
 
 

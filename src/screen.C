@@ -3138,7 +3138,6 @@ rxvt_term::selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, r
       break;
     }
 
-Old_Word_Selection_You_Die:
   if (dirn == DN)
     col++;                  /* put us on one past the end */
 
