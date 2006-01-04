@@ -1617,6 +1617,7 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 	B<< C<Ps = 713> >>	Set bold-italic fontset to B<< C<Pt> >>. Similar to C<Ps = 50> (Compile styles).
 	B<< C<Ps = 720> >>	Move viewing window up by B<< C<Pt> >> lines, or clear scrollback buffer if C<Pt = 0> (Compile frills).
 	B<< C<Ps = 721> >>	Move viewing window down by B<< C<Pt> >> lines, or clear scrollback buffer if C<Pt = 0> (Compile frills).
+	B<< C<Ps = 777> >>	Call the perl extension with the given string, which should be of the form C<extension:parameters> (Compile perl).
 
 =end table
 
