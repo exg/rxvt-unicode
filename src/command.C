@@ -3963,12 +3963,14 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
 
       case URxvt_view_up:
       case URxvt_view_down:
-        int lines = atoi (str);
+        {
+          int lines = atoi (str);
 
-        if (lines)
-          scr_page (op == URxvt_view_up ? UP : DN, lines);
-        else
-          scr_erase_savelines ();
+          if (lines)
+            scr_page (op == URxvt_view_up ? UP : DN, lines);
+          else
+            scr_erase_savelines ();
+        }
 
         break;
 #endif
@@ -3978,9 +3980,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
         if (PERL_INVOKE ((this, HOOK_OSC_SEQ, DT_STRING, str, DT_END)))
           ; // no responses yet
         break;
-
 #endif
-
     }
 }
 /*----------------------------------------------------------------------*/
