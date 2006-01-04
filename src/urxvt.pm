@@ -368,6 +368,8 @@ sub script_package($) {
    }
 }
 
+our $retval; # return value for urxvt
+
 # called by the rxvt core
 sub invoke {
    local $TERM = shift;
@@ -385,37 +387,45 @@ sub invoke {
             warn "perl extension '$ext' not found in perl library search path\n";
          }
       }
+   }
 
-   } elsif ($htype == 1) { # DESTROY
+   $retval = undef;
+
+   if (my $cb = $TERM->{_hook}[$htype]) {
+      verbose 10, "$HOOKNAME[$htype] (" . (join ", ", $TERM, @_) . ")"
+         if $verbosity >= 10;
+
+      keys %$cb;
+
+      while (my ($pkg, $cb) = each %$cb) {
+         $retval = $cb->(
+            $TERM->{_pkg}{$pkg} ||= do {
+               my $proxy = bless { }, urxvt::term::proxy::;
+               Scalar::Util::weaken ($proxy->{term} = $TERM);
+               $proxy
+            },
+            @_,
+         ) and last;
+      }
+   }
+
+   if ($htype == 1) { # DESTROY
+      # remove hooks if unused
       if (my $hook = $TERM->{_hook}) {
          for my $htype (0..$#$hook) {
             $hook_count[$htype] -= scalar keys %{ $hook->[$htype] || {} }
                or set_should_invoke $htype, 0;
          }
       }
+
+      # clear package objects
+      %$_ = () for values %{ $TERM->{_pkg} };
+
+      # clear package
+      %$TERM = ();
    }
 
-   my $cb = $TERM->{_hook}[$htype]
-      or return;
-
-   verbose 10, "$HOOKNAME[$htype] (" . (join ", ", $TERM, @_) . ")"
-      if $verbosity >= 10;
-
-   keys %$cb;
-
-   while (my ($pkg, $cb) = each %$cb) {
-      return 1
-         if $cb->(
-               $TERM->{$pkg} ||= do {
-                  my $proxy = bless { }, urxvt::term::proxy::;
-                  Scalar::Util::weaken ($proxy->{term} = $TERM);
-                  $proxy
-               },
-               @_,
-            );
-   }
-
-   0
+   $retval
 }
 
 sub urxvt::term::proxy::AUTOLOAD {
