@@ -124,7 +124,7 @@ src/xpm.C
 src/urxvt.pm
 src/typemap
 src/rxvtperl.h
-src/rxvtperl.C
+src/rxvtperl.xs
 
 src/perl/example-refresh-hooks
 src/perl/digital-clock
