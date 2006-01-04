@@ -471,6 +471,8 @@ enum {
 
   URxvt_view_up          = 720,
   URxvt_view_down        = 721,
+
+  URxvt_perl             = 777,
 };
 
 /* Words starting with `Color_' are colours.  Others are counts */

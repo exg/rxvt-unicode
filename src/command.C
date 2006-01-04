@@ -3968,12 +3968,19 @@ rxvt_term::process_xterm_seq (int op, const char *str, unsigned char resp)
         if (lines)
           scr_page (op == URxvt_view_up ? UP : DN, lines);
         else
-          {
-            scr_erase_savelines ();
-          }
+          scr_erase_savelines ();
 
         break;
 #endif
+
+#if ENABLE_PERL
+      case URxvt_perl:
+        if (PERL_INVOKE ((this, HOOK_OSC_SEQ, DT_STRING, str, DT_END)))
+          ; // no responses yet
+        break;
+
+#endif
+
     }
 }
 /*----------------------------------------------------------------------*/

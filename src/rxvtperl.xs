@@ -519,6 +519,7 @@ BOOT:
   set_hookname (VIEW_CHANGE);
   set_hookname (SCROLL_BACK);
   set_hookname (TTY_ACTIVITY);
+  set_hookname (OSC_SEQ);
   set_hookname (REFRESH_BEGIN);
   set_hookname (REFRESH_END);
   set_hookname (KEYBOARD_COMMAND);
