@@ -1098,7 +1098,7 @@ rxvt_term::pty_fill ()
 
   if (CBUFSIZ == n)
     {
-      rxvt_warn ("pty_fill on full buffer, draining input, continuing.\n");
+      rxvt_warn ("PLEASE REPORT: pty_fill on full buffer, draining input, continuing.\n");
       n = 0;
     }
 
