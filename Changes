@@ -25,7 +25,9 @@ WISH: better support for mixing xft font sizes rxvt -fn "xft:Andale Mono:size=15
           perl*-resources and keysym resources. Not everything is there yet.
         - try to be more clever about differing font sizes and their ascent.
         - fix directory permissions on install.
-        - improved sched_yield support.
+        - disabled sched_yield support: the linux version is just too useless
+          (it schedules nice'd processes before the own one for extended
+          periods). Too bad, it could reduce system time by a factor of 5 here.
 
 6.2  Mon Jan  2 16:03:01 CET 2006
         - implemented intensityStyles option which enables/disables bold/blink
