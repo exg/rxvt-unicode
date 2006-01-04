@@ -11,5 +11,5 @@ if [ "x$HOSTNAME" = xcerebro -o "x$HOSTNAME" = xfuji ]; then
 fi
 
 ./configure --prefix=/opt/rxvt --with-name=rxvt --enable-perl \
-            --enable-transparency --enable-menubar --enable-xpm-background --enable-xgetdefault \
+            --enable-menubar --enable-xgetdefault \
             "$@"

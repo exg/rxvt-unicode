@@ -4322,7 +4322,7 @@ MALLOC_TYPE=S
 
 support_addstrings=no
 support_frills=yes
-support_inheritpixmap=no
+support_inheritpixmap=yes
 support_tinting=yes
 support_fading=yes
 support_keepscrolling=yes
@@ -4340,14 +4340,14 @@ support_scroll_next=yes
 support_scroll_xterm=yes
 support_scroll_plain=yes
 support_xim=yes
-support_xpm=no
+support_xpm=yes
 support_xft=yes
 support_unicode3=no
 support_combining=yes
 support_8bitctrls=no
 support_iso14755=yes
 support_styles=yes
-support_perl=no
+support_perl=yes
 codesets=all
 
 
@@ -12741,21 +12741,87 @@ fi
 echo $ECHO_N "checking for $PERL suitability... $ECHO_C" >&6
   if $PERL -MExtUtils::Embed -e "use v5.8" >/dev/null 2>/dev/null; then
 
+     save_CXXFLAGS="$CXXFLAGS"
+     save_LIBS="$LIBS"
+     CXXFLAGS="$CXXFLAGS `$PERL -MExtUtils::Embed -e ccopts`"
+     LIBS="$LIBS `$PERL -MExtUtils::Embed -e ldopts`"
+     cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+#include <EXTERN.h>
+#include <perl.h>
+#include <XSUB.h>
+
+int
+main ()
+{
+
+     PerlInterpreter *perl = perl_alloc ();
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_cxx_werror_flag"			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  rxvt_perl_link=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+rxvt_perl_link=no
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+     CXXFLAGS="$save_CXXFLAGS"
+     LIBS="$save_LIBS"
+
+     if test x$rxvt_perl_link = xyes; then
+        echo "$as_me:$LINENO: result: ok" >&5
+echo "${ECHO_T}ok" >&6
+
 cat >>confdefs.h <<\_ACEOF
 #define ENABLE_PERL 1
 _ACEOF
 
-     IF_PERL=
-     PERL_O=rxvtperl.o
-     PERLFLAGS="`$PERL -MExtUtils::Embed -e ccopts`"
-     PERLLIB="`$PERL -MExtUtils::Embed -e ldopts`"
-     PERLPRIVLIBEXP="`$PERL -MConfig -e 'print $Config{privlibexp}'`"
-     echo "$as_me:$LINENO: result: ok" >&5
-echo "${ECHO_T}ok" >&6
+        IF_PERL=
+        PERL_O=rxvtperl.o
+        PERLFLAGS="`$PERL -MExtUtils::Embed -e ccopts`"
+        PERLLIB="`$PERL -MExtUtils::Embed -e ldopts`"
+        PERLPRIVLIBEXP="`$PERL -MConfig -e 'print $Config{privlibexp}'`"
+     else
+        support_perl=no
+        echo "$as_me:$LINENO: result: no, unable to link" >&5
+echo "${ECHO_T}no, unable to link" >&6
+     fi
   else
      { { echo "$as_me:$LINENO: error: no working perl found" >&5
 echo "$as_me: error: no working perl found" >&2;}
    { (exit or perl not version >= 5.8); exit or perl not version >= 5.8; }; }
+     support_perl=no
   fi
 fi
 

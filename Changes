@@ -9,9 +9,9 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 WISH: make builtin character glyphs optional
 
-SECURITY FIX: systems using openpty (most BSDs) had wrong permissions
-on the tty. Systems using unix pty's (such as GNU/Linux) were not
-affected. Apart from this, the meta8 option is no longer forcefully
+SECURITY FIX: systems using openpty (most BSDs) had wrong permissions on
+the tty. Other systems (such as GNU/Linux) were not affected. Bug fixes:
+the meta8 option ("weird alt key behaviour") is no longer forcefully
 enabled. New features: urxvt now supports embedded perl, which can already
 do useful things and will certainly be extended in the future.
 
@@ -19,8 +19,9 @@ do useful things and will certainly be extended in the future.
         - SECURITY FIX: on systems using openpty, permissions were
           not correctly updated on the tty device and were left as
           world-readable and world-writable (likely in original rxvt,
-          too), and were not restored properly. Affected are only systems
-          using non-unix ptys (such as most BSDs, not GNU/Linux).
+          too), and were not restored properly. Affected are only
+          systems where non-unix ptys were used (such as most BSDs, not
+          GNU/Linux). (found, patched and debugged by Ryan Beasley).
         - meta8 support was forcefully enabled in most configurations.
           restored configurability of this (useless) feature (reported
           by Mikachu).
