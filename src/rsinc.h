@@ -76,6 +76,7 @@
   def (borderLess)
   def (lineSpace)
   def (cursorUnderline)
+  def (skipBuiltinGlyphs)
 #endif
 #if CURSOR_BLINK
   def (cursorBlink)

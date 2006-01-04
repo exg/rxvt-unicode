@@ -163,7 +163,6 @@ optList[] = {
               RSTRG (Rs_color + minCOLOR + 5, "color5", "color"),
               RSTRG (Rs_color + minCOLOR + 6, "color6", "color"),
               RSTRG (Rs_color + minCOLOR + 7, "color7", "color"),
-#ifndef NO_BRIGHTCOLOR
               RSTRG (Rs_color + minBrightCOLOR + 0, "color8", "color"),
               RSTRG (Rs_color + minBrightCOLOR + 1, "color9", "color"),
               RSTRG (Rs_color + minBrightCOLOR + 2, "color10", "color"),
@@ -172,7 +171,6 @@ optList[] = {
               RSTRG (Rs_color + minBrightCOLOR + 5, "color13", "color"),
               RSTRG (Rs_color + minBrightCOLOR + 6, "color14", "color"),
               RSTRG (Rs_color + minBrightCOLOR + 7, "color15", "color"),
-#endif				/* NO_BRIGHTCOLOR */
 #ifndef NO_BOLD_UNDERLINE_REVERSE
               RSTRG (Rs_color + Color_BD, "colorBD", "color"),
               RSTRG (Rs_color + Color_IT, "colorIT", "color"),
@@ -236,6 +234,7 @@ optList[] = {
               STRG (Rs_ext_bwidth, NULL, "borderwidth", NULL, NULL),
               STRG (Rs_int_bwidth, "internalBorder", "b", "number", "internal border in pixels"),
               BOOL (Rs_borderLess, "borderLess", "bl", Opt_borderLess, "borderless window"),
+              BOOL (Rs_skipBuiltinGlyphs, "skipBuiltinGlyphs", "sbg", Opt_skipBuiltinGlyphs, "do not use internal glyphs"),
               STRG (Rs_lineSpace, "lineSpace", "lsp", "number", "number of extra pixels between rows"),
 #endif
 #ifdef POINTER_BLANK

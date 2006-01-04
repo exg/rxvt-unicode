@@ -4342,7 +4342,7 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
 
           //case 50: // not variable spacing
 
-#ifndef NO_BRIGHTCOLOR
+#if ENABLE_FRILLS
           case 90:
           case 91:		/* set bright fg color */
           case 92:

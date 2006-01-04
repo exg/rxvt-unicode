@@ -32,7 +32,7 @@ do useful things and will certainly be extended in the future.
         - try to be more clever about differing font sizes and their ascent.
           Not guarenteed to work, but works better in most cases now.
         - fix directory permissions on install.
-TODO    - implemented option to disable built-in line drawing characters
+        - implemented option to disable built-in line drawing characters
           and fall back to the font ones (patch by Martin Pohlack).
         - disabled sched_yield support: the linux version is just too useless
           (it schedules nice'd processes before the own one for extended

@@ -1028,11 +1028,9 @@ rxvt_term::set_window_color (int idx, const char *color)
       if (i >= 8 && i <= 15)
         {        /* bright colors */
           i -= 8;
-# ifndef NO_BRIGHTCOLOR
           pix_colors_focused[idx] = pix_colors_focused[minBrightCOLOR + i];
           SET_PIXCOLOR (idx);
           goto done;
-# endif
         }
 
       if (i >= 0 && i <= 7)

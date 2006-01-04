@@ -59,13 +59,6 @@
 /* #define NO_CURSORCOLOR */
 
 /*
- * Suppress use of BOLD and BLINK attributes for setting bright foreground
- * and background, respectively.  Simulate BOLD using colorBD or
- * overstrike characters.
- */
-/* #define NO_BRIGHTCOLOR */
-
-/*
  * Make colours match xterm colours instead of `traditional' rxvt colours
  */
 #define XTERM_COLORS

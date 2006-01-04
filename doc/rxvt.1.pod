@@ -191,23 +191,23 @@ section of @@RXVT_NAME@@(7).
 
 =item B<-fb> I<fontlist>
 
-Compile font-styles: The bold font list to use when B<bold> characters are to
-be printed. See resource B<boldFont> for details.
+Compile I<font-styles>: The bold font list to use when B<bold> characters
+are to be printed. See resource B<boldFont> for details.
 
 =item B<-fi> I<fontlist>
 
-Compile font-styles: The italic font list to use when I<italic> characters are to
-be printed. See resource B<italicFont> for details.
+Compile I<font-styles>: The italic font list to use when I<italic>
+characters are to be printed. See resource B<italicFont> for details.
 
 =item B<-fbi> I<fontlist>
 
-Compile font-styles: The bold italic font list to use when B<< I<bold
+Compile I<font-styles>: The bold italic font list to use when B<< I<bold
 italic> >> characters are to be printed. See resource B<boldItalicFont>
 for details.
 
 =item B<-is>|B<+is>
 
-Compile font-styles: Bold/Italic font styles imply high intensity
+Compile I<font-styles>: Bold/Italic font styles imply high intensity
 foreground/background (default). See resource B<intensityStyles> for
 details.
 
@@ -298,6 +298,13 @@ B<externalBorder>.
 Compile I<frills>: Set MWM hints to request a borderless window, i.e.
 if honoured by the WM, the rxvt-unicode window will not have window
 decorations; resource B<borderLess>.
+
+=item B<-sbg>
+
+Compile I<frills>: Disable the usage of the built-in block graphics/line
+drawing characters and just rely on what the specified fonts provide. Use
+this if you have a good font and want to use its block graphic glyphs;
+resource B<skipBuiltinGlyphs>.
 
 =item B<-lsp> I<number>
 
@@ -827,6 +834,13 @@ option B<-w>, B<-bw>, B<-borderwidth>.
 
 Set MWM hints to request a borderless window, i.e. if honoured by the
 WM, the rxvt-unicode window will not have window decorations; option B<-bl>.
+
+=item B<skipBuiltinGlyphs:> I<boolean>
+
+Compile I<frills>: Disable the usage of the built-in block graphics/line
+drawing characters and just rely on what the specified fonts provide. Use
+this if you have a good font and want to use its block graphic glyphs;
+option B<-sbg>.
 
 =item B<termName:> I<termname>
 

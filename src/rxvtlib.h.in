@@ -254,15 +254,17 @@ typedef struct {
 #define Opt_cursorUnderline      (1UL<<23)
 #if ENABLE_FRILLS
 # define Opt_insecure		 (1UL<<24) // insecure esc sequences
-# define Opt_borderLess		 (1UL<<25) // mem borderless hints
+# define Opt_borderLess		 (1UL<<25) // mwm borderless hints
 # define Opt_hold		 (1UL<<26) // hold window open after exit
+# define Opt_skipBuiltinGlyphs	 (1UL<<27) // do not use internal glyphs
 #else
 # define Opt_insecure		 0
 # define Opt_borderLess		 0
 # define Opt_hold		 0
+# define Opt_skipBuiltinGlyphs	 0
 #endif
 #if ENABLE_STYLES
-# define Opt_intensityStyles	 (1UL<<27) // font styles imply intensity
+# define Opt_intensityStyles	 (1UL<<28) // font styles imply intensity
 #else
 # define Opt_intensityStyles	 0
 #endif
@@ -270,6 +272,7 @@ typedef struct {
 #define SET_OPTION(opt)		 (options |= (opt))
 #define CLR_OPTION(opt)		 (options &= ~(opt))
 #define OPTION(opt)              (options & (opt))
+#define OPTION_R(opt)            (r->options & (opt))
 #define DEFAULT_OPTIONS          (Opt_scrollBar | Opt_scrollTtyOutput \
                                   | Opt_jumpScroll | Opt_secondaryScreen \
                                   | Opt_pastableTabs | Opt_intensityStyles)
