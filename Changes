@@ -7,15 +7,8 @@ TODO: read property sequence is broken with respect to utf-8 etc.
 TODO: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
-WISH: make builtin character glyphs optional
 
-SECURITY FIX: systems using openpty (most BSDs) had wrong permissions on
-the tty. Other systems (such as GNU/Linux) were not affected. Bug fixes:
-the meta8 option ("weird alt key behaviour") is no longer forcefully
-enabled. New features: urxvt now supports embedded perl, which can already
-do useful things and will certainly be extended in the future.
-
-6.3
+6.3  Wed Jan  4 22:37:10 CET 2006
         - SECURITY FIX: on systems using openpty, permissions were
           not correctly updated on the tty device and were left as
           world-readable and world-writable (likely in original rxvt,

@@ -267,6 +267,15 @@ DESCRIPTION
           shade term_name title transparent transparent_all tripleclickwords
           utmpInhibit visualBell
 
+    $rend = $term->screen_rstyle ([$new_rstyle])
+        Return and optionally change the current rendition. Text thta is
+        output by the temrianl application will use this style.
+
+    ($row, $col) = $term->screen_cur ([$row, $col])
+        Return the current coordinates of the text cursor position and
+        optionally set it (which is usually bad as applications don't expect
+        that).
+
     ($row, $col) = $term->selection_mark ([$row, $col])
     ($row, $col) = $term->selection_beg ([$row, $col])
     ($row, $col) = $term->selection_end ([$row, $col])
@@ -341,13 +350,19 @@ DESCRIPTION
         strings first to the locale-specific encoding using
         "$term->locale_encode".
 
-    $nrow = $term->nrow
-    $ncol = $term->ncol
-        Return the number of rows/columns of the terminal window (i.e. as
-        specified by "-geometry", excluding any scrollback).
-
-    $nsaved = $term->nsaved
-        Returns the number of lines in the scrollback buffer.
+    $window_width = $term->width
+    $window_height = $term->height
+    $font_width = $term->fwidth
+    $font_height = $term->fheight
+    $font_ascent = $term->fbase
+    $terminal_rows = $term->nrow
+    $terminal_columns = $term->ncol
+    $has_focus = $term->focus
+    $is_mapped = $term->mapped
+    $max_scrollback = $term->saveLines
+    $nrow_plus_saveLines = $term->total_rows
+    $lines_in_scrollback = $term->nsaved
+        Return various integers describing terminal characteristics.
 
     $view_start = $term->view_start ([$newvalue])
         Returns the negative row number of the topmost line. Minimum value

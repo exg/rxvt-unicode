@@ -165,20 +165,20 @@ OPTIONS
         FAQ section of rxvt(7).
 
     -fb *fontlist*
-        Compile font-styles: The bold font list to use when bold characters
-        are to be printed. See resource boldFont for details.
+        Compile *font-styles*: The bold font list to use when bold
+        characters are to be printed. See resource boldFont for details.
 
     -fi *fontlist*
-        Compile font-styles: The italic font list to use when *italic*
+        Compile *font-styles*: The italic font list to use when *italic*
         characters are to be printed. See resource italicFont for details.
 
     -fbi *fontlist*
-        Compile font-styles: The bold italic font list to use when *bold
+        Compile *font-styles*: The bold italic font list to use when *bold
         italic* characters are to be printed. See resource boldItalicFont
         for details.
 
     -is|+is
-        Compile font-styles: Bold/Italic font styles imply high intensity
+        Compile *font-styles*: Bold/Italic font styles imply high intensity
         foreground/background (default). See resource intensityStyles for
         details.
 
@@ -253,6 +253,12 @@ OPTIONS
     -bl Compile *frills*: Set MWM hints to request a borderless window, i.e.
         if honoured by the WM, the rxvt-unicode window will not have window
         decorations; resource borderLess.
+
+    -sbg
+        Compile *frills*: Disable the usage of the built-in block
+        graphics/line drawing characters and just rely on what the specified
+        fonts provide. Use this if you have a good font and want to use its
+        block graphic glyphs; resource skipBuiltinGlyphs.
 
     -lsp *number*
         Compile *frills*: Lines (pixel height) to insert between each row of
@@ -712,6 +718,12 @@ RESOURCES (available also as long-options)
         Set MWM hints to request a borderless window, i.e. if honoured by
         the WM, the rxvt-unicode window will not have window decorations;
         option -bl.
+
+    skipBuiltinGlyphs: *boolean*
+        Compile *frills*: Disable the usage of the built-in block
+        graphics/line drawing characters and just rely on what the specified
+        fonts provide. Use this if you have a good font and want to use its
+        block graphic glyphs; option -sbg.
 
     termName: *termname*
         Specifies the terminal type name to be set in the TERM environment

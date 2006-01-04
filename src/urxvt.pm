@@ -489,6 +489,16 @@ sub urxvt::term::resource($$;$) {
    goto &urxvt::term::_resource;
 }
 
+=item $rend = $term->screen_rstyle ([$new_rstyle])
+
+Return and optionally change the current rendition. Text thta is output by
+the temrianl application will use this style.
+
+=item ($row, $col) = $term->screen_cur ([$row, $col])
+
+Return the current coordinates of the text cursor position and optionally
+set it (which is usually bad as applications don't expect that).
+
 =item ($row, $col) = $term->selection_mark ([$row, $col])
 
 =item ($row, $col) = $term->selection_beg ([$row, $col])
@@ -582,16 +592,31 @@ Write the octets given in C<$data> to the tty (i.e. as program input). To
 pass characters instead of octets, you should convert your strings first
 to the locale-specific encoding using C<< $term->locale_encode >>.
 
-=item $nrow = $term->nrow
+=item $window_width = $term->width
 
-=item $ncol = $term->ncol
+=item $window_height = $term->height
 
-Return the number of rows/columns of the terminal window (i.e. as
-specified by C<-geometry>, excluding any scrollback).
+=item $font_width = $term->fwidth
 
-=item $nsaved = $term->nsaved
+=item $font_height = $term->fheight
 
-Returns the number of lines in the scrollback buffer.
+=item $font_ascent = $term->fbase
+
+=item $terminal_rows = $term->nrow
+
+=item $terminal_columns = $term->ncol
+
+=item $has_focus = $term->focus
+
+=item $is_mapped = $term->mapped
+
+=item $max_scrollback = $term->saveLines
+
+=item $nrow_plus_saveLines = $term->total_rows
+
+=item $lines_in_scrollback = $term->nsaved
+
+Return various integers describing terminal characteristics.
 
 =item $view_start = $term->view_start ([$newvalue])
 

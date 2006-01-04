@@ -300,20 +300,20 @@ See also the question \*(L"How does rxvt-unicode choose fonts?\*(R" in the \s-1F
 section of @@RXVT_NAME@@(7).
 .IP "\fB\-fb\fR \fIfontlist\fR" 4
 .IX Item "-fb fontlist"
-Compile font\-styles: The bold font list to use when \fBbold\fR characters are to
-be printed. See resource \fBboldFont\fR for details.
+Compile \fIfont-styles\fR: The bold font list to use when \fBbold\fR characters
+are to be printed. See resource \fBboldFont\fR for details.
 .IP "\fB\-fi\fR \fIfontlist\fR" 4
 .IX Item "-fi fontlist"
-Compile font\-styles: The italic font list to use when \fIitalic\fR characters are to
-be printed. See resource \fBitalicFont\fR for details.
+Compile \fIfont-styles\fR: The italic font list to use when \fIitalic\fR
+characters are to be printed. See resource \fBitalicFont\fR for details.
 .IP "\fB\-fbi\fR \fIfontlist\fR" 4
 .IX Item "-fbi fontlist"
-Compile font\-styles: The bold italic font list to use when \fB\f(BIbold
+Compile \fIfont-styles\fR: The bold italic font list to use when \fB\f(BIbold
 italic\fB\fR characters are to be printed. See resource \fBboldItalicFont\fR
 for details.
 .IP "\fB\-is\fR|\fB+is\fR" 4
 .IX Item "-is|+is"
-Compile font\-styles: Bold/Italic font styles imply high intensity
+Compile \fIfont-styles\fR: Bold/Italic font styles imply high intensity
 foreground/background (default). See resource \fBintensityStyles\fR for
 details.
 .IP "\fB\-name\fR \fIname\fR" 4
@@ -387,6 +387,12 @@ and \fB\-borderwidth\fR. See resource entry for limits; resource
 Compile \fIfrills\fR: Set \s-1MWM\s0 hints to request a borderless window, i.e.
 if honoured by the \s-1WM\s0, the rxvt-unicode window will not have window
 decorations; resource \fBborderLess\fR.
+.IP "\fB\-sbg\fR" 4
+.IX Item "-sbg"
+Compile \fIfrills\fR: Disable the usage of the built-in block graphics/line
+drawing characters and just rely on what the specified fonts provide. Use
+this if you have a good font and want to use its block graphic glyphs;
+resource \fBskipBuiltinGlyphs\fR.
 .IP "\fB\-lsp\fR \fInumber\fR" 4
 .IX Item "-lsp number"
 Compile \fIfrills\fR: Lines (pixel height) to insert between each row of
@@ -865,6 +871,12 @@ option \fB\-w\fR, \fB\-bw\fR, \fB\-borderwidth\fR.
 .IX Item "borderLess: boolean"
 Set \s-1MWM\s0 hints to request a borderless window, i.e. if honoured by the
 \&\s-1WM\s0, the rxvt-unicode window will not have window decorations; option \fB\-bl\fR.
+.IP "\fBskipBuiltinGlyphs:\fR \fIboolean\fR" 4
+.IX Item "skipBuiltinGlyphs: boolean"
+Compile \fIfrills\fR: Disable the usage of the built-in block graphics/line
+drawing characters and just rely on what the specified fonts provide. Use
+this if you have a good font and want to use its block graphic glyphs;
+option \fB\-sbg\fR.
 .IP "\fBtermName:\fR \fItermname\fR" 4
 .IX Item "termName: termname"
 Specifies the terminal type name to be set in the \fB\s-1TERM\s0\fR environment

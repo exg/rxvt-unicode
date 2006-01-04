@@ -445,6 +445,16 @@ list:
 \&  shade term_name title transparent transparent_all tripleclickwords
 \&  utmpInhibit visualBell
 .Ve
+.ie n .IP "$rend = $term\->screen_rstyle ([$new_rstyle])" 4
+.el .IP "$rend = \f(CW$term\fR\->screen_rstyle ([$new_rstyle])" 4
+.IX Item "$rend = $term->screen_rstyle ([$new_rstyle])"
+Return and optionally change the current rendition. Text thta is output by
+the temrianl application will use this style.
+.ie n .IP "($row, $col\fR) = \f(CW$term\fR\->screen_cur ([$row, \f(CW$col])" 4
+.el .IP "($row, \f(CW$col\fR) = \f(CW$term\fR\->screen_cur ([$row, \f(CW$col\fR])" 4
+.IX Item "($row, $col) = $term->screen_cur ([$row, $col])"
+Return the current coordinates of the text cursor position and optionally
+set it (which is usually bad as applications don't expect that).
 .ie n .IP "($row, $col\fR) = \f(CW$term\fR\->selection_mark ([$row, \f(CW$col])" 4
 .el .IP "($row, \f(CW$col\fR) = \f(CW$term\fR\->selection_mark ([$row, \f(CW$col\fR])" 4
 .IX Item "($row, $col) = $term->selection_mark ([$row, $col])"
@@ -545,20 +555,45 @@ Convert the given locale-encoded octets into a perl string.
 Write the octets given in \f(CW$data\fR to the tty (i.e. as program input). To
 pass characters instead of octets, you should convert your strings first
 to the locale-specific encoding using \f(CW\*(C`$term\->locale_encode\*(C'\fR.
-.ie n .IP "$nrow = $term\->nrow" 4
-.el .IP "$nrow = \f(CW$term\fR\->nrow" 4
-.IX Item "$nrow = $term->nrow"
+.ie n .IP "$window_width = $term\->width" 4
+.el .IP "$window_width = \f(CW$term\fR\->width" 4
+.IX Item "$window_width = $term->width"
 .PD 0
-.ie n .IP "$ncol = $term\->ncol" 4
-.el .IP "$ncol = \f(CW$term\fR\->ncol" 4
-.IX Item "$ncol = $term->ncol"
+.ie n .IP "$window_height = $term\->height" 4
+.el .IP "$window_height = \f(CW$term\fR\->height" 4
+.IX Item "$window_height = $term->height"
+.ie n .IP "$font_width = $term\->fwidth" 4
+.el .IP "$font_width = \f(CW$term\fR\->fwidth" 4
+.IX Item "$font_width = $term->fwidth"
+.ie n .IP "$font_height = $term\->fheight" 4
+.el .IP "$font_height = \f(CW$term\fR\->fheight" 4
+.IX Item "$font_height = $term->fheight"
+.ie n .IP "$font_ascent = $term\->fbase" 4
+.el .IP "$font_ascent = \f(CW$term\fR\->fbase" 4
+.IX Item "$font_ascent = $term->fbase"
+.ie n .IP "$terminal_rows = $term\->nrow" 4
+.el .IP "$terminal_rows = \f(CW$term\fR\->nrow" 4
+.IX Item "$terminal_rows = $term->nrow"
+.ie n .IP "$terminal_columns = $term\->ncol" 4
+.el .IP "$terminal_columns = \f(CW$term\fR\->ncol" 4
+.IX Item "$terminal_columns = $term->ncol"
+.ie n .IP "$has_focus = $term\->focus" 4
+.el .IP "$has_focus = \f(CW$term\fR\->focus" 4
+.IX Item "$has_focus = $term->focus"
+.ie n .IP "$is_mapped = $term\->mapped" 4
+.el .IP "$is_mapped = \f(CW$term\fR\->mapped" 4
+.IX Item "$is_mapped = $term->mapped"
+.ie n .IP "$max_scrollback = $term\->saveLines" 4
+.el .IP "$max_scrollback = \f(CW$term\fR\->saveLines" 4
+.IX Item "$max_scrollback = $term->saveLines"
+.ie n .IP "$nrow_plus_saveLines = $term\->total_rows" 4
+.el .IP "$nrow_plus_saveLines = \f(CW$term\fR\->total_rows" 4
+.IX Item "$nrow_plus_saveLines = $term->total_rows"
+.ie n .IP "$lines_in_scrollback = $term\->nsaved" 4
+.el .IP "$lines_in_scrollback = \f(CW$term\fR\->nsaved" 4
+.IX Item "$lines_in_scrollback = $term->nsaved"
 .PD
-Return the number of rows/columns of the terminal window (i.e. as
-specified by \f(CW\*(C`\-geometry\*(C'\fR, excluding any scrollback).
-.ie n .IP "$nsaved = $term\->nsaved" 4
-.el .IP "$nsaved = \f(CW$term\fR\->nsaved" 4
-.IX Item "$nsaved = $term->nsaved"
-Returns the number of lines in the scrollback buffer.
+Return various integers describing terminal characteristics.
 .ie n .IP "$view_start = $term\->view_start ([$newvalue])" 4
 .el .IP "$view_start = \f(CW$term\fR\->view_start ([$newvalue])" 4
 .IX Item "$view_start = $term->view_start ([$newvalue])"

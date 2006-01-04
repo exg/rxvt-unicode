@@ -2934,17 +2934,21 @@ in combination with other switches) is:</p>
 <pre>
   MWM-hints
   EWMH-hints (pid, utf8 names) and protocols (ping)
-  seperate underline colour
-  settable border widths and borderless switch
-  settable extra linespacing
+  seperate underline colour (-underlineColor)
+  settable border widths and borderless switch (-w, -b, -bl)
+  settable extra linespacing /-lsp)
   iso-14755-2 and -3, and visual feedback
   backindex and forwardindex escape sequence
   window op and some xterm/OSC escape sequences
-  tripleclickwords
-  settable insecure mode
+  tripleclickwords (-tcw)
+  settable insecure mode (-insecure)
   keysym remapping support
-  cursor blinking and underline cursor
-  -embed, -pty-fd and -hold options</pre>
+  cursor blinking and underline cursor (-cb, -uc)
+  XEmbed support (-embed)
+  user-pty (-pty-fd)
+  hold on exit (-hold)
+  skip builtin block graphics (-sbg)
+  sgr modes 90..97 and 100..107</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_iso14755">--enable-iso14755 (default: on)</a></strong><br />

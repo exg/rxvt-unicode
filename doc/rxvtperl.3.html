@@ -427,6 +427,20 @@ list:</p>
   utmpInhibit visualBell</pre>
 </dd>
 <p></p>
+<dt><strong><a name="item_screen_rstyle">$rend = $term-&gt;screen_rstyle ([$new_rstyle])</a></strong><br />
+</dt>
+<dd>
+Return and optionally change the current rendition. Text thta is output by
+the temrianl application will use this style.
+</dd>
+<p></p>
+<dt><strong><a name="item_screen_cur">($row, $col) = $term-&gt;screen_cur ([$row, $col])</a></strong><br />
+</dt>
+<dd>
+Return the current coordinates of the text cursor position and optionally
+set it (which is usually bad as applications don't expect that).
+</dd>
+<p></p>
 <dt><strong><a name="item_selection_mark">($row, $col) = $term-&gt;selection_mark ([$row, $col])</a></strong><br />
 </dt>
 <dt><strong><a name="item_selection_beg">($row, $col) = $term-&gt;selection_beg ([$row, $col])</a></strong><br />
@@ -550,19 +564,32 @@ pass characters instead of octets, you should convert your strings first
 to the locale-specific encoding using <a href="#item_locale_encode"><code>$term-&gt;locale_encode</code></a>.
 </dd>
 <p></p>
-<dt><strong><a name="item_nrow">$nrow = $term-&gt;nrow</a></strong><br />
+<dt><strong><a name="item_width">$window_width = $term-&gt;width</a></strong><br />
 </dt>
-<dt><strong><a name="item_ncol">$ncol = $term-&gt;ncol</a></strong><br />
+<dt><strong><a name="item_height">$window_height = $term-&gt;height</a></strong><br />
+</dt>
+<dt><strong><a name="item_fwidth">$font_width = $term-&gt;fwidth</a></strong><br />
+</dt>
+<dt><strong><a name="item_fheight">$font_height = $term-&gt;fheight</a></strong><br />
+</dt>
+<dt><strong><a name="item_fbase">$font_ascent = $term-&gt;fbase</a></strong><br />
+</dt>
+<dt><strong><a name="item_nrow">$terminal_rows = $term-&gt;nrow</a></strong><br />
+</dt>
+<dt><strong><a name="item_ncol">$terminal_columns = $term-&gt;ncol</a></strong><br />
+</dt>
+<dt><strong><a name="item_focus">$has_focus = $term-&gt;focus</a></strong><br />
+</dt>
+<dt><strong><a name="item_mapped">$is_mapped = $term-&gt;mapped</a></strong><br />
+</dt>
+<dt><strong><a name="item_savelines">$max_scrollback = $term-&gt;saveLines</a></strong><br />
+</dt>
+<dt><strong><a name="item_total_rows">$nrow_plus_saveLines = $term-&gt;total_rows</a></strong><br />
+</dt>
+<dt><strong><a name="item_nsaved">$lines_in_scrollback = $term-&gt;nsaved</a></strong><br />
 </dt>
 <dd>
-Return the number of rows/columns of the terminal window (i.e. as
-specified by <code>-geometry</code>, excluding any scrollback).
-</dd>
-<p></p>
-<dt><strong><a name="item_nsaved">$nsaved = $term-&gt;nsaved</a></strong><br />
-</dt>
-<dd>
-Returns the number of lines in the scrollback buffer.
+Return various integers describing terminal characteristics.
 </dd>
 <p></p>
 <dt><strong><a name="item_view_start">$view_start = $term-&gt;view_start ([$newvalue])</a></strong><br />

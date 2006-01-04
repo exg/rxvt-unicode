@@ -268,21 +268,21 @@ section of rxvt(7).</p>
 <dt><strong><a name="item__2dfb_fontlist"><strong>-fb</strong> <em>fontlist</em></a></strong><br />
 </dt>
 <dd>
-Compile font-styles: The bold font list to use when <strong>bold</strong> characters are to
-be printed. See resource <strong>boldFont</strong> for details.
+Compile <em>font-styles</em>: The bold font list to use when <strong>bold</strong> characters
+are to be printed. See resource <strong>boldFont</strong> for details.
 </dd>
 <p></p>
 <dt><strong><a name="item__2dfi_fontlist"><strong>-fi</strong> <em>fontlist</em></a></strong><br />
 </dt>
 <dd>
-Compile font-styles: The italic font list to use when <em>italic</em> characters are to
-be printed. See resource <strong>italicFont</strong> for details.
+Compile <em>font-styles</em>: The italic font list to use when <em>italic</em>
+characters are to be printed. See resource <strong>italicFont</strong> for details.
 </dd>
 <p></p>
 <dt><strong><a name="item__2dfbi_fontlist"><strong>-fbi</strong> <em>fontlist</em></a></strong><br />
 </dt>
 <dd>
-Compile font-styles: The bold italic font list to use when <strong><em>bold
+Compile <em>font-styles</em>: The bold italic font list to use when <strong><em>bold
 italic</em> </strong>&gt; characters are to be printed. See resource <strong>boldItalicFont</strong>
 for details.
 </dd>
@@ -290,7 +290,7 @@ for details.
 <dt><strong><a name="item__2dis_7c_2bis"><strong>-is</strong>|<strong>+is</strong></a></strong><br />
 </dt>
 <dd>
-Compile font-styles: Bold/Italic font styles imply high intensity
+Compile <em>font-styles</em>: Bold/Italic font styles imply high intensity
 foreground/background (default). See resource <strong>intensityStyles</strong> for
 details.
 </dd>
@@ -415,6 +415,15 @@ and <strong>-borderwidth</strong>. See resource entry for limits; resource
 Compile <em>frills</em>: Set MWM hints to request a borderless window, i.e.
 if honoured by the WM, the rxvt-unicode window will not have window
 decorations; resource <strong>borderLess</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2dsbg"><strong>-sbg</strong></a></strong><br />
+</dt>
+<dd>
+Compile <em>frills</em>: Disable the usage of the built-in block graphics/line
+drawing characters and just rely on what the specified fonts provide. Use
+this if you have a good font and want to use its block graphic glyphs;
+resource <strong>skipBuiltinGlyphs</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item__2dlsp_number"><strong>-lsp</strong> <em>number</em></a></strong><br />
@@ -1108,6 +1117,15 @@ option <strong>-w</strong>, <strong>-bw</strong>, <strong>-borderwidth</strong>.
 <dd>
 Set MWM hints to request a borderless window, i.e. if honoured by the
 WM, the rxvt-unicode window will not have window decorations; option <strong>-bl</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item_skipbuiltinglyphs_3a_boolean"><strong>skipBuiltinGlyphs:</strong> <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+Compile <em>frills</em>: Disable the usage of the built-in block graphics/line
+drawing characters and just rely on what the specified fonts provide. Use
+this if you have a good font and want to use its block graphic glyphs;
+option <strong>-sbg</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item_termname_3a_termname"><strong>termName:</strong> <em>termname</em></a></strong><br />

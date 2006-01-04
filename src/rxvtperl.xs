@@ -217,15 +217,15 @@ overlay::overlay (rxvt_term *THIS, int x_, int y_, int w_, int h_, rend_t rstyle
 
   text = new text_t *[h];
   rend = new rend_t *[h];
-  
+
   for (int y = 0; y < h; y++)
-    { 
+    {
       text_t *tp = text[y] = new text_t[w];
       rend_t *rp = rend[y] = new rend_t[w];
-      
+
       text_t t0, t1, t2;
       rend_t r = rstyle;
-  
+
       if (border == 2)
         {
           if (y == 0)
@@ -234,26 +234,26 @@ overlay::overlay (rxvt_term *THIS, int x_, int y_, int w_, int h_, rend_t rstyle
             t0 = 0x2551, t1 = 0x0020, t2 = 0x2551;
           else
             t0 = 0x255a, t1 = 0x2550, t2 = 0x255d;
-  
-          *tp++ = t0;          
+
+          *tp++ = t0;
           *rp++ = r;
-      
+
           for (int x = w - 2; x-- > 0; )
             {
               *tp++ = t1;
               *rp++ = r;
-            }                 
+            }
 
           *tp = t2;
-          *rp = r;            
+          *rp = r;
         }
       else
         for (int x = w; x-- > 0; )
           {
             *tp++ = 0x0020;
             *rp++ = r;
-          }                 
-    }                      
+          }
+    }
 
   show ();
   THIS->want_refresh = 1;
@@ -310,12 +310,12 @@ void overlay::swap ()
     {
       text_t *t1 = text [y];
       rend_t *r1 = rend [y];
-                       
+
       text_t *t2 = ROW(y + ov_y - THIS->view_start).t + ov_x;
       rend_t *r2 = ROW(y + ov_y - THIS->view_start).r + ov_x;
 
       for (int x = ov_w; x--; )
-        {                                               
+        {
           text_t t = *t1; *t1++ = *t2; *t2++ = t;
           rend_t r = *r1; *r1++ = *r2; *r2++ = SET_FONT (r, THIS->fontset [GET_STYLE (r)]->find_font (t));
         }
@@ -335,7 +335,7 @@ void overlay::set (int x, int y, SV *text, SV *rend)
 
   for (int col = min (wcslen (wtext), w - x - border); col--; )
     this->text [y][x + col] = wtext [col];
-  
+
   free (wtext);
 
   if (rend)
@@ -402,7 +402,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 {
   if (!perl)
     return false;
-  
+
   if (htype == HOOK_INIT) // first hook ever called
     {
       term->self = (void *)newSVptr ((void *)term, "urxvt::term");
@@ -646,12 +646,51 @@ rxvt_term::locale_decode (SV *octets)
 	OUTPUT:
         RETVAL
 
+# very portable, especially on objects as opposed to pods
+#define TERM_OFFSET(sym) (((char *)&((TermWin_t *)0)->sym) - (char *)(TermWin_t *)0)
+
+#define TERM_OFFSET_width      TERM_OFFSET(width)
+#define TERM_OFFSET_height     TERM_OFFSET(height)
+#define TERM_OFFSET_fwidth     TERM_OFFSET(fwidth)
+#define TERM_OFFSET_fheight    TERM_OFFSET(fheight)
+#define TERM_OFFSET_fbase      TERM_OFFSET(fbase)
+#define TERM_OFFSET_nrow       TERM_OFFSET(nrow)
+#define TERM_OFFSET_ncol       TERM_OFFSET(ncol)
+#define TERM_OFFSET_focus      TERM_OFFSET(focus)
+#define TERM_OFFSET_mapped     TERM_OFFSET(mapped)
+#define TERM_OFFSET_saveLines  TERM_OFFSET(saveLines)
+#define TERM_OFFSET_total_rows TERM_OFFSET(total_rows)
+#define TERM_OFFSET_nsaved     TERM_OFFSET(nsaved)
+
 int
-rxvt_term::nsaved ()
+rxvt_term::width ()
+	ALIAS:
+           width      = TERM_OFFSET_width
+           height     = TERM_OFFSET_height
+           fwidth     = TERM_OFFSET_fwidth
+           fheight    = TERM_OFFSET_fheight
+           fbase      = TERM_OFFSET_fbase
+           nrow       = TERM_OFFSET_nrow
+           ncol       = TERM_OFFSET_ncol
+           focus      = TERM_OFFSET_focus
+           mapped     = TERM_OFFSET_mapped
+           saveLines  = TERM_OFFSET_saveLines
+           total_rows = TERM_OFFSET_total_rows
+           nsaved     = TERM_OFFSET_nsaved
 	CODE:
-        RETVAL = THIS->nsaved;
+        RETVAL = *(int *)((char *)THIS + ix);
         OUTPUT:
         RETVAL
+
+U32
+rxvt_term::screen_rstyle (U32 new_rstyle = THIS->screen.s_rstyle)
+	CODE:
+{
+        RETVAL = THIS->screen.s_rstyle;
+        THIS->screen.s_rstyle = new_rstyle;
+}
+        OUTPUT:
+	RETVAL
 
 int
 rxvt_term::view_start (int newval = -1)
@@ -667,20 +706,6 @@ rxvt_term::view_start (int newval = -1)
 }
         OUTPUT:
 	RETVAL
-
-int
-rxvt_term::nrow ()
-	CODE:
-        RETVAL = THIS->nrow;
-        OUTPUT:
-        RETVAL
-
-int
-rxvt_term::ncol ()
-	CODE:
-        RETVAL = THIS->ncol;
-        OUTPUT:
-        RETVAL
 
 void
 rxvt_term::want_refresh ()
@@ -854,28 +879,31 @@ rxvt_term::_resource (char *name, int index, SV *newval = 0)
 }
 
 void
-rxvt_term::selection_mark (...)
+rxvt_term::cur (...)
 	PROTOTYPE: $;$$
         ALIAS:
-           selection_beg = 1
-           selection_end = 2
+           screen_cur     = 0
+           selection_beg  = 1
+           selection_end  = 2
+           selection_mark = 3
         PPCODE:
 {
-        row_col_t &sel = ix == 1 ? THIS->selection.beg
-                       : ix == 2 ? THIS->selection.end
-                       :           THIS->selection.mark;
+        row_col_t &rc = ix == 0 ? THIS->screen.cur
+                      : ix == 1 ? THIS->selection.beg
+                      : ix == 2 ? THIS->selection.end
+                      :           THIS->selection.mark;
 
         if (GIMME_V != G_VOID)
           {
             EXTEND (SP, 2);
-            PUSHs (sv_2mortal (newSViv (sel.row)));
-            PUSHs (sv_2mortal (newSViv (sel.col)));
+            PUSHs (sv_2mortal (newSViv (rc.row)));
+            PUSHs (sv_2mortal (newSViv (rc.col)));
           }
 
         if (items == 3)
           {
-            sel.row = clamp (SvIV (ST (1)), -THIS->nsaved, THIS->nrow - 1);
-            sel.col = clamp (SvIV (ST (2)), 0, THIS->ncol - 1);
+            rc.row = clamp (SvIV (ST (1)), -THIS->nsaved, THIS->nrow - 1);
+            rc.col = clamp (SvIV (ST (2)), 0, THIS->ncol - 1);
 
             if (ix)
               THIS->want_refresh = 1;
@@ -906,7 +934,7 @@ rxvt_term::selection (SV *newtext = 0)
             THIS->selection.len = wcslen (THIS->selection.text);
           }
 }
-        
+
 void
 rxvt_term::tt_write (SV *octets)
         INIT:
