@@ -503,7 +503,7 @@ PROTOTYPES: ENABLE
 
 BOOT:
 {
-# define export_const(name) newCONSTSUB (gv_stashpv ("urxvt", 1), #name, newSViv (name));
+# define export_const(name) newCONSTSUB (gv_stashpv ("urxvt", 1), # name, newSViv (name));
   AV *hookname = get_av ("urxvt::HOOKNAME", 1);
 # define def(sym) av_store (hookname, HOOK_ ## sym, newSVpv (# sym, 0));
 # include "hookinc.h"
