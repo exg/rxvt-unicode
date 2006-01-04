@@ -52,7 +52,8 @@
 #include "command.h"
 
 #if HAVE_SCHED_YIELD
-# include <sched.h>
+#undef HAVE_SCHED_YIELD // disabled for the time being
+//# include <sched.h>
 #endif
 
 #ifdef KEYSYM_RESOURCE
