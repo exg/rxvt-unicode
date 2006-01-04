@@ -239,6 +239,22 @@ number of lines that will be in the scrollback buffer.</p>
 Called whenever the <code>program(s)</code> running in the urxvt window send output.
 </dd>
 <p></p>
+<dt><strong><a name="item_on_osc_seq__24term_2c__24string">on_osc_seq $term, $string</a></strong><br />
+</dt>
+<dd>
+Called whenever the <strong>ESC ] 777 ; string ST</strong> command sequence (OSC =
+operating system command) is processed. Cursor position and other state
+information is up-to-date when this happens. For interoperability, the
+string should start with the extension name and a colon, to distinguish
+it from commands for other extensions, and this might be enforced in the
+future.
+</dd>
+<dd>
+<p>Be careful not ever to trust (in a security sense) the data you receive,
+as its source can not easily be controleld (e-mail content, messages from
+other users on the same system etc.).</p>
+</dd>
+<p></p>
 <dt><strong><a name="item_on_refresh_begin__24term">on_refresh_begin $term</a></strong><br />
 </dt>
 <dd>

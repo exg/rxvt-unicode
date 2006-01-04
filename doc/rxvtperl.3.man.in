@@ -299,6 +299,19 @@ number of lines that will be in the scrollback buffer.
 .el .IP "on_tty_activity \f(CW$term\fR *NYI*" 4
 .IX Item "on_tty_activity $term *NYI*"
 Called whenever the program(s) running in the urxvt window send output.
+.ie n .IP "on_osc_seq $term\fR, \f(CW$string" 4
+.el .IP "on_osc_seq \f(CW$term\fR, \f(CW$string\fR" 4
+.IX Item "on_osc_seq $term, $string"
+Called whenever the \fB\s-1ESC\s0 ] 777 ; string \s-1ST\s0\fR command sequence (\s-1OSC\s0 =
+operating system command) is processed. Cursor position and other state
+information is up-to-date when this happens. For interoperability, the
+string should start with the extension name and a colon, to distinguish
+it from commands for other extensions, and this might be enforced in the
+future.
+.Sp
+Be careful not ever to trust (in a security sense) the data you receive,
+as its source can not easily be controleld (e\-mail content, messages from
+other users on the same system etc.).
 .ie n .IP "on_refresh_begin $term" 4
 .el .IP "on_refresh_begin \f(CW$term\fR" 4
 .IX Item "on_refresh_begin $term"

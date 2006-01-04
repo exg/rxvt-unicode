@@ -176,11 +176,16 @@ Called whenever the program(s) running in the urxvt window send output.
 
 =item on_osc_seq $term, $string
 
-Called whenever the B<ESC ] 777 ; string ST> command sequence is
-processed. Cursor position and other state information is up-to-date when
-this happens. For interoperability, the string should start with the
-extension name and a colon, to distinguish it from commands for other
-extensions, and this might be enforced in the future.
+Called whenever the B<ESC ] 777 ; string ST> command sequence (OSC =
+operating system command) is processed. Cursor position and other state
+information is up-to-date when this happens. For interoperability, the
+string should start with the extension name and a colon, to distinguish
+it from commands for other extensions, and this might be enforced in the
+future.
+
+Be careful not ever to trust (in a security sense) the data you receive,
+as its source can not easily be controleld (e-mail content, messages from
+other users on the same system etc.).
 
 =item on_refresh_begin $term
 

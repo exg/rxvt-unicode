@@ -1286,6 +1286,7 @@ XTerm Operating System Commands
            Ps = 713        Set bold-italic fontset to Pt. Similar to Ps = 50 (Compile styles). 
            Ps = 720        Move viewing window up by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills). 
            Ps = 721        Move viewing window down by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills). 
+           Ps = 777        Call the perl extension with the given string, which should be of the form extension:parameters (Compile perl). 
 
 
 
