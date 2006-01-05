@@ -3,8 +3,8 @@
 # same url as used in "selection"
 my $url =
    qr{(
-      (?:https?|ftp|news|mailto|file)://[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),]+
-      [^.]   # do not include a trailing dot, its wrong too often
+      (?:https?|ftp|news|mailto|file)://[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),~]+
+      [ab-zA-Z0-9\-\@;\/?:&=%\$_+!*\x27(),~]   # do not include a trailing dot, its wrong too often
    )}x;
 
 sub on_add_lines {
