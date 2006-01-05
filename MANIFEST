@@ -121,15 +121,6 @@ src/version.h
 src/xdefaults.C
 src/xpm.C
 
-src/urxvt.pm
-src/typemap
-src/rxvtperl.h
-src/rxvtperl.xs
-
-src/perl/example-refresh-hooks
-src/perl/digital-clock
-src/perl/selection
-
 src/gentables
 src/gencompose
 src/genlinedraw
@@ -173,3 +164,14 @@ src/table/jis0208_1990_0.h
 src/table/jis0212_1990_0.h
 src/table/jis0213_1.h
 src/table/jis0213_2.h
+
+src/urxvt.pm
+src/typemap
+src/rxvtperl.h
+src/rxvtperl.xs
+
+src/perl/example-refresh-hooks
+src/perl/digital-clock
+src/perl/selection
+src/perl/mark-urls
+

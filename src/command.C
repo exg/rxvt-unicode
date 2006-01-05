@@ -2735,7 +2735,9 @@ rxvt_term::cmd_parse ()
                   // scr_add_lines only works for nlines <= nrow - 1.
                   if (nlines >= nrow - 1)
                     {
-                      scr_add_lines (buf, nlines, str - buf);
+                      if (!PERL_INVOKE ((this, HOOK_ADD_LINES, DT_USTRING_LEN, buf, str - buf, DT_END)))
+                        scr_add_lines (buf, nlines, str - buf);
+
                       nlines = 0;
                       str = buf;
                       eol = str + min (ncol, UBUFSIZ);
@@ -2758,7 +2760,8 @@ rxvt_term::cmd_parse ()
               ch = next_char ();
             }
 
-          scr_add_lines (buf, nlines, str - buf);
+          if (!PERL_INVOKE ((this, HOOK_ADD_LINES, DT_USTRING_LEN, buf, str - buf, DT_END)))
+            scr_add_lines (buf, nlines, str - buf);
 
           /*
            * If there have been a lot of new lines, then update the screen

@@ -68,6 +68,13 @@ Displays a very simple digital clock in the upper right corner of the
 window. Illustrates overwriting the refresh callbacks to create your own
 overlays or changes.
 
+=item mark-urls
+
+A not very useful example of filtering all text output to the terminal, by
+underlining all urls that matches a certain regex (i.e. some urls :). It
+is not very useful because urls that are output in multiple steps (e.g.
+when typing them) do not get marked.
+
 =back
 
 =head2 General API Considerations
@@ -82,6 +89,29 @@ When objects are destroyed on the C++ side, the perl object hashes are
 emptied, so its best to store related objects such as time watchers and
 the like inside the terminal object so they get destroyed as soon as the
 terminal is destroyed.
+
+Argument names also often indicate the type of a parameter. Here are some
+hints on what they mean:
+
+=over 4
+
+=item $text
+
+Rxvt-unicodes special way of encoding text, where one "unicode" character
+always represents one screen cell. See L<row_t> for a discussion of this format.
+
+=item $string
+
+A perl text string, with an emphasis on I<text>. It can store all unicode
+characters and is to be distinguished with text encoded in a specific
+encoding (often locale-specific) and binary data.
+
+=item $octets
+
+Either binary data or - more common - a text string encoded in a
+locale-specific way.
+
+=back
 
 =head2 Hooks
 
@@ -186,6 +216,14 @@ future.
 Be careful not ever to trust (in a security sense) the data you receive,
 as its source can not easily be controleld (e-mail content, messages from
 other users on the same system etc.).
+
+=item on_add_lines $term, $string
+
+Called whenever text is about to be output, with the text as argument. You
+can filter/change and output the text yourself by returning a true value
+and calling C<< $term->scr_add_lines >> yourself. Please note that this
+might be very slow, however, as your hook is called for B<all> text being
+output.
 
 =item on_refresh_begin $term
 
@@ -489,10 +527,10 @@ sub urxvt::term::resource($$;$) {
    goto &urxvt::term::_resource;
 }
 
-=item $rend = $term->screen_rstyle ([$new_rstyle])
+=item $rend = $term->rstyle ([$new_rstyle])
 
-Return and optionally change the current rendition. Text thta is output by
-the temrianl application will use this style.
+Return and optionally change the current rendition. Text that is output by
+the terminal application will use this style.
 
 =item ($row, $col) = $term->screen_cur ([$row, $col])
 
@@ -522,21 +560,20 @@ Return the current selection text and optionally replace it by C<$newtext>.
 #Create a simple multi-line overlay box. See the next method for details.
 #
 #=cut
-
-sub urxvt::term::scr_overlay {
-die;
-   my ($self, $x, $y, $text) = @_;
-
-   my @lines = split /\n/, $text;
-
-   my $w = 0;
-   for (map $self->strwidth ($_), @lines) {
-      $w = $_ if $w < $_;
-   }
-
-   $self->scr_overlay_new ($x, $y, $w, scalar @lines);
-   $self->scr_overlay_set (0, $_, $lines[$_]) for 0.. $#lines;
-}
+#
+#sub urxvt::term::scr_overlay {
+#   my ($self, $x, $y, $text) = @_;
+#
+#   my @lines = split /\n/, $text;
+#
+#   my $w = 0;
+#   for (map $self->strwidth ($_), @lines) {
+#      $w = $_ if $w < $_;
+#   }
+#
+#   $self->scr_overlay_new ($x, $y, $w, scalar @lines);
+#   $self->scr_overlay_set (0, $_, $lines[$_]) for 0.. $#lines;
+#}
 
 =item $term->overlay ($x, $y, $width, $height[, $rstyle[, $border]])
 
@@ -585,6 +622,17 @@ Convert the given text string into the corresponding locale encoding.
 =item $string = $term->locale_decode $octets
 
 Convert the given locale-encoded octets into a perl string.
+
+=item $term->scr_add_lines ($string)
+
+Write the given text string to the screen, as if output by the application
+running inside the terminal. It may not contain command sequences (escape
+codes), but is free to use line feeds, carriage returns and tabs. The
+string is a normal text string, not in locale-dependent encoding.
+
+Normally its not a good idea to use this function, as programs might be
+confused by changes in cursor position or scrolling. Its useful inside a
+C<on_add_lines> hook, though.
 
 =item $term->tt_write ($octets)
 

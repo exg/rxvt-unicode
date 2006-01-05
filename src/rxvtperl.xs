@@ -53,6 +53,18 @@ sv2wcs (SV *sv)
 }
 
 static SV *
+wcs2sv (wchar_t *wstr, int len = -1)
+{
+  char *str = rxvt_wcstoutf8 (wstr, len);
+
+  SV *sv = newSVpv (str, 0);
+  SvUTF8_on (sv);
+  free (str);
+
+  return sv;
+}
+
+static SV *
 new_ref (HV *hv, const char *klass)
 {
   return sv_bless (newRV ((SV *)hv), gv_stashpv (klass, 1));
@@ -459,6 +471,20 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
           XPUSHs (sv_2mortal (newSVpv (va_arg (ap, char *), 0)));
           break;
 
+        case DT_USTRING_LEN:
+          {
+            unicode_t *ustr = va_arg (ap, unicode_t *);
+            int ulen = va_arg (ap, int);
+            wchar_t *wstr = new wchar_t [ulen];
+
+            for (int i = ulen; i--; )
+              wstr [i] = ustr [i];
+
+            XPUSHs (sv_2mortal (wcs2sv (wstr, ulen)));
+
+            delete [] wstr;
+          }
+
         case DT_END:
           {
             va_end (ap);
@@ -636,12 +662,8 @@ rxvt_term::locale_decode (SV *octets)
         wchar_t *wstr = rxvt_mbstowcs (data, len);
         rxvt_pop_locale ();
 
-        char *str = rxvt_wcstoutf8 (wstr);
+        RETVAL = wcs2sv (wstr);
         free (wstr);
-
-        RETVAL = newSVpv (str, 0);
-        SvUTF8_on (RETVAL);
-        free (str);
 }
 	OUTPUT:
         RETVAL
@@ -683,11 +705,11 @@ rxvt_term::width ()
         RETVAL
 
 U32
-rxvt_term::screen_rstyle (U32 new_rstyle = THIS->screen.s_rstyle)
+rxvt_term::rstyle (U32 new_rstyle = THIS->rstyle)
 	CODE:
 {
-        RETVAL = THIS->screen.s_rstyle;
-        THIS->screen.s_rstyle = new_rstyle;
+        RETVAL = THIS->rstyle;
+        THIS->rstyle = new_rstyle;
 }
         OUTPUT:
 	RETVAL
@@ -728,13 +750,9 @@ rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0)
             for (int col = 0; col <THIS->ncol; col++)
               wstr [col] = l.t [col];
 
-            char *str = rxvt_wcstoutf8 (wstr, THIS->ncol);
-            free (wstr);
+            XPUSHs (sv_2mortal (wcs2sv (wstr)));
 
-            SV *sv = newSVpv (str, 0);
-            SvUTF8_on (sv);
-            XPUSHs (sv_2mortal (sv));
-            free (str);
+            delete [] wstr;
           }
 
         if (new_text)
@@ -918,13 +936,7 @@ rxvt_term::selection (SV *newtext = 0)
         PPCODE:
 {
         if (GIMME_V != G_VOID)
-          {
-            char *sel = rxvt_wcstoutf8 (THIS->selection.text, THIS->selection.len);
-            SV *sv = newSVpv (sel, 0);
-            SvUTF8_on (sv);
-            free (sel);
-            XPUSHs (sv_2mortal (sv));
-          }
+          XPUSHs (sv_2mortal (wcs2sv (THIS->selection.text, THIS->selection.len)));
 
         if (newtext)
           {
@@ -933,6 +945,27 @@ rxvt_term::selection (SV *newtext = 0)
             THIS->selection.text = sv2wcs (newtext);
             THIS->selection.len = wcslen (THIS->selection.text);
           }
+}
+
+void
+rxvt_term::scr_add_lines (SV *string)
+	CODE:
+{
+        wchar_t *wstr = sv2wcs (string);
+        int wlen = wcslen (wstr);
+        unicode_t *ustr = new unicode_t [wlen];
+        int nlines = 0;
+
+        for (int i = wlen; i--; )
+          {
+            ustr [i] = wstr [i];
+            nlines += ustr [i] == '\012';
+          }
+
+        THIS->scr_add_lines (ustr, nlines, wlen);
+
+        free (wstr);
+        delete [] ustr;
 }
 
 void

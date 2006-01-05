@@ -7,6 +7,7 @@ TODO: read property sequence is broken with respect to utf-8 etc.
 TODO: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
+WISH: support tex fonts
 
 6.3  Wed Jan  4 22:37:10 CET 2006
         - SECURITY FIX: on systems using openpty, permissions were

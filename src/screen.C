@@ -724,6 +724,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
   if (nlines > 0)
     {
       nlines += screen.cur.row - screen.bscroll;
+
       if (nlines > 0
           && screen.tscroll == 0
           && screen.bscroll == (nrow - 1))
