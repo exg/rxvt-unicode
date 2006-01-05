@@ -837,11 +837,8 @@ extern bool rxvt_set_locale (const char *locale);
 extern bool rxvt_push_locale (const char *locale);
 extern void rxvt_pop_locale ();
 
-/*
- *****************************************************************************
- * VARIABLES
- *****************************************************************************
- */
+/****************************************************************************/
+
 #ifdef MENUBAR
 # include "menubar.h"
 #endif
@@ -858,6 +855,55 @@ extern void rxvt_pop_locale ();
 # define __attribute__(x)
 #endif
 
+/****************************************************************************/
+
+#define LINE_LONGER     0x0001 // line is continued on the next row
+#define LINE_FILTERED   0x0002 // line has been filtered
+#define LINE_COMPRESSED 0x0004 // line has been compressed (NYI)
+
+struct line_t {
+   text_t *t; // terminal the text
+   rend_t *r; // rendition, uses RS_ flags
+   tlen_t_ l; // length of each text line, LINE_CONT == continued on next line
+   uint32_t f; // flags
+
+   bool is_longer ()
+   {
+     return f & LINE_LONGER;
+   }
+
+   void is_longer (int set)
+   {
+     if (set)
+       f |= LINE_LONGER;
+     else
+       f &= ~LINE_LONGER;
+   }
+
+   void clear ()
+   {
+     t = 0;
+     r = 0;
+     l = 0;
+     f = 0;
+   }
+
+   void touch () // call whenever a line is changed/touched/updated
+   {
+#if ENABLE_PERL
+     f &= ~LINE_FILTERED;
+#endif
+   }
+
+   void touch (int col)
+   {
+     max_it (l, col);
+     touch ();
+   }
+};
+
+/****************************************************************************/
+
 // primivite wrapper around mbstate_t to ensure initialisation
 struct mbstate {
   mbstate_t mbs;
@@ -866,6 +912,8 @@ struct mbstate {
   void reset () { memset (&mbs, 0, sizeof (mbs)); }
   mbstate () { reset (); }
 };
+
+/****************************************************************************/
 
 #define UNICODE_MASK 0x1fffffUL
 
@@ -906,6 +954,7 @@ public:
 extern class rxvt_composite_vec rxvt_composite;
 #endif
 
+/****************************************************************************/
 
 #ifdef KEYSYM_RESOURCE
   class keyboard_manager;
@@ -1406,7 +1455,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   rxvt_fontset *scr_find_fontset (rend_t r = DEFAULT_RSTYLE);
   void scr_recolour ();
   void scr_remap_chars ();
-  void scr_remap_chars (const line_t &l);
+  void scr_remap_chars (line_t &l);
 
   void scr_poweron ();
   void scr_cursor (int mode);

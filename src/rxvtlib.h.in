@@ -79,32 +79,10 @@ typedef uint32_t text_t;
 typedef uint16_t text_t; // saves lots of memory
 #endif
 typedef uint32_t rend_t;
-typedef  int32_t tlen_t; // was int16_t, but this result sin smaller code and memory use
+typedef  int32_t tlen_t;  // was int16_t, but this results in smaller code and memory use
+typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 
-#define LINE_CONT -1
-
-struct line_t {
-   text_t *t; // terminal the text
-   rend_t *r; // rendition, uses RS_ flags
-   tlen_t l;  // length of each text line, LINE_CONT == continued on next line
-
-   bool is_longer ()
-   {
-     return l < 0;
-   }
-
-   void set_is_longer ()
-   {
-     l = LINE_CONT;
-   }
-
-   void clear ()
-   {
-     t = 0;
-     r = 0;
-     l = 0;
-   }
-};
+struct line_t;
 
 /*
  * terminal limits:

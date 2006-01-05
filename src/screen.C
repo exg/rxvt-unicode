@@ -126,6 +126,8 @@ rxvt_term::scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend
       width = ncol;
     }
 
+  l.touch ();
+
   efs &= ~RS_baseattrMask;
   efs = SET_FONT (efs, FONTSET (efs)->find_font (' '));
 
@@ -292,7 +294,6 @@ rxvt_term::scr_reset ()
 #ifdef DEBUG_STRICT
               assert (old_buf [MOD (p, prev_total_rows)].t);
 #endif
-
               int plines = 1;
               int llen = old_buf [MOD (p, prev_total_rows)].l;
 
@@ -320,7 +321,8 @@ rxvt_term::scr_reset ()
                 {
                   qline = row_buf + qrow;
                   lalloc (*qline);
-                  qline->set_is_longer ();
+                  qline->l = ncol;
+                  qline->is_longer (1);
 
                   int qcol = 0;
 
@@ -355,13 +357,7 @@ rxvt_term::scr_reset ()
                 }
 
               qline->l = llen ? MOD (llen - 1, ncol) + 1 : 0;
-#ifdef DEBUG_STRICT //TODO//FIXME//TEMPORARY
-              if (qline->l < 0)
-                {
-                  fprintf (stderr, "ERROR, PLEASE REPORT to rxvt-unicode@plan9.de: qline->l %d = llen %d < ncol %d ? %d : MOD %d\n", qline->l,llen,ncol,llen,MOD (llen - 1, ncol) + 1);//D
-                  qline->l = 0;
-                }
-#endif
+              qline->is_longer (0);
               scr_blank_line (*qline, qline->l, ncol - qline->l, DEFAULT_RSTYLE);
             }
           while (p != pend && q > 0);
@@ -372,7 +368,6 @@ rxvt_term::scr_reset ()
           // make sure all terminal lines exist
           while (nsaved < 0)
             scr_blank_screen_mem (ROW (-++nsaved), DEFAULT_RSTYLE);
-
         }
       else
         {
@@ -714,12 +709,11 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
   unsigned char checksel;
   unicode_t c;
-  int last_col;
+  int ncol = this->ncol;
   const unicode_t *strend = str + len;
 
   want_refresh = 1;
   ZERO_SCROLLBACK ();
-  last_col = ncol;
 
   if (nlines > 0)
     {
@@ -727,7 +721,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
       if (nlines > 0
           && screen.tscroll == 0
-          && screen.bscroll == (nrow - 1))
+          && screen.bscroll == nrow - 1)
         {
           /* _at least_ this many lines need to be scrolled */
           scr_scroll_text (screen.tscroll, screen.bscroll, nlines);
@@ -736,7 +730,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
     }
 
 #ifdef DEBUG_STRICT
-  assert (screen.cur.col < last_col);
+  assert (screen.cur.col < ncol);
   assert (screen.cur.row < nrow
           && screen.cur.row >= -nsaved);
 #endif
@@ -753,8 +747,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
       if (c < 0x20)
         if (c == C0_LF)
           {
-            if (!line->is_longer ())      /* XXX: think about this */
-              max_it (line->l, screen.cur.col);
+            max_it (line->l, screen.cur.col);
 
             screen.flags &= ~Screen_WrapNext;
 
@@ -768,8 +761,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
           }
         else if (c == C0_CR)
           {
-            if (!line->is_longer ())      /* XXX: think about this */
-              max_it (line->l, screen.cur.col);
+            max_it (line->l, screen.cur.col);
 
             screen.flags &= ~Screen_WrapNext;
             screen.cur.col = 0;
@@ -796,7 +788,8 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
       if (screen.flags & Screen_WrapNext)
         {
-          line->set_is_longer ();
+          max_it (line->l, ncol);
+          line->is_longer (1);
 
           scr_do_wrap ();
           
@@ -814,7 +807,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
       // locale.
       int width = c < 0x100 ? 1 : wcwidth (c);
 
-      if (charsets[screen.charset] == '0') // DEC SPECIAL
+      if (charsets [screen.charset] == '0') // DEC SPECIAL
         {
           // vt100 special graphics and line drawing
           // 5f-7e standard vt100
@@ -876,7 +869,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
           rend_t rend = SET_FONT (rstyle, FONTSET (rstyle)->find_font (c));
 
           // if the character doesn't fit into the remaining columns...
-          if (screen.cur.col > last_col - width && last_col >= width)
+          if (screen.cur.col > ncol - width && ncol >= width)
             {
               // ...output spaces
               c = ' ';
@@ -884,16 +877,18 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
               --str;
             }
 
+          line->touch ();
+
           do
             {
               line->t[screen.cur.col] = c;
               line->r[screen.cur.col] = rend;
 
-              if (screen.cur.col < last_col - 1)
+              if (screen.cur.col < ncol - 1)
                 screen.cur.col++;
               else
                 {
-                  line->l = last_col;
+                  line->l = ncol;
                   if (screen.flags & Screen_Autowrap)
                     screen.flags |= Screen_WrapNext;
                   break;
@@ -905,11 +900,15 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
           // pad with spaces when overwriting wide character with smaller one
           if (!width)
-            for (int c = screen.cur.col; c < last_col && line->t[c] == NOCHAR; c++)
-              {
-                line->t[c] = ' ';
-                line->r[c] = rend;
-              }
+            {
+              line->touch ();
+
+              for (int c = screen.cur.col; c < ncol && line->t[c] == NOCHAR; c++)
+                {
+                  line->t[c] = ' ';
+                  line->r[c] = rend;
+                }
+            }
         }
       else // width == 0
         {
@@ -918,30 +917,30 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
           // we just tag the accent on the previous on-screen character.
           // this is arguably not correct, but also arguably not wrong.
           // we don't handle double-width characters nicely yet.
+          line_t *linep;
           text_t *tp;
           rend_t *rp;
 
           if (screen.cur.col > 0)
             {
+              linep = line;
               tp = line->t + screen.cur.col - 1;
               rp = line->r + screen.cur.col - 1;
-
-              while (*tp == NOCHAR && tp > line->t)
-                tp--, rp--;
             }
           else if (screen.cur.row > 0
                    && ROW(screen.cur.row - 1).is_longer ())
             {
-              line_t *line = &ROW(screen.cur.row - 1);
-
-              tp = line->t + last_col - 1;
-              rp = line->r + last_col - 1;
-
-              while (*tp == NOCHAR && tp > line->t)
-                tp--, rp--;
+              linep = &ROW(screen.cur.row - 1);
+              tp = line->t + ncol - 1;
+              rp = line->r + ncol - 1;
             }
           else
             continue;
+
+          linep->touch ();
+
+          while (*tp == NOCHAR && tp > linep->t)
+            tp--, rp--;
 
           // first try to find a precomposed character
           unicode_t n = rxvt_compose (*tp, c);
@@ -954,8 +953,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
         }
     }
 
-  if (!line->is_longer ())      /* XXX: think about this */
-    max_it (line->l, screen.cur.col);
+  max_it (line->l, screen.cur.col);
 
 #ifdef DEBUG_STRICT
   assert (screen.cur.row >= 0);
@@ -1015,6 +1013,7 @@ rxvt_term::scr_tab (int count, bool ht)
         if (tabs[i])
           {
             x = i;
+
             if (!--count)
               break;
           }
@@ -1031,8 +1030,7 @@ rxvt_term::scr_tab (int count, bool ht)
         {
           base_rend = SET_FONT (base_rend, 0);
 
-          if (!l.is_longer ())      /* XXX: think about this */
-            max_it (l.l, x);
+          l.touch (x);
 
           i = screen.cur.col;
 
@@ -1096,8 +1094,10 @@ rxvt_term::scr_forwardindex ()
     scr_gotorc (0, 1, R_RELATIVE | C_RELATIVE);
   else
     {
-      if (ROW(screen.cur.row).is_longer ()) //TODO//FIXME//LEN
-        ROW(screen.cur.row).l = ncol;
+      line_t &l = ROW(screen.cur.row);
+
+      l.touch ();
+      l.is_longer (0);
 
       scr_gotorc (0, 0, R_RELATIVE);
       scr_insdel_chars (1, DELETE);
@@ -1198,6 +1198,9 @@ rxvt_term::scr_erase_line (int mode)
   selection_check (1);
 
   line_t &line = ROW(screen.cur.row);
+
+  line.touch ();
+  line.is_longer (0);
 
   switch (mode)
     {
@@ -1302,8 +1305,10 @@ rxvt_term::scr_erase_screen (int mode)
 
   for (; num--; row++)
     {
-      ROW (row).l = 0;
-      scr_blank_screen_mem (ROW (row), rstyle);
+      line_t &l = ROW(row);
+      l.l = 0;
+      l.is_longer (0);
+      scr_blank_screen_mem (l, rstyle);
       scr_blank_line (drawn_buf [row], 0, ncol, ren);
     }
 }
@@ -1346,7 +1351,8 @@ rxvt_term::scr_E ()
       for (int j = ncol; j--; )
         *r1++ = fs;
 
-      line.l = ncol;    /* make the `E's selectable */
+      line.is_longer (0);
+      line.touch (ncol);
     }
 }
 
@@ -1405,6 +1411,9 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
 
   line_t *line = &ROW(row);
 
+  line->touch ();
+  line->is_longer (0);
+
   switch (insdel)
     {
       case INSERT:
@@ -1414,11 +1423,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
             line->r[col] = line->r[col - count];
           }
 
-        if (!line->is_longer ())
-          {
-            line->l += count;
-            min_it (line->l, ncol);
-          }
+        line->l = min (line->l + count, ncol);
 
         if (selection.op && current_screen == selection.screen
             && ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur))
@@ -1441,6 +1446,8 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
         screen.cur.col += count;     /* don't worry if > ncol */
         selection_check (1);
         screen.cur.col -= count;
+
+        line->l = max (line->l - count, 0);
         scr_blank_line (*line, screen.cur.col, count, rstyle);
         break;
 
@@ -1453,12 +1460,8 @@ rxvt_term::scr_insdel_chars (int count, int insdel)
             line->r[col] = line->r[col + count];
           }
 
-        scr_blank_line (*line, ncol - count, count, tr);
-
-        if (line->is_longer ()) /* break line continuation */
-          line->l = ncol;
-        
         line->l = max (line->l - count, 0);
+        scr_blank_line (*line, ncol - count, count, tr);
 
         if (selection.op && current_screen == selection.screen
             && ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur))
@@ -1580,7 +1583,7 @@ rxvt_term::scr_set_tab (int mode)
   if (mode < 0)
     memset (tabs, 0, ncol * sizeof (char));
   else if (screen.cur.col < ncol)
-    tabs[screen.cur.col] = (mode ? 1 : 0);
+    tabs [screen.cur.col] = !!mode;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1637,7 +1640,8 @@ rxvt_term::scr_report_position ()
 void
 rxvt_term::set_font_style ()
 {
-  switch (charsets[screen.charset])
+#if 0
+  switch (charsets [screen.charset])
     {
       case '0':                   /* DEC Special Character & Line Drawing Set */
         break;
@@ -1654,6 +1658,7 @@ rxvt_term::set_font_style ()
       case 'K':                   /* German character set */
         break;
     }
+#endif
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1828,15 +1833,15 @@ rxvt_term::scr_page (enum page_dirn direction, int nlines)
 int
 rxvt_term::scr_changeview (unsigned int oldviewstart)
 {
-  PERL_INVOKE ((this, HOOK_VIEW_CHANGE, DT_INT, view_start, DT_END));
-
   if (view_start != oldviewstart)
     {
+      PERL_INVOKE ((this, HOOK_VIEW_CHANGE, DT_INT, view_start, DT_END));
+
       want_refresh = 1;
       num_scr -= (view_start - oldviewstart);
     }
 
-  return (int) (view_start - oldviewstart);
+  return (int)view_start - (int)oldviewstart;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -2380,10 +2385,12 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 }
 
 void
-rxvt_term::scr_remap_chars (const line_t &l)
+rxvt_term::scr_remap_chars (line_t &l)
 {
   if (!l.t)
     return;
+
+  l.touch (); // maybe a bit of an overkill, but its not performance-relevant
 
   for (int i = ncol; i--; )
     l.r[i] = SET_FONT (l.r[i], FONTSET (l.r[i])->find_font (l.t[i]));
@@ -2909,7 +2916,7 @@ rxvt_term::selection_make (Time tm)
         }
       else
 #endif
-        end_col = ROW(row).is_longer () ? ncol : ROW(row).l; //TODO//FIXME//LEN
+        end_col = ROW(row).l;
 
       col = max (col, 0);
 
@@ -2921,6 +2928,7 @@ rxvt_term::selection_make (Time tm)
         min_it (end_col, selection.end.col);
 
       t = ROW(row).t + col;
+
       for (; col < end_col; col++)
         {
           if (*t == NOCHAR)

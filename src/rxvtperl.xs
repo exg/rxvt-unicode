@@ -818,30 +818,33 @@ rxvt_term::ROW_r (int row_number, SV *new_rend = 0, int start_col = 0)
 }
 
 int
-rxvt_term::ROW_l (int row_number, int new_length = -2)
+rxvt_term::ROW_l (int row_number, int new_length = -1)
 	CODE:
 {
         if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
           XSRETURN_EMPTY;
 
         line_t &l = ROW(row_number);
-        RETVAL = l.l < 0 ? THIS->ncol : l.l;
+        RETVAL = l.l;
 
-        if (new_length >= -1)
+        if (new_length >= 0)
           l.l = new_length;
 }
         OUTPUT:
         RETVAL
 
 bool
-rxvt_term::ROW_is_longer (int row_number)
+rxvt_term::ROW_is_longer (int row_number, int new_is_longer = -1)
 	CODE:
 {
         if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
           XSRETURN_EMPTY;
 
         line_t &l = ROW(row_number);
-        RETVAL = l.l < 0;
+        RETVAL = l.is_longer ();
+
+        if (new_is_longer >= 0)
+          l.is_longer (new_is_longer);
 }
         OUTPUT:
         RETVAL
