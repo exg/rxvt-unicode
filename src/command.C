@@ -969,6 +969,45 @@ rxvt_term::flush ()
 
   if (want_refresh)
     {
+      if (SHOULD_INVOKE (HOOK_LINE_UPDATE))
+        {
+          int row = -view_start;
+
+          while (row > -nsaved && ROW (row - 1).is_longer ())
+            --row;
+
+          while (row < -view_start + nrow)
+            {
+              int start_row = row;
+              line_t *l;
+
+              do
+                {
+                  l = &ROW (row);
+
+                  if (!(l->f & LINE_FILTERED))
+                    {
+                      // line not filtered, mark it as filtered
+                      l->f |= LINE_FILTERED;
+                      while (l->is_longer ())
+                        {
+                          l = &ROW (++row);
+                          l->f |= LINE_FILTERED;
+                        }
+
+                      // and filter it
+                      HOOK_INVOKE ((this, HOOK_LINE_UPDATE, DT_INT, start_row, DT_END));
+
+                      break;
+                    }
+                }
+              while (l->is_longer ());
+
+              row++;
+            }
+         
+        }
+
       scr_refresh (refresh_type);
       scrollbar_show (1);
 #ifdef USE_XIM
@@ -1704,7 +1743,7 @@ rxvt_term::focus_in ()
       focus = 1;
       want_refresh = 1;
 
-      PERL_INVOKE ((this, HOOK_FOCUS_OUT, DT_END));
+      HOOK_INVOKE ((this, HOOK_FOCUS_OUT, DT_END));
 
 #if USE_XIM
       if (Input_Context != NULL)
@@ -1735,7 +1774,7 @@ rxvt_term::focus_out ()
       focus = 0;
       want_refresh = 1;
 
-      PERL_INVOKE ((this, HOOK_FOCUS_OUT, DT_END));
+      HOOK_INVOKE ((this, HOOK_FOCUS_OUT, DT_END));
 
 #if ENABLE_FRILLS || ISO_14755
       if (iso14755buf)
@@ -1857,7 +1896,7 @@ rxvt_term::button_press (XButtonEvent &ev)
           if (ev.button != MEvent.button)
             MEvent.clicks = 0;
 
-          if (!PERL_INVOKE ((this, HOOK_MOUSE_CLICK, DT_XEVENT, &ev, DT_END)))
+          if (!HOOK_INVOKE ((this, HOOK_MOUSE_CLICK, DT_XEVENT, &ev, DT_END)))
             switch (ev.button)
               {
                 case Button1:
@@ -2735,7 +2774,7 @@ rxvt_term::cmd_parse ()
                   // scr_add_lines only works for nlines <= nrow - 1.
                   if (nlines >= nrow - 1)
                     {
-                      if (!PERL_INVOKE ((this, HOOK_ADD_LINES, DT_USTRING_LEN, buf, str - buf, DT_END)))
+                      if (!HOOK_INVOKE ((this, HOOK_ADD_LINES, DT_USTRING_LEN, buf, str - buf, DT_END)))
                         scr_add_lines (buf, nlines, str - buf);
 
                       nlines = 0;
@@ -2760,7 +2799,7 @@ rxvt_term::cmd_parse ()
               ch = next_char ();
             }
 
-          if (!PERL_INVOKE ((this, HOOK_ADD_LINES, DT_USTRING_LEN, buf, str - buf, DT_END)))
+          if (!HOOK_INVOKE ((this, HOOK_ADD_LINES, DT_USTRING_LEN, buf, str - buf, DT_END)))
             scr_add_lines (buf, nlines, str - buf);
 
           /*
@@ -3977,7 +4016,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 
 #if ENABLE_PERL
       case URxvt_perl:
-        if (PERL_INVOKE ((this, HOOK_OSC_SEQ, DT_STRING, str, DT_END)))
+        if (HOOK_INVOKE ((this, HOOK_OSC_SEQ, DT_STRING, str, DT_END)))
           ; // no responses yet
         break;
 #endif

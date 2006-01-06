@@ -6,10 +6,10 @@
 #define RXVTPERL_H_
 
 #if ENABLE_PERL
+# define SHOULD_INVOKE(htype) rxvt_perl.should_invoke [htype]
+# define HOOK_INVOKE(args) rxvt_perl.invoke args
 
 #include "rxvt.h"
-
-#define PERL_INVOKE(args) rxvt_perl.invoke args
 
 enum data_type {
   DT_END,
@@ -36,11 +36,13 @@ struct rxvt_perl_interp
 
   void init ();
   bool invoke (rxvt_term *term, hook_type htype, ...);
+  void line_update (rxvt_term *term);
 };
 
 extern struct rxvt_perl_interp rxvt_perl;
 
 #else
+# define SHOULD_INVOKE(htype) false
 # define PERL_INVOKE(args) false
 #endif
 

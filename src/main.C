@@ -208,7 +208,7 @@ void rxvt_term::emergency_cleanup ()
 
 rxvt_term::~rxvt_term ()
 {
-  PERL_INVOKE ((this, HOOK_DESTROY, DT_END));
+  HOOK_INVOKE ((this, HOOK_DESTROY, DT_END));
 
   termlist.erase (find (termlist.begin (), termlist.end(), this));
 
@@ -494,7 +494,7 @@ rxvt_term::init (int argc, const char *const *argv)
       || (rs[Rs_perl_eval] && *rs[Rs_perl_eval]))
     {
       rxvt_perl.init ();
-      PERL_INVOKE ((this, HOOK_INIT, DT_END));
+      HOOK_INVOKE ((this, HOOK_INIT, DT_END));
     }
 #endif
 
@@ -540,7 +540,7 @@ rxvt_term::init (int argc, const char *const *argv)
 
   check_ev.start ();
 
-  PERL_INVOKE ((this, HOOK_START, DT_END));
+  HOOK_INVOKE ((this, HOOK_START, DT_END));
 
   return true;
 }

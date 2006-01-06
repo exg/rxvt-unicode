@@ -782,6 +782,7 @@ sub urxvt::term::line {
       term => $self,
       beg  => $beg,
       end  => $end,
+      ncol => $self->ncol,
       len  => ($end - $beg) * $self->ncol + $self->ROW_l ($end),
    }, urxvt::line::
 }
@@ -789,18 +790,35 @@ sub urxvt::term::line {
 sub urxvt::line::t {
    my ($self) = @_;
 
-   substr +(join "", map $self->{term}->ROW_t ($_), $self->{beg} .. $self->{end}),
-          0, $self->{len}
+   if (@_ > 1)
+     {
+       $self->{term}->ROW_t ($_, $_[1], 0, ($_ - $self->{beg}) * $self->{ncol}, $self->{ncol})
+          for $self->{beg} .. $self->{end};
+     }
+
+   defined wantarray &&
+      substr +(join "", map $self->{term}->ROW_t ($_), $self->{beg} .. $self->{end}),
+             0, $self->{len}
 }
 
 sub urxvt::line::r {
    my ($self) = @_;
 
-   my $rend = [
-      map @{ $self->{term}->ROW_r ($_) }, $self->{beg} .. $self->{end}
-   ];
-   $#$rend = $self->{len} - 1;
-   $rend
+   if (@_ > 1)
+     {
+       $self->{term}->ROW_r ($_, $_[1], 0, ($_ - $self->{beg}) * $self->{ncol}, $self->{ncol})
+          for $self->{beg} .. $self->{end};
+     }
+
+   if (defined wantarray) {
+      my $rend = [
+         map @{ $self->{term}->ROW_r ($_) }, $self->{beg} .. $self->{end}
+      ];
+      $#$rend = $self->{len} - 1;
+      return $rend;
+   }
+
+   ()
 }
 
 sub urxvt::line::beg { $_[0]{beg} }
@@ -810,7 +828,7 @@ sub urxvt::line::l   { $_[0]{len} }
 sub urxvt::line::offset_of {
    my ($self, $row, $col) = @_;
 
-   ($row - $self->{beg}) * $self->{term}->ncol + $col
+   ($row - $self->{beg}) * $self->{ncol} + $col
 }
 
 sub urxvt::line::coord_of {
@@ -819,8 +837,8 @@ sub urxvt::line::coord_of {
    use integer;
 
    (
-      $offset / $self->{term}->ncol + $self->{beg},
-      $offset % $self->{term}->ncol
+      $offset / $self->{ncol} + $self->{beg},
+      $offset % $self->{ncol}
    )
 }
 

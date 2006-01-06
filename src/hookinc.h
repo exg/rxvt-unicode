@@ -17,7 +17,7 @@
 
   def (VIEW_CHANGE)
   def (SCROLL_BACK)
-  def (TTY_ACTIVITY)
+  def (LINE_UPDATE)
   def (ADD_LINES)
   def (OSC_SEQ)
 

@@ -7,23 +7,25 @@ my $url =
       [ab-zA-Z0-9\-\@;\/?:&=%\$_+!*\x27(),~]   # do not include a trailing dot, its wrong too often
    )}x;
 
-sub on_add_lines {
-   my ($term, $str) = @_;
+sub on_line_update {
+   my ($term, $row) = @_;
 
-   while ($str =~ $url) {
-      # found a url, first output preceding text
-      $term->scr_add_lines (substr $str, 0, $-[1], "");
-      # then toggle underline
-      $term->rstyle ($term->rstyle ^ urxvt::RS_Uline);
-      # now output the url
-      $term->scr_add_lines (substr $str, 0, $+[1] - $-[1], "");
-      # toggle undelrine again
-      $term->rstyle ($term->rstyle ^ urxvt::RS_Uline);
+   # fetch the line that has changed
+   my $line = $term->line ($row);
+   my $text = $line->t;
+
+   # find all urls (if any)
+   while ($text =~ /$url/g) {
+      my $rend = $line->r;
+
+      # mark all characters as underlined. we _must_ not toggle underline,
+      # as we might get called on an already-marked url.
+      $_ |= urxvt::RS_Uline
+         for @{$rend}[ $-[1] .. $+[1] - 1];
+
+      $line->r ($rend);
    }
 
-   # output trailing text
-   $term->scr_add_lines ($str);
-
-   1
+   ()
 }
 

@@ -735,7 +735,7 @@ rxvt_term::want_refresh ()
         THIS->want_refresh = 1;
 
 void
-rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0)
+rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0, int start_ofs = 0, int max_len = MAX_COLS)
 	PPCODE:
 {
         if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
@@ -759,7 +759,7 @@ rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0)
           {
             wchar_t *wstr = sv2wcs (new_text);
 
-            int len = wcslen (wstr);
+            int len = min (wcslen (wstr) - start_ofs, max_len);
 
             if (!IN_RANGE_INC (start_col, 0, THIS->ncol - len))
               {
@@ -769,7 +769,7 @@ rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0)
 
             for (int col = start_col; col < start_col + len; col++)
               {
-                l.t [col] = wstr [col - start_col];
+                l.t [col] = wstr [start_ofs + col - start_col];
                 l.r [col] = SET_FONT (l.r [col], THIS->fontset [GET_STYLE (l.r [col])]->find_font (l.t [col]));
               }
 
@@ -778,7 +778,7 @@ rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0)
 }
 
 void
-rxvt_term::ROW_r (int row_number, SV *new_rend = 0, int start_col = 0)
+rxvt_term::ROW_r (int row_number, SV *new_rend = 0, int start_col = 0, int start_ofs = 0, int max_len = MAX_COLS)
 	PPCODE:
 {
         if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
@@ -803,14 +803,14 @@ rxvt_term::ROW_r (int row_number, SV *new_rend = 0, int start_col = 0)
               croak ("new_rend must be arrayref");
 
             AV *av = (AV *)SvRV (new_rend);
-            int len = av_len (av) + 1;
+            int len = min (av_len (av) + 1 - start_ofs, max_len);
 
             if (!IN_RANGE_INC (start_col, 0, THIS->ncol - len))
               croak ("new_rend array extends beyond horizontal margins");
 
             for (int col = start_col; col < start_col + len; col++)
               {
-                rend_t r = SvIV (*av_fetch (av, col - start_col, 1)) & ~RS_fontMask;
+                rend_t r = SvIV (*av_fetch (av, start_ofs + col - start_col, 1)) & ~RS_fontMask;
 
                 l.r [col] = SET_FONT (r, THIS->fontset [GET_STYLE (r)]->find_font (l.t [col]));
               }

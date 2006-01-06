@@ -9,6 +9,9 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
+	- perl: implement additional hook: line_update, add_lines.
+        - perl: urxvt::line now can set via ->t and ->r.
+
 6.3  Wed Jan  4 22:37:10 CET 2006
         - SECURITY FIX: on systems using openpty, permissions were
           not correctly updated on the tty device and were left as

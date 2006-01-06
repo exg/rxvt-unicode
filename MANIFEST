@@ -171,6 +171,7 @@ src/rxvtperl.h
 src/rxvtperl.xs
 
 src/perl/example-refresh-hooks
+src/perl/example-filter-input
 src/perl/digital-clock
 src/perl/selection
 src/perl/mark-urls

@@ -416,7 +416,7 @@ rxvt_term::scr_reset ()
 
   tt_winch ();
 
-  PERL_INVOKE ((this, HOOK_RESET, DT_END));
+  HOOK_INVOKE ((this, HOOK_RESET, DT_END));
 }
 
 /* ------------------------------------------------------------------------- */
@@ -620,7 +620,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
     {
       nsaved = min (nsaved + count, saveLines);
 
-      PERL_INVOKE ((this, HOOK_SCROLL_BACK, DT_INT, count, DT_INT, nsaved, DT_END));
+      HOOK_INVOKE ((this, HOOK_SCROLL_BACK, DT_INT, count, DT_INT, nsaved, DT_END));
       
       term_start = (term_start + count) % total_rows;
 
@@ -1835,7 +1835,7 @@ rxvt_term::scr_changeview (unsigned int oldviewstart)
 {
   if (view_start != oldviewstart)
     {
-      PERL_INVOKE ((this, HOOK_VIEW_CHANGE, DT_INT, view_start, DT_END));
+      HOOK_INVOKE ((this, HOOK_VIEW_CHANGE, DT_INT, view_start, DT_END));
 
       want_refresh = 1;
       num_scr -= (view_start - oldviewstart);
@@ -2055,7 +2055,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
       }
   }
 
-  PERL_INVOKE ((this, HOOK_REFRESH_BEGIN, DT_END));
+  HOOK_INVOKE ((this, HOOK_REFRESH_BEGIN, DT_END));
 #if ENABLE_OVERLAY
   scr_swap_overlay ();
 #endif
@@ -2328,7 +2328,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
 #if ENABLE_OVERLAY
   scr_swap_overlay ();
 #endif
-  PERL_INVOKE ((this, HOOK_REFRESH_END, DT_END));
+  HOOK_INVOKE ((this, HOOK_REFRESH_END, DT_END));
 
   /*
    * G: cleanup cursor and display outline cursor if necessary
@@ -2892,7 +2892,7 @@ rxvt_term::selection_make (Time tm)
   if (selection.clicks == 4)
     return;                 /* nothing selected, go away */
 
-  if (PERL_INVOKE ((this, HOOK_SEL_MAKE, DT_LONG, (long)tm, DT_END)))
+  if (HOOK_INVOKE ((this, HOOK_SEL_MAKE, DT_LONG, (long)tm, DT_END)))
     return;
 
   i = (selection.end.row - selection.beg.row + 1) * (ncol + 1);
@@ -2987,7 +2987,7 @@ rxvt_term::selection_make (Time tm)
   selection.len = ofs;
   selection.text = (wchar_t *)rxvt_realloc (new_selection_text, (ofs + 1) * sizeof (wchar_t));
 
-  if (PERL_INVOKE ((this, HOOK_SEL_GRAB, DT_LONG, (long)tm, DT_END)))
+  if (HOOK_INVOKE ((this, HOOK_SEL_GRAB, DT_LONG, (long)tm, DT_END)))
     return;
 
   selection_grab (tm);
@@ -3333,7 +3333,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
       if (ROWCOL_IS_AFTER (selection.end, selection.beg))
         selection.end.col--;
 
-      if (!PERL_INVOKE ((this, HOOK_SEL_EXTEND, DT_END)))
+      if (!HOOK_INVOKE ((this, HOOK_SEL_EXTEND, DT_END)))
         {
           selection_delimit_word (UP, &selection.beg, &selection.beg);
           selection_delimit_word (DN, &selection.end, &selection.end);
