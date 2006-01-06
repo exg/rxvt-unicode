@@ -1417,7 +1417,8 @@ rxvt_term::x_cb (XEvent &ev)
               }
 #endif
 
-          if (ev.xany.window == vt && HOOK_INVOKE ((this, HOOK_KEY_RELEASE, DT_XEVENT, &ev, DT_END)))
+          if (ev.xany.window == vt
+              && HOOK_INVOKE ((this, HOOK_KEY_RELEASE, DT_XEVENT, &ev, DT_END)))
             break;
 
 #if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
@@ -2169,7 +2170,7 @@ rxvt_term::button_release (XButtonEvent &ev)
           && ev.button == Button1 && MEvent.clicks <= 1)
         selection_extend (ev.x, ev.y, 0);
 
-      if (!HOOK_INVOKE ((this, HOOK_BUTTON_RELEASE, DT_XEVENT, &ev, DT_END)))
+      if (HOOK_INVOKE ((this, HOOK_BUTTON_RELEASE, DT_XEVENT, &ev, DT_END)))
         return;
 
       switch (ev.button)
