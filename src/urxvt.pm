@@ -665,16 +665,16 @@ If hidden, display the overlay again.
 
 =back
 
-=item $cellwidth = $term->strwidth $string
+=item $cellwidth = $term->strwidth ($string)
 
 Returns the number of screen-cells this string would need. Correctly
 accounts for wide and combining characters.
 
-=item $octets = $term->locale_encode $string
+=item $octets = $term->locale_encode ($string)
 
 Convert the given text string into the corresponding locale encoding.
 
-=item $string = $term->locale_decode $octets
+=item $string = $term->locale_decode ($octets)
 
 Convert the given locale-encoded octets into a perl string.
 
@@ -700,6 +700,14 @@ locale-specific encoding of the terminal and can contain command sequences
 Write the octets given in C<$data> to the tty (i.e. as program input). To
 pass characters instead of octets, you should convert your strings first
 to the locale-specific encoding using C<< $term->locale_encode >>.
+
+=item $windowid = $term->parent
+
+Return the window id of the toplevel window.
+
+=item $windowid = $term->vt
+
+Return the window id of the terminal window.
 
 =item $window_width = $term->width
 

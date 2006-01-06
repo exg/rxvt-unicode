@@ -3,7 +3,7 @@
  *----------------------------------------------------------------------*
  *
  * All portions of code are copyright by their respective author/s.
- * Copyright (c) 2005-2005 Marc Lehmann <pcg@goof.com>
+ * Copyright (c) 2005-2006 Marc Lehmann <pcg@goof.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -799,9 +799,16 @@ rxvt_term::width ()
         RETVAL
 
 U32
+rxvt_term::parent ()
+	CODE:
+        RETVAL = (U32)THIS->parent [0];
+        OUTPUT:
+        RETVAL
+
+U32
 rxvt_term::vt ()
 	CODE:
-        RETVAL = THIS->vt;
+        RETVAL = (U32)THIS->vt;
         OUTPUT:
         RETVAL
 
