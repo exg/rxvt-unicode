@@ -536,7 +536,8 @@ rxvt_term::init (int argc, const char *const *argv)
 
   free (cmd_argv);
 
-  pty_ev.start (pty.pty, EVENT_READ);
+  if (pty.pty >= 0)
+    pty_ev.start (pty.pty, EVENT_READ);
 
   check_ev.start ();
 

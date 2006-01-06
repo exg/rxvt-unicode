@@ -281,7 +281,6 @@ void rxvt_display::x_cb (io_watcher &w, short revents)
 #ifdef USE_XIM
       if (!XFilterEvent (&xev, None))
         {
-
           if (xev.type == PropertyNotify
               && xev.xany.window == root
               && xev.xproperty.atom == xa_xim_servers)

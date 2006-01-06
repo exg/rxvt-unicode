@@ -398,7 +398,10 @@ void
 
 rxvt_ptytty::close_tty ()
 {
-  if (tty >= 0) close (tty);
+  if (tty < 0)
+    return;
+
+  close (tty);
   tty = -1;
 }
 
@@ -453,24 +456,24 @@ void
 rxvt_ptytty::set_utf8_mode (bool on)
 {
 #ifdef IUTF8
-  if (pty != -1)
+  if (pty < 0)
+    return;
+
+  struct termios tio;
+
+  if (tcgetattr (pty, &tio) != -1)
     {
-      struct termios tio;
+      tcflag_t new_cflag = tio.c_iflag;
 
-      if (tcgetattr (pty, &tio) != -1)
+      if (on)
+        new_cflag |= IUTF8;
+      else
+        new_cflag &= ~IUTF8;
+
+      if (new_cflag != tio.c_iflag)
         {
-          tcflag_t new_cflag = tio.c_iflag;
-
-          if (on)
-            new_cflag |= IUTF8;
-          else
-            new_cflag &= ~IUTF8;
-
-          if (new_cflag != tio.c_iflag)
-            {
-              tio.c_iflag = new_cflag;
-              tcsetattr (pty, TCSANOW, &tio);
-            }
+          tio.c_iflag = new_cflag;
+          tcsetattr (pty, TCSANOW, &tio);
         }
     }
 #endif
