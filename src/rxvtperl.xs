@@ -487,6 +487,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 
             XPUSHs (sv_2mortal (wcs2sv (wstr, wlen)));
           }
+         break;
 
         case DT_XEVENT:
           {

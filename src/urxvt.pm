@@ -64,20 +64,19 @@ Displays a digital clock using the built-in overlay.
 
 =item mark-urls
 
-Uses per-line filtering (C<on_line_update>) to underline urls.
+Uses per-line display filtering (C<on_line_update>) to underline urls.
+
+=item block-graphics-to-ascii
+
+A not very useful example of filtering all text output to the terminal,
+by replacing all line-drawing characters (U+2500 .. U+259F) by a
+similar-looking ascii character.
 
 =item example-refresh-hooks
 
 Displays a very simple digital clock in the upper right corner of the
 window. Illustrates overwriting the refresh callbacks to create your own
 overlays or changes.
-
-=item example-filter-input
-
-A not very useful example of filtering all text output to the terminal, by
-underlining all urls that matches a certain regex (i.e. some urls :). It
-is not very useful because urls that are output in multiple steps (e.g.
-when typing them) do not get marked.
 
 =back
 
