@@ -16,6 +16,7 @@ enum data_type {
   DT_INT,
   DT_LONG,
   DT_STRING,
+  DT_STRING_LEN,
   DT_USTRING_LEN,
   DT_XEVENT,
 };

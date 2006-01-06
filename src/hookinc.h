@@ -26,5 +26,8 @@
 
   def (KEYBOARD_COMMAND)
 
-  def (MOUSE_CLICK)
-  def (MOUSE_MOVE)
+  def (KEY_PRESS)
+  def (KEY_RELEASE)
+  def (BUTTON_PRESS)
+  def (BUTTON_RELEASE)
+  def (MOTION_NOTIFY)

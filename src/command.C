@@ -869,6 +869,9 @@ rxvt_term::lookup_key (XKeyEvent &ev)
         }
     }
 
+  if (HOOK_INVOKE ((this, HOOK_KEY_PRESS, DT_XEVENT, &ev, DT_STRING_LEN, kbuf, len, DT_END)))
+    return;
+
   if (len <= 0)
     return;			/* not mapped */
 
@@ -1637,7 +1640,9 @@ rxvt_term::x_cb (XEvent &ev)
 
         if (ev.xany.window == vt)
           {
-            if (ev.xbutton.state & (Button1Mask | Button3Mask))
+            if (HOOK_INVOKE ((this, HOOK_MOTION_NOTIFY, DT_XEVENT, &ev, DT_END)))
+              ; // nop
+            else if (ev.xbutton.state & (Button1Mask | Button3Mask))
               {
                 while (XCheckTypedWindowEvent (disp, vt, MotionNotify, &ev))
                   ;
@@ -1896,7 +1901,7 @@ rxvt_term::button_press (XButtonEvent &ev)
           if (ev.button != MEvent.button)
             MEvent.clicks = 0;
 
-          if (!HOOK_INVOKE ((this, HOOK_MOUSE_CLICK, DT_XEVENT, &ev, DT_END)))
+          if (!HOOK_INVOKE ((this, HOOK_BUTTON_PRESS, DT_XEVENT, &ev, DT_END)))
             switch (ev.button)
               {
                 case Button1:
@@ -2157,6 +2162,9 @@ rxvt_term::button_release (XButtonEvent &ev)
           && bypass_keystate
           && ev.button == Button1 && MEvent.clicks <= 1)
         selection_extend (ev.x, ev.y, 0);
+
+      if (!HOOK_INVOKE ((this, HOOK_BUTTON_RELEASE, DT_XEVENT, &ev, DT_END)))
+        return;
 
       switch (ev.button)
         {

@@ -471,6 +471,65 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
           XPUSHs (sv_2mortal (newSVpv (va_arg (ap, char *), 0)));
           break;
 
+        case DT_STRING_LEN:
+          {
+            char *str = va_arg (ap, char *);
+            int len = va_arg (ap, int);
+
+            XPUSHs (sv_2mortal (newSVpvn (str, len)));
+          }
+          break;
+
+        case DT_XEVENT:
+          {
+            XEvent *xe = va_arg (ap, XEvent *);
+            HV *hv = newHV ();
+
+#           define set(name, sv) hv_store (hv, # name,  sizeof (# name) - 1, sv, 0)
+#           define setiv(name, val) hv_store (hv, # name,  sizeof (# name) - 1, newSViv (val), 0)
+#           undef set
+
+            setiv (type,       xe->type);
+            setiv (send_event, xe->xany.send_event);
+            setiv (serial,     xe->xany.serial);
+
+            switch (xe->type)
+              {
+                case KeyPress:
+                case KeyRelease:
+                case ButtonPress:
+                case ButtonRelease:
+                case MotionNotify:
+                  setiv (time,   xe->xmotion.time);
+                  setiv (x,      xe->xmotion.x);
+                  setiv (y,      xe->xmotion.y);
+                  setiv (x_root, xe->xmotion.x_root);
+                  setiv (y_root, xe->xmotion.y_root);
+                  setiv (state,  xe->xmotion.state);
+                  break;
+              }
+
+            switch (xe->type)
+              {
+                case KeyPress:
+                case KeyRelease:
+                  setiv (keycode, xe->xkey.keycode);
+                  break;
+
+                case ButtonPress:
+                case ButtonRelease:
+                  setiv (button,  xe->xbutton.button);
+                  break;
+
+                case MotionNotify:
+                  setiv (is_hint, xe->xmotion.is_hint);
+                  break;
+              }
+
+            XPUSHs (sv_2mortal (newRV_noinc ((SV *)hv)));
+          }
+          break;
+
         case DT_USTRING_LEN:
           {
             unicode_t *ustr = va_arg (ap, unicode_t *);

@@ -263,6 +263,21 @@ Called whenever the user presses a key combination that has a
 C<perl:string> action bound to it (see description of the B<keysym>
 resource in the @@RXVT_NAME@@(1) manpage).
 
+=item on_key_press $term, $event
+
+=item on_key_release $term, $event
+
+=item on_button_press $term, $event
+
+=item on_button_release $term, $event
+
+=item on_motion_notify $term, $event
+
+Called whenever the corresponding X event is received for the terminal. If
+the hook returns true, then the even will be ignored by rxvt-unicode.
+
+subwindow.
+
 =back
 
 =head2 Variables in the C<urxvt> Package
