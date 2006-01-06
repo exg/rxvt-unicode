@@ -1875,6 +1875,7 @@ rxvt_term::button_press (XButtonEvent &ev)
             {
               /* same button, within alloted time */
               MEvent.clicks++;
+
               if (MEvent.clicks > 1)
                 {
                   /* only report double clicks */
@@ -2092,8 +2093,10 @@ rxvt_term::button_press (XButtonEvent &ev)
                   break;
               }
         }
+
       return;
     }
+
 #if MENUBAR
   /*
    * Menubar window processing of button press
