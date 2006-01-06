@@ -2892,7 +2892,7 @@ uint32_t
 rxvt_term::next_octet ()
 {
   return cmdbuf_ptr < cmdbuf_endp
-         ? *cmdbuf_ptr++
+         ? (unsigned char)*cmdbuf_ptr++
          : NOCHAR;
 }
 
