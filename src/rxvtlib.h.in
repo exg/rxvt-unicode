@@ -224,7 +224,11 @@ typedef struct {
 #define Opt_scrollWithBuffer     (1UL<<15)
 #define Opt_jumpScroll           (1UL<<16)
 #define Opt_mouseWheelScrollPage (1UL<<17)
-#define Opt_pointerBlank         (1UL<<18)
+#if POINTER_BLANK
+# define Opt_pointerBlank        (1UL<<18)
+#else
+# define Opt_pointerBlank        0
+#endif
 #define Opt_cursorBlink          (1UL<<19)
 #define Opt_secondaryScreen      (1UL<<20)
 #define Opt_secondaryScroll      (1UL<<21)

@@ -437,7 +437,7 @@ used (a longer example is in F<doc/embed>):
       system "@@RXVT_NAME@@ -embed $xid &";
    });
 
-=item B<-pty-fd> I<fileno>
+=item B<-pty-fd> I<file descriptor>
 
 Tells @@RXVT_NAME@@ NOT to execute any commands or create a new pty/tty
 pair but instead use the given filehandle as the tty master. This is
@@ -447,6 +447,9 @@ without having to run a program within it.
 If this switch is given, @@RXVT_NAME@@ will not create any utmp/wtmp
 entries and will not tinker with pty/tty permissions - you have to do that
 yourself if you want that.
+
+As an extremely special case, specifying C<-1> will completely suppress
+pty/tty operations.
 
 Here is a example in perl that illustrates how this option can be used (a
 longer example is in F<doc/pty-fd>):

@@ -9,6 +9,8 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
+TODO: document transient_for, vt
+
 	- perl: implement additional hook: line_update, add_lines.
         - perl: urxvt::line now can set via ->t and ->r.
 

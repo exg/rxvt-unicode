@@ -503,6 +503,8 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
                   setiv (time,   xe->xmotion.time);
                   setiv (x,      xe->xmotion.x);
                   setiv (y,      xe->xmotion.y);
+                  setiv (row,    xe->xmotion.y / term->fheight);
+                  setiv (col,    xe->xmotion.x / term->fwidth);
                   setiv (x_root, xe->xmotion.x_root);
                   setiv (y_root, xe->xmotion.y_root);
                   setiv (state,  xe->xmotion.state);
@@ -793,6 +795,13 @@ rxvt_term::width ()
            nsaved     = TERM_OFFSET_nsaved
 	CODE:
         RETVAL = *(int *)((char *)THIS + ix);
+        OUTPUT:
+        RETVAL
+
+U32
+rxvt_term::vt ()
+	CODE:
+        RETVAL = THIS->vt;
         OUTPUT:
         RETVAL
 

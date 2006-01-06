@@ -1207,7 +1207,7 @@ rxvt_term::pointer_unblank ()
 void
 rxvt_term::pointer_blank ()
 {
-  if (! OPTION (Opt_pointerBlank))
+  if (!OPTION (Opt_pointerBlank))
     return;
 
   XDefineCursor (display->display, vt, display->blank_cursor);
@@ -1416,6 +1416,9 @@ rxvt_term::x_cb (XEvent &ev)
                   iso14755buf = 0;
               }
 #endif
+
+          if (ev.xany.window == vt && HOOK_INVOKE ((this, HOOK_KEY_RELEASE, DT_XEVENT, &ev, DT_END)))
+            break;
 
 #if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
           if (!(ev.xkey.state & ControlMask))

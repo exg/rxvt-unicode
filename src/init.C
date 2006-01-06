@@ -1034,6 +1034,11 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   XSetWMProtocols (disp, top, protocols, sizeof (protocols) / sizeof (protocols[0]));
 
+#if ENABLE_FRILLS
+  if (rs[Rs_transient_for])
+    XSetTransientForHint (disp, top, (Window)strtol (rs[Rs_transient_for], 0, 0));
+#endif
+
 #if ENABLE_EWMH
   long pid = getpid ();
 
@@ -1086,11 +1091,13 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   vt_emask = ExposureMask | ButtonPressMask | ButtonReleaseMask | PropertyChangeMask;
 
-#ifdef POINTER_BLANK
-  if (OPTION (Opt_pointerBlank))
+  if (OPTION (Opt_pointerBlank)
+#ifdef ENABLE_PERL
+      || self
+#endif
+      )
     vt_emask |= PointerMotionMask;
   else
-#endif
     vt_emask |= Button1MotionMask | Button3MotionMask;
 
   XSelectInput (disp, vt, vt_emask);
