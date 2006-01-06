@@ -2720,10 +2720,10 @@ rxvt_term::cmd_parse ()
         {
           seq_begin = cmdbuf_ptr;
           ch = next_char ();
-        }
 
-      if (ch == NOCHAR) // TODO: improve
-        break;
+          if (ch == NOCHAR)
+            break;
+        }
 
       if (!IS_CONTROL (ch) || ch == C0_LF || ch == C0_CR || ch == C0_HT)
         {

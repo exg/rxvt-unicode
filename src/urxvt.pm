@@ -139,7 +139,10 @@ When in doubt, return a false value (preferably C<()>).
 =item on_init $term
 
 Called after a new terminal object has been initialized, but before
-windows are created or the command gets run.
+windows are created or the command gets run. Most methods are unsafe to
+call or deliver senseless data, as terminal size and other characteristics
+have not yet been determined. You can safely query and change resources,
+though.
 
 =item on_reset $term
 
@@ -276,6 +279,14 @@ variable stores the current C<urxvt::term> object.
 =head2 Functions in the C<urxvt> Package
 
 =over 4
+
+=item $term = new urxvt [arg...]
+
+Creates a new terminal, very similar as if you had started it with
+C<system $binfile, arg...>. Croaks (and probably outputs an error message)
+if the new instance couldn't be created.  Returns C<undef> if the new
+instance didn't initialise perl, and the terminal object otherwise. The
+C<init> and C<start> hooks will be called during the call.
 
 =item urxvt::fatal $errormessage
 
@@ -503,6 +514,10 @@ sub urxvt::term::proxy::AUTOLOAD {
 
 =over 4
 
+=item $term->destroy
+
+Destroy the terminal object (close the window, free resources etc.).
+
 =item $value = $term->resource ($name[, $newval])
 
 Returns the current resource value associated with a given name and
@@ -651,6 +666,12 @@ string is a normal text string, not in locale-dependent encoding.
 Normally its not a good idea to use this function, as programs might be
 confused by changes in cursor position or scrolling. Its useful inside a
 C<on_add_lines> hook, though.
+
+=item $term->cmd_parse ($octets)
+
+Similar to C<scr_add_lines>, but the argument must be in the
+locale-specific encoding of the terminal and can contain command sequences
+(escape codes) that will be interpreted.
 
 =item $term->tt_write ($octets)
 

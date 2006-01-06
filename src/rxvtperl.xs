@@ -546,6 +546,36 @@ BOOT:
   sv_setpv (get_sv ("urxvt::LIBDIR", 1), LIBDIR);
 }
 
+SV *
+new (...)
+	CODE:
+{
+	stringvec *argv = new stringvec;
+        bool success;
+
+        for (int i = 0; i < items ;i++)
+          argv->push_back (strdup (SvPVbyte_nolen (ST (i))));
+
+        rxvt_term *term = new rxvt_term;
+
+        term->argv = argv;
+
+        try
+          {
+            if (!term->init (argv->size (), argv->begin ()))
+              term = 0;
+          }
+        catch (const class rxvt_failure_exception &e)
+          {
+            term->destroy ();
+            croak ("exception caught while initializing new terminal instance");
+          }
+
+        RETVAL = term && term->self ? newSVterm (term) : &PL_sv_undef;
+}
+	OUTPUT:
+        RETVAL
+
 void
 set_should_invoke (int htype, int value)
 	CODE:
@@ -617,6 +647,9 @@ SET_CUSTOM (int rend, int new_value)
         RETVAL
 
 MODULE = urxvt             PACKAGE = urxvt::term
+
+void
+rxvt_term::destroy ()
 
 int
 rxvt_term::strwidth (SV *str)
@@ -978,6 +1011,25 @@ rxvt_term::tt_write (SV *octets)
           char *str = SvPVbyte (octets, len);
 	C_ARGS:
           str, len
+
+void
+rxvt_term::cmd_parse (SV *octets)
+	CODE:
+{
+	STRLEN len;
+        char *str = SvPVbyte (octets, len);
+
+        char *old_cmdbuf_ptr  = THIS->cmdbuf_ptr;
+        char *old_cmdbuf_endp = THIS->cmdbuf_endp;
+
+        THIS->cmdbuf_ptr  = str;
+        THIS->cmdbuf_endp = str + len;
+
+        THIS->cmd_parse ();
+
+        THIS->cmdbuf_ptr  = old_cmdbuf_ptr;
+        THIS->cmdbuf_endp = old_cmdbuf_endp;
+}
 
 SV *
 rxvt_term::overlay (int x, int y, int w, int h, int rstyle = OVERLAY_RSTYLE, int border = 2)
