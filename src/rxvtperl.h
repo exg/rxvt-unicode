@@ -44,7 +44,7 @@ extern struct rxvt_perl_interp rxvt_perl;
 
 #else
 # define SHOULD_INVOKE(htype) false
-# define PERL_INVOKE(args) false
+# define HOOK_INVOKE(args) false
 #endif
 
 #endif
