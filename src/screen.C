@@ -702,7 +702,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
  * Add text given in <str> of length <len> to screen struct
  */
 void
-rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
+rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines)
 {
   if (len <= 0)               /* sanity */
     return;
@@ -710,22 +710,22 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
   unsigned char checksel;
   unicode_t c;
   int ncol = this->ncol;
-  const unicode_t *strend = str + len;
+  const wchar_t *strend = str + len;
 
   want_refresh = 1;
   ZERO_SCROLLBACK ();
 
-  if (nlines > 0)
+  if (minlines > 0)
     {
-      nlines += screen.cur.row - screen.bscroll;
+      minlines += screen.cur.row - screen.bscroll;
 
-      if (nlines > 0
+      if (minlines > 0
           && screen.tscroll == 0
           && screen.bscroll == nrow - 1)
         {
           /* _at least_ this many lines need to be scrolled */
-          scr_scroll_text (screen.tscroll, screen.bscroll, nlines);
-          screen.cur.row -= nlines;
+          scr_scroll_text (screen.tscroll, screen.bscroll, minlines);
+          screen.cur.row -= minlines;
         }
     }
 
@@ -742,7 +742,7 @@ rxvt_term::scr_add_lines (const unicode_t *str, int nlines, int len)
 
   while (str < strend)
     {
-      c = *str++;
+      c = (unicode_t)*str++; // convert to rxvt-unicodes representation
 
       if (c < 0x20)
         if (c == C0_LF)

@@ -869,7 +869,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
         }
     }
 
-  if (HOOK_INVOKE ((this, HOOK_KEY_PRESS, DT_XEVENT, &ev, DT_STRING_LEN, kbuf, len, DT_END)))
+  if (HOOK_INVOKE ((this, HOOK_KEY_PRESS, DT_XEVENT, &ev, DT_STR_LEN, kbuf, len, DT_END)))
     return;
 
   if (len <= 0)
@@ -2726,7 +2726,7 @@ bool
 rxvt_term::cmd_parse ()
 {
   bool flag = false;
-  unicode_t ch = NOCHAR;
+  wchar_t ch = NOCHAR;
   char *seq_begin; // remember start of esc-sequence here
 
   for (;;)
@@ -2757,11 +2757,11 @@ rxvt_term::cmd_parse ()
             }
 
           /* Read a text string from the input buffer */
-          unicode_t buf[UBUFSIZ];
+          wchar_t buf[UBUFSIZ];
           bool refreshnow = false;
           int nlines = 0;
-          unicode_t *str = buf;
-          unicode_t *eol = str + min (ncol, UBUFSIZ);
+          wchar_t *str = buf;
+          wchar_t *eol = str + min (ncol, UBUFSIZ);
 
           for (;;)
             {
@@ -2789,8 +2789,8 @@ rxvt_term::cmd_parse ()
                   // scr_add_lines only works for nlines <= nrow - 1.
                   if (nlines >= nrow - 1)
                     {
-                      if (!HOOK_INVOKE ((this, HOOK_ADD_LINES, DT_USTRING_LEN, buf, str - buf, DT_END)))
-                        scr_add_lines (buf, nlines, str - buf);
+                      if (!HOOK_INVOKE ((this, HOOK_ADD_LINES, DT_WCS_LEN, buf, str - buf, DT_END)))
+                        scr_add_lines (buf, str - buf, nlines);
 
                       nlines = 0;
                       str = buf;
@@ -2814,8 +2814,8 @@ rxvt_term::cmd_parse ()
               ch = next_char ();
             }
 
-          if (!HOOK_INVOKE ((this, HOOK_ADD_LINES, DT_USTRING_LEN, buf, str - buf, DT_END)))
-            scr_add_lines (buf, nlines, str - buf);
+          if (!HOOK_INVOKE ((this, HOOK_ADD_LINES, DT_WCS_LEN, buf, str - buf, DT_END)))
+            scr_add_lines (buf, str - buf, nlines);
 
           /*
            * If there have been a lot of new lines, then update the screen
@@ -2856,17 +2856,8 @@ rxvt_term::cmd_parse ()
   return flag;
 }
 
-// read the next octet
-unicode_t
-rxvt_term::next_octet ()
-{
-  return cmdbuf_ptr < cmdbuf_endp
-         ? *cmdbuf_ptr++
-         : NOCHAR;
-}
-
 // read the next character
-unicode_t
+wchar_t
 rxvt_term::next_char ()
 {
   while (cmdbuf_ptr < cmdbuf_endp)
@@ -2886,7 +2877,7 @@ rxvt_term::next_char ()
         }
 
       if (len == (size_t)-1)
-        return *cmdbuf_ptr++; // the _occasional_ latin1 character is allowed to slip through
+        return (unsigned char)*cmdbuf_ptr++; // the _occasional_ latin1 character is allowed to slip through
 
       // assume wchar == unicode
       cmdbuf_ptr += len;
@@ -2896,15 +2887,24 @@ rxvt_term::next_char ()
   return NOCHAR;
 }
 
+// read the next octet
+uint32_t
+rxvt_term::next_octet ()
+{
+  return cmdbuf_ptr < cmdbuf_endp
+         ? *cmdbuf_ptr++
+         : NOCHAR;
+}
+
 /* rxvt_cmd_getc () - Return next input character */
 /*
  * Return the next input character after first passing any keyboard input
  * to the command.
  */
-unicode_t
+wchar_t
 rxvt_term::cmd_getc ()
 {
-  unicode_t c = next_char ();
+  wchar_t c = next_char ();
 
   if (c == NOCHAR)
     throw out_of_input;
@@ -2912,10 +2912,10 @@ rxvt_term::cmd_getc ()
   return c;
 }
 
-unicode_t
+uint32_t
 rxvt_term::cmd_get8 ()
 {
-  unicode_t c = next_octet ();
+  uint32_t c = next_octet ();
 
   if (c == NOCHAR)
     throw out_of_input;
@@ -3192,8 +3192,8 @@ rxvt_term::process_escape_seq ()
         /* 8.3.87: NEXT LINE */
       case C1_NEL:		/* ESC E */
         {
-          unicode_t nlcr[] = { C0_LF, C0_CR };
-          scr_add_lines (nlcr, 1, 2);
+          wchar_t nlcr[] = { C0_LF, C0_CR };
+          scr_add_lines (nlcr, sizeof (nlcr) / sizeof (nlcr [0]), 1);
         }
         break;
 
@@ -4031,7 +4031,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 
 #if ENABLE_PERL
       case URxvt_perl:
-        if (HOOK_INVOKE ((this, HOOK_OSC_SEQ, DT_STRING, str, DT_END)))
+        if (HOOK_INVOKE ((this, HOOK_OSC_SEQ, DT_STR, str, DT_END)))
           ; // no responses yet
         break;
 #endif

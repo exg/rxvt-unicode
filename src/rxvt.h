@@ -1296,10 +1296,10 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void lookup_key (XKeyEvent &ev);
   unsigned int cmd_write (const char *str, unsigned int count);
 
-  unicode_t next_char ();
-  unicode_t cmd_getc ();
-  unicode_t next_octet ();
-  unicode_t cmd_get8 ();
+  wchar_t next_char ();
+  wchar_t cmd_getc ();
+  uint32_t next_octet ();
+  uint32_t cmd_get8 ();
 
   bool cmd_parse ();
   void mouse_report (XButtonEvent &ev);
@@ -1463,7 +1463,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   int scr_change_screen (int scrn);
   void scr_color (unsigned int color, int fgbg);
   void scr_rendition (int set, int style);
-  void scr_add_lines (const unicode_t *str, int nlines, int len);
+  void scr_add_lines (const wchar_t *str, int len, int minlines = 0);
   void scr_backspace ();
   void scr_tab (int count, bool ht = false);
   void scr_gotorc (int row, int col, int relative);

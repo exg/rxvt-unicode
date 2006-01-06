@@ -467,11 +467,11 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
           XPUSHs (sv_2mortal (newSViv (va_arg (ap, long))));
           break;
 
-        case DT_STRING:
+        case DT_STR:
           XPUSHs (sv_2mortal (newSVpv (va_arg (ap, char *), 0)));
           break;
 
-        case DT_STRING_LEN:
+        case DT_STR_LEN:
           {
             char *str = va_arg (ap, char *);
             int len = va_arg (ap, int);
@@ -479,6 +479,14 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
             XPUSHs (sv_2mortal (newSVpvn (str, len)));
           }
           break;
+
+        case DT_WCS_LEN:
+          {
+            wchar_t *wstr = va_arg (ap, wchar_t *);
+            int wlen = va_arg (ap, int);
+
+            XPUSHs (sv_2mortal (wcs2sv (wstr, wlen)));
+          }
 
         case DT_XEVENT:
           {
@@ -531,20 +539,6 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
             XPUSHs (sv_2mortal (newRV_noinc ((SV *)hv)));
           }
           break;
-
-        case DT_USTRING_LEN:
-          {
-            unicode_t *ustr = va_arg (ap, unicode_t *);
-            int ulen = va_arg (ap, int);
-            wchar_t *wstr = new wchar_t [ulen];
-
-            for (int i = ulen; i--; )
-              wstr [i] = ustr [i];
-
-            XPUSHs (sv_2mortal (wcs2sv (wstr, ulen)));
-
-            delete [] wstr;
-          }
 
         case DT_END:
           {
@@ -1063,20 +1057,8 @@ rxvt_term::scr_add_lines (SV *string)
 	CODE:
 {
         wchar_t *wstr = sv2wcs (string);
-        int wlen = wcslen (wstr);
-        unicode_t *ustr = new unicode_t [wlen];
-        int nlines = 0;
-
-        for (int i = wlen; i--; )
-          {
-            ustr [i] = wstr [i];
-            nlines += ustr [i] == '\012';
-          }
-
-        THIS->scr_add_lines (ustr, nlines, wlen);
-
+        THIS->scr_add_lines (wstr, wcslen (wstr));
         free (wstr);
-        delete [] ustr;
 }
 
 void
