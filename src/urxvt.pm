@@ -62,13 +62,17 @@ Rot-13 the selection when activated. Used via keyboard trigger:
 
 Displays a digital clock using the built-in overlay.
 
+=item mark-urls
+
+Uses per-line filtering (C<on_line_update>) to underline urls.
+
 =item example-refresh-hooks
 
 Displays a very simple digital clock in the upper right corner of the
 window. Illustrates overwriting the refresh callbacks to create your own
 overlays or changes.
 
-=item mark-urls
+=item example-filter-input
 
 A not very useful example of filtering all text output to the terminal, by
 underlining all urls that matches a certain regex (i.e. some urls :). It
@@ -224,6 +228,20 @@ can filter/change and output the text yourself by returning a true value
 and calling C<< $term->scr_add_lines >> yourself. Please note that this
 might be very slow, however, as your hook is called for B<all> text being
 output.
+
+=item on_line_update $term, $row
+
+Called whenever a line was updated or changed. Can be used to filter
+screen output (e.g. underline urls or other useless stuff). Only lines
+that are being shown will be filtered, and, due to performance reasons,
+not always immediately.
+
+The row number is always the topmost row of the line if the line spans
+multiple rows.
+
+Please note that, if you change the line, then the hook might get called
+later with the already-modified line (e.g. if unrelated parts change), so
+you cannot just toggle rendition bits, but only set them.
 
 =item on_refresh_begin $term
 
@@ -737,13 +755,13 @@ following methods:
 
 =over 4
 
-=item $text = $line->t
+=item $text = $line->t ([$new_text])
 
-Returns the full text of the line, similar to C<ROW_t>
+Returns or replaces the full text of the line, similar to C<ROW_t>
 
-=item $rend = $line->r
+=item $rend = $line->r ([$new_rend])
 
-Returns the full rendition array of the line, similar to C<ROW_r>
+Returns or replaces the full rendition array of the line, similar to C<ROW_r>
 
 =item $length = $line->l
 
