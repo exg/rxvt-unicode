@@ -922,9 +922,14 @@ struct mbstate {
 # define COMPOSE_HI 0x400fffffUL
 # define IS_COMPOSE(n) ((int32_t)(n) >= COMPOSE_LO)
 #else
-# define COMPOSE_LO 0xd800UL
-# define COMPOSE_HI 0xf8ffUL // dfff should be safer, but...
-# define IS_COMPOSE(n) (COMPOSE_LO <= (n) && (n) <= COMPOSE_HI)
+# if ENABLE_PERL
+#  define COMPOSE_LO 0xe000UL // our _own_ routiens don't like (illegal) surrogates
+#  define COMPOSE_HI 0xf8ffUL // in utf-8, so use private use area only
+# else
+#  define COMPOSE_LO 0xd800UL
+#  define COMPOSE_HI 0xf8ffUL
+# endif
+# define IS_COMPOSE(n) IN_RANGE_INC ((n), COMPOSE_LO, COMPOSE_HI)
 #endif
 
 #if ENABLE_COMBINING

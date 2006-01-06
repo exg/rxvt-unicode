@@ -467,7 +467,7 @@ sub invoke {
    if ($htype == 0) { # INIT
       my @dirs = ((split /:/, $TERM->resource ("perl_lib")), "$LIBDIR/perl");
 
-      for my $ext (map { split /:/, $TERM->resource ("perl_ext_$_") } 1, 2) {
+      for my $ext (map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2) {
          my @files = grep -f $_, map "$_/$ext", @dirs;
 
          if (@files) {

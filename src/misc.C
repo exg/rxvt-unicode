@@ -38,6 +38,7 @@ rxvt_wcstombs (const wchar_t *str, int len)
   while (len--)
     {
       ssize_t l = wcrtomb (dst, *str++, mbs);
+
       if (l < 0)
         *dst++ = '?';
       else

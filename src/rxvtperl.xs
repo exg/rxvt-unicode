@@ -849,10 +849,10 @@ rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0, int start
           {
             wchar_t *wstr = new wchar_t [THIS->ncol];
 
-            for (int col = 0; col <THIS->ncol; col++)
+            for (int col = 0; col < THIS->ncol; col++)
               wstr [col] = l.t [col];
 
-            XPUSHs (sv_2mortal (wcs2sv (wstr)));
+            XPUSHs (sv_2mortal (wcs2sv (wstr, THIS->ncol)));
 
             delete [] wstr;
           }
@@ -952,14 +952,79 @@ rxvt_term::ROW_is_longer (int row_number, int new_is_longer = -1)
         RETVAL
 
 SV *
-rxvt_term::special_encode (SV *str)
+rxvt_term::special_encode (SV *string)
 	CODE:
-        abort ();//TODO
+{
+        wchar_t *wstr = sv2wcs (string);
+        int wlen = wcslen (wstr);
+        wchar_t *rstr = new wchar_t [wlen]; // cannot become longer
+
+	rxvt_push_locale (THIS->locale);
+
+        wchar_t *r = rstr;
+        for (wchar_t *s = wstr; *s; s++)
+          if (wcwidth (*s) == 0)
+            {
+              if (r == rstr)
+                croak ("leading combining character unencodable");
+
+              unicode_t n = rxvt_compose (r[-1], *s);
+              if (n == NOCHAR)
+                n = rxvt_composite.compose (r[-1], *s);
+
+              r[-1] = n;
+            }
+#if !UNICODE_3
+          else if (*s >= 0x10000)
+            *r++ = rxvt_composite.compose (*s);
+#endif
+          else
+            *r++ = *s;
+
+	rxvt_pop_locale ();
+
+        RETVAL = wcs2sv (rstr, r - rstr);
+
+        delete [] rstr;
+}
+	OUTPUT:
+        RETVAL
 
 SV *
-rxvt_term::special_decode (SV *str)
+rxvt_term::special_decode (SV *text)
 	CODE:
-        abort ();//TODO
+{
+        wchar_t *wstr = sv2wcs (text);
+        int wlen = wcslen (wstr);
+        int dlen = 0;
+
+        // find length
+        for (wchar_t *s = wstr; *s; s++)
+          if (*s == NOCHAR)
+            ;
+          else if (IS_COMPOSE (*s))
+            dlen += rxvt_composite.expand (*s, 0);
+          else
+            dlen++;
+
+        wchar_t *rstr = new wchar_t [dlen];
+
+        // decode
+        wchar_t *r = rstr;
+        for (wchar_t *s = wstr; *s; s++)
+          if (*s == NOCHAR)
+            ;
+          else if (IS_COMPOSE (*s))
+            r += rxvt_composite.expand (*s, r);
+          else
+            *r++ = *s;
+
+        RETVAL = wcs2sv (rstr, r - rstr);
+
+        delete [] rstr;
+}
+	OUTPUT:
+        RETVAL
 
 void
 rxvt_term::_resource (char *name, int index, SV *newval = 0)

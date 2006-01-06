@@ -16,6 +16,9 @@ my @patterns = (
       [ab-zA-Z0-9\-\@;\/?:&=%\$_+!*\x27(),~]   # do not include a trailing dot, its wrong too often
    )}x,
 
+   # common forms of quoting
+   qr{(?:^|\s) [‘`] ([^‘`’']+) [’'] (?:\s|$)}x,
+
    # shell-like argument quoting
    qr{\G [\ \t|&;<>()] *(
       (?:
@@ -24,8 +27,10 @@ my @patterns = (
          | " (?: [^\\"]+ | \\. )* "
          | ' [^']* '
       )+
-   )}xs,
+   )}x,
 );
+
+my $x = "‘hallole’";
 
 sub on_sel_extend {
    my ($self) = @_;
