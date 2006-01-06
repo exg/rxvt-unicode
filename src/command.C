@@ -4456,6 +4456,9 @@ const unsigned int MAX_PTY_WRITE = 255; // minimum MAX_INPUT
 void
 rxvt_term::tt_write (const char *data, unsigned int len)
 {
+  if (pty.pty < 0)
+    return;
+
   if (v_buflen == 0)
     {
       ssize_t written = write (pty.pty, data, min (len, MAX_PTY_WRITE));
