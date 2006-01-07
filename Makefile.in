@@ -85,6 +85,7 @@ distclean:
 
 distdir:
 	cd doc && $(MAKE) distdepend
+	cd src && $(MAKE) depend
 	rm -rf $(VERNAME)
 	mkdir $(VERNAME)
 	rsync -aR `cat MANIFEST` $(VERNAME)/.
