@@ -586,15 +586,22 @@ PROTOTYPES: ENABLE
 
 BOOT:
 {
-  HV *stash = gv_stashpv ("urxvt", 1);
-# define export_const_iv(name) newCONSTSUB (stash, # name, newSViv (name));
+  sv_setsv (get_sv ("urxvt::LIBDIR", 1), newSVpvn (LIBDIR, sizeof (LIBDIR) - 1));
 
   AV *hookname = get_av ("urxvt::HOOKNAME", 1);
 # define def(sym) av_store (hookname, HOOK_ ## sym, newSVpv (# sym, 0));
 # include "hookinc.h"
 # undef def
 
-  
+  HV *option = get_hv ("urxvt::OPTION", 1);
+# define def(name,val) hv_store (option, # name, sizeof (# name) - 1, newSVuv (Opt_ ## name), 0);
+# define nodef(name)
+# include "optinc.h"
+# undef nodef
+# undef def
+
+  HV *stash = gv_stashpv ("urxvt", 1);
+# define export_const_iv(name) newCONSTSUB (stash, # name, newSViv (name));
   export_const_iv (DEFAULT_RSTYLE);
   export_const_iv (OVERLAY_RSTYLE);
   export_const_iv (RS_Bold);
@@ -618,8 +625,6 @@ BOOT:
   export_const_iv (Button4Mask);
   export_const_iv (Button5Mask);
   export_const_iv (AnyModifier);
-
-  sv_setsv (get_sv ("urxvt::LIBDIR", 1), newSVpvn (LIBDIR, sizeof (LIBDIR) - 1));
 }
 
 SV *

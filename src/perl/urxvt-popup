@@ -3,8 +3,6 @@
 # this extension implements popup-menu functionality for urxvt. it works
 # together with the urxvt::popup class.
 
-use List::Util;
-
 sub refresh {
    my ($self) = @_;
 
