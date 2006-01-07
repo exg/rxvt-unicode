@@ -55,8 +55,9 @@ sub on_button_release {
       $self->destroy;
    }
 
+   $self->{press}[$event->{button}] = 0;
+
    if ($event->{button} == 1) {
-      $self->{press}[$event->{button}] = 0;
       refresh $self;
 
       warn "$event->{row} $event->{col}\n";#d#
@@ -113,7 +114,7 @@ sub on_start {
 
    # might fail, but try anyways
    $self->grab ($self->{data}{event}{time}, 1)
-      and $self->allow_events_sync;
+      and $self->allow_events_async;
 
    on_button_press $self, $self->{data}{event} if $self->{data}{event}{button};
 
@@ -128,7 +129,7 @@ sub on_map_notify {
 
    # should definitely not fail
    $self->grab ($self->{data}{event}{time}, 1)
-      and $self->allow_events_sync;
+      and $self->allow_events_async;
 }
 
 sub on_destroy {
