@@ -995,7 +995,7 @@ sub show {
 
    urxvt->new ("--perl-lib" => "", "--perl-ext-common" => "", "-pty-fd" => -1, "-sl" => 0, "-b" => 0,
                "--transient-for" => $self->{term}->parent,
-               "-pe" => "urxvt_popup")
+               "-pe" => "urxvt-popup")
       or die "unable to create popup window\n";
 }
 
