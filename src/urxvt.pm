@@ -399,8 +399,10 @@ Change the custom value.
 
 package urxvt;
 
+use utf8;
 use strict;
 use Scalar::Util ();
+use List::Util ();
 
 our $TERM;
 our @HOOKNAME;
@@ -1002,7 +1004,18 @@ sub add_item {
 sub add_button {
    my ($self, $text, $cb) = @_;
 
-   $self->add_item ({ type => "button", text => "[ $text ]", activate => $cb });
+   $self->add_item ({ type => "button", text => "[ $text ]", activate => $cb,
+      render => sub { $_[0]{text} },
+   });
+}
+
+sub add_toggle {
+   my ($self, $text, $cb, $value) = @_;
+
+   $self->add_item ({ type => "button", text => "  $text", value => $value,
+      render => sub { ($_[0]{value} ? "✔" : " ") . substr $_[0]{text}, 1 },
+      activate => sub { $cb->($_[0]{value} = !$_[0]{value}); },
+   });
 }
 
 sub show {

@@ -18,7 +18,9 @@ sub refresh {
          $rend = $self->{press} ? "\x1b[m" : "\x1b[30;46m";
       }
 
-      $cmd .= "$rend\x1b[K" . $self->locale_encode ($item->{text}) . "\015\012";
+      $cmd .= "$rend\x1b[K";
+      $cmd .= $self->locale_encode ($item->{render}->($item));
+      $cmd .= "\015\012";
 
       $row++;
    }
