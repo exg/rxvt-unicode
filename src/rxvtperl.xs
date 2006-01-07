@@ -28,6 +28,7 @@
 
 #include "../config.h"
 
+#include <cstddef>
 #include <cstdarg>
 
 #include "rxvt.h"
@@ -601,7 +602,22 @@ BOOT:
   export_const_iv (RS_Blink);
   export_const_iv (RS_RVid);
   export_const_iv (RS_Uline);
+
   export_const_iv (CurrentTime);
+  export_const_iv (ShiftMask);
+  export_const_iv (LockMask);
+  export_const_iv (ControlMask);
+  export_const_iv (Mod1Mask);
+  export_const_iv (Mod2Mask);
+  export_const_iv (Mod3Mask);
+  export_const_iv (Mod4Mask);
+  export_const_iv (Mod5Mask);
+  export_const_iv (Button1Mask);
+  export_const_iv (Button2Mask);
+  export_const_iv (Button3Mask);
+  export_const_iv (Button4Mask);
+  export_const_iv (Button5Mask);
+  export_const_iv (AnyModifier);
 
   sv_setsv (get_sv ("urxvt::LIBDIR", 1), newSVpvn (LIBDIR, sizeof (LIBDIR) - 1));
 }
@@ -812,8 +828,7 @@ rxvt_term::locale_decode (SV *octets)
 	OUTPUT:
         RETVAL
 
-# very portable, especially on objects as opposed to pods
-#define TERM_OFFSET(sym) (((char *)&((TermWin_t *)0)->sym) - (char *)(TermWin_t *)0)
+#define TERM_OFFSET(sym) offsetof (TermWin_t, sym)
 
 #define TERM_OFFSET_width      TERM_OFFSET(width)
 #define TERM_OFFSET_height     TERM_OFFSET(height)
@@ -845,6 +860,22 @@ rxvt_term::width ()
            nsaved     = TERM_OFFSET_nsaved
 	CODE:
         RETVAL = *(int *)((char *)THIS + ix);
+        OUTPUT:
+        RETVAL
+
+unsigned int
+rxvt_term::ModLevel3Mask ()
+	ALIAS:
+           ModLevel3Mask  = 0
+           ModMetaMask    = 1
+           ModNumLockMask = 2
+	CODE:
+        switch (ix)
+          {
+           case 0: RETVAL = THIS->ModLevel3Mask;  break;
+           case 1: RETVAL = THIS->ModMetaMask;    break;
+           case 2: RETVAL = THIS->ModNumLockMask; break;
+          }
         OUTPUT:
         RETVAL
 

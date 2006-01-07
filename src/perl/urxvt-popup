@@ -132,8 +132,6 @@ sub on_map_notify {
       and $self->allow_events_async;
 }
 
-sub on_destroy {
-}
 
 
 

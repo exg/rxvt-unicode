@@ -333,6 +333,14 @@ correct place, e.g. on stderr of the connecting urxvtc client.
 
 Returns the "current time" (as per the event loop).
 
+=item urxvt::CurrentTime
+
+=item urxvt::ShiftMask, LockMask, ControlMask, Mod1Mask, Mod2Mask,
+Mod3Mask, Mod4Mask, Mod5Mask, Button1Mask, Button2Mask, Button3Mask,
+Button4Mask, Button5Mask, AnyModifier
+
+Various constants for use in X events.
+
 =back
 
 =head2 RENDITION
@@ -777,6 +785,15 @@ Return the window id of the terminal window.
 =item $lines_in_scrollback = $term->nsaved
 
 Return various integers describing terminal characteristics.
+
+=item $modifiermask = $term->ModLevel3Mask
+
+=item $modifiermask = $term->ModMetaMask
+
+=item $modifiermask = $term->ModNumLockMask
+
+Return the modifier masks corresponding to the "ISO Level 3 Shift" (often
+AltGr), the meta key (often Alt) and the num lock key, if applicable.
 
 =item $view_start = $term->view_start ([$newvalue])
 
