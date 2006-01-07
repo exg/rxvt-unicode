@@ -181,16 +181,6 @@ processing.
 
 See the F<selection> example extension.
 
-=item on_focus_in $term
-
-Called whenever the window gets the keyboard focus, before urxvt does
-focus in processing.
-
-=item on_focus_out $term
-
-Called wheneever the window loses keyboard focus, before urxvt does focus
-out processing.
-
 =item on_view_change $term, $offset
 
 Called whenever the view offset changes, i..e the user or program
@@ -263,6 +253,16 @@ Called whenever the user presses a key combination that has a
 C<perl:string> action bound to it (see description of the B<keysym>
 resource in the @@RXVT_NAME@@(1) manpage).
 
+=item on_focus_in $term
+
+Called whenever the window gets the keyboard focus, before rxvt-unicode
+does focus in processing.
+
+=item on_focus_out $term
+
+Called wheneever the window loses keyboard focus, before rxvt-unicode does
+focus out processing.
+
 =item on_key_press $term, $event, $octets
 
 =item on_key_release $term, $event
@@ -272,6 +272,10 @@ resource in the @@RXVT_NAME@@(1) manpage).
 =item on_button_release $term, $event
 
 =item on_motion_notify $term, $event
+
+=item on_map_notify $term, $event
+
+=item on_unmap_notify $term, $event
 
 Called whenever the corresponding X event is received for the terminal If
 the hook returns true, then the even will be ignored by rxvt-unicode.
@@ -536,6 +540,14 @@ sub urxvt::term::proxy::AUTOLOAD {
    goto &$urxvt::term::proxy::AUTOLOAD;
 }
 
+sub urxvt::destroy_hook::DESTROY {
+   ${$_[0]}->();
+}
+
+sub urxvt::destroy_hook(&) {
+   bless \shift, urxvt::destroy_hook::
+}
+
 =head2 The C<urxvt::term> Class
 
 =over 4
@@ -583,7 +595,7 @@ list:
 sub urxvt::term::resource($$;$) {
    my ($self, $name) = (shift, shift);
    unshift @_, $self, $name, ($name =~ s/\s*\+\s*(\d+)$// ? $1 : 0);
-   goto &urxvt::term::_resource;
+   &urxvt::term::_resource
 }
 
 =item $rend = $term->rstyle ([$new_rstyle])
@@ -668,6 +680,33 @@ If visible, hide the overlay, but do not destroy it.
 If hidden, display the overlay again.
 
 =back
+
+=item $popup = $term->popup ($event)
+
+Creates a new C<urxvt::popup> object that implements a popup menu. The
+C<$event> I<must> be the event causing the menu to pop up (a button event,
+currently).
+
+=cut
+
+sub urxvt::term::popup {
+   my ($self, $event) = @_;
+
+   $self->grab ($event->{time}, 1)
+      or return;
+
+   my $popup = bless {
+      term  => $self,
+      event => $event,
+   }, urxvt::popup::;
+
+   Scalar::Util::weaken $popup->{term};
+
+   $self->{_destroy}{$popup} = urxvt::destroy_hook { $popup->{popup}->destroy };
+   Scalar::Util::weaken $self->{_destroy}{$popup};
+
+   $popup
+}
 
 =item $cellwidth = $term->strwidth ($string)
 
@@ -928,6 +967,43 @@ Converts rxvt-unicodes text reprsentation into a perl string. See
 C<< $term->ROW_t >> for details.
 
 =back
+
+=head2 The C<urxvt::popup> Class
+
+=over 4
+
+=cut
+
+package urxvt::popup;
+
+sub add_item {
+   my ($self, $item) = @_;
+
+   push @{ $self->{item} }, $item;
+}
+
+sub add_button {
+   my ($self, $text, $cb) = @_;
+
+   $self->add_item ({ type => "button", text => "[ $text ]", activate => $cb });
+}
+
+sub show {
+   my ($self) = @_;
+
+   local $urxvt::popup::self = $self;
+
+   urxvt->new ("--perl-lib" => "", "--perl-ext-common" => "", "-pty-fd" => -1, "-sl" => 0, "-b" => 0,
+               "--transient-for" => $self->{term}->parent,
+               "-pe" => "urxvt_popup")
+      or die "unable to create popup window\n";
+}
+
+sub DESTROY {
+   my ($self) = @_;
+
+   $self->{term}->ungrab;
+}
 
 =head2 The C<urxvt::timer> Class
 

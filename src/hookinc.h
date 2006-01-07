@@ -12,9 +12,6 @@
 
   def (SEL_CLICK)
 
-  def (FOCUS_IN)
-  def (FOCUS_OUT)
-
   def (VIEW_CHANGE)
   def (SCROLL_BACK)
   def (LINE_UPDATE)
@@ -26,8 +23,12 @@
 
   def (KEYBOARD_COMMAND)
 
+  def (FOCUS_IN)
+  def (FOCUS_OUT)
   def (KEY_PRESS)
   def (KEY_RELEASE)
   def (BUTTON_PRESS)
   def (BUTTON_RELEASE)
   def (MOTION_NOTIFY)
+  def (MAP_NOTIFY)
+  def (UNMAP_NOTIFY)

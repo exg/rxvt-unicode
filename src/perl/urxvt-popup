@@ -1,0 +1,137 @@
+#! perl
+
+use List::Util;
+
+sub refresh {
+   my ($self) = @_;
+
+   my $cmd = "\x1b[H";
+
+   my $row = 1;
+   for my $item (@{ $self->{data}{item} }) {
+      my $rend = "\x1b[30;47m";
+
+      if ($row == $self->{hover}) {
+         $rend = $self->{press} ? "\x1b[m" : "\x1b[30;46m";
+      }
+
+      $cmd .= "$rend\x1b[K" . $self->locale_encode ($item->{text}) . "\015\012";
+
+      $row++;
+   }
+
+   $self->cmd_parse (substr $cmd, 0, -2);
+}
+
+sub on_motion_notify {
+   my ($self, $event) = @_;
+
+   $self->{hover} = $event->{row} + 1;
+   refresh $self;
+
+   1
+}
+
+sub on_button_press {
+   my ($self, $event) = @_;
+
+   $self->{press}[$event->{button}] = 1;
+   refresh $self;
+
+   1
+}
+
+sub on_button_release {
+   my ($self, $event) = @_;
+
+   my $row = $event->{row};
+   my $col = $event->{col};
+
+   if ($event->{button} == $self->{data}{event}{button}) {
+      $self->ungrab;
+      $self->destroy;
+   }
+
+   if ($event->{button} == 1) {
+      $self->{press}[$event->{button}] = 0;
+      refresh $self;
+
+      warn "$event->{row} $event->{col}\n";#d#
+
+      if ($col >= 0 && $col < $self->ncol
+          && $row >= 0 && $row < @{ $self->{data}{item} }) {
+         $self->{data}{item}[$row]{activate}->($event);
+         print "ok\n";
+      }
+   }
+
+   1
+}
+
+sub on_focus_out {
+   my ($self) = @_;
+
+   delete $self->{hover};
+   refresh $self;
+
+   ()
+}
+
+sub on_init {
+   my ($self) = @_;
+
+   my $data = $self->{data} = $urxvt::popup::self;
+
+   $_->{width} = $self->strwidth ($_->{text})
+      for @{ $data->{item} };
+
+   $self->resource ($_ => $data->{term}->resource ($_))
+      for qw(font boldFont italicFont boldItalicFont color+0 color+1);
+
+   my $width  = List::Util::max map $_->{width}, @{ $data->{item} };
+   my $height = @{ $data->{item} };
+
+   my $pos = "";
+
+   if ($data->{event}) {
+      my $x = int List::Util::max 0, $data->{event}{x_root} - $width * $data->{term}->fwidth  * 0.5;
+      my $y = int List::Util::max 0, $data->{event}{y_root} -          $data->{term}->fheight * 0.5;
+
+      $pos = "+$x+$y";
+   }
+
+   $self->resource (geometry => "${width}x${height}$pos");
+
+   ()
+}
+
+sub on_start {
+   my ($self) = @_;
+
+   # might fail, but try anyways
+   $self->grab ($self->{data}{event}{time}, 1)
+      and $self->allow_events_sync;
+
+   on_button_press $self, $self->{data}{event} if $self->{data}{event}{button};
+
+   $self->cmd_parse ("\x1b[?25l\x1b[?7l");
+   refresh $self;
+
+   ()
+}
+
+sub on_map_notify {
+   my ($self, $event) = @_;
+
+   # should definitely not fail
+   $self->grab ($self->{data}{event}{time}, 1)
+      and $self->allow_events_sync;
+}
+
+sub on_destroy {
+}
+
+
+
+
+

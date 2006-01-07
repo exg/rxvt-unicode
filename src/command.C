@@ -1564,18 +1564,20 @@ rxvt_term::x_cb (XEvent &ev)
         selection_send (ev.xselectionrequest);
         break;
 
-      case UnmapNotify:
-        mapped = 0;
-#ifdef TEXT_BLINK
-        text_blink_ev.stop ();
-#endif
-        break;
-
       case MapNotify:
         mapped = 1;
 #ifdef TEXT_BLINK
         text_blink_ev.start (NOW + TEXT_BLINK_INTERVAL);
 #endif
+        HOOK_INVOKE ((this, HOOK_MAP_NOTIFY, DT_XEVENT, &ev, DT_END));
+        break;
+
+      case UnmapNotify:
+        mapped = 0;
+#ifdef TEXT_BLINK
+        text_blink_ev.stop ();
+#endif
+        HOOK_INVOKE ((this, HOOK_UNMAP_NOTIFY, DT_XEVENT, &ev, DT_END));
         break;
 
 #ifdef TRANSPARENT

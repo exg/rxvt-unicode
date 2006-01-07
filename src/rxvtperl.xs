@@ -585,22 +585,25 @@ PROTOTYPES: ENABLE
 
 BOOT:
 {
-# define export_const(name) newCONSTSUB (gv_stashpv ("urxvt", 1), # name, newSViv (name));
+  HV *stash = gv_stashpv ("urxvt", 1);
+# define export_const_iv(name) newCONSTSUB (stash, # name, newSViv (name));
+
   AV *hookname = get_av ("urxvt::HOOKNAME", 1);
 # define def(sym) av_store (hookname, HOOK_ ## sym, newSVpv (# sym, 0));
 # include "hookinc.h"
 # undef def
 
-  export_const (DEFAULT_RSTYLE);
-  export_const (OVERLAY_RSTYLE);
-  export_const (RS_Bold);
-  export_const (RS_Italic);
-  export_const (RS_Blink);
-  export_const (RS_RVid);
-  export_const (RS_Uline);
-  export_const (CurrentTime);
+  
+  export_const_iv (DEFAULT_RSTYLE);
+  export_const_iv (OVERLAY_RSTYLE);
+  export_const_iv (RS_Bold);
+  export_const_iv (RS_Italic);
+  export_const_iv (RS_Blink);
+  export_const_iv (RS_RVid);
+  export_const_iv (RS_Uline);
+  export_const_iv (CurrentTime);
 
-  sv_setpv (get_sv ("urxvt::LIBDIR", 1), LIBDIR);
+  sv_setsv (get_sv ("urxvt::LIBDIR", 1), newSVpvn (LIBDIR, sizeof (LIBDIR) - 1));
 }
 
 SV *
