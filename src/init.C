@@ -1093,7 +1093,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   if (OPTION (Opt_pointerBlank)
 #ifdef ENABLE_PERL
-      || self
+      || perl.self
 #endif
       )
     vt_emask |= PointerMotionMask;

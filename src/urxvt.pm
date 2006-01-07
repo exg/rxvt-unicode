@@ -19,8 +19,8 @@
 
 =head1 DESCRIPTION
 
-Everytime a terminal object gets created, scripts specified via the
-C<perl> resource are loaded and associated with it.
+Everytime a terminal object gets created, extension scripts specified via
+the C<perl> resource are loaded and associated with it.
 
 Scripts are compiled in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as UTF-8.
@@ -122,10 +122,11 @@ The following subroutines can be declared in extension files, and will be
 called whenever the relevant event happens.
 
 The first argument passed to them is an object private to each terminal
-and extension package.  You can call all C<urxvt::term> methods on it, but
+and extension package. You can call all C<urxvt::term> methods on it, but
 its not a real C<urxvt::term> object. Instead, the real C<urxvt::term>
 object that is shared between all packages is stored in the C<term>
-member.
+member. It is, however, blessed intot he package of the extension script,
+so for all practical purposes you can treat an extension script as a class.
 
 All of them must return a boolean value. If it is true, then the event
 counts as being I<consumed>, and the invocation of other hooks is skipped,
@@ -430,22 +431,23 @@ sub register_package($) {
    }
 }
 
-my $script_pkg = "script0000";
-my %script_pkg;
+my $extension_pkg = "extension0000";
+my %extension_pkg;
 
 # load a single script into its own package, once only
-sub script_package($) {
+sub extension_package($) {
    my ($path) = @_;
 
-   $script_pkg{$path} ||= do {
-      my $pkg = "urxvt::" . ($script_pkg++);
+   $extension_pkg{$path} ||= do {
+      my $pkg = "urxvt::" . ($extension_pkg++);
 
-      verbose 3, "loading script '$path' into package '$pkg'";
+      verbose 3, "loading extension '$path' into package '$pkg'";
 
       open my $fh, "<:raw", $path
          or die "$path: $!";
 
       my $source = "package $pkg; use strict; use utf8;\n"
+                   . "use base urxvt::term::proxy::;\n"
                    . "#line 1 \"$path\"\n{\n"
                    . (do { local $/; <$fh> })
                    . "\n};\n1";
@@ -470,7 +472,7 @@ sub invoke {
          my @files = grep -f $_, map "$_/$ext", @dirs;
 
          if (@files) {
-            register_package script_package $files[0];
+            register_package extension_package $files[0];
          } else {
             warn "perl extension '$ext' not found in perl library search path\n";
          }
@@ -486,14 +488,17 @@ sub invoke {
       keys %$cb;
 
       while (my ($pkg, $cb) = each %$cb) {
-         $retval = $cb->(
-            $TERM->{_pkg}{$pkg} ||= do {
-               my $proxy = bless { }, urxvt::term::proxy::;
-               Scalar::Util::weaken ($proxy->{term} = $TERM);
-               $proxy
-            },
-            @_,
-         ) and last;
+         eval {
+            $retval = $cb->(
+               $TERM->{_pkg}{$pkg} ||= do {
+                  my $proxy = bless { }, $pkg;
+                  Scalar::Util::weaken ($proxy->{term} = $TERM);
+                  $proxy
+               },
+               @_,
+            ) and last;
+         };
+         warn $@ if $@;#d#
       }
    }
 

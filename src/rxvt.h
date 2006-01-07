@@ -21,6 +21,8 @@
 #include "iom.h"
 #include "salloc.h"
 
+#include "rxvtperl.h"
+
 #if ENABLE_FRILLS
 # define ENABLE_XEMBED 1
 # define ENABLE_EWMH   1
@@ -966,11 +968,11 @@ extern class rxvt_composite_vec rxvt_composite;
 #endif
 
 struct rxvt_term : zero_initialized, rxvt_vars {
-  log_callback *log_hook;               // log error messages through this hook, if != 0
+  log_callback   *log_hook;               // log error messages through this hook, if != 0
   getfd_callback *getfd_hook;           // convert remote to local fd, if != 0
 
 #if ENABLE_PERL
-  void *self; // perl's $self
+  rxvt_perl_term  perl;
 #endif
 
   struct mbstate  mbstate;              // current input multibyte state

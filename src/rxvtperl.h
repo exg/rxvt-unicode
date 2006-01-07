@@ -28,6 +28,12 @@ enum hook_type {
   HOOK_NUM,
 };
 
+struct rxvt_perl_term
+{
+  void *self;
+  unsigned long grabtime;
+};
+
 struct rxvt_perl_interp
 {
   rxvt_perl_interp ();

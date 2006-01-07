@@ -103,7 +103,7 @@ SvPTR (SV *sv, const char *klass)
   return (long)mg->mg_ptr;
 }
 
-#define newSVterm(term) SvREFCNT_inc ((SV *)term->self)
+#define newSVterm(term) SvREFCNT_inc ((SV *)term->perl.self)
 #define SvTERM(sv) (rxvt_term *)SvPTR (sv, "urxvt::term")
 
 /////////////////////////////////////////////////////////////////////////////
@@ -292,14 +292,14 @@ overlay::show ()
 {
   char key[33]; sprintf (key, "%32lx", (long)this);
 
-  HV *hv = (HV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)THIS->self), "_overlay", 8, 0));
+  HV *hv = (HV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)THIS->perl.self), "_overlay", 8, 0));
   hv_store (hv, key, 32, newSViv ((long)this), 0);
 }
 
 void
 overlay::hide ()
 {
-  SV **ovs = hv_fetch ((HV *)SvRV ((SV *)THIS->self), "_overlay", 8, 0);
+  SV **ovs = hv_fetch ((HV *)SvRV ((SV *)THIS->perl.self), "_overlay", 8, 0);
 
   if (ovs)
     {
@@ -417,10 +417,10 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 
   if (htype == HOOK_INIT) // first hook ever called
     {
-      term->self = (void *)newSVptr ((void *)term, "urxvt::term");
-      hv_store ((HV *)SvRV ((SV *)term->self), "_overlay", 8, newRV_noinc ((SV *)newHV ()), 0);
+      term->perl.self = (void *)newSVptr ((void *)term, "urxvt::term");
+      hv_store ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, newRV_noinc ((SV *)newHV ()), 0);
     }
-  else if (!term->self)
+  else if (!term->perl.self)
     return false; // perl not initialized for this instance
   else if (htype == HOOK_DESTROY)
     {
@@ -428,7 +428,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
     }
   else if (htype == HOOK_REFRESH_BEGIN || htype == HOOK_REFRESH_END)
     {
-      HV *hv = (HV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)term->self), "_overlay", 8, 0));
+      HV *hv = (HV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, 0));
 
       if (HvKEYS (hv))
         {
@@ -564,8 +564,8 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 
             if (htype == HOOK_DESTROY)
               {
-                clearSVptr ((SV *)term->self);
-                SvREFCNT_dec ((SV *)term->self);
+                clearSVptr ((SV *)term->perl.self);
+                SvREFCNT_dec ((SV *)term->perl.self);
               }
 
             return count;
@@ -598,6 +598,7 @@ BOOT:
   export_const (RS_Blink);
   export_const (RS_RVid);
   export_const (RS_Uline);
+  export_const (CurrentTime);
 
   sv_setpv (get_sv ("urxvt::LIBDIR", 1), LIBDIR);
 }
@@ -627,7 +628,7 @@ new (...)
             croak ("exception caught while initializing new terminal instance");
           }
 
-        RETVAL = term && term->self ? newSVterm (term) : &PL_sv_undef;
+        RETVAL = term && term->perl.self ? newSVterm (term) : &PL_sv_undef;
 }
 	OUTPUT:
         RETVAL
@@ -708,15 +709,55 @@ void
 rxvt_term::destroy ()
 
 void
-rxvt_term::grab (int eventtime)
+rxvt_term::grab_button (int button, U32 modifiers)
+	CODE:
+	XGrabButton (THIS->display->display, button, modifiers, THIS->vt, 1,
+                     ButtonPressMask | ButtonReleaseMask | EnterWindowMask | LeaveWindowMask | PointerMotionMask,
+                     GrabModeSync, GrabModeSync, None, None);
+
+bool
+rxvt_term::grab (U32 eventtime, int sync = 0)
 	CODE:
 {
-return;
-        XGrabPointer (THIS->display->display, THIS->vt, 0,
-                      ButtonPressMask | ButtonReleaseMask | EnterWindowMask | LeaveWindowMask | PointerMotionMask,
-                      GrabModeAsync, GrabModeAsync, None, None, eventtime);
-        XGrabKeyboard (THIS->display->display, THIS->vt, 0, GrabModeAsync, GrabModeAsync, eventtime);
+        int mode = sync ? GrabModeSync : GrabModeAsync;
+
+        THIS->perl.grabtime = 0;
+
+        if (!XGrabPointer (THIS->display->display, THIS->vt, 0,
+                           ButtonPressMask | ButtonReleaseMask | EnterWindowMask | LeaveWindowMask | PointerMotionMask,
+                           mode, mode, None, None, eventtime))
+          if (!XGrabKeyboard (THIS->display->display, THIS->vt, 0, mode, mode, eventtime))
+            THIS->perl.grabtime = eventtime;
+          else
+            XUngrabPointer (THIS->display->display, eventtime);
+
+        RETVAL = !!THIS->perl.grabtime;
 }
+	OUTPUT:
+        RETVAL
+
+void
+rxvt_term::allow_events_async (U32 eventtime = THIS->perl.grabtime)
+	CODE:
+        XAllowEvents (THIS->display->display, AsyncBoth, eventtime);
+
+void
+rxvt_term::allow_events_sync (U32 eventtime = THIS->perl.grabtime)
+	CODE:
+        XAllowEvents (THIS->display->display, SyncBoth, eventtime);
+
+void
+rxvt_term::allow_events_replay (U32 eventtime = THIS->perl.grabtime)
+	CODE:
+        XAllowEvents (THIS->display->display, ReplayPointer, eventtime);
+        XAllowEvents (THIS->display->display, ReplayKeyboard, eventtime);
+
+void
+rxvt_term::ungrab (U32 eventtime = THIS->perl.grabtime)
+	CODE:
+        THIS->perl.grabtime = 0;
+        XUngrabKeyboard (THIS->display->display, eventtime);
+        XUngrabPointer (THIS->display->display, eventtime);
 
 int
 rxvt_term::strwidth (SV *str)
@@ -1111,7 +1152,7 @@ rxvt_term::cur (...)
 }
 
 int
-rxvt_term::selection_grab (int eventtime = CurrentTime)
+rxvt_term::selection_grab (U32 eventtime)
 
 void
 rxvt_term::selection (SV *newtext = 0)
