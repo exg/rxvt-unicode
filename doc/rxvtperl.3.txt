@@ -47,6 +47,15 @@ DESCRIPTION
     digital-clock
         Displays a digital clock using the built-in overlay.
 
+    mark-urls
+        Uses per-line display filtering ("on_line_update") to underline
+        urls.
+
+    block-graphics-to-ascii
+        A not very useful example of filtering all text output to the
+        terminal, by replacing all line-drawing characters (U+2500 ..
+        U+259F) by a similar-looking ascii character.
+
     example-refresh-hooks
         Displays a very simple digital clock in the upper right corner of
         the window. Illustrates overwriting the refresh callbacks to create
@@ -64,9 +73,26 @@ DESCRIPTION
     the like inside the terminal object so they get destroyed as soon as the
     terminal is destroyed.
 
+    Argument names also often indicate the type of a parameter. Here are
+    some hints on what they mean:
+
+    $text
+        Rxvt-unicodes special way of encoding text, where one "unicode"
+        character always represents one screen cell. See row_t for a
+        discussion of this format.
+
+    $string
+        A perl text string, with an emphasis on *text*. It can store all
+        unicode characters and is to be distinguished with text encoded in a
+        specific encoding (often locale-specific) and binary data.
+
+    $octets
+        Either binary data or - more common - a text string encoded in a
+        locale-specific way.
+
   Hooks
-    The following subroutines can be declared in loaded scripts, and will be
-    called whenever the relevant event happens.
+    The following subroutines can be declared in extension files, and will
+    be called whenever the relevant event happens.
 
     The first argument passed to them is an object private to each terminal
     and extension package. You can call all "urxvt::term" methods on it, but
@@ -83,7 +109,10 @@ DESCRIPTION
 
     on_init $term
         Called after a new terminal object has been initialized, but before
-        windows are created or the command gets run.
+        windows are created or the command gets run. Most methods are unsafe
+        to call or deliver senseless data, as terminal size and other
+        characteristics have not yet been determined. You can safely query
+        and change resources, though.
 
     on_reset $term
         Called after the screen is "reset" for any reason, such as resizing
@@ -157,6 +186,27 @@ DESCRIPTION
         receive, as its source can not easily be controleld (e-mail content,
         messages from other users on the same system etc.).
 
+    on_add_lines $term, $string
+        Called whenever text is about to be output, with the text as
+        argument. You can filter/change and output the text yourself by
+        returning a true value and calling "$term->scr_add_lines" yourself.
+        Please note that this might be very slow, however, as your hook is
+        called for all text being output.
+
+    on_line_update $term, $row
+        Called whenever a line was updated or changed. Can be used to filter
+        screen output (e.g. underline urls or other useless stuff). Only
+        lines that are being shown will be filtered, and, due to performance
+        reasons, not always immediately.
+
+        The row number is always the topmost row of the line if the line
+        spans multiple rows.
+
+        Please note that, if you change the line, then the hook might get
+        called later with the already-modified line (e.g. if unrelated parts
+        change), so you cannot just toggle rendition bits, but only set
+        them.
+
     on_refresh_begin $term
         Called just before the screen gets redrawn. Can be used for overlay
         or similar effects by modify terminal contents in refresh_begin, and
@@ -171,12 +221,38 @@ DESCRIPTION
         "perl:string" action bound to it (see description of the keysym
         resource in the rxvt(1) manpage).
 
+    on_key_press $term, $event, $octets
+    on_key_release $term, $event
+    on_button_press $term, $event
+    on_button_release $term, $event
+    on_motion_notify $term, $event
+        Called whenever the corresponding X event is received for the
+        terminal If the hook returns true, then the even will be ignored by
+        rxvt-unicode.
+
+        The event is a hash with most values as named by Xlib (see the
+        XEvent manpage), with the additional members "row" and "col", which
+        are the row and column under the mouse cursor.
+
+        "on_key_press" additionally receives the string rxvt-unicode would
+        output, if any, in locale-specific encoding.
+
+        subwindow.
+
   Variables in the "urxvt" Package
     $urxvt::TERM
-        The current terminal. Whenever a callback/Hook is bein executed,
-        this variable stores the current "urxvt::term" object.
+        The current terminal. This variable stores the current "urxvt::term"
+        object, whenever a callback/hook is executing.
 
   Functions in the "urxvt" Package
+    $term = new urxvt [arg...]
+        Creates a new terminal, very similar as if you had started it with
+        "system $binfile, arg...". Croaks (and probably outputs an error
+        message) if the new instance couldn't be created. Returns "undef" if
+        the new instance didn't initialise perl, and the terminal object
+        otherwise. The "init" and "start" hooks will be called during the
+        call.
+
     urxvt::fatal $errormessage
         Fatally aborts execution with the given error message. Avoid at all
         costs! The only time this is acceptable is when the terminal process
@@ -233,6 +309,9 @@ DESCRIPTION
         Change the custom value.
 
   The "urxvt::term" Class
+    $term->destroy
+        Destroy the terminal object (close the window, free resources etc.).
+
     $value = $term->resource ($name[, $newval])
         Returns the current resource value associated with a given name and
         optionally sets a new value. Setting values is most useful in the
@@ -267,9 +346,9 @@ DESCRIPTION
           shade term_name title transparent transparent_all tripleclickwords
           utmpInhibit visualBell
 
-    $rend = $term->screen_rstyle ([$new_rstyle])
-        Return and optionally change the current rendition. Text thta is
-        output by the temrianl application will use this style.
+    $rend = $term->rstyle ([$new_rstyle])
+        Return and optionally change the current rendition. Text that is
+        output by the terminal application will use this style.
 
     ($row, $col) = $term->screen_cur ([$row, $col])
         Return the current coordinates of the text cursor position and
@@ -291,20 +370,12 @@ DESCRIPTION
         $newtext.
 
         #=item $term->overlay ($x, $y, $text) # #Create a simple multi-line
-        overlay box. See the next method for details. # #=cut
-
-        sub urxvt::term::scr_overlay { die; my ($self, $x, $y, $text) = @_;
-
-           my @lines = split /\n/, $text;
-
-           my $w = 0;
-           for (map $self->strwidth ($_), @lines) {
-              $w = $_ if $w < $_;
-           }
-
-           $self->scr_overlay_new ($x, $y, $w, scalar @lines);
-           $self->scr_overlay_set (0, $_, $lines[$_]) for 0.. $#lines;
-        }
+        overlay box. See the next method for details. # #=cut # #sub
+        urxvt::term::scr_overlay { # my ($self, $x, $y, $text) = @_; # # my
+        @lines = split /\n/, $text; # # my $w = 0; # for (map
+        $self->strwidth ($_), @lines) { # $w = $_ if $w < $_; # } # #
+        $self->scr_overlay_new ($x, $y, $w, scalar @lines); #
+        $self->scr_overlay_set (0, $_, $lines[$_]) for 0.. $#lines; #}
 
     $term->overlay ($x, $y, $width, $height[, $rstyle[, $border]])
         Create a new (empty) overlay at the given position with the given
@@ -333,22 +404,44 @@ DESCRIPTION
         $overlay->show
             If hidden, display the overlay again.
 
-    $cellwidth = $term->strwidth $string
+    $cellwidth = $term->strwidth ($string)
         Returns the number of screen-cells this string would need. Correctly
         accounts for wide and combining characters.
 
-    $octets = $term->locale_encode $string
+    $octets = $term->locale_encode ($string)
         Convert the given text string into the corresponding locale
         encoding.
 
-    $string = $term->locale_decode $octets
+    $string = $term->locale_decode ($octets)
         Convert the given locale-encoded octets into a perl string.
+
+    $term->scr_add_lines ($string)
+        Write the given text string to the screen, as if output by the
+        application running inside the terminal. It may not contain command
+        sequences (escape codes), but is free to use line feeds, carriage
+        returns and tabs. The string is a normal text string, not in
+        locale-dependent encoding.
+
+        Normally its not a good idea to use this function, as programs might
+        be confused by changes in cursor position or scrolling. Its useful
+        inside a "on_add_lines" hook, though.
+
+    $term->cmd_parse ($octets)
+        Similar to "scr_add_lines", but the argument must be in the
+        locale-specific encoding of the terminal and can contain command
+        sequences (escape codes) that will be interpreted.
 
     $term->tt_write ($octets)
         Write the octets given in $data to the tty (i.e. as program input).
         To pass characters instead of octets, you should convert your
         strings first to the locale-specific encoding using
         "$term->locale_encode".
+
+    $windowid = $term->parent
+        Return the window id of the toplevel window.
+
+    $windowid = $term->vt
+        Return the window id of the terminal window.
 
     $window_width = $term->width
     $window_height = $term->height
@@ -426,11 +519,13 @@ DESCRIPTION
         about the logical line that row $row_number is part of. It supports
         the following methods:
 
-        $text = $line->t
-            Returns the full text of the line, similar to "ROW_t"
+        $text = $line->t ([$new_text])
+            Returns or replaces the full text of the line, similar to
+            "ROW_t"
 
-        $rend = $line->r
-            Returns the full rendition array of the line, similar to "ROW_r"
+        $rend = $line->r ([$new_rend])
+            Returns or replaces the full rendition array of the line,
+            similar to "ROW_r"
 
         $length = $line->l
             Returns the length of the line in cells, similar to "ROW_l".

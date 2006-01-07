@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2006-01-04" "6.3" "RXVT-UNICODE"
+.TH rxvt 1 "2006-01-07" "6.3" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -510,8 +510,8 @@ used (a longer example is in \fIdoc/embed\fR):
 \&      system "@@RXVT_NAME@@ -embed $xid &";
 \&   });
 .Ve
-.IP "\fB\-pty\-fd\fR \fIfileno\fR" 4
-.IX Item "-pty-fd fileno"
+.IP "\fB\-pty\-fd\fR \fIfile descriptor\fR" 4
+.IX Item "-pty-fd file descriptor"
 Tells @@RXVT_NAME@@ \s-1NOT\s0 to execute any commands or create a new pty/tty
 pair but instead use the given filehandle as the tty master. This is
 useful if you want to drive @@RXVT_NAME@@ as a generic terminal emulator
@@ -520,6 +520,9 @@ without having to run a program within it.
 If this switch is given, @@RXVT_NAME@@ will not create any utmp/wtmp
 entries and will not tinker with pty/tty permissions \- you have to do that
 yourself if you want that.
+.Sp
+As an extremely special case, specifying \f(CW\*(C`\-1\*(C'\fR will completely suppress
+pty/tty operations.
 .Sp
 Here is a example in perl that illustrates how this option can be used (a
 longer example is in \fIdoc/pty\-fd\fR):
@@ -543,7 +546,7 @@ longer example is in \fIdoc/pty\-fd\fR):
 .Ve
 .IP "\fB\-pe\fR \fIstring\fR" 4
 .IX Item "-pe string"
-Colon-separated list of perl extension scripts to use in this terminal
+Comma-separated list of perl extension scripts to use in this terminal
 instance. See resource \fBperl-ext\fR.
 .SH "RESOURCES (available also as long\-options)"
 .IX Header "RESOURCES (available also as long-options)"
@@ -1109,7 +1112,7 @@ info):
 .IP "\fBperl-ext\fR: \fIstring\fR" 4
 .IX Item "perl-ext: string"
 .PD
-Colon-separated list(s) of perl extension scripts to use in this terminal
+Comma-separated list(s) of perl extension scripts to use in this terminal
 instance. Each extension is looked up in the library directories, loaded
 if necessary, and bound to the current terminal instance. If this
 resource is empty or missing, then the perl interpreter will not be

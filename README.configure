@@ -106,10 +106,10 @@ CONFIGURE OPTIONS
         at start of rxvt execution. This option requires --enable-utmp to
         also be specified.
 
-    --enable-xpm-background (default: off)
+    --enable-xpm-background (default: on)
         Add support for XPM background pixmaps.
 
-    --enable-transparency (default: off)
+    --enable-transparency (default: on)
         Add support for inheriting parent backgrounds thus giving a fake
         transparency to the term.
 
@@ -121,9 +121,10 @@ CONFIGURE OPTIONS
         Add support for tinting of transparent backgrounds (requires
         "--enable-transparency").
 
-    --enable-menubar (default: off)
+    --enable-menubar (default: off) [DEPRECATED]
         Add support for our menu bar system (this interacts badly with
-        dynamic locale switching currently).
+        dynamic locale switching currently). This option is DEPRECATED and
+        will be removed in the future.
 
     --enable-rxvt-scroll (default: on)
         Add support for the original rxvt scrollbar.

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-04" "6.3" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-07" "6.3" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -194,6 +194,14 @@ Rot\-13 the selection when activated. Used via keyboard trigger:
 .IP "digital-clock" 4
 .IX Item "digital-clock"
 Displays a digital clock using the built-in overlay.
+.IP "mark-urls" 4
+.IX Item "mark-urls"
+Uses per-line display filtering (\f(CW\*(C`on_line_update\*(C'\fR) to underline urls.
+.IP "block-graphics-to-ascii" 4
+.IX Item "block-graphics-to-ascii"
+A not very useful example of filtering all text output to the terminal,
+by replacing all line-drawing characters (U+2500 .. U+259F) by a
+similar-looking ascii character.
 .IP "example-refresh-hooks" 4
 .IX Item "example-refresh-hooks"
 Displays a very simple digital clock in the upper right corner of the
@@ -211,9 +219,25 @@ When objects are destroyed on the \*(C+ side, the perl object hashes are
 emptied, so its best to store related objects such as time watchers and
 the like inside the terminal object so they get destroyed as soon as the
 terminal is destroyed.
+.PP
+Argument names also often indicate the type of a parameter. Here are some
+hints on what they mean:
+.IP "$text" 4
+.IX Item "$text"
+Rxvt-unicodes special way of encoding text, where one \*(L"unicode\*(R" character
+always represents one screen cell. See row_t for a discussion of this format.
+.IP "$string" 4
+.IX Item "$string"
+A perl text string, with an emphasis on \fItext\fR. It can store all unicode
+characters and is to be distinguished with text encoded in a specific
+encoding (often locale\-specific) and binary data.
+.IP "$octets" 4
+.IX Item "$octets"
+Either binary data or \- more common \- a text string encoded in a
+locale-specific way.
 .Sh "Hooks"
 .IX Subsection "Hooks"
-The following subroutines can be declared in loaded scripts, and will be
+The following subroutines can be declared in extension files, and will be
 called whenever the relevant event happens.
 .PP
 The first argument passed to them is an object private to each terminal
@@ -231,7 +255,10 @@ When in doubt, return a false value (preferably \f(CW\*(C`()\*(C'\fR).
 .el .IP "on_init \f(CW$term\fR" 4
 .IX Item "on_init $term"
 Called after a new terminal object has been initialized, but before
-windows are created or the command gets run.
+windows are created or the command gets run. Most methods are unsafe to
+call or deliver senseless data, as terminal size and other characteristics
+have not yet been determined. You can safely query and change resources,
+though.
 .ie n .IP "on_reset $term" 4
 .el .IP "on_reset \f(CW$term\fR" 4
 .IX Item "on_reset $term"
@@ -312,6 +339,28 @@ future.
 Be careful not ever to trust (in a security sense) the data you receive,
 as its source can not easily be controleld (e\-mail content, messages from
 other users on the same system etc.).
+.ie n .IP "on_add_lines $term\fR, \f(CW$string" 4
+.el .IP "on_add_lines \f(CW$term\fR, \f(CW$string\fR" 4
+.IX Item "on_add_lines $term, $string"
+Called whenever text is about to be output, with the text as argument. You
+can filter/change and output the text yourself by returning a true value
+and calling \f(CW\*(C`$term\->scr_add_lines\*(C'\fR yourself. Please note that this
+might be very slow, however, as your hook is called for \fBall\fR text being
+output.
+.ie n .IP "on_line_update $term\fR, \f(CW$row" 4
+.el .IP "on_line_update \f(CW$term\fR, \f(CW$row\fR" 4
+.IX Item "on_line_update $term, $row"
+Called whenever a line was updated or changed. Can be used to filter
+screen output (e.g. underline urls or other useless stuff). Only lines
+that are being shown will be filtered, and, due to performance reasons,
+not always immediately.
+.Sp
+The row number is always the topmost row of the line if the line spans
+multiple rows.
+.Sp
+Please note that, if you change the line, then the hook might get called
+later with the already-modified line (e.g. if unrelated parts change), so
+you cannot just toggle rendition bits, but only set them.
 .ie n .IP "on_refresh_begin $term" 4
 .el .IP "on_refresh_begin \f(CW$term\fR" 4
 .IX Item "on_refresh_begin $term"
@@ -329,16 +378,51 @@ Called just after the screen gets redrawn. See \f(CW\*(C`on_refresh_begin\*(C'\f
 Called whenever the user presses a key combination that has a
 \&\f(CW\*(C`perl:string\*(C'\fR action bound to it (see description of the \fBkeysym\fR
 resource in the @@RXVT_NAME@@(1) manpage).
+.ie n .IP "on_key_press $term\fR, \f(CW$event\fR, \f(CW$octets" 4
+.el .IP "on_key_press \f(CW$term\fR, \f(CW$event\fR, \f(CW$octets\fR" 4
+.IX Item "on_key_press $term, $event, $octets"
+.PD 0
+.ie n .IP "on_key_release $term\fR, \f(CW$event" 4
+.el .IP "on_key_release \f(CW$term\fR, \f(CW$event\fR" 4
+.IX Item "on_key_release $term, $event"
+.ie n .IP "on_button_press $term\fR, \f(CW$event" 4
+.el .IP "on_button_press \f(CW$term\fR, \f(CW$event\fR" 4
+.IX Item "on_button_press $term, $event"
+.ie n .IP "on_button_release $term\fR, \f(CW$event" 4
+.el .IP "on_button_release \f(CW$term\fR, \f(CW$event\fR" 4
+.IX Item "on_button_release $term, $event"
+.ie n .IP "on_motion_notify $term\fR, \f(CW$event" 4
+.el .IP "on_motion_notify \f(CW$term\fR, \f(CW$event\fR" 4
+.IX Item "on_motion_notify $term, $event"
+.PD
+Called whenever the corresponding X event is received for the terminal If
+the hook returns true, then the even will be ignored by rxvt\-unicode.
+.Sp
+The event is a hash with most values as named by Xlib (see the XEvent
+manpage), with the additional members \f(CW\*(C`row\*(C'\fR and \f(CW\*(C`col\*(C'\fR, which are the row
+and column under the mouse cursor.
+.Sp
+\&\f(CW\*(C`on_key_press\*(C'\fR additionally receives the string rxvt-unicode would
+output, if any, in locale-specific encoding.
+.Sp
+subwindow.
 .ie n .Sh "Variables in the ""urxvt"" Package"
 .el .Sh "Variables in the \f(CWurxvt\fP Package"
 .IX Subsection "Variables in the urxvt Package"
 .IP "$urxvt::TERM" 4
 .IX Item "$urxvt::TERM"
-The current terminal. Whenever a callback/Hook is bein executed, this
-variable stores the current \f(CW\*(C`urxvt::term\*(C'\fR object.
+The current terminal. This variable stores the current \f(CW\*(C`urxvt::term\*(C'\fR
+object, whenever a callback/hook is executing.
 .ie n .Sh "Functions in the ""urxvt"" Package"
 .el .Sh "Functions in the \f(CWurxvt\fP Package"
 .IX Subsection "Functions in the urxvt Package"
+.IP "$term = new urxvt [arg...]" 4
+.IX Item "$term = new urxvt [arg...]"
+Creates a new terminal, very similar as if you had started it with
+\&\f(CW\*(C`system $binfile, arg...\*(C'\fR. Croaks (and probably outputs an error message)
+if the new instance couldn't be created.  Returns \f(CW\*(C`undef\*(C'\fR if the new
+instance didn't initialise perl, and the terminal object otherwise. The
+\&\f(CW\*(C`init\*(C'\fR and \f(CW\*(C`start\*(C'\fR hooks will be called during the call.
 .ie n .IP "urxvt::fatal $errormessage" 4
 .el .IP "urxvt::fatal \f(CW$errormessage\fR" 4
 .IX Item "urxvt::fatal $errormessage"
@@ -409,6 +493,9 @@ Change the custom value.
 .ie n .Sh "The ""urxvt::term"" Class"
 .el .Sh "The \f(CWurxvt::term\fP Class"
 .IX Subsection "The urxvt::term Class"
+.IP "$term\->destroy" 4
+.IX Item "$term->destroy"
+Destroy the terminal object (close the window, free resources etc.).
 .ie n .IP "$value = $term\fR\->resource ($name[, \f(CW$newval])" 4
 .el .IP "$value = \f(CW$term\fR\->resource ($name[, \f(CW$newval\fR])" 4
 .IX Item "$value = $term->resource ($name[, $newval])"
@@ -445,11 +532,11 @@ list:
 \&  shade term_name title transparent transparent_all tripleclickwords
 \&  utmpInhibit visualBell
 .Ve
-.ie n .IP "$rend = $term\->screen_rstyle ([$new_rstyle])" 4
-.el .IP "$rend = \f(CW$term\fR\->screen_rstyle ([$new_rstyle])" 4
-.IX Item "$rend = $term->screen_rstyle ([$new_rstyle])"
-Return and optionally change the current rendition. Text thta is output by
-the temrianl application will use this style.
+.ie n .IP "$rend = $term\->rstyle ([$new_rstyle])" 4
+.el .IP "$rend = \f(CW$term\fR\->rstyle ([$new_rstyle])" 4
+.IX Item "$rend = $term->rstyle ([$new_rstyle])"
+Return and optionally change the current rendition. Text that is output by
+the terminal application will use this style.
 .ie n .IP "($row, $col\fR) = \f(CW$term\fR\->screen_cur ([$row, \f(CW$col])" 4
 .el .IP "($row, \f(CW$col\fR) = \f(CW$term\fR\->screen_cur ([$row, \f(CW$col\fR])" 4
 .IX Item "($row, $col) = $term->screen_cur ([$row, $col])"
@@ -483,27 +570,20 @@ Return the current selection text and optionally replace it by \f(CW$newtext\fR.
 #Create a simple multi-line overlay box. See the next method for details.
 #
 #=cut
-.Sp
-sub urxvt::term::scr_overlay {
-die;
-   my ($self, \f(CW$x\fR, \f(CW$y\fR, \f(CW$text\fR) = \f(CW@_\fR;
-.Sp
-.Vb 1
-\&   my @lines = split /\en/, $text;
-.Ve
-.Sp
-.Vb 4
-\&   my $w = 0;
-\&   for (map $self->strwidth ($_), @lines) {
-\&      $w = $_ if $w < $_;
-\&   }
-.Ve
-.Sp
-.Vb 3
-\&   $self->scr_overlay_new ($x, $y, $w, scalar @lines);
-\&   $self->scr_overlay_set (0, $_, $lines[$_]) for 0.. $#lines;
-\&}
-.Ve
+#
+#sub urxvt::term::scr_overlay {
+#   my ($self, \f(CW$x\fR, \f(CW$y\fR, \f(CW$text\fR) = \f(CW@_\fR;
+#
+#   my \f(CW@lines\fR = split /\en/, \f(CW$text\fR;
+#
+#   my \f(CW$w\fR = 0;
+#   for (map \f(CW$self\fR\->strwidth ($_), \f(CW@lines\fR) {
+#      \f(CW$w\fR = \f(CW$_\fR if \f(CW$w\fR < \f(CW$_\fR;
+#   }
+#
+#   \f(CW$self\fR\->scr_overlay_new ($x, \f(CW$y\fR, \f(CW$w\fR, scalar \f(CW@lines\fR);
+#   \f(CW$self\fR\->scr_overlay_set (0, \f(CW$_\fR, \f(CW$lines\fR[$_]) for 0.. $#lines;
+#}
 .ie n .IP "$term\->overlay ($x, $y\fR, \f(CW$width\fR, \f(CW$height\fR[, \f(CW$rstyle\fR[, \f(CW$border]])" 4
 .el .IP "$term\->overlay ($x, \f(CW$y\fR, \f(CW$width\fR, \f(CW$height\fR[, \f(CW$rstyle\fR[, \f(CW$border\fR]])" 4
 .IX Item "$term->overlay ($x, $y, $width, $height[, $rstyle[, $border]])"
@@ -537,24 +617,47 @@ If hidden, display the overlay again.
 .RE
 .RS 4
 .RE
-.ie n .IP "$cellwidth = $term\fR\->strwidth \f(CW$string" 4
-.el .IP "$cellwidth = \f(CW$term\fR\->strwidth \f(CW$string\fR" 4
-.IX Item "$cellwidth = $term->strwidth $string"
+.ie n .IP "$cellwidth = $term\->strwidth ($string)" 4
+.el .IP "$cellwidth = \f(CW$term\fR\->strwidth ($string)" 4
+.IX Item "$cellwidth = $term->strwidth ($string)"
 Returns the number of screen-cells this string would need. Correctly
 accounts for wide and combining characters.
-.ie n .IP "$octets = $term\fR\->locale_encode \f(CW$string" 4
-.el .IP "$octets = \f(CW$term\fR\->locale_encode \f(CW$string\fR" 4
-.IX Item "$octets = $term->locale_encode $string"
+.ie n .IP "$octets = $term\->locale_encode ($string)" 4
+.el .IP "$octets = \f(CW$term\fR\->locale_encode ($string)" 4
+.IX Item "$octets = $term->locale_encode ($string)"
 Convert the given text string into the corresponding locale encoding.
-.ie n .IP "$string = $term\fR\->locale_decode \f(CW$octets" 4
-.el .IP "$string = \f(CW$term\fR\->locale_decode \f(CW$octets\fR" 4
-.IX Item "$string = $term->locale_decode $octets"
+.ie n .IP "$string = $term\->locale_decode ($octets)" 4
+.el .IP "$string = \f(CW$term\fR\->locale_decode ($octets)" 4
+.IX Item "$string = $term->locale_decode ($octets)"
 Convert the given locale-encoded octets into a perl string.
+.IP "$term\->scr_add_lines ($string)" 4
+.IX Item "$term->scr_add_lines ($string)"
+Write the given text string to the screen, as if output by the application
+running inside the terminal. It may not contain command sequences (escape
+codes), but is free to use line feeds, carriage returns and tabs. The
+string is a normal text string, not in locale-dependent encoding.
+.Sp
+Normally its not a good idea to use this function, as programs might be
+confused by changes in cursor position or scrolling. Its useful inside a
+\&\f(CW\*(C`on_add_lines\*(C'\fR hook, though.
+.IP "$term\->cmd_parse ($octets)" 4
+.IX Item "$term->cmd_parse ($octets)"
+Similar to \f(CW\*(C`scr_add_lines\*(C'\fR, but the argument must be in the
+locale-specific encoding of the terminal and can contain command sequences
+(escape codes) that will be interpreted.
 .IP "$term\->tt_write ($octets)" 4
 .IX Item "$term->tt_write ($octets)"
 Write the octets given in \f(CW$data\fR to the tty (i.e. as program input). To
 pass characters instead of octets, you should convert your strings first
 to the locale-specific encoding using \f(CW\*(C`$term\->locale_encode\*(C'\fR.
+.ie n .IP "$windowid = $term\->parent" 4
+.el .IP "$windowid = \f(CW$term\fR\->parent" 4
+.IX Item "$windowid = $term->parent"
+Return the window id of the toplevel window.
+.ie n .IP "$windowid = $term\->vt" 4
+.el .IP "$windowid = \f(CW$term\fR\->vt" 4
+.IX Item "$windowid = $term->vt"
+Return the window id of the terminal window.
 .ie n .IP "$window_width = $term\->width" 4
 .el .IP "$window_width = \f(CW$term\fR\->width" 4
 .IX Item "$window_width = $term->width"
@@ -663,14 +766,14 @@ Create and return a new \f(CW\*(C`urxvt::line\*(C'\fR object that stores informa
 about the logical line that row \f(CW$row_number\fR is part of. It supports the
 following methods:
 .RS 4
-.ie n .IP "$text = $line\->t" 4
-.el .IP "$text = \f(CW$line\fR\->t" 4
-.IX Item "$text = $line->t"
-Returns the full text of the line, similar to \f(CW\*(C`ROW_t\*(C'\fR
-.ie n .IP "$rend = $line\->r" 4
-.el .IP "$rend = \f(CW$line\fR\->r" 4
-.IX Item "$rend = $line->r"
-Returns the full rendition array of the line, similar to \f(CW\*(C`ROW_r\*(C'\fR
+.ie n .IP "$text = $line\->t ([$new_text])" 4
+.el .IP "$text = \f(CW$line\fR\->t ([$new_text])" 4
+.IX Item "$text = $line->t ([$new_text])"
+Returns or replaces the full text of the line, similar to \f(CW\*(C`ROW_t\*(C'\fR
+.ie n .IP "$rend = $line\->r ([$new_rend])" 4
+.el .IP "$rend = \f(CW$line\fR\->r ([$new_rend])" 4
+.IX Item "$rend = $line->r ([$new_rend])"
+Returns or replaces the full rendition array of the line, similar to \f(CW\*(C`ROW_r\*(C'\fR
 .ie n .IP "$length = $line\->l" 4
 .el .IP "$length = \f(CW$line\fR\->l" 4
 .IX Item "$length = $line->l"

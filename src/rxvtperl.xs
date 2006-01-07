@@ -707,6 +707,17 @@ MODULE = urxvt             PACKAGE = urxvt::term
 void
 rxvt_term::destroy ()
 
+void
+rxvt_term::grab (int eventtime)
+	CODE:
+{
+return;
+        XGrabPointer (THIS->display->display, THIS->vt, 0,
+                      ButtonPressMask | ButtonReleaseMask | EnterWindowMask | LeaveWindowMask | PointerMotionMask,
+                      GrabModeAsync, GrabModeAsync, None, None, eventtime);
+        XGrabKeyboard (THIS->display->display, THIS->vt, 0, GrabModeAsync, GrabModeAsync, eventtime);
+}
+
 int
 rxvt_term::strwidth (SV *str)
 	CODE:
@@ -1148,7 +1159,9 @@ rxvt_term::cmd_parse (SV *octets)
         THIS->cmdbuf_ptr  = str;
         THIS->cmdbuf_endp = str + len;
 
+	rxvt_push_locale (THIS->locale);
         THIS->cmd_parse ();
+	rxvt_pop_locale ();
 
         THIS->cmdbuf_ptr  = old_cmdbuf_ptr;
         THIS->cmdbuf_endp = old_cmdbuf_endp;

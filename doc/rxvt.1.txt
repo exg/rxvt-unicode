@@ -373,7 +373,7 @@ OPTIONS
               system "rxvt -embed $xid &";
            });
 
-    -pty-fd *fileno*
+    -pty-fd *file descriptor*
         Tells rxvt NOT to execute any commands or create a new pty/tty pair
         but instead use the given filehandle as the tty master. This is
         useful if you want to drive rxvt as a generic terminal emulator
@@ -382,6 +382,9 @@ OPTIONS
         If this switch is given, rxvt will not create any utmp/wtmp entries
         and will not tinker with pty/tty permissions - you have to do that
         yourself if you want that.
+
+        As an extremely special case, specifying -1 will completely suppress
+        pty/tty operations.
 
         Here is a example in perl that illustrates how this option can be
         used (a longer example is in doc/pty-fd):
@@ -399,7 +402,7 @@ OPTIONS
            while (<$slave>) { print $slave "got <$_>\n" }
 
     -pe *string*
-        Colon-separated list of perl extension scripts to use in this
+        Comma-separated list of perl extension scripts to use in this
         terminal instance. See resource perl-ext.
 
 RESOURCES (available also as long-options)
@@ -940,7 +943,7 @@ RESOURCES (available also as long-options)
 
     perl-ext-common: *string*
     perl-ext: *string*
-        Colon-separated list(s) of perl extension scripts to use in this
+        Comma-separated list(s) of perl extension scripts to use in this
         terminal instance. Each extension is looked up in the library
         directories, loaded if necessary, and bound to the current terminal
         instance. If this resource is empty or missing, then the perl

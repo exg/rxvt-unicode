@@ -118,7 +118,7 @@ locale-specific way.
 
 =head2 Hooks
 
-The following subroutines can be declared in loaded scripts, and will be
+The following subroutines can be declared in extension files, and will be
 called whenever the relevant event happens.
 
 The first argument passed to them is an object private to each terminal
@@ -292,8 +292,8 @@ subwindow.
 
 =item $urxvt::TERM
 
-The current terminal. Whenever a callback/Hook is bein executed, this
-variable stores the current C<urxvt::term> object.
+The current terminal. This variable stores the current C<urxvt::term>
+object, whenever a callback/hook is executing.
 
 =back
 

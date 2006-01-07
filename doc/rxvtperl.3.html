@@ -106,6 +106,20 @@ Rot-13 the selection when activated. Used via keyboard trigger:
 Displays a digital clock using the built-in overlay.
 </dd>
 <p></p>
+<dt><strong><a name="item_mark_2durls">mark-urls</a></strong><br />
+</dt>
+<dd>
+Uses per-line display filtering (<code>on_line_update</code>) to underline urls.
+</dd>
+<p></p>
+<dt><strong><a name="item_block_2dgraphics_2dto_2dascii">block-graphics-to-ascii</a></strong><br />
+</dt>
+<dd>
+A not very useful example of filtering all text output to the terminal,
+by replacing all line-drawing characters (U+2500 .. U+259F) by a
+similar-looking ascii character.
+</dd>
+<p></p>
 <dt><strong><a name="item_example_2drefresh_2dhooks">example-refresh-hooks</a></strong><br />
 </dt>
 <dd>
@@ -126,10 +140,35 @@ modified).</p>
 emptied, so its best to store related objects such as time watchers and
 the like inside the terminal object so they get destroyed as soon as the
 terminal is destroyed.</p>
+<p>Argument names also often indicate the type of a parameter. Here are some
+hints on what they mean:</p>
+<dl>
+<dt><strong><a name="item__24text">$text</a></strong><br />
+</dt>
+<dd>
+Rxvt-unicodes special way of encoding text, where one ``unicode'' character
+always represents one screen cell. See <em>row_t</em> for a discussion of this format.
+</dd>
+<p></p>
+<dt><strong><a name="item__24string">$string</a></strong><br />
+</dt>
+<dd>
+A perl text string, with an emphasis on <em>text</em>. It can store all unicode
+characters and is to be distinguished with text encoded in a specific
+encoding (often locale-specific) and binary data.
+</dd>
+<p></p>
+<dt><strong><a name="item__24octets">$octets</a></strong><br />
+</dt>
+<dd>
+Either binary data or - more common - a text string encoded in a
+locale-specific way.
+</dd>
+<p></p></dl>
 <p>
 </p>
 <h2><a name="hooks">Hooks</a></h2>
-<p>The following subroutines can be declared in loaded scripts, and will be
+<p>The following subroutines can be declared in extension files, and will be
 called whenever the relevant event happens.</p>
 <p>The first argument passed to them is an object private to each terminal
 and extension package.  You can call all <code>urxvt::term</code> methods on it, but
@@ -145,7 +184,10 @@ and the relevant action might not be carried out by the C++ code.</p>
 </dt>
 <dd>
 Called after a new terminal object has been initialized, but before
-windows are created or the command gets run.
+windows are created or the command gets run. Most methods are unsafe to
+call or deliver senseless data, as terminal size and other characteristics
+have not yet been determined. You can safely query and change resources,
+though.
 </dd>
 <p></p>
 <dt><strong><a name="item_on_reset__24term">on_reset $term</a></strong><br />
@@ -255,6 +297,34 @@ as its source can not easily be controleld (e-mail content, messages from
 other users on the same system etc.).</p>
 </dd>
 <p></p>
+<dt><strong><a name="item_on_add_lines__24term_2c__24string">on_add_lines $term, $string</a></strong><br />
+</dt>
+<dd>
+Called whenever text is about to be output, with the text as argument. You
+can filter/change and output the text yourself by returning a true value
+and calling <a href="#item_scr_add_lines"><code>$term-&gt;scr_add_lines</code></a> yourself. Please note that this
+might be very slow, however, as your hook is called for <strong>all</strong> text being
+output.
+</dd>
+<p></p>
+<dt><strong><a name="item_on_line_update__24term_2c__24row">on_line_update $term, $row</a></strong><br />
+</dt>
+<dd>
+Called whenever a line was updated or changed. Can be used to filter
+screen output (e.g. underline urls or other useless stuff). Only lines
+that are being shown will be filtered, and, due to performance reasons,
+not always immediately.
+</dd>
+<dd>
+<p>The row number is always the topmost row of the line if the line spans
+multiple rows.</p>
+</dd>
+<dd>
+<p>Please note that, if you change the line, then the hook might get called
+later with the already-modified line (e.g. if unrelated parts change), so
+you cannot just toggle rendition bits, but only set them.</p>
+</dd>
+<p></p>
 <dt><strong><a name="item_on_refresh_begin__24term">on_refresh_begin $term</a></strong><br />
 </dt>
 <dd>
@@ -277,6 +347,33 @@ Called whenever the user presses a key combination that has a
 <code>perl:string</code> action bound to it (see description of the <strong>keysym</strong>
 resource in the <code>rxvt(1)</code> manpage).
 </dd>
+<p></p>
+<dt><strong><a name="item_on_key_press__24term_2c__24event_2c__24octets">on_key_press $term, $event, $octets</a></strong><br />
+</dt>
+<dt><strong><a name="item_on_key_release__24term_2c__24event">on_key_release $term, $event</a></strong><br />
+</dt>
+<dt><strong><a name="item_on_button_press__24term_2c__24event">on_button_press $term, $event</a></strong><br />
+</dt>
+<dt><strong><a name="item_on_button_release__24term_2c__24event">on_button_release $term, $event</a></strong><br />
+</dt>
+<dt><strong><a name="item_on_motion_notify__24term_2c__24event">on_motion_notify $term, $event</a></strong><br />
+</dt>
+<dd>
+Called whenever the corresponding X event is received for the terminal If
+the hook returns true, then the even will be ignored by rxvt-unicode.
+</dd>
+<dd>
+<p>The event is a hash with most values as named by Xlib (see the XEvent
+manpage), with the additional members <code>row</code> and <code>col</code>, which are the row
+and column under the mouse cursor.</p>
+</dd>
+<dd>
+<p><code>on_key_press</code> additionally receives the string rxvt-unicode would
+output, if any, in locale-specific encoding.</p>
+</dd>
+<dd>
+<p>subwindow.</p>
+</dd>
 <p></p></dl>
 <p>
 </p>
@@ -285,14 +382,24 @@ resource in the <code>rxvt(1)</code> manpage).
 <dt><strong><a name="item__24urxvt_3a_3aterm">$urxvt::TERM</a></strong><br />
 </dt>
 <dd>
-The current terminal. Whenever a callback/Hook is bein executed, this
-variable stores the current <code>urxvt::term</code> object.
+The current terminal. This variable stores the current <code>urxvt::term</code>
+object, whenever a callback/hook is executing.
 </dd>
 <p></p></dl>
 <p>
 </p>
 <h2><a name="functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></h2>
 <dl>
+<dt><strong><a name="item__24term__3d_new_urxvt__5barg_2e_2e_2e_5d">$term = new urxvt [arg...]</a></strong><br />
+</dt>
+<dd>
+Creates a new terminal, very similar as if you had started it with
+<code>system $binfile, arg...</code>. Croaks (and probably outputs an error message)
+if the new instance couldn't be created.  Returns <code>undef</code> if the new
+instance didn't initialise perl, and the terminal object otherwise. The
+<code>init</code> and <a href="#item_start"><code>start</code></a> hooks will be called during the call.
+</dd>
+<p></p>
 <dt><strong><a name="item_urxvt_3a_3afatal__24errormessage">urxvt::fatal $errormessage</a></strong><br />
 </dt>
 <dd>
@@ -385,6 +492,12 @@ Change the custom value.
 </p>
 <h2><a name="the_urxvt__term_class">The <code>urxvt::term</code> Class</a></h2>
 <dl>
+<dt><strong><a name="item_destroy">$term-&gt;destroy</a></strong><br />
+</dt>
+<dd>
+Destroy the terminal object (close the window, free resources etc.).
+</dd>
+<p></p>
 <dt><strong><a name="item_resource">$value = $term-&gt;resource ($name[, $newval])</a></strong><br />
 </dt>
 <dd>
@@ -427,11 +540,11 @@ list:</p>
   utmpInhibit visualBell</pre>
 </dd>
 <p></p>
-<dt><strong><a name="item_screen_rstyle">$rend = $term-&gt;screen_rstyle ([$new_rstyle])</a></strong><br />
+<dt><strong><a name="item_rstyle">$rend = $term-&gt;rstyle ([$new_rstyle])</a></strong><br />
 </dt>
 <dd>
-Return and optionally change the current rendition. Text thta is output by
-the temrianl application will use this style.
+Return and optionally change the current rendition. Text that is output by
+the terminal application will use this style.
 </dd>
 <p></p>
 <dt><strong><a name="item_screen_cur">($row, $col) = $term-&gt;screen_cur ([$row, $col])</a></strong><br />
@@ -469,29 +582,21 @@ Return the current selection text and optionally replace it by <code>$newtext</c
 #
 #Create a simple multi-line overlay box. See the next method for details.
 #
-#=cut</p>
-</dd>
-<dd>
-<p>sub urxvt::term::scr_overlay {
-die;
-   my ($self, $x, $y, $text) = @_;</p>
-</dd>
-<dd>
-<pre>
-   my @lines = split /\n/, $text;</pre>
-</dd>
-<dd>
-<pre>
-   my $w = 0;
-   for (map $self-&gt;strwidth ($_), @lines) {
-      $w = $_ if $w &lt; $_;
-   }</pre>
-</dd>
-<dd>
-<pre>
-   $self-&gt;scr_overlay_new ($x, $y, $w, scalar @lines);
-   $self-&gt;scr_overlay_set (0, $_, $lines[$_]) for 0.. $#lines;
-}</pre>
+#=cut
+#
+#sub urxvt::term::scr_overlay {
+#   my ($self, $x, $y, $text) = @_;
+#
+#   my @lines = split /\n/, $text;
+#
+#   my $w = 0;
+#   for (map $self-&gt;strwidth ($_), @lines) {
+#      $w = $_ if $w &lt; $_;
+#   }
+#
+#   $self-&gt;scr_overlay_new ($x, $y, $w, scalar @lines);
+#   $self-&gt;scr_overlay_set (0, $_, $lines[$_]) for 0.. $#lines;
+#}</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_overlay">$term-&gt;overlay ($x, $y, $width, $height[, $rstyle[, $border]])</a></strong><br />
@@ -537,23 +642,45 @@ If visible, hide the overlay, but do not destroy it.
 If hidden, display the overlay again.
 </dd>
 <p></p></dl>
-<dt><strong><a name="item_strwidth">$cellwidth = $term-&gt;strwidth $string</a></strong><br />
+<dt><strong><a name="item_strwidth">$cellwidth = $term-&gt;strwidth ($string)</a></strong><br />
 </dt>
 <dd>
 Returns the number of screen-cells this string would need. Correctly
 accounts for wide and combining characters.
 </dd>
 <p></p>
-<dt><strong><a name="item_locale_encode">$octets = $term-&gt;locale_encode $string</a></strong><br />
+<dt><strong><a name="item_locale_encode">$octets = $term-&gt;locale_encode ($string)</a></strong><br />
 </dt>
 <dd>
 Convert the given text string into the corresponding locale encoding.
 </dd>
 <p></p>
-<dt><strong><a name="item_locale_decode">$string = $term-&gt;locale_decode $octets</a></strong><br />
+<dt><strong><a name="item_locale_decode">$string = $term-&gt;locale_decode ($octets)</a></strong><br />
 </dt>
 <dd>
 Convert the given locale-encoded octets into a perl string.
+</dd>
+<p></p>
+<dt><strong><a name="item_scr_add_lines">$term-&gt;scr_add_lines ($string)</a></strong><br />
+</dt>
+<dd>
+Write the given text string to the screen, as if output by the application
+running inside the terminal. It may not contain command sequences (escape
+codes), but is free to use line feeds, carriage returns and tabs. The
+string is a normal text string, not in locale-dependent encoding.
+</dd>
+<dd>
+<p>Normally its not a good idea to use this function, as programs might be
+confused by changes in cursor position or scrolling. Its useful inside a
+<code>on_add_lines</code> hook, though.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_cmd_parse">$term-&gt;cmd_parse ($octets)</a></strong><br />
+</dt>
+<dd>
+Similar to <a href="#item_scr_add_lines"><code>scr_add_lines</code></a>, but the argument must be in the
+locale-specific encoding of the terminal and can contain command sequences
+(escape codes) that will be interpreted.
 </dd>
 <p></p>
 <dt><strong><a name="item_tt_write">$term-&gt;tt_write ($octets)</a></strong><br />
@@ -562,6 +689,18 @@ Convert the given locale-encoded octets into a perl string.
 Write the octets given in <code>$data</code> to the tty (i.e. as program input). To
 pass characters instead of octets, you should convert your strings first
 to the locale-specific encoding using <a href="#item_locale_encode"><code>$term-&gt;locale_encode</code></a>.
+</dd>
+<p></p>
+<dt><strong><a name="item_parent">$windowid = $term-&gt;parent</a></strong><br />
+</dt>
+<dd>
+Return the window id of the toplevel window.
+</dd>
+<p></p>
+<dt><strong><a name="item_vt">$windowid = $term-&gt;vt</a></strong><br />
+</dt>
+<dd>
+Return the window id of the terminal window.
 </dd>
 <p></p>
 <dt><strong><a name="item_width">$window_width = $term-&gt;width</a></strong><br />
@@ -627,7 +766,7 @@ to replace only parts of a line. The font index in the rendition will
 automatically be updated.</p>
 </dd>
 <dd>
-<p><code>$text</code> is in a special encoding: tabs and wide characters that use more
+<p><a href="#item__24text"><code>$text</code></a> is in a special encoding: tabs and wide characters that use more
 than one cell when displayed are padded with urxvt::NOCHAR characters
 (<code>chr 65535</code>). Characters with combining characters and other characters
 that do not fit into the normal tetx encoding will be replaced with
@@ -682,16 +821,16 @@ about the logical line that row <code>$row_number</code> is part of. It supports
 following methods:
 </dd>
 <dl>
-<dt><strong><a name="item_t">$text = $line-&gt;t</a></strong><br />
+<dt><strong><a name="item_t">$text = $line-&gt;t ([$new_text])</a></strong><br />
 </dt>
 <dd>
-Returns the full text of the line, similar to <a href="#item_row_t"><code>ROW_t</code></a>
+Returns or replaces the full text of the line, similar to <a href="#item_row_t"><code>ROW_t</code></a>
 </dd>
 <p></p>
-<dt><strong><a name="item_r">$rend = $line-&gt;r</a></strong><br />
+<dt><strong><a name="item_r">$rend = $line-&gt;r ([$new_rend])</a></strong><br />
 </dt>
 <dd>
-Returns the full rendition array of the line, similar to <a href="#item_row_r"><code>ROW_r</code></a>
+Returns or replaces the full rendition array of the line, similar to <a href="#item_row_r"><code>ROW_r</code></a>
 </dd>
 <p></p>
 <dt><strong><a name="item_l">$length = $line-&gt;l</a></strong><br />

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2006-01-04" "6.3" "RXVT-UNICODE"
+.TH rxvt 7 "2006-01-07" "6.3" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -2402,11 +2402,11 @@ option requires \-\-enable\-utmp to also be specified.
 Write user and tty to lastlog file (used by programs like
 \&\fIlastlogin\fR) at start of rxvt execution.  This option requires
 \&\-\-enable\-utmp to also be specified.
-.IP "\-\-enable\-xpm\-background (default: off)" 4
-.IX Item "--enable-xpm-background (default: off)"
+.IP "\-\-enable\-xpm\-background (default: on)" 4
+.IX Item "--enable-xpm-background (default: on)"
 Add support for \s-1XPM\s0 background pixmaps.
-.IP "\-\-enable\-transparency (default: off)" 4
-.IX Item "--enable-transparency (default: off)"
+.IP "\-\-enable\-transparency (default: on)" 4
+.IX Item "--enable-transparency (default: on)"
 Add support for inheriting parent backgrounds thus giving a fake
 transparency to the term.
 .IP "\-\-enable\-fading (default: on)" 4
@@ -2415,10 +2415,11 @@ Add support for fading the text when focus is lost (requires \f(CW\*(C`\-\-enabl
 .IP "\-\-enable\-tinting (default: on)" 4
 .IX Item "--enable-tinting (default: on)"
 Add support for tinting of transparent backgrounds (requires \f(CW\*(C`\-\-enable\-transparency\*(C'\fR).
-.IP "\-\-enable\-menubar (default: off)" 4
-.IX Item "--enable-menubar (default: off)"
-Add support for our menu bar system (this interacts badly with
-dynamic locale switching currently).
+.IP "\-\-enable\-menubar (default: off) [\s-1DEPRECATED\s0]" 4
+.IX Item "--enable-menubar (default: off) [DEPRECATED]"
+Add support for our menu bar system (this interacts badly with dynamic
+locale switching currently). This option is \s-1DEPRECATED\s0 and will be removed
+in the future.
 .IP "\-\-enable\-rxvt\-scroll (default: on)" 4
 .IX Item "--enable-rxvt-scroll (default: on)"
 Add support for the original rxvt scrollbar.

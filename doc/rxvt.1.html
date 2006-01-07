@@ -602,7 +602,7 @@ used (a longer example is in <em>doc/embed</em>):</p>
    });</pre>
 </dd>
 <p></p>
-<dt><strong><a name="item__2dpty_2dfd_fileno"><strong>-pty-fd</strong> <em>fileno</em></a></strong><br />
+<dt><strong><a name="item__2dpty_2dfd_file_descriptor"><strong>-pty-fd</strong> <em>file descriptor</em></a></strong><br />
 </dt>
 <dd>
 Tells rxvt NOT to execute any commands or create a new pty/tty
@@ -614,6 +614,10 @@ without having to run a program within it.
 <p>If this switch is given, rxvt will not create any utmp/wtmp
 entries and will not tinker with pty/tty permissions - you have to do that
 yourself if you want that.</p>
+</dd>
+<dd>
+<p>As an extremely special case, specifying <code>-1</code> will completely suppress
+pty/tty operations.</p>
 </dd>
 <dd>
 <p>Here is a example in perl that illustrates how this option can be used (a
@@ -641,7 +645,7 @@ longer example is in <em>doc/pty-fd</em>):</p>
 <dt><strong><a name="item__2dpe_string"><strong>-pe</strong> <em>string</em></a></strong><br />
 </dt>
 <dd>
-Colon-separated list of perl extension scripts to use in this terminal
+Comma-separated list of perl extension scripts to use in this terminal
 instance. See resource <strong>perl-ext</strong>.
 </dd>
 <p></p></dl>
@@ -1451,7 +1455,7 @@ info):</p>
 <dt><strong><a name="item_perl_2dext_3a_string"><strong>perl-ext</strong>: <em>string</em></a></strong><br />
 </dt>
 <dd>
-Colon-separated <code>list(s)</code> of perl extension scripts to use in this terminal
+Comma-separated <code>list(s)</code> of perl extension scripts to use in this terminal
 instance. Each extension is looked up in the library directories, loaded
 if necessary, and bound to the current terminal instance. If this
 resource is empty or missing, then the perl interpreter will not be
