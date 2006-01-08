@@ -584,9 +584,17 @@ sub urxvt::destroy_hook(&) {
    bless \shift, urxvt::destroy_hook::
 }
 
-# urxvt::anyevent
-
 package urxvt::anyevent;
+
+=head2 The C<urxvt::anyevent> Class
+
+The sole purpose of this class is to deliver an interface to the
+C<AnyEvent> module - any module using it will work inside urxvt without
+further work. The only exception is that you cannot wait on condition
+variables, but non-blocking condvar use is ok. What this means is that you
+cannot use blocking APIs, but the non-blocking variant should work.
+
+=cut
 
 our $VERSION = 1;
 
