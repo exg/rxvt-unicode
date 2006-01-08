@@ -29,7 +29,13 @@ sub refresh {
 sub on_motion_notify {
    my ($self, $event) = @_;
 
-   $self->{hover} = $event->{row} + 1;
+   delete $self->{hover};
+
+   my ($row, $col) = ($event->{row}, $event->{col});
+   if ($col >= 0 && $col < $self->ncol
+       && $row >= 0 && $row < @{ $self->{data}{item} }) {
+      $self->{hover} = $event->{row} + 1;
+   }
    $self->refresh;
 
    1
@@ -47,9 +53,6 @@ sub on_button_press {
 sub on_button_release {
    my ($self, $event) = @_;
 
-   my $row = $event->{row};
-   my $col = $event->{col};
-
    if ($event->{button} == $self->{data}{event}{button}) {
       $self->ungrab;
       $self->destroy;
@@ -57,6 +60,7 @@ sub on_button_release {
 
    $self->{press}[$event->{button}] = 0;
 
+   my ($row, $col) = ($event->{row}, $event->{col});
    if ($col >= 0 && $col < $self->ncol
        && $row >= 0 && $row < @{ $self->{data}{item} }) {
       $self->{data}{item}[$row]{activate}->($event);

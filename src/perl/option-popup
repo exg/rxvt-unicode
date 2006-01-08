@@ -9,7 +9,7 @@ sub on_button_press {
       my %unsafe = map +($_ => 1),
          qw(borderLess console iconic loginShell reverseVideo
             scrollBar scrollBar_floating scrollBar_right
-            secondaryScreen transparent utmpInhibit);
+            secondaryScreen transparent utmpInhibit meta8);
 
       for my $name (sort keys %urxvt::OPTION) {
          next if $unsafe{$name};
