@@ -1027,15 +1027,42 @@ package urxvt::popup;
 sub add_item {
    my ($self, $item) = @_;
 
+   $item->{rend}{normal} = "\x1b[0;30;47m" unless exists $item->{rend}{normal};
+   $item->{rend}{hover}  = "\x1b[0;30;46m" unless exists $item->{rend}{hover};
+   $item->{rend}{active} = "\x1b[m"        unless exists $item->{rend}{active};
+
+   $item->{render} ||= sub { $_[0]{text} };
+
    push @{ $self->{item} }, $item;
+}
+
+sub add_separator {
+   my ($self, $sep) = @_;
+
+   $sep ||= "═";
+
+   $self->add_item ({
+      rend => { normal => "\x1b[0;30;47m", hover => "\x1b[0;30;47m", active => "\x1b[0;30;47m" },
+      text => "",
+      render => sub { $sep x $urxvt::TERM->ncol },
+      activate => sub { },
+   });
+}
+
+sub add_title {
+   my ($self, $title) = @_;
+
+   $self->add_item ({
+      rend => { normal => "\x1b[38;5;11;44m", hover => "\x1b[38;5;11;44m", active => "\x1b[38;5;11;44m" },
+      text => $title,
+      activate => sub { },
+   });
 }
 
 sub add_button {
    my ($self, $text, $cb) = @_;
 
-   $self->add_item ({ type => "button", text => "[ $text ]", activate => $cb,
-      render => sub { $_[0]{text} },
-   });
+   $self->add_item ({ type => "button", text => "[ $text ]", activate => $cb});
 }
 
 sub add_toggle {

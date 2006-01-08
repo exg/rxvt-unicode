@@ -12,6 +12,9 @@ sub on_button_press {
    if ($event->{button} == 3 && $event->{state} & urxvt::ControlMask) {
       my $popup = $self->popup ($event);
 
+      $popup->add_title ("Options");
+      $popup->add_separator;
+
       my %unsafe = map +($_ => 1),
          qw(borderLess console iconic loginShell reverseVideo
             scrollBar scrollBar_floating scrollBar_right

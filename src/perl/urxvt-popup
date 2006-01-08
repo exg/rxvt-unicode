@@ -10,13 +10,13 @@ sub refresh {
 
    my $row = 1;
    for my $item (@{ $self->{data}{item} }) {
-      my $rend = "\x1b[30;47m";
+      my $rend = "normal";
 
       if ($row == $self->{hover}) {
-         $rend = $self->{press} ? "\x1b[m" : "\x1b[30;46m";
+         $rend = $self->{press} ? "active" : "hover";
       }
 
-      $cmd .= "$rend\x1b[K";
+      $cmd .= "$item->{rend}{$rend}\x1b[K";
       $cmd .= $self->locale_encode ($item->{render}->($item));
       $cmd .= "\015\012";
 
