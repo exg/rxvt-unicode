@@ -13,6 +13,8 @@ TODO: document transient_for, vt
 
 	- perl: implement additional hook: line_update, add_lines.
         - perl: urxvt::line now can set via ->t and ->r.
+        - perl: changed interpretation of --perl-ext-common and -pe.
+        - perl: much increased functionality, better overlays, popup support.
 
 6.3  Wed Jan  4 22:37:10 CET 2006
         - SECURITY FIX: on systems using openpty, permissions were

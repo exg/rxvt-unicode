@@ -468,8 +468,8 @@ longer example is in F<doc/pty-fd>):
 
 =item B<-pe> I<string>
 
-Comma-separated list of perl extension scripts to use in this terminal
-instance. See resource B<perl-ext>.
+Comma-separated list of perl extension scripts to use (or not to use) in
+this terminal instance. See resource B<perl-ext> for details.
 
 =back
 
@@ -1086,13 +1086,22 @@ info):
 
 =item B<perl-ext>: I<string>
 
-Comma-separated list(s) of perl extension scripts to use in this terminal
-instance. Each extension is looked up in the library directories, loaded
-if necessary, and bound to the current terminal instance. If this
-resource is empty or missing, then the perl interpreter will not be
-initialized. The idea behind two options is that B<perl-ext-common> will
-be used for extensions that should be available to all instances, while
-B<perl-ext> is used for specific instances; option B<-pe>.
+Comma-separated list(s) of perl extension scripts (default: C<default>) to
+use in this terminal instance; option B<-pe>.
+
+Extension names can be prefixed with a C<-> sign to prohibit using
+it. This can be useful to selectively disable some extensions loaded
+by default, or specified via the C<perl-ext-common> resource. For
+example, C<default,-selection> will use all the default extension except
+C<selection>.
+
+Each extension is looked up in the library directories, loaded if
+necessary, and bound to the current terminal instance.
+
+If both of these resources are the empty string, then the perl
+interpreter will not be initialized. The idea behind two options is that
+B<perl-ext-common> will be used for extensions that should be available to
+all instances, while B<perl-ext> is used for specific instances.
 
 =item B<perl-eval>: I<string>
 

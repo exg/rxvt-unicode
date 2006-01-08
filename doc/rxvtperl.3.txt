@@ -14,8 +14,8 @@ SYNOPSIS
        rxvt --perl-lib $HOME -pe grab_test
 
 DESCRIPTION
-    Everytime a terminal object gets created, scripts specified via the
-    "perl" resource are loaded and associated with it.
+    Everytime a terminal object gets created, extension scripts specified
+    via the "perl" resource are loaded and associated with it.
 
     Scripts are compiled in a 'use strict' and 'use utf8' environment, and
     thus must be encoded as UTF-8.
@@ -98,7 +98,9 @@ DESCRIPTION
     and extension package. You can call all "urxvt::term" methods on it, but
     its not a real "urxvt::term" object. Instead, the real "urxvt::term"
     object that is shared between all packages is stored in the "term"
-    member.
+    member. It is, however, blessed intot he package of the extension
+    script, so for all practical purposes you can treat an extension script
+    as a class.
 
     All of them must return a boolean value. If it is true, then the event
     counts as being *consumed*, and the invocation of other hooks is
@@ -147,14 +149,6 @@ DESCRIPTION
         suppress the built-in processing.
 
         See the selection example extension.
-
-    on_focus_in $term
-        Called whenever the window gets the keyboard focus, before urxvt
-        does focus in processing.
-
-    on_focus_out $term
-        Called wheneever the window loses keyboard focus, before urxvt does
-        focus out processing.
 
     on_view_change $term, $offset
         Called whenever the view offset changes, i..e the user or program
@@ -221,11 +215,21 @@ DESCRIPTION
         "perl:string" action bound to it (see description of the keysym
         resource in the rxvt(1) manpage).
 
+    on_focus_in $term
+        Called whenever the window gets the keyboard focus, before
+        rxvt-unicode does focus in processing.
+
+    on_focus_out $term
+        Called wheneever the window loses keyboard focus, before
+        rxvt-unicode does focus out processing.
+
     on_key_press $term, $event, $octets
     on_key_release $term, $event
     on_button_press $term, $event
     on_button_release $term, $event
     on_motion_notify $term, $event
+    on_map_notify $term, $event
+    on_unmap_notify $term, $event
         Called whenever the corresponding X event is received for the
         terminal If the hook returns true, then the even will be ignored by
         rxvt-unicode.
@@ -268,6 +272,12 @@ DESCRIPTION
 
     $time = urxvt::NOW
         Returns the "current time" (as per the event loop).
+
+    urxvt::CurrentTime
+    urxvt::ShiftMask, LockMask, ControlMask, Mod1Mask, Mod2Mask, Mod3Mask,
+    Mod4Mask, Mod5Mask, Button1Mask, Button2Mask, Button3Mask, Button4Mask,
+    Button5Mask, AnyModifier
+        Various constants for use in X events.
 
   RENDITION
     Rendition bitsets contain information about colour, font, font styles
@@ -312,6 +322,22 @@ DESCRIPTION
     $term->destroy
         Destroy the terminal object (close the window, free resources etc.).
 
+    $isset = $term->option ($optval[, $set])
+        Returns true if the option specified by $optval is enabled, and
+        optionally change it. All option values are stored by name in the
+        hash %urxvt::OPTION. Options not enabled in this binary are not in
+        the hash.
+
+        Here is a a likely non-exhaustive list of option names, please see
+        the source file /src/optinc.h to see the actual list:
+
+         borderLess console cursorBlink cursorUnderline hold iconic insecure
+         intensityStyles jumpScroll loginShell mapAlert meta8 mouseWheelScrollPage
+         pastableTabs pointerBlank reverseVideo scrollBar scrollBar_floating
+         scrollBar_right scrollTtyKeypress scrollTtyOutput scrollWithBuffer
+         secondaryScreen secondaryScroll skipBuiltinGlyphs transparent
+         tripleclickwords utmpInhibit visualBell
+
     $value = $term->resource ($name[, $newval])
         Returns the current resource value associated with a given name and
         optionally sets a new value. Setting values is most useful in the
@@ -330,8 +356,8 @@ DESCRIPTION
         memory.
 
         Here is a a likely non-exhaustive list of resource names, not all of
-        which are supported in every build, please see the source to see the
-        actual list:
+        which are supported in every build, please see the source file
+        /src/rsinc.h to see the actual list:
 
           answerbackstring backgroundPixmap backspace_key boldFont boldItalicFont
           borderLess color cursorBlink cursorUnderline cutchars delete_key
@@ -404,6 +430,11 @@ DESCRIPTION
         $overlay->show
             If hidden, display the overlay again.
 
+    $popup = $term->popup ($event)
+        Creates a new "urxvt::popup" object that implements a popup menu.
+        The $event *must* be the event causing the menu to pop up (a button
+        event, currently).
+
     $cellwidth = $term->strwidth ($string)
         Returns the number of screen-cells this string would need. Correctly
         accounts for wide and combining characters.
@@ -456,6 +487,13 @@ DESCRIPTION
     $nrow_plus_saveLines = $term->total_rows
     $lines_in_scrollback = $term->nsaved
         Return various integers describing terminal characteristics.
+
+    $modifiermask = $term->ModLevel3Mask
+    $modifiermask = $term->ModMetaMask
+    $modifiermask = $term->ModNumLockMask
+        Return the modifier masks corresponding to the "ISO Level 3 Shift"
+        (often AltGr), the meta key (often Alt) and the num lock key, if
+        applicable.
 
     $view_start = $term->view_start ([$newvalue])
         Returns the negative row number of the topmost line. Minimum value
@@ -552,92 +590,93 @@ DESCRIPTION
         Converts rxvt-unicodes text reprsentation into a perl string. See
         "$term->ROW_t" for details.
 
+  The "urxvt::popup" Class
   The "urxvt::timer" Class
-    This class implements timer watchers/events. Time is represented as a
-    fractional number of seconds since the epoch. Example:
+        This class implements timer watchers/events. Time is represented as
+        a fractional number of seconds since the epoch. Example:
 
-       $term->{overlay} = $term->overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);
-       $term->{timer} = urxvt::timer
-                        ->new
-                        ->interval (1)
-                        ->cb (sub {
-                           $term->{overlay}->set (0, 0,
-                              sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2,1,0]);
-                        });                                                                                                                                      
+           $term->{overlay} = $term->overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);
+           $term->{timer} = urxvt::timer
+                            ->new
+                            ->interval (1)
+                            ->cb (sub {
+                               $term->{overlay}->set (0, 0,
+                                  sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2,1,0]);
+                            });                                                                                                                                      
 
-    $timer = new urxvt::timer
-        Create a new timer object in started state. It is scheduled to fire
-        immediately.
+        $timer = new urxvt::timer
+            Create a new timer object in started state. It is scheduled to
+            fire immediately.
 
-    $timer = $timer->cb (sub { my ($timer) = @_; ... })
-        Set the callback to be called when the timer triggers.
+        $timer = $timer->cb (sub { my ($timer) = @_; ... })
+            Set the callback to be called when the timer triggers.
 
-    $tstamp = $timer->at
-        Return the time this watcher will fire next.
+        $tstamp = $timer->at
+            Return the time this watcher will fire next.
 
-    $timer = $timer->set ($tstamp)
-        Set the time the event is generated to $tstamp.
+        $timer = $timer->set ($tstamp)
+            Set the time the event is generated to $tstamp.
 
-    $timer = $timer->interval ($interval)
-        Normally (and when $interval is 0), the timer will automatically
-        stop after it has fired once. If $interval is non-zero, then the
-        timer is automatically rescheduled at the given intervals.
+        $timer = $timer->interval ($interval)
+            Normally (and when $interval is 0), the timer will automatically
+            stop after it has fired once. If $interval is non-zero, then the
+            timer is automatically rescheduled at the given intervals.
 
-    $timer = $timer->start
-        Start the timer.
+        $timer = $timer->start
+            Start the timer.
 
-    $timer = $timer->start ($tstamp)
-        Set the event trigger time to $tstamp and start the timer.
+        $timer = $timer->start ($tstamp)
+            Set the event trigger time to $tstamp and start the timer.
 
-    $timer = $timer->stop
-        Stop the timer.
+        $timer = $timer->stop
+            Stop the timer.
 
   The "urxvt::iow" Class
-    This class implements io watchers/events. Example:
+        This class implements io watchers/events. Example:
 
-      $term->{socket} = ...
-      $term->{iow} = urxvt::iow
-                     ->new
-                     ->fd (fileno $term->{socket})
-                     ->events (1) # wait for read data
-                     ->start
-                     ->cb (sub {
-                       my ($iow, $revents) = @_;
-                       # $revents must be 1 here, no need to check
-                       sysread $term->{socket}, my $buf, 8192
-                          or end-of-file;
-                     });
+          $term->{socket} = ...
+          $term->{iow} = urxvt::iow
+                         ->new
+                         ->fd (fileno $term->{socket})
+                         ->events (1) # wait for read data
+                         ->start
+                         ->cb (sub {
+                           my ($iow, $revents) = @_;
+                           # $revents must be 1 here, no need to check
+                           sysread $term->{socket}, my $buf, 8192
+                              or end-of-file;
+                         });
 
-    $iow = new urxvt::iow
-        Create a new io watcher object in stopped state.
+        $iow = new urxvt::iow
+            Create a new io watcher object in stopped state.
 
-    $iow = $iow->cb (sub { my ($iow, $reventmask) = @_; ... })
-        Set the callback to be called when io events are triggered.
-        $reventmask is a bitset as described in the "events" method.
+        $iow = $iow->cb (sub { my ($iow, $reventmask) = @_; ... })
+            Set the callback to be called when io events are triggered.
+            $reventmask is a bitset as described in the "events" method.
 
-    $iow = $iow->fd ($fd)
-        Set the filedescriptor (not handle) to watch.
+        $iow = $iow->fd ($fd)
+            Set the filedescriptor (not handle) to watch.
 
-    $iow = $iow->events ($eventmask)
-        Set the event mask to watch. Bit #0 (value 1) enables watching for
-        read data, Bit #1 (value 2) enables watching for write data.
+        $iow = $iow->events ($eventmask)
+            Set the event mask to watch. Bit #0 (value 1) enables watching
+            for read data, Bit #1 (value 2) enables watching for write data.
 
-    $iow = $iow->start
-        Start watching for requested events on the given handle.
+        $iow = $iow->start
+            Start watching for requested events on the given handle.
 
-    $iow = $iow->stop
-        Stop watching for events on the given filehandle.
+        $iow = $iow->stop
+            Stop watching for events on the given filehandle.
 
 ENVIRONMENT
   URXVT_PERL_VERBOSITY
-    This variable controls the verbosity level of the perl extension. Higher
-    numbers indicate more verbose output.
+        This variable controls the verbosity level of the perl extension.
+        Higher numbers indicate more verbose output.
 
-    =0 - only fatal messages
-    =3 - script loading and management
-    =10 - all events received
+        =0 - only fatal messages
+        =3 - script loading and management
+        =10 - all events received
 
 AUTHOR
-     Marc Lehmann <pcg@goof.com>
-     http://software.schmorp.de/pkg/rxvt-unicode
+         Marc Lehmann <pcg@goof.com>
+         http://software.schmorp.de/pkg/rxvt-unicode
 

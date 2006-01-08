@@ -402,8 +402,8 @@ OPTIONS
            while (<$slave>) { print $slave "got <$_>\n" }
 
     -pe *string*
-        Comma-separated list of perl extension scripts to use in this
-        terminal instance. See resource perl-ext.
+        Comma-separated list of perl extension scripts to use (or not to
+        use) in this terminal instance. See resource perl-ext for details.
 
 RESOURCES (available also as long-options)
     Note: `rxvt --help' gives a list of all resources (long options)
@@ -943,14 +943,23 @@ RESOURCES (available also as long-options)
 
     perl-ext-common: *string*
     perl-ext: *string*
-        Comma-separated list(s) of perl extension scripts to use in this
-        terminal instance. Each extension is looked up in the library
-        directories, loaded if necessary, and bound to the current terminal
-        instance. If this resource is empty or missing, then the perl
+        Comma-separated list(s) of perl extension scripts (default:
+        "default") to use in this terminal instance; option -pe.
+
+        Extension names can be prefixed with a "-" sign to prohibit using
+        it. This can be useful to selectively disable some extensions loaded
+        by default, or specified via the "perl-ext-common" resource. For
+        example, "default,-selection" will use all the default extension
+        except "selection".
+
+        Each extension is looked up in the library directories, loaded if
+        necessary, and bound to the current terminal instance.
+
+        If both of these resources are the empty string, then the perl
         interpreter will not be initialized. The idea behind two options is
         that perl-ext-common will be used for extensions that should be
         available to all instances, while perl-ext is used for specific
-        instances; option -pe.
+        instances.
 
     perl-eval: *string*
         Perl code to be evaluated when all extensions have been registered.

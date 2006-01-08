@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-07" "6.3" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-08" "6.3" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -154,8 +154,8 @@
 .Ve
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-Everytime a terminal object gets created, scripts specified via the
-\&\f(CW\*(C`perl\*(C'\fR resource are loaded and associated with it.
+Everytime a terminal object gets created, extension scripts specified via
+the \f(CW\*(C`perl\*(C'\fR resource are loaded and associated with it.
 .PP
 Scripts are compiled in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as \s-1UTF\-8\s0.
@@ -241,10 +241,11 @@ The following subroutines can be declared in extension files, and will be
 called whenever the relevant event happens.
 .PP
 The first argument passed to them is an object private to each terminal
-and extension package.  You can call all \f(CW\*(C`urxvt::term\*(C'\fR methods on it, but
+and extension package. You can call all \f(CW\*(C`urxvt::term\*(C'\fR methods on it, but
 its not a real \f(CW\*(C`urxvt::term\*(C'\fR object. Instead, the real \f(CW\*(C`urxvt::term\*(C'\fR
 object that is shared between all packages is stored in the \f(CW\*(C`term\*(C'\fR
-member.
+member. It is, however, blessed intot he package of the extension script,
+so for all practical purposes you can treat an extension script as a class.
 .PP
 All of them must return a boolean value. If it is true, then the event
 counts as being \fIconsumed\fR, and the invocation of other hooks is skipped,
@@ -296,16 +297,6 @@ should extend the selection itelf and return true to suppress the built-in
 processing.
 .Sp
 See the \fIselection\fR example extension.
-.ie n .IP "on_focus_in $term" 4
-.el .IP "on_focus_in \f(CW$term\fR" 4
-.IX Item "on_focus_in $term"
-Called whenever the window gets the keyboard focus, before urxvt does
-focus in processing.
-.ie n .IP "on_focus_out $term" 4
-.el .IP "on_focus_out \f(CW$term\fR" 4
-.IX Item "on_focus_out $term"
-Called wheneever the window loses keyboard focus, before urxvt does focus
-out processing.
 .ie n .IP "on_view_change $term\fR, \f(CW$offset" 4
 .el .IP "on_view_change \f(CW$term\fR, \f(CW$offset\fR" 4
 .IX Item "on_view_change $term, $offset"
@@ -378,6 +369,16 @@ Called just after the screen gets redrawn. See \f(CW\*(C`on_refresh_begin\*(C'\f
 Called whenever the user presses a key combination that has a
 \&\f(CW\*(C`perl:string\*(C'\fR action bound to it (see description of the \fBkeysym\fR
 resource in the @@RXVT_NAME@@(1) manpage).
+.ie n .IP "on_focus_in $term" 4
+.el .IP "on_focus_in \f(CW$term\fR" 4
+.IX Item "on_focus_in $term"
+Called whenever the window gets the keyboard focus, before rxvt-unicode
+does focus in processing.
+.ie n .IP "on_focus_out $term" 4
+.el .IP "on_focus_out \f(CW$term\fR" 4
+.IX Item "on_focus_out $term"
+Called wheneever the window loses keyboard focus, before rxvt-unicode does
+focus out processing.
 .ie n .IP "on_key_press $term\fR, \f(CW$event\fR, \f(CW$octets" 4
 .el .IP "on_key_press \f(CW$term\fR, \f(CW$event\fR, \f(CW$octets\fR" 4
 .IX Item "on_key_press $term, $event, $octets"
@@ -394,6 +395,12 @@ resource in the @@RXVT_NAME@@(1) manpage).
 .ie n .IP "on_motion_notify $term\fR, \f(CW$event" 4
 .el .IP "on_motion_notify \f(CW$term\fR, \f(CW$event\fR" 4
 .IX Item "on_motion_notify $term, $event"
+.ie n .IP "on_map_notify $term\fR, \f(CW$event" 4
+.el .IP "on_map_notify \f(CW$term\fR, \f(CW$event\fR" 4
+.IX Item "on_map_notify $term, $event"
+.ie n .IP "on_unmap_notify $term\fR, \f(CW$event" 4
+.el .IP "on_unmap_notify \f(CW$term\fR, \f(CW$event\fR" 4
+.IX Item "on_unmap_notify $term, $event"
 .PD
 Called whenever the corresponding X event is received for the terminal If
 the hook returns true, then the even will be ignored by rxvt\-unicode.
@@ -441,6 +448,13 @@ correct place, e.g. on stderr of the connecting urxvtc client.
 .IP "$time = urxvt::NOW" 4
 .IX Item "$time = urxvt::NOW"
 Returns the \*(L"current time\*(R" (as per the event loop).
+.IP "urxvt::CurrentTime" 4
+.IX Item "urxvt::CurrentTime"
+.PD 0
+.IP "urxvt::ShiftMask, LockMask, ControlMask, Mod1Mask, Mod2Mask, Mod3Mask, Mod4Mask, Mod5Mask, Button1Mask, Button2Mask, Button3Mask, Button4Mask, Button5Mask, AnyModifier" 4
+.IX Item "urxvt::ShiftMask, LockMask, ControlMask, Mod1Mask, Mod2Mask, Mod3Mask, Mod4Mask, Mod5Mask, Button1Mask, Button2Mask, Button3Mask, Button4Mask, Button5Mask, AnyModifier"
+.PD
+Various constants for use in X events.
 .Sh "\s-1RENDITION\s0"
 .IX Subsection "RENDITION"
 Rendition bitsets contain information about colour, font, font styles and
@@ -496,6 +510,24 @@ Change the custom value.
 .IP "$term\->destroy" 4
 .IX Item "$term->destroy"
 Destroy the terminal object (close the window, free resources etc.).
+.ie n .IP "$isset = $term\fR\->option ($optval[, \f(CW$set])" 4
+.el .IP "$isset = \f(CW$term\fR\->option ($optval[, \f(CW$set\fR])" 4
+.IX Item "$isset = $term->option ($optval[, $set])"
+Returns true if the option specified by \f(CW$optval\fR is enabled, and
+optionally change it. All option values are stored by name in the hash
+\&\f(CW%urxvt::OPTION\fR. Options not enabled in this binary are not in the hash.
+.Sp
+Here is a a likely non-exhaustive list of option names, please see the
+source file \fI/src/optinc.h\fR to see the actual list:
+.Sp
+.Vb 6
+\& borderLess console cursorBlink cursorUnderline hold iconic insecure
+\& intensityStyles jumpScroll loginShell mapAlert meta8 mouseWheelScrollPage
+\& pastableTabs pointerBlank reverseVideo scrollBar scrollBar_floating
+\& scrollBar_right scrollTtyKeypress scrollTtyOutput scrollWithBuffer
+\& secondaryScreen secondaryScroll skipBuiltinGlyphs transparent
+\& tripleclickwords utmpInhibit visualBell
+.Ve
 .ie n .IP "$value = $term\fR\->resource ($name[, \f(CW$newval])" 4
 .el .IP "$value = \f(CW$term\fR\->resource ($name[, \f(CW$newval\fR])" 4
 .IX Item "$value = $term->resource ($name[, $newval])"
@@ -515,8 +547,8 @@ Please note that resource strings will currently only be freed when the
 terminal is destroyed, so changing options frequently will eat memory.
 .Sp
 Here is a a likely non-exhaustive list of resource names, not all of which
-are supported in every build, please see the source to see the actual
-list:
+are supported in every build, please see the source file \fI/src/rsinc.h\fR
+to see the actual list:
 .Sp
 .Vb 12
 \&  answerbackstring backgroundPixmap backspace_key boldFont boldItalicFont
@@ -617,6 +649,12 @@ If hidden, display the overlay again.
 .RE
 .RS 4
 .RE
+.ie n .IP "$popup = $term\->popup ($event)" 4
+.el .IP "$popup = \f(CW$term\fR\->popup ($event)" 4
+.IX Item "$popup = $term->popup ($event)"
+Creates a new \f(CW\*(C`urxvt::popup\*(C'\fR object that implements a popup menu. The
+\&\f(CW$event\fR \fImust\fR be the event causing the menu to pop up (a button event,
+currently).
 .ie n .IP "$cellwidth = $term\->strwidth ($string)" 4
 .el .IP "$cellwidth = \f(CW$term\fR\->strwidth ($string)" 4
 .IX Item "$cellwidth = $term->strwidth ($string)"
@@ -697,6 +735,19 @@ Return the window id of the terminal window.
 .IX Item "$lines_in_scrollback = $term->nsaved"
 .PD
 Return various integers describing terminal characteristics.
+.ie n .IP "$modifiermask = $term\->ModLevel3Mask" 4
+.el .IP "$modifiermask = \f(CW$term\fR\->ModLevel3Mask" 4
+.IX Item "$modifiermask = $term->ModLevel3Mask"
+.PD 0
+.ie n .IP "$modifiermask = $term\->ModMetaMask" 4
+.el .IP "$modifiermask = \f(CW$term\fR\->ModMetaMask" 4
+.IX Item "$modifiermask = $term->ModMetaMask"
+.ie n .IP "$modifiermask = $term\->ModNumLockMask" 4
+.el .IP "$modifiermask = \f(CW$term\fR\->ModNumLockMask" 4
+.IX Item "$modifiermask = $term->ModNumLockMask"
+.PD
+Return the modifier masks corresponding to the \*(L"\s-1ISO\s0 Level 3 Shift\*(R" (often
+AltGr), the meta key (often Alt) and the num lock key, if applicable.
 .ie n .IP "$view_start = $term\->view_start ([$newvalue])" 4
 .el .IP "$view_start = \f(CW$term\fR\->view_start ([$newvalue])" 4
 .IX Item "$view_start = $term->view_start ([$newvalue])"
@@ -810,12 +861,16 @@ where one character corresponds to one screen cell. See
 .IX Item "$string = $term->special_decode $text"
 Converts rxvt-unicodes text reprsentation into a perl string. See
 \&\f(CW\*(C`$term\->ROW_t\*(C'\fR for details.
+.ie n .Sh "The ""urxvt::popup"" Class"
+.el .Sh "The \f(CWurxvt::popup\fP Class"
+.IX Subsection "The urxvt::popup Class"
 .ie n .Sh "The ""urxvt::timer"" Class"
 .el .Sh "The \f(CWurxvt::timer\fP Class"
 .IX Subsection "The urxvt::timer Class"
+.RS 4
 This class implements timer watchers/events. Time is represented as a
 fractional number of seconds since the epoch. Example:
-.PP
+.Sp
 .Vb 8
 \&   $term->{overlay} = $term->overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);
 \&   $term->{timer} = urxvt::timer
@@ -860,11 +915,13 @@ Set the event trigger time to \f(CW$tstamp\fR and start the timer.
 .el .IP "$timer = \f(CW$timer\fR\->stop" 4
 .IX Item "$timer = $timer->stop"
 Stop the timer.
+.RE
+.RS 4
 .ie n .Sh "The ""urxvt::iow"" Class"
 .el .Sh "The \f(CWurxvt::iow\fP Class"
 .IX Subsection "The urxvt::iow Class"
 This class implements io watchers/events. Example:
-.PP
+.Sp
 .Vb 12
 \&  $term->{socket} = ...
 \&  $term->{iow} = urxvt::iow
@@ -904,6 +961,8 @@ Start watching for requested events on the given handle.
 .el .IP "$iow = \f(CW$iow\fR\->stop" 4
 .IX Item "$iow = $iow->stop"
 Stop watching for events on the given filehandle.
+.RE
+.RS 4
 .SH "ENVIRONMENT"
 .IX Header "ENVIRONMENT"
 .Sh "\s-1URXVT_PERL_VERBOSITY\s0"
@@ -917,6 +976,8 @@ numbers indicate more verbose output.
 .IX Item "=3 - script loading and management"
 .IP "=10 \- all events received" 4
 .IX Item "=10 - all events received"
+.RE
+.RS 4
 .PD
 .SH "AUTHOR"
 .IX Header "AUTHOR"

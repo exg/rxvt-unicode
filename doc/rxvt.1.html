@@ -645,8 +645,8 @@ longer example is in <em>doc/pty-fd</em>):</p>
 <dt><strong><a name="item__2dpe_string"><strong>-pe</strong> <em>string</em></a></strong><br />
 </dt>
 <dd>
-Comma-separated list of perl extension scripts to use in this terminal
-instance. See resource <strong>perl-ext</strong>.
+Comma-separated list of perl extension scripts to use (or not to use) in
+this terminal instance. See resource <strong>perl-ext</strong> for details.
 </dd>
 <p></p></dl>
 <p>
@@ -1455,13 +1455,25 @@ info):</p>
 <dt><strong><a name="item_perl_2dext_3a_string"><strong>perl-ext</strong>: <em>string</em></a></strong><br />
 </dt>
 <dd>
-Comma-separated <code>list(s)</code> of perl extension scripts to use in this terminal
-instance. Each extension is looked up in the library directories, loaded
-if necessary, and bound to the current terminal instance. If this
-resource is empty or missing, then the perl interpreter will not be
-initialized. The idea behind two options is that <strong>perl-ext-common</strong> will
-be used for extensions that should be available to all instances, while
-<strong>perl-ext</strong> is used for specific instances; option <strong>-pe</strong>.
+Comma-separated <code>list(s)</code> of perl extension scripts (default: <code>default</code>) to
+use in this terminal instance; option <strong>-pe</strong>.
+</dd>
+<dd>
+<p>Extension names can be prefixed with a <code>-</code> sign to prohibit using
+it. This can be useful to selectively disable some extensions loaded
+by default, or specified via the <code>perl-ext-common</code> resource. For
+example, <code>default,-selection</code> will use all the default extension except
+<code>selection</code>.</p>
+</dd>
+<dd>
+<p>Each extension is looked up in the library directories, loaded if
+necessary, and bound to the current terminal instance.</p>
+</dd>
+<dd>
+<p>If both of these resources are the empty string, then the perl
+interpreter will not be initialized. The idea behind two options is that
+<strong>perl-ext-common</strong> will be used for extensions that should be available to
+all instances, while <strong>perl-ext</strong> is used for specific instances.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_perl_2deval_3a_string"><strong>perl-eval</strong>: <em>string</em></a></strong><br />

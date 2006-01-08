@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2006-01-07" "6.3" "RXVT-UNICODE"
+.TH rxvt 1 "2006-01-08" "6.3" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -546,8 +546,8 @@ longer example is in \fIdoc/pty\-fd\fR):
 .Ve
 .IP "\fB\-pe\fR \fIstring\fR" 4
 .IX Item "-pe string"
-Comma-separated list of perl extension scripts to use in this terminal
-instance. See resource \fBperl-ext\fR.
+Comma-separated list of perl extension scripts to use (or not to use) in
+this terminal instance. See resource \fBperl-ext\fR for details.
 .SH "RESOURCES (available also as long\-options)"
 .IX Header "RESOURCES (available also as long-options)"
 Note: `@@RXVT_NAME@@ \-\-help' gives a list of all resources (long
@@ -1112,13 +1112,22 @@ info):
 .IP "\fBperl-ext\fR: \fIstring\fR" 4
 .IX Item "perl-ext: string"
 .PD
-Comma-separated list(s) of perl extension scripts to use in this terminal
-instance. Each extension is looked up in the library directories, loaded
-if necessary, and bound to the current terminal instance. If this
-resource is empty or missing, then the perl interpreter will not be
-initialized. The idea behind two options is that \fBperl-ext-common\fR will
-be used for extensions that should be available to all instances, while
-\&\fBperl-ext\fR is used for specific instances; option \fB\-pe\fR.
+Comma-separated list(s) of perl extension scripts (default: \f(CW\*(C`default\*(C'\fR) to
+use in this terminal instance; option \fB\-pe\fR.
+.Sp
+Extension names can be prefixed with a \f(CW\*(C`\-\*(C'\fR sign to prohibit using
+it. This can be useful to selectively disable some extensions loaded
+by default, or specified via the \f(CW\*(C`perl\-ext\-common\*(C'\fR resource. For
+example, \f(CW\*(C`default,\-selection\*(C'\fR will use all the default extension except
+\&\f(CW\*(C`selection\*(C'\fR.
+.Sp
+Each extension is looked up in the library directories, loaded if
+necessary, and bound to the current terminal instance.
+.Sp
+If both of these resources are the empty string, then the perl
+interpreter will not be initialized. The idea behind two options is that
+\&\fBperl-ext-common\fR will be used for extensions that should be available to
+all instances, while \fBperl-ext\fR is used for specific instances.
 .IP "\fBperl-eval\fR: \fIstring\fR" 4
 .IX Item "perl-eval: string"
 Perl code to be evaluated when all extensions have been registered. See the

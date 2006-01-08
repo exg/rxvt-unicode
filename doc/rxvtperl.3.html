@@ -24,6 +24,7 @@
 		<li><a href="#functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></li>
 		<li><a href="#rendition">RENDITION</a></li>
 		<li><a href="#the_urxvt__term_class">The <code>urxvt::term</code> Class</a></li>
+		<li><a href="#the_urxvt__popup_class">The <code>urxvt::popup</code> Class</a></li>
 		<li><a href="#the_urxvt__timer_class">The <code>urxvt::timer</code> Class</a></li>
 		<li><a href="#the_urxvt__iow_class">The <code>urxvt::iow</code> Class</a></li>
 	</ul>
@@ -63,8 +64,8 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p>Everytime a terminal object gets created, scripts specified via the
-<code>perl</code> resource are loaded and associated with it.</p>
+<p>Everytime a terminal object gets created, extension scripts specified via
+the <code>perl</code> resource are loaded and associated with it.</p>
 <p>Scripts are compiled in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as UTF-8.</p>
 <p>Each script will only ever be loaded once, even in rxvtd, where
@@ -171,10 +172,11 @@ locale-specific way.
 <p>The following subroutines can be declared in extension files, and will be
 called whenever the relevant event happens.</p>
 <p>The first argument passed to them is an object private to each terminal
-and extension package.  You can call all <code>urxvt::term</code> methods on it, but
+and extension package. You can call all <code>urxvt::term</code> methods on it, but
 its not a real <code>urxvt::term</code> object. Instead, the real <code>urxvt::term</code>
 object that is shared between all packages is stored in the <code>term</code>
-member.</p>
+member. It is, however, blessed intot he package of the extension script,
+so for all practical purposes you can treat an extension script as a class.</p>
 <p>All of them must return a boolean value. If it is true, then the event
 counts as being <em>consumed</em>, and the invocation of other hooks is skipped,
 and the relevant action might not be carried out by the C++ code.</p>
@@ -238,20 +240,6 @@ processing.
 </dd>
 <dd>
 <p>See the <em>selection</em> example extension.</p>
-</dd>
-<p></p>
-<dt><strong><a name="item_on_focus_in__24term">on_focus_in $term</a></strong><br />
-</dt>
-<dd>
-Called whenever the window gets the keyboard focus, before urxvt does
-focus in processing.
-</dd>
-<p></p>
-<dt><strong><a name="item_on_focus_out__24term">on_focus_out $term</a></strong><br />
-</dt>
-<dd>
-Called wheneever the window loses keyboard focus, before urxvt does focus
-out processing.
 </dd>
 <p></p>
 <dt><strong><a name="item_on_view_change__24term_2c__24offset">on_view_change $term, $offset</a></strong><br />
@@ -348,6 +336,20 @@ Called whenever the user presses a key combination that has a
 resource in the <code>rxvt(1)</code> manpage).
 </dd>
 <p></p>
+<dt><strong><a name="item_on_focus_in__24term">on_focus_in $term</a></strong><br />
+</dt>
+<dd>
+Called whenever the window gets the keyboard focus, before rxvt-unicode
+does focus in processing.
+</dd>
+<p></p>
+<dt><strong><a name="item_on_focus_out__24term">on_focus_out $term</a></strong><br />
+</dt>
+<dd>
+Called wheneever the window loses keyboard focus, before rxvt-unicode does
+focus out processing.
+</dd>
+<p></p>
 <dt><strong><a name="item_on_key_press__24term_2c__24event_2c__24octets">on_key_press $term, $event, $octets</a></strong><br />
 </dt>
 <dt><strong><a name="item_on_key_release__24term_2c__24event">on_key_release $term, $event</a></strong><br />
@@ -357,6 +359,10 @@ resource in the <code>rxvt(1)</code> manpage).
 <dt><strong><a name="item_on_button_release__24term_2c__24event">on_button_release $term, $event</a></strong><br />
 </dt>
 <dt><strong><a name="item_on_motion_notify__24term_2c__24event">on_motion_notify $term, $event</a></strong><br />
+</dt>
+<dt><strong><a name="item_on_map_notify__24term_2c__24event">on_map_notify $term, $event</a></strong><br />
+</dt>
+<dt><strong><a name="item_on_unmap_notify__24term_2c__24event">on_unmap_notify $term, $event</a></strong><br />
 </dt>
 <dd>
 Called whenever the corresponding X event is received for the terminal If
@@ -424,6 +430,16 @@ correct place, e.g. on stderr of the connecting urxvtc client.</p>
 </dt>
 <dd>
 Returns the ``current time'' (as per the event loop).
+</dd>
+<p></p>
+<dt><strong><a name="item_urxvt_3a_3acurrenttime">urxvt::CurrentTime</a></strong><br />
+</dt>
+<dt><strong><a name="item_urxvt_3a_3ashiftmask_2c_lockmask_2c_controlmask_2c">urxvt::ShiftMask, LockMask, ControlMask, Mod1Mask, Mod2Mask,
+Mod3Mask, Mod4Mask, Mod5Mask, Button1Mask, Button2Mask, Button3Mask,
+Button4Mask, Button5Mask, AnyModifier</a></strong><br />
+</dt>
+<dd>
+Various constants for use in X events.
 </dd>
 <p></p></dl>
 <p>
@@ -498,6 +514,27 @@ Change the custom value.
 Destroy the terminal object (close the window, free resources etc.).
 </dd>
 <p></p>
+<dt><strong><a name="item_option">$isset = $term-&gt;option ($optval[, $set])</a></strong><br />
+</dt>
+<dd>
+Returns true if the option specified by <code>$optval</code> is enabled, and
+optionally change it. All option values are stored by name in the hash
+<code>%urxvt::OPTION</code>. Options not enabled in this binary are not in the hash.
+</dd>
+<dd>
+<p>Here is a a likely non-exhaustive list of option names, please see the
+source file <em>/src/optinc.h</em> to see the actual list:</p>
+</dd>
+<dd>
+<pre>
+ borderLess console cursorBlink cursorUnderline hold iconic insecure
+ intensityStyles jumpScroll loginShell mapAlert meta8 mouseWheelScrollPage
+ pastableTabs pointerBlank reverseVideo scrollBar scrollBar_floating
+ scrollBar_right scrollTtyKeypress scrollTtyOutput scrollWithBuffer
+ secondaryScreen secondaryScroll skipBuiltinGlyphs transparent
+ tripleclickwords utmpInhibit visualBell</pre>
+</dd>
+<p></p>
 <dt><strong><a name="item_resource">$value = $term-&gt;resource ($name[, $newval])</a></strong><br />
 </dt>
 <dd>
@@ -521,8 +558,8 @@ terminal is destroyed, so changing options frequently will eat memory.</p>
 </dd>
 <dd>
 <p>Here is a a likely non-exhaustive list of resource names, not all of which
-are supported in every build, please see the source to see the actual
-list:</p>
+are supported in every build, please see the source file <em>/src/rsinc.h</em>
+to see the actual list:</p>
 </dd>
 <dd>
 <pre>
@@ -642,6 +679,14 @@ If visible, hide the overlay, but do not destroy it.
 If hidden, display the overlay again.
 </dd>
 <p></p></dl>
+<dt><strong><a name="item_popup">$popup = $term-&gt;popup ($event)</a></strong><br />
+</dt>
+<dd>
+Creates a new <code>urxvt::popup</code> object that implements a popup menu. The
+<code>$event</code> <em>must</em> be the event causing the menu to pop up (a button event,
+currently).
+</dd>
+<p></p>
 <dt><strong><a name="item_strwidth">$cellwidth = $term-&gt;strwidth ($string)</a></strong><br />
 </dt>
 <dd>
@@ -729,6 +774,17 @@ Return the window id of the terminal window.
 </dt>
 <dd>
 Return various integers describing terminal characteristics.
+</dd>
+<p></p>
+<dt><strong><a name="item_modlevel3mask">$modifiermask = $term-&gt;ModLevel3Mask</a></strong><br />
+</dt>
+<dt><strong><a name="item_modmetamask">$modifiermask = $term-&gt;ModMetaMask</a></strong><br />
+</dt>
+<dt><strong><a name="item_modnumlockmask">$modifiermask = $term-&gt;ModNumLockMask</a></strong><br />
+</dt>
+<dd>
+Return the modifier masks corresponding to the ``ISO Level 3 Shift'' (often
+AltGr), the meta key (often Alt) and the num lock key, if applicable.
 </dd>
 <p></p>
 <dt><strong><a name="item_view_start">$view_start = $term-&gt;view_start ([$newvalue])</a></strong><br />
@@ -876,6 +932,9 @@ Converts rxvt-unicodes text reprsentation into a perl string. See
 <a href="#item_row_t"><code>$term-&gt;ROW_t</code></a> for details.
 </dd>
 <p></p></dl>
+<p>
+</p>
+<h2><a name="the_urxvt__popup_class">The <code>urxvt::popup</code> Class</a></h2>
 <p>
 </p>
 <h2><a name="the_urxvt__timer_class">The <code>urxvt::timer</code> Class</a></h2>
