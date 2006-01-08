@@ -38,6 +38,12 @@
 
 #include "perlxsi.c"
 
+#if defined(HAVE_SCROLLBARS) || defined(MENUBAR)
+# define GRAB_CURSOR THIS->leftptr_cursor
+#else
+# define GRAB_CURSOR None
+#endif
+
 #undef LINENO
 #define LINENO(n) MOD (THIS->term_start + int(n), THIS->total_rows)
 #undef ROW
@@ -737,7 +743,7 @@ rxvt_term::grab_button (int button, U32 modifiers)
 	CODE:
 	XGrabButton (THIS->display->display, button, modifiers, THIS->vt, 1,
                      ButtonPressMask | ButtonReleaseMask | EnterWindowMask | LeaveWindowMask | PointerMotionMask,
-                     GrabModeSync, GrabModeSync, None, None);
+                     GrabModeSync, GrabModeSync, None, GRAB_CURSOR);
 
 bool
 rxvt_term::grab (U32 eventtime, int sync = 0)
@@ -749,7 +755,7 @@ rxvt_term::grab (U32 eventtime, int sync = 0)
 
         if (!XGrabPointer (THIS->display->display, THIS->vt, 0,
                            ButtonPressMask | ButtonReleaseMask | EnterWindowMask | LeaveWindowMask | PointerMotionMask,
-                           mode, mode, None, None, eventtime))
+                           mode, mode, None, GRAB_CURSOR, eventtime))
           if (!XGrabKeyboard (THIS->display->display, THIS->vt, 0, mode, mode, eventtime))
             THIS->perl.grabtime = eventtime;
           else
