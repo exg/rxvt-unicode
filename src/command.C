@@ -989,13 +989,15 @@ rxvt_term::flush ()
                 {
                   l = &ROW (row++);
 
-                  if (!(l->f & LINE_FILTERED))
+                  if (l->f & LINE_FILTERED)
+                    row++;
+                  else
                     {
                       // line not filtered, mark it as filtered
                       l->f |= LINE_FILTERED;
                       while (l->is_longer ())
                         {
-                          l = &ROW (row++);
+                          l = &ROW (++row);
                           l->f |= LINE_FILTERED;
                         }
 

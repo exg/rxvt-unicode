@@ -979,6 +979,9 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 #if ENABLE_PERL
   rxvt_perl_term  perl;
 #endif
+#if USE_XGETDEFAULT
+  XrmDatabase     xrmdatabase;
+#endif
 
   struct mbstate  mbstate;              // current input multibyte state
 

@@ -406,7 +406,7 @@ static const char optionsstring[] = "options: "
                                     "NoResources"
 #else
 # if defined(USE_XGETDEFAULT)
-                                    "XGetDefaults"
+                                    "XGetDefault"
 # else
                                     ".Xdefaults"
 # endif
@@ -882,6 +882,20 @@ rxvt_term::get_xdefaults (FILE *stream, const char *name)
 # endif				/* ! USE_XGETDEFAULT */
 #endif				/* NO_RESOURCES */
 
+#ifdef USE_XGETDEFAULT
+char *get_res (XrmDatabase database, const char *program, const char *option)
+{
+  char resource[512];
+  char *type;
+  XrmValue result;
+
+  snprintf (resource, sizeof (resource), "%s.%s", program, option);
+  XrmGetResource (database, resource, resource, &type, &result);
+
+  return result.addr;
+}
+#endif
+
 /*{{{ read the resources files */
 /*
  * using XGetDefault () or the hand-rolled replacement
@@ -915,13 +929,11 @@ rxvt_term::extract_resources ()
    */
   int entry;
 
-#  ifdef XrmEnumOneLevel
   char *displayResource, *xe;
   XrmName name_prefix[3];
   XrmClass class_prefix[3];
   XrmDatabase database, rdb1;
 
-  XrmInitialize ();
   database = NULL;
 
   // for ordering, see for example http://www.faqs.org/faqs/Xt-FAQ/ Subject: 20
@@ -992,8 +1004,7 @@ rxvt_term::extract_resources ()
         }
     }
 
-  XrmSetDatabase (disp, database);
-#  endif
+  xrmdatabase = database;
 
   /*
    * Query resources for options that affect us
@@ -1007,14 +1018,14 @@ rxvt_term::extract_resources ()
       if (kw == NULL || rs[optList[entry].doff] != NULL)
         continue;		/* previously set */
 
-      p = XGetDefault (disp, rs[Rs_name], kw);
-      p0 = XGetDefault (disp, "!INVALIDPROGRAMMENAMEDONTMATCH!", kw);
+      p = get_res (database, rs[Rs_name], kw);
+      p0 = get_res (database, "!INVALIDPROGRAMMENAMEDONTMATCH!", kw);
       if (p == NULL || (p0 && strcmp (p, p0) == 0))
         {
-          p = XGetDefault (disp, RESCLASS, kw);
+          p = get_res (database, RESCLASS, kw);
 #ifdef RESFALLBACK
           if (p == NULL || (p0 && strcmp (p, p0) == 0))
-            p = XGetDefault (disp, RESFALLBACK, kw);
+            p = get_res (database, RESFALLBACK, kw);
 #endif
         }
 
@@ -1051,7 +1062,7 @@ rxvt_term::extract_resources ()
   class_prefix[1] = XrmStringToName ("Keysym");
   class_prefix[2] = NULLQUARK;
   /* XXX: Need to check sizeof (rxvt_t) == sizeof (XPointer) */
-  XrmEnumerateDatabase (XrmGetDatabase (disp), name_prefix, class_prefix,
+  XrmEnumerateDatabase (database, name_prefix, class_prefix,
                         XrmEnumOneLevel, rxvt_define_key, NULL);
 #   ifdef RESFALLBACK
   name_prefix[0] = XrmStringToName (RESFALLBACK);
@@ -1059,7 +1070,7 @@ rxvt_term::extract_resources ()
   class_prefix[0] = XrmStringToName (RESFALLBACK);
   class_prefix[1] = XrmStringToName ("Keysym");
   /* XXX: Need to check sizeof (rxvt_t) == sizeof (XPointer) */
-  XrmEnumerateDatabase (XrmGetDatabase (disp), name_prefix, class_prefix,
+  XrmEnumerateDatabase (database, name_prefix, class_prefix,
                         XrmEnumOneLevel, rxvt_define_key, NULL);
 #   endif
 #  endif

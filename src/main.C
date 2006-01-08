@@ -276,6 +276,9 @@ rxvt_term::~rxvt_term ()
 #if OFF_FOCUS_FADING
   delete pix_colors_unfocused;
 #endif
+#if USE_XGETDEFAULT
+  XrmDestroyDatabase (xrmdatabase);
+#endif
 
   displays.put (display);
 
@@ -615,6 +618,10 @@ rxvt_init ()
   old_xerror_handler = XSetErrorHandler ((XErrorHandler) rxvt_xerror_handler);
   // TODO: handle this with exceptions and tolerate the memory loss
   XSetIOErrorHandler (rxvt_xioerror_handler);
+
+#ifdef USE_XGETDEFAULT
+  XrmInitialize ();
+#endif
 }
 
 /* ------------------------------------------------------------------------- *
