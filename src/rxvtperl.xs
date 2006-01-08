@@ -408,20 +408,20 @@ rxvt_perl_interp::~rxvt_perl_interp ()
 }
 
 void
-rxvt_perl_interp::init (bool tainted)
+rxvt_perl_interp::init ()
 {
   if (!perl)
     {
       char *argv[] = {
         "",
-        "-edo '" LIBDIR "/urxvt.pm' or ($@ and die $@) or exit 1",
         "-T",
+        "-edo '" LIBDIR "/urxvt.pm' or ($@ and die $@) or exit 1",
       };
 
       perl = perl_alloc ();
       perl_construct (perl);
 
-      if (perl_parse (perl, xs_init, 2 + !!tainted, argv, (char **)NULL)
+      if (perl_parse (perl, xs_init, 3, argv, (char **)NULL)
           || perl_run (perl))
         {
           rxvt_warn ("unable to initialize perl-interpreter, continuing without.\n");

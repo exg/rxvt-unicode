@@ -53,6 +53,16 @@ static uid_t saved_euid;
 static gid_t saved_egid;
 #endif
 
+bool
+rxvt_tainted ()
+{
+#if (defined(HAVE_SETEUID) || defined(HAVE_SETREUID)) && !defined(__CYGWIN32__)
+  return getuid () != saved_euid || getgid () != saved_egid;
+#else
+  return false;
+#endif
+}
+
 vector<rxvt_term *> rxvt_term::termlist;
 
 static char curlocale[128], savelocale[128];
@@ -504,24 +514,20 @@ rxvt_term::init (int argc, const char *const *argv)
       || (rs[Rs_perl_ext_2] && *rs[Rs_perl_ext_2])
       || (rs[Rs_perl_eval] && *rs[Rs_perl_eval]))
     {
-      bool tainted = false;
-
 #if (defined(HAVE_SETEUID) || defined(HAVE_SETREUID)) && !defined(__CYGWIN32__)
       // ignore some perl-related arguments if some bozo installed us set[ug]id
-      if (getuid () != saved_euid || getgid () != saved_egid)
+      if (rxvt_tainted ())
         {
-          tainted = true;
-
           if ((rs[Rs_perl_lib] && *rs[Rs_perl_lib])
               || (rs[Rs_perl_eval] && *rs[Rs_perl_eval]))
             {
               rxvt_warn ("running with elevated privileges: ignoring perl-lib and perl-eval.\n");
-              rs[Rs_perl_lib] = 0;
-              rs[Rs_perl_eval] = "our $tainted = 1";
+              rs[Rs_perl_lib]  = 0;
+              rs[Rs_perl_eval] = 0;
             }
         }
 #endif
-      rxvt_perl.init (tainted);
+      rxvt_perl.init ();
       HOOK_INVOKE ((this, HOOK_INIT, DT_END));
     }
 #endif

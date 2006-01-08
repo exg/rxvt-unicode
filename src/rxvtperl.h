@@ -41,7 +41,7 @@ struct rxvt_perl_interp
 
   bool should_invoke[HOOK_NUM];
 
-  void init (bool tainted);
+  void init ();
   bool invoke (rxvt_term *term, hook_type htype, ...);
   void line_update (rxvt_term *term);
 };
