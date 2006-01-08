@@ -9,7 +9,7 @@ sub on_keyboard_command {
    ()
 }
 
-my @patterns = (
+my @mark_patterns = (
    # urls, just a heuristic
    qr{(
       (?:https?|ftp|news|mailto|file)://[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),~]+
@@ -30,7 +30,10 @@ my @patterns = (
    )}x,
 );
 
-my $x = "‘hallole’";
+my @simplify_patterns = (
+   qr{^"([^\\"'\ \t|&;<>()*?]+)"$}, # "simple" => simple
+   qr{^(.*)[,\-]$},
+);
 
 sub on_sel_extend {
    my ($self) = @_;
@@ -40,11 +43,22 @@ sub on_sel_extend {
    my $offset = $line->offset_of ($row, $col);
    my $text = $line->t;
 
-   for my $regex (@patterns) {
+   for my $regex (@mark_patterns) {
       while ($text =~ /$regex/g) {
          if ($-[1] <= $offset and $offset <= $+[1]) {
-            $self->selection_beg ($line->coord_of ($-[1]));
-            $self->selection_end ($line->coord_of ($+[1]));
+            my $match = $1;
+            my ($ofs1, $ofs2) = ($-[1], $+[1]);
+
+            for my $regex (@simplify_patterns) {
+               if ($match =~ $regex) {
+                  $match = $1;
+                  $ofs1 += $-[1];
+                  $ofs2 = $ofs1 + length $match;
+               }
+            }
+
+            $self->selection_beg ($line->coord_of ($ofs1));
+            $self->selection_end ($line->coord_of ($ofs2));
             return 1;
          }
       }
