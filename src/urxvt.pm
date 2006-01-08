@@ -1045,7 +1045,7 @@ sub add_toggle {
       type => "button",
       text => "  $text",
       value => $value,
-      render => sub { ($item->{value} ? "✔" : " ") . $text },
+      render => sub { ($item->{value} ? "* " : "  ") . $text },
       activate => sub { $cb->($item->{value} = !$item->{value}); },
    };
 

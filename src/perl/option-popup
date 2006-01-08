@@ -1,5 +1,11 @@
 #! perl
 
+sub on_start {
+   my ($self) = @_;
+
+   $self->grab_button (3, urxvt::ControlMask);
+}
+
 sub on_button_press {
    my ($self, $event) = @_;
 
