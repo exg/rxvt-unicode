@@ -9,6 +9,7 @@ sub on_keyboard_command {
    ()
 }
 
+# "find interetsing things"-patterns
 my @mark_patterns = (
    # urls, just a heuristic
    qr{(
@@ -30,9 +31,10 @@ my @mark_patterns = (
    )}x,
 );
 
+# "correct obvious? crap"-patterns
 my @simplify_patterns = (
    qr{^"([^\\"'\ \t|&;<>()*?]+)"$}, # "simple" => simple
-   qr{^(.*)[,\-]$},
+   qr{^(.*)[,\-]$},                 # strip off trailing , and -
 );
 
 sub on_sel_extend {
@@ -46,19 +48,18 @@ sub on_sel_extend {
    for my $regex (@mark_patterns) {
       while ($text =~ /$regex/g) {
          if ($-[1] <= $offset and $offset <= $+[1]) {
+            my $ofs = $-[1];
             my $match = $1;
-            my ($ofs1, $ofs2) = ($-[1], $+[1]);
 
             for my $regex (@simplify_patterns) {
                if ($match =~ $regex) {
                   $match = $1;
-                  $ofs1 += $-[1];
-                  $ofs2 = $ofs1 + length $match;
+                  $ofs += $-[1];
                }
             }
 
-            $self->selection_beg ($line->coord_of ($ofs1));
-            $self->selection_end ($line->coord_of ($ofs2));
+            $self->selection_beg ($line->coord_of ($ofs));
+            $self->selection_end ($line->coord_of ($ofs + length $match));
             return 1;
          }
       }
