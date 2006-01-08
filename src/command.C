@@ -4157,10 +4157,7 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
         {
 #if ENABLE_STYLES
           case 1021:
-            if (mode)
-              SET_OPTION (Opt_intensityStyles);
-            else
-              CLR_OPTION (Opt_intensityStyles);
+            set_option (Opt_intensityStyles, mode);
 
             scr_touch (true);
             break;
@@ -4192,10 +4189,7 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
                 set_widthheight (((state ? 132 : 80) * fwidth), height);
               break;
             case 4:			/* smooth scrolling */
-              if (!state)
-                SET_OPTION (Opt_jumpScroll);
-              else
-                CLR_OPTION (Opt_jumpScroll);
+              set_option (Opt_jumpScroll, !state);
               break;
             case 5:			/* reverse video */
               scr_rvideo_mode (state);
@@ -4246,16 +4240,10 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
               break;		/* X11 mouse highlighting */
 #endif
             case 1010:		/* scroll to bottom on TTY output inhibit */
-              if (!state)
-                SET_OPTION (Opt_scrollTtyOutput);
-              else
-                CLR_OPTION (Opt_scrollTtyOutput);
+              set_option (Opt_scrollTtyOutput, !state);
               break;
             case 1011:		/* scroll to bottom on key press */
-              if (state)
-                SET_OPTION (Opt_scrollTtyKeypress);
-              else
-                CLR_OPTION (Opt_scrollTtyKeypress);
+              set_option (Opt_scrollTtyKeypress, state);
               break;
             case 1047:		/* secondary screen w/ clearing last */
               if (OPTION (Opt_secondaryScreen))

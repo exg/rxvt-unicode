@@ -310,7 +310,7 @@ struct rxvt_font_default : rxvt_font {
       return true;
 
     if (unicode >= 0x2500 && unicode <= 0x259f &&
-        ! OPTION_R (Opt_skipBuiltinGlyphs))
+        !r->option (Opt_skipBuiltinGlyphs))
       return true;
 
     if (IS_COMPOSE (unicode))
@@ -356,8 +356,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
       int width = text - tp;
       int fwidth = r->fwidth * width;
 
-      if (0x2500 <= t && t <= 0x259f &&
-          ! OPTION_R (Opt_skipBuiltinGlyphs))
+      if (0x2500 <= t && t <= 0x259f)
         {
           uint16_t offs = linedraw_offs[t - 0x2500];
           uint32_t *a = linedraw_command + (offs >> 4);

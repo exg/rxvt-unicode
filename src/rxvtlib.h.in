@@ -214,14 +214,6 @@ enum {
 # undef def
 };
 
-#define SET_OPTION(opt)		 (options |= (opt))
-#define CLR_OPTION(opt)		 (options &= ~(opt))
-#define OPTION(opt)              (options & (opt))
-#define OPTION_R(opt)            (r->options & (opt))
-#define DEFAULT_OPTIONS          (Opt_scrollBar | Opt_scrollTtyOutput \
-                                  | Opt_jumpScroll | Opt_secondaryScreen \
-                                  | Opt_pastableTabs | Opt_intensityStyles)
-
 /* ------------------------------------------------------------------------- */
 
 typedef struct {
@@ -251,7 +243,7 @@ typedef struct {
 struct rxvt_vars : TermWin_t {
   scrollBar_t     scrollBar;
   menuBar_t       menuBar;
-  unsigned long   options;
+  uint32_t        options;
   XSizeHints      szHint;
   rxvt_display   *display;
   rxvt_color     *pix_colors;

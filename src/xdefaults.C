@@ -575,10 +575,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
               fprintf (stderr, "boolean (%s,%s) = %s\n",
                       optList[entry].opt, optList[entry].kw, flag);
 #endif
-              if (flag == On)
-                SET_OPTION (optList[entry].flag & Optflag_mask);
-              else
-                CLR_OPTION (optList[entry].flag & Optflag_mask);
+              set_option (optList[entry].flag & Optflag_mask, flag == On);
 
               if (optList[entry].doff != -1)
                 rs[optList[entry].doff] = flag;
@@ -869,10 +866,7 @@ rxvt_term::get_xdefaults (FILE *stream, const char *name)
                         if (optList_isReverse (entry))
                           s = !s;
 
-                        if (s)
-                          SET_OPTION (optList[entry].flag & Optflag_mask);
-                        else
-                          CLR_OPTION (optList[entry].flag & Optflag_mask);
+                        set_option (optList[entry].flag & Optflag_mask, s);
                       }
                   }
 
@@ -1041,10 +1035,7 @@ rxvt_term::extract_resources ()
               if (optList_isReverse (entry))
                 s = !s;
 
-              if (s)
-                SET_OPTION (optList[entry].flag & Optflag_mask);
-              else
-                CLR_OPTION (optList[entry].flag & Optflag_mask);
+              set_option (optList[entry].flag & Optflag_mask, s);
             }
         }
     }

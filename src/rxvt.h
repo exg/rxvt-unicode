@@ -701,6 +701,11 @@ enum {
 #define Width2Pixel(n)          ((int32_t)(n) * (int32_t)fwidth)
 #define Height2Pixel(n)         ((int32_t)(n) * (int32_t)fheight)
 
+#define OPTION(opt)              (options & (opt))
+#define DEFAULT_OPTIONS          (Opt_scrollBar | Opt_scrollTtyOutput \
+                                  | Opt_jumpScroll | Opt_secondaryScreen \
+                                  | Opt_pastableTabs | Opt_intensityStyles)
+
 // for m >= -n, ensure remainder lies between 0..n-1
 #define MOD(m,n) (((m) + (n)) % (n))
 
@@ -1441,6 +1446,19 @@ struct rxvt_term : zero_initialized, rxvt_vars {
       base += minBrightCOLOR - minCOLOR;
 #endif
     return base;
+  }
+
+  bool option (uint32_t opt)
+  {
+    return OPTION (opt);
+  }
+
+  void set_option (uint32_t opt, bool set)
+  {
+    if (set)
+      options |= opt;
+    else
+      options &= ~opt;
   }
 
   void scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs);

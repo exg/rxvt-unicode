@@ -393,7 +393,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
   /* no point having a scrollbar without having any scrollback! */
   if (!saveLines)
-    CLR_OPTION (Opt_scrollBar);
+    set_option (Opt_scrollBar, 0);
 
 #ifdef PRINTPIPE
   if (!rs[Rs_print_pipe])
