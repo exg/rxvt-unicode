@@ -487,8 +487,8 @@ sub invoke {
 
       for (map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2) {
          if ($_ eq "default") {
-            $want_ext{$_}++ for qw(selection);
-         } elsif (/-(.*)/) {
+            $want_ext{$_}++ for qw(selection option-popup);
+         } elsif (/^-(.*)$/) {
             delete $want_ext{$1};
          } else {
             $want_ext{$_}++;
