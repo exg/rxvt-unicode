@@ -39,7 +39,7 @@ You can activate them like this:
 
 =over 4
 
-=item selection
+=item selection (enabled by default)
 
 Intelligent selection. This extension tries to be more intelligent when
 the user extends selections (double-click). Right now, it tries to select
@@ -57,6 +57,11 @@ Rot-13 the selection when activated. Used via keyboard trigger:
    URxvt.keysym.C-M-r: perl:selection:rot13
 
 =back
+
+=item option-popup (enabled by default)
+
+Binds a popup menu to Ctrl-Button3 that lets you toggle (some) options at
+runtime.
 
 =item digital-clock
 
