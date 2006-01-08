@@ -344,7 +344,7 @@ Returns the "current time" (as per the event loop).
 Mod3Mask, Mod4Mask, Mod5Mask, Button1Mask, Button2Mask, Button3Mask,
 Button4Mask, Button5Mask, AnyModifier
 
-Various constants for use in X events.
+Various constants for use in X calls and event processing.
 
 =back
 
@@ -409,6 +409,7 @@ use strict;
 use Scalar::Util ();
 use List::Util ();
 
+our $VERSION = 1;
 our $TERM;
 our @HOOKNAME;
 our %OPTION;
@@ -509,6 +510,9 @@ sub invoke {
             warn "perl extension '$ext' not found in perl library search path\n";
          }
       }
+
+      eval "#line 1 \"--perl-eval resource/argument\"\n" . $TERM->resource ("perl_eval");
+      warn $@ if $@;
    }
 
    $retval = undef;
@@ -553,6 +557,8 @@ sub invoke {
    $retval
 }
 
+# urxvt::term::proxy
+
 sub urxvt::term::proxy::AUTOLOAD {
    $urxvt::term::proxy::AUTOLOAD =~ /:([^:]+)$/
       or die "FATAL: \$AUTOLOAD '$urxvt::term::proxy::AUTOLOAD' unparsable";
@@ -568,6 +574,8 @@ sub urxvt::term::proxy::AUTOLOAD {
    goto &$urxvt::term::proxy::AUTOLOAD;
 }
 
+# urxvt::destroy_hook
+
 sub urxvt::destroy_hook::DESTROY {
    ${$_[0]}->();
 }
@@ -575,6 +583,68 @@ sub urxvt::destroy_hook::DESTROY {
 sub urxvt::destroy_hook(&) {
    bless \shift, urxvt::destroy_hook::
 }
+
+# urxvt::anyevent
+
+package urxvt::anyevent;
+
+our $VERSION = 1;
+
+$INC{"urxvt/anyevent.pm"} = 1; # mark us as there
+push @AnyEvent::REGISTRY, [urxvt => urxvt::anyevent::];
+
+sub timer {
+   my ($class, %arg) = @_;
+
+   my $cb = $arg{cb};
+
+   urxvt::timer
+      ->new
+      ->start (urxvt::NOW + $arg{after})
+      ->cb (sub {
+        $_[0]->stop; # need to cancel manually
+        $cb->();
+      })
+}
+
+sub io {
+   my ($class, %arg) = @_;
+
+   my $cb = $arg{cb};
+
+   bless [$arg{fh}, urxvt::iow
+             ->new
+             ->fd (fileno $arg{fh})
+             ->events (($arg{poll} =~ /r/ ? 1 : 0)
+                     | ($arg{poll} =~ /w/ ? 2 : 0))
+             ->start
+             ->cb (sub {
+                $cb->(($_[1] & 1 ? 'r' : '')
+                    . ($_[1] & 2 ? 'w' : ''));
+             })],
+         urxvt::anyevent::
+}
+
+sub DESTROY {
+   $_[0][1]->stop;
+}
+
+sub condvar {
+   bless \my $flag, urxvt::anyevent::condvar::
+}
+
+sub urxvt::anyevent::condvar::broadcast {
+   ${$_[0]}++;
+}
+
+sub urxvt::anyevent::condvar::wait {
+   unless (${$_[0]}) {
+      require Carp;
+      Carp::croak ("AnyEvent->condvar blocking wait unsupported in urxvt, use a non-blocking API");
+   }
+}
+
+package urxvt::term;
 
 =head2 The C<urxvt::term> Class
 
@@ -636,7 +706,7 @@ to see the actual list:
 
 =cut
 
-sub urxvt::term::resource($$;$) {
+sub resource($$;$) {
    my ($self, $name) = (shift, shift);
    unshift @_, $self, $name, ($name =~ s/\s*\+\s*(\d+)$// ? $1 : 0);
    &urxvt::term::_resource
@@ -733,7 +803,7 @@ currently).
 
 =cut
 
-sub urxvt::term::popup {
+sub popup {
    my ($self, $event) = @_;
 
    $self->grab ($event->{time}, 1)
@@ -933,7 +1003,7 @@ Translates a string offset into terminal coordinates again.
 
 =cut
 
-sub urxvt::term::line {
+sub line {
    my ($self, $row) = @_;
 
    my $maxrow = $self->nrow - 1;
@@ -1021,13 +1091,15 @@ C<< $term->ROW_t >> for details.
 
 =back
 
+=cut
+
+package urxvt::popup;
+
 =head2 The C<urxvt::popup> Class
 
 =over 4
 
 =cut
-
-package urxvt::popup;
 
 sub add_item {
    my ($self, $item) = @_;

@@ -9,12 +9,15 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
-TODO: document transient_for, vt
+TODO: document transient_for, vt and the grab etc. functionality
 
 	- perl: implement additional hook: line_update, add_lines.
         - perl: urxvt::line now can set via ->t and ->r.
         - perl: changed interpretation of --perl-ext-common and -pe.
-        - perl: much increased functionality, better overlays, popup support.
+        - perl: finally implemented --perl-eval.
+        - perl: much increased functionality, better overlays, popup support
+          and much much more.
+        - perl: anyevent support.
 
 6.3  Wed Jan  4 22:37:10 CET 2006
         - SECURITY FIX: on systems using openpty, permissions were

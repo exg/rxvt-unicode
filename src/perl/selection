@@ -17,10 +17,13 @@ my @mark_patterns = (
       [ab-zA-Z0-9\-\@;\/?:&=%\$_+!*\x27(),~]   # do not include a trailing dot, its wrong too often
    )}x,
 
-   # common forms of quoting
-   qr{(?:^|\s) [‘`] ([^‘`’']+) [’'] (?:\s|$)}x,
+   # common "parentheses"
+   qr{(?:^|\s) ‘  ([^‘’]+?) ’  (?:\s|$)}x,
+   qr{(?:^|\s) `  ([^`']+?) '  (?:\s|$)}x,
+   qr{         \{ ([^{}]+?) \}         }x,
+   qr{         \[ ([^{}]+?) \]         }x,
 
-   # shell-like argument quoting
+   # shell-like argument quoting, basically always matches
    qr{\G [\ \t|&;<>()] *(
       (?:
          [^\\"'\ \t|&;<>()]+
