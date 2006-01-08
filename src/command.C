@@ -975,18 +975,19 @@ rxvt_term::flush ()
       if (SHOULD_INVOKE (HOOK_LINE_UPDATE))
         {
           int row = -view_start;
+          int end_row = row + nrow;
 
           while (row > -nsaved && ROW (row - 1).is_longer ())
             --row;
 
-          while (row < -view_start + nrow)
+          do
             {
               int start_row = row;
               line_t *l;
 
               do
                 {
-                  l = &ROW (row);
+                  l = &ROW (row++);
 
                   if (!(l->f & LINE_FILTERED))
                     {
@@ -994,7 +995,7 @@ rxvt_term::flush ()
                       l->f |= LINE_FILTERED;
                       while (l->is_longer ())
                         {
-                          l = &ROW (++row);
+                          l = &ROW (row++);
                           l->f |= LINE_FILTERED;
                         }
 
@@ -1004,11 +1005,9 @@ rxvt_term::flush ()
                       break;
                     }
                 }
-              while (l->is_longer ());
-
-              row++;
+              while (l->is_longer () && row < end_row);
             }
-         
+          while (++row < end_row);
         }
 
       scr_refresh (refresh_type);

@@ -147,6 +147,9 @@ void
 rxvt_term::scr_blank_screen_mem (line_t &l, rend_t efs)
 {
   scr_blank_line (l, 0, ncol, efs);
+
+  l.l = 0;
+  l.f = 0;
 }
 
 /* ------------------------------------------------------------------------- *
@@ -640,10 +643,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
         }
 
       for (int i = count; i--; )
-        {
-          ROW(row2 - i).l = 0;
-          scr_blank_screen_mem (ROW(row2 - i), rstyle);
-        }
+        scr_blank_screen_mem (ROW(row2 - i), rstyle);
       
       if (OPTION (Opt_scrollWithBuffer)
           && view_start != 0
@@ -1305,10 +1305,7 @@ rxvt_term::scr_erase_screen (int mode)
 
   for (; num--; row++)
     {
-      line_t &l = ROW(row);
-      l.l = 0;
-      l.is_longer (0);
-      scr_blank_screen_mem (l, rstyle);
+      scr_blank_screen_mem (ROW(row), rstyle);
       scr_blank_line (drawn_buf [row], 0, ncol, ren);
     }
 }
