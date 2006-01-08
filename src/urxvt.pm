@@ -406,6 +406,7 @@ use List::Util ();
 
 our $TERM;
 our @HOOKNAME;
+our %OPTION;
 our $LIBDIR;
 
 BEGIN {
@@ -481,14 +482,21 @@ sub invoke {
 
    if ($htype == 0) { # INIT
       my @dirs = ((split /:/, $TERM->resource ("perl_lib")), "$LIBDIR/perl");
+      
+      my @ext = (map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2);
 
-      for my $ext (map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2) {
-         my @files = grep -f $_, map "$_/$ext", @dirs;
-
-         if (@files) {
-            register_package extension_package $files[0];
+      while (@ext) {
+         my $ext = shift @ext;
+         if ($ext eq "default") {
+            unshift @ext, qw(selection);
          } else {
-            warn "perl extension '$ext' not found in perl library search path\n";
+            my @files = grep -f $_, map "$_/$ext", @dirs;
+
+            if (@files) {
+               register_package extension_package $files[0];
+            } else {
+               warn "perl extension '$ext' not found in perl library search path\n";
+            }
          }
       }
    }
@@ -566,6 +574,22 @@ sub urxvt::destroy_hook(&) {
 
 Destroy the terminal object (close the window, free resources etc.).
 
+=item $isset = $term->option ($optval[, $set])
+
+Returns true if the option specified by C<$optval> is enabled, and
+optionally change it. All option values are stored by name in the hash
+C<%urxvt::OPTION>. Options not enabled in this binary are not in the hash.
+
+Here is a a likely non-exhaustive list of option names, please see the
+source file F</src/optinc.h> to see the actual list:
+
+ borderLess console cursorBlink cursorUnderline hold iconic insecure
+ intensityStyles jumpScroll loginShell mapAlert meta8 mouseWheelScrollPage
+ pastableTabs pointerBlank reverseVideo scrollBar scrollBar_floating
+ scrollBar_right scrollTtyKeypress scrollTtyOutput scrollWithBuffer
+ secondaryScreen secondaryScroll skipBuiltinGlyphs transparent
+ tripleclickwords utmpInhibit visualBell
+
 =item $value = $term->resource ($name[, $newval])
 
 Returns the current resource value associated with a given name and
@@ -584,8 +608,8 @@ Please note that resource strings will currently only be freed when the
 terminal is destroyed, so changing options frequently will eat memory.
 
 Here is a a likely non-exhaustive list of resource names, not all of which
-are supported in every build, please see the source to see the actual
-list:
+are supported in every build, please see the source file F</src/rsinc.h>
+to see the actual list:
 
   answerbackstring backgroundPixmap backspace_key boldFont boldItalicFont
   borderLess color cursorBlink cursorUnderline cutchars delete_key
@@ -1012,10 +1036,15 @@ sub add_button {
 sub add_toggle {
    my ($self, $text, $cb, $value) = @_;
 
-   $self->add_item ({ type => "button", text => "  $text", value => $value,
-      render => sub { ($_[0]{value} ? "✔" : " ") . substr $_[0]{text}, 1 },
-      activate => sub { $cb->($_[0]{value} = !$_[0]{value}); },
-   });
+   my $item; $item = {
+      type => "button",
+      text => "  $text",
+      value => $value,
+      render => sub { ($item->{value} ? "✔" : " ") . $text },
+      activate => sub { $cb->($item->{value} = !$item->{value}); },
+   };
+
+   $self->add_item ($item);
 }
 
 sub show {

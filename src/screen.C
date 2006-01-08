@@ -2390,7 +2390,7 @@ rxvt_term::scr_remap_chars (line_t &l)
   if (!l.t)
     return;
 
-  l.touch (); // maybe a bit of an overkill, but its not performance-relevant
+  l.touch (); // maybe a bit of an overkill, but it's not performance-relevant
 
   for (int i = ncol; i--; )
     l.r[i] = SET_FONT (l.r[i], FONTSET (l.r[i])->find_font (l.t[i]));

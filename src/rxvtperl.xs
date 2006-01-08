@@ -1158,6 +1158,42 @@ rxvt_term::_resource (char *name, int index, SV *newval = 0)
           }
 }
 
+bool
+rxvt_term::option (U32 optval, int set = -1)
+	CODE:
+{
+	RETVAL = THIS->options & optval;
+
+        if (set >= 0)
+          {
+            if (set)
+              THIS->options |= optval;
+            else
+              THIS->options &= ~optval;
+
+            switch (optval)
+              {
+                case Opt_skipBuiltinGlyphs:
+                  THIS->set_fonts ();
+                  THIS->scr_remap_chars ();
+                  THIS->scr_touch (true);
+                  THIS->want_refresh = 1;
+                  break;
+
+                case Opt_cursorUnderline:
+                  THIS->want_refresh = 1;
+                  break;
+
+#                  case Opt_scrollBar_floating:
+#                  case Opt_scrollBar_right:
+#                    THIS->resize_all_windows (THIS->width, THIS->height, 1);
+#                    break;
+              }
+          }
+}
+        OUTPUT:
+        RETVAL
+
 void
 rxvt_term::cur (...)
 	PROTOTYPE: $;$$

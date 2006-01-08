@@ -1314,33 +1314,6 @@ rxvt_term::x_cb (XEvent &ev)
   SET_R (this);
   SET_LOCALE (locale);
 
-#if defined(CURSOR_BLINK)
-  if (OPTION (Opt_cursorBlink) && ev.type == KeyPress)
-    {
-      if (hidden_cursor)
-        {
-          hidden_cursor = 0;
-          want_refresh = 1;
-        }
-
-      cursor_blink_ev.start (NOW + BLINK_INTERVAL);
-    }
-#endif
-
-#if defined(POINTER_BLANK)
-  if (OPTION (Opt_pointerBlank) && pointerBlankDelay > 0)
-    {
-      if (ev.type == MotionNotify
-          || ev.type == ButtonPress
-          || ev.type == ButtonRelease)
-        if (hidden_pointer)
-          pointer_unblank ();
-
-      if (ev.type == KeyPress && hidden_pointer == 0)
-        pointer_blank ();
-    }
-#endif
-
   Window unused_root, unused_child;
   int unused_root_x, unused_root_y;
   unsigned int unused_mask;
@@ -1380,7 +1353,7 @@ rxvt_term::x_cb (XEvent &ev)
                   {
                     iso14755buf = ISO_14755_51 | 0x2400 | (ks & 0x1f);
                     commit_iso14755 ();
-                    return; // case-break;
+                    goto skip_switch;
                   }
 
                 for (unsigned short *i = iso14755_symtab; i[0]; i+= 2)
@@ -1388,7 +1361,7 @@ rxvt_term::x_cb (XEvent &ev)
                     {
                       iso14755buf = ISO_14755_51 | i[1];
                       commit_iso14755 ();
-                      return; // case-break;
+                      goto skip_switch;
                     }
 
                 scr_bell ();
@@ -1744,6 +1717,35 @@ rxvt_term::x_cb (XEvent &ev)
           }
         break;
     }
+
+skip_switch: ;
+
+#if defined(CURSOR_BLINK)
+  if (OPTION (Opt_cursorBlink) && ev.type == KeyPress)
+    {
+      if (hidden_cursor)
+        {
+          hidden_cursor = 0;
+          want_refresh = 1;
+        }
+
+      cursor_blink_ev.start (NOW + BLINK_INTERVAL);
+    }
+#endif
+
+#if defined(POINTER_BLANK)
+  if (OPTION (Opt_pointerBlank) && pointerBlankDelay > 0)
+    {
+      if (ev.type == MotionNotify
+          || ev.type == ButtonPress
+          || ev.type == ButtonRelease)
+        if (hidden_pointer)
+          pointer_unblank ();
+
+      if (ev.type == KeyPress && hidden_pointer == 0)
+        pointer_blank ();
+    }
+#endif
 }
 
 void
