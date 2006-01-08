@@ -48,6 +48,11 @@
 # include <termios.h>
 #endif
 
+#if (defined(HAVE_SETEUID) || defined(HAVE_SETREUID)) && !defined(__CYGWIN32__)
+static uid_t saved_euid;
+static gid_t saved_egid;
+#endif
+
 vector<rxvt_term *> rxvt_term::termlist;
 
 static char curlocale[128], savelocale[128];
@@ -499,7 +504,24 @@ rxvt_term::init (int argc, const char *const *argv)
       || (rs[Rs_perl_ext_2] && *rs[Rs_perl_ext_2])
       || (rs[Rs_perl_eval] && *rs[Rs_perl_eval]))
     {
-      rxvt_perl.init ();
+      bool tainted = false;
+
+#if (defined(HAVE_SETEUID) || defined(HAVE_SETREUID)) && !defined(__CYGWIN32__)
+      // ignore some perl-related arguments if some bozo installed us set[ug]id
+      if (getuid () != saved_euid || getgid () != saved_egid)
+        {
+          tainted = true;
+
+          if ((rs[Rs_perl_lib] && *rs[Rs_perl_lib])
+              || (rs[Rs_perl_eval] && *rs[Rs_perl_eval]))
+            {
+              rxvt_warn ("running with elevated privileges: ignoring perl-lib and perl-eval.\n");
+              rs[Rs_perl_lib] = 0;
+              rs[Rs_perl_eval] = "our $tainted = 1";
+            }
+        }
+#endif
+      rxvt_perl.init (tainted);
       HOOK_INVOKE ((this, HOOK_INIT, DT_END));
     }
 #endif
@@ -667,11 +689,6 @@ rxvt_realloc (void *ptr, size_t size)
 void
 rxvt_privileges (rxvt_privaction action)
 {
-#if (defined(HAVE_SETEUID) || defined(HAVE_SETREUID)) && !defined(__CYGWIN32__)
-  static uid_t euid;
-  static gid_t egid;
-#endif
-
 #if ! defined(__CYGWIN32__)
 # if !defined(HAVE_SETEUID) && defined(HAVE_SETREUID)
   /* setreuid () is the poor man's setuid (), seteuid () */
@@ -691,12 +708,12 @@ rxvt_privileges (rxvt_privaction action)
         setegid (getgid ());
         break;
       case SAVE:
-        euid = geteuid ();
-        egid = getegid ();
+        saved_euid = geteuid ();
+        saved_egid = getegid ();
         break;
       case RESTORE:
-        seteuid (euid);
-        setegid (egid);
+        seteuid (saved_euid);
+        setegid (saved_egid);
         break;
     }
 # else

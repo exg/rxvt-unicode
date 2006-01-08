@@ -10,7 +10,6 @@ WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
 TODO: document transient_for, vt and the grab etc. functionality
-TODO: add warning about perl interpreter and setuid/setgid
 
 	- perl: implement additional hook: line_update, add_lines.
         - perl: urxvt::line now can set via ->t and ->r.
@@ -19,6 +18,8 @@ TODO: add warning about perl interpreter and setuid/setgid
         - perl: much increased functionality, better overlays, popup support
           and much much more.
         - perl: anyevent support.
+        - perl: run tainted and ignore perl-eval/perl-lib if installed
+          setuid/setgid.
         - free the resource database: this plugs a massive memory hole. as a
           side effect, it also gets rid of XGetDefault calls.
         - free one of the cursors, fixes a small memory leaks.

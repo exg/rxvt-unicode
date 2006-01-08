@@ -473,6 +473,8 @@ sub extension_package($) {
                    . (do { local $/; <$fh> })
                    . "\n};\n1";
 
+      $source =~ /(.*)/s and $source = $1; # untaint
+
       eval $source or die "$path: $@";
 
       $pkg

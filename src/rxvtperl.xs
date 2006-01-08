@@ -51,6 +51,22 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
+static SV *
+taint (SV *sv)
+{
+  SvTAINT (sv);
+  return sv;
+}
+
+static SV *
+taint_if (SV *sv, SV *src)
+{
+  if (SvTAINTED (src))
+    SvTAINT (sv);
+
+  return sv;
+}
+
 static wchar_t *
 sv2wcs (SV *sv)
 {
@@ -392,19 +408,20 @@ rxvt_perl_interp::~rxvt_perl_interp ()
 }
 
 void
-rxvt_perl_interp::init ()
+rxvt_perl_interp::init (bool tainted)
 {
   if (!perl)
     {
       char *argv[] = {
         "",
         "-edo '" LIBDIR "/urxvt.pm' or ($@ and die $@) or exit 1",
+        "-T",
       };
 
       perl = perl_alloc ();
       perl_construct (perl);
 
-      if (perl_parse (perl, xs_init, 2, argv, (char **)NULL)
+      if (perl_parse (perl, xs_init, 2 + !!tainted, argv, (char **)NULL)
           || perl_run (perl))
         {
           rxvt_warn ("unable to initialize perl-interpreter, continuing without.\n");
@@ -475,7 +492,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
           break;
 
         case DT_STR:
-          XPUSHs (sv_2mortal (newSVpv (va_arg (ap, char *), 0)));
+          XPUSHs (taint (sv_2mortal (newSVpv (va_arg (ap, char *), 0))));
           break;
 
         case DT_STR_LEN:
@@ -483,7 +500,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
             char *str = va_arg (ap, char *);
             int len = va_arg (ap, int);
 
-            XPUSHs (sv_2mortal (newSVpvn (str, len)));
+            XPUSHs (taint (sv_2mortal (newSVpvn (str, len))));
           }
           break;
 
@@ -492,7 +509,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
             wchar_t *wstr = va_arg (ap, wchar_t *);
             int wlen = va_arg (ap, int);
 
-            XPUSHs (sv_2mortal (wcs2sv (wstr, wlen)));
+            XPUSHs (taint (sv_2mortal (wcs2sv (wstr, wlen))));
           }
          break;
 
@@ -816,7 +833,7 @@ rxvt_term::locale_encode (SV *str)
 
         free (wstr);
 
-        RETVAL = newSVpv (mbstr, 0);
+        RETVAL = taint_if (newSVpv (mbstr, 0), str);
         free (mbstr);
 }
 	OUTPUT:
@@ -833,7 +850,7 @@ rxvt_term::locale_decode (SV *octets)
         wchar_t *wstr = rxvt_mbstowcs (data, len);
         rxvt_pop_locale ();
 
-        RETVAL = wcs2sv (wstr);
+        RETVAL = taint_if (wcs2sv (wstr), octets);
         free (wstr);
 }
 	OUTPUT:
@@ -950,7 +967,7 @@ rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0, int start
             for (int col = 0; col < THIS->ncol; col++)
               wstr [col] = l.t [col];
 
-            XPUSHs (sv_2mortal (wcs2sv (wstr, THIS->ncol)));
+            XPUSHs (taint (sv_2mortal (wcs2sv (wstr, THIS->ncol))));
 
             delete [] wstr;
           }
@@ -1081,7 +1098,7 @@ rxvt_term::special_encode (SV *string)
 
 	rxvt_pop_locale ();
 
-        RETVAL = wcs2sv (rstr, r - rstr);
+        RETVAL = taint_if (wcs2sv (rstr, r - rstr), string);
 
         delete [] rstr;
 }
@@ -1117,7 +1134,7 @@ rxvt_term::special_decode (SV *text)
           else
             *r++ = *s;
 
-        RETVAL = wcs2sv (rstr, r - rstr);
+        RETVAL = taint_if (wcs2sv (rstr, r - rstr), text);
 
         delete [] rstr;
 }
@@ -1149,7 +1166,7 @@ rxvt_term::_resource (char *name, int index, SV *newval = 0)
           croak ("requested out-of-bound resource %s+%d,", name, index - rs->value);
 
         if (GIMME_V != G_VOID)
-          XPUSHs (THIS->rs [index] ? sv_2mortal (newSVpv (THIS->rs [index], 0)) : &PL_sv_undef);
+          XPUSHs (THIS->rs [index] ? sv_2mortal (taint (newSVpv (THIS->rs [index], 0))) : &PL_sv_undef);
 
         if (newval)
           {
@@ -1240,7 +1257,7 @@ rxvt_term::selection (SV *newtext = 0)
         PPCODE:
 {
         if (GIMME_V != G_VOID)
-          XPUSHs (sv_2mortal (wcs2sv (THIS->selection.text, THIS->selection.len)));
+          XPUSHs (taint (sv_2mortal (wcs2sv (THIS->selection.text, THIS->selection.len))));
 
         if (newtext)
           {

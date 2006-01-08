@@ -1105,15 +1105,17 @@ all instances, while B<perl-ext> is used for specific instances.
 
 =item B<perl-eval>: I<string>
 
-Perl code to be evaluated when all extensions have been registered. See the
-@@RXVT_NAME@@perl(3) manpage.
+Perl code to be evaluated when all extensions have been registered. See
+the @@RXVT_NAME@@perl(3) manpage. Due to security reasons, this resource
+will be ignored when running setuid/setgid.
 
 =item B<perl-lib>: I<path>
 
 Colon-separated list of additional directories that hold extension
 scripts. When looking for extensions specified by the C<perl> resource,
 @@RXVT_NAME@@ will first look in these directories and then in
-F<@@RXVT_LIBDIR@@/urxvt/perl/>.
+F<@@RXVT_LIBDIR@@/urxvt/perl/>. Due to security reasons, this resource
+will be ignored when running setuid/setgid.
 
 See the @@RXVT_NAME@@perl(3) manpage.
 
