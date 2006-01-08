@@ -16,7 +16,7 @@ sub on_button_press {
 
          my $optval = $urxvt::OPTION{$name};
 
-         $popup->add_toggle ($name => sub { $self->option ($optval, $_[0]); warn "toggle $optval, $_[0]" },
+         $popup->add_toggle ($name => sub { $self->option ($optval, $_[0]) },
                              $self->option ($optval));
       }
 
