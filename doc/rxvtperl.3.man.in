@@ -172,8 +172,8 @@ You can activate them like this:
 .Vb 1
 \&  @@RXVT_NAME@@ -pe <extensionname>
 .Ve
-.IP "selection" 4
-.IX Item "selection"
+.IP "selection (enabled by default)" 4
+.IX Item "selection (enabled by default)"
 Intelligent selection. This extension tries to be more intelligent when
 the user extends selections (double\-click). Right now, it tries to select
 urls and complete shell-quoted arguments, which is very convenient, too,
@@ -191,6 +191,10 @@ Rot\-13 the selection when activated. Used via keyboard trigger:
 .RE
 .RS 4
 .RE
+.IP "option-popup (enabled by default)" 4
+.IX Item "option-popup (enabled by default)"
+Binds a popup menu to Ctrl\-Button3 that lets you toggle (some) options at
+runtime.
 .IP "digital-clock" 4
 .IX Item "digital-clock"
 Displays a digital clock using the built-in overlay.
@@ -454,7 +458,7 @@ Returns the \*(L"current time\*(R" (as per the event loop).
 .IP "urxvt::ShiftMask, LockMask, ControlMask, Mod1Mask, Mod2Mask, Mod3Mask, Mod4Mask, Mod5Mask, Button1Mask, Button2Mask, Button3Mask, Button4Mask, Button5Mask, AnyModifier" 4
 .IX Item "urxvt::ShiftMask, LockMask, ControlMask, Mod1Mask, Mod2Mask, Mod3Mask, Mod4Mask, Mod5Mask, Button1Mask, Button2Mask, Button3Mask, Button4Mask, Button5Mask, AnyModifier"
 .PD
-Various constants for use in X events.
+Various constants for use in X calls and event processing.
 .Sh "\s-1RENDITION\s0"
 .IX Subsection "RENDITION"
 Rendition bitsets contain information about colour, font, font styles and
@@ -504,6 +508,14 @@ zero.
 .el .IP "$rend = urxvt::SET_CUSTOM ($rend, \f(CW$new_value\fR)" 4
 .IX Item "$rend = urxvt::SET_CUSTOM ($rend, $new_value)"
 Change the custom value.
+.ie n .Sh "The ""urxvt::anyevent"" Class"
+.el .Sh "The \f(CWurxvt::anyevent\fP Class"
+.IX Subsection "The urxvt::anyevent Class"
+The sole purpose of this class is to deliver an interface to the
+\&\f(CW\*(C`AnyEvent\*(C'\fR module \- any module using it will work inside urxvt without
+further work. The only exception is that you cannot wait on condition
+variables, but non-blocking condvar use is ok. What this means is that you
+cannot use blocking APIs, but the non-blocking variant should work.
 .ie n .Sh "The ""urxvt::term"" Class"
 .el .Sh "The \f(CWurxvt::term\fP Class"
 .IX Subsection "The urxvt::term Class"
