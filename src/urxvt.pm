@@ -483,20 +483,25 @@ sub invoke {
    if ($htype == 0) { # INIT
       my @dirs = ((split /:/, $TERM->resource ("perl_lib")), "$LIBDIR/perl");
       
-      my @ext = (map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2);
+      my %want_ext;
 
-      while (@ext) {
-         my $ext = shift @ext;
-         if ($ext eq "default") {
-            unshift @ext, qw(selection);
+      for (map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2) {
+         if ($_ eq "default") {
+            $want_ext{$_}++ for qw(selection);
+         } elsif (/-(.*)/) {
+            delete $want_ext{$1};
          } else {
-            my @files = grep -f $_, map "$_/$ext", @dirs;
+            $want_ext{$_}++;
+         }
+      }
 
-            if (@files) {
-               register_package extension_package $files[0];
-            } else {
-               warn "perl extension '$ext' not found in perl library search path\n";
-            }
+      for my $ext (keys %want_ext) {
+         my @files = grep -f $_, map "$_/$ext", @dirs;
+
+         if (@files) {
+            register_package extension_package $files[0];
+         } else {
+            warn "perl extension '$ext' not found in perl library search path\n";
          }
       }
    }
