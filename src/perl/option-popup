@@ -10,7 +10,8 @@ sub on_button_press {
    my ($self, $event) = @_;
 
    if ($event->{button} == 3 && $event->{state} & urxvt::ControlMask) {
-      my $popup = $self->popup ($event);
+      my $popup = $self->popup ($event)
+         or return;
 
       $popup->add_title ("Options");
       $popup->add_separator;

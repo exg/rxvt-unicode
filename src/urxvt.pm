@@ -536,7 +536,10 @@ sub invoke {
                @_,
             ) and last;
          };
-         warn $@ if $@;#d#
+         if ($@) {
+            $TERM->ungrab; # better to lose the grab than the session
+            warn $@;
+         }
       }
    }
 
@@ -574,6 +577,10 @@ sub urxvt::term::proxy::AUTOLOAD {
    } or die "FATAL: unable to compile method forwarder: $@";
 
    goto &$urxvt::term::proxy::AUTOLOAD;
+}
+
+sub urxvt::term::proxy::DESTROY {
+   # nop
 }
 
 # urxvt::destroy_hook
@@ -1159,8 +1166,8 @@ sub add_toggle {
       type => "button",
       text => "  $text",
       value => $value,
-      render => sub { ($item->{value} ? "* " : "  ") . $text },
-      activate => sub { $cb->($item->{value} = !$item->{value}); },
+      render => sub { ($_[0]{value} ? "* " : "  ") . $text },
+      activate => sub { $cb->($_[0]{value} = !$_[0]{value}); },
    };
 
    $self->add_item ($item);
@@ -1180,6 +1187,7 @@ sub show {
 sub DESTROY {
    my ($self) = @_;
 
+   delete $self->{term}{_destroy}{$self};
    $self->{term}->ungrab;
 }
 
@@ -1293,11 +1301,11 @@ numbers indicate more verbose output.
 
 =over 4
 
-=item =0 - only fatal messages
+=item == 0 - fatal messages
 
-=item =3 - script loading and management
+=item >= 3 - script loading and management
 
-=item =10 - all events received
+=item >=10 - all events received
 
 =back
 

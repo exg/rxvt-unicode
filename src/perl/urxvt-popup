@@ -63,7 +63,8 @@ sub on_button_release {
    my ($row, $col) = ($event->{row}, $event->{col});
    if ($col >= 0 && $col < $self->ncol
        && $row >= 0 && $row < @{ $self->{data}{item} }) {
-      $self->{data}{item}[$row]{activate}->($event);
+      my $item = $self->{data}{item}[$row];
+      $item->{activate}->($event, $item);
    }
 
    $self->refresh;
@@ -99,7 +100,6 @@ sub on_init {
    if ($data->{event}) {
       my $x = int List::Util::max 0, $data->{event}{x_root} - $width * $data->{term}->fwidth  * 0.5;
       my $y = int List::Util::max 0, $data->{event}{y_root} -          $data->{term}->fheight * 0.5;
-
       $pos = "+$x+$y";
    }
 
@@ -130,9 +130,5 @@ sub on_map_notify {
    $self->grab ($self->{data}{event}{time}, 1)
       and $self->allow_events_async;
 }
-
-
-
-
 
 

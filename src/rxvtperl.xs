@@ -784,27 +784,32 @@ rxvt_term::grab (U32 eventtime, int sync = 0)
         RETVAL
 
 void
-rxvt_term::allow_events_async (U32 eventtime = THIS->perl.grabtime)
+rxvt_term::allow_events_async ()
 	CODE:
-        XAllowEvents (THIS->display->display, AsyncBoth, eventtime);
+        XAllowEvents (THIS->display->display, AsyncBoth,      THIS->perl.grabtime);
 
 void
-rxvt_term::allow_events_sync (U32 eventtime = THIS->perl.grabtime)
+rxvt_term::allow_events_sync ()
 	CODE:
-        XAllowEvents (THIS->display->display, SyncBoth, eventtime);
+        XAllowEvents (THIS->display->display, SyncBoth,       THIS->perl.grabtime);
 
 void
-rxvt_term::allow_events_replay (U32 eventtime = THIS->perl.grabtime)
+rxvt_term::allow_events_replay ()
 	CODE:
-        XAllowEvents (THIS->display->display, ReplayPointer, eventtime);
-        XAllowEvents (THIS->display->display, ReplayKeyboard, eventtime);
+        XAllowEvents (THIS->display->display, ReplayPointer,  THIS->perl.grabtime);
+        XAllowEvents (THIS->display->display, ReplayKeyboard, THIS->perl.grabtime);
 
 void
-rxvt_term::ungrab (U32 eventtime = THIS->perl.grabtime)
+rxvt_term::ungrab ()
 	CODE:
-        THIS->perl.grabtime = 0;
-        XUngrabKeyboard (THIS->display->display, eventtime);
-        XUngrabPointer (THIS->display->display, eventtime);
+{
+        if (THIS->perl.grabtime)
+          {
+            XUngrabKeyboard (THIS->display->display, THIS->perl.grabtime);
+            XUngrabPointer  (THIS->display->display, THIS->perl.grabtime);
+            THIS->perl.grabtime = 0;
+          }
+}
 
 int
 rxvt_term::strwidth (SV *str)
