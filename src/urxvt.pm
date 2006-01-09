@@ -1117,7 +1117,7 @@ C<< $term->ROW_t >> for details.
 
 =item $success = $term->grab_button ($button, $modifiermask)
 
-Registers a synchronous button grab. See XGrabButton.
+Registers a synchronous button grab. See the XGrabButton manpage.
 
 =item $success = $term->grab ($eventtime[, $sync])
 
@@ -1193,7 +1193,7 @@ sub add_title {
 sub add_button {
    my ($self, $text, $cb) = @_;
 
-   $self->add_item ({ type => "button", text => "[ $text ]", activate => $cb});
+   $self->add_item ({ type => "button", text => $text, activate => $cb});
 }
 
 sub add_toggle {
