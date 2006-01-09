@@ -447,23 +447,6 @@ sub verbose {
    warn "$msg\n" if $level <= $verbosity;
 }
 
-# find on_xxx subs in the package and register them
-# as hooks
-sub register_package($) {
-   my ($pkg) = @_;
-
-   for my $htype (0.. $#HOOKNAME) {
-      my $name = $HOOKNAME[$htype];
-
-      my $ref = $pkg->can ("on_" . lc $name)
-         or next;
-
-      $TERM->{_hook}[$htype]{$pkg} = $ref;
-      $hook_count[$htype]++
-         or set_should_invoke $htype, 1;
-   }
-}
-
 my $extension_pkg = "extension0000";
 my %extension_pkg;
 
@@ -501,23 +484,25 @@ sub invoke {
    if ($htype == 0) { # INIT
       my @dirs = ((split /:/, $TERM->resource ("perl_lib")), "$LIBDIR/perl");
       
-      my %want_ext;
+      my %ext_arg;
 
       for (map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2) {
          if ($_ eq "default") {
-            $want_ext{$_}++ for qw(selection option-popup selection-popup);
+            $ext_arg{$_} ||= [] for qw(selection option-popup selection-popup);
          } elsif (/^-(.*)$/) {
-            delete $want_ext{$1};
+            delete $ext_arg{$1};
+         } elsif (/^([^<]+)<(.*)>$/) {
+            push @{ $ext_arg{$1} }, $2;
          } else {
-            $want_ext{$_}++;
+            $ext_arg{$_} ||= [];
          }
       }
 
-      for my $ext (keys %want_ext) {
+      while (my ($ext, $argv) = each %ext_arg) {
          my @files = grep -f $_, map "$_/$ext", @dirs;
 
          if (@files) {
-            register_package extension_package $files[0];
+            $TERM->register_package (extension_package $files[0], $argv);
          } else {
             warn "perl extension '$ext' not found in perl library search path\n";
          }
@@ -536,16 +521,9 @@ sub invoke {
       keys %$cb;
 
       while (my ($pkg, $cb) = each %$cb) {
-         eval {
-            $retval = $cb->(
-               $TERM->{_pkg}{$pkg} ||= do {
-                  my $proxy = bless { }, $pkg;
-                  Scalar::Util::weaken ($proxy->{term} = $TERM);
-                  $proxy
-               },
-               @_,
-            ) and last;
-         };
+         $retval = eval { $cb->($TERM->{_pkg}{$pkg}, @_) }
+            and last;
+
          if ($@) {
             $TERM->ungrab; # better to lose the grab than the session
             warn $@;
@@ -676,6 +654,30 @@ package urxvt::term;
 =head2 The C<urxvt::term> Class
 
 =over 4
+
+=cut
+
+# find on_xxx subs in the package and register them
+# as hooks
+sub register_package {
+   my ($self, $pkg, $argv) = @_;
+
+   my $proxy = bless { argv => $argv }, $pkg;
+   Scalar::Util::weaken ($proxy->{term} = $TERM);
+
+   $self->{_pkg}{$pkg} = $proxy;
+
+   for my $htype (0.. $#HOOKNAME) {
+      my $name = $HOOKNAME[$htype];
+
+      my $ref = $pkg->can ("on_" . lc $name)
+         or next;
+
+      $self->{_hook}[$htype]{$pkg} = $ref;
+      $hook_count[$htype]++
+         or urxvt::set_should_invoke $htype, 1;
+   }
+}
 
 =item $term->destroy
 
