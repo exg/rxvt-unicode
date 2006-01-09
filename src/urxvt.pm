@@ -431,8 +431,10 @@ BEGIN {
       urxvt::warn ($msg);
    };
 
-   $ENV{PATH} = "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin:/opt/sbin";
+   delete $ENV{IFS};
    delete $ENV{CDPATH};
+   delete $ENV{BASH_ENV};
+   $ENV{PATH} = "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin:/opt/sbin";
 }
 
 my @hook_count;

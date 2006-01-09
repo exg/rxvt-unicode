@@ -35,10 +35,14 @@ sub on_button_press {
       };
 
       for ($text) {
+         $add_button->("rot13" => sub { y/A-Za-z/N-ZA-Mn-za-m/ });
+
          /^(\S+):(\d+):?$/
             and $add_button->("vi-commands to load '$1'" => sub { s/^(\S+):(\d+):?$/\x1b:e $1\x0d:$2\x0d/ });
+
          /%[0-9a-fA-F]{2}/ && !/%[^0-9a-fA-F]/ && !/%.[^0-9a-fA-F]/
             and $add_button->("uri unescape" => sub { s/%([0-9a-fA-F]{2})/chr hex $1/ge });
+
          /^(http|ftp|telnet|irc|news):\//
             and $add_button->("run x-www-browser" => sub { system "x-www-browser \Q$_\E &" });
       }
