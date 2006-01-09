@@ -1,5 +1,18 @@
 #! perl
 
+sub msg {
+   my ($self, $msg1, $msg2) = @_;
+
+   my $overlay = $self->overlay (0, 0,
+      (List::Util::max map $self->strwidth ($_), $msg1, $msg2), 2);
+   $overlay->set (0, 0, $msg1);
+   $overlay->set (0, 1, $msg2);
+   my $iow; $iow = urxvt::timer->new->start (urxvt::NOW + 1)->cb (sub {
+      undef $overlay;
+      undef $iow;
+   });
+}
+
 sub on_start {
    my ($self) = @_;
 
@@ -28,8 +41,13 @@ sub on_button_press {
 
          $popup->add_button ($title => sub {
             for ($text) {
+               my $orig = $_;
                $cb->();
-               $self->selection ($_);
+
+               if ($orig ne $_) {
+                  $self->selection ($_);
+                  $self->msg ("Selection replaced by", $_);
+               }
             }
          });
       };
@@ -45,6 +63,9 @@ sub on_button_press {
 
          /%[0-9a-fA-F]{2}/ && !/%[^0-9a-fA-F]/ && !/%.[^0-9a-fA-F]/
             and $add_button->("uri unescape" => sub { s/%([0-9a-fA-F]{2})/chr hex $1/ge });
+
+         /[\\"'\ \t|&;<>()]/
+            and $add_button->("shell quote" => sub { $_ = "\Q$_" });
 
          /^(http|ftp|telnet|irc|news):\//
             and $add_button->("run x-www-browser" => sub { system "x-www-browser \Q$_\E &" });
