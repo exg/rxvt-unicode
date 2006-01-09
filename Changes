@@ -10,7 +10,9 @@ WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
 	- added sections for DISTRIBUTION MAINTAINERS and about
-          SETUID/SETGID operation tot he FAQ.
+          SETUID/SETGID to the FAQ.
+        - increased xft drawing speed for problematic fonts, speed
+          seems to be entirely server-dependent now.
 	- selection, selection-popup and option-popup extensions
           enabled by default.
         - perl: much increased functionality, better overlays, popup support

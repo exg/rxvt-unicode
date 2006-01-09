@@ -449,6 +449,11 @@ that calls this function.
 .Sp
 Using this function has the advantage that its output ends up in the
 correct place, e.g. on stderr of the connecting urxvtc client.
+.IP "$is_safe = urxvt::safe" 4
+.IX Item "$is_safe = urxvt::safe"
+Returns true when it is safe to do potentially unsafe things, such as
+evaluating perl code specified by the user. This is true when urxvt was
+started setuid or setgid.
 .IP "$time = urxvt::NOW" 4
 .IX Item "$time = urxvt::NOW"
 Returns the \*(L"current time\*(R" (as per the event loop).
@@ -876,7 +881,7 @@ Converts rxvt-unicodes text reprsentation into a perl string. See
 .ie n .IP "$success = $term\fR\->grab_button ($button, \f(CW$modifiermask)" 4
 .el .IP "$success = \f(CW$term\fR\->grab_button ($button, \f(CW$modifiermask\fR)" 4
 .IX Item "$success = $term->grab_button ($button, $modifiermask)"
-Registers a synchronous button grab. See XGrabButton.
+Registers a synchronous button grab. See the XGrabButton manpage.
 .ie n .IP "$success = $term\fR\->grab ($eventtime[, \f(CW$sync])" 4
 .el .IP "$success = \f(CW$term\fR\->grab ($eventtime[, \f(CW$sync\fR])" 4
 .IX Item "$success = $term->grab ($eventtime[, $sync])"

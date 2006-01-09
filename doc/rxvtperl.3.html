@@ -435,6 +435,14 @@ that calls this function.
 correct place, e.g. on stderr of the connecting urxvtc client.</p>
 </dd>
 <p></p>
+<dt><strong><a name="item__24is_safe__3d_urxvt_3a_3asafe">$is_safe = urxvt::safe</a></strong><br />
+</dt>
+<dd>
+Returns true when it is safe to do potentially unsafe things, such as
+evaluating perl code specified by the user. This is true when urxvt was
+started setuid or setgid.
+</dd>
+<p></p>
 <dt><strong><a name="item__24time__3d_urxvt_3a_3anow">$time = urxvt::NOW</a></strong><br />
 </dt>
 <dd>
@@ -951,7 +959,7 @@ Converts rxvt-unicodes text reprsentation into a perl string. See
 <dt><strong><a name="item_grab_button">$success = $term-&gt;grab_button ($button, $modifiermask)</a></strong><br />
 </dt>
 <dd>
-Registers a synchronous button grab. See XGrabButton.
+Registers a synchronous button grab. See the XGrabButton manpage.
 </dd>
 <p></p>
 <dt><strong><a name="item_grab">$success = $term-&gt;grab ($eventtime[, $sync])</a></strong><br />

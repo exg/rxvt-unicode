@@ -1,12 +1,10 @@
 #! perl
 
 sub msg {
-   my ($self, $msg1, $msg2) = @_;
+   my ($self, $msg) = @_;
 
-   my $overlay = $self->overlay (0, 0,
-      (List::Util::max map $self->strwidth ($_), $msg1, $msg2), 2);
-   $overlay->set (0, 0, $msg1);
-   $overlay->set (0, 1, $msg2);
+   my $overlay = $self->overlay (0, 0, $self->strwidth ($msg), 1);
+   $overlay->set (0, 0, $msg);
    my $iow; $iow = urxvt::timer->new->start (urxvt::NOW + 1)->cb (sub {
       undef $overlay;
       undef $iow;
@@ -47,7 +45,7 @@ sub on_button_press {
                if ($orig ne $_) {
                   $self->selection ($_);
                   s/[\x00-\x1f\x80-\x9f]/·/g;
-                  $self->msg ("Selection replaced by", $_);
+                  $self->msg ($self->special_encode ($_));
                }
             }
          });
