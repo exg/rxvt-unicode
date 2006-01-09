@@ -433,6 +433,17 @@ rxvt_perl_interp::init ()
     }
 }
 
+static void
+ungrab (rxvt_term *THIS)
+{
+  if (THIS->perl.grabtime)
+    {
+      XUngrabKeyboard (THIS->display->display, THIS->perl.grabtime);
+      XUngrabPointer  (THIS->display->display, THIS->perl.grabtime);
+      THIS->perl.grabtime = 0;
+    }
+}
+
 bool
 rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 {
@@ -584,7 +595,10 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
             LEAVE;
 
             if (SvTRUE (ERRSV))
-              rxvt_warn ("perl hook %d evaluation error: %s", htype, SvPV_nolen (ERRSV));
+              {
+                rxvt_warn ("perl hook %d evaluation error: %s", htype, SvPV_nolen (ERRSV));
+                ungrab (term); // better lose the grab than the session
+              }
 
             if (htype == HOOK_DESTROY)
               {
@@ -695,6 +709,14 @@ fatal (const char *msg)
 	CODE:
         rxvt_fatal ("%s", msg);
 
+SV *
+untaint (SV *sv)
+	CODE:
+        RETVAL = newSVsv (sv);
+        SvTAINTED_off (RETVAL);
+        OUTPUT:
+        RETVAL
+
 NV
 NOW ()
 	CODE:
@@ -802,14 +824,7 @@ rxvt_term::allow_events_replay ()
 void
 rxvt_term::ungrab ()
 	CODE:
-{
-        if (THIS->perl.grabtime)
-          {
-            XUngrabKeyboard (THIS->display->display, THIS->perl.grabtime);
-            XUngrabPointer  (THIS->display->display, THIS->perl.grabtime);
-            THIS->perl.grabtime = 0;
-          }
-}
+        ungrab (THIS);
 
 int
 rxvt_term::strwidth (SV *str)
@@ -1262,7 +1277,9 @@ rxvt_term::selection (SV *newtext = 0)
         PPCODE:
 {
         if (GIMME_V != G_VOID)
-          XPUSHs (taint (sv_2mortal (wcs2sv (THIS->selection.text, THIS->selection.len))));
+          XPUSHs (THIS->selection.text
+                  ? taint (sv_2mortal (wcs2sv (THIS->selection.text, THIS->selection.len)))
+                  : &PL_sv_undef);
 
         if (newtext)
           {

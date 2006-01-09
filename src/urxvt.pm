@@ -60,8 +60,13 @@ Rot-13 the selection when activated. Used via keyboard trigger:
 
 =item option-popup (enabled by default)
 
-Binds a popup menu to Ctrl-Button3 that lets you toggle (some) options at
+Binds a popup menu to Ctrl-Button2 that lets you toggle (some) options at
 runtime.
+
+=item selection-popup (enabled by default)
+
+Binds a popup menu to Ctrl-Button3 that lets you convert the selection
+text into various other formats/action.
 
 =item digital-clock
 
@@ -425,6 +430,9 @@ BEGIN {
          unless $msg =~ /\n$/;
       urxvt::warn ($msg);
    };
+
+   $ENV{PATH} = "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin:/opt/sbin";
+   delete $ENV{CDPATH};
 }
 
 my @hook_count;
@@ -467,13 +475,11 @@ sub extension_package($) {
       open my $fh, "<:raw", $path
          or die "$path: $!";
 
-      my $source = "package $pkg; use strict; use utf8;\n"
+      my $source = untaint "package $pkg; use strict; use utf8;\n"
                    . "use base urxvt::term::proxy::;\n"
                    . "#line 1 \"$path\"\n{\n"
                    . (do { local $/; <$fh> })
                    . "\n};\n1";
-
-      $source =~ /(.*)/s and $source = $1; # untaint
 
       eval $source or die "$path: $@";
 
@@ -495,7 +501,7 @@ sub invoke {
 
       for (map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2) {
          if ($_ eq "default") {
-            $want_ext{$_}++ for qw(selection option-popup);
+            $want_ext{$_}++ for qw(selection option-popup selection-popup);
          } elsif (/^-(.*)$/) {
             delete $want_ext{$1};
          } else {

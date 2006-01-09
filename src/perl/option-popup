@@ -3,15 +3,15 @@
 sub on_start {
    my ($self) = @_;
 
-   $self->grab_button (3, urxvt::ControlMask);
+   $self->grab_button (2, urxvt::ControlMask);
 }
 
 sub on_button_press {
    my ($self, $event) = @_;
 
-   if ($event->{button} == 3 && $event->{state} & urxvt::ControlMask) {
+   if ($event->{button} == 2 && $event->{state} & urxvt::ControlMask) {
       my $popup = $self->popup ($event)
-         or return;
+         or return 1;
 
       $popup->add_title ("Options");
       $popup->add_separator;

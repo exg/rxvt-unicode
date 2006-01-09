@@ -1,0 +1,53 @@
+#! perl
+
+sub on_start {
+   my ($self) = @_;
+
+   $self->grab_button (3, urxvt::ControlMask);
+}
+
+sub on_button_press {
+   my ($self, $event) = @_;
+
+   if ($event->{button} == 3 && $event->{state} & urxvt::ControlMask) {
+      my $popup = $self->popup ($event)
+         or return 1;
+
+      $popup->add_title ("Convert Selection");
+
+      my $text = $self->selection;
+
+      my $title = $text;
+      $title =~ s/[\x00-\x1f\x80-\x9f]/·/g;
+      substr $title, 40, -1, "..." if 40 < length $title;
+      $popup->add_title ($title);
+      $popup->add_separator;
+
+      my $add_button = sub {
+         my ($title, $cb) = @_;
+
+         $popup->add_button ($title => sub {
+            for ($text) {
+               $cb->();
+               $self->selection ($_);
+            }
+         });
+      };
+
+      for ($text) {
+         /^(\S+):(\d+):?$/
+            and $add_button->("vi-commands to load '$1'" => sub { s/^(\S+):(\d+):?$/\x1b:e $1\x0d:$2\x0d/ });
+         /%[0-9a-fA-F]{2}/ && !/%[^0-9a-fA-F]/ && !/%.[^0-9a-fA-F]/
+            and $add_button->("uri unescape" => sub { s/%([0-9a-fA-F]{2})/chr hex $1/ge });
+         /^(http|ftp|telnet|irc|news):\//
+            and $add_button->("run x-www-browser" => sub { system "x-www-browser \Q$_\E &" });
+      }
+
+      $popup->show;
+
+      return 1;
+   }
+
+   ()
+}
+
