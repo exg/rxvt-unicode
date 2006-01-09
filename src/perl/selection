@@ -18,10 +18,10 @@ my @mark_patterns = (
    )}x,
 
    # common "parentheses"
-   qr{(?:^|\s) ‘  ([^‘’]+?) ’  (?:\s|$)}x,
-   qr{(?:^|\s) `  ([^`']+?) '  (?:\s|$)}x,
-   qr{         \{ ([^{}]+?) \}         }x,
-   qr{         \[ ([^{}]+?) \]         }x,
+   qr{(?:^|\s) ‘  ([^‘’]+?) ’ (?:\s|\)|$)}x,
+   qr{(?:^|\s) `  ([^`']+?) ' (?:\s|\)|$)}x,
+   qr{         \{ ([^{}]+?) \} }x,
+   qr{         \[ ([^{}]+?) \] }x,
 
    # shell-like argument quoting, basically always matches
    qr{\G [\ \t|&;<>()] *(
