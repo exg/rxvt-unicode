@@ -919,6 +919,14 @@ Return the window id of the terminal window.
 
 Return various integers describing terminal characteristics.
 
+=item $lc_ctype = $term->locale
+
+Returns the LC_CTYPE category string used by this rxvt-unicode.
+
+=item $x_display = $term->display_id
+
+Return the DISPLAY used by rxvt-unicode.
+
 =item $modifiermask = $term->ModLevel3Mask
 
 =item $modifiermask = $term->ModMetaMask
