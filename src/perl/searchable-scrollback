@@ -144,7 +144,7 @@ sub key_press {
       } elsif ($string eq "n") {
          $self->search (-1);
          $self->idle;
-      } elsif ($string eq "p") {
+      } elsif ($string eq "p" or $string eq "N") {
          # TODO
       } elsif ($string ne "") {
          $self->scr_bell;
