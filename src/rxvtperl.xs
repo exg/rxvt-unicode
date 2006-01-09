@@ -717,6 +717,13 @@ untaint (SV *sv)
         OUTPUT:
         RETVAL
 
+bool
+safe ()
+	CODE:
+        RETVAL = !rxvt_tainted ();
+        OUTPUT:
+        RETVAL
+
 NV
 NOW ()
 	CODE:

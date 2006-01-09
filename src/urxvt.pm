@@ -335,6 +335,12 @@ that calls this function.
 Using this function has the advantage that its output ends up in the
 correct place, e.g. on stderr of the connecting urxvtc client.
 
+=item $is_safe = urxvt::safe
+
+Returns true when it is safe to do potentially unsafe things, such as
+evaluating perl code specified by the user. This is true when urxvt was
+started setuid or setgid.
+
 =item $time = urxvt::NOW
 
 Returns the "current time" (as per the event loop).
