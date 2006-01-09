@@ -934,6 +934,13 @@ rxvt_term::ModLevel3Mask ()
         OUTPUT:
         RETVAL
 
+char *
+rxvt_term::display_id ()
+	CODE:
+        RETVAL = THIS->display->id;
+        OUTPUT:
+        RETVAL
+
 U32
 rxvt_term::parent ()
 	CODE:

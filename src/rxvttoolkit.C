@@ -229,6 +229,9 @@ bool rxvt_display::init ()
 
 rxvt_display::~rxvt_display ()
 {
+  if (!display)
+    return;
+
 #ifdef POINTER_BLANK
   XFreeCursor (display, blank_cursor);
 #endif
@@ -236,9 +239,7 @@ rxvt_display::~rxvt_display ()
 #ifdef USE_XIM
   xims.clear ();
 #endif
-
-  if (display)
-    XCloseDisplay (display);
+  XCloseDisplay (display);
 }
 
 #ifdef USE_XIM
