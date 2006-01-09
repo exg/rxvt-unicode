@@ -1271,11 +1271,11 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                      const text_t *text, int len,
                      int fg, int bg)
 {
-  clear_rect (d, x, y, r->fwidth * len, r->fheight, bg);
-
   XGlyphInfo extents;
   XftGlyphSpec *enc = (XftGlyphSpec *)get_enc_buf (len * sizeof (XftGlyphSpec));
   XftGlyphSpec *ep = enc;
+
+  clear_rect (d, x, y, r->fwidth * len, r->fheight, bg);
 
   // cut trailing spaces
   while (len && text [len - 1] == ' ')
