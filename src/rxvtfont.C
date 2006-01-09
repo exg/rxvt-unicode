@@ -1273,13 +1273,11 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 {
   clear_rect (d, x, y, r->fwidth * len, r->fheight, bg);
 
-  int base = ascent; // should be fbase, but that is incorrect
-
   XGlyphInfo extents;
   XftGlyphSpec *enc = (XftGlyphSpec *) get_enc_buf (len * sizeof (XftGlyphSpec));
   XftGlyphSpec *ep = enc;
 
-  // skip trailing spaces
+  // cut trailing spaces
   while (len && text [len - 1] == ' ')
     len--;
 
@@ -1298,7 +1296,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
           ep->glyph = gl;
           ep->x = x + (cwidth - extents.xOff >> 1);
-          ep->y = y + base;
+          ep->y = y + ascent;
           ep++;
         }
 
