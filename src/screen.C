@@ -196,7 +196,6 @@ rxvt_term::scr_reset ()
     {
       /*
        * first time called so just malloc everything: don't rely on realloc
-       * Note: this is still needed so that all the scrollback lines are NULL
        */
       nsaved = 0;       /* no saved lines */
       term_start = 0;
@@ -204,10 +203,9 @@ rxvt_term::scr_reset ()
       talloc = new rxvt_salloc (ncol * sizeof (text_t));
       ralloc = new rxvt_salloc (ncol * sizeof (rend_t));
 
-      row_buf   = (line_t *)rxvt_calloc (total_rows, sizeof (line_t));
-      temp_buf  = (line_t *)rxvt_calloc (total_rows, sizeof (line_t));
-      drawn_buf = (line_t *)rxvt_calloc (nrow      , sizeof (line_t));
-      swap_buf  = (line_t *)rxvt_calloc (nrow      , sizeof (line_t));
+      row_buf   = (line_t *)rxvt_calloc (total_rows + nrow, sizeof (line_t));
+      drawn_buf = (line_t *)rxvt_calloc (nrow             , sizeof (line_t));
+      swap_buf  = (line_t *)rxvt_calloc (nrow             , sizeof (line_t));
 
       for (int row = nrow; row--; )
         {
@@ -262,7 +260,6 @@ rxvt_term::scr_reset ()
 #endif
 
       drawn_buf = (line_t *)rxvt_realloc (drawn_buf, nrow * sizeof (line_t));
-      temp_buf  = (line_t *)rxvt_realloc (temp_buf , nrow * sizeof (line_t));
       swap_buf  = (line_t *)rxvt_realloc (swap_buf , nrow * sizeof (line_t));
 
       for (int row = min (nrow, prev_nrow); row--; )
@@ -277,7 +274,8 @@ rxvt_term::scr_reset ()
           drawn_buf[row].clear (); scr_blank_screen_mem (drawn_buf[row], DEFAULT_RSTYLE);
         }
 
-      line_t *old_buf = row_buf; row_buf = (line_t *)rxvt_calloc (total_rows, sizeof (line_t));
+      line_t *old_buf = row_buf;
+      row_buf = (line_t *)rxvt_calloc (total_rows + nrow, sizeof (line_t));
         
       int p    = MOD (term_start + prev_nrow, prev_total_rows);  // previous row
       int pend = MOD (term_start - nsaved   , prev_total_rows);
@@ -435,7 +433,6 @@ rxvt_term::scr_release ()
   free (row_buf);
   free (swap_buf);
   free (drawn_buf);
-  free (temp_buf);
   free (tabs);
 
   row_buf = 0; // signal that we freed all the arrays
@@ -690,6 +687,8 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
       int rows = row2 - row1 + 1;
 
       min_it (count, rows);
+
+      line_t *temp_buf = row_buf + total_rows;
 
       for (int row = 0; row < rows; row++)
         {
