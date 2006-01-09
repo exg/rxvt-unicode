@@ -7,8 +7,8 @@ sub on_init {
 
    my $hotkey = $self->{argv}[0] || "M-s";
 
-   $self->parse_keysym ($hotkey, "perl:searchable-scrollback:enter")
-      or warn "unable to register '$hotkey' as scrollback search enter hotkey\n";
+   $self->parse_keysym ($hotkey, "perl:searchable-scrollback:start")
+      or warn "unable to register '$hotkey' as scrollback search start hotkey\n";
 
    ()
 }
@@ -16,7 +16,7 @@ sub on_init {
 sub on_keyboard_command {
    my ($self, $cmd) = @_;
 
-   if ($cmd eq "searchable-scrollback:enter") {
+   if ($cmd eq "searchable-scrollback:start") {
       $self->enter;
    }
 
