@@ -134,6 +134,45 @@ probably should use the Debian BTS, too, because, after all, it's also a
 bug in the Debian version and it serves as a reminder for other users that
 might encounter the same issue.
 
+=item I am maintaining rxvt-unicode for distribution/OS XXX, any recommendation?
+
+You should build one binary with the default options. F<configure>
+now enables most useful options, and the trend goes to making them
+runtime-switchable, too, so there is usually no drawback to enbaling them,
+except higher disk and possibly memory usage. The perl interpreter should
+be enabled, as important functionality (menus, selection, likely more in
+the future) depends on it.
+
+You should not overwrite the C<perl-ext-common> snd C<perl-ext> resources
+system-wide (except maybe with C<defaults>). This will result in useful
+behaviour. If your distribution aims at low memory, add an empty
+C<perl-ext-common> resource to the app-defaults file. This will keep the
+perl interpreter disabled until the user enables it.
+
+If you can/want build more binaries, I recommend building a minimal
+one with C<--disable-everything> (very useful) and a maximal one with
+C<--enable-everything> (less useful, it will be very big due to a lot of
+encodings built-in that increase download times and are rarely used).
+
+=item I need to make it setuid/setgid to support utmp/ptys on my OS, is this safe?
+
+Likely not. While I honestly try to make it secure, and am probably
+not bad at it, I think it is simply unreasonable to expect all of
+freetype + fontconfig + xft + xlib + ... + rxvt-unicode itself to all be
+secure. Also, rxvt-unicode disables some options when it detects that it
+runs setuid or setgid, which is not nice.
+
+Elevated privileges are only required for utmp and pty operations on some
+systems (for example, GNU/Linux doesn't need any extra privileges for
+ptys, but some need it for utmp support). If rxvt-unicode doesn't support
+the library/setuid helper that your OS needs I'll be happy to assist you
+in implementing support for it.
+
+So, while setuid/setgid operation is supported and not a problem on your
+typical single-user-no-other-logins unix desktop, always remember that
+its an awful lot of code, most of which isn't checked for security issues
+regularly.
+
 =item When I log-in to another system it tells me about missing terminfo data?
 
 The terminal description used by rxvt-unicode is not as widely available

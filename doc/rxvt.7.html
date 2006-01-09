@@ -210,6 +210,53 @@ bug in the Debian version and it serves as a reminder for other users that
 might encounter the same issue.</p>
 </dd>
 <p></p>
+<dt><strong><a name="item_i_am_maintaining_rxvt_2dunicode_for_distribution_2">I am maintaining rxvt-unicode for distribution/OS XXX, any recommendation?</a></strong><br />
+</dt>
+<dd>
+You should build one binary with the default options. <em>configure</em>
+now enables most useful options, and the trend goes to making them
+runtime-switchable, too, so there is usually no drawback to enbaling them,
+except higher disk and possibly memory usage. The perl interpreter should
+be enabled, as important functionality (menus, selection, likely more in
+the future) depends on it.
+</dd>
+<dd>
+<p>You should not overwrite the <code>perl-ext-common</code> snd <code>perl-ext</code> resources
+system-wide (except maybe with <code>defaults</code>). This will result in useful
+behaviour. If your distribution aims at low memory, add an empty
+<code>perl-ext-common</code> resource to the app-defaults file. This will keep the
+perl interpreter disabled until the user enables it.</p>
+</dd>
+<dd>
+<p>If you can/want build more binaries, I recommend building a minimal
+one with <code>--disable-everything</code> (very useful) and a maximal one with
+<a href="#item__2d_2denable_2deverything"><code>--enable-everything</code></a> (less useful, it will be very big due to a lot of
+encodings built-in that increase download times and are rarely used).</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_i_need_to_make_it_setuid_2fsetgid_to_support_utmp_">I need to make it setuid/setgid to support utmp/ptys on my OS, is this safe?</a></strong><br />
+</dt>
+<dd>
+Likely not. While I honestly try to make it secure, and am probably
+not bad at it, I think it is simply unreasonable to expect all of
+freetype + fontconfig + xft + xlib + ... + rxvt-unicode itself to all be
+secure. Also, rxvt-unicode disables some options when it detects that it
+runs setuid or setgid, which is not nice.
+</dd>
+<dd>
+<p>Elevated privileges are only required for utmp and pty operations on some
+systems (for example, GNU/Linux doesn't need any extra privileges for
+ptys, but some need it for utmp support). If rxvt-unicode doesn't support
+the library/setuid helper that your OS needs I'll be happy to assist you
+in implementing support for it.</p>
+</dd>
+<dd>
+<p>So, while setuid/setgid operation is supported and not a problem on your
+typical single-user-no-other-logins unix desktop, always remember that
+its an awful lot of code, most of which isn't checked for security issues
+regularly.</p>
+</dd>
+<p></p>
 <dt><strong><a name="item_when_i_log_2din_to_another_system_it_tells_me_abou">When I log-in to another system it tells me about missing terminfo data?</a></strong><br />
 </dt>
 <dd>
