@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-08" "6.3" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-09" "6.3" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -193,8 +193,12 @@ Rot\-13 the selection when activated. Used via keyboard trigger:
 .RE
 .IP "option-popup (enabled by default)" 4
 .IX Item "option-popup (enabled by default)"
-Binds a popup menu to Ctrl\-Button3 that lets you toggle (some) options at
+Binds a popup menu to Ctrl\-Button2 that lets you toggle (some) options at
 runtime.
+.IP "selection-popup (enabled by default)" 4
+.IX Item "selection-popup (enabled by default)"
+Binds a popup menu to Ctrl\-Button3 that lets you convert the selection
+text into various other formats/action.
 .IP "digital-clock" 4
 .IX Item "digital-clock"
 Displays a digital clock using the built-in overlay.
@@ -317,10 +321,6 @@ than the scroll back buffer or the terminal.
 It is called before lines are scrolled out (so rows 0 .. min ($lines \- 1,
 \&\f(CW$nrow\fR \- 1) represent the lines to be scrolled out). \f(CW$saved\fR is the total
 number of lines that will be in the scrollback buffer.
-.ie n .IP "on_tty_activity $term *NYI*" 4
-.el .IP "on_tty_activity \f(CW$term\fR *NYI*" 4
-.IX Item "on_tty_activity $term *NYI*"
-Called whenever the program(s) running in the urxvt window send output.
 .ie n .IP "on_osc_seq $term\fR, \f(CW$string" 4
 .el .IP "on_osc_seq \f(CW$term\fR, \f(CW$string\fR" 4
 .IX Item "on_osc_seq $term, $string"
@@ -862,9 +862,9 @@ Translates a string offset into terminal coordinates again.
 .RE
 .RS 4
 .RE
-.ie n .IP "($row, $col\fR) = \f(CW$line\fR\->coord_of ($offset) =item \f(CW$text\fR = \f(CW$term\fR\->special_encode \f(CW$string" 4
-.el .IP "($row, \f(CW$col\fR) = \f(CW$line\fR\->coord_of ($offset) =item \f(CW$text\fR = \f(CW$term\fR\->special_encode \f(CW$string\fR" 4
-.IX Item "($row, $col) = $line->coord_of ($offset) =item $text = $term->special_encode $string"
+.ie n .IP "$text = $term\fR\->special_encode \f(CW$string" 4
+.el .IP "$text = \f(CW$term\fR\->special_encode \f(CW$string\fR" 4
+.IX Item "$text = $term->special_encode $string"
 Converts a perl string into the special encoding used by rxvt\-unicode,
 where one character corresponds to one screen cell. See
 \&\f(CW\*(C`$term\->ROW_t\*(C'\fR for details.
@@ -873,6 +873,30 @@ where one character corresponds to one screen cell. See
 .IX Item "$string = $term->special_decode $text"
 Converts rxvt-unicodes text reprsentation into a perl string. See
 \&\f(CW\*(C`$term\->ROW_t\*(C'\fR for details.
+.ie n .IP "$success = $term\fR\->grab_button ($button, \f(CW$modifiermask)" 4
+.el .IP "$success = \f(CW$term\fR\->grab_button ($button, \f(CW$modifiermask\fR)" 4
+.IX Item "$success = $term->grab_button ($button, $modifiermask)"
+Registers a synchronous button grab. See XGrabButton.
+.ie n .IP "$success = $term\fR\->grab ($eventtime[, \f(CW$sync])" 4
+.el .IP "$success = \f(CW$term\fR\->grab ($eventtime[, \f(CW$sync\fR])" 4
+.IX Item "$success = $term->grab ($eventtime[, $sync])"
+Calls XGrabPointer and XGrabKeyboard in asynchronous (default) or
+synchronous (\f(CW$sync\fR is true). Also remembers the grab timestampe.
+.IP "$term\->allow_events_async" 4
+.IX Item "$term->allow_events_async"
+Calls XAllowEvents with AsyncBoth for the most recent grab.
+.IP "$term\->allow_events_sync" 4
+.IX Item "$term->allow_events_sync"
+Calls XAllowEvents with SyncBoth for the most recent grab.
+.IP "$term\->allow_events_replay" 4
+.IX Item "$term->allow_events_replay"
+Calls XAllowEvents with both ReplayPointer and ReplayKeyboard for the most
+recent grab.
+.IP "$term\->ungrab" 4
+.IX Item "$term->ungrab"
+Calls XUngrab for the most recent grab. Is called automatically on
+evaluation errors, as it is better to lose the grab in the error case as
+the session.
 .ie n .Sh "The ""urxvt::popup"" Class"
 .el .Sh "The \f(CWurxvt::popup\fP Class"
 .IX Subsection "The urxvt::popup Class"
@@ -981,13 +1005,13 @@ Stop watching for events on the given filehandle.
 .IX Subsection "URXVT_PERL_VERBOSITY"
 This variable controls the verbosity level of the perl extension. Higher
 numbers indicate more verbose output.
-.IP "=0 \- only fatal messages" 4
-.IX Item "=0 - only fatal messages"
+.IP "== 0 \- fatal messages" 4
+.IX Item "== 0 - fatal messages"
 .PD 0
-.IP "=3 \- script loading and management" 4
-.IX Item "=3 - script loading and management"
-.IP "=10 \- all events received" 4
-.IX Item "=10 - all events received"
+.IP ">= 3 \- script loading and management" 4
+.IX Item ">= 3 - script loading and management"
+.IP ">=10 \- all events received" 4
+.IX Item ">=10 - all events received"
 .RE
 .RS 4
 .PD

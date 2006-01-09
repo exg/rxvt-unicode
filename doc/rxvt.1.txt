@@ -963,15 +963,20 @@ RESOURCES (available also as long-options)
 
     perl-eval: *string*
         Perl code to be evaluated when all extensions have been registered.
-        See the rxvtperl(3) manpage.
+        See the rxvtperl(3) manpage. Due to security reasons, this resource
+        will be ignored when running setuid/setgid.
 
     perl-lib: *path*
         Colon-separated list of additional directories that hold extension
         scripts. When looking for extensions specified by the "perl"
         resource, rxvt will first look in these directories and then in
-        /opt/rxvt/lib/urxvt/perl/.
+        /opt/rxvt/lib/urxvt/perl/. Due to security reasons, this resource
+        will be ignored when running setuid/setgid.
 
         See the rxvtperl(3) manpage.
+
+    transient-for: *windowid*
+        Sets the WM_TRANSIENT_FOR property to the given window iw.
 
 THE SCROLLBAR
     Lines of text that scroll off the top of the rxvt window (resource:

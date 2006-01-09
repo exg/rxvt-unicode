@@ -105,8 +105,15 @@ Rot-13 the selection when activated. Used via keyboard trigger:
 <dt><strong><a name="item_popup">option-popup (enabled by default)</a></strong><br />
 </dt>
 <dd>
-Binds a popup menu to Ctrl-Button3 that lets you toggle (some) options at
+Binds a popup menu to Ctrl-Button2 that lets you toggle (some) options at
 runtime.
+</dd>
+<p></p>
+<dt><strong>selection-popup (enabled by default)</strong><br />
+</dt>
+<dd>
+Binds a popup menu to Ctrl-Button3 that lets you convert the selection
+text into various other formats/action.
 </dd>
 <p></p>
 <dt><strong><a name="item_digital_2dclock">digital-clock</a></strong><br />
@@ -269,12 +276,6 @@ than the scroll back buffer or the terminal.
 <p>It is called before lines are scrolled out (so rows 0 .. min ($lines - 1,
 $nrow - 1) represent the lines to be scrolled out). <code>$saved</code> is the total
 number of lines that will be in the scrollback buffer.</p>
-</dd>
-<p></p>
-<dt><strong><a name="item_on_tty_activity__24term__2anyi_2a">on_tty_activity $term *NYI*</a></strong><br />
-</dt>
-<dd>
-Called whenever the <code>program(s)</code> running in the urxvt window send output.
 </dd>
 <p></p>
 <dt><strong><a name="item_on_osc_seq__24term_2c__24string">on_osc_seq $term, $string</a></strong><br />
@@ -850,7 +851,7 @@ that <code>substr</code> and similar functions work on screen cells and not on
 characters.</p>
 </dd>
 <dd>
-<p>The methods <code>$term-&gt;special_encode</code> and <a href="#item_special_decode"><code>$term-&gt;special_decode</code></a>
+<p>The methods <a href="#item_special_encode"><code>$term-&gt;special_encode</code></a> and <a href="#item_special_decode"><code>$term-&gt;special_decode</code></a>
 can be used to convert normal strings into this encoding and vice versa.</p>
 </dd>
 <p></p>
@@ -932,8 +933,7 @@ line.
 Translates a string offset into terminal coordinates again.
 </dd>
 <p></p></dl>
-<dt><strong>($row, $col) = $line-&gt;coord_of ($offset)
-=item $text = $term-&gt;special_encode $string</strong><br />
+<dt><strong><a name="item_special_encode">$text = $term-&gt;special_encode $string</a></strong><br />
 </dt>
 <dd>
 Converts a perl string into the special encoding used by rxvt-unicode,
@@ -946,6 +946,46 @@ where one character corresponds to one screen cell. See
 <dd>
 Converts rxvt-unicodes text reprsentation into a perl string. See
 <a href="#item_row_t"><code>$term-&gt;ROW_t</code></a> for details.
+</dd>
+<p></p>
+<dt><strong><a name="item_grab_button">$success = $term-&gt;grab_button ($button, $modifiermask)</a></strong><br />
+</dt>
+<dd>
+Registers a synchronous button grab. See XGrabButton.
+</dd>
+<p></p>
+<dt><strong><a name="item_grab">$success = $term-&gt;grab ($eventtime[, $sync])</a></strong><br />
+</dt>
+<dd>
+Calls XGrabPointer and XGrabKeyboard in asynchronous (default) or
+synchronous (<code>$sync</code> is true). Also remembers the grab timestampe.
+</dd>
+<p></p>
+<dt><strong><a name="item_allow_events_async">$term-&gt;allow_events_async</a></strong><br />
+</dt>
+<dd>
+Calls XAllowEvents with AsyncBoth for the most recent grab.
+</dd>
+<p></p>
+<dt><strong><a name="item_allow_events_sync">$term-&gt;allow_events_sync</a></strong><br />
+</dt>
+<dd>
+Calls XAllowEvents with SyncBoth for the most recent grab.
+</dd>
+<p></p>
+<dt><strong><a name="item_allow_events_replay">$term-&gt;allow_events_replay</a></strong><br />
+</dt>
+<dd>
+Calls XAllowEvents with both ReplayPointer and ReplayKeyboard for the most
+recent grab.
+</dd>
+<p></p>
+<dt><strong><a name="item_ungrab">$term-&gt;ungrab</a></strong><br />
+</dt>
+<dd>
+Calls XUngrab for the most recent grab. Is called automatically on
+evaluation errors, as it is better to lose the grab in the error case as
+the session.
 </dd>
 <p></p></dl>
 <p>
@@ -1083,11 +1123,11 @@ Stop watching for events on the given filehandle.
 <p>This variable controls the verbosity level of the perl extension. Higher
 numbers indicate more verbose output.</p>
 <dl>
-<dt><strong><a name="item__3d0__2d_only_fatal_messages">=0 - only fatal messages</a></strong><br />
+<dt><strong><a name="item__3d_3d_0__2d_fatal_messages">== 0 - fatal messages</a></strong><br />
 </dt>
-<dt><strong><a name="item__3d3__2d_script_loading_and_management">=3 - script loading and management</a></strong><br />
+<dt><strong><a name="item__3e_3d_3__2d_script_loading_and_management">&gt;= 3 - script loading and management</a></strong><br />
 </dt>
-<dt><strong><a name="item__3d10__2d_all_events_received">=10 - all events received</a></strong><br />
+<dt><strong><a name="item__3e_3d10__2d_all_events_received">&gt;=10 - all events received</a></strong><br />
 </dt>
 </dl>
 <p>

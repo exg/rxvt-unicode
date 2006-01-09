@@ -1238,7 +1238,7 @@ rxvt_term::option (U32 optval, int set = -1)
         RETVAL
 
 void
-rxvt_term::cur (...)
+rxvt_term::screen_cur (...)
 	PROTOTYPE: $;$$
         ALIAS:
            screen_cur     = 0

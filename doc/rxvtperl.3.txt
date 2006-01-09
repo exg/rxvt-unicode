@@ -45,8 +45,12 @@ DESCRIPTION
                URxvt.keysym.C-M-r: perl:selection:rot13
 
     option-popup (enabled by default)
-        Binds a popup menu to Ctrl-Button3 that lets you toggle (some)
+        Binds a popup menu to Ctrl-Button2 that lets you toggle (some)
         options at runtime.
+
+    selection-popup (enabled by default)
+        Binds a popup menu to Ctrl-Button3 that lets you convert the
+        selection text into various other formats/action.
 
     digital-clock
         Displays a digital clock using the built-in overlay.
@@ -167,10 +171,6 @@ DESCRIPTION
         It is called before lines are scrolled out (so rows 0 .. min ($lines
         - 1, $nrow - 1) represent the lines to be scrolled out). $saved is
         the total number of lines that will be in the scrollback buffer.
-
-    on_tty_activity $term *NYI*
-        Called whenever the program(s) running in the urxvt window send
-        output.
 
     on_osc_seq $term, $string
         Called whenever the ESC ] 777 ; string ST command sequence (OSC =
@@ -591,8 +591,7 @@ DESCRIPTION
         ($row, $col) = $line->coord_of ($offset)
             Translates a string offset into terminal coordinates again.
 
-    ($row, $col) = $line->coord_of ($offset) =item $text =
-    $term->special_encode $string
+    $text = $term->special_encode $string
         Converts a perl string into the special encoding used by
         rxvt-unicode, where one character corresponds to one screen cell.
         See "$term->ROW_t" for details.
@@ -600,6 +599,28 @@ DESCRIPTION
     $string = $term->special_decode $text
         Converts rxvt-unicodes text reprsentation into a perl string. See
         "$term->ROW_t" for details.
+
+    $success = $term->grab_button ($button, $modifiermask)
+        Registers a synchronous button grab. See XGrabButton.
+
+    $success = $term->grab ($eventtime[, $sync])
+        Calls XGrabPointer and XGrabKeyboard in asynchronous (default) or
+        synchronous ($sync is true). Also remembers the grab timestampe.
+
+    $term->allow_events_async
+        Calls XAllowEvents with AsyncBoth for the most recent grab.
+
+    $term->allow_events_sync
+        Calls XAllowEvents with SyncBoth for the most recent grab.
+
+    $term->allow_events_replay
+        Calls XAllowEvents with both ReplayPointer and ReplayKeyboard for
+        the most recent grab.
+
+    $term->ungrab
+        Calls XUngrab for the most recent grab. Is called automatically on
+        evaluation errors, as it is better to lose the grab in the error
+        case as the session.
 
   The "urxvt::popup" Class
   The "urxvt::timer" Class
@@ -683,9 +704,9 @@ ENVIRONMENT
         This variable controls the verbosity level of the perl extension.
         Higher numbers indicate more verbose output.
 
-        =0 - only fatal messages
-        =3 - script loading and management
-        =10 - all events received
+        == 0 - fatal messages
+        >= 3 - script loading and management
+        >=10 - all events received
 
 AUTHOR
          Marc Lehmann <pcg@goof.com>

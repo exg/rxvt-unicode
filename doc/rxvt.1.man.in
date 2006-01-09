@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2006-01-08" "6.3" "RXVT-UNICODE"
+.TH rxvt 1 "2006-01-09" "6.3" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -1130,16 +1130,21 @@ interpreter will not be initialized. The idea behind two options is that
 all instances, while \fBperl-ext\fR is used for specific instances.
 .IP "\fBperl-eval\fR: \fIstring\fR" 4
 .IX Item "perl-eval: string"
-Perl code to be evaluated when all extensions have been registered. See the
-@@RXVT_NAME@@\fIperl\fR\|(3) manpage.
+Perl code to be evaluated when all extensions have been registered. See
+the @@RXVT_NAME@@\fIperl\fR\|(3) manpage. Due to security reasons, this resource
+will be ignored when running setuid/setgid.
 .IP "\fBperl-lib\fR: \fIpath\fR" 4
 .IX Item "perl-lib: path"
 Colon-separated list of additional directories that hold extension
 scripts. When looking for extensions specified by the \f(CW\*(C`perl\*(C'\fR resource,
 @@RXVT_NAME@@ will first look in these directories and then in
-\&\fI@@RXVT_LIBDIR@@/urxvt/perl/\fR.
+\&\fI@@RXVT_LIBDIR@@/urxvt/perl/\fR. Due to security reasons, this resource
+will be ignored when running setuid/setgid.
 .Sp
 See the @@RXVT_NAME@@\fIperl\fR\|(3) manpage.
+.IP "\fBtransient-for\fR: \fIwindowid\fR" 4
+.IX Item "transient-for: windowid"
+Sets the \s-1WM_TRANSIENT_FOR\s0 property to the given window iw.
 .SH "THE SCROLLBAR"
 .IX Header "THE SCROLLBAR"
 Lines of text that scroll off the top of the \fB@@RXVT_NAME@@\fR window

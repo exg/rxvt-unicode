@@ -207,10 +207,6 @@ It is called before lines are scrolled out (so rows 0 .. min ($lines - 1,
 $nrow - 1) represent the lines to be scrolled out). C<$saved> is the total
 number of lines that will be in the scrollback buffer.
 
-=item on_tty_activity $term *NYI*
-
-Called whenever the program(s) running in the urxvt window send output.
-
 =item on_osc_seq $term, $string
 
 Called whenever the B<ESC ] 777 ; string ST> command sequence (OSC =
@@ -1102,7 +1098,6 @@ sub urxvt::line::coord_of {
    )
 }
 
-=item ($row, $col) = $line->coord_of ($offset)
 =item $text = $term->special_encode $string
 
 Converts a perl string into the special encoding used by rxvt-unicode,
@@ -1113,6 +1108,34 @@ C<< $term->ROW_t >> for details.
 
 Converts rxvt-unicodes text reprsentation into a perl string. See
 C<< $term->ROW_t >> for details.
+
+=item $success = $term->grab_button ($button, $modifiermask)
+
+Registers a synchronous button grab. See XGrabButton.
+
+=item $success = $term->grab ($eventtime[, $sync])
+
+Calls XGrabPointer and XGrabKeyboard in asynchronous (default) or
+synchronous (C<$sync> is true). Also remembers the grab timestampe.
+
+=item $term->allow_events_async
+
+Calls XAllowEvents with AsyncBoth for the most recent grab.
+
+=item $term->allow_events_sync
+
+Calls XAllowEvents with SyncBoth for the most recent grab.
+
+=item $term->allow_events_replay
+
+Calls XAllowEvents with both ReplayPointer and ReplayKeyboard for the most
+recent grab.
+
+=item $term->ungrab
+
+Calls XUngrab for the most recent grab. Is called automatically on
+evaluation errors, as it is better to lose the grab in the error case as
+the session.
 
 =back
 

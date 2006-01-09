@@ -1119,6 +1119,10 @@ will be ignored when running setuid/setgid.
 
 See the @@RXVT_NAME@@perl(3) manpage.
 
+=item B<transient-for>: I<windowid>
+
+Sets the WM_TRANSIENT_FOR property to the given window iw.
+
 =back
 
 =head1 THE SCROLLBAR

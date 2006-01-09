@@ -1479,8 +1479,9 @@ all instances, while <strong>perl-ext</strong> is used for specific instances.</
 <dt><strong><a name="item_perl_2deval_3a_string"><strong>perl-eval</strong>: <em>string</em></a></strong><br />
 </dt>
 <dd>
-Perl code to be evaluated when all extensions have been registered. See the
-<code>rxvtperl(3)</code> manpage.
+Perl code to be evaluated when all extensions have been registered. See
+the <code>rxvtperl(3)</code> manpage. Due to security reasons, this resource
+will be ignored when running setuid/setgid.
 </dd>
 <p></p>
 <dt><strong><a name="item_perl_2dlib_3a_path"><strong>perl-lib</strong>: <em>path</em></a></strong><br />
@@ -1489,10 +1490,17 @@ Perl code to be evaluated when all extensions have been registered. See the
 Colon-separated list of additional directories that hold extension
 scripts. When looking for extensions specified by the <code>perl</code> resource,
 rxvt will first look in these directories and then in
-<em>/opt/rxvt/lib/urxvt/perl/</em>.
+<em>/opt/rxvt/lib/urxvt/perl/</em>. Due to security reasons, this resource
+will be ignored when running setuid/setgid.
 </dd>
 <dd>
 <p>See the <code>rxvtperl(3)</code> manpage.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_transient_2dfor_3a_windowid"><strong>transient-for</strong>: <em>windowid</em></a></strong><br />
+</dt>
+<dd>
+Sets the WM_TRANSIENT_FOR property to the given window iw.
 </dd>
 <p></p></dl>
 <p>
