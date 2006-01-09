@@ -67,9 +67,9 @@ sub idle {
 }
 
 sub search {
-   my ($self) = @_;
+   my ($self, $offset) = @_;
 
-   my $row = -$self->view_start;
+   my $row = -$self->view_start + ($self->nrow >> 1) + $offset;
 
    delete $self->{found};
 
@@ -103,7 +103,7 @@ sub refresh {
 
    return unless $self->{found};
 
-   $self->scr_xor_span (@$_)
+   $self->scr_xor_span (@$_, urxvt::SET_FGCOLOR (urxvt::RS_RVid, 15))
       for @{ $self->{found} };
 
    ()
@@ -120,11 +120,9 @@ sub key_press {
          $self->idle;
       } elsif ($keysym == 0xff08) {
          substr $self->{search}, -1, 1, "";
-
          $self->search;
       } elsif ($string ne "") {
          $self->{search} .= $string;
-
          $self->search;
       }
    } else {
@@ -144,7 +142,8 @@ sub key_press {
       } elsif ($string eq "G") {
          $self->view_start (0);
       } elsif ($string eq "n") {
-         $self->search;
+         $self->search (-1);
+         $self->idle;
       } elsif ($string eq "p") {
          # TODO
       } elsif ($string ne "") {

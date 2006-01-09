@@ -503,7 +503,7 @@ sub extension_package($) {
 
       my $source = untaint
          "package $pkg; use strict; use utf8;\n"
-         . "use base urxvt::term::proxy::;\n"
+         . "use base urxvt::term::extension::;\n"
          . "#line 1 \"$path\"\n{\n"
          . (do { local $/; <$fh> })
          . "\n};\n1";
@@ -590,9 +590,9 @@ sub invoke {
    $retval
 }
 
-# urxvt::term::proxy
+# urxvt::term::extension
 
-package urxvt::term::proxy;
+package urxvt::term::extension;
 
 sub enable {
    my ($self, %hook) = @_;

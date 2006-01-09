@@ -2500,11 +2500,11 @@ rxvt_term::scr_xor_span (int beg_row, int beg_col, int end_row, int end_col, ren
 
   for (; row < min (end_row, view_end); row++, col = 0)
     for (rend_t *srp = ROW(row).r; col < ncol; col++)
-      srp[col] ^= RS_RVid;
+      srp[col] ^= rstyle;
 
   if (row == end_row)
     for (rend_t *srp = ROW(row).r; col < end_col; col++)
-      srp[col] ^= RS_RVid;
+      srp[col] ^= rstyle;
 }
 
 /* ------------------------------------------------------------------------- */
