@@ -34,7 +34,7 @@ typedef void (keyevent_handler) (rxvt_term *rt,
 struct keysym_t
 {
   enum keysym_type {
-    NORMAL, RANGE, RANGE_META8, LIST, BUILTIN,
+    STRING, RANGE, RANGE_META8, LIST, BUILTIN,
   };
 
   KeySym      keysym;

@@ -31,8 +31,9 @@
 #include <cstddef>
 #include <cstdarg>
 
-#include "rxvt.h"
 #include "iom.h"
+#include "rxvt.h"
+#include "keyboard.h"
 #include "rxvtutil.h"
 #include "rxvtperl.h"
 
@@ -461,20 +462,25 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
     {
       // handled later
     }
-  else if (htype == HOOK_REFRESH_BEGIN || htype == HOOK_REFRESH_END)
+  else
     {
-      HV *hv = (HV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, 0));
-
-      if (HvKEYS (hv))
+      if (htype == HOOK_REFRESH_BEGIN || htype == HOOK_REFRESH_END)
         {
-          hv_iterinit (hv);
+          HV *hv = (HV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, 0));
 
-          while (HE *he = hv_iternext (hv))
-            ((overlay *)SvIV (hv_iterval (hv, he)))->swap ();
+          if (HvKEYS (hv))
+            {
+              hv_iterinit (hv);
+
+              while (HE *he = hv_iternext (hv))
+                ((overlay *)SvIV (hv_iterval (hv, he)))->swap ();
+            }
+
         }
+
+      if (!should_invoke [htype])
+        return false;
     }
-  else if (!should_invoke [htype])
-    return false;
 
   dSP;
   va_list ap;
@@ -662,6 +668,10 @@ BOOT:
   export_const_iv (Button4Mask);
   export_const_iv (Button5Mask);
   export_const_iv (AnyModifier);
+
+  export_const_iv (EVENT_NONE);
+  export_const_iv (EVENT_READ);
+  export_const_iv (EVENT_WRITE);
 }
 
 SV *
@@ -946,6 +956,15 @@ rxvt_term::display_id ()
             case 1: RETVAL = THIS->locale;      break;
           }
         OUTPUT:
+        RETVAL
+
+int
+rxvt_term::pty_ev_events (int events = EVENT_UNDEF)
+	CODE:
+        RETVAL = THIS->pty_ev.events;
+        if (events != EVENT_UNDEF)
+          THIS->pty_ev.set (events);
+	OUTPUT:
         RETVAL
 
 U32
@@ -1258,6 +1277,14 @@ rxvt_term::option (U32 optval, int set = -1)
         OUTPUT:
         RETVAL
 
+bool
+rxvt_term::parse_keysym (char *keysym, char *str)
+	CODE:
+        RETVAL = 0 < THIS->parse_keysym (keysym, str);
+        THIS->keyboard->register_done ();
+	OUTPUT:
+        RETVAL
+
 void
 rxvt_term::screen_cur (...)
 	PROTOTYPE: $;$$
@@ -1310,6 +1337,9 @@ rxvt_term::selection (SV *newtext = 0)
             THIS->selection.len = wcslen (THIS->selection.text);
           }
 }
+
+void
+rxvt_term::scr_bell ()
 
 void
 rxvt_term::scr_add_lines (SV *string)

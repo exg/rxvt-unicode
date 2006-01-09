@@ -68,6 +68,14 @@ runtime.
 Binds a popup menu to Ctrl-Button3 that lets you convert the selection
 text into various other formats/action.
 
+=item searchable-scrollback (enabled by default)
+
+Adds regex search functionality to the scrollback buffer, triggered by a
+hotkey (default: C<M-s>). When in search mode, terminal input/output is
+suspended, C</> starts an incremental regex search, C<n> searches further,
+C<p> jumps to the previous match. C<enter> leaves search mode at the
+current position and C<escape> returns to the original position.
+
 =item digital-clock
 
 Displays a digital clock using the built-in overlay.
@@ -126,23 +134,52 @@ locale-specific way.
 
 =back
 
+=head2 Extension Objects
+
+Very perl extension is a perl class. A separate perl object is created
+for each terminal and each extension and passed as the first parameter to
+hooks. So extensions can use their C<$self> object without having to think
+about other extensions, with the exception of methods and members that
+begin with an underscore character C<_>: these are reserved for internal
+use.
+
+Although it isn't a C<urxvt::term> object, you can call all methods of the
+C<urxvt::term> class on this object.
+
+It has the following methods and data members:
+
+=over 4
+
+=item $urxvt_term = $self->{term}
+
+Returns the C<urxvt::term> object associated with this instance of the
+extension. This member I<must not> be changed in any way.
+
+=item $self->enable ($hook_name => $cb, [$hook_name => $cb..])
+
+Dynamically enable the given hooks (named without the C<on_> prefix) for
+this extension, replacing any previous hook. This is useful when you want
+to overwrite time-critical hooks only temporarily.
+
+=item $self->disable ($hook_name[, $hook_name..])
+
+Dynamically disable the given hooks.
+
+=back
+
 =head2 Hooks
 
 The following subroutines can be declared in extension files, and will be
 called whenever the relevant event happens.
 
-The first argument passed to them is an object private to each terminal
-and extension package. You can call all C<urxvt::term> methods on it, but
-its not a real C<urxvt::term> object. Instead, the real C<urxvt::term>
-object that is shared between all packages is stored in the C<term>
-member. It is, however, blessed intot he package of the extension script,
-so for all practical purposes you can treat an extension script as a class.
+The first argument passed to them is an extension oject as described in
+the in the C<Extension Objects> section.
 
-All of them must return a boolean value. If it is true, then the event
-counts as being I<consumed>, and the invocation of other hooks is skipped,
-and the relevant action might not be carried out by the C++ code.
+B<All> of these hooks must return a boolean value. If it is true, then the
+event counts as being I<consumed>, and the invocation of other hooks is
+skipped, and the relevant action might not be carried out by the C++ code.
 
-When in doubt, return a false value (preferably C<()>).
+I<< When in doubt, return a false value (preferably C<()>). >>
 
 =over 4
 
@@ -269,9 +306,9 @@ does focus in processing.
 Called wheneever the window loses keyboard focus, before rxvt-unicode does
 focus out processing.
 
-=item on_key_press $term, $event, $octets
+=item on_key_press $term, $event, $keysym, $octets
 
-=item on_key_release $term, $event
+=item on_key_release $term, $event, $keysym
 
 =item on_button_press $term, $event
 
@@ -413,12 +450,14 @@ package urxvt;
 
 use utf8;
 use strict;
+use Carp ();
 use Scalar::Util ();
 use List::Util ();
 
 our $VERSION = 1;
 our $TERM;
 our @HOOKNAME;
+our %HOOKTYPE = map +($HOOKNAME[$_] => $_), 0..$#HOOKNAME;
 our %OPTION;
 our $LIBDIR;
 
@@ -462,13 +501,15 @@ sub extension_package($) {
       open my $fh, "<:raw", $path
          or die "$path: $!";
 
-      my $source = untaint "package $pkg; use strict; use utf8;\n"
-                   . "use base urxvt::term::proxy::;\n"
-                   . "#line 1 \"$path\"\n{\n"
-                   . (do { local $/; <$fh> })
-                   . "\n};\n1";
+      my $source = untaint
+         "package $pkg; use strict; use utf8;\n"
+         . "use base urxvt::term::proxy::;\n"
+         . "#line 1 \"$path\"\n{\n"
+         . (do { local $/; <$fh> })
+         . "\n};\n1";
 
-      eval $source or die "$path: $@";
+      eval $source
+         or die "$path: $@";
 
       $pkg
    }
@@ -488,7 +529,7 @@ sub invoke {
 
       for (map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2) {
          if ($_ eq "default") {
-            $ext_arg{$_} ||= [] for qw(selection option-popup selection-popup);
+            $ext_arg{$_} ||= [] for qw(selection option-popup selection-popup searchable-scrollback);
          } elsif (/^-(.*)$/) {
             delete $ext_arg{$1};
          } elsif (/^([^<]+)<(.*)>$/) {
@@ -532,8 +573,7 @@ sub invoke {
    }
 
    if ($htype == 1) { # DESTROY
-      # remove hooks if unused
-      if (my $hook = $TERM->{_hook}) {
+      if (my $hook = delete $TERM->{_hook}) {
          for my $htype (0..$#$hook) {
             $hook_count[$htype] -= scalar keys %{ $hook->[$htype] || {} }
                or set_should_invoke $htype, 0;
@@ -552,22 +592,60 @@ sub invoke {
 
 # urxvt::term::proxy
 
-sub urxvt::term::proxy::AUTOLOAD {
-   $urxvt::term::proxy::AUTOLOAD =~ /:([^:]+)$/
-      or die "FATAL: \$AUTOLOAD '$urxvt::term::proxy::AUTOLOAD' unparsable";
+package urxvt::term::proxy;
+
+sub enable {
+   my ($self, %hook) = @_;
+   my $pkg = $self->{_pkg};
+
+   while (my ($name, $cb) = each %hook) {
+      my $htype = $HOOKTYPE{uc $name};
+      defined $htype
+         or Carp::croak "unsupported hook type '$name'";
+
+      unless (exists $self->{term}{_hook}[$htype]{$pkg}) {
+         $hook_count[$htype]++
+            or urxvt::set_should_invoke $htype, 1;
+      }
+
+      $self->{term}{_hook}[$htype]{$pkg} = $cb;
+   }
+}
+
+sub disable {
+   my ($self, @hook) = @_;
+   my $pkg = $self->{_pkg};
+
+   for my $name (@hook) {
+      my $htype = $HOOKTYPE{uc $name};
+      defined $htype
+         or Carp::croak "unsupported hook type '$name'";
+
+      if (delete $self->{term}{_hook}[$htype]{$pkg}) {
+         --$hook_count[$htype]
+            or urxvt::set_should_invoke $htype, 0;
+      }
+   }
+}
+
+our $AUTOLOAD;
+
+sub AUTOLOAD {
+   $AUTOLOAD =~ /:([^:]+)$/
+      or die "FATAL: \$AUTOLOAD '$AUTOLOAD' unparsable";
 
    eval qq{
-      sub $urxvt::term::proxy::AUTOLOAD {
+      sub $AUTOLOAD {
          my \$proxy = shift;
          \$proxy->{term}->$1 (\@_)
       }
       1
    } or die "FATAL: unable to compile method forwarder: $@";
 
-   goto &$urxvt::term::proxy::AUTOLOAD;
+   goto &$AUTOLOAD;
 }
 
-sub urxvt::term::proxy::DESTROY {
+sub DESTROY {
    # nop
 }
 
@@ -644,8 +722,7 @@ sub urxvt::anyevent::condvar::broadcast {
 
 sub urxvt::anyevent::condvar::wait {
    unless (${$_[0]}) {
-      require Carp;
-      Carp::croak ("AnyEvent->condvar blocking wait unsupported in urxvt, use a non-blocking API");
+      Carp::croak "AnyEvent->condvar blocking wait unsupported in urxvt, use a non-blocking API";
    }
 }
 
@@ -662,20 +739,18 @@ package urxvt::term;
 sub register_package {
    my ($self, $pkg, $argv) = @_;
 
-   my $proxy = bless { argv => $argv }, $pkg;
-   Scalar::Util::weaken ($proxy->{term} = $TERM);
+   my $proxy = bless {
+      _pkg => $pkg,
+      argv => $argv,
+   }, $pkg;
+   Scalar::Util::weaken ($proxy->{term} = $self);
 
    $self->{_pkg}{$pkg} = $proxy;
 
-   for my $htype (0.. $#HOOKNAME) {
-      my $name = $HOOKNAME[$htype];
-
-      my $ref = $pkg->can ("on_" . lc $name)
-         or next;
-
-      $self->{_hook}[$htype]{$pkg} = $ref;
-      $hook_count[$htype]++
-         or urxvt::set_should_invoke $htype, 1;
+   for my $name (@HOOKNAME) {
+      if (my $ref = $pkg->can ("on_" . lc $name)) {
+         $proxy->enable ($name => $ref);
+      }
    }
 }
 
@@ -741,6 +816,11 @@ sub resource($$;$) {
    &urxvt::term::_resource
 }
 
+=item $success = $term->parse_keysym ($keysym_spec, $command_string)
+
+Adds a keymap translation exactly as specified via a resource. See the
+C<keysym> resource in the @@RXVT_NAME@@(1) manpage.
+
 =item $rend = $term->rstyle ([$new_rstyle])
 
 Return and optionally change the current rendition. Text that is output by
@@ -769,25 +849,24 @@ by the next method).
 
 Return the current selection text and optionally replace it by C<$newtext>.
 
-#=item $term->overlay ($x, $y, $text)
-#
-#Create a simple multi-line overlay box. See the next method for details.
-#
-#=cut
-#
-#sub urxvt::term::scr_overlay {
-#   my ($self, $x, $y, $text) = @_;
-#
-#   my @lines = split /\n/, $text;
-#
-#   my $w = 0;
-#   for (map $self->strwidth ($_), @lines) {
-#      $w = $_ if $w < $_;
-#   }
-#
-#   $self->scr_overlay_new ($x, $y, $w, scalar @lines);
-#   $self->scr_overlay_set (0, $_, $lines[$_]) for 0.. $#lines;
-#}
+=item $term->overlay_simple ($x, $y, $text)
+
+Create a simple multi-line overlay box. See the next method for details.
+
+=cut
+
+sub overlay_simple {
+   my ($self, $x, $y, $text) = @_;
+
+   my @lines = split /\n/, $text;
+
+   my $w = List::Util::max map $self->strwidth ($_), @lines;
+
+   my $overlay = $self->overlay ($x, $y, $w, scalar @lines);
+   $overlay->set (0, $_, $lines[$_]) for 0.. $#lines;
+
+   $overlay
+}
 
 =item $term->overlay ($x, $y, $width, $height[, $rstyle[, $border]])
 
@@ -864,6 +943,10 @@ Convert the given text string into the corresponding locale encoding.
 
 Convert the given locale-encoded octets into a perl string.
 
+=item $term->scr_bell
+
+Ring the bell!
+
 =item $term->scr_add_lines ($string)
 
 Write the given text string to the screen, as if output by the application
@@ -886,6 +969,13 @@ locale-specific encoding of the terminal and can contain command sequences
 Write the octets given in C<$data> to the tty (i.e. as program input). To
 pass characters instead of octets, you should convert your strings first
 to the locale-specific encoding using C<< $term->locale_encode >>.
+
+=item $old_events = $term->pty_ev_events ([$new_events])
+
+Replaces the event mask of the pty watcher by the given event mask. Can
+be used to suppress input and output handling to the pty/tty. See the
+description of C<< urxvt::timer->events >>. Make sure to always restore
+the previous value.
 
 =item $windowid = $term->parent
 
@@ -1302,7 +1392,7 @@ This class implements io watchers/events. Example:
   $term->{iow} = urxvt::iow
                  ->new
                  ->fd (fileno $term->{socket})
-                 ->events (1) # wait for read data
+                 ->events (urxvt::EVENT_READ)
                  ->start
                  ->cb (sub {
                    my ($iow, $revents) = @_;
@@ -1329,8 +1419,9 @@ Set the filedescriptor (not handle) to watch.
 
 =item $iow = $iow->events ($eventmask)
 
-Set the event mask to watch. Bit #0 (value C<1>) enables watching for read
-data, Bit #1 (value C<2>) enables watching for write data.
+Set the event mask to watch. The only allowed values are
+C<urxvt::EVENT_READ> and C<urxvt::EVENT_WRITE>, which might be ORed
+together, or C<urxvt::EVENT_NONE>.
 
 =item $iow = $iow->start
 

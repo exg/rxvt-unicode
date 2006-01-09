@@ -126,7 +126,7 @@ struct watcher {
 };
 
 #if IOM_IO
-enum { EVENT_READ = 1, EVENT_WRITE = 2 };
+enum { EVENT_UNDEF = -1, EVENT_NONE = 0, EVENT_READ = 1, EVENT_WRITE = 2 };
 
 struct io_watcher : watcher, callback2<void, io_watcher &, short> {
   int fd;

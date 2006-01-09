@@ -1,0 +1,146 @@
+#! perl
+
+# this extension implements scrollback buffer search
+
+sub on_init {
+   my ($self) = @_;
+
+   my $hotkey = $self->{argv}[0] || "M-s";
+
+   $self->parse_keysym ($hotkey, "perl:searchable-scrollback:enter")
+      or warn "unable to register '$hotkey' as scrollback search enter hotkey\n";
+
+   ()
+}
+
+sub on_keyboard_command {
+   my ($self, $cmd) = @_;
+
+   if ($cmd eq "searchable-scrollback:enter") {
+      $self->enter;
+   }
+
+   ()
+}
+
+sub msg {
+   my ($self, $msg) = @_;
+
+   $self->{overlay} = $self->overlay (0, -1, $self->ncol, 1, urxvt::OVERLAY_RSTYLE, 0);
+   $self->{overlay}->set (0, 0, $self->special_encode ($msg));
+}
+
+sub enter {
+   my ($self) = @_;
+
+   return if $self->{overlay};
+
+   $self->{pty_ev_events} = $self->pty_ev_events (urxvt::EVENT_NONE);
+   $self->{view_start} = $self->view_start;
+
+   $self->enable (
+      refresh_begin => sub {
+         warn "beg(@_)\n";
+      },
+      refresh_end => sub {
+         warn "end(@_)\n";
+      },
+   );
+
+   $self->idle;
+}
+
+sub leave {
+   my ($self) = @_;
+
+   delete $self->{overlay};
+
+   $self->disable ("refresh_begin", "refresh_end");
+
+   $self->pty_ev_events ($self->{pty_ev_events});
+   $self->want_refresh;
+}
+
+sub idle {
+   my ($self) = @_;
+
+   $self->msg ("scrollback search, escape=exit, enter=accept, /=start search, n=next, p=previous");
+
+   delete $self->{in_search};
+}
+
+sub search {
+   my ($self) = @_;
+
+   my $row = -$self->view_start;
+
+   delete $self->{found};
+
+   no re 'eval'; # just to be sure
+   my $re = qr/$self->{search}/;
+
+   while ($row > -$self->nsaved) {
+      my $line = $self->line ($row)
+         or last;
+
+      my $text = $line->t;
+      if ($text =~ /$re/g) {
+         do {
+            push @{ $self->{found} }, [$line->coord_of ($-[0]), $line->coord_of ($+[1])];
+         } while $text =~ /$re/g;
+
+         $self->view_start (-$row + ($self->nrow >> 1));
+         last;
+      }
+
+      $row = $line->beg - 1;
+   }
+
+   $self->msg ("enter/type/backspace: /$self->{search}_"
+               . ($self->{found} ? " (not found)" : ""));
+   $self->scr_bell unless $self->{found};
+}
+
+sub on_key_press {
+   my ($self, $event, $keysym, $string) =  @_;
+
+   $self->{overlay}
+      or return;
+
+   if (exists $self->{in_search}) {
+      if ($keysym == 0xff0d || $keysym == 0xff8d) {
+         delete $self->{in_search};
+      } elsif ($keysym == 0xff1b) {
+         $self->view_start (delete $self->{in_search});
+      } elsif ($keysym == 0xff08) {
+         substr $self->{search}, -1, 1, "";
+      } elsif ($string ne "") {
+         $self->{search} .= $string;
+      }
+
+      $self->search;
+   } else {
+      if ($keysym == 0xff0d || $keysym == 0xff8d) {
+         # OK
+         $self->leave;
+      } elsif ($keysym == 0xff1b) {
+         $self->view_start ($self->{view_start});
+         $self->leave;
+      } elsif ($keysym == 0xff52) {
+         $self->view_start ($self->view_start + 1);
+      } elsif ($keysym == 0xff54) {
+         $self->view_start ($self->view_start - 1);
+      } elsif ($string eq "/") {
+         $self->{in_search} = $self->view_start;
+         $self->search;
+      } elsif ($string eq "n") {
+      } elsif ($string eq "p") {
+      } elsif ($string ne "") {
+         $self->scr_bell;
+      }
+   }
+
+   1
+}
+
+

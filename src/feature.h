@@ -162,9 +162,9 @@
 /*
  * Enable the keysym resource which allows you to define strings associated
  * with various KeySyms (0xFF00 - 0xFFFF).
- * Only works with the default hand-rolled resources.
+ * Required by perl.
  */
-#if !NO_RESOURCES && ENABLE_FRILLS
+#if (!NO_RESOURCES && ENABLE_FRILLS) || ENABLE_PERL
 # define KEYSYM_RESOURCE
 #endif
 

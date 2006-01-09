@@ -694,7 +694,7 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
         return 0;
 
       str += n;		/* skip `keysym.' */
-      if ((pmodend = strchr (str, ':')) < str)
+      if (!(pmodend = strchr (str, ':')))
         return -1;
     }
   else

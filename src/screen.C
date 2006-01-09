@@ -1865,6 +1865,7 @@ rxvt_term::scr_bell ()
   if (OPTION (Opt_visualBell))
     {
       scr_rvideo_mode (!rvideo); /* refresh also done */
+      display->flush ();
       rxvt_usleep (VISUAL_BELL_DURATION);
       scr_rvideo_mode (!rvideo); /* refresh also done */
     }

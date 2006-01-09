@@ -869,7 +869,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
         }
     }
 
-  if (HOOK_INVOKE ((this, HOOK_KEY_PRESS, DT_XEVENT, &ev, DT_STR_LEN, kbuf, len, DT_END)))
+  if (HOOK_INVOKE ((this, HOOK_KEY_PRESS, DT_XEVENT, &ev, DT_INT, keysym, DT_STR_LEN, kbuf, len, DT_END)))
     return;
 
   if (len <= 0)
@@ -1331,10 +1331,10 @@ rxvt_term::x_cb (XEvent &ev)
 
       case KeyRelease:
         {
-#if (MOUSE_WHEEL && MOUSE_SLIP_WHEELING) || ISO_14755
-          KeySym ks;
+#if (MOUSE_WHEEL && MOUSE_SLIP_WHEELING) || ISO_14755 || ENABLE_PERL
+          KeySym keysym;
 
-          ks = XLookupKeysym (&ev.xkey, ev.xkey.state & ShiftMask ? 1 : 0); // sorry, only shift supported :/
+          keysym = XLookupKeysym (&ev.xkey, ev.xkey.state & ShiftMask ? 1 : 0); // sorry, only shift supported :/
 #endif
 
 #if ENABLE_FRILLS || ISO_14755
@@ -1349,16 +1349,16 @@ rxvt_term::x_cb (XEvent &ev)
                 // iso14755 part 5.2 handling: release time
                 // first: controls
                 if ((ev.xkey.state & ControlMask)
-                     && ((ks >= 0x40 && ks <= 0x5f)
-                         || (ks >= 0x61 && ks <= 0x7f)))
+                     && ((keysym >= 0x40 && keysym <= 0x5f)
+                         || (keysym >= 0x61 && keysym <= 0x7f)))
                   {
-                    iso14755buf = ISO_14755_51 | 0x2400 | (ks & 0x1f);
+                    iso14755buf = ISO_14755_51 | 0x2400 | (keysym & 0x1f);
                     commit_iso14755 ();
                     goto skip_switch;
                   }
 
                 for (unsigned short *i = iso14755_symtab; i[0]; i+= 2)
-                  if (i[0] == ks)
+                  if (i[0] == keysym)
                     {
                       iso14755buf = ISO_14755_51 | i[1];
                       commit_iso14755 ();
@@ -1392,13 +1392,13 @@ rxvt_term::x_cb (XEvent &ev)
 #endif
 
           if (ev.xany.window == vt
-              && HOOK_INVOKE ((this, HOOK_KEY_RELEASE, DT_XEVENT, &ev, DT_END)))
+              && HOOK_INVOKE ((this, HOOK_KEY_RELEASE, DT_XEVENT, &ev, DT_INT, keysym, DT_END)))
             break;
 
 #if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
           if (!(ev.xkey.state & ControlMask))
             slip_wheel_ev.stop ();
-          else if (ks == XK_Control_L || ks == XK_Control_R)
+          else if (keysym == XK_Control_L || keysym == XK_Control_R)
             mouse_slip_wheel_speed = 0;
 #endif
           break;

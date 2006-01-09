@@ -48,22 +48,22 @@
 keysym_t keyboard_manager::stock_keymap[] = {
   /* examples */
   /*        keysym,                state, range,               handler,              str */
-//{XK_ISO_Left_Tab,                    0,     1,      keysym_t::NORMAL,           "\033[Z"},
+//{XK_ISO_Left_Tab,                    0,     1,      keysym_t::STRING,           "\033[Z"},
 //{            'a',                    0,    26, keysym_t::RANGE_META8,           "a" "%c"},
 //{            'a',          ControlMask,    26, keysym_t::RANGE_META8,          "" "%c"},
 //{        XK_Left,                    0,     4,        keysym_t::LIST,     ".\033[.DACB."},
 //{        XK_Left,            ShiftMask,     4,        keysym_t::LIST,     ".\033[.dacb."},
 //{        XK_Left,          ControlMask,     4,        keysym_t::LIST,     ".\033O.dacb."},
-//{         XK_Tab,          ControlMask,     1,      keysym_t::NORMAL,      "\033<C-Tab>"},
-//{  XK_apostrophe,          ControlMask,     1,      keysym_t::NORMAL,        "\033<C-'>"},
-//{       XK_slash,          ControlMask,     1,      keysym_t::NORMAL,        "\033<C-/>"},
-//{   XK_semicolon,          ControlMask,     1,      keysym_t::NORMAL,        "\033<C-;>"},
-//{       XK_grave,          ControlMask,     1,      keysym_t::NORMAL,        "\033<C-`>"},
-//{       XK_comma,          ControlMask,     1,      keysym_t::NORMAL,     "\033<C-\054>"},
-//{      XK_Return,          ControlMask,     1,      keysym_t::NORMAL,   "\033<C-Return>"},
-//{      XK_Return,            ShiftMask,     1,      keysym_t::NORMAL,   "\033<S-Return>"},
-//{            ' ',            ShiftMask,     1,      keysym_t::NORMAL,    "\033<S-Space>"},
-//{            '.',          ControlMask,     1,      keysym_t::NORMAL,        "\033<C-.>"},
+//{         XK_Tab,          ControlMask,     1,      keysym_t::STRING,      "\033<C-Tab>"},
+//{  XK_apostrophe,          ControlMask,     1,      keysym_t::STRING,        "\033<C-'>"},
+//{       XK_slash,          ControlMask,     1,      keysym_t::STRING,        "\033<C-/>"},
+//{   XK_semicolon,          ControlMask,     1,      keysym_t::STRING,        "\033<C-;>"},
+//{       XK_grave,          ControlMask,     1,      keysym_t::STRING,        "\033<C-`>"},
+//{       XK_comma,          ControlMask,     1,      keysym_t::STRING,     "\033<C-\054>"},
+//{      XK_Return,          ControlMask,     1,      keysym_t::STRING,   "\033<C-Return>"},
+//{      XK_Return,            ShiftMask,     1,      keysym_t::STRING,   "\033<S-Return>"},
+//{            ' ',            ShiftMask,     1,      keysym_t::STRING,    "\033<S-Space>"},
+//{            '.',          ControlMask,     1,      keysym_t::STRING,        "\033<C-.>"},
 //{            '0',          ControlMask,    10,       keysym_t::RANGE,   "0" "\033<C-%c>"},
 //{            '0', MetaMask|ControlMask,    10,       keysym_t::RANGE, "0" "\033<M-C-%c>"},
 //{            'a', MetaMask|ControlMask,    26,       keysym_t::RANGE, "a" "\033<M-C-%c>"},
@@ -203,7 +203,7 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
       key->state  = state;
       key->range  = 1;
       key->str    = translation;
-      key->type   = keysym_t::NORMAL;
+      key->type   = keysym_t::STRING;
 
       if (strncmp (translation, "list", 4) == 0 && translation [4])
         {
@@ -293,7 +293,7 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
 
           switch (key.type)
             {
-              case keysym_t::NORMAL:
+              case keysym_t::STRING:
                 output_string (term, str);
                 break;
 
