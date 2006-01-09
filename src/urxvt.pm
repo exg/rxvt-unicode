@@ -265,6 +265,11 @@ and calling C<< $term->scr_add_lines >> yourself. Please note that this
 might be very slow, however, as your hook is called for B<all> text being
 output.
 
+=item on_tt_write $term, $octets
+
+Called whenever some data is written to the tty/pty and can be used to
+suppress or filter tty input.
+
 =item on_line_update $term, $row
 
 Called whenever a line was updated or changed. Can be used to filter

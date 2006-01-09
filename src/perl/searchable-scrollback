@@ -40,6 +40,7 @@ sub enter {
 
    $self->enable (
       key_press     => \&key_press,
+      tt_write      => \&tt_write,
       refresh_begin => \&refresh,
       refresh_end   => \&refresh,
    );
@@ -52,7 +53,7 @@ sub leave {
 
    delete $self->{overlay};
 
-   $self->disable ("key_press", "refresh_begin", "refresh_end");
+   $self->disable ("key_press", "tt_write", "refresh_begin", "refresh_end");
 
    $self->pty_ev_events ($self->{pty_ev_events});
    $self->want_refresh;
@@ -73,8 +74,10 @@ sub search {
 
    delete $self->{found};
 
+   my $search = $self->special_encode ($self->{search});
+
    no re 'eval'; # just to be sure
-   my $re = qr/$self->{search}/;
+   my $re = qr/$search/;
 
    while ($row > -$self->nsaved) {
       my $line = $self->line ($row)
@@ -122,8 +125,7 @@ sub key_press {
          substr $self->{search}, -1, 1, "";
          $self->search;
       } elsif ($string ne "") {
-         $self->{search} .= $string;
-         $self->search;
+         return;
       }
    } else {
       if ($keysym == 0xff0d || $keysym == 0xff8d) {
@@ -150,6 +152,15 @@ sub key_press {
          $self->scr_bell;
       }
    }
+
+   1
+}
+
+sub tt_write {
+   my ($self, $data) = @_;
+
+   $self->{search} .= $self->locale_decode ($data);
+   $self->search;
 
    1
 }

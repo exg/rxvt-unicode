@@ -4464,6 +4464,9 @@ const unsigned int MAX_PTY_WRITE = 255; // minimum MAX_INPUT
 void
 rxvt_term::tt_write (const char *data, unsigned int len)
 {
+  if (HOOK_INVOKE ((this, HOOK_TT_WRITE, DT_STR_LEN, data, len, DT_END)))
+    return;
+
   if (pty.pty < 0)
     return;
 

@@ -17,6 +17,7 @@
   def (LINE_UPDATE)
   def (ADD_LINES)
   def (OSC_SEQ)
+  def (TT_WRITE)
 
   def (REFRESH_BEGIN)
   def (REFRESH_END)
