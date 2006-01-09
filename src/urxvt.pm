@@ -943,6 +943,19 @@ Convert the given text string into the corresponding locale encoding.
 
 Convert the given locale-encoded octets into a perl string.
 
+=item $term->scr_xor_span ($beg_row, $beg_col, $end_row, $end_col[, $rstyle])
+
+XORs the rendition values in the given span with the provided value
+(default: C<RS_RVid>). Useful in refresh hooks to provide effects similar
+to the selection.
+
+=item $term->scr_xor_rect ($beg_row, $beg_col, $end_row, $end_col[, $rstyle1[, $rstyle2]])
+
+Similar to C<scr_xor_span>, but xors a rectangle instead. Trailing
+whitespace will additionally be xored with the C<$rstyle2>, which defaults
+to C<RS_RVid | RS_Uline>, which removes reverse video again and underlines
+it instead.
+
 =item $term->scr_bell
 
 Ring the bell!

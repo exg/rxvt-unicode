@@ -39,12 +39,9 @@ sub enter {
    $self->{view_start} = $self->view_start;
 
    $self->enable (
-      refresh_begin => sub {
-         warn "beg(@_)\n";
-      },
-      refresh_end => sub {
-         warn "end(@_)\n";
-      },
+      key_press     => \&key_press,
+      refresh_begin => \&refresh,
+      refresh_end   => \&refresh,
    );
 
    $self->idle;
@@ -55,7 +52,7 @@ sub leave {
 
    delete $self->{overlay};
 
-   $self->disable ("refresh_begin", "refresh_end");
+   $self->disable ("key_press", "refresh_begin", "refresh_end");
 
    $self->pty_ev_events ($self->{pty_ev_events});
    $self->want_refresh;
@@ -86,7 +83,7 @@ sub search {
       my $text = $line->t;
       if ($text =~ /$re/g) {
          do {
-            push @{ $self->{found} }, [$line->coord_of ($-[0]), $line->coord_of ($+[1])];
+            push @{ $self->{found} }, [$line->coord_of ($-[0]), $line->coord_of ($+[0])];
          } while $text =~ /$re/g;
 
          $self->view_start (-$row + ($self->nrow >> 1));
@@ -101,24 +98,35 @@ sub search {
    $self->scr_bell unless $self->{found};
 }
 
-sub on_key_press {
-   my ($self, $event, $keysym, $string) =  @_;
+sub refresh {
+   my ($self) = @_;
 
-   $self->{overlay}
-      or return;
+   return unless $self->{found};
+
+   $self->scr_xor_span (@$_)
+      for @{ $self->{found} };
+
+   ()
+}
+
+sub key_press {
+   my ($self, $event, $keysym, $string) =  @_;
 
    if (exists $self->{in_search}) {
       if ($keysym == 0xff0d || $keysym == 0xff8d) {
-         delete $self->{in_search};
+         $self->idle;
       } elsif ($keysym == 0xff1b) {
-         $self->view_start (delete $self->{in_search});
+         $self->view_start ($self->{in_search});
+         $self->idle;
       } elsif ($keysym == 0xff08) {
          substr $self->{search}, -1, 1, "";
+
+         $self->search;
       } elsif ($string ne "") {
          $self->{search} .= $string;
-      }
 
-      $self->search;
+         $self->search;
+      }
    } else {
       if ($keysym == 0xff0d || $keysym == 0xff8d) {
          # OK
@@ -134,6 +142,7 @@ sub on_key_press {
          $self->{in_search} = $self->view_start;
          $self->search;
       } elsif ($string eq "n") {
+         $self->search;
       } elsif ($string eq "p") {
       } elsif ($string ne "") {
          $self->scr_bell;

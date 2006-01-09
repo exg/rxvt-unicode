@@ -1516,6 +1516,8 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   int scr_changeview (unsigned int oldviewstart);
   void scr_bell ();
   void scr_printscreen (int fullhist);
+  void scr_xor_rect (int beg_row, int beg_col, int end_row, int end_col, rend_t rstyle1, rend_t rstyle2);
+  void scr_xor_span (int beg_row, int beg_col, int end_row, int end_col, rend_t rstyle);
   void scr_reverse_selection ();
   void scr_dump (int fd);
   void selection_check (int check_more);

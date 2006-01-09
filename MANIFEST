@@ -171,12 +171,13 @@ src/typemap
 src/rxvtperl.h
 src/rxvtperl.xs
 
+src/perl/urxvt-popup
+src/perl/selection
+src/perl/option-popup
+src/perl/selection-popup
+src/perl/searchable-scrollback
 src/perl/example-refresh-hooks
 src/perl/block-graphics-to-ascii
 src/perl/digital-clock
-src/perl/option-popup
-src/perl/selection-popup
-src/perl/urxvt-popup
-src/perl/selection
 src/perl/mark-urls
 

@@ -1339,6 +1339,12 @@ rxvt_term::selection (SV *newtext = 0)
 }
 
 void
+rxvt_term::scr_xor_rect (int beg_row, int beg_col, int end_row, int end_col, U32 rstyle1 = RS_RVid, U32 rstyle2 = RS_RVid | RS_Uline)
+
+void
+rxvt_term::scr_xor_span (int beg_row, int beg_col, int end_row, int end_col, U32 rstyle = RS_RVid)
+
+void
 rxvt_term::scr_bell ()
 
 void

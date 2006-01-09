@@ -1428,6 +1428,10 @@ AC_SUBST(PERL)
 AC_SUBST(IF_PERL)
 AC_SUBST(PERL_O)
 
+if text x$support_perl = xyes; then
+   support_frills=yes
+fi
+
 dnl> AC_CHECK_FUNCS(gettimeofday putenv select socket)
 
 CFLAGS=${CFLAGS--O}

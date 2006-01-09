@@ -2459,6 +2459,54 @@ rxvt_term::scr_clear (bool really)
     XClearWindow (display->display, vt);
 }
 
+void
+rxvt_term::scr_xor_rect (int beg_row, int beg_col, int end_row, int end_col, rend_t rstyle1, rend_t rstyle2)
+{
+  int view_end = -view_start + nrow;
+  int row, col;
+
+  for (row = max (beg_row, -view_start); row <= min (end_row, view_end); row++)
+    {
+      text_t *stp = ROW(row).t;
+      rend_t *srp = ROW(row).r;
+
+      for (col = beg_col; col < end_col; col++)
+        srp[col] ^= rstyle1;
+
+      while (col-- > beg_col && (stp[col] == NOCHAR || unicode::is_space (stp[col])))
+        srp[col] ^= rstyle2;
+
+      if (++col < end_col)
+        srp[col] ^= rstyle2;
+    }
+}
+
+void
+rxvt_term::scr_xor_span (int beg_row, int beg_col, int end_row, int end_col, rend_t rstyle)
+{
+  int view_end = -view_start + nrow;
+  int row, col;
+
+  if (beg_row >= -view_start)
+    {
+      col = beg_col;
+      row = beg_row;
+    }
+  else
+    {
+      col = 0;
+      row = -view_start;
+    }
+
+  for (; row < min (end_row, view_end); row++, col = 0)
+    for (rend_t *srp = ROW(row).r; col < ncol; col++)
+      srp[col] ^= RS_RVid;
+
+  if (row == end_row)
+    for (rend_t *srp = ROW(row).r; col < end_col; col++)
+      srp[col] ^= RS_RVid;
+}
+
 /* ------------------------------------------------------------------------- */
 void
 rxvt_term::scr_reverse_selection ()
@@ -2467,49 +2515,16 @@ rxvt_term::scr_reverse_selection ()
       && current_screen == selection.screen
       && selection.end.row >= -view_start)
     {
-      int view_end = -view_start + nrow;
-      int row, col;
-
 #if ENABLE_FRILLS
       if (selection.rect)
-        {
-          for (row = max (selection.beg.row, -view_start); row <= min (selection.end.row, view_end); row++)
-            {
-              text_t *stp = ROW(row).t;
-              rend_t *srp = ROW(row).r;
-
-              for (col = selection.beg.col; col < selection.end.col; col++)
-                srp[col] ^= RS_RVid;
-
-              while (col-- > selection.beg.col && (stp[col] == NOCHAR || unicode::is_space (stp[col])))
-                srp[col] ^= RS_RVid | RS_Uline;
-
-              if (++col < selection.end.col)
-                srp[col] ^= RS_RVid | RS_Uline;
-            }
-        }
+        scr_xor_rect (selection.beg.row, selection.beg.col,
+                      selection.end.row, selection.end.col,
+                      RS_RVid, RS_RVid | RS_Uline);
       else
 #endif
-        {
-          if (selection.beg.row >= -view_start)
-            {
-              col = selection.beg.col;
-              row = selection.beg.row;
-            }
-          else
-            {
-              col = 0;
-              row = -view_start;
-            }
-
-          for (; row < min (selection.end.row, view_end); row++, col = 0)
-            for (rend_t *srp = ROW(row).r; col < ncol; col++)
-              srp[col] ^= RS_RVid;
-
-          if (row == selection.end.row)
-            for (rend_t *srp = ROW(row).r; col < selection.end.col; col++)
-              srp[col] ^= RS_RVid;
-        }
+        scr_xor_span (selection.beg.row, selection.beg.col,
+                      selection.end.row, selection.end.col,
+                      RS_RVid);
     }
 }
 
