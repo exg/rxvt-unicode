@@ -1274,7 +1274,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
   clear_rect (d, x, y, r->fwidth * len, r->fheight, bg);
 
   XGlyphInfo extents;
-  XftGlyphSpec *enc = (XftGlyphSpec *) get_enc_buf (len * sizeof (XftGlyphSpec));
+  XftGlyphSpec *enc = (XftGlyphSpec *)get_enc_buf (len * sizeof (XftGlyphSpec));
   XftGlyphSpec *ep = enc;
 
   // cut trailing spaces
@@ -1291,10 +1291,10 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
       
       if (fc != ' ') // skip spaces
         {
-          FT_UInt gl = XftCharIndex (d.display->display, f, fc);
-          XftGlyphExtents (d.display->display, f, &gl, 1, &extents);
+          FT_UInt glyph = XftCharIndex (d.display->display, f, fc);
+          XftGlyphExtents (d.display->display, f, &glyph, 1, &extents);
 
-          ep->glyph = gl;
+          ep->glyph = glyph;
           ep->x = x + (cwidth - extents.xOff >> 1);
           ep->y = y + ascent;
           ep++;
