@@ -1178,7 +1178,7 @@ sub add_item {
 sub add_separator {
    my ($self, $sep) = @_;
 
-   $sep ||= "═";
+   $sep ||= "=";
 
    $self->add_item ({
       rend => { normal => "\x1b[0;30;47m", hover => "\x1b[0;30;47m", active => "\x1b[0;30;47m" },
