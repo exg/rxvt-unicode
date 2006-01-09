@@ -1175,7 +1175,7 @@ sub add_separator {
    $self->add_item ({
       rend => { normal => "\x1b[0;30;47m", hover => "\x1b[0;30;47m", active => "\x1b[0;30;47m" },
       text => "",
-      render => sub { $sep x $urxvt::TERM->ncol },
+      render => sub { $sep x $self->{term}->ncol },
       activate => sub { },
    });
 }
@@ -1214,6 +1214,8 @@ sub show {
    my ($self) = @_;
 
    local $urxvt::popup::self = $self;
+
+   local $ENV{LC_ALL} = $self->{term}->locale;
 
    urxvt->new ("--perl-lib" => "", "--perl-ext-common" => "", "-pty-fd" => -1, "-sl" => 0, "-b" => 0,
                "--transient-for" => $self->{term}->parent,

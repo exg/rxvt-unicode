@@ -55,7 +55,7 @@ sub on_button_press {
          $add_button->("rot13" => sub { y/A-Za-z/N-ZA-Mn-za-m/ });
 
          urxvt::safe
-            and $add_button->("eval perl expression" => sub { $_ = eval urxvt::untaint $_ });
+            and $add_button->("eval perl expression" => sub { no warnings; $_ = eval urxvt::untaint $_ });
 
          /^(\S+):(\d+):?$/
             and $add_button->("vi-commands to load '$1'" => sub { s/^(\S+):(\d+):?$/\x1b:e $1\x0d:$2\x0d/ });

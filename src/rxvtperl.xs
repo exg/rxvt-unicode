@@ -936,8 +936,15 @@ rxvt_term::ModLevel3Mask ()
 
 char *
 rxvt_term::display_id ()
+	ALIAS:
+           display_id = 0
+           locale     = 1
 	CODE:
-        RETVAL = THIS->display->id;
+        switch (ix)
+          {
+            case 0: RETVAL = THIS->display->id; break;
+            case 1: RETVAL = THIS->locale;      break;
+          }
         OUTPUT:
         RETVAL
 
