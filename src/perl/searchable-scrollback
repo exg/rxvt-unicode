@@ -61,7 +61,7 @@ sub leave {
 sub idle {
    my ($self) = @_;
 
-   $self->msg ("scrollback search, escape=exit, enter=accept, /=start search, n=next, p=previous");
+   $self->msg ("scrollback search, escape=exit, enter=accept, /=start search, n=next, p=previous, G=bottom");
 
    delete $self->{in_search};
 }
@@ -94,7 +94,7 @@ sub search {
    }
 
    $self->msg ("enter/type/backspace: /$self->{search}_"
-               . ($self->{found} ? " (not found)" : ""));
+               . ($self->{found} ? "" : " (not found)"));
    $self->scr_bell unless $self->{found};
 }
 
@@ -141,9 +141,12 @@ sub key_press {
       } elsif ($string eq "/") {
          $self->{in_search} = $self->view_start;
          $self->search;
+      } elsif ($string eq "G") {
+         $self->view_start (0);
       } elsif ($string eq "n") {
          $self->search;
       } elsif ($string eq "p") {
+         # TODO
       } elsif ($string ne "") {
          $self->scr_bell;
       }
