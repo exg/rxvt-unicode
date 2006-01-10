@@ -133,7 +133,7 @@ sub key_press {
 
    } else {
       if ($keysym == 0xff0d || $keysym == 0xff8d) {
-         # OK
+         # TODO: set selection
          $self->leave;
       } elsif ($keysym == 0xff1b) {
          $self->view_start ($self->{view_start});
