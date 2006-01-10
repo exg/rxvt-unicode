@@ -123,6 +123,7 @@ main (int argc, const char *const *argv)
     else if (!strcmp (tok, "END"))
       {
         int success;
+
         if (c.recv (success))
           exit (success ? EXIT_SUCCESS : EXIT_FAILURE);
       }

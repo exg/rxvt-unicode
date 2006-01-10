@@ -464,7 +464,11 @@ our $TERM;
 our @HOOKNAME;
 our %HOOKTYPE = map +($HOOKNAME[$_] => $_), 0..$#HOOKNAME;
 our %OPTION;
+
 our $LIBDIR;
+our $RESNAME;
+our $RESCLASS;
+our $RXVTNAME;
 
 BEGIN {
    urxvt->bootstrap;

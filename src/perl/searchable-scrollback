@@ -16,9 +16,8 @@ sub on_init {
 sub on_keyboard_command {
    my ($self, $cmd) = @_;
 
-   if ($cmd eq "searchable-scrollback:start") {
-      $self->enter;
-   }
+   $cmd eq "searchable-scrollback:start"
+      and $self->enter;
 
    ()
 }
@@ -35,8 +34,9 @@ sub enter {
 
    return if $self->{overlay};
 
-   $self->{pty_ev_events} = $self->pty_ev_events (urxvt::EVENT_NONE);
+   $self->{history} = [];
    $self->{view_start} = $self->view_start;
+   $self->{pty_ev_events} = $self->pty_ev_events (urxvt::EVENT_NONE);
 
    $self->enable (
       key_press     => \&key_press,
@@ -45,24 +45,27 @@ sub enter {
       refresh_end   => \&refresh,
    );
 
+   $self->{manpage_overlay} = $self->overlay (0, -2, $self->ncol, 1, urxvt::OVERLAY_RSTYLE, 0);
+   $self->{manpage_overlay}->set (0, 0, "scrollback search, see man ${urxvt::RXVTNAME}perl");
+
    $self->idle;
 }
 
 sub leave {
    my ($self) = @_;
 
-   delete $self->{overlay};
-
    $self->disable ("key_press", "tt_write", "refresh_begin", "refresh_end");
-
    $self->pty_ev_events ($self->{pty_ev_events});
-   $self->want_refresh;
+
+   delete $self->{manpage_overlay};
+   delete $self->{overlay};
+   delete $self->{history};
 }
 
 sub idle {
    my ($self) = @_;
 
-   $self->msg ("scrollback search, escape=exit, enter=accept, /=start search, n=next, p=previous, G=bottom");
+   $self->msg ("escape=exit, enter=accept, /=start search, n=next, p=previous, G=bottom");
 
    delete $self->{in_search};
 }
@@ -127,6 +130,7 @@ sub key_press {
       } elsif ($string ne "") {
          return;
       }
+
    } else {
       if ($keysym == 0xff0d || $keysym == 0xff8d) {
          # OK
@@ -139,15 +143,24 @@ sub key_press {
       } elsif ($keysym == 0xff54) {
          $self->view_start ($self->view_start - 1);
       } elsif ($string eq "/") {
+         delete $self->{manpage_overlay};
          $self->{in_search} = $self->view_start;
          $self->search;
       } elsif ($string eq "G") {
+         $self->{history} = [];
          $self->view_start (0);
       } elsif ($string eq "n") {
-         $self->search (-1);
-         $self->idle;
+         if ($self->{found} && @{ $self->{found} }) {
+            push @{ $self->{history} }, [$self->view_start, $self->{found}];
+            $self->search (-1);
+            $self->idle;
+         }
       } elsif ($string eq "p" or $string eq "N") {
-         # TODO
+         if (my $prev = pop @{ $self->{history} }) {
+            $self->view_start ($prev->[0]);
+            $self->{found} = $prev->[1];
+            $self->want_refresh;
+         }
       } elsif ($string ne "") {
          $self->scr_bell;
       }

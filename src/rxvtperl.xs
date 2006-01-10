@@ -629,7 +629,10 @@ PROTOTYPES: ENABLE
 
 BOOT:
 {
-  sv_setsv (get_sv ("urxvt::LIBDIR", 1), newSVpvn (LIBDIR, sizeof (LIBDIR) - 1));
+  sv_setsv (get_sv ("urxvt::LIBDIR",   1), newSVpvn (LIBDIR,   sizeof (LIBDIR)   - 1));
+  sv_setsv (get_sv ("urxvt::RESNAME",  1), newSVpvn (RESNAME,  sizeof (RESNAME)  - 1));
+  sv_setsv (get_sv ("urxvt::RESCLASS", 1), newSVpvn (RESCLASS, sizeof (RESCLASS) - 1));
+  sv_setsv (get_sv ("urxvt::RXVTNAME", 1), newSVpvn (RXVTNAME, sizeof (RXVTNAME) - 1));
 
   AV *hookname = get_av ("urxvt::HOOKNAME", 1);
 # define def(sym) av_store (hookname, HOOK_ ## sym, newSVpv (# sym, 0));
