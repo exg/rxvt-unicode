@@ -453,13 +453,34 @@ output, if any, in locale-specific encoding.</p>
 </p>
 <h2><a name="variables_in_the_urxvt_package">Variables in the <code>urxvt</code> Package</a></h2>
 <dl>
+<dt><strong><a name="item__24urxvt_3a_3alibdir">$urxvt::LIBDIR</a></strong><br />
+</dt>
+<dd>
+The rxvt-unicode library directory, where, among other things, the perl
+modules and scripts are stored.
+</dd>
+<p></p>
+<dt><strong><a name="item__24urxvt_3a_3aresclass_2c__24urxvt_3a_3aresclass">$urxvt::RESCLASS, $urxvt::RESCLASS</a></strong><br />
+</dt>
+<dd>
+The resource class and name rxvt-unicode uses to look up X resources.
+</dd>
+<p></p>
+<dt><strong><a name="item__24urxvt_3a_3arxvtname">$urxvt::RXVTNAME</a></strong><br />
+</dt>
+<dd>
+The basename of the installed binaries, usually <code>urxvt</code>.
+</dd>
+<p></p>
 <dt><strong><a name="item__24urxvt_3a_3aterm">$urxvt::TERM</a></strong><br />
 </dt>
 <dd>
 The current terminal. This variable stores the current <code>urxvt::term</code>
 object, whenever a callback/hook is executing.
 </dd>
-<p></p></dl>
+<p></p>
+<dt></dt>
+</dl>
 <p>
 </p>
 <h2><a name="functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></h2>
@@ -557,16 +578,16 @@ the bitset.
 Return the foreground/background colour index, respectively.
 </dd>
 <p></p>
-<dt><strong><a name="item_set_fgcolor">$rend = urxvt::SET_FGCOLOR ($rend, $new_colour)</a></strong><br />
+<dt><strong><a name="item__24rend__3d_urxvt_3a_3aset_fgcolor__24rend_2c__24n">$rend = urxvt::SET_FGCOLOR $rend, $new_colour</a></strong><br />
 </dt>
-<dt><strong><a name="item_set_bgcolor">$rend = urxvt::SET_BGCOLOR ($rend, $new_colour)</a></strong><br />
+<dt><strong><a name="item__24rend__3d_urxvt_3a_3aset_bgcolor__24rend_2c__24n">$rend = urxvt::SET_BGCOLOR $rend, $new_colour</a></strong><br />
 </dt>
 <dd>
 Replace the foreground/background colour in the rendition mask with the
 specified one.
 </dd>
 <p></p>
-<dt><strong><a name="item_get_custom">$value = urxvt::GET_CUSTOM ($rend)</a></strong><br />
+<dt><strong><a name="item__24value__3d_urxvt_3a_3aget_custom__24rend">$value = urxvt::GET_CUSTOM $rend</a></strong><br />
 </dt>
 <dd>
 Return the ``custom'' value: Every rendition has 5 bits for use by
@@ -574,7 +595,7 @@ extensions. They can be set and changed as you like and are initially
 zero.
 </dd>
 <p></p>
-<dt><strong><a name="item_set_custom">$rend = urxvt::SET_CUSTOM ($rend, $new_value)</a></strong><br />
+<dt><strong><a name="item__24rend__3d_urxvt_3a_3aset_custom__24rend_2c__24ne">$rend = urxvt::SET_CUSTOM $rend, $new_value</a></strong><br />
 </dt>
 <dd>
 Change the custom value.
@@ -585,9 +606,10 @@ Change the custom value.
 <h2><a name="the_urxvt__anyevent_class">The <code>urxvt::anyevent</code> Class</a></h2>
 <p>The sole purpose of this class is to deliver an interface to the
 <code>AnyEvent</code> module - any module using it will work inside urxvt without
-further work. The only exception is that you cannot wait on condition
-variables, but non-blocking condvar use is ok. What this means is that you
-cannot use blocking APIs, but the non-blocking variant should work.</p>
+further programming. The only exception is that you cannot wait on
+condition variables, but non-blocking condvar use is ok. What this means
+is that you cannot use blocking APIs, but the non-blocking variant should
+work.</p>
 <p>
 </p>
 <h2><a name="the_urxvt__term_class">The <code>urxvt::term</code> Class</a></h2>
@@ -595,7 +617,9 @@ cannot use blocking APIs, but the non-blocking variant should work.</p>
 <dt><strong><a name="item_destroy">$term-&gt;destroy</a></strong><br />
 </dt>
 <dd>
-Destroy the terminal object (close the window, free resources etc.).
+Destroy the terminal object (close the window, free resources
+etc.). Please note that rxvt will not exit as long as any event
+watchers (timers, io watchers) are still active.
 </dd>
 <p></p>
 <dt><strong><a name="item_option">$isset = $term-&gt;option ($optval[, $set])</a></strong><br />
@@ -1094,6 +1118,40 @@ the session.
 <p>
 </p>
 <h2><a name="the_urxvt__popup_class">The <code>urxvt::popup</code> Class</a></h2>
+<dl>
+<dt><strong><a name="item_add_title">$popup-&gt;add_title ($title)</a></strong><br />
+</dt>
+<dd>
+Adds a non-clickable title to the popup.
+</dd>
+<p></p>
+<dt><strong><a name="item_add_separator">$popup-&gt;add_separator ([$sepchr])</a></strong><br />
+</dt>
+<dd>
+Creates a separator, optionally using the character given as <code>$sepchr</code>.
+</dd>
+<p></p>
+<dt><strong><a name="item_add_button">$popup-&gt;add_button ($text, $cb)</a></strong><br />
+</dt>
+<dd>
+Adds a clickable button to the popup. <code>$cb</code> is called whenever it is
+selected.
+</dd>
+<p></p>
+<dt><strong><a name="item_add_toggle">$popup-&gt;add_toggle ($text, $cb, $initial_value)</a></strong><br />
+</dt>
+<dd>
+Adds a toggle/checkbox item to the popup. Teh callback gets called
+whenever it gets toggled, with a boolean indicating its value as its first
+argument.
+</dd>
+<p></p>
+<dt><strong>$popup-&gt;show</strong><br />
+</dt>
+<dd>
+Displays the popup (which is initially hidden).
+</dd>
+<p></p></dl>
 <p>
 </p>
 <h2><a name="the_urxvt__timer_class">The <code>urxvt::timer</code> Class</a></h2>

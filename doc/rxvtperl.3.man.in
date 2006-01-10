@@ -462,15 +462,29 @@ subwindow.
 .ie n .Sh "Variables in the ""urxvt"" Package"
 .el .Sh "Variables in the \f(CWurxvt\fP Package"
 .IX Subsection "Variables in the urxvt Package"
+.IP "$urxvt::LIBDIR" 4
+.IX Item "$urxvt::LIBDIR"
+The rxvt-unicode library directory, where, among other things, the perl
+modules and scripts are stored.
+.ie n .IP "$urxvt::RESCLASS, $urxvt::RESCLASS" 4
+.el .IP "$urxvt::RESCLASS, \f(CW$urxvt::RESCLASS\fR" 4
+.IX Item "$urxvt::RESCLASS, $urxvt::RESCLASS"
+The resource class and name rxvt-unicode uses to look up X resources.
+.IP "$urxvt::RXVTNAME" 4
+.IX Item "$urxvt::RXVTNAME"
+The basename of the installed binaries, usually \f(CW\*(C`urxvt\*(C'\fR.
 .IP "$urxvt::TERM" 4
 .IX Item "$urxvt::TERM"
 The current terminal. This variable stores the current \f(CW\*(C`urxvt::term\*(C'\fR
 object, whenever a callback/hook is executing.
+.IP "*" 4
 .ie n .Sh "Functions in the ""urxvt"" Package"
 .el .Sh "Functions in the \f(CWurxvt\fP Package"
 .IX Subsection "Functions in the urxvt Package"
+.PD 0
 .IP "$term = new urxvt [arg...]" 4
 .IX Item "$term = new urxvt [arg...]"
+.PD
 Creates a new terminal, very similar as if you had started it with
 \&\f(CW\*(C`system $binfile, arg...\*(C'\fR. Croaks (and probably outputs an error message)
 if the new instance couldn't be created.  Returns \f(CW\*(C`undef\*(C'\fR if the new
@@ -536,39 +550,43 @@ the bitset.
 .IX Item "$background = urxvt::GET_BASEBG $rend"
 .PD
 Return the foreground/background colour index, respectively.
-.ie n .IP "$rend = urxvt::SET_FGCOLOR ($rend, $new_colour)" 4
-.el .IP "$rend = urxvt::SET_FGCOLOR ($rend, \f(CW$new_colour\fR)" 4
-.IX Item "$rend = urxvt::SET_FGCOLOR ($rend, $new_colour)"
+.ie n .IP "$rend = urxvt::SET_FGCOLOR $rend\fR, \f(CW$new_colour" 4
+.el .IP "$rend = urxvt::SET_FGCOLOR \f(CW$rend\fR, \f(CW$new_colour\fR" 4
+.IX Item "$rend = urxvt::SET_FGCOLOR $rend, $new_colour"
 .PD 0
-.ie n .IP "$rend = urxvt::SET_BGCOLOR ($rend, $new_colour)" 4
-.el .IP "$rend = urxvt::SET_BGCOLOR ($rend, \f(CW$new_colour\fR)" 4
-.IX Item "$rend = urxvt::SET_BGCOLOR ($rend, $new_colour)"
+.ie n .IP "$rend = urxvt::SET_BGCOLOR $rend\fR, \f(CW$new_colour" 4
+.el .IP "$rend = urxvt::SET_BGCOLOR \f(CW$rend\fR, \f(CW$new_colour\fR" 4
+.IX Item "$rend = urxvt::SET_BGCOLOR $rend, $new_colour"
 .PD
 Replace the foreground/background colour in the rendition mask with the
 specified one.
-.IP "$value = urxvt::GET_CUSTOM ($rend)" 4
-.IX Item "$value = urxvt::GET_CUSTOM ($rend)"
+.ie n .IP "$value = urxvt::GET_CUSTOM $rend" 4
+.el .IP "$value = urxvt::GET_CUSTOM \f(CW$rend\fR" 4
+.IX Item "$value = urxvt::GET_CUSTOM $rend"
 Return the \*(L"custom\*(R" value: Every rendition has 5 bits for use by
 extensions. They can be set and changed as you like and are initially
 zero.
-.ie n .IP "$rend = urxvt::SET_CUSTOM ($rend, $new_value)" 4
-.el .IP "$rend = urxvt::SET_CUSTOM ($rend, \f(CW$new_value\fR)" 4
-.IX Item "$rend = urxvt::SET_CUSTOM ($rend, $new_value)"
+.ie n .IP "$rend = urxvt::SET_CUSTOM $rend\fR, \f(CW$new_value" 4
+.el .IP "$rend = urxvt::SET_CUSTOM \f(CW$rend\fR, \f(CW$new_value\fR" 4
+.IX Item "$rend = urxvt::SET_CUSTOM $rend, $new_value"
 Change the custom value.
 .ie n .Sh "The ""urxvt::anyevent"" Class"
 .el .Sh "The \f(CWurxvt::anyevent\fP Class"
 .IX Subsection "The urxvt::anyevent Class"
 The sole purpose of this class is to deliver an interface to the
 \&\f(CW\*(C`AnyEvent\*(C'\fR module \- any module using it will work inside urxvt without
-further work. The only exception is that you cannot wait on condition
-variables, but non-blocking condvar use is ok. What this means is that you
-cannot use blocking APIs, but the non-blocking variant should work.
+further programming. The only exception is that you cannot wait on
+condition variables, but non-blocking condvar use is ok. What this means
+is that you cannot use blocking APIs, but the non-blocking variant should
+work.
 .ie n .Sh "The ""urxvt::term"" Class"
 .el .Sh "The \f(CWurxvt::term\fP Class"
 .IX Subsection "The urxvt::term Class"
 .IP "$term\->destroy" 4
 .IX Item "$term->destroy"
-Destroy the terminal object (close the window, free resources etc.).
+Destroy the terminal object (close the window, free resources
+etc.). Please note that @@RXVT_NAME@@ will not exit as long as any event
+watchers (timers, io watchers) are still active.
 .ie n .IP "$isset = $term\fR\->option ($optval[, \f(CW$set])" 4
 .el .IP "$isset = \f(CW$term\fR\->option ($optval[, \f(CW$set\fR])" 4
 .IX Item "$isset = $term->option ($optval[, $set])"
@@ -967,10 +985,29 @@ the session.
 .ie n .Sh "The ""urxvt::popup"" Class"
 .el .Sh "The \f(CWurxvt::popup\fP Class"
 .IX Subsection "The urxvt::popup Class"
+.IP "$popup\->add_title ($title)" 4
+.IX Item "$popup->add_title ($title)"
+Adds a non-clickable title to the popup.
+.IP "$popup\->add_separator ([$sepchr])" 4
+.IX Item "$popup->add_separator ([$sepchr])"
+Creates a separator, optionally using the character given as \f(CW$sepchr\fR.
+.ie n .IP "$popup\->add_button ($text, $cb)" 4
+.el .IP "$popup\->add_button ($text, \f(CW$cb\fR)" 4
+.IX Item "$popup->add_button ($text, $cb)"
+Adds a clickable button to the popup. \f(CW$cb\fR is called whenever it is
+selected.
+.ie n .IP "$popup\->add_toggle ($text, $cb\fR, \f(CW$initial_value)" 4
+.el .IP "$popup\->add_toggle ($text, \f(CW$cb\fR, \f(CW$initial_value\fR)" 4
+.IX Item "$popup->add_toggle ($text, $cb, $initial_value)"
+Adds a toggle/checkbox item to the popup. Teh callback gets called
+whenever it gets toggled, with a boolean indicating its value as its first
+argument.
+.IP "$popup\->show" 4
+.IX Item "$popup->show"
+Displays the popup (which is initially hidden).
 .ie n .Sh "The ""urxvt::timer"" Class"
 .el .Sh "The \f(CWurxvt::timer\fP Class"
 .IX Subsection "The urxvt::timer Class"
-.RS 4
 This class implements timer watchers/events. Time is represented as a
 fractional number of seconds since the epoch. Example:
 .Sp
@@ -984,6 +1021,7 @@ fractional number of seconds since the epoch. Example:
 \&                          sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2,1,0]);
 \&                    });
 .Ve
+.RS 4
 .IP "$timer = new urxvt::timer" 4
 .IX Item "$timer = new urxvt::timer"
 Create a new timer object in started state. It is scheduled to fire

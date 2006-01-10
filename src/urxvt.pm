@@ -1313,6 +1313,28 @@ sub add_item {
    push @{ $self->{item} }, $item;
 }
 
+=item $popup->add_title ($title)
+
+Adds a non-clickable title to the popup.
+
+=cut
+
+sub add_title {
+   my ($self, $title) = @_;
+
+   $self->add_item ({
+      rend => { normal => "\x1b[38;5;11;44m", hover => "\x1b[38;5;11;44m", active => "\x1b[38;5;11;44m" },
+      text => $title,
+      activate => sub { },
+   });
+}
+
+=item $popup->add_separator ([$sepchr])
+
+Creates a separator, optionally using the character given as C<$sepchr>.
+
+=cut
+
 sub add_separator {
    my ($self, $sep) = @_;
 
@@ -1326,21 +1348,26 @@ sub add_separator {
    });
 }
 
-sub add_title {
-   my ($self, $title) = @_;
+=item $popup->add_button ($text, $cb)
 
-   $self->add_item ({
-      rend => { normal => "\x1b[38;5;11;44m", hover => "\x1b[38;5;11;44m", active => "\x1b[38;5;11;44m" },
-      text => $title,
-      activate => sub { },
-   });
-}
+Adds a clickable button to the popup. C<$cb> is called whenever it is
+selected.
+
+=cut
 
 sub add_button {
    my ($self, $text, $cb) = @_;
 
    $self->add_item ({ type => "button", text => $text, activate => $cb});
 }
+
+=item $popup->add_toggle ($text, $cb, $initial_value)
+
+Adds a toggle/checkbox item to the popup. Teh callback gets called
+whenever it gets toggled, with a boolean indicating its value as its first
+argument.
+
+=cut
 
 sub add_toggle {
    my ($self, $text, $cb, $value) = @_;
@@ -1350,11 +1377,17 @@ sub add_toggle {
       text => "  $text",
       value => $value,
       render => sub { ($_[0]{value} ? "* " : "  ") . $text },
-      activate => sub { $cb->($_[0]{value} = !$_[0]{value}); },
+      activate => sub { $cb->($_[1]{value} = !$_[1]{value}); },
    };
 
    $self->add_item ($item);
 }
+
+=item $popup->show
+
+Displays the popup (which is initially hidden).
+
+=cut
 
 sub show {
    my ($self) = @_;
