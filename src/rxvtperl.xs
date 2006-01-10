@@ -1320,6 +1320,13 @@ rxvt_term::screen_cur (...)
           }
 }
 
+char
+rxvt_term::cur_charset ()
+	CODE:
+        RETVAL = THIS->charsets [THIS->screen.charset];
+	OUTPUT:
+        RETVAL
+
 int
 rxvt_term::selection_grab (U32 eventtime)
 
