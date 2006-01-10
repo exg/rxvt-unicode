@@ -28,9 +28,9 @@ thus must be encoded as UTF-8.
 Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
 scripts will be shared (but not enabled) for all terminals.
 
-=head2 Prepackaged Extensions
+=head1 PREPACKAGED EXTENSIONS
 
-This section describes the extensiosn delivered with this version. You can
+This section describes the extensions delivered with this release. You can
 find them in F<@@RXVT_LIBDIR@@/urxvt/perl/>.
 
 You can activate them like this:
@@ -41,12 +41,12 @@ You can activate them like this:
 
 =item selection (enabled by default)
 
-Intelligent selection. This extension tries to be more intelligent when
-the user extends selections (double-click). Right now, it tries to select
-urls and complete shell-quoted arguments, which is very convenient, too,
-if your F<ls> supports C<--quoting-style=shell>.
+(More) intelligent selection. This extension tries to be more intelligent
+when the user extends selections (double-click). Right now, it tries to
+select urls and complete shell-quoted arguments, which is very convenient,
+too, if your F<ls> supports C<--quoting-style=shell>.
 
-It also offers the following bindable event:
+It also offers the following bindable keyboard command:
 
 =over 4
 
@@ -66,7 +66,8 @@ runtime.
 =item selection-popup (enabled by default)
 
 Binds a popup menu to Ctrl-Button3 that lets you convert the selection
-text into various other formats/action.
+text into various other formats/action (such as uri unescaping, perl
+evalution, web-browser starting etc.), depending on content.
 
 =item searchable-scrollback<hotkey> (enabled by default)
 
@@ -100,6 +101,8 @@ window. Illustrates overwriting the refresh callbacks to create your own
 overlays or changes.
 
 =back
+
+=head1 API DOCUMENTATION
 
 =head2 General API Considerations
 
@@ -346,10 +349,25 @@ subwindow.
 
 =over 4
 
+=item $urxvt::LIBDIR
+
+The rxvt-unicode library directory, where, among other things, the perl
+modules and scripts are stored.
+
+=item $urxvt::RESCLASS, $urxvt::RESCLASS
+
+The resource class and name rxvt-unicode uses to look up X resources.
+
+=item $urxvt::RXVTNAME
+
+The basename of the installed binaries, usually C<urxvt>.
+
 =item $urxvt::TERM
 
 The current terminal. This variable stores the current C<urxvt::term>
 object, whenever a callback/hook is executing.
+
+=item
 
 =back
 
@@ -433,20 +451,20 @@ the bitset.
 
 Return the foreground/background colour index, respectively.
 
-=item $rend = urxvt::SET_FGCOLOR ($rend, $new_colour)
+=item $rend = urxvt::SET_FGCOLOR $rend, $new_colour
 
-=item $rend = urxvt::SET_BGCOLOR ($rend, $new_colour)
+=item $rend = urxvt::SET_BGCOLOR $rend, $new_colour
 
 Replace the foreground/background colour in the rendition mask with the
 specified one.
 
-=item $value = urxvt::GET_CUSTOM ($rend)
+=item $value = urxvt::GET_CUSTOM $rend
 
 Return the "custom" value: Every rendition has 5 bits for use by
 extensions. They can be set and changed as you like and are initially
 zero.
 
-=item $rend = urxvt::SET_CUSTOM ($rend, $new_value)
+=item $rend = urxvt::SET_CUSTOM $rend, $new_value
 
 Change the custom value.
 
@@ -677,9 +695,10 @@ package urxvt::anyevent;
 
 The sole purpose of this class is to deliver an interface to the
 C<AnyEvent> module - any module using it will work inside urxvt without
-further work. The only exception is that you cannot wait on condition
-variables, but non-blocking condvar use is ok. What this means is that you
-cannot use blocking APIs, but the non-blocking variant should work.
+further programming. The only exception is that you cannot wait on
+condition variables, but non-blocking condvar use is ok. What this means
+is that you cannot use blocking APIs, but the non-blocking variant should
+work.
 
 =cut
 
@@ -768,7 +787,9 @@ sub register_package {
 
 =item $term->destroy
 
-Destroy the terminal object (close the window, free resources etc.).
+Destroy the terminal object (close the window, free resources
+etc.). Please note that @@RXVT_NAME@@ will not exit as long as any event
+watchers (timers, io watchers) are still active.
 
 =item $isset = $term->option ($optval[, $set])
 
