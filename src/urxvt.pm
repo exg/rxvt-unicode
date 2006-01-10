@@ -68,13 +68,16 @@ runtime.
 Binds a popup menu to Ctrl-Button3 that lets you convert the selection
 text into various other formats/action.
 
-=item searchable-scrollback (enabled by default)
+=item searchable-scrollback<hotkey> (enabled by default)
 
-Adds regex search functionality to the scrollback buffer, triggered by a
-hotkey (default: C<M-s>). When in search mode, terminal input/output is
-suspended, C</> starts an incremental regex search, C<n> searches further,
-C<p> jumps to the previous match. C<enter> leaves search mode at the
-current position and C<escape> returns to the original position.
+Adds regex search functionality to the scrollback buffer, triggered
+by a hotkey (default: C<M-s>). When in search mode, normal terminal
+input/output is suspended.
+
+C</> starts an incremental regex search, C<n> searches further, C<p> or
+C<N> jump to the previous match, C<G> jumps to the bottom and clears the
+history, C<enter> leaves search mode at the current position and C<escape>
+returns to the original position.
 
 =item digital-clock
 

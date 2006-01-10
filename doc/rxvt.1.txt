@@ -947,10 +947,16 @@ RESOURCES (available also as long-options)
         "default") to use in this terminal instance; option -pe.
 
         Extension names can be prefixed with a "-" sign to prohibit using
-        it. This can be useful to selectively disable some extensions loaded
-        by default, or specified via the "perl-ext-common" resource. For
-        example, "default,-selection" will use all the default extension
+        them. This can be useful to selectively disable some extensions
+        loaded by default, or specified via the "perl-ext-common" resource.
+        For example, "default,-selection" will use all the default extension
         except "selection".
+
+        Extension names can also be followed by an argument in angle
+        brackets (e.g. "searchable-scrollback<M-s>", which binds the hotkey
+        for searchable scorllback to Alt/Meta-s). Mentioning the same
+        extension multiple times with different arguments will pass multiple
+        arguments to the extension.
 
         Each extension is looked up in the library directories, loaded if
         necessary, and bound to the current terminal instance.

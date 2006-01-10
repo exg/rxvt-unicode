@@ -37,7 +37,7 @@ FREQUENTLY ASKED QUESTIONS
         this still fares rather well. And compared to some monsters like
         gnome-terminal (21152k + extra 4204k in separate processes) or
         konsole (22200k + extra 43180k in daemons that stay around after
-        exit, plus half aminute of startup time, including the hundreds of
+        exit, plus half a minute of startup time, including the hundreds of
         warnings it spits out), it fares extremely well *g*.
 
     Why C++, isn't that unportable/bloated/uncool?

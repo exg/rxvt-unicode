@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2006-01-09" "6.3" "RXVT-UNICODE"
+.TH rxvt 1 "2006-01-10" "6.3" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -1116,10 +1116,16 @@ Comma-separated list(s) of perl extension scripts (default: \f(CW\*(C`default\*(
 use in this terminal instance; option \fB\-pe\fR.
 .Sp
 Extension names can be prefixed with a \f(CW\*(C`\-\*(C'\fR sign to prohibit using
-it. This can be useful to selectively disable some extensions loaded
+them. This can be useful to selectively disable some extensions loaded
 by default, or specified via the \f(CW\*(C`perl\-ext\-common\*(C'\fR resource. For
 example, \f(CW\*(C`default,\-selection\*(C'\fR will use all the default extension except
 \&\f(CW\*(C`selection\*(C'\fR.
+.Sp
+Extension names can also be followed by an argument in angle brackets
+(e.g.  \f(CW\*(C`searchable\-scrollback<M\-s>\*(C'\fR, which binds the hotkey for
+searchable scorllback to Alt/Meta\-s). Mentioning the same extension
+multiple times with different arguments will pass multiple arguments to
+the extension.
 .Sp
 Each extension is looked up in the library directories, loaded if
 necessary, and bound to the current terminal instance.

@@ -19,6 +19,7 @@
 
 		<li><a href="#prepackaged_extensions">Prepackaged Extensions</a></li>
 		<li><a href="#general_api_considerations">General API Considerations</a></li>
+		<li><a href="#extension_objects">Extension Objects</a></li>
 		<li><a href="#hooks">Hooks</a></li>
 		<li><a href="#variables_in_the_urxvt_package">Variables in the <code>urxvt</code> Package</a></li>
 		<li><a href="#functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></li>
@@ -116,6 +117,20 @@ Binds a popup menu to Ctrl-Button3 that lets you convert the selection
 text into various other formats/action.
 </dd>
 <p></p>
+<dt><strong><a name="item_searchable_2dscrollback_3chotkey_3e__28enabled_by_">searchable-scrollback&lt;hotkey&gt; (enabled by default)</a></strong><br />
+</dt>
+<dd>
+Adds regex search functionality to the scrollback buffer, triggered
+by a hotkey (default: <code>M-s</code>). When in search mode, normal terminal
+input/output is suspended.
+</dd>
+<dd>
+<p><code>/</code> starts an incremental regex search, <code>n</code> searches further, <code>p</code> or
+<code>N</code> jump to the previous match, <code>G</code> jumps to the bottom and clears the
+history, <code>enter</code> leaves search mode at the current position and <code>escape</code>
+returns to the original position.</p>
+</dd>
+<p></p>
 <dt><strong><a name="item_digital_2dclock">digital-clock</a></strong><br />
 </dt>
 <dd>
@@ -183,19 +198,49 @@ locale-specific way.
 <p></p></dl>
 <p>
 </p>
+<h2><a name="extension_objects">Extension Objects</a></h2>
+<p>Very perl extension is a perl class. A separate perl object is created
+for each terminal and each extension and passed as the first parameter to
+hooks. So extensions can use their <code>$self</code> object without having to think
+about other extensions, with the exception of methods and members that
+begin with an underscore character <code>_</code>: these are reserved for internal
+use.</p>
+<p>Although it isn't a <code>urxvt::term</code> object, you can call all methods of the
+<code>urxvt::term</code> class on this object.</p>
+<p>It has the following methods and data members:</p>
+<dl>
+<dt><strong><a name="item__24urxvt_term__3d__24self_2d_3e_7bterm_7d">$urxvt_term = $self-&gt;{term}</a></strong><br />
+</dt>
+<dd>
+Returns the <code>urxvt::term</code> object associated with this instance of the
+extension. This member <em>must not</em> be changed in any way.
+</dd>
+<p></p>
+<dt><strong><a name="item_enable">$self-&gt;enable ($hook_name =&gt; $cb, [$hook_name =&gt; $cb..])</a></strong><br />
+</dt>
+<dd>
+Dynamically enable the given hooks (named without the <code>on_</code> prefix) for
+this extension, replacing any previous hook. This is useful when you want
+to overwrite time-critical hooks only temporarily.
+</dd>
+<p></p>
+<dt><strong><a name="item_disable">$self-&gt;disable ($hook_name[, $hook_name..])</a></strong><br />
+</dt>
+<dd>
+Dynamically disable the given hooks.
+</dd>
+<p></p></dl>
+<p>
+</p>
 <h2><a name="hooks">Hooks</a></h2>
 <p>The following subroutines can be declared in extension files, and will be
 called whenever the relevant event happens.</p>
-<p>The first argument passed to them is an object private to each terminal
-and extension package. You can call all <code>urxvt::term</code> methods on it, but
-its not a real <code>urxvt::term</code> object. Instead, the real <code>urxvt::term</code>
-object that is shared between all packages is stored in the <code>term</code>
-member. It is, however, blessed intot he package of the extension script,
-so for all practical purposes you can treat an extension script as a class.</p>
-<p>All of them must return a boolean value. If it is true, then the event
-counts as being <em>consumed</em>, and the invocation of other hooks is skipped,
-and the relevant action might not be carried out by the C++ code.</p>
-<p>When in doubt, return a false value (preferably <code>()</code>).</p>
+<p>The first argument passed to them is an extension oject as described in
+the in the <code>Extension Objects</code> section.</p>
+<p><strong>All</strong> of these hooks must return a boolean value. If it is true, then the
+event counts as being <em>consumed</em>, and the invocation of other hooks is
+skipped, and the relevant action might not be carried out by the C++ code.</p>
+<p><em>When in doubt, return a false value (preferably <code>()</code>). </em>&gt;</p>
 <dl>
 <dt><strong><a name="item_on_init__24term">on_init $term</a></strong><br />
 </dt>
@@ -304,6 +349,13 @@ might be very slow, however, as your hook is called for <strong>all</strong> tex
 output.
 </dd>
 <p></p>
+<dt><strong><a name="item_on_tt_write__24term_2c__24octets">on_tt_write $term, $octets</a></strong><br />
+</dt>
+<dd>
+Called whenever some data is written to the tty/pty and can be used to
+suppress or filter tty input.
+</dd>
+<p></p>
 <dt><strong><a name="item_on_line_update__24term_2c__24row">on_line_update $term, $row</a></strong><br />
 </dt>
 <dd>
@@ -359,9 +411,9 @@ Called wheneever the window loses keyboard focus, before rxvt-unicode does
 focus out processing.
 </dd>
 <p></p>
-<dt><strong><a name="item_on_key_press__24term_2c__24event_2c__24octets">on_key_press $term, $event, $octets</a></strong><br />
+<dt><strong><a name="item_on_key_press__24term_2c__24event_2c__24keysym_2c__">on_key_press $term, $event, $keysym, $octets</a></strong><br />
 </dt>
-<dt><strong><a name="item_on_key_release__24term_2c__24event">on_key_release $term, $event</a></strong><br />
+<dt><strong><a name="item_on_key_release__24term_2c__24event_2c__24keysym">on_key_release $term, $event, $keysym</a></strong><br />
 </dt>
 <dt><strong><a name="item_on_button_press__24term_2c__24event">on_button_press $term, $event</a></strong><br />
 </dt>
@@ -602,6 +654,13 @@ to see the actual list:</p>
   utmpInhibit visualBell</pre>
 </dd>
 <p></p>
+<dt><strong><a name="item_parse_keysym">$success = $term-&gt;parse_keysym ($keysym_spec, $command_string)</a></strong><br />
+</dt>
+<dd>
+Adds a keymap translation exactly as specified via a resource. See the
+<code>keysym</code> resource in the <code>rxvt(1)</code> manpage.
+</dd>
+<p></p>
 <dt><strong><a name="item_rstyle">$rend = $term-&gt;rstyle ([$new_rstyle])</a></strong><br />
 </dt>
 <dd>
@@ -639,26 +698,11 @@ by the next method).
 <dd>
 Return the current selection text and optionally replace it by <code>$newtext</code>.
 </dd>
+<p></p>
+<dt><strong><a name="item_overlay_simple">$term-&gt;overlay_simple ($x, $y, $text)</a></strong><br />
+</dt>
 <dd>
-<p>#=item $term-&gt;overlay ($x, $y, $text)
-#
-#Create a simple multi-line overlay box. See the next method for details.
-#
-#=cut
-#
-#sub urxvt::term::scr_overlay {
-#   my ($self, $x, $y, $text) = @_;
-#
-#   my @lines = split /\n/, $text;
-#
-#   my $w = 0;
-#   for (map $self-&gt;strwidth ($_), @lines) {
-#      $w = $_ if $w &lt; $_;
-#   }
-#
-#   $self-&gt;scr_overlay_new ($x, $y, $w, scalar @lines);
-#   $self-&gt;scr_overlay_set (0, $_, $lines[$_]) for 0.. $#lines;
-#}</p>
+Create a simple multi-line overlay box. See the next method for details.
 </dd>
 <p></p>
 <dt><strong><a name="item_overlay">$term-&gt;overlay ($x, $y, $width, $height[, $rstyle[, $border]])</a></strong><br />
@@ -731,6 +775,29 @@ Convert the given text string into the corresponding locale encoding.
 Convert the given locale-encoded octets into a perl string.
 </dd>
 <p></p>
+<dt><strong><a name="item_scr_xor_span">$term-&gt;scr_xor_span ($beg_row, $beg_col, $end_row, $end_col[, $rstyle])</a></strong><br />
+</dt>
+<dd>
+XORs the rendition values in the given span with the provided value
+(default: <code>RS_RVid</code>). Useful in refresh hooks to provide effects similar
+to the selection.
+</dd>
+<p></p>
+<dt><strong><a name="item_scr_xor_rect">$term-&gt;scr_xor_rect ($beg_row, $beg_col, $end_row, $end_col[, $rstyle1[, $rstyle2]])</a></strong><br />
+</dt>
+<dd>
+Similar to <a href="#item_scr_xor_span"><code>scr_xor_span</code></a>, but xors a rectangle instead. Trailing
+whitespace will additionally be xored with the <code>$rstyle2</code>, which defaults
+to <code>RS_RVid | RS_Uline</code>, which removes reverse video again and underlines
+it instead.
+</dd>
+<p></p>
+<dt><strong><a name="item_scr_bell">$term-&gt;scr_bell</a></strong><br />
+</dt>
+<dd>
+Ring the bell!
+</dd>
+<p></p>
 <dt><strong><a name="item_scr_add_lines">$term-&gt;scr_add_lines ($string)</a></strong><br />
 </dt>
 <dd>
@@ -759,6 +826,15 @@ locale-specific encoding of the terminal and can contain command sequences
 Write the octets given in <code>$data</code> to the tty (i.e. as program input). To
 pass characters instead of octets, you should convert your strings first
 to the locale-specific encoding using <a href="#item_locale_encode"><code>$term-&gt;locale_encode</code></a>.
+</dd>
+<p></p>
+<dt><strong><a name="item_pty_ev_events">$old_events = $term-&gt;pty_ev_events ([$new_events])</a></strong><br />
+</dt>
+<dd>
+Replaces the event mask of the pty watcher by the given event mask. Can
+be used to suppress input and output handling to the pty/tty. See the
+description of <a href="#item_events"><code>urxvt::timer-&gt;events</code></a>. Make sure to always restore
+the previous value.
 </dd>
 <p></p>
 <dt><strong><a name="item_parent">$windowid = $term-&gt;parent</a></strong><br />
@@ -799,6 +875,18 @@ Return the window id of the terminal window.
 </dt>
 <dd>
 Return various integers describing terminal characteristics.
+</dd>
+<p></p>
+<dt><strong><a name="item_locale">$lc_ctype = $term-&gt;locale</a></strong><br />
+</dt>
+<dd>
+Returns the LC_CTYPE category string used by this rxvt-unicode.
+</dd>
+<p></p>
+<dt><strong><a name="item_display_id">$x_display = $term-&gt;display_id</a></strong><br />
+</dt>
+<dd>
+Return the DISPLAY used by rxvt-unicode.
 </dd>
 <p></p>
 <dt><strong><a name="item_modlevel3mask">$modifiermask = $term-&gt;ModLevel3Mask</a></strong><br />
@@ -1074,7 +1162,7 @@ Stop the timer.
   $term-&gt;{iow} = urxvt::iow
                  -&gt;new
                  -&gt;fd (fileno $term-&gt;{socket})
-                 -&gt;events (1) # wait for read data
+                 -&gt;events (urxvt::EVENT_READ)
                  -&gt;start
                  -&gt;cb (sub {
                    my ($iow, $revents) = @_;
@@ -1105,8 +1193,9 @@ Set the filedescriptor (not handle) to watch.
 <dt><strong><a name="item_events">$iow = $iow-&gt;events ($eventmask)</a></strong><br />
 </dt>
 <dd>
-Set the event mask to watch. Bit #0 (value <code>1</code>) enables watching for read
-data, Bit #1 (value <code>2</code>) enables watching for write data.
+Set the event mask to watch. The only allowed values are
+<code>urxvt::EVENT_READ</code> and <code>urxvt::EVENT_WRITE</code>, which might be ORed
+together, or <code>urxvt::EVENT_NONE</code>.
 </dd>
 <p></p>
 <dt><strong>$iow = $iow-&gt;start</strong><br />

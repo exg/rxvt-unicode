@@ -1460,10 +1460,17 @@ use in this terminal instance; option <strong>-pe</strong>.
 </dd>
 <dd>
 <p>Extension names can be prefixed with a <code>-</code> sign to prohibit using
-it. This can be useful to selectively disable some extensions loaded
+them. This can be useful to selectively disable some extensions loaded
 by default, or specified via the <code>perl-ext-common</code> resource. For
 example, <code>default,-selection</code> will use all the default extension except
 <code>selection</code>.</p>
+</dd>
+<dd>
+<p>Extension names can also be followed by an argument in angle brackets
+(e.g.  <code>searchable-scrollback&lt;M-s&gt;</code>, which binds the hotkey for
+searchable scorllback to Alt/Meta-s). Mentioning the same extension
+multiple times with different arguments will pass multiple arguments to
+the extension.</p>
 </dd>
 <dd>
 <p>Each extension is looked up in the library directories, loaded if

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-09" "6.3" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-10" "6.3" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -199,6 +199,16 @@ runtime.
 .IX Item "selection-popup (enabled by default)"
 Binds a popup menu to Ctrl\-Button3 that lets you convert the selection
 text into various other formats/action.
+.IP "searchable\-scrollback<hotkey> (enabled by default)" 4
+.IX Item "searchable-scrollback<hotkey> (enabled by default)"
+Adds regex search functionality to the scrollback buffer, triggered
+by a hotkey (default: \f(CW\*(C`M\-s\*(C'\fR). When in search mode, normal terminal
+input/output is suspended.
+.Sp
+\&\f(CW\*(C`/\*(C'\fR starts an incremental regex search, \f(CW\*(C`n\*(C'\fR searches further, \f(CW\*(C`p\*(C'\fR or
+\&\f(CW\*(C`N\*(C'\fR jump to the previous match, \f(CW\*(C`G\*(C'\fR jumps to the bottom and clears the
+history, \f(CW\*(C`enter\*(C'\fR leaves search mode at the current position and \f(CW\*(C`escape\*(C'\fR
+returns to the original position.
 .IP "digital-clock" 4
 .IX Item "digital-clock"
 Displays a digital clock using the built-in overlay.
@@ -243,23 +253,47 @@ encoding (often locale\-specific) and binary data.
 .IX Item "$octets"
 Either binary data or \- more common \- a text string encoded in a
 locale-specific way.
+.Sh "Extension Objects"
+.IX Subsection "Extension Objects"
+Very perl extension is a perl class. A separate perl object is created
+for each terminal and each extension and passed as the first parameter to
+hooks. So extensions can use their \f(CW$self\fR object without having to think
+about other extensions, with the exception of methods and members that
+begin with an underscore character \f(CW\*(C`_\*(C'\fR: these are reserved for internal
+use.
+.PP
+Although it isn't a \f(CW\*(C`urxvt::term\*(C'\fR object, you can call all methods of the
+\&\f(CW\*(C`urxvt::term\*(C'\fR class on this object.
+.PP
+It has the following methods and data members:
+.ie n .IP "$urxvt_term = $self\->{term}" 4
+.el .IP "$urxvt_term = \f(CW$self\fR\->{term}" 4
+.IX Item "$urxvt_term = $self->{term}"
+Returns the \f(CW\*(C`urxvt::term\*(C'\fR object associated with this instance of the
+extension. This member \fImust not\fR be changed in any way.
+.ie n .IP "$self\->enable ($hook_name => $cb\fR, [$hook_name => \f(CW$cb..])" 4
+.el .IP "$self\->enable ($hook_name => \f(CW$cb\fR, [$hook_name => \f(CW$cb\fR..])" 4
+.IX Item "$self->enable ($hook_name => $cb, [$hook_name => $cb..])"
+Dynamically enable the given hooks (named without the \f(CW\*(C`on_\*(C'\fR prefix) for
+this extension, replacing any previous hook. This is useful when you want
+to overwrite time-critical hooks only temporarily.
+.ie n .IP "$self\->disable ($hook_name[, $hook_name..])" 4
+.el .IP "$self\->disable ($hook_name[, \f(CW$hook_name\fR..])" 4
+.IX Item "$self->disable ($hook_name[, $hook_name..])"
+Dynamically disable the given hooks.
 .Sh "Hooks"
 .IX Subsection "Hooks"
 The following subroutines can be declared in extension files, and will be
 called whenever the relevant event happens.
 .PP
-The first argument passed to them is an object private to each terminal
-and extension package. You can call all \f(CW\*(C`urxvt::term\*(C'\fR methods on it, but
-its not a real \f(CW\*(C`urxvt::term\*(C'\fR object. Instead, the real \f(CW\*(C`urxvt::term\*(C'\fR
-object that is shared between all packages is stored in the \f(CW\*(C`term\*(C'\fR
-member. It is, however, blessed intot he package of the extension script,
-so for all practical purposes you can treat an extension script as a class.
+The first argument passed to them is an extension oject as described in
+the in the \f(CW\*(C`Extension Objects\*(C'\fR section.
 .PP
-All of them must return a boolean value. If it is true, then the event
-counts as being \fIconsumed\fR, and the invocation of other hooks is skipped,
-and the relevant action might not be carried out by the \*(C+ code.
+\&\fBAll\fR of these hooks must return a boolean value. If it is true, then the
+event counts as being \fIconsumed\fR, and the invocation of other hooks is
+skipped, and the relevant action might not be carried out by the \*(C+ code.
 .PP
-When in doubt, return a false value (preferably \f(CW\*(C`()\*(C'\fR).
+\&\fIWhen in doubt, return a false value (preferably \f(CI\*(C`()\*(C'\fI).\fR
 .ie n .IP "on_init $term" 4
 .el .IP "on_init \f(CW$term\fR" 4
 .IX Item "on_init $term"
@@ -342,6 +376,11 @@ can filter/change and output the text yourself by returning a true value
 and calling \f(CW\*(C`$term\->scr_add_lines\*(C'\fR yourself. Please note that this
 might be very slow, however, as your hook is called for \fBall\fR text being
 output.
+.ie n .IP "on_tt_write $term\fR, \f(CW$octets" 4
+.el .IP "on_tt_write \f(CW$term\fR, \f(CW$octets\fR" 4
+.IX Item "on_tt_write $term, $octets"
+Called whenever some data is written to the tty/pty and can be used to
+suppress or filter tty input.
 .ie n .IP "on_line_update $term\fR, \f(CW$row" 4
 .el .IP "on_line_update \f(CW$term\fR, \f(CW$row\fR" 4
 .IX Item "on_line_update $term, $row"
@@ -383,13 +422,13 @@ does focus in processing.
 .IX Item "on_focus_out $term"
 Called wheneever the window loses keyboard focus, before rxvt-unicode does
 focus out processing.
-.ie n .IP "on_key_press $term\fR, \f(CW$event\fR, \f(CW$octets" 4
-.el .IP "on_key_press \f(CW$term\fR, \f(CW$event\fR, \f(CW$octets\fR" 4
-.IX Item "on_key_press $term, $event, $octets"
+.ie n .IP "on_key_press $term\fR, \f(CW$event\fR, \f(CW$keysym\fR, \f(CW$octets" 4
+.el .IP "on_key_press \f(CW$term\fR, \f(CW$event\fR, \f(CW$keysym\fR, \f(CW$octets\fR" 4
+.IX Item "on_key_press $term, $event, $keysym, $octets"
 .PD 0
-.ie n .IP "on_key_release $term\fR, \f(CW$event" 4
-.el .IP "on_key_release \f(CW$term\fR, \f(CW$event\fR" 4
-.IX Item "on_key_release $term, $event"
+.ie n .IP "on_key_release $term\fR, \f(CW$event\fR, \f(CW$keysym" 4
+.el .IP "on_key_release \f(CW$term\fR, \f(CW$event\fR, \f(CW$keysym\fR" 4
+.IX Item "on_key_release $term, $event, $keysym"
 .ie n .IP "on_button_press $term\fR, \f(CW$event" 4
 .el .IP "on_button_press \f(CW$term\fR, \f(CW$event\fR" 4
 .IX Item "on_button_press $term, $event"
@@ -581,6 +620,11 @@ to see the actual list:
 \&  shade term_name title transparent transparent_all tripleclickwords
 \&  utmpInhibit visualBell
 .Ve
+.ie n .IP "$success = $term\fR\->parse_keysym ($keysym_spec, \f(CW$command_string)" 4
+.el .IP "$success = \f(CW$term\fR\->parse_keysym ($keysym_spec, \f(CW$command_string\fR)" 4
+.IX Item "$success = $term->parse_keysym ($keysym_spec, $command_string)"
+Adds a keymap translation exactly as specified via a resource. See the
+\&\f(CW\*(C`keysym\*(C'\fR resource in the @@RXVT_NAME@@(1) manpage.
 .ie n .IP "$rend = $term\->rstyle ([$new_rstyle])" 4
 .el .IP "$rend = \f(CW$term\fR\->rstyle ([$new_rstyle])" 4
 .IX Item "$rend = $term->rstyle ([$new_rstyle])"
@@ -613,26 +657,10 @@ by the next method).
 .el .IP "$oldtext = \f(CW$term\fR\->selection ([$newtext])" 4
 .IX Item "$oldtext = $term->selection ([$newtext])"
 Return the current selection text and optionally replace it by \f(CW$newtext\fR.
-.Sp
-#=item \f(CW$term\fR\->overlay ($x, \f(CW$y\fR, \f(CW$text\fR)
-#
-#Create a simple multi-line overlay box. See the next method for details.
-#
-#=cut
-#
-#sub urxvt::term::scr_overlay {
-#   my ($self, \f(CW$x\fR, \f(CW$y\fR, \f(CW$text\fR) = \f(CW@_\fR;
-#
-#   my \f(CW@lines\fR = split /\en/, \f(CW$text\fR;
-#
-#   my \f(CW$w\fR = 0;
-#   for (map \f(CW$self\fR\->strwidth ($_), \f(CW@lines\fR) {
-#      \f(CW$w\fR = \f(CW$_\fR if \f(CW$w\fR < \f(CW$_\fR;
-#   }
-#
-#   \f(CW$self\fR\->scr_overlay_new ($x, \f(CW$y\fR, \f(CW$w\fR, scalar \f(CW@lines\fR);
-#   \f(CW$self\fR\->scr_overlay_set (0, \f(CW$_\fR, \f(CW$lines\fR[$_]) for 0.. $#lines;
-#}
+.ie n .IP "$term\->overlay_simple ($x, $y\fR, \f(CW$text)" 4
+.el .IP "$term\->overlay_simple ($x, \f(CW$y\fR, \f(CW$text\fR)" 4
+.IX Item "$term->overlay_simple ($x, $y, $text)"
+Create a simple multi-line overlay box. See the next method for details.
 .ie n .IP "$term\->overlay ($x, $y\fR, \f(CW$width\fR, \f(CW$height\fR[, \f(CW$rstyle\fR[, \f(CW$border]])" 4
 .el .IP "$term\->overlay ($x, \f(CW$y\fR, \f(CW$width\fR, \f(CW$height\fR[, \f(CW$rstyle\fR[, \f(CW$border\fR]])" 4
 .IX Item "$term->overlay ($x, $y, $width, $height[, $rstyle[, $border]])"
@@ -685,6 +713,22 @@ Convert the given text string into the corresponding locale encoding.
 .el .IP "$string = \f(CW$term\fR\->locale_decode ($octets)" 4
 .IX Item "$string = $term->locale_decode ($octets)"
 Convert the given locale-encoded octets into a perl string.
+.ie n .IP "$term\->scr_xor_span ($beg_row, $beg_col\fR, \f(CW$end_row\fR, \f(CW$end_col\fR[, \f(CW$rstyle])" 4
+.el .IP "$term\->scr_xor_span ($beg_row, \f(CW$beg_col\fR, \f(CW$end_row\fR, \f(CW$end_col\fR[, \f(CW$rstyle\fR])" 4
+.IX Item "$term->scr_xor_span ($beg_row, $beg_col, $end_row, $end_col[, $rstyle])"
+XORs the rendition values in the given span with the provided value
+(default: \f(CW\*(C`RS_RVid\*(C'\fR). Useful in refresh hooks to provide effects similar
+to the selection.
+.ie n .IP "$term\->scr_xor_rect ($beg_row, $beg_col\fR, \f(CW$end_row\fR, \f(CW$end_col\fR[, \f(CW$rstyle1\fR[, \f(CW$rstyle2]])" 4
+.el .IP "$term\->scr_xor_rect ($beg_row, \f(CW$beg_col\fR, \f(CW$end_row\fR, \f(CW$end_col\fR[, \f(CW$rstyle1\fR[, \f(CW$rstyle2\fR]])" 4
+.IX Item "$term->scr_xor_rect ($beg_row, $beg_col, $end_row, $end_col[, $rstyle1[, $rstyle2]])"
+Similar to \f(CW\*(C`scr_xor_span\*(C'\fR, but xors a rectangle instead. Trailing
+whitespace will additionally be xored with the \f(CW$rstyle2\fR, which defaults
+to \f(CW\*(C`RS_RVid | RS_Uline\*(C'\fR, which removes reverse video again and underlines
+it instead.
+.IP "$term\->scr_bell" 4
+.IX Item "$term->scr_bell"
+Ring the bell!
 .IP "$term\->scr_add_lines ($string)" 4
 .IX Item "$term->scr_add_lines ($string)"
 Write the given text string to the screen, as if output by the application
@@ -705,6 +749,13 @@ locale-specific encoding of the terminal and can contain command sequences
 Write the octets given in \f(CW$data\fR to the tty (i.e. as program input). To
 pass characters instead of octets, you should convert your strings first
 to the locale-specific encoding using \f(CW\*(C`$term\->locale_encode\*(C'\fR.
+.ie n .IP "$old_events = $term\->pty_ev_events ([$new_events])" 4
+.el .IP "$old_events = \f(CW$term\fR\->pty_ev_events ([$new_events])" 4
+.IX Item "$old_events = $term->pty_ev_events ([$new_events])"
+Replaces the event mask of the pty watcher by the given event mask. Can
+be used to suppress input and output handling to the pty/tty. See the
+description of \f(CW\*(C`urxvt::timer\->events\*(C'\fR. Make sure to always restore
+the previous value.
 .ie n .IP "$windowid = $term\->parent" 4
 .el .IP "$windowid = \f(CW$term\fR\->parent" 4
 .IX Item "$windowid = $term->parent"
@@ -752,6 +803,14 @@ Return the window id of the terminal window.
 .IX Item "$lines_in_scrollback = $term->nsaved"
 .PD
 Return various integers describing terminal characteristics.
+.ie n .IP "$lc_ctype = $term\->locale" 4
+.el .IP "$lc_ctype = \f(CW$term\fR\->locale" 4
+.IX Item "$lc_ctype = $term->locale"
+Returns the \s-1LC_CTYPE\s0 category string used by this rxvt\-unicode.
+.ie n .IP "$x_display = $term\->display_id" 4
+.el .IP "$x_display = \f(CW$term\fR\->display_id" 4
+.IX Item "$x_display = $term->display_id"
+Return the \s-1DISPLAY\s0 used by rxvt\-unicode.
 .ie n .IP "$modifiermask = $term\->ModLevel3Mask" 4
 .el .IP "$modifiermask = \f(CW$term\fR\->ModLevel3Mask" 4
 .IX Item "$modifiermask = $term->ModLevel3Mask"
@@ -968,7 +1027,7 @@ This class implements io watchers/events. Example:
 \&  $term->{iow} = urxvt::iow
 \&                 ->new
 \&                 ->fd (fileno $term->{socket})
-\&                 ->events (1) # wait for read data
+\&                 ->events (urxvt::EVENT_READ)
 \&                 ->start
 \&                 ->cb (sub {
 \&                   my ($iow, $revents) = @_;
@@ -992,8 +1051,9 @@ Set the filedescriptor (not handle) to watch.
 .ie n .IP "$iow = $iow\->events ($eventmask)" 4
 .el .IP "$iow = \f(CW$iow\fR\->events ($eventmask)" 4
 .IX Item "$iow = $iow->events ($eventmask)"
-Set the event mask to watch. Bit #0 (value \f(CW1\fR) enables watching for read
-data, Bit #1 (value \f(CW2\fR) enables watching for write data.
+Set the event mask to watch. The only allowed values are
+\&\f(CW\*(C`urxvt::EVENT_READ\*(C'\fR and \f(CW\*(C`urxvt::EVENT_WRITE\*(C'\fR, which might be ORed
+together, or \f(CW\*(C`urxvt::EVENT_NONE\*(C'\fR.
 .ie n .IP "$iow = $iow\->start" 4
 .el .IP "$iow = \f(CW$iow\fR\->start" 4
 .IX Item "$iow = $iow->start"

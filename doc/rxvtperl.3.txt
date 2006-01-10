@@ -52,6 +52,16 @@ DESCRIPTION
         Binds a popup menu to Ctrl-Button3 that lets you convert the
         selection text into various other formats/action.
 
+    searchable-scrollback<hotkey> (enabled by default)
+        Adds regex search functionality to the scrollback buffer, triggered
+        by a hotkey (default: "M-s"). When in search mode, normal terminal
+        input/output is suspended.
+
+        "/" starts an incremental regex search, "n" searches further, "p" or
+        "N" jump to the previous match, "G" jumps to the bottom and clears
+        the history, "enter" leaves search mode at the current position and
+        "escape" returns to the original position.
+
     digital-clock
         Displays a digital clock using the built-in overlay.
 
@@ -98,24 +108,44 @@ DESCRIPTION
         Either binary data or - more common - a text string encoded in a
         locale-specific way.
 
+  Extension Objects
+    Very perl extension is a perl class. A separate perl object is created
+    for each terminal and each extension and passed as the first parameter
+    to hooks. So extensions can use their $self object without having to
+    think about other extensions, with the exception of methods and members
+    that begin with an underscore character "_": these are reserved for
+    internal use.
+
+    Although it isn't a "urxvt::term" object, you can call all methods of
+    the "urxvt::term" class on this object.
+
+    It has the following methods and data members:
+
+    $urxvt_term = $self->{term}
+        Returns the "urxvt::term" object associated with this instance of
+        the extension. This member *must not* be changed in any way.
+
+    $self->enable ($hook_name => $cb, [$hook_name => $cb..])
+        Dynamically enable the given hooks (named without the "on_" prefix)
+        for this extension, replacing any previous hook. This is useful when
+        you want to overwrite time-critical hooks only temporarily.
+
+    $self->disable ($hook_name[, $hook_name..])
+        Dynamically disable the given hooks.
+
   Hooks
     The following subroutines can be declared in extension files, and will
     be called whenever the relevant event happens.
 
-    The first argument passed to them is an object private to each terminal
-    and extension package. You can call all "urxvt::term" methods on it, but
-    its not a real "urxvt::term" object. Instead, the real "urxvt::term"
-    object that is shared between all packages is stored in the "term"
-    member. It is, however, blessed intot he package of the extension
-    script, so for all practical purposes you can treat an extension script
-    as a class.
+    The first argument passed to them is an extension oject as described in
+    the in the "Extension Objects" section.
 
-    All of them must return a boolean value. If it is true, then the event
-    counts as being *consumed*, and the invocation of other hooks is
+    All of these hooks must return a boolean value. If it is true, then the
+    event counts as being *consumed*, and the invocation of other hooks is
     skipped, and the relevant action might not be carried out by the C++
     code.
 
-    When in doubt, return a false value (preferably "()").
+    *When in doubt, return a false value (preferably "()").*
 
     on_init $term
         Called after a new terminal object has been initialized, but before
@@ -191,6 +221,10 @@ DESCRIPTION
         Please note that this might be very slow, however, as your hook is
         called for all text being output.
 
+    on_tt_write $term, $octets
+        Called whenever some data is written to the tty/pty and can be used
+        to suppress or filter tty input.
+
     on_line_update $term, $row
         Called whenever a line was updated or changed. Can be used to filter
         screen output (e.g. underline urls or other useless stuff). Only
@@ -227,8 +261,8 @@ DESCRIPTION
         Called wheneever the window loses keyboard focus, before
         rxvt-unicode does focus out processing.
 
-    on_key_press $term, $event, $octets
-    on_key_release $term, $event
+    on_key_press $term, $event, $keysym, $octets
+    on_key_release $term, $event, $keysym
     on_button_press $term, $event
     on_button_release $term, $event
     on_motion_notify $term, $event
@@ -388,6 +422,10 @@ DESCRIPTION
           shade term_name title transparent transparent_all tripleclickwords
           utmpInhibit visualBell
 
+    $success = $term->parse_keysym ($keysym_spec, $command_string)
+        Adds a keymap translation exactly as specified via a resource. See
+        the "keysym" resource in the rxvt(1) manpage.
+
     $rend = $term->rstyle ([$new_rstyle])
         Return and optionally change the current rendition. Text that is
         output by the terminal application will use this style.
@@ -411,13 +449,9 @@ DESCRIPTION
         Return the current selection text and optionally replace it by
         $newtext.
 
-        #=item $term->overlay ($x, $y, $text) # #Create a simple multi-line
-        overlay box. See the next method for details. # #=cut # #sub
-        urxvt::term::scr_overlay { # my ($self, $x, $y, $text) = @_; # # my
-        @lines = split /\n/, $text; # # my $w = 0; # for (map
-        $self->strwidth ($_), @lines) { # $w = $_ if $w < $_; # } # #
-        $self->scr_overlay_new ($x, $y, $w, scalar @lines); #
-        $self->scr_overlay_set (0, $_, $lines[$_]) for 0.. $#lines; #}
+    $term->overlay_simple ($x, $y, $text)
+        Create a simple multi-line overlay box. See the next method for
+        details.
 
     $term->overlay ($x, $y, $width, $height[, $rstyle[, $border]])
         Create a new (empty) overlay at the given position with the given
@@ -462,6 +496,21 @@ DESCRIPTION
     $string = $term->locale_decode ($octets)
         Convert the given locale-encoded octets into a perl string.
 
+    $term->scr_xor_span ($beg_row, $beg_col, $end_row, $end_col[, $rstyle])
+        XORs the rendition values in the given span with the provided value
+        (default: "RS_RVid"). Useful in refresh hooks to provide effects
+        similar to the selection.
+
+    $term->scr_xor_rect ($beg_row, $beg_col, $end_row, $end_col[, $rstyle1[,
+    $rstyle2]])
+        Similar to "scr_xor_span", but xors a rectangle instead. Trailing
+        whitespace will additionally be xored with the $rstyle2, which
+        defaults to "RS_RVid | RS_Uline", which removes reverse video again
+        and underlines it instead.
+
+    $term->scr_bell
+        Ring the bell!
+
     $term->scr_add_lines ($string)
         Write the given text string to the screen, as if output by the
         application running inside the terminal. It may not contain command
@@ -484,6 +533,12 @@ DESCRIPTION
         strings first to the locale-specific encoding using
         "$term->locale_encode".
 
+    $old_events = $term->pty_ev_events ([$new_events])
+        Replaces the event mask of the pty watcher by the given event mask.
+        Can be used to suppress input and output handling to the pty/tty.
+        See the description of "urxvt::timer->events". Make sure to always
+        restore the previous value.
+
     $windowid = $term->parent
         Return the window id of the toplevel window.
 
@@ -503,6 +558,12 @@ DESCRIPTION
     $nrow_plus_saveLines = $term->total_rows
     $lines_in_scrollback = $term->nsaved
         Return various integers describing terminal characteristics.
+
+    $lc_ctype = $term->locale
+        Returns the LC_CTYPE category string used by this rxvt-unicode.
+
+    $x_display = $term->display_id
+        Return the DISPLAY used by rxvt-unicode.
 
     $modifiermask = $term->ModLevel3Mask
     $modifiermask = $term->ModMetaMask
@@ -675,7 +736,7 @@ DESCRIPTION
           $term->{iow} = urxvt::iow
                          ->new
                          ->fd (fileno $term->{socket})
-                         ->events (1) # wait for read data
+                         ->events (urxvt::EVENT_READ)
                          ->start
                          ->cb (sub {
                            my ($iow, $revents) = @_;
@@ -695,8 +756,9 @@ DESCRIPTION
             Set the filedescriptor (not handle) to watch.
 
         $iow = $iow->events ($eventmask)
-            Set the event mask to watch. Bit #0 (value 1) enables watching
-            for read data, Bit #1 (value 2) enables watching for write data.
+            Set the event mask to watch. The only allowed values are
+            "urxvt::EVENT_READ" and "urxvt::EVENT_WRITE", which might be
+            ORed together, or "urxvt::EVENT_NONE".
 
         $iow = $iow->start
             Start watching for requested events on the given handle.
