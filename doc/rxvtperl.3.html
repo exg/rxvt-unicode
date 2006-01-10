@@ -15,9 +15,10 @@
 	<li><a href="#name">NAME</a></li>
 	<li><a href="#synopsis">SYNOPSIS</a></li>
 	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#prepackaged_extensions">PREPACKAGED EXTENSIONS</a></li>
+	<li><a href="#api_documentation">API DOCUMENTATION</a></li>
 	<ul>
 
-		<li><a href="#prepackaged_extensions">Prepackaged Extensions</a></li>
 		<li><a href="#general_api_considerations">General API Considerations</a></li>
 		<li><a href="#extension_objects">Extension Objects</a></li>
 		<li><a href="#hooks">Hooks</a></li>
@@ -74,8 +75,9 @@ thus must be encoded as UTF-8.</p>
 scripts will be shared (but not enabled) for all terminals.</p>
 <p>
 </p>
-<h2><a name="prepackaged_extensions">Prepackaged Extensions</a></h2>
-<p>This section describes the extensiosn delivered with this version. You can
+<hr />
+<h1><a name="prepackaged_extensions">PREPACKAGED EXTENSIONS</a></h1>
+<p>This section describes the extensions delivered with this release. You can
 find them in <em>/opt/rxvt/lib/urxvt/perl/</em>.</p>
 <p>You can activate them like this:</p>
 <pre>
@@ -84,13 +86,13 @@ find them in <em>/opt/rxvt/lib/urxvt/perl/</em>.</p>
 <dt><strong><a name="item_selection">selection (enabled by default)</a></strong><br />
 </dt>
 <dd>
-Intelligent selection. This extension tries to be more intelligent when
-the user extends selections (double-click). Right now, it tries to select
-urls and complete shell-quoted arguments, which is very convenient, too,
-if your <em>ls</em> supports <code>--quoting-style=shell</code>.
+(More) intelligent selection. This extension tries to be more intelligent
+when the user extends selections (double-click). Right now, it tries to
+select urls and complete shell-quoted arguments, which is very convenient,
+too, if your <em>ls</em> supports <code>--quoting-style=shell</code>.
 </dd>
 <dd>
-<p>It also offers the following bindable event:</p>
+<p>It also offers the following bindable keyboard command:</p>
 </dd>
 <dl>
 <dt><strong><a name="item_rot13">rot13</a></strong><br />
@@ -114,7 +116,8 @@ runtime.
 </dt>
 <dd>
 Binds a popup menu to Ctrl-Button3 that lets you convert the selection
-text into various other formats/action.
+text into various other formats/action (such as uri unescaping, perl
+evalution, web-browser starting etc.), depending on content.
 </dd>
 <p></p>
 <dt><strong><a name="item_searchable_2dscrollback_3chotkey_3e__28enabled_by_">searchable-scrollback&lt;hotkey&gt; (enabled by default)</a></strong><br />
@@ -159,6 +162,10 @@ window. Illustrates overwriting the refresh callbacks to create your own
 overlays or changes.
 </dd>
 <p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="api_documentation">API DOCUMENTATION</a></h1>
 <p>
 </p>
 <h2><a name="general_api_considerations">General API Considerations</a></h2>

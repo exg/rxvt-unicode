@@ -24,17 +24,14 @@
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"
 
-#ifdef HAVE_STDLIB_H
 # include <cstdlib>
-#endif
+# include <cstring>
+
 #ifdef HAVE_SYS_TYPES_H
 # include <sys/types.h>
 #endif
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
-#endif
-#if defined(HAVE_STRING_H)
-# include <cstring>
 #endif
 #ifdef HAVE_FCNTL_H
 # include <fcntl.h>
@@ -48,14 +45,11 @@
 #ifdef HAVE_ISASTREAM
 # include <stropts.h>
 #endif
-#ifdef HAVE_PTY_H
+#if defined(HAVE_PTY_H)
 # include <pty.h>
-#endif
-
-// better do this via configure, but....
-#if defined(__FreeBSD__)
+#elif defined(HAVE_LIBUTIL_H)
 # include <libutil.h>
-#elif defined(__DARWIN__) || (defined (__MACH__) && defined (__APPLE__))
+#elif defined(HAVE_UTIL_H)
 # include <util.h>
 #endif
 

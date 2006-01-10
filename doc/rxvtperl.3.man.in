@@ -162,9 +162,9 @@ thus must be encoded as \s-1UTF\-8\s0.
 .PP
 Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
 scripts will be shared (but not enabled) for all terminals.
-.Sh "Prepackaged Extensions"
-.IX Subsection "Prepackaged Extensions"
-This section describes the extensiosn delivered with this version. You can
+.SH "PREPACKAGED EXTENSIONS"
+.IX Header "PREPACKAGED EXTENSIONS"
+This section describes the extensions delivered with this release. You can
 find them in \fI@@RXVT_LIBDIR@@/urxvt/perl/\fR.
 .PP
 You can activate them like this:
@@ -174,12 +174,12 @@ You can activate them like this:
 .Ve
 .IP "selection (enabled by default)" 4
 .IX Item "selection (enabled by default)"
-Intelligent selection. This extension tries to be more intelligent when
-the user extends selections (double\-click). Right now, it tries to select
-urls and complete shell-quoted arguments, which is very convenient, too,
-if your \fIls\fR supports \f(CW\*(C`\-\-quoting\-style=shell\*(C'\fR.
+(More) intelligent selection. This extension tries to be more intelligent
+when the user extends selections (double\-click). Right now, it tries to
+select urls and complete shell-quoted arguments, which is very convenient,
+too, if your \fIls\fR supports \f(CW\*(C`\-\-quoting\-style=shell\*(C'\fR.
 .Sp
-It also offers the following bindable event:
+It also offers the following bindable keyboard command:
 .RS 4
 .IP "rot13" 4
 .IX Item "rot13"
@@ -198,7 +198,8 @@ runtime.
 .IP "selection-popup (enabled by default)" 4
 .IX Item "selection-popup (enabled by default)"
 Binds a popup menu to Ctrl\-Button3 that lets you convert the selection
-text into various other formats/action.
+text into various other formats/action (such as uri unescaping, perl
+evalution, web-browser starting etc.), depending on content.
 .IP "searchable\-scrollback<hotkey> (enabled by default)" 4
 .IX Item "searchable-scrollback<hotkey> (enabled by default)"
 Adds regex search functionality to the scrollback buffer, triggered
@@ -225,6 +226,8 @@ similar-looking ascii character.
 Displays a very simple digital clock in the upper right corner of the
 window. Illustrates overwriting the refresh callbacks to create your own
 overlays or changes.
+.SH "API DOCUMENTATION"
+.IX Header "API DOCUMENTATION"
 .Sh "General \s-1API\s0 Considerations"
 .IX Subsection "General API Considerations"
 All objects (such as terminals, time watchers etc.) are typical

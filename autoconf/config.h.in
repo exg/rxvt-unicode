@@ -136,6 +136,9 @@
 /* Define if you have the <libc.h> header file.  */
 #undef HAVE_LIBC_H
 
+/* Define if you have the <libutil.h> header file.  */
+#undef HAVE_LIBUTIL_H
+
 /* Define if you have the <pty.h> header file.  */
 #undef HAVE_PTY_H
 
@@ -177,6 +180,9 @@
 
 /* Define if you have the <unistd.h> header file.  */
 #undef HAVE_UNISTD_H
+
+/* Define if you have the <util.h> header file.  */
+#undef HAVE_UTIL_H
 
 /* Define if you have the <utmp.h> header file.  */
 #undef HAVE_UTMP_H

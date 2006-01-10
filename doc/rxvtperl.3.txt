@@ -23,8 +23,8 @@ DESCRIPTION
     Each script will only ever be loaded once, even in rxvtd, where scripts
     will be shared (but not enabled) for all terminals.
 
-  Prepackaged Extensions
-    This section describes the extensiosn delivered with this version. You
+PREPACKAGED EXTENSIONS
+    This section describes the extensions delivered with this release. You
     can find them in /opt/rxvt/lib/urxvt/perl/.
 
     You can activate them like this:
@@ -32,12 +32,13 @@ DESCRIPTION
       rxvt -pe <extensionname>
 
     selection (enabled by default)
-        Intelligent selection. This extension tries to be more intelligent
-        when the user extends selections (double-click). Right now, it tries
-        to select urls and complete shell-quoted arguments, which is very
-        convenient, too, if your ls supports "--quoting-style=shell".
+        (More) intelligent selection. This extension tries to be more
+        intelligent when the user extends selections (double-click). Right
+        now, it tries to select urls and complete shell-quoted arguments,
+        which is very convenient, too, if your ls supports
+        "--quoting-style=shell".
 
-        It also offers the following bindable event:
+        It also offers the following bindable keyboard command:
 
         rot13
             Rot-13 the selection when activated. Used via keyboard trigger:
@@ -50,7 +51,9 @@ DESCRIPTION
 
     selection-popup (enabled by default)
         Binds a popup menu to Ctrl-Button3 that lets you convert the
-        selection text into various other formats/action.
+        selection text into various other formats/action (such as uri
+        unescaping, perl evalution, web-browser starting etc.), depending on
+        content.
 
     searchable-scrollback<hotkey> (enabled by default)
         Adds regex search functionality to the scrollback buffer, triggered
@@ -79,6 +82,7 @@ DESCRIPTION
         the window. Illustrates overwriting the refresh callbacks to create
         your own overlays or changes.
 
+API DOCUMENTATION
   General API Considerations
     All objects (such as terminals, time watchers etc.) are typical
     reference-to-hash objects. The hash can be used to store anything you

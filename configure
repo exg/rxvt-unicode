@@ -7310,6 +7310,8 @@ done
 
 
 
+
+
 for ac_header in \
 	assert.h \
 	fcntl.h \
@@ -7332,6 +7334,8 @@ for ac_header in \
 	utmpx.h \
         stdint.h \
         pty.h \
+        util.h \
+        libutil.h \
         wchar.h \
         cwchar \
         clocale \
@@ -12829,6 +12833,10 @@ fi
 
 
 
+
+if text x$support_perl = xyes; then
+   support_frills=yes
+fi
 
 
 CFLAGS=${CFLAGS--O}

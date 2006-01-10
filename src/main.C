@@ -78,7 +78,7 @@ rxvt_set_locale (const char *locale)
   return true;
 }
 
-bool
+void
 rxvt_push_locale (const char *locale)
 {
   strcpy (savelocale, curlocale);

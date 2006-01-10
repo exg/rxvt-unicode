@@ -564,6 +564,8 @@ AC_CHECK_HEADERS( \
 	utmpx.h \
         stdint.h \
         pty.h \
+        util.h \
+        libutil.h \
         wchar.h \
         cwchar \
         clocale \
