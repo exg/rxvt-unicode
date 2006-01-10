@@ -4,14 +4,14 @@
 my $url =
    qr{(
       (?:https?|ftp|news|mailto|file)://[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),~]+
-      [ab-zA-Z0-9\-\@;\/?:&=%\$_+!*\x27(),~]   # do not include a trailing dot, its wrong too often
+      [ab-zA-Z0-9\-\@;\/?:&=%\$_+!*\x27()~]   # exclude some trailing characters (heuristic)
    )}x;
 
 sub on_line_update {
-   my ($term, $row) = @_;
+   my ($self, $row) = @_;
 
    # fetch the line that has changed
-   my $line = $term->line ($row);
+   my $line = $self->line ($row);
    my $text = $line->t;
 
    # find all urls (if any)
@@ -28,4 +28,23 @@ sub on_line_update {
 
    ()
 }
+
+# needs confgiurability TODO
+#sub on_button_press {
+#    my ($self, $event) = @_;
+#    my $row = $event->{row};
+#    my $col =  $event->{col};
+#
+#    my $line = $self->line ($row);
+#    my $text = $line->t;
+#
+#    while($text =~ /$url/g) {
+#        #print "... " . ($-[0] 
+#        if ($-[0] <= $col && $+[0] >= $col) {
+#            system "firefox \Q$1\E &";
+#            return 1;
+#        }
+#    }
+#    ()
+#}
 

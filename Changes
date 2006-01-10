@@ -9,7 +9,8 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
-TODO: urxvt::popup is undocumented
+TODO: resources! resources! resources!
+TODO: better environment handling in rxvt/xim etc. and urxvt::term->new
 	- added sections for DISTRIBUTION MAINTAINERS and about
           SETUID/SETGID to the FAQ.
         - selection, searchable-scrollback, selection-popup and
@@ -30,6 +31,7 @@ TODO: urxvt::popup is undocumented
         - built-in (as opposed to terminfos) visual bell was broken/too fast.
         - applied minor cleanups by Ladislav Michnovic.
         - applied better configure support for openpty by Emanuele Giaquinta.
+        - mark-urls launch-on-click by jepler.
 
 6.3  Wed Jan  4 22:37:10 CET 2006
         - SECURITY FIX: on systems using openpty, permissions were
