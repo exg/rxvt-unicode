@@ -229,9 +229,6 @@
 /* Define if you don't want any resources read */
 #undef NO_RESOURCES
 
-/* Define if you want to use XGetDefault instead of our internal version */
-#undef USE_XGETDEFAULT
-
 /* Fallback resource class */
 #undef RESFALLBACK
 

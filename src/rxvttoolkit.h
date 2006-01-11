@@ -28,7 +28,8 @@ struct refcounted {
   char *id;
 
   refcounted (const char *id);
-  bool init () { return false; }
+  bool ref_init () { return false; }
+  void ref_next () { }
   ~refcounted ();
 };
 
@@ -55,7 +56,7 @@ struct rxvt_xim : refcounted {
   XIM xim;
 
   rxvt_xim (const char *id) : refcounted (id) { }
-  bool init ();
+  bool ref_init ();
   ~rxvt_xim ();
 };
 #endif
@@ -91,7 +92,9 @@ struct rxvt_display : refcounted {
 #endif
 
   rxvt_display (const char *id);
-  bool init ();
+  XrmDatabase get_resources ();
+  bool ref_init ();
+  void ref_next ();
   ~rxvt_display ();
 
   operator Display *() const { return display; }

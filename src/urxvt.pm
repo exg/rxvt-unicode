@@ -345,6 +345,27 @@ subwindow.
 
 =back
 
+=cut
+
+package urxvt;
+
+use utf8;
+use strict;
+use Carp ();
+use Scalar::Util ();
+use List::Util ();
+
+our $VERSION = 1;
+our $TERM;
+our @HOOKNAME;
+our %HOOKTYPE = map +($HOOKNAME[$_] => $_), 0..$#HOOKNAME;
+our %OPTION;
+
+our $LIBDIR;
+our $RESNAME;
+our $RESCLASS;
+our $RXVTNAME;
+
 =head2 Variables in the C<urxvt> Package
 
 =over 4
@@ -375,14 +396,6 @@ object, whenever a callback/hook is executing.
 
 =over 4
 
-=item $term = new urxvt [arg...]
-
-Creates a new terminal, very similar as if you had started it with
-C<system $binfile, arg...>. Croaks (and probably outputs an error message)
-if the new instance couldn't be created.  Returns C<undef> if the new
-instance didn't initialise perl, and the terminal object otherwise. The
-C<init> and C<start> hooks will be called during the call.
-
 =item urxvt::fatal $errormessage
 
 Fatally aborts execution with the given error message. Avoid at all
@@ -397,6 +410,8 @@ that calls this function.
 
 Using this function has the advantage that its output ends up in the
 correct place, e.g. on stderr of the connecting urxvtc client.
+
+Messages have a size limit of 1023 bytes currently.
 
 =item $is_safe = urxvt::safe
 
@@ -471,25 +486,6 @@ Change the custom value.
 =back
 
 =cut
-
-package urxvt;
-
-use utf8;
-use strict;
-use Carp ();
-use Scalar::Util ();
-use List::Util ();
-
-our $VERSION = 1;
-our $TERM;
-our @HOOKNAME;
-our %HOOKTYPE = map +($HOOKNAME[$_] => $_), 0..$#HOOKNAME;
-our %OPTION;
-
-our $LIBDIR;
-our $RESNAME;
-our $RESCLASS;
-our $RXVTNAME;
 
 BEGIN {
    urxvt->bootstrap;
@@ -785,6 +781,25 @@ sub register_package {
    }
 }
 
+=item $term = new urxvt::term $envhashref, $rxvtname, [arg...]
+
+Creates a new terminal, very similar as if you had started it with system
+C<$rxvtname, arg...>. C<$envhashref> must be a reference to a %ENV>-like
+C<hash which defines the environment of the new terminal.
+
+Croaks (and probably outputs an error message) if the new instance
+couldn't be created.  Returns C<undef> if the new instance didn't
+initialise perl, and the terminal object otherwise. The C<init> and
+C<start> hooks will be called during this call.
+
+=cut
+
+sub new {
+   my ($class, $env, @args) = @_;
+
+   _new ([ map "$_=$env->{$_}", keys %$env ], @args);
+}
+
 =item $term->destroy
 
 Destroy the terminal object (close the window, free resources
@@ -1057,13 +1072,28 @@ Return the window id of the terminal window.
 
 Return various integers describing terminal characteristics.
 
+=item $x_display = $term->display_id
+
+Return the DISPLAY used by rxvt-unicode.
+
 =item $lc_ctype = $term->locale
 
 Returns the LC_CTYPE category string used by this rxvt-unicode.
 
-=item $x_display = $term->display_id
+=item $env = $term->env
 
-Return the DISPLAY used by rxvt-unicode.
+Returns a copy of the environment in effect for the terminal as a hashref
+similar to C<\%ENV>.
+
+=cut
+
+sub env {
+   if (my $env = $_[0]->_env) {
+      +{ map /^([^=]+)(?:=(.*))?$/s && ($1 => $2), @$env }
+   } else {
+      +{ %ENV }
+   }
+}
 
 =item $modifiermask = $term->ModLevel3Mask
 
@@ -1394,12 +1424,16 @@ sub show {
 
    local $urxvt::popup::self = $self;
 
-   local $ENV{LC_ALL} = $self->{term}->locale;
+   my $env = $self->{term}->env;
+   # we can't hope to reproduce the locale algorithm, so nuke LC_ALL and set LC_CTYPE.
+   delete $env->{LC_ALL};
+   $env->{LC_CTYPE} = $self->{term}->locale;
 
-   urxvt->new ("--perl-lib" => "", "--perl-ext-common" => "", "-pty-fd" => -1, "-sl" => 0, "-b" => 0,
-               "--transient-for" => $self->{term}->parent,
-               "-display" => $self->{term}->display_id,
-               "-pe" => "urxvt-popup")
+   urxvt::term->new ($env, $self->{term}->resource ("name"),
+                     "--perl-lib" => "", "--perl-ext-common" => "", "-pty-fd" => -1, "-sl" => 0, "-b" => 0,
+                     "--transient-for" => $self->{term}->parent,
+                     "-display" => $self->{term}->display_id,
+                     "-pe" => "urxvt-popup")
       or die "unable to create popup window\n";
 }
 

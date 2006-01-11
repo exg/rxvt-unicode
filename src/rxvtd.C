@@ -188,9 +188,6 @@ void server::read_cb (io_watcher &w, short revents)
           envv->push_back (0);
 
           {
-            char **old_environ = environ;
-            environ = envv->begin ();
-
             rxvt_term *term = new rxvt_term;
             
             term->log_hook = &log_cb;
@@ -211,7 +208,6 @@ void server::read_cb (io_watcher &w, short revents)
 
             term->log_hook = 0;
 
-            environ = old_environ;
             chdir ("/");
 
             if (!success)

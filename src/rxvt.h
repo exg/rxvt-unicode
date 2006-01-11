@@ -213,10 +213,6 @@ typedef struct _mwmhints {
 # define NO_MOUSE_REPORT_SCROLLBAR 1
 #endif
 
-#ifdef NO_RESOURCES
-# undef USE_XGETDEFAULT
-#endif
-
 #if defined (ISO_14755) || defined (ENABLE_PERL)
 # define ENABLE_OVERLAY 1
 #endif
@@ -701,10 +697,12 @@ enum {
 #define Width2Pixel(n)          ((int32_t)(n) * (int32_t)fwidth)
 #define Height2Pixel(n)         ((int32_t)(n) * (int32_t)fheight)
 
-#define OPTION(opt)              (options & (opt))
-#define DEFAULT_OPTIONS          (Opt_scrollBar | Opt_scrollTtyOutput \
-                                  | Opt_jumpScroll | Opt_secondaryScreen \
-                                  | Opt_pastableTabs | Opt_intensityStyles)
+#define TEMP_ENV		temp_environ temp_environ (envv)
+
+#define OPTION(opt)		(options & (opt))
+#define DEFAULT_OPTIONS		(Opt_scrollBar | Opt_scrollTtyOutput \
+				 | Opt_jumpScroll | Opt_secondaryScreen \
+				 | Opt_pastableTabs | Opt_intensityStyles)
 
 // for m >= -n, ensure remainder lies between 0..n-1
 #define MOD(m,n) (((m) + (n)) % (n))
@@ -975,14 +973,9 @@ extern class rxvt_composite_vec rxvt_composite;
 struct rxvt_term : zero_initialized, rxvt_vars {
   log_callback   *log_hook;               // log error messages through this hook, if != 0
   getfd_callback *getfd_hook;           // convert remote to local fd, if != 0
-
 #if ENABLE_PERL
   rxvt_perl_term  perl;
 #endif
-#if USE_XGETDEFAULT
-  XrmDatabase     xrmdatabase;
-#endif
-
   struct mbstate  mbstate;              // current input multibyte state
 
   unsigned char   want_refresh:1,

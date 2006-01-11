@@ -46,14 +46,6 @@
  */
 
 /*
- * Define the name of the environment variable to be used in
- * addition to the "PATH" environment and the `path' resource.
- * Usually it should point to where you keep your background pixmaps and/or
- * your menu files
- */
-#define PATH_ENV	"RXVTPATH"
-
-/*
  * Avoid enabling the colour cursor (-cr, cursorColor, cursorColor2)
  */
 /* #define NO_CURSORCOLOR */
@@ -130,13 +122,6 @@
  */
 /* #define ALLOW_132_MODE */
  
-/*------------------------------RESOURCES-------------------------------*/
-/*
- * Define to find installed application defaults for rxvt
- * Only if USE_XGETDEFAULT is not defined.
- */
-#define USE_XAPPLOADDIR
-
 /*
  * Add support for the Offix DND (Drag 'n' Drop) protocol
  */
@@ -164,7 +149,7 @@
  * with various KeySyms (0xFF00 - 0xFFFF).
  * Required by perl.
  */
-#if (!NO_RESOURCES && ENABLE_FRILLS) || ENABLE_PERL
+#if ENABLE_FRILLS || ENABLE_PERL
 # define KEYSYM_RESOURCE
 #endif
 

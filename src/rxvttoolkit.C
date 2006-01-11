@@ -27,6 +27,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#include <sys/utsname.h>
+
 #ifndef NO_SLOW_LINK_SUPPORT
 # include <sys/socket.h>
 # include <sys/un.h>
@@ -49,17 +51,17 @@ T *refcache<T>::get (const char *id)
     {
       if (!strcmp (id, (*i)->id))
         {
-          (*i)->referenced++;
+          ++(*i)->referenced;
+          (*i)->ref_next ();
           return *i;
         }
     }
 
   T *obj = new T (id);
 
-  obj->referenced = 1;
-
-  if (obj && obj->init ())
+  if (obj && obj->ref_init ())
     {
+      obj->referenced = 1;
       this->push_back (obj);
       return obj;
     }
@@ -109,7 +111,8 @@ im_destroy_cb (XIM unused1, XPointer client_data, XPointer unused3)
   display->im_change_cb ();
 }
 
-bool rxvt_xim::init ()
+bool
+rxvt_xim::ref_init ()
 {
   display = GET_R->display; //HACK: TODO
 
@@ -143,7 +146,87 @@ rxvt_display::rxvt_display (const char *id)
 {
 }
 
-bool rxvt_display::init ()
+XrmDatabase
+rxvt_display::get_resources ()
+{
+  char *homedir = (char *)getenv ("HOME");
+  char fname[1024];
+
+  /*
+   * get resources using the X library function
+   */
+  char *displayResource, *xe;
+  XrmDatabase database, rdb1;
+
+  database = NULL;
+
+  // for ordering, see for example http://www.faqs.org/faqs/Xt-FAQ/ Subject: 20
+
+  // 6. System wide per application default file.
+
+  /* Add in $XAPPLRESDIR/Rxvt only; not bothering with XUSERFILESEARCHPATH */
+  if ((xe = (char *)getenv ("XAPPLRESDIR")))
+    {
+      snprintf (fname, sizeof (fname), "%s/%s", xe, RESCLASS);
+
+      if ((rdb1 = XrmGetFileDatabase (fname)))
+        XrmMergeDatabases (rdb1, &database);
+    }
+
+  // 5. User's per application default file.
+  // none
+
+  // 4. User's defaults file.
+  /* Get any Xserver defaults */
+  displayResource = XResourceManagerString (display);
+
+  if (displayResource != NULL)
+    {
+      if ((rdb1 = XrmGetStringDatabase (displayResource)))
+        XrmMergeDatabases (rdb1, &database);
+    }
+  else if (homedir)
+    {
+      snprintf (fname, sizeof (fname), "%s/.Xdefaults", homedir);
+
+      if ((rdb1 = XrmGetFileDatabase (fname)))
+        XrmMergeDatabases (rdb1, &database);
+    }
+
+  /* Get screen specific resources */
+  displayResource = XScreenResourceString (ScreenOfDisplay (display, screen));
+
+  if (displayResource != NULL)
+    {
+      if ((rdb1 = XrmGetStringDatabase (displayResource)))
+        /* Merge with screen-independent resources */
+        XrmMergeDatabases (rdb1, &database);
+
+      XFree (displayResource);
+    }
+
+  // 3. User's per host defaults file
+  /* Add in XENVIRONMENT file */
+  if ((xe = (char *)getenv ("XENVIRONMENT"))
+      && (rdb1 = XrmGetFileDatabase (xe)))
+    XrmMergeDatabases (rdb1, &database);
+  else if (homedir)
+    {
+      struct utsname un;
+
+      if (!uname (&un))
+        {
+          snprintf (fname, sizeof (fname), "%s/.Xdefaults-%s", homedir, un.nodename);
+
+          if ((rdb1 = XrmGetFileDatabase (fname)))
+            XrmMergeDatabases (rdb1, &database);
+        }
+    }
+
+  return database;
+}
+
+bool rxvt_display::ref_init ()
 {
 #ifdef LOCAL_X_IS_UNIX
   if (id[0] == ':')
@@ -170,19 +253,7 @@ bool rxvt_display::init ()
   cmap   = DefaultColormap (display, screen);
   depth  = DefaultDepth (display, screen);
 
-  int fd = XConnectionNumber (display);
-
-#ifndef NO_SLOW_LINK_SUPPORT
-  // try to detect wether we have a local connection.
-  // assume unix domains socket == local, everything else not
-  // TODO: might want to check for inet/127.0.0.1
-  is_local = 0;
-  sockaddr_un sa;
-  socklen_t sl = sizeof (sa);
-
-  if (!getsockname (fd, (sockaddr *)&sa, &sl))
-    is_local = sa.sun_family == AF_LOCAL;
-#endif
+  XrmSetDatabase (display, get_resources ());
 
 #ifdef POINTER_BLANK
   XColor blackcolour;
@@ -214,6 +285,20 @@ bool rxvt_display::init ()
     }
 #endif
 
+  int fd = XConnectionNumber (display);
+
+#ifndef NO_SLOW_LINK_SUPPORT
+  // try to detect wether we have a local connection.
+  // assume unix domains socket == local, everything else not
+  // TODO: might want to check for inet/127.0.0.1
+  is_local = 0;
+  sockaddr_un sa;
+  socklen_t sl = sizeof (sa);
+
+  if (!getsockname (fd, (sockaddr *)&sa, &sl))
+    is_local = sa.sun_family == AF_LOCAL;
+#endif
+
   x_ev.start (fd, EVENT_READ);
   fcntl (fd, F_SETFD, FD_CLOEXEC);
 
@@ -225,6 +310,15 @@ bool rxvt_display::init ()
   flush ();
 
   return true;
+}
+
+void
+rxvt_display::ref_next ()
+{
+  // TODO: somehow check wether the database files/resources changed
+  // before re-loading/parsing
+  XrmDestroyDatabase (XrmGetDatabase (display));
+  XrmSetDatabase (display, get_resources ());
 }
 
 rxvt_display::~rxvt_display ()

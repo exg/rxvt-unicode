@@ -485,16 +485,6 @@ object, whenever a callback/hook is executing.
 </p>
 <h2><a name="functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></h2>
 <dl>
-<dt><strong><a name="item__24term__3d_new_urxvt__5barg_2e_2e_2e_5d">$term = new urxvt [arg...]</a></strong><br />
-</dt>
-<dd>
-Creates a new terminal, very similar as if you had started it with
-<code>system $binfile, arg...</code>. Croaks (and probably outputs an error message)
-if the new instance couldn't be created.  Returns <code>undef</code> if the new
-instance didn't initialise perl, and the terminal object otherwise. The
-<code>init</code> and <a href="#item_start"><code>start</code></a> hooks will be called during the call.
-</dd>
-<p></p>
 <dt><strong><a name="item_urxvt_3a_3afatal__24errormessage">urxvt::fatal $errormessage</a></strong><br />
 </dt>
 <dd>
@@ -513,6 +503,9 @@ that calls this function.
 <dd>
 <p>Using this function has the advantage that its output ends up in the
 correct place, e.g. on stderr of the connecting urxvtc client.</p>
+</dd>
+<dd>
+<p>Messages have a size limit of 1023 bytes currently.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item__24is_safe__3d_urxvt_3a_3asafe">$is_safe = urxvt::safe</a></strong><br />
@@ -614,6 +607,20 @@ work.</p>
 </p>
 <h2><a name="the_urxvt__term_class">The <code>urxvt::term</code> Class</a></h2>
 <dl>
+<dt><strong><a name="item__24term__3d_new_urxvt_3a_3aterm__24envhashref_2c__">$term = new urxvt::term $envhashref, $rxvtname, [arg...]</a></strong><br />
+</dt>
+<dd>
+Creates a new terminal, very similar as if you had started it with system
+<code>$rxvtname, arg...</code>. <code>$envhashref</code> must be a reference to a %ENV&gt;-like
+<code></code>hash which defines the environment of the new terminal.
+</dd>
+<dd>
+<p>&gt;Croaks (and probably outputs an error message) if the new instance
+couldn't be created.  Returns <code>undef</code> if the new instance didn't
+initialise perl, and the terminal object otherwise. The <code>init</code> and
+<a href="#item_start"><code>start</code></a> hooks will be called during this call.</p>
+</dd>
+<p></p>
 <dt><strong><a name="item_destroy">$term-&gt;destroy</a></strong><br />
 </dt>
 <dd>
@@ -908,16 +915,23 @@ Return the window id of the terminal window.
 Return various integers describing terminal characteristics.
 </dd>
 <p></p>
+<dt><strong><a name="item_display_id">$x_display = $term-&gt;display_id</a></strong><br />
+</dt>
+<dd>
+Return the DISPLAY used by rxvt-unicode.
+</dd>
+<p></p>
 <dt><strong><a name="item_locale">$lc_ctype = $term-&gt;locale</a></strong><br />
 </dt>
 <dd>
 Returns the LC_CTYPE category string used by this rxvt-unicode.
 </dd>
 <p></p>
-<dt><strong><a name="item_display_id">$x_display = $term-&gt;display_id</a></strong><br />
+<dt><strong><a name="item_env">$env = $term-&gt;env</a></strong><br />
 </dt>
 <dd>
-Return the DISPLAY used by rxvt-unicode.
+Returns a copy of the environment in effect for the terminal as a hashref
+similar to <code>\%ENV</code>.
 </dd>
 <p></p>
 <dt><strong><a name="item_modlevel3mask">$modifiermask = $term-&gt;ModLevel3Mask</a></strong><br />

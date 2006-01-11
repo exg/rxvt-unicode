@@ -350,12 +350,6 @@ AC_ARG_ENABLE(resources,
     AC_DEFINE(NO_RESOURCES, 1, Define if you don't want any resources read)
   fi])
 
-AC_ARG_ENABLE(xgetdefault,
-  [  --enable-xgetdefault    enable resources via X instead of our small version],
-  [if test x$enableval = xyes; then
-    AC_DEFINE(USE_XGETDEFAULT, 1, Define if you want to use XGetDefault instead of our internal version)
-  fi])
-
 AC_ARG_ENABLE(8bitctrls,
   [  --enable-8bitctrls      enable 8 bit control sequences (not recommended)],
   [if test x$enableval = xyes -o x$enableval = xno; then

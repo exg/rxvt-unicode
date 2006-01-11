@@ -677,36 +677,6 @@ BOOT:
   export_const_iv (EVENT_WRITE);
 }
 
-SV *
-new (...)
-	CODE:
-{
-	stringvec *argv = new stringvec;
-        bool success;
-
-        for (int i = 0; i < items ;i++)
-          argv->push_back (strdup (SvPVbyte_nolen (ST (i))));
-
-        rxvt_term *term = new rxvt_term;
-
-        term->argv = argv;
-
-        try
-          {
-            if (!term->init (argv->size (), argv->begin ()))
-              term = 0;
-          }
-        catch (const class rxvt_failure_exception &e)
-          {
-            term->destroy ();
-            croak ("exception caught while initializing new terminal instance");
-          }
-
-        RETVAL = term && term->perl.self ? newSVterm (term) : &PL_sv_undef;
-}
-	OUTPUT:
-        RETVAL
-
 void
 set_should_invoke (int htype, int value)
 	CODE:
@@ -793,6 +763,50 @@ SET_CUSTOM (int rend, int new_value)
         RETVAL
 
 MODULE = urxvt             PACKAGE = urxvt::term
+
+SV *
+_new (...)
+	CODE:
+{
+	if (items < 1 || !SvROK (ST (0)) || SvTYPE (SvRV (ST (0))) != SVt_PVAV)
+          croak ("first argument to urxvt::term->_new must be arrayref");
+
+        rxvt_term *term = new rxvt_term;
+
+	term->argv = new stringvec;
+	term->envv = new stringvec;
+
+        for (int i = 1; i < items; i++)
+          term->argv->push_back (strdup (SvPVbyte_nolen (ST (i))));
+
+        AV *envv = (AV *)SvRV (ST (0));
+        for (int i = av_len (envv) + 1; i--; )
+          term->envv->push_back (strdup (SvPVbyte_nolen (*av_fetch (envv, i, 1))));
+
+        term->envv->push_back (0);
+
+        bool success;
+
+        try
+          {
+            success = term->init (term->argv->size (), term->argv->begin ());
+          }
+        catch (const class rxvt_failure_exception &e)
+          {
+            success = false;
+          }
+
+        if (!success)
+          {
+            term->destroy ();
+            croak ("error while initializing new terminal instance");
+          }
+
+        RETVAL = term && term->perl.self
+                 ? newSVterm (term) : &PL_sv_undef;
+}
+	OUTPUT:
+        RETVAL
 
 void
 rxvt_term::destroy ()
@@ -958,6 +972,26 @@ rxvt_term::display_id ()
             case 0: RETVAL = THIS->display->id; break;
             case 1: RETVAL = THIS->locale;      break;
           }
+        OUTPUT:
+        RETVAL
+
+SV *
+rxvt_term::_env ()
+	CODE:
+{
+        if (THIS->envv)
+          {
+            AV *av = newAV ();
+
+            for (char **i = THIS->envv->begin (); i != THIS->envv->end (); ++i)
+              if (*i)
+                av_push (av, newSVpv (*i, 0));
+
+            RETVAL = newRV_noinc ((SV *)av);
+          }
+        else
+          RETVAL = &PL_sv_undef;
+}
         OUTPUT:
         RETVAL
 

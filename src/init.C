@@ -341,13 +341,17 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   /*
    * Open display, get options/resources and create the window
    */
-  if ((rs[Rs_display_name] = getenv ("DISPLAY")) == NULL)
-    rs[Rs_display_name] = ":0";
+  {
+    TEMP_ENV;
 
-  get_options (r_argc, r_argv);
+    if ((rs[Rs_display_name] = getenv ("DISPLAY")) == NULL)
+      rs[Rs_display_name] = ":0";
 
-  if (!(display = displays.get (rs[Rs_display_name])))
-    rxvt_fatal ("can't open display %s, aborting.\n", rs[Rs_display_name]);
+    get_options (r_argc, r_argv);
+
+    if (!(display = displays.get (rs[Rs_display_name])))
+      rxvt_fatal ("can't open display %s, aborting.\n", rs[Rs_display_name]);
+  }
 
   extract_resources ();
   free (r_argv);
@@ -578,6 +582,8 @@ rxvt_term::init_env ()
 void
 rxvt_term::set_locale (const char *locale)
 {
+  TEMP_ENV;
+
 #if HAVE_XSETLOCALE || HAVE_SETLOCALE
   free (this->locale);
   this->locale = setlocale (LC_CTYPE, locale);
@@ -586,13 +592,13 @@ rxvt_term::set_locale (const char *locale)
     {
       if (*locale)
         {
-          rxvt_warn ("unable to set locale \"%s\", using default locale instead.\n", locale);
-          setlocale (LC_CTYPE, "");
+          rxvt_warn ("unable to set locale \"%s\", using C locale instead.\n", locale);
+          setlocale (LC_CTYPE, "C");
         }
       else
         rxvt_warn ("default locale unavailable, check LC_* and LANG variables. Continuing.\n");
 
-      this->locale = "";
+      this->locale = "C";
     }
 
 
@@ -617,6 +623,8 @@ rxvt_term::set_locale (const char *locale)
 void
 rxvt_term::init_xlocale ()
 {
+  TEMP_ENV;
+
 #ifdef USE_XIM
   if (!locale)
     rxvt_warn ("setting locale failed, working without locale support.\n");
@@ -1527,6 +1535,8 @@ rxvt_term::run_child (const char *const *argv)
 {
   char *login;
 
+  TEMP_ENV; // not very temporary...
+
   SET_TTYMODE (STDIN_FILENO, &tio);       /* init terminal attributes */
 
   if (OPTION (Opt_console))
@@ -1582,7 +1592,7 @@ rxvt_term::run_child (const char *const *argv)
     }
   else
     {
-      const char     *argv0, *shell;
+      const char *argv0, *shell;
 
       if ((shell = getenv ("SHELL")) == NULL || *shell == '\0')
         shell = "/bin/sh";
@@ -1597,6 +1607,7 @@ rxvt_term::run_child (const char *const *argv)
           strcpy (&login[1], argv0);
           argv0 = login;
         }
+
       execlp (shell, argv0, NULL);
       /* no error message: STDERR is closed! */
     }

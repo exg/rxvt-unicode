@@ -891,7 +891,6 @@ Optional Features:
   --disable-backspace-key disable handling of the backspace key
   --disable-delete-key    disable handling of the delete key
   --disable-resources     disable all resource checking
-  --enable-xgetdefault    enable resources via X instead of our small version
   --enable-8bitctrls      enable 8 bit control sequences (not recommended)
   --enable-fallback(=CLASS) fall back on CLASS resources in addition to URxvt ones (default: Rxvt)
   --enable-strings        enable some replacement system functions
@@ -4636,18 +4635,6 @@ if test "${enable_resources+set}" = set; then
 
 cat >>confdefs.h <<\_ACEOF
 #define NO_RESOURCES 1
-_ACEOF
-
-  fi
-fi;
-
-# Check whether --enable-xgetdefault or --disable-xgetdefault was given.
-if test "${enable_xgetdefault+set}" = set; then
-  enableval="$enable_xgetdefault"
-  if test x$enableval = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define USE_XGETDEFAULT 1
 _ACEOF
 
   fi

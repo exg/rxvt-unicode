@@ -19,6 +19,7 @@ public:
   static bool vax           () { return e == 0x44332211; };
 } byteorder;
 
+// various utility functions
 template<typename T, typename U> static inline T    min    (T  a, U b) { return a < (T)b ? a : (T)b; }
 template<typename T, typename U> static inline void min_it (T &a, U b) {    a = a < (T)b ? a : (T)b; }
 template<typename T, typename U> static inline T    max    (T  a, U b) { return a > (T)b ? a : (T)b; }
@@ -37,6 +38,7 @@ template<typename T, typename U> static inline void swap (T& a, U& b) { T t=a; a
 #define IN_RANGE_EXC(val,beg,end) \
   ((unsigned int)(val) - (unsigned int)(beg) <  (unsigned int)(end) - (unsigned int)(beg))
 
+// makes dynamically allocated objects zero-initialised
 struct zero_initialized {
   void *operator new (size_t s);
   void operator delete (void *p, size_t s);
@@ -392,6 +394,26 @@ struct stringvec : simplevec<char *>
   {
     for (char **c = begin (); c != end (); c++)
       delete [] *c;
+  }
+};
+
+// temporarily replace the process environment
+extern char **environ;
+
+struct temp_environ
+{
+  char **prev;
+
+  temp_environ (const stringvec *envv)
+  : prev (environ)
+  {
+    if (envv)
+      environ = (char **)envv->begin ();
+  }
+
+  ~temp_environ ()
+  {
+    environ = prev;
   }
 };
 

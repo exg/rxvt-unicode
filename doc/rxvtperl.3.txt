@@ -304,14 +304,6 @@ API DOCUMENTATION
     *
 
   Functions in the "urxvt" Package
-    $term = new urxvt [arg...]
-        Creates a new terminal, very similar as if you had started it with
-        "system $binfile, arg...". Croaks (and probably outputs an error
-        message) if the new instance couldn't be created. Returns "undef" if
-        the new instance didn't initialise perl, and the terminal object
-        otherwise. The "init" and "start" hooks will be called during the
-        call.
-
     urxvt::fatal $errormessage
         Fatally aborts execution with the given error message. Avoid at all
         costs! The only time this is acceptable is when the terminal process
@@ -324,6 +316,8 @@ API DOCUMENTATION
 
         Using this function has the advantage that its output ends up in the
         correct place, e.g. on stderr of the connecting urxvtc client.
+
+        Messages have a size limit of 1023 bytes currently.
 
     $is_safe = urxvt::safe
         Returns true when it is safe to do potentially unsafe things, such
@@ -387,6 +381,17 @@ API DOCUMENTATION
     should work.
 
   The "urxvt::term" Class
+    $term = new urxvt::term $envhashref, $rxvtname, [arg...]
+        Creates a new terminal, very similar as if you had started it with
+        system "$rxvtname, arg...". $envhashref must be a reference to a
+        %ENV>-like "hash which defines the environment of the new terminal.
+        "
+
+        >Croaks (and probably outputs an error message) if the new instance
+        couldn't be created. Returns "undef" if the new instance didn't
+        initialise perl, and the terminal object otherwise. The "init" and
+        "start" hooks will be called during this call.
+
     $term->destroy
         Destroy the terminal object (close the window, free resources etc.).
         Please note that rxvt will not exit as long as any event watchers
@@ -579,11 +584,15 @@ API DOCUMENTATION
     $lines_in_scrollback = $term->nsaved
         Return various integers describing terminal characteristics.
 
+    $x_display = $term->display_id
+        Return the DISPLAY used by rxvt-unicode.
+
     $lc_ctype = $term->locale
         Returns the LC_CTYPE category string used by this rxvt-unicode.
 
-    $x_display = $term->display_id
-        Return the DISPLAY used by rxvt-unicode.
+    $env = $term->env
+        Returns a copy of the environment in effect for the terminal as a
+        hashref similar to "\%ENV".
 
     $modifiermask = $term->ModLevel3Mask
     $modifiermask = $term->ModMetaMask

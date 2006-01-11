@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-10" "6.3" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-11" "6.3" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -482,17 +482,10 @@ object, whenever a callback/hook is executing.
 .el .Sh "Functions in the \f(CWurxvt\fP Package"
 .IX Subsection "Functions in the urxvt Package"
 .PD 0
-.IP "$term = new urxvt [arg...]" 4
-.IX Item "$term = new urxvt [arg...]"
-.PD
-Creates a new terminal, very similar as if you had started it with
-\&\f(CW\*(C`system $binfile, arg...\*(C'\fR. Croaks (and probably outputs an error message)
-if the new instance couldn't be created.  Returns \f(CW\*(C`undef\*(C'\fR if the new
-instance didn't initialise perl, and the terminal object otherwise. The
-\&\f(CW\*(C`init\*(C'\fR and \f(CW\*(C`start\*(C'\fR hooks will be called during the call.
 .ie n .IP "urxvt::fatal $errormessage" 4
 .el .IP "urxvt::fatal \f(CW$errormessage\fR" 4
 .IX Item "urxvt::fatal $errormessage"
+.PD
 Fatally aborts execution with the given error message. Avoid at all
 costs! The only time this is acceptable is when the terminal process
 starts up.
@@ -505,6 +498,8 @@ that calls this function.
 .Sp
 Using this function has the advantage that its output ends up in the
 correct place, e.g. on stderr of the connecting urxvtc client.
+.Sp
+Messages have a size limit of 1023 bytes currently.
 .IP "$is_safe = urxvt::safe" 4
 .IX Item "$is_safe = urxvt::safe"
 Returns true when it is safe to do potentially unsafe things, such as
@@ -582,6 +577,18 @@ work.
 .ie n .Sh "The ""urxvt::term"" Class"
 .el .Sh "The \f(CWurxvt::term\fP Class"
 .IX Subsection "The urxvt::term Class"
+.ie n .IP "$term = new urxvt::term $envhashref\fR, \f(CW$rxvtname, [arg...]" 4
+.el .IP "$term = new urxvt::term \f(CW$envhashref\fR, \f(CW$rxvtname\fR, [arg...]" 4
+.IX Item "$term = new urxvt::term $envhashref, $rxvtname, [arg...]"
+Creates a new terminal, very similar as if you had started it with system
+\&\f(CW\*(C`$rxvtname, arg...\*(C'\fR. \f(CW$envhashref\fR must be a reference to a \f(CW%ENV\fR>\-like
+\&\f(CW\*(C`hash which defines the environment of the new terminal.
+
+\&\*(C'\fR.Sp
+>Croaks (and probably outputs an error message) if the new instance
+couldn't be created.  Returns \f(CW\*(C`undef\*(C'\fR if the new instance didn't
+initialise perl, and the terminal object otherwise. The \f(CW\*(C`init\*(C'\fR and
+\&\f(CW\*(C`start\*(C'\fR hooks will be called during this call.
 .IP "$term\->destroy" 4
 .IX Item "$term->destroy"
 Destroy the terminal object (close the window, free resources
@@ -824,14 +831,19 @@ Return the window id of the terminal window.
 .IX Item "$lines_in_scrollback = $term->nsaved"
 .PD
 Return various integers describing terminal characteristics.
-.ie n .IP "$lc_ctype = $term\->locale" 4
-.el .IP "$lc_ctype = \f(CW$term\fR\->locale" 4
-.IX Item "$lc_ctype = $term->locale"
-Returns the \s-1LC_CTYPE\s0 category string used by this rxvt\-unicode.
 .ie n .IP "$x_display = $term\->display_id" 4
 .el .IP "$x_display = \f(CW$term\fR\->display_id" 4
 .IX Item "$x_display = $term->display_id"
 Return the \s-1DISPLAY\s0 used by rxvt\-unicode.
+.ie n .IP "$lc_ctype = $term\->locale" 4
+.el .IP "$lc_ctype = \f(CW$term\fR\->locale" 4
+.IX Item "$lc_ctype = $term->locale"
+Returns the \s-1LC_CTYPE\s0 category string used by this rxvt\-unicode.
+.ie n .IP "$env = $term\->env" 4
+.el .IP "$env = \f(CW$term\fR\->env" 4
+.IX Item "$env = $term->env"
+Returns a copy of the environment in effect for the terminal as a hashref
+similar to \f(CW\*(C`\e%ENV\*(C'\fR.
 .ie n .IP "$modifiermask = $term\->ModLevel3Mask" 4
 .el .IP "$modifiermask = \f(CW$term\fR\->ModLevel3Mask" 4
 .IX Item "$modifiermask = $term->ModLevel3Mask"

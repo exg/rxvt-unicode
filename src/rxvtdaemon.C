@@ -58,6 +58,9 @@ void rxvt_connection::send (const char *data, int len)
 {
   uint8_t s[2];
 
+  if (len > 65535)
+    len = 65535;
+
   s[0] = len >> 8; s[1] = len;
 
   write (fd, s, 2);
@@ -78,7 +81,7 @@ bool rxvt_connection::recv (auto_str &data, int *len)
     return false;
 
   l = (s[0] << 8) + s[1];
-  if (l > 4096)
+  if (l > 65535)
     return false;
 
   if (len)

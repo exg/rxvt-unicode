@@ -11,6 +11,7 @@ WISH: support tex fonts
 
 TODO: resources! resources! resources!
 TODO: better environment handling in rxvt/xim etc. and urxvt::term->new
+TODO: selection-extending with rmb does not work?
 	- added sections for DISTRIBUTION MAINTAINERS and about
           SETUID/SETGID to the FAQ.
         - selection, searchable-scrollback, selection-popup and
@@ -32,6 +33,10 @@ TODO: better environment handling in rxvt/xim etc. and urxvt::term->new
         - applied minor cleanups by Ladislav Michnovic.
         - applied better configure support for openpty by Emanuele Giaquinta.
         - mark-urls launch-on-click by jepler.
+        - removed "small" resource parsing function, as it wasn't really
+          compatible, and not really small either.
+        - removed PATH_ENV and PATH file search support.
+        - removed support for locale-specific app-defaults file.
 
 6.3  Wed Jan  4 22:37:10 CET 2006
         - SECURITY FIX: on systems using openpty, permissions were
