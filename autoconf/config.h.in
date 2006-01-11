@@ -73,6 +73,9 @@
 /* Define if you have the on_exit function.  */
 #undef HAVE_ON_EXIT
 
+/* Define if you have the posix_openpt function.  */
+#undef HAVE_POSIX_OPENPT
+
 /* Define if you have the revoke function.  */
 #undef HAVE_REVOKE
 
@@ -326,6 +329,9 @@
 #undef XIMCB_PROTO_BROKEN
 
 /* Define for this pty type */
+#undef PTYS_ARE_POSIX
+
+/* Define for this pty type */
 #undef PTYS_ARE_OPENPTY
 
 /* Define for this pty type */
@@ -339,9 +345,6 @@
 
 /* Define for this pty type */
 #undef PTYS_ARE__GETPTY
-
-/* Define for this pty type */
-#undef PTYS_ARE_GETPTY
 
 /* Define for this pty type */
 #undef PTYS_ARE_GETPT

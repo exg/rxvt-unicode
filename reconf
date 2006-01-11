@@ -10,6 +10,5 @@ if [ "x$HOSTNAME" = xcerebro -o "x$HOSTNAME" = xfuji ]; then
    export CC CXX
 fi
 
-./configure --prefix=/opt/rxvt --with-name=rxvt \
-            --enable-menubar --enable-xgetdefault \
+./configure --prefix=/opt/rxvt --with-name=rxvt --enable-menubar \
             "$@"

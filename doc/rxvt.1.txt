@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 6.3, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 7.0, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -409,13 +409,10 @@ RESOURCES (available also as long-options)
     Note: `rxvt --help' gives a list of all resources (long options)
     compiled into your version.
 
-    There are two different methods that rxvt can use to get the Xresource
-    data: using the X libraries (Xrm*-functions) or internal Xresources
-    reader (~/.Xdefaults). For the first method (ie. rxvt -h lists
-    XGetDefaults), you can set and change the resources using X11 tools like
-    xrdb. Many distribution do also load settings from the ~/.Xresources
-    file when X starts. rxvt will consult the following files/resources in
-    order, with later settings overwriting earlier ones:
+    You can set and change the resources using X11 tools like xrdb. Many
+    distribution do also load settings from the ~/.Xresources file when X
+    starts. rxvt will consult the following files/resources in order, with
+    later settings overwriting earlier ones:
 
       1. system-wide app-defaults file, either locale-dependent OR global
       2. app-defaults file in $XAPPLRESDIR
@@ -423,18 +420,15 @@ RESOURCES (available also as long-options)
       4. SCREEN_RESOURCES for the current screen
       5. $XENVIRONMENT file OR $HOME/.Xdefaults-<nodename>
 
-    If compiled with internal Xresources support (i.e. rxvt -h lists
-    .Xdefaults) then rxvt accepts application defaults set in
-    XAPPLOADDIR/URxvt (compile-time defined: usually
-    /usr/lib/X11/app-defaults/URxvt) and resources set in ~/.Xdefaults, or
-    ~/.Xresources if ~/.Xdefaults does not exist. Note that when reading X
-    resources, rxvt recognizes two class names: XTerm and URxvt. The class
-    name Rxvt allows resources common to both rxvt and the original *rxvt*
-    to be easily configured, while the class name URxvt allows resources
-    unique to rxvt, notably colours and key-handling, to be shared between
-    different rxvt configurations. If no resources are specified, suitable
-    defaults will be used. Command-line arguments can be used to override
-    resource settings. The following resources are allowed:
+    Note that when reading X resources, rxvt recognizes two class names:
+    Rxvt and URxvt. The class name Rxvt allows resources common to both rxvt
+    and the original *rxvt* to be easily configured, while the class name
+    URxvt allows resources unique to rxvt, to be shared between different
+    rxvt configurations. If no resources are specified, suitable defaults
+    will be used. Command-line arguments can be used to override resource
+    settings. The following resources are supported (you might want to check
+    the rxvtperl(3) manpage for additional settings by perl extensions not
+    documented here):
 
     geometry: *geom*
         Create the window with the specified X window geometry [default
@@ -876,10 +870,10 @@ RESOURCES (available also as long-options)
         "^@": null, "^A" ...) and may be enclosed with double quotes so that
         it can start or end with whitespace.
 
-        Please note that you need to double the "\" when using
-        "--enable-xgetdefault", as X itself does it's own de-escaping (you
-        can use "\033" instead of "\e" (and so on), which will work with
-        both Xt and rxvt's own processing).
+        Please note that you need to double the "\" in resource files, as
+        Xlib itself does it's own de-escaping (you can use "\033" instead of
+        "\e" (and so on), which will work with both Xt and rxvt's own
+        processing).
 
         You can define a range of keysyms in one shot by providing a
         *string* with pattern list/PREFIX/MIDDLE/SUFFIX, where the delimeter

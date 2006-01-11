@@ -478,14 +478,10 @@ this terminal instance. See resource B<perl-ext> for details.
 Note: `@@RXVT_NAME@@ --help' gives a list of all resources (long
 options) compiled into your version.
 
-There are two different methods that @@RXVT_NAME@@ can use to get the
-Xresource data: using the X libraries (Xrm*-functions) or internal
-Xresources reader (B<~/.Xdefaults>). For the first method (ie.
-B<@@RXVT_NAME@@ -h> lists B<XGetDefaults>), you can set and change the
-resources using X11 tools like B<xrdb>. Many distribution do also load
-settings from the B<~/.Xresources> file when X starts. @@RXVT_NAME@@
-will consult the following files/resources in order, with later settings
-overwriting earlier ones:
+You can set and change the resources using X11 tools like B<xrdb>. Many
+distribution do also load settings from the B<~/.Xresources> file when X
+starts. @@RXVT_NAME@@ will consult the following files/resources in order,
+with later settings overwriting earlier ones:
 
   1. system-wide app-defaults file, either locale-dependent OR global
   2. app-defaults file in $XAPPLRESDIR
@@ -493,20 +489,16 @@ overwriting earlier ones:
   4. SCREEN_RESOURCES for the current screen
   5. $XENVIRONMENT file OR $HOME/.Xdefaults-<nodename>
 
-If compiled with internal Xresources support (i.e. B<@@RXVT_NAME@@ -h>
-lists B<.Xdefaults>) then B<@@RXVT_NAME@@> accepts application defaults
-set in XAPPLOADDIR/URxvt (compile-time defined: usually
-B</usr/lib/X11/app-defaults/URxvt>) and resources set in
-B<~/.Xdefaults>, or B<~/.Xresources> if B<~/.Xdefaults> does not exist.
-Note that when reading X resources, B<@@RXVT_NAME@@> recognizes two
-class names: B<XTerm> and B<URxvt>. The class name B<Rxvt> allows
-resources common to both B<@@RXVT_NAME@@> and the original I<rxvt> to be
-easily configured, while the class name B<URxvt> allows resources
-unique to B<@@RXVT_NAME@@>, notably colours and key-handling, to be
-shared between different B<@@RXVT_NAME@@> configurations. If no
-resources are specified, suitable defaults will be used. Command-line
-arguments can be used to override resource settings. The following
-resources are allowed:
+Note that when reading X resources, B<@@RXVT_NAME@@> recognizes two class
+names: B<Rxvt> and B<URxvt>. The class name B<Rxvt> allows resources
+common to both B<@@RXVT_NAME@@> and the original I<rxvt> to be easily
+configured, while the class name B<URxvt> allows resources unique to
+B<@@RXVT_NAME@@>, to be shared between different B<@@RXVT_NAME@@>
+configurations. If no resources are specified, suitable defaults will
+be used. Command-line arguments can be used to override resource
+settings. The following resources are supported (you might want to
+check the @@RXVT_NAME@@perl(3) manpage for additional settings by perl
+extensions not documented here):
 
 =over 4
 
@@ -1017,10 +1009,10 @@ C<\000>: octal number) or verbatim control characters (C<^?>: delete,
 C<^@>: null, C<^A> ...) and may be enclosed with double quotes so that it
 can start or end with whitespace.
 
-Please note that you need to double the C<\> when using
-C<--enable-xgetdefault>, as X itself does it's own de-escaping (you can
-use C<\033> instead of C<\e> (and so on), which will work with both Xt and
-@@RXVT_NAME@@'s own processing).
+Please note that you need to double the C<\> in resource files, as
+Xlib itself does it's own de-escaping (you can use C<\033> instead of
+C<\e> (and so on), which will work with both Xt and @@RXVT_NAME@@'s own
+processing).
 
 You can define a range of keysyms in one shot by providing a I<string>
 with pattern B<list/PREFIX/MIDDLE/SUFFIX>, where the delimeter `/'

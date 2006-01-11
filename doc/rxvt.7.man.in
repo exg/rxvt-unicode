@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2006-01-11" "6.3" "RXVT-UNICODE"
+.TH rxvt 7 "2006-01-11" "7.0" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -2491,15 +2491,6 @@ do it.
 .IP "\-\-disable\-resources" 4
 .IX Item "--disable-resources"
 Removes any support for resource checking.
-.IP "\-\-enable\-xgetdefault" 4
-.IX Item "--enable-xgetdefault"
-Make resources checking via \fIXGetDefault()\fR instead of our small
-version which only checks ~/.Xdefaults, or if that doesn't exist then
-~/.Xresources.
-.Sp
-Please note that nowadays, things like \s-1XIM\s0 will automatically pull in and
-use the full X resource manager, so the overhead of using it might be very
-small, if nonexistant.
 .IP "\-\-enable\-strings (default: off)" 4
 .IX Item "--enable-strings (default: off)"
 Add support for our possibly faster \fImemset()\fR function and other

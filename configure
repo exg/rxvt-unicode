@@ -10185,6 +10185,7 @@ esac
 
 
 
+
 for ac_func in \
 	atexit \
 	revoke \
@@ -10196,6 +10197,7 @@ for ac_func in \
 	setpgrp \
 	setpgid \
 	_getpty \
+	posix_openpt \
 	grantpt \
 	unlockpt \
 	isastream \
@@ -11986,63 +11988,7 @@ _ACEOF
 
 fi
 
-echo "$as_me:$LINENO: checking for getpt" >&5
-echo $ECHO_N "checking for getpt... $ECHO_C" >&6
-if test "${rxvt_cv_func_getpt+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-#define _GNU_SOURCE
-#ifdef HAVE_STDLIB_H
-# include <cstdlib>
-#endif
-int
-main ()
-{
-(void)getpt();
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
-  (eval $ac_link) 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_cxx_werror_flag"			 || test ! -s conftest.err'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; } &&
-	 { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  rxvt_cv_func_getpt=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-rxvt_cv_func_getpt=no
-fi
-rm -f conftest.err conftest.$ac_objext \
-      conftest$ac_exeext conftest.$ac_ext
-fi
-echo "$as_me:$LINENO: result: $rxvt_cv_func_getpt" >&5
-echo "${ECHO_T}$rxvt_cv_func_getpt" >&6
-if test x$rxvt_cv_func_getpt = xno; then
+if test x$rxvt_cv_func_posix_openpt = xno; then
   echo "$as_me:$LINENO: checking for openpty" >&5
 echo $ECHO_N "checking for openpty... $ECHO_C" >&6
 if test "${ac_cv_func_openpty+set}" = set; then
@@ -12213,14 +12159,14 @@ if test "${rxvt_cv_ptys+set}" = set; then
 else
   if test x$ac_cv_func_openpty = xyes -o x$ac_cv_lib_util_openpty = xyes; then
     rxvt_cv_ptys=OPENPTY
+ else if test x$ac_cv_func_posix_openpt = xyes; then
+    rxvt_cv_ptys=POSIX
  else if test x$ac_cv_func__getpty = xyes; then
     rxvt_cv_ptys=SGI4
  else if test -c /dev/ttyp20; then
     rxvt_cv_ptys=SCO
  else if test -c /dev/ptym/clone; then
     rxvt_cv_ptys=HPUX
- else if test x$rxvt_cv_func_getpt = xyes; then
-    rxvt_cv_ptys=GLIBC
  else if test -c /dev/ptc -a -c /dev/pts; then
     rxvt_cv_ptys=PTC
  else if test -c /dev/ptc -a -d /dev/pts; then
@@ -12245,6 +12191,13 @@ fi
 echo "$as_me:$LINENO: result: $rxvt_cv_ptys" >&5
 echo "${ECHO_T}$rxvt_cv_ptys" >&6
 
+if test x$rxvt_cv_ptys = xPOSIX; then
+
+cat >>confdefs.h <<\_ACEOF
+#define PTYS_ARE_POSIX 1
+_ACEOF
+
+fi
 if test x$rxvt_cv_ptys = xOPENPTY; then
 
 cat >>confdefs.h <<\_ACEOF
@@ -12277,13 +12230,6 @@ if test x$rxvt_cv_ptys = xSGI4; then
 
 cat >>confdefs.h <<\_ACEOF
 #define PTYS_ARE__GETPTY 1
-_ACEOF
-
-fi
-if test x$rxvt_cv_ptys = xCONVEX; then
-
-cat >>confdefs.h <<\_ACEOF
-#define PTYS_ARE_GETPTY 1
 _ACEOF
 
 fi

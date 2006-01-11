@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2006-01-11" "6.3" "RXVT-UNICODE"
+.TH rxvt 1 "2006-01-11" "7.0" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -553,14 +553,10 @@ this terminal instance. See resource \fBperl-ext\fR for details.
 Note: `@@RXVT_NAME@@ \-\-help' gives a list of all resources (long
 options) compiled into your version.
 .PP
-There are two different methods that @@RXVT_NAME@@ can use to get the
-Xresource data: using the X libraries (Xrm*\-functions) or internal
-Xresources reader (\fB~/.Xdefaults\fR). For the first method (ie.
-\&\fB@@RXVT_NAME@@ \-h\fR lists \fBXGetDefaults\fR), you can set and change the
-resources using X11 tools like \fBxrdb\fR. Many distribution do also load
-settings from the \fB~/.Xresources\fR file when X starts. @@RXVT_NAME@@
-will consult the following files/resources in order, with later settings
-overwriting earlier ones:
+You can set and change the resources using X11 tools like \fBxrdb\fR. Many
+distribution do also load settings from the \fB~/.Xresources\fR file when X
+starts. @@RXVT_NAME@@ will consult the following files/resources in order,
+with later settings overwriting earlier ones:
 .PP
 .Vb 5
 \&  1. system-wide app-defaults file, either locale-dependent OR global
@@ -570,20 +566,16 @@ overwriting earlier ones:
 \&  5. $XENVIRONMENT file OR $HOME/.Xdefaults-<nodename>
 .Ve
 .PP
-If compiled with internal Xresources support (i.e. \fB@@RXVT_NAME@@ \-h\fR
-lists \fB.Xdefaults\fR) then \fB@@RXVT_NAME@@\fR accepts application defaults
-set in XAPPLOADDIR/URxvt (compile\-time defined: usually
-\&\fB/usr/lib/X11/app\-defaults/URxvt\fR) and resources set in
-\&\fB~/.Xdefaults\fR, or \fB~/.Xresources\fR if \fB~/.Xdefaults\fR does not exist.
-Note that when reading X resources, \fB@@RXVT_NAME@@\fR recognizes two
-class names: \fBXTerm\fR and \fBURxvt\fR. The class name \fBRxvt\fR allows
-resources common to both \fB@@RXVT_NAME@@\fR and the original \fIrxvt\fR to be
-easily configured, while the class name \fBURxvt\fR allows resources
-unique to \fB@@RXVT_NAME@@\fR, notably colours and key\-handling, to be
-shared between different \fB@@RXVT_NAME@@\fR configurations. If no
-resources are specified, suitable defaults will be used. Command-line
-arguments can be used to override resource settings. The following
-resources are allowed:
+Note that when reading X resources, \fB@@RXVT_NAME@@\fR recognizes two class
+names: \fBRxvt\fR and \fBURxvt\fR. The class name \fBRxvt\fR allows resources
+common to both \fB@@RXVT_NAME@@\fR and the original \fIrxvt\fR to be easily
+configured, while the class name \fBURxvt\fR allows resources unique to
+\&\fB@@RXVT_NAME@@\fR, to be shared between different \fB@@RXVT_NAME@@\fR
+configurations. If no resources are specified, suitable defaults will
+be used. Command-line arguments can be used to override resource
+settings. The following resources are supported (you might want to
+check the @@RXVT_NAME@@\fIperl\fR\|(3) manpage for additional settings by perl
+extensions not documented here):
 .IP "\fBgeometry:\fR \fIgeom\fR" 4
 .IX Item "geometry: geom"
 Create the window with the specified X window geometry [default 80x24];
@@ -1028,10 +1020,10 @@ performed in an exact manner; however, the closest match is assured.
 \&\f(CW\*(C`^@\*(C'\fR: null, \f(CW\*(C`^A\*(C'\fR ...) and may be enclosed with double quotes so that it
 can start or end with whitespace.
 .Sp
-Please note that you need to double the \f(CW\*(C`\e\*(C'\fR when using
-\&\f(CW\*(C`\-\-enable\-xgetdefault\*(C'\fR, as X itself does it's own de-escaping (you can
-use \f(CW\*(C`\e033\*(C'\fR instead of \f(CW\*(C`\ee\*(C'\fR (and so on), which will work with both Xt and
-@@RXVT_NAME@@'s own processing).
+Please note that you need to double the \f(CW\*(C`\e\*(C'\fR in resource files, as
+Xlib itself does it's own de-escaping (you can use \f(CW\*(C`\e033\*(C'\fR instead of
+\&\f(CW\*(C`\ee\*(C'\fR (and so on), which will work with both Xt and @@RXVT_NAME@@'s own
+processing).
 .Sp
 You can define a range of keysyms in one shot by providing a \fIstring\fR
 with pattern \fBlist/PREFIX/MIDDLE/SUFFIX\fR, where the delimeter `/'

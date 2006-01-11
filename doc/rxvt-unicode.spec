@@ -22,14 +22,7 @@ Xft fonts.
 %setup -q
 
 %build
-%configure --enable-xft --enable-font-styles --enable-utmp --enable-wtmp \
-  --enable-lastlog --enable-transparency --enable-tinting --enable-fading \
-  --enable-menubar --enable-rxvt-scroll --enable-xterm-scroll \
-  --enable-plain-scroll --enable-half-shadow --enable-xgetdefault \
-  --enable-24bit --enable-keepscrolling --enable-selectionscrolling \
-  --enable-mousewheel --enable-slipwheeling --enable-smart-resize \
-  --enable-pointer-blank --enable-xpm-background --enable-next-scroll \
-  --enable-xim --enable-linespace --with-save-lines=2000 --enable-resources
+%configure
 make
 
 %install

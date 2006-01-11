@@ -90,11 +90,11 @@ get_pty (int *fd_tty, char **ttydev)
 #endif
 
 #if defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
-# if defined(PTYS_ARE_GETPT) || defined(PTYS_ARE_PTMX)
+# if defined(PTYS_ARE_POSIX) || defined(PTYS_ARE_PTMX)
 
   {
-#  ifdef PTYS_ARE_GETPT
-    pfd = getpt ();
+#  ifdef PTYS_ARE_POSIX
+    pfd = posix_openpt (O_RDWR);
 #  else
     pfd = open ("/dev/ptmx", O_RDWR | O_NOCTTY, 0);
 #  endif

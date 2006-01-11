@@ -14,6 +14,7 @@ WISH: support tex fonts
 7.0
 TODO: run external commands more sytematically (using $self->env etc.)
 TODO: document searchable-scorllback hotkey
+TODO: double-click and right-extend
 	- added sections for DISTRIBUTION MAINTAINERS and about
           SETUID/SETGID to the FAQ.
         - selection, searchable-scrollback, selection-popup and
@@ -33,7 +34,8 @@ TODO: document searchable-scorllback hotkey
         - free one of the cursors, fixes a small memory leak.
         - built-in (as opposed to terminfos) visual bell was broken/too fast.
         - applied minor cleanups by Ladislav Michnovic.
-        - applied better configure support for openpty by Emanuele Giaquinta.
+        - applied better configure support for openpty and other pty stuff
+          (Emanuele Giaquinta).
         - mark-urls launch-on-click by jepler.
         - removed "small" resource parsing function, as it wasn't really
           compatible, and not really small either.
@@ -44,6 +46,7 @@ TODO: document searchable-scorllback hotkey
         - limit colour changing to the standard 88 palette instead of all
           colours.
         - XTerm_Color01 sequence returned wrong results in query mode.
+        - iom.C now checks against destructed io_manager when unregistering.
 
 6.3  Wed Jan  4 22:37:10 CET 2006
         - SECURITY FIX: on systems using openpty, permissions were

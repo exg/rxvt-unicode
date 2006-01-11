@@ -742,6 +742,7 @@ AC_CHECK_FUNCS( \
 	setpgrp \
 	setpgid \
 	_getpty \
+	posix_openpt \
 	grantpt \
 	unlockpt \
 	isastream \
@@ -1180,12 +1181,7 @@ if test x$rxvt_broken_ximcb = xyes; then
    AC_DEFINE(XIMCB_PROTO_BROKEN, 1, Define if your XIMCallback specifies XIC as first type.)
 fi
 
-AC_CACHE_CHECK(for getpt, rxvt_cv_func_getpt,
-[AC_LINK_IFELSE([AC_LANG_PROGRAM([[#define _GNU_SOURCE
-#ifdef HAVE_STDLIB_H
-# include <cstdlib>
-#endif]], [[(void)getpt();]])],[rxvt_cv_func_getpt=yes],[rxvt_cv_func_getpt=no])])
-if test x$rxvt_cv_func_getpt = xno; then
+if test x$rxvt_cv_func_posix_openpt = xno; then
   AC_CHECK_FUNC(openpty, [], [AC_CHECK_LIB(util, openpty, [LIBS="$LIBS -lutil"])])
 fi
 
@@ -1193,14 +1189,14 @@ dnl# if we don't guess right then it's up to the user
 AC_CACHE_CHECK(for pty/tty type, rxvt_cv_ptys,
 [if test x$ac_cv_func_openpty = xyes -o x$ac_cv_lib_util_openpty = xyes; then
     rxvt_cv_ptys=OPENPTY
+ else if test x$ac_cv_func_posix_openpt = xyes; then
+    rxvt_cv_ptys=POSIX
  else if test x$ac_cv_func__getpty = xyes; then
     rxvt_cv_ptys=SGI4
  else if test -c /dev/ttyp20; then
     rxvt_cv_ptys=SCO
  else if test -c /dev/ptym/clone; then
     rxvt_cv_ptys=HPUX
- else if test x$rxvt_cv_func_getpt = xyes; then
-    rxvt_cv_ptys=GLIBC
  else if test -c /dev/ptc -a -c /dev/pts; then
     rxvt_cv_ptys=PTC
  else if test -c /dev/ptc -a -d /dev/pts; then
@@ -1223,6 +1219,9 @@ fi
 fi
 ])
 
+if test x$rxvt_cv_ptys = xPOSIX; then
+  AC_DEFINE(PTYS_ARE_POSIX, 1, Define for this pty type)
+fi
 if test x$rxvt_cv_ptys = xOPENPTY; then
   AC_DEFINE(PTYS_ARE_OPENPTY, 1, Define for this pty type)
 fi
@@ -1237,9 +1236,6 @@ if test x$rxvt_cv_ptys = xPTC; then
 fi
 if test x$rxvt_cv_ptys = xSGI4; then
   AC_DEFINE(PTYS_ARE__GETPTY, 1, Define for this pty type)
-fi
-if test x$rxvt_cv_ptys = xCONVEX; then
-  AC_DEFINE(PTYS_ARE_GETPTY, 1, Define for this pty type)
 fi
 if test x$rxvt_cv_ptys = xGLIBC; then
   AC_DEFINE(PTYS_ARE_GETPT, 1, Define for this pty type)

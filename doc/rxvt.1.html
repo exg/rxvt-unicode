@@ -48,7 +48,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>6.3</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>7.0</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -655,34 +655,26 @@ this terminal instance. See resource <strong>perl-ext</strong> for details.
 <h1><a name="resources__available_also_as_longoptions_">RESOURCES (available also as long-options)</a></h1>
 <p>Note: `rxvt --help' gives a list of all resources (long
 options) compiled into your version.</p>
-<p>There are two different methods that rxvt can use to get the
-Xresource data: using the X libraries (Xrm*-functions) or internal
-Xresources reader (<strong>~/.Xdefaults</strong>). For the first method (ie.
-<strong>rxvt -h</strong> lists <strong>XGetDefaults</strong>), you can set and change the
-resources using X11 tools like <strong>xrdb</strong>. Many distribution do also load
-settings from the <strong>~/.Xresources</strong> file when X starts. rxvt
-will consult the following files/resources in order, with later settings
-overwriting earlier ones:</p>
+<p>You can set and change the resources using X11 tools like <strong>xrdb</strong>. Many
+distribution do also load settings from the <strong>~/.Xresources</strong> file when X
+starts. rxvt will consult the following files/resources in order,
+with later settings overwriting earlier ones:</p>
 <pre>
   1. system-wide app-defaults file, either locale-dependent OR global
   2. app-defaults file in $XAPPLRESDIR
   3. RESOURCE_MANAGER property on root-window OR $HOME/.Xdefaults
   4. SCREEN_RESOURCES for the current screen
   5. $XENVIRONMENT file OR $HOME/.Xdefaults-&lt;nodename&gt;</pre>
-<p>If compiled with internal Xresources support (i.e. <strong>rxvt -h</strong>
-lists <strong>.Xdefaults</strong>) then <strong>rxvt</strong> accepts application defaults
-set in XAPPLOADDIR/URxvt (compile-time defined: usually
-<strong>/usr/lib/X11/app-defaults/URxvt</strong>) and resources set in
-<strong>~/.Xdefaults</strong>, or <strong>~/.Xresources</strong> if <strong>~/.Xdefaults</strong> does not exist.
-Note that when reading X resources, <strong>rxvt</strong> recognizes two
-class names: <strong>XTerm</strong> and <strong>URxvt</strong>. The class name <strong>Rxvt</strong> allows
-resources common to both <strong>rxvt</strong> and the original <em>rxvt</em> to be
-easily configured, while the class name <strong>URxvt</strong> allows resources
-unique to <strong>rxvt</strong>, notably colours and key-handling, to be
-shared between different <strong>rxvt</strong> configurations. If no
-resources are specified, suitable defaults will be used. Command-line
-arguments can be used to override resource settings. The following
-resources are allowed:</p>
+<p>Note that when reading X resources, <strong>rxvt</strong> recognizes two class
+names: <strong>Rxvt</strong> and <strong>URxvt</strong>. The class name <strong>Rxvt</strong> allows resources
+common to both <strong>rxvt</strong> and the original <em>rxvt</em> to be easily
+configured, while the class name <strong>URxvt</strong> allows resources unique to
+<strong>rxvt</strong>, to be shared between different <strong>rxvt</strong>
+configurations. If no resources are specified, suitable defaults will
+be used. Command-line arguments can be used to override resource
+settings. The following resources are supported (you might want to
+check the <code>rxvtperl(3)</code> manpage for additional settings by perl
+extensions not documented here):</p>
 <dl>
 <dt><strong><a name="item_geometry_3a_geom"><strong>geometry:</strong> <em>geom</em></a></strong><br />
 </dt>
@@ -1360,10 +1352,10 @@ performed in an exact manner; however, the closest match is assured.</p>
 can start or end with whitespace.</p>
 </dd>
 <dd>
-<p>Please note that you need to double the <code>\</code> when using
-<code>--enable-xgetdefault</code>, as X itself does it's own de-escaping (you can
-use <code>\033</code> instead of <code>\e</code> (and so on), which will work with both Xt and
-rxvt's own processing).</p>
+<p>Please note that you need to double the <code>\</code> in resource files, as
+Xlib itself does it's own de-escaping (you can use <code>\033</code> instead of
+<code>\e</code> (and so on), which will work with both Xt and rxvt's own
+processing).</p>
 </dd>
 <dd>
 <p>You can define a range of keysyms in one shot by providing a <em>string</em>

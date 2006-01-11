@@ -2513,16 +2513,6 @@ do it.
 
 Removes any support for resource checking.
 
-=item --enable-xgetdefault
-
-Make resources checking via XGetDefault() instead of our small
-version which only checks ~/.Xdefaults, or if that doesn't exist then
-~/.Xresources.
-
-Please note that nowadays, things like XIM will automatically pull in and
-use the full X resource manager, so the overhead of using it might be very
-small, if nonexistant.
-
 =item --enable-strings (default: off)
 
 Add support for our possibly faster memset() function and other

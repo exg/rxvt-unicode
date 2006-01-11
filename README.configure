@@ -159,15 +159,6 @@ CONFIGURE OPTIONS
     --disable-resources
         Removes any support for resource checking.
 
-    --enable-xgetdefault
-        Make resources checking via XGetDefault() instead of our small
-        version which only checks ~/.Xdefaults, or if that doesn't exist
-        then ~/.Xresources.
-
-        Please note that nowadays, things like XIM will automatically pull
-        in and use the full X resource manager, so the overhead of using it
-        might be very small, if nonexistant.
-
     --enable-strings (default: off)
         Add support for our possibly faster memset() function and other
         various routines, overriding your system's versions which may have
