@@ -574,7 +574,7 @@ rxvt_term::scr_do_wrap ()
 void
 rxvt_term::scr_color (unsigned int color, int fgbg)
 {
-  if (!IN_RANGE_INC (color, minTermCOLOR, maxTermCOLOR))
+  if (!IN_RANGE_INC (color, minCOLOR, maxTermCOLOR))
     color = fgbg;
 
   if (fgbg == Color_fg)
