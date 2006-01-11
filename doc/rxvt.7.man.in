@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2006-01-10" "6.3" "RXVT-UNICODE"
+.TH rxvt 7 "2006-01-11" "6.3" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -1776,8 +1776,8 @@ Ps = 11	Change colour of text background to Pt (NB: may change in future)
 Ps = 12	Change colour of text cursor foreground to Pt
 Ps = 13	Change colour of mouse foreground to Pt
 Ps = 17	Change colour of highlight characters to Pt
-Ps = 18	Change colour of bold characters to Pt
-Ps = 19	Change colour of underlined characters to Pt
+Ps = 18	Change colour of bold characters to Pt [deprecated, see 706]
+Ps = 19	Change colour of underlined characters to Pt [deprecated, see 707]
 Ps = 20	Change default background to Pt
 Ps = 39	Change default foreground colour to Pt.
 Ps = 46	Change Log File to Pt unimplemented
@@ -1788,6 +1788,8 @@ Ps = 701	Change current locale to Pt, or, if Pt is ?, return the current locale 
 Ps = 703	Menubar command Pt (Compile menubar).
 Ps = 704	Change colour of italic characters to Pt
 Ps = 705	Change background pixmap tint colour to Pt (Compile transparency).
+Ps = 706	Change colour of bold characters to Pt
+Ps = 707	Change colour of underlined characters to Pt
 Ps = 710	Set normal fontset to Pt. Same as Ps = 50.
 Ps = 711	Set bold fontset to Pt. Similar to Ps = 50 (Compile styles).
 Ps = 712	Set italic fontset to Pt. Similar to Ps = 50 (Compile styles).

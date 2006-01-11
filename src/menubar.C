@@ -1709,7 +1709,7 @@ rxvt_term::menubar_dispatch (char *str)
             else if ((n = rxvt_Str_match (str, "pixmap:")) != 0)
               {
                 str += n;
-                process_xterm_seq (XTerm_Pixmap, str, CHAR_ST);
+                process_xterm_seq (Rxvt_Pixmap, str, CHAR_ST);
               }
 #if (MENUBAR_MAX > 1)
             else if ((n = rxvt_Str_match (str, "rm")) != 0)

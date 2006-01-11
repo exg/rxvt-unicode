@@ -40,6 +40,8 @@ TODO: document searchable-scorllback hotkey
         - removed support for locale-specific app-defaults file.
         - fixed a bug where out-of-bounds colour sequences could lead
           to crashes.
+        - limit colour changing to the standard 88 palette instead of all
+          colours.
         - XTerm_Color01 sequence returned wrong results in query mode.
 
 6.3  Wed Jan  4 22:37:10 CET 2006

@@ -1638,8 +1638,8 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 	B<< C<Ps = 12> >>	Change colour of text cursor foreground to B<< C<Pt> >>
 	B<< C<Ps = 13> >>	Change colour of mouse foreground to B<< C<Pt> >>
 	B<< C<Ps = 17> >>	Change colour of highlight characters to B<< C<Pt> >>
-	B<< C<Ps = 18> >>	Change colour of bold characters to B<< C<Pt> >>
-	B<< C<Ps = 19> >>	Change colour of underlined characters to B<< C<Pt> >>
+	B<< C<Ps = 18> >>	Change colour of bold characters to B<< C<Pt> >> [deprecated, see 706]
+	B<< C<Ps = 19> >>	Change colour of underlined characters to B<< C<Pt> >> [deprecated, see 707]
 	B<< C<Ps = 20> >>	Change default background to B<< C<Pt> >>
 	B<< C<Ps = 39> >>	Change default foreground colour to B<< C<Pt> >>.
 	B<< C<Ps = 46> >>	Change Log File to B<< C<Pt> >> I<unimplemented>
@@ -1650,6 +1650,8 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 	B<< C<Ps = 703> >>	Menubar command B<< C<Pt> >> (Compile menubar).
 	B<< C<Ps = 704> >>	Change colour of italic characters to B<< C<Pt> >>
 	B<< C<Ps = 705> >>	Change background pixmap tint colour to B<< C<Pt> >> (Compile transparency).
+	B<< C<Ps = 706> >>	Change colour of bold characters to B<< C<Pt> >>
+	B<< C<Ps = 707> >>	Change colour of underlined characters to B<< C<Pt> >>
 	B<< C<Ps = 710> >>	Set normal fontset to B<< C<Pt> >>. Same as C<Ps = 50>.
 	B<< C<Ps = 711> >>	Set bold fontset to B<< C<Pt> >>. Similar to C<Ps = 50> (Compile styles).
 	B<< C<Ps = 712> >>	Set italic fontset to B<< C<Pt> >>. Similar to C<Ps = 50> (Compile styles).

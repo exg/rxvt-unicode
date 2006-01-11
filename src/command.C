@@ -3862,7 +3862,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
             *name++ = '\0';
             color = atoi (buf) + minCOLOR;
 
-            if (!IN_RANGE_EXC (color, minCOLOR, TOTAL_COLORS))
+            if (!IN_RANGE_INC (color, minCOLOR, maxTermCOLOR))
               break;
 
             if ((buf = strchr (name, ';')) != NULL)
@@ -3896,14 +3896,16 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
         process_color_seq (XTerm_Color_pointer_bg, Color_pointer_bg, str, resp);
         break;
 #ifndef NO_BOLD_UNDERLINE_REVERSE
-      case XTerm_Color_BD:
-        process_color_seq (XTerm_Color_BD, Color_BD, str, resp);
-        break;
-      case XTerm_Color_UL:
-        process_color_seq (XTerm_Color_UL, Color_UL, str, resp);
-        break;
       case XTerm_Color_RV:
         process_color_seq (XTerm_Color_RV, Color_RV, str, resp);
+        break;
+      case Rxvt_Color_BD:
+      case URxvt_Color_BD:
+        process_color_seq (op, Color_BD, str, resp);
+        break;
+      case Rxvt_Color_UL:
+      case URxvt_Color_UL:
+        process_color_seq (op, Color_UL, str, resp);
         break;
       case URxvt_Color_IT:
         process_color_seq (URxvt_Color_IT, Color_IT, str, resp);
@@ -3918,7 +3920,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
         break;
 #endif
 
-      case XTerm_Pixmap:
+      case Rxvt_Pixmap:
         if (*str != ';')
           {
 #if XPM_BACKGROUND
@@ -3945,10 +3947,10 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
           }
         break;
 
-      case XTerm_restoreFG:
+      case Rxvt_restoreFG:
         set_window_color (Color_fg, str);
         break;
-      case XTerm_restoreBG:
+      case Rxvt_restoreBG:
         set_window_color (Color_bg, str);
         break;
 
@@ -3963,7 +3965,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
        break;
 #endif
 #if 0
-      case XTerm_dumpscreen:	/* no error notices */
+      case Rxvt_dumpscreen:	/* no error notices */
         {
           int fd;
           if ((fd = open (str, O_RDWR | O_CREAT | O_EXCL, 0600)) >= 0)
