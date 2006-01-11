@@ -100,7 +100,7 @@ API DOCUMENTATION
 
     $text
         Rxvt-unicodes special way of encoding text, where one "unicode"
-        character always represents one screen cell. See row_t for a
+        character always represents one screen cell. See ROW_t for a
         discussion of this format.
 
     $string
@@ -301,8 +301,6 @@ API DOCUMENTATION
         The current terminal. This variable stores the current "urxvt::term"
         object, whenever a callback/hook is executing.
 
-    *
-
   Functions in the "urxvt" Package
     urxvt::fatal $errormessage
         Fatally aborts execution with the given error message. Avoid at all
@@ -384,10 +382,9 @@ API DOCUMENTATION
     $term = new urxvt::term $envhashref, $rxvtname, [arg...]
         Creates a new terminal, very similar as if you had started it with
         system "$rxvtname, arg...". $envhashref must be a reference to a
-        %ENV>-like "hash which defines the environment of the new terminal.
-        "
+        %ENV-like hash which defines the environment of the new terminal.
 
-        >Croaks (and probably outputs an error message) if the new instance
+        Croaks (and probably outputs an error message) if the new instance
         couldn't be created. Returns "undef" if the new instance didn't
         initialise perl, and the terminal object otherwise. The "init" and
         "start" hooks will be called during this call.
@@ -738,92 +735,92 @@ API DOCUMENTATION
         Displays the popup (which is initially hidden).
 
   The "urxvt::timer" Class
-        This class implements timer watchers/events. Time is represented as
-        a fractional number of seconds since the epoch. Example:
+    This class implements timer watchers/events. Time is represented as a
+    fractional number of seconds since the epoch. Example:
 
-           $term->{overlay} = $term->overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);
-           $term->{timer} = urxvt::timer
-                            ->new
-                            ->interval (1)
-                            ->cb (sub {
-                               $term->{overlay}->set (0, 0,
-                                  sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2,1,0]);
-                            });                                                                                                                                      
+       $term->{overlay} = $term->overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);
+       $term->{timer} = urxvt::timer
+                        ->new
+                        ->interval (1)
+                        ->cb (sub {
+                           $term->{overlay}->set (0, 0,
+                              sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2,1,0]);
+                        });                                                                                                                                      
 
-        $timer = new urxvt::timer
-            Create a new timer object in started state. It is scheduled to
-            fire immediately.
+    $timer = new urxvt::timer
+        Create a new timer object in started state. It is scheduled to fire
+        immediately.
 
-        $timer = $timer->cb (sub { my ($timer) = @_; ... })
-            Set the callback to be called when the timer triggers.
+    $timer = $timer->cb (sub { my ($timer) = @_; ... })
+        Set the callback to be called when the timer triggers.
 
-        $tstamp = $timer->at
-            Return the time this watcher will fire next.
+    $tstamp = $timer->at
+        Return the time this watcher will fire next.
 
-        $timer = $timer->set ($tstamp)
-            Set the time the event is generated to $tstamp.
+    $timer = $timer->set ($tstamp)
+        Set the time the event is generated to $tstamp.
 
-        $timer = $timer->interval ($interval)
-            Normally (and when $interval is 0), the timer will automatically
-            stop after it has fired once. If $interval is non-zero, then the
-            timer is automatically rescheduled at the given intervals.
+    $timer = $timer->interval ($interval)
+        Normally (and when $interval is 0), the timer will automatically
+        stop after it has fired once. If $interval is non-zero, then the
+        timer is automatically rescheduled at the given intervals.
 
-        $timer = $timer->start
-            Start the timer.
+    $timer = $timer->start
+        Start the timer.
 
-        $timer = $timer->start ($tstamp)
-            Set the event trigger time to $tstamp and start the timer.
+    $timer = $timer->start ($tstamp)
+        Set the event trigger time to $tstamp and start the timer.
 
-        $timer = $timer->stop
-            Stop the timer.
+    $timer = $timer->stop
+        Stop the timer.
 
   The "urxvt::iow" Class
-        This class implements io watchers/events. Example:
+    This class implements io watchers/events. Example:
 
-          $term->{socket} = ...
-          $term->{iow} = urxvt::iow
-                         ->new
-                         ->fd (fileno $term->{socket})
-                         ->events (urxvt::EVENT_READ)
-                         ->start
-                         ->cb (sub {
-                           my ($iow, $revents) = @_;
-                           # $revents must be 1 here, no need to check
-                           sysread $term->{socket}, my $buf, 8192
-                              or end-of-file;
-                         });
+      $term->{socket} = ...
+      $term->{iow} = urxvt::iow
+                     ->new
+                     ->fd (fileno $term->{socket})
+                     ->events (urxvt::EVENT_READ)
+                     ->start
+                     ->cb (sub {
+                       my ($iow, $revents) = @_;
+                       # $revents must be 1 here, no need to check
+                       sysread $term->{socket}, my $buf, 8192
+                          or end-of-file;
+                     });
 
-        $iow = new urxvt::iow
-            Create a new io watcher object in stopped state.
+    $iow = new urxvt::iow
+        Create a new io watcher object in stopped state.
 
-        $iow = $iow->cb (sub { my ($iow, $reventmask) = @_; ... })
-            Set the callback to be called when io events are triggered.
-            $reventmask is a bitset as described in the "events" method.
+    $iow = $iow->cb (sub { my ($iow, $reventmask) = @_; ... })
+        Set the callback to be called when io events are triggered.
+        $reventmask is a bitset as described in the "events" method.
 
-        $iow = $iow->fd ($fd)
-            Set the filedescriptor (not handle) to watch.
+    $iow = $iow->fd ($fd)
+        Set the filedescriptor (not handle) to watch.
 
-        $iow = $iow->events ($eventmask)
-            Set the event mask to watch. The only allowed values are
-            "urxvt::EVENT_READ" and "urxvt::EVENT_WRITE", which might be
-            ORed together, or "urxvt::EVENT_NONE".
+    $iow = $iow->events ($eventmask)
+        Set the event mask to watch. The only allowed values are
+        "urxvt::EVENT_READ" and "urxvt::EVENT_WRITE", which might be ORed
+        together, or "urxvt::EVENT_NONE".
 
-        $iow = $iow->start
-            Start watching for requested events on the given handle.
+    $iow = $iow->start
+        Start watching for requested events on the given handle.
 
-        $iow = $iow->stop
-            Stop watching for events on the given filehandle.
+    $iow = $iow->stop
+        Stop watching for events on the given filehandle.
 
 ENVIRONMENT
   URXVT_PERL_VERBOSITY
-        This variable controls the verbosity level of the perl extension.
-        Higher numbers indicate more verbose output.
+    This variable controls the verbosity level of the perl extension. Higher
+    numbers indicate more verbose output.
 
-        == 0 - fatal messages
-        >= 3 - script loading and management
-        >=10 - all events received
+    == 0 - fatal messages
+    >= 3 - script loading and management
+    >=10 - all events received
 
 AUTHOR
-         Marc Lehmann <pcg@goof.com>
-         http://software.schmorp.de/pkg/rxvt-unicode
+     Marc Lehmann <pcg@goof.com>
+     http://software.schmorp.de/pkg/rxvt-unicode
 

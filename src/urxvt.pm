@@ -125,7 +125,7 @@ hints on what they mean:
 =item $text
 
 Rxvt-unicodes special way of encoding text, where one "unicode" character
-always represents one screen cell. See L<row_t> for a discussion of this format.
+always represents one screen cell. See L<ROW_t> for a discussion of this format.
 
 =item $string
 
@@ -387,8 +387,6 @@ The basename of the installed binaries, usually C<urxvt>.
 
 The current terminal. This variable stores the current C<urxvt::term>
 object, whenever a callback/hook is executing.
-
-=item
 
 =back
 
@@ -784,8 +782,8 @@ sub register_package {
 =item $term = new urxvt::term $envhashref, $rxvtname, [arg...]
 
 Creates a new terminal, very similar as if you had started it with system
-C<$rxvtname, arg...>. C<$envhashref> must be a reference to a %ENV>-like
-C<hash which defines the environment of the new terminal.
+C<$rxvtname, arg...>. C<$envhashref> must be a reference to a C<%ENV>-like
+hash which defines the environment of the new terminal.
 
 Croaks (and probably outputs an error message) if the new instance
 couldn't be created.  Returns C<undef> if the new instance didn't
@@ -1443,6 +1441,8 @@ sub DESTROY {
    delete $self->{term}{_destroy}{$self};
    $self->{term}->ungrab;
 }
+
+=back
 
 =head2 The C<urxvt::timer> Class
 

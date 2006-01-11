@@ -246,7 +246,7 @@ hints on what they mean:
 .IP "$text" 4
 .IX Item "$text"
 Rxvt-unicodes special way of encoding text, where one \*(L"unicode\*(R" character
-always represents one screen cell. See row_t for a discussion of this format.
+always represents one screen cell. See ROW_t for a discussion of this format.
 .IP "$string" 4
 .IX Item "$string"
 A perl text string, with an emphasis on \fItext\fR. It can store all unicode
@@ -477,15 +477,12 @@ The basename of the installed binaries, usually \f(CW\*(C`urxvt\*(C'\fR.
 .IX Item "$urxvt::TERM"
 The current terminal. This variable stores the current \f(CW\*(C`urxvt::term\*(C'\fR
 object, whenever a callback/hook is executing.
-.IP "*" 4
 .ie n .Sh "Functions in the ""urxvt"" Package"
 .el .Sh "Functions in the \f(CWurxvt\fP Package"
 .IX Subsection "Functions in the urxvt Package"
-.PD 0
 .ie n .IP "urxvt::fatal $errormessage" 4
 .el .IP "urxvt::fatal \f(CW$errormessage\fR" 4
 .IX Item "urxvt::fatal $errormessage"
-.PD
 Fatally aborts execution with the given error message. Avoid at all
 costs! The only time this is acceptable is when the terminal process
 starts up.
@@ -581,11 +578,10 @@ work.
 .el .IP "$term = new urxvt::term \f(CW$envhashref\fR, \f(CW$rxvtname\fR, [arg...]" 4
 .IX Item "$term = new urxvt::term $envhashref, $rxvtname, [arg...]"
 Creates a new terminal, very similar as if you had started it with system
-\&\f(CW\*(C`$rxvtname, arg...\*(C'\fR. \f(CW$envhashref\fR must be a reference to a \f(CW%ENV\fR>\-like
-\&\f(CW\*(C`hash which defines the environment of the new terminal.
-
-\&\*(C'\fR.Sp
->Croaks (and probably outputs an error message) if the new instance
+\&\f(CW\*(C`$rxvtname, arg...\*(C'\fR. \f(CW$envhashref\fR must be a reference to a \f(CW%ENV\fR\-like
+hash which defines the environment of the new terminal.
+.Sp
+Croaks (and probably outputs an error message) if the new instance
 couldn't be created.  Returns \f(CW\*(C`undef\*(C'\fR if the new instance didn't
 initialise perl, and the terminal object otherwise. The \f(CW\*(C`init\*(C'\fR and
 \&\f(CW\*(C`start\*(C'\fR hooks will be called during this call.
@@ -1022,7 +1018,7 @@ Displays the popup (which is initially hidden).
 .IX Subsection "The urxvt::timer Class"
 This class implements timer watchers/events. Time is represented as a
 fractional number of seconds since the epoch. Example:
-.Sp
+.PP
 .Vb 8
 \&   $term->{overlay} = $term->overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);
 \&   $term->{timer} = urxvt::timer
@@ -1033,7 +1029,6 @@ fractional number of seconds since the epoch. Example:
 \&                          sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2,1,0]);
 \&                    });
 .Ve
-.RS 4
 .IP "$timer = new urxvt::timer" 4
 .IX Item "$timer = new urxvt::timer"
 Create a new timer object in started state. It is scheduled to fire
@@ -1068,13 +1063,11 @@ Set the event trigger time to \f(CW$tstamp\fR and start the timer.
 .el .IP "$timer = \f(CW$timer\fR\->stop" 4
 .IX Item "$timer = $timer->stop"
 Stop the timer.
-.RE
-.RS 4
 .ie n .Sh "The ""urxvt::iow"" Class"
 .el .Sh "The \f(CWurxvt::iow\fP Class"
 .IX Subsection "The urxvt::iow Class"
 This class implements io watchers/events. Example:
-.Sp
+.PP
 .Vb 12
 \&  $term->{socket} = ...
 \&  $term->{iow} = urxvt::iow
@@ -1115,8 +1108,6 @@ Start watching for requested events on the given handle.
 .el .IP "$iow = \f(CW$iow\fR\->stop" 4
 .IX Item "$iow = $iow->stop"
 Stop watching for events on the given filehandle.
-.RE
-.RS 4
 .SH "ENVIRONMENT"
 .IX Header "ENVIRONMENT"
 .Sh "\s-1URXVT_PERL_VERBOSITY\s0"
@@ -1130,8 +1121,6 @@ numbers indicate more verbose output.
 .IX Item ">= 3 - script loading and management"
 .IP ">=10 \- all events received" 4
 .IX Item ">=10 - all events received"
-.RE
-.RS 4
 .PD
 .SH "AUTHOR"
 .IX Header "AUTHOR"

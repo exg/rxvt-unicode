@@ -185,7 +185,7 @@ hints on what they mean:</p>
 </dt>
 <dd>
 Rxvt-unicodes special way of encoding text, where one ``unicode'' character
-always represents one screen cell. See <em>row_t</em> for a discussion of this format.
+always represents one screen cell. See <a href="#item_row_t">ROW_t</a> for a discussion of this format.
 </dd>
 <p></p>
 <dt><strong><a name="item__24string">$string</a></strong><br />
@@ -478,9 +478,7 @@ The basename of the installed binaries, usually <code>urxvt</code>.
 The current terminal. This variable stores the current <code>urxvt::term</code>
 object, whenever a callback/hook is executing.
 </dd>
-<p></p>
-<dt></dt>
-</dl>
+<p></p></dl>
 <p>
 </p>
 <h2><a name="functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></h2>
@@ -611,11 +609,11 @@ work.</p>
 </dt>
 <dd>
 Creates a new terminal, very similar as if you had started it with system
-<code>$rxvtname, arg...</code>. <code>$envhashref</code> must be a reference to a %ENV&gt;-like
-<code></code>hash which defines the environment of the new terminal.
+<code>$rxvtname, arg...</code>. <code>$envhashref</code> must be a reference to a <code>%ENV</code>-like
+hash which defines the environment of the new terminal.
 </dd>
 <dd>
-<p>&gt;Croaks (and probably outputs an error message) if the new instance
+<p>Croaks (and probably outputs an error message) if the new instance
 couldn't be created.  Returns <code>undef</code> if the new instance didn't
 initialise perl, and the terminal object otherwise. The <code>init</code> and
 <a href="#item_start"><code>start</code></a> hooks will be called during this call.</p>
