@@ -89,17 +89,6 @@ get_pty (int *fd_tty, char **ttydev)
     return pfd;
 #endif
 
-#ifdef PTYS_ARE_GETPTY
-  char           *ptydev;
-
-  while ((ptydev = getpty ()) != NULL)
-    if ((pfd = open (ptydev, O_RDWR | O_NOCTTY, 0)) >= 0)
-      {
-        *ttydev = ptydev;
-        return pfd;
-      }
-#endif
-
 #if defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
 # if defined(PTYS_ARE_GETPT) || defined(PTYS_ARE_PTMX)
 
