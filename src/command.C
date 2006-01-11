@@ -3860,9 +3860,9 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
               break;
 
             *name++ = '\0';
-            color = atoi (buf);
+            color = atoi (buf) + minCOLOR;
 
-            if (color < 0 || color >= TOTAL_COLORS)
+            if (!IN_RANGE_EXC (color, minCOLOR, TOTAL_COLORS))
               break;
 
             if ((buf = strchr (name, ';')) != NULL)
@@ -3871,18 +3871,18 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
             if (name[0] == '?' && !name[1])
               {
                 unsigned short r, g, b;
-                pix_colors_focused[color + minCOLOR].get (display, r, g, b);
+                pix_colors_focused[color].get (display, r, g, b);
                 tt_printf ("\033]%d;%d;rgb:%04x/%04x/%04x%c", XTerm_Color, color, r, g, b, resp);
               }
             else
-              set_window_color (color + minCOLOR, name);
+              set_window_color (color, name);
           }
         break;
       case XTerm_Color00:
         process_color_seq (XTerm_Color00, Color_fg, str, resp);
         break;
       case XTerm_Color01:
-        process_color_seq (XTerm_Color00, Color_bg, str, resp);
+        process_color_seq (XTerm_Color01, Color_bg, str, resp);
         break;
 #ifndef NO_CURSORCOLOR
       case XTerm_Color_cursor:
@@ -3924,9 +3924,10 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 #if XPM_BACKGROUND
             scale_pixmap ("");	/* reset to default scaling */
             set_bgPixmap (str);	/* change pixmap */
-#endif
             scr_touch (true);
+#endif
           }
+
         while ((str = strchr (str, ';')) != NULL)
           {
             str++;
@@ -3939,8 +3940,8 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
           {
 #ifdef XPM_BACKGROUND
             resize_pixmap ();
-#endif
             scr_touch (true);
+#endif
           }
         break;
 

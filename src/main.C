@@ -286,7 +286,6 @@ rxvt_term::~rxvt_term ()
     }
 
   // TODO: free pixcolours, colours should become part of rxvt_display
-
   delete pix_colors_focused;
 #if OFF_FOCUS_FADING
   delete pix_colors_unfocused;
