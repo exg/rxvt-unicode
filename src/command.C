@@ -987,7 +987,7 @@ rxvt_term::flush ()
 
               do
                 {
-                  l = &ROW (row++);
+                  l = &ROW (row);
 
                   if (l->f & LINE_FILTERED)
                     row++;
@@ -1575,7 +1575,7 @@ rxvt_term::x_cb (XEvent &ev)
               scr_expose (ev.xexpose.x, ev.xexpose.y,
                           ev.xexpose.width, ev.xexpose.height, False);
 
-            scr_refresh (refresh_type);
+            want_refresh = 1;
           }
         else
           {
@@ -1712,7 +1712,7 @@ rxvt_term::x_cb (XEvent &ev)
                           &unused_mask);
             scr_move_to (scrollbar_position (ev.xbutton.y) - csrO,
                          scrollbar_size ());
-            scr_refresh (refresh_type);
+            want_refresh = 1;
             refresh_limit = 0;
             scrollbar_show (1);
           }
@@ -2218,21 +2218,11 @@ rxvt_term::button_release (XButtonEvent &ev)
               else
                 {
 # endif
-# ifdef JUMP_MOUSE_WHEEL
                   scr_page (v, i);
-                  scr_refresh (SMOOTH_REFRESH);
                   scrollbar_show (1);
-# else
-                  while (i--)
-                    {
-                      scr_page (v, 1);
-                      scr_refresh (SMOOTH_REFRESH);
-                      scrollbar_show (1);
-                    }
-# endif
 # ifdef MOUSE_SLIP_WHEELING
                 }
-#endif
+# endif
             }
             break;
 #endif
@@ -2836,7 +2826,7 @@ rxvt_term::cmd_parse ()
                 {
                   flag = true;
                   scr_refresh (refresh_type);
-                  flush_ev.stop ();
+                  want_refresh = 1;
                 }
             }
 

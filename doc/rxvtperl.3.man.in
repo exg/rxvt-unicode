@@ -215,7 +215,9 @@ returns to the original position.
 Displays a digital clock using the built-in overlay.
 .IP "mark-urls" 4
 .IX Item "mark-urls"
-Uses per-line display filtering (\f(CW\*(C`on_line_update\*(C'\fR) to underline urls.
+Uses per-line display filtering (\f(CW\*(C`on_line_update\*(C'\fR) to underline urls and
+make them clickable. When clicked, the program specified in the resource
+\&\f(CW\*(C`urlLauncher\*(C'\fR (default \f(CW\*(C`x\-www\-browser\*(C'\fR) will be started.
 .IP "block-graphics-to-ascii" 4
 .IX Item "block-graphics-to-ascii"
 A not very useful example of filtering all text output to the terminal,
@@ -644,6 +646,17 @@ to see the actual list:
 \&  shade term_name title transparent transparent_all tripleclickwords
 \&  utmpInhibit visualBell
 .Ve
+.ie n .IP "$value = $term\->x_resource ($pattern)" 4
+.el .IP "$value = \f(CW$term\fR\->x_resource ($pattern)" 4
+.IX Item "$value = $term->x_resource ($pattern)"
+Returns the X\-Resource for the given pattern, excluding the program or
+class name, i.e.  \f(CW\*(C`$term\->x_resource ("boldFont")\*(C'\fR should return the
+same value as used by this instance of rxvt\-unicode. Returns \f(CW\*(C`undef\*(C'\fR if no
+resource with that pattern exists.
+.Sp
+This method should only be called during the \f(CW\*(C`on_start\*(C'\fR hook, as there is
+only one resource database per display, and later invocations might return
+the wrong resources.
 .ie n .IP "$success = $term\fR\->parse_keysym ($keysym_spec, \f(CW$command_string)" 4
 .el .IP "$success = \f(CW$term\fR\->parse_keysym ($keysym_spec, \f(CW$command_string\fR)" 4
 .IX Item "$success = $term->parse_keysym ($keysym_spec, $command_string)"

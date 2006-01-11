@@ -2383,9 +2383,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
    */
   scr_reverse_selection ();
 
-  if (refresh_type & SMOOTH_REFRESH)
-    XFlush (display->display);
-
   num_scr = 0;
   num_scr_allow = 1;
 }

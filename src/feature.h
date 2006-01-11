@@ -224,12 +224,6 @@
 #define MOUSE_THRESHOLD		50
 
 /*
- * If mouse wheel is defined, then scrolling is by 5 lines (or 1 line
- * if the shift key is down).  Scrolling can be smooth or jump scrolling
- */
-#define JUMP_MOUSE_WHEEL
-
-/*
  * Set delay periods for continuous scrolling with scrollbar buttons
  */
 /* #define SCROLLBAR_INITIAL_DELAY 0.33 */

@@ -1278,6 +1278,11 @@ rxvt_term::_resource (char *name, int index, SV *newval = 0)
           }
 }
 
+const char *
+rxvt_term::x_resource (const char *name)
+	CLEANUP:
+        SvTAINTED_on (ST (0));
+
 bool
 rxvt_term::option (U32 optval, int set = -1)
 	CODE:

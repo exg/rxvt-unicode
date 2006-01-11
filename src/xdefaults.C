@@ -773,7 +773,8 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
 # endif				/* KEYSYM_RESOURCE */
 #endif				/* NO_RESOURCES */
 
-char *get_res (XrmDatabase database, const char *program, const char *option)
+static char *
+get_res (XrmDatabase database, const char *program, const char *option)
 {
   char resource[512];
   char *type;
@@ -785,49 +786,50 @@ char *get_res (XrmDatabase database, const char *program, const char *option)
   return result.addr;
 }
 
-/*{{{ read the resources files */
-/*
- * using XGetDefault () or the hand-rolled replacement
- */
-/* ARGSUSED */
+const char *
+rxvt_term::x_resource (const char *name)
+{
+  XrmDatabase database = XrmGetDatabase (display->display);
+
+  const char *p = get_res (database, rs[Rs_name], name);
+  const char *p0 = get_res (database, "!INVALIDPROGRAMMENAMEDONTMATCH!", name);
+
+  if (p == NULL || (p0 && strcmp (p, p0) == 0))
+    {
+      p = get_res (database, RESCLASS, name);
+#ifdef RESFALLBACK
+      if (p == NULL || (p0 && strcmp (p, p0) == 0))
+        p = get_res (database, RESFALLBACK, name);
+#endif
+    }
+
+  if (p == NULL && p0)
+    p = p0;
+
+  return p;
+}
+
 void
 rxvt_term::extract_resources ()
 {
-  dDisp;
-
 #ifndef NO_RESOURCES
-  XrmDatabase database = XrmGetDatabase (display->display);
-
   /*
    * Query resources for options that affect us
    */
   for (int entry = 0; entry < optList_size; entry++)
     {
       int s;
-      char *p, *p0;
       const char *kw = optList[entry].kw;
 
       if (kw == NULL || rs[optList[entry].doff] != NULL)
         continue; // previously set
 
-      p = get_res (database, rs[Rs_name], kw);
-      p0 = get_res (database, "!INVALIDPROGRAMMENAMEDONTMATCH!", kw);
-      if (p == NULL || (p0 && strcmp (p, p0) == 0))
-        {
-          p = get_res (database, RESCLASS, kw);
-#ifdef RESFALLBACK
-          if (p == NULL || (p0 && strcmp (p, p0) == 0))
-            p = get_res (database, RESFALLBACK, kw);
-#endif
-        }
-
-      if (p == NULL && p0)
-        p = p0;
+      const char *p = x_resource (kw);
 
       if (p)
         {
           p = strdup (p);
-          allocated.push_back (p);
+          allocated.push_back ((void *)p);
           rs[optList[entry].doff] = p;
 
           if (optList_isBool (entry))
@@ -849,6 +851,7 @@ rxvt_term::extract_resources ()
    * [R5 or later]: enumerate the resource database
    */
 #  ifdef KEYSYM_RESOURCE
+  XrmDatabase database = XrmGetDatabase (display->display);
   XrmName name_prefix[3];
   XrmClass class_prefix[3];
 
@@ -875,5 +878,4 @@ rxvt_term::extract_resources ()
 #endif				/* NO_RESOURCES */
 }
 
-/*}}} */
 /*----------------------- end-of-file (C source) -----------------------*/

@@ -69,8 +69,9 @@ PREPACKAGED EXTENSIONS
         Displays a digital clock using the built-in overlay.
 
     mark-urls
-        Uses per-line display filtering ("on_line_update") to underline
-        urls.
+        Uses per-line display filtering ("on_line_update") to underline urls
+        and make them clickable. When clicked, the program specified in the
+        resource "urlLauncher" (default "x-www-browser") will be started.
 
     block-graphics-to-ascii
         A not very useful example of filtering all text output to the
@@ -443,6 +444,16 @@ API DOCUMENTATION
           scrollWithBuffer scrollstyle secondaryScreen secondaryScroll selectstyle
           shade term_name title transparent transparent_all tripleclickwords
           utmpInhibit visualBell
+
+    $value = $term->x_resource ($pattern)
+        Returns the X-Resource for the given pattern, excluding the program
+        or class name, i.e. "$term->x_resource ("boldFont")" should return
+        the same value as used by this instance of rxvt-unicode. Returns
+        "undef" if no resource with that pattern exists.
+
+        This method should only be called during the "on_start" hook, as
+        there is only one resource database per display, and later
+        invocations might return the wrong resources.
 
     $success = $term->parse_keysym ($keysym_spec, $command_string)
         Adds a keymap translation exactly as specified via a resource. See

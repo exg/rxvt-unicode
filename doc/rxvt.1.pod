@@ -1125,6 +1125,11 @@ will be ignored when running setuid/setgid.
 
 See the @@RXVT_NAME@@perl(3) manpage.
 
+=item B<urlLauncher>: I<string>
+
+Specifies the program to be started with a URL argument. Used by the
+C<selection-popup> and C<mark-urls> perl extensions.
+
 =item B<transient-for>: I<windowid>
 
 Sets the WM_TRANSIENT_FOR property to the given window iw.

@@ -5,13 +5,11 @@ TODO: after requesting the selection and getting a timeout, no further requests 
 TODO: "slow" rendering mode for bidi and scripts
 TODO: read property sequence is broken with respect to utf-8 etc.
 TODO: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
+TODO: clarify and get rid of SMOOTH_REFRESH etc.
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif
 WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
-TODO: resources! resources! resources!
-TODO: better environment handling in rxvt/xim etc. and urxvt::term->new
-TODO: selection-extending with rmb does not work?
 	- added sections for DISTRIBUTION MAINTAINERS and about
           SETUID/SETGID to the FAQ.
         - selection, searchable-scrollback, selection-popup and

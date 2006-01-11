@@ -143,7 +143,9 @@ Displays a digital clock using the built-in overlay.
 <dt><strong><a name="item_mark_2durls">mark-urls</a></strong><br />
 </dt>
 <dd>
-Uses per-line display filtering (<code>on_line_update</code>) to underline urls.
+Uses per-line display filtering (<code>on_line_update</code>) to underline urls and
+make them clickable. When clicked, the program specified in the resource
+<code>urlLauncher</code> (default <code>x-www-browser</code>) will be started.
 </dd>
 <p></p>
 <dt><strong><a name="item_block_2dgraphics_2dto_2dascii">block-graphics-to-ascii</a></strong><br />
@@ -688,6 +690,20 @@ to see the actual list:</p>
   scrollWithBuffer scrollstyle secondaryScreen secondaryScroll selectstyle
   shade term_name title transparent transparent_all tripleclickwords
   utmpInhibit visualBell</pre>
+</dd>
+<p></p>
+<dt><strong><a name="item_x_resource">$value = $term-&gt;x_resource ($pattern)</a></strong><br />
+</dt>
+<dd>
+Returns the X-Resource for the given pattern, excluding the program or
+class name, i.e.  <a href="#item_x_resource"><code>$term-&gt;x_resource (&quot;boldFont&quot;)</code></a> should return the
+same value as used by this instance of rxvt-unicode. Returns <code>undef</code> if no
+resource with that pattern exists.
+</dd>
+<dd>
+<p>This method should only be called during the <code>on_start</code> hook, as there is
+only one resource database per display, and later invocations might return
+the wrong resources.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_parse_keysym">$success = $term-&gt;parse_keysym ($keysym_spec, $command_string)</a></strong><br />

@@ -7,6 +7,12 @@ my $url =
       [ab-zA-Z0-9\-\@;\/?:&=%\$_+!*\x27()~]   # exclude some trailing characters (heuristic)
    )}x;
 
+sub on_start {
+   my ($self) = @_;
+
+   $self->{browser} = urxvt::untaint $self->x_resource ("urlLauncher") || "x-www-browser";
+}
+
 sub on_line_update {
    my ($self, $row) = @_;
 
@@ -29,22 +35,20 @@ sub on_line_update {
    ()
 }
 
-# needs confgiurability TODO
-#sub on_button_press {
-#    my ($self, $event) = @_;
-#    my $row = $event->{row};
-#    my $col =  $event->{col};
-#
-#    my $line = $self->line ($row);
-#    my $text = $line->t;
-#
-#    while($text =~ /$url/g) {
-#        #print "... " . ($-[0] 
-#        if ($-[0] <= $col && $+[0] >= $col) {
-#            system "firefox \Q$1\E &";
-#            return 1;
-#        }
-#    }
-#    ()
-#}
+sub on_button_press {
+    my ($self, $event) = @_;
+    my $row = $event->{row};
+    my $col = $event->{col};
+
+    my $line = $self->line ($row);
+    my $text = $line->t;
+
+    while($text =~ /$url/g) {
+        if ($-[0] <= $col && $+[0] >= $col) {
+            system "$self->{browser} \Q$1\E &";
+            return 1;
+        }
+    }
+    ()
+}
 

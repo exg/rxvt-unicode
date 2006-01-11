@@ -1258,6 +1258,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 
   void init_secondary ();
   const char **init_resources (int argc, const char *const *argv);
+  const char *x_resource (const char *name);
   void init_env ();
   void set_locale (const char *locale);
   void init_xlocale ();

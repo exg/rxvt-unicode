@@ -86,7 +86,9 @@ Displays a digital clock using the built-in overlay.
 
 =item mark-urls
 
-Uses per-line display filtering (C<on_line_update>) to underline urls.
+Uses per-line display filtering (C<on_line_update>) to underline urls and
+make them clickable. When clicked, the program specified in the resource
+C<urlLauncher> (default C<x-www-browser>) will be started.
 
 =item block-graphics-to-ascii
 
@@ -861,6 +863,17 @@ sub resource($$;$) {
    unshift @_, $self, $name, ($name =~ s/\s*\+\s*(\d+)$// ? $1 : 0);
    &urxvt::term::_resource
 }
+
+=item $value = $term->x_resource ($pattern)
+
+Returns the X-Resource for the given pattern, excluding the program or
+class name, i.e.  C<< $term->x_resource ("boldFont") >> should return the
+same value as used by this instance of rxvt-unicode. Returns C<undef> if no
+resource with that pattern exists.
+
+This method should only be called during the C<on_start> hook, as there is
+only one resource database per display, and later invocations might return
+the wrong resources.
 
 =item $success = $term->parse_keysym ($keysym_spec, $command_string)
 

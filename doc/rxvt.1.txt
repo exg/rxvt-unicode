@@ -981,6 +981,10 @@ RESOURCES (available also as long-options)
 
         See the rxvtperl(3) manpage.
 
+    urlLauncher: *string*
+        Specifies the program to be started with a URL argument. Used by the
+        "selection-popup" and "mark-urls" perl extensions.
+
     transient-for: *windowid*
         Sets the WM_TRANSIENT_FOR property to the given window iw.
 
