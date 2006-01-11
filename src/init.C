@@ -351,9 +351,10 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
     if (!(display = displays.get (rs[Rs_display_name])))
       rxvt_fatal ("can't open display %s, aborting.\n", rs[Rs_display_name]);
+
+    extract_resources ();
   }
 
-  extract_resources ();
   free (r_argv);
 
   /*

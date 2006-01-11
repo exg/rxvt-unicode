@@ -481,6 +481,7 @@ bool
 rxvt_term::init (int argc, const char *const *argv)
 {
   SET_R (this);
+  TEMP_ENV; // few things in X do not call setlocale :(
 
   set_locale ("");
 
@@ -535,7 +536,7 @@ rxvt_term::init (int argc, const char *const *argv)
 
   init_xlocale ();
 
-  scr_reset ();         /* initialize screen */
+  scr_reset (); // initialize screen
 
 #if 0
   XSynchronize (disp, True);
@@ -1447,6 +1448,8 @@ rxvt_term::IM_get_IC (const char *modifiers)
   const char *p;
   char **s;
   XIMStyles *xim_styles;
+
+  TEMP_ENV;
 
   if (! ((p = XSetLocaleModifiers (modifiers)) && *p))
     return false;

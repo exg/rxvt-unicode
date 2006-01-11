@@ -987,17 +987,15 @@ rxvt_term::flush ()
 
               do
                 {
-                  l = &ROW (row);
+                  l = &ROW (row++);
 
-                  if (l->f & LINE_FILTERED)
-                    row++;
-                  else
+                  if (!(l->f & LINE_FILTERED))
                     {
                       // line not filtered, mark it as filtered
                       l->f |= LINE_FILTERED;
                       while (l->is_longer ())
                         {
-                          l = &ROW (++row);
+                          l = &ROW (row++);
                           l->f |= LINE_FILTERED;
                         }
 
@@ -1009,7 +1007,7 @@ rxvt_term::flush ()
                 }
               while (l->is_longer () && row < end_row);
             }
-          while (++row < end_row);
+          while (row < end_row);
         }
 
       scr_refresh (refresh_type);
