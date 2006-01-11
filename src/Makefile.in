@@ -83,7 +83,8 @@ allbin: rxvt rxvtd rxvtc
 alldoc:
 
 clean:
-	$(RMF) rxvt rxvtc rxvtd core a.out *.o *.lo *.bak *~ *.intpro .libs/* librxvt.la tmpproto *.tmp
+	$(RMF) rxvt rxvtc rxvtd perlxsi.c rxvtperl.C
+	$(RMF) *.o *.lo .libs/* librxvt.la tmpproto *.tmp
 
 realclean: clean
 	$(RMF) tags librxvt.h
