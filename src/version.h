@@ -1,3 +1,3 @@
 // VERSION _must_ be \d.\d+
-#define VERSION "6.3"
+#define VERSION "7.0"
 #define DATE	"2006-01-04"

@@ -73,9 +73,6 @@
 /* Define if you have the on_exit function.  */
 #undef HAVE_ON_EXIT
 
-/* Define if you have the openpty function.  */
-#undef HAVE_OPENPTY
-
 /* Define if you have the revoke function.  */
 #undef HAVE_REVOKE
 
@@ -327,9 +324,6 @@
 
 /* Define if your XIMCallback specifies XIC as first type. */
 #undef XIMCB_PROTO_BROKEN
-
-/* Define if you have _GNU_SOURCE getpt()  */
-#undef HAVE_GETPT
 
 /* Define for this pty type */
 #undef PTYS_ARE_OPENPTY

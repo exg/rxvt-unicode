@@ -156,17 +156,17 @@ encodings built-in that increase download times and are rarely used).
 
 =item I need to make it setuid/setgid to support utmp/ptys on my OS, is this safe?
 
-Likely not. While I honestly try to make it secure, and am probably
-not bad at it, I think it is simply unreasonable to expect all of
-freetype + fontconfig + xft + xlib + ... + rxvt-unicode itself to all be
+Likely not. While I honestly try to make it secure, and am probably not
+bad at it, I think it is simply unreasonable to expect all of freetype
++ fontconfig + xft + xlib + perl + ... + rxvt-unicode itself to all be
 secure. Also, rxvt-unicode disables some options when it detects that it
-runs setuid or setgid, which is not nice.
+runs setuid or setgid, which is not nice. Besides, with the embedded perl
+interpreter the possibility for security problems easily multiplies.
 
 Elevated privileges are only required for utmp and pty operations on some
 systems (for example, GNU/Linux doesn't need any extra privileges for
-ptys, but some need it for utmp support). If rxvt-unicode doesn't support
-the library/setuid helper that your OS needs I'll be happy to assist you
-in implementing support for it.
+ptys, but some need it for utmp support). It is planned to mvoe this into
+a forked handler process, but this is not yet done.
 
 So, while setuid/setgid operation is supported and not a problem on your
 typical single-user-no-other-logins unix desktop, always remember that

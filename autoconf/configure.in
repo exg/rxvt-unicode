@@ -741,7 +741,6 @@ AC_CHECK_FUNCS( \
 	setsid \
 	setpgrp \
 	setpgid \
-	openpty \
 	_getpty \
 	grantpt \
 	unlockpt \
@@ -752,7 +751,6 @@ AC_CHECK_FUNCS( \
 	updwtmpx \
 	ttyslot \
 )
-dnl# Note: On NetBSD, openpty() exists in libutil.  Don't pull it in
 
 dnl# --------------------------------------------------------------------------
 dnl# DO ALL UTMP AND WTMP CHECKING
@@ -1187,13 +1185,13 @@ AC_CACHE_CHECK(for getpt, rxvt_cv_func_getpt,
 #ifdef HAVE_STDLIB_H
 # include <cstdlib>
 #endif]], [[(void)getpt();]])],[rxvt_cv_func_getpt=yes],[rxvt_cv_func_getpt=no])])
-if test x$rxvt_cv_func_getpt = xyes; then
-  AC_DEFINE(HAVE_GETPT, 1, Define if you have _GNU_SOURCE getpt() )
+if test x$rxvt_cv_func_getpt = xno; then
+  AC_CHECK_FUNC(openpty, [], [AC_CHECK_LIB(util, openpty, [LIBS="$LIBS -lutil"])])
 fi
 
 dnl# if we don't guess right then it's up to the user
 AC_CACHE_CHECK(for pty/tty type, rxvt_cv_ptys,
-[if test x$ac_cv_func_openpty = xyes; then
+[if test x$ac_cv_func_openpty = xyes -o x$ac_cv_lib_util_openpty = xyes; then
     rxvt_cv_ptys=OPENPTY
  else if test x$ac_cv_func__getpty = xyes; then
     rxvt_cv_ptys=SGI4
@@ -1424,7 +1422,7 @@ AC_SUBST(PERL)
 AC_SUBST(IF_PERL)
 AC_SUBST(PERL_O)
 
-if text x$support_perl = xyes; then
+if test x$support_perl = xyes; then
    support_frills=yes
 fi
 

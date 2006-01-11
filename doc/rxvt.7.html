@@ -237,18 +237,18 @@ encodings built-in that increase download times and are rarely used).</p>
 <dt><strong><a name="item_i_need_to_make_it_setuid_2fsetgid_to_support_utmp_">I need to make it setuid/setgid to support utmp/ptys on my OS, is this safe?</a></strong><br />
 </dt>
 <dd>
-Likely not. While I honestly try to make it secure, and am probably
-not bad at it, I think it is simply unreasonable to expect all of
-freetype + fontconfig + xft + xlib + ... + rxvt-unicode itself to all be
+Likely not. While I honestly try to make it secure, and am probably not
+bad at it, I think it is simply unreasonable to expect all of freetype
++ fontconfig + xft + xlib + perl + ... + rxvt-unicode itself to all be
 secure. Also, rxvt-unicode disables some options when it detects that it
-runs setuid or setgid, which is not nice.
+runs setuid or setgid, which is not nice. Besides, with the embedded perl
+interpreter the possibility for security problems easily multiplies.
 </dd>
 <dd>
 <p>Elevated privileges are only required for utmp and pty operations on some
 systems (for example, GNU/Linux doesn't need any extra privileges for
-ptys, but some need it for utmp support). If rxvt-unicode doesn't support
-the library/setuid helper that your OS needs I'll be happy to assist you
-in implementing support for it.</p>
+ptys, but some need it for utmp support). It is planned to mvoe this into
+a forked handler process, but this is not yet done.</p>
 </dd>
 <dd>
 <p>So, while setuid/setgid operation is supported and not a problem on your

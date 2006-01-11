@@ -705,24 +705,24 @@ rxvt_privileges (rxvt_privaction action)
          * change effective uid/gid - not real uid/gid - so we can switch
          * back to root later, as required
          */
-        seteuid (getuid ());
         setegid (getgid ());
+        seteuid (getuid ());
         break;
       case SAVE:
-        saved_euid = geteuid ();
         saved_egid = getegid ();
+        saved_euid = geteuid ();
         break;
       case RESTORE:
-        seteuid (saved_euid);
         setegid (saved_egid);
+        seteuid (saved_euid);
         break;
     }
 # else
   switch (action)
     {
       case IGNORE:
-        setuid (getuid ());
         setgid (getgid ());
+        setuid (getuid ());
         /* FALLTHROUGH */
       case SAVE:
         /* FALLTHROUGH */
