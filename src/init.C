@@ -1414,6 +1414,8 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
 void
 rxvt_term::run_command (const char *const *argv)
 {
+  TEMP_ENV; // not very temporary...
+
 #if ENABLE_FRILLS
   if (rs[Rs_pty_fd])
     {
@@ -1534,8 +1536,6 @@ int
 rxvt_term::run_child (const char *const *argv)
 {
   char *login;
-
-  TEMP_ENV; // not very temporary...
 
   SET_TTYMODE (STDIN_FILENO, &tio);       /* init terminal attributes */
 
