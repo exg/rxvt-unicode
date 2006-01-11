@@ -221,6 +221,8 @@ sighandler (int signum)
 
 void io_manager::reg (sig_watcher &w)
 {
+  init::required ();
+
   assert (0 < w.signum);
 
   sw.reserve (w.signum);
@@ -255,7 +257,7 @@ void io_manager::reg (sig_watcher &w)
 
 void io_manager::unreg (sig_watcher &w)
 {
-  if (!w.active)
+  if (!w.active || !iom_valid)
     return;
 
   assert (0 < w.signum && w.signum <= sw.size ());
