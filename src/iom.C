@@ -137,6 +137,11 @@ static struct init {
 #endif
   }
 
+  ~init ()
+  {
+    iom_valid = false;
+  }
+
   static void required ();
 } init;
 
