@@ -617,6 +617,18 @@ sub invoke {
    $retval
 }
 
+sub exec_async(@) {
+   my $pid = fork;
+
+   return
+      if !defined $pid or $pid;
+
+   %ENV = %{ $TERM->env };
+
+   exec @_;
+   _exit 255;
+}
+
 # urxvt::term::extension
 
 package urxvt::term::extension;

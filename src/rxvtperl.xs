@@ -31,6 +31,8 @@
 #include <cstddef>
 #include <cstdarg>
 
+#include "unistd.h"
+
 #include "iom.h"
 #include "rxvt.h"
 #include "keyboard.h"
@@ -711,6 +713,9 @@ untaint (SV *sv)
         SvTAINTED_off (RETVAL);
         OUTPUT:
         RETVAL
+
+void
+_exit (int status)
 
 bool
 safe ()

@@ -17,6 +17,8 @@ sub on_start {
    $self->{browser} = urxvt::untaint $self->x_resource ("urlLauncher") || "x-www-browser";
 
    $self->grab_button (3, urxvt::ControlMask);
+
+   ()
 }
 
 sub on_button_press {
@@ -69,7 +71,7 @@ sub on_button_press {
             and $add_button->("shell quote" => sub { $_ = "\Q$_" });
 
          /^(http|ftp|telnet|irc|news):\//
-            and $add_button->("run $self->{browser}" => sub { system "$self->{browser} \Q$_\E &" });
+            and $add_button->("run $self->{browser}" => sub { urxvt::exec_async $self->{browser}, $_ });
       }
 
       $popup->show;
