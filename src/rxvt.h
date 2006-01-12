@@ -121,31 +121,17 @@ void             rxvt_usleep                      (int usecs);
 extern char **environ;
 extern char **rxvt_environ; // the original environ pointer
 
-struct temp_environ
+inline void set_environ (stringvec *envv)
 {
-  char **prev;
+  if (envv)
+    environ = (char **)envv->begin ();
+}
 
-  temp_environ (const stringvec *envv)
-  : prev(environ)
-  {
-    if (envv)
-      environ = (char **)envv->begin ();
-  }
-
-  temp_environ (char **env)
-  : prev(environ)
-  {
-    if (env)
-      environ = env;
-  }
-
-  ~temp_environ ()
-  {
-    environ = prev;
-  }
-};
-
-#define TEMP_ENV		temp_environ temp_environ (envv)
+inline void set_environ (char **envv)
+{
+  if (envv)
+    environ = envv;
+}
 
 /*
  *****************************************************************************

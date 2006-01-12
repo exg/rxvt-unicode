@@ -498,6 +498,7 @@ BEGIN {
       urxvt::warn ($msg);
    };
 
+   # %ENV is the original startup environment
    delete $ENV{IFS};
    delete $ENV{CDPATH};
    delete $ENV{BASH_ENV};

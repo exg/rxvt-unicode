@@ -35,7 +35,7 @@ sub on_line_update {
    ()
 }
 
-sub on_button_press {
+sub on_button_release {
     my ($self, $event) = @_;
     my $row = $event->{row};
     my $col = $event->{col};
@@ -43,12 +43,15 @@ sub on_button_press {
     my $line = $self->line ($row);
     my $text = $line->t;
 
-    while($text =~ /$url/g) {
-        if ($-[0] <= $col && $+[0] >= $col) {
-            system "$self->{browser} \Q$1\E &";
-            return 1;
-        }
+    if ($event->{button} == 2) {
+       while ($text =~ /$url/g) {
+           if ($-[0] <= $col && $+[0] >= $col) {
+               system "$self->{browser} \Q$1\E &";
+               return 1;
+           }
+       }
     }
+
     ()
 }
 

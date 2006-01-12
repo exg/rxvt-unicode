@@ -36,6 +36,8 @@ struct rxvt_perl_term
 
 struct rxvt_perl_interp
 {
+  char **perl_environ;
+
   rxvt_perl_interp ();
   ~rxvt_perl_interp ();
 

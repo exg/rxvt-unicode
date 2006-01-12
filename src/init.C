@@ -341,19 +341,16 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   /*
    * Open display, get options/resources and create the window
    */
-  {
-    TEMP_ENV;
 
-    if ((rs[Rs_display_name] = getenv ("DISPLAY")) == NULL)
-      rs[Rs_display_name] = ":0";
+  if ((rs[Rs_display_name] = getenv ("DISPLAY")) == NULL)
+    rs[Rs_display_name] = ":0";
 
-    get_options (r_argc, r_argv);
+  get_options (r_argc, r_argv);
 
-    if (!(display = displays.get (rs[Rs_display_name])))
-      rxvt_fatal ("can't open display %s, aborting.\n", rs[Rs_display_name]);
+  if (!(display = displays.get (rs[Rs_display_name])))
+    rxvt_fatal ("can't open display %s, aborting.\n", rs[Rs_display_name]);
 
-    extract_resources ();
-  }
+  extract_resources ();
 
   free (r_argv);
 
@@ -583,7 +580,7 @@ rxvt_term::init_env ()
 void
 rxvt_term::set_locale (const char *locale)
 {
-  TEMP_ENV;
+  set_environ (envv);
 
 #if HAVE_XSETLOCALE || HAVE_SETLOCALE
   free (this->locale);
@@ -624,7 +621,7 @@ rxvt_term::set_locale (const char *locale)
 void
 rxvt_term::init_xlocale ()
 {
-  TEMP_ENV;
+  set_environ (envv);
 
 #ifdef USE_XIM
   if (!locale)
@@ -1415,8 +1412,6 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
 void
 rxvt_term::run_command (const char *const *argv)
 {
-  TEMP_ENV; // not very temporary...
-
 #if ENABLE_FRILLS
   if (rs[Rs_pty_fd])
     {

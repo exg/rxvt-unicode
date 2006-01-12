@@ -480,7 +480,7 @@ bool
 rxvt_term::init (int argc, const char *const *argv)
 {
   SET_R (this);
-  TEMP_ENV; // few things in X do not call setlocale :(
+  set_environ (envv); // few things in X do not call setlocale :(
 
   set_locale ("");
 
@@ -525,7 +525,7 @@ rxvt_term::init (int argc, const char *const *argv)
         }
 #endif
       rxvt_perl.init ();
-      setlocale (LC_CTYPE, curlocale); // perl init destroys this info
+      setlocale (LC_CTYPE, curlocale); // perl init destroys current locale
       HOOK_INVOKE ((this, HOOK_INIT, DT_END));
     }
 #endif
@@ -1453,7 +1453,7 @@ rxvt_term::IM_get_IC (const char *modifiers)
   char **s;
   XIMStyles *xim_styles;
 
-  TEMP_ENV;
+  set_environ (envv);
 
   if (! ((p = XSetLocaleModifiers (modifiers)) && *p))
     return false;
