@@ -1922,7 +1922,7 @@ rxvt_term::button_press (XButtonEvent &ev)
 #endif
 
                   /* allow shift+left click to extend selection */
-                  if (ev.state & ShiftMask && ! (priv_modes & PrivMode_mouse_report))
+                  if (ev.state & ShiftMask && !(priv_modes & PrivMode_mouse_report))
                     {
                       if (MEvent.button == Button1 && clickintime)
                         selection_rotate (ev.x, ev.y);

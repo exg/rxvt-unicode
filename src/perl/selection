@@ -11,17 +11,19 @@ sub on_keyboard_command {
 
 # "find interetsing things"-patterns
 my @mark_patterns = (
-   # urls, just a heuristic
-   qr{(
-      (?:https?|ftp|news|mailto|file)://[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),~]+
-      [ab-zA-Z0-9\-\@;\/?:&=%\$_+!*\x27()~]   # exclude some trailing characters (heuristic)
-   )}x,
+   qr{([[:alnum:]]+)},
 
    # common "parentheses"
    qr{(?:^|\s) ‘  ([^‘’]+?) ’ (?:\s|\)|$)}x,
    qr{(?:^|\s) `  ([^`']+?) ' (?:\s|\)|$)}x,
    qr{         \{ ([^{}]+?) \} }x,
    qr{         \[ ([^{}]+?) \] }x,
+
+   # urls, just a heuristic
+   qr{(
+      (?:https?|ftp|news|mailto|file)://[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),~]+
+      [ab-zA-Z0-9\-\@;\/?:&=%\$_+!*\x27()~]   # exclude some trailing characters (heuristic)
+   )}x,
 
    # shell-like argument quoting, basically always matches
    qr{\G [\ \t|&;<>()] *(
@@ -45,14 +47,20 @@ sub on_sel_extend {
 
    my ($row, $col) = $self->selection_mark;
    my $line = $self->line ($row);
-   my $offset = $line->offset_of ($row, $col);
    my $text = $line->t;
+   my $markofs = $line->offset_of ($row, $col);
+   my $curlen  = $line->offset_of ($self->selection_end)
+               - $line->offset_of ($self->selection_beg);
+
+   my @matches;
 
    for my $regex (@mark_patterns) {
       while ($text =~ /$regex/g) {
-         if ($-[1] <= $offset and $offset <= $+[1]) {
+         if ($-[1] <= $markofs and $markofs <= $+[1]) {
             my $ofs = $-[1];
             my $match = $1;
+
+            push @matches, [$ofs, length $match];
 
             for my $regex (@simplify_patterns) {
                if ($match =~ $regex) {
@@ -61,12 +69,24 @@ sub on_sel_extend {
                }
             }
 
-            $self->selection_beg ($line->coord_of ($ofs));
-            $self->selection_end ($line->coord_of ($ofs + length $match));
-            return 1;
+            push @matches, [$ofs, length $match];
          }
       }
    }
 
-   ()
+   for (sort { $a->[1] <=> $b->[1] or $b->[0] <=> $a->[0] } @matches) {
+      my ($ofs, $len) = @$_;
+
+      next if $len <= $curlen;
+
+      $self->selection_beg ($line->coord_of ($ofs));
+      $self->selection_end ($line->coord_of ($ofs + $len));
+      return 1;
+   }
+
+   # whole line
+   $self->selection_beg ($line->beg, 0);
+   $self->selection_end ($line->end, $self->ncol);
+
+   return 1;
 }

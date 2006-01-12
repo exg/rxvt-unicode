@@ -232,7 +232,9 @@ Returning a true value aborts selection grabbing. It will still be hilighted.
 Called whenever the user tries to extend the selection (e.g. with a double
 click) and is either supposed to return false (normal operation), or
 should extend the selection itelf and return true to suppress the built-in
-processing.
+processing. This can happen multiple times, as long as the callback
+returns true, it will be called on every further click by the user and is
+supposed to enlarge the selection more and more, if possible.
 
 See the F<selection> example extension.
 
@@ -597,6 +599,9 @@ sub invoke {
             warn $@;
          }
       }
+
+      verbose 11, "$HOOKNAME[$htype] returning <$retval>"
+         if $verbosity >= 11;
    }
 
    if ($htype == 1) { # DESTROY
@@ -1220,7 +1225,8 @@ Return the row number of the first/last row of the line, respectively.
 =item $offset = $line->offset_of ($row, $col)
 
 Returns the character offset of the given row|col pair within the logical
-line.
+line. Works for rows outside the line, too, and returns corresponding
+offsets outside the string.
 
 =item ($row, $col) = $line->coord_of ($offset)
 
@@ -1585,7 +1591,9 @@ numbers indicate more verbose output.
 
 =item >= 3 - script loading and management
 
-=item >=10 - all events received
+=item >=10 - all called hooks
+
+=item >=11 - hook reutrn values
 
 =back
 

@@ -3047,6 +3047,13 @@ rxvt_term::selection_click (int clicks, int x, int y)
   clicks = ((clicks - 1) % 3) + 1;
   selection.clicks = clicks;       /* save clicks so extend will work */
 
+  if (clicks == 2 && !selection.rect
+      && HOOK_INVOKE ((this, HOOK_SEL_EXTEND, DT_END)))
+    {
+      MEvent.clicks = 1; // what a mess
+      return;
+    }
+
   selection_start_colrow (Pixel2Col (x), Pixel2Row (y));
 
   if (clicks == 2 || clicks == 3)
@@ -3351,11 +3358,8 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
       if (ROWCOL_IS_AFTER (selection.end, selection.beg))
         selection.end.col--;
 
-      if (!HOOK_INVOKE ((this, HOOK_SEL_EXTEND, DT_END)))
-        {
-          selection_delimit_word (UP, &selection.beg, &selection.beg);
-          selection_delimit_word (DN, &selection.end, &selection.end);
-        }
+      selection_delimit_word (UP, &selection.beg, &selection.beg);
+      selection_delimit_word (DN, &selection.end, &selection.end);
     }
   else if (selection.clicks == 3)
     {
