@@ -26,11 +26,11 @@ L<http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html>.
 
 =over 4
 
-=item The new selection selects pieces that are too big/too small, can I
-change this?
+=item The new selection selects pieces that are too big, how can I select
+single words?
 
-Yes. For example, if you want to select smaller pieces ("words") you can
-use the following resource:
+Yes. For example, if you want to select alphanumeric words, you can use
+the following resource:
 
    URxvt.selection.pattern-0: ([[:word:]]+)
 
@@ -40,6 +40,9 @@ more and more.
 To get a selection that is very similar to the old code, try this pattern:
 
    URxvt.selection.pattern-0: ([^"&'()*,;<=>?@[\\\\]^`{|})]+)
+
+Please also note that the I<LeftClick Shift-LeftClik> combination also
+selects words like the old code.
 
 =item I don't like the new selection/popups/hotkeys/perl, how do I
 change/disable it?

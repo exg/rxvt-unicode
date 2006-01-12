@@ -158,10 +158,10 @@ also available on the World Wide Web at
 <http://cvs.schmorp.de/browse/*checkout*/rxvt\-unicode/doc/rxvt.7.html>.
 .SH "FREQUENTLY ASKED QUESTIONS"
 .IX Header "FREQUENTLY ASKED QUESTIONS"
-.IP "The new selection selects pieces that are too big/too small, can I change this?" 4
-.IX Item "The new selection selects pieces that are too big/too small, can I change this?"
-Yes. For example, if you want to select smaller pieces (\*(L"words\*(R") you can
-use the following resource:
+.IP "The new selection selects pieces that are too big, how can I select single words?" 4
+.IX Item "The new selection selects pieces that are too big, how can I select single words?"
+Yes. For example, if you want to select alphanumeric words, you can use
+the following resource:
 .Sp
 .Vb 1
 \&   URxvt.selection.pattern-0: ([[:word:]]+)
@@ -175,6 +175,9 @@ To get a selection that is very similar to the old code, try this pattern:
 .Vb 1
 \&   URxvt.selection.pattern-0: ([^"&'()*,;<=>?@[\e\e\e\e]^`{|})]+)
 .Ve
+.Sp
+Please also note that the \fILeftClick Shift-LeftClik\fR combination also
+selects words like the old code.
 .IP "I don't like the new selection/popups/hotkeys/perl, how do I change/disable it?" 4
 .IX Item "I don't like the new selection/popups/hotkeys/perl, how do I change/disable it?"
 You can disable the perl extension completely by setting the

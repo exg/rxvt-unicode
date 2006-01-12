@@ -1,8 +1,8 @@
 FREQUENTLY ASKED QUESTIONS
-    The new selection selects pieces that are too big/too small, can I
-    change this?
-        Yes. For example, if you want to select smaller pieces ("words") you
-        can use the following resource:
+    The new selection selects pieces that are too big, how can I select
+    single words?
+        Yes. For example, if you want to select alphanumeric words, you can
+        use the following resource:
 
            URxvt.selection.pattern-0: ([[:word:]]+)
 
@@ -13,6 +13,9 @@ FREQUENTLY ASKED QUESTIONS
         pattern:
 
            URxvt.selection.pattern-0: ([^"&'()*,;<=>?@[\\\\]^`{|})]+)
+
+        Please also note that the *LeftClick Shift-LeftClik* combination
+        also selects words like the old code.
 
     I don't like the new selection/popups/hotkeys/perl, how do I
     change/disable it?
