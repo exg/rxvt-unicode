@@ -92,7 +92,7 @@ sub search {
             } while $text =~ /$re/g;
 
             $self->{row} = $row;
-            $self->view_start (-$row + ($self->nrow >> 1));
+            $self->view_start (List::Util::max 0, -$row + ($self->nrow >> 1));
             $self->want_refresh;
             last;
          }
