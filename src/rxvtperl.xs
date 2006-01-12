@@ -395,10 +395,6 @@ struct rxvt_perl_interp rxvt_perl;
 
 static PerlInterpreter *perl;
 
-rxvt_perl_interp::rxvt_perl_interp ()
-{
-}
-
 rxvt_perl_interp::~rxvt_perl_interp ()
 {
   if (perl)

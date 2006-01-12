@@ -15,6 +15,8 @@ WISH: support tex fonts
 TODO: run external commands more sytematically (using $self->env etc.)
 TODO: document searchable-scorllback hotkey
 TODO: double-click and right-extend
+TODO: change scrollback to use cursor movements
+TODO: middle-click conflicts with menu use, !Ctrl
 	- added sections for DISTRIBUTION MAINTAINERS and about
           SETUID/SETGID to the FAQ.
         - selection, searchable-scrollback, selection-popup and
@@ -34,8 +36,7 @@ TODO: double-click and right-extend
         - free one of the cursors, fixes a small memory leak.
         - built-in (as opposed to terminfos) visual bell was broken/too fast.
         - applied minor cleanups by Ladislav Michnovic.
-        - applied better configure support for openpty and other pty stuff
-          (Emanuele Giaquinta).
+        - applied pty handling cleanups and improvements (Emanuele Giaquinta).
         - mark-urls launch-on-click by jepler.
         - removed "small" resource parsing function, as it wasn't really
           compatible, and not really small either.

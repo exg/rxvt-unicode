@@ -38,7 +38,6 @@ struct rxvt_perl_interp
 {
   char **perl_environ;
 
-  rxvt_perl_interp ();
   ~rxvt_perl_interp ();
 
   bool should_invoke[HOOK_NUM];

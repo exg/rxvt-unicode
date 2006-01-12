@@ -87,8 +87,8 @@ Displays a digital clock using the built-in overlay.
 =item mark-urls
 
 Uses per-line display filtering (C<on_line_update>) to underline urls and
-make them clickable. When clicked, the program specified in the resource
-C<urlLauncher> (default C<x-www-browser>) will be started.
+make them clickable. When middle-clicked, the program specified in the
+resource C<urlLauncher> (default C<x-www-browser>) will be started.
 
 =item block-graphics-to-ascii
 
