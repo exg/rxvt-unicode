@@ -975,6 +975,10 @@ RESOURCES (available also as long-options)
 
         See the rxvtperl(3) manpage.
 
+    searchable-scrollback: *keysym*
+        Sets the hotkey that starts the incremental scrollback buffer search
+        (default: "M-s").
+
     urlLauncher: *string*
         Specifies the program to be started with a URL argument. Used by the
         "selection-popup" and "mark-urls" perl extensions.

@@ -87,9 +87,14 @@ find them in <em>/opt/rxvt/lib/urxvt/perl/</em>.</p>
 </dt>
 <dd>
 (More) intelligent selection. This extension tries to be more intelligent
-when the user extends selections (double-click). Right now, it tries to
-select urls and complete shell-quoted arguments, which is very convenient,
-too, if your <em>ls</em> supports <code>--quoting-style=shell</code>.
+when the user extends selections (double-click and further clicks). Right
+now, it tries to select words, urls and complete shell-quoted
+arguments, which is very convenient, too, if your <em>ls</em> supports
+<code>--quoting-style=shell</code>.
+</dd>
+<dd>
+<p>A double-click usually selects the word under the cursor, further clicks
+will enlarge the selection.</p>
 </dd>
 <dd>
 <p>It also offers the following bindable keyboard command:</p>
@@ -124,14 +129,18 @@ evalution, web-browser starting etc.), depending on content.
 </dt>
 <dd>
 Adds regex search functionality to the scrollback buffer, triggered
-by a hotkey (default: <code>M-s</code>). When in search mode, normal terminal
-input/output is suspended.
+by a hotkey (default: <code>M-s</code>). While in search mode, normal terminal
+input/output is suspended and a regex is displayed at the bottom of the
+screen.
 </dd>
 <dd>
-<p><code>/</code> starts an incremental regex search, <code>n</code> searches further, <code>p</code> or
-<code>N</code> jump to the previous match, <code>G</code> jumps to the bottom and clears the
-history, <code>enter</code> leaves search mode at the current position and <code>escape</code>
-returns to the original position.</p>
+<p>Inputting characters appends them to the regex and continues incremental
+search. <code>BackSpace</code> removes a character from the regex, <code>Up</code> and <code>Down</code>
+search upwards/downwards in the scrollback buffer, <code>End</code> jumps to the
+bottom. <code>Escape</code> leaves search mode and returns to the point where search
+was started, while <code>Enter</code> or <code>Return</code> stay at the current position and
+additionally stores the first match in the current line into the primary
+selection.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_digital_2dclock">digital-clock</a></strong><br />
@@ -144,8 +153,9 @@ Displays a digital clock using the built-in overlay.
 </dt>
 <dd>
 Uses per-line display filtering (<code>on_line_update</code>) to underline urls and
-make them clickable. When clicked, the program specified in the resource
-<code>urlLauncher</code> (default <code>x-www-browser</code>) will be started.
+make them clickable. When middle-clicked, the program specified in the
+resource <code>urlLauncher</code> (default <code>x-www-browser</code>) will be started with
+the URL as first argument.
 </dd>
 <p></p>
 <dt><strong><a name="item_block_2dgraphics_2dto_2dascii">block-graphics-to-ascii</a></strong><br />
@@ -305,7 +315,9 @@ by calling <a href="#item_selection"><code>$term-&gt;selection</code></a>.
 Called whenever the user tries to extend the selection (e.g. with a double
 click) and is either supposed to return false (normal operation), or
 should extend the selection itelf and return true to suppress the built-in
-processing.
+processing. This can happen multiple times, as long as the callback
+returns true, it will be called on every further click by the user and is
+supposed to enlarge the selection more and more, if possible.
 </dd>
 <dd>
 <p>See the <em>selection</em> example extension.</p>
@@ -738,11 +750,21 @@ Return the current values of the selection mark, begin or end positions,
 and optionally set them to new values.
 </dd>
 <p></p>
+<dt><strong><a name="item_selection_make">$term-&gt;selection_make ($eventtime[, $rectangular])</a></strong><br />
+</dt>
+<dd>
+Tries to make a selection as set by <a href="#item_selection_beg"><code>selection_beg</code></a> and
+<a href="#item_selection_end"><code>selection_end</code></a>. If <code>$rectangular</code> is true (default: false), a
+rectangular selection will be made. This is the prefered function to make
+a selection.
+</dd>
+<p></p>
 <dt><strong><a name="item_selection_grab">$success = $term-&gt;selection_grab ($eventtime)</a></strong><br />
 </dt>
 <dd>
-Try to request the primary selection from the server (for example, as set
-by the next method).
+Try to request the primary selection text from the server (for example, as
+set by the next method). No visual feedback will be given. This function
+is mostly useful from within <code>on_sel_grab</code> hooks.
 </dd>
 <p></p>
 <dt><strong>$oldtext = $term-&gt;selection ([$newtext])</strong><br />
@@ -831,8 +853,8 @@ Convert the given locale-encoded octets into a perl string.
 </dt>
 <dd>
 XORs the rendition values in the given span with the provided value
-(default: <code>RS_RVid</code>). Useful in refresh hooks to provide effects similar
-to the selection.
+(default: <code>RS_RVid</code>), which <em>MUST NOT</em> contain font styles. Useful in
+refresh hooks to provide effects similar to the selection.
 </dd>
 <p></p>
 <dt><strong><a name="item_scr_xor_rect">$term-&gt;scr_xor_rect ($beg_row, $beg_col, $end_row, $end_col[, $rstyle1[, $rstyle2]])</a></strong><br />
@@ -841,7 +863,7 @@ to the selection.
 Similar to <a href="#item_scr_xor_span"><code>scr_xor_span</code></a>, but xors a rectangle instead. Trailing
 whitespace will additionally be xored with the <code>$rstyle2</code>, which defaults
 to <code>RS_RVid | RS_Uline</code>, which removes reverse video again and underlines
-it instead.
+it instead. Both styles <em>MUST NOT</em> contain font styles.
 </dd>
 <p></p>
 <dt><strong><a name="item_scr_bell">$term-&gt;scr_bell</a></strong><br />
@@ -1079,7 +1101,8 @@ Return the row number of the first/last row of the line, respectively.
 </dt>
 <dd>
 Returns the character offset of the given row|col pair within the logical
-line.
+line. Works for rows outside the line, too, and returns corresponding
+offsets outside the string.
 </dd>
 <p></p>
 <dt><strong><a name="item_coord_of">($row, $col) = $line-&gt;coord_of ($offset)</a></strong><br />
@@ -1317,7 +1340,9 @@ numbers indicate more verbose output.</p>
 </dt>
 <dt><strong><a name="item__3e_3d_3__2d_script_loading_and_management">&gt;= 3 - script loading and management</a></strong><br />
 </dt>
-<dt><strong><a name="item__3e_3d10__2d_all_events_received">&gt;=10 - all events received</a></strong><br />
+<dt><strong><a name="item__3e_3d10__2d_all_called_hooks">&gt;=10 - all called hooks</a></strong><br />
+</dt>
+<dt><strong><a name="item__3e_3d11__2d_hook_reutrn_values">&gt;=11 - hook reutrn values</a></strong><br />
 </dt>
 </dl>
 <p>

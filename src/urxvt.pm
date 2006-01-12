@@ -42,9 +42,13 @@ You can activate them like this:
 =item selection (enabled by default)
 
 (More) intelligent selection. This extension tries to be more intelligent
-when the user extends selections (double-click). Right now, it tries to
-select urls and complete shell-quoted arguments, which is very convenient,
-too, if your F<ls> supports C<--quoting-style=shell>.
+when the user extends selections (double-click and further clicks). Right
+now, it tries to select words, urls and complete shell-quoted
+arguments, which is very convenient, too, if your F<ls> supports
+C<--quoting-style=shell>.
+
+A double-click usually selects the word under the cursor, further clicks
+will enlarge the selection.
 
 It also offers the following bindable keyboard command:
 
@@ -72,13 +76,17 @@ evalution, web-browser starting etc.), depending on content.
 =item searchable-scrollback<hotkey> (enabled by default)
 
 Adds regex search functionality to the scrollback buffer, triggered
-by a hotkey (default: C<M-s>). When in search mode, normal terminal
-input/output is suspended.
+by a hotkey (default: C<M-s>). While in search mode, normal terminal
+input/output is suspended and a regex is displayed at the bottom of the
+screen.
 
-C</> starts an incremental regex search, C<n> searches further, C<p> or
-C<N> jump to the previous match, C<G> jumps to the bottom and clears the
-history, C<enter> leaves search mode at the current position and C<escape>
-returns to the original position.
+Inputting characters appends them to the regex and continues incremental
+search. C<BackSpace> removes a character from the regex, C<Up> and C<Down>
+search upwards/downwards in the scrollback buffer, C<End> jumps to the
+bottom. C<Escape> leaves search mode and returns to the point where search
+was started, while C<Enter> or C<Return> stay at the current position and
+additionally stores the first match in the current line into the primary
+selection.
 
 =item digital-clock
 
@@ -88,7 +96,8 @@ Displays a digital clock using the built-in overlay.
 
 Uses per-line display filtering (C<on_line_update>) to underline urls and
 make them clickable. When middle-clicked, the program specified in the
-resource C<urlLauncher> (default C<x-www-browser>) will be started.
+resource C<urlLauncher> (default C<x-www-browser>) will be started with
+the URL as first argument.
 
 =item block-graphics-to-ascii
 

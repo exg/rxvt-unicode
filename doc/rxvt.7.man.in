@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2006-01-11" "7.0" "RXVT-UNICODE"
+.TH rxvt 7 "2006-01-12" "7.0" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -158,6 +158,30 @@ also available on the World Wide Web at
 <http://cvs.schmorp.de/browse/*checkout*/rxvt\-unicode/doc/rxvt.7.html>.
 .SH "FREQUENTLY ASKED QUESTIONS"
 .IX Header "FREQUENTLY ASKED QUESTIONS"
+.IP "I don't like the new selection/popups/hotkeys/perl, how do I change/disable it?" 4
+.IX Item "I don't like the new selection/popups/hotkeys/perl, how do I change/disable it?"
+You can disable the perl extension completely by setting the
+\&\fBperl-ext-common\fR resource to the empty string, which also keeps
+rxvt-unicode from initialising perl, saving memory.
+.Sp
+If you only want to disable specific features, you first have to
+identify which perl extension is responsible. For this, read the section
+\&\fB\s-1PREPACKAGED\s0 \s-1EXTENSIONS\s0\fR in the @@RXVT_NAME@@\fIperl\fR\|(3) manpage. For
+example, to disable the \fBselection-popup\fR and \fBoption-popup\fR, specify
+this \fBperl-ext-common\fR resource:
+.Sp
+.Vb 1
+\&   URxvt.perl-ext-common: default,-selection-popup,-option-popup
+.Ve
+.Sp
+This will keep the default extensions, but disable the two popup
+extensions. Some extensions can also be configured, for example,
+scrollback search mode is triggered by \fBM\-s\fR. You can move it to any
+other combination either by setting the \fBsearchable-scrollback\fR resource:
+.Sp
+.Vb 1
+\&   URxvt.searchable-scrollback: CM-s
+.Ve
 .IP "Isn't rxvt supposed to be small? Don't all those features bloat?" 4
 .IX Item "Isn't rxvt supposed to be small? Don't all those features bloat?"
 I often get asked about this, and I think, no, they didn't cause extra

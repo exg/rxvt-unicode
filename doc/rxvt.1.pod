@@ -1117,6 +1117,11 @@ will be ignored when running setuid/setgid.
 
 See the @@RXVT_NAME@@perl(3) manpage.
 
+=item B<searchable-scrollback:> I<keysym>
+
+Sets the hotkey that starts the incremental scrollback buffer search
+(default: C<M-s>).
+
 =item B<urlLauncher>: I<string>
 
 Specifies the program to be started with a URL argument. Used by the

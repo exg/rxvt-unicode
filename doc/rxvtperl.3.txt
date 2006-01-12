@@ -33,10 +33,13 @@ PREPACKAGED EXTENSIONS
 
     selection (enabled by default)
         (More) intelligent selection. This extension tries to be more
-        intelligent when the user extends selections (double-click). Right
-        now, it tries to select urls and complete shell-quoted arguments,
-        which is very convenient, too, if your ls supports
-        "--quoting-style=shell".
+        intelligent when the user extends selections (double-click and
+        further clicks). Right now, it tries to select words, urls and
+        complete shell-quoted arguments, which is very convenient, too, if
+        your ls supports "--quoting-style=shell".
+
+        A double-click usually selects the word under the cursor, further
+        clicks will enlarge the selection.
 
         It also offers the following bindable keyboard command:
 
@@ -57,21 +60,26 @@ PREPACKAGED EXTENSIONS
 
     searchable-scrollback<hotkey> (enabled by default)
         Adds regex search functionality to the scrollback buffer, triggered
-        by a hotkey (default: "M-s"). When in search mode, normal terminal
-        input/output is suspended.
+        by a hotkey (default: "M-s"). While in search mode, normal terminal
+        input/output is suspended and a regex is displayed at the bottom of
+        the screen.
 
-        "/" starts an incremental regex search, "n" searches further, "p" or
-        "N" jump to the previous match, "G" jumps to the bottom and clears
-        the history, "enter" leaves search mode at the current position and
-        "escape" returns to the original position.
+        Inputting characters appends them to the regex and continues
+        incremental search. "BackSpace" removes a character from the regex,
+        "Up" and "Down" search upwards/downwards in the scrollback buffer,
+        "End" jumps to the bottom. "Escape" leaves search mode and returns
+        to the point where search was started, while "Enter" or "Return"
+        stay at the current position and additionally stores the first match
+        in the current line into the primary selection.
 
     digital-clock
         Displays a digital clock using the built-in overlay.
 
     mark-urls
         Uses per-line display filtering ("on_line_update") to underline urls
-        and make them clickable. When clicked, the program specified in the
-        resource "urlLauncher" (default "x-www-browser") will be started.
+        and make them clickable. When middle-clicked, the program specified
+        in the resource "urlLauncher" (default "x-www-browser") will be
+        started with the URL as first argument.
 
     block-graphics-to-ascii
         A not very useful example of filtering all text output to the
@@ -189,7 +197,10 @@ API DOCUMENTATION
         Called whenever the user tries to extend the selection (e.g. with a
         double click) and is either supposed to return false (normal
         operation), or should extend the selection itelf and return true to
-        suppress the built-in processing.
+        suppress the built-in processing. This can happen multiple times, as
+        long as the callback returns true, it will be called on every
+        further click by the user and is supposed to enlarge the selection
+        more and more, if possible.
 
         See the selection example extension.
 
@@ -474,9 +485,17 @@ API DOCUMENTATION
         Return the current values of the selection mark, begin or end
         positions, and optionally set them to new values.
 
+    $term->selection_make ($eventtime[, $rectangular])
+        Tries to make a selection as set by "selection_beg" and
+        "selection_end". If $rectangular is true (default: false), a
+        rectangular selection will be made. This is the prefered function to
+        make a selection.
+
     $success = $term->selection_grab ($eventtime)
-        Try to request the primary selection from the server (for example,
-        as set by the next method).
+        Try to request the primary selection text from the server (for
+        example, as set by the next method). No visual feedback will be
+        given. This function is mostly useful from within "on_sel_grab"
+        hooks.
 
     $oldtext = $term->selection ([$newtext])
         Return the current selection text and optionally replace it by
@@ -531,15 +550,16 @@ API DOCUMENTATION
 
     $term->scr_xor_span ($beg_row, $beg_col, $end_row, $end_col[, $rstyle])
         XORs the rendition values in the given span with the provided value
-        (default: "RS_RVid"). Useful in refresh hooks to provide effects
-        similar to the selection.
+        (default: "RS_RVid"), which *MUST NOT* contain font styles. Useful
+        in refresh hooks to provide effects similar to the selection.
 
     $term->scr_xor_rect ($beg_row, $beg_col, $end_row, $end_col[, $rstyle1[,
     $rstyle2]])
         Similar to "scr_xor_span", but xors a rectangle instead. Trailing
         whitespace will additionally be xored with the $rstyle2, which
         defaults to "RS_RVid | RS_Uline", which removes reverse video again
-        and underlines it instead.
+        and underlines it instead. Both styles *MUST NOT* contain font
+        styles.
 
     $term->scr_bell
         Ring the bell!
@@ -689,7 +709,8 @@ API DOCUMENTATION
 
         $offset = $line->offset_of ($row, $col)
             Returns the character offset of the given row|col pair within
-            the logical line.
+            the logical line. Works for rows outside the line, too, and
+            returns corresponding offsets outside the string.
 
         ($row, $col) = $line->coord_of ($offset)
             Translates a string offset into terminal coordinates again.
@@ -829,7 +850,8 @@ ENVIRONMENT
 
     == 0 - fatal messages
     >= 3 - script loading and management
-    >=10 - all events received
+    >=10 - all called hooks
+    >=11 - hook reutrn values
 
 AUTHOR
      Marc Lehmann <pcg@goof.com>

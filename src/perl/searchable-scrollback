@@ -121,7 +121,7 @@ sub key_press {
 
    delete $self->{manpage_overlay};
 
-   if ($keysym == 0xff0d || $keysym == 0xff8d) {
+   if ($keysym == 0xff0d || $keysym == 0xff8d) { # enter
       if ($self->{found}) {
          my ($br, $bc, $er, $ec) = @{ $self->{found}[0] };
          $self->selection_beg ($br, $bc);
@@ -129,31 +129,19 @@ sub key_press {
          $self->selection_make ($event->{time});
       }
       $self->leave;
-   } elsif ($keysym == 0xff1b) {
+   } elsif ($keysym == 0xff1b) { # escape
       $self->view_start ($self->{view_start});
       $self->leave;
-   } elsif ($keysym == 0xff57) {
+   } elsif ($keysym == 0xff57) { # end
       $self->{row} = $self->nrow - 1;
       $self->view_start (0);
-   } elsif ($keysym == 0xff52) {
+   } elsif ($keysym == 0xff52) { # up
       $self->{row}-- if $self->{row} > -$self->nsaved;
       $self->search (-1);
-   } elsif ($keysym == 0xff54) {
+   } elsif ($keysym == 0xff54) { # down
       $self->{row}++ if $self->{row} < $self->nrow;
       $self->search (+1);
-   } elsif ($string eq "n") {
-      if ($self->{found} && @{ $self->{found} }) {
-         push @{ $self->{history} }, [$self->view_start, $self->{found}];
-         $self->search (-1);
-         $self->idle;
-      }
-   } elsif ($string eq "p" or $string eq "N") {
-      if (my $prev = pop @{ $self->{history} }) {
-         $self->view_start ($prev->[0]);
-         $self->{found} = $prev->[1];
-         $self->want_refresh;
-      }
-   } elsif ($keysym == 0xff08) {
+   } elsif ($keysym == 0xff08) { # backspace
       substr $self->{search}, -1, 1, "";
       $self->search;
       $self->idle;

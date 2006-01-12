@@ -75,6 +75,36 @@ also available on the World Wide Web at
 <hr />
 <h1><a name="frequently_asked_questions">FREQUENTLY ASKED QUESTIONS</a></h1>
 <dl>
+<dt><strong><a name="item_i_don_27t_like_the_new_selection_2fpopups_2fhotkey">I don't like the new selection/popups/hotkeys/perl, how do I
+change/disable it?</a></strong><br />
+</dt>
+<dd>
+You can disable the perl extension completely by setting the
+<strong>perl-ext-common</strong> resource to the empty string, which also keeps
+rxvt-unicode from initialising perl, saving memory.
+</dd>
+<dd>
+<p>If you only want to disable specific features, you first have to
+identify which perl extension is responsible. For this, read the section
+<strong>PREPACKAGED EXTENSIONS</strong> in the <code>rxvtperl(3)</code> manpage. For
+example, to disable the <strong>selection-popup</strong> and <strong>option-popup</strong>, specify
+this <strong>perl-ext-common</strong> resource:</p>
+</dd>
+<dd>
+<pre>
+   URxvt.perl-ext-common: default,-selection-popup,-option-popup</pre>
+</dd>
+<dd>
+<p>This will keep the default extensions, but disable the two popup
+extensions. Some extensions can also be configured, for example,
+scrollback search mode is triggered by <strong>M-s</strong>. You can move it to any
+other combination either by setting the <strong>searchable-scrollback</strong> resource:</p>
+</dd>
+<dd>
+<pre>
+   URxvt.searchable-scrollback: CM-s</pre>
+</dd>
+<p></p>
 <dt><strong><a name="item_isn_27t_rxvt_supposed_to_be_small_3f_don_27t_all_t">Isn't rxvt supposed to be small? Don't all those features bloat?</a></strong><br />
 </dt>
 <dd>

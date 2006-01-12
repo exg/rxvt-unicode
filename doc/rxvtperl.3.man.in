@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-11" "6.3" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-12" "7.0" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -175,9 +175,13 @@ You can activate them like this:
 .IP "selection (enabled by default)" 4
 .IX Item "selection (enabled by default)"
 (More) intelligent selection. This extension tries to be more intelligent
-when the user extends selections (double\-click). Right now, it tries to
-select urls and complete shell-quoted arguments, which is very convenient,
-too, if your \fIls\fR supports \f(CW\*(C`\-\-quoting\-style=shell\*(C'\fR.
+when the user extends selections (double\-click and further clicks). Right
+now, it tries to select words, urls and complete shell-quoted
+arguments, which is very convenient, too, if your \fIls\fR supports
+\&\f(CW\*(C`\-\-quoting\-style=shell\*(C'\fR.
+.Sp
+A double-click usually selects the word under the cursor, further clicks
+will enlarge the selection.
 .Sp
 It also offers the following bindable keyboard command:
 .RS 4
@@ -203,21 +207,26 @@ evalution, web-browser starting etc.), depending on content.
 .IP "searchable\-scrollback<hotkey> (enabled by default)" 4
 .IX Item "searchable-scrollback<hotkey> (enabled by default)"
 Adds regex search functionality to the scrollback buffer, triggered
-by a hotkey (default: \f(CW\*(C`M\-s\*(C'\fR). When in search mode, normal terminal
-input/output is suspended.
+by a hotkey (default: \f(CW\*(C`M\-s\*(C'\fR). While in search mode, normal terminal
+input/output is suspended and a regex is displayed at the bottom of the
+screen.
 .Sp
-\&\f(CW\*(C`/\*(C'\fR starts an incremental regex search, \f(CW\*(C`n\*(C'\fR searches further, \f(CW\*(C`p\*(C'\fR or
-\&\f(CW\*(C`N\*(C'\fR jump to the previous match, \f(CW\*(C`G\*(C'\fR jumps to the bottom and clears the
-history, \f(CW\*(C`enter\*(C'\fR leaves search mode at the current position and \f(CW\*(C`escape\*(C'\fR
-returns to the original position.
+Inputting characters appends them to the regex and continues incremental
+search. \f(CW\*(C`BackSpace\*(C'\fR removes a character from the regex, \f(CW\*(C`Up\*(C'\fR and \f(CW\*(C`Down\*(C'\fR
+search upwards/downwards in the scrollback buffer, \f(CW\*(C`End\*(C'\fR jumps to the
+bottom. \f(CW\*(C`Escape\*(C'\fR leaves search mode and returns to the point where search
+was started, while \f(CW\*(C`Enter\*(C'\fR or \f(CW\*(C`Return\*(C'\fR stay at the current position and
+additionally stores the first match in the current line into the primary
+selection.
 .IP "digital-clock" 4
 .IX Item "digital-clock"
 Displays a digital clock using the built-in overlay.
 .IP "mark-urls" 4
 .IX Item "mark-urls"
 Uses per-line display filtering (\f(CW\*(C`on_line_update\*(C'\fR) to underline urls and
-make them clickable. When clicked, the program specified in the resource
-\&\f(CW\*(C`urlLauncher\*(C'\fR (default \f(CW\*(C`x\-www\-browser\*(C'\fR) will be started.
+make them clickable. When middle\-clicked, the program specified in the
+resource \f(CW\*(C`urlLauncher\*(C'\fR (default \f(CW\*(C`x\-www\-browser\*(C'\fR) will be started with
+the \s-1URL\s0 as first argument.
 .IP "block-graphics-to-ascii" 4
 .IX Item "block-graphics-to-ascii"
 A not very useful example of filtering all text output to the terminal,
@@ -341,7 +350,9 @@ Returning a true value aborts selection grabbing. It will still be hilighted.
 Called whenever the user tries to extend the selection (e.g. with a double
 click) and is either supposed to return false (normal operation), or
 should extend the selection itelf and return true to suppress the built-in
-processing.
+processing. This can happen multiple times, as long as the callback
+returns true, it will be called on every further click by the user and is
+supposed to enlarge the selection more and more, if possible.
 .Sp
 See the \fIselection\fR example extension.
 .ie n .IP "on_view_change $term\fR, \f(CW$offset" 4
@@ -685,11 +696,19 @@ set it (which is usually bad as applications don't expect that).
 .PD
 Return the current values of the selection mark, begin or end positions,
 and optionally set them to new values.
+.ie n .IP "$term\->selection_make ($eventtime[, $rectangular])" 4
+.el .IP "$term\->selection_make ($eventtime[, \f(CW$rectangular\fR])" 4
+.IX Item "$term->selection_make ($eventtime[, $rectangular])"
+Tries to make a selection as set by \f(CW\*(C`selection_beg\*(C'\fR and
+\&\f(CW\*(C`selection_end\*(C'\fR. If \f(CW$rectangular\fR is true (default: false), a
+rectangular selection will be made. This is the prefered function to make
+a selection.
 .ie n .IP "$success = $term\->selection_grab ($eventtime)" 4
 .el .IP "$success = \f(CW$term\fR\->selection_grab ($eventtime)" 4
 .IX Item "$success = $term->selection_grab ($eventtime)"
-Try to request the primary selection from the server (for example, as set
-by the next method).
+Try to request the primary selection text from the server (for example, as
+set by the next method). No visual feedback will be given. This function
+is mostly useful from within \f(CW\*(C`on_sel_grab\*(C'\fR hooks.
 .ie n .IP "$oldtext = $term\->selection ([$newtext])" 4
 .el .IP "$oldtext = \f(CW$term\fR\->selection ([$newtext])" 4
 .IX Item "$oldtext = $term->selection ([$newtext])"
@@ -754,15 +773,15 @@ Convert the given locale-encoded octets into a perl string.
 .el .IP "$term\->scr_xor_span ($beg_row, \f(CW$beg_col\fR, \f(CW$end_row\fR, \f(CW$end_col\fR[, \f(CW$rstyle\fR])" 4
 .IX Item "$term->scr_xor_span ($beg_row, $beg_col, $end_row, $end_col[, $rstyle])"
 XORs the rendition values in the given span with the provided value
-(default: \f(CW\*(C`RS_RVid\*(C'\fR). Useful in refresh hooks to provide effects similar
-to the selection.
+(default: \f(CW\*(C`RS_RVid\*(C'\fR), which \fI\s-1MUST\s0 \s-1NOT\s0\fR contain font styles. Useful in
+refresh hooks to provide effects similar to the selection.
 .ie n .IP "$term\->scr_xor_rect ($beg_row, $beg_col\fR, \f(CW$end_row\fR, \f(CW$end_col\fR[, \f(CW$rstyle1\fR[, \f(CW$rstyle2]])" 4
 .el .IP "$term\->scr_xor_rect ($beg_row, \f(CW$beg_col\fR, \f(CW$end_row\fR, \f(CW$end_col\fR[, \f(CW$rstyle1\fR[, \f(CW$rstyle2\fR]])" 4
 .IX Item "$term->scr_xor_rect ($beg_row, $beg_col, $end_row, $end_col[, $rstyle1[, $rstyle2]])"
 Similar to \f(CW\*(C`scr_xor_span\*(C'\fR, but xors a rectangle instead. Trailing
 whitespace will additionally be xored with the \f(CW$rstyle2\fR, which defaults
 to \f(CW\*(C`RS_RVid | RS_Uline\*(C'\fR, which removes reverse video again and underlines
-it instead.
+it instead. Both styles \fI\s-1MUST\s0 \s-1NOT\s0\fR contain font styles.
 .IP "$term\->scr_bell" 4
 .IX Item "$term->scr_bell"
 Ring the bell!
@@ -960,7 +979,8 @@ Return the row number of the first/last row of the line, respectively.
 .el .IP "$offset = \f(CW$line\fR\->offset_of ($row, \f(CW$col\fR)" 4
 .IX Item "$offset = $line->offset_of ($row, $col)"
 Returns the character offset of the given row|col pair within the logical
-line.
+line. Works for rows outside the line, too, and returns corresponding
+offsets outside the string.
 .ie n .IP "($row, $col\fR) = \f(CW$line\->coord_of ($offset)" 4
 .el .IP "($row, \f(CW$col\fR) = \f(CW$line\fR\->coord_of ($offset)" 4
 .IX Item "($row, $col) = $line->coord_of ($offset)"
@@ -1132,8 +1152,10 @@ numbers indicate more verbose output.
 .PD 0
 .IP ">= 3 \- script loading and management" 4
 .IX Item ">= 3 - script loading and management"
-.IP ">=10 \- all events received" 4
-.IX Item ">=10 - all events received"
+.IP ">=10 \- all called hooks" 4
+.IX Item ">=10 - all called hooks"
+.IP ">=11 \- hook reutrn values" 4
+.IX Item ">=11 - hook reutrn values"
 .PD
 .SH "AUTHOR"
 .IX Header "AUTHOR"

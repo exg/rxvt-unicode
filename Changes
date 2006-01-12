@@ -13,9 +13,6 @@ WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
 7.0
-TODO: document searchable-scorllback hotkey
-TODO: double-click and right-extend
-TODO: change scrollback to use cursor movements
 	- added sections for DISTRIBUTION MAINTAINERS and about
           SETUID/SETGID to the FAQ.
         - selection, searchable-scrollback, selection-popup and

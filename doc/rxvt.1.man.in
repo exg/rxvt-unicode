@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2006-01-11" "7.0" "RXVT-UNICODE"
+.TH rxvt 1 "2006-01-12" "7.0" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -1140,6 +1140,10 @@ scripts. When looking for extensions specified by the \f(CW\*(C`perl\*(C'\fR res
 will be ignored when running setuid/setgid.
 .Sp
 See the @@RXVT_NAME@@\fIperl\fR\|(3) manpage.
+.IP "\fBsearchable\-scrollback:\fR \fIkeysym\fR" 4
+.IX Item "searchable-scrollback: keysym"
+Sets the hotkey that starts the incremental scrollback buffer search
+(default: \f(CW\*(C`M\-s\*(C'\fR).
 .IP "\fBurlLauncher\fR: \fIstring\fR" 4
 .IX Item "urlLauncher: string"
 Specifies the program to be started with a \s-1URL\s0 argument. Used by the
