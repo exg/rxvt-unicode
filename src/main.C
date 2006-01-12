@@ -480,28 +480,33 @@ bool
 rxvt_term::init (int argc, const char *const *argv)
 {
   SET_R (this);
-  TEMP_ENV; // few things in X do not call setlocale :(
 
-  set_locale ("");
+  const char **cmd_argv;
+  
+  {
+    TEMP_ENV; // few things in X do not call setlocale :(
 
-  if (!init_vars ())
-    return false;
+    set_locale ("");
 
-  init_secondary ();
+    if (!init_vars ())
+      return false;
 
-  const char **cmd_argv = init_resources (argc, argv);
+    init_secondary ();
+
+    cmd_argv = init_resources (argc, argv);
 
 #ifdef KEYSYM_RESOURCE
-  keyboard->register_done ();
+    keyboard->register_done ();
 #endif
 
 #if MENUBAR_MAX
-  menubar_read (rs[Rs_menu]);
+    menubar_read (rs[Rs_menu]);
 #endif
 #ifdef HAVE_SCROLLBARS
-  if (OPTION (Opt_scrollBar))
-    scrollBar.setIdle ();    /* set existence for size calculations */
+    if (OPTION (Opt_scrollBar))
+      scrollBar.setIdle ();    /* set existence for size calculations */
 #endif
+  }
 
 #if ENABLE_PERL
   if (!rs[Rs_perl_ext_1])
@@ -525,54 +530,59 @@ rxvt_term::init (int argc, const char *const *argv)
         }
 #endif
       rxvt_perl.init ();
+      setlocale (LC_CTYPE, curlocale); // perl destroys this info
       HOOK_INVOKE ((this, HOOK_INIT, DT_END));
     }
 #endif
 
-  create_windows (argc, argv);
+  {
+    TEMP_ENV;
 
-  dDisp;
+    create_windows (argc, argv);
 
-  init_xlocale ();
+    dDisp;
 
-  scr_reset (); // initialize screen
+    init_xlocale ();
+
+    scr_reset (); // initialize screen
 
 #if 0
-  XSynchronize (disp, True);
+    XSynchronize (disp, True);
 #endif
 
 #ifdef HAVE_SCROLLBARS
-  if (OPTION (Opt_scrollBar))
-    resize_scrollbar ();      /* create and map scrollbar */
+    if (OPTION (Opt_scrollBar))
+      resize_scrollbar ();      /* create and map scrollbar */
 #endif
 #if (MENUBAR_MAX)
-  if (menubar_visible ())
-    XMapWindow (disp, menuBar.win);
+    if (menubar_visible ())
+      XMapWindow (disp, menuBar.win);
 #endif
 #ifdef TRANSPARENT
-  if (OPTION (Opt_transparent))
-    {
-      XSelectInput (disp, display->root, PropertyChangeMask);
-      check_our_parents ();
-      rootwin_ev.start (display, display->root);
-    }
+    if (OPTION (Opt_transparent))
+      {
+        XSelectInput (disp, display->root, PropertyChangeMask);
+        check_our_parents ();
+        rootwin_ev.start (display, display->root);
+      }
 #endif
 
-  XMapWindow (disp, vt);
-  XMapWindow (disp, parent[0]);
+    XMapWindow (disp, vt);
+    XMapWindow (disp, parent[0]);
 
-  set_colorfgbg ();
+    set_colorfgbg ();
 
-  init_command (cmd_argv);
+    init_command (cmd_argv);
 
-  free (cmd_argv);
+    free (cmd_argv);
 
-  if (pty.pty >= 0)
-    pty_ev.start (pty.pty, EVENT_READ);
+    if (pty.pty >= 0)
+      pty_ev.start (pty.pty, EVENT_READ);
 
-  check_ev.start ();
+    check_ev.start ();
 
-  HOOK_INVOKE ((this, HOOK_START, DT_END));
+    HOOK_INVOKE ((this, HOOK_START, DT_END));
+  }
 
   return true;
 }
