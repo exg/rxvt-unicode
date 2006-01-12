@@ -397,25 +397,5 @@ struct stringvec : simplevec<char *>
   }
 };
 
-// temporarily replace the process environment
-extern char **environ;
-
-struct temp_environ
-{
-  char **prev;
-
-  temp_environ (const stringvec *envv)
-  : prev (environ)
-  {
-    if (envv)
-      environ = (char **)envv->begin ();
-  }
-
-  ~temp_environ ()
-  {
-    environ = prev;
-  }
-};
-
 #endif
 

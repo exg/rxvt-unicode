@@ -413,6 +413,8 @@ rxvt_perl_interp::init ()
 {
   if (!perl)
     {
+      temp_environ temp_environ(rxvt_environ);
+
       char *argv[] = {
         "",
         "-T",
@@ -481,6 +483,8 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
       if (!should_invoke [htype])
         return false;
     }
+
+  temp_environ temp_environ(rxvt_environ);
 
   dSP;
   va_list ap;

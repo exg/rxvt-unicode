@@ -115,6 +115,38 @@ void             rxvt_Draw_Shadow                 (Display *display, Window win,
 void             rxvt_Draw_Triangle               (Display *display, Window win, GC topShadow, GC botShadow, int x, int y, int w, int type);
 void             rxvt_usleep                      (int usecs);
 
+/////////////////////////////////////////////////////////////////////////////
+
+// temporarily replace the process environment
+extern char **environ;
+extern char **rxvt_environ; // the original environ pointer
+
+struct temp_environ
+{
+  char **prev;
+
+  temp_environ (const stringvec *envv)
+  : prev(environ)
+  {
+    if (envv)
+      environ = (char **)envv->begin ();
+  }
+
+  temp_environ (char **env)
+  : prev(environ)
+  {
+    if (env)
+      environ = env;
+  }
+
+  ~temp_environ ()
+  {
+    environ = prev;
+  }
+};
+
+#define TEMP_ENV		temp_environ temp_environ (envv)
+
 /*
  *****************************************************************************
  * STRUCTURES AND TYPEDEFS
@@ -699,8 +731,6 @@ enum {
 #define Row2Pixel(row)          ((int32_t)Height2Pixel(row))
 #define Width2Pixel(n)          ((int32_t)(n) * (int32_t)fwidth)
 #define Height2Pixel(n)         ((int32_t)(n) * (int32_t)fheight)
-
-#define TEMP_ENV		temp_environ temp_environ (envv)
 
 #define OPTION(opt)		(options & (opt))
 #define DEFAULT_OPTIONS		(Opt_scrollBar | Opt_scrollTtyOutput \
