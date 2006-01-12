@@ -11,13 +11,14 @@ sub on_keyboard_command {
 
 # "find interetsing things"-patterns
 my @mark_patterns = (
-   qr{([[:alnum:]]+)},
+   qr{([[:word:]]+)},
 
    # common "parentheses"
    qr{(?:^|\s) ‘  ([^‘’]+?) ’ (?:\s|\)|$)}x,
    qr{(?:^|\s) `  ([^`']+?) ' (?:\s|\)|$)}x,
    qr{         \{ ([^{}]+?) \} }x,
    qr{         \[ ([^{}]+?) \] }x,
+   qr{         \( ([^()]+?) \) }x,
 
    # urls, just a heuristic
    qr{(
