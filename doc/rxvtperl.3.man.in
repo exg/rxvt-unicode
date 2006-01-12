@@ -183,7 +183,29 @@ arguments, which is very convenient, too, if your \fIls\fR supports
 A double-click usually selects the word under the cursor, further clicks
 will enlarge the selection.
 .Sp
-It also offers the following bindable keyboard command:
+The selection works by trying to match a number of regexes and displaying
+them in increasing order of length. You can add your own regexes by
+specifying resources of the form:
+.Sp
+.Vb 3
+\&   URxvt.selection.pattern-0: perl-regex
+\&   URxvt.selection.pattern-1: perl-regex
+\&   ...
+.Ve
+.Sp
+The index number (0, 1...) must not have any holes, and each regex must
+contain at least one pair of capturing parentheses, which will be used for
+the match. For example, the followign adds a regex that matches everything
+between two vertical bars:
+.Sp
+.Vb 1
+\&   URxvt.selection.pattern-0: \e\e|([^|]+)\e\e|
+.Ve
+.Sp
+You can look at the source of the selection extension to see more
+interesting uses, such as parsing a line from beginning to end.
+.Sp
+This extension also offers the following bindable keyboard command:
 .RS 4
 .IP "rot13" 4
 .IX Item "rot13"
@@ -218,9 +240,34 @@ bottom. \f(CW\*(C`Escape\*(C'\fR leaves search mode and returns to the point whe
 was started, while \f(CW\*(C`Enter\*(C'\fR or \f(CW\*(C`Return\*(C'\fR stay at the current position and
 additionally stores the first match in the current line into the primary
 selection.
-.IP "digital-clock" 4
-.IX Item "digital-clock"
-Displays a digital clock using the built-in overlay.
+.IP "selection-autotransform" 4
+.IX Item "selection-autotransform"
+This selection allows you to do automatic transforms on a selection
+whenever a selection is made.
+.Sp
+It works by specifying perl snippets (most useful is a single \f(CW\*(C`s///\*(C'\fR
+operator) that modify \f(CW$_\fR as resources:
+.Sp
+.Vb 3
+\&   URxvt.selection-autotransform.0: transform
+\&   URxvt.selection-autotransform.1: transform
+\&   ...
+.Ve
+.Sp
+For example, the following will transform selections of the form
+\&\f(CW\*(C`filename:number\*(C'\fR, often seen in compiler messages, into \f(CW\*(C`vi +$filename
+$word\*(C'\fR:
+.Sp
+.Vb 1
+\&   URxvt.selection-autotransform.0: s/^(\e\eS+):(\e\ed+):?$/vi +$2 \e\eQ$1\e\eE\e\ex0d/
+.Ve
+.Sp
+And this example matches the same,but replaces it with vi-commands you can
+paste directly into your (vi :) editor:
+.Sp
+.Vb 1
+\&   URxvt.selection-autotransform.0: s/^(S+):(d+):?$/\e\ex1b:e \e\eQ$1\e\eE\e\ex0d:$2\e\ex0d/
+.Ve
 .IP "mark-urls" 4
 .IX Item "mark-urls"
 Uses per-line display filtering (\f(CW\*(C`on_line_update\*(C'\fR) to underline urls and
@@ -232,6 +279,9 @@ the \s-1URL\s0 as first argument.
 A not very useful example of filtering all text output to the terminal,
 by replacing all line-drawing characters (U+2500 .. U+259F) by a
 similar-looking ascii character.
+.IP "digital-clock" 4
+.IX Item "digital-clock"
+Displays a digital clock using the built-in overlay.
 .IP "example-refresh-hooks" 4
 .IX Item "example-refresh-hooks"
 Displays a very simple digital clock in the upper right corner of the

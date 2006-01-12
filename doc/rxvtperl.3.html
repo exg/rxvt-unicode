@@ -97,7 +97,32 @@ arguments, which is very convenient, too, if your <em>ls</em> supports
 will enlarge the selection.</p>
 </dd>
 <dd>
-<p>It also offers the following bindable keyboard command:</p>
+<p>The selection works by trying to match a number of regexes and displaying
+them in increasing order of length. You can add your own regexes by
+specifying resources of the form:</p>
+</dd>
+<dd>
+<pre>
+   URxvt.selection.pattern-0: perl-regex
+   URxvt.selection.pattern-1: perl-regex
+   ...</pre>
+</dd>
+<dd>
+<p>The index number (0, 1...) must not have any holes, and each regex must
+contain at least one pair of capturing parentheses, which will be used for
+the match. For example, the followign adds a regex that matches everything
+between two vertical bars:</p>
+</dd>
+<dd>
+<pre>
+   URxvt.selection.pattern-0: \\|([^|]+)\\|</pre>
+</dd>
+<dd>
+<p>You can look at the source of the selection extension to see more
+interesting uses, such as parsing a line from beginning to end.</p>
+</dd>
+<dd>
+<p>This extension also offers the following bindable keyboard command:</p>
 </dd>
 <dl>
 <dt><strong><a name="item_rot13">rot13</a></strong><br />
@@ -143,10 +168,38 @@ additionally stores the first match in the current line into the primary
 selection.</p>
 </dd>
 <p></p>
-<dt><strong><a name="item_digital_2dclock">digital-clock</a></strong><br />
+<dt><strong><a name="item_selection_2dautotransform">selection-autotransform</a></strong><br />
 </dt>
 <dd>
-Displays a digital clock using the built-in overlay.
+This selection allows you to do automatic transforms on a selection
+whenever a selection is made.
+</dd>
+<dd>
+<p>It works by specifying perl snippets (most useful is a single <code>s///</code>
+operator) that modify <code>$_</code> as resources:</p>
+</dd>
+<dd>
+<pre>
+   URxvt.selection-autotransform.0: transform
+   URxvt.selection-autotransform.1: transform
+   ...</pre>
+</dd>
+<dd>
+<p>For example, the following will transform selections of the form
+<code>filename:number</code>, often seen in compiler messages, into <code>vi +$filename
+$word</code>:</p>
+</dd>
+<dd>
+<pre>
+   URxvt.selection-autotransform.0: s/^(\\S+):(\\d+):?$/vi +$2 \\Q$1\\E\\x0d/</pre>
+</dd>
+<dd>
+<p>And this example matches the same,but replaces it with vi-commands you can
+paste directly into your (vi :) editor:</p>
+</dd>
+<dd>
+<pre>
+   URxvt.selection-autotransform.0: s/^(S+):(d+):?$/\\x1b:e \\Q$1\\E\\x0d:$2\\x0d/</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_mark_2durls">mark-urls</a></strong><br />
@@ -164,6 +217,12 @@ the URL as first argument.
 A not very useful example of filtering all text output to the terminal,
 by replacing all line-drawing characters (U+2500 .. U+259F) by a
 similar-looking ascii character.
+</dd>
+<p></p>
+<dt><strong><a name="item_digital_2dclock">digital-clock</a></strong><br />
+</dt>
+<dd>
+Displays a digital clock using the built-in overlay.
 </dd>
 <p></p>
 <dt><strong><a name="item_example_2drefresh_2dhooks">example-refresh-hooks</a></strong><br />
