@@ -23,11 +23,14 @@ sub on_init {
 # "find interetsing things"-patterns
 my @mark_patterns = (
    # common types of "parentheses"
-   qr{(?:^|\s) ‘  ([^‘’]+?) ’ (?:\s|\)|$)}x,
-   qr{(?:^|\s) `  ([^`']+?) ' (?:\s|\)|$)}x,
-   qr{         \{ ([^{}]+?) \} }x,
-   qr{         \[ ([^{}]+?) \] }x,
-   qr{         \( ([^()]+?) \) }x,
+   qr{ (?<![^[:space:]]) ‘ ([^‘’]+) ’ (?![^[:space]]) }x,
+   qr{ (?<![^[:space:]]) ` ([^`']+) ' (?![^[:space]]) }x,
+   qr{ (?<![^[:space:]]) (" [^[:space:]] [^"]* ")                 }x,
+   qr{                   (" [^"]* [^[:space:]] ") (?![^[:space]]) }x,
+   qr{ \< ([^<>[:space:]]+) \> }x,
+   qr{ \{ ([^{}[:space:]]+) \} }x,
+   qr{ \[ ([^{}[:space:]]+) \] }x,
+   qr{ \( ([^()[:space:]]+) \) }x,
 
    # urls, just a heuristic
    qr{(
@@ -69,8 +72,6 @@ sub on_sel_extend {
          if ($-[1] <= $markofs and $markofs <= $+[1]) {
             my $ofs = $-[1];
             my $match = $1;
-
-            push @matches, [$ofs, length $match];
 
             for my $regex (@simplify_patterns) {
                if ($match =~ $regex) {
