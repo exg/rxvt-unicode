@@ -80,25 +80,25 @@ sub search {
    my $search = $self->special_encode ($self->{search});
 
    no re 'eval'; # just to be sure
-   my $re = qr/$search/;
+   if (my $re = eval { qr/$search/ }) {
+      while ($self->nrow > $row && $row > -$self->nsaved) {
+         my $line = $self->line ($row)
+            or last;
 
-   while ($self->nrow > $row && $row > -$self->nsaved) {
-      my $line = $self->line ($row)
-         or last;
+         my $text = $line->t;
+         if ($text =~ /$re/g) {
+            do {
+               push @{ $self->{found} }, [$line->coord_of ($-[0]), $line->coord_of ($+[0])];
+            } while $text =~ /$re/g;
 
-      my $text = $line->t;
-      if ($text =~ /$re/g) {
-         do {
-            push @{ $self->{found} }, [$line->coord_of ($-[0]), $line->coord_of ($+[0])];
-         } while $text =~ /$re/g;
+            $self->{row} = $row;
+            $self->view_start (-$row + ($self->nrow >> 1));
+            $self->want_refresh;
+            last;
+         }
 
-         $self->{row} = $row;
-         $self->view_start (-$row + ($self->nrow >> 1));
-         $self->want_refresh;
-         last;
+         $row = $dir < 0 ? $line->beg - 1 : $line->end + 1;
       }
-
-      $row = $dir < 0 ? $line->beg - 1 : $line->end + 1;
    }
 
    $self->scr_bell unless $self->{found};
