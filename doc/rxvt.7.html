@@ -75,6 +75,29 @@ also available on the World Wide Web at
 <hr />
 <h1><a name="frequently_asked_questions">FREQUENTLY ASKED QUESTIONS</a></h1>
 <dl>
+<dt><strong><a name="item_the_new_selection_selects_pieces_that_are_too_big_">The new selection selects pieces that are too big/too small, can I
+change this?</a></strong><br />
+</dt>
+<dd>
+Yes. For example, if you want to select smaller pieces (``words'') you can
+use the following resource:
+</dd>
+<dd>
+<pre>
+   URxvt.selection.pattern-0: ([[:word:]]+)</pre>
+</dd>
+<dd>
+<p>If you click more than twice, the selection will be extended
+more and more.</p>
+</dd>
+<dd>
+<p>To get a selection that is very similar to the old code, try this pattern:</p>
+</dd>
+<dd>
+<pre>
+   URxvt.selection.pattern-0: ([^&quot;&amp;'()*,;&lt;=&gt;?@[\\\\]^`{|})]+)</pre>
+</dd>
+<p></p>
 <dt><strong><a name="item_i_don_27t_like_the_new_selection_2fpopups_2fhotkey">I don't like the new selection/popups/hotkeys/perl, how do I
 change/disable it?</a></strong><br />
 </dt>

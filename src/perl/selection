@@ -22,9 +22,7 @@ sub on_init {
 
 # "find interetsing things"-patterns
 my @mark_patterns = (
-   qr{([[:word:]]+)},
-
-   # common "parentheses"
+   # common types of "parentheses"
    qr{(?:^|\s) ‘  ([^‘’]+?) ’ (?:\s|\)|$)}x,
    qr{(?:^|\s) `  ([^`']+?) ' (?:\s|\)|$)}x,
    qr{         \{ ([^{}]+?) \} }x,
