@@ -107,7 +107,7 @@ sub search {
 sub refresh {
    my ($self) = @_;
 
-   my $xor = urxvt::RS_RVid | urxvt::RS_Uline;
+   my $xor = urxvt::RS_RVid | urxvt::RS_Blink;
    for (@{ $self->{found} }) {
       $self->scr_xor_span (@$_, $xor);
       $xor = urxvt::RS_RVid;
