@@ -268,6 +268,8 @@ paste directly into your (vi :) editor:
 .Vb 1
 \&   URxvt.selection-autotransform.0: s/^(S+):(d+):?$/\e\ex1b:e \e\eQ$1\e\eE\e\ex0d:$2\e\ex0d/
 .Ve
+.Sp
+Of course, this can be modified to suit your needs and your editor :)
 .IP "mark-urls" 4
 .IX Item "mark-urls"
 Uses per-line display filtering (\f(CW\*(C`on_line_update\*(C'\fR) to underline urls and

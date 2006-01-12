@@ -1117,6 +1117,16 @@ will be ignored when running setuid/setgid.
 
 See the @@RXVT_NAME@@perl(3) manpage.
 
+=item B<< selection.pattern-I<idx> >>: I<perl-regex>
+
+Additional selection patterns, see the @@RXVT_NAME@@perl(3) manpage for
+details.
+
+=item B<< selection-autotransform.I<idx> >>: I<perl-transform>
+
+Selection auto-transform patterns, see the @@RXVT_NAME@@perl(3) manpage
+for details.
+
 =item B<searchable-scrollback:> I<keysym>
 
 Sets the hotkey that starts the incremental scrollback buffer search

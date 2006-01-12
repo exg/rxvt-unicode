@@ -975,6 +975,14 @@ RESOURCES (available also as long-options)
 
         See the rxvtperl(3) manpage.
 
+    selection.pattern-*idx*: *perl-regex*
+        Additional selection patterns, see the rxvtperl(3) manpage for
+        details.
+
+    selection-autotransform.*idx*: *perl-transform*
+        Selection auto-transform patterns, see the rxvtperl(3) manpage for
+        details.
+
     searchable-scrollback: *keysym*
         Sets the hotkey that starts the incremental scrollback buffer search
         (default: "M-s").

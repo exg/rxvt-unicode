@@ -129,6 +129,8 @@ paste directly into your (vi :) editor:
 
    URxvt.selection-autotransform.0: s/^(S+):(d+):?$/\\x1b:e \\Q$1\\E\\x0d:$2\\x0d/
 
+Of course, this can be modified to suit your needs and your editor :)
+
 =item mark-urls
 
 Uses per-line display filtering (C<on_line_update>) to underline urls and

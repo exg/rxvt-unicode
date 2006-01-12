@@ -1140,6 +1140,14 @@ scripts. When looking for extensions specified by the \f(CW\*(C`perl\*(C'\fR res
 will be ignored when running setuid/setgid.
 .Sp
 See the @@RXVT_NAME@@\fIperl\fR\|(3) manpage.
+.IP "\fBselection.pattern\-\f(BIidx\fB\fR: \fIperl-regex\fR" 4
+.IX Item "selection.pattern-idx: perl-regex"
+Additional selection patterns, see the @@RXVT_NAME@@\fIperl\fR\|(3) manpage for
+details.
+.IP "\fBselection\-autotransform.\f(BIidx\fB\fR: \fIperl-transform\fR" 4
+.IX Item "selection-autotransform.idx: perl-transform"
+Selection auto-transform patterns, see the @@RXVT_NAME@@\fIperl\fR\|(3) manpage
+for details.
 .IP "\fBsearchable\-scrollback:\fR \fIkeysym\fR" 4
 .IX Item "searchable-scrollback: keysym"
 Sets the hotkey that starts the incremental scrollback buffer search
