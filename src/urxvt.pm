@@ -50,7 +50,25 @@ C<--quoting-style=shell>.
 A double-click usually selects the word under the cursor, further clicks
 will enlarge the selection.
 
-It also offers the following bindable keyboard command:
+The selection works by trying to match a number of regexes and displaying
+them in increasing order of length. You can add your own regexes by
+specifying resources of the form:
+
+   URxvt.selection.pattern-0: perl-regex
+   URxvt.selection.pattern-1: perl-regex
+   ...
+
+The index number (0, 1...) must not have any holes, and each regex must
+contain at least one pair of capturing parentheses, which will be used for
+the match. For example, the followign adds a regex that matches everything
+between two vertical bars:
+
+   URxvt.selection.pattern-0: \\|([^|]+)\\|
+
+You can look at the source of the selection extension to see more
+interesting uses, such as parsing a line from beginning to end.
+
+This extension also offers the following bindable keyboard command:
 
 =over 4
 
@@ -88,9 +106,27 @@ was started, while C<Enter> or C<Return> stay at the current position and
 additionally stores the first match in the current line into the primary
 selection.
 
-=item digital-clock
+=item selection-autotransform
 
-Displays a digital clock using the built-in overlay.
+This selection allows you to do automatic transforms on a selection
+whenever a selection is made.
+
+It works by specifying perl snippets (most useful is a single C<s///>
+operator) that modify C<$_> as resources:
+
+   URxvt.selection-autotransform.0: transform
+   URxvt.selection-autotransform.1: transform
+   ...
+
+For example, the following will transform selections of the form
+C<word:number> into C<vi +$number $word>:
+
+   URxvt.selection-autotransform.0: s/^(S+):(d+):?$/vi +$2 $1\\x0d/
+
+And this example matches the same,but replaces it with vi-commands you can
+paste directory into your (vi :) editor:
+
+   URxvt.selection-autotransform.0: s/^(S+):(d+):?$/\\x1b:e $1\\x0d:$2\\x0d/
 
 =item mark-urls
 
@@ -104,6 +140,10 @@ the URL as first argument.
 A not very useful example of filtering all text output to the terminal,
 by replacing all line-drawing characters (U+2500 .. U+259F) by a
 similar-looking ascii character.
+
+=item digital-clock
+
+Displays a digital clock using the built-in overlay.
 
 =item example-refresh-hooks
 

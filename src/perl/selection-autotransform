@@ -1,0 +1,54 @@
+#! perl
+
+sub msg {
+   my ($self, $msg) = @_;
+
+   my $overlay = $self->overlay (0, 0, $self->strwidth ($msg), 1);
+   $overlay->set (0, 0, $msg);
+   my $iow; $iow = urxvt::timer->new->start (urxvt::NOW + 2)->cb (sub {
+      undef $overlay;
+      undef $iow;
+   });
+}
+
+sub on_init {
+   my ($self) = @_;
+
+   unless (urxvt::safe) {
+      warn "running with elevated privileges, ignoring selection-autotransform patterns";
+      return;
+   }
+
+   for (my $idx = 0; defined (my $res = urxvt::untaint $self->x_resource ("selection-autotransform.$idx")); $idx++) {
+      my $transform = eval "sub { $res }";
+
+      if ($transform) {
+         push @{ $self->{transforms} }, $transform;
+      } else {
+         warn "$res: $@";
+      }
+   }
+
+   ()
+}
+
+sub on_sel_grab {
+   my ($self) = @_;
+
+   my $text = $self->selection;
+   local $_ = $text;
+
+   for my $transform (@{ $self->{transforms} }) {
+      $transform->();
+      if ($text ne $_) {
+         $self->selection ($_);
+         s/[\x00-\x1f\x80-\x9f]/·/g;
+         $self->msg ($self->special_encode ("auto-transformed to $_"));
+      }
+
+      last;
+   }
+      
+   ()
+}
+

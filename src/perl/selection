@@ -9,6 +9,17 @@ sub on_keyboard_command {
    ()
 }
 
+sub on_init {
+   my ($self) = @_;
+
+   for (my $idx = 0; defined (my $res = $self->x_resource ("selection.pattern-$idx")); $idx++) {
+      no re 'eval'; # just to be sure
+      push @{ $self->{patterns} }, qr/$res/;
+   }
+
+   ()
+}
+
 # "find interetsing things"-patterns
 my @mark_patterns = (
    qr{([[:word:]]+)},
@@ -55,7 +66,7 @@ sub on_sel_extend {
 
    my @matches;
 
-   for my $regex (@mark_patterns) {
+   for my $regex (@mark_patterns, @{ $self->{patterns} }) {
       while ($text =~ /$regex/g) {
          if ($-[1] <= $markofs and $markofs <= $+[1]) {
             my $ofs = $-[1];
