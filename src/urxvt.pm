@@ -917,10 +917,18 @@ set it (which is usually bad as applications don't expect that).
 Return the current values of the selection mark, begin or end positions,
 and optionally set them to new values.
 
+=item $term->selection_make ($eventtime[, $rectangular])
+
+Tries to make a selection as set by C<selection_beg> and
+C<selection_end>. If C<$rectangular> is true (default: false), a
+rectangular selection will be made. This is the prefered function to make
+a selection.
+
 =item $success = $term->selection_grab ($eventtime)
 
-Try to request the primary selection from the server (for example, as set
-by the next method).
+Try to request the primary selection text from the server (for example, as
+set by the next method). No visual feedback will be given. This function
+is mostly useful from within C<on_sel_grab> hooks.
 
 =item $oldtext = $term->selection ([$newtext])
 
@@ -1023,15 +1031,15 @@ Convert the given locale-encoded octets into a perl string.
 =item $term->scr_xor_span ($beg_row, $beg_col, $end_row, $end_col[, $rstyle])
 
 XORs the rendition values in the given span with the provided value
-(default: C<RS_RVid>). Useful in refresh hooks to provide effects similar
-to the selection.
+(default: C<RS_RVid>), which I<MUST NOT> contain font styles. Useful in
+refresh hooks to provide effects similar to the selection.
 
 =item $term->scr_xor_rect ($beg_row, $beg_col, $end_row, $end_col[, $rstyle1[, $rstyle2]])
 
 Similar to C<scr_xor_span>, but xors a rectangle instead. Trailing
 whitespace will additionally be xored with the C<$rstyle2>, which defaults
 to C<RS_RVid | RS_Uline>, which removes reverse video again and underlines
-it instead.
+it instead. Both styles I<MUST NOT> contain font styles.
 
 =item $term->scr_bell
 

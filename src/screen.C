@@ -3023,7 +3023,10 @@ rxvt_term::selection_grab (Time tm)
       return true;
     }
   else
-    return false;
+    {
+      selection_clear ();
+      return false;
+    }
 
 #if 0
   XTextProperty ct;

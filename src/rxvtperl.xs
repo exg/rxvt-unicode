@@ -1383,6 +1383,16 @@ rxvt_term::cur_charset ()
 	OUTPUT:
         RETVAL
 
+#void
+#rxvt_term::selection_clear ()
+
+void
+rxvt_term::selection_make (U32 eventtime, bool rect = false)
+	CODE:
+        THIS->selection.op = SELECTION_CONT;
+        THIS->selection.rect = rect;
+        THIS->selection_make (eventtime);
+
 int
 rxvt_term::selection_grab (U32 eventtime)
 

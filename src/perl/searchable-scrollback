@@ -36,9 +36,9 @@ sub enter {
 
    return if $self->{overlay};
 
-   $self->{history} = [];
    $self->{view_start} = $self->view_start;
    $self->{pty_ev_events} = $self->pty_ev_events (urxvt::EVENT_NONE);
+   $self->{row} = $self->nrow - 1;
 
    $self->enable (
       key_press     => \&key_press,
@@ -62,29 +62,27 @@ sub leave {
    delete $self->{manpage_overlay};
    delete $self->{overlay};
    delete $self->{history};
+   delete $self->{search};
 }
 
 sub idle {
    my ($self) = @_;
 
-   $self->msg ("escape=exit, enter=accept, /=start search, n=next, p=previous, G=bottom");
-
-   delete $self->{in_search};
+   $self->msg ("(escape cancels) /$self->{search}█");
 }
 
 sub search {
-   my ($self, $offset) = @_;
-
-   my $row = -$self->view_start + ($self->nrow >> 1) + $offset;
+   my ($self, $dir) = @_;
 
    delete $self->{found};
+   my $row = $self->{row};
 
    my $search = $self->special_encode ($self->{search});
 
    no re 'eval'; # just to be sure
    my $re = qr/$search/;
 
-   while ($row > -$self->nsaved) {
+   while ($self->nrow > $row && $row > -$self->nsaved) {
       my $line = $self->line ($row)
          or last;
 
@@ -94,25 +92,26 @@ sub search {
             push @{ $self->{found} }, [$line->coord_of ($-[0]), $line->coord_of ($+[0])];
          } while $text =~ /$re/g;
 
+         $self->{row} = $row;
          $self->view_start (-$row + ($self->nrow >> 1));
+         $self->want_refresh;
          last;
       }
 
-      $row = $line->beg - 1;
+      $row = $dir < 0 ? $line->beg - 1 : $line->end + 1;
    }
 
-   $self->msg ("enter/type/backspace: /$self->{search}_"
-               . ($self->{found} ? "" : " (not found)"));
    $self->scr_bell unless $self->{found};
 }
 
 sub refresh {
    my ($self) = @_;
 
-   return unless $self->{found};
-
-   $self->scr_xor_span (@$_, urxvt::SET_FGCOLOR (urxvt::RS_RVid, 15))
-      for @{ $self->{found} };
+   my $xor = urxvt::RS_RVid | urxvt::RS_Uline;
+   for (@{ $self->{found} }) {
+      $self->scr_xor_span (@$_, $xor);
+      $xor = urxvt::RS_RVid;
+   }
 
    ()
 }
@@ -120,52 +119,46 @@ sub refresh {
 sub key_press {
    my ($self, $event, $keysym, $string) =  @_;
 
-   if (exists $self->{in_search}) {
-      if ($keysym == 0xff0d || $keysym == 0xff8d) {
-         $self->idle;
-      } elsif ($keysym == 0xff1b) {
-         $self->view_start ($self->{in_search});
-         $self->idle;
-      } elsif ($keysym == 0xff08) {
-         substr $self->{search}, -1, 1, "";
-         $self->search;
-      } elsif ($string ne "") {
-         return;
-      }
+   delete $self->{manpage_overlay};
 
-   } else {
-      if ($keysym == 0xff0d || $keysym == 0xff8d) {
-         # TODO: set selection
-         $self->leave;
-      } elsif ($keysym == 0xff1b) {
-         $self->view_start ($self->{view_start});
-         $self->leave;
-      } elsif ($keysym == 0xff52) {
-         $self->view_start ($self->view_start + 1);
-      } elsif ($keysym == 0xff54) {
-         $self->view_start ($self->view_start - 1);
-      } elsif ($string eq "/") {
-         delete $self->{manpage_overlay};
-         $self->{in_search} = $self->view_start;
-         $self->search;
-      } elsif ($string eq "G") {
-         $self->{history} = [];
-         $self->view_start (0);
-      } elsif ($string eq "n") {
-         if ($self->{found} && @{ $self->{found} }) {
-            push @{ $self->{history} }, [$self->view_start, $self->{found}];
-            $self->search (-1);
-            $self->idle;
-         }
-      } elsif ($string eq "p" or $string eq "N") {
-         if (my $prev = pop @{ $self->{history} }) {
-            $self->view_start ($prev->[0]);
-            $self->{found} = $prev->[1];
-            $self->want_refresh;
-         }
-      } elsif ($string ne "") {
-         $self->scr_bell;
+   if ($keysym == 0xff0d || $keysym == 0xff8d) {
+      if ($self->{found}) {
+         my ($br, $bc, $er, $ec) = @{ $self->{found}[0] };
+         $self->selection_beg ($br, $bc);
+         $self->selection_end ($er, $ec);
+         $self->selection_make ($event->{time});
       }
+      $self->leave;
+   } elsif ($keysym == 0xff1b) {
+      $self->view_start ($self->{view_start});
+      $self->leave;
+   } elsif ($keysym == 0xff57) {
+      $self->{row} = $self->nrow - 1;
+      $self->view_start (0);
+   } elsif ($keysym == 0xff52) {
+      $self->{row}-- if $self->{row} > -$self->nsaved;
+      $self->search (-1);
+   } elsif ($keysym == 0xff54) {
+      $self->{row}++ if $self->{row} < $self->nrow;
+      $self->search (+1);
+   } elsif ($string eq "n") {
+      if ($self->{found} && @{ $self->{found} }) {
+         push @{ $self->{history} }, [$self->view_start, $self->{found}];
+         $self->search (-1);
+         $self->idle;
+      }
+   } elsif ($string eq "p" or $string eq "N") {
+      if (my $prev = pop @{ $self->{history} }) {
+         $self->view_start ($prev->[0]);
+         $self->{found} = $prev->[1];
+         $self->want_refresh;
+      }
+   } elsif ($keysym == 0xff08) {
+      substr $self->{search}, -1, 1, "";
+      $self->search;
+      $self->idle;
+   } elsif ($string =~ /^[^\x00-\x1f\x80-\xaf]+$/) {
+      return; # pass to tt_write
    }
 
    1
@@ -175,7 +168,8 @@ sub tt_write {
    my ($self, $data) = @_;
 
    $self->{search} .= $self->locale_decode ($data);
-   $self->search;
+   $self->search (-1);
+   $self->idle;
 
    1
 }
