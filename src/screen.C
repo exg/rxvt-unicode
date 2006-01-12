@@ -3054,6 +3054,8 @@ rxvt_term::selection_click (int clicks, int x, int y)
       && HOOK_INVOKE ((this, HOOK_SEL_EXTEND, DT_END)))
     {
       MEvent.clicks = 1; // what a mess
+      selection.screen = current_screen;
+      selection.op = SELECTION_CONT;
       return;
     }
 

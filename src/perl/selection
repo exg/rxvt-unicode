@@ -43,7 +43,7 @@ my @simplify_patterns = (
 );
 
 sub on_sel_extend {
-   my ($self) = @_;
+   my ($self, $time) = @_;
 
    my ($row, $col) = $self->selection_mark;
    my $line = $self->line ($row);
@@ -74,6 +74,9 @@ sub on_sel_extend {
       }
    }
 
+   # whole line
+   push @matches, [0, ($line->end - $line->beg + 1) * $self->ncol];
+
    for (sort { $a->[1] <=> $b->[1] or $b->[0] <=> $a->[0] } @matches) {
       my ($ofs, $len) = @$_;
 
@@ -84,9 +87,5 @@ sub on_sel_extend {
       return 1;
    }
 
-   # whole line
-   $self->selection_beg ($line->beg, 0);
-   $self->selection_end ($line->end, $self->ncol);
-
-   return 1;
+   ()
 }
