@@ -23,6 +23,14 @@
 
 #include "rxvtperl.h"
 
+#if defined (ISO_14755) || defined (ENABLE_PERL)
+# define ENABLE_OVERLAY 1
+#endif
+
+#if ENABLE_PERL
+# define ENABLE_FRILLS
+#endif
+
 #if ENABLE_FRILLS
 # define ENABLE_XEMBED 1
 # define ENABLE_EWMH   1
@@ -45,7 +53,7 @@
 #endif
 
 #ifndef HAVE_XPOINTER
-typedef char   *XPointer;
+typedef char *XPointer;
 #endif
 
 #ifdef HAVE_TERMIOS_H
@@ -229,10 +237,6 @@ typedef struct _mwmhints {
 
 #if defined (NO_MOUSE_REPORT) && !defined (NO_MOUSE_REPORT_SCROLLBAR)
 # define NO_MOUSE_REPORT_SCROLLBAR 1
-#endif
-
-#if defined (ISO_14755) || defined (ENABLE_PERL)
-# define ENABLE_OVERLAY 1
 #endif
 
 /* now look for other badly set stuff */
