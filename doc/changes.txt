@@ -34,7 +34,7 @@ Geoff Wing <gcw@pobox.com> et al.
 	removed reporting of title and icon settings as they can aid a security
 		hole
 
-Mikko Lepp‰nen <m.leppanen@iki.fi>
+Mikko Lepp√§nen <m.leppanen@iki.fi>
 	fixed clearing problem when internalBorder is zero
 
 Steve O <bub@io.com>
