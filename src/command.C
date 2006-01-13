@@ -1607,7 +1607,6 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case MotionNotify:
-        printf ("motion notify\n");//D
 #ifdef POINTER_BLANK
         if (hidden_pointer)
           pointer_unblank ();

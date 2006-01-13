@@ -52,6 +52,8 @@
 #undef ROW
 #define ROW(n) THIS->row_buf [LINENO (n)]
 
+#define ENABLE_PERL_FRILLS 1
+
 /////////////////////////////////////////////////////////////////////////////
 
 static SV *
@@ -892,6 +894,85 @@ _new (...)
 
 void
 rxvt_term::destroy ()
+
+#if ENABLE_PERL_FRILLS
+
+void
+rxvt_term::XListProperties (U32 window)
+	PPCODE:
+{
+	int count;
+	Atom *props = XListProperties (THIS->display->display, (Window)window, &count);
+
+        EXTEND (SP, count);
+        while (count--)
+          PUSHs (newSVuv ((U32)props [count]));
+        
+        XFree (props);
+}
+
+void
+rxvt_term::XGetWindowProperty (U32 window, U32 property)
+	PPCODE:
+{
+        Atom type;
+        int format;
+        unsigned long nitems;
+        unsigned long bytes_after;
+        unsigned char *prop;
+	XGetWindowProperty (THIS->display->display, (Window)window, (Atom)property,
+                            0, 1<<30, 0, AnyPropertyType,
+                            &type, &format, &nitems, &bytes_after, &prop);
+        if (type != None)
+          {
+            EXTEND (SP, 3);
+            PUSHs (newSVuv ((U32)type));
+            PUSHs (newSViv (format));
+            PUSHs (newSVpvn ((char *)prop, nitems * format / 8));
+            XFree (prop);
+          }
+}
+
+void
+rxvt_term::XChangeWindowProperty (U32 window, U32 property, U32 type, int format, SV *data)
+	CODE:
+{
+	STRLEN len;
+        char *data_ = SvPVbyte (data, len);
+
+	XChangeProperty (THIS->display->display, (Window)window, (Atom)property,
+                         type, format, PropModeReplace,
+                         (unsigned char *)data, len * 8 / format);
+}
+
+void
+rxvt_term::XDeleteProperty (U32 window, U32 property)
+	CODE:
+        XDeleteProperty (THIS->display->display, (Window)window, (Atom)property);
+
+U32
+rxvt_term::DefaultRootWindow ()
+	CODE:
+        RETVAL = (U32)THIS->display->root;
+        OUTPUT:
+        RETVAL
+
+U32
+rxvt_term::XCreateSimpleWindow (U32 parent, int x, int y, unsigned int width, unsigned int height)
+	CODE:
+        RETVAL = XCreateSimpleWindow (THIS->display->display, (Window)parent,
+                                      x, y, width, height, 0,
+                                      THIS->pix_colors_focused[Color_border],
+                                      THIS->pix_colors_focused[Color_border]);
+	OUTPUT:
+        RETVAL
+
+void
+rxvt_term::XReparentWindow (U32 window, U32 parent, int x = 0, int y = 0)
+	CODE:
+        XReparentWindow (THIS->display->display, window, parent, x, y);
+
+#endif
 
 void
 rxvt_term::set_should_invoke (int htype, int inc)
