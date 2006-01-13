@@ -20,7 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *----------------------------------------------------------------------*/
 
-#include "../config.h"		/* NECESSARY */
+#include "../config.h"
+#include "rxvt.h"
 
 #if ENABLE_FRILLS && HAVE_UNIX_FDPASS
 

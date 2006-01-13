@@ -5,6 +5,21 @@
 
 #include "feature.h"
 
+#if defined (ISO_14755) || defined (ENABLE_PERL)
+# define ENABLE_OVERLAY 1
+#endif
+
+#if ENABLE_PERL
+# define ENABLE_FRILLS 1
+# define ENABLE_COMBINING 1
+#endif
+
+#if ENABLE_FRILLS
+# define ENABLE_XEMBED 1
+# define ENABLE_EWMH   1
+# define CURSOR_BLINK  1
+#endif
+
 #include <limits.h>
 
 #include <X11/cursorfont.h>
@@ -22,20 +37,6 @@
 #include "salloc.h"
 
 #include "rxvtperl.h"
-
-#if defined (ISO_14755) || defined (ENABLE_PERL)
-# define ENABLE_OVERLAY 1
-#endif
-
-#if ENABLE_PERL
-# define ENABLE_FRILLS
-#endif
-
-#if ENABLE_FRILLS
-# define ENABLE_XEMBED 1
-# define ENABLE_EWMH   1
-# define CURSOR_BLINK  1
-#endif
 
 /*
  *****************************************************************************

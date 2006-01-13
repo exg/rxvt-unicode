@@ -122,12 +122,12 @@ For example, the following will transform selections of the form
 C<filename:number>, often seen in compiler messages, into C<vi +$filename
 $word>:
 
-   URxvt.selection-autotransform.0: s/^(\\S+):(\\d+):?$/vi +$2 \\Q$1\\E\\x0d/
+   URxvt.selection-autotransform.0: s/^([^:[:space:]]+):(\\d+):?$/vi +$2 \\Q$1\\E\\x0d/
 
 And this example matches the same,but replaces it with vi-commands you can
 paste directly into your (vi :) editor:
 
-   URxvt.selection-autotransform.0: s/^(S+):(d+):?$/\\x1b:e \\Q$1\\E\\x0d:$2\\x0d/
+   URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\\d+):?$/\\x1b:e \\Q$1\\E\\x0d:$2\\x0d/
 
 Of course, this can be modified to suit your needs and your editor :)
 

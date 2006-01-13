@@ -39,9 +39,10 @@
  *	rxvt_update_wtmp ();
  *----------------------------------------------------------------------*/
 
-#include "../config.h"		/* NECESSARY */
-#include "rxvt.h"		/* NECESSARY */
+#include "../config.h"
+#include "rxvt.h"
 #include "logging.h"
+
 #ifdef UTMP_SUPPORT
 
 #if HAVE_STRUCT_UTMP
