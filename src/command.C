@@ -1317,6 +1317,7 @@ rxvt_term::x_cb (XEvent &ev)
       && HOOK_INVOKE ((this, HOOK_X_EVENT, DT_XEVENT, &ev, DT_END)))
     return;
 
+  // for XQueryPointer
   Window unused_root, unused_child;
   int unused_root_x, unused_root_y;
   unsigned int unused_mask;
