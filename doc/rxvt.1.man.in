@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2006-01-12" "7.0" "RXVT-UNICODE"
+.TH rxvt 1 "2006-01-13" "7.0" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -282,7 +282,7 @@ resource \fBborderColor\fR.
 .IP "\fB\-fn\fR \fIfontlist\fR" 4
 .IX Item "-fn fontlist"
 Select the fonts to be used. This is a comma separated list of font names
-that are used in turn when trying to display Unicode characters.  The
+that are checked in order when trying to find glyphs for characters. The
 first font defines the cell size for characters; other fonts might be
 smaller, but not (in general) larger. A (hopefully) reasonable default
 font list is always appended to it. See resource \fBfont\fR for more details.
@@ -696,11 +696,11 @@ menus), in addition to the paths specified by the \fB\s-1RXVTPATH\s0\fR and
 \&\fB\s-1PATH\s0\fR environment variables.
 .IP "\fBfont:\fR \fIfontlist\fR" 4
 .IX Item "font: fontlist"
-Select the fonts to be used. This is a comma separated list of font
-names that are used in turn when trying to display Unicode characters.
-The first font defines the cell size for characters; other fonts might
-be smaller, but not larger. A reasonable default font list is always
-appended to it; option \fB\-fn\fR.
+Select the fonts to be used. This is a comma separated list of font names
+that are checked in order when trying to find glyphs for characters. The
+first font defines the cell size for characters; other fonts might be
+smaller, but not (in general) larger. A (hopefully) reasonable default
+font list is always appended to it; option \fB\-fn\fR.
 .Sp
 Each font can either be a standard X11 core font (\s-1XLFD\s0) name, with
 optional prefix \f(CW\*(C`x:\*(C'\fR or a Xft font (Compile \fIxft\fR), prefixed with \f(CW\*(C`xft:\*(C'\fR.

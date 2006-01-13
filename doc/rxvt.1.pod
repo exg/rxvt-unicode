@@ -174,7 +174,7 @@ resource B<borderColor>.
 =item B<-fn> I<fontlist>
 
 Select the fonts to be used. This is a comma separated list of font names
-that are used in turn when trying to display Unicode characters.  The
+that are checked in order when trying to find glyphs for characters. The
 first font defines the cell size for characters; other fonts might be
 smaller, but not (in general) larger. A (hopefully) reasonable default
 font list is always appended to it. See resource B<font> for more details.
@@ -643,11 +643,11 @@ B<PATH> environment variables.
 
 =item B<font:> I<fontlist>
 
-Select the fonts to be used. This is a comma separated list of font
-names that are used in turn when trying to display Unicode characters.
-The first font defines the cell size for characters; other fonts might
-be smaller, but not larger. A reasonable default font list is always
-appended to it; option B<-fn>.
+Select the fonts to be used. This is a comma separated list of font names
+that are checked in order when trying to find glyphs for characters. The
+first font defines the cell size for characters; other fonts might be
+smaller, but not (in general) larger. A (hopefully) reasonable default
+font list is always appended to it; option B<-fn>.
 
 Each font can either be a standard X11 core font (XLFD) name, with
 optional prefix C<x:> or a Xft font (Compile I<xft>), prefixed with C<xft:>.

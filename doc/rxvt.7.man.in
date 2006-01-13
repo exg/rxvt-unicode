@@ -829,7 +829,7 @@ Make sure that mouse reporting is actually turned off since killing
 some editors prematurely may leave the mouse in mouse report mode. I've
 heard that tcsh may use mouse reporting unless it otherwise specified. A
 quick check is to see if cut/paste works when the Alt or Shift keys are
-depressed. See @@RXVT_NAME@@(7)
+depressed.
 .IP "What's with this bold/blink stuff?" 4
 .IX Item "What's with this bold/blink stuff?"
 If no bold colour is set via \f(CW\*(C`colorBD:\*(C'\fR, bold will invert text using the
@@ -934,7 +934,7 @@ For starting a new rxvt\-unicode:
 \&   $ @@RXVT_NAME@@
 .Ve
 .Sp
-Toggle with \f(CW\*(C`ESC [ 36 h\*(C'\fR / \f(CW\*(C`ESC [ 36 l\*(C'\fR as documented in @@RXVT_NAME@@(7).
+Toggle with \f(CW\*(C`ESC [ 36 h\*(C'\fR / \f(CW\*(C`ESC [ 36 l\*(C'\fR.
 .Sp
 For an existing rxvt\-unicode:
 .Sp

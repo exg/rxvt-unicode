@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>rxvtperl - rxvt-unicode's embedded perl interpreter</title>
+<title>urxvtperl - rxvt-unicode's embedded perl interpreter</title>
 <link rev="made" href="mailto:perl-binary@plan9.de" />
 </head>
 
@@ -47,7 +47,7 @@
 </p>
 <hr />
 <h1><a name="name">NAME</a></h1>
-<p>rxvtperl - rxvt-unicode's embedded perl interpreter</p>
+<p>urxvtperl - rxvt-unicode's embedded perl interpreter</p>
 <p>
 </p>
 <hr />
@@ -60,9 +60,9 @@
       ()
    }</pre>
 <pre>
-   # start a rxvt using it:</pre>
+   # start a urxvt using it:</pre>
 <pre>
-   rxvt --perl-lib $HOME -pe grab_test</pre>
+   urxvt --perl-lib $HOME -pe grab_test</pre>
 <p>
 </p>
 <hr />
@@ -71,17 +71,17 @@
 the <code>perl</code> resource are loaded and associated with it.</p>
 <p>Scripts are compiled in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as UTF-8.</p>
-<p>Each script will only ever be loaded once, even in rxvtd, where
+<p>Each script will only ever be loaded once, even in urxvtd, where
 scripts will be shared (but not enabled) for all terminals.</p>
 <p>
 </p>
 <hr />
 <h1><a name="prepackaged_extensions">PREPACKAGED EXTENSIONS</a></h1>
 <p>This section describes the extensions delivered with this release. You can
-find them in <em>/opt/rxvt/lib/urxvt/perl/</em>.</p>
+find them in <em>/usr/local/lib/urxvt/perl/</em>.</p>
 <p>You can activate them like this:</p>
 <pre>
-  rxvt -pe &lt;extensionname&gt;</pre>
+  urxvt -pe &lt;extensionname&gt;</pre>
 <dl>
 <dt><strong><a name="item_selection">selection (enabled by default)</a></strong><br />
 </dt>
@@ -191,7 +191,7 @@ $word</code>:</p>
 </dd>
 <dd>
 <pre>
-   URxvt.selection-autotransform.0: s/^(\\S+):(\\d+):?$/vi +$2 \\Q$1\\E\\x0d/</pre>
+   URxvt.selection-autotransform.0: s/^([^:[:space:]]+):(\\d+):?$/vi +$2 \\Q$1\\E\\x0d/</pre>
 </dd>
 <dd>
 <p>And this example matches the same,but replaces it with vi-commands you can
@@ -199,7 +199,7 @@ paste directly into your (vi :) editor:</p>
 </dd>
 <dd>
 <pre>
-   URxvt.selection-autotransform.0: s/^(S+):(d+):?$/\\x1b:e \\Q$1\\E\\x0d:$2\\x0d/</pre>
+   URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\\d+):?$/\\x1b:e \\Q$1\\E\\x0d:$2\\x0d/</pre>
 </dd>
 <dd>
 <p>Of course, this can be modified to suit your needs and your editor :)</p>
@@ -491,7 +491,15 @@ Called just after the screen gets redrawn. See <code>on_refresh_begin</code>.
 <dd>
 Called whenever the user presses a key combination that has a
 <code>perl:string</code> action bound to it (see description of the <strong>keysym</strong>
-resource in the <code>rxvt(1)</code> manpage).
+resource in the <code>urxvt(1)</code> manpage).
+</dd>
+<p></p>
+<dt><strong><a name="item_on_x_event__24term_2c__24event">on_x_event $term, $event</a></strong><br />
+</dt>
+<dd>
+Called on every X event received on the vt window (and possibly other
+windows). Should only be used as a last resort. Most event structure
+members are not passed.
 </dd>
 <p></p>
 <dt><strong><a name="item_on_focus_in__24term">on_focus_in $term</a></strong><br />
@@ -616,6 +624,22 @@ Returns the ``current time'' (as per the event loop).
 Mod3Mask, Mod4Mask, Mod5Mask, Button1Mask, Button2Mask, Button3Mask,
 Button4Mask, Button5Mask, AnyModifier</a></strong><br />
 </dt>
+<dt><strong><a name="item_urxvt_3a_3anoeventmask_2c_keypressmask_2c_keyrelea">urxvt::NoEventMask, KeyPressMask, KeyReleaseMask,
+ButtonPressMask, ButtonReleaseMask, EnterWindowMask, LeaveWindowMask,
+PointerMotionMask, PointerMotionHintMask, Button1MotionMask, Button2MotionMask,
+Button3MotionMask, Button4MotionMask, Button5MotionMask, ButtonMotionMask,
+KeymapStateMask, ExposureMask, VisibilityChangeMask, StructureNotifyMask,
+ResizeRedirectMask, SubstructureNotifyMask, SubstructureRedirectMask,
+FocusChangeMask, PropertyChangeMask, ColormapChangeMask, OwnerGrabButtonMask</a></strong><br />
+</dt>
+<dt><strong><a name="item_urxvt_3a_3akeypress_2c_keyrelease_2c_buttonpress_2">urxvt::KeyPress, KeyRelease, ButtonPress, ButtonRelease, MotionNotify,
+EnterNotify, LeaveNotify, FocusIn, FocusOut, KeymapNotify, Expose,
+GraphicsExpose, NoExpose, VisibilityNotify, CreateNotify, DestroyNotify,
+UnmapNotify, MapNotify, MapRequest, ReparentNotify, ConfigureNotify,
+ConfigureRequest, GravityNotify, ResizeRequest, CirculateNotify,
+CirculateRequest, PropertyNotify, SelectionClear, SelectionRequest,
+SelectionNotify, ColormapNotify, ClientMessage, MappingNotify</a></strong><br />
+</dt>
 <dd>
 Various constants for use in X calls and event processing.
 </dd>
@@ -713,7 +737,7 @@ initialise perl, and the terminal object otherwise. The <code>init</code> and
 </dt>
 <dd>
 Destroy the terminal object (close the window, free resources
-etc.). Please note that rxvt will not exit as long as any event
+etc.). Please note that urxvt will not exit as long as any event
 watchers (timers, io watchers) are still active.
 </dd>
 <p></p>
@@ -798,7 +822,7 @@ the wrong resources.</p>
 </dt>
 <dd>
 Adds a keymap translation exactly as specified via a resource. See the
-<code>keysym</code> resource in the <code>rxvt(1)</code> manpage.
+<code>keysym</code> resource in the <code>urxvt(1)</code> manpage.
 </dd>
 <p></p>
 <dt><strong><a name="item_rstyle">$rend = $term-&gt;rstyle ([$new_rstyle])</a></strong><br />
@@ -997,6 +1021,17 @@ Return the window id of the toplevel window.
 </dt>
 <dd>
 Return the window id of the terminal window.
+</dd>
+<p></p>
+<dt><strong><a name="item_vt_emask_add">$term-&gt;vt_emask_add ($x_event_mask)</a></strong><br />
+</dt>
+<dd>
+Adds the specified events to the vt event mask. Useful e.g. when you want
+to receive pointer events all the times:
+</dd>
+<dd>
+<pre>
+   $term-&gt;vt_emask_add (urxvt::PointerMotionMask);</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_width">$window_width = $term-&gt;width</a></strong><br />

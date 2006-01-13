@@ -1,5 +1,5 @@
 NAME
-    rxvtperl - rxvt-unicode's embedded perl interpreter
+    urxvtperl - rxvt-unicode's embedded perl interpreter
 
 SYNOPSIS
        # create a file grab_test in $HOME:
@@ -9,9 +9,9 @@ SYNOPSIS
           ()
        }
 
-       # start a rxvt using it:
+       # start a urxvt using it:
 
-       rxvt --perl-lib $HOME -pe grab_test
+       urxvt --perl-lib $HOME -pe grab_test
 
 DESCRIPTION
     Everytime a terminal object gets created, extension scripts specified
@@ -20,16 +20,16 @@ DESCRIPTION
     Scripts are compiled in a 'use strict' and 'use utf8' environment, and
     thus must be encoded as UTF-8.
 
-    Each script will only ever be loaded once, even in rxvtd, where scripts
+    Each script will only ever be loaded once, even in urxvtd, where scripts
     will be shared (but not enabled) for all terminals.
 
 PREPACKAGED EXTENSIONS
     This section describes the extensions delivered with this release. You
-    can find them in /opt/rxvt/lib/urxvt/perl/.
+    can find them in /usr/local/lib/urxvt/perl/.
 
     You can activate them like this:
 
-      rxvt -pe <extensionname>
+      urxvt -pe <extensionname>
 
     selection (enabled by default)
         (More) intelligent selection. This extension tries to be more
@@ -105,12 +105,12 @@ PREPACKAGED EXTENSIONS
         "filename:number", often seen in compiler messages, into "vi
         +$filename $word":
 
-           URxvt.selection-autotransform.0: s/^(\\S+):(\\d+):?$/vi +$2 \\Q$1\\E\\x0d/
+           URxvt.selection-autotransform.0: s/^([^:[:space:]]+):(\\d+):?$/vi +$2 \\Q$1\\E\\x0d/
 
         And this example matches the same,but replaces it with vi-commands
         you can paste directly into your (vi :) editor:
 
-           URxvt.selection-autotransform.0: s/^(S+):(d+):?$/\\x1b:e \\Q$1\\E\\x0d:$2\\x0d/
+           URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\\d+):?$/\\x1b:e \\Q$1\\E\\x0d:$2\\x0d/
 
         Of course, this can be modified to suit your needs and your editor
         :)
@@ -320,7 +320,12 @@ API DOCUMENTATION
     on_keyboard_command $term, $string
         Called whenever the user presses a key combination that has a
         "perl:string" action bound to it (see description of the keysym
-        resource in the rxvt(1) manpage).
+        resource in the urxvt(1) manpage).
+
+    on_x_event $term, $event
+        Called on every X event received on the vt window (and possibly
+        other windows). Should only be used as a last resort. Most event
+        structure members are not passed.
 
     on_focus_in $term
         Called whenever the window gets the keyboard focus, before
@@ -394,6 +399,21 @@ API DOCUMENTATION
     urxvt::ShiftMask, LockMask, ControlMask, Mod1Mask, Mod2Mask, Mod3Mask,
     Mod4Mask, Mod5Mask, Button1Mask, Button2Mask, Button3Mask, Button4Mask,
     Button5Mask, AnyModifier
+    urxvt::NoEventMask, KeyPressMask, KeyReleaseMask, ButtonPressMask,
+    ButtonReleaseMask, EnterWindowMask, LeaveWindowMask, PointerMotionMask,
+    PointerMotionHintMask, Button1MotionMask, Button2MotionMask,
+    Button3MotionMask, Button4MotionMask, Button5MotionMask,
+    ButtonMotionMask, KeymapStateMask, ExposureMask, VisibilityChangeMask,
+    StructureNotifyMask, ResizeRedirectMask, SubstructureNotifyMask,
+    SubstructureRedirectMask, FocusChangeMask, PropertyChangeMask,
+    ColormapChangeMask, OwnerGrabButtonMask
+    urxvt::KeyPress, KeyRelease, ButtonPress, ButtonRelease, MotionNotify,
+    EnterNotify, LeaveNotify, FocusIn, FocusOut, KeymapNotify, Expose,
+    GraphicsExpose, NoExpose, VisibilityNotify, CreateNotify, DestroyNotify,
+    UnmapNotify, MapNotify, MapRequest, ReparentNotify, ConfigureNotify,
+    ConfigureRequest, GravityNotify, ResizeRequest, CirculateNotify,
+    CirculateRequest, PropertyNotify, SelectionClear, SelectionRequest,
+    SelectionNotify, ColormapNotify, ClientMessage, MappingNotify
         Various constants for use in X calls and event processing.
 
   RENDITION
@@ -456,7 +476,7 @@ API DOCUMENTATION
 
     $term->destroy
         Destroy the terminal object (close the window, free resources etc.).
-        Please note that rxvt will not exit as long as any event watchers
+        Please note that urxvt will not exit as long as any event watchers
         (timers, io watchers) are still active.
 
     $isset = $term->option ($optval[, $set])
@@ -521,7 +541,7 @@ API DOCUMENTATION
 
     $success = $term->parse_keysym ($keysym_spec, $command_string)
         Adds a keymap translation exactly as specified via a resource. See
-        the "keysym" resource in the rxvt(1) manpage.
+        the "keysym" resource in the urxvt(1) manpage.
 
     $rend = $term->rstyle ([$new_rstyle])
         Return and optionally change the current rendition. Text that is
@@ -650,6 +670,12 @@ API DOCUMENTATION
 
     $windowid = $term->vt
         Return the window id of the terminal window.
+
+    $term->vt_emask_add ($x_event_mask)
+        Adds the specified events to the vt event mask. Useful e.g. when you
+        want to receive pointer events all the times:
+
+           $term->vt_emask_add (urxvt::PointerMotionMask);
 
     $window_width = $term->width
     $window_height = $term->height

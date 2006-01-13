@@ -674,7 +674,7 @@ Make sure that mouse reporting is actually turned off since killing
 some editors prematurely may leave the mouse in mouse report mode. I've
 heard that tcsh may use mouse reporting unless it otherwise specified. A
 quick check is to see if cut/paste works when the Alt or Shift keys are
-depressed. See @@RXVT_NAME@@(7)
+depressed.
 
 =item What's with this bold/blink stuff?
 
@@ -773,7 +773,7 @@ For starting a new rxvt-unicode:
    $ stty erase ^?
    $ @@RXVT_NAME@@
 
-Toggle with C<ESC [ 36 h> / C<ESC [ 36 l> as documented in @@RXVT_NAME@@(7).
+Toggle with C<ESC [ 36 h> / C<ESC [ 36 l>.
 
 For an existing rxvt-unicode:
 

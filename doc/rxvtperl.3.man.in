@@ -259,14 +259,14 @@ For example, the following will transform selections of the form
 $word\*(C'\fR:
 .Sp
 .Vb 1
-\&   URxvt.selection-autotransform.0: s/^(\e\eS+):(\e\ed+):?$/vi +$2 \e\eQ$1\e\eE\e\ex0d/
+\&   URxvt.selection-autotransform.0: s/^([^:[:space:]]+):(\e\ed+):?$/vi +$2 \e\eQ$1\e\eE\e\ex0d/
 .Ve
 .Sp
 And this example matches the same,but replaces it with vi-commands you can
 paste directly into your (vi :) editor:
 .Sp
 .Vb 1
-\&   URxvt.selection-autotransform.0: s/^(S+):(d+):?$/\e\ex1b:e \e\eQ$1\e\eE\e\ex0d:$2\e\ex0d/
+\&   URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\e\ed+):?$/\e\ex1b:e \e\eQ$1\e\eE\e\ex0d:$2\e\ex0d/
 .Ve
 .Sp
 Of course, this can be modified to suit your needs and your editor :)
@@ -492,6 +492,12 @@ Called just after the screen gets redrawn. See \f(CW\*(C`on_refresh_begin\*(C'\f
 Called whenever the user presses a key combination that has a
 \&\f(CW\*(C`perl:string\*(C'\fR action bound to it (see description of the \fBkeysym\fR
 resource in the @@RXVT_NAME@@(1) manpage).
+.ie n .IP "on_x_event $term\fR, \f(CW$event" 4
+.el .IP "on_x_event \f(CW$term\fR, \f(CW$event\fR" 4
+.IX Item "on_x_event $term, $event"
+Called on every X event received on the vt window (and possibly other
+windows). Should only be used as a last resort. Most event structure
+members are not passed.
 .ie n .IP "on_focus_in $term" 4
 .el .IP "on_focus_in \f(CW$term\fR" 4
 .IX Item "on_focus_in $term"
@@ -587,6 +593,10 @@ Returns the \*(L"current time\*(R" (as per the event loop).
 .PD 0
 .IP "urxvt::ShiftMask, LockMask, ControlMask, Mod1Mask, Mod2Mask, Mod3Mask, Mod4Mask, Mod5Mask, Button1Mask, Button2Mask, Button3Mask, Button4Mask, Button5Mask, AnyModifier" 4
 .IX Item "urxvt::ShiftMask, LockMask, ControlMask, Mod1Mask, Mod2Mask, Mod3Mask, Mod4Mask, Mod5Mask, Button1Mask, Button2Mask, Button3Mask, Button4Mask, Button5Mask, AnyModifier"
+.IP "urxvt::NoEventMask, KeyPressMask, KeyReleaseMask, ButtonPressMask, ButtonReleaseMask, EnterWindowMask, LeaveWindowMask, PointerMotionMask, PointerMotionHintMask, Button1MotionMask, Button2MotionMask, Button3MotionMask, Button4MotionMask, Button5MotionMask, ButtonMotionMask, KeymapStateMask, ExposureMask, VisibilityChangeMask, StructureNotifyMask, ResizeRedirectMask, SubstructureNotifyMask, SubstructureRedirectMask, FocusChangeMask, PropertyChangeMask, ColormapChangeMask, OwnerGrabButtonMask" 4
+.IX Item "urxvt::NoEventMask, KeyPressMask, KeyReleaseMask, ButtonPressMask, ButtonReleaseMask, EnterWindowMask, LeaveWindowMask, PointerMotionMask, PointerMotionHintMask, Button1MotionMask, Button2MotionMask, Button3MotionMask, Button4MotionMask, Button5MotionMask, ButtonMotionMask, KeymapStateMask, ExposureMask, VisibilityChangeMask, StructureNotifyMask, ResizeRedirectMask, SubstructureNotifyMask, SubstructureRedirectMask, FocusChangeMask, PropertyChangeMask, ColormapChangeMask, OwnerGrabButtonMask"
+.IP "urxvt::KeyPress, KeyRelease, ButtonPress, ButtonRelease, MotionNotify, EnterNotify, LeaveNotify, FocusIn, FocusOut, KeymapNotify, Expose, GraphicsExpose, NoExpose, VisibilityNotify, CreateNotify, DestroyNotify, UnmapNotify, MapNotify, MapRequest, ReparentNotify, ConfigureNotify, ConfigureRequest, GravityNotify, ResizeRequest, CirculateNotify, CirculateRequest, PropertyNotify, SelectionClear, SelectionRequest, SelectionNotify, ColormapNotify, ClientMessage, MappingNotify" 4
+.IX Item "urxvt::KeyPress, KeyRelease, ButtonPress, ButtonRelease, MotionNotify, EnterNotify, LeaveNotify, FocusIn, FocusOut, KeymapNotify, Expose, GraphicsExpose, NoExpose, VisibilityNotify, CreateNotify, DestroyNotify, UnmapNotify, MapNotify, MapRequest, ReparentNotify, ConfigureNotify, ConfigureRequest, GravityNotify, ResizeRequest, CirculateNotify, CirculateRequest, PropertyNotify, SelectionClear, SelectionRequest, SelectionNotify, ColormapNotify, ClientMessage, MappingNotify"
 .PD
 Various constants for use in X calls and event processing.
 .Sh "\s-1RENDITION\s0"
@@ -884,6 +894,14 @@ Return the window id of the toplevel window.
 .el .IP "$windowid = \f(CW$term\fR\->vt" 4
 .IX Item "$windowid = $term->vt"
 Return the window id of the terminal window.
+.IP "$term\->vt_emask_add ($x_event_mask)" 4
+.IX Item "$term->vt_emask_add ($x_event_mask)"
+Adds the specified events to the vt event mask. Useful e.g. when you want
+to receive pointer events all the times:
+.Sp
+.Vb 1
+\&   $term->vt_emask_add (urxvt::PointerMotionMask);
+.Ve
 .ie n .IP "$window_width = $term\->width" 4
 .el .IP "$window_width = \f(CW$term\fR\->width" 4
 .IX Item "$window_width = $term->width"

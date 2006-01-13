@@ -3,7 +3,7 @@ NAME
     system)
 
 SYNOPSIS
-    rxvt [options] [-e command [ args ]]
+    urxvt [options] [-e command [ args ]]
 
 DESCRIPTION
     rxvt-unicode, version 7.0, is a colour vt102 terminal emulator intended
@@ -13,9 +13,9 @@ DESCRIPTION
     advantage on a machine serving many X sessions.
 
 FREQUENTLY ASKED QUESTIONS
-    See rxvt(7) (try "man 7 rxvt") for a list of frequently asked questions
-    and answer to them and some common problems. That document is also
-    accessible on the World-Wide-Web at
+    See urxvt(7) (try "man 7 urxvt") for a list of frequently asked
+    questions and answer to them and some common problems. That document is
+    also accessible on the World-Wide-Web at
     <http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html>.
 
 RXVT-UNICODE VS. RXVT
@@ -54,27 +54,27 @@ RXVT-UNICODE VS. RXVT
     without most of it's features to get a lean binary. It also comes with a
     client/daemon pair that lets you open any number of terminal windows
     from within a single process, which makes startup time very fast and
-    drastically reduces memory usage. See rxvtd(1) (daemon) and rxvtc(1)
+    drastically reduces memory usage. See urxvtd(1) (daemon) and urxvtc(1)
     (client).
 
     It also makes technical information about escape sequences (which have
-    been extended) easier accessible: see rxvt(7) for technical reference
+    been extended) easier accessible: see urxvt(7) for technical reference
     documentation (escape sequences etc.).
 
 OPTIONS
-    The rxvt options (mostly a subset of *xterm*'s) are listed below. In
+    The urxvt options (mostly a subset of *xterm*'s) are listed below. In
     keeping with the smaller-is-better philosophy, options may be eliminated
     or default values chosen at compile-time, so options and defaults listed
-    may not accurately reflect the version installed on your system. `rxvt
+    may not accurately reflect the version installed on your system. `urxvt
     -h' gives a list of major compile-time options on the *Options* line.
     Option descriptions may be prefixed with which compile option each is
     dependent upon. e.g. `Compile *XIM*:' requires *XIM* on the *Options*
-    line. Note: `rxvt -help' gives a list of all command-line options
+    line. Note: `urxvt -help' gives a list of all command-line options
     compiled into your version.
 
-    Note that rxvt permits the resource name to be used as a long-option
+    Note that urxvt permits the resource name to be used as a long-option
     (--/++ option) so the potential command-line options are far greater
-    than those listed. For example: `rxvt --loginShell --color1 Orange'.
+    than those listed. For example: `urxvt --loginShell --color1 Orange'.
 
     The following options are available:
 
@@ -115,7 +115,7 @@ OPTIONS
         be used to brighten or darken the image in addition to tinting it;
         resource *tintColor*. Example:
 
-           rxvt -tr -tint blue -sh 40
+           urxvt -tr -tint blue -sh 40
 
     -sh *number* Darken (0 .. 100) or lighten (-1 .. -100) the transparent
         background image in addition to tinting it (i.e. -tint must be
@@ -148,7 +148,7 @@ OPTIONS
 
     -fn *fontlist*
         Select the fonts to be used. This is a comma separated list of font
-        names that are used in turn when trying to display Unicode
+        names that are checked in order when trying to find glyphs for
         characters. The first font defines the cell size for characters;
         other fonts might be smaller, but not (in general) larger. A
         (hopefully) reasonable default font list is always appended to it.
@@ -158,11 +158,11 @@ OPTIONS
         prefix it with "x:". To specify an XFT-font, you need to prefix it
         with "xft:", e.g.:
 
-           rxvt -fn "xft:Bitstream Vera Sans Mono:pixelsize=15"
-           rxvt -fn "9x15bold,xft:Bitstream Vera Sans Mono"
+           urxvt -fn "xft:Bitstream Vera Sans Mono:pixelsize=15"
+           urxvt -fn "9x15bold,xft:Bitstream Vera Sans Mono"
 
         See also the question "How does rxvt-unicode choose fonts?" in the
-        FAQ section of rxvt(7).
+        FAQ section of urxvt(7).
 
     -fb *fontlist*
         Compile *font-styles*: The bold font list to use when bold
@@ -272,7 +272,7 @@ OPTIONS
         resource termName.
 
     -e *command [arguments]*
-        Run the command with its command-line arguments in the rxvt window;
+        Run the command with its command-line arguments in the urxvt window;
         also sets the window title and icon name to be the basename of the
         program being executed if neither *-title* (*-T*) nor *-n* are given
         on the command line. If this option is used, it must be the last on
@@ -284,7 +284,7 @@ OPTIONS
         want to run shell commands, you have to specify the shell, like
         this:
 
-          rxvt -e sh -c "shell commands"
+          urxvt -e sh -c "shell commands"
 
     -title *text*
         Window title (-T still respected); the default title is the basename
@@ -339,7 +339,7 @@ OPTIONS
         secondaryScroll.
 
     -hold|+hold
-        Turn on/off hold window after exit support. If enabled, rxvt will
+        Turn on/off hold window after exit support. If enabled, urxvt will
         not immediately destroy its window when the program executed within
         it exits. Instead, it will wait till it is being killed or closed by
         the user; resource hold.
@@ -348,21 +348,21 @@ OPTIONS
         Remap a key symbol. See resource keysym.
 
     -embed *windowid*
-        Tells rxvt to embed it's windows into an already-existing window,
+        Tells urxvt to embed it's windows into an already-existing window,
         which enables applications to easily embed a terminal.
 
-        Right now, rxvt will first unmap/map the specified window, so it
-        shouldn't be a top-level window. rxvt will also reconfigure it quite
-        a bit, so don't expect it to keep some specific state. It's best to
-        create an extra subwindow for rxvt and leave it alone.
+        Right now, urxvt will first unmap/map the specified window, so it
+        shouldn't be a top-level window. urxvt will also reconfigure it
+        quite a bit, so don't expect it to keep some specific state. It's
+        best to create an extra subwindow for urxvt and leave it alone.
 
-        The window will not be destroyed when rxvt exits.
+        The window will not be destroyed when urxvt exits.
 
-        It might be useful to know that rxvt will not close file descriptors
-        passed to it (except for stdin/out/err, of course), so you can use
-        file descriptors to communicate with the programs within the
-        terminal. This works regardless of wether the "-embed" option was
-        used or not.
+        It might be useful to know that urxvt will not close file
+        descriptors passed to it (except for stdin/out/err, of course), so
+        you can use file descriptors to communicate with the programs within
+        the terminal. This works regardless of wether the "-embed" option
+        was used or not.
 
         Here is a short Gtk2-perl snippet that illustrates how this option
         can be used (a longer example is in doc/embed):
@@ -370,16 +370,16 @@ OPTIONS
            my $rxvt = new Gtk2::Socket;
            $rxvt->signal_connect_after (realize => sub {
               my $xid = $_[0]->window->get_xid;
-              system "rxvt -embed $xid &";
+              system "urxvt -embed $xid &";
            });
 
     -pty-fd *file descriptor*
-        Tells rxvt NOT to execute any commands or create a new pty/tty pair
+        Tells urxvt NOT to execute any commands or create a new pty/tty pair
         but instead use the given filehandle as the tty master. This is
-        useful if you want to drive rxvt as a generic terminal emulator
+        useful if you want to drive urxvt as a generic terminal emulator
         without having to run a program within it.
 
-        If this switch is given, rxvt will not create any utmp/wtmp entries
+        If this switch is given, urxvt will not create any utmp/wtmp entries
         and will not tinker with pty/tty permissions - you have to do that
         yourself if you want that.
 
@@ -394,7 +394,7 @@ OPTIONS
 
            my $pty = new IO::Pty;
            fcntl $pty, F_SETFD, 0; # clear close-on-exec
-           system "rxvt -pty-fd " . (fileno $pty) . "&";
+           system "urxvt -pty-fd " . (fileno $pty) . "&";
            close $pty;
 
            # now communicate with rxvt
@@ -406,12 +406,12 @@ OPTIONS
         use) in this terminal instance. See resource perl-ext for details.
 
 RESOURCES (available also as long-options)
-    Note: `rxvt --help' gives a list of all resources (long options)
+    Note: `urxvt --help' gives a list of all resources (long options)
     compiled into your version.
 
     You can set and change the resources using X11 tools like xrdb. Many
     distribution do also load settings from the ~/.Xresources file when X
-    starts. rxvt will consult the following files/resources in order, with
+    starts. urxvt will consult the following files/resources in order, with
     later settings overwriting earlier ones:
 
       1. system-wide app-defaults file, either locale-dependent OR global
@@ -420,15 +420,15 @@ RESOURCES (available also as long-options)
       4. SCREEN_RESOURCES for the current screen
       5. $XENVIRONMENT file OR $HOME/.Xdefaults-<nodename>
 
-    Note that when reading X resources, rxvt recognizes two class names:
-    Rxvt and URxvt. The class name Rxvt allows resources common to both rxvt
-    and the original *rxvt* to be easily configured, while the class name
-    URxvt allows resources unique to rxvt, to be shared between different
-    rxvt configurations. If no resources are specified, suitable defaults
-    will be used. Command-line arguments can be used to override resource
-    settings. The following resources are supported (you might want to check
-    the rxvtperl(3) manpage for additional settings by perl extensions not
-    documented here):
+    Note that when reading X resources, urxvt recognizes two class names:
+    Rxvt and URxvt. The class name Rxvt allows resources common to both
+    urxvt and the original *rxvt* to be easily configured, while the class
+    name URxvt allows resources unique to urxvt, to be shared between
+    different urxvt configurations. If no resources are specified, suitable
+    defaults will be used. Command-line arguments can be used to override
+    resource settings. The following resources are supported (you might want
+    to check the urxvtperl(3) manpage for additional settings by perl
+    extensions not documented here):
 
     geometry: *geom*
         Create the window with the specified X window geometry [default
@@ -452,7 +452,7 @@ RESOURCES (available also as long-options)
         section.
 
         Colours higher than 15 cannot be set using resources (yet), but can
-        be changed using an escape command (see rxvt(7)).
+        be changed using an escape command (see urxvt(7)).
 
         Colours 16-79 form a standard 4x4x4 colour cube (the same as xterm
         with 88 colour support). Colours 80-87 are evenly spaces grey steps.
@@ -551,10 +551,11 @@ RESOURCES (available also as long-options)
 
     font: *fontlist*
         Select the fonts to be used. This is a comma separated list of font
-        names that are used in turn when trying to display Unicode
+        names that are checked in order when trying to find glyphs for
         characters. The first font defines the cell size for characters;
-        other fonts might be smaller, but not larger. A reasonable default
-        font list is always appended to it; option -fn.
+        other fonts might be smaller, but not (in general) larger. A
+        (hopefully) reasonable default font list is always appended to it;
+        option -fn.
 
         Each font can either be a standard X11 core font (XLFD) name, with
         optional prefix "x:" or a Xft font (Compile *xft*), prefixed with
@@ -795,7 +796,7 @@ RESOURCES (available also as long-options)
         Specify the font-set used for XIM styles "OverTheSpot" or
         "OffTheSpot". It must be a standard X font set (XLFD patterns
         separated by commas), i.e. it's not in the same format as the other
-        font lists used in rxvt. The default will be set-up to chose *any*
+        font lists used in urxvt. The default will be set-up to chose *any*
         suitable found found, preferably one or two pixels differing in size
         to the base font. option -imfont.
 
@@ -838,7 +839,7 @@ RESOURCES (available also as long-options)
         instead scroll the screen up.
 
     hold: *bool*
-        Turn on/off hold window after exit support. If enabled, rxvt will
+        Turn on/off hold window after exit support. If enabled, urxvt will
         not immediately destroy its window when the program executed within
         it exits. Instead, it will wait till it is being killed or closed by
         the user.
@@ -872,7 +873,7 @@ RESOURCES (available also as long-options)
 
         Please note that you need to double the "\" in resource files, as
         Xlib itself does it's own de-escaping (you can use "\033" instead of
-        "\e" (and so on), which will work with both Xt and rxvt's own
+        "\e" (and so on), which will work with both Xt and urxvt's own
         processing).
 
         You can define a range of keysyms in one shot by providing a
@@ -890,7 +891,7 @@ RESOURCES (available also as long-options)
           URxvt.keysym.Meta-Control-0x63:    \033<M-C-c>
 
         If *string* takes the form of "command:STRING", the specified STRING
-        is interpreted and executed as rxvt's control sequence. For example
+        is interpreted and executed as urxvt's control sequence. For example
         the following means "change the current locale to "zh_CN.GBK" when
         Control-Meta-c is being pressed":
 
@@ -898,8 +899,9 @@ RESOURCES (available also as long-options)
 
         If *string* takes the form "perl:STRING", then the specified STRING
         is passed to the "on_keyboard_command" perl handler. See the
-        rxvtperl(3) manpage. For example, the selection extension (activated
-        via "rxvt -pe selection") listens for "selection:rot13" events:
+        urxvtperl(3) manpage. For example, the selection extension
+        (activated via "urxvt -pe selection") listens for "selection:rot13"
+        events:
 
           URxvt.keysym.M-C-c: perl:selection:rot13
 
@@ -911,7 +913,7 @@ RESOURCES (available also as long-options)
         unless some of those are defined mappings themselves.
 
         Unfortunately, this will override built-in key mappings. For example
-        if you overwrite the "Insert" key you will disable rxvt's
+        if you overwrite the "Insert" key you will disable urxvt's
         "Shift-Insert" mapping. To re-enable that, you can poke "holes" into
         the user-defined keymap using the "builtin:" replacement:
 
@@ -929,7 +931,7 @@ RESOURCES (available also as long-options)
           URxvt.keysym.M-C-1: command:\033]50;suxuseuro\007
           URxvt.keysym.M-C-2: command:\033]50;9x15bold\007
 
-        Other things are possible, e.g. resizing (see rxvt(7) for more
+        Other things are possible, e.g. resizing (see urxvt(7) for more
         info):
 
           URxvt.keysym.M-C-3: command:\033[8;25;80t
@@ -963,24 +965,24 @@ RESOURCES (available also as long-options)
 
     perl-eval: *string*
         Perl code to be evaluated when all extensions have been registered.
-        See the rxvtperl(3) manpage. Due to security reasons, this resource
+        See the urxvtperl(3) manpage. Due to security reasons, this resource
         will be ignored when running setuid/setgid.
 
     perl-lib: *path*
         Colon-separated list of additional directories that hold extension
         scripts. When looking for extensions specified by the "perl"
-        resource, rxvt will first look in these directories and then in
-        /opt/rxvt/lib/urxvt/perl/. Due to security reasons, this resource
+        resource, urxvt will first look in these directories and then in
+        /usr/local/lib/urxvt/perl/. Due to security reasons, this resource
         will be ignored when running setuid/setgid.
 
-        See the rxvtperl(3) manpage.
+        See the urxvtperl(3) manpage.
 
     selection.pattern-*idx*: *perl-regex*
-        Additional selection patterns, see the rxvtperl(3) manpage for
+        Additional selection patterns, see the urxvtperl(3) manpage for
         details.
 
     selection-autotransform.*idx*: *perl-transform*
-        Selection auto-transform patterns, see the rxvtperl(3) manpage for
+        Selection auto-transform patterns, see the urxvtperl(3) manpage for
         details.
 
     searchable-scrollback: *keysym*
@@ -995,9 +997,9 @@ RESOURCES (available also as long-options)
         Sets the WM_TRANSIENT_FOR property to the given window iw.
 
 THE SCROLLBAR
-    Lines of text that scroll off the top of the rxvt window (resource:
+    Lines of text that scroll off the top of the urxvt window (resource:
     saveLines) and can be scrolled back using the scrollbar or by
-    keystrokes. The normal rxvt scrollbar has arrows and its behaviour is
+    keystrokes. The normal urxvt scrollbar has arrows and its behaviour is
     fairly intuitive. The xterm-scrollbar is without arrows and its
     behaviour mimics that of *xterm*
 
@@ -1035,7 +1037,7 @@ TEXT SELECTION AND INSERTION
 
     Insertion:
         Pressing and releasing the Middle mouse button (or Shift-Insert) in
-        an rxvt window causes the current text selection to be inserted as
+        an urxvt window causes the current text selection to be inserted as
         if it had been typed on the keyboard.
 
 CHANGING FONTS
@@ -1110,13 +1112,13 @@ ISO 14755 SUPPORT
     both scenario A and B of ISO 14755, including part 5.2.
 
 LOGIN STAMP
-    rxvt tries to write an entry into the *utmp*(5) file so that it can be
+    urxvt tries to write an entry into the *utmp*(5) file so that it can be
     seen via the *who(1)* command, and can accept messages. To allow this
-    feature, rxvt may need to be installed setuid root on some systems or
+    feature, urxvt may need to be installed setuid root on some systems or
     setgid to root or to some other group on others.
 
 COLORS AND GRAPHICS
-    In addition to the default foreground and background colours, rxvt can
+    In addition to the default foreground and background colours, urxvt can
     display up to 16 colours (8 ANSI colours plus high-intensity bold/blink
     versions of the same). Here is a list of the colours with their rgb.txt
     names.
@@ -1150,19 +1152,19 @@ COLORS AND GRAPHICS
     *xterm*(1) where the colours are only swapped if they have not otherwise
     been specified. For example,
 
-    rxvt -fg Black -bg White -rv
+    urxvt -fg Black -bg White -rv
         would yield White on Black, while on *xterm*(1) it would yield Black
         on White.
 
 ENVIRONMENT
-    rxvt sets and/or uses the following environment variables:
+    urxvt sets and/or uses the following environment variables:
 
     TERM
         Normally set to "rxvt-unicode", unless overwritten at configure
         time, via resources or on the commandline.
 
     COLORTERM
-        Either "rxvt", "rxvt-xpm", depending on wether rxvt was compiled
+        Either "rxvt", "rxvt-xpm", depending on wether urxvt was compiled
         with XPM support, and optionally with the added extension "-mono" to
         indicate that rxvt-unicode runs on a monochrome screen.
 
@@ -1172,34 +1174,34 @@ ENVIRONMENT
         string "default" to indicate that the default-colour escape sequence
         is to be used), "bg" is the colour code used as default background
         colour (or the string "default"), and "xpm" is the string "default"
-        if rxvt was compiled with XPM support. Libraries like "ncurses" and
+        if urxvt was compiled with XPM support. Libraries like "ncurses" and
         "slang" can (and do) use this information to optimize screen output.
 
     WINDOWID
-        Set to the (decimal) X Window ID of the rxvt window (the toplevel
+        Set to the (decimal) X Window ID of the urxvt window (the toplevel
         window, which usually has subwindows for the scrollbar, the terminal
         window and so on).
 
     TERMINFO
-        Set to the terminfo directory iff rxvt was configured with
+        Set to the terminfo directory iff urxvt was configured with
         "--with-terminfo=PATH".
 
     DISPLAY
-        Used by rxvt to connect to the display and set to the correct
+        Used by urxvt to connect to the display and set to the correct
         display in it's child processes.
 
     SHELL
         The shell to be used for command execution, defaults to "/bin/sh".
 
     RXVTPATH
-        The path where rxvt looks for support files such as menu and xpm
+        The path where urxvt looks for support files such as menu and xpm
         files.
 
     PATH
         Used in the same way as "RXVTPATH".
 
     RXVT_SOCKET
-        The unix domain socket path used by rxvtc(1) and rxvtd(1).
+        The unix domain socket path used by urxvtc(1) and urxvtd(1).
 
         Default $HOME/.rxvt-unicode-*<nodename*.
 
@@ -1213,15 +1215,15 @@ ENVIRONMENT
 
     XENVIRONMENT
         If set and accessible, gives the name of a X resource file to be
-        loaded by rxvt.
+        loaded by urxvt.
 
 FILES
     /usr/lib/X11/rgb.txt
         Color names.
 
 SEE ALSO
-    rxvt(7), rxvtc(1), rxvtd(1), xterm(1), sh(1), resize(1), X(1), pty(4),
-    tty(4), utmp(5)
+    urxvt(7), urxvtc(1), urxvtd(1), xterm(1), sh(1), resize(1), X(1),
+    pty(4), tty(4), utmp(5)
 
 CURRENT PROJECT COORDINATOR
     Project Coordinator
