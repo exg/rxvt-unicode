@@ -52,7 +52,7 @@
 #undef ROW
 #define ROW(n) THIS->row_buf [LINENO (n)]
 
-#define ENABLE_PERL_FRILLS 1
+#define ENABLE_PERL_FRILLS 0
 
 /////////////////////////////////////////////////////////////////////////////
 
