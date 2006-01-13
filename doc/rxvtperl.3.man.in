@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-12" "7.0" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-13" "7.0" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -270,6 +270,18 @@ paste directly into your (vi :) editor:
 .Ve
 .Sp
 Of course, this can be modified to suit your needs and your editor :)
+.Sp
+To expand the example above to typical perl error messages (\*(L"\s-1XXX\s0 at
+\&\s-1FILENAME\s0 line \s-1YYY\s0.\*(R"), you need a slightly more elaborate solution:
+.Sp
+.Vb 2
+\&   URxvt.selection.pattern-0: ( at .*? line \e\ed+\e\e.)
+\&   URxvt.selection-autotransform.0: s/^ at (.*?) line (\e\ed+)\e\e.$/\ex1b:e \e\eQ$1\eE\e\ex0d:$2\e\ex0d/
+.Ve
+.Sp
+The first line tells the selection code to treat the unchanging part of
+every error message as a selection pattern, and the second line transforms
+the message into vi commands to load the file.
 .IP "mark-urls" 4
 .IX Item "mark-urls"
 Uses per-line display filtering (\f(CW\*(C`on_line_update\*(C'\fR) to underline urls and

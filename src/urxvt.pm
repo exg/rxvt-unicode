@@ -131,6 +131,16 @@ paste directly into your (vi :) editor:
 
 Of course, this can be modified to suit your needs and your editor :)
 
+To expand the example above to typical perl error messages ("XXX at
+FILENAME line YYY."), you need a slightly more elaborate solution:
+
+   URxvt.selection.pattern-0: ( at .*? line \\d+\\.)
+   URxvt.selection-autotransform.0: s/^ at (.*?) line (\\d+)\\.$/\x1b:e \\Q$1\E\\x0d:$2\\x0d/
+
+The first line tells the selection code to treat the unchanging part of
+every error message as a selection pattern, and the second line transforms
+the message into vi commands to load the file.
+
 =item mark-urls
 
 Uses per-line display filtering (C<on_line_update>) to underline urls and
