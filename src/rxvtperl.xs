@@ -1114,10 +1114,8 @@ rxvt_term::vt_emask_add (U32 emask)
 U32
 rxvt_term::rstyle (U32 new_rstyle = THIS->rstyle)
 	CODE:
-{
         RETVAL = THIS->rstyle;
         THIS->rstyle = new_rstyle;
-}
         OUTPUT:
 	RETVAL
 
