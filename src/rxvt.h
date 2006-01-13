@@ -1210,6 +1210,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   // modifies first argument(!)
   void paste (char *data, unsigned int len);
 
+  long vt_emask;
   void flush ();
 
 #if TRANSPARENT

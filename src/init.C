@@ -924,7 +924,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   MWMHints mwmhints;
 #endif
   XGCValues gcvalue;
-  long vt_emask;
   XSetWindowAttributes attributes;
   XWindowAttributes gattr;
   Window top, parent;

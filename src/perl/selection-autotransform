@@ -20,7 +20,6 @@ sub on_init {
    }
 
    for (my $idx = 0; defined (my $res = urxvt::untaint $self->x_resource ("selection-autotransform.$idx")); $idx++) {
-      warn "<<<$idx:$res>>>\n";#d#
       my $transform = eval "sub { $res }";
 
       if ($transform) {
