@@ -141,7 +141,9 @@ encoding.o: table/cns11643_1992_f.h table/big5_ext.h table/big5_plus.h
 encoding.o: table/viscii.h table/jis0201_1976_0.h table/jis0208_1990_0.h
 encoding.o: table/jis0212_1990_0.h table/jis0213_1.h table/jis0213_2.h
 encoding.o: table/compose.h table/category.h
-fdpass.o: ../config.h fdpass.h
+fdpass.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h optinc.h encoding.h
+fdpass.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
+fdpass.o: salloc.h rxvtperl.h hookinc.h rsinc.h menubar.h fdpass.h
 init.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h optinc.h encoding.h
 init.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 init.o: salloc.h rxvtperl.h hookinc.h rsinc.h menubar.h init.h
@@ -248,7 +250,10 @@ encoding.lo: table/cns11643_1992_f.h table/big5_ext.h table/big5_plus.h
 encoding.lo: table/viscii.h table/jis0201_1976_0.h table/jis0208_1990_0.h
 encoding.lo: table/jis0212_1990_0.h table/jis0213_1.h table/jis0213_2.h
 encoding.lo: table/compose.h table/category.h
-fdpass.lo: ../config.h fdpass.h
+fdpass.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h optinc.h
+fdpass.lo: encoding.h rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
+fdpass.lo: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h menubar.h
+fdpass.lo: fdpass.h
 init.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h optinc.h encoding.h
 init.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 init.lo: salloc.h rxvtperl.h hookinc.h rsinc.h menubar.h init.h

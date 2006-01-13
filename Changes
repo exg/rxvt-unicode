@@ -12,7 +12,7 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an 
 WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
-7.0
+7.0  Fri Jan 13 14:02:18 CET 2006
 	- added sections for DISTRIBUTION MAINTAINERS and about
           SETUID/SETGID to the FAQ.
         - selection, searchable-scrollback, selection-popup and
