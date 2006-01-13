@@ -373,6 +373,12 @@ Called whenever the user presses a key combination that has a
 C<perl:string> action bound to it (see description of the B<keysym>
 resource in the @@RXVT_NAME@@(1) manpage).
 
+=item on_x_event $term, $event
+
+Called on every X event received on the vt window (and possibly other
+windows). Should only be used as a last resort. Most event structure
+members are not passed.
+
 =item on_focus_in $term
 
 Called whenever the window gets the keyboard focus, before rxvt-unicode
@@ -493,6 +499,22 @@ Returns the "current time" (as per the event loop).
 Mod3Mask, Mod4Mask, Mod5Mask, Button1Mask, Button2Mask, Button3Mask,
 Button4Mask, Button5Mask, AnyModifier
 
+=item urxvt::NoEventMask, KeyPressMask, KeyReleaseMask,
+ButtonPressMask, ButtonReleaseMask, EnterWindowMask, LeaveWindowMask,
+PointerMotionMask, PointerMotionHintMask, Button1MotionMask, Button2MotionMask,
+Button3MotionMask, Button4MotionMask, Button5MotionMask, ButtonMotionMask,
+KeymapStateMask, ExposureMask, VisibilityChangeMask, StructureNotifyMask,
+ResizeRedirectMask, SubstructureNotifyMask, SubstructureRedirectMask,
+FocusChangeMask, PropertyChangeMask, ColormapChangeMask, OwnerGrabButtonMask
+
+=item urxvt::KeyPress, KeyRelease, ButtonPress, ButtonRelease, MotionNotify,
+EnterNotify, LeaveNotify, FocusIn, FocusOut, KeymapNotify, Expose,
+GraphicsExpose, NoExpose, VisibilityNotify, CreateNotify, DestroyNotify,
+UnmapNotify, MapNotify, MapRequest, ReparentNotify, ConfigureNotify,
+ConfigureRequest, GravityNotify, ResizeRequest, CirculateNotify,
+CirculateRequest, PropertyNotify, SelectionClear, SelectionRequest,
+SelectionNotify, ColormapNotify, ClientMessage, MappingNotify
+
 Various constants for use in X calls and event processing.
 
 =back
@@ -569,7 +591,6 @@ BEGIN {
    $ENV{PATH} = "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin:/opt/sbin";
 }
 
-my @hook_count;
 my $verbosity = $ENV{URXVT_PERL_VERBOSITY};
 
 sub verbose {
@@ -667,13 +688,6 @@ sub invoke {
    }
 
    if ($htype == 1) { # DESTROY
-      if (my $hook = delete $TERM->{_hook}) {
-         for my $htype (0..$#$hook) {
-            $hook_count[$htype] -= scalar keys %{ $hook->[$htype] || {} }
-               or set_should_invoke $htype, 0;
-         }
-      }
-
       # clear package objects
       %$_ = () for values %{ $TERM->{_pkg} };
 
@@ -709,10 +723,8 @@ sub enable {
       defined $htype
          or Carp::croak "unsupported hook type '$name'";
 
-      unless (exists $self->{term}{_hook}[$htype]{$pkg}) {
-         $hook_count[$htype]++
-            or urxvt::set_should_invoke $htype, 1;
-      }
+      $self->set_should_invoke ($htype, +1)
+         unless exists $self->{term}{_hook}[$htype]{$pkg};
 
       $self->{term}{_hook}[$htype]{$pkg} = $cb;
    }
@@ -727,10 +739,8 @@ sub disable {
       defined $htype
          or Carp::croak "unsupported hook type '$name'";
 
-      if (delete $self->{term}{_hook}[$htype]{$pkg}) {
-         --$hook_count[$htype]
-            or urxvt::set_should_invoke $htype, 0;
-      }
+      $self->set_should_invoke ($htype, -1)
+         if delete $self->{term}{_hook}[$htype]{$pkg};
    }
 }
 
@@ -1144,6 +1154,13 @@ Return the window id of the toplevel window.
 =item $windowid = $term->vt
 
 Return the window id of the terminal window.
+
+=item $term->vt_emask_add ($x_event_mask)
+
+Adds the specified events to the vt event mask. Useful e.g. when you want
+to receive pointer events all the times:
+
+   $term->vt_emask_add (urxvt::PointerMotionMask);
 
 =item $window_width = $term->width
 

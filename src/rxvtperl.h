@@ -6,7 +6,7 @@
 #define RXVTPERL_H_
 
 #if ENABLE_PERL
-# define SHOULD_INVOKE(htype) rxvt_perl.should_invoke [htype]
+# define SHOULD_INVOKE(htype) perl.should_invoke [htype]
 # define HOOK_INVOKE(args) rxvt_perl.invoke args
 
 #include "rxvt.h"
@@ -32,6 +32,7 @@ struct rxvt_perl_term
 {
   void *self;
   unsigned long grabtime;
+  uint8_t should_invoke[HOOK_NUM];
 };
 
 struct rxvt_perl_interp
@@ -39,8 +40,6 @@ struct rxvt_perl_interp
   char **perl_environ;
 
   ~rxvt_perl_interp ();
-
-  bool should_invoke[HOOK_NUM];
 
   void init ();
   bool invoke (rxvt_term *term, hook_type htype, ...);

@@ -1210,8 +1210,12 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   // modifies first argument(!)
   void paste (char *data, unsigned int len);
 
-  long vt_emask;
-  void flush ();
+  long vt_emask, vt_emask_perl;
+
+  void vt_select_input ()
+  {
+    XSelectInput (display->display, vt, vt_emask | vt_emask_perl);
+  }
 
 #if TRANSPARENT
   void rootwin_cb (XEvent &xev);
@@ -1219,6 +1223,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 #endif
 
   void x_cb (XEvent &xev);
+  void flush ();
   xevent_watcher termwin_ev;
   xevent_watcher vt_ev;
 #ifdef HAVE_SCROLLBARS

@@ -481,7 +481,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 
         }
 
-      if (!should_invoke [htype])
+      if (!term->perl.should_invoke [htype])
         return false;
     }
 
@@ -661,40 +661,105 @@ BOOT:
 # undef def
 
   HV *stash = gv_stashpv ("urxvt", 1);
-# define export_const_iv(name) newCONSTSUB (stash, # name, newSViv (name));
-  export_const_iv (DEFAULT_RSTYLE);
-  export_const_iv (OVERLAY_RSTYLE);
-  export_const_iv (RS_Bold);
-  export_const_iv (RS_Italic);
-  export_const_iv (RS_Blink);
-  export_const_iv (RS_RVid);
-  export_const_iv (RS_Uline);
+  struct {
+    const char *name;
+    IV iv;
+  } *civ, const_iv[] = {
+#   define const_iv(name) { # name, (IV)name }
+    const_iv (DEFAULT_RSTYLE),
+    const_iv (OVERLAY_RSTYLE),
+    const_iv (RS_Bold),
+    const_iv (RS_Italic),
+    const_iv (RS_Blink),
+    const_iv (RS_RVid),
+    const_iv (RS_Uline),
 
-  export_const_iv (CurrentTime);
-  export_const_iv (ShiftMask);
-  export_const_iv (LockMask);
-  export_const_iv (ControlMask);
-  export_const_iv (Mod1Mask);
-  export_const_iv (Mod2Mask);
-  export_const_iv (Mod3Mask);
-  export_const_iv (Mod4Mask);
-  export_const_iv (Mod5Mask);
-  export_const_iv (Button1Mask);
-  export_const_iv (Button2Mask);
-  export_const_iv (Button3Mask);
-  export_const_iv (Button4Mask);
-  export_const_iv (Button5Mask);
-  export_const_iv (AnyModifier);
+    const_iv (CurrentTime),
+    const_iv (ShiftMask),
+    const_iv (LockMask),
+    const_iv (ControlMask),
+    const_iv (Mod1Mask),
+    const_iv (Mod2Mask),
+    const_iv (Mod3Mask),
+    const_iv (Mod4Mask),
+    const_iv (Mod5Mask),
+    const_iv (Button1Mask),
+    const_iv (Button2Mask),
+    const_iv (Button3Mask),
+    const_iv (Button4Mask),
+    const_iv (Button5Mask),
+    const_iv (AnyModifier),
 
-  export_const_iv (EVENT_NONE);
-  export_const_iv (EVENT_READ);
-  export_const_iv (EVENT_WRITE);
+    const_iv (EVENT_NONE),
+    const_iv (EVENT_READ),
+    const_iv (EVENT_WRITE),
+
+    const_iv (NoEventMask),
+    const_iv (KeyPressMask),
+    const_iv (KeyReleaseMask),
+    const_iv (ButtonPressMask),
+    const_iv (ButtonReleaseMask),
+    const_iv (EnterWindowMask),
+    const_iv (LeaveWindowMask),
+    const_iv (PointerMotionMask),
+    const_iv (PointerMotionHintMask),
+    const_iv (Button1MotionMask),
+    const_iv (Button2MotionMask),
+    const_iv (Button3MotionMask),
+    const_iv (Button4MotionMask),
+    const_iv (Button5MotionMask),
+    const_iv (ButtonMotionMask),
+    const_iv (KeymapStateMask),
+    const_iv (ExposureMask),
+    const_iv (VisibilityChangeMask),
+    const_iv (StructureNotifyMask),
+    const_iv (ResizeRedirectMask),
+    const_iv (SubstructureNotifyMask),
+    const_iv (SubstructureRedirectMask),
+    const_iv (FocusChangeMask),
+    const_iv (PropertyChangeMask),
+    const_iv (ColormapChangeMask),
+    const_iv (OwnerGrabButtonMask),
+
+    const_iv (KeyPress),
+    const_iv (KeyRelease),
+    const_iv (ButtonPress),
+    const_iv (ButtonRelease),
+    const_iv (MotionNotify),
+    const_iv (EnterNotify),
+    const_iv (LeaveNotify),
+    const_iv (FocusIn),
+    const_iv (FocusOut),
+    const_iv (KeymapNotify),
+    const_iv (Expose),
+    const_iv (GraphicsExpose),
+    const_iv (NoExpose),
+    const_iv (VisibilityNotify),
+    const_iv (CreateNotify),
+    const_iv (DestroyNotify),
+    const_iv (UnmapNotify),
+    const_iv (MapNotify),
+    const_iv (MapRequest),
+    const_iv (ReparentNotify),
+    const_iv (ConfigureNotify),
+    const_iv (ConfigureRequest),
+    const_iv (GravityNotify),
+    const_iv (ResizeRequest),
+    const_iv (CirculateNotify),
+    const_iv (CirculateRequest),
+    const_iv (PropertyNotify),
+    const_iv (SelectionClear),
+    const_iv (SelectionRequest),
+    const_iv (SelectionNotify),
+    const_iv (ColormapNotify),
+    const_iv (ClientMessage),
+    const_iv (MappingNotify),
+  };
+
+  for (civ = const_iv + sizeof (const_iv) / sizeof (const_iv [0]);
+       civ-- > const_iv; )
+    newCONSTSUB (stash, (char *)civ->name, newSViv (civ->iv));
 }
-
-void
-set_should_invoke (int htype, int value)
-	CODE:
-        rxvt_perl.should_invoke [htype] = value;
 
 void
 warn (const char *msg)
@@ -827,6 +892,11 @@ _new (...)
 
 void
 rxvt_term::destroy ()
+
+void
+rxvt_term::set_should_invoke (int htype, int inc)
+	CODE:
+        THIS->perl.should_invoke [htype] += inc;
 
 void
 rxvt_term::grab_button (int button, U32 modifiers)
@@ -1034,6 +1104,12 @@ rxvt_term::vt ()
         RETVAL = (U32)THIS->vt;
         OUTPUT:
         RETVAL
+
+void
+rxvt_term::vt_emask_add (U32 emask)
+	CODE:
+        THIS->vt_emask_perl |= emask;
+        THIS->vt_select_input ();
 
 U32
 rxvt_term::rstyle (U32 new_rstyle = THIS->rstyle)

@@ -1313,6 +1313,10 @@ rxvt_term::x_cb (XEvent &ev)
   SET_R (this);
   SET_LOCALE (locale);
 
+  if (ev.xany.window == vt
+      && HOOK_INVOKE ((this, HOOK_X_EVENT, DT_XEVENT, &ev, DT_END)))
+    return;
+
   Window unused_root, unused_child;
   int unused_root_x, unused_root_y;
   unsigned int unused_mask;
@@ -1602,6 +1606,7 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case MotionNotify:
+        printf ("motion notify\n");//D
 #ifdef POINTER_BLANK
         if (hidden_pointer)
           pointer_unblank ();

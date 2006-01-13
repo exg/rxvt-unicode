@@ -1096,16 +1096,13 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   vt_emask = ExposureMask | ButtonPressMask | ButtonReleaseMask | PropertyChangeMask;
 
-  if (OPTION (Opt_pointerBlank)
-#ifdef ENABLE_PERL
-      || perl.self
-#endif
-      )
+  if (OPTION (Opt_pointerBlank))
     vt_emask |= PointerMotionMask;
   else
     vt_emask |= Button1MotionMask | Button3MotionMask;
 
-  XSelectInput (disp, vt, vt_emask);
+  vt_select_input ();
+
   vt_ev.start (display, vt);
 
 #if defined(MENUBAR) && (MENUBAR_MAX > 1)

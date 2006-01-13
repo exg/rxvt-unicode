@@ -24,6 +24,7 @@
 
   def (KEYBOARD_COMMAND)
 
+  def (X_EVENT)
   def (FOCUS_IN)
   def (FOCUS_OUT)
   def (KEY_PRESS)
@@ -33,4 +34,4 @@
   def (MOTION_NOTIFY)
   def (MAP_NOTIFY)
   def (UNMAP_NOTIFY)
-  def (ON_CUSTOM_REND) // hovering over custom rendition, generate enter/leave maybe?
+  def (CUSTOM_REND) // hovering over custom rendition, generate enter/leave maybe?

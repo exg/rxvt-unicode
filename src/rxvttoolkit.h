@@ -97,8 +97,6 @@ struct rxvt_display : refcounted {
   void ref_next ();
   ~rxvt_display ();
 
-  operator Display *() const { return display; }
-
   void flush ();
   Atom atom (const char *name);
   void set_selection_owner (rxvt_term *owner);
