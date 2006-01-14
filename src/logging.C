@@ -100,7 +100,7 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
   strncpy (ut->ut_id, ut_id, sizeof (ut->ut_id));
   ut->ut_type = DEAD_PROCESS;
   getutid (ut);		/* position to entry in utmp file */
-  strncpy (ut_id, ut_id, sizeof (ut_id));
+  strncpy (this->ut_id, ut_id, sizeof (this->ut_id));
 # endif
 #endif
 
@@ -110,7 +110,7 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
   strncpy (utx->ut_id, ut_id, sizeof (utx->ut_id));
   utx->ut_type = DEAD_PROCESS;
   getutxid (utx);		/* position to entry in utmp file */
-  strncpy (ut_id, ut_id, sizeof (ut_id));
+  strncpy (this->ut_id, ut_id, sizeof (this->ut_id));
 #endif
 
 #ifdef HAVE_STRUCT_UTMP
@@ -248,7 +248,7 @@ rxvt_term::cleanutent ()
 # ifdef HAVE_UTMP_PID
   memset (ut, 0, sizeof (struct utmp));
   setutent ();
-  strncpy (ut->ut_id, ut_id, sizeof (ut->ut_id));
+  strncpy (ut->ut_id, this->ut_id, sizeof (ut->ut_id));
   ut->ut_type = USER_PROCESS;
   {
     struct utmp    *tmput = getutid (ut);
@@ -269,7 +269,7 @@ rxvt_term::cleanutent ()
 #ifdef HAVE_STRUCT_UTMPX
   memset (utx, 0, sizeof (struct utmpx));
   setutxent ();
-  strncpy (utx->ut_id, ut_id, sizeof (utx->ut_id));
+  strncpy (utx->ut_id, this->ut_id, sizeof (utx->ut_id));
   utx->ut_type = USER_PROCESS;
   if ((tmputx = getutxid (utx)))	/* position to entry in utmp file */
     utx = tmputx;
