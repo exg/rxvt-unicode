@@ -63,4 +63,5 @@ rxvt-unicode|rxvt-unicode terminal (X Window System),
 	sc=\E7, 
 	s0ds=\E(B, s1ds=\E(0, s2ds=\E*B, s3ds=\E+B,
 	u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c,
+        tsl=\E]2;, fsl=\007,
 
