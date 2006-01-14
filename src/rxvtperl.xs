@@ -52,7 +52,7 @@
 #undef ROW
 #define ROW(n) THIS->row_buf [LINENO (n)]
 
-#define ENABLE_PERL_FRILLS 0
+#define ENABLE_PERL_FRILLS 1
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -970,7 +970,17 @@ rxvt_term::XCreateSimpleWindow (U32 parent, int x, int y, unsigned int width, un
 void
 rxvt_term::XReparentWindow (U32 window, U32 parent, int x = 0, int y = 0)
 	CODE:
-        XReparentWindow (THIS->display->display, window, parent, x, y);
+        XReparentWindow (THIS->display->display, (Window)window, (Window)parent, x, y);
+
+void
+rxvt_term::XMapWindow (U32 window)
+	CODE:
+        XMapWindow (THIS->display->display, (Window)window);
+
+void
+rxvt_term::XUnmapWindow (U32 window)
+	CODE:
+        XUnmapWindow (THIS->display->display, (Window)window);
 
 #endif
 

@@ -72,6 +72,12 @@ sub on_button_press {
 
          /^(http|ftp|telnet|irc|news):\//
             and $add_button->("run $self->{browser}" => sub { urxvt::exec_async $self->{browser}, $_ });
+
+         if (/^\s*((?:0x)?\d+)\s*$/) {
+            $popup->add_title (sprintf "%20s", eval $1);
+            $popup->add_title (sprintf "%20s", sprintf "0x%x", eval $1);
+            $popup->add_title (sprintf "%20s", sprintf "0%o", eval $1);
+         }
       }
 
       $popup->show;
