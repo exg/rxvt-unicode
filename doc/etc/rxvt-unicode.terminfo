@@ -7,7 +7,7 @@
 # but the latter does not work correctly.
 #
 rxvt-unicode|rxvt-unicode terminal (X Window System), 
-	am, bce, eo, km, msgr, xenl, 
+	am, bce, eo, km, msgr, xenl, hs,
 	cols#80, it#8, lines#24, 
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~-A.B+C\,D0EhFiG,
 	bel=^G, blink=\E[5m, bold=\E[1m, blink=\E[5m, civis=\E[?25l, 
@@ -63,5 +63,5 @@ rxvt-unicode|rxvt-unicode terminal (X Window System),
 	sc=\E7, 
 	s0ds=\E(B, s1ds=\E(0, s2ds=\E*B, s3ds=\E+B,
 	u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c,
-        tsl=\E]2;, fsl=\007,
+        tsl=\E]2;, fsl=\007, dsl=\E]2;\007,
 

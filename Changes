@@ -13,8 +13,8 @@ WISH: support tex fonts
 
 9.0
 TODO: scroll lines into scrollback when tscroll==0, regardless of bscrol
-	- add tsl/fsl capabilities to the terminfo description, to set the
-          window title.
+	- add tsl/fsl and related capabilities to the terminfo description,
+          to set the window title.
 	- selection popup now shows selection in dec/hex/oct.
         - fix some bugs in the utmp logging code.
 
