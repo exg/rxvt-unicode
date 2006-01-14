@@ -4,7 +4,7 @@
 
 /*
     callback.h -- C++ callback mechanism
-    Copyright (C) 2003-2005 Marc Lehmann <pcg@goof.com>
+    Copyright (C) 2003-2006 Marc Lehmann <pcg@goof.com>
  
     This file is part of GVPE.
 
@@ -35,11 +35,11 @@ class callback0 {
 
   /* a proxy is a kind of recipe on how to call a specific class method	*/
   struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)()) = 0;
+    virtual R call (void *obj, R (object::*meth)()) const = 0;
   };
   template<class O1, class O2>
   struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)())
+    virtual R call (void *obj, R (object::*meth)()) const
       {
         return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)()>(meth)))
           ();
@@ -50,7 +50,7 @@ class callback0 {
 
 public:
   template<class O1, class O2>
-  callback0 (O1 *object, R (O2::*method)())
+  explicit callback0 (O1 *object, R (O2::*method)())
     {
       static proxy<O1,O2> p;
       obj  = reinterpret_cast<void *>(object);
@@ -78,11 +78,11 @@ class callback1 {
 
   /* a proxy is a kind of recipe on how to call a specific class method	*/
   struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1), A1 a1) = 0;
+    virtual R call (void *obj, R (object::*meth)(A1), A1 a1) const = 0;
   };
   template<class O1, class O2>
   struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1), A1 a1)
+    virtual R call (void *obj, R (object::*meth)(A1), A1 a1) const
       {
         return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1)>(meth)))
           (a1);
@@ -93,7 +93,7 @@ class callback1 {
 
 public:
   template<class O1, class O2>
-  callback1 (O1 *object, R (O2::*method)(A1))
+  explicit callback1 (O1 *object, R (O2::*method)(A1))
     {
       static proxy<O1,O2> p;
       obj  = reinterpret_cast<void *>(object);
@@ -121,11 +121,11 @@ class callback2 {
 
   /* a proxy is a kind of recipe on how to call a specific class method	*/
   struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2), A1 a1, A2 a2) = 0;
+    virtual R call (void *obj, R (object::*meth)(A1, A2), A1 a1, A2 a2) const = 0;
   };
   template<class O1, class O2>
   struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2), A1 a1, A2 a2)
+    virtual R call (void *obj, R (object::*meth)(A1, A2), A1 a1, A2 a2) const
       {
         return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2)>(meth)))
           (a1, a2);
@@ -136,7 +136,7 @@ class callback2 {
 
 public:
   template<class O1, class O2>
-  callback2 (O1 *object, R (O2::*method)(A1, A2))
+  explicit callback2 (O1 *object, R (O2::*method)(A1, A2))
     {
       static proxy<O1,O2> p;
       obj  = reinterpret_cast<void *>(object);
@@ -164,11 +164,11 @@ class callback3 {
 
   /* a proxy is a kind of recipe on how to call a specific class method	*/
   struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3), A1 a1, A2 a2, A3 a3) = 0;
+    virtual R call (void *obj, R (object::*meth)(A1, A2, A3), A1 a1, A2 a2, A3 a3) const = 0;
   };
   template<class O1, class O2>
   struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3), A1 a1, A2 a2, A3 a3)
+    virtual R call (void *obj, R (object::*meth)(A1, A2, A3), A1 a1, A2 a2, A3 a3) const
       {
         return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3)>(meth)))
           (a1, a2, a3);
@@ -179,7 +179,7 @@ class callback3 {
 
 public:
   template<class O1, class O2>
-  callback3 (O1 *object, R (O2::*method)(A1, A2, A3))
+  explicit callback3 (O1 *object, R (O2::*method)(A1, A2, A3))
     {
       static proxy<O1,O2> p;
       obj  = reinterpret_cast<void *>(object);
@@ -207,11 +207,11 @@ class callback4 {
 
   /* a proxy is a kind of recipe on how to call a specific class method	*/
   struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4), A1 a1, A2 a2, A3 a3, A4 a4) = 0;
+    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4), A1 a1, A2 a2, A3 a3, A4 a4) const = 0;
   };
   template<class O1, class O2>
   struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4), A1 a1, A2 a2, A3 a3, A4 a4)
+    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4), A1 a1, A2 a2, A3 a3, A4 a4) const
       {
         return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4)>(meth)))
           (a1, a2, a3, a4);
@@ -222,7 +222,7 @@ class callback4 {
 
 public:
   template<class O1, class O2>
-  callback4 (O1 *object, R (O2::*method)(A1, A2, A3, A4))
+  explicit callback4 (O1 *object, R (O2::*method)(A1, A2, A3, A4))
     {
       static proxy<O1,O2> p;
       obj  = reinterpret_cast<void *>(object);
@@ -250,11 +250,11 @@ class callback5 {
 
   /* a proxy is a kind of recipe on how to call a specific class method	*/
   struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) = 0;
+    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const = 0;
   };
   template<class O1, class O2>
   struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5)
+    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const
       {
         return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5)>(meth)))
           (a1, a2, a3, a4, a5);
@@ -265,7 +265,7 @@ class callback5 {
 
 public:
   template<class O1, class O2>
-  callback5 (O1 *object, R (O2::*method)(A1, A2, A3, A4, A5))
+  explicit callback5 (O1 *object, R (O2::*method)(A1, A2, A3, A4, A5))
     {
       static proxy<O1,O2> p;
       obj  = reinterpret_cast<void *>(object);
@@ -293,11 +293,11 @@ class callback6 {
 
   /* a proxy is a kind of recipe on how to call a specific class method	*/
   struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) = 0;
+    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const = 0;
   };
   template<class O1, class O2>
   struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6)
+    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const
       {
         return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5, A6)>(meth)))
           (a1, a2, a3, a4, a5, a6);
@@ -308,7 +308,7 @@ class callback6 {
 
 public:
   template<class O1, class O2>
-  callback6 (O1 *object, R (O2::*method)(A1, A2, A3, A4, A5, A6))
+  explicit callback6 (O1 *object, R (O2::*method)(A1, A2, A3, A4, A5, A6))
     {
       static proxy<O1,O2> p;
       obj  = reinterpret_cast<void *>(object);
@@ -336,11 +336,11 @@ class callback7 {
 
   /* a proxy is a kind of recipe on how to call a specific class method	*/
   struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6, A7), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) = 0;
+    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6, A7), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const = 0;
   };
   template<class O1, class O2>
   struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6, A7), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7)
+    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6, A7), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const
       {
         return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5, A6, A7)>(meth)))
           (a1, a2, a3, a4, a5, a6, a7);
@@ -351,7 +351,7 @@ class callback7 {
 
 public:
   template<class O1, class O2>
-  callback7 (O1 *object, R (O2::*method)(A1, A2, A3, A4, A5, A6, A7))
+  explicit callback7 (O1 *object, R (O2::*method)(A1, A2, A3, A4, A5, A6, A7))
     {
       static proxy<O1,O2> p;
       obj  = reinterpret_cast<void *>(object);
