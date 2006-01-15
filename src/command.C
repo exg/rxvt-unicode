@@ -445,7 +445,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                 }
               else if (keysym == XK_End)
                 {
-                  scr_move_to (1, 0);
+                  scr_move_to (1, 1);
                   return;
                 }
             }
