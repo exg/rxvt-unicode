@@ -81,7 +81,7 @@ sub search {
 
    no re 'eval'; # just to be sure
    if (my $re = eval { qr/$search/ }) {
-      while ($self->nrow > $row && $row > -$self->nsaved) {
+      while ($self->nrow > $row && $row > $self->top_row) {
          my $line = $self->line ($row)
             or last;
 
@@ -92,7 +92,7 @@ sub search {
             } while $text =~ /$re/g;
 
             $self->{row} = $row;
-            $self->view_start (List::Util::max 0, -$row + ($self->nrow >> 1));
+            $self->view_start (List::Util::min 0, $row - ($self->nrow >> 1));
             $self->want_refresh;
             last;
          }
@@ -138,7 +138,7 @@ sub key_press {
       $self->{row} = $self->nrow - 1;
       $self->view_start (0);
    } elsif ($keysym == 0xff52) { # up
-      $self->{row}-- if $self->{row} > -$self->nsaved;
+      $self->{row}-- if $self->{row} > $self->top_row;
       $self->search (-1);
    } elsif ($keysym == 0xff54) { # down
       $self->{row}++ if $self->{row} < $self->nrow;

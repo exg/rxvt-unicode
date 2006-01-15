@@ -1184,7 +1184,7 @@ to receive pointer events all the times:
 
 =item $nrow_plus_saveLines = $term->total_rows
 
-=item $lines_in_scrollback = $term->nsaved
+=item $topmost_scrollback_row = $term->top_row
 
 Return various integers describing terminal characteristics.
 
@@ -1222,8 +1222,8 @@ AltGr), the meta key (often Alt) and the num lock key, if applicable.
 
 =item $view_start = $term->view_start ([$newvalue])
 
-Returns the negative row number of the topmost line. Minimum value is
-C<0>, which displays the normal terminal contents. Larger values scroll
+Returns the row number of the topmost displayed line. Maximum value is
+C<0>, which displays the normal terminal contents. Lower values scroll
 this many lines into the scrollback buffer.
 
 =item $term->want_refresh

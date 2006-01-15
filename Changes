@@ -20,6 +20,8 @@ WISH: support tex fonts
           :-> Matching is now done on UTF-8, which makes it almost instant.
         - perl/selection, perl/selection-autotransform: regexes are now
           being interpreted in the locale urxvt was started.
+        - perl-overlays and refresh hooks were not applied in correct order.
+        - changed coordinate-system of view_start/nsaved to be top to bottom.
         - applied many patches by Emanuele Giaquinta that clean the code up
           and fix more bugs in the utmp logging code.
 	- add tsl/fsl and related capabilities to the terminfo description,

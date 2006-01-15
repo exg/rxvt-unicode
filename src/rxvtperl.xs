@@ -351,8 +351,8 @@ void overlay::swap ()
       text_t *t1 = text [y];
       rend_t *r1 = rend [y];
 
-      text_t *t2 = ROW(y + ov_y - THIS->view_start).t + ov_x;
-      rend_t *r2 = ROW(y + ov_y - THIS->view_start).r + ov_x;
+      text_t *t2 = ROW(y + ov_y + THIS->view_start).t + ov_x;
+      rend_t *r2 = ROW(y + ov_y + THIS->view_start).r + ov_x;
 
       for (int x = ov_w; x--; )
         {
@@ -450,6 +450,20 @@ ungrab (rxvt_term *THIS)
     }
 }
 
+static void
+swap_overlays (rxvt_term *term)
+{
+  HV *hv = (HV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, 0));
+
+  if (HvKEYS (hv))
+    {
+      hv_iterinit (hv);
+
+      while (HE *he = hv_iternext (hv))
+        ((overlay *)SvIV (hv_iterval (hv, he)))->swap ();
+    }
+}
+
 bool
 rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 {
@@ -469,22 +483,16 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
     }
   else
     {
-      if (htype == HOOK_REFRESH_BEGIN || htype == HOOK_REFRESH_END)
-        {
-          HV *hv = (HV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, 0));
-
-          if (HvKEYS (hv))
-            {
-              hv_iterinit (hv);
-
-              while (HE *he = hv_iternext (hv))
-                ((overlay *)SvIV (hv_iterval (hv, he)))->swap ();
-            }
-
-        }
+      if (htype == HOOK_REFRESH_END)
+        swap_overlays (term);
 
       if (!term->perl.should_invoke [htype])
-        return false;
+        {
+          if (htype == HOOK_REFRESH_BEGIN)
+            swap_overlays (term);
+
+          return false;
+        }
     }
 
   swap (perl_environ, environ);
@@ -615,7 +623,9 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
                     ungrab (term); // better lose the grab than the session
                   }
 
-                if (htype == HOOK_DESTROY)
+                if (htype == HOOK_REFRESH_BEGIN)
+                  swap_overlays (term);
+                else if (htype == HOOK_DESTROY)
                   {
                     clearSVptr ((SV *)term->perl.self);
                     SvREFCNT_dec ((SV *)term->perl.self);
@@ -1101,7 +1111,7 @@ rxvt_term::locale_decode (SV *octets)
 #define TERM_OFFSET_mapped     TERM_OFFSET(mapped)
 #define TERM_OFFSET_saveLines  TERM_OFFSET(saveLines)
 #define TERM_OFFSET_total_rows TERM_OFFSET(total_rows)
-#define TERM_OFFSET_nsaved     TERM_OFFSET(nsaved)
+#define TERM_OFFSET_top_row    TERM_OFFSET(top_row)
 
 int
 rxvt_term::width ()
@@ -1117,7 +1127,7 @@ rxvt_term::width ()
            mapped     = TERM_OFFSET_mapped
            saveLines  = TERM_OFFSET_saveLines
            total_rows = TERM_OFFSET_total_rows
-           nsaved     = TERM_OFFSET_nsaved
+           top_row    = TERM_OFFSET_top_row
 	CODE:
         RETVAL = *(int *)((char *)THIS + ix);
         OUTPUT:
@@ -1211,17 +1221,14 @@ rxvt_term::rstyle (U32 new_rstyle = THIS->rstyle)
 	RETVAL
 
 int
-rxvt_term::view_start (int newval = -1)
+rxvt_term::view_start (int newval = 1)
 	PROTOTYPE: $;$
 	CODE:
 {
         RETVAL = THIS->view_start;
 
-        if (newval >= 0)
-          {
-            THIS->view_start = min (newval, THIS->nsaved);
-            THIS->scr_changeview (RETVAL);
-          }
+        if (newval <= 0)
+          THIS->scr_changeview (max (newval, THIS->top_row));
 }
         OUTPUT:
 	RETVAL
@@ -1235,7 +1242,7 @@ void
 rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0, int start_ofs = 0, int max_len = MAX_COLS)
 	PPCODE:
 {
-        if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
+        if (!IN_RANGE_EXC (row_number, THIS->top_row, THIS->nrow))
           XSRETURN_EMPTY;
 
         line_t &l = ROW(row_number);
@@ -1278,7 +1285,7 @@ void
 rxvt_term::ROW_r (int row_number, SV *new_rend = 0, int start_col = 0, int start_ofs = 0, int max_len = MAX_COLS)
 	PPCODE:
 {
-        if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
+        if (!IN_RANGE_EXC (row_number, THIS->top_row, THIS->nrow))
           XSRETURN_EMPTY;
 
         line_t &l = ROW(row_number);
@@ -1318,7 +1325,7 @@ int
 rxvt_term::ROW_l (int row_number, int new_length = -1)
 	CODE:
 {
-        if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
+        if (!IN_RANGE_EXC (row_number, THIS->top_row, THIS->nrow))
           XSRETURN_EMPTY;
 
         line_t &l = ROW(row_number);
@@ -1334,7 +1341,7 @@ bool
 rxvt_term::ROW_is_longer (int row_number, int new_is_longer = -1)
 	CODE:
 {
-        if (!IN_RANGE_EXC (row_number, -THIS->nsaved, THIS->nrow))
+        if (!IN_RANGE_EXC (row_number, THIS->top_row, THIS->nrow))
           XSRETURN_EMPTY;
 
         line_t &l = ROW(row_number);
@@ -1534,7 +1541,7 @@ rxvt_term::screen_cur (...)
 
         if (items == 3)
           {
-            rc.row = clamp (SvIV (ST (1)), -THIS->nsaved, THIS->nrow - 1);
+            rc.row = clamp (SvIV (ST (1)), THIS->top_row, THIS->nrow - 1);
             rc.col = clamp (SvIV (ST (2)), 0, THIS->ncol - 1);
 
             if (ix)

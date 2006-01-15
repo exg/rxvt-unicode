@@ -1535,9 +1535,9 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void set_font_style ();
   void scr_charset_choose (int set);
   void scr_charset_set (int set, unsigned int ch);
-  int scr_move_to (int y, int len);
-  int scr_page (enum page_dirn direction, int nlines);
-  int scr_changeview (unsigned int oldviewstart);
+  void scr_move_to (int y, int len);
+  bool scr_page (enum page_dirn direction, int nlines);
+  bool scr_changeview (int new_view_start);
   void scr_bell ();
   void scr_printscreen (int fullhist);
   void scr_xor_rect (int beg_row, int beg_col, int end_row, int end_col, rend_t rstyle1, rend_t rstyle2);

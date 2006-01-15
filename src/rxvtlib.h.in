@@ -92,10 +92,11 @@ struct line_t;
  *  ncol       : 1 <= ncol       <= MAX(tlen_t)
  *  nrow       : 1 <= nrow       <= MAX(int)
  *  saveLines  : 0 <= saveLines  <= MAX(int)
- *  total_rows : nrow + saveLines
- *  nsaved     : 0 <= nsaved     <= saveLines
  *  term_start : 0 <= term_start < saveLines
- *  view_start : 0 <= view_start < saveLines
+ *  total_rows : nrow + saveLines
+ *
+ *  top_row    : -saveLines <= top_row    <= 0
+ *  view_start : top_row    <= view_start <= 0
  *
  *          | most coordinates are stored relative to term_start,
  *  ROW_BUF | which is the first line of the terminal screen
@@ -103,9 +104,9 @@ struct line_t;
  *  |························= row_buf[1]
  *  |························= row_buf[2] etc.
  *  |
- *  +------------+···········= term_start - nsaved
+ *  +------------+···········= term_start + top_row
  *  | scrollback |                                      
- *  | scrollback +---------+·= term_start - view_start
+ *  | scrollback +---------+·= term_start + view_start
  *  | scrollback | display |
  *  | scrollback | display |
  *  +------------+·display·+·= term_start
@@ -134,9 +135,9 @@ struct TermWin_t {
   int            lineSpace;     /* number of extra pixels between rows      */
   int            saveLines;     /* number of lines that fit in scrollback   */
   int            total_rows;    /* total number of rows in this terminal    */
-  int            nsaved;        /* number of rows saved to scrollback       */
   int            term_start;    /* term lines start here                    */
   int            view_start;    /* scrollback view starts here              */
+  int            top_row;       /* topmost row index of scrollback          */
   Window         parent[6];     /* parent identifiers - we're parent[0]     */
   Window         vt;            /* vt100 window                             */
   GC             gc;            /* GC for drawing                           */

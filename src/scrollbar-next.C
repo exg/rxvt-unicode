@@ -242,7 +242,7 @@ rxvt_term::scrollbar_show_next (int update, int last_top, int last_bot, int scro
       init_scrollbar_stuff ();
     }
 
-  if (nsaved == 0 || !update)
+  if (top_row == 0 || !update)
     {
       XFillRectangle (disp, scrollBar.win, grayGC, 0, 0,
                      SB_WIDTH_NEXT + 1, height);
@@ -253,7 +253,7 @@ rxvt_term::scrollbar_show_next (int update, int last_top, int last_bot, int scro
                      SB_LEFT_PADDING, 0, SB_BUTTON_WIDTH, height);
     }
 
-  if (nsaved)
+  if (top_row)
     {
       if (last_top < scrollBar.top || !update)
         XFillRectangle (disp, scrollBar.win, stippleGC,

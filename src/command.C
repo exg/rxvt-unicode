@@ -149,7 +149,7 @@ rxvt_term::iso14755_54 (int x, int y)
 
   for (;;)
     {
-      const line_t &l = ROW(y - view_start);
+      const line_t &l = ROW(y + view_start);
 
       text_t t = l.t[x];
 
@@ -974,10 +974,10 @@ rxvt_term::flush ()
     {
       if (SHOULD_INVOKE (HOOK_LINE_UPDATE))
         {
-          int row = -view_start;
+          int row = view_start;
           int end_row = row + nrow;
 
-          while (row > -nsaved && ROW (row - 1).is_longer ())
+          while (row > top_row && ROW (row - 1).is_longer ())
             --row;
 
           do
@@ -1103,8 +1103,7 @@ rxvt_term::slip_wheel_cb (time_watcher &w)
       || mouse_slip_wheel_speed < 0 ? scr_page (DN, -mouse_slip_wheel_speed)
                                     : scr_page (UP,  mouse_slip_wheel_speed))
     {
-      if (view_start == nsaved ||
-          view_start == 0)
+      if (view_start == top_row || view_start == 0)
         mouse_slip_wheel_speed = 0;
 
       refresh_type |= SMOOTH_REFRESH;
