@@ -1838,17 +1838,15 @@ rxvt_term::scr_changeview (int new_view_start)
 {
   clamp_it (new_view_start, top_row, 0);
 
-  if (new_view_start != view_start)
-    {
-      num_scr += new_view_start - view_start;
-      view_start = new_view_start;
-      HOOK_INVOKE ((this, HOOK_VIEW_CHANGE, DT_INT, view_start, DT_END));
-      want_refresh = 1;
-
-      return true;
-    }
-  else
+  if (new_view_start == view_start)
     return false;
+
+  num_scr += new_view_start - view_start;
+  view_start = new_view_start;
+  HOOK_INVOKE ((this, HOOK_VIEW_CHANGE, DT_INT, view_start, DT_END));
+  want_refresh = 1;
+
+  return true;
 }
 
 /* ------------------------------------------------------------------------- */
