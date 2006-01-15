@@ -14,6 +14,7 @@ sub on_init {
 
    for (my $idx = 0; defined (my $res = $self->x_resource ("selection.pattern-$idx")); $idx++) {
       no re 'eval'; # just to be sure
+      $res = utf8::encode $self->locale_decode ($res);
       push @{ $self->{patterns} }, qr/$res/;
    }
 
@@ -66,6 +67,12 @@ sub on_sel_extend {
                - $line->offset_of ($self->selection_beg);
 
    my @matches;
+
+   # not doing matches in unicode mode helps speed
+   # enourmously here. working in utf-8 should be
+   # equivalent due to the magic of utf-8 encoding.
+   utf8::encode $text;
+   study $text; # _really_ helps, too :)
 
    for my $regex (@mark_patterns, @{ $self->{patterns} }) {
       while ($text =~ /$regex/g) {

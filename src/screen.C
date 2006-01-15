@@ -615,15 +615,48 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
 
   if (count > 0
       && row1 == 0
-      && row2 == nrow - 1
       && (current_screen == PRIMARY || OPTION (Opt_secondaryScroll)))
     {
       nsaved = min (nsaved + count, saveLines);
 
       HOOK_INVOKE ((this, HOOK_SCROLL_BACK, DT_INT, count, DT_INT, nsaved, DT_END));
       
+      // scroll everything up 'count' lines
       term_start = (term_start + count) % total_rows;
 
+      {
+        // severe bottommost scrolled line
+        line_t &l = ROW(row2 - count);
+        l.touch ();
+        l.is_longer (0);
+      }
+
+      // erase newly scorlled-in lines
+      for (int i = count; i; --i )
+        {
+          // basically this is a slightly optimized scr_blank_screen_mem
+          // it is worth the effort on slower machines
+          line_t &l = ROW(nrow - i);
+
+          scr_blank_line (l, 0, l.l, rstyle);
+
+          l.l = 0;
+          l.f = 0;
+        }
+
+      // now copy lines below the scroll region bottom to the
+      // bottom of the screen again, so they look as if they
+      // hadn't moved.
+      for (int i = nrow; --i > row2; )
+        {
+          line_t &l1 = ROW(i - count);
+          line_t &l2 = ROW(i);
+
+          ::swap (l1, l2);
+          l2.touch ();
+        }
+      
+      // move and/or clear selection, if any
       if (selection.op && current_screen == selection.screen)
         {
           selection.beg.row  -= count;
@@ -639,18 +672,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
             }
         }
 
-      for (int i = count; i--; )
-        {
-          // basically thi is a slightly optimized scr_blank_screen_mem
-          // it is worth the effort on slower machines
-          line_t &l = ROW(row2 - i);
-
-          scr_blank_line (l, 0, l.l, rstyle);
-
-          l.l = 0;
-          l.f = 0;
-        }
-      
+      // finally move the view window, if desired
       if (OPTION (Opt_scrollWithBuffer)
           && view_start != 0
           && view_start != saveLines)

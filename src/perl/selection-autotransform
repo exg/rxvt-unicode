@@ -20,6 +20,7 @@ sub on_init {
    }
 
    for (my $idx = 0; defined (my $res = urxvt::untaint $self->x_resource ("selection-autotransform.$idx")); $idx++) {
+      $res = $self->locale_decode ($res);
       my $transform = eval "sub { $res }";
 
       if ($transform) {

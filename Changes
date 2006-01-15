@@ -12,11 +12,18 @@ WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
 9.0
-TODO: scroll lines into scrollback when tscroll==0, regardless of bscrol
+	- use the scrollback buffer even when the scroll region doesn't
+          span the whole screen, as long as it starts at row 0.
+	- selection popup now shows selection in dec/hex/oct.
+        - perl/selection: matching on unicode characters in the selection
+          code was O(n²), which equals infinity in some degenerate cases
+          :-> Matching is now done on UTF-8, which makes it almost instant.
+        - perl/selection, perl/selection-autotransform: regexes are now
+          being interpreted in the locale urxvt was started.
+        - applied many patches by Emanuele Giaquinta that clean the code up
+          and fix more bugs in the utmp logging code.
 	- add tsl/fsl and related capabilities to the terminfo description,
           to set the window title.
-	- selection popup now shows selection in dec/hex/oct.
-        - fix some bugs in the utmp logging code.
 
 7.0  Fri Jan 13 14:02:18 CET 2006
 	- added sections for DISTRIBUTION MAINTAINERS and about

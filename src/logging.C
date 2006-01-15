@@ -46,11 +46,11 @@
 #ifdef UTMP_SUPPORT
 
 #if HAVE_STRUCT_UTMP
-int              rxvt_write_bsd_utmp              (int utmp_pos, struct utmp *wu);
-void             rxvt_update_wtmp                 (const char *fname, const struct utmp *putmp);
+static int              rxvt_write_bsd_utmp              (int utmp_pos, struct utmp *wu);
+static void             rxvt_update_wtmp                 (const char *fname, const struct utmp *putmp);
 #endif
 
-void             rxvt_update_lastlog              (const char *fname, const char *pty, const char *host);
+static void             rxvt_update_lastlog              (const char *fname, const char *pty, const char *host);
 
 /*
  * BSD style utmp entry
@@ -73,15 +73,13 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
 #ifdef HAVE_STRUCT_UTMPX
   struct utmpx *utx = &this->utx;
 #endif
-#ifdef HAVE_UTMP_PID
   int i;
-#endif
   struct passwd *pwent = getpwuid (getuid ());
 
   if (!strncmp (pty, "/dev/", 5))
     pty += 5;		/* skip /dev/ prefix */
 
-#ifdef HAVE_UTMP_PID
+#if defined(HAVE_UTMP_PID) || defined(HAVE_STRUCT_UTMPX)
   if (!strncmp (pty, "pty", 3) || !strncmp (pty, "tty", 3))
     strncpy (ut_id, pty + 3, sizeof (ut_id));
   else if (sscanf (pty, "pts/%d", &i) == 1)
@@ -169,7 +167,6 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
 #if defined(HAVE_STRUCT_UTMP) && !defined(HAVE_UTMP_PID)
 
   {
-    int             i;
 # ifdef HAVE_TTYSLOT
     i = ttyslot ();
     if (rxvt_write_bsd_utmp (i, ut))
@@ -330,8 +327,8 @@ rxvt_term::cleanutent ()
 /*
  * Write a BSD style utmp entry
  */
-#ifdef HAVE_UTMP_H
-int
+#if defined(HAVE_STRUCT_UTMP) && !defined(HAVE_UTMP_PID)
+static int
 rxvt_write_bsd_utmp (int utmp_pos, struct utmp *wu)
 {
   int             fd;
@@ -351,7 +348,7 @@ rxvt_write_bsd_utmp (int utmp_pos, struct utmp *wu)
  * Update a BSD style wtmp entry
  */
 #if defined(WTMP_SUPPORT) && !defined(HAVE_UPDWTMP) && defined(HAVE_STRUCT_UTMP)
-void
+static void
 rxvt_update_wtmp (const char *fname, const struct utmp *putmp)
 {
   int             fd, gotlock, retry;
@@ -392,7 +389,7 @@ rxvt_update_wtmp (const char *fname, const struct utmp *putmp)
 
 /* ------------------------------------------------------------------------- */
 #ifdef LASTLOG_SUPPORT
-void
+static void
 rxvt_update_lastlog (const char *fname, const char *pty, const char *host)
 {
 # ifdef HAVE_STRUCT_LASTLOGX
