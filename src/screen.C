@@ -1813,7 +1813,9 @@ rxvt_term::scr_touch (bool refresh)
 void
 rxvt_term::scr_move_to (int y, int len)
 {
-  int p = (top_row - nrow) * (len - y) / len + (nrow - 1);
+  int p = len
+          ? (top_row - nrow) * (len - y) / len + (nrow - 1)
+          : 0;
 
   scr_changeview (p);
 }
