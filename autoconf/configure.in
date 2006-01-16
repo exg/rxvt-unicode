@@ -301,11 +301,11 @@ AC_ARG_ENABLE(plain-scroll,
     support_scroll_plain=$enableval
   fi])
 
-AC_ARG_ENABLE(half-shadow,
-  [  --enable-half-shadow    use half width/height shadow on rxvt scrollbar],
-  [if test x$enableval = xyes; then
-    AC_DEFINE(HALFSHADOW, 1, Define if you want the depth of scrollbars and menus to be less)
-  fi])
+dnl AC_ARG_ENABLE(half-shadow,
+dnl   [  --enable-half-shadow    use half width/height shadow on rxvt scrollbar],
+dnl   [if test x$enableval = xyes; then
+dnl     AC_DEFINE(HALFSHADOW, 1, Define if you want the depth of scrollbars and menus to be less)
+dnl   fi])
 
 AC_ARG_WITH(codesets,
   [  --with-codesets=NAME,.. compile in additional codesets (jp,jp_ext,kr,zh,zh_ext,all)],

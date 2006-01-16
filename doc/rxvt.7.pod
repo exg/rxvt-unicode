@@ -901,8 +901,8 @@ interested in learning about new and exciting problems (but not FAQs :).
 
 The rest of this document describes various technical aspects of
 B<rxvt-unicode>. First the description of supported command sequences,
-followed by menu and pixmap support and last by a description of all
-features selectable at C<configure> time.
+followed by pixmap support and last by a description of all features
+selectable at C<configure> time.
 
 =head1 Definitions
 

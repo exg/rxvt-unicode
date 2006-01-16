@@ -1060,8 +1060,8 @@ interested in learning about new and exciting problems (but not FAQs :).
 .IX Header "DESCRIPTION"
 The rest of this document describes various technical aspects of
 \&\fBrxvt-unicode\fR. First the description of supported command sequences,
-followed by menu and pixmap support and last by a description of all
-features selectable at \f(CW\*(C`configure\*(C'\fR time.
+followed by pixmap support and last by a description of all features
+selectable at \f(CW\*(C`configure\*(C'\fR time.
 .SH "Definitions"
 .IX Header "Definitions"
 .ie n .IP "\fB\fB""c""\fB\fR" 4

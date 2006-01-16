@@ -1356,13 +1356,6 @@ display in it's child processes.
 .IP "\fB\s-1SHELL\s0\fR" 4
 .IX Item "SHELL"
 The shell to be used for command execution, defaults to \f(CW\*(C`/bin/sh\*(C'\fR.
-.IP "\fB\s-1RXVTPATH\s0\fR" 4
-.IX Item "RXVTPATH"
-The path where @@RXVT_NAME@@ looks for support files such as menu and xpm
-files.
-.IP "\fB\s-1PATH\s0\fR" 4
-.IX Item "PATH"
-Used in the same way as \f(CW\*(C`RXVTPATH\*(C'\fR.
 .IP "\fB\s-1RXVT_SOCKET\s0\fR" 4
 .IX Item "RXVT_SOCKET"
 The unix domain socket path used by @@RXVT_NAME@@c(1) and

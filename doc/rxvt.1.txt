@@ -1187,13 +1187,6 @@ ENVIRONMENT
     SHELL
         The shell to be used for command execution, defaults to "/bin/sh".
 
-    RXVTPATH
-        The path where rxvt looks for support files such as menu and xpm
-        files.
-
-    PATH
-        Used in the same way as "RXVTPATH".
-
     RXVT_SOCKET
         The unix domain socket path used by rxvtc(1) and rxvtd(1).
 

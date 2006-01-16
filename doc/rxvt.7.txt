@@ -874,8 +874,8 @@ RXVT TECHNICAL REFERENCE
 DESCRIPTION
     The rest of this document describes various technical aspects of
     rxvt-unicode. First the description of supported command sequences,
-    followed by menu and pixmap support and last by a description of all
-    features selectable at "configure" time.
+    followed by pixmap support and last by a description of all features
+    selectable at "configure" time.
 
 Definitions
     "c" The literal character c.

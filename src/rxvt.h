@@ -160,7 +160,7 @@ inline void set_environ (char **envv)
  */
 struct grwin_t;
 
-/* If we're using either the rxvt scrollbar or menu bars, keep the
+/* If we're using either the rxvt scrollbar, keep the
  * scrollColor resource.
  */
 #if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(PLAIN_SCROLLBAR)
@@ -258,13 +258,6 @@ typedef struct _mwmhints {
 
 #if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR) || defined(PLAIN_SCROLLBAR)
 # define HAVE_SCROLLBARS 1
-#endif
-
-/* width of scrollBar shadow, must be 1 or 2 */
-#ifdef HALFSHADOW
-# define MENU_SHADOW 1
-#else
-# define MENU_SHADOW 2
 #endif
 
 #define R_SB_ALIGN_CENTRE       0
@@ -483,7 +476,7 @@ enum {
   Rxvt_dumpscreen        = 55,      // dump scrollback and all of screen
 
   URxvt_locale           = 701,     // change locale
-  URxvt_Menu             = 703,     // set menu item
+
   URxvt_Color_IT         = 704,     // change actual 'Italic' colour
   URxvt_Color_tint       = 705,     // change actual tint colour
   URxvt_Color_BD         = 706,

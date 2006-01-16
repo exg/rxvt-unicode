@@ -231,9 +231,9 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
     if (thickness && (i = atoi (thickness)) >= SB_WIDTH_MINIMUM)
       width = min (i, SB_WIDTH_MAXIMUM);
 
-# if defined(RXVT_SCROLLBAR)
+# ifdef RXVT_SCROLLBAR
   if (! OPTION (Opt_scrollBar_floating) && style == R_SB_RXVT)
-    sb_shadow = MENU_SHADOW;
+    sb_shadow = 2;
 # endif
 
   scrollBar.style = style;
