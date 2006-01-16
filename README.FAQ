@@ -582,7 +582,7 @@ FREQUENTLY ASKED QUESTIONS
         You can specify separate locales for the input method and the rest
         of the terminal, using the resource "imlocale":
 
-           URxvt*imlocale: ja_JP.EUC-JP
+           URxvt.imlocale: ja_JP.EUC-JP
 
         Now you can start your terminal with "LC_CTYPE=ja_JP.UTF-8" and
         still use your input method. Please note, however, that you will not

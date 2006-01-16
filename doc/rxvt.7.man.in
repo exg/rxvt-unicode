@@ -777,7 +777,7 @@ You can specify separate locales for the input method and the rest of the
 terminal, using the resource \f(CW\*(C`imlocale\*(C'\fR:
 .Sp
 .Vb 1
-\&   URxvt*imlocale: ja_JP.EUC-JP
+\&   URxvt.imlocale: ja_JP.EUC-JP
 .Ve
 .Sp
 Now you can start your terminal with \f(CW\*(C`LC_CTYPE=ja_JP.UTF\-8\*(C'\fR and still

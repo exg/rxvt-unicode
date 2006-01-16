@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2006-01-13" "7.0" "RXVT-UNICODE"
+.TH rxvt 1 "2006-01-16" "7.0" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -684,16 +684,9 @@ of 1 displays the image without any scaling. A scale of 2 to 9
 specifies an integer number of images in that direction. No image will
 be magnified beyond 10 times its original size. The maximum permitted
 scale is 1000. [default 0x0+50+50]
-.IP "\fBmenu:\fR \fIfile[;tag]\fR" 4
-.IX Item "menu: file[;tag]"
-Read in the specified menu file (note the `.menu' extension is
-optional) and also optionally specify a starting tag to find. See the
-reference documentation for details on the syntax for the menuBar.
 .IP "\fBpath:\fR \fIpath\fR" 4
 .IX Item "path: path"
-Specify the colon-delimited search path for finding files (\s-1XPM\s0 and
-menus), in addition to the paths specified by the \fB\s-1RXVTPATH\s0\fR and
-\&\fB\s-1PATH\s0\fR environment variables.
+Specify the colon-delimited search path for finding \s-1XPM\s0 files.
 .IP "\fBfont:\fR \fIfontlist\fR" 4
 .IX Item "font: fontlist"
 Select the fonts to be used. This is a comma separated list of font names
@@ -713,7 +706,7 @@ fonts.
 For example, this font resource
 .Sp
 .Vb 5
-\&   URxvt*font: 9x15bold,\e
+\&   URxvt.font: 9x15bold,\e
 \&               -misc-fixed-bold-r-normal--15-140-75-75-c-90-iso10646-1,\e
 \&               -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1, \e
 \&               [codeset=JISX0208]xft:Kochi Gothic:antialias=false, \e
@@ -813,7 +806,7 @@ The string will be interpreted as if typed into the shell as\-is.
 Example:
 .Sp
 .Vb 1
-\&   URxvt*print-pipe: cat > $(TMPDIR=$HOME mktemp urxvt.XXXXXX)
+\&   URxvt.print-pipe: cat > $(TMPDIR=$HOME mktemp urxvt.XXXXXX)
 .Ve
 .Sp
 This creates a new file in your home directory with the screen contents
@@ -965,8 +958,7 @@ sequences enabled by default, which doesn't make it safer, though).
 .Sp
 You can enable them by setting this boolean resource or specifying
 \&\fB\-insecure\fR as an option. At the moment, this enables display\-answer,
-locale, findfont, icon label and window title requests as well as dynamic
-menubar dispatch.
+locale, findfont, icon label and window title requests.
 .IP "\fBmodifier:\fR \fImodifier\fR" 4
 .IX Item "modifier: modifier"
 Set the key to be interpreted as the Meta key to: \fBalt\fR, \fBmeta\fR,
@@ -1209,11 +1201,17 @@ inserted as if it had been typed on the keyboard.
 Changing fonts (or font sizes, respectively) via the keypad is not yet
 supported in rxvt\-unicode. Bug me if you need this.
 .PP
-You can, however, switch fonts at runtime using escape sequences (and
-therefore using the menubar), e.g.:
+You can, however, switch fonts at runtime using escape sequences, e.g.:
 .PP
 .Vb 1
 \&   printf '\ee]710;%s\e007' "9x15bold,xft:Kochi Gothic"
+.Ve
+.PP
+You can use keyboard shortcuts, too:
+.PP
+.Vb 2
+\&   URxvt.keysym.M-C-1: command:\e033]710;suxuseuro\e007\e033]711;suxuseuro\e007
+\&   URxvt.keysym.M-C-2: command:\e033]710;9x15bold\e007\e033]711;9x15bold\e007
 .Ve
 .PP
 rxvt-unicode will automatically re-apply these fonts to the output so far.

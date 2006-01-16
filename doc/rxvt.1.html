@@ -43,7 +43,7 @@
 </p>
 <hr />
 <h1><a name="synopsis">SYNOPSIS</a></h1>
-<p><strong>urxvt</strong> [options] [-e command [ args ]]</p>
+<p><strong>rxvt</strong> [options] [-e command [ args ]]</p>
 <p>
 </p>
 <hr />
@@ -57,7 +57,7 @@ a significant advantage on a machine serving many X sessions.</p>
 </p>
 <hr />
 <h1><a name="frequently_asked_questions">FREQUENTLY ASKED QUESTIONS</a></h1>
-<p>See <code>urxvt(7)</code> (try <code>man 7 urxvt</code>) for a list of
+<p>See <code>rxvt(7)</code> (try <code>man 7 rxvt</code>) for a list of
 frequently asked questions and answer to them and some common
 problems. That document is also accessible on the World-Wide-Web at
 <a href="http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html">http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html</a>.</p>
@@ -95,27 +95,27 @@ and nice on resources: for example, you can still configure rxvt-unicode
 without most of it's features to get a lean binary. It also comes with
 a client/daemon pair that lets you open any number of terminal windows
 from within a single process, which makes startup time very fast and
-drastically reduces memory usage. See <code>urxvtd(1)</code> (daemon) and
-<code>urxvtc(1)</code> (client).</p>
+drastically reduces memory usage. See <code>rxvtd(1)</code> (daemon) and
+<code>rxvtc(1)</code> (client).</p>
 <p>It also makes technical information about escape sequences (which have
-been extended) easier accessible: see <code>urxvt(7)</code> for technical
+been extended) easier accessible: see <code>rxvt(7)</code> for technical
 reference documentation (escape sequences etc.).</p>
 <p>
 </p>
 <hr />
 <h1><a name="options">OPTIONS</a></h1>
-<p>The <strong>urxvt</strong> options (mostly a subset of <em>xterm</em>'s) are listed
+<p>The <strong>rxvt</strong> options (mostly a subset of <em>xterm</em>'s) are listed
 below. In keeping with the smaller-is-better philosophy, options may be
 eliminated or default values chosen at compile-time, so options and
 defaults listed may not accurately reflect the version installed on
-your system. `urxvt -h' gives a list of major compile-time options on
+your system. `rxvt -h' gives a list of major compile-time options on
 the <em>Options</em> line. Option descriptions may be prefixed with which
 compile option each is dependent upon. e.g. `Compile <em>XIM</em>:' requires
-<em>XIM</em> on the <em>Options</em> line. Note: `urxvt -help' gives a list of all
+<em>XIM</em> on the <em>Options</em> line. Note: `rxvt -help' gives a list of all
 command-line options compiled into your version.</p>
-<p>Note that <strong>urxvt</strong> permits the resource name to be used as a
+<p>Note that <strong>rxvt</strong> permits the resource name to be used as a
 long-option (--/++ option) so the potential command-line options are
-far greater than those listed. For example: `urxvt --loginShell --color1
+far greater than those listed. For example: `rxvt --loginShell --color1
 Orange'.</p>
 <p>The following options are available:</p>
 <dl>
@@ -184,7 +184,7 @@ used to brighten or darken the image in addition to tinting it; resource
 </dd>
 <dd>
 <pre>
-   urxvt -tr -tint blue -sh 40</pre>
+   rxvt -tr -tint blue -sh 40</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item__2dsh"><strong>-sh</strong></a></strong><br />
@@ -257,12 +257,12 @@ e.g.:</p>
 </dd>
 <dd>
 <pre>
-   urxvt -fn &quot;xft:Bitstream Vera Sans Mono:pixelsize=15&quot;
-   urxvt -fn &quot;9x15bold,xft:Bitstream Vera Sans Mono&quot;</pre>
+   rxvt -fn &quot;xft:Bitstream Vera Sans Mono:pixelsize=15&quot;
+   rxvt -fn &quot;9x15bold,xft:Bitstream Vera Sans Mono&quot;</pre>
 </dd>
 <dd>
 <p>See also the question ``How does rxvt-unicode choose fonts?'' in the FAQ
-section of urxvt(7).</p>
+section of rxvt(7).</p>
 </dd>
 <p></p>
 <dt><strong><a name="item__2dfb_fontlist"><strong>-fb</strong> <em>fontlist</em></a></strong><br />
@@ -446,7 +446,7 @@ resource <strong>termName</strong>.
 <dt><strong><a name="item__2de_command__5barguments_5d"><strong>-e</strong> <em>command [arguments]</em></a></strong><br />
 </dt>
 <dd>
-Run the command with its command-line arguments in the <strong>urxvt</strong>
+Run the command with its command-line arguments in the <strong>rxvt</strong>
 window; also sets the window title and icon name to be the basename of
 the program being executed if neither <em>-title</em> (<em>-T</em>) nor <em>-n</em> are
 given on the command line. If this option is used, it must be the last
@@ -460,7 +460,7 @@ run shell commands, you have to specify the shell, like this:</p>
 </dd>
 <dd>
 <pre>
-  urxvt -e sh -c &quot;shell commands&quot;</pre>
+  rxvt -e sh -c &quot;shell commands&quot;</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item__2dtitle_text"><strong>-title</strong> <em>text</em></a></strong><br />
@@ -555,7 +555,7 @@ Turn on/off secondary screen scroll (default enabled); resource
 <dt><strong><a name="item__2dhold_7c_2bhold"><strong>-hold</strong>|<strong>+hold</strong></a></strong><br />
 </dt>
 <dd>
-Turn on/off hold window after exit support. If enabled, urxvt
+Turn on/off hold window after exit support. If enabled, rxvt
 will not immediately destroy its window when the program executed within
 it exits. Instead, it will wait till it is being killed or closed by the
 user; resource <strong>hold</strong>.
@@ -570,20 +570,20 @@ Remap a key symbol. See resource <strong>keysym</strong>.
 <dt><strong><a name="item__2dembed_windowid"><strong>-embed</strong> <em>windowid</em></a></strong><br />
 </dt>
 <dd>
-Tells urxvt to embed it's windows into an already-existing window,
+Tells rxvt to embed it's windows into an already-existing window,
 which enables applications to easily embed a terminal.
 </dd>
 <dd>
-<p>Right now, urxvt will first unmap/map the specified window, so it
-shouldn't be a top-level window. urxvt will also reconfigure it
+<p>Right now, rxvt will first unmap/map the specified window, so it
+shouldn't be a top-level window. rxvt will also reconfigure it
 quite a bit, so don't expect it to keep some specific state. It's best to
-create an extra subwindow for urxvt and leave it alone.</p>
+create an extra subwindow for rxvt and leave it alone.</p>
 </dd>
 <dd>
-<p>The window will not be destroyed when urxvt exits.</p>
+<p>The window will not be destroyed when rxvt exits.</p>
 </dd>
 <dd>
-<p>It might be useful to know that urxvt will not close file
+<p>It might be useful to know that rxvt will not close file
 descriptors passed to it (except for stdin/out/err, of course), so you
 can use file descriptors to communicate with the programs within the
 terminal. This works regardless of wether the <code>-embed</code> option was used or
@@ -598,20 +598,20 @@ used (a longer example is in <em>doc/embed</em>):</p>
    my $rxvt = new Gtk2::Socket;
    $rxvt-&gt;signal_connect_after (realize =&gt; sub {
       my $xid = $_[0]-&gt;window-&gt;get_xid;
-      system &quot;urxvt -embed $xid &amp;&quot;;
+      system &quot;rxvt -embed $xid &amp;&quot;;
    });</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item__2dpty_2dfd_file_descriptor"><strong>-pty-fd</strong> <em>file descriptor</em></a></strong><br />
 </dt>
 <dd>
-Tells urxvt NOT to execute any commands or create a new pty/tty
+Tells rxvt NOT to execute any commands or create a new pty/tty
 pair but instead use the given filehandle as the tty master. This is
-useful if you want to drive urxvt as a generic terminal emulator
+useful if you want to drive rxvt as a generic terminal emulator
 without having to run a program within it.
 </dd>
 <dd>
-<p>If this switch is given, urxvt will not create any utmp/wtmp
+<p>If this switch is given, rxvt will not create any utmp/wtmp
 entries and will not tinker with pty/tty permissions - you have to do that
 yourself if you want that.</p>
 </dd>
@@ -632,7 +632,7 @@ longer example is in <em>doc/pty-fd</em>):</p>
 <pre>
    my $pty = new IO::Pty;
    fcntl $pty, F_SETFD, 0; # clear close-on-exec
-   system &quot;urxvt -pty-fd &quot; . (fileno $pty) . &quot;&amp;&quot;;
+   system &quot;rxvt -pty-fd &quot; . (fileno $pty) . &quot;&amp;&quot;;
    close $pty;</pre>
 </dd>
 <dd>
@@ -653,11 +653,11 @@ this terminal instance. See resource <strong>perl-ext</strong> for details.
 </p>
 <hr />
 <h1><a name="resources__available_also_as_longoptions_">RESOURCES (available also as long-options)</a></h1>
-<p>Note: `urxvt --help' gives a list of all resources (long
+<p>Note: `rxvt --help' gives a list of all resources (long
 options) compiled into your version.</p>
 <p>You can set and change the resources using X11 tools like <strong>xrdb</strong>. Many
 distribution do also load settings from the <strong>~/.Xresources</strong> file when X
-starts. urxvt will consult the following files/resources in order,
+starts. rxvt will consult the following files/resources in order,
 with later settings overwriting earlier ones:</p>
 <pre>
   1. system-wide app-defaults file, either locale-dependent OR global
@@ -665,15 +665,15 @@ with later settings overwriting earlier ones:</p>
   3. RESOURCE_MANAGER property on root-window OR $HOME/.Xdefaults
   4. SCREEN_RESOURCES for the current screen
   5. $XENVIRONMENT file OR $HOME/.Xdefaults-&lt;nodename&gt;</pre>
-<p>Note that when reading X resources, <strong>urxvt</strong> recognizes two class
+<p>Note that when reading X resources, <strong>rxvt</strong> recognizes two class
 names: <strong>Rxvt</strong> and <strong>URxvt</strong>. The class name <strong>Rxvt</strong> allows resources
-common to both <strong>urxvt</strong> and the original <em>rxvt</em> to be easily
+common to both <strong>rxvt</strong> and the original <em>rxvt</em> to be easily
 configured, while the class name <strong>URxvt</strong> allows resources unique to
-<strong>urxvt</strong>, to be shared between different <strong>urxvt</strong>
+<strong>rxvt</strong>, to be shared between different <strong>rxvt</strong>
 configurations. If no resources are specified, suitable defaults will
 be used. Command-line arguments can be used to override resource
 settings. The following resources are supported (you might want to
-check the <code>urxvtperl(3)</code> manpage for additional settings by perl
+check the <code>rxvtperl(3)</code> manpage for additional settings by perl
 extensions not documented here):</p>
 <dl>
 <dt><strong><a name="item_geometry_3a_geom"><strong>geometry:</strong> <em>geom</em></a></strong><br />
@@ -709,7 +709,7 @@ names used are listed in the <strong>COLORS AND GRAPHICS</strong> section.
 </dd>
 <dd>
 <p>Colours higher than 15 cannot be set using resources (yet), but can be
-changed using an escape command (see urxvt(7)).</p>
+changed using an escape command (see rxvt(7)).</p>
 </dd>
 <dd>
 <p>Colours 16-79 form a standard 4x4x4 colour cube (the same as xterm with
@@ -847,20 +847,10 @@ be magnified beyond 10 times its original size. The maximum permitted
 scale is 1000. [default 0x0+50+50]
 </dd>
 <p></p>
-<dt><strong><a name="item_menu_3a_file_5b_3btag_5d"><strong>menu:</strong> <em>file[;tag]</em></a></strong><br />
-</dt>
-<dd>
-Read in the specified menu file (note the `.menu' extension is
-optional) and also optionally specify a starting tag to find. See the
-reference documentation for details on the syntax for the menuBar.
-</dd>
-<p></p>
 <dt><strong><a name="item_path_3a_path"><strong>path:</strong> <em>path</em></a></strong><br />
 </dt>
 <dd>
-Specify the colon-delimited search path for finding files (XPM and
-menus), in addition to the paths specified by the <strong>RXVTPATH</strong> and
-<strong>PATH</strong> environment variables.
+Specify the colon-delimited search path for finding XPM files.
 </dd>
 <p></p>
 <dt><strong><a name="item_font_3a_fontlist"><strong>font:</strong> <em>fontlist</em></a></strong><br />
@@ -887,7 +877,7 @@ fonts.</p>
 </dd>
 <dd>
 <pre>
-   URxvt*font: 9x15bold,\
+   URxvt.font: 9x15bold,\
                -misc-fixed-bold-r-normal--15-140-75-75-c-90-iso10646-1,\
                -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1, \
                [codeset=JISX0208]xft:Kochi Gothic:antialias=false, \
@@ -1027,7 +1017,7 @@ Specify a command pipe for vt100 printer [default <em>lpr(1)</em>]. Use
 </dd>
 <dd>
 <pre>
-   URxvt*print-pipe: cat &gt; $(TMPDIR=$HOME mktemp urxvt.XXXXXX)</pre>
+   URxvt.print-pipe: cat &gt; $(TMPDIR=$HOME mktemp urxvt.XXXXXX)</pre>
 </dd>
 <dd>
 <p>This creates a new file in your home directory with the screen contents
@@ -1247,7 +1237,7 @@ another locale; option <strong>-imlocale</strong>.
 Specify the font-set used for XIM styles <code>OverTheSpot</code> or
 <code>OffTheSpot</code>. It must be a standard X font set (XLFD patterns separated
 by commas), i.e. it's not in the same format as the other font lists used
-in urxvt. The default will be set-up to chose *any* suitable found
+in rxvt. The default will be set-up to chose *any* suitable found
 found, preferably one or two pixels differing in size to the base font.
 option <strong>-imfont</strong>.
 </dd>
@@ -1274,8 +1264,7 @@ sequences enabled by default, which doesn't make it safer, though).
 <dd>
 <p>You can enable them by setting this boolean resource or specifying
 <strong>-insecure</strong> as an option. At the moment, this enables display-answer,
-locale, findfont, icon label and window title requests as well as dynamic
-menubar dispatch.</p>
+locale, findfont, icon label and window title requests.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_modifier_3a_modifier"><strong>modifier:</strong> <em>modifier</em></a></strong><br />
@@ -1312,7 +1301,7 @@ instead scroll the screen up.
 <dt><strong><a name="item_hold_3a_bool"><strong>hold</strong>: <em>bool</em></a></strong><br />
 </dt>
 <dd>
-Turn on/off hold window after exit support. If enabled, urxvt
+Turn on/off hold window after exit support. If enabled, rxvt
 will not immediately destroy its window when the program executed within
 it exits. Instead, it will wait till it is being killed or closed by the
 user.
@@ -1354,7 +1343,7 @@ can start or end with whitespace.</p>
 <dd>
 <p>Please note that you need to double the <code>\</code> in resource files, as
 Xlib itself does it's own de-escaping (you can use <code>\033</code> instead of
-<code>\e</code> (and so on), which will work with both Xt and urxvt's own
+<code>\e</code> (and so on), which will work with both Xt and rxvt's own
 processing).</p>
 </dd>
 <dd>
@@ -1380,7 +1369,7 @@ should be a character not used by the strings.</p>
 </dd>
 <dd>
 <p>If <em>string</em> takes the form of <code>command:STRING</code>, the specified <strong>STRING</strong>
-is interpreted and executed as urxvt's control sequence. For
+is interpreted and executed as rxvt's control sequence. For
 example the following means ``change the current locale to <code>zh_CN.GBK</code>
 when Control-Meta-c is being pressed'':</p>
 </dd>
@@ -1390,9 +1379,9 @@ when Control-Meta-c is being pressed'':</p>
 </dd>
 <dd>
 <p>If <em>string</em> takes the form <code>perl:STRING</code>, then the specified <strong>STRING</strong>
-is passed to the <code>on_keyboard_command</code> perl handler. See the <code>urxvtperl(3)</code>
+is passed to the <code>on_keyboard_command</code> perl handler. See the <code>rxvtperl(3)</code>
 manpage. For example, the <em>selection</em> extension (activated via
-<code>urxvt -pe selection</code>) listens for <code>selection:rot13</code> events:</p>
+<code>rxvt -pe selection</code>) listens for <code>selection:rot13</code> events:</p>
 </dd>
 <dd>
 <pre>
@@ -1408,7 +1397,7 @@ mappings themselves.</p>
 </dd>
 <dd>
 <p>Unfortunately, this will override built-in key mappings. For example
-if you overwrite the <code>Insert</code> key you will disable urxvt's
+if you overwrite the <code>Insert</code> key you will disable rxvt's
 <code>Shift-Insert</code> mapping. To re-enable that, you can poke ``holes'' into the
 user-defined keymap using the <code>builtin:</code> replacement:</p>
 </dd>
@@ -1433,7 +1422,7 @@ font-switching at runtime:</p>
   URxvt.keysym.M-C-2: command:\033]50;9x15bold\007</pre>
 </dd>
 <dd>
-<p>Other things are possible, e.g. resizing (see <code>urxvt(7)</code> for more
+<p>Other things are possible, e.g. resizing (see <code>rxvt(7)</code> for more
 info):</p>
 </dd>
 <dd>
@@ -1479,7 +1468,7 @@ all instances, while <strong>perl-ext</strong> is used for specific instances.</
 </dt>
 <dd>
 Perl code to be evaluated when all extensions have been registered. See
-the <code>urxvtperl(3)</code> manpage. Due to security reasons, this resource
+the <code>rxvtperl(3)</code> manpage. Due to security reasons, this resource
 will be ignored when running setuid/setgid.
 </dd>
 <p></p>
@@ -1488,25 +1477,25 @@ will be ignored when running setuid/setgid.
 <dd>
 Colon-separated list of additional directories that hold extension
 scripts. When looking for extensions specified by the <code>perl</code> resource,
-urxvt will first look in these directories and then in
-<em>/usr/local/lib/urxvt/perl/</em>. Due to security reasons, this resource
+rxvt will first look in these directories and then in
+<em>/opt/rxvt/lib/urxvt/perl/</em>. Due to security reasons, this resource
 will be ignored when running setuid/setgid.
 </dd>
 <dd>
-<p>See the <code>urxvtperl(3)</code> manpage.</p>
+<p>See the <code>rxvtperl(3)</code> manpage.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_selection_2epattern_2didx_3a_perl_2dregex"><strong>selection.pattern-<em>idx</em> </strong>&gt;: <em>perl-regex</em></a></strong><br />
 </dt>
 <dd>
-Additional selection patterns, see the <code>urxvtperl(3)</code> manpage for
+Additional selection patterns, see the <code>rxvtperl(3)</code> manpage for
 details.
 </dd>
 <p></p>
 <dt><strong><a name="item_selection_2dautotransform_2eidx_3a_perl_2dtransfor"><strong>selection-autotransform.<em>idx</em> </strong>&gt;: <em>perl-transform</em></a></strong><br />
 </dt>
 <dd>
-Selection auto-transform patterns, see the <code>urxvtperl(3)</code> manpage
+Selection auto-transform patterns, see the <code>rxvtperl(3)</code> manpage
 for details.
 </dd>
 <p></p>
@@ -1534,9 +1523,9 @@ Sets the WM_TRANSIENT_FOR property to the given window iw.
 </p>
 <hr />
 <h1><a name="the_scrollbar">THE SCROLLBAR</a></h1>
-<p>Lines of text that scroll off the top of the <strong>urxvt</strong> window
+<p>Lines of text that scroll off the top of the <strong>rxvt</strong> window
 (resource: <strong>saveLines</strong>) and can be scrolled back using the scrollbar
-or by keystrokes. The normal <strong>urxvt</strong> scrollbar has arrows and
+or by keystrokes. The normal <strong>rxvt</strong> scrollbar has arrows and
 its behaviour is fairly intuitive. The <strong>xterm-scrollbar</strong> is without
 arrows and its behaviour mimics that of <em>xterm</em></p>
 <p>Scroll down with <strong>Button1</strong> (<strong>xterm-scrollbar</strong>) or <strong>Shift-Next</strong>.
@@ -1583,7 +1572,7 @@ the selection.</p>
 </dt>
 <dd>
 Pressing and releasing the Middle mouse button (or <strong>Shift-Insert</strong>) in
-an <strong>urxvt</strong> window causes the current text selection to be
+an <strong>rxvt</strong> window causes the current text selection to be
 inserted as if it had been typed on the keyboard.
 </dd>
 <p></p></dl>
@@ -1593,10 +1582,13 @@ inserted as if it had been typed on the keyboard.
 <h1><a name="changing_fonts">CHANGING FONTS</a></h1>
 <p>Changing fonts (or font sizes, respectively) via the keypad is not yet
 supported in rxvt-unicode. Bug me if you need this.</p>
-<p>You can, however, switch fonts at runtime using escape sequences (and
-therefore using the menubar), e.g.:</p>
+<p>You can, however, switch fonts at runtime using escape sequences, e.g.:</p>
 <pre>
    printf '\e]710;%s\007' &quot;9x15bold,xft:Kochi Gothic&quot;</pre>
+<p>You can use keyboard shortcuts, too:</p>
+<pre>
+   URxvt.keysym.M-C-1: command:\033]710;suxuseuro\007\033]711;suxuseuro\007
+   URxvt.keysym.M-C-2: command:\033]710;9x15bold\007\033]711;9x15bold\007</pre>
 <p>rxvt-unicode will automatically re-apply these fonts to the output so far.</p>
 <p>
 </p>
@@ -1659,16 +1651,16 @@ both scenario A and B of ISO 14755, including part 5.2.</p>
 </p>
 <hr />
 <h1><a name="login_stamp">LOGIN STAMP</a></h1>
-<p><strong>urxvt</strong> tries to write an entry into the <em>utmp</em>(5) file so that
+<p><strong>rxvt</strong> tries to write an entry into the <em>utmp</em>(5) file so that
 it can be seen via the <em>who(1)</em> command, and can accept messages.  To
-allow this feature, <strong>urxvt</strong> may need to be installed setuid root
+allow this feature, <strong>rxvt</strong> may need to be installed setuid root
 on some systems or setgid to root or to some other group on others.</p>
 <p>
 </p>
 <hr />
 <h1><a name="colors_and_graphics">COLORS AND GRAPHICS</a></h1>
 <p>In addition to the default foreground and background colours,
-<strong>urxvt</strong> can display up to 16 colours (8 ANSI colours plus
+<strong>rxvt</strong> can display up to 16 colours (8 ANSI colours plus
 high-intensity bold/blink versions of the same). Here is a list of the
 colours with their <strong>rgb.txt</strong> names.</p>
 <table>
@@ -1699,7 +1691,7 @@ always swapping the foreground/background colours. This is in contrast to
 <em>xterm</em>(1) where the colours are only swapped if they have not otherwise
 been specified. For example,</p>
 <dl>
-<dt><strong><a name="item_urxvt__2dfg_black__2dbg_white__2drv"><strong>urxvt -fg Black -bg White -rv</strong></a></strong><br />
+<dt><strong><a name="item_rxvt__2dfg_black__2dbg_white__2drv"><strong>rxvt -fg Black -bg White -rv</strong></a></strong><br />
 </dt>
 <dd>
 would yield White on Black, while on <em>xterm</em>(1) it would yield Black
@@ -1710,7 +1702,7 @@ on White.
 </p>
 <hr />
 <h1><a name="environment">ENVIRONMENT</a></h1>
-<p><strong>urxvt</strong> sets and/or uses the following environment variables:</p>
+<p><strong>rxvt</strong> sets and/or uses the following environment variables:</p>
 <dl>
 <dt><strong><a name="item_term"><strong>TERM</strong></a></strong><br />
 </dt>
@@ -1722,7 +1714,7 @@ resources or on the commandline.
 <dt><strong><a name="item_colorterm"><strong>COLORTERM</strong></a></strong><br />
 </dt>
 <dd>
-Either <code>rxvt</code>, <code>rxvt-xpm</code>, depending on wether urxvt was
+Either <code>rxvt</code>, <code>rxvt-xpm</code>, depending on wether rxvt was
 compiled with XPM support, and optionally with the added extension
 <code>-mono</code> to indicate that rxvt-unicode runs on a monochrome screen.
 </dd>
@@ -1734,7 +1726,7 @@ Set to a string of the form <code>fg;bg</code> or <code>fg;xpm;bg</code>, where 
 the colour code used as default foreground/text colour (or the string
 <code>default</code> to indicate that the default-colour escape sequence is to be
 used), <code>bg</code> is the colour code used as default background colour (or the
-string <code>default</code>), and <code>xpm</code> is the string <code>default</code> if urxvt
+string <code>default</code>), and <code>xpm</code> is the string <code>default</code> if rxvt
 was compiled with XPM support. Libraries like <code>ncurses</code> and <code>slang</code> can
 (and do) use this information to optimize screen output.
 </dd>
@@ -1742,7 +1734,7 @@ was compiled with XPM support. Libraries like <code>ncurses</code> and <code>sla
 <dt><strong><a name="item_windowid"><strong>WINDOWID</strong></a></strong><br />
 </dt>
 <dd>
-Set to the (decimal) X Window ID of the urxvt window (the toplevel
+Set to the (decimal) X Window ID of the rxvt window (the toplevel
 window, which usually has subwindows for the scrollbar, the terminal
 window and so on).
 </dd>
@@ -1750,14 +1742,14 @@ window and so on).
 <dt><strong><a name="item_terminfo"><strong>TERMINFO</strong></a></strong><br />
 </dt>
 <dd>
-Set to the terminfo directory iff urxvt was configured with
+Set to the terminfo directory iff rxvt was configured with
 <code>--with-terminfo=PATH</code>.
 </dd>
 <p></p>
 <dt><strong><a name="item_display"><strong>DISPLAY</strong></a></strong><br />
 </dt>
 <dd>
-Used by urxvt to connect to the display and set to the correct
+Used by rxvt to connect to the display and set to the correct
 display in it's child processes.
 </dd>
 <p></p>
@@ -1770,7 +1762,7 @@ The shell to be used for command execution, defaults to <code>/bin/sh</code>.
 <dt><strong><a name="item_rxvtpath"><strong>RXVTPATH</strong></a></strong><br />
 </dt>
 <dd>
-The path where urxvt looks for support files such as menu and xpm
+The path where rxvt looks for support files such as menu and xpm
 files.
 </dd>
 <p></p>
@@ -1783,8 +1775,8 @@ Used in the same way as <a href="#item_rxvtpath"><code>RXVTPATH</code></a>.
 <dt><strong><a name="item_rxvt_socket"><strong>RXVT_SOCKET</strong></a></strong><br />
 </dt>
 <dd>
-The unix domain socket path used by <code>urxvtc(1)</code> and
-urxvtd(1).
+The unix domain socket path used by <code>rxvtc(1)</code> and
+rxvtd(1).
 </dd>
 <dd>
 <p>Default <em>$HOME/.rxvt-unicode-<em>&lt;nodename </em></em> &gt;&gt;&gt;.</p>
@@ -1808,7 +1800,7 @@ Directory where various X resource files are being located.
 </dt>
 <dd>
 If set and accessible, gives the name of a X resource file to be loaded by
-urxvt.
+rxvt.
 </dd>
 <p></p></dl>
 <p>
@@ -1826,7 +1818,7 @@ Color names.
 </p>
 <hr />
 <h1><a name="see_also">SEE ALSO</a></h1>
-<p>urxvt(7), urxvtc(1), urxvtd(1), xterm(1), sh(1), resize(1), X(1), pty(4), tty(4), <code>utmp(5)</code></p>
+<p>rxvt(7), rxvtc(1), rxvtd(1), xterm(1), sh(1), resize(1), X(1), pty(4), tty(4), <code>utmp(5)</code></p>
 <p>
 </p>
 <hr />
