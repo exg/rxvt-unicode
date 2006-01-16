@@ -2,10 +2,9 @@ dnl# -*- sh -*-
 dnl#
 dnl# Process this file with autoconf to produce a configure script.
 dnl#
-AC_PREREQ(2.50)
-orig_CXXFLAGS="$CXXFLAGS"
 
 AC_INIT
+AC_PREREQ(2.50)
 AC_CONFIG_SRCDIR([src/feature.h])
 AC_CONFIG_AUX_DIR(autoconf)
 AC_CONFIG_HEADER(config.h:autoconf/config.h.in)
@@ -26,6 +25,8 @@ echo ""
 echo "configuring for rxvt $VERSION"
 echo ""
 
+orig_CXXFLAGS="$CXXFLAGS"
+
 dnl# Checks for programs.
 dnl AC_MAKE_SET
 
@@ -41,9 +42,10 @@ dnl# --------------------------------------------------------------------------
 dnl# Supply default CFLAGS, if not specified by `CFLAGS=flags ./configure'
 dnl#
 if test -z "$orig_CXXFLAGS"; then
-  CXXFLAGS='-O'
   if test x$GCC = xyes && test "x$GXX" = xyes; then
     CXXFLAGS="-g -O3"
+  else
+    CXXFLAGS="-O"
   fi
   CFLAGS="$CXXFLAGS"
 fi
