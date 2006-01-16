@@ -1497,7 +1497,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 
 #if defined(RXVT_SCROLLBAR)
   // scrollbar-rxvt.C
-  void Draw_button (int x, int y, int state, int dirn);
   int scrollbar_show_rxvt (int update, int last_top, int last_bot, int scrollbar_len);
 #endif
 
