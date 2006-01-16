@@ -884,7 +884,6 @@ Optional Features:
   --enable-xterm-scroll   enable Xterm style scrollbar
   --enable-perl           enable embedded perl interpreter
   --enable-plain-scroll   enable plain style scrollbar
-  --enable-half-shadow    use half width/height shadow on rxvt scrollbar
   --enable-xim            XIM (X Input Method) protocol support
   --enable-ttygid         enable tty setting to group named "tty"
   --disable-backspace-key disable handling of the backspace key
@@ -1372,6 +1371,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+
 ac_aux_dir=
 for ac_dir in autoconf $srcdir/autoconf; do
   if test -f $ac_dir/install-sh; then
@@ -1460,6 +1460,8 @@ DATE=`sed -n -e 's/^.*[ \t]DATE.*"\(.*\)"$/\1/p' ${srcdir}/src/version.h`
 echo ""
 echo "configuring for rxvt $VERSION"
 echo ""
+
+orig_CXXFLAGS="$CXXFLAGS"
 
 
 ac_ext=c
@@ -3099,9 +3101,10 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 if test -z "$orig_CXXFLAGS"; then
-  CXXFLAGS='-O'
   if test x$GCC = xyes && test "x$GXX" = xyes; then
     CXXFLAGS="-g -O3"
+  else
+    CXXFLAGS="-O"
   fi
   CFLAGS="$CXXFLAGS"
 fi
@@ -4551,17 +4554,6 @@ if test "${enable_plain_scroll+set}" = set; then
   fi
 fi;
 
-# Check whether --enable-half-shadow or --disable-half-shadow was given.
-if test "${enable_half_shadow+set}" = set; then
-  enableval="$enable_half_shadow"
-  if test x$enableval = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define HALFSHADOW 1
-_ACEOF
-
-  fi
-fi;
 
 
 # Check whether --with-codesets or --without-codesets was given.
