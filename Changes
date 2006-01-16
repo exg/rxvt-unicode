@@ -16,6 +16,9 @@ WISH: support tex fonts
 9.0
 	- use the scrollback buffer even when the scroll region doesn't
           span the whole screen, as long as it starts at row 0.
+        - swap the environment in some more cases. This hopefully fixes
+          some segfaults that might be caused by xft asking for env variables
+          at the wrong time.
 	- selection popup now shows selection in dec/hex/oct.
         - perl/selection: matching on unicode characters in the selection
           code was O(n²), which equals infinity in some degenerate cases
@@ -823,6 +826,9 @@ WISH: support tex fonts
 1.8  Mon Feb  2 20:09:18 CET 2004
 	- almost total conversion to C++. Except for introducing
 	  new bugs, this should not change much.
+        - fix and re-enable background pixmap and inherit pixmap support.
+        - re-enabled multiple scrollbar support.
+        - added plain scrollbar style and restored xterm scrollbar.
 	- blinking and selections work slightly better now.
 	- fix an error condition when rxvt receives more than one screenful
 	  of output. should occur with original rxvt, too, but very rarely.
