@@ -6,18 +6,23 @@
 #define RXVTPERL_H_
 
 #if ENABLE_PERL
-# define SHOULD_INVOKE(htype) perl.should_invoke [htype]
+# define SHOULD_INVOKE(htype) \
+    (  (htype) == HOOK_INIT		\
+    || (htype) == HOOK_DESTROY		\
+    || (htype) == HOOK_REFRESH_BEGIN	\
+    || (htype) == HOOK_REFRESH_END	\
+    || perl.should_invoke [htype])
 # define HOOK_INVOKE(args) rxvt_perl.invoke args
 
 #include "rxvt.h"
 
 enum data_type {
-  DT_END,
+  DT_END,     // no further arguments
   DT_INT,
   DT_LONG,
-  DT_STR,
-  DT_STR_LEN,
-  DT_WCS_LEN,
+  DT_STR,     // 0-terminates string
+  DT_STR_LEN, // string + length
+  DT_WCS_LEN, // wstring + length
   DT_XEVENT,
 };
 

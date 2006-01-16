@@ -1308,6 +1308,7 @@ rxvt_term::x_cb (XEvent &ev)
   dDisp;
 
   if (ev.xany.window == vt
+      && SHOULD_INVOKE (HOOK_X_EVENT)
       && HOOK_INVOKE ((this, HOOK_X_EVENT, DT_XEVENT, &ev, DT_END)))
     return;
 
@@ -1617,7 +1618,8 @@ rxvt_term::x_cb (XEvent &ev)
 
         if (ev.xany.window == vt)
           {
-            if (HOOK_INVOKE ((this, HOOK_MOTION_NOTIFY, DT_XEVENT, &ev, DT_END)))
+            if (SHOULD_INVOKE (HOOK_MOTION_NOTIFY)
+                && HOOK_INVOKE ((this, HOOK_MOTION_NOTIFY, DT_XEVENT, &ev, DT_END)))
               ; // nop
             else if (ev.xbutton.state & (Button1Mask | Button3Mask))
               {

@@ -1286,7 +1286,12 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 
   bool pty_fill ();
 
-  void make_current () const; // make this the "currently active" urxvt instance
+  void make_current () const // make this the "currently active" urxvt instance
+  {
+    SET_R (this);
+    rxvt_set_locale (locale);
+    set_environ (envv);
+  }
 
   void init_secondary ();
   const char **init_resources (int argc, const char *const *argv);

@@ -91,14 +91,6 @@ rxvt_pop_locale ()
   rxvt_set_locale (savelocale);
 }
 
-void
-rxvt_term::make_current () const
-{
-  SET_R (this);
-  rxvt_set_locale (locale);
-  set_environ (envv);
-}
-
 #if ENABLE_COMBINING
 class rxvt_composite_vec rxvt_composite;
 
