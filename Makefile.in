@@ -1,5 +1,4 @@
 # ./Makefile.in			-*- Makefile -*-
-@MCOMMON@
 
 VERNAME = rxvt-unicode-$(VERSION)
 
@@ -17,7 +16,7 @@ DIST =	INSTALL README.configure configure Makefile Makefile.in ChangeLog
 
 DIST_CFG = autoconf/aclocal.m4 autoconf/xpm.m4 autoconf/libtool.m4 \
 	autoconf/configure.in  autoconf/config.h.in \
-	autoconf/Make.common.in autoconf/install-sh autoconf/mkinstalldirs \
+	autoconf/install-sh autoconf/mkinstalldirs \
 	autoconf/config.guess autoconf/config.sub \
 	autoconf/ltmain.sh \
 
@@ -81,7 +80,7 @@ cleandir: realclean
 distclean:
 	(cd $(srcdir); $(RMF) *~ config.cache config.h config.log config.status libtool)
 	@for I in $(allsubdirs); do (cd $$I; $(MAKE) $@) || exit 1; done
-	(cd $(srcdir); $(RMF) Makefile autoconf/Make.common)
+	(cd $(srcdir); $(RMF) Makefile)
 
 distdir:
 	cd doc && $(MAKE) distdepend
