@@ -409,10 +409,12 @@ rxvt_perl_interp::~rxvt_perl_interp ()
 }
 
 void
-rxvt_perl_interp::init ()
+rxvt_perl_interp::init (rxvt_term *term)
 {
   if (!perl)
     {
+      rxvt_push_locale (""); // perl init destroys current locale
+
       perl_environ = rxvt_environ;
       swap (perl_environ, environ);
 
@@ -436,7 +438,13 @@ rxvt_perl_interp::init ()
         }
 
       swap (perl_environ, environ);
+
+      rxvt_pop_locale ();
     }
+
+  // runs outside of perls ENV
+  term->perl.self = (void *)newSVptr ((void *)term, "urxvt::term");
+  hv_store ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, newRV_noinc ((SV *)newHV ()), 0);
 }
 
 static void
@@ -467,184 +475,174 @@ swap_overlays (rxvt_term *term)
 bool
 rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 {
-  if (!perl)
+  if (!perl || !term->perl.self)
     return false;
 
-  if (htype == HOOK_INIT) // first hook ever called
-    {
-      term->perl.self = (void *)newSVptr ((void *)term, "urxvt::term");
-      hv_store ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, newRV_noinc ((SV *)newHV ()), 0);
-    }
-  else if (!term->perl.self)
-    return false; // perl not initialized for this instance
-  else if (htype == HOOK_DESTROY)
-    {
-      // handled later
-    }
-  else
-    {
-      if (htype == HOOK_REFRESH_END)
-        swap_overlays (term);
-
-      if (!term->perl.should_invoke [htype])
-        {
-          if (htype == HOOK_REFRESH_BEGIN)
-            swap_overlays (term);
-
-          return false;
-        }
-    }
+  // pre-handling of some events
+  if (htype == HOOK_REFRESH_END)
+    swap_overlays (term);
 
   swap (perl_environ, environ);
 
-  try
-    {
-      dSP;
-      va_list ap;
+  bool event_consumed;
 
-      va_start (ap, htype);
+  if (htype == HOOK_INIT || htype == HOOK_DESTROY // must be called always
+      || term->perl.should_invoke [htype])
+    try
+      {
+        dSP;
+        va_list ap;
 
-      ENTER;
-      SAVETMPS;
+        va_start (ap, htype);
 
-      PUSHMARK (SP);
+        ENTER;
+        SAVETMPS;
 
-      XPUSHs (sv_2mortal (newSVterm (term)));
-      XPUSHs (sv_2mortal (newSViv (htype)));
+        PUSHMARK (SP);
 
-      for (;;) {
-        data_type dt = (data_type)va_arg (ap, int);
+        XPUSHs (sv_2mortal (newSVterm (term)));
+        XPUSHs (sv_2mortal (newSViv (htype)));
 
-        switch (dt)
-          {
-            case DT_INT:
-              XPUSHs (sv_2mortal (newSViv (va_arg (ap, int))));
-              break;
+        for (;;) {
+          data_type dt = (data_type)va_arg (ap, int);
 
-            case DT_LONG:
-              XPUSHs (sv_2mortal (newSViv (va_arg (ap, long))));
-              break;
+          switch (dt)
+            {
+              case DT_INT:
+                XPUSHs (sv_2mortal (newSViv (va_arg (ap, int))));
+                break;
 
-            case DT_STR:
-              XPUSHs (taint (sv_2mortal (newSVpv (va_arg (ap, char *), 0))));
-              break;
+              case DT_LONG:
+                XPUSHs (sv_2mortal (newSViv (va_arg (ap, long))));
+                break;
 
-            case DT_STR_LEN:
-              {
-                char *str = va_arg (ap, char *);
-                int len = va_arg (ap, int);
+              case DT_STR:
+                XPUSHs (taint (sv_2mortal (newSVpv (va_arg (ap, char *), 0))));
+                break;
 
-                XPUSHs (taint (sv_2mortal (newSVpvn (str, len))));
-              }
-              break;
+              case DT_STR_LEN:
+                {
+                  char *str = va_arg (ap, char *);
+                  int len = va_arg (ap, int);
 
-            case DT_WCS_LEN:
-              {
-                wchar_t *wstr = va_arg (ap, wchar_t *);
-                int wlen = va_arg (ap, int);
+                  XPUSHs (taint (sv_2mortal (newSVpvn (str, len))));
+                }
+                break;
 
-                XPUSHs (taint (sv_2mortal (wcs2sv (wstr, wlen))));
-              }
-             break;
+              case DT_WCS_LEN:
+                {
+                  wchar_t *wstr = va_arg (ap, wchar_t *);
+                  int wlen = va_arg (ap, int);
 
-            case DT_XEVENT:
-              {
-                XEvent *xe = va_arg (ap, XEvent *);
-                HV *hv = newHV ();
+                  XPUSHs (taint (sv_2mortal (wcs2sv (wstr, wlen))));
+                }
+               break;
+
+              case DT_XEVENT:
+                {
+                  XEvent *xe = va_arg (ap, XEvent *);
+                  HV *hv = newHV ();
 
 #           define set(name, sv) hv_store (hv, # name,  sizeof (# name) - 1, sv, 0)
 #           define setiv(name, val) hv_store (hv, # name,  sizeof (# name) - 1, newSViv (val), 0)
 #           undef set
 
-                setiv (type,       xe->type);
-                setiv (send_event, xe->xany.send_event);
-                setiv (serial,     xe->xany.serial);
+                  setiv (type,       xe->type);
+                  setiv (send_event, xe->xany.send_event);
+                  setiv (serial,     xe->xany.serial);
 
-                switch (xe->type)
-                  {
-                    case KeyPress:
-                    case KeyRelease:
-                    case ButtonPress:
-                    case ButtonRelease:
-                    case MotionNotify:
-                      setiv (time,   xe->xmotion.time);
-                      setiv (x,      xe->xmotion.x);
-                      setiv (y,      xe->xmotion.y);
-                      setiv (row,    xe->xmotion.y / term->fheight);
-                      setiv (col,    xe->xmotion.x / term->fwidth);
-                      setiv (x_root, xe->xmotion.x_root);
-                      setiv (y_root, xe->xmotion.y_root);
-                      setiv (state,  xe->xmotion.state);
-                      break;
-                  }
+                  switch (xe->type)
+                    {
+                      case KeyPress:
+                      case KeyRelease:
+                      case ButtonPress:
+                      case ButtonRelease:
+                      case MotionNotify:
+                        setiv (time,   xe->xmotion.time);
+                        setiv (x,      xe->xmotion.x);
+                        setiv (y,      xe->xmotion.y);
+                        setiv (row,    xe->xmotion.y / term->fheight);
+                        setiv (col,    xe->xmotion.x / term->fwidth);
+                        setiv (x_root, xe->xmotion.x_root);
+                        setiv (y_root, xe->xmotion.y_root);
+                        setiv (state,  xe->xmotion.state);
+                        break;
+                    }
 
-                switch (xe->type)
-                  {
-                    case KeyPress:
-                    case KeyRelease:
-                      setiv (keycode, xe->xkey.keycode);
-                      break;
+                  switch (xe->type)
+                    {
+                      case KeyPress:
+                      case KeyRelease:
+                        setiv (keycode, xe->xkey.keycode);
+                        break;
 
-                    case ButtonPress:
-                    case ButtonRelease:
-                      setiv (button,  xe->xbutton.button);
-                      break;
+                      case ButtonPress:
+                      case ButtonRelease:
+                        setiv (button,  xe->xbutton.button);
+                        break;
 
-                    case MotionNotify:
-                      setiv (is_hint, xe->xmotion.is_hint);
-                      break;
-                  }
+                      case MotionNotify:
+                        setiv (is_hint, xe->xmotion.is_hint);
+                        break;
+                    }
 
-                XPUSHs (sv_2mortal (newRV_noinc ((SV *)hv)));
-              }
-              break;
+                  XPUSHs (sv_2mortal (newRV_noinc ((SV *)hv)));
+                }
+                break;
 
-            case DT_END:
-              {
-                va_end (ap);
+              case DT_END:
+                goto call;
 
-                PUTBACK;
-                int count = call_pv ("urxvt::invoke", G_ARRAY | G_EVAL);
-                SPAGAIN;
+              default:
+                rxvt_fatal ("FATAL: unable to pass data type %d\n", dt);
+            }
+        }
 
-                if (count)
-                  {
-                    SV *status = POPs;
-                    count = SvTRUE (status);
-                  }
+      call:
+        va_end (ap);
 
-                PUTBACK;
-                FREETMPS;
-                LEAVE;
+        PUTBACK;
+        int count = call_pv ("urxvt::invoke", G_ARRAY | G_EVAL);
+        SPAGAIN;
 
-                if (SvTRUE (ERRSV))
-                  {
-                    rxvt_warn ("perl hook %d evaluation error: %s", htype, SvPV_nolen (ERRSV));
-                    ungrab (term); // better lose the grab than the session
-                  }
-
-                if (htype == HOOK_REFRESH_BEGIN)
-                  swap_overlays (term);
-                else if (htype == HOOK_DESTROY)
-                  {
-                    clearSVptr ((SV *)term->perl.self);
-                    SvREFCNT_dec ((SV *)term->perl.self);
-                  }
-
-                swap (perl_environ, environ);
-                return count;
-              }
-
-            default:
-              rxvt_fatal ("FATAL: unable to pass data type %d\n", dt);
+        if (count)
+          {
+            SV *status = POPs;
+            count = SvTRUE (status);
           }
+
+        PUTBACK;
+        FREETMPS;
+        LEAVE;
+
+        if (SvTRUE (ERRSV))
+          {
+            rxvt_warn ("perl hook %d evaluation error: %s", htype, SvPV_nolen (ERRSV));
+            ungrab (term); // better lose the grab than the session
+          }
+
+        event_consumed = !!count;
       }
-    }
-  catch (...)
+    catch (...)
+      {
+        swap (perl_environ, environ);
+        throw;
+      }
+  else
+    event_consumed = false;
+
+  // post-handling of some events
+  if (htype == HOOK_REFRESH_BEGIN)
+    swap_overlays (term);
+  else if (htype == HOOK_DESTROY)
     {
-      swap (perl_environ, environ);
-      throw;
+      clearSVptr ((SV *)term->perl.self);
+      SvREFCNT_dec ((SV *)term->perl.self);
     }
+
+  swap (perl_environ, environ);
+
+  return event_consumed;
 }
 
 /////////////////////////////////////////////////////////////////////////////

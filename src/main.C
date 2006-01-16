@@ -523,8 +523,7 @@ rxvt_term::init (int argc, const char *const *argv)
             }
         }
 #endif
-      rxvt_perl.init ();
-      setlocale (LC_CTYPE, curlocale); // perl init destroys current locale
+      rxvt_perl.init (this);
       HOOK_INVOKE ((this, HOOK_INIT, DT_END));
     }
 #endif
