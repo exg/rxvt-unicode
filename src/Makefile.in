@@ -24,7 +24,7 @@ COMMON = \
 	command.o rxvtfont.o init.o logging.o @PERL_O@ \
 	main.o menubar.o misc.o netdisp.o ptytty.o screen.o \
 	scrollbar.o scrollbar-next.o scrollbar-rxvt.o scrollbar-xterm.o scrollbar-plain.o \
-	strings.o xdefaults.o xpm.o encoding.o rxvttoolkit.o rxvtutil.o iom.o keyboard.o
+	xdefaults.o xpm.o encoding.o rxvttoolkit.o rxvtutil.o iom.o keyboard.o
 
 COMMON_DAEMON = rxvtdaemon.o fdpass.o
 
@@ -220,9 +220,6 @@ scrollbar-xterm.o: rsinc.h menubar.h
 scrollbar.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h optinc.h
 scrollbar.o: encoding.h rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
 scrollbar.o: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h menubar.h
-strings.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h optinc.h
-strings.o: encoding.h rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
-strings.o: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h menubar.h
 xdefaults.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h optinc.h
 xdefaults.o: encoding.h rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
 xdefaults.o: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h menubar.h
@@ -331,9 +328,6 @@ scrollbar-xterm.lo: rsinc.h menubar.h
 scrollbar.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h optinc.h
 scrollbar.lo: encoding.h rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
 scrollbar.lo: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h menubar.h
-strings.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h optinc.h
-strings.lo: encoding.h rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
-strings.lo: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h menubar.h
 xdefaults.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h optinc.h
 xdefaults.lo: encoding.h rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
 xdefaults.lo: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h menubar.h

@@ -18,6 +18,8 @@
 # define ENABLE_XEMBED 1
 # define ENABLE_EWMH   1
 # define CURSOR_BLINK  1
+#else
+# define ENABLE_MINIMAL 1
 #endif
 
 #include <limits.h>
@@ -37,6 +39,15 @@
 #include "salloc.h"
 
 #include "rxvtperl.h"
+
+// try to avoid some macros to decrease code size, on some systems
+#if ENABLE_MINIMAL
+# define strcmp(a,b)   (strcmp)(a,b)
+# define strlen(a)     (strlen)(a)
+# define strcpy(a,b)   (strcpy)(a,b)
+# define memset(a,c,l) (memset)(a,c,l)
+# define memcpy(a,b,l) (memcpy)(a,b,l)
+#endif
 
 /*
  *****************************************************************************
