@@ -1,4 +1,3 @@
-@MCOMMON@
 
 LINT = lint -DNARROWPROTO=1 $(XINC) -chapbxz
 
