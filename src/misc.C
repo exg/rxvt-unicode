@@ -538,32 +538,6 @@ rxvt_File_find (const char *file, const char *ext, const char *path)
 }
 #endif
 
-/*----------------------------------------------------------------------*
- * miscellaneous drawing routines
- */
-
-/*
- * Draw top/left and bottom/right border shadows around windows
- */
-#ifdef RXVT_SCROLLBAR
-void
-rxvt_Draw_Shadow (Display *display, Window win, GC topShadow, GC botShadow, int x, int y, int w, int h)
-{
-  int             shadow;
-
-  shadow = (w == 0 || h == 0) ? 1 : 2;
-  w += x - 1;
-  h += y - 1;
-  for (; shadow-- > 0; x++, y++, w--, h--)
-    {
-      XDrawLine (display, win, topShadow, x, y, w, y);
-      XDrawLine (display, win, topShadow, x, y, x, h);
-      XDrawLine (display, win, botShadow, w, h, w, y + 1);
-      XDrawLine (display, win, botShadow, w, h, x + 1, h);
-    }
-}
-#endif
-
 // should not be used in interactive programs, for obvious reasons
 void rxvt_usleep (int usecs)
 {

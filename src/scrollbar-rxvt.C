@@ -27,7 +27,24 @@
 /*----------------------------------------------------------------------*/
 #if defined(RXVT_SCROLLBAR)
 
-#define DOUBLED 1
+#define SHADOW_WIDTH 1
+
+static void  
+rxvt_Draw_Shadow (Display *display, Window win, GC topShadow, GC botShadow, int x, int y, int w, int h)
+{       
+  int             shadow;
+    
+  shadow = (w == 0 || h == 0) ? 1 : SHADOW_WIDTH;
+  w += x - 1;
+  h += y - 1;
+  for (; shadow-- > 0; x++, y++, w--, h--)
+    {     
+      XDrawLine (display, win, topShadow, x, y, w, y);
+      XDrawLine (display, win, topShadow, x, y, x, h);
+      XDrawLine (display, win, botShadow, w, h, w, y + 1);
+      XDrawLine (display, win, botShadow, w, h, x + 1, h);
+    }           
+}                 
 
 /* draw triangular button with a shadow of 2 pixels */
 void
@@ -82,7 +99,7 @@ rxvt_term::Draw_button (int x, int y, int state, int dirn)
   XDrawLine (display->display, scrollBar.win, top,
              pt[0].x, pt[0].y, pt[1].x, pt[1].y);
 
-#if DOUBLED
+#if SHADOW_WIDTH > 1
   /* doubled */
   pt[0].x++;
 
@@ -109,7 +126,7 @@ rxvt_term::Draw_button (int x, int y, int state, int dirn)
   XDrawLine (display->display, scrollBar.win, bot,
              pt[2].x, pt[2].y, pt[1].x, pt[1].y);
 
-#if DOUBLED
+#if SHADOW_WIDTH > 1
   /* doubled */
   pt[1].x--;
   if (dirn == UP)

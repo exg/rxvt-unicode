@@ -131,8 +131,6 @@ int              rxvt_Str_escaped                 (char *str);
 char          ** rxvt_splitcommastring            (const char *cs);
 void             rxvt_freecommastring             (char **cs);
 char           * rxvt_File_find                   (const char *file, const char *ext, const char *path);
-void             rxvt_Draw_Shadow                 (Display *display, Window win, GC topShadow, GC botShadow, int x, int y, int w, int h);
-void             rxvt_Draw_Triangle               (Display *display, Window win, GC topShadow, GC botShadow, int x, int y, int w, int type);
 void             rxvt_usleep                      (int usecs);
 
 /////////////////////////////////////////////////////////////////////////////
