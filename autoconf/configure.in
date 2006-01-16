@@ -1174,7 +1174,7 @@ if test x$rxvt_broken_ximcb = xyes; then
    AC_DEFINE(XIMCB_PROTO_BROKEN, 1, Define if your XIMCallback specifies XIC as first type.)
 fi
 
-if test x$rxvt_cv_func_posix_openpt = xno; then
+if test x$ac_cv_func_posix_openpt = xno; then
   AC_CHECK_FUNC(openpty, [], [AC_CHECK_LIB(util, openpty, [LIBS="$LIBS -lutil"])])
 fi
 
