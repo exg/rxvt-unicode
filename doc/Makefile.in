@@ -1,5 +1,4 @@
 # doc/Makefile.in	-*- Makefile -*-
-@MCOMMON@
 
 srcdir =	@srcdir@
 VPATH =		@srcdir@
