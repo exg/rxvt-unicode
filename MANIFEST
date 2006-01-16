@@ -117,7 +117,6 @@ src/scrollbar-rxvt.C
 src/scrollbar-xterm.C
 src/scrollbar-plain.C
 src/scrollbar.C
-src/strings.C
 src/version.h
 src/xdefaults.C
 src/xpm.C

@@ -2553,14 +2553,6 @@ do it.
 
 Removes any support for resource checking.
 
-=item --enable-strings (default: off)
-
-Add support for our possibly faster memset() function and other
-various routines, overriding your system's versions which may
-have been hand-crafted in assembly or may require extra libraries
-to link in. (this breaks ANSI-C rules and has problems on many
-GNU/Linux systems).
-
 =item --disable-swapscreen
 
 Remove support for secondary/swap screen.

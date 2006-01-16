@@ -893,7 +893,6 @@ Optional Features:
   --disable-resources     disable all resource checking
   --enable-8bitctrls      enable 8 bit control sequences (not recommended)
   --enable-fallback(=CLASS) fall back on CLASS resources in addition to URxvt ones (default: Rxvt)
-  --enable-strings        enable some replacement system functions
   --disable-swapscreen    disable swap screen support
   --enable-iso14755       enable support for extended ISO 14755 modes
   --enable-frills         enable support for rarely used features
@@ -4319,7 +4318,6 @@ rm -f conftest.err conftest.$ac_objext \
 
 MALLOC_TYPE=S
 
-support_addstrings=no
 support_frills=yes
 support_inheritpixmap=yes
 support_tinting=yes
@@ -4708,14 +4706,6 @@ _ACEOF
 
 RXVTNAME=`echo "$RXVTNAME"|sed "$program_transform_name"`
 
-
-# Check whether --enable-strings or --disable-strings was given.
-if test "${enable_strings+set}" = set; then
-  enableval="$enable_strings"
-  if test x$enableval = xyes -o x$enableval = xno; then
-    support_addstrings=$enableval
-  fi
-fi;
 
 # Check whether --enable-swapscreen or --disable-swapscreen was given.
 if test "${enable_swapscreen+set}" = set; then
@@ -12948,14 +12938,6 @@ fi
 
 
 
-
-if test x$support_addstrings = xno; then
-
-cat >>confdefs.h <<\_ACEOF
-#define NO_STRINGS 1
-_ACEOF
-
-fi
 
 MCOMMON=./autoconf/Make.common
 
