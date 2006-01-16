@@ -243,7 +243,7 @@ rxvt_term::cleanutent ()
   strncpy (ut->ut_id, this->ut_id, sizeof (ut->ut_id));
   ut->ut_type = USER_PROCESS;
   {
-    struct utmp    *tmput = getutid (ut);
+    struct utmp *tmput = getutid (ut);
 
     if (tmput)		/* position to entry in utmp file */
       ut = tmput;
@@ -288,12 +288,8 @@ rxvt_term::cleanutent ()
       rxvt_update_wtmp (RXVT_WTMP_FILE, ut);
 #  endif
 # endif
-# ifdef HAVE_STRUCT_UTMPX
-#  if HAVE_UPDWTMPX
+# if defined(HAVE_STRUCT_UTMPX) && defined(HAVE_UPDWTMPX)
       updwtmpx (RXVT_WTMPX_FILE, utx);
-#  else
-      pututxline (utx);
-#  endif
 # endif
     }
 #endif
