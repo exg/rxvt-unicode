@@ -105,7 +105,6 @@ support_tinting=yes
 support_fading=yes
 support_keepscrolling=yes
 support_selectionscrolling=yes
-support_menubar=no 
 support_mousewheel=yes
 support_mouseslipwheel=yes
 support_utmp=yes
@@ -152,7 +151,6 @@ AC_ARG_ENABLE(everything,
        support_keepscrolling=no
        support_selectionscrolling=no
        support_lastlog=no
-       support_menubar=no
        support_mousewheel=no
        support_mouseslipwheel=no
        support_text_blink=no
@@ -183,7 +181,6 @@ AC_ARG_ENABLE(everything,
        support_keepscrolling=yes
        support_selectionscrolling=yes
        support_lastlog=yes
-       support_menubar=yes
        support_mousewheel=yes
        support_mouseslipwheel=yes
        support_text_blink=yes
@@ -271,12 +268,6 @@ AC_ARG_ENABLE(fading,
   [  --enable-fading         enable colors fading when off focus],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_fading=$enableval
-  fi])
-
-AC_ARG_ENABLE(menubar,
-  [  --enable-menubar        enable menubar],
-  [if test x$enableval = xyes -o x$enableval = xno; then
-    support_menubar=$enableval
   fi])
 
 AC_ARG_ENABLE(rxvt-scroll,
@@ -1286,9 +1277,6 @@ if test x$support_keepscrolling = xno; then
 fi
 if test x$support_selectionscrolling = xyes; then
   AC_DEFINE(SELECTION_SCROLLING, 1, Define to allow scrolling when the selection moves to the top or bottom of the screen)
-fi
-if test x$support_menubar = xyes; then
-  AC_DEFINE(MENUBAR, 1, Define if you want Menubar support)
 fi
 if test x$support_frills = xyes; then
   AC_DEFINE(ENABLE_FRILLS, 1, Define if you want handling for rarely used but handy features)

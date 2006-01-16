@@ -24,17 +24,6 @@
 	<li><a href="#csi__command_sequence_introducer__sequences">CSI (Command Sequence Introducer) Sequences</a></li>
 	<li><a href="#dec_private_modes">DEC Private Modes</a></li>
 	<li><a href="#xterm_operating_system_commands">XTerm Operating System Commands</a></li>
-	<li><a href="#menubar">menuBar</a></li>
-	<ul>
-
-		<li><a href="#overview_of_menubar_operation">Overview of menuBar operation</a></li>
-		<li><a href="#commands">Commands</a></li>
-		<li><a href="#adding_and_accessing_menus">Adding and accessing menus</a></li>
-		<li><a href="#removing_menus">Removing menus</a></li>
-		<li><a href="#quick_arrows">Quick Arrows</a></li>
-		<li><a href="#command_summary">Command Summary</a></li>
-	</ul>
-
 	<li><a href="#xpm">XPM</a></li>
 	<li><a href="#mouse_reporting">Mouse Reporting</a></li>
 	<li><a href="#key_codes">Key Codes</a></li>
@@ -113,7 +102,7 @@ rxvt-unicode from initialising perl, saving memory.
 <dd>
 <p>If you only want to disable specific features, you first have to
 identify which perl extension is responsible. For this, read the section
-<strong>PREPACKAGED EXTENSIONS</strong> in the <code>urxvtperl(3)</code> manpage. For
+<strong>PREPACKAGED EXTENSIONS</strong> in the <code>rxvtperl(3)</code> manpage. For
 example, to disable the <strong>selection-popup</strong> and <strong>option-popup</strong>, specify
 this <strong>perl-ext-common</strong> resource:</p>
 </dd>
@@ -244,7 +233,7 @@ embedding application.
 <dd>
 The version number is displayed with the usage (-h). Also the escape
 sequence <code>ESC [ 8 n</code> sets the window title to the version number. When
-using the urxvtc client, the version displayed is that of the
+using the rxvtc client, the version displayed is that of the
 daemon.
 </dd>
 <p></p>
@@ -360,7 +349,7 @@ Most likely it's the empty definition for <code>enacs=</code>. Just replace it b
 <code>enacs=\E[0@</code> and try again.
 </dd>
 <p></p>
-<dt><strong><a name="item_bash_27s_readline_does_not_work_correctly_under_ur"><code>bash</code>'s readline does not work correctly under urxvt.</a></strong><br />
+<dt><strong><a name="item_bash_27s_readline_does_not_work_correctly_under_rx"><code>bash</code>'s readline does not work correctly under rxvt.</a></strong><br />
 </dt>
 <dt><strong><a name="item_i_need_a_termcap_file_entry_2e">I need a termcap file entry.</a></strong><br />
 </dt>
@@ -524,7 +513,7 @@ e.g.:</p>
 </dd>
 <dd>
 <pre>
-   urxvt -fn basefont,font2,font3...</pre>
+   rxvt -fn basefont,font2,font3...</pre>
 </dd>
 <dd>
 <p>When rxvt-unicode sees a character, it will first look at the base
@@ -992,10 +981,10 @@ me) as ``pretty girly''.</p>
    URxvt.color15:      #e1dddd</pre>
 </dd>
 <p></p>
-<dt><strong><a name="item_how_can_i_start_urxvtd_in_a_race_2dfree_way_3f">How can I start urxvtd in a race-free way?</a></strong><br />
+<dt><strong><a name="item_how_can_i_start_rxvtd_in_a_race_2dfree_way_3f">How can I start rxvtd in a race-free way?</a></strong><br />
 </dt>
 <dd>
-Try <code>urxvtd -f -o</code>, which tells urxvtd to open the
+Try <code>rxvtd -f -o</code>, which tells rxvtd to open the
 display, create the listening socket and then fork.
 </dd>
 <p></p>
@@ -1026,13 +1015,13 @@ be used (which may not be the same as your stty setting).</p>
 <pre>
    # use Backspace = ^H
    $ stty erase ^H
-   $ urxvt</pre>
+   $ rxvt</pre>
 </dd>
 <dd>
 <pre>
    # use Backspace = ^?
    $ stty erase ^?
-   $ urxvt</pre>
+   $ rxvt</pre>
 </dd>
 <dd>
 <p>Toggle with <code>ESC [ 36 h</code> / <code>ESC [ 36 l</code>.</p>
@@ -1083,7 +1072,7 @@ you have run ``configure'' with the <a href="#item__2d_2ddisable_2dresources"><c
 use the `keysym' resource to alter the keystrings associated with keysyms.
 </dd>
 <dd>
-<p>Here's an example for a URxvt session started using <code>urxvt -name URxvt</code></p>
+<p>Here's an example for a URxvt session started using <code>rxvt -name URxvt</code></p>
 </dd>
 <dd>
 <pre>
@@ -1840,11 +1829,6 @@ Toggle DEC Private Mode Values (rxvt extension). <em>where</em>
 <table>
 <tr><td>h</td><td>Send Mouse X & Y on button press.</td></tr>
 <tr><td>l</td><td>No mouse reporting.</td></tr>
-</table><dt><strong><a name="item_10"><strong><code>Ps = 10</code> </strong>&gt; (<strong>rxvt</strong>)</a></strong><br />
-</dt>
-<table>
-<tr><td>h</td><td>menuBar visible</td></tr>
-<tr><td>l</td><td>menuBar invisible</td></tr>
 </table><dt><strong><a name="item_ps__3d_25"><strong><code>Ps = 25</code> </strong>&gt;</a></strong><br />
 </dt>
 <table>
@@ -1974,7 +1958,6 @@ Set XTerm Parameters. 8-bit ST: 0x9c, 7-bit ST sequence: ESC \ (0x1b,
 <tr><td>Ps = 50</td><td>Set fontset to Pt, with the following special values of Pt (rxvt) #+n change up n #-n change down n if n is missing of 0, a value of 1 is used empty change to font0 n change to font n</td></tr>
 <tr><td>Ps = 55</td><td>Log all scrollback buffer and all of screen to Pt</td></tr>
 <tr><td>Ps = 701</td><td>Change current locale to Pt, or, if Pt is ?, return the current locale (Compile frills).</td></tr>
-<tr><td>Ps = 703</td><td>Menubar command Pt (Compile menubar).</td></tr>
 <tr><td>Ps = 704</td><td>Change colour of italic characters to Pt</td></tr>
 <tr><td>Ps = 705</td><td>Change background pixmap tint colour to Pt (Compile transparency).</td></tr>
 <tr><td>Ps = 706</td><td>Change colour of bold characters to Pt</td></tr>
@@ -1988,583 +1971,6 @@ Set XTerm Parameters. 8-bit ST: 0x9c, 7-bit ST sequence: ESC \ (0x1b,
 <tr><td>Ps = 777</td><td>Call the perl extension with the given string, which should be of the form extension:parameters (Compile perl).</td></tr>
 </table><p></p></dl>
 <p></p>
-<p>
-</p>
-<hr />
-<h1><a name="menubar">menuBar</a></h1>
-<p><strong>The exact syntax used is <em>almost</em> solidified. </strong>&gt;
-In the menus, <strong>DON'T</strong> try to use menuBar commands that add or remove a
-menuBar.</p>
-<p>Note that in all of the commands, the <strong><em>/path/</em> </strong>&gt; <em>cannot</em> be
-omitted: use <strong>./</strong> to specify a menu relative to the current menu.</p>
-<p>
-</p>
-<h2><a name="overview_of_menubar_operation">Overview of menuBar operation</a></h2>
-<p>For the menuBar XTerm escape sequence <code>ESC ] 703 ; Pt ST</code>, the syntax
-of <a href="#item_pt"><code>Pt</code></a> can be used for a variety of tasks:</p>
-<p>At the top level is the current menuBar which is a member of a circular
-linked-list of other such menuBars.</p>
-<p>The menuBar acts as a parent for the various drop-down menus, which in
-turn, may have labels, separator lines, menuItems and subMenus.</p>
-<p>The menuItems are the useful bits: you can use them to mimic keyboard
-input or even to send text or escape sequences back to rxvt.</p>
-<p>The menuBar syntax is intended to provide a simple yet robust method of
-constructing and manipulating menus and navigating through the
-menuBars.</p>
-<p>The first step is to use the tag <strong>[menu:<em>name</em>] </strong>&gt; which creates
-the menuBar called <em>name</em> and allows access. You may now or menus,
-subMenus, and menuItems. Finally, use the tag <strong>[done]</strong> to set the
-menuBar access as <strong>readonly</strong> to prevent accidental corruption of the
-menus. To re-access the current menuBar for alterations, use the tag
-<strong>[menu]</strong>, make the alterations and then use <strong>[done]</strong></p>
-<p></p>
-<p>
-</p>
-<h2><a name="commands">Commands</a></h2>
-<dl>
-<dt><strong><a name="item__5bmenu_3a_2bname_5d"><strong>[menu:+<em>name</em>] </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-access the named menuBar for creation or alteration. If a new menuBar
-is created, it is called <em>name</em> (max of 15 chars) and the current
-menuBar is pushed onto the stack
-</dd>
-<p></p>
-<dt><strong><a name="item__5bmenu_5d"><strong>[menu]</strong></a></strong><br />
-</dt>
-<dd>
-access the current menuBar for alteration
-</dd>
-<p></p>
-<dt><strong><a name="item__5btitle_3a_2bstring_5d"><strong>[title:+<em>string</em>] </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-set the current menuBar's title to <em>string</em>, which may contain the
-following format specifiers:
-</dd>
-<dd>
-<pre>
-   B&lt;%n&gt;  rxvt name (as per the B&lt;-name&gt; command-line option)
-   B&lt;%v&gt;  rxvt version
-   B&lt;%%&gt;  literal B&lt;%&gt; character</pre>
-</dd>
-<p></p>
-<dt><strong><a name="item__5bdone_5d"><strong>[done]</strong></a></strong><br />
-</dt>
-<dd>
-set menuBar access as <strong>readonly</strong>.
-End-of-file tag for <strong>[read:+<em>file</em>] </strong>&gt; operations.
-</dd>
-<p></p>
-<dt><strong><a name="item__5bread_3a_2bfile_5d"><strong>[read:+<em>file</em>] </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-read menu commands directly from <em>file</em> (extension ``.menu'' will be
-appended if required.) Start reading at a line with <strong>[menu]</strong> or <strong>&lt;
-[menu:+<em>name</em> </strong>&gt; and continuing until <strong>[done]</strong> is encountered.
-</dd>
-<dd>
-<p>Blank and comment lines (starting with <strong>#</strong>) are ignored. Actually,
-since any invalid menu commands are also ignored, almost anything could
-be construed as a comment line, but this may be tightened up in the
-future ... so don't count on it!.</p>
-</dd>
-<p></p>
-<dt><strong><a name="item__5bread_3a_2bfile_3b_2bname_5d"><strong>[read:+<em>file</em>;+<em>name</em>] </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-The same as <strong>[read:+<em>file</em>] </strong>&gt;, but start reading at a line with
-<strong>[menu:+<em>name</em>] </strong>&gt; and continuing until <strong>[done:+<em>name</em>] </strong>&gt; or
-<strong>[done]</strong> is encountered.
-</dd>
-<p></p>
-<dt><strong><a name="item__5bdump_5d"><strong>[dump]</strong></a></strong><br />
-</dt>
-<dd>
-dump all menuBars to the file <strong>/tmp/rxvt-PID</strong> in a format suitable for
-later rereading.
-</dd>
-<p></p>
-<dt><strong><a name="item__5brm_3aname_5d"><strong>[rm:name]</strong></a></strong><br />
-</dt>
-<dd>
-remove the named menuBar
-</dd>
-<p></p>
-<dt><strong><a name="item__5brm_5d__5brm_3a_5d"><strong>[rm] [rm:]</strong></a></strong><br />
-</dt>
-<dd>
-remove the current menuBar
-</dd>
-<p></p>
-<dt><strong><a name="item__5brm_2a_5d__5brm_3a_2a_5d"><strong>[rm*] [rm:*]</strong></a></strong><br />
-</dt>
-<dd>
-remove all menuBars
-</dd>
-<p></p>
-<dt><strong><a name="item__5bswap_5d"><strong>[swap]</strong></a></strong><br />
-</dt>
-<dd>
-swap the top two menuBars
-</dd>
-<p></p>
-<dt><strong><a name="item__5bprev_5d"><strong>[prev]</strong></a></strong><br />
-</dt>
-<dd>
-access the previous menuBar
-</dd>
-<p></p>
-<dt><strong><a name="item__5bnext_5d"><strong>[next]</strong></a></strong><br />
-</dt>
-<dd>
-access the next menuBar
-</dd>
-<p></p>
-<dt><strong><a name="item__5bshow_5d"><strong>[show]</strong></a></strong><br />
-</dt>
-<dd>
-Enable display of the menuBar
-</dd>
-<p></p>
-<dt><strong><a name="item__5bhide_5d"><strong>[hide]</strong></a></strong><br />
-</dt>
-<dd>
-Disable display of the menuBar
-</dd>
-<p></p>
-<dt><strong><a name="item__5bpixmap_3a_2bname_5d"><strong>[pixmap:+<em>name</em>] </strong>&gt;</a></strong><br />
-</dt>
-<dt><strong><a name="item__5bpixmap_3a_2bname_3bscaling_5d"><strong>[pixmap:+<em>name</em>;<em>scaling</em>] </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-(set the background pixmap globally
-</dd>
-<dd>
-<p><strong>A Future implementation <em>may</em> make this local to the menubar </strong>&gt;)</p>
-</dd>
-<p></p>
-<dt><strong><a name="item__5b_3a_2bcommand_3a_5d"><strong>[:+<em>command</em>:] </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-ignore the menu readonly status and issue a <em>command</em> to or a menu or
-menuitem or change the ; a useful shortcut for setting the quick arrows
-from a menuBar.
-</dd>
-<p></p></dl>
-<p></p>
-<p>
-</p>
-<h2><a name="adding_and_accessing_menus">Adding and accessing menus</a></h2>
-<p>The following commands may also be <strong>+</strong> prefixed.</p>
-<dl>
-<dt><strong><a name="item__2f_2b"><strong>/+</strong></a></strong><br />
-</dt>
-<dd>
-access menuBar top level
-</dd>
-<p></p>
-<dt><strong><a name="item__2e_2f_2b"><strong>./+</strong></a></strong><br />
-</dt>
-<dd>
-access current menu level
-</dd>
-<p></p>
-<dt><strong><a name="item__2e_2e_2f_2b"><strong>../+</strong></a></strong><br />
-</dt>
-<dd>
-access parent menu (1 level up)
-</dd>
-<p></p>
-<dt><strong><a name="item__2e_2e_2f_2e_2e_2f"><strong>../../</strong></a></strong><br />
-</dt>
-<dd>
-access parent menu (multiple levels up)
-</dd>
-<p></p>
-<dt><strong><a name="item__2fpath_2fmenu"><strong><em>/path/</em>menu </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-add/access menu
-</dd>
-<p></p>
-<dt><strong><a name="item__2fpath_2fmenu_2f_2a"><strong><em>/path/</em>menu/* </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-add/access menu and clear it if it exists
-</dd>
-<p></p>
-<dt><strong><a name="item__2fpath_2f_7b_2d_7d"><strong><em>/path/</em>{-} </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-add separator
-</dd>
-<p></p>
-<dt><strong><a name="item__2fpath_2f_7bitem_7d"><strong><em>/path/</em>{item} </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-add <strong>item</strong> as a label
-</dd>
-<p></p>
-<dt><strong><a name="item__2fpath_2f_7bitem_7d_action"><strong><em>/path/</em>{item} action </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-add/alter <em>menuitem</em> with an associated <em>action</em>
-</dd>
-<p></p>
-<dt><strong><a name="item__2fpath_2f_7bitem_7d_7bright_2dtext_7d"><strong><em>/path/</em>{item}{right-text} </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-add/alter <em>menuitem</em> with <strong>right-text</strong> as the right-justified text
-and as the associated <em>action</em>
-</dd>
-<p></p>
-<dt><strong><a name="item__2fpath_2f_7bitem_7d_7brtext_7d_action"><strong><em>/path/</em>{item}{rtext} action </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-add/alter <em>menuitem</em> with an associated <em>action</em> and with <strong>rtext</strong> as
-the right-justified text.
-</dd>
-<p></p></dl>
-<dl>
-<dt><strong><a name="item_special_characters_in_action_must_be_backslash_2de">Special characters in <em>action</em> must be backslash-escaped:</a></strong><br />
-</dt>
-<dd>
-<strong>\a \b \E \e \n \r \t \octal</strong>
-</dd>
-<p></p>
-<dt><strong><a name="item_or_in_control_2dcharacter_notation_3a">or in control-character notation:</a></strong><br />
-</dt>
-<dd>
-<strong>^@, ^A .. ^Z .. ^_, ^?</strong>
-</dd>
-<p></p></dl>
-<p>To send a string starting with a <strong>NUL</strong> (<strong>^@</strong>) character to the
-program, start <em>action</em> with a pair of <strong>NUL</strong> characters (<strong>^@^@</strong>),
-the first of which will be stripped off and the balance directed to the
-program. Otherwise if <em>action</em> begins with <strong>NUL</strong> followed by
-non-+<strong>NUL</strong> characters, the leading <strong>NUL</strong> is stripped off and the
-balance is sent back to rxvt.</p>
-<p>As a convenience for the many Emacs-type editors, <em>action</em> may start
-with <strong>M-</strong> (eg, <strong>M-$</strong> is equivalent to <strong>\E$</strong>) and a <strong>CR</strong> will be
-appended if missed from <strong>M-x</strong> commands.</p>
-<p>As a convenience for issuing XTerm <strong>ESC ]</strong> sequences from a menubar (or
-quick arrow), a <strong>BEL</strong> (<strong>^G</strong>) will be appended if needed.</p>
-<dl>
-<dt><strong><a name="item_for_example_2c">For example,</a></strong><br />
-</dt>
-<dd>
-<strong>M-xapropos</strong> is equivalent to <strong>\Exapropos\r</strong>
-</dd>
-<p></p>
-<dt><strong><a name="item_and">and</a></strong><br />
-</dt>
-<dd>
-<strong>\E]703;mona;100</strong> is equivalent to <strong>\E]703;mona;100\a</strong>
-</dd>
-<p></p></dl>
-<p>The option <strong>{<em>right-rtext</em>} </strong>&gt; will be right-justified. In the
-absence of a specified action, this text will be used as the <em>action</em>
-as well.</p>
-<dl>
-<dt><strong>For example,</strong><br />
-</dt>
-<dd>
-<strong>/File/{Open}{^X^F}</strong> is equivalent to <strong>/File/{Open}{^X^F} ^X^F</strong>
-</dd>
-<p></p></dl>
-<p>The left label <em>is</em> necessary, since it's used for matching, but
-implicitly hiding the left label (by using same name for both left and
-right labels), or explicitly hiding the left label (by preceeding it
-with a dot), makes it possible to have right-justified text only.</p>
-<dl>
-<dt><strong>For example,</strong><br />
-</dt>
-<dd>
-<strong>/File/{Open}{Open} Open-File-Action</strong>
-</dd>
-<p></p>
-<dt><strong><a name="item_or_hiding_it">or hiding it</a></strong><br />
-</dt>
-<dd>
-<strong>/File/{.anylabel}{Open} Open-File-Action</strong>
-</dd>
-<p></p></dl>
-<p></p>
-<p>
-</p>
-<h2><a name="removing_menus">Removing menus</a></h2>
-<dl>
-<dt><strong><a name="item__2d_2f_2a_2b"><strong>-/*+ </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-remove all menus from the menuBar, the same as <strong>[clear]</strong>
-</dd>
-<p></p>
-<dt><strong><a name="item__2d_2b_2fpathmenu_2b"><strong>-+<em>/path</em>menu+ </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-remove menu
-</dd>
-<p></p>
-<dt><strong><a name="item__2d_2b_2fpath_7bitem_7d_2b"><strong>-+<em>/path</em>{item}+ </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-remove item
-</dd>
-<p></p>
-<dt><strong><a name="item__2d_2b_2fpath_7b_2d_7d"><strong>-+<em>/path</em>{-} </strong>&gt;</a></strong><br />
-</dt>
-<dd>
-remove separator)
-</dd>
-<p></p>
-<dt><strong><a name="item__2d_2fpath_2fmenu_2f_2a"><strong>-/path/menu/*</strong></a></strong><br />
-</dt>
-<dd>
-remove all items, separators and submenus from menu
-</dd>
-<p></p></dl>
-<p></p>
-<p>
-</p>
-<h2><a name="quick_arrows">Quick Arrows</a></h2>
-<p>The menus also provide a hook for <em>quick arrows</em> to provide easier
-user access. If nothing has been explicitly set, the default is to
-emulate the curror keys. The syntax permits each arrow to be altered
-individually or all four at once without re-entering their common
-beginning/end text. For example, to explicitly associate cursor actions
-with the arrows, any of the following forms could be used:</p>
-<dl>
-<dt><strong><a name="item__3cr_3e_2bright"><strong>&lt;r</strong>+<em>Right</em> &gt;&gt;</a></strong><br />
-</dt>
-<dt><strong><a name="item__3cl_3e_2bleft"><strong>&lt;l</strong>+<em>Left</em> &gt;&gt;</a></strong><br />
-</dt>
-<dt><strong><a name="item__3cu_3e_2bup"><strong>&lt;u</strong>+<em>Up</em> &gt;&gt;</a></strong><br />
-</dt>
-<dt><strong><a name="item__3cd_3e_2bdown"><strong>&lt;d</strong>+<em>Down</em> &gt;&gt;</a></strong><br />
-</dt>
-<dd>
-Define actions for the respective arrow buttons
-</dd>
-<p></p>
-<dt><strong><a name="item__3cb_3e_2bbegin"><strong>&lt;b</strong>+<em>Begin</em> &gt;&gt;</a></strong><br />
-</dt>
-<dt><strong><a name="item__3ce_3e_2bend"><strong>&lt;e</strong>+<em>End</em> &gt;&gt;</a></strong><br />
-</dt>
-<dd>
-Define common beginning/end parts for <em>quick arrows</em> which used in
-conjunction with the above &lt;r&gt; &lt;l&gt; &lt;u&gt; &lt;d&gt; constructs
-</dd>
-<p></p></dl>
-<dl>
-<dt><strong><a name="item_for_example_2c_define_arrows_individually_2c">For example, define arrows individually,</a></strong><br />
-</dt>
-<dd>
-<pre>
- &lt;u&gt;\E[A</pre>
-</dd>
-<dd>
-<pre>
- &lt;d&gt;\E[B</pre>
-</dd>
-<dd>
-<pre>
- &lt;r&gt;\E[C</pre>
-</dd>
-<dd>
-<pre>
- &lt;l&gt;\E[D</pre>
-</dd>
-<dt><strong><a name="item_or_all_at_once">or all at once</a></strong><br />
-</dt>
-<dd>
-<pre>
- &lt;u&gt;\E[AZ&lt;&gt;&lt;d&gt;\E[BZ&lt;&gt;&lt;r&gt;\E[CZ&lt;&gt;&lt;l&gt;\E[D</pre>
-</dd>
-<dt><strong><a name="item_compactly">or more compactly (factoring out common parts)</a></strong><br />
-</dt>
-<dd>
-<pre>
- &lt;b&gt;\E[&lt;u&gt;AZ&lt;&gt;&lt;d&gt;BZ&lt;&gt;&lt;r&gt;CZ&lt;&gt;&lt;l&gt;D</pre>
-</dd>
-</dl>
-<p></p>
-<p>
-</p>
-<h2><a name="command_summary">Command Summary</a></h2>
-<p>A short summary of the most <em>common</em> commands:</p>
-<dl>
-<dt><strong><a name="item__5bmenu_3aname_5d">[menu:name]</a></strong><br />
-</dt>
-<dd>
-use an existing named menuBar or start a new one
-</dd>
-<p></p>
-<dt><strong>[menu]</strong><br />
-</dt>
-<dd>
-use the current menuBar
-</dd>
-<p></p>
-<dt><strong><a name="item__5btitle_3astring_5d">[title:string]</a></strong><br />
-</dt>
-<dd>
-set menuBar title
-</dd>
-<p></p>
-<dt><strong>[done]</strong><br />
-</dt>
-<dd>
-set menu access to readonly and, if reading from a file, signal EOF
-</dd>
-<p></p>
-<dt><strong><a name="item__5bdone_3aname_5d">[done:name]</a></strong><br />
-</dt>
-<dd>
-if reading from a file using [read:file;name] signal EOF
-</dd>
-<p></p>
-<dt><strong>[rm:name]</strong><br />
-</dt>
-<dd>
-remove named <code>menuBar(s)</code>
-</dd>
-<p></p>
-<dt><strong>[rm] [rm:]</strong><br />
-</dt>
-<dd>
-remove current menuBar
-</dd>
-<p></p>
-<dt><strong>[rm*] [rm:*]</strong><br />
-</dt>
-<dd>
-remove all <code>menuBar(s)</code>
-</dd>
-<p></p>
-<dt><strong>[swap]</strong><br />
-</dt>
-<dd>
-swap top two menuBars
-</dd>
-<p></p>
-<dt><strong>[prev]</strong><br />
-</dt>
-<dd>
-access the previous menuBar
-</dd>
-<p></p>
-<dt><strong>[next]</strong><br />
-</dt>
-<dd>
-access the next menuBar
-</dd>
-<p></p>
-<dt><strong>[show]</strong><br />
-</dt>
-<dd>
-map menuBar
-</dd>
-<p></p>
-<dt><strong>[hide]</strong><br />
-</dt>
-<dd>
-unmap menuBar
-</dd>
-<p></p>
-<dt><strong><a name="item__5bpixmap_3bfile_5d">[pixmap;file]</a></strong><br />
-</dt>
-<dt><strong><a name="item__5bpixmap_3bfile_3bscaling_5d">[pixmap;file;scaling]</a></strong><br />
-</dt>
-<dd>
-set a background pixmap
-</dd>
-<p></p>
-<dt><strong><a name="item__5bread_3afile_5d">[read:file]</a></strong><br />
-</dt>
-<dt><strong><a name="item__5bread_3afile_3bname_5d">[read:file;name]</a></strong><br />
-</dt>
-<dd>
-read in a menu from a file
-</dd>
-<p></p>
-<dt><strong>[dump]</strong><br />
-</dt>
-<dd>
-dump out all menuBars to /tmp/rxvt-PID
-</dd>
-<p></p>
-<dt><strong><a name="item__2f">/</a></strong><br />
-</dt>
-<dd>
-access menuBar top level
-</dd>
-<p></p>
-<dt><strong><a name="item__2e_2f">./</a></strong><br />
-</dt>
-<dt><strong><a name="item__2e_2e_2f">../</a></strong><br />
-</dt>
-<dt><strong>../../</strong><br />
-</dt>
-<dd>
-access current or parent menu level
-</dd>
-<p></p>
-<dt><strong>/path/menu</strong><br />
-</dt>
-<dd>
-add/access menu
-</dd>
-<p></p>
-<dt><strong>/path/{-}</strong><br />
-</dt>
-<dd>
-add separator
-</dd>
-<p></p>
-<dt><strong>/path/{item}{rtext} action</strong><br />
-</dt>
-<dd>
-add/alter menu item
-</dd>
-<p></p>
-<dt><strong><a name="item__2d_2f_2a">-/*</a></strong><br />
-</dt>
-<dd>
-remove all menus from the menuBar
-</dd>
-<p></p>
-<dt><strong><a name="item__2d_2fpath_2fmenu">-/path/menu</a></strong><br />
-</dt>
-<dd>
-remove menu items, separators and submenus from menu
-</dd>
-<p></p>
-<dt><strong>-/path/menu</strong><br />
-</dt>
-<dd>
-remove menu
-</dd>
-<p></p>
-<dt><strong><a name="item__2d_2fpath_2f_7bitem_7d">-/path/{item}</a></strong><br />
-</dt>
-<dd>
-remove item
-</dd>
-<p></p>
-<dt><strong><a name="item__2d_2fpath_2f_7b_2d_7d">-/path/{-}</a></strong><br />
-</dt>
-<dd>
-remove separator
-</dd>
-<p></p>
-<dt><strong><a name="item__3cb_3ebegin_3cr_3eright_3cl_3eleft_3cu_3eup_3cd_3">&lt;b&gt;Begin&lt;r&gt;Right&lt;l&gt;Left&lt;u&gt;Up&lt;d&gt;Down&lt;e&gt;End</a></strong><br />
-</dt>
-<dd>
-menu quick arrows
-</dd>
-<p></p></dl>
 <p>
 </p>
 <hr />
@@ -2930,14 +2336,6 @@ Add support for fading the text when focus is lost (requires <code>--enable-tran
 Add support for tinting of transparent backgrounds (requires <code>--enable-transparency</code>).
 </dd>
 <p></p>
-<dt><strong><a name="item_menubar">--enable-menubar (default: off) [DEPRECATED]</a></strong><br />
-</dt>
-<dd>
-Add support for our menu bar system (this interacts badly with dynamic
-locale switching currently). This option is DEPRECATED and will be removed
-in the future.
-</dd>
-<p></p>
 <dt><strong><a name="item_scroll">--enable-rxvt-scroll (default: on)</a></strong><br />
 </dt>
 <dd>
@@ -2997,16 +2395,6 @@ do it.
 Removes any support for resource checking.
 </dd>
 <p></p>
-<dt><strong><a name="item_strings">--enable-strings (default: off)</a></strong><br />
-</dt>
-<dd>
-Add support for our possibly faster <code>memset()</code> function and other
-various routines, overriding your system's versions which may
-have been hand-crafted in assembly or may require extra libraries
-to link in. (this breaks ANSI-C rules and has problems on many
-GNU/Linux systems).
-</dd>
-<p></p>
 <dt><strong><a name="item__2d_2ddisable_2dswapscreen">--disable-swapscreen</a></strong><br />
 </dt>
 <dd>
@@ -3048,7 +2436,7 @@ in combination with other switches) is:</p>
 <dt><strong><a name="item_iso14755">--enable-iso14755 (default: on)</a></strong><br />
 </dt>
 <dd>
-Enable extended ISO 14755 support (see urxvt(1), or
+Enable extended ISO 14755 support (see rxvt(1), or
 <em>doc/rxvt.1.txt</em>). Basic support (section 5.1) is enabled by
 <code>--enable-frills</code>, while support for 5.2, 5.3 and 5.4 is enabled with
 this switch.
@@ -3118,7 +2506,7 @@ Add support to have the pointer disappear when typing or inactive.
 <dt><strong><a name="item_perl">--enable-perl (default: off)</a></strong><br />
 </dt>
 <dd>
-Enable an embedded perl interpreter. See the <strong>urxvtperl(3)</strong>
+Enable an embedded perl interpreter. See the <strong>rxvtperl(3)</strong>
 manpage (<em>doc/rxvtperl.txt</em>) for more info on this feature, or the files
 in <em>src/perl-ext/</em> for the extensions that are installed by default. The
 perl interpreter that is used can be specified via the <code>PERL</code> environment

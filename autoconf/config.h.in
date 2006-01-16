@@ -385,9 +385,6 @@
 /* Define to allow scrolling when the selection moves to the top or bottom of the screen */
 #undef SELECTION_SCROLLING
 
-/* Define if you want Menubar support */
-#undef MENUBAR
-
 /* Define if you want handling for rarely used but handy features */
 #undef ENABLE_FRILLS
 

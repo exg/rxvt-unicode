@@ -1,6 +1,5 @@
 rxvt-unicode changelog <= google-friendly title
 
-TODO: nuke menubar.C and strings.C
 TODO: move pty/tty handling into a fork'ed server and drop all privs
 TODO: harmonize --disable-options into position-dependent options.
 TODO: after requesting the selection and getting a timeout, no further requests will be sent.
@@ -29,7 +28,7 @@ WISH: support tex fonts
         - changed coordinate-system of view_start/nsaved to be top to bottom.
         - applied many patches by Emanuele Giaquinta that clean the code up
           and fix more bugs in the utmp logging code.
-        . removed src/strings.C.
+        - removed src/strings.C and src/menubar.C.
 	- add tsl/fsl and related capabilities to the terminfo description,
           to set the window title.
 

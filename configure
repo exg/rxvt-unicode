@@ -879,7 +879,6 @@ Optional Features:
   --enable-transparency   enable transparent backgrounds
   --enable-tinting        enable tinting of transparent bg
   --enable-fading         enable colors fading when off focus
-  --enable-menubar        enable menubar
   --enable-rxvt-scroll    enable rxvt style scrollbar
   --enable-next-scroll    enable NeXT style scrollbar
   --enable-xterm-scroll   enable Xterm style scrollbar
@@ -4324,7 +4323,6 @@ support_tinting=yes
 support_fading=yes
 support_keepscrolling=yes
 support_selectionscrolling=yes
-support_menubar=no
 support_mousewheel=yes
 support_mouseslipwheel=yes
 support_utmp=yes
@@ -4371,7 +4369,6 @@ if test "${enable_everything+set}" = set; then
        support_keepscrolling=no
        support_selectionscrolling=no
        support_lastlog=no
-       support_menubar=no
        support_mousewheel=no
        support_mouseslipwheel=no
        support_text_blink=no
@@ -4402,7 +4399,6 @@ if test "${enable_everything+set}" = set; then
        support_keepscrolling=yes
        support_selectionscrolling=yes
        support_lastlog=yes
-       support_menubar=yes
        support_mousewheel=yes
        support_mouseslipwheel=yes
        support_text_blink=yes
@@ -4512,14 +4508,6 @@ if test "${enable_fading+set}" = set; then
   enableval="$enable_fading"
   if test x$enableval = xyes -o x$enableval = xno; then
     support_fading=$enableval
-  fi
-fi;
-
-# Check whether --enable-menubar or --disable-menubar was given.
-if test "${enable_menubar+set}" = set; then
-  enableval="$enable_menubar"
-  if test x$enableval = xyes -o x$enableval = xno; then
-    support_menubar=$enableval
   fi
 fi;
 
@@ -12551,13 +12539,6 @@ if test x$support_selectionscrolling = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
 #define SELECTION_SCROLLING 1
-_ACEOF
-
-fi
-if test x$support_menubar = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define MENUBAR 1
 _ACEOF
 
 fi
