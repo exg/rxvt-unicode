@@ -1,6 +1,4 @@
 
-@MCOMMON@
-
 srcdir =	@srcdir@
 VPATH =		@srcdir@
 .PATH:		@srcdir@
