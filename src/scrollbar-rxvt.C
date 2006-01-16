@@ -29,22 +29,23 @@
 
 #define SHADOW_WIDTH 1
 
-static void  
+static void
 draw_shadow (rxvt_term *term, int x, int y, int w, int h)
-{       
+{
   int shadow;
-    
+
   shadow = (w == 0 || h == 0) ? 1 : SHADOW_WIDTH;
   w += x - 1;
   h += y - 1;
+
   for (; shadow-- > 0; x++, y++, w--, h--)
-    {     
+    {
       XDrawLine (term->display->display, term->scrollBar.win, term->topShadowGC, x, y, w, y);
       XDrawLine (term->display->display, term->scrollBar.win, term->topShadowGC, x, y, x, h);
       XDrawLine (term->display->display, term->scrollBar.win, term->botShadowGC, w, h, w, y + 1);
       XDrawLine (term->display->display, term->scrollBar.win, term->botShadowGC, w, h, x + 1, h);
-    }           
-}                 
+    }
+}
 
 /* draw triangular button with a shadow of 2 pixels */
 static void
