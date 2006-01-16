@@ -619,8 +619,6 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
     {
       top_row = max (top_row - count, -saveLines);
 
-      HOOK_INVOKE ((this, HOOK_SCROLL_BACK, DT_INT, count, DT_INT, top_row, DT_END));
-      
       // scroll everything up 'count' lines
       term_start = (term_start + count) % total_rows;
 
@@ -677,6 +675,9 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
           && view_start != 0
           && view_start != -saveLines)
         scr_page (UP, count);
+
+      if (SHOULD_INVOKE (HOOK_SCROLL_BACK))
+        HOOK_INVOKE ((this, HOOK_SCROLL_BACK, DT_INT, count, DT_INT, top_row, DT_END));
     }
   else
     {
@@ -1841,8 +1842,9 @@ rxvt_term::scr_changeview (int new_view_start)
 
   num_scr += new_view_start - view_start;
   view_start = new_view_start;
-  HOOK_INVOKE ((this, HOOK_VIEW_CHANGE, DT_INT, view_start, DT_END));
   want_refresh = 1;
+
+  HOOK_INVOKE ((this, HOOK_VIEW_CHANGE, DT_INT, view_start, DT_END));
 
   return true;
 }

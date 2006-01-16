@@ -2782,7 +2782,8 @@ rxvt_term::cmd_parse ()
                   // scr_add_lines only works for nlines <= nrow - 1.
                   if (nlines >= nrow - 1)
                     {
-                      if (!HOOK_INVOKE ((this, HOOK_ADD_LINES, DT_WCS_LEN, buf, str - buf, DT_END)))
+                      if (!(SHOULD_INVOKE (HOOK_ADD_LINES)
+                            && HOOK_INVOKE ((this, HOOK_ADD_LINES, DT_WCS_LEN, buf, str - buf, DT_END))))
                         scr_add_lines (buf, str - buf, nlines);
 
                       nlines = 0;
@@ -2807,7 +2808,8 @@ rxvt_term::cmd_parse ()
               ch = next_char ();
             }
 
-          if (!HOOK_INVOKE ((this, HOOK_ADD_LINES, DT_WCS_LEN, buf, str - buf, DT_END)))
+          if (!(SHOULD_INVOKE (HOOK_ADD_LINES)
+                && HOOK_INVOKE ((this, HOOK_ADD_LINES, DT_WCS_LEN, buf, str - buf, DT_END))))
             scr_add_lines (buf, str - buf, nlines);
 
           /*
