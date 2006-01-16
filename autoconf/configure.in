@@ -1429,10 +1429,6 @@ AC_SUBST(LIBS)
 AC_SUBST(X_LIBS)
 AC_SUBST(X_EXTRA_LIBS)
 
-dnl# common parts of the Makefile
-MCOMMON=./autoconf/Make.common
-AC_SUBST_FILE(MCOMMON)
-
 AC_ARG_PROGRAM
 
 dnl# test for "sun" or "__sun__" before include sys_ioctl
@@ -1460,8 +1456,7 @@ RXVT_DEFINE_TO_INCLUDE(include_sys_strredir_h, sys/strredir.h, ac_cv_header_sys_
 RXVT_DEFINE_TO_INCLUDE(include_sys_time_h, sys/time.h, ac_cv_header_sys_time_h, yes, notset, dontmatch)
 RXVT_DEFINE_TO_INCLUDE(include_time_h, time.h, ac_cv_header_sys_time_h, no, ac_cv_header_time, yes)
 
-AC_CONFIG_FILES([autoconf/Make.common \
-Makefile \
+AC_CONFIG_FILES([Makefile \
 doc/Makefile \
 src/Makefile \
 src/rxvtlib.h \
