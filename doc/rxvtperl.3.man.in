@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-13" "7.0" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-15" "7.0" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -936,9 +936,9 @@ to receive pointer events all the times:
 .ie n .IP "$nrow_plus_saveLines = $term\->total_rows" 4
 .el .IP "$nrow_plus_saveLines = \f(CW$term\fR\->total_rows" 4
 .IX Item "$nrow_plus_saveLines = $term->total_rows"
-.ie n .IP "$lines_in_scrollback = $term\->nsaved" 4
-.el .IP "$lines_in_scrollback = \f(CW$term\fR\->nsaved" 4
-.IX Item "$lines_in_scrollback = $term->nsaved"
+.ie n .IP "$topmost_scrollback_row = $term\->top_row" 4
+.el .IP "$topmost_scrollback_row = \f(CW$term\fR\->top_row" 4
+.IX Item "$topmost_scrollback_row = $term->top_row"
 .PD
 Return various integers describing terminal characteristics.
 .ie n .IP "$x_display = $term\->display_id" 4
@@ -970,8 +970,8 @@ AltGr), the meta key (often Alt) and the num lock key, if applicable.
 .ie n .IP "$view_start = $term\->view_start ([$newvalue])" 4
 .el .IP "$view_start = \f(CW$term\fR\->view_start ([$newvalue])" 4
 .IX Item "$view_start = $term->view_start ([$newvalue])"
-Returns the negative row number of the topmost line. Minimum value is
-\&\f(CW0\fR, which displays the normal terminal contents. Larger values scroll
+Returns the row number of the topmost displayed line. Maximum value is
+\&\f(CW0\fR, which displays the normal terminal contents. Lower values scroll
 this many lines into the scrollback buffer.
 .IP "$term\->want_refresh" 4
 .IX Item "$term->want_refresh"

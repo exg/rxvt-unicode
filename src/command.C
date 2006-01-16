@@ -1023,8 +1023,7 @@ rxvt_term::flush ()
 void
 rxvt_term::check_cb (check_watcher &w)
 {
-  SET_R (this);
-  SET_LOCALE (locale);
+  make_current ();
 
   display->flush ();
 
@@ -1035,8 +1034,7 @@ rxvt_term::check_cb (check_watcher &w)
 void
 rxvt_term::flush_cb (time_watcher &w)
 {
-  SET_R (this);
-  SET_LOCALE (locale);
+  make_current ();
 
   refresh_limit = 1;
   refresh_count = 0;
@@ -1174,8 +1172,7 @@ rxvt_term::pty_fill ()
 void
 rxvt_term::pty_cb (io_watcher &w, short revents)
 {
-  SET_R (this);
-  SET_LOCALE (locale);
+  make_current ();
 
   if (revents & EVENT_READ)
     // loop, but don't allow a single term to monopolize us
@@ -1217,8 +1214,7 @@ rxvt_term::pointer_blank ()
 void
 rxvt_term::pointer_cb (time_watcher &w)
 {
-  SET_R (this);
-  SET_LOCALE (locale);
+  make_current ();
 
   pointer_blank ();
 }
@@ -1307,10 +1303,9 @@ rxvt_W11_process_x_event (XEvent *ev)
 void
 rxvt_term::x_cb (XEvent &ev)
 {
-  dDisp;
+  make_current ();
 
-  SET_R (this);
-  SET_LOCALE (locale);
+  dDisp;
 
   if (ev.xany.window == vt
       && HOOK_INVOKE ((this, HOOK_X_EVENT, DT_XEVENT, &ev, DT_END)))
@@ -1824,8 +1819,7 @@ rxvt_term::focus_out ()
 void
 rxvt_term::rootwin_cb (XEvent &ev)
 {
-  SET_R (this);
-  SET_LOCALE (locale);
+  make_current ();
 
   switch (ev.type)
     {

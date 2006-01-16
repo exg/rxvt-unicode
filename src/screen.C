@@ -117,7 +117,7 @@ inline void fill_text (text_t *start, text_t value, int len)
 
 /* Fill part/all of a line with blanks. */
 void
-rxvt_term::scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs)
+rxvt_term::scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs) const
 {
   if (!l.t)
     {
@@ -144,7 +144,7 @@ rxvt_term::scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend
 /* ------------------------------------------------------------------------- */
 /* Fill a full line with blanks - make sure it is allocated first */
 void
-rxvt_term::scr_blank_screen_mem (line_t &l, rend_t efs)
+rxvt_term::scr_blank_screen_mem (line_t &l, rend_t efs) const
 {
   scr_blank_line (l, 0, ncol, efs);
 

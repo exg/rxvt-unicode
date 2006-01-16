@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>urxvtperl - rxvt-unicode's embedded perl interpreter</title>
+<title>rxvtperl - rxvt-unicode's embedded perl interpreter</title>
 <link rev="made" href="mailto:perl-binary@plan9.de" />
 </head>
 
@@ -47,7 +47,7 @@
 </p>
 <hr />
 <h1><a name="name">NAME</a></h1>
-<p>urxvtperl - rxvt-unicode's embedded perl interpreter</p>
+<p>rxvtperl - rxvt-unicode's embedded perl interpreter</p>
 <p>
 </p>
 <hr />
@@ -60,9 +60,9 @@
       ()
    }</pre>
 <pre>
-   # start a urxvt using it:</pre>
+   # start a rxvt using it:</pre>
 <pre>
-   urxvt --perl-lib $HOME -pe grab_test</pre>
+   rxvt --perl-lib $HOME -pe grab_test</pre>
 <p>
 </p>
 <hr />
@@ -71,17 +71,17 @@
 the <code>perl</code> resource are loaded and associated with it.</p>
 <p>Scripts are compiled in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as UTF-8.</p>
-<p>Each script will only ever be loaded once, even in urxvtd, where
+<p>Each script will only ever be loaded once, even in rxvtd, where
 scripts will be shared (but not enabled) for all terminals.</p>
 <p>
 </p>
 <hr />
 <h1><a name="prepackaged_extensions">PREPACKAGED EXTENSIONS</a></h1>
 <p>This section describes the extensions delivered with this release. You can
-find them in <em>/usr/local/lib/urxvt/perl/</em>.</p>
+find them in <em>/opt/rxvt/lib/urxvt/perl/</em>.</p>
 <p>You can activate them like this:</p>
 <pre>
-  urxvt -pe &lt;extensionname&gt;</pre>
+  rxvt -pe &lt;extensionname&gt;</pre>
 <dl>
 <dt><strong><a name="item_selection">selection (enabled by default)</a></strong><br />
 </dt>
@@ -491,7 +491,7 @@ Called just after the screen gets redrawn. See <code>on_refresh_begin</code>.
 <dd>
 Called whenever the user presses a key combination that has a
 <code>perl:string</code> action bound to it (see description of the <strong>keysym</strong>
-resource in the <code>urxvt(1)</code> manpage).
+resource in the <code>rxvt(1)</code> manpage).
 </dd>
 <p></p>
 <dt><strong><a name="item_on_x_event__24term_2c__24event">on_x_event $term, $event</a></strong><br />
@@ -737,7 +737,7 @@ initialise perl, and the terminal object otherwise. The <code>init</code> and
 </dt>
 <dd>
 Destroy the terminal object (close the window, free resources
-etc.). Please note that urxvt will not exit as long as any event
+etc.). Please note that rxvt will not exit as long as any event
 watchers (timers, io watchers) are still active.
 </dd>
 <p></p>
@@ -822,7 +822,7 @@ the wrong resources.</p>
 </dt>
 <dd>
 Adds a keymap translation exactly as specified via a resource. See the
-<code>keysym</code> resource in the <code>urxvt(1)</code> manpage.
+<code>keysym</code> resource in the <code>rxvt(1)</code> manpage.
 </dd>
 <p></p>
 <dt><strong><a name="item_rstyle">$rend = $term-&gt;rstyle ([$new_rstyle])</a></strong><br />
@@ -1056,7 +1056,7 @@ to receive pointer events all the times:
 </dt>
 <dt><strong><a name="item_total_rows">$nrow_plus_saveLines = $term-&gt;total_rows</a></strong><br />
 </dt>
-<dt><strong><a name="item_nsaved">$lines_in_scrollback = $term-&gt;nsaved</a></strong><br />
+<dt><strong><a name="item_top_row">$topmost_scrollback_row = $term-&gt;top_row</a></strong><br />
 </dt>
 <dd>
 Return various integers describing terminal characteristics.
@@ -1095,8 +1095,8 @@ AltGr), the meta key (often Alt) and the num lock key, if applicable.
 <dt><strong><a name="item_view_start">$view_start = $term-&gt;view_start ([$newvalue])</a></strong><br />
 </dt>
 <dd>
-Returns the negative row number of the topmost line. Minimum value is
-<code>0</code>, which displays the normal terminal contents. Larger values scroll
+Returns the row number of the topmost displayed line. Maximum value is
+<code>0</code>, which displays the normal terminal contents. Lower values scroll
 this many lines into the scrollback buffer.
 </dd>
 <p></p>
@@ -1117,7 +1117,7 @@ differ, it redraws the differences.
 Returns the text of the entire row with number <code>$row_number</code>. Row <code>0</code>
 is the topmost terminal line, row <code>$term-&gt;$ncol-1</code> is the bottommost
 terminal line. The scrollback buffer starts at line <code>-1</code> and extends to
-line <a href="#item_nsaved"><code>-$term-&gt;nsaved</code></a>. Nothing will be returned if a nonexistent line
+line <code>-$term-&gt;nsaved</code>. Nothing will be returned if a nonexistent line
 is requested.
 </dd>
 <dd>

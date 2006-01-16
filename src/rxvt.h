@@ -1217,7 +1217,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 
   long vt_emask, vt_emask_perl;
 
-  void vt_select_input ()
+  void vt_select_input () const
   {
     XSelectInput (display->display, vt, vt_emask | vt_emask_perl);
   }
@@ -1285,6 +1285,8 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   bool init_vars ();
 
   bool pty_fill ();
+
+  void make_current () const; // make this the "currently active" urxvt instance
 
   void init_secondary ();
   const char **init_resources (int argc, const char *const *argv);
@@ -1419,7 +1421,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 
   // screen.C
 
-  void lalloc (line_t &l)
+  void lalloc (line_t &l) const
   {
     l.t = (text_t *)talloc->alloc ();
     l.r = (rend_t *)ralloc->alloc ();
@@ -1433,7 +1435,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   }
 #endif
 
-  void lresize (line_t &l)
+  void lresize (line_t &l) const
   {
     if (!l.t)
       return;
@@ -1447,7 +1449,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
       scr_blank_line (l, prev_ncol, ncol - prev_ncol, DEFAULT_RSTYLE);
   }
 
-  int fgcolor_of (rend_t r)
+  int fgcolor_of (rend_t r) const
   {
     int base = GET_BASEFG (r);
 #ifndef NO_BRIGHTCOLOR
@@ -1461,7 +1463,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
     return base;
   }
 
-  int bgcolor_of (rend_t r)
+  int bgcolor_of (rend_t r) const
   {
     int base = GET_BASEBG (r);
 #ifndef NO_BRIGHTCOLOR
@@ -1475,7 +1477,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
     return base;
   }
 
-  bool option (uint32_t opt)
+  bool option (uint32_t opt) const
   {
     return OPTION (opt);
   }
@@ -1488,8 +1490,8 @@ struct rxvt_term : zero_initialized, rxvt_vars {
       options &= ~opt;
   }
 
-  void scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs);
-  void scr_blank_screen_mem (line_t &l, rend_t efs);
+  void scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs) const;
+  void scr_blank_screen_mem (line_t &l, rend_t efs) const;
   int scr_scroll_text (int row1, int row2, int count);
   void scr_reset ();
   void scr_release ();

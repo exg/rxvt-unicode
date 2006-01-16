@@ -91,6 +91,14 @@ rxvt_pop_locale ()
   rxvt_set_locale (savelocale);
 }
 
+void
+rxvt_term::make_current () const
+{
+  SET_R (this);
+  rxvt_set_locale (locale);
+  set_environ (envv);
+}
+
 #if ENABLE_COMBINING
 class rxvt_composite_vec rxvt_composite;
 
@@ -379,7 +387,7 @@ rxvt_term::destroy ()
 void
 rxvt_term::destroy_cb (time_watcher &w)
 {
-  SET_R (this);
+  make_current ();
 
   delete this;
 }
@@ -480,9 +488,8 @@ bool
 rxvt_term::init (int argc, const char *const *argv)
 {
   SET_R (this);
-  set_environ (envv); // few things in X do not call setlocale :(
-
   set_locale ("");
+  set_environ (envv); // few things in X do not call setlocale :(
 
   if (!init_vars ())
     return false;
@@ -1629,7 +1636,7 @@ rxvt_term::im_cb ()
   char **s;
   char buf[IMBUFSIZ];
 
-  SET_R (this);
+  make_current ();
 
   im_destroy ();
 

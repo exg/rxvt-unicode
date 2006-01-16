@@ -1,5 +1,5 @@
 NAME
-    urxvtperl - rxvt-unicode's embedded perl interpreter
+    rxvtperl - rxvt-unicode's embedded perl interpreter
 
 SYNOPSIS
        # create a file grab_test in $HOME:
@@ -9,9 +9,9 @@ SYNOPSIS
           ()
        }
 
-       # start a urxvt using it:
+       # start a rxvt using it:
 
-       urxvt --perl-lib $HOME -pe grab_test
+       rxvt --perl-lib $HOME -pe grab_test
 
 DESCRIPTION
     Everytime a terminal object gets created, extension scripts specified
@@ -20,16 +20,16 @@ DESCRIPTION
     Scripts are compiled in a 'use strict' and 'use utf8' environment, and
     thus must be encoded as UTF-8.
 
-    Each script will only ever be loaded once, even in urxvtd, where scripts
+    Each script will only ever be loaded once, even in rxvtd, where scripts
     will be shared (but not enabled) for all terminals.
 
 PREPACKAGED EXTENSIONS
     This section describes the extensions delivered with this release. You
-    can find them in /usr/local/lib/urxvt/perl/.
+    can find them in /opt/rxvt/lib/urxvt/perl/.
 
     You can activate them like this:
 
-      urxvt -pe <extensionname>
+      rxvt -pe <extensionname>
 
     selection (enabled by default)
         (More) intelligent selection. This extension tries to be more
@@ -320,7 +320,7 @@ API DOCUMENTATION
     on_keyboard_command $term, $string
         Called whenever the user presses a key combination that has a
         "perl:string" action bound to it (see description of the keysym
-        resource in the urxvt(1) manpage).
+        resource in the rxvt(1) manpage).
 
     on_x_event $term, $event
         Called on every X event received on the vt window (and possibly
@@ -476,7 +476,7 @@ API DOCUMENTATION
 
     $term->destroy
         Destroy the terminal object (close the window, free resources etc.).
-        Please note that urxvt will not exit as long as any event watchers
+        Please note that rxvt will not exit as long as any event watchers
         (timers, io watchers) are still active.
 
     $isset = $term->option ($optval[, $set])
@@ -541,7 +541,7 @@ API DOCUMENTATION
 
     $success = $term->parse_keysym ($keysym_spec, $command_string)
         Adds a keymap translation exactly as specified via a resource. See
-        the "keysym" resource in the urxvt(1) manpage.
+        the "keysym" resource in the rxvt(1) manpage.
 
     $rend = $term->rstyle ([$new_rstyle])
         Return and optionally change the current rendition. Text that is
@@ -688,7 +688,7 @@ API DOCUMENTATION
     $is_mapped = $term->mapped
     $max_scrollback = $term->saveLines
     $nrow_plus_saveLines = $term->total_rows
-    $lines_in_scrollback = $term->nsaved
+    $topmost_scrollback_row = $term->top_row
         Return various integers describing terminal characteristics.
 
     $x_display = $term->display_id
@@ -709,8 +709,8 @@ API DOCUMENTATION
         applicable.
 
     $view_start = $term->view_start ([$newvalue])
-        Returns the negative row number of the topmost line. Minimum value
-        is 0, which displays the normal terminal contents. Larger values
+        Returns the row number of the topmost displayed line. Maximum value
+        is 0, which displays the normal terminal contents. Lower values
         scroll this many lines into the scrollback buffer.
 
     $term->want_refresh
