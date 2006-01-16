@@ -370,9 +370,6 @@ static const char optionsstring[] = "options: "
 #if EIGHT_BIT_CONTROLS
                                     "8bitctrls,"
 #endif
-#if !defined(NO_STRINGS)
-                                    "strings,"
-#endif
 #if defined(ENABLE_FRILLS)
                                     "frills,"
 #endif
