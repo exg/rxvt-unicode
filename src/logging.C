@@ -196,7 +196,6 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
         fclose (fd0);
       }
 # endif
-
   }
 #endif
 
@@ -212,12 +211,8 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
       rxvt_update_wtmp (RXVT_WTMP_FILE, ut);
 #  endif
 # endif
-# ifdef HAVE_STRUCT_UTMPX
-#  if HAVE_UPDWTMPX
+# if defined(HAVE_STRUCT_UTMPX) && defined(HAVE_UPDWTMPX)
       updwtmpx (RXVT_WTMPX_FILE, utx);
-#  else
-      pututxline (utx);
-#  endif
 # endif
     }
 #endif
