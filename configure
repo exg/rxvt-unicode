@@ -310,7 +310,7 @@ ac_includes_default="\
 #endif"
 
 ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os VERSION DATE LSMDATE LIBVERSION CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX CPP INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA AWK LINKER CXXCPP EGREP INSTALL_LIBRXVT RXVTNAME MV RM CP LN SED ECHO CMP TBL TIC X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS XPM_CPPFLAGS XPM_CFLAGS XPM_LIBS rxvt_int16_typedef rxvt_uint16_typedef rxvt_int32_typedef rxvt_uint32_typedef rxvt_intp_define rxvt_u_intp_define PERL PERLLIB PERLFLAGS PERLPRIVLIBEXP IF_PERL PERL_O DEBUG DINCLUDE DLIB include_stdint_h include_stdarg_h include_stdlib_h include_unistd_h include_string_h include_fcntl_h include_util_h include_assert_h include_sys_ioctl_h include_sys_select_h include_sys_strredir_h include_sys_time_h include_time_h LIBOBJS LTLIBOBJS'
-ac_subst_files='MCOMMON'
+ac_subst_files=''
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -12905,9 +12905,6 @@ fi
 
 
 
-MCOMMON=./autoconf/Make.common
-
-
 test "$program_prefix" != NONE &&
   program_transform_name="s,^,$program_prefix,;$program_transform_name"
 # Use a double $ so make ignores it.
@@ -12991,7 +12988,7 @@ else
   include_time_h="/* #include <time.h> */"
 fi
 
-                                                  ac_config_files="$ac_config_files autoconf/Make.common Makefile doc/Makefile src/Makefile src/rxvtlib.h"
+                                        ac_config_files="$ac_config_files Makefile doc/Makefile src/Makefile src/rxvtlib.h"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -13518,7 +13515,6 @@ for ac_config_target in $ac_config_targets
 do
   case "$ac_config_target" in
   # Handling of arguments.
-  "autoconf/Make.common" ) CONFIG_FILES="$CONFIG_FILES autoconf/Make.common" ;;
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "doc/Makefile" ) CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
   "src/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
@@ -13686,8 +13682,6 @@ s,@include_sys_time_h@,$include_sys_time_h,;t t
 s,@include_time_h@,$include_time_h,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
-/@MCOMMON@/r $MCOMMON
-s,@MCOMMON@,,;t t
 CEOF
 
 _ACEOF

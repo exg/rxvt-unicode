@@ -2048,11 +2048,6 @@ Add support for a very unobtrusive, plain-looking scrollbar that
 is the favourite of the rxvt-unicode author, having used it for
 many years.
 
-=item --enable-half-shadow (default: off)
-
-Make shadows on the scrollbar only half the normal width & height.
-only applicable to rxvt scrollbars.
-
 =item --enable-ttygid (default: off)
 
 Change tty device setting to group "tty" - only use this if
