@@ -11978,7 +11978,7 @@ _ACEOF
 
 fi
 
-if test x$rxvt_cv_func_posix_openpt = xno; then
+if test x$ac_cv_func_posix_openpt = xno; then
   echo "$as_me:$LINENO: checking for openpty" >&5
 echo $ECHO_N "checking for openpty... $ECHO_C" >&6
 if test "${ac_cv_func_openpty+set}" = set; then
