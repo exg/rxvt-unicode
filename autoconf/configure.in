@@ -1230,13 +1230,10 @@ fi
 if test x$rxvt_cv_ptys = xSGI4; then
   AC_DEFINE(PTYS_ARE__GETPTY, 1, Define for this pty type)
 fi
-if test x$rxvt_cv_ptys = xGLIBC; then
-  AC_DEFINE(PTYS_ARE_GETPT, 1, Define for this pty type)
-fi
 if test x$rxvt_cv_ptys = xHPUX; then
   AC_DEFINE(PTYS_ARE_CLONE, 1, Define for this pty type)
 fi
-if test x$rxvt_cv_ptys = xBSD -o x$rxvt_cv_ptys = xHPUX -o x$rxvt_cv_ptys = xGLIBC; then
+if test x$rxvt_cv_ptys = xBSD -o x$rxvt_cv_ptys = xHPUX -o x$rxvt_cv_ptys = xPOSIX; then
   AC_DEFINE(PTYS_ARE_SEARCHED, 1, Define for this pty type)
 fi
 

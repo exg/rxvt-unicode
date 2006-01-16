@@ -12223,13 +12223,6 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
 fi
-if test x$rxvt_cv_ptys = xGLIBC; then
-
-cat >>confdefs.h <<\_ACEOF
-#define PTYS_ARE_GETPT 1
-_ACEOF
-
-fi
 if test x$rxvt_cv_ptys = xHPUX; then
 
 cat >>confdefs.h <<\_ACEOF
@@ -12237,7 +12230,7 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
 fi
-if test x$rxvt_cv_ptys = xBSD -o x$rxvt_cv_ptys = xHPUX -o x$rxvt_cv_ptys = xGLIBC; then
+if test x$rxvt_cv_ptys = xBSD -o x$rxvt_cv_ptys = xHPUX -o x$rxvt_cv_ptys = xPOSIX; then
 
 cat >>confdefs.h <<\_ACEOF
 #define PTYS_ARE_SEARCHED 1

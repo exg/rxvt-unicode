@@ -347,9 +347,6 @@
 #undef PTYS_ARE__GETPTY
 
 /* Define for this pty type */
-#undef PTYS_ARE_GETPT
-
-/* Define for this pty type */
 #undef PTYS_ARE_CLONE
 
 /* Define for this pty type */
