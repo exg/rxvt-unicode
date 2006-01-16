@@ -189,14 +189,9 @@ optList[] = {
               STRG (Rs_color + Color_pointer_fg, "pointerColor", "pr", "color", "pointer color"),
               STRG (Rs_color + Color_pointer_bg, "pointerColor2", "pr2", "color", "pointer bg color"),
               STRG (Rs_color + Color_border, "borderColor", "bd", "color", "border color"),
-#if defined (XPM_BACKGROUND) || (MENUBAR_MAX)
-              RSTRG (Rs_path, "path", "search path"),
-#endif				/* defined (XPM_BACKGROUND) || (MENUBAR_MAX) */
 #ifdef XPM_BACKGROUND
+              RSTRG (Rs_path, "path", "search path"),
               STRG (Rs_backgroundPixmap, "backgroundPixmap", "pixmap", "file[;geom]", "background pixmap"),
-#endif				/* XPM_BACKGROUND */
-#if (MENUBAR_MAX)
-              RSTRG (Rs_menu, "menu", "name[;tag]"),
 #endif
               /* fonts: command-line option = resource name */
               STRG (Rs_font, "font", "fn", "fontname", "normal text font"),
@@ -327,9 +322,6 @@ static const char optionsstring[] = "options: "
 #endif
 #if defined(UTMP_SUPPORT)
                                     "utmp,"
-#endif
-#if defined(MENUBAR)
-                                    "menubar,"
 #endif
 #if defined(USE_XIM)
                                     "XIM,"

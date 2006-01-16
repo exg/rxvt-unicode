@@ -16,14 +16,9 @@
 #endif
   def (name)
   def (title)
-#if defined (XPM_BACKGROUND) || (MENUBAR_MAX)
-  def (path)
-#endif
 #ifdef XPM_BACKGROUND
+  def (path)
   def (backgroundPixmap)
-#endif
-#if (MENUBAR_MAX)
-  def (menu)
 #endif
   def (loginShell)
   def (jumpScroll)

@@ -163,9 +163,6 @@ rxvt_term::rxvt_term ()
 #ifdef HAVE_SCROLLBARS
     scrollbar_ev (this, &rxvt_term::x_cb),
 #endif
-#ifdef MENUBAR
-    menubar_ev (this, &rxvt_term::x_cb),
-#endif
 #ifdef CURSOR_BLINK
     cursor_blink_ev (this, &rxvt_term::cursor_blink_cb),
 #endif
@@ -245,9 +242,6 @@ rxvt_term::~rxvt_term ()
 #ifdef USE_XIM
       im_destroy ();
 #endif
-#ifdef MENUBAR
-      if (menubarGC)    XFreeGC (disp, menubarGC);
-#endif
 #ifdef XTERM_SCROLLBAR
       if (xscrollbarGC) XFreeGC (disp, xscrollbarGC);
       if (ShadowGC)     XFreeGC (disp, ShadowGC);
@@ -267,18 +261,13 @@ rxvt_term::~rxvt_term ()
       if (upArrowHi)    XFreePixmap (disp, upArrowHi);
       if (downArrowHi)  XFreePixmap (disp, downArrowHi);
 #endif
-#if defined(MENUBAR) || defined(RXVT_SCROLLBAR)
+#ifdef RXVT_SCROLLBAR
       if (topShadowGC)  XFreeGC (disp, topShadowGC);
       if (botShadowGC)  XFreeGC (disp, botShadowGC);
       if (scrollbarGC)  XFreeGC (disp, scrollbarGC);
 #endif
       if (gc)   XFreeGC (disp, gc);
 
-#if defined(MENUBAR) && (MENUBAR_MAX > 1)
-      delete menuBar.drawable;
-      //if (menuBar.win)
-      //  XDestroyWindow (disp, menuBar.win);
-#endif
       delete drawable;
       // destroy all windows
       if (parent[0])
@@ -343,9 +332,6 @@ rxvt_term::destroy ()
 #endif
 #if HAVE_SCROLLBARS
       scrollbar_ev.stop (display);
-#endif
-#if MENUBAR
-      menubar_ev.stop (display);
 #endif
 #if TRANSPARENT
       rootwin_ev.stop (display);
@@ -494,9 +480,6 @@ rxvt_term::init (int argc, const char *const *argv)
   keyboard->register_done ();
 #endif
 
-#if MENUBAR_MAX
-  menubar_read (rs[Rs_menu]);
-#endif
 #ifdef HAVE_SCROLLBARS
   if (OPTION (Opt_scrollBar))
     scrollBar.setIdle ();    /* set existence for size calculations */
@@ -543,10 +526,6 @@ rxvt_term::init (int argc, const char *const *argv)
 #ifdef HAVE_SCROLLBARS
   if (OPTION (Opt_scrollBar))
     resize_scrollbar ();      /* create and map scrollbar */
-#endif
-#if (MENUBAR_MAX)
-  if (menubar_visible ())
-    XMapWindow (disp, menuBar.win);
 #endif
 #ifdef TRANSPARENT
   if (OPTION (Opt_transparent))
@@ -764,7 +743,7 @@ void
 rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
 {
   short recalc_x, recalc_y;
-  int x, y, sb_w, mb_h, flags;
+  int x, y, sb_w, flags;
   unsigned int w, h;
   unsigned int max_width, max_height;
   dDisp;
@@ -835,22 +814,15 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
 
   szHint.base_width = szHint.base_height = 2 * int_bwidth;
 
-  sb_w = mb_h = 0;
+  sb_w = 0;
   window_vt_x = window_vt_y = int_bwidth;
 
-  if (scrollbar_visible ())
+  if (scrollBar.state)
     {
       sb_w = scrollbar_TotalWidth ();
       szHint.base_width += sb_w;
       if (!OPTION (Opt_scrollBar_right))
         window_vt_x += sb_w;
-    }
-
-  if (menubar_visible ())
-    {
-      mb_h = menuBar_TotalHeight ();
-      szHint.base_height += mb_h;
-      window_vt_y += mb_h;
     }
 
   szHint.width_inc = fwidth;
@@ -880,7 +852,7 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
       szHint.height = szHint.base_height + height;
     }
 
-  if (scrollbar_visible () && OPTION (Opt_scrollBar_right))
+  if (scrollBar.state && OPTION (Opt_scrollBar_right))
     window_sb_x = szHint.width - sb_w;
 
   if (recalc_x)
@@ -1245,18 +1217,13 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
 
   if (fix_screen || newwidth != old_width || newheight != old_height)
     {
-      if (scrollbar_visible ())
+      if (scrollBar.state)
         {
           XMoveResizeWindow (disp, scrollBar.win,
                              window_sb_x, 0,
                              scrollbar_TotalWidth (), szHint.height);
           resize_scrollbar ();
         }
-
-      if (menubar_visible ())
-        XMoveResizeWindow (disp, menuBar.win,
-                           window_vt_x, 0,
-                           width, menuBar_TotalHeight ());
 
       XMoveResizeWindow (disp, vt,
                          window_vt_x, window_vt_y,

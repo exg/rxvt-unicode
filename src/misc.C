@@ -440,7 +440,7 @@ rxvt_freecommastring (char **cs)
 
 /* #define DEBUG_SEARCH_PATH */
 
-#if defined (XPM_BACKGROUND) || (MENUBAR_MAX)
+#ifdef XPM_BACKGROUND
 /*
  * search for FILE in the current working directory, and within the
  * colon-delimited PATHLIST, adding the file extension EXT if required.
@@ -536,7 +536,7 @@ rxvt_File_find (const char *file, const char *ext, const char *path)
 
   return f;
 }
-#endif				/* defined (XPM_BACKGROUND) || (MENUBAR_MAX) */
+#endif
 
 /*----------------------------------------------------------------------*
  * miscellaneous drawing routines
@@ -545,7 +545,7 @@ rxvt_File_find (const char *file, const char *ext, const char *path)
 /*
  * Draw top/left and bottom/right border shadows around windows
  */
-#if defined(RXVT_SCROLLBAR) || defined(MENUBAR)
+#ifdef RXVT_SCROLLBAR
 void
 rxvt_Draw_Shadow (Display *display, Window win, GC topShadow, GC botShadow, int x, int y, int w, int h)
 {
@@ -560,49 +560,6 @@ rxvt_Draw_Shadow (Display *display, Window win, GC topShadow, GC botShadow, int 
       XDrawLine (display, win, topShadow, x, y, x, h);
       XDrawLine (display, win, botShadow, w, h, w, y + 1);
       XDrawLine (display, win, botShadow, w, h, x + 1, h);
-    }
-}
-#endif
-
-/* button shapes */
-#ifdef MENUBAR
-void
-rxvt_Draw_Triangle (Display *display, Window win, GC topShadow, GC botShadow, int x, int y, int w, int type)
-{
-  switch (type)
-    {
-      case 'r':			/* right triangle */
-        XDrawLine (display, win, topShadow, x, y, x, y + w);
-        XDrawLine (display, win, topShadow, x, y, x + w, y + w / 2);
-        XDrawLine (display, win, botShadow, x, y + w, x + w, y + w / 2);
-        break;
-
-      case 'l':			/* left triangle */
-        XDrawLine (display, win, botShadow, x + w, y + w, x + w, y);
-        XDrawLine (display, win, botShadow, x + w, y + w, x, y + w / 2);
-        XDrawLine (display, win, topShadow, x, y + w / 2, x + w, y);
-        break;
-
-      case 'd':			/* down triangle */
-        XDrawLine (display, win, topShadow, x, y, x + w / 2, y + w);
-        XDrawLine (display, win, topShadow, x, y, x + w, y);
-        XDrawLine (display, win, botShadow, x + w, y, x + w / 2, y + w);
-        break;
-
-      case 'u':			/* up triangle */
-        XDrawLine (display, win, botShadow, x + w, y + w, x + w / 2, y);
-        XDrawLine (display, win, botShadow, x + w, y + w, x, y + w);
-        XDrawLine (display, win, topShadow, x, y + w, x + w / 2, y);
-        break;
-#if 0
-      case 's':			/* square */
-        XDrawLine (display, win, topShadow, x + w, y, x, y);
-        XDrawLine (display, win, topShadow, x, y, x, y + w);
-        XDrawLine (display, win, botShadow, x, y + w, x + w, y + w);
-        XDrawLine (display, win, botShadow, x + w, y + w, x + w, y);
-        break;
-#endif
-
     }
 }
 #endif

@@ -41,7 +41,7 @@
 
 #include "perlxsi.c"
 
-#if defined(HAVE_SCROLLBARS) || defined(MENUBAR)
+#ifdef HAVE_SCROLLBARS
 # define GRAB_CURSOR THIS->leftptr_cursor
 #else
 # define GRAB_CURSOR None

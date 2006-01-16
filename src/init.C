@@ -258,13 +258,6 @@ rxvt_term::init_vars ()
 
   last_bot = last_state = -1;
 
-#ifdef MENUBAR
-  menu_readonly = 1;
-# if ! (MENUBAR_MAX > 1)
-  CurrentBar = &BarList;
-# endif                         /* (MENUBAR_MAX > 1) */
-#endif
-
   return true;
 }
 
@@ -672,16 +665,10 @@ rxvt_term::init_command (const char *const *argv)
 #endif
 
   /* add value for scrollBar */
-  if (scrollbar_visible ())
+  if (scrollBar.state)
     {
       priv_modes |= PrivMode_scrollBar;
       SavedModes |= PrivMode_scrollBar;
-    }
-
-  if (menubar_visible ())
-    {
-      priv_modes |= PrivMode_menuBar;
-      SavedModes |= PrivMode_menuBar;
     }
 
   run_command (argv);
@@ -759,7 +746,7 @@ rxvt_term::Get_Colours ()
     }
 
   /*
-   * get scrollBar/menuBar shadow colors
+   * get scrollBar shadow colors
    *
    * The calculations of topShadow/bottomShadow values are adapted
    * from the fvwm window manager.
@@ -1073,8 +1060,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   /* vt cursor: Black-on-White is standard, but this is more popular */
   TermWin_cursor = XCreateFontCursor (disp, XC_xterm);
 
-#if defined(HAVE_SCROLLBARS) || defined(MENUBAR)
-  /* cursor (menuBar/scrollBar): Black-on-White */
+#ifdef HAVE_SCROLLBARS
+  /* cursor scrollBar: Black-on-White */
   leftptr_cursor = XCreateFontCursor (disp, XC_left_ptr);
 #endif
 
@@ -1105,32 +1092,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   vt_ev.start (display, vt);
 
-#if defined(MENUBAR) && (MENUBAR_MAX > 1)
-  if (menuBar_height ())
-    {
-      menuBar.win = XCreateSimpleWindow (disp, top,
-                                         window_vt_x, 0,
-                                         width,
-                                         menuBar_TotalHeight (),
-                                         0,
-                                         pix_colors_focused[Color_fg],
-                                         pix_colors_focused[Color_scroll]);
-
-#ifdef DEBUG_X
-      XStoreName (disp, menuBar.win, "menubar");
-#endif
-
-      menuBar.drawable = new rxvt_drawable (display, menuBar.win);
-
-      XDefineCursor (disp, menuBar.win,
-                     XCreateFontCursor (disp, XC_left_ptr));
-
-      XSelectInput (disp, menuBar.win,
-                    (ExposureMask | ButtonPressMask | ButtonReleaseMask | Button1MotionMask));
-      menubar_ev.start (display, menuBar.win);
-    }
-#endif
-
 #ifdef XPM_BACKGROUND
   if (rs[Rs_backgroundPixmap] != NULL
       && ! OPTION (Opt_transparent))
@@ -1158,7 +1119,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   drawable = new rxvt_drawable (display, vt);
 
-#if defined(MENUBAR) || defined(RXVT_SCROLLBAR)
+#ifdef RXVT_SCROLLBAR
   gcvalue.foreground = pix_colors[Color_topShadow];
   topShadowGC = XCreateGC (disp, vt, GCForeground, &gcvalue);
   gcvalue.foreground = pix_colors[Color_bottomShadow];

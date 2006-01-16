@@ -160,18 +160,10 @@ inline void set_environ (char **envv)
  */
 struct grwin_t;
 
-/* Sanitize menubar info */
-#ifndef MENUBAR
-# undef MENUBAR_MAX
-#endif
-#ifndef MENUBAR_MAX
-# define MENUBAR_MAX    0
-#endif
-
 /* If we're using either the rxvt scrollbar or menu bars, keep the
  * scrollColor resource.
  */
-#if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(MENUBAR) || defined(PLAIN_SCROLLBAR)
+#if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(PLAIN_SCROLLBAR)
 # define KEEP_SCROLLCOLOR 1
 #else
 # undef KEEP_SCROLLCOLOR
@@ -262,15 +254,13 @@ typedef struct _mwmhints {
 # define EXIT_FAILURE           1       /* exit function failure */
 #endif
 
-#define menuBar_esc             10
 #define scrollBar_esc           30
-#define menuBar_margin          2       /* margin below text */
 
 #if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR) || defined(PLAIN_SCROLLBAR)
 # define HAVE_SCROLLBARS 1
 #endif
 
-/* width of scrollBar, menuBar shadow, must be 1 or 2 */
+/* width of scrollBar shadow, must be 1 or 2 */
 #ifdef HALFSHADOW
 # define MENU_SHADOW 1
 #else
@@ -658,14 +648,13 @@ enum {
 #define PrivMode_MouseX10       (1UL<<12)
 #define PrivMode_MouseX11       (1UL<<13)
 #define PrivMode_scrollBar      (1UL<<14)
-#define PrivMode_menuBar        (1UL<<15)
-#define PrivMode_TtyOutputInh   (1UL<<16)
-#define PrivMode_Keypress       (1UL<<17)
-#define PrivMode_smoothScroll   (1UL<<18)
-#define PrivMode_vt52           (1UL<<19)
-#define PrivMode_LFNL		(1UL<<20)
+#define PrivMode_TtyOutputInh   (1UL<<15)
+#define PrivMode_Keypress       (1UL<<16)
+#define PrivMode_smoothScroll   (1UL<<17)
+#define PrivMode_vt52           (1UL<<18)
+#define PrivMode_LFNL		(1UL<<19)
 /* too annoying to implement X11 highlight tracking */
-/* #define PrivMode_MouseX11Track       (1LU<<21) */
+/* #define PrivMode_MouseX11Track       (1LU<<20) */
 
 #define PrivMode_mouse_report   (PrivMode_MouseX10|PrivMode_MouseX11)
 #define PrivMode(test,bit)              \
@@ -805,17 +794,6 @@ enum {
 #define scrollbar_size()                (scrollBar.end - scrollBar.beg \
                                          - scrollbar_minheight ())
 
-#if (MENUBAR_MAX > 1)
-/* rendition style flags */
-# define menuBar_height()       (fheight + MENU_SHADOW)
-# define menuBar_TotalHeight()  (menuBar_height() + MENU_SHADOW + menuBar_margin)
-# define isMenuBarWindow(w)     ((w) == menuBar.win)
-#else
-# define menuBar_height()       (0)
-# define menuBar_TotalHeight()  (0)
-# define isMenuBarWindow(w)     (0)
-#endif
-
 #ifdef XPM_BACKGROUND
 # define XPMClearArea(a, b, c, d, e, f, g)      XClearArea((a), (b), (c), (d), (e), (f), (g))
 #else
@@ -878,10 +856,6 @@ extern void rxvt_push_locale (const char *locale);
 extern void rxvt_pop_locale ();
 
 /****************************************************************************/
-
-#ifdef MENUBAR
-# include "menubar.h"
-#endif
 
 #define BLINK_INTERVAL 0.5
 #define TEXT_BLINK_INTERVAL 0.5
@@ -1075,13 +1049,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
                   last_top,   /* scrollbar last top position               */
                   last_state, /* scrollbar last state                      */
                   scrollbar_len,
-#ifdef MENUBAR
-                  menu_readonly,      /* okay to alter menu? */
-                  Arrows_x,
-#endif
-#if MENUBAR_MAX > 1
-                  Nbars,
-#endif
                   window_vt_x,
                   window_vt_y,
                   window_sb_x,
@@ -1100,10 +1067,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 /* ---------- */
   Atom            xa[NUM_XA];
 /* ---------- */
-#ifdef MENUBAR
-  GC              menubarGC;
-#endif
-#if defined(MENUBAR) || defined(RXVT_SCROLLBAR)
+#ifdef RXVT_SCROLLBAR
   GC              scrollbarGC,
                   topShadowGC,
                   botShadowGC;
@@ -1161,14 +1125,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 #ifdef XPM_BACKGROUND
   bgPixmap_t      bgPixmap;
   XpmAttributes   xpmAttr;    /* originally loaded pixmap and its scaling */
-#endif
-#ifdef MENUBAR
-  menu_t         *ActiveMenu,         /* currently active menu */
-                 *BuildMenu;          /* the menu currently being built */
-  bar_t          *CurrentBar;
-# if ! (MENUBAR_MAX > 1)
-  bar_t           BarList;
-# endif                         /* (MENUBAR_MAX > 1) */
 #endif
 
 #if ENABLE_OVERLAY
@@ -1244,9 +1200,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   xevent_watcher vt_ev;
 #ifdef HAVE_SCROLLBARS
   xevent_watcher scrollbar_ev;
-#endif
-#ifdef MENUBAR
-  xevent_watcher menubar_ev;
 #endif
 
   void check_cb (check_watcher &w); check_watcher check_ev;
@@ -1401,39 +1354,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void set_colorfgbg ();
   int rXParseAllocColor (rxvt_color * screen_in_out, const char *colour);
   void set_widthheight (unsigned int newwidth, unsigned int newheight);
-
-#ifdef MENUBAR
-  // menubar.C
-  void menuitem_free (menu_t *menu, menuitem_t *item);
-  int action_dispatch (action_t *action);
-  void menuarrow_free (char name);
-  void menuarrow_add (char *string);
-  char *menu_find_base (menu_t **menu, char *path);
-  menu_t *menu_delete (menu_t *menu);
-  menu_t *menu_add (menu_t *parent, char *path);
-  void drawbox_menubar (int x, int len, int state);
-  void drawtriangle (int x, int y, int state);
-  void drawbox_menuitem (int y, int state);
-  void menu_show ();
-  void menu_display (void (rxvt_term::*update) ());
-  void menu_hide_all ();
-  void menu_hide ();
-  void menu_clear (menu_t *menu);
-  void menubar_clear ();
-  bar_t *menubar_find (const char *name);
-  int menubar_push (const char *name);
-  void menubar_remove (const char *name);
-  void menubar_dump (FILE *fp);
-  void menubar_read (const char *filename);
-  void menubar_dispatch (char *str);
-  void draw_Arrows (int name, int state);
-  void menubar_expose ();
-  int menubar_mapping (int map);
-  int menu_select (XButtonEvent &ev);
-  void menubar_select (XButtonEvent &ev);
-  void menubar_control (XButtonEvent &ev);
-  void map_menuBar (int map);
-#endif
 
   // screen.C
 

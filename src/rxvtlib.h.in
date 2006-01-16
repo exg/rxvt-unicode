@@ -65,9 +65,6 @@ extern rxvt_t rxvt_current_term;
 #define SET_R(r) rxvt_current_term = const_cast<rxvt_term *>(r)
 #define GET_R rxvt_current_term
 
-#define scrollbar_visible()    scrollBar.state
-#define menubar_visible()      menuBar.state
-
 typedef struct {
   int row;
   int col;
@@ -218,12 +215,6 @@ enum {
 /* ------------------------------------------------------------------------- */
 
 typedef struct {
-  short           state;
-  Window          win;
-  struct rxvt_drawable *drawable;
-} menuBar_t;
-
-typedef struct {
   char            state;        /* scrollbar state                          */
   char            init;         /* scrollbar has been initialised           */
   unsigned int    beg;          /* slider sub-window begin height           */
@@ -243,7 +234,6 @@ typedef struct {
 
 struct rxvt_vars : TermWin_t {
   scrollBar_t     scrollBar;
-  menuBar_t       menuBar;
   uint32_t        options;
   XSizeHints      szHint;
   rxvt_display   *display;

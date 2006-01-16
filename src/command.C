@@ -921,9 +921,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
 }
 /*}}} */
 
-#if MENUBAR_MAX || defined (KEYSYM_RESOURCE)
-/*{{{ rxvt_cmd_write (), rxvt_cmd_getc () */
-/* attempt to `write' count to the input buffer */
+#if defined (KEYSYM_RESOURCE)
 unsigned int
 rxvt_term::cmd_write (const char *str, unsigned int count)
 {
@@ -1589,10 +1587,6 @@ rxvt_term::x_cb (XEvent &ev)
                 scrollBar.setIdle ();
                 scrollbar_show (0);
               }
-#ifdef MENUBAR
-            if (menubar_visible () && isMenuBarWindow (ev.xany.window))
-              menubar_expose ();
-#endif
 
 #ifdef TRANSPARENT
             if (am_transparent && ev.xany.window == parent[0])
@@ -1605,13 +1599,6 @@ rxvt_term::x_cb (XEvent &ev)
 #ifdef POINTER_BLANK
         if (hidden_pointer)
           pointer_unblank ();
-#endif
-#if MENUBAR
-        if (isMenuBarWindow (ev.xany.window))
-          {
-            menubar_control (ev.xbutton);
-            break;
-          }
 #endif
         if ((priv_modes & PrivMode_mouse_report) && !bypass_keystate)
           break;
@@ -2100,14 +2087,6 @@ rxvt_term::button_press (XButtonEvent &ev)
 
       return;
     }
-
-#if MENUBAR
-  /*
-   * Menubar window processing of button press
-   */
-  if (isMenuBarWindow (ev.window))
-    menubar_control (ev);
-#endif
 }
 
 void
@@ -2226,10 +2205,6 @@ rxvt_term::button_release (XButtonEvent &ev)
 #endif
         }
     }
-#ifdef MENUBAR
-  else if (isMenuBarWindow (ev.window))
-    menubar_control (ev);
-#endif
 }
 
 #ifdef TRANSPARENT
@@ -3960,12 +3935,6 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
         // TODO, when secure mode?
         break;
 
-#ifdef MENUBAR
-     case URxvt_Menu:
-       if (OPTION (Opt_insecure))
-         menubar_dispatch (const_cast<char *>(str)); // casting away constness is checked
-       break;
-#endif
 #if 0
       case Rxvt_dumpscreen:	/* no error notices */
         {
@@ -4092,9 +4061,6 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
                   { 7, PrivMode_Autowrap },
                  // 8, bi-directional support mode
                   { 9, PrivMode_MouseX10 },
-#ifdef menuBar_esc
-                  { menuBar_esc, PrivMode_menuBar },
-#endif
                  // 18, 19 printing-related
                   { 25, PrivMode_VisibleCursor },
 #ifdef scrollBar_esc
@@ -4199,13 +4165,6 @@ rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), u
               if (state)		/* orthogonal */
                 priv_modes &= ~PrivMode_MouseX11;
               break;
-#ifdef menuBar_esc
-            case menuBar_esc:
-#ifdef MENUBAR
-              map_menuBar (state);
-#endif
-              break;
-#endif
 #ifdef scrollBar_esc
             case scrollBar_esc:
               if (scrollbar_mapping (state))

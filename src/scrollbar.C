@@ -150,7 +150,7 @@ rxvt_term::scrollbar_show (int update)
 #ifdef HAVE_SCROLLBARS
   int             top, bot, len, adj;
 
-  if (!scrollbar_visible ())
+  if (!scrollBar.state)
     return 0;
 
   if (update)

@@ -295,26 +295,6 @@
  */
 /* #define SB_BORDER */
 
-/*------------------------------MENU BAR--------------------------------*/
-/*
- * Choose how many of (experimental) menuBars you want to be able to stack at
- * one time.
- *  A value of 1 disables menuBar stacking.
- *  A value of 0 disables menuBar all together.
- *  Note that the amount of memory overhead is the same for any value >= 2.
- */
-#define MENUBAR_MAX 16
-
-/*
- * Change the default shadow style
- */
-/* #define MENUBAR_SHADOW_IN */
-
-/*
- * Change the default shadow style
- */
-#define MENU_SHADOW_IN
-
 /*---------------------------MULTILINGUAL-------------------------------*/
 /*
  * Allow run-time selection of Meta (Alt) to set the 8th bit on
