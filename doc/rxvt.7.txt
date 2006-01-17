@@ -188,24 +188,21 @@ FREQUENTLY ASKED QUESTIONS
 
     I need to make it setuid/setgid to support utmp/ptys on my OS, is this
     safe?
-        Likely not. While I honestly try to make it secure, and am probably
-        not bad at it, I think it is simply unreasonable to expect all of
-        freetype + fontconfig + xft + xlib + perl + ... + rxvt-unicode
-        itself to all be secure. Also, rxvt-unicode disables some options
-        when it detects that it runs setuid or setgid, which is not nice.
-        Besides, with the embedded perl interpreter the possibility for
-        security problems easily multiplies.
+        It should be, starting with release 7.1. You are encouraged to
+        properly install urxvt with privileges necessary for your OS now.
 
-        Elevated privileges are only required for utmp and pty operations on
-        some systems (for example, GNU/Linux doesn't need any extra
-        privileges for ptys, but some need it for utmp support). It is
-        planned to mvoe this into a forked handler process, but this is not
-        yet done.
+        When rxvt-unicode detects that it runs setuid or setgid, it will
+        fork into a helper process for privileged operations (pty handling
+        on some systems, utmp/wtmp/lastlog handling on others) and drop
+        privileges immediately. This is much safer than most other terminals
+        that keep privileges while running (but is more relevant to urxvt,
+        as it contains things as perl interpreters, which might be "helpful"
+        to attackers).
 
-        So, while setuid/setgid operation is supported and not a problem on
-        your typical single-user-no-other-logins unix desktop, always
-        remember that its an awful lot of code, most of which isn't checked
-        for security issues regularly.
+        This forking is done as the very first within main(), which is very
+        early and reduces possible bugs to initialisation code run before
+        main(), or things like the dynamic loader of your system, which
+        should result in very little risk.
 
     When I log-in to another system it tells me about missing terminfo data?
         The terminal description used by rxvt-unicode is not as widely
@@ -1647,10 +1644,6 @@ CONFIGURE OPTIONS
         Add support for a very unobtrusive, plain-looking scrollbar that is
         the favourite of the rxvt-unicode author, having used it for many
         years.
-
-    --enable-half-shadow (default: off)
-        Make shadows on the scrollbar only half the normal width & height.
-        only applicable to rxvt scrollbars.
 
     --enable-ttygid (default: off)
         Change tty device setting to group "tty" - only use this if your

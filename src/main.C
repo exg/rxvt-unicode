@@ -48,21 +48,6 @@
 # include <termios.h>
 #endif
 
-#if (defined(HAVE_SETEUID) || defined(HAVE_SETREUID)) && !defined(__CYGWIN32__)
-static uid_t saved_euid;
-static gid_t saved_egid;
-#endif
-
-bool
-rxvt_tainted ()
-{
-#if (defined(HAVE_SETEUID) || defined(HAVE_SETREUID)) && !defined(__CYGWIN32__)
-  return getuid () != saved_euid || getgid () != saved_egid;
-#else
-  return false;
-#endif
-}
-
 vector<rxvt_term *> rxvt_term::termlist;
 
 static char curlocale[128], savelocale[128];
@@ -489,19 +474,6 @@ rxvt_term::init (int argc, const char *const *argv)
       || (rs[Rs_perl_ext_2] && *rs[Rs_perl_ext_2])
       || (rs[Rs_perl_eval] && *rs[Rs_perl_eval]))
     {
-#if (defined(HAVE_SETEUID) || defined(HAVE_SETREUID)) && !defined(__CYGWIN32__)
-      // ignore some perl-related arguments if some bozo installed us set[ug]id
-      if (rxvt_tainted ())
-        {
-          if ((rs[Rs_perl_lib] && *rs[Rs_perl_lib])
-              || (rs[Rs_perl_eval] && *rs[Rs_perl_eval]))
-            {
-              rxvt_warn ("running with elevated privileges: ignoring perl-lib and perl-eval.\n");
-              rs[Rs_perl_lib]  = 0;
-              rs[Rs_perl_eval] = 0;
-            }
-        }
-#endif
       rxvt_perl.init (this);
       HOOK_INVOKE ((this, HOOK_INIT, DT_END));
     }
@@ -632,16 +604,6 @@ rxvt_init ()
 
   rxvt_environ = environ;
 
-  /*
-   * Save and then give up any super-user privileges
-   * If we need privileges in any area then we must specifically request it.
-   * We should only need to be root in these cases:
-   *  1.  write utmp entries on some systems
-   *  2.  chown tty on some systems
-   */
-  rxvt_privileges (SAVE);
-  rxvt_privileges (IGNORE);
-
   signal (SIGHUP,  SIG_IGN);
   signal (SIGPIPE, SIG_IGN);
 
@@ -693,56 +655,6 @@ rxvt_realloc (void *ptr, size_t size)
     rxvt_fatal ("memory allocation failure. aborting.\n");
 
   return p;
-}
-
-/* ------------------------------------------------------------------------- *
- *                            PRIVILEGED OPERATIONS                          *
- * ------------------------------------------------------------------------- */
-/* take care of suid/sgid super-user (root) privileges */
-void
-rxvt_privileges (rxvt_privaction action)
-{
-#if ! defined(__CYGWIN32__)
-# if !defined(HAVE_SETEUID) && defined(HAVE_SETREUID)
-  /* setreuid () is the poor man's setuid (), seteuid () */
-#  define seteuid(a)    setreuid(-1, (a))
-#  define setegid(a)    setregid(-1, (a))
-#  define HAVE_SETEUID
-# endif
-# ifdef HAVE_SETEUID
-  switch (action)
-    {
-      case IGNORE:
-        /*
-         * change effective uid/gid - not real uid/gid - so we can switch
-         * back to root later, as required
-         */
-        setegid (getgid ());
-        seteuid (getuid ());
-        break;
-      case SAVE:
-        saved_egid = getegid ();
-        saved_euid = geteuid ();
-        break;
-      case RESTORE:
-        setegid (saved_egid);
-        seteuid (saved_euid);
-        break;
-    }
-# else
-  switch (action)
-    {
-      case IGNORE:
-        setgid (getgid ());
-        setuid (getuid ());
-        /* FALLTHROUGH */
-      case SAVE:
-        /* FALLTHROUGH */
-      case RESTORE:
-        break;
-    }
-# endif
-#endif
 }
 
 /*----------------------------------------------------------------------*/

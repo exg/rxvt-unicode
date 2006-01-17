@@ -254,7 +254,6 @@ struct rxvt_vars : TermWin_t {
 };
 
 void rxvt_init ();
-bool rxvt_tainted ();
 
 #endif                          /* _RXVTLIB_H_ */
 

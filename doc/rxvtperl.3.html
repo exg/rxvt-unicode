@@ -122,7 +122,7 @@ between two vertical bars:</p>
 interesting uses, such as parsing a line from beginning to end.</p>
 </dd>
 <dd>
-<p>This extension also offers the following bindable keyboard command:</p>
+<p>This extension also offers following bindable keyboard commands:</p>
 </dd>
 <dl>
 <dt><strong><a name="item_rot13">rot13</a></strong><br />
@@ -133,6 +133,33 @@ Rot-13 the selection when activated. Used via keyboard trigger:
 <dd>
 <pre>
    URxvt.keysym.C-M-r: perl:selection:rot13</pre>
+</dd>
+<p></p>
+<dt><strong><a name="item_remote_2dpastebin">remote-pastebin</a></strong><br />
+</dt>
+<dd>
+Upload the selection as textfile to a remote site.
+</dd>
+<dd>
+<pre>
+   URxvt.keysym.C-M-e: perl:selection:remote-pastebin</pre>
+</dd>
+<dd>
+<p>To set the command to upload the file set this resource:</p>
+</dd>
+<dd>
+<pre>
+   URxvt.selection-pastebin-cmd: rsync -apP % ruth:/var/www/www.ta-sa.org/files/txt/.</pre>
+</dd>
+<dd>
+<p>The % is the placeholder for the textfile. The name of the textfile is the hex encoded 
+md5 sum of the selection.
+After an successful upload the selection will be replaced by the following url 
+(the % is the placeholder for the filename):</p>
+</dd>
+<dd>
+<pre>
+   URxvt.selection-pastebin-url: <a href="http://www.ta-sa.org/files/txt/%">http://www.ta-sa.org/files/txt/%</a></pre>
 </dd>
 <p></p></dl>
 <dt><strong><a name="item_popup">option-popup (enabled by default)</a></strong><br />
@@ -602,14 +629,6 @@ correct place, e.g. on stderr of the connecting urxvtc client.</p>
 </dd>
 <dd>
 <p>Messages have a size limit of 1023 bytes currently.</p>
-</dd>
-<p></p>
-<dt><strong><a name="item__24is_safe__3d_urxvt_3a_3asafe">$is_safe = urxvt::safe</a></strong><br />
-</dt>
-<dd>
-Returns true when it is safe to do potentially unsafe things, such as
-evaluating perl code specified by the user. This is true when urxvt was
-started setuid or setgid.
 </dd>
 <p></p>
 <dt><strong><a name="item__24time__3d_urxvt_3a_3anow">$time = urxvt::NOW</a></strong><br />

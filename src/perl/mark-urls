@@ -10,7 +10,7 @@ my $url =
 sub on_start {
    my ($self) = @_;
 
-   $self->{browser} = urxvt::untaint $self->x_resource ("urlLauncher") || "x-www-browser";
+   $self->{browser} = $self->x_resource ("urlLauncher") || "x-www-browser";
 
    ()
 }

@@ -7,12 +7,10 @@ my $pastebin_url;
 
 sub on_start {
    my ($self) = @_;
-   $pastebin_cmd =
-      (urxvt::untaint $self->x_resource ("selection-pastebin-cmd"))
+   $pastebin_cmd = $self->x_resource ("selection-pastebin-cmd")
       or "scp -p % ruth:/var/www/www.ta-sa.org/files/txt/";
 
-   $pastebin_url = 
-      (urxvt::untaint $self->x_resource ("selection-pastebin-url"))
+   $pastebin_url = $self->x_resource ("selection-pastebin-url")
       or "http://www.ta-sa.org/files/txt/";
    ();
 }

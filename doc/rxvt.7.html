@@ -283,24 +283,22 @@ encodings built-in that increase download times and are rarely used).</p>
 <dt><strong><a name="item_i_need_to_make_it_setuid_2fsetgid_to_support_utmp_">I need to make it setuid/setgid to support utmp/ptys on my OS, is this safe?</a></strong><br />
 </dt>
 <dd>
-Likely not. While I honestly try to make it secure, and am probably not
-bad at it, I think it is simply unreasonable to expect all of freetype
-+ fontconfig + xft + xlib + perl + ... + rxvt-unicode itself to all be
-secure. Also, rxvt-unicode disables some options when it detects that it
-runs setuid or setgid, which is not nice. Besides, with the embedded perl
-interpreter the possibility for security problems easily multiplies.
+It should be, starting with release 7.1. You are encouraged to properly
+install urxvt with privileges necessary for your OS now.
 </dd>
 <dd>
-<p>Elevated privileges are only required for utmp and pty operations on some
-systems (for example, GNU/Linux doesn't need any extra privileges for
-ptys, but some need it for utmp support). It is planned to mvoe this into
-a forked handler process, but this is not yet done.</p>
+<p>When rxvt-unicode detects that it runs setuid or setgid, it will fork
+into a helper process for privileged operations (pty handling on some
+systems, utmp/wtmp/lastlog handling on others) and drop privileges
+immediately. This is much safer than most other terminals that keep
+privileges while running (but is more relevant to urxvt, as it contains
+things as perl interpreters, which might be ``helpful'' to attackers).</p>
 </dd>
 <dd>
-<p>So, while setuid/setgid operation is supported and not a problem on your
-typical single-user-no-other-logins unix desktop, always remember that
-its an awful lot of code, most of which isn't checked for security issues
-regularly.</p>
+<p>This forking is done as the very first within main(), which is very early
+and reduces possible bugs to initialisation code run before main(), or
+things like the dynamic loader of your system, which should result in very
+little risk.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_when_i_log_2din_to_another_system_it_tells_me_abou">When I log-in to another system it tells me about missing terminfo data?</a></strong><br />
@@ -2360,13 +2358,6 @@ Add support for an Xterm-like scrollbar.
 Add support for a very unobtrusive, plain-looking scrollbar that
 is the favourite of the rxvt-unicode author, having used it for
 many years.
-</dd>
-<p></p>
-<dt><strong><a name="item_shadow">--enable-half-shadow (default: off)</a></strong><br />
-</dt>
-<dd>
-Make shadows on the scrollbar only half the normal width &amp; height.
-only applicable to rxvt scrollbars.
 </dd>
 <p></p>
 <dt><strong><a name="item_ttygid">--enable-ttygid (default: off)</a></strong><br />

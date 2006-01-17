@@ -135,10 +135,6 @@ CONFIGURE OPTIONS
         the favourite of the rxvt-unicode author, having used it for many
         years.
 
-    --enable-half-shadow (default: off)
-        Make shadows on the scrollbar only half the normal width & height.
-        only applicable to rxvt scrollbars.
-
     --enable-ttygid (default: off)
         Change tty device setting to group "tty" - only use this if your
         system uses this type of security.

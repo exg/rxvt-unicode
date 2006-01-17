@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-16" "7.0" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-17" "7.1" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -205,7 +205,7 @@ between two vertical bars:
 You can look at the source of the selection extension to see more
 interesting uses, such as parsing a line from beginning to end.
 .Sp
-This extension also offers the following bindable keyboard command:
+This extension also offers following bindable keyboard commands:
 .RS 4
 .IP "rot13" 4
 .IX Item "rot13"
@@ -213,6 +213,28 @@ Rot\-13 the selection when activated. Used via keyboard trigger:
 .Sp
 .Vb 1
 \&   URxvt.keysym.C-M-r: perl:selection:rot13
+.Ve
+.IP "remote-pastebin" 4
+.IX Item "remote-pastebin"
+Upload the selection as textfile to a remote site.
+.Sp
+.Vb 1
+\&   URxvt.keysym.C-M-e: perl:selection:remote-pastebin
+.Ve
+.Sp
+To set the command to upload the file set this resource:
+.Sp
+.Vb 1
+\&   URxvt.selection-pastebin-cmd: rsync -apP % ruth:/var/www/www.ta-sa.org/files/txt/.
+.Ve
+.Sp
+The % is the placeholder for the textfile. The name of the textfile is the hex encoded 
+md5 sum of the selection.
+After an successful upload the selection will be replaced by the following url 
+(the % is the placeholder for the filename):
+.Sp
+.Vb 1
+\&   URxvt.selection-pastebin-url: http://www.ta-sa.org/files/txt/%
 .Ve
 .RE
 .RS 4
@@ -580,11 +602,6 @@ Using this function has the advantage that its output ends up in the
 correct place, e.g. on stderr of the connecting urxvtc client.
 .Sp
 Messages have a size limit of 1023 bytes currently.
-.IP "$is_safe = urxvt::safe" 4
-.IX Item "$is_safe = urxvt::safe"
-Returns true when it is safe to do potentially unsafe things, such as
-evaluating perl code specified by the user. This is true when urxvt was
-started setuid or setgid.
 .IP "$time = urxvt::NOW" 4
 .IX Item "$time = urxvt::NOW"
 Returns the \*(L"current time\*(R" (as per the event loop).

@@ -500,12 +500,6 @@ correct place, e.g. on stderr of the connecting urxvtc client.
 
 Messages have a size limit of 1023 bytes currently.
 
-=item $is_safe = urxvt::safe
-
-Returns true when it is safe to do potentially unsafe things, such as
-evaluating perl code specified by the user. This is true when urxvt was
-started setuid or setgid.
-
 =item $time = urxvt::NOW
 
 Returns the "current time" (as per the event loop).
@@ -630,7 +624,7 @@ sub extension_package($) {
       open my $fh, "<:raw", $path
          or die "$path: $!";
 
-      my $source = untaint
+      my $source =
          "package $pkg; use strict; use utf8;\n"
          . "use base urxvt::term::extension::;\n"
          . "#line 1 \"$path\"\n{\n"
