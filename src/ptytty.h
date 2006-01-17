@@ -51,7 +51,13 @@
 
 #endif
 
-struct rxvt_ptytty_unix : rxvt_ptytty {
+struct rxvt_ptytty_base : rxvt_ptytty
+{
+  virtual void put () = 0;
+};
+
+struct rxvt_ptytty_unix : rxvt_ptytty_base
+{
   char *name;
 
 #ifndef RESET_TTY_TO_COMMON_DEFAULTS

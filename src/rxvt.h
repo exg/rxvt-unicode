@@ -186,7 +186,6 @@ struct rxvt_ptytty {
   }
 
   virtual bool get () = 0;
-  virtual void put () = 0;
 
   virtual void login (int cmd_pid, bool login_shell, const char *hostname) = 0;
   virtual void logout () = 0;
