@@ -10132,14 +10132,6 @@ _ACEOF
 
 
 
-case "$host_alias" in
-    *ultrix) ac_cv_func_setsid='no' ;;
-    *) break;;
-esac
-
-
-
-
 
 
 
@@ -10158,15 +10150,12 @@ esac
 
 
 for ac_func in \
-	atexit \
 	revoke \
 	unsetenv \
 	setutent \
 	seteuid \
+        setresuid \
 	setreuid \
-	setsid \
-	setpgrp \
-	setpgid \
 	_getpty \
 	getpt \
 	posix_openpt \
@@ -11900,6 +11889,10 @@ cat >>confdefs.h <<\_ACEOF
 #define HAVE_UNIX_FDPASS 1
 _ACEOF
 
+else
+   { { echo "$as_me:$LINENO: error: urxvt requires unix-compliant filehandle passing ability" >&5
+echo "$as_me: error: urxvt requires unix-compliant filehandle passing ability" >&2;}
+   { (exit 1); exit 1; }; }
 fi
 
 echo "$as_me:$LINENO: checking for broken XIM callback" >&5
@@ -12871,15 +12864,14 @@ _ACEOF
         PERLLIB="`$PERL -MExtUtils::Embed -e ldopts`"
         PERLPRIVLIBEXP="`$PERL -MConfig -e 'print $Config{privlibexp}'`"
      else
-        support_perl=no
-        echo "$as_me:$LINENO: result: no, unable to link" >&5
-echo "${ECHO_T}no, unable to link" >&6
+        { { echo "$as_me:$LINENO: error: no, unable to link" >&5
+echo "$as_me: error: no, unable to link" >&2;}
+   { (exit 1); exit 1; }; }
      fi
   else
-     { { echo "$as_me:$LINENO: error: no working perl found" >&5
-echo "$as_me: error: no working perl found" >&2;}
-   { (exit or perl not version >= 5.8); exit or perl not version >= 5.8; }; }
-     support_perl=no
+     { { echo "$as_me:$LINENO: error: no working perl found, or perl not version >= 5.8" >&5
+echo "$as_me: error: no working perl found, or perl not version >= 5.8" >&2;}
+   { (exit 1); exit 1; }; }
   fi
 fi
 

@@ -211,10 +211,6 @@ void rxvt_term::emergency_cleanup ()
   if (cmd_pid)
     kill (-cmd_pid, SIGHUP);
 
-#ifdef UTMP_SUPPORT
-  privileged_utmp (RESTORE);
-#endif
-
   delete pty; pty = 0;
 }
 
@@ -602,6 +598,38 @@ char **rxvt_environ; // startup environment
 void
 rxvt_init ()
 {
+  uid_t uid = getuid ();
+  gid_t gid = getgid ();
+      
+  // before doing anything else, check for setuid/setgid operation,
+  // start the helper process and drop privileges
+  if (uid != geteuid ()
+      || 1 //D
+      || gid != getegid ())
+    {
+#if PTYTTY_HELPER
+      rxvt_ptytty_server ();
+#else
+      rxvt_warn ("running setuid/setgid without pty helper compiled in, continuing unprivileged.\n");
+#endif
+
+      // drop privileges
+#if HAVE_SETRESUID
+      setresgid (gid, gid, gid);
+      setresuid (uid, uid, uid);
+#elif HAVE_SETREUID
+      setregid (gid, gid);
+      setreuid (uid, uid);
+#elif HAVE_SETUID
+      setgid (gid);
+      setuid (uid);
+#endif
+
+      if (uid != geteuid ()
+          || gid != getegid ())
+        rxvt_fatal ("unable to drop privileges, aborting.\n");
+    }
+
   rxvt_environ = environ;
 
   /*

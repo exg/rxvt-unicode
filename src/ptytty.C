@@ -74,9 +74,7 @@ get_pty (int *fd_tty, char **ttydev)
 #ifdef PTYS_ARE_OPENPTY
   char tty_name[sizeof "/dev/pts/????\0"];
 
-  rxvt_privileges(RESTORE);
   int res = openpty (&pfd, fd_tty, tty_name, NULL, NULL);
-  rxvt_privileges(IGNORE);
 
   if (res != -1)
     {
@@ -346,8 +344,6 @@ rxvt_ptytty_unix::privileges (rxvt_privaction action)
   if (!name || !*name)
     return;
 
-  rxvt_privileges (RESTORE);
-
   if (action == SAVE)
     {
 # ifndef RESET_TTY_TO_COMMON_DEFAULTS
@@ -379,8 +375,6 @@ rxvt_ptytty_unix::privileges (rxvt_privaction action)
 # endif
 
     }
-
-  rxvt_privileges (IGNORE);
 }
 #endif
 
@@ -463,7 +457,6 @@ struct rxvt_ptytty_proxy : zero_initialized, rxvt_ptytty
 {
   rxvt_ptytty *id;
 
-  rxvt_ptytty_proxy ();
   ~rxvt_ptytty_proxy ();
 
   bool get ();
@@ -551,7 +544,6 @@ void serve ()
               cmd.hostname[sizeof (cmd.hostname) - 1] = 0;
               cmd.id->login (cmd.cmd_pid, cmd.login_shell, cmd.hostname);
             }
-          else printf ("xxx hiya login no match %p\n", cmd.id);
         }
       else if (cmd.type == command::destroy)
         {
@@ -562,7 +554,6 @@ void serve ()
               ptys.erase (pty);
               delete *pty;
             }
-          else printf ("xxx hiya destroy no match %p\n", cmd.id);
         }
       else
         break;
@@ -594,13 +585,15 @@ void rxvt_ptytty_server ()
     }
   else
     {
+      setgid (getegid ());
+      setuid (geteuid ());
+
       // server, pty-helper
       sock_fd = sv[1];
 
-      close (sv[0]);//D
-//      for (int fd = 0; fd < 1023; fd++)
-//        if (fd != sock_fd)
-//          close (fd);
+      for (int fd = 0; fd < 1023; fd++)
+        if (fd != sock_fd)
+          close (fd);
 
       serve ();
       _exit (EXIT_SUCCESS);
@@ -614,10 +607,8 @@ rxvt_new_ptytty ()
 {
 #if PTYTTY_HELPER
   if (pid > 0)
-    {
-      // use helper process
-      return new rxvt_ptytty_proxy;
-    }
+    // use helper process
+    return new rxvt_ptytty_proxy;
   else
 #endif
     return new rxvt_ptytty_unix;
