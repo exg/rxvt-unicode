@@ -717,24 +717,6 @@ rxvt_privileges (rxvt_privaction action)
 #endif
 }
 
-#ifdef UTMP_SUPPORT
-void
-rxvt_term::privileged_utmp (rxvt_privaction action)
-{
-  if (OPTION (Opt_utmpInhibit))
-    return;
-
-  rxvt_privileges (RESTORE);
-
-  if (action == SAVE)
-    pty->login (cmd_pid, OPTION (Opt_loginShell), rs[Rs_display_name]);
-  else
-    pty->logout ();
-
-  rxvt_privileges (IGNORE);
-}
-#endif
-
 /*----------------------------------------------------------------------*/
 /*
  * window size/position calculcations for XSizeHint and other storage.

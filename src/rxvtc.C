@@ -41,7 +41,7 @@ struct client : rxvt_connection {
 
 client::client ()
 {
-  if ((fd = socket (PF_UNIX, SOCK_STREAM, 0)) < 0)
+  if ((fd = socket (AF_UNIX, SOCK_STREAM, 0)) < 0)
     {
       perror ("unable to create communications socket");
       exit (EXIT_FAILURE);
@@ -110,7 +110,6 @@ main (int argc, const char *const *argv)
       }
     else if (!strcmp (tok, "MSG") && c.recv (tok))
       fprintf (stderr, "%s", (const char *)tok);
-#if ENABLE_FRILLS && HAVE_UNIX_FDPASS
     else if (!strcmp (tok, "GETFD") && c.recv (cint))
       {
         if (rxvt_send_fd (c.fd, cint) < 0)
@@ -119,7 +118,6 @@ main (int argc, const char *const *argv)
             exit (EXIT_FAILURE);
           }
       }
-#endif
     else if (!strcmp (tok, "END"))
       {
         int success;

@@ -23,8 +23,6 @@
 #include "../config.h"
 #include "rxvt.h"
 
-#if ENABLE_FRILLS && HAVE_UNIX_FDPASS
-
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -101,6 +99,4 @@ rxvt_recv_fd (int socket)
 
   return *(int *)CMSG_DATA (cmsg);
 }
-
-#endif
 

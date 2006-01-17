@@ -186,18 +186,15 @@ struct rxvt_ptytty {
   }
 
   virtual bool get () = 0;
-
   virtual void login (int cmd_pid, bool login_shell, const char *hostname) = 0;
-  virtual void logout () = 0;
 
   void close_tty ();
-
   bool make_controlling_tty ();
   void set_utf8_mode (bool on);
 };
 
-// a "factory" *g*
-rxvt_ptytty *rxvt_new_ptytty ();
+rxvt_ptytty *rxvt_new_ptytty (); // create a new pty object
+void rxvt_ptytty_server (); // start the ptytty server process
 
 /*
  * the 'essential' information for reporting Mouse Events

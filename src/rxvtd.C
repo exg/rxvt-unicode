@@ -73,7 +73,7 @@ struct unix_listener {
 unix_listener::unix_listener (const char *sockname)
 : accept_ev (this, &unix_listener::accept_cb)
 {
-  if ((fd = socket (PF_UNIX, SOCK_STREAM, 0)) < 0)
+  if ((fd = socket (AF_UNIX, SOCK_STREAM, 0)) < 0)
     {
       perror ("unable to create listening socket");
       exit (EXIT_FAILURE);
@@ -120,13 +120,9 @@ void unix_listener::accept_cb (io_watcher &w, short revents)
 
 int server::getfd (int remote_fd)
 {
-#if ENABLE_FRILLS && HAVE_UNIX_FDPASS
   send ("GETFD");
   send (remote_fd);
   return rxvt_recv_fd (fd);
-#else
-  return -1;
-#endif
 }
 
 void server::log_msg (const char *msg)

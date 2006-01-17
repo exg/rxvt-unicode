@@ -23,10 +23,7 @@
 #include "../config.h"
 #include "rxvt.h"
 
-#if ENABLE_FRILLS && HAVE_UNIX_FDPASS
-
 int rxvt_send_fd (int socket, int fd);
 int rxvt_recv_fd (int socket);
 
-#endif
 

@@ -1445,24 +1445,8 @@ rxvt_term::run_command (const char *const *argv)
         _exit (EXIT_FAILURE);
 
       default:
-        {
-#if defined(HAVE_STRUCT_UTMP) && defined(HAVE_TTYSLOT)
-          int fdstdin;
-
-          fdstdin = dup (STDIN_FILENO);
-          dup2 (pty->tty, STDIN_FILENO);
-#endif
-
-#ifdef UTMP_SUPPORT
-          privileged_utmp (SAVE);
-#endif
-
-#if defined(HAVE_STRUCT_UTMP) && defined(HAVE_TTYSLOT)
-
-          dup2 (fdstdin, STDIN_FILENO);
-          close (fdstdin);
-#endif
-        }
+        if (!OPTION (Opt_utmpInhibit))
+          pty->login (cmd_pid, OPTION (Opt_loginShell), rs[Rs_display_name]);
 
         pty->close_tty ();
         break;

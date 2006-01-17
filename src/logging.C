@@ -165,14 +165,19 @@ rxvt_ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
 #endif
 
 #if defined(HAVE_STRUCT_UTMP) && !defined(HAVE_UTMP_PID)
-
   {
 # ifdef HAVE_TTYSLOT
+    int fdstdin = dup (STDIN_FILENO);
+    dup2 (pty->tty, STDIN_FILENO);
+
     i = ttyslot ();
     if (rxvt_write_bsd_utmp (i, ut))
       utmp_pos = i;
+
+    dup2 (fdstdin, STDIN_FILENO);
+    close (fdstdin);
 # else
-    FILE           *fd0;
+    FILE *fd0;
 
     if ((fd0 = fopen (TTYTAB_FILENAME, "r")) != NULL)
       {
