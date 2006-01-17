@@ -716,7 +716,7 @@ AC_CHECK_FUNCS( \
 	unsetenv \
 	setutent \
 	seteuid \
-        setresuid \
+	setresuid \
 	setreuid \
 	_getpty \
 	getpt \
