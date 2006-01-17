@@ -66,75 +66,101 @@
  * If successful, ttydev is set to the name of the slave device.
  * fd_tty _may_ also be set to an open fd to the slave device
  */
-static int
-get_pty (int *fd_tty, char **ttydev)
+static inline int
+get_pty_streams (int *fd_tty, char **ttydev)
 {
+#ifdef NO_SETOWNER_TTYDEV
   int pfd;
 
+# ifdef PTYS_ARE_GETPT
+  pfd = getpt();
+# else
+# ifdef PTYS_ARE_POSIX
+  pfd = posix_openpt (O_RDWR);
+# else
+  pfd = open ("/dev/ptmx", O_RDWR | O_NOCTTY, 0);
+# endif
+# endif
+  if (pfd >= 0)
+    {
+      if (grantpt (pfd) == 0	/* change slave permissions */
+          && unlockpt (pfd) == 0)
+        {	/* slave now unlocked */
+          *ttydev = strdup (ptsname (pfd));	/* get slave's name */
+          return pfd;
+        }
+      close (pfd);
+    }
+#endif
+  return -1;
+}
+
+static inline int
+get_pty_openpty (int *fd_tty, char **ttydev)
+{
 #ifdef PTYS_ARE_OPENPTY
+  int pfd;
+  int res;
   char tty_name[sizeof "/dev/pts/????\0"];
-
-  int res = openpty (&pfd, fd_tty, tty_name, NULL, NULL);
-
+  
+  res = openpty (&pfd, fd_tty, tty_name, NULL, NULL);
   if (res != -1)
     {
       *ttydev = strdup (tty_name);
       return pfd;
     }
 #endif
+  return -1;
+}
 
+static inline int
+get_pty__getpty (int *fd_tty, char **ttydev)
+{
 #ifdef PTYS_ARE__GETPTY
+  int pfd;
+
   *ttydev = _getpty (&pfd, O_RDWR | O_NONBLOCK | O_NOCTTY, 0622, 0);
   if (*ttydev != NULL)
     return pfd;
 #endif
+  return -1;
+}
 
-#if defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
-# if defined(PTYS_ARE_GETPT) || defined(PTYS_ARE_POSIX) || defined(PTYS_ARE_PTMX)
-
-  {
-#  ifdef PTYS_ARE_GETPT
-    pfd = getpt();
-#  else
-#  ifdef PTYS_ARE_POSIX
-    pfd = posix_openpt (O_RDWR);
-#  else
-    pfd = open ("/dev/ptmx", O_RDWR | O_NOCTTY, 0);
-#  endif
-#  endif
-
-    if (pfd >= 0)
-      {
-        if (grantpt (pfd) == 0	/* change slave permissions */
-            && unlockpt (pfd) == 0)
-          {	/* slave now unlocked */
-            *ttydev = strdup (ptsname (pfd));	/* get slave's name */
-            return pfd;
-          }
-        close (pfd);
-      }
-  }
-# endif
-#endif
-
+static inline int
+get_pty_ptc (int *fd_tty, char **ttydev)
+{
 #ifdef PTYS_ARE_PTC
+  int pfd;
+
   if ((pfd = open ("/dev/ptc", O_RDWR | O_NOCTTY, 0)) >= 0)
     {
       *ttydev = strdup (ttyname (pfd));
       return pfd;
     }
 #endif
+  return -1;
+}
 
+static inline int
+get_pty_clone (int *fd_tty, char **ttydev)
+{
 #ifdef PTYS_ARE_CLONE
+  int pfd;
+
   if ((pfd = open ("/dev/ptym/clone", O_RDWR | O_NOCTTY, 0)) >= 0)
     {
       *ttydev = strdup (ptsname (pfd));
       return pfd;
     }
 #endif
+  return -1;
+}
 
+static inline int
+get_pty_numeric (int *fd_tty, char **ttydev)
+{
 #ifdef PTYS_ARE_NUMERIC
-  {
+    int pfd;
     int idx;
     char *c1, *c2;
     char pty_name[] = "/dev/ptyp???";
@@ -163,21 +189,24 @@ get_pty (int *fd_tty, char **ttydev)
             close (pfd);
           }
       }
-  }
 #endif
+    return -1;
+}
 
+static inline int
+get_pty_searched (int *fd_tty, char **ttydev)
+{
 #ifdef PTYS_ARE_SEARCHED
-  {
-    const char *c1, *c2;
-    char pty_name[] = "/dev/pty??";
-    char tty_name[] = "/dev/tty??";
-
 # ifndef PTYCHAR1
 #  define PTYCHAR1	"pqrstuvwxyz"
 # endif
 # ifndef PTYCHAR2
 #  define PTYCHAR2	"0123456789abcdef"
 # endif
+    int pfd;
+    const char *c1, *c2;
+    char pty_name[] = "/dev/pty??";
+    char tty_name[] = "/dev/tty??";
 
     for (c1 = PTYCHAR1; *c1; c1++)
       {
@@ -199,9 +228,23 @@ get_pty (int *fd_tty, char **ttydev)
               }
           }
       }
-  }
 #endif
+    return -1;
+}
 
+static int
+get_pty (int *fd_tty, char **ttydev)
+{
+  int pfd;
+
+  if ((pfd = get_pty_streams (fd_tty, ttydev)) != -1
+      || (pfd = get_pty_openpty (fd_tty, ttydev)) != -1
+      || (pfd = get_pty__getpty (fd_tty, ttydev)) != -1
+      || (pfd = get_pty_ptc (fd_tty, ttydev)) != -1
+      || (pfd = get_pty_clone (fd_tty, ttydev)) != -1
+      || (pfd = get_pty_numeric (fd_tty, ttydev)) != -1
+      || (pfd = get_pty_searched (fd_tty, ttydev)) != -1)
+    return pfd;
   return -1;
 }
 
