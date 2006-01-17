@@ -37,7 +37,7 @@
 /*-------------------------------SECURITY-------------------------------*/
 
 /*
- * define if you want to use a separate process for pty/tty handling
+ * Define if you want to use a separate process for pty/tty handling
  * when running setuid/setgid. You need this when making it setuid/setgid.
  */
 #define PTYTTY_HELPER 1
@@ -47,7 +47,7 @@
 /*
  * NOTE:
  *
- * Most of these configuration options have not been tested within the new
+ * Some of these configuration options have not been tested within the new
  * rxvt-unicode framework. Changing them should work, might have no effect,
  * destroy your disks or have any other effects. You may freely try (and
  * report bugs, too!), but don't _expect_ them to work.
