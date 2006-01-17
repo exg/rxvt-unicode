@@ -224,6 +224,8 @@ int opt_fork, opt_opendisplay, opt_quiet;
 int
 main (int argc, const char *const *argv)
 {
+  rxvt_init ();
+
   for (int i = 1; i < argc; i++)
     {
       if (!strcmp (argv [i], "-f") || !strcmp (argv [i], "--fork"))
@@ -239,8 +241,6 @@ main (int argc, const char *const *argv)
         }
     }
   
-  rxvt_init ();
-
   chdir ("/");
 
   if (opt_opendisplay)
