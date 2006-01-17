@@ -39,9 +39,6 @@
 /* Define to 1 if you have the <assert.h> header file. */
 #undef HAVE_ASSERT_H
 
-/* Define to 1 if you have the `atexit' function. */
-#undef HAVE_ATEXIT
-
 /* Define to 1 if you have the <clocale> header file. */
 #undef HAVE_CLOCALE
 
@@ -108,17 +105,8 @@
 /* Define if plain old setlocale works */
 #undef HAVE_SETLOCALE
 
-/* Define to 1 if you have the `setpgid' function. */
-#undef HAVE_SETPGID
-
-/* Define to 1 if you have the `setpgrp' function. */
-#undef HAVE_SETPGRP
-
 /* Define to 1 if you have the `setreuid' function. */
 #undef HAVE_SETREUID
-
-/* Define to 1 if you have the `setsid' function. */
-#undef HAVE_SETSID
 
 /* Define to 1 if you have the `setutent' function. */
 #undef HAVE_SETUTENT

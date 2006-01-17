@@ -32,6 +32,7 @@ WISH: support tex fonts
           anymore.
 	- add tsl/fsl and related capabilities to the terminfo description,
           to set the window title.
+        - nuked QNX support.
 
 7.0  Fri Jan 13 14:02:18 CET 2006
 	- added sections for DISTRIBUTION MAINTAINERS and about

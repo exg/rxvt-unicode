@@ -10132,15 +10132,6 @@ _ACEOF
 
 
 
-case "$host_alias" in
-    *ultrix) ac_cv_func_setsid='no' ;;
-    *) break;;
-esac
-
-
-
-
-
 
 
 
@@ -10158,15 +10149,11 @@ esac
 
 
 for ac_func in \
-	atexit \
 	revoke \
 	unsetenv \
 	setutent \
 	seteuid \
 	setreuid \
-	setsid \
-	setpgrp \
-	setpgid \
 	_getpty \
 	getpt \
 	posix_openpt \

@@ -227,29 +227,7 @@ control_tty (int fd_tty)
   int fd;
 
   /* ---------------------------------------- */
-# ifdef HAVE_SETSID
   setsid ();
-# endif
-# if defined(HAVE_SETPGID)
-  setpgid (0, 0);
-# elif defined(HAVE_SETPGRP)
-  setpgrp (0, 0);
-# endif
-
-  /* ---------------------------------------- */
-# ifdef TIOCNOTTY
-  fd = open ("/dev/tty", O_RDWR | O_NOCTTY);
-  if (fd >= 0)
-    {
-      ioctl (fd, TIOCNOTTY, NULL);	/* void tty associations */
-      close (fd);
-    }
-# endif
-
-  /* ---------------------------------------- */
-  fd = open ("/dev/tty", O_RDWR | O_NOCTTY);
-  if (fd >= 0)
-    close (fd);		/* ouch: still have controlling tty */
 
   /* ---------------------------------------- */
 # if defined(PTYS_ARE_PTMX) && defined(I_PUSH)
