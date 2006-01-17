@@ -442,9 +442,12 @@ rxvt_perl_interp::init (rxvt_term *term)
       rxvt_pop_locale ();
     }
 
-  // runs outside of perls ENV
-  term->perl.self = (void *)newSVptr ((void *)term, "urxvt::term");
-  hv_store ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, newRV_noinc ((SV *)newHV ()), 0);
+  if (perl)
+    {
+      // runs outside of perls ENV
+      term->perl.self = (void *)newSVptr ((void *)term, "urxvt::term");
+      hv_store ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, newRV_noinc ((SV *)newHV ()), 0);
+    }
 }
 
 static void
