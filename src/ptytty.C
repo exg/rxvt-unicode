@@ -374,10 +374,14 @@ rxvt_ptytty::rxvt_ptytty ()
 #ifndef NO_SETOWNER_TTYDEV
   saved = false;
 #endif
+#if UTMP_SUPPORT
+  cmd_pid = 0;
+#endif
 }
 
 rxvt_ptytty::~rxvt_ptytty ()
 {
+  logout ();
   put ();
 }
 

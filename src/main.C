@@ -719,8 +719,7 @@ rxvt_privileges (rxvt_privaction action)
 void
 rxvt_term::privileged_utmp (rxvt_privaction action)
 {
-  if (OPTION (Opt_utmpInhibit)
-      || !pty.name || !*pty.name)
+  if (OPTION (Opt_utmpInhibit))
     return;
 
   rxvt_privileges (RESTORE);

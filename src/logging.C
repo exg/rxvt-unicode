@@ -59,10 +59,13 @@ static void             rxvt_update_lastlog              (const char *fname, con
 void
 rxvt_ptytty::login (int cmd_pid, bool login_shell, const char *hostname)
 {
+  const char *pty = name;
+
+  if (!pty || !*pty)
+    return;
+
   this->cmd_pid     = cmd_pid;
   this->login_shell = login_shell;
-
-  const char *pty = name;
 
 #ifdef HAVE_STRUCT_UTMP
   struct utmp *ut = &this->ut;
@@ -226,6 +229,9 @@ rxvt_ptytty::login (int cmd_pid, bool login_shell, const char *hostname)
 void
 rxvt_ptytty::logout ()
 {
+  if (!cmd_pid)
+    return;
+
 #ifdef HAVE_STRUCT_UTMP
   struct utmp *tmput, *ut = &this->ut;
 #endif
@@ -305,6 +311,8 @@ rxvt_ptytty::logout ()
     pututxline (utx);
   endutxent ();
 #endif
+
+  cmd_pid = 0;
 }
 
 /* ------------------------------------------------------------------------- */
