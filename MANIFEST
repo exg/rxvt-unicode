@@ -77,7 +77,6 @@ src/iom_conf.h
 src/keyboard.C
 src/keyboard.h
 src/logging.C
-src/logging.h
 src/main.C
 src/misc.C
 src/netdisp.C

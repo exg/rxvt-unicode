@@ -31,7 +31,6 @@
 #endif
 
 #include "ptytty.h"
-#include "logging.h"
 
 extern "C" {
 #include <X11/Intrinsic.h>      /* Xlib, Xutil, Xresource, Xfuncproto */

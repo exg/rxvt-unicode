@@ -1125,7 +1125,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   char            cmdbuf_base[CBUFSIZ];
 
   rxvt_ptytty     pty;
-  rxvt_session    session;
 
   rxvt_salloc    *talloc;             // text line allocator
   rxvt_salloc    *ralloc;             // rend line allocator

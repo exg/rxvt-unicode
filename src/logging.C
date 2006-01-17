@@ -33,9 +33,9 @@
 
 #include "../config.h"
 #include "rxvt.h"
-#include "logging.h"
+#include "ptytty.h"
 
-#ifdef UTMP_SUPPORT
+#if UTMP_SUPPORT
 
 #if HAVE_STRUCT_UTMP
 static int              rxvt_write_bsd_utmp              (int utmp_pos, struct utmp *wu);
@@ -57,10 +57,12 @@ static void             rxvt_update_lastlog              (const char *fname, con
  * make and write utmp and wtmp entries
  */
 void
-rxvt_session::login (const char *pty, int cmd_pid, bool login_shell, const char *hostname)
+rxvt_ptytty::login (int cmd_pid, bool login_shell, const char *hostname)
 {
   this->cmd_pid     = cmd_pid;
   this->login_shell = login_shell;
+
+  const char *pty = name;
 
 #ifdef HAVE_STRUCT_UTMP
   struct utmp *ut = &this->ut;
@@ -222,7 +224,7 @@ rxvt_session::login (const char *pty, int cmd_pid, bool login_shell, const char 
  * remove utmp and wtmp entries
  */
 void
-rxvt_session::logout ()
+rxvt_ptytty::logout ()
 {
 #ifdef HAVE_STRUCT_UTMP
   struct utmp *tmput, *ut = &this->ut;

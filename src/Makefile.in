@@ -195,7 +195,7 @@ keyboard.o: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h keyboard.h
 keyboard.o: command.h
 logging.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h optinc.h
 logging.o: encoding.h rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
-logging.o: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h logging.h
+logging.o: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h
 main.o: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h optinc.h encoding.h
 main.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 main.o: salloc.h rxvtperl.h hookinc.h rsinc.h keyboard.h
@@ -290,7 +290,7 @@ keyboard.lo: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h keyboard.h
 keyboard.lo: command.h
 logging.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h optinc.h
 logging.lo: encoding.h rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
-logging.lo: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h logging.h
+logging.lo: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h
 main.lo: ../config.h rxvt.h rxvtlib.h ptytty.h feature.h optinc.h encoding.h
 main.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 main.lo: salloc.h rxvtperl.h hookinc.h rsinc.h keyboard.h
