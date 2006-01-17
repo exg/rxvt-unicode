@@ -13,13 +13,13 @@ WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
 9.0
+        - new script: perl/selection-pastebin
         - improved security of setuid/setgid operation, which is now
           encouraged, by moving privileged operations into a separate
           process and permanently dropping privileges within the
           terminal. This makes it possible to remove security checks from
           the perl code and gives a much safer feeling when urxvt needs to
           run with special privileges.
-        - implemented perl:selection:remote-pastebin command in perl/selection
 	- use the scrollback buffer even when the scroll region doesn't
           span the whole screen, as long as it starts at row 0.
         - swap the environment in some more cases. This hopefully fixes

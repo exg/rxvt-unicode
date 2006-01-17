@@ -1,69 +1,10 @@
 #! perl
-use Digest::MD5 qw/md5_hex/;
-
-my $timers = {};
-my $pastebin_cmd;
-my $pastebin_url;
-
-sub on_start {
-   my ($self) = @_;
-   $pastebin_cmd = $self->x_resource ("selection-pastebin-cmd")
-      or "scp -p % ruth:/var/www/www.ta-sa.org/files/txt/";
-
-   $pastebin_url = $self->x_resource ("selection-pastebin-url")
-      or "http://www.ta-sa.org/files/txt/";
-   ();
-}
-
-sub upload_paste {
-   my ($self) = @_;
-
-   my $txt = $self->selection;
-   my $filename = md5_hex ($txt) . ".txt";
-
-   my $tmpfile = "/tmp/$filename";
-
-   my $msg = "uploaded $filename";
-
-   if (open my $o, ">" . $tmpfile) {
-      print $o $txt;
-      close $o;
-   } else {
-      $msg = "couldn't write $tmpfile: $!";
-   }
-
-   my $cmd = $pastebin_cmd;
-   $cmd =~ s/%/$tmpfile/;
-
-   if (system ($cmd) == 0) {
-
-      my $url = $pastebin_url;
-      $url =~ s/%/$filename/;
-
-      $self->selection ($url);
-   } else {
-      $msg = "couldn't upload, '$cmd' failed";
-   }
-
-   my $ov = $timers->{ov} = $self->overlay (-1, 0, length ($msg), 1, urxvt::OVERLAY_RSTYLE, 0);
-   $ov->set (0, 0, $msg);
-
-   $timers->{t1} =
-      urxvt::timer
-              ->new
-              ->start ((int urxvt::NOW) + 5) # make sure we update "on" the second
-              ->interval (1)
-              ->cb (sub { delete $timers->{ov}; delete $timers->{t1}; });
-}
 
 sub on_keyboard_command {
    my ($self, $cmd) = @_;
 
    $cmd eq "selection:rot13"
       and $self->selection (map { y/A-Za-z/N-ZA-Mn-za-m/; $_ } $self->selection);
-
-   $cmd eq "selection:remote-pastebin"
-      and upload_paste ($self);
 
    ()
 }

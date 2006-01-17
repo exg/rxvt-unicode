@@ -78,23 +78,6 @@ Rot-13 the selection when activated. Used via keyboard trigger:
 
    URxvt.keysym.C-M-r: perl:selection:rot13
 
-=item remote-pastebin
-
-Upload the selection as textfile to a remote site.
-
-   URxvt.keysym.C-M-e: perl:selection:remote-pastebin
-
-To set the command to upload the file set this resource:
-
-   URxvt.selection-pastebin-cmd: rsync -apP % ruth:/var/www/www.ta-sa.org/files/txt/.
-
-The % is the placeholder for the textfile. The name of the textfile is the hex encoded 
-md5 sum of the selection.
-After an successful upload the selection will be replaced by the following url 
-(the % is the placeholder for the filename):
-
-   URxvt.selection-pastebin-url: http://www.ta-sa.org/files/txt/%
-
 =back
 
 =item option-popup (enabled by default)
@@ -180,6 +163,23 @@ Displays a digital clock using the built-in overlay.
 Displays a very simple digital clock in the upper right corner of the
 window. Illustrates overwriting the refresh callbacks to create your own
 overlays or changes.
+
+=item selection-pastebin
+
+Uploads the selection as textfile to a remote site.
+
+   URxvt.keysym.C-M-e: perl:selection-pastebin:remote-pastebin
+
+To set the command to upload the file set this resource:
+
+   URxvt.selection-pastebin-cmd: rsync -apP % ruth:/var/www/www.ta-sa.org/files/txt/.
+
+The % is the placeholder for the textfile. The name of the textfile is the hex encoded 
+md5 sum of the selection.
+After an successful upload the selection will be replaced by the following url 
+(the % is the placeholder for the filename):
+
+   URxvt.selection-pastebin-url: http://www.ta-sa.org/files/txt/%
 
 =back
 
