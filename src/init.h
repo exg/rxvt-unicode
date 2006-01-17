@@ -18,10 +18,6 @@
 # define _NEW_TTY_CTRL		/* to get proper defines in <termios.h> */
 #endif
 
-#ifdef __QNX__			/* autoconf someday */
-# include <process.h>
-#endif
-
 #ifdef TTY_GID_SUPPORT
 # include <grp.h>
 #endif
@@ -143,7 +139,7 @@
 # define O_NOCTTY	0
 #endif
 #ifndef ONLCR
-# define ONLCR		0		/* QNX, at least */
+# define ONLCR		0
 #endif
 
 #define CONSOLE		"/dev/console"	/* console device */

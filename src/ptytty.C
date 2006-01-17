@@ -224,7 +224,6 @@ get_tty (char *ttydev)
 static int
 control_tty (int fd_tty)
 {
-#ifndef __QNX__
   int fd;
 
   /* ---------------------------------------- */
@@ -288,7 +287,6 @@ control_tty (int fd_tty)
     return -1;		/* fatal */
   close (fd);
   /* ---------------------------------------- */
-#endif				/* ! __QNX__ */
 
   return 0;
 }

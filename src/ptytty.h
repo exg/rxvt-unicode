@@ -48,11 +48,6 @@
 #  endif
 # endif
 
-# ifdef __QNX__
-#  include <sys/utsname.h>
-#  define ut_name		ut_user
-# endif
-
 #endif
 
 enum rxvt_privaction { IGNORE = 'i', SAVE = 's', RESTORE = 'r' };

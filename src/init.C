@@ -1411,7 +1411,6 @@ rxvt_term::run_command (const char *const *argv)
     return;
 #endif
 
-#ifndef __QNX__
   /* spin off the command interpreter */
   switch (cmd_pid = fork ())
     {
@@ -1468,14 +1467,6 @@ rxvt_term::run_command (const char *const *argv)
         pty.close_tty ();   /* keep STDERR_FILENO, pty.pty, display->fd () open */
         break;
     }
-#else                           /* __QNX__ uses qnxspawn () */
-  fchmod (pty.tty, 0622);
-  fcntl (pty.tty, F_SETFD, FD_CLOEXEC);
-  fcntl (pty.pty, F_SETFD, FD_CLOEXEC);
-
-  if (run_child (argv) == -1)
-    exit (EXIT_FAILURE);
-#endif
 }
 
 /* ------------------------------------------------------------------------- *
@@ -1529,7 +1520,6 @@ rxvt_term::run_child (const char *const *argv)
   sigemptyset (&ss);
   sigprocmask (SIG_SETMASK, &ss, 0);
 
-#ifndef __QNX__
   /* command interpreter path */
   if (argv != NULL)
     {
@@ -1564,62 +1554,6 @@ rxvt_term::run_child (const char *const *argv)
       execlp (shell, argv0, NULL);
       /* no error message: STDERR is closed! */
     }
-
-#else                           /* __QNX__ uses qnxspawn () */
-
-  char iov_a[10] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-  char *command = NULL, fullcommand[_MAX_PATH];
-  char **arg_v, *arg_a[2] = { NULL, NULL };
-
-  if (argv != NULL)
-    {
-      if (access (argv[0], X_OK) == -1)
-        {
-          if (strchr (argv[0], '/') == NULL)
-            {
-              searchenv (argv[0], "PATH", fullcommand);
-
-              if (fullcommand[0] != '\0')
-                command = fullcommand;
-            }
-
-          if (access (command, X_OK) == -1)
-            return -1;
-        }
-      else
-        command = argv[0];
-
-      arg_v = argv;
-    }
-  else
-    {
-      if ((command = getenv ("SHELL")) == NULL || *command == '\0')
-        command = "/bin/sh";
-
-      arg_a[0] = my_basename (command);
-
-      if (OPTION (Opt_loginShell))
-        {
-          login = rxvt_malloc ((strlen (arg_a[0]) + 2) * sizeof (char));
-
-          login[0] = '-';
-          strcpy (&login[1], arg_a[0]);
-          arg_a[0] = login;
-        }
-
-      arg_v = arg_a;
-    }
-
-  iov_a[0] = iov_a[1] = iov_a[2] = pty.tty;
-  cmd_pid = qnx_spawn (0, 0, 0, -1, -1,
-                       _SPAWN_SETSID | _SPAWN_TCSETPGRP,
-                       command, arg_v, environ, iov_a, 0);
-  if (login)
-    free (login);
-
-  pty.close_tty ();
-  return pty.pty;
-#endif
 
   return -1;
 }
