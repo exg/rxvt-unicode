@@ -225,7 +225,7 @@ void
 rxvt_session::logout ()
 {
 #ifdef HAVE_STRUCT_UTMP
-  struct utmp *ut = &this->ut;
+  struct utmp *tmput, *ut = &this->ut;
 #endif
 #ifdef HAVE_STRUCT_UTMPX
   struct utmpx *tmputx, *utx = &this->utx;
@@ -237,12 +237,8 @@ rxvt_session::logout ()
   setutent ();
   strncpy (ut->ut_id, this->ut_id, sizeof (ut->ut_id));
   ut->ut_type = USER_PROCESS;
-  {
-    struct utmp *tmput = getutid (ut);
-
-    if (tmput)		/* position to entry in utmp file */
-      ut = tmput;
-  }
+  if ((tmput = getutid (ut)))		/* position to entry in utmp file */
+    ut = tmput;
   ut->ut_type = DEAD_PROCESS;
 # else
   memset (ut->ut_name, 0, sizeof (ut->ut_name));
