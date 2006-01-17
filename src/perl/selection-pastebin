@@ -1,5 +1,4 @@
 #! perl
-use Digest::MD5 qw/md5_hex/;
 
 my $timers = {};
 my $pastebin_cmd;
@@ -14,15 +13,17 @@ sub on_start {
    $pastebin_url = 
       $self->x_resource ("selection-pastebin-url")
       or "http://www.ta-sa.org/files/txt/";
-   ();
+
+   ()
 }
 
 sub upload_paste {
    my ($self) = @_;
 
+   require Digest::MD5;
 
    my $txt = $self->selection;
-   my $filename = md5_hex ($txt) . ".txt";
+   my $filename = Digest::MD5::md5_hex ($txt) . ".txt";
 
    my $tmpfile = "/tmp/$filename";
 
