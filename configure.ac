@@ -1140,6 +1140,8 @@ AC_CACHE_CHECK(for unix-compliant filehandle passing ability, rxvt_can_pass_fds,
 ],[rxvt_can_pass_fds=yes],[rxvt_can_pass_fds=no])])
 if test x$rxvt_can_pass_fds = xyes; then
    AC_DEFINE(HAVE_UNIX_FDPASS, 1, Define if sys/socket.h defines the necessary macros/functions for file handle passing)
+else
+   AC_MSG_ERROR([urxvt requires unix-compliant filehandle passing ability])
 fi
 
 AC_CACHE_CHECK(for broken XIM callback, rxvt_broken_ximcb,
@@ -1380,12 +1382,10 @@ if test x$support_perl = xyes; then
         PERLLIB="`$PERL -MExtUtils::Embed -e ldopts`"
         PERLPRIVLIBEXP="`$PERL -MConfig -e 'print $Config{privlibexp}'`"
      else
-        support_perl=no
-        AC_MSG_RESULT([no, unable to link])
+        AC_MSG_ERROR([no, unable to link])
      fi
   else
-     AC_MSG_ERROR(no working perl found, or perl not version >= 5.8)
-     support_perl=no
+     AC_MSG_ERROR([no working perl found, or perl not version >= 5.8])
   fi
 fi
 AC_SUBST(PERLLIB)
