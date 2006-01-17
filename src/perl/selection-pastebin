@@ -48,6 +48,8 @@ sub upload_paste {
       $msg = "couldn't upload, '$cmd' failed";
    }
 
+   unlink $tmpfile;
+
    my $ov = $timers->{ov} = $self->overlay (-1, 0, length ($msg), 1, urxvt::OVERLAY_RSTYLE, 0);
    $ov->set (0, 0, $msg);
 
