@@ -13,6 +13,8 @@ WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
 9.0
+TODO: remove ||1 in main.C
+TODO: on_seelction_popup hook or so.
         - new script: perl/selection-pastebin
         - improved security of setuid/setgid operation, which is now
           encouraged, by moving privileged operations into a separate
