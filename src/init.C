@@ -1372,23 +1372,23 @@ rxvt_term::run_command (const char *const *argv)
 #if ENABLE_FRILLS
   if (rs[Rs_pty_fd])
     {
-      pty.pty = atoi (rs[Rs_pty_fd]);
+      pty->pty = atoi (rs[Rs_pty_fd]);
 
-      if (pty.pty >= 0)
+      if (pty->pty >= 0)
         {
           if (getfd_hook)
-            pty.pty = (*getfd_hook) (pty.pty);
+            pty->pty = (*getfd_hook) (pty->pty);
 
-          if (pty.pty < 0 || fcntl (pty.pty, F_SETFL, O_NONBLOCK))
+          if (pty->pty < 0 || fcntl (pty->pty, F_SETFL, O_NONBLOCK))
             rxvt_fatal ("unusable pty-fd filehandle, aborting.\n");
         }
     }
   else
 #endif
-    if (!pty.get ())
+    if (!pty->get ())
       rxvt_fatal ("can't initialize pseudo-tty, aborting.\n");
 
-  pty.set_utf8_mode (enc_utf8);
+  pty->set_utf8_mode (enc_utf8);
 
   /* set initial window size */
   tt_winch ();
@@ -1422,20 +1422,20 @@ rxvt_term::run_command (const char *const *argv)
       case 0:
         init_env ();
 
-        if (!pty.make_controlling_tty ())
+        if (!pty->make_controlling_tty ())
           fprintf (stderr, "%s: could not obtain control of tty.", RESNAME);
         else
           {
             /* Reopen stdin, stdout and stderr over the tty file descriptor */
-            dup2 (pty.tty, STDIN_FILENO);
-            dup2 (pty.tty, STDOUT_FILENO);
-            dup2 (pty.tty, STDERR_FILENO);
+            dup2 (pty->tty, STDIN_FILENO);
+            dup2 (pty->tty, STDOUT_FILENO);
+            dup2 (pty->tty, STDERR_FILENO);
 
             // close all our file handles that we do no longer need
             for (rxvt_term **t = termlist.begin (); t < termlist.end (); t++)
               {
-                if ((*t)->pty.pty > 2) close ((*t)->pty.pty);
-                if ((*t)->pty.tty > 2) close ((*t)->pty.tty);
+                if ((*t)->pty->pty > 2) close ((*t)->pty->pty);
+                if ((*t)->pty->tty > 2) close ((*t)->pty->tty);
               }
 
             run_child (argv);
@@ -1450,7 +1450,7 @@ rxvt_term::run_command (const char *const *argv)
           int fdstdin;
 
           fdstdin = dup (STDIN_FILENO);
-          dup2 (pty.tty, STDIN_FILENO);
+          dup2 (pty->tty, STDIN_FILENO);
 #endif
 
 #ifdef UTMP_SUPPORT
@@ -1464,7 +1464,7 @@ rxvt_term::run_command (const char *const *argv)
 #endif
         }
 
-        pty.close_tty ();   /* keep STDERR_FILENO, pty.pty, display->fd () open */
+        pty->close_tty ();
         break;
     }
 }

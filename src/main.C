@@ -215,7 +215,7 @@ void rxvt_term::emergency_cleanup ()
   privileged_utmp (RESTORE);
 #endif
 
-  pty.put ();
+  delete pty; pty = 0;
 }
 
 rxvt_term::~rxvt_term ()
@@ -511,6 +511,8 @@ rxvt_term::init (int argc, const char *const *argv)
     }
 #endif
 
+  pty = rxvt_new_ptytty ();
+
   create_windows (argc, argv);
 
   dDisp;
@@ -545,8 +547,8 @@ rxvt_term::init (int argc, const char *const *argv)
 
   free (cmd_argv);
 
-  if (pty.pty >= 0)
-    pty_ev.start (pty.pty, EVENT_READ);
+  if (pty->pty >= 0)
+    pty_ev.start (pty->pty, EVENT_READ);
 
   check_ev.start ();
 
@@ -725,9 +727,9 @@ rxvt_term::privileged_utmp (rxvt_privaction action)
   rxvt_privileges (RESTORE);
 
   if (action == SAVE)
-    pty.login (cmd_pid, OPTION (Opt_loginShell), rs[Rs_display_name]);
+    pty->login (cmd_pid, OPTION (Opt_loginShell), rs[Rs_display_name]);
   else
-    pty.logout ();
+    pty->logout ();
 
   rxvt_privileges (IGNORE);
 }
@@ -875,7 +877,7 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
 void
 rxvt_term::tt_winch ()
 {
-  if (pty.pty < 0)
+  if (pty->pty < 0)
     return;
 
   struct winsize ws;
@@ -884,7 +886,7 @@ rxvt_term::tt_winch ()
   ws.ws_row = nrow;
   ws.ws_xpixel = width;
   ws.ws_ypixel = height;
-  (void)ioctl (pty.pty, TIOCSWINSZ, &ws);
+  (void)ioctl (pty->pty, TIOCSWINSZ, &ws);
 
 #if 0
   // TIOCSWINSZ⎈ is supposed to do this automatically and correctly

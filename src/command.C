@@ -1139,7 +1139,7 @@ rxvt_term::pty_fill ()
   cmdbuf_ptr = cmdbuf_base;
   cmdbuf_endp = cmdbuf_ptr + n;
 
-  ssize_t r = read (pty.pty, cmdbuf_endp, CBUFSIZ - n);
+  ssize_t r = read (pty->pty, cmdbuf_endp, CBUFSIZ - n);
 
   if (r > 0)
     {
@@ -3971,7 +3971,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
         else
           {
             set_locale (str);
-            pty.set_utf8_mode (enc_utf8);
+            pty->set_utf8_mode (enc_utf8);
             init_xlocale ();
           }
         break;
@@ -4413,12 +4413,12 @@ rxvt_term::tt_write (const char *data, unsigned int len)
   if (HOOK_INVOKE ((this, HOOK_TT_WRITE, DT_STR_LEN, data, len, DT_END)))
     return;
 
-  if (pty.pty < 0)
+  if (pty->pty < 0)
     return;
 
   if (v_buflen == 0)
     {
-      ssize_t written = write (pty.pty, data, min (len, MAX_PTY_WRITE));
+      ssize_t written = write (pty->pty, data, min (len, MAX_PTY_WRITE));
 
       if ((unsigned int)written == len)
         return;
@@ -4437,7 +4437,7 @@ rxvt_term::tt_write (const char *data, unsigned int len)
 
 void rxvt_term::pty_write ()
 {
-  int written = write (pty.pty, v_buffer, min (v_buflen, MAX_PTY_WRITE));
+  int written = write (pty->pty, v_buffer, min (v_buflen, MAX_PTY_WRITE));
 
   if (written > 0)
     {

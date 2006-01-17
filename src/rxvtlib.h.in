@@ -30,8 +30,6 @@
 // stdlib.h might provide it
 #endif
 
-#include "ptytty.h"
-
 extern "C" {
 #include <X11/Intrinsic.h>      /* Xlib, Xutil, Xresource, Xfuncproto */
 }

@@ -1372,8 +1372,11 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+          ac_config_headers="$ac_config_headers config.h:config.h.in"
+
+
 ac_aux_dir=
-for ac_dir in autoconf $srcdir/autoconf; do
+for ac_dir in $srcdir $srcdir/.. $srcdir/../..; do
   if test -f $ac_dir/install-sh; then
     ac_aux_dir=$ac_dir
     ac_install_sh="$ac_aux_dir/install-sh -c"
@@ -1389,16 +1392,13 @@ for ac_dir in autoconf $srcdir/autoconf; do
   fi
 done
 if test -z "$ac_aux_dir"; then
-  { { echo "$as_me:$LINENO: error: cannot find install-sh or install.sh in autoconf $srcdir/autoconf" >&5
-echo "$as_me: error: cannot find install-sh or install.sh in autoconf $srcdir/autoconf" >&2;}
+  { { echo "$as_me:$LINENO: error: cannot find install-sh or install.sh in $srcdir $srcdir/.. $srcdir/../.." >&5
+echo "$as_me: error: cannot find install-sh or install.sh in $srcdir $srcdir/.. $srcdir/../.." >&2;}
    { (exit 1); exit 1; }; }
 fi
 ac_config_guess="$SHELL $ac_aux_dir/config.guess"
 ac_config_sub="$SHELL $ac_aux_dir/config.sub"
 ac_configure="$SHELL $ac_aux_dir/configure" # This should be Cygnus configure.
-
-          ac_config_headers="$ac_config_headers config.h:autoconf/config.h.in"
-
 
 # Make sure we can run config.sub.
 $ac_config_sub sun4 >/dev/null 2>&1 ||
@@ -10132,6 +10132,15 @@ _ACEOF
 
 
 
+case "$host_alias" in
+    *ultrix) ac_cv_func_setsid='no' ;;
+    *) break;;
+esac
+
+
+
+
+
 
 
 
@@ -10149,11 +10158,15 @@ _ACEOF
 
 
 for ac_func in \
+	atexit \
 	revoke \
 	unsetenv \
 	setutent \
 	seteuid \
 	setreuid \
+	setsid \
+	setpgrp \
+	setpgid \
 	_getpty \
 	getpt \
 	posix_openpt \
@@ -13518,7 +13531,7 @@ do
   "doc/Makefile" ) CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
   "src/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
   "src/rxvtlib.h" ) CONFIG_FILES="$CONFIG_FILES src/rxvtlib.h" ;;
-  "config.h" ) CONFIG_HEADERS="$CONFIG_HEADERS config.h:autoconf/config.h.in" ;;
+  "config.h" ) CONFIG_HEADERS="$CONFIG_HEADERS config.h:config.h.in" ;;
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;

@@ -1,6 +1,7 @@
 #ifndef PTYTTY_H
 #define PTYTTY_H
 
+#include "rxvt.h"
 #include "feature.h"
 
 #if defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
@@ -49,29 +50,6 @@
 # endif
 
 #endif
-
-enum rxvt_privaction { IGNORE = 'i', SAVE = 's', RESTORE = 'r' };
-
-struct rxvt_ptytty {
-  int pty; // pty file descriptor; connected to rxvt
-  int tty; // tty file descriptor; connected to child
-
-  virtual ~rxvt_ptytty ()
-  {
-    //
-  }
-
-  virtual bool get () = 0;
-  virtual void put () = 0;
-
-  virtual void login (int cmd_pid, bool login_shell, const char *hostname) = 0;
-  virtual void logout () = 0;
-
-  void close_tty ();
-
-  bool make_controlling_tty ();
-  void set_utf8_mode (bool on);
-};
 
 struct rxvt_ptytty_unix : rxvt_ptytty {
   char *name;

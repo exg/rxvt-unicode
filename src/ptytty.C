@@ -56,6 +56,8 @@
 #include <cstdio>
 #include <grp.h>
 
+#include "ptytty.h"
+
 /////////////////////////////////////////////////////////////////////////////
 
 /* ------------------------------------------------------------------------- *
@@ -441,6 +443,12 @@ rxvt_ptytty_unix::get ()
     }
 
   return true;
+}
+
+// a "factory" *g*
+rxvt_ptytty *rxvt_new_ptytty ()
+{
+   return new rxvt_ptytty_unix;
 }
 
 /*----------------------- end-of-file (C source) -----------------------*/

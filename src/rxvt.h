@@ -96,6 +96,8 @@ typedef struct {
 # define STDERR_FILENO  2
 #endif
 
+enum rxvt_privaction { IGNORE = 'i', SAVE = 's', RESTORE = 'r' };//TODO
+
 /*
  *****************************************************************************
  * PROTOTYPES                    
@@ -173,6 +175,30 @@ typedef struct {
   Pixmap pixmap;
 } bgPixmap_t;
 #endif
+
+struct rxvt_ptytty {
+  int pty; // pty file descriptor; connected to rxvt
+  int tty; // tty file descriptor; connected to child
+
+  virtual ~rxvt_ptytty ()
+  {
+    //
+  }
+
+  virtual bool get () = 0;
+  virtual void put () = 0;
+
+  virtual void login (int cmd_pid, bool login_shell, const char *hostname) = 0;
+  virtual void logout () = 0;
+
+  void close_tty ();
+
+  bool make_controlling_tty ();
+  void set_utf8_mode (bool on);
+};
+
+// a "factory" *g*
+rxvt_ptytty *rxvt_new_ptytty ();
 
 /*
  * the 'essential' information for reporting Mouse Events
@@ -1124,7 +1150,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   char           *cmdbuf_ptr, *cmdbuf_endp;
   char            cmdbuf_base[CBUFSIZ];
 
-  rxvt_ptytty_unix pty;
+  rxvt_ptytty    *pty;
 
   rxvt_salloc    *talloc;             // text line allocator
   rxvt_salloc    *ralloc;             // rend line allocator
