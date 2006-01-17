@@ -791,24 +791,6 @@ enum {
 # define XPMClearArea(a, b, c, d, e, f, g)
 #endif
 
-#ifdef UTMP_SUPPORT
-# if !defined(RXVT_UTMPX_FILE) || !defined(HAVE_STRUCT_UTMPX)
-#  undef HAVE_UTMPX_H
-#  undef HAVE_STRUCT_UTMPX
-# endif
-# if !defined(RXVT_UTMP_FILE) || !defined(HAVE_STRUCT_UTMP)
-#  undef HAVE_UTMP_H
-#  undef HAVE_STRUCT_UTMP
-# endif
-
-# ifdef HAVE_UTMPX_H
-#  include <utmpx.h>
-# endif
-# ifdef HAVE_UTMP_H
-#  include <utmp.h>
-# endif
-#endif
-
 #ifdef DEBUG_CMD
 # define D_CMD(x)               fprintf x ; fputc('\n', stderr)
 #else
@@ -1100,18 +1082,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   struct mouse_event MEvent;
   XComposeStatus  compose;
   ttymode_t       tio;
-#ifdef UTMP_SUPPORT
-# ifdef HAVE_STRUCT_UTMP
-  struct utmp     ut;
-# endif
-# ifdef HAVE_STRUCT_UTMPX
-  struct utmpx    utx;
-# endif
-# if (defined(HAVE_STRUCT_UTMP) && defined(HAVE_UTMP_PID)) || defined(HAVE_STRUCT_UTMPX)
-  char            ut_id[5];
-# endif
-  int             utmp_pos;
-#endif
   row_col_t       oldcursor;
 #ifdef XPM_BACKGROUND
   bgPixmap_t      bgPixmap;
@@ -1153,6 +1123,9 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   /* command input buffering */
   char           *cmdbuf_ptr, *cmdbuf_endp;
   char            cmdbuf_base[CBUFSIZ];
+
+  rxvt_ptytty     pty;
+  rxvt_session    session;
 
   rxvt_salloc    *talloc;             // text line allocator
   rxvt_salloc    *ralloc;             // rend line allocator
@@ -1331,9 +1304,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   // init.C
   void Get_Colours ();
   void get_ourmods ();
-  // logging.C
-  void makeutent (const char *pty, const char *hostname);
-  void cleanutent ();
   // main.C
   void privileged_utmp (rxvt_privaction action);
   bool set_fonts ();

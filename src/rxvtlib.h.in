@@ -31,6 +31,7 @@
 #endif
 
 #include "ptytty.h"
+#include "logging.h"
 
 extern "C" {
 #include <X11/Intrinsic.h>      /* Xlib, Xutil, Xresource, Xfuncproto */
@@ -245,7 +246,6 @@ struct rxvt_vars : TermWin_t {
   short           numpix_colors;
   Cursor          TermWin_cursor;       /* cursor for vt window */
   int             sb_shadow;    /* scrollbar shadow width                    */
-  rxvt_ptytty     pty;
   int             numlock_state;
   line_t         *row_buf;      // all lines, scrollback + terminal, circular, followed by temp_buf
   line_t         *drawn_buf;    // text on screen

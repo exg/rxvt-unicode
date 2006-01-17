@@ -30,14 +30,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*
- * Public:
- *	extern void cleanutent (void);
- *	extern void makeutent (const char * pty, const char * hostname);
- *
- * Private:
- *	rxvt_update_wtmp ();
- *----------------------------------------------------------------------*/
 
 #include "../config.h"
 #include "rxvt.h"
@@ -65,8 +57,11 @@ static void             rxvt_update_lastlog              (const char *fname, con
  * make and write utmp and wtmp entries
  */
 void
-rxvt_term::makeutent (const char *pty, const char *hostname)
+rxvt_session::login (const char *pty, int cmd_pid, bool login_shell, const char *hostname)
 {
+  this->cmd_pid     = cmd_pid;
+  this->login_shell = login_shell;
+
 #ifdef HAVE_STRUCT_UTMP
   struct utmp *ut = &this->ut;
 #endif
@@ -201,7 +196,7 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
 
 #ifdef WTMP_SUPPORT
 # ifdef WTMP_ONLY_ON_LOGIN
-  if (OPTION (Opt_loginShell))
+  if (login_shell)
 # endif
     {
 # ifdef HAVE_STRUCT_UTMP
@@ -217,7 +212,7 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
     }
 #endif
 #if defined(LASTLOG_SUPPORT) && defined(RXVT_LASTLOG_FILE)
-  if (OPTION (Opt_loginShell))
+  if (login_shell)
     rxvt_update_lastlog (RXVT_LASTLOG_FILE, pty, hostname);
 #endif
 }
@@ -227,7 +222,7 @@ rxvt_term::makeutent (const char *pty, const char *hostname)
  * remove utmp and wtmp entries
  */
 void
-rxvt_term::cleanutent ()
+rxvt_session::logout ()
 {
 #ifdef HAVE_STRUCT_UTMP
   struct utmp *ut = &this->ut;
@@ -278,7 +273,7 @@ rxvt_term::cleanutent ()
    */
 #ifdef WTMP_SUPPORT
 # ifdef WTMP_ONLY_ON_LOGIN
-  if (OPTION (Opt_loginShell))
+  if (login_shell)
 # endif
     {
 # ifdef HAVE_STRUCT_UTMP

@@ -726,9 +726,9 @@ rxvt_term::privileged_utmp (rxvt_privaction action)
   rxvt_privileges (RESTORE);
 
   if (action == SAVE)
-    makeutent (pty.name, rs[Rs_display_name]);
+    session.login (pty.name, cmd_pid, OPTION (Opt_loginShell), rs[Rs_display_name]);
   else
-    cleanutent ();
+    session.logout ();
 
   rxvt_privileges (IGNORE);
 }
