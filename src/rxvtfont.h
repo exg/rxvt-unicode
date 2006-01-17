@@ -63,8 +63,8 @@ struct rxvt_drawable {
 
 struct rxvt_font {
   // managed by the fontset
-  rxvt_term *r;
-  void set_term (rxvt_term *r) { this->r = r; }
+  rxvt_term *term;
+  void set_term (rxvt_term *term) { this->term = term; }
 
   char *name;
   codeset cs;
@@ -81,12 +81,12 @@ struct rxvt_font {
 
   virtual void clear () { };
 
-  void clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color);
+  void clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color) const;
 
   virtual rxvt_fontprop properties () = 0;
 
   virtual bool load (const rxvt_fontprop &morph) = 0;
-  virtual bool has_char (uint32_t unicode, const rxvt_fontprop *prop, bool &careful) = 0;
+  virtual bool has_char (uint32_t unicode, const rxvt_fontprop *prop, bool &careful) const = 0;
 
   virtual void draw (rxvt_drawable &d,
                      int x, int y,
@@ -101,7 +101,7 @@ struct rxvt_fallback_font;
 struct rxvt_fontset {
   char *fontdesc;
 
-  rxvt_fontset (rxvt_term *r);
+  rxvt_fontset (rxvt_term *term);
   ~rxvt_fontset ();
 
   bool populate (const char *desc);
@@ -117,7 +117,7 @@ struct rxvt_fontset {
   }
 
 private:
-  rxvt_term *r;
+  rxvt_term *term;
   rxvt_fontprop prop;
   simplevec<rxvt_font *> fonts;
   const rxvt_fallback_font *fallback;

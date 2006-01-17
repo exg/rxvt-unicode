@@ -338,10 +338,9 @@ typedef struct _mwmhints {
   */
 
 enum {
-  NO_REFRESH       = 0   ,  /* Window not visible at all!        */
-  FAST_REFRESH     = 1<<0,  /* Fully exposed window              */
-  SLOW_REFRESH     = 1<<1,  /* Partially exposed window          */
-  SMOOTH_REFRESH   = 1<<2,  /* Do sync'ing to make it smooth     */
+  NO_REFRESH       = 0,  /* Window not visible at all!        */
+  FAST_REFRESH     = 1,  /* Fully exposed window              */
+  SLOW_REFRESH     = 2,  /* Partially exposed window          */
 };
 
 #ifdef NO_SECONDARY_SCREEN
@@ -702,7 +701,8 @@ enum {
  * MACRO DEFINES
  *****************************************************************************
  */
-#define dDisp			Display *disp = display->display
+#define dLocal(type,name)       type const name = this->name
+#define dDisp			Display *disp = this->display->display
 
 /* convert pixel dimensions to row/column values.  Everything as int32_t */
 #define Pixel2Col(x)            Pixel2Width((int32_t)(x))
@@ -1423,7 +1423,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void scr_reset ();
   void scr_release ();
   void scr_clear (bool really = false);
-  void scr_refresh (unsigned char refresh_type);
+  void scr_refresh ();
   bool scr_refresh_rend (rend_t mask, rend_t value);
   void scr_erase_screen (int mode);
 #if ENABLE_FRILLS

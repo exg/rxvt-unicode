@@ -1008,7 +1008,7 @@ rxvt_term::flush ()
           while (row < end_row);
         }
 
-      scr_refresh (refresh_type);
+      scr_refresh ();
       scrollbar_show (1);
 #ifdef USE_XIM
       IMSendSpot ();
@@ -1070,7 +1070,6 @@ rxvt_term::cont_scroll_cb (time_watcher &w)
   if ((scrollbar_isUp() || scrollbar_isDn()) &&
       scr_page (scrollbar_isUp() ? UP : DN, 1))
     {
-      refresh_type |= SMOOTH_REFRESH;
       want_refresh = 1;
       w.start (w.at + SCROLLBAR_CONTINUOUS_DELAY);
     }
@@ -1084,7 +1083,6 @@ rxvt_term::sel_scroll_cb (time_watcher &w)
   if (scr_page (scroll_selection_dir, scroll_selection_lines))
     {
       selection_extend (selection_save_x, selection_save_y, selection_save_state);
-      refresh_type |= SMOOTH_REFRESH;
       want_refresh = 1;
       w.start (w.at + SCROLLBAR_CONTINUOUS_DELAY);
     }
@@ -1102,7 +1100,6 @@ rxvt_term::slip_wheel_cb (time_watcher &w)
       if (view_start == top_row || view_start == 0)
         mouse_slip_wheel_speed = 0;
 
-      refresh_type |= SMOOTH_REFRESH;
       want_refresh = 1;
       w.start (w.at + SCROLLBAR_CONTINUOUS_DELAY);
     }
@@ -2102,9 +2099,6 @@ rxvt_term::button_release (XButtonEvent &ev)
     {
       scrollBar.setIdle ();
       scrollbar_show (0);
-#ifndef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
-      refresh_type &= ~SMOOTH_REFRESH;
-#endif
     }
 
 #ifdef SELECTION_SCROLLING
@@ -2800,7 +2794,7 @@ rxvt_term::cmd_parse ()
               else
                 {
                   flag = true;
-                  scr_refresh (refresh_type);
+                  scr_refresh ();
                   want_refresh = 1;
                 }
             }

@@ -450,7 +450,7 @@ rxvt_term::scr_poweron ()
   scr_reset ();
 
   scr_clear (true);
-  scr_refresh (SLOW_REFRESH);
+  scr_refresh ();
 }
 
 /* ------------------------------------------------------------------------- *
@@ -1792,8 +1792,10 @@ rxvt_term::scr_expose (int x, int y, int ewidth, int eheight, bool refresh)
   for (i = rc[PART_BEG].row; i <= rc[PART_END].row; i++)
     fill_text (&drawn_buf[i].t[rc[PART_BEG].col], 0, rc[PART_END].col - rc[PART_BEG].col + 1);
 
+  num_scr_allow = 0;
+
   if (refresh)
-    scr_refresh (SLOW_REFRESH);
+    scr_refresh ();
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1937,7 +1939,7 @@ rxvt_term::scr_printscreen (int fullhist)
  * screen.text/screen.rend contain what the screen will change to.
  */
 void
-rxvt_term::scr_refresh (unsigned char refresh_type)
+rxvt_term::scr_refresh ()
 {
   unsigned char must_clear, /* use draw_string not draw_image_string     */
                 showcursor; /* show the cursor                           */
@@ -2071,7 +2073,6 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
    * D: CopyArea pass - very useful for slower links
    *    This has been deliberately kept simple.
    */
-  i = num_scr;
   if (!display->is_local
       && refresh_type == FAST_REFRESH && num_scr_allow && num_scr
       && abs (num_scr) < nrow && !must_clear)
@@ -2079,6 +2080,7 @@ rxvt_term::scr_refresh (unsigned char refresh_type)
       int16_t nits;
       int j;
       int len, wlen;
+      dLocal (int, num_scr);
 
       j = nrow;
       wlen = len = -1;
