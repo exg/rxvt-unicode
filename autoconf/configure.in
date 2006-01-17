@@ -729,6 +729,7 @@ AC_CHECK_FUNCS( \
 	setpgrp \
 	setpgid \
 	_getpty \
+	getpt \
 	posix_openpt \
 	grantpt \
 	unlockpt \
@@ -1168,7 +1169,7 @@ if test x$rxvt_broken_ximcb = xyes; then
    AC_DEFINE(XIMCB_PROTO_BROKEN, 1, Define if your XIMCallback specifies XIC as first type.)
 fi
 
-if test x$ac_cv_func_posix_openpt = xno; then
+if test x$ac_cv_func_getpt = xno -a x$ac_cv_func_posix_openpt = xno; then
   AC_CHECK_FUNC(openpty, [], [AC_CHECK_LIB(util, openpty, [LIBS="$LIBS -lutil"])])
 fi
 
@@ -1176,6 +1177,8 @@ dnl# if we don't guess right then it's up to the user
 AC_CACHE_CHECK(for pty/tty type, rxvt_cv_ptys,
 [if test x$ac_cv_func_openpty = xyes -o x$ac_cv_lib_util_openpty = xyes; then
     rxvt_cv_ptys=OPENPTY
+ else if test x$ac_cv_func_getpt = xyes; then
+    rxvt_cv_ptys=GLIBC
  else if test x$ac_cv_func_posix_openpt = xyes; then
     rxvt_cv_ptys=POSIX
  else if test x$ac_cv_func__getpty = xyes; then
@@ -1204,8 +1207,12 @@ fi
 fi
 fi
 fi
+fi
 ])
 
+if test x$rxvt_cv_ptys = xGLIBC; then
+  AC_DEFINE(PTYS_ARE_GETPT, 1, Define for this pty type)
+fi
 if test x$rxvt_cv_ptys = xPOSIX; then
   AC_DEFINE(PTYS_ARE_POSIX, 1, Define for this pty type)
 fi
