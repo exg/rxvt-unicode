@@ -21,26 +21,31 @@ sub upload_paste {
    my ($self) = @_;
 
    my $txt = $self->selection;
-   my $h = md5_hex ($txt);
+   my $filename = md5_hex ($txt) . ".txt";
 
-   my $fn = "/tmp/$h.txt";
+   my $tmpfile = "/tmp/$filename";
 
-   my $msg = "uploaded $h.txt";
+   my $msg = "uploaded $filename";
 
-   if (open my $o, ">" . $fn) {
+   if (open my $o, ">" . $tmpfile) {
       print $o $txt;
       close $o;
    } else {
-      $msg = "couldn't write $fn: $!";
+      $msg = "couldn't write $tmpfile: $!";
    }
 
    my $cmd = $pastebin_cmd;
-   $cmd =~ s/%/$fn/;
-   unless (system ($cmd) == 0) {
+   $cmd =~ s/%/$tmpfile/;
+
+   if (system ($cmd) == 0) {
+
+      my $url = $pastebin_url;
+      $url =~ s/%/$filename/;
+
+      $self->selection ($url);
+   } else {
       $msg = "couldn't upload, '$cmd' failed";
    }
-
-   $self->selection ($pastebin_url . "$h.txt");
 
    my $ov = $timers->{ov} = $self->overlay (-1, 0, length ($msg), 1, urxvt::OVERLAY_RSTYLE, 0);
    $ov->set (0, 0, $msg);

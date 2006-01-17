@@ -68,7 +68,7 @@ between two vertical bars:
 You can look at the source of the selection extension to see more
 interesting uses, such as parsing a line from beginning to end.
 
-This extension also offers the following bindable keyboard command:
+This extension also offers following bindable keyboard commands:
 
 =over 4
 
@@ -77,6 +77,23 @@ This extension also offers the following bindable keyboard command:
 Rot-13 the selection when activated. Used via keyboard trigger:
 
    URxvt.keysym.C-M-r: perl:selection:rot13
+
+=item remote-pastebin
+
+Upload the selection as textfile to a remote site.
+
+   URxvt.keysym.C-M-e: perl:selection:remote-pastebin
+
+To set the command to upload the file set this resource:
+
+   URxvt.selection-pastebin-cmd: rsync -apP % ruth:/var/www/www.ta-sa.org/files/txt/.
+
+The % is the placeholder for the textfile. The name of the textfile is the hex encoded 
+md5 sum of the selection.
+After an successful upload the selection will be replaced by the following url 
+(the % is the placeholder for the filename):
+
+   URxvt.selection-pastebin-url: http://www.ta-sa.org/files/txt/%
 
 =back
 
