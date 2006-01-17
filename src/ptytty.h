@@ -58,6 +58,29 @@
 enum rxvt_privaction { IGNORE = 'i', SAVE = 's', RESTORE = 'r' };
 
 struct rxvt_ptytty {
+  int pty; // pty file descriptor; connected to rxvt
+  int tty; // tty file descriptor; connected to child
+
+  virtual ~rxvt_ptytty ()
+  {
+    //
+  }
+
+  virtual bool get () = 0;
+  virtual void put () = 0;
+
+  virtual void login (int cmd_pid, bool login_shell, const char *hostname) = 0;
+  virtual void logout () = 0;
+
+  void close_tty ();
+
+  bool make_controlling_tty ();
+  void set_utf8_mode (bool on);
+};
+
+struct rxvt_ptytty_unix : rxvt_ptytty {
+  char *name;
+
 #ifndef RESET_TTY_TO_COMMON_DEFAULTS
   struct stat savestat; /* original status of our tty */
 #endif
@@ -66,20 +89,9 @@ struct rxvt_ptytty {
   bool saved;
 #endif
 public:
-  int pty; // pty file descriptor; connected to rxvt
-  int tty; // tty file descriptor; connected to child
-  char *name;
 
-  rxvt_ptytty ();
-  ~rxvt_ptytty ();
-
-  bool get ();
-  void put ();
-
-  void close_tty ();
-
-  bool make_controlling_tty ();
-  void set_utf8_mode (bool on);
+  rxvt_ptytty_unix ();
+  ~rxvt_ptytty_unix ();
 
 #if UTMP_SUPPORT
   int utmp_pos;
@@ -95,6 +107,9 @@ public:
 #if (defined(HAVE_STRUCT_UTMP) && defined(HAVE_UTMP_PID)) || defined(HAVE_STRUCT_UTMPX)
   char ut_id[5];
 #endif
+
+  bool get ();
+  void put ();
 
   void login (int cmd_pid, bool login_shell, const char *hostname);
   void logout ();

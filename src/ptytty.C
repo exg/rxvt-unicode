@@ -56,6 +56,8 @@
 #include <cstdio>
 #include <grp.h>
 
+/////////////////////////////////////////////////////////////////////////////
+
 /* ------------------------------------------------------------------------- *
  *                  GET PSEUDO TELETYPE - MASTER AND SLAVE                   *
  * ------------------------------------------------------------------------- */
@@ -220,7 +222,7 @@ get_tty (char *ttydev)
  * Make our tty a controlling tty so that /dev/tty points to us
  */
 static int
-control_tty (int fd_tty, const char *ttydev)
+control_tty (int fd_tty)
 {
 #ifndef __QNX__
   int fd;
@@ -251,7 +253,7 @@ control_tty (int fd_tty, const char *ttydev)
     close (fd);		/* ouch: still have controlling tty */
 
   /* ---------------------------------------- */
-#if defined(PTYS_ARE_PTMX) && defined(I_PUSH)
+# if defined(PTYS_ARE_PTMX) && defined(I_PUSH)
   /*
    * Push STREAMS modules:
    *    ptem: pseudo-terminal hardware emulation module.
@@ -269,25 +271,17 @@ control_tty (int fd_tty, const char *ttydev)
    * close () - on the master side which causes a hang up to be sent
    * through - Geoff Wing
    */
-# ifdef HAVE_ISASTREAM
+#  ifdef HAVE_ISASTREAM
   if (isastream (fd_tty) == 1)
-# endif
+#  endif
     {
       ioctl (fd_tty, I_PUSH, "ptem");
       ioctl (fd_tty, I_PUSH, "ldterm");
       ioctl (fd_tty, I_PUSH, "ttcompat");
     }
-#endif
-  /* ---------------------------------------- */
-# if defined(TIOCSCTTY)
-  fd = ioctl (fd_tty, TIOCSCTTY, NULL);
-# elif defined(TIOCSETCTTY)
-  fd = ioctl (fd_tty, TIOCSETCTTY, NULL);
-# else
-  fd = open (ttydev, O_RDWR);
-  if (fd >= 0)
-    close (fd);
 # endif
+  /* ---------------------------------------- */
+  fd = ioctl (fd_tty, TIOCSCTTY, NULL);
   /* ---------------------------------------- */
   fd = open ("/dev/tty", O_WRONLY);
   if (fd < 0)
@@ -298,6 +292,51 @@ control_tty (int fd_tty, const char *ttydev)
 
   return 0;
 }
+
+void
+rxvt_ptytty::close_tty ()
+{
+  if (tty < 0)
+    return;
+
+  close (tty);
+  tty = -1;
+}
+
+bool
+rxvt_ptytty::make_controlling_tty ()
+{
+  return control_tty (tty) >= 0;
+}
+
+void
+rxvt_ptytty::set_utf8_mode (bool on)
+{
+#ifdef IUTF8
+  if (pty < 0)
+    return;
+
+  struct termios tio;
+
+  if (tcgetattr (pty, &tio) != -1)
+    {
+      tcflag_t new_cflag = tio.c_iflag;
+
+      if (on)
+        new_cflag |= IUTF8;
+      else
+        new_cflag &= ~IUTF8;
+
+      if (new_cflag != tio.c_iflag)
+        {
+          tio.c_iflag = new_cflag;
+          tcsetattr (pty, TCSANOW, &tio);
+        }
+    }
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////////////
 
 #ifndef NO_SETOWNER_TTYDEV
 static struct ttyconf {
@@ -323,8 +362,10 @@ static struct ttyconf {
     }
 } ttyconf;
 
+/////////////////////////////////////////////////////////////////////////////
+
 void
-rxvt_ptytty::privileges (rxvt_privaction action)
+rxvt_ptytty_unix::privileges (rxvt_privaction action)
 {
   if (!name || !*name)
     return;
@@ -367,7 +408,7 @@ rxvt_ptytty::privileges (rxvt_privaction action)
 }
 #endif
 
-rxvt_ptytty::rxvt_ptytty ()
+rxvt_ptytty_unix::rxvt_ptytty_unix ()
 {
   pty = tty = -1;
   name = 0;
@@ -379,25 +420,14 @@ rxvt_ptytty::rxvt_ptytty ()
 #endif
 }
 
-rxvt_ptytty::~rxvt_ptytty ()
+rxvt_ptytty_unix::~rxvt_ptytty_unix ()
 {
   logout ();
   put ();
 }
 
 void
-
-rxvt_ptytty::close_tty ()
-{
-  if (tty < 0)
-    return;
-
-  close (tty);
-  tty = -1;
-}
-
-void
-rxvt_ptytty::put ()
+rxvt_ptytty_unix::put ()
 {
 #ifndef NO_SETOWNER_TTYDEV
   privileges (RESTORE);
@@ -412,13 +442,7 @@ rxvt_ptytty::put ()
 }
 
 bool
-rxvt_ptytty::make_controlling_tty ()
-{
-  return control_tty (tty, name) >= 0;
-}
-
-bool
-rxvt_ptytty::get ()
+rxvt_ptytty_unix::get ()
 {
   /* get master (pty) */
   if ((pty = get_pty (&tty, &name)) < 0)
@@ -441,33 +465,6 @@ rxvt_ptytty::get ()
     }
 
   return true;
-}
-
-void
-rxvt_ptytty::set_utf8_mode (bool on)
-{
-#ifdef IUTF8
-  if (pty < 0)
-    return;
-
-  struct termios tio;
-
-  if (tcgetattr (pty, &tio) != -1)
-    {
-      tcflag_t new_cflag = tio.c_iflag;
-
-      if (on)
-        new_cflag |= IUTF8;
-      else
-        new_cflag &= ~IUTF8;
-
-      if (new_cflag != tio.c_iflag)
-        {
-          tio.c_iflag = new_cflag;
-          tcsetattr (pty, TCSANOW, &tio);
-        }
-    }
-#endif
 }
 
 /*----------------------- end-of-file (C source) -----------------------*/

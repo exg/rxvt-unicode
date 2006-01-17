@@ -57,7 +57,7 @@ static void             rxvt_update_lastlog              (const char *fname, con
  * make and write utmp and wtmp entries
  */
 void
-rxvt_ptytty::login (int cmd_pid, bool login_shell, const char *hostname)
+rxvt_ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
 {
   const char *pty = name;
 
@@ -227,7 +227,7 @@ rxvt_ptytty::login (int cmd_pid, bool login_shell, const char *hostname)
  * remove utmp and wtmp entries
  */
 void
-rxvt_ptytty::logout ()
+rxvt_ptytty_unix::logout ()
 {
   if (!cmd_pid)
     return;
