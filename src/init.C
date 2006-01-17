@@ -1445,8 +1445,10 @@ rxvt_term::run_command (const char *const *argv)
         _exit (EXIT_FAILURE);
 
       default:
+#if UTMP_SUPPORT
         if (!OPTION (Opt_utmpInhibit))
           pty->login (cmd_pid, OPTION (Opt_loginShell), rs[Rs_display_name]);
+#endif
 
         pty->close_tty ();
         break;

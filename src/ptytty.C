@@ -392,7 +392,9 @@ rxvt_ptytty_unix::rxvt_ptytty_unix ()
 
 rxvt_ptytty_unix::~rxvt_ptytty_unix ()
 {
+#if UTMP_SUPPORT
   logout ();
+#endif
   put ();
 }
 
@@ -539,11 +541,13 @@ void serve ()
         }
       else if (cmd.type == command::login)
         {
+#if UTMP_SUPPORT
           if (find (ptys.begin (), ptys.end (), cmd.id))
             {
               cmd.hostname[sizeof (cmd.hostname) - 1] = 0;
               cmd.id->login (cmd.cmd_pid, cmd.login_shell, cmd.hostname);
             }
+#endif
         }
       else if (cmd.type == command::destroy)
         {
