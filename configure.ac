@@ -711,22 +711,12 @@ dnl# --------------------------------------------------------------------------
 AC_TYPE_SIGNAL
 dnl> AC_FUNC_VPRINTF
 
-dnl# Note: On Ultrix, setsid() does weirdo stuff, disable it
-case "$host_alias" in
-    *ultrix) ac_cv_func_setsid='no' ;;
-    *) break;;
-esac
-
 AC_CHECK_FUNCS( \
-	atexit \
 	revoke \
 	unsetenv \
 	setutent \
 	seteuid \
 	setreuid \
-	setsid \
-	setpgrp \
-	setpgid \
 	_getpty \
 	getpt \
 	posix_openpt \
