@@ -72,14 +72,12 @@ get_pty_streams (int *fd_tty, char **ttydev)
 #ifdef NO_SETOWNER_TTYDEV
   int pfd;
 
-# ifdef PTYS_ARE_GETPT
+# if defined(PTYS_ARE_GETPT)
   pfd = getpt();
-# else
-# ifdef PTYS_ARE_POSIX
+# elif defined(PTYS_ARE_POSIX)
   pfd = posix_openpt (O_RDWR);
 # else
   pfd = open ("/dev/ptmx", O_RDWR | O_NOCTTY, 0);
-# endif
 # endif
   if (pfd >= 0)
     {
@@ -89,9 +87,11 @@ get_pty_streams (int *fd_tty, char **ttydev)
           *ttydev = strdup (ptsname (pfd));	/* get slave's name */
           return pfd;
         }
+
       close (pfd);
     }
 #endif
+
   return -1;
 }
 
@@ -110,6 +110,7 @@ get_pty_openpty (int *fd_tty, char **ttydev)
       return pfd;
     }
 #endif
+
   return -1;
 }
 
@@ -123,6 +124,7 @@ get_pty__getpty (int *fd_tty, char **ttydev)
   if (*ttydev != NULL)
     return pfd;
 #endif
+
   return -1;
 }
 
@@ -138,6 +140,7 @@ get_pty_ptc (int *fd_tty, char **ttydev)
       return pfd;
     }
 #endif
+
   return -1;
 }
 
@@ -153,6 +156,7 @@ get_pty_clone (int *fd_tty, char **ttydev)
       return pfd;
     }
 #endif
+
   return -1;
 }
 
@@ -160,37 +164,40 @@ static inline int
 get_pty_numeric (int *fd_tty, char **ttydev)
 {
 #ifdef PTYS_ARE_NUMERIC
-    int pfd;
-    int idx;
-    char *c1, *c2;
-    char pty_name[] = "/dev/ptyp???";
-    char tty_name[] = "/dev/ttyp???";
+  int pfd;
+  int idx;
+  char *c1, *c2;
+  char pty_name[] = "/dev/ptyp???";
+  char tty_name[] = "/dev/ttyp???";
 
-    c1 = &(pty_name[sizeof (pty_name) - 4]);
-    c2 = &(tty_name[sizeof (tty_name) - 4]);
-    for (idx = 0; idx < 256; idx++)
-      {
-        sprintf (c1, "%d", idx);
-        sprintf (c2, "%d", idx);
-        if (access (tty_name, F_OK) < 0)
-          {
-            idx = 256;
-            break;
-          }
+  c1 = &(pty_name[sizeof (pty_name) - 4]);
+  c2 = &(tty_name[sizeof (tty_name) - 4]);
 
-        if ((pfd = open (pty_name, O_RDWR | O_NOCTTY, 0)) >= 0)
-          {
-            if (access (tty_name, R_OK | W_OK) == 0)
-              {
-                *ttydev = strdup (tty_name);
-                return pfd;
-              }
+  for (idx = 0; idx < 256; idx++)
+    {
+      sprintf (c1, "%d", idx);
+      sprintf (c2, "%d", idx);
 
-            close (pfd);
-          }
-      }
+      if (access (tty_name, F_OK) < 0)
+        {
+          idx = 256;
+          break;
+        }
+
+      if ((pfd = open (pty_name, O_RDWR | O_NOCTTY, 0)) >= 0)
+        {
+          if (access (tty_name, R_OK | W_OK) == 0)
+            {
+              *ttydev = strdup (tty_name);
+              return pfd;
+            }
+
+          close (pfd);
+        }
+    }
 #endif
-    return -1;
+
+  return -1;
 }
 
 static inline int
@@ -203,33 +210,36 @@ get_pty_searched (int *fd_tty, char **ttydev)
 # ifndef PTYCHAR2
 #  define PTYCHAR2	"0123456789abcdef"
 # endif
-    int pfd;
-    const char *c1, *c2;
-    char pty_name[] = "/dev/pty??";
-    char tty_name[] = "/dev/tty??";
+  int pfd;
+  const char *c1, *c2;
+  char pty_name[] = "/dev/pty??";
+  char tty_name[] = "/dev/tty??";
 
-    for (c1 = PTYCHAR1; *c1; c1++)
-      {
-        pty_name[ (sizeof (pty_name) - 3)] =
-          tty_name[ (sizeof (pty_name) - 3)] = *c1;
-        for (c2 = PTYCHAR2; *c2; c2++)
-          {
-            pty_name[ (sizeof (pty_name) - 2)] =
-              tty_name[ (sizeof (pty_name) - 2)] = *c2;
-            if ((pfd = open (pty_name, O_RDWR | O_NOCTTY, 0)) >= 0)
-              {
-                if (access (tty_name, R_OK | W_OK) == 0)
-                  {
-                    *ttydev = strdup (tty_name);
-                    return pfd;
-                  }
+  for (c1 = PTYCHAR1; *c1; c1++)
+    {
+      pty_name[ (sizeof (pty_name) - 3)] =
+        tty_name[ (sizeof (pty_name) - 3)] = *c1;
 
-                close (pfd);
-              }
-          }
-      }
+      for (c2 = PTYCHAR2; *c2; c2++)
+        {
+          pty_name[ (sizeof (pty_name) - 2)] =
+            tty_name[ (sizeof (pty_name) - 2)] = *c2;
+
+          if ((pfd = open (pty_name, O_RDWR | O_NOCTTY, 0)) >= 0)
+            {
+              if (access (tty_name, R_OK | W_OK) == 0)
+                {
+                  *ttydev = strdup (tty_name);
+                  return pfd;
+                }
+
+              close (pfd);
+            }
+        }
+    }
 #endif
-    return -1;
+
+  return -1;
 }
 
 static int
@@ -245,6 +255,7 @@ get_pty (int *fd_tty, char **ttydev)
       || (pfd = get_pty_numeric (fd_tty, ttydev)) != -1
       || (pfd = get_pty_searched (fd_tty, ttydev)) != -1)
     return pfd;
+
   return -1;
 }
 
@@ -265,12 +276,8 @@ get_tty (char *ttydev)
 static int
 control_tty (int fd_tty)
 {
-  int fd;
-
-  /* ---------------------------------------- */
   setsid ();
 
-  /* ---------------------------------------- */
 # if defined(PTYS_ARE_PTMX) && defined(I_PUSH)
   /*
    * Push STREAMS modules:
@@ -298,14 +305,14 @@ control_tty (int fd_tty)
       ioctl (fd_tty, I_PUSH, "ttcompat");
     }
 # endif
-  /* ---------------------------------------- */
-  fd = ioctl (fd_tty, TIOCSCTTY, NULL);
-  /* ---------------------------------------- */
-  fd = open ("/dev/tty", O_WRONLY);
+
+  ioctl (fd_tty, TIOCSCTTY, NULL);
+
+  int fd = open ("/dev/tty", O_WRONLY);
   if (fd < 0)
     return -1;		/* fatal */
+
   close (fd);
-  /* ---------------------------------------- */
 
   return 0;
 }
@@ -416,7 +423,6 @@ rxvt_ptytty_unix::privileges (rxvt_privaction action)
       chmod (name, (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH));
       chown (name, 0, 0);
 # endif
-
     }
 }
 #endif
