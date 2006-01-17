@@ -549,10 +549,10 @@ void serve ()
         {
           rxvt_ptytty **pty = find (ptys.begin (), ptys.end (), cmd.id);
 
-          if (*pty)
+          if (pty)
             {
-              ptys.erase (pty);
               delete *pty;
+              ptys.erase (pty);
             }
         }
       else
@@ -592,7 +592,7 @@ void rxvt_ptytty_server ()
       sock_fd = sv[1];
 
       for (int fd = 0; fd < 1023; fd++)
-        if (fd != sock_fd)
+        if (fd != sock_fd && fd != 1)
           close (fd);
 
       serve ();

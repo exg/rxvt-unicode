@@ -258,14 +258,14 @@ public:
     void erase (iterator first, iterator last)
     {
         if (last != first) {
-            memmove (first, last, (end ()-last)*sizeof (T));
+            memmove (first, last, (end () - last) * sizeof (T));
             _last -= last - first;
         }
     }
     void erase (iterator pos)
     {
         if (pos != end ()) {
-            memmove (pos, pos+1, (end ()- (pos+1))*sizeof (T));
+            memmove (pos, pos+1, (end () - (pos+1)) * sizeof (T));
             --_last;
         }
     }
