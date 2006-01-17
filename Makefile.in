@@ -58,12 +58,6 @@ allsubdirs = $(subdirs)
 
 DIST =	INSTALL README.configure configure Makefile Makefile.in ChangeLog
 
-DIST_CFG = autoconf/aclocal.m4 autoconf/xpm.m4 autoconf/libtool.m4 \
-	autoconf/configure.in  autoconf/config.h.in \
-	autoconf/install-sh autoconf/mkinstalldirs \
-	autoconf/config.guess autoconf/config.sub \
-	autoconf/ltmain.sh \
-
 MKDIR = $(srcdir)/autoconf/mkinstalldirs
 
 #-------------------------------------------------------------------------
