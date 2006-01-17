@@ -4,7 +4,7 @@
 #include "feature.h"
 
 #if defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
-# if defined(PTYS_ARE_GETPT) || defined(PTYS_ARE_PTMX)
+# if defined(PTYS_ARE_GETPT) || defined(PTYS_ARE_POSIX) || defined(PTYS_ARE_PTMX)
 #  define NO_SETOWNER_TTYDEV 1
 # endif
 #endif
