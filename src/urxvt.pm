@@ -167,7 +167,9 @@ overlays or changes.
 =item selection-pastebin
 
 This is a little rarely useful extension that Uploads the selection as
-textfile to a remote site (or does other things).
+textfile to a remote site (or does other things). (The implementation is
+not currently secure for use in a multiuser environment as it writes to
+F</tmp> directly.).
 
 It listens to the C<selection-pastebin:remote-pastebin> keyboard command,
 i.e.
