@@ -39,7 +39,6 @@
 #include "salloc.h"
 
 #include "rxvtperl.h"
-#include "logging.h"
 
 // try to avoid some macros to decrease code size, on some systems
 #if ENABLE_MINIMAL
