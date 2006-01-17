@@ -166,20 +166,30 @@ overlays or changes.
 
 =item selection-pastebin
 
-Uploads the selection as textfile to a remote site.
+This is a little rarely useful extension that Uploads the selection as
+textfile to a remote site (or does other things).
+
+It listens to the C<selection-pastebin:remote-pastebin> keyboard command,
+i.e.
 
    URxvt.keysym.C-M-e: perl:selection-pastebin:remote-pastebin
 
-To set the command to upload the file set this resource:
+Pressing this combination runs a command with C<%> replaced by the name of
+the textfile. This command can be set via a resource:
 
-   URxvt.selection-pastebin-cmd: rsync -apP % ruth:/var/www/www.ta-sa.org/files/txt/.
+   URxvt.selection-pastebin.cmd: rsync -apP % ruth:/var/www/www.ta-sa.org/files/txt/.
 
-The % is the placeholder for the textfile. The name of the textfile is the hex encoded 
-md5 sum of the selection.
-After an successful upload the selection will be replaced by the following url 
-(the % is the placeholder for the filename):
+And the default is likely not useful to anybody but the few people around
+here :)
 
-   URxvt.selection-pastebin-url: http://www.ta-sa.org/files/txt/%
+The name of the textfile is the hex encoded md5 sum of the selection, so
+the same content should lead to the same filename.
+
+After a successful upload the selection will be replaced by the text given
+in the C<selection-pastebin-url> resource (again, the % is the placeholder
+for the filename):
+
+   URxvt.selection-pastebin.url: http://www.ta-sa.org/files/txt/%
 
 =back
 
