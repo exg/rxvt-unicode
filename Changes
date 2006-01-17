@@ -13,6 +13,7 @@ WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
 9.0
+        - implemented perl:selection:remote-pastebin command in perl/selection
 	- use the scrollback buffer even when the scroll region doesn't
           span the whole screen, as long as it starts at row 0.
         - swap the environment in some more cases. This hopefully fixes
