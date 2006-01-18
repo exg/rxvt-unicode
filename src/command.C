@@ -3768,7 +3768,6 @@ rxvt_term::process_color_seq (int report, int color, const char *str, char resp)
 void
 rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 {
-  int changed = 0;
   int color;
   char *buf, *name;
   bool query = str[0] == '?' && !str[1];
@@ -3894,30 +3893,34 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 #endif
 
       case Rxvt_Pixmap:
-        if (*str != ';')
-          {
+        {
+          if (*str != ';')
+            {
 #if XPM_BACKGROUND
-            scale_pixmap ("");	/* reset to default scaling */
-            set_bgPixmap (str);	/* change pixmap */
-            scr_touch (true);
+              scale_pixmap ("");	/* reset to default scaling */
+              set_bgPixmap (str);	/* change pixmap */
+              scr_touch (true);
 #endif
-          }
+            }
 
-        while ((str = strchr (str, ';')) != NULL)
-          {
-            str++;
+          int changed = 0;
+
+          while ((str = strchr (str, ';')) != NULL)
+            {
+              str++;
 #if XPM_BACKGROUND
-            changed += scale_pixmap (str);
+              changed += scale_pixmap (str);
 #endif
-          }
+            }
 
-        if (changed)
-          {
+          if (changed)
+            {
 #ifdef XPM_BACKGROUND
-            resize_pixmap ();
-            scr_touch (true);
+              resize_pixmap ();
+              scr_touch (true);
 #endif
-          }
+            }
+        }
         break;
 
       case Rxvt_restoreFG:

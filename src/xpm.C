@@ -52,30 +52,32 @@ static void      rxvt_pixmap_incr                 (unsigned int *wh, unsigned in
 int
 rxvt_term::scale_pixmap (const char *geom)
 {
-  int             flags, changed = 0;
-  int             x = 0, y = 0;
-  unsigned int    w = 0, h = 0;
-  unsigned int    n;
-  char           *p, *str;
-  bgPixmap_t     *bgpixmap = & (bgPixmap);
+  int flags, changed = 0;
+  int x = 0, y = 0;
+  unsigned int w = 0, h = 0;
+  unsigned int n;
+  char *p;
+  bgPixmap_t *bgpixmap = & (bgPixmap);
 
-#define MAXLEN_GEOM		sizeof("[1000x1000+1000+1000]")
+#define MAXLEN_GEOM		sizeof("[10000x10000+10000+10000]")
 
   if (geom == NULL)
     return 0;
-  str = (char *)rxvt_malloc (MAXLEN_GEOM + 1);
+
+  char str[MAXLEN_GEOM];
+
   if (!strcmp (geom, "?"))
     {
       sprintf (str, "[%dx%d+%d+%d]",	/* can't presume snprintf () ! */
-              min (bgpixmap->w, 9999), min (bgpixmap->h, 9999),
-              min (bgpixmap->x, 9999), min (bgpixmap->y, 9999));
+              min (bgpixmap->w, 32767), min (bgpixmap->h, 32767),
+              min (bgpixmap->x, 32767), min (bgpixmap->y, 32767));
       process_xterm_seq (XTerm_title, str, CHAR_ST);
-      free (str);
       return 0;
     }
 
   if ((p = strchr (geom, ';')) == NULL)
     p = strchr (geom, '\0');
+
   n = (p - geom);
   if (n <= MAXLEN_GEOM)
     {
@@ -83,17 +85,21 @@ rxvt_term::scale_pixmap (const char *geom)
       str[n] = '\0';
 
       flags = XParseGeometry (str, &x, &y, &w, &h);
+
       if (!flags)
         {
           flags |= WidthValue;
           w = 0;
         }			/* default is tile */
+
       if (flags & WidthValue)
         {
-          if (! (flags & XValue))
+          if (!(flags & XValue))
             x = 50;
-          if (! (flags & HeightValue))
+
+          if (!(flags & HeightValue))
             h = w;
+
           if (w && !h)
             {
               w = (bgpixmap->w * w) / 100;
@@ -104,56 +110,56 @@ rxvt_term::scale_pixmap (const char *geom)
               w = bgpixmap->w;
               h = (bgpixmap->h * h) / 100;
             }
-          if (w > 1000)
-            w = 1000;
-          if (h > 1000)
-            h = 1000;
+
+          min_it (w, 32767);
+          min_it (h, 32767);
+
           if (bgpixmap->w != (short)w)
             {
               bgpixmap->w = (short)w;
               changed++;
             }
+
           if (bgpixmap->h != (short)h)
             {
               bgpixmap->h = (short)h;
               changed++;
             }
         }
-      if (! (flags & YValue))
+
+      if (!(flags & YValue))
         {
           if (flags & XNegative)
             flags |= YNegative;
+
           y = x;
         }
 
-      if (! (flags & WidthValue) && geom[0] != '=')
+      if (!(flags & WidthValue) && geom[0] != '=')
         {
           x += bgpixmap->x;
           y += bgpixmap->y;
         }
-      else
+
+      if (xpmAttr.width && xpmAttr.height)
         {
-          if (flags & XNegative)
-            x += 100;
-          if (flags & YNegative)
-            y += 100;
+          x = MOD(x, xpmAttr.width);
+          y = MOD(y, xpmAttr.height);
         }
-      min_it (x, 100);
-      min_it (y, 100);
-      max_it (x, 0);
-      max_it (y, 0);
+
       if (bgpixmap->x != x)
         {
           bgpixmap->x = x;
           changed++;
         }
+
       if (bgpixmap->y != y)
         {
           bgpixmap->y = y;
           changed++;
         }
     }
-  free (str);
+
   return changed;
 }
 
@@ -182,27 +188,29 @@ rxvt_term::resize_pixmap ()
 
   if (bgPixmap.pixmap != None)
     {	/* we have a specified pixmap */
-      unsigned int    w = bgPixmap.w, h = bgPixmap.h,
-                      x = bgPixmap.x, y = bgPixmap.y;
-      unsigned int    xpmh = xpmAttr.height,
-                      xpmw = xpmAttr.width;
+      unsigned int w = bgPixmap.w, h = bgPixmap.h,
+                   x = bgPixmap.x, y = bgPixmap.y;
+      unsigned int xpmh = xpmAttr.height,
+                   xpmw = xpmAttr.width;
 
       /*
        * don't zoom pixmap too much nor expand really small pixmaps
        */
-      if (w > 1000 || h > 1000)
+      if (w > 32767 || h > 32767)
         w = 1;
       else if (width > (10 * xpmw)
                || height > (10 * xpmh))
         w = 0;		/* tile */
 
-      if (w == 0)
+      if (!w)
         {
           /* basic X tiling - let the X server do it */
-          pixmap = XCreatePixmap (disp, vt, xpmw, xpmh,
-                                  (unsigned int)display->depth);
-          XCopyArea (disp, bgPixmap.pixmap, pixmap, gc,
-                     0, 0, xpmw, xpmh, 0, 0);
+          pixmap = XCreatePixmap (disp, vt, xpmw, xpmh, display->depth);
+
+          XCopyArea (disp, bgPixmap.pixmap, pixmap, gc, x, y, xpmw - x, xpmh - y,        0,        0);
+          XCopyArea (disp, bgPixmap.pixmap, pixmap, gc, x, 0, xpmw - x,        y,        0, xpmh - y);
+          XCopyArea (disp, bgPixmap.pixmap, pixmap, gc, 0, y,        x, xpmh - y, xpmw - x,        0);
+          XCopyArea (disp, bgPixmap.pixmap, pixmap, gc, 0, 0,        x,        y, xpmw - x, xpmh - y);
         }
       else
         {
@@ -223,6 +231,7 @@ rxvt_term::resize_pixmap ()
             {
               if (p >= xpmw)
                 p = 0;
+
               /* copy one column from the original pixmap to the tmp pixmap */
               XCopyArea (disp, bgPixmap.pixmap, tmp, gc,
                         (int)p, 0, 1, xpmh, (int)x, 0);
@@ -254,6 +263,13 @@ rxvt_term::resize_pixmap ()
     }
 
   XSetWindowBackgroundPixmap (disp, vt, pixmap);
+
+  if (pixmap != None)
+    {
+      XFreePixmap (disp, pixmap);
+      pixmap = None;
+    }
+
   XFreeGC (disp, gc);
   am_transparent = 0;
 }

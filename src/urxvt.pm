@@ -166,6 +166,14 @@ make them clickable. When middle-clicked, the program specified in the
 resource C<urlLauncher> (default C<x-www-browser>) will be started with
 the URL as first argument.
 
+=item automove-background
+
+This is basically a one-line extension that dynamically changes the background pixmap offset
+to the window position, in effect creating the same effect as pseudo transparency with
+a custom pixmap. No scaling is supported in this mode. Exmaple:
+
+   @@RXVT_NAME@@ -pixmap background.xpm -pe automove-background
+
 =item block-graphics-to-ascii
 
 A not very useful example of filtering all text output to the terminal,
