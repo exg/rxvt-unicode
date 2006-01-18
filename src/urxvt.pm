@@ -436,6 +436,8 @@ does focus in processing.
 Called wheneever the window loses keyboard focus, before rxvt-unicode does
 focus out processing.
 
+=item on_configure_notify $term, $event
+
 =item on_key_press $term, $event, $keysym, $octets
 
 =item on_key_release $term, $event, $keysym

@@ -34,4 +34,5 @@
   def (MOTION_NOTIFY)
   def (MAP_NOTIFY)
   def (UNMAP_NOTIFY)
+  def (CONFIGURE_NOTIFY)
   def (CUSTOM_REND) // hovering over custom rendition, generate enter/leave maybe?

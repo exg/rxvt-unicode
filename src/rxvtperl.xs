@@ -537,6 +537,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 
 #           define set(name, sv) hv_store (hv, # name,  sizeof (# name) - 1, sv, 0)
 #           define setiv(name, val) hv_store (hv, # name,  sizeof (# name) - 1, newSViv (val), 0)
+#           define setuv(name, val) hv_store (hv, # name,  sizeof (# name) - 1, newSVuv (val), 0)
 #           undef set
 
                   setiv (type,       xe->type);
@@ -550,31 +551,54 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
                       case ButtonPress:
                       case ButtonRelease:
                       case MotionNotify:
-                        setiv (time,   xe->xmotion.time);
-                        setiv (x,      xe->xmotion.x);
-                        setiv (y,      xe->xmotion.y);
-                        setiv (row,    xe->xmotion.y / term->fheight);
-                        setiv (col,    xe->xmotion.x / term->fwidth);
-                        setiv (x_root, xe->xmotion.x_root);
-                        setiv (y_root, xe->xmotion.y_root);
-                        setiv (state,  xe->xmotion.state);
-                        break;
-                    }
+                        setuv (window,    xe->xmotion.window);
+                        setuv (root,      xe->xmotion.root);
+                        setuv (subwindow, xe->xmotion.subwindow);
+                        setuv (time,      xe->xmotion.time);
+                        setiv (x,         xe->xmotion.x);
+                        setiv (y,         xe->xmotion.y);
+                        setiv (row,       xe->xmotion.y / term->fheight);
+                        setiv (col,       xe->xmotion.x / term->fwidth);
+                        setiv (x_root,    xe->xmotion.x_root);
+                        setiv (y_root,    xe->xmotion.y_root);
+                        setuv (state,     xe->xmotion.state);
 
-                  switch (xe->type)
-                    {
-                      case KeyPress:
-                      case KeyRelease:
-                        setiv (keycode, xe->xkey.keycode);
+                        switch (xe->type)
+                          {
+                            case KeyPress:
+                            case KeyRelease:
+                              setuv (keycode, xe->xkey.keycode);
+                              break;
+
+                            case ButtonPress:
+                            case ButtonRelease:
+                              setuv (button,  xe->xbutton.button);
+                              break;
+
+                            case MotionNotify:
+                              setiv (is_hint, xe->xmotion.is_hint);
+                              break;
+                          }
+
                         break;
 
-                      case ButtonPress:
-                      case ButtonRelease:
-                        setiv (button,  xe->xbutton.button);
-                        break;
+                      case MapNotify:
+                      case UnmapNotify:
+                      case ConfigureNotify:
+                        setuv (event,  xe->xconfigure.event);
+                        setuv (window, xe->xconfigure.window);
 
-                      case MotionNotify:
-                        setiv (is_hint, xe->xmotion.is_hint);
+                        switch (xe->type)
+                          {
+                            case ConfigureNotify:
+                              setiv (x,      xe->xconfigure.x);
+                              setiv (y,      xe->xconfigure.y);
+                              setiv (width,  xe->xconfigure.width);
+                              setiv (height, xe->xconfigure.height);
+                              setuv (above,  xe->xconfigure.above);
+                              break;
+                          }
+
                         break;
                     }
 

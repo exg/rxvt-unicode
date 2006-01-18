@@ -1504,6 +1504,8 @@ rxvt_term::x_cb (XEvent &ev)
                 resize_all_windows (ev.xconfigure.width, ev.xconfigure.height, 1);
               }
 
+            HOOK_INVOKE ((this, HOOK_CONFIGURE_NOTIFY, DT_XEVENT, &ev, DT_END));
+
 #ifdef TRANSPARENT		/* XXX: maybe not needed - leave in for now */
             if (OPTION (Opt_transparent))
               check_our_parents ();
