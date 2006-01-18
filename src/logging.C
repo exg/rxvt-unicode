@@ -168,7 +168,7 @@ rxvt_ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
   {
 # ifdef HAVE_TTYSLOT
     int fdstdin = dup (STDIN_FILENO);
-    dup2 (pty->tty, STDIN_FILENO);
+    dup2 (tty, STDIN_FILENO);
 
     i = ttyslot ();
     if (rxvt_write_bsd_utmp (i, ut))
