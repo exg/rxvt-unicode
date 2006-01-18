@@ -14,7 +14,7 @@ WISH: support tex fonts
 
 9.0
 TODO: distributed clipboard example
-
+TODO: use correct %ENV for perl exec'ed processes.
         - setuid/setgid operation is now _encouraged_: security has been
           improved by moving privileged operations into a separate process
           and permanently dropping privileges within the terminal. This
