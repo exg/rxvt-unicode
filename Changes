@@ -6,6 +6,7 @@ TODO: after requesting the selection and getting a timeout, no further requests 
 TODO: "slow" rendering mode for bidi and scripts
 TODO: read property sequence is broken with respect to utf-8 etc.
 TODO: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
+TODO: rxvt -name urxvt-girly /// leave pixel droppings
 WISH: perl extension for background image loading and moving the origin.
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an overlay...
 WISH: just for fun, do shade and tint with XRender.
@@ -13,35 +14,41 @@ WISH: support tex fonts
 
 9.0
 TODO: distributed clipboard example
-        - fixed struct utmp check in configure for OpenBSD
-        - new script: perl/selection-pastebin
-        - improved security of setuid/setgid operation, which is now
-          encouraged, by moving privileged operations into a separate
-          process and permanently dropping privileges within the
-          terminal. This makes it possible to remove security checks from
-          the perl code and gives a much safer feeling when urxvt needs to
-          run with special privileges.
+
+        - setuid/setgid operation is now _encouraged_: security has been
+          improved by moving privileged operations into a separate process
+          and permanently dropping privileges within the terminal. This
+          makes it possible to remove security checks from the perl code
+          and gives a much safer feeling when urxvt needs to run with
+          special privileges.
+        - perl taint checking disabled, as urxvt no longer runs setuid/setgid
+          itself.
+        - new extension example: perl/selection-pastebin, can be used to
+          e.g. upload the selection to a webserver and generate a url, or
+          similar stuff.
 	- use the scrollback buffer even when the scroll region doesn't
-          span the whole screen, as long as it starts at row 0.
-        - swap the environment in some more cases. This hopefully fixes
-          some segfaults that might be caused by xft asking for env variables
-          at the wrong time.
+          span the whole screen, as long as it starts at row 0. Helps
+          for programs displaying a status line at the bottom.
 	- selection popup now shows selection in dec/hex/oct.
         - perl/selection: matching on unicode characters in the selection
           code was O(n²), which equals infinity in some degenerate cases
           :-> Matching is now done on UTF-8, which makes it almost instant.
         - perl/selection, perl/selection-autotransform: regexes are now
           being interpreted in the locale urxvt was started.
-        - perl-overlays and refresh hooks were not applied in correct order.
-        - changed coordinate-system of view_start/nsaved to be top to bottom.
+        - fixed struct utmp check in configure for OpenBSD.
         - complete overhaul of the pty/utmp management stuff and configure
           (Emanuele Giaquinta).
-        - removed src/strings.C and src/menubar.C. No menubar support
-          anymore.
 	- add tsl/fsl and related capabilities to the terminfo description,
           to set the window title.
+        - swap the environment in some more cases. This hopefully fixes
+          some segfaults that might be caused by xft asking for env variables
+          at the wrong time.
+        - removed src/strings.C and src/menubar.C. No menubar support
+          anymore.
         - removed all traces of SMOOTH_REFRESH.
         - nuked QNX support.
+        - perl-overlays and refresh hooks were not applied in correct order.
+        - changed coordinate-system of view_start/nsaved to be top to bottom.
 
 7.0  Fri Jan 13 14:02:18 CET 2006
 	- added sections for DISTRIBUTION MAINTAINERS and about
