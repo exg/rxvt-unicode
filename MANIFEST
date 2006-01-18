@@ -7,8 +7,8 @@ Makefile.in
 README.configure
 README.FAQ
 configure
+autogen.sh
 reconf
-genac
 
 doc/embed
 doc/embed-tk
