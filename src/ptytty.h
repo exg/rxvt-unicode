@@ -9,7 +9,7 @@
 #  define NO_SETOWNER_TTYDEV 1
 # endif
 #endif
-#if defined(__CYGWIN32__)
+#if defined(__CYGWIN__)
 # define NO_SETOWNER_TTYDEV 1
 #endif
 
