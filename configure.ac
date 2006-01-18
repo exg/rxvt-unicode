@@ -735,7 +735,6 @@ dnl# --------------------------------------------
 AC_CHECK_HEADER(utmp.h,
 [AC_CACHE_CHECK([for struct utmp], rxvt_cv_struct_utmp,
 [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
-#include <stdint.h>
 #include <utmp.h>]], [[struct utmp ut;]])],[rxvt_cv_struct_utmp=yes],[rxvt_cv_struct_utmp=no])])
 if test x$rxvt_cv_struct_utmp = xyes; then
   AC_DEFINE(HAVE_STRUCT_UTMP, 1, Define if utmp.h has struct utmp)
