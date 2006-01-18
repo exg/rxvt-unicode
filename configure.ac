@@ -32,7 +32,6 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_CPP
 AC_PROG_INSTALL
-AC_PROG_AWK
 
 AC_LANG(C)
 
@@ -480,8 +479,6 @@ AC_ARG_WITH(terminfo,
 
 dnl# --------------------------------------------------------------------------
 
-AC_DEFINE(PROTOTYPES, 1, Define if you need function prototypes)
-
 AC_PATH_PROG(MV, mv, mv)
 AC_PATH_PROG(RM, rm, rm)
 AC_PATH_PROG(CP, cp, cp)
@@ -489,7 +486,6 @@ AC_PATH_PROG(LN, ln, ln)
 AC_PATH_PROG(SED, sed, sed)
 AC_PATH_PROG(ECHO, echo, echo)
 AC_PATH_PROG(CMP, cmp, cmp)
-AC_PATH_PROG(TBL, tbl)
 AC_PATH_PROG(TIC, tic)
 
 dnl# need a neat way to detect SVR4 or its features

@@ -576,7 +576,6 @@ rxvt_init ()
   // before doing anything else, check for setuid/setgid operation,
   // start the helper process and drop privileges
   if (uid != geteuid ()
-      || 1 //D
       || gid != getegid ())
     {
 #if PTYTTY_HELPER

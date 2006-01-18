@@ -301,9 +301,6 @@
 /* Define to use a 24 bit visual if the screen has 24 bit mode */
 #undef PREFER_24BIT
 
-/* Define if you need function prototypes */
-#undef PROTOTYPES
-
 /* Define for first char in devptyXX */
 #undef PTYCHAR1
 

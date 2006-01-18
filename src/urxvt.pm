@@ -597,8 +597,6 @@ Change the custom value.
 =cut
 
 BEGIN {
-   urxvt->bootstrap;
-
    # overwrite perl's warn
    *CORE::GLOBAL::warn = sub {
       my $msg = join "", @_;
@@ -621,24 +619,29 @@ sub verbose {
    warn "$msg\n" if $level <= $verbosity;
 }
 
-my $extension_pkg = "extension0000";
 my %extension_pkg;
 
 # load a single script into its own package, once only
 sub extension_package($) {
    my ($path) = @_;
 
+   no strict 'refs';
+
    $extension_pkg{$path} ||= do {
-      my $pkg = "urxvt::" . ($extension_pkg++);
+      $path =~ /([^\/\\]+)$/;
+      my $pkg = $1;
+      $pkg =~ s/[^[:word:]]/_/g;
+      $pkg = "urxvt::ext::$pkg";
 
       verbose 3, "loading extension '$path' into package '$pkg'";
 
       open my $fh, "<:raw", $path
          or die "$path: $!";
 
+      @{"$pkg\::ISA"} = urxvt::term::extension::;
+
       my $source =
          "package $pkg; use strict; use utf8;\n"
-         . "use base urxvt::term::extension::;\n"
          . "#line 1 \"$path\"\n{\n"
          . (do { local $/; <$fh> })
          . "\n};\n1";

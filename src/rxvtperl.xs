@@ -404,7 +404,13 @@ rxvt_perl_interp::init (rxvt_term *term)
 
       char *argv[] = {
         "",
-        "-edo '" LIBDIR "/urxvt.pm' or ($@ and die $@) or exit 1",
+        "-e"
+        "BEGIN {"
+        "   urxvt->bootstrap;"
+        "   unshift @INC, '" LIBDIR "';"
+        "}"
+        ""
+        "use urxvt;"
       };
 
       perl = perl_alloc ();
