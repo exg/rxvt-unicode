@@ -32,7 +32,6 @@ TODO: distributed clipboard example
           span the whole screen, as long as it starts at row 0. Helps
           for programs displaying a status line at the bottom.
 	- selection popup now shows selection in dec/hex/oct.
-        - some fixes to xpm offste and scaling code.
         - perl/selection: matching on unicode characters in the selection
           code was O(n²), which equals infinity in some degenerate cases
           :-> Matching is now done on UTF-8, which makes it almost instant.
@@ -50,6 +49,7 @@ TODO: distributed clipboard example
           anymore.
         - removed all traces of SMOOTH_REFRESH.
         - nuked QNX support.
+        - made some fixes to xpm offset and scaling code.
         - perl-overlays and refresh hooks were not applied in correct order.
         - changed coordinate-system of view_start/nsaved to be top to bottom.
 
