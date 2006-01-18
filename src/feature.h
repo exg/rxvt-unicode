@@ -257,11 +257,6 @@
  */
 #define RESET_TTY_TO_COMMON_DEFAULTS
 
-/*
- * Only log in wtmp file when we're a login shell (-ls option)
- */
-#define WTMP_ONLY_ON_LOGIN
-
 /*--------------------------------BELL----------------------------------*/
 /*
  * Disable all bell indications
