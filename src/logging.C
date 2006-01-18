@@ -205,7 +205,9 @@ rxvt_ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
 #endif
 
 #ifdef WTMP_SUPPORT
+#ifdef LOG_ONLY_ON_LOGIN
   if (login_shell)
+#endif
     {
 # ifdef HAVE_STRUCT_UTMP
 #  ifdef HAVE_UPDWTMP
@@ -220,7 +222,9 @@ rxvt_ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
     }
 #endif
 #if defined(LASTLOG_SUPPORT) && defined(RXVT_LASTLOG_FILE)
+#ifdef LOG_ONLY_ON_LOGIN
   if (login_shell)
+#endif
     rxvt_update_lastlog (RXVT_LASTLOG_FILE, pty, hostname);
 #endif
 }
@@ -279,7 +283,9 @@ rxvt_ptytty_unix::logout ()
    * Write ending wtmp entry
    */
 #ifdef WTMP_SUPPORT
+#ifdef LOG_ONLY_ON_LOGIN
   if (login_shell)
+#endif
     {
 # ifdef HAVE_STRUCT_UTMP
 #  ifdef HAVE_UPDWTMP

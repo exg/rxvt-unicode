@@ -257,6 +257,11 @@
  */
 #define RESET_TTY_TO_COMMON_DEFAULTS
 
+/*
+ * Only log in wtmp and lastlog files when we're a login shell (-ls option)
+ */
+#define LOG_ONLY_ON_LOGIN
+
 /*--------------------------------BELL----------------------------------*/
 /*
  * Disable all bell indications
