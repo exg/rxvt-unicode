@@ -205,9 +205,7 @@ rxvt_ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
 #endif
 
 #ifdef WTMP_SUPPORT
-# ifdef WTMP_ONLY_ON_LOGIN
   if (login_shell)
-# endif
     {
 # ifdef HAVE_STRUCT_UTMP
 #  ifdef HAVE_UPDWTMP
@@ -281,9 +279,7 @@ rxvt_ptytty_unix::logout ()
    * Write ending wtmp entry
    */
 #ifdef WTMP_SUPPORT
-# ifdef WTMP_ONLY_ON_LOGIN
   if (login_shell)
-# endif
     {
 # ifdef HAVE_STRUCT_UTMP
 #  ifdef HAVE_UPDWTMP
