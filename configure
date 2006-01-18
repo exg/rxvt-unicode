@@ -10333,7 +10333,6 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 #include <sys/types.h>
-#include <stdint.h>
 #include <utmp.h>
 int
 main ()
