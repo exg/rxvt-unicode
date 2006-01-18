@@ -1,0 +1,7 @@
+#! perl
+
+sub on_configure_notify {
+   my ($self, $event) = @_;
+
+   $self->cmd_parse ("\033]20;;=+$event->{x}+$event->{y}\007");
+}
