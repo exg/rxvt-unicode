@@ -632,12 +632,6 @@ BEGIN {
          unless $msg =~ /\n$/;
       urxvt::warn ($msg);
    };
-
-   # %ENV is the original startup environment
-   delete $ENV{IFS};
-   delete $ENV{CDPATH};
-   delete $ENV{BASH_ENV};
-   $ENV{PATH} = "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin:/opt/sbin";
 }
 
 my $verbosity = $ENV{URXVT_PERL_VERBOSITY};
