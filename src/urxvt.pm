@@ -91,6 +91,24 @@ Binds a popup menu to Ctrl-Button3 that lets you convert the selection
 text into various other formats/action (such as uri unescaping, perl
 evalution, web-browser starting etc.), depending on content.
 
+Other extensions can extend this popup menu by pushing a code reference onto
+C<@urxvt::ext::selection_popup::hook>, that is called whenever the popup is displayed.
+
+It's sole argument is the popup menu, which can be modified. The selection
+is in C<$_>, which can be used to decide wether to add something or not.
+It should either return nothing or a string and a code reference. The
+string will be used as button text and the code reference will be called
+when the button gets activated and should transform C<$_>.
+
+The following will add an entry C<a to b> that transforms all C<a>s in
+the selection to C<b>s, but only if the selection currently contains any
+C<a>s:
+
+   push urxvt::ext::selection_popup::hook, sub {
+      /a/ ? ("a to be" => sub { s/a/b/g }
+          : ()
+   };
+
 =item searchable-scrollback<hotkey> (enabled by default)
 
 Adds regex search functionality to the scrollback buffer, triggered

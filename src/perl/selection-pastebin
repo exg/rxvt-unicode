@@ -4,19 +4,6 @@ my $timers = {};
 my $pastebin_cmd;
 my $pastebin_url;
 
-sub on_start {
-   my ($self) = @_;
-   $pastebin_cmd =
-      $self->x_resource ("selection-pastebin.cmd")
-      or "scp -p % ruth:/var/www/www.ta-sa.org/files/txt/";
-
-   $pastebin_url = 
-      $self->x_resource ("selection-pastebin.url")
-      or "http://www.ta-sa.org/files/txt/";
-
-   ()
-}
-
 sub upload_paste {
    my ($self) = @_;
 
@@ -61,11 +48,27 @@ sub upload_paste {
               ->cb (sub { delete $timers->{ov}; delete $timers->{t1}; });
 }
 
+sub on_start {
+   my ($self) = @_;
+   $pastebin_cmd = $self->x_resource ("selection-pastebin.cmd")
+                   || "scp -p % ruth:/var/www/www.ta-sa.org/files/txt/";
+
+   $pastebin_url = $self->x_resource ("selection-pastebin.url")
+                   || "http://www.ta-sa.org/files/txt/%";
+
+   push @urxvt::ext::selection_popup::hook, sub {
+      ("pastebin upload" => sub { $self->upload_paste })
+   };
+
+   ()
+}
+
 sub on_keyboard_command {
    my ($self, $cmd) = @_;
 
-   $cmd eq "selection-pastebin:remote-pastebin"
-      and upload_paste ($self);
+   if ($cmd eq "selection-pastebin:remote-pastebin") {
+      $self->upload_paste;
+   }
 
    ()
 }
