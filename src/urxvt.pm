@@ -1603,7 +1603,8 @@ sub show {
 
    urxvt::term->new ($env, "popup",
                      "--perl-lib" => "", "--perl-ext-common" => "",
-                     "-pty-fd" => -1, "-sl" => 0, "-b" => 1, "-bd" => "grey80", "-bl", "-override-redirect",
+                     "-pty-fd" => -1, "-sl" => 0,
+                     "-b" => 1, "-bd" => "grey80", "-bl", "-override-redirect",
                      "--transient-for" => $self->{term}->parent,
                      "-display" => $self->{term}->display_id,
                      "-pe" => "urxvt-popup")
