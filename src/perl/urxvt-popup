@@ -89,6 +89,9 @@ sub on_init {
    $_->{width} = $self->strwidth ($_->{text})
       for @{ $data->{item} };
 
+   $self->resource (title => "URxvt Popup Menu");
+   $self->resource (name => "URxvt.popup");
+
    $self->resource ($_ => $data->{term}->resource ($_))
       for qw(font boldFont italicFont boldItalicFont color+0 color+1);
 

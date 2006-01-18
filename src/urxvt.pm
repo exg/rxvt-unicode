@@ -1592,7 +1592,7 @@ sub show {
    delete $env->{LC_ALL};
    $env->{LC_CTYPE} = $self->{term}->locale;
 
-   urxvt::term->new ($env, $self->{term}->resource ("name"),
+   urxvt::term->new ($env, "popup",
                      "--perl-lib" => "", "--perl-ext-common" => "", "-pty-fd" => -1, "-sl" => 0, "-b" => 0,
                      "--transient-for" => $self->{term}->parent,
                      "-display" => $self->{term}->display_id,
@@ -1655,6 +1655,10 @@ Start the timer.
 =item $timer = $timer->start ($tstamp)
 
 Set the event trigger time to C<$tstamp> and start the timer.
+
+=item $timer = $timer->after ($delay)
+
+Like C<start>, but sets the expiry timer to c<urxvt::NOW + $delay>.
 
 =item $timer = $timer->stop
 

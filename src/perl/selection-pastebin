@@ -43,7 +43,7 @@ sub upload_paste {
    my $timer; $timer =
       urxvt::timer
               ->new
-              ->start (urxvt::NOW + 5)
+              ->after (5)
               ->cb (sub {undef $timer; undef $ov; });
 }
 

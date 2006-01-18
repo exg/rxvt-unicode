@@ -8,11 +8,9 @@ sub on_init {
    # force a refresh every second
    $self->{digital_clock_refresh} = urxvt::timer
                     ->new
-                    ->start (urxvt::NOW)
-                    ->cb (sub {
-                       $self->{digital_clock_refresh}->start ($self->{digital_clock_refresh}->at + 1);
-                       $self->want_refresh;
-                    });
+                    ->start (1 + int urxvt::NOW)
+                    ->interval (1)
+                    ->cb (sub { $self->want_refresh });
 
    ()
 }

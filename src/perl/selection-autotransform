@@ -5,7 +5,7 @@ sub msg {
 
    my $overlay = $self->overlay (0, 0, $self->strwidth ($msg), 1);
    $overlay->set (0, 0, $msg);
-   my $iow; $iow = urxvt::timer->new->start (urxvt::NOW + 2)->cb (sub {
+   my $iow; $iow = urxvt::timer->new->after (2)->cb (sub {
       undef $overlay;
       undef $iow;
    });

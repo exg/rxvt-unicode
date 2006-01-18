@@ -8,7 +8,7 @@ sub on_init {
    $self->{overlay} = $self->overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);
    $self->{timer} = urxvt::timer
                     ->new
-                    ->start (int urxvt::NOW) # make sure we update "on" the second
+                    ->start (1 + int urxvt::NOW) # make sure we update "on" the second
                     ->interval (1)
                     ->cb (sub {
                        $self->{overlay}->set (0, 0,

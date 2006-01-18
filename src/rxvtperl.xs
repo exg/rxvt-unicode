@@ -1717,6 +1717,13 @@ timer::start (NV tstamp = THIS->at)
         RETVAL
 
 timer *
+timer::after (NV delay)
+	CODE:
+        THIS->start (NOW + delay);
+        OUTPUT:
+        RETVAL
+
+timer *
 timer::stop ()
 	CODE:
         THIS->stop ();
