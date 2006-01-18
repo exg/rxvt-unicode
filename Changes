@@ -37,6 +37,8 @@ TODO: distributed clipboard example
           :-> Matching is now done on UTF-8, which makes it almost instant.
         - perl/selection, perl/selection-autotransform: regexes are now
           being interpreted in the locale urxvt was started.
+        - implemented override-redirect option and enabled it on menus,
+          as kwin puts our windows behind the terminal (what a shoddy wm).
         - fixed struct utmp check in configure for OpenBSD.
         - complete overhaul of the pty/utmp management stuff and configure
           (Emanuele Giaquinta).

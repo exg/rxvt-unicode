@@ -65,6 +65,7 @@
 #endif
 #if ENABLE_FRILLS
   def (transient_for)
+  def (override_redirect)
   def (pty_fd)
   def (hold)
   def (ext_bwidth)

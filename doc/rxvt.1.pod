@@ -299,6 +299,11 @@ Compile I<frills>: Set MWM hints to request a borderless window, i.e.
 if honoured by the WM, the rxvt-unicode window will not have window
 decorations; resource B<borderLess>.
 
+=item B<-override-redirect>
+
+Compile I<frills>: Sets override-redirect on the window; resource
+B<override-redirect>.
+
 =item B<-sbg>
 
 Compile I<frills>: Disable the usage of the built-in block graphics/line
@@ -954,18 +959,18 @@ Specify the reply rxvt-unicode sends to the shell when an ENQ (control-E)
 character is passed through. It may contain escape values as described
 in the entry on B<keysym> following.
 
-=item B<secondaryScreen:> I<bool>
+=item B<secondaryScreen:> I<boolean>
 
 Turn on/off secondary screen (default enabled).
 
-=item B<secondaryScroll:> I<bool>
+=item B<secondaryScroll:> I<boolean>
 
 Turn on/off secondary screen scroll (default enabled). If the this
 option is enabled, scrolls on the secondary screen will change the
 scrollback buffer and switching to/from the secondary screen will
 instead scroll the screen up.
 
-=item B<hold>: I<bool>
+=item B<hold>: I<boolean>
 
 Turn on/off hold window after exit support. If enabled, @@RXVT_NAME@@
 will not immediately destroy its window when the program executed within
@@ -1130,7 +1135,12 @@ C<selection-popup> and C<mark-urls> perl extensions.
 
 =item B<transient-for>: I<windowid>
 
-Sets the WM_TRANSIENT_FOR property to the given window iw.
+Compile I<frills>: Sets the WM_TRANSIENT_FOR property to the given window id.
+
+=item B<override-redirect>: I<boolean>
+
+Compile I<frills>: Sets override-redirect for the terminal window, making
+it almost invisible to window managers; option B<-override-redirect>.
 
 =back
 

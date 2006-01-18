@@ -961,10 +961,10 @@ source file F</src/optinc.h> to see the actual list:
 
  borderLess console cursorBlink cursorUnderline hold iconic insecure
  intensityStyles jumpScroll loginShell mapAlert meta8 mouseWheelScrollPage
- pastableTabs pointerBlank reverseVideo scrollBar scrollBar_floating
- scrollBar_right scrollTtyKeypress scrollTtyOutput scrollWithBuffer
- secondaryScreen secondaryScroll skipBuiltinGlyphs transparent
- tripleclickwords utmpInhibit visualBell
+ override-redirect pastableTabs pointerBlank reverseVideo scrollBar
+ scrollBar_floating scrollBar_right scrollTtyKeypress scrollTtyOutput
+ scrollWithBuffer secondaryScreen secondaryScroll skipBuiltinGlyphs
+ transparent tripleclickwords utmpInhibit visualBell
 
 =item $value = $term->resource ($name[, $newval])
 
@@ -991,14 +991,15 @@ to see the actual list:
   borderLess color cursorBlink cursorUnderline cutchars delete_key
   display_name embed ext_bwidth fade font geometry hold iconName
   imFont imLocale inputMethod insecure int_bwidth intensityStyles
-  italicFont jumpScroll lineSpace loginShell mapAlert menu meta8 modifier
-  mouseWheelScrollPage name pastableTabs path perl_eval perl_ext_1 perl_ext_2
-  perl_lib pointerBlank pointerBlankDelay preeditType print_pipe pty_fd
-  reverseVideo saveLines scrollBar scrollBar_align scrollBar_floating
-  scrollBar_right scrollBar_thickness scrollTtyKeypress scrollTtyOutput
-  scrollWithBuffer scrollstyle secondaryScreen secondaryScroll selectstyle
-  shade term_name title transparent transparent_all tripleclickwords
-  utmpInhibit visualBell
+  italicFont jumpScroll lineSpace loginShell mapAlert meta8 modifier
+  mouseWheelScrollPage name override_redirect pastableTabs path perl_eval
+  perl_ext_1 perl_ext_2 perl_lib pointerBlank pointerBlankDelay
+  preeditType print_pipe pty_fd reverseVideo saveLines scrollBar
+  scrollBar_align scrollBar_floating scrollBar_right scrollBar_thickness
+  scrollTtyKeypress scrollTtyOutput scrollWithBuffer scrollstyle
+  secondaryScreen secondaryScroll selectstyle shade term_name title
+  transient_for transparent transparent_all tripleclickwords utmpInhibit
+  visualBell
 
 =cut
 
@@ -1601,7 +1602,8 @@ sub show {
    $env->{LC_CTYPE} = $self->{term}->locale;
 
    urxvt::term->new ($env, "popup",
-                     "--perl-lib" => "", "--perl-ext-common" => "", "-pty-fd" => -1, "-sl" => 0, "-b" => 0,
+                     "--perl-lib" => "", "--perl-ext-common" => "",
+                     "-pty-fd" => -1, "-sl" => 0, "-b" => 1, "-bd" => "grey80", "-bl", "-override-redirect",
                      "--transient-for" => $self->{term}->parent,
                      "-display" => $self->{term}->display_id,
                      "-pe" => "urxvt-popup")

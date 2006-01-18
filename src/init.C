@@ -930,17 +930,25 @@ rxvt_term::create_windows (int argc, const char *const *argv)
       display->depth = gattr.depth; // doh //TODO, per-term not per-display?
     }
 
+  /* grab colors before netscape does */
+  Get_Colours ();
+
+  if (!set_fonts ())
+    rxvt_fatal ("unable to load base fontset, please specify a valid one using -fn, aborting.\n");
+
+  parent = DefaultRootWindow (disp);
+
+  attributes.override_redirect = !!OPTION (Opt_override_redirect);
+
 #if ENABLE_FRILLS
   if (OPTION (Opt_borderLess))
     {
-      prop = XInternAtom(disp, "_MOTIF_WM_INFO", True);
+      prop = XInternAtom (disp, "_MOTIF_WM_INFO", True);
 
       if (prop == None)
         {
           /*     print_warning("Window Manager does not support MWM hints.  Bypassing window manager control for borderless window.\n");*/
-#ifdef PREFER_24BIT
           attributes.override_redirect = TRUE;
-#endif
           mwmhints.flags = 0;
         }
       else
@@ -952,14 +960,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   else
     mwmhints.flags = 0;
 #endif
-
-  /* grab colors before netscape does */
-  Get_Colours ();
-
-  if (!set_fonts ())
-    rxvt_fatal ("unable to load base fontset, please specify a valid one using -fn, aborting.\n");
-
-  parent = DefaultRootWindow (disp);
 
 #if ENABLE_XEMBED
   if (rs[Rs_embed])
@@ -978,7 +978,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   window_calc (0, 0);
 
   /* sub-window placement & size in rxvt_resize_subwindows () */
-#ifdef PREFER_24BIT
   attributes.background_pixel = pix_colors_focused[Color_border];
   attributes.border_pixel = pix_colors_focused[Color_border];
   attributes.colormap = display->cmap;
@@ -988,15 +987,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                        ext_bwidth,
                        display->depth, InputOutput,
                        display->visual,
-                       CWColormap | CWBackPixel | CWBorderPixel, &attributes);
-#else
-  top = XCreateSimpleWindow (disp, parent,
-                             szHint.x, szHint.y,
-                             szHint.width, szHint.height,
-                             ext_bwidth,
-                             pix_colors_focused[Color_border],
-                             pix_colors_focused[Color_border]);
-#endif
+                       CWColormap | CWBackPixel | CWBorderPixel | CWOverrideRedirect,
+                       &attributes);
 
   this->parent[0] = top;
 

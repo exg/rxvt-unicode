@@ -30,15 +30,17 @@
  def(insecure,             24) // insecure esc sequences
  def(borderLess,           25) // mwm borderless hints
  def(hold,                 26) // hold window open after exit
- def(skipBuiltinGlyphs,    27) // do not use internal glyphs
+ def(override_redirect,    27)
+ def(skipBuiltinGlyphs,    28) // do not use internal glyphs
 #else
  nodef(insecure)
  nodef(borderLess)
  nodef(hold)
  nodef(skipBuiltinGlyphs)
+ nodef(override_redirect)
 #endif
 #if ENABLE_STYLES
- def(intensityStyles,      28) // font styles imply intensity
+ def(intensityStyles,      29) // font styles imply intensity
 #else
  nodef(intensityStyles)
 #endif
