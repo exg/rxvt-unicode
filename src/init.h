@@ -13,11 +13,6 @@
 # endif
 #endif				/* HAVE_XLOCALE */
 
-#if defined(PTYS_ARE_PTMX) && !defined(__CYGWIN32__)
-# include <sys/resource.h>	/* for struct rlimit */
-# define _NEW_TTY_CTRL		/* to get proper defines in <termios.h> */
-#endif
-
 #ifdef TTY_GID_SUPPORT
 # include <grp.h>
 #endif
