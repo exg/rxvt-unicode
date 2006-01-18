@@ -622,19 +622,19 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count)
       // scroll everything up 'count' lines
       term_start = (term_start + count) % total_rows;
 
+      // sever bottommost line
       {
-        // severe bottommost scrolled line
         line_t &l = ROW(row2 - count);
-        l.touch ();
         l.is_longer (0);
+        l.touch ();
       }
 
-      // erase newly scorlled-in lines
-      for (int i = count; i; --i )
+      // erase newly scrolled-in lines
+      for (int i = count; i--; )
         {
           // basically this is a slightly optimized scr_blank_screen_mem
           // it is worth the effort on slower machines
-          line_t &l = ROW(nrow - i);
+          line_t &l = ROW(row2 - i);
 
           scr_blank_line (l, 0, l.l, rstyle);
 
@@ -819,11 +819,11 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines)
 
       if (screen.flags & Screen_WrapNext)
         {
-          max_it (line->l, ncol);
-          line->is_longer (1);
-
           scr_do_wrap ();
           
+          line->l = ncol;
+          line->is_longer (1);
+
           row = screen.cur.row;
           line = &ROW(row);   /* _must_ refresh */
         }

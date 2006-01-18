@@ -14,7 +14,7 @@ WISH: support tex fonts
 
 9.0
 TODO: on_seelction_popup hook or so.
-TODO: echo * at bottom => borked line lengths
+TODO: distributed clipboard example
         - new script: perl/selection-pastebin
         - improved security of setuid/setgid operation, which is now
           encouraged, by moving privileged operations into a separate

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-17" "7.1" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-18" "7.1" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -213,28 +213,6 @@ Rot\-13 the selection when activated. Used via keyboard trigger:
 .Sp
 .Vb 1
 \&   URxvt.keysym.C-M-r: perl:selection:rot13
-.Ve
-.IP "remote-pastebin" 4
-.IX Item "remote-pastebin"
-Upload the selection as textfile to a remote site.
-.Sp
-.Vb 1
-\&   URxvt.keysym.C-M-e: perl:selection:remote-pastebin
-.Ve
-.Sp
-To set the command to upload the file set this resource:
-.Sp
-.Vb 1
-\&   URxvt.selection-pastebin-cmd: rsync -apP % ruth:/var/www/www.ta-sa.org/files/txt/.
-.Ve
-.Sp
-The % is the placeholder for the textfile. The name of the textfile is the hex encoded 
-md5 sum of the selection.
-After an successful upload the selection will be replaced by the following url 
-(the % is the placeholder for the filename):
-.Sp
-.Vb 1
-\&   URxvt.selection-pastebin-url: http://www.ta-sa.org/files/txt/%
 .Ve
 .RE
 .RS 4
@@ -323,6 +301,40 @@ Displays a digital clock using the built-in overlay.
 Displays a very simple digital clock in the upper right corner of the
 window. Illustrates overwriting the refresh callbacks to create your own
 overlays or changes.
+.IP "selection-pastebin" 4
+.IX Item "selection-pastebin"
+This is a little rarely useful extension that Uploads the selection as
+textfile to a remote site (or does other things). (The implementation is
+not currently secure for use in a multiuser environment as it writes to
+\&\fI/tmp\fR directly.).
+.Sp
+It listens to the \f(CW\*(C`selection\-pastebin:remote\-pastebin\*(C'\fR keyboard command,
+i.e.
+.Sp
+.Vb 1
+\&   URxvt.keysym.C-M-e: perl:selection-pastebin:remote-pastebin
+.Ve
+.Sp
+Pressing this combination runs a command with \f(CW\*(C`%\*(C'\fR replaced by the name of
+the textfile. This command can be set via a resource:
+.Sp
+.Vb 1
+\&   URxvt.selection-pastebin.cmd: rsync -apP % ruth:/var/www/www.ta-sa.org/files/txt/.
+.Ve
+.Sp
+And the default is likely not useful to anybody but the few people around
+here :)
+.Sp
+The name of the textfile is the hex encoded md5 sum of the selection, so
+the same content should lead to the same filename.
+.Sp
+After a successful upload the selection will be replaced by the text given
+in the \f(CW\*(C`selection\-pastebin\-url\*(C'\fR resource (again, the % is the placeholder
+for the filename):
+.Sp
+.Vb 1
+\&   URxvt.selection-pastebin.url: http://www.ta-sa.org/files/txt/%
+.Ve
 .SH "API DOCUMENTATION"
 .IX Header "API DOCUMENTATION"
 .Sh "General \s-1API\s0 Considerations"
