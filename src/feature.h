@@ -259,11 +259,6 @@
 
 /*--------------------------------MISC----------------------------------*/
 /*
- * Disable to reset tty device to pre-incovation state
- */
-#define RESET_TTY_TO_COMMON_DEFAULTS
-
-/*
  * Only log in wtmp and lastlog files when we're a login shell (-ls option)
  */
 #define LOG_ONLY_ON_LOGIN
