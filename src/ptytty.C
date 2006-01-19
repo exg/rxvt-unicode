@@ -381,7 +381,7 @@ static struct ttyconf {
 #endif                          /* TTY_GID_SUPPORT */
         {
           mode = S_IRUSR | S_IWUSR | S_IWGRP | S_IWOTH;
-          gid = getgid ();
+          gid = 0;
         }
     }
 } ttyconf;
@@ -396,33 +396,16 @@ rxvt_ptytty_unix::privileges (rxvt_privaction action)
 
   if (action == SAVE)
     {
-# ifndef RESET_TTY_TO_COMMON_DEFAULTS
-      /* store original tty status for restoration rxvt_clean_exit () -- rgg 04/12/95 */
-      if (lstat (name, &savestat) < 0)       /* you lose out */
-        ;
-      else
-# endif
-        {
-          saved = true;
-          chown (name, getuid (), ttyconf.gid);      /* fail silently */
-          chmod (name, ttyconf.mode);
+      chown (name, getuid (), ttyconf.gid);      /* fail silently */
+      chmod (name, ttyconf.mode);
 # ifdef HAVE_REVOKE
-          revoke (name);
+      revoke (name);
 # endif
-        }
     }
   else
     {                    /* action == RESTORE */
-# ifndef RESET_TTY_TO_COMMON_DEFAULTS
-      if (saved)
-        {
-          chmod (name, savestat.st_mode);
-          chown (name, savestat.st_uid, savestat.st_gid);
-        }
-# else
-      chmod (name, (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH));
-      chown (name, 0, 0);
-# endif
+      chmod (name, RESTORE_TTY_MODE);
+      chown (name, 0, ttyconf.gid);
     }
 }
 #endif
@@ -431,9 +414,6 @@ rxvt_ptytty_unix::rxvt_ptytty_unix ()
 {
   pty = tty = -1;
   name = 0;
-#ifndef NO_SETOWNER_TTYDEV
-  saved = false;
-#endif
 #if UTMP_SUPPORT
   cmd_pid = 0;
 #endif
