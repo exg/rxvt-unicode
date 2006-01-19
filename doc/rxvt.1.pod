@@ -1460,16 +1460,20 @@ Project Coordinator (changes.txt 2.21a to 2.4.5)
 
 =item Geoff Wing L<< <gcw@pobox.com> >>
 
-Rewrote screen display and text selection routines. Project Coordinator
-(changes.txt 2.4.6 - rxvt-unicode)
+Rewrote screen display and text selection routines.
+   
+Project Coordinator (changes.txt 2.4.6 - rxvt-unicode)
 
 =item Marc Alexander Lehmann L<< <rxvt-unicode@schmorp.de> >>
 
-Forked rxvt-unicode, rewrote most of the display code and internal
-character handling to store text in unicode, improve xterm
-compatibility and apply numerous other bugfixes and extensions.
+Forked rxvt-unicode, unicode support, rewrote almost all the code, perl
+extension, random hacks, numerous bugfixes and extensions.
 
 Project Coordinator (Changes 1.0 -)
+
+=item Emanuele Giaquinta L<< <e.giaquinta@glauco.it> >>
+
+Pty/tty/utmp/wtmp rewrite, lots of random hacking and bugxifing.
 
 =back
 
