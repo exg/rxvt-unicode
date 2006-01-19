@@ -1731,6 +1731,7 @@ timer *
 timer::after (NV delay)
 	CODE:
         THIS->start (NOW + delay);
+        RETVAL = THIS;
         OUTPUT:
         RETVAL
 
