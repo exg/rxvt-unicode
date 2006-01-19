@@ -387,7 +387,6 @@ static struct ttyconf {
 
 rxvt_ptytty_unix::rxvt_ptytty_unix ()
 {
-  pty = tty = -1;
   name = 0;
 #if UTMP_SUPPORT
   cmd_pid = 0;

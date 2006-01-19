@@ -1494,24 +1494,25 @@ rxvt_term::option (U32 optval, int set = -1)
             else
               THIS->options &= ~optval;
 
-            switch (optval)
-              {
-                case Opt_skipBuiltinGlyphs:
-                  THIS->set_fonts ();
-                  THIS->scr_remap_chars ();
-                  THIS->scr_touch (true);
-                  THIS->want_refresh = 1;
-                  break;
+            if (THIS->check_ev.is_active ()) // avoid doing this before START
+              switch (optval)
+                {
+                  case Opt_skipBuiltinGlyphs:
+                    THIS->set_fonts ();
+                    THIS->scr_remap_chars ();
+                    THIS->scr_touch (true);
+                    THIS->want_refresh = 1;
+                    break;
 
-                case Opt_cursorUnderline:
-                  THIS->want_refresh = 1;
-                  break;
+                  case Opt_cursorUnderline:
+                    THIS->want_refresh = 1;
+                    break;
 
 #                  case Opt_scrollBar_floating:
 #                  case Opt_scrollBar_right:
 #                    THIS->resize_all_windows (THIS->width, THIS->height, 1);
 #                    break;
-              }
+                }
           }
 }
         OUTPUT:

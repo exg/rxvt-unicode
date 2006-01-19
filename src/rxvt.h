@@ -177,9 +177,13 @@ struct rxvt_ptytty {
   int pty; // pty file descriptor; connected to rxvt
   int tty; // tty file descriptor; connected to child
 
+  rxvt_ptytty ()
+  : pty(-1), tty(-1)
+  {
+  }
+
   virtual ~rxvt_ptytty ()
   {
-    //
   }
 
   virtual bool get () = 0;

@@ -117,6 +117,8 @@ public:
 struct watcher {
   int active; /* 0 == inactive, else index into respective vector */
 
+  bool is_active () { return active; }
+
   watcher () : active (0) { }
 };
 
