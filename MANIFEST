@@ -6,9 +6,17 @@ MANIFEST
 Makefile.in
 README.configure
 README.FAQ
+reconf
 configure
 autogen.sh
-reconf
+aclocal.m4
+config.guess
+config.h.in
+config.sub
+configure.ac
+install-sh
+mkinstalldirs
+xpm.m4
 
 doc/embed
 doc/embed-tk
@@ -44,19 +52,6 @@ doc/rxvt.7.html
 doc/rxvtc.1.html
 doc/rxvtd.1.html
 doc/rxvtperl.3.html
-
-autoconf/.cvsignore
-autoconf/Make.common.in
-autoconf/aclocal.m4
-autoconf/config.guess
-autoconf/config.h.in
-autoconf/config.sub
-autoconf/configure.in
-autoconf/install-sh
-autoconf/libtool.m4
-autoconf/ltmain.sh
-autoconf/mkinstalldirs
-autoconf/xpm.m4
 
 src/.cvsignore
 src/Makefile.in
