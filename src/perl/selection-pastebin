@@ -44,7 +44,7 @@ sub upload_paste {
       urxvt::timer
               ->new
               ->after (5)
-              ->cb (sub {undef $timer; undef $ov; });
+              ->cb (sub { undef $timer; undef $ov; });
 }
 
 sub on_start {

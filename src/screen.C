@@ -236,13 +236,10 @@ rxvt_term::scr_reset ()
       selection.op = SELECTION_CLEAR;
       selection.screen = PRIMARY;
       selection.clicks = 0;
-      CLEAR_ALL_SELECTION ();
       rvideo = 0;
     }
   else
     {
-      CLEAR_ALL_SELECTION ();
-
       /*
        * add or delete rows as appropriate
        */
@@ -352,8 +349,10 @@ rxvt_term::scr_reset ()
 
                       int len = min (min (prev_ncol - pcol, ncol - qcol), llen - lofs);
 
+#if DEBUG_STRICT
                       assert (len);
                       assert (pline.t);
+#endif
 
                       memcpy (qline->t + qcol, pline.t + pcol, len * sizeof (text_t));
                       memcpy (qline->r + qcol, pline.r + pcol, len * sizeof (rend_t));
@@ -407,6 +406,8 @@ rxvt_term::scr_reset ()
       if (tabs)
         free (tabs);
     }
+
+  CLEAR_ALL_SELECTION ();
 
   prev_nrow = nrow;
   prev_ncol = ncol;

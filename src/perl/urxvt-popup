@@ -53,11 +53,6 @@ sub on_button_press {
 sub on_button_release {
    my ($self, $event) = @_;
 
-   if ($event->{button} == $self->{data}{event}{button}) {
-      $self->ungrab;
-      $self->destroy;
-   }
-
    $self->{press}[$event->{button}] = 0;
 
    my ($row, $col) = ($event->{row}, $event->{col});
@@ -68,6 +63,11 @@ sub on_button_release {
    }
 
    $self->refresh;
+
+   if ($event->{button} == $self->{data}{event}{button}) {
+      $self->ungrab;
+      $self->destroy;
+   }
 
    1
 }
