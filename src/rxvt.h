@@ -1469,7 +1469,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void selection_check (int check_more);
   void selection_paste (Window win, Atom prop, bool delete_prop);
   void selection_property (Window win, Atom prop);
-  void selection_request (Time tm, int x, int y);
+  void selection_request (Time tm);
   int selection_request_other (Atom target, int selnum);
   void selection_clear ();
   void selection_make (Time tm);

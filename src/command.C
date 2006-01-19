@@ -466,7 +466,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                 {
                     /* normal XTerm key bindings */
                   case XK_Insert:	/* Shift+Insert = paste mouse selection */
-                    selection_request (ev.time, 0, 0);
+                    selection_request (ev.time);
                     return;
 #if TODO
                     /* rxvt extras */
@@ -2157,9 +2157,14 @@ rxvt_term::button_release (XButtonEvent &ev)
           case Button3:
             selection_make (ev.time);
             break;
+
           case Button2:
-            selection_request (ev.time, ev.x, ev.y);
+            if (IN_RANGE_EXC (ev.x, 0, width)
+                && IN_RANGE_EXC (ev.y, 0, height))  // inside window?
+              selection_request (ev.time);
+
             break;
+
 #ifdef MOUSE_WHEEL
           case Button4:
           case Button5:

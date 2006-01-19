@@ -49,18 +49,19 @@ sub upload_paste {
 
 sub on_start {
    my ($self) = @_;
+
    $pastebin_cmd = $self->x_resource ("selection-pastebin.cmd")
                    || "rcp -p % ruth:/var/www/www.ta-sa.org/files/txt/";
 
    $pastebin_url = $self->x_resource ("selection-pastebin.url")
                    || "http://www.ta-sa.org/files/txt/%";
 
+   push @{ $self->{term}{selection_popup_hook} }, sub {
+      ("pastebin upload" => sub { $self->upload_paste })
+   };
+
    ()
 }
-
-push @urxvt::ext::selection_popup::hook, sub {
-   ("pastebin upload" => sub { $self->upload_paste })
-};
 
 sub on_keyboard_command {
    my ($self, $cmd) = @_;

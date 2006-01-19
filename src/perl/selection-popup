@@ -21,8 +21,6 @@ sub on_start {
    ()
 }
 
-our @hook;
-
 sub on_button_press {
    my ($self, $event) = @_;
 
@@ -73,7 +71,7 @@ sub on_button_press {
          /^(http|ftp|telnet|irc|news):\//
             and $add_button->("run $self->{browser}" => sub { $self->exec_async ($self->{browser}, $_) });
 
-         for my $hook (@hook) {
+         for my $hook (@{ $self->{term}{selection_popup_hook} || [] }) {
             if (my ($title, $cb) = $hook->($popup)) {
                $add_button->($title, $cb);
             }

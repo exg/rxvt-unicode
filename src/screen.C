@@ -2802,11 +2802,8 @@ rxvt_term::selection_property (Window win, Atom prop)
  * EXT: button 2 release
  */
 void
-rxvt_term::selection_request (Time tm, int x, int y)
+rxvt_term::selection_request (Time tm)
 {
-  if (x < 0 || x >= width || y < 0 || y >= height)
-    return;                 /* outside window */
-
   if (selection.text)
     { /* internal selection */
       char *str = rxvt_wcstombs (selection.text, selection.len);
