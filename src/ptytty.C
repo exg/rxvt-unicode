@@ -103,7 +103,7 @@ get_pty_openpty (int *fd_tty, char **ttydev)
 #ifdef PTYS_ARE_OPENPTY
   int pfd;
   int res;
-  char tty_name[sizeof "/dev/pts/????\0"];
+  char tty_name[32];
   
   res = openpty (&pfd, fd_tty, tty_name, NULL, NULL);
   if (res != -1)
