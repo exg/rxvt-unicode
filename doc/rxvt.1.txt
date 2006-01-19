@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 7.0, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 7.1, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -253,6 +253,10 @@ OPTIONS
     -bl Compile *frills*: Set MWM hints to request a borderless window, i.e.
         if honoured by the WM, the rxvt-unicode window will not have window
         decorations; resource borderLess.
+
+    -override-redirect
+        Compile *frills*: Sets override-redirect on the window; resource
+        override-redirect.
 
     -sbg
         Compile *frills*: Disable the usage of the built-in block
@@ -820,16 +824,16 @@ RESOURCES (available also as long-options)
         (control-E) character is passed through. It may contain escape
         values as described in the entry on keysym following.
 
-    secondaryScreen: *bool*
+    secondaryScreen: *boolean*
         Turn on/off secondary screen (default enabled).
 
-    secondaryScroll: *bool*
+    secondaryScroll: *boolean*
         Turn on/off secondary screen scroll (default enabled). If the this
         option is enabled, scrolls on the secondary screen will change the
         scrollback buffer and switching to/from the secondary screen will
         instead scroll the screen up.
 
-    hold: *bool*
+    hold: *boolean*
         Turn on/off hold window after exit support. If enabled, rxvt will
         not immediately destroy its window when the program executed within
         it exits. Instead, it will wait till it is being killed or closed by
@@ -984,7 +988,13 @@ RESOURCES (available also as long-options)
         "selection-popup" and "mark-urls" perl extensions.
 
     transient-for: *windowid*
-        Sets the WM_TRANSIENT_FOR property to the given window iw.
+        Compile *frills*: Sets the WM_TRANSIENT_FOR property to the given
+        window id.
+
+    override-redirect: *boolean*
+        Compile *frills*: Sets override-redirect for the terminal window,
+        making it almost invisible to window managers; option
+        -override-redirect.
 
 THE SCROLLBAR
     Lines of text that scroll off the top of the rxvt window (resource:
@@ -1237,13 +1247,16 @@ AUTHORS
         Project Coordinator (changes.txt 2.21a to 2.4.5)
 
     Geoff Wing <gcw@pobox.com>
-        Rewrote screen display and text selection routines. Project
-        Coordinator (changes.txt 2.4.6 - rxvt-unicode)
+        Rewrote screen display and text selection routines.
+
+        Project Coordinator (changes.txt 2.4.6 - rxvt-unicode)
 
     Marc Alexander Lehmann <rxvt-unicode@schmorp.de>
-        Forked rxvt-unicode, rewrote most of the display code and internal
-        character handling to store text in unicode, improve xterm
-        compatibility and apply numerous other bugfixes and extensions.
+        Forked rxvt-unicode, unicode support, rewrote almost all the code,
+        perl extension, random hacks, numerous bugfixes and extensions.
 
         Project Coordinator (Changes 1.0 -)
+
+    Emanuele Giaquinta <e.giaquinta@glauco.it>
+        Pty/tty/utmp/wtmp rewrite, lots of random hacking and bugxifing.
 

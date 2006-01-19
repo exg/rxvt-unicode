@@ -48,7 +48,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>7.0</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>7.1</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -415,6 +415,13 @@ and <strong>-borderwidth</strong>. See resource entry for limits; resource
 Compile <em>frills</em>: Set MWM hints to request a borderless window, i.e.
 if honoured by the WM, the rxvt-unicode window will not have window
 decorations; resource <strong>borderLess</strong>.
+</dd>
+<p></p>
+<dt><strong><a name="item__2doverride_2dredirect"><strong>-override-redirect</strong></a></strong><br />
+</dt>
+<dd>
+Compile <em>frills</em>: Sets override-redirect on the window; resource
+<strong>override-redirect</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item__2dsbg"><strong>-sbg</strong></a></strong><br />
@@ -1283,13 +1290,13 @@ character is passed through. It may contain escape values as described
 in the entry on <strong>keysym</strong> following.
 </dd>
 <p></p>
-<dt><strong><a name="item_secondaryscreen_3a_bool"><strong>secondaryScreen:</strong> <em>bool</em></a></strong><br />
+<dt><strong><a name="item_secondaryscreen_3a_boolean"><strong>secondaryScreen:</strong> <em>boolean</em></a></strong><br />
 </dt>
 <dd>
 Turn on/off secondary screen (default enabled).
 </dd>
 <p></p>
-<dt><strong><a name="item_secondaryscroll_3a_bool"><strong>secondaryScroll:</strong> <em>bool</em></a></strong><br />
+<dt><strong><a name="item_secondaryscroll_3a_boolean"><strong>secondaryScroll:</strong> <em>boolean</em></a></strong><br />
 </dt>
 <dd>
 Turn on/off secondary screen scroll (default enabled). If the this
@@ -1298,7 +1305,7 @@ scrollback buffer and switching to/from the secondary screen will
 instead scroll the screen up.
 </dd>
 <p></p>
-<dt><strong><a name="item_hold_3a_bool"><strong>hold</strong>: <em>bool</em></a></strong><br />
+<dt><strong><a name="item_hold_3a_boolean"><strong>hold</strong>: <em>boolean</em></a></strong><br />
 </dt>
 <dd>
 Turn on/off hold window after exit support. If enabled, rxvt
@@ -1516,7 +1523,14 @@ Specifies the program to be started with a URL argument. Used by the
 <dt><strong><a name="item_transient_2dfor_3a_windowid"><strong>transient-for</strong>: <em>windowid</em></a></strong><br />
 </dt>
 <dd>
-Sets the WM_TRANSIENT_FOR property to the given window iw.
+Compile <em>frills</em>: Sets the WM_TRANSIENT_FOR property to the given window id.
+</dd>
+<p></p>
+<dt><strong><a name="item_override_2dredirect_3a_boolean"><strong>override-redirect</strong>: <em>boolean</em></a></strong><br />
+</dt>
+<dd>
+Compile <em>frills</em>: Sets override-redirect for the terminal window, making
+it almost invisible to window managers; option <strong>-override-redirect</strong>.
 </dd>
 <p></p></dl>
 <p>
@@ -1861,19 +1875,29 @@ Project Coordinator (changes.txt 2.21a to 2.4.5)
 <dt><strong><a name="item_geoff_wing__3cgcw_40pobox_2ecom_3e">Geoff Wing <em><a href="mailto:<gcw@pobox.com"><gcw@pobox.com</a></em>&gt;</a></strong><br />
 </dt>
 <dd>
-Rewrote screen display and text selection routines. Project Coordinator
-(changes.txt 2.4.6 - rxvt-unicode)
+Rewrote screen display and text selection routines.
+
+</dd>
+<dd>
+<pre>
+
+Project Coordinator (changes.txt 2.4.6 - rxvt-unicode)</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_marc_alexander_lehmann__3crxvt_2dunicode_40schmorp">Marc Alexander Lehmann <em><a href="mailto:<rxvt-unicode@schmorp.de"><rxvt-unicode@schmorp.de</a></em>&gt;</a></strong><br />
 </dt>
 <dd>
-Forked rxvt-unicode, rewrote most of the display code and internal
-character handling to store text in unicode, improve xterm
-compatibility and apply numerous other bugfixes and extensions.
+Forked rxvt-unicode, unicode support, rewrote almost all the code, perl
+extension, random hacks, numerous bugfixes and extensions.
 </dd>
 <dd>
 <p>Project Coordinator (Changes 1.0 -)</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_emanuele_giaquinta__3ce_2egiaquinta_40glauco_2eit_">Emanuele Giaquinta <em><a href="mailto:<e.giaquinta@glauco.it"><e.giaquinta@glauco.it</a></em>&gt;</a></strong><br />
+</dt>
+<dd>
+Pty/tty/utmp/wtmp rewrite, lots of random hacking and bugxifing.
 </dd>
 <p></p></dl>
 

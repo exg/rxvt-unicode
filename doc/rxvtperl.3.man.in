@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-18" "7.1" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-19" "7.1" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -226,6 +226,27 @@ runtime.
 Binds a popup menu to Ctrl\-Button3 that lets you convert the selection
 text into various other formats/action (such as uri unescaping, perl
 evalution, web-browser starting etc.), depending on content.
+.Sp
+Other extensions can extend this popup menu by pushing a code reference
+onto \f(CW\*(C`@{ $term\-\*(C'\fR{selection_popup_hook} }>, that is called whenever the
+popup is displayed.
+.Sp
+It's sole argument is the popup menu, which can be modified. The selection
+is in \f(CW$_\fR, which can be used to decide wether to add something or not.
+It should either return nothing or a string and a code reference. The
+string will be used as button text and the code reference will be called
+when the button gets activated and should transform \f(CW$_\fR.
+.Sp
+The following will add an entry \f(CW\*(C`a to b\*(C'\fR that transforms all \f(CW\*(C`a\*(C'\fRs in
+the selection to \f(CW\*(C`b\*(C'\fRs, but only if the selection currently contains any
+\&\f(CW\*(C`a\*(C'\fRs:
+.Sp
+.Vb 4
+\&   push @{ $self->{term}{selection_popup_hook} }, sub {
+\&      /a/ ? ("a to be" => sub { s/a/b/g }
+\&          : ()
+\&   };
+.Ve
 .IP "searchable\-scrollback<hotkey> (enabled by default)" 4
 .IX Item "searchable-scrollback<hotkey> (enabled by default)"
 Adds regex search functionality to the scrollback buffer, triggered
@@ -266,7 +287,7 @@ And this example matches the same,but replaces it with vi-commands you can
 paste directly into your (vi :) editor:
 .Sp
 .Vb 1
-\&   URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\e\ed+):?$/\e\ex1b:e \e\eQ$1\e\eE\e\ex0d:$2\e\ex0d/
+\&   URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\e\ed+):?$/:e \e\eQ$1\e\eE\e\ex0d:$2\e\ex0d/
 .Ve
 .Sp
 Of course, this can be modified to suit your needs and your editor :)
@@ -275,8 +296,8 @@ To expand the example above to typical perl error messages (\*(L"\s-1XXX\s0 at
 \&\s-1FILENAME\s0 line \s-1YYY\s0.\*(R"), you need a slightly more elaborate solution:
 .Sp
 .Vb 2
-\&   URxvt.selection.pattern-0: ( at .*? line \e\ed+\e\e.)
-\&   URxvt.selection-autotransform.0: s/^ at (.*?) line (\e\ed+)\e\e.$/\ex1b:e \e\eQ$1\eE\e\ex0d:$2\e\ex0d/
+\&   URxvt.selection.pattern-0: ( at .*? line \e\ed+[,.])
+\&   URxvt.selection-autotransform.0: s/^ at (.*?) line (\e\ed+)[,.]$/:e \e\eQ$1\eE\e\ex0d:$2\e\ex0d/
 .Ve
 .Sp
 The first line tells the selection code to treat the unchanging part of
@@ -288,6 +309,15 @@ Uses per-line display filtering (\f(CW\*(C`on_line_update\*(C'\fR) to underline 
 make them clickable. When middle\-clicked, the program specified in the
 resource \f(CW\*(C`urlLauncher\*(C'\fR (default \f(CW\*(C`x\-www\-browser\*(C'\fR) will be started with
 the \s-1URL\s0 as first argument.
+.IP "automove-background" 4
+.IX Item "automove-background"
+This is basically a one-line extension that dynamically changes the background pixmap offset
+to the window position, in effect creating the same effect as pseudo transparency with
+a custom pixmap. No scaling is supported in this mode. Exmaple:
+.Sp
+.Vb 1
+\&   @@RXVT_NAME@@ -pixmap background.xpm -pe automove-background
+.Ve
 .IP "block-graphics-to-ascii" 4
 .IX Item "block-graphics-to-ascii"
 A not very useful example of filtering all text output to the terminal,
@@ -425,6 +455,15 @@ variables.
 .IX Item "on_start $term"
 Called at the very end of initialisation of a new terminal, just before
 returning to the mainloop.
+.ie n .IP "on_child_start $term\fR, \f(CW$pid" 4
+.el .IP "on_child_start \f(CW$term\fR, \f(CW$pid\fR" 4
+.IX Item "on_child_start $term, $pid"
+Called just after the child process has been \f(CW\*(C`fork\*(C'\fRed.
+.ie n .IP "on_child_exit $term\fR, \f(CW$status" 4
+.el .IP "on_child_exit \f(CW$term\fR, \f(CW$status\fR" 4
+.IX Item "on_child_exit $term, $status"
+Called just after the child process has exited. \f(CW$status\fR is the status
+from \f(CW\*(C`waitpid\*(C'\fR.
 .ie n .IP "on_sel_make $term\fR, \f(CW$eventtime" 4
 .el .IP "on_sel_make \f(CW$term\fR, \f(CW$eventtime\fR" 4
 .IX Item "on_sel_make $term, $eventtime"
@@ -542,10 +581,13 @@ does focus in processing.
 .IX Item "on_focus_out $term"
 Called wheneever the window loses keyboard focus, before rxvt-unicode does
 focus out processing.
+.ie n .IP "on_configure_notify $term\fR, \f(CW$event" 4
+.el .IP "on_configure_notify \f(CW$term\fR, \f(CW$event\fR" 4
+.IX Item "on_configure_notify $term, $event"
+.PD 0
 .ie n .IP "on_key_press $term\fR, \f(CW$event\fR, \f(CW$keysym\fR, \f(CW$octets" 4
 .el .IP "on_key_press \f(CW$term\fR, \f(CW$event\fR, \f(CW$keysym\fR, \f(CW$octets\fR" 4
 .IX Item "on_key_press $term, $event, $keysym, $octets"
-.PD 0
 .ie n .IP "on_key_release $term\fR, \f(CW$event\fR, \f(CW$keysym" 4
 .el .IP "on_key_release \f(CW$term\fR, \f(CW$event\fR, \f(CW$keysym\fR" 4
 .IX Item "on_key_release $term, $event, $keysym"
@@ -706,6 +748,15 @@ initialise perl, and the terminal object otherwise. The \f(CW\*(C`init\*(C'\fR a
 Destroy the terminal object (close the window, free resources
 etc.). Please note that @@RXVT_NAME@@ will not exit as long as any event
 watchers (timers, io watchers) are still active.
+.ie n .IP "$term\->exec_async ($cmd[, @args])" 4
+.el .IP "$term\->exec_async ($cmd[, \f(CW@args\fR])" 4
+.IX Item "$term->exec_async ($cmd[, @args])"
+Works like the combination of the \f(CW\*(C`fork\*(C'\fR/\f(CW\*(C`exec\*(C'\fR builtins, which executes
+(\*(L"starts\*(R") programs in the background. This function takes care of setting
+the user environment before exec'ing the command (e.g. \f(CW\*(C`PATH\*(C'\fR) and should
+be preferred over explicit calls to \f(CW\*(C`exec\*(C'\fR or \f(CW\*(C`system\*(C'\fR.
+.Sp
+Returns the pid of the subprocess or \f(CW\*(C`undef\*(C'\fR on error.
 .ie n .IP "$isset = $term\fR\->option ($optval[, \f(CW$set])" 4
 .el .IP "$isset = \f(CW$term\fR\->option ($optval[, \f(CW$set\fR])" 4
 .IX Item "$isset = $term->option ($optval[, $set])"
@@ -719,10 +770,10 @@ source file \fI/src/optinc.h\fR to see the actual list:
 .Vb 6
 \& borderLess console cursorBlink cursorUnderline hold iconic insecure
 \& intensityStyles jumpScroll loginShell mapAlert meta8 mouseWheelScrollPage
-\& pastableTabs pointerBlank reverseVideo scrollBar scrollBar_floating
-\& scrollBar_right scrollTtyKeypress scrollTtyOutput scrollWithBuffer
-\& secondaryScreen secondaryScroll skipBuiltinGlyphs transparent
-\& tripleclickwords utmpInhibit visualBell
+\& override-redirect pastableTabs pointerBlank reverseVideo scrollBar
+\& scrollBar_floating scrollBar_right scrollTtyKeypress scrollTtyOutput
+\& scrollWithBuffer secondaryScreen secondaryScroll skipBuiltinGlyphs
+\& transparent tripleclickwords utmpInhibit visualBell
 .Ve
 .ie n .IP "$value = $term\fR\->resource ($name[, \f(CW$newval])" 4
 .el .IP "$value = \f(CW$term\fR\->resource ($name[, \f(CW$newval\fR])" 4
@@ -746,19 +797,20 @@ Here is a a likely non-exhaustive list of resource names, not all of which
 are supported in every build, please see the source file \fI/src/rsinc.h\fR
 to see the actual list:
 .Sp
-.Vb 12
+.Vb 13
 \&  answerbackstring backgroundPixmap backspace_key boldFont boldItalicFont
 \&  borderLess color cursorBlink cursorUnderline cutchars delete_key
 \&  display_name embed ext_bwidth fade font geometry hold iconName
 \&  imFont imLocale inputMethod insecure int_bwidth intensityStyles
-\&  italicFont jumpScroll lineSpace loginShell mapAlert menu meta8 modifier
-\&  mouseWheelScrollPage name pastableTabs path perl_eval perl_ext_1 perl_ext_2
-\&  perl_lib pointerBlank pointerBlankDelay preeditType print_pipe pty_fd
-\&  reverseVideo saveLines scrollBar scrollBar_align scrollBar_floating
-\&  scrollBar_right scrollBar_thickness scrollTtyKeypress scrollTtyOutput
-\&  scrollWithBuffer scrollstyle secondaryScreen secondaryScroll selectstyle
-\&  shade term_name title transparent transparent_all tripleclickwords
-\&  utmpInhibit visualBell
+\&  italicFont jumpScroll lineSpace loginShell mapAlert meta8 modifier
+\&  mouseWheelScrollPage name override_redirect pastableTabs path perl_eval
+\&  perl_ext_1 perl_ext_2 perl_lib pointerBlank pointerBlankDelay
+\&  preeditType print_pipe pty_fd reverseVideo saveLines scrollBar
+\&  scrollBar_align scrollBar_floating scrollBar_right scrollBar_thickness
+\&  scrollTtyKeypress scrollTtyOutput scrollWithBuffer scrollstyle
+\&  secondaryScreen secondaryScroll selectstyle shade term_name title
+\&  transient_for transparent transparent_all tripleclickwords utmpInhibit
+\&  visualBell
 .Ve
 .ie n .IP "$value = $term\->x_resource ($pattern)" 4
 .el .IP "$value = \f(CW$term\fR\->x_resource ($pattern)" 4
@@ -1203,6 +1255,10 @@ Start the timer.
 .el .IP "$timer = \f(CW$timer\fR\->start ($tstamp)" 4
 .IX Item "$timer = $timer->start ($tstamp)"
 Set the event trigger time to \f(CW$tstamp\fR and start the timer.
+.ie n .IP "$timer = $timer\->after ($delay)" 4
+.el .IP "$timer = \f(CW$timer\fR\->after ($delay)" 4
+.IX Item "$timer = $timer->after ($delay)"
+Like \f(CW\*(C`start\*(C'\fR, but sets the expiry timer to c<urxvt::NOW + \f(CW$delay\fR>.
 .ie n .IP "$timer = $timer\->stop" 4
 .el .IP "$timer = \f(CW$timer\fR\->stop" 4
 .IX Item "$timer = $timer->stop"

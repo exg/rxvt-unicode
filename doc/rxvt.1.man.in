@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2006-01-16" "7.0" "RXVT-UNICODE"
+.TH rxvt 1 "2006-01-19" "7.1" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -387,6 +387,10 @@ and \fB\-borderwidth\fR. See resource entry for limits; resource
 Compile \fIfrills\fR: Set \s-1MWM\s0 hints to request a borderless window, i.e.
 if honoured by the \s-1WM\s0, the rxvt-unicode window will not have window
 decorations; resource \fBborderLess\fR.
+.IP "\fB\-override\-redirect\fR" 4
+.IX Item "-override-redirect"
+Compile \fIfrills\fR: Sets override-redirect on the window; resource
+\&\fBoverride-redirect\fR.
 .IP "\fB\-sbg\fR" 4
 .IX Item "-sbg"
 Compile \fIfrills\fR: Disable the usage of the built-in block graphics/line
@@ -969,17 +973,17 @@ Set the key to be interpreted as the Meta key to: \fBalt\fR, \fBmeta\fR,
 Specify the reply rxvt-unicode sends to the shell when an \s-1ENQ\s0 (control\-E)
 character is passed through. It may contain escape values as described
 in the entry on \fBkeysym\fR following.
-.IP "\fBsecondaryScreen:\fR \fIbool\fR" 4
-.IX Item "secondaryScreen: bool"
+.IP "\fBsecondaryScreen:\fR \fIboolean\fR" 4
+.IX Item "secondaryScreen: boolean"
 Turn on/off secondary screen (default enabled).
-.IP "\fBsecondaryScroll:\fR \fIbool\fR" 4
-.IX Item "secondaryScroll: bool"
+.IP "\fBsecondaryScroll:\fR \fIboolean\fR" 4
+.IX Item "secondaryScroll: boolean"
 Turn on/off secondary screen scroll (default enabled). If the this
 option is enabled, scrolls on the secondary screen will change the
 scrollback buffer and switching to/from the secondary screen will
 instead scroll the screen up.
-.IP "\fBhold\fR: \fIbool\fR" 4
-.IX Item "hold: bool"
+.IP "\fBhold\fR: \fIboolean\fR" 4
+.IX Item "hold: boolean"
 Turn on/off hold window after exit support. If enabled, @@RXVT_NAME@@
 will not immediately destroy its window when the program executed within
 it exits. Instead, it will wait till it is being killed or closed by the
@@ -1150,7 +1154,11 @@ Specifies the program to be started with a \s-1URL\s0 argument. Used by the
 \&\f(CW\*(C`selection\-popup\*(C'\fR and \f(CW\*(C`mark\-urls\*(C'\fR perl extensions.
 .IP "\fBtransient-for\fR: \fIwindowid\fR" 4
 .IX Item "transient-for: windowid"
-Sets the \s-1WM_TRANSIENT_FOR\s0 property to the given window iw.
+Compile \fIfrills\fR: Sets the \s-1WM_TRANSIENT_FOR\s0 property to the given window id.
+.IP "\fBoverride-redirect\fR: \fIboolean\fR" 4
+.IX Item "override-redirect: boolean"
+Compile \fIfrills\fR: Sets override-redirect for the terminal window, making
+it almost invisible to window managers; option \fB\-override\-redirect\fR.
 .SH "THE SCROLLBAR"
 .IX Header "THE SCROLLBAR"
 Lines of text that scroll off the top of the \fB@@RXVT_NAME@@\fR window
@@ -1410,12 +1418,15 @@ Project Coordinator (changes.txt 2.11 to 2.21)
 Project Coordinator (changes.txt 2.21a to 2.4.5)
 .IP "Geoff Wing <gcw@pobox.com>" 4
 .IX Item "Geoff Wing <gcw@pobox.com>"
-Rewrote screen display and text selection routines. Project Coordinator
-(changes.txt 2.4.6 \- rxvt\-unicode)
+Rewrote screen display and text selection routines.
+.Sp
+Project Coordinator (changes.txt 2.4.6 \- rxvt\-unicode)
 .IP "Marc Alexander Lehmann <rxvt\-unicode@schmorp.de>" 4
 .IX Item "Marc Alexander Lehmann <rxvt-unicode@schmorp.de>"
-Forked rxvt\-unicode, rewrote most of the display code and internal
-character handling to store text in unicode, improve xterm
-compatibility and apply numerous other bugfixes and extensions.
+Forked rxvt\-unicode, unicode support, rewrote almost all the code, perl
+extension, random hacks, numerous bugfixes and extensions.
 .Sp
 Project Coordinator (Changes 1.0 \-)
+.IP "Emanuele Giaquinta <e.giaquinta@glauco.it>" 4
+.IX Item "Emanuele Giaquinta <e.giaquinta@glauco.it>"
+Pty/tty/utmp/wtmp rewrite, lots of random hacking and bugxifing.

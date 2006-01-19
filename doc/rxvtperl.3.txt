@@ -76,6 +76,26 @@ PREPACKAGED EXTENSIONS
         unescaping, perl evalution, web-browser starting etc.), depending on
         content.
 
+        Other extensions can extend this popup menu by pushing a code
+        reference onto "@{ $term-"{selection_popup_hook} }>, that is called
+        whenever the popup is displayed.
+
+        It's sole argument is the popup menu, which can be modified. The
+        selection is in $_, which can be used to decide wether to add
+        something or not. It should either return nothing or a string and a
+        code reference. The string will be used as button text and the code
+        reference will be called when the button gets activated and should
+        transform $_.
+
+        The following will add an entry "a to b" that transforms all "a"s in
+        the selection to "b"s, but only if the selection currently contains
+        any "a"s:
+
+           push @{ $self->{term}{selection_popup_hook} }, sub {
+              /a/ ? ("a to be" => sub { s/a/b/g }
+                  : ()
+           };
+
     searchable-scrollback<hotkey> (enabled by default)
         Adds regex search functionality to the scrollback buffer, triggered
         by a hotkey (default: "M-s"). While in search mode, normal terminal
@@ -110,7 +130,7 @@ PREPACKAGED EXTENSIONS
         And this example matches the same,but replaces it with vi-commands
         you can paste directly into your (vi :) editor:
 
-           URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\\d+):?$/\\x1b:e \\Q$1\\E\\x0d:$2\\x0d/
+           URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\\d+):?$/:e \\Q$1\\E\\x0d:$2\\x0d/
 
         Of course, this can be modified to suit your needs and your editor
         :)
@@ -118,8 +138,8 @@ PREPACKAGED EXTENSIONS
         To expand the example above to typical perl error messages ("XXX at
         FILENAME line YYY."), you need a slightly more elaborate solution:
 
-           URxvt.selection.pattern-0: ( at .*? line \\d+\\.)
-           URxvt.selection-autotransform.0: s/^ at (.*?) line (\\d+)\\.$/\x1b:e \\Q$1\E\\x0d:$2\\x0d/
+           URxvt.selection.pattern-0: ( at .*? line \\d+[,.])
+           URxvt.selection-autotransform.0: s/^ at (.*?) line (\\d+)[,.]$/:e \\Q$1\E\\x0d:$2\\x0d/
 
         The first line tells the selection code to treat the unchanging part
         of every error message as a selection pattern, and the second line
@@ -130,6 +150,14 @@ PREPACKAGED EXTENSIONS
         and make them clickable. When middle-clicked, the program specified
         in the resource "urlLauncher" (default "x-www-browser") will be
         started with the URL as first argument.
+
+    automove-background
+        This is basically a one-line extension that dynamically changes the
+        background pixmap offset to the window position, in effect creating
+        the same effect as pseudo transparency with a custom pixmap. No
+        scaling is supported in this mode. Exmaple:
+
+           rxvt -pixmap background.xpm -pe automove-background
 
     block-graphics-to-ascii
         A not very useful example of filtering all text output to the
@@ -257,6 +285,13 @@ API DOCUMENTATION
         Called at the very end of initialisation of a new terminal, just
         before returning to the mainloop.
 
+    on_child_start $term, $pid
+        Called just after the child process has been "fork"ed.
+
+    on_child_exit $term, $status
+        Called just after the child process has exited. $status is the
+        status from "waitpid".
+
     on_sel_make $term, $eventtime
         Called whenever a selection has been made by the user, but before
         the selection text is copied, so changes to the beginning, end or
@@ -363,6 +398,7 @@ API DOCUMENTATION
         Called wheneever the window loses keyboard focus, before
         rxvt-unicode does focus out processing.
 
+    on_configure_notify $term, $event
     on_key_press $term, $event, $keysym, $octets
     on_key_release $term, $event, $keysym
     on_button_press $term, $event
@@ -502,6 +538,15 @@ API DOCUMENTATION
         Please note that rxvt will not exit as long as any event watchers
         (timers, io watchers) are still active.
 
+    $term->exec_async ($cmd[, @args])
+        Works like the combination of the "fork"/"exec" builtins, which
+        executes ("starts") programs in the background. This function takes
+        care of setting the user environment before exec'ing the command
+        (e.g. "PATH") and should be preferred over explicit calls to "exec"
+        or "system".
+
+        Returns the pid of the subprocess or "undef" on error.
+
     $isset = $term->option ($optval[, $set])
         Returns true if the option specified by $optval is enabled, and
         optionally change it. All option values are stored by name in the
@@ -513,10 +558,10 @@ API DOCUMENTATION
 
          borderLess console cursorBlink cursorUnderline hold iconic insecure
          intensityStyles jumpScroll loginShell mapAlert meta8 mouseWheelScrollPage
-         pastableTabs pointerBlank reverseVideo scrollBar scrollBar_floating
-         scrollBar_right scrollTtyKeypress scrollTtyOutput scrollWithBuffer
-         secondaryScreen secondaryScroll skipBuiltinGlyphs transparent
-         tripleclickwords utmpInhibit visualBell
+         override-redirect pastableTabs pointerBlank reverseVideo scrollBar
+         scrollBar_floating scrollBar_right scrollTtyKeypress scrollTtyOutput
+         scrollWithBuffer secondaryScreen secondaryScroll skipBuiltinGlyphs
+         transparent tripleclickwords utmpInhibit visualBell
 
     $value = $term->resource ($name[, $newval])
         Returns the current resource value associated with a given name and
@@ -543,14 +588,15 @@ API DOCUMENTATION
           borderLess color cursorBlink cursorUnderline cutchars delete_key
           display_name embed ext_bwidth fade font geometry hold iconName
           imFont imLocale inputMethod insecure int_bwidth intensityStyles
-          italicFont jumpScroll lineSpace loginShell mapAlert menu meta8 modifier
-          mouseWheelScrollPage name pastableTabs path perl_eval perl_ext_1 perl_ext_2
-          perl_lib pointerBlank pointerBlankDelay preeditType print_pipe pty_fd
-          reverseVideo saveLines scrollBar scrollBar_align scrollBar_floating
-          scrollBar_right scrollBar_thickness scrollTtyKeypress scrollTtyOutput
-          scrollWithBuffer scrollstyle secondaryScreen secondaryScroll selectstyle
-          shade term_name title transparent transparent_all tripleclickwords
-          utmpInhibit visualBell
+          italicFont jumpScroll lineSpace loginShell mapAlert meta8 modifier
+          mouseWheelScrollPage name override_redirect pastableTabs path perl_eval
+          perl_ext_1 perl_ext_2 perl_lib pointerBlank pointerBlankDelay
+          preeditType print_pipe pty_fd reverseVideo saveLines scrollBar
+          scrollBar_align scrollBar_floating scrollBar_right scrollBar_thickness
+          scrollTtyKeypress scrollTtyOutput scrollWithBuffer scrollstyle
+          secondaryScreen secondaryScroll selectstyle shade term_name title
+          transient_for transparent transparent_all tripleclickwords utmpInhibit
+          visualBell
 
     $value = $term->x_resource ($pattern)
         Returns the X-Resource for the given pattern, excluding the program
@@ -904,6 +950,9 @@ API DOCUMENTATION
 
     $timer = $timer->start ($tstamp)
         Set the event trigger time to $tstamp and start the timer.
+
+    $timer = $timer->after ($delay)
+        Like "start", but sets the expiry timer to c<urxvt::NOW + $delay>.
 
     $timer = $timer->stop
         Stop the timer.

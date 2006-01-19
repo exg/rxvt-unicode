@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2006-01-17" "7.1" "RXVT-UNICODE"
+.TH rxvt 7 "2006-01-19" "7.1" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -301,13 +301,13 @@ daemon.
 .IP "I am using Debian GNU/Linux and have a problem..." 4
 .IX Item "I am using Debian GNU/Linux and have a problem..."
 The Debian GNU/Linux package of rxvt-unicode in sarge contains large
-patches that considerably change the behaviour of rxvt\-unicode. Before
-reporting a bug to the original rxvt-unicode author please download and
-install the genuine version (<http://software.schmorp.de#rxvt\-unicode>)
-and try to reproduce the problem. If you cannot, chances are that the
-problems are specific to Debian GNU/Linux, in which case it should be
-reported via the Debian Bug Tracking System (use \f(CW\*(C`reportbug\*(C'\fR to report
-the bug).
+patches that considerably change the behaviour of rxvt-unicode (but
+unfortunately this notice has been removed). Before reporting a bug to
+the original rxvt-unicode author please download and install the genuine
+version (<http://software.schmorp.de#rxvt\-unicode>) and try to reproduce
+the problem. If you cannot, chances are that the problems are specific to
+Debian GNU/Linux, in which case it should be reported via the Debian Bug
+Tracking System (use \f(CW\*(C`reportbug\*(C'\fR to report the bug).
 .Sp
 For other problems that also affect the Debian package, you can and
 probably should use the Debian \s-1BTS\s0, too, because, after all, it's also a
@@ -1811,7 +1811,7 @@ Ps = 13	Change colour of mouse foreground to Pt
 Ps = 17	Change colour of highlight characters to Pt
 Ps = 18	Change colour of bold characters to Pt [deprecated, see 706]
 Ps = 19	Change colour of underlined characters to Pt [deprecated, see 707]
-Ps = 20	Change default background to Pt
+Ps = 20	Change background pixmap parameters (see section XPM) (Compile XPM).
 Ps = 39	Change default foreground colour to Pt.
 Ps = 46	Change Log File to Pt unimplemented
 Ps = 49	Change default background colour to Pt.

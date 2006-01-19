@@ -16,7 +16,7 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an 
 WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
-7.1  Thu Jan 19 18:56:55 CET 2006
+7.1  Thu Jan 19 20:25:34 CET 2006
         - setuid/setgid operation is now _encouraged_: security has been
           improved by moving privileged operations into a separate process
           and permanently dropping privileges within the terminal. This

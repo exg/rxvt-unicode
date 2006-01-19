@@ -149,6 +149,30 @@ Binds a popup menu to Ctrl-Button3 that lets you convert the selection
 text into various other formats/action (such as uri unescaping, perl
 evalution, web-browser starting etc.), depending on content.
 </dd>
+<dd>
+<p>Other extensions can extend this popup menu by pushing a code reference
+onto <code>@{ $term-</code>{selection_popup_hook} }&gt;, that is called whenever the
+popup is displayed.</p>
+</dd>
+<dd>
+<p>It's sole argument is the popup menu, which can be modified. The selection
+is in <code>$_</code>, which can be used to decide wether to add something or not.
+It should either return nothing or a string and a code reference. The
+string will be used as button text and the code reference will be called
+when the button gets activated and should transform <code>$_</code>.</p>
+</dd>
+<dd>
+<p>The following will add an entry <code>a to b</code> that transforms all <code>a</code>s in
+the selection to <code>b</code>s, but only if the selection currently contains any
+<code>a</code>s:</p>
+</dd>
+<dd>
+<pre>
+   push @{ $self-&gt;{term}{selection_popup_hook} }, sub {
+      /a/ ? (&quot;a to be&quot; =&gt; sub { s/a/b/g }
+          : ()
+   };</pre>
+</dd>
 <p></p>
 <dt><strong><a name="item_searchable_2dscrollback_3chotkey_3e__28enabled_by_">searchable-scrollback&lt;hotkey&gt; (enabled by default)</a></strong><br />
 </dt>
@@ -199,7 +223,7 @@ paste directly into your (vi :) editor:</p>
 </dd>
 <dd>
 <pre>
-   URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\\d+):?$/\\x1b:e \\Q$1\\E\\x0d:$2\\x0d/</pre>
+   URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\\d+):?$/:e \\Q$1\\E\\x0d:$2\\x0d/</pre>
 </dd>
 <dd>
 <p>Of course, this can be modified to suit your needs and your editor :)</p>
@@ -210,8 +234,8 @@ FILENAME line YYY.''), you need a slightly more elaborate solution:</p>
 </dd>
 <dd>
 <pre>
-   URxvt.selection.pattern-0: ( at .*? line \\d+\\.)
-   URxvt.selection-autotransform.0: s/^ at (.*?) line (\\d+)\\.$/\x1b:e \\Q$1\E\\x0d:$2\\x0d/</pre>
+   URxvt.selection.pattern-0: ( at .*? line \\d+[,.])
+   URxvt.selection-autotransform.0: s/^ at (.*?) line (\\d+)[,.]$/:e \\Q$1\E\\x0d:$2\\x0d/</pre>
 </dd>
 <dd>
 <p>The first line tells the selection code to treat the unchanging part of
@@ -226,6 +250,18 @@ Uses per-line display filtering (<code>on_line_update</code>) to underline urls 
 make them clickable. When middle-clicked, the program specified in the
 resource <code>urlLauncher</code> (default <code>x-www-browser</code>) will be started with
 the URL as first argument.
+</dd>
+<p></p>
+<dt><strong><a name="item_automove_2dbackground">automove-background</a></strong><br />
+</dt>
+<dd>
+This is basically a one-line extension that dynamically changes the background pixmap offset
+to the window position, in effect creating the same effect as pseudo transparency with
+a custom pixmap. No scaling is supported in this mode. Exmaple:
+</dd>
+<dd>
+<pre>
+   rxvt -pixmap background.xpm -pe automove-background</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_block_2dgraphics_2dto_2dascii">block-graphics-to-ascii</a></strong><br />
@@ -404,6 +440,19 @@ Called at the very end of initialisation of a new terminal, just before
 returning to the mainloop.
 </dd>
 <p></p>
+<dt><strong><a name="item_on_child_start__24term_2c__24pid">on_child_start $term, $pid</a></strong><br />
+</dt>
+<dd>
+Called just after the child process has been <code>fork</code>ed.
+</dd>
+<p></p>
+<dt><strong><a name="item_on_child_exit__24term_2c__24status">on_child_exit $term, $status</a></strong><br />
+</dt>
+<dd>
+Called just after the child process has exited. <code>$status</code> is the status
+from <code>waitpid</code>.
+</dd>
+<p></p>
 <dt><strong><a name="item_on_sel_make__24term_2c__24eventtime">on_sel_make $term, $eventtime</a></strong><br />
 </dt>
 <dd>
@@ -558,6 +607,8 @@ Called wheneever the window loses keyboard focus, before rxvt-unicode does
 focus out processing.
 </dd>
 <p></p>
+<dt><strong><a name="item_on_configure_notify__24term_2c__24event">on_configure_notify $term, $event</a></strong><br />
+</dt>
 <dt><strong><a name="item_on_key_press__24term_2c__24event_2c__24keysym_2c__">on_key_press $term, $event, $keysym, $octets</a></strong><br />
 </dt>
 <dt><strong><a name="item_on_key_release__24term_2c__24event_2c__24keysym">on_key_release $term, $event, $keysym</a></strong><br />
@@ -775,6 +826,18 @@ etc.). Please note that rxvt will not exit as long as any event
 watchers (timers, io watchers) are still active.
 </dd>
 <p></p>
+<dt><strong><a name="item_exec_async">$term-&gt;exec_async ($cmd[, @args])</a></strong><br />
+</dt>
+<dd>
+Works like the combination of the <code>fork</code>/<code>exec</code> builtins, which executes
+(``starts'') programs in the background. This function takes care of setting
+the user environment before exec'ing the command (e.g. <code>PATH</code>) and should
+be preferred over explicit calls to <code>exec</code> or <code>system</code>.
+</dd>
+<dd>
+<p>Returns the pid of the subprocess or <code>undef</code> on error.</p>
+</dd>
+<p></p>
 <dt><strong><a name="item_option">$isset = $term-&gt;option ($optval[, $set])</a></strong><br />
 </dt>
 <dd>
@@ -790,10 +853,10 @@ source file <em>/src/optinc.h</em> to see the actual list:</p>
 <pre>
  borderLess console cursorBlink cursorUnderline hold iconic insecure
  intensityStyles jumpScroll loginShell mapAlert meta8 mouseWheelScrollPage
- pastableTabs pointerBlank reverseVideo scrollBar scrollBar_floating
- scrollBar_right scrollTtyKeypress scrollTtyOutput scrollWithBuffer
- secondaryScreen secondaryScroll skipBuiltinGlyphs transparent
- tripleclickwords utmpInhibit visualBell</pre>
+ override-redirect pastableTabs pointerBlank reverseVideo scrollBar
+ scrollBar_floating scrollBar_right scrollTtyKeypress scrollTtyOutput
+ scrollWithBuffer secondaryScreen secondaryScroll skipBuiltinGlyphs
+ transparent tripleclickwords utmpInhibit visualBell</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_resource">$value = $term-&gt;resource ($name[, $newval])</a></strong><br />
@@ -828,14 +891,15 @@ to see the actual list:</p>
   borderLess color cursorBlink cursorUnderline cutchars delete_key
   display_name embed ext_bwidth fade font geometry hold iconName
   imFont imLocale inputMethod insecure int_bwidth intensityStyles
-  italicFont jumpScroll lineSpace loginShell mapAlert menu meta8 modifier
-  mouseWheelScrollPage name pastableTabs path perl_eval perl_ext_1 perl_ext_2
-  perl_lib pointerBlank pointerBlankDelay preeditType print_pipe pty_fd
-  reverseVideo saveLines scrollBar scrollBar_align scrollBar_floating
-  scrollBar_right scrollBar_thickness scrollTtyKeypress scrollTtyOutput
-  scrollWithBuffer scrollstyle secondaryScreen secondaryScroll selectstyle
-  shade term_name title transparent transparent_all tripleclickwords
-  utmpInhibit visualBell</pre>
+  italicFont jumpScroll lineSpace loginShell mapAlert meta8 modifier
+  mouseWheelScrollPage name override_redirect pastableTabs path perl_eval
+  perl_ext_1 perl_ext_2 perl_lib pointerBlank pointerBlankDelay
+  preeditType print_pipe pty_fd reverseVideo saveLines scrollBar
+  scrollBar_align scrollBar_floating scrollBar_right scrollBar_thickness
+  scrollTtyKeypress scrollTtyOutput scrollWithBuffer scrollstyle
+  secondaryScreen secondaryScroll selectstyle shade term_name title
+  transient_for transparent transparent_all tripleclickwords utmpInhibit
+  visualBell</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_x_resource">$value = $term-&gt;x_resource ($pattern)</a></strong><br />
@@ -1406,6 +1470,12 @@ Start the timer.
 </dt>
 <dd>
 Set the event trigger time to <code>$tstamp</code> and start the timer.
+</dd>
+<p></p>
+<dt><strong><a name="item_after">$timer = $timer-&gt;after ($delay)</a></strong><br />
+</dt>
+<dd>
+Like <a href="#item_start"><code>start</code></a>, but sets the expiry timer to c&lt;urxvt::NOW + $delay&gt;.
 </dd>
 <p></p>
 <dt><strong><a name="item_stop">$timer = $timer-&gt;stop</a></strong><br />
