@@ -9,12 +9,12 @@
 #  define NO_SETOWNER_TTYDEV 1
 # endif
 #endif
-#if defined(__CYGWIN__)
+#if defined(__CYGWIN__) || defined(PTYS_ARE_OPENPTY)
 # define NO_SETOWNER_TTYDEV 1
 #endif
 
 #if UTMP_SUPPORT
-# if !defined(RXVT_UTMPX_FILE) || !defined(HAVE_STRUCT_UTMPX)
+# if !defined(RXVT_UTMPX_FILE) || !defined(HAVE_STRUCT_UTMPX) || defined(__GLIBC__)
 #  undef HAVE_UTMPX_H
 #  undef HAVE_STRUCT_UTMPX
 # endif
@@ -55,13 +55,6 @@ struct rxvt_ptytty_unix : rxvt_ptytty
 {
   char *name;
 
-#ifndef RESET_TTY_TO_COMMON_DEFAULTS
-  struct stat savestat; /* original status of our tty */
-#endif
-#ifndef NO_SETOWNER_TTYDEV
-  void privileges (rxvt_privaction action);
-  bool saved;
-#endif
 public:
 
   rxvt_ptytty_unix ();
