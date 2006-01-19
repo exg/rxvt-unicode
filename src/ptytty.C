@@ -408,8 +408,11 @@ rxvt_ptytty_unix::put ()
   chmod (name, RESTORE_TTY_MODE);
   chown (name, 0, ttyconf.gid);
 
-  if (pty >= 0) close (pty);
   close_tty ();
+
+  if (pty >= 0)
+    close (pty);
+
   free (name);
 
   pty = tty = -1;
@@ -607,6 +610,7 @@ void rxvt_ptytty_server ()
       _exit (EXIT_SUCCESS);
     }
 }
+
 #endif
 
 // a "factory" *g*
