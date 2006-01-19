@@ -16,7 +16,6 @@ config.sub
 configure.ac
 install-sh
 mkinstalldirs
-xpm.m4
 
 doc/embed
 doc/embed-tk
