@@ -2804,8 +2804,13 @@ rxvt_term::selection_property (Window win, Atom prop)
  * EXT: button 2 release
  */
 void
-rxvt_term::selection_request (Time tm)
+rxvt_term::selection_request (Time tm, int selnum)
 {
+/* After making a selection with selection_make this function will always
+ * return the internal selection, which is not correct IMO, now much more since
+ * I added the selnum parameter.
+ */
+#if 0
   if (selection.text)
     { /* internal selection */
       char *str = rxvt_wcstombs (selection.text, selection.len);
@@ -2814,24 +2819,20 @@ rxvt_term::selection_request (Time tm)
       return;
     }
   else
+#endif
     {
-      int i;
-
       selection_request_time = tm;
       selection_wait = Sel_normal;
 
-      for (i = Sel_Primary; i <= Sel_Clipboard; i++)
-        {
 #if X_HAVE_UTF8_STRING
-          selection_type = Sel_UTF8String;
-          if (selection_request_other (xa[XA_UTF8_STRING], i))
-            return;
+      selection_type = Sel_UTF8String;
+      if (selection_request_other (xa[XA_UTF8_STRING], selnum))
+	return;
 #else
-          selection_type = Sel_CompoundText;
-          if (selection_request_other (xa[XA_COMPOUND_TEXT], i))
-            return;
+      selection_type = Sel_CompoundText;
+      if (selection_request_other (xa[XA_COMPOUND_TEXT], selnum))
+	return;
 #endif
-        }
     }
 
   selection_wait = Sel_none;       /* don't loop in selection_paste () */
