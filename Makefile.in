@@ -58,7 +58,7 @@ allsubdirs = $(subdirs)
 
 DIST =	INSTALL README.configure configure Makefile Makefile.in ChangeLog
 
-MKDIR = $(srcdir)/autoconf/mkinstalldirs
+MKDIR = $(srcdir)/mkinstalldirs
 
 #-------------------------------------------------------------------------
 
@@ -83,17 +83,15 @@ tests:
 	(cd src/test; ${MAKE} tests)
 
 #-------------------------------------------------------------------------
-configure: autoconf/configure.in autoconf/aclocal.m4 autoconf/config.h.in
-	cd $(srcdir);
-	./.prebuild
+configure: configure.ac aclocal.m4 config.h.in
+	cd $(srcdir); ./autogen.sh
 
 config.status:
 	if test -x config.status; then config.status --recheck; \
 	else $(SHELL) configure; fi
 
-autoconf/config.h.in: autoconf/configure.in
-	cd $(srcdir);
-	./.prebuild
+config.h.in: configure.ac
+	cd $(srcdir); ./autogen.sh
 
 installdirs:
 	$(MKDIR) $(DESTDIR)$(bindir)
