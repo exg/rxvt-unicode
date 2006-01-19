@@ -56,8 +56,11 @@ sub on_button_press {
       };
 
       for ($text) {
-         $add_button->("rot13" => sub { y/A-Za-z/N-ZA-Mn-za-m/ });
-         $add_button->("eval perl expression" => sub { no warnings; $_ = eval $_ });
+         /./
+            and $add_button->("rot13" => sub { y/A-Za-z/N-ZA-Mn-za-m/ });
+
+         /./
+            and $add_button->("eval perl expression" => sub { no warnings; $_ = eval $_ });
 
          /^(\S+):(\d+):?$/
             and $add_button->("vi-commands to load '$1'" => sub { s/^(\S+):(\d+):?$/\x1b:e $1\x0d:$2\x0d/ });
