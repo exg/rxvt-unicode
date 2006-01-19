@@ -305,9 +305,9 @@ called whenever the relevant event happens.
 The first argument passed to them is an extension oject as described in
 the in the C<Extension Objects> section.
 
-B<All> of these hooks must return a boolean value. If it is true, then the
-event counts as being I<consumed>, and the invocation of other hooks is
-skipped, and the relevant action might not be carried out by the C++ code.
+B<All> of these hooks must return a boolean value. If any of the called
+hooks returns true, then the event counts as being I<consumed>, and the
+relevant action might not be carried out by the C++ code.
 
 I<< When in doubt, return a false value (preferably C<()>). >>
 
@@ -318,19 +318,20 @@ I<< When in doubt, return a false value (preferably C<()>). >>
 Called after a new terminal object has been initialized, but before
 windows are created or the command gets run. Most methods are unsafe to
 call or deliver senseless data, as terminal size and other characteristics
-have not yet been determined. You can safely query and change resources,
-though.
+have not yet been determined. You can safely query and change resources
+and options, though. For many purposes the C<on_start> hook is a better
+place.
+
+=item on_start $term
+
+Called at the very end of initialisation of a new terminal, just before
+returning to the mainloop.
 
 =item on_reset $term
 
 Called after the screen is "reset" for any reason, such as resizing or
 control sequences. Here is where you can react on changes to size-related
 variables.
-
-=item on_start $term
-
-Called at the very end of initialisation of a new terminal, just before
-returning to the mainloop.
 
 =item on_child_start $term, $pid
 
@@ -736,8 +737,7 @@ sub invoke {
       keys %$cb;
 
       while (my ($pkg, $cb) = each %$cb) {
-         $retval = eval { $cb->($TERM->{_pkg}{$pkg}, @_) }
-            and last;
+         $retval ||= eval { $cb->($TERM->{_pkg}{$pkg}, @_) };
 
          if ($@) {
             $TERM->ungrab; # better to lose the grab than the session
