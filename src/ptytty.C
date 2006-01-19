@@ -638,14 +638,11 @@ void rxvt_ptytty_server ()
     }
   else
     {
-      setgid (getegid ());
-      setuid (geteuid ());
-
       // server, pty-helper
       sock_fd = sv[1];
 
       for (int fd = 0; fd < 1023; fd++)
-        if (fd != sock_fd && fd != 1)
+        if (fd != sock_fd)
           close (fd);
 
       serve ();
