@@ -327,6 +327,10 @@ rxvt_term::scr_reset ()
 
                   int qcol = 0;
 
+                  // see below for cursor adjustment rationale
+                  if (p == ocur.row)
+                    screen.cur.row = q - (total_rows - nrow);
+                  
                   // fill a single destination line
                   while (lofs < llen && qcol < ncol)
                     {
@@ -390,11 +394,6 @@ rxvt_term::scr_reset ()
 
           term_start = 0;
         }
-
-#ifdef DEBUG_STRICT //TODO: remove
-      for (int i = top_row; i < nrow; i++)
-        assert (ROW (i).t);
-#endif
 
       free (old_buf);
       delete old_ta;
