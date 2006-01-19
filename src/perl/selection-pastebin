@@ -55,12 +55,12 @@ sub on_start {
    $pastebin_url = $self->x_resource ("selection-pastebin.url")
                    || "http://www.ta-sa.org/files/txt/%";
 
-   push @urxvt::ext::selection_popup::hook, sub {
-      ("pastebin upload" => sub { $self->upload_paste })
-   };
-
    ()
 }
+
+push @urxvt::ext::selection_popup::hook, sub {
+   ("pastebin upload" => sub { $self->upload_paste })
+};
 
 sub on_keyboard_command {
    my ($self, $cmd) = @_;

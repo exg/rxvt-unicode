@@ -109,6 +109,9 @@ C<a>s:
           : ()
    };
 
+Don't run it in a hook, otherwise the menu will grow and grow. Instead put
+it at the toplevel of your extension.
+
 =item searchable-scrollback<hotkey> (enabled by default)
 
 Adds regex search functionality to the scrollback buffer, triggered
