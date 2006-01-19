@@ -241,6 +241,8 @@ rxvt_term::scr_reset ()
     }
   else
     {
+      CLEAR_ALL_SELECTION ();
+
       /*
        * add or delete rows as appropriate
        */
