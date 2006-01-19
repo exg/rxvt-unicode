@@ -278,7 +278,7 @@ control_tty (int fd_tty)
 {
   setsid ();
 
-# if defined(PTYS_ARE_PTMX) && defined(I_PUSH)
+#if defined(PTYS_ARE_PTMX) && defined(I_PUSH)
   /*
    * Push STREAMS modules:
    *    ptem: pseudo-terminal hardware emulation module.
@@ -296,15 +296,15 @@ control_tty (int fd_tty)
    * close () - on the master side which causes a hang up to be sent
    * through - Geoff Wing
    */
-#  ifdef HAVE_ISASTREAM
+# ifdef HAVE_ISASTREAM
   if (isastream (fd_tty) == 1)
-#  endif
+# endif
     {
       ioctl (fd_tty, I_PUSH, "ptem");
       ioctl (fd_tty, I_PUSH, "ldterm");
       ioctl (fd_tty, I_PUSH, "ttcompat");
     }
-# endif
+#endif
 
   ioctl (fd_tty, TIOCSCTTY, NULL);
 
