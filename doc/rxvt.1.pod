@@ -1473,7 +1473,7 @@ Project Coordinator (Changes 1.0 -)
 
 =item Emanuele Giaquinta L<< <e.giaquinta@glauco.it> >>
 
-Pty/tty/utmp/wtmp rewrite, lots of random hacking and bugxifing.
+Pty/tty/utmp/wtmp rewrite, lots of random hacking and bugfixing.
 
 =back
 
