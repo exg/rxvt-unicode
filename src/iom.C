@@ -1,6 +1,6 @@
 /*
     iom.C -- generic I/O multiplexer
-    Copyright (C) 2003, 2004 Marc Lehmann <gvpe@schmorp.de>
+    Copyright (C) 2003-2006 Marc Lehmann <gvpe@schmorp.de>
  
     This file is part of GVPE.
 

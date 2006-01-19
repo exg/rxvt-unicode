@@ -1,6 +1,7 @@
 rxvt-unicode changelog <= google-friendly title
 
 TODO: split perl documnetation and urxvt.pm into separate files
+TODO: nuke rxvt_privaction and related garbage
 TODO: harmonize --disable-options into position-dependent options.
 TODO: after requesting the selection and getting a timeout, no further requests will be sent.
 TODO: "slow" rendering mode for bidi and scripts

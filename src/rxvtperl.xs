@@ -213,6 +213,7 @@ struct iow : io_watcher, perl_watcher
 
 struct overlay {
   HV *self;
+  bool visible;
   rxvt_term *THIS;
   int x, y, w, h;
   int border;
@@ -231,7 +232,7 @@ struct overlay {
 };
 
 overlay::overlay (rxvt_term *THIS, int x_, int y_, int w_, int h_, rend_t rstyle, int border)
-: THIS(THIS), x(x_), y(y_), w(w_), h(h_), border(border == 2)
+: THIS(THIS), x(x_), y(y_), w(w_), h(h_), border(border == 2), visible(false)
 {
   if (border == 2)
     {
@@ -302,24 +303,38 @@ overlay::~overlay ()
 void
 overlay::show ()
 {
-  char key[33]; sprintf (key, "%32lx", (long)this);
+  if (visible)
+    return;
 
-  HV *hv = (HV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)THIS->perl.self), "_overlay", 8, 0));
-  hv_store (hv, key, 32, newSViv ((long)this), 0);
+  visible = true;
+
+  AV *av = (AV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)THIS->perl.self), "_overlay", 8, 0));
+  av_push (av, newSViv ((long)this));
 }
 
 void
 overlay::hide ()
 {
-  SV **ovs = hv_fetch ((HV *)SvRV ((SV *)THIS->perl.self), "_overlay", 8, 0);
+  if (!visible)
+    return;
 
-  if (ovs)
-    {
-      char key[33]; sprintf (key, "%32lx", (long)this);
+  visible = false;
 
-      HV *hv = (HV *)SvRV (*ovs);
-      hv_delete (hv, key, 32, G_DISCARD);
-    }
+  AV *av = (AV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)THIS->perl.self), "_overlay", 8, 0));
+
+  int i;
+
+  for (i = AvFILL (av); i >= 0; i--)
+    if (SvIV (*av_fetch (av, i, 1)) == (long)this)
+      {
+        av_delete (av, i, G_DISCARD);
+        break;
+      }
+
+  for (; i < AvFILL (av); i++)
+    av_store (av, i, SvREFCNT_inc (*av_fetch (av, i + 1, 0)));
+
+  av_pop (av);
 }
 
 void overlay::swap ()
@@ -369,7 +384,7 @@ void overlay::set (int x, int y, SV *text, SV *rend)
 
       AV *av = (AV *)SvRV (rend);
 
-      for (int col = min (av_len (av) + 1, w - x - border); col--; )
+      for (int col = min (AvFILL (av) + 1, w - x - border); col--; )
         this->rend [y][x + col] = SvIV (*av_fetch (av, col, 1));
     }
 
@@ -435,7 +450,7 @@ rxvt_perl_interp::init (rxvt_term *term)
     {
       // runs outside of perls ENV
       term->perl.self = (void *)newSVptr ((void *)term, "urxvt::term");
-      hv_store ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, newRV_noinc ((SV *)newHV ()), 0);
+      hv_store ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, newRV_noinc ((SV *)newAV ()), 0);
     }
 }
 
@@ -450,20 +465,6 @@ ungrab (rxvt_term *THIS)
     }
 }
 
-static void
-swap_overlays (rxvt_term *term)
-{
-  HV *hv = (HV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, 0));
-
-  if (HvKEYS (hv))
-    {
-      hv_iterinit (hv);
-
-      while (HE *he = hv_iternext (hv))
-        ((overlay *)SvIV (hv_iterval (hv, he)))->swap ();
-    }
-}
-
 bool
 rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 {
@@ -472,7 +473,12 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 
   // pre-handling of some events
   if (htype == HOOK_REFRESH_END)
-    swap_overlays (term);
+    {
+      AV *av = (AV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, 0));
+      
+      for (int i = 0; i <= AvFILL (av); i++)
+        ((overlay *)SvIV (*av_fetch (av, i, 0)))->swap ();
+    }
 
   swap (perl_environ, environ);
 
@@ -649,7 +655,12 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 
   // post-handling of some events
   if (htype == HOOK_REFRESH_BEGIN)
-    swap_overlays (term);
+    {
+      AV *av = (AV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, 0));
+      
+      for (int i = AvFILL (av); i >= 0; i--)
+        ((overlay *)SvIV (*av_fetch (av, i, 0)))->swap ();
+    }
   else if (htype == HOOK_DESTROY)
     {
       clearSVptr ((SV *)term->perl.self);
@@ -873,7 +884,7 @@ _new (...)
           term->argv->push_back (strdup (SvPVbyte_nolen (ST (i))));
 
         AV *envv = (AV *)SvRV (ST (0));
-        for (int i = av_len (envv) + 1; i--; )
+        for (int i = AvFILL (envv) + 1; i--; )
           term->envv->push_back (strdup (SvPVbyte_nolen (*av_fetch (envv, i, 1))));
 
         term->envv->push_back (0);
@@ -1306,7 +1317,7 @@ rxvt_term::ROW_r (int row_number, SV *new_rend = 0, int start_col = 0, int start
               croak ("new_rend must be arrayref");
 
             AV *av = (AV *)SvRV (new_rend);
-            int len = min (av_len (av) + 1 - start_ofs, max_len);
+            int len = min (AvFILL (av) + 1 - start_ofs, max_len);
 
             if (!IN_RANGE_INC (start_col, 0, THIS->ncol - len))
               croak ("new_rend array extends beyond horizontal margins");
