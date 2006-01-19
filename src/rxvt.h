@@ -96,8 +96,6 @@ typedef struct {
 # define STDERR_FILENO  2
 #endif
 
-enum rxvt_privaction { IGNORE = 'i', SAVE = 's', RESTORE = 'r' };//TODO
-
 /*
  *****************************************************************************
  * PROTOTYPES                    
@@ -110,7 +108,6 @@ void             rxvt_clean_exit                  ();
 void           * rxvt_malloc                      (size_t size);
 void           * rxvt_calloc                      (size_t number, size_t size);
 void           * rxvt_realloc                     (void *ptr, size_t size);
-void             rxvt_privileges                  (rxvt_privaction action);
 
 // util.C
 char *           rxvt_wcstombs                    (const wchar_t *str, int len = -1);
@@ -1328,7 +1325,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void Get_Colours ();
   void get_ourmods ();
   // main.C
-  void privileged_utmp (rxvt_privaction action);
   bool set_fonts ();
   void set_string_property (Atom prop, const char *str, int len = -1);
   void set_utf8_property (Atom prop, const char *str, int len = -1);
@@ -1431,8 +1427,10 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void scr_remap_chars ();
   void scr_remap_chars (line_t &l);
 
+  enum cursor_mode { SAVE, RESTORE };
+
   void scr_poweron ();
-  void scr_cursor (int mode);
+  void scr_cursor (cursor_mode mode);
   void scr_do_wrap ();
   int scr_change_screen (int scrn);
   void scr_color (unsigned int color, int fgbg);

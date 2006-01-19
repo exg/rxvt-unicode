@@ -464,7 +464,7 @@ rxvt_term::scr_poweron ()
  * XTERM_SEQ: Restore cursor: ESC 8
  */
 void
-rxvt_term::scr_cursor (int mode)
+rxvt_term::scr_cursor (cursor_mode mode)
 {
   screen_t *s;
 
