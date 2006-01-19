@@ -37,6 +37,10 @@ You can activate them like this:
 
   @@RXVT_NAME@@ -pe <extensionname>
 
+Or by adding them to the resource for extensions loaded by default:
+
+  URxvt.perl-ext-common: default,automove-background,selection-autotransform
+
 =over 4
 
 =item selection (enabled by default)
