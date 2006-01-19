@@ -69,7 +69,8 @@
 static inline int
 get_pty_streams (int *fd_tty, char **ttydev)
 {
-#ifdef NO_SETOWNER_TTYDEV
+#if defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
+# if defined(PTYS_ARE_GETPT) || defined(PTYS_ARE_POSIX) || defined(PTYS_ARE_PTMX)
   int pfd;
 
 # if defined(PTYS_ARE_GETPT)
@@ -90,6 +91,7 @@ get_pty_streams (int *fd_tty, char **ttydev)
 
       close (pfd);
     }
+# endif
 #endif
 
   return -1;
@@ -360,9 +362,6 @@ rxvt_ptytty::set_utf8_mode (bool on)
 #endif
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-#ifndef NO_SETOWNER_TTYDEV
 static struct ttyconf {
   gid_t gid;
   mode_t mode;
@@ -386,30 +385,6 @@ static struct ttyconf {
     }
 } ttyconf;
 
-/////////////////////////////////////////////////////////////////////////////
-
-void
-rxvt_ptytty_unix::privileges (rxvt_privaction action)
-{
-  if (!name || !*name)
-    return;
-
-  if (action == SAVE)
-    {
-      chown (name, getuid (), ttyconf.gid);      /* fail silently */
-      chmod (name, ttyconf.mode);
-# ifdef HAVE_REVOKE
-      revoke (name);
-# endif
-    }
-  else
-    {                    /* action == RESTORE */
-      chmod (name, RESTORE_TTY_MODE);
-      chown (name, 0, ttyconf.gid);
-    }
-}
-#endif
-
 rxvt_ptytty_unix::rxvt_ptytty_unix ()
 {
   pty = tty = -1;
@@ -430,9 +405,8 @@ rxvt_ptytty_unix::~rxvt_ptytty_unix ()
 void
 rxvt_ptytty_unix::put ()
 {
-#ifndef NO_SETOWNER_TTYDEV
-  privileges (RESTORE);
-#endif
+  chmod (name, RESTORE_TTY_MODE);
+  chown (name, 0, ttyconf.gid);
 
   if (pty >= 0) close (pty);
   close_tty ();
@@ -455,7 +429,11 @@ rxvt_ptytty_unix::get ()
   if (tty < 0)
     {
 #ifndef NO_SETOWNER_TTYDEV
-      privileges (SAVE);
+      chown (name, getuid (), ttyconf.gid);      /* fail silently */
+      chmod (name, ttyconf.mode);
+# ifdef HAVE_REVOKE
+      revoke (name);
+# endif
 #endif
 
       if ((tty = get_tty (name)) < 0)
