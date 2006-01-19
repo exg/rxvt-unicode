@@ -14,7 +14,8 @@ sub on_init {
 
    for (my $idx = 0; defined (my $res = $self->x_resource ("selection.pattern-$idx")); $idx++) {
       no re 'eval'; # just to be sure
-      $res = utf8::encode $self->locale_decode ($res);
+      $res = $self->locale_decode ($res);
+      utf8::encode $res;
       push @{ $self->{patterns} }, qr/$res/;
    }
 

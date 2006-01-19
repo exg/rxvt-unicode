@@ -171,6 +171,7 @@ rxvt_term::rxvt_term ()
 #endif
     termwin_ev (this, &rxvt_term::x_cb),
     vt_ev (this, &rxvt_term::x_cb),
+    child_ev (this, &rxvt_term::child_cb),
     check_ev (this, &rxvt_term::check_cb),
     flush_ev (this, &rxvt_term::flush_cb),
     destroy_ev (this, &rxvt_term::destroy_cb),
@@ -287,9 +288,12 @@ rxvt_term::~rxvt_term ()
 #endif
 }
 
+// child has exited, usually destroys
 void
-rxvt_term::child_exit ()
+rxvt_term::child_cb (child_watcher &w, int status)
 {
+  HOOK_INVOKE ((this, HOOK_CHILD_EXIT, DT_INT, status, DT_END));
+
   cmd_pid = 0;
 
   if (!OPTION (Opt_hold))
@@ -527,22 +531,8 @@ rxvt_term::init (int argc, const char *const *argv)
 
 static struct sig_handlers
 {
-  sig_watcher sw_chld, sw_term, sw_int;
+  sig_watcher sw_term, sw_int;
   
-  void sig_chld (sig_watcher &w)
-  {
-    // we are being called for every SIGCHLD, find the corresponding term
-    int pid;
-
-    while ((pid = waitpid (-1, NULL, WNOHANG)) > 0)
-      for (rxvt_term **t = rxvt_term::termlist.begin (); t < rxvt_term::termlist.end (); t++)
-        if (pid == (*t)->cmd_pid)
-          {
-            (*t)->child_exit ();
-            break;
-          }
-  }
-
   /*
    * Catch a fatal signal and tidy up before quitting
    */
@@ -558,8 +548,7 @@ static struct sig_handlers
   }
 
   sig_handlers ()
-  : sw_chld (this, &sig_handlers::sig_chld),
-    sw_term (this, &sig_handlers::sig_term),
+  : sw_term (this, &sig_handlers::sig_term),
     sw_int  (this, &sig_handlers::sig_term)
   {
   }
@@ -606,7 +595,6 @@ rxvt_init ()
   signal (SIGHUP,  SIG_IGN);
   signal (SIGPIPE, SIG_IGN);
 
-  sig_handlers.sw_chld.start (SIGCHLD);
   sig_handlers.sw_term.start (SIGTERM);
   sig_handlers.sw_int.start  (SIGINT);
 

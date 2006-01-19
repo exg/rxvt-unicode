@@ -24,18 +24,20 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cerrno>
+#include <cassert>
 
+#include <sys/types.h>
 #include <sys/time.h>
-
-#include <assert.h>
 
 #if 1 // older unices need these includes for select (2)
 # include <unistd.h>
-# include <sys/types.h>
 # include <time.h>
 #endif
 
-// for IOM_SIG
+#if IOM_CHILD
+# include <sys/wait.h>
+#endif
+
 #if IOM_SIG
 # include <csignal>
 # include <fcntl.h>
@@ -72,27 +74,62 @@ struct sig_vec : io_manager_vec<sig_watcher> {
 };
 static vector<sig_vec *> sw;
 #endif
+#if IOM_CHILD
+static io_manager_vec<child_watcher>  pw;
+#endif
 
 // this is a dummy time watcher to ensure that the first
 // time watcher is _always_ valid, this gets rid of a lot
 // of null-pointer-checks
 // (must come _before_ iom is being defined)
 static struct tw0 : time_watcher
+{
+  void cb (time_watcher &w)
   {
-    void cb (time_watcher &w)
-    {
-      // should never get called
-      // reached end-of-time, or tstamp has a bogus definition,
-      // or compiler initialisation order broken, or something else :)
-      abort ();
-    }
+    // should never get called
+    // reached end-of-time, or tstamp has a bogus definition,
+    // or compiler initialisation order broken, or something else :)
+    abort ();
+  }
 
-    tw0 ()
-      : time_watcher (this, &tw0::cb)
-      { }
-  } tw0;
+  tw0 ()
+  : time_watcher (this, &tw0::cb)
+  { }
+} tw0;
 
 tstamp NOW;
+
+#if IOM_CHILD
+// sig_watcher for child signal(s)
+static struct sw0 : sig_watcher
+{
+  void cb (sig_watcher &w)
+  {
+    // SIGCHLD, call corresponding watchera
+    pid_t pid;
+    int status;
+
+    while ((pid = waitpid (-1, &status, WNOHANG)) > 0)
+      for (int i = pw.size (); i--; )
+        {
+          child_watcher *w = pw[i];
+
+          if (!w)
+            pw.erase_unordered (i);
+          else if (w->pid == pid)
+            {
+              w->stop ();
+              w->call (*w, status);
+            }
+         }
+
+  }
+
+  sw0 ()
+  : sig_watcher (this, &sw0::cb)
+  { }
+} sw0;
+#endif
 
 #if IOM_TIME
 tstamp io_manager::now ()
@@ -115,6 +152,8 @@ static bool iom_valid;
 static struct init {
   init ()
   {
+    iom_valid = true;
+
 #if IOM_SIG
     sigemptyset (&sigs);
 
@@ -128,7 +167,9 @@ static struct init {
     fcntl (sigpipe[1], F_SETFL, O_NONBLOCK); fcntl (sigpipe[1], F_SETFD, FD_CLOEXEC);
 #endif
 
-    iom_valid = true;
+#if IOM_CHILD
+    sw0.start (SIGCHLD);
+#endif
 
 #if IOM_TIME
     io_manager::set_now ();
@@ -271,6 +312,11 @@ void sig_watcher::start (int signum)
   this->signum = signum;
   io_manager::reg (*this);
 }
+#endif
+
+#if IOM_CHILD
+void io_manager::reg   (child_watcher &w) { io_manager::reg   (w, pw); }
+void io_manager::unreg (child_watcher &w) { io_manager::unreg (w, pw); }
 #endif
 
 void io_manager::loop ()

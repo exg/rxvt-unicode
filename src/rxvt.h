@@ -1189,6 +1189,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   xevent_watcher scrollbar_ev;
 #endif
 
+  void child_cb (child_watcher &w, int status); child_watcher child_ev;
   void check_cb (check_watcher &w); check_watcher check_ev;
   void destroy_cb (time_watcher &w); time_watcher destroy_ev;
   void flush_cb (time_watcher &w); time_watcher flush_ev;
@@ -1228,7 +1229,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 
   rxvt_term ();
   ~rxvt_term ();
-  void child_exit (); // child has exited, usually destroys
   void destroy ();
   void emergency_cleanup ();
 

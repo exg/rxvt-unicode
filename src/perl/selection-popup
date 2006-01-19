@@ -71,7 +71,7 @@ sub on_button_press {
             and $add_button->("shell quote" => sub { $_ = "\Q$_" });
 
          /^(http|ftp|telnet|irc|news):\//
-            and $add_button->("run $self->{browser}" => sub { urxvt::exec_async $self->{browser}, $_ });
+            and $add_button->("run $self->{browser}" => sub { $self->exec_async ($self->{browser}, $_) });
 
          for my $hook (@hook) {
             if (my ($title, $cb) = $hook->($popup)) {

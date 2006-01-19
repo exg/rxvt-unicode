@@ -4,6 +4,8 @@
   def (DESTROY)
   def (RESET)
   def (START)
+  def (CHILD_START)
+  def (CHILD_EXIT)
 
   def (SEL_BEGIN)
   def (SEL_EXTEND)

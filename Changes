@@ -14,7 +14,6 @@ WISH: support tex fonts
 
 9.0
 TODO: distributed clipboard example
-TODO: use correct %ENV for perl exec'ed processes.
         - setuid/setgid operation is now _encouraged_: security has been
           improved by moving privileged operations into a separate process
           and permanently dropping privileges within the terminal. This
@@ -54,6 +53,7 @@ TODO: use correct %ENV for perl exec'ed processes.
         - made some fixes to xpm offset and scaling code.
         - perl-overlays and refresh hooks were not applied in correct order.
         - changed coordinate-system of view_start/nsaved to be top to bottom.
+        - iom extended to support listening for child exits.
 
 7.0  Fri Jan 13 14:02:18 CET 2006
 	- added sections for DISTRIBUTION MAINTAINERS and about

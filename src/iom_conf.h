@@ -22,10 +22,11 @@
 
 #include <rxvtutil.h>
 
-#define IOM_IO 1
-#define IOM_TIME 1
+#define IOM_IO    1
+#define IOM_TIME  1
 #define IOM_CHECK 1
-#define IOM_SIG 1
+#define IOM_SIG   1
+#define IOM_CHILD 1
 
 #endif
 

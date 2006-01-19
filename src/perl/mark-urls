@@ -51,7 +51,7 @@ sub on_button_release {
     if ($event->{button} == 2 && ($event->{state} & $mask) == 0) {
        while ($text =~ /$url/g) {
            if ($-[1] <= $col && $+[1] >= $col) {
-               urxvt::exec_async $self->{browser}, $1;
+               $self->exec_async ($self->{browser}, $1);
                return 1;
            }
        }

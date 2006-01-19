@@ -145,15 +145,15 @@ $word>:
 And this example matches the same,but replaces it with vi-commands you can
 paste directly into your (vi :) editor:
 
-   URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\\d+):?$/\\x1b:e \\Q$1\\E\\x0d:$2\\x0d/
+   URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\\d+):?$/:e \\Q$1\\E\\x0d:$2\\x0d/
 
 Of course, this can be modified to suit your needs and your editor :)
 
 To expand the example above to typical perl error messages ("XXX at
 FILENAME line YYY."), you need a slightly more elaborate solution:
 
-   URxvt.selection.pattern-0: ( at .*? line \\d+\\.)
-   URxvt.selection-autotransform.0: s/^ at (.*?) line (\\d+)\\.$/\x1b:e \\Q$1\E\\x0d:$2\\x0d/
+   URxvt.selection.pattern-0: ( at .*? line \\d+[,.])
+   URxvt.selection-autotransform.0: s/^ at (.*?) line (\\d+)[,.]$/:e \\Q$1\E\\x0d:$2\\x0d/
 
 The first line tells the selection code to treat the unchanging part of
 every error message as a selection pattern, and the second line transforms
@@ -326,6 +326,15 @@ variables.
 
 Called at the very end of initialisation of a new terminal, just before
 returning to the mainloop.
+
+=item on_child_start $term, $pid
+
+Called just after the child process has been C<fork>ed.
+
+=item on_child_exit $term, $status
+
+Called just after the child process has exited. C<$status> is the status
+from C<waitpid>.
 
 =item on_sel_make $term, $eventtime
 
@@ -746,18 +755,6 @@ sub invoke {
    $retval
 }
 
-sub exec_async(@) {
-   my $pid = fork;
-
-   return
-      if !defined $pid or $pid;
-
-   %ENV = %{ $TERM->env };
-
-   exec @_;
-   _exit 255;
-}
-
 # urxvt::term::extension
 
 package urxvt::term::extension;
@@ -943,6 +940,31 @@ sub new {
 Destroy the terminal object (close the window, free resources
 etc.). Please note that @@RXVT_NAME@@ will not exit as long as any event
 watchers (timers, io watchers) are still active.
+
+=item $term->exec_async ($cmd[, @args])
+
+Works like the combination of the C<fork>/C<exec> builtins, which executes
+("starts") programs in the background. This function takes care of setting
+the user environment before exec'ing the command (e.g. C<PATH>) and should
+be preferred over explicit calls to C<exec> or C<system>.
+
+Returns the pid of the subprocess or C<undef> on error.
+
+=cut
+
+sub exec_async {
+   my $self = shift;
+
+   my $pid = fork;
+
+   return $pid
+      if !defined $pid or $pid;
+
+   %ENV = %{ $self->env };
+
+   exec @_;
+   urxvt::_exit 255;
+}
 
 =item $isset = $term->option ($optval[, $set])
 

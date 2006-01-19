@@ -1443,6 +1443,10 @@ rxvt_term::run_command (const char *const *argv)
 #endif
 
         pty->close_tty ();
+
+        child_ev.start (cmd_pid);
+
+        HOOK_INVOKE ((this, HOOK_CHILD_START, DT_INT, cmd_pid, DT_END));
         break;
     }
 }
