@@ -104,8 +104,11 @@ rxvtc: rxvtc.o $(COMMON_DAEMON) fdpass.o
 
 #-------------------------------------------------------------------------
 
-tags:
-	ctags *.h *.C
+tags: *.[Ch]
+	ctags $^
+
+TAGS: *.[Ch]
+	etags $^
 
 allbin: rxvt rxvtd rxvtc
 
@@ -116,7 +119,7 @@ clean:
 	$(RMF) *.o *.lo .libs/* librxvt.la tmpproto *.tmp
 
 realclean: clean
-	$(RMF) tags librxvt.h
+	$(RMF) tags TAGS librxvt.h
 
 cleandir: realclean
 
