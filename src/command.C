@@ -1494,9 +1494,10 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case PropertyNotify:
-        if (ev.xproperty.atom == xa[XA_VT_SELECTION]
-            && ev.xproperty.state == PropertyNewValue)
-          selection_property (ev.xproperty.window, ev.xproperty.atom);
+        if (!HOOK_INVOKE ((this, HOOK_PROPERTY_NOTIFY, DT_XEVENT, &ev, DT_END)))
+          if (ev.xproperty.atom == xa[XA_VT_SELECTION]
+              && ev.xproperty.state == PropertyNewValue)
+            selection_property (ev.xproperty.window, ev.xproperty.atom);
 
         break;
 

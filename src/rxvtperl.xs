@@ -642,6 +642,13 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 
                         break;
 
+                      case PropertyNotify:
+                        setuv (window,       xe->xproperty.window);
+                        setuv (atom,         xe->xproperty.atom);
+                        setuv (time,         xe->xproperty.time);
+                        setiv (state,        xe->xproperty.state);
+                        break;
+
                       case ClientMessage:
                         setuv (window,       xe->xclient.window);
                         setuv (message_type, xe->xclient.message_type);
@@ -651,6 +658,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
                         setuv (l2,           xe->xclient.data.l[2]);
                         setuv (l3,           xe->xclient.data.l[3]);
                         setuv (l4,           xe->xclient.data.l[4]);
+                        break;
                     }
 
                   XPUSHs (sv_2mortal (newRV_noinc ((SV *)hv)));
@@ -1740,7 +1748,16 @@ XUnmapWindow (rxvt_term *term, Window window)
 
 void
 XMoveResizeWindow (rxvt_term *term, Window window, int x, int y, unsigned int width, unsigned int height)
-	C_ARGS: term->display->display, (Window)window, x, y, width, height
+	C_ARGS: term->display->display, window, x, y, width, height
+
+void
+rxvt_term::XChangeInput (Window window, U32 add_events, U32 del_events = 0)
+	CODE:
+{
+	XWindowAttributes attr;
+        XGetWindowAttributes (THIS->display->display, window, &attr);
+        XSelectInput (THIS->display->display, window, attr.your_event_mask | add_events & ~del_events);
+}
 
 void
 rxvt_term::XTranslateCoordinates (Window src, Window dst, int x, int y)

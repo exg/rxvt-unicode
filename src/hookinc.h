@@ -40,6 +40,7 @@
   def (CLIENT_MESSAGE)
   def (WM_DELETE_WINDOW)
   def (WM_PROTOCOLS)
+  def (PROPERTY_NOTIFY)
 
   def (CUSTOM_REND) // hovering over custom rendition, generate enter/leave maybe?
 

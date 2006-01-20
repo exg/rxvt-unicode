@@ -78,11 +78,20 @@ sub configure {
       0, $self->{tabheight},
       $self->width, $self->height - $self->{tabheight}
    );
+}
+
+sub copy_properties {
+   my ($self) = @_;
+   my $tab = $self->{cur};
 
    my $wm_normal_hints = $self->XInternAtom ("WM_NORMAL_HINTS");
 
+   my %our_props = map +($_ => undef), $self->XListProperties ($self->parent);
+
    for my $atom ($tab->XListProperties ($tab->parent)) {
       my ($type, $format, $items) = $self->XGetWindowProperty ($tab->parent, $atom);
+      
+      delete $our_props{$atom};
 
       if ($atom == $wm_normal_hints) {
          my (@hints) = unpack "l!*", $items;
@@ -94,7 +103,7 @@ sub configure {
       $self->XChangeWindowProperty ($self->parent, $atom, $type, $format, $items);
    }
 
-   $self->refresh;
+   $self->XDeleteProperty ($self->parent, $_) for keys %our_props;
 }
 
 sub make_current {
@@ -109,6 +118,7 @@ sub make_current {
    $self->{cur} = $tab;
 
    $self->configure;
+   $self->copy_properties;
    $tab->focus_in;
    $tab->XMapWindow ($tab->parent);
    delete $tab->{activity};
@@ -187,6 +197,8 @@ sub on_wm_delete_window {
 sub tab_start {
    my ($self, $tab) = @_;
 
+   $tab->XChangeInput ($tab->parent, urxvt::PropertyChangeMask);
+
    push @{ $self->{tabs} }, $tab;
 
 #   $tab->{name} ||= scalar @{ $self->{tabs} };
@@ -238,6 +250,15 @@ sub tab_key_press {
    ()
 }
 
+sub tab_property_notify {
+   my ($self, $tab, $event) = @_;
+
+   $self->copy_properties
+      if $event->{window} == $tab->parent;
+
+   ()
+}
+
 sub tab_activity {
    my ($self, $tab) = @_;
 
@@ -250,7 +271,7 @@ package urxvt::ext::tabbed::tab;
 # simply proxies all interesting calls back to the tabbed class.
 
 {
-   for my $hook qw(start destroy key_press) {
+   for my $hook qw(start destroy key_press property_notify) {
       eval qq{
          sub on_$hook {
             my \$parent = \$_[0]{term}{parent}

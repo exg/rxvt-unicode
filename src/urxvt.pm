@@ -478,6 +478,8 @@ focus out processing.
 
 =item on_configure_notify $term, $event
 
+=item on_property_notify $term, $event
+
 =item on_key_press $term, $event, $keysym, $octets
 
 =item on_key_release $term, $event, $keysym
