@@ -74,7 +74,6 @@ sub on_button_press {
          /^(http|ftp|telnet|irc|news):\//
             and $add_button->("run $self->{browser}" => sub { $self->exec_async ($self->{browser}, $_) });
 
-         warn "hook for $self $self->{term}\n";#d#
          for my $hook (@{ $self->{term}{selection_popup_hook} || [] }) {
             if (my ($title, $cb) = $hook->($popup)) {
                $add_button->($title, $cb);
