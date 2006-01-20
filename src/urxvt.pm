@@ -93,7 +93,7 @@ runtime.
 
 Binds a popup menu to Ctrl-Button3 that lets you convert the selection
 text into various other formats/action (such as uri unescaping, perl
-evalution, web-browser starting etc.), depending on content.
+evaluation, web-browser starting etc.), depending on content.
 
 Other extensions can extend this popup menu by pushing a code reference
 onto C<@{ $term->{selection_popup_hook} }>, that is called whenever the
