@@ -325,7 +325,13 @@ place.
 =item on_start $term
 
 Called at the very end of initialisation of a new terminal, just before
-returning to the mainloop.
+trying to map (display) the toplevel and returning to the mainloop.
+
+=item on_destroy $term
+
+Called whenever something tries to destroy terminal, before doing anything
+yet. If this hook returns true, then destruction is skipped, but this is
+rarely a good idea.
 
 =item on_reset $term
 
@@ -501,6 +507,8 @@ use List::Util ();
 
 our $VERSION = 1;
 our $TERM;
+our @TERM_INIT;
+our @TERM_EXT;
 our @HOOKNAME;
 our %HOOKTYPE = map +($HOOKNAME[$_] => $_), 0..$#HOOKNAME;
 our %OPTION;
@@ -531,6 +539,22 @@ The basename of the installed binaries, usually C<urxvt>.
 
 The current terminal. This variable stores the current C<urxvt::term>
 object, whenever a callback/hook is executing.
+
+=item @urxvt::TERM_INIT
+
+All coderefs in this array will be called as methods of the next newly
+created C<urxvt::term> object (during the C<on_init> phase). The array
+gets cleared before the codereferences that were in it are being executed,
+so coderefs can push themselves onto it again if they so desire.
+
+This complements to the perl-eval commandline option, but gets executed
+first.
+
+=item @urxvt::TERM_EXT
+
+Works similar to C<@TERM_INIT>, but contains perl package/class names, which
+get registered as normal extensions after calling the hooks in C<@TERM_INIT>
+but before other extensions. Gets cleared just like C<@TERM_INIT>.
 
 =back
 
@@ -662,8 +686,6 @@ my %extension_pkg;
 sub extension_package($) {
    my ($path) = @_;
 
-   no strict 'refs';
-
    $extension_pkg{$path} ||= do {
       $path =~ /([^\/\\]+)$/;
       my $pkg = $1;
@@ -674,8 +696,6 @@ sub extension_package($) {
 
       open my $fh, "<:raw", $path
          or die "$path: $!";
-
-      @{"$pkg\::ISA"} = urxvt::term::extension::;
 
       my $source =
          "package $pkg; use strict; use utf8;\n"
@@ -702,7 +722,16 @@ sub invoke {
       
       my %ext_arg;
 
-      for (map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2) {
+      {
+         my @init = @TERM_INIT;
+         @TERM_INIT = ();
+         $_->($TERM) for @init;
+         my @pkg = @TERM_EXT;
+         @TERM_EXT = ();
+         $TERM->register_package ($_) for @pkg;
+      }
+
+      for (grep $_, map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2) {
          if ($_ eq "default") {
             $ext_arg{$_} ||= [] for qw(selection option-popup selection-popup searchable-scrollback);
          } elsif (/^-(.*)$/) {
@@ -737,7 +766,8 @@ sub invoke {
       keys %$cb;
 
       while (my ($pkg, $cb) = each %$cb) {
-         $retval ||= eval { $cb->($TERM->{_pkg}{$pkg}, @_) };
+         my $retval_ = eval { $cb->($TERM->{_pkg}{$pkg}, @_) };
+         $retval ||= $retval_;
 
          if ($@) {
             $TERM->ungrab; # better to lose the grab than the session
@@ -905,6 +935,12 @@ package urxvt::term;
 # as hooks
 sub register_package {
    my ($self, $pkg, $argv) = @_;
+
+   no strict 'refs';
+
+   urxvt::verbose 6, "register package $pkg to $self";
+
+   @{"$pkg\::ISA"} = urxvt::term::extension::;
 
    my $proxy = bless {
       _pkg => $pkg,
@@ -1640,6 +1676,15 @@ sub DESTROY {
 }
 
 =back
+
+=cut
+
+package urxvt::watcher;
+
+@urxvt::timer::ISA = __PACKAGE__;
+@urxvt::iow::ISA   = __PACKAGE__;
+@urxvt::pw::ISA    = __PACKAGE__;
+@urxvt::iw::ISA    = __PACKAGE__;
 
 =head2 The C<urxvt::timer> Class
 

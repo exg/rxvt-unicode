@@ -165,13 +165,7 @@ rxvt_utf8towcs (const char *str, int len)
 }
 
 char *
-rxvt_strdup (const char *str)
-{
-  return str ? strdup (str) : 0;
-}
-
-char *
-rxvt_r_basename (const char *str)
+rxvt_r_basename (const char *str) NOTHROW
 {
   char *base = strrchr (str, '/');
 
@@ -182,7 +176,7 @@ rxvt_r_basename (const char *str)
  * Print an error message
  */
 void
-rxvt_vlog (const char *fmt, va_list arg_ptr)
+rxvt_vlog (const char *fmt, va_list arg_ptr) NOTHROW
 {
   char msg[1024];
 
@@ -195,7 +189,7 @@ rxvt_vlog (const char *fmt, va_list arg_ptr)
 }
 
 void
-rxvt_log (const char *fmt,...)
+rxvt_log (const char *fmt,...) NOTHROW
 {
   va_list arg_ptr;
 
@@ -208,7 +202,7 @@ rxvt_log (const char *fmt,...)
  * Print an error message
  */
 void
-rxvt_warn (const char *fmt,...)
+rxvt_warn (const char *fmt,...) NOTHROW
 {
   va_list arg_ptr;
 
@@ -220,7 +214,7 @@ rxvt_warn (const char *fmt,...)
 }
 
 void
-rxvt_fatal (const char *fmt,...)
+rxvt_fatal (const char *fmt,...) THROW ((class rxvt_failure_exception))
 {
   va_list arg_ptr;
 
@@ -233,11 +227,10 @@ rxvt_fatal (const char *fmt,...)
   rxvt_exit_failure ();
 }
 
-class rxvt_failure_exception rxvt_failure_exception;
-
 void
-rxvt_exit_failure ()
+rxvt_exit_failure () THROW ((class rxvt_failure_exception))
 {
+  static class rxvt_failure_exception rxvt_failure_exception;
   throw (rxvt_failure_exception);
 }
 
@@ -250,7 +243,7 @@ rxvt_exit_failure ()
  *      return: strlen (S2)
  */
 int
-rxvt_Str_match (const char *s1, const char *s2)
+rxvt_Str_match (const char *s1, const char *s2) NOTHROW
 {
   int n = strlen (s2);
 
@@ -258,7 +251,7 @@ rxvt_Str_match (const char *s1, const char *s2)
 }
 
 const char *
-rxvt_Str_skip_space (const char *str)
+rxvt_Str_skip_space (const char *str) NOTHROW
 {
   if (str)
     while (*str && isspace (*str))
@@ -272,7 +265,7 @@ rxvt_Str_skip_space (const char *str)
  * in place.
  */
 char           *
-rxvt_Str_trim (char *str)
+rxvt_Str_trim (char *str) NOTHROW
 {
   char *r, *s;
 
@@ -319,7 +312,7 @@ rxvt_Str_trim (char *str)
  * returns the converted string length
  */
 int
-rxvt_Str_escaped (char *str)
+rxvt_Str_escaped (char *str) NOTHROW
 {
   char            ch, *s, *d;
   int             i, num, append = 0;
@@ -395,7 +388,7 @@ rxvt_Str_escaped (char *str)
  * Caller should free each entry and array when done
  */
 char          **
-rxvt_splitcommastring (const char *cs)
+rxvt_splitcommastring (const char *cs) NOTHROW
 {
   int             l, n, p;
   const char     *s, *t;
@@ -426,7 +419,7 @@ rxvt_splitcommastring (const char *cs)
 }
 
 void
-rxvt_freecommastring (char **cs)
+rxvt_freecommastring (char **cs) NOTHROW
 {
   for (int i = 0; cs[i]; ++i)
     free (cs[i]);
@@ -448,7 +441,7 @@ rxvt_freecommastring (char **cs)
  * FILE is either semi-colon or zero terminated
  */
 char           *
-rxvt_File_search_path (const char *pathlist, const char *file, const char *ext)
+rxvt_File_search_path (const char *pathlist, const char *file, const char *ext) NOTHROW
 {
   int             maxpath, len;
   const char     *p, *path;
@@ -520,7 +513,7 @@ rxvt_File_search_path (const char *pathlist, const char *file, const char *ext)
 }
 
 char           *
-rxvt_File_find (const char *file, const char *ext, const char *path)
+rxvt_File_find (const char *file, const char *ext, const char *path) NOTHROW
 {
   char           *f;
 
@@ -539,7 +532,7 @@ rxvt_File_find (const char *file, const char *ext, const char *path)
 #endif
 
 // should not be used in interactive programs, for obvious reasons
-void rxvt_usleep (int usecs)
+void rxvt_usleep (int usecs) NOTHROW
 {
 #if HAVE_NANOSLEEP
   struct timespec ts;

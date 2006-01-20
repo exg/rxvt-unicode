@@ -26,6 +26,7 @@
 #define IOM_TIME  1
 #define IOM_CHECK 1
 #define IOM_SIG   1
+#define IOM_IDLE  1
 #define IOM_CHILD 1
 
 #endif

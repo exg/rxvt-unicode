@@ -50,10 +50,13 @@
 
 vector<rxvt_term *> rxvt_term::termlist;
 
+// used to tell global functions which terminal instance is "active"
+rxvt_t rxvt_current_term;
+
 static char curlocale[128], savelocale[128];
 
 bool
-rxvt_set_locale (const char *locale)
+rxvt_set_locale (const char *locale) NOTHROW
 {
   if (!locale || !strncmp (locale, curlocale, 128))
     return false;
@@ -64,14 +67,14 @@ rxvt_set_locale (const char *locale)
 }
 
 void
-rxvt_push_locale (const char *locale)
+rxvt_push_locale (const char *locale) NOTHROW
 {
   strcpy (savelocale, curlocale);
   rxvt_set_locale (locale);
 }
 
 void
-rxvt_pop_locale ()
+rxvt_pop_locale () NOTHROW
 {
   rxvt_set_locale (savelocale);
 }
@@ -184,9 +187,6 @@ rxvt_term::rxvt_term ()
 
 #ifdef KEYSYM_RESOURCE
   keyboard = new keyboard_manager;
-
-  if (!keyboard)
-    rxvt_fatal ("out of memory, aborting.\n");
 #endif
 }
 
@@ -202,8 +202,6 @@ void rxvt_term::emergency_cleanup ()
 
 rxvt_term::~rxvt_term ()
 {
-  HOOK_INVOKE ((this, HOOK_DESTROY, DT_END));
-
   termlist.erase (find (termlist.begin (), termlist.end(), this));
 
   emergency_cleanup ();
@@ -304,6 +302,9 @@ void
 rxvt_term::destroy ()
 {
   if (destroy_ev.active)
+    return;
+
+  if (HOOK_INVOKE ((this, HOOK_DESTROY, DT_END)))
     return;
 
 #if ENABLE_OVERLAY
@@ -510,9 +511,6 @@ rxvt_term::init (int argc, const char *const *argv)
     }
 #endif
 
-  XMapWindow (disp, vt);
-  XMapWindow (disp, parent[0]);
-
   set_colorfgbg ();
 
   init_command (cmd_argv);
@@ -525,6 +523,9 @@ rxvt_term::init (int argc, const char *const *argv)
   check_ev.start ();
 
   HOOK_INVOKE ((this, HOOK_START, DT_END));
+
+  XMapWindow (disp, vt);
+  XMapWindow (disp, parent[0]);
 
   return true;
 }
@@ -633,7 +634,7 @@ rxvt_calloc (size_t number, size_t size)
   return p;
 }
 
-void           *
+void *
 rxvt_realloc (void *ptr, size_t size)
 {
   void *p = realloc (ptr, size);
@@ -1590,8 +1591,5 @@ rxvt_term::IMSetStatusPosition ()
   XFree (status_attr);
 }
 #endif                          /* USE_XIM */
-
-/*----------------------------------------------------------------------*/
-rxvt_t          rxvt_current_term;
 
 /*----------------------- end-of-file (C source) -----------------------*/

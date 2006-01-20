@@ -60,6 +60,16 @@
  */
 
 /*
+ * The cursor blink interval, in seconds.
+ */
+#define CURSOR_BLINK_INTERVAL 0.5
+
+/*
+ * The text blink interval, in seconds.
+ */
+#define TEXT_BLINK_INTERVAL CURSOR_BLINK_INTERVAL
+
+/*
  * Avoid enabling the colour cursor (-cr, cursorColor, cursorColor2)
  */
 /* #define NO_CURSORCOLOR */

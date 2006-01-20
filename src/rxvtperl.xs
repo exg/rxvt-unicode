@@ -52,7 +52,7 @@
 #undef ROW
 #define ROW(n) THIS->row_buf [LINENO (n)]
 
-#define ENABLE_PERL_FRILLS 1
+typedef int CHAINED UNUSED;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -120,13 +120,15 @@ SvPTR (SV *sv, const char *klass)
 
 /////////////////////////////////////////////////////////////////////////////
 
+#define SvWATCHER(sv) (perl_watcher *)SvPTR (sv, "urxvt::watcher")
+
 struct perl_watcher
 {
   SV *cbsv;
   HV *self;
 
   perl_watcher ()
-  : cbsv (newSV (0))
+  : cbsv (0)
   {
   }
 
@@ -137,7 +139,8 @@ struct perl_watcher
 
   void cb (SV *cb)
   {
-    sv_setsv (cbsv, cb);
+    SvREFCNT_dec (cbsv);
+    cbsv = newSVsv (cb);
   }
 
   void invoke (const char *type, SV *self, int arg = -1);
@@ -171,9 +174,9 @@ perl_watcher::invoke (const char *type, SV *self, int arg)
 }
 
 #define newSVtimer(timer) new_ref (timer->self, "urxvt::timer")
-#define SvTIMER(sv) (timer *)SvPTR (sv, "urxvt::timer")
+#define SvTIMER(sv) (timer *)(perl_watcher *)SvPTR (sv, "urxvt::timer")
 
-struct timer : time_watcher, perl_watcher
+struct timer : perl_watcher, time_watcher
 {
   tstamp interval;
 
@@ -192,9 +195,9 @@ struct timer : time_watcher, perl_watcher
 };
 
 #define newSViow(iow) new_ref (iow->self, "urxvt::iow")
-#define SvIOW(sv) (iow *)SvPTR (sv, "urxvt::iow")
+#define SvIOW(sv) (iow *)(perl_watcher *)SvPTR (sv, "urxvt::iow")
 
-struct iow : io_watcher, perl_watcher
+struct iow : perl_watcher, io_watcher
 {
   iow ()
   : io_watcher (this, &iow::execute)
@@ -204,6 +207,38 @@ struct iow : io_watcher, perl_watcher
   void execute (io_watcher &w, short revents)
   {
     invoke ("urxvt::iow", newSViow (this), revents);
+  }
+};
+
+#define newSViw(iw) new_ref (iw->self, "urxvt::iw")
+#define SvIW(sv) (iw *)(perl_watcher *)SvPTR (sv, "urxvt::iw")
+
+struct iw : perl_watcher, idle_watcher
+{
+  iw ()
+  : idle_watcher (this, &iw::execute)
+  {
+  }
+
+  void execute (idle_watcher &w)
+  {
+    invoke ("urxvt::iw", newSViw (this));
+  }
+};
+
+#define newSVpw(pw) new_ref (pw->self, "urxvt::pw")
+#define SvPW(sv) (pw *)(perl_watcher *)SvPTR (sv, "urxvt::pw")
+
+struct pw : perl_watcher, child_watcher
+{
+  pw ()
+  : child_watcher (this, &pw::execute)
+  {
+  }
+
+  void execute (child_watcher &w, int status)
+  {
+    invoke ("urxvt::pw", newSVpw (this), status);
   }
 };
 
@@ -915,95 +950,6 @@ _new (...)
 void
 rxvt_term::destroy ()
 
-#if ENABLE_PERL_FRILLS
-
-void
-rxvt_term::XListProperties (U32 window)
-	PPCODE:
-{
-	int count;
-	Atom *props = XListProperties (THIS->display->display, (Window)window, &count);
-
-        EXTEND (SP, count);
-        while (count--)
-          PUSHs (newSVuv ((U32)props [count]));
-        
-        XFree (props);
-}
-
-void
-rxvt_term::XGetWindowProperty (U32 window, U32 property)
-	PPCODE:
-{
-        Atom type;
-        int format;
-        unsigned long nitems;
-        unsigned long bytes_after;
-        unsigned char *prop;
-	XGetWindowProperty (THIS->display->display, (Window)window, (Atom)property,
-                            0, 1<<30, 0, AnyPropertyType,
-                            &type, &format, &nitems, &bytes_after, &prop);
-        if (type != None)
-          {
-            EXTEND (SP, 3);
-            PUSHs (newSVuv ((U32)type));
-            PUSHs (newSViv (format));
-            PUSHs (newSVpvn ((char *)prop, nitems * format / 8));
-            XFree (prop);
-          }
-}
-
-void
-rxvt_term::XChangeWindowProperty (U32 window, U32 property, U32 type, int format, SV *data)
-	CODE:
-{
-	STRLEN len;
-        char *data_ = SvPVbyte (data, len);
-
-	XChangeProperty (THIS->display->display, (Window)window, (Atom)property,
-                         type, format, PropModeReplace,
-                         (unsigned char *)data, len * 8 / format);
-}
-
-void
-rxvt_term::XDeleteProperty (U32 window, U32 property)
-	CODE:
-        XDeleteProperty (THIS->display->display, (Window)window, (Atom)property);
-
-U32
-rxvt_term::DefaultRootWindow ()
-	CODE:
-        RETVAL = (U32)THIS->display->root;
-        OUTPUT:
-        RETVAL
-
-U32
-rxvt_term::XCreateSimpleWindow (U32 parent, int x, int y, unsigned int width, unsigned int height)
-	CODE:
-        RETVAL = XCreateSimpleWindow (THIS->display->display, (Window)parent,
-                                      x, y, width, height, 0,
-                                      THIS->pix_colors_focused[Color_border],
-                                      THIS->pix_colors_focused[Color_border]);
-	OUTPUT:
-        RETVAL
-
-void
-rxvt_term::XReparentWindow (U32 window, U32 parent, int x = 0, int y = 0)
-	CODE:
-        XReparentWindow (THIS->display->display, (Window)window, (Window)parent, x, y);
-
-void
-rxvt_term::XMapWindow (U32 window)
-	CODE:
-        XMapWindow (THIS->display->display, (Window)window);
-
-void
-rxvt_term::XUnmapWindow (U32 window)
-	CODE:
-        XUnmapWindow (THIS->display->display, (Window)window);
-
-#endif
-
 void
 rxvt_term::set_should_invoke (int htype, int inc)
 	CODE:
@@ -1017,7 +963,7 @@ rxvt_term::grab_button (int button, U32 modifiers)
                      GrabModeSync, GrabModeSync, None, GRAB_CURSOR);
 
 bool
-rxvt_term::grab (U32 eventtime, int sync = 0)
+rxvt_term::grab (Time eventtime, int sync = 0)
 	CODE:
 {
         int mode = sync ? GrabModeSync : GrabModeAsync;
@@ -1202,17 +1148,17 @@ rxvt_term::pty_ev_events (int events = EVENT_UNDEF)
 	OUTPUT:
         RETVAL
 
-U32
+Window
 rxvt_term::parent ()
 	CODE:
-        RETVAL = (U32)THIS->parent [0];
+        RETVAL = THIS->parent [0];
         OUTPUT:
         RETVAL
 
-U32
+Window
 rxvt_term::vt ()
 	CODE:
-        RETVAL = (U32)THIS->vt;
+        RETVAL = THIS->vt;
         OUTPUT:
         RETVAL
 
@@ -1578,14 +1524,14 @@ rxvt_term::cur_charset ()
 #rxvt_term::selection_clear ()
 
 void
-rxvt_term::selection_make (U32 eventtime, bool rect = false)
+rxvt_term::selection_make (Time eventtime, bool rect = false)
 	CODE:
         THIS->selection.op = SELECTION_CONT;
         THIS->selection.rect = rect;
         THIS->selection_make (eventtime);
 
 int
-rxvt_term::selection_grab (U32 eventtime)
+rxvt_term::selection_grab (Time eventtime)
 
 void
 rxvt_term::selection (SV *newtext = 0)
@@ -1663,6 +1609,96 @@ rxvt_term::overlay (int x, int y, int w, int h, int rstyle = OVERLAY_RSTYLE, int
 	OUTPUT:
         RETVAL
 
+#############################################################################
+# Various X Utility Functions
+#############################################################################
+
+void
+rxvt_term::XListProperties (Window window)
+	PPCODE:
+{
+	int count;
+	Atom *props = XListProperties (THIS->display->display, window, &count);
+
+        EXTEND (SP, count);
+        while (count--)
+          PUSHs (newSVuv ((U32)props [count]));
+        
+        XFree (props);
+}
+
+void
+rxvt_term::XGetWindowProperty (Window window, Atom property)
+	PPCODE:
+{
+        Atom type;
+        int format;
+        unsigned long nitems;
+        unsigned long bytes_after;
+        unsigned char *prop;
+	XGetWindowProperty (THIS->display->display, window, property,
+                            0, 1<<30, 0, AnyPropertyType,
+                            &type, &format, &nitems, &bytes_after, &prop);
+        if (type != None)
+          {
+            EXTEND (SP, 3);
+            PUSHs (newSVuv ((U32)type));
+            PUSHs (newSViv (format));
+            PUSHs (newSVpvn ((char *)prop, nitems * format / 8));
+            XFree (prop);
+          }
+}
+
+void
+rxvt_term::XChangeWindowProperty (Window window, Atom property, Atom type, int format, SV *data)
+	CODE:
+{
+	STRLEN len;
+        char *data_ = SvPVbyte (data, len);
+
+	XChangeProperty (THIS->display->display, window, property,
+                         type, format, PropModeReplace,
+                         (unsigned char *)data, len * 8 / format);
+}
+
+void
+XDeleteProperty (rxvt_term *term, Window window, Atom property)
+  	C_ARGS: term->display->display, window, property
+
+Window
+rxvt_term::DefaultRootWindow ()
+	CODE:
+        RETVAL = THIS->display->root;
+        OUTPUT:
+        RETVAL
+
+Window
+XCreateSimpleWindow (rxvt_term *term, Window parent, int x, int y, unsigned int width, unsigned int height)
+	C_ARGS: term->display->display, (Window)parent,
+                x, y, width, height, 0,
+                term->pix_colors_focused[Color_border],
+                term->pix_colors_focused[Color_border]
+
+void
+XReparentWindow (rxvt_term *term, Window window, Window parent, int x = 0, int y = 0)
+	C_ARGS: term->display->display, window, parent, x, y
+
+void
+XMapWindow (rxvt_term *term, Window window)
+	C_ARGS: term->display->display, window
+
+void
+XUnmapWindow (rxvt_term *term, Window window)
+	C_ARGS: term->display->display, window
+
+void
+XMoveResizeWindow (rxvt_term *term, Window window, int x, int y, unsigned int width, unsigned int height)
+	C_ARGS: term->display->display, (Window)window, x, y, width, height
+
+#############################################################################
+# urxvt::overlay
+#############################################################################
+
 MODULE = urxvt             PACKAGE = urxvt::overlay
 
 void
@@ -1677,6 +1713,23 @@ overlay::hide ()
 void
 overlay::DESTROY ()
 
+#############################################################################
+# urxvt::watcher
+#############################################################################
+
+MODULE = urxvt             PACKAGE = urxvt::watcher
+
+CHAINED
+perl_watcher::cb (SV *cb)
+	CODE:
+        THIS->cb (cb);
+        OUTPUT:
+        RETVAL
+
+#############################################################################
+# urxvt::timer
+#############################################################################
+
 MODULE = urxvt             PACKAGE = urxvt::timer
 
 SV *
@@ -1684,16 +1737,8 @@ timer::new ()
 	CODE:
         timer *w =  new timer;
         w->start (NOW);
-        RETVAL = newSVptr ((void *)w, "urxvt::timer");
+        RETVAL = newSVptr ((void *)(perl_watcher *)w, "urxvt::timer");
         w->self = (HV *)SvRV (RETVAL);
-        OUTPUT:
-        RETVAL
-
-timer *
-timer::cb (SV *cb)
-	CODE:
-        THIS->cb (cb);
-        RETVAL = THIS;
         OUTPUT:
         RETVAL
 
@@ -1704,48 +1749,47 @@ timer::at ()
         OUTPUT:
         RETVAL
 
-timer *
+CHAINED
 timer::interval (NV interval)
 	CODE:
         THIS->interval = interval;
-        RETVAL = THIS;
         OUTPUT:
         RETVAL
 
-timer *
+CHAINED
 timer::set (NV tstamp)
 	CODE:
         THIS->set (tstamp);
-        RETVAL = THIS;
         OUTPUT:
         RETVAL
 
-timer *
+CHAINED
 timer::start (NV tstamp = THIS->at)
-        CODE:
+	CODE:
         THIS->start (tstamp);
-        RETVAL = THIS;
         OUTPUT:
         RETVAL
 
-timer *
+CHAINED
 timer::after (NV delay)
 	CODE:
         THIS->start (NOW + delay);
-        RETVAL = THIS;
         OUTPUT:
         RETVAL
 
-timer *
+CHAINED
 timer::stop ()
 	CODE:
         THIS->stop ();
-        RETVAL = THIS;
         OUTPUT:
         RETVAL
 
 void
 timer::DESTROY ()
+
+#############################################################################
+# urxvt::iow
+#############################################################################
 
 MODULE = urxvt             PACKAGE = urxvt::iow
 
@@ -1753,52 +1797,104 @@ SV *
 iow::new ()
 	CODE:
         iow *w =  new iow;
-        RETVAL = newSVptr ((void *)w, "urxvt::iow");
+        RETVAL = newSVptr ((void *)(perl_watcher *)w, "urxvt::iow");
         w->self = (HV *)SvRV (RETVAL);
         OUTPUT:
         RETVAL
 
-iow *
-iow::cb (SV *cb)
-	CODE:
-        THIS->cb (cb);
-        RETVAL = THIS;
-        OUTPUT:
-        RETVAL
-
-iow *
+CHAINED
 iow::fd (int fd)
 	CODE:
         THIS->fd = fd;
-        RETVAL = THIS;
         OUTPUT:
         RETVAL
 
-iow *
+CHAINED
 iow::events (short events)
 	CODE:
         THIS->events = events;
-        RETVAL = THIS;
         OUTPUT:
         RETVAL
 
-iow *
+CHAINED
 iow::start ()
-        CODE:
+	CODE:
         THIS->start ();
-        RETVAL = THIS;
         OUTPUT:
         RETVAL
 
-iow *
+CHAINED
 iow::stop ()
 	CODE:
         THIS->stop ();
-        RETVAL = THIS;
         OUTPUT:
         RETVAL
 
 void
 iow::DESTROY ()
+
+#############################################################################
+# urxvt::iw
+#############################################################################
+
+MODULE = urxvt             PACKAGE = urxvt::iw
+
+SV *
+iw::new ()
+	CODE:
+        iw *w =  new iw;
+        RETVAL = newSVptr ((void *)(perl_watcher *)w, "urxvt::iw");
+        w->self = (HV *)SvRV (RETVAL);
+        OUTPUT:
+        RETVAL
+
+CHAINED
+iow::start ()
+	CODE:
+        THIS->start ();
+        OUTPUT:
+        RETVAL
+
+CHAINED
+iow::stop ()
+	CODE:
+        THIS->stop ();
+        OUTPUT:
+        RETVAL
+
+void
+iw::DESTROY ()
+
+#############################################################################
+# urxvt::pw
+#############################################################################
+
+MODULE = urxvt             PACKAGE = urxvt::pw
+
+SV *
+pw::new ()
+	CODE:
+        pw *w =  new pw;
+        RETVAL = newSVptr ((void *)(perl_watcher *)w, "urxvt::pw");
+        w->self = (HV *)SvRV (RETVAL);
+        OUTPUT:
+        RETVAL
+
+CHAINED
+pw::start (int pid)
+	CODE:
+        THIS->start (pid);
+        OUTPUT:
+        RETVAL
+
+CHAINED
+iow::stop ()
+	CODE:
+        THIS->stop ();
+        OUTPUT:
+        RETVAL
+
+void
+pw::DESTROY ()
 
 

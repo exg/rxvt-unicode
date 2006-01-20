@@ -8,6 +8,7 @@ if [ "x$HOSTNAME" = xcerebro -o "x$HOSTNAME" = xfuji ]; then
    CC=ccache\ gcc-4.0
    CXX=ccache\ g++-4.0
    export CC CXX
+   unset CXXFLAGS CFLAGS
 fi
 
 ./configure --prefix=/opt/rxvt --with-name=rxvt --enable-menubar \

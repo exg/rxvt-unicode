@@ -596,12 +596,12 @@ rxvt_term::get_options (int argc, const char *const *argv)
  */
 /* ARGSUSED */
 int
-rxvt_define_key (XrmDatabase *database __attribute__((unused)),
-                 XrmBindingList bindings __attribute__((unused)),
+rxvt_define_key (XrmDatabase *database UNUSED,
+                 XrmBindingList bindings UNUSED,
                  XrmQuarkList quarks,
-                 XrmRepresentation *type __attribute__((unused)),
+                 XrmRepresentation *type UNUSED,
                  XrmValue *value,
-                 XPointer closure __attribute__((unused)))
+                 XPointer closure UNUSED)
 {
   int last;
 

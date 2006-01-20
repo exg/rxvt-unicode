@@ -33,20 +33,12 @@ AC_PROG_CXX
 AC_PROG_CPP
 AC_PROG_INSTALL
 
+AC_AIX
+AC_ISC_POSIX
+
 AC_LANG(C)
 
-dnl# --------------------------------------------------------------------------
-dnl# Supply default CFLAGS, if not specified by `CFLAGS=flags ./configure'
-dnl#
-if test -z "$orig_CXXFLAGS"; then
-  if test x$GCC = xyes && test "x$GXX" = xyes; then
-    CXXFLAGS="-g -O3"
-  else
-    CXXFLAGS="-O"
-  fi
-  CFLAGS="$CXXFLAGS"
-fi
-
+dnl check wetehr we can link with gcc -lsupc++
 LINKER="$CXX"
 if test x$GCC = xyes && test x$GXX = xyes; then
    AC_CHECK_LIB(supc++, main, [
@@ -55,6 +47,20 @@ if test x$GCC = xyes && test x$GXX = xyes; then
    ])
 fi
 AC_SUBST(LINKER,[$LINKER])
+
+AC_LANG(C++)
+dnl# --------------------------------------------------------------------------
+dnl# Supply default CXXLAGS, if not specified by `CXXLAGS=flags ./configure'
+dnl#
+if test -z "$orig_CXXFLAGS"; then
+  if test x$GCC = xyes && test "x$GXX" = xyes; then
+    CXXFLAGS="-g -O3 -Os -fno-threadsafe-statics -fno-enforce-eh-specs"
+    AC_COMPILE_IFELSE([int i;], [echo didididid], [CXXFLAGS="-g -O3"])
+  else
+    CXXFLAGS="-O"
+  fi
+  CFLAGS="$CXXFLAGS"
+fi
 
 AC_DEFINE(_GNU_SOURCE, 1, Use all glibc features.)
 
@@ -69,12 +75,6 @@ esac
 dnl if test x$GXX = xyes; then
 dnl    CXXFLAGS="$CXXFLAGS" dnl I once had -fno-exceptions, but I am using them now...
 dnl fi
-
-AC_LANG(C++)
-
-dnl# system hacks
-AC_AIX
-AC_ISC_POSIX
 
 dnl# FreeBSD needs to link libxpg4
 AC_CHECK_FUNC(setlocale,     [], [AC_CHECK_LIB(xpg4,   setlocale,     [LIBS="$LIBS -lxpg4"])])

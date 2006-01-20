@@ -4,6 +4,8 @@ sub on_start {
    my ($self) = @_;
 
    $self->grab_button (2, urxvt::ControlMask);
+
+   ()
 }
 
 sub on_button_press {

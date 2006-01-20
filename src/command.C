@@ -66,9 +66,6 @@
 
 #define IS_CONTROL(ch) !((ch) & 0xffffff60UL)
 
-// exception thrown when the command parser runs out of input data
-class out_of_input { } out_of_input;
-
 #if ENABLE_FRILLS || ISO_14755
 
 #define ISO_14755_STARTED	0x80000000UL
@@ -1046,7 +1043,7 @@ rxvt_term::cursor_blink_cb (time_watcher &w)
   hidden_cursor = !hidden_cursor;
   want_refresh = 1;
 
-  w.start (w.at + BLINK_INTERVAL);
+  w.start (w.at + CURSOR_BLINK_INTERVAL);
 }
 #endif
 
@@ -1715,7 +1712,7 @@ skip_switch: ;
           want_refresh = 1;
         }
 
-      cursor_blink_ev.start (NOW + BLINK_INTERVAL);
+      cursor_blink_ev.start (NOW + CURSOR_BLINK_INTERVAL);
     }
 #endif
 
@@ -1753,7 +1750,7 @@ rxvt_term::focus_in ()
 #endif
 #if CURSOR_BLINK
       if (OPTION (Opt_cursorBlink))
-        cursor_blink_ev.start (NOW + BLINK_INTERVAL);
+        cursor_blink_ev.start (NOW + CURSOR_BLINK_INTERVAL);
 #endif
 #if OFF_FOCUS_FADING
       if (rs[Rs_fade])
@@ -2833,7 +2830,7 @@ rxvt_term::cmd_parse ()
 
 // read the next character
 wchar_t
-rxvt_term::next_char ()
+rxvt_term::next_char () NOTHROW
 {
   while (cmdbuf_ptr < cmdbuf_endp)
     {
@@ -2864,12 +2861,14 @@ rxvt_term::next_char ()
 
 // read the next octet
 uint32_t
-rxvt_term::next_octet ()
+rxvt_term::next_octet () NOTHROW
 {
   return cmdbuf_ptr < cmdbuf_endp
          ? (unsigned char)*cmdbuf_ptr++
          : NOCHAR;
 }
+
+static class out_of_input out_of_input;
 
 /* rxvt_cmd_getc () - Return next input character */
 /*
@@ -2877,7 +2876,7 @@ rxvt_term::next_octet ()
  * to the command.
  */
 wchar_t
-rxvt_term::cmd_getc ()
+rxvt_term::cmd_getc () THROW ((class out_of_input))
 {
   wchar_t c = next_char ();
 
@@ -2888,7 +2887,7 @@ rxvt_term::cmd_getc ()
 }
 
 uint32_t
-rxvt_term::cmd_get8 ()
+rxvt_term::cmd_get8 () THROW ((class out_of_input))
 {
   uint32_t c = next_octet ();
 
@@ -4048,7 +4047,7 @@ rxvt_term::privcases (int mode, unsigned long bit)
 
 /* we're not using priv _yet_ */
 void
-rxvt_term::process_terminal_mode (int mode, int priv __attribute__ ((unused)), unsigned int nargs, const int *arg)
+rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs, const int *arg)
 {
   unsigned int i, j;
   int state;

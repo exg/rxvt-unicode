@@ -1,22 +1,50 @@
 rxvt_term *		T_TERM
+
+perl_watcher *		T_WATCHER
 timer *			T_TIMER
 iow *			T_IOW
+pw *			T_PW
+iw *			T_IW
+
 overlay *		T_OVERLAY
 
+Time			T_UV
+Atom			T_UV
+Window			T_UV
+
+CHAINED			T_CHAINED
+
+
 INPUT
+
 T_TERM
 	$var = SvTERM ($arg);
+T_WATCHER
+	$var = SvWATCHER ($arg);
 T_TIMER
 	$var = SvTIMER ($arg);
 T_IOW
 	$var = SvIOW ($arg);
+T_PW
+	$var = SvPW ($arg);
+T_IW
+	$var = SvIW ($arg);
 T_OVERLAY
 	$var = SvOVERLAY ($arg);
 
+
 OUTPUT
+
 T_TERM
 	$arg = newSVterm ($var);
 T_TIMER
 	$arg = newSVtimer ($var);
 T_IOW
 	$arg = newSViow ($var);
+T_PW
+	$arg = newSVpw ($var);
+T_IW
+	$arg = newSViw ($var);
+T_CHAINED
+	$arg = newSVsv (ST(0));
+
