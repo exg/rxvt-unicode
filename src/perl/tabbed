@@ -20,7 +20,10 @@ sub refresh {
    for my $tab (@{ $self->{tabs} }) {
       $idx++;
 
-      my $txt = " $idx ";
+      my $act = $tab->{activity} && $tab != $self->{cur}
+                ? "*" : " ";
+
+      my $txt = "$act$idx$act";
       my $len = length $txt;
 
       substr $text, $ofs, $len + 1, "$txt|";
@@ -98,6 +101,7 @@ sub make_current {
    my ($self, $tab) = @_;
 
    if (my $cur = $self->{cur}) {
+      delete $cur->{activity};
       $cur->XUnmapWindow ($cur->parent) if $cur->mapped;
       $cur->focus_out;
    }
@@ -108,6 +112,7 @@ sub make_current {
    $tab->focus_in;
    $tab->XMapWindow ($tab->parent);
    $self->refresh;
+   delete $tab->{activity};
 
    ()
 }
@@ -229,6 +234,12 @@ sub tab_key_press {
    ()
 }
 
+sub tab_activity {
+   my ($self, $tab) = @_;
+
+   $self->refresh;
+}
+
 package urxvt::ext::tabbed::tab;
 
 # helper extension implementing the subwindows of a tabbed terminal.
@@ -247,5 +258,10 @@ package urxvt::ext::tabbed::tab;
    }
 }
 
+sub on_add_lines {
+  $_[0]->{activity}++
+     or $_[0]{term}{parent}->tab_activity ($_[0]);
+  ()
+}
 
 
