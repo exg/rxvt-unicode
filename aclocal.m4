@@ -1,7 +1,7 @@
 dnl> test to find the hard-to-find libXpm
 dnl> mostly copied from AC_PATH_X & AC_PATH_DIRECT, but explictly set
 
-AC_DEFUN(VT_FIND_LIBXPM,
+AC_DEFUN([VT_FIND_LIBXPM],
 [
 AC_REQUIRE_CPP()
 
@@ -106,7 +106,7 @@ AC_SUBST(XPM_LIBS)
 dnl Internal subroutine of VT_FIND_LIBXPM
 dnl Set vt_xpm_include and vt_xpm_libr
 # -------------- find xpm.h and Xpm.a/Xpm.so/Xpm.sl
-AC_DEFUN(VT_XPM_DIRECT,
+AC_DEFUN([VT_XPM_DIRECT],
 [if test "$vt_xpm_includes" = NO; then
   # Guess where to find xpm.h
 
