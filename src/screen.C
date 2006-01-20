@@ -2806,12 +2806,7 @@ rxvt_term::selection_property (Window win, Atom prop) NOTHROW
 void
 rxvt_term::selection_request (Time tm, int selnum) NOTHROW
 {
-/* After making a selection with selection_make this function will always
- * return the internal selection, which is not correct IMO, now much more since
- * I added the selnum parameter.
- */
-#if 0
-  if (selection.text)
+  if (selection.text && selnum == Sel_Primary)
     { /* internal selection */
       char *str = rxvt_wcstombs (selection.text, selection.len);
       paste (str, strlen (str));
@@ -2819,7 +2814,6 @@ rxvt_term::selection_request (Time tm, int selnum) NOTHROW
       return;
     }
   else
-#endif
     {
       selection_request_time = tm;
       selection_wait = Sel_normal;

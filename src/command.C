@@ -463,7 +463,7 @@ rxvt_term::lookup_key (XKeyEvent &ev)
                 {
                     /* normal XTerm key bindings */
                   case XK_Insert:	/* Shift+Insert = paste mouse selection */
-                    selection_request (ev.time, Sel_Primary);
+                    selection_request (ev.time);
                     return;
 #if TODO
                     /* rxvt extras */
@@ -2156,14 +2156,8 @@ rxvt_term::button_release (XButtonEvent &ev)
             break;
 
           case Button2:
-            if (IN_RANGE_EXC (ev.x, 0, width)
-                && IN_RANGE_EXC (ev.y, 0, height))  // inside window?
-	      {
-		if (ev.state & ShiftMask)
-		  selection_request (ev.time, Sel_Clipboard);
-		else
-		  selection_request (ev.time, Sel_Primary);
-	      }
+            if (IN_RANGE_EXC (ev.x, 0, width) && IN_RANGE_EXC (ev.y, 0, height)) // inside window?
+	      selection_request (ev.time, ev.state & ShiftMask ? Sel_Clipboard : Sel_Primary);
             break;
 
 #ifdef MOUSE_WHEEL
