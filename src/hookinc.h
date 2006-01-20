@@ -37,4 +37,9 @@
   def (MAP_NOTIFY)
   def (UNMAP_NOTIFY)
   def (CONFIGURE_NOTIFY)
+  def (CLIENT_MESSAGE)
+  def (WM_DELETE_WINDOW)
+  def (WM_PROTOCOLS)
+
   def (CUSTOM_REND) // hovering over custom rendition, generate enter/leave maybe?
+

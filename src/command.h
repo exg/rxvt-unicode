@@ -10,12 +10,6 @@
 
 #define ESC_ARGS	32	/* max # of args for esc sequences */
 
-#ifdef OFFIX_DND
-# define DndFile	2
-# define DndDir		5
-# define DndLink	7
-#endif
-
 /* a large REFRESH_PERIOD causes problems with `cat' */
 #define REFRESH_PERIOD		1
 

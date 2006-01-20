@@ -146,11 +146,6 @@
  */
 /* #define ALLOW_132_MODE */
  
-/*
- * Add support for the Offix DND (Drag 'n' Drop) protocol
- */
-/* #define OFFIX_DND */
-
 /*---------------------------------KEYS---------------------------------*/
 
 /*

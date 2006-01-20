@@ -205,10 +205,6 @@ const char *const xa_names[] =
     "_XROOTPMAP_ID",
     "ESETROOT_PMAP_ID",
 #endif
-#ifdef OFFIX_DND
-    "DndProtocol",
-    "DndSelection",
-#endif
 #if ENABLE_XEMBED
     "_XEMBED",
     "_XEMBED_INFO",

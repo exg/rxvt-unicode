@@ -666,10 +666,6 @@ enum {
   XA_XROOTPMAP_ID,
   XA_ESETROOT_PMAP_ID,
 #endif
-#if OFFIX_DND                /* OffiX Dnd (drag 'n' drop) support */
-  XA_DNDPROTOCOL,
-  XA_DNDSELECTION,
-#endif
 #if ENABLE_XEMBED
   XA_XEMBED,
   XA_XEMBED_INFO,

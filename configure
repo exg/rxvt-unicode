@@ -3309,7 +3309,7 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 if test -z "$orig_CXXFLAGS"; then
   if test x$GCC = xyes && test "x$GXX" = xyes; then
-    CXXFLAGS="-g -O3 -Os -fno-threadsafe-statics -fno-enforce-eh-specs"
+    CXXFLAGS="-g -O3 -fno-threadsafe-statics -fno-enforce-eh-specs"
 
 cat >conftest.$ac_ext <<_ACEOF
 int i;

@@ -1403,53 +1403,32 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case ClientMessage:
-        if (ev.xclient.format == 32
-            && ev.xclient.message_type == xa[XA_WM_PROTOCOLS])
+        if (ev.xclient.format == 32)
           {
-            if (ev.xclient.data.l[0] == xa[XA_WM_DELETE_WINDOW])
-              destroy ();
+            if (ev.xclient.message_type == xa[XA_WM_PROTOCOLS])
+              {
+                if (ev.xclient.data.l[0] == xa[XA_WM_DELETE_WINDOW])
+                  {
+                    if (!HOOK_INVOKE ((this, HOOK_WM_DELETE_WINDOW, DT_XEVENT, ev, DT_END)))
+                      destroy ();
+                  }
 #if ENABLE_EWMH
-            else if (ev.xclient.data.l[0] == xa[XA_NET_WM_PING])
-              XSendEvent (disp, ev.xclient.window = display->root,
-                          False, SubstructureRedirectMask | SubstructureNotifyMask,
-                          &ev);
+                else if (ev.xclient.data.l[0] == xa[XA_NET_WM_PING])
+                  XSendEvent (disp, ev.xclient.window = display->root,
+                              False, SubstructureRedirectMask | SubstructureNotifyMask,
+                              &ev);
 #endif
-          }
+              }
 #if ENABLE_XEMBED
-        else if (ev.xclient.format == 32 && ev.xclient.message_type == xa[XA_XEMBED])
-          {
-            if (ev.xclient.data.l[1] == XEMBED_FOCUS_IN)
-              focus_in ();
-            else if (ev.xclient.data.l[1] == XEMBED_FOCUS_OUT)
-              focus_out ();
-          }
+            else if (ev.xclient.format == 32 && ev.xclient.message_type == xa[XA_XEMBED])
+              {
+                if (ev.xclient.data.l[1] == XEMBED_FOCUS_IN)
+                  focus_in ();
+                else if (ev.xclient.data.l[1] == XEMBED_FOCUS_OUT)
+                  focus_out ();
+              }
 #endif
-#ifdef OFFIX_DND
-        /* OffiX Dnd (drag 'n' drop) protocol */
-          else if (ev.xclient.message_type == xa[XA_DNDPROTOCOL]
-            && (ev.xclient.data.l[0] == DndFile
-                || ev.xclient.data.l[0] == DndDir
-                || ev.xclient.data.l[0] == DndLink))
-          {
-            /* Get Dnd data */
-            Atom ActualType;
-            int ActualFormat;
-            unsigned char *data;
-            unsigned long Size, RemainingBytes;
-
-            XGetWindowProperty (disp, display->root,
-                                xa[XA_DNDSELECTION],
-                                0L, 1000000L,
-                                False, AnyPropertyType,
-                                &ActualType, &ActualFormat,
-                                &Size, &RemainingBytes,
-                                &data);
-            set_string_property (XA_CUT_BUFFER0, data);
-            XFree (data);
-            selection_paste (display->root, XA_CUT_BUFFER0, true);
-            XSetInputFocus (disp, display->root, RevertToNone, CurrentTime);
           }
-#endif				/* OFFIX_DND */
         break;
 
       case MappingNotify:
