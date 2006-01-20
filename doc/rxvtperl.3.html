@@ -30,6 +30,8 @@
 		<li><a href="#the_urxvt__popup_class">The <code>urxvt::popup</code> Class</a></li>
 		<li><a href="#the_urxvt__timer_class">The <code>urxvt::timer</code> Class</a></li>
 		<li><a href="#the_urxvt__iow_class">The <code>urxvt::iow</code> Class</a></li>
+		<li><a href="#the_urxvt__iw_class">The <code>urxvt::iw</code> Class</a></li>
+		<li><a href="#the_urxvt__pw_class">The <code>urxvt::pw</code> Class</a></li>
 	</ul>
 
 	<li><a href="#environment">ENVIRONMENT</a></li>
@@ -82,6 +84,9 @@ find them in <em>/opt/rxvt/lib/urxvt/perl/</em>.</p>
 <p>You can activate them like this:</p>
 <pre>
   rxvt -pe &lt;extensionname&gt;</pre>
+<p>Or by adding them to the resource for extensions loaded by default:</p>
+<pre>
+  URxvt.perl-ext-common: default,automove-background,selection-autotransform</pre>
 <dl>
 <dt><strong><a name="item_selection">selection (enabled by default)</a></strong><br />
 </dt>
@@ -241,6 +246,19 @@ FILENAME line YYY.''), you need a slightly more elaborate solution:</p>
 <p>The first line tells the selection code to treat the unchanging part of
 every error message as a selection pattern, and the second line transforms
 the message into vi commands to load the file.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_tabbed">tabbed</a></strong><br />
+</dt>
+<dd>
+This transforms the terminal into a tabbar with additional terminals, that
+is, it implements what is commonly refered to as ``tabbed terminal''. The topmost line
+displays a ``[NEW]'' button, which, when clicked, will add a new tab, followed by one
+button per tab.
+</dd>
+<dd>
+<p>Clicking a button will activate that tab. Pressing Shift-Left and
+Shift-Right will switch to the tab left or right of the current one.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_mark_2durls">mark-urls</a></strong><br />
@@ -410,9 +428,9 @@ Dynamically disable the given hooks.
 called whenever the relevant event happens.</p>
 <p>The first argument passed to them is an extension oject as described in
 the in the <code>Extension Objects</code> section.</p>
-<p><strong>All</strong> of these hooks must return a boolean value. If it is true, then the
-event counts as being <em>consumed</em>, and the invocation of other hooks is
-skipped, and the relevant action might not be carried out by the C++ code.</p>
+<p><strong>All</strong> of these hooks must return a boolean value. If any of the called
+hooks returns true, then the event counts as being <em>consumed</em>, and the
+relevant action might not be carried out by the C++ code.</p>
 <p><em>When in doubt, return a false value (preferably <code>()</code>). </em>&gt;</p>
 <dl>
 <dt><strong><a name="item_on_init__24term">on_init $term</a></strong><br />
@@ -421,8 +439,24 @@ skipped, and the relevant action might not be carried out by the C++ code.</p>
 Called after a new terminal object has been initialized, but before
 windows are created or the command gets run. Most methods are unsafe to
 call or deliver senseless data, as terminal size and other characteristics
-have not yet been determined. You can safely query and change resources,
-though.
+have not yet been determined. You can safely query and change resources
+and options, though. For many purposes the <code>on_start</code> hook is a better
+place.
+</dd>
+<p></p>
+<dt><strong><a name="item_on_start__24term">on_start $term</a></strong><br />
+</dt>
+<dd>
+Called at the very end of initialisation of a new terminal, just before
+trying to map (display) the toplevel and returning to the mainloop.
+</dd>
+<p></p>
+<dt><strong><a name="item_on_destroy__24term">on_destroy $term</a></strong><br />
+</dt>
+<dd>
+Called whenever something tries to destroy terminal, before doing anything
+yet. If this hook returns true, then destruction is skipped, but this is
+rarely a good idea.
 </dd>
 <p></p>
 <dt><strong><a name="item_on_reset__24term">on_reset $term</a></strong><br />
@@ -431,13 +465,6 @@ though.
 Called after the screen is ``reset'' for any reason, such as resizing or
 control sequences. Here is where you can react on changes to size-related
 variables.
-</dd>
-<p></p>
-<dt><strong><a name="item_on_start__24term">on_start $term</a></strong><br />
-</dt>
-<dd>
-Called at the very end of initialisation of a new terminal, just before
-returning to the mainloop.
 </dd>
 <p></p>
 <dt><strong><a name="item_on_child_start__24term_2c__24pid">on_child_start $term, $pid</a></strong><br />
@@ -639,6 +666,17 @@ output, if any, in locale-specific encoding.</p>
 <dd>
 <p>subwindow.</p>
 </dd>
+<p></p>
+<dt><strong><a name="item_on_client_message__24term_2c__24event">on_client_message $term, $event</a></strong><br />
+</dt>
+<dt><strong><a name="item_on_wm_protocols__24term_2c__24event">on_wm_protocols $term, $event</a></strong><br />
+</dt>
+<dt><strong><a name="item_on_wm_delete_window__24term_2c__24event">on_wm_delete_window $term, $event</a></strong><br />
+</dt>
+<dd>
+Called when various types of ClientMessage events are received (all with
+format=32, WM_PROTOCOLS or WM_PROTOCOLS:WM_DELETE_WINDOW).
+</dd>
 <p></p></dl>
 <p>
 </p>
@@ -668,6 +706,27 @@ The basename of the installed binaries, usually <code>urxvt</code>.
 <dd>
 The current terminal. This variable stores the current <code>urxvt::term</code>
 object, whenever a callback/hook is executing.
+</dd>
+<p></p>
+<dt><strong><a name="item__40urxvt_3a_3aterm_init">@urxvt::TERM_INIT</a></strong><br />
+</dt>
+<dd>
+All coderefs in this array will be called as methods of the next newly
+created <code>urxvt::term</code> object (during the <code>on_init</code> phase). The array
+gets cleared before the codereferences that were in it are being executed,
+so coderefs can push themselves onto it again if they so desire.
+</dd>
+<dd>
+<p>This complements to the perl-eval commandline option, but gets executed
+first.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item__40urxvt_3a_3aterm_ext">@urxvt::TERM_EXT</a></strong><br />
+</dt>
+<dd>
+Works similar to <code>@TERM_INIT</code>, but contains perl package/class names, which
+get registered as normal extensions after calling the hooks in <code>@TERM_INIT</code>
+but before other extensions. Gets cleared just like <code>@TERM_INIT</code>.
 </dd>
 <p></p></dl>
 <p>
@@ -1539,6 +1598,77 @@ Start watching for requested events on the given handle.
 </dt>
 <dd>
 Stop watching for events on the given filehandle.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<h2><a name="the_urxvt__iw_class">The <code>urxvt::iw</code> Class</a></h2>
+<p>This class implements idle watchers, that get called automatically when
+the process is idle. They should return as fast as possible, after doing
+some useful work.</p>
+<dl>
+<dt><strong><a name="item__24iw__3d_new_urxvt_3a_3aiw">$iw = new urxvt::iw</a></strong><br />
+</dt>
+<dd>
+Create a new idle watcher object in stopped state.
+</dd>
+<p></p>
+<dt><strong>$iw = $iw-&gt;cb (sub { my ($iw) = @_; ... })</strong><br />
+</dt>
+<dd>
+Set the callback to be called when the watcher triggers.
+</dd>
+<p></p>
+<dt><strong>$timer = $timer-&gt;start</strong><br />
+</dt>
+<dd>
+Start the watcher.
+</dd>
+<p></p>
+<dt><strong>$timer = $timer-&gt;stop</strong><br />
+</dt>
+<dd>
+Stop the watcher.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<h2><a name="the_urxvt__pw_class">The <code>urxvt::pw</code> Class</a></h2>
+<p>This class implements process watchers. They create an event whenever a
+process exits, after which they stop automatically.</p>
+<pre>
+   my $pid = fork;
+   ...
+   $term-&gt;{pw} = urxvt::pw
+                    -&gt;new
+                    -&gt;start ($pid)
+                    -&gt;cb (sub {
+                       my ($pw, $exit_status) = @_;
+                       ...
+                    });</pre>
+<dl>
+<dt><strong><a name="item__24pw__3d_new_urxvt_3a_3apw">$pw = new urxvt::pw</a></strong><br />
+</dt>
+<dd>
+Create a new process watcher in stopped state.
+</dd>
+<p></p>
+<dt><strong>$pw = $pw-&gt;cb (sub { my ($pw, $exit_status) = @_; ... })</strong><br />
+</dt>
+<dd>
+Set the callback to be called when the timer triggers.
+</dd>
+<p></p>
+<dt><strong>$pw = $timer-&gt;start ($pid)</strong><br />
+</dt>
+<dd>
+Tells the wqtcher to start watching for process <code>$pid</code>.
+</dd>
+<p></p>
+<dt><strong>$pw = $pw-&gt;stop</strong><br />
+</dt>
+<dd>
+Stop the watcher.
 </dd>
 <p></p></dl>
 <p>

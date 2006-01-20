@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-19" "7.1" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-20" "7.1" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -171,6 +171,12 @@ You can activate them like this:
 .PP
 .Vb 1
 \&  @@RXVT_NAME@@ -pe <extensionname>
+.Ve
+.PP
+Or by adding them to the resource for extensions loaded by default:
+.PP
+.Vb 1
+\&  URxvt.perl-ext-common: default,automove-background,selection-autotransform
 .Ve
 .IP "selection (enabled by default)" 4
 .IX Item "selection (enabled by default)"
@@ -303,6 +309,15 @@ To expand the example above to typical perl error messages (\*(L"\s-1XXX\s0 at
 The first line tells the selection code to treat the unchanging part of
 every error message as a selection pattern, and the second line transforms
 the message into vi commands to load the file.
+.IP "tabbed" 4
+.IX Item "tabbed"
+This transforms the terminal into a tabbar with additional terminals, that
+is, it implements what is commonly refered to as \*(L"tabbed terminal\*(R". The topmost line
+displays a \*(L"[\s-1NEW\s0]\*(R" button, which, when clicked, will add a new tab, followed by one
+button per tab.
+.Sp
+Clicking a button will activate that tab. Pressing Shift-Left and
+Shift-Right will switch to the tab left or right of the current one.
 .IP "mark-urls" 4
 .IX Item "mark-urls"
 Uses per-line display filtering (\f(CW\*(C`on_line_update\*(C'\fR) to underline urls and
@@ -431,9 +446,9 @@ called whenever the relevant event happens.
 The first argument passed to them is an extension oject as described in
 the in the \f(CW\*(C`Extension Objects\*(C'\fR section.
 .PP
-\&\fBAll\fR of these hooks must return a boolean value. If it is true, then the
-event counts as being \fIconsumed\fR, and the invocation of other hooks is
-skipped, and the relevant action might not be carried out by the \*(C+ code.
+\&\fBAll\fR of these hooks must return a boolean value. If any of the called
+hooks returns true, then the event counts as being \fIconsumed\fR, and the
+relevant action might not be carried out by the \*(C+ code.
 .PP
 \&\fIWhen in doubt, return a false value (preferably \f(CI\*(C`()\*(C'\fI).\fR
 .ie n .IP "on_init $term" 4
@@ -442,19 +457,26 @@ skipped, and the relevant action might not be carried out by the \*(C+ code.
 Called after a new terminal object has been initialized, but before
 windows are created or the command gets run. Most methods are unsafe to
 call or deliver senseless data, as terminal size and other characteristics
-have not yet been determined. You can safely query and change resources,
-though.
+have not yet been determined. You can safely query and change resources
+and options, though. For many purposes the \f(CW\*(C`on_start\*(C'\fR hook is a better
+place.
+.ie n .IP "on_start $term" 4
+.el .IP "on_start \f(CW$term\fR" 4
+.IX Item "on_start $term"
+Called at the very end of initialisation of a new terminal, just before
+trying to map (display) the toplevel and returning to the mainloop.
+.ie n .IP "on_destroy $term" 4
+.el .IP "on_destroy \f(CW$term\fR" 4
+.IX Item "on_destroy $term"
+Called whenever something tries to destroy terminal, before doing anything
+yet. If this hook returns true, then destruction is skipped, but this is
+rarely a good idea.
 .ie n .IP "on_reset $term" 4
 .el .IP "on_reset \f(CW$term\fR" 4
 .IX Item "on_reset $term"
 Called after the screen is \*(L"reset\*(R" for any reason, such as resizing or
 control sequences. Here is where you can react on changes to size-related
 variables.
-.ie n .IP "on_start $term" 4
-.el .IP "on_start \f(CW$term\fR" 4
-.IX Item "on_start $term"
-Called at the very end of initialisation of a new terminal, just before
-returning to the mainloop.
 .ie n .IP "on_child_start $term\fR, \f(CW$pid" 4
 .el .IP "on_child_start \f(CW$term\fR, \f(CW$pid\fR" 4
 .IX Item "on_child_start $term, $pid"
@@ -618,6 +640,19 @@ and column under the mouse cursor.
 output, if any, in locale-specific encoding.
 .Sp
 subwindow.
+.ie n .IP "on_client_message $term\fR, \f(CW$event" 4
+.el .IP "on_client_message \f(CW$term\fR, \f(CW$event\fR" 4
+.IX Item "on_client_message $term, $event"
+.PD 0
+.ie n .IP "on_wm_protocols $term\fR, \f(CW$event" 4
+.el .IP "on_wm_protocols \f(CW$term\fR, \f(CW$event\fR" 4
+.IX Item "on_wm_protocols $term, $event"
+.ie n .IP "on_wm_delete_window $term\fR, \f(CW$event" 4
+.el .IP "on_wm_delete_window \f(CW$term\fR, \f(CW$event\fR" 4
+.IX Item "on_wm_delete_window $term, $event"
+.PD
+Called when various types of ClientMessage events are received (all with
+format=32, \s-1WM_PROTOCOLS\s0 or \s-1WM_PROTOCOLS:WM_DELETE_WINDOW\s0).
 .ie n .Sh "Variables in the ""urxvt"" Package"
 .el .Sh "Variables in the \f(CWurxvt\fP Package"
 .IX Subsection "Variables in the urxvt Package"
@@ -636,6 +671,20 @@ The basename of the installed binaries, usually \f(CW\*(C`urxvt\*(C'\fR.
 .IX Item "$urxvt::TERM"
 The current terminal. This variable stores the current \f(CW\*(C`urxvt::term\*(C'\fR
 object, whenever a callback/hook is executing.
+.IP "@urxvt::TERM_INIT" 4
+.IX Item "@urxvt::TERM_INIT"
+All coderefs in this array will be called as methods of the next newly
+created \f(CW\*(C`urxvt::term\*(C'\fR object (during the \f(CW\*(C`on_init\*(C'\fR phase). The array
+gets cleared before the codereferences that were in it are being executed,
+so coderefs can push themselves onto it again if they so desire.
+.Sp
+This complements to the perl-eval commandline option, but gets executed
+first.
+.IP "@urxvt::TERM_EXT" 4
+.IX Item "@urxvt::TERM_EXT"
+Works similar to \f(CW@TERM_INIT\fR, but contains perl package/class names, which
+get registered as normal extensions after calling the hooks in \f(CW@TERM_INIT\fR
+but before other extensions. Gets cleared just like \f(CW@TERM_INIT\fR.
 .ie n .Sh "Functions in the ""urxvt"" Package"
 .el .Sh "Functions in the \f(CWurxvt\fP Package"
 .IX Subsection "Functions in the urxvt Package"
@@ -1308,6 +1357,59 @@ Start watching for requested events on the given handle.
 .el .IP "$iow = \f(CW$iow\fR\->stop" 4
 .IX Item "$iow = $iow->stop"
 Stop watching for events on the given filehandle.
+.ie n .Sh "The ""urxvt::iw"" Class"
+.el .Sh "The \f(CWurxvt::iw\fP Class"
+.IX Subsection "The urxvt::iw Class"
+This class implements idle watchers, that get called automatically when
+the process is idle. They should return as fast as possible, after doing
+some useful work.
+.IP "$iw = new urxvt::iw" 4
+.IX Item "$iw = new urxvt::iw"
+Create a new idle watcher object in stopped state.
+.ie n .IP "$iw = $iw\fR\->cb (sub { my ($iw) = \f(CW@_; ... })" 4
+.el .IP "$iw = \f(CW$iw\fR\->cb (sub { my ($iw) = \f(CW@_\fR; ... })" 4
+.IX Item "$iw = $iw->cb (sub { my ($iw) = @_; ... })"
+Set the callback to be called when the watcher triggers.
+.ie n .IP "$timer = $timer\->start" 4
+.el .IP "$timer = \f(CW$timer\fR\->start" 4
+.IX Item "$timer = $timer->start"
+Start the watcher.
+.ie n .IP "$timer = $timer\->stop" 4
+.el .IP "$timer = \f(CW$timer\fR\->stop" 4
+.IX Item "$timer = $timer->stop"
+Stop the watcher.
+.ie n .Sh "The ""urxvt::pw"" Class"
+.el .Sh "The \f(CWurxvt::pw\fP Class"
+.IX Subsection "The urxvt::pw Class"
+This class implements process watchers. They create an event whenever a
+process exits, after which they stop automatically.
+.PP
+.Vb 9
+\&   my $pid = fork;
+\&   ...
+\&   $term->{pw} = urxvt::pw
+\&                    ->new
+\&                    ->start ($pid)
+\&                    ->cb (sub {
+\&                       my ($pw, $exit_status) = @_;
+\&                       ...
+\&                    });
+.Ve
+.IP "$pw = new urxvt::pw" 4
+.IX Item "$pw = new urxvt::pw"
+Create a new process watcher in stopped state.
+.ie n .IP "$pw = $pw\fR\->cb (sub { my ($pw, \f(CW$exit_status\fR) = \f(CW@_; ... })" 4
+.el .IP "$pw = \f(CW$pw\fR\->cb (sub { my ($pw, \f(CW$exit_status\fR) = \f(CW@_\fR; ... })" 4
+.IX Item "$pw = $pw->cb (sub { my ($pw, $exit_status) = @_; ... })"
+Set the callback to be called when the timer triggers.
+.ie n .IP "$pw = $timer\->start ($pid)" 4
+.el .IP "$pw = \f(CW$timer\fR\->start ($pid)" 4
+.IX Item "$pw = $timer->start ($pid)"
+Tells the wqtcher to start watching for process \f(CW$pid\fR.
+.ie n .IP "$pw = $pw\->stop" 4
+.el .IP "$pw = \f(CW$pw\fR\->stop" 4
+.IX Item "$pw = $pw->stop"
+Stop the watcher.
 .SH "ENVIRONMENT"
 .IX Header "ENVIRONMENT"
 .Sh "\s-1URXVT_PERL_VERBOSITY\s0"

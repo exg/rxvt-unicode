@@ -31,6 +31,10 @@ PREPACKAGED EXTENSIONS
 
       rxvt -pe <extensionname>
 
+    Or by adding them to the resource for extensions loaded by default:
+
+      URxvt.perl-ext-common: default,automove-background,selection-autotransform
+
     selection (enabled by default)
         (More) intelligent selection. This extension tries to be more
         intelligent when the user extends selections (double-click and
@@ -144,6 +148,16 @@ PREPACKAGED EXTENSIONS
         The first line tells the selection code to treat the unchanging part
         of every error message as a selection pattern, and the second line
         transforms the message into vi commands to load the file.
+
+    tabbed
+        This transforms the terminal into a tabbar with additional
+        terminals, that is, it implements what is commonly refered to as
+        "tabbed terminal". The topmost line displays a "[NEW]" button,
+        which, when clicked, will add a new tab, followed by one button per
+        tab.
+
+        Clicking a button will activate that tab. Pressing Shift-Left and
+        Shift-Right will switch to the tab left or right of the current one.
 
     mark-urls
         Uses per-line display filtering ("on_line_update") to underline urls
@@ -262,10 +276,9 @@ API DOCUMENTATION
     The first argument passed to them is an extension oject as described in
     the in the "Extension Objects" section.
 
-    All of these hooks must return a boolean value. If it is true, then the
-    event counts as being *consumed*, and the invocation of other hooks is
-    skipped, and the relevant action might not be carried out by the C++
-    code.
+    All of these hooks must return a boolean value. If any of the called
+    hooks returns true, then the event counts as being *consumed*, and the
+    relevant action might not be carried out by the C++ code.
 
     *When in doubt, return a false value (preferably "()").*
 
@@ -274,16 +287,23 @@ API DOCUMENTATION
         windows are created or the command gets run. Most methods are unsafe
         to call or deliver senseless data, as terminal size and other
         characteristics have not yet been determined. You can safely query
-        and change resources, though.
+        and change resources and options, though. For many purposes the
+        "on_start" hook is a better place.
+
+    on_start $term
+        Called at the very end of initialisation of a new terminal, just
+        before trying to map (display) the toplevel and returning to the
+        mainloop.
+
+    on_destroy $term
+        Called whenever something tries to destroy terminal, before doing
+        anything yet. If this hook returns true, then destruction is
+        skipped, but this is rarely a good idea.
 
     on_reset $term
         Called after the screen is "reset" for any reason, such as resizing
         or control sequences. Here is where you can react on changes to
         size-related variables.
-
-    on_start $term
-        Called at the very end of initialisation of a new terminal, just
-        before returning to the mainloop.
 
     on_child_start $term, $pid
         Called just after the child process has been "fork"ed.
@@ -419,6 +439,12 @@ API DOCUMENTATION
 
         subwindow.
 
+    on_client_message $term, $event
+    on_wm_protocols $term, $event
+    on_wm_delete_window $term, $event
+        Called when various types of ClientMessage events are received (all
+        with format=32, WM_PROTOCOLS or WM_PROTOCOLS:WM_DELETE_WINDOW).
+
   Variables in the "urxvt" Package
     $urxvt::LIBDIR
         The rxvt-unicode library directory, where, among other things, the
@@ -434,6 +460,22 @@ API DOCUMENTATION
     $urxvt::TERM
         The current terminal. This variable stores the current "urxvt::term"
         object, whenever a callback/hook is executing.
+
+    @urxvt::TERM_INIT
+        All coderefs in this array will be called as methods of the next
+        newly created "urxvt::term" object (during the "on_init" phase). The
+        array gets cleared before the codereferences that were in it are
+        being executed, so coderefs can push themselves onto it again if
+        they so desire.
+
+        This complements to the perl-eval commandline option, but gets
+        executed first.
+
+    @urxvt::TERM_EXT
+        Works similar to @TERM_INIT, but contains perl package/class names,
+        which get registered as normal extensions after calling the hooks in
+        @TERM_INIT but before other extensions. Gets cleared just like
+        @TERM_INIT.
 
   Functions in the "urxvt" Package
     urxvt::fatal $errormessage
@@ -993,6 +1035,49 @@ API DOCUMENTATION
 
     $iow = $iow->stop
         Stop watching for events on the given filehandle.
+
+  The "urxvt::iw" Class
+    This class implements idle watchers, that get called automatically when
+    the process is idle. They should return as fast as possible, after doing
+    some useful work.
+
+    $iw = new urxvt::iw
+        Create a new idle watcher object in stopped state.
+
+    $iw = $iw->cb (sub { my ($iw) = @_; ... })
+        Set the callback to be called when the watcher triggers.
+
+    $timer = $timer->start
+        Start the watcher.
+
+    $timer = $timer->stop
+        Stop the watcher.
+
+  The "urxvt::pw" Class
+    This class implements process watchers. They create an event whenever a
+    process exits, after which they stop automatically.
+
+       my $pid = fork;
+       ...
+       $term->{pw} = urxvt::pw
+                        ->new
+                        ->start ($pid)
+                        ->cb (sub {
+                           my ($pw, $exit_status) = @_;
+                           ...
+                        });                                                                                                                                      
+
+    $pw = new urxvt::pw
+        Create a new process watcher in stopped state.
+
+    $pw = $pw->cb (sub { my ($pw, $exit_status) = @_; ... })
+        Set the callback to be called when the timer triggers.
+
+    $pw = $timer->start ($pid)
+        Tells the wqtcher to start watching for process $pid.
+
+    $pw = $pw->stop
+        Stop the watcher.
 
 ENVIRONMENT
   URXVT_PERL_VERBOSITY

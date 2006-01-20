@@ -1258,5 +1258,5 @@ AUTHORS
         Project Coordinator (Changes 1.0 -)
 
     Emanuele Giaquinta <e.giaquinta@glauco.it>
-        Pty/tty/utmp/wtmp rewrite, lots of random hacking and bugxifing.
+        Pty/tty/utmp/wtmp rewrite, lots of random hacking and bugfixing.
 
