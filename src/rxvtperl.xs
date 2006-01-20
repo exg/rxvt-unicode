@@ -1206,6 +1206,12 @@ rxvt_term::view_start (int newval = 1)
 	RETVAL
 
 void
+rxvt_term::focus_in ()
+
+void
+rxvt_term::focus_out ()
+
+void
 rxvt_term::want_refresh ()
 	CODE:
         THIS->want_refresh = 1;
@@ -1237,7 +1243,7 @@ rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0, int start
 
             int len = min (wcslen (wstr) - start_ofs, max_len);
 
-            if (!IN_RANGE_INC (start_col, 0, THIS->ncol - len))
+            if (start_col < 0 || start_col + len > THIS->ncol)
               {
                 free (wstr);
                 croak ("new_text extends beyond horizontal margins");
@@ -1281,7 +1287,7 @@ rxvt_term::ROW_r (int row_number, SV *new_rend = 0, int start_col = 0, int start
             AV *av = (AV *)SvRV (new_rend);
             int len = min (AvFILL (av) + 1 - start_ofs, max_len);
 
-            if (!IN_RANGE_INC (start_col, 0, THIS->ncol - len))
+            if (start_col < 0 || start_col + len > THIS->ncol)
               croak ("new_rend array extends beyond horizontal margins");
 
             for (int col = start_col; col < start_col + len; col++)
