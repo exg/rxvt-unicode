@@ -2,11 +2,17 @@
 
 sub on_configure_notify {
    my ($self, $event) = @_;
+   
+   my ($x, $y);
 
-   my ($x, $y) = $self->XTranslateCoordinates (
-      $self->parent, $self->DefaultRootWindow,
-      0, 0
-   );
+   if ($event->{send_event}) {
+      ($x, $y) = ($event->{x}, $event->{y});
+   } else {
+      ($x, $y) = $self->XTranslateCoordinates (
+         $self->parent, $self->DefaultRootWindow,
+         0, 0
+      );
+   }
 
    $self->cmd_parse ("\033]20;;=+$x+$y\007");
 }

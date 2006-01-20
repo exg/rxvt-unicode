@@ -3,24 +3,38 @@
 sub refresh {
    my ($self) = @_;
 
-   my $cmd = "\x1b[H\x1b[7m\x1b[K";
+   my $ncol = $self->ncol;
+
+   my $text = " " x $ncol;
+   my $rend = [(urxvt::DEFAULT_RSTYLE | urxvt::RS_RVid) x $ncol];
+
    my $txt;
-   my @ofs = (0);
+   my $ofs = 0;
+   my @ofs;
 
    for my $tab (@{ $self->{tabs} }) {
-      if ($tab == $self->{cur}) {
-         $txt = " [$tab->{name}] ";
-      } else {
-         $txt = "  $tab->{name}  ";
-      }
+      my $txt = " $tab->{name} ";
+      my $len = length $txt;
 
-      $cmd .= $txt;
-      push @ofs, $ofs[-1] + length $txt;
+      substr $text, $ofs, $len + 1, "$txt|";
+      @$rend[$ofs .. $ofs + $len - 1] = (urxvt::OVERLAY_RSTYLE) x $len;
+
+      push @ofs, [
+         $ofs,
+         $ofs + $len,
+         sub {
+            my ($self, $event) = @_;
+            $self->make_current ($tab);
+         },
+      ];
+
+      $ofs += $len + 1;
    }
 
    $self->{tabofs} = \@ofs;
 
-   $self->cmd_parse ($self->locale_encode ($cmd));
+   $self->ROW_t (0, $text);
+   $self->ROW_r (0, $rend);
 }
 
 sub new_tab {
@@ -67,11 +81,14 @@ sub configure {
       if ($atom == $wm_normal_hints) {
          my (@hints) = unpack "l!*", $items;
 
-         $hints[ 4] += $self->{tabheight};
-         $hints[16] += $self->{tabheight};
+         $hints[$_] += $self->{tabheight} for (4, 6, 16);
+
+         $items = pack "l!*", @hints;
       }
       $self->XChangeWindowProperty ($self->parent, $atom, $type, $format, $items);
    }
+
+   $self->refresh;
 }
 
 sub make_current {
@@ -100,14 +117,11 @@ sub on_button_press {
 sub on_button_release {
    my ($self, $event) = @_;
 
-   my $ofs = $self->{tabofs};
-
    if ($event->{row} == 0) {
-      for my $i (0 .. @$ofs - 2) {
-         if ($event->{col} >= $ofs->[$i]
-             && $event->{col} < $ofs->[$i+1]) {
-            $self->make_current ($self->{tabs}[$i]);
-         }
+      for my $button (@{ $self->{tabofs} }) {
+         $button->[2]->($self, $event)
+            if $event->{col} >= $button->[0]
+               && $event->{col} < $button->[1];
       }
    }
 
