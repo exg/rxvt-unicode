@@ -1652,15 +1652,21 @@ rxvt_term::XGetWindowProperty (Window window, Atom property)
         unsigned long nitems;
         unsigned long bytes_after;
         unsigned char *prop;
+
 	XGetWindowProperty (THIS->display->display, window, property,
-                            0, 1<<30, 0, AnyPropertyType,
+                            0, 1<<24, 0, AnyPropertyType,
                             &type, &format, &nitems, &bytes_after, &prop);
+
         if (type != None)
           {
+            int elemsize = format == 16 ? sizeof (short)
+                         : format == 32 ? sizeof (long)
+                         :                1;
+
             EXTEND (SP, 3);
             PUSHs (newSVuv ((U32)type));
             PUSHs (newSViv (format));
-            PUSHs (newSVpvn ((char *)prop, nitems * format / 8));
+            PUSHs (newSVpvn ((char *)prop, nitems * elemsize));
             XFree (prop);
           }
 }
@@ -1672,10 +1678,25 @@ rxvt_term::XChangeWindowProperty (Window window, Atom property, Atom type, int f
 	STRLEN len;
         char *data_ = SvPVbyte (data, len);
 
+        int elemsize = format == 16 ? sizeof (short)
+                     : format == 32 ? sizeof (long)
+                     :                1;
+
 	XChangeProperty (THIS->display->display, window, property,
                          type, format, PropModeReplace,
-                         (unsigned char *)data, len * 8 / format);
+                         (unsigned char *)data_, len / elemsize);
+        XSync (THIS->display->display, 0);
 }
+
+Atom
+XInternAtom (rxvt_term *term, char *atom_name, int only_if_exists = FALSE)
+	C_ARGS: term->display->display, atom_name, only_if_exists
+
+char *
+XGetAtomName (rxvt_term *term, Atom atom)
+	C_ARGS: term->display->display, atom
+        CLEANUP:
+        XFree (RETVAL);
 
 void
 XDeleteProperty (rxvt_term *term, Window window, Atom property)
@@ -1688,12 +1709,16 @@ rxvt_term::DefaultRootWindow ()
         OUTPUT:
         RETVAL
 
+#if 0
+
 Window
 XCreateSimpleWindow (rxvt_term *term, Window parent, int x, int y, unsigned int width, unsigned int height)
 	C_ARGS: term->display->display, (Window)parent,
                 x, y, width, height, 0,
                 term->pix_colors_focused[Color_border],
                 term->pix_colors_focused[Color_border]
+
+#endif
 
 void
 XReparentWindow (rxvt_term *term, Window window, Window parent, int x = 0, int y = 0)

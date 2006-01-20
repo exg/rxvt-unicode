@@ -51,12 +51,10 @@ sub new_tab {
 sub configure {
    my ($self) = @_;
 
-   my $tabheight = $self->int_bwidth + $self->fheight + $self->lineSpace;
-
    $self->{cur}->XMoveResizeWindow (
       $self->{cur}->parent,
-      0, $tabheight,
-      $self->width, $self->height - $tabheight
+      0, $self->{tabheight},
+      $self->width, $self->height - $self->{tabheight}
    );
 }
 
@@ -72,8 +70,18 @@ sub make_current {
 
    $self->configure;
 
+   my $wm_normal_hints = $self->XInternAtom ("WM_NORMAL_HINTS");
+
    for my $atom ($tab->XListProperties ($tab->parent)) {
-      warn "$atom\n";
+      my ($type, $format, $items) = $self->XGetWindowProperty ($tab->parent, $atom);
+
+      if ($atom == $wm_normal_hints) {
+         my (@hints) = unpack "l!*", $items;
+         $hints[ 4] += $self->{tabheight};
+         $hints[16] += $self->{tabheight};
+         $items = pack "l!*", @hints;
+      }
+      $self->XChangeWindowProperty ($self->parent, $atom, $type, $format, $items);
    }
 
    $tab->XMapWindow ($tab->parent);
@@ -129,6 +137,8 @@ sub on_init {
 
 sub on_start {
    my ($self) = @_;
+
+   $self->{tabheight} = $self->int_bwidth + $self->fheight + $self->lineSpace;
 
    $self->cmd_parse ("\x1b[?25l\x1b[?7l");
    $self->new_tab;
