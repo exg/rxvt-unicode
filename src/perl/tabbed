@@ -72,6 +72,10 @@ sub make_current {
 
    $self->configure;
 
+   for my $atom ($tab->XListProperties) {
+      warn "$atom\n";
+   }
+
    $tab->XMapWindow ($tab->parent);
 
    $self->refresh;
