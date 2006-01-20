@@ -493,6 +493,15 @@ output, if any, in locale-specific encoding.
 
 subwindow.
 
+=item on_client_message $term, $event
+
+=item on_wm_protocols $term, $event
+
+=item on_wm_delete_window $term, $event
+
+Called when various types of ClientMessage events are received (all with
+format=32, WM_PROTOCOLS or WM_PROTOCOLS:WM_DELETE_WINDOW).
+
 =back
 
 =cut
@@ -1789,6 +1798,67 @@ Start watching for requested events on the given handle.
 =item $iow = $iow->stop
 
 Stop watching for events on the given filehandle.
+
+=back
+
+=head2 The C<urxvt::iw> Class
+
+This class implements idle watchers, that get called automatically when
+the process is idle. They should return as fast as possible, after doing
+some useful work.
+
+=over 4
+
+=item $iw = new urxvt::iw
+
+Create a new idle watcher object in stopped state.
+
+=item $iw = $iw->cb (sub { my ($iw) = @_; ... })
+
+Set the callback to be called when the watcher triggers.
+
+=item $timer = $timer->start
+
+Start the watcher.
+
+=item $timer = $timer->stop
+
+Stop the watcher.
+
+=back
+
+=head2 The C<urxvt::pw> Class
+
+This class implements process watchers. They create an event whenever a
+process exits, after which they stop automatically.
+
+   my $pid = fork;
+   ...
+   $term->{pw} = urxvt::pw
+                    ->new
+                    ->start ($pid)
+                    ->cb (sub {
+                       my ($pw, $exit_status) = @_;
+                       ...
+                    });                                                                                                                                      
+
+=over 4
+
+=item $pw = new urxvt::pw
+
+Create a new process watcher in stopped state.
+
+=item $pw = $pw->cb (sub { my ($pw, $exit_status) = @_; ... })
+
+Set the callback to be called when the timer triggers.
+
+=item $pw = $timer->start ($pid)
+
+Tells the wqtcher to start watching for process C<$pid>.
+
+=item $pw = $pw->stop
+
+Stop the watcher.
 
 =back
 

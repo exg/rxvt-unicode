@@ -641,6 +641,16 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
                           }
 
                         break;
+
+                      case ClientMessage:
+                        setuv (window,       xe->xclient.window);
+                        setuv (message_type, xe->xclient.message_type);
+                        setuv (format,       xe->xclient.format);
+                        setuv (l0,           xe->xclient.data.l[0]);
+                        setuv (l1,           xe->xclient.data.l[1]);
+                        setuv (l2,           xe->xclient.data.l[2]);
+                        setuv (l3,           xe->xclient.data.l[3]);
+                        setuv (l4,           xe->xclient.data.l[4]);
                     }
 
                   XPUSHs (sv_2mortal (newRV_noinc ((SV *)hv)));
@@ -1065,6 +1075,9 @@ rxvt_term::locale_decode (SV *octets)
 #define TERM_OFFSET_ncol       TERM_OFFSET(ncol)
 #define TERM_OFFSET_focus      TERM_OFFSET(focus)
 #define TERM_OFFSET_mapped     TERM_OFFSET(mapped)
+#define TERM_OFFSET_int_bwidth TERM_OFFSET(int_bwidth)
+#define TERM_OFFSET_ext_bwidth TERM_OFFSET(ext_bwidth)
+#define TERM_OFFSET_lineSpace  TERM_OFFSET(lineSpace)
 #define TERM_OFFSET_saveLines  TERM_OFFSET(saveLines)
 #define TERM_OFFSET_total_rows TERM_OFFSET(total_rows)
 #define TERM_OFFSET_top_row    TERM_OFFSET(top_row)
@@ -1081,6 +1094,9 @@ rxvt_term::width ()
            ncol       = TERM_OFFSET_ncol
            focus      = TERM_OFFSET_focus
            mapped     = TERM_OFFSET_mapped
+           int_bwidth = TERM_OFFSET_int_bwidth
+           ext_bwidth = TERM_OFFSET_ext_bwidth
+           lineSpace  = TERM_OFFSET_lineSpace
            saveLines  = TERM_OFFSET_saveLines
            total_rows = TERM_OFFSET_total_rows
            top_row    = TERM_OFFSET_top_row
@@ -1849,14 +1865,14 @@ iw::new ()
         RETVAL
 
 CHAINED
-iow::start ()
+iw::start ()
 	CODE:
         THIS->start ();
         OUTPUT:
         RETVAL
 
 CHAINED
-iow::stop ()
+iw::stop ()
 	CODE:
         THIS->stop ();
         OUTPUT:
@@ -1888,7 +1904,7 @@ pw::start (int pid)
         RETVAL
 
 CHAINED
-iow::stop ()
+pw::stop ()
 	CODE:
         THIS->stop ();
         OUTPUT:

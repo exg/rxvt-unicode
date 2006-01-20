@@ -343,6 +343,19 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
   free (r_argv);
 
+#if ENABLE_PERL
+  if (!rs[Rs_perl_ext_1])
+    rs[Rs_perl_ext_1] = "default";
+
+  if ((rs[Rs_perl_ext_1] && *rs[Rs_perl_ext_1])
+      || (rs[Rs_perl_ext_2] && *rs[Rs_perl_ext_2])
+      || (rs[Rs_perl_eval] && *rs[Rs_perl_eval]))
+    {
+      rxvt_perl.init (this);
+      HOOK_INVOKE ((this, HOOK_INIT, DT_END));
+    }
+#endif
+
   /*
    * set any defaults not already set
    */

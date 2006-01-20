@@ -1403,21 +1403,25 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case ClientMessage:
-        if (ev.xclient.format == 32)
+        if (ev.xclient.format == 32
+            && !HOOK_INVOKE ((this, HOOK_CLIENT_MESSAGE, DT_XEVENT, &ev, DT_END)))
           {
             if (ev.xclient.message_type == xa[XA_WM_PROTOCOLS])
               {
-                if (ev.xclient.data.l[0] == xa[XA_WM_DELETE_WINDOW])
+                if (!HOOK_INVOKE ((this, HOOK_WM_PROTOCOLS, DT_XEVENT, &ev, DT_END)))
                   {
-                    if (!HOOK_INVOKE ((this, HOOK_WM_DELETE_WINDOW, DT_XEVENT, ev, DT_END)))
-                      destroy ();
-                  }
+                    if (ev.xclient.data.l[0] == xa[XA_WM_DELETE_WINDOW])
+                      {
+                        if (!HOOK_INVOKE ((this, HOOK_WM_DELETE_WINDOW, DT_XEVENT, &ev, DT_END)))
+                          destroy ();
+                      }
 #if ENABLE_EWMH
-                else if (ev.xclient.data.l[0] == xa[XA_NET_WM_PING])
-                  XSendEvent (disp, ev.xclient.window = display->root,
-                              False, SubstructureRedirectMask | SubstructureNotifyMask,
-                              &ev);
+                    else if (ev.xclient.data.l[0] == xa[XA_NET_WM_PING])
+                      XSendEvent (disp, ev.xclient.window = display->root,
+                                  False, SubstructureRedirectMask | SubstructureNotifyMask,
+                                  &ev);
 #endif
+                  }
               }
 #if ENABLE_XEMBED
             else if (ev.xclient.format == 32 && ev.xclient.message_type == xa[XA_XEMBED])

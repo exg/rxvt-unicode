@@ -1,0 +1,201 @@
+#! perl
+
+sub refresh {
+   my ($self) = @_;
+
+   my $cmd = "\x1b[H\x1b[7m\x1b[K";
+   my $txt;
+   my @ofs = (0);
+
+   for my $tab (@{ $self->{tabs} }) {
+      if ($tab == $self->{cur}) {
+         $txt = " [$tab->{name}] ";
+      } else {
+         $txt = "  $tab->{name}  ";
+      }
+
+      $cmd .= $txt;
+      push @ofs, $ofs[-1] + length $txt;
+   }
+
+   $self->{tabofs} = \@ofs;
+
+   $self->cmd_parse ($self->locale_encode ($cmd));
+}
+
+sub new_tab {
+   my ($self) = @_;
+
+   my $offset = $self->fheight;
+
+   # save a backlink to us, make sure tabbed is inactive
+   push @urxvt::TERM_INIT, sub {
+      my ($term) = @_;
+      $term->{parent} = $self;
+
+      $term->resource ($_->[0] => $_->[1])
+         for @{ $self->{resource} || [] };
+
+      $term->resource (perl_ext_2 => $term->resource ("perl_ext_2") . ",-tabbed");
+      
+   };
+
+   push @urxvt::TERM_EXT, urxvt::ext::tabbed::tab::;
+
+   my $term = new urxvt::term
+      $self->env, $urxvt::RXVTNAME,
+      -embed => $self->parent,
+   ;
+}
+
+sub configure {
+   my ($self) = @_;
+
+   my $tabheight = $self->int_bwidth + $self->fheight + $self->lineSpace;
+
+   $self->{cur}->XMoveResizeWindow (
+      $self->{cur}->parent,
+      0, $tabheight,
+      $self->width, $self->height - $tabheight
+   );
+}
+
+sub make_current {
+   my ($self, $tab) = @_;
+
+   if (my $cur = $self->{cur}) {
+      $cur->XUnmapWindow ($cur->parent)
+         if $cur->mapped;
+   }
+   
+   $self->{cur} = $tab;
+
+   $self->configure;
+
+   $tab->XMapWindow ($tab->parent);
+
+   $self->refresh;
+
+   ()
+}
+
+sub on_button_press {
+   1
+}
+
+sub on_button_release {
+   my ($self, $event) = @_;
+
+   my $ofs = $self->{tabofs};
+
+   if ($event->{row} == 0) {
+      for my $i (0 .. @$ofs - 2) {
+         if ($event->{col} >= $ofs->[$i]
+             && $event->{col} < $ofs->[$i+1]) {
+            $self->make_current ($self->{tabs}[$i]);
+         }
+      }
+   }
+
+   1
+}
+
+sub on_motion_notify {
+   1
+}
+
+sub on_init {
+   my ($self) = @_;
+
+   for (qw(name perl_ext_1 perl_ext_2)) {
+      my $val = $self->resource ($_);
+
+      push @{ $self->{resource} }, [$_ => $val]
+        if defined $val;
+   }
+
+   $self->resource (int_bwidth => 0);
+   $self->resource (name => "URxvt.tab");
+   $self->resource (pty_fd => -1);
+
+   $self->option ($urxvt::OPTION{scrollBar}, 0);
+
+   ()
+}
+
+sub on_start {
+   my ($self) = @_;
+
+   $self->cmd_parse ("\x1b[?25l\x1b[?7l");
+   $self->new_tab;
+   $self->new_tab;
+   $self->new_tab;
+
+   ()
+}
+
+sub on_configure_notify {
+   my ($self, $event) = @_;
+
+   $self->configure;
+
+   ()
+}
+
+sub on_wm_delete_window {
+   my ($self) = @_;
+
+   $_->destroy for @{ $self->{tabs} };
+
+   1
+}
+
+sub tab_start {
+   my ($self, $tab) = @_;
+
+   push @{ $self->{tabs} }, $tab;
+
+   $tab->{name} ||= scalar @{ $self->{tabs} };
+   $self->make_current ($tab);
+
+   ()
+}
+
+sub tab_destroy {
+   my ($self, $tab) = @_;
+
+   $self->{tabs} = [ grep $_ != $tab, @{ $self->{tabs} } ];
+
+   if (@{ $self->{tabs} }) {
+      if ($self->{cur} == $tab) {
+         delete $self->{cur};
+         $self->make_current ($self->{tabs}[-1]);
+      }
+   } else {
+      # delay destruction a tiny bit
+      $self->{destroy} = urxvt::iw->new->start->cb (sub { $self->destroy });
+   }
+
+   ()
+}
+
+package urxvt::ext::tabbed::tab;
+
+# helper extension implementing the subwindows of a tabbed terminal.
+# simply proxies all interesting calls back to the tabbed class.
+
+{
+   for my $hook qw(start destroy) {
+      eval qq{
+         sub on_$hook {
+            my \$parent = \$_[0]{term}{parent}
+               or return;
+            \$parent->tab_$hook (\@_)
+         }
+      };
+      die if $@;
+   }
+}
+
+
+
