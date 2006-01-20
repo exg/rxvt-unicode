@@ -13,8 +13,6 @@ sub on_button_press {
 
       $self->tt_write ($diff < 0 ? "\x1b[D" x -$diff
                                  : "\x1b[C" x $diff);
-
-      return 1;
    }
 
    ()
