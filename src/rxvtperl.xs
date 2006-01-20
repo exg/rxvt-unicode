@@ -1736,6 +1736,22 @@ void
 XMoveResizeWindow (rxvt_term *term, Window window, int x, int y, unsigned int width, unsigned int height)
 	C_ARGS: term->display->display, (Window)window, x, y, width, height
 
+void
+rxvt_term::XTranslateCoordinates (Window src, Window dst, int x, int y)
+	PPCODE:
+{
+        int dx, dy;
+        Window child;
+
+        if (XTranslateCoordinates (THIS->display->display, src, dst, x, y, &dx, &dy, &child))
+          {
+            EXTEND (SP, 3);
+            PUSHs (newSViv (dx));
+            PUSHs (newSViv (dy));
+            PUSHs (newSVuv (child));
+          }
+}
+
 #############################################################################
 # urxvt::overlay
 #############################################################################

@@ -3,5 +3,10 @@
 sub on_configure_notify {
    my ($self, $event) = @_;
 
-   $self->cmd_parse ("\033]20;;=+$event->{x}+$event->{y}\007");
+   my ($x, $y) = $self->XTranslateCoordinates (
+      $self->parent, $self->DefaultRootWindow,
+      0, 0
+   );
+
+   $self->cmd_parse ("\033]20;;=+$x+$y\007");
 }
