@@ -50,12 +50,12 @@ AC_SUBST(LINKER,[$LINKER])
 
 AC_LANG(C++)
 dnl# --------------------------------------------------------------------------
-dnl# Supply default CXXLAGS, if not specified by `CXXLAGS=flags ./configure'
+dnl# Supply default CXXFLAGS, if not specified by `CXXFLAGS=flags ./configure'
 dnl#
 if test -z "$orig_CXXFLAGS"; then
   if test x$GCC = xyes && test "x$GXX" = xyes; then
     CXXFLAGS="-g -O3 -fno-threadsafe-statics -fno-enforce-eh-specs"
-    AC_COMPILE_IFELSE([int i;], [], [CXXFLAGS="-g -O3"])
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM()], [], [CXXFLAGS="-g -O3"])
   else
     CXXFLAGS="-O"
   fi
