@@ -152,7 +152,7 @@ runtime.
 <dd>
 Binds a popup menu to Ctrl-Button3 that lets you convert the selection
 text into various other formats/action (such as uri unescaping, perl
-evalution, web-browser starting etc.), depending on content.
+evaluation, web-browser starting etc.), depending on content.
 </dd>
 <dd>
 <p>Other extensions can extend this popup menu by pushing a code reference
@@ -248,6 +248,23 @@ every error message as a selection pattern, and the second line transforms
 the message into vi commands to load the file.</p>
 </dd>
 <p></p>
+<dt><strong><a name="item_readline">readline</a></strong><br />
+</dt>
+<dd>
+A support package that tries to make editing with readline easier. At the
+moment, it reacts to clicking with the left mouse button by trying to
+move the text cursor to this position. It does so by generating as many
+cursor-left or cursor-right keypresses as required (the this only works
+for programs that correctly support wide characters).
+</dd>
+<dd>
+<p>It only works when clicking into the same line (possibly extended over
+multiple rows) as the text cursor and on the primary screen, to reduce the
+risk of misinterpreting. The normal selection isn't disabled, so quick
+successive clicks might interfere with selection creation in harmless
+ways.</p>
+</dd>
+<p></p>
 <dt><strong><a name="item_tabbed">tabbed</a></strong><br />
 </dt>
 <dd>
@@ -257,8 +274,9 @@ displays a ``[NEW]'' button, which, when clicked, will add a new tab, followed b
 button per tab.
 </dd>
 <dd>
-<p>Clicking a button will activate that tab. Pressing Shift-Left and
-Shift-Right will switch to the tab left or right of the current one.</p>
+<p>Clicking a button will activate that tab. Pressing <strong>Shift-Left</strong> and
+<strong>Shift-Right</strong> will switch to the tab left or right of the current one,
+while <strong>Shift-Down</strong> creates a new tab.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_mark_2durls">mark-urls</a></strong><br />
@@ -636,6 +654,8 @@ focus out processing.
 <p></p>
 <dt><strong><a name="item_on_configure_notify__24term_2c__24event">on_configure_notify $term, $event</a></strong><br />
 </dt>
+<dt><strong><a name="item_on_property_notify__24term_2c__24event">on_property_notify $term, $event</a></strong><br />
+</dt>
 <dt><strong><a name="item_on_key_press__24term_2c__24event_2c__24keysym_2c__">on_key_press $term, $event, $keysym, $octets</a></strong><br />
 </dt>
 <dt><strong><a name="item_on_key_release__24term_2c__24event_2c__24keysym">on_key_release $term, $event, $keysym</a></strong><br />
@@ -656,8 +676,8 @@ the hook returns true, then the even will be ignored by rxvt-unicode.
 </dd>
 <dd>
 <p>The event is a hash with most values as named by Xlib (see the XEvent
-manpage), with the additional members <code>row</code> and <code>col</code>, which are the row
-and column under the mouse cursor.</p>
+manpage), with the additional members <code>row</code> and <code>col</code>, which are the
+(real, not screen-based) row and column under the mouse cursor.</p>
 </dd>
 <dd>
 <p><code>on_key_press</code> additionally receives the string rxvt-unicode would
@@ -1143,6 +1163,12 @@ confused by changes in cursor position or scrolling. Its useful inside a
 <code>on_add_lines</code> hook, though.</p>
 </dd>
 <p></p>
+<dt><strong><a name="item_scr_change_screen">$term-&gt;scr_change_screen ($screen)</a></strong><br />
+</dt>
+<dd>
+Switch to given screen - 0 primary, 1 secondary.
+</dd>
+<p></p>
 <dt><strong><a name="item_cmd_parse">$term-&gt;cmd_parse ($octets)</a></strong><br />
 </dt>
 <dd>
@@ -1249,6 +1275,12 @@ Return the modifier masks corresponding to the ``ISO Level 3 Shift'' (often
 AltGr), the meta key (often Alt) and the num lock key, if applicable.
 </dd>
 <p></p>
+<dt><strong><a name="item_current_screen">$screen = $term-&gt;current_screen</a></strong><br />
+</dt>
+<dd>
+Returns the currently displayed screen (0 primary, 1 secondary).
+</dd>
+<p></p>
 <dt><strong><a name="item_view_start">$view_start = $term-&gt;view_start ([$newvalue])</a></strong><br />
 </dt>
 <dd>
@@ -1284,11 +1316,11 @@ to replace only parts of a line. The font index in the rendition will
 automatically be updated.</p>
 </dd>
 <dd>
-<p><a href="#item__24text"><code>$text</code></a> is in a special encoding: tabs and wide characters that use more
-than one cell when displayed are padded with urxvt::NOCHAR characters
-(<code>chr 65535</code>). Characters with combining characters and other characters
-that do not fit into the normal tetx encoding will be replaced with
-characters in the private use area.</p>
+<p><a href="#item__24text"><code>$text</code></a> is in a special encoding: tabs and wide characters that use
+more than one cell when displayed are padded with <code>$urxvt::NOCHAR</code>
+characters. Characters with combining characters and other characters that
+do not fit into the normal tetx encoding will be replaced with characters
+in the private use area.</p>
 </dd>
 <dd>
 <p>You have to obey this encoding when changing text. The advantage is
@@ -1432,6 +1464,38 @@ recent grab.
 Calls XUngrab for the most recent grab. Is called automatically on
 evaluation errors, as it is better to lose the grab in the error case as
 the session.
+</dd>
+<p></p>
+<dt><strong><a name="item_xinternatom">$atom = $term-&gt;XInternAtom ($atom_name[, $only_if_exists])</a></strong><br />
+</dt>
+<dt><strong><a name="item_xgetatomname">$atom_name = $term-&gt;XGetAtomName ($atom)</a></strong><br />
+</dt>
+<dt><strong><a name="item_xlistproperties">@atoms = $term-&gt;XListProperties ($window)</a></strong><br />
+</dt>
+<dt><strong><a name="item_xgetwindowproperty">($type,$format,$octets) = $term-&gt;XGetWindowProperty ($window, $property)</a></strong><br />
+</dt>
+<dt><strong><a name="item_xchangewindowproperty">$term-&gt;XChangeWindowProperty ($window, $property, $type, $format, $octets)</a></strong><br />
+</dt>
+<dt><strong><a name="item_xdeleteproperty">$term-&gt;XDeleteProperty ($window, $property)</a></strong><br />
+</dt>
+<dt><strong><a name="item_defaultrootwindow">$window = $term-&gt;DefaultRootWindow</a></strong><br />
+</dt>
+<dt><strong><a name="item_xreparentwindow">$term-&gt;XReparentWindow ($window, $parent, [$x, $y])</a></strong><br />
+</dt>
+<dt><strong><a name="item_xmapwindow">$term-&gt;XMapWindow ($window)</a></strong><br />
+</dt>
+<dt><strong><a name="item_xunmapwindow">$term-&gt;XUnmapWindow ($window)</a></strong><br />
+</dt>
+<dt><strong><a name="item_xmoveresizewindow">$term-&gt;XMoveResizeWindow ($window, $x, $y, $width, $height)</a></strong><br />
+</dt>
+<dt><strong><a name="item_xtranslatecoordinates">($x, $y, $child_window) = $term-&gt;XTranslateCoordinates ($src, $dst, $x, $y)</a></strong><br />
+</dt>
+<dt><strong><a name="item_xchangeinput">$term-&gt;XChangeInput ($window, $add_events[, $del_events])</a></strong><br />
+</dt>
+<dd>
+Various X or X-related functions. The <code>$term</code> object only serves as
+the source of the display, otherwise those functions map more-or-less
+directory onto the X functions of the same name.
 </dd>
 <p></p></dl>
 <p>

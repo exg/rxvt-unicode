@@ -8,11 +8,21 @@ sub on_button_press {
    my $cur = $line->offset_of ($row, $col);
    my $ofs = $line->offset_of ($event->{row}, $event->{col});
 
-   if ($ofs >= 0 && $ofs < $line->l) {
+   if ($ofs >= 0 && $ofs < $line->l && !$self->current_screen) {
       my $diff = $ofs - $cur;
+      my $move;
 
-      $self->tt_write ($diff < 0 ? "\x1b[D" x -$diff
-                                 : "\x1b[C" x $diff);
+      if ($diff < 0) {
+         ($ofs, $cur) = ($cur, $ofs);
+         $move = "\x1b[D";
+      } else {
+         $move = "\x1b[C";
+      }
+
+      my $skipped = substr $line->t, $cur, $ofs - $cur;
+      $skipped =~ s/$urxvt::NOCHAR//g;
+
+      $self->tt_write ($move x length $skipped);
    }
 
    ()

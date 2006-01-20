@@ -1119,12 +1119,14 @@ rxvt_term::ModLevel3Mask ()
            ModLevel3Mask  = 0
            ModMetaMask    = 1
            ModNumLockMask = 2
+           current_screen = 3
 	CODE:
         switch (ix)
           {
            case 0: RETVAL = THIS->ModLevel3Mask;  break;
            case 1: RETVAL = THIS->ModMetaMask;    break;
            case 2: RETVAL = THIS->ModNumLockMask; break;
+           case 3: RETVAL = THIS->current_screen; break;
           }
         OUTPUT:
         RETVAL
@@ -1589,6 +1591,9 @@ rxvt_term::scr_xor_span (int beg_row, int beg_col, int end_row, int end_col, U32
 
 void
 rxvt_term::scr_bell ()
+
+void
+rxvt_term::scr_change_screen (int screen)
 
 void
 rxvt_term::scr_add_lines (SV *string)

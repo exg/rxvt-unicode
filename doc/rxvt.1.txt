@@ -1036,9 +1036,10 @@ TEXT SELECTION AND INSERTION
         removed from the selection.
 
     Insertion:
-        Pressing and releasing the Middle mouse button (or Shift-Insert) in
-        an rxvt window causes the current text selection to be inserted as
-        if it had been typed on the keyboard.
+        Pressing and releasing the Middle mouse button in an rxvt window
+        causes the value of the PRIMARY selection (Shift for CLIPBOARD) to
+        be inserted as if it had been typed on the keyboard. Shift-Insert
+        causes the value of the PRIMARY selection to be inserted too.
 
 CHANGING FONTS
     Changing fonts (or font sizes, respectively) via the keypad is not yet

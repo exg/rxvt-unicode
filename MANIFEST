@@ -164,6 +164,7 @@ src/perl/searchable-scrollback
 src/perl/automove-background
 src/perl/mark-urls
 src/perl/tabbed
+src/perl/readline
 src/perl/example-refresh-hooks
 src/perl/block-graphics-to-ascii
 src/perl/digital-clock

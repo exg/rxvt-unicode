@@ -77,8 +77,8 @@ PREPACKAGED EXTENSIONS
     selection-popup (enabled by default)
         Binds a popup menu to Ctrl-Button3 that lets you convert the
         selection text into various other formats/action (such as uri
-        unescaping, perl evalution, web-browser starting etc.), depending on
-        content.
+        unescaping, perl evaluation, web-browser starting etc.), depending
+        on content.
 
         Other extensions can extend this popup menu by pushing a code
         reference onto "@{ $term-"{selection_popup_hook} }>, that is called
@@ -149,6 +149,20 @@ PREPACKAGED EXTENSIONS
         of every error message as a selection pattern, and the second line
         transforms the message into vi commands to load the file.
 
+    readline
+        A support package that tries to make editing with readline easier.
+        At the moment, it reacts to clicking with the left mouse button by
+        trying to move the text cursor to this position. It does so by
+        generating as many cursor-left or cursor-right keypresses as
+        required (the this only works for programs that correctly support
+        wide characters).
+
+        It only works when clicking into the same line (possibly extended
+        over multiple rows) as the text cursor and on the primary screen, to
+        reduce the risk of misinterpreting. The normal selection isn't
+        disabled, so quick successive clicks might interfere with selection
+        creation in harmless ways.
+
     tabbed
         This transforms the terminal into a tabbar with additional
         terminals, that is, it implements what is commonly refered to as
@@ -157,7 +171,8 @@ PREPACKAGED EXTENSIONS
         tab.
 
         Clicking a button will activate that tab. Pressing Shift-Left and
-        Shift-Right will switch to the tab left or right of the current one.
+        Shift-Right will switch to the tab left or right of the current one,
+        while Shift-Down creates a new tab.
 
     mark-urls
         Uses per-line display filtering ("on_line_update") to underline urls
@@ -419,6 +434,7 @@ API DOCUMENTATION
         rxvt-unicode does focus out processing.
 
     on_configure_notify $term, $event
+    on_property_notify $term, $event
     on_key_press $term, $event, $keysym, $octets
     on_key_release $term, $event, $keysym
     on_button_press $term, $event
@@ -432,7 +448,8 @@ API DOCUMENTATION
 
         The event is a hash with most values as named by Xlib (see the
         XEvent manpage), with the additional members "row" and "col", which
-        are the row and column under the mouse cursor.
+        are the (real, not screen-based) row and column under the mouse
+        cursor.
 
         "on_key_press" additionally receives the string rxvt-unicode would
         output, if any, in locale-specific encoding.
@@ -759,6 +776,9 @@ API DOCUMENTATION
         be confused by changes in cursor position or scrolling. Its useful
         inside a "on_add_lines" hook, though.
 
+    $term->scr_change_screen ($screen)
+        Switch to given screen - 0 primary, 1 secondary.
+
     $term->cmd_parse ($octets)
         Similar to "scr_add_lines", but the argument must be in the
         locale-specific encoding of the terminal and can contain command
@@ -819,6 +839,9 @@ API DOCUMENTATION
         (often AltGr), the meta key (often Alt) and the num lock key, if
         applicable.
 
+    $screen = $term->current_screen
+        Returns the currently displayed screen (0 primary, 1 secondary).
+
     $view_start = $term->view_start ([$newvalue])
         Returns the row number of the topmost displayed line. Maximum value
         is 0, which displays the normal terminal contents. Lower values
@@ -844,10 +867,10 @@ API DOCUMENTATION
         automatically be updated.
 
         $text is in a special encoding: tabs and wide characters that use
-        more than one cell when displayed are padded with urxvt::NOCHAR
-        characters ("chr 65535"). Characters with combining characters and
-        other characters that do not fit into the normal tetx encoding will
-        be replaced with characters in the private use area.
+        more than one cell when displayed are padded with $urxvt::NOCHAR
+        characters. Characters with combining characters and other
+        characters that do not fit into the normal tetx encoding will be
+        replaced with characters in the private use area.
 
         You have to obey this encoding when changing text. The advantage is
         that "substr" and similar functions work on screen cells and not on
@@ -935,6 +958,25 @@ API DOCUMENTATION
         Calls XUngrab for the most recent grab. Is called automatically on
         evaluation errors, as it is better to lose the grab in the error
         case as the session.
+
+    $atom = $term->XInternAtom ($atom_name[, $only_if_exists])
+    $atom_name = $term->XGetAtomName ($atom)
+    @atoms = $term->XListProperties ($window)
+    ($type,$format,$octets) = $term->XGetWindowProperty ($window, $property)
+    $term->XChangeWindowProperty ($window, $property, $type, $format,
+    $octets)
+    $term->XDeleteProperty ($window, $property)
+    $window = $term->DefaultRootWindow
+    $term->XReparentWindow ($window, $parent, [$x, $y])
+    $term->XMapWindow ($window)
+    $term->XUnmapWindow ($window)
+    $term->XMoveResizeWindow ($window, $x, $y, $width, $height)
+    ($x, $y, $child_window) = $term->XTranslateCoordinates ($src, $dst, $x,
+    $y)
+    $term->XChangeInput ($window, $add_events[, $del_events])
+        Various X or X-related functions. The $term object only serves as
+        the source of the display, otherwise those functions map
+        more-or-less directory onto the X functions of the same name.
 
   The "urxvt::popup" Class
     $popup->add_title ($title)

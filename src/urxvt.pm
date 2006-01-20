@@ -164,6 +164,20 @@ The first line tells the selection code to treat the unchanging part of
 every error message as a selection pattern, and the second line transforms
 the message into vi commands to load the file.
 
+=item readline
+
+A support package that tries to make editing with readline easier. At the
+moment, it reacts to clicking with the left mouse button by trying to
+move the text cursor to this position. It does so by generating as many
+cursor-left or cursor-right keypresses as required (the this only works
+for programs that correctly support wide characters).
+
+It only works when clicking into the same line (possibly extended over
+multiple rows) as the text cursor and on the primary screen, to reduce the
+risk of misinterpreting. The normal selection isn't disabled, so quick
+successive clicks might interfere with selection creation in harmless
+ways.
+
 =item tabbed
 
 This transforms the terminal into a tabbar with additional terminals, that
@@ -539,6 +553,8 @@ our $LIBDIR;
 our $RESNAME;
 our $RESCLASS;
 our $RXVTNAME;
+
+our $NOCHAR = chr 0xfffe;
 
 =head2 Variables in the C<urxvt> Package
 
@@ -1262,6 +1278,10 @@ Normally its not a good idea to use this function, as programs might be
 confused by changes in cursor position or scrolling. Its useful inside a
 C<on_add_lines> hook, though.
 
+=item $term->scr_change_screen ($screen)
+
+Switch to given screen - 0 primary, 1 secondary.
+
 =item $term->cmd_parse ($octets)
 
 Similar to C<scr_add_lines>, but the argument must be in the
@@ -1354,6 +1374,10 @@ sub env {
 Return the modifier masks corresponding to the "ISO Level 3 Shift" (often
 AltGr), the meta key (often Alt) and the num lock key, if applicable.
 
+=item $screen = $term->current_screen
+
+Returns the currently displayed screen (0 primary, 1 secondary).
+
 =item $view_start = $term->view_start ([$newvalue])
 
 Returns the row number of the topmost displayed line. Maximum value is
@@ -1381,11 +1405,11 @@ line, starting at column C<$start_col> (default C<0>), which is useful
 to replace only parts of a line. The font index in the rendition will
 automatically be updated.
 
-C<$text> is in a special encoding: tabs and wide characters that use more
-than one cell when displayed are padded with urxvt::NOCHAR characters
-(C<chr 65535>). Characters with combining characters and other characters
-that do not fit into the normal tetx encoding will be replaced with
-characters in the private use area.
+C<$text> is in a special encoding: tabs and wide characters that use
+more than one cell when displayed are padded with C<$urxvt::NOCHAR>
+characters. Characters with combining characters and other characters that
+do not fit into the normal tetx encoding will be replaced with characters
+in the private use area.
 
 You have to obey this encoding when changing text. The advantage is
 that C<substr> and similar functions work on screen cells and not on

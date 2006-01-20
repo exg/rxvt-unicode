@@ -998,7 +998,6 @@ struct rxvt_term : zero_initialized, rxvt_vars {
                   am_pixmap_trans:1, 	/* transparency w/known root pixmap  */
 #endif
                   current_screen:1,	/* primary or secondary              */
-                  hate_those_clicks:1,	/* a.k.a. keep mark position         */
                   num_scr_allow:1,
                   bypass_keystate:1,
 #ifdef CURSOR_BLINK

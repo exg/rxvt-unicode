@@ -19,6 +19,8 @@ WISH: support tex fonts
 7.2
 	- removed support for obsolete offix dnd protocol.
         - added "tabbed" extension that provides a crude tabbed terminal.
+        - added "readline" extension that allows cursor positioning
+          via mouse clicks.
         - fixed the automove-background extension to ignore coordinates
           in non-synthetic events.
 
