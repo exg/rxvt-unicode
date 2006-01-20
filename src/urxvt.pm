@@ -1570,6 +1570,36 @@ Calls XUngrab for the most recent grab. Is called automatically on
 evaluation errors, as it is better to lose the grab in the error case as
 the session.
 
+=item $atom = $term->XInternAtom ($atom_name[, $only_if_exists])
+
+=item $atom_name = $term->XGetAtomName ($atom)
+
+=item @atoms = $term->XListProperties ($window)
+
+=item ($type,$format,$octets) = $term->XGetWindowProperty ($window, $property)
+
+=item $term->XChangeWindowProperty ($window, $property, $type, $format, $octets)
+
+=item $term->XDeleteProperty ($window, $property)
+
+=item $window = $term->DefaultRootWindow
+
+=item $term->XReparentWindow ($window, $parent, [$x, $y])
+
+=item $term->XMapWindow ($window)
+
+=item $term->XUnmapWindow ($window)
+
+=item $term->XMoveResizeWindow ($window, $x, $y, $width, $height)
+
+=item ($x, $y, $child_window) = $term->XTranslateCoordinates ($src, $dst, $x, $y)
+
+=item $term->XChangeInput ($window, $add_events[, $del_events])
+
+Various X or X-related functions. The C<$term> object only serves as
+the source of the display, otherwise those functions map more-or-less
+directory onto the X functions of the same name.
+
 =back
 
 =cut
