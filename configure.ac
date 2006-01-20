@@ -55,7 +55,7 @@ dnl#
 if test -z "$orig_CXXFLAGS"; then
   if test x$GCC = xyes && test "x$GXX" = xyes; then
     CXXFLAGS="-g -O3 -fno-threadsafe-statics -fno-enforce-eh-specs"
-    AC_COMPILE_IFELSE([int i;], [echo didididid], [CXXFLAGS="-g -O3"])
+    AC_COMPILE_IFELSE([int i;], [], [CXXFLAGS="-g -O3"])
   else
     CXXFLAGS="-O"
   fi
