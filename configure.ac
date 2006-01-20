@@ -628,7 +628,7 @@ AC_CHECK_SIZEOF(long long, 8)
 AC_CHECK_SIZEOF(int *, 4)
 
 dnl# see usage below
-AC_DEFUN(RXVT_CHECK_SIZE,
+AC_DEFUN([RXVT_CHECK_SIZE],
   [AC_CACHE_CHECK([for $2], $1,
     [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdint.h>]], [[$2 dummy;]])],[$1=yes],[dnl
 if test "$ac_cv_sizeof_char" -ge $3; then
@@ -1425,7 +1425,7 @@ AC_ARG_PROGRAM
 dnl# test for "sun" or "__sun__" before include sys_ioctl
 
 dnl# revert HAVE_BLAH_H into a "#include <blah.h>"
-AC_DEFUN(RXVT_DEFINE_TO_INCLUDE, dnl
+AC_DEFUN([RXVT_DEFINE_TO_INCLUDE], dnl
 [if test "$$3" = "$4" -o "$$5" = "$6"; then
   $1="#include <$2>"
 else
