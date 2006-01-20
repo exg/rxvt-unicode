@@ -51,11 +51,27 @@ sub new_tab {
 sub configure {
    my ($self) = @_;
 
-   $self->{cur}->XMoveResizeWindow (
-      $self->{cur}->parent,
+   my $tab = $self->{cur};
+
+   $tab->XMoveResizeWindow (
+      $tab->parent,
       0, $self->{tabheight},
       $self->width, $self->height - $self->{tabheight}
    );
+
+   my $wm_normal_hints = $self->XInternAtom ("WM_NORMAL_HINTS");
+
+   for my $atom ($tab->XListProperties ($tab->parent)) {
+      my ($type, $format, $items) = $self->XGetWindowProperty ($tab->parent, $atom);
+
+      if ($atom == $wm_normal_hints) {
+         my (@hints) = unpack "l!*", $items;
+
+         $hints[ 4] += $self->{tabheight};
+         $hints[16] += $self->{tabheight};
+      }
+      $self->XChangeWindowProperty ($self->parent, $atom, $type, $format, $items);
+   }
 }
 
 sub make_current {
@@ -69,20 +85,6 @@ sub make_current {
    $self->{cur} = $tab;
 
    $self->configure;
-
-   my $wm_normal_hints = $self->XInternAtom ("WM_NORMAL_HINTS");
-
-   for my $atom ($tab->XListProperties ($tab->parent)) {
-      my ($type, $format, $items) = $self->XGetWindowProperty ($tab->parent, $atom);
-
-      if ($atom == $wm_normal_hints) {
-         my (@hints) = unpack "l!*", $items;
-         $hints[ 4] += $self->{tabheight};
-         $hints[16] += $self->{tabheight};
-         $items = pack "l!*", @hints;
-      }
-      $self->XChangeWindowProperty ($self->parent, $atom, $type, $format, $items);
-   }
 
    $tab->XMapWindow ($tab->parent);
 
