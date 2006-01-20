@@ -164,6 +164,16 @@ The first line tells the selection code to treat the unchanging part of
 every error message as a selection pattern, and the second line transforms
 the message into vi commands to load the file.
 
+=item tabbed
+
+This transforms the terminal into a tabbar with additional terminals, that
+is, it implements what is commonly refered to as "tabbed terminal". The topmost line
+displays a "[NEW]" button, which, when clicked, will add a new tab, followed by one
+button per tab.
+
+Clicking a button will activate that tab. Pressing Shift-Left and
+Shift-Right will switch to the tab left or right of the current one.
+
 =item mark-urls
 
 Uses per-line display filtering (C<on_line_update>) to underline urls and
