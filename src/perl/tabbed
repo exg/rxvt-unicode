@@ -111,8 +111,8 @@ sub make_current {
    $self->configure;
    $tab->focus_in;
    $tab->XMapWindow ($tab->parent);
-   $self->refresh;
    delete $tab->{activity};
+   $self->refresh;
 
    ()
 }
@@ -218,17 +218,21 @@ sub tab_destroy {
 sub tab_key_press {
    my ($self, $tab, $event, $keysym, $str) = @_;
 
-   if ($event->{state} & urxvt::ShiftMask
-       && ($keysym == 0xff51 || $keysym == 0xff53)) {
-      my ($idx) = grep $self->{tabs}[$_] == $tab, 0 .. $#{ $self->{tabs} };
+   if ($event->{state} & urxvt::ShiftMask) {
+      if ($keysym == 0xff51 || $keysym == 0xff53) {
+         my ($idx) = grep $self->{tabs}[$_] == $tab, 0 .. $#{ $self->{tabs} };
 
-      --$idx if $keysym == 0xff51;
-      ++$idx if $keysym == 0xff53;
+         --$idx if $keysym == 0xff51;
+         ++$idx if $keysym == 0xff53;
 
-      $self->make_current ($self->{tabs}[$idx % @{ $self->{tabs}}]);
-      $self->refresh;
-      
-      return 1;
+         $self->make_current ($self->{tabs}[$idx % @{ $self->{tabs}}]);
+         
+         return 1;
+      } elsif ($keysym == 0xff54) {
+         $self->new_tab;
+
+         return 1;
+      }
    }
 
    ()

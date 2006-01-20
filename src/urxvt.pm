@@ -171,8 +171,9 @@ is, it implements what is commonly refered to as "tabbed terminal". The topmost 
 displays a "[NEW]" button, which, when clicked, will add a new tab, followed by one
 button per tab.
 
-Clicking a button will activate that tab. Pressing Shift-Left and
-Shift-Right will switch to the tab left or right of the current one.
+Clicking a button will activate that tab. Pressing B<Shift-Left> and
+B<Shift-Right> will switch to the tab left or right of the current one,
+while B<Shift-Down> creates a new tab.
 
 =item mark-urls
 
