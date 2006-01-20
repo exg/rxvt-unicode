@@ -498,8 +498,8 @@ Called whenever the corresponding X event is received for the terminal If
 the hook returns true, then the even will be ignored by rxvt-unicode.
 
 The event is a hash with most values as named by Xlib (see the XEvent
-manpage), with the additional members C<row> and C<col>, which are the row
-and column under the mouse cursor.
+manpage), with the additional members C<row> and C<col>, which are the
+(real, not screen-based) row and column under the mouse cursor.
 
 C<on_key_press> additionally receives the string rxvt-unicode would
 output, if any, in locale-specific encoding.

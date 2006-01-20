@@ -598,7 +598,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
                         setuv (time,      xe->xmotion.time);
                         setiv (x,         xe->xmotion.x);
                         setiv (y,         xe->xmotion.y);
-                        setiv (row,       xe->xmotion.y / term->fheight);
+                        setiv (row,       xe->xmotion.y / term->fheight + term->view_start);
                         setiv (col,       xe->xmotion.x / term->fwidth);
                         setiv (x_root,    xe->xmotion.x_root);
                         setiv (y_root,    xe->xmotion.y_root);

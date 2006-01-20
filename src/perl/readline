@@ -1,0 +1,21 @@
+#! perl
+
+sub on_button_press {
+   my ($self, $event) = @_;
+
+   my ($row, $col) = $self->screen_cur;
+   my $line = $self->line ($row);
+   my $cur = $line->offset_of ($row, $col);
+   my $ofs = $line->offset_of ($event->{row}, $event->{col});
+
+   if ($ofs >= 0 && $ofs < $line->l) {
+      my $diff = $ofs - $cur;
+
+      $self->tt_write ($diff < 0 ? "\x1b[D" x -$diff
+                                 : "\x1b[C" x $diff);
+
+      return 1;
+   }
+
+   ()
+}
