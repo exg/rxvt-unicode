@@ -18,6 +18,9 @@ WISH: support tex fonts
 
 7.2
 	- removed support for obsolete offix dnd protocol.
+        - added "tabbed" extension that provides a crude tabbed terminal.
+        - fixed the automove-background extension to ignore coordinates
+          in non-synthetic events.
 
 7.1  Thu Jan 19 20:25:34 CET 2006
         - setuid/setgid operation is now _encouraged_: security has been
