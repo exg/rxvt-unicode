@@ -4,12 +4,7 @@
 #include "rxvt.h"
 #include "feature.h"
 
-#if defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
-# if defined(PTYS_ARE_GETPT) || defined(PTYS_ARE_POSIX) || defined(PTYS_ARE_PTMX)
-#  define NO_SETOWNER_TTYDEV 1
-# endif
-#endif
-#if defined(__CYGWIN__) || defined(PTYS_ARE_OPENPTY)
+#if defined(HAVE__GETPTY) || defined(HAVE_OPENPTY) || defined(UNIX98_PTY)
 # define NO_SETOWNER_TTYDEV 1
 #endif
 
