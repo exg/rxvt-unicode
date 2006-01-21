@@ -35,7 +35,7 @@
 #ifdef HAVE_SYS_IOCTL_H
 # include <sys/ioctl.h>
 #endif
-#if defined(PTYS_ARE_PTMX) && defined(HAVE_SYS_STROPTS_H)
+#if defined(HAVE_DEV_PTMX) && defined(HAVE_SYS_STROPTS_H)
 # include <sys/stropts.h>      /* for I_PUSH */
 #endif
 #ifdef HAVE_ISASTREAM
@@ -48,9 +48,11 @@
 #elif defined(HAVE_UTIL_H)
 # include <util.h>
 #endif
+#ifdef TTY_GID_SUPPORT
+#include <grp.h>
+#endif
 
 #include <cstdio>
-#include <grp.h>
 
 #include "rxvtutil.h"
 #include "fdpass.h"
@@ -66,19 +68,18 @@
  * If successful, ttydev is set to the name of the slave device.
  * fd_tty _may_ also be set to an open fd to the slave device
  */
-static inline int
-get_pty_streams (int *fd_tty, char **ttydev)
+#if defined(UNIX98_PTY)
+static int
+get_pty (int *fd_tty, char **ttydev)
 {
-#if defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
-# if defined(PTYS_ARE_GETPT) || defined(PTYS_ARE_POSIX) || defined(PTYS_ARE_PTMX)
   int pfd;
 
-# if defined(PTYS_ARE_GETPT)
+# if defined(HAVE_GETPT)
   pfd = getpt();
-# elif defined(PTYS_ARE_POSIX)
+# elif defined(HAVE_POSIX_OPENPT)
   pfd = posix_openpt (O_RDWR);
 # else
-  pfd = open ("/dev/ptmx", O_RDWR | O_NOCTTY, 0);
+  pfd = open (CLONE_DEVICE, O_RDWR | O_NOCTTY, 0);
 # endif
   if (pfd >= 0)
     {
@@ -91,16 +92,13 @@ get_pty_streams (int *fd_tty, char **ttydev)
 
       close (pfd);
     }
-# endif
-#endif
 
   return -1;
 }
-
-static inline int
-get_pty_openpty (int *fd_tty, char **ttydev)
+#elif defined(HAVE_OPENPTY)
+static int
+get_pty (int *fd_tty, char **ttydev)
 {
-#ifdef PTYS_ARE_OPENPTY
   int pfd;
   int res;
   char tty_name[32];
@@ -111,29 +109,25 @@ get_pty_openpty (int *fd_tty, char **ttydev)
       *ttydev = strdup (tty_name);
       return pfd;
     }
-#endif
 
   return -1;
 }
-
-static inline int
-get_pty__getpty (int *fd_tty, char **ttydev)
+#elif defined(HAVE__GETPTY)
+static int
+get_pty (int *fd_tty, char **ttydev)
 {
-#ifdef PTYS_ARE__GETPTY
   int pfd;
 
   *ttydev = _getpty (&pfd, O_RDWR | O_NONBLOCK | O_NOCTTY, 0622, 0);
   if (*ttydev != NULL)
     return pfd;
-#endif
 
   return -1;
 }
-
-static inline int
-get_pty_ptc (int *fd_tty, char **ttydev)
+#elif defined(HAVE_DEV_PTC)
+static int
+get_pty (int *fd_tty, char **ttydev)
 {
-#ifdef PTYS_ARE_PTC
   int pfd;
 
   if ((pfd = open ("/dev/ptc", O_RDWR | O_NOCTTY, 0)) >= 0)
@@ -141,15 +135,13 @@ get_pty_ptc (int *fd_tty, char **ttydev)
       *ttydev = strdup (ttyname (pfd));
       return pfd;
     }
-#endif
 
   return -1;
 }
-
-static inline int
-get_pty_clone (int *fd_tty, char **ttydev)
+#elif defined(HAVE_DEV_CLONE)
+static int
+get_pty (int *fd_tty, char **ttydev)
 {
-#ifdef PTYS_ARE_CLONE
   int pfd;
 
   if ((pfd = open ("/dev/ptym/clone", O_RDWR | O_NOCTTY, 0)) >= 0)
@@ -157,109 +149,41 @@ get_pty_clone (int *fd_tty, char **ttydev)
       *ttydev = strdup (ptsname (pfd));
       return pfd;
     }
-#endif
 
   return -1;
 }
-
-static inline int
-get_pty_numeric (int *fd_tty, char **ttydev)
-{
-#ifdef PTYS_ARE_NUMERIC
-  int pfd;
-  int idx;
-  char *c1, *c2;
-  char pty_name[] = "/dev/ptyp???";
-  char tty_name[] = "/dev/ttyp???";
-
-  c1 = &(pty_name[sizeof (pty_name) - 4]);
-  c2 = &(tty_name[sizeof (tty_name) - 4]);
-
-  for (idx = 0; idx < 256; idx++)
-    {
-      sprintf (c1, "%d", idx);
-      sprintf (c2, "%d", idx);
-
-      if (access (tty_name, F_OK) < 0)
-        {
-          idx = 256;
-          break;
-        }
-
-      if ((pfd = open (pty_name, O_RDWR | O_NOCTTY, 0)) >= 0)
-        {
-          if (access (tty_name, R_OK | W_OK) == 0)
-            {
-              *ttydev = strdup (tty_name);
-              return pfd;
-            }
-
-          close (pfd);
-        }
-    }
-#endif
-
-  return -1;
-}
-
-static inline int
-get_pty_searched (int *fd_tty, char **ttydev)
-{
-#ifdef PTYS_ARE_SEARCHED
-# ifndef PTYCHAR1
-#  define PTYCHAR1	"pqrstuvwxyz"
-# endif
-# ifndef PTYCHAR2
-#  define PTYCHAR2	"0123456789abcdef"
-# endif
-  int pfd;
-  const char *c1, *c2;
-  char pty_name[] = "/dev/pty??";
-  char tty_name[] = "/dev/tty??";
-
-  for (c1 = PTYCHAR1; *c1; c1++)
-    {
-      pty_name[ (sizeof (pty_name) - 3)] =
-        tty_name[ (sizeof (pty_name) - 3)] = *c1;
-
-      for (c2 = PTYCHAR2; *c2; c2++)
-        {
-          pty_name[ (sizeof (pty_name) - 2)] =
-            tty_name[ (sizeof (pty_name) - 2)] = *c2;
-
-          if ((pfd = open (pty_name, O_RDWR | O_NOCTTY, 0)) >= 0)
-            {
-              if (access (tty_name, R_OK | W_OK) == 0)
-                {
-                  *ttydev = strdup (tty_name);
-                  return pfd;
-                }
-
-              close (pfd);
-            }
-        }
-    }
-#endif
-
-  return -1;
-}
-
+#else
+/* Based on the code in openssh/openbsd-compat/bsd-openpty.c */
 static int
 get_pty (int *fd_tty, char **ttydev)
 {
   int pfd;
+  int i;
+  char pty_name[32];
+  char tty_name[32];
+  const char *majors = "pqrstuvwxyzabcde";
+  const char *minors = "0123456789abcdef";
+  for (i = 0; i < 256; i++)
+    {
+      snprintf(pty_name, 32, "/dev/pty%c%c", majors[i / 16], minors[i % 16]);
+      snprintf(tty_name, 32, "/dev/tty%c%c", majors[i / 16], minors[i % 16]);
+      if ((pfd = open (pty_name, O_RDWR | O_NOCTTY, 0)) == -1)
+        {
+	  snprintf(pty_name, 32, "/dev/ptyp%d", i);
+	  snprintf(tty_name, 32, "/dev/ttyp%d", i);
+	  if ((pfd = open (pty_name, O_RDWR | O_NOCTTY, 0)) == -1)
+	    continue;
+        }
+      if (access (tty_name, R_OK | W_OK) == 0)
+        {
+	  *ttydev = strdup (tty_name);
+	  return pfd;
+        }
 
-  if ((pfd = get_pty_streams (fd_tty, ttydev)) != -1
-      || (pfd = get_pty_openpty (fd_tty, ttydev)) != -1
-      || (pfd = get_pty__getpty (fd_tty, ttydev)) != -1
-      || (pfd = get_pty_ptc (fd_tty, ttydev)) != -1
-      || (pfd = get_pty_clone (fd_tty, ttydev)) != -1
-      || (pfd = get_pty_numeric (fd_tty, ttydev)) != -1
-      || (pfd = get_pty_searched (fd_tty, ttydev)) != -1)
-    return pfd;
-
-  return -1;
+      close (pfd);
+    }
 }
+#endif
 
 /*----------------------------------------------------------------------*/
 /*
@@ -280,7 +204,7 @@ control_tty (int fd_tty)
 {
   setsid ();
 
-#if defined(PTYS_ARE_PTMX) && defined(I_PUSH)
+#if defined(HAVE_DEV_PTMX) && defined(I_PUSH)
   /*
    * Push STREAMS modules:
    *    ptem: pseudo-terminal hardware emulation module.
