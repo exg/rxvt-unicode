@@ -520,9 +520,6 @@ AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS( \
 	assert.h \
 	fcntl.h \
-	grp.h \
-	libc.h \
-	lastlog.h \
 	stdarg.h \
 	stdlib.h \
 	string.h \
@@ -533,14 +530,8 @@ AC_CHECK_HEADERS( \
 	sys/select.h \
 	sys/sockio.h \
 	sys/strredir.h \
-	sys/stropts.h \
 	sys/time.h \
-	utmp.h \
-	utmpx.h \
 	stdint.h \
-	pty.h \
-	util.h \
-	libutil.h \
 	wchar.h \
 	cwchar \
 	clocale \
@@ -707,339 +698,16 @@ AC_TYPE_SIGNAL
 dnl> AC_FUNC_VPRINTF
 
 AC_CHECK_FUNCS( \
-	revoke \
 	unsetenv \
 	setutent \
 	seteuid \
 	setresuid \
 	setreuid \
-	_getpty \
-	getpt \
-	posix_openpt \
-	grantpt \
-	unlockpt \
-	isastream \
 	on_exit \
 	nanosleep \
-	updwtmp \
-	updwtmpx \
-	ttyslot \
 )
 
-dnl# --------------------------------------------------------------------------
-dnl# DO ALL UTMP AND WTMP CHECKING
-dnl# --------------------------------------------------------------------------
-dnl# check for host field in utmp structure
-
-dnl# --------------------------------------------
-AC_CHECK_HEADER(utmp.h,
-[AC_CACHE_CHECK([for struct utmp], rxvt_cv_struct_utmp,
-[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
-#include <utmp.h>]], [[struct utmp ut;]])],[rxvt_cv_struct_utmp=yes],[rxvt_cv_struct_utmp=no])])
-if test x$rxvt_cv_struct_utmp = xyes; then
-  AC_DEFINE(HAVE_STRUCT_UTMP, 1, Define if utmp.h has struct utmp)
-fi
-]
-
-AC_CACHE_CHECK(for ut_host in utmp struct, rxvt_cv_struct_utmp_host,
-[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
-#include <utmp.h>]], [[struct utmp ut; ut.ut_host;]])],[rxvt_cv_struct_utmp_host=yes],[rxvt_cv_struct_utmp_host=no])])
-if test x$rxvt_cv_struct_utmp_host = xyes; then
-  AC_DEFINE(HAVE_UTMP_HOST, 1, Define if struct utmp contains ut_host)
-fi
-
-AC_CACHE_CHECK(for ut_pid in utmp struct, rxvt_cv_struct_utmp_pid,
-[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
-#include <utmp.h>]], [[struct utmp ut; ut.ut_pid;]])],[rxvt_cv_struct_utmp_pid=yes],[rxvt_cv_struct_utmp_pid=no])])
-if test x$rxvt_cv_struct_utmp_pid = xyes; then
-  AC_DEFINE(HAVE_UTMP_PID, 1, Define if struct utmp contains ut_pid)
-fi
-) dnl# AC_CHECK_HEADER(utmp.h
-
-dnl# --------------------------------------------
-
-AC_CHECK_HEADER(utmpx.h,
-[AC_CACHE_CHECK([for struct utmpx], rxvt_cv_struct_utmpx,
-[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
-#include <utmpx.h>]], [[struct utmpx ut;]])],[rxvt_cv_struct_utmpx=yes],[rxvt_cv_struct_utmpx=no])])
-if test x$rxvt_cv_struct_utmpx = xyes; then
-  AC_DEFINE(HAVE_STRUCT_UTMPX, 1, Define if utmpx.h has struct utmpx)
-fi
-]
-
-AC_CACHE_CHECK(for host in utmpx struct, rxvt_cv_struct_utmpx_host,
-[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
-#include <utmpx.h>]], [[struct utmpx utx; utx.ut_host;]])],[rxvt_cv_struct_utmpx_host=yes],[rxvt_cv_struct_utmpx_host=no])])
-if test x$rxvt_cv_struct_utmpx_host = xyes; then
-  AC_DEFINE(HAVE_UTMPX_HOST, 1, Define if struct utmpx contains ut_host)
-fi
-
-AC_CACHE_CHECK(for session in utmpx struct, rxvt_cv_struct_utmpx_session,
-[AC_TRY_COMPILE([#include <sys/types.h>
-#include <utmpx.h>],
-[struct utmpx utx; utx.ut_session;],
-rxvt_cv_struct_utmpx_session=yes, rxvt_cv_struct_utmpx_session=no)])
-if test x$rxvt_cv_struct_utmpx_session = xyes; then
-  AC_DEFINE(HAVE_UTMPX_SESSION, 1, Define if struct utmpx contains ut_session)
-fi
-) dnl# AC_CHECK_HEADER(utmpx.h
-
-dnl# --------------------------------------------------------------------------
-dnl# check for struct lastlog
-AC_CACHE_CHECK(for struct lastlog, rxvt_cv_struct_lastlog,
-[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
-#include <utmp.h>
-#ifdef HAVE_LASTLOG_H
-#include <lastlog.h>
-#endif
-]], [[struct lastlog ll;]])],[rxvt_cv_struct_lastlog=yes],[rxvt_cv_struct_lastlog=no])])
-if test x$rxvt_cv_struct_lastlog = xyes; then
-  AC_DEFINE(HAVE_STRUCT_LASTLOG, 1, Define if utmp.h or lastlog.h has struct lastlog)
-fi
-
-dnl# check for struct lastlogx
-AC_CACHE_CHECK(for struct lastlogx, rxvt_cv_struct_lastlogx,
-[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
-#include <utmpx.h>
-#ifdef HAVE_LASTLOG_H
-#include <lastlog.h>
-#endif
-]], [[struct lastlogx ll;]])],[rxvt_cv_struct_lastlogx=yes],[rxvt_cv_struct_lastlogx=no])])
-if test x$rxvt_cv_struct_lastlogx = xyes; then
-  AC_DEFINE(HAVE_STRUCT_LASTLOGX, 1, Define if utmpx.h or lastlog.h has struct lastlogx)
-fi
-
-dnl# --------------------------------------------------------------------------
-dnl# FIND FILES
-dnl# --------------------------------------------------------------------------
-
-dnl# find utmp
-AC_CACHE_CHECK(where utmp is located, rxvt_cv_path_utmp,
-[AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
-#include <sys/types.h>
-#include <utmp.h>
-#include <errno.h>
-main()
-{
-    char **u, *utmplist[] = {
-    "/var/run/utmp", "/var/adm/utmp", "/etc/utmp", "/usr/etc/utmp", "/usr/adm/utmp", NULL };
-    FILE *a, *f=fopen("conftestval", "w");
-    if (!f) exit(1);
-#ifdef UTMP_FILE
-    fprintf(f, "%s\n", UTMP_FILE);
-    exit(0);
-#endif
-#ifdef _PATH_UTMP
-    fprintf(f, "%s\n", _PATH_UTMP);
-    exit(0);
-#endif
-    for (u = utmplist; *u; u++) {
-	if ((a = fopen(*u, "r")) != NULL || errno == EACCES) {
-	    fprintf(f, "%s\n", *u);
-	    exit(0);
-	}
-    }
-    exit(0);
-}]])],[rxvt_cv_path_utmp=`cat conftestval`],[rxvt_cv_path_utmp=],[dnl
-  AC_MSG_WARN(Define RXVT_UTMP_FILE in config.h manually)])])
-if test x$rxvt_cv_path_utmp != x; then
-  AC_DEFINE_UNQUOTED(RXVT_UTMP_FILE, "$rxvt_cv_path_utmp", Define location of utmp)
-fi
-
-dnl# --------------------------------------------------------------------------
-
-dnl# find utmpx - if a utmp file exists at the same location and is more than
-dnl# a day newer, then dump the utmpx.  People leave lots of junk around.
-AC_CACHE_CHECK(where utmpx is located, rxvt_cv_path_utmpx,
-[AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
-#include <sys/types.h>
-#include <utmpx.h>
-#include <errno.h>
-#include <sys/stat.h>
-#ifdef HAVE_STRING_H
-#include <string.h>
-#endif
-main()
-{
-    char **u, *p, *utmplist[] = {
-#ifdef UTMPX_FILE
-	UTMPX_FILE,
-#endif
-#ifdef _PATH_UTMPX
-	_PATH_UTMPX,
-#endif
-    "/var/adm/utmpx", "/etc/utmpx", NULL };
-    FILE *a, *f=fopen("conftestval", "w");
-    struct stat statu, statux;
-    if (!f) exit(1);
-    for (u = utmplist; *u; u++) {
-	if ((a = fopen(*u, "r")) != NULL || errno == EACCES) {
-	    if (stat(*u, &statux) < 0)
-		continue;
-	    p = strdup(*u);
-	    p[strlen(p) - 1] = '\0';
-	    if (stat(p, &statu) >= 0
-		&& (statu.st_mtime - statux.st_mtime > 86400))
-		continue;
-	    fprintf(f, "%s\n", *u);
-	    exit(0);
-	}
-    }
-    exit(0);
-}]])],[rxvt_cv_path_utmpx=`cat conftestval`],[rxvt_cv_path_utmpx=],[dnl
-  AC_MSG_WARN(Define RXVT_UTMPX_FILE in config.h manually)])])
-if test x$rxvt_cv_path_utmpx != x; then
-  AC_DEFINE_UNQUOTED(RXVT_UTMPX_FILE, "$rxvt_cv_path_utmpx", Define location of utmpx)
-fi
-
-dnl# --------------------------------------------------------------------------
-
-dnl# find wtmp
-AC_CACHE_CHECK(where wtmp is located, rxvt_cv_path_wtmp,
-[AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
-#include <sys/types.h>
-#ifdef HAVE_UTMP_H
-#include <utmp.h>
-#endif
-#include <errno.h>
-main()
-{
-    char **w, *wtmplist[] = {
-    "/var/log/wtmp", "/var/adm/wtmp", "/etc/wtmp", "/usr/etc/wtmp", "/usr/adm/wtmp", NULL }; 
-    FILE *a, *f=fopen("conftestval", "w");
-    if (!f) exit(1);
-#ifdef WTMP_FILE
-    fprintf(f, "%s\n", WTMP_FILE);
-    exit(0);
-#endif
-#ifdef _PATH_WTMP
-    fprintf(f, "%s\n", _PATH_WTMP);
-    exit(0);
-#endif
-    for (w = wtmplist; *w; w++) {
-	if ((a = fopen(*w, "r")) != NULL || errno == EACCES) {
-	    fprintf(f, "%s\n", *w);
-	    exit(0);
-	}
-    }
-    exit(0);
-}]])],[rxvt_cv_path_wtmp=`cat conftestval`],[rxvt_cv_path_wtmp=],[dnl
-  AC_MSG_WARN(Define RXVT_WTMP_FILE in config.h manually)])])
-if test x$rxvt_cv_path_wtmp != x; then
-  AC_DEFINE_UNQUOTED(RXVT_WTMP_FILE, "$rxvt_cv_path_wtmp", Define location of wtmp)
-fi
-dnl# --------------------------------------------------------------------------
-
-dnl# find wtmpx
-AC_CACHE_CHECK(where wtmpx is located, rxvt_cv_path_wtmpx,
-[AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
-#ifdef HAVE_UTMPX_H
-#include <utmpx.h>
-#endif
-#include <errno.h>
-main()
-{
-    char **w, *wtmplist[] = {
-    "/var/log/wtmpx", "/var/adm/wtmpx", NULL }; 
-    FILE *a, *f=fopen("conftestval", "w");
-    if (!f) exit(1);
-#ifdef WTMPX_FILE
-    fprintf(f, "%s\n", WTMPX_FILE);
-    exit(0);
-#endif
-#ifdef _PATH_WTMPX
-    fprintf(f, "%s\n", _PATH_WTMPX);
-    exit(0);
-#endif
-    for (w = wtmplist; *w; w++) {
-	if ((a = fopen(*w, "r")) != NULL || errno == EACCES) {
-	    fprintf(f, "%s\n", *w);
-	    exit(0);
-	}
-    }
-    exit(0);
-}]])],[rxvt_cv_path_wtmpx=`cat conftestval`],[rxvt_cv_path_wtmpx=],[dnl
-  AC_MSG_WARN(Define RXVT_WTMPX_FILE in config.h manually)])])
-if test x$rxvt_cv_path_wtmpx != x; then
-  AC_DEFINE_UNQUOTED(RXVT_WTMPX_FILE, "$rxvt_cv_path_wtmpx", Define location of wtmpx)
-fi
-dnl# --------------------------------------------------------------------------
-
-dnl# find lastlog
-AC_CACHE_CHECK(where lastlog is located, rxvt_cv_path_lastlog,
-[AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
-#include <sys/types.h>
-#ifdef HAVE_UTMPX_H
-#include <utmpx.h>
-#elif defined(HAVE_UTMP_H)
-#include <utmp.h>
-#endif
-#ifdef HAVE_LASTLOG_H
-#include <lastlog.h>
-#endif
-#include <errno.h>
-main()
-{
-    char **w, *lastloglist[] = { "/var/log/lastlog", NULL };
-    FILE *a, *f=fopen("conftestval", "w");
-    if (!f) exit(1);
-#ifdef LASTLOG_FILE
-    fprintf(f, "%s\n", LASTLOG_FILE);
-    exit(0);
-#endif
-#ifdef _PATH_LASTLOG
-    fprintf(f, "%s\n", _PATH_LASTLOG);
-    exit(0);
-#endif
-    for (w = lastloglist; *w; w++) {
-	if ((a = fopen(*w, "r")) != NULL || errno == EACCES) {
-	    fprintf(f, "%s\n", *w);
-	    exit(0);
-	}
-    }
-    exit(0);
-}]])],[rxvt_cv_path_lastlog=`cat conftestval`],[rxvt_cv_path_lastlog=],[dnl
-  AC_MSG_WARN(Define RXVT_LASTLOG_FILE in config.h manually)])])
-if test x$rxvt_cv_path_lastlog != x; then
-  AC_DEFINE_UNQUOTED(RXVT_LASTLOG_FILE, "$rxvt_cv_path_lastlog", Define location of lastlog)
-  if test -d "$rxvt_cv_path_lastlog"; then
-    AC_DEFINE(LASTLOG_IS_DIR, 1, Define if lastlog is provided via a directory)
-  fi
-fi
-dnl# --------------------------------------------------------------------------
-
-dnl# find lastlogx
-AC_CACHE_CHECK(where lastlogx is located, rxvt_cv_path_lastlogx,
-[AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
-#ifdef HAVE_UTMPX_H
-#include <utmpx.h>
-#endif
-#include <errno.h>
-main()
-{
-    char **w, *wtmplist[] = { "/var/log/lastlogx", "/var/adm/lastlogx", NULL };
-    FILE *a, *f=fopen("conftestval", "w");
-    if (!f) exit(1);
-#ifdef LASTLOGX_FILE
-    fprintf(f, "%s\n", LASTLOGX_FILE);
-    exit(0);
-#endif
-#ifdef _PATH_LASTLOGX
-    fprintf(f, "%s\n", _PATH_LASTLOGX);
-    exit(0);
-#endif
-    for (w = wtmplist; *w; w++) {
-	if ((a = fopen(*w, "r")) != NULL || errno == EACCES) {
-	    fprintf(f, "%s\n", *w);
-	    exit(0);
-	}
-    }
-    exit(0);
-}]])],[rxvt_cv_path_lastlogx=`cat conftestval`],[rxvt_cv_path_lastlogx=],[dnl
-  AC_MSG_WARN(Define RXVT_LASTLOGX_FILE in config.h manually)])])
-if test x$rxvt_cv_path_lastlogx != x; then
-  AC_DEFINE_UNQUOTED(RXVT_LASTLOGX_FILE, "$rxvt_cv_path_lastlogx", Define location of lastlogx)
-fi
+UTMP_CHECK
 
 dnl# --------------------------------------------------------------------------
 
@@ -1155,86 +823,7 @@ if test x$rxvt_broken_ximcb = xyes; then
    AC_DEFINE(XIMCB_PROTO_BROKEN, 1, Define if your XIMCallback specifies XIC as first type.)
 fi
 
-if test x$ac_cv_func_getpt = xno -a x$ac_cv_func_posix_openpt = xno; then
-  AC_CHECK_FUNC(openpty, [], [AC_CHECK_LIB(util, openpty, [LIBS="$LIBS -lutil"])])
-fi
-
-dnl# if we don't guess right then it's up to the user
-AC_CACHE_CHECK(for pty/tty type, rxvt_cv_ptys,
-[if test x$ac_cv_func_openpty = xyes -o x$ac_cv_lib_util_openpty = xyes; then
-    rxvt_cv_ptys=OPENPTY
- else if test x$ac_cv_func_getpt = xyes; then
-    rxvt_cv_ptys=GLIBC
- else if test x$ac_cv_func_posix_openpt = xyes; then
-    rxvt_cv_ptys=POSIX
- else if test x$ac_cv_func__getpty = xyes; then
-    rxvt_cv_ptys=SGI4
- else if test -c /dev/ttyp20; then
-    rxvt_cv_ptys=SCO
- else if test -c /dev/ptym/clone; then
-    rxvt_cv_ptys=HPUX
- else if test -c /dev/ptc -a -c /dev/pts; then
-    rxvt_cv_ptys=PTC
- else if test -c /dev/ptc -a -d /dev/pts; then
-    rxvt_cv_ptys=PTC
- else if test -c /dev/ptmx -a -c /dev/pts/0; then
-    rxvt_cv_ptys=STREAMS
- else if test x$ac_cv_func_grantpt = xyes && test x$ac_cv_func_unlockpt = xyes; then
-dnl# catch CYGWIN
-    rxvt_cv_ptys=STREAMS
- else
-    rxvt_cv_ptys=BSD
-fi
-fi
-fi
-fi
-fi
-fi
-fi
-fi
-fi
-fi
-])
-
-if test x$rxvt_cv_ptys = xGLIBC; then
-  AC_DEFINE(PTYS_ARE_GETPT, 1, Define for this pty type)
-fi
-if test x$rxvt_cv_ptys = xPOSIX; then
-  AC_DEFINE(PTYS_ARE_POSIX, 1, Define for this pty type)
-fi
-if test x$rxvt_cv_ptys = xOPENPTY; then
-  AC_DEFINE(PTYS_ARE_OPENPTY, 1, Define for this pty type)
-fi
-if test x$rxvt_cv_ptys = xSCO; then
-  AC_DEFINE(PTYS_ARE_NUMERIC, 1, Define for this pty type)
-fi
-if test x$rxvt_cv_ptys = xSTREAMS; then
-  AC_DEFINE(PTYS_ARE_PTMX, 1, Define for this pty type)
-fi
-if test x$rxvt_cv_ptys = xPTC; then
-  AC_DEFINE(PTYS_ARE_PTC, 1, Define for this pty type)
-fi
-if test x$rxvt_cv_ptys = xSGI4; then
-  AC_DEFINE(PTYS_ARE__GETPTY, 1, Define for this pty type)
-fi
-if test x$rxvt_cv_ptys = xHPUX; then
-  AC_DEFINE(PTYS_ARE_CLONE, 1, Define for this pty type)
-fi
-if test x$rxvt_cv_ptys = xBSD -o x$rxvt_cv_ptys = xHPUX -o x$rxvt_cv_ptys = xPOSIX; then
-  AC_DEFINE(PTYS_ARE_SEARCHED, 1, Define for this pty type)
-fi
-
-
-AS_MESSAGE(checking for pty ranges...)
-ptys=`echo /dev/pty??`
-pch1=`echo $ptys | tr ' ' '\012' | sed -e 's/^.*\(.\).$/\1/g' | sort -u | tr -d '\012'`
-pch2=`echo $ptys | tr ' ' '\012' | sed -e 's/^.*\(.\)$/\1/g' | sort -u | tr -d '\012'`
-if test x$pch1 != x; then
-  AC_DEFINE_UNQUOTED(PTYCHAR1, "$pch1", Define for first char in devptyXX)
-fi
-if test x$pch2 != x; then
-  AC_DEFINE_UNQUOTED(PTYCHAR2, "$pch2", Define for second char in devptyXX)
-fi
+PTY_CHECK
 
 dnl# --------------------------------------------------------------------------
 dnl# now add and remove other stuff
@@ -1480,7 +1069,6 @@ fi
 echo "
 The following are set in config.h
 "
-echo "  pty/tty type:               "$rxvt_cv_ptys
 if test x$support_utmp != xyes; then
   echo "  utmp support:               disabled"
   echo
@@ -1507,12 +1095,6 @@ if test x$RESFALLBACK != x; then
    echo "  resource class fallback:    $RESFALLBACK"
 fi
 echo
-if test x$rxvt_cv_ptys = xUNKNOWN; then
-  echo ".----------------------------------------------------------------."
-  echo ". WARNING: could not determine pty/tty type.  Do not build until ."
-  echo ".          the appropriate PTYS_ARE_* is defined in config.h     ."
-  echo ".----------------------------------------------------------------."
-fi
 if test x$support_xpm = xneedsmanualspecification; then
   echo ".----------------------------------------------------------------."
   echo ". WARNING: --enable-xpm-background was specified however the     ."
