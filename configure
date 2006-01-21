@@ -309,7 +309,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os VERSION DATE LSMDATE LIBVERSION CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX CPP INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA EGREP LINKER INSTALL_LIBRXVT RXVTNAME MV RM CP LN SED ECHO CMP TIC CXXCPP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS XPM_CPPFLAGS XPM_CFLAGS XPM_LIBS rxvt_int16_typedef rxvt_uint16_typedef rxvt_int32_typedef rxvt_uint32_typedef rxvt_intp_define rxvt_u_intp_define PERL PERLLIB PERLFLAGS PERLPRIVLIBEXP IF_PERL PERL_O DEBUG DINCLUDE DLIB include_stdint_h include_stdarg_h include_stdlib_h include_unistd_h include_string_h include_fcntl_h include_util_h include_assert_h include_sys_ioctl_h include_sys_select_h include_sys_strredir_h include_sys_time_h include_time_h LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os VERSION DATE LSMDATE LIBVERSION CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX CPP INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA EGREP LINKER INSTALL_LIBRXVT RXVTNAME MV RM CP LN SED ECHO CMP TIC CXXCPP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS XPM_CPPFLAGS XPM_CFLAGS XPM_LIBS rxvt_int16_typedef rxvt_uint16_typedef rxvt_int32_typedef rxvt_uint32_typedef rxvt_intp_define rxvt_u_intp_define PKG_CONFIG XFT_CONFIG PERL PERLLIB PERLFLAGS PERLPRIVLIBEXP IF_PERL PERL_O DEBUG DINCLUDE DLIB include_stdint_h include_stdarg_h include_stdlib_h include_unistd_h include_string_h include_fcntl_h include_util_h include_assert_h include_sys_ioctl_h include_sys_select_h include_sys_strredir_h include_sys_time_h include_time_h LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -3282,8 +3282,8 @@ else
 sed 's/^/| /' conftest.$ac_ext >&5
 
 
-         echo "$as_me:$LINENO: result: no, make everything bigger and slower" >&5
-echo "${ECHO_T}no, make everything bigger and slower" >&6
+         echo "$as_me:$LINENO: result: no, making everything bigger and slower" >&5
+echo "${ECHO_T}no, making everything bigger and slower" >&6
          LIBS="$save_LIBS"
          LINKER="$save_CXX"
 
@@ -12720,8 +12720,95 @@ fi
 
 
 if test x$support_xft = xyes; then
-  LIBS="$LIBS `pkg-config xft --libs`"
-  CPPFLAGS="$CPPFLAGS `pkg-config xft --cflags`"
+  # Extract the first word of "pkg-config", so it can be a program name with args.
+set dummy pkg-config; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_PKG_CONFIG+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $PKG_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PKG_CONFIG="$PKG_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_PKG_CONFIG" && ac_cv_path_PKG_CONFIG="no"
+  ;;
+esac
+fi
+PKG_CONFIG=$ac_cv_path_PKG_CONFIG
+
+if test -n "$PKG_CONFIG"; then
+  echo "$as_me:$LINENO: result: $PKG_CONFIG" >&5
+echo "${ECHO_T}$PKG_CONFIG" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  # Extract the first word of "xft-config", so it can be a program name with args.
+set dummy xft-config; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_XFT_CONFIG+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $XFT_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_XFT_CONFIG="$XFT_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_XFT_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_XFT_CONFIG" && ac_cv_path_XFT_CONFIG="no"
+  ;;
+esac
+fi
+XFT_CONFIG=$ac_cv_path_XFT_CONFIG
+
+if test -n "$XFT_CONFIG"; then
+  echo "$as_me:$LINENO: result: $XFT_CONFIG" >&5
+echo "${ECHO_T}$XFT_CONFIG" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  if test $PKG_CONFIG != no && $PKG_CONFIG --exists xft; then
+    LIBS="$LIBS `$PKG_CONFIG xft --libs`"
+    CPPFLAGS="$CPPFLAGS `$PKG_CONFIG xft --cflags`"
+  else
+    if test $XFT_CONFIG != no; then
+      LIBS="$LIBS `$XFT_CONFIG --libs`"
+      CPPFLAGS="$CPPFLAGS `$XFT_CONFIG --cflags`"
+    fi
+  fi
 
 
 for ac_header in X11/Xft/Xft.h
@@ -14135,6 +14222,8 @@ s,@rxvt_int32_typedef@,$rxvt_int32_typedef,;t t
 s,@rxvt_uint32_typedef@,$rxvt_uint32_typedef,;t t
 s,@rxvt_intp_define@,$rxvt_intp_define,;t t
 s,@rxvt_u_intp_define@,$rxvt_u_intp_define,;t t
+s,@PKG_CONFIG@,$PKG_CONFIG,;t t
+s,@XFT_CONFIG@,$XFT_CONFIG,;t t
 s,@PERL@,$PERL,;t t
 s,@PERLLIB@,$PERLLIB,;t t
 s,@PERLFLAGS@,$PERLFLAGS,;t t
