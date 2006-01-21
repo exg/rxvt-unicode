@@ -76,6 +76,7 @@ src/misc.C
 src/netdisp.C
 src/netdisp.h
 src/optinc.h
+src/ptytty_conf.h
 src/ptytty.h
 src/ptytty.C
 src/rxvtutil.C
