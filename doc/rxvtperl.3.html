@@ -197,6 +197,28 @@ additionally stores the first match in the current line into the primary
 selection.</p>
 </dd>
 <p></p>
+<dt><strong><a name="item_readline">readline (enabled by default)</a></strong><br />
+</dt>
+<dd>
+A support package that tries to make editing with readline easier. At the
+moment, it reacts to clicking with the left mouse button by trying to
+move the text cursor to this position. It does so by generating as many
+cursor-left or cursor-right keypresses as required (the this only works
+for programs that correctly support wide characters).
+</dd>
+<dd>
+<p>To avoid too many false positives, this is only done when:</p>
+</dd>
+<dl>
+<dt><strong><a name="item_same">- the mouse is on the same (multi-row-) line as the text cursor.</a></strong><br />
+</dt>
+<dt><strong><a name="item__2d_the_primary_screen_is_currently_being_displaye">- the primary screen is currently being displayed.</a></strong><br />
+</dt>
+<dt><strong><a name="item__2d_the_text_cursor_is_visible_2e">- the text cursor is visible.</a></strong><br />
+</dt>
+</dl>
+<p>The normal selection mechanism isn't disabled, so quick successive clicks
+might interfere with selection creation in harmless ways.</p>
 <dt><strong><a name="item_selection_2dautotransform">selection-autotransform</a></strong><br />
 </dt>
 <dd>
@@ -246,23 +268,6 @@ FILENAME line YYY.''), you need a slightly more elaborate solution:</p>
 <p>The first line tells the selection code to treat the unchanging part of
 every error message as a selection pattern, and the second line transforms
 the message into vi commands to load the file.</p>
-</dd>
-<p></p>
-<dt><strong><a name="item_readline">readline</a></strong><br />
-</dt>
-<dd>
-A support package that tries to make editing with readline easier. At the
-moment, it reacts to clicking with the left mouse button by trying to
-move the text cursor to this position. It does so by generating as many
-cursor-left or cursor-right keypresses as required (the this only works
-for programs that correctly support wide characters).
-</dd>
-<dd>
-<p>It only works when clicking into the same line (possibly extended over
-multiple rows) as the text cursor and on the primary screen, to reduce the
-risk of misinterpreting. The normal selection isn't disabled, so quick
-successive clicks might interfere with selection creation in harmless
-ways.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_tabbed">tabbed</a></strong><br />
@@ -1279,6 +1284,12 @@ AltGr), the meta key (often Alt) and the num lock key, if applicable.
 </dt>
 <dd>
 Returns the currently displayed screen (0 primary, 1 secondary).
+</dd>
+<p></p>
+<dt><strong><a name="item_hidden_cursor">$cursor_is_hidden = $term-&gt;hidden_cursor</a></strong><br />
+</dt>
+<dd>
+Returns wether the cursor is currently hidden or not.
 </dd>
 <p></p>
 <dt><strong><a name="item_view_start">$view_start = $term-&gt;view_start ([$newvalue])</a></strong><br />

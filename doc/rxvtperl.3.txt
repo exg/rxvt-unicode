@@ -114,6 +114,23 @@ PREPACKAGED EXTENSIONS
         stay at the current position and additionally stores the first match
         in the current line into the primary selection.
 
+    readline (enabled by default)
+        A support package that tries to make editing with readline easier.
+        At the moment, it reacts to clicking with the left mouse button by
+        trying to move the text cursor to this position. It does so by
+        generating as many cursor-left or cursor-right keypresses as
+        required (the this only works for programs that correctly support
+        wide characters).
+
+        To avoid too many false positives, this is only done when:
+
+        - the mouse is on the same (multi-row-) line as the text cursor.
+        - the primary screen is currently being displayed.
+        - the text cursor is visible.
+
+        The normal selection mechanism isn't disabled, so quick successive
+        clicks might interfere with selection creation in harmless ways.
+
     selection-autotransform
         This selection allows you to do automatic transforms on a selection
         whenever a selection is made.
@@ -148,20 +165,6 @@ PREPACKAGED EXTENSIONS
         The first line tells the selection code to treat the unchanging part
         of every error message as a selection pattern, and the second line
         transforms the message into vi commands to load the file.
-
-    readline
-        A support package that tries to make editing with readline easier.
-        At the moment, it reacts to clicking with the left mouse button by
-        trying to move the text cursor to this position. It does so by
-        generating as many cursor-left or cursor-right keypresses as
-        required (the this only works for programs that correctly support
-        wide characters).
-
-        It only works when clicking into the same line (possibly extended
-        over multiple rows) as the text cursor and on the primary screen, to
-        reduce the risk of misinterpreting. The normal selection isn't
-        disabled, so quick successive clicks might interfere with selection
-        creation in harmless ways.
 
     tabbed
         This transforms the terminal into a tabbar with additional
@@ -841,6 +844,9 @@ API DOCUMENTATION
 
     $screen = $term->current_screen
         Returns the currently displayed screen (0 primary, 1 secondary).
+
+    $cursor_is_hidden = $term->hidden_cursor
+        Returns wether the cursor is currently hidden or not.
 
     $view_start = $term->view_start ([$newvalue])
         Returns the row number of the topmost displayed line. Maximum value

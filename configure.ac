@@ -35,16 +35,27 @@ AC_PROG_INSTALL
 
 AC_AIX
 AC_ISC_POSIX
+AC_LANG(C++)
 
-AC_LANG(C)
-
-dnl check wetehr we can link with gcc -lsupc++
-LINKER="$CXX"
+dnl check wether we can link with gcc -lsupc++
 if test x$GCC = xyes && test x$GXX = xyes; then
-   AC_CHECK_LIB(supc++, main, [
-      LINKER="$CC"
-      LIBS="$LIBS -lsupc++"
-   ])
+   dnl FreeBSD (at least up to 5.3) has a broken GCC, workaround it
+   AC_MSG_CHECKING([for working libsupc++])
+   save_CXX="$CXX"
+   save_LIBS="$LIBS"
+   CXX="$CC"
+   LIBS="$LIBS -lsupc++"
+   LINKER="$CC"
+   AC_LINK_IFELSE(
+      [AC_LANG_PROGRAM([struct test { }; void f() try { throw new test; } catch (...) { throw; }])],
+      [AC_MSG_RESULT(ok)],
+      [
+         AC_MSG_RESULT([no, make everything bigger and slower])
+         CXX="$save_CXX"
+         LIBS="$save_LIBS"
+         LINKER="$CXX"
+      ]
+   )
 fi
 AC_SUBST(LINKER,[$LINKER])
 
@@ -774,8 +785,10 @@ fi
 
 AC_CACHE_CHECK(for unix-compliant filehandle passing ability, rxvt_can_pass_fds,
 [AC_TRY_LINK([
+#include <cstddef> // broken bsds (is that redundant) need this
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/uio.h>
 ],[
 {
   msghdr msg;

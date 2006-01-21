@@ -29,6 +29,9 @@ WISH: support tex fonts
         - the non-terminfo visual bell is now done asynchronously, so
           continous ASCI BELs in one terminal do no longer monopolise the
           while urxvt[d] process.
+        - support some bsd makes (for the time being, gnu make is a safe bet).
+        - work around bugs in FreeBSDs gcc.
+        - implemented some *bsd fixes in configure.
 	- removed support for obsolete offix dnd protocol.
 
 7.1  Thu Jan 19 20:25:34 CET 2006

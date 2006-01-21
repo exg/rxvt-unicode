@@ -88,15 +88,15 @@ RXVTD_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)d$(EXEEXT)
 all: allbin
 
 rxvt: rxvt.o $(COMMON)
-	$(LINK) -o $@ $^ $(LIBS) $(XLIB) $(DLIB) @PERLLIB@
+	$(LINK) -o $@ rxvt.o $(COMMON) $(LIBS) $(XLIB) $(DLIB) @PERLLIB@
 #	$(LIBTOOL) --mode=link $(LINK) rxvt.o librxvt.la $(LIBS) $(XLIB) $(DLIB) -o $@
 
 rxvtd: rxvtd.o $(COMMON) $(COMMON_DAEMON)
-	$(LINK) -o $@ $^ $(LIBS) $(XLIB) $(DLIB) @PERLLIB@
+	$(LINK) -o $@ rxvtd.o $(COMMON) $(COMMON_DAEMON) $(LIBS) $(XLIB) $(DLIB) @PERLLIB@
 #	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o librxvt.la $(LIBS) $(XLIB) $(DLIB) -o $@
 
 rxvtc: rxvtc.o $(COMMON_DAEMON) fdpass.o
-	$(LINK) -o $@ $^ $(LIBS) $(DLIB)
+	$(LINK) -o $@ rxvtc.o $(COMMON_DAEMON) fdpass.o $(LIBS) $(DLIB)
 #	$(LIBTOOL) --mode=link $(LINK) rxvtc.o rxvtdaemon.o $(LIBS) $(DLIB) -o $@
 
 #librxvt.la: $(LIBOBJS)
