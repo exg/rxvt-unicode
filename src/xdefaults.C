@@ -321,9 +321,6 @@ static const char optionsstring[] = "options: "
 #if TINTING
                                     "tint,"
 #endif
-#if defined(UTMP_SUPPORT)
-                                    "utmp,"
-#endif
 #if defined(USE_XIM)
                                     "XIM,"
 #endif
