@@ -1,5 +1,8 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* clone device filename */
+#undef CLONE_DEVICE
+
 /* Define if you want 8 bit control sequences */
 #undef EIGHT_BIT_CONTROLS
 
@@ -45,17 +48,20 @@
 /* Define to 1 if you have the <cwchar> header file. */
 #undef HAVE_CWCHAR
 
+/* Define to 1 if you have /dev/ptym/clone */
+#undef HAVE_DEV_CLONE
+
+/* Define to 1 if you have /dev/ptc */
+#undef HAVE_DEV_PTC
+
+/* Define to 1 if you have /dev/ptmx */
+#undef HAVE_DEV_PTMX
+
 /* Define to 1 if you have the <fcntl.h> header file. */
 #undef HAVE_FCNTL_H
 
 /* Define to 1 if you have the `getpt' function. */
 #undef HAVE_GETPT
-
-/* Define to 1 if you have the `grantpt' function. */
-#undef HAVE_GRANTPT
-
-/* Define to 1 if you have the <grp.h> header file. */
-#undef HAVE_GRP_H
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
@@ -65,9 +71,6 @@
 
 /* Define to 1 if you have the <lastlog.h> header file. */
 #undef HAVE_LASTLOG_H
-
-/* Define to 1 if you have the <libc.h> header file. */
-#undef HAVE_LIBC_H
 
 /* Define to 1 if you have the <libutil.h> header file. */
 #undef HAVE_LIBUTIL_H
@@ -86,6 +89,9 @@
 
 /* Define to 1 if you have the `on_exit' function. */
 #undef HAVE_ON_EXIT
+
+/* Define to 1 if you have the `openpty' function. */
+#undef HAVE_OPENPTY
 
 /* Define to 1 if you have the `posix_openpt' function. */
 #undef HAVE_POSIX_OPENPT
@@ -183,9 +189,6 @@
 /* Define if sys/socket.h defines the necessary macros/functions for file
    handle passing */
 #undef HAVE_UNIX_FDPASS
-
-/* Define to 1 if you have the `unlockpt' function. */
-#undef HAVE_UNLOCKPT
 
 /* Define to 1 if you have the `unsetenv' function. */
 #undef HAVE_UNSETENV
@@ -301,39 +304,6 @@
 /* Define to use a 24 bit visual if the screen has 24 bit mode */
 #undef PREFER_24BIT
 
-/* Define for first char in devptyXX */
-#undef PTYCHAR1
-
-/* Define for second char in devptyXX */
-#undef PTYCHAR2
-
-/* Define for this pty type */
-#undef PTYS_ARE_CLONE
-
-/* Define for this pty type */
-#undef PTYS_ARE_GETPT
-
-/* Define for this pty type */
-#undef PTYS_ARE_NUMERIC
-
-/* Define for this pty type */
-#undef PTYS_ARE_OPENPTY
-
-/* Define for this pty type */
-#undef PTYS_ARE_POSIX
-
-/* Define for this pty type */
-#undef PTYS_ARE_PTC
-
-/* Define for this pty type */
-#undef PTYS_ARE_PTMX
-
-/* Define for this pty type */
-#undef PTYS_ARE_SEARCHED
-
-/* Define for this pty type */
-#undef PTYS_ARE__GETPTY
-
 /* Resource class */
 #undef RESCLASS
 
@@ -418,6 +388,9 @@
 
 /* Define if you want to represent unicode characters outside plane 0 */
 #undef UNICODE_3
+
+/* "" */
+#undef UNIX98_PTY
 
 /* Define if you want to have XIM (X Input Method) protocol support - required
    for multibyte characters input */
