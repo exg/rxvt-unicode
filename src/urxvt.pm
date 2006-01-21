@@ -172,11 +172,20 @@ move the text cursor to this position. It does so by generating as many
 cursor-left or cursor-right keypresses as required (the this only works
 for programs that correctly support wide characters).
 
-It only works when clicking into the same line (possibly extended over
-multiple rows) as the text cursor and on the primary screen, to reduce the
-risk of misinterpreting. The normal selection isn't disabled, so quick
-successive clicks might interfere with selection creation in harmless
-ways.
+To avoid too many false positives, this is only done when:
+
+=over 4
+
+=item - the mouse is on the same (multi-row-) line as the text cursor.
+
+=item - the primary screen is currently being displayed.
+
+=item - the text cursor is visible.
+
+=back
+
+The normal selection mechanism isn't disabled, so quick successive clicks
+might interfere with selection creation in harmless ways.
 
 =item tabbed
 
@@ -1377,6 +1386,10 @@ AltGr), the meta key (often Alt) and the num lock key, if applicable.
 =item $screen = $term->current_screen
 
 Returns the currently displayed screen (0 primary, 1 secondary).
+
+=item $cursor_is_hidden = $term->hidden_cursor
+
+Returns wether the cursor is currently hidden or not.
 
 =item $view_start = $term->view_start ([$newvalue])
 

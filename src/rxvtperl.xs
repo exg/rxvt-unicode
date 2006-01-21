@@ -1120,13 +1120,15 @@ rxvt_term::ModLevel3Mask ()
            ModMetaMask    = 1
            ModNumLockMask = 2
            current_screen = 3
+           hidden_cursor  = 4
 	CODE:
         switch (ix)
           {
-           case 0: RETVAL = THIS->ModLevel3Mask;  break;
-           case 1: RETVAL = THIS->ModMetaMask;    break;
-           case 2: RETVAL = THIS->ModNumLockMask; break;
-           case 3: RETVAL = THIS->current_screen; break;
+            case 0: RETVAL = THIS->ModLevel3Mask;  break;
+            case 1: RETVAL = THIS->ModMetaMask;    break;
+            case 2: RETVAL = THIS->ModNumLockMask; break;
+            case 3: RETVAL = THIS->current_screen; break;
+            case 4: RETVAL = THIS->hidden_cursor;  break;
           }
         OUTPUT:
         RETVAL
