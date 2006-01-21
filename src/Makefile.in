@@ -143,7 +143,7 @@ perlxsi.c: Makefile
 	$(PERL) -MExtUtils::Embed -e xsinit -- -std urxvt
 
 rxvtperl.C: rxvtperl.xs typemap
-	$(PERL) @PERLPRIVLIBEXP@/ExtUtils/xsubpp -C++ -typemap @PERLPRIVLIBEXP@/ExtUtils/typemap -typemap typemap -prototypes $< >$@
+	$(PERL) @PERLPRIVLIBEXP@/ExtUtils/xsubpp -C++ -typemap @PERLPRIVLIBEXP@/ExtUtils/typemap -typemap typemap -prototypes rxvtperl.xs >$@
 
 rxvtperl.o: rxvtperl.C perlxsi.c
 	$(COMPILE) @PERLFLAGS@ -DLIBDIR="\"$(libdir)/urxvt\"" -c $<
@@ -211,9 +211,6 @@ rxvtdaemon.o: rxvtdaemon.h rxvtutil.h
 rxvtfont.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 rxvtfont.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 rxvtfont.o: salloc.h rxvtperl.h hookinc.h rsinc.h table/linedraw.h
-rxvtperl.o: ../config.h iom.h iom_conf.h rxvtutil.h callback.h rxvt.h
-rxvtperl.o: rxvtlib.h optinc.h feature.h encoding.h rxvtfont.h rxvttoolkit.h
-rxvtperl.o: salloc.h rxvtperl.h hookinc.h rsinc.h keyboard.h perlxsi.c
 rxvttoolkit.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 rxvttoolkit.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
 rxvttoolkit.o: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h
@@ -301,9 +298,6 @@ rxvtdaemon.lo: rxvtdaemon.h rxvtutil.h
 rxvtfont.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 rxvtfont.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 rxvtfont.lo: salloc.h rxvtperl.h hookinc.h rsinc.h table/linedraw.h
-rxvtperl.lo: ../config.h iom.h iom_conf.h rxvtutil.h callback.h rxvt.h
-rxvtperl.lo: rxvtlib.h optinc.h feature.h encoding.h rxvtfont.h rxvttoolkit.h
-rxvtperl.lo: salloc.h rxvtperl.h hookinc.h rsinc.h keyboard.h perlxsi.c
 rxvttoolkit.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 rxvttoolkit.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h
 rxvttoolkit.lo: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h
