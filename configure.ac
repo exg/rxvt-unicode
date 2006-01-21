@@ -783,42 +783,7 @@ if test x$rxvt_cv_func_nl_langinfo = xyes; then
   AC_DEFINE(HAVE_NL_LANGINFO, 1, Define if nl_langinfo(CODESET) works)
 fi
 
-AC_CACHE_CHECK(for unix-compliant filehandle passing ability, rxvt_can_pass_fds,
-[AC_TRY_LINK([
-#include <cstddef> // broken bsds (is that redundant) need this
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/uio.h>
-],[
-{
-  msghdr msg;
-  iovec iov;
-  char buf [100];
-  char data = 0;
-
-  iov.iov_base = &data;
-  iov.iov_len  = 1;
-
-  msg.msg_iov        = &iov;
-  msg.msg_iovlen     = 1;
-  msg.msg_control    = buf;
-  msg.msg_controllen = sizeof buf;
-
-  cmsghdr *cmsg = CMSG_FIRSTHDR (&msg);
-  cmsg->cmsg_level = SOL_SOCKET;
-  cmsg->cmsg_type  = SCM_RIGHTS;
-  cmsg->cmsg_len   = 100;
-
-  *(int *)CMSG_DATA (cmsg) = 5;
-
-  return sendmsg (3, &msg, 0);
-}
-],[rxvt_can_pass_fds=yes],[rxvt_can_pass_fds=no])])
-if test x$rxvt_can_pass_fds = xyes; then
-   AC_DEFINE(HAVE_UNIX_FDPASS, 1, Define if sys/socket.h defines the necessary macros/functions for file handle passing)
-else
-   AC_MSG_ERROR([urxvt requires unix-compliant filehandle passing ability])
-fi
+SCM_RIGHTS_CHECK
 
 AC_CACHE_CHECK(for broken XIM callback, rxvt_broken_ximcb,
 [AC_COMPILE_IFELSE([
