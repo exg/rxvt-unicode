@@ -17,6 +17,8 @@ WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
 7.2
+	- now it is possible to insert the value of the CLIPBOARD selection
+	  with shift - mouse button 2
 	- removed support for obsolete offix dnd protocol.
         - added "tabbed" extension that provides a crude tabbed terminal.
         - added "readline" extension that allows cursor positioning
