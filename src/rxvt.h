@@ -160,7 +160,6 @@ int              rxvt_Str_escaped                 (char *str) NOTHROW;
 char          ** rxvt_splitcommastring            (const char *cs) NOTHROW;
 void             rxvt_freecommastring             (char **cs) NOTHROW;
 char           * rxvt_File_find                   (const char *file, const char *ext, const char *path) NOTHROW;
-void             rxvt_usleep                      (int usecs) NOTHROW;
 
 /////////////////////////////////////////////////////////////////////////////
 

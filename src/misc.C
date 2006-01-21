@@ -531,24 +531,4 @@ rxvt_File_find (const char *file, const char *ext, const char *path) NOTHROW
 }
 #endif
 
-// should not be used in interactive programs, for obvious reasons
-void rxvt_usleep (int usecs) NOTHROW
-{
-#if HAVE_NANOSLEEP
-  struct timespec ts;
-
-  ts.tv_sec = 0;
-  ts.tv_nsec = usecs * 1000;
-  nanosleep (&ts, NULL);
-#else                 
-  /* use select for timing */
-  struct timeval  tv;
-
-  tv.tv_sec = 0;
-  tv.tv_usec = usecs;
-  select (0, NULL, NULL, NULL, &tv);
-#endif                
-}
-
-/*----------------------- end-of-file (C source) -----------------------*/
 

@@ -1,8 +1,5 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* clone device filename */
-#undef CLONE_DEVICE
-
 /* Define if you want 8 bit control sequences */
 #undef EIGHT_BIT_CONTROLS
 
@@ -48,32 +45,11 @@
 /* Define to 1 if you have the <cwchar> header file. */
 #undef HAVE_CWCHAR
 
-/* Define to 1 if you have /dev/ptym/clone */
-#undef HAVE_DEV_CLONE
-
-/* Define to 1 if you have /dev/ptc */
-#undef HAVE_DEV_PTC
-
-/* Define to 1 if you have /dev/ptmx */
-#undef HAVE_DEV_PTMX
-
 /* Define to 1 if you have the <fcntl.h> header file. */
 #undef HAVE_FCNTL_H
 
-/* Define to 1 if you have the `getpt' function. */
-#undef HAVE_GETPT
-
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
-
-/* Define to 1 if you have the `isastream' function. */
-#undef HAVE_ISASTREAM
-
-/* Define to 1 if you have the <lastlog.h> header file. */
-#undef HAVE_LASTLOG_H
-
-/* Define to 1 if you have the <libutil.h> header file. */
-#undef HAVE_LIBUTIL_H
 
 /* Define to 1 if you have the `Xft' library (-lXft). */
 #undef HAVE_LIBXFT
@@ -89,18 +65,6 @@
 
 /* Define to 1 if you have the `on_exit' function. */
 #undef HAVE_ON_EXIT
-
-/* Define to 1 if you have the `openpty' function. */
-#undef HAVE_OPENPTY
-
-/* Define to 1 if you have the `posix_openpt' function. */
-#undef HAVE_POSIX_OPENPT
-
-/* Define to 1 if you have the <pty.h> header file. */
-#undef HAVE_PTY_H
-
-/* Define to 1 if you have the `revoke' function. */
-#undef HAVE_REVOKE
 
 /* Define if you have sched-h and sched_yield */
 #undef HAVE_SCHED_YIELD
@@ -135,18 +99,6 @@
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
-/* Define if utmp.h or lastlog.h has struct lastlog */
-#undef HAVE_STRUCT_LASTLOG
-
-/* Define if utmpx.h or lastlog.h has struct lastlogx */
-#undef HAVE_STRUCT_LASTLOGX
-
-/* Define if utmp.h has struct utmp */
-#undef HAVE_STRUCT_UTMP
-
-/* Define if utmpx.h has struct utmpx */
-#undef HAVE_STRUCT_UTMPX
-
 /* Define to 1 if you have the <sys/byteorder.h> header file. */
 #undef HAVE_SYS_BYTEORDER_H
 
@@ -161,9 +113,6 @@
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H
-
-/* Define to 1 if you have the <sys/stropts.h> header file. */
-#undef HAVE_SYS_STROPTS_H
 
 /* Define to 1 if you have the <sys/strredir.h> header file. */
 #undef HAVE_SYS_STRREDIR_H
@@ -180,45 +129,11 @@
 /* Define to 1 if you have the <termios.h> header file. */
 #undef HAVE_TERMIOS_H
 
-/* Define to 1 if you have the `ttyslot' function. */
-#undef HAVE_TTYSLOT
-
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Define if sys/socket.h defines the necessary macros/functions for file
-   handle passing */
-#undef HAVE_UNIX_FDPASS
-
 /* Define to 1 if you have the `unsetenv' function. */
 #undef HAVE_UNSETENV
-
-/* Define to 1 if you have the `updwtmp' function. */
-#undef HAVE_UPDWTMP
-
-/* Define to 1 if you have the `updwtmpx' function. */
-#undef HAVE_UPDWTMPX
-
-/* Define to 1 if you have the <util.h> header file. */
-#undef HAVE_UTIL_H
-
-/* Define to 1 if you have the <utmpx.h> header file. */
-#undef HAVE_UTMPX_H
-
-/* Define if struct utmpx contains ut_host */
-#undef HAVE_UTMPX_HOST
-
-/* Define if struct utmpx contains ut_session */
-#undef HAVE_UTMPX_SESSION
-
-/* Define to 1 if you have the <utmp.h> header file. */
-#undef HAVE_UTMP_H
-
-/* Define if struct utmp contains ut_host */
-#undef HAVE_UTMP_HOST
-
-/* Define if struct utmp contains ut_pid */
-#undef HAVE_UTMP_PID
 
 /* Define to 1 if you have the <wchar.h> header file. */
 #undef HAVE_WCHAR_H
@@ -235,14 +150,8 @@
 /* Define if setlocale (defined to Xsetlocale) works */
 #undef HAVE_XSETLOCALE
 
-/* Define to 1 if you have the `_getpty' function. */
-#undef HAVE__GETPTY
-
 /* Define if you want ISO 14755 extended support */
 #undef ISO_14755
-
-/* Define if lastlog is provided via a directory */
-#undef LASTLOG_IS_DIR
 
 /* Define if you want to have lastlog support when utmp/utmpx is enabled */
 #undef LASTLOG_SUPPORT
@@ -319,29 +228,11 @@
 /* Binary base name */
 #undef RXVTNAME
 
-/* Define location of lastlogx */
-#undef RXVT_LASTLOGX_FILE
-
-/* Define location of lastlog */
-#undef RXVT_LASTLOG_FILE
-
 /* Support Rxvt original style scrollbars */
 #undef RXVT_SCROLLBAR
 
 /* Set TERMINFO value to the value given by configure */
 #undef RXVT_TERMINFO
-
-/* Define location of utmpx */
-#undef RXVT_UTMPX_FILE
-
-/* Define location of utmp */
-#undef RXVT_UTMP_FILE
-
-/* Define location of wtmpx */
-#undef RXVT_WTMPX_FILE
-
-/* Define location of wtmp */
-#undef RXVT_WTMP_FILE
 
 /* Define to allow scrolling when the selection moves to the top or bottom of
    the screen */
@@ -388,9 +279,6 @@
 
 /* Define if you want to represent unicode characters outside plane 0 */
 #undef UNICODE_3
-
-/* "" */
-#undef UNIX98_PTY
 
 /* Define if you want to have XIM (X Input Method) protocol support - required
    for multibyte characters input */
