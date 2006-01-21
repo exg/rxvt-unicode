@@ -129,6 +129,29 @@ was started, while C<Enter> or C<Return> stay at the current position and
 additionally stores the first match in the current line into the primary
 selection.
 
+=item readline (enabled by default)
+
+A support package that tries to make editing with readline easier. At the
+moment, it reacts to clicking with the left mouse button by trying to
+move the text cursor to this position. It does so by generating as many
+cursor-left or cursor-right keypresses as required (the this only works
+for programs that correctly support wide characters).
+
+To avoid too many false positives, this is only done when:
+
+=over 4
+
+=item - the mouse is on the same (multi-row-) line as the text cursor.
+
+=item - the primary screen is currently being displayed.
+
+=item - the text cursor is visible.
+
+=back
+
+The normal selection mechanism isn't disabled, so quick successive clicks
+might interfere with selection creation in harmless ways.
+
 =item selection-autotransform
 
 This selection allows you to do automatic transforms on a selection
@@ -163,29 +186,6 @@ FILENAME line YYY."), you need a slightly more elaborate solution:
 The first line tells the selection code to treat the unchanging part of
 every error message as a selection pattern, and the second line transforms
 the message into vi commands to load the file.
-
-=item readline
-
-A support package that tries to make editing with readline easier. At the
-moment, it reacts to clicking with the left mouse button by trying to
-move the text cursor to this position. It does so by generating as many
-cursor-left or cursor-right keypresses as required (the this only works
-for programs that correctly support wide characters).
-
-To avoid too many false positives, this is only done when:
-
-=over 4
-
-=item - the mouse is on the same (multi-row-) line as the text cursor.
-
-=item - the primary screen is currently being displayed.
-
-=item - the text cursor is visible.
-
-=back
-
-The normal selection mechanism isn't disabled, so quick successive clicks
-might interfere with selection creation in harmless ways.
 
 =item tabbed
 
@@ -780,7 +780,7 @@ sub invoke {
 
       for (grep $_, map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2) {
          if ($_ eq "default") {
-            $ext_arg{$_} ||= [] for qw(selection option-popup selection-popup searchable-scrollback);
+            $ext_arg{$_} ||= [] for qw(selection option-popup selection-popup searchable-scrollback readline);
          } elsif (/^-(.*)$/) {
             delete $ext_arg{$1};
          } elsif (/^([^<]+)<(.*)>$/) {
