@@ -50,12 +50,12 @@ if test x$GCC = xyes && test x$GXX = xyes; then
       [AC_LANG_PROGRAM([struct test { }; void f() try { throw new test; } catch (...) { throw; }])],
       [AC_MSG_RESULT(ok)],
       [
-         AC_MSG_RESULT([no, make everything bigger and slower])
-         CXX="$save_CXX"
+         AC_MSG_RESULT([no, making everything bigger and slower])
          LIBS="$save_LIBS"
-         LINKER="$CXX"
+         LINKER="$save_CXX"
       ]
    )
+   CXX="$save_CXX"
 fi
 AC_SUBST(LINKER,[$LINKER])
 

@@ -3284,14 +3284,14 @@ sed 's/^/| /' conftest.$ac_ext >&5
 
          echo "$as_me:$LINENO: result: no, make everything bigger and slower" >&5
 echo "${ECHO_T}no, make everything bigger and slower" >&6
-         CXX="$save_CXX"
          LIBS="$save_LIBS"
-         LINKER="$CXX"
+         LINKER="$save_CXX"
 
 
 fi
 rm -f conftest.err conftest.$ac_objext \
       conftest$ac_exeext conftest.$ac_ext
+   CXX="$save_CXX"
 fi
 LINKER=$LINKER
 
