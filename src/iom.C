@@ -118,7 +118,7 @@ static struct sw0 : sig_watcher
             pw.erase_unordered (i);
           else if (w->pid == pid)
             {
-              w->stop ();
+              io_manager::unreg (*w);
               w->call (*w, status);
             }
          }

@@ -365,20 +365,13 @@
 /*
  * Provide termcap/terminfo bw support (wrap backwards on cub1)
  */
-#define TERMCAP_HAS_BW
+#define TERMCAP_HAS_BW 1
 
 /*
- * Some (older, e.g. fvwm 2.2.2) window managers need some time when
- * updating window positions. If transparency isn't working correctly
- * then you might try out this one.
- */
-/* #define WAIT_FOR_WM */
-
-/*
- * The duration of the visual bell flash in µs. The default of 20ms
+ * The duration of the visual bell flash in s. The default of 20ms
  * corresponds to the delay given in the terminfo flash code.
  */
-#define VISUAL_BELL_DURATION 20000
+#define VISUAL_BELL_DURATION .020
 
 #endif
 

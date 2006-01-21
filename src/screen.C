@@ -236,7 +236,7 @@ rxvt_term::scr_reset ()
       selection.op = SELECTION_CLEAR;
       selection.screen = PRIMARY;
       selection.clicks = 0;
-      rvideo = 0;
+      rvideo_state = rvideo_mode = false;
     }
   else
     {
@@ -1623,27 +1623,32 @@ rxvt_term::scr_set_tab (int mode) NOTHROW
  * XTERM_SEQ: Normal video : ESC [ ? 5 l
  */
 void
-rxvt_term::scr_rvideo_mode (int mode) NOTHROW
+rxvt_term::scr_rvideo_mode (bool on) NOTHROW
 {
-  XGCValues gcvalue;
+  rvideo_mode = on;
 
-  if (rvideo != mode)
+#ifndef NO_BELL
+  on ^= rvideo_bell;
+#endif
+
+  if (rvideo_state != on)
     {
-      rvideo = mode;
+      rvideo_state = on;
+
       ::swap (pix_colors[Color_fg], pix_colors[Color_bg]);
 #if XPM_BACKGROUND
       if (bgPixmap.pixmap == None)
 #endif
 #if TRANSPARENT
-        if (! OPTION (Opt_transparent) || am_transparent == 0)
+        if (!OPTION (Opt_transparent) || am_transparent == 0)
 #endif
-          XSetWindowBackground (display->display, vt,
-                               pix_colors[Color_bg]);
+          XSetWindowBackground (display->display, vt, pix_colors[Color_bg]);
 
+      XGCValues gcvalue;
       gcvalue.foreground = pix_colors[Color_fg];
       gcvalue.background = pix_colors[Color_bg];
-      XChangeGC (display->display, gc, GCBackground | GCForeground,
-                &gcvalue);
+      XChangeGC (display->display, gc, GCBackground | GCForeground, &gcvalue);
+
       scr_clear ();
       scr_touch (true);
     }
@@ -1853,6 +1858,15 @@ rxvt_term::scr_changeview (int new_view_start) NOTHROW
   return true;
 }
 
+#ifndef NO_BELL
+void
+rxvt_term::bell_cb (time_watcher &w)
+{
+  rvideo_bell = false;
+  scr_rvideo_mode (rvideo_mode);
+}
+#endif
+
 /* ------------------------------------------------------------------------- */
 void
 rxvt_term::scr_bell () NOTHROW
@@ -1868,10 +1882,11 @@ rxvt_term::scr_bell () NOTHROW
 
   if (OPTION (Opt_visualBell))
     {
-      scr_rvideo_mode (!rvideo); /* refresh also done */
+      rvideo_bell = true;
+      scr_rvideo_mode (rvideo_mode);
       display->flush ();
-      rxvt_usleep (VISUAL_BELL_DURATION);
-      scr_rvideo_mode (!rvideo); /* refresh also done */
+
+      bell_ev.start (NOW + VISUAL_BELL_DURATION);
     }
   else
     XBell (display->display, 0);

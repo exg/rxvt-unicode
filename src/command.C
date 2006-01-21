@@ -2631,11 +2631,6 @@ rxvt_term::check_our_parents ()
         }
       else
         {
-#if WAIT_FOR_WM
-          /* wait (an arbitrary period) for the WM to do its thing
-           * needed for fvwm2.2.2 (and before?) */
-          sleep (1);
-#endif
           for (n = 0; n < (unsigned int)i; n++)
             {
               XSetWindowBackgroundPixmap (disp, parent[n], ParentRelative);

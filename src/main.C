@@ -172,6 +172,9 @@ rxvt_term::rxvt_term ()
 #ifdef USE_XIM
     im_ev (this, &rxvt_term::im_cb),
 #endif
+#ifndef NO_BELL     
+    bell_ev (this, &rxvt_term::bell_cb),
+#endif
     termwin_ev (this, &rxvt_term::x_cb),
     vt_ev (this, &rxvt_term::x_cb),
     child_ev (this, &rxvt_term::child_cb),

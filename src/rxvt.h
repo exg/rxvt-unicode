@@ -1022,7 +1022,10 @@ struct rxvt_term : zero_initialized, rxvt_vars {
                   selection_wait,
                   selection_type;
 /* ---------- */
-  short           rvideo;
+  bool            rvideo_state, rvideo_mode;
+#ifndef NO_BELL
+  bool            rvideo_bell;
+#endif
   int             num_scr;              /* screen: number lines scrolled */
   int             prev_ncol,            /* screen: previous number of columns */
                   prev_nrow;            /* screen: previous number of rows */
@@ -1197,9 +1200,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void check_cb (check_watcher &w); check_watcher check_ev;
   void destroy_cb (time_watcher &w); time_watcher destroy_ev;
   void flush_cb (time_watcher &w); time_watcher flush_ev;
-
   void pty_cb (io_watcher &w, short revents); io_watcher pty_ev;
-
   void incr_cb (time_watcher &w) NOTHROW; time_watcher incr_ev;
 
 #ifdef CURSOR_BLINK
@@ -1207,6 +1208,9 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 #endif
 #ifdef TEXT_BLINK
   void text_blink_cb (time_watcher &w); time_watcher text_blink_ev;
+#endif
+#ifndef NO_BELL     
+  void bell_cb (time_watcher &w); time_watcher bell_ev;
 #endif
 
 #ifndef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
@@ -1449,7 +1453,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void scr_relative_origin (int mode) NOTHROW;
   void scr_insert_mode (int mode) NOTHROW;
   void scr_set_tab (int mode) NOTHROW;
-  void scr_rvideo_mode (int mode) NOTHROW;
+  void scr_rvideo_mode (bool on) NOTHROW;
   void scr_report_position () NOTHROW;
   void set_font_style () NOTHROW;
   void scr_charset_choose (int set) NOTHROW;

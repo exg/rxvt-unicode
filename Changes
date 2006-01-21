@@ -26,6 +26,9 @@ WISH: support tex fonts
 	  with shift - mouse button 2
         - fixed the automove-background extension to ignore coordinates
           in non-synthetic events.
+        - the non-terminfo visual bell is now done asynchronously, so
+          continous ASCI BELs in one terminal do no longer monopolise the
+          while urxvt[d] process.
 	- removed support for obsolete offix dnd protocol.
 
 7.1  Thu Jan 19 20:25:34 CET 2006
