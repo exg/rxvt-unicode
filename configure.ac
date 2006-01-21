@@ -842,8 +842,17 @@ dnl# --------------------------------------------------------------------------
 dnl# now add and remove other stuff
 dnl# --------------------------------------------------------------------------
 if test x$support_xft = xyes; then
-  LIBS="$LIBS `pkg-config xft --libs`"
-  CPPFLAGS="$CPPFLAGS `pkg-config xft --cflags`"
+  AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+  AC_PATH_PROG(XFT_CONFIG, xft-config, no)
+  if test $PKG_CONFIG != no && $PKG_CONFIG --exists xft; then
+    LIBS="$LIBS `$PKG_CONFIG xft --libs`"
+    CPPFLAGS="$CPPFLAGS `$PKG_CONFIG xft --cflags`"
+  else
+    if test $XFT_CONFIG != no; then
+      LIBS="$LIBS `$XFT_CONFIG --libs`"
+      CPPFLAGS="$CPPFLAGS `$XFT_CONFIG --cflags`"
+    fi
+  fi
 
   AC_CHECK_HEADERS(X11/Xft/Xft.h,,[support_xft=no])
   AC_CHECK_LIB(Xft,XftDrawString32,,[support_xft=no])
