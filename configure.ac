@@ -533,17 +533,17 @@ AC_CHECK_HEADERS( \
 	sys/select.h \
 	sys/sockio.h \
 	sys/strredir.h \
-        sys/stropts.h \
+	sys/stropts.h \
 	sys/time.h \
 	utmp.h \
 	utmpx.h \
-        stdint.h \
-        pty.h \
-        util.h \
-        libutil.h \
-        wchar.h \
-        cwchar \
-        clocale \
+	stdint.h \
+	pty.h \
+	util.h \
+	libutil.h \
+	wchar.h \
+	cwchar \
+	clocale \
 )
 
 AC_HEADER_TIME
