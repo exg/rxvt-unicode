@@ -19,6 +19,8 @@ WISH: just for fun, do shade and tint with XRender.
 WISH: support tex fonts
 
 7.2
+        - bugfix: the selection speed in in 7.1 unfortunately caused
+          non-ascii characters to enlarge/move the selection.
         - added "tabbed" extension that provides a crude tabbed terminal.
         - added "readline" extension that allows cursor positioning
           via mouse clicks.

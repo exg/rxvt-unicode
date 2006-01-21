@@ -69,26 +69,35 @@ sub on_sel_extend {
 
    my @matches;
 
-   # not doing matches in unicode mode helps speed
-   # enourmously here. working in utf-8 should be
-   # equivalent due to the magic of utf-8 encoding.
-   utf8::encode $text;
-   study $text; # _really_ helps, too :)
+   if ($markofs < $line->l) {
+      # convert markofs form character to UTF-8 offset space
+      {
+         my $prefix = substr $text, 0, $markofs;
+         utf8::encode $prefix;
+         $markofs = length $prefix;
+      }
 
-   for my $regex (@mark_patterns, @{ $self->{patterns} }) {
-      while ($text =~ /$regex/g) {
-         if ($-[1] <= $markofs and $markofs <= $+[1]) {
-            my $ofs = $-[1];
-            my $match = $1;
+      # not doing matches in unicode mode helps speed
+      # enourmously here. working in utf-8 should be
+      # equivalent due to the magic of utf-8 encoding.
+      utf8::encode $text;
+      study $text; # _really_ helps, too :)
 
-            for my $regex (@simplify_patterns) {
-               if ($match =~ $regex) {
-                  $match = $1;
-                  $ofs += $-[1];
+      for my $regex (@mark_patterns, @{ $self->{patterns} }) {
+         while ($text =~ /$regex/g) {
+            if ($-[1] <= $markofs and $markofs <= $+[1]) {
+               my $ofs = $-[1];
+               my $match = $1;
+
+               for my $regex (@simplify_patterns) {
+                  if ($match =~ $regex) {
+                     $match = $1;
+                     $ofs += $-[1];
+                  }
                }
-            }
 
-            push @matches, [$ofs, length $match];
+               push @matches, [$ofs, length $match];
+            }
          }
       }
    }
@@ -100,6 +109,18 @@ sub on_sel_extend {
       my ($ofs, $len) = @$_;
 
       next if $len <= $curlen;
+
+      # convert back from UTF-8 offset space to character space
+      {
+         my $length = substr $text, $ofs, $len;
+         utf8::decode $length;
+         $len = length $length;
+      }
+      {
+         my $prefix = substr $text, 0, $ofs;
+         utf8::decode $prefix;
+         $ofs = length $prefix;
+      }
 
       $self->selection_beg ($line->coord_of ($ofs));
       $self->selection_end ($line->coord_of ($ofs + $len));
