@@ -715,7 +715,6 @@ AC_CHECK_FUNCS( \
 	setresuid \
 	setreuid \
 	on_exit \
-	nanosleep \
 )
 
 UTMP_CHECK
