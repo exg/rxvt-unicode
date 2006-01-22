@@ -1259,10 +1259,10 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void window_calc (unsigned int newwidth, unsigned int newheight);
 
 #if USE_XIM
-  rxvt_xim       *input_method;
-  XIC             Input_Context;
-  XIMStyle        input_style;
-  XPoint          spot; // most recently sent spot position
+  rxvt_xim *input_method;
+  XIC      Input_Context;
+  XIMStyle input_style;
+  XPoint   spot; // most recently sent spot position
 
   void im_destroy ();
   void im_cb (); im_watcher im_ev;

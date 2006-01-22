@@ -885,7 +885,6 @@ Optional Features:
   --enable-perl           enable embedded perl interpreter
   --enable-plain-scroll   enable plain style scrollbar
   --enable-xim            XIM (X Input Method) protocol support
-  --enable-ttygid         enable tty setting to group named "tty"
   --disable-backspace-key disable handling of the backspace key
   --disable-delete-key    disable handling of the delete key
   --disable-resources     disable all resource checking
@@ -4334,18 +4333,6 @@ if test "${enable_xim+set}" = set; then
   enableval="$enable_xim"
   if test x$enableval = xyes -o x$enableval = xno; then
     support_xim=$enableval
-  fi
-fi;
-
-# Check whether --enable-ttygid or --disable-ttygid was given.
-if test "${enable_ttygid+set}" = set; then
-  enableval="$enable_ttygid"
-  if test x$enableval = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define TTY_GID_SUPPORT 1
-_ACEOF
-
   fi
 fi;
 
@@ -10073,7 +10060,6 @@ _ACEOF
 
 
 
-
 for ac_func in \
 	unsetenv \
 	setutent \
@@ -10081,7 +10067,6 @@ for ac_func in \
 	setresuid \
 	setreuid \
 	on_exit \
-	nanosleep \
 
 do
 as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
@@ -12721,6 +12706,76 @@ done
 fi
 
 
+
+echo "$as_me:$LINENO: checking for tty group" >&5
+echo $ECHO_N "checking for tty group... $ECHO_C" >&6
+if test "${tty_group+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test "$cross_compiling" = yes; then
+  tty_group=no
+else
+  cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <grp.h>
+
+main()
+{
+  struct stat st;
+  struct group *gr;
+  char *tty;
+  gr = getgrnam("tty");
+  tty = ttyname(0);
+  if (gr != 0
+      && tty != 0
+      && (stat(tty, &st)) == 0
+      && st.st_gid == gr->gr_gid)
+    return 0;
+  else
+    return 1;
+}
+_ACEOF
+rm -f conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && { ac_try='./conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  tty_group=yes
+else
+  echo "$as_me: program exited with status $ac_status" >&5
+echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+( exit $ac_status )
+tty_group=no
+fi
+rm -f core *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+fi
+fi
+echo "$as_me:$LINENO: result: $tty_group" >&5
+echo "${ECHO_T}$tty_group" >&6
+if test x$tty_group = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define TTY_GID_SUPPORT 1
+_ACEOF
+
+fi
+
 if test x$support_xft = xyes; then
   # Extract the first word of "pkg-config", so it can be a program name with args.
 set dummy pkg-config; ac_word=$2
@@ -12762,7 +12817,11 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-  # Extract the first word of "xft-config", so it can be a program name with args.
+  if test $PKG_CONFIG != no && $PKG_CONFIG --exists xft; then
+    LIBS="$LIBS `$PKG_CONFIG xft --libs`"
+    CPPFLAGS="$CPPFLAGS `$PKG_CONFIG xft --cflags`"
+  else
+    # Extract the first word of "xft-config", so it can be a program name with args.
 set dummy xft-config; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
@@ -12802,10 +12861,6 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-  if test $PKG_CONFIG != no && $PKG_CONFIG --exists xft; then
-    LIBS="$LIBS `$PKG_CONFIG xft --libs`"
-    CPPFLAGS="$CPPFLAGS `$PKG_CONFIG xft --cflags`"
-  else
     if test $XFT_CONFIG != no; then
       LIBS="$LIBS `$XFT_CONFIG --libs`"
       CPPFLAGS="$CPPFLAGS `$XFT_CONFIG --cflags`"
