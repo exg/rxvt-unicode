@@ -17,6 +17,7 @@ WISH: just for fun, do shade and tint with XRender.
 DUMB: support tex fonts
 
 7.2
+TODO: alsamixer/wild resize => secondary leaks into primary scrollback?
         - bugfix: urxvt (not urxvtd) did not correctly handle multiple
           environments necessary, which resulted in segfaults within
           getenv (reproducable: urxvt -fn 9x15, open a menu once,
