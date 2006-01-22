@@ -1,4 +1,7 @@
-/*--------------------------------*-C-*---------------------------------*
+// This file is part of libptytty. Do not make local modifications.
+// http://software.schmorp.de/pkg/libptytty
+
+/*----------------------------------------------------------------------*
  * File:	ptytty.C
  *----------------------------------------------------------------------*
  *
@@ -21,7 +24,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *---------------------------------------------------------------------*/
 
-#include "../config.h"		/* NECESSARY */
+#include "../config.h"
 
 #include "fdpass.h"
 #include "ptytty.h"

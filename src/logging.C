@@ -1,4 +1,7 @@
-/*--------------------------------*-C-*---------------------------------*
+// This file is part of libptytty. Do not make local modifications.
+// http://software.schmorp.de/pkg/libptytty
+
+/*----------------------------------------------------------------------*
  * File:	logging.C
  *----------------------------------------------------------------------*
  *
@@ -447,14 +450,11 @@ update_lastlog (const char *fname, const char *pty, const char *host)
 # endif				/* HAVE_STRUCT_LASTLOG */
 }
 #endif				/* LASTLOG_SUPPORT */
-/* ------------------------------------------------------------------------- */
 
 #else
-
 void
 ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
 {
 }
-
 #endif
 

@@ -1,3 +1,6 @@
+dnl this file is part of libptytty, do not make local modifications
+dnl http://software.schmorp.de/pkg/libptytty
+
 AC_DEFUN([PTY_CHECK],
 [
 AC_CHECK_HEADERS( \

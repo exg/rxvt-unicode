@@ -1,8 +1,10 @@
+// This file is part of libptytty. Do not make local modifications.
+// http://software.schmorp.de/pkg/libptytty
+
 #ifndef PTYTTY_H
 #define PTYTTY_H
 
 #include "libptytty.h"
-
 #include "ptytty_conf.h"
 
 #if defined(HAVE__GETPTY) || defined(HAVE_OPENPTY) || defined(UNIX98_PTY)
