@@ -210,11 +210,13 @@ for programs that correctly support wide characters).
 <p>To avoid too many false positives, this is only done when:</p>
 </dd>
 <dl>
-<dt><strong><a name="item_same">- the mouse is on the same (multi-row-) line as the text cursor.</a></strong><br />
+<dt><strong><a name="item__2d_the_tty_is_in_icanon_state_2e">- the tty is in ICANON state.</a></strong><br />
+</dt>
+<dt><strong><a name="item__2d_the_text_cursor_is_visible_2e">- the text cursor is visible.</a></strong><br />
 </dt>
 <dt><strong><a name="item__2d_the_primary_screen_is_currently_being_displaye">- the primary screen is currently being displayed.</a></strong><br />
 </dt>
-<dt><strong><a name="item__2d_the_text_cursor_is_visible_2e">- the text cursor is visible.</a></strong><br />
+<dt><strong><a name="item_same">- the mouse is on the same (multi-row-) line as the text cursor.</a></strong><br />
 </dt>
 </dl>
 <p>The normal selection mechanism isn't disabled, so quick successive clicks
@@ -1199,6 +1201,13 @@ description of <a href="#item_events"><code>urxvt::timer-&gt;events</code></a>. 
 the previous value.
 </dd>
 <p></p>
+<dt><strong><a name="item_pty_fd">$fd = $term-&gt;pty_fd</a></strong><br />
+</dt>
+<dd>
+Returns the master file descriptor for the pty in use, or <code>-1</code> if no pty
+is used.
+</dd>
+<p></p>
 <dt><strong><a name="item_parent">$windowid = $term-&gt;parent</a></strong><br />
 </dt>
 <dd>
@@ -1327,8 +1336,8 @@ to replace only parts of a line. The font index in the rendition will
 automatically be updated.</p>
 </dd>
 <dd>
-<p><a href="#item__24text"><code>$text</code></a> is in a special encoding: tabs and wide characters that use
-more than one cell when displayed are padded with <code>$urxvt::NOCHAR</code>
+<p><a href="#item__24text"><code>$text</code></a> is in a special encoding: tabs and wide characters that use more
+than one cell when displayed are padded with <code>$urxvt::NOCHAR</code> (chr 65535)
 characters. Characters with combining characters and other characters that
 do not fit into the normal tetx encoding will be replaced with characters
 in the private use area.</p>

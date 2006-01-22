@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-21" "7.2" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-22" "7.2" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -277,13 +277,15 @@ for programs that correctly support wide characters).
 .Sp
 To avoid too many false positives, this is only done when:
 .RS 4
-.IP "\- the mouse is on the same (multi\-row\-) line as the text cursor." 4
-.IX Item "- the mouse is on the same (multi-row-) line as the text cursor."
+.IP "\- the tty is in \s-1ICANON\s0 state." 4
+.IX Item "- the tty is in ICANON state."
 .PD 0
-.IP "\- the primary screen is currently being displayed." 4
-.IX Item "- the primary screen is currently being displayed."
 .IP "\- the text cursor is visible." 4
 .IX Item "- the text cursor is visible."
+.IP "\- the primary screen is currently being displayed." 4
+.IX Item "- the primary screen is currently being displayed."
+.IP "\- the mouse is on the same (multi\-row\-) line as the text cursor." 4
+.IX Item "- the mouse is on the same (multi-row-) line as the text cursor."
 .RE
 .RS 4
 .PD
@@ -1047,6 +1049,11 @@ Replaces the event mask of the pty watcher by the given event mask. Can
 be used to suppress input and output handling to the pty/tty. See the
 description of \f(CW\*(C`urxvt::timer\->events\*(C'\fR. Make sure to always restore
 the previous value.
+.ie n .IP "$fd = $term\->pty_fd" 4
+.el .IP "$fd = \f(CW$term\fR\->pty_fd" 4
+.IX Item "$fd = $term->pty_fd"
+Returns the master file descriptor for the pty in use, or \f(CW\*(C`\-1\*(C'\fR if no pty
+is used.
 .ie n .IP "$windowid = $term\->parent" 4
 .el .IP "$windowid = \f(CW$term\fR\->parent" 4
 .IX Item "$windowid = $term->parent"
@@ -1163,8 +1170,8 @@ line, starting at column \f(CW$start_col\fR (default \f(CW0\fR), which is useful
 to replace only parts of a line. The font index in the rendition will
 automatically be updated.
 .Sp
-\&\f(CW$text\fR is in a special encoding: tabs and wide characters that use
-more than one cell when displayed are padded with \f(CW$urxvt::NOCHAR\fR
+\&\f(CW$text\fR is in a special encoding: tabs and wide characters that use more
+than one cell when displayed are padded with \f(CW$urxvt::NOCHAR\fR (chr 65535)
 characters. Characters with combining characters and other characters that
 do not fit into the normal tetx encoding will be replaced with characters
 in the private use area.

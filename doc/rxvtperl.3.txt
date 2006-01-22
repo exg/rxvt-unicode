@@ -124,9 +124,10 @@ PREPACKAGED EXTENSIONS
 
         To avoid too many false positives, this is only done when:
 
-        - the mouse is on the same (multi-row-) line as the text cursor.
-        - the primary screen is currently being displayed.
+        - the tty is in ICANON state.
         - the text cursor is visible.
+        - the primary screen is currently being displayed.
+        - the mouse is on the same (multi-row-) line as the text cursor.
 
         The normal selection mechanism isn't disabled, so quick successive
         clicks might interfere with selection creation in harmless ways.
@@ -799,6 +800,10 @@ API DOCUMENTATION
         See the description of "urxvt::timer->events". Make sure to always
         restore the previous value.
 
+    $fd = $term->pty_fd
+        Returns the master file descriptor for the pty in use, or -1 if no
+        pty is used.
+
     $windowid = $term->parent
         Return the window id of the toplevel window.
 
@@ -874,9 +879,9 @@ API DOCUMENTATION
 
         $text is in a special encoding: tabs and wide characters that use
         more than one cell when displayed are padded with $urxvt::NOCHAR
-        characters. Characters with combining characters and other
-        characters that do not fit into the normal tetx encoding will be
-        replaced with characters in the private use area.
+        (chr 65535) characters. Characters with combining characters and
+        other characters that do not fit into the normal tetx encoding will
+        be replaced with characters in the private use area.
 
         You have to obey this encoding when changing text. The advantage is
         that "substr" and similar functions work on screen cells and not on
