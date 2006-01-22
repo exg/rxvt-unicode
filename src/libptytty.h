@@ -25,7 +25,7 @@ struct ptytty {
   static void drop_privileges ();
   static void use_helper ();
 
-  static int send_fd (int socket, int fd);
+  static bool send_fd (int socket, int fd);
   static int recv_fd (int socket);
 
 protected:

@@ -112,7 +112,7 @@ main (int argc, const char *const *argv)
       fprintf (stderr, "%s", (const char *)tok);
     else if (!strcmp (tok, "GETFD") && c.recv (cint))
       {
-        if (ptytty::send_fd (c.fd, cint) < 0)
+        if (!ptytty::send_fd (c.fd, cint))
           {
             fprintf (stderr, "unable to send fd %d: ", cint); perror (0);
             exit (EXIT_FAILURE);

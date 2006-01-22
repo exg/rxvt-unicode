@@ -35,7 +35,7 @@
 # define CMSG_LEN(len) (sizeof (cmsghdr) + len)
 #endif
 
-int
+bool
 ptytty::send_fd (int socket, int fd)
 {
   msghdr msg;
@@ -62,7 +62,7 @@ ptytty::send_fd (int socket, int fd)
 
   msg.msg_controllen = cmsg->cmsg_len;
 
-  return sendmsg (socket, &msg, 0);
+  return sendmsg (socket, &msg, 0) >= 0;
 }
 
 int
