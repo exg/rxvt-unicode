@@ -49,6 +49,8 @@
 
 #endif
 
+#define fatal(msg) do { write (2, msg, sizeof (msg) - 1); _exit (255); } while (0)
+
 struct ptytty_unix : ptytty
 {
   char *name;

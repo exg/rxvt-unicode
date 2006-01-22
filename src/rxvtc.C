@@ -21,11 +21,6 @@
  *----------------------------------------------------------------------*/
 
 #include "../config.h"
-#include "rxvtdaemon.h"
-#include "fdpass.h"
-
-#include "rxvt.h"
-
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -34,6 +29,11 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+
+#include "rxvtdaemon.h"
+#include "libptytty.h"
+
+#include "rxvt.h"
 
 struct client : rxvt_connection {
   client ();
@@ -112,7 +112,7 @@ main (int argc, const char *const *argv)
       fprintf (stderr, "%s", (const char *)tok);
     else if (!strcmp (tok, "GETFD") && c.recv (cint))
       {
-        if (rxvt_send_fd (c.fd, cint) < 0)
+        if (ptytty::send_fd (c.fd, cint) < 0)
           {
             fprintf (stderr, "unable to send fd %d: ", cint); perror (0);
             exit (EXIT_FAILURE);

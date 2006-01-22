@@ -36,6 +36,14 @@
 
 #include "../config.h"
 
+#include <cstdio>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/fcntl.h>
+#include <unistd.h>
+#include <time.h>
+
 #include "ptytty.h"
 
 #if UTMP_SUPPORT
@@ -89,7 +97,7 @@ ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
     sprintf (ut_id, "vt%02x", (i & 0xff));	/* sysv naming */
   else if (strncmp (pty, "pty", 3) && strncmp (pty, "tty", 3))
     {
-      warn ("can't parse tty name \"%s\", not adding utmp entry.\n", pty);
+      ptytty_warn ("can't parse tty name \"%s\", not adding utmp entry.\n", pty);
       return;
     }
 #endif
@@ -419,7 +427,7 @@ update_lastlog (const char *fname, const char *pty, const char *host)
   pwent = getpwuid (getuid ());
   if (!pwent)
     {
-      warn ("no entry in password file, not updating lastlog.\n");
+      ptytty_warn ("no entry in password file, not updating lastlog.\n");
       return;
     }
 

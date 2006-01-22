@@ -476,7 +476,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
     scrollBar.setIdle ();    /* set existence for size calculations */
 #endif
 
-  pty = ptytty_new ();
+  pty = ptytty::create ();
 
   create_windows (argc, argv);
 
@@ -552,36 +552,7 @@ char **rxvt_environ; // startup environment
 void
 rxvt_init ()
 {
-  uid_t uid = getuid ();
-  gid_t gid = getgid ();
-      
-  // before doing anything else, check for setuid/setgid operation,
-  // start the helper process and drop privileges
-  if (uid != geteuid ()
-      || gid != getegid ())
-    {
-#if PTYTTY_HELPER
-      ptytty_server ();
-#else
-      rxvt_warn ("running setuid/setgid without pty helper compiled in, continuing unprivileged.\n");
-#endif
-
-      // drop privileges
-#if HAVE_SETRESUID
-      setresgid (gid, gid, gid);
-      setresuid (uid, uid, uid);
-#elif HAVE_SETREUID
-      setregid (gid, gid);
-      setreuid (uid, uid);
-#elif HAVE_SETUID
-      setgid (gid);
-      setuid (uid);
-#endif
-
-      if (uid != geteuid ()
-          || gid != getegid ())
-        rxvt_fatal ("unable to drop privileges, aborting.\n");
-    }
+  ptytty::init ();
 
   rxvt_environ = environ;
 

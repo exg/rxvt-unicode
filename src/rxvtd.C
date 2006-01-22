@@ -21,11 +21,6 @@
  *----------------------------------------------------------------------*/
 
 #include "../config.h"
-#include "rxvt.h"
-#include "rxvtdaemon.h"
-#include "fdpass.h"
-#include "iom.h"
-
 #include <cstdio>
 #include <cstdlib>
 #include <cstdarg>
@@ -40,7 +35,10 @@
 
 #include <cerrno>
 
-extern char **environ;
+#include "rxvt.h"
+#include "rxvtdaemon.h"
+#include "libptytty.h"
+#include "iom.h"
 
 struct server : rxvt_connection {
   log_callback log_cb;
@@ -122,7 +120,7 @@ int server::getfd (int remote_fd)
 {
   send ("GETFD");
   send (remote_fd);
-  return rxvt_recv_fd (fd);
+  return ptytty::recv_fd (fd);
 }
 
 void server::log_msg (const char *msg)
