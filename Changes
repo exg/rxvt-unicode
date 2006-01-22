@@ -10,8 +10,6 @@ TODO: read property sequence is broken with respect to utf-8 etc.
 TODO: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 TODO: rxvt -name urxvt-girly /// leave pixel droppings
 TODO: distributed clipboard example
-TODO: http://www.issociate.de/board/post/274416/HOWTO:_Mouse_editing_with_readline_in_xterm.html
-TODO: http://groups.google.com/group/comp.unix.shell/msg/e538d04a118174d3
 WISH: anyevent mouse notification / manage MotionMask better.
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an overlay...
 WISH: just for fun, do shade and tint with XRender.
