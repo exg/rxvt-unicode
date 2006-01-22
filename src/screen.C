@@ -175,8 +175,11 @@ rxvt_term::scr_reset ()
   if (ncol == prev_ncol && nrow == prev_nrow)
     return;
 
+  if (current_screen != PRIMARY)
+    scr_swap_screen ();
+
   // we need at least two lines for wrapping to work correctly
-  if (nrow + saveLines < 2)
+  while (nrow + saveLines < 2)
     {
       //TODO//FIXME
       saveLines++;
@@ -197,7 +200,7 @@ rxvt_term::scr_reset ()
       /*
        * first time called so just malloc everything: don't rely on realloc
        */
-      top_row = 0;       /* no saved lines */
+      top_row    = 0;
       term_start = 0;
 
       talloc = new rxvt_salloc (ncol * sizeof (text_t));
@@ -282,7 +285,7 @@ rxvt_term::scr_reset ()
 
       if (top_row)
         {
-          // re-wrap lines, this is rather ugly, possibly because I am too dumb
+          // Re-wrap lines. This is rather ugly, possibly because I am too dumb
           // to come up with a lean and mean algorithm.
 
           row_col_t ocur = screen.cur;
@@ -349,11 +352,6 @@ rxvt_term::scr_reset ()
 
                       int len = min (min (prev_ncol - pcol, ncol - qcol), llen - lofs);
 
-#if DEBUG_STRICT
-                      assert (len);
-                      assert (pline.t);
-#endif
-
                       memcpy (qline->t + qcol, pline.t + pcol, len * sizeof (text_t));
                       memcpy (qline->r + qcol, pline.r + pcol, len * sizeof (rend_t));
 
@@ -403,8 +401,7 @@ rxvt_term::scr_reset ()
       clamp_it (screen.cur.row, 0, nrow - 1);
       clamp_it (screen.cur.col, 0, ncol - 1);
 
-      if (tabs)
-        free (tabs);
+      free (tabs);
     }
 
   CLEAR_ALL_SELECTION ();
@@ -416,6 +413,9 @@ rxvt_term::scr_reset ()
 
   for (int col = ncol; col--; )
     tabs [col] = col % TABSIZE == 0;
+
+  if (current_screen != PRIMARY)
+    scr_swap_screen ();
 
   tt_winch ();
 
@@ -429,15 +429,18 @@ rxvt_term::scr_reset ()
 void
 rxvt_term::scr_release () NOTHROW
 {
-  delete talloc; talloc = 0;
-  delete ralloc; ralloc = 0;
+  if (row_buf)
+    {
+      delete talloc; talloc = 0;
+      delete ralloc; ralloc = 0;
 
-  free (row_buf);
-  free (swap_buf);
-  free (drawn_buf);
-  free (tabs);
+      free (row_buf);
+      free (swap_buf);
+      free (drawn_buf);
+      free (tabs);
 
-  row_buf = 0; // signal that we freed all the arrays
+      row_buf = 0; // signal that we freed all the arrays
+    }
 }
 
 /* ------------------------------------------------------------------------- */
@@ -445,7 +448,7 @@ rxvt_term::scr_release () NOTHROW
  * Hard reset
  */
 void
-rxvt_term::scr_poweron () NOTHROW
+rxvt_term::scr_poweron ()
 {
   scr_release ();
   prev_nrow = prev_ncol = 0;
@@ -506,50 +509,56 @@ rxvt_term::scr_cursor (cursor_mode mode) NOTHROW
 #endif
 }
 
+void
+rxvt_term::scr_swap_screen ()
+{
+  if (!OPTION (Opt_secondaryScreen))
+    return;
+
+  for (int i = prev_nrow; i--; )
+    ::swap (ROW(i), swap_buf [i]);
+
+  ::swap (screen.cur, swap.cur);
+
+  screen.cur.row = clamp (screen.cur.row, 0, prev_nrow - 1);
+  screen.cur.col = clamp (screen.cur.col, 0, prev_ncol - 1);
+}
+
 /* ------------------------------------------------------------------------- */
 /*
  * Swap between primary and secondary screens
  * XTERM_SEQ: Primary screen  : ESC [ ? 4 7 h
  * XTERM_SEQ: Secondary screen: ESC [ ? 4 7 l
  */
-int
-rxvt_term::scr_change_screen (int scrn) NOTHROW
+void
+rxvt_term::scr_change_screen (int scrn)
 {
+  if (scrn == current_screen)
+    return;
+
   want_refresh = 1;
   view_start = 0;
-
-  if (current_screen == scrn)
-    return scrn;
 
   selection_check (2);        /* check for boundary cross */
 
   int i = current_screen; current_screen = scrn; scrn = i;
-
-  ::swap (screen.cur.row, swap.cur.row);
-  ::swap (screen.cur.col, swap.cur.col);
-
-  screen.cur.row = clamp (screen.cur.row, 0, prev_nrow - 1);
-  screen.cur.col = clamp (screen.cur.col, 0, prev_ncol - 1);
 
 #if NSCREENS
   if (OPTION (Opt_secondaryScreen))
     {
       num_scr = 0;
 
-      for (int i = prev_nrow; i--; )
-        ::swap (ROW(i), swap_buf [i]);
+      scr_swap_screen ();
 
       ::swap (screen.charset, swap.charset);
-      ::swap (screen.flags, swap.flags);
+      ::swap (screen.flags,   swap.flags);
       screen.flags |= Screen_VisibleCursor;
-      swap.flags |= Screen_VisibleCursor;
+      swap.flags   |= Screen_VisibleCursor;
     }
   else
 #endif
     if (OPTION (Opt_secondaryScroll))
       scr_scroll_text (0, prev_nrow - 1, prev_nrow);
-
-  return scrn;
 }
 
 // clear WrapNext indicator, solidifying position on next line

@@ -1176,6 +1176,13 @@ rxvt_term::pty_ev_events (int events = EVENT_UNDEF)
 	OUTPUT:
         RETVAL
 
+int
+rxvt_term::pty_fd ()
+	CODE:
+        RETVAL = THIS->pty->pty;
+	OUTPUT:
+        RETVAL
+
 Window
 rxvt_term::parent ()
 	CODE:

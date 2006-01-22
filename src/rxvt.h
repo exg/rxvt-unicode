@@ -1330,7 +1330,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 
   // screen.C
 
-  void lalloc (line_t &l) const NOTHROW
+  void lalloc (line_t &l) const
   {
     l.t = (text_t *)talloc->alloc ();
     l.r = (rend_t *)ralloc->alloc ();
@@ -1344,7 +1344,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   }
 #endif
 
-  void lresize (line_t &l) const NOTHROW
+  void lresize (line_t &l) const
   {
     if (!l.t)
       return;
@@ -1422,10 +1422,11 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 
   enum cursor_mode { SAVE, RESTORE };
 
-  void scr_poweron () NOTHROW;
+  void scr_poweron ();
   void scr_cursor (cursor_mode mode) NOTHROW;
   void scr_do_wrap () NOTHROW;
-  int scr_change_screen (int scrn) NOTHROW;
+  void scr_swap_screen () NOTHROW;
+  void scr_change_screen (int scrn);
   void scr_color (unsigned int color, int fgbg) NOTHROW;
   void scr_rendition (int set, int style) NOTHROW;
   void scr_add_lines (const wchar_t *str, int len, int minlines = 0) NOTHROW;

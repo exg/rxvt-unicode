@@ -141,11 +141,13 @@ To avoid too many false positives, this is only done when:
 
 =over 4
 
-=item - the mouse is on the same (multi-row-) line as the text cursor.
+=item - the tty is in ICANON state.
+
+=item - the text cursor is visible.
 
 =item - the primary screen is currently being displayed.
 
-=item - the text cursor is visible.
+=item - the mouse is on the same (multi-row-) line as the text cursor.
 
 =back
 
@@ -1311,6 +1313,11 @@ Replaces the event mask of the pty watcher by the given event mask. Can
 be used to suppress input and output handling to the pty/tty. See the
 description of C<< urxvt::timer->events >>. Make sure to always restore
 the previous value.
+
+=item $fd = $term->pty_fd
+
+Returns the master file descriptor for the pty in use, or C<-1> if no pty
+is used.
 
 =item $windowid = $term->parent
 

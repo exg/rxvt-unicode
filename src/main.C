@@ -1033,7 +1033,8 @@ void
 rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, int ignoreparent)
 {
   int fix_screen;
-  int old_width = szHint.width, old_height = szHint.height;
+  int old_width  = szHint.width;
+  int old_height = szHint.height;
   dDisp;
 
   window_calc (newwidth, newheight);
@@ -1065,9 +1066,9 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
           y -= y1;
         }
 
-      x1 = (DisplayWidth (disp, display->screen) - old_width) / 2;
+      x1 = (DisplayWidth  (disp, display->screen) - old_width ) / 2;
       y1 = (DisplayHeight (disp, display->screen) - old_height) / 2;
-      dx = old_width - szHint.width;
+      dx = old_width  - szHint.width;
       dy = old_height - szHint.height;
 
       /* Check position of the center of the window */
@@ -1110,30 +1111,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
     }
 
   if (fix_screen || old_height == 0)
-    {
-      int curr_screen = -1;
-      int old_ncol = prev_ncol;
-
-      /* scr_reset only works on the primary screen */
-      if (old_height)      /* this is not the first time through */
-        {
-          unsigned int ocol = ncol;
-          ncol = prev_ncol; // save b/c scr_blank_screen_mem uses this
-          curr_screen = scr_change_screen (PRIMARY);
-          ncol = ocol;
-        }
-
-      scr_reset ();
-
-      if (curr_screen >= 0) /* this is not the first time through */
-        {
-          scr_change_screen (curr_screen);
-          selection_check (old_ncol != ncol ? 4 : 0);
-        }
-    }
-
-  old_width = szHint.width;
-  old_height = szHint.height;
+    scr_reset ();
 
 #ifdef XPM_BACKGROUND
   if (pixmap)

@@ -65,7 +65,7 @@ dnl# Supply default CXXFLAGS, if not specified by `CXXFLAGS=flags ./configure'
 dnl#
 if test -z "$orig_CXXFLAGS"; then
   if test x$GCC = xyes && test "x$GXX" = xyes; then
-    CXXFLAGS="-g -O3 -fno-threadsafe-statics -fno-enforce-eh-specs"
+     CXXFLAGS="-g -O3 -fno-threadsafe-statics -fno-enforce-eh-specs"
     AC_COMPILE_IFELSE([AC_LANG_PROGRAM()], [], [CXXFLAGS="-g -O3"])
   else
     CXXFLAGS="-O"

@@ -17,14 +17,15 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an 
 WISH: just for fun, do shade and tint with XRender.
 DUMB: support tex fonts
 
-7.2
-TODO: alsamixer/wild resize => secondary leaks into primary scrollback?
+7.2  Sun Jan 22 21:39:33 CET 2006
         - bugfix: urxvt (not urxvtd) did not correctly handle multiple
           environments necessary, which resulted in segfaults within
           getenv (reproducable: urxvt -fn 9x15, open a menu once,
           ctrl-shift-672c).
         - bugfix: the selection speedup in in 7.1 unfortunately caused
           non-ascii characters to enlarge/move the selection.
+        - bugfix: resizing sometimes leaked lines from the secondary to
+          the primary screen.
         - added "tabbed" extension that provides a crude tabbed terminal.
         - added "readline" extension that allows cursor positioning
           via mouse clicks.

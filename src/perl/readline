@@ -1,10 +1,20 @@
 #! perl
 
+use POSIX ();
+
+my $termios = new POSIX::Termios;
+
 sub on_button_press {
    my ($self, $event) = @_;
 
    return
       if $self->current_screen || $self->hidden_cursor;
+
+   $termios->getattr ($self->pty_fd)
+      or return;
+
+   return
+      if $termios->getlflag & &POSIX::ICANON;
 
    my ($row, $col) = $self->screen_cur;
    my $line = $self->line ($row);
