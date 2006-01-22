@@ -28,12 +28,12 @@ TODO: alsamixer/wild resize => secondary leaks into primary scrollback?
         - added "readline" extension that allows cursor positioning
           via mouse clicks.
 	- now it is possible to insert the value of the CLIPBOARD selection
-	  with shift - mouse button 2
+	  with shift - mouse button 2.
         - fixed the automove-background extension to ignore coordinates
           in non-synthetic events.
         - created a separate libpty for portable and secure
-          pty/tty/utmp/wtmp/lastlog handling.
-        - the non-terminfo visual bell is now done asynchronously, so
+          pty/tty/utmp/wtmp/lastlog handling, and include it in rxvt-unicode.
+        - the non-terminfo visual bell now works asynchronously, so
           continuous ASCI BELs in one terminal do no longer monopolise the
           whole urxvt[d] process.
         - support some *BSD makes (for the time being, gnu make is a safe bet).
