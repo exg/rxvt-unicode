@@ -143,6 +143,7 @@ char *           rxvt_wcstombs                    (const wchar_t *str, int len =
 wchar_t *        rxvt_mbstowcs                    (const char *str, int len = -1);
 char *           rxvt_wcstoutf8                   (const wchar_t *str, int len = -1);
 wchar_t *        rxvt_utf8towcs                   (const char *str, int len = -1);
+char *           rxvt_strdup_cpp                  (const char *str);
 
 #define rxvt_strdup(s) ((s) ? strdup(s) : 0)
 
@@ -216,9 +217,7 @@ struct rxvt_ptytty {
   }
 
   virtual bool get () = 0;
-#if UTMP_SUPPORT
   virtual void login (int cmd_pid, bool login_shell, const char *hostname) = 0;
-#endif
 
   void close_tty ();
   bool make_controlling_tty ();
@@ -1239,7 +1238,14 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   void destroy ();
   void emergency_cleanup ();
 
-  bool init (int argc, const char *const *argv);
+  bool init (int argc, const char *const *argv, stringvec *envv);
+
+  bool init (stringvec *argv, stringvec *envv)
+  {
+    this->argv = argv;
+    return init (argv->size (), argv->begin (), envv);
+  }
+  
   bool init_vars ();
 
   bool pty_fill ();

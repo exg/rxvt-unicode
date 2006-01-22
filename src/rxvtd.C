@@ -168,7 +168,7 @@ void server::read_cb (io_watcher &w, short revents)
               if (!strcmp (tok, "END"))
                 break;
               else if (!strcmp (tok, "ENV") && recv (tok))
-                envv->push_back (tok.get ());
+                envv->push_back (strdup (tok));
               else if (!strcmp (tok, "CWD") && recv (tok))
                 {
                   if (chdir (tok))
@@ -176,7 +176,7 @@ void server::read_cb (io_watcher &w, short revents)
                          (char *)tok, strerror (errno));
                 }
               else if (!strcmp (tok, "ARG") && recv (tok))
-                argv->push_back (tok.get ());
+                argv->push_back (strdup (tok));
               else
                 return err ("protocol error: unexpected NEW token");
             }
@@ -188,14 +188,12 @@ void server::read_cb (io_watcher &w, short revents)
             
             term->log_hook = &log_cb;
             term->getfd_hook = &getfd_cb;
-            term->argv = argv;
-            term->envv = envv;
 
             bool success;
             
             try
               {
-                success = term->init (argv->size (), argv->begin ());
+                success = term->init (argv, envv);
               }
             catch (const class rxvt_failure_exception &e)
               {

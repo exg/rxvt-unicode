@@ -23,15 +23,25 @@
 #include "../config.h"
 #include "rxvt.h"
 
+#include <cstdlib>
+#include <cstring>
+
 int
 main (int argc, const char *const *argv)
 try
   {
     rxvt_init ();
 
+    stringvec *envv = new stringvec;
+
+    for (char **var = environ; *var; var++)
+      envv->push_back (strdup (*var));
+
+    envv->push_back (0);
+
     rxvt_term *t = new rxvt_term;
 
-    if (!t->init (argc, argv))
+    if (!t->init (argc, argv, envv))
       return EXIT_FAILURE;
 
     io_manager::loop ();

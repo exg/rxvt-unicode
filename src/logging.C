@@ -449,4 +449,9 @@ rxvt_update_lastlog (const char *fname, const char *pty, const char *host)
 #endif				/* LASTLOG_SUPPORT */
 /* ------------------------------------------------------------------------- */
 
+#else
+void
+rxvt_ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
+{
+}
 #endif				/* UTMP_SUPPORT */

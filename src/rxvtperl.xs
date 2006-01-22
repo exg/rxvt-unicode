@@ -930,23 +930,23 @@ _new (...)
 
         rxvt_term *term = new rxvt_term;
 
-	term->argv = new stringvec;
-	term->envv = new stringvec;
+	stringvec *argv = new stringvec;
+	stringvec *envv = new stringvec;
 
         for (int i = 1; i < items; i++)
-          term->argv->push_back (strdup (SvPVbyte_nolen (ST (i))));
+          argv->push_back (strdup (SvPVbyte_nolen (ST (i))));
 
-        AV *envv = (AV *)SvRV (ST (0));
-        for (int i = AvFILL (envv) + 1; i--; )
-          term->envv->push_back (strdup (SvPVbyte_nolen (*av_fetch (envv, i, 1))));
+        AV *env = (AV *)SvRV (ST (0));
+        for (int i = AvFILL (env) + 1; i--; )
+          envv->push_back (strdup (SvPVbyte_nolen (*av_fetch (env, i, 1))));
 
-        term->envv->push_back (0);
+        envv->push_back (0);
 
         bool success;
 
         try
           {
-            success = term->init (term->argv->size (), term->argv->begin ());
+            success = term->init (argv, envv);
           }
         catch (const class rxvt_failure_exception &e)
           {

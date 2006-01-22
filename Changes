@@ -3,7 +3,6 @@ rxvt-unicode changelog <= google-friendly title
 TODO: event mechanism that replaces on_keyboard_command with something more scalable.
 TODO: simplify selection_request and make it callable from perl.
 TODO: split perl documnetation and urxvt.pm into separate files
-TODO: nuke rxvt_privaction and related garbage
 TODO: harmonize --disable-options into position-dependent options.
 TODO: after requesting the selection and getting a timeout, no further requests will be sent.
 TODO: "slow" rendering mode for bidi and scripts
@@ -13,13 +12,15 @@ TODO: rxvt -name urxvt-girly /// leave pixel droppings
 TODO: distributed clipboard example
 TODO: http://www.issociate.de/board/post/274416/HOWTO:_Mouse_editing_with_readline_in_xterm.html
 TODO: http://groups.google.com/group/comp.unix.shell/msg/e538d04a118174d3
-WISH: perl extension for background image loading and moving the origin.
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an overlay...
 WISH: just for fun, do shade and tint with XRender.
-WISH: support tex fonts
+DUMB: support tex fonts
 
 7.2
-BUG: env handling in single process mode does not set/restore the env: make it so.
+        - bugfix: urxvt (not urxvtd) did not correctly handle multiple
+          environments necessary, which resulted in segfaults within
+          getenv (reproducable: urxvt -fn 9x15, open a menu once,
+          ctrl-shift-672c).
         - bugfix: the selection speedup in in 7.1 unfortunately caused
           non-ascii characters to enlarge/move the selection.
         - added "tabbed" extension that provides a crude tabbed terminal.
@@ -32,11 +33,11 @@ BUG: env handling in single process mode does not set/restore the env: make it s
         - created a separate libpty for portable and secure
           pty/tty/utmp/wtmp/lastlog handling.
         - the non-terminfo visual bell is now done asynchronously, so
-          continous ASCI BELs in one terminal do no longer monopolise the
-          while urxvt[d] process.
-        - support some bsd makes (for the time being, gnu make is a safe bet).
-        - work around bugs in FreeBSDs gcc.
-        - implemented some *bsd fixes in configure.
+          continuous ASCI BELs in one terminal do no longer monopolise the
+          whole urxvt[d] process.
+        - support some *BSD makes (for the time being, gnu make is a safe bet).
+        - work around bugs in FreeBSD's gcc.
+        - implemented some *BSD fixes in configure.
 	- removed support for obsolete offix dnd protocol.
 
 7.1  Thu Jan 19 20:25:34 CET 2006

@@ -1,6 +1,7 @@
 #ifndef RXVT_UTIL_H
 #define RXVT_UTIL_H
 
+#include <cstdlib>
 #include <cstring>
 
 #define PP_CONCAT_(a, b) a ## b
@@ -393,7 +394,7 @@ struct stringvec : simplevec<char *>
   ~stringvec ()
   {
     for (char **c = begin (); c != end (); c++)
-      delete [] *c;
+      free (*c);
   }
 };
 

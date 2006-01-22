@@ -452,8 +452,10 @@ rxvt_xioerror_handler (Display *display)
 
 /*----------------------------------------------------------------------*/
 bool
-rxvt_term::init (int argc, const char *const *argv)
+rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 {
+  this->envv = envv;
+
   SET_R (this);
   set_locale ("");
   set_environ (envv); // few things in X do not call setlocale :(
