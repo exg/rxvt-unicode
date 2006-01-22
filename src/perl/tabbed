@@ -182,6 +182,7 @@ sub on_configure_notify {
    my ($self, $event) = @_;
 
    $self->configure;
+   $self->refresh;
 
    ()
 }
