@@ -476,7 +476,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
     scrollBar.setIdle ();    /* set existence for size calculations */
 #endif
 
-  pty = rxvt_new_ptytty ();
+  pty = ptytty_new ();
 
   create_windows (argc, argv);
 
@@ -561,7 +561,7 @@ rxvt_init ()
       || gid != getegid ())
     {
 #if PTYTTY_HELPER
-      rxvt_ptytty_server ();
+      ptytty_server ();
 #else
       rxvt_warn ("running setuid/setgid without pty helper compiled in, continuing unprivileged.\n");
 #endif

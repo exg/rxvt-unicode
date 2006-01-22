@@ -37,6 +37,7 @@
 #include "rxvttoolkit.h"
 #include "iom.h"
 #include "salloc.h"
+#include "libptytty.h"
 
 #include "rxvtperl.h"
 
@@ -202,30 +203,6 @@ typedef struct {
   Pixmap pixmap;
 } bgPixmap_t;
 #endif
-
-struct rxvt_ptytty {
-  int pty; // pty file descriptor; connected to rxvt
-  int tty; // tty file descriptor; connected to child
-
-  rxvt_ptytty ()
-  : pty(-1), tty(-1)
-  {
-  }
-
-  virtual ~rxvt_ptytty ()
-  {
-  }
-
-  virtual bool get () = 0;
-  virtual void login (int cmd_pid, bool login_shell, const char *hostname) = 0;
-
-  void close_tty ();
-  bool make_controlling_tty ();
-  void set_utf8_mode (bool on);
-};
-
-rxvt_ptytty *rxvt_new_ptytty (); // create a new pty object
-void rxvt_ptytty_server (); // start the ptytty server process
 
 /*
  * the 'essential' information for reporting Mouse Events
@@ -1153,7 +1130,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   char           *cmdbuf_ptr, *cmdbuf_endp;
   char            cmdbuf_base[CBUFSIZ];
 
-  rxvt_ptytty    *pty;
+  ptytty         *pty;
 
   rxvt_salloc    *talloc;             // text line allocator
   rxvt_salloc    *ralloc;             // rend line allocator

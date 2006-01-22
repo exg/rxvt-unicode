@@ -1,19 +1,20 @@
 #ifndef PTYTTY_H
 #define PTYTTY_H
 
-#include "rxvt.h"
-#include "feature.h"
+#include "libptytty.h"
+
+#include "ptytty_conf.h"
 
 #if defined(HAVE__GETPTY) || defined(HAVE_OPENPTY) || defined(UNIX98_PTY)
 # define NO_SETOWNER_TTYDEV 1
 #endif
 
 #if UTMP_SUPPORT
-# if !defined(RXVT_UTMPX_FILE) || !defined(HAVE_STRUCT_UTMPX) || defined(__GLIBC__)
+# if !defined(UTMPX_FILE) || !defined(HAVE_STRUCT_UTMPX) || defined(__GLIBC__)
 #  undef HAVE_UTMPX_H
 #  undef HAVE_STRUCT_UTMPX
 # endif
-# if !defined(RXVT_UTMP_FILE) || !defined(HAVE_STRUCT_UTMP)
+# if !defined(UTMP_FILE) || !defined(HAVE_STRUCT_UTMP)
 #  undef HAVE_UTMP_H
 #  undef HAVE_STRUCT_UTMP
 # endif
@@ -35,7 +36,7 @@
 
 # include <pwd.h>
 
-# ifdef RXVT_UTMP_SYSV
+# ifdef UTMP_SYSV
 #  ifndef USER_PROCESS
 #   define USER_PROCESS		7
 #  endif
@@ -46,14 +47,14 @@
 
 #endif
 
-struct rxvt_ptytty_unix : rxvt_ptytty
+struct ptytty_unix : ptytty
 {
   char *name;
 
 public:
 
-  rxvt_ptytty_unix ();
-  ~rxvt_ptytty_unix ();
+  ptytty_unix ();
+  ~ptytty_unix ();
 
   bool get ();
   void put ();

@@ -21,7 +21,6 @@
  *----------------------------------------------------------------------*/
 
 #include "../config.h"
-#include "rxvt.h"
 
 #include <sys/uio.h>
 #include <sys/types.h>
@@ -29,14 +28,12 @@
 
 #include "fdpass.h"
 
-#include <cstdio> //d
-
 #ifndef CMSG_LEN // CMSG_SPACe && CMSG_LEN are rfc2292 extensions to unix
 # define CMSG_LEN(len) (sizeof (cmsghdr) + len)
 #endif
 
 int
-rxvt_send_fd (int socket, int fd)
+ptytty_send_fd (int socket, int fd)
 {
   msghdr msg;
   iovec iov;
@@ -66,7 +63,7 @@ rxvt_send_fd (int socket, int fd)
 }
 
 int
-rxvt_recv_fd (int socket)
+ptytty_recv_fd (int socket)
 {
   msghdr msg;
   iovec iov;

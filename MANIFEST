@@ -10,6 +10,7 @@ reconf
 configure
 autogen.sh
 aclocal.m4
+ptytty.m4
 config.guess
 config.h.in
 config.sub
@@ -59,8 +60,6 @@ src/command.C
 src/command.h
 src/encoding.C
 src/encoding.h
-src/fdpass.h
-src/fdpass.C
 src/feature.h
 src/hookinc.h
 src/init.C
@@ -70,15 +69,11 @@ src/iom.h
 src/iom_conf.h
 src/keyboard.C
 src/keyboard.h
-src/logging.C
 src/main.C
 src/misc.C
 src/netdisp.C
 src/netdisp.h
 src/optinc.h
-src/ptytty_conf.h
-src/ptytty.h
-src/ptytty.C
 src/rxvtutil.C
 src/rxvtutil.h
 src/rxvttoolkit.C
@@ -105,6 +100,14 @@ src/scrollbar.C
 src/version.h
 src/xdefaults.C
 src/xpm.C
+
+src/libptytty.h
+src/ptytty_conf.h
+src/ptytty.h
+src/ptytty.C
+src/logging.C
+src/fdpass.h
+src/fdpass.C
 
 src/gentables
 src/gencompose

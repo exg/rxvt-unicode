@@ -21,9 +21,8 @@
  *----------------------------------------------------------------------*/
 
 #include "../config.h"
-#include "rxvt.h"
 
-int rxvt_send_fd (int socket, int fd);
-int rxvt_recv_fd (int socket);
+int ptytty_send_fd (int socket, int fd);
+int ptytty_recv_fd (int socket);
 
 

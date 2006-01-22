@@ -32,17 +32,17 @@
  *----------------------------------------------------------------------*/
 
 #include "../config.h"
-#include "rxvt.h"
+
 #include "ptytty.h"
 
 #if UTMP_SUPPORT
 
 #if HAVE_STRUCT_UTMP
-static int              rxvt_write_bsd_utmp              (int utmp_pos, struct utmp *wu);
-static void             rxvt_update_wtmp                 (const char *fname, const struct utmp *putmp);
+static int              write_bsd_utmp              (int utmp_pos, struct utmp *wu);
+static void             update_wtmp                 (const char *fname, const struct utmp *putmp);
 #endif
 
-static void             rxvt_update_lastlog              (const char *fname, const char *pty, const char *host);
+static void             update_lastlog              (const char *fname, const char *pty, const char *host);
 
 /*
  * BSD style utmp entry
@@ -57,7 +57,7 @@ static void             rxvt_update_lastlog              (const char *fname, con
  * make and write utmp and wtmp entries
  */
 void
-rxvt_ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
+ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
 {
   const char *pty = name;
 
@@ -86,7 +86,7 @@ rxvt_ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
     sprintf (ut_id, "vt%02x", (i & 0xff));	/* sysv naming */
   else if (strncmp (pty, "pty", 3) && strncmp (pty, "tty", 3))
     {
-      rxvt_warn ("can't parse tty name \"%s\", not adding utmp entry.\n", pty);
+      warn ("can't parse tty name \"%s\", not adding utmp entry.\n", pty);
       return;
     }
 #endif
@@ -171,7 +171,7 @@ rxvt_ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
     dup2 (tty, STDIN_FILENO);
 
     i = ttyslot ();
-    if (rxvt_write_bsd_utmp (i, ut))
+    if (write_bsd_utmp (i, ut))
       utmp_pos = i;
 
     dup2 (fdstdin, STDIN_FILENO);
@@ -190,7 +190,7 @@ rxvt_ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
               continue;
             if (!strcmp (ut->ut_line, name))
               {
-                if (!rxvt_write_bsd_utmp (i, ut))
+                if (!write_bsd_utmp (i, ut))
                   i = 0;
                 utmp_pos = i;
                 fclose (fd0);
@@ -211,21 +211,21 @@ rxvt_ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
     {
 # ifdef HAVE_STRUCT_UTMP
 #  ifdef HAVE_UPDWTMP
-      updwtmp (RXVT_WTMP_FILE, ut);
+      updwtmp (WTMP_FILE, ut);
 #  else
-      rxvt_update_wtmp (RXVT_WTMP_FILE, ut);
+      update_wtmp (WTMP_FILE, ut);
 #  endif
 # endif
 # if defined(HAVE_STRUCT_UTMPX) && defined(HAVE_UPDWTMPX)
-      updwtmpx (RXVT_WTMPX_FILE, utx);
+      updwtmpx (WTMPX_FILE, utx);
 # endif
     }
 #endif
-#if defined(LASTLOG_SUPPORT) && defined(RXVT_LASTLOG_FILE)
+#if defined(LASTLOG_SUPPORT) && defined(LASTLOG_FILE)
 #ifdef LOG_ONLY_ON_LOGIN
   if (login_shell)
 #endif
-    rxvt_update_lastlog (RXVT_LASTLOG_FILE, pty, hostname);
+    update_lastlog (LASTLOG_FILE, pty, hostname);
 #endif
 }
 
@@ -234,7 +234,7 @@ rxvt_ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
  * remove utmp and wtmp entries
  */
 void
-rxvt_ptytty_unix::logout ()
+ptytty_unix::logout ()
 {
   if (!cmd_pid)
     return;
@@ -289,13 +289,13 @@ rxvt_ptytty_unix::logout ()
     {
 # ifdef HAVE_STRUCT_UTMP
 #  ifdef HAVE_UPDWTMP
-      updwtmp (RXVT_WTMP_FILE, ut);
+      updwtmp (WTMP_FILE, ut);
 #  else
-      rxvt_update_wtmp (RXVT_WTMP_FILE, ut);
+      update_wtmp (WTMP_FILE, ut);
 #  endif
 # endif
 # if defined(HAVE_STRUCT_UTMPX) && defined(HAVE_UPDWTMPX)
-      updwtmpx (RXVT_WTMPX_FILE, utx);
+      updwtmpx (WTMPX_FILE, utx);
 # endif
     }
 #endif
@@ -310,7 +310,7 @@ rxvt_ptytty_unix::logout ()
   endutent ();
 # else
   memset (ut, 0, sizeof (struct utmp));
-  rxvt_write_bsd_utmp (utmp_pos, ut);
+  write_bsd_utmp (utmp_pos, ut);
 # endif
 #endif
 #ifdef HAVE_STRUCT_UTMPX
@@ -328,11 +328,11 @@ rxvt_ptytty_unix::logout ()
  */
 #if defined(HAVE_STRUCT_UTMP) && !defined(HAVE_UTMP_PID)
 static int
-rxvt_write_bsd_utmp (int utmp_pos, struct utmp *wu)
+write_bsd_utmp (int utmp_pos, struct utmp *wu)
 {
   int             fd;
 
-  if (utmp_pos <= 0 || (fd = open (RXVT_UTMP_FILE, O_WRONLY)) == -1)
+  if (utmp_pos <= 0 || (fd = open (UTMP_FILE, O_WRONLY)) == -1)
     return 0;
 
   if (lseek (fd, (off_t) (utmp_pos * sizeof (struct utmp)), SEEK_SET) != -1)
@@ -348,7 +348,7 @@ rxvt_write_bsd_utmp (int utmp_pos, struct utmp *wu)
  */
 #if defined(WTMP_SUPPORT) && !defined(HAVE_UPDWTMP) && defined(HAVE_STRUCT_UTMP)
 static void
-rxvt_update_wtmp (const char *fname, const struct utmp *putmp)
+update_wtmp (const char *fname, const struct utmp *putmp)
 {
   int             fd, gotlock, retry;
   struct flock    lck;	/* fcntl locking scheme */
@@ -389,7 +389,7 @@ rxvt_update_wtmp (const char *fname, const struct utmp *putmp)
 /* ------------------------------------------------------------------------- */
 #ifdef LASTLOG_SUPPORT
 static void
-rxvt_update_lastlog (const char *fname, const char *pty, const char *host)
+update_lastlog (const char *fname, const char *pty, const char *host)
 {
 # ifdef HAVE_STRUCT_LASTLOGX
   struct lastlogx llx;
@@ -409,14 +409,14 @@ rxvt_update_lastlog (const char *fname, const char *pty, const char *host)
   llx.ll_tv.tv_usec = 0;
   strncpy (llx.ll_line, pty, sizeof (llx.ll_line));
   strncpy (llx.ll_host, host, sizeof (llx.ll_host));
-  updlastlogx (RXVT_LASTLOGX_FILE, getuid (), &llx);
+  updlastlogx (LASTLOGX_FILE, getuid (), &llx);
 # endif
 
 # ifdef HAVE_STRUCT_LASTLOG
   pwent = getpwuid (getuid ());
   if (!pwent)
     {
-      rxvt_warn ("no entry in password file, not updating lastlog.\n");
+      warn ("no entry in password file, not updating lastlog.\n");
       return;
     }
 
@@ -450,8 +450,11 @@ rxvt_update_lastlog (const char *fname, const char *pty, const char *host)
 /* ------------------------------------------------------------------------- */
 
 #else
+
 void
-rxvt_ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
+ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
 {
 }
-#endif				/* UTMP_SUPPORT */
+
+#endif
+
