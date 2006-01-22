@@ -17,7 +17,7 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an 
 WISH: just for fun, do shade and tint with XRender.
 DUMB: support tex fonts
 
-7.2  Sun Jan 22 21:39:33 CET 2006
+7.2  Sun Jan 22 21:58:16 CET 2006
         - bugfix: urxvt (not urxvtd) did not correctly handle multiple
           environments necessary, which resulted in segfaults within
           getenv (reproducable: urxvt -fn 9x15, open a menu once,
@@ -26,6 +26,8 @@ DUMB: support tex fonts
           non-ascii characters to enlarge/move the selection.
         - bugfix: resizing sometimes leaked lines from the secondary to
           the primary screen.
+        - bugfix: reducing window size while large amounts of text were output
+          could lead to an assertion failure.
         - added "tabbed" extension that provides a crude tabbed terminal.
         - added "readline" extension that allows cursor positioning
           via mouse clicks.
@@ -815,9 +817,9 @@ DUMB: support tex fonts
 	- changed locale-setting esc-sequence from code 9 to code 701.
 	  also added 702 that returns the font selected for a specific
 	  unicode character.
-	- no longer set XA_CUT_BUFFER0. this is confusing and clients WILL
+	- no longer set CUT_BUFFER0. this is confusing and clients WILL
 	  get it wrong.
-	- don't use XTextStyle for XA_TEXT, instead use XStdICCTextStyle.
+	- don't use XTextStyle for TEXT, instead use XStdICCTextStyle.
 
 2.1  Wed Mar  3 21:48:39 CET 2004
 	- NOTE: the name of the binary and resources were changed in

@@ -760,6 +760,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
   if (minlines > 0)
     {
       minlines += screen.cur.row - screen.bscroll;
+      min_it (minlines, screen.cur.row - top_row);
 
       if (minlines > 0
           && screen.tscroll == 0
