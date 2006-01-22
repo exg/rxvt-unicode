@@ -171,13 +171,21 @@ extern char **rxvt_environ; // the original environ pointer
 
 inline void set_environ (stringvec *envv)
 {
+#if ENABLE_PERL
+  assert (envv);
+#else
   if (envv)
+#endif
     environ = (char **)envv->begin ();
 }
 
 inline void set_environ (char **envv)
 {
+#if ENABLE_PERL
+  assert (envv);
+#else
   if (envv)
+#endif
     environ = envv;
 }
 

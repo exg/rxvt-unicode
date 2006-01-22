@@ -563,7 +563,7 @@ our $RESNAME;
 our $RESCLASS;
 our $RXVTNAME;
 
-our $NOCHAR = chr 0xfffe;
+our $NOCHAR = chr 0xffff;
 
 =head2 Variables in the C<urxvt> Package
 
@@ -720,6 +720,8 @@ BEGIN {
    };
 }
 
+no warnings 'utf8';
+
 my $verbosity = $ENV{URXVT_PERL_VERBOSITY};
 
 sub verbose {
@@ -745,7 +747,7 @@ sub extension_package($) {
          or die "$path: $!";
 
       my $source =
-         "package $pkg; use strict; use utf8;\n"
+         "package $pkg; use strict; use utf8; no warnings 'utf8';\n"
          . "#line 1 \"$path\"\n{\n"
          . (do { local $/; <$fh> })
          . "\n};\n1";
@@ -1418,8 +1420,8 @@ line, starting at column C<$start_col> (default C<0>), which is useful
 to replace only parts of a line. The font index in the rendition will
 automatically be updated.
 
-C<$text> is in a special encoding: tabs and wide characters that use
-more than one cell when displayed are padded with C<$urxvt::NOCHAR>
+C<$text> is in a special encoding: tabs and wide characters that use more
+than one cell when displayed are padded with C<$urxvt::NOCHAR> (chr 65535)
 characters. Characters with combining characters and other characters that
 do not fit into the normal tetx encoding will be replaced with characters
 in the private use area.

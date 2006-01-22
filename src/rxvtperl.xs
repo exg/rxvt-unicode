@@ -1533,10 +1533,20 @@ rxvt_term::screen_cur (...)
             rc.row = SvIV (ST (1));
             rc.col = SvIV (ST (2));
 
-            if (ix == 2 && rc.col == 0)
+            if (ix == 2)
               {
-                rc.row--;
-                rc.col = THIS->ncol;
+                if (rc.col == 0)
+                  {
+                    // col == 0 means end of previous line
+                    rc.row--;
+                    rc.col = THIS->ncol;
+                  }
+                else if (IN_RANGE_EXC (rc.row, THIS->top_row, THIS->nrow)
+                         && rc.col > ROW(rc.row).l)
+                  {
+                    // col >= length means while line and add newline
+                    rc.col = THIS->ncol;
+                  }
               }
 
             clamp_it (rc.col, 0, THIS->ncol);

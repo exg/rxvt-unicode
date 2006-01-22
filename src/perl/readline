@@ -23,7 +23,7 @@ sub on_button_press {
       }
 
       my $skipped = substr $line->t, $cur, $ofs - $cur;
-      $skipped =~ s/$urxvt::NOCHAR//g;
+      $skipped =~ s/\x{ffff}//g;
 
       $self->tt_write ($move x length $skipped);
    }

@@ -112,7 +112,7 @@ sub on_sel_extend {
 
       # convert back from UTF-8 offset space to character space
       {
-         my $length = substr $text, $ofs, $len;
+         my $length = substr "$text ", $ofs, $len;
          utf8::decode $length;
          $len = length $length;
       }

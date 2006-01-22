@@ -32,12 +32,16 @@ try
   {
     rxvt_init ();
 
+#if ENABLE_PERL
     stringvec *envv = new stringvec;
 
     for (char **var = environ; *var; var++)
       envv->push_back (strdup (*var));
 
     envv->push_back (0);
+#else
+    stringvec *envv = 0;
+#endif
 
     rxvt_term *t = new rxvt_term;
 
