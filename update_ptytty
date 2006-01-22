@@ -1,5 +1,5 @@
 #!/bin/sh
 
-for i in ptytty.m4 src/libptytty.h src/ptytty.C src/ptytty.h src/logging.C src/fdpass.h src/fdpass.C; do
+for i in ptytty.m4 src/libptytty.h src/ptytty.C src/ptytty.h src/logging.C src/fdpass.C; do
    cp ../libptytty/$i $i
 done

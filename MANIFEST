@@ -3,18 +3,18 @@ COPYING
 Changes
 INSTALL
 MANIFEST
-Makefile.in
 README.configure
 README.FAQ
 reconf
 configure
-autogen.sh
+configure.ac
+config.sub
+config.guess
 aclocal.m4
 ptytty.m4
-config.guess
+autogen.sh
 config.h.in
-config.sub
-configure.ac
+Makefile.in
 install-sh
 mkinstalldirs
 
@@ -106,7 +106,6 @@ src/ptytty_conf.h
 src/ptytty.h
 src/ptytty.C
 src/logging.C
-src/fdpass.h
 src/fdpass.C
 
 src/gentables

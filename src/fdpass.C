@@ -26,14 +26,14 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#include "fdpass.h"
+#include "libptytty.h"
 
 #ifndef CMSG_LEN // CMSG_SPACe && CMSG_LEN are rfc2292 extensions to unix
 # define CMSG_LEN(len) (sizeof (cmsghdr) + len)
 #endif
 
 int
-ptytty_send_fd (int socket, int fd)
+ptytty::send_fd (int socket, int fd)
 {
   msghdr msg;
   iovec iov;
@@ -63,7 +63,7 @@ ptytty_send_fd (int socket, int fd)
 }
 
 int
-ptytty_recv_fd (int socket)
+ptytty::recv_fd (int socket)
 {
   msghdr msg;
   iovec iov;
