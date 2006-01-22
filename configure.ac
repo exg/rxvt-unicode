@@ -807,11 +807,11 @@ dnl# now add and remove other stuff
 dnl# --------------------------------------------------------------------------
 if test x$support_xft = xyes; then
   AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
-  AC_PATH_PROG(XFT_CONFIG, xft-config, no)
   if test $PKG_CONFIG != no && $PKG_CONFIG --exists xft; then
     LIBS="$LIBS `$PKG_CONFIG xft --libs`"
     CPPFLAGS="$CPPFLAGS `$PKG_CONFIG xft --cflags`"
   else
+    AC_PATH_PROG(XFT_CONFIG, xft-config, no)
     if test $XFT_CONFIG != no; then
       LIBS="$LIBS `$XFT_CONFIG --libs`"
       CPPFLAGS="$CPPFLAGS `$XFT_CONFIG --cflags`"
