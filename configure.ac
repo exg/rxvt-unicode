@@ -1053,22 +1053,17 @@ if test x$support_xpm = xyes; then
   echo "  Xpm library:                $XPM_LIBS"
 fi
 
-echo "
-The following are set in config.h
-"
 if test x$support_utmp != xyes; then
   echo "  utmp support:               disabled"
   echo
 else
   echo "  utmp support:               enabled
-  utmp file:                  $rxvt_cv_path_utmp
-  utmpx file:                 $rxvt_cv_path_utmpx
-  wtmp file:                  $rxvt_cv_path_wtmp
-  wtmpx file:                 $rxvt_cv_path_wtmpx
-  lastlog file:               $rxvt_cv_path_lastlog
-  ttys/ttytab file:           $rxvt_cv_path_ttytab
-  embedded perl:              $support_perl"
-  echo
+  utmp file:                  $path_utmp
+  utmpx file:                 $path_utmpx
+  wtmp file:                  $path_wtmp
+  wtmpx file:                 $path_wtmpx
+  lastlog file:               $path_lastlog
+  lastlogx file:              $path_lastlogx"
 fi
 if test x$term != x; then
   echo "  set TERM to:                $term"
@@ -1081,6 +1076,8 @@ echo "  resource class:             $RESCLASS"
 if test x$RESFALLBACK != x; then
    echo "  resource class fallback:    $RESFALLBACK"
 fi
+echo
+echo "  embedded perl:              $support_perl"
 echo
 if test x$support_xpm = xneedsmanualspecification; then
   echo ".----------------------------------------------------------------."
