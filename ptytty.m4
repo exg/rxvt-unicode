@@ -443,3 +443,33 @@ else
    AC_MSG_ERROR([libptytty requires unix-compliant filehandle passing ability])
 fi
 ])
+
+AC_DEFUN([TTY_GROUP_CHECK],
+[
+AC_CACHE_CHECK([for tty group], tty_group,
+[AC_TRY_RUN([
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <grp.h>
+
+main()
+{
+  struct stat st;
+  struct group *gr;
+  char *tty;
+  gr = getgrnam("tty");
+  tty = ttyname(0);
+  if (gr != 0
+      && tty != 0
+      && (stat(tty, &st)) == 0
+      && st.st_gid == gr->gr_gid)
+    return 0;
+  else
+    return 1;
+}],
+[tty_group=yes],[tty_group=no],[tty_group=no])])
+if test x$tty_group = xyes; then
+  AC_DEFINE(TTY_GID_SUPPORT, 1, "")
+fi])
+

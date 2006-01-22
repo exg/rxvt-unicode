@@ -327,12 +327,6 @@ AC_ARG_ENABLE(xim,
     support_xim=$enableval
   fi])
 
-AC_ARG_ENABLE(ttygid,
-  [  --enable-ttygid         enable tty setting to group named "tty"],
-  [if test x$enableval = xyes; then
-    AC_DEFINE(TTY_GID_SUPPORT, 1, Define to change gid of ttys to group tty)
-  fi])
-
 AC_ARG_ENABLE(backspace-key,
   [  --disable-backspace-key disable handling of the backspace key],
   [if test x$enableval = xno; then
@@ -801,6 +795,8 @@ if test x$rxvt_broken_ximcb = xyes; then
 fi
 
 PTY_CHECK
+
+TTY_GROUP_CHECK
 
 dnl# --------------------------------------------------------------------------
 dnl# now add and remove other stuff
