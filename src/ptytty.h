@@ -7,6 +7,10 @@
 #include "libptytty.h"
 #include "ptytty_conf.h"
 
+#if PTYTTY_REENTRANT
+# define PTYTTY_NO_PID_CHECK 1
+#endif
+
 #if defined(HAVE__GETPTY) || defined(HAVE_OPENPTY) || defined(UNIX98_PTY)
 # define NO_SETOWNER_TTYDEV 1
 #endif

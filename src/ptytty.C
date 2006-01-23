@@ -31,6 +31,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <csignal>
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -373,9 +374,12 @@ ptytty_unix::get ()
   return true;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+// helper/proxy support
+
 #if PTYTTY_HELPER
 
-static int sock_fd = -1;
+static int sock_fd = -1, lock_fd = -1;
 static int helper_pid, owner_pid;
 
 struct command
@@ -404,9 +408,19 @@ struct ptytty_proxy : ptytty
   void login (int cmd_pid, bool login_shell, const char *hostname);
 };
 
+#if PTYTTY_REENTRANT
+# define NEED_TOKEN do { char ch; read  (lock_fd, &ch, 1); } while (0)
+# define GIVE_TOKEN do { char ch; write (lock_fd, &ch, 1); } while (0)
+#else
+# define NEED_TOKEN (void)0
+# define GIVE_TOKEN (void)0
+#endif
+
 bool
 ptytty_proxy::get ()
 {
+  NEED_TOKEN;
+
   command cmd;
 
   cmd.type = command::get;
@@ -417,18 +431,24 @@ ptytty_proxy::get ()
     ptytty_fatal ("protocol error while creating pty using helper process, aborting.\n");
 
   if (!id)
-    return false;
+    {
+      GIVE_TOKEN;
+      return false;
+    }
 
   if ((pty = recv_fd (sock_fd)) < 0
       || (tty = recv_fd (sock_fd)) < 0)
     ptytty_fatal ("protocol error while reading pty/tty fds from helper process, aborting.\n");
 
+  GIVE_TOKEN;
   return true;
 }
 
 void
 ptytty_proxy::login (int cmd_pid, bool login_shell, const char *hostname)
 {
+  NEED_TOKEN;
+
   command cmd;
 
   cmd.type = command::login;
@@ -438,18 +458,24 @@ ptytty_proxy::login (int cmd_pid, bool login_shell, const char *hostname)
   strncpy (cmd.hostname, hostname, sizeof (cmd.hostname));
 
   write (sock_fd, &cmd, sizeof (cmd));
+
+  GIVE_TOKEN;
 }
 
 ptytty_proxy::~ptytty_proxy ()
 {
   if (id)
     {
+      NEED_TOKEN;
+
       command cmd;
 
       cmd.type = command::destroy;
       cmd.id = id;
 
       write (sock_fd, &cmd, sizeof (cmd));
+
+      GIVE_TOKEN;
     }
 }
 
@@ -459,8 +485,13 @@ void serve ()
   command cmd;
   vector<ptytty *> ptys;
 
-  while (read (sock_fd, &cmd, sizeof (command)) == sizeof (command))
+  for (;;)
     {
+      GIVE_TOKEN;
+
+      if (read (sock_fd, &cmd, sizeof (command)) != sizeof (command))
+        break;
+
       if (cmd.type == command::get)
         {
           // -> id ptyfd ttyfd
@@ -484,7 +515,7 @@ void serve ()
       else if (cmd.type == command::login)
         {
 #if UTMP_SUPPORT
-          if (find (ptys.begin (), ptys.end (), cmd.id))
+          if (find (ptys.begin (), ptys.end (), cmd.id) != ptys.end ())
             {
               cmd.hostname[sizeof (cmd.hostname) - 1] = 0;
               cmd.id->login (cmd.cmd_pid, cmd.login_shell, cmd.hostname);
@@ -503,6 +534,8 @@ void serve ()
         }
       else
         break;
+
+      NEED_TOKEN;
     }
 
   // destroy all ptys
@@ -513,17 +546,32 @@ void serve ()
 void
 ptytty::use_helper ()
 {
+#ifndef PTYTTY_NO_PID_CHECK
   int pid = getpid ();
+#endif
 
-  if (sock_fd >= 0 && pid == owner_pid)
+  if (sock_fd >= 0
+#ifndef PTYTTY_NO_PID_CHECK
+      && pid == owner_pid
+#endif
+      )
     return;
 
+#ifndef PTYTTY_NO_PID_CHECK
   owner_pid = pid;
+#endif
 
   int sv[2];
 
   if (socketpair (AF_UNIX, SOCK_STREAM, 0, sv))
     ptytty_fatal ("could not create socket to communicate with pty/sessiondb helper, aborting.\n");
+
+#ifdef PTYTTY_REENTRANT
+  int lv[2];
+
+  if (socketpair (AF_UNIX, SOCK_STREAM, 0, lv))
+    ptytty_fatal ("could not create socket to communicate with pty/sessiondb helper, aborting.\n");
+#endif
 
   helper_pid = fork ();
 
@@ -536,16 +584,29 @@ ptytty::use_helper ()
       sock_fd = sv[0];
       close (sv[1]);
       fcntl (sock_fd, F_SETFD, FD_CLOEXEC);
+#ifdef PTYTTY_REENTRANT
+      lock_fd = lv[0];
+      close (lv[1]);
+      fcntl (lock_fd, F_SETFD, FD_CLOEXEC);
+#endif
     }
   else
     {
       // server, pty-helper
       sock_fd = sv[1];
+#ifdef PTYTTY_REENTRANT
+      lock_fd = lv[1];
+#endif
 
       chdir ("/");
 
+      signal (SIGHUP,  SIG_IGN);
+      signal (SIGTERM, SIG_IGN);
+      signal (SIGINT,  SIG_IGN);
+      signal (SIGPIPE, SIG_IGN);
+
       for (int fd = 0; fd < 1023; fd++)
-        if (fd != sock_fd)
+        if (fd != sock_fd && fd != lock_fd)
           close (fd);
 
       serve ();
@@ -559,7 +620,11 @@ ptytty *
 ptytty::create ()
 {
 #if PTYTTY_HELPER
-  if (helper_pid && getpid () == owner_pid)
+  if (helper_pid
+# ifndef PTYTTY_NO_PID_CHECK
+      && getpid () == owner_pid
+# endif
+      )
     // use helper process
     return new ptytty_proxy;
   else
@@ -611,3 +676,39 @@ ptytty::drop_privileges ()
     ptytty_fatal ("unable to drop privileges, aborting.\n");
 }
 
+/////////////////////////////////////////////////////////////////////////////
+// C API
+
+#ifndef PTYTTY_NO_C_API
+
+#define DEFINE_METHOD(retval, name, args1, args2) \
+extern "C" retval ptytty_ ## name args1           \
+{ return ((struct ptytty *)ptytty)->name args2; }
+
+DEFINE_METHOD(int,pty,(void *ptytty),)
+DEFINE_METHOD(int,tty,(void *ptytty),)
+DEFINE_METHOD(int,get,(void *ptytty),())
+DEFINE_METHOD(void,login,(void *ptytty, int cmd_pid, bool login_shell, const char *hostname),(cmd_pid,login_shell,hostname))
+
+DEFINE_METHOD(void,close_tty,(void *ptytty),())
+DEFINE_METHOD(int,make_controlling_tty,(void *ptytty),())
+DEFINE_METHOD(void,set_utf8_mode,(void *ptytty, int on),(on))
+
+#define DEFINE_STATIC(retval, name, args) \
+extern "C" retval ptytty_ ## name args           \
+{ return ptytty::name args; }
+
+DEFINE_STATIC(void,drop_privileges,())
+DEFINE_STATIC(void,use_helper,())
+DEFINE_STATIC(void,init,())
+
+DEFINE_STATIC(void *,create,())
+
+void ptytty_delete (void *ptytty)
+{
+  delete (struct ptytty *)ptytty;
+}
+
+// send_fd, recv_fd not exposed
+
+#endif

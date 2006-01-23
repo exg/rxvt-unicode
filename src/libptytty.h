@@ -4,6 +4,10 @@
 #ifndef LIBPTYTTY_H_ /* public libptytty header file */
 #define LIBPTYTTY_H_
 
+#ifdef __cplusplus
+
+// c++ api
+
 struct ptytty {
   int pty; // pty file descriptor; connected to rxvt
   int tty; // tty file descriptor; connected to child
@@ -35,6 +39,27 @@ protected:
   {
   }
 };
+
+#else
+
+// c api
+int ptytty_pty (void *ptytty);
+int ptytty_tty (void *ptytty);
+void ptytty_delete (void *ptytty);
+int ptytty_get (void *ptytty);
+void ptytty_login (void *ptytty, int cmd_pid, bool login_shell, const char *hostname);
+
+void ptytty_close_tty (void *ptytty);
+int ptytty_make_controlling_tty (void *ptytty);
+void ptytty_set_utf8_mode (void *ptytty, int on);
+
+void ptytty_init ();
+void *ptytty_create ();
+
+void ptytty_drop_privileges ();
+void ptytty_use_helper ();
+
+#endif
 
 #endif
 
