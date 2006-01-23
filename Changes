@@ -15,8 +15,9 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an 
 WISH: just for fun, do shade and tint with XRender.
 DUMB: support tex fonts
 
-TODO: kill arabic presentation form table
-TODO: iso14755 code interacts badly with popup grabs
+	- don't let iso14755 get into the way of perl (could lead to global
+          grabs never being cleared).
+        - removed (unused) arabic presentation form composing sequences.
 
 7.2  Sun Jan 22 21:58:16 CET 2006
         - bugfix: urxvt (not urxvtd) did not correctly handle multiple

@@ -2,7 +2,8 @@
 
 open UNIDATA, "<", "www.unicode.org/Public/UNIDATA/UnicodeData.txt"
    or die "www.unicode.org/Public/UNIDATA/UnicodeData.txt: $!";
-my %docom = qw(initial | medial | final | isolated | compat | none |);
+#my %docom = qw(initial | medial | final | isolated | compat | none |); #+ arabic
+my %docom = qw(compat | none |);
 
 while (<UNIDATA>) {
    my ($code, undef, $category, undef, undef, $decompose, undef) = split /;/;

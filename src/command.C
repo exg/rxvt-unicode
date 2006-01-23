@@ -1825,6 +1825,9 @@ rxvt_term::button_press (XButtonEvent &ev)
    */
   if (ev.window == vt)
     {
+      if (HOOK_INVOKE ((this, HOOK_BUTTON_PRESS, DT_XEVENT, &ev, DT_END)))
+        return;
+
 #if ISO_14755
       // 5.4
       if (iso14755buf & (ISO_14755_STARTED | ISO_14755_54))
@@ -1876,49 +1879,48 @@ rxvt_term::button_press (XButtonEvent &ev)
           if (ev.button != MEvent.button)
             MEvent.clicks = 0;
 
-          if (!HOOK_INVOKE ((this, HOOK_BUTTON_PRESS, DT_XEVENT, &ev, DT_END)))
-            switch (ev.button)
-              {
-                case Button1:
-                  /* allow meta + click to select rectangular areas */
-                  /* should be done in screen.C */
+          switch (ev.button)
+            {
+              case Button1:
+                /* allow meta + click to select rectangular areas */
+                /* should be done in screen.C */
 #if ENABLE_FRILLS
-                  selection.rect = !!(ev.state & ModMetaMask);
+                selection.rect = !!(ev.state & ModMetaMask);
 #else
-                  selection.rect = false;
+                selection.rect = false;
 #endif
 
-                  /* allow shift+left click to extend selection */
-                  if (ev.state & ShiftMask && !(priv_modes & PrivMode_mouse_report))
-                    {
-                      if (MEvent.button == Button1 && clickintime)
-                        selection_rotate (ev.x, ev.y);
-                      else
-                        selection_extend (ev.x, ev.y, 1);
-                    }
-                  else
-                    {
-                      if (MEvent.button == Button1 && clickintime)
-                        MEvent.clicks++;
-                      else
-                        MEvent.clicks = 1;
+                /* allow shift+left click to extend selection */
+                if (ev.state & ShiftMask && !(priv_modes & PrivMode_mouse_report))
+                  {
+                    if (MEvent.button == Button1 && clickintime)
+                      selection_rotate (ev.x, ev.y);
+                    else
+                      selection_extend (ev.x, ev.y, 1);
+                  }
+                else
+                  {
+                    if (MEvent.button == Button1 && clickintime)
+                      MEvent.clicks++;
+                    else
+                      MEvent.clicks = 1;
 
-                      selection_click (MEvent.clicks, ev.x, ev.y);
-                    }
+                    selection_click (MEvent.clicks, ev.x, ev.y);
+                  }
 
-                  MEvent.button = Button1;
-                  break;
+                MEvent.button = Button1;
+                break;
 
-                case Button3:
-                  if (MEvent.button == Button3 && clickintime)
-                    selection_rotate (ev.x, ev.y);
-                  else
-                    selection_extend (ev.x, ev.y, 1);
+              case Button3:
+                if (MEvent.button == Button3 && clickintime)
+                  selection_rotate (ev.x, ev.y);
+                else
+                  selection_extend (ev.x, ev.y, 1);
 
-                  MEvent.button = Button3;
-                  break;
-              }
-          }
+                MEvent.button = Button3;
+                break;
+            }
+        }
 
       MEvent.time = ev.time;
       return;
@@ -2091,11 +2093,15 @@ rxvt_term::button_release (XButtonEvent &ev)
 
   if (ev.window == vt)
     {
+      if (HOOK_INVOKE ((this, HOOK_BUTTON_RELEASE, DT_XEVENT, &ev, DT_END)))
+        return;
+
 #if ISO_14755
       // 5.4
       if (iso14755buf & (ISO_14755_STARTED | ISO_14755_54))
         return;
 #endif
+
       if (reportmode)
         {
           /* mouse report from vt window */
@@ -2128,9 +2134,6 @@ rxvt_term::button_release (XButtonEvent &ev)
           && bypass_keystate
           && ev.button == Button1 && MEvent.clicks <= 1)
         selection_extend (ev.x, ev.y, 0);
-
-      if (HOOK_INVOKE ((this, HOOK_BUTTON_RELEASE, DT_XEVENT, &ev, DT_END)))
-        return;
 
       switch (ev.button)
         {
