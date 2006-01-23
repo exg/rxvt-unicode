@@ -2,7 +2,7 @@
 
 # this creates a simple digital clock
 
-sub on_init {
+sub on_start {
    my ($self) = @_;
 
    $self->{overlay} = $self->overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);

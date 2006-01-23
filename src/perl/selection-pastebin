@@ -15,7 +15,7 @@ sub upload_paste {
 
    my $msg = "uploaded as $filename";
 
-   if (open my $o, ">", $tmpfile) {
+   if (open my $o, ">:utf-8", $tmpfile) {
       chmod 0644, $tmpfile;
       print $o $txt;
       close $o;

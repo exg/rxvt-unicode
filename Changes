@@ -16,7 +16,7 @@ WISH: just for fun, do shade and tint with XRender.
 DUMB: support tex fonts
 
 TODO: kill arabic presentation form table
-TODO: bug ayin to document possible configure options?
+TODO: iso14755 code interacts badly with popup grabs
 
 7.2  Sun Jan 22 21:58:16 CET 2006
         - bugfix: urxvt (not urxvtd) did not correctly handle multiple

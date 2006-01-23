@@ -13,7 +13,6 @@ sub on_init {
    my ($self) = @_;
 
    for (my $idx = 0; defined (my $res = $self->x_resource ("selection.pattern-$idx")); $idx++) {
-      no re 'eval'; # just to be sure
       $res = $self->locale_decode ($res);
       utf8::encode $res;
       push @{ $self->{patterns} }, qr/$res/;
@@ -22,7 +21,7 @@ sub on_init {
    ()
 }
 
-# "find interetsing things"-patterns
+# "find interesting things"-patterns
 my @mark_patterns = (
    # common types of "parentheses"
    qr{ (?<![^[:space:]]) ‘ ([^‘’]+) ’ (?![^[:space]]) }x,
@@ -41,7 +40,7 @@ my @mark_patterns = (
    )}x,
 
    # shell-like argument quoting, basically always matches
-   qr{\G [\ \t|&;<>()] *(
+   qr{\G [\ \t|&;<>()]* (
       (?:
          [^\\"'\ \t|&;<>()]+
          | \\.
