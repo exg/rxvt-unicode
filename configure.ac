@@ -239,24 +239,6 @@ AC_ARG_ENABLE(font-styles,
     support_styles=$enableval
   fi])
 
-AC_ARG_ENABLE(utmp,
-  [  --enable-utmp           enable utmp (utmpx) support],
-  [if test x$enableval = xyes -o x$enableval = xno; then
-    support_utmp=$enableval
-  fi])
-
-AC_ARG_ENABLE(wtmp,
-  [  --enable-wtmp           enable wtmp (wtmpx) support (requires --enable-utmp)],
-  [if test x$enableval = xyes -o x$enableval = xno; then
-    support_wtmp=$enableval
-  fi])
-
-AC_ARG_ENABLE(lastlog,
-  [  --enable-lastlog        enable lastlog support (requires --enable-utmp)],
-  [if test x$enableval = xyes -o x$enableval = xno; then
-    support_lastlog=$enableval
-  fi])
-
 AC_ARG_ENABLE(xpm-background,
   [  --enable-xpm-background enable XPM background pixmaps],
   [if test x$enableval = xyes -o x$enableval = xno; then
@@ -856,15 +838,6 @@ fi
 if test x$support_mouseslipwheel = xyes; then
   AC_DEFINE(MOUSE_SLIP_WHEELING, 1, Define to have CTRL cause wheel events to accelerate scrolling. Release CTRL to halt scrolling)
 fi
-if test x$support_utmp = xyes; then
-  AC_DEFINE(UTMP_SUPPORT, 1, Define if you want to have utmp/utmpx support)
-fi
-if test x$support_wtmp = xyes; then
-  AC_DEFINE(WTMP_SUPPORT, 1, Define if you want to have wtmp support when utmp/utmpx is enabled)
-fi
-if test x$support_lastlog = xyes; then
-  AC_DEFINE(LASTLOG_SUPPORT, 1, Define if you want to have lastlog support when utmp/utmpx is enabled)
-fi
 if test x$support_xim = xyes -o x$multichar_set = xyes; then
   if test x$rxvt_cv_func_xlocale = xyes; then
     AC_DEFINE(USE_XIM, 1, Define if you want to have XIM (X Input Method) protocol support - required for multibyte characters input)
@@ -1047,18 +1020,6 @@ if test x$support_xpm = xyes; then
   echo "  Xpm library:                $XPM_LIBS"
 fi
 
-if test x$support_utmp != xyes; then
-  echo "  utmp support:               disabled"
-  echo
-else
-  echo "  utmp support:               enabled
-  utmp file:                  $path_utmp
-  utmpx file:                 $path_utmpx
-  wtmp file:                  $path_wtmp
-  wtmpx file:                 $path_wtmpx
-  lastlog file:               $path_lastlog
-  lastlogx file:              $path_lastlogx"
-fi
 if test x$term != x; then
   echo "  set TERM to:                $term"
 fi

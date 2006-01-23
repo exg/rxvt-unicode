@@ -76,6 +76,34 @@ fi
 
 AC_DEFUN([UTMP_CHECK],
 [
+AC_ARG_ENABLE(utmp,
+  [  --enable-utmp           enable utmp (utmpx) support],
+  [if test x$enableval = xyes -o x$enableval = xno; then
+    support_utmp=$enableval
+  fi])
+
+AC_ARG_ENABLE(wtmp,
+  [  --enable-wtmp           enable wtmp (wtmpx) support (requires --enable-utmp)],
+  [if test x$enableval = xyes -o x$enableval = xno; then
+    support_wtmp=$enableval
+  fi])
+
+AC_ARG_ENABLE(lastlog,
+  [  --enable-lastlog        enable lastlog support (requires --enable-utmp)],
+  [if test x$enableval = xyes -o x$enableval = xno; then
+    support_lastlog=$enableval
+  fi])
+
+if test x$support_utmp = xyes; then
+  AC_DEFINE(UTMP_SUPPORT, 1, Define if you want to have utmp/utmpx support)
+fi
+if test x$support_wtmp = xyes; then
+  AC_DEFINE(WTMP_SUPPORT, 1, Define if you want to have wtmp support when utmp/utmpx is enabled)
+fi
+if test x$support_lastlog = xyes; then
+  AC_DEFINE(LASTLOG_SUPPORT, 1, Define if you want to have lastlog support when utmp/utmpx is enabled)
+fi
+
 AC_CHECK_FUNCS( \
 	ttyslot \
 	updwtmp \
@@ -401,6 +429,19 @@ main()
   AC_MSG_WARN(Define LASTLOGX_FILE in config.h manually)])])
 if test x$path_lastlogx != x; then
   AC_DEFINE_UNQUOTED(LASTLOGX_FILE, "$path_lastlogx", Define location of lastlogx)
+fi
+
+if test x$support_utmp != xyes; then
+  echo "  utmp support:               disabled"
+  echo
+else
+  echo "  utmp support:               enabled
+  utmp file:                  $path_utmp
+  utmpx file:                 $path_utmpx
+  wtmp file:                  $path_wtmp
+  wtmpx file:                 $path_wtmpx
+  lastlog file:               $path_lastlog
+  lastlogx file:              $path_lastlogx"
 fi
 ])
 
