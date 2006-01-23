@@ -681,18 +681,20 @@ ptytty::drop_privileges ()
 
 #ifndef PTYTTY_NO_C_API
 
+typedef void *PTYTTY;
+
 #define DEFINE_METHOD(retval, name, args1, args2) \
 extern "C" retval ptytty_ ## name args1           \
 { return ((struct ptytty *)ptytty)->name args2; }
 
-DEFINE_METHOD(int,pty,(void *ptytty),)
-DEFINE_METHOD(int,tty,(void *ptytty),)
-DEFINE_METHOD(int,get,(void *ptytty),())
-DEFINE_METHOD(void,login,(void *ptytty, int cmd_pid, bool login_shell, const char *hostname),(cmd_pid,login_shell,hostname))
+DEFINE_METHOD(int,pty,(PTYTTY ptytty),)
+DEFINE_METHOD(int,tty,(PTYTTY ptytty),)
+DEFINE_METHOD(int,get,(PTYTTY ptytty),())
+DEFINE_METHOD(void,login,(PTYTTY ptytty, int cmd_pid, bool login_shell, const char *hostname),(cmd_pid,login_shell,hostname))
 
-DEFINE_METHOD(void,close_tty,(void *ptytty),())
-DEFINE_METHOD(int,make_controlling_tty,(void *ptytty),())
-DEFINE_METHOD(void,set_utf8_mode,(void *ptytty, int on),(on))
+DEFINE_METHOD(void,close_tty,(PTYTTY ptytty),())
+DEFINE_METHOD(int,make_controlling_tty,(PTYTTY ptytty),())
+DEFINE_METHOD(void,set_utf8_mode,(PTYTTY ptytty, int on),(on))
 
 #define DEFINE_STATIC(retval, name, args) \
 extern "C" retval ptytty_ ## name args           \
@@ -702,9 +704,9 @@ DEFINE_STATIC(void,drop_privileges,())
 DEFINE_STATIC(void,use_helper,())
 DEFINE_STATIC(void,init,())
 
-DEFINE_STATIC(void *,create,())
+DEFINE_STATIC(PTYTTY ,create,())
 
-void ptytty_delete (void *ptytty)
+void ptytty_delete (PTYTTY ptytty)
 {
   delete (struct ptytty *)ptytty;
 }
