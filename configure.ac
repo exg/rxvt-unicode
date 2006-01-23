@@ -108,8 +108,6 @@ dnl AC_ENABLE_SHARED(no)dnl#	libtool
 dnl AC_ENABLE_STATIC(yes)dnl#	libtool
 dnl AC_PROG_LIBTOOL()dnl#		libtool
 
-MALLOC_TYPE=S
-
 support_frills=yes
 support_inheritpixmap=yes
 support_tinting=yes
@@ -413,25 +411,6 @@ AC_ARG_ENABLE(slipwheeling,
   [  --enable-slipwheeling   enable slip wheel scrolling     (requires previous)],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_mouseslipwheel=$enableval
-  fi])
-
-AC_ARG_ENABLE(dmalloc,
-  [  --enable-dmalloc        enable Gray Watson's malloc - for debugging use],
-  [if test x$enableval = xyes; then
-    MALLOC_TYPE=G
-    DEBUG=-DDEBUG_MALLOC
-    DLIB="-L/usr/local/lib -ldmalloc"
-    DINCLUDE=-I/usr/local/include
-  fi])
-
-AC_ARG_ENABLE(dlmalloc,
-  [  --enable-dlmalloc       enable Doug Lea's malloc - for production use
-                     NOTE: enable only one malloc package],
-  [if test x$enableval = xyes; then
-    MALLOC_TYPE=D
-    DEBUG=
-    DLIB="-L/usr/local/lib -ldlmalloc"
-    DINCLUDE=
   fi])
 
 AC_ARG_ENABLE(smart-resize,
@@ -1005,16 +984,6 @@ echo "Configuration:
   Compiler:                   $CXX
   Compiler flags:             $CFLAGS
   Linker:                     $LINKER"
-
-if test "$MALLOC_TYPE" = S; then
-  echo "  malloc support:             system default"
-fi
-if test "$MALLOC_TYPE" = G; then
-  echo "  malloc support:             Gray Watson's dmalloc"
-fi
-if test "$MALLOC_TYPE" = D; then
-  echo "  malloc support:             Doug Lea's malloc"
-fi
 
 if test x$support_xpm = xyes; then
   echo "  Xpm library:                $XPM_LIBS"

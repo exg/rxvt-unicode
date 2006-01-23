@@ -16,7 +16,6 @@ WISH: just for fun, do shade and tint with XRender.
 DUMB: support tex fonts
 
 TODO: kill arabic presentation form table
-TODO: kill dlmalloc dmalloc
 TODO: bug ayin to document possible configure options?
 
 7.2  Sun Jan 22 21:58:16 CET 2006

@@ -1528,9 +1528,5 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 # define __PROTO(p)     ()
 #endif
 
-#ifdef DEBUG_malloc
-# include "dmalloc.h"           /* This comes last */
-#endif
-
 #endif                          /* _RXVT_H_ */
 
