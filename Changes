@@ -15,6 +15,10 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an 
 WISH: just for fun, do shade and tint with XRender.
 DUMB: support tex fonts
 
+TODO: kill arabic presentation form table
+TODO: kill dlmalloc dmalloc
+TODO: bug ayin to document possible configure options?
+
 7.2  Sun Jan 22 21:58:16 CET 2006
         - bugfix: urxvt (not urxvtd) did not correctly handle multiple
           environments necessary, which resulted in segfaults within
