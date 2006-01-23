@@ -76,6 +76,10 @@ fi
 
 AC_DEFUN([UTMP_CHECK],
 [
+support_utmp=yes
+support_wtmp=yes
+support_lastlog=yes
+
 AC_ARG_ENABLE(utmp,
   [  --enable-utmp           enable utmp (utmpx) support],
   [if test x$enableval = xyes -o x$enableval = xno; then
