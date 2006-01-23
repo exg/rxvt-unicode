@@ -485,7 +485,6 @@ AC_ARG_WITH(terminfo,
 dnl# --------------------------------------------------------------------------
 
 AC_PATH_PROG(MV, mv, mv)
-AC_PATH_PROG(RM, rm, rm)
 AC_PATH_PROG(CP, cp, cp)
 AC_PATH_PROG(LN, ln, ln)
 AC_PATH_PROG(SED, sed, sed)

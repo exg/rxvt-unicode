@@ -19,8 +19,6 @@ CC = @CC@
 CXX = @CXX@
 CPP = @CPP@
 MV = @MV@
-RM = @RM@
-RMF = @RM@ -f
 CP = @CP@
 LN = @LN@
 SED = @SED@
@@ -66,11 +64,11 @@ all allbin alldoc tags:
 	@for I in ${subdirs}; do (cd $$I; ${MAKE} $@) || exit 1; done
 
 realclean: clean
-	$(RMF) config.h config.status config.log libtool
+	rm -f config.h config.status config.log libtool
 
 clean:
-	$(RMF) *~ config.cache
-	$(RMF) -r autom4te.cache
+	rm -f *~ config.cache
+	rm -f -r autom4te.cache
 	@for I in ${subdirs}; do (cd $$I; ${MAKE} $@) || exit 1; done
 
 #
@@ -114,9 +112,9 @@ cleandir: realclean
 # In that case most of those commands do nothing, except cleaning *~
 # and cleaning source links.
 distclean:
-	(cd $(srcdir); $(RMF) *~ config.cache config.h config.log config.status libtool)
+	(cd $(srcdir); rm -f *~ config.cache config.h config.log config.status libtool)
 	@for I in $(allsubdirs); do (cd $$I; $(MAKE) $@) || exit 1; done
-	(cd $(srcdir); $(RMF) Makefile)
+	(cd $(srcdir); rm -f Makefile)
 
 distdir:
 	cd doc && $(MAKE) distdepend
