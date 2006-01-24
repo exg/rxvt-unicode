@@ -25,6 +25,8 @@
 
 #include "../config.h"
 
+#include <cstddef> // needed by freebsd for NULL used in sys/uio.h
+
 #include <sys/uio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
