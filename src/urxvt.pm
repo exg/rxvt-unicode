@@ -69,6 +69,13 @@ between two vertical bars:
 
    URxvt.selection.pattern-0: \\|([^|]+)\\|
 
+Another example: Programs I use often output "absolute path: " at the
+beginning of a line when they process multiple files. The following
+pattern matches the filename (note, there is a single space at the very
+end):
+
+   URxvt.selection.pattern-0: ^(/[^:]+):\ 
+
 You can look at the source of the selection extension to see more
 interesting uses, such as parsing a line from beginning to end.
 
