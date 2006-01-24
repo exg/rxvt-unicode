@@ -1431,6 +1431,9 @@ foundpet:
       return false;
     }
 
+  if (!XGetICValues (Input_Context, XNFilterEvents, &vt_emask_xim, NULL))
+    vt_select_input ();
+
   if (input_style & XIMPreeditArea)
     IMSetStatusPosition ();
 

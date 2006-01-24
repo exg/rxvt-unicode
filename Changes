@@ -15,10 +15,11 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an 
 WISH: just for fun, do shade and tint with XRender.
 DUMB: support tex fonts
 
-TODO: ctrl - mouse button2 in vim makes X freeze
-	- don't let iso14755 get into the way of perl (could lead to global
-          grabs never being cleared).
+TODO: ctrl - mouse button2 in vim makes X freeze (unreproducable with cvs)
+        - don't let iso14755 or mouse reporting get into the way of perl
+          (could lead to global grabs never being cleared).
         - removed (unused) arabic presentation form composing sequences.
+        - correctly ask XIM for events it needs to be enabled on the window.
 
 7.2  Sun Jan 22 21:58:16 CET 2006
         - bugfix: urxvt (not urxvtd) did not correctly handle multiple

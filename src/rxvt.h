@@ -1159,11 +1159,11 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   // modifies first argument(!)
   void paste (char *data, unsigned int len) NOTHROW;
 
-  long vt_emask, vt_emask_perl;
+  long vt_emask, vt_emask_perl, vt_emask_xim;
 
   void vt_select_input () const NOTHROW
   {
-    XSelectInput (display->display, vt, vt_emask | vt_emask_perl);
+    XSelectInput (display->display, vt, vt_emask | vt_emask_perl | vt_emask_xim);
   }
 
 #if TRANSPARENT
