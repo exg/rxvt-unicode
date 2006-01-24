@@ -532,9 +532,6 @@ static struct sig_handlers
   void
   sig_term (sig_watcher &w)
   {
-#ifdef DEBUG_CMD
-    rxvt_warn ("caught signal %d, exiting.\n", w.signum);
-#endif
     rxvt_emergency_cleanup ();
     signal (w.signum, SIG_DFL);
     kill (getpid (), w.signum);
@@ -621,9 +618,6 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
   unsigned int w, h;
   unsigned int max_width, max_height;
   dDisp;
-
-  D_SIZE ((stderr, "< Cols/Rows: %3d x %3d ; Width/Height: %4d x %4d",
-          ncol, nrow, szHint.width, szHint.height));
 
   szHint.flags = PMinSize | PResizeInc | PBaseSize | PWinGravity;
   szHint.win_gravity = NorthWestGravity;
@@ -736,10 +730,6 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
 
   ncol = width / fwidth;
   nrow = height / fheight;
-  D_SIZE ((stderr, "> Cols/Rows: %3d x %3d ; Width/Height: %4d x %4d",
-          ncol, nrow, szHint.width,
-          szHint.height));
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1275,7 +1265,6 @@ rxvt_term::IM_get_IC (const char *modifiers)
   if (! ((p = XSetLocaleModifiers (modifiers)) && *p))
     return false;
 
-  D_MAIN ((stderr, "rxvt_IM_get_IC ()"));
   input_method = display->get_xim (locale, modifiers);
   if (input_method == NULL)
     return false;
@@ -1437,7 +1426,6 @@ foundpet:
   if (input_style & XIMPreeditArea)
     IMSetStatusPosition ();
 
-  D_MAIN ((stderr, "rxvt_IM_get_IC () - successful connection"));
   return true;
 }
 
@@ -1453,7 +1441,6 @@ rxvt_term::im_cb ()
 
   im_destroy ();
 
-  D_MAIN ((stderr, "rxvt_IMInstantiateCallback ()"));
   if (Input_Context)
     return;
 

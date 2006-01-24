@@ -119,9 +119,6 @@ rxvt_term::resize_scrollbar ()
                                            0,
                                            pix_colors[Color_fg],
                                            pix_colors[Color_border]);
-#ifdef DEBUG_X
-      XStoreName (display->display, scrollBar.win, "scrollbar");
-#endif
       XDefineCursor (display->display, scrollBar.win, leftptr_cursor);
 
       XSelectInput (display->display, scrollBar.win,

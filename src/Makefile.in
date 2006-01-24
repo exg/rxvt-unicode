@@ -39,11 +39,7 @@ top_builddir = ..
 basedir = ..
 thisdir = src
 
-# for developers: the following debug options may be used
-#	-DDEBUG_CMD -DDEBUG_MAIN -DDEBUG_RESOURCES
-#	-DDEBUG_SEARCH_PATH -DDEBUG_SIZE -DDEBUG_TTY -DDEBUG_TTYMODE
-#	-DDEBUG_KEYBOARD -DDEBUG_STRICT
-DEBUG=-DDEBUG_STRICT @DEBUG@
+DEBUG=-DDEBUG_STRICT
 
 first_rule: all
 dummy:

@@ -431,8 +431,6 @@ rxvt_freecommastring (char **cs) NOTHROW
  * file searching
  */
 
-/* #define DEBUG_SEARCH_PATH */
-
 #ifdef XPM_BACKGROUND
 /*
  * search for FILE in the current working directory, and within the
@@ -440,7 +438,7 @@ rxvt_freecommastring (char **cs) NOTHROW
  *
  * FILE is either semi-colon or zero terminated
  */
-char           *
+char *
 rxvt_File_search_path (const char *pathlist, const char *file, const char *ext) NOTHROW
 {
   int             maxpath, len;
@@ -455,12 +453,6 @@ rxvt_File_search_path (const char *pathlist, const char *file, const char *ext) 
     len = (p - file);
   else
     len = strlen (file);
-
-#ifdef DEBUG_SEARCH_PATH
-  getcwd (name, sizeof (name));
-  fprintf (stderr, "pwd: \"%s\"\n", name);
-  fprintf (stderr, "find: \"%.*s\"\n", len, file);
-#endif
 
   /* leave room for an extra '/' and trailing '\0' */
   maxpath = sizeof (name) - (len + (ext ? strlen (ext) : 0) + 2);
@@ -512,7 +504,7 @@ rxvt_File_search_path (const char *pathlist, const char *file, const char *ext) 
   return NULL;
 }
 
-char           *
+char *
 rxvt_File_find (const char *file, const char *ext, const char *path) NOTHROW
 {
   char           *f;
@@ -521,11 +513,6 @@ rxvt_File_find (const char *file, const char *ext, const char *path) NOTHROW
     return NULL;
 
   f = rxvt_File_search_path (path, file, ext);
-
-#ifdef DEBUG_SEARCH_PATH
-  if (f)
-    fprintf (stderr, "found: \"%s\"\n", f);
-#endif
 
   return f;
 }

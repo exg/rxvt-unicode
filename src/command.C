@@ -301,9 +301,6 @@ rxvt_term::lookup_key (XKeyEvent &ev)
   int ctrl, meta, shft, len;
   unsigned int newlen;
   KeySym keysym;
-#ifdef DEBUG_CMD
-  static int debug_key = 1;	/* accessible by a debugger only */
-#endif
   int valid_keysym;
   char kbuf[KBUFSZ];
 
@@ -904,16 +901,6 @@ rxvt_term::lookup_key (XKeyEvent &ev)
       tt_write (&ch, 1);
     }
 
-#if defined(DEBUG_CMD)
-  /* Display keyboard buffer contents */
-  unsigned char *p;
-  int i;
-
-  fprintf (stderr, "key 0x%04X [%d]: `", (unsigned int)keysym, len);
-  for (i = 0, p = kbuf; i < len; i++, p++)
-    fprintf (stderr, (*p >= ' ' && *p < '\177' ? "%c" : "\\%03o"), *p);
-  fprintf (stderr, "'\n");
-#endif				/* DEBUG_CMD */
   tt_write (kbuf, (unsigned int)len);
 }
 /*}}} */
@@ -3293,13 +3280,6 @@ rxvt_term::process_csi_seq ()
   for (p = 0; p < nargs; p++)
     if (arg[p] == -1)
       arg[p] = ndef;
-
-#ifdef DEBUG_CMD
-  fprintf (stderr, "CSI ");
-  for (p = 0; p < nargs; p++)
-    fprintf (stderr, "%d%s", arg[p], p < nargs - 1 ? ";" : "");
-  fprintf (stderr, "%c\n", ch);
-#endif
 
   /*
    * private mode handling

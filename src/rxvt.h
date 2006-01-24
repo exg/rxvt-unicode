@@ -825,27 +825,6 @@ enum {
 # define XPMClearArea(a, b, c, d, e, f, g)
 #endif
 
-#ifdef DEBUG_CMD
-# define D_CMD(x)               fprintf x ; fputc('\n', stderr)
-#else
-# define D_CMD(x)
-#endif
-#ifdef DEBUG_INIT
-# define D_INIT(x)              fprintf x ; fputc('\n', stderr)
-#else
-# define D_INIT(x)
-#endif
-#ifdef DEBUG_MAIN
-# define D_MAIN(x)              fprintf x ; fputc('\n', stderr)
-#else
-# define D_MAIN(x)
-#endif
-#ifdef DEBUG_SIZE
-# define D_SIZE(x)              fprintf x ; fputc('\n', stderr)
-#else
-# define D_SIZE(x)
-#endif
-
 typedef callback1<void, const char *> log_callback;
 typedef callback1<int, int> getfd_callback;
 

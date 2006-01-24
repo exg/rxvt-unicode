@@ -36,8 +36,6 @@
 #define Optflag_Boolean              0x80000000UL
 #define Optflag_mask                 0x3fffffffUL
 
-/* #define DEBUG_RESOURCES */
-
 /*{{{ monolithic option/resource structure: */
 /*
  * `string' options MUST have a usage argument
@@ -494,9 +492,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
       const char *flag, *opt;
 
       opt = argv[i];
-#ifdef DEBUG_RESOURCES
-      fprintf (stderr, "argv[%d] = %s: ", i, opt);
-#endif
+
       if (*opt == '-')
         {
           flag = On;
@@ -547,10 +543,6 @@ rxvt_term::get_options (int argc, const char *const *argv)
             }
           else
             {		/* boolean value */
-#ifdef DEBUG_RESOURCES
-              fprintf (stderr, "boolean (%s,%s) = %s\n",
-                      optList[entry].opt, optList[entry].kw, flag);
-#endif
               set_option (optList[entry].flag & Optflag_mask, flag == On);
 
               if (optList[entry].doff != -1)
