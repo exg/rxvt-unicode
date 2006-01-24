@@ -18,6 +18,7 @@ DUMB: support tex fonts
 TODO: ctrl - mouse button2 in vim makes X freeze (unreproducable with cvs)
         - don't let iso14755 or mouse reporting get into the way of perl
           (could lead to global grabs never being cleared).
+        - moved Shift-Button2 paste combination to Meta-Button2.
         - removed (unused) arabic presentation form composing sequences.
         - correctly ask XIM for events it needs to be enabled on the window.
 
