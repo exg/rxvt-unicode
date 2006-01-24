@@ -1192,10 +1192,12 @@ the selection.
 
 =item B<Insertion>:
 
-Pressing and releasing the Middle mouse button in an B<@@RXVT_NAME@@> window
-causes the value of the PRIMARY selection (Shift for CLIPBOARD) to be inserted
-as if it had been typed on the keyboard.
-B<Shift-Insert> causes the value of the PRIMARY selection to be inserted too.
+Pressing and releasing the Middle mouse button in an B<@@RXVT_NAME@@>
+window causes the value of the PRIMARY selection (or CLIPBOARD with the
+Meta modifier) to be inserted as if it had been typed on the keyboard.
+
+Pressing B<Shift-Insert> causes the value of the PRIMARY selection to be
+inserted too.
 
 =back
 
