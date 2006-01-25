@@ -37,6 +37,10 @@
 
 #include "../config.h"
 
+#include "ptytty.h"
+
+#if UTMP_SUPPORT
+
 #include <cstdio>
 
 #include <sys/types.h>
@@ -44,10 +48,6 @@
 #include <sys/fcntl.h>
 #include <unistd.h>
 #include <time.h>
-
-#include "ptytty.h"
-
-#if UTMP_SUPPORT
 
 #if HAVE_STRUCT_UTMP
 static int              write_bsd_utmp              (int utmp_pos, struct utmp *wu);
@@ -428,7 +428,7 @@ update_lastlog (const char *fname, const char *pty, const char *host)
   pwent = getpwuid (getuid ());
   if (!pwent)
     {
-      ptytty_warn ("no entry in password file, not updating lastlog.\n");
+      ptytty_warn ("no entry in password file, not updating lastlog.\n", 0);
       return;
     }
 

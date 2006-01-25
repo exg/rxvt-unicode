@@ -305,7 +305,7 @@ ptytty::init ()
 #if PTYTTY_HELPER
       use_helper ();
 #else
-      ptytty_warn ("running setuid/setgid without pty helper compiled in, continuing unprivileged.\n");
+      ptytty_warn ("running setuid/setgid without pty helper compiled in, continuing unprivileged.\n", 0);
 #endif
 
       drop_privileges ();
