@@ -898,7 +898,8 @@ with the B<Execute> key.
 
 =item B<cutchars:> I<string>
 
-The characters used as delimiters for double-click word selection.
+The characters used as delimiters for double-click word selection
+(whitespace delimiting is added automatically if resource is given).
 
 When the selection extension is in use (the default if compiled in, see
 the @@RXVT_NAME@@perl(3) manpage), a suitable regex using these characters
