@@ -381,8 +381,9 @@ static const char optionsstring[] = "options: "
                                     "pointerBlank,"
 #endif
 #if defined(NO_RESOURCES)
-                                    "NoResources"
+                                    "NoResources,"
 #endif
+                                    "v" VERSION
                                     "\nUsage: ";		/* Usage */
 
 #define INDENT 18
