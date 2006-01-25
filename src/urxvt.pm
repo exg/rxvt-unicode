@@ -244,7 +244,7 @@ similar-looking ascii character.
 
 Displays a digital clock using the built-in overlay.
 
-=item remote-selection
+=item remote-clipboard
 
 Somewhat of a misnomer, this extension adds two menu entries to the
 selection popup that allows one ti run external commands to store the
@@ -517,11 +517,14 @@ code is run after this hook, and takes precedence.
 
 Called just after the screen gets redrawn. See C<on_refresh_begin>.
 
-=item on_keyboard_command $term, $string
+=item on_user_command $term, $string
 
-Called whenever the user presses a key combination that has a
-C<perl:string> action bound to it (see description of the B<keysym>
+Called whenever the a user-configured event is being activated (e.g. via
+a C<perl:string> action bound to a key, see description of the B<keysym>
 resource in the @@RXVT_NAME@@(1) manpage).
+
+The event is simply the action string. This interface is assumed to change
+slightly in the future.
 
 =item on_x_event $term, $event
 

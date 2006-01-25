@@ -24,7 +24,7 @@
   def (REFRESH_BEGIN)
   def (REFRESH_END)
 
-  def (KEYBOARD_COMMAND)
+  def (USER_COMMAND)
 
   def (X_EVENT)
   def (FOCUS_IN)

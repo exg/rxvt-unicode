@@ -18,7 +18,7 @@ DUMB: support tex fonts
         - moved Shift-Button2 paste combination to Meta-Button2.
         - the cutchars resource will now be respected and used by the
           selection extension.
-        - added the "remote-selection" extension which just runs external
+        - added the "remote-clipboard" extension which just runs external
           commands to fetch and store the selection data.
         - removed (unused) arabic presentation form composing sequences.
         - be more strict when deciding that a core font glyph is too wide and
@@ -28,6 +28,7 @@ DUMB: support tex fonts
         - redraw even more characters around characters usign careful mode.
         - reduced number of server turnarounds at startup by allocating
           atoms only once per display.
+        - renamed on_keyboard_command to on_user_command.
         - changed version sos (ESC [ > c) response to be more compatible with
           xterm.
 
