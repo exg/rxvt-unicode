@@ -244,11 +244,25 @@ similar-looking ascii character.
 
 Displays a digital clock using the built-in overlay.
 
-=item example-refresh-hooks
+=item remote-selection
 
-Displays a very simple digital clock in the upper right corner of the
-window. Illustrates overwriting the refresh callbacks to create your own
-overlays or changes.
+Somewhat of a misnomer, this extension adds two menu entries to the
+selection popup that allows one ti run external commands to store the
+selection somewhere and fetch it again.
+
+We use it to implement a "distributed selection mechanism", which just
+means that one command uploads the file to a remote server, and another
+reads it.
+
+The commands can be set using the C<URxvt.remote-selection.store> and
+C<URxvt.remote-selection.fetch> resources. The first should read the
+selection to store from STDIN (always in UTF-8), the second should provide
+the selection data on STDOUT (also in UTF-8).
+
+The defaults (which are likely useless to you) use rsh and cat:
+
+   URxvt.remote-selection.store: rsh ruth 'cat >/tmp/distributed-selection'
+   URxvt.remote-selection.fetch: rsh ruth 'cat /tmp/distributed-selection'
 
 =item selection-pastebin
 
@@ -278,6 +292,12 @@ in the C<selection-pastebin-url> resource (again, the % is the placeholder
 for the filename):
 
    URxvt.selection-pastebin.url: http://www.ta-sa.org/files/txt/%
+
+=item example-refresh-hooks
+
+Displays a very simple digital clock in the upper right corner of the
+window. Illustrates overwriting the refresh callbacks to create your own
+overlays or changes.
 
 =back
 

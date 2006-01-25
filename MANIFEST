@@ -171,6 +171,7 @@ src/perl/mark-urls
 src/perl/tabbed
 src/perl/xim-onthespot
 src/perl/readline
+src/perl/remote-selection
 src/perl/example-refresh-hooks
 src/perl/block-graphics-to-ascii
 src/perl/digital-clock

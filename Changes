@@ -8,7 +8,6 @@ TODO: after requesting the selection and getting a timeout, no further requests 
 TODO: "slow" rendering mode for bidi and scripts
 TODO: read property sequence is broken with respect to utf-8 etc.
 TODO: rxvt -name urxvt-girly /// leave pixel droppings
-TODO: distributed clipboard example
 WISH: anyevent mouse notification / manage MotionMask better.
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an overlay...
 WISH: just for fun, do shade and tint with XRender.
@@ -21,6 +20,8 @@ DUMB: support tex fonts
         - moved Shift-Button2 paste combination to Meta-Button2.
         - the cutchars resource will now be respected and used by the
           selection extension.
+        - added the "remote-selection" extension which just runs external
+          commands to fetch and store the selection data.
         - removed (unused) arabic presentation form composing sequences.
         - be more strict when deciding that a core font glyph is too wide and
           needs the careful rendering mode.
