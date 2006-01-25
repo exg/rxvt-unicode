@@ -309,7 +309,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os VERSION DATE LSMDATE LIBVERSION CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX CPP INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA EGREP LINKER INSTALL_LIBRXVT RXVTNAME MV RM CP LN SED ECHO CMP TIC CXXCPP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS XPM_CPPFLAGS XPM_CFLAGS XPM_LIBS rxvt_int16_typedef rxvt_uint16_typedef rxvt_int32_typedef rxvt_uint32_typedef rxvt_intp_define rxvt_u_intp_define PKG_CONFIG XFT_CONFIG PERL PERLLIB PERLFLAGS PERLPRIVLIBEXP IF_PERL PERL_O DEBUG DINCLUDE DLIB include_stdint_h include_stdarg_h include_stdlib_h include_unistd_h include_string_h include_fcntl_h include_util_h include_assert_h include_sys_ioctl_h include_sys_select_h include_sys_strredir_h include_sys_time_h include_time_h LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os VERSION DATE LSMDATE LIBVERSION CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX CPP INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA EGREP LINKER INSTALL_LIBRXVT RXVTNAME MV CP LN SED ECHO CMP TIC CXXCPP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS XPM_CPPFLAGS XPM_CFLAGS XPM_LIBS rxvt_int16_typedef rxvt_uint16_typedef rxvt_int32_typedef rxvt_uint32_typedef rxvt_intp_define rxvt_u_intp_define PKG_CONFIG XFT_CONFIG PERL PERLLIB PERLFLAGS PERLPRIVLIBEXP IF_PERL PERL_O DEBUG DINCLUDE DLIB include_stdint_h include_stdarg_h include_stdlib_h include_unistd_h include_string_h include_fcntl_h include_util_h include_assert_h include_sys_ioctl_h include_sys_select_h include_sys_strredir_h include_sys_time_h include_time_h LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -872,9 +872,6 @@ Optional Features:
   --enable-combining      enable composition of base and combining characters
   --enable-xft            enable xft support on systems that have it
   --enable-font-styles    enable bold and italic support
-  --enable-utmp           enable utmp (utmpx) support
-  --enable-wtmp           enable wtmp (wtmpx) support (requires --enable-utmp)
-  --enable-lastlog        enable lastlog support (requires --enable-utmp)
   --enable-xpm-background enable XPM background pixmaps
   --enable-transparency   enable transparent backgrounds
   --enable-tinting        enable tinting of transparent bg
@@ -893,17 +890,16 @@ Optional Features:
   --disable-swapscreen    disable swap screen support
   --enable-iso14755       enable support for extended ISO 14755 modes
   --enable-frills         enable support for rarely used features
-  --enable-24bit          enable support for using 24bit visuals if available
   --enable-keepscrolling  enable continual scrolling on scrollbar arrow press
   --enable-selectionscrolling  enable scrolling during selections
   --enable-mousewheel     enable scrolling via mouse wheel or buttons 4 & 5
   --enable-slipwheeling   enable slip wheel scrolling     (requires previous)
-  --enable-dmalloc        enable Gray Watson's malloc - for debugging use
-  --enable-dlmalloc       enable Doug Lea's malloc - for production use
-                     NOTE: enable only one malloc package
   --enable-smart-resize   enable smart growth/shrink behaviour
   --enable-text-blink     enable blinking text
   --enable-pointer-blank  enable pointer blank when typing or inactive pointer
+  --enable-utmp           enable utmp (utmpx) support
+  --enable-wtmp           enable wtmp (wtmpx) support (requires --enable-utmp)
+  --enable-lastlog        enable lastlog support (requires --enable-utmp)
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -4084,8 +4080,6 @@ rm -f conftest.err conftest.$ac_objext \
       conftest$ac_exeext conftest.$ac_ext
 
 
-MALLOC_TYPE=S
-
 support_frills=yes
 support_inheritpixmap=yes
 support_tinting=yes
@@ -4094,9 +4088,6 @@ support_keepscrolling=yes
 support_selectionscrolling=yes
 support_mousewheel=yes
 support_mouseslipwheel=yes
-support_utmp=yes
-support_wtmp=yes
-support_lastlog=yes
 support_text_blink=yes
 support_pointer_blank=yes
 support_scroll_rxvt=yes
@@ -4130,7 +4121,6 @@ if test "${enable_everything+set}" = set; then
   enableval="$enable_everything"
 
     if test x$enableval = xno; then
-       support_24bit=no
        support_frills=no
        support_inheritpixmap=no
        support_tinting=no
@@ -4160,7 +4150,6 @@ if test "${enable_everything+set}" = set; then
        codesets=
     fi
     if test x$enableval = xyes; then
-       support_24bit=yes
        support_frills=yes
        support_inheritpixmap=yes
        support_tinting=yes
@@ -4221,30 +4210,6 @@ if test "${enable_font_styles+set}" = set; then
   enableval="$enable_font_styles"
   if test x$enableval = xyes -o x$enableval = xno; then
     support_styles=$enableval
-  fi
-fi;
-
-# Check whether --enable-utmp or --disable-utmp was given.
-if test "${enable_utmp+set}" = set; then
-  enableval="$enable_utmp"
-  if test x$enableval = xyes -o x$enableval = xno; then
-    support_utmp=$enableval
-  fi
-fi;
-
-# Check whether --enable-wtmp or --disable-wtmp was given.
-if test "${enable_wtmp+set}" = set; then
-  enableval="$enable_wtmp"
-  if test x$enableval = xyes -o x$enableval = xno; then
-    support_wtmp=$enableval
-  fi
-fi;
-
-# Check whether --enable-lastlog or --disable-lastlog was given.
-if test "${enable_lastlog+set}" = set; then
-  enableval="$enable_lastlog"
-  if test x$enableval = xyes -o x$enableval = xno; then
-    support_lastlog=$enableval
   fi
 fi;
 
@@ -4469,14 +4434,6 @@ if test "${enable_frills+set}" = set; then
   fi
 fi;
 
-# Check whether --enable-24bit or --disable-24bit was given.
-if test "${enable_24bit+set}" = set; then
-  enableval="$enable_24bit"
-  if test x$enableval = xyes -o x$enableval = xno; then
-    support_24bit=$enableval
-  fi
-fi;
-
 # Check whether --enable-keepscrolling or --disable-keepscrolling was given.
 if test "${enable_keepscrolling+set}" = set; then
   enableval="$enable_keepscrolling"
@@ -4506,28 +4463,6 @@ if test "${enable_slipwheeling+set}" = set; then
   enableval="$enable_slipwheeling"
   if test x$enableval = xyes -o x$enableval = xno; then
     support_mouseslipwheel=$enableval
-  fi
-fi;
-
-# Check whether --enable-dmalloc or --disable-dmalloc was given.
-if test "${enable_dmalloc+set}" = set; then
-  enableval="$enable_dmalloc"
-  if test x$enableval = xyes; then
-    MALLOC_TYPE=G
-    DEBUG=-DDEBUG_MALLOC
-    DLIB="-L/usr/local/lib -ldmalloc"
-    DINCLUDE=-I/usr/local/include
-  fi
-fi;
-
-# Check whether --enable-dlmalloc or --disable-dlmalloc was given.
-if test "${enable_dlmalloc+set}" = set; then
-  enableval="$enable_dlmalloc"
-  if test x$enableval = xyes; then
-    MALLOC_TYPE=D
-    DEBUG=
-    DLIB="-L/usr/local/lib -ldlmalloc"
-    DINCLUDE=
   fi
 fi;
 
@@ -4621,46 +4556,6 @@ MV=$ac_cv_path_MV
 if test -n "$MV"; then
   echo "$as_me:$LINENO: result: $MV" >&5
 echo "${ECHO_T}$MV" >&6
-else
-  echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6
-fi
-
-# Extract the first word of "rm", so it can be a program name with args.
-set dummy rm; ac_word=$2
-echo "$as_me:$LINENO: checking for $ac_word" >&5
-echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
-if test "${ac_cv_path_RM+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  case $RM in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_RM="$RM" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-  for ac_exec_ext in '' $ac_executable_extensions; do
-  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_RM="$as_dir/$ac_word$ac_exec_ext"
-    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-done
-
-  test -z "$ac_cv_path_RM" && ac_cv_path_RM="rm"
-  ;;
-esac
-fi
-RM=$ac_cv_path_RM
-
-if test -n "$RM"; then
-  echo "$as_me:$LINENO: result: $RM" >&5
-echo "${ECHO_T}$RM" >&6
 else
   echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
@@ -10169,6 +10064,56 @@ done
 
 
 
+support_utmp=yes
+support_wtmp=yes
+support_lastlog=yes
+
+# Check whether --enable-utmp or --disable-utmp was given.
+if test "${enable_utmp+set}" = set; then
+  enableval="$enable_utmp"
+  if test x$enableval = xyes -o x$enableval = xno; then
+    support_utmp=$enableval
+  fi
+fi;
+
+# Check whether --enable-wtmp or --disable-wtmp was given.
+if test "${enable_wtmp+set}" = set; then
+  enableval="$enable_wtmp"
+  if test x$enableval = xyes -o x$enableval = xno; then
+    support_wtmp=$enableval
+  fi
+fi;
+
+# Check whether --enable-lastlog or --disable-lastlog was given.
+if test "${enable_lastlog+set}" = set; then
+  enableval="$enable_lastlog"
+  if test x$enableval = xyes -o x$enableval = xno; then
+    support_lastlog=$enableval
+  fi
+fi;
+
+if test x$support_utmp = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define UTMP_SUPPORT 1
+_ACEOF
+
+fi
+if test x$support_wtmp = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define WTMP_SUPPORT 1
+_ACEOF
+
+fi
+if test x$support_lastlog = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define LASTLOG_SUPPORT 1
+_ACEOF
+
+fi
+
 
 
 
@@ -11692,6 +11637,19 @@ _ACEOF
 
 fi
 
+if test x$support_utmp != xyes; then
+  echo "  utmp support:               disabled"
+  echo
+else
+  echo "  utmp support:               enabled
+  utmp file:                  $path_utmp
+  utmpx file:                 $path_utmpx
+  wtmp file:                  $path_wtmp
+  wtmpx file:                 $path_wtmpx
+  lastlog file:               $path_lastlog
+  lastlogx file:              $path_lastlogx"
+fi
+
 
 
 echo "$as_me:$LINENO: checking where ttys/ttytab is located" >&5
@@ -13165,13 +13123,6 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
 fi
-if test x$support_24bit = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define PREFER_24BIT 1
-_ACEOF
-
-fi
 if test x$support_mousewheel = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
@@ -13183,27 +13134,6 @@ if test x$support_mouseslipwheel = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
 #define MOUSE_SLIP_WHEELING 1
-_ACEOF
-
-fi
-if test x$support_utmp = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define UTMP_SUPPORT 1
-_ACEOF
-
-fi
-if test x$support_wtmp = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define WTMP_SUPPORT 1
-_ACEOF
-
-fi
-if test x$support_lastlog = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define LASTLOG_SUPPORT 1
 _ACEOF
 
 fi
@@ -14258,7 +14188,6 @@ s,@LINKER@,$LINKER,;t t
 s,@INSTALL_LIBRXVT@,$INSTALL_LIBRXVT,;t t
 s,@RXVTNAME@,$RXVTNAME,;t t
 s,@MV@,$MV,;t t
-s,@RM@,$RM,;t t
 s,@CP@,$CP,;t t
 s,@LN@,$LN,;t t
 s,@SED@,$SED,;t t
@@ -14807,32 +14736,10 @@ echo "Configuration:
   Compiler flags:             $CFLAGS
   Linker:                     $LINKER"
 
-if test "$MALLOC_TYPE" = S; then
-  echo "  malloc support:             system default"
-fi
-if test "$MALLOC_TYPE" = G; then
-  echo "  malloc support:             Gray Watson's dmalloc"
-fi
-if test "$MALLOC_TYPE" = D; then
-  echo "  malloc support:             Doug Lea's malloc"
-fi
-
 if test x$support_xpm = xyes; then
   echo "  Xpm library:                $XPM_LIBS"
 fi
 
-if test x$support_utmp != xyes; then
-  echo "  utmp support:               disabled"
-  echo
-else
-  echo "  utmp support:               enabled
-  utmp file:                  $path_utmp
-  utmpx file:                 $path_utmpx
-  wtmp file:                  $path_wtmp
-  wtmpx file:                 $path_wtmpx
-  lastlog file:               $path_lastlog
-  lastlogx file:              $path_lastlogx"
-fi
 if test x$term != x; then
   echo "  set TERM to:                $term"
 fi

@@ -1,6 +1,7 @@
 rxvt-unicode changelog <= google-friendly title
 
 TODO: event mechanism that replaces on_keyboard_command with something more scalable.
+TODO: overlays collide with the way the out-of-focus cursor is being drawn
 TODO: simplify selection_request and make it callable from perl.
 TODO: split perl documentation and urxvt.pm into separate files
 TODO: harmonize --disable-options into position-dependent options.
@@ -12,7 +13,7 @@ WISH: just for fun, do shade and tint with XRender.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
-TODO: overlays collide with the way the out-of-focus cursor is being drawn
+7.3
         - don't let iso14755 or mouse reporting get into the way of perl
           (could lead to global grabs never being cleared).
         - experimental OnTheSpot editing support (-pe xim-onthespot).

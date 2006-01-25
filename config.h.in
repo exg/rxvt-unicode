@@ -304,9 +304,6 @@
 /* Define if you want hide the pointer while typing */
 #undef POINTER_BLANK
 
-/* Define to use a 24 bit visual if the screen has 24 bit mode */
-#undef PREFER_24BIT
-
 /* Resource class */
 #undef RESCLASS
 
