@@ -328,6 +328,8 @@ ptytty::drop_privileges ()
 #elif HAVE_SETUID
   setgid (gid);
   setuid (uid);
+#else
+# error no way to drop privileges, configure failed?
 #endif
 
   if (uid != geteuid ()

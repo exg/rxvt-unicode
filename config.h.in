@@ -114,6 +114,9 @@
 /* Define to 1 if you have the `setreuid' function. */
 #undef HAVE_SETREUID
 
+/* Define to 1 if you have the `setuid' function. */
+#undef HAVE_SETUID
+
 /* Define to 1 if you have the `setutent' function. */
 #undef HAVE_SETUTENT
 

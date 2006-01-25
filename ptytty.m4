@@ -17,6 +17,10 @@ AC_CHECK_FUNCS( \
   getpt \
   posix_openpt \
   isastream \
+  setuid \
+  seteuid \
+  setreuid \
+  setresuid \
 )
 
 have_clone=no

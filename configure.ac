@@ -654,9 +654,6 @@ dnl> AC_FUNC_VPRINTF
 AC_CHECK_FUNCS( \
 	unsetenv \
 	setutent \
-	seteuid \
-	setresuid \
-	setreuid \
 	on_exit \
 )
 
