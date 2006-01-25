@@ -194,7 +194,6 @@ rxvt_term::init_vars ()
   options = DEFAULT_OPTIONS;
   want_refresh = 1;
   priv_modes = SavedModes = PrivMode_Default;
-  focus = 0;
   ncol = 80;
   nrow = 24;
   int_bwidth = INTERNALBORDERWIDTH;
@@ -205,7 +204,6 @@ rxvt_term::init_vars ()
 
   refresh_limit = 1;
   refresh_type = SLOW_REFRESH;
-  prev_nrow = prev_ncol = 0;
 
   oldcursor.row = oldcursor.col = -1;
 #ifdef XPM_BACKGROUND
@@ -487,15 +485,7 @@ rxvt_term::init_env ()
 
   sprintf (env_display, "DISPLAY=%s", val);
 
-  /* avoiding the math library:
-   * i = (int) (ceil (log10 ((unsigned int)parent[0]))) */
-  for (i = 0, u = (unsigned int)parent[0]; u; u /= 10, i++)
-    ;
-  max_it (i, 1);
-  env_windowid = (char *)rxvt_malloc ((i + 10) * sizeof (char));
-
-  sprintf (env_windowid, "WINDOWID=%u",
-           (unsigned int)parent[0]);
+  sprintf (env_windowid, "WINDOWID=%lu", (unsigned long)parent[0]);
 
   /* add entries to the environment:
    * @ DISPLAY:   in case we started with -display
@@ -507,6 +497,7 @@ rxvt_term::init_env ()
    */
   putenv (env_display);
   putenv (env_windowid);
+
   if (env_colorfgbg)
     putenv (env_colorfgbg);
 

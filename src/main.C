@@ -273,10 +273,8 @@ rxvt_term::~rxvt_term ()
 
   free (selection.text);
   // TODO: manage env vars in child only(!)
-  free (env_windowid);
   free (env_display);
   free (env_term);
-  free (env_colorfgbg);
   free (locale);
   free (v_buffer);
   free (incr_buf);
@@ -988,7 +986,6 @@ rxvt_term::set_colorfgbg ()
   const char *xpmb = "\0";
   char fstr[sizeof ("default") + 1], bstr[sizeof ("default") + 1];
 
-  env_colorfgbg = (char *)rxvt_malloc (sizeof ("COLORFGBG=default;default;bg") + 1);
   strcpy (fstr, "default");
   strcpy (bstr, "default");
   for (i = Color_Black; i <= Color_White; i++)

@@ -1068,15 +1068,16 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 
   vector<void *> allocated;           // free these memory blocks with free()
 
-  char           *env_windowid;       /* environmental variable WINDOWID */
+  char            env_windowid[21];   /* environmental variable WINDOWID */
+  char            env_colorfgbg[sizeof ("COLORFGBG=default;default;bg") + 1];
   char           *env_display;        /* environmental variable DISPLAY  */
   char           *env_term;           /* environmental variable TERM     */
-  char           *env_colorfgbg;
+
   char           *locale;
   char            charsets[4];
   char           *v_buffer;           /* pointer to physical buffer */
   unsigned int    v_buflen;           /* size of area to write */
-  stringvec      *argv, *envv;        /* if != 0, will be freed on destroy time */
+  stringvec      *argv, *envv;        /* if != 0, will be freed at destroy time */
 
 #ifdef KEYSYM_RESOURCE
   keyboard_manager *keyboard;

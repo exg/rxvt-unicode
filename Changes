@@ -15,6 +15,7 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an 
 WISH: just for fun, do shade and tint with XRender.
 DUMB: support tex fonts
 
+TODO: move resources out of allocated
         - don't let iso14755 or mouse reporting get into the way of perl
           (could lead to global grabs never being cleared).
         - experimental OnTheSpot editing support (-pe xim-onthespot).
