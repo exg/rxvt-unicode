@@ -18,7 +18,7 @@ sub msg {
 sub wait_pipe {
    my ($self, $fh, $pid, $msg) = @_;
 
-   $self->msg ("waiting for process to finish...");
+   $self->msg ("waiting for selection process to finish...");
 
    my $wait_pipe; $wait_pipe = urxvt::pw->new->start ($pid)->cb (sub {
       my ($undef, $status) = @_;
@@ -74,7 +74,7 @@ sub fetch {
             delete $self->{iow};
             $self->selection_clear;
             $self->selection ($txt);
-            $self->selection_make (urxvt::CurrentTime);
+            $self->selection_grab (urxvt::CurrentTime);
             $self->wait_pipe ($fh, $pid, "selection fetched");
          }
       });
