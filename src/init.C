@@ -179,14 +179,11 @@ const char *const def_colorName[] =
 bool
 rxvt_term::init_vars ()
 {
-  pix_colors_focused = new rxvt_color [TOTAL_COLORS];
+  pix_colors           = //
+  pix_colors_focused   = new rxvt_color [TOTAL_COLORS];
 #ifdef OFF_FOCUS_FADING
   pix_colors_unfocused = new rxvt_color [TOTAL_COLORS];
 #endif
-  pix_colors = pix_colors_focused;
-
-  if (pix_colors == NULL)
-    return false;
 
 #if defined(XPM_BACKGROUND) || defined(TRANSPARENT)
   pixmap = None;
@@ -1040,7 +1037,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
 #ifdef XPM_BACKGROUND
   if (rs[Rs_backgroundPixmap] != NULL
-      && ! OPTION (Opt_transparent))
+      && !OPTION (Opt_transparent))
     {
       const char *p = rs[Rs_backgroundPixmap];
 
