@@ -159,7 +159,7 @@ static uint16_t extent_test_chars[] = {
 
 #define NUM_EXTENT_TEST_CHARS (sizeof (extent_test_chars) / sizeof (extent_test_chars[0]))
 
-#define dTermDisplay Display *disp = term->display->display
+#define dTermDisplay Display *disp = term->xdisp
 #define dTermGC      GC gc = term->gc
 
 /////////////////////////////////////////////////////////////////////////////
@@ -506,8 +506,8 @@ rxvt_font_x11::get_property (XFontStruct *f, const char *property, const char *r
 {
   unsigned long value;
 
-  if (XGetFontProperty (f, XInternAtom (term->display->display, property, 0), &value))
-    return XGetAtomName (term->display->display, value);
+  if (XGetFontProperty (f, XInternAtom (term->xdisp, property, 0), &value))
+    return XGetAtomName (term->xdisp, value);
   else
     return rxvt_strdup (repl);
 }
@@ -538,14 +538,14 @@ rxvt_font_x11::set_properties (rxvt_fontprop &p, XFontStruct *f)
   unsigned long height;
 
 #if 0
-  if (!XGetFontProperty (f, XInternAtom (term->display->display, "PIXEL_SIZE", 0), &height))
+  if (!XGetFontProperty (f, XInternAtom (term->xdisp, "PIXEL_SIZE", 0), &height))
     return false;
 #else
   height = f->ascent + f->descent;
 #endif
 
   unsigned long avgwidth;
-  if (!XGetFontProperty (f, XInternAtom (term->display->display, "AVERAGE_WIDTH", 0), &avgwidth))
+  if (!XGetFontProperty (f, XInternAtom (term->xdisp, "AVERAGE_WIDTH", 0), &avgwidth))
     avgwidth = 0;
 
   char *weight = get_property (f, "WEIGHT_NAME", "medium");
@@ -886,7 +886,7 @@ rxvt_font_x11::clear ()
 {
   if (f)
     {
-      XFreeFont (term->display->display, f);
+      XFreeFont (term->xdisp, f);
       f = 0;
     }
 }
@@ -1068,7 +1068,7 @@ rxvt_font_xft::clear ()
 {
   if (f)
     {
-      XftFontClose (term->display->display, f);
+      XftFontClose (term->xdisp, f);
       f = 0;
     }
 }
@@ -1245,7 +1245,7 @@ rxvt_font_xft::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
 {
   careful = false;
 
-  if (!XftCharExists (term->display->display, f, unicode))
+  if (!XftCharExists (term->xdisp, f, unicode))
     return false;
 
   if (!prop || prop->width == rxvt_fontprop::unset)
@@ -1254,7 +1254,7 @@ rxvt_font_xft::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
   // check character against base font bounding box
   FcChar32 ch = unicode;
   XGlyphInfo g;
-  XftTextExtents32 (term->display->display, f, &ch, 1, &g);
+  XftTextExtents32 (term->xdisp, f, &ch, 1, &g);
 
   int w = g.width - g.x;
   int wcw = WCWIDTH (unicode);
@@ -1562,7 +1562,7 @@ rxvt_fontset::find_font (unicode_t unicode)
               //FcPatternAddBool    (p, FC_ANTIALIAS, 1);
 
               XftResult result;
-              FcPattern *match = XftFontMatch (term->display->display, term->display->screen, p, &result);
+              FcPattern *match = XftFontMatch (term->xdisp, term->display->screen, p, &result);
 
               FcPatternDestroy (p);
 

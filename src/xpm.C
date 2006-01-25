@@ -355,11 +355,11 @@ rxvt_term::set_bgPixmap (const char *file)
 
   if (bgPixmap.pixmap != None)
     {
-      XFreePixmap (display->display, bgPixmap.pixmap);
+      XFreePixmap (xdisp, bgPixmap.pixmap);
       bgPixmap.pixmap = None;
     }
 
-  XSetWindowBackground (display->display, vt, pix_colors[Color_bg]);
+  XSetWindowBackground (xdisp, vt, pix_colors[Color_bg]);
 
   if (*file != '\0')
     {
@@ -368,7 +368,7 @@ rxvt_term::set_bgPixmap (const char *file)
       /*
        * we already have the required attributes
        */
-      /*      XGetWindowAttributes (display->display, vt, &attr); */
+      /*      XGetWindowAttributes (xdisp, vt, &attr); */
 
       xpmAttr.closeness = 30000;
       xpmAttr.colormap = cmap;
@@ -380,7 +380,7 @@ rxvt_term::set_bgPixmap (const char *file)
       /* search environment variables here too */
       f = (char *)rxvt_File_find (file, ".xpm", rs[Rs_path]);
       if (f == NULL
-          || XpmReadFileToPixmap (display->display, display->root, f,
+          || XpmReadFileToPixmap (xdisp, display->root, f,
                                   &bgPixmap.pixmap, NULL,
                                   &xpmAttr))
         {

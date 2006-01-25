@@ -95,18 +95,18 @@ inline void fill_text (text_t *start, text_t value, int len)
 
 #define CLEAR_ROWS(row, num)                                           \
     if (mapped)                                                \
-        XClearArea (display->display, drawBuffer, 0,                   \
+        XClearArea (xdisp, drawBuffer, 0,                   \
                     Row2Pixel (row), (unsigned int)width,      \
                     (unsigned int)Height2Pixel (num), False)
 
 #define CLEAR_CHARS(x, y, num)                                         \
     if (mapped)                                                \
-        XClearArea (display->display, drawBuffer, x, y,                \
+        XClearArea (xdisp, drawBuffer, x, y,                \
                     (unsigned int)Width2Pixel (num),                   \
                     (unsigned int)Height2Pixel (1), False)
 
 #define ERASE_ROWS(row, num)                                           \
-    XFillRectangle (display->display, drawBuffer, gc,          \
+    XFillRectangle (xdisp, drawBuffer, gc,          \
                     0, Row2Pixel (row),                                \
                     (unsigned int)width,                       \
                     (unsigned int)Height2Pixel (num))
@@ -1340,10 +1340,10 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
     {
       ren = rstyle & (RS_fgMask | RS_bgMask);
       gcvalue.foreground = pix_colors[bgcolor_of (rstyle)];
-      XChangeGC (display->display, gc, GCForeground, &gcvalue);
+      XChangeGC (xdisp, gc, GCForeground, &gcvalue);
       ERASE_ROWS (row, num);
       gcvalue.foreground = pix_colors[Color_fg];
-      XChangeGC (display->display, gc, GCForeground, &gcvalue);
+      XChangeGC (xdisp, gc, GCForeground, &gcvalue);
     }
 
   for (; num--; row++)
@@ -1652,12 +1652,12 @@ rxvt_term::scr_rvideo_mode (bool on) NOTHROW
 #if TRANSPARENT
         if (!OPTION (Opt_transparent) || am_transparent == 0)
 #endif
-          XSetWindowBackground (display->display, vt, pix_colors[Color_bg]);
+          XSetWindowBackground (xdisp, vt, pix_colors[Color_bg]);
 
       XGCValues gcvalue;
       gcvalue.foreground = pix_colors[Color_fg];
       gcvalue.background = pix_colors[Color_bg];
-      XChangeGC (display->display, gc, GCBackground | GCForeground, &gcvalue);
+      XChangeGC (xdisp, gc, GCBackground | GCForeground, &gcvalue);
 
       scr_clear ();
       scr_touch (true);
@@ -1887,7 +1887,7 @@ rxvt_term::scr_bell () NOTHROW
 #  ifdef MAPALERT_OPTION
   if (OPTION (Opt_mapAlert))
 #  endif
-    XMapWindow (display->display, parent[0]);
+    XMapWindow (xdisp, parent[0]);
 # endif
 
   if (OPTION (Opt_visualBell))
@@ -1899,7 +1899,7 @@ rxvt_term::scr_bell () NOTHROW
       bell_ev.start (NOW + VISUAL_BELL_DURATION);
     }
   else
-    XBell (display->display, 0);
+    XBell (xdisp, 0);
 
 #endif
 }
@@ -2148,7 +2148,7 @@ rxvt_term::scr_refresh () NOTHROW
               if (wlen < len)
                 ::swap (wlen, len);
 
-              XCopyArea (display->display, vt, vt,
+              XCopyArea (xdisp, vt, vt,
                          gc, 0, Row2Pixel (len + i),
                          (unsigned int)this->width,
                          (unsigned int)Height2Pixel (wlen - len + 1),
@@ -2354,12 +2354,12 @@ rxvt_term::scr_refresh () NOTHROW
             {
 #if ENABLE_FRILLS
               if (ISSET_PIXCOLOR (Color_underline))
-                XSetForeground (display->display, gc, pix_colors[Color_underline]);
+                XSetForeground (xdisp, gc, pix_colors[Color_underline]);
               else
 #endif
-                XSetForeground (display->display, gc, pix_colors[fore]);
+                XSetForeground (xdisp, gc, pix_colors[fore]);
 
-              XDrawLine (display->display, drawBuffer, gc,
+              XDrawLine (xdisp, drawBuffer, gc,
                          xpixel, ypixel + font->ascent + 1,
                          xpixel + Width2Pixel (count) - 1, ypixel + font->ascent + 1);
             }
@@ -2402,10 +2402,10 @@ rxvt_term::scr_refresh () NOTHROW
 
 #ifndef NO_CURSORCOLOR
           if (ISSET_PIXCOLOR (Color_cursor))
-            XSetForeground (display->display, gc, pix_colors[Color_cursor]);
+            XSetForeground (xdisp, gc, pix_colors[Color_cursor]);
 #endif
 
-          XDrawRectangle (display->display, drawBuffer, gc,
+          XDrawRectangle (xdisp, drawBuffer, gc,
                           Col2Pixel (col),
                           Row2Pixel (oldcursor.row),
                           (unsigned int) (Width2Pixel (cursorwidth) - 1),
@@ -2459,13 +2459,13 @@ rxvt_term::scr_recolour () NOTHROW
 #endif
       )
     {
-      XSetWindowBackground (display->display, parent[0], pix_colors[Color_border]);
-      XClearWindow (display->display, parent[0]);
-      XSetWindowBackground (display->display, vt, pix_colors[Color_bg]);
+      XSetWindowBackground (xdisp, parent[0], pix_colors[Color_border]);
+      XClearWindow (xdisp, parent[0]);
+      XSetWindowBackground (xdisp, vt, pix_colors[Color_bg]);
 #if HAVE_SCROLLBARS
       if (scrollBar.win)
         {
-          XSetWindowBackground (display->display, scrollBar.win, pix_colors[Color_border]);
+          XSetWindowBackground (xdisp, scrollBar.win, pix_colors[Color_border]);
           scrollBar.setIdle ();
           scrollbar_show (0);
         }
@@ -2488,7 +2488,7 @@ rxvt_term::scr_clear (bool really) NOTHROW
   want_refresh = 1;
 
   if (really)
-    XClearWindow (display->display, vt);
+    XClearWindow (xdisp, vt);
 }
 
 void
@@ -2673,7 +2673,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
   unsigned long bytes_after;
   XTextProperty ct;
 
-  if (XGetWindowProperty (display->display, win, prop,
+  if (XGetWindowProperty (xdisp, win, prop,
                           0, PROP_SIZE / 4,
                           delete_prop, AnyPropertyType,
                           &ct.encoding, &ct.format,
@@ -2692,7 +2692,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
       // fetch and append remaining data
       XTextProperty ct2;
 
-      if (XGetWindowProperty (display->display, win, prop,
+      if (XGetWindowProperty (xdisp, win, prop,
                               ct.nitems / 4, (bytes_after + 3) / 4,
                               delete_prop, AnyPropertyType,
                               &ct2.encoding, &ct2.format,
@@ -2715,7 +2715,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
     {
       // INCR selection, start handshake
       if (!delete_prop)
-        XDeleteProperty (display->display, win, prop);
+        XDeleteProperty (xdisp, win, prop);
 
       selection_wait = Sel_incr;
       incr_buf_fill = 0;
@@ -2786,7 +2786,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
     }
   else
 #endif
-  if (XmbTextPropertyToTextList (display->display, &ct, &cl, &cr) >= 0
+  if (XmbTextPropertyToTextList (xdisp, &ct, &cl, &cr) >= 0
       && cl)
     {
       for (int i = 0; i < cr; i++)
@@ -2878,9 +2878,9 @@ rxvt_term::selection_request_other (Atom target, int selnum) NOTHROW
   else
     sel = xa[XA_CLIPBOARD];
 
-  if (XGetSelectionOwner (display->display, sel) != None)
+  if (XGetSelectionOwner (xdisp, sel) != None)
     {
-      XConvertSelection (display->display, sel, target, xa[XA_VT_SELECTION],
+      XConvertSelection (xdisp, sel, target, xa[XA_VT_SELECTION],
                          vt, selection_request_time);
       return 1;
     }
@@ -3043,8 +3043,8 @@ rxvt_term::selection_grab (Time tm) NOTHROW
 {
   selection_time = tm;
 
-  XSetSelectionOwner (display->display, XA_PRIMARY, vt, tm);
-  if (XGetSelectionOwner (display->display, XA_PRIMARY) == vt)
+  XSetSelectionOwner (xdisp, XA_PRIMARY, vt, tm);
+  if (XGetSelectionOwner (xdisp, XA_PRIMARY) == vt)
     {
       display->set_selection_owner (this);
       return true;
@@ -3058,7 +3058,7 @@ rxvt_term::selection_grab (Time tm) NOTHROW
 #if 0
   XTextProperty ct;
 
-  if (XwcTextListToTextProperty (display->display, &selection.text, 1, XStringStyle, &ct) >= 0)
+  if (XwcTextListToTextProperty (xdisp, &selection.text, 1, XStringStyle, &ct) >= 0)
     {
       set_string_property (XA_CUT_BUFFER0, ct.value, ct.nitems);
       XFree (ct.value);
@@ -3665,7 +3665,7 @@ rxvt_term::im_set_position (XPoint &pos) NOTHROW
 {
   XWindowAttributes xwa;
 
-  XGetWindowAttributes (display->display, vt, &xwa);
+  XGetWindowAttributes (xdisp, vt, &xwa);
 
   pos.x = xwa.x + Col2Pixel    (screen.cur.col);
   pos.y = xwa.y + Height2Pixel (screen.cur.row) + fbase;

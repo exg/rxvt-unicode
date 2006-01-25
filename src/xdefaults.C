@@ -766,7 +766,7 @@ get_res (XrmDatabase database, const char *program, const char *option)
 const char *
 rxvt_term::x_resource (const char *name)
 {
-  XrmDatabase database = XrmGetDatabase (display->display);
+  XrmDatabase database = XrmGetDatabase (xdisp);
 
   const char *p = get_res (database, rs[Rs_name], name);
   const char *p0 = get_res (database, "!INVALIDPROGRAMMENAMEDONTMATCH!", name);
@@ -828,7 +828,7 @@ rxvt_term::extract_resources ()
    * [R5 or later]: enumerate the resource database
    */
 #  ifdef KEYSYM_RESOURCE
-  XrmDatabase database = XrmGetDatabase (display->display);
+  XrmDatabase database = XrmGetDatabase (xdisp);
   XrmName name_prefix[3];
   XrmClass class_prefix[3];
 

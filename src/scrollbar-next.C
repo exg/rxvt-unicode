@@ -123,7 +123,7 @@ rxvt_term::renderPixmap (const char *const *data, int width, int height)
   Pixmap          d;
   GC              pointcolour;
 
-  d = XCreatePixmap (display->display, scrollBar.win, width, height, depth);
+  d = XCreatePixmap (xdisp, scrollBar.win, width, height, depth);
 
   for (y = 0; y < height; y++)
     {
@@ -138,7 +138,7 @@ rxvt_term::renderPixmap (const char *const *data, int width, int height)
           else		/* if (a == '#' || a == 'b' || a) */
             pointcolour = blackGC;
 
-          XDrawPoint (display->display, d, pointcolour, x, y);
+          XDrawPoint (xdisp, d, pointcolour, x, y);
         }
     }
   return d;

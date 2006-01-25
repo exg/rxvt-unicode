@@ -183,14 +183,13 @@ void
 rxvt_screen::set (rxvt_display *disp)
 {
   display = disp;
-
-  xdisp  = disp->display;
+  xdisp   = disp->display;
 
   Screen *screen = ScreenOfDisplay (xdisp, disp->screen);
 
-  depth  = DefaultDepthOfScreen    (screen);
-  visual = DefaultVisualOfScreen   (screen);
-  cmap   = DefaultColormapOfScreen (screen);
+  depth   = DefaultDepthOfScreen    (screen);
+  visual  = DefaultVisualOfScreen   (screen);
+  cmap    = DefaultColormapOfScreen (screen);
 }
 
 void

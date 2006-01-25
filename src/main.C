@@ -516,7 +516,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
     {
       long info[2] = { 0, XEMBED_MAPPED };
 
-      XChangeProperty (display->display, parent[0], xa[XA_XEMBED_INFO], xa[XA_XEMBED_INFO],
+      XChangeProperty (xdisp, parent[0], xa[XA_XEMBED_INFO], xa[XA_XEMBED_INFO],
                        32, PropModeReplace, (unsigned char *)&info, 2);
     }
 #endif
@@ -844,7 +844,7 @@ rxvt_term::set_fonts ()
 
 void rxvt_term::set_string_property (Atom prop, const char *str, int len)
 {
-  XChangeProperty (display->display, parent[0],
+  XChangeProperty (xdisp, parent[0],
                    prop, XA_STRING, 8, PropModeReplace,
                    (const unsigned char *)str, len >= 0 ? len : strlen (str));
 }
@@ -854,7 +854,7 @@ void rxvt_term::set_utf8_property (Atom prop, const char *str, int len)
   wchar_t *ws = rxvt_mbstowcs (str, len);
   char *s = rxvt_wcstoutf8 (ws);
 
-  XChangeProperty (display->display, parent[0],
+  XChangeProperty (xdisp, parent[0],
                    prop, xa[XA_UTF8_STRING], 8, PropModeReplace,
                    (const unsigned char *)s, strlen (s));
 
@@ -917,7 +917,7 @@ rxvt_term::set_window_color (int idx, const char *color)
   if (!rXParseAllocColor (&xcol, color))
     return;
 
-  /* XStoreColor (display->display, display->cmap, XColor*); */
+  /* XStoreColor (xdisp, display->cmap, XColor*); */
 
   /*
    * FIXME: should free colors here, but no idea how to do it so instead,
@@ -930,8 +930,8 @@ rxvt_term::set_window_color (int idx, const char *color)
   if (i > Color_White)
     {
       /* fprintf (stderr, "XFreeColors: pix_colors [%d] = %lu\n", idx, pix_colors [idx]); */
-      XFreeColors (display->display, display->cmap, (pix_colors + idx), 1,
-                  DisplayPlanes (display->display, display->screen));
+      XFreeColors (xdisp, display->cmap, (pix_colors + idx), 1,
+                   DisplayPlanes (xdisp, display->screen));
     }
 # endif
 
@@ -969,8 +969,8 @@ rxvt_term::recolour_cursor ()
                      ? pix_colors_focused[Color_pointer_bg]
                      : pix_colors_focused[Color_bg];
 
-  XQueryColors (display->display, cmap, xcol, 2);
-  XRecolorCursor (display->display, TermWin_cursor, xcol + 0, xcol + 1);
+  XQueryColors (xdisp, cmap, xcol, 2);
+  XRecolorCursor (xdisp, TermWin_cursor, xcol + 0, xcol + 1);
 }
 
 /*----------------------------------------------------------------------*/
@@ -1127,7 +1127,7 @@ rxvt_term::set_widthheight (unsigned int newwidth, unsigned int newheight)
 
   if (newwidth == 0 || newheight == 0)
     {
-      XGetWindowAttributes (display->display, display->root, &wattr);
+      XGetWindowAttributes (xdisp, display->root, &wattr);
 
       if (newwidth == 0)
         newwidth = wattr.width - szHint.base_width;
@@ -1199,8 +1199,8 @@ rxvt_term::IMisRunning ()
       if ((p = strchr (server + 1, '@')) != NULL)      /* first one only */
         *p = '\0';
 
-      atom = XInternAtom (display->display, server, False);
-      win = XGetSelectionOwner (display->display, atom);
+      atom = XInternAtom (xdisp, server, False);
+      win = XGetSelectionOwner (xdisp, atom);
 
       if (win != None)
         return True;
@@ -1434,7 +1434,7 @@ foundpet:
                fheight + 1, fheight - 1,
                fheight - 2, fheight + 2);
 
-      fs = XCreateFontSet (display->display, rs[Rs_imFont] ? rs[Rs_imFont] : pat,
+      fs = XCreateFontSet (xdisp, rs[Rs_imFont] ? rs[Rs_imFont] : pat,
                            &missing_charset_list, &missing_charset_count, &def_string);
 
       if (missing_charset_list)
@@ -1520,7 +1520,7 @@ foundpet:
 
   if (preedit_attr) XFree (preedit_attr);
   if (status_attr) XFree (status_attr);
-  if (fs) XFreeFontSet (display->display, fs);
+  if (fs) XFreeFontSet (xdisp, fs);
 
   if (Input_Context == NULL)
     {

@@ -1166,7 +1166,7 @@ rxvt_term::pty_cb (io_watcher &w, short revents)
 void
 rxvt_term::pointer_unblank ()
 {
-  XDefineCursor (display->display, vt, TermWin_cursor);
+  XDefineCursor (xdisp, vt, TermWin_cursor);
   recolour_cursor ();
 
 #ifdef POINTER_BLANK
@@ -1184,8 +1184,8 @@ rxvt_term::pointer_blank ()
   if (!OPTION (Opt_pointerBlank))
     return;
 
-  XDefineCursor (display->display, vt, display->blank_cursor);
-  XFlush (display->display);
+  XDefineCursor (xdisp, vt, display->blank_cursor);
+  XFlush (xdisp);
 
   hidden_pointer = 1;
 }

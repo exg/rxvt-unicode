@@ -299,6 +299,15 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   if (!(display = displays.get (rs[Rs_display_name])))
     rxvt_fatal ("can't open display %s, aborting.\n", rs[Rs_display_name]);
 
+  xa = display->xa;
+
+#if ENABLE_FRILLS
+  if (rs[Rs_depth])
+    set (display, strtol (rs[Rs_depth], 0, 0));
+  else
+#endif
+    set (display);
+
   extract_resources ();
 
   free (r_argv);
@@ -315,15 +324,6 @@ rxvt_term::init_resources (int argc, const char *const *argv)
       HOOK_INVOKE ((this, HOOK_INIT, DT_END));
     }
 #endif
-
-  xa = display->xa;
-
-#if ENABLE_FRILLS
-  if (rs[Rs_depth])
-    set (display, strtol (rs[Rs_depth], 0, 0));
-  else
-#endif
-    set (display);
 
   /*
    * set any defaults not already set
@@ -484,7 +484,7 @@ rxvt_term::init_env ()
 
   if (val == NULL)
 #endif                          /* DISPLAY_IS_IP */
-    val = XDisplayString (display->display);
+    val = XDisplayString (xdisp);
 
   if (rs[Rs_display_name] == NULL)
     rs[Rs_display_name] = val;   /* use broken `:0' value */
@@ -806,7 +806,7 @@ rxvt_term::get_ourmods ()
       && strcasecmp (rsmod, "mod1") >= 0 && strcasecmp (rsmod, "mod5") <= 0)
     requestedmeta = rsmod[3] - '0';
 
-  map = XGetModifierMapping (display->display);
+  map = XGetModifierMapping (xdisp);
   kc = map->modifiermap;
 
   for (i = 1; i < 6; i++)
@@ -818,7 +818,7 @@ rxvt_term::get_ourmods ()
           if (kc[k] == 0)
             break;
 
-          switch (XKeycodeToKeysym (display->display, kc[k], 0))
+          switch (XKeycodeToKeysym (xdisp, kc[k], 0))
             {
               case XK_Num_Lock:
                 ModNumLockMask = modmasks[i - 1];
