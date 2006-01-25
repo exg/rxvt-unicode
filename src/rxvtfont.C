@@ -29,7 +29,14 @@
 #include <wchar.h>
 #include <inttypes.h>
 
-#define MAX_OVERLAP (4 + 1)	// max. character width in 4ths of the base width
+#define MAX_OVERLAP_ROMAN  (8 + 2)	// max. character width in 8ths of the base width
+#define MAX_OVERLAP_ITALIC (8 + 3)	// max. overlap for italic fonts
+
+#define OVERLAP_OK(w,prop) (w) > (			\
+  prop->slant >= rxvt_fontprop::italic			\
+    ? (prop->width * MAX_OVERLAP_ITALIC + 7) >> 3	\
+    : (prop->width * MAX_OVERLAP_ROMAN  + 7) >> 3	\
+  )
 
 const struct rxvt_fallback_font {
   codeset cs;
@@ -850,7 +857,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
       int dir_ret, asc_ret, des_ret;
       XTextExtents16 (f, &ch, 1, &dir_ret, &asc_ret, &des_ret, &g);
 
-      int wcw = wcwidth (*t); if (wcw > 0) g.width = (g.width + wcw - 1) / wcw;
+      int wcw = WCWIDTH (*t); if (wcw > 0) g.width = (g.width + wcw - 1) / wcw;
 
       if (width  < g.width)  width  = g.width;
     }
@@ -933,12 +940,12 @@ rxvt_font_x11::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
     return true;
 
   // check character against base font bounding box
-  int w = xcs->width;
-  int wcw = wcwidth (unicode);
+  int w = xcs->rbearing - xcs->lbearing;
+  int wcw = WCWIDTH (unicode);
   if (wcw > 0) w = (w + wcw - 1) / wcw;
 
   careful = w > prop->width;
-  if (careful && w > prop->width * MAX_OVERLAP >> 2)
+  if (careful && OVERLAP_OK (w, prop))
     return false;
 
   return true;
@@ -1178,7 +1185,7 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
 
           g.width -= g.x;
 
-          int wcw = wcwidth (ch);
+          int wcw = WCWIDTH (ch);
           if (wcw > 0) g.width = (g.width + wcw - 1) / wcw;
 
           if (width    < g.width       ) width    = g.width;
@@ -1250,11 +1257,11 @@ rxvt_font_xft::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
   XftTextExtents32 (term->display->display, f, &ch, 1, &g);
 
   int w = g.width - g.x;
-  int wcw = wcwidth (unicode);
+  int wcw = WCWIDTH (unicode);
   if (wcw > 0) w = (w + wcw - 1) / wcw;
 
   careful = w > prop->width;
-  if (careful && w > prop->width * MAX_OVERLAP >> 2)
+  if (careful && OVERLAP_OK (w, prop))
     return false;
 
   return true;

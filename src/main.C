@@ -1488,6 +1488,7 @@ foundpet:
                                          XNFontSet, fs,
                                          NULL);
     }
+#if ENABLE_XIM_ONTHESPOT
   else if (input_style & XIMPreeditCallbacks)
     {
       im_set_position (spot);
@@ -1495,20 +1496,21 @@ foundpet:
       xcb[0].client_data = (XPointer)this; xcb[0].callback = (XIMProc)xim_preedit_start;
       xcb[1].client_data = (XPointer)this; xcb[1].callback = (XIMProc)xim_preedit_done;
       xcb[2].client_data = (XPointer)this; xcb[2].callback = (XIMProc)xim_preedit_draw;
-#if 0
+# if 0
       xcb[3].client_data = (XPointer)this; xcb[3].callback = (XIMProc)xim_preedit_caret;
-#endif
+# endif
 
       preedit_attr = XVaCreateNestedList (0,
                                           XNSpotLocation, &spot,
                                           XNPreeditStartCallback, &xcb[0],
                                           XNPreeditDoneCallback , &xcb[1],
                                           XNPreeditDrawCallback , &xcb[2],
-#if 0
+# if 0
                                           XNPreeditCaretCallback, &xcb[3],
-#endif
+# endif
                                           NULL);
     }
+#endif
 
   Input_Context = XCreateIC (xim,
                              XNInputStyle, input_style,

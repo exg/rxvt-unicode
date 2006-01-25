@@ -2,17 +2,17 @@ rxvt-unicode changelog <= google-friendly title
 
 TODO: event mechanism that replaces on_keyboard_command with something more scalable.
 TODO: simplify selection_request and make it callable from perl.
-TODO: split perl documnetation and urxvt.pm into separate files
+TODO: split perl documentation and urxvt.pm into separate files
 TODO: harmonize --disable-options into position-dependent options.
 TODO: after requesting the selection and getting a timeout, no further requests will be sent.
 TODO: "slow" rendering mode for bidi and scripts
 TODO: read property sequence is broken with respect to utf-8 etc.
-TODO: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 TODO: rxvt -name urxvt-girly /// leave pixel droppings
 TODO: distributed clipboard example
 WISH: anyevent mouse notification / manage MotionMask better.
 WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an overlay...
 WISH: just for fun, do shade and tint with XRender.
+WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
 TODO: move resources out of allocated
@@ -20,7 +20,14 @@ TODO: move resources out of allocated
           (could lead to global grabs never being cleared).
         - experimental OnTheSpot editing support (-pe xim-onthespot).
         - moved Shift-Button2 paste combination to Meta-Button2.
+        - the cutchars resource will now be respected and used by the
+          selection extension.
         - removed (unused) arabic presentation form composing sequences.
+        - be more strict when deciding that a core font glyph is too wide and
+          needs the careful rendering mode.
+        - allow more leeway for italic fonts when deciding that a character is
+          too wide and needs careful mode.
+        - redraw even more characters around characters usign careful mode.
         - reduced number of server turnarounds at startup by allocating
           atoms only once per display.
         - changed version sos (ESC [ > c) response to be more compatible with

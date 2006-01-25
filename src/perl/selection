@@ -12,6 +12,11 @@ sub on_keyboard_command {
 sub on_init {
    my ($self) = @_;
 
+   if (defined (my $res = $self->resource ("cutchars"))) {
+      $res = $self->locale_decode ($res);
+      push @{ $self->{patterns} }, qr{\G [\Q$res\E[:space:]]* ([^\Q$res\E[:space:]]+) }x;
+   }
+
    for (my $idx = 0; defined (my $res = $self->x_resource ("selection.pattern-$idx")); $idx++) {
       $res = $self->locale_decode ($res);
       utf8::encode $res;

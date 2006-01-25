@@ -2246,15 +2246,21 @@ rxvt_term::scr_refresh () NOTHROW
           if (rend & (RS_Bold | RS_Italic | RS_Uline | RS_RVid | RS_Blink | RS_Careful))
             {
 #if ENABLE_STYLES
-              // force redraw after "careful" characters to avoid pixel droppings
-              if (srp[col] & RS_Careful && col < ncol - 1 && 0)
-                drp[col + 1] = ~srp[col + 1];
+              // "careful" (too wide) character handling
 
               // include previous careful character(s) if possible, looks nicer (best effort...)
               while (text > stp
                   && srp[text - stp - 1] & RS_Careful
                   && RS_SAME (rend, srp[text - stp - 1]))
                 text--, count++, xpixel -= fwidth;
+
+              // force redraw after "careful" characters to avoid pixel droppings
+              for (int i = 0; srp[col + i] & RS_Careful && col + i < ncol - 1; i++)
+                drp[col + i + 1] = ~srp[col + i + 1];
+
+              // force redraw before "careful" characters to avoid pixel droppings
+              for (int i = 0; srp[text - stp - i] & RS_Careful && text - i > stp; i++)
+                drp[text - stp - i - 1] = ~srp[text - stp - i - 1];
 #endif
 
               bool invert = rend & RS_RVid;
@@ -3766,7 +3772,7 @@ rxvt_term::scr_overlay_set (int x, int y, const wchar_t *s) NOTHROW
   while (*s)
     {
       text_t t = *s++;
-      int width = wcwidth (t);
+      int width = WCWIDTH (t);
 
       while (width--)
         {

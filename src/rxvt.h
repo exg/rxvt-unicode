@@ -704,9 +704,9 @@ enum {
 #define dDisp			Display *disp = this->display->display
 
 // for speed reasons, we assume that all latin1 characters
-// are single-width (the first unicdoe combining character
+// are single-width (the first unicode combining character
 // is actually 0x300, but ascii is what matters most).
-#define WCWIDTH(c) ((c) < 0x100 ? 1 : wcwidth (c))
+#define WCWIDTH(c) ((c) & ~0xff ? wcwidth (c) : 1)
 
 /* convert pixel dimensions to row/column values.  Everything as int32_t */
 #define Pixel2Col(x)            Pixel2Width((int32_t)(x))
