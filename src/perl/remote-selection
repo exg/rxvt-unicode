@@ -1,0 +1,112 @@
+#! perl
+
+use Fcntl ();
+
+sub msg {
+   my ($self, $msg) = @_;
+
+   my $ov = $self->overlay (-1, 0, $self->strwidth ($msg), 1, urxvt::OVERLAY_RSTYLE, 0);
+   $ov->set (0, 0, $msg);
+
+   $self->{msg} =
+      urxvt::timer
+              ->new
+              ->after (5)
+              ->cb (sub { delete $self->{msg}; undef $ov; });
+}
+
+sub wait_pipe {
+   my ($self, $fh, $pid, $msg) = @_;
+
+   $self->msg ("waiting for process to finish...");
+
+   my $wait_pipe; $wait_pipe = urxvt::pw->new->start ($pid)->cb (sub {
+      my ($undef, $status) = @_;
+      undef $wait_pipe;
+      close $fh;
+      $status >>= 8;
+      $self->msg ("$msg (status $status)");
+   });
+}
+
+sub store {
+   my ($self) = @_;
+
+   my $txt = $self->selection;
+
+   local %ENV = %{ $self->env };
+   if (my $pid = open my $fh, "|-:utf8", $self->{store_cmd}) {
+      fcntl $fh, &Fcntl::F_SETFL, &Fcntl::O_NONBLOCK;
+      $self->{iow} = urxvt::iow
+                     ->new
+                     ->fd (fileno $fh)
+                     ->events (urxvt::EVENT_WRITE)
+                     ->start
+                     ->cb (sub {
+         if (my $len = syswrite $fh, $txt) {
+            substr $txt, 0, $len, "";
+            $self->msg ((length $txt) . " chars to go...");
+         } else {
+            delete $self->{iow};
+            $self->wait_pipe ($fh, $pid, "selection stored");
+         }
+      });
+   }
+}
+
+sub fetch {
+   my ($self) = @_;
+
+   my $txt;
+
+   local %ENV = %{ $self->env };
+   if (my $pid = open my $fh, "-|:utf8", $self->{fetch_cmd}) {
+      fcntl $fh, &Fcntl::F_SETFL, &Fcntl::O_NONBLOCK;
+      $self->{iow} = urxvt::iow
+                     ->new
+                     ->fd (fileno $fh)
+                     ->events (urxvt::EVENT_READ)
+                     ->start
+                     ->cb (sub {
+         if (my $len = sysread $fh, $txt, 8192, length $txt) {
+            $self->msg ((length $txt) . " chars read...");
+         } else {
+            delete $self->{iow};
+            $self->selection_clear;
+            $self->selection ($txt);
+            $self->selection_make (urxvt::CurrentTime);
+            $self->wait_pipe ($fh, $pid, "selection fetched");
+         }
+      });
+   }
+}
+
+sub on_start {
+   my ($self) = @_;
+
+   $self->{store_cmd} = $self->x_resource ("remote-selection.store")
+                        || "rsh ruth 'cat >/tmp/distributed-selection'";
+
+   $self->{fetch_cmd} = $self->x_resource ("remote-selection.fetch")
+                        || "rsh ruth 'cat /tmp/distributed-selection'";
+
+   push @{ $self->{term}{selection_popup_hook} }, sub {
+      ("selection => remote" => sub { $self->store })
+   };
+   push @{ $self->{term}{selection_popup_hook} }, sub {
+      ("remote => selection" => sub { $self->fetch })
+   };
+
+   ()
+}
+
+sub on_keyboard_command {
+   my ($self, $cmd) = @_;
+
+   if ($cmd eq "selection-pastebin:remote-pastebin") {
+      $self->upload_paste;
+   }
+
+   ()
+}
+

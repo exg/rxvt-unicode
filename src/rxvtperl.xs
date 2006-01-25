@@ -246,14 +246,16 @@ struct pw : perl_watcher, child_watcher
 
 #define SvOVERLAY(sv) (overlay *)SvPTR (sv, "urxvt::overlay")
 
-struct overlay {
-  HV *self;
-  bool visible;
+class overlay {
   rxvt_term *THIS;
+  AV *overlay_av;
   int x, y, w, h;
   int border;
   text_t **text;
   rend_t **rend;
+
+public:
+  HV *self;
 
   overlay (rxvt_term *THIS, int x_, int y_, int w_, int h_, rend_t rstyle, int border);
   ~overlay ();
@@ -267,7 +269,7 @@ struct overlay {
 };
 
 overlay::overlay (rxvt_term *THIS, int x_, int y_, int w_, int h_, rend_t rstyle, int border)
-: THIS(THIS), x(x_), y(y_), w(w_), h(h_), border(border == 2), visible(false)
+: THIS(THIS), x(x_), y(y_), w(w_), h(h_), border(border == 2), overlay_av (0)
 {
   if (border == 2)
     {
@@ -316,7 +318,6 @@ overlay::overlay (rxvt_term *THIS, int x_, int y_, int w_, int h_, rend_t rstyle
     }
 
   show ();
-  THIS->want_refresh = 1;
 }
 
 overlay::~overlay ()
@@ -331,45 +332,46 @@ overlay::~overlay ()
 
   delete [] text;
   delete [] rend;
-
-  THIS->want_refresh = 1;
 }
 
 void
 overlay::show ()
 {
-  if (visible)
+  if (overlay_av)
     return;
 
-  visible = true;
+  overlay_av = (AV *)SvREFCNT_inc (SvRV (
+        *hv_fetch ((HV *)SvRV ((SV *)THIS->perl.self), "_overlay", 8, 0)
+     ));
+  av_push (overlay_av, newSViv ((long)this));
 
-  AV *av = (AV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)THIS->perl.self), "_overlay", 8, 0));
-  av_push (av, newSViv ((long)this));
+  THIS->want_refresh = 1;
 }
 
 void
 overlay::hide ()
 {
-  if (!visible)
+  if (!overlay_av)
     return;
-
-  visible = false;
-
-  AV *av = (AV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)THIS->perl.self), "_overlay", 8, 0));
 
   int i;
 
-  for (i = AvFILL (av); i >= 0; i--)
-    if (SvIV (*av_fetch (av, i, 1)) == (long)this)
+  for (i = AvFILL (overlay_av); i >= 0; i--)
+    if (SvIV (*av_fetch (overlay_av, i, 1)) == (long)this)
       {
-        av_delete (av, i, G_DISCARD);
+        av_delete (overlay_av, i, G_DISCARD);
         break;
       }
 
-  for (; i < AvFILL (av); i++)
-    av_store (av, i, SvREFCNT_inc (*av_fetch (av, i + 1, 0)));
+  for (; i < AvFILL (overlay_av); i++)
+    av_store (overlay_av, i, SvREFCNT_inc (*av_fetch (overlay_av, i + 1, 0)));
 
-  av_pop (av);
+  av_pop (overlay_av);
+
+  SvREFCNT_dec (overlay_av);
+  overlay_av = 0;
+
+  THIS->want_refresh = 1;
 }
 
 void overlay::swap ()
@@ -1611,8 +1613,8 @@ rxvt_term::cur_charset ()
 	OUTPUT:
         RETVAL
 
-#void
-#rxvt_term::selection_clear ()
+void
+rxvt_term::selection_clear ()
 
 void
 rxvt_term::selection_make (Time eventtime, bool rect = false)
