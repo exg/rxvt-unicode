@@ -27,6 +27,7 @@ TODO: overlays collide with the way the out-of-focus cursor is being drawn
         - allow more leeway for italic fonts when deciding that a character is
           too wide and needs careful mode.
         - redraw even more characters around characters usign careful mode.
+        - made selection-pastebin fully asynchronous.
         - reduced number of server turnarounds at startup by allocating
           atoms only once per display.
         - renamed on_keyboard_command to on_user_command.
