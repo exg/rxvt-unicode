@@ -621,42 +621,6 @@ enum {
   NUM_RESOURCES
 };
 
-// see init.C:xa_names, which must be kept in sync
-enum {
-  XA_TEXT = 0,
-  XA_COMPOUND_TEXT,
-  XA_UTF8_STRING,
-  XA_MULTIPLE,
-  XA_TARGETS,
-  XA_TIMESTAMP,
-  XA_VT_SELECTION,
-  XA_INCR,
-  XA_WM_PROTOCOLS,
-  XA_WM_DELETE_WINDOW,
-  XA_CLIPBOARD,
-#if ENABLE_FRILLS
-  XA_MOTIF_WM_HINTS,
-#endif
-#if ENABLE_EWMH
-  XA_NET_WM_PID,
-  XA_NET_WM_NAME,
-  XA_NET_WM_ICON_NAME,
-  XA_NET_WM_PING,
-#endif
-#if USE_XIM
-  XA_WM_LOCALE_NAME,
-#endif
-#if TRANSPARENT
-  XA_XROOTPMAP_ID,
-  XA_ESETROOT_PMAP_ID,
-#endif
-#if ENABLE_XEMBED
-  XA_XEMBED,
-  XA_XEMBED_INFO,
-#endif
-  NUM_XA
-};
-
 /* DEC private modes */
 #define PrivMode_132            (1UL<<0)
 #define PrivMode_132OK          (1UL<<1)
@@ -1037,7 +1001,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
   unsigned long   priv_modes,
                   SavedModes;
 /* ---------- */
-  Atom            xa[NUM_XA];
+  Atom            *xa;
 /* ---------- */
 #ifdef RXVT_SCROLLBAR
   GC              scrollbarGC,

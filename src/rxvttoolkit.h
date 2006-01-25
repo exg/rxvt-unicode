@@ -17,6 +17,43 @@
 
 #include "callback.h"
 
+// see rxvttoolkit.C:xa_names, which must be kept in sync
+enum {
+  XA_TEXT,
+  XA_COMPOUND_TEXT,
+  XA_UTF8_STRING,
+  XA_MULTIPLE,
+  XA_TARGETS,
+  XA_TIMESTAMP,
+  XA_VT_SELECTION,
+  XA_INCR,
+  XA_WM_PROTOCOLS,
+  XA_WM_DELETE_WINDOW,
+  XA_CLIPBOARD,
+#if ENABLE_FRILLS
+  XA_MOTIF_WM_HINTS,
+#endif
+#if ENABLE_EWMH
+  XA_NET_WM_PID,
+  XA_NET_WM_NAME,
+  XA_NET_WM_ICON_NAME,
+  XA_NET_WM_PING,
+#endif
+#if USE_XIM
+  XA_WM_LOCALE_NAME,
+  XA_XIM_SERVERS,
+#endif
+#if TRANSPARENT
+  XA_XROOTPMAP_ID,
+  XA_ESETROOT_PMAP_ID,
+#endif
+#if ENABLE_XEMBED
+  XA_XEMBED,
+  XA_XEMBED_INFO,
+#endif
+  NUM_XA
+};
+
 struct rxvt_term;
 struct rxvt_display;
 
@@ -62,8 +99,6 @@ struct rxvt_xim : refcounted {
 #endif
 
 struct rxvt_display : refcounted {
-  Atom xa_xim_servers;
-
   io_manager_vec<xevent_watcher> xw;
 
   io_watcher x_ev; void x_cb (io_watcher &w, short revents);
@@ -84,6 +119,7 @@ struct rxvt_display : refcounted {
   Colormap  cmap;
   Window    root;
   rxvt_term *selection_owner;
+  Atom      xa[NUM_XA];
 #ifndef NO_SLOW_LINK_SUPPORT
   bool      is_local;
 #endif

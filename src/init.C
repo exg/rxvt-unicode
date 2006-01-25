@@ -176,41 +176,6 @@ const char *const def_colorName[] =
 #endif
   };
 
-const char *const xa_names[] =
-  {
-    "TEXT",
-    "COMPOUND_TEXT",
-    "UTF8_STRING",
-    "MULTIPLE",
-    "TARGETS",
-    "TIMESTAMP",
-    "VT_SELECTION",
-    "INCR",
-    "WM_PROTOCOLS",
-    "WM_DELETE_WINDOW",
-    "CLIPBOARD",
-#if ENABLE_FRILLS
-    "_MOTIF_WM_HINTS",
-#endif
-#if ENABLE_EWMH
-    "_NET_WM_PID",
-    "_NET_WM_NAME",
-    "_NET_WM_ICON_NAME",
-    "_NET_WM_PING",
-#endif
-#if USE_XIM
-    "WM_LOCALE_NAME",
-#endif
-#ifdef TRANSPARENT
-    "_XROOTPMAP_ID",
-    "ESETROOT_PMAP_ID",
-#endif
-#if ENABLE_XEMBED
-    "_XEMBED",
-    "_XEMBED_INFO",
-#endif
-  };
-
 bool
 rxvt_term::init_vars ()
 {
@@ -916,28 +881,14 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   XClassHint classHint;
   XWMHints wmHint;
 #if ENABLE_FRILLS
-  Atom prop = None;
   MWMHints mwmhints;
 #endif
   XGCValues gcvalue;
   XSetWindowAttributes attributes;
-  XWindowAttributes gattr;
   Window top, parent;
   dDisp;
 
-#ifdef USING_W11LIB
-  /* enable W11 callbacks */
-  W11AddEventHandler (disp, rxvt_W11_process_x_event);
-#endif
-
-  assert (sizeof (xa_names) / sizeof (char *) == NUM_XA);
-  XInternAtoms (disp, (char **)xa_names, NUM_XA, False, xa);
-
-  if (OPTION (Opt_transparent))
-    {
-      XGetWindowAttributes (disp, RootWindow (disp, display->screen), &gattr);
-      display->depth = gattr.depth; // doh //TODO, per-term not per-display?
-    }
+  xa = display->xa;
 
   /* grab colors before netscape does */
   Get_Colours ();
@@ -945,16 +896,14 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   if (!set_fonts ())
     rxvt_fatal ("unable to load base fontset, please specify a valid one using -fn, aborting.\n");
 
-  parent = DefaultRootWindow (disp);
+  parent = display->root;
 
   attributes.override_redirect = !!OPTION (Opt_override_redirect);
 
 #if ENABLE_FRILLS
   if (OPTION (Opt_borderLess))
     {
-      prop = XInternAtom (disp, "_MOTIF_WM_INFO", True);
-
-      if (prop == None)
+      if (XInternAtom (disp, "_MOTIF_WM_INFO", True) == None)
         {
           /*     print_warning("Window Manager does not support MWM hints.  Bypassing window manager control for borderless window.\n");*/
           attributes.override_redirect = TRUE;
@@ -988,8 +937,9 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   /* sub-window placement & size in rxvt_resize_subwindows () */
   attributes.background_pixel = pix_colors_focused[Color_border];
-  attributes.border_pixel = pix_colors_focused[Color_border];
-  attributes.colormap = display->cmap;
+  attributes.border_pixel     = pix_colors_focused[Color_border];
+  attributes.colormap         = display->cmap;
+
   top = XCreateWindow (disp, parent,
                        szHint.x, szHint.y,
                        szHint.width, szHint.height,
@@ -1004,19 +954,25 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   old_width = szHint.width;
   old_height = szHint.height;
 
-  process_xterm_seq (XTerm_title, rs[Rs_title], CHAR_ST);
+  process_xterm_seq (XTerm_title,    rs[Rs_title],    CHAR_ST);
   process_xterm_seq (XTerm_iconName, rs[Rs_iconName], CHAR_ST);
 
-  classHint.res_name = (char *)rs[Rs_name];
+  classHint.res_name  = (char *)rs[Rs_name];
   classHint.res_class = (char *)RESCLASS;
 
-  wmHint.flags = InputHint | StateHint | WindowGroupHint;
-  wmHint.input = True;
+  wmHint.flags         = InputHint | StateHint | WindowGroupHint;
+  wmHint.input         = True;
   wmHint.initial_state = OPTION (Opt_iconic) ? IconicState : NormalState;
-  wmHint.window_group = top;
+  wmHint.window_group  = top;
 
   XmbSetWMProperties (disp, top, NULL, NULL, (char **)argv, argc,
                       &szHint, &wmHint, &classHint);
+
+#if ENABLE_FRILLS
+  if (mwmhints.flags)
+    XChangeProperty (disp, top, xa[XA_MOTIF_WM_HINTS], xa[XA_MOTIF_WM_HINTS], 32,
+                     PropModeReplace, (unsigned char *)&mwmhints, PROP_MWM_HINTS_ELEMENTS);
+#endif
 
   Atom protocols[] = {
     xa[XA_WM_DELETE_WINDOW],
@@ -1052,12 +1008,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   termwin_ev.start (display, top);
 
-#if ENABLE_FRILLS
-  if (mwmhints.flags)
-    XChangeProperty (disp, top, xa[XA_MOTIF_WM_HINTS], xa[XA_MOTIF_WM_HINTS], 32,
-                     PropModeReplace, (unsigned char *)&mwmhints, PROP_MWM_HINTS_ELEMENTS);
-#endif
-
   /* vt cursor: Black-on-White is standard, but this is more popular */
   TermWin_cursor = XCreateFontCursor (disp, XC_xterm);
 
@@ -1068,16 +1018,11 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   /* the vt window */
   vt = XCreateSimpleWindow (disp, top,
-                                    window_vt_x,
-                                    window_vt_y,
-                                    width,
-                                    height,
-                                    0,
-                                    pix_colors_focused[Color_fg],
-                                    pix_colors_focused[Color_bg]);
-#ifdef DEBUG_X
-  XStoreName (disp, vt, "vt window");
-#endif
+                            window_vt_x, window_vt_y,
+                            width, height,
+                            0,
+                            pix_colors_focused[Color_fg],
+                            pix_colors_focused[Color_bg]);
 
   attributes.bit_gravity = NorthWestGravity;
   XChangeWindowAttributes (disp, vt, CWBitGravity, &attributes);
@@ -1111,12 +1056,13 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #endif
 
   /* graphics context for the vt window */
-  gcvalue.foreground = pix_colors[Color_fg];
-  gcvalue.background = pix_colors[Color_bg];
+  gcvalue.foreground         = pix_colors[Color_fg];
+  gcvalue.background         = pix_colors[Color_bg];
   gcvalue.graphics_exposures = 1;
+
   gc = XCreateGC (disp, vt,
-                          GCForeground | GCBackground | GCGraphicsExposures,
-                          &gcvalue);
+                  GCForeground | GCBackground | GCGraphicsExposures,
+                  &gcvalue);
 
   drawable = new rxvt_drawable (display, vt);
 
@@ -1137,16 +1083,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   pointer_unblank ();
   scr_recolour ();
-
-#if ENABLE_XEMBED
-  if (rs[Rs_embed])
-    {
-      long info[2] = { 0, XEMBED_MAPPED };
-
-      XChangeProperty (disp, parent, xa[XA_XEMBED_INFO], xa[XA_XEMBED_INFO],
-                       32, PropModeReplace, (unsigned char *)&info, 2);
-    }
-#endif
 }
 
 /* ------------------------------------------------------------------------- *

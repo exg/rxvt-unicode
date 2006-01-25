@@ -20,6 +20,8 @@ DUMB: support tex fonts
         - experimental OnTheSpot editing support (-pe xim-onthespot).
         - moved Shift-Button2 paste combination to Meta-Button2.
         - removed (unused) arabic presentation form composing sequences.
+        - reduced number of server turnarounds at startup by allocating
+          atoms only once per display.
         - changed version sos (ESC [ > c) response to be more compatible with
           xterm.
 

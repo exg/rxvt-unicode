@@ -1268,16 +1268,6 @@ rxvt_term::mouse_report (XButtonEvent &ev)
             (32 + y + 1));
 }
 
-#ifdef USING_W11LIB
-void
-rxvt_W11_process_x_event (XEvent *ev)
-{
-  rxvt_t *r = rxvt_get_r ();
-
-  x_cb (*ev);
-}
-#endif
-
 /*{{{ process an X event */
 void
 rxvt_term::x_cb (XEvent &ev)

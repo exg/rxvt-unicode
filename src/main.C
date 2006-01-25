@@ -515,6 +515,16 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 
   HOOK_INVOKE ((this, HOOK_START, DT_END));
 
+#if ENABLE_XEMBED
+  if (rs[Rs_embed])
+    {
+      long info[2] = { 0, XEMBED_MAPPED };
+
+      XChangeProperty (display->display, parent[0], xa[XA_XEMBED_INFO], xa[XA_XEMBED_INFO],
+                       32, PropModeReplace, (unsigned char *)&info, 2);
+    }
+#endif
+
   XMapWindow (disp, vt);
   XMapWindow (disp, parent[0]);
 

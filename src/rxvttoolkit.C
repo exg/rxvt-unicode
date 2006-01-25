@@ -34,6 +34,44 @@
 # include <sys/un.h>
 #endif
 
+const char *const xa_names[] =
+  {
+    "TEXT",
+    "COMPOUND_TEXT",
+    "UTF8_STRING",
+    "MULTIPLE",
+    "TARGETS",
+    "TIMESTAMP",
+    "VT_SELECTION",
+    "INCR",
+    "WM_PROTOCOLS",
+    "WM_DELETE_WINDOW",
+    "CLIPBOARD",
+#if ENABLE_FRILLS
+    "_MOTIF_WM_HINTS",
+#endif
+#if ENABLE_EWMH
+    "_NET_WM_PID",
+    "_NET_WM_NAME",
+    "_NET_WM_ICON_NAME",
+    "_NET_WM_PING",
+#endif
+#if USE_XIM
+    "WM_LOCALE_NAME",
+    "XIM_SERVERS",
+#endif
+#ifdef TRANSPARENT
+    "_XROOTPMAP_ID",
+    "ESETROOT_PMAP_ID",
+#endif
+#if ENABLE_XEMBED
+    "_XEMBED",
+    "_XEMBED_INFO",
+#endif
+  };
+
+/////////////////////////////////////////////////////////////////////////////
+
 refcounted::refcounted (const char *id)
 {
   this->id = strdup (id);
@@ -255,6 +293,9 @@ bool rxvt_display::ref_init ()
   cmap   = DefaultColormap (display, screen);
   depth  = DefaultDepth (display, screen);
 
+  assert (sizeof (xa_names) / sizeof (char *) == NUM_XA);
+  XInternAtoms (display, (char **)xa_names, NUM_XA, False, xa);
+
   XrmSetDatabase (display, get_resources ());
 
 #ifdef POINTER_BLANK
@@ -305,9 +346,6 @@ bool rxvt_display::ref_init ()
   fcntl (fd, F_SETFD, FD_CLOEXEC);
 
   XSelectInput (display, root, PropertyChangeMask);
-#ifdef USE_XIM
-  xa_xim_servers = XInternAtom (display, "XIM_SERVERS", 0);
-#endif
 
   flush ();
 
@@ -353,7 +391,7 @@ void rxvt_display::im_change_check ()
   int actual_format;
   unsigned long nitems, bytes_after;
 
-  if (XGetWindowProperty (display, root, xa_xim_servers, 0L, 1000000L,
+  if (XGetWindowProperty (display, root, xa[XA_XIM_SERVERS], 0L, 1000000L,
                           False, XA_ATOM, &actual_type, &actual_format,
                           &nitems, &bytes_after, (unsigned char **)&atoms)
       != Success )
@@ -383,7 +421,7 @@ void rxvt_display::x_cb (io_watcher &w, short revents)
         {
           if (xev.type == PropertyNotify
               && xev.xany.window == root
-              && xev.xproperty.atom == xa_xim_servers)
+              && xev.xproperty.atom == xa[XA_XIM_SERVERS])
             im_change_check ();
 #endif
           for (int i = xw.size (); i--; )
