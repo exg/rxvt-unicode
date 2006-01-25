@@ -27,7 +27,7 @@ sub refresh {
 
       $rstyle |= urxvt::RS_Uline   if $_ & (urxvt::XIMUnderline | urxvt::XIMPrimary);
       $rstyle |= urxvt::RS_RVid    if $_ & (urxvt::XIMReverse   | urxvt::XIMSecondary);
-      $rstyle |= urxvt::RS_Blink   if $_ & (urxvt::XIMHighlight | urxvt::XIMTertiary);
+      $rstyle |= urxvt::RS_Italic  if $_ & (urxvt::XIMHighlight | urxvt::XIMTertiary);
 
       ($rstyle) x ($self->strwidth (substr $text, $idx++, 1))
    } unpack "l!*", $self->{rend};
@@ -54,12 +54,6 @@ sub on_xim_preedit_done {
    delete $self->{text};
    delete $self->{rend};
 
-   ()
-}
-
-sub on_xim_preedit_caret {
-   my ($self, $pos, $dir, $style) = @_;
-   warn "preedit_caret(@_)\n";
    ()
 }
 
