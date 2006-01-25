@@ -48,7 +48,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>7.1</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>7.2</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -1585,10 +1585,13 @@ the selection.</p>
 <dt><strong><a name="item_insertion_3a"><strong>Insertion</strong>:</a></strong><br />
 </dt>
 <dd>
-Pressing and releasing the Middle mouse button in an <strong>rxvt</strong> window
-causes the value of the PRIMARY selection (Shift for CLIPBOARD) to be inserted
-as if it had been typed on the keyboard.
-<strong>Shift-Insert</strong> causes the value of the PRIMARY selection to be inserted too.
+Pressing and releasing the Middle mouse button in an <strong>rxvt</strong>
+window causes the value of the PRIMARY selection (or CLIPBOARD with the
+Meta modifier) to be inserted as if it had been typed on the keyboard.
+</dd>
+<dd>
+<p>Pressing <strong>Shift-Insert</strong> causes the value of the PRIMARY selection to be
+inserted too.</p>
 </dd>
 <p></p></dl>
 <p>

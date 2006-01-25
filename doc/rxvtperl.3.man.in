@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-22" "7.2" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-25" "7.2" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -206,6 +206,15 @@ between two vertical bars:
 .Sp
 .Vb 1
 \&   URxvt.selection.pattern-0: \e\e|([^|]+)\e\e|
+.Ve
+.Sp
+Another example: Programs I use often output \*(L"absolute path: \*(R" at the
+beginning of a line when they process multiple files. The following
+pattern matches the filename (note, there is a single space at the very
+end):
+.Sp
+.Vb 1
+\&   URxvt.selection.pattern-0: ^(/[^:]+):\e
 .Ve
 .Sp
 You can look at the source of the selection extension to see more
@@ -351,6 +360,19 @@ Uses per-line display filtering (\f(CW\*(C`on_line_update\*(C'\fR) to underline 
 make them clickable. When middle\-clicked, the program specified in the
 resource \f(CW\*(C`urlLauncher\*(C'\fR (default \f(CW\*(C`x\-www\-browser\*(C'\fR) will be started with
 the \s-1URL\s0 as first argument.
+.IP "xim-onthespot" 4
+.IX Item "xim-onthespot"
+This (experimental) perl extension implements OnTheSpot editing. It does
+not work perfectly, and some input methods don't seem to work well with
+OnTheSpot editing in general, but it seems to work at leats for \s-1SCIM\s0 and
+kinput2.
+.Sp
+You enable it by specifying this extension and a preedit style of
+\&\f(CW\*(C`OnTheSpot\*(C'\fR, i.e.:
+.Sp
+.Vb 1
+\&   @@RXVT_NAME@@ -pt OnTheSpot -pe xim-onthespot
+.Ve
 .IP "automove-background" 4
 .IX Item "automove-background"
 This is basically a one-line extension that dynamically changes the background pixmap offset
@@ -495,9 +517,8 @@ trying to map (display) the toplevel and returning to the mainloop.
 .ie n .IP "on_destroy $term" 4
 .el .IP "on_destroy \f(CW$term\fR" 4
 .IX Item "on_destroy $term"
-Called whenever something tries to destroy terminal, before doing anything
-yet. If this hook returns true, then destruction is skipped, but this is
-rarely a good idea.
+Called whenever something tries to destroy terminal, when the terminal is
+still fully functional (not for long, though).
 .ie n .IP "on_reset $term" 4
 .el .IP "on_reset \f(CW$term\fR" 4
 .IX Item "on_reset $term"

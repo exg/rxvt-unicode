@@ -1302,6 +1302,7 @@ xim_preedit_draw (XIC ic, XPointer client_data, XIMPreeditDrawCallbackStruct *ca
                   DT_END));
 }
 
+#if 0
 static void
 xim_preedit_caret (XIC ic, XPointer client_data, XIMPreeditCaretCallbackStruct *call_data)
 {
@@ -1312,6 +1313,7 @@ xim_preedit_caret (XIC ic, XPointer client_data, XIMPreeditCaretCallbackStruct *
                 DT_INT, call_data->style,
                 DT_END));
 }
+#endif
 
 #endif
 
@@ -1484,13 +1486,17 @@ foundpet:
       xcb[0].client_data = (XPointer)this; xcb[0].callback = (XIMProc)xim_preedit_start;
       xcb[1].client_data = (XPointer)this; xcb[1].callback = (XIMProc)xim_preedit_done;
       xcb[2].client_data = (XPointer)this; xcb[2].callback = (XIMProc)xim_preedit_draw;
+#if 0
       xcb[3].client_data = (XPointer)this; xcb[3].callback = (XIMProc)xim_preedit_caret;
+#endif
 
       preedit_attr = XVaCreateNestedList (0,
                                           XNPreeditStartCallback, &xcb[0],
                                           XNPreeditDoneCallback , &xcb[1],
                                           XNPreeditDrawCallback , &xcb[2],
+#if 0
                                           XNPreeditCaretCallback, &xcb[3],
+#endif
                                           NULL);
     }
 

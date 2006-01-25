@@ -2228,10 +2228,13 @@ set up the input for people using dead keys or compose keys.
 <dt><strong><a name="item_unicode3">--enable-unicode3 (default: off)</a></strong><br />
 </dt>
 <dd>
-Enable direct support for displaying unicode codepoints above
+Recommended to stay off unless you really need non-BMP characters.
+</dd>
+<dd>
+<p>Enable direct support for displaying unicode codepoints above
 65535 (the basic multilingual page). This increases storage
 requirements per character from 2 to 4 bytes. X11 fonts do not yet
-support these extra characters, but Xft does.
+support these extra characters, but Xft does.</p>
 </dd>
 <dd>
 <p>Please note that rxvt-unicode can store unicode code points &gt;65535
@@ -2251,10 +2254,9 @@ done by using precomposited characters when available or creating
 new pseudo-characters when no precomposed form exists.
 </dd>
 <dd>
-<p>Without --enable-unicode3, the number of additional precomposed characters
-is rather limited (2048, if this is full, rxvt-unicode will use the
-private use area, extending the number of combinations to 8448). With
---enable-unicode3, no practical limit exists.</p>
+<p>Without --enable-unicode3, the number of additional precomposed
+characters is somewhat limited (the 6400 private use characters will be
+(ab-)used). With --enable-unicode3, no practical limit exists.</p>
 </dd>
 <dd>
 <p>This option will also enable storage (but not display) of characters
@@ -2269,7 +2271,8 @@ tell me how these are to be used...).</p>
 <dt><strong><a name="item_fallback">--enable-fallback(=CLASS) (default: Rxvt)</a></strong><br />
 </dt>
 <dd>
-When reading resource settings, also read settings for class CLASS. To disable resource fallback use --disable-fallback.
+When reading resource settings, also read settings for class CLASS. To
+disable resource fallback use --disable-fallback.
 </dd>
 <p></p>
 <dt><strong><a name="item_name">--with-res-name=NAME (default: urxvt)</a></strong><br />
@@ -2495,7 +2498,7 @@ the screen in a fixed position.
 Add support to have the pointer disappear when typing or inactive.
 </dd>
 <p></p>
-<dt><strong><a name="item_perl">--enable-perl (default: off)</a></strong><br />
+<dt><strong><a name="item_perl">--enable-perl (default: on)</a></strong><br />
 </dt>
 <dd>
 Enable an embedded perl interpreter. See the <strong>rxvtperl(3)</strong>

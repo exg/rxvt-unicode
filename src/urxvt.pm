@@ -214,6 +214,18 @@ make them clickable. When middle-clicked, the program specified in the
 resource C<urlLauncher> (default C<x-www-browser>) will be started with
 the URL as first argument.
 
+=item xim-onthespot
+
+This (experimental) perl extension implements OnTheSpot editing. It does
+not work perfectly, and some input methods don't seem to work well with
+OnTheSpot editing in general, but it seems to work at leats for SCIM and
+kinput2.
+
+You enable it by specifying this extension and a preedit style of
+C<OnTheSpot>, i.e.:
+
+   @@RXVT_NAME@@ -pt OnTheSpot -pe xim-onthespot
+
 =item automove-background
 
 This is basically a one-line extension that dynamically changes the background pixmap offset

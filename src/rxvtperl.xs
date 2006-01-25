@@ -867,7 +867,7 @@ BOOT:
     const_iv (XIMVisibleToForward),
     const_iv (XIMVisibleToBackword),
     const_iv (XIMVisibleToCenter),
-
+#   if 0
     const_iv (XIMForwardChar),
     const_iv (XIMBackwardChar),
     const_iv (XIMForwardWord),
@@ -880,6 +880,7 @@ BOOT:
     const_iv (XIMLineEnd),
     const_iv (XIMAbsolutePosition),
     const_iv (XIMDontChange),
+#   endif
 #   endif
   };
 

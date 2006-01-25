@@ -60,6 +60,13 @@ PREPACKAGED EXTENSIONS
 
            URxvt.selection.pattern-0: \\|([^|]+)\\|
 
+        Another example: Programs I use often output "absolute path: " at
+        the beginning of a line when they process multiple files. The
+        following pattern matches the filename (note, there is a single
+        space at the very end):
+
+           URxvt.selection.pattern-0: ^(/[^:]+):\ 
+
         You can look at the source of the selection extension to see more
         interesting uses, such as parsing a line from beginning to end.
 
@@ -183,6 +190,17 @@ PREPACKAGED EXTENSIONS
         and make them clickable. When middle-clicked, the program specified
         in the resource "urlLauncher" (default "x-www-browser") will be
         started with the URL as first argument.
+
+    xim-onthespot
+        This (experimental) perl extension implements OnTheSpot editing. It
+        does not work perfectly, and some input methods don't seem to work
+        well with OnTheSpot editing in general, but it seems to work at
+        leats for SCIM and kinput2.
+
+        You enable it by specifying this extension and a preedit style of
+        "OnTheSpot", i.e.:
+
+           rxvt -pt OnTheSpot -pe xim-onthespot
 
     automove-background
         This is basically a one-line extension that dynamically changes the
@@ -315,9 +333,8 @@ API DOCUMENTATION
         mainloop.
 
     on_destroy $term
-        Called whenever something tries to destroy terminal, before doing
-        anything yet. If this hook returns true, then destruction is
-        skipped, but this is rarely a good idea.
+        Called whenever something tries to destroy terminal, when the
+        terminal is still fully functional (not for long, though).
 
     on_reset $term
         Called after the screen is "reset" for any reason, such as resizing

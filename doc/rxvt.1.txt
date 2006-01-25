@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 7.1, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 7.2, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -1037,9 +1037,12 @@ TEXT SELECTION AND INSERTION
 
     Insertion:
         Pressing and releasing the Middle mouse button in an rxvt window
-        causes the value of the PRIMARY selection (Shift for CLIPBOARD) to
-        be inserted as if it had been typed on the keyboard. Shift-Insert
-        causes the value of the PRIMARY selection to be inserted too.
+        causes the value of the PRIMARY selection (or CLIPBOARD with the
+        Meta modifier) to be inserted as if it had been typed on the
+        keyboard.
+
+        Pressing Shift-Insert causes the value of the PRIMARY selection to
+        be inserted too.
 
 CHANGING FONTS
     Changing fonts (or font sizes, respectively) via the keypad is not yet

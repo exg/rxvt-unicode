@@ -123,6 +123,16 @@ between two vertical bars:</p>
    URxvt.selection.pattern-0: \\|([^|]+)\\|</pre>
 </dd>
 <dd>
+<p>Another example: Programs I use often output ``absolute path: '' at the
+beginning of a line when they process multiple files. The following
+pattern matches the filename (note, there is a single space at the very
+end):</p>
+</dd>
+<dd>
+<pre>
+   URxvt.selection.pattern-0: ^(/[^:]+):\</pre>
+</dd>
+<dd>
 <p>You can look at the source of the selection extension to see more
 interesting uses, such as parsing a line from beginning to end.</p>
 </dd>
@@ -293,6 +303,23 @@ Uses per-line display filtering (<code>on_line_update</code>) to underline urls 
 make them clickable. When middle-clicked, the program specified in the
 resource <code>urlLauncher</code> (default <code>x-www-browser</code>) will be started with
 the URL as first argument.
+</dd>
+<p></p>
+<dt><strong><a name="item_xim_2donthespot">xim-onthespot</a></strong><br />
+</dt>
+<dd>
+This (experimental) perl extension implements OnTheSpot editing. It does
+not work perfectly, and some input methods don't seem to work well with
+OnTheSpot editing in general, but it seems to work at leats for SCIM and
+kinput2.
+</dd>
+<dd>
+<p>You enable it by specifying this extension and a preedit style of
+<code>OnTheSpot</code>, i.e.:</p>
+</dd>
+<dd>
+<pre>
+   rxvt -pt OnTheSpot -pe xim-onthespot</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_automove_2dbackground">automove-background</a></strong><br />
@@ -479,9 +506,8 @@ trying to map (display) the toplevel and returning to the mainloop.
 <dt><strong><a name="item_on_destroy__24term">on_destroy $term</a></strong><br />
 </dt>
 <dd>
-Called whenever something tries to destroy terminal, before doing anything
-yet. If this hook returns true, then destruction is skipped, but this is
-rarely a good idea.
+Called whenever something tries to destroy terminal, when the terminal is
+still fully functional (not for long, though).
 </dd>
 <p></p>
 <dt><strong><a name="item_on_reset__24term">on_reset $term</a></strong><br />

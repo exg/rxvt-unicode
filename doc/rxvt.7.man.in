@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2006-01-19" "7.1" "RXVT-UNICODE"
+.TH rxvt 7 "2006-01-25" "7.2" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -2045,6 +2045,8 @@ alternative input methods (e.g. kinput2) and will also correctly
 set up the input for people using dead keys or compose keys.
 .IP "\-\-enable\-unicode3 (default: off)" 4
 .IX Item "--enable-unicode3 (default: off)"
+Recommended to stay off unless you really need non-BMP characters.
+.Sp
 Enable direct support for displaying unicode codepoints above
 65535 (the basic multilingual page). This increases storage
 requirements per character from 2 to 4 bytes. X11 fonts do not yet
@@ -2063,10 +2065,9 @@ where accents are encoded as seperate unicode characters. This is
 done by using precomposited characters when available or creating
 new pseudo-characters when no precomposed form exists.
 .Sp
-Without \-\-enable\-unicode3, the number of additional precomposed characters
-is rather limited (2048, if this is full, rxvt-unicode will use the
-private use area, extending the number of combinations to 8448). With
-\&\-\-enable\-unicode3, no practical limit exists.
+Without \-\-enable\-unicode3, the number of additional precomposed
+characters is somewhat limited (the 6400 private use characters will be
+(ab\-)used). With \-\-enable\-unicode3, no practical limit exists.
 .Sp
 This option will also enable storage (but not display) of characters
 beyond plane 0 (>65535) when \-\-enable\-unicode3 was not specified.
@@ -2076,7 +2077,8 @@ but these are not currently used. Bug me if you want these to be used (and
 tell me how these are to be used...).
 .IP "\-\-enable\-fallback(=CLASS) (default: Rxvt)" 4
 .IX Item "--enable-fallback(=CLASS) (default: Rxvt)"
-When reading resource settings, also read settings for class \s-1CLASS\s0. To disable resource fallback use \-\-disable\-fallback.
+When reading resource settings, also read settings for class \s-1CLASS\s0. To
+disable resource fallback use \-\-disable\-fallback.
 .IP "\-\-with\-res\-name=NAME (default: urxvt)" 4
 .IX Item "--with-res-name=NAME (default: urxvt)"
 Use the given name as default application name when
@@ -2214,8 +2216,8 @@ the screen in a fixed position.
 .IP "\-\-enable\-pointer\-blank (default: on)" 4
 .IX Item "--enable-pointer-blank (default: on)"
 Add support to have the pointer disappear when typing or inactive.
-.IP "\-\-enable\-perl (default: off)" 4
-.IX Item "--enable-perl (default: off)"
+.IP "\-\-enable\-perl (default: on)" 4
+.IX Item "--enable-perl (default: on)"
 Enable an embedded perl interpreter. See the \fB@@RXVT_NAME@@\f(BIperl\fB\|(3)\fR
 manpage (\fIdoc/rxvtperl.txt\fR) for more info on this feature, or the files
 in \fIsrc/perl\-ext/\fR for the extensions that are installed by default. The

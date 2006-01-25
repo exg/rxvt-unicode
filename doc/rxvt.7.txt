@@ -1561,6 +1561,8 @@ CONFIGURE OPTIONS
         up the input for people using dead keys or compose keys.
 
     --enable-unicode3 (default: off)
+        Recommended to stay off unless you really need non-BMP characters.
+
         Enable direct support for displaying unicode codepoints above 65535
         (the basic multilingual page). This increases storage requirements
         per character from 2 to 4 bytes. X11 fonts do not yet support these
@@ -1580,9 +1582,8 @@ CONFIGURE OPTIONS
         pseudo-characters when no precomposed form exists.
 
         Without --enable-unicode3, the number of additional precomposed
-        characters is rather limited (2048, if this is full, rxvt-unicode
-        will use the private use area, extending the number of combinations
-        to 8448). With --enable-unicode3, no practical limit exists.
+        characters is somewhat limited (the 6400 private use characters will
+        be (ab-)used). With --enable-unicode3, no practical limit exists.
 
         This option will also enable storage (but not display) of characters
         beyond plane 0 (>65535) when --enable-unicode3 was not specified.
@@ -1731,7 +1732,7 @@ CONFIGURE OPTIONS
     --enable-pointer-blank (default: on)
         Add support to have the pointer disappear when typing or inactive.
 
-    --enable-perl (default: off)
+    --enable-perl (default: on)
         Enable an embedded perl interpreter. See the rxvtperl(3) manpage
         (doc/rxvtperl.txt) for more info on this feature, or the files in
         src/perl-ext/ for the extensions that are installed by default. The
