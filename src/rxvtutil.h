@@ -398,5 +398,15 @@ struct stringvec : simplevec<char *>
   }
 };
 
+// return a very temporary (and never deallocated) buffer. keep small.
+void *rxvt_temp_buf (int len);
+
+template<typename T>
+inline T *
+rxvt_temp_buf (int len)
+{
+  return (T *)rxvt_temp_buf (len * sizeof (T));
+}
+
 #endif
 

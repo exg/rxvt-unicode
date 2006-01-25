@@ -372,9 +372,8 @@ trying to map (display) the toplevel and returning to the mainloop.
 
 =item on_destroy $term
 
-Called whenever something tries to destroy terminal, before doing anything
-yet. If this hook returns true, then destruction is skipped, but this is
-rarely a good idea.
+Called whenever something tries to destroy terminal, when the terminal is
+still fully functional (not for long, though).
 
 =item on_reset $term
 

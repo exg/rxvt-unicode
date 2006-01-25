@@ -1,0 +1,79 @@
+#! perl
+
+#
+# problems with this implementation include
+# 
+# - primary, secondary, teriary is NOT different to other hilighting
+# - if rend values are missing, they are not interpolated
+#
+
+my $SIZEOF_LONG = length pack "l!", 0;
+
+sub refresh {
+   my ($self) = @_;
+
+   delete $self->{overlay};
+
+   my $text = $self->{text};
+
+   return unless length $text;
+
+   my ($row, $col) = $self->screen_cur;
+
+   my $idx = 0;
+
+   my @rend = map {
+      my $rstyle = $self->{caret} == $idx ? urxvt::OVERLAY_RSTYLE : $self->rstyle;
+
+      $rstyle |= urxvt::RS_Uline   if $_ & (urxvt::XIMUnderline | urxvt::XIMPrimary);
+      $rstyle |= urxvt::RS_RVid    if $_ & (urxvt::XIMReverse   | urxvt::XIMSecondary);
+      $rstyle |= urxvt::RS_Blink   if $_ & (urxvt::XIMHighlight | urxvt::XIMTertiary);
+
+      ($rstyle) x ($self->strwidth (substr $text, $idx++, 1))
+   } unpack "l!*", $self->{rend};
+
+   if ($self->{caret} >= length $text) {
+      $text .= " ";
+      push @rend, urxvt::OVERLAY_RSTYLE;
+   }
+
+   $self->{overlay} = $self->overlay ($col, $row, $self->strwidth ($text), 1, $self->rstyle, 0);
+   $self->{overlay}->set (0, 0, $self->special_encode ($text), \@rend);
+}
+
+sub on_xim_preedit_start {
+   my ($self) = @_;
+
+   ()
+}
+
+sub on_xim_preedit_done {
+   my ($self) = @_;
+
+   delete $self->{overlay};
+   delete $self->{text};
+   delete $self->{rend};
+
+   ()
+}
+
+sub on_xim_preedit_caret {
+   my ($self, $pos, $dir, $style) = @_;
+   warn "preedit_caret(@_)\n";
+   ()
+}
+
+sub on_xim_preedit_draw {
+   my ($self, $caret, $pos, $len, $feedback, $chars) = @_;
+
+   $self->{caret} = $caret;
+
+   substr $self->{rend}, $pos * $SIZEOF_LONG, $len * $SIZEOF_LONG, $feedback;
+   substr $self->{text}, $pos               , $len               , $chars if defined $feedback || !defined $chars;
+
+   $self->refresh;
+
+   ()
+}
+
+

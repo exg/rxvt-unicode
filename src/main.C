@@ -307,8 +307,7 @@ rxvt_term::destroy ()
   if (destroy_ev.active)
     return;
 
-  if (HOOK_INVOKE ((this, HOOK_DESTROY, DT_END)))
-    return;
+  HOOK_INVOKE ((this, HOOK_DESTROY, DT_END));
 
 #if ENABLE_OVERLAY
   scr_overlay_off ();
@@ -1244,6 +1243,78 @@ rxvt_term::im_destroy ()
   Input_Context = 0;
 }
 
+#ifdef ENABLE_XIM_ONTHESPOT
+
+static void
+xim_preedit_start (XIC ic, XPointer client_data, XPointer call_data)
+{
+  ((rxvt_term *)client_data)->make_current ();
+  HOOK_INVOKE (((rxvt_term *)client_data, HOOK_XIM_PREEDIT_START, DT_END));
+}
+
+static void
+xim_preedit_done (XIC ic, XPointer client_data, XPointer call_data)
+{
+  ((rxvt_term *)client_data)->make_current ();
+  HOOK_INVOKE (((rxvt_term *)client_data, HOOK_XIM_PREEDIT_DONE, DT_END));
+}
+
+static void
+xim_preedit_draw (XIC ic, XPointer client_data, XIMPreeditDrawCallbackStruct *call_data)
+{
+  rxvt_term *term = (rxvt_term *)client_data;
+  XIMText *text = call_data->text;
+
+  term->make_current ();
+
+  if (text)
+    {
+      void *str;
+
+      if (!text->encoding_is_wchar && text->string.multi_byte)
+        {
+          // of course, X makes it ugly again
+          if (term->rs[Rs_imLocale])
+            SET_LOCALE (term->rs[Rs_imLocale]);
+
+          str = rxvt_temp_buf ((text->length + 1) * sizeof (wchar_t));
+          mbstowcs ((wchar_t *)str, text->string.multi_byte, text->length + 1);
+
+          if (term->rs[Rs_imLocale])
+            SET_LOCALE (term->locale);
+        }
+      else
+        str = (void *)text->string.wide_char;
+      
+      HOOK_INVOKE ((term, HOOK_XIM_PREEDIT_DRAW,
+                    DT_INT, call_data->caret,
+                    DT_INT, call_data->chg_first,
+                    DT_INT, call_data->chg_length,
+                    DT_LCS_LEN, (void *)text->feedback, text->feedback ? (int)text->length : 0,
+                    DT_WCS_LEN, str, str ? (int)text->length : 0,
+                    DT_END));
+    }
+  else
+    HOOK_INVOKE ((term, HOOK_XIM_PREEDIT_DRAW,
+                  DT_INT, call_data->caret,
+                  DT_INT, call_data->chg_first,
+                  DT_INT, call_data->chg_length,
+                  DT_END));
+}
+
+static void
+xim_preedit_caret (XIC ic, XPointer client_data, XIMPreeditCaretCallbackStruct *call_data)
+{
+  ((rxvt_term *)client_data)->make_current ();
+  HOOK_INVOKE (((rxvt_term *)client_data, HOOK_XIM_PREEDIT_CARET,
+                DT_INT, call_data->position,
+                DT_INT, call_data->direction,
+                DT_INT, call_data->style,
+                DT_END));
+}
+
+#endif
+
 /*
  * Try to open a XIM with the current modifiers, then see if we can
  * open a suitable preedit type
@@ -1259,6 +1330,9 @@ rxvt_term::IM_get_IC (const char *modifiers)
   const char *p;
   char **s;
   XIMStyles *xim_styles;
+#ifdef ENABLE_XIM_ONTHESPOT
+  XIMCallback xcb[4];
+#endif
 
   set_environ (envv);
 
@@ -1294,13 +1368,19 @@ rxvt_term::IM_get_IC (const char *modifiers)
       for (i = found = 0; !found && s[i]; i++)
         {
           if (!strcmp (s[i], "OverTheSpot"))
-            input_style = (XIMPreeditPosition | XIMStatusNothing);
+            input_style = XIMPreeditPosition | XIMStatusNothing;
           else if (!strcmp (s[i], "OffTheSpot"))
-            input_style = (XIMPreeditArea | XIMStatusArea);
+            input_style = XIMPreeditArea | XIMStatusArea;
           else if (!strcmp (s[i], "Root"))
-            input_style = (XIMPreeditNothing | XIMStatusNothing);
+            input_style = XIMPreeditNothing | XIMStatusNothing;
           else if (!strcmp (s[i], "None"))
-            input_style = (XIMPreeditNone | XIMStatusNone);
+            input_style = XIMPreeditNone | XIMStatusNone;
+#ifdef ENABLE_XIM_ONTHESPOT
+          else if (SHOULD_INVOKE (HOOK_XIM_PREEDIT_START) && !strcmp (s[i], "OnTheSpot"))
+            input_style = XIMPreeditCallbacks | XIMStatusNothing;
+#endif
+          else
+            input_style = XIMPreeditNothing | XIMStatusNothing;
 
           for (j = 0; j < xim_styles->count_styles; j++)
             if (input_style == xim_styles->supported_styles[j])
@@ -1399,6 +1479,20 @@ foundpet:
                                          XNFontSet, fs,
                                          NULL);
     }
+  else if (input_style & XIMPreeditCallbacks)
+    {
+      xcb[0].client_data = (XPointer)this; xcb[0].callback = (XIMProc)xim_preedit_start;
+      xcb[1].client_data = (XPointer)this; xcb[1].callback = (XIMProc)xim_preedit_done;
+      xcb[2].client_data = (XPointer)this; xcb[2].callback = (XIMProc)xim_preedit_draw;
+      xcb[3].client_data = (XPointer)this; xcb[3].callback = (XIMProc)xim_preedit_caret;
+
+      preedit_attr = XVaCreateNestedList (0,
+                                          XNPreeditStartCallback, &xcb[0],
+                                          XNPreeditDoneCallback , &xcb[1],
+                                          XNPreeditDrawCallback , &xcb[2],
+                                          XNPreeditCaretCallback, &xcb[3],
+                                          NULL);
+    }
 
   Input_Context = XCreateIC (xim,
                              XNInputStyle, input_style,
@@ -1420,8 +1514,11 @@ foundpet:
       return false;
     }
 
+#if 0
+  // unfortunately, only the focus window is used by XIM, hard to fix
   if (!XGetICValues (Input_Context, XNFilterEvents, &vt_emask_xim, NULL))
     vt_select_input ();
+#endif
 
   if (input_style & XIMPreeditArea)
     IMSetStatusPosition ();

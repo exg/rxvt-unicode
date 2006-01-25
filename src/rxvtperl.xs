@@ -556,8 +556,9 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
               case DT_STR_LEN:
                 {
                   char *str = va_arg (ap, char *);
-                  int len = va_arg (ap, int);
+                  int len   = va_arg (ap, int);
 
+                  printf ("pushing str %p:%d\n", str,len);//D
                   XPUSHs (sv_2mortal (newSVpvn (str, len)));
                 }
                 break;
@@ -565,9 +566,18 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
               case DT_WCS_LEN:
                 {
                   wchar_t *wstr = va_arg (ap, wchar_t *);
-                  int wlen = va_arg (ap, int);
+                  int wlen      = va_arg (ap, int);
 
                   XPUSHs (sv_2mortal (wcs2sv (wstr, wlen)));
+                }
+               break;
+
+              case DT_LCS_LEN:
+                {
+                  long *lstr = va_arg (ap, long *);
+                  int llen   = va_arg (ap, int);
+
+                  XPUSHs (sv_2mortal (newSVpvn ((char *)lstr, llen * sizeof (long))));
                 }
                break;
 
@@ -576,10 +586,10 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
                   XEvent *xe = va_arg (ap, XEvent *);
                   HV *hv = newHV ();
 
-#           define set(name, sv) hv_store (hv, # name,  sizeof (# name) - 1, sv, 0)
-#           define setiv(name, val) hv_store (hv, # name,  sizeof (# name) - 1, newSViv (val), 0)
-#           define setuv(name, val) hv_store (hv, # name,  sizeof (# name) - 1, newSVuv (val), 0)
-#           undef set
+#                 define set(name, sv) hv_store (hv, # name,  sizeof (# name) - 1, sv, 0)
+#                 define setiv(name, val) hv_store (hv, # name,  sizeof (# name) - 1, newSViv (val), 0)
+#                 define setuv(name, val) hv_store (hv, # name,  sizeof (# name) - 1, newSVuv (val), 0)
+#                 undef set
 
                   setiv (type,       xe->type);
                   setiv (send_event, xe->xany.send_event);
@@ -718,6 +728,9 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
     {
       clearSVptr ((SV *)term->perl.self);
       SvREFCNT_dec ((SV *)term->perl.self);
+      
+      // don't allow further calls
+      term->perl.self = 0;
     }
 
   swap (perl_environ, environ);
@@ -844,6 +857,30 @@ BOOT:
     const_iv (ColormapNotify),
     const_iv (ClientMessage),
     const_iv (MappingNotify),
+#   if ENABLE_XIM_ONTHESPOT
+    const_iv (XIMReverse),
+    const_iv (XIMUnderline),
+    const_iv (XIMHighlight),
+    const_iv (XIMPrimary),
+    const_iv (XIMSecondary),
+    const_iv (XIMTertiary),
+    const_iv (XIMVisibleToForward),
+    const_iv (XIMVisibleToBackword),
+    const_iv (XIMVisibleToCenter),
+
+    const_iv (XIMForwardChar),
+    const_iv (XIMBackwardChar),
+    const_iv (XIMForwardWord),
+    const_iv (XIMBackwardWord),
+    const_iv (XIMCaretUp),
+    const_iv (XIMCaretDown),
+    const_iv (XIMNextLine),
+    const_iv (XIMPreviousLine),
+    const_iv (XIMLineStart),
+    const_iv (XIMLineEnd),
+    const_iv (XIMAbsolutePosition),
+    const_iv (XIMDontChange),
+#   endif
   };
 
   for (civ = const_iv + sizeof (const_iv) / sizeof (const_iv [0]);
@@ -1246,14 +1283,12 @@ rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0, int start
 
         if (GIMME_V != G_VOID)
           {
-            wchar_t *wstr = new wchar_t [THIS->ncol];
+            wchar_t *wstr = rxvt_temp_buf<wchar_t> (THIS->ncol);
 
             for (int col = 0; col < THIS->ncol; col++)
               wstr [col] = l.t [col];
 
             XPUSHs (sv_2mortal (wcs2sv (wstr, THIS->ncol)));
-
-            delete [] wstr;
           }
 
         if (new_text)
@@ -1356,35 +1391,41 @@ rxvt_term::special_encode (SV *string)
 {
         wchar_t *wstr = sv2wcs (string);
         int wlen = wcslen (wstr);
-        wchar_t *rstr = new wchar_t [wlen]; // cannot become longer
+        wchar_t *rstr = rxvt_temp_buf<wchar_t> (wlen * 2); // cannot become longer
 
 	rxvt_push_locale (THIS->locale);
 
         wchar_t *r = rstr;
         for (wchar_t *s = wstr; *s; s++)
-          if (wcwidth (*s) == 0)
-            {
-              if (r == rstr)
-                croak ("leading combining character unencodable");
+          {
+            int w = WCWIDTH (*s);
 
-              unicode_t n = rxvt_compose (r[-1], *s);
-              if (n == NOCHAR)
-                n = rxvt_composite.compose (r[-1], *s);
+            if (w == 0)
+              {
+                if (r == rstr)
+                  croak ("leading combining character unencodable");
 
-              r[-1] = n;
-            }
+                unicode_t n = rxvt_compose (r[-1], *s);
+                if (n == NOCHAR)
+                  n = rxvt_composite.compose (r[-1], *s);
+
+                r[-1] = n;
+              }
 #if !UNICODE_3
-          else if (*s >= 0x10000)
-            *r++ = rxvt_composite.compose (*s);
+            else if (*s >= 0x10000)
+              *r++ = rxvt_composite.compose (*s);
 #endif
-          else
-            *r++ = *s;
+            else
+              *r++ = *s;
+
+            // the *2 above only allows wcwidth <= 2
+            if (w > 1)
+              *r++ = NOCHAR;
+          }
 
 	rxvt_pop_locale ();
 
         RETVAL = wcs2sv (rstr, r - rstr);
-
-        delete [] rstr;
 }
 	OUTPUT:
         RETVAL
@@ -1406,7 +1447,7 @@ rxvt_term::special_decode (SV *text)
           else
             dlen++;
 
-        wchar_t *rstr = new wchar_t [dlen];
+        wchar_t *rstr = rxvt_temp_buf<wchar_t> (dlen);
 
         // decode
         wchar_t *r = rstr;
@@ -1419,8 +1460,6 @@ rxvt_term::special_decode (SV *text)
             *r++ = *s;
 
         RETVAL = wcs2sv (rstr, r - rstr);
-
-        delete [] rstr;
 }
 	OUTPUT:
         RETVAL

@@ -42,5 +42,10 @@
   def (WM_PROTOCOLS)
   def (PROPERTY_NOTIFY)
 
+  def (XIM_PREEDIT_START)
+  def (XIM_PREEDIT_DONE)
+  def (XIM_PREEDIT_DRAW)
+  def (XIM_PREEDIT_CARET)
+
   def (CUSTOM_REND) // hovering over custom rendition, generate enter/leave maybe?
 

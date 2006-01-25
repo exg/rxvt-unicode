@@ -844,11 +844,11 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
       if (IN_RANGE_INC (c, 0xd800, 0xdfff))
         c = 0xfffd;
 
-      // rely on wcwidth to tell us the character width, at least for non-latin1
-      // do wcwidth before further replacements, as wcwidth might return -1
-      // for the line drawing characters below as they might be invalid in the current
+      // rely on wcwidth to tell us the character width, do wcwidth before
+      // further replacements, as wcwidth might return -1 for the line
+      // drawing characters below as they might be invalid in the current
       // locale.
-      int width = c < 0x100 ? 1 : wcwidth (c);
+      int width = WCWIDTH (c);
 
       if (charsets [screen.charset] == '0') // DEC SPECIAL
         {

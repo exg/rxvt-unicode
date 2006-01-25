@@ -17,6 +17,7 @@
 #if ENABLE_FRILLS
 # define ENABLE_XEMBED 1
 # define ENABLE_EWMH   1
+# define ENABLE_XIM_ONTHESPOT 1
 # define CURSOR_BLINK  1
 #else
 # define ENABLE_MINIMAL 1
@@ -737,6 +738,11 @@ enum {
  */
 #define dLocal(type,name)       type const name = this->name
 #define dDisp			Display *disp = this->display->display
+
+// for speed reasons, we assume that all latin1 characters
+// are single-width (the first unicdoe combining character
+// is actually 0x300, but ascii is what matters most).
+#define WCWIDTH(c) ((c) < 0x100 ? 1 : wcwidth (c))
 
 /* convert pixel dimensions to row/column values.  Everything as int32_t */
 #define Pixel2Col(x)            Pixel2Width((int32_t)(x))

@@ -22,7 +22,8 @@ enum data_type {
   DT_LONG,
   DT_STR,     // 0-terminates string
   DT_STR_LEN, // string + length
-  DT_WCS_LEN, // wstring + length
+  DT_WCS_LEN, // wchar_t* + length
+  DT_LCS_LEN, // long* + length
   DT_XEVENT,
 };
 

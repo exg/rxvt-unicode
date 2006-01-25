@@ -15,12 +15,11 @@ WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an 
 WISH: just for fun, do shade and tint with XRender.
 DUMB: support tex fonts
 
-TODO: ctrl - mouse button2 in vim makes X freeze (unreproducable with cvs)
         - don't let iso14755 or mouse reporting get into the way of perl
           (could lead to global grabs never being cleared).
+        - experimental OnTheSpot editing support (-pe xim-onthespot).
         - moved Shift-Button2 paste combination to Meta-Button2.
         - removed (unused) arabic presentation form composing sequences.
-        - correctly ask XIM for events it needs to have enabled on the window.
         - changed version sos (ESC [ > c) response to be more compatible with
           xterm.
 

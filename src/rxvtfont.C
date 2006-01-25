@@ -175,26 +175,11 @@ rxvt_drawable::operator XftDraw *()
 
 /////////////////////////////////////////////////////////////////////////////
 
-static void *enc_buf;
-static uint32_t enc_len;
-
-static inline void *
-get_enc_buf (uint32_t len)
-{
-  if (len > enc_len)
-    {
-      free (enc_buf);
-      enc_buf = malloc (len);
-      enc_len = len;
-    }
-
-  return enc_buf;
-}
-
 static const char *
 enc_char (const text_t *text, uint32_t len, codeset cs, bool &zero)
 {
-  uint8_t *buf = (uint8_t *)get_enc_buf (len);
+  uint8_t *buf = rxvt_temp_buf<uint8_t> (len);
+  uint8_t *res = buf;
 
   while (len--)
     {
@@ -209,13 +194,14 @@ enc_char (const text_t *text, uint32_t len, codeset cs, bool &zero)
       *buf++ = c;
     }
 
-  return (const char *)enc_buf;
+  return (const char *)res;
 }
 
 static const XChar2b *
 enc_xchar2b (const text_t *text, uint32_t len, codeset cs, bool &zero)
 {
-  XChar2b *buf = (XChar2b *)get_enc_buf (len * sizeof (XChar2b));
+  XChar2b *buf = rxvt_temp_buf<XChar2b> (len);
+  XChar2b *res = buf;
 
   while (len--)
     {
@@ -232,7 +218,7 @@ enc_xchar2b (const text_t *text, uint32_t len, codeset cs, bool &zero)
       buf++;
     }
 
-  return (XChar2b *)enc_buf;
+  return res;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1282,7 +1268,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
   clear_rect (d, x, y, term->fwidth * len, term->fheight, bg);
 
   XGlyphInfo extents;
-  XftGlyphSpec *enc = (XftGlyphSpec *)get_enc_buf (len * sizeof (XftGlyphSpec));
+  XftGlyphSpec *enc = (XftGlyphSpec *)rxvt_temp_buf (len * sizeof (XftGlyphSpec));
   XftGlyphSpec *ep = enc;
 
   dTermDisplay;

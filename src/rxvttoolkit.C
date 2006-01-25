@@ -95,6 +95,7 @@ void refcache<T>::clear ()
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef USE_XIM
+
 static void
 #if XIMCB_PROTO_BROKEN
 im_destroy_cb (XIC unused1, XPointer client_data, XPointer unused3)
@@ -135,6 +136,7 @@ rxvt_xim::~rxvt_xim ()
   if (xim)
     XCloseIM (xim);
 }
+
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

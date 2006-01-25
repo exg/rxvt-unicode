@@ -38,5 +38,20 @@ zero_initialized::operator delete (void *p, size_t s)
   free (p);
 }
 
+static void *temp_buf;
+static uint32_t temp_len;
+
+void *
+rxvt_temp_buf (int len)
+{
+  if (len > temp_len)
+    { 
+      free (temp_buf);
+      temp_buf = malloc (len);
+      temp_len = len;
+    }
+  
+  return temp_buf;
+}
 
 
