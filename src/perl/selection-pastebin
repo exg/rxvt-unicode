@@ -69,7 +69,7 @@ sub on_start {
    ()
 }
 
-sub on_keyboard_command {
+sub on_user_command {
    my ($self, $cmd) = @_;
 
    if ($cmd eq "selection-pastebin:remote-pastebin") {

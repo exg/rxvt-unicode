@@ -15,7 +15,7 @@ sub on_init {
    ()
 }
 
-sub on_keyboard_command {
+sub on_user_command {
    my ($self, $cmd) = @_;
 
    $cmd eq "searchable-scrollback:start"

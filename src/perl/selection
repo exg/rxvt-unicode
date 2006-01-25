@@ -1,6 +1,6 @@
 #! perl
 
-sub on_keyboard_command {
+sub on_user_command {
    my ($self, $cmd) = @_;
 
    $cmd eq "selection:rot13"
