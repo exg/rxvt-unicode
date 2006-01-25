@@ -1,8 +1,5 @@
 #! perl
 
-my $pastebin_cmd;
-my $pastebin_url;
-
 sub upload_paste {
    my ($self) = @_;
 
@@ -15,7 +12,7 @@ sub upload_paste {
 
    my $msg = "uploaded as $filename";
 
-   if (open my $o, ">:utf-8", $tmpfile) {
+   if (open my $o, ">:utf8", $tmpfile) {
       chmod 0644, $tmpfile;
       print $o $txt;
       close $o;
@@ -23,38 +20,47 @@ sub upload_paste {
       $msg = "couldn't write $tmpfile: $!";
    }
 
-   my $cmd = $pastebin_cmd;
+   my $cmd = $self->{pastebin_cmd};
    $cmd =~ s/%/$tmpfile/;
 
-   if (system ($cmd) == 0) {
-      my $url = $pastebin_url;
-      $url =~ s/%/$filename/;
+   my $pid = $self->exec_async ("/bin/sh", "-c", $cmd);
 
-      $self->selection ($url);
-   } else {
-      $msg = "couldn't upload, '$cmd' failed";
-   }
+   $self->{pw} = urxvt::pw->new->start ($pid)->cb (sub {
+      my (undef, $status) = @_;
 
-   unlink $tmpfile;
+      delete $self->{pw};
 
-   my $ov = $self->overlay (-1, 0, length $msg, 1, urxvt::OVERLAY_RSTYLE, 0);
-   $ov->set (0, 0, $msg);
+      if ($status) {
+         $status >>= 8;
+         $msg = "ERROR: command returned status $status";
+      } else {
+         my $url = $self->{pastebin_url};
+         $url =~ s/%/$filename/;
 
-   my $timer; $timer =
-      urxvt::timer
-              ->new
-              ->after (5)
-              ->cb (sub { undef $timer; undef $ov; });
+         $self->selection ($url);
+      }
+
+      unlink $tmpfile;
+
+      my $ov = $self->overlay (-1, 0, $self->strwidth ($msg), 1, urxvt::OVERLAY_RSTYLE, 0);
+      $ov->set (0, 0, $msg);
+
+      $self->{timer} =
+         urxvt::timer
+                 ->new
+                 ->after (5)
+                 ->cb (sub { delete $self->{timer}; undef $ov; });
+   });
 }
 
 sub on_start {
    my ($self) = @_;
 
-   $pastebin_cmd = $self->x_resource ("selection-pastebin.cmd")
-                   || "rcp -p % ruth:/var/www/www.ta-sa.org/files/txt/";
+   $self->{pastebin_cmd} = $self->x_resource ("selection-pastebin.cmd")
+                           || "rcp -p % ruth:/var/www/www.ta-sa.org/files/txt/";
 
-   $pastebin_url = $self->x_resource ("selection-pastebin.url")
-                   || "http://www.ta-sa.org/files/txt/%";
+   $self->{pastebin_url} = $self->x_resource ("selection-pastebin.url")
+                           || "http://www.ta-sa.org/files/txt/%";
 
    push @{ $self->{term}{selection_popup_hook} }, sub {
       ("pastebin upload" => sub { $self->upload_paste })
