@@ -5,7 +5,6 @@ TODO: overlays collide with the way the out-of-focus cursor is being drawn
 TODO: simplify selection_request and make it callable from perl.
 TODO: split perl documentation and urxvt.pm into separate files
 TODO: harmonize --disable-options into position-dependent options.
-TODO: after requesting the selection and getting a timeout, no further requests will be sent.
 TODO: "slow" rendering mode for bidi and scripts
 TODO: read property sequence is broken with respect to utf-8 etc.
 WISH: anyevent mouse notification / manage MotionMask better.
