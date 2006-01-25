@@ -7,9 +7,7 @@ TODO: harmonize --disable-options into position-dependent options.
 TODO: after requesting the selection and getting a timeout, no further requests will be sent.
 TODO: "slow" rendering mode for bidi and scripts
 TODO: read property sequence is broken with respect to utf-8 etc.
-TODO: rxvt -name urxvt-girly /// leave pixel droppings
 WISH: anyevent mouse notification / manage MotionMask better.
-WISH: OnTheSpot editing, or maybe switch to miiiiiiif. or maybe use perl and an overlay...
 WISH: just for fun, do shade and tint with XRender.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
