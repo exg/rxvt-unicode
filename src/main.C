@@ -1213,7 +1213,7 @@ rxvt_term::IMSendSpot ()
 
   if (!Input_Context
       || !focus
-      || !(input_style & XIMPreeditPosition))
+      || !(input_style & (XIMPreeditPosition | XIMPreeditCallbacks)))
     return;
 
   im_set_position (nspot);
@@ -1483,6 +1483,8 @@ foundpet:
     }
   else if (input_style & XIMPreeditCallbacks)
     {
+      im_set_position (spot);
+
       xcb[0].client_data = (XPointer)this; xcb[0].callback = (XIMProc)xim_preedit_start;
       xcb[1].client_data = (XPointer)this; xcb[1].callback = (XIMProc)xim_preedit_done;
       xcb[2].client_data = (XPointer)this; xcb[2].callback = (XIMProc)xim_preedit_draw;
@@ -1491,6 +1493,7 @@ foundpet:
 #endif
 
       preedit_attr = XVaCreateNestedList (0,
+                                          XNSpotLocation, &spot,
                                           XNPreeditStartCallback, &xcb[0],
                                           XNPreeditDoneCallback , &xcb[1],
                                           XNPreeditDrawCallback , &xcb[2],
