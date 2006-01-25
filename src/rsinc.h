@@ -68,6 +68,7 @@
   def (override_redirect)
   def (pty_fd)
   def (hold)
+  def (depth)
   def (ext_bwidth)
   def (int_bwidth)
   def (borderLess)

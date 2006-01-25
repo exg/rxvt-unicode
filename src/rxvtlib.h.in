@@ -52,7 +52,6 @@ struct rxvt_fontset;
 struct rxvt_color;
 struct rxvt_vars;               /* defined later on */
 struct rxvt_term;
-struct rxvt_display;
 struct rxvt_im;
 struct rxvt_drawable;
 
@@ -234,7 +233,6 @@ struct rxvt_vars : TermWin_t {
   scrollBar_t     scrollBar;
   uint32_t        options;
   XSizeHints      szHint;
-  rxvt_display   *display;
   rxvt_color     *pix_colors;
   rxvt_color     *pix_colors_focused;
 #ifdef OFF_FOCUS_FADING

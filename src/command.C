@@ -1274,7 +1274,7 @@ rxvt_term::x_cb (XEvent &ev)
 {
   make_current ();
 
-  dDisp;
+  dLocal (Display *, xdisp);
 
   if (ev.xany.window == vt
       && SHOULD_INVOKE (HOOK_X_EVENT)
@@ -1394,7 +1394,7 @@ rxvt_term::x_cb (XEvent &ev)
                       }
 #if ENABLE_EWMH
                     else if (ev.xclient.data.l[0] == xa[XA_NET_WM_PING])
-                      XSendEvent (disp, ev.xclient.window = display->root,
+                      XSendEvent (xdisp, ev.xclient.window = display->root,
                                   False, SubstructureRedirectMask | SubstructureNotifyMask,
                                   &ev);
 #endif
@@ -1452,7 +1452,7 @@ rxvt_term::x_cb (XEvent &ev)
       case ConfigureNotify:
         if (ev.xconfigure.window == parent[0])
           {
-            while (XCheckTypedWindowEvent (disp, ev.xconfigure.window, ConfigureNotify, &ev))
+            while (XCheckTypedWindowEvent (xdisp, ev.xconfigure.window, ConfigureNotify, &ev))
               ;
 
             if (szHint.width != ev.xconfigure.width || szHint.height != ev.xconfigure.height)
@@ -1520,11 +1520,11 @@ rxvt_term::x_cb (XEvent &ev)
             do
               scr_expose (ev.xexpose.x, ev.xexpose.y,
                           ev.xexpose.width, ev.xexpose.height, False);
-            while (XCheckTypedWindowEvent (disp, vt, ev.xany.type, &ev));
+            while (XCheckTypedWindowEvent (xdisp, vt, ev.xany.type, &ev));
 
             ev.xany.type = ev.xany.type == Expose ? GraphicsExpose : Expose;
 
-            while (XCheckTypedWindowEvent (disp, vt, ev.xany.type, &ev))
+            while (XCheckTypedWindowEvent (xdisp, vt, ev.xany.type, &ev))
               scr_expose (ev.xexpose.x, ev.xexpose.y,
                           ev.xexpose.width, ev.xexpose.height, False);
 
@@ -1534,9 +1534,9 @@ rxvt_term::x_cb (XEvent &ev)
           {
             XEvent unused_event;
 
-            while (XCheckTypedWindowEvent (disp, ev.xany.window, Expose, &unused_event))
+            while (XCheckTypedWindowEvent (xdisp, ev.xany.window, Expose, &unused_event))
               ;
-            while (XCheckTypedWindowEvent (disp, ev.xany.window, GraphicsExpose, &unused_event))
+            while (XCheckTypedWindowEvent (xdisp, ev.xany.window, GraphicsExpose, &unused_event))
               ;
 
             if (isScrollbarWindow (ev.xany.window))
@@ -1547,7 +1547,7 @@ rxvt_term::x_cb (XEvent &ev)
 
 #ifdef TRANSPARENT
             if (am_transparent && ev.xany.window == parent[0])
-              XClearWindow (disp, ev.xany.window);
+              XClearWindow (xdisp, ev.xany.window);
 #endif
           }
         break;
@@ -1567,10 +1567,10 @@ rxvt_term::x_cb (XEvent &ev)
               ; // nop
             else if (ev.xbutton.state & (Button1Mask | Button3Mask))
               {
-                while (XCheckTypedWindowEvent (disp, vt, MotionNotify, &ev))
+                while (XCheckTypedWindowEvent (xdisp, vt, MotionNotify, &ev))
                   ;
 
-                XQueryPointer (disp, vt,
+                XQueryPointer (xdisp, vt,
                                &unused_root, &unused_child,
                                &unused_root_x, &unused_root_y,
                                &ev.xbutton.x, &ev.xbutton.y,
@@ -1644,11 +1644,11 @@ rxvt_term::x_cb (XEvent &ev)
           }
         else if (isScrollbarWindow (ev.xany.window) && scrollbar_isMotion ())
           {
-            while (XCheckTypedWindowEvent (disp, scrollBar.win,
+            while (XCheckTypedWindowEvent (xdisp, scrollBar.win,
                                            MotionNotify, &ev))
               ;
 
-            XQueryPointer (disp, scrollBar.win,
+            XQueryPointer (xdisp, scrollBar.win,
                           &unused_root, &unused_child,
                           &unused_root_x, &unused_root_y,
                           &ev.xbutton.x, &ev.xbutton.y,
@@ -2173,7 +2173,7 @@ rxvt_term::button_release (XButtonEvent &ev)
 
 typedef uint32_t RUINT32T;
 
-void ShadeXImage(rxvt_display *display, XImage* srcImage, int shade, int rm, int gm, int bm)
+void ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, int bm)
 {
   int sh_r, sh_g, sh_b;
   RUINT32T mask_r, mask_g, mask_b;
@@ -2182,7 +2182,7 @@ void ShadeXImage(rxvt_display *display, XImage* srcImage, int shade, int rm, int
   unsigned int upper_lim_r, upper_lim_g, upper_lim_b;
   int i;
 
-  Visual *visual = display->visual;
+  Visual *visual = term->visual;
 
   if( visual->c_class != TrueColor || srcImage->format != ZPixmap ) return ;
 
@@ -2413,24 +2413,23 @@ rxvt_term::check_our_parents ()
   Window root, oldp, *list;
   Pixmap rootpixmap = None;
   XWindowAttributes wattr, wrootattr;
-  dDisp;
 
   pchanged = 0;
 
   if (!OPTION (Opt_transparent))
     return pchanged;	/* Don't try any more */
 
-  XGetWindowAttributes (disp, display->root, &wrootattr);
+  XGetWindowAttributes (xdisp, display->root, &wrootattr);
   rootdepth = wrootattr.depth;
 
-  XGetWindowAttributes (disp, parent[0], &wattr);
+  XGetWindowAttributes (xdisp, parent[0], &wattr);
 
   if (rootdepth != wattr.depth)
     {
       if (am_transparent)
         {
           pchanged = 1;
-          XSetWindowBackground (disp, vt, pix_colors_focused[Color_bg]);
+          XSetWindowBackground (xdisp, vt, pix_colors_focused[Color_bg]);
           am_transparent = am_pixmap_trans = 0;
         }
 
@@ -2438,7 +2437,7 @@ rxvt_term::check_our_parents ()
     }
 
   /* Get all X ops out of the queue so that our information is up-to-date. */
-  XSync (disp, False);
+  XSync (xdisp, False);
 
   /*
    * Make the frame window set by the window manager have
@@ -2446,13 +2445,13 @@ rxvt_term::check_our_parents ()
    * windows for each client, so we have to take care about that.
    */
   i = (xa[XA_XROOTPMAP_ID]
-       && XGetWindowProperty (disp, display->root, xa[XA_XROOTPMAP_ID],
+       && XGetWindowProperty (xdisp, display->root, xa[XA_XROOTPMAP_ID],
                               0L, 1L, False, XA_PIXMAP, &atype, &aformat,
                               &nitems, &bytes_after, &prop) == Success);
 
   if (!i || prop == NULL)
      i = (xa[XA_ESETROOT_PMAP_ID]
-          && XGetWindowProperty (disp, display->root, xa[XA_ESETROOT_PMAP_ID],
+          && XGetWindowProperty (xdisp, display->root, xa[XA_ESETROOT_PMAP_ID],
                                  0L, 1L, False, XA_PIXMAP, &atype, &aformat,
                                  &nitems, &bytes_after, &prop) == Success);
 
@@ -2481,7 +2480,7 @@ rxvt_term::check_our_parents ()
       GC gc;
       XGCValues gcvalue;
 
-      XTranslateCoordinates (disp, parent[0], display->root,
+      XTranslateCoordinates (xdisp, parent[0], display->root,
                              0, 0, &sx, &sy, &cr);
       nw = (unsigned int)szHint.width;
       nh = (unsigned int)szHint.height;
@@ -2504,9 +2503,9 @@ rxvt_term::check_our_parents ()
       min_it (nw, (unsigned int) (wrootattr.width - sx));
       min_it (nh, (unsigned int) (wrootattr.height - sy));
 
-      XSync (disp, False);
+      XSync (xdisp, False);
       allowedxerror = -1;
-      image = XGetImage (disp, rootpixmap, sx, sy, nw, nh, AllPlanes, ZPixmap);
+      image = XGetImage (xdisp, rootpixmap, sx, sy, nw, nh, AllPlanes, ZPixmap);
 
       /* XXX: handle BadMatch - usually because we're outside the pixmap */
       /* XXX: may need a delay here? */
@@ -2519,7 +2518,7 @@ rxvt_term::check_our_parents ()
               pchanged = 1;
               if (pixmap != None)
                 {
-                  XFreePixmap (disp, pixmap);
+                  XFreePixmap (xdisp, pixmap);
                   pixmap = None;
                 }
             }
@@ -2529,7 +2528,7 @@ rxvt_term::check_our_parents ()
       else
         {
           if (pixmap != None)
-            XFreePixmap (disp, pixmap);
+            XFreePixmap (xdisp, pixmap);
 
 #if TINTING
           if (ISSET_PIXCOLOR (Color_tint))
@@ -2537,21 +2536,20 @@ rxvt_term::check_our_parents ()
               unsigned short rm, gm, bm;
               int shade = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100;
 
-              pix_colors_focused[Color_tint].get (display, rm, gm, bm);
+              pix_colors_focused[Color_tint].get (this, rm, gm, bm);
 
-              ShadeXImage (display, image, shade, rm, gm, bm);
+              ShadeXImage (this, image, shade, rm, gm, bm);
             }
 #endif
 
-          pixmap = XCreatePixmap (disp, vt,
-                                          szHint.width, szHint.height, image->depth);
-          gc = XCreateGC (disp, vt, 0UL, &gcvalue);
-          XPutImage (disp, pixmap, gc, image, 0, 0,
+          pixmap = XCreatePixmap (xdisp, vt, szHint.width, szHint.height, image->depth);
+          gc = XCreateGC (xdisp, vt, 0UL, &gcvalue);
+          XPutImage (xdisp, pixmap, gc, image, 0, 0,
                      nx, ny, image->width, image->height);
-          XFreeGC (disp, gc);
+          XFreeGC (xdisp, gc);
           XDestroyImage (image);
-          XSetWindowBackgroundPixmap (disp, parent[0], pixmap);
-          XClearWindow (disp, parent[0]);
+          XSetWindowBackgroundPixmap (xdisp, parent[0], pixmap);
+          XClearWindow (xdisp, parent[0]);
 
           if (!am_transparent || !am_pixmap_trans)
             pchanged = 1;
@@ -2561,7 +2559,7 @@ rxvt_term::check_our_parents ()
     }
 
   if (am_pixmap_trans)
-    XSetWindowBackgroundPixmap (disp, vt, ParentRelative);
+    XSetWindowBackgroundPixmap (xdisp, vt, ParentRelative);
   else
     {
       unsigned int n;
@@ -2571,7 +2569,7 @@ rxvt_term::check_our_parents ()
       for (i = 1; i < (int) (sizeof (parent) / sizeof (Window)); i++)
         {
           oldp = parent[i];
-          XQueryTree (disp, parent[i - 1], &root,
+          XQueryTree (xdisp, parent[i - 1], &root,
                       &parent[i], &list, &n);
           XFree (list);
 
@@ -2593,7 +2591,7 @@ rxvt_term::check_our_parents ()
         {
           for (; n < (unsigned int)i; n++)
             {
-              XGetWindowAttributes (disp, parent[n], &wattr);
+              XGetWindowAttributes (xdisp, parent[n], &wattr);
               if (wattr.depth != rootdepth || wattr.c_class == InputOnly)
                 {
                   n = (int) (sizeof (parent) / sizeof (Window)) + 1;
@@ -2604,8 +2602,8 @@ rxvt_term::check_our_parents ()
 
       if (n > (int) (sizeof (parent) / sizeof (parent[0])))
         {
-          XSetWindowBackground (disp, parent[0], pix_colors_focused[Color_border]);
-          XSetWindowBackground (disp, vt, pix_colors_focused[Color_bg]);
+          XSetWindowBackground (xdisp, parent[0], pix_colors_focused[Color_border]);
+          XSetWindowBackground (xdisp, vt, pix_colors_focused[Color_bg]);
           am_transparent = 0;
           /* XXX: also turn off Opt_transparent? */
         }
@@ -2613,11 +2611,11 @@ rxvt_term::check_our_parents ()
         {
           for (n = 0; n < (unsigned int)i; n++)
             {
-              XSetWindowBackgroundPixmap (disp, parent[n], ParentRelative);
-              XClearWindow (disp, parent[n]);
+              XSetWindowBackgroundPixmap (xdisp, parent[n], ParentRelative);
+              XClearWindow (xdisp, parent[n]);
             }
 
-          XSetWindowBackgroundPixmap (disp, vt, ParentRelative);
+          XSetWindowBackgroundPixmap (xdisp, vt, ParentRelative);
           am_transparent = 1;
         }
 
@@ -2627,7 +2625,7 @@ rxvt_term::check_our_parents ()
 
   if (scrollBar.win)
     {
-      XSetWindowBackgroundPixmap (disp, scrollBar.win, ParentRelative);
+      XSetWindowBackgroundPixmap (xdisp, scrollBar.win, ParentRelative);
       scrollBar.setIdle ();
       scrollbar_show (0);
     }
@@ -3527,7 +3525,8 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
   int x, y;
   XWindowAttributes wattr;
   Window wdummy;
-  dDisp;
+
+  dLocal (Display *, xdisp);
 
   if (nargs == 0)
     return;
@@ -3538,22 +3537,22 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
        * commands
        */
       case 1:			/* deiconify window */
-        XMapWindow (disp, parent[0]);
+        XMapWindow (xdisp, parent[0]);
         break;
       case 2:			/* iconify window */
-        XIconifyWindow (disp, parent[0], display->screen);
+        XIconifyWindow (xdisp, parent[0], display->screen);
         break;
       case 3:			/* set position (pixels) */
-        XMoveWindow (disp, parent[0], args[1], args[2]);
+        XMoveWindow (xdisp, parent[0], args[1], args[2]);
         break;
       case 4:			/* set size (pixels) */
         set_widthheight ((unsigned int)args[2], (unsigned int)args[1]);
         break;
       case 5:			/* raise window */
-        XRaiseWindow (disp, parent[0]);
+        XRaiseWindow (xdisp, parent[0]);
         break;
       case 6:			/* lower window */
-        XLowerWindow (disp, parent[0]);
+        XLowerWindow (xdisp, parent[0]);
         break;
       case 7:			/* refresh window */
         scr_touch (true);
@@ -3575,18 +3574,18 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
        * reports - some output format copied from XTerm
        */
       case 11:			/* report window state */
-        XGetWindowAttributes (disp, parent[0], &wattr);
+        XGetWindowAttributes (xdisp, parent[0], &wattr);
         tt_printf ("\033[%dt", wattr.map_state == IsViewable ? 1 : 2);
         break;
       case 13:			/* report window position */
-        XGetWindowAttributes (disp, parent[0], &wattr);
-        XTranslateCoordinates (disp, parent[0], wattr.root,
+        XGetWindowAttributes (xdisp, parent[0], &wattr);
+        XTranslateCoordinates (xdisp, parent[0], wattr.root,
                                -wattr.border_width, -wattr.border_width,
                                &x, &y, &wdummy);
         tt_printf ("\033[3;%d;%dt", x, y);
         break;
       case 14:			/* report window size (pixels) */
-        XGetWindowAttributes (disp, parent[0], &wattr);
+        XGetWindowAttributes (xdisp, parent[0], &wattr);
         tt_printf ("\033[4;%d;%dt", wattr.height, wattr.width);
         break;
       case 18:			/* report text area size (chars) */
@@ -3598,7 +3597,7 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
       case 20:			/* report icon label */
         {
           char *s;
-          XGetIconName (disp, parent[0], &s);
+          XGetIconName (xdisp, parent[0], &s);
           tt_printf ("\033]L%-.250s\234", OPTION (Opt_insecure) && s ? s : "");	/* 8bit ST */
           XFree (s);
         }
@@ -3606,7 +3605,7 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
       case 21:			/* report window title */
         {
           char *s;
-          XFetchName (disp, parent[0], &s);
+          XFetchName (xdisp, parent[0], &s);
           tt_printf ("\033]l%-.250s\234", OPTION (Opt_insecure) && s ? s : "");	/* 8bit ST */
           XFree (s);
         }
@@ -3718,7 +3717,7 @@ rxvt_term::process_color_seq (int report, int color, const char *str, char resp)
   if (str[0] == '?' && !str[1])
     {
       unsigned short r, g, b;
-      pix_colors_focused[color].get (display, r, g, b);
+      pix_colors_focused[color].get (this, r, g, b);
       tt_printf ("\033]%d;rgb:%04x/%04x/%04x%c", report, r, g, b, resp);
     }
   else
@@ -3735,7 +3734,8 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
   char *buf, *name;
   bool query = str[0] == '?' && !str[1];
   int saveop = op;
-  dDisp;
+
+  dLocal (Display *, xdisp);
 
   assert (str != NULL);
   switch (op)
@@ -3761,7 +3761,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
             const char *str = "";
 
             if (prop
-                && XGetWindowProperty (disp, parent[0],
+                && XGetWindowProperty (xdisp, parent[0],
                                        prop, 0, 1<<16, 0, AnyPropertyType,
                                        &actual_type, &actual_format,
                                        &nitems, &bytes_after, &value) == Success
@@ -3783,7 +3783,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
                 set_utf8_property (display->atom (str), eq + 1);
               }
             else
-              XDeleteProperty (disp, parent[0],
+              XDeleteProperty (xdisp, parent[0],
                                display->atom (str));
           }
         break;
@@ -3806,7 +3806,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
             if (name[0] == '?' && !name[1])
               {
                 unsigned short r, g, b;
-                pix_colors_focused[color].get (display, r, g, b);
+                pix_colors_focused[color].get (this, r, g, b);
                 tt_printf ("\033]%d;%d;rgb:%04x/%04x/%04x%c", XTerm_Color, color, r, g, b, resp);
               }
             else

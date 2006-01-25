@@ -3516,7 +3516,6 @@ void
 rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
 {
   XSelectionEvent ev;
-  dDisp;
 
   ev.type = SelectionNotify;
   ev.property = None;
@@ -3540,7 +3539,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
       *target++ = xa[XA_UTF8_STRING];
 #endif
 
-      XChangeProperty (disp, rq.requestor, rq.property, XA_ATOM,
+      XChangeProperty (xdisp, rq.requestor, rq.property, XA_ATOM,
                        32, PropModeReplace,
                        (unsigned char *)target_list, target - target_list);
       ev.property = rq.property;
@@ -3553,7 +3552,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
 #endif
   else if (rq.target == xa[XA_TIMESTAMP] && selection.text)
     {
-      XChangeProperty (disp, rq.requestor, rq.property, rq.target,
+      XChangeProperty (xdisp, rq.requestor, rq.property, rq.target,
                        32, PropModeReplace, (unsigned char *)&selection_time, 1);
       ev.property = rq.property;
     }
@@ -3621,7 +3620,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
         }
       else
 #endif
-      if (XwcTextListToTextProperty (disp, &cl, 1, (XICCEncodingStyle) style, &ct) >= 0)
+      if (XwcTextListToTextProperty (xdisp, &cl, 1, (XICCEncodingStyle) style, &ct) >= 0)
         freect = 1;
       else
         {
@@ -3631,7 +3630,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
           ct.encoding = target;
         }
 
-      XChangeProperty (disp, rq.requestor, rq.property,
+      XChangeProperty (xdisp, rq.requestor, rq.property,
                        ct.encoding, 8, PropModeReplace,
                        ct.value, (int)ct.nitems);
       ev.property = rq.property;
@@ -3640,7 +3639,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
         XFree (ct.value);
     }
 
-  XSendEvent (disp, rq.requestor, False, 0L, (XEvent *)&ev);
+  XSendEvent (xdisp, rq.requestor, False, 0L, (XEvent *)&ev);
 }
 
 /* ------------------------------------------------------------------------- *

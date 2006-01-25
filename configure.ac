@@ -149,7 +149,6 @@ AC_ARG_ENABLE(everything,
                      NOTE: automatically enabled with --enable-shared],
   [
     if test x$enableval = xno; then
-       support_24bit=no
        support_frills=no
        support_inheritpixmap=no
        support_tinting=no
@@ -179,7 +178,6 @@ AC_ARG_ENABLE(everything,
        codesets=
     fi
     if test x$enableval = xyes; then
-       support_24bit=yes
        support_frills=yes
        support_inheritpixmap=yes
        support_tinting=yes
@@ -378,12 +376,6 @@ AC_ARG_ENABLE(frills,
   [  --enable-frills         enable support for rarely used features],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_frills=$enableval
-  fi])
-
-AC_ARG_ENABLE(24bit,
-  [  --enable-24bit          enable support for using 24bit visuals if available],
-  [if test x$enableval = xyes -o x$enableval = xno; then
-    support_24bit=$enableval
   fi])
 
 AC_ARG_ENABLE(keepscrolling,
@@ -804,9 +796,6 @@ if test x$support_selectionscrolling = xyes; then
 fi
 if test x$support_frills = xyes; then
   AC_DEFINE(ENABLE_FRILLS, 1, Define if you want handling for rarely used but handy features)
-fi
-if test x$support_24bit = xyes; then
-  AC_DEFINE(PREFER_24BIT, 1, Define to use a 24 bit visual if the screen has 24 bit mode, even if the default is 8 bit)
 fi
 if test x$support_mousewheel = xyes; then
   AC_DEFINE(MOUSE_WHEEL, 1, Define to use wheel events (button4 and button5) to scroll)

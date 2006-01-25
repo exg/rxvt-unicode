@@ -701,7 +701,6 @@ enum {
  *****************************************************************************
  */
 #define dLocal(type,name)       type const name = this->name
-#define dDisp			Display *disp = this->display->display
 
 // for speed reasons, we assume that all latin1 characters
 // are single-width (the first unicode combining character
@@ -913,7 +912,7 @@ extern class rxvt_composite_vec rxvt_composite;
   class keyboard_manager;
 #endif
 
-struct rxvt_term : zero_initialized, rxvt_vars {
+struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   log_callback   *log_hook;               // log error messages through this hook, if != 0
   getfd_callback *getfd_hook;           // convert remote to local fd, if != 0
 #if ENABLE_PERL
@@ -1113,7 +1112,7 @@ struct rxvt_term : zero_initialized, rxvt_vars {
 
   void vt_select_input () const NOTHROW
   {
-    XSelectInput (display->display, vt, vt_emask | vt_emask_perl | vt_emask_xim);
+    XSelectInput (xdisp, vt, vt_emask | vt_emask_perl | vt_emask_xim);
   }
 
 #if TRANSPARENT

@@ -174,7 +174,7 @@ rxvt_drawable::~rxvt_drawable ()
 rxvt_drawable::operator XftDraw *()
 {
   if (!xftdrawable)
-    xftdrawable = XftDrawCreate (display->display, drawable, display->visual, display->cmap);
+    xftdrawable = XftDrawCreate (screen->xdisp, drawable, screen->visual, screen->cmap);
 
   return xftdrawable;
 }

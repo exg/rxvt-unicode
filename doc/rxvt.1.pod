@@ -95,6 +95,11 @@ Attempt to open a window on the named X display (B<-d> still
 respected). In the absence of this option, the display specified by the
 B<DISPLAY> environment variable is used.
 
+=item B<-depth> I<bitdepth>
+
+Compile I<frills>: Attempt to find a visual with the given bit depth;
+resource B<depth>.
+
 =item B<-geometry> I<geom>
 
 Window geometry (B<-g> still respected); resource B<geometry>.
@@ -506,6 +511,11 @@ check the @@RXVT_NAME@@perl(3) manpage for additional settings by perl
 extensions not documented here):
 
 =over 4
+
+=item B<depth:> I<bitdepth>
+
+Compile I<frills>: Attempt to find a visual with the given bit depth;
+option B<-depth>.
 
 =item B<geometry:> I<geom>
 

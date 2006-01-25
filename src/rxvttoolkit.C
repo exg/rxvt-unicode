@@ -179,6 +179,44 @@ rxvt_xim::~rxvt_xim ()
 
 /////////////////////////////////////////////////////////////////////////////
 
+void
+rxvt_screen::set (rxvt_display *disp)
+{
+  display = disp;
+
+  xdisp  = disp->display;
+
+  Screen *screen = ScreenOfDisplay (xdisp, disp->screen);
+
+  depth  = DefaultDepthOfScreen    (screen);
+  visual = DefaultVisualOfScreen   (screen);
+  cmap   = DefaultColormapOfScreen (screen);
+}
+
+void
+rxvt_screen::set (rxvt_display *disp, int depth)
+{
+  set (disp);
+
+  XVisualInfo vinfo;
+
+  if (XMatchVisualInfo (xdisp, display->screen, depth, TrueColor, &vinfo))
+    {
+      this->depth  = depth;
+      this->visual = vinfo.visual;
+      this->cmap   = XCreateColormap (xdisp, disp->root, visual, AllocNone);
+    }
+}
+
+void
+rxvt_screen::clear ()
+{
+  if (cmap != DefaultColormapOfScreen (ScreenOfDisplay (xdisp, display->screen)))
+    XFreeColormap (xdisp, cmap);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 rxvt_display::rxvt_display (const char *id)
 : refcounted (id)
 , x_ev (this, &rxvt_display::x_cb)
@@ -289,9 +327,6 @@ bool rxvt_display::ref_init ()
 
   screen = DefaultScreen (display);
   root   = DefaultRootWindow (display);
-  visual = DefaultVisual (display, screen);
-  cmap   = DefaultColormap (display, screen);
-  depth  = DefaultDepth (display, screen);
 
   assert (sizeof (xa_names) / sizeof (char *) == NUM_XA);
   XInternAtoms (display, (char **)xa_names, NUM_XA, False, xa);
@@ -307,25 +342,6 @@ bool rxvt_display::ref_init ()
   blank_cursor = XCreateGlyphCursor (display, f, f, ' ', ' ',
                                      &blackcolour, &blackcolour);
   XUnloadFont (display, f);
-#endif
-
-#ifdef PREFER_24BIT
-  /*
-   * If depth is not 24, look for a 24bit visual.
-   */
-  if (depth != 24)
-    {
-      XVisualInfo vinfo;
-
-      if (XMatchVisualInfo (display, screen, 24, TrueColor, &vinfo))
-        {
-          depth = 24;
-          visual = vinfo.visual;
-          cmap = XCreateColormap (display,
-                                  RootWindow (display, screen),
-                                  visual, AllocNone);
-        }
-    }
 #endif
 
   int fd = XConnectionNumber (display);
@@ -521,13 +537,13 @@ refcache<rxvt_display> displays;
 /////////////////////////////////////////////////////////////////////////////
   
 bool
-rxvt_color::set (rxvt_display *display, Pixel p)
+rxvt_color::set (rxvt_screen *screen, Pixel p)
 {
 #if XFT
   XColor xc;
 
   xc.pixel = p;
-  if (!XQueryColor (display->display, display->cmap, &xc))
+  if (!XQueryColor (screen->xdisp, screen->cmap, &xc))
     return false;
 
   XRenderColor d;
@@ -538,9 +554,9 @@ rxvt_color::set (rxvt_display *display, Pixel p)
   d.alpha = 0xffff;
 
   return
-    XftColorAllocValue (display->display, 
-                        display->visual,
-                        display->cmap,
+    XftColorAllocValue (screen->xdisp, 
+                        screen->visual,
+                        screen->cmap,
                         &d, &c);
 #else
   this->p = p;
@@ -550,23 +566,22 @@ rxvt_color::set (rxvt_display *display, Pixel p)
 }
 
 bool
-rxvt_color::set (rxvt_display *display, const char *name)
+rxvt_color::set (rxvt_screen *screen, const char *name)
 {
 #if XFT
-  return XftColorAllocName (display->display, display->visual, display->cmap,
-                            name, &c);
+  return XftColorAllocName (screen->xdisp, screen->visual, screen->cmap, name, &c);
 #else
   XColor xc;
 
-  if (XParseColor (display->display, display->cmap, name, &xc))
-    return set (display, xc.red, xc.green, xc.blue);
+  if (XParseColor (screen->xdisp, screen->cmap, name, &xc))
+    return set (screen, xc.red, xc.green, xc.blue);
 
   return false;
 #endif
 }
 
 bool
-rxvt_color::set (rxvt_display *display, unsigned short cr, unsigned short cg, unsigned short cb)
+rxvt_color::set (rxvt_screen *screen, unsigned short cr, unsigned short cg, unsigned short cb)
 {
   XColor xc;
 
@@ -575,14 +590,14 @@ rxvt_color::set (rxvt_display *display, unsigned short cr, unsigned short cg, un
   xc.blue  = cb;
   xc.flags = DoRed | DoGreen | DoBlue;
 
-  if (XAllocColor (display->display, display->cmap, &xc))
-    return set (display, xc.pixel);
+  if (XAllocColor (screen->xdisp, screen->cmap, &xc))
+    return set (screen, xc.pixel);
 
   return false;
 }
 
 void 
-rxvt_color::get (rxvt_display *display, unsigned short &cr, unsigned short &cg, unsigned short &cb)
+rxvt_color::get (rxvt_screen *screen, unsigned short &cr, unsigned short &cg, unsigned short &cb)
 {
 #if XFT
   cr = c.color.red;
@@ -592,7 +607,7 @@ rxvt_color::get (rxvt_display *display, unsigned short &cr, unsigned short &cg, 
   XColor c;
 
   c.pixel = p;
-  XQueryColor (display->display, display->cmap, &c);
+  XQueryColor (screen->xdisp, screen->cmap, &c);
 
   cr = c.red;
   cg = c.green;
@@ -601,27 +616,27 @@ rxvt_color::get (rxvt_display *display, unsigned short &cr, unsigned short &cg, 
 }
 
 void 
-rxvt_color::free (rxvt_display *display)
+rxvt_color::free (rxvt_screen *screen)
 {
 #if XFT
-  XftColorFree (display->display, display->visual, display->cmap, &c);
+  XftColorFree (screen->xdisp, screen->visual, screen->cmap, &c);
 #else
-  XFreeColors (display->display, display->cmap, &p, 1, AllPlanes);
+  XFreeColors (screen->xdisp, screen->cmap, &p, 1, AllPlanes);
 #endif
 }
 
 rxvt_color
-rxvt_color::fade (rxvt_display *display, int percent)
+rxvt_color::fade (rxvt_screen *screen, int percent)
 {
   percent = 100 - percent;
 
   unsigned short cr, cg, cb;
   rxvt_color faded;
 
-  get (display, cr, cg, cb);
+  get (screen, cr, cg, cb);
 
   faded.set (
-    display,
+    screen,
     cr * percent / 100,
     cg * percent / 100,
     cb * percent / 100
@@ -633,7 +648,7 @@ rxvt_color::fade (rxvt_display *display, int percent)
 #define LERP(a,b,p) (a * p + b * (100 - p)) / 100
 
 rxvt_color
-rxvt_color::fade (rxvt_display *display, int percent, rxvt_color &fadeto)
+rxvt_color::fade (rxvt_screen *screen, int percent, rxvt_color &fadeto)
 {
   percent = 100 - percent;
 
@@ -641,11 +656,11 @@ rxvt_color::fade (rxvt_display *display, int percent, rxvt_color &fadeto)
   unsigned short fcr, fcg, fcb;
   rxvt_color faded;
   
-  get (display, cr, cg, cb);
-  fadeto.get(display, fcr, fcg, fcb);
+  get (screen, cr, cg, cb);
+  fadeto.get (screen, fcr, fcg, fcb);
 
   faded.set (
-    display,
+    screen,
     LERP (cr, fcr, percent),
     LERP (cg, fcg, percent),
     LERP (cb, fcb, percent)

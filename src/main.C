@@ -218,43 +218,43 @@ rxvt_term::~rxvt_term ()
 
   if (display)
     {
-      dDisp;
-
       selection_clear ();
 
 #ifdef USE_XIM
       im_destroy ();
 #endif
 #ifdef XTERM_SCROLLBAR
-      if (xscrollbarGC) XFreeGC (disp, xscrollbarGC);
-      if (ShadowGC)     XFreeGC (disp, ShadowGC);
+      if (xscrollbarGC) XFreeGC (xdisp, xscrollbarGC);
+      if (ShadowGC)     XFreeGC (xdisp, ShadowGC);
 #endif
 #ifdef PLAIN_SCROLLBAR
-      if (pscrollbarGC) XFreeGC (disp, pscrollbarGC);
+      if (pscrollbarGC) XFreeGC (xdisp, pscrollbarGC);
 #endif
 #ifdef NEXT_SCROLLBAR
-      if (blackGC)      XFreeGC (disp, blackGC);
-      if (whiteGC)      XFreeGC (disp, whiteGC);
-      if (grayGC)       XFreeGC (disp, grayGC);
-      if (darkGC)       XFreeGC (disp, darkGC);
-      if (stippleGC)    XFreeGC (disp, stippleGC);
-      if (dimple)       XFreePixmap (disp, dimple);
-      if (upArrow)      XFreePixmap (disp, upArrow);
-      if (downArrow)    XFreePixmap (disp, downArrow);
-      if (upArrowHi)    XFreePixmap (disp, upArrowHi);
-      if (downArrowHi)  XFreePixmap (disp, downArrowHi);
+      if (blackGC)      XFreeGC (xdisp, blackGC);
+      if (whiteGC)      XFreeGC (xdisp, whiteGC);
+      if (grayGC)       XFreeGC (xdisp, grayGC);
+      if (darkGC)       XFreeGC (xdisp, darkGC);
+      if (stippleGC)    XFreeGC (xdisp, stippleGC);
+      if (dimple)       XFreePixmap (xdisp, dimple);
+      if (upArrow)      XFreePixmap (xdisp, upArrow);
+      if (downArrow)    XFreePixmap (xdisp, downArrow);
+      if (upArrowHi)    XFreePixmap (xdisp, upArrowHi);
+      if (downArrowHi)  XFreePixmap (xdisp, downArrowHi);
 #endif
 #ifdef RXVT_SCROLLBAR
-      if (topShadowGC)  XFreeGC (disp, topShadowGC);
-      if (botShadowGC)  XFreeGC (disp, botShadowGC);
-      if (scrollbarGC)  XFreeGC (disp, scrollbarGC);
+      if (topShadowGC)  XFreeGC (xdisp, topShadowGC);
+      if (botShadowGC)  XFreeGC (xdisp, botShadowGC);
+      if (scrollbarGC)  XFreeGC (xdisp, scrollbarGC);
 #endif
-      if (gc)   XFreeGC (disp, gc);
+      if (gc)   XFreeGC (xdisp, gc);
 
       delete drawable;
       // destroy all windows
       if (parent[0])
-        XDestroyWindow (disp, parent[0]);
+        XDestroyWindow (xdisp, parent[0]);
+
+      clear ();
     }
 
   // TODO: free pixcolours, colours should become part of rxvt_display
@@ -477,14 +477,12 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 
   create_windows (argc, argv);
 
-  dDisp;
-
   init_xlocale ();
 
   scr_reset (); // initialize screen
 
 #if 0
-  XSynchronize (disp, True);
+  XSynchronize (xdisp, True);
 #endif
 
 #ifdef HAVE_SCROLLBARS
@@ -494,7 +492,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 #ifdef TRANSPARENT
   if (OPTION (Opt_transparent))
     {
-      XSelectInput (disp, display->root, PropertyChangeMask);
+      XSelectInput (xdisp, display->root, PropertyChangeMask);
       check_our_parents ();
       rootwin_ev.start (display, display->root);
     }
@@ -523,8 +521,8 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
     }
 #endif
 
-  XMapWindow (disp, vt);
-  XMapWindow (disp, parent[0]);
+  XMapWindow (xdisp, vt);
+  XMapWindow (xdisp, parent[0]);
 
   return true;
 }
@@ -624,7 +622,6 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
   int x, y, sb_w, flags;
   unsigned int w, h;
   unsigned int max_width, max_height;
-  dDisp;
 
   szHint.flags = PMinSize | PResizeInc | PBaseSize | PWinGravity;
   szHint.win_gravity = NorthWestGravity;
@@ -731,9 +728,10 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
     window_sb_x = szHint.width - sb_w;
 
   if (recalc_x)
-    szHint.x += DisplayWidth  (disp, display->screen) - szHint.width  - 2 * ext_bwidth;
+    szHint.x += DisplayWidth  (xdisp, display->screen) - szHint.width  - 2 * ext_bwidth;
+
   if (recalc_y)
-    szHint.y += DisplayHeight (disp, display->screen) - szHint.height - 2 * ext_bwidth;
+    szHint.y += DisplayHeight (xdisp, display->screen) - szHint.height - 2 * ext_bwidth;
 
   ncol = width / fwidth;
   nrow = height / fheight;
@@ -946,7 +944,7 @@ done:
 
 #if OFF_FOCUS_FADING
   if (rs[Rs_fade])
-    pix_colors_unfocused[idx] = pix_colors_focused[idx].fade (display, atoi (rs[Rs_fade]), pix_colors[Color_fade]);
+    pix_colors_unfocused[idx] = pix_colors_focused[idx].fade (this, atoi (rs[Rs_fade]), pix_colors[Color_fade]);
 #endif
 
   /*TODO: handle Color_BD, scrollbar background, etc. */
@@ -971,7 +969,7 @@ rxvt_term::recolour_cursor ()
                      ? pix_colors_focused[Color_pointer_bg]
                      : pix_colors_focused[Color_bg];
 
-  XQueryColors (display->display, display->cmap, xcol, 2);
+  XQueryColors (display->display, cmap, xcol, 2);
   XRecolorCursor (display->display, TermWin_cursor, xcol + 0, xcol + 1);
 }
 
@@ -1013,7 +1011,7 @@ rxvt_term::set_colorfgbg ()
 int
 rxvt_term::rXParseAllocColor (rxvt_color *screen_in_out, const char *colour)
 {
-  if (!screen_in_out->set (display, colour))
+  if (!screen_in_out->set (this, colour))
     {
       rxvt_warn ("can't get colour '%s', continuing without.\n", colour);
       return false;
@@ -1031,10 +1029,9 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
   int fix_screen;
   int old_width  = szHint.width;
   int old_height = szHint.height;
-  dDisp;
 
   window_calc (newwidth, newheight);
-  XSetWMNormalHints (disp, parent[0], &szHint);
+  XSetWMNormalHints (xdisp, parent[0], &szHint);
 
   if (!ignoreparent)
     {
@@ -1048,9 +1045,9 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
       unsigned int unused_w1, unused_h1, unused_b1, unused_d1;
       Window unused_cr;
 
-      XTranslateCoordinates (disp, parent[0], display->root,
+      XTranslateCoordinates (xdisp, parent[0], display->root,
                              0, 0, &x, &y, &unused_cr);
-      XGetGeometry (disp, parent[0], &unused_cr, &x1, &y1,
+      XGetGeometry (xdisp, parent[0], &unused_cr, &x1, &y1,
                     &unused_w1, &unused_h1, &unused_b1, &unused_d1);
       /*
        * if display->root isn't the parent window, a WM will probably have offset
@@ -1062,8 +1059,8 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
           y -= y1;
         }
 
-      x1 = (DisplayWidth  (disp, display->screen) - old_width ) / 2;
-      y1 = (DisplayHeight (disp, display->screen) - old_height) / 2;
+      x1 = (DisplayWidth  (xdisp, display->screen) - old_width ) / 2;
+      y1 = (DisplayHeight (xdisp, display->screen) - old_height) / 2;
       dx = old_width  - szHint.width;
       dy = old_height - szHint.height;
 
@@ -1077,10 +1074,10 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
       else if (y == y1)       /* exact center */
         dy /= 2;
 
-      XMoveResizeWindow (disp, parent[0], x + dx, y + dy,
+      XMoveResizeWindow (xdisp, parent[0], x + dx, y + dy,
                          szHint.width, szHint.height);
 #else
-      XResizeWindow (disp, parent[0], szHint.width, szHint.height);
+      XResizeWindow (xdisp, parent[0], szHint.width, szHint.height);
 #endif
     }
 
@@ -1090,13 +1087,13 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
     {
       if (scrollBar.state)
         {
-          XMoveResizeWindow (disp, scrollBar.win,
+          XMoveResizeWindow (xdisp, scrollBar.win,
                              window_sb_x, 0,
                              scrollbar_TotalWidth (), szHint.height);
           resize_scrollbar ();
         }
 
-      XMoveResizeWindow (disp, vt,
+      XMoveResizeWindow (xdisp, vt,
                          window_vt_x, window_vt_y,
                          width, height);
 

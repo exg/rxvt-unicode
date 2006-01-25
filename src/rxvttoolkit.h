@@ -98,6 +98,18 @@ struct rxvt_xim : refcounted {
 };
 #endif
 
+struct rxvt_screen {
+  rxvt_display *display;
+  Display *xdisp;
+  int depth;
+  Visual *visual;
+  Colormap cmap;
+
+  void set (rxvt_display *disp);
+  void set (rxvt_display *disp, int depth);
+  void clear ();
+};
+
 struct rxvt_display : refcounted {
   io_manager_vec<xevent_watcher> xw;
 
@@ -113,10 +125,7 @@ struct rxvt_display : refcounted {
 
 //public
   Display   *display;
-  int       depth;
   int       screen;
-  Visual    *visual;
-  Colormap  cmap;
   Window    root;
   rxvt_term *selection_owner;
   Atom      xa[NUM_XA];
@@ -204,16 +213,16 @@ struct rxvt_color {
   bool operator == (const rxvt_color &b) const { return Pixel (*this) == Pixel (b); }
   bool operator != (const rxvt_color &b) const { return Pixel (*this) != Pixel (b); }
 
-  void get (rxvt_display *display, unsigned short &cr, unsigned short &cg, unsigned short &cb);
+  void get (rxvt_screen *screen, unsigned short &cr, unsigned short &cg, unsigned short &cb);
  
-  bool set (rxvt_display *display, Pixel p);
-  bool set (rxvt_display *display, const char *name);
-  bool set (rxvt_display *display, unsigned short cr, unsigned short cg, unsigned short cb);
+  bool set (rxvt_screen *screen, Pixel p);
+  bool set (rxvt_screen *screen, const char *name);
+  bool set (rxvt_screen *screen, unsigned short cr, unsigned short cg, unsigned short cb);
 
-  rxvt_color fade (rxvt_display *, int percent); // fades to black
-  rxvt_color fade (rxvt_display *, int percent, rxvt_color &fadeto);
+  rxvt_color fade (rxvt_screen *screen, int percent); // fades to black
+  rxvt_color fade (rxvt_screen *screen, int percent, rxvt_color &fadeto);
 
-  void free (rxvt_display *display);
+  void free (rxvt_screen *screen);
 };
 
 #endif

@@ -218,6 +218,7 @@ optList[] = {
               BOOL (Rs_override_redirect, "override-redirect", "override-redirect", Opt_override_redirect, "set override-redirect on the terminal window"),
               STRG (Rs_pty_fd, NULL, "pty-fd", "fileno", "file descriptor of pty to use"),
               BOOL (Rs_hold, "hold", "hold", Opt_hold, "retain window after shell exit"),
+              STRG (Rs_depth, "depth", "depth", "number", "depth of visual to request"),
               STRG (Rs_ext_bwidth, "externalBorder", "w", "number", "external border in pixels"),
               STRG (Rs_ext_bwidth, NULL, "bw", NULL, NULL),
               STRG (Rs_ext_bwidth, NULL, "borderwidth", NULL, NULL),
@@ -360,9 +361,6 @@ static const char optionsstring[] = "options: "
 #endif
 #if defined(ENABLE_FRILLS)
                                     "frills,"
-#endif
-#if defined(PREFER_24BIT)
-                                    "24bit,"
 #endif
 #if defined(SELECTION_SCROLLING)
                                     "selectionscrolling,"
