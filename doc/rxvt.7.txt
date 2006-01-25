@@ -1677,6 +1677,7 @@ CONFIGURE OPTIONS
           EWMH-hints (pid, utf8 names) and protocols (ping)
           seperate underline colour (-underlineColor)
           settable border widths and borderless switch (-w, -b, -bl)
+          visual selection (-depth)
           settable extra linespacing /-lsp)
           iso-14755-2 and -3, and visual feedback
           backindex and forwardindex escape sequence

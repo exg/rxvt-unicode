@@ -48,7 +48,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>7.2</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>7.3</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -131,6 +131,13 @@ Print out a message describing available options.
 Attempt to open a window on the named X display (<strong>-d</strong> still
 respected). In the absence of this option, the display specified by the
 <strong>DISPLAY</strong> environment variable is used.
+</dd>
+<p></p>
+<dt><strong><a name="item__2ddepth_bitdepth"><strong>-depth</strong> <em>bitdepth</em></a></strong><br />
+</dt>
+<dd>
+Compile <em>frills</em>: Attempt to find a visual with the given bit depth;
+resource <strong>depth</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item__2dgeometry_geom"><strong>-geometry</strong> <em>geom</em></a></strong><br />
@@ -683,6 +690,13 @@ settings. The following resources are supported (you might want to
 check the <code>rxvtperl(3)</code> manpage for additional settings by perl
 extensions not documented here):</p>
 <dl>
+<dt><strong><a name="item_depth_3a_bitdepth"><strong>depth:</strong> <em>bitdepth</em></a></strong><br />
+</dt>
+<dd>
+Compile <em>frills</em>: Attempt to find a visual with the given bit depth;
+option <strong>-depth</strong>.
+</dd>
+<p></p>
 <dt><strong><a name="item_geometry_3a_geom"><strong>geometry:</strong> <em>geom</em></a></strong><br />
 </dt>
 <dd>
@@ -1210,8 +1224,18 @@ with the <strong>Execute</strong> key.
 <dt><strong><a name="item_cutchars_3a_string"><strong>cutchars:</strong> <em>string</em></a></strong><br />
 </dt>
 <dd>
-The characters used as delimiters for double-click word selection. The
-built-in default:
+The characters used as delimiters for double-click word selection
+(whitespace delimiting is added automatically if resource is given).
+</dd>
+<dd>
+<p>When the selection extension is in use (the default if compiled in, see
+the <code>rxvtperl(3)</code> manpage), a suitable regex using these characters
+will be created (if the resource exists, otherwise, no regex will be
+created). In this mode, characters outside ISO-8859-1 can be used.</p>
+</dd>
+<dd>
+<p>When the selection extension is not used, only ISO-8859-1 characters can
+be used. If not specified, the built-in default is used:</p>
 </dd>
 <dd>
 <p><strong>BACKSLASH ```'&amp;()*,;&lt;=</strong>?@[]{|} &gt;&gt;</p>

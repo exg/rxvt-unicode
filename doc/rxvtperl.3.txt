@@ -218,10 +218,24 @@ PREPACKAGED EXTENSIONS
     digital-clock
         Displays a digital clock using the built-in overlay.
 
-    example-refresh-hooks
-        Displays a very simple digital clock in the upper right corner of
-        the window. Illustrates overwriting the refresh callbacks to create
-        your own overlays or changes.
+    remote-clipboard
+        Somewhat of a misnomer, this extension adds two menu entries to the
+        selection popup that allows one ti run external commands to store
+        the selection somewhere and fetch it again.
+
+        We use it to implement a "distributed selection mechanism", which
+        just means that one command uploads the file to a remote server, and
+        another reads it.
+
+        The commands can be set using the "URxvt.remote-selection.store" and
+        "URxvt.remote-selection.fetch" resources. The first should read the
+        selection to store from STDIN (always in UTF-8), the second should
+        provide the selection data on STDOUT (also in UTF-8).
+
+        The defaults (which are likely useless to you) use rsh and cat:
+
+           URxvt.remote-selection.store: rsh ruth 'cat >/tmp/distributed-selection'
+           URxvt.remote-selection.fetch: rsh ruth 'cat /tmp/distributed-selection'
 
     selection-pastebin
         This is a little rarely useful extension that Uploads the selection
@@ -250,6 +264,11 @@ PREPACKAGED EXTENSIONS
         placeholder for the filename):
 
            URxvt.selection-pastebin.url: http://www.ta-sa.org/files/txt/%
+
+    example-refresh-hooks
+        Displays a very simple digital clock in the upper right corner of
+        the window. Illustrates overwriting the refresh callbacks to create
+        your own overlays or changes.
 
 API DOCUMENTATION
   General API Considerations
@@ -436,10 +455,13 @@ API DOCUMENTATION
     on_refresh_end $term
         Called just after the screen gets redrawn. See "on_refresh_begin".
 
-    on_keyboard_command $term, $string
-        Called whenever the user presses a key combination that has a
-        "perl:string" action bound to it (see description of the keysym
-        resource in the rxvt(1) manpage).
+    on_user_command $term, $string
+        Called whenever the a user-configured event is being activated (e.g.
+        via a "perl:string" action bound to a key, see description of the
+        keysym resource in the rxvt(1) manpage).
+
+        The event is simply the action string. This interface is assumed to
+        change slightly in the future.
 
     on_x_event $term, $event
         Called on every X event received on the vt window (and possibly

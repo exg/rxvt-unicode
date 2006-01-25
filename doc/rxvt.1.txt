@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 7.2, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 7.3, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -85,6 +85,10 @@ OPTIONS
         Attempt to open a window on the named X display (-d still
         respected). In the absence of this option, the display specified by
         the DISPLAY environment variable is used.
+
+    -depth *bitdepth*
+        Compile *frills*: Attempt to find a visual with the given bit depth;
+        resource depth.
 
     -geometry *geom*
         Window geometry (-g still respected); resource geometry.
@@ -434,6 +438,10 @@ RESOURCES (available also as long-options)
     the rxvtperl(3) manpage for additional settings by perl extensions not
     documented here):
 
+    depth: *bitdepth*
+        Compile *frills*: Attempt to find a visual with the given bit depth;
+        option -depth.
+
     geometry: *geom*
         Create the window with the specified X window geometry [default
         80x24]; option -geometry.
@@ -771,8 +779,17 @@ RESOURCES (available also as long-options)
         associated with the Execute key.
 
     cutchars: *string*
-        The characters used as delimiters for double-click word selection.
-        The built-in default:
+        The characters used as delimiters for double-click word selection
+        (whitespace delimiting is added automatically if resource is given).
+
+        When the selection extension is in use (the default if compiled in,
+        see the rxvtperl(3) manpage), a suitable regex using these
+        characters will be created (if the resource exists, otherwise, no
+        regex will be created). In this mode, characters outside ISO-8859-1
+        can be used.
+
+        When the selection extension is not used, only ISO-8859-1 characters
+        can be used. If not specified, the built-in default is used:
 
         BACKSLASH `"'&()*,;<=>?@[]{|}
 

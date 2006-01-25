@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-01-25" "7.2" "RXVT-UNICODE"
+.TH rxvt 3 "2006-01-25" "7.3" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -390,11 +390,27 @@ similar-looking ascii character.
 .IP "digital-clock" 4
 .IX Item "digital-clock"
 Displays a digital clock using the built-in overlay.
-.IP "example-refresh-hooks" 4
-.IX Item "example-refresh-hooks"
-Displays a very simple digital clock in the upper right corner of the
-window. Illustrates overwriting the refresh callbacks to create your own
-overlays or changes.
+.IP "remote-clipboard" 4
+.IX Item "remote-clipboard"
+Somewhat of a misnomer, this extension adds two menu entries to the
+selection popup that allows one ti run external commands to store the
+selection somewhere and fetch it again.
+.Sp
+We use it to implement a \*(L"distributed selection mechanism\*(R", which just
+means that one command uploads the file to a remote server, and another
+reads it.
+.Sp
+The commands can be set using the \f(CW\*(C`URxvt.remote\-selection.store\*(C'\fR and
+\&\f(CW\*(C`URxvt.remote\-selection.fetch\*(C'\fR resources. The first should read the
+selection to store from \s-1STDIN\s0 (always in \s-1UTF\-8\s0), the second should provide
+the selection data on \s-1STDOUT\s0 (also in \s-1UTF\-8\s0).
+.Sp
+The defaults (which are likely useless to you) use rsh and cat:
+.Sp
+.Vb 2
+\&   URxvt.remote-selection.store: rsh ruth 'cat >/tmp/distributed-selection'
+\&   URxvt.remote-selection.fetch: rsh ruth 'cat /tmp/distributed-selection'
+.Ve
 .IP "selection-pastebin" 4
 .IX Item "selection-pastebin"
 This is a little rarely useful extension that Uploads the selection as
@@ -429,6 +445,11 @@ for the filename):
 .Vb 1
 \&   URxvt.selection-pastebin.url: http://www.ta-sa.org/files/txt/%
 .Ve
+.IP "example-refresh-hooks" 4
+.IX Item "example-refresh-hooks"
+Displays a very simple digital clock in the upper right corner of the
+window. Illustrates overwriting the refresh callbacks to create your own
+overlays or changes.
 .SH "API DOCUMENTATION"
 .IX Header "API DOCUMENTATION"
 .Sh "General \s-1API\s0 Considerations"
@@ -629,12 +650,15 @@ code is run after this hook, and takes precedence.
 .el .IP "on_refresh_end \f(CW$term\fR" 4
 .IX Item "on_refresh_end $term"
 Called just after the screen gets redrawn. See \f(CW\*(C`on_refresh_begin\*(C'\fR.
-.ie n .IP "on_keyboard_command $term\fR, \f(CW$string" 4
-.el .IP "on_keyboard_command \f(CW$term\fR, \f(CW$string\fR" 4
-.IX Item "on_keyboard_command $term, $string"
-Called whenever the user presses a key combination that has a
-\&\f(CW\*(C`perl:string\*(C'\fR action bound to it (see description of the \fBkeysym\fR
+.ie n .IP "on_user_command $term\fR, \f(CW$string" 4
+.el .IP "on_user_command \f(CW$term\fR, \f(CW$string\fR" 4
+.IX Item "on_user_command $term, $string"
+Called whenever the a user-configured event is being activated (e.g. via
+a \f(CW\*(C`perl:string\*(C'\fR action bound to a key, see description of the \fBkeysym\fR
 resource in the @@RXVT_NAME@@(1) manpage).
+.Sp
+The event is simply the action string. This interface is assumed to change
+slightly in the future.
 .ie n .IP "on_x_event $term\fR, \f(CW$event" 4
 .el .IP "on_x_event \f(CW$term\fR, \f(CW$event\fR" 4
 .IX Item "on_x_event $term, $event"

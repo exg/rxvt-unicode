@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2006-01-25" "7.2" "RXVT-UNICODE"
+.TH rxvt 7 "2006-01-25" "7.3" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -2155,11 +2155,12 @@ disable this.
 A non-exhaustive list of features enabled by \f(CW\*(C`\-\-enable\-frills\*(C'\fR (possibly
 in combination with other switches) is:
 .Sp
-.Vb 17
+.Vb 18
 \&  MWM-hints
 \&  EWMH-hints (pid, utf8 names) and protocols (ping)
 \&  seperate underline colour (-underlineColor)
 \&  settable border widths and borderless switch (-w, -b, -bl)
+\&  visual selection (-depth)
 \&  settable extra linespacing /-lsp)
 \&  iso-14755-2 and -3, and visual feedback
 \&  backindex and forwardindex escape sequence

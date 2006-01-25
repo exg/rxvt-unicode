@@ -348,12 +348,31 @@ similar-looking ascii character.
 Displays a digital clock using the built-in overlay.
 </dd>
 <p></p>
-<dt><strong><a name="item_example_2drefresh_2dhooks">example-refresh-hooks</a></strong><br />
+<dt><strong><a name="item_remote_2dclipboard">remote-clipboard</a></strong><br />
 </dt>
 <dd>
-Displays a very simple digital clock in the upper right corner of the
-window. Illustrates overwriting the refresh callbacks to create your own
-overlays or changes.
+Somewhat of a misnomer, this extension adds two menu entries to the
+selection popup that allows one ti run external commands to store the
+selection somewhere and fetch it again.
+</dd>
+<dd>
+<p>We use it to implement a ``distributed selection mechanism'', which just
+means that one command uploads the file to a remote server, and another
+reads it.</p>
+</dd>
+<dd>
+<p>The commands can be set using the <code>URxvt.remote-selection.store</code> and
+<code>URxvt.remote-selection.fetch</code> resources. The first should read the
+selection to store from STDIN (always in UTF-8), the second should provide
+the selection data on STDOUT (also in UTF-8).</p>
+</dd>
+<dd>
+<p>The defaults (which are likely useless to you) use rsh and cat:</p>
+</dd>
+<dd>
+<pre>
+   URxvt.remote-selection.store: rsh ruth 'cat &gt;/tmp/distributed-selection'
+   URxvt.remote-selection.fetch: rsh ruth 'cat /tmp/distributed-selection'</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_selection_2dpastebin">selection-pastebin</a></strong><br />
@@ -396,6 +415,14 @@ for the filename):</p>
 <dd>
 <pre>
    URxvt.selection-pastebin.url: <a href="http://www.ta-sa.org/files/txt/%">http://www.ta-sa.org/files/txt/%</a></pre>
+</dd>
+<p></p>
+<dt><strong><a name="item_example_2drefresh_2dhooks">example-refresh-hooks</a></strong><br />
+</dt>
+<dd>
+Displays a very simple digital clock in the upper right corner of the
+window. Illustrates overwriting the refresh callbacks to create your own
+overlays or changes.
 </dd>
 <p></p></dl>
 <p>
@@ -655,12 +682,16 @@ code is run after this hook, and takes precedence.
 Called just after the screen gets redrawn. See <code>on_refresh_begin</code>.
 </dd>
 <p></p>
-<dt><strong><a name="item_on_keyboard_command__24term_2c__24string">on_keyboard_command $term, $string</a></strong><br />
+<dt><strong><a name="item_on_user_command__24term_2c__24string">on_user_command $term, $string</a></strong><br />
 </dt>
 <dd>
-Called whenever the user presses a key combination that has a
-<code>perl:string</code> action bound to it (see description of the <strong>keysym</strong>
+Called whenever the a user-configured event is being activated (e.g. via
+a <code>perl:string</code> action bound to a key, see description of the <strong>keysym</strong>
 resource in the <code>rxvt(1)</code> manpage).
+</dd>
+<dd>
+<p>The event is simply the action string. This interface is assumed to change
+slightly in the future.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_on_x_event__24term_2c__24event">on_x_event $term, $event</a></strong><br />

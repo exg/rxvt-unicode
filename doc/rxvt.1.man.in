@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2006-01-25" "7.2" "RXVT-UNICODE"
+.TH rxvt 1 "2006-01-25" "7.3" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -216,6 +216,10 @@ Print out a message describing available options.
 Attempt to open a window on the named X display (\fB\-d\fR still
 respected). In the absence of this option, the display specified by the
 \&\fB\s-1DISPLAY\s0\fR environment variable is used.
+.IP "\fB\-depth\fR \fIbitdepth\fR" 4
+.IX Item "-depth bitdepth"
+Compile \fIfrills\fR: Attempt to find a visual with the given bit depth;
+resource \fBdepth\fR.
 .IP "\fB\-geometry\fR \fIgeom\fR" 4
 .IX Item "-geometry geom"
 Window geometry (\fB\-g\fR still respected); resource \fBgeometry\fR.
@@ -580,6 +584,10 @@ be used. Command-line arguments can be used to override resource
 settings. The following resources are supported (you might want to
 check the @@RXVT_NAME@@\fIperl\fR\|(3) manpage for additional settings by perl
 extensions not documented here):
+.IP "\fBdepth:\fR \fIbitdepth\fR" 4
+.IX Item "depth: bitdepth"
+Compile \fIfrills\fR: Attempt to find a visual with the given bit depth;
+option \fB\-depth\fR.
 .IP "\fBgeometry:\fR \fIgeom\fR" 4
 .IX Item "geometry: geom"
 Create the window with the specified X window geometry [default 80x24];
@@ -921,8 +929,16 @@ pressed. If unset it will send the sequence traditionally associated
 with the \fBExecute\fR key.
 .IP "\fBcutchars:\fR \fIstring\fR" 4
 .IX Item "cutchars: string"
-The characters used as delimiters for double-click word selection. The
-built-in default:
+The characters used as delimiters for double-click word selection
+(whitespace delimiting is added automatically if resource is given).
+.Sp
+When the selection extension is in use (the default if compiled in, see
+the @@RXVT_NAME@@\fIperl\fR\|(3) manpage), a suitable regex using these characters
+will be created (if the resource exists, otherwise, no regex will be
+created). In this mode, characters outside \s-1ISO\-8859\-1\s0 can be used.
+.Sp
+When the selection extension is not used, only \s-1ISO\-8859\-1\s0 characters can
+be used. If not specified, the built-in default is used:
 .Sp
 \&\fB\s-1BACKSLASH\s0 `"'&()*,;<=>?@[]{|}\fR
 .IP "\fBpreeditType:\fR \fIstyle\fR" 4

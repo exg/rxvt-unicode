@@ -188,6 +188,9 @@ misc.o: libptytty.h rxvtperl.h hookinc.h rsinc.h
 netdisp.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 netdisp.o: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 netdisp.o: salloc.h libptytty.h rxvtperl.h hookinc.h rsinc.h
+proxy.o: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h rxvtlib.h
+proxy.o: optinc.h feature.h encoding.h rxvtfont.h rxvtutil.h rxvttoolkit.h
+proxy.o: iom.h iom_conf.h callback.h salloc.h rxvtperl.h hookinc.h rsinc.h
 ptytty.o: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h rxvtlib.h
 ptytty.o: optinc.h feature.h encoding.h rxvtfont.h rxvtutil.h rxvttoolkit.h
 ptytty.o: iom.h iom_conf.h callback.h salloc.h rxvtperl.h hookinc.h rsinc.h
@@ -284,6 +287,9 @@ misc.lo: salloc.h libptytty.h rxvtperl.h hookinc.h rsinc.h
 netdisp.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 netdisp.lo: rxvtfont.h rxvtutil.h rxvttoolkit.h iom.h iom_conf.h callback.h
 netdisp.lo: salloc.h libptytty.h rxvtperl.h hookinc.h rsinc.h
+proxy.lo: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h rxvtlib.h
+proxy.lo: optinc.h feature.h encoding.h rxvtfont.h rxvtutil.h rxvttoolkit.h
+proxy.lo: iom.h iom_conf.h callback.h salloc.h rxvtperl.h hookinc.h rsinc.h
 ptytty.lo: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h rxvtlib.h
 ptytty.lo: optinc.h feature.h encoding.h rxvtfont.h rxvtutil.h rxvttoolkit.h
 ptytty.lo: iom.h iom_conf.h callback.h salloc.h rxvtperl.h hookinc.h rsinc.h
