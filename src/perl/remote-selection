@@ -75,7 +75,9 @@ sub fetch {
             $self->selection_clear;
             $self->selection ($txt);
             $self->selection_grab (urxvt::CurrentTime);
-            $self->wait_pipe ($fh, $pid, "selection fetched");
+            close $fh;
+            my $status = $? >> 8;
+            $self->msg ("selection fetched (status $status)");
          }
       });
    }
