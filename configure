@@ -11939,7 +11939,7 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 
-#include <cstddef> // broken bsds (is that redundant) need this
+#include <cstddef> // broken bsds (is that redundant?) need this
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/uio.h>

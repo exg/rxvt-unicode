@@ -453,7 +453,7 @@ AC_DEFUN([SCM_RIGHTS_CHECK],
 [
 AC_CACHE_CHECK(for unix-compliant filehandle passing ability, can_pass_fds,
 [AC_TRY_LINK([
-#include <cstddef> // broken bsds (is that redundant) need this
+#include <cstddef> // broken bsds (is that redundant?) need this
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
