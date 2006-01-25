@@ -106,6 +106,7 @@ src/libptytty.h
 src/ptytty_conf.h
 src/ptytty.h
 src/ptytty.C
+src/proxy.C
 src/logging.C
 src/fdpass.C
 

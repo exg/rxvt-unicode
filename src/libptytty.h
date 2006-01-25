@@ -50,7 +50,7 @@ int ptytty_pty (PTYTTY ptytty);
 int ptytty_tty (PTYTTY ptytty);
 void ptytty_delete (PTYTTY ptytty);
 int ptytty_get (PTYTTY ptytty);
-void ptytty_login (PTYTTY ptytty, int cmd_pid, bool login_shell, const char *hostname);
+void ptytty_login (PTYTTY ptytty, int cmd_pid, int login_shell, const char *hostname);
 
 void ptytty_close_tty (PTYTTY ptytty);
 int ptytty_make_controlling_tty (PTYTTY ptytty);

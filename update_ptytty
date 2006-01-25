@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 # updates libptytty from pristine sources, check out libptytty
 # as a subling of rxvt-unicode
 
-for i in ptytty.m4 src/libptytty.h src/ptytty.C src/ptytty.h src/logging.C src/fdpass.C; do
+for i in ptytty.m4 src/{libptytty.h,ptytty.C,proxy.C,ptytty.h,logging.C,fdpass.C}; do
    cp ../libptytty/$i $i
 done

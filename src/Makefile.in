@@ -45,9 +45,9 @@ first_rule: all
 dummy:
 
 COMMON = \
-        command.o rxvtfont.o init.o logging.o main.o misc.o netdisp.o      \
-	ptytty.o screen.o scrollbar.o scrollbar-next.o scrollbar-rxvt.o    \
-	scrollbar-xterm.o scrollbar-plain.o xdefaults.o xpm.o encoding.o   \
+        command.o rxvtfont.o init.o logging.o main.o misc.o netdisp.o           \
+	ptytty.o proxy.o screen.o scrollbar.o scrollbar-next.o scrollbar-rxvt.o \
+	scrollbar-xterm.o scrollbar-plain.o xdefaults.o xpm.o encoding.o        \
 	rxvttoolkit.o rxvtutil.o iom.o keyboard.o fdpass.o @PERL_O@
 
 COMMON_DAEMON = rxvtdaemon.o
