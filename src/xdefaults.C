@@ -323,33 +323,6 @@ static const char optionsstring[] = "options: "
 #if defined(USE_XIM)
                                     "XIM,"
 #endif
-                                    "scrollbars="
-#if !defined(HAVE_SCROLLBARS)
-                                    "NONE"
-#else
-# if defined(PLAIN_SCROLLBAR)
-                                    "plain"
-#  if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR)
-                                    "+"
-#  endif
-# endif
-# if defined(RXVT_SCROLLBAR)
-                                    "rxvt"
-#  if defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR)
-                                    "+"
-#  endif
-# endif
-# if defined(NEXT_SCROLLBAR)
-                                    "NeXT"
-#  if defined(XTERM_SCROLLBAR)
-                                    "+"
-#  endif
-# endif
-# if defined(XTERM_SCROLLBAR)
-                                    "xterm"
-# endif
-#endif
-                                    ","
 #if defined(NO_BACKSPACE_KEY)
                                     "no_backspace,"
 #endif
@@ -383,7 +356,32 @@ static const char optionsstring[] = "options: "
 #if defined(NO_RESOURCES)
                                     "NoResources,"
 #endif
-                                    "v" VERSION
+                                    "scrollbars="
+#if !defined(HAVE_SCROLLBARS)
+                                    "NONE"
+#else
+# if defined(PLAIN_SCROLLBAR)
+                                    "plain"
+#  if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR)
+                                    "+"
+#  endif
+# endif
+# if defined(RXVT_SCROLLBAR)
+                                    "rxvt"
+#  if defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR)
+                                    "+"
+#  endif
+# endif
+# if defined(NEXT_SCROLLBAR)
+                                    "NeXT"
+#  if defined(XTERM_SCROLLBAR)
+                                    "+"
+#  endif
+# endif
+# if defined(XTERM_SCROLLBAR)
+                                    "xterm"
+# endif
+#endif
                                     "\nUsage: ";		/* Usage */
 
 #define INDENT 18
