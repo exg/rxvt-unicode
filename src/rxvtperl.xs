@@ -560,7 +560,6 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
                   char *str = va_arg (ap, char *);
                   int len   = va_arg (ap, int);
 
-                  printf ("pushing str %p:%d\n", str,len);//D
                   XPUSHs (sv_2mortal (newSVpvn (str, len)));
                 }
                 break;
