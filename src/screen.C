@@ -642,16 +642,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
 
       // erase newly scrolled-in lines
       for (int i = count; i--; )
-        {
-          // basically this is a slightly optimized scr_blank_screen_mem
-          // it is worth the effort on slower machines
-          line_t &l = ROW(nrow - 1 - i);
-
-          scr_blank_line (l, 0, l.l, rstyle);
-
-          l.l = 0;
-          l.f = 0;
-        }
+        scr_blank_screen_mem (ROW(nrow - 1 - i), rstyle);
 
       // now copy lines below the scroll region bottom to the
       // bottom of the screen again, so they look as if they
