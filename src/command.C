@@ -3286,7 +3286,7 @@ rxvt_term::process_csi_seq ()
                 // and Mm (e.g. 72 for 7.2) for urxvt <= 7.2, and 94 for later versions, to signify
                 // that we do not support xterm mouse reporting (should be 95 when we do).
                 //
-                tt_printf ("\033[>%c%c85;94;0c", VERSION[0], VERSION[1]);
+                tt_printf ("\033[>%c%c85;94;0c", VERSION[0], VERSION[2]);
               }
             break;
           case '?':
