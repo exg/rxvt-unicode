@@ -3769,7 +3769,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
                 && actual_format == 8)
               str = (const char *)(value);
 
-            tt_printf ("\033]%d;%s%c", XTerm_property, str, resp);
+            tt_printf ("\033]%d;%s%c", op, str, resp);
 
             XFree (value);
           }
@@ -3807,32 +3807,32 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
               {
                 unsigned short r, g, b;
                 pix_colors_focused[color].get (this, r, g, b);
-                tt_printf ("\033]%d;%d;rgb:%04x/%04x/%04x%c", XTerm_Color, color, r, g, b, resp);
+                tt_printf ("\033]%d;%d;rgb:%04x/%04x/%04x%c", op, color, r, g, b, resp);
               }
             else
               set_window_color (color, name);
           }
         break;
       case XTerm_Color00:
-        process_color_seq (XTerm_Color00, Color_fg, str, resp);
+        process_color_seq (op, Color_fg, str, resp);
         break;
       case XTerm_Color01:
-        process_color_seq (XTerm_Color01, Color_bg, str, resp);
+        process_color_seq (op, Color_bg, str, resp);
         break;
 #ifndef NO_CURSORCOLOR
       case XTerm_Color_cursor:
-        process_color_seq (XTerm_Color_cursor, Color_cursor, str, resp);
+        process_color_seq (op, Color_cursor, str, resp);
         break;
 #endif
       case XTerm_Color_pointer_fg:
-        process_color_seq (XTerm_Color_pointer_fg, Color_pointer_fg, str, resp);
+        process_color_seq (op, Color_pointer_fg, str, resp);
         break;
       case XTerm_Color_pointer_bg:
-        process_color_seq (XTerm_Color_pointer_bg, Color_pointer_bg, str, resp);
+        process_color_seq (op, Color_pointer_bg, str, resp);
         break;
 #ifndef NO_BOLD_UNDERLINE_REVERSE
       case XTerm_Color_RV:
-        process_color_seq (XTerm_Color_RV, Color_RV, str, resp);
+        process_color_seq (op, Color_RV, str, resp);
         break;
       case Rxvt_Color_BD:
       case URxvt_Color_BD:
@@ -3843,12 +3843,12 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
         process_color_seq (op, Color_UL, str, resp);
         break;
       case URxvt_Color_IT:
-        process_color_seq (URxvt_Color_IT, Color_IT, str, resp);
+        process_color_seq (op, Color_IT, str, resp);
         break;
 #endif
 #if TRANSPARENT && TINTING
       case URxvt_Color_tint:
-        process_color_seq (URxvt_Color_tint, Color_tint, str, resp);
+        process_color_seq (op, Color_tint, str, resp);
         check_our_parents ();
         if (am_transparent)
           want_full_refresh = want_refresh = 1;
@@ -3935,16 +3935,15 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
       case URxvt_version:
         if (query)
           tt_printf ("\33]%d;rxvt-unicode;%-.20s;%c;%c%c",
-                     URxvt_version,
-                     rs[Rs_name],
-                     VERSION[0], VERSION[2],
+                     op,
+                     rs[Rs_name], VERSION[0], VERSION[2],
                      resp);
         break;
 
 #if ENABLE_FRILLS
       case URxvt_locale:
         if (query)
-          tt_printf ("\33]%d;%-.250s%c", URxvt_locale, OPTION (Opt_insecure) ? locale : "", resp);
+          tt_printf ("\33]%d;%-.250s%c", op, OPTION (Opt_insecure) ? locale : "", resp);
         else
           {
             set_locale (str);
