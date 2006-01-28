@@ -12,6 +12,8 @@ WISH: just for fun, do shade and tint with XRender.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
+	- SYNCCVS: updated to rxvt-cvs 2006-01-28, no relevant changes.
+
 7.4  Sat Jan 28 15:26:27 CET 2006
 	- screen background wasn't always erased properly when scrolling,
         - re-enabled clearing optimisation disabled in 7.4pre.
