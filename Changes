@@ -12,9 +12,9 @@ WISH: just for fun, do shade and tint with XRender.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
-	- SYNCCVS: updated to rxvt-cvs 2006-01-28, no relevant changes.
+	- SYNCCVS: compared to rxvt-cvs 2006-01-28, no relevant changes.
         - fix version report (DA) (which was unfortunately broken).
-        - changed version number report again, now to emulate xterm better.
+        - changed version number report again, now to emulate xterm closer.
         - added the OSC sequence 702 to detect the urxvt version number.
         - small configure updates.
 

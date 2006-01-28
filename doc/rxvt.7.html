@@ -220,12 +220,24 @@ except maybe libX11 :)</p>
 <dt><strong><a name="item_does_it_support_tabs_2c_can_i_have_a_tabbed_rxvt_2">Does it support tabs, can I have a tabbed rxvt-unicode?</a></strong><br />
 </dt>
 <dd>
-rxvt-unicode does not directly support tabs. It will work fine with
-tabbing functionality of many window managers or similar tabbing programs,
-and its embedding-features allow it to be embedded into other programs,
-as witnessed by <em>doc/rxvt-tabbed</em> or the upcoming <code>Gtk2::URxvt</code> perl
-module, which features a tabbed urxvt (murxvt) terminal as an example
-embedding application.
+Beginning with version 7.3, there is a perl extension that implements a
+simple tabbed terminal. It is installed by default, so any of these should
+give you tabs:
+</dd>
+<dd>
+<pre>
+   rxvt -pe tabbed</pre>
+</dd>
+<dd>
+<pre>
+   URxvt.perl-ext-common: default,tabbed</pre>
+</dd>
+<dd>
+<p>It will also work fine with tabbing functionality of many window managers
+or similar tabbing programs, and its embedding-features allow it to be
+embedded into other programs, as witnessed by <em>doc/rxvt-tabbed</em> or
+the upcoming <code>Gtk2::URxvt</code> perl module, which features a tabbed urxvt
+(murxvt) terminal as an example embedding application.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_how_do_i_know_which_rxvt_2dunicode_version_i_27m_u">How do I know which rxvt-unicode version I'm using?</a></strong><br />
@@ -1957,6 +1969,7 @@ Set XTerm Parameters. 8-bit ST: 0x9c, 7-bit ST sequence: ESC \ (0x1b,
 <tr><td>Ps = 50</td><td>Set fontset to Pt, with the following special values of Pt (rxvt) #+n change up n #-n change down n if n is missing of 0, a value of 1 is used empty change to font0 n change to font n</td></tr>
 <tr><td>Ps = 55</td><td>Log all scrollback buffer and all of screen to Pt</td></tr>
 <tr><td>Ps = 701</td><td>Change current locale to Pt, or, if Pt is ?, return the current locale (Compile frills).</td></tr>
+<tr><td>Ps = 702</td><td>Request version if Pt is ?, returning rxvt-unicode, the resource name, the major and minor version numbers, e.g. ESC ] 702 ; rxvt-unicode ; urxvt ; 7 ; 4 ST.</td></tr>
 <tr><td>Ps = 704</td><td>Change colour of italic characters to Pt</td></tr>
 <tr><td>Ps = 705</td><td>Change background pixmap tint colour to Pt (Compile transparency).</td></tr>
 <tr><td>Ps = 706</td><td>Change colour of bold characters to Pt</td></tr>

@@ -115,12 +115,20 @@ FREQUENTLY ASKED QUESTIONS
         statically), except maybe libX11 :)
 
     Does it support tabs, can I have a tabbed rxvt-unicode?
-        rxvt-unicode does not directly support tabs. It will work fine with
-        tabbing functionality of many window managers or similar tabbing
-        programs, and its embedding-features allow it to be embedded into
-        other programs, as witnessed by doc/rxvt-tabbed or the upcoming
-        "Gtk2::URxvt" perl module, which features a tabbed urxvt (murxvt)
-        terminal as an example embedding application.
+        Beginning with version 7.3, there is a perl extension that
+        implements a simple tabbed terminal. It is installed by default, so
+        any of these should give you tabs:
+
+           rxvt -pe tabbed
+
+           URxvt.perl-ext-common: default,tabbed
+
+        It will also work fine with tabbing functionality of many window
+        managers or similar tabbing programs, and its embedding-features
+        allow it to be embedded into other programs, as witnessed by
+        doc/rxvt-tabbed or the upcoming "Gtk2::URxvt" perl module, which
+        features a tabbed urxvt (murxvt) terminal as an example embedding
+        application.
 
     How do I know which rxvt-unicode version I'm using?
         The version number is displayed with the usage (-h). Also the escape
