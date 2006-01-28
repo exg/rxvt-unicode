@@ -16,6 +16,7 @@ DUMB: support tex fonts
         - fix version report (DA) (which was unfortunately broken).
         - changed version number report again, now to emulate xterm better.
         - added the OSC sequence 702 to detect the urxvt version number.
+        - small configure updates.
 
 7.4  Sat Jan 28 15:26:27 CET 2006
 	- screen background wasn't always erased properly when scrolling,

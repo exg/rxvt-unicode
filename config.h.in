@@ -99,9 +99,6 @@
 /* Define to 1 if you have the `revoke' function. */
 #undef HAVE_REVOKE
 
-/* Define if you have sched-h and sched_yield */
-#undef HAVE_SCHED_YIELD
-
 /* Define to 1 if you have the `seteuid' function. */
 #undef HAVE_SETEUID
 
