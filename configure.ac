@@ -997,14 +997,3 @@ fi
 echo "*** Optionally check src/feature.h for further, rarely used options ***"
 echo
 
-echo ".----------------------------------------------------------------."
-echo ". NOTE: some features are disabled by default, try               ."
-echo ". configure --help to get an idea of the optional features,      ."
-echo ". or read ./README.configure                                     ."
-echo ".                                                                ."
-echo ". The script ./reconf gives a reasonable baseline, try it if     ."
-echo ". you do not want to read documentation and still want some      ."
-echo ". useful features.                                               ."
-echo ".----------------------------------------------------------------."
-echo
-
