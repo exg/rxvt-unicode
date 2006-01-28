@@ -3280,13 +3280,13 @@ rxvt_term::process_csi_seq ()
             if (ch == CSI_DA)	/* secondary device attributes */
               {
                 // first parameter is normally 0 for vt100, 1 for some newer vtxxx, 'R' for rxvt,
-                // 'U' for rxvt-unicode <= 7.2.
+                // 'U' for rxvt-unicode != 7.[34] (where it was broken).
                 //
                 // second parameter is xterm patch level for xterm, MMmmpp (e.g. 20703) for rxvt
                 // and Mm (e.g. 72 for 7.2) for urxvt <= 7.2, and 94 for later versions, to signify
                 // that we do not support xterm mouse reporting (should be 95 when we do).
                 //
-                tt_printf ("\033[>0;94;0c");
+                tt_printf ("\033[>%d;94;0c", 'U');
               }
             break;
           case '?':
