@@ -12,12 +12,12 @@ WISH: just for fun, do shade and tint with XRender.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
-7.4
+7.4  Sat Jan 28 15:26:27 CET 2006
 	- screen background wasn't always erased properly when scrolling,
         - re-enabled clearing optimisation disabled in 7.4pre.
-
-7.3a Thu Jan 26 01:08:25 CET 2006
-	- removed stoopid debugging message.
+        - small configure updates for libptytty.
+        - fixed version options: line output.
+	- removed stoopid debugging message left in the code.
 
 7.3  Wed Jan 25 22:47:35 CET 2006
         - don't let iso14755 or mouse reporting get into the way of perl
