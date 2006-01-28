@@ -144,12 +144,19 @@ except maybe libX11 :)
 
 =item Does it support tabs, can I have a tabbed rxvt-unicode?
 
-rxvt-unicode does not directly support tabs. It will work fine with
-tabbing functionality of many window managers or similar tabbing programs,
-and its embedding-features allow it to be embedded into other programs,
-as witnessed by F<doc/rxvt-tabbed> or the upcoming C<Gtk2::URxvt> perl
-module, which features a tabbed urxvt (murxvt) terminal as an example
-embedding application.
+Beginning with version 7.3, there is a perl extension that implements a
+simple tabbed terminal. It is installed by default, so any of these should
+give you tabs:
+
+   @@RXVT_NAME@@ -pe tabbed
+
+   URxvt.perl-ext-common: default,tabbed
+
+It will also work fine with tabbing functionality of many window managers
+or similar tabbing programs, and its embedding-features allow it to be
+embedded into other programs, as witnessed by F<doc/rxvt-tabbed> or
+the upcoming C<Gtk2::URxvt> perl module, which features a tabbed urxvt
+(murxvt) terminal as an example embedding application.
 
 =item How do I know which rxvt-unicode version I'm using?
 
@@ -1677,6 +1684,7 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 	B<< C<Ps = 50> >>	Set fontset to B<< C<Pt> >>, with the following special values of B<< C<Pt> >> (B<rxvt>) B<< C<#+n> >> change up B<< C<n> >> B<< C<#-n> >> change down B<< C<n> >> if B<< C<n> >> is missing of 0, a value of 1 is used I<empty> change to font0 B<< C<n> >> change to font B<< C<n> >>
 	B<< C<Ps = 55> >>	Log all scrollback buffer and all of screen to B<< C<Pt> >>
 	B<< C<Ps = 701> >>	Change current locale to B<< C<Pt> >>, or, if B<< C<Pt> >> is B<< C<?> >>, return the current locale (Compile frills).
+	B<< C<Ps = 702> >>	Request version if B<< C<Pt> >> is B<< C<?> >>, returning C<rxvt-unicode>, the resource name, the major and minor version numbers, e.g. C<ESC ] 702 ; rxvt-unicode ; urxvt ; 7 ; 4 ST>.
 	B<< C<Ps = 704> >>	Change colour of italic characters to B<< C<Pt> >>
 	B<< C<Ps = 705> >>	Change background pixmap tint colour to B<< C<Pt> >> (Compile transparency).
 	B<< C<Ps = 706> >>	Change colour of bold characters to B<< C<Pt> >>

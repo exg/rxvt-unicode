@@ -512,6 +512,7 @@ enum {
   Rxvt_dumpscreen        = 55,      // dump scrollback and all of screen
 
   URxvt_locale           = 701,     // change locale
+  URxvt_version          = 702,     // request version
 
   URxvt_Color_IT         = 704,     // change actual 'Italic' colour
   URxvt_Color_tint       = 705,     // change actual tint colour
