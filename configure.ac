@@ -994,7 +994,7 @@ if test x$support_xim = xyes -a x$rxvt_cv_func_xlocale = xno; then
   echo ".----------------------------------------------------------------."
 fi
 
-echo "  *** Optionally check src/feature.h for further options ***"
+echo "*** Optionally check src/feature.h for further, rarely used options ***"
 echo
 
 echo ".----------------------------------------------------------------."
