@@ -11,7 +11,6 @@
 
 // actually, some gcc-3.x versions work, too
 #define HAVE_GCC_BUILTINS (__GNUC__ >= 4)
-#define HAVE_GCC_BUILTINS 0
 
 extern class byteorder {
   static unsigned int e; // at least 32 bits
