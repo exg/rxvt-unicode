@@ -840,6 +840,15 @@ correct place, e.g. on stderr of the connecting urxvtc client.</p>
 <p>Messages have a size limit of 1023 bytes currently.</p>
 </dd>
 <p></p>
+<dt><strong><a name="item__40terms__3d_urxvt_3a_3atermlist">@terms = urxvt::termlist</a></strong><br />
+</dt>
+<dd>
+Returns all urxvt::term objects that exist in this process, regardless of
+wether they are started, being destroyed etc., so be careful. Only term
+objects that have perl extensions attached will be returned (because there
+is no urxvt::term objet associated with others).
+</dd>
+<p></p>
 <dt><strong><a name="item__24time__3d_urxvt_3a_3anow">$time = urxvt::NOW</a></strong><br />
 </dt>
 <dd>
@@ -958,7 +967,8 @@ hash which defines the environment of the new terminal.
 <p>Croaks (and probably outputs an error message) if the new instance
 couldn't be created.  Returns <code>undef</code> if the new instance didn't
 initialise perl, and the terminal object otherwise. The <code>init</code> and
-<a href="#item_start"><code>start</code></a> hooks will be called during this call.</p>
+<a href="#item_start"><code>start</code></a> hooks will be called before this call returns, and are free to
+refer to global data (which is race free).</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_destroy">$term-&gt;destroy</a></strong><br />
@@ -1503,10 +1513,13 @@ Converts rxvt-unicodes text reprsentation into a perl string. See
 <a href="#item_row_t"><code>$term-&gt;ROW_t</code></a> for details.
 </dd>
 <p></p>
-<dt><strong><a name="item_grab_button">$success = $term-&gt;grab_button ($button, $modifiermask)</a></strong><br />
+<dt><strong><a name="item_grab_button">$success = $term-&gt;grab_button ($button, $modifiermask[, $window = $term-&gt;vt])</a></strong><br />
+</dt>
+<dt><strong><a name="item_ungrab_button">$term-&gt;ungrab_button ($button, $modifiermask[, $window = $term-&gt;vt])</a></strong><br />
 </dt>
 <dd>
-Registers a synchronous button grab. See the XGrabButton manpage.
+Register/unregister a synchronous button grab. See the XGrabButton
+manpage.
 </dd>
 <p></p>
 <dt><strong><a name="item_grab">$success = $term-&gt;grab ($eventtime[, $sync])</a></strong><br />

@@ -3721,7 +3721,7 @@ rxvt_term::process_color_seq (int report, int color, const char *str, char resp)
 
 #if XFT
       if (c.a != rxvt_rgba::MAX_CC)
-        tt_printf ("\033]%d;#%04x%04x%04x%04x%c", report, c.a, c.r, c.g, c.b, resp);
+        tt_printf ("\033]%d;rgba:%04x/%04x/%04x/%04x%c", report, c.a, c.r, c.g, c.b, resp);
       else
 #endif
         tt_printf ("\033]%d;rgb:%04x/%04x/%04x%c", report, c.r, c.g, c.b, resp);

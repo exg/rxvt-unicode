@@ -545,11 +545,13 @@ rxvt_color::set (rxvt_screen *screen, const char *name)
   int mult;
 
   if (     l == 1+4*1 && 4 == sscanf (name, "#%1hx%1hx%1hx%1hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
-    mult = 0x1111;
+    mult = rxvt_rgba::MAX_CC / 0x000f;
   else if (l == 1+4*2 && 4 == sscanf (name, "#%2hx%2hx%2hx%2hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
-    mult = 0x0101;
+    mult = rxvt_rgba::MAX_CC / 0x00ff;
   else if (l == 1+4*4 && 4 == sscanf (name, "#%4hx%4hx%4hx%4hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
-    mult = 0x0001;
+    mult = rxvt_rgba::MAX_CC / 0xffff;
+  else if (l == 4+5*4 && 4 == sscanf (name, "rgba:%hx/%hx/%hx/%hx%c", &r.r, &r.g, &r.b, &r.a, &eos))
+    mult = rxvt_rgba::MAX_CC / 0xffff;
   else
     return XftColorAllocName (screen->xdisp, screen->visual, screen->cmap, name, &c);
 
@@ -576,7 +578,22 @@ rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
   d.blue  = rgba.b;
   d.alpha = rgba.a;
 
-  return XftColorAllocValue (screen->xdisp, screen->visual, screen->cmap, &d, &c);
+  if (XftColorAllocValue (screen->xdisp, screen->visual, screen->cmap, &d, &c))
+    {
+      // FUCKING Xft gets it wrong, of course, fix it for the common case
+      // transparency users should eat shit and die, and then
+      // XRenderQueryPictIndexValues themselves plenty.
+      if (screen->depth == 32
+          && screen->visual->c_class == TrueColor
+          && screen->visual->red_mask   == 0x00ff0000
+          && screen->visual->green_mask == 0x0000ff00
+          && screen->visual->blue_mask  == 0x000000ff)
+        c.pixel = c.pixel & 0x00ffffffUL | ((rgba.a >> 8) << 24);
+
+      return true;
+    }
+
+  return false;
 #else
   XColor xc;
 

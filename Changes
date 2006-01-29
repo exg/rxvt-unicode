@@ -18,6 +18,8 @@ DUMB: support tex fonts
         - added the OSC sequence 702 to detect the urxvt version number.
         - small configure updates.
         - overhauled color management: smaller codesize, alpha support.
+        - support rgba:r/g/b/a, #argb, #aarrggbb and #aaaarrrrggggbbbb
+          colour "names".
         - do not include X11/Intrinsic.h anymore, directly use
           Xlib/Xutil/Xresource directly.
 

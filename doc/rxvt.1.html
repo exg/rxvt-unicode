@@ -48,7 +48,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>7.3a</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>7.4</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -1704,7 +1704,7 @@ on some systems or setgid to root or to some other group on others.</p>
 <p>In addition to the default foreground and background colours,
 <strong>rxvt</strong> can display up to 16 colours (8 ANSI colours plus
 high-intensity bold/blink versions of the same). Here is a list of the
-colours with their <strong>rgb.txt</strong> names.</p>
+colours with their names.</p>
 <table>
 <tr><td>color0</td><td>(black)</td><td>= Black</td></tr>
 <tr><td>color1</td><td>(red)</td><td>= Red3</td></tr>
@@ -1728,6 +1728,15 @@ colours with their <strong>rgb.txt</strong> names.</p>
 <strong>background</strong>, <strong>cursorColor</strong>, <strong>cursorColor2</strong>, <strong>colorBD</strong>, <strong>colorUL</strong> as
 a number 0-15, as a convenient shorthand to reference the colour name of
 color0-color15.</p>
+<p>If Xft support has been compiled in and as long as Xft/Xrender/X don't get
+their act together, rxvt-unicode will support <code>rgba:rrrr/gggg/bbbb/aaaa</code>
+(recommended, but <strong>MUST</strong> have 4 digits/component), <code>#ARGB</code>, <code>#AARRGGBB</code>
+and <code>#AAAARRRRGGGGBBBB</code> colour specifications, in addition to the ones
+provided by X, where the additional A component specifies alpha (opacity)
+values (0 is completely transparent and the maximum is opaque). You
+probably need to specify <strong>``-depth 32''</strong>, too, and have the luck that your
+X-server uses ARGB pixel layout, as X is far from just supporting ARGB
+visuals out of the box, and rxvt-unicode just fudges around.</p>
 <p>Note that <strong>-rv</strong> (<strong>``reverseVideo: True''</strong>) simulates reverse video by
 always swapping the foreground/background colours. This is in contrast to
 <em>xterm</em>(1) where the colours are only swapped if they have not otherwise

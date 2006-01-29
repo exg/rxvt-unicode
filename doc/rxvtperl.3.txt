@@ -553,6 +553,13 @@ API DOCUMENTATION
 
         Messages have a size limit of 1023 bytes currently.
 
+    @terms = urxvt::termlist
+        Returns all urxvt::term objects that exist in this process,
+        regardless of wether they are started, being destroyed etc., so be
+        careful. Only term objects that have perl extensions attached will
+        be returned (because there is no urxvt::term objet associated with
+        others).
+
     $time = urxvt::NOW
         Returns the "current time" (as per the event loop).
 
@@ -633,7 +640,8 @@ API DOCUMENTATION
         Croaks (and probably outputs an error message) if the new instance
         couldn't be created. Returns "undef" if the new instance didn't
         initialise perl, and the terminal object otherwise. The "init" and
-        "start" hooks will be called during this call.
+        "start" hooks will be called before this call returns, and are free
+        to refer to global data (which is race free).
 
     $term->destroy
         Destroy the terminal object (close the window, free resources etc.).
@@ -987,8 +995,11 @@ API DOCUMENTATION
         Converts rxvt-unicodes text reprsentation into a perl string. See
         "$term->ROW_t" for details.
 
-    $success = $term->grab_button ($button, $modifiermask)
-        Registers a synchronous button grab. See the XGrabButton manpage.
+    $success = $term->grab_button ($button, $modifiermask[, $window =
+    $term->vt])
+    $term->ungrab_button ($button, $modifiermask[, $window = $term->vt])
+        Register/unregister a synchronous button grab. See the XGrabButton
+        manpage.
 
     $success = $term->grab ($eventtime[, $sync])
         Calls XGrabPointer and XGrabKeyboard in asynchronous (default) or

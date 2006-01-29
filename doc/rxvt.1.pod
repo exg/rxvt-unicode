@@ -1342,13 +1342,15 @@ B<background>, B<cursorColor>, B<cursorColor2>, B<colorBD>, B<colorUL> as
 a number 0-15, as a convenient shorthand to reference the colour name of
 color0-color15.
 
-If Xft support has been compiled in and as long as Xft/Xrender don't get
-their act together, rxvt-unicode will support C<#ARGB>, C<#AARRGGBB>
+If Xft support has been compiled in and as long as Xft/Xrender/X don't get
+their act together, rxvt-unicode will support C<rgba:rrrr/gggg/bbbb/aaaa>
+(recommended, but B<MUST> have 4 digits/component), C<#ARGB>, C<#AARRGGBB>
 and C<#AAAARRRRGGGGBBBB> colour specifications, in addition to the ones
 provided by X, where the additional A component specifies alpha (opacity)
 values (0 is completely transparent and the maximum is opaque). You
-probably need to specify B<"-depth 32">, too, as X is far from just
-supporting ARGB visuals out of the box.
+probably need to specify B<"-depth 32">, too, and have the luck that your
+X-server uses ARGB pixel layout, as X is far from just supporting ARGB
+visuals out of the box, and rxvt-unicode just fudges around.
 
 Note that B<-rv> (B<"reverseVideo: True">) simulates reverse video by
 always swapping the foreground/background colours. This is in contrast to
