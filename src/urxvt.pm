@@ -669,6 +669,13 @@ correct place, e.g. on stderr of the connecting urxvtc client.
 
 Messages have a size limit of 1023 bytes currently.
 
+=item @terms = urxvt::termlist
+
+Returns all urxvt::term objects that exist in this process, regardless of
+wether they are started, being destroyed etc., so be careful. Only term
+objects that have perl extensions attached will be returned (because there
+is no urxvt::term objet associated with others).
+
 =item $time = urxvt::NOW
 
 Returns the "current time" (as per the event loop).
@@ -1058,14 +1065,18 @@ hash which defines the environment of the new terminal.
 Croaks (and probably outputs an error message) if the new instance
 couldn't be created.  Returns C<undef> if the new instance didn't
 initialise perl, and the terminal object otherwise. The C<init> and
-C<start> hooks will be called during this call.
+C<start> hooks will be called before this call returns, and are free to
+refer to global data (which is race free).
 
 =cut
 
 sub new {
    my ($class, $env, @args) = @_;
 
-   _new ([ map "$_=$env->{$_}", keys %$env ], @args);
+   $env  or Carp::croak "environment hash missing in call to urxvt::term->new";
+   @args or Carp::croak "name argument missing in call to urxvt::term->new";
+
+   _new ([ map "$_=$env->{$_}", keys %$env ], \@args);
 }
 
 =item $term->destroy
@@ -1629,9 +1640,12 @@ C<< $term->ROW_t >> for details.
 Converts rxvt-unicodes text reprsentation into a perl string. See
 C<< $term->ROW_t >> for details.
 
-=item $success = $term->grab_button ($button, $modifiermask)
+=item $success = $term->grab_button ($button, $modifiermask[, $window = $term->vt])
 
-Registers a synchronous button grab. See the XGrabButton manpage.
+=item $term->ungrab_button ($button, $modifiermask[, $window = $term->vt])
+
+Register/unregister a synchronous button grab. See the XGrabButton
+manpage.
 
 =item $success = $term->grab ($eventtime[, $sync])
 

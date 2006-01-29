@@ -31,6 +31,14 @@ template<typename T, typename U, typename V> static inline void clamp_it (T &v, 
 
 template<typename T, typename U> static inline void swap (T& a, U& b) { T t=a; a=(T)b; b=(U)t; }
 
+// linear interpolation
+template<typename T, typename U, typename P>
+static inline
+T lerp (T a, U b, P p)
+{
+  return (int(a) * int(p) + int(b) * int(100 - p)) / 100;
+}
+
 // in range including end
 #define IN_RANGE_INC(val,beg,end) \
   ((unsigned int)(val) - (unsigned int)(beg) <= (unsigned int)(end) - (unsigned int)(beg))

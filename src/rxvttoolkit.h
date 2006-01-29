@@ -106,7 +106,7 @@ struct rxvt_screen {
   Colormap cmap;
 
   void set (rxvt_display *disp);
-  void set (rxvt_display *disp, int depth);
+  void set (rxvt_display *disp, int bitdepth);
   void clear ();
 };
 
@@ -201,6 +201,19 @@ extern refcache<rxvt_display> displays;
 
 typedef unsigned long Pixel;
 
+struct rxvt_rgba {
+  unsigned short r, g, b, a;
+
+  enum { MIN_CC = 0x0000, MAX_CC  = 0xffff };
+
+  rxvt_rgba ()
+  { }
+
+  rxvt_rgba (unsigned short r, unsigned short g, unsigned short b, unsigned short a = MAX_CC)
+  : r(r), g(g), b(b), a(a)
+  { }
+};
+
 struct rxvt_color {
 #if XFT
   XftColor c;
@@ -213,11 +226,10 @@ struct rxvt_color {
   bool operator == (const rxvt_color &b) const { return Pixel (*this) == Pixel (b); }
   bool operator != (const rxvt_color &b) const { return Pixel (*this) != Pixel (b); }
 
-  void get (rxvt_screen *screen, unsigned short &cr, unsigned short &cg, unsigned short &cb);
+  void get (rxvt_screen *screen, rxvt_rgba &rgba);
  
-  bool set (rxvt_screen *screen, Pixel p);
   bool set (rxvt_screen *screen, const char *name);
-  bool set (rxvt_screen *screen, unsigned short cr, unsigned short cg, unsigned short cb);
+  bool set (rxvt_screen *screen, rxvt_rgba rgba);
 
   rxvt_color fade (rxvt_screen *screen, int percent); // fades to black
   rxvt_color fade (rxvt_screen *screen, int percent, rxvt_color &fadeto);

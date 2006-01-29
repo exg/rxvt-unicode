@@ -2533,12 +2533,12 @@ rxvt_term::check_our_parents ()
 #if TINTING
           if (ISSET_PIXCOLOR (Color_tint))
             {
-              unsigned short rm, gm, bm;
+              rxvt_rgba c;
               int shade = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100;
 
-              pix_colors_focused[Color_tint].get (this, rm, gm, bm);
+              pix_colors_focused[Color_tint].get (this, c);
 
-              ShadeXImage (this, image, shade, rm, gm, bm);
+              ShadeXImage (this, image, shade, c.r, c.g, c.b);
             }
 #endif
 
@@ -3716,9 +3716,15 @@ rxvt_term::process_color_seq (int report, int color, const char *str, char resp)
 {
   if (str[0] == '?' && !str[1])
     {
-      unsigned short r, g, b;
-      pix_colors_focused[color].get (this, r, g, b);
-      tt_printf ("\033]%d;rgb:%04x/%04x/%04x%c", report, r, g, b, resp);
+      rxvt_rgba c;
+      pix_colors_focused[color].get (this, c);
+
+#if XFT
+      if (c.a != rxvt_rgba::MAX_CC)
+        tt_printf ("\033]%d;#%04x%04x%04x%04x%c", report, c.a, c.r, c.g, c.b, resp);
+      else
+#endif
+        tt_printf ("\033]%d;rgb:%04x/%04x/%04x%c", report, c.r, c.g, c.b, resp);
     }
   else
     set_window_color (color, str);
@@ -3803,14 +3809,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
             if ((buf = strchr (name, ';')) != NULL)
               *buf++ = '\0';
 
-            if (name[0] == '?' && !name[1])
-              {
-                unsigned short r, g, b;
-                pix_colors_focused[color].get (this, r, g, b);
-                tt_printf ("\033]%d;%d;rgb:%04x/%04x/%04x%c", op, color, r, g, b, resp);
-              }
-            else
-              set_window_color (color, name);
+            process_color_seq (op, color, name, resp);
           }
         break;
       case XTerm_Color00:

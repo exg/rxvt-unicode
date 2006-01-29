@@ -739,20 +739,23 @@ rxvt_term::Get_Colours ()
        * xcol[2] == bot shadow */
 
       xcol[1] = pix_colors[Color_scroll];
-      xcol[0].set (this, 65535, 65535, 65535);
+      xcol[0].set (this, rxvt_rgba (rxvt_rgba::MAX_CC, rxvt_rgba::MAX_CC, rxvt_rgba::MAX_CC));
 
-      unsigned short pr1, pg1, pb1, pr0, pg0, pb0;
+      rxvt_rgba c0, c1;
 
-      xcol[0].get (this, pr0, pg0, pb0);
-      xcol[1].get (this, pr1, pg1, pb1);
+      xcol[0].get (this, c0);
+      xcol[1].get (this, c1);
 
       pix_colors[Color_bottomShadow] = xcol[1].fade (this, 50);
 
       /* topShadowColor */
       if (!xcol[1].set (this,
-                        min (pr0, max (pr0 / 5, pr1) * 7 / 5),
-                        min (pg0, max (pg0 / 5, pg1) * 7 / 5),
-                        min (pb0, max (pb0 / 5, pb1) * 7 / 5)))
+                        rxvt_rgba (
+                          min (c0.r, max (c1.r / 5, c1.r) * 7 / 5),
+                          min (c0.g, max (c1.g / 5, c1.g) * 7 / 5),
+                          min (c0.b, max (c1.b / 5, c1.b) * 7 / 5),
+                          c1.a) // pa1 vs. pa0: arbitrary
+                        ));
         xcol[1] = pix_colors[Color_White];
 
       pix_colors[Color_topShadow] = xcol[1];
@@ -902,7 +905,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
       if (XInternAtom (xdisp, "_MOTIF_WM_INFO", True) == None)
         {
           /*     print_warning("Window Manager does not support MWM hints.  Bypassing window manager control for borderless window.\n");*/
-          attributes.override_redirect = TRUE;
+          attributes.override_redirect = true;
           mwmhints.flags = 0;
         }
       else

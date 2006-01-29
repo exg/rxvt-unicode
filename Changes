@@ -17,6 +17,9 @@ DUMB: support tex fonts
         - changed version number report again, now to emulate xterm closer.
         - added the OSC sequence 702 to detect the urxvt version number.
         - small configure updates.
+        - overhauled color management: smaller codesize, alpha support.
+        - do not include X11/Intrinsic.h anymore, directly use
+          Xlib/Xutil/Xresource directly.
 
 7.4  Sat Jan 28 15:26:27 CET 2006
 	- screen background wasn't always erased properly when scrolling,

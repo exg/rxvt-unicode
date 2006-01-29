@@ -115,8 +115,8 @@ SvPTR (SV *sv, const char *klass)
   return (long)mg->mg_ptr;
 }
 
-#define newSVterm(term) SvREFCNT_inc ((SV *)term->perl.self)
-#define SvTERM(sv) (rxvt_term *)SvPTR (sv, "urxvt::term")
+#define newSVterm(term) SvREFCNT_inc ((SV *)(term)->perl.self)
+#define SvTERM(sv) (rxvt_term *)SvPTR ((sv), "urxvt::term")
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -173,8 +173,8 @@ perl_watcher::invoke (const char *type, SV *self, int arg)
     rxvt_warn ("%s callback evaluation error: %s", type, SvPV_nolen (ERRSV));
 }
 
-#define newSVtimer(timer) new_ref (timer->self, "urxvt::timer")
-#define SvTIMER(sv) (timer *)(perl_watcher *)SvPTR (sv, "urxvt::timer")
+#define newSVtimer(timer) new_ref ((timer)->self, "urxvt::timer")
+#define SvTIMER(sv) (timer *)(perl_watcher *)SvPTR ((sv), "urxvt::timer")
 
 struct timer : perl_watcher, time_watcher
 {
@@ -194,8 +194,8 @@ struct timer : perl_watcher, time_watcher
   }
 };
 
-#define newSViow(iow) new_ref (iow->self, "urxvt::iow")
-#define SvIOW(sv) (iow *)(perl_watcher *)SvPTR (sv, "urxvt::iow")
+#define newSViow(iow) new_ref ((iow)->self, "urxvt::iow")
+#define SvIOW(sv) (iow *)(perl_watcher *)SvPTR ((sv), "urxvt::iow")
 
 struct iow : perl_watcher, io_watcher
 {
@@ -210,8 +210,8 @@ struct iow : perl_watcher, io_watcher
   }
 };
 
-#define newSViw(iw) new_ref (iw->self, "urxvt::iw")
-#define SvIW(sv) (iw *)(perl_watcher *)SvPTR (sv, "urxvt::iw")
+#define newSViw(iw) new_ref ((iw)->self, "urxvt::iw")
+#define SvIW(sv) (iw *)(perl_watcher *)SvPTR ((sv), "urxvt::iw")
 
 struct iw : perl_watcher, idle_watcher
 {
@@ -226,8 +226,8 @@ struct iw : perl_watcher, idle_watcher
   }
 };
 
-#define newSVpw(pw) new_ref (pw->self, "urxvt::pw")
-#define SvPW(sv) (pw *)(perl_watcher *)SvPTR (sv, "urxvt::pw")
+#define newSVpw(pw) new_ref ((pw)->self, "urxvt::pw")
+#define SvPW(sv) (pw *)(perl_watcher *)SvPTR ((sv), "urxvt::pw")
 
 struct pw : perl_watcher, child_watcher
 {
@@ -496,8 +496,8 @@ ungrab (rxvt_term *THIS)
 {
   if (THIS->perl.grabtime)
     {
-      XUngrabKeyboard (THIS->display->display, THIS->perl.grabtime);
-      XUngrabPointer  (THIS->display->display, THIS->perl.grabtime);
+      XUngrabKeyboard (THIS->xdisp, THIS->perl.grabtime);
+      XUngrabPointer  (THIS->xdisp, THIS->perl.grabtime);
       THIS->perl.grabtime = 0;
     }
 }
@@ -958,24 +958,31 @@ SET_CUSTOM (int rend, int new_value)
 	OUTPUT:
         RETVAL
 
+void
+termlist ()
+	PPCODE:
+{
+        EXTEND (SP, rxvt_term::termlist.size ());
+
+        for (rxvt_term **t = rxvt_term::termlist.begin (); t < rxvt_term::termlist.end (); t++)
+          if ((*t)->perl.self)
+            PUSHs (sv_2mortal (newSVterm (*t)));
+}
+
 MODULE = urxvt             PACKAGE = urxvt::term
 
 SV *
-_new (...)
+_new (AV *env, AV *arg)
 	CODE:
 {
-	if (items < 1 || !SvROK (ST (0)) || SvTYPE (SvRV (ST (0))) != SVt_PVAV)
-          croak ("first argument to urxvt::term->_new must be arrayref");
-
         rxvt_term *term = new rxvt_term;
 
 	stringvec *argv = new stringvec;
 	stringvec *envv = new stringvec;
 
-        for (int i = 1; i < items; i++)
-          argv->push_back (strdup (SvPVbyte_nolen (ST (i))));
+        for (int i = 0; i <= AvFILL (arg); i++)
+          argv->push_back (strdup (SvPVbyte_nolen (*av_fetch (arg, i, 1))));
 
-        AV *env = (AV *)SvRV (ST (0));
         for (int i = AvFILL (env) + 1; i--; )
           envv->push_back (strdup (SvPVbyte_nolen (*av_fetch (env, i, 1))));
 
@@ -1013,11 +1020,30 @@ rxvt_term::set_should_invoke (int htype, int inc)
         THIS->perl.should_invoke [htype] += inc;
 
 void
-rxvt_term::grab_button (int button, U32 modifiers)
+rxvt_term::grab_button (int button, U32 modifiers, Window window = THIS->vt)
 	CODE:
-	XGrabButton (THIS->display->display, button, modifiers, THIS->vt, 1,
+        XGrabButton (THIS->xdisp, button, modifiers, window, 1,
                      ButtonPressMask | ButtonReleaseMask | EnterWindowMask | LeaveWindowMask | PointerMotionMask,
                      GrabModeSync, GrabModeSync, None, GRAB_CURSOR);
+
+void
+rxvt_term::ungrab_button (int button, U32 modifiers, Window window = THIS->vt)
+	CODE:
+        XUngrabButton (THIS->xdisp, button, modifiers, window);
+
+#if 0
+
+void
+XGrabKey (rxvt_term *THIS, int keycode, U32 modifiers, Window window = THIS->vt)
+	C_ARGS:
+        THIS->xdisp, keycode, modifiers, window, 1,
+        GrabModeSync, GrabModeSync
+
+void
+XUngrabKey (rxvt_term *THIS, int keycode, U32 modifiers, Window window = THIS->vt)
+	C_ARGS: THIS->xdisp, keycode, modifiers, window
+
+#endif
 
 bool
 rxvt_term::grab (Time eventtime, int sync = 0)
@@ -1027,13 +1053,13 @@ rxvt_term::grab (Time eventtime, int sync = 0)
 
         THIS->perl.grabtime = 0;
 
-        if (!XGrabPointer (THIS->display->display, THIS->vt, 0,
+        if (!XGrabPointer (THIS->xdisp, THIS->vt, 0,
                            ButtonPressMask | ButtonReleaseMask | EnterWindowMask | LeaveWindowMask | PointerMotionMask,
                            mode, mode, None, GRAB_CURSOR, eventtime))
-          if (!XGrabKeyboard (THIS->display->display, THIS->vt, 0, mode, mode, eventtime))
+          if (!XGrabKeyboard (THIS->xdisp, THIS->vt, 0, mode, mode, eventtime))
             THIS->perl.grabtime = eventtime;
           else
-            XUngrabPointer (THIS->display->display, eventtime);
+            XUngrabPointer (THIS->xdisp, eventtime);
 
         RETVAL = !!THIS->perl.grabtime;
 }
@@ -1043,18 +1069,18 @@ rxvt_term::grab (Time eventtime, int sync = 0)
 void
 rxvt_term::allow_events_async ()
 	CODE:
-        XAllowEvents (THIS->display->display, AsyncBoth,      THIS->perl.grabtime);
+        XAllowEvents (THIS->xdisp, AsyncBoth,      THIS->perl.grabtime);
 
 void
 rxvt_term::allow_events_sync ()
 	CODE:
-        XAllowEvents (THIS->display->display, SyncBoth,       THIS->perl.grabtime);
+        XAllowEvents (THIS->xdisp, SyncBoth,       THIS->perl.grabtime);
 
 void
 rxvt_term::allow_events_replay ()
 	CODE:
-        XAllowEvents (THIS->display->display, ReplayPointer,  THIS->perl.grabtime);
-        XAllowEvents (THIS->display->display, ReplayKeyboard, THIS->perl.grabtime);
+        XAllowEvents (THIS->xdisp, ReplayPointer,  THIS->perl.grabtime);
+        XAllowEvents (THIS->xdisp, ReplayKeyboard, THIS->perl.grabtime);
 
 void
 rxvt_term::ungrab ()
@@ -1713,7 +1739,7 @@ rxvt_term::XListProperties (Window window)
 	PPCODE:
 {
 	int count;
-	Atom *props = XListProperties (THIS->display->display, window, &count);
+	Atom *props = XListProperties (THIS->xdisp, window, &count);
 
         EXTEND (SP, count);
         while (count--)
@@ -1732,7 +1758,7 @@ rxvt_term::XGetWindowProperty (Window window, Atom property)
         unsigned long bytes_after;
         unsigned char *prop;
 
-	XGetWindowProperty (THIS->display->display, window, property,
+	XGetWindowProperty (THIS->xdisp, window, property,
                             0, 1<<24, 0, AnyPropertyType,
                             &type, &format, &nitems, &bytes_after, &prop);
 
@@ -1761,25 +1787,25 @@ rxvt_term::XChangeWindowProperty (Window window, Atom property, Atom type, int f
                      : format == 32 ? sizeof (long)
                      :                1;
 
-	XChangeProperty (THIS->display->display, window, property,
+	XChangeProperty (THIS->xdisp, window, property,
                          type, format, PropModeReplace,
                          (unsigned char *)data_, len / elemsize);
-        XSync (THIS->display->display, 0);
+        XSync (THIS->xdisp, 0);
 }
 
 Atom
 XInternAtom (rxvt_term *term, char *atom_name, int only_if_exists = FALSE)
-	C_ARGS: term->display->display, atom_name, only_if_exists
+	C_ARGS: term->xdisp, atom_name, only_if_exists
 
 char *
 XGetAtomName (rxvt_term *term, Atom atom)
-	C_ARGS: term->display->display, atom
+	C_ARGS: term->xdisp, atom
         CLEANUP:
         XFree (RETVAL);
 
 void
 XDeleteProperty (rxvt_term *term, Window window, Atom property)
-  	C_ARGS: term->display->display, window, property
+  	C_ARGS: term->xdisp, window, property
 
 Window
 rxvt_term::DefaultRootWindow ()
@@ -1792,7 +1818,7 @@ rxvt_term::DefaultRootWindow ()
 
 Window
 XCreateSimpleWindow (rxvt_term *term, Window parent, int x, int y, unsigned int width, unsigned int height)
-	C_ARGS: term->display->display, (Window)parent,
+	C_ARGS: term->xdisp, (Window)parent,
                 x, y, width, height, 0,
                 term->pix_colors_focused[Color_border],
                 term->pix_colors_focused[Color_border]
@@ -1801,27 +1827,27 @@ XCreateSimpleWindow (rxvt_term *term, Window parent, int x, int y, unsigned int 
 
 void
 XReparentWindow (rxvt_term *term, Window window, Window parent, int x = 0, int y = 0)
-	C_ARGS: term->display->display, window, parent, x, y
+	C_ARGS: term->xdisp, window, parent, x, y
 
 void
 XMapWindow (rxvt_term *term, Window window)
-	C_ARGS: term->display->display, window
+	C_ARGS: term->xdisp, window
 
 void
 XUnmapWindow (rxvt_term *term, Window window)
-	C_ARGS: term->display->display, window
+	C_ARGS: term->xdisp, window
 
 void
 XMoveResizeWindow (rxvt_term *term, Window window, int x, int y, unsigned int width, unsigned int height)
-	C_ARGS: term->display->display, window, x, y, width, height
+	C_ARGS: term->xdisp, window, x, y, width, height
 
 void
 rxvt_term::XChangeInput (Window window, U32 add_events, U32 del_events = 0)
 	CODE:
 {
 	XWindowAttributes attr;
-        XGetWindowAttributes (THIS->display->display, window, &attr);
-        XSelectInput (THIS->display->display, window, attr.your_event_mask | add_events & ~del_events);
+        XGetWindowAttributes (THIS->xdisp, window, &attr);
+        XSelectInput (THIS->xdisp, window, attr.your_event_mask | add_events & ~del_events);
 }
 
 void
@@ -1831,7 +1857,7 @@ rxvt_term::XTranslateCoordinates (Window src, Window dst, int x, int y)
         int dx, dy;
         Window child;
 
-        if (XTranslateCoordinates (THIS->display->display, src, dst, x, y, &dx, &dy, &child))
+        if (XTranslateCoordinates (THIS->xdisp, src, dst, x, y, &dx, &dy, &child))
           {
             EXTEND (SP, 3);
             PUSHs (newSViv (dx));

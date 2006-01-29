@@ -247,7 +247,7 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color) 
   dTermGC;
   
   if (color == Color_bg)
-    XClearArea (disp, d, x, y, w, h, FALSE);
+    XClearArea (disp, d, x, y, w, h, false);
   else if (color >= 0)
     {
 #if XFT
