@@ -591,9 +591,9 @@ rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
       c.color.blue  = rgba.b;
       c.color.alpha = rgba.a;
 
-      c.pixel = ((rgba.r * format->direct.redMask   / rxvt_rgba::MAX_CC) << format->direct.red)
+      c.pixel = ((rgba.r * format->direct.redMask   / rxvt_rgba::MAX_CC) << format->direct.red  )
               | ((rgba.g * format->direct.greenMask / rxvt_rgba::MAX_CC) << format->direct.green)
-              | ((rgba.b * format->direct.blueMask  / rxvt_rgba::MAX_CC) << format->direct.blue)
+              | ((rgba.b * format->direct.blueMask  / rxvt_rgba::MAX_CC) << format->direct.blue )
               | ((rgba.a * format->direct.alphaMask / rxvt_rgba::MAX_CC) << format->direct.alpha);
 
       return true;
