@@ -583,12 +583,11 @@ rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
       // FUCKING Xft gets it wrong, of course, fix it for the common case
       // transparency users should eat shit and die, and then
       // XRenderQueryPictIndexValues themselves plenty.
-      if (screen->depth == 32
-          && screen->visual->c_class == TrueColor
-          && screen->visual->red_mask   == 0x00ff0000
-          && screen->visual->green_mask == 0x0000ff00
-          && screen->visual->blue_mask  == 0x000000ff)
-        c.pixel = c.pixel & 0x00ffffffUL | ((rgba.a >> 8) << 24);
+      if (screen->depth == 32 && screen->visual->c_class == TrueColor)
+        if ((screen->visual->red_mask | screen->visual->green_mask | screen->visual->blue_mask) == 0x00ffffffUL)
+          c.pixel = c.pixel & 0x00ffffffUL | ((rgba.a >> 8) << 24);
+        else if ((screen->visual->red_mask | screen->visual->green_mask | screen->visual->blue_mask) == 0xffffff00UL)
+          c.pixel = c.pixel & 0xffffff00UL |  (rgba.a >> 8);
 
       return true;
     }
