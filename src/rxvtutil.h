@@ -9,6 +9,10 @@
 #define PP_STRINGIFY_(a) #a
 #define PP_STRINGIFY(a) PP_STRINGIFY_(a)
 
+// actually, some gcc-3.x versions work, too
+#define HAVE_GCC_BUILTINS (__GNUC__ >= 4)
+#define HAVE_GCC_BUILTINS 0
+
 extern class byteorder {
   static unsigned int e; // at least 32 bits
 public:
@@ -38,6 +42,16 @@ T lerp (T a, U b, P p)
 {
   return (int(a) * int(p) + int(b) * int(100 - p)) / 100;
 }
+
+// some bit functions, xft fuck me plenty
+#if HAVE_GCC_BUILTINS
+static inline int ctz      (unsigned int x) { return __builtin_ctz      (x); }
+static inline int popcount (unsigned int x) { return __builtin_popcount (x); }
+#else
+// count trailing zero bits and count # of one bits
+int ctz      (unsigned int x);
+int popcount (unsigned int x);
+#endif
 
 // in range including end
 #define IN_RANGE_INC(val,beg,end) \

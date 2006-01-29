@@ -19,7 +19,8 @@ DUMB: support tex fonts
         - small configure updates.
         - overhauled color management: smaller codesize, alpha support.
         - support rgba:r/g/b/a, #argb, #aarrggbb and #aaaarrrrggggbbbb
-          colour "names".
+          colour "names", and try to work around xft forcing everything
+          to be 100% transparent. Long Live Xft!
         - do not include X11/Intrinsic.h anymore, directly use
           Xlib/Xutil/Xresource directly.
 

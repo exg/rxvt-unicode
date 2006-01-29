@@ -97,7 +97,7 @@ B<DISPLAY> environment variable is used.
 
 =item B<-depth> I<bitdepth>
 
-Compile I<frills>: Attempt to find a visual with the given bit depth;
+Compile I<xft>: Attempt to find a visual with the given bit depth;
 resource B<depth>.
 
 =item B<-geometry> I<geom>
@@ -514,7 +514,7 @@ extensions not documented here):
 
 =item B<depth:> I<bitdepth>
 
-Compile I<frills>: Attempt to find a visual with the given bit depth;
+Compile I<xft>: Attempt to find a visual with the given bit depth;
 option B<-depth>.
 
 =item B<geometry:> I<geom>

@@ -34,6 +34,10 @@
 # include <sys/un.h>
 #endif
 
+#if XFT
+# include <X11/extensions/Xrender.h>
+#endif
+
 const char *const xa_names[] =
   {
     "TEXT",
@@ -197,6 +201,7 @@ rxvt_screen::set (rxvt_display *disp, int bitdepth)
 {
   set (disp);
 
+#if XFT
   XVisualInfo vinfo;
 
   if (XMatchVisualInfo (xdisp, display->screen, bitdepth, TrueColor, &vinfo))
@@ -205,6 +210,7 @@ rxvt_screen::set (rxvt_display *disp, int bitdepth)
       visual = vinfo.visual;
       cmap   = XCreateColormap (xdisp, disp->root, visual, AllocNone);
     }
+#endif
 }
 
 void
@@ -571,25 +577,37 @@ bool
 rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
 {
 #if XFT
-  XRenderColor d;
+  XRenderPictFormat *format;
 
-  d.red   = rgba.r;
-  d.green = rgba.g;
-  d.blue  = rgba.b;
-  d.alpha = rgba.a;
-
-  if (XftColorAllocValue (screen->xdisp, screen->visual, screen->cmap, &d, &c))
+  // FUCKING Xft gets it wrong, of course, so work around it
+  // transparency users should eat shit and die, and then
+  // XRenderQueryPictIndexValues themselves plenty.
+  if (screen->visual->c_class == TrueColor
+      && (format = XRenderFindVisualFormat (screen->xdisp, screen->visual)))
     {
-      // FUCKING Xft gets it wrong, of course, fix it for the common case
-      // transparency users should eat shit and die, and then
-      // XRenderQueryPictIndexValues themselves plenty.
-      if (screen->depth == 32 && screen->visual->c_class == TrueColor)
-        if ((screen->visual->red_mask | screen->visual->green_mask | screen->visual->blue_mask) == 0x00ffffffUL)
-          c.pixel = c.pixel & 0x00ffffffUL | ((rgba.a >> 8) << 24);
-        else if ((screen->visual->red_mask | screen->visual->green_mask | screen->visual->blue_mask) == 0xffffff00UL)
-          c.pixel = c.pixel & 0xffffff00UL |  (rgba.a >> 8);
+      // the fun lies in doing everything manually...
+      c.color.red   = rgba.r;
+      c.color.green = rgba.g;
+      c.color.blue  = rgba.b;
+      c.color.alpha = rgba.a;
+
+      c.pixel = (rgba.r >> (16 - popcount (format->direct.redMask  )) << format->direct.red)
+              | (rgba.g >> (16 - popcount (format->direct.greenMask)) << format->direct.green)
+              | (rgba.b >> (16 - popcount (format->direct.blueMask )) << format->direct.blue)
+              | (rgba.a >> (16 - popcount (format->direct.alphaMask)) << format->direct.alpha);
 
       return true;
+    }
+  else
+    {
+      XRenderColor d;
+
+      d.red   = rgba.r;
+      d.green = rgba.g;
+      d.blue  = rgba.b;
+      d.alpha = rgba.a;
+
+      return XftColorAllocValue (screen->xdisp, screen->visual, screen->cmap, &d, &c);
     }
 
   return false;
