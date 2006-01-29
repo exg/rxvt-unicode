@@ -218,7 +218,7 @@ respected). In the absence of this option, the display specified by the
 \&\fB\s-1DISPLAY\s0\fR environment variable is used.
 .IP "\fB\-depth\fR \fIbitdepth\fR" 4
 .IX Item "-depth bitdepth"
-Compile \fIfrills\fR: Attempt to find a visual with the given bit depth;
+Compile \fIxft\fR: Attempt to find a visual with the given bit depth;
 resource \fBdepth\fR.
 .IP "\fB\-geometry\fR \fIgeom\fR" 4
 .IX Item "-geometry geom"
@@ -233,6 +233,9 @@ Turn on/off jump scrolling; resource \fBjumpScroll\fR.
 .IX Item "-ip|+ip | -tr|+tr"
 Turn on/off inheriting parent window's pixmap. Alternative form is
 \&\fB\-tr\fR; resource \fBinheritPixmap\fR.
+.Sp
+\&\fIPlease note that transparency of any kind if completely unsupported by
+the author. Don't bug him with installation questions!\fR
 .IP "\fB\-fade\fR \fInumber\fR" 4
 .IX Item "-fade number"
 Fade the text by the given percentage when focus is lost. Small values
@@ -241,7 +244,7 @@ colour; resource \fBfading\fR.
 .IP "\fB\-fadecolor\fR \fIcolour\fR" 4
 .IX Item "-fadecolor colour"
 Fade to this colour when fading is used (see \fB\-fade\fR). The default colour
-is black. resource \fBfadeColor\fR.
+is opaque black. resource \fBfadeColor\fR.
 .IP "\fB\-tint\fR \fIcolour\fR" 4
 .IX Item "-tint colour"
 Tint the transparent background pixmap with the given colour when
@@ -586,7 +589,7 @@ check the @@RXVT_NAME@@\fIperl\fR\|(3) manpage for additional settings by perl
 extensions not documented here):
 .IP "\fBdepth:\fR \fIbitdepth\fR" 4
 .IX Item "depth: bitdepth"
-Compile \fIfrills\fR: Attempt to find a visual with the given bit depth;
+Compile \fIxft\fR: Attempt to find a visual with the given bit depth;
 option \fB\-depth\fR.
 .IP "\fBgeometry:\fR \fIgeom\fR" 4
 .IX Item "geometry: geom"
@@ -659,6 +662,9 @@ quickly, fewer screen updates are performed [default]; option \fB\-j\fR.
 \&\fBTrue\fR: make the background inherit the parent windows' pixmap, giving
 artificial transparency. \fBFalse\fR: do not inherit the parent windows'
 pixmap.
+.Sp
+\&\fIPlease note that transparency of any kind if completely unsupported by
+the author. Don't bug him with installation questions!\fR
 .IP "\fBfading:\fR \fInumber\fR" 4
 .IX Item "fading: number"
 Fade the text by the given percentage when focus is lost; option \fB\-fade\fR.
@@ -1347,6 +1353,9 @@ values (0 is completely transparent and the maximum is opaque). You
 probably need to specify \fB\*(L"\-depth 32\*(R"\fR, too, and have the luck that your
 X\-server uses \s-1ARGB\s0 pixel layout, as X is far from just supporting \s-1ARGB\s0
 visuals out of the box, and rxvt-unicode just fudges around.
+.PP
+\&\fIPlease note that transparency of any kind if completely unsupported by
+the author. Don't bug him with installation questions!\fR
 .PP
 Note that \fB\-rv\fR (\fB\*(L"reverseVideo: True\*(R"\fR) simulates reverse video by
 always swapping the foreground/background colours. This is in contrast to

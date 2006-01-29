@@ -87,7 +87,7 @@ OPTIONS
         the DISPLAY environment variable is used.
 
     -depth *bitdepth*
-        Compile *frills*: Attempt to find a visual with the given bit depth;
+        Compile *xft*: Attempt to find a visual with the given bit depth;
         resource depth.
 
     -geometry *geom*
@@ -103,6 +103,9 @@ OPTIONS
         Turn on/off inheriting parent window's pixmap. Alternative form is
         -tr; resource inheritPixmap.
 
+        *Please note that transparency of any kind if completely unsupported
+        by the author. Don't bug him with installation questions!*
+
     -fade *number*
         Fade the text by the given percentage when focus is lost. Small
         values fade a little only, 100 completely replaces all colours by
@@ -110,7 +113,7 @@ OPTIONS
 
     -fadecolor *colour*
         Fade to this colour when fading is used (see -fade). The default
-        colour is black. resource fadeColor.
+        colour is opaque black. resource fadeColor.
 
     -tint *colour*
         Tint the transparent background pixmap with the given colour when
@@ -439,7 +442,7 @@ RESOURCES (available also as long-options)
     documented here):
 
     depth: *bitdepth*
-        Compile *frills*: Attempt to find a visual with the given bit depth;
+        Compile *xft*: Attempt to find a visual with the given bit depth;
         option -depth.
 
     geometry: *geom*
@@ -511,6 +514,9 @@ RESOURCES (available also as long-options)
         True: make the background inherit the parent windows' pixmap, giving
         artificial transparency. False: do not inherit the parent windows'
         pixmap.
+
+        *Please note that transparency of any kind if completely unsupported
+        by the author. Don't bug him with installation questions!*
 
     fading: *number*
         Fade the text by the given percentage when focus is lost; option
@@ -1181,6 +1187,9 @@ COLORS AND GRAPHICS
     "-depth 32", too, and have the luck that your X-server uses ARGB pixel
     layout, as X is far from just supporting ARGB visuals out of the box,
     and rxvt-unicode just fudges around.
+
+    *Please note that transparency of any kind if completely unsupported by
+    the author. Don't bug him with installation questions!*
 
     Note that -rv ("reverseVideo: True") simulates reverse video by always
     swapping the foreground/background colours. This is in contrast to

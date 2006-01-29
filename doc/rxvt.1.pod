@@ -117,6 +117,9 @@ Turn on/off jump scrolling; resource B<jumpScroll>.
 Turn on/off inheriting parent window's pixmap. Alternative form is
 B<-tr>; resource B<inheritPixmap>.
 
+I<Please note that transparency of any kind if completely unsupported by
+the author. Don't bug him with installation questions!>
+
 =item B<-fade> I<number>
 
 Fade the text by the given percentage when focus is lost. Small values
@@ -126,7 +129,7 @@ colour; resource B<fading>.
 =item B<-fadecolor> I<colour>
 
 Fade to this colour when fading is used (see B<-fade>). The default colour
-is black. resource B<fadeColor>.
+is opaque black. resource B<fadeColor>.
 
 =item B<-tint> I<colour>
 
@@ -598,6 +601,9 @@ B<False>: specify that smooth scrolling should be used; option B<+j>.
 B<True>: make the background inherit the parent windows' pixmap, giving
 artificial transparency. B<False>: do not inherit the parent windows'
 pixmap.
+
+I<Please note that transparency of any kind if completely unsupported by
+the author. Don't bug him with installation questions!>
 
 =item B<fading:> I<number>
 
@@ -1351,6 +1357,9 @@ values (0 is completely transparent and the maximum is opaque). You
 probably need to specify B<"-depth 32">, too, and have the luck that your
 X-server uses ARGB pixel layout, as X is far from just supporting ARGB
 visuals out of the box, and rxvt-unicode just fudges around.
+
+I<Please note that transparency of any kind if completely unsupported by
+the author. Don't bug him with installation questions!>
 
 Note that B<-rv> (B<"reverseVideo: True">) simulates reverse video by
 always swapping the foreground/background colours. This is in contrast to

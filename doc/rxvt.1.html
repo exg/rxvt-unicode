@@ -136,7 +136,7 @@ respected). In the absence of this option, the display specified by the
 <dt><strong><a name="item__2ddepth_bitdepth"><strong>-depth</strong> <em>bitdepth</em></a></strong><br />
 </dt>
 <dd>
-Compile <em>frills</em>: Attempt to find a visual with the given bit depth;
+Compile <em>xft</em>: Attempt to find a visual with the given bit depth;
 resource <strong>depth</strong>.
 </dd>
 <p></p>
@@ -164,6 +164,10 @@ Turn on/off jump scrolling; resource <strong>jumpScroll</strong>.
 Turn on/off inheriting parent window's pixmap. Alternative form is
 <strong>-tr</strong>; resource <strong>inheritPixmap</strong>.
 </dd>
+<dd>
+<p><em>Please note that transparency of any kind if completely unsupported by
+the author. Don't bug him with installation questions!</em></p>
+</dd>
 <p></p>
 <dt><strong><a name="item__2dfade_number"><strong>-fade</strong> <em>number</em></a></strong><br />
 </dt>
@@ -177,7 +181,7 @@ colour; resource <strong>fading</strong>.
 </dt>
 <dd>
 Fade to this colour when fading is used (see <strong>-fade</strong>). The default colour
-is black. resource <strong>fadeColor</strong>.
+is opaque black. resource <strong>fadeColor</strong>.
 </dd>
 <p></p>
 <dt><strong><a name="item__2dtint_colour"><strong>-tint</strong> <em>colour</em></a></strong><br />
@@ -693,7 +697,7 @@ extensions not documented here):</p>
 <dt><strong><a name="item_depth_3a_bitdepth"><strong>depth:</strong> <em>bitdepth</em></a></strong><br />
 </dt>
 <dd>
-Compile <em>frills</em>: Attempt to find a visual with the given bit depth;
+Compile <em>xft</em>: Attempt to find a visual with the given bit depth;
 option <strong>-depth</strong>.
 </dd>
 <p></p>
@@ -805,6 +809,10 @@ quickly, fewer screen updates are performed [default]; option <strong>-j</strong
 <strong>True</strong>: make the background inherit the parent windows' pixmap, giving
 artificial transparency. <strong>False</strong>: do not inherit the parent windows'
 pixmap.
+</dd>
+<dd>
+<p><em>Please note that transparency of any kind if completely unsupported by
+the author. Don't bug him with installation questions!</em></p>
 </dd>
 <p></p>
 <dt><strong><a name="item_fading_3a_number"><strong>fading:</strong> <em>number</em></a></strong><br />
@@ -1737,6 +1745,8 @@ values (0 is completely transparent and the maximum is opaque). You
 probably need to specify <strong>``-depth 32''</strong>, too, and have the luck that your
 X-server uses ARGB pixel layout, as X is far from just supporting ARGB
 visuals out of the box, and rxvt-unicode just fudges around.</p>
+<p><em>Please note that transparency of any kind if completely unsupported by
+the author. Don't bug him with installation questions!</em></p>
 <p>Note that <strong>-rv</strong> (<strong>``reverseVideo: True''</strong>) simulates reverse video by
 always swapping the foreground/background colours. This is in contrast to
 <em>xterm</em>(1) where the colours are only swapped if they have not otherwise
