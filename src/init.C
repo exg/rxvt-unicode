@@ -301,7 +301,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
   xa = display->xa;
 
-#if ENABLE_FRILLS
+#if XFT
   if (rs[Rs_depth])
     set (display, strtol (rs[Rs_depth], 0, 0));
   else

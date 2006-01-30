@@ -63,12 +63,14 @@
   def (transparent)
   def (transparent_all)
 #endif
+#if XFT
+  def (depth)
+#endif
 #if ENABLE_FRILLS
   def (transient_for)
   def (override_redirect)
   def (pty_fd)
   def (hold)
-  def (depth)
   def (ext_bwidth)
   def (int_bwidth)
   def (borderLess)

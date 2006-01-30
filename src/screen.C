@@ -1116,7 +1116,7 @@ rxvt_term::scr_tab (int count, bool ht) NOTHROW
  * Move cursor left in row.  If we're at the left boundary, shift everything
  * in that row right.  Clear left column.
  */
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
 void
 rxvt_term::scr_backindex () NOTHROW
 {
@@ -1133,7 +1133,7 @@ rxvt_term::scr_backindex () NOTHROW
  * Move cursor right in row.  If we're at the right boundary, shift everything
  * in that row left.  Clear right column.
  */
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
 void
 rxvt_term::scr_forwardindex () NOTHROW
 {
@@ -1357,7 +1357,7 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
     }
 }
 
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
 void
 rxvt_term::scr_erase_savelines () NOTHROW
 {
@@ -2550,7 +2550,7 @@ rxvt_term::scr_reverse_selection () NOTHROW
       && current_screen == selection.screen
       && selection.end.row >= view_start)
     {
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
       if (selection.rect)
         scr_xor_rect (selection.beg.row, selection.beg.col,
                       selection.end.row, selection.end.col,
@@ -2775,7 +2775,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
   char **cl;
   int cr;
 
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
   // xlib is horribly broken with respect to UTF8_STRING, and nobody cares to fix it
   // so recode it manually
   if (ct.encoding == xa[XA_UTF8_STRING])
@@ -2956,7 +2956,7 @@ rxvt_term::selection_make (Time tm)
 
   for (; row <= selection.end.row; row++, col = 0)
     {
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
       if (selection.rect)
         {
           col = selection.beg.col;
@@ -2969,7 +2969,7 @@ rxvt_term::selection_make (Time tm)
       col = max (col, 0);
 
       if (row == selection.end.row
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
           || selection.rect
 #endif
           )
@@ -3002,7 +3002,7 @@ rxvt_term::selection_make (Time tm)
             new_selection_text[ofs++] = *t++;
         }
 
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
       if (selection.rect)
         {
           while (ofs
@@ -3373,7 +3373,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
     {
       if (selection.beg.col > ROW(selection.beg.row).l //TODO//FIXME//LEN
           && !ROW(selection.beg.row).is_longer ()
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
           && !selection.rect
 #endif
          )
@@ -3382,7 +3382,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
       if (
           selection.end.col > ROW(selection.end.row).l //TODO//FIXME//LEN
           && !ROW(selection.end.row).is_longer ()
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
           && !selection.rect
 #endif
          )
@@ -3409,7 +3409,9 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
                 {
                   selection.end.row = end_row;
                   selection.end.col = ROW(end_row).l;
+# if !ENABLE_MINIMAL
                   selection_remove_trailing_spaces ();
+# endif
                   break;
                 }
             }
@@ -3448,13 +3450,13 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
         }
     }
 
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
   if (selection.rect && selection.beg.col > selection.end.col)
     ::swap (selection.beg.col, selection.end.col);
 #endif
 }
 
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
 void
 rxvt_term::selection_remove_trailing_spaces () NOTHROW
 {
@@ -3589,7 +3591,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
         style = enc_text;
       else if (target == xa[XA_COMPOUND_TEXT])
         style = enc_compound_text;
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
       else if (target == xa[XA_UTF8_STRING])
         style = enc_utf8;
 #endif
@@ -3610,7 +3612,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
           selectlen = 0;
         }
 
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
       // xlib is horribly broken with respect to UTF8_STRING, and nobody cares to fix it
       // so recode it manually
       if (style == enc_utf8)

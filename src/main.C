@@ -370,7 +370,7 @@ rxvt_emergency_cleanup ()
     (*t)->emergency_cleanup ();
 }
 
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
 static void
 print_x_error (Display *dpy, XErrorEvent *event)
 {
@@ -428,10 +428,10 @@ rxvt_xerror_handler (Display *display, XErrorEvent *event)
     {
       // GET_R is most likely not the terminal which caused the error,
       // so just output the error and continue
-#if ENABLE_FRILLS
-      print_x_error (display, event);
-#else
+#if ENABLE_MINIMAL
       old_xerror_handler (display, event);
+#else
+      print_x_error (display, event);
 #endif
     }
 

@@ -3093,7 +3093,7 @@ rxvt_term::process_escape_seq ()
       case '+':
         scr_charset_set (3, (unsigned int)cmd_getc ());
         break;
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
       case '6':
         scr_backindex ();
         break;
@@ -3104,7 +3104,7 @@ rxvt_term::process_escape_seq ()
       case '8':
         scr_cursor (RESTORE);
         break;
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
       case '9':
         scr_forwardindex ();
         break;
@@ -3507,7 +3507,7 @@ rxvt_term::process_csi_seq ()
         scr_cursor (RESTORE);
         break;
 
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
       case CSI_74:
         process_window_ops (arg, nargs);
         break;
@@ -3524,7 +3524,7 @@ rxvt_term::process_csi_seq ()
 }
 /*}}} */
 
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
 /* ARGSUSED */
 void
 rxvt_term::process_window_ops (const int *args, unsigned int nargs)
@@ -3946,7 +3946,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
                      resp);
         break;
 
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
       case URxvt_locale:
         if (query)
           tt_printf ("\33]%d;%-.250s%c", op, OPTION (Opt_insecure) ? locale : "", resp);
@@ -4320,7 +4320,7 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
 
           //case 50: // not variable spacing
 
-#if ENABLE_FRILLS
+#if !ENABLE_MINIMAL
           case 90:
           case 91:		/* set bright fg color */
           case 92:
