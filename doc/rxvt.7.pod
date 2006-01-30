@@ -66,6 +66,63 @@ other combination either by setting the B<searchable-scrollback> resource:
 
    URxvt.searchable-scrollback: CM-s
 
+=item Why doesn't rxvt-unicode read my resources?
+
+Well, why, indeed? It does, in a way very similar to other X
+applications. Most importantly, this means that if you or your OS loads
+resources into the X display (the right way to do it), rxvt-unicode will
+ignore any resource files in your home directory. It will only read
+F<$HOME/.Xdefaults> when no resources are attached to the display.
+
+If you have or use an F<$HOME/.Xresources> file, chances are that
+resources are loaded into your X-server. In this case, you have to
+re-login after every change (or run F<xrdb -merge $HOME/.Xresources>).
+
+Also consider the form resources have to use:
+
+  URxvt.resource: value
+
+If you want to use another form (there are lots of different ways of
+specifying resources), make sure you understand wether and why it
+works. If unsure, use the form above.
+
+=item I can't get transparency working, what am I doing wrong?
+
+First of all, transparency isn't officially supported in rxvt-unicode, so
+you are mostly on your own. Do not bug the author about it (but you may
+bug everybody else). Also, if you can't get it working consider it a rite
+of passage, and you failed.
+
+Here are three ways to get transparency. B<Do> read the manpage and option
+descriptions for the programs mentioned and rxvt-unicode. Really, do it!
+
+1. Use inheritPixmap:
+
+   Esetroot wallpaper.jpg
+   @@RXVT_NAME@@ -ip -tint red -sh 40
+
+That works. If you think it doesn't, you lack transparency and tinting
+support, or you are unable to read.
+
+2. Use a simple pixmap and emulate pseudo-transparency. This enables you
+to use effects other than tinting and shading: Just shade/tint/whatever
+your picture with gimp:
+
+   convert wallpaper.jpg -blur 20x20 -modulate 30 background.xpm
+   @@RXVT_NAME@@ -pixmap background.xpm -pe automove-background
+
+That works. If you think it doesn't, you lack XPM and Perl support, or you
+are unable to read.
+
+3. Use an ARGB visual:
+
+   @@RXVT_NAME@@ -depth 432 -fg grey90 -bg rgba:0000/0000/0000/c000
+
+This requires XFT support, and support form your X-server. If that doesn't
+work for you, blame Xorg and Keith Packard. ARGB visuals aren't there yet,
+no matter what they claim. Rxvt-Unicode contains the neccessary bugfixes
+and workarounds for Xft and Xlib to make it work.
+
 =item Isn't rxvt supposed to be small? Don't all those features bloat?
 
 I often get asked about this, and I think, no, they didn't cause extra

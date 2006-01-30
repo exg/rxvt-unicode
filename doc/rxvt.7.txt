@@ -60,6 +60,64 @@ FREQUENTLY ASKED QUESTIONS
 
            URxvt.searchable-scrollback: CM-s
 
+    Why doesn't rxvt-unicode read my resources?
+        Well, why, indeed? It does, in a way very similar to other X
+        applications. Most importantly, this means that if you or your OS
+        loads resources into the X display (the right way to do it),
+        rxvt-unicode will ignore any resource files in your home directory.
+        It will only read $HOME/.Xdefaults when no resources are attached to
+        the display.
+
+        If you have or use an $HOME/.Xresources file, chances are that
+        resources are loaded into your X-server. In this case, you have to
+        re-login after every change (or run xrdb -merge $HOME/.Xresources).
+
+        Also consider the form resources have to use:
+
+          URxvt.resource: value
+
+        If you want to use another form (there are lots of different ways of
+        specifying resources), make sure you understand wether and why it
+        works. If unsure, use the form above.
+
+    I can't get transparency working, what am I doing wrong?
+        First of all, transparency isn't officially supported in
+        rxvt-unicode, so you are mostly on your own. Do not bug the author
+        about it (but you may bug everybody else). Also, if you can't get it
+        working consider it a rite of passage, and you failed.
+
+        Here are three ways to get transparency. Do read the manpage and
+        option descriptions for the programs mentioned and rxvt-unicode.
+        Really, do it!
+
+        1. Use inheritPixmap:
+
+           Esetroot wallpaper.jpg
+           rxvt -ip -tint red -sh 40
+
+        That works. If you think it doesn't, you lack transparency and
+        tinting support, or you are unable to read.
+
+        2. Use a simple pixmap and emulate pseudo-transparency. This enables
+        you to use effects other than tinting and shading: Just
+        shade/tint/whatever your picture with gimp:
+
+           convert wallpaper.jpg -blur 20x20 -modulate 30 background.xpm
+           rxvt -pixmap background.xpm -pe automove-background
+
+        That works. If you think it doesn't, you lack XPM and Perl support,
+        or you are unable to read.
+
+        3. Use an ARGB visual:
+
+           rxvt -depth 432 -fg grey90 -bg rgba:0000/0000/0000/c000
+
+        This requires XFT support, and support form your X-server. If that
+        doesn't work for you, blame Xorg and Keith Packard. ARGB visuals
+        aren't there yet, no matter what they claim. Rxvt-Unicode contains
+        the neccessary bugfixes and workarounds for Xft and Xlib to make it
+        work.
+
     Isn't rxvt supposed to be small? Don't all those features bloat?
         I often get asked about this, and I think, no, they didn't cause
         extra bloat. If you compare a minimal rxvt and a minimal urxvt, you
@@ -1686,11 +1744,9 @@ CONFIGURE OPTIONS
           EWMH-hints (pid, utf8 names) and protocols (ping)
           seperate underline colour (-underlineColor)
           settable border widths and borderless switch (-w, -b, -bl)
-          visual selection (-depth)
+          visual depth selection (-depth)
           settable extra linespacing /-lsp)
           iso-14755-2 and -3, and visual feedback
-          backindex and forwardindex escape sequence
-          window op and some xterm/OSC escape sequences
           tripleclickwords (-tcw)
           settable insecure mode (-insecure)
           keysym remapping support
@@ -1699,7 +1755,21 @@ CONFIGURE OPTIONS
           user-pty (-pty-fd)
           hold on exit (-hold)
           skip builtin block graphics (-sbg)
+
+        It also enabled some non-essential features otherwise disabled, such
+        as:
+
+          some round-trip time optimisations
+          nearest color allocation on pseudocolor screens
+          UTF8_STRING supporr for selection
           sgr modes 90..97 and 100..107
+          backindex and forwardindex escape sequences
+          view change/zero scorllback esacpe sequences
+          locale switching escape sequence
+          window op and some xterm/OSC escape sequences
+          rectangular selections
+          trailing space removal for selections
+          verbose X error handling
 
     --enable-iso14755 (default: on)
         Enable extended ISO 14755 support (see rxvt(1), or doc/rxvt.1.txt).

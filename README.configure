@@ -166,11 +166,9 @@ CONFIGURE OPTIONS
           EWMH-hints (pid, utf8 names) and protocols (ping)
           seperate underline colour (-underlineColor)
           settable border widths and borderless switch (-w, -b, -bl)
-          visual selection (-depth)
+          visual depth selection (-depth)
           settable extra linespacing /-lsp)
           iso-14755-2 and -3, and visual feedback
-          backindex and forwardindex escape sequence
-          window op and some xterm/OSC escape sequences
           tripleclickwords (-tcw)
           settable insecure mode (-insecure)
           keysym remapping support
@@ -179,7 +177,21 @@ CONFIGURE OPTIONS
           user-pty (-pty-fd)
           hold on exit (-hold)
           skip builtin block graphics (-sbg)
+
+        It also enabled some non-essential features otherwise disabled, such
+        as:
+
+          some round-trip time optimisations
+          nearest color allocation on pseudocolor screens
+          UTF8_STRING supporr for selection
           sgr modes 90..97 and 100..107
+          backindex and forwardindex escape sequences
+          view change/zero scorllback esacpe sequences
+          locale switching escape sequence
+          window op and some xterm/OSC escape sequences
+          rectangular selections
+          trailing space removal for selections
+          verbose X error handling
 
     --enable-iso14755 (default: on)
         Enable extended ISO 14755 support (see rxvt(1), or doc/rxvt.1.txt).

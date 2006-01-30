@@ -121,6 +121,85 @@ other combination either by setting the <strong>searchable-scrollback</strong> r
    URxvt.searchable-scrollback: CM-s</pre>
 </dd>
 <p></p>
+<dt><strong><a name="item_why_doesn_27t_rxvt_2dunicode_read_my_resources_3f">Why doesn't rxvt-unicode read my resources?</a></strong><br />
+</dt>
+<dd>
+Well, why, indeed? It does, in a way very similar to other X
+applications. Most importantly, this means that if you or your OS loads
+resources into the X display (the right way to do it), rxvt-unicode will
+ignore any resource files in your home directory. It will only read
+<em>$HOME/.Xdefaults</em> when no resources are attached to the display.
+</dd>
+<dd>
+<p>If you have or use an <em>$HOME/.Xresources</em> file, chances are that
+resources are loaded into your X-server. In this case, you have to
+re-login after every change (or run <em>xrdb -merge $HOME/.Xresources</em>).</p>
+</dd>
+<dd>
+<p>Also consider the form resources have to use:</p>
+</dd>
+<dd>
+<pre>
+  URxvt.resource: value</pre>
+</dd>
+<dd>
+<p>If you want to use another form (there are lots of different ways of
+specifying resources), make sure you understand wether and why it
+works. If unsure, use the form above.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_i_can_27t_get_transparency_working_2c_what_am_i_do">I can't get transparency working, what am I doing wrong?</a></strong><br />
+</dt>
+<dd>
+First of all, transparency isn't officially supported in rxvt-unicode, so
+you are mostly on your own. Do not bug the author about it (but you may
+bug everybody else). Also, if you can't get it working consider it a rite
+of passage, and you failed.
+</dd>
+<dd>
+<p>Here are three ways to get transparency. <strong>Do</strong> read the manpage and option
+descriptions for the programs mentioned and rxvt-unicode. Really, do it!</p>
+</dd>
+<dd>
+<p>1. Use inheritPixmap:</p>
+</dd>
+<dd>
+<pre>
+   Esetroot wallpaper.jpg
+   rxvt -ip -tint red -sh 40</pre>
+</dd>
+<dd>
+<p>That works. If you think it doesn't, you lack transparency and tinting
+support, or you are unable to read.</p>
+</dd>
+<dd>
+<p>2. Use a simple pixmap and emulate pseudo-transparency. This enables you
+to use effects other than tinting and shading: Just shade/tint/whatever
+your picture with gimp:</p>
+</dd>
+<dd>
+<pre>
+   convert wallpaper.jpg -blur 20x20 -modulate 30 background.xpm
+   rxvt -pixmap background.xpm -pe automove-background</pre>
+</dd>
+<dd>
+<p>That works. If you think it doesn't, you lack XPM and Perl support, or you
+are unable to read.</p>
+</dd>
+<dd>
+<p>3. Use an ARGB visual:</p>
+</dd>
+<dd>
+<pre>
+   rxvt -depth 432 -fg grey90 -bg rgba:0000/0000/0000/c000</pre>
+</dd>
+<dd>
+<p>This requires XFT support, and support form your X-server. If that doesn't
+work for you, blame Xorg and Keith Packard. ARGB visuals aren't there yet,
+no matter what they claim. Rxvt-Unicode contains the neccessary bugfixes
+and workarounds for Xft and Xlib to make it work.</p>
+</dd>
+<p></p>
 <dt><strong><a name="item_isn_27t_rxvt_supposed_to_be_small_3f_don_27t_all_t">Isn't rxvt supposed to be small? Don't all those features bloat?</a></strong><br />
 </dt>
 <dd>
@@ -2426,11 +2505,9 @@ in combination with other switches) is:</p>
   EWMH-hints (pid, utf8 names) and protocols (ping)
   seperate underline colour (-underlineColor)
   settable border widths and borderless switch (-w, -b, -bl)
-  visual selection (-depth)
+  visual depth selection (-depth)
   settable extra linespacing /-lsp)
   iso-14755-2 and -3, and visual feedback
-  backindex and forwardindex escape sequence
-  window op and some xterm/OSC escape sequences
   tripleclickwords (-tcw)
   settable insecure mode (-insecure)
   keysym remapping support
@@ -2438,8 +2515,24 @@ in combination with other switches) is:</p>
   XEmbed support (-embed)
   user-pty (-pty-fd)
   hold on exit (-hold)
-  skip builtin block graphics (-sbg)
-  sgr modes 90..97 and 100..107</pre>
+  skip builtin block graphics (-sbg)</pre>
+</dd>
+<dd>
+<p>It also enabled some non-essential features otherwise disabled, such as:</p>
+</dd>
+<dd>
+<pre>
+  some round-trip time optimisations
+  nearest color allocation on pseudocolor screens
+  UTF8_STRING supporr for selection
+  sgr modes 90..97 and 100..107
+  backindex and forwardindex escape sequences
+  view change/zero scorllback esacpe sequences
+  locale switching escape sequence
+  window op and some xterm/OSC escape sequences
+  rectangular selections
+  trailing space removal for selections
+  verbose X error handling</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_iso14755">--enable-iso14755 (default: on)</a></strong><br />
