@@ -605,7 +605,7 @@ rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
   // FUCKING Xft gets it wrong, of course, so work around it
   // transparency users should eat shit and die, and then
   // XRenderQueryPictIndexValues themselves plenty.
-  if (screen->visual->c_class == TrueColor
+  if ((screen->visual->c_class == TrueColor || screen->visual->c_class == DirectColor)
       && (format = XRenderFindVisualFormat (screen->xdisp, screen->visual)))
     {
       // the fun lies in doing everything manually...
@@ -635,14 +635,14 @@ rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
 
   return false;
 #else
-  if (screen->visual->c_class == TrueColor)
+  if (screen->visual->c_class == TrueColor || screen->visual->c_class == DirectColor)
     {
-      p = ((rgba.r * ((1 << screen->visual->bits_per_rgb) - 1)
-                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->red_mask  ))
-        | ((rgba.g * ((1 << screen->visual->bits_per_rgb) - 1)
-                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->green_mask))
-        | ((rgba.b * ((1 << screen->visual->bits_per_rgb) - 1)
-                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->blue_mask ));
+      p = (rgba.r * (screen->visual->red_mask   >> ctz (screen->visual->red_mask  ))
+                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->red_mask  )
+        | (rgba.g * (screen->visual->green_mask >> ctz (screen->visual->green_mask))
+                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->green_mask)
+        | (rgba.b * (screen->visual->blue_mask  >> ctz (screen->visual->blue_mask ))
+                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->blue_mask );
 
       return true;
     }
