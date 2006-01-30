@@ -64,6 +64,15 @@ enum {
   XA_XDCCC_LINEAR_RGB_MATRICES,
   XA_WM_COLORMAP_WINDOWS,
   XA_WM_STATE,
+  XA_cursor,
+# if USE_XIM
+  // various selection targets used by XIM
+  XA_TRANSPORT,
+  XA_LOCALES,
+  XA__XIM_PROTOCOL,
+  XA__XIM_XCONNECT,
+  XA__XIM_MOREDATA,
+# endif
 #endif
   NUM_XA
 };
@@ -242,6 +251,8 @@ struct rxvt_color {
 
   void get (rxvt_screen *screen, rxvt_rgba &rgba);
  
+  bool alloc (rxvt_screen *screen, rxvt_rgba rgba);
+
   bool set (rxvt_screen *screen, const char *name);
   bool set (rxvt_screen *screen, rxvt_rgba rgba);
 

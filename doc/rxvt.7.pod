@@ -2107,6 +2107,11 @@ in combination with other switches) is:
   skip builtin block graphics (-sbg)
   sgr modes 90..97 and 100..107
 
+It also enabled some non-essential features otherwise disabled, such as:
+
+  some round-trip time optimisations
+  nearest color allocation on pseudocolor screens
+
 =item --enable-iso14755 (default: on)
 
 Enable extended ISO 14755 support (see @@RXVT_NAME@@(1), or

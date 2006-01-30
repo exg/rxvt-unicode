@@ -914,7 +914,7 @@ rxvt_term::set_window_color (int idx, const char *color)
         }
     }
 
-  if (!rXParseAllocColor (&xcol, color))
+  if (!set_color (xcol, color))
     return;
 
   /* XStoreColor (xdisp, display->cmap, XColor*); */
@@ -1008,16 +1008,14 @@ rxvt_term::set_colorfgbg ()
 
 /*----------------------------------------------------------------------*/
 
-int
-rxvt_term::rXParseAllocColor (rxvt_color *screen_in_out, const char *colour)
+bool
+rxvt_term::set_color (rxvt_color &color, const char *name)
 {
-  if (!screen_in_out->set (this, colour))
-    {
-      rxvt_warn ("can't get colour '%s', continuing without.\n", colour);
-      return false;
-    }
+  if (color.set (this, name))
+    return true;
 
-  return true;
+  rxvt_warn ("can't get colour '%s', continuing without.\n", name);
+  return false;
 }
 
 /* -------------------------------------------------------------------- *

@@ -662,7 +662,7 @@ rxvt_term::Get_Colours ()
       if (!rs[Rs_color + i])
         continue;
 
-      if (!rXParseAllocColor (&xcol, rs[Rs_color + i]))
+      if (!set_color (xcol, rs[Rs_color + i]))
         {
 #ifndef XTERM_REVERSE_VIDEO
           if (i < 2 && OPTION (Opt_reverseVideo))
@@ -674,15 +674,14 @@ rxvt_term::Get_Colours ()
           if (!rs[Rs_color + i])
             continue;
 
-          if (!rXParseAllocColor (&xcol, rs[Rs_color + i]))
+          if (!set_color (xcol, rs[Rs_color + i]))
             {
               switch (i)
                 {
                   case Color_fg:
                   case Color_bg:
                     /* fatal: need bg/fg color */
-                    rxvt_fatal ("unable to get foreground/background colour, aborting.\n");
-                    /* NOTREACHED */
+                    rxvt_warn ("unable to get foreground/background colour, continuing.\n");
                     break;
 #ifndef NO_CURSORCOLOR
                   case Color_cursor2:

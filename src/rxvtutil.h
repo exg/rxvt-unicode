@@ -56,6 +56,8 @@ template<typename T, typename U, typename V> static inline void clamp_it (T &v, 
 
 template<typename T, typename U> static inline void swap (T& a, U& b) { T t=a; a=(T)b; b=(U)t; }
 
+template<typename T> static inline T squared_diff (T a, T b) { return (a-b)*(a-b); }
+
 // linear interpolation
 template<typename T, typename U, typename P>
 static inline

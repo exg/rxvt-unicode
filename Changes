@@ -39,6 +39,8 @@ DUMB: support tex fonts
           transparent. Long Live Xft!
         - do not include X11/Intrinsic.h anymore, directly use
           Xlib/Xutil/Xresource directly.
+        - try to find a nearest matching color when color allocation fails
+          on a pseudocolor screen.
 	- SYNCCVS: compared to rxvt-cvs 2006-01-28, no relevant changes.
         - fix version report (DA) (which was unfortunately broken).
         - changed version number report again, now to emulate xterm closer.

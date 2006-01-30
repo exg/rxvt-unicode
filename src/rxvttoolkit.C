@@ -83,6 +83,14 @@ const char *const xa_names[] =
   "XDCCC_LINEAR_RGB_MATRICES",
   "WM_COLORMAP_WINDOWS",
   "WM_STATE",
+  "cursor",
+# if USE_XIM
+  "TRANSPORT",
+  "LOCALES",
+  "_XIM_PROTOCOL",
+  "_XIM_XCONNECT",
+  "_XIM_MOREDATA",
+# endif
 #endif
 };
 
@@ -552,52 +560,9 @@ template class refcache<rxvt_display>;
 refcache<rxvt_display> displays;
 
 /////////////////////////////////////////////////////////////////////////////
-  
+ 
 bool
-rxvt_color::set (rxvt_screen *screen, const char *name)
-{
-#if XFT
-  int l = strlen (name);
-  rxvt_rgba r;
-  char eos;
-  int mult;
-
-  // shortcutting this saves countless server RTTs for the built-in colours
-  if (l == 3+3*3 && 3 == sscanf (name, "rgb:%hx/%hx/%hx/%hx%c", &r.r, &r.g, &r.b, &r.a, &eos))
-    {
-      r.a  = rxvt_rgba::MAX_CC;
-      mult = rxvt_rgba::MAX_CC / 0x00ff;
-    }
-
-  // parse a number of non-standard ARGB colour specifications
-  else if (     l == 1+4*1 && 4 == sscanf (name, "#%1hx%1hx%1hx%1hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
-    mult = rxvt_rgba::MAX_CC / 0x000f;
-  else if (l == 1+4*2 && 4 == sscanf (name, "#%2hx%2hx%2hx%2hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
-    mult = rxvt_rgba::MAX_CC / 0x00ff;
-  else if (l == 1+4*4 && 4 == sscanf (name, "#%4hx%4hx%4hx%4hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
-    mult = rxvt_rgba::MAX_CC / 0xffff;
-  else if (l == 4+5*4 && 4 == sscanf (name, "rgba:%hx/%hx/%hx/%hx%c", &r.r, &r.g, &r.b, &r.a, &eos))
-    mult = rxvt_rgba::MAX_CC / 0xffff;
-
-  // slow case: server round trip
-  else
-    return XftColorAllocName (screen->xdisp, screen->visual, screen->cmap, name, &c);
-
-  r.r *= mult; r.g *= mult; r.b *= mult; r.a *= mult;
-
-  return set (screen, r);
-#else
-  XColor xc;
-
-  if (XParseColor (screen->xdisp, screen->cmap, name, &xc))
-    return set (screen, rxvt_rgba (xc.red, xc.green, xc.blue));
-
-  return false;
-#endif
-}
-
-bool
-rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
+rxvt_color::alloc (rxvt_screen *screen, rxvt_rgba rgba)
 {
 #if XFT
   XRenderPictFormat *format;
@@ -632,8 +597,6 @@ rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
 
       return XftColorAllocValue (screen->xdisp, screen->visual, screen->cmap, &d, &c);
     }
-
-  return false;
 #else
   if (screen->visual->c_class == TrueColor || screen->visual->c_class == DirectColor)
     {
@@ -653,17 +616,106 @@ rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
       xc.red   = rgba.r;
       xc.green = rgba.g;
       xc.blue  = rgba.b;
-      xc.flags = DoRed | DoGreen | DoBlue;
 
       if (XAllocColor (screen->xdisp, screen->cmap, &xc))
 	{
 	  p = xc.pixel;
 	  return true;
 	}
+      else
+        p = (rgba.r + rgba.g + rgba.b) > 128*3
+            ? WhitePixelOfScreen (DefaultScreenOfDisplay (screen->xdisp))
+            : BlackPixelOfScreen (DefaultScreenOfDisplay (screen->xdisp));
     }
+#endif
 
   return false;
+}
+
+bool
+rxvt_color::set (rxvt_screen *screen, const char *name)
+{
+  int l = strlen (name);
+  rxvt_rgba r;
+  char eos;
+  int mult;
+  XColor xc, xc_exact;
+
+  // parse a number of non-standard ARGB colour specifications
+  if (     l == 1+4*1 && 4 == sscanf (name, "#%1hx%1hx%1hx%1hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
+    mult = rxvt_rgba::MAX_CC / 0x0010;
+  else if (l == 1+4*2 && 4 == sscanf (name, "#%2hx%2hx%2hx%2hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
+    mult = rxvt_rgba::MAX_CC / 0x0100;
+  else if (l == 1+4*4 && 4 == sscanf (name, "#%4hx%4hx%4hx%4hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
+    mult = rxvt_rgba::MAX_CC / 0x0100;
+  else if (l == 4+5*4 && 4 == sscanf (name, "rgba:%hx/%hx/%hx/%hx%c", &r.r, &r.g, &r.b, &r.a, &eos))
+    mult = rxvt_rgba::MAX_CC / 0xffff;
+  else if (XParseColor (screen->xdisp, screen->cmap, name, &xc))
+    {
+      r.r = xc.red;
+      r.g = xc.green;
+      r.b = xc.blue;
+      mult = rxvt_rgba::MAX_CC / 0xffff;
+    }
+  else
+    {
+      rxvt_warn ("failed to allocate color '%s', using pink instead.\n", name);
+      r.r = 255;
+      r.g = 105;
+      r.b = 180;
+      mult = rxvt_rgba::MAX_CC / 0x00ff;
+    }
+
+  r.r *= mult; r.g *= mult; r.b *= mult; r.a *= mult;
+
+  return set (screen, r);
+}
+
+bool
+rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
+{
+  bool got = alloc (screen, rgba);
+
+#if !ENABLE_MINIMAL
+  int cmap_size = screen->visual->map_entries;
+
+  if (!got
+      && screen->visual->c_class == PseudoColor
+      && cmap_size < 4096)
+    {
+      XColor *colors = new XColor [screen->visual->map_entries];
+
+      for (int i = 0; i < cmap_size; i++)
+        colors [i].pixel = i;
+ 
+      XQueryColors (screen->xdisp, screen->cmap, colors, cmap_size);
+
+      int diff = 0x7fffffffUL;
+      XColor *best = colors;
+
+      for (int i = 0; i < cmap_size; i++)
+        {
+          int d = (squared_diff<int> (rgba.r >> 2, colors [i].red   >> 2))
+                + (squared_diff<int> (rgba.g >> 2, colors [i].green >> 2))
+                + (squared_diff<int> (rgba.b >> 2, colors [i].blue  >> 2));
+
+          if (d < diff)
+            {
+              diff = d;
+              best = colors + i;
+            }
+        }
+
+      //rxvt_warn ("could not allocate %04x %04x %04x, getting %04x %04x %04x instead (%d)\n",
+      //    rgba.r, rgba.g, rgba.b, best->red, best->green, best->blue, diff);
+          
+      got = alloc (screen, rxvt_rgba (best->red, best->green, best->blue));
+
+      delete colors;
+    }
 #endif
+
+  return got;
 }
 
 void 
