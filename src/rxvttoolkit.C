@@ -635,17 +635,31 @@ rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
 
   return false;
 #else
-  XColor xc;
-
-  xc.red   = rgba.r;
-  xc.green = rgba.g;
-  xc.blue  = rgba.b;
-  xc.flags = DoRed | DoGreen | DoBlue;
-
-  if (XAllocColor (screen->xdisp, screen->cmap, &xc))
+  if (screen->visual->c_class == TrueColor)
     {
-      p = xc.pixel;
+      p = (rgba.r * (screen->visual->red_mask   >> ctz (screen->visual->red_mask  ))
+                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->red_mask  )
+        | (rgba.g * (screen->visual->green_mask >> ctz (screen->visual->green_mask))
+                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->green_mask)
+        | (rgba.b * (screen->visual->blue_mask  >> ctz (screen->visual->blue_mask ))
+                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->blue_mask );
+
       return true;
+    }
+  else
+    {
+      XColor xc;
+
+      xc.red   = rgba.r;
+      xc.green = rgba.g;
+      xc.blue  = rgba.b;
+      xc.flags = DoRed | DoGreen | DoBlue;
+
+      if (XAllocColor (screen->xdisp, screen->cmap, &xc))
+	{
+	  p = xc.pixel;
+	  return true;
+	}
     }
 
   return false;

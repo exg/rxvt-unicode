@@ -24,7 +24,7 @@ byteorder::byteorder ()
 }
 
 #if !HAVE_GCC_BUILTINS
-int ctz (unsigned int x)
+int ctz (unsigned int x) CONST
 {
   int r = 0;
 
@@ -39,7 +39,7 @@ int ctz (unsigned int x)
   return r;
 }
 
-int popcount (unsigned int x)
+int popcount (unsigned int x) CONST
 {
   x -=  (x >> 1) & 0x55555555;
   x  = ((x >> 2) & 0x33333333) + (x & 0x33333333);

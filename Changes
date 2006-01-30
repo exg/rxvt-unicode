@@ -7,6 +7,7 @@ TODO: split perl documentation and urxvt.pm into separate files
 TODO: harmonize --disable-options into position-dependent options.
 TODO: "slow" rendering mode for bidi and scripts
 TODO: read property sequence is broken with respect to utf-8 etc.
+WISH: look into XAddConnectionWatch, does anybody need that?
 WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
@@ -28,7 +29,9 @@ DUMB: support tex fonts
         - removed gnu unifont fallback, all combining characters are broken.
         - replace named colours by xorg's rgb.txt equivalents, to
           reduce round trip time on startup, and short-cut allocation
-          of rgb:rr/gg/bb.
+          of rgb:rr/gg/bb for xft.
+        - short-cut allocation of known rgb values in the xlib case
+          (patch by Paco-Paco).
         - overhauled color management: smaller codesize, alpha support.
         - support rgba:rrrr/gggg/bbbb/aaaa, #argb, #aarrggbb and
           #aaaarrrrggggbbbb (yes, it did hurt) colour "names".

@@ -34,6 +34,7 @@
 #endif
 
 #include "encoding.h"
+#include "rxvtutil.h"
 #include "rxvtfont.h"
 #include "rxvttoolkit.h"
 #include "iom.h"
@@ -99,27 +100,6 @@ typedef struct {
 #endif
 
 /****************************************************************************/
-
-#ifndef __attribute__
-# if __GNUC__
-#  if (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || (__GNUC__ < 2)
-#   define __attribute__(x)
-#  endif
-# endif
-# define __attribute__(x)
-#endif
-
-#define NORETURN __attribute__ ((noreturn))
-#define UNUSED   __attribute__ ((unused))
-
-// increases code size unless -fno-enforce-eh-specs
-#if __GNUC__
-# define NOTHROW
-# define THROW(x)
-#else
-# define NOTHROW  throw()
-# define THROW(x) throw x
-#endif
 
 // exception thrown on fatal (per-instance) errors
 class rxvt_failure_exception { };

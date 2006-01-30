@@ -12,6 +12,28 @@
 // actually, some gcc-3.x versions work, too
 #define HAVE_GCC_BUILTINS (__GNUC__ >= 4)
 
+#ifndef __attribute__
+# if __GNUC__
+#  if (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || (__GNUC__ < 2)
+#   define __attribute__(x)
+#  endif
+# endif
+# define __attribute__(x)
+#endif
+
+#define NORETURN __attribute__ ((noreturn))
+#define UNUSED   __attribute__ ((unused))
+#define CONST    __attribute__ ((const))
+
+// increases code size unless -fno-enforce-eh-specs
+#if __GNUC__
+# define NOTHROW
+# define THROW(x)
+#else
+# define NOTHROW  throw()
+# define THROW(x) throw x
+#endif
+
 extern class byteorder {
   static unsigned int e; // at least 32 bits
 public:
@@ -44,12 +66,12 @@ T lerp (T a, U b, P p)
 
 // some bit functions, xft fuck me plenty
 #if HAVE_GCC_BUILTINS
-static inline int ctz      (unsigned int x) { return __builtin_ctz      (x); }
-static inline int popcount (unsigned int x) { return __builtin_popcount (x); }
+static inline int ctz      (unsigned int x) CONST { return __builtin_ctz      (x); }
+static inline int popcount (unsigned int x) CONST { return __builtin_popcount (x); }
 #else
 // count trailing zero bits and count # of one bits
-int ctz      (unsigned int x);
-int popcount (unsigned int x);
+int ctz      (unsigned int x) CONST;
+int popcount (unsigned int x) CONST;
 #endif
 
 // in range including end
@@ -423,7 +445,7 @@ struct stringvec : simplevec<char *>
 void *rxvt_temp_buf (int len);
 
 template<typename T>
-inline T *
+static inline T *
 rxvt_temp_buf (int len)
 {
   return (T *)rxvt_temp_buf (len * sizeof (T));
