@@ -39,40 +39,52 @@
 #endif
 
 const char *const xa_names[] =
-  {
-    "TEXT",
-    "COMPOUND_TEXT",
-    "UTF8_STRING",
-    "MULTIPLE",
-    "TARGETS",
-    "TIMESTAMP",
-    "VT_SELECTION",
-    "INCR",
-    "WM_PROTOCOLS",
-    "WM_DELETE_WINDOW",
-    "CLIPBOARD",
+{
+  "TEXT",
+  "COMPOUND_TEXT",
+  "UTF8_STRING",
+  "MULTIPLE",
+  "TARGETS",
+  "TIMESTAMP",
+  "VT_SELECTION",
+  "INCR",
+  "WM_PROTOCOLS",
+  "WM_DELETE_WINDOW",
+  "CLIPBOARD",
+  "AVERAGE_WIDTH",
+  "WEIGHT_NAME",
+  "SLANT",
+  "CHARSET_REGISTRY",
+  "CHARSET_ENCODING",
 #if ENABLE_FRILLS
-    "_MOTIF_WM_HINTS",
+  "_MOTIF_WM_HINTS",
 #endif
 #if ENABLE_EWMH
-    "_NET_WM_PID",
-    "_NET_WM_NAME",
-    "_NET_WM_ICON_NAME",
-    "_NET_WM_PING",
+  "_NET_WM_PID",
+  "_NET_WM_NAME",
+  "_NET_WM_ICON_NAME",
+  "_NET_WM_PING",
 #endif
 #if USE_XIM
-    "WM_LOCALE_NAME",
-    "XIM_SERVERS",
+  "WM_LOCALE_NAME",
+  "XIM_SERVERS",
 #endif
 #ifdef TRANSPARENT
-    "_XROOTPMAP_ID",
-    "ESETROOT_PMAP_ID",
+  "_XROOTPMAP_ID",
+  "ESETROOT_PMAP_ID",
 #endif
 #if ENABLE_XEMBED
-    "_XEMBED",
-    "_XEMBED_INFO",
+  "_XEMBED",
+  "_XEMBED_INFO",
 #endif
-  };
+#if !ENABLE_MINIMAL
+  "SCREEN_RESOURCES",
+  "XDCCC_LINEAR_RGB_CORRECTION",
+  "XDCCC_LINEAR_RGB_MATRICES",
+  "WM_COLORMAP_WINDOWS",
+  "WM_STATE",
+#endif
+};
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -550,7 +562,15 @@ rxvt_color::set (rxvt_screen *screen, const char *name)
   char eos;
   int mult;
 
-  if (     l == 1+4*1 && 4 == sscanf (name, "#%1hx%1hx%1hx%1hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
+  // shortcutting this saves countless server RTTs for the built-in colours
+  if (l == 3+3*3 && 3 == sscanf (name, "rgb:%hx/%hx/%hx/%hx%c", &r.r, &r.g, &r.b, &r.a, &eos))
+    {
+      r.a  = rxvt_rgba::MAX_CC;
+      mult = rxvt_rgba::MAX_CC / 0x00ff;
+    }
+
+  // parse a number of non-standard ARGB colour specifications
+  else if (     l == 1+4*1 && 4 == sscanf (name, "#%1hx%1hx%1hx%1hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
     mult = rxvt_rgba::MAX_CC / 0x000f;
   else if (l == 1+4*2 && 4 == sscanf (name, "#%2hx%2hx%2hx%2hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
     mult = rxvt_rgba::MAX_CC / 0x00ff;
@@ -558,10 +578,13 @@ rxvt_color::set (rxvt_screen *screen, const char *name)
     mult = rxvt_rgba::MAX_CC / 0xffff;
   else if (l == 4+5*4 && 4 == sscanf (name, "rgba:%hx/%hx/%hx/%hx%c", &r.r, &r.g, &r.b, &r.a, &eos))
     mult = rxvt_rgba::MAX_CC / 0xffff;
+
+  // slow case: server round trip
   else
     return XftColorAllocName (screen->xdisp, screen->visual, screen->cmap, name, &c);
 
   r.r *= mult; r.g *= mult; r.b *= mult; r.a *= mult;
+
   return set (screen, r);
 #else
   XColor xc;

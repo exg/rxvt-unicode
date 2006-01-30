@@ -30,6 +30,11 @@ enum {
   XA_WM_PROTOCOLS,
   XA_WM_DELETE_WINDOW,
   XA_CLIPBOARD,
+  XA_AVERAGE_WIDTH,
+  XA_WEIGHT_NAME,
+  XA_SLANT,
+  XA_CHARSET_REGISTRY,
+  XA_CHARSET_ENCODING,
 #if ENABLE_FRILLS
   XA_MOTIF_WM_HINTS,
 #endif
@@ -50,6 +55,15 @@ enum {
 #if ENABLE_XEMBED
   XA_XEMBED,
   XA_XEMBED_INFO,
+#endif
+#if !ENABLE_MINIMAL
+  // these are usually allocated by other subsystens, but we do it
+  // here to avoid a server roundtrip.
+  XA_SCREEN_RESOURCES,
+  XA_XDCCC_LINEAR_RGB_CORRECTION,
+  XA_XDCCC_LINEAR_RGB_MATRICES,
+  XA_WM_COLORMAP_WINDOWS,
+  XA_WM_STATE,
 #endif
   NUM_XA
 };

@@ -45,31 +45,31 @@ const char *const def_colorName[] =
     COLOR_FOREGROUND,
     COLOR_BACKGROUND,
     /* low-intensity colors */
-    "Black",                    /* 0: black             (#000000) */
-    "Red3",                     /* 1: red               (#CD0000) */
-    "Green3",                   /* 2: green             (#00CD00) */
-    "Yellow3",                  /* 3: yellow            (#CDCD00) */
-    "Blue3",                    /* 4: blue              (#0000CD) */
-    "Magenta3",                 /* 5: magenta           (#CD00CD) */
-    "Cyan3",                    /* 6: cyan              (#00CDCD) */
-# ifdef XTERM_COLORS
-    "Grey90",                   /* 7: white             (#E5E5E5) */
-# else
-    "AntiqueWhite",             /* 7: white             (#FAEBD7) */
+    "rgb:00/00/00",             // 0: black             (Black)
+    "rgb:cd/00/00",             // 1: red               (Red3)
+    "rgb:00/cd/00",             // 2: green             (Green3)
+    "rgb:cd/cd/00",             // 3: ywlloe            (Yellow3)
+    "rgb:00/00/cd",             // 4: blue              (Blue3)
+    "rgb:cd/00/cd",             // 5: magenta           (Magenta3)
+    "rgb:00/cd/cd",             // 6: cyan              (Cyan3)
+# ifdef XTERM_COLORS                                    
+    "rgb:e5/e5/e5",             // 7: white             (Grey90)
+# else                                                  
+    "rgb:fa/eb/d7",             // 7: white             (AntiqueWhite)
 # endif
     /* high-intensity colors */
 # ifdef XTERM_COLORS
-    "Grey30",                   /* 8: bright black      (#4D4D4D) */
+    "rgb:4d/4d/4d",             // 8: bright black      (Grey30)
 # else
-    "Grey25",                   /* 8: bright black      (#404040) */
+    "rgb:40/40/40",             // 8: bright black      (Grey25)
 # endif
-    "Red",                      /* 1/9: bright red      (#FF0000) */
-    "Green",                    /* 2/10: bright green   (#00FF00) */
-    "Yellow",                   /* 3/11: bright yellow  (#FFFF00) */
-    "Blue",                     /* 4/12: bright blue    (#0000FF) */
-    "Magenta",                  /* 5/13: bright magenta (#FF00FF) */
-    "Cyan",                     /* 6/14: bright cyan    (#00FFFF) */
-    "White",                    /* 7/15: bright white   (#FFFFFF) */
+    "rgb:ff/00/00",             // 1/9: bright red      (Reed)
+    "rgb:00/ff/00",             // 2/10: bright green   (Green)
+    "rgb:ff/ff/00",             // 3/11: bright yellow  (Yellow)
+    "rgb:00/00/ff",             // 4/12: bright blue    (Blue)
+    "rgb:ff/00/ff",             // 5/13: bright magenta (Magenta)
+    "rgb:00/ff/ff",             // 6/14: bright cyan    (Cyan)
+    "rgb:ff/ff/ff",             // 7/15: bright white   (White)
 
     // 88 xterm colours
     "rgb:00/00/00",
@@ -172,7 +172,7 @@ const char *const def_colorName[] =
     NULL,
 #endif
 #if OFF_FOCUS_FADING
-    "black",
+    "rgb:00/00/00",
 #endif
   };
 

@@ -495,18 +495,18 @@ struct rxvt_font_x11 : rxvt_font {
   codeset cs;
   bool enc2b, encm;
 
-  char *get_property (XFontStruct *f, const char *property, const char *repl) const;
+  char *get_property (XFontStruct *f, Atom property, const char *repl) const;
   bool set_properties (rxvt_fontprop &p, int height, const char *weight, const char *slant, int avgwidth);
   bool set_properties (rxvt_fontprop &p, XFontStruct *f);
   bool set_properties (rxvt_fontprop &p, const char *name);
 };
 
 char *
-rxvt_font_x11::get_property (XFontStruct *f, const char *property, const char *repl) const
+rxvt_font_x11::get_property (XFontStruct *f, Atom property, const char *repl) const
 {
   unsigned long value;
 
-  if (XGetFontProperty (f, XInternAtom (term->xdisp, property, 0), &value))
+  if (XGetFontProperty (f, property, &value))
     return XGetAtomName (term->xdisp, value);
   else
     return rxvt_strdup (repl);
@@ -545,11 +545,11 @@ rxvt_font_x11::set_properties (rxvt_fontprop &p, XFontStruct *f)
 #endif
 
   unsigned long avgwidth;
-  if (!XGetFontProperty (f, XInternAtom (term->xdisp, "AVERAGE_WIDTH", 0), &avgwidth))
+  if (!XGetFontProperty (f, term->xa [XA_AVERAGE_WIDTH], &avgwidth))
     avgwidth = 0;
 
-  char *weight = get_property (f, "WEIGHT_NAME", "medium");
-  char *slant  = get_property (f, "SLANT", "r");
+  char *weight = get_property (f, term->xa [XA_WEIGHT_NAME], "medium");
+  char *slant  = get_property (f, term->xa [XA_SLANT], "r");
 
   set_properties (p, height, weight, slant, avgwidth);
 
@@ -657,7 +657,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
           if (!f)
             return false;
 
-          char *new_name = get_property (f, "FONT", name);
+          char *new_name = get_property (f, XA_FONT, name);
 
           if (new_name)
             set_name (new_name);
@@ -776,8 +776,8 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
   if (!f)
     return false;
 
-  char *registry = get_property (f, "CHARSET_REGISTRY", 0);
-  char *encoding = get_property (f, "CHARSET_ENCODING", 0);
+  char *registry = get_property (f, term->xa [XA_CHARSET_REGISTRY], 0);
+  char *encoding = get_property (f, term->xa [XA_CHARSET_ENCODING], 0);
 
   if (registry && encoding)
     {
@@ -788,7 +788,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
     }
   else
     {
-      const char *charset = get_property (f, "FONT", 0);
+      const char *charset = get_property (f, XA_FONT, 0);
 
       if (!charset)
         charset = name;

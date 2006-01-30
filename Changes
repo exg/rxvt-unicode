@@ -23,6 +23,10 @@ DUMB: support tex fonts
           transparent. Long Live Xft!
         - do not include X11/Intrinsic.h anymore, directly use
           Xlib/Xutil/Xresource directly.
+        - replace named colours by xorg's rgb.txt equivalents, to
+          reduce round trip time on startup, and short-cut allocation
+          of rgb:rr/gg/bb.
+        - further RTT optimisations.
 
 7.4  Sat Jan 28 15:26:27 CET 2006
 	- screen background wasn't always erased properly when scrolling,

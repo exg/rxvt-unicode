@@ -99,15 +99,16 @@
 /*
  * Define default colours for certain items.  If you have a low colour
  * display, then consider using colours which are already pre-allocated:
+ *
  *   Black		(#000000)
- *   Red3		(#CD0000)	+ these
- *   Green3		(#00CD00)	+ colours
- *   Yellow3		(#CDCD00)	+ are
- *   Blue3		(#0000CD)	+ not
- *   Magenta3		(#CD00CD)	+ pre-allocated
- *   Cyan3		(#00CDCD)	+ if
- *   AntiqueWhite	(#FAEBD7)	+ NO_BRIGHTCOLOR
- *   Grey25		(#404040)	+ defined
+ *   Red3		(#CD0000)
+ *   Green3		(#00CD00)
+ *   Yellow3		(#CDCD00)
+ *   Blue3		(#0000CD)
+ *   Magenta3		(#CD00CD)
+ *   Cyan3		(#00CDCD)
+ *   AntiqueWhite	(#FAEBD7)
+ *   Grey25		(#404040)
  *   Red		(#FF0000)
  *   Green		(#00FF00)
  *   Yellow		(#FFFF00)
@@ -117,10 +118,10 @@
  *   White		(#FFFFFF)
  */
 /* These colours MUST be defined */
-#define COLOR_FOREGROUND	"Black"
-#define COLOR_BACKGROUND	"White"
-#define COLOR_SCROLLBAR		"#B2B2B2"	/* scrollColor match Netscape */
-#define COLOR_SCROLLTROUGH	"#969696"
+#define COLOR_FOREGROUND	"rgb:00/00/00"
+#define COLOR_BACKGROUND	"rgb:ff/ff/ff"
+#define COLOR_SCROLLBAR		"rgb:b2/b2/b2"	/* scrollColor match Netscape */
+#define COLOR_SCROLLTROUGH	"rgb:96/96/96"
 
 /*
  * The cursor colours are special.  Be very careful about setting these:
