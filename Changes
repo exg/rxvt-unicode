@@ -11,19 +11,7 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
-	- SYNCCVS: compared to rxvt-cvs 2006-01-28, no relevant changes.
-        - fix version report (DA) (which was unfortunately broken).
-        - changed version number report again, now to emulate xterm closer.
-        - added the OSC sequence 702 to detect the urxvt version number.
-        - small configure updates.
-        - overhauled color management: smaller codesize, alpha support.
-        - support rgba:rrrr/gggg/bbbb/aaaa, #argb, #aarrggbb and
-          #aaaarrrrggggbbbb (yes, it did hurt) colour "names".
-        - try to work around Xft and Xrender forcing everything to be 100%
-          transparent. Long Live Xft!
-        - do not include X11/Intrinsic.h anymore, directly use
-          Xlib/Xutil/Xresource directly.
-        - further improve the careful mode detection, and font width
+        - further improvements to the careful mode detection, and font width
           detection: 
           - fully double-wide fonts will now be correctly treated,
           - overlap detection was improved.
@@ -35,9 +23,24 @@ DUMB: support tex fonts
           might get used for other encodings which really need it, later.
         - remove spacing=100 from all default fonts, as this creates totally
           weird spacing (5 times normal) with xft.
+        - removed iso10646 fallback, as xorgs iso10646 encoded fonts are mostly
+          broken.
+        - removed gnu unifont fallback, all combining characters are broken.
         - replace named colours by xorg's rgb.txt equivalents, to
           reduce round trip time on startup, and short-cut allocation
           of rgb:rr/gg/bb.
+        - overhauled color management: smaller codesize, alpha support.
+        - support rgba:rrrr/gggg/bbbb/aaaa, #argb, #aarrggbb and
+          #aaaarrrrggggbbbb (yes, it did hurt) colour "names".
+        - try to work around Xft and Xrender forcing everything to be 100%
+          transparent. Long Live Xft!
+        - do not include X11/Intrinsic.h anymore, directly use
+          Xlib/Xutil/Xresource directly.
+	- SYNCCVS: compared to rxvt-cvs 2006-01-28, no relevant changes.
+        - fix version report (DA) (which was unfortunately broken).
+        - changed version number report again, now to emulate xterm closer.
+        - added the OSC sequence 702 to detect the urxvt version number.
+        - small configure updates.
         - further RTT optimisations.
 
 7.4  Sat Jan 28 15:26:27 CET 2006

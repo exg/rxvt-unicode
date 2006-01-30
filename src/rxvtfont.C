@@ -131,21 +131,22 @@ const struct rxvt_fallback_font {
 # endif
 #endif
 
-  // generic font fallback
   { CS_UNICODE,      "-*-lucidatypewriter-*-*-*-*-*-*-*-*-m-*-iso10646-1" },
-  { CS_UNICODE,      "-*-unifont-*-*-*-*-*-*-*-*-c-*-iso10646-1"   },
-  { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-c-*-iso10646-1"         },
-  { CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1"         },
+  //{ CS_UNICODE,      "-*-unifont-*-*-*-*-*-*-*-*-c-*-iso10646-1"   }, // this gem of a font has actual dotted circles within the combining character glyphs.
 #if XFT
   { CS_UNICODE,      "xft:Bitstream Vera Sans Mono:antialias=false:autohint=true" },
   { CS_UNICODE,      "xft:Courier New:antialias=false:autohint=true"              },
   { CS_UNICODE,      "xft:Andale Mono:antialias=false:autohint=false"             },
   { CS_UNICODE,      "xft:Arial Unicode MS:antialias=false:autohint=false"        },
 
-  // FreeMono is usually uglier than x fonts, so try last only.
+  // FreeMono is usually uglier than x fonts, so try after the others
   { CS_UNICODE,      "xft:FreeMono:autohint=true"                  },
 #endif
 
+  // generic font fallback, put this last, as many iso10646 fonts have extents
+  // specified for all glyphs in the range they cover, but most are simply empty
+  //{ CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-c-*-iso10646-1"         },
+  //{ CS_UNICODE,      "-*-*-*-r-*-*-*-*-*-*-m-*-iso10646-1"         },
   { CS_UNKNOWN, 0 }
 };
 
@@ -863,7 +864,8 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
       int dir_ret, asc_ret, des_ret;
       XTextExtents16 (f, &ch, 1, &dir_ret, &asc_ret, &des_ret, &g);
 
-      int wcw = WCWIDTH (*t); if (wcw > 0) g.width = (g.width + wcw - 1) / wcw;
+      int wcw = WCWIDTH (*t);
+      if (wcw > 0) g.width = (g.width + wcw - 1) / wcw;
 
       if (width < g.width) width = g.width;
     }
@@ -947,7 +949,7 @@ rxvt_font_x11::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
 
   // check wether character overlaps previous/next character
   int w = xcs->rbearing - xcs->lbearing;
-  int wcw = WCWIDTH (unicode);
+  int wcw = max (WCWIDTH (unicode), 1);
 
   careful = xcs->lbearing < 0 || xcs->rbearing > prop->width * wcw;
 
@@ -1263,7 +1265,7 @@ rxvt_font_xft::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
   XftTextExtents32 (term->xdisp, f, &ch, 1, &g);
 
   int w = g.width - g.x;
-  int wcw = WCWIDTH (unicode);
+  int wcw = max (WCWIDTH (unicode), 1);
 
   careful = g.x > 0 || w > prop->width * wcw;
 
