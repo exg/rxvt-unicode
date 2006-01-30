@@ -637,12 +637,12 @@ rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
 #else
   if (screen->visual->c_class == TrueColor)
     {
-      p = (rgba.r * (screen->visual->red_mask   >> ctz (screen->visual->red_mask  ))
-                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->red_mask  )
-        | (rgba.g * (screen->visual->green_mask >> ctz (screen->visual->green_mask))
-                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->green_mask)
-        | (rgba.b * (screen->visual->blue_mask  >> ctz (screen->visual->blue_mask ))
-                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->blue_mask );
+      p = ((rgba.r * ((1 << screen->visual->bits_per_rgb) - 1)
+                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->red_mask  ))
+        | ((rgba.g * ((1 << screen->visual->bits_per_rgb) - 1)
+                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->green_mask))
+        | ((rgba.b * ((1 << screen->visual->bits_per_rgb) - 1)
+                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->blue_mask ));
 
       return true;
     }
