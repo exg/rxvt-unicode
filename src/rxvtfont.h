@@ -76,7 +76,7 @@ struct rxvt_font {
 
   void set_name (char *name);
 
-  rxvt_font () { name = 0; }
+  rxvt_font ();
   virtual ~rxvt_font () { free (name); };
 
   virtual void clear () { };

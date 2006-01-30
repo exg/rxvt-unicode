@@ -23,6 +23,18 @@ DUMB: support tex fonts
           transparent. Long Live Xft!
         - do not include X11/Intrinsic.h anymore, directly use
           Xlib/Xutil/Xresource directly.
+        - further improve the careful mode detection, and font width
+          detection: 
+          - fully double-wide fonts will now be correctly treated,
+          - overlap detection was improved.
+          - detect totally broken fonts (usually synthesized by xft).
+          - careful mode forced refresh sometimes clashed with blinking,
+            causing unnecessary screen redraws.
+        - better handling of XFT combining characters.
+        - enable antialiasing for some replacement fonts, as they
+          might get used for other encodings which really need it, later.
+        - remove spacing=100 from all default fonts, as this creates totally
+          weird spacing (5 times normal) with xft.
         - replace named colours by xorg's rgb.txt equivalents, to
           reduce round trip time on startup, and short-cut allocation
           of rgb:rr/gg/bb.

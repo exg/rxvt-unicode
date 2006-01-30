@@ -1756,10 +1756,9 @@ rxvt_term::scr_refresh_rend (rend_t mask, rend_t value) NOTHROW
 
   for (int i = 0; i < nrow; i++)
     {
-      int col = 0;
       rend_t *drp = drawn_buf[i].r;
 
-      for (; col < ncol; col++, drp++)
+      for (int col = 0; col < ncol; col++, drp++)
         if ((*drp & mask) == value)
           {
             found = true;
@@ -2260,11 +2259,11 @@ rxvt_term::scr_refresh () NOTHROW
 
               // force redraw after "careful" characters to avoid pixel droppings
               for (int i = 0; srp[col + i] & RS_Careful && col + i < ncol - 1; i++)
-                drp[col + i + 1] = ~srp[col + i + 1];
+                drp[col + i + 1] = srp[col + i + 1] ^ RS_redraw;
 
               // force redraw before "careful" characters to avoid pixel droppings
               for (int i = 0; srp[text - stp - i] & RS_Careful && text - i > stp; i++)
-                drp[text - stp - i - 1] = ~srp[text - stp - i - 1];
+                drp[text - stp - i - 1] = srp[text - stp - i - 1] ^ RS_redraw;
 #endif
 
               bool invert = rend & RS_RVid;

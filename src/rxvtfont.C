@@ -26,17 +26,17 @@
 #include "rxvtfont.h"
 
 #include <cstdlib>
-#include <wchar.h>
+
 #include <inttypes.h>
 
 #define MAX_OVERLAP_ROMAN  (8 + 2)	// max. character width in 8ths of the base width
 #define MAX_OVERLAP_ITALIC (8 + 3)	// max. overlap for italic fonts
 
-#define OVERLAP_OK(w,prop) (w) > (			\
-  prop->slant >= rxvt_fontprop::italic			\
-    ? (prop->width * MAX_OVERLAP_ITALIC + 7) >> 3	\
-    : (prop->width * MAX_OVERLAP_ROMAN  + 7) >> 3	\
-  )
+#define OVERLAP_OK(w,wcw,prop) ((w) <= (			\
+  (prop)->slant >= rxvt_fontprop::italic			\
+    ? ((prop)->width * (wcw) * MAX_OVERLAP_ITALIC + 7) >> 3	\
+    : ((prop)->width * (wcw) * MAX_OVERLAP_ROMAN  + 7) >> 3	\
+  ))
 
 const struct rxvt_fallback_font {
   codeset cs;
@@ -66,15 +66,15 @@ const struct rxvt_fallback_font {
   { CS_ISO8859_16,   "-*-*-*-r-*--*-*-*-*-c-*-iso8859-16"          },
 
 # if XFT
-  { CS_KOI8_U,       "xft::spacing=100:lang=ru:antialias=false"    },
-
-  { CS_ISO8859_5,    "xft::spacing=100:lang=ru:antialias=false"    },
-  { CS_ISO8859_6,    "xft::spacing=100:lang=ar:antialias=false"    },
-  { CS_ISO8859_7,    "xft::spacing=100:lang=el:antialias=false"    },
-  { CS_ISO8859_8,    "xft::spacing=100:lang=he:antialias=false"    },
-  { CS_ISO8859_9,    "xft::spacing=100:lang=tr:antialias=false"    },
-  { CS_ISO8859_10,   "xft::spacing=100:lang=se:antialias=false"    },
-  { CS_ISO8859_11,   "xft::spacing=100:lang=th:antialias=false"    },
+  { CS_KOI8_U,       "xft::lang=ru"                                },
+                                                                   
+  { CS_ISO8859_5,    "xft::lang=ru"                                },
+  { CS_ISO8859_6,    "xft::lang=ar"                                },
+  { CS_ISO8859_7,    "xft::lang=el"                                },
+  { CS_ISO8859_8,    "xft::lang=he"                                },
+  { CS_ISO8859_9,    "xft::lang=tr"                                },
+  { CS_ISO8859_10,   "xft::lang=se"                                },
+  { CS_ISO8859_11,   "xft::lang=th"                                },
 # endif
 #endif
 
@@ -85,7 +85,7 @@ const struct rxvt_fallback_font {
   { CS_JIS0208_1990_0, "xft:Kochi Gothic:antialias=false"          },
   { CS_JIS0208_1990_0, "xft:Sazanami Mincho:antialias=false"       },
   { CS_JIS0208_1990_0, "xft:Mincho:antialias=false"                },
-  { CS_JIS0208_1990_0, "xft::lang=ja:spacing=100:antialias=false"  },
+  { CS_JIS0208_1990_0, "xft::lang=ja:antialias=false"              },
 # endif
   { CS_JIS0201_1976_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0201*-0"  },
   { CS_JIS0208_1990_0, "-*-mincho-*-r-*--*-*-*-*-c-*-jisx0208*-0"  },
@@ -99,12 +99,12 @@ const struct rxvt_fallback_font {
 # if XFT
   { CS_GBK_0,          "xft:AR PL KaitiM GB"                       },
   { CS_GBK_0,          "xft:AR PL SungtiL GB"                      },
-  { CS_GBK_0,          "xft::spacing=100:lang=zh"                  },
+  { CS_GBK_0,          "xft::lang=zh"                              },
   { CS_BIG5_EXT,       "xft:AR PL Mingti2L Big5"                   },
   { CS_BIG5_EXT,       "xft:AR PL KaitiM Big5"                     },
   { CS_GB2312_1980_0,  "xft:AR PL KaitiM GB"                       },
   { CS_GB2312_1980_0,  "xft:AR PL SungtiL GB"                      },
-  { CS_GB2312_1980_0,  "xft::spacing=100:lang=zh"                  },
+  { CS_GB2312_1980_0,  "xft::lang=zh"                              },
 # endif
   { CS_GBK_0,           "-*-*-*-*-*-*-*-*-*-*-c-*-gbk*-0"          },
   { CS_BIG5,            "-*-*-*-*-*-*-*-*-*-*-c-*-big5-0"          },
@@ -127,7 +127,7 @@ const struct rxvt_fallback_font {
   { CS_KSC5601_1987_0,  "-*-*-*-*-*-*-*-*-*-*-c-*-ksc5601*"        },
 # if XFT
   { CS_KSC5601_1987_0,  "xft:Baekmuk Gulim:antialias=false"        },
-  { CS_KSC5601_1987_0,  "xft::spacing=100:lang=ko:antialias=false" },
+  { CS_KSC5601_1987_0,  "xft::lang=ko:antialias=false"             },
 # endif
 #endif
 
@@ -230,6 +230,11 @@ enc_xchar2b (const text_t *text, uint32_t len, codeset cs, bool &zero)
 
 /////////////////////////////////////////////////////////////////////////////
 
+rxvt_font::rxvt_font ()
+: name(0), width(rxvt_fontprop::unset), height(rxvt_fontprop::unset)
+{
+}
+
 void
 rxvt_font::set_name (char *name)
 {
@@ -258,6 +263,8 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color) 
 #endif
     }
 }
+
+/////////////////////////////////////////////////////////////////////////////
 
 #include "table/linedraw.h"
 
@@ -434,8 +441,9 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 #if ENABLE_COMBINING
       else if (IS_COMPOSE (t) && (cc = rxvt_composite[t]))
         {
+          min_it (width, 2); // we only support wcwidth up to 2
+
           text_t chrs[2];
-          width = min (2, width);
           chrs [1] = NOCHAR;
 
           *chrs = cc->c1;
@@ -523,7 +531,9 @@ rxvt_font_x11::properties ()
 bool
 rxvt_font_x11::set_properties (rxvt_fontprop &p, int height, const char *weight, const char *slant, int avgwidth)
 {
-  p.width  = avgwidth ? (avgwidth + 1) / 10 : (height + 1) / 2;
+  p.width  = width != rxvt_fontprop::unset ? width
+           : avgwidth                      ? (avgwidth + 1) / 10
+                                           : (height + 1) / 2;
   p.height = height;
   p.ascent = rxvt_fontprop::unset;
   p.weight = *weight == 'B' || *weight == 'b' ? rxvt_fontprop::bold : rxvt_fontprop::medium;
@@ -813,9 +823,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
   slow = false;
 
 #if 1 // only used for slow detection, TODO optimize
-  if (f->min_bounds.width == f->max_bounds.width)
-    width = f->min_bounds.width;
-  else if (f->per_char == NULL)
+  if (f->min_bounds.width == f->max_bounds.width || !f->per_char)
     width = f->max_bounds.width;
   else
     {
@@ -841,9 +849,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
 
   for (uint16_t *t = extent_test_chars + NUM_EXTENT_TEST_CHARS; t-- > extent_test_chars; )
     {
-      if (cs != CS_UNICODE
-          && *t > 0x100
-          && FROM_UNICODE (cs, *t) == NOCHAR)
+      if (FROM_UNICODE (cs, *t) == NOCHAR)
         continue;
 
       // ignore characters we wouldn't use anyways
@@ -859,7 +865,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
 
       int wcw = WCWIDTH (*t); if (wcw > 0) g.width = (g.width + wcw - 1) / wcw;
 
-      if (width  < g.width)  width  = g.width;
+      if (width < g.width) width = g.width;
     }
 
   if (cs == CS_UNKNOWN)
@@ -939,13 +945,13 @@ rxvt_font_x11::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
   if (!prop || prop->width == rxvt_fontprop::unset)
     return true;
 
-  // check character against base font bounding box
+  // check wether character overlaps previous/next character
   int w = xcs->rbearing - xcs->lbearing;
   int wcw = WCWIDTH (unicode);
-  if (wcw > 0) w = (w + wcw - 1) / wcw;
 
-  careful = w > prop->width;
-  if (careful && OVERLAP_OK (w, prop))
+  careful = xcs->lbearing < 0 || xcs->rbearing > prop->width * wcw;
+
+  if (careful && !OVERLAP_OK (w, wcw, prop))
     return false;
 
   return true;
@@ -1258,10 +1264,14 @@ rxvt_font_xft::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
 
   int w = g.width - g.x;
   int wcw = WCWIDTH (unicode);
-  if (wcw > 0) w = (w + wcw - 1) / wcw;
 
-  careful = w > prop->width;
-  if (careful && OVERLAP_OK (w, prop))
+  careful = g.x > 0 || w > prop->width * wcw;
+
+  if (careful && !OVERLAP_OK (w, wcw, prop))
+    return false;
+
+  // this weeds out _totally_ broken fonts, or glyphs
+  if (!OVERLAP_OK (g.xOff, wcw, prop))
     return false;
 
   return true;
@@ -1298,9 +1308,14 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
           FT_UInt glyph = XftCharIndex (disp, f, fc);
           XftGlyphExtents (disp, f, &glyph, 1, &extents);
 
+
           ep->glyph = glyph;
           ep->x = x + (cwidth - extents.xOff >> 1);
           ep->y = y + ascent;
+
+          if (extents.xOff == 0)
+            ep->x = x + cwidth;
+
           ep++;
         }
 

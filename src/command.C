@@ -229,9 +229,16 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
         ch = 0xfffd;
 # endif
       scr_overlay_set (11, y, ch, r);
-      scr_overlay_set (12, y, NOCHAR, r);
+
+      if (WCWIDTH (ch) >= 2)
+        scr_overlay_set (12, y, NOCHAR, r);
     }
 
+//  {
+//    char buf[4+4+3+1];
+//    snprintf (buf, sizeof (buf), "(%.4d|%.4d)", x, y);
+//    scr_overlay_set (0, 0, buf);
+//  }
   scr_overlay_set (0, len    , attr);
   scr_overlay_set (0, len + 1, fname);
 
