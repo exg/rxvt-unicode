@@ -51,11 +51,6 @@
 #include "version.h"
 #include "command.h"
 
-#if HAVE_SCHED_YIELD
-#undef HAVE_SCHED_YIELD // disabled for the time being
-//# include <sched.h>
-#endif
-
 #ifdef KEYSYM_RESOURCE
 # include "keyboard.h"
 #endif
@@ -1095,24 +1090,6 @@ rxvt_term::slip_wheel_cb (time_watcher &w)
       w.start (w.at + SCROLLBAR_CONTINUOUS_DELAY);
     }
 }
-#endif
-
-#if HAVE_SCHED_YIELD
-static struct event_handler
-{
-  check_watcher cw_yield;
-  
-  void yield (check_watcher &w)
-  {
-    sched_yield ();
-    w.stop ();
-  }
-
-  event_handler ()
-  : cw_yield (this, &event_handler::yield)
-  {
-  }
-} event_handler;
 #endif
 
 bool
