@@ -63,7 +63,7 @@ rxvt_term::scrollbar_show_plain (int update, int last_top, int last_bot, int scr
 
   /* scrollbar slider */
   XFillRectangle (xdisp, scrollBar.win, pscrollbarGC,
-                  xsb + 1, scrollBar.top, sbwidth, scrollbar_len);
+                  1 - xsb, scrollBar.top, sbwidth, scrollbar_len);
 
   return 1;
 }

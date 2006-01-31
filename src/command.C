@@ -3574,7 +3574,6 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
                            (unsigned int) (args[1] * fheight));
         break;
 
-
       /*
        * reports - some output format copied from XTerm
        */

@@ -693,6 +693,7 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
     {
       sb_w = scrollbar_TotalWidth ();
       szHint.base_width += sb_w;
+
       if (!OPTION (Opt_scrollBar_right))
         window_vt_x += sb_w;
     }

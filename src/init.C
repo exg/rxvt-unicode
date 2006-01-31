@@ -423,6 +423,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     {
       if (!rs[Rs_color + Color_fg])
         rs[Rs_color + Color_fg] = def_colorName[Color_bg];
+
       if (!rs[Rs_color + Color_bg])
         rs[Rs_color + Color_bg] = def_colorName[Color_fg];
     }
