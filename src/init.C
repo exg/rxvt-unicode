@@ -311,11 +311,11 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
   extract_resources ();
 
+  free (r_argv);
+
   for (int i = NUM_RESOURCES; i--; )
     if (rs [i] == resval_undef)
       rs [i] = 0;
-
-  free (r_argv);
 
 #if ENABLE_PERL
   if (!rs[Rs_perl_ext_1])

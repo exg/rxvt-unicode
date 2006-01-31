@@ -545,8 +545,6 @@ rxvt_term::get_options (int argc, const char *const *argv)
               if (optList[entry].doff != -1)
                 rs[optList[entry].doff] = flag == resval_on && argv[i+1]
                                           ? argv[++i] : resval_undef;
-
-              if (optList[entry].doff == Rs_color + Color_tint) printf ("doff %d is %s\n",optList[entry].doff,rs[optList[entry].doff]);//D
             }
           else
             {		/* boolean value */
