@@ -705,7 +705,11 @@ rxvt_term::Get_Colours ()
 #ifdef OFF_FOCUS_FADING
   if (rs[Rs_fade])
     for (i = 0; i < (depth <= 2 ? 2 : NRS_COLORS); i++)
-      pix_colors_unfocused[i] = pix_colors_focused[i].fade (this, atoi (rs[Rs_fade]), pix_colors[Color_fade]);
+      {
+        rxvt_rgba c;
+        pix_colors[Color_fade].get (this, c);
+        pix_colors_unfocused[i] = pix_colors_focused[i].fade (this, atoi (rs[Rs_fade]), c);
+      }
 #endif
 
   if (depth <= 2)

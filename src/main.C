@@ -944,7 +944,11 @@ done:
 
 #if OFF_FOCUS_FADING
   if (rs[Rs_fade])
-    pix_colors_unfocused[idx] = pix_colors_focused[idx].fade (this, atoi (rs[Rs_fade]), pix_colors[Color_fade]);
+    {
+      rxvt_rgba c;
+      pix_colors [Color_fade].get (this, c);
+      pix_colors_unfocused [idx] = pix_colors_focused [idx].fade (this, atoi (rs[Rs_fade]), c);
+    }
 #endif
 
   /*TODO: handle Color_BD, scrollbar background, etc. */

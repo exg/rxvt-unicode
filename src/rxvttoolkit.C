@@ -562,7 +562,7 @@ refcache<rxvt_display> displays;
 /////////////////////////////////////////////////////////////////////////////
  
 bool
-rxvt_color::alloc (rxvt_screen *screen, rxvt_rgba rgba)
+rxvt_color::alloc (rxvt_screen *screen, const rxvt_rgba &color)
 {
 #if XFT
   XRenderPictFormat *format;
@@ -574,15 +574,15 @@ rxvt_color::alloc (rxvt_screen *screen, rxvt_rgba rgba)
       && (format = XRenderFindVisualFormat (screen->xdisp, screen->visual)))
     {
       // the fun lies in doing everything manually...
-      c.color.red   = rgba.r;
-      c.color.green = rgba.g;
-      c.color.blue  = rgba.b;
-      c.color.alpha = rgba.a;
+      c.color.red   = color.r;
+      c.color.green = color.g;
+      c.color.blue  = color.b;
+      c.color.alpha = color.a;
 
-      c.pixel = ((rgba.r * format->direct.redMask   / rxvt_rgba::MAX_CC) << format->direct.red  )
-              | ((rgba.g * format->direct.greenMask / rxvt_rgba::MAX_CC) << format->direct.green)
-              | ((rgba.b * format->direct.blueMask  / rxvt_rgba::MAX_CC) << format->direct.blue )
-              | ((rgba.a * format->direct.alphaMask / rxvt_rgba::MAX_CC) << format->direct.alpha);
+      c.pixel = ((color.r * format->direct.redMask   / rxvt_rgba::MAX_CC) << format->direct.red  )
+              | ((color.g * format->direct.greenMask / rxvt_rgba::MAX_CC) << format->direct.green)
+              | ((color.b * format->direct.blueMask  / rxvt_rgba::MAX_CC) << format->direct.blue )
+              | ((color.a * format->direct.alphaMask / rxvt_rgba::MAX_CC) << format->direct.alpha);
 
       return true;
     }
@@ -590,22 +590,22 @@ rxvt_color::alloc (rxvt_screen *screen, rxvt_rgba rgba)
     {
       XRenderColor d;
 
-      d.red   = rgba.r;
-      d.green = rgba.g;
-      d.blue  = rgba.b;
-      d.alpha = rgba.a;
+      d.red   = color.r;
+      d.green = color.g;
+      d.blue  = color.b;
+      d.alpha = color.a;
 
       return XftColorAllocValue (screen->xdisp, screen->visual, screen->cmap, &d, &c);
     }
 #else
   if (screen->visual->c_class == TrueColor || screen->visual->c_class == DirectColor)
     {
-      p = (rgba.r * (screen->visual->red_mask   >> ctz (screen->visual->red_mask  ))
-                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->red_mask  )
-        | (rgba.g * (screen->visual->green_mask >> ctz (screen->visual->green_mask))
-                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->green_mask)
-        | (rgba.b * (screen->visual->blue_mask  >> ctz (screen->visual->blue_mask ))
-                  / rxvt_rgba::MAX_CC) << ctz (screen->visual->blue_mask );
+      p = (color.r * (screen->visual->red_mask   >> ctz (screen->visual->red_mask  ))
+                   / rxvt_rgba::MAX_CC) << ctz (screen->visual->red_mask  )
+        | (color.g * (screen->visual->green_mask >> ctz (screen->visual->green_mask))
+                   / rxvt_rgba::MAX_CC) << ctz (screen->visual->green_mask)
+        | (color.b * (screen->visual->blue_mask  >> ctz (screen->visual->blue_mask ))
+                   / rxvt_rgba::MAX_CC) << ctz (screen->visual->blue_mask );
 
       return true;
     }
@@ -613,9 +613,9 @@ rxvt_color::alloc (rxvt_screen *screen, rxvt_rgba rgba)
     {
       XColor xc;
 
-      xc.red   = rgba.r;
-      xc.green = rgba.g;
-      xc.blue  = rgba.b;
+      xc.red   = color.r;
+      xc.green = color.g;
+      xc.blue  = color.b;
 
       if (XAllocColor (screen->xdisp, screen->cmap, &xc))
 	{
@@ -623,7 +623,7 @@ rxvt_color::alloc (rxvt_screen *screen, rxvt_rgba rgba)
 	  return true;
 	}
       else
-        p = (rgba.r + rgba.g + rgba.b) > 128*3
+        p = (color.r + color.g + color.b) > 128*3
             ? WhitePixelOfScreen (DefaultScreenOfDisplay (screen->xdisp))
             : BlackPixelOfScreen (DefaultScreenOfDisplay (screen->xdisp));
     }
@@ -679,9 +679,9 @@ rxvt_color::set (rxvt_screen *screen, const char *name)
 }
 
 bool
-rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
+rxvt_color::set (rxvt_screen *screen, const rxvt_rgba &color)
 {
-  bool got = alloc (screen, rgba);
+  bool got = alloc (screen, color);
 
 #if !ENABLE_MINIMAL
   int cmap_size = screen->visual->map_entries;
@@ -702,9 +702,9 @@ rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
 
       for (int i = 0; i < cmap_size; i++)
         {
-          int d = (squared_diff<int> (rgba.r >> 2, colors [i].red   >> 2))
-                + (squared_diff<int> (rgba.g >> 2, colors [i].green >> 2))
-                + (squared_diff<int> (rgba.b >> 2, colors [i].blue  >> 2));
+          int d = (squared_diff<int> (color.r >> 2, colors [i].red   >> 2))
+                + (squared_diff<int> (color.g >> 2, colors [i].green >> 2))
+                + (squared_diff<int> (color.b >> 2, colors [i].blue  >> 2));
 
           if (d < diff)
             {
@@ -714,7 +714,7 @@ rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
         }
 
       //rxvt_warn ("could not allocate %04x %04x %04x, getting %04x %04x %04x instead (%d)\n",
-      //    rgba.r, rgba.g, rgba.b, best->red, best->green, best->blue, diff);
+      //    color.r, color.g, color.b, best->red, best->green, best->blue, diff);
           
       got = alloc (screen, rxvt_rgba (best->red, best->green, best->blue));
 
@@ -726,23 +726,23 @@ rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
 }
 
 void
-rxvt_color::get (rxvt_screen *screen, rxvt_rgba &rgba)
+rxvt_color::get (rxvt_screen *screen, rxvt_rgba &color)
 {
 #if XFT
-  rgba.r = c.color.red;
-  rgba.g = c.color.green;
-  rgba.b = c.color.blue;
-  rgba.a = c.color.alpha;
+  color.r = c.color.red;
+  color.g = c.color.green;
+  color.b = c.color.blue;
+  color.a = c.color.alpha;
 #else
   XColor c;
 
   c.pixel = p;
   XQueryColor (screen->xdisp, screen->cmap, &c);
 
-  rgba.r = c.red;
-  rgba.g = c.green;
-  rgba.b = c.blue;
-  rgba.a = rxvt_rgba::MAX_CC;
+  color.r = c.red;
+  color.g = c.green;
+  color.b = c.blue;
+  color.a = rxvt_rgba::MAX_CC;
 #endif
 }
 
@@ -757,38 +757,19 @@ rxvt_color::free (rxvt_screen *screen)
 }
 
 rxvt_color
-rxvt_color::fade (rxvt_screen *screen, int percent)
+rxvt_color::fade (rxvt_screen *screen, int percent, const rxvt_rgba &to)
 {
-  rxvt_color faded;
-
   rxvt_rgba c;
   get (screen, c);
 
-  c.r = lerp (0, c.r, percent);
-  c.g = lerp (0, c.g, percent);
-  c.b = lerp (0, c.b, percent);
-
-  faded.set (screen, c);
-
-  return faded;
-}
-
-rxvt_color
-rxvt_color::fade (rxvt_screen *screen, int percent, rxvt_color &fadeto)
-{
-  rxvt_rgba c, fc;
   rxvt_color faded;
-  
-  get (screen, c);
-  fadeto.get (screen, fc);
-
   faded.set (
     screen,
     rxvt_rgba (
-      lerp (fc.r, c.r, percent),
-      lerp (fc.g, c.g, percent),
-      lerp (fc.b, c.b, percent),
-      lerp (fc.a, c.a, percent)
+      lerp (to.r, c.r, percent),
+      lerp (to.g, c.g, percent),
+      lerp (to.b, c.b, percent),
+      lerp (to.a, c.a, percent)
     )
   );
 
