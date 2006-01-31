@@ -890,11 +890,17 @@ extern class rxvt_composite_vec rxvt_composite;
 /****************************************************************************/
 
 #ifdef KEYSYM_RESOURCE
-  class keyboard_manager;
+class keyboard_manager;
 #endif
 
 struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
-  log_callback   *log_hook;               // log error messages through this hook, if != 0
+
+  // special markers with magic addresses
+  static const char resval_undef [];    // options specifically unset
+  static const char resval_on [];       // boolean options switched on
+  static const char resval_off [];      // or off
+  
+  log_callback   *log_hook;             // log error messages through this hook, if != 0
   getfd_callback *getfd_hook;           // convert remote to local fd, if != 0
 #if ENABLE_PERL
   rxvt_perl_term  perl;

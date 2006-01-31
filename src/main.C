@@ -934,7 +934,7 @@ done:
   if (rs[Rs_fade])
     {
       rgba c;
-      pix_colors [Color_fade].get (this, c);
+      pix_colors [Color_fade].get (c);
       pix_colors_focused [idx].fade (this, atoi (rs[Rs_fade]), pix_colors_unfocused [idx], c);
     }
 #endif

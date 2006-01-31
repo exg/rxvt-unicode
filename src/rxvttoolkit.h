@@ -252,7 +252,7 @@ struct rxvt_color {
   bool alloc (rxvt_screen *screen, const rgba &color);
   void free (rxvt_screen *screen);
 
-  void get (rxvt_screen *screen, rgba &color);
+  void get (rgba &color);
  
   bool set (rxvt_screen *screen, const char *name);
   bool set (rxvt_screen *screen, const rgba &color);

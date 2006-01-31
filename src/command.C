@@ -2543,7 +2543,7 @@ rxvt_term::check_our_parents ()
               int shade = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100;
 
               rgba c;
-              pix_colors_focused [Color_tint].get (this, c);
+              pix_colors_focused [Color_tint].get (c);
 
               ShadeXImage (this, image, shade, c.r, c.g, c.b);
             }
@@ -3721,7 +3721,7 @@ rxvt_term::process_color_seq (int report, int color, const char *str, char resp)
   if (str[0] == '?' && !str[1])
     {
       rgba c;
-      pix_colors_focused[color].get (this, c);
+      pix_colors_focused[color].get (c);
 
 #if XFT
       if (c.a != rgba::MAX_CC)

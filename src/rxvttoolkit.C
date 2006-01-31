@@ -721,7 +721,7 @@ rxvt_color::set (rxvt_screen *screen, const rgba &color)
 }
 
 void
-rxvt_color::get (rxvt_screen *screen, rgba &color)
+rxvt_color::get (rgba &color)
 {
 #if XFT
   color.r = c.color.red;
@@ -750,7 +750,7 @@ void
 rxvt_color::fade (rxvt_screen *screen, int percent, rxvt_color &result, const rgba &to)
 {
   rgba c;
-  get (screen, c);
+  get (c);
 
   result.set (
     screen,

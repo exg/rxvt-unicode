@@ -299,6 +299,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   if (!(display = displays.get (rs[Rs_display_name])))
     rxvt_fatal ("can't open display %s, aborting.\n", rs[Rs_display_name]);
 
+  // using a local pointer decreases code size a lot
   xa = display->xa;
 
 #if XFT
@@ -309,6 +310,10 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     set (display);
 
   extract_resources ();
+
+  for (int i = NUM_RESOURCES; i--; )
+    if (rs [i] == resval_undef)
+      rs [i] = 0;
 
   free (r_argv);
 
@@ -710,7 +715,7 @@ rxvt_term::Get_Colours ()
     for (i = 0; i < (depth <= 2 ? 2 : NRS_COLORS); i++)
       {
         rgba c;
-        pix_colors[Color_fade].get (this, c);
+        pix_colors[Color_fade].get (c);
         pix_colors_focused[i].fade (this, atoi (rs[Rs_fade]), pix_colors_unfocused[i],c);
       }
 #endif
@@ -749,8 +754,8 @@ rxvt_term::Get_Colours ()
 
       rgba c0, c1;
 
-      xcol[0].get (this, c0);
-      xcol[1].get (this, c1);
+      xcol[0].get (c0);
+      xcol[1].get (c1);
 
       xcol[1].fade (this, 50, pix_colors[Color_bottomShadow]);
 

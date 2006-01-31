@@ -23,8 +23,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *----------------------------------------------------------------------*/
 
-#include "../config.h"		/* NECESSARY */
-#include "rxvt.h"		/* NECESSARY */
+#include "../config.h"
+#include "rxvt.h"
 #include "version.h"
 
 #ifdef KEYSYM_RESOURCE
@@ -388,6 +388,10 @@ static const char optionsstring[] = "options: "
 
 #define INDENT 18
 
+const char rxvt_term::resval_undef [] = "<undef>";
+const char rxvt_term::resval_on []    = "on";
+const char rxvt_term::resval_off []   = "off";
+
 /*{{{ usage: */
 /*----------------------------------------------------------------------*/
 static void
@@ -483,7 +487,6 @@ void
 rxvt_term::get_options (int argc, const char *const *argv)
 {
   int             i, bad_option = 0;
-  static const char On[3] = "ON", Off[4] = "OFF";
 
   for (i = 1; i < argc; i++)
     {
@@ -494,13 +497,15 @@ rxvt_term::get_options (int argc, const char *const *argv)
 
       if (*opt == '-')
         {
-          flag = On;
+          flag = resval_on;
+
           if (*++opt == '-')
             longopt = *opt++;	/* long option */
         }
       else if (*opt == '+')
         {
-          flag = Off;
+          flag = resval_off;
+
           if (*++opt == '+')
             longopt = *opt++;	/* long option */
         }
@@ -513,6 +518,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
 
       if (!strcmp (opt, "help"))
         rxvt_usage (longopt ? 2 : 1);
+
       if (!strcmp (opt, "h"))
         rxvt_usage (0);
 
@@ -526,7 +532,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
       if (entry < optList_size)
         {
           if (optList_isReverse (entry))
-            flag = flag == On ? Off : On;
+            flag = flag == resval_on ? resval_off : resval_on;
 
           if (optList_strlen (entry))
             {
@@ -537,12 +543,14 @@ rxvt_term::get_options (int argc, const char *const *argv)
                */
 
               if (optList[entry].doff != -1)
-                rs[optList[entry].doff] = flag == On && argv[i+1]
-                                          ? argv[++i] : 0;
+                rs[optList[entry].doff] = flag == resval_on && argv[i+1]
+                                          ? argv[++i] : resval_undef;
+
+              if (optList[entry].doff == Rs_color + Color_tint) printf ("doff %d is %s\n",optList[entry].doff,rs[optList[entry].doff]);//D
             }
           else
             {		/* boolean value */
-              set_option (optList[entry].flag & Optflag_mask, flag == On);
+              set_option (optList[entry].flag & Optflag_mask, flag == resval_on);
 
               if (optList[entry].doff != -1)
                 rs[optList[entry].doff] = flag;
