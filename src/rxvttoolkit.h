@@ -224,15 +224,15 @@ extern refcache<rxvt_display> displays;
 
 typedef unsigned long Pixel;
 
-struct rxvt_rgba {
+struct rgba {
   unsigned short r, g, b, a;
 
   enum { MIN_CC = 0x0000, MAX_CC  = 0xffff };
 
-  rxvt_rgba ()
+  rgba ()
   { }
 
-  rxvt_rgba (unsigned short r, unsigned short g, unsigned short b, unsigned short a = MAX_CC)
+  rgba (unsigned short r, unsigned short g, unsigned short b, unsigned short a = MAX_CC)
   : r(r), g(g), b(b), a(a)
   { }
 };
@@ -240,24 +240,24 @@ struct rxvt_rgba {
 struct rxvt_color {
 #if XFT
   XftColor c;
-  operator Pixel () const { return c.pixel; }
 #else
-  Pixel p;
-  operator Pixel () const { return p; }
+  XColor c;
 #endif
+
+  operator Pixel () const { return c.pixel; }
 
   bool operator == (const rxvt_color &b) const { return Pixel (*this) == Pixel (b); }
   bool operator != (const rxvt_color &b) const { return Pixel (*this) != Pixel (b); }
 
-  bool alloc (rxvt_screen *screen, const rxvt_rgba &color);
+  bool alloc (rxvt_screen *screen, const rgba &color);
   void free (rxvt_screen *screen);
 
-  void get (rxvt_screen *screen, rxvt_rgba &color);
+  void get (rxvt_screen *screen, rgba &color);
  
   bool set (rxvt_screen *screen, const char *name);
-  bool set (rxvt_screen *screen, const rxvt_rgba &color);
+  bool set (rxvt_screen *screen, const rgba &color);
 
-  void fade (rxvt_screen *screen, int percent, rxvt_color &result, const rxvt_rgba &to = rxvt_rgba (0, 0, 0));
+  void fade (rxvt_screen *screen, int percent, rxvt_color &result, const rgba &to = rgba (0, 0, 0));
 };
 
 #endif

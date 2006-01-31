@@ -657,56 +657,58 @@ rxvt_term::Get_Colours ()
   
   for (i = 0; i < (depth <= 2 ? 2 : NRS_COLORS); i++)
     {
-      rxvt_color xcol;
+      const char *name = rs[Rs_color + i];
 
-      if (!rs[Rs_color + i])
+      if (!name)
         continue;
 
-      if (!set_color (xcol, rs[Rs_color + i]))
+      rxvt_color xcol;
+
+      if (!set_color (xcol, name))
         {
 #ifndef XTERM_REVERSE_VIDEO
           if (i < 2 && OPTION (Opt_reverseVideo))
-            rs[Rs_color + i] = def_colorName[!i];
+            name = def_colorName [1 - i];
           else
 #endif
-            rs[Rs_color + i] = def_colorName[i];
+            name = def_colorName [i];
 
-          if (!rs[Rs_color + i])
+          if (!name)
             continue;
 
-          if (!set_color (xcol, rs[Rs_color + i]))
+          if (!set_color (xcol, name))
             {
               switch (i)
                 {
                   case Color_fg:
                   case Color_bg:
-                    /* fatal: need bg/fg color */
                     rxvt_warn ("unable to get foreground/background colour, continuing.\n");
+                    name = "";
                     break;
 #ifndef NO_CURSORCOLOR
                   case Color_cursor2:
-                    xcol = pix_colors[Color_fg];
-                    break;
-#endif                          /* ! NO_CURSORCOLOR */
+#endif
                   case Color_pointer_fg:
+                    name = rs[Rs_color + Color_fg];
                     xcol = pix_colors[Color_fg];
                     break;
                   default:
-                    xcol = pix_colors[Color_bg];      /* None */
+                    name = rs[Rs_color + Color_bg];
+                    xcol = pix_colors[Color_bg];
                     break;
                 }
             }
         }
 
       pix_colors[i] = xcol;
-      SET_PIXCOLOR (i);
+      rs[Rs_color + i] = name;
     }
 
 #ifdef OFF_FOCUS_FADING
   if (rs[Rs_fade])
     for (i = 0; i < (depth <= 2 ? 2 : NRS_COLORS); i++)
       {
-        rxvt_rgba c;
+        rgba c;
         pix_colors[Color_fade].get (this, c);
         pix_colors_focused[i].fade (this, atoi (rs[Rs_fade]), pix_colors_unfocused[i],c);
       }
@@ -742,9 +744,9 @@ rxvt_term::Get_Colours ()
        * xcol[2] == bot shadow */
 
       xcol[1] = pix_colors[Color_scroll];
-      xcol[0].set (this, rxvt_rgba (rxvt_rgba::MAX_CC, rxvt_rgba::MAX_CC, rxvt_rgba::MAX_CC));
+      xcol[0].set (this, rgba (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC));
 
-      rxvt_rgba c0, c1;
+      rgba c0, c1;
 
       xcol[0].get (this, c0);
       xcol[1].get (this, c1);
@@ -753,7 +755,7 @@ rxvt_term::Get_Colours ()
 
       /* topShadowColor */
       if (!xcol[1].set (this,
-                        rxvt_rgba (
+                        rgba (
                           min (c0.r, max (c1.r / 5, c1.r) * 7 / 5),
                           min (c0.g, max (c1.g / 5, c1.g) * 7 / 5),
                           min (c0.b, max (c1.b / 5, c1.b) * 7 / 5),

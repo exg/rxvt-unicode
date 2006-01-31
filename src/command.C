@@ -2542,7 +2542,7 @@ rxvt_term::check_our_parents ()
             {
               int shade = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100;
 
-              rxvt_rgba c;
+              rgba c;
               pix_colors_focused [Color_tint].get (this, c);
 
               ShadeXImage (this, image, shade, c.r, c.g, c.b);
@@ -2576,8 +2576,7 @@ rxvt_term::check_our_parents ()
       for (i = 1; i < (int) (sizeof (parent) / sizeof (Window)); i++)
         {
           oldp = parent[i];
-          XQueryTree (xdisp, parent[i - 1], &root,
-                      &parent[i], &list, &n);
+          XQueryTree (xdisp, parent[i - 1], &root, &parent[i], &list, &n);
           XFree (list);
 
           if (parent[i] == display->root)
@@ -2595,19 +2594,18 @@ rxvt_term::check_our_parents ()
       n = 0;
 
       if (pchanged)
-        {
-          for (; n < (unsigned int)i; n++)
-            {
-              XGetWindowAttributes (xdisp, parent[n], &wattr);
-              if (wattr.depth != rootdepth || wattr.c_class == InputOnly)
-                {
-                  n = (int) (sizeof (parent) / sizeof (Window)) + 1;
-                  break;
-                }
-            }
-        }
+        for (; n < (unsigned int)i; n++)
+          {
+            XGetWindowAttributes (xdisp, parent[n], &wattr);
 
-      if (n > (int) (sizeof (parent) / sizeof (parent[0])))
+            if (wattr.depth != rootdepth || wattr.c_class == InputOnly)
+              {
+                n = (int) (sizeof (parent) / sizeof (Window)) + 1;
+                break;
+              }
+          }
+
+      if (n > (sizeof (parent) / sizeof (parent[0])))
         {
           XSetWindowBackground (xdisp, parent[0], pix_colors_focused[Color_border]);
           XSetWindowBackground (xdisp, vt, pix_colors_focused[Color_bg]);
@@ -3723,11 +3721,11 @@ rxvt_term::process_color_seq (int report, int color, const char *str, char resp)
 {
   if (str[0] == '?' && !str[1])
     {
-      rxvt_rgba c;
+      rgba c;
       pix_colors_focused[color].get (this, c);
 
 #if XFT
-      if (c.a != rxvt_rgba::MAX_CC)
+      if (c.a != rgba::MAX_CC)
         tt_printf ("\033]%d;rgba:%04x/%04x/%04x/%04x%c", report, c.a, c.r, c.g, c.b, resp);
       else
 #endif

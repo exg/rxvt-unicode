@@ -590,9 +590,6 @@ enum colour_list {
 
 #define Color_Bits      7 // 0 .. maxTermCOLOR
 
-#define NPIXCLR_SETS    ((TOTAL_COLORS + 31) / 32)
-#define NPIXCLR_BITS    32
-
 /*
  * Resource list
  */
@@ -733,8 +730,8 @@ enum {
 
 #define RS_SAME(a,b)		(!(((a) ^ (b)) & ~RS_Careful))
 
-#define SET_PIXCOLOR(x)         (pixcolor_set[(x) / NPIXCLR_BITS] |= (1 << ((x) % NPIXCLR_BITS)))
-#define ISSET_PIXCOLOR(x)       (pixcolor_set[(x) / NPIXCLR_BITS] &  (1 << ((x) % NPIXCLR_BITS)))
+#define PIXCOLOR_NAME(idx)      rs[Rs_color + (idx)]
+#define ISSET_PIXCOLOR(idx)     (!!rs[Rs_color + (idx)])
 
 #if ENABLE_STYLES
 # define FONTSET(style) fontset[GET_STYLE (style)]
@@ -946,8 +943,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
                   prev_nrow;            /* screen: previous number of rows */
 /* ---------- */
   rend_t          rstyle;
-/* ---------- */
-  uint32_t        pixcolor_set[NPIXCLR_SETS];
 /* ---------- */
 #ifdef SELECTION_SCROLLING
   int             scroll_selection_lines;

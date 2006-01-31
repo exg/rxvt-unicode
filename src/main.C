@@ -889,9 +889,13 @@ rxvt_term::set_window_color (int idx, const char *color)
 {
   rxvt_color xcol;
   int i;
-
+  
   if (color == NULL || *color == '\0')
     return;
+
+  color = strdup (color);
+  allocated.push_back ((void *)color);
+  rs[Rs_color + idx] = color;
 
   /* handle color aliases */
   if (isdigit (*color))
@@ -902,41 +906,24 @@ rxvt_term::set_window_color (int idx, const char *color)
         {        /* bright colors */
           i -= 8;
           pix_colors_focused[idx] = pix_colors_focused[minBrightCOLOR + i];
-          SET_PIXCOLOR (idx);
           goto done;
         }
 
       if (i >= 0 && i <= 7)
         { /* normal colors */
           pix_colors_focused[idx] = pix_colors_focused[minCOLOR + i];
-          SET_PIXCOLOR (idx);
           goto done;
         }
     }
 
-  if (!set_color (xcol, color))
-    return;
-
-  /* XStoreColor (xdisp, display->cmap, XColor*); */
+  set_color (xcol, color);
 
   /*
    * FIXME: should free colors here, but no idea how to do it so instead,
    * so just keep gobbling up the colormap
    */
-# if 0
-  for (i = Color_Black; i <= Color_White; i++)
-    if (pix_colors[idx] == pix_colors[i])
-      break;
-  if (i > Color_White)
-    {
-      /* fprintf (stderr, "XFreeColors: pix_colors [%d] = %lu\n", idx, pix_colors [idx]); */
-      XFreeColors (xdisp, display->cmap, (pix_colors + idx), 1,
-                   DisplayPlanes (xdisp, display->screen));
-    }
-# endif
 
   pix_colors_focused[idx] = xcol;
-  SET_PIXCOLOR (idx);
 
   /* XSetWindowAttributes attr; */
   /* Cursor cursor; */
@@ -945,7 +932,7 @@ done:
 #if OFF_FOCUS_FADING
   if (rs[Rs_fade])
     {
-      rxvt_rgba c;
+      rgba c;
       pix_colors [Color_fade].get (this, c);
       pix_colors_focused [idx].fade (this, atoi (rs[Rs_fade]), pix_colors_unfocused [idx], c);
     }
