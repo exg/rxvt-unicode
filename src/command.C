@@ -1092,6 +1092,24 @@ rxvt_term::slip_wheel_cb (time_watcher &w)
 }
 #endif
 
+#if LINUX_YIELD_HACK
+static struct event_handler
+{
+  check_watcher yield_ev;
+  
+  void yield_cb (check_watcher &w)
+  {
+    usleep (0);
+    w.stop ();
+  }
+
+  event_handler ()
+  : yield_ev (this, &event_handler::yield_cb)
+  {
+  }
+} event_handler;
+#endif
+
 bool
 rxvt_term::pty_fill ()
 {
@@ -1116,9 +1134,9 @@ rxvt_term::pty_fill ()
     }
   else if (r < 0 && (errno == EAGAIN || errno == EINTR))
     {
-#if HAVE_SCHED_YIELD
+#if LINUX_YIELD_HACK
       if (display->is_local)
-        event_handler.cw_yield.start ();
+        event_handler.yield_ev.start ();
 #endif
     }
   else

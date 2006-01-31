@@ -380,5 +380,15 @@
  */
 #define VISUAL_BELL_DURATION .020
 
+/*--------------------------------OTHER---------------------------------*/
+
+/*
+ * Enable the linux yield/usleep hack, which can dramatically improve
+ * performance without hurting. See command.C for details.
+ */
+#if __linux__
+# define LINUX_YIELD_HACK 1
+#endif
+
 #endif
 

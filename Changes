@@ -19,6 +19,8 @@ TODO: xim "how to" faq entry
 	- changed interpretation of [alpha] colour prefix.
         - +option now really sets the option to default, instead of using the
           resource value.
+        - the linux yield hack is back, now using usleep, and enabled only on
+          __linux__.
         - further round trip eliminations in the !XFT case by remembering
           the colour components.
         - plain scrollbar works better with -sr.
