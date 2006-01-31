@@ -65,6 +65,23 @@ other combination either by setting the B<searchable-scrollback> resource:
 
    URxvt.searchable-scrollback: CM-s
 
+=item The cursor moves when selecting text in the current input line, how
+do I switch this off?
+
+=item During rlogin/ssh/telnet/etc. sessions, clicking near the cursor
+outputs strange escape sequences, how do I fix this?
+
+These are caused by the C<readline> perl extension. Under normal
+circumstances, it will move your cursor around when you click into the
+line that contains it. It tries hard not to do this at the wrong moment,
+but when running a program that doesn't parse cursor movements or in some
+cases during rlogin sessions, it fails to detect this properly.
+
+You can permamently switch this feature off by disabling the C<readline>
+extension:
+
+   URxvt.perl-ext-common: default,-readline
+
 =item Why doesn't rxvt-unicode read my resources?
 
 Well, why, indeed? It does, in a way very similar to other X
