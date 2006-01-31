@@ -384,7 +384,10 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
        URxvt.color7:       #e1dddd
        URxvt.color15:      #e1dddd
 
-    (They were described (not by me) as "pretty girly").
+    They have been described (not by me) as "pretty girly".
+
+   Why do some characters look so much different than others?
+    See next entry.
 
    How does rxvt-unicode choose fonts?
     Most fonts do not contain the full range of Unicode, which is fine.

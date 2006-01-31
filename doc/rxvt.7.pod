@@ -411,8 +411,12 @@ And here is a more complete set of non-standard colors.
    URxvt.color7:       #e1dddd
    URxvt.color15:      #e1dddd
 
-(They were described (not by me) as "pretty girly").
+They have been described (not by me) as "pretty girly".
 
+=head3 Why do some characters look so much different than others?
+ 
+See next entry.
+ 
 =head3 How does rxvt-unicode choose fonts?
  
 Most fonts do not contain the full range of Unicode, which is
@@ -440,7 +444,6 @@ search and use less resources within rxvt-unicode and the X-server.
 The only limitation is that none of the fonts may be larger than the base
 font, as the base font defines the terminal character cell size, which
 must be the same due to the way terminals work.
-
 
 =head2 Keyboard, Mouse & User Interaction
 

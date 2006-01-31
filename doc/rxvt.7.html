@@ -47,7 +47,7 @@
 			<li><a href="#rxvtunicode_doesn_t_seem_to_antialias_its_fonts__what_is_wrong">Rxvt-unicode doesn't seem to anti-alias its fonts, what is wrong?</a></li>
 			<li><a href="#what_s_with_this_bold_blink_stuff">What's with this bold/blink stuff?</a></li>
 			<li><a href="#i_don_t_like_the_screen_colors__how_do_i_change_them">I don't like the screen colors.  How do I change them?</a></li>
-			<li><a href="#how_does_rxvtunicode_choose_fonts">How does rxvt-unicode choose fonts?</a></li>
+			<li><a href="#why_do_some_characters_look_so_much_different_than_others">Why do some characters look so much different than others?</a></li>
 		</ul>
 
 		<li><a href="#keyboard__mouse___user_interaction">Keyboard, Mouse &amp; User Interaction</a></li>
@@ -503,10 +503,16 @@ including the murky brown that passes for low-intensity yellow:</p>
    URxvt.color14:      #73f7ff
    URxvt.color7:       #e1dddd
    URxvt.color15:      #e1dddd</pre>
-<p>(They were described (not by me) as ``pretty girly'').</p>
+<p>They have been described (not by me) as ``pretty girly''.</p>
 <p>
 </p>
-<h3><a name="how_does_rxvtunicode_choose_fonts">How does rxvt-unicode choose fonts?</a></h3>
+<h3><a name="why_do_some_characters_look_so_much_different_than_others">Why do some characters look so much different than others?</a></h3>
+<pre>
+
+See next entry.</pre>
+<pre>
+
+=head3 How does rxvt-unicode choose fonts?</pre>
 <pre>
 
 Most fonts do not contain the full range of Unicode, which is
@@ -2422,6 +2428,8 @@ Use the X Window System (pretty much default, eh?).
 </dt>
 <dd>
 Look for the XPM includes in DIR.
+
+
 </dd>
 <p></p>
 <dt><strong><a name="item__2d_2dwith_2dxpm_2dlibrary_3ddir">--with-xpm-library=DIR</a></strong><br />
