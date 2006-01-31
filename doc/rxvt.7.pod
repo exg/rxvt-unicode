@@ -23,8 +23,7 @@ L<http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html>.
 
 =head1 FREQUENTLY ASKED QUESTIONS
 
-=head2 The new selection selects pieces that are too big, how can I select
-single words?
+=head2 The new selection selects pieces that are too big, how can I select single words?
 
 If you want to select e.g. alphanumeric words, you can use the following
 setting:
@@ -41,8 +40,7 @@ To get a selection that is very similar to the old code, try this pattern:
 Please also note that the I<LeftClick Shift-LeftClik> combination also
 selects words like the old code.
 
-=head2 I don't like the new selection/popups/hotkeys/perl, how do I
-change/disable it?
+=head2 I don't like the new selection/popups/hotkeys/perl, how do I change/disable it?
 
 You can disable the perl extension completely by setting the
 B<perl-ext-common> resource to the empty string, which also keeps
@@ -63,13 +61,11 @@ other combination either by setting the B<searchable-scrollback> resource:
 
    URxvt.searchable-scrollback: CM-s
 
-=head3 The cursor moves when selecting text in the current input line, how
-do I switch this off?
+=head2 The cursor moves when selecting text in the current input line, how do I switch this off?
 
 See next entry.
 
-=head2 During rlogin/ssh/telnet/etc. sessions, clicking near the cursor
-outputs strange escape sequences, how do I fix this?
+=head2 During rlogin/ssh/telnet/etc. sessions, clicking near the cursor outputs strange escape sequences, how do I fix this?
 
 These are caused by the C<readline> perl extension. Under normal
 circumstances, it will move your cursor around when you click into the
@@ -264,8 +260,7 @@ probably should use the Debian BTS, too, because, after all, it's also a
 bug in the Debian version and it serves as a reminder for other users that
 might encounter the same issue.
 
-=head2 I am maintaining rxvt-unicode for distribution/OS XXX, any
-recommendation?
+=head2 I am maintaining rxvt-unicode for distribution/OS XXX, any recommendation?
 
 You should build one binary with the default options. F<configure>
 now enables most useful options, and the trend goes to making them
@@ -934,9 +929,7 @@ Here's an example for a URxvt session started using C<@@RXVT_NAME@@ -name URxvt>
 
 See some more examples in the documentation for the B<keysym> resource.
 
-=head2 I'm using keyboard model XXX that has extra Prior/Next/Insert keys.
-How do I make use of them?  For example, the Sun Keyboard type 4
-has the following mappings that rxvt-unicode doesn't recognize.
+=head2 I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How do I make use of them? For example, the Sun Keyboard type 4 has the following mappings that rxvt-unicode doesn't recognize.
 
    KP_Insert == Insert
    F22 == Print
@@ -949,8 +942,7 @@ Rather than have rxvt-unicode try to accommodate all the various possible
 keyboard mappings, it is better to use `xmodmap' to remap the keys as
 required for your particular machine.
 
-=head2 How do I distinguish wether I'm running rxvt-unicode or a regular xterm?
-I need this to decide about setting colors etc.
+=head2 How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.
 
 rxvt and rxvt-unicode always export the variable "COLORTERM", so you can
 check and see if that is set. Note that several programs, JED, slrn,

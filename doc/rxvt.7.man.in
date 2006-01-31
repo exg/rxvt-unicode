@@ -201,10 +201,8 @@ other combination either by setting the \fBsearchable-scrollback\fR resource:
 .Vb 1
 \&   URxvt.searchable-scrollback: CM-s
 .Ve
-.PP
-\fIThe cursor moves when selecting text in the current input line, how do I switch this off?\fR
+.Sh "The cursor moves when selecting text in the current input line, how do I switch this off?"
 .IX Subsection "The cursor moves when selecting text in the current input line, how do I switch this off?"
-.PP
 See next entry.
 .Sh "During rlogin/ssh/telnet/etc. sessions, clicking near the cursor outputs strange escape sequences, how do I fix this?"
 .IX Subsection "During rlogin/ssh/telnet/etc. sessions, clicking near the cursor outputs strange escape sequences, how do I fix this?"
@@ -1096,8 +1094,8 @@ Here's an example for a URxvt session started using \f(CW\*(C`@@RXVT_NAME@@ \-na
 .Ve
 .PP
 See some more examples in the documentation for the \fBkeysym\fR resource.
-.Sh "I'm using keyboard model \s-1XXX\s0 that has extra Prior/Next/Insert keys. How do I make use of them?  For example, the Sun Keyboard type 4 has the following mappings that rxvt-unicode doesn't recognize."
-.IX Subsection "I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How do I make use of them?  For example, the Sun Keyboard type 4 has the following mappings that rxvt-unicode doesn't recognize."
+.Sh "I'm using keyboard model \s-1XXX\s0 that has extra Prior/Next/Insert keys. How do I make use of them? For example, the Sun Keyboard type 4 has the following mappings that rxvt-unicode doesn't recognize."
+.IX Subsection "I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How do I make use of them? For example, the Sun Keyboard type 4 has the following mappings that rxvt-unicode doesn't recognize."
 .Vb 6
 \&   KP_Insert == Insert
 \&   F22 == Print
