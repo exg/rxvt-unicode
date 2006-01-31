@@ -66,10 +66,10 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     listening socket and then fork.
 
    How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.
-    rxvt and rxvt-unicode always export the variable "COLORTERM", so you can
-    check and see if that is set. Note that several programs, JED, slrn,
-    Midnight Commander automatically check this variable to decide whether
-    or not to use color.
+    The original rxvt and rxvt-unicode always export the variable
+    "COLORTERM", so you can check and see if that is set. Note that several
+    programs, JED, slrn, Midnight Commander automatically check this
+    variable to decide whether or not to use color.
 
    How do I set the correct, full IP address for the DISPLAY variable?
     If you've compiled rxvt-unicode with DISPLAY_IS_IP and have enabled
@@ -644,7 +644,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
        URxvt.termName: rxvt
 
     If you don't plan to use rxvt (quite common...) you could also replace
-    the rxvt terminfo file with the rxvt-unicode one.
+    the rxvt terminfo file with the rxvt-unicode one and use "TERM=rxvt".
 
    "tic" outputs some error when compiling the terminfo entry.
     Most likely it's the empty definition for "enacs=". Just replace it by
@@ -936,7 +936,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     multi-byte encodings (you might try "LC_CTYPE=C-UTF-8"), so you are
     likely limited to 8-bit encodings.
 
-RXVT TECHNICAL REFERENCE
+RXVT-UNICODE TECHNICAL REFERENCE
 DESCRIPTION
     The rest of this document describes various technical aspects of
     rxvt-unicode. First the description of supported command sequences,
@@ -1505,7 +1505,7 @@ Mouse Reporting
            4               Shift           
            8               Meta            
            16              Control         
-           32              Double Click (Rxvt extension) 
+           32              Double Click (rxvt extension) 
 
         Col = "<x> - SPACE"
 

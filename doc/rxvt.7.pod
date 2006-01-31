@@ -77,10 +77,10 @@ display, create the listening socket and then fork.
 
 =head3 How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.
 
-rxvt and rxvt-unicode always export the variable "COLORTERM", so you can
-check and see if that is set. Note that several programs, JED, slrn,
-Midnight Commander automatically check this variable to decide whether or
-not to use color.
+The original rxvt and rxvt-unicode always export the variable "COLORTERM",
+so you can check and see if that is set. Note that several programs, JED,
+slrn, Midnight Commander automatically check this variable to decide
+whether or not to use color.
 
 =head3 How do I set the correct, full IP address for the DISPLAY variable?
 
@@ -689,7 +689,7 @@ resource to set it:
    URxvt.termName: rxvt
 
 If you don't plan to use B<rxvt> (quite common...) you could also replace
-the rxvt terminfo file with the rxvt-unicode one.
+the rxvt terminfo file with the rxvt-unicode one and use C<TERM=rxvt>.
 
 =head3 C<tic> outputs some error when compiling the terminfo entry.
 
@@ -1005,7 +1005,7 @@ At the time of this writing, cygwin didn't seem to support any multi-byte
 encodings (you might try C<LC_CTYPE=C-UTF-8>), so you are likely limited
 to 8-bit encodings.
 
-=head1 RXVT TECHNICAL REFERENCE
+=head1 RXVT-UNICODE TECHNICAL REFERENCE
 
 =head1 DESCRIPTION
 
@@ -1913,7 +1913,7 @@ button was pressed and are added together (X11 mouse report only):
 	4	Shift
 	8	Meta
 	16	Control
-	32	Double Click I<(Rxvt extension)>
+	32	Double Click I<(rxvt extension)>
 
 =end table
 

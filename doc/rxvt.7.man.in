@@ -220,10 +220,10 @@ display, create the listening socket and then fork.
 \fIHow do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.\fR
 .IX Subsection "How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc."
 .PP
-rxvt and rxvt-unicode always export the variable \*(L"\s-1COLORTERM\s0\*(R", so you can
-check and see if that is set. Note that several programs, \s-1JED\s0, slrn,
-Midnight Commander automatically check this variable to decide whether or
-not to use color.
+The original rxvt and rxvt-unicode always export the variable \*(L"\s-1COLORTERM\s0\*(R",
+so you can check and see if that is set. Note that several programs, \s-1JED\s0,
+slrn, Midnight Commander automatically check this variable to decide
+whether or not to use color.
 .PP
 \fIHow do I set the correct, full \s-1IP\s0 address for the \s-1DISPLAY\s0 variable?\fR
 .IX Subsection "How do I set the correct, full IP address for the DISPLAY variable?"
@@ -914,7 +914,7 @@ resource to set it:
 .Ve
 .PP
 If you don't plan to use \fBrxvt\fR (quite common...) you could also replace
-the rxvt terminfo file with the rxvt-unicode one.
+the rxvt terminfo file with the rxvt-unicode one and use \f(CW\*(C`TERM=rxvt\*(C'\fR.
 .PP
 \fI\f(CI\*(C`tic\*(C'\fI outputs some error when compiling the terminfo entry.\fR
 .IX Subsection "tic outputs some error when compiling the terminfo entry."
@@ -1266,8 +1266,8 @@ old libW11 emulation.
 At the time of this writing, cygwin didn't seem to support any multi-byte
 encodings (you might try \f(CW\*(C`LC_CTYPE=C\-UTF\-8\*(C'\fR), so you are likely limited
 to 8\-bit encodings.
-.SH "RXVT TECHNICAL REFERENCE"
-.IX Header "RXVT TECHNICAL REFERENCE"
+.SH "RXVT-UNICODE TECHNICAL REFERENCE"
+.IX Header "RXVT-UNICODE TECHNICAL REFERENCE"
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
 The rest of this document describes various technical aspects of
@@ -2128,7 +2128,7 @@ l l .
 4	Shift
 8	Meta
 16	Control
-32	Double Click (Rxvt extension)
+32	Double Click (rxvt extension)
 .TE
 
 Col = \fB\f(CB\*(C`<x> \- SPACE\*(C'\fB\fR

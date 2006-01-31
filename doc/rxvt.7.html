@@ -106,7 +106,7 @@
 
 	</ul>
 
-	<li><a href="#rxvt_technical_reference">RXVT TECHNICAL REFERENCE</a></li>
+	<li><a href="#rxvtunicode_technical_reference">RXVT-UNICODE TECHNICAL REFERENCE</a></li>
 	<li><a href="#description">DESCRIPTION</a></li>
 	<li><a href="#definitions">Definitions</a></li>
 	<li><a href="#values">Values</a></li>
@@ -205,10 +205,10 @@ display, create the listening socket and then fork.</p>
 <p>
 </p>
 <h3><a name="how_do_i_distinguish_wether_i_m_running_rxvtunicode_or_a_regular_xterm_i_need_this_to_decide_about_setting_colors_etc_">How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.</a></h3>
-<p>rxvt and rxvt-unicode always export the variable ``COLORTERM'', so you can
-check and see if that is set. Note that several programs, JED, slrn,
-Midnight Commander automatically check this variable to decide whether or
-not to use color.</p>
+<p>The original rxvt and rxvt-unicode always export the variable ``COLORTERM'',
+so you can check and see if that is set. Note that several programs, JED,
+slrn, Midnight Commander automatically check this variable to decide
+whether or not to use color.</p>
 <p>
 </p>
 <h3><a name="how_do_i_set_the_correct__full_ip_address_for_the_display_variable">How do I set the correct, full IP address for the DISPLAY variable?</a></h3>
@@ -763,7 +763,7 @@ resource to set it:</p>
 <pre>
    URxvt.termName: rxvt</pre>
 <p>If you don't plan to use <strong>rxvt</strong> (quite common...) you could also replace
-the rxvt terminfo file with the rxvt-unicode one.</p>
+the rxvt terminfo file with the rxvt-unicode one and use <code>TERM=rxvt</code>.</p>
 <p>
 </p>
 <h3><a name="tic_outputs_some_error_when_compiling_the_terminfo_entry_"><code>tic</code> outputs some error when compiling the terminfo entry.</a></h3>
@@ -1050,7 +1050,7 @@ to 8-bit encodings.</p>
 <p>
 </p>
 <hr />
-<h1><a name="rxvt_technical_reference">RXVT TECHNICAL REFERENCE</a></h1>
+<h1><a name="rxvtunicode_technical_reference">RXVT-UNICODE TECHNICAL REFERENCE</a></h1>
 <p>
 </p>
 <hr />
@@ -1958,7 +1958,7 @@ button was pressed and are added together (X11 mouse report only):</p>
 <tr><td>4</td><td>Shift</td></tr>
 <tr><td>8</td><td>Meta</td></tr>
 <tr><td>16</td><td>Control</td></tr>
-<tr><td>32</td><td>Double Click (Rxvt extension)</td></tr>
+<tr><td>32</td><td>Double Click (rxvt extension)</td></tr>
 </table><p>Col = <strong><code>&lt;x&gt; - SPACE</code> </strong>&gt;</p>
 <p>Row = <strong><code>&lt;y&gt; - SPACE</code> </strong>&gt;</p>
 </dl>
