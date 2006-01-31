@@ -4069,7 +4069,6 @@ if test "${enable_plain_scroll+set}" = set; then
 fi;
 
 
-
 # Check whether --with-codesets or --without-codesets was given.
 if test "${with_codesets+set}" = set; then
   withval="$with_codesets"

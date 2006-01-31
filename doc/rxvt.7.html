@@ -25,7 +25,7 @@
 			<li><a href="#does_it_support_tabs__can_i_have_a_tabbed_rxvtunicode">Does it support tabs, can I have a tabbed rxvt-unicode?</a></li>
 			<li><a href="#how_do_i_know_which_rxvtunicode_version_i_m_using">How do I know which rxvt-unicode version I'm using?</a></li>
 			<li><a href="#rxvtunicode_uses_gobs_of_memory__how_can_i_reduce_that">Rxvt-unicode uses gobs of memory, how can I reduce that?</a></li>
-			<li><a href="#how_can_i_start_rxvtd_in_a_racefree_way">How can I start rxvtd in a race-free way?</a></li>
+			<li><a href="#how_can_i_start_urxvtd_in_a_racefree_way">How can I start urxvtd in a race-free way?</a></li>
 			<li><a href="#how_do_i_distinguish_wether_i_m_running_rxvtunicode_or_a_regular_xterm_i_need_this_to_decide_about_setting_colors_etc_">How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.</a></li>
 			<li><a href="#how_do_i_set_the_correct__full_ip_address_for_the_display_variable">How do I set the correct, full IP address for the DISPLAY variable?</a></li>
 			<li><a href="#how_do_i_compile_the_manual_pages_on_my_own">How do I compile the manual pages on my own?</a></li>
@@ -72,7 +72,7 @@
 			<li><a href="#why_doesn_t_rxvtunicode_read_my_resources">Why doesn't rxvt-unicode read my resources?</a></li>
 			<li><a href="#when_i_login_to_another_system_it_tells_me_about_missing_terminfo_data">When I log-in to another system it tells me about missing terminfo data?</a></li>
 			<li><a href="#tic_outputs_some_error_when_compiling_the_terminfo_entry_"><code>tic</code> outputs some error when compiling the terminfo entry.</a></li>
-			<li><a href="#bash_s_readline_does_not_work_correctly_under_rxvt_"><code>bash</code>'s readline does not work correctly under rxvt.</a></li>
+			<li><a href="#bash_s_readline_does_not_work_correctly_under_urxvt_"><code>bash</code>'s readline does not work correctly under urxvt.</a></li>
 			<li><a href="#i_need_a_termcap_file_entry_">I need a termcap file entry.</a></li>
 			<li><a href="#why_does_ls_no_longer_have_coloured_output">Why does <code>ls</code> no longer have coloured output?</a></li>
 			<li><a href="#why_doesn_t_vim_emacs_etc__use_the_88_colour_mode">Why doesn't vim/emacs etc. use the 88 colour mode?</a></li>
@@ -168,7 +168,7 @@ interested in learning about new and exciting problems (but not FAQs :).</p>
 simple tabbed terminal. It is installed by default, so any of these should
 give you tabs:</p>
 <pre>
-   rxvt -pe tabbed</pre>
+   urxvt -pe tabbed</pre>
 <pre>
    URxvt.perl-ext-common: default,tabbed</pre>
 <p>It will also work fine with tabbing functionality of many window managers
@@ -181,7 +181,7 @@ the upcoming <code>Gtk2::URxvt</code> perl module, which features a tabbed urxvt
 <h3><a name="how_do_i_know_which_rxvtunicode_version_i_m_using">How do I know which rxvt-unicode version I'm using?</a></h3>
 <p>The version number is displayed with the usage (-h). Also the escape
 sequence <code>ESC [ 8 n</code> sets the window title to the version number. When
-using the rxvtc client, the version displayed is that of the
+using the urxvtc client, the version displayed is that of the
 daemon.</p>
 <p>
 </p>
@@ -199,8 +199,8 @@ use 10 Megabytes of memory. With <code>--enable-unicode3</code> it gets worse, a
 rxvt-unicode then uses 8 bytes per screen cell.</p>
 <p>
 </p>
-<h3><a name="how_can_i_start_rxvtd_in_a_racefree_way">How can I start rxvtd in a race-free way?</a></h3>
-<p>Try <code>rxvtd -f -o</code>, which tells rxvtd to open the
+<h3><a name="how_can_i_start_urxvtd_in_a_racefree_way">How can I start urxvtd in a race-free way?</a></h3>
+<p>Try <code>urxvtd -f -o</code>, which tells urxvtd to open the
 display, create the listening socket and then fork.</p>
 <p>
 </p>
@@ -322,7 +322,7 @@ descriptions for the programs mentioned and rxvt-unicode. Really, do it!</p>
 <p>1. Use inheritPixmap:</p>
 <pre>
    Esetroot wallpaper.jpg
-   rxvt -ip -tint red -sh 40</pre>
+   urxvt -ip -tint red -sh 40</pre>
 <p>That works. If you think it doesn't, you lack transparency and tinting
 support, or you are unable to read.</p>
 <p>2. Use a simple pixmap and emulate pseudo-transparency. This enables you
@@ -330,12 +330,12 @@ to use effects other than tinting and shading: Just shade/tint/whatever
 your picture with gimp or any other tool:</p>
 <pre>
    convert wallpaper.jpg -blur 20x20 -modulate 30 background.xpm
-   rxvt -pixmap background.xpm -pe automove-background</pre>
+   urxvt -pixmap background.xpm -pe automove-background</pre>
 <p>That works. If you think it doesn't, you lack XPM and Perl support, or you
 are unable to read.</p>
 <p>3. Use an ARGB visual:</p>
 <pre>
-   rxvt -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc</pre>
+   urxvt -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc</pre>
 <p>This requires XFT support, and the support of your X-server. If that
 doesn't work for you, blame Xorg and Keith Packard. ARGB visuals aren't
 there yet, no matter what they claim. Rxvt-Unicode contains the neccessary
@@ -533,7 +533,7 @@ In that case, select a font of your taste and add it to the font list,
 e.g.:</pre>
 <pre>
 
-   rxvt -fn basefont,font2,font3...</pre>
+   urxvt -fn basefont,font2,font3...</pre>
 <pre>
 
 When rxvt-unicode sees a character, it will first look at the base
@@ -570,7 +570,7 @@ selects words like the old code.</p>
 rxvt-unicode from initialising perl, saving memory.</p>
 <p>If you only want to disable specific features, you first have to
 identify which perl extension is responsible. For this, read the section
-<strong>PREPACKAGED EXTENSIONS</strong> in the <code>rxvtperl(3)</code> manpage. For
+<strong>PREPACKAGED EXTENSIONS</strong> in the <code>urxvtperl(3)</code> manpage. For
 example, to disable the <strong>selection-popup</strong> and <strong>option-popup</strong>, specify
 this <strong>perl-ext-common</strong> resource:</p>
 <pre>
@@ -652,11 +652,11 @@ be used (which may not be the same as your stty setting).</p>
 <pre>
    # use Backspace = ^H
    $ stty erase ^H
-   $ rxvt</pre>
+   $ urxvt</pre>
 <pre>
    # use Backspace = ^?
    $ stty erase ^?
-   $ rxvt</pre>
+   $ urxvt</pre>
 <p>Toggle with <code>ESC [ 36 h</code> / <code>ESC [ 36 l</code>.</p>
 <p>For an existing rxvt-unicode:</p>
 <pre>
@@ -685,7 +685,7 @@ GNU Emacs (and Emacs-like editors) use ^H for help.</p>
 <p>There are some compile-time selections available via configure. Unless
 you have run ``configure'' with the <a href="#item__2d_2ddisable_2dresources"><code>--disable-resources</code></a> option you can
 use the `keysym' resource to alter the keystrings associated with keysyms.</p>
-<p>Here's an example for a URxvt session started using <code>rxvt -name URxvt</code></p>
+<p>Here's an example for a URxvt session started using <code>urxvt -name URxvt</code></p>
 <pre>
    URxvt.keysym.Home:          \033[1~
    URxvt.keysym.End:           \033[4~
@@ -771,7 +771,7 @@ the rxvt terminfo file with the rxvt-unicode one.</p>
 <code>enacs=\E[0@</code> and try again.</p>
 <p>
 </p>
-<h3><a name="bash_s_readline_does_not_work_correctly_under_rxvt_"><code>bash</code>'s readline does not work correctly under rxvt.</a></h3>
+<h3><a name="bash_s_readline_does_not_work_correctly_under_urxvt_"><code>bash</code>'s readline does not work correctly under urxvt.</a></h3>
 <p>See next entry.</p>
 <p>
 </p>

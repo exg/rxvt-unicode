@@ -41,7 +41,8 @@ all:
 SEDREPLACE = -e 's%@@RXVT_VERSION@@%$(VERSION)%g;'	\
 	     -e 's%@@RXVT_NAME@@%$(RXVTNAME)%g;'	\
 	     -e 's%@@RXVT_DATE@@%$(DATE)%g;'		\
-	     -e 's%@@RXVT_LIBDIR@@%$(libdir)%g;'
+	     -e 's%@@RXVT_LIBDIR@@%$(libdir)%g;'	\
+	     -e 's%@@URXVT_NAME@@%urxvt%g;'
 
 rxvtperl.3.pod: ../src/urxvt.pm
 	$(CP) $< $@

@@ -38,7 +38,7 @@ Beginning with version 7.3, there is a perl extension that implements a
 simple tabbed terminal. It is installed by default, so any of these should
 give you tabs:
 
-   @@RXVT_NAME@@ -pe tabbed
+   @@URXVT_NAME@@ -pe tabbed
 
    URxvt.perl-ext-common: default,tabbed
 
@@ -52,7 +52,7 @@ the upcoming C<Gtk2::URxvt> perl module, which features a tabbed urxvt
 
 The version number is displayed with the usage (-h). Also the escape
 sequence C<ESC [ 8 n> sets the window title to the version number. When
-using the @@RXVT_NAME@@c client, the version displayed is that of the
+using the @@URXVT_NAME@@c client, the version displayed is that of the
 daemon.
 
 =head3 Rxvt-unicode uses gobs of memory, how can I reduce that?
@@ -70,9 +70,9 @@ kilobyte per line. A scrollback buffer of 10000 lines will then (if full)
 use 10 Megabytes of memory. With C<--enable-unicode3> it gets worse, as
 rxvt-unicode then uses 8 bytes per screen cell.
 
-=head3 How can I start @@RXVT_NAME@@d in a race-free way?
+=head3 How can I start @@URXVT_NAME@@d in a race-free way?
 
-Try C<@@RXVT_NAME@@d -f -o>, which tells @@RXVT_NAME@@d to open the
+Try C<@@URXVT_NAME@@d -f -o>, which tells @@URXVT_NAME@@d to open the
 display, create the listening socket and then fork.
 
 =head3 How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.
@@ -205,7 +205,7 @@ descriptions for the programs mentioned and rxvt-unicode. Really, do it!
 1. Use inheritPixmap:
 
    Esetroot wallpaper.jpg
-   @@RXVT_NAME@@ -ip -tint red -sh 40
+   @@URXVT_NAME@@ -ip -tint red -sh 40
 
 That works. If you think it doesn't, you lack transparency and tinting
 support, or you are unable to read.
@@ -215,14 +215,14 @@ to use effects other than tinting and shading: Just shade/tint/whatever
 your picture with gimp or any other tool:
 
    convert wallpaper.jpg -blur 20x20 -modulate 30 background.xpm
-   @@RXVT_NAME@@ -pixmap background.xpm -pe automove-background
+   @@URXVT_NAME@@ -pixmap background.xpm -pe automove-background
 
 That works. If you think it doesn't, you lack XPM and Perl support, or you
 are unable to read.
 
 3. Use an ARGB visual:
 
-   @@RXVT_NAME@@ -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc
+   @@URXVT_NAME@@ -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc
 
 This requires XFT support, and the support of your X-server. If that
 doesn't work for you, blame Xorg and Keith Packard. ARGB visuals aren't
@@ -433,7 +433,7 @@ the font that the characters it claims to contain indeed look correct.
 In that case, select a font of your taste and add it to the font list,
 e.g.:
  
-   @@RXVT_NAME@@ -fn basefont,font2,font3...
+   @@URXVT_NAME@@ -fn basefont,font2,font3...
  
 When rxvt-unicode sees a character, it will first look at the base
 font. If the base font does not contain the character, it will go to the
@@ -472,7 +472,7 @@ rxvt-unicode from initialising perl, saving memory.
 
 If you only want to disable specific features, you first have to
 identify which perl extension is responsible. For this, read the section
-B<PREPACKAGED EXTENSIONS> in the @@RXVT_NAME@@perl(3) manpage. For
+B<PREPACKAGED EXTENSIONS> in the @@URXVT_NAME@@perl(3) manpage. For
 example, to disable the B<selection-popup> and B<option-popup>, specify
 this B<perl-ext-common> resource:
 
@@ -560,11 +560,11 @@ For starting a new rxvt-unicode:
 
    # use Backspace = ^H
    $ stty erase ^H
-   $ @@RXVT_NAME@@
+   $ @@URXVT_NAME@@
 
    # use Backspace = ^?
    $ stty erase ^?
-   $ @@RXVT_NAME@@
+   $ @@URXVT_NAME@@
 
 Toggle with C<ESC [ 36 h> / C<ESC [ 36 l>.
 
@@ -601,7 +601,7 @@ There are some compile-time selections available via configure. Unless
 you have run "configure" with the C<--disable-resources> option you can
 use the `keysym' resource to alter the keystrings associated with keysyms.
 
-Here's an example for a URxvt session started using C<@@RXVT_NAME@@ -name URxvt>
+Here's an example for a URxvt session started using C<@@URXVT_NAME@@ -name URxvt>
 
    URxvt.keysym.Home:          \033[1~
    URxvt.keysym.End:           \033[4~
@@ -696,7 +696,7 @@ the rxvt terminfo file with the rxvt-unicode one.
 Most likely it's the empty definition for C<enacs=>. Just replace it by
 C<enacs=\E[0@> and try again.
 
-=head3 C<bash>'s readline does not work correctly under @@RXVT_NAME@@.
+=head3 C<bash>'s readline does not work correctly under @@URXVT_NAME@@.
 
 See next entry.
 

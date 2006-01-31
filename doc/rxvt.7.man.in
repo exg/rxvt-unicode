@@ -174,7 +174,7 @@ simple tabbed terminal. It is installed by default, so any of these should
 give you tabs:
 .PP
 .Vb 1
-\&   @@RXVT_NAME@@ -pe tabbed
+\&   @@URXVT_NAME@@ -pe tabbed
 .Ve
 .PP
 .Vb 1
@@ -192,7 +192,7 @@ the upcoming \f(CW\*(C`Gtk2::URxvt\*(C'\fR perl module, which features a tabbed 
 .PP
 The version number is displayed with the usage (\-h). Also the escape
 sequence \f(CW\*(C`ESC [ 8 n\*(C'\fR sets the window title to the version number. When
-using the @@RXVT_NAME@@c client, the version displayed is that of the
+using the @@URXVT_NAME@@c client, the version displayed is that of the
 daemon.
 .PP
 \fIRxvt-unicode uses gobs of memory, how can I reduce that?\fR
@@ -211,10 +211,10 @@ kilobyte per line. A scrollback buffer of 10000 lines will then (if full)
 use 10 Megabytes of memory. With \f(CW\*(C`\-\-enable\-unicode3\*(C'\fR it gets worse, as
 rxvt-unicode then uses 8 bytes per screen cell.
 .PP
-\fIHow can I start @@RXVT_NAME@@d in a race-free way?\fR
-.IX Subsection "How can I start @@RXVT_NAME@@d in a race-free way?"
+\fIHow can I start @@URXVT_NAME@@d in a race-free way?\fR
+.IX Subsection "How can I start @@URXVT_NAME@@d in a race-free way?"
 .PP
-Try \f(CW\*(C`@@RXVT_NAME@@d \-f \-o\*(C'\fR, which tells @@RXVT_NAME@@d to open the
+Try \f(CW\*(C`@@URXVT_NAME@@d \-f \-o\*(C'\fR, which tells @@URXVT_NAME@@d to open the
 display, create the listening socket and then fork.
 .PP
 \fIHow do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.\fR
@@ -362,7 +362,7 @@ descriptions for the programs mentioned and rxvt\-unicode. Really, do it!
 .PP
 .Vb 2
 \&   Esetroot wallpaper.jpg
-\&   @@RXVT_NAME@@ -ip -tint red -sh 40
+\&   @@URXVT_NAME@@ -ip -tint red -sh 40
 .Ve
 .PP
 That works. If you think it doesn't, you lack transparency and tinting
@@ -374,7 +374,7 @@ your picture with gimp or any other tool:
 .PP
 .Vb 2
 \&   convert wallpaper.jpg -blur 20x20 -modulate 30 background.xpm
-\&   @@RXVT_NAME@@ -pixmap background.xpm -pe automove-background
+\&   @@URXVT_NAME@@ -pixmap background.xpm -pe automove-background
 .Ve
 .PP
 That works. If you think it doesn't, you lack \s-1XPM\s0 and Perl support, or you
@@ -383,7 +383,7 @@ are unable to read.
 3. Use an \s-1ARGB\s0 visual:
 .PP
 .Vb 1
-\&   @@RXVT_NAME@@ -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc
+\&   @@URXVT_NAME@@ -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc
 .Ve
 .PP
 This requires \s-1XFT\s0 support, and the support of your X\-server. If that
@@ -621,7 +621,7 @@ In that case, select a font of your taste and add it to the font list,
 e.g.:
 .PP
 .Vb 1
-\&   @@RXVT_NAME@@ -fn basefont,font2,font3...
+\&   @@URXVT_NAME@@ -fn basefont,font2,font3...
 .Ve
 .PP
 When rxvt-unicode sees a character, it will first look at the base
@@ -665,7 +665,7 @@ rxvt-unicode from initialising perl, saving memory.
 .PP
 If you only want to disable specific features, you first have to
 identify which perl extension is responsible. For this, read the section
-\&\fB\s-1PREPACKAGED\s0 \s-1EXTENSIONS\s0\fR in the @@RXVT_NAME@@\fIperl\fR\|(3) manpage. For
+\&\fB\s-1PREPACKAGED\s0 \s-1EXTENSIONS\s0\fR in the @@URXVT_NAME@@\fIperl\fR\|(3) manpage. For
 example, to disable the \fBselection-popup\fR and \fBoption-popup\fR, specify
 this \fBperl-ext-common\fR resource:
 .PP
@@ -767,13 +767,13 @@ For starting a new rxvt\-unicode:
 .Vb 3
 \&   # use Backspace = ^H
 \&   $ stty erase ^H
-\&   $ @@RXVT_NAME@@
+\&   $ @@URXVT_NAME@@
 .Ve
 .PP
 .Vb 3
 \&   # use Backspace = ^?
 \&   $ stty erase ^?
-\&   $ @@RXVT_NAME@@
+\&   $ @@URXVT_NAME@@
 .Ve
 .PP
 Toggle with \f(CW\*(C`ESC [ 36 h\*(C'\fR / \f(CW\*(C`ESC [ 36 l\*(C'\fR.
@@ -816,7 +816,7 @@ There are some compile-time selections available via configure. Unless
 you have run \*(L"configure\*(R" with the \f(CW\*(C`\-\-disable\-resources\*(C'\fR option you can
 use the `keysym' resource to alter the keystrings associated with keysyms.
 .PP
-Here's an example for a URxvt session started using \f(CW\*(C`@@RXVT_NAME@@ \-name URxvt\*(C'\fR
+Here's an example for a URxvt session started using \f(CW\*(C`@@URXVT_NAME@@ \-name URxvt\*(C'\fR
 .PP
 .Vb 20
 \&   URxvt.keysym.Home:          \e033[1~
@@ -922,8 +922,8 @@ the rxvt terminfo file with the rxvt-unicode one.
 Most likely it's the empty definition for \f(CW\*(C`enacs=\*(C'\fR. Just replace it by
 \&\f(CW\*(C`enacs=\eE[0@\*(C'\fR and try again.
 .PP
-\fI\f(CI\*(C`bash\*(C'\fI's readline does not work correctly under @@RXVT_NAME@@.\fR
-.IX Subsection "bash's readline does not work correctly under @@RXVT_NAME@@."
+\fI\f(CI\*(C`bash\*(C'\fI's readline does not work correctly under @@URXVT_NAME@@.\fR
+.IX Subsection "bash's readline does not work correctly under @@URXVT_NAME@@."
 .PP
 See next entry.
 .PP

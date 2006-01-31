@@ -10,7 +10,7 @@ FREQUENTLY ASKED QUESTIONS
     simple tabbed terminal. It is installed by default, so any of these
     should give you tabs:
 
-       rxvt -pe tabbed
+       urxvt -pe tabbed
 
        URxvt.perl-ext-common: default,tabbed
 
@@ -23,7 +23,7 @@ FREQUENTLY ASKED QUESTIONS
    How do I know which rxvt-unicode version I'm using?
     The version number is displayed with the usage (-h). Also the escape
     sequence "ESC [ 8 n" sets the window title to the version number. When
-    using the rxvtc client, the version displayed is that of the daemon.
+    using the urxvtc client, the version displayed is that of the daemon.
 
    Rxvt-unicode uses gobs of memory, how can I reduce that?
     Rxvt-unicode tries to obey the rule of not charging you for something
@@ -40,8 +40,8 @@ FREQUENTLY ASKED QUESTIONS
     full) use 10 Megabytes of memory. With "--enable-unicode3" it gets
     worse, as rxvt-unicode then uses 8 bytes per screen cell.
 
-   How can I start rxvtd in a race-free way?
-    Try "rxvtd -f -o", which tells rxvtd to open the display, create the
+   How can I start urxvtd in a race-free way?
+    Try "urxvtd -f -o", which tells urxvtd to open the display, create the
     listening socket and then fork.
 
    How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.
@@ -166,7 +166,7 @@ FREQUENTLY ASKED QUESTIONS
     1. Use inheritPixmap:
 
        Esetroot wallpaper.jpg
-       rxvt -ip -tint red -sh 40
+       urxvt -ip -tint red -sh 40
 
     That works. If you think it doesn't, you lack transparency and tinting
     support, or you are unable to read.
@@ -176,14 +176,14 @@ FREQUENTLY ASKED QUESTIONS
     your picture with gimp or any other tool:
 
        convert wallpaper.jpg -blur 20x20 -modulate 30 background.xpm
-       rxvt -pixmap background.xpm -pe automove-background
+       urxvt -pixmap background.xpm -pe automove-background
 
     That works. If you think it doesn't, you lack XPM and Perl support, or
     you are unable to read.
 
     3. Use an ARGB visual:
 
-       rxvt -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc
+       urxvt -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc
 
     This requires XFT support, and the support of your X-server. If that
     doesn't work for you, blame Xorg and Keith Packard. ARGB visuals aren't
@@ -383,7 +383,7 @@ FREQUENTLY ASKED QUESTIONS
     In that case, select a font of your taste and add it to the font list,
     e.g.:
 
-       rxvt -fn basefont,font2,font3...
+       urxvt -fn basefont,font2,font3...
  
     When rxvt-unicode sees a character, it will first look at the base font.
     If the base font does not contain the character, it will go to the next
@@ -419,7 +419,7 @@ FREQUENTLY ASKED QUESTIONS
 
     If you only want to disable specific features, you first have to
     identify which perl extension is responsible. For this, read the section
-    PREPACKAGED EXTENSIONS in the rxvtperl(3) manpage. For example, to
+    PREPACKAGED EXTENSIONS in the urxvtperl(3) manpage. For example, to
     disable the selection-popup and option-popup, specify this
     perl-ext-common resource:
 
@@ -500,11 +500,11 @@ FREQUENTLY ASKED QUESTIONS
 
        # use Backspace = ^H
        $ stty erase ^H
-       $ rxvt
+       $ urxvt
 
        # use Backspace = ^?
        $ stty erase ^?
-       $ rxvt
+       $ urxvt
 
     Toggle with "ESC [ 36 h" / "ESC [ 36 l".
 
@@ -540,7 +540,7 @@ FREQUENTLY ASKED QUESTIONS
     use the `keysym' resource to alter the keystrings associated with
     keysyms.
 
-    Here's an example for a URxvt session started using "rxvt -name URxvt"
+    Here's an example for a URxvt session started using "urxvt -name URxvt"
 
        URxvt.keysym.Home:          \033[1~
        URxvt.keysym.End:           \033[4~
@@ -629,7 +629,7 @@ FREQUENTLY ASKED QUESTIONS
     Most likely it's the empty definition for "enacs=". Just replace it by
     "enacs=\E[0@" and try again.
 
-   "bash"'s readline does not work correctly under rxvt.
+   "bash"'s readline does not work correctly under urxvt.
     See next entry.
 
    I need a termcap file entry.
