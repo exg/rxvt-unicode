@@ -1705,7 +1705,6 @@ rxvt_term::focus_in ()
   if (!focus)
     {
       focus = 1;
-      want_refresh = 1;
 
       HOOK_INVOKE ((this, HOOK_FOCUS_OUT, DT_END));
 
@@ -1724,6 +1723,7 @@ rxvt_term::focus_in ()
       if (rs[Rs_fade])
         {
           pix_colors = pix_colors_focused;
+          want_refresh = 1;
           scr_recolour ();
         }
 #endif
@@ -1736,7 +1736,6 @@ rxvt_term::focus_out ()
   if (focus)
     {
       focus = 0;
-      want_refresh = 1;
 
       HOOK_INVOKE ((this, HOOK_FOCUS_OUT, DT_END));
 
@@ -1762,6 +1761,7 @@ rxvt_term::focus_out ()
       if (rs[Rs_fade])
         {
           pix_colors = pix_colors_unfocused;
+          want_refresh = 1;
           scr_recolour ();
         }
 #endif
@@ -2540,10 +2540,10 @@ rxvt_term::check_our_parents ()
 #if TINTING
           if (ISSET_PIXCOLOR (Color_tint))
             {
-              rxvt_rgba c;
               int shade = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100;
 
-              pix_colors_focused[Color_tint].get (this, c);
+              rxvt_rgba c;
+              pix_colors_focused [Color_tint].get (this, c);
 
               ShadeXImage (this, image, shade, c.r, c.g, c.b);
             }

@@ -63,9 +63,9 @@ FREQUENTLY ASKED QUESTIONS
         First of all, transparency isn't officially supported in
         rxvt-unicode, so you are mostly on your own. Do not bug the author
         about it (but you may bug everybody else). Also, if you can't get it
-        working consider it a rite of passage, and you failed.
+        working consider it a rite of passage: ... and you failed.
 
-        Here are three ways to get transparency. Do read the manpage and
+        Here are four ways to get transparency. Do read the manpage and
         option descriptions for the programs mentioned and rxvt-unicode.
         Really, do it!
 
@@ -89,13 +89,23 @@ FREQUENTLY ASKED QUESTIONS
 
         3. Use an ARGB visual:
 
-           rxvt -depth 432 -fg grey90 -bg rgba:0000/0000/0000/c000
+           rxvt -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc
 
-        This requires XFT support, and support form your X-server. If that
+        This requires XFT support, and the support of your X-server. If that
         doesn't work for you, blame Xorg and Keith Packard. ARGB visuals
         aren't there yet, no matter what they claim. Rxvt-Unicode contains
         the neccessary bugfixes and workarounds for Xft and Xlib to make it
-        work.
+        work, but that doesn't mean that your WM has the required kludges in
+        place.
+
+        4. Use xcompmgr and let it do the job:
+
+          xprop -frame -f _NET_WM_WINDOW_OPACITY 32c \
+                -set _NET_WM_WINDOW_OPACITY 0xc0000000
+
+        Then click on a window you want to make transparent. Replace
+        0xc0000000 by other values to change the degree of opacity. If it
+        doesn't work and your server crashes, you got to keep the pieces.
 
     Isn't rxvt supposed to be small? Don't all those features bloat?
         I often get asked about this, and I think, no, they didn't cause

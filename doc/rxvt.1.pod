@@ -1348,19 +1348,6 @@ B<background>, B<cursorColor>, B<cursorColor2>, B<colorBD>, B<colorUL> as
 a number 0-15, as a convenient shorthand to reference the colour name of
 color0-color15.
 
-If Xft support has been compiled in and as long as Xft/Xrender/X don't get
-their act together, rxvt-unicode will support C<rgba:rrrr/gggg/bbbb/aaaa>
-(recommended, but B<MUST> have 4 digits/component), C<#ARGB>, C<#AARRGGBB>
-and C<#AAAARRRRGGGGBBBB> colour specifications, in addition to the ones
-provided by X, where the additional A component specifies alpha (opacity)
-values (0 is completely transparent and the maximum is opaque). You
-probably need to specify B<"-depth 32">, too, and have the luck that your
-X-server uses ARGB pixel layout, as X is far from just supporting ARGB
-visuals out of the box, and rxvt-unicode just fudges around.
-
-I<Please note that transparency of any kind if completely unsupported by
-the author. Don't bug him with installation questions!>
-
 Note that B<-rv> (B<"reverseVideo: True">) simulates reverse video by
 always swapping the foreground/background colours. This is in contrast to
 I<xterm>(1) where the colours are only swapped if they have not otherwise
@@ -1374,6 +1361,28 @@ would yield White on Black, while on I<xterm>(1) it would yield Black
 on White.
 
 =back
+
+=head2 ALPHA CHANNEL SUPPORT
+
+If Xft support has been compiled in and as long as Xft/Xrender/X don't get
+their act together, rxvt-unicode will support C<rgba:rrrr/gggg/bbbb/aaaa>
+(recommended, but B<MUST> have 4 digits/component) colour specifications,
+in addition to the ones provided by X, where the additional A component
+specifies opacity (alpha) values. The minimum value of C<0> is completely
+transparent). You can also prefix any color with C<[a]>, where C<a> is on
+to four hex digits specifiying the opacity value.
+
+You probably need to specify B<"-depth 32">, too, and have the luck that
+your X-server uses ARGB pixel layout, as X is far from just supporting
+ARGB visuals out of the box, and rxvt-unicode just fudges around.
+
+For example, the following selects an almost completely transparent red
+background, and an almost opaque pink foreground:
+
+   @@RXVT_NAME@@ -depth 32 -bg rgba:0000/0000/0000/2222 -fg "[e]pink"
+
+I<Please note that transparency of any kind if completely unsupported by
+the author. Don't bug him with installation questions!>
 
 =head1 ENVIRONMENT
 

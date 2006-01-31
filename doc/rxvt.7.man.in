@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2006-01-30" "7.4" "RXVT-UNICODE"
+.TH rxvt 7 "2006-01-31" "7.5" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -153,8 +153,7 @@ RXVT REFERENCE \- FAQ, command sequences and other background information
 This document contains the \s-1FAQ\s0, the \s-1RXVT\s0 \s-1TECHNICAL\s0 \s-1REFERENCE\s0 documenting
 all escape sequences, and other background information.
 .PP
-The newest version of this document is
-also available on the World Wide Web at
+The newest version of this document is also available on the World Wide Web at
 <http://cvs.schmorp.de/browse/*checkout*/rxvt\-unicode/doc/rxvt.7.html>.
 .SH "FREQUENTLY ASKED QUESTIONS"
 .IX Header "FREQUENTLY ASKED QUESTIONS"
@@ -228,9 +227,9 @@ works. If unsure, use the form above.
 First of all, transparency isn't officially supported in rxvt\-unicode, so
 you are mostly on your own. Do not bug the author about it (but you may
 bug everybody else). Also, if you can't get it working consider it a rite
-of passage, and you failed.
+of passage: ... and you failed.
 .Sp
-Here are three ways to get transparency. \fBDo\fR read the manpage and option
+Here are four ways to get transparency. \fBDo\fR read the manpage and option
 descriptions for the programs mentioned and rxvt\-unicode. Really, do it!
 .Sp
 1. Use inheritPixmap:
@@ -258,13 +257,25 @@ are unable to read.
 3. Use an \s-1ARGB\s0 visual:
 .Sp
 .Vb 1
-\&   @@RXVT_NAME@@ -depth 432 -fg grey90 -bg rgba:0000/0000/0000/c000
+\&   @@RXVT_NAME@@ -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc
 .Ve
 .Sp
-This requires \s-1XFT\s0 support, and support form your X\-server. If that doesn't
-work for you, blame Xorg and Keith Packard. \s-1ARGB\s0 visuals aren't there yet,
-no matter what they claim. Rxvt-Unicode contains the neccessary bugfixes
-and workarounds for Xft and Xlib to make it work.
+This requires \s-1XFT\s0 support, and the support of your X\-server. If that
+doesn't work for you, blame Xorg and Keith Packard. \s-1ARGB\s0 visuals aren't
+there yet, no matter what they claim. Rxvt-Unicode contains the neccessary
+bugfixes and workarounds for Xft and Xlib to make it work, but that
+doesn't mean that your \s-1WM\s0 has the required kludges in place.
+.Sp
+4. Use xcompmgr and let it do the job:
+.Sp
+.Vb 2
+\&  xprop -frame -f _NET_WM_WINDOW_OPACITY 32c \e
+\&        -set _NET_WM_WINDOW_OPACITY 0xc0000000
+.Ve
+.Sp
+Then click on a window you want to make transparent. Replace \f(CW0xc0000000\fR
+by other values to change the degree of opacity. If it doesn't work and
+your server crashes, you got to keep the pieces.
 .IP "Isn't rxvt supposed to be small? Don't all those features bloat?" 4
 .IX Item "Isn't rxvt supposed to be small? Don't all those features bloat?"
 I often get asked about this, and I think, no, they didn't cause extra

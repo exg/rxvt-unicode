@@ -635,40 +635,47 @@ rxvt_color::alloc (rxvt_screen *screen, rxvt_rgba rgba)
 bool
 rxvt_color::set (rxvt_screen *screen, const char *name)
 {
-  int l = strlen (name);
-  rxvt_rgba r;
+  rxvt_rgba c;
   char eos;
-  int mult;
-  XColor xc, xc_exact;
+  int skip;
 
-  // parse a number of non-standard ARGB colour specifications
-  if (     l == 1+4*1 && 4 == sscanf (name, "#%1hx%1hx%1hx%1hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
-    mult = rxvt_rgba::MAX_CC / 0x0010;
-  else if (l == 1+4*2 && 4 == sscanf (name, "#%2hx%2hx%2hx%2hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
-    mult = rxvt_rgba::MAX_CC / 0x0100;
-  else if (l == 1+4*4 && 4 == sscanf (name, "#%4hx%4hx%4hx%4hx%c", &r.a, &r.r, &r.g, &r.b, &eos))
-    mult = rxvt_rgba::MAX_CC / 0x0100;
-  else if (l == 4+5*4 && 4 == sscanf (name, "rgba:%hx/%hx/%hx/%hx%c", &r.r, &r.g, &r.b, &r.a, &eos))
-    mult = rxvt_rgba::MAX_CC / 0xffff;
-  else if (XParseColor (screen->xdisp, screen->cmap, name, &xc))
+  if (1 <= sscanf (name, "[%hx]%n", &c.a, &skip))
     {
-      r.r = xc.red;
-      r.g = xc.green;
-      r.b = xc.blue;
-      mult = rxvt_rgba::MAX_CC / 0xffff;
+      switch (skip)
+        {
+          case 2 + 1: c.a *= rxvt_rgba::MAX_CC / 0x000f; break;
+          case 2 + 2: c.a *= rxvt_rgba::MAX_CC / 0x00ff; break;
+          case 2 + 3: c.a *= rxvt_rgba::MAX_CC / 0x0fff; break;
+          case 2 + 4: c.a *= rxvt_rgba::MAX_CC / 0xffff; break;
+        }
+
+      name += skip;
     }
   else
+    c.a = rxvt_rgba::MAX_CC;
+
+  // parse the non-standard rgba format
+  if (strlen (name) != 4+5*4 || 4 != sscanf (name, "rgba:%hx/%hx/%hx/%hx%c", &c.r, &c.g, &c.b, &c.a, &eos))
     {
-      rxvt_warn ("failed to allocate color '%s', using pink instead.\n", name);
-      r.r = 255;
-      r.g = 105;
-      r.b = 180;
-      mult = rxvt_rgba::MAX_CC / 0x00ff;
+      XColor xc, xc_exact;
+
+      if (XParseColor (screen->xdisp, screen->cmap, name, &xc))
+        {
+          c.r = xc.red;
+          c.g = xc.green;
+          c.b = xc.blue;
+        }
+      else
+        {
+          c.r = 0xffff;
+          c.g = 0x6969;
+          c.b = 0xb4b4;
+
+          rxvt_warn ("unable to parse color '%s', using pink instead.\n", name);
+        }
     }
 
-  r.r *= mult; r.g *= mult; r.b *= mult; r.a *= mult;
-
-  return set (screen, r);
+  return set (screen, c);
 }
 
 bool
@@ -718,7 +725,7 @@ rxvt_color::set (rxvt_screen *screen, rxvt_rgba rgba)
   return got;
 }
 
-void 
+void
 rxvt_color::get (rxvt_screen *screen, rxvt_rgba &rgba)
 {
 #if XFT

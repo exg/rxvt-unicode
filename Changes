@@ -34,8 +34,8 @@ DUMB: support tex fonts
         - short-cut allocation of known rgb values in the xlib case
           (patch by Paco-Paco).
         - overhauled color management: smaller codesize, alpha support.
-        - support rgba:rrrr/gggg/bbbb/aaaa, #argb, #aarrggbb and
-          #aaaarrrrggggbbbb (yes, it did hurt) colour "names".
+        - support "rgba:rrrr/gggg/bbbb/aaaa" color specifications and
+          an "[alpha]" prefix.
         - try to work around Xft and Xrender forcing everything to be 100%
           transparent. Long Live Xft!
         - do not include X11/Intrinsic.h anymore, directly use
@@ -48,6 +48,7 @@ DUMB: support tex fonts
         - added the OSC sequence 702 to detect the urxvt version number.
         - small configure updates.
         - further RTT optimisations.
+        - don't cause an unnecessary refresh on focus changes.
 
 7.4  Sat Jan 28 15:26:27 CET 2006
 	- screen background wasn't always erased properly when scrolling,

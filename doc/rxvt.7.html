@@ -56,8 +56,7 @@
 <h1><a name="description">DESCRIPTION</a></h1>
 <p>This document contains the FAQ, the RXVT TECHNICAL REFERENCE documenting
 all escape sequences, and other background information.</p>
-<p>The newest version of this document is
-also available on the World Wide Web at
+<p>The newest version of this document is also available on the World Wide Web at
 <a href="http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html">http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html</a>.</p>
 <p>
 </p>
@@ -154,10 +153,10 @@ works. If unsure, use the form above.</p>
 First of all, transparency isn't officially supported in rxvt-unicode, so
 you are mostly on your own. Do not bug the author about it (but you may
 bug everybody else). Also, if you can't get it working consider it a rite
-of passage, and you failed.
+of passage: ... and you failed.
 </dd>
 <dd>
-<p>Here are three ways to get transparency. <strong>Do</strong> read the manpage and option
+<p>Here are four ways to get transparency. <strong>Do</strong> read the manpage and option
 descriptions for the programs mentioned and rxvt-unicode. Really, do it!</p>
 </dd>
 <dd>
@@ -191,13 +190,27 @@ are unable to read.</p>
 </dd>
 <dd>
 <pre>
-   rxvt -depth 432 -fg grey90 -bg rgba:0000/0000/0000/c000</pre>
+   rxvt -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc</pre>
 </dd>
 <dd>
-<p>This requires XFT support, and support form your X-server. If that doesn't
-work for you, blame Xorg and Keith Packard. ARGB visuals aren't there yet,
-no matter what they claim. Rxvt-Unicode contains the neccessary bugfixes
-and workarounds for Xft and Xlib to make it work.</p>
+<p>This requires XFT support, and the support of your X-server. If that
+doesn't work for you, blame Xorg and Keith Packard. ARGB visuals aren't
+there yet, no matter what they claim. Rxvt-Unicode contains the neccessary
+bugfixes and workarounds for Xft and Xlib to make it work, but that
+doesn't mean that your WM has the required kludges in place.</p>
+</dd>
+<dd>
+<p>4. Use xcompmgr and let it do the job:</p>
+</dd>
+<dd>
+<pre>
+  xprop -frame -f _NET_WM_WINDOW_OPACITY 32c \
+        -set _NET_WM_WINDOW_OPACITY 0xc0000000</pre>
+</dd>
+<dd>
+<p>Then click on a window you want to make transparent. Replace <code>0xc0000000</code>
+by other values to change the degree of opacity. If it doesn't work and
+your server crashes, you got to keep the pieces.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_isn_27t_rxvt_supposed_to_be_small_3f_don_27t_all_t">Isn't rxvt supposed to be small? Don't all those features bloat?</a></strong><br />

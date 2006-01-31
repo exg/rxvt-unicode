@@ -249,17 +249,16 @@ struct rxvt_color {
   bool operator == (const rxvt_color &b) const { return Pixel (*this) == Pixel (b); }
   bool operator != (const rxvt_color &b) const { return Pixel (*this) != Pixel (b); }
 
+  bool alloc (rxvt_screen *screen, rxvt_rgba rgba);
+  void free (rxvt_screen *screen);
+
   void get (rxvt_screen *screen, rxvt_rgba &rgba);
  
-  bool alloc (rxvt_screen *screen, rxvt_rgba rgba);
-
   bool set (rxvt_screen *screen, const char *name);
   bool set (rxvt_screen *screen, rxvt_rgba rgba);
 
   rxvt_color fade (rxvt_screen *screen, int percent); // fades to black
   rxvt_color fade (rxvt_screen *screen, int percent, rxvt_color &fadeto);
-
-  void free (rxvt_screen *screen);
 };
 
 #endif

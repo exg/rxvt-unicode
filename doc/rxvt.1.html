@@ -26,6 +26,11 @@
 	<li><a href="#iso_14755_support">ISO 14755 SUPPORT</a></li>
 	<li><a href="#login_stamp">LOGIN STAMP</a></li>
 	<li><a href="#colors_and_graphics">COLORS AND GRAPHICS</a></li>
+	<ul>
+
+		<li><a href="#alpha_channel_support">ALPHA CHANNEL SUPPORT</a></li>
+	</ul>
+
 	<li><a href="#environment">ENVIRONMENT</a></li>
 	<li><a href="#files">FILES</a></li>
 	<li><a href="#see_also">SEE ALSO</a></li>
@@ -48,7 +53,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>7.4</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>7.5</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -1736,17 +1741,6 @@ colours with their names.</p>
 <strong>background</strong>, <strong>cursorColor</strong>, <strong>cursorColor2</strong>, <strong>colorBD</strong>, <strong>colorUL</strong> as
 a number 0-15, as a convenient shorthand to reference the colour name of
 color0-color15.</p>
-<p>If Xft support has been compiled in and as long as Xft/Xrender/X don't get
-their act together, rxvt-unicode will support <code>rgba:rrrr/gggg/bbbb/aaaa</code>
-(recommended, but <strong>MUST</strong> have 4 digits/component), <code>#ARGB</code>, <code>#AARRGGBB</code>
-and <code>#AAAARRRRGGGGBBBB</code> colour specifications, in addition to the ones
-provided by X, where the additional A component specifies alpha (opacity)
-values (0 is completely transparent and the maximum is opaque). You
-probably need to specify <strong>``-depth 32''</strong>, too, and have the luck that your
-X-server uses ARGB pixel layout, as X is far from just supporting ARGB
-visuals out of the box, and rxvt-unicode just fudges around.</p>
-<p><em>Please note that transparency of any kind if completely unsupported by
-the author. Don't bug him with installation questions!</em></p>
 <p>Note that <strong>-rv</strong> (<strong>``reverseVideo: True''</strong>) simulates reverse video by
 always swapping the foreground/background colours. This is in contrast to
 <em>xterm</em>(1) where the colours are only swapped if they have not otherwise
@@ -1759,6 +1753,25 @@ would yield White on Black, while on <em>xterm</em>(1) it would yield Black
 on White.
 </dd>
 <p></p></dl>
+<p>
+</p>
+<h2><a name="alpha_channel_support">ALPHA CHANNEL SUPPORT</a></h2>
+<p>If Xft support has been compiled in and as long as Xft/Xrender/X don't get
+their act together, rxvt-unicode will support <code>rgba:rrrr/gggg/bbbb/aaaa</code>
+(recommended, but <strong>MUST</strong> have 4 digits/component) colour specifications,
+in addition to the ones provided by X, where the additional A component
+specifies opacity (alpha) values. The minimum value of <code>0</code> is completely
+transparent). You can also prefix any color with <code>[a]</code>, where <code>a</code> is on
+to four hex digits specifiying the opacity value.</p>
+<p>You probably need to specify <strong>``-depth 32''</strong>, too, and have the luck that
+your X-server uses ARGB pixel layout, as X is far from just supporting
+ARGB visuals out of the box, and rxvt-unicode just fudges around.</p>
+<p>For example, the following selects an almost completely transparent red
+background, and an almost opaque pink foreground:</p>
+<pre>
+   rxvt -depth 32 -bg rgba:0000/0000/0000/2222 -fg &quot;[e]pink&quot;</pre>
+<p><em>Please note that transparency of any kind if completely unsupported by
+the author. Don't bug him with installation questions!</em></p>
 <p>
 </p>
 <hr />

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 1"
-.TH rxvt 1 "2006-01-29" "7.4" "RXVT-UNICODE"
+.TH rxvt 1 "2006-01-31" "7.5" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -1344,19 +1344,6 @@ It is also possible to specify the colour values of \fBforeground\fR,
 a number 0\-15, as a convenient shorthand to reference the colour name of
 color0\-color15.
 .PP
-If Xft support has been compiled in and as long as Xft/Xrender/X don't get
-their act together, rxvt-unicode will support \f(CW\*(C`rgba:rrrr/gggg/bbbb/aaaa\*(C'\fR
-(recommended, but \fB\s-1MUST\s0\fR have 4 digits/component), \f(CW\*(C`#ARGB\*(C'\fR, \f(CW\*(C`#AARRGGBB\*(C'\fR
-and \f(CW\*(C`#AAAARRRRGGGGBBBB\*(C'\fR colour specifications, in addition to the ones
-provided by X, where the additional A component specifies alpha (opacity)
-values (0 is completely transparent and the maximum is opaque). You
-probably need to specify \fB\*(L"\-depth 32\*(R"\fR, too, and have the luck that your
-X\-server uses \s-1ARGB\s0 pixel layout, as X is far from just supporting \s-1ARGB\s0
-visuals out of the box, and rxvt-unicode just fudges around.
-.PP
-\&\fIPlease note that transparency of any kind if completely unsupported by
-the author. Don't bug him with installation questions!\fR
-.PP
 Note that \fB\-rv\fR (\fB\*(L"reverseVideo: True\*(R"\fR) simulates reverse video by
 always swapping the foreground/background colours. This is in contrast to
 \&\fIxterm\fR(1) where the colours are only swapped if they have not otherwise
@@ -1365,6 +1352,29 @@ been specified. For example,
 .IX Item "@@RXVT_NAME@@ -fg Black -bg White -rv"
 would yield White on Black, while on \fIxterm\fR(1) it would yield Black
 on White.
+.Sh "\s-1ALPHA\s0 \s-1CHANNEL\s0 \s-1SUPPORT\s0"
+.IX Subsection "ALPHA CHANNEL SUPPORT"
+If Xft support has been compiled in and as long as Xft/Xrender/X don't get
+their act together, rxvt-unicode will support \f(CW\*(C`rgba:rrrr/gggg/bbbb/aaaa\*(C'\fR
+(recommended, but \fB\s-1MUST\s0\fR have 4 digits/component) colour specifications,
+in addition to the ones provided by X, where the additional A component
+specifies opacity (alpha) values. The minimum value of \f(CW0\fR is completely
+transparent). You can also prefix any color with \f(CW\*(C`[a]\*(C'\fR, where \f(CW\*(C`a\*(C'\fR is on
+to four hex digits specifiying the opacity value.
+.PP
+You probably need to specify \fB\*(L"\-depth 32\*(R"\fR, too, and have the luck that
+your X\-server uses \s-1ARGB\s0 pixel layout, as X is far from just supporting
+\&\s-1ARGB\s0 visuals out of the box, and rxvt-unicode just fudges around.
+.PP
+For example, the following selects an almost completely transparent red
+background, and an almost opaque pink foreground:
+.PP
+.Vb 1
+\&   @@RXVT_NAME@@ -depth 32 -bg rgba:0000/0000/0000/2222 -fg "[e]pink"
+.Ve
+.PP
+\&\fIPlease note that transparency of any kind if completely unsupported by
+the author. Don't bug him with installation questions!\fR
 .SH "ENVIRONMENT"
 .IX Header "ENVIRONMENT"
 \&\fB@@RXVT_NAME@@\fR sets and/or uses the following environment variables:

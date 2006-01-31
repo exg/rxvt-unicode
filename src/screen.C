@@ -2331,9 +2331,7 @@ rxvt_term::scr_refresh () NOTHROW
           rxvt_font *font = (*fontset[GET_STYLE (rend)])[GET_FONT (rend)];
 
           if (back == fore)
-            font->clear_rect (*drawable, xpixel, ypixel,
-                              fwidth * count, fheight,
-                              back);
+            font->clear_rect (*drawable, xpixel, ypixel, fwidth * count, fheight, back);
           else if (back == Color_bg)
             {
               if (must_clear)

@@ -1310,7 +1310,6 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
           FT_UInt glyph = XftCharIndex (disp, f, fc);
           XftGlyphExtents (disp, f, &glyph, 1, &extents);
 
-
           ep->glyph = glyph;
           ep->x = x + (cwidth - extents.xOff >> 1);
           ep->y = y + ascent;

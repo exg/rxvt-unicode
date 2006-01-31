@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 7.4, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 7.5, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -1177,20 +1177,6 @@ COLORS AND GRAPHICS
     0-15, as a convenient shorthand to reference the colour name of
     color0-color15.
 
-    If Xft support has been compiled in and as long as Xft/Xrender/X don't
-    get their act together, rxvt-unicode will support
-    "rgba:rrrr/gggg/bbbb/aaaa" (recommended, but MUST have 4
-    digits/component), "#ARGB", "#AARRGGBB" and "#AAAARRRRGGGGBBBB" colour
-    specifications, in addition to the ones provided by X, where the
-    additional A component specifies alpha (opacity) values (0 is completely
-    transparent and the maximum is opaque). You probably need to specify
-    "-depth 32", too, and have the luck that your X-server uses ARGB pixel
-    layout, as X is far from just supporting ARGB visuals out of the box,
-    and rxvt-unicode just fudges around.
-
-    *Please note that transparency of any kind if completely unsupported by
-    the author. Don't bug him with installation questions!*
-
     Note that -rv ("reverseVideo: True") simulates reverse video by always
     swapping the foreground/background colours. This is in contrast to
     *xterm*(1) where the colours are only swapped if they have not otherwise
@@ -1199,6 +1185,28 @@ COLORS AND GRAPHICS
     rxvt -fg Black -bg White -rv
         would yield White on Black, while on *xterm*(1) it would yield Black
         on White.
+
+  ALPHA CHANNEL SUPPORT
+    If Xft support has been compiled in and as long as Xft/Xrender/X don't
+    get their act together, rxvt-unicode will support
+    "rgba:rrrr/gggg/bbbb/aaaa" (recommended, but MUST have 4
+    digits/component) colour specifications, in addition to the ones
+    provided by X, where the additional A component specifies opacity
+    (alpha) values. The minimum value of 0 is completely transparent). You
+    can also prefix any color with "[a]", where "a" is on to four hex digits
+    specifiying the opacity value.
+
+    You probably need to specify "-depth 32", too, and have the luck that
+    your X-server uses ARGB pixel layout, as X is far from just supporting
+    ARGB visuals out of the box, and rxvt-unicode just fudges around.
+
+    For example, the following selects an almost completely transparent red
+    background, and an almost opaque pink foreground:
+
+       rxvt -depth 32 -bg rgba:0000/0000/0000/2222 -fg "[e]pink"
+
+    *Please note that transparency of any kind if completely unsupported by
+    the author. Don't bug him with installation questions!*
 
 ENVIRONMENT
     rxvt sets and/or uses the following environment variables:
