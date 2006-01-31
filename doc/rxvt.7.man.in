@@ -155,8 +155,8 @@ all escape sequences, and other background information.
 .PP
 The newest version of this document is also available on the World Wide Web at
 <http://cvs.schmorp.de/browse/*checkout*/rxvt\-unicode/doc/rxvt.7.html>.
-.SH "FREQUENTLY ASKED QUESTIONS"
-.IX Header "FREQUENTLY ASKED QUESTIONS"
+.SH "RXVT\-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS"
+.IX Header "RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS"
 .Sh "Meta, Features & Commandline Issues"
 .IX Subsection "Meta, Features & Commandline Issues"
 \fIMy question isn't answered here, can I ask a human?\fR

@@ -19,7 +19,7 @@ DESCRIPTION
     Web at
     <http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html>.
 
-FREQUENTLY ASKED QUESTIONS
+RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
   Meta, Features & Commandline Issues
    My question isn't answered here, can I ask a human?
     Before sending me mail, you could go to IRC: "irc.freenode.net", channel
