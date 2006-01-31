@@ -409,7 +409,7 @@ rxvt_usage (int type)
         for (col = 1, i = 0; i < optList_size; i++)
           if (optList[i].desc != NULL)
             {
-              int             len = 0;
+              int len = 0;
 
               if (!optList_isBool (i))
                 {
