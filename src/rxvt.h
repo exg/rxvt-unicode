@@ -854,7 +854,7 @@ struct mbstate {
 # define IS_COMPOSE(n) ((int32_t)(n) >= COMPOSE_LO)
 #else
 # if ENABLE_PERL
-#  define COMPOSE_LO 0xe000UL // our _own_ routiens don't like (illegal) surrogates
+#  define COMPOSE_LO 0xe000UL // our _own_ functions don't like (illegal) surrogates
 #  define COMPOSE_HI 0xf8ffUL // in utf-8, so use private use area only
 # else
 #  define COMPOSE_LO 0xd800UL
