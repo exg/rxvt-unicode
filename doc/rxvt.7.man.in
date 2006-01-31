@@ -157,24 +157,24 @@ The newest version of this document is also available on the World Wide Web at
 <http://cvs.schmorp.de/browse/*checkout*/rxvt\-unicode/doc/rxvt.7.html>.
 .SH "FREQUENTLY ASKED QUESTIONS"
 .IX Header "FREQUENTLY ASKED QUESTIONS"
-.IP "The new selection selects pieces that are too big, how can I select single words?" 4
-.IX Item "The new selection selects pieces that are too big, how can I select single words?"
+.Sh "The new selection selects pieces that are too big, how can I select single words?"
+.IX Subsection "The new selection selects pieces that are too big, how can I select single words?"
 Yes. For example, if you want to select alphanumeric words, you can use
 the following resource:
-.Sp
+.PP
 .Vb 1
 \&   URxvt.selection.pattern-0: ([[:word:]]+)
 .Ve
-.Sp
+.PP
 If you click more than twice, the selection will be extended
 more and more.
-.Sp
+.PP
 To get a selection that is very similar to the old code, try this pattern:
-.Sp
+.PP
 .Vb 1
 \&   URxvt.selection.pattern-0: ([^"&'()*,;<=>?@[\e\e\e\e]^`{|})]+)
 .Ve
-.Sp
+.PP
 Please also note that the \fILeftClick Shift-LeftClik\fR combination also
 selects words like the old code.
 .IP "I don't like the new selection/popups/hotkeys/perl, how do I change/disable it?" 4

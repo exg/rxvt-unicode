@@ -23,9 +23,7 @@ L<http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html>.
 
 =head1 FREQUENTLY ASKED QUESTIONS
 
-=over 4
-
-=item The new selection selects pieces that are too big, how can I select
+=head2 The new selection selects pieces that are too big, how can I select
 single words?
 
 Yes. For example, if you want to select alphanumeric words, you can use
@@ -42,6 +40,8 @@ To get a selection that is very similar to the old code, try this pattern:
 
 Please also note that the I<LeftClick Shift-LeftClik> combination also
 selects words like the old code.
+
+=over 4
 
 =item I don't like the new selection/popups/hotkeys/perl, how do I
 change/disable it?

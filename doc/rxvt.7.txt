@@ -20,23 +20,23 @@ DESCRIPTION
     <http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html>.
 
 FREQUENTLY ASKED QUESTIONS
-    The new selection selects pieces that are too big, how can I select
-    single words?
-        Yes. For example, if you want to select alphanumeric words, you can
-        use the following resource:
+  The new selection selects pieces that are too big, how can I select
+single words?
+    Yes. For example, if you want to select alphanumeric words, you can use
+    the following resource:
 
-           URxvt.selection.pattern-0: ([[:word:]]+)
+       URxvt.selection.pattern-0: ([[:word:]]+)
 
-        If you click more than twice, the selection will be extended more
-        and more.
+    If you click more than twice, the selection will be extended more and
+    more.
 
-        To get a selection that is very similar to the old code, try this
-        pattern:
+    To get a selection that is very similar to the old code, try this
+    pattern:
 
-           URxvt.selection.pattern-0: ([^"&'()*,;<=>?@[\\\\]^`{|})]+)
+       URxvt.selection.pattern-0: ([^"&'()*,;<=>?@[\\\\]^`{|})]+)
 
-        Please also note that the *LeftClick Shift-LeftClik* combination
-        also selects words like the old code.
+    Please also note that the *LeftClick Shift-LeftClik* combination also
+    selects words like the old code.
 
     I don't like the new selection/popups/hotkeys/perl, how do I
     change/disable it?
