@@ -257,7 +257,7 @@ struct rxvt_color {
   bool set (rxvt_screen *screen, const char *name);
   bool set (rxvt_screen *screen, const rxvt_rgba &color);
 
-  rxvt_color fade (rxvt_screen *screen, int percent, const rxvt_rgba &to = rxvt_rgba (0, 0, 0));
+  void fade (rxvt_screen *screen, int percent, rxvt_color &result, const rxvt_rgba &to = rxvt_rgba (0, 0, 0));
 };
 
 #endif

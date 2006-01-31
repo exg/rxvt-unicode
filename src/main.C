@@ -947,7 +947,7 @@ done:
     {
       rxvt_rgba c;
       pix_colors [Color_fade].get (this, c);
-      pix_colors_unfocused [idx] = pix_colors_focused [idx].fade (this, atoi (rs[Rs_fade]), c);
+      pix_colors_focused [idx].fade (this, atoi (rs[Rs_fade]), pix_colors_unfocused [idx], c);
     }
 #endif
 

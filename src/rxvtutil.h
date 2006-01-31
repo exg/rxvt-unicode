@@ -63,7 +63,7 @@ template<typename T, typename U, typename P>
 static inline
 T lerp (T a, U b, P p)
 {
-  return (int(a) * int(p) + int(b) * int(100 - p)) / 100;
+  return (long(a) * long(100 - p) + long(b) * long(p) + 50) / 100;
 }
 
 // some bit functions, xft fuck me plenty

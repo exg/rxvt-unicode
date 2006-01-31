@@ -641,8 +641,10 @@ rxvt_color::set (rxvt_screen *screen, const char *name)
 
   if (1 <= sscanf (name, "[%hd]%n", &c.a, &skip))
     {
+     printf ("X %d\n", c.a);
       c.a = lerp<int, int, int> (0, rxvt_rgba::MAX_CC, c.a);
       name += skip;
+     printf ("y %04x\n", c.a);
     }
   else
     c.a = rxvt_rgba::MAX_CC;
@@ -749,23 +751,20 @@ rxvt_color::free (rxvt_screen *screen)
 #endif
 }
 
-rxvt_color
-rxvt_color::fade (rxvt_screen *screen, int percent, const rxvt_rgba &to)
+void
+rxvt_color::fade (rxvt_screen *screen, int percent, rxvt_color &result, const rxvt_rgba &to)
 {
   rxvt_rgba c;
   get (screen, c);
 
-  rxvt_color faded;
-  faded.set (
+  result.set (
     screen,
     rxvt_rgba (
-      lerp (to.r, c.r, percent),
-      lerp (to.g, c.g, percent),
-      lerp (to.b, c.b, percent),
-      lerp (to.a, c.a, percent)
+      lerp (c.r, to.r, percent),
+      lerp (c.g, to.g, percent),
+      lerp (c.b, to.b, percent),
+      lerp (c.a, to.a, percent)
     )
   );
-
-  return faded;
 }
 

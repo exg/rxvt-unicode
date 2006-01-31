@@ -708,7 +708,7 @@ rxvt_term::Get_Colours ()
       {
         rxvt_rgba c;
         pix_colors[Color_fade].get (this, c);
-        pix_colors_unfocused[i] = pix_colors_focused[i].fade (this, atoi (rs[Rs_fade]), c);
+        pix_colors_focused[i].fade (this, atoi (rs[Rs_fade]), pix_colors_unfocused[i],c);
       }
 #endif
 
@@ -749,7 +749,7 @@ rxvt_term::Get_Colours ()
       xcol[0].get (this, c0);
       xcol[1].get (this, c1);
 
-      pix_colors[Color_bottomShadow] = xcol[1].fade (this, 50);
+      xcol[1].fade (this, 50, pix_colors[Color_bottomShadow]);
 
       /* topShadowColor */
       if (!xcol[1].set (this,
