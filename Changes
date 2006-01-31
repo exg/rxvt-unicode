@@ -12,7 +12,7 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
-7.5  Mon Jan 30 23:49:13 CET 2006
+7.5  Tue Jan 31 01:25:41 CET 2006
         - further improvements to the careful mode detection, and font width
           detection: 
           - fully double-wide fonts will now be correctly treated,
@@ -31,7 +31,7 @@ DUMB: support tex fonts
         - replace named colours by xorg's rgb.txt equivalents, to
           reduce round trip time on startup, and short-cut allocation
           of rgb:rr/gg/bb for xft.
-        - short-cut allocation of known rgb values in the xlib case
+        - short-cut allocation of rgb values in the xlib case
           (patch by Paco-Paco).
         - overhauled color management: smaller codesize, alpha support.
         - support "rgba:rrrr/gggg/bbbb/aaaa" color specifications and
