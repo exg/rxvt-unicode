@@ -413,10 +413,6 @@ And here is a more complete set of non-standard colors.
 
 (They were described (not by me) as "pretty girly").
 
-=head3 Why do some characters look so much different than others?
- 
-See next entry.
- 
 =head3 How does rxvt-unicode choose fonts?
  
 Most fonts do not contain the full range of Unicode, which is

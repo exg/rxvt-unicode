@@ -386,9 +386,6 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
     (They were described (not by me) as "pretty girly").
 
-   Why do some characters look so much different than others?
-    See next entry.
-
    How does rxvt-unicode choose fonts?
     Most fonts do not contain the full range of Unicode, which is fine.
     Chances are that the font you (or the admin/package maintainer of your

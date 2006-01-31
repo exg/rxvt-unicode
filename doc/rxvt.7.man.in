@@ -598,11 +598,6 @@ And here is a more complete set of non-standard colors.
 .PP
 (They were described (not by me) as \*(L"pretty girly\*(R").
 .PP
-\fIWhy do some characters look so much different than others?\fR
-.IX Subsection "Why do some characters look so much different than others?"
-.PP
-See next entry.
-.PP
 \fIHow does rxvt-unicode choose fonts?\fR
 .IX Subsection "How does rxvt-unicode choose fonts?"
 .PP
