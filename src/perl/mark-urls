@@ -39,16 +39,17 @@ sub on_line_update {
 
 sub on_button_release {
     my ($self, $event) = @_;
-    my $row = $event->{row};
-    my $col = $event->{col};
 
-    my $line = $self->line ($row);
-    my $text = $line->t;
-    
     my $mask = $self->ModLevel3Mask | $self->ModMetaMask
              | urxvt::ShiftMask | urxvt::ControlMask;
 
     if ($event->{button} == 2 && ($event->{state} & $mask) == 0) {
+       my $row = $event->{row};
+       my $col = $event->{col};
+
+       my $line = $self->line ($row);
+       my $text = $line->t;
+    
        while ($text =~ /$url/g) {
            if ($-[1] <= $col && $+[1] >= $col) {
                $self->exec_async ($self->{browser}, $1);
