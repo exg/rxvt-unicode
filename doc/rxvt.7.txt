@@ -221,30 +221,6 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     by other values to change the degree of opacity. If it doesn't work and
     your server crashes, you got to keep the pieces.
 
-   Why do some chinese characters look so different than others?
-    This is because there is a difference between script and language --
-    rxvt-unicode does not know which language the text that is output is, as
-    it only knows the unicode character codes. If rxvt-unicode first sees a
-    japanese/chinese character, it might choose a japanese font for display.
-    Subsequent japanese characters will use that font. Now, many chinese
-    characters aren't represented in japanese fonts, so when the first
-    non-japanese character comes up, rxvt-unicode will look for a chinese
-    font -- unfortunately at this point, it will still use the japanese font
-    for chinese characters that are also in the japanese font.
-
-    The workaround is easy: just tag a chinese font at the end of your font
-    list (see the previous question). The key is to view the font list as a
-    preference list: If you expect more japanese, list a japanese font
-    first. If you expect more chinese, put a chinese font first.
-
-    In the future it might be possible to switch language preferences at
-    runtime (the internal data structure has no problem with using different
-    fonts for the same character at the same time, but no interface for this
-    has been designed yet).
-
-    Until then, you might get away with switching fonts at runtime (see "Can
-    I switch the fonts at runtime?" later in this document).
-
    Why does rxvt-unicode sometimes leave pixel droppings?
     Most fonts were not designed for terminal use, which means that
     character size varies a lot. A font that is otherwise fine for terminal
@@ -406,7 +382,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     e.g.:
 
        urxvt -fn basefont,font2,font3...
- 
+
     When rxvt-unicode sees a character, it will first look at the base font.
     If the base font does not contain the character, it will go to the next
     font, and so on. Specifying your own fonts will also speed up this
@@ -415,6 +391,30 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     The only limitation is that none of the fonts may be larger than the
     base font, as the base font defines the terminal character cell size,
     which must be the same due to the way terminals work.
+
+   Why do some chinese characters look so different than others?
+    This is because there is a difference between script and language --
+    rxvt-unicode does not know which language the text that is output is, as
+    it only knows the unicode character codes. If rxvt-unicode first sees a
+    japanese/chinese character, it might choose a japanese font for display.
+    Subsequent japanese characters will use that font. Now, many chinese
+    characters aren't represented in japanese fonts, so when the first
+    non-japanese character comes up, rxvt-unicode will look for a chinese
+    font -- unfortunately at this point, it will still use the japanese font
+    for chinese characters that are also in the japanese font.
+
+    The workaround is easy: just tag a chinese font at the end of your font
+    list (see the previous question). The key is to view the font list as a
+    preference list: If you expect more japanese, list a japanese font
+    first. If you expect more chinese, put a chinese font first.
+
+    In the future it might be possible to switch language preferences at
+    runtime (the internal data structure has no problem with using different
+    fonts for the same character at the same time, but no interface for this
+    has been designed yet).
+
+    Until then, you might get away with switching fonts at runtime (see "Can
+    I switch the fonts at runtime?" later in this document).
 
   Keyboard, Mouse & User Interaction
    The new selection selects pieces that are too big, how can I select single words?
@@ -938,13 +938,12 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     likely limited to 8-bit encodings.
 
 RXVT-UNICODE TECHNICAL REFERENCE
-DESCRIPTION
     The rest of this document describes various technical aspects of
     rxvt-unicode. First the description of supported command sequences,
     followed by pixmap support and last by a description of all features
     selectable at "configure" time.
 
-Definitions
+  Definitions
     "c" The literal character c.
 
     "C" A single (required) character.
@@ -960,7 +959,7 @@ Definitions
     "Pt"
         A text parameter composed of printable characters.
 
-Values
+  Values
     "ENQ"
         Enquiry (Ctrl-E) = Send Device Attributes (DA) request attributes
         from terminal. See "ESC [ Ps c".
@@ -997,7 +996,7 @@ Values
     "SPC"
         Space Character
 
-Escape Sequences
+  Escape Sequences
     "ESC # 8"
         DEC Screen Alignment Test (DECALN)
 
@@ -1077,7 +1076,7 @@ Escape Sequences
 
 
 
-CSI (Command Sequence Introducer) Sequences
+  CSI (Command Sequence Introducer) Sequences
     "ESC [ Ps @"
         Insert "Ps" (Blank) Character(s) [default: 1] (ICH)
 
@@ -1269,7 +1268,7 @@ CSI (Command Sequence Introducer) Sequences
 
 
 
-DEC Private Modes
+  DEC Private Modes
     "ESC [ ? Pm h"
         DEC Private Mode Set (DECSET)
 
@@ -1397,7 +1396,7 @@ DEC Private Modes
 
 
 
-XTerm Operating System Commands
+  XTerm Operating System Commands
     "ESC ] Ps;Pt ST"
         Set XTerm Parameters. 8-bit ST: 0x9c, 7-bit ST sequence: ESC \
         (0x1b, 0x5c), backwards compatible terminator BEL (0x07) is also
@@ -1435,8 +1434,6 @@ XTerm Operating System Commands
            Ps = 720        Move viewing window up by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills). 
            Ps = 721        Move viewing window down by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills). 
            Ps = 777        Call the perl extension with the given string, which should be of the form extension:parameters (Compile perl). 
-
-
 
 XPM
     For the XPM XTerm escape sequence "ESC ] 20 ; Pt ST" then value of "Pt"

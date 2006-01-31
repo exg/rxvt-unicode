@@ -239,31 +239,6 @@ Then click on a window you want to make transparent. Replace C<0xc0000000>
 by other values to change the degree of opacity. If it doesn't work and
 your server crashes, you got to keep the pieces.
 
-=head3 Why do some chinese characters look so different than others?
-
-This is because there is a difference between script and language --
-rxvt-unicode does not know which language the text that is output is,
-as it only knows the unicode character codes. If rxvt-unicode first
-sees a japanese/chinese character, it might choose a japanese font for
-display. Subsequent japanese characters will use that font. Now, many
-chinese characters aren't represented in japanese fonts, so when the first
-non-japanese character comes up, rxvt-unicode will look for a chinese font
--- unfortunately at this point, it will still use the japanese font for
-chinese characters that are also in the japanese font.
-
-The workaround is easy: just tag a chinese font at the end of your font
-list (see the previous question). The key is to view the font list as
-a preference list: If you expect more japanese, list a japanese font
-first. If you expect more chinese, put a chinese font first.
-
-In the future it might be possible to switch language preferences at
-runtime (the internal data structure has no problem with using different
-fonts for the same character at the same time, but no interface for this
-has been designed yet).
-
-Until then, you might get away with switching fonts at runtime (see L<Can
-I switch the fonts at runtime?> later in this document).
-
 =head3 Why does rxvt-unicode sometimes leave pixel droppings?
 
 Most fonts were not designed for terminal use, which means that character
@@ -414,36 +389,61 @@ And here is a more complete set of non-standard colors.
 They have been described (not by me) as "pretty girly".
 
 =head3 Why do some characters look so much different than others?
- 
+
 See next entry.
- 
+
 =head3 How does rxvt-unicode choose fonts?
- 
+
 Most fonts do not contain the full range of Unicode, which is
 fine. Chances are that the font you (or the admin/package maintainer of
 your system/os) have specified does not cover all the characters you want
 to display.
- 
+
 B<rxvt-unicode> makes a best-effort try at finding a replacement
 font. Often the result is fine, but sometimes the chosen font looks
 bad/ugly/wrong. Some fonts have totally strange characters that don't
 resemble the correct glyph at all, and rxvt-unicode lacks the artificial
 intelligence to detect that a specific glyph is wrong: it has to believe
 the font that the characters it claims to contain indeed look correct.
- 
+
 In that case, select a font of your taste and add it to the font list,
 e.g.:
- 
+
    @@URXVT_NAME@@ -fn basefont,font2,font3...
- 
+
 When rxvt-unicode sees a character, it will first look at the base
 font. If the base font does not contain the character, it will go to the
 next font, and so on. Specifying your own fonts will also speed up this
 search and use less resources within rxvt-unicode and the X-server.
- 
+
 The only limitation is that none of the fonts may be larger than the base
 font, as the base font defines the terminal character cell size, which
 must be the same due to the way terminals work.
+
+=head3 Why do some chinese characters look so different than others?
+
+This is because there is a difference between script and language --
+rxvt-unicode does not know which language the text that is output is,
+as it only knows the unicode character codes. If rxvt-unicode first
+sees a japanese/chinese character, it might choose a japanese font for
+display. Subsequent japanese characters will use that font. Now, many
+chinese characters aren't represented in japanese fonts, so when the first
+non-japanese character comes up, rxvt-unicode will look for a chinese font
+-- unfortunately at this point, it will still use the japanese font for
+chinese characters that are also in the japanese font.
+
+The workaround is easy: just tag a chinese font at the end of your font
+list (see the previous question). The key is to view the font list as
+a preference list: If you expect more japanese, list a japanese font
+first. If you expect more chinese, put a chinese font first.
+
+In the future it might be possible to switch language preferences at
+runtime (the internal data structure has no problem with using different
+fonts for the same character at the same time, but no interface for this
+has been designed yet).
+
+Until then, you might get away with switching fonts at runtime (see L<Can
+I switch the fonts at runtime?> later in this document).
 
 =head2 Keyboard, Mouse & User Interaction
 
@@ -1007,14 +1007,12 @@ to 8-bit encodings.
 
 =head1 RXVT-UNICODE TECHNICAL REFERENCE
 
-=head1 DESCRIPTION
-
 The rest of this document describes various technical aspects of
 B<rxvt-unicode>. First the description of supported command sequences,
 followed by pixmap support and last by a description of all features
 selectable at C<configure> time.
 
-=head1 Definitions
+=head2 Definitions
 
 =over 4
 
@@ -1042,7 +1040,7 @@ A text parameter composed of printable characters.
 
 =back
 
-=head1 Values
+=head2 Values
 
 =over 4
 
@@ -1095,7 +1093,7 @@ Space Character
 
 =back
 
-=head1 Escape Sequences
+=head2 Escape Sequences
 
 =over 4
 
@@ -1203,7 +1201,7 @@ Where B<< C<C> >> is one of:
 
 X<CSI>
 
-=head1 CSI (Command Sequence Introducer) Sequences
+=head2 CSI (Command Sequence Introducer) Sequences
 
 =over 4
 
@@ -1483,7 +1481,7 @@ Request Terminal Parameters (DECREQTPARM)
 
 X<PrivateModes>
 
-=head1 DEC Private Modes
+=head2 DEC Private Modes
 
 =over 4
 
@@ -1757,7 +1755,7 @@ X<Priv66>
 
 X<XTerm>
 
-=head1 XTerm Operating System Commands
+=head2 XTerm Operating System Commands
 
 =over 4
 
@@ -1804,8 +1802,6 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 =end table
 
 =back
-
-X<XPM>
 
 =head1 XPM
 

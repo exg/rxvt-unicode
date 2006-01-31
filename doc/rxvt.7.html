@@ -37,7 +37,6 @@
 		<ul>
 
 			<li><a href="#i_can_t_get_transparency_working__what_am_i_doing_wrong">I can't get transparency working, what am I doing wrong?</a></li>
-			<li><a href="#why_do_some_chinese_characters_look_so_different_than_others">Why do some chinese characters look so different than others?</a></li>
 			<li><a href="#why_does_rxvtunicode_sometimes_leave_pixel_droppings">Why does rxvt-unicode sometimes leave pixel droppings?</a></li>
 			<li><a href="#how_can_i_keep_rxvtunicode_from_using_reverse_video_so_much">How can I keep rxvt-unicode from using reverse video so much?</a></li>
 			<li><a href="#some_programs_assume_totally_weird_colours__red_instead_of_blue___how_can_i_fix_that">Some programs assume totally weird colours (red instead of blue), how can I fix that?</a></li>
@@ -48,6 +47,8 @@
 			<li><a href="#what_s_with_this_bold_blink_stuff">What's with this bold/blink stuff?</a></li>
 			<li><a href="#i_don_t_like_the_screen_colors__how_do_i_change_them">I don't like the screen colors.  How do I change them?</a></li>
 			<li><a href="#why_do_some_characters_look_so_much_different_than_others">Why do some characters look so much different than others?</a></li>
+			<li><a href="#how_does_rxvtunicode_choose_fonts">How does rxvt-unicode choose fonts?</a></li>
+			<li><a href="#why_do_some_chinese_characters_look_so_different_than_others">Why do some chinese characters look so different than others?</a></li>
 		</ul>
 
 		<li><a href="#keyboard__mouse___user_interaction">Keyboard, Mouse &amp; User Interaction</a></li>
@@ -107,13 +108,16 @@
 	</ul>
 
 	<li><a href="#rxvtunicode_technical_reference">RXVT-UNICODE TECHNICAL REFERENCE</a></li>
-	<li><a href="#description">DESCRIPTION</a></li>
-	<li><a href="#definitions">Definitions</a></li>
-	<li><a href="#values">Values</a></li>
-	<li><a href="#escape_sequences">Escape Sequences</a></li>
-	<li><a href="#csi__command_sequence_introducer__sequences">CSI (Command Sequence Introducer) Sequences</a></li>
-	<li><a href="#dec_private_modes">DEC Private Modes</a></li>
-	<li><a href="#xterm_operating_system_commands">XTerm Operating System Commands</a></li>
+	<ul>
+
+		<li><a href="#definitions">Definitions</a></li>
+		<li><a href="#values">Values</a></li>
+		<li><a href="#escape_sequences">Escape Sequences</a></li>
+		<li><a href="#csi__command_sequence_introducer__sequences">CSI (Command Sequence Introducer) Sequences</a></li>
+		<li><a href="#dec_private_modes">DEC Private Modes</a></li>
+		<li><a href="#xterm_operating_system_commands">XTerm Operating System Commands</a></li>
+	</ul>
+
 	<li><a href="#xpm">XPM</a></li>
 	<li><a href="#mouse_reporting">Mouse Reporting</a></li>
 	<li><a href="#key_codes">Key Codes</a></li>
@@ -350,27 +354,6 @@ by other values to change the degree of opacity. If it doesn't work and
 your server crashes, you got to keep the pieces.</p>
 <p>
 </p>
-<h3><a name="why_do_some_chinese_characters_look_so_different_than_others">Why do some chinese characters look so different than others?</a></h3>
-<p>This is because there is a difference between script and language --
-rxvt-unicode does not know which language the text that is output is,
-as it only knows the unicode character codes. If rxvt-unicode first
-sees a japanese/chinese character, it might choose a japanese font for
-display. Subsequent japanese characters will use that font. Now, many
-chinese characters aren't represented in japanese fonts, so when the first
-non-japanese character comes up, rxvt-unicode will look for a chinese font
--- unfortunately at this point, it will still use the japanese font for
-chinese characters that are also in the japanese font.</p>
-<p>The workaround is easy: just tag a chinese font at the end of your font
-list (see the previous question). The key is to view the font list as
-a preference list: If you expect more japanese, list a japanese font
-first. If you expect more chinese, put a chinese font first.</p>
-<p>In the future it might be possible to switch language preferences at
-runtime (the internal data structure has no problem with using different
-fonts for the same character at the same time, but no interface for this
-has been designed yet).</p>
-<p>Until then, you might get away with switching fonts at runtime (see <a href="#can_i_switch_the_fonts_at_runtime">Can I switch the fonts at runtime?</a> later in this document).</p>
-<p>
-</p>
 <h3><a name="why_does_rxvtunicode_sometimes_leave_pixel_droppings">Why does rxvt-unicode sometimes leave pixel droppings?</a></h3>
 <p>Most fonts were not designed for terminal use, which means that character
 size varies a lot. A font that is otherwise fine for terminal use might
@@ -507,44 +490,52 @@ including the murky brown that passes for low-intensity yellow:</p>
 <p>
 </p>
 <h3><a name="why_do_some_characters_look_so_much_different_than_others">Why do some characters look so much different than others?</a></h3>
-<pre>
-
-See next entry.</pre>
-<pre>
-
-=head3 How does rxvt-unicode choose fonts?</pre>
-<pre>
-
-Most fonts do not contain the full range of Unicode, which is
+<p>See next entry.</p>
+<p>
+</p>
+<h3><a name="how_does_rxvtunicode_choose_fonts">How does rxvt-unicode choose fonts?</a></h3>
+<p>Most fonts do not contain the full range of Unicode, which is
 fine. Chances are that the font you (or the admin/package maintainer of
 your system/os) have specified does not cover all the characters you want
-to display.</pre>
-<pre>
-
-B&lt;rxvt-unicode&gt; makes a best-effort try at finding a replacement
+to display.</p>
+<p><strong>rxvt-unicode</strong> makes a best-effort try at finding a replacement
 font. Often the result is fine, but sometimes the chosen font looks
 bad/ugly/wrong. Some fonts have totally strange characters that don't
 resemble the correct glyph at all, and rxvt-unicode lacks the artificial
 intelligence to detect that a specific glyph is wrong: it has to believe
-the font that the characters it claims to contain indeed look correct.</pre>
+the font that the characters it claims to contain indeed look correct.</p>
+<p>In that case, select a font of your taste and add it to the font list,
+e.g.:</p>
 <pre>
-
-In that case, select a font of your taste and add it to the font list,
-e.g.:</pre>
-<pre>
-
    urxvt -fn basefont,font2,font3...</pre>
-<pre>
-
-When rxvt-unicode sees a character, it will first look at the base
+<p>When rxvt-unicode sees a character, it will first look at the base
 font. If the base font does not contain the character, it will go to the
 next font, and so on. Specifying your own fonts will also speed up this
-search and use less resources within rxvt-unicode and the X-server.</pre>
-<pre>
-
-The only limitation is that none of the fonts may be larger than the base
+search and use less resources within rxvt-unicode and the X-server.</p>
+<p>The only limitation is that none of the fonts may be larger than the base
 font, as the base font defines the terminal character cell size, which
-must be the same due to the way terminals work.</pre>
+must be the same due to the way terminals work.</p>
+<p>
+</p>
+<h3><a name="why_do_some_chinese_characters_look_so_different_than_others">Why do some chinese characters look so different than others?</a></h3>
+<p>This is because there is a difference between script and language --
+rxvt-unicode does not know which language the text that is output is,
+as it only knows the unicode character codes. If rxvt-unicode first
+sees a japanese/chinese character, it might choose a japanese font for
+display. Subsequent japanese characters will use that font. Now, many
+chinese characters aren't represented in japanese fonts, so when the first
+non-japanese character comes up, rxvt-unicode will look for a chinese font
+-- unfortunately at this point, it will still use the japanese font for
+chinese characters that are also in the japanese font.</p>
+<p>The workaround is easy: just tag a chinese font at the end of your font
+list (see the previous question). The key is to view the font list as
+a preference list: If you expect more japanese, list a japanese font
+first. If you expect more chinese, put a chinese font first.</p>
+<p>In the future it might be possible to switch language preferences at
+runtime (the internal data structure has no problem with using different
+fonts for the same character at the same time, but no interface for this
+has been designed yet).</p>
+<p>Until then, you might get away with switching fonts at runtime (see <a href="#can_i_switch_the_fonts_at_runtime">Can I switch the fonts at runtime?</a> later in this document).</p>
 <p>
 </p>
 <h2><a name="keyboard__mouse___user_interaction">Keyboard, Mouse &amp; User Interaction</a></h2>
@@ -1051,18 +1042,13 @@ to 8-bit encodings.</p>
 </p>
 <hr />
 <h1><a name="rxvtunicode_technical_reference">RXVT-UNICODE TECHNICAL REFERENCE</a></h1>
-<p>
-</p>
-<hr />
-<h1><a name="description">DESCRIPTION</a></h1>
 <p>The rest of this document describes various technical aspects of
 <strong>rxvt-unicode</strong>. First the description of supported command sequences,
 followed by pixmap support and last by a description of all features
 selectable at <code>configure</code> time.</p>
 <p>
 </p>
-<hr />
-<h1><a name="definitions">Definitions</a></h1>
+<h2><a name="definitions">Definitions</a></h2>
 <dl>
 <dt><strong><a name="item_c"><strong><code>c</code> </strong>&gt;</a></strong><br />
 </dt>
@@ -1098,8 +1084,7 @@ A text parameter composed of printable characters.
 <p></p></dl>
 <p>
 </p>
-<hr />
-<h1><a name="values">Values</a></h1>
+<h2><a name="values">Values</a></h2>
 <dl>
 <dt><strong><a name="item_enq"><strong><code>ENQ</code> </strong>&gt;</a></strong><br />
 </dt>
@@ -1172,8 +1157,7 @@ Space Character
 <p></p></dl>
 <p>
 </p>
-<hr />
-<h1><a name="escape_sequences">Escape Sequences</a></h1>
+<h2><a name="escape_sequences">Escape Sequences</a></h2>
 <dl>
 <dt><strong><a name="item_esc__23_8"><strong><code>ESC # 8</code> </strong>&gt;</a></strong><br />
 </dt>
@@ -1316,8 +1300,7 @@ Designate Kanji Character Set
 <p></p>
 <p>
 </p>
-<hr />
-<h1><a name="csi__command_sequence_introducer__sequences">CSI (Command Sequence Introducer) Sequences</a></h1>
+<h2><a name="csi__command_sequence_introducer__sequences">CSI (Command Sequence Introducer) Sequences</a></h2>
 <dl>
 <dt><strong><a name="item_esc__5b_ps__40"><strong><code>ESC [ Ps @</code> </strong>&gt;</a></strong><br />
 </dt>
@@ -1623,8 +1606,7 @@ Request Terminal Parameters (DECREQTPARM)
 <p></p>
 <p>
 </p>
-<hr />
-<h1><a name="dec_private_modes">DEC Private Modes</a></h1>
+<h2><a name="dec_private_modes">DEC Private Modes</a></h2>
 <dl>
 <dt><strong><a name="item_esc__5b__3f_pm_h"><strong><code>ESC [ ? Pm h</code> </strong>&gt;</a></strong><br />
 </dt>
@@ -1800,8 +1782,7 @@ Enter Tektronix Mode (DECTEK)
 <p></p>
 <p>
 </p>
-<hr />
-<h1><a name="xterm_operating_system_commands">XTerm Operating System Commands</a></h1>
+<h2><a name="xterm_operating_system_commands">XTerm Operating System Commands</a></h2>
 <dl>
 <dt><strong><a name="item_esc__5d_ps_3bpt_st"><strong><code>ESC ] Ps;Pt ST</code> </strong>&gt;</a></strong><br />
 </dt>
@@ -1843,7 +1824,6 @@ Set XTerm Parameters. 8-bit ST: 0x9c, 7-bit ST sequence: ESC \ (0x1b,
 <tr><td>Ps = 721</td><td>Move viewing window down by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).</td></tr>
 <tr><td>Ps = 777</td><td>Call the perl extension with the given string, which should be of the form extension:parameters (Compile perl).</td></tr>
 </table><p></p></dl>
-<p></p>
 <p>
 </p>
 <hr />
@@ -2428,24 +2408,18 @@ Use the X Window System (pretty much default, eh?).
 </dt>
 <dd>
 Look for the XPM includes in DIR.
-
-
 </dd>
 <p></p>
 <dt><strong><a name="item__2d_2dwith_2dxpm_2dlibrary_3ddir">--with-xpm-library=DIR</a></strong><br />
 </dt>
 <dd>
 Look for the XPM library in DIR.
-
-
 </dd>
 <p></p>
 <dt><strong><a name="item__2d_2dwith_2dxpm">--with-xpm</a></strong><br />
 </dt>
 <dd>
 Not needed - define via --enable-xpm-background.
-
-
 </dd>
 <p></p></dl>
 <p>
@@ -2455,9 +2429,7 @@ Not needed - define via --enable-xpm-background.
 <p>Marc Lehmann &lt;<a href="mailto:rxvt@schmorp.de">rxvt@schmorp.de</a>&gt; converted this document to pod and
 reworked it from the original Rxvt documentation, which was done by Geoff
 Wing &lt;<a href="mailto:gcw@pobox.com">gcw@pobox.com</a>&gt;, who in turn used the XTerm documentation and other
-sources.
-
-</p>
+sources.</p>
 
 </body>
 

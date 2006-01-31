@@ -403,31 +403,6 @@ Then click on a window you want to make transparent. Replace \f(CW0xc0000000\fR
 by other values to change the degree of opacity. If it doesn't work and
 your server crashes, you got to keep the pieces.
 .PP
-\fIWhy do some chinese characters look so different than others?\fR
-.IX Subsection "Why do some chinese characters look so different than others?"
-.PP
-This is because there is a difference between script and language \*(--
-rxvt-unicode does not know which language the text that is output is,
-as it only knows the unicode character codes. If rxvt-unicode first
-sees a japanese/chinese character, it might choose a japanese font for
-display. Subsequent japanese characters will use that font. Now, many
-chinese characters aren't represented in japanese fonts, so when the first
-non-japanese character comes up, rxvt-unicode will look for a chinese font
-\&\*(-- unfortunately at this point, it will still use the japanese font for
-chinese characters that are also in the japanese font.
-.PP
-The workaround is easy: just tag a chinese font at the end of your font
-list (see the previous question). The key is to view the font list as
-a preference list: If you expect more japanese, list a japanese font
-first. If you expect more chinese, put a chinese font first.
-.PP
-In the future it might be possible to switch language preferences at
-runtime (the internal data structure has no problem with using different
-fonts for the same character at the same time, but no interface for this
-has been designed yet).
-.PP
-Until then, you might get away with switching fonts at runtime (see \*(L"Can I switch the fonts at runtime?\*(R" later in this document).
-.PP
 \fIWhy does rxvt-unicode sometimes leave pixel droppings?\fR
 .IX Subsection "Why does rxvt-unicode sometimes leave pixel droppings?"
 .PP
@@ -633,6 +608,31 @@ search and use less resources within rxvt-unicode and the X\-server.
 The only limitation is that none of the fonts may be larger than the base
 font, as the base font defines the terminal character cell size, which
 must be the same due to the way terminals work.
+.PP
+\fIWhy do some chinese characters look so different than others?\fR
+.IX Subsection "Why do some chinese characters look so different than others?"
+.PP
+This is because there is a difference between script and language \*(--
+rxvt-unicode does not know which language the text that is output is,
+as it only knows the unicode character codes. If rxvt-unicode first
+sees a japanese/chinese character, it might choose a japanese font for
+display. Subsequent japanese characters will use that font. Now, many
+chinese characters aren't represented in japanese fonts, so when the first
+non-japanese character comes up, rxvt-unicode will look for a chinese font
+\&\*(-- unfortunately at this point, it will still use the japanese font for
+chinese characters that are also in the japanese font.
+.PP
+The workaround is easy: just tag a chinese font at the end of your font
+list (see the previous question). The key is to view the font list as
+a preference list: If you expect more japanese, list a japanese font
+first. If you expect more chinese, put a chinese font first.
+.PP
+In the future it might be possible to switch language preferences at
+runtime (the internal data structure has no problem with using different
+fonts for the same character at the same time, but no interface for this
+has been designed yet).
+.PP
+Until then, you might get away with switching fonts at runtime (see \*(L"Can I switch the fonts at runtime?\*(R" later in this document).
 .Sh "Keyboard, Mouse & User Interaction"
 .IX Subsection "Keyboard, Mouse & User Interaction"
 \fIThe new selection selects pieces that are too big, how can I select single words?\fR
@@ -1269,14 +1269,12 @@ encodings (you might try \f(CW\*(C`LC_CTYPE=C\-UTF\-8\*(C'\fR), so you are likel
 to 8\-bit encodings.
 .SH "RXVT-UNICODE TECHNICAL REFERENCE"
 .IX Header "RXVT-UNICODE TECHNICAL REFERENCE"
-.SH "DESCRIPTION"
-.IX Header "DESCRIPTION"
 The rest of this document describes various technical aspects of
 \&\fBrxvt-unicode\fR. First the description of supported command sequences,
 followed by pixmap support and last by a description of all features
 selectable at \f(CW\*(C`configure\*(C'\fR time.
-.SH "Definitions"
-.IX Header "Definitions"
+.Sh "Definitions"
+.IX Subsection "Definitions"
 .ie n .IP "\fB\fB""c""\fB\fR" 4
 .el .IP "\fB\f(CBc\fB\fR" 4
 .IX Item "c"
@@ -1299,8 +1297,8 @@ parameters, separated by \f(CW\*(C`;\*(C'\fR character(s).
 .el .IP "\fB\f(CBPt\fB\fR" 4
 .IX Item "Pt"
 A text parameter composed of printable characters.
-.SH "Values"
-.IX Header "Values"
+.Sh "Values"
+.IX Subsection "Values"
 .ie n .IP "\fB\fB""ENQ""\fB\fR" 4
 .el .IP "\fB\f(CBENQ\fB\fR" 4
 .IX Item "ENQ"
@@ -1348,8 +1346,8 @@ Switch to Standard Character Set
 .el .IP "\fB\f(CBSPC\fB\fR" 4
 .IX Item "SPC"
 Space Character
-.SH "Escape Sequences"
-.IX Header "Escape Sequences"
+.Sh "Escape Sequences"
+.IX Subsection "Escape Sequences"
 .ie n .IP "\fB\fB""ESC # 8""\fB\fR" 4
 .el .IP "\fB\f(CBESC # 8\fB\fR" 4
 .IX Item "ESC # 8"
@@ -1452,8 +1450,8 @@ C = K 	German character set unimplemented
 .PP
 
 .IX Xref "CSI"
-.SH "CSI (Command Sequence Introducer) Sequences"
-.IX Header "CSI (Command Sequence Introducer) Sequences"
+.Sh "\s-1CSI\s0 (Command Sequence Introducer) Sequences"
+.IX Subsection "CSI (Command Sequence Introducer) Sequences"
 .ie n .IP "\fB\fB""ESC [ Ps @""\fB\fR" 4
 .el .IP "\fB\f(CBESC [ Ps @\fB\fR" 4
 .IX Item "ESC [ Ps @"
@@ -1726,8 +1724,8 @@ Request Terminal Parameters (\s-1DECREQTPARM\s0)
 .PP
 
 .IX Xref "PrivateModes"
-.SH "DEC Private Modes"
-.IX Header "DEC Private Modes"
+.Sh "\s-1DEC\s0 Private Modes"
+.IX Subsection "DEC Private Modes"
 .ie n .IP "\fB\fB""ESC [ ? Pm h""\fB\fR" 4
 .el .IP "\fB\f(CBESC [ ? Pm h\fB\fR" 4
 .IX Item "ESC [ ? Pm h"
@@ -2004,8 +2002,8 @@ l	Use Normal Screen Buffer
 .PP
 
 .IX Xref "XTerm"
-.SH "XTerm Operating System Commands"
-.IX Header "XTerm Operating System Commands"
+.Sh "XTerm Operating System Commands"
+.IX Subsection "XTerm Operating System Commands"
 .ie n .IP "\fB\fB""ESC ] Ps;Pt ST""\fB\fR" 4
 .el .IP "\fB\f(CBESC ] Ps;Pt ST\fB\fR" 4
 .IX Item "ESC ] Ps;Pt ST"
@@ -2047,9 +2045,6 @@ Ps = 721	Move viewing window down by Pt lines, or clear scrollback buffer if Pt 
 Ps = 777	Call the perl extension with the given string, which should be of the form extension:parameters (Compile perl).
 .TE
 
-.PP
-
-.IX Xref "XPM"
 .SH "XPM"
 .IX Header "XPM"
 For the \s-1XPM\s0 XTerm escape sequence \fB\f(CB\*(C`ESC ] 20 ; Pt ST\*(C'\fB\fR then value
