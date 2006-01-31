@@ -113,7 +113,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
        98398    1664      24   15695    1824 rxvt --disable-everything
       188985    9048   66616   18222    1788 urxvt --disable-everything
 
-    When you "--enable-everything" (which _is_ unfair, as this involves xft
+    When you "--enable-everything" (which *is* unfair, as this involves xft
     and full locale/XIM support which are quite bloaty inside libX11 and my
     libc), the two diverge, but not unreasnobaly so.
 
@@ -363,8 +363,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
        URxvt.color14:  #00FFFF
        URxvt.color15:  #FFFFFF
 
-    And here is a more complete set of non-standard colors described (not by
-    me) as "pretty girly".
+    And here is a more complete set of non-standard colors.
 
        URxvt.cursorColor:  #dc74d1
        URxvt.pointerColor: #dc74d1
@@ -384,6 +383,8 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
        URxvt.color14:      #73f7ff
        URxvt.color7:       #e1dddd
        URxvt.color15:      #e1dddd
+
+    (They were described (not by me) as "pretty girly").
 
    Why do some characters look so much different than others?
     See next entry.

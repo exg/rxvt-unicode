@@ -390,8 +390,7 @@ including the murky brown that passes for low-intensity yellow:
    URxvt.color14:  #00FFFF
    URxvt.color15:  #FFFFFF
 
-And here is a more complete set of non-standard colors described (not by
-me) as "pretty girly".
+And here is a more complete set of non-standard colors.
 
    URxvt.cursorColor:  #dc74d1
    URxvt.pointerColor: #dc74d1
@@ -411,6 +410,8 @@ me) as "pretty girly".
    URxvt.color14:      #73f7ff
    URxvt.color7:       #e1dddd
    URxvt.color15:      #e1dddd
+
+(They were described (not by me) as "pretty girly").
 
 =head3 Why do some characters look so much different than others?
  

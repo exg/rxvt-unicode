@@ -277,7 +277,7 @@ already in use in this mode.
 \&  188985    9048   66616   18222    1788 urxvt --disable-everything
 .Ve
 .PP
-When you \f(CW\*(C`\-\-enable\-everything\*(C'\fR (which _is_ unfair, as this involves xft
+When you \f(CW\*(C`\-\-enable\-everything\*(C'\fR (which \fIis\fR unfair, as this involves xft
 and full locale/XIM support which are quite bloaty inside libX11 and my
 libc), the two diverge, but not unreasnobaly so.
 .PP
@@ -573,8 +573,7 @@ including the murky brown that passes for low-intensity yellow:
 \&   URxvt.color15:  #FFFFFF
 .Ve
 .PP
-And here is a more complete set of non-standard colors described (not by
-me) as \*(L"pretty girly\*(R".
+And here is a more complete set of non-standard colors.
 .PP
 .Vb 18
 \&   URxvt.cursorColor:  #dc74d1
@@ -596,6 +595,8 @@ me) as \*(L"pretty girly\*(R".
 \&   URxvt.color7:       #e1dddd
 \&   URxvt.color15:      #e1dddd
 .Ve
+.PP
+(They were described (not by me) as \*(L"pretty girly\*(R").
 .PP
 \fIWhy do some characters look so much different than others?\fR
 .IX Subsection "Why do some characters look so much different than others?"
