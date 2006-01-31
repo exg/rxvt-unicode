@@ -57,6 +57,10 @@
 
 #include <csignal>
 
+#if LINUX_YIELD_HACK
+# include <ctime>
+#endif
+
 /*----------------------------------------------------------------------*/
 
 #define IS_CONTROL(ch) !((ch) & 0xffffff60UL)
@@ -1099,7 +1103,13 @@ static struct event_handler
   
   void yield_cb (check_watcher &w)
   {
-    usleep (0);
+    // this should really be sched_yield(), but the linux guys thought
+    // that giving a process calling sched_yield () less cpu time than
+    // ones with high nice levels.
+
+    struct timespec ts = { 0, 0 };
+    nanosleep (&ts, 0);
+
     w.stop ();
   }
 
