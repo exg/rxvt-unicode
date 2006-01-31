@@ -14,6 +14,9 @@ DUMB: support tex fonts
 
 THINK: struct passwd *userinfo; /* defined in pwd.h + if ((userinfo = getpwuid(getuid())) != NULL) + shell = strdup(userinfo->pw_shell); /* retrieve current shell */ 
 
+TODO: xim "how to" faq entry
+TODO: reorganize faq
+
 7.5  Tue Jan 31 01:25:41 CET 2006
         - further improvements to the careful mode detection, and font width
           detection: 

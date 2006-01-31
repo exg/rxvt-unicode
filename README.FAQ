@@ -1,6 +1,5 @@
 FREQUENTLY ASKED QUESTIONS
-  The new selection selects pieces that are too big, how can I select
-single words?
+  The new selection selects pieces that are too big, how can I select single words?
     If you want to select e.g. alphanumeric words, you can use the following
     setting:
 
@@ -17,8 +16,7 @@ single words?
     Please also note that the *LeftClick Shift-LeftClik* combination also
     selects words like the old code.
 
-  I don't like the new selection/popups/hotkeys/perl, how do I
-change/disable it?
+  I don't like the new selection/popups/hotkeys/perl, how do I change/disable it?
     You can disable the perl extension completely by setting the
     perl-ext-common resource to the empty string, which also keeps
     rxvt-unicode from initialising perl, saving memory.
@@ -38,10 +36,10 @@ change/disable it?
 
        URxvt.searchable-scrollback: CM-s
 
-  The cursor moves when selecting text in the current input line, how
-do I switch this off?
-  During rlogin/ssh/telnet/etc. sessions, clicking near the cursor
-outputs strange escape sequences, how do I fix this?
+  The cursor moves when selecting text in the current input line, how do I switch this off?
+    See next entry.
+
+  During rlogin/ssh/telnet/etc. sessions, clicking near the cursor outputs strange escape sequences, how do I fix this?
     These are caused by the "readline" perl extension. Under normal
     circumstances, it will move your cursor around when you click into the
     line that contains it. It tries hard not to do this at the wrong moment,
@@ -227,8 +225,7 @@ outputs strange escape sequences, how do I fix this?
     bug in the Debian version and it serves as a reminder for other users
     that might encounter the same issue.
 
-  I am maintaining rxvt-unicode for distribution/OS XXX, any
-recommendation?
+  I am maintaining rxvt-unicode for distribution/OS XXX, any recommendation?
     You should build one binary with the default options. configure now
     enables most useful options, and the trend goes to making them
     runtime-switchable, too, so there is usually no drawback to enbaling
@@ -296,6 +293,8 @@ recommendation?
     "enacs=\E[0@" and try again.
 
   "bash"'s readline does not work correctly under rxvt.
+    See next entry.
+
   I need a termcap file entry.
     One reason you might want this is that some distributions or operating
     systems still compile some programs using the long-obsoleted termcap
@@ -346,7 +345,11 @@ recommendation?
     to your ".profile" or ".bashrc".
 
   Why doesn't vim/emacs etc. use the 88 colour mode?
+    See next entry.
+
   Why doesn't vim/emacs etc. make use of italic?
+    See next entry.
+
   Why are the secondary screen-related options not working properly?
     Make sure you are using "TERM=rxvt-unicode". Some pre-packaged
     distributions (most notably Debian GNU/Linux) break rxvt-unicode by
@@ -366,6 +369,8 @@ recommendation?
     report if that helped.
 
   Rxvt-unicode does not seem to understand the selected encoding?
+    See next entry.
+
   Unicode does not seem to work?
     If you encounter strange problems like typing an accented character but
     getting two unrelated other characters or similar, or if program output
@@ -398,6 +403,8 @@ recommendation?
     support locales :(
 
   Why do some characters look so much different than others?
+    See next entry.
+
   How does rxvt-unicode choose fonts?
     Most fonts do not contain the full range of Unicode, which is fine.
     Chances are that the font you (or the admin/package maintainer of your
@@ -564,6 +571,8 @@ recommendation?
     likely limited to 8-bit encodings.
 
   How does rxvt-unicode determine the encoding to use?
+    See next entry.
+
   Is there an option to switch encodings?
     Unlike some other terminals, rxvt-unicode has no encoding switch, and no
     specific "utf-8" mode, such as xterm. In fact, it doesn't even know
@@ -848,9 +857,7 @@ recommendation?
 
     See some more examples in the documentation for the keysym resource.
 
-  I'm using keyboard model XXX that has extra Prior/Next/Insert keys.
-How do I make use of them?  For example, the Sun Keyboard type 4
-has the following mappings that rxvt-unicode doesn't recognize.
+  I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How do I make use of them? For example, the Sun Keyboard type 4 has the following mappings that rxvt-unicode doesn't recognize.
        KP_Insert == Insert
        F22 == Print
        F27 == Home
@@ -862,8 +869,7 @@ has the following mappings that rxvt-unicode doesn't recognize.
     possible keyboard mappings, it is better to use `xmodmap' to remap the
     keys as required for your particular machine.
 
-  How do I distinguish wether I'm running rxvt-unicode or a regular xterm?
-I need this to decide about setting colors etc.
+  How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.
     rxvt and rxvt-unicode always export the variable "COLORTERM", so you can
     check and see if that is set. Note that several programs, JED, slrn,
     Midnight Commander automatically check this variable to decide whether
