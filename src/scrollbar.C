@@ -34,7 +34,7 @@
 int
 rxvt_term::scrollbar_mapping (int map)
 {
-  int             change = 0;
+  int change = 0;
 
 #ifdef HAVE_SCROLLBARS
   if (map)
@@ -57,6 +57,7 @@ rxvt_term::scrollbar_mapping (int map)
       change = 1;
     }
 #endif
+
   return change;
 }
 
@@ -230,7 +231,7 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
 
 # ifdef RXVT_SCROLLBAR
   if (! OPTION (Opt_scrollBar_floating) && style == R_SB_RXVT)
-    sb_shadow = 2;
+    sb_shadow = SHADOW_WIDTH;
 # endif
 
   scrollBar.style = style;

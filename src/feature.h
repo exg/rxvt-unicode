@@ -300,6 +300,11 @@
 #define SB_WIDTH_MAXIMUM 	100
 
 /*
+ * rxvt scrollbar shadow width in pixels, must be 1 or 2
+ */
+#define SHADOW_WIDTH 1
+
+/*
  * When using Rxvt scrollbar, clicking above or below the slider will move
  * 1/4 of the screen height, if possible.  Setting RXVT_SCROLL_FULL will move
  * it one screen height less one line, if possible

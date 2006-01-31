@@ -27,8 +27,6 @@
 /*----------------------------------------------------------------------*/
 #if defined(RXVT_SCROLLBAR)
 
-#define SHADOW_WIDTH 1
-
 static void
 draw_shadow (rxvt_term *term, int x, int y, int w, int h)
 {
@@ -40,10 +38,10 @@ draw_shadow (rxvt_term *term, int x, int y, int w, int h)
 
   for (; shadow-- > 0; x++, y++, w--, h--)
     {
-      XDrawLine (term->xdisp, term->scrollBar.win, term->topShadowGC, x, y, w, y);
-      XDrawLine (term->xdisp, term->scrollBar.win, term->topShadowGC, x, y, x, h);
-      XDrawLine (term->xdisp, term->scrollBar.win, term->botShadowGC, w, h, w, y + 1);
-      XDrawLine (term->xdisp, term->scrollBar.win, term->botShadowGC, w, h, x + 1, h);
+      XDrawLine (term->xdisp, term->scrollBar.win, term->topShadowGC, x, y, w    , y    );
+      XDrawLine (term->xdisp, term->scrollBar.win, term->topShadowGC, x, y, x    , h    );
+      XDrawLine (term->xdisp, term->scrollBar.win, term->botShadowGC, w, h, w    , y + 1);
+      XDrawLine (term->xdisp, term->scrollBar.win, term->botShadowGC, w, h, x + 1, h    );
     }
 }
 
@@ -57,6 +55,7 @@ draw_button (rxvt_term *term, int x, int y, int state, int dirn)
 
   sz = term->scrollBar.width;
   sz2 = sz / 2;
+
   switch (state)
     {
       case +1:
@@ -76,6 +75,7 @@ draw_button (rxvt_term *term, int x, int y, int state, int dirn)
   pt[0].x = x;
   pt[1].x = x + sz - 1;
   pt[2].x = x + sz2;
+
   if (dirn == UP)
     {
       pt[0].y = pt[1].y = y + sz - 1;
