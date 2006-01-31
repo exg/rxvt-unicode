@@ -2464,7 +2464,7 @@ rxvt_term::check_our_parents ()
 
   if (!i || prop == NULL
 #if TINTING
-      || !rs[Rs_color + Color_tint]
+      || !ISSET_PIXCOLOR (Color_tint)
 #endif
       )
     have_pixmap = 0;
@@ -3855,9 +3855,12 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 #if TRANSPARENT && TINTING
       case URxvt_Color_tint:
         process_color_seq (op, Color_tint, str, resp);
+
         check_our_parents ();
+
         if (am_transparent)
           want_full_refresh = want_refresh = 1;
+
         break;
 #endif
 

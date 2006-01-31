@@ -639,16 +639,9 @@ rxvt_color::set (rxvt_screen *screen, const char *name)
   char eos;
   int skip;
 
-  if (1 <= sscanf (name, "[%hx]%n", &c.a, &skip))
+  if (1 <= sscanf (name, "[%hd]%n", &c.a, &skip))
     {
-      switch (skip)
-        {
-          case 2 + 1: c.a *= rxvt_rgba::MAX_CC / 0x000f; break;
-          case 2 + 2: c.a *= rxvt_rgba::MAX_CC / 0x00ff; break;
-          case 2 + 3: c.a *= rxvt_rgba::MAX_CC / 0x0fff; break;
-          case 2 + 4: c.a *= rxvt_rgba::MAX_CC / 0xffff; break;
-        }
-
+      c.a = lerp<int, int, int> (0, rxvt_rgba::MAX_CC, c.a);
       name += skip;
     }
   else
