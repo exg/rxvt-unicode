@@ -12,6 +12,8 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
+THINK: struct passwd *userinfo; /* defined in pwd.h + if ((userinfo = getpwuid(getuid())) != NULL) + shell = strdup(userinfo->pw_shell); /* retrieve current shell */ 
+
 7.5  Tue Jan 31 01:25:41 CET 2006
         - further improvements to the careful mode detection, and font width
           detection: 
