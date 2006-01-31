@@ -1705,6 +1705,7 @@ rxvt_term::focus_in ()
   if (!focus)
     {
       focus = 1;
+      want_refresh = 1;
 
       HOOK_INVOKE ((this, HOOK_FOCUS_OUT, DT_END));
 
@@ -1723,7 +1724,6 @@ rxvt_term::focus_in ()
       if (rs[Rs_fade])
         {
           pix_colors = pix_colors_focused;
-          want_refresh = 1;
           scr_recolour ();
         }
 #endif
@@ -1736,6 +1736,7 @@ rxvt_term::focus_out ()
   if (focus)
     {
       focus = 0;
+      want_refresh = 1;
 
       HOOK_INVOKE ((this, HOOK_FOCUS_OUT, DT_END));
 
@@ -1761,7 +1762,6 @@ rxvt_term::focus_out ()
       if (rs[Rs_fade])
         {
           pix_colors = pix_colors_unfocused;
-          want_refresh = 1;
           scr_recolour ();
         }
 #endif

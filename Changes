@@ -17,7 +17,7 @@ THINK: struct passwd *userinfo; /* defined in pwd.h + if ((userinfo = getpwuid(g
 TODO: xim "how to" faq entry
 TODO: reorganize faq
 
-7.5  Tue Jan 31 01:25:41 CET 2006
+7.5  Tue Jan 31 15:15:43 CET 2006
         - further improvements to the careful mode detection, and font width
           detection: 
           - fully double-wide fonts will now be correctly treated,
@@ -53,7 +53,6 @@ TODO: reorganize faq
         - added the OSC sequence 702 to detect the urxvt version number.
         - small configure updates.
         - further RTT optimisations.
-        - don't cause an unnecessary refresh on focus changes.
 
 7.4  Sat Jan 28 15:26:27 CET 2006
 	- screen background wasn't always erased properly when scrolling,
