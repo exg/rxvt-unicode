@@ -127,7 +127,7 @@ already in use in this mode.
    98398    1664      24   15695    1824 rxvt --disable-everything
   188985    9048   66616   18222    1788 urxvt --disable-everything
 
-When you C<--enable-everything> (which _is_ unfair, as this involves xft
+When you C<--enable-everything> (which I<is> unfair, as this involves xft
 and full locale/XIM support which are quite bloaty inside libX11 and my
 libc), the two diverge, but not unreasnobaly so.
 
