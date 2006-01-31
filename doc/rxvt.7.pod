@@ -63,8 +63,10 @@ other combination either by setting the B<searchable-scrollback> resource:
 
    URxvt.searchable-scrollback: CM-s
 
-=head2 The cursor moves when selecting text in the current input line, how
+=head3 The cursor moves when selecting text in the current input line, how
 do I switch this off?
+
+See next entry.
 
 =head2 During rlogin/ssh/telnet/etc. sessions, clicking near the cursor
 outputs strange escape sequences, how do I fix this?
@@ -335,6 +337,8 @@ C<enacs=\E[0@> and try again.
 
 =head2 C<bash>'s readline does not work correctly under @@RXVT_NAME@@.
 
+See next entry.
+
 =head2 I need a termcap file entry.
 
 One reason you might want this is that some distributions or operating
@@ -388,7 +392,11 @@ to your C<.profile> or C<.bashrc>.
 
 =head2 Why doesn't vim/emacs etc. use the 88 colour mode?
 
+See next entry.
+
 =head2 Why doesn't vim/emacs etc. make use of italic?
+
+See next entry.
 
 =head2 Why are the secondary screen-related options not working properly?
 
@@ -411,6 +419,8 @@ keymap. See the answer to the previous question, and please report if that
 helped.
 
 =head2 Rxvt-unicode does not seem to understand the selected encoding?
+
+See next entry.
 
 =head2 Unicode does not seem to work?
 
@@ -443,6 +453,8 @@ you will need to remember a little known fact: Some programs just don't
 support locales :(
 
 =head2 Why do some characters look so much different than others?
+
+See next entry.
 
 =head2 How does rxvt-unicode choose fonts?
 
@@ -619,6 +631,8 @@ encodings (you might try C<LC_CTYPE=C-UTF-8>), so you are likely limited
 to 8-bit encodings.
 
 =head2 How does rxvt-unicode determine the encoding to use?
+
+See next entry.
 
 =head2 Is there an option to switch encodings?
 

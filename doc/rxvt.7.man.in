@@ -201,8 +201,11 @@ other combination either by setting the \fBsearchable-scrollback\fR resource:
 .Vb 1
 \&   URxvt.searchable-scrollback: CM-s
 .Ve
-.Sh "The cursor moves when selecting text in the current input line, how do I switch this off?"
+.PP
+\fIThe cursor moves when selecting text in the current input line, how do I switch this off?\fR
 .IX Subsection "The cursor moves when selecting text in the current input line, how do I switch this off?"
+.PP
+See next entry.
 .Sh "During rlogin/ssh/telnet/etc. sessions, clicking near the cursor outputs strange escape sequences, how do I fix this?"
 .IX Subsection "During rlogin/ssh/telnet/etc. sessions, clicking near the cursor outputs strange escape sequences, how do I fix this?"
 These are caused by the \f(CW\*(C`readline\*(C'\fR perl extension. Under normal
@@ -488,6 +491,7 @@ Most likely it's the empty definition for \f(CW\*(C`enacs=\*(C'\fR. Just replace
 .ie n .Sh """bash""'s readline does not work correctly under @@RXVT_NAME@@."
 .el .Sh "\f(CWbash\fP's readline does not work correctly under @@RXVT_NAME@@."
 .IX Subsection "bash's readline does not work correctly under @@RXVT_NAME@@."
+See next entry.
 .Sh "I need a termcap file entry."
 .IX Subsection "I need a termcap file entry."
 One reason you might want this is that some distributions or operating
@@ -548,8 +552,10 @@ to \f(CW\*(C`/etc/DIR_COLORS\*(C'\fR or simply add:
 to your \f(CW\*(C`.profile\*(C'\fR or \f(CW\*(C`.bashrc\*(C'\fR.
 .Sh "Why doesn't vim/emacs etc. use the 88 colour mode?"
 .IX Subsection "Why doesn't vim/emacs etc. use the 88 colour mode?"
+See next entry.
 .Sh "Why doesn't vim/emacs etc. make use of italic?"
 .IX Subsection "Why doesn't vim/emacs etc. make use of italic?"
+See next entry.
 .Sh "Why are the secondary screen-related options not working properly?"
 .IX Subsection "Why are the secondary screen-related options not working properly?"
 Make sure you are using \f(CW\*(C`TERM=rxvt\-unicode\*(C'\fR. Some pre-packaged
@@ -570,6 +576,7 @@ keymap. See the answer to the previous question, and please report if that
 helped.
 .Sh "Rxvt-unicode does not seem to understand the selected encoding?"
 .IX Subsection "Rxvt-unicode does not seem to understand the selected encoding?"
+See next entry.
 .Sh "Unicode does not seem to work?"
 .IX Subsection "Unicode does not seem to work?"
 If you encounter strange problems like typing an accented character but
@@ -605,6 +612,7 @@ you will need to remember a little known fact: Some programs just don't
 support locales :(
 .Sh "Why do some characters look so much different than others?"
 .IX Subsection "Why do some characters look so much different than others?"
+See next entry.
 .Sh "How does rxvt-unicode choose fonts?"
 .IX Subsection "How does rxvt-unicode choose fonts?"
 Most fonts do not contain the full range of Unicode, which is
@@ -776,6 +784,7 @@ encodings (you might try \f(CW\*(C`LC_CTYPE=C\-UTF\-8\*(C'\fR), so you are likel
 to 8\-bit encodings.
 .Sh "How does rxvt-unicode determine the encoding to use?"
 .IX Subsection "How does rxvt-unicode determine the encoding to use?"
+See next entry.
 .Sh "Is there an option to switch encodings?"
 .IX Subsection "Is there an option to switch encodings?"
 Unlike some other terminals, rxvt-unicode has no encoding switch, and no

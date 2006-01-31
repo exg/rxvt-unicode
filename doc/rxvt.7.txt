@@ -59,8 +59,10 @@ change/disable it?
 
        URxvt.searchable-scrollback: CM-s
 
-  The cursor moves when selecting text in the current input line, how
+   The cursor moves when selecting text in the current input line, how
 do I switch this off?
+    See next entry.
+
   During rlogin/ssh/telnet/etc. sessions, clicking near the cursor
 outputs strange escape sequences, how do I fix this?
     These are caused by the "readline" perl extension. Under normal
@@ -317,6 +319,8 @@ recommendation?
     "enacs=\E[0@" and try again.
 
   "bash"'s readline does not work correctly under rxvt.
+    See next entry.
+
   I need a termcap file entry.
     One reason you might want this is that some distributions or operating
     systems still compile some programs using the long-obsoleted termcap
@@ -367,7 +371,11 @@ recommendation?
     to your ".profile" or ".bashrc".
 
   Why doesn't vim/emacs etc. use the 88 colour mode?
+    See next entry.
+
   Why doesn't vim/emacs etc. make use of italic?
+    See next entry.
+
   Why are the secondary screen-related options not working properly?
     Make sure you are using "TERM=rxvt-unicode". Some pre-packaged
     distributions (most notably Debian GNU/Linux) break rxvt-unicode by
@@ -387,6 +395,8 @@ recommendation?
     report if that helped.
 
   Rxvt-unicode does not seem to understand the selected encoding?
+    See next entry.
+
   Unicode does not seem to work?
     If you encounter strange problems like typing an accented character but
     getting two unrelated other characters or similar, or if program output
@@ -419,6 +429,8 @@ recommendation?
     support locales :(
 
   Why do some characters look so much different than others?
+    See next entry.
+
   How does rxvt-unicode choose fonts?
     Most fonts do not contain the full range of Unicode, which is fine.
     Chances are that the font you (or the admin/package maintainer of your
@@ -585,6 +597,8 @@ recommendation?
     likely limited to 8-bit encodings.
 
   How does rxvt-unicode determine the encoding to use?
+    See next entry.
+
   Is there an option to switch encodings?
     Unlike some other terminals, rxvt-unicode has no encoding switch, and no
     specific "utf-8" mode, such as xterm. In fact, it doesn't even know
