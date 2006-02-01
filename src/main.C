@@ -952,17 +952,17 @@ done:
 void
 rxvt_term::recolour_cursor ()
 {
-  XColor xcol[2];
+  XColor fg, bg;
 
-  xcol[0].pixel = ISSET_PIXCOLOR (Color_pointer_fg)
-                     ? pix_colors_focused[Color_pointer_fg]
-                     : pix_colors_focused[Color_fg];
-  xcol[1].pixel = ISSET_PIXCOLOR (Color_pointer_bg)
-                     ? pix_colors_focused[Color_pointer_bg]
-                     : pix_colors_focused[Color_bg];
+  (ISSET_PIXCOLOR (Color_pointer_fg)
+     ? pix_colors_focused[Color_pointer_fg]
+     : pix_colors_focused[Color_fg]).get (fg);
 
-  XQueryColors (xdisp, cmap, xcol, 2);
-  XRecolorCursor (xdisp, TermWin_cursor, xcol + 0, xcol + 1);
+  (ISSET_PIXCOLOR (Color_pointer_bg)
+     ? pix_colors_focused[Color_pointer_bg]
+     : pix_colors_focused[Color_bg]).get (bg);
+
+  XRecolorCursor (xdisp, TermWin_cursor, &fg, &bg);
 }
 
 /*----------------------------------------------------------------------*/

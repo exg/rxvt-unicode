@@ -397,9 +397,10 @@ void
 rxvt_display::ref_next ()
 {
   // TODO: somehow check wether the database files/resources changed
-  // before re-loading/parsing
+  // before affording re-loading/parsing
   XrmDestroyDatabase (XrmGetDatabase (display));
   XrmSetDatabase (display, get_resources ());
+  printf ("next\n");//D
 }
 
 rxvt_display::~rxvt_display ()
@@ -510,6 +511,7 @@ void rxvt_display::set_selection_owner (rxvt_term *owner)
 }
 
 #ifdef USE_XIM
+
 void rxvt_display::reg (im_watcher *w)
 {
   imw.push_back (w);
@@ -543,10 +545,11 @@ rxvt_xim *rxvt_display::get_xim (const char *locale, const char *modifiers)
 
 void rxvt_display::put_xim (rxvt_xim *xim)
 {
-#if XLIB_IS_RACEFREE
+# if XLIB_IS_RACEFREE
   xims.put (xim);
-#endif
+# endif
 }
+
 #endif
 
 Atom rxvt_display::atom (const char *name)
@@ -598,11 +601,12 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
       return XftColorAllocValue (screen->xdisp, screen->visual, screen->cmap, &d, &c);
     }
 #else
+  c.red   = color.r;
+  c.green = color.g;
+  c.blue  = color.b;
+
   if (screen->visual->c_class == TrueColor || screen->visual->c_class == DirectColor)
     {
-      c.red   = color.g;
-      c.green = color.g;
-      c.blue  = color.g;
       c.pixel = (color.r * (screen->visual->red_mask   >> ctz (screen->visual->red_mask  ))
                          / rgba::MAX_CC) << ctz (screen->visual->red_mask  )
               | (color.g * (screen->visual->green_mask >> ctz (screen->visual->green_mask))
@@ -612,19 +616,12 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
 
       return true;
     }
+  else if (XAllocColor (screen->xdisp, screen->cmap, &c))
+    return true;
   else
-    {
-      c.red   = color.r;
-      c.green = color.g;
-      c.blue  = color.b;
-
-      if (XAllocColor (screen->xdisp, screen->cmap, &c))
-	return true;
-      else
-        c.pixel = (color.r + color.g + color.b) > 128*3
-                ? WhitePixelOfScreen (DefaultScreenOfDisplay (screen->xdisp))
-                : BlackPixelOfScreen (DefaultScreenOfDisplay (screen->xdisp));
-    }
+    c.pixel = (color.r + color.g + color.b) > 128*3
+            ? WhitePixelOfScreen (DefaultScreenOfDisplay (screen->xdisp))
+            : BlackPixelOfScreen (DefaultScreenOfDisplay (screen->xdisp));
 #endif
 
   return false;
@@ -637,6 +634,7 @@ rxvt_color::set (rxvt_screen *screen, const char *name)
   char eos;
   int skip;
 
+  // parse the nonstandard "[alphapercent]" prefix
   if (1 <= sscanf (name, "[%hd]%n", &c.a, &skip))
     {
       c.a = lerp<int, int, int> (0, rgba::MAX_CC, c.a);
@@ -645,8 +643,8 @@ rxvt_color::set (rxvt_screen *screen, const char *name)
   else
     c.a = rgba::MAX_CC;
 
-  // parse the non-standard rgba format
-  if (strlen (name) != 4+5*4 || 4 != sscanf (name, "rgba:%hx/%hx/%hx/%hx%c", &c.r, &c.g, &c.b, &c.a, &eos))
+  // parse the non-standard "rgba:rrrr/gggg/bbbb/aaaa" format
+  if (strlen (name) != 4+5*4 || 4 != sscanf (name, "rgba:%4hx/%4hx/%4hx/%4hx%c", &c.r, &c.g, &c.b, &c.a, &eos))
     {
       XColor xc, xc_exact;
 
@@ -732,6 +730,18 @@ rxvt_color::get (rgba &color)
   color.b = c.blue;
   color.a = rgba::MAX_CC;
 #endif
+}
+
+void
+rxvt_color::get (XColor &color)
+{
+  rgba c;
+  get (c);
+
+  color.red   = c.r;
+  color.green = c.g;
+  color.blue  = c.b;
+  color.pixel = (Pixel)*this;
 }
 
 void 
