@@ -15,6 +15,7 @@ DUMB: support tex fonts
 THINK: struct passwd *userinfo; /* defined in pwd.h + if ((userinfo = getpwuid(getuid())) != NULL) + shell = strdup(userinfo->pw_shell); /* retrieve current shell */ 
 
 TODO: xim "how to" faq entry
+TODO: rxvt -bg #comment
 
 	- changed interpretation of [alpha] colour prefix.
         - +option now really sets the option to default, instead of using the
