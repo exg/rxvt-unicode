@@ -20,6 +20,7 @@ TODO: rxvt -bg #comment
 	- changed interpretation of [alpha] colour prefix.
         - +option now really sets the option to default, instead of using the
           resource value.
+        - use exit status 2 in urxvtc when urxvtd couldn't be contacted.
         - the linux yield hack is back, now using usleep, and enabled only on
           __linux__.
         - further round trip eliminations in the !XFT case by remembering

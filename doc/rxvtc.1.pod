@@ -21,6 +21,16 @@ B<@@RXVT_NAME@@c>, too. Please note that all options are currently
 interpreted in the context of the daemon process, which makes a difference
 for options that specify a file descriptor (such as B<-pty-fd>).
 
+=head1 EXIT STATUS
+
+If everything went well, @@RXVT_NAME@@c returns with an exit status of C<0>.
+If contacting the daemon fails, it exits with the exit status C<2>. In all other error
+cases it returns with status C<1>.
+
+This can be used to implement auto-starting behaviour, by checking for an
+exit status of C<2>, running C<@@RXVT_NAME@@d -f -q> and retrying the call
+to @@RXVT_NAME@@c.
+
 =head1 ENVIRONMENT
 
 All environment variables of the current process will be made available

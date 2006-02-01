@@ -1,4 +1,4 @@
-// all resource indices, used by rxvt.h anf rxvtperl.xs
+// all resource indices, used by rxvt.h and rxvtperl.xs
 
   def (display_name)
   def (term_name)

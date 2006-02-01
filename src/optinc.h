@@ -1,3 +1,5 @@
+// all resource indices, used by rxvtlib.h and rxvtperl.xs
+
  def(console,               0)
  def(loginShell,            1)
  def(iconic,                2)
