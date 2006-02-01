@@ -639,10 +639,8 @@ rxvt_color::set (rxvt_screen *screen, const char *name)
 
   if (1 <= sscanf (name, "[%hd]%n", &c.a, &skip))
     {
-     printf ("X %d\n", c.a);
       c.a = lerp<int, int, int> (0, rgba::MAX_CC, c.a);
       name += skip;
-     printf ("y %04x\n", c.a);
     }
   else
     c.a = rgba::MAX_CC;
