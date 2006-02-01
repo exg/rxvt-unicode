@@ -1260,6 +1260,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void set_window_color (int idx, const char *color);
   void set_colorfgbg ();
   bool set_color (rxvt_color &color, const char *name);
+  void alias_color (int dst, int src);
   void set_widthheight (unsigned int newwidth, unsigned int newheight);
 
   // screen.C

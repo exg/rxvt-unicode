@@ -28,7 +28,7 @@
 #include "version.h"
 
 #ifdef KEYSYM_RESOURCE
-#include "keyboard.h"
+# include "keyboard.h"
 #endif
 
 /* place holders used for parsing command-line options */
@@ -36,7 +36,7 @@
 #define Optflag_Boolean              0x80000000UL
 #define Optflag_mask                 0x3fffffffUL
 
-/*{{{ monolithic option/resource structure: */
+/* monolithic option/resource structure: */
 /*
  * `string' options MUST have a usage argument
  * `switch' and `boolean' options have no argument
@@ -268,7 +268,6 @@ optList[] = {
 #undef RSTRG
 #undef SWCH
 #undef BOOL
-/*}}} */
 
 static const char releasestring[] = "rxvt-unicode (" RXVTNAME ") v" VERSION " - released: " DATE "\n";
 static const char optionsstring[] = "options: "
@@ -486,7 +485,7 @@ rxvt_usage (int type)
 void
 rxvt_term::get_options (int argc, const char *const *argv)
 {
-  int             i, bad_option = 0;
+  int i, bad_option = 0;
 
   for (i = 1; i < argc; i++)
     {
@@ -543,8 +542,12 @@ rxvt_term::get_options (int argc, const char *const *argv)
                */
 
               if (optList[entry].doff != -1)
-                rs[optList[entry].doff] = flag == resval_on && argv[i+1]
-                                          ? argv[++i] : resval_undef;
+                {
+                  if (flag == resval_on && !argv [i+1])
+                    rxvt_fatal ("option '%s' needs an argument, aborting.\n", argv [i]);
+
+                  rs[optList[entry].doff] = flag == resval_on ? argv[++i] : resval_undef;
+                }
             }
           else
             {		/* boolean value */

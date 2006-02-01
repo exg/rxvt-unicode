@@ -6,7 +6,7 @@
   def (geometry)
   def (reverseVideo)
   def (color)
-  reserve (color, NRS_COLORS)
+  reserve (color, TOTAL_COLORS)
   def (font)
 #if ENABLE_STYLES
   def (boldFont)

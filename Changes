@@ -15,7 +15,6 @@ DUMB: support tex fonts
 THINK: struct passwd *userinfo; /* defined in pwd.h + if ((userinfo = getpwuid(getuid())) != NULL) + shell = strdup(userinfo->pw_shell); /* retrieve current shell */ 
 
 TODO: xim "how to" faq entry
-TODO: rxvt -bg #comment
 
 	- changed interpretation of [alpha] colour prefix.
         - +option now really sets the option to default, instead of using the
@@ -27,6 +26,8 @@ TODO: rxvt -bg #comment
           the colour components.
         - plain scrollbar works better with -sr.
         - fixed half-shadow scrollbar look.
+        - more colour rtt optimisations.
+        - properly(?) free colours on window close.
         - reorganised the FAQ into multiple sections.
 
 7.5  Tue Jan 31 15:15:43 CET 2006

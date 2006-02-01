@@ -696,11 +696,11 @@ rxvt_term::Get_Colours ()
 #endif
                   case Color_pointer_fg:
                     name = rs[Rs_color + Color_fg];
-                    xcol = pix_colors[Color_fg];
+                    xcol.set (this, name);
                     break;
                   default:
                     name = rs[Rs_color + Color_bg];
-                    xcol = pix_colors[Color_bg];
+                    xcol.set (this, name);
                     break;
                 }
             }
@@ -710,21 +710,11 @@ rxvt_term::Get_Colours ()
       rs[Rs_color + i] = name;
     }
 
-#ifdef OFF_FOCUS_FADING
-  if (rs[Rs_fade])
-    for (i = 0; i < (depth <= 2 ? 2 : NRS_COLORS); i++)
-      {
-        rgba c;
-        pix_colors[Color_fade].get (c);
-        pix_colors_focused[i].fade (this, atoi (rs[Rs_fade]), pix_colors_unfocused[i],c);
-      }
-#endif
-
   if (depth <= 2)
     {
-      if (!rs[Rs_color + Color_pointer_fg]) pix_colors[Color_pointer_fg] = pix_colors[Color_fg];
-      if (!rs[Rs_color + Color_pointer_bg]) pix_colors[Color_pointer_bg] = pix_colors[Color_bg];
-      if (!rs[Rs_color + Color_border]    ) pix_colors[Color_border]     = pix_colors[Color_fg];
+      if (!rs[Rs_color + Color_pointer_fg]) alias_color (Color_pointer_fg, Color_fg);
+      if (!rs[Rs_color + Color_pointer_bg]) alias_color (Color_pointer_bg, Color_bg);
+      if (!rs[Rs_color + Color_border]    ) alias_color (Color_border,     Color_fg);
     }
 
   /*
@@ -734,44 +724,41 @@ rxvt_term::Get_Colours ()
    * from the fvwm window manager.
    */
 #ifdef KEEP_SCROLLCOLOR
-
   if (depth <= 2)
     {
       /* Monochrome */
-      pix_colors[Color_scroll]       = pix_colors[Color_fg];
-      pix_colors[Color_topShadow]    = pix_colors[Color_bg];
-      pix_colors[Color_bottomShadow] = pix_colors[Color_bg];
+      alias_color (Color_scroll,       Color_fg);
+      alias_color (Color_topShadow,    Color_bg);
+      alias_color (Color_bottomShadow, Color_bg);
     }
   else
     {
-      rxvt_color xcol[2];
-      /* xcol[0] == white
-       * xcol[1] == top shadow
-       * xcol[2] == bot shadow */
+      pix_colors [Color_scroll].fade (this, 50, pix_colors [Color_bottomShadow]);
 
-      xcol[1] = pix_colors[Color_scroll];
-      xcol[0].set (this, rgba (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC));
-
-      rgba c0, c1;
-
-      xcol[0].get (c0);
-      xcol[1].get (c1);
-
-      xcol[1].fade (this, 50, pix_colors[Color_bottomShadow]);
+      rgba cscroll;
+      pix_colors [Color_scroll].get (cscroll);
 
       /* topShadowColor */
-      if (!xcol[1].set (this,
-                        rgba (
-                          min (c0.r, max (c1.r / 5, c1.r) * 7 / 5),
-                          min (c0.g, max (c1.g / 5, c1.g) * 7 / 5),
-                          min (c0.b, max (c1.b / 5, c1.b) * 7 / 5),
-                          c1.a) // pa1 vs. pa0: arbitrary
-                        ));
-        xcol[1] = pix_colors[Color_White];
-
-      pix_colors[Color_topShadow] = xcol[1];
+      if (!pix_colors[Color_topShadow].set (this,
+                       rgba (
+                         min ((int)rgba::MAX_CC, max (cscroll.r / 5, cscroll.r) * 7 / 5),
+                         min ((int)rgba::MAX_CC, max (cscroll.g / 5, cscroll.g) * 7 / 5),
+                         min ((int)rgba::MAX_CC, max (cscroll.b / 5, cscroll.b) * 7 / 5),
+                         cscroll.a)
+                       ))
+        alias_color (Color_topShadow, Color_White);
     }
 #endif                          /* KEEP_SCROLLCOLOR */
+
+#ifdef OFF_FOCUS_FADING
+  if (rs[Rs_fade])
+    for (i = 0; i < (depth <= 2 ? 2 : NRS_COLORS); i++)
+      {
+        rgba c;
+        pix_colors [Color_fade].get (c);
+        pix_colors_focused [i].fade (this, atoi (rs[Rs_fade]), pix_colors_unfocused[i],c);
+      }
+#endif
 }
 
 /*----------------------------------------------------------------------*/

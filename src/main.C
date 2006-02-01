@@ -254,10 +254,18 @@ rxvt_term::~rxvt_term ()
       if (parent[0])
         XDestroyWindow (xdisp, parent[0]);
 
+      for (int i = 0; i < TOTAL_COLORS; i++)
+        if (ISSET_PIXCOLOR (i))
+          {
+            pix_colors_focused   [i].free (this);
+#if OFF_FOCUS_FADING
+            pix_colors_unfocused [i].free (this);
+#endif
+          }
+
       clear ();
     }
 
-  // TODO: free pixcolours, colours should become part of rxvt_display
   delete pix_colors_focused;
 #if OFF_FOCUS_FADING
   delete pix_colors_unfocused;
@@ -1010,6 +1018,12 @@ rxvt_term::set_color (rxvt_color &color, const char *name)
   return false;
 }
 
+void
+rxvt_term::alias_color (int dst, int src)
+{
+  pix_colors[dst].set (this, rs[Rs_color + dst] = rs[Rs_color + src]);
+}
+
 /* -------------------------------------------------------------------- *
  * -                         WINDOW RESIZING                          - *
  * -------------------------------------------------------------------- */
@@ -1141,8 +1155,8 @@ rxvt_term::set_widthheight (unsigned int newwidth, unsigned int newheight)
 void
 rxvt_term::im_set_color (unsigned long &fg, unsigned long &bg)
 {
-  fg = pix_colors[Color_fg];
-  bg = pix_colors[Color_bg];
+  fg = pix_colors [Color_fg];
+  bg = pix_colors [Color_bg];
 }
 
 void
