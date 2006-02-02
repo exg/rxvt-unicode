@@ -16,6 +16,15 @@ OPTIONS
     daemon process, which makes a difference for options that specify a file
     descriptor (such as -pty-fd).
 
+EXIT STATUS
+    If everything went well, rxvtc returns with an exit status of 0. If
+    contacting the daemon fails, it exits with the exit status 2. In all
+    other error cases it returns with status 1.
+
+    This can be used to implement auto-starting behaviour, by checking for
+    an exit status of 2, running "rxvtd -f -q" and retrying the call to
+    rxvtc.
+
 ENVIRONMENT
     All environment variables of the current process will be made available
     to the new instance, and will be interpreted as if rxvt were started

@@ -13,15 +13,13 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
-THINK: struct passwd *userinfo; /* defined in pwd.h + if ((userinfo = getpwuid(getuid())) != NULL) + shell = strdup(userinfo->pw_shell); /* retrieve current shell */ 
-
 TODO: xim "how to" faq entry
 
 	- changed interpretation of [alpha] colour prefix.
         - +option now really sets the option to default, instead of using the
           resource value.
-        - options that require an agrument now _really_ require an argument.
-        - use exit status 2 in urxvtc when urxvtd couldn't be contacted.
+        - options that require an argument now really _require_ an argument.
+        - return exit status 2 in urxvtc when urxvtd couldn't be contacted.
         - the linux yield hack is back, now using usleep, and enabled only on
           __linux__.
         - further round trip eliminations in the !XFT case by remembering

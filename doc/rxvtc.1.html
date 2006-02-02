@@ -16,6 +16,7 @@
 	<li><a href="#synopsis">SYNOPSIS</a></li>
 	<li><a href="#description">DESCRIPTION</a></li>
 	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#exit_status">EXIT STATUS</a></li>
 	<li><a href="#environment">ENVIRONMENT</a></li>
 	<li><a href="#see_also">SEE ALSO</a></li>
 </ul>
@@ -48,6 +49,16 @@ contacting the daemon.</p>
 <strong>rxvtc</strong>, too. Please note that all options are currently
 interpreted in the context of the daemon process, which makes a difference
 for options that specify a file descriptor (such as <strong>-pty-fd</strong>).</p>
+<p>
+</p>
+<hr />
+<h1><a name="exit_status">EXIT STATUS</a></h1>
+<p>If everything went well, rxvtc returns with an exit status of <code>0</code>.
+If contacting the daemon fails, it exits with the exit status <code>2</code>. In all other error
+cases it returns with status <code>1</code>.</p>
+<p>This can be used to implement auto-starting behaviour, by checking for an
+exit status of <code>2</code>, running <code>rxvtd -f -q</code> and retrying the call
+to rxvtc.</p>
 <p>
 </p>
 <hr />
