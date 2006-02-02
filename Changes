@@ -7,6 +7,7 @@ TODO: split perl documentation and urxvt.pm into separate files
 TODO: harmonize --disable-options into position-dependent options.
 TODO: "slow" rendering mode for bidi and scripts
 TODO: read property sequence is broken with respect to utf-8 etc.
+TODO: slow drag selection on remote display - other things seem fast (rxvt illness?)
 WISH: look into XAddConnectionWatch, does anybody need that?
 WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
@@ -19,6 +20,7 @@ TODO: xim "how to" faq entry
 	- changed interpretation of [alpha] colour prefix.
         - +option now really sets the option to default, instead of using the
           resource value.
+        - options that require an agrument now _really_ require an argument.
         - use exit status 2 in urxvtc when urxvtd couldn't be contacted.
         - the linux yield hack is back, now using usleep, and enabled only on
           __linux__.
