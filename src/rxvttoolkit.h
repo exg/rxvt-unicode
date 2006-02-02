@@ -160,7 +160,7 @@ struct rxvt_display : refcounted {
 #endif
 
   rxvt_display (const char *id);
-  XrmDatabase get_resources ();
+  XrmDatabase get_resources (bool refresh);
   bool ref_init ();
   void ref_next ();
   ~rxvt_display ();

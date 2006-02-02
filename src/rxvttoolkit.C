@@ -179,7 +179,7 @@ rxvt_xim::ref_init ()
 {
   display = GET_R->display; //HACK: TODO
 
-  xim = XOpenIM (display->display, NULL, NULL, NULL);
+  xim = XOpenIM (display->display, 0, 0, 0);
 
   if (!xim)
     return false;
@@ -188,7 +188,7 @@ rxvt_xim::ref_init ()
   ximcallback.client_data = (XPointer)this;
   ximcallback.callback = im_destroy_cb;
 
-  XSetIMValues (xim, XNDestroyCallback, &ximcallback, NULL);
+  XSetIMValues (xim, XNDestroyCallback, &ximcallback, 0);
 
   return true;
 }
@@ -250,7 +250,7 @@ rxvt_display::rxvt_display (const char *id)
 }
 
 XrmDatabase
-rxvt_display::get_resources ()
+rxvt_display::get_resources (bool refresh)
 {
   char *homedir = (char *)getenv ("HOME");
   char fname[1024];
@@ -259,9 +259,7 @@ rxvt_display::get_resources ()
    * get resources using the X library function
    */
   char *displayResource, *xe;
-  XrmDatabase database, rdb1;
-
-  database = NULL;
+  XrmDatabase rdb1, database = 0;
 
   // for ordering, see for example http://www.faqs.org/faqs/Xt-FAQ/ Subject: 20
 
@@ -281,9 +279,42 @@ rxvt_display::get_resources ()
 
   // 4. User's defaults file.
   /* Get any Xserver defaults */
-  displayResource = XResourceManagerString (display);
+  if (refresh)
+    {
+      // fucking xlib keeps a copy of the rm string
+      Atom actual_type;
+      int actual_format;
+      unsigned long nitems, nremaining;
+      char *val = 0;
 
-  if (displayResource != NULL)
+#if XLIB_ILLEGAL_ACCESS
+      if (display->xdefaults)
+        XFree (display->xdefaults);
+#endif
+
+      if (XGetWindowProperty (display, root, XA_RESOURCE_MANAGER,
+                              0L, 100000000L, False,
+                              XA_STRING, &actual_type, &actual_format,
+                              &nitems, &nremaining,
+                              (unsigned char **)&val) == Success
+          && actual_type == XA_STRING
+          && actual_format == 8)
+         displayResource = val;
+       else
+         {
+           displayResource = 0;
+           if (val)
+             XFree(val);
+         }
+
+#if XLIB_ILLEGAL_ACCESS
+      display->xdefaults = displayResource;
+#endif
+    }
+  else
+    displayResource = XResourceManagerString (display);
+
+  if (displayResource)
     {
       if ((rdb1 = XrmGetStringDatabase (displayResource)))
         XrmMergeDatabases (rdb1, &database);
@@ -296,10 +327,15 @@ rxvt_display::get_resources ()
         XrmMergeDatabases (rdb1, &database);
     }
 
+#if !XLIB_ILLEGAL_ACCESS
+  if (refresh && displayResource)
+    XFree (displayResource);
+#endif
+
   /* Get screen specific resources */
   displayResource = XScreenResourceString (ScreenOfDisplay (display, screen));
 
-  if (displayResource != NULL)
+  if (displayResource)
     {
       if ((rdb1 = XrmGetStringDatabase (displayResource)))
         /* Merge with screen-independent resources */
@@ -350,13 +386,13 @@ bool rxvt_display::ref_init ()
   if (!display)
     return false;
 
-  screen = DefaultScreen (display);
+  screen = DefaultScreen     (display);
   root   = DefaultRootWindow (display);
 
   assert (sizeof (xa_names) / sizeof (char *) == NUM_XA);
   XInternAtoms (display, (char **)xa_names, NUM_XA, False, xa);
 
-  XrmSetDatabase (display, get_resources ());
+  XrmSetDatabase (display, get_resources (false));
 
 #ifdef POINTER_BLANK
   XColor blackcolour;
@@ -399,7 +435,7 @@ rxvt_display::ref_next ()
   // TODO: somehow check wether the database files/resources changed
   // before affording re-loading/parsing
   XrmDestroyDatabase (XrmGetDatabase (display));
-  XrmSetDatabase (display, get_resources ());
+  XrmSetDatabase (display, get_resources (true));
 }
 
 rxvt_display::~rxvt_display ()

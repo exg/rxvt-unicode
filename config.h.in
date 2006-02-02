@@ -402,6 +402,9 @@
 /* Define if your XIMCallback specifies XIC as first type. */
 #undef XIMCB_PROTO_BROKEN
 
+/* Define ONLY iff Xlib.h supports it */
+#undef XLIB_ILLEGAL_ACCESS
+
 /* Define if you want to have sexy-looking background pixmaps. Needs libXpm */
 #undef XPM_BACKGROUND
 

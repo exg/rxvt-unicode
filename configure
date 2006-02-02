@@ -3291,12 +3291,6 @@ fi
 LINKER=$LINKER
 
 
-ac_ext=cc
-ac_cpp='$CXXCPP $CPPFLAGS'
-ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
-
 if test -z "$orig_CXXFLAGS"; then
   if test x$GCC = xyes && test "x$GXX" = xyes; then
      CXXFLAGS="-g -O3 -fno-threadsafe-statics -fno-enforce-eh-specs"
@@ -7340,6 +7334,72 @@ fi
 LIBS=$ac_save_LIBS
 CFLAGS=$ac_save_CFLAGS
 
+echo "$as_me:$LINENO: checking for XLIB_ILLEGAL_ACCESS" >&5
+echo $ECHO_N "checking for XLIB_ILLEGAL_ACCESS... $ECHO_C" >&6
+if test "${rxvt_xlib_illegal_access+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+#define XLIB_ILLEGAL_ACCESS
+#include <X11/Xlib.h>
+
+int
+main ()
+{
+
+      Display *dpy;
+      dpy->xdefaults = (char *)0;
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_cxx_werror_flag"			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  rxvt_xlib_illegal_access=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+rxvt_xlib_illegal_access=no
+
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+echo "$as_me:$LINENO: result: $rxvt_xlib_illegal_access" >&5
+echo "${ECHO_T}$rxvt_xlib_illegal_access" >&6
+if test x$rxvt_xlib_illegal_access = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define XLIB_ILLEGAL_ACCESS 1
+_ACEOF
+
+fi
 
 echo "$as_me:$LINENO: checking for an ANSI C-conforming const" >&5
 echo $ECHO_N "checking for an ANSI C-conforming const... $ECHO_C" >&6
@@ -13214,15 +13274,61 @@ fi
 
 
 
+     cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+#include <EXTERN.h>
+#include <perl.h>
+#include <XSUB.h>
+
+int
+main ()
+{
+
+     PerlInterpreter *perl = perl_alloc ();
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_cxx_werror_flag"			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  rxvt_perl_link=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+rxvt_perl_link=no
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
 if test x$support_perl = xyes; then
    support_frills=yes
 fi
 
-
-CFLAGS=${CFLAGS--O}
-LDFLAGS=${LDFLAGS--O}
-
-CPPFLAGS="$CPPFLAGS"
 
 
 
