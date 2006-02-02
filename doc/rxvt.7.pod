@@ -75,6 +75,23 @@ rxvt-unicode then uses 8 bytes per screen cell.
 Try C<@@URXVT_NAME@@d -f -o>, which tells @@URXVT_NAME@@d to open the
 display, create the listening socket and then fork.
 
+=head3 How can I start @@URXVT_NAME@@d automatically when I run URXVT_NAME@@c?
+
+If you want to start @@URXVT_NAME@@d automatically whenever you run
+@@URXVT_NAME@@c and the daemon isn't running yet, use this script:
+
+   #!/bin/sh
+   @@URXVT_NAME@@c "$@"
+   if [ $? -eq 2 ]; then
+      @@URXVT_NAME@@d -q -o -f
+      @@URXVT_NAME@@c "$@"
+   fi
+
+This tries to create a new terminal, and if fails with exit status 2,
+meaning it couldn't connect to the daemon, it will start the daemon and
+re-run the command. Subsequent invocations of the script will re-use the
+existing daemon.
+
 =head3 How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.
 
 The original rxvt and rxvt-unicode always export the variable "COLORTERM",

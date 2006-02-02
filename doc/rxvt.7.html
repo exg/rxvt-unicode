@@ -26,6 +26,7 @@
 			<li><a href="#how_do_i_know_which_rxvtunicode_version_i_m_using">How do I know which rxvt-unicode version I'm using?</a></li>
 			<li><a href="#rxvtunicode_uses_gobs_of_memory__how_can_i_reduce_that">Rxvt-unicode uses gobs of memory, how can I reduce that?</a></li>
 			<li><a href="#how_can_i_start_urxvtd_in_a_racefree_way">How can I start urxvtd in a race-free way?</a></li>
+			<li><a href="#how_can_i_start_urxvtd_automatically_when_i_run_urxvt_name__c">How can I start urxvtd automatically when I run URXVT_NAME@@c?</a></li>
 			<li><a href="#how_do_i_distinguish_wether_i_m_running_rxvtunicode_or_a_regular_xterm_i_need_this_to_decide_about_setting_colors_etc_">How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.</a></li>
 			<li><a href="#how_do_i_set_the_correct__full_ip_address_for_the_display_variable">How do I set the correct, full IP address for the DISPLAY variable?</a></li>
 			<li><a href="#how_do_i_compile_the_manual_pages_on_my_own">How do I compile the manual pages on my own?</a></li>
@@ -206,6 +207,22 @@ rxvt-unicode then uses 8 bytes per screen cell.</p>
 <h3><a name="how_can_i_start_urxvtd_in_a_racefree_way">How can I start urxvtd in a race-free way?</a></h3>
 <p>Try <code>urxvtd -f -o</code>, which tells urxvtd to open the
 display, create the listening socket and then fork.</p>
+<p>
+</p>
+<h3><a name="how_can_i_start_urxvtd_automatically_when_i_run_urxvt_name__c">How can I start urxvtd automatically when I run URXVT_NAME@@c?</a></h3>
+<p>If you want to start urxvtd automatically whenever you run
+urxvtc and the daemon isn't running yet, use this script:</p>
+<pre>
+   #!/bin/sh
+   urxvtc &quot;$@&quot;
+   if [ $? -eq 2 ]; then
+      urxvtd -q -o -f
+      urxvtc &quot;$@&quot;
+   fi</pre>
+<p>This tries to create a new terminal, and if fails with exit status 2,
+meaning it couldn't connect to the daemon, it will start the daemon and
+re-run the command. Subsequent invocations of the script will re-use the
+existing daemon.</p>
 <p>
 </p>
 <h3><a name="how_do_i_distinguish_wether_i_m_running_rxvtunicode_or_a_regular_xterm_i_need_this_to_decide_about_setting_colors_etc_">How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.</a></h3>

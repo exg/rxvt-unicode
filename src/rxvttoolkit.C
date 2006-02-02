@@ -400,7 +400,6 @@ rxvt_display::ref_next ()
   // before affording re-loading/parsing
   XrmDestroyDatabase (XrmGetDatabase (display));
   XrmSetDatabase (display, get_resources ());
-  printf ("next\n");//D
 }
 
 rxvt_display::~rxvt_display ()
