@@ -1140,6 +1140,35 @@ You can also use xterm's \f(CW\*(C`luit\*(C'\fR program, which usually works fin
 for some locales where character width differs between program\- and
 rxvt\-unicode\-locales.
 .PP
+\fII have problems getting my input method working.\fR
+.IX Subsection "I have problems getting my input method working."
+.PP
+Try a search engine, as this is slightly different for every input method server.
+.PP
+Here is a checklist:
+.IP "\- Make sure your locale \fIand\fR the imLocale are supported on your \s-1OS\s0." 4
+.IX Item "- Make sure your locale and the imLocale are supported on your OS."
+Try \f(CW\*(C`locale \-a\*(C'\fR or check the documentation for your \s-1OS\s0.
+.IP "\- Make sure your locale or imLocale matches a locale supported by your \s-1XIM\s0." 4
+.IX Item "- Make sure your locale or imLocale matches a locale supported by your XIM."
+For example, \fBkinput2\fR does not support \s-1UTF\-8\s0 locales, you should use
+\&\f(CW\*(C`ja_JP.EUC\-JP\*(C'\fR or equivalent.
+.IP "\- Make sure your \s-1XIM\s0 server is actually running." 4
+.IX Item "- Make sure your XIM server is actually running."
+.PD 0
+.ie n .IP "\- Make sure the ""XMODIFIERS""\fR environment variable is set correctly when \fIstarting rxvt\-unicode." 4
+.el .IP "\- Make sure the \f(CWXMODIFIERS\fR environment variable is set correctly when \fIstarting\fR rxvt\-unicode." 4
+.IX Item "- Make sure the XMODIFIERS environment variable is set correctly when starting rxvt-unicode."
+.PD
+When you want to use e.g. \fBkinput2\fR, it must be set to
+\&\f(CW\*(C`@im=kinput2\*(C'\fR. For \fBscim\fR, use \f(CW\*(C`@im=SCIM\*(C'\fR. Youc an see what input
+method servers are running with this command:
+.Sp
+.Vb 1
+\&   xprop -root XIM_SERVERS
+.Ve
+.IP "*" 4
+.PP
 \fIMy input method wants <some encoding> but I want \s-1UTF\-8\s0, what can I do?\fR
 .IX Subsection "My input method wants <some encoding> but I want UTF-8, what can I do?"
 .PP
@@ -1151,9 +1180,9 @@ terminal, using the resource \f(CW\*(C`imlocale\*(C'\fR:
 .Ve
 .PP
 Now you can start your terminal with \f(CW\*(C`LC_CTYPE=ja_JP.UTF\-8\*(C'\fR and still
-use your input method. Please note, however, that you will not be able to
-input characters outside \f(CW\*(C`EUC\-JP\*(C'\fR in a normal way then, as your input
-method limits you.
+use your input method. Please note, however, that, depending on your Xlib
+version, you may not be able to input characters outside \f(CW\*(C`EUC\-JP\*(C'\fR in a
+normal way then, as your input method limits you.
 .PP
 \fIRxvt-unicode crashes when the X Input Method changes or exits.\fR
 .IX Subsection "Rxvt-unicode crashes when the X Input Method changes or exits."

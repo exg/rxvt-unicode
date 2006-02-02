@@ -90,6 +90,7 @@
 			<li><a href="#how_does_rxvtunicode_determine_the_encoding_to_use">How does rxvt-unicode determine the encoding to use?</a></li>
 			<li><a href="#is_there_an_option_to_switch_encodings">Is there an option to switch encodings?</a></li>
 			<li><a href="#can_i_switch_locales_at_runtime">Can I switch locales at runtime?</a></li>
+			<li><a href="#i_have_problems_getting_my_input_method_working_">I have problems getting my input method working.</a></li>
 			<li><a href="#my_input_method_wants__some_encoding__but_i_want_utf8__what_can_i_do">My input method wants &lt;some encoding&gt; but I want UTF-8, what can I do?</a></li>
 			<li><a href="#rxvtunicode_crashes_when_the_x_input_method_changes_or_exits_">Rxvt-unicode crashes when the X Input Method changes or exits.</a></li>
 		</ul>
@@ -933,15 +934,50 @@ for some locales where character width differs between program- and
 rxvt-unicode-locales.</p>
 <p>
 </p>
+<h3><a name="i_have_problems_getting_my_input_method_working_">I have problems getting my input method working.</a></h3>
+<p>Try a search engine, as this is slightly different for every input method server.</p>
+<p>Here is a checklist:</p>
+<dl>
+<dt><strong><a name="item__2d_make_sure_your_locale_and_the_imlocale_are_sup">- Make sure your locale <em>and</em> the imLocale are supported on your OS.</a></strong><br />
+</dt>
+<dd>
+Try <code>locale -a</code> or check the documentation for your OS.
+</dd>
+<p></p>
+<dt><strong><a name="item__2d_make_sure_your_locale_or_imlocale_matches_a_lo">- Make sure your locale or imLocale matches a locale supported by your XIM.</a></strong><br />
+</dt>
+<dd>
+For example, <strong>kinput2</strong> does not support UTF-8 locales, you should use
+<code>ja_JP.EUC-JP</code> or equivalent.
+</dd>
+<p></p>
+<dt><strong><a name="item__2d_make_sure_your_xim_server_is_actually_running_">- Make sure your XIM server is actually running.</a></strong><br />
+</dt>
+<dt><strong><a name="item__2d_make_sure_the_xmodifiers_environment_variable_">- Make sure the <code>XMODIFIERS</code> environment variable is set correctly when <em>starting</em> rxvt-unicode.</a></strong><br />
+</dt>
+<dd>
+When you want to use e.g. <strong>kinput2</strong>, it must be set to
+<code>@im=kinput2</code>. For <strong>scim</strong>, use <code>@im=SCIM</code>. Youc an see what input
+method servers are running with this command:
+</dd>
+<dd>
+<pre>
+   xprop -root XIM_SERVERS</pre>
+</dd>
+<p></p>
+<dt></dt>
+</dl>
+<p>
+</p>
 <h3><a name="my_input_method_wants__some_encoding__but_i_want_utf8__what_can_i_do">My input method wants &lt;some encoding&gt; but I want UTF-8, what can I do?</a></h3>
 <p>You can specify separate locales for the input method and the rest of the
 terminal, using the resource <code>imlocale</code>:</p>
 <pre>
    URxvt.imlocale: ja_JP.EUC-JP</pre>
 <p>Now you can start your terminal with <code>LC_CTYPE=ja_JP.UTF-8</code> and still
-use your input method. Please note, however, that you will not be able to
-input characters outside <code>EUC-JP</code> in a normal way then, as your input
-method limits you.</p>
+use your input method. Please note, however, that, depending on your Xlib
+version, you may not be able to input characters outside <code>EUC-JP</code> in a
+normal way then, as your input method limits you.</p>
 <p>
 </p>
 <h3><a name="rxvtunicode_crashes_when_the_x_input_method_changes_or_exits_">Rxvt-unicode crashes when the X Input Method changes or exits.</a></h3>

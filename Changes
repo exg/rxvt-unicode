@@ -2,7 +2,6 @@ rxvt-unicode changelog <= google-friendly title
 
 TODO: event mechanism that replaces on_keyboard_command with something more scalable.
 TODO: overlays collide with the way the out-of-focus cursor is being drawn
-TODO: simplify selection_request and make it callable from perl.
 TODO: split perl documentation and urxvt.pm into separate files
 TODO: harmonize --disable-options into position-dependent options.
 TODO: "slow" rendering mode for bidi and scripts
@@ -12,8 +11,6 @@ WISH: look into XAddConnectionWatch, does anybody need that?
 WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
-
-TODO: xim "how to" faq entry
 
 	- changed interpretation of [alpha] colour prefix.
         - +option now really sets the option to default, instead of using the

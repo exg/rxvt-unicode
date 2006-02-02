@@ -827,6 +827,31 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     except for some locales where character width differs between program-
     and rxvt-unicode-locales.
 
+   I have problems getting my input method working.
+    Try a search engine, as this is slightly different for every input
+    method server.
+
+    Here is a checklist:
+
+    - Make sure your locale *and* the imLocale are supported on your OS.
+        Try "locale -a" or check the documentation for your OS.
+
+    - Make sure your locale or imLocale matches a locale supported by your
+    XIM.
+        For example, kinput2 does not support UTF-8 locales, you should use
+        "ja_JP.EUC-JP" or equivalent.
+
+    - Make sure your XIM server is actually running.
+    - Make sure the "XMODIFIERS" environment variable is set correctly when
+    *starting* rxvt-unicode.
+        When you want to use e.g. kinput2, it must be set to "@im=kinput2".
+        For scim, use "@im=SCIM". Youc an see what input method servers are
+        running with this command:
+
+           xprop -root XIM_SERVERS
+
+    *
+
    My input method wants <some encoding> but I want UTF-8, what can I do?
     You can specify separate locales for the input method and the rest of
     the terminal, using the resource "imlocale":
@@ -834,9 +859,9 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
        URxvt.imlocale: ja_JP.EUC-JP
 
     Now you can start your terminal with "LC_CTYPE=ja_JP.UTF-8" and still
-    use your input method. Please note, however, that you will not be able
-    to input characters outside "EUC-JP" in a normal way then, as your input
-    method limits you.
+    use your input method. Please note, however, that, depending on your
+    Xlib version, you may not be able to input characters outside "EUC-JP"
+    in a normal way then, as your input method limits you.
 
    Rxvt-unicode crashes when the X Input Method changes or exits.
     Unfortunately, this is unavoidable, as the XIM protocol is racy by

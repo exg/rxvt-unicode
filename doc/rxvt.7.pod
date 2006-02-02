@@ -885,6 +885,37 @@ You can also use xterm's C<luit> program, which usually works fine, except
 for some locales where character width differs between program- and
 rxvt-unicode-locales.
 
+=head3 I have problems getting my input method working.
+
+Try a search engine, as this is slightly different for every input method server.
+
+Here is a checklist:
+
+=over 4
+
+=item - Make sure your locale I<and> the imLocale are supported on your OS.
+
+Try C<locale -a> or check the documentation for your OS.
+
+=item - Make sure your locale or imLocale matches a locale supported by your XIM.
+
+For example, B<kinput2> does not support UTF-8 locales, you should use
+C<ja_JP.EUC-JP> or equivalent.
+
+=item - Make sure your XIM server is actually running.
+
+=item - Make sure the C<XMODIFIERS> environment variable is set correctly when I<starting> rxvt-unicode.
+
+When you want to use e.g. B<kinput2>, it must be set to
+C<@im=kinput2>. For B<scim>, use C<@im=SCIM>. Youc an see what input
+method servers are running with this command:
+
+   xprop -root XIM_SERVERS
+
+=item 
+
+=back
+
 =head3 My input method wants <some encoding> but I want UTF-8, what can I do?
 
 You can specify separate locales for the input method and the rest of the
@@ -893,9 +924,9 @@ terminal, using the resource C<imlocale>:
    URxvt.imlocale: ja_JP.EUC-JP
 
 Now you can start your terminal with C<LC_CTYPE=ja_JP.UTF-8> and still
-use your input method. Please note, however, that you will not be able to
-input characters outside C<EUC-JP> in a normal way then, as your input
-method limits you.
+use your input method. Please note, however, that, depending on your Xlib
+version, you may not be able to input characters outside C<EUC-JP> in a
+normal way then, as your input method limits you.
 
 =head3 Rxvt-unicode crashes when the X Input Method changes or exits.
 
