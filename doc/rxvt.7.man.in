@@ -2472,7 +2472,7 @@ Remove support for mouse selection style like that of xterm.
 .IP "\-\-enable\-dmalloc (default: off)" 4
 .IX Item "--enable-dmalloc (default: off)"
 Use Gray Watson's malloc \- which is good for debugging See
-http://www.letters.com/dmalloc/ for details If you use either this or the
+<http://www.letters.com/dmalloc/> for details If you use either this or the
 next option, you may need to edit src/Makefile after compiling to point
 \&\s-1DINCLUDE\s0 and \s-1DLIB\s0 to the right places.
 .Sp

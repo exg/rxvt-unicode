@@ -40,7 +40,7 @@ rxvt_term::scrollbar_show_plain (int update, int last_top, int last_bot, int scr
       scrollBar.init |= R_SB_PLAIN;
       gcvalue.foreground = pix_colors_focused[Color_scroll];
 
-      pscrollbarGC = XCreateGC (xdisp, scrollBar.win, GCForeground, &gcvalue);
+      pscrollbarGC = XCreateGC (dpy, scrollBar.win, GCForeground, &gcvalue);
     }
 
   xsb = OPTION (Opt_scrollBar_right) ? 1 : 0;
@@ -48,20 +48,20 @@ rxvt_term::scrollbar_show_plain (int update, int last_top, int last_bot, int scr
   if (update)
     {
       if (last_top < scrollBar.top)
-        XClearArea (xdisp, scrollBar.win,
+        XClearArea (dpy, scrollBar.win,
                     sb_shadow, last_top,
                     sbwidth + 1, scrollBar.top - last_top, False);
 
       if (scrollBar.bot < last_bot)
-        XClearArea (xdisp, scrollBar.win,
+        XClearArea (dpy, scrollBar.win,
                     sb_shadow, scrollBar.bot,
                     sbwidth + 1, last_bot - scrollBar.bot, False);
     }
   else
-    XClearWindow (xdisp, scrollBar.win);
+    XClearWindow (dpy, scrollBar.win);
 
   /* scrollbar slider */
-  XFillRectangle (xdisp, scrollBar.win, pscrollbarGC,
+  XFillRectangle (dpy, scrollBar.win, pscrollbarGC,
                   1 - xsb, scrollBar.top, sbwidth, scrollbar_len);
 
   return 1;

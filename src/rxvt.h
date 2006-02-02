@@ -1097,7 +1097,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 
   void vt_select_input () const NOTHROW
   {
-    XSelectInput (xdisp, vt, vt_emask | vt_emask_perl | vt_emask_xim);
+    XSelectInput (dpy, vt, vt_emask | vt_emask_perl | vt_emask_xim);
   }
 
 #if TRANSPARENT

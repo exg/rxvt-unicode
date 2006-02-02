@@ -490,7 +490,7 @@ rxvt_term::init_env ()
 
   if (val == NULL)
 #endif                          /* DISPLAY_IS_IP */
-    val = XDisplayString (xdisp);
+    val = XDisplayString (dpy);
 
   if (rs[Rs_display_name] == NULL)
     rs[Rs_display_name] = val;   /* use broken `:0' value */
@@ -807,7 +807,7 @@ rxvt_term::get_ourmods ()
       && strcasecmp (rsmod, "mod1") >= 0 && strcasecmp (rsmod, "mod5") <= 0)
     requestedmeta = rsmod[3] - '0';
 
-  map = XGetModifierMapping (xdisp);
+  map = XGetModifierMapping (dpy);
   kc = map->modifiermap;
 
   for (i = 1; i < 6; i++)
@@ -819,7 +819,7 @@ rxvt_term::get_ourmods ()
           if (kc[k] == 0)
             break;
 
-          switch (XKeycodeToKeysym (xdisp, kc[k], 0))
+          switch (XKeycodeToKeysym (dpy, kc[k], 0))
             {
               case XK_Num_Lock:
                 ModNumLockMask = modmasks[i - 1];
@@ -885,7 +885,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   XSetWindowAttributes attributes;
   Window top, parent;
 
-  dLocal (Display *, xdisp);
+  dLocal (Display *, dpy);
 
   /* grab colors before netscape does */
   Get_Colours ();
@@ -900,7 +900,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #if ENABLE_FRILLS
   if (OPTION (Opt_borderLess))
     {
-      if (XInternAtom (xdisp, "_MOTIF_WM_INFO", True) == None)
+      if (XInternAtom (dpy, "_MOTIF_WM_INFO", True) == None)
         {
           /*     print_warning("Window Manager does not support MWM hints.  Bypassing window manager control for borderless window.\n");*/
           attributes.override_redirect = true;
@@ -923,7 +923,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
       parent = strtol (rs[Rs_embed], 0, 0);
 
-      if (!XGetWindowAttributes (xdisp, parent, &wattr))
+      if (!XGetWindowAttributes (dpy, parent, &wattr))
         rxvt_fatal ("invalid window-id specified with -embed, aborting.\n");
 
       window_calc (wattr.width, wattr.height);
@@ -937,7 +937,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   attributes.border_pixel     = pix_colors_focused [Color_border];
   attributes.colormap         = cmap;
 
-  top = XCreateWindow (xdisp, parent,
+  top = XCreateWindow (dpy, parent,
                        szHint.x, szHint.y,
                        szHint.width, szHint.height,
                        ext_bwidth,
@@ -961,12 +961,12 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   wmHint.initial_state = OPTION (Opt_iconic) ? IconicState : NormalState;
   wmHint.window_group  = top;
 
-  XmbSetWMProperties (xdisp, top, NULL, NULL, (char **)argv, argc,
+  XmbSetWMProperties (dpy, top, NULL, NULL, (char **)argv, argc,
                       &szHint, &wmHint, &classHint);
 
 #if ENABLE_FRILLS
   if (mwmhints.flags)
-    XChangeProperty (xdisp, top, xa[XA_MOTIF_WM_HINTS], xa[XA_MOTIF_WM_HINTS], 32,
+    XChangeProperty (dpy, top, xa[XA_MOTIF_WM_HINTS], xa[XA_MOTIF_WM_HINTS], 32,
                      PropModeReplace, (unsigned char *)&mwmhints, PROP_MWM_HINTS_ELEMENTS);
 #endif
 
@@ -977,24 +977,24 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #endif
   };
 
-  XSetWMProtocols (xdisp, top, protocols, sizeof (protocols) / sizeof (protocols[0]));
+  XSetWMProtocols (dpy, top, protocols, sizeof (protocols) / sizeof (protocols[0]));
 
 #if ENABLE_FRILLS
   if (rs[Rs_transient_for])
-    XSetTransientForHint (xdisp, top, (Window)strtol (rs[Rs_transient_for], 0, 0));
+    XSetTransientForHint (dpy, top, (Window)strtol (rs[Rs_transient_for], 0, 0));
 #endif
 
 #if ENABLE_EWMH
   long pid = getpid ();
 
-  XChangeProperty (xdisp, top,
+  XChangeProperty (dpy, top,
                    xa[XA_NET_WM_PID], XA_CARDINAL, 32,
                    PropModeReplace, (unsigned char *)&pid, 1);
 
   // _NET_WM_WINDOW_TYPE is NORMAL, which is the default
 #endif
 
-  XSelectInput (xdisp, top,
+  XSelectInput (dpy, top,
                 KeyPressMask
 #if (MOUSE_WHEEL && MOUSE_SLIP_WHEELING) || ENABLE_FRILLS || ISO_14755
                 | KeyReleaseMask
@@ -1005,15 +1005,15 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   termwin_ev.start (display, top);
 
   /* vt cursor: Black-on-White is standard, but this is more popular */
-  TermWin_cursor = XCreateFontCursor (xdisp, XC_xterm);
+  TermWin_cursor = XCreateFontCursor (dpy, XC_xterm);
 
 #ifdef HAVE_SCROLLBARS
   /* cursor scrollBar: Black-on-White */
-  leftptr_cursor = XCreateFontCursor (xdisp, XC_left_ptr);
+  leftptr_cursor = XCreateFontCursor (dpy, XC_left_ptr);
 #endif
 
   /* the vt window */
-  vt = XCreateSimpleWindow (xdisp, top,
+  vt = XCreateSimpleWindow (dpy, top,
                             window_vt_x, window_vt_y,
                             width, height,
                             0,
@@ -1021,7 +1021,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                             pix_colors_focused[Color_bg]);
 
   attributes.bit_gravity = NorthWestGravity;
-  XChangeWindowAttributes (xdisp, vt, CWBitGravity, &attributes);
+  XChangeWindowAttributes (dpy, vt, CWBitGravity, &attributes);
 
   vt_emask = ExposureMask | ButtonPressMask | ButtonReleaseMask | PropertyChangeMask;
 
@@ -1056,7 +1056,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   gcvalue.background         = pix_colors[Color_bg];
   gcvalue.graphics_exposures = 1;
 
-  gc = XCreateGC (xdisp, vt,
+  gc = XCreateGC (dpy, vt,
                   GCForeground | GCBackground | GCGraphicsExposures,
                   &gcvalue);
 
@@ -1064,11 +1064,11 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
 #ifdef RXVT_SCROLLBAR
   gcvalue.foreground = pix_colors[Color_topShadow];
-  topShadowGC = XCreateGC (xdisp, vt, GCForeground, &gcvalue);
+  topShadowGC = XCreateGC (dpy, vt, GCForeground, &gcvalue);
   gcvalue.foreground = pix_colors[Color_bottomShadow];
-  botShadowGC = XCreateGC (xdisp, vt, GCForeground, &gcvalue);
+  botShadowGC = XCreateGC (dpy, vt, GCForeground, &gcvalue);
   gcvalue.foreground = pix_colors[ (depth <= 2 ? Color_fg : Color_scroll)];
-  scrollbarGC = XCreateGC (xdisp, vt, GCForeground, &gcvalue);
+  scrollbarGC = XCreateGC (dpy, vt, GCForeground, &gcvalue);
 #endif
 
 #ifdef OFF_FOCUS_FADING

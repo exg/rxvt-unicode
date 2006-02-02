@@ -224,35 +224,35 @@ rxvt_term::~rxvt_term ()
       im_destroy ();
 #endif
 #ifdef XTERM_SCROLLBAR
-      if (xscrollbarGC) XFreeGC (xdisp, xscrollbarGC);
-      if (ShadowGC)     XFreeGC (xdisp, ShadowGC);
+      if (xscrollbarGC) XFreeGC (dpy, xscrollbarGC);
+      if (ShadowGC)     XFreeGC (dpy, ShadowGC);
 #endif
 #ifdef PLAIN_SCROLLBAR
-      if (pscrollbarGC) XFreeGC (xdisp, pscrollbarGC);
+      if (pscrollbarGC) XFreeGC (dpy, pscrollbarGC);
 #endif
 #ifdef NEXT_SCROLLBAR
-      if (blackGC)      XFreeGC (xdisp, blackGC);
-      if (whiteGC)      XFreeGC (xdisp, whiteGC);
-      if (grayGC)       XFreeGC (xdisp, grayGC);
-      if (darkGC)       XFreeGC (xdisp, darkGC);
-      if (stippleGC)    XFreeGC (xdisp, stippleGC);
-      if (dimple)       XFreePixmap (xdisp, dimple);
-      if (upArrow)      XFreePixmap (xdisp, upArrow);
-      if (downArrow)    XFreePixmap (xdisp, downArrow);
-      if (upArrowHi)    XFreePixmap (xdisp, upArrowHi);
-      if (downArrowHi)  XFreePixmap (xdisp, downArrowHi);
+      if (blackGC)      XFreeGC (dpy, blackGC);
+      if (whiteGC)      XFreeGC (dpy, whiteGC);
+      if (grayGC)       XFreeGC (dpy, grayGC);
+      if (darkGC)       XFreeGC (dpy, darkGC);
+      if (stippleGC)    XFreeGC (dpy, stippleGC);
+      if (dimple)       XFreePixmap (dpy, dimple);
+      if (upArrow)      XFreePixmap (dpy, upArrow);
+      if (downArrow)    XFreePixmap (dpy, downArrow);
+      if (upArrowHi)    XFreePixmap (dpy, upArrowHi);
+      if (downArrowHi)  XFreePixmap (dpy, downArrowHi);
 #endif
 #ifdef RXVT_SCROLLBAR
-      if (topShadowGC)  XFreeGC (xdisp, topShadowGC);
-      if (botShadowGC)  XFreeGC (xdisp, botShadowGC);
-      if (scrollbarGC)  XFreeGC (xdisp, scrollbarGC);
+      if (topShadowGC)  XFreeGC (dpy, topShadowGC);
+      if (botShadowGC)  XFreeGC (dpy, botShadowGC);
+      if (scrollbarGC)  XFreeGC (dpy, scrollbarGC);
 #endif
-      if (gc)   XFreeGC (xdisp, gc);
+      if (gc)   XFreeGC (dpy, gc);
 
       delete drawable;
       // destroy all windows
       if (parent[0])
-        XDestroyWindow (xdisp, parent[0]);
+        XDestroyWindow (dpy, parent[0]);
 
       for (int i = 0; i < TOTAL_COLORS; i++)
         if (ISSET_PIXCOLOR (i))
@@ -490,7 +490,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
   scr_reset (); // initialize screen
 
 #if 0
-  XSynchronize (xdisp, True);
+  XSynchronize (dpy, True);
 #endif
 
 #ifdef HAVE_SCROLLBARS
@@ -500,7 +500,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 #ifdef TRANSPARENT
   if (OPTION (Opt_transparent))
     {
-      XSelectInput (xdisp, display->root, PropertyChangeMask);
+      XSelectInput (dpy, display->root, PropertyChangeMask);
       check_our_parents ();
       rootwin_ev.start (display, display->root);
     }
@@ -524,13 +524,13 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
     {
       long info[2] = { 0, XEMBED_MAPPED };
 
-      XChangeProperty (xdisp, parent[0], xa[XA_XEMBED_INFO], xa[XA_XEMBED_INFO],
+      XChangeProperty (dpy, parent[0], xa[XA_XEMBED_INFO], xa[XA_XEMBED_INFO],
                        32, PropModeReplace, (unsigned char *)&info, 2);
     }
 #endif
 
-  XMapWindow (xdisp, vt);
-  XMapWindow (xdisp, parent[0]);
+  XMapWindow (dpy, vt);
+  XMapWindow (dpy, parent[0]);
 
   return true;
 }
@@ -737,10 +737,10 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
     window_sb_x = szHint.width - sb_w;
 
   if (recalc_x)
-    szHint.x += DisplayWidth  (xdisp, display->screen) - szHint.width  - 2 * ext_bwidth;
+    szHint.x += DisplayWidth  (dpy, display->screen) - szHint.width  - 2 * ext_bwidth;
 
   if (recalc_y)
-    szHint.y += DisplayHeight (xdisp, display->screen) - szHint.height - 2 * ext_bwidth;
+    szHint.y += DisplayHeight (dpy, display->screen) - szHint.height - 2 * ext_bwidth;
 
   ncol = width / fwidth;
   nrow = height / fheight;
@@ -853,7 +853,7 @@ rxvt_term::set_fonts ()
 
 void rxvt_term::set_string_property (Atom prop, const char *str, int len)
 {
-  XChangeProperty (xdisp, parent[0],
+  XChangeProperty (dpy, parent[0],
                    prop, XA_STRING, 8, PropModeReplace,
                    (const unsigned char *)str, len >= 0 ? len : strlen (str));
 }
@@ -863,7 +863,7 @@ void rxvt_term::set_utf8_property (Atom prop, const char *str, int len)
   wchar_t *ws = rxvt_mbstowcs (str, len);
   char *s = rxvt_wcstoutf8 (ws);
 
-  XChangeProperty (xdisp, parent[0],
+  XChangeProperty (dpy, parent[0],
                    prop, xa[XA_UTF8_STRING], 8, PropModeReplace,
                    (const unsigned char *)s, strlen (s));
 
@@ -970,7 +970,7 @@ rxvt_term::recolour_cursor ()
      ? pix_colors_focused[Color_pointer_bg]
      : pix_colors_focused[Color_bg]).get (bg);
 
-  XRecolorCursor (xdisp, TermWin_cursor, &fg, &bg);
+  XRecolorCursor (dpy, TermWin_cursor, &fg, &bg);
 }
 
 /*----------------------------------------------------------------------*/
@@ -1035,7 +1035,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
   int old_height = szHint.height;
 
   window_calc (newwidth, newheight);
-  XSetWMNormalHints (xdisp, parent[0], &szHint);
+  XSetWMNormalHints (dpy, parent[0], &szHint);
 
   if (!ignoreparent)
     {
@@ -1049,9 +1049,9 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
       unsigned int unused_w1, unused_h1, unused_b1, unused_d1;
       Window unused_cr;
 
-      XTranslateCoordinates (xdisp, parent[0], display->root,
+      XTranslateCoordinates (dpy, parent[0], display->root,
                              0, 0, &x, &y, &unused_cr);
-      XGetGeometry (xdisp, parent[0], &unused_cr, &x1, &y1,
+      XGetGeometry (dpy, parent[0], &unused_cr, &x1, &y1,
                     &unused_w1, &unused_h1, &unused_b1, &unused_d1);
       /*
        * if display->root isn't the parent window, a WM will probably have offset
@@ -1063,8 +1063,8 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
           y -= y1;
         }
 
-      x1 = (DisplayWidth  (xdisp, display->screen) - old_width ) / 2;
-      y1 = (DisplayHeight (xdisp, display->screen) - old_height) / 2;
+      x1 = (DisplayWidth  (dpy, display->screen) - old_width ) / 2;
+      y1 = (DisplayHeight (dpy, display->screen) - old_height) / 2;
       dx = old_width  - szHint.width;
       dy = old_height - szHint.height;
 
@@ -1078,10 +1078,10 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
       else if (y == y1)       /* exact center */
         dy /= 2;
 
-      XMoveResizeWindow (xdisp, parent[0], x + dx, y + dy,
+      XMoveResizeWindow (dpy, parent[0], x + dx, y + dy,
                          szHint.width, szHint.height);
 #else
-      XResizeWindow (xdisp, parent[0], szHint.width, szHint.height);
+      XResizeWindow (dpy, parent[0], szHint.width, szHint.height);
 #endif
     }
 
@@ -1091,13 +1091,13 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
     {
       if (scrollBar.state)
         {
-          XMoveResizeWindow (xdisp, scrollBar.win,
+          XMoveResizeWindow (dpy, scrollBar.win,
                              window_sb_x, 0,
                              scrollbar_TotalWidth (), szHint.height);
           resize_scrollbar ();
         }
 
-      XMoveResizeWindow (xdisp, vt,
+      XMoveResizeWindow (dpy, vt,
                          window_vt_x, window_vt_y,
                          width, height);
 
@@ -1134,7 +1134,7 @@ rxvt_term::set_widthheight (unsigned int newwidth, unsigned int newheight)
 
   if (newwidth == 0 || newheight == 0)
     {
-      XGetWindowAttributes (xdisp, display->root, &wattr);
+      XGetWindowAttributes (dpy, display->root, &wattr);
 
       if (newwidth == 0)
         newwidth = wattr.width - szHint.base_width;
@@ -1206,8 +1206,8 @@ rxvt_term::IMisRunning ()
       if ((p = strchr (server + 1, '@')) != NULL)      /* first one only */
         *p = '\0';
 
-      atom = XInternAtom (xdisp, server, False);
-      win = XGetSelectionOwner (xdisp, atom);
+      atom = XInternAtom (dpy, server, False);
+      win = XGetSelectionOwner (dpy, atom);
 
       if (win != None)
         return True;
@@ -1441,7 +1441,7 @@ foundpet:
                fheight + 1, fheight - 1,
                fheight - 2, fheight + 2);
 
-      fs = XCreateFontSet (xdisp, rs[Rs_imFont] ? rs[Rs_imFont] : pat,
+      fs = XCreateFontSet (dpy, rs[Rs_imFont] ? rs[Rs_imFont] : pat,
                            &missing_charset_list, &missing_charset_count, &def_string);
 
       if (missing_charset_list)
@@ -1527,7 +1527,7 @@ foundpet:
 
   if (preedit_attr) XFree (preedit_attr);
   if (status_attr) XFree (status_attr);
-  if (fs) XFreeFontSet (xdisp, fs);
+  if (fs) XFreeFontSet (dpy, fs);
 
   if (Input_Context == NULL)
     {

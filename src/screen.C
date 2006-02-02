@@ -95,18 +95,18 @@ inline void fill_text (text_t *start, text_t value, int len)
 
 #define CLEAR_ROWS(row, num)                                           \
     if (mapped)                                                \
-        XClearArea (xdisp, drawBuffer, 0,                   \
+        XClearArea (dpy, drawBuffer, 0,                   \
                     Row2Pixel (row), (unsigned int)width,      \
                     (unsigned int)Height2Pixel (num), False)
 
 #define CLEAR_CHARS(x, y, num)                                         \
     if (mapped)                                                \
-        XClearArea (xdisp, drawBuffer, x, y,                \
+        XClearArea (dpy, drawBuffer, x, y,                \
                     (unsigned int)Width2Pixel (num),                   \
                     (unsigned int)Height2Pixel (1), False)
 
 #define ERASE_ROWS(row, num)                                           \
-    XFillRectangle (xdisp, drawBuffer, gc,          \
+    XFillRectangle (dpy, drawBuffer, gc,          \
                     0, Row2Pixel (row),                                \
                     (unsigned int)width,                       \
                     (unsigned int)Height2Pixel (num))
@@ -1344,10 +1344,10 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
     {
       ren = rstyle & (RS_fgMask | RS_bgMask);
       gcvalue.foreground = pix_colors[bgcolor_of (rstyle)];
-      XChangeGC (xdisp, gc, GCForeground, &gcvalue);
+      XChangeGC (dpy, gc, GCForeground, &gcvalue);
       ERASE_ROWS (row, num);
       gcvalue.foreground = pix_colors[Color_fg];
-      XChangeGC (xdisp, gc, GCForeground, &gcvalue);
+      XChangeGC (dpy, gc, GCForeground, &gcvalue);
     }
 
   for (; num--; row++)
@@ -1656,12 +1656,12 @@ rxvt_term::scr_rvideo_mode (bool on) NOTHROW
 #if TRANSPARENT
         if (!OPTION (Opt_transparent) || am_transparent == 0)
 #endif
-          XSetWindowBackground (xdisp, vt, pix_colors[Color_bg]);
+          XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
 
       XGCValues gcvalue;
       gcvalue.foreground = pix_colors[Color_fg];
       gcvalue.background = pix_colors[Color_bg];
-      XChangeGC (xdisp, gc, GCBackground | GCForeground, &gcvalue);
+      XChangeGC (dpy, gc, GCBackground | GCForeground, &gcvalue);
 
       scr_clear ();
       scr_touch (true);
@@ -1890,7 +1890,7 @@ rxvt_term::scr_bell () NOTHROW
 #  ifdef MAPALERT_OPTION
   if (OPTION (Opt_mapAlert))
 #  endif
-    XMapWindow (xdisp, parent[0]);
+    XMapWindow (dpy, parent[0]);
 # endif
 
   if (OPTION (Opt_visualBell))
@@ -1902,7 +1902,7 @@ rxvt_term::scr_bell () NOTHROW
       bell_ev.start (NOW + VISUAL_BELL_DURATION);
     }
   else
-    XBell (xdisp, 0);
+    XBell (dpy, 0);
 
 #endif
 }
@@ -2151,7 +2151,7 @@ rxvt_term::scr_refresh () NOTHROW
               if (wlen < len)
                 ::swap (wlen, len);
 
-              XCopyArea (xdisp, vt, vt,
+              XCopyArea (dpy, vt, vt,
                          gc, 0, Row2Pixel (len + i),
                          (unsigned int)this->width,
                          (unsigned int)Height2Pixel (wlen - len + 1),
@@ -2355,12 +2355,12 @@ rxvt_term::scr_refresh () NOTHROW
             {
 #if ENABLE_FRILLS
               if (ISSET_PIXCOLOR (Color_underline))
-                XSetForeground (xdisp, gc, pix_colors[Color_underline]);
+                XSetForeground (dpy, gc, pix_colors[Color_underline]);
               else
 #endif
-                XSetForeground (xdisp, gc, pix_colors[fore]);
+                XSetForeground (dpy, gc, pix_colors[fore]);
 
-              XDrawLine (xdisp, drawBuffer, gc,
+              XDrawLine (dpy, drawBuffer, gc,
                          xpixel, ypixel + font->ascent + 1,
                          xpixel + Width2Pixel (count) - 1, ypixel + font->ascent + 1);
             }
@@ -2403,10 +2403,10 @@ rxvt_term::scr_refresh () NOTHROW
 
 #ifndef NO_CURSORCOLOR
           if (ISSET_PIXCOLOR (Color_cursor))
-            XSetForeground (xdisp, gc, pix_colors[Color_cursor]);
+            XSetForeground (dpy, gc, pix_colors[Color_cursor]);
 #endif
 
-          XDrawRectangle (xdisp, drawBuffer, gc,
+          XDrawRectangle (dpy, drawBuffer, gc,
                           Col2Pixel (col),
                           Row2Pixel (oldcursor.row),
                           (unsigned int) (Width2Pixel (cursorwidth) - 1),
@@ -2460,13 +2460,13 @@ rxvt_term::scr_recolour () NOTHROW
 #endif
       )
     {
-      XSetWindowBackground (xdisp, parent[0], pix_colors[Color_border]);
-      XClearWindow (xdisp, parent[0]);
-      XSetWindowBackground (xdisp, vt, pix_colors[Color_bg]);
+      XSetWindowBackground (dpy, parent[0], pix_colors[Color_border]);
+      XClearWindow (dpy, parent[0]);
+      XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
 #if HAVE_SCROLLBARS
       if (scrollBar.win)
         {
-          XSetWindowBackground (xdisp, scrollBar.win, pix_colors[Color_border]);
+          XSetWindowBackground (dpy, scrollBar.win, pix_colors[Color_border]);
           scrollBar.setIdle ();
           scrollbar_show (0);
         }
@@ -2489,7 +2489,7 @@ rxvt_term::scr_clear (bool really) NOTHROW
   want_refresh = 1;
 
   if (really)
-    XClearWindow (xdisp, vt);
+    XClearWindow (dpy, vt);
 }
 
 void
@@ -2674,7 +2674,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
   unsigned long bytes_after;
   XTextProperty ct;
 
-  if (XGetWindowProperty (xdisp, win, prop,
+  if (XGetWindowProperty (dpy, win, prop,
                           0, PROP_SIZE / 4,
                           delete_prop, AnyPropertyType,
                           &ct.encoding, &ct.format,
@@ -2693,7 +2693,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
       // fetch and append remaining data
       XTextProperty ct2;
 
-      if (XGetWindowProperty (xdisp, win, prop,
+      if (XGetWindowProperty (dpy, win, prop,
                               ct.nitems / 4, (bytes_after + 3) / 4,
                               delete_prop, AnyPropertyType,
                               &ct2.encoding, &ct2.format,
@@ -2716,7 +2716,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
     {
       // INCR selection, start handshake
       if (!delete_prop)
-        XDeleteProperty (xdisp, win, prop);
+        XDeleteProperty (dpy, win, prop);
 
       selection_wait = Sel_incr;
       incr_buf_fill = 0;
@@ -2787,7 +2787,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
     }
   else
 #endif
-  if (XmbTextPropertyToTextList (xdisp, &ct, &cl, &cr) >= 0
+  if (XmbTextPropertyToTextList (dpy, &ct, &cl, &cr) >= 0
       && cl)
     {
       for (int i = 0; i < cr; i++)
@@ -2879,9 +2879,9 @@ rxvt_term::selection_request_other (Atom target, int selnum) NOTHROW
   else
     sel = xa[XA_CLIPBOARD];
 
-  if (XGetSelectionOwner (xdisp, sel) != None)
+  if (XGetSelectionOwner (dpy, sel) != None)
     {
-      XConvertSelection (xdisp, sel, target, xa[XA_VT_SELECTION],
+      XConvertSelection (dpy, sel, target, xa[XA_VT_SELECTION],
                          vt, selection_request_time);
       return 1;
     }
@@ -3044,8 +3044,8 @@ rxvt_term::selection_grab (Time tm) NOTHROW
 {
   selection_time = tm;
 
-  XSetSelectionOwner (xdisp, XA_PRIMARY, vt, tm);
-  if (XGetSelectionOwner (xdisp, XA_PRIMARY) == vt)
+  XSetSelectionOwner (dpy, XA_PRIMARY, vt, tm);
+  if (XGetSelectionOwner (dpy, XA_PRIMARY) == vt)
     {
       display->set_selection_owner (this);
       return true;
@@ -3059,7 +3059,7 @@ rxvt_term::selection_grab (Time tm) NOTHROW
 #if 0
   XTextProperty ct;
 
-  if (XwcTextListToTextProperty (xdisp, &selection.text, 1, XStringStyle, &ct) >= 0)
+  if (XwcTextListToTextProperty (dpy, &selection.text, 1, XStringStyle, &ct) >= 0)
     {
       set_string_property (XA_CUT_BUFFER0, ct.value, ct.nitems);
       XFree (ct.value);
@@ -3542,7 +3542,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
       *target++ = xa[XA_UTF8_STRING];
 #endif
 
-      XChangeProperty (xdisp, rq.requestor, rq.property, XA_ATOM,
+      XChangeProperty (dpy, rq.requestor, rq.property, XA_ATOM,
                        32, PropModeReplace,
                        (unsigned char *)target_list, target - target_list);
       ev.property = rq.property;
@@ -3555,7 +3555,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
 #endif
   else if (rq.target == xa[XA_TIMESTAMP] && selection.text)
     {
-      XChangeProperty (xdisp, rq.requestor, rq.property, rq.target,
+      XChangeProperty (dpy, rq.requestor, rq.property, rq.target,
                        32, PropModeReplace, (unsigned char *)&selection_time, 1);
       ev.property = rq.property;
     }
@@ -3623,7 +3623,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
         }
       else
 #endif
-      if (XwcTextListToTextProperty (xdisp, &cl, 1, (XICCEncodingStyle) style, &ct) >= 0)
+      if (XwcTextListToTextProperty (dpy, &cl, 1, (XICCEncodingStyle) style, &ct) >= 0)
         freect = 1;
       else
         {
@@ -3633,7 +3633,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
           ct.encoding = target;
         }
 
-      XChangeProperty (xdisp, rq.requestor, rq.property,
+      XChangeProperty (dpy, rq.requestor, rq.property,
                        ct.encoding, 8, PropModeReplace,
                        ct.value, (int)ct.nitems);
       ev.property = rq.property;
@@ -3642,7 +3642,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
         XFree (ct.value);
     }
 
-  XSendEvent (xdisp, rq.requestor, False, 0L, (XEvent *)&ev);
+  XSendEvent (dpy, rq.requestor, False, 0L, (XEvent *)&ev);
 }
 
 /* ------------------------------------------------------------------------- *
@@ -3668,7 +3668,7 @@ rxvt_term::im_set_position (XPoint &pos) NOTHROW
 {
   XWindowAttributes xwa;
 
-  XGetWindowAttributes (xdisp, vt, &xwa);
+  XGetWindowAttributes (dpy, vt, &xwa);
 
   pos.x = xwa.x + Col2Pixel    (screen.cur.col);
   pos.y = xwa.y + Height2Pixel (screen.cur.row) + fbase;

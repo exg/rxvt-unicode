@@ -46,14 +46,14 @@ rxvt_term::scrollbar_mapping (int map)
 
       if (scrollBar.win)
         {
-          XMapWindow (xdisp, scrollBar.win);
+          XMapWindow (dpy, scrollBar.win);
           change = 1;
         }
     }
   else
     {
       scrollBar.state = 0;
-      XUnmapWindow (xdisp, scrollBar.win);
+      XUnmapWindow (dpy, scrollBar.win);
       change = 1;
     }
 #endif
@@ -112,7 +112,7 @@ rxvt_term::resize_scrollbar ()
   if (!scrollBar.win)
     {
       /* create the scrollbar window */
-      scrollBar.win = XCreateSimpleWindow (xdisp,
+      scrollBar.win = XCreateSimpleWindow (dpy,
                                            parent[0],
                                            window_sb_x, 0,
                                            scrollbar_TotalWidth (),
@@ -120,9 +120,9 @@ rxvt_term::resize_scrollbar ()
                                            0,
                                            pix_colors[Color_fg],
                                            pix_colors[Color_border]);
-      XDefineCursor (xdisp, scrollBar.win, leftptr_cursor);
+      XDefineCursor (dpy, scrollBar.win, leftptr_cursor);
 
-      XSelectInput (xdisp, scrollBar.win,
+      XSelectInput (dpy, scrollBar.win,
                    ExposureMask | ButtonPressMask | ButtonReleaseMask
                    | Button1MotionMask | Button2MotionMask
                    | Button3MotionMask);
@@ -134,7 +134,7 @@ rxvt_term::resize_scrollbar ()
   scrollbar_show (1);
 
   if (delayed_init)
-    XMapWindow (xdisp, scrollBar.win);
+    XMapWindow (dpy, scrollBar.win);
 #endif
 }
 

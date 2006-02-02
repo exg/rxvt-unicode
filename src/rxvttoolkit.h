@@ -123,7 +123,7 @@ struct rxvt_xim : refcounted {
 
 struct rxvt_screen {
   rxvt_display *display;
-  Display *xdisp;
+  Display *dpy;
   int depth;
   Visual *visual;
   Colormap cmap;
@@ -147,7 +147,7 @@ struct rxvt_display : refcounted {
 #endif
 
 //public
-  Display   *display;
+  Display   *dpy;
   int       screen;
   Window    root;
   rxvt_term *selection_owner;

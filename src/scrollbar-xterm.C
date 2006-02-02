@@ -42,7 +42,7 @@ rxvt_term::scrollbar_show_xterm (int update, int last_top, int last_bot, int scr
       XGCValues       gcvalue;
 
       scrollBar.init |= R_SB_XTERM;
-      gcvalue.stipple = XCreateBitmapFromData (xdisp, scrollBar.win,
+      gcvalue.stipple = XCreateBitmapFromData (dpy, scrollBar.win,
                                               (char *)x_stp_bits, x_stp_width,
                                               x_stp_height);
       if (!gcvalue.stipple)
@@ -52,34 +52,34 @@ rxvt_term::scrollbar_show_xterm (int update, int last_top, int last_bot, int scr
       gcvalue.foreground = pix_colors_focused[Color_fg];
       gcvalue.background = pix_colors_focused[Color_bg];
 
-      xscrollbarGC = XCreateGC (xdisp, scrollBar.win,
+      xscrollbarGC = XCreateGC (dpy, scrollBar.win,
                                 GCForeground | GCBackground
                                 | GCFillStyle | GCStipple, &gcvalue);
       gcvalue.foreground = pix_colors_focused[Color_border];
-      ShadowGC = XCreateGC (xdisp, scrollBar.win, GCForeground, &gcvalue);
+      ShadowGC = XCreateGC (dpy, scrollBar.win, GCForeground, &gcvalue);
     }
 
   if (update)
     {
       xsb = OPTION (Opt_scrollBar_right) ? 1 : 0;
       if (last_top < scrollBar.top)
-        XClearArea (xdisp, scrollBar.win,
+        XClearArea (dpy, scrollBar.win,
                    sb_shadow + xsb, last_top,
                    sbwidth, (scrollBar.top - last_top), False);
 
       if (scrollBar.bot < last_bot)
-        XClearArea (xdisp, scrollBar.win,
+        XClearArea (dpy, scrollBar.win,
                    sb_shadow + xsb, scrollBar.bot,
                    sbwidth, (last_bot - scrollBar.bot), False);
     }
   else
-    XClearWindow (xdisp, scrollBar.win);
+    XClearWindow (dpy, scrollBar.win);
 
   /* scrollbar slider */
-  XFillRectangle (xdisp, scrollBar.win, xscrollbarGC,
+  XFillRectangle (dpy, scrollBar.win, xscrollbarGC,
                  xsb + 1, scrollBar.top, sbwidth - 2, scrollbar_len);
 
-  XDrawLine (xdisp, scrollBar.win, ShadowGC,
+  XDrawLine (dpy, scrollBar.win, ShadowGC,
             xsb ? 0 : sbwidth, scrollBar.beg,
             xsb ? 0 : sbwidth, scrollBar.end);
   return 1;

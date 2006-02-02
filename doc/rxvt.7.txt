@@ -1834,7 +1834,7 @@ CONFIGURE OPTIONS
 
     --enable-dmalloc (default: off)
         Use Gray Watson's malloc - which is good for debugging See
-        http://www.letters.com/dmalloc/ for details If you use either this
+        <http://www.letters.com/dmalloc/> for details If you use either this
         or the next option, you may need to edit src/Makefile after
         compiling to point DINCLUDE and DLIB to the right places.
 
