@@ -569,10 +569,10 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
 #if XFT
   XRenderPictFormat *format;
 
-  // FUCKING Xft gets it wrong, of course, so work around it
-  // transparency users should eat shit and die, and then
+  // FUCKING Xft gets it wrong, of course, so work around it.
+  // Transparency users should eat shit and die, and then
   // XRenderQueryPictIndexValues themselves plenty.
-  if ((screen->visual->c_class == TrueColor || screen->visual->c_class == DirectColor)
+  if ((screen->visual->c_class == TrueColor)
       && (format = XRenderFindVisualFormat (screen->xdisp, screen->visual)))
     {
       // the fun lies in doing everything manually...
@@ -604,7 +604,7 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
   c.green = color.g;
   c.blue  = color.b;
 
-  if (screen->visual->c_class == TrueColor || screen->visual->c_class == DirectColor)
+  if (screen->visual->c_class == TrueColor)
     {
       c.pixel = (color.r * (screen->visual->red_mask   >> ctz (screen->visual->red_mask  ))
                          / rgba::MAX_CC) << ctz (screen->visual->red_mask  )
