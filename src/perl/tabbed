@@ -75,6 +75,11 @@ sub configure {
 
    $tab->XMoveResizeWindow (
       $tab->parent,
+      0, $self->{tabheight} - 1,
+      $self->width, $self->height - $self->{tabheight}
+   );
+   $tab->XMoveResizeWindow (
+      $tab->parent,
       0, $self->{tabheight},
       $self->width, $self->height - $self->{tabheight}
    );

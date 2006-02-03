@@ -82,7 +82,6 @@ new_ref (HV *hv, const char *klass)
   return sv_bless (newRV ((SV *)hv), gv_stashpv (klass, 1));
 }
 
-//TODO: use magic
 static SV *
 newSVptr (void *ptr, const char *klass)
 {
@@ -496,8 +495,8 @@ ungrab (rxvt_term *THIS)
 {
   if (THIS->perl.grabtime)
     {
-      XUngrabKeyboard (THIS->xdisp, THIS->perl.grabtime);
-      XUngrabPointer  (THIS->xdisp, THIS->perl.grabtime);
+      XUngrabKeyboard (THIS->dpy, THIS->perl.grabtime);
+      XUngrabPointer  (THIS->dpy, THIS->perl.grabtime);
       THIS->perl.grabtime = 0;
     }
 }
@@ -885,8 +884,7 @@ BOOT:
 #   endif
   };
 
-  for (civ = const_iv + sizeof (const_iv) / sizeof (const_iv [0]);
-       civ-- > const_iv; )
+  for (civ = const_iv + sizeof (const_iv) / sizeof (const_iv [0]); civ-- > const_iv; )
     newCONSTSUB (stash, (char *)civ->name, newSViv (civ->iv));
 }
 
@@ -1022,26 +1020,26 @@ rxvt_term::set_should_invoke (int htype, int inc)
 void
 rxvt_term::grab_button (int button, U32 modifiers, Window window = THIS->vt)
 	CODE:
-        XGrabButton (THIS->xdisp, button, modifiers, window, 1,
+        XGrabButton (THIS->dpy, button, modifiers, window, 1,
                      ButtonPressMask | ButtonReleaseMask | EnterWindowMask | LeaveWindowMask | PointerMotionMask,
                      GrabModeSync, GrabModeSync, None, GRAB_CURSOR);
 
 void
 rxvt_term::ungrab_button (int button, U32 modifiers, Window window = THIS->vt)
 	CODE:
-        XUngrabButton (THIS->xdisp, button, modifiers, window);
+        XUngrabButton (THIS->dpy, button, modifiers, window);
 
 #if 0
 
 void
 XGrabKey (rxvt_term *THIS, int keycode, U32 modifiers, Window window = THIS->vt)
 	C_ARGS:
-        THIS->xdisp, keycode, modifiers, window, 1,
+        THIS->dpy, keycode, modifiers, window, 1,
         GrabModeSync, GrabModeSync
 
 void
 XUngrabKey (rxvt_term *THIS, int keycode, U32 modifiers, Window window = THIS->vt)
-	C_ARGS: THIS->xdisp, keycode, modifiers, window
+	C_ARGS: THIS->dpy, keycode, modifiers, window
 
 #endif
 
@@ -1053,13 +1051,13 @@ rxvt_term::grab (Time eventtime, int sync = 0)
 
         THIS->perl.grabtime = 0;
 
-        if (!XGrabPointer (THIS->xdisp, THIS->vt, 0,
+        if (!XGrabPointer (THIS->dpy, THIS->vt, 0,
                            ButtonPressMask | ButtonReleaseMask | EnterWindowMask | LeaveWindowMask | PointerMotionMask,
                            mode, mode, None, GRAB_CURSOR, eventtime))
-          if (!XGrabKeyboard (THIS->xdisp, THIS->vt, 0, mode, mode, eventtime))
+          if (!XGrabKeyboard (THIS->dpy, THIS->vt, 0, mode, mode, eventtime))
             THIS->perl.grabtime = eventtime;
           else
-            XUngrabPointer (THIS->xdisp, eventtime);
+            XUngrabPointer (THIS->dpy, eventtime);
 
         RETVAL = !!THIS->perl.grabtime;
 }
@@ -1069,18 +1067,18 @@ rxvt_term::grab (Time eventtime, int sync = 0)
 void
 rxvt_term::allow_events_async ()
 	CODE:
-        XAllowEvents (THIS->xdisp, AsyncBoth,      THIS->perl.grabtime);
+        XAllowEvents (THIS->dpy, AsyncBoth,      THIS->perl.grabtime);
 
 void
 rxvt_term::allow_events_sync ()
 	CODE:
-        XAllowEvents (THIS->xdisp, SyncBoth,       THIS->perl.grabtime);
+        XAllowEvents (THIS->dpy, SyncBoth,       THIS->perl.grabtime);
 
 void
 rxvt_term::allow_events_replay ()
 	CODE:
-        XAllowEvents (THIS->xdisp, ReplayPointer,  THIS->perl.grabtime);
-        XAllowEvents (THIS->xdisp, ReplayKeyboard, THIS->perl.grabtime);
+        XAllowEvents (THIS->dpy, ReplayPointer,  THIS->perl.grabtime);
+        XAllowEvents (THIS->dpy, ReplayKeyboard, THIS->perl.grabtime);
 
 void
 rxvt_term::ungrab ()
@@ -1739,7 +1737,7 @@ rxvt_term::XListProperties (Window window)
 	PPCODE:
 {
 	int count;
-	Atom *props = XListProperties (THIS->xdisp, window, &count);
+	Atom *props = XListProperties (THIS->dpy, window, &count);
 
         EXTEND (SP, count);
         while (count--)
@@ -1758,7 +1756,7 @@ rxvt_term::XGetWindowProperty (Window window, Atom property)
         unsigned long bytes_after;
         unsigned char *prop;
 
-	XGetWindowProperty (THIS->xdisp, window, property,
+	XGetWindowProperty (THIS->dpy, window, property,
                             0, 1<<24, 0, AnyPropertyType,
                             &type, &format, &nitems, &bytes_after, &prop);
 
@@ -1787,25 +1785,25 @@ rxvt_term::XChangeWindowProperty (Window window, Atom property, Atom type, int f
                      : format == 32 ? sizeof (long)
                      :                1;
 
-	XChangeProperty (THIS->xdisp, window, property,
+	XChangeProperty (THIS->dpy, window, property,
                          type, format, PropModeReplace,
                          (unsigned char *)data_, len / elemsize);
-        XSync (THIS->xdisp, 0);
+        XSync (THIS->dpy, 0);
 }
 
 Atom
 XInternAtom (rxvt_term *term, char *atom_name, int only_if_exists = FALSE)
-	C_ARGS: term->xdisp, atom_name, only_if_exists
+	C_ARGS: term->dpy, atom_name, only_if_exists
 
 char *
 XGetAtomName (rxvt_term *term, Atom atom)
-	C_ARGS: term->xdisp, atom
+	C_ARGS: term->dpy, atom
         CLEANUP:
         XFree (RETVAL);
 
 void
 XDeleteProperty (rxvt_term *term, Window window, Atom property)
-  	C_ARGS: term->xdisp, window, property
+  	C_ARGS: term->dpy, window, property
 
 Window
 rxvt_term::DefaultRootWindow ()
@@ -1818,7 +1816,7 @@ rxvt_term::DefaultRootWindow ()
 
 Window
 XCreateSimpleWindow (rxvt_term *term, Window parent, int x, int y, unsigned int width, unsigned int height)
-	C_ARGS: term->xdisp, (Window)parent,
+	C_ARGS: term->dpy, (Window)parent,
                 x, y, width, height, 0,
                 term->pix_colors_focused[Color_border],
                 term->pix_colors_focused[Color_border]
@@ -1827,27 +1825,27 @@ XCreateSimpleWindow (rxvt_term *term, Window parent, int x, int y, unsigned int 
 
 void
 XReparentWindow (rxvt_term *term, Window window, Window parent, int x = 0, int y = 0)
-	C_ARGS: term->xdisp, window, parent, x, y
+	C_ARGS: term->dpy, window, parent, x, y
 
 void
 XMapWindow (rxvt_term *term, Window window)
-	C_ARGS: term->xdisp, window
+	C_ARGS: term->dpy, window
 
 void
 XUnmapWindow (rxvt_term *term, Window window)
-	C_ARGS: term->xdisp, window
+	C_ARGS: term->dpy, window
 
 void
 XMoveResizeWindow (rxvt_term *term, Window window, int x, int y, unsigned int width, unsigned int height)
-	C_ARGS: term->xdisp, window, x, y, width, height
+	C_ARGS: term->dpy, window, x, y, width, height
 
 void
 rxvt_term::XChangeInput (Window window, U32 add_events, U32 del_events = 0)
 	CODE:
 {
 	XWindowAttributes attr;
-        XGetWindowAttributes (THIS->xdisp, window, &attr);
-        XSelectInput (THIS->xdisp, window, attr.your_event_mask | add_events & ~del_events);
+        XGetWindowAttributes (THIS->dpy, window, &attr);
+        XSelectInput (THIS->dpy, window, attr.your_event_mask | add_events & ~del_events);
 }
 
 void
@@ -1857,7 +1855,7 @@ rxvt_term::XTranslateCoordinates (Window src, Window dst, int x, int y)
         int dx, dy;
         Window child;
 
-        if (XTranslateCoordinates (THIS->xdisp, src, dst, x, y, &dx, &dy, &child))
+        if (XTranslateCoordinates (THIS->dpy, src, dst, x, y, &dx, &dy, &child))
           {
             EXTEND (SP, 3);
             PUSHs (newSViv (dx));
