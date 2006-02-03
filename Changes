@@ -13,7 +13,6 @@ WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the
 DUMB: support tex fonts
 
 TODO: option popup hook, make some exts switchable
-WISH: automove-background because of missing xconfigurenotify in tabs
 
 	- changed interpretation of [alpha] colour prefix.
         - +option now really sets the option to default, instead of using the
@@ -30,6 +29,8 @@ WISH: automove-background because of missing xconfigurenotify in tabs
         - more colour rtt optimisations.
         - properly(?) free colours on window close.
         - reorganised the FAQ into multiple sections.
+        - forcing a configure event to tabbed subwindows with -pe tabbed, for
+          the benefit of automove-background.
 
 7.5  Tue Jan 31 15:15:43 CET 2006
         - further improvements to the careful mode detection, and font width

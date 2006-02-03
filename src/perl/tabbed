@@ -73,9 +73,10 @@ sub configure {
 
    my $tab = $self->{cur};
 
+   # this is an extremely dirty way to force a configurenotify, but who cares
    $tab->XMoveResizeWindow (
       $tab->parent,
-      0, $self->{tabheight} - 1,
+      0, $self->{tabheight} + 1,
       $self->width, $self->height - $self->{tabheight}
    );
    $tab->XMoveResizeWindow (
