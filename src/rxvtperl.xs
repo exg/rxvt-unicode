@@ -764,7 +764,7 @@ BOOT:
 # undef def
 
   HV *stash = gv_stashpv ("urxvt", 1);
-  struct {
+  static const struct {
     const char *name;
     IV iv;
   } *civ, const_iv[] = {
@@ -1494,7 +1494,7 @@ void
 rxvt_term::_resource (char *name, int index, SV *newval = 0)
 	PPCODE:
 {
-	struct resval { const char *name; int value; } rslist [] = {
+	static const struct resval { const char *name; int value; } *rs, rslist [] = {
 #	  define def(name) { # name, Rs_ ## name },
 #	  define reserve(name,count)
 #	  include "rsinc.h"
@@ -1502,7 +1502,7 @@ rxvt_term::_resource (char *name, int index, SV *newval = 0)
 #	  undef reserve
         };
 
-        struct resval *rs = rslist + sizeof (rslist) / sizeof (rslist [0]);
+        rs = rslist + sizeof (rslist) / sizeof (rslist [0]);
 
         do {
           if (rs-- == rslist)
