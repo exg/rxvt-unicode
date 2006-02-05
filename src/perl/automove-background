@@ -9,7 +9,7 @@ sub on_configure_notify {
       ($x, $y) = ($event->{x}, $event->{y});
    } else {
       ($x, $y) = $self->XTranslateCoordinates (
-         $self->parent, $self->DefaultRootWindow,
+         $self->vt, $self->DefaultRootWindow,
          0, 0
       );
    }
