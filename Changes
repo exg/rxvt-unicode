@@ -15,6 +15,8 @@ DUMB: support tex fonts
 TODO: option popup hook, make some exts switchable
 TODO: constant offste with automove
 TODO: rework colors and blabla section
+TODO: hednod-tabs
+TODO: forward keyevents to subtabs
 
 	- changed interpretation of [alpha] colour prefix.
         - +option now really sets the option to default, instead of using the
@@ -33,6 +35,7 @@ TODO: rework colors and blabla section
         - reorganised the FAQ into multiple sections.
         - forcing a configure event to tabbed subwindows with -pe tabbed, for
           the benefit of automove-background.
+        - add ISO646.1991-IRV to the list of supported codesets.
 
 7.5  Tue Jan 31 15:15:43 CET 2006
         - further improvements to the careful mode detection, and font width
