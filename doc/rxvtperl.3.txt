@@ -81,6 +81,23 @@ PREPACKAGED EXTENSIONS
         Binds a popup menu to Ctrl-Button2 that lets you toggle (some)
         options at runtime.
 
+        Other extensions can extend this popup menu by pushing a code
+        reference onto "@{ $term-"{option_popup_hook} }>, which gets called
+        whenever the popup is being displayed.
+
+        It's sole argument is the popup menu, which can be modified. It
+        should either return nothing or a string, the initial boolean value
+        and a code reference. The string will be used as button text and the
+        code reference will be called when the toggle changes, with the new
+        boolean value as first argument.
+
+        The following will add an entry "myoption" that changes
+        "$self-"{myoption}>:
+
+           push @{ $self->{term}{option_popup_hook} }, sub {
+              ("my option" => $myoption, sub { $self->{myoption} = $_[0] })
+           };
+
     selection-popup (enabled by default)
         Binds a popup menu to Ctrl-Button3 that lets you convert the
         selection text into various other formats/action (such as uri
@@ -88,8 +105,8 @@ PREPACKAGED EXTENSIONS
         on content.
 
         Other extensions can extend this popup menu by pushing a code
-        reference onto "@{ $term-"{selection_popup_hook} }>, that is called
-        whenever the popup is displayed.
+        reference onto "@{ $term-"{selection_popup_hook} }>, which gets
+        called whenever the popup is being displayed.
 
         It's sole argument is the popup menu, which can be modified. The
         selection is in $_, which can be used to decide wether to add
@@ -1069,10 +1086,10 @@ API DOCUMENTATION
         Adds a clickable button to the popup. $cb is called whenever it is
         selected.
 
-    $popup->add_toggle ($text, $cb, $initial_value)
-        Adds a toggle/checkbox item to the popup. Teh callback gets called
-        whenever it gets toggled, with a boolean indicating its value as its
-        first argument.
+    $popup->add_toggle ($text, $initial_value, $cb)
+        Adds a toggle/checkbox item to the popup. The callback gets called
+        whenever it gets toggled, with a boolean indicating its new value as
+        its first argument.
 
     $popup->show
         Displays the popup (which is initially hidden).

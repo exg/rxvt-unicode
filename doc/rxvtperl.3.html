@@ -156,6 +156,28 @@ Rot-13 the selection when activated. Used via keyboard trigger:
 Binds a popup menu to Ctrl-Button2 that lets you toggle (some) options at
 runtime.
 </dd>
+<dd>
+<p>Other extensions can extend this popup menu by pushing a code reference
+onto <code>@{ $term-</code>{option_popup_hook} }&gt;, which gets called whenever the
+popup is being displayed.</p>
+</dd>
+<dd>
+<p>It's sole argument is the popup menu, which can be modified.  It should
+either return nothing or a string, the initial boolean value and a code
+reference. The string will be used as button text and the code reference
+will be called when the toggle changes, with the new boolean value as
+first argument.</p>
+</dd>
+<dd>
+<p>The following will add an entry <code>myoption</code> that changes
+<code>$self-</code>{myoption}&gt;:</p>
+</dd>
+<dd>
+<pre>
+   push @{ $self-&gt;{term}{option_popup_hook} }, sub {
+      (&quot;my option&quot; =&gt; $myoption, sub { $self-&gt;{myoption} = $_[0] })
+   };</pre>
+</dd>
 <p></p>
 <dt><strong>selection-popup (enabled by default)</strong><br />
 </dt>
@@ -166,8 +188,8 @@ evaluation, web-browser starting etc.), depending on content.
 </dd>
 <dd>
 <p>Other extensions can extend this popup menu by pushing a code reference
-onto <code>@{ $term-</code>{selection_popup_hook} }&gt;, that is called whenever the
-popup is displayed.</p>
+onto <code>@{ $term-</code>{selection_popup_hook} }&gt;, which gets called whenever the
+popup is being displayed.</p>
 </dd>
 <dd>
 <p>It's sole argument is the popup menu, which can be modified. The selection
@@ -1641,12 +1663,12 @@ Adds a clickable button to the popup. <code>$cb</code> is called whenever it is
 selected.
 </dd>
 <p></p>
-<dt><strong><a name="item_add_toggle">$popup-&gt;add_toggle ($text, $cb, $initial_value)</a></strong><br />
+<dt><strong><a name="item_add_toggle">$popup-&gt;add_toggle ($text, $initial_value, $cb)</a></strong><br />
 </dt>
 <dd>
-Adds a toggle/checkbox item to the popup. Teh callback gets called
-whenever it gets toggled, with a boolean indicating its value as its first
-argument.
+Adds a toggle/checkbox item to the popup. The callback gets called
+whenever it gets toggled, with a boolean indicating its new value as its
+first argument.
 </dd>
 <p></p>
 <dt><strong>$popup-&gt;show</strong><br />
