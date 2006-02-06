@@ -300,15 +300,19 @@ rxvt_term::hex_keyval (XKeyEvent &ev)
 }
 #endif
 
-/*{{{ Convert the keypress event into a string */
 void
-rxvt_term::lookup_key (XKeyEvent &ev)
+rxvt_term::key_press (XKeyEvent &ev)
 {
   int ctrl, meta, shft, len;
   unsigned int newlen;
   KeySym keysym;
   int valid_keysym;
   char kbuf[KBUFSZ];
+
+#if ISO_14755
+  if (iso14755buf & ISO_14755_52)
+    return;
+#endif
 
   /*
    * use Num_Lock to toggle Keypad on/off.  If Num_Lock is off, allow an
@@ -909,7 +913,83 @@ rxvt_term::lookup_key (XKeyEvent &ev)
 
   tt_write (kbuf, (unsigned int)len);
 }
-/*}}} */
+
+void
+rxvt_term::key_release (XKeyEvent &ev)
+{
+#if (MOUSE_WHEEL && MOUSE_SLIP_WHEELING) || ISO_14755 || ENABLE_PERL
+  KeySym keysym;
+
+  keysym = XLookupKeysym (&ev, ev.state & ShiftMask ? 1 : 0); // sorry, only shift supported :/
+#endif
+
+#if ENABLE_FRILLS || ISO_14755
+  // ISO 14755 support
+  if (iso14755buf)
+    if (iso14755buf & ISO_14755_52)
+      {
+# if ENABLE_OVERLAY
+        scr_overlay_off ();
+# endif
+# if ISO_14755
+        // iso14755 part 5.2 handling: release time
+        // first: controls
+        if ((ev.state & ControlMask)
+             && ((keysym >= 0x40 && keysym <= 0x5f)
+                 || (keysym >= 0x61 && keysym <= 0x7f)))
+          {
+            iso14755buf = ISO_14755_51 | 0x2400 | (keysym & 0x1f);
+            commit_iso14755 ();
+
+            return;
+          }
+
+        for (unsigned short *i = iso14755_symtab; i[0]; i+= 2)
+          if (i[0] == keysym)
+            {
+              iso14755buf = ISO_14755_51 | i[1];
+              commit_iso14755 ();
+
+              return;
+            }
+
+        scr_bell ();
+# endif
+        iso14755buf = 0;
+
+        return;
+      }
+    else if ((ev.state & (ShiftMask | ControlMask)) != (ShiftMask | ControlMask))
+      {
+# if ENABLE_OVERLAY
+        scr_overlay_off ();
+# endif
+        if (iso14755buf & ISO_14755_51)
+          commit_iso14755 ();
+#if ISO_14755
+        else if (iso14755buf & ISO_14755_STARTED)
+          {
+            iso14755buf = ISO_14755_52; // iso14755 part 5.2: remember empty begin/end pair
+
+            scr_overlay_new (0, -1, sizeof ("KEYCAP PICTURE INSERT MODE") - 1, 1);
+            scr_overlay_set (0, 0, "KEYCAP PICTURE INSERT MODE");
+          }
+# endif
+        else
+          iso14755buf = 0;
+      }
+#endif
+
+  if (HOOK_INVOKE ((this, HOOK_KEY_RELEASE, DT_XEVENT, &ev, DT_INT, keysym, DT_END)))
+    return;
+
+#if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
+  if (!(ev.state & ControlMask))
+    slip_wheel_ev.stop ();
+  else if (keysym == XK_Control_L || keysym == XK_Control_R)
+    mouse_slip_wheel_speed = 0;
+#endif
+}
 
 #if defined (KEYSYM_RESOURCE)
 unsigned int
@@ -1302,87 +1382,12 @@ rxvt_term::x_cb (XEvent &ev)
   switch (ev.type)
     {
       case KeyPress:
-#if ISO_14755
-        if (!(iso14755buf & ISO_14755_52))
-#endif
-          lookup_key (ev.xkey);
-
+        key_press (ev.xkey);
         break;
 
       case KeyRelease:
-        {
-#if (MOUSE_WHEEL && MOUSE_SLIP_WHEELING) || ISO_14755 || ENABLE_PERL
-          KeySym keysym;
-
-          keysym = XLookupKeysym (&ev.xkey, ev.xkey.state & ShiftMask ? 1 : 0); // sorry, only shift supported :/
-#endif
-
-#if ENABLE_FRILLS || ISO_14755
-          // ISO 14755 support
-          if (iso14755buf)
-            if (iso14755buf & ISO_14755_52)
-              {
-# if ENABLE_OVERLAY
-                scr_overlay_off ();
-# endif
-# if ISO_14755
-                // iso14755 part 5.2 handling: release time
-                // first: controls
-                if ((ev.xkey.state & ControlMask)
-                     && ((keysym >= 0x40 && keysym <= 0x5f)
-                         || (keysym >= 0x61 && keysym <= 0x7f)))
-                  {
-                    iso14755buf = ISO_14755_51 | 0x2400 | (keysym & 0x1f);
-                    commit_iso14755 ();
-                    goto skip_switch;
-                  }
-
-                for (unsigned short *i = iso14755_symtab; i[0]; i+= 2)
-                  if (i[0] == keysym)
-                    {
-                      iso14755buf = ISO_14755_51 | i[1];
-                      commit_iso14755 ();
-                      goto skip_switch;
-                    }
-
-                scr_bell ();
-# endif
-                iso14755buf = 0;
-                break;
-              }
-            else if ((ev.xkey.state & (ShiftMask | ControlMask)) != (ShiftMask | ControlMask))
-              {
-# if ENABLE_OVERLAY
-                scr_overlay_off ();
-# endif
-                if (iso14755buf & ISO_14755_51)
-                  commit_iso14755 ();
-#if ISO_14755
-                else if (iso14755buf & ISO_14755_STARTED)
-                  {
-                    iso14755buf = ISO_14755_52; // iso14755 part 5.2: remember empty begin/end pair
-
-                    scr_overlay_new (0, -1, sizeof ("KEYCAP PICTURE INSERT MODE") - 1, 1);
-                    scr_overlay_set (0, 0, "KEYCAP PICTURE INSERT MODE");
-                  }
-# endif
-                else
-                  iso14755buf = 0;
-              }
-#endif
-
-          if (ev.xany.window == vt
-              && HOOK_INVOKE ((this, HOOK_KEY_RELEASE, DT_XEVENT, &ev, DT_INT, keysym, DT_END)))
-            break;
-
-#if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
-          if (!(ev.xkey.state & ControlMask))
-            slip_wheel_ev.stop ();
-          else if (keysym == XK_Control_L || keysym == XK_Control_R)
-            mouse_slip_wheel_speed = 0;
-#endif
-          break;
-        }
+        key_release (ev.xkey);
+        break;
 
       case ButtonPress:
         button_press (ev.xbutton);
@@ -1674,8 +1679,6 @@ rxvt_term::x_cb (XEvent &ev)
           }
         break;
     }
-
-skip_switch: ;
 
 #if defined(CURSOR_BLINK)
   if (OPTION (Opt_cursorBlink) && ev.type == KeyPress)

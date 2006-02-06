@@ -207,6 +207,18 @@ Clicking a button will activate that tab. Pressing B<Shift-Left> and
 B<Shift-Right> will switch to the tab left or right of the current one,
 while B<Shift-Down> creates a new tab.
 
+The tabbar itself can be configured similarly to a normal terminal, but
+with a resource class of C<URxvt.tabbed>. In addition, it supports the
+following four resources (shown with defaults):
+
+   URxvt.tabbed.tabbar-fg: <colour-index, default 3>
+   URxvt.tabbed.tabbar-bg: <colour-index, default 0>
+   URxvt.tabbed.tab-fg:    <colour-index, default 0>
+   URxvt.tabbed.tab-bg:    <colour-index, default 1>
+
+See I<COLOR AND GRAPHICS> in the @@RXVT_NAME@@(1) manpage for valid
+indices.
+
 =item mark-urls
 
 Uses per-line display filtering (C<on_line_update>) to underline urls and
@@ -743,6 +755,8 @@ Return the foreground/background colour index, respectively.
 
 =item $rend = urxvt::SET_BGCOLOR $rend, $new_colour
 
+=item $rend = urxvt::SET_COLOR $rend, $new_fg, $new_bg
+
 Replace the foreground/background colour in the rendition mask with the
 specified one.
 
@@ -887,6 +901,10 @@ sub invoke {
    }
 
    $retval
+}
+
+sub SET_COLOR($$$) {
+   SET_BGCOLOR (SET_FGCOLOR ($_[0], $_[1]), $_[2])
 }
 
 # urxvt::term::extension
@@ -1385,6 +1403,16 @@ Adds the specified events to the vt event mask. Useful e.g. when you want
 to receive pointer events all the times:
 
    $term->vt_emask_add (urxvt::PointerMotionMask);
+
+=item $term->focus_in
+
+=item $term->focus_out
+
+=item $term->key_press ($state, $keycode[, $time])
+
+=item $term->key_release ($state, $keycode[, $time])
+
+Deliver various fake events to to terminal.
 
 =item $window_width = $term->width
 

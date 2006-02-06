@@ -925,14 +925,14 @@ GET_BASEBG (int rend)
 int
 SET_FGCOLOR (int rend, int new_color)
 	CODE:
-        RETVAL = SET_FGCOLOR (rend, new_color);
+        RETVAL = SET_FGCOLOR (rend, clamp (new_color, 0, TOTAL_COLORS - 1));
 	OUTPUT:
         RETVAL
 
 int
 SET_BGCOLOR (int rend, int new_color)
 	CODE:
-        RETVAL = SET_BGCOLOR (rend, new_color);
+        RETVAL = SET_BGCOLOR (rend, clamp (new_color, 0, TOTAL_COLORS - 1));
 	OUTPUT:
         RETVAL
 
@@ -1292,6 +1292,32 @@ rxvt_term::focus_in ()
 
 void
 rxvt_term::focus_out ()
+
+void
+rxvt_term::key_press (unsigned int state, unsigned int keycode, Time time = CurrentTime)
+	ALIAS:
+           key_release = 1
+	CODE:
+{
+        XKeyEvent xkey;
+
+        memset (&xkey, 0, sizeof (xkey));
+
+        xkey.time      = time;
+        xkey.state     = state;
+        xkey.keycode   = keycode;
+
+        xkey.type      = ix ? KeyRelease : KeyPress;
+        xkey.display   = THIS->dpy;
+        xkey.window    = THIS->vt;
+        xkey.root      = THIS->display->root;
+        xkey.subwindow = THIS->vt;
+
+        if (ix)
+          THIS->key_release (xkey);
+        else
+          THIS->key_press (xkey);
+}
 
 void
 rxvt_term::want_refresh ()

@@ -15,13 +15,15 @@ DUMB: support tex fonts
 TODO: option popup hook, make some exts switchable
 TODO: constant offste with automove
 TODO: rework colors and blabla section
-TODO: hednod-tabs
-TODO: forward keyevents to subtabs
 
 	- changed interpretation of [alpha] colour prefix.
         - +option now really sets the option to default, instead of using the
           resource value.
         - options that require an argument now really _require_ an argument.
+        - the tabbed extension now forwards focus and keys events to th
+          relevant tab window.
+        - tab colours are now configurable and have sensible defaults
+          (initial patch by hednod).
         - force refresh of XA_RESOURCE_STRING on virtual reconnect.
         - return exit status 2 in urxvtc when urxvtd couldn't be contacted.
         - the linux yield hack is back, now using usleep, and enabled only on

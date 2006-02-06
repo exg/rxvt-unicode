@@ -1214,7 +1214,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void resize_scrollbar ();
 
   // command.C
-  void lookup_key (XKeyEvent &ev);
+  void key_press (XKeyEvent &ev);
+  void key_release (XKeyEvent &ev);
   unsigned int cmd_write (const char *str, unsigned int count);
 
   wchar_t next_char () NOTHROW;
