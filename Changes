@@ -22,6 +22,8 @@ TODO: option popup hook, make some exts switchable
           relevant tab window.
         - tab colours are now configurable and have sensible defaults
           (initial patch by hednod).
+        - forcing a configure event to tabbed subwindows with -pe tabbed, for
+          the benefit of automove-background.
         - the automove-background extension added a wrong constant offset.
         - force refresh of XA_RESOURCE_STRING on virtual reconnect.
         - return exit status 2 in urxvtc when urxvtd couldn't be contacted.
@@ -34,8 +36,6 @@ TODO: option popup hook, make some exts switchable
         - more colour rtt optimisations.
         - properly(?) free colours on window close.
         - reorganised the FAQ into multiple sections.
-        - forcing a configure event to tabbed subwindows with -pe tabbed, for
-          the benefit of automove-background.
         - add ISO646.1991-IRV to the list of supported codesets.
 
 7.5  Tue Jan 31 15:15:43 CET 2006
