@@ -1348,6 +1348,15 @@ B<background>, B<cursorColor>, B<cursorColor2>, B<colorBD>, B<colorUL> as
 a number 0-15, as a convenient shorthand to reference the colour name of
 color0-color15.
 
+In addition to the colours defined above, @@RXVT_NAME@@ offers an
+additional 72 colours. The first 64 of those (with indices 16 to 79)
+consist of a 4*4*4 RGB colour cube (i.e. I<index = r * 16 + g * 4 + b +
+16>), followed by 8 additional shades of gray (with indices 80 to 87).
+
+Together, all those colours implement the 88 colour xterm colours. Only
+the first 16 can be changed using resources currently, the rest can only
+be changed via command sequences ("escape codes").
+
 Note that B<-rv> (B<"reverseVideo: True">) simulates reverse video by
 always swapping the foreground/background colours. This is in contrast to
 I<xterm>(1) where the colours are only swapped if they have not otherwise

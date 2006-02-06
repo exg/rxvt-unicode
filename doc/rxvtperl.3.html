@@ -295,6 +295,22 @@ button per tab.
 <strong>Shift-Right</strong> will switch to the tab left or right of the current one,
 while <strong>Shift-Down</strong> creates a new tab.</p>
 </dd>
+<dd>
+<p>The tabbar itself can be configured similarly to a normal terminal, but
+with a resource class of <code>URxvt.tabbed</code>. In addition, it supports the
+following four resources (shown with defaults):</p>
+</dd>
+<dd>
+<pre>
+   URxvt.tabbed.tabbar-fg: &lt;colour-index, default 3&gt;
+   URxvt.tabbed.tabbar-bg: &lt;colour-index, default 0&gt;
+   URxvt.tabbed.tab-fg:    &lt;colour-index, default 0&gt;
+   URxvt.tabbed.tab-bg:    &lt;colour-index, default 1&gt;</pre>
+</dd>
+<dd>
+<p>See <em>COLOR AND GRAPHICS</em> in the <code>rxvt(1)</code> manpage for valid
+indices.</p>
+</dd>
 <p></p>
 <dt><strong><a name="item_mark_2durls">mark-urls</a></strong><br />
 </dt>
@@ -924,6 +940,8 @@ Return the foreground/background colour index, respectively.
 </dt>
 <dt><strong><a name="item__24rend__3d_urxvt_3a_3aset_bgcolor__24rend_2c__24n">$rend = urxvt::SET_BGCOLOR $rend, $new_colour</a></strong><br />
 </dt>
+<dt><strong><a name="item__24rend__3d_urxvt_3a_3aset_color__24rend_2c__24new">$rend = urxvt::SET_COLOR $rend, $new_fg, $new_bg</a></strong><br />
+</dt>
 <dd>
 Replace the foreground/background colour in the rendition mask with the
 specified one.
@@ -1296,6 +1314,18 @@ to receive pointer events all the times:
 <dd>
 <pre>
    $term-&gt;vt_emask_add (urxvt::PointerMotionMask);</pre>
+</dd>
+<p></p>
+<dt><strong><a name="item_focus_in">$term-&gt;focus_in</a></strong><br />
+</dt>
+<dt><strong><a name="item_focus_out">$term-&gt;focus_out</a></strong><br />
+</dt>
+<dt><strong><a name="item_key_press">$term-&gt;key_press ($state, $keycode[, $time])</a></strong><br />
+</dt>
+<dt><strong><a name="item_key_release">$term-&gt;key_release ($state, $keycode[, $time])</a></strong><br />
+</dt>
+<dd>
+Deliver various fake events to to terminal.
 </dd>
 <p></p>
 <dt><strong><a name="item_width">$window_width = $term-&gt;width</a></strong><br />

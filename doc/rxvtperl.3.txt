@@ -185,6 +185,17 @@ PREPACKAGED EXTENSIONS
         Shift-Right will switch to the tab left or right of the current one,
         while Shift-Down creates a new tab.
 
+        The tabbar itself can be configured similarly to a normal terminal,
+        but with a resource class of "URxvt.tabbed". In addition, it
+        supports the following four resources (shown with defaults):
+
+           URxvt.tabbed.tabbar-fg: <colour-index, default 3>
+           URxvt.tabbed.tabbar-bg: <colour-index, default 0>
+           URxvt.tabbed.tab-fg:    <colour-index, default 0>
+           URxvt.tabbed.tab-bg:    <colour-index, default 1>
+
+        See *COLOR AND GRAPHICS* in the rxvt(1) manpage for valid indices.
+
     mark-urls
         Uses per-line display filtering ("on_line_update") to underline urls
         and make them clickable. When middle-clicked, the program specified
@@ -612,6 +623,7 @@ API DOCUMENTATION
 
     $rend = urxvt::SET_FGCOLOR $rend, $new_colour
     $rend = urxvt::SET_BGCOLOR $rend, $new_colour
+    $rend = urxvt::SET_COLOR $rend, $new_fg, $new_bg
         Replace the foreground/background colour in the rendition mask with
         the specified one.
 
@@ -862,6 +874,12 @@ API DOCUMENTATION
         want to receive pointer events all the times:
 
            $term->vt_emask_add (urxvt::PointerMotionMask);
+
+    $term->focus_in
+    $term->focus_out
+    $term->key_press ($state, $keycode[, $time])
+    $term->key_release ($state, $keycode[, $time])
+        Deliver various fake events to to terminal.
 
     $window_width = $term->width
     $window_height = $term->height

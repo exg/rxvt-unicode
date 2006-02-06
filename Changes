@@ -13,7 +13,6 @@ WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the
 DUMB: support tex fonts
 
 TODO: option popup hook, make some exts switchable
-TODO: rework colors and blabla section
 
 	- changed interpretation of [alpha] colour prefix.
         - +option now really sets the option to default, instead of using the

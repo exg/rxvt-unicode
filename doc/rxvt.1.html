@@ -1741,6 +1741,13 @@ colours with their names.</p>
 <strong>background</strong>, <strong>cursorColor</strong>, <strong>cursorColor2</strong>, <strong>colorBD</strong>, <strong>colorUL</strong> as
 a number 0-15, as a convenient shorthand to reference the colour name of
 color0-color15.</p>
+<p>In addition to the colours defined above, rxvt offers an
+additional 72 colours. The first 64 of those (with indices 16 to 79)
+consist of a 4*4*4 RGB colour cube (i.e. <em>index = r * 16 + g * 4 + b +
+16</em>), followed by 8 additional shades of gray (with indices 80 to 87).</p>
+<p>Together, all those colours implement the 88 colour xterm colours. Only
+the first 16 can be changed using resources currently, the rest can only
+be changed via command sequences (``escape codes'').</p>
 <p>Note that <strong>-rv</strong> (<strong>``reverseVideo: True''</strong>) simulates reverse video by
 always swapping the foreground/background colours. This is in contrast to
 <em>xterm</em>(1) where the colours are only swapped if they have not otherwise
