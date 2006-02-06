@@ -12,8 +12,6 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
-TODO: option popup hook, make some exts switchable
-
 	- changed interpretation of [alpha] colour prefix.
         - +option now really sets the option to default, instead of using the
           resource value.
@@ -22,6 +20,8 @@ TODO: option popup hook, make some exts switchable
           relevant tab window.
         - tab colours are now configurable and have sensible defaults
           (initial patch by hednod).
+        - option menu is extendable, readline, selection and
+          selection-autotransform can now be disabled/enabled at runtime.
         - forcing a configure event to tabbed subwindows with -pe tabbed, for
           the benefit of automove-background.
         - the automove-background extension added a wrong constant offset.

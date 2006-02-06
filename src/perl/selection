@@ -23,6 +23,12 @@ sub on_init {
       push @{ $self->{patterns} }, qr/$res/;
    }
 
+   $self->{enabled} = 1;
+
+   push @{ $self->{term}{option_popup_hook} }, sub {
+      ("new selection" => $self->{enabled}, sub { $self->{enabled} = shift })
+   };
+
    ()
 }
 
@@ -63,6 +69,9 @@ my @simplify_patterns = (
 
 sub on_sel_extend {
    my ($self, $time) = @_;
+
+   $self->{enabled}
+      or return;
 
    my ($row, $col) = $self->selection_mark;
    my $line = $self->line ($row);

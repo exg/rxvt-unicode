@@ -29,8 +29,14 @@ sub on_button_press {
 
          my $optval = $urxvt::OPTION{$name};
 
-         $popup->add_toggle ($name => sub { $self->option ($optval, $_[0]) },
-                             $self->option ($optval));
+         $popup->add_toggle ($name => $self->option ($optval),
+                             sub { $self->option ($optval, $_[0]) });
+      }
+
+      for my $hook (@{ $self->{term}{option_popup_hook} || [] }) {
+         if (my ($name, $value, $cb) = $hook->($popup)) {
+            $popup->add_toggle ($name => $value, sub { $cb->($_[0]) });
+         }
       }
 
       $popup->show;

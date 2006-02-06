@@ -25,11 +25,20 @@ sub on_init {
       }
    }
 
+   $self->{enabled} = 1;
+
+   push @{ $self->{term}{option_popup_hook} }, sub {
+      ("autotransform" => $self->{enabled}, sub { $self->{enabled} = shift })
+   };
+
    ()
 }
 
 sub on_sel_grab {
    my ($self) = @_;
+
+   $self->{enabled}
+      or return;
 
    my $text = $self->selection;
    local $_ = $text;
