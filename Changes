@@ -24,6 +24,7 @@ TODO: rework colors and blabla section
           relevant tab window.
         - tab colours are now configurable and have sensible defaults
           (initial patch by hednod).
+        - the automove-background extension added a wrong constant offset.
         - force refresh of XA_RESOURCE_STRING on virtual reconnect.
         - return exit status 2 in urxvtc when urxvtd couldn't be contacted.
         - the linux yield hack is back, now using usleep, and enabled only on
