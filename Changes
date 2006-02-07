@@ -38,6 +38,7 @@ TODO: default cutchars should includce =
         - properly(?) free colours on window close.
         - reorganised the FAQ into multiple sections.
         - add ISO646.1991-IRV to the list of supported codesets.
+        - minor libptytty update.
 
 7.5  Tue Jan 31 15:15:43 CET 2006
         - further improvements to the careful mode detection, and font width
