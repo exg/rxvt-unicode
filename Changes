@@ -12,6 +12,7 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
+TODO: default cutchars should includce =
 	- changed interpretation of [alpha] colour prefix.
         - +option now really sets the option to default, instead of using the
           resource value.

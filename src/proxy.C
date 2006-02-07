@@ -27,16 +27,16 @@
 
 #include "ptytty.h"
 
-// helper/proxy support
-
-#if PTYTTY_HELPER
-
 #include <csignal>
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <fcntl.h>
+
+// helper/proxy support
+
+#if PTYTTY_HELPER
 
 static int sock_fd = -1, lock_fd = -1;
 static int helper_pid, owner_pid;
