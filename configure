@@ -14623,7 +14623,7 @@ echo "Configuration:
   Source code location:       $srcdir
   Install path:               ${prefix}/bin
   Compiler:                   $CXX
-  Compiler flags:             $CFLAGS
+  Compiler flags:             $CXXFLAGS
   Linker:                     $LINKER"
 
 if test x$support_xpm = xyes; then
