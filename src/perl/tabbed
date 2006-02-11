@@ -86,6 +86,12 @@ sub configure {
    );
 }
 
+sub on_resize_all_windows {
+   my ($self, $width, $height) = @_;
+
+   1
+}
+
 sub copy_properties {
    my ($self) = @_;
    my $tab = $self->{cur};
@@ -105,12 +111,17 @@ sub copy_properties {
 
       if ($atom == $wm_normal_hints) {
          my (@hints) = unpack "l!*", $items;
-
+      
          $hints[$_] += $self->{tabheight} for (4, 6, 16);
-
+      
          $items = pack "l!*", @hints;
       }
-      $self->XChangeWindowProperty ($self->parent, $atom, $type, $format, $items);
+
+      my ($dtype, $dformat, $ditems) = $self->XGetWindowProperty ($self->parent, $atom);
+
+      if ($dtype != $type or $dformat != $format or $ditems ne $items) {
+         $self->XChangeWindowProperty ($self->parent, $atom, $type, $format, $items);
+      }
    }
 
    $self->XDeleteProperty ($self->parent, $_) for keys %our_props;

@@ -1814,7 +1814,6 @@ rxvt_term::XChangeWindowProperty (Window window, Atom property, Atom type, int f
 	XChangeProperty (THIS->dpy, window, property,
                          type, format, PropModeReplace,
                          (unsigned char *)data_, len / elemsize);
-        XSync (THIS->dpy, 0);
 }
 
 Atom

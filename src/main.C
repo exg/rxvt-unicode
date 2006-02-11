@@ -706,9 +706,9 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
         window_vt_x += sb_w;
     }
 
-  szHint.width_inc = fwidth;
+  szHint.width_inc  = fwidth;
   szHint.height_inc = fheight;
-  szHint.min_width = szHint.base_width + szHint.width_inc;
+  szHint.min_width  = szHint.base_width + szHint.width_inc;
   szHint.min_height = szHint.base_height + szHint.height_inc;
 
   if (newwidth && newwidth - szHint.base_width < max_width)
@@ -1035,7 +1035,9 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
   int old_height = szHint.height;
 
   window_calc (newwidth, newheight);
-  XSetWMNormalHints (dpy, parent[0], &szHint);
+
+  if (!HOOK_INVOKE ((this, HOOK_RESIZE_ALL_WINDOWS, DT_INT, newwidth, DT_INT, newheight, DT_END)))
+    XSetWMNormalHints (dpy, parent[0], &szHint);
 
   if (!ignoreparent)
     {
