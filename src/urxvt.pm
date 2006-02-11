@@ -555,6 +555,12 @@ resource in the @@RXVT_NAME@@(1) manpage).
 The event is simply the action string. This interface is assumed to change
 slightly in the future.
 
+=item on_resize_all_windows $tern, $new_width, $new_height
+
+Called just after the new window size has been calculcated, but before
+windows are actually being resized or hints are being set. If this hook
+returns TRUE, setting of the window hints is being skipped.
+
 =item on_x_event $term, $event
 
 Called on every X event received on the vt window (and possibly other

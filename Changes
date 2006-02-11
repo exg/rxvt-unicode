@@ -13,6 +13,10 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
+	- improve property handling for -pe tabbed: avoid unneecssary property
+          changes (for kde's benefit) at the expense of extra round-trips,
+          improve size hint setting.
+
 7.6  Fri Feb 10 08:52:36 CET 2006
 	- changed interpretation of [alpha] colour prefix.
         - +option now really sets the option to default, instead of using the
