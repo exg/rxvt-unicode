@@ -91,11 +91,10 @@ sub copy_properties {
    my $tab = $self->{cur};
 
    my $wm_normal_hints = $self->XInternAtom ("WM_NORMAL_HINTS");
-   my $wm_state        = $self->XInternAtom ("WM_STATE");
 
    my %our_props = map +($_ => undef), $self->XListProperties ($self->parent);
 
-   delete $our_props{$wm_state};
+   delete $our_props{$self->XInternAtom ($_)} for qw(WM_STATE WM_ICON_SIZE);
 
    for my $atom ($tab->XListProperties ($tab->parent)) {
       my ($type, $format, $items) = $self->XGetWindowProperty ($tab->parent, $atom);
