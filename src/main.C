@@ -1121,7 +1121,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
 #endif
 
 #ifdef USE_XIM
-  IMSetStatusPosition ();
+  IMSetPosition ();
 #endif
 }
 
@@ -1528,8 +1528,8 @@ foundpet:
                              status_attr, NULL);
 
   if (preedit_attr) XFree (preedit_attr);
-  if (status_attr) XFree (status_attr);
-  if (fs) XFreeFontSet (dpy, fs);
+  if (status_attr)  XFree (status_attr);
+  if (fs)           XFreeFontSet (dpy, fs);
 
   if (Input_Context == NULL)
     {
@@ -1544,8 +1544,7 @@ foundpet:
     vt_select_input ();
 #endif
 
-  if (input_style & XIMPreeditArea)
-    IMSetStatusPosition ();
+  IMSetPosition ();
 
   return true;
 }
@@ -1613,14 +1612,14 @@ done:
 }
 
 void
-rxvt_term::IMSetStatusPosition ()
+rxvt_term::IMSetPosition ()
 {
   XRectangle preedit_rect, status_rect, *needed_rect;
   XVaNestedList preedit_attr, status_attr;
 
   if (!Input_Context
       || !focus
-      || !(input_style & XIMPreeditArea)
+      || !(input_style & (XIMPreeditArea | XIMPreeditPosition))
       || !IMisRunning ())
     return;
 
@@ -1633,11 +1632,12 @@ rxvt_term::IMSetStatusPosition ()
   XFree (needed_rect);
 
   preedit_attr = XVaCreateNestedList (0, XNArea, &preedit_rect, NULL);
-  status_attr = XVaCreateNestedList (0, XNArea, &status_rect, NULL);
+  status_attr  = XVaCreateNestedList (0, XNArea, &status_rect,  NULL);
 
   XSetICValues (Input_Context,
                 XNPreeditAttributes, preedit_attr,
-                XNStatusAttributes, status_attr, NULL);
+                XNStatusAttributes,  status_attr,
+                NULL);
 
   XFree (preedit_attr);
   XFree (status_attr);

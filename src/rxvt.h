@@ -1208,7 +1208,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   bool IMisRunning ();
   void IMSendSpot ();
   bool IM_get_IC (const char *modifiers);
-  void IMSetStatusPosition ();
+  void IMSetPosition ();
 #endif
 
   void resize_scrollbar ();

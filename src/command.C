@@ -1721,7 +1721,7 @@ rxvt_term::focus_in ()
 #if USE_XIM
       if (Input_Context != NULL)
         {
-          IMSetStatusPosition ();
+          IMSetPosition ();
           XSetICFocus (Input_Context);
         }
 #endif
