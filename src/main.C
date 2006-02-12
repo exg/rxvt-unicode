@@ -1623,7 +1623,7 @@ rxvt_term::IMSetPosition ()
       || !IMisRunning ())
     return;
 
-  if (input_style & XIMPreeditArea)
+  if (input_style & XIMPreeditPosition)
     {
       im_set_size (preedit_rect);
       preedit_attr = XVaCreateNestedList (0, XNArea, &preedit_rect, NULL);
