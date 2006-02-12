@@ -1623,24 +1623,36 @@ rxvt_term::IMSetPosition ()
       || !IMisRunning ())
     return;
 
-  /* Getting the necessary width of preedit area */
-  status_attr = XVaCreateNestedList (0, XNAreaNeeded, &needed_rect, NULL);
-  XGetICValues (Input_Context, XNStatusAttributes, status_attr, NULL);
-  XFree (status_attr);
+  if (input_style & XIMPreeditArea)
+    {
+      im_set_size (preedit_rect);
+      preedit_attr = XVaCreateNestedList (0, XNArea, &preedit_rect, NULL);
+    
+      XSetICValues (Input_Context,
+                    XNPreeditAttributes, preedit_attr, NULL);
+    }
+  else
+    {
+      /* Getting the necessary width of preedit area */
+      status_attr = XVaCreateNestedList (0, XNAreaNeeded, &needed_rect, NULL);
+      XGetICValues (Input_Context, XNStatusAttributes, status_attr, NULL);
+      XFree (status_attr);
 
-  im_set_preedit_area (preedit_rect, status_rect, *needed_rect);
-  XFree (needed_rect);
+      im_set_preedit_area (preedit_rect, status_rect, *needed_rect);
+      XFree (needed_rect);
 
-  preedit_attr = XVaCreateNestedList (0, XNArea, &preedit_rect, NULL);
-  status_attr  = XVaCreateNestedList (0, XNArea, &status_rect,  NULL);
+      preedit_attr = XVaCreateNestedList (0, XNArea, &preedit_rect, NULL);
+      status_attr  = XVaCreateNestedList (0, XNArea, &status_rect,  NULL);
 
-  XSetICValues (Input_Context,
-                XNPreeditAttributes, preedit_attr,
-                XNStatusAttributes,  status_attr,
-                NULL);
+      XSetICValues (Input_Context,
+                    XNPreeditAttributes, preedit_attr,
+                    XNStatusAttributes,  status_attr,
+                    NULL);
 
-  XFree (preedit_attr);
-  XFree (status_attr);
+      XFree (status_attr);
+    }
+
+   XFree (preedit_attr);
 }
 #endif                          /* USE_XIM */
 
