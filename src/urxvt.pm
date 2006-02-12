@@ -155,8 +155,8 @@ selection.
 
 =item readline (enabled by default)
 
-A support package that tries to make editing with readline easier. At the
-moment, it reacts to clicking with the left mouse button by trying to
+A support package that tries to make editing with readline easier. At
+the moment, it reacts to clicking shift-left mouse button by trying to
 move the text cursor to this position. It does so by generating as many
 cursor-left or cursor-right keypresses as required (the this only works
 for programs that correctly support wide characters).

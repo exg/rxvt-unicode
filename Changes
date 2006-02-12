@@ -13,9 +13,14 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
-	- improve property handling for -pe tabbed: avoid unneecssary property
+	- readline perl extension now requires shift-click instead of a normal
+          click.
+	- improve property handling for -pe tabbed: avoid unnecessary property
           changes (for kde's benefit) at the expense of extra round-trips,
           improve size hint setting.
+        - modified XIM according to a patch sent by Takano Akio that sets
+          the preedit rectangle for OverTheSpot, which helps some input methods
+          to correctly position their preedit window.
 
 7.6  Fri Feb 10 08:52:36 CET 2006
 	- changed interpretation of [alpha] colour prefix.
