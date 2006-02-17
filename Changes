@@ -21,6 +21,11 @@ DUMB: support tex fonts
         - modified XIM according to a patch sent by Takano Akio that sets
           the preedit rectangle for OverTheSpot, which helps some input methods
           to correctly position their preedit window.
+        - un-optimise the line clearing on newly scrolled-in lines a bit: the
+          former reasoning was that any fg colour on default bg looks the same
+          in empts spaces, but thats not true when reversing (e.g. selection),
+          so also check for matching fg colours. This fixes the problem where
+          selecting newly scrolled-in lines would exhibit wrong colours.
 
 7.6  Fri Feb 10 08:52:36 CET 2006
 	- changed interpretation of [alpha] colour prefix.

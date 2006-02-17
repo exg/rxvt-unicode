@@ -647,7 +647,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
 
           // optimize if already cleared, can be significant on slow machines
           // could be rolled into scr_blank_screen_mem
-          if (l.r && l.l < ncol - 1 && !((l.r[l.l + 1] ^ rstyle) & RS_bgMask))
+          if (l.r && l.l < ncol - 1 && !((l.r[l.l + 1] ^ rstyle) & (RS_fgMask | RS_bgMask)))
             {
               scr_blank_line (l, 0, l.l, rstyle);
               l.l = 0;
