@@ -203,6 +203,56 @@ rxvt_xim::~rxvt_xim ()
 
 /////////////////////////////////////////////////////////////////////////////
 
+#if XFT
+rxvt_drawable::~rxvt_drawable ()
+{
+  if (xftdrawable)
+    XftDrawDestroy (xftdrawable);
+}
+
+rxvt_drawable::operator XftDraw *()
+{
+  if (!xftdrawable)
+    xftdrawable = XftDrawCreate (screen->dpy, drawable, screen->visual, screen->cmap);
+
+  return xftdrawable;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+#if XFT
+
+// not strictly necessary as it is only used with superclass of zero_initialised
+rxvt_screen::rxvt_screen ()
+: scratch_area (0)
+{
+}
+
+rxvt_drawable &rxvt_screen::scratch_drawable (int w, int h)
+{
+  // it's actually faster to re-allocate every time. don't ask me
+  // why, but its likely no big deal there are no roundtrips
+  // (I think/hope).
+  if (!scratch_area || w > scratch_w || h > scratch_h || 1/*D*/)
+    {
+      if (scratch_area)
+        {
+          XFreePixmap (dpy, scratch_area->drawable);
+          delete scratch_area;
+        }
+
+      Pixmap pm = XCreatePixmap (dpy, RootWindowOfScreen (ScreenOfDisplay (dpy, display->screen)),
+                                 scratch_w = w, scratch_h = h, depth);
+
+      scratch_area = new rxvt_drawable (this, pm);
+    }
+
+  return *scratch_area;
+}
+
+#endif
+
 void
 rxvt_screen::set (rxvt_display *disp)
 {
@@ -236,6 +286,14 @@ rxvt_screen::set (rxvt_display *disp, int bitdepth)
 void
 rxvt_screen::clear ()
 {
+#if XFT
+  if (scratch_area)
+    {
+      XFreePixmap (dpy, scratch_area->drawable);
+      delete scratch_area;
+    }
+#endif
+
   if (cmap != DefaultColormapOfScreen (ScreenOfDisplay (dpy, display->screen)))
     XFreeColormap (dpy, cmap);
 }

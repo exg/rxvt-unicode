@@ -200,6 +200,7 @@ void rxvt_term::emergency_cleanup ()
   if (cmd_pid)
     kill (-cmd_pid, SIGHUP);
 
+  pty_ev.stop ();
   delete pty; pty = 0;
 }
 

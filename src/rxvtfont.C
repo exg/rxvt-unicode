@@ -165,24 +165,6 @@ static uint16_t extent_test_chars[] = {
 
 /////////////////////////////////////////////////////////////////////////////
 
-#if XFT
-rxvt_drawable::~rxvt_drawable ()
-{
-  if (xftdrawable)
-    XftDrawDestroy (xftdrawable);
-}
-
-rxvt_drawable::operator XftDraw *()
-{
-  if (!xftdrawable)
-    xftdrawable = XftDrawCreate (screen->dpy, drawable, screen->visual, screen->cmap);
-
-  return xftdrawable;
-}
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
-
 static const char *
 enc_char (const text_t *text, uint32_t len, codeset cs, bool &zero)
 {
@@ -1284,8 +1266,6 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                      const text_t *text, int len,
                      int fg, int bg)
 {
-  clear_rect (d, x, y, term->fwidth * len, term->fheight, bg);
-
   XGlyphInfo extents;
   XftGlyphSpec *enc = (XftGlyphSpec *)rxvt_temp_buf (len * sizeof (XftGlyphSpec));
   XftGlyphSpec *ep = enc;
@@ -1293,9 +1273,17 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
   dTermDisplay;
   dTermGC;
 
+  int w = term->fwidth * len;
+  int h = term->fheight;
+
+  bool buffered = false;
+
   // cut trailing spaces
   while (len && text [len - 1] == ' ')
     len--;
+
+  int x_ = buffered ? 0 : x;
+  int y_ = buffered ? 0 : y;
 
   while (len)
     {
@@ -1311,21 +1299,39 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
           XftGlyphExtents (disp, f, &glyph, 1, &extents);
 
           ep->glyph = glyph;
-          ep->x = x + (cwidth - extents.xOff >> 1);
-          ep->y = y + ascent;
+          ep->x = x_ + (cwidth - extents.xOff >> 1);
+          ep->y = y_ + ascent;
 
           if (extents.xOff == 0)
-            ep->x = x + cwidth;
+            ep->x = x_ + cwidth;
 
           ep++;
         }
 
-      x += cwidth;
+      x_ += cwidth;
     }
 
-  if (ep != enc)
-    XftDrawGlyphSpec (d, &term->pix_colors[fg].c, f, enc, ep - enc);
+  if (buffered)
+    {
+      if (ep != enc)
+        {
+          rxvt_drawable &d2 = d.screen->scratch_drawable (w, h);
+
+          XftDrawRect (d2, &term->pix_colors[bg].c, 0, 0, w, h);
+
+          XftDrawGlyphSpec (d2, &term->pix_colors[fg].c, f, enc, ep - enc);
+          XCopyArea (disp, d2, d, gc, 0, 0, w, h, x, y);
+        }
+      else
+        clear_rect (d, x, y, w, h, bg);
+    }
+  else
+    {
+      clear_rect (d, x, y, w, h, bg);
+      XftDrawGlyphSpec (d, &term->pix_colors[fg].c, f, enc, ep - enc);
+    }
 }
+
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

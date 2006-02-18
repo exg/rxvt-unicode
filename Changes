@@ -26,6 +26,7 @@ DUMB: support tex fonts
           in empts spaces, but thats not true when reversing (e.g. selection),
           so also check for matching fg colours. This fixes the problem where
           selecting newly scrolled-in lines would exhibit wrong colours.
+        - fix a race resulting in a crash on exiting.
 
 7.6  Fri Feb 10 08:52:36 CET 2006
 	- changed interpretation of [alpha] colour prefix.

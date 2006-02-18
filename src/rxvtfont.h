@@ -38,29 +38,6 @@ struct rxvt_fontprop {
   int weight, slant;
 };
 
-struct rxvt_drawable {
-  rxvt_screen *screen;
-#if XFT
-  XftDraw *xftdrawable;
-  operator XftDraw *();
-#endif
-  Drawable drawable;
-
-  rxvt_drawable (rxvt_screen *screen, Drawable drawable)
-  : screen(screen),
-#if XFT
-    xftdrawable(0),
-#endif
-    drawable(drawable)
-  { }
-
-#if XFT
-  ~rxvt_drawable ();
-#endif
-
-  operator Drawable() { return drawable; }
-};
-
 struct rxvt_font {
   // managed by the fontset
   rxvt_term *term;

@@ -107,6 +107,33 @@ struct refcache : vector<T *> {
 
 /////////////////////////////////////////////////////////////////////////////
 
+struct rxvt_screen;
+
+struct rxvt_drawable {
+  rxvt_screen *screen;
+  Drawable drawable;
+  operator Drawable() { return drawable; }
+
+#if XFT
+  XftDraw *xftdrawable;
+  operator XftDraw *();
+#endif
+
+  rxvt_drawable (rxvt_screen *screen, Drawable drawable)
+  : screen(screen),
+#if XFT
+    xftdrawable(0),
+#endif
+    drawable(drawable)
+  { }
+
+#if XFT
+  ~rxvt_drawable ();
+#endif
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
 #ifdef USE_XIM
 struct rxvt_xim : refcounted {
   void destroy ();
@@ -127,6 +154,16 @@ struct rxvt_screen {
   int depth;
   Visual *visual;
   Colormap cmap;
+
+#if XFT
+  // scratch pixmap
+  rxvt_drawable *scratch_area;
+  int scratch_w, scratch_h;
+
+  rxvt_drawable &scratch_drawable (int w, int h);
+
+  rxvt_screen ();
+#endif
 
   void set (rxvt_display *disp);
   void set (rxvt_display *disp, int bitdepth);
