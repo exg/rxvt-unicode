@@ -189,9 +189,7 @@ struct rxvt_display : refcounted {
   Window    root;
   rxvt_term *selection_owner;
   Atom      xa[NUM_XA];
-#ifndef NO_SLOW_LINK_SUPPORT
   bool      is_local;
-#endif
 #ifdef POINTER_BLANK
   Cursor    blank_cursor;
 #endif

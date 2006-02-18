@@ -28,11 +28,8 @@
 #include <fcntl.h>
 
 #include <sys/utsname.h>
-
-#ifndef NO_SLOW_LINK_SUPPORT
-# include <sys/socket.h>
-# include <sys/un.h>
-#endif
+#include <sys/socket.h>
+#include <sys/un.h>
 
 #if XFT
 # include <X11/extensions/Xrender.h>
@@ -465,7 +462,6 @@ bool rxvt_display::ref_init ()
 
   int fd = XConnectionNumber (dpy);
 
-#ifndef NO_SLOW_LINK_SUPPORT
   // try to detect wether we have a local connection.
   // assume unix domains socket == local, everything else not
   // TODO: might want to check for inet/127.0.0.1
@@ -475,7 +471,6 @@ bool rxvt_display::ref_init ()
 
   if (!getsockname (fd, (sockaddr *)&sa, &sl))
     is_local = sa.sun_family == AF_LOCAL;
-#endif
 
   x_ev.start (fd, EVENT_READ);
   fcntl (fd, F_SETFD, FD_CLOEXEC);
