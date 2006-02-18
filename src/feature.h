@@ -136,7 +136,7 @@
  * Define to remove support for XCopyArea () support.  XCopyArea () is useful
  * for scrolling on non-local X displays
  */
-#undef NO_SLOW_LINK_SUPPORT
+#define NO_SLOW_LINK_SUPPORT
 
 /*
  * Printer pipe which will be used for emulation of attached vt100 printer

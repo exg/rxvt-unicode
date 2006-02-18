@@ -2108,6 +2108,7 @@ rxvt_term::scr_refresh () NOTHROW
       && abs (num_scr) < nrow && !have_bg)
     {
       int16_t nits;
+      int i = num_scr;
       int j;
       int len, wlen;
       dLocal (int, num_scr);
@@ -2115,6 +2116,7 @@ rxvt_term::scr_refresh () NOTHROW
       j = nrow;
       wlen = len = -1;
       row = i > 0 ? 0 : j - 1;
+
       for (; j-- >= 0; row += (i > 0 ? 1 : -1))
         {
           if (row + i >= 0 && row + i < nrow && row + i != ocrow)
@@ -2145,7 +2147,7 @@ rxvt_term::scr_refresh () NOTHROW
                 }
             }
 
-          if (len != -1)
+          if (len >= 0)
             {
               /* also comes here at end if needed because of >= above */
               if (wlen < len)
