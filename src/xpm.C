@@ -260,12 +260,6 @@ rxvt_term::resize_pixmap ()
 
   XSetWindowBackgroundPixmap (dpy, vt, pixmap);
 
-  if (pixmap != None)
-    {
-      XFreePixmap (dpy, pixmap);
-      pixmap = None;
-    }
-
   XFreeGC (dpy, gc);
   am_transparent = 0;
 }

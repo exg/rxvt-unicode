@@ -1054,7 +1054,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   /* graphics context for the vt window */
   gcvalue.foreground         = pix_colors[Color_fg];
   gcvalue.background         = pix_colors[Color_bg];
-  gcvalue.graphics_exposures = 1;
+  gcvalue.graphics_exposures = 0;
 
   gc = XCreateGC (dpy, vt,
                   GCForeground | GCBackground | GCGraphicsExposures,

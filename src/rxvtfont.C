@@ -234,9 +234,9 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color) 
   dTermDisplay;
   dTermGC;
   
-  if (color == Color_bg)
+  if (color < 0 || color == Color_bg)
     XClearArea (disp, d, x, y, w, h, false);
-  else if (color >= 0)
+  else
     {
 #if XFT
       XftDrawRect (d, &term->pix_colors[color].c, x, y, w, h);
@@ -1276,7 +1276,9 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
   int w = term->fwidth * len;
   int h = term->fheight;
 
-  bool buffered = false;
+  bool buffered = !term->am_transparent           // we aren't transparent
+                  || term->am_pixmap_trans        // we have a pixmap
+                  || bg >= 0;                     // we don't use a transparent bg
 
   // cut trailing spaces
   while (len && text [len - 1] == ' ')
@@ -1317,7 +1319,27 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
         {
           rxvt_drawable &d2 = d.screen->scratch_drawable (w, h);
 
-          XftDrawRect (d2, &term->pix_colors[bg].c, 0, 0, w, h);
+          if (bg < 0 && term->am_pixmap_trans)
+            XCopyArea (disp, term->pixmap, d2, gc, x, y, w, h, 0, 0);
+          else if (bg < 0 && term->bgPixmap.pixmap)
+            {
+              XGCValues gcv;
+
+              gcv.fill_style  = FillTiled;
+              gcv.tile        = term->pixmap;
+              gcv.ts_x_origin = -x;
+              gcv.ts_y_origin = -y;
+
+              GC gc2 = XCreateGC (disp, d2,
+                                  GCTile | GCTileStipXOrigin | GCTileStipYOrigin | GCFillStyle,
+                                  &gcv);
+
+              XFillRectangle (disp, d2, gc2, 0, 0, w, h);
+
+              XFreeGC (disp, gc2);
+            }
+          else
+            XftDrawRect (d2, &term->pix_colors[bg].c, 0, 0, w, h);
 
           XftDrawGlyphSpec (d2, &term->pix_colors[fg].c, f, enc, ep - enc);
           XCopyArea (disp, d2, d, gc, 0, 0, w, h, x, y);

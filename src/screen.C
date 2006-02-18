@@ -1971,7 +1971,7 @@ rxvt_term::scr_printscreen (int fullhist) NOTHROW
 void
 rxvt_term::scr_refresh () NOTHROW
 {
-  unsigned char must_clear, /* use draw_string not draw_image_string     */
+  unsigned char have_bg,
                 showcursor; /* show the cursor                           */
   int16_t col, row,   /* column/row we're processing               */
           ocrow;      /* old cursor row                            */
@@ -1989,14 +1989,14 @@ rxvt_term::scr_refresh () NOTHROW
   /*
    * A: set up vars
    */
-  must_clear = 0;
+  have_bg = 0;
   refresh_count = 0;
 
 #if XPM_BACKGROUND
-  must_clear |= bgPixmap.pixmap != None;
+  have_bg |= bgPixmap.pixmap != None;
 #endif
 #if TRANSPARENT
-  must_clear |= OPTION (Opt_transparent) && am_transparent;
+  have_bg |= OPTION (Opt_transparent) && am_transparent;
 #endif
   ocrow = oldcursor.row; /* is there an old outline cursor on screen? */
 
@@ -2105,7 +2105,7 @@ rxvt_term::scr_refresh () NOTHROW
    */
   if (!display->is_local
       && refresh_type == FAST_REFRESH && num_scr_allow && num_scr
-      && abs (num_scr) < nrow && !must_clear)
+      && abs (num_scr) < nrow && !have_bg)
     {
       int16_t nits;
       int j;
@@ -2151,11 +2151,16 @@ rxvt_term::scr_refresh () NOTHROW
               if (wlen < len)
                 ::swap (wlen, len);
 
+              XGCValues gcv;
+
+              gcv.graphics_exposures = 1; XChangeGC (dpy, gc, GCGraphicsExposures, &gcv);
               XCopyArea (dpy, vt, vt,
                          gc, 0, Row2Pixel (len + i),
                          (unsigned int)this->width,
                          (unsigned int)Height2Pixel (wlen - len + 1),
                          0, Row2Pixel (len));
+              gcv.graphics_exposures = 0; XChangeGC (dpy, gc, GCGraphicsExposures, &gcv);
+
               len = -1;
             }
         }
@@ -2221,14 +2226,14 @@ rxvt_term::scr_refresh () NOTHROW
               if (stp[col] != dtp[col]
                   || !RS_SAME (srp[col], drp[col]))
                 {
-                  if (must_clear && (i++ > count / 2))
+                  if (have_bg && (i++ > count / 2))
                     break;
 
                   dtp[col] = stp[col];
                   drp[col] = rend;
                   i = 0;
                 }
-              else if (must_clear || (stp[col] != ' ' && ++i >= 16))
+              else if (have_bg || (stp[col] != ' ' && ++i >= 16))
                 break;
             }
 
@@ -2332,21 +2337,19 @@ rxvt_term::scr_refresh () NOTHROW
 
           if (back == fore)
             font->clear_rect (*drawable, xpixel, ypixel, fwidth * count, fheight, back);
-          else if (back == Color_bg)
+          else if (back == Color_bg && have_bg)
             {
-              if (must_clear)
-                {
-                  CLEAR_CHARS (xpixel, ypixel, count);
+              // this is very ugly, maybe push it into ->draw?
 
-                  for (i = 0; i < count; i++) /* don't draw empty strings */
-                    if (text[i] != ' ')
-                      {
-                        font->draw (*drawable, xpixel, ypixel, text, count, fore, -1);
-                        break;
-                      }
-                }
-              else
-                font->draw (*drawable, xpixel, ypixel, text, count, fore, Color_bg);
+              for (i = 0; i < count; i++) /* don't draw empty strings */
+                if (text[i] != ' ')
+                  {
+                    font->draw (*drawable, xpixel, ypixel, text, count, fore, -1);
+                    goto did_clear;
+                  }
+
+              CLEAR_CHARS (xpixel, ypixel, count);
+              did_clear: ;
             }
           else
             font->draw (*drawable, xpixel, ypixel, text, count, fore, back);
