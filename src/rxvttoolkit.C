@@ -347,7 +347,7 @@ rxvt_display::get_resources (bool refresh)
         XFree (dpy->xdefaults);
 #endif
 
-      if (XGetWindowProperty (dpy, RootWindow(dpy, 0), XA_RESOURCE_MANAGER,
+      if (XGetWindowProperty (dpy, RootWindow (dpy, 0), XA_RESOURCE_MANAGER,
                               0L, 100000000L, False,
                               XA_STRING, &actual_type, &actual_format,
                               &nitems, &nremaining,

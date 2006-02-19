@@ -34,7 +34,9 @@ DUMB: support tex fonts
           selecting newly scrolled-in lines would exhibit wrong colours.
         - fix a race resulting in a crash on exiting.
         - fix a with --disable-xft that caused xfreecolors to be called on
-          colors never allocated, resulting in program aborts.
+          colors never allocated, resulting in aborts (reported by Paco-Paco).
+        - resources on non-initial screens weren't refetched correctly
+          (reported by Paco-Paco).
         - fix a bug in xcopyarea pass and _disable_ it, as it seems not to be
           working in either rxvt-unicode nor in the original rxvt.
 
