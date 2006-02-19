@@ -835,6 +835,9 @@ rxvt_color::get (XColor &color)
 void 
 rxvt_color::free (rxvt_screen *screen)
 {
+  if (screen->visual->c_class == TrueColor)
+    return; // nothing to do
+
 #if XFT
   XftColorFree (screen->dpy, screen->visual, screen->cmap, &c);
 #else
