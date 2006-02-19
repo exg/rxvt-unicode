@@ -1276,8 +1276,11 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
   int w = term->fwidth * len;
   int h = term->fheight;
 
-  bool buffered = !term->am_transparent           // we aren't transparent
+  bool buffered = 0
+#if defined(XPM_BACKGROUND) || defined(TRANSPARENT)
+                  || !term->am_transparent        // we aren't transparent
                   || term->am_pixmap_trans        // we have a pixmap
+#endif
                   || bg >= 0;                     // we don't use a transparent bg
 
   // cut trailing spaces
@@ -1319,6 +1322,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
         {
           rxvt_drawable &d2 = d.screen->scratch_drawable (w, h);
 
+#if defined(XPM_BACKGROUND) || defined(TRANSPARENT)
           if (bg < 0 && term->am_pixmap_trans)
             XCopyArea (disp, term->pixmap, d2, gc, x, y, w, h, 0, 0);
           else if (bg < 0 && term->bgPixmap.pixmap)
@@ -1339,6 +1343,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
               XFreeGC (disp, gc2);
             }
           else
+#endif
             XftDrawRect (d2, &term->pix_colors[bg].c, 0, 0, w, h);
 
           XftDrawGlyphSpec (d2, &term->pix_colors[fg].c, f, enc, ep - enc);
