@@ -18,7 +18,7 @@ DUMB: support tex fonts
           combination this actually increases xft drawing speed, at the expense
           of more network bandwidth and slight nausea on the side of the author.
 	- readline perl extension now requires shift-click instead of a normal
-          click.
+          click, and eats the click.
         - tabbed perl extension now supports -e.
         - disabled graphics-exposures on the main drawing GC, report any
           refresh bugs please.

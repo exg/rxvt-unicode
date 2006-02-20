@@ -39,24 +39,23 @@ sub on_button_press {
    my $cur = $line->offset_of ($row, $col);
    my $ofs = $line->offset_of ($event->{row}, $event->{col});
 
-   if ($ofs >= 0 && $ofs < $line->l) {
-      my $diff = $ofs - $cur;
-      my $move;
+   $ofs >= 0 && $ofs < $line->l
+      or return;
 
-      if ($diff < 0) {
-         ($ofs, $cur) = ($cur, $ofs);
-         $move = "\x1b[D";
-      } else {
-         $move = "\x1b[C";
-      }
+   my $diff = $ofs - $cur;
+   my $move;
 
-      my $skipped = substr $line->t, $cur, $ofs - $cur;
-      $skipped =~ s/\x{ffff}//g;
-
-      $self->tt_write ($move x length $skipped);
-
-      return 1;
+   if ($diff < 0) {
+      ($ofs, $cur) = ($cur, $ofs);
+      $move = "\x1b[D";
+   } else {
+      $move = "\x1b[C";
    }
 
-   ()
+   my $skipped = substr $line->t, $cur, $ofs - $cur;
+   $skipped =~ s/\x{ffff}//g;
+
+   $self->tt_write ($move x length $skipped);
+
+   1
 }
