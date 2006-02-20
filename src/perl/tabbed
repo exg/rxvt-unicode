@@ -140,7 +140,10 @@ sub make_current {
 
    $self->configure;
    $self->copy_properties;
-   $tab->focus_in;
+   
+   $tab->focus_out; # just in case, should be a nop
+   $tab->focus_in if $self->focus;
+   
    $tab->XMapWindow ($tab->parent);
    delete $tab->{activity};
    $self->refresh;

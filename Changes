@@ -33,6 +33,8 @@ DUMB: support tex fonts
           in empts spaces, but thats not true when reversing (e.g. selection),
           so also check for matching fg colours. This fixes the problem where
           selecting newly scrolled-in lines would exhibit wrong colours.
+        - fix a bug in the perl interface causing focus in events to generate
+          focus out perl events, causing bad focus effects with -pe tabbed.
         - fix a race resulting in a crash on exiting.
         - fix a with --disable-xft that caused xfreecolors to be called on
           colors never allocated, resulting in aborts (reported by Paco-Paco).

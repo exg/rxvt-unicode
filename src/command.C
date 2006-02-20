@@ -1716,7 +1716,7 @@ rxvt_term::focus_in ()
       focus = 1;
       want_refresh = 1;
 
-      HOOK_INVOKE ((this, HOOK_FOCUS_OUT, DT_END));
+      HOOK_INVOKE ((this, HOOK_FOCUS_IN, DT_END));
 
 #if USE_XIM
       if (Input_Context != NULL)
