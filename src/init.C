@@ -260,10 +260,10 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   const char **cmd_argv, **r_argv;
 
   /*
-   * Look for -exec option.  Find => split and make cmd_argv[] of command args
+   * Look for -e option. Find => split and make cmd_argv[] of command args
    */
   for (r_argc = 0; r_argc < argc; r_argc++)
-    if (!strcmp (argv[r_argc], "-e") || !strcmp (argv[r_argc], "-exec"))
+    if (!strcmp (argv[r_argc], "-e"))
       break;
 
   r_argv = (const char **)rxvt_malloc (sizeof (char *) * (r_argc + 1));

@@ -1476,14 +1476,19 @@ Returns the LC_CTYPE category string used by this rxvt-unicode.
 Returns a copy of the environment in effect for the terminal as a hashref
 similar to C<\%ENV>.
 
+=item @envv = $term->envv
+
+Returns the environment as array of strings of the form C<VAR=VALUE>.
+
+=item @argv = $term->argv
+
+Return the argument vector as this terminal, similar to @ARGV, but
+includes the program name as first element.
+
 =cut
 
 sub env {
-   if (my $env = $_[0]->_env) {
-      +{ map /^([^=]+)(?:=(.*))?$/s && ($1 => $2), @$env }
-   } else {
-      +{ %ENV }
-   }
+   +{ map /^([^=]+)(?:=(.*))?$/s && ($1 => $2), $_[0]->envv }
 }
 
 =item $modifiermask = $term->ModLevel3Mask

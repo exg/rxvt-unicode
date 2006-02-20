@@ -32,20 +32,24 @@ try
   {
     rxvt_init ();
 
+    rxvt_term *t = new rxvt_term;
+
 #if ENABLE_PERL
+    stringvec *args = new stringvec;
     stringvec *envv = new stringvec;
+
+    for (int i = 0; i < argc; i++)
+      args->push_back (strdup (argv [i]));
 
     for (char **var = environ; *var; var++)
       envv->push_back (strdup (*var));
 
     envv->push_back (0);
+
+    if (!t->init (args, envv))
 #else
-    stringvec *envv = 0;
+    if (!t->init (argc, argv, 0))
 #endif
-
-    rxvt_term *t = new rxvt_term;
-
-    if (!t->init (argc, argv, envv))
       return EXIT_FAILURE;
 
     io_manager::loop ();

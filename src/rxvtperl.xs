@@ -1211,24 +1211,19 @@ rxvt_term::display_id ()
         RETVAL
 
 SV *
-rxvt_term::_env ()
-	CODE:
+rxvt_term::envv ()
+	ALIAS:
+        argv = 1
+	PPCODE:
 {
-        if (THIS->envv)
-          {
-            AV *av = newAV ();
+	stringvec *vec = ix ? THIS->argv : THIS->envv;
 
-            for (char **i = THIS->envv->begin (); i != THIS->envv->end (); ++i)
-              if (*i)
-                av_push (av, newSVpv (*i, 0));
+        EXTEND (SP, vec->size ());
 
-            RETVAL = newRV_noinc ((SV *)av);
-          }
-        else
-          RETVAL = &PL_sv_undef;
+        for (char **i = vec->begin (); i != vec->end (); ++i)
+          if (*i)
+            PUSHs (sv_2mortal (newSVpv (*i, 0)));
 }
-        OUTPUT:
-        RETVAL
 
 int
 rxvt_term::pty_ev_events (int events = EVENT_UNDEF)

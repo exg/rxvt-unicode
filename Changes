@@ -1,6 +1,5 @@
 rxvt-unicode changelog <= google-friendly title
 
-TODO: -pe tabbed users want -e and probably lots of other things.
 TODO: xcopyarea pass broken, fix and improve
 TODO: event mechanism that replaces on_keyboard_command with something more scalable.
 TODO: overlays collide with the way the out-of-focus cursor is being drawn
@@ -20,6 +19,7 @@ DUMB: support tex fonts
           of more network bandwidth and slight nausea on the side of the author.
 	- readline perl extension now requires shift-click instead of a normal
           click.
+        - tabbed perl extension now supports -e.
         - disabled graphics-exposures on the main drawing GC, report any
           refresh bugs please.
 	- improve property handling for -pe tabbed: avoid unnecessary property
@@ -42,6 +42,7 @@ DUMB: support tex fonts
           (reported by Paco-Paco).
         - fix a bug in xcopyarea pass and _disable_ it, as it seems not to be
           working in either rxvt-unicode nor in the original rxvt.
+        - removed undocumented -exec alias for the -e option.
 
 7.6  Fri Feb 10 08:52:36 CET 2006
 	- changed interpretation of [alpha] colour prefix.

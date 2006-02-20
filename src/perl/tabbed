@@ -44,7 +44,7 @@ sub refresh {
 }
 
 sub new_tab {
-   my ($self) = @_;
+   my ($self, @argv) = @_;
 
    my $offset = $self->fheight;
 
@@ -65,6 +65,7 @@ sub new_tab {
    my $term = new urxvt::term
       $self->env, $urxvt::RXVTNAME,
       -embed => $self->parent,
+      @argv,
    ;
 }
 
@@ -244,7 +245,13 @@ sub on_start {
 
    $self->cmd_parse ("\033[?25l");
 
-   $self->new_tab;
+   my @argv = $self->argv;
+
+   do {
+      shift @argv;
+   } while @argv && $argv[0] ne "-e";
+
+   $self->new_tab (@argv);
 
    ()
 }
