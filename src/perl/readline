@@ -54,6 +54,8 @@ sub on_button_press {
       $skipped =~ s/\x{ffff}//g;
 
       $self->tt_write ($move x length $skipped);
+
+      return 1;
    }
 
    ()
