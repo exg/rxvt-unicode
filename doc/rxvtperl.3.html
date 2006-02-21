@@ -232,8 +232,8 @@ selection.</p>
 <dt><strong><a name="item_readline">readline (enabled by default)</a></strong><br />
 </dt>
 <dd>
-A support package that tries to make editing with readline easier. At the
-moment, it reacts to clicking with the left mouse button by trying to
+A support package that tries to make editing with readline easier. At
+the moment, it reacts to clicking shift-left mouse button by trying to
 move the text cursor to this position. It does so by generating as many
 cursor-left or cursor-right keypresses as required (the this only works
 for programs that correctly support wide characters).
@@ -730,6 +730,14 @@ resource in the <code>rxvt(1)</code> manpage).
 <dd>
 <p>The event is simply the action string. This interface is assumed to change
 slightly in the future.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_on_resize_all_windows__24tern_2c__24new_width_2c__">on_resize_all_windows $tern, $new_width, $new_height</a></strong><br />
+</dt>
+<dd>
+Called just after the new window size has been calculcated, but before
+windows are actually being resized or hints are being set. If this hook
+returns TRUE, setting of the window hints is being skipped.
 </dd>
 <p></p>
 <dt><strong><a name="item_on_x_event__24term_2c__24event">on_x_event $term, $event</a></strong><br />
@@ -1395,6 +1403,19 @@ Returns the LC_CTYPE category string used by this rxvt-unicode.
 <dd>
 Returns a copy of the environment in effect for the terminal as a hashref
 similar to <code>\%ENV</code>.
+</dd>
+<p></p>
+<dt><strong><a name="item_envv">@envv = $term-&gt;envv</a></strong><br />
+</dt>
+<dd>
+Returns the environment as array of strings of the form <code>VAR=VALUE</code>.
+</dd>
+<p></p>
+<dt><strong><a name="item_argv">@argv = $term-&gt;argv</a></strong><br />
+</dt>
+<dd>
+Return the argument vector as this terminal, similar to @ARGV, but
+includes the program name as first element.
 </dd>
 <p></p>
 <dt><strong><a name="item_modlevel3mask">$modifiermask = $term-&gt;ModLevel3Mask</a></strong><br />

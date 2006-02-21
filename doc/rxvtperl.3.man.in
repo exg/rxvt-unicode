@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 3"
-.TH rxvt 3 "2006-02-10" "7.6" "RXVT-UNICODE"
+.TH rxvt 3 "2006-02-21" "7.6" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -297,8 +297,8 @@ additionally stores the first match in the current line into the primary
 selection.
 .IP "readline (enabled by default)" 4
 .IX Item "readline (enabled by default)"
-A support package that tries to make editing with readline easier. At the
-moment, it reacts to clicking with the left mouse button by trying to
+A support package that tries to make editing with readline easier. At
+the moment, it reacts to clicking shift-left mouse button by trying to
 move the text cursor to this position. It does so by generating as many
 cursor-left or cursor-right keypresses as required (the this only works
 for programs that correctly support wide characters).
@@ -692,6 +692,12 @@ resource in the @@RXVT_NAME@@(1) manpage).
 .Sp
 The event is simply the action string. This interface is assumed to change
 slightly in the future.
+.ie n .IP "on_resize_all_windows $tern\fR, \f(CW$new_width\fR, \f(CW$new_height" 4
+.el .IP "on_resize_all_windows \f(CW$tern\fR, \f(CW$new_width\fR, \f(CW$new_height\fR" 4
+.IX Item "on_resize_all_windows $tern, $new_width, $new_height"
+Called just after the new window size has been calculcated, but before
+windows are actually being resized or hints are being set. If this hook
+returns \s-1TRUE\s0, setting of the window hints is being skipped.
 .ie n .IP "on_x_event $term\fR, \f(CW$event" 4
 .el .IP "on_x_event \f(CW$term\fR, \f(CW$event\fR" 4
 .IX Item "on_x_event $term, $event"
@@ -1223,6 +1229,15 @@ Returns the \s-1LC_CTYPE\s0 category string used by this rxvt\-unicode.
 .IX Item "$env = $term->env"
 Returns a copy of the environment in effect for the terminal as a hashref
 similar to \f(CW\*(C`\e%ENV\*(C'\fR.
+.ie n .IP "@envv = $term\->envv" 4
+.el .IP "@envv = \f(CW$term\fR\->envv" 4
+.IX Item "@envv = $term->envv"
+Returns the environment as array of strings of the form \f(CW\*(C`VAR=VALUE\*(C'\fR.
+.ie n .IP "@argv = $term\->argv" 4
+.el .IP "@argv = \f(CW$term\fR\->argv" 4
+.IX Item "@argv = $term->argv"
+Return the argument vector as this terminal, similar to \f(CW@ARGV\fR, but
+includes the program name as first element.
 .ie n .IP "$modifiermask = $term\->ModLevel3Mask" 4
 .el .IP "$modifiermask = \f(CW$term\fR\->ModLevel3Mask" 4
 .IX Item "$modifiermask = $term->ModLevel3Mask"

@@ -140,7 +140,7 @@ PREPACKAGED EXTENSIONS
 
     readline (enabled by default)
         A support package that tries to make editing with readline easier.
-        At the moment, it reacts to clicking with the left mouse button by
+        At the moment, it reacts to clicking shift-left mouse button by
         trying to move the text cursor to this position. It does so by
         generating as many cursor-left or cursor-right keypresses as
         required (the this only works for programs that correctly support
@@ -490,6 +490,12 @@ API DOCUMENTATION
 
         The event is simply the action string. This interface is assumed to
         change slightly in the future.
+
+    on_resize_all_windows $tern, $new_width, $new_height
+        Called just after the new window size has been calculcated, but
+        before windows are actually being resized or hints are being set. If
+        this hook returns TRUE, setting of the window hints is being
+        skipped.
 
     on_x_event $term, $event
         Called on every X event received on the vt window (and possibly
@@ -921,6 +927,13 @@ API DOCUMENTATION
     $env = $term->env
         Returns a copy of the environment in effect for the terminal as a
         hashref similar to "\%ENV".
+
+    @envv = $term->envv
+        Returns the environment as array of strings of the form "VAR=VALUE".
+
+    @argv = $term->argv
+        Return the argument vector as this terminal, similar to @ARGV, but
+        includes the program name as first element.
 
     $modifiermask = $term->ModLevel3Mask
     $modifiermask = $term->ModMetaMask

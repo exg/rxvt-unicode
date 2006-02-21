@@ -71,6 +71,7 @@
 		<li><a href="#terminal_configuration">Terminal Configuration</a></li>
 		<ul>
 
+			<li><a href="#can_i_see_a_typical_configuration">Can I see a typical configuration?</a></li>
 			<li><a href="#why_doesn_t_rxvtunicode_read_my_resources">Why doesn't rxvt-unicode read my resources?</a></li>
 			<li><a href="#when_i_login_to_another_system_it_tells_me_about_missing_terminfo_data">When I log-in to another system it tells me about missing terminfo data?</a></li>
 			<li><a href="#tic_outputs_some_error_when_compiling_the_terminfo_entry_"><code>tic</code> outputs some error when compiling the terminfo entry.</a></li>
@@ -733,6 +734,139 @@ required for your particular machine.</p>
 <p>
 </p>
 <h2><a name="terminal_configuration">Terminal Configuration</a></h2>
+<p>
+</p>
+<h3><a name="can_i_see_a_typical_configuration">Can I see a typical configuration?</a></h3>
+<p>The default configuration tries to be xterm-like, which I don't like that
+much, but it's least surprise to regular users.</p>
+<p>As a rxvt or rxvt-unicode user, you are practically supposed to invest
+time into customising your terminal. To get you started, here is the
+author's .Xdefaults entries, with comments on what they do:</p>
+<pre>
+   URxvt.cutchars: &quot;()*,&lt;&gt;[]{}|'
+   URxvt.print-pipe: cat &gt;/tmp/xxx</pre>
+<p>These are just for testing stuff.</p>
+<pre>
+   URxvt.imLocale: ja_JP.UTF-8
+   URxvt.preeditType: OnTheSpot,None</pre>
+<p>This tells rxvt-unicode to use a special locale when communicating with
+the X Input Method, and also tells it to only use the OnTheSpot pre-edit
+type, which requires the <code>xim-onthespot</code> perl extension but rewards me
+with correct-looking fonts.</p>
+<pre>
+   URxvt.perl-lib: /root/lib/urxvt
+   URxvt.perl-ext-common: default,selection-autotransform,selection-pastebin,xim-onthespot,remote-clipboard
+   URxvt.selection.pattern-0: ( at .*? line \\d+)
+   URxvt.selection.pattern-1: ^(/[^:]+):\ 
+   URxvt.selection-autotransform.0: s/^([^:[:space:]]+):(\\d+):?$/:e \\Q$1\\E\\x0d:$2\\x0d/
+   URxvt.selection-autotransform.1: s/^ at (.*?) line (\\d+)$/:e \\Q$1\\E\\x0d:$2\\x0d/</pre>
+<p>This is my perl configuration. The first two set the perl library
+directory and also tells urxvt to use a large number of extensions. I
+develop for myself mostly, so I actually use most of the extensions I
+write.</p>
+<p>The selection stuff mainly makes the selection perl-error-message aware
+and tells it to convert pelr error mssages into vi-commands to load the
+relevant file and go tot he error line number.</p>
+<pre>
+   URxvt.scrollstyle:      plain
+   URxvt.secondaryScroll:  true</pre>
+<p>As the documentation says: plain is the preferred scrollbar for the
+author. The <code>secondaryScroll</code> confgiures urxvt to scroll in full-screen
+apps, like screen, so lines scorlled out of screen end up in urxvt's
+scrollback buffer.</p>
+<pre>
+   URxvt.background:       #000000
+   URxvt.foreground:       gray90
+   URxvt.color7:           gray90
+   URxvt.colorBD:          #ffffff
+   URxvt.cursorColor:      #e0e080
+   URxvt.throughColor:     #8080f0
+   URxvt.highlightColor:   #f0f0f0</pre>
+<p>Some colours. Not sure which ones are being used or even non-defaults, but
+these are in my .Xdefaults. Most notably, they set foreground/background
+to light gray/black, and also make sure that the colour 7 matches the
+default foreground colour.</p>
+<pre>
+   URxvt.underlineColor:   yellow</pre>
+<p>Another colour, makes underline lines look different. Sometimes hurts, but
+is mostly a nice effect.</p>
+<pre>
+   URxvt.geometry:         154x36
+   URxvt.loginShell:       false
+   URxvt.meta:             ignore
+   URxvt.utmpInhibit:      true</pre>
+<p>Uh, well, should be mostly self-explanatory. By specifying some defaults
+manually, I can quickly switch them for testing.</p>
+<pre>
+   URxvt.saveLines:        8192</pre>
+<p>A large scrollback buffer is essential. Really.</p>
+<pre>
+   URxvt.mapAlert:         true</pre>
+<p>The only case I use it is for my IRC window, which I like to keep
+iconified till people msg me (which beeps).</p>
+<pre>
+   URxvt.visualBell:       true</pre>
+<p>The audible bell is often annoying, especially when in a crowd.</p>
+<pre>
+   URxvt.insecure:         true</pre>
+<p>Please don't hack my mutt! Ooops...</p>
+<pre>
+   URxvt.pastableTabs:     false</pre>
+<p>I once thought this is a great idea.</p>
+<pre>
+   urxvt.font:             9x15bold,\
+                           -misc-fixed-bold-r-normal--15-140-75-75-c-90-iso10646-1,\
+                           -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1, \
+                           [codeset=JISX0208]xft:Kochi Gothic, \
+                           xft:Bitstream Vera Sans Mono:autohint=true, \
+                           xft:Code2000:antialias=false
+   urxvt.boldFont:         -xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso8859-15
+   urxvt.italicFont:       xft:Bitstream Vera Sans Mono:italic:autohint=true
+   urxvt.boldItalicFont:   xft:Bitstream Vera Sans Mono:bold:italic:autohint=true</pre>
+<p>I wrote rxvt-unicode to be able to specify fonts exactly. So don't be
+overwhelmed. A special note: the <code>9x15bold</code> mentioend above is actually
+the version from XFree-3.3, as XFree-4 replaced it by a totally different
+font (different glyphs for <code>;</code> and many other harmless characters),
+while the second font is actually the <code>9x15bold</code> from XFree4/XOrg. The
+bold version has less chars than the medium version, so I use it for rare
+characters, too. Whene ditign sources with vim, I use italic for comments
+and other stuff, which looks quite good with Bitstream Vera anti-aliased.</p>
+<p>Terminus is a quite bad font (many very wrong glyphs), but for most of my
+purposes, it works, and gives a different look, as my normal (Non-bold)
+font is already bold, and I want to see a difference between bold and
+normal fonts.</p>
+<p>Please note that I used the <code>urxvt</code> instance name and not the <code>URxvt</code>
+class name. Thats because I use different configs for different purposes,
+for example, my IRC window is started with <code>-name IRC</code>, and uses these
+defaults:</p>
+<pre>
+   IRC*title:              IRC
+   IRC*geometry:           87x12+535+542
+   IRC*saveLines:          0
+   IRC*mapAlert:           true
+   IRC*font:               suxuseuro
+   IRC*boldFont:           suxuseuro
+   IRC*colorBD:            white
+   IRC*keysym.M-C-1:       command:\033]710;suxuseuro\007\033]711;suxuseuro\007
+   IRC*keysym.M-C-2:       command:\033]710;9x15bold\007\033]711;9x15bold\007</pre>
+<p><code>Alt-Shift-1</code> and <code>Alt-Shift-2</code> switch between two different font
+sizes. <code>suxuseuro</code> allows me to keep an eye (and actually read)
+stuff while keeping a very small window. If somebody pastes something
+complicated (e.g. japanese), I temporarily switch to a larger font.</p>
+<p>The above is all in my <code>.Xdefaults</code> (I don't use <code>.Xresources</code> nor
+<code>xrdb</code>). I also have some resources in a separate <code>.Xdefaults-hostname</code>
+file for different hosts, for example, on ym main desktop, I use:</p>
+<pre>
+   URxvt.keysym.C-M-q: command:\033[3;5;5t
+   URxvt.keysym.C-M-y: command:\033[3;5;606t
+   URxvt.keysym.C-M-e: command:\033[3;1605;5t
+   URxvt.keysym.C-M-c: command:\033[3;1605;606t
+   URxvt.keysym.C-M-p: perl:test</pre>
+<p>The first for keysym definitions allow me to quickly bring some windows
+in the layout I like most. Ion users might start laughing but will stop
+immediately when I tell them that I use my own Fvwm2 module for much the
+same effect as Ion provides, and I only very rarely use the above key
+combinations :-&gt;</p>
 <p>
 </p>
 <h3><a name="why_doesn_t_rxvtunicode_read_my_resources">Why doesn't rxvt-unicode read my resources?</a></h3>

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2006-02-02" "7.5" "RXVT-UNICODE"
+.TH rxvt 7 "2006-02-21" "7.6" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -881,6 +881,190 @@ keyboard mappings, it is better to use `xmodmap' to remap the keys as
 required for your particular machine.
 .Sh "Terminal Configuration"
 .IX Subsection "Terminal Configuration"
+\fICan I see a typical configuration?\fR
+.IX Subsection "Can I see a typical configuration?"
+.PP
+The default configuration tries to be xterm\-like, which I don't like that
+much, but it's least surprise to regular users.
+.PP
+As a rxvt or rxvt-unicode user, you are practically supposed to invest
+time into customising your terminal. To get you started, here is the
+author's .Xdefaults entries, with comments on what they do:
+.PP
+.Vb 2
+\&   URxvt.cutchars: "()*,<>[]{}|'
+\&   URxvt.print-pipe: cat >/tmp/xxx
+.Ve
+.PP
+These are just for testing stuff.
+.PP
+.Vb 2
+\&   URxvt.imLocale: ja_JP.UTF-8
+\&   URxvt.preeditType: OnTheSpot,None
+.Ve
+.PP
+This tells rxvt-unicode to use a special locale when communicating with
+the X Input Method, and also tells it to only use the OnTheSpot pre-edit
+type, which requires the \f(CW\*(C`xim\-onthespot\*(C'\fR perl extension but rewards me
+with correct-looking fonts.
+.PP
+.Vb 6
+\&   URxvt.perl-lib: /root/lib/urxvt
+\&   URxvt.perl-ext-common: default,selection-autotransform,selection-pastebin,xim-onthespot,remote-clipboard
+\&   URxvt.selection.pattern-0: ( at .*? line \e\ed+)
+\&   URxvt.selection.pattern-1: ^(/[^:]+):\e 
+\&   URxvt.selection-autotransform.0: s/^([^:[:space:]]+):(\e\ed+):?$/:e \e\eQ$1\e\eE\e\ex0d:$2\e\ex0d/
+\&   URxvt.selection-autotransform.1: s/^ at (.*?) line (\e\ed+)$/:e \e\eQ$1\e\eE\e\ex0d:$2\e\ex0d/
+.Ve
+.PP
+This is my perl configuration. The first two set the perl library
+directory and also tells urxvt to use a large number of extensions. I
+develop for myself mostly, so I actually use most of the extensions I
+write.
+.PP
+The selection stuff mainly makes the selection perl-error-message aware
+and tells it to convert pelr error mssages into vi-commands to load the
+relevant file and go tot he error line number.
+.PP
+.Vb 2
+\&   URxvt.scrollstyle:      plain
+\&   URxvt.secondaryScroll:  true
+.Ve
+.PP
+As the documentation says: plain is the preferred scrollbar for the
+author. The \f(CW\*(C`secondaryScroll\*(C'\fR confgiures urxvt to scroll in full-screen
+apps, like screen, so lines scorlled out of screen end up in urxvt's
+scrollback buffer.
+.PP
+.Vb 7
+\&   URxvt.background:       #000000
+\&   URxvt.foreground:       gray90
+\&   URxvt.color7:           gray90
+\&   URxvt.colorBD:          #ffffff
+\&   URxvt.cursorColor:      #e0e080
+\&   URxvt.throughColor:     #8080f0
+\&   URxvt.highlightColor:   #f0f0f0
+.Ve
+.PP
+Some colours. Not sure which ones are being used or even non\-defaults, but
+these are in my .Xdefaults. Most notably, they set foreground/background
+to light gray/black, and also make sure that the colour 7 matches the
+default foreground colour.
+.PP
+.Vb 1
+\&   URxvt.underlineColor:   yellow
+.Ve
+.PP
+Another colour, makes underline lines look different. Sometimes hurts, but
+is mostly a nice effect.
+.PP
+.Vb 4
+\&   URxvt.geometry:         154x36
+\&   URxvt.loginShell:       false
+\&   URxvt.meta:             ignore
+\&   URxvt.utmpInhibit:      true
+.Ve
+.PP
+Uh, well, should be mostly self\-explanatory. By specifying some defaults
+manually, I can quickly switch them for testing.
+.PP
+.Vb 1
+\&   URxvt.saveLines:        8192
+.Ve
+.PP
+A large scrollback buffer is essential. Really.
+.PP
+.Vb 1
+\&   URxvt.mapAlert:         true
+.Ve
+.PP
+The only case I use it is for my \s-1IRC\s0 window, which I like to keep
+iconified till people msg me (which beeps).
+.PP
+.Vb 1
+\&   URxvt.visualBell:       true
+.Ve
+.PP
+The audible bell is often annoying, especially when in a crowd.
+.PP
+.Vb 1
+\&   URxvt.insecure:         true
+.Ve
+.PP
+Please don't hack my mutt! Ooops...
+.PP
+.Vb 1
+\&   URxvt.pastableTabs:     false
+.Ve
+.PP
+I once thought this is a great idea.
+.PP
+.Vb 9
+\&   urxvt.font:             9x15bold,\e
+\&                           -misc-fixed-bold-r-normal--15-140-75-75-c-90-iso10646-1,\e
+\&                           -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1, \e
+\&                           [codeset=JISX0208]xft:Kochi Gothic, \e
+\&                           xft:Bitstream Vera Sans Mono:autohint=true, \e
+\&                           xft:Code2000:antialias=false
+\&   urxvt.boldFont:         -xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso8859-15
+\&   urxvt.italicFont:       xft:Bitstream Vera Sans Mono:italic:autohint=true
+\&   urxvt.boldItalicFont:   xft:Bitstream Vera Sans Mono:bold:italic:autohint=true
+.Ve
+.PP
+I wrote rxvt-unicode to be able to specify fonts exactly. So don't be
+overwhelmed. A special note: the \f(CW\*(C`9x15bold\*(C'\fR mentioend above is actually
+the version from XFree\-3.3, as XFree\-4 replaced it by a totally different
+font (different glyphs for \f(CW\*(C`;\*(C'\fR and many other harmless characters),
+while the second font is actually the \f(CW\*(C`9x15bold\*(C'\fR from XFree4/XOrg. The
+bold version has less chars than the medium version, so I use it for rare
+characters, too. Whene ditign sources with vim, I use italic for comments
+and other stuff, which looks quite good with Bitstream Vera anti\-aliased.
+.PP
+Terminus is a quite bad font (many very wrong glyphs), but for most of my
+purposes, it works, and gives a different look, as my normal (Non\-bold)
+font is already bold, and I want to see a difference between bold and
+normal fonts.
+.PP
+Please note that I used the \f(CW\*(C`urxvt\*(C'\fR instance name and not the \f(CW\*(C`URxvt\*(C'\fR
+class name. Thats because I use different configs for different purposes,
+for example, my \s-1IRC\s0 window is started with \f(CW\*(C`\-name IRC\*(C'\fR, and uses these
+defaults:
+.PP
+.Vb 9
+\&   IRC*title:              IRC
+\&   IRC*geometry:           87x12+535+542
+\&   IRC*saveLines:          0
+\&   IRC*mapAlert:           true
+\&   IRC*font:               suxuseuro
+\&   IRC*boldFont:           suxuseuro
+\&   IRC*colorBD:            white
+\&   IRC*keysym.M-C-1:       command:\e033]710;suxuseuro\e007\e033]711;suxuseuro\e007
+\&   IRC*keysym.M-C-2:       command:\e033]710;9x15bold\e007\e033]711;9x15bold\e007
+.Ve
+.PP
+\&\f(CW\*(C`Alt\-Shift\-1\*(C'\fR and \f(CW\*(C`Alt\-Shift\-2\*(C'\fR switch between two different font
+sizes. \f(CW\*(C`suxuseuro\*(C'\fR allows me to keep an eye (and actually read)
+stuff while keeping a very small window. If somebody pastes something
+complicated (e.g. japanese), I temporarily switch to a larger font.
+.PP
+The above is all in my \f(CW\*(C`.Xdefaults\*(C'\fR (I don't use \f(CW\*(C`.Xresources\*(C'\fR nor
+\&\f(CW\*(C`xrdb\*(C'\fR). I also have some resources in a separate \f(CW\*(C`.Xdefaults\-hostname\*(C'\fR
+file for different hosts, for example, on ym main desktop, I use:
+.PP
+.Vb 5
+\&   URxvt.keysym.C-M-q: command:\e033[3;5;5t
+\&   URxvt.keysym.C-M-y: command:\e033[3;5;606t
+\&   URxvt.keysym.C-M-e: command:\e033[3;1605;5t
+\&   URxvt.keysym.C-M-c: command:\e033[3;1605;606t
+\&   URxvt.keysym.C-M-p: perl:test
+.Ve
+.PP
+The first for keysym definitions allow me to quickly bring some windows
+in the layout I like most. Ion users might start laughing but will stop
+immediately when I tell them that I use my own Fvwm2 module for much the
+same effect as Ion provides, and I only very rarely use the above key
+combinations :\->
+.PP
 \fIWhy doesn't rxvt-unicode read my resources?\fR
 .IX Subsection "Why doesn't rxvt-unicode read my resources?"
 .PP
