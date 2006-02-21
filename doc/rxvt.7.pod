@@ -667,7 +667,8 @@ much, but it's least surprise to regular users.
 
 As a rxvt or rxvt-unicode user, you are practically supposed to invest
 time into customising your terminal. To get you started, here is the
-author's .Xdefaults entries, with comments on what they do:
+author's .Xdefaults entries, with comments on what they do. It's certainly
+not I<typical>, but what's typical...
 
    URxvt.cutchars: "()*,<>[]{}|'
    URxvt.print-pipe: cat >/tmp/xxx
