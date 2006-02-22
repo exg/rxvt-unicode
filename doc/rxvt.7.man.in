@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "rxvt 7"
-.TH rxvt 7 "2006-02-21" "7.7" "RXVT-UNICODE"
+.TH rxvt 7 "2006-02-22" "7.7" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -478,7 +478,7 @@ Yes, using an escape sequence. Try something like this, which has the same
 effect as using the \f(CW\*(C`\-fn\*(C'\fR switch, and takes effect immediately:
 .PP
 .Vb 1
-\&   printf '\ee]50;%s\e007' "9x15bold,xft:Kochi Gothic"
+\&   printf '\e33]50;%s\e007' "9x15bold,xft:Kochi Gothic"
 .Ve
 .PP
 This is useful if you e.g. work primarily with japanese (and prefer a
@@ -1238,7 +1238,7 @@ The best thing is to fix your startup environment, as you will likely run
 into other problems. If nothing works you can try this in your .profile.
 .PP
 .Vb 1
-\&  printf '\ee]701;%s\e007' "$LC_CTYPE"
+\&  printf '\e33]701;%s\e007' "$LC_CTYPE"
 .Ve
 .PP
 If this doesn't work, then maybe you use a \f(CW\*(C`LC_CTYPE\*(C'\fR specification not
@@ -1305,7 +1305,7 @@ Yes, using an escape sequence. Try something like this, which sets
 rxvt\-unicode's idea of \f(CW\*(C`LC_CTYPE\*(C'\fR.
 .PP
 .Vb 1
-\&  printf '\ee]701;%s\e007' ja_JP.SJIS
+\&  printf '\e33]701;%s\e007' ja_JP.SJIS
 .Ve
 .PP
 See also the previous answer.
@@ -1316,9 +1316,9 @@ one locale (e.g. \f(CW\*(C`de_DE.UTF\-8\*(C'\fR) but some programs don't support
 first switches to a locale supported by xjdic and back later:
 .PP
 .Vb 3
-\&   printf '\ee]701;%s\e007' ja_JP.SJIS
+\&   printf '\e33]701;%s\e007' ja_JP.SJIS
 \&   xjdic -js
-\&   printf '\ee]701;%s\e007' de_DE.UTF-8
+\&   printf '\e33]701;%s\e007' de_DE.UTF-8
 .Ve
 .PP
 You can also use xterm's \f(CW\*(C`luit\*(C'\fR program, which usually works fine, except

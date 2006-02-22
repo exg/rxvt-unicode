@@ -304,7 +304,7 @@ fix colours but keep you from using other rxvt-unicode features.
 Yes, using an escape sequence. Try something like this, which has the same
 effect as using the C<-fn> switch, and takes effect immediately:
 
-   printf '\e]50;%s\007' "9x15bold,xft:Kochi Gothic"
+   printf '\33]50;%s\007' "9x15bold,xft:Kochi Gothic"
 
 This is useful if you e.g. work primarily with japanese (and prefer a
 japanese font), but you have to switch to chinese temporarily, where
@@ -962,7 +962,7 @@ something else, e.g. C<en_GB.UTF-8>. Needless to say, this is not going to work.
 The best thing is to fix your startup environment, as you will likely run
 into other problems. If nothing works you can try this in your .profile.
 
-  printf '\e]701;%s\007' "$LC_CTYPE"
+  printf '\33]701;%s\007' "$LC_CTYPE"
 
 If this doesn't work, then maybe you use a C<LC_CTYPE> specification not
 supported on your systems. Some systems have a C<locale> command which
@@ -1022,7 +1022,7 @@ rxvt-unicode with the correct C<LC_CTYPE> category.
 Yes, using an escape sequence. Try something like this, which sets
 rxvt-unicode's idea of C<LC_CTYPE>.
 
-  printf '\e]701;%s\007' ja_JP.SJIS
+  printf '\33]701;%s\007' ja_JP.SJIS
 
 See also the previous answer.
 
@@ -1031,9 +1031,9 @@ one locale (e.g. C<de_DE.UTF-8>) but some programs don't support it
 (e.g. UTF-8). For example, I use this script to start C<xjdic>, which
 first switches to a locale supported by xjdic and back later:
 
-   printf '\e]701;%s\007' ja_JP.SJIS
+   printf '\33]701;%s\007' ja_JP.SJIS
    xjdic -js
-   printf '\e]701;%s\007' de_DE.UTF-8
+   printf '\33]701;%s\007' de_DE.UTF-8
 
 You can also use xterm's C<luit> program, which usually works fine, except
 for some locales where character width differs between program- and

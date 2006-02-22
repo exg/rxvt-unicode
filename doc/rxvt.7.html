@@ -416,7 +416,7 @@ fix colours but keep you from using other rxvt-unicode features.</p>
 <p>Yes, using an escape sequence. Try something like this, which has the same
 effect as using the <code>-fn</code> switch, and takes effect immediately:</p>
 <pre>
-   printf '\e]50;%s\007' &quot;9x15bold,xft:Kochi Gothic&quot;</pre>
+   printf '\33]50;%s\007' &quot;9x15bold,xft:Kochi Gothic&quot;</pre>
 <p>This is useful if you e.g. work primarily with japanese (and prefer a
 japanese font), but you have to switch to chinese temporarily, where
 japanese fonts would only be in your way.</p>
@@ -1003,7 +1003,7 @@ something else, e.g. <code>en_GB.UTF-8</code>. Needless to say, this is not goin
 <p>The best thing is to fix your startup environment, as you will likely run
 into other problems. If nothing works you can try this in your .profile.</p>
 <pre>
-  printf '\e]701;%s\007' &quot;$LC_CTYPE&quot;</pre>
+  printf '\33]701;%s\007' &quot;$LC_CTYPE&quot;</pre>
 <p>If this doesn't work, then maybe you use a <code>LC_CTYPE</code> specification not
 supported on your systems. Some systems have a <code>locale</code> command which
 displays this (also, <code>perl -e0</code> can be used to check locale settings, as
@@ -1054,16 +1054,16 @@ rxvt-unicode with the correct <code>LC_CTYPE</code> category.</p>
 <p>Yes, using an escape sequence. Try something like this, which sets
 rxvt-unicode's idea of <code>LC_CTYPE</code>.</p>
 <pre>
-  printf '\e]701;%s\007' ja_JP.SJIS</pre>
+  printf '\33]701;%s\007' ja_JP.SJIS</pre>
 <p>See also the previous answer.</p>
 <p>Sometimes this capability is rather handy when you want to work in
 one locale (e.g. <code>de_DE.UTF-8</code>) but some programs don't support it
 (e.g. UTF-8). For example, I use this script to start <code>xjdic</code>, which
 first switches to a locale supported by xjdic and back later:</p>
 <pre>
-   printf '\e]701;%s\007' ja_JP.SJIS
+   printf '\33]701;%s\007' ja_JP.SJIS
    xjdic -js
-   printf '\e]701;%s\007' de_DE.UTF-8</pre>
+   printf '\33]701;%s\007' de_DE.UTF-8</pre>
 <p>You can also use xterm's <code>luit</code> program, which usually works fine, except
 for some locales where character width differs between program- and
 rxvt-unicode-locales.</p>

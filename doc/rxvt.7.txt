@@ -283,7 +283,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     Yes, using an escape sequence. Try something like this, which has the
     same effect as using the "-fn" switch, and takes effect immediately:
 
-       printf '\e]50;%s\007' "9x15bold,xft:Kochi Gothic"
+       printf '\33]50;%s\007' "9x15bold,xft:Kochi Gothic"
 
     This is useful if you e.g. work primarily with japanese (and prefer a
     japanese font), but you have to switch to chinese temporarily, where
@@ -908,7 +908,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     run into other problems. If nothing works you can try this in your
     .profile.
 
-      printf '\e]701;%s\007' "$LC_CTYPE"
+      printf '\33]701;%s\007' "$LC_CTYPE"
 
     If this doesn't work, then maybe you use a "LC_CTYPE" specification not
     supported on your systems. Some systems have a "locale" command which
@@ -964,7 +964,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     Yes, using an escape sequence. Try something like this, which sets
     rxvt-unicode's idea of "LC_CTYPE".
 
-      printf '\e]701;%s\007' ja_JP.SJIS
+      printf '\33]701;%s\007' ja_JP.SJIS
 
     See also the previous answer.
 
@@ -973,9 +973,9 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     UTF-8). For example, I use this script to start "xjdic", which first
     switches to a locale supported by xjdic and back later:
 
-       printf '\e]701;%s\007' ja_JP.SJIS
+       printf '\33]701;%s\007' ja_JP.SJIS
        xjdic -js
-       printf '\e]701;%s\007' de_DE.UTF-8
+       printf '\33]701;%s\007' de_DE.UTF-8
 
     You can also use xterm's "luit" program, which usually works fine,
     except for some locales where character width differs between program-
