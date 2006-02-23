@@ -2767,6 +2767,7 @@ rxvt_term::cmd_parse ()
               else
                 {
                   flag = true;
+                  //TODO: due to popular request, implement "skipscroll" option here
                   scr_refresh ();
                   want_refresh = 1;
                 }
