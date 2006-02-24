@@ -9,6 +9,7 @@ TODO: "slow" rendering mode for bidi and scripts, pango!
 TODO: read property sequence is broken with respect to utf-8 etc.
 TODO: slow drag selection on remote display - other things seem fast (rxvt illness, motion hints?)
 TODO: default selection should handle = better
+TODO: kick out xpm.C, replace by pixbuf
 WISH: skipscroll option
 WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
