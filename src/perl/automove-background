@@ -27,4 +27,6 @@ sub on_configure_notify {
    );
 
    $self->cmd_parse ("\033]20;;=+$x+$y\007");
+
+   ()
 }
