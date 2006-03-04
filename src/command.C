@@ -3760,7 +3760,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
   assert (str != NULL);
   
   if (HOOK_INVOKE ((this, HOOK_OSC_SEQ, DT_INT, op, DT_STR, str, DT_END)))
-    ; // no responses yet
+    return;
 
   switch (op)
     {
