@@ -1,5 +1,6 @@
 rxvt-unicode changelog <= google-friendly title
 
+TODO: fix the flaw in the url regex jost pointed out
 TODO: xcopyarea pass broken, fix and improve
 TODO: event mechanism that replaces on_keyboard_command with something more scalable.
 TODO: overlays collide with the way the out-of-focus cursor is being drawn
