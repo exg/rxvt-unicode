@@ -1,5 +1,14 @@
 #! perl
 
+sub xy {
+   my ($self) = @_;
+
+   $self->XTranslateCoordinates (
+      $self->vt, $self->DefaultRootWindow,
+      0, 0
+   )
+}
+
 sub on_osc_seq {
    my ($self, $op, $args) = @_;
 
@@ -10,6 +19,7 @@ sub on_osc_seq {
             $self->vt, $self->DefaultRootWindow,
             0, 0
          );
+         my ($x, $y) = $self->xy;
          $self->cmd_parse ("\033]20;$pic;=+$x+$y\007");
          return 1;
       }
@@ -21,10 +31,7 @@ sub on_osc_seq {
 sub on_configure_notify {
    my ($self, $event) = @_;
    
-   my ($x, $y) = $self->XTranslateCoordinates (
-      $self->vt, $self->DefaultRootWindow,
-      0, 0
-   );
+   my ($x, $y) = $self->xy;
 
    $self->cmd_parse ("\033]20;;=+$x+$y\007");
 
