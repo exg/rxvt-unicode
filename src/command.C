@@ -3758,6 +3758,10 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
   dLocal (Display *, dpy);
 
   assert (str != NULL);
+  
+  if (HOOK_INVOKE ((this, HOOK_OSC_SEQ, DT_INT, op, DT_STR, str, DT_END)))
+    ; // no responses yet
+
   switch (op)
     {
       case XTerm_name:
@@ -3984,7 +3988,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 
 #if ENABLE_PERL
       case URxvt_perl:
-        if (HOOK_INVOKE ((this, HOOK_OSC_SEQ, DT_STR, str, DT_END)))
+        if (HOOK_INVOKE ((this, HOOK_OSC_SEQ_PERL, DT_STR, str, DT_END)))
           ; // no responses yet
         break;
 #endif
