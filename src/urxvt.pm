@@ -495,7 +495,17 @@ It is called before lines are scrolled out (so rows 0 .. min ($lines - 1,
 $nrow - 1) represent the lines to be scrolled out). C<$saved> is the total
 number of lines that will be in the scrollback buffer.
 
-=item on_osc_seq $term, $string
+=item on_osc_seq $term, $op, $args
+
+Called on every OSC sequence and can be used to suppress it or modify its
+behaviour.  The default should be to return an empty list. A true value
+suppresses execution of the request completely. Make sure you don't get
+confused by recursive invocations when you output an osc sequence within
+this callback.
+
+C<on_osc_seq_perl> should be used for new behaviour.
+
+=item on_osc_seq_perl $term, $string
 
 Called whenever the B<ESC ] 777 ; string ST> command sequence (OSC =
 operating system command) is processed. Cursor position and other state
