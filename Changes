@@ -21,6 +21,8 @@ DUMB: support tex fonts
 	- add FORCE_UNBUFFERED_XFT define to features.h.
 	- moved on_osc_seq to on_osc_seq_perl and added a more
           generic osc_seq.
+        - fix a bug causing double callback invocations when perl hooks
+          were invoked recursively.
 
 7.7  Tue Feb 21 12:32:49 CET 2006
 	- use double-buffered drawing (xft fonts only). On many driver/hardware

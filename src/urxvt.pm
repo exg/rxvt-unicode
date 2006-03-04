@@ -909,10 +909,8 @@ sub invoke {
       verbose 10, "$HOOKNAME[$htype] (" . (join ", ", $TERM, @_) . ")"
          if $verbosity >= 10;
 
-      keys %$cb;
-
-      while (my ($pkg, $cb) = each %$cb) {
-         my $retval_ = eval { $cb->($TERM->{_pkg}{$pkg}, @_) };
+      for my $pkg (keys %$cb) {
+         my $retval_ = eval { $cb->{$pkg}->($TERM->{_pkg}{$pkg}, @_) };
          $retval ||= $retval_;
 
          if ($@) {
