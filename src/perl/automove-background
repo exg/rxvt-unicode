@@ -5,13 +5,11 @@ sub on_osc_seq {
 
    if ($op == 20) {
       my ($pic, $commands) = split(/;/, $args, 2);
-      warn "   pic=$pic commands=$commands";
       if ($pic !~ /^$/ && $commands !~ /[+\-]/) {
          my ($x, $y) = $self->XTranslateCoordinates (
             $self->vt, $self->DefaultRootWindow,
             0, 0
          );
-         warn "      $x $y \\033]20;$pic;=+$x+$y\\007";
          $self->cmd_parse ("\033]20;$pic;=+$x+$y\007");
          return 1;
       }

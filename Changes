@@ -23,6 +23,8 @@ DUMB: support tex fonts
           generic osc_seq.
         - fix a bug causing double callback invocations when perl hooks
           were invoked recursively.
+        - the automove-background extension now properly works when the
+          pixmap gets reset with an osc sequence (sqweek).
 
 7.7  Tue Feb 21 12:32:49 CET 2006
 	- use double-buffered drawing (xft fonts only). On many driver/hardware
