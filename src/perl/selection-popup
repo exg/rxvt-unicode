@@ -62,6 +62,9 @@ sub on_button_press {
          /./
             and $add_button->("eval perl expression" => sub { no warnings; $_ = eval $_ });
 
+         /./
+            and $add_button->((sprintf "to unicode hex index (%x)", ord) => sub { $_ = sprintf "%x", ord });
+
          /^(\S+):(\d+):?$/
             and $add_button->("vi-commands to load '$1'" => sub { s/^(\S+):(\d+):?$/\x1b:e $1\x0d:$2\x0d/ });
 
