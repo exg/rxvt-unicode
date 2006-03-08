@@ -43,7 +43,7 @@ DUMB: support tex fonts
           to correctly position their preedit window.
         - un-optimise the line clearing on newly scrolled-in lines a bit: the
           former reasoning was that any fg colour on default bg looks the same
-          in empts spaces, but thats not true when reversing (e.g. selection),
+          in empty spaces, but thats not true when reversing (e.g. selection),
           so also check for matching fg colours. This fixes the problem where
           selecting newly scrolled-in lines would exhibit wrong colours.
         - fix a bug in the perl interface causing focus in events to generate
