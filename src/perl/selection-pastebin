@@ -6,7 +6,10 @@ sub upload_paste {
    require Digest::MD5;
 
    my $txt = $self->selection;
-   my $filename = Digest::MD5::md5_hex ($txt) . ".txt";
+
+   my $filename = $txt;
+   utf8::encode $filename;
+   $filename = Digest::MD5::md5_hex ($filename) . ".txt";
 
    my $tmpfile = "/tmp/$filename";
 

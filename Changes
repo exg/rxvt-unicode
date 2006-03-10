@@ -18,6 +18,8 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
+TODO: zero scorllback buffer should free memory
+TODO: kuake
 	- add FORCE_UNBUFFERED_XFT define to features.h.
 	- moved on_osc_seq to on_osc_seq_perl and added a more
           generic osc_seq.
@@ -25,6 +27,7 @@ DUMB: support tex fonts
           were invoked recursively.
         - the automove-background extension now properly works when the
           pixmap gets reset with an osc sequence (sqweek).
+        - selection-pastebin did not work properly with non-latin1-characters.
 
 7.7  Tue Feb 21 12:32:49 CET 2006
 	- use double-buffered drawing (xft fonts only). On many driver/hardware
