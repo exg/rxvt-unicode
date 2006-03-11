@@ -1326,7 +1326,9 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
 #if defined(XPM_BACKGROUND) || defined(TRANSPARENT)
           if (bg < 0 && term->am_pixmap_trans)
-            XCopyArea (disp, term->pixmap, d2, gc, x, y, w, h, 0, 0);
+            XCopyArea (disp, term->pixmap, d2, gc,
+                       x + term->window_vt_x, y + term->window_vt_y,
+                       w, h, 0, 0);
           else if (bg < 0 && term->bgPixmap.pixmap)
             {
               XGCValues gcv;

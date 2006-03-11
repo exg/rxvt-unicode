@@ -21,6 +21,8 @@ DUMB: support tex fonts
 TODO: zero scorllback buffer should free memory
 TODO: kuake
 	- add FORCE_UNBUFFERED_XFT define to features.h.
+        - double-buffered xft drawing did suffer from pixel offset issues
+          when pixmap transparency was enabled.
 	- moved on_osc_seq to on_osc_seq_perl and added a more
           generic osc_seq.
         - fix a bug causing double callback invocations when perl hooks
