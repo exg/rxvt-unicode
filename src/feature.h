@@ -62,8 +62,8 @@
 
 /*
  * Forcefully disable double-buffering for xft. On some card/driver combination
- * this slightly decreases performance, on most it greatly helps it.
- * The slowdown is small, so it * should normally be enabled.
+ * enabling it slightly decreases performance, on most it greatly helps it.
+ * The slowdown is small, so it should normally be enabled.
  */
 /* #define FORCE_UNBUFFERED_XFT */
 

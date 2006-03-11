@@ -1276,14 +1276,14 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
   int w = term->fwidth * len;
   int h = term->fheight;
 
-  bool buffered = 0
+  bool buffered = bg >= 0                         // we don't use a transparent bg
 #ifndef FORCE_UNBUFFERED_XFT
 # if defined(XPM_BACKGROUND) || defined(TRANSPARENT)
                   || !term->am_transparent        // we aren't transparent
                   || term->am_pixmap_trans        // we have a pixmap
 # endif
-                  || bg >= 0;                     // we don't use a transparent bg
 #endif
+                  ;
 
   // cut trailing spaces
   while (len && text [len - 1] == ' ')
