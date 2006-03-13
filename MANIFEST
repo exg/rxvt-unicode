@@ -88,7 +88,6 @@ src/rxvtc.C
 src/rxvtd.C
 src/rxvtdaemon.C
 src/rxvtdaemon.h
-src/rxvtlib.h
 src/rxvtlib.h.in
 src/salloc.C
 src/salloc.h
