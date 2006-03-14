@@ -1709,7 +1709,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =over 4
 
-=item B<< C<Ps = 1> >> (DECCKM)
+=item B<< C<Pm = 1> >> (DECCKM)
 
 =begin table
 
@@ -1718,7 +1718,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Ps = 2> >> (ANSI/VT52 mode)
+=item B<< C<Pm = 2> >> (ANSI/VT52 mode)
 
 =begin table
 
@@ -1727,7 +1727,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Ps = 3> >>
+=item B<< C<Pm = 3> >>
 
 =begin table
 
@@ -1736,7 +1736,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Ps = 4> >>
+=item B<< C<Pm = 4> >>
 
 =begin table
 
@@ -1745,7 +1745,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Ps = 5> >>
+=item B<< C<Pm = 5> >>
 
 =begin table
 
@@ -1754,7 +1754,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Ps = 6> >>
+=item B<< C<Pm = 6> >>
 
 =begin table
 
@@ -1763,7 +1763,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Ps = 7> >>
+=item B<< C<Pm = 7> >>
 
 =begin table
 
@@ -1772,7 +1772,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Ps = 8> >> I<unimplemented>
+=item B<< C<Pm = 8> >> I<unimplemented>
 
 =begin table
 
@@ -1781,7 +1781,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Ps = 9> >> X10 XTerm
+=item B<< C<Pm = 9> >> X10 XTerm
 
 =begin table
 
@@ -1790,7 +1790,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Ps = 25> >>
+=item B<< C<Pm = 25> >>
 
 =begin table
 
@@ -1799,7 +1799,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Ps = 30> >>
+=item B<< C<Pm = 30> >>
 
 =begin table
 
@@ -1808,7 +1808,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Ps = 35> >> (B<rxvt>)
+=item B<< C<Pm = 35> >> (B<rxvt>)
 
 =begin table
 
@@ -1817,11 +1817,11 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Ps = 38> >> I<unimplemented>
+=item B<< C<Pm = 38> >> I<unimplemented>
 
 Enter Tektronix Mode (DECTEK)
 
-=item B<< C<Ps = 40> >>
+=item B<< C<Pm = 40> >>
 
 =begin table
 
@@ -1830,7 +1830,7 @@ Enter Tektronix Mode (DECTEK)
 
 =end table
 
-=item B<< C<Ps = 44> >> I<unimplemented>
+=item B<< C<Pm = 44> >> I<unimplemented>
 
 =begin table
 
@@ -1839,7 +1839,7 @@ Enter Tektronix Mode (DECTEK)
 
 =end table
 
-=item B<< C<Ps = 45> >> I<unimplemented>
+=item B<< C<Pm = 45> >> I<unimplemented>
 
 =begin table
 
@@ -1848,9 +1848,9 @@ Enter Tektronix Mode (DECTEK)
 
 =end table
 
-=item B<< C<Ps = 46> >> I<unimplemented>
+=item B<< C<Pm = 46> >> I<unimplemented>
 
-=item B<< C<Ps = 47> >>
+=item B<< C<Pm = 47> >>
 
 =begin table
 
@@ -1861,7 +1861,7 @@ Enter Tektronix Mode (DECTEK)
 
 X<Priv66>
 
-=item B<< C<Ps = 66> >>
+=item B<< C<Pm = 66> >>
 
 =begin table
 
@@ -1870,7 +1870,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Ps = 67> >>
+=item B<< C<Pm = 67> >>
 
 =begin table
 
@@ -1879,7 +1879,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Ps = 1000> >> (X11 XTerm)
+=item B<< C<Pm = 1000> >> (X11 XTerm)
 
 =begin table
 
@@ -1888,7 +1888,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Ps = 1001> >> (X11 XTerm) I<unimplemented>
+=item B<< C<Pm = 1001> >> (X11 XTerm) I<unimplemented>
 
 =begin table
 
@@ -1897,7 +1897,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Ps = 1010> >> (B<rxvt>)
+=item B<< C<Pm = 1010> >> (B<rxvt>)
 
 =begin table
 
@@ -1906,7 +1906,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Ps = 1011> >> (B<rxvt>)
+=item B<< C<Pm = 1011> >> (B<rxvt>)
 
 =begin table
 
@@ -1915,7 +1915,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Ps = 1021> >> (B<rxvt>)
+=item B<< C<Pm = 1021> >> (B<rxvt>)
 
 =begin table
 
@@ -1924,7 +1924,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Ps = 1047> >>
+=item B<< C<Pm = 1047> >>
 
 =begin table
 
@@ -1933,7 +1933,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Ps = 1048> >>
+=item B<< C<Pm = 1048> >>
 
 =begin table
 
@@ -1942,7 +1942,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Ps = 1049> >>
+=item B<< C<Pm = 1049> >>
 
 =begin table
 
