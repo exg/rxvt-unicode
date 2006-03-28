@@ -13,6 +13,7 @@ TODO: slow drag selection on remote display - other things seem fast (rxvt illne
 TODO: default selection should handle = better
 TODO: kick out xpm.C, replace by pixbuf
 WISH: skipscroll option
+WISH: selection-color-pair instead of reverse video
 WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 WISH: anyevent mouse notification / manage MotionMask better.
@@ -21,6 +22,7 @@ DUMB: support tex fonts
 
 TODO: zero scorllback buffer should free memory
 TODO: kuake
+TODO: depth resource not working(?)
 	- add FORCE_UNBUFFERED_XFT define to features.h.
         - double-buffered xft drawing did suffer from pixel offset issues
           when pixmap transparency was enabled.
@@ -35,6 +37,8 @@ TODO: kuake
           (spotted by Decklin Foster).
         - fix compiling with TRANSPARENT but !XPM_BACKGROUND, as reported 
           by omatunto_.
+        - slap in a using namespace std, might help on platforms that don't
+          follow C++ closely enough.
 
 7.7  Tue Feb 21 12:32:49 CET 2006
 	- use double-buffered drawing (xft fonts only). On many driver/hardware
