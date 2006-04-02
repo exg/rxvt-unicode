@@ -1486,7 +1486,7 @@ Color names.
 
 Marc A. Lehmann L<< <rxvt-unicode@schmorp.de> >>
 
-L<http://software.schmorp.de/#rxvt-unicode>
+L<http://software.schmorp.de/pkg/rxvt-unicode.html>
 
 =back
 
