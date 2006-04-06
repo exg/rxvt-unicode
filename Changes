@@ -1,6 +1,5 @@
 rxvt-unicode changelog <= google-friendly title
 
-TODO: fix the flaw in the url regex jost pointed out
 TODO: xcopyarea pass broken, fix and improve
 TODO: event mechanism that replaces on_keyboard_command with something more scalable.
 TODO: slipwheeling needs a keyboard grab to get key release events.
@@ -23,6 +22,8 @@ DUMB: support tex fonts
 TODO: zero scorllback buffer should free memory
 TODO: kuake
 TODO: depth resource not working(?)
+TODO: fix the flaw in the url regex jost pointed out
+TODO: look into the selection hilight patch
 	- add FORCE_UNBUFFERED_XFT define to features.h.
         - double-buffered xft drawing did suffer from pixel offset issues
           when pixmap transparency was enabled.
