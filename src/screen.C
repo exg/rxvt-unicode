@@ -2298,7 +2298,7 @@ rxvt_term::scr_refresh () NOTHROW
 # endif
                 }
 
-              if (rend & RS_Uline && ISSET_PIXCOLOR (Color_UL))
+              if (rend & RS_Uline && fore == Color_fg && ISSET_PIXCOLOR (Color_UL))
                 fore = Color_UL;
 #endif
 

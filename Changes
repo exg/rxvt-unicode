@@ -34,7 +34,9 @@ TODO: look into the selection hilight patch
         - the automove-background extension now properly works when the
           pixmap gets reset with an osc sequence (sqweek).
         - selection-pastebin did not work properly with non-latin1-characters.
-        - removed rxvtlib.h from the tarballe, it had no reason to be there
+        - apply colorUL only when the text colour is the default fg
+          (patch by Wu Fengguang).
+        - removed rxvtlib.h from the tarball, it had no reason to be there
           (spotted by Decklin Foster).
         - fix compiling with TRANSPARENT but !XPM_BACKGROUND, as reported 
           by omatunto_.
