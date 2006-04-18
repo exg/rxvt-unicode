@@ -24,6 +24,7 @@ TODO: kuake
 TODO: depth resource not working(?)
 TODO: fix the flaw in the url regex jost pointed out
 TODO: look into the selection hilight patch
+TODO: implement smartcase-like search in searchable-scrollback
 	- add FORCE_UNBUFFERED_XFT define to features.h.
         - double-buffered xft drawing did suffer from pixel offset issues
           when pixmap transparency was enabled.
