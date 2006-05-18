@@ -19,12 +19,15 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
+TODO: rxvt -bg "#262626" -fn "xft:Andale Mono:pixelsize=15"
+      # causes some lines with #252525 in the output. rounding bug in xft?
 TODO: zero scorllback buffer should free memory
 TODO: kuake
 TODO: depth resource not working(?)
 TODO: fix the flaw in the url regex jost pointed out
 TODO: look into the selection hilight patch
 TODO: implement smartcase-like search in searchable-scrollback
+TODO: check wether -depth works as resource
 	- add FORCE_UNBUFFERED_XFT define to features.h.
         - double-buffered xft drawing did suffer from pixel offset issues
           when pixmap transparency was enabled.
