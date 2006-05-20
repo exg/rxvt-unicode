@@ -46,6 +46,7 @@ TODO: check wether -depth works as resource
           by omatunto_.
         - slap in a using namespace std, might help on platforms that don't
           follow C++ closely enough.
+        - fix mailto url regex, spotted within milliseconds by Jost Krieger.
 
 7.7  Tue Feb 21 12:32:49 CET 2006
 	- use double-buffered drawing (xft fonts only). On many driver/hardware

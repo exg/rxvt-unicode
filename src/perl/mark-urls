@@ -3,7 +3,7 @@
 # same url as used in "selection"
 my $url =
    qr{(
-      (?:https?|ftp|news|mailto|file)://[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),~]+
+      (?:https?://|ftp://|news://|mailto:|file://)[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),~]+
       [ab-zA-Z0-9\-\@;\/?:&=%\$_+!*\x27()~]   # exclude some trailing characters (heuristic)
    )}x;
 
