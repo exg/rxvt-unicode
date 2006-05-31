@@ -136,8 +136,8 @@ struct io_watcher : watcher, callback<void (io_watcher &, short)> {
   void start (int fd_, short events_) { set (fd_, events_); io_manager::reg (*this); }
   void stop () { io_manager::unreg (*this); }
 
-  template<class O1, class O2>
-  io_watcher (O1 *object, void (O2::*method) (io_watcher &, short))
+  template<class O, class M>
+  io_watcher (O object, M method)
   : callback<void (io_watcher &, short)> (object, method)
   { }
   ~io_watcher () { stop (); }
@@ -156,8 +156,8 @@ struct time_watcher : watcher, callback<void (time_watcher &)> {
   void start (tstamp when) { set (when); io_manager::reg (*this); }
   void stop () { io_manager::unreg (*this); }
 
-  template<class O1, class O2>
-  time_watcher (O1 *object, void (O2::*method) (time_watcher &))
+  template<class O, class M>
+  time_watcher (O object, M method)
   : callback<void (time_watcher &)> (object, method), at (0)
   { }
   ~time_watcher () { stop (); }
@@ -170,8 +170,8 @@ struct check_watcher : watcher, callback<void (check_watcher &)> {
   void start () { io_manager::reg (*this); }
   void stop () { io_manager::unreg (*this); }
 
-  template<class O1, class O2>
-  check_watcher (O1 *object, void (O2::*method) (check_watcher &))
+  template<class O, class M>
+  check_watcher (O object, M method)
   : callback<void (check_watcher &)> (object, method)
   { }
   ~check_watcher () { stop (); }
@@ -184,8 +184,8 @@ struct idle_watcher : watcher, callback<void (idle_watcher &)> {
   void start () { io_manager::reg (*this); }
   void stop () { io_manager::unreg (*this); }
 
-  template<class O1, class O2>
-  idle_watcher (O1 *object, void (O2::*method) (idle_watcher &))
+  template<class O, class M>
+  idle_watcher (O object, M method)
     : callback<void (idle_watcher &)> (object, method)
     { }
   ~idle_watcher () { stop (); }
@@ -199,8 +199,8 @@ struct sig_watcher : watcher, callback<void (sig_watcher &)> {
   void start (int signum);
   void stop () { io_manager::unreg (*this); }
 
-  template<class O1, class O2>
-  sig_watcher (O1 *object, void (O2::*method) (sig_watcher &))
+  template<class O, class M>
+  sig_watcher (O object, M method)
   : callback<void(sig_watcher &)> (object, method), signum (0)
   { }
   ~sig_watcher () { stop (); }
@@ -214,8 +214,8 @@ struct child_watcher : watcher, callback<void (child_watcher &, int)> {
   void start (int pid) { this->pid = pid; io_manager::reg (*this); }
   void stop () { io_manager::unreg (*this); }
 
-  template<class O1, class O2>
-  child_watcher (O1 *object, void (O2::*method) (child_watcher &, int status))
+  template<class O, class M>
+  child_watcher (O object, M method)
   : callback<void (child_watcher &, int)> (object, method), pid (0)
   { }
   ~child_watcher () { stop (); }
