@@ -236,10 +236,10 @@ struct rxvt_display : refcounted {
 };
 
 #ifdef USE_XIM
-struct im_watcher : watcher, callback0<void> {
-  template<class O1, class O2>
-  im_watcher (O1 *object, void (O2::*method) ())
-  : callback0<void> (object,method)
+struct im_watcher : watcher, callback<void (void)> {
+  template<class O, class M>
+  im_watcher (O object, M method)
+  : callback<void (void)> (object, method)
   { }
 
   void start (rxvt_display *display)
@@ -253,12 +253,12 @@ struct im_watcher : watcher, callback0<void> {
 };
 #endif
 
-struct xevent_watcher : watcher, callback1<void, XEvent &> {
+struct xevent_watcher : watcher, callback<void (XEvent &)> {
   Window window;
 
-  template<class O1, class O2>
-  xevent_watcher (O1 *object, void (O2::*method) (XEvent &))
-  : callback1<void, XEvent &> (object,method)
+  template<class O, class M>
+  xevent_watcher (O object, M method)
+  : callback<void (XEvent &)> (object, method)
   { }
 
   void start (rxvt_display *display, Window window)

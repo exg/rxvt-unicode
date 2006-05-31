@@ -775,8 +775,8 @@ enum {
 # define XPMClearArea(a, b, c, d, e, f, g)
 #endif
 
-typedef callback1<void, const char *> log_callback;
-typedef callback1<int, int> getfd_callback;
+typedef callback<void (const char *)> log_callback;
+typedef callback<int (int)> getfd_callback;
 
 #define SET_LOCALE(locale) rxvt_set_locale (locale)
 extern bool rxvt_set_locale (const char *locale) NOTHROW;
