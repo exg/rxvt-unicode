@@ -27,8 +27,8 @@
 
 #include <cstddef> // needed by broken bsds for NULL used in sys/uio.h
 
-#include <sys/uio.h>
 #include <sys/types.h>
+#include <sys/uio.h>
 #include <sys/socket.h>
 
 #include "libptytty.h"

@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <cstring>
 
+using namespace std;
+
 #define PP_CONCAT_(a, b) a ## b
 #define PP_CONCAT(a, b) PP_CONCAT_(a, b)
 #define PP_STRINGIFY_(a) #a
