@@ -370,7 +370,7 @@ locale-specific way.
 
 =head2 Extension Objects
 
-Very perl extension is a perl class. A separate perl object is created
+Every perl extension is a perl class. A separate perl object is created
 for each terminal and each extension and passed as the first parameter to
 hooks. So extensions can use their C<$self> object without having to think
 about other extensions, with the exception of methods and members that
