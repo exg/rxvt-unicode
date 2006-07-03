@@ -266,7 +266,7 @@ supported in this mode. Exmaple:
 
 =item block-graphics-to-ascii
 
-A not very useful example of filtering all text output to the terminal,
+A not very useful example of filtering all text output to the terminal
 by replacing all line-drawing characters (U+2500 .. U+259F) by a
 similar-looking ascii character.
 
