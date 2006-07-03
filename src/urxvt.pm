@@ -257,9 +257,10 @@ C<OnTheSpot>, i.e.:
 
 =item automove-background
 
-This is basically a one-line extension that dynamically changes the background pixmap offset
-to the window position, in effect creating the same effect as pseudo transparency with
-a custom pixmap. No scaling is supported in this mode. Exmaple:
+This is basically a very small extension that dynamically changes the
+background pixmap offset to the window position, in effect creating the
+same effect as pseudo transparency with a custom pixmap. No scaling is
+supported in this mode. Exmaple:
 
    @@RXVT_NAME@@ -pixmap background.xpm -pe automove-background
 
