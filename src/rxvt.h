@@ -1229,6 +1229,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void button_release (XButtonEvent &ev);
   void focus_in ();
   void focus_out ();
+  void update_fade_color (unsigned int idx);
   int check_our_parents ();
 #ifdef PRINTPIPE
   FILE *popen_printer ();

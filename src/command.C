@@ -1777,6 +1777,19 @@ rxvt_term::focus_out ()
     }
 }
 
+void
+rxvt_term::update_fade_color (unsigned int idx)
+{
+#if OFF_FOCUS_FADING
+  if (rs[Rs_fade])
+    {
+      rgba c;
+      pix_colors [Color_fade].get (c);
+      pix_colors_focused [idx].fade (this, atoi (rs[Rs_fade]), pix_colors_unfocused [idx], c);
+    }
+#endif
+}
+
 #if TRANSPARENT
 void
 rxvt_term::rootwin_cb (XEvent &ev)

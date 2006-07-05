@@ -750,13 +750,8 @@ rxvt_term::Get_Colours ()
 #endif                          /* KEEP_SCROLLCOLOR */
 
 #ifdef OFF_FOCUS_FADING
-  if (rs[Rs_fade])
-    for (i = 0; i < (depth <= 2 ? 2 : NRS_COLORS); i++)
-      {
-        rgba c;
-        pix_colors [Color_fade].get (c);
-        pix_colors_focused [i].fade (this, atoi (rs[Rs_fade]), pix_colors_unfocused[i],c);
-      }
+  for (i = 0; i < (depth <= 2 ? 2 : NRS_COLORS); i++)
+    update_fade_color (i);
 #endif
 }
 

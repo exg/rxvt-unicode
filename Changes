@@ -53,6 +53,7 @@ TODO: investigate the color-management patch send ages ago, as well as other pos
         - slap in a using namespace std, might help on platforms that don't
           follow C++ closely enough.
         - fix mailto url regex, spotted within milliseconds by Jost Krieger.
+        - applied fade_color_update_func.patch by WU Fengguang.
 
 7.7  Tue Feb 21 12:32:49 CET 2006
 	- use double-buffered drawing (xft fonts only). On many driver/hardware

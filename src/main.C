@@ -938,18 +938,9 @@ rxvt_term::set_window_color (int idx, const char *color)
   /* XSetWindowAttributes attr; */
   /* Cursor cursor; */
 done:
-
-#if OFF_FOCUS_FADING
-  if (rs[Rs_fade])
-    {
-      rgba c;
-      pix_colors [Color_fade].get (c);
-      pix_colors_focused [idx].fade (this, atoi (rs[Rs_fade]), pix_colors_unfocused [idx], c);
-    }
-#endif
-
   /*TODO: handle Color_BD, scrollbar background, etc. */
 
+  update_fade_color (idx);
   recolour_cursor ();
   scr_recolour ();
 }
