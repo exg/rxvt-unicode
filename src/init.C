@@ -302,14 +302,13 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   // using a local pointer decreases code size a lot
   xa = display->xa;
 
+  set (display);
+  extract_resources ();
+
 #if XFT
   if (rs[Rs_depth])
-    set (display, strtol (rs[Rs_depth], 0, 0));
-  else
+    select_visual (strtol (rs[Rs_depth], 0, 0));
 #endif
-    set (display);
-
-  extract_resources ();
 
   free (r_argv);
 

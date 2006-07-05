@@ -185,7 +185,7 @@ struct rxvt_screen {
 #endif
 
   void set (rxvt_display *disp);
-  void set (rxvt_display *disp, int bitdepth);
+  void select_visual (int bitdepth);
   void clear ();
 };
 

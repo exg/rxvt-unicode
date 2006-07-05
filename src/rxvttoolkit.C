@@ -264,10 +264,8 @@ rxvt_screen::set (rxvt_display *disp)
 }
 
 void
-rxvt_screen::set (rxvt_display *disp, int bitdepth)
+rxvt_screen::select_visual (int bitdepth)
 {
-  set (disp);
-
 #if XFT
   XVisualInfo vinfo;
 
@@ -275,7 +273,7 @@ rxvt_screen::set (rxvt_display *disp, int bitdepth)
     {
       depth  = bitdepth;
       visual = vinfo.visual;
-      cmap   = XCreateColormap (dpy, disp->root, visual, AllocNone);
+      cmap   = XCreateColormap (dpy, display->root, visual, AllocNone);
     }
 #endif
 }

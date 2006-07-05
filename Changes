@@ -29,6 +29,9 @@ TODO: implement smartcase-like search in searchable-scrollback
 TODO: check wether -depth works as resource
 TODO: digital clock gets nuked after searching
 TODO: read .Xdefaults even when we have display resources, but give them lower priority
+        - use less "correct" color scaling that is compatible with libX11 and Xft
+          (avoids off-by-one colors resulting in striped backgrounds).
+        - the "depth" resource is now respected.
 	- add FORCE_UNBUFFERED_XFT define to features.h.
         - double-buffered xft drawing did suffer from pixel offset issues
           when pixmap transparency was enabled.
@@ -48,8 +51,6 @@ TODO: read .Xdefaults even when we have display resources, but give them lower p
         - slap in a using namespace std, might help on platforms that don't
           follow C++ closely enough.
         - fix mailto url regex, spotted within milliseconds by Jost Krieger.
-        - use less "correct" color scaling that is compatible with libX11 and Xft
-          (avoids off-by-one colors resulting in striped backgrounds).
 
 7.7  Tue Feb 21 12:32:49 CET 2006
 	- use double-buffered drawing (xft fonts only). On many driver/hardware
