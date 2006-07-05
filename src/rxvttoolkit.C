@@ -651,6 +651,13 @@ template class refcache<rxvt_display>;
 refcache<rxvt_display> displays;
 
 /////////////////////////////////////////////////////////////////////////////
+//
+
+static unsigned int
+insert_component (unsigned int value, unsigned int mask, unsigned int shift)
+{
+  return (value * (mask + 1) >> 16) << shift;
+}
  
 bool
 rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
@@ -670,10 +677,10 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
       c.color.blue  = color.b;
       c.color.alpha = color.a;
 
-      c.pixel = ((color.r * format->direct.redMask   / rgba::MAX_CC) << format->direct.red  )
-              | ((color.g * format->direct.greenMask / rgba::MAX_CC) << format->direct.green)
-              | ((color.b * format->direct.blueMask  / rgba::MAX_CC) << format->direct.blue )
-              | ((color.a * format->direct.alphaMask / rgba::MAX_CC) << format->direct.alpha);
+      c.pixel = insert_component (color.r, format->direct.redMask  , format->direct.red  )
+              | insert_component (color.g, format->direct.greenMask, format->direct.green)
+              | insert_component (color.b, format->direct.blueMask , format->direct.blue )
+              | insert_component (color.a, format->direct.alphaMask, format->direct.alpha);
 
       return true;
     }
