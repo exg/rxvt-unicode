@@ -315,6 +315,7 @@ rxvt_display::get_resources (bool refresh)
   XrmDatabase rdb1, database = 0;
 
   // for ordering, see for example http://www.faqs.org/faqs/Xt-FAQ/ Subject: 20
+  // as opposed to "standard practise", we always read in ~/.Xdefaults
 
   // 6. System wide per application default file.
 
@@ -331,6 +332,14 @@ rxvt_display::get_resources (bool refresh)
   // none
 
   // 4. User's defaults file.
+  if (homedir)
+    {
+      snprintf (fname, sizeof (fname), "%s/.Xdefaults", homedir);
+
+      if ((rdb1 = XrmGetFileDatabase (fname)))
+        XrmMergeDatabases (rdb1, &database);
+    }
+
   /* Get any Xserver defaults */
   if (refresh)
     {
@@ -356,6 +365,7 @@ rxvt_display::get_resources (bool refresh)
        else
          {
            displayResource = 0;
+
            if (val)
              XFree(val);
          }
@@ -370,13 +380,6 @@ rxvt_display::get_resources (bool refresh)
   if (displayResource)
     {
       if ((rdb1 = XrmGetStringDatabase (displayResource)))
-        XrmMergeDatabases (rdb1, &database);
-    }
-  else if (homedir)
-    {
-      snprintf (fname, sizeof (fname), "%s/.Xdefaults", homedir);
-
-      if ((rdb1 = XrmGetFileDatabase (fname)))
         XrmMergeDatabases (rdb1, &database);
     }
 
