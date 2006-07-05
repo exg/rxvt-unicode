@@ -24,7 +24,6 @@ TODO: zero scorllback buffer should free memory
 TODO: kuake
 TODO: look into the selection hilight patch
 TODO: implement smartcase-like search in searchable-scrollback
-TODO: digital clock gets nuked after searching
 TODO: investigate the color-management patch send ages ago, as well as other postings
 	- INCOMPATIBLE CHANGE: this version will always read ~/.Xdefaults, earlier
           versions only read it if display-resources (usually from .Xresources)
@@ -54,6 +53,8 @@ TODO: investigate the color-management patch send ages ago, as well as other pos
           follow C++ closely enough.
         - fix mailto url regex, spotted within milliseconds by Jost Krieger.
         - applied fade_color_update_func.patch by WU Fengguang.
+        - fix a bug where (due to an optimisation in av_delete), hiding the
+          bottom-most overlay would hide two overlays.
 
 7.7  Tue Feb 21 12:32:49 CET 2006
 	- use double-buffered drawing (xft fonts only). On many driver/hardware

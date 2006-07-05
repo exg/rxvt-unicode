@@ -357,10 +357,7 @@ overlay::hide ()
 
   for (i = AvFILL (overlay_av); i >= 0; i--)
     if (SvIV (*av_fetch (overlay_av, i, 1)) == (long)this)
-      {
-        av_delete (overlay_av, i, G_DISCARD);
-        break;
-      }
+      break;
 
   for (; i < AvFILL (overlay_av); i++)
     av_store (overlay_av, i, SvREFCNT_inc (*av_fetch (overlay_av, i + 1, 0)));
