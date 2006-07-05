@@ -26,6 +26,7 @@ TODO: fix the flaw in the url regex jost pointed out
 TODO: look into the selection hilight patch
 TODO: implement smartcase-like search in searchable-scrollback
 TODO: digital clock gets nuked after searching
+TODO: investigate the color-management patch send ages ago, as well as other postings
 	- INCOMPATIBLE CHANGE: this version will always read ~/.Xdefaults, earlier
           versions only read it if display-resources (usually from .Xresources)
           are not set. This avoids the #1 FAQ ("why isn't my resource used") and
