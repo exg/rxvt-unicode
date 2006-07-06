@@ -1,7 +1,9 @@
+<?xml version="1.0" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>REFERENCE - FAQ, command sequences and other background information</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <link rev="made" href="mailto:perl-binary@plan9.de" />
 </head>
 
@@ -1073,34 +1075,34 @@ rxvt-unicode-locales.</p>
 <p>Try a search engine, as this is slightly different for every input method server.</p>
 <p>Here is a checklist:</p>
 <dl>
-<dt><strong><a name="item__2d_make_sure_your_locale_and_the_imlocale_are_sup">- Make sure your locale <em>and</em> the imLocale are supported on your OS.</a></strong><br />
-</dt>
+<dt><strong><a name="item__2d_make_sure_your_locale_and_the_imlocale_are_sup">- Make sure your locale <em>and</em> the imLocale are supported on your OS.</a></strong>
+
 <dd>
-Try <code>locale -a</code> or check the documentation for your OS.
+<p>Try <code>locale -a</code> or check the documentation for your OS.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__2d_make_sure_your_locale_or_imlocale_matches_a_lo">- Make sure your locale or imLocale matches a locale supported by your XIM.</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__2d_make_sure_your_locale_or_imlocale_matches_a_lo">- Make sure your locale or imLocale matches a locale supported by your XIM.</a></strong>
+
 <dd>
-For example, <strong>kinput2</strong> does not support UTF-8 locales, you should use
-<code>ja_JP.EUC-JP</code> or equivalent.
+<p>For example, <strong>kinput2</strong> does not support UTF-8 locales, you should use
+<code>ja_JP.EUC-JP</code> or equivalent.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__2d_make_sure_your_xim_server_is_actually_running_">- Make sure your XIM server is actually running.</a></strong><br />
-</dt>
-<dt><strong><a name="item__2d_make_sure_the_xmodifiers_environment_variable_">- Make sure the <code>XMODIFIERS</code> environment variable is set correctly when <em>starting</em> rxvt-unicode.</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__2d_make_sure_your_xim_server_is_actually_running_">- Make sure your XIM server is actually running.</a></strong>
+
+<dt><strong><a name="item__2d_make_sure_the_xmodifiers_environment_variable_">- Make sure the <code>XMODIFIERS</code> environment variable is set correctly when <em>starting</em> rxvt-unicode.</a></strong>
+
 <dd>
-When you want to use e.g. <strong>kinput2</strong>, it must be set to
+<p>When you want to use e.g. <strong>kinput2</strong>, it must be set to
 <code>@im=kinput2</code>. For <strong>scim</strong>, use <code>@im=SCIM</code>. Youc an see what input
-method servers are running with this command:
+method servers are running with this command:</p>
 </dd>
 <dd>
 <pre>
    xprop -root XIM_SERVERS</pre>
 </dd>
-<p></p>
-<dt></dt>
+</li>
+<dt>
 </dl>
 <p>
 </p>
@@ -1238,240 +1240,242 @@ selectable at <code>configure</code> time.</p>
 </p>
 <h2><a name="definitions">Definitions</a></h2>
 <dl>
-<dt><strong><a name="item_c"><strong><code>c</code> </strong>&gt;</a></strong><br />
-</dt>
+<dt><strong><a name="item_c"><strong><code>c</code> </strong>&gt;</a></strong>
+
 <dd>
-The literal character c.
+<p>The literal character c.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_c"><strong><code>C</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_c"><strong><code>C</code> </strong>&gt;</a></strong>
+
 <dd>
-A single (required) character.
+<p>A single (required) character.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_ps"><strong><code>Ps</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_ps"><strong><code>Ps</code> </strong>&gt;</a></strong>
+
 <dd>
-A single (usually optional) numeric parameter, composed of one or more
-digits.
+<p>A single (usually optional) numeric parameter, composed of one or more
+digits.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_pm"><strong><code>Pm</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_pm"><strong><code>Pm</code> </strong>&gt;</a></strong>
+
 <dd>
-A multiple numeric parameter composed of any number of single numeric
-parameters, separated by <code>;</code> character(s).
+<p>A multiple numeric parameter composed of any number of single numeric
+parameters, separated by <code>;</code> character(s).</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_pt"><strong><code>Pt</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_pt"><strong><code>Pt</code> </strong>&gt;</a></strong>
+
 <dd>
-A text parameter composed of printable characters.
+<p>A text parameter composed of printable characters.</p>
 </dd>
-<p></p></dl>
+</li>
+</dl>
 <p>
 </p>
 <h2><a name="values">Values</a></h2>
 <dl>
-<dt><strong><a name="item_enq"><strong><code>ENQ</code> </strong>&gt;</a></strong><br />
-</dt>
+<dt><strong><a name="item_enq"><strong><code>ENQ</code> </strong>&gt;</a></strong>
+
 <dd>
-Enquiry (Ctrl-E) = Send Device Attributes (DA)
-request attributes from terminal. See <strong><a href="#item_esc__5b_ps_c"><code>ESC [ Ps c</code></a> </strong>&gt;.
+<p>Enquiry (Ctrl-E) = Send Device Attributes (DA)
+request attributes from terminal. See <strong><a href="#item_esc__5b_ps_c"><code>ESC [ Ps c</code></a> </strong>&gt;.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_bel"><strong><code>BEL</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_bel"><strong><code>BEL</code> </strong>&gt;</a></strong>
+
 <dd>
-Bell (Ctrl-G)
+<p>Bell (Ctrl-G)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_bs"><strong><code>BS</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_bs"><strong><code>BS</code> </strong>&gt;</a></strong>
+
 <dd>
-Backspace (Ctrl-H)
+<p>Backspace (Ctrl-H)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_tab"><strong><code>TAB</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_tab"><strong><code>TAB</code> </strong>&gt;</a></strong>
+
 <dd>
-Horizontal Tab (HT) (Ctrl-I)
+<p>Horizontal Tab (HT) (Ctrl-I)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_lf"><strong><code>LF</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_lf"><strong><code>LF</code> </strong>&gt;</a></strong>
+
 <dd>
-Line Feed or New Line (NL) (Ctrl-J)
+<p>Line Feed or New Line (NL) (Ctrl-J)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_vt"><strong><code>VT</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_vt"><strong><code>VT</code> </strong>&gt;</a></strong>
+
 <dd>
-Vertical Tab (Ctrl-K) same as <strong><a href="#item_lf"><code>LF</code></a> </strong>&gt;
+<p>Vertical Tab (Ctrl-K) same as <strong><a href="#item_lf"><code>LF</code></a> </strong>&gt;</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_ff"><strong><code>FF</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_ff"><strong><code>FF</code> </strong>&gt;</a></strong>
+
 <dd>
-Form Feed or New Page (NP) (Ctrl-L) same as <strong><a href="#item_lf"><code>LF</code></a> </strong>&gt;
+<p>Form Feed or New Page (NP) (Ctrl-L) same as <strong><a href="#item_lf"><code>LF</code></a> </strong>&gt;</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_cr"><strong><code>CR</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_cr"><strong><code>CR</code> </strong>&gt;</a></strong>
+
 <dd>
-Carriage Return (Ctrl-M)
+<p>Carriage Return (Ctrl-M)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_so"><strong><code>SO</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_so"><strong><code>SO</code> </strong>&gt;</a></strong>
+
 <dd>
-Shift Out (Ctrl-N), invokes the G1 character set.
-Switch to Alternate Character Set
+<p>Shift Out (Ctrl-N), invokes the G1 character set.
+Switch to Alternate Character Set</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_si"><strong><code>SI</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_si"><strong><code>SI</code> </strong>&gt;</a></strong>
+
 <dd>
-Shift In (Ctrl-O), invokes the G0 character set (the default).
-Switch to Standard Character Set
+<p>Shift In (Ctrl-O), invokes the G0 character set (the default).
+Switch to Standard Character Set</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_spc"><strong><code>SPC</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_spc"><strong><code>SPC</code> </strong>&gt;</a></strong>
+
 <dd>
-Space Character
+<p>Space Character</p>
 </dd>
-<p></p></dl>
+</li>
+</dl>
 <p>
 </p>
 <h2><a name="escape_sequences">Escape Sequences</a></h2>
 <dl>
-<dt><strong><a name="item_esc__23_8"><strong><code>ESC # 8</code> </strong>&gt;</a></strong><br />
-</dt>
+<dt><strong><a name="item_esc__23_8"><strong><code>ESC # 8</code> </strong>&gt;</a></strong>
+
 <dd>
-DEC Screen Alignment Test (DECALN)
+<p>DEC Screen Alignment Test (DECALN)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc_7"><strong><code>ESC 7</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc_7"><strong><code>ESC 7</code> </strong>&gt;</a></strong>
+
 <dd>
-Save Cursor (SC)
+<p>Save Cursor (SC)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc_8"><strong><code>ESC 8</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc_8"><strong><code>ESC 8</code> </strong>&gt;</a></strong>
+
 <dd>
-Restore Cursor
+<p>Restore Cursor</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__3d"><strong><code>ESC =</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__3d"><strong><code>ESC =</code> </strong>&gt;</a></strong>
+
 <dd>
-Application Keypad (SMKX). See also next sequence.
+<p>Application Keypad (SMKX). See also next sequence.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc"><strong><code>ESC</code> </strong>&gt;&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc"><strong><code>ESC</code> </strong>&gt;&gt;</a></strong>
+
 <dd>
-Normal Keypad (RMKX)
+<p>Normal Keypad (RMKX)</p>
 </dd>
 <dd>
 <p><strong>Note:</strong> If the numeric keypad is activated, eg, <strong>Num_Lock</strong> has been
 pressed, numbers or control functions are generated by the numeric keypad
 (see Key Codes).</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc_d"><strong><code>ESC D</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc_d"><strong><code>ESC D</code> </strong>&gt;</a></strong>
+
 <dd>
-Index (IND)
+<p>Index (IND)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc_e"><strong><code>ESC E</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc_e"><strong><code>ESC E</code> </strong>&gt;</a></strong>
+
 <dd>
-Next Line (NEL)
+<p>Next Line (NEL)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc_h"><strong><code>ESC H</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc_h"><strong><code>ESC H</code> </strong>&gt;</a></strong>
+
 <dd>
-Tab Set (HTS)
+<p>Tab Set (HTS)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc_m"><strong><code>ESC M</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc_m"><strong><code>ESC M</code> </strong>&gt;</a></strong>
+
 <dd>
-Reverse Index (RI)
+<p>Reverse Index (RI)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc_n"><strong><code>ESC N</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc_n"><strong><code>ESC N</code> </strong>&gt;</a></strong>
+
 <dd>
-Single Shift Select of G2 Character Set (SS2): affects next character
-only <em>unimplemented</em>
+<p>Single Shift Select of G2 Character Set (SS2): affects next character
+only <em>unimplemented</em></p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc_o"><strong><code>ESC O</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc_o"><strong><code>ESC O</code> </strong>&gt;</a></strong>
+
 <dd>
-Single Shift Select of G3 Character Set (SS3): affects next character
-only <em>unimplemented</em>
+<p>Single Shift Select of G3 Character Set (SS3): affects next character
+only <em>unimplemented</em></p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc_z"><strong><code>ESC Z</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc_z"><strong><code>ESC Z</code> </strong>&gt;</a></strong>
+
 <dd>
-Obsolete form of returns: <strong><code>ESC [ ? 1 ; 2 C</code> </strong>&gt; <em>rxvt-unicode compile-time option</em>
+<p>Obsolete form of returns: <strong><code>ESC [ ? 1 ; 2 C</code> </strong>&gt; <em>rxvt-unicode compile-time option</em></p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc_c"><strong><code>ESC c</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc_c"><strong><code>ESC c</code> </strong>&gt;</a></strong>
+
 <dd>
-Full reset (RIS)
+<p>Full reset (RIS)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc_n"><strong><code>ESC n</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc_n"><strong><code>ESC n</code> </strong>&gt;</a></strong>
+
 <dd>
-Invoke the G2 Character Set (LS2)
+<p>Invoke the G2 Character Set (LS2)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc_o"><strong><code>ESC o</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc_o"><strong><code>ESC o</code> </strong>&gt;</a></strong>
+
 <dd>
-Invoke the G3 Character Set (LS3)
+<p>Invoke the G3 Character Set (LS3)</p>
 </dd>
-<p></p>
-<dt><strong><strong><code>ESC ( C</code> </strong>&gt;</strong><br />
-</dt>
+</li>
+<dt><strong><strong><code>ESC ( C</code> </strong>&gt;</strong>
+
 <dd>
-Designate G0 Character Set (ISO 2022), see below for values of <a href="#item_c"><code>C</code></a>.
+<p>Designate G0 Character Set (ISO 2022), see below for values of <a href="#item_c"><code>C</code></a>.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__29_c"><strong><code>ESC ) C</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__29_c"><strong><code>ESC ) C</code> </strong>&gt;</a></strong>
+
 <dd>
-Designate G1 Character Set (ISO 2022), see below for values of <a href="#item_c"><code>C</code></a>.
+<p>Designate G1 Character Set (ISO 2022), see below for values of <a href="#item_c"><code>C</code></a>.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__2a_c"><strong><code>ESC * C</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__2a_c"><strong><code>ESC * C</code> </strong>&gt;</a></strong>
+
 <dd>
-Designate G2 Character Set (ISO 2022), see below for values of <a href="#item_c"><code>C</code></a>.
+<p>Designate G2 Character Set (ISO 2022), see below for values of <a href="#item_c"><code>C</code></a>.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__2b_c"><strong><code>ESC + C</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__2b_c"><strong><code>ESC + C</code> </strong>&gt;</a></strong>
+
 <dd>
-Designate G3 Character Set (ISO 2022), see below for values of <a href="#item_c"><code>C</code></a>.
+<p>Designate G3 Character Set (ISO 2022), see below for values of <a href="#item_c"><code>C</code></a>.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__24_c"><strong><code>ESC $ C</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__24_c"><strong><code>ESC $ C</code> </strong>&gt;</a></strong>
+
 <dd>
-Designate Kanji Character Set
+<p>Designate Kanji Character Set</p>
 </dd>
 <dd>
 <p>Where <strong><a href="#item_c"><code>C</code></a> </strong>&gt; is one of:</p>
@@ -1484,224 +1488,225 @@ Designate Kanji Character Set
 <tr><td>C = 5 </td><td>Finnish character set unimplemented</td></tr>
 <tr><td>C = C </td><td>Finnish character set unimplemented</td></tr>
 <tr><td>C = K </td><td>German character set unimplemented</td></tr>
-</table><p></p></dl>
+</table></li>
+</dl>
 <p></p>
 <p>
 </p>
 <h2><a name="csi__command_sequence_introducer__sequences">CSI (Command Sequence Introducer) Sequences</a></h2>
 <dl>
-<dt><strong><a name="item_esc__5b_ps__40"><strong><code>ESC [ Ps @</code> </strong>&gt;</a></strong><br />
-</dt>
+<dt><strong><a name="item_esc__5b_ps__40"><strong><code>ESC [ Ps @</code> </strong>&gt;</a></strong>
+
 <dd>
-Insert <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; (Blank) <code>Character(s)</code> [default: 1] (ICH)
+<p>Insert <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; (Blank) <code>Character(s)</code> [default: 1] (ICH)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_a"><strong><code>ESC [ Ps A</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_a"><strong><code>ESC [ Ps A</code> </strong>&gt;</a></strong>
+
 <dd>
-Cursor Up <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] (CUU)
+<p>Cursor Up <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] (CUU)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_b"><strong><code>ESC [ Ps B</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_b"><strong><code>ESC [ Ps B</code> </strong>&gt;</a></strong>
+
 <dd>
-Cursor Down <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] (CUD)
+<p>Cursor Down <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] (CUD)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_c"><strong><code>ESC [ Ps C</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_c"><strong><code>ESC [ Ps C</code> </strong>&gt;</a></strong>
+
 <dd>
-Cursor Forward <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] (CUF)
+<p>Cursor Forward <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] (CUF)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_d"><strong><code>ESC [ Ps D</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_d"><strong><code>ESC [ Ps D</code> </strong>&gt;</a></strong>
+
 <dd>
-Cursor Backward <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] (CUB)
+<p>Cursor Backward <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] (CUB)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_e"><strong><code>ESC [ Ps E</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_e"><strong><code>ESC [ Ps E</code> </strong>&gt;</a></strong>
+
 <dd>
-Cursor Down <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] and to first column
+<p>Cursor Down <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] and to first column</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_f"><strong><code>ESC [ Ps F</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_f"><strong><code>ESC [ Ps F</code> </strong>&gt;</a></strong>
+
 <dd>
-Cursor Up <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] and to first column
+<p>Cursor Up <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] and to first column</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_g"><strong><code>ESC [ Ps G</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_g"><strong><code>ESC [ Ps G</code> </strong>&gt;</a></strong>
+
 <dd>
-Cursor to Column <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; (HPA)
+<p>Cursor to Column <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; (HPA)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_3bps_h"><strong><code>ESC [ Ps;Ps H</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_3bps_h"><strong><code>ESC [ Ps;Ps H</code> </strong>&gt;</a></strong>
+
 <dd>
-Cursor Position [row;column] [default: 1;1] (CUP)
+<p>Cursor Position [row;column] [default: 1;1] (CUP)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_i"><strong><code>ESC [ Ps I</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_i"><strong><code>ESC [ Ps I</code> </strong>&gt;</a></strong>
+
 <dd>
-Move forward <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; tab stops [default: 1]
+<p>Move forward <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; tab stops [default: 1]</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_j"><strong><code>ESC [ Ps J</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_j"><strong><code>ESC [ Ps J</code> </strong>&gt;</a></strong>
+
 <dd>
-Erase in Display (ED)
+<p>Erase in Display (ED)</p>
 </dd>
 <table>
 <tr><td>Ps = 0</td><td>Clear Below (default)</td></tr>
 <tr><td>Ps = 1</td><td>Clear Above</td></tr>
 <tr><td>Ps = 2</td><td>Clear All</td></tr>
-</table><p></p>
-<dt><strong><a name="item_esc__5b_ps_k"><strong><code>ESC [ Ps K</code> </strong>&gt;</a></strong><br />
-</dt>
+</table></li>
+<dt><strong><a name="item_esc__5b_ps_k"><strong><code>ESC [ Ps K</code> </strong>&gt;</a></strong>
+
 <dd>
-Erase in Line (EL)
+<p>Erase in Line (EL)</p>
 </dd>
 <table>
 <tr><td>Ps = 0</td><td>Clear to Right (default)</td></tr>
 <tr><td>Ps = 1</td><td>Clear to Left</td></tr>
 <tr><td>Ps = 2</td><td>Clear All</td></tr>
-</table><p></p>
-<dt><strong><a name="item_esc__5b_ps_l"><strong><code>ESC [ Ps L</code> </strong>&gt;</a></strong><br />
-</dt>
+</table></li>
+<dt><strong><a name="item_esc__5b_ps_l"><strong><code>ESC [ Ps L</code> </strong>&gt;</a></strong>
+
 <dd>
-Insert <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; <code>Line(s)</code> [default: 1] (IL)
+<p>Insert <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; <code>Line(s)</code> [default: 1] (IL)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_m"><strong><code>ESC [ Ps M</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_m"><strong><code>ESC [ Ps M</code> </strong>&gt;</a></strong>
+
 <dd>
-Delete <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; <code>Line(s)</code> [default: 1] (DL)
+<p>Delete <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; <code>Line(s)</code> [default: 1] (DL)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_p"><strong><code>ESC [ Ps P</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_p"><strong><code>ESC [ Ps P</code> </strong>&gt;</a></strong>
+
 <dd>
-Delete <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; <code>Character(s)</code> [default: 1] (DCH)
+<p>Delete <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; <code>Character(s)</code> [default: 1] (DCH)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_3bps_3bps_3bps_3bps_t"><strong><code>ESC [ Ps;Ps;Ps;Ps;Ps T</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_3bps_3bps_3bps_3bps_t"><strong><code>ESC [ Ps;Ps;Ps;Ps;Ps T</code> </strong>&gt;</a></strong>
+
 <dd>
-Initiate . <em>unimplemented</em> Parameters are
-[func;startx;starty;firstrow;lastrow].
+<p>Initiate . <em>unimplemented</em> Parameters are
+[func;startx;starty;firstrow;lastrow].</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_w"><strong><code>ESC [ Ps W</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_w"><strong><code>ESC [ Ps W</code> </strong>&gt;</a></strong>
+
 <dd>
-Tabulator functions
+<p>Tabulator functions</p>
 </dd>
 <table>
 <tr><td>Ps = 0</td><td>Tab Set (HTS)</td></tr>
 <tr><td>Ps = 2</td><td>Tab Clear (TBC), Clear Current Column (default)</td></tr>
 <tr><td>Ps = 5</td><td>Tab Clear (TBC), Clear All</td></tr>
-</table><p></p>
-<dt><strong><a name="item_esc__5b_ps_x"><strong><code>ESC [ Ps X</code> </strong>&gt;</a></strong><br />
-</dt>
+</table></li>
+<dt><strong><a name="item_esc__5b_ps_x"><strong><code>ESC [ Ps X</code> </strong>&gt;</a></strong>
+
 <dd>
-Erase <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; <code>Character(s)</code> [default: 1] (ECH)
+<p>Erase <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; <code>Character(s)</code> [default: 1] (ECH)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_z"><strong><code>ESC [ Ps Z</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_z"><strong><code>ESC [ Ps Z</code> </strong>&gt;</a></strong>
+
 <dd>
-Move backward <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; [default: 1] tab stops
+<p>Move backward <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; [default: 1] tab stops</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps__27"><strong><code>ESC [ Ps '</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps__27"><strong><code>ESC [ Ps '</code> </strong>&gt;</a></strong>
+
 <dd>
-See <strong><a href="#item_esc__5b_ps_g"><code>ESC [ Ps G</code></a> </strong>&gt;
+<p>See <strong><a href="#item_esc__5b_ps_g"><code>ESC [ Ps G</code></a> </strong>&gt;</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_a"><strong><code>ESC [ Ps a</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_a"><strong><code>ESC [ Ps a</code> </strong>&gt;</a></strong>
+
 <dd>
-See <strong><a href="#item_esc__5b_ps_c"><code>ESC [ Ps C</code></a> </strong>&gt;
+<p>See <strong><a href="#item_esc__5b_ps_c"><code>ESC [ Ps C</code></a> </strong>&gt;</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_c"><strong><code>ESC [ Ps c</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_c"><strong><code>ESC [ Ps c</code> </strong>&gt;</a></strong>
+
 <dd>
-Send Device Attributes (DA)
+<p>Send Device Attributes (DA)
 <strong><code>Ps = 0</code> </strong>&gt; (or omitted): request attributes from terminal
 returns: <strong><code>ESC [ ? 1 ; 2 c</code> </strong>&gt; (``I am a VT100 with Advanced Video
-Option'')
+Option'')</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_d"><strong><code>ESC [ Ps d</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_d"><strong><code>ESC [ Ps d</code> </strong>&gt;</a></strong>
+
 <dd>
-Cursor to Line <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; (VPA)
+<p>Cursor to Line <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; (VPA)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_e"><strong><code>ESC [ Ps e</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_e"><strong><code>ESC [ Ps e</code> </strong>&gt;</a></strong>
+
 <dd>
-See <strong><a href="#item_esc__5b_ps_a"><code>ESC [ Ps A</code></a> </strong>&gt;
+<p>See <strong><a href="#item_esc__5b_ps_a"><code>ESC [ Ps A</code></a> </strong>&gt;</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_3bps_f"><strong><code>ESC [ Ps;Ps f</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_3bps_f"><strong><code>ESC [ Ps;Ps f</code> </strong>&gt;</a></strong>
+
 <dd>
-Horizontal and Vertical Position [row;column] (HVP) [default: 1;1]
+<p>Horizontal and Vertical Position [row;column] (HVP) [default: 1;1]</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_g"><strong><code>ESC [ Ps g</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_g"><strong><code>ESC [ Ps g</code> </strong>&gt;</a></strong>
+
 <dd>
-Tab Clear (TBC)
+<p>Tab Clear (TBC)</p>
 </dd>
 <table>
 <tr><td>Ps = 0</td><td>Clear Current Column (default)</td></tr>
 <tr><td>Ps = 3</td><td>Clear All (TBC)</td></tr>
-</table><p></p>
-<dt><strong><a name="item_esc__5b_pm_h"><strong><code>ESC [ Pm h</code> </strong>&gt;</a></strong><br />
-</dt>
+</table></li>
+<dt><strong><a name="item_esc__5b_pm_h"><strong><code>ESC [ Pm h</code> </strong>&gt;</a></strong>
+
 <dd>
-Set Mode (SM). See <strong><a href="#item_esc__5b_pm_l"><code>ESC [ Pm l</code></a> </strong>&gt; sequence for description of <a href="#item_pm"><code>Pm</code></a>.
+<p>Set Mode (SM). See <strong><a href="#item_esc__5b_pm_l"><code>ESC [ Pm l</code></a> </strong>&gt; sequence for description of <a href="#item_pm"><code>Pm</code></a>.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_i"><strong><code>ESC [ Ps i</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_i"><strong><code>ESC [ Ps i</code> </strong>&gt;</a></strong>
+
 <dd>
-Printing. See also the <code>print-pipe</code> resource.
+<p>Printing. See also the <code>print-pipe</code> resource.</p>
 </dd>
 <table>
 <tr><td>Ps = 0</td><td>print screen (MC0)</td></tr>
 <tr><td>Ps = 4</td><td>disable transparent print mode (MC4)</td></tr>
 <tr><td>Ps = 5</td><td>enable transparent print mode (MC5)</td></tr>
-</table><p></p>
-<dt><strong><a name="item_esc__5b_pm_l"><strong><code>ESC [ Pm l</code> </strong>&gt;</a></strong><br />
-</dt>
+</table></li>
+<dt><strong><a name="item_esc__5b_pm_l"><strong><code>ESC [ Pm l</code> </strong>&gt;</a></strong>
+
 <dd>
-Reset Mode (RM)
+<p>Reset Mode (RM)</p>
 </dd>
 <dl>
-<dt><strong><a name="item_ps__3d_4"><strong><code>Ps = 4</code> </strong>&gt;</a></strong><br />
-</dt>
+<dt><strong><a name="item_ps__3d_4"><strong><code>Ps = 4</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>Insert Mode (SMIR)</td></tr>
 <tr><td>l</td><td>Replace Mode (RMIR)</td></tr>
-</table><dt><strong><a name="item_20"><strong><code>Ps = 20</code> </strong>&gt; (partially implemented)</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_20"><strong><code>Ps = 20</code> </strong>&gt; (partially implemented)</a></strong>
+
 <table>
 <tr><td>h</td><td>Automatic Newline (LNM)</td></tr>
 <tr><td>l</td><td>Normal Linefeed (LNM)</td></tr>
 </table></dl>
-<dt><strong><a name="item_esc__5b_pm_m"><strong><code>ESC [ Pm m</code> </strong>&gt;</a></strong><br />
-</dt>
+<dt><strong><a name="item_esc__5b_pm_m"><strong><code>ESC [ Pm m</code> </strong>&gt;</a></strong>
+
 <dd>
-Character Attributes (SGR)
+<p>Character Attributes (SGR)</p>
 </dd>
 <table>
 <tr><td>Ps = 0</td><td>Normal (default)</td></tr>
@@ -1731,35 +1736,35 @@ Character Attributes (SGR)
 <tr><td>Ps = 96 / 106</td><td>fg/bg Bright Cyan</td></tr>
 <tr><td>Ps = 97 / 107</td><td>fg/bg Bright White</td></tr>
 <tr><td>Ps = 99 / 109</td><td>fg/bg Bright Default</td></tr>
-</table><p></p>
-<dt><strong><a name="item_esc__5b_ps_n"><strong><code>ESC [ Ps n</code> </strong>&gt;</a></strong><br />
-</dt>
+</table></li>
+<dt><strong><a name="item_esc__5b_ps_n"><strong><code>ESC [ Ps n</code> </strong>&gt;</a></strong>
+
 <dd>
-Device Status Report (DSR)
+<p>Device Status Report (DSR)</p>
 </dd>
 <table>
 <tr><td>Ps = 5</td><td>Status Report ESC [ 0 n (``OK'')</td></tr>
 <tr><td>Ps = 6</td><td>Report Cursor Position (CPR) [row;column] as ESC [ r ; c R</td></tr>
 <tr><td>Ps = 7</td><td>Request Display Name</td></tr>
 <tr><td>Ps = 8</td><td>Request Version Number (place in window title)</td></tr>
-</table><p></p>
-<dt><strong><a name="item_esc__5b_ps_3bps_r"><strong><code>ESC [ Ps;Ps r</code> </strong>&gt;</a></strong><br />
-</dt>
+</table></li>
+<dt><strong><a name="item_esc__5b_ps_3bps_r"><strong><code>ESC [ Ps;Ps r</code> </strong>&gt;</a></strong>
+
 <dd>
-Set Scrolling Region [top;bottom]
-[default: full size of window] (CSR)
+<p>Set Scrolling Region [top;bottom]
+[default: full size of window] (CSR)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_s"><strong><code>ESC [ s</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_s"><strong><code>ESC [ s</code> </strong>&gt;</a></strong>
+
 <dd>
-Save Cursor (SC)
+<p>Save Cursor (SC)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_3bpt_t"><strong><code>ESC [ Ps;Pt t</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_3bpt_t"><strong><code>ESC [ Ps;Pt t</code> </strong>&gt;</a></strong>
+
 <dd>
-Window Operations
+<p>Window Operations</p>
 </dd>
 <table>
 <tr><td>Ps = 1</td><td>Deiconify (map) window</td></tr>
@@ -1778,190 +1783,191 @@ Window Operations
 <tr><td>Ps = 20</td><td>Reports icon label (ESC ] L NAME \234)</td></tr>
 <tr><td>Ps = 21</td><td>Reports window title (ESC ] l NAME \234)</td></tr>
 <tr><td>Ps = 24..</td><td>Set window height to Ps rows</td></tr>
-</table><p></p>
-<dt><strong><a name="item_esc__5b_u"><strong><code>ESC [ u</code> </strong>&gt;</a></strong><br />
-</dt>
+</table></li>
+<dt><strong><a name="item_esc__5b_u"><strong><code>ESC [ u</code> </strong>&gt;</a></strong>
+
 <dd>
-Restore Cursor
+<p>Restore Cursor</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b_ps_x"><strong><code>ESC [ Ps x</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b_ps_x"><strong><code>ESC [ Ps x</code> </strong>&gt;</a></strong>
+
 <dd>
-Request Terminal Parameters (DECREQTPARM)
+<p>Request Terminal Parameters (DECREQTPARM)</p>
 </dd>
-<p></p></dl>
+</li>
+</dl>
 <p></p>
 <p>
 </p>
 <h2><a name="dec_private_modes">DEC Private Modes</a></h2>
 <dl>
-<dt><strong><a name="item_esc__5b__3f_pm_h"><strong><code>ESC [ ? Pm h</code> </strong>&gt;</a></strong><br />
-</dt>
+<dt><strong><a name="item_esc__5b__3f_pm_h"><strong><code>ESC [ ? Pm h</code> </strong>&gt;</a></strong>
+
 <dd>
-DEC Private Mode Set (DECSET)
+<p>DEC Private Mode Set (DECSET)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b__3f_pm_l"><strong><code>ESC [ ? Pm l</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b__3f_pm_l"><strong><code>ESC [ ? Pm l</code> </strong>&gt;</a></strong>
+
 <dd>
-DEC Private Mode Reset (DECRST)
+<p>DEC Private Mode Reset (DECRST)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b__3f_pm_r"><strong><code>ESC [ ? Pm r</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b__3f_pm_r"><strong><code>ESC [ ? Pm r</code> </strong>&gt;</a></strong>
+
 <dd>
-Restore previously saved DEC Private Mode Values.
+<p>Restore previously saved DEC Private Mode Values.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b__3f_pm_s"><strong><code>ESC [ ? Pm s</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b__3f_pm_s"><strong><code>ESC [ ? Pm s</code> </strong>&gt;</a></strong>
+
 <dd>
-Save DEC Private Mode Values.
+<p>Save DEC Private Mode Values.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_esc__5b__3f_pm_t"><strong><code>ESC [ ? Pm t</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_esc__5b__3f_pm_t"><strong><code>ESC [ ? Pm t</code> </strong>&gt;</a></strong>
+
 <dd>
-Toggle DEC Private Mode Values (rxvt extension). <em>where</em>
+<p>Toggle DEC Private Mode Values (rxvt extension). <em>where</em></p>
 </dd>
 <dl>
-<dt><strong><a name="item_1"><strong><code>Ps = 1</code> </strong>&gt; (DECCKM)</a></strong><br />
-</dt>
+<dt><strong><a name="item_1"><strong><code>Pm = 1</code> </strong>&gt; (DECCKM)</a></strong>
+
 <table>
 <tr><td>h</td><td>Application Cursor Keys</td></tr>
 <tr><td>l</td><td>Normal Cursor Keys</td></tr>
-</table><dt><strong><a name="item_2"><strong><code>Ps = 2</code> </strong>&gt; (ANSI/VT52 mode)</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_2"><strong><code>Pm = 2</code> </strong>&gt; (ANSI/VT52 mode)</a></strong>
+
 <table>
 <tr><td>h</td><td>Enter VT52 mode</td></tr>
 <tr><td>l</td><td>Enter VT52 mode</td></tr>
-</table><dt><strong><a name="item_ps__3d_3"><strong><code>Ps = 3</code> </strong>&gt;</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_3"><strong><code>Pm = 3</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>132 Column Mode (DECCOLM)</td></tr>
 <tr><td>l</td><td>80 Column Mode (DECCOLM)</td></tr>
-</table><dt><strong><strong><code>Ps = 4</code> </strong>&gt;</strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_4"><strong><code>Pm = 4</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>Smooth (Slow) Scroll (DECSCLM)</td></tr>
 <tr><td>l</td><td>Jump (Fast) Scroll (DECSCLM)</td></tr>
-</table><dt><strong><a name="item_ps__3d_5"><strong><code>Ps = 5</code> </strong>&gt;</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_5"><strong><code>Pm = 5</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>Reverse Video (DECSCNM)</td></tr>
 <tr><td>l</td><td>Normal Video (DECSCNM)</td></tr>
-</table><dt><strong><a name="item_ps__3d_6"><strong><code>Ps = 6</code> </strong>&gt;</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_6"><strong><code>Pm = 6</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>Origin Mode (DECOM)</td></tr>
 <tr><td>l</td><td>Normal Cursor Mode (DECOM)</td></tr>
-</table><dt><strong><a name="item_ps__3d_7"><strong><code>Ps = 7</code> </strong>&gt;</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_7"><strong><code>Pm = 7</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>Wraparound Mode (DECAWM)</td></tr>
 <tr><td>l</td><td>No Wraparound Mode (DECAWM)</td></tr>
-</table><dt><strong><a name="item_ps__3d_8_unimplemented"><strong><code>Ps = 8</code> </strong>&gt; <em>unimplemented</em></a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_8_unimplemented"><strong><code>Pm = 8</code> </strong>&gt; <em>unimplemented</em></a></strong>
+
 <table>
 <tr><td>h</td><td>Auto-repeat Keys (DECARM)</td></tr>
 <tr><td>l</td><td>No Auto-repeat Keys (DECARM)</td></tr>
-</table><dt><strong><a name="item_ps__3d_9_x10_xterm"><strong><code>Ps = 9</code> </strong>&gt; X10 XTerm</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_9_x10_xterm"><strong><code>Pm = 9</code> </strong>&gt; X10 XTerm</a></strong>
+
 <table>
 <tr><td>h</td><td>Send Mouse X & Y on button press.</td></tr>
 <tr><td>l</td><td>No mouse reporting.</td></tr>
-</table><dt><strong><a name="item_ps__3d_25"><strong><code>Ps = 25</code> </strong>&gt;</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_25"><strong><code>Pm = 25</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>Visible cursor {cnorm/cvvis}</td></tr>
 <tr><td>l</td><td>Invisible cursor {civis}</td></tr>
-</table><dt><strong><a name="item_ps__3d_30"><strong><code>Ps = 30</code> </strong>&gt;</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_30"><strong><code>Pm = 30</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>scrollBar visisble</td></tr>
 <tr><td>l</td><td>scrollBar invisisble</td></tr>
-</table><dt><strong><a name="item_35"><strong><code>Ps = 35</code> </strong>&gt; (<strong>rxvt</strong>)</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_35"><strong><code>Pm = 35</code> </strong>&gt; (<strong>rxvt</strong>)</a></strong>
+
 <table>
 <tr><td>h</td><td>Allow XTerm Shift+key sequences</td></tr>
 <tr><td>l</td><td>Disallow XTerm Shift+key sequences</td></tr>
-</table><dt><strong><a name="item_ps__3d_38_unimplemented"><strong><code>Ps = 38</code> </strong>&gt; <em>unimplemented</em></a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_38_unimplemented"><strong><code>Pm = 38</code> </strong>&gt; <em>unimplemented</em></a></strong>
+
 <dd>
-Enter Tektronix Mode (DECTEK)
+<p>Enter Tektronix Mode (DECTEK)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_ps__3d_40"><strong><code>Ps = 40</code> </strong>&gt;</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_pm__3d_40"><strong><code>Pm = 40</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>Allow 80/132 Mode</td></tr>
 <tr><td>l</td><td>Disallow 80/132 Mode</td></tr>
-</table><dt><strong><a name="item_ps__3d_44_unimplemented"><strong><code>Ps = 44</code> </strong>&gt; <em>unimplemented</em></a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_44_unimplemented"><strong><code>Pm = 44</code> </strong>&gt; <em>unimplemented</em></a></strong>
+
 <table>
 <tr><td>h</td><td>Turn On Margin Bell</td></tr>
 <tr><td>l</td><td>Turn Off Margin Bell</td></tr>
-</table><dt><strong><a name="item_ps__3d_45_unimplemented"><strong><code>Ps = 45</code> </strong>&gt; <em>unimplemented</em></a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_45_unimplemented"><strong><code>Pm = 45</code> </strong>&gt; <em>unimplemented</em></a></strong>
+
 <table>
 <tr><td>h</td><td>Reverse-wraparound Mode</td></tr>
 <tr><td>l</td><td>No Reverse-wraparound Mode</td></tr>
-</table><dt><strong><a name="item_ps__3d_46_unimplemented"><strong><code>Ps = 46</code> </strong>&gt; <em>unimplemented</em></a></strong><br />
-</dt>
-<dt><strong><a name="item_ps__3d_47"><strong><code>Ps = 47</code> </strong>&gt;</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_46_unimplemented"><strong><code>Pm = 46</code> </strong>&gt; <em>unimplemented</em></a></strong>
+
+<dt><strong><a name="item_pm__3d_47"><strong><code>Pm = 47</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>Use Alternate Screen Buffer</td></tr>
 <tr><td>l</td><td>Use Normal Screen Buffer</td></tr>
 </table><p></p>
-<dt><strong><a name="item_ps__3d_66"><strong><code>Ps = 66</code> </strong>&gt;</a></strong><br />
-</dt>
+<dt><strong><a name="item_pm__3d_66"><strong><code>Pm = 66</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>Application Keypad (DECPAM) == ESC =</td></tr>
 <tr><td>l</td><td>Normal Keypad (DECPNM) == ESC ></td></tr>
-</table><dt><strong><a name="item_ps__3d_67"><strong><code>Ps = 67</code> </strong>&gt;</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_67"><strong><code>Pm = 67</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>Backspace key sends BS (DECBKM)</td></tr>
 <tr><td>l</td><td>Backspace key sends DEL</td></tr>
-</table><dt><strong><a name="item_1000"><strong><code>Ps = 1000</code> </strong>&gt; (X11 XTerm)</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_1000"><strong><code>Pm = 1000</code> </strong>&gt; (X11 XTerm)</a></strong>
+
 <table>
 <tr><td>h</td><td>Send Mouse X & Y on button press and release.</td></tr>
 <tr><td>l</td><td>No mouse reporting.</td></tr>
-</table><dt><strong><a name="item_1001"><strong><code>Ps = 1001</code> </strong>&gt; (X11 XTerm) <em>unimplemented</em></a></strong><br />
-</dt>
+</table><dt><strong><a name="item_1001"><strong><code>Pm = 1001</code> </strong>&gt; (X11 XTerm) <em>unimplemented</em></a></strong>
+
 <table>
 <tr><td>h</td><td>Use Hilite Mouse Tracking.</td></tr>
 <tr><td>l</td><td>No mouse reporting.</td></tr>
-</table><dt><strong><a name="item_1010"><strong><code>Ps = 1010</code> </strong>&gt; (<strong>rxvt</strong>)</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_1010"><strong><code>Pm = 1010</code> </strong>&gt; (<strong>rxvt</strong>)</a></strong>
+
 <table>
 <tr><td>h</td><td>Don't scroll to bottom on TTY output</td></tr>
 <tr><td>l</td><td>Scroll to bottom on TTY output</td></tr>
-</table><dt><strong><a name="item_1011"><strong><code>Ps = 1011</code> </strong>&gt; (<strong>rxvt</strong>)</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_1011"><strong><code>Pm = 1011</code> </strong>&gt; (<strong>rxvt</strong>)</a></strong>
+
 <table>
 <tr><td>h</td><td>Scroll to bottom when a key is pressed</td></tr>
 <tr><td>l</td><td>Don't scroll to bottom when a key is pressed</td></tr>
-</table><dt><strong><a name="item_1021"><strong><code>Ps = 1021</code> </strong>&gt; (<strong>rxvt</strong>)</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_1021"><strong><code>Pm = 1021</code> </strong>&gt; (<strong>rxvt</strong>)</a></strong>
+
 <table>
 <tr><td>h</td><td>Bold/italic implies high intensity (see option -is)</td></tr>
 <tr><td>l</td><td>Font styles have no effect on intensity (Compile styles)</td></tr>
-</table><dt><strong><a name="item_ps__3d_1047"><strong><code>Ps = 1047</code> </strong>&gt;</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_1047"><strong><code>Pm = 1047</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>Use Alternate Screen Buffer</td></tr>
 <tr><td>l</td><td>Use Normal Screen Buffer - clear Alternate Screen Buffer if returning from it</td></tr>
-</table><dt><strong><a name="item_ps__3d_1048"><strong><code>Ps = 1048</code> </strong>&gt;</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_1048"><strong><code>Pm = 1048</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>Save cursor position</td></tr>
 <tr><td>l</td><td>Restore cursor position</td></tr>
-</table><dt><strong><a name="item_ps__3d_1049"><strong><code>Ps = 1049</code> </strong>&gt;</a></strong><br />
-</dt>
+</table><dt><strong><a name="item_pm__3d_1049"><strong><code>Pm = 1049</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>h</td><td>Use Alternate Screen Buffer - clear Alternate Screen Buffer if switching to it</td></tr>
 <tr><td>l</td><td>Use Normal Screen Buffer</td></tr>
@@ -1972,12 +1978,12 @@ Enter Tektronix Mode (DECTEK)
 </p>
 <h2><a name="xterm_operating_system_commands">XTerm Operating System Commands</a></h2>
 <dl>
-<dt><strong><a name="item_esc__5d_ps_3bpt_st"><strong><code>ESC ] Ps;Pt ST</code> </strong>&gt;</a></strong><br />
-</dt>
+<dt><strong><a name="item_esc__5d_ps_3bpt_st"><strong><code>ESC ] Ps;Pt ST</code> </strong>&gt;</a></strong>
+
 <dd>
-Set XTerm Parameters. 8-bit ST: 0x9c, 7-bit ST sequence: ESC \ (0x1b,
+<p>Set XTerm Parameters. 8-bit ST: 0x9c, 7-bit ST sequence: ESC \ (0x1b,
 0x5c), backwards compatible terminator BEL (0x07) is also accepted. any
-<strong>octet</strong> can be escaped by prefixing it with SYN (0x16, ^V).
+<strong>octet</strong> can be escaped by prefixing it with SYN (0x16, ^V).</p>
 </dd>
 <table>
 <tr><td>Ps = 0</td><td>Change Icon Name and Window Title to Pt</td></tr>
@@ -2011,7 +2017,8 @@ Set XTerm Parameters. 8-bit ST: 0x9c, 7-bit ST sequence: ESC \ (0x1b,
 <tr><td>Ps = 720</td><td>Move viewing window up by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).</td></tr>
 <tr><td>Ps = 721</td><td>Move viewing window down by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).</td></tr>
 <tr><td>Ps = 777</td><td>Call the perl extension with the given string, which should be of the form extension:parameters (Compile perl).</td></tr>
-</table><p></p></dl>
+</table></li>
+</dl>
 <p>
 </p>
 <hr />
@@ -2021,16 +2028,16 @@ of <strong><a href="#item_pt"><code>Pt</code></a> </strong>&gt; can be the name 
 sequence of scaling/positioning commands separated by semi-colons. The
 scaling/positioning commands are as follows:</p>
 <dl>
-<dt><strong><a name="item_query_scale_2fposition">query scale/position</a></strong><br />
-</dt>
+<dt><strong><a name="item_query_scale_2fposition">query scale/position</a></strong>
+
 <dd>
-<strong>?</strong>
+<p><strong>?</strong></p>
 </dd>
-<p></p>
-<dt><strong><a name="item_change_scale_and_position">change scale and position</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_change_scale_and_position">change scale and position</a></strong>
+
 <dd>
-<strong>WxH+X+Y</strong>
+<p><strong>WxH+X+Y</strong></p>
 </dd>
 <dd>
 <p><strong>WxH+X</strong> (== <strong>WxH+X+X</strong>)</p>
@@ -2047,70 +2054,73 @@ scaling/positioning commands are as follows:</p>
 <dd>
 <p><strong>W</strong> (same as <strong>WxW+50+50</strong>)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_position">change position (absolute)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_position">change position (absolute)</a></strong>
+
 <dd>
-<strong>=+X+Y</strong>
+<p><strong>=+X+Y</strong></p>
 </dd>
 <dd>
 <p><strong>=+X</strong> (same as <strong>=+X+Y</strong>)</p>
 </dd>
-<p></p>
-<dt><strong>change position (relative)</strong><br />
-</dt>
+</li>
+<dt><strong>change position (relative)</strong>
+
 <dd>
-<strong>+X+Y</strong>
+<p><strong>+X+Y</strong></p>
 </dd>
 <dd>
 <p><strong>+X</strong> (same as <strong>+X+Y</strong>)</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_rescale">rescale (relative)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_rescale">rescale (relative)</a></strong>
+
 <dd>
-<strong>Wx0</strong> -&gt; <strong>W *= (W/100)</strong>
+<p><strong>Wx0</strong> -&gt; <strong>W *= (W/100)</strong></p>
 </dd>
 <dd>
 <p><strong>0xH</strong> -&gt; <strong>H *= (H/100)</strong></p>
 </dd>
-<p></p></dl>
+</li>
+</dl>
 <p>For example:</p>
 <dl>
-<dt><strong><a name="item__5ce_5d20_3bfunky_5ca"><strong>\E]20;funky\a</strong></a></strong><br />
-</dt>
+<dt><strong><a name="item__5ce_5d20_3bfunky_5ca"><strong>\E]20;funky\a</strong></a></strong>
+
 <dd>
-load <strong>funky.xpm</strong> as a tiled image
+<p>load <strong>funky.xpm</strong> as a tiled image</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__5ce_5d20_3bmona_3b100_5ca"><strong>\E]20;mona;100\a</strong></a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__5ce_5d20_3bmona_3b100_5ca"><strong>\E]20;mona;100\a</strong></a></strong>
+
 <dd>
-load <strong>mona.xpm</strong> with a scaling of 100%
+<p>load <strong>mona.xpm</strong> with a scaling of 100%</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__5ce_5d20_3b_3b200_3b_3f_5ca"><strong>\E]20;;200;?\a</strong></a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__5ce_5d20_3b_3b200_3b_3f_5ca"><strong>\E]20;;200;?\a</strong></a></strong>
+
 <dd>
-rescale the current pixmap to 200% and display the image geometry in
-the title
+<p>rescale the current pixmap to 200% and display the image geometry in
+the title</p>
 </dd>
-<p></p></dl>
+</li>
+</dl>
 <p>
 </p>
 <hr />
 <h1><a name="mouse_reporting">Mouse Reporting</a></h1>
 <dl>
-<dt><strong><a name="item_esc__5b_m__3cb_3e__3cx_3e__3cy_3e"><strong><code>ESC [ M &lt;b&gt; &lt;x&gt; &lt;y&gt;</code> </strong>&gt;</a></strong><br />
-</dt>
+<dt><strong><a name="item_esc__5b_m__3cb_3e__3cx_3e__3cy_3e"><strong><code>ESC [ M &lt;b&gt; &lt;x&gt; &lt;y&gt;</code> </strong>&gt;</a></strong>
+
 <dd>
-report mouse position
+<p>report mouse position</p>
 </dd>
-<p></p></dl>
+</li>
+</dl>
 <p>The lower 2 bits of <strong><code>&lt;b&gt;</code> </strong>&gt; indicate the button:</p>
 <dl>
-<dt><strong><a name="item_button__3d__28_3cb_3e__2d_space_29__26_3">Button = <strong><code>(&lt;b&gt; - SPACE) &amp; 3</code> </strong>&gt;</a></strong><br />
-</dt>
+<dt><strong><a name="item_button__3d__28_3cb_3e__2d_space_29__26_3">Button = <strong><code>(&lt;b&gt; - SPACE) &amp; 3</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>0</td><td>Button1 pressed</td></tr>
 <tr><td>1</td><td>Button2 pressed</td></tr>
@@ -2120,8 +2130,8 @@ report mouse position
 <p>The upper bits of <strong><code>&lt;b&gt;</code> </strong>&gt; indicate the modifiers when the
 button was pressed and are added together (X11 mouse report only):</p>
 <dl>
-<dt><strong><a name="item_state__3d__28_3cb_3e__2d_space_29__26_60">State = <strong><code>(&lt;b&gt; - SPACE) &amp; 60</code> </strong>&gt;</a></strong><br />
-</dt>
+<dt><strong><a name="item_state__3d__28_3cb_3e__2d_space_29__26_60">State = <strong><code>(&lt;b&gt; - SPACE) &amp; 60</code> </strong>&gt;</a></strong>
+
 <table>
 <tr><td>4</td><td>Shift</td></tr>
 <tr><td>8</td><td>Meta</td></tr>
@@ -2211,11 +2221,11 @@ always report when a combination doesn't work, so it can be fixed. Marc
 Lehmann &lt;<a href="mailto:rxvt@schmorp.de">rxvt@schmorp.de</a>&gt;.</p>
 <p>All</p>
 <dl>
-<dt><strong><a name="item__2d_2denable_2deverything">--enable-everything</a></strong><br />
-</dt>
+<dt><strong><a name="item__2d_2denable_2deverything">--enable-everything</a></strong>
+
 <dd>
-Add (or remove) support for all non-multichoice options listed in ``./configure
---help''.
+<p>Add (or remove) support for all non-multichoice options listed in ``./configure
+--help''.</p>
 </dd>
 <dd>
 <p>You can specify this and then disable options you do not like by
@@ -2224,32 +2234,32 @@ or you can start with a minimal configuration by specifying
 <code>--disable-everything</code> and than adding just the <code>--enable-...</code> arguments
 you want.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_xft">--enable-xft (default: enabled)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_xft">--enable-xft (default: enabled)</a></strong>
+
 <dd>
-Add support for Xft (anti-aliases, among others) fonts. Xft fonts are
+<p>Add support for Xft (anti-aliases, among others) fonts. Xft fonts are
 slower and require lots of memory, but as long as you don't use them, you
-don't pay for them.
+don't pay for them.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_styles">--enable-font-styles (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_styles">--enable-font-styles (default: on)</a></strong>
+
 <dd>
-Add support for <strong>bold</strong>, <em>italic</em> and <strong><em>bold italic</em> </strong>&gt; font
-styles. The fonts can be set manually or automatically.
+<p>Add support for <strong>bold</strong>, <em>italic</em> and <strong><em>bold italic</em> </strong>&gt; font
+styles. The fonts can be set manually or automatically.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__2d_2dwith_2dcodesets_3dname_2c_2e_2e_2e__28defaul">--with-codesets=NAME,... (default: all)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__2d_2dwith_2dcodesets_3dname_2c_2e_2e_2e__28defaul">--with-codesets=NAME,... (default: all)</a></strong>
+
 <dd>
-Compile in support for additional codeset (encoding) groups (<code>eu</code>, <code>vn</code>
+<p>Compile in support for additional codeset (encoding) groups (<code>eu</code>, <code>vn</code>
 are always compiled in, which includes most 8-bit character sets). These
 codeset tables are used for driving X11 core fonts, they are not required
 for Xft fonts, although having them compiled in lets rxvt-unicode choose
 replacement fonts more intelligently. Compiling them in will make your
 binary bigger (all of together cost about 700kB), but it doesn't increase
-memory usage unless you use a font requiring one of these encodings.
+memory usage unless you use a font requiring one of these encodings.</p>
 </dd>
 <table>
 <tr><td>all</td><td>all available codeset groups</td></tr>
@@ -2258,19 +2268,19 @@ memory usage unless you use a font requiring one of these encodings.
 <tr><td>jp</td><td>common japanese encodings</td></tr>
 <tr><td>jp_ext</td><td>rarely used but big japanese encodings</td></tr>
 <tr><td>kr</td><td>korean encodings</td></tr>
-</table><p></p>
-<dt><strong><a name="item_xim">--enable-xim (default: on)</a></strong><br />
-</dt>
+</table></li>
+<dt><strong><a name="item_xim">--enable-xim (default: on)</a></strong>
+
 <dd>
-Add support for XIM (X Input Method) protocol. This allows using
+<p>Add support for XIM (X Input Method) protocol. This allows using
 alternative input methods (e.g. kinput2) and will also correctly
-set up the input for people using dead keys or compose keys.
+set up the input for people using dead keys or compose keys.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_unicode3">--enable-unicode3 (default: off)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_unicode3">--enable-unicode3 (default: off)</a></strong>
+
 <dd>
-Recommended to stay off unless you really need non-BMP characters.
+<p>Recommended to stay off unless you really need non-BMP characters.</p>
 </dd>
 <dd>
 <p>Enable direct support for displaying unicode codepoints above
@@ -2285,15 +2295,15 @@ limited to a view thousand (shared with combining characters,
 see next switch), and right now rxvt-unicode cannot display them
 (input/output and cut&amp;paste still work, though).</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_combining">--enable-combining (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_combining">--enable-combining (default: on)</a></strong>
+
 <dd>
-Enable automatic composition of combining characters into
+<p>Enable automatic composition of combining characters into
 composite characters. This is required for proper viewing of text
 where accents are encoded as seperate unicode characters. This is
 done by using precomposited characters when available or creating
-new pseudo-characters when no precomposed form exists.
+new pseudo-characters when no precomposed form exists.</p>
 </dd>
 <dd>
 <p>Without --enable-unicode3, the number of additional precomposed
@@ -2309,141 +2319,141 @@ beyond plane 0 (&gt;65535) when --enable-unicode3 was not specified.</p>
 but these are not currently used. Bug me if you want these to be used (and
 tell me how these are to be used...).</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_fallback">--enable-fallback(=CLASS) (default: Rxvt)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_fallback">--enable-fallback(=CLASS) (default: Rxvt)</a></strong>
+
 <dd>
-When reading resource settings, also read settings for class CLASS. To
-disable resource fallback use --disable-fallback.
+<p>When reading resource settings, also read settings for class CLASS. To
+disable resource fallback use --disable-fallback.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_name">--with-res-name=NAME (default: urxvt)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_name">--with-res-name=NAME (default: urxvt)</a></strong>
+
 <dd>
-Use the given name as default application name when
-reading resources. Specify --with-res-name=rxvt to replace rxvt.
+<p>Use the given name as default application name when
+reading resources. Specify --with-res-name=rxvt to replace rxvt.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__2d_2dwith_2dres_2dclass_3dclass__2fdefault_3a_urx">--with-res-class=CLASS /default: URxvt)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__2d_2dwith_2dres_2dclass_3dclass__2fdefault_3a_urx">--with-res-class=CLASS /default: URxvt)</a></strong>
+
 <dd>
-Use the given class as default application class
+<p>Use the given class as default application class
 when reading resources. Specify --with-res-class=Rxvt to replace
-rxvt.
+rxvt.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_utmp">--enable-utmp (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_utmp">--enable-utmp (default: on)</a></strong>
+
 <dd>
-Write user and tty to utmp file (used by programs like <em>w</em>) at
-start of rxvt execution and delete information when rxvt exits.
+<p>Write user and tty to utmp file (used by programs like <em>w</em>) at
+start of rxvt execution and delete information when rxvt exits.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_wtmp">--enable-wtmp (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_wtmp">--enable-wtmp (default: on)</a></strong>
+
 <dd>
-Write user and tty to wtmp file (used by programs like <em>last</em>) at
+<p>Write user and tty to wtmp file (used by programs like <em>last</em>) at
 start of rxvt execution and write logout when rxvt exits.  This
-option requires --enable-utmp to also be specified.
+option requires --enable-utmp to also be specified.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_lastlog">--enable-lastlog (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_lastlog">--enable-lastlog (default: on)</a></strong>
+
 <dd>
-Write user and tty to lastlog file (used by programs like
+<p>Write user and tty to lastlog file (used by programs like
 <em>lastlogin</em>) at start of rxvt execution.  This option requires
---enable-utmp to also be specified.
+--enable-utmp to also be specified.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_background">--enable-xpm-background (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_background">--enable-xpm-background (default: on)</a></strong>
+
 <dd>
-Add support for XPM background pixmaps.
+<p>Add support for XPM background pixmaps.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_transparency">--enable-transparency (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_transparency">--enable-transparency (default: on)</a></strong>
+
 <dd>
-Add support for inheriting parent backgrounds thus giving a fake
-transparency to the term.
+<p>Add support for inheriting parent backgrounds thus giving a fake
+transparency to the term.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_fading">--enable-fading (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_fading">--enable-fading (default: on)</a></strong>
+
 <dd>
-Add support for fading the text when focus is lost (requires <code>--enable-transparency</code>).
+<p>Add support for fading the text when focus is lost (requires <code>--enable-transparency</code>).</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_tinting">--enable-tinting (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_tinting">--enable-tinting (default: on)</a></strong>
+
 <dd>
-Add support for tinting of transparent backgrounds (requires <code>--enable-transparency</code>).
+<p>Add support for tinting of transparent backgrounds (requires <code>--enable-transparency</code>).</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_scroll">--enable-rxvt-scroll (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_scroll">--enable-rxvt-scroll (default: on)</a></strong>
+
 <dd>
-Add support for the original rxvt scrollbar.
+<p>Add support for the original rxvt scrollbar.</p>
 </dd>
-<p></p>
-<dt><strong>--enable-next-scroll (default: on)</strong><br />
-</dt>
+</li>
+<dt><strong>--enable-next-scroll (default: on)</strong>
+
 <dd>
-Add support for a NeXT-like scrollbar.
+<p>Add support for a NeXT-like scrollbar.</p>
 </dd>
-<p></p>
-<dt><strong>--enable-xterm-scroll (default: on)</strong><br />
-</dt>
+</li>
+<dt><strong>--enable-xterm-scroll (default: on)</strong>
+
 <dd>
-Add support for an Xterm-like scrollbar.
+<p>Add support for an Xterm-like scrollbar.</p>
 </dd>
-<p></p>
-<dt><strong>--enable-plain-scroll (default: on)</strong><br />
-</dt>
+</li>
+<dt><strong>--enable-plain-scroll (default: on)</strong>
+
 <dd>
-Add support for a very unobtrusive, plain-looking scrollbar that
+<p>Add support for a very unobtrusive, plain-looking scrollbar that
 is the favourite of the rxvt-unicode author, having used it for
-many years.
+many years.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_ttygid">--enable-ttygid (default: off)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_ttygid">--enable-ttygid (default: off)</a></strong>
+
 <dd>
-Change tty device setting to group ``tty'' - only use this if
-your system uses this type of security.
+<p>Change tty device setting to group ``tty'' - only use this if
+your system uses this type of security.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__2d_2ddisable_2dbackspace_2dkey">--disable-backspace-key</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__2d_2ddisable_2dbackspace_2dkey">--disable-backspace-key</a></strong>
+
 <dd>
-Removes any handling of the backspace key by us - let the X server do it.
+<p>Removes any handling of the backspace key by us - let the X server do it.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__2d_2ddisable_2ddelete_2dkey">--disable-delete-key</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__2d_2ddisable_2ddelete_2dkey">--disable-delete-key</a></strong>
+
 <dd>
-Removes any handling of the delete key by us - let the X server
-do it.
+<p>Removes any handling of the delete key by us - let the X server
+do it.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__2d_2ddisable_2dresources">--disable-resources</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__2d_2ddisable_2dresources">--disable-resources</a></strong>
+
 <dd>
-Removes any support for resource checking.
+<p>Removes any support for resource checking.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__2d_2ddisable_2dswapscreen">--disable-swapscreen</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__2d_2ddisable_2dswapscreen">--disable-swapscreen</a></strong>
+
 <dd>
-Remove support for secondary/swap screen.
+<p>Remove support for secondary/swap screen.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_frills">--enable-frills (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_frills">--enable-frills (default: on)</a></strong>
+
 <dd>
-Add support for many small features that are not essential but nice to
+<p>Add support for many small features that are not essential but nice to
 have. Normally you want this, but for very small binaries you may want to
-disable this.
+disable this.</p>
 </dd>
 <dd>
 <p>A non-exhaustive list of features enabled by <code>--enable-frills</code> (possibly
@@ -2465,10 +2475,11 @@ in combination with other switches) is:</p>
   XEmbed support (-embed)
   user-pty (-pty-fd)
   hold on exit (-hold)
-  skip builtin block graphics (-sbg)</pre>
+  skip builtin block graphics (-sbg)
+  separate highlightcolor support (-hc)</pre>
 </dd>
 <dd>
-<p>It also enabled some non-essential features otherwise disabled, such as:</p>
+<p>It also enables some non-essential features otherwise disabled, such as:</p>
 </dd>
 <dd>
 <pre>
@@ -2484,132 +2495,133 @@ in combination with other switches) is:</p>
   trailing space removal for selections
   verbose X error handling</pre>
 </dd>
-<p></p>
-<dt><strong><a name="item_iso14755">--enable-iso14755 (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_iso14755">--enable-iso14755 (default: on)</a></strong>
+
 <dd>
-Enable extended ISO 14755 support (see rxvt(1), or
+<p>Enable extended ISO 14755 support (see rxvt(1), or
 <em>doc/rxvt.1.txt</em>). Basic support (section 5.1) is enabled by
 <code>--enable-frills</code>, while support for 5.2, 5.3 and 5.4 is enabled with
-this switch.
+this switch.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_keepscrolling">--enable-keepscrolling (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_keepscrolling">--enable-keepscrolling (default: on)</a></strong>
+
 <dd>
-Add support for continual scrolling of the display when you hold
-the mouse button down on a scrollbar arrow.
+<p>Add support for continual scrolling of the display when you hold
+the mouse button down on a scrollbar arrow.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_mousewheel">--enable-mousewheel (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_mousewheel">--enable-mousewheel (default: on)</a></strong>
+
 <dd>
-Add support for scrolling via mouse wheel or buttons 4 &amp; 5.
+<p>Add support for scrolling via mouse wheel or buttons 4 &amp; 5.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_slipwheeling">--enable-slipwheeling (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_slipwheeling">--enable-slipwheeling (default: on)</a></strong>
+
 <dd>
-Add support for continual scrolling (using the mouse wheel as an
+<p>Add support for continual scrolling (using the mouse wheel as an
 accelerator) while the control key is held down.  This option
-requires --enable-mousewheel to also be specified.
+requires --enable-mousewheel to also be specified.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__2d_2ddisable_2dnew_2dselection">--disable-new-selection</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__2d_2ddisable_2dnew_2dselection">--disable-new-selection</a></strong>
+
 <dd>
-Remove support for mouse selection style like that of xterm.
+<p>Remove support for mouse selection style like that of xterm.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_dmalloc">--enable-dmalloc (default: off)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_dmalloc">--enable-dmalloc (default: off)</a></strong>
+
 <dd>
-Use Gray Watson's malloc - which is good for debugging See
+<p>Use Gray Watson's malloc - which is good for debugging See
 <a href="http://www.letters.com/dmalloc/">http://www.letters.com/dmalloc/</a> for details If you use either this or the
 next option, you may need to edit src/Makefile after compiling to point
-DINCLUDE and DLIB to the right places.
+DINCLUDE and DLIB to the right places.</p>
 </dd>
 <dd>
 <p>You can only use either this option and the following (should
 you use either) .</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_dlmalloc">--enable-dlmalloc (default: off)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_dlmalloc">--enable-dlmalloc (default: off)</a></strong>
+
 <dd>
-Use Doug Lea's malloc - which is good for a production version
-See <a href="http://g.oswego.edu/dl/html/malloc.html">http://g.oswego.edu/dl/html/malloc.html</a> for details.
+<p>Use Doug Lea's malloc - which is good for a production version
+See <a href="http://g.oswego.edu/dl/html/malloc.html">http://g.oswego.edu/dl/html/malloc.html</a> for details.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_resize">--enable-smart-resize (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_resize">--enable-smart-resize (default: on)</a></strong>
+
 <dd>
-Add smart growth/shrink behaviour when changing font size via hot
+<p>Add smart growth/shrink behaviour when changing font size via hot
 keys. This should keep the window corner which is closest to a corner of
-the screen in a fixed position.
+the screen in a fixed position.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_blank">--enable-pointer-blank (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_blank">--enable-pointer-blank (default: on)</a></strong>
+
 <dd>
-Add support to have the pointer disappear when typing or inactive.
+<p>Add support to have the pointer disappear when typing or inactive.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item_perl">--enable-perl (default: on)</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item_perl">--enable-perl (default: on)</a></strong>
+
 <dd>
-Enable an embedded perl interpreter. See the <strong>rxvtperl(3)</strong>
+<p>Enable an embedded perl interpreter. See the <strong>rxvtperl(3)</strong>
 manpage (<em>doc/rxvtperl.txt</em>) for more info on this feature, or the files
 in <em>src/perl-ext/</em> for the extensions that are installed by default. The
 perl interpreter that is used can be specified via the <code>PERL</code> environment
-variable when running configure.
+variable when running configure.</p>
 </dd>
-<p></p>
-<dt><strong>--with-name=NAME (default: urxvt)</strong><br />
-</dt>
+</li>
+<dt><strong>--with-name=NAME (default: urxvt)</strong>
+
 <dd>
-Set the basename for the installed binaries, resulting
+<p>Set the basename for the installed binaries, resulting
 in <code>urxvt</code>, <code>urxvtd</code> etc.). Specify <code>--with-name=rxvt</code> to replace with
-<code>rxvt</code>.
+<code>rxvt</code>.</p>
 </dd>
-<p></p>
-<dt><strong>--with-term=NAME (default: rxvt-unicode)</strong><br />
-</dt>
+</li>
+<dt><strong>--with-term=NAME (default: rxvt-unicode)</strong>
+
 <dd>
-Change the environmental variable for the terminal to NAME.
+<p>Change the environmental variable for the terminal to NAME.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__2d_2dwith_2dterminfo_3dpath">--with-terminfo=PATH</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__2d_2dwith_2dterminfo_3dpath">--with-terminfo=PATH</a></strong>
+
 <dd>
-Change the environmental variable for the path to the terminfo tree to
-PATH.
+<p>Change the environmental variable for the path to the terminfo tree to
+PATH.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__2d_2dwith_2dx">--with-x</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__2d_2dwith_2dx">--with-x</a></strong>
+
 <dd>
-Use the X Window System (pretty much default, eh?).
+<p>Use the X Window System (pretty much default, eh?).</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__2d_2dwith_2dxpm_2dincludes_3ddir">--with-xpm-includes=DIR</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__2d_2dwith_2dxpm_2dincludes_3ddir">--with-xpm-includes=DIR</a></strong>
+
 <dd>
-Look for the XPM includes in DIR.
+<p>Look for the XPM includes in DIR.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__2d_2dwith_2dxpm_2dlibrary_3ddir">--with-xpm-library=DIR</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__2d_2dwith_2dxpm_2dlibrary_3ddir">--with-xpm-library=DIR</a></strong>
+
 <dd>
-Look for the XPM library in DIR.
+<p>Look for the XPM library in DIR.</p>
 </dd>
-<p></p>
-<dt><strong><a name="item__2d_2dwith_2dxpm">--with-xpm</a></strong><br />
-</dt>
+</li>
+<dt><strong><a name="item__2d_2dwith_2dxpm">--with-xpm</a></strong>
+
 <dd>
-Not needed - define via --enable-xpm-background.
+<p>Not needed - define via --enable-xpm-background.</p>
 </dd>
-<p></p></dl>
+</li>
+</dl>
 <p>
 </p>
 <hr />

@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 7.6, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 7.7, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -1090,7 +1090,8 @@ ISO 14755 SUPPORT
     the rest is available when rxvt-unicode was compiled with
     "--enable-iso14755".
 
-    * 5.1: Basic method
+    *   5.1: Basic method
+
         This allows you to enter unicode characters using their hexcode.
 
         Start by pressing and holding both "Control" and "Shift", then enter
@@ -1106,7 +1107,8 @@ ISO 14755 SUPPORT
         easily by pressing "Control" and "Shift", followed by
         "6-7-1-D-SPACE-6-5-E-5", followed by releasing the modifier keys.
 
-    * 5.2: Keyboard symbols entry method
+    *   5.2: Keyboard symbols entry method
+
         This mode lets you input characters representing the keycap symbols
         of your keyboard, if representable in the current locale encoding.
 
@@ -1118,13 +1120,15 @@ ISO 14755 SUPPORT
         enter the symbol for "ISO Level 2 Switch", although your intention
         might have been to enter a reverse tab (Shift-Tab).
 
-    * 5.3: Screen-selection entry method
+    *   5.3: Screen-selection entry method
+
         While this is implemented already (it's basically the selection
         mechanism), it could be extended by displaying a unicode character
         map.
 
-    * 5.4: Feedback method for identifying displayed characters for later
-    input
+    *   5.4: Feedback method for identifying displayed characters for later
+        input
+
         This method lets you display the unicode character code associated
         with characters already displayed.
 
@@ -1153,25 +1157,24 @@ COLORS AND GRAPHICS
     display up to 16 colours (8 ANSI colours plus high-intensity bold/blink
     versions of the same). Here is a list of the colours with their names.
 
-       color0          (black)         = Black         
-       color1          (red)           = Red3          
-       color2          (green)         = Green3        
-       color3          (yellow)        = Yellow3       
-       color4          (blue)          = Blue3         
-       color5          (magenta)       = Magenta3      
-       color6          (cyan)          = Cyan3         
-       color7          (white)         = AntiqueWhite  
-       color8          (bright black)  = Grey25        
-       color9          (bright red)    = Red           
-       color10         (bright green)  = Green         
-       color11         (bright yellow) = Yellow        
-       color12         (bright blue)   = Blue          
-       color13         (bright magenta) = Magenta       
-       color14         (bright cyan)   = Cyan          
-       color15         (bright white)  = White         
-       foreground                      = Black         
-       background                      = White         
-
+   color0          (black)         = Black         
+   color1          (red)           = Red3          
+   color2          (green)         = Green3        
+   color3          (yellow)        = Yellow3       
+   color4          (blue)          = Blue3         
+   color5          (magenta)       = Magenta3      
+   color6          (cyan)          = Cyan3         
+   color7          (white)         = AntiqueWhite  
+   color8          (bright black)  = Grey25        
+   color9          (bright red)    = Red           
+   color10         (bright green)  = Green         
+   color11         (bright yellow) = Yellow        
+   color12         (bright blue)   = Blue          
+   color13         (bright magenta) = Magenta       
+   color14         (bright cyan)   = Cyan          
+   color15         (bright white)  = White         
+   foreground                      = Black         
+   background                      = White         
     It is also possible to specify the colour values of foreground,
     background, cursorColor, cursorColor2, colorBD, colorUL as a number
     0-15, as a convenient shorthand to reference the colour name of
@@ -1283,7 +1286,7 @@ CURRENT PROJECT COORDINATOR
     Project Coordinator
         Marc A. Lehmann <rxvt-unicode@schmorp.de>
 
-        <http://software.schmorp.de/#rxvt-unicode>
+        <http://software.schmorp.de/pkg/rxvt-unicode.html>
 
 AUTHORS
     John Bovey

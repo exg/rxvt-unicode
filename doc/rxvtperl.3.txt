@@ -65,7 +65,7 @@ PREPACKAGED EXTENSIONS
         following pattern matches the filename (note, there is a single
         space at the very end):
 
-           URxvt.selection.pattern-0: ^(/[^:]+):\ 
+           URxvt.selection.pattern-0: ^(/[^:]+):\
 
         You can look at the source of the selection extension to see more
         interesting uses, such as parsing a line from beginning to end.
@@ -137,6 +137,13 @@ PREPACKAGED EXTENSIONS
         to the point where search was started, while "Enter" or "Return"
         stay at the current position and additionally stores the first match
         in the current line into the primary selection.
+
+        The regex defaults to "(?i)", resulting in a case-insensitive
+        search. To get a case-sensitive search you can delete this prefix
+        using "BackSpace" or simply use an uppercase character which removes
+        the "(?i)" prefix.
+
+        See perlre for more info about perl regular expression syntax.
 
     readline (enabled by default)
         A support package that tries to make editing with readline easier.
@@ -231,17 +238,17 @@ PREPACKAGED EXTENSIONS
            rxvt -pt OnTheSpot -pe xim-onthespot
 
     automove-background
-        This is basically a one-line extension that dynamically changes the
-        background pixmap offset to the window position, in effect creating
-        the same effect as pseudo transparency with a custom pixmap. No
-        scaling is supported in this mode. Exmaple:
+        This is basically a very small extension that dynamically changes
+        the background pixmap offset to the window position, in effect
+        creating the same effect as pseudo transparency with a custom
+        pixmap. No scaling is supported in this mode. Exmaple:
 
            rxvt -pixmap background.xpm -pe automove-background
 
     block-graphics-to-ascii
         A not very useful example of filtering all text output to the
-        terminal, by replacing all line-drawing characters (U+2500 ..
-        U+259F) by a similar-looking ascii character.
+        terminal by replacing all line-drawing characters (U+2500 .. U+259F)
+        by a similar-looking ascii character.
 
     digital-clock
         Displays a digital clock using the built-in overlay.
@@ -329,7 +336,7 @@ API DOCUMENTATION
         locale-specific way.
 
   Extension Objects
-    Very perl extension is a perl class. A separate perl object is created
+    Every perl extension is a perl class. A separate perl object is created
     for each terminal and each extension and passed as the first parameter
     to hooks. So extensions can use their $self object without having to
     think about other extensions, with the exception of methods and members
@@ -437,7 +444,16 @@ API DOCUMENTATION
         - 1, $nrow - 1) represent the lines to be scrolled out). $saved is
         the total number of lines that will be in the scrollback buffer.
 
-    on_osc_seq $term, $string
+    on_osc_seq $term, $op, $args
+        Called on every OSC sequence and can be used to suppress it or
+        modify its behaviour. The default should be to return an empty list.
+        A true value suppresses execution of the request completely. Make
+        sure you don't get confused by recursive invocations when you output
+        an osc sequence within this callback.
+
+        "on_osc_seq_perl" should be used for new behaviour.
+
+    on_osc_seq_perl $term, $string
         Called whenever the ESC ] 777 ; string ST command sequence (OSC =
         operating system command) is processed. Cursor position and other
         state information is up-to-date when this happens. For
@@ -1118,7 +1134,7 @@ API DOCUMENTATION
                         ->cb (sub {
                            $term->{overlay}->set (0, 0,
                               sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2,1,0]);
-                        });                                                                                                                                      
+                        });
 
     $timer = new urxvt::timer
         Create a new timer object in started state. It is scheduled to fire
@@ -1216,7 +1232,7 @@ API DOCUMENTATION
                         ->cb (sub {
                            my ($pw, $exit_status) = @_;
                            ...
-                        });                                                                                                                                      
+                        });
 
     $pw = new urxvt::pw
         Create a new process watcher in stopped state.

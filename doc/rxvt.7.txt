@@ -185,7 +185,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
        libgcc_s.so.1 => /lib/libgcc_s.so.1 (0x00002aaaaada2000)
        libc.so.6 => /lib/libc.so.6 (0x00002aaaaaeb0000)     
        libdl.so.2 => /lib/libdl.so.2 (0x00002aaaab0ee000)   
-       /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)     
+       /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)
 
     No large bloated libraries (of course, none were linked in statically),
     except maybe libX11 :)
@@ -1004,7 +1004,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
            xprop -root XIM_SERVERS
 
-    *
+
 
    My input method wants <some encoding> but I want UTF-8, what can I do?
     You can specify separate locales for the input method and the rest of
@@ -1261,14 +1261,13 @@ RXVT-UNICODE TECHNICAL REFERENCE
 
         Where "C" is one of:
 
-           C = 0           DEC Special Character and Line Drawing Set 
-           C = A           United Kingdom (UK) 
-           C = B           United States (USASCII) 
-           C = <           Multinational character set unimplemented 
-           C = 5           Finnish character set unimplemented 
-           C = C           Finnish character set unimplemented 
-           C = K           German character set unimplemented 
-
+   C = 0           DEC Special Character and Line Drawing Set 
+   C = A           United Kingdom (UK) 
+   C = B           United States (USASCII) 
+   C = <           Multinational character set unimplemented 
+   C = 5           Finnish character set unimplemented 
+   C = C           Finnish character set unimplemented 
+   C = K           German character set unimplemented 
 
 
   CSI (Command Sequence Introducer) Sequences
@@ -1305,17 +1304,15 @@ RXVT-UNICODE TECHNICAL REFERENCE
     "ESC [ Ps J"
         Erase in Display (ED)
 
-           Ps = 0          Clear Below (default) 
-           Ps = 1          Clear Above     
-           Ps = 2          Clear All       
-
+   Ps = 0          Clear Below (default) 
+   Ps = 1          Clear Above     
+   Ps = 2          Clear All       
     "ESC [ Ps K"
         Erase in Line (EL)
 
-           Ps = 0          Clear to Right (default) 
-           Ps = 1          Clear to Left   
-           Ps = 2          Clear All       
-
+   Ps = 0          Clear to Right (default) 
+   Ps = 1          Clear to Left   
+   Ps = 2          Clear All       
     "ESC [ Ps L"
         Insert "Ps" Line(s) [default: 1] (IL)
 
@@ -1332,10 +1329,9 @@ RXVT-UNICODE TECHNICAL REFERENCE
     "ESC [ Ps W"
         Tabulator functions
 
-           Ps = 0          Tab Set (HTS)   
-           Ps = 2          Tab Clear (TBC), Clear Current Column (default) 
-           Ps = 5          Tab Clear (TBC), Clear All 
-
+   Ps = 0          Tab Set (HTS)   
+   Ps = 2          Tab Clear (TBC), Clear Current Column (default) 
+   Ps = 5          Tab Clear (TBC), Clear All 
     "ESC [ Ps X"
         Erase "Ps" Character(s) [default: 1] (ECH)
 
@@ -1365,69 +1361,64 @@ RXVT-UNICODE TECHNICAL REFERENCE
     "ESC [ Ps g"
         Tab Clear (TBC)
 
-           Ps = 0          Clear Current Column (default) 
-           Ps = 3          Clear All (TBC) 
-
+   Ps = 0          Clear Current Column (default) 
+   Ps = 3          Clear All (TBC) 
     "ESC [ Pm h"
         Set Mode (SM). See "ESC [ Pm l" sequence for description of "Pm".
 
     "ESC [ Ps i"
         Printing. See also the "print-pipe" resource.
 
-           Ps = 0          print screen (MC0) 
-           Ps = 4          disable transparent print mode (MC4) 
-           Ps = 5          enable transparent print mode (MC5) 
-
+   Ps = 0          print screen (MC0) 
+   Ps = 4          disable transparent print mode (MC4) 
+   Ps = 5          enable transparent print mode (MC5) 
     "ESC [ Pm l"
         Reset Mode (RM)
 
+   h               Insert Mode (SMIR) 
+   l               Replace Mode (RMIR) 
         "Ps = 4"
-               h               Insert Mode (SMIR) 
-               l               Replace Mode (RMIR) 
-
+   h               Automatic Newline (LNM) 
+   l               Normal Linefeed (LNM) 
         "Ps = 20" (partially implemented)
-               h               Automatic Newline (LNM) 
-               l               Normal Linefeed (LNM) 
 
     "ESC [ Pm m"
         Character Attributes (SGR)
 
-           Ps = 0          Normal (default) 
-           Ps = 1 / 21     On / Off Bold (bright fg) 
-           Ps = 3 / 23     On / Off Italic 
-           Ps = 4 / 24     On / Off Underline 
-           Ps = 5 / 25     On / Off Slow Blink (bright bg) 
-           Ps = 6 / 26     On / Off Rapid Blink (bright bg) 
-           Ps = 7 / 27     On / Off Inverse 
-           Ps = 8 / 27     On / Off Invisible (NYI) 
-           Ps = 30 / 40    fg/bg Black     
-           Ps = 31 / 41    fg/bg Red       
-           Ps = 32 / 42    fg/bg Green     
-           Ps = 33 / 43    fg/bg Yellow    
-           Ps = 34 / 44    fg/bg Blue      
-           Ps = 35 / 45    fg/bg Magenta   
-           Ps = 36 / 46    fg/bg Cyan      
-           Ps = 38;5 / 48;5 set fg/bg to color #m (ISO 8613-6) 
-           Ps = 37 / 47    fg/bg White     
-           Ps = 39 / 49    fg/bg Default   
-           Ps = 90 / 100   fg/bg Bright Black 
-           Ps = 91 / 101   fg/bg Bright Red 
-           Ps = 92 / 102   fg/bg Bright Green 
-           Ps = 93 / 103   fg/bg Bright Yellow 
-           Ps = 94 / 104   fg/bg Bright Blue 
-           Ps = 95 / 105   fg/bg Bright Magenta 
-           Ps = 96 / 106   fg/bg Bright Cyan 
-           Ps = 97 / 107   fg/bg Bright White 
-           Ps = 99 / 109   fg/bg Bright Default 
-
+   Ps = 0          Normal (default) 
+   Ps = 1 / 21     On / Off Bold (bright fg) 
+   Ps = 3 / 23     On / Off Italic 
+   Ps = 4 / 24     On / Off Underline 
+   Ps = 5 / 25     On / Off Slow Blink (bright bg) 
+   Ps = 6 / 26     On / Off Rapid Blink (bright bg) 
+   Ps = 7 / 27     On / Off Inverse 
+   Ps = 8 / 27     On / Off Invisible (NYI) 
+   Ps = 30 / 40    fg/bg Black     
+   Ps = 31 / 41    fg/bg Red       
+   Ps = 32 / 42    fg/bg Green     
+   Ps = 33 / 43    fg/bg Yellow    
+   Ps = 34 / 44    fg/bg Blue      
+   Ps = 35 / 45    fg/bg Magenta   
+   Ps = 36 / 46    fg/bg Cyan      
+   Ps = 38;5 / 48;5 set fg/bg to color #m (ISO 8613-6) 
+   Ps = 37 / 47    fg/bg White     
+   Ps = 39 / 49    fg/bg Default   
+   Ps = 90 / 100   fg/bg Bright Black 
+   Ps = 91 / 101   fg/bg Bright Red 
+   Ps = 92 / 102   fg/bg Bright Green 
+   Ps = 93 / 103   fg/bg Bright Yellow 
+   Ps = 94 / 104   fg/bg Bright Blue 
+   Ps = 95 / 105   fg/bg Bright Magenta 
+   Ps = 96 / 106   fg/bg Bright Cyan 
+   Ps = 97 / 107   fg/bg Bright White 
+   Ps = 99 / 109   fg/bg Bright Default 
     "ESC [ Ps n"
         Device Status Report (DSR)
 
-           Ps = 5          Status Report ESC [ 0 n (``OK'') 
-           Ps = 6          Report Cursor Position (CPR) [row;column] as ESC [ r ; c R 
-           Ps = 7          Request Display Name 
-           Ps = 8          Request Version Number (place in window title) 
-
+   Ps = 5          Status Report ESC [ 0 n (``OK'') 
+   Ps = 6          Report Cursor Position (CPR) [row;column] as ESC [ r ; c R 
+   Ps = 7          Request Display Name 
+   Ps = 8          Request Version Number (place in window title) 
     "ESC [ Ps;Ps r"
         Set Scrolling Region [top;bottom] [default: full size of window]
         (CSR)
@@ -1438,23 +1429,22 @@ RXVT-UNICODE TECHNICAL REFERENCE
     "ESC [ Ps;Pt t"
         Window Operations
 
-           Ps = 1          Deiconify (map) window 
-           Ps = 2          Iconify window  
-           Ps = 3          ESC [ 3 ; X ; Y t Move window to (X|Y) 
-           Ps = 4          ESC [ 4 ; H ; W t Resize to WxH pixels 
-           Ps = 5          Raise window    
-           Ps = 6          Lower window    
-           Ps = 7          Refresh screen once 
-           Ps = 8          ESC [ 8 ; R ; C t Resize to R rows and C columns 
-           Ps = 11         Report window state (responds with Ps = 1 or Ps = 2) 
-           Ps = 13         Report window position (responds with Ps = 3) 
-           Ps = 14         Report window pixel size (responds with Ps = 4) 
-           Ps = 18         Report window text size (responds with Ps = 7) 
-           Ps = 19         Currently the same as Ps = 18, but responds with Ps = 9 
-           Ps = 20         Reports icon label (ESC ] L NAME \234) 
-           Ps = 21         Reports window title (ESC ] l NAME \234) 
-           Ps = 24..       Set window height to Ps rows 
-
+   Ps = 1          Deiconify (map) window 
+   Ps = 2          Iconify window  
+   Ps = 3          ESC [ 3 ; X ; Y t Move window to (X|Y) 
+   Ps = 4          ESC [ 4 ; H ; W t Resize to WxH pixels 
+   Ps = 5          Raise window    
+   Ps = 6          Lower window    
+   Ps = 7          Refresh screen once 
+   Ps = 8          ESC [ 8 ; R ; C t Resize to R rows and C columns 
+   Ps = 11         Report window state (responds with Ps = 1 or Ps = 2) 
+   Ps = 13         Report window position (responds with Ps = 3) 
+   Ps = 14         Report window pixel size (responds with Ps = 4) 
+   Ps = 18         Report window text size (responds with Ps = 7) 
+   Ps = 19         Currently the same as Ps = 18, but responds with Ps = 9 
+   Ps = 20         Reports icon label (ESC ] L NAME \234) 
+   Ps = 21         Reports window title (ESC ] l NAME \234) 
+   Ps = 24..       Set window height to Ps rows 
     "ESC [ u"
         Restore Cursor
 
@@ -1479,115 +1469,89 @@ RXVT-UNICODE TECHNICAL REFERENCE
     "ESC [ ? Pm t"
         Toggle DEC Private Mode Values (rxvt extension). *where*
 
-        "Ps = 1" (DECCKM)
-               h               Application Cursor Keys 
-               l               Normal Cursor Keys 
-
-        "Ps = 2" (ANSI/VT52 mode)
-               h               Enter VT52 mode 
-               l               Enter VT52 mode 
-
-        "Ps = 3"
-               h               132 Column Mode (DECCOLM) 
-               l               80 Column Mode (DECCOLM) 
-
-        "Ps = 4"
-               h               Smooth (Slow) Scroll (DECSCLM) 
-               l               Jump (Fast) Scroll (DECSCLM) 
-
-        "Ps = 5"
-               h               Reverse Video (DECSCNM) 
-               l               Normal Video (DECSCNM) 
-
-        "Ps = 6"
-               h               Origin Mode (DECOM) 
-               l               Normal Cursor Mode (DECOM) 
-
-        "Ps = 7"
-               h               Wraparound Mode (DECAWM) 
-               l               No Wraparound Mode (DECAWM) 
-
-        "Ps = 8" *unimplemented*
-               h               Auto-repeat Keys (DECARM) 
-               l               No Auto-repeat Keys (DECARM) 
-
-        "Ps = 9" X10 XTerm
-               h               Send Mouse X & Y on button press. 
-               l               No mouse reporting. 
-
-        "Ps = 25"
-               h               Visible cursor {cnorm/cvvis} 
-               l               Invisible cursor {civis} 
-
-        "Ps = 30"
-               h               scrollBar visisble 
-               l               scrollBar invisisble 
-
-        "Ps = 35" (rxvt)
-               h               Allow XTerm Shift+key sequences 
-               l               Disallow XTerm Shift+key sequences 
-
-        "Ps = 38" *unimplemented*
+   h               Application Cursor Keys 
+   l               Normal Cursor Keys 
+        "Pm = 1" (DECCKM)
+   h               Enter VT52 mode 
+   l               Enter VT52 mode 
+        "Pm = 2" (ANSI/VT52 mode)
+   h               132 Column Mode (DECCOLM) 
+   l               80 Column Mode (DECCOLM) 
+        "Pm = 3"
+   h               Smooth (Slow) Scroll (DECSCLM) 
+   l               Jump (Fast) Scroll (DECSCLM) 
+        "Pm = 4"
+   h               Reverse Video (DECSCNM) 
+   l               Normal Video (DECSCNM) 
+        "Pm = 5"
+   h               Origin Mode (DECOM) 
+   l               Normal Cursor Mode (DECOM) 
+        "Pm = 6"
+   h               Wraparound Mode (DECAWM) 
+   l               No Wraparound Mode (DECAWM) 
+        "Pm = 7"
+   h               Auto-repeat Keys (DECARM) 
+   l               No Auto-repeat Keys (DECARM) 
+        "Pm = 8" *unimplemented*
+   h               Send Mouse X & Y on button press. 
+   l               No mouse reporting. 
+        "Pm = 9" X10 XTerm
+   h               Visible cursor {cnorm/cvvis} 
+   l               Invisible cursor {civis} 
+        "Pm = 25"
+   h               scrollBar visisble 
+   l               scrollBar invisisble 
+        "Pm = 30"
+   h               Allow XTerm Shift+key sequences 
+   l               Disallow XTerm Shift+key sequences 
+        "Pm = 35" (rxvt)
+        "Pm = 38" *unimplemented*
             Enter Tektronix Mode (DECTEK)
 
-        "Ps = 40"
-               h               Allow 80/132 Mode 
-               l               Disallow 80/132 Mode 
+   h               Allow 80/132 Mode 
+   l               Disallow 80/132 Mode 
+        "Pm = 40"
+   h               Turn On Margin Bell 
+   l               Turn Off Margin Bell 
+        "Pm = 44" *unimplemented*
+   h               Reverse-wraparound Mode 
+   l               No Reverse-wraparound Mode 
+        "Pm = 45" *unimplemented*
+        "Pm = 46" *unimplemented*
+   h               Use Alternate Screen Buffer 
+   l               Use Normal Screen Buffer 
+        "Pm = 47"
 
-        "Ps = 44" *unimplemented*
-               h               Turn On Margin Bell 
-               l               Turn Off Margin Bell 
-
-        "Ps = 45" *unimplemented*
-               h               Reverse-wraparound Mode 
-               l               No Reverse-wraparound Mode 
-
-        "Ps = 46" *unimplemented*
-        "Ps = 47"
-               h               Use Alternate Screen Buffer 
-               l               Use Normal Screen Buffer 
-
-
-
-        "Ps = 66"
-               h               Application Keypad (DECPAM) == ESC = 
-               l               Normal Keypad (DECPNM) == ESC > 
-
-        "Ps = 67"
-               h               Backspace key sends BS (DECBKM) 
-               l               Backspace key sends DEL 
-
-        "Ps = 1000" (X11 XTerm)
-               h               Send Mouse X & Y on button press and release. 
-               l               No mouse reporting. 
-
-        "Ps = 1001" (X11 XTerm) *unimplemented*
-               h               Use Hilite Mouse Tracking. 
-               l               No mouse reporting. 
-
-        "Ps = 1010" (rxvt)
-               h               Don't scroll to bottom on TTY output 
-               l               Scroll to bottom on TTY output 
-
-        "Ps = 1011" (rxvt)
-               h               Scroll to bottom when a key is pressed 
-               l               Don't scroll to bottom when a key is pressed 
-
-        "Ps = 1021" (rxvt)
-               h               Bold/italic implies high intensity (see option -is) 
-               l               Font styles have no effect on intensity (Compile styles) 
-
-        "Ps = 1047"
-               h               Use Alternate Screen Buffer 
-               l               Use Normal Screen Buffer - clear Alternate Screen Buffer if returning from it 
-
-        "Ps = 1048"
-               h               Save cursor position 
-               l               Restore cursor position 
-
-        "Ps = 1049"
-               h               Use Alternate Screen Buffer - clear Alternate Screen Buffer if switching to it 
-               l               Use Normal Screen Buffer 
+   h               Application Keypad (DECPAM) == ESC = 
+   l               Normal Keypad (DECPNM) == ESC > 
+        "Pm = 66"
+   h               Backspace key sends BS (DECBKM) 
+   l               Backspace key sends DEL 
+        "Pm = 67"
+   h               Send Mouse X & Y on button press and release. 
+   l               No mouse reporting. 
+        "Pm = 1000" (X11 XTerm)
+   h               Use Hilite Mouse Tracking. 
+   l               No mouse reporting. 
+        "Pm = 1001" (X11 XTerm) *unimplemented*
+   h               Don't scroll to bottom on TTY output 
+   l               Scroll to bottom on TTY output 
+        "Pm = 1010" (rxvt)
+   h               Scroll to bottom when a key is pressed 
+   l               Don't scroll to bottom when a key is pressed 
+        "Pm = 1011" (rxvt)
+   h               Bold/italic implies high intensity (see option -is) 
+   l               Font styles have no effect on intensity (Compile styles) 
+        "Pm = 1021" (rxvt)
+   h               Use Alternate Screen Buffer 
+   l               Use Normal Screen Buffer - clear Alternate Screen Buffer if returning from it 
+        "Pm = 1047"
+   h               Save cursor position 
+   l               Restore cursor position 
+        "Pm = 1048"
+   h               Use Alternate Screen Buffer - clear Alternate Screen Buffer if switching to it 
+   l               Use Normal Screen Buffer 
+        "Pm = 1049"
 
 
 
@@ -1598,38 +1562,37 @@ RXVT-UNICODE TECHNICAL REFERENCE
         accepted. any octet can be escaped by prefixing it with SYN (0x16,
         ^V).
 
-           Ps = 0          Change Icon Name and Window Title to Pt 
-           Ps = 1          Change Icon Name to Pt 
-           Ps = 2          Change Window Title to Pt 
-           Ps = 3          If Pt starts with a ?, query the (STRING) property of the window and return it. If Pt contains a =, set the named property to the given value, else delete the specified property. 
-           Ps = 4          Pt is a semi-colon separated sequence of one or more semi-colon separated number/name pairs, where number is an index to a colour and name is the name of a colour. Each pair causes the numbered colour to be changed to name. Numbers 0-7 corresponds to low-intensity (normal) colours and 8-15 corresponds to high-intensity colours. 0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white 
-           Ps = 10         Change colour of text foreground to Pt (NB: may change in future) 
-           Ps = 11         Change colour of text background to Pt (NB: may change in future) 
-           Ps = 12         Change colour of text cursor foreground to Pt 
-           Ps = 13         Change colour of mouse foreground to Pt 
-           Ps = 17         Change colour of highlight characters to Pt 
-           Ps = 18         Change colour of bold characters to Pt [deprecated, see 706] 
-           Ps = 19         Change colour of underlined characters to Pt [deprecated, see 707] 
-           Ps = 20         Change background pixmap parameters (see section XPM) (Compile XPM). 
-           Ps = 39         Change default foreground colour to Pt. 
-           Ps = 46         Change Log File to Pt unimplemented 
-           Ps = 49         Change default background colour to Pt. 
-           Ps = 50         Set fontset to Pt, with the following special values of Pt (rxvt) #+n change up n #-n change down n if n is missing of 0, a value of 1 is used empty change to font0 n change to font n 
-           Ps = 55         Log all scrollback buffer and all of screen to Pt 
-           Ps = 701        Change current locale to Pt, or, if Pt is ?, return the current locale (Compile frills). 
-           Ps = 702        Request version if Pt is ?, returning rxvt-unicode, the resource name, the major and minor version numbers, e.g. ESC ] 702 ; rxvt-unicode ; urxvt ; 7 ; 4 ST. 
-           Ps = 704        Change colour of italic characters to Pt 
-           Ps = 705        Change background pixmap tint colour to Pt (Compile transparency). 
-           Ps = 706        Change colour of bold characters to Pt 
-           Ps = 707        Change colour of underlined characters to Pt 
-           Ps = 710        Set normal fontset to Pt. Same as Ps = 50. 
-           Ps = 711        Set bold fontset to Pt. Similar to Ps = 50 (Compile styles). 
-           Ps = 712        Set italic fontset to Pt. Similar to Ps = 50 (Compile styles). 
-           Ps = 713        Set bold-italic fontset to Pt. Similar to Ps = 50 (Compile styles). 
-           Ps = 720        Move viewing window up by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills). 
-           Ps = 721        Move viewing window down by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills). 
-           Ps = 777        Call the perl extension with the given string, which should be of the form extension:parameters (Compile perl). 
-
+   Ps = 0          Change Icon Name and Window Title to Pt 
+   Ps = 1          Change Icon Name to Pt 
+   Ps = 2          Change Window Title to Pt 
+   Ps = 3          If Pt starts with a ?, query the (STRING) property of the window and return it. If Pt contains a =, set the named property to the given value, else delete the specified property. 
+   Ps = 4          Pt is a semi-colon separated sequence of one or more semi-colon separated number/name pairs, where number is an index to a colour and name is the name of a colour. Each pair causes the numbered colour to be changed to name. Numbers 0-7 corresponds to low-intensity (normal) colours and 8-15 corresponds to high-intensity colours. 0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white 
+   Ps = 10         Change colour of text foreground to Pt (NB: may change in future) 
+   Ps = 11         Change colour of text background to Pt (NB: may change in future) 
+   Ps = 12         Change colour of text cursor foreground to Pt 
+   Ps = 13         Change colour of mouse foreground to Pt 
+   Ps = 17         Change colour of highlight characters to Pt 
+   Ps = 18         Change colour of bold characters to Pt [deprecated, see 706] 
+   Ps = 19         Change colour of underlined characters to Pt [deprecated, see 707] 
+   Ps = 20         Change background pixmap parameters (see section XPM) (Compile XPM). 
+   Ps = 39         Change default foreground colour to Pt. 
+   Ps = 46         Change Log File to Pt unimplemented 
+   Ps = 49         Change default background colour to Pt. 
+   Ps = 50         Set fontset to Pt, with the following special values of Pt (rxvt) #+n change up n #-n change down n if n is missing of 0, a value of 1 is used empty change to font0 n change to font n 
+   Ps = 55         Log all scrollback buffer and all of screen to Pt 
+   Ps = 701        Change current locale to Pt, or, if Pt is ?, return the current locale (Compile frills). 
+   Ps = 702        Request version if Pt is ?, returning rxvt-unicode, the resource name, the major and minor version numbers, e.g. ESC ] 702 ; rxvt-unicode ; urxvt ; 7 ; 4 ST. 
+   Ps = 704        Change colour of italic characters to Pt 
+   Ps = 705        Change background pixmap tint colour to Pt (Compile transparency). 
+   Ps = 706        Change colour of bold characters to Pt 
+   Ps = 707        Change colour of underlined characters to Pt 
+   Ps = 710        Set normal fontset to Pt. Same as Ps = 50. 
+   Ps = 711        Set bold fontset to Pt. Similar to Ps = 50 (Compile styles). 
+   Ps = 712        Set italic fontset to Pt. Similar to Ps = 50 (Compile styles). 
+   Ps = 713        Set bold-italic fontset to Pt. Similar to Ps = 50 (Compile styles). 
+   Ps = 720        Move viewing window up by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills). 
+   Ps = 721        Move viewing window down by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills). 
+   Ps = 777        Call the perl extension with the given string, which should be of the form extension:parameters (Compile perl). 
 XPM
     For the XPM XTerm escape sequence "ESC ] 20 ; Pt ST" then value of "Pt"
     can be the name of the background pixmap followed by a sequence of
@@ -1685,21 +1648,20 @@ Mouse Reporting
 
     The lower 2 bits of "<b>" indicate the button:
 
+   0               Button1 pressed 
+   1               Button2 pressed 
+   2               Button3 pressed 
+   3               button released (X11 mouse report) 
     Button = "(<b> - SPACE) & 3"
-           0               Button1 pressed 
-           1               Button2 pressed 
-           2               Button3 pressed 
-           3               button released (X11 mouse report) 
 
     The upper bits of "<b>" indicate the modifiers when the button was
     pressed and are added together (X11 mouse report only):
 
+   4               Shift           
+   8               Meta            
+   16              Control         
+   32              Double Click (rxvt extension) 
     State = "(<b> - SPACE) & 60"
-           4               Shift           
-           8               Meta            
-           16              Control         
-           32              Double Click (rxvt extension) 
-
         Col = "<x> - SPACE"
 
         Row = "<y> - SPACE"
@@ -1712,65 +1674,64 @@ Key Codes
     off, toggle Application-Keypad setting. Also note that values of Home,
     End, Delete may have been compiled differently on your system.
 
-                       Normal          Shift           Control         Ctrl+Shift      
-       Tab             ^I              ESC [ Z         ^I              ESC [ Z         
-       BackSpace       ^H              ^?              ^?              ^?              
-       Find            ESC [ 1 ~       ESC [ 1 $       ESC [ 1 ^       ESC [ 1 @       
-       Insert          ESC [ 2 ~       paste           ESC [ 2 ^       ESC [ 2 @       
-       Execute         ESC [ 3 ~       ESC [ 3 $       ESC [ 3 ^       ESC [ 3 @       
-       Select          ESC [ 4 ~       ESC [ 4 $       ESC [ 4 ^       ESC [ 4 @       
-       Prior           ESC [ 5 ~       scroll-up       ESC [ 5 ^       ESC [ 5 @       
-       Next            ESC [ 6 ~       scroll-down     ESC [ 6 ^       ESC [ 6 @       
-       Home            ESC [ 7 ~       ESC [ 7 $       ESC [ 7 ^       ESC [ 7 @       
-       End             ESC [ 8 ~       ESC [ 8 $       ESC [ 8 ^       ESC [ 8 @       
-       Delete          ESC [ 3 ~       ESC [ 3 $       ESC [ 3 ^       ESC [ 3 @       
-       F1              ESC [ 11 ~      ESC [ 23 ~      ESC [ 11 ^      ESC [ 23 ^      
-       F2              ESC [ 12 ~      ESC [ 24 ~      ESC [ 12 ^      ESC [ 24 ^      
-       F3              ESC [ 13 ~      ESC [ 25 ~      ESC [ 13 ^      ESC [ 25 ^      
-       F4              ESC [ 14 ~      ESC [ 26 ~      ESC [ 14 ^      ESC [ 26 ^      
-       F5              ESC [ 15 ~      ESC [ 28 ~      ESC [ 15 ^      ESC [ 28 ^      
-       F6              ESC [ 17 ~      ESC [ 29 ~      ESC [ 17 ^      ESC [ 29 ^      
-       F7              ESC [ 18 ~      ESC [ 31 ~      ESC [ 18 ^      ESC [ 31 ^      
-       F8              ESC [ 19 ~      ESC [ 32 ~      ESC [ 19 ^      ESC [ 32 ^      
-       F9              ESC [ 20 ~      ESC [ 33 ~      ESC [ 20 ^      ESC [ 33 ^      
-       F10             ESC [ 21 ~      ESC [ 34 ~      ESC [ 21 ^      ESC [ 34 ^      
-       F11             ESC [ 23 ~      ESC [ 23 $      ESC [ 23 ^      ESC [ 23 @      
-       F12             ESC [ 24 ~      ESC [ 24 $      ESC [ 24 ^      ESC [ 24 @      
-       F13             ESC [ 25 ~      ESC [ 25 $      ESC [ 25 ^      ESC [ 25 @      
-       F14             ESC [ 26 ~      ESC [ 26 $      ESC [ 26 ^      ESC [ 26 @      
-       F15 (Help)      ESC [ 28 ~      ESC [ 28 $      ESC [ 28 ^      ESC [ 28 @      
-       F16 (Menu)      ESC [ 29 ~      ESC [ 29 $      ESC [ 29 ^      ESC [ 29 @      
-       F17             ESC [ 31 ~      ESC [ 31 $      ESC [ 31 ^      ESC [ 31 @      
-       F18             ESC [ 32 ~      ESC [ 32 $      ESC [ 32 ^      ESC [ 32 @      
-       F19             ESC [ 33 ~      ESC [ 33 $      ESC [ 33 ^      ESC [ 33 @      
-       F20             ESC [ 34 ~      ESC [ 34 $      ESC [ 34 ^      ESC [ 34 @      
-                                                                       Application     
-       Up              ESC [ A         ESC [ a         ESC O a         ESC O A         
-       Down            ESC [ B         ESC [ b         ESC O b         ESC O B         
-       Right           ESC [ C         ESC [ c         ESC O c         ESC O C         
-       Left            ESC [ D         ESC [ d         ESC O d         ESC O D         
-       KP_Enter        ^M                                              ESC O M         
-       KP_F1           ESC O P                                         ESC O P         
-       KP_F2           ESC O Q                                         ESC O Q         
-       KP_F3           ESC O R                                         ESC O R         
-       KP_F4           ESC O S                                         ESC O S         
-       XK_KP_Multiply  *                                               ESC O j         
-       XK_KP_Add       +                                               ESC O k         
-       XK_KP_Separator ,                                               ESC O l         
-       XK_KP_Subtract  -                                               ESC O m         
-       XK_KP_Decimal   .                                               ESC O n         
-       XK_KP_Divide    /                                               ESC O o         
-       XK_KP_0         0                                               ESC O p         
-       XK_KP_1         1                                               ESC O q         
-       XK_KP_2         2                                               ESC O r         
-       XK_KP_3         3                                               ESC O s         
-       XK_KP_4         4                                               ESC O t         
-       XK_KP_5         5                                               ESC O u         
-       XK_KP_6         6                                               ESC O v         
-       XK_KP_7         7                                               ESC O w         
-       XK_KP_8         8                                               ESC O x         
-       XK_KP_9         9                                               ESC O y         
-
+                   Normal          Shift           Control         Ctrl+Shift      
+   Tab             ^I              ESC [ Z         ^I              ESC [ Z         
+   BackSpace       ^H              ^?              ^?              ^?              
+   Find            ESC [ 1 ~       ESC [ 1 $       ESC [ 1 ^       ESC [ 1 @       
+   Insert          ESC [ 2 ~       paste           ESC [ 2 ^       ESC [ 2 @       
+   Execute         ESC [ 3 ~       ESC [ 3 $       ESC [ 3 ^       ESC [ 3 @       
+   Select          ESC [ 4 ~       ESC [ 4 $       ESC [ 4 ^       ESC [ 4 @       
+   Prior           ESC [ 5 ~       scroll-up       ESC [ 5 ^       ESC [ 5 @       
+   Next            ESC [ 6 ~       scroll-down     ESC [ 6 ^       ESC [ 6 @       
+   Home            ESC [ 7 ~       ESC [ 7 $       ESC [ 7 ^       ESC [ 7 @       
+   End             ESC [ 8 ~       ESC [ 8 $       ESC [ 8 ^       ESC [ 8 @       
+   Delete          ESC [ 3 ~       ESC [ 3 $       ESC [ 3 ^       ESC [ 3 @       
+   F1              ESC [ 11 ~      ESC [ 23 ~      ESC [ 11 ^      ESC [ 23 ^      
+   F2              ESC [ 12 ~      ESC [ 24 ~      ESC [ 12 ^      ESC [ 24 ^      
+   F3              ESC [ 13 ~      ESC [ 25 ~      ESC [ 13 ^      ESC [ 25 ^      
+   F4              ESC [ 14 ~      ESC [ 26 ~      ESC [ 14 ^      ESC [ 26 ^      
+   F5              ESC [ 15 ~      ESC [ 28 ~      ESC [ 15 ^      ESC [ 28 ^      
+   F6              ESC [ 17 ~      ESC [ 29 ~      ESC [ 17 ^      ESC [ 29 ^      
+   F7              ESC [ 18 ~      ESC [ 31 ~      ESC [ 18 ^      ESC [ 31 ^      
+   F8              ESC [ 19 ~      ESC [ 32 ~      ESC [ 19 ^      ESC [ 32 ^      
+   F9              ESC [ 20 ~      ESC [ 33 ~      ESC [ 20 ^      ESC [ 33 ^      
+   F10             ESC [ 21 ~      ESC [ 34 ~      ESC [ 21 ^      ESC [ 34 ^      
+   F11             ESC [ 23 ~      ESC [ 23 $      ESC [ 23 ^      ESC [ 23 @      
+   F12             ESC [ 24 ~      ESC [ 24 $      ESC [ 24 ^      ESC [ 24 @      
+   F13             ESC [ 25 ~      ESC [ 25 $      ESC [ 25 ^      ESC [ 25 @      
+   F14             ESC [ 26 ~      ESC [ 26 $      ESC [ 26 ^      ESC [ 26 @      
+   F15 (Help)      ESC [ 28 ~      ESC [ 28 $      ESC [ 28 ^      ESC [ 28 @      
+   F16 (Menu)      ESC [ 29 ~      ESC [ 29 $      ESC [ 29 ^      ESC [ 29 @      
+   F17             ESC [ 31 ~      ESC [ 31 $      ESC [ 31 ^      ESC [ 31 @      
+   F18             ESC [ 32 ~      ESC [ 32 $      ESC [ 32 ^      ESC [ 32 @      
+   F19             ESC [ 33 ~      ESC [ 33 $      ESC [ 33 ^      ESC [ 33 @      
+   F20             ESC [ 34 ~      ESC [ 34 $      ESC [ 34 ^      ESC [ 34 @      
+                                                                   Application     
+   Up              ESC [ A         ESC [ a         ESC O a         ESC O A         
+   Down            ESC [ B         ESC [ b         ESC O b         ESC O B         
+   Right           ESC [ C         ESC [ c         ESC O c         ESC O C         
+   Left            ESC [ D         ESC [ d         ESC O d         ESC O D         
+   KP_Enter        ^M                                              ESC O M         
+   KP_F1           ESC O P                                         ESC O P         
+   KP_F2           ESC O Q                                         ESC O Q         
+   KP_F3           ESC O R                                         ESC O R         
+   KP_F4           ESC O S                                         ESC O S         
+   XK_KP_Multiply  *                                               ESC O j         
+   XK_KP_Add       +                                               ESC O k         
+   XK_KP_Separator ,                                               ESC O l         
+   XK_KP_Subtract  -                                               ESC O m         
+   XK_KP_Decimal   .                                               ESC O n         
+   XK_KP_Divide    /                                               ESC O o         
+   XK_KP_0         0                                               ESC O p         
+   XK_KP_1         1                                               ESC O q         
+   XK_KP_2         2                                               ESC O r         
+   XK_KP_3         3                                               ESC O s         
+   XK_KP_4         4                                               ESC O t         
+   XK_KP_5         5                                               ESC O u         
+   XK_KP_6         6                                               ESC O v         
+   XK_KP_7         7                                               ESC O w         
+   XK_KP_8         8                                               ESC O x         
+   XK_KP_9         9                                               ESC O y         
 CONFIGURE OPTIONS
     General hint: if you get compile errors, then likely your configuration
     hasn't been tested well. Either try with "--enable-everything" or use
@@ -1810,13 +1771,12 @@ CONFIGURE OPTIONS
         about 700kB), but it doesn't increase memory usage unless you use a
         font requiring one of these encodings.
 
-           all             all available codeset groups 
-           zh              common chinese encodings 
-           zh_ext          rarely used but very big chinese encodigs 
-           jp              common japanese encodings 
-           jp_ext          rarely used but big japanese encodings 
-           kr              korean encodings 
-
+   all             all available codeset groups 
+   zh              common chinese encodings 
+   zh_ext          rarely used but very big chinese encodigs 
+   jp              common japanese encodings 
+   jp_ext          rarely used but big japanese encodings 
+   kr              korean encodings 
     --enable-xim (default: on)
         Add support for XIM (X Input Method) protocol. This allows using
         alternative input methods (e.g. kinput2) and will also correctly set
@@ -1950,8 +1910,9 @@ CONFIGURE OPTIONS
           user-pty (-pty-fd)
           hold on exit (-hold)
           skip builtin block graphics (-sbg)
+          separate highlightcolor support (-hc)
 
-        It also enabled some non-essential features otherwise disabled, such
+        It also enables some non-essential features otherwise disabled, such
         as:
 
           some round-trip time optimisations
@@ -2042,4 +2003,14 @@ AUTHORS
     reworked it from the original Rxvt documentation, which was done by
     Geoff Wing <gcw@pobox.com>, who in turn used the XTerm documentation and
     other sources.
+
+POD ERRORS
+    Hey! The above document had some coding errors, which are explained
+    below:
+
+    Around line 2952:
+        =back doesn't take any parameters, but you said =back X<Mouse>
+
+    Around line 3048:
+        =back doesn't take any parameters, but you said =back X<KeyCodes>
 

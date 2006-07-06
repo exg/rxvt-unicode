@@ -153,6 +153,12 @@ was started, while C<Enter> or C<Return> stay at the current position and
 additionally stores the first match in the current line into the primary
 selection.
 
+The regex defaults to "(?i)", resulting in a case-insensitive search. To
+get a case-sensitive search you can delete this prefix using C<BackSpace>
+or simply use an uppercase character which removes the "(?i)" prefix.
+
+See L<perlre> for more info about perl regular expression syntax.
+
 =item readline (enabled by default)
 
 A support package that tries to make editing with readline easier. At

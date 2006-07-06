@@ -10,15 +10,16 @@
 #endif
 
 #if ENABLE_PERL
-# define ENABLE_FRILLS 1
+# define ENABLE_FRILLS    1
 # define ENABLE_COMBINING 1
 #endif
 
 #if ENABLE_FRILLS
-# define ENABLE_XEMBED 1
-# define ENABLE_EWMH   1
+# define ENABLE_XEMBED        1
+# define ENABLE_EWMH          1
 # define ENABLE_XIM_ONTHESPOT 1
-# define CURSOR_BLINK  1
+# define CURSOR_BLINK         1
+# define OPTION_HC            1
 #else
 # define ENABLE_MINIMAL 1
 #endif

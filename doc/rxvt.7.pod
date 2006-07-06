@@ -2405,8 +2405,9 @@ in combination with other switches) is:
   user-pty (-pty-fd)
   hold on exit (-hold)
   skip builtin block graphics (-sbg)
+  separate highlightcolor support (-hc)
 
-It also enabled some non-essential features otherwise disabled, such as:
+It also enables some non-essential features otherwise disabled, such as:
 
   some round-trip time optimisations
   nearest color allocation on pseudocolor screens

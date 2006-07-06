@@ -39,6 +39,7 @@ sub enter {
    $self->{view_start} = $self->view_start;
    $self->{pty_ev_events} = $self->pty_ev_events (urxvt::EVENT_NONE);
    $self->{row} = $self->nrow - 1;
+   $self->{search} = "(?i)";
 
    $self->enable (
       key_press     => \&key_press,
@@ -158,6 +159,10 @@ sub tt_write {
    my ($self, $data) = @_;
 
    $self->{search} .= $self->locale_decode ($data);
+
+   $self->{search} =~ s/^\(\?i\)//
+      if $self->{search} =~ /^\(.*[[:upper:]]/;
+   
    $self->search (-1);
    $self->idle;
 

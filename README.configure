@@ -37,13 +37,12 @@ CONFIGURE OPTIONS
         about 700kB), but it doesn't increase memory usage unless you use a
         font requiring one of these encodings.
 
-           all             all available codeset groups 
-           zh              common chinese encodings 
-           zh_ext          rarely used but very big chinese encodigs 
-           jp              common japanese encodings 
-           jp_ext          rarely used but big japanese encodings 
-           kr              korean encodings 
-
+   all             all available codeset groups 
+   zh              common chinese encodings 
+   zh_ext          rarely used but very big chinese encodigs 
+   jp              common japanese encodings 
+   jp_ext          rarely used but big japanese encodings 
+   kr              korean encodings 
     --enable-xim (default: on)
         Add support for XIM (X Input Method) protocol. This allows using
         alternative input methods (e.g. kinput2) and will also correctly set
@@ -177,8 +176,9 @@ CONFIGURE OPTIONS
           user-pty (-pty-fd)
           hold on exit (-hold)
           skip builtin block graphics (-sbg)
+          separate highlightcolor support (-hc)
 
-        It also enabled some non-essential features otherwise disabled, such
+        It also enables some non-essential features otherwise disabled, such
         as:
 
           some round-trip time optimisations

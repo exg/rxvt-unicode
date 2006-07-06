@@ -2255,24 +2255,6 @@ rxvt_term::scr_refresh () NOTHROW
           // only do special processing if any attributes are set, which is unlikely
           if (rend & (RS_Bold | RS_Italic | RS_Uline | RS_RVid | RS_Blink | RS_Careful))
             {
-#if ENABLE_STYLES
-              // "careful" (too wide) character handling
-
-              // include previous careful character(s) if possible, looks nicer (best effort...)
-              while (text > stp
-                  && srp[text - stp - 1] & RS_Careful
-                  && RS_SAME (rend, srp[text - stp - 1]))
-                text--, count++, xpixel -= fwidth;
-
-              // force redraw after "careful" characters to avoid pixel droppings
-              for (int i = 0; srp[col + i] & RS_Careful && col + i < ncol - 1; i++)
-                drp[col + i + 1] = srp[col + i + 1] ^ RS_redraw;
-
-              // force redraw before "careful" characters to avoid pixel droppings
-              for (int i = 0; srp[text - stp - i] & RS_Careful && text - i > stp; i++)
-                drp[text - stp - i - 1] = srp[text - stp - i - 1] ^ RS_redraw;
-#endif
-
               bool invert = rend & RS_RVid;
 
 #ifndef NO_BOLD_UNDERLINE_REVERSE
@@ -2304,12 +2286,23 @@ rxvt_term::scr_refresh () NOTHROW
 
               if (invert)
                 {
-                  ::swap (fore, back);
+#ifdef OPTION_HC
+                  if ((showcursor && row == screen.cur.row && text - stp == screen.cur.col)
+                      || !ISSET_PIXCOLOR (Color_HC))
+#endif
+                    /* invert the column if no highlightColor is set or it is the
+                     * current cursor column */
+                    ::swap (fore, back);
+#ifdef OPTION_HC
+                  else if (ISSET_PIXCOLOR (Color_HC))
+                    back = Color_HC;
+#endif
 
 #ifndef NO_BOLD_UNDERLINE_REVERSE
+# ifndef OPTION_HC
                   if (ISSET_PIXCOLOR (Color_RV))
                     back = Color_RV;
-
+# endif
                   if (fore == back)
                     {
                       fore = Color_bg;
@@ -2329,6 +2322,24 @@ rxvt_term::scr_refresh () NOTHROW
                   else if (hidden_text)
                     fore = back;
                 }
+#endif
+
+#if ENABLE_STYLES
+              // "careful" (too wide) character handling
+
+              // include previous careful character(s) if possible, looks nicer (best effort...)
+              while (text > stp
+                  && srp[text - stp - 1] & RS_Careful
+                  && RS_SAME (rend, srp[text - stp - 1]))
+                text--, count++, xpixel -= fwidth;
+
+              // force redraw after "careful" characters to avoid pixel droppings
+              for (int i = 0; srp[col + i] & RS_Careful && col + i < ncol - 1; i++)
+                drp[col + i + 1] = srp[col + i + 1] ^ RS_redraw;
+
+              // force redraw before "careful" characters to avoid pixel droppings
+              for (int i = 0; srp[text - stp - i] & RS_Careful && text - i > stp; i++)
+                drp[text - stp - i - 1] = srp[text - stp - i - 1] ^ RS_redraw;
 #endif
             }
 
