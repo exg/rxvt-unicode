@@ -145,7 +145,7 @@ int rxvt_composite_vec::expand (unicode_t c, wchar_t *r)
 
 rxvt_term::rxvt_term ()
     :
-#if TRANSPARENT
+#if TRANSPARENT || ENABLE_PERL
     rootwin_ev (this, &rxvt_term::rootwin_cb),
 #endif
 #ifdef HAVE_SCROLLBARS
@@ -328,7 +328,7 @@ rxvt_term::destroy ()
 #if HAVE_SCROLLBARS
       scrollbar_ev.stop (display);
 #endif
-#if TRANSPARENT
+#if TRANSPARENT || ENABLE_PERL
       rootwin_ev.stop (display);
 #endif
       incr_ev.stop ();
@@ -505,6 +505,9 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
       check_our_parents ();
       rootwin_ev.start (display, display->root);
     }
+#endif
+#if ENABLE_PERL
+  rootwin_ev.start (display, display->root);
 #endif
 
   set_colorfgbg ();

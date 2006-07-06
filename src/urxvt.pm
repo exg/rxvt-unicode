@@ -261,6 +261,25 @@ C<OnTheSpot>, i.e.:
 
    @@RXVT_NAME@@ -pt OnTheSpot -pe xim-onthespot
 
+=item kuake<hotkey>
+
+A very primitive quake-console-like extension. It was inspired by a
+description of how the programs C<kuake> and C<yakuake> work: Whenever the
+user presses a global accelerator key (by default C<F10>), the terminal
+will show or hide itself. Another press of the accelerator key will hide
+or show it again.
+
+Initially, the window will not be shown when using this extension.
+
+This is useful if you need a single terminal thats not using any desktop
+space most of the time but is quickly available at the press of a key.
+
+The accelerator key is grabbed regardless of any modifers, so this
+extension will actually grab a physical key just for this function.
+
+If you want a quake-like animation, tell your window manager to do so
+(fvwm can do it).
+
 =item automove-background
 
 This is basically a very small extension that dynamically changes the
@@ -583,6 +602,10 @@ returns TRUE, setting of the window hints is being skipped.
 Called on every X event received on the vt window (and possibly other
 windows). Should only be used as a last resort. Most event structure
 members are not passed.
+
+=item on_root_event $term, $event
+
+Like C<on_x_event>, but is called for events on the root window.
 
 =item on_focus_in $term
 

@@ -1101,7 +1101,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
     XSelectInput (dpy, vt, vt_emask | vt_emask_perl | vt_emask_xim);
   }
 
-#if TRANSPARENT
+#if TRANSPARENT || ENABLE_PERL
   void rootwin_cb (XEvent &xev);
   xevent_watcher rootwin_ev;
 #endif

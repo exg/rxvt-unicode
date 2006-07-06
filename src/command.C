@@ -1790,12 +1790,17 @@ rxvt_term::update_fade_color (unsigned int idx)
 #endif
 }
 
-#if TRANSPARENT
+#if TRANSPARENT || ENABLE_PERL
 void
 rxvt_term::rootwin_cb (XEvent &ev)
 {
   make_current ();
 
+  if (SHOULD_INVOKE (HOOK_ROOT_EVENT)
+      && HOOK_INVOKE ((this, HOOK_ROOT_EVENT, DT_XEVENT, &ev, DT_END)))
+    return;
+
+# if TRANSPARENT
   switch (ev.type)
     {
       case PropertyNotify:
@@ -1813,6 +1818,7 @@ rxvt_term::rootwin_cb (XEvent &ev)
           want_refresh = want_full_refresh = 1;
         break;
     }
+# endif
 }
 #endif
 

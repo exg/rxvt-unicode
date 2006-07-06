@@ -1,0 +1,52 @@
+#! perl
+
+sub on_start {
+   my ($self) = @_;
+
+   $self->{key} = $self->{argv}[0] || "F10";
+
+   $self->{keysym} = $self->XStringToKeysym ($self->{key})
+      or urxvt::fatal "cannot convert requested kuake wake-up key '$self->{key}' to keysym, unable to continue.\n";
+
+   $self->{keycode} = $self->XKeysymToKeycode ($self->{keysym})
+      or urxvt::fatal "cannot convert requested kuake wake-up key '$self->{key}' to keycode, unable to continue.\n";
+
+   $self->XGrabKey ($self->{keycode}, urxvt::AnyModifier, $self->DefaultRootWindow);
+
+   $self->XUnmapWindow ($self->parent);
+
+   $self->{unmap_me} = 1;
+
+   ()
+}
+
+sub on_map_notify {
+   my ($self) = @_;
+
+   # suppress initial map event
+   $self->XUnmapWindow ($self->parent)
+      if delete $self->{unmap_me};
+   
+   ()
+}
+
+sub on_root_event {
+   my ($self, $event) = @_;
+
+   return unless $event->{type} == urxvt::KeyPress && $event->{keycode} == $self->{keycode};
+
+   $self->mapped
+      ? $self->XUnmapWindow ($self->parent)
+      : $self->XMapWindow ($self->parent);
+
+   1
+}
+
+sub on_destroy {
+   my ($self) = @_;
+
+   $self->XUngrabKey ($self->XKeysymToKeycode ($self->{keysym}), 0, $self->DefaultRootWindow)
+      if $self->{keysym};
+
+   ()
+}

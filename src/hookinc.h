@@ -27,6 +27,7 @@
 
   def (USER_COMMAND)
 
+  def (ROOT_EVENT)
   def (X_EVENT)
   def (FOCUS_IN)
   def (FOCUS_OUT)

@@ -19,14 +19,16 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
 DUMB: support tex fonts
 
+7.8
 TODO: investigate -pe tabbed -g 80x25 being 23 not 24 or 25 lines
 TODO: zero scorllback buffer should free memory
-TODO: kuake
 	- INCOMPATIBLE CHANGE: this version will always read ~/.Xdefaults,
           earlier versions only read it if display-resources (usually from
           .Xresources) are not set. This avoids the #1 FAQ ("why isn't my
           resource used") and seems to be logical behaviour, too. .Xdefaults
           resources have a lower priority than display-specific resources.
+        - add "kuake" perl extension that does a similar thing to the kuake
+          terminal emulator (see man urxtvperl).
         - use less "correct" color scaling that is compatible with libX11 and
           Xft (avoids off-by-one colors resulting in striped backgrounds).
         - the "depth" resource is now respected.

@@ -790,6 +790,10 @@ BOOT:
     const_iv (Button5Mask),
     const_iv (AnyModifier),
 
+    const_iv (NoSymbol),
+    const_iv (GrabModeSync),
+    const_iv (GrabModeAsync),
+
     const_iv (EVENT_NONE),
     const_iv (EVENT_READ),
     const_iv (EVENT_WRITE),
@@ -1014,31 +1018,35 @@ rxvt_term::set_should_invoke (int htype, int inc)
 	CODE:
         THIS->perl.should_invoke [htype] += inc;
 
-void
+int
 rxvt_term::grab_button (int button, U32 modifiers, Window window = THIS->vt)
 	CODE:
-        XGrabButton (THIS->dpy, button, modifiers, window, 1,
-                     ButtonPressMask | ButtonReleaseMask | EnterWindowMask | LeaveWindowMask | PointerMotionMask,
-                     GrabModeSync, GrabModeSync, None, GRAB_CURSOR);
+        RETVAL = XGrabButton (THIS->dpy, button, modifiers, window, 1,
+                              ButtonPressMask | ButtonReleaseMask | EnterWindowMask | LeaveWindowMask | PointerMotionMask,
+                              GrabModeSync, GrabModeSync, None, GRAB_CURSOR);
+	OUTPUT: RETVAL
 
-void
+int
 rxvt_term::ungrab_button (int button, U32 modifiers, Window window = THIS->vt)
 	CODE:
-        XUngrabButton (THIS->dpy, button, modifiers, window);
-
-#if 0
-
-void
-XGrabKey (rxvt_term *THIS, int keycode, U32 modifiers, Window window = THIS->vt)
-	C_ARGS:
-        THIS->dpy, keycode, modifiers, window, 1,
-        GrabModeSync, GrabModeSync
+        RETVAL = XUngrabButton (THIS->dpy, button, modifiers, window);
+	OUTPUT: RETVAL
 
 void
-XUngrabKey (rxvt_term *THIS, int keycode, U32 modifiers, Window window = THIS->vt)
-	C_ARGS: THIS->dpy, keycode, modifiers, window
+rxvt_term::XGrabKey (int keycode, U32 modifiers, Window window = THIS->vt, \
+                     int owner_events = 1, int pointer_mode = GrabModeAsync, int keyboard_mode = GrabModeAsync)
+	CODE:
+        XGrabKey (THIS->dpy, keycode, modifiers, window, owner_events, pointer_mode, keyboard_mode);
 
-#endif
+void
+rxvt_term::XUngrabKey (int keycode, U32 modifiers, Window window = THIS->vt)
+	CODE:
+	XUngrabKey (THIS->dpy, keycode, modifiers, window);
+
+void
+rxvt_term::XUngrabKeyboard (Time eventtime)
+	CODE:
+	XUngrabKeyboard (THIS->dpy, eventtime);
 
 bool
 rxvt_term::grab (Time eventtime, int sync = 0)
@@ -1081,6 +1089,30 @@ void
 rxvt_term::ungrab ()
 	CODE:
         ungrab (THIS);
+
+int
+rxvt_term::XStringToKeysym (char *string)
+	CODE:
+        RETVAL = XStringToKeysym (string);
+	OUTPUT: RETVAL
+
+char *
+rxvt_term::XKeysymToString (int sym)
+	CODE:
+        RETVAL = XKeysymToString (sym);
+	OUTPUT: RETVAL
+
+int
+rxvt_term::XKeysymToKeycode (int sym)
+	CODE:
+        RETVAL = XKeysymToKeycode (THIS->dpy, sym);
+	OUTPUT: RETVAL
+
+int
+rxvt_term::XKeycodeToKeysym (int code, int index)
+	CODE:
+        RETVAL = XKeycodeToKeysym (THIS->dpy, code, index);
+	OUTPUT: RETVAL
 
 int
 rxvt_term::strwidth (SV *str)
