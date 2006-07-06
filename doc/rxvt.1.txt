@@ -40,18 +40,18 @@ RXVT-UNICODE VS. RXVT
 
     Therefore another design rationale was the use of multiple fonts to
     display characters: The idea of a single unicode font which many other
-    programs force onto it's users never made sense to me: You should be
-    able to choose any font for any script freely.
+    programs force onto its users never made sense to me: You should be able
+    to choose any font for any script freely.
 
     Apart from that, rxvt-unicode is also much better internationalised than
-    it's predecessor, supports things such as XFT and ISO 14755 that are
+    its predecessor, supports things such as XFT and ISO 14755 that are
     handy in i18n-environments, is faster, and has a lot less bugs than the
     original rxvt. This all in addition to dozens of other small
     improvements.
 
     It is still faithfully following the original rxvt idea of being lean
     and nice on resources: for example, you can still configure rxvt-unicode
-    without most of it's features to get a lean binary. It also comes with a
+    without most of its features to get a lean binary. It also comes with a
     client/daemon pair that lets you open any number of terminal windows
     from within a single process, which makes startup time very fast and
     drastically reduces memory usage. See rxvtd(1) (daemon) and rxvtc(1)
@@ -161,7 +161,7 @@ OPTIONS
         (hopefully) reasonable default font list is always appended to it.
         See resource font for more details.
 
-        In short, to specify an X11 core font, just specify it's name or
+        In short, to specify an X11 core font, just specify its name or
         prefix it with "x:". To specify an XFT-font, you need to prefix it
         with "xft:", e.g.:
 
@@ -359,7 +359,7 @@ OPTIONS
         Remap a key symbol. See resource keysym.
 
     -embed *windowid*
-        Tells rxvt to embed it's windows into an already-existing window,
+        Tells rxvt to embed its windows into an already-existing window,
         which enables applications to easily embed a terminal.
 
         Right now, rxvt will first unmap/map the specified window, so it
@@ -890,7 +890,7 @@ RESOURCES (available also as long-options)
         it can start or end with whitespace.
 
         Please note that you need to double the "\" in resource files, as
-        Xlib itself does it's own de-escaping (you can use "\033" instead of
+        Xlib itself does its own de-escaping (you can use "\033" instead of
         "\e" (and so on), which will work with both Xt and rxvt's own
         processing).
 
@@ -1114,7 +1114,7 @@ ISO 14755 SUPPORT
 
         Start by pressing "Control" and "Shift" together, then releasing
         them. The next special key (cursor keys, home etc.) you enter will
-        not invoke it's usual function but instead will insert the
+        not invoke its usual function but instead will insert the
         corresponding keycap symbol. The symbol will only be entered when
         the key has been released, otherwise pressing e.g. "Shift" would
         enter the symbol for "ISO Level 2 Switch", although your intention
@@ -1252,7 +1252,7 @@ ENVIRONMENT
 
     DISPLAY
         Used by rxvt to connect to the display and set to the correct
-        display in it's child processes.
+        display in its child processes.
 
     SHELL
         The shell to be used for command execution, defaults to "/bin/sh".

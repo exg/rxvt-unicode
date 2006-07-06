@@ -294,7 +294,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
    Why do italic characters look as if clipped?
     Many fonts have difficulties with italic characters and hinting. For
     example, the otherwise very nicely hinted font "xft:Bitstream Vera Sans
-    Mono" completely fails in it's italic face. A workaround might be to
+    Mono" completely fails in its italic face. A workaround might be to
     enable freetype autohinting, i.e. like this:
 
        URxvt.italicFont:        xft:Bitstream Vera Sans Mono:italic:autohint=true
@@ -308,8 +308,8 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
    Rxvt-unicode doesn't seem to anti-alias its fonts, what is wrong?
     Rxvt-unicode will use whatever you specify as a font. If it needs to
-    fall back to it's default font search list it will prefer X11 core
-    fonts, because they are small and fast, and then use Xft fonts. It has
+    fall back to its default font search list it will prefer X11 core fonts,
+    because they are small and fast, and then use Xft fonts. It has
     antialiasing disabled for most of them, because the author thinks they
     look best that way.
 
@@ -861,8 +861,8 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
    Why does "ls" no longer have coloured output?
     The "ls" in the GNU coreutils unfortunately doesn't use terminfo to
-    decide wether a terminal has colour, but uses it's own configuration
-    file. Needless to say, "rxvt-unicode" is not in it's default file (among
+    decide wether a terminal has colour, but uses its own configuration
+    file. Needless to say, "rxvt-unicode" is not in its default file (among
     with most other terminals supporting colour). Either add:
 
        TERM rxvt-unicode
@@ -937,7 +937,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     this to all applications so everybody agrees on character properties
     such as width and code number. This mechanism is the *locale*.
     Applications not using that info will have problems (for example,
-    "xterm" gets the width of characters wrong as it uses it's own,
+    "xterm" gets the width of characters wrong as it uses its own,
     locale-independent table under all locales).
 
     Rxvt-unicode uses the "LC_CTYPE" locale category to select encoding. All
@@ -1092,7 +1092,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     wchar_t is represented as unicode.
 
     As you might have guessed, FreeBSD does neither define this symobl nor
-    does it support it. Instead, it uses it's own internal representation of
+    does it support it. Instead, it uses its own internal representation of
     wchar_t. This is, of course, completely fine with respect to standards.
 
     However, that means rxvt-unicode only works in "POSIX", "ISO-8859-1" and

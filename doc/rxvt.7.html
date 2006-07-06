@@ -428,7 +428,7 @@ japanese fonts would only be in your way.</p>
 <h3><a name="why_do_italic_characters_look_as_if_clipped">Why do italic characters look as if clipped?</a></h3>
 <p>Many fonts have difficulties with italic characters and hinting. For
 example, the otherwise very nicely hinted font <code>xft:Bitstream Vera Sans
-Mono</code> completely fails in it's italic face. A workaround might be to
+Mono</code> completely fails in its italic face. A workaround might be to
 enable freetype autohinting, i.e. like this:</p>
 <pre>
    URxvt.italicFont:        xft:Bitstream Vera Sans Mono:italic:autohint=true
@@ -444,7 +444,7 @@ memory and also speeds up rendering considerably.</p>
 </p>
 <h3><a name="rxvtunicode_doesn_t_seem_to_antialias_its_fonts__what_is_wrong">Rxvt-unicode doesn't seem to anti-alias its fonts, what is wrong?</a></h3>
 <p>Rxvt-unicode will use whatever you specify as a font. If it needs to
-fall back to it's default font search list it will prefer X11 core
+fall back to its default font search list it will prefer X11 core
 fonts, because they are small and fast, and then use Xft fonts. It has
 antialiasing disabled for most of them, because the author thinks they
 look best that way.</p>
@@ -957,8 +957,8 @@ like this:</p>
 </p>
 <h3><a name="why_does_ls_no_longer_have_coloured_output">Why does <code>ls</code> no longer have coloured output?</a></h3>
 <p>The <code>ls</code> in the GNU coreutils unfortunately doesn't use terminfo to
-decide wether a terminal has colour, but uses it's own configuration
-file. Needless to say, <code>rxvt-unicode</code> is not in it's default file (among
+decide wether a terminal has colour, but uses its own configuration
+file. Needless to say, <code>rxvt-unicode</code> is not in its default file (among
 with most other terminals supporting colour). Either add:</p>
 <pre>
    TERM rxvt-unicode</pre>
@@ -1032,7 +1032,7 @@ the encoding, doing I/O and (most important) communicating this to all
 applications so everybody agrees on character properties such as width
 and code number. This mechanism is the <em>locale</em>. Applications not using
 that info will have problems (for example, <code>xterm</code> gets the width of
-characters wrong as it uses it's own, locale-independent table under all
+characters wrong as it uses its own, locale-independent table under all
 locales).</p>
 <p>Rxvt-unicode uses the <code>LC_CTYPE</code> locale category to select encoding. All
 programs doing the same (that is, most) will automatically agree in the
@@ -1192,7 +1192,7 @@ in your compile environment, or an implementation that implements it,
 wether it defines the symbol or not. <code>__STDC_ISO_10646__</code> requires that
 <strong>wchar_t</strong> is represented as unicode.</p>
 <p>As you might have guessed, FreeBSD does neither define this symobl nor
-does it support it. Instead, it uses it's own internal representation of
+does it support it. Instead, it uses its own internal representation of
 <strong>wchar_t</strong>. This is, of course, completely fine with respect to standards.</p>
 <p>However, that means rxvt-unicode only works in <code>POSIX</code>, <code>ISO-8859-1</code> and
 <code>UTF-8</code> locales under FreeBSD (which all use Unicode as <strong>wchar_t</strong>.</p>

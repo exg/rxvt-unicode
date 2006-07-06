@@ -155,6 +155,8 @@ TODO: kuake
         - added the OSC sequence 702 to detect the urxvt version number.
         - small configure updates.
         - further RTT optimisations.
+        - backported clean-up patches for makefiles and documentation from
+          the debian package.
         - updated doc/rxvt-unicode.spec file. It's still not maintained here,
           but much newer than the old one.
 
