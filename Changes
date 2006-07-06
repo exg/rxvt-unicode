@@ -22,7 +22,6 @@ DUMB: support tex fonts
 TODO: investigate -pe tabbed -g 80x25 being 23 not 24 or 25 lines
 TODO: zero scorllback buffer should free memory
 TODO: kuake
-TODO: investigate the color-management patch send ages ago, as well as other postings
 	- INCOMPATIBLE CHANGE: this version will always read ~/.Xdefaults,
           earlier versions only read it if display-resources (usually from
           .Xresources) are not set. This avoids the #1 FAQ ("why isn't my
@@ -39,6 +38,8 @@ TODO: investigate the color-management patch send ages ago, as well as other pos
           a patch by Martin Stubenschrott.
         - double-buffered xft drawing did suffer from pixel offset issues
           when pixmap transparency was enabled.
+        - strategically add # to the url-match regexes, as we really want to
+          match common URIs not common URLs. Reported by Aaron Griffin.
 	- moved on_osc_seq to on_osc_seq_perl and added a more
           generic osc_seq.
         - fix a bug causing double callback invocations when perl hooks
