@@ -155,6 +155,8 @@ TODO: kuake
         - added the OSC sequence 702 to detect the urxvt version number.
         - small configure updates.
         - further RTT optimisations.
+        - updated doc/rxvt-unicode.spec file. It's still not maintained here,
+          but much newer than the old one.
 
 7.4  Sat Jan 28 15:26:27 CET 2006
 	- screen background wasn't always erased properly when scrolling,
