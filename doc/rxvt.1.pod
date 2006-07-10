@@ -49,7 +49,7 @@ to choose any font for any script freely.
 
 Apart from that, rxvt-unicode is also much better internationalised than
 its predecessor, supports things such as XFT and ISO 14755 that are handy
-in i18n-environments, is faster, and has a lot less bugs than the original
+in i18n-environments, is faster, and has a lot bugs less than the original
 rxvt. This all in addition to dozens of other small improvements.
 
 It is still faithfully following the original rxvt idea of being lean
@@ -61,7 +61,7 @@ drastically reduces memory usage. See @@RXVT_NAME@@d(1) (daemon) and
 @@RXVT_NAME@@c(1) (client).
 
 It also makes technical information about escape sequences (which have
-been extended) easier accessible: see @@RXVT_NAME@@(7) for technical
+been extended) more accessible: see @@RXVT_NAME@@(7) for technical
 reference documentation (escape sequences etc.).
 
 =head1 OPTIONS
