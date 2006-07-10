@@ -30,7 +30,7 @@ especially cursive scripts such as arabic, vertically written scripts
 like mongolian or scripts requiring extremely complex combining rules,
 like tibetan or devenagari. Don't expect pretty output when using these
 scripts. Most other scripts, latin, cyrillic, kanji, thai etc. should work
-fine, though. A somewhat difficult case are left-to-right scripts, such
+fine, though. A somewhat difficult case are right-to-left scripts, such
 as hebrew: B<rxvt-unicode> adopts the view that bidirectional algorithms
 belong into the application, not the terminal emulator (too many things --
 such as cursor-movement while editing -- break otherwise), but that might
