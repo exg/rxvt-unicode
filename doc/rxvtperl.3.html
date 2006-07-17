@@ -371,6 +371,31 @@ kinput2.</p>
    rxvt -pt OnTheSpot -pe xim-onthespot</pre>
 </dd>
 </li>
+<dt><strong><a name="item_kuake_3chotkey_3e">kuake&lt;hotkey&gt;</a></strong>
+
+<dd>
+<p>A very primitive quake-console-like extension. It was inspired by a
+description of how the programs <code>kuake</code> and <code>yakuake</code> work: Whenever the
+user presses a global accelerator key (by default <code>F10</code>), the terminal
+will show or hide itself. Another press of the accelerator key will hide
+or show it again.</p>
+</dd>
+<dd>
+<p>Initially, the window will not be shown when using this extension.</p>
+</dd>
+<dd>
+<p>This is useful if you need a single terminal thats not using any desktop
+space most of the time but is quickly available at the press of a key.</p>
+</dd>
+<dd>
+<p>The accelerator key is grabbed regardless of any modifers, so this
+extension will actually grab a physical key just for this function.</p>
+</dd>
+<dd>
+<p>If you want a quake-like animation, tell your window manager to do so
+(fvwm can do it).</p>
+</dd>
+</li>
 <dt><strong><a name="item_automove_2dbackground">automove-background</a></strong>
 
 <dd>
@@ -774,6 +799,12 @@ returns TRUE, setting of the window hints is being skipped.</p>
 <p>Called on every X event received on the vt window (and possibly other
 windows). Should only be used as a last resort. Most event structure
 members are not passed.</p>
+</dd>
+</li>
+<dt><strong><a name="item_on_root_event__24term_2c__24event">on_root_event $term, $event</a></strong>
+
+<dd>
+<p>Like <code>on_x_event</code>, but is called for events on the root window.</p>
 </dd>
 </li>
 <dt><strong><a name="item_on_focus_in__24term">on_focus_in $term</a></strong>

@@ -15,17 +15,17 @@ TODO: investigate -pe tabbed -g 80x25 being 23 not 24 or 25 lines
       => when setting the constraints, the wm might (correctly)
          resize the outer window, which might result in a smaller window overall.
          or something like that. guys, send me a patch.
+TODO: zero scorllback buffer should free memory
+TODO: debian integration
 WISH: skipscroll option
 WISH: selection-color-pair instead of reverse video
 WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 WISH: anyevent mouse notification / manage MotionMask better.
-WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep look.
+WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep scrollbar look.
 DUMB: support tex fonts
 
-7.8
-TODO: zero scorllback buffer should free memory
-TODO: debian integration
+7.8  Mon Jul 17 21:00:46 CEST 2006
 	- INCOMPATIBLE CHANGE: this version will always read ~/.Xdefaults,
           earlier versions only read it if display-resources (usually from
           .Xresources) are not set. This avoids the #1 FAQ ("why isn't my

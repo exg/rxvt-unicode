@@ -128,8 +128,8 @@
 .rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
-.IX Title "rxvt 3"
-.TH rxvt 3 "2006-07-06" "7.7" "RXVT-UNICODE"
+.IX Title "@@RXVT_NAME@@ 3"
+.TH @@RXVT_NAME@@ 3 "2006-07-17" "7.8" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -406,6 +406,24 @@ You enable it by specifying this extension and a preedit style of
 .Vb 1
 \&   @@RXVT_NAME@@ \-pt OnTheSpot \-pe xim\-onthespot
 .Ve
+.IP "kuake<hotkey>" 4
+.IX Item "kuake<hotkey>"
+A very primitive quake-console-like extension. It was inspired by a
+description of how the programs \f(CW\*(C`kuake\*(C'\fR and \f(CW\*(C`yakuake\*(C'\fR work: Whenever the
+user presses a global accelerator key (by default \f(CW\*(C`F10\*(C'\fR), the terminal
+will show or hide itself. Another press of the accelerator key will hide
+or show it again.
+.Sp
+Initially, the window will not be shown when using this extension.
+.Sp
+This is useful if you need a single terminal thats not using any desktop
+space most of the time but is quickly available at the press of a key.
+.Sp
+The accelerator key is grabbed regardless of any modifers, so this
+extension will actually grab a physical key just for this function.
+.Sp
+If you want a quake-like animation, tell your window manager to do so
+(fvwm can do it).
 .IP "automove-background" 4
 .IX Item "automove-background"
 This is basically a very small extension that dynamically changes the
@@ -718,6 +736,10 @@ returns \s-1TRUE\s0, setting of the window hints is being skipped.
 Called on every X event received on the vt window (and possibly other
 windows). Should only be used as a last resort. Most event structure
 members are not passed.
+.ie n .IP "on_root_event $term\fR, \f(CW$event" 4
+.el .IP "on_root_event \f(CW$term\fR, \f(CW$event\fR" 4
+.IX Item "on_root_event $term, $event"
+Like \f(CW\*(C`on_x_event\*(C'\fR, but is called for events on the root window.
 .ie n .IP "on_focus_in $term" 4
 .el .IP "on_focus_in \f(CW$term\fR" 4
 .IX Item "on_focus_in $term"
