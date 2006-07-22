@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2006-07-17" "7.8" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2006-07-22" "7.8" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@c \- control the @@RXVT_NAME@@d daemon
 .SH "SYNOPSIS"
@@ -145,9 +145,10 @@ contacting the daemon.
 .SH "OPTIONS"
 .IX Header "OPTIONS"
 All options that are valid for \fB@@RXVT_NAME@@\fR are valid for
-\&\fB@@RXVT_NAME@@c\fR, too. Please note that all options are currently
-interpreted in the context of the daemon process, which makes a difference
-for options that specify a file descriptor (such as \fB\-pty\-fd\fR).
+\&\fB@@RXVT_NAME@@c\fR, too. Please note that options are interpreted in the
+context of the daemon process. However, as current working directory,
+process environment and any file handles (e.g. for \f(CW\*(C`\-pty\-fd\*(C'\fR) are
+preserved, this rarely makes a difference.
 .SH "EXIT STATUS"
 .IX Header "EXIT STATUS"
 If everything went well, @@RXVT_NAME@@c returns with an exit status of \f(CW0\fR.
@@ -156,7 +157,16 @@ cases it returns with status \f(CW1\fR.
 .PP
 This can be used to implement auto-starting behaviour, by checking for an
 exit status of \f(CW2\fR, running \f(CW\*(C`@@RXVT_NAME@@d \-f \-q\*(C'\fR and retrying the call
-to @@RXVT_NAME@@c.
+to @@RXVT_NAME@@c, like this:
+.PP
+.Vb 6
+\&   #!/bin/sh
+\&   @@RXVT_NAME@@c "$@"
+\&   if [ $? \-eq 2 ]; then
+\&      @@RXVT_NAME@@d \-q \-o \-f
+\&      @@RXVT_NAME@@c "$@"
+\&   fi
+.Ve
 .SH "ENVIRONMENT"
 .IX Header "ENVIRONMENT"
 All environment variables of the current process will be made available

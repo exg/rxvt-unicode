@@ -25,6 +25,9 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep scrollbar look.
 DUMB: support tex fonts
 
+	- fix urxvtc.1.pod: it actually claimed -pty-fd would not work. But
+          it does! :->
+
 7.8  Mon Jul 17 21:00:46 CEST 2006
 	- INCOMPATIBLE CHANGE: this version will always read ~/.Xdefaults,
           earlier versions only read it if display-resources (usually from
