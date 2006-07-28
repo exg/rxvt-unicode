@@ -118,7 +118,8 @@ Turn on/off inheriting parent window's pixmap. Alternative form is
 B<-tr>; resource B<inheritPixmap>.
 
 I<Please note that transparency of any kind if completely unsupported by
-the author. Don't bug him with installation questions!>
+the author. Don't bug him with installation questions! Read the FAQ (man 7
+@@RXVT_NAME@@)!>
 
 =item B<-fade> I<number>
 
