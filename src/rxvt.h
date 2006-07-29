@@ -1173,8 +1173,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void make_current () const // make this the "currently active" urxvt instance
   {
     SET_R (this);
-    rxvt_set_locale (locale);
     set_environ (envv);
+    rxvt_set_locale (locale);
   }
 
   void init_secondary ();
