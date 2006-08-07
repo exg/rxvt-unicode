@@ -26,6 +26,7 @@ DUMB: support tex fonts
 	- fix urxvtc.1.pod: it actually claimed -pty-fd would not work. But
           it does! :->
 	- rxvt_fatal() in case the locale string is too long for our static buffer.
+        - fixed many, many, typos in the documentation (patch supplied by ves).
 
 7.8  Mon Jul 17 21:00:46 CEST 2006
 	- INCOMPATIBLE CHANGE: this version will always read ~/.Xdefaults,

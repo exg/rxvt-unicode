@@ -37,7 +37,7 @@ such as cursor-movement while editing -- break otherwise), but that might
 change.
 
 If you are looking for a terminal that supports more exotic scripts, let
-me recommend C<mlterm>, which is a very userfriendly, lean and clean
+me recommend C<mlterm>, which is a very user friendly, lean and clean
 terminal emulator. In fact, the reason rxvt-unicode was born was solely
 because the author couldn't get C<mlterm> to use one font for latin1 and
 another for japanese.
@@ -439,7 +439,7 @@ The window will not be destroyed when @@RXVT_NAME@@ exits.
 It might be useful to know that @@RXVT_NAME@@ will not close file
 descriptors passed to it (except for stdin/out/err, of course), so you
 can use file descriptors to communicate with the programs within the
-terminal. This works regardless of wether the C<-embed> option was used or
+terminal. This works regardless of whether the C<-embed> option was used or
 not.
 
 Here is a short Gtk2-perl snippet that illustrates how this option can be
@@ -454,7 +454,7 @@ used (a longer example is in F<doc/embed>):
 =item B<-pty-fd> I<file descriptor>
 
 Tells @@RXVT_NAME@@ NOT to execute any commands or create a new pty/tty
-pair but instead use the given filehandle as the tty master. This is
+pair but instead use the given file handle as the tty master. This is
 useful if you want to drive @@RXVT_NAME@@ as a generic terminal emulator
 without having to run a program within it.
 
@@ -721,7 +721,7 @@ text font will being used for the given style.
 
 When font styles are not enabled, or this option is enabled (B<True>,
 option B<-is>, the default), bold and italic font styles imply high
-intensity foreground/backround colours. Disabling this option (B<False>,
+intensity foreground/background colours. Disabling this option (B<False>,
 option B<+is>) disables this behaviour, the high intensity colours are not
 reachable.
 
@@ -783,7 +783,7 @@ Example:
    URxvt.print-pipe: cat > $(TMPDIR=$HOME mktemp urxvt.XXXXXX)
 
 This creates a new file in your home directory with the screen contents
-everytime you hit C<Print>.
+every time you hit C<Print>.
 
 =item B<scrollBar:> I<boolean>
 
@@ -815,7 +815,7 @@ B<+si>.
 
 B<True>: scroll with scrollback buffer when tty receives new lines (and
 B<scrollTtyOutput> is False); option B<-sw>. B<False>: do not scroll
-with scrollback buffer when tty recieves new lines; option B<+sw>.
+with scrollback buffer when tty receives new lines; option B<+sw>.
 
 =item B<scrollTtyKeypress:> I<boolean>
 
@@ -1036,7 +1036,7 @@ C<\e> (and so on), which will work with both Xt and @@RXVT_NAME@@'s own
 processing).
 
 You can define a range of keysyms in one shot by providing a I<string>
-with pattern B<list/PREFIX/MIDDLE/SUFFIX>, where the delimeter `/'
+with pattern B<list/PREFIX/MIDDLE/SUFFIX>, where the delimiter `/'
 should be a character not used by the strings.
 
 Its usage can be demonstrated by an example:
@@ -1110,7 +1110,7 @@ C<selection>.
 
 Extension names can also be followed by an argument in angle brackets
 (e.g.  C<< searchable-scrollback<M-s> >>, which binds the hotkey for
-searchable scorllback to Alt/Meta-s). Mentioning the same extension
+searchable scrollback to Alt/Meta-s). Mentioning the same extension
 multiple times with different arguments will pass multiple arguments to
 the extension.
 
@@ -1403,11 +1403,11 @@ B<@@RXVT_NAME@@> sets and/or uses the following environment variables:
 =item B<TERM>
 
 Normally set to C<rxvt-unicode>, unless overwritten at configure time, via
-resources or on the commandline.
+resources or on the command line.
 
 =item B<COLORTERM>
 
-Either C<rxvt>, C<rxvt-xpm>, depending on wether @@RXVT_NAME@@ was
+Either C<rxvt>, C<rxvt-xpm>, depending on whether @@RXVT_NAME@@ was
 compiled with XPM support, and optionally with the added extension
 C<-mono> to indicate that rxvt-unicode runs on a monochrome screen.
 
