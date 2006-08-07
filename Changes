@@ -21,12 +21,13 @@ WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the
 WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
-        - hopefully fix the crashing bug people encounter with 7.8
-          (triggered by using transparency + perl). Likely fixes debian bug #380348.
+7.9  Mon Aug  7 18:16:07 CEST 2006
+        - fix the crashing bug people encountered with 7.8 + urxvtd + perl
+          + transparency. Oight to fix debian bug #380348.
 	- fix urxvtc.1.pod: it actually claimed -pty-fd would not work. But
           it does! :->
 	- rxvt_fatal() in case the locale string is too long for our static buffer.
-        - fixed many, many, typos in the documentation (patch supplied by ves).
+        - fixed many, many, typos in the manpages (patch supplied by ves).
 
 7.8  Mon Jul 17 21:00:46 CEST 2006
 	- INCOMPATIBLE CHANGE: this version will always read ~/.Xdefaults,

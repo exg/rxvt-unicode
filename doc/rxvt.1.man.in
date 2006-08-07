@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2006-07-17" "7.8" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2006-08-07" "7.9" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -157,14 +157,14 @@ especially cursive scripts such as arabic, vertically written scripts
 like mongolian or scripts requiring extremely complex combining rules,
 like tibetan or devenagari. Don't expect pretty output when using these
 scripts. Most other scripts, latin, cyrillic, kanji, thai etc. should work
-fine, though. A somewhat difficult case are left-to-right scripts, such
+fine, though. A somewhat difficult case are right-to-left scripts, such
 as hebrew: \fBrxvt-unicode\fR adopts the view that bidirectional algorithms
 belong into the application, not the terminal emulator (too many things \*(--
 such as cursor-movement while editing \*(-- break otherwise), but that might
 change.
 .PP
 If you are looking for a terminal that supports more exotic scripts, let
-me recommend \f(CW\*(C`mlterm\*(C'\fR, which is a very userfriendly, lean and clean
+me recommend \f(CW\*(C`mlterm\*(C'\fR, which is a very user friendly, lean and clean
 terminal emulator. In fact, the reason rxvt-unicode was born was solely
 because the author couldn't get \f(CW\*(C`mlterm\*(C'\fR to use one font for latin1 and
 another for japanese.
@@ -176,7 +176,7 @@ to choose any font for any script freely.
 .PP
 Apart from that, rxvt-unicode is also much better internationalised than
 its predecessor, supports things such as \s-1XFT\s0 and \s-1ISO\s0 14755 that are handy
-in i18n\-environments, is faster, and has a lot less bugs than the original
+in i18n\-environments, is faster, and has a lot bugs less than the original
 rxvt. This all in addition to dozens of other small improvements.
 .PP
 It is still faithfully following the original rxvt idea of being lean
@@ -188,7 +188,7 @@ drastically reduces memory usage. See @@RXVT_NAME@@d(1) (daemon) and
 @@RXVT_NAME@@c(1) (client).
 .PP
 It also makes technical information about escape sequences (which have
-been extended) easier accessible: see @@RXVT_NAME@@(7) for technical
+been extended) more accessible: see @@RXVT_NAME@@(7) for technical
 reference documentation (escape sequences etc.).
 .SH "OPTIONS"
 .IX Header "OPTIONS"
@@ -235,7 +235,8 @@ Turn on/off inheriting parent window's pixmap. Alternative form is
 \&\fB\-tr\fR; resource \fBinheritPixmap\fR.
 .Sp
 \&\fIPlease note that transparency of any kind if completely unsupported by
-the author. Don't bug him with installation questions!\fR
+the author. Don't bug him with installation questions! Read the \s-1FAQ\s0 (man 7
+@@RXVT_NAME@@)!\fR
 .IP "\fB\-fade\fR \fInumber\fR" 4
 .IX Item "-fade number"
 Fade the text by the given percentage when focus is lost. Small values
@@ -508,7 +509,7 @@ The window will not be destroyed when @@RXVT_NAME@@ exits.
 It might be useful to know that @@RXVT_NAME@@ will not close file
 descriptors passed to it (except for stdin/out/err, of course), so you
 can use file descriptors to communicate with the programs within the
-terminal. This works regardless of wether the \f(CW\*(C`\-embed\*(C'\fR option was used or
+terminal. This works regardless of whether the \f(CW\*(C`\-embed\*(C'\fR option was used or
 not.
 .Sp
 Here is a short Gtk2\-perl snippet that illustrates how this option can be
@@ -524,7 +525,7 @@ used (a longer example is in \fIdoc/embed\fR):
 .IP "\fB\-pty\-fd\fR \fIfile descriptor\fR" 4
 .IX Item "-pty-fd file descriptor"
 Tells @@RXVT_NAME@@ \s-1NOT\s0 to execute any commands or create a new pty/tty
-pair but instead use the given filehandle as the tty master. This is
+pair but instead use the given file descriptor as the tty master. This is
 useful if you want to drive @@RXVT_NAME@@ as a generic terminal emulator
 without having to run a program within it.
 .Sp
@@ -769,7 +770,7 @@ text font will being used for the given style.
 .IX Item "intensityStyles: boolean"
 When font styles are not enabled, or this option is enabled (\fBTrue\fR,
 option \fB\-is\fR, the default), bold and italic font styles imply high
-intensity foreground/backround colours. Disabling this option (\fBFalse\fR,
+intensity foreground/background colours. Disabling this option (\fBFalse\fR,
 option \fB+is\fR) disables this behaviour, the high intensity colours are not
 reachable.
 .IP "\fBselectstyle:\fR \fImode\fR" 4
@@ -824,7 +825,7 @@ Example:
 .Ve
 .Sp
 This creates a new file in your home directory with the screen contents
-everytime you hit \f(CW\*(C`Print\*(C'\fR.
+every time you hit \f(CW\*(C`Print\*(C'\fR.
 .IP "\fBscrollBar:\fR \fIboolean\fR" 4
 .IX Item "scrollBar: boolean"
 \&\fBTrue\fR: enable the scrollbar [default]; option \fB\-sb\fR. \fBFalse\fR:
@@ -850,7 +851,7 @@ thumb with the pointer on middle button press/drag.
 .IX Item "scrollWithBuffer: boolean"
 \&\fBTrue\fR: scroll with scrollback buffer when tty receives new lines (and
 \&\fBscrollTtyOutput\fR is False); option \fB\-sw\fR. \fBFalse\fR: do not scroll
-with scrollback buffer when tty recieves new lines; option \fB+sw\fR.
+with scrollback buffer when tty receives new lines; option \fB+sw\fR.
 .IP "\fBscrollTtyKeypress:\fR \fIboolean\fR" 4
 .IX Item "scrollTtyKeypress: boolean"
 \&\fBTrue\fR: scroll to bottom when a non-special key is pressed. Special keys
@@ -1040,7 +1041,7 @@ Xlib itself does its own de-escaping (you can use \f(CW\*(C`\e033\*(C'\fR instea
 processing).
 .Sp
 You can define a range of keysyms in one shot by providing a \fIstring\fR
-with pattern \fBlist/PREFIX/MIDDLE/SUFFIX\fR, where the delimeter `/'
+with pattern \fBlist/PREFIX/MIDDLE/SUFFIX\fR, where the delimiter `/'
 should be a character not used by the strings.
 .Sp
 Its usage can be demonstrated by an example:
@@ -1129,7 +1130,7 @@ example, \f(CW\*(C`default,\-selection\*(C'\fR will use all the default extensio
 .Sp
 Extension names can also be followed by an argument in angle brackets
 (e.g.  \f(CW\*(C`searchable\-scrollback<M\-s>\*(C'\fR, which binds the hotkey for
-searchable scorllback to Alt/Meta\-s). Mentioning the same extension
+searchable scrollback to Alt/Meta\-s). Mentioning the same extension
 multiple times with different arguments will pass multiple arguments to
 the extension.
 .Sp
@@ -1389,10 +1390,10 @@ the author. Don't bug him with installation questions!\fR
 .IP "\fB\s-1TERM\s0\fR" 4
 .IX Item "TERM"
 Normally set to \f(CW\*(C`rxvt\-unicode\*(C'\fR, unless overwritten at configure time, via
-resources or on the commandline.
+resources or on the command line.
 .IP "\fB\s-1COLORTERM\s0\fR" 4
 .IX Item "COLORTERM"
-Either \f(CW\*(C`rxvt\*(C'\fR, \f(CW\*(C`rxvt\-xpm\*(C'\fR, depending on wether @@RXVT_NAME@@ was
+Either \f(CW\*(C`rxvt\*(C'\fR, \f(CW\*(C`rxvt\-xpm\*(C'\fR, depending on whether @@RXVT_NAME@@ was
 compiled with \s-1XPM\s0 support, and optionally with the added extension
 \&\f(CW\*(C`\-mono\*(C'\fR to indicate that rxvt-unicode runs on a monochrome screen.
 .IP "\fB\s-1COLORFGBG\s0\fR" 4

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2006-07-22" "7.8" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2006-08-07" "7.9" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@c \- control the @@RXVT_NAME@@d daemon
 .SH "SYNOPSIS"
@@ -147,7 +147,7 @@ contacting the daemon.
 All options that are valid for \fB@@RXVT_NAME@@\fR are valid for
 \&\fB@@RXVT_NAME@@c\fR, too. Please note that options are interpreted in the
 context of the daemon process. However, as current working directory,
-process environment and any file handles (e.g. for \f(CW\*(C`\-pty\-fd\*(C'\fR) are
+process environment and any file descriptor (e.g. for \f(CW\*(C`\-pty\-fd\*(C'\fR) are
 preserved, this rarely makes a difference.
 .SH "EXIT STATUS"
 .IX Header "EXIT STATUS"

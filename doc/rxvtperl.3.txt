@@ -14,7 +14,7 @@ SYNOPSIS
        rxvt --perl-lib $HOME -pe grab_test
 
 DESCRIPTION
-    Everytime a terminal object gets created, extension scripts specified
+    Every time a terminal object gets created, extension scripts specified
     via the "perl" resource are loaded and associated with it.
 
     Scripts are compiled in a 'use strict' and 'use utf8' environment, and
@@ -55,7 +55,7 @@ PREPACKAGED EXTENSIONS
 
         The index number (0, 1...) must not have any holes, and each regex
         must contain at least one pair of capturing parentheses, which will
-        be used for the match. For example, the followign adds a regex that
+        be used for the match. For example, the following adds a regex that
         matches everything between two vertical bars:
 
            URxvt.selection.pattern-0: \\|([^|]+)\\|
@@ -109,7 +109,7 @@ PREPACKAGED EXTENSIONS
         called whenever the popup is being displayed.
 
         It's sole argument is the popup menu, which can be modified. The
-        selection is in $_, which can be used to decide wether to add
+        selection is in $_, which can be used to decide whether to add
         something or not. It should either return nothing or a string and a
         code reference. The string will be used as button text and the code
         reference will be called when the button gets activated and should
@@ -200,7 +200,7 @@ PREPACKAGED EXTENSIONS
 
     tabbed
         This transforms the terminal into a tabbar with additional
-        terminals, that is, it implements what is commonly refered to as
+        terminals, that is, it implements what is commonly referred to as
         "tabbed terminal". The topmost line displays a "[NEW]" button,
         which, when clicked, will add a new tab, followed by one button per
         tab.
@@ -250,7 +250,7 @@ PREPACKAGED EXTENSIONS
         desktop space most of the time but is quickly available at the press
         of a key.
 
-        The accelerator key is grabbed regardless of any modifers, so this
+        The accelerator key is grabbed regardless of any modifiers, so this
         extension will actually grab a physical key just for this function.
 
         If you want a quake-like animation, tell your window manager to do
@@ -260,7 +260,7 @@ PREPACKAGED EXTENSIONS
         This is basically a very small extension that dynamically changes
         the background pixmap offset to the window position, in effect
         creating the same effect as pseudo transparency with a custom
-        pixmap. No scaling is supported in this mode. Exmaple:
+        pixmap. No scaling is supported in this mode. Example:
 
            rxvt -pixmap background.xpm -pe automove-background
 
@@ -383,7 +383,7 @@ API DOCUMENTATION
     The following subroutines can be declared in extension files, and will
     be called whenever the relevant event happens.
 
-    The first argument passed to them is an extension oject as described in
+    The first argument passed to them is an extension object as described in
     the in the "Extension Objects" section.
 
     All of these hooks must return a boolean value. If any of the called
@@ -403,7 +403,7 @@ API DOCUMENTATION
     on_start $term
         Called at the very end of initialisation of a new terminal, just
         before trying to map (display) the toplevel and returning to the
-        mainloop.
+        main loop.
 
     on_destroy $term
         Called whenever something tries to destroy terminal, when the
@@ -436,12 +436,12 @@ API DOCUMENTATION
         queried and changed by calling "$term->selection".
 
         Returning a true value aborts selection grabbing. It will still be
-        hilighted.
+        highlighted.
 
     on_sel_extend $term
         Called whenever the user tries to extend the selection (e.g. with a
         double click) and is either supposed to return false (normal
-        operation), or should extend the selection itelf and return true to
+        operation), or should extend the selection itself and return true to
         suppress the built-in processing. This can happen multiple times, as
         long as the callback returns true, it will be called on every
         further click by the user and is supposed to enlarge the selection
@@ -450,7 +450,7 @@ API DOCUMENTATION
         See the selection example extension.
 
     on_view_change $term, $offset
-        Called whenever the view offset changes, i..e the user or program
+        Called whenever the view offset changes, i.e. the user or program
         scrolls. Offset 0 means display the normal terminal, positive values
         show this many lines of scrollback.
 
@@ -481,7 +481,7 @@ API DOCUMENTATION
         and this might be enforced in the future.
 
         Be careful not ever to trust (in a security sense) the data you
-        receive, as its source can not easily be controleld (e-mail content,
+        receive, as its source can not easily be controlled (e-mail content,
         messages from other users on the same system etc.).
 
     on_add_lines $term, $string
@@ -519,15 +519,15 @@ API DOCUMENTATION
         Called just after the screen gets redrawn. See "on_refresh_begin".
 
     on_user_command $term, $string
-        Called whenever the a user-configured event is being activated (e.g.
-        via a "perl:string" action bound to a key, see description of the
-        keysym resource in the rxvt(1) manpage).
+        Called whenever a user-configured event is being activated (e.g. via
+        a "perl:string" action bound to a key, see description of the keysym
+        resource in the rxvt(1) manpage).
 
         The event is simply the action string. This interface is assumed to
         change slightly in the future.
 
     on_resize_all_windows $tern, $new_width, $new_height
-        Called just after the new window size has been calculcated, but
+        Called just after the new window size has been calculated, but
         before windows are actually being resized or hints are being set. If
         this hook returns TRUE, setting of the window hints is being
         skipped.
@@ -545,8 +545,8 @@ API DOCUMENTATION
         rxvt-unicode does focus in processing.
 
     on_focus_out $term
-        Called wheneever the window loses keyboard focus, before
-        rxvt-unicode does focus out processing.
+        Called whenever the window loses keyboard focus, before rxvt-unicode
+        does focus out processing.
 
     on_configure_notify $term, $event
     on_property_notify $term, $event
@@ -594,13 +594,13 @@ API DOCUMENTATION
         object, whenever a callback/hook is executing.
 
     @urxvt::TERM_INIT
-        All coderefs in this array will be called as methods of the next
-        newly created "urxvt::term" object (during the "on_init" phase). The
-        array gets cleared before the codereferences that were in it are
-        being executed, so coderefs can push themselves onto it again if
-        they so desire.
+        All code references in this array will be called as methods of the
+        next newly created "urxvt::term" object (during the "on_init"
+        phase). The array gets cleared before the code references that were
+        in it are being executed, so references can push themselves onto it
+        again if they so desire.
 
-        This complements to the perl-eval commandline option, but gets
+        This complements to the perl-eval command line option, but gets
         executed first.
 
     @urxvt::TERM_EXT
@@ -627,7 +627,7 @@ API DOCUMENTATION
 
     @terms = urxvt::termlist
         Returns all urxvt::term objects that exist in this process,
-        regardless of wether they are started, being destroyed etc., so be
+        regardless of whether they are started, being destroyed etc., so be
         careful. Only term objects that have perl extensions attached will
         be returned (because there is no urxvt::term objet associated with
         others).
@@ -736,8 +736,8 @@ API DOCUMENTATION
         hash %urxvt::OPTION. Options not enabled in this binary are not in
         the hash.
 
-        Here is a a likely non-exhaustive list of option names, please see
-        the source file /src/optinc.h to see the actual list:
+        Here is a likely non-exhaustive list of option names, please see the
+        source file /src/optinc.h to see the actual list:
 
          borderLess console cursorBlink cursorUnderline hold iconic insecure
          intensityStyles jumpScroll loginShell mapAlert meta8 mouseWheelScrollPage
@@ -763,7 +763,7 @@ API DOCUMENTATION
         the terminal is destroyed, so changing options frequently will eat
         memory.
 
-        Here is a a likely non-exhaustive list of resource names, not all of
+        Here is a likely non-exhaustive list of resource names, not all of
         which are supported in every build, please see the source file
         /src/rsinc.h to see the actual list:
 
@@ -984,7 +984,7 @@ API DOCUMENTATION
         Returns the currently displayed screen (0 primary, 1 secondary).
 
     $cursor_is_hidden = $term->hidden_cursor
-        Returns wether the cursor is currently hidden or not.
+        Returns whether the cursor is currently hidden or not.
 
     $view_start = $term->view_start ([$newvalue])
         Returns the row number of the topmost displayed line. Maximum value
@@ -1078,7 +1078,7 @@ API DOCUMENTATION
         See "$term->ROW_t" for details.
 
     $string = $term->special_decode $text
-        Converts rxvt-unicodes text reprsentation into a perl string. See
+        Converts rxvt-unicodes text representation into a perl string. See
         "$term->ROW_t" for details.
 
     $success = $term->grab_button ($button, $modifiermask[, $window =
@@ -1089,7 +1089,7 @@ API DOCUMENTATION
 
     $success = $term->grab ($eventtime[, $sync])
         Calls XGrabPointer and XGrabKeyboard in asynchronous (default) or
-        synchronous ($sync is true). Also remembers the grab timestampe.
+        synchronous ($sync is true). Also remembers the grab timestamp.
 
     $term->allow_events_async
         Calls XAllowEvents with AsyncBoth for the most recent grab.
@@ -1212,7 +1212,7 @@ API DOCUMENTATION
         $reventmask is a bitset as described in the "events" method.
 
     $iow = $iow->fd ($fd)
-        Set the filedescriptor (not handle) to watch.
+        Set the file descriptor (not handle) to watch.
 
     $iow = $iow->events ($eventmask)
         Set the event mask to watch. The only allowed values are
@@ -1223,7 +1223,7 @@ API DOCUMENTATION
         Start watching for requested events on the given handle.
 
     $iow = $iow->stop
-        Stop watching for events on the given filehandle.
+        Stop watching for events on the given file handle.
 
   The "urxvt::iw" Class
     This class implements idle watchers, that get called automatically when
@@ -1263,7 +1263,7 @@ API DOCUMENTATION
         Set the callback to be called when the timer triggers.
 
     $pw = $timer->start ($pid)
-        Tells the wqtcher to start watching for process $pid.
+        Tells the watcher to start watching for process $pid.
 
     $pw = $pw->stop
         Stop the watcher.
@@ -1276,7 +1276,7 @@ ENVIRONMENT
     == 0 - fatal messages
     >= 3 - script loading and management
     >=10 - all called hooks
-    >=11 - hook reutrn values
+    >=11 - hook return values
 
 AUTHOR
      Marc Lehmann <pcg@goof.com>

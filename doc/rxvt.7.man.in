@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2006-07-17" "7.8" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2006-08-07" "7.9" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -231,8 +231,8 @@ meaning it couldn't connect to the daemon, it will start the daemon and
 re-run the command. Subsequent invocations of the script will re-use the
 existing daemon.
 .PP
-\fIHow do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.\fR
-.IX Subsection "How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc."
+\fIHow do I distinguish whether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.\fR
+.IX Subsection "How do I distinguish whether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc."
 .PP
 The original rxvt and rxvt-unicode always export the variable \*(L"\s-1COLORTERM\s0\*(R",
 so you can check and see if that is set. Note that several programs, \s-1JED\s0,
@@ -293,7 +293,7 @@ already in use in this mode.
 .PP
 When you \f(CW\*(C`\-\-enable\-everything\*(C'\fR (which \fIis\fR unfair, as this involves xft
 and full locale/XIM support which are quite bloaty inside libX11 and my
-libc), the two diverge, but not unreasnobaly so.
+libc), the two diverge, but not unreasonably so.
 .PP
 .Vb 3
 \&    text    data     bss     drs     rss filename
@@ -402,7 +402,7 @@ are unable to read.
 .PP
 This requires \s-1XFT\s0 support, and the support of your X\-server. If that
 doesn't work for you, blame Xorg and Keith Packard. \s-1ARGB\s0 visuals aren't
-there yet, no matter what they claim. Rxvt-Unicode contains the neccessary
+there yet, no matter what they claim. Rxvt-Unicode contains the necessary
 bugfixes and workarounds for Xft and Xlib to make it work, but that
 doesn't mean that your \s-1WM\s0 has the required kludges in place.
 .PP
@@ -432,7 +432,7 @@ box, and rxvt-unicode has no way of detecting this (the correct way is to
 ask for the character bounding box, which unfortunately is wrong in these
 cases).
 .PP
-It's not clear (to me at least), wether this is a bug in Xft, freetype,
+It's not clear (to me at least), whether this is a bug in Xft, freetype,
 or the respective font. If you encounter this problem you might try using
 the \f(CW\*(C`\-lsp\*(C'\fR option to give the font more height. If that doesn't work, you
 might be forced to use a different font.
@@ -710,7 +710,7 @@ line that contains it. It tries hard not to do this at the wrong moment,
 but when running a program that doesn't parse cursor movements or in some
 cases during rlogin sessions, it fails to detect this properly.
 .PP
-You can permamently switch this feature off by disabling the \f(CW\*(C`readline\*(C'\fR
+You can permanently switch this feature off by disabling the \f(CW\*(C`readline\*(C'\fR
 extension:
 .PP
 .Vb 1
@@ -722,7 +722,7 @@ extension:
 .PP
 Some Debian GNUL/Linux users seem to have this problem, although no
 specific details were reported so far. It is possible that this is caused
-by the wrong \f(CW\*(C`TERM\*(C'\fR setting, although the details of wether and how
+by the wrong \f(CW\*(C`TERM\*(C'\fR setting, although the details of whether and how
 this can happen are unknown, as \f(CW\*(C`TERM=rxvt\*(C'\fR should offer a compatible
 keymap. See the answer to the previous question, and please report if that
 helped.
@@ -762,7 +762,7 @@ depressed.
 .IX Subsection "What's with the strange Backspace/Delete key behaviour?"
 .PP
 Assuming that the physical Backspace key corresponds to the
-BackSpace keysym (not likely for Linux ... see the following
+Backspace keysym (not likely for Linux ... see the following
 question) there are two standard values that can be used for
 Backspace: \f(CW\*(C`^H\*(C'\fR and \f(CW\*(C`^?\*(C'\fR.
 .PP
@@ -913,7 +913,7 @@ develop for myself mostly, so I actually use most of the extensions I
 write.
 .PP
 The selection stuff mainly makes the selection perl-error-message aware
-and tells it to convert pelr error mssages into vi-commands to load the
+and tells it to convert perl error messages into vi-commands to load the
 relevant file and go tot he error line number.
 .PP
 .Vb 2
@@ -922,8 +922,8 @@ relevant file and go tot he error line number.
 .Ve
 .PP
 As the documentation says: plain is the preferred scrollbar for the
-author. The \f(CW\*(C`secondaryScroll\*(C'\fR confgiures urxvt to scroll in full-screen
-apps, like screen, so lines scorlled out of screen end up in urxvt's
+author. The \f(CW\*(C`secondaryScroll\*(C'\fR configures urxvt to scroll in full-screen
+apps, like screen, so lines scrolled out of screen end up in urxvt's
 scrollback buffer.
 .PP
 .Vb 7
@@ -1002,12 +1002,12 @@ I once thought this is a great idea.
 .Ve
 .PP
 I wrote rxvt-unicode to be able to specify fonts exactly. So don't be
-overwhelmed. A special note: the \f(CW\*(C`9x15bold\*(C'\fR mentioend above is actually
+overwhelmed. A special note: the \f(CW\*(C`9x15bold\*(C'\fR mentioned above is actually
 the version from XFree\-3.3, as XFree\-4 replaced it by a totally different
 font (different glyphs for \f(CW\*(C`;\*(C'\fR and many other harmless characters),
 while the second font is actually the \f(CW\*(C`9x15bold\*(C'\fR from XFree4/XOrg. The
 bold version has less chars than the medium version, so I use it for rare
-characters, too. Whene ditign sources with vim, I use italic for comments
+characters, too. When editing sources with vim, I use italic for comments
 and other stuff, which looks quite good with Bitstream Vera anti\-aliased.
 .PP
 Terminus is a quite bad font (many very wrong glyphs), but for most of my
@@ -1075,7 +1075,7 @@ Also consider the form resources have to use:
 .Ve
 .PP
 If you want to use another form (there are lots of different ways of
-specifying resources), make sure you understand wether and why it
+specifying resources), make sure you understand whether and why it
 works. If unsure, use the form above.
 .PP
 \fIWhen I log-in to another system it tells me about missing terminfo data?\fR
@@ -1130,7 +1130,7 @@ systems still compile some programs using the long-obsoleted termcap
 library (Fedora Core's bash is one example) and rely on a termcap entry
 for \f(CW\*(C`rxvt\-unicode\*(C'\fR.
 .PP
-You could use rxvt's termcap entry with resonable results in many cases.
+You could use rxvt's termcap entry with reasonable results in many cases.
 You can also create a termcap entry by using terminfo's infocmp program
 like this:
 .PP
@@ -1167,7 +1167,7 @@ Or you could use this termcap entry, generated by the command above:
 .IX Subsection "Why does ls no longer have coloured output?"
 .PP
 The \f(CW\*(C`ls\*(C'\fR in the \s-1GNU\s0 coreutils unfortunately doesn't use terminfo to
-decide wether a terminal has colour, but uses its own configuration
+decide whether a terminal has colour, but uses its own configuration
 file. Needless to say, \f(CW\*(C`rxvt\-unicode\*(C'\fR is not in its default file (among
 with most other terminals supporting colour). Either add:
 .PP
@@ -1335,7 +1335,7 @@ For example, \fBkinput2\fR does not support \s-1UTF\-8\s0 locales, you should us
 .IX Item "- Make sure the XMODIFIERS environment variable is set correctly when starting rxvt-unicode."
 .PD
 When you want to use e.g. \fBkinput2\fR, it must be set to
-\&\f(CW\*(C`@im=kinput2\*(C'\fR. For \fBscim\fR, use \f(CW\*(C`@im=SCIM\*(C'\fR. Youc an see what input
+\&\f(CW\*(C`@im=kinput2\*(C'\fR. For \fBscim\fR, use \f(CW\*(C`@im=SCIM\*(C'\fR. You can see what input
 method servers are running with this command:
 .Sp
 .Vb 1
@@ -1393,7 +1393,7 @@ might encounter the same issue.
 .PP
 You should build one binary with the default options. \fIconfigure\fR
 now enables most useful options, and the trend goes to making them
-runtime\-switchable, too, so there is usually no drawback to enbaling them,
+runtime\-switchable, too, so there is usually no drawback to enabling them,
 except higher disk and possibly memory usage. The perl interpreter should
 be enabled, as important functionality (menus, selection, likely more in
 the future) depends on it.
@@ -1443,10 +1443,10 @@ following ugly workaround to get non-double-wide-characters working:
 .PP
 Rxvt-unicode requires the symbol \f(CW\*(C`_\|_STDC_ISO_10646_\|_\*(C'\fR to be defined
 in your compile environment, or an implementation that implements it,
-wether it defines the symbol or not. \f(CW\*(C`_\|_STDC_ISO_10646_\|_\*(C'\fR requires that
+whether it defines the symbol or not. \f(CW\*(C`_\|_STDC_ISO_10646_\|_\*(C'\fR requires that
 \&\fBwchar_t\fR is represented as unicode.
 .PP
-As you might have guessed, FreeBSD does neither define this symobl nor
+As you might have guessed, FreeBSD does neither define this symbol nor
 does it support it. Instead, it uses its own internal representation of
 \&\fBwchar_t\fR. This is, of course, completely fine with respect to standards.
 .PP

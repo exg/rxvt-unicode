@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 3"
-.TH @@RXVT_NAME@@ 3 "2006-07-17" "7.8" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 3 "2006-08-07" "7.9" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -148,7 +148,7 @@
 .Ve
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-Everytime a terminal object gets created, extension scripts specified via
+Every time a terminal object gets created, extension scripts specified via
 the \f(CW\*(C`perl\*(C'\fR resource are loaded and associated with it.
 .PP
 Scripts are compiled in a 'use strict' and 'use utf8' environment, and
@@ -195,7 +195,7 @@ specifying resources of the form:
 .Sp
 The index number (0, 1...) must not have any holes, and each regex must
 contain at least one pair of capturing parentheses, which will be used for
-the match. For example, the followign adds a regex that matches everything
+the match. For example, the following adds a regex that matches everything
 between two vertical bars:
 .Sp
 .Vb 1
@@ -260,7 +260,7 @@ onto \f(CW\*(C`@{ $term\-\*(C'\fR{selection_popup_hook} }>, which gets called wh
 popup is being displayed.
 .Sp
 It's sole argument is the popup menu, which can be modified. The selection
-is in \f(CW$_\fR, which can be used to decide wether to add something or not.
+is in \f(CW$_\fR, which can be used to decide whether to add something or not.
 It should either return nothing or a string and a code reference. The
 string will be used as button text and the code reference will be called
 when the button gets activated and should transform \f(CW$_\fR.
@@ -366,7 +366,7 @@ the message into vi commands to load the file.
 .IP "tabbed" 4
 .IX Item "tabbed"
 This transforms the terminal into a tabbar with additional terminals, that
-is, it implements what is commonly refered to as \*(L"tabbed terminal\*(R". The topmost line
+is, it implements what is commonly referred to as \*(L"tabbed terminal\*(R". The topmost line
 displays a \*(L"[\s-1NEW\s0]\*(R" button, which, when clicked, will add a new tab, followed by one
 button per tab.
 .Sp
@@ -419,7 +419,7 @@ Initially, the window will not be shown when using this extension.
 This is useful if you need a single terminal thats not using any desktop
 space most of the time but is quickly available at the press of a key.
 .Sp
-The accelerator key is grabbed regardless of any modifers, so this
+The accelerator key is grabbed regardless of any modifiers, so this
 extension will actually grab a physical key just for this function.
 .Sp
 If you want a quake-like animation, tell your window manager to do so
@@ -429,7 +429,7 @@ If you want a quake-like animation, tell your window manager to do so
 This is basically a very small extension that dynamically changes the
 background pixmap offset to the window position, in effect creating the
 same effect as pseudo transparency with a custom pixmap. No scaling is
-supported in this mode. Exmaple:
+supported in this mode. Example:
 .Sp
 .Vb 1
 \&   @@RXVT_NAME@@ \-pixmap background.xpm \-pe automove\-background
@@ -568,7 +568,7 @@ Dynamically disable the given hooks.
 The following subroutines can be declared in extension files, and will be
 called whenever the relevant event happens.
 .PP
-The first argument passed to them is an extension oject as described in
+The first argument passed to them is an extension object as described in
 the in the \f(CW\*(C`Extension Objects\*(C'\fR section.
 .PP
 \&\fBAll\fR of these hooks must return a boolean value. If any of the called
@@ -589,7 +589,7 @@ place.
 .el .IP "on_start \f(CW$term\fR" 4
 .IX Item "on_start $term"
 Called at the very end of initialisation of a new terminal, just before
-trying to map (display) the toplevel and returning to the mainloop.
+trying to map (display) the toplevel and returning to the main loop.
 .ie n .IP "on_destroy $term" 4
 .el .IP "on_destroy \f(CW$term\fR" 4
 .IX Item "on_destroy $term"
@@ -626,13 +626,13 @@ Called whenever a selection has been copied, but before the selection is
 requested from the server.  The selection text can be queried and changed
 by calling \f(CW\*(C`$term\->selection\*(C'\fR.
 .Sp
-Returning a true value aborts selection grabbing. It will still be hilighted.
+Returning a true value aborts selection grabbing. It will still be highlighted.
 .ie n .IP "on_sel_extend $term" 4
 .el .IP "on_sel_extend \f(CW$term\fR" 4
 .IX Item "on_sel_extend $term"
 Called whenever the user tries to extend the selection (e.g. with a double
 click) and is either supposed to return false (normal operation), or
-should extend the selection itelf and return true to suppress the built-in
+should extend the selection itself and return true to suppress the built-in
 processing. This can happen multiple times, as long as the callback
 returns true, it will be called on every further click by the user and is
 supposed to enlarge the selection more and more, if possible.
@@ -641,7 +641,7 @@ See the \fIselection\fR example extension.
 .ie n .IP "on_view_change $term\fR, \f(CW$offset" 4
 .el .IP "on_view_change \f(CW$term\fR, \f(CW$offset\fR" 4
 .IX Item "on_view_change $term, $offset"
-Called whenever the view offset changes, i..e the user or program
+Called whenever the view offset changes, i.e. the user or program
 scrolls. Offset \f(CW0\fR means display the normal terminal, positive values
 show this many lines of scrollback.
 .ie n .IP "on_scroll_back $term\fR, \f(CW$lines\fR, \f(CW$saved" 4
@@ -675,7 +675,7 @@ it from commands for other extensions, and this might be enforced in the
 future.
 .Sp
 Be careful not ever to trust (in a security sense) the data you receive,
-as its source can not easily be controleld (e\-mail content, messages from
+as its source can not easily be controlled (e\-mail content, messages from
 other users on the same system etc.).
 .ie n .IP "on_add_lines $term\fR, \f(CW$string" 4
 .el .IP "on_add_lines \f(CW$term\fR, \f(CW$string\fR" 4
@@ -718,7 +718,7 @@ Called just after the screen gets redrawn. See \f(CW\*(C`on_refresh_begin\*(C'\f
 .ie n .IP "on_user_command $term\fR, \f(CW$string" 4
 .el .IP "on_user_command \f(CW$term\fR, \f(CW$string\fR" 4
 .IX Item "on_user_command $term, $string"
-Called whenever the a user-configured event is being activated (e.g. via
+Called whenever a user-configured event is being activated (e.g. via
 a \f(CW\*(C`perl:string\*(C'\fR action bound to a key, see description of the \fBkeysym\fR
 resource in the @@RXVT_NAME@@(1) manpage).
 .Sp
@@ -727,7 +727,7 @@ slightly in the future.
 .ie n .IP "on_resize_all_windows $tern\fR, \f(CW$new_width\fR, \f(CW$new_height" 4
 .el .IP "on_resize_all_windows \f(CW$tern\fR, \f(CW$new_width\fR, \f(CW$new_height\fR" 4
 .IX Item "on_resize_all_windows $tern, $new_width, $new_height"
-Called just after the new window size has been calculcated, but before
+Called just after the new window size has been calculated, but before
 windows are actually being resized or hints are being set. If this hook
 returns \s-1TRUE\s0, setting of the window hints is being skipped.
 .ie n .IP "on_x_event $term\fR, \f(CW$event" 4
@@ -748,7 +748,7 @@ does focus in processing.
 .ie n .IP "on_focus_out $term" 4
 .el .IP "on_focus_out \f(CW$term\fR" 4
 .IX Item "on_focus_out $term"
-Called wheneever the window loses keyboard focus, before rxvt-unicode does
+Called whenever the window loses keyboard focus, before rxvt-unicode does
 focus out processing.
 .ie n .IP "on_configure_notify $term\fR, \f(CW$event" 4
 .el .IP "on_configure_notify \f(CW$term\fR, \f(CW$event\fR" 4
@@ -827,12 +827,12 @@ object, whenever a callback/hook is executing.
 .ie n .IP "@urxvt::TERM_INIT" 4
 .el .IP "\f(CW@urxvt::TERM_INIT\fR" 4
 .IX Item "@urxvt::TERM_INIT"
-All coderefs in this array will be called as methods of the next newly
+All code references in this array will be called as methods of the next newly
 created \f(CW\*(C`urxvt::term\*(C'\fR object (during the \f(CW\*(C`on_init\*(C'\fR phase). The array
-gets cleared before the codereferences that were in it are being executed,
-so coderefs can push themselves onto it again if they so desire.
+gets cleared before the code references that were in it are being executed,
+so references can push themselves onto it again if they so desire.
 .Sp
-This complements to the perl-eval commandline option, but gets executed
+This complements to the perl-eval command line option, but gets executed
 first.
 .ie n .IP "@urxvt::TERM_EXT" 4
 .el .IP "\f(CW@urxvt::TERM_EXT\fR" 4
@@ -864,7 +864,7 @@ Messages have a size limit of 1023 bytes currently.
 .el .IP "\f(CW@terms\fR = urxvt::termlist" 4
 .IX Item "@terms = urxvt::termlist"
 Returns all urxvt::term objects that exist in this process, regardless of
-wether they are started, being destroyed etc., so be careful. Only term
+whether they are started, being destroyed etc., so be careful. Only term
 objects that have perl extensions attached will be returned (because there
 is no urxvt::term objet associated with others).
 .ie n .IP "$time = urxvt::NOW" 4
@@ -984,7 +984,7 @@ Returns true if the option specified by \f(CW$optval\fR is enabled, and
 optionally change it. All option values are stored by name in the hash
 \&\f(CW%urxvt::OPTION\fR. Options not enabled in this binary are not in the hash.
 .Sp
-Here is a a likely non-exhaustive list of option names, please see the
+Here is a likely non-exhaustive list of option names, please see the
 source file \fI/src/optinc.h\fR to see the actual list:
 .Sp
 .Vb 6
@@ -1013,7 +1013,7 @@ likely change).
 Please note that resource strings will currently only be freed when the
 terminal is destroyed, so changing options frequently will eat memory.
 .Sp
-Here is a a likely non-exhaustive list of resource names, not all of which
+Here is a likely non-exhaustive list of resource names, not all of which
 are supported in every build, please see the source file \fI/src/rsinc.h\fR
 to see the actual list:
 .Sp
@@ -1315,7 +1315,7 @@ Returns the currently displayed screen (0 primary, 1 secondary).
 .ie n .IP "$cursor_is_hidden\fR = \f(CW$term\->hidden_cursor" 4
 .el .IP "\f(CW$cursor_is_hidden\fR = \f(CW$term\fR\->hidden_cursor" 4
 .IX Item "$cursor_is_hidden = $term->hidden_cursor"
-Returns wether the cursor is currently hidden or not.
+Returns whether the cursor is currently hidden or not.
 .ie n .IP "$view_start\fR = \f(CW$term\->view_start ([$newvalue])" 4
 .el .IP "\f(CW$view_start\fR = \f(CW$term\fR\->view_start ([$newvalue])" 4
 .IX Item "$view_start = $term->view_start ([$newvalue])"
@@ -1429,7 +1429,7 @@ where one character corresponds to one screen cell. See
 .ie n .IP "$string\fR = \f(CW$term\fR\->special_decode \f(CW$text" 4
 .el .IP "\f(CW$string\fR = \f(CW$term\fR\->special_decode \f(CW$text\fR" 4
 .IX Item "$string = $term->special_decode $text"
-Converts rxvt-unicodes text reprsentation into a perl string. See
+Converts rxvt-unicodes text representation into a perl string. See
 \&\f(CW\*(C`$term\->ROW_t\*(C'\fR for details.
 .ie n .IP "$success\fR = \f(CW$term\fR\->grab_button ($button, \f(CW$modifiermask\fR[, \f(CW$window\fR = \f(CW$term\->vt])" 4
 .el .IP "\f(CW$success\fR = \f(CW$term\fR\->grab_button ($button, \f(CW$modifiermask\fR[, \f(CW$window\fR = \f(CW$term\fR\->vt])" 4
@@ -1445,7 +1445,7 @@ manpage.
 .el .IP "\f(CW$success\fR = \f(CW$term\fR\->grab ($eventtime[, \f(CW$sync\fR])" 4
 .IX Item "$success = $term->grab ($eventtime[, $sync])"
 Calls XGrabPointer and XGrabKeyboard in asynchronous (default) or
-synchronous (\f(CW$sync\fR is true). Also remembers the grab timestampe.
+synchronous (\f(CW$sync\fR is true). Also remembers the grab timestamp.
 .ie n .IP "$term\->allow_events_async" 4
 .el .IP "\f(CW$term\fR\->allow_events_async" 4
 .IX Item "$term->allow_events_async"
@@ -1621,7 +1621,7 @@ is a bitset as described in the \f(CW\*(C`events\*(C'\fR method.
 .ie n .IP "$iow\fR = \f(CW$iow\->fd ($fd)" 4
 .el .IP "\f(CW$iow\fR = \f(CW$iow\fR\->fd ($fd)" 4
 .IX Item "$iow = $iow->fd ($fd)"
-Set the filedescriptor (not handle) to watch.
+Set the file descriptor (not handle) to watch.
 .ie n .IP "$iow\fR = \f(CW$iow\->events ($eventmask)" 4
 .el .IP "\f(CW$iow\fR = \f(CW$iow\fR\->events ($eventmask)" 4
 .IX Item "$iow = $iow->events ($eventmask)"
@@ -1635,7 +1635,7 @@ Start watching for requested events on the given handle.
 .ie n .IP "$iow\fR = \f(CW$iow\->stop" 4
 .el .IP "\f(CW$iow\fR = \f(CW$iow\fR\->stop" 4
 .IX Item "$iow = $iow->stop"
-Stop watching for events on the given filehandle.
+Stop watching for events on the given file handle.
 .ie n .Sh "The ""urxvt::iw"" Class"
 .el .Sh "The \f(CWurxvt::iw\fP Class"
 .IX Subsection "The urxvt::iw Class"
@@ -1686,7 +1686,7 @@ Set the callback to be called when the timer triggers.
 .ie n .IP "$pw\fR = \f(CW$timer\->start ($pid)" 4
 .el .IP "\f(CW$pw\fR = \f(CW$timer\fR\->start ($pid)" 4
 .IX Item "$pw = $timer->start ($pid)"
-Tells the wqtcher to start watching for process \f(CW$pid\fR.
+Tells the watcher to start watching for process \f(CW$pid\fR.
 .ie n .IP "$pw\fR = \f(CW$pw\->stop" 4
 .el .IP "\f(CW$pw\fR = \f(CW$pw\fR\->stop" 4
 .IX Item "$pw = $pw->stop"
@@ -1704,8 +1704,8 @@ numbers indicate more verbose output.
 .IX Item ">= 3 - script loading and management"
 .IP ">=10 \- all called hooks" 4
 .IX Item ">=10 - all called hooks"
-.IP ">=11 \- hook reutrn values" 4
-.IX Item ">=11 - hook reutrn values"
+.IP ">=11 \- hook return values" 4
+.IX Item ">=11 - hook return values"
 .PD
 .SH "AUTHOR"
 .IX Header "AUTHOR"

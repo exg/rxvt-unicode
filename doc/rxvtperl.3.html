@@ -71,7 +71,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p>Everytime a terminal object gets created, extension scripts specified via
+<p>Every time a terminal object gets created, extension scripts specified via
 the <code>perl</code> resource are loaded and associated with it.</p>
 <p>Scripts are compiled in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as UTF-8.</p>
@@ -117,7 +117,7 @@ specifying resources of the form:</p>
 <dd>
 <p>The index number (0, 1...) must not have any holes, and each regex must
 contain at least one pair of capturing parentheses, which will be used for
-the match. For example, the followign adds a regex that matches everything
+the match. For example, the following adds a regex that matches everything
 between two vertical bars:</p>
 </dd>
 <dd>
@@ -196,7 +196,7 @@ popup is being displayed.</p>
 </dd>
 <dd>
 <p>It's sole argument is the popup menu, which can be modified. The selection
-is in <code>$_</code>, which can be used to decide wether to add something or not.
+is in <code>$_</code>, which can be used to decide whether to add something or not.
 It should either return nothing or a string and a code reference. The
 string will be used as button text and the code reference will be called
 when the button gets activated and should transform <code>$_</code>.</p>
@@ -319,7 +319,7 @@ the message into vi commands to load the file.</p>
 
 <dd>
 <p>This transforms the terminal into a tabbar with additional terminals, that
-is, it implements what is commonly refered to as ``tabbed terminal''. The topmost line
+is, it implements what is commonly referred to as ``tabbed terminal''. The topmost line
 displays a ``[NEW]'' button, which, when clicked, will add a new tab, followed by one
 button per tab.</p>
 </dd>
@@ -388,7 +388,7 @@ or show it again.</p>
 space most of the time but is quickly available at the press of a key.</p>
 </dd>
 <dd>
-<p>The accelerator key is grabbed regardless of any modifers, so this
+<p>The accelerator key is grabbed regardless of any modifiers, so this
 extension will actually grab a physical key just for this function.</p>
 </dd>
 <dd>
@@ -402,7 +402,7 @@ extension will actually grab a physical key just for this function.</p>
 <p>This is basically a very small extension that dynamically changes the
 background pixmap offset to the window position, in effect creating the
 same effect as pseudo transparency with a custom pixmap. No scaling is
-supported in this mode. Exmaple:</p>
+supported in this mode. Example:</p>
 </dd>
 <dd>
 <pre>
@@ -583,7 +583,7 @@ to overwrite time-critical hooks only temporarily.</p>
 <h2><a name="hooks">Hooks</a></h2>
 <p>The following subroutines can be declared in extension files, and will be
 called whenever the relevant event happens.</p>
-<p>The first argument passed to them is an extension oject as described in
+<p>The first argument passed to them is an extension object as described in
 the in the <code>Extension Objects</code> section.</p>
 <p><strong>All</strong> of these hooks must return a boolean value. If any of the called
 hooks returns true, then the event counts as being <em>consumed</em>, and the
@@ -605,7 +605,7 @@ place.</p>
 
 <dd>
 <p>Called at the very end of initialisation of a new terminal, just before
-trying to map (display) the toplevel and returning to the mainloop.</p>
+trying to map (display) the toplevel and returning to the main loop.</p>
 </dd>
 </li>
 <dt><strong><a name="item_on_destroy__24term">on_destroy $term</a></strong>
@@ -656,7 +656,7 @@ requested from the server.  The selection text can be queried and changed
 by calling <a href="#item_selection"><code>$term-&gt;selection</code></a>.</p>
 </dd>
 <dd>
-<p>Returning a true value aborts selection grabbing. It will still be hilighted.</p>
+<p>Returning a true value aborts selection grabbing. It will still be highlighted.</p>
 </dd>
 </li>
 <dt><strong><a name="item_on_sel_extend__24term">on_sel_extend $term</a></strong>
@@ -664,7 +664,7 @@ by calling <a href="#item_selection"><code>$term-&gt;selection</code></a>.</p>
 <dd>
 <p>Called whenever the user tries to extend the selection (e.g. with a double
 click) and is either supposed to return false (normal operation), or
-should extend the selection itelf and return true to suppress the built-in
+should extend the selection itself and return true to suppress the built-in
 processing. This can happen multiple times, as long as the callback
 returns true, it will be called on every further click by the user and is
 supposed to enlarge the selection more and more, if possible.</p>
@@ -676,7 +676,7 @@ supposed to enlarge the selection more and more, if possible.</p>
 <dt><strong><a name="item_on_view_change__24term_2c__24offset">on_view_change $term, $offset</a></strong>
 
 <dd>
-<p>Called whenever the view offset changes, i..e the user or program
+<p>Called whenever the view offset changes, i.e. the user or program
 scrolls. Offset <code>0</code> means display the normal terminal, positive values
 show this many lines of scrollback.</p>
 </dd>
@@ -719,7 +719,7 @@ future.</p>
 </dd>
 <dd>
 <p>Be careful not ever to trust (in a security sense) the data you receive,
-as its source can not easily be controleld (e-mail content, messages from
+as its source can not easily be controlled (e-mail content, messages from
 other users on the same system etc.).</p>
 </dd>
 </li>
@@ -776,7 +776,7 @@ code is run after this hook, and takes precedence.</p>
 <dt><strong><a name="item_on_user_command__24term_2c__24string">on_user_command $term, $string</a></strong>
 
 <dd>
-<p>Called whenever the a user-configured event is being activated (e.g. via
+<p>Called whenever a user-configured event is being activated (e.g. via
 a <code>perl:string</code> action bound to a key, see description of the <strong>keysym</strong>
 resource in the <code>rxvt(1)</code> manpage).</p>
 </dd>
@@ -788,7 +788,7 @@ slightly in the future.</p>
 <dt><strong><a name="item_on_resize_all_windows__24tern_2c__24new_width_2c__">on_resize_all_windows $tern, $new_width, $new_height</a></strong>
 
 <dd>
-<p>Called just after the new window size has been calculcated, but before
+<p>Called just after the new window size has been calculated, but before
 windows are actually being resized or hints are being set. If this hook
 returns TRUE, setting of the window hints is being skipped.</p>
 </dd>
@@ -817,7 +817,7 @@ does focus in processing.</p>
 <dt><strong><a name="item_on_focus_out__24term">on_focus_out $term</a></strong>
 
 <dd>
-<p>Called wheneever the window loses keyboard focus, before rxvt-unicode does
+<p>Called whenever the window loses keyboard focus, before rxvt-unicode does
 focus out processing.</p>
 </dd>
 </li>
@@ -901,13 +901,13 @@ object, whenever a callback/hook is executing.</p>
 <dt><strong><a name="item__urxvt__term_init">@urxvt::TERM_INIT</a></strong>
 
 <dd>
-<p>All coderefs in this array will be called as methods of the next newly
+<p>All code references in this array will be called as methods of the next newly
 created <code>urxvt::term</code> object (during the <code>on_init</code> phase). The array
-gets cleared before the codereferences that were in it are being executed,
-so coderefs can push themselves onto it again if they so desire.</p>
+gets cleared before the code references that were in it are being executed,
+so references can push themselves onto it again if they so desire.</p>
 </dd>
 <dd>
-<p>This complements to the perl-eval commandline option, but gets executed
+<p>This complements to the perl-eval command line option, but gets executed
 first.</p>
 </dd>
 </li>
@@ -951,7 +951,7 @@ correct place, e.g. on stderr of the connecting urxvtc client.</p>
 
 <dd>
 <p>Returns all urxvt::term objects that exist in this process, regardless of
-wether they are started, being destroyed etc., so be careful. Only term
+whether they are started, being destroyed etc., so be careful. Only term
 objects that have perl extensions attached will be returned (because there
 is no urxvt::term objet associated with others).</p>
 </dd>
@@ -1110,7 +1110,7 @@ optionally change it. All option values are stored by name in the hash
 <code>%urxvt::OPTION</code>. Options not enabled in this binary are not in the hash.</p>
 </dd>
 <dd>
-<p>Here is a a likely non-exhaustive list of option names, please see the
+<p>Here is a likely non-exhaustive list of option names, please see the
 source file <em>/src/optinc.h</em> to see the actual list:</p>
 </dd>
 <dd>
@@ -1145,7 +1145,7 @@ likely change).</p>
 terminal is destroyed, so changing options frequently will eat memory.</p>
 </dd>
 <dd>
-<p>Here is a a likely non-exhaustive list of resource names, not all of which
+<p>Here is a likely non-exhaustive list of resource names, not all of which
 are supported in every build, please see the source file <em>/src/rsinc.h</em>
 to see the actual list:</p>
 </dd>
@@ -1502,7 +1502,7 @@ AltGr), the meta key (often Alt) and the num lock key, if applicable.</p>
 <dt><strong><a name="item_hidden_cursor">$cursor_is_hidden = $term-&gt;hidden_cursor</a></strong>
 
 <dd>
-<p>Returns wether the cursor is currently hidden or not.</p>
+<p>Returns whether the cursor is currently hidden or not.</p>
 </dd>
 </li>
 <dt><strong><a name="item_view_start">$view_start = $term-&gt;view_start ([$newvalue])</a></strong>
@@ -1647,7 +1647,7 @@ where one character corresponds to one screen cell. See
 <dt><strong><a name="item_special_decode">$string = $term-&gt;special_decode $text</a></strong>
 
 <dd>
-<p>Converts rxvt-unicodes text reprsentation into a perl string. See
+<p>Converts rxvt-unicodes text representation into a perl string. See
 <a href="#item_row_t"><code>$term-&gt;ROW_t</code></a> for details.</p>
 </dd>
 </li>
@@ -1664,7 +1664,7 @@ manpage.</p>
 
 <dd>
 <p>Calls XGrabPointer and XGrabKeyboard in asynchronous (default) or
-synchronous (<code>$sync</code> is true). Also remembers the grab timestampe.</p>
+synchronous (<code>$sync</code> is true). Also remembers the grab timestamp.</p>
 </dd>
 </li>
 <dt><strong><a name="item_allow_events_async">$term-&gt;allow_events_async</a></strong>
@@ -1872,7 +1872,7 @@ is a bitset as described in the <a href="#item_events"><code>events</code></a> m
 <dt><strong><a name="item_fd">$iow = $iow-&gt;fd ($fd)</a></strong>
 
 <dd>
-<p>Set the filedescriptor (not handle) to watch.</p>
+<p>Set the file descriptor (not handle) to watch.</p>
 </dd>
 </li>
 <dt><strong><a name="item_events">$iow = $iow-&gt;events ($eventmask)</a></strong>
@@ -1892,7 +1892,7 @@ together, or <code>urxvt::EVENT_NONE</code>.</p>
 <dt><strong>$iow = $iow-&gt;stop</strong>
 
 <dd>
-<p>Stop watching for events on the given filehandle.</p>
+<p>Stop watching for events on the given file handle.</p>
 </dd>
 </li>
 </dl>
@@ -1959,7 +1959,7 @@ process exits, after which they stop automatically.</p>
 <dt><strong>$pw = $timer-&gt;start ($pid)</strong>
 
 <dd>
-<p>Tells the wqtcher to start watching for process <code>$pid</code>.</p>
+<p>Tells the watcher to start watching for process <code>$pid</code>.</p>
 </dd>
 </li>
 <dt><strong>$pw = $pw-&gt;stop</strong>
@@ -1985,7 +1985,7 @@ numbers indicate more verbose output.</p>
 
 <dt><strong><a name="item__3e_3d10__2d_all_called_hooks">&gt;=10 - all called hooks</a></strong>
 
-<dt><strong><a name="item__3e_3d11__2d_hook_reutrn_values">&gt;=11 - hook reutrn values</a></strong>
+<dt><strong><a name="item__3e_3d11__2d_hook_return_values">&gt;=11 - hook return values</a></strong>
 
 </dl>
 <p>

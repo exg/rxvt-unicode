@@ -14,7 +14,7 @@ OPTIONS
     All options that are valid for rxvt are valid for rxvtc, too. Please
     note that options are interpreted in the context of the daemon process.
     However, as current working directory, process environment and any file
-    handles (e.g. for "-pty-fd") are preserved, this rarely makes a
+    descriptor (e.g. for "-pty-fd") are preserved, this rarely makes a
     difference.
 
 EXIT STATUS

@@ -29,7 +29,7 @@
 			<li><a href="#rxvtunicode_uses_gobs_of_memory__how_can_i_reduce_that">Rxvt-unicode uses gobs of memory, how can I reduce that?</a></li>
 			<li><a href="#how_can_i_start_urxvtd_in_a_racefree_way">How can I start urxvtd in a race-free way?</a></li>
 			<li><a href="#how_can_i_start_urxvtd_automatically_when_i_run_urxvt_name__c">How can I start urxvtd automatically when I run URXVT_NAME@@c?</a></li>
-			<li><a href="#how_do_i_distinguish_wether_i_m_running_rxvtunicode_or_a_regular_xterm_i_need_this_to_decide_about_setting_colors_etc_">How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.</a></li>
+			<li><a href="#how_do_i_distinguish_whether_i_m_running_rxvtunicode_or_a_regular_xterm_i_need_this_to_decide_about_setting_colors_etc_">How do I distinguish whether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.</a></li>
 			<li><a href="#how_do_i_set_the_correct__full_ip_address_for_the_display_variable">How do I set the correct, full IP address for the DISPLAY variable?</a></li>
 			<li><a href="#how_do_i_compile_the_manual_pages_on_my_own">How do I compile the manual pages on my own?</a></li>
 			<li><a href="#isn_t_rxvtunicode_supposed_to_be_small_don_t_all_those_features_bloat">Isn't rxvt-unicode supposed to be small? Don't all those features bloat?</a></li>
@@ -229,7 +229,7 @@ re-run the command. Subsequent invocations of the script will re-use the
 existing daemon.</p>
 <p>
 </p>
-<h3><a name="how_do_i_distinguish_wether_i_m_running_rxvtunicode_or_a_regular_xterm_i_need_this_to_decide_about_setting_colors_etc_">How do I distinguish wether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.</a></h3>
+<h3><a name="how_do_i_distinguish_whether_i_m_running_rxvtunicode_or_a_regular_xterm_i_need_this_to_decide_about_setting_colors_etc_">How do I distinguish whether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.</a></h3>
 <p>The original rxvt and rxvt-unicode always export the variable ``COLORTERM'',
 so you can check and see if that is set. Note that several programs, JED,
 slrn, Midnight Commander automatically check this variable to decide
@@ -280,7 +280,7 @@ already in use in this mode.</p>
   188985    9048   66616   18222    1788 urxvt --disable-everything</pre>
 <p>When you <a href="#item__2d_2denable_2deverything"><code>--enable-everything</code></a> (which <em>is</em> unfair, as this involves xft
 and full locale/XIM support which are quite bloaty inside libX11 and my
-libc), the two diverge, but not unreasnobaly so.</p>
+libc), the two diverge, but not unreasonably so.</p>
 <pre>
     text    data     bss     drs     rss filename
   163431    2152      24   20123    2060 rxvt --enable-everything
@@ -363,7 +363,7 @@ are unable to read.</p>
    urxvt -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc</pre>
 <p>This requires XFT support, and the support of your X-server. If that
 doesn't work for you, blame Xorg and Keith Packard. ARGB visuals aren't
-there yet, no matter what they claim. Rxvt-Unicode contains the neccessary
+there yet, no matter what they claim. Rxvt-Unicode contains the necessary
 bugfixes and workarounds for Xft and Xlib to make it work, but that
 doesn't mean that your WM has the required kludges in place.</p>
 <p>4. Use xcompmgr and let it do the job:</p>
@@ -386,7 +386,7 @@ however: Xft fonts often draw glyphs larger than their acclaimed bounding
 box, and rxvt-unicode has no way of detecting this (the correct way is to
 ask for the character bounding box, which unfortunately is wrong in these
 cases).</p>
-<p>It's not clear (to me at least), wether this is a bug in Xft, freetype,
+<p>It's not clear (to me at least), whether this is a bug in Xft, freetype,
 or the respective font. If you encounter this problem you might try using
 the <code>-lsp</code> option to give the font more height. If that doesn't work, you
 might be forced to use a different font.</p>
@@ -605,7 +605,7 @@ circumstances, it will move your cursor around when you click into the
 line that contains it. It tries hard not to do this at the wrong moment,
 but when running a program that doesn't parse cursor movements or in some
 cases during rlogin sessions, it fails to detect this properly.</p>
-<p>You can permamently switch this feature off by disabling the <code>readline</code>
+<p>You can permanently switch this feature off by disabling the <code>readline</code>
 extension:</p>
 <pre>
    URxvt.perl-ext-common: default,-readline</pre>
@@ -614,7 +614,7 @@ extension:</p>
 <h3><a name="my_numerical_keypad_acts_weird_and_generates_differing_output">My numerical keypad acts weird and generates differing output?</a></h3>
 <p>Some Debian GNUL/Linux users seem to have this problem, although no
 specific details were reported so far. It is possible that this is caused
-by the wrong <code>TERM</code> setting, although the details of wether and how
+by the wrong <code>TERM</code> setting, although the details of whether and how
 this can happen are unknown, as <code>TERM=rxvt</code> should offer a compatible
 keymap. See the answer to the previous question, and please report if that
 helped.</p>
@@ -649,7 +649,7 @@ depressed.</p>
 </p>
 <h3><a name="what_s_with_the_strange_backspace_delete_key_behaviour">What's with the strange Backspace/Delete key behaviour?</a></h3>
 <p>Assuming that the physical Backspace key corresponds to the
-BackSpace keysym (not likely for Linux ... see the following
+Backspace keysym (not likely for Linux ... see the following
 question) there are two standard values that can be used for
 Backspace: <code>^H</code> and <code>^?</code>.</p>
 <p>Historically, either value is correct, but rxvt-unicode adopts the debian
@@ -768,14 +768,14 @@ directory and also tells urxvt to use a large number of extensions. I
 develop for myself mostly, so I actually use most of the extensions I
 write.</p>
 <p>The selection stuff mainly makes the selection perl-error-message aware
-and tells it to convert pelr error mssages into vi-commands to load the
+and tells it to convert perl error messages into vi-commands to load the
 relevant file and go tot he error line number.</p>
 <pre>
    URxvt.scrollstyle:      plain
    URxvt.secondaryScroll:  true</pre>
 <p>As the documentation says: plain is the preferred scrollbar for the
-author. The <code>secondaryScroll</code> confgiures urxvt to scroll in full-screen
-apps, like screen, so lines scorlled out of screen end up in urxvt's
+author. The <code>secondaryScroll</code> configures urxvt to scroll in full-screen
+apps, like screen, so lines scrolled out of screen end up in urxvt's
 scrollback buffer.</p>
 <pre>
    URxvt.background:       #000000
@@ -827,12 +827,12 @@ iconified till people msg me (which beeps).</p>
    urxvt.italicFont:       xft:Bitstream Vera Sans Mono:italic:autohint=true
    urxvt.boldItalicFont:   xft:Bitstream Vera Sans Mono:bold:italic:autohint=true</pre>
 <p>I wrote rxvt-unicode to be able to specify fonts exactly. So don't be
-overwhelmed. A special note: the <code>9x15bold</code> mentioend above is actually
+overwhelmed. A special note: the <code>9x15bold</code> mentioned above is actually
 the version from XFree-3.3, as XFree-4 replaced it by a totally different
 font (different glyphs for <code>;</code> and many other harmless characters),
 while the second font is actually the <code>9x15bold</code> from XFree4/XOrg. The
 bold version has less chars than the medium version, so I use it for rare
-characters, too. Whene ditign sources with vim, I use italic for comments
+characters, too. When editing sources with vim, I use italic for comments
 and other stuff, which looks quite good with Bitstream Vera anti-aliased.</p>
 <p>Terminus is a quite bad font (many very wrong glyphs), but for most of my
 purposes, it works, and gives a different look, as my normal (Non-bold)
@@ -885,7 +885,7 @@ re-login after every change (or run <em>xrdb -merge $HOME/.Xresources</em>).</p>
 <pre>
   URxvt.resource: value</pre>
 <p>If you want to use another form (there are lots of different ways of
-specifying resources), make sure you understand wether and why it
+specifying resources), make sure you understand whether and why it
 works. If unsure, use the form above.</p>
 <p>
 </p>
@@ -926,7 +926,7 @@ the rxvt terminfo file with the rxvt-unicode one and use <code>TERM=rxvt</code>.
 systems still compile some programs using the long-obsoleted termcap
 library (Fedora Core's bash is one example) and rely on a termcap entry
 for <code>rxvt-unicode</code>.</p>
-<p>You could use rxvt's termcap entry with resonable results in many cases.
+<p>You could use rxvt's termcap entry with reasonable results in many cases.
 You can also create a termcap entry by using terminfo's infocmp program
 like this:</p>
 <pre>
@@ -957,7 +957,7 @@ like this:</p>
 </p>
 <h3><a name="why_does_ls_no_longer_have_coloured_output">Why does <code>ls</code> no longer have coloured output?</a></h3>
 <p>The <code>ls</code> in the GNU coreutils unfortunately doesn't use terminfo to
-decide wether a terminal has colour, but uses its own configuration
+decide whether a terminal has colour, but uses its own configuration
 file. Needless to say, <code>rxvt-unicode</code> is not in its default file (among
 with most other terminals supporting colour). Either add:</p>
 <pre>
@@ -1094,7 +1094,7 @@ rxvt-unicode-locales.</p>
 
 <dd>
 <p>When you want to use e.g. <strong>kinput2</strong>, it must be set to
-<code>@im=kinput2</code>. For <strong>scim</strong>, use <code>@im=SCIM</code>. Youc an see what input
+<code>@im=kinput2</code>. For <strong>scim</strong>, use <code>@im=SCIM</code>. You can see what input
 method servers are running with this command:</p>
 </dd>
 <dd>
@@ -1148,7 +1148,7 @@ might encounter the same issue.</p>
 <h3><a name="i_am_maintaining_rxvtunicode_for_distribution_os_xxx__any_recommendation">I am maintaining rxvt-unicode for distribution/OS XXX, any recommendation?</a></h3>
 <p>You should build one binary with the default options. <em>configure</em>
 now enables most useful options, and the trend goes to making them
-runtime-switchable, too, so there is usually no drawback to enbaling them,
+runtime-switchable, too, so there is usually no drawback to enabling them,
 except higher disk and possibly memory usage. The perl interpreter should
 be enabled, as important functionality (menus, selection, likely more in
 the future) depends on it.</p>
@@ -1189,9 +1189,9 @@ following ugly workaround to get non-double-wide-characters working:</p>
 <h3><a name="i_am_on_freebsd_and_rxvtunicode_does_not_seem_to_work_at_all_">I am on FreeBSD and rxvt-unicode does not seem to work at all.</a></h3>
 <p>Rxvt-unicode requires the symbol <code>__STDC_ISO_10646__</code> to be defined
 in your compile environment, or an implementation that implements it,
-wether it defines the symbol or not. <code>__STDC_ISO_10646__</code> requires that
+whether it defines the symbol or not. <code>__STDC_ISO_10646__</code> requires that
 <strong>wchar_t</strong> is represented as unicode.</p>
-<p>As you might have guessed, FreeBSD does neither define this symobl nor
+<p>As you might have guessed, FreeBSD does neither define this symbol nor
 does it support it. Instead, it uses its own internal representation of
 <strong>wchar_t</strong>. This is, of course, completely fine with respect to standards.</p>
 <p>However, that means rxvt-unicode only works in <code>POSIX</code>, <code>ISO-8859-1</code> and
@@ -2499,7 +2499,7 @@ in combination with other switches) is:</p>
 <dt><strong><a name="item_iso14755">--enable-iso14755 (default: on)</a></strong>
 
 <dd>
-<p>Enable extended ISO 14755 support (see urxvt(1), or
+<p>Enable extended ISO 14755 support (see rxvt(1), or
 <em>doc/rxvt.1.txt</em>). Basic support (section 5.1) is enabled by
 <code>--enable-frills</code>, while support for 5.2, 5.3 and 5.4 is enabled with
 this switch.</p>
@@ -2569,7 +2569,7 @@ the screen in a fixed position.</p>
 <dt><strong><a name="item_perl">--enable-perl (default: on)</a></strong>
 
 <dd>
-<p>Enable an embedded perl interpreter. See the <strong>urxvtperl(3)</strong>
+<p>Enable an embedded perl interpreter. See the <strong>rxvtperl(3)</strong>
 manpage (<em>doc/rxvtperl.txt</em>) for more info on this feature, or the files
 in <em>src/perl-ext/</em> for the extensions that are installed by default. The
 perl interpreter that is used can be specified via the <code>PERL</code> environment
