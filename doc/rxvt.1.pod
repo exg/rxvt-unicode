@@ -454,7 +454,7 @@ used (a longer example is in F<doc/embed>):
 =item B<-pty-fd> I<file descriptor>
 
 Tells @@RXVT_NAME@@ NOT to execute any commands or create a new pty/tty
-pair but instead use the given file handle as the tty master. This is
+pair but instead use the given file descriptor as the tty master. This is
 useful if you want to drive @@RXVT_NAME@@ as a generic terminal emulator
 without having to run a program within it.
 
