@@ -23,7 +23,7 @@ DUMB: support tex fonts
 
 7.9  Mon Aug  7 18:16:07 CEST 2006
         - fix the crashing bug people encountered with 7.8 + urxvtd + perl
-          + transparency. Oight to fix debian bug #380348.
+          + transparency. Ought to fix debian bug #380348.
 	- fix urxvtc.1.pod: it actually claimed -pty-fd would not work. But
           it does! :->
 	- rxvt_fatal() in case the locale string is too long for our static buffer.
