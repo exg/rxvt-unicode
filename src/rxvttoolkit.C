@@ -581,7 +581,7 @@ void rxvt_display::flush ()
 
 void rxvt_display::reg (xevent_watcher *w)
 {
-  if (!w.active)
+  if (!w->active)
     {
       xw.push_back (w);
       w->active = xw.size ();
