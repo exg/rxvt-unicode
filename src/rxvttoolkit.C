@@ -581,14 +581,20 @@ void rxvt_display::flush ()
 
 void rxvt_display::reg (xevent_watcher *w)
 {
-  xw.push_back (w);
-  w->active = xw.size ();
+  if (!w.active)
+    {
+      xw.push_back (w);
+      w->active = xw.size ();
+    }
 }
 
 void rxvt_display::unreg (xevent_watcher *w)
 {
   if (w->active)
-    xw[w->active - 1] = 0;
+    {
+      xw[w->active - 1] = 0;
+      w->active = 0;
+    }
 }
 
 void rxvt_display::set_selection_owner (rxvt_term *owner)
