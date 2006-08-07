@@ -270,6 +270,9 @@ public:
 overlay::overlay (rxvt_term *THIS, int x_, int y_, int w_, int h_, rend_t rstyle, int border)
 : THIS(THIS), x(x_), y(y_), w(w_), h(h_), border(border == 2), overlay_av (0)
 {
+  if (w < 0) w = 0;
+  if (h < 0) h = 0;
+
   if (border == 2)
     {
       w += 2;
