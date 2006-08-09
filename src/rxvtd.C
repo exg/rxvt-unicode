@@ -71,6 +71,11 @@ struct unix_listener {
 unix_listener::unix_listener (const char *sockname)
 : accept_ev (this, &unix_listener::accept_cb)
 {
+  sockaddr_un sa;
+  
+  if (strlen(sockname) >= sizeof(sa.sun_path))
+    rxvt_fatal ("socket name too long, aborting.\n");
+
   if ((fd = socket (AF_UNIX, SOCK_STREAM, 0)) < 0)
     {
       perror ("unable to create listening socket");
@@ -78,8 +83,6 @@ unix_listener::unix_listener (const char *sockname)
     }
 
   fcntl (fd, F_SETFD, FD_CLOEXEC);
-
-  sockaddr_un sa;
 
   sa.sun_family = AF_UNIX;
   strcpy (sa.sun_path, sockname);

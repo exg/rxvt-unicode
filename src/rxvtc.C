@@ -45,14 +45,21 @@ struct client : rxvt_connection {
 
 client::client ()
 {
+  sockaddr_un sa;
+  char *sockname = rxvt_connection::unix_sockname ();
+  
+  if (strlen(sockname) >= sizeof(sa.sun_path))
+    {
+      fputs ("socket name too long, aborting.\n", stderr);
+      exit (STATUS_FAILURE);
+    }
+  
   if ((fd = socket (AF_UNIX, SOCK_STREAM, 0)) < 0)
     {
       perror ("unable to create communications socket");
       exit (STATUS_FAILURE);
     }
 
-  char *sockname = rxvt_connection::unix_sockname ();
-  sockaddr_un sa;
   sa.sun_family = AF_UNIX;
   strcpy (sa.sun_path, sockname);
   free (sockname);
