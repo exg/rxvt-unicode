@@ -397,11 +397,12 @@ locale-specific way.
 =head2 Extension Objects
 
 Every perl extension is a perl class. A separate perl object is created
-for each terminal and each extension and passed as the first parameter to
-hooks. So extensions can use their C<$self> object without having to think
-about other extensions, with the exception of methods and members that
-begin with an underscore character C<_>: these are reserved for internal
-use.
+for each terminal, and each terminal has its own set of extenion objects,
+which are passed as the first parameter to hooks. So extensions can use
+their C<$self> object without having to think about clashes with other
+extensions or other terminals, with the exception of methods and members
+that begin with an underscore character C<_>: these are reserved for
+internal use.
 
 Although it isn't a C<urxvt::term> object, you can call all methods of the
 C<urxvt::term> class on this object.
