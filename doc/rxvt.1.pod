@@ -1028,7 +1028,8 @@ I<string> may contain escape values (C<\a>: bell, C<\b>: backspace,
 C<\e>, C<\E>: escape, C<\n>: newline, C<\r>: carriage return, C<\t>: tab,
 C<\000>: octal number) or verbatim control characters (C<^?>: delete,
 C<^@>: null, C<^A> ...) and may be enclosed with double quotes so that it
-can start or end with whitespace.
+can start or end with whitespace. B<This feature is deprecated and will
+be removed>.
 
 Please note that you need to double the C<\> in resource files, as
 Xlib itself does its own de-escaping (you can use C<\033> instead of
