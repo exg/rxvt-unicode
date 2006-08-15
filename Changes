@@ -21,6 +21,7 @@ WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the
 WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
+TODO: rxvtd failing to enter cwd of rxvtc leads to crash due to free(this), Gentoo #143985
 TODO: fix crash because strwidth returning -1 in selection-popup in LC_ALL=C
 	- give proper diagnostic when RXVT_SOCKET is too long instead of
           corrupting the stack (patch by exg).
