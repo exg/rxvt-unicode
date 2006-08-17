@@ -348,6 +348,11 @@ for the filename):
 
    URxvt.selection-pastebin.url: http://www.ta-sa.org/files/txt/%
 
+I<Note to xrdb users:> xrdb uses the C preprocessor, which might interpret
+the double C</> characters as comment start. Use C<\057\057> instead,
+which works regardless of wether xrdb is used to parse the resource file
+or not.
+
 =item example-refresh-hooks
 
 Displays a very simple digital clock in the upper right corner of the
