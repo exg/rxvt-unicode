@@ -145,10 +145,10 @@ void server::err (const char *format, ...)
       vsnprintf (err, 1024, format, ap);
       va_end (ap);
 
-      send ("MSG"), send (err);
+      log_msg (err);
     }
 
-  send ("END"); send (0);
+  send ("END"), send (0);
   close (fd);
   delete this;
 }

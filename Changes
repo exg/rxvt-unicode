@@ -25,6 +25,9 @@ TODO: rxvtd failing to enter cwd of rxvtc leads to crash due to free(this), Gent
 TODO: fix crash because strwidth returning -1 in selection-popup in LC_ALL=C
 	- give proper diagnostic when RXVT_SOCKET is too long instead of
           corrupting the stack (patch by exg).
+        - urxvtd no longer crashes when the client sends an inaccessible
+          working directory (reported by Roland Baer).
+        - fixed many minor issues reported by Roland Baer.
 
 7.9  Mon Aug  7 18:16:07 CEST 2006
         - fix the crashing bug people encountered with 7.8 + urxvtd + perl
