@@ -82,6 +82,7 @@ main (int argc, const char *const *argv)
 
     sigemptyset (&ss);
     sigaddset (&ss, SIGHUP);
+    sigaddset (&ss, SIGPIPE);
     sigprocmask (SIG_BLOCK, &ss, 0);
   }
 

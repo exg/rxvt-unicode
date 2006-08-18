@@ -58,7 +58,7 @@ rxvt_term::scale_pixmap (const char *geom)
   unsigned int w = 0, h = 0;
   unsigned int n;
   char *p;
-  bgPixmap_t *bgpixmap = & (bgPixmap);
+  bgPixmap_t *bgpixmap = &bgPixmap;
 
 #define MAXLEN_GEOM		sizeof("[10000x10000+10000+10000]")
 
@@ -80,7 +80,7 @@ rxvt_term::scale_pixmap (const char *geom)
     p = strchr (geom, '\0');
 
   n = (p - geom);
-  if (n <= MAXLEN_GEOM)
+  if (n < MAXLEN_GEOM)
     {
       strncpy (str, geom, n);
       str[n] = '\0';

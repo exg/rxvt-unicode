@@ -811,7 +811,7 @@ rxvt_color::set (rxvt_screen *screen, const rgba &color)
           
       got = alloc (screen, rgba (best->red, best->green, best->blue));
 
-      delete colors;
+      delete [] colors;
     }
 #endif
 

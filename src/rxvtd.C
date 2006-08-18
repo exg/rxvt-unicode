@@ -73,8 +73,11 @@ unix_listener::unix_listener (const char *sockname)
 {
   sockaddr_un sa;
   
-  if (strlen(sockname) >= sizeof(sa.sun_path))
-    rxvt_fatal ("socket name too long, aborting.\n");
+  if (strlen (sockname) >= sizeof(sa.sun_path))
+    {
+      fputs ("socket name too long, aborting.\n", stderr);
+      exit (EXIT_FAILURE);
+    }
 
   if ((fd = socket (AF_UNIX, SOCK_STREAM, 0)) < 0)
     {
@@ -145,7 +148,7 @@ void server::err (const char *format, ...)
       send ("MSG"), send (err);
     }
 
-  send ("END", 0);
+  send ("END"); send (0);
   close (fd);
   delete this;
 }
@@ -160,7 +163,7 @@ void server::read_cb (io_watcher &w, short revents)
         {
           stringvec *argv = new stringvec;
           stringvec *envv = new stringvec;
-            
+           
           for (;;)
             {
               if (!recv (tok))
@@ -173,13 +176,17 @@ void server::read_cb (io_watcher &w, short revents)
               else if (!strcmp (tok, "CWD") && recv (tok))
                 {
                   if (chdir (tok))
-                    err ("unable to change to working directory to '%s': %s",
-                         (char *)tok, strerror (errno));
+                    {
+                      delete envv;
+                      delete argv;
+                      return err ("unable to change to working directory to '%s', aborting: %s.\n",
+                                  (char *)tok, strerror (errno));
+                    }
                 }
               else if (!strcmp (tok, "ARG") && recv (tok))
                 argv->push_back (strdup (tok));
               else
-                return err ("protocol error: unexpected NEW token");
+                return err ("protocol error: unexpected NEW token.\n");
             }
 
           envv->push_back (0);
@@ -212,7 +219,7 @@ void server::read_cb (io_watcher &w, short revents)
           }
         }
       else
-        return err ("protocol error: request '%s' unsupported.", (char *)tok);
+        return err ("protocol error: request '%s' unsupported.\n", (char *)tok);
     }
   else
     return err ();
