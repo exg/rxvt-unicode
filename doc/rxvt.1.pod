@@ -19,7 +19,7 @@ a significant advantage on a machine serving many X sessions.
 See @@RXVT_NAME@@(7) (try C<man 7 @@RXVT_NAME@@>) for a list of
 frequently asked questions and answer to them and some common
 problems. That document is also accessible on the World-Wide-Web at
-L<http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html>.
+L<http://cvs.schmorp.de/browse/rxvt-unicode/doc/rxvt.7.html>.
 
 =head1 RXVT-UNICODE VS. RXVT
 

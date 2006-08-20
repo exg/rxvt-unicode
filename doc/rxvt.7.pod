@@ -19,7 +19,7 @@ This document contains the FAQ, the RXVT TECHNICAL REFERENCE documenting
 all escape sequences, and other background information.
 
 The newest version of this document is also available on the World Wide Web at
-L<http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html>.
+L<http://cvs.schmorp.de/browse/rxvt-unicode/doc/rxvt.7.html>.
 
 =head1 RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
