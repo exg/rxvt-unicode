@@ -21,12 +21,13 @@ WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the
 WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
-TODO: rxvtd failing to enter cwd of rxvtc leads to crash due to free(this), Gentoo #143985
-TODO: fix crash because strwidth returning -1 in selection-popup in LC_ALL=C
+        - fixed urxvt::strwidth to calculate width in the same way as screen.C.
+	- fix a crash caused by passing negative widths to overlay functions.
 	- give proper diagnostic when RXVT_SOCKET is too long instead of
           corrupting the stack (patch by exg).
         - urxvtd no longer crashes when the client sends an inaccessible
-          working directory (reported by Roland Baer).
+          working directory (reported by Roland Baer, possibly fixes gentoo
+          bug #143985).
         - fixed many minor issues reported by Roland Baer.
 
 7.9  Mon Aug  7 18:16:07 CEST 2006

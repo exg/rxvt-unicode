@@ -1124,8 +1124,14 @@ rxvt_term::strwidth (SV *str)
         wchar_t *wstr = sv2wcs (str);
 
 	rxvt_push_locale (THIS->locale);
-        //TODO: use same algorithm as screen.C
-        RETVAL = wcswidth (wstr, wcslen (wstr));
+        RETVAL = 0;
+        for (wchar_t *wc = wstr; *wc; wc++)
+          {
+            int w = WCWIDTH (*wc);
+
+            if (w)
+              RETVAL += min (w, 1);
+          }
         rxvt_pop_locale ();
 
         free (wstr);
