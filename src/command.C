@@ -3676,6 +3676,8 @@ rxvt_term::get_to_st (unicode_t &ends_how)
         }
       else if (ch == C0_BEL || ch == CHAR_ST)
         break;
+      else if (ch == C0_SYN)
+        ch = cmd_get8 ();
       else if (ch < 0x20)
         return NULL;	/* other control character - exit */
 
@@ -3685,10 +3687,7 @@ rxvt_term::get_to_st (unicode_t &ends_how)
         // stop at some sane length
         return NULL;
 
-      if (ch == C0_SYN)
-        string[n++] = cmd_get8 ();
-      else
-        string[n++] = ch;
+      string[n++] = ch;
     }
 
   string[n++] = '\0';
