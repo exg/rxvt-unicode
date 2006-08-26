@@ -840,12 +840,15 @@ The terminal description used by rxvt-unicode is not as widely available
 as that for xterm, or even rxvt (for which the same problem often arises).
 
 The correct solution for this problem is to install the terminfo, this can
-be done like this (with ncurses' infocmp):
+be done like this (with ncurses' infocmp and works as user and admin):
 
    REMOTE=remotesystem.domain
-   infocmp rxvt-unicode | ssh $REMOTE "cat >/tmp/ti && tic /tmp/ti"
+   infocmp rxvt-unicode | ssh $REMOTE "mkdir -p .terminfo && cat >/tmp/ti && tic /tmp/ti"
 
 ... or by installing rxvt-unicode normally on the remote system,
+
+One some systems you might need to set C<$TERMINFO> to the full path of
+F<$HOME/.terminfo> for this to work.
 
 If you cannot or do not want to do this, then you can simply set
 C<TERM=rxvt> or even C<TERM=xterm>, and live with the small number of

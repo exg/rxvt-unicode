@@ -789,6 +789,8 @@ extern void rxvt_pop_locale () NOTHROW;
 #define LINE_LONGER     0x0001 // line is continued on the next row
 #define LINE_FILTERED   0x0002 // line has been filtered
 #define LINE_COMPRESSED 0x0004 // line has been compressed (NYI)
+#define LINE_FILTER     0x0008 // line needs to be filtered before display (NYI)
+#define LINE_BIDI       0x0010 // line needs bidi (NYI)
 
 struct line_t {
    text_t *t; // terminal the text
