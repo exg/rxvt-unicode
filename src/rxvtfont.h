@@ -62,7 +62,7 @@ struct rxvt_font {
 
   virtual rxvt_fontprop properties () = 0;
 
-  virtual bool load (const rxvt_fontprop &morph) = 0;
+  virtual bool load (const rxvt_fontprop &morph, bool force_prop) = 0;
   virtual bool has_char (uint32_t unicode, const rxvt_fontprop *prop, bool &careful) const = 0;
 
   virtual void draw (rxvt_drawable &d,
@@ -82,7 +82,7 @@ struct rxvt_fontset {
   ~rxvt_fontset ();
 
   bool populate (const char *desc);
-  void set_prop (const rxvt_fontprop &prop) { this->prop = prop; }
+  void set_prop (const rxvt_fontprop &prop, bool force_prop) { this->prop = prop; this->force_prop = force_prop; }
   int find_font (uint32_t unicode);
   int find_font (const char *name) const;
   bool realize_font (int i);
@@ -96,6 +96,7 @@ struct rxvt_fontset {
 private:
   rxvt_term *term;
   rxvt_fontprop prop;
+  bool force_prop;
   simplevec<rxvt_font *> fonts;
   const rxvt_fallback_font *fallback;
 

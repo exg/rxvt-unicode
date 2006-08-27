@@ -814,7 +814,8 @@ rxvt_term::set_fonts ()
 
   prop = (*fs)[1]->properties ();
   prop.height += lineSpace;
-  fs->set_prop (prop);
+
+  fs->set_prop (prop, false);
 
   fwidth  = prop.width;
   fheight = prop.height;
@@ -843,7 +844,7 @@ rxvt_term::set_fonts ()
             }
 
           fs->populate (res);
-          fs->set_prop (prop2);
+          fs->set_prop (prop2, true);
         }
 #else
       fontset[style] = fontset[0];

@@ -272,7 +272,7 @@ struct rxvt_font_default : rxvt_font {
     return p;
   }
 
-  bool load (const rxvt_fontprop &prop)
+  bool load (const rxvt_fontprop &prop, bool force_prop)
   {
     width = 1; height = 1;
     ascent = 1; descent = 0;
@@ -473,7 +473,7 @@ struct rxvt_font_x11 : rxvt_font {
 
   rxvt_fontprop properties ();
 
-  bool load (const rxvt_fontprop &prop);
+  bool load (const rxvt_fontprop &prop, bool force_prop);
 
   bool has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &careful) const;
 
@@ -629,7 +629,7 @@ replace_field (char *buf, const char *name, int index, const char old, const cha
 }
 
 bool
-rxvt_font_x11::load (const rxvt_fontprop &prop)
+rxvt_font_x11::load (const rxvt_fontprop &prop, bool force_prop)
 {
   dTermDisplay;
 
@@ -638,8 +638,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop)
   char field_str[64]; // enough for 128 bits
 
   // first morph the font if required
-  if (prop.weight != rxvt_fontprop::unset
-      || prop.slant != rxvt_fontprop::unset)
+  if (force_prop)
     {
       char fname[1024];
 
@@ -1041,7 +1040,7 @@ struct rxvt_font_xft : rxvt_font {
 
   rxvt_fontprop properties ();
 
-  bool load (const rxvt_fontprop &prop);
+  bool load (const rxvt_fontprop &prop, bool force_prop);
 
   void draw (rxvt_drawable &d, int x, int y,
              const text_t *text, int len,
@@ -1084,7 +1083,7 @@ rxvt_font_xft::properties ()
 }
 
 bool
-rxvt_font_xft::load (const rxvt_fontprop &prop)
+rxvt_font_xft::load (const rxvt_fontprop &prop, bool force_prop)
 {
   dTermDisplay;
 
@@ -1103,11 +1102,11 @@ rxvt_font_xft::load (const rxvt_fontprop &prop)
     FcPatternAddInteger (p, FC_PIXEL_SIZE, prop.height);
 
   if (prop.weight != rxvt_fontprop::unset
-      && FcPatternGet (p, FC_WEIGHT, 0, &v) != FcResultMatch)
+      && (force_prop || FcPatternGet (p, FC_WEIGHT, 0, &v) != FcResultMatch))
     FcPatternAddInteger (p, FC_WEIGHT, prop.weight);
 
   if (prop.slant != rxvt_fontprop::unset
-      && FcPatternGet (p, FC_SLANT, 0, &v) != FcResultMatch)
+      && (force_prop || FcPatternGet (p, FC_SLANT, 0, &v) != FcResultMatch))
     FcPatternAddInteger (p, FC_SLANT, prop.slant);
 
 #if 0 // clipping unfortunately destroys our precious double-width-characters
@@ -1387,6 +1386,7 @@ rxvt_fontset::clear ()
 {
   prop.width = prop.height = prop.ascent = prop.weight = prop.slant
     = rxvt_fontprop::unset;
+  force_prop = false;
 
   for (rxvt_font **i = fonts.begin (); i != fonts.end (); i++)
     FONT_UNREF (*i);
@@ -1508,7 +1508,7 @@ rxvt_fontset::realize_font (int i)
 
   fonts[i]->loaded = true;
 
-  if (!fonts[i]->load (prop))
+  if (!fonts[i]->load (prop, force_prop))
     {
       fonts[i]->cs = CS_UNKNOWN;
       return false;
