@@ -834,17 +834,20 @@ rxvt_term::set_fonts ()
           rxvt_fontprop prop2 = prop;
 
           if (res)
-            prop2.weight = prop2.slant = rxvt_fontprop::unset;
+            {
+              fs->populate (res);
+              fs->set_prop (prop2, false);
+            }
           else
             {
-              res = fontset[0]->fontdesc;
+              fs->populate (fontset[0]->fontdesc);
 
               if (SET_STYLE (0, style) & RS_Bold)   prop2.weight = rxvt_fontprop::bold;
               if (SET_STYLE (0, style) & RS_Italic) prop2.slant  = rxvt_fontprop::italic;
+
+              fs->set_prop (prop2, true);
             }
 
-          fs->populate (res);
-          fs->set_prop (prop2, true);
         }
 #else
       fontset[style] = fontset[0];
