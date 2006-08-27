@@ -22,6 +22,8 @@ WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
 8.0
+	- specified fonts were incorrectly morphed to bold/italic according to the
+          basefont, even if explicitly specified (tracked down by tpope).
         - fixed urxvt::strwidth to calculate width in the same way as screen.C.
 	- fix a crash caused by passing negative widths to overlay functions.
 	- give proper diagnostic when RXVT_SOCKET is too long instead of
