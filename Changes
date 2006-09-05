@@ -21,6 +21,9 @@ WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the
 WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
+TODO: outline cursor color broken? http://bereft.net/rxvt-cursor2.png http://bereft.net/rxvt-cursor1.png
+TODO: matcher etc. support
+TODO: add ctype locale info to some menu to aid the "support"
 8.0
 	- specified fonts were incorrectly morphed to bold/italic according to the
           basefont, even if explicitly specified (tracked down by tpope).
