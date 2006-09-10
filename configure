@@ -11473,19 +11473,6 @@ _ACEOF
 
 fi
 
-if test x$support_utmp != xyes; then
-  echo "  utmp support:               disabled"
-  echo
-else
-  echo "  utmp support:               enabled
-  utmp file:                  $path_utmp
-  utmpx file:                 $path_utmpx
-  wtmp file:                  $path_wtmp
-  wtmpx file:                 $path_wtmpx
-  lastlog file:               $path_lastlog
-  lastlogx file:              $path_lastlogx"
-fi
-
 
 
 echo "$as_me:$LINENO: checking where ttys/ttytab is located" >&5

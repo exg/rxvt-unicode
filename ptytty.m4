@@ -438,19 +438,6 @@ main()
 if test x$path_lastlogx != x; then
   AC_DEFINE_UNQUOTED(LASTLOGX_FILE, "$path_lastlogx", Define location of lastlogx)
 fi
-
-if test x$support_utmp != xyes; then
-  echo "  utmp support:               disabled"
-  echo
-else
-  echo "  utmp support:               enabled
-  utmp file:                  $path_utmp
-  utmpx file:                 $path_utmpx
-  wtmp file:                  $path_wtmp
-  wtmpx file:                 $path_wtmpx
-  lastlog file:               $path_lastlog
-  lastlogx file:              $path_lastlogx"
-fi
 ])
 
 AC_DEFUN([SCM_RIGHTS_CHECK],
