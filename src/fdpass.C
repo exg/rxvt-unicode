@@ -33,7 +33,7 @@
 
 #include "libptytty.h"
 
-#ifndef CMSG_LEN // CMSG_SPACe && CMSG_LEN are rfc2292 extensions to unix
+#ifndef CMSG_LEN // CMSG_SPACE && CMSG_LEN are rfc2292 extensions to unix
 # define CMSG_LEN(len) (sizeof (cmsghdr) + len)
 #endif
 

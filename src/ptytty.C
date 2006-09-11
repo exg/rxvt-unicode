@@ -183,6 +183,8 @@ get_pty (int *fd_tty, char **ttydev)
 
       close (pfd);
     }
+
+  return -1;
 }
 #endif
 
