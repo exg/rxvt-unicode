@@ -24,6 +24,7 @@ DUMB: support tex fonts
 TODO: outline cursor color broken? http://bereft.net/rxvt-cursor2.png http://bereft.net/rxvt-cursor1.png
 TODO: matcher etc. support
 TODO: add ctype locale info to some menu to aid the "support"
+TODO: (exg) rxvt -fn -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1 U+39b+U+30a wipes out 39b
 8.0
 	- specified fonts were incorrectly morphed to bold/italic according to the
           basefont, even if explicitly specified (tracked down by tpope).
