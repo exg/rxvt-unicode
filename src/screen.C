@@ -1980,6 +1980,8 @@ rxvt_term::scr_refresh () NOTHROW
   rend_t cc1;         /* store colours at cursor position (s)      */
 #endif
   rend_t *crp;        // cursor rendition pointer
+  rend_t ccol1,  /* Cursor colour       */
+         ccol2;  /* Cursor colour2      */
 
   want_refresh = 0;        /* screen is current */
 
@@ -2010,8 +2012,6 @@ rxvt_term::scr_refresh () NOTHROW
    */
   {
     unsigned char setoldcursor;
-    rend_t ccol1,  /* Cursor colour       */
-           ccol2;  /* Cursor colour2      */
 
     showcursor = (screen.flags & Screen_VisibleCursor);
 #ifdef CURSOR_BLINK
@@ -2028,6 +2028,29 @@ rxvt_term::scr_refresh () NOTHROW
 
         crp = &ROW(screen.cur.row).r[col];
 
+#ifndef NO_CURSORCOLOR
+        cc1 = *crp & (RS_fgMask | RS_bgMask);
+        if (ISSET_PIXCOLOR (Color_cursor))
+          ccol1 = Color_cursor;
+        else
+#endif
+#ifdef CURSOR_COLOR_IS_RENDITION_COLOR
+          ccol1 = fgcolor_of (rstyle);
+#else
+          ccol1 = Color_fg;
+#endif
+
+#ifndef NO_CURSORCOLOR
+        if (ISSET_PIXCOLOR (Color_cursor2))
+          ccol2 = Color_cursor2;
+        else
+#endif
+#ifdef CURSOR_COLOR_IS_RENDITION_COLOR
+          ccol2 = bgcolor_of (rstyle);
+#else
+          ccol2 = Color_bg;
+#endif
+
         if (showcursor && focus)
           {
             if (OPTION (Opt_cursorUnderline))
@@ -2035,28 +2058,8 @@ rxvt_term::scr_refresh () NOTHROW
             else
               {
                 *crp ^= RS_RVid;
-
-#ifndef NO_CURSORCOLOR
-                cc1 = *crp & (RS_fgMask | RS_bgMask);
-                if (ISSET_PIXCOLOR (Color_cursor))
-                  ccol1 = Color_cursor;
-                else
-#ifdef CURSOR_COLOR_IS_RENDITION_COLOR
-                  ccol1 = fgcolor_of (rstyle);
-#else
-                  ccol1 = Color_fg;
-#endif
-                if (ISSET_PIXCOLOR (Color_cursor2))
-                  ccol2 = Color_cursor2;
-                else
-#ifdef CURSOR_COLOR_IS_RENDITION_COLOR
-                  ccol2 = bgcolor_of (rstyle);
-#else
-                  ccol2 = Color_bg;
-#endif
                 *crp = SET_FGCOLOR (*crp, ccol1);
                 *crp = SET_BGCOLOR (*crp, ccol2);
-#endif
               }
           }
       }
@@ -2420,7 +2423,9 @@ rxvt_term::scr_refresh () NOTHROW
 #ifndef NO_CURSORCOLOR
           if (ISSET_PIXCOLOR (Color_cursor))
             XSetForeground (dpy, gc, pix_colors[Color_cursor]);
+          else
 #endif
+            XSetForeground (dpy, gc, pix_colors[ccol1]);
 
           XDrawRectangle (dpy, drawBuffer, gc,
                           Col2Pixel (col),

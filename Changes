@@ -21,7 +21,6 @@ WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the
 WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
-TODO: outline cursor color broken? http://bereft.net/rxvt-cursor2.png http://bereft.net/rxvt-cursor1.png
 TODO: add ctype locale info to some menu to aid the "support"
 TODO: (exg) rxvt -fn -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1 U+39b+U+30a wipes out 39b
 8.0
@@ -31,6 +30,8 @@ TODO: (exg) rxvt -fn -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1 U
 	- fix a crash caused by passing negative widths to overlay functions.
 	- added 'matcher' extension by tpope, replacing the mark-urls extension.
         - improve url regex to match anything www.* (tpope).
+        - fixed bug with outline cursor color being wrong after xft fonts.
+        - update to libptytty-1.0.
 	- give proper diagnostic when RXVT_SOCKET is too long instead of
           corrupting the stack (patch by exg).
         - urxvtd no longer crashes when the client sends an inaccessible
@@ -39,7 +40,7 @@ TODO: (exg) rxvt -fn -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1 U
         - fixed many minor issues reported by Roland Baer.
         - Leonid Khramov spotted a minor glitch in rxvtfont.C that
           should not have any consequences, but was buggy nonetheless.
-        - update to libptytty-1.0.
+        - manpage fix by exg.
 
 7.9  Mon Aug  7 18:16:07 CEST 2006
         - fix the crashing bug people encountered with 7.8 + urxvtd + perl
