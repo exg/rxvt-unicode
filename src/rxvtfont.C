@@ -483,7 +483,6 @@ struct rxvt_font_x11 : rxvt_font {
 
   bool slow; // wether this is a proportional font or has other funny characteristics
   XFontStruct *f;
-  codeset cs;
   bool enc2b, encm;
 
   char *get_property (XFontStruct *f, Atom property, const char *repl) const;

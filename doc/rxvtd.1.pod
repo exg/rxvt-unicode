@@ -59,7 +59,7 @@ socket.
 This is a useful invocation of B<@@RXVT_NAME@@d> in a F<.xsession>-style
 script:
 
-   B<@@RXVT_NAME@@d> -q -f -o
+   @@RXVT_NAME@@d -q -f -o
 
 This waits till the control socket is available, opens the current display
 and forks into the background. When you log-out, the server is reset and
