@@ -36,6 +36,8 @@ TODO: (exg) rxvt -fn -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1 U
           working directory (reported by Roland Baer, possibly fixes gentoo
           bug #143985).
         - fixed many minor issues reported by Roland Baer.
+        - Leonid Khramov spotted a minor glitch in rxvtfont.C that
+          should not have any consequences, but was buggy nonetheless.
 
 7.9  Mon Aug  7 18:16:07 CEST 2006
         - fix the crashing bug people encountered with 7.8 + urxvtd + perl
