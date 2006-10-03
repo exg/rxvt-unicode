@@ -263,7 +263,7 @@ Example configuration:
     URxvt.perl-ext:           default,matcher
     URxvt.urlLauncher:        sensible-browser
     URxvt.matcher.button:     1
-    URxvt.matcher.pattern.1:  \\bwww\\.[\\w-]\\.[\\w./?&@#-]*[\\w/-]
+    URxvt.matcher.pattern.1:  \\bwww\\.[\\w-]+\\.[\\w./?&@#-]*[\\w/-]
     URxvt.matcher.pattern.2:  \\B(/\\S+?):(\\d+)(?=:|$)
     URxvt.matcher.launcher.2: gvim +$2 $1
 
