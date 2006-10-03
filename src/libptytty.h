@@ -6,7 +6,7 @@
 
 #ifdef __cplusplus
 
-// c++ api
+// C++ API
 
 struct ptytty {
   int pty; // pty file descriptor; connected to rxvt
@@ -42,7 +42,7 @@ protected:
 
 #else
 
-// c api
+// C API
 
 typedef void *PTYTTY;
 
