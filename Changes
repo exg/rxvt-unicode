@@ -11,7 +11,6 @@ TODO: investigate -pe tabbed -g 80x25 being 23 not 24 or 25 lines
       => when setting the constraints, the wm might (correctly)
          resize the outer window, which might result in a smaller window overall.
          or something like that. guys, send me a patch.
-TODO: zeroing scorllback buffer should free memory
 WISH: skipscroll option
 WISH: selection-color-pair instead of reverse video
 WISH: load system-wide config file even if we don't have one
@@ -21,7 +20,6 @@ WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the
 WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
-TODO: add ctype locale info to some menu to aid the "support"
 TODO: (exg) rxvt -fn -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1 U+39b+U+30a wipes out 39b
 8.0
 	- specified fonts were incorrectly morphed to bold/italic according to the
@@ -34,6 +32,7 @@ TODO: (exg) rxvt -fn -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1 U
         - update to libptytty-1.0.
 	- give proper diagnostic when RXVT_SOCKET is too long instead of
           corrupting the stack (patch by exg).
+        - display current terminal locale in option menu.
         - urxvtd no longer crashes when the client sends an inaccessible
           working directory (reported by Roland Baer, possibly fixes gentoo
           bug #143985).

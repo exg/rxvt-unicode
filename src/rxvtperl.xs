@@ -1174,6 +1174,13 @@ rxvt_term::locale_decode (SV *octets)
 	OUTPUT:
         RETVAL
 
+char *
+rxvt_term::locale ()
+	CODE:
+        RETVAL = THIS->locale;
+	OUTPUT:
+        RETVAL
+
 #define TERM_OFFSET(sym) offsetof (TermWin_t, sym)
 
 #define TERM_OFFSET_width      TERM_OFFSET(width)

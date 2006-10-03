@@ -39,6 +39,13 @@ sub on_button_press {
          }
       }
 
+      {
+         $popup->add_separator;
+         my $locale = $self->locale;
+         $locale =~ y/\x20-\x7e//cd;
+         $popup->add_title ("Locale: $locale");
+      }
+
       $popup->show;
 
       return 1;
