@@ -234,9 +234,9 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color) 
   dTermDisplay;
   dTermGC;
   
-  if (color < 0 || color == Color_bg)
+  if (color == Color_bg)
     XClearArea (disp, d, x, y, w, h, false);
-  else
+  else if (color >= 0)
     {
 #if XFT
       XftDrawRect (d, &term->pix_colors[color].c, x, y, w, h);

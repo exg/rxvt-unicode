@@ -20,8 +20,10 @@ WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the
 WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
-TODO: (exg) rxvt -fn -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1 U+39b+U+30a wipes out 39b
 8.0
+	- combining characters cleared the area instead of creating an overlay,
+          thus losing the ability to draw combining characters properly in most
+          circumstances (reported by exg).
 	- specified fonts were incorrectly morphed to bold/italic according to the
           basefont, even if explicitly specified (tracked down by tpope).
         - fixed urxvt::strwidth to calculate width in the same way as screen.C.
