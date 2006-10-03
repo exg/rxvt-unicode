@@ -242,12 +242,30 @@ following four resources (shown with defaults):
 See I<COLOR AND GRAPHICS> in the @@RXVT_NAME@@(1) manpage for valid
 indices.
 
-=item mark-urls
+=item matcher
 
-Uses per-line display filtering (C<on_line_update>) to underline urls and
-make them clickable. When middle-clicked, the program specified in the
-resource C<urlLauncher> (default C<x-www-browser>) will be started with
-the URL as first argument.
+Uses per-line display filtering (C<on_line_update>) to underline text
+matching a certain pattern and make it clickable. When clicked with the
+mouse button specified in the C<matcher.button> resource (default 2, or
+middle), the program specified in the C<matcher.launcher> resource
+(default, the C<urlLauncher> resource, C<sensible-browser>) will be started
+with the matched text as first argument.  The default configuration is
+suitable for matching URLs and launching a web browser, like the
+former "mark-urls" extension.
+
+The default pattern to match URLs can be overridden with the
+C<matcher.pattern.0> resource, and additional patterns can be specified
+with numbered patterns, in a manner similar to the "selection" extension.
+The launcher can also be overridden on a per-pattern basis.
+
+Example configuration:
+
+    URxvt.perl-ext:           default,matcher
+    URxvt.urlLauncher:        sensible-browser
+    URxvt.matcher.button:     1
+    URxvt.matcher.pattern.1:  \\bwww\\.[\\w-]\\.[\\w./?&@#-]*[\\w/-]
+    URxvt.matcher.pattern.2:  \\B(/\\S+?):(\\d+)(?=:|$)
+    URxvt.matcher.launcher.2: gvim +$2 $1
 
 =item xim-onthespot
 

@@ -46,8 +46,8 @@ my @mark_patterns = (
 
    # urls, just a heuristic
    qr{(
-      (?:https?://|ftp://|news://|mailto:|file://)[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),~#]+
-      [ab-zA-Z0-9\-\@;\/?:&=%\$_+!*\x27()~]   # exclude some trailing characters (heuristic)
+      (?:https?://|ftp://|news://|mailto:|file://|\bwww\.)[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),~#]+
+      [ab-zA-Z0-9\-\@;\/?:&=%\$_+*()~]   # exclude some trailing characters (heuristic)
    )}x,
 
    # shell-like argument quoting, basically always matches

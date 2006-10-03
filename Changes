@@ -30,6 +30,8 @@ TODO: (exg) rxvt -fn -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1 U
           basefont, even if explicitly specified (tracked down by tpope).
         - fixed urxvt::strwidth to calculate width in the same way as screen.C.
 	- fix a crash caused by passing negative widths to overlay functions.
+	- added 'matcher' extension by tpope, replacing the mark-urls extension.
+        - improve url regex to match anything www.* (tpope).
 	- give proper diagnostic when RXVT_SOCKET is too long instead of
           corrupting the stack (patch by exg).
         - urxvtd no longer crashes when the client sends an inaccessible
