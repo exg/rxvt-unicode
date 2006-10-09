@@ -238,7 +238,7 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
               key->type  = keysym_t::LIST;
               key->range = suffix - middle - 1;
 
-              strcpy (translation, translation + 4);
+              memmove (translation, translation + 4, strlen (translation + 4) + 1);
             }
           else
             rxvt_warn ("cannot parse list-type keysym '%s', treating as normal keysym.\n", translation);

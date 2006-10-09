@@ -411,7 +411,7 @@ rxvt_term::scr_reset ()
 
   tabs = (char *)rxvt_malloc (ncol * sizeof (char));
 
-  for (int col = ncol; col--; )
+  for (int col = ncol; --col; )
     tabs [col] = col % TABSIZE == 0;
 
   if (current_screen != PRIMARY)
@@ -2351,9 +2351,7 @@ rxvt_term::scr_refresh () NOTHROW
            */
           rxvt_font *font = (*fontset[GET_STYLE (rend)])[GET_FONT (rend)];
 
-          if (back == fore)
-            font->clear_rect (*drawable, xpixel, ypixel, fwidth * count, fheight, back);
-          else if (back == Color_bg && have_bg)
+          if (back == Color_bg && have_bg)
             {
               // this is very ugly, maybe push it into ->draw?
 
