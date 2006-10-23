@@ -5,8 +5,8 @@
 
 # just set some compiler options
 if [ "x$HOSTNAME" = xcerebro -o "x$HOSTNAME" = xfuji ]; then
-   CC=ccache\ gcc-4.0
-   CXX=ccache\ g++-4.0
+   CC=ccache\ gcc
+   CXX=ccache\ g++
    export CC CXX
    unset CXXFLAGS CFLAGS
 fi

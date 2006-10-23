@@ -892,7 +892,7 @@ TODO: clear_rect -1 transparency breaks -ip
 	- fix pixmap offset when tinting (reported by Eduard Bloch).
 	- new -sh option by Mikael Magnusson.
 	- off-focus-fading (--enable-fading) support (patch by
-	  Mikael Magnusson).
+	  Mikael Magnusson, based on aterm code).
 	- cursor now set correctly on --disable-blank (reported by
 	  Mikael Magnusson).
 	- better (and non-crashing) slipwheeling (Mikael Magnusson).
