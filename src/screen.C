@@ -2351,14 +2351,14 @@ rxvt_term::scr_refresh () NOTHROW
            */
           rxvt_font *font = (*fontset[GET_STYLE (rend)])[GET_FONT (rend)];
 
-          if (back == Color_bg && have_bg)
+          if (have_bg && back == Color_bg)
             {
               // this is very ugly, maybe push it into ->draw?
 
               for (i = 0; i < count; i++) /* don't draw empty strings */
                 if (text[i] != ' ')
                   {
-                    font->draw (*drawable, xpixel, ypixel, text, count, fore, -1);
+                    font->draw (*drawable, xpixel, ypixel, text, count, fore, Color_transparent);
                     goto did_clear;
                   }
 

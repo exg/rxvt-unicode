@@ -234,7 +234,7 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color) 
   dTermDisplay;
   dTermGC;
   
-  if (color == Color_bg)
+  if (color == Color_bg || color == Color_transparent)
     XClearArea (disp, d, x, y, w, h, false);
   else if (color >= 0)
     {
@@ -443,7 +443,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
                                 ? f1
                                 : (*fs)[fs->find_font (cc->c2)];
 
-              f2->draw (d, x, y, chrs, width, fg, -1);
+              f2->draw (d, x, y, chrs, width, fg, Color_none);
             }
         }
 #endif

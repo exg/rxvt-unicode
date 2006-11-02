@@ -522,6 +522,8 @@ enum {
  */
 
 enum colour_list {
+  Color_none = -2,
+  Color_transparent = -1,
   Color_fg = 0,
   Color_bg,
   minCOLOR,                   /* 2 */
