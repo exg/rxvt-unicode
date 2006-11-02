@@ -65,7 +65,7 @@ PREPACKAGED EXTENSIONS
         following pattern matches the filename (note, there is a single
         space at the very end):
 
-           URxvt.selection.pattern-0: ^(/[^:]+):\
+           URxvt.selection.pattern-0: ^(/[^:]+):\ 
 
         You can look at the source of the selection extension to see more
         interesting uses, such as parsing a line from beginning to end.
@@ -220,11 +220,30 @@ PREPACKAGED EXTENSIONS
 
         See *COLOR AND GRAPHICS* in the rxvt(1) manpage for valid indices.
 
-    mark-urls
-        Uses per-line display filtering ("on_line_update") to underline urls
-        and make them clickable. When middle-clicked, the program specified
-        in the resource "urlLauncher" (default "x-www-browser") will be
-        started with the URL as first argument.
+    matcher
+        Uses per-line display filtering ("on_line_update") to underline text
+        matching a certain pattern and make it clickable. When clicked with
+        the mouse button specified in the "matcher.button" resource (default
+        2, or middle), the program specified in the "matcher.launcher"
+        resource (default, the "urlLauncher" resource, "sensible-browser")
+        will be started with the matched text as first argument. The default
+        configuration is suitable for matching URLs and launching a web
+        browser, like the former "mark-urls" extension.
+
+        The default pattern to match URLs can be overridden with the
+        "matcher.pattern.0" resource, and additional patterns can be
+        specified with numbered patterns, in a manner similar to the
+        "selection" extension. The launcher can also be overridden on a
+        per-pattern basis.
+
+        Example configuration:
+
+            URxvt.perl-ext:           default,matcher
+            URxvt.urlLauncher:        sensible-browser
+            URxvt.matcher.button:     1
+            URxvt.matcher.pattern.1:  \\bwww\\.[\\w-]+\\.[\\w./?&@#-]*[\\w/-]
+            URxvt.matcher.pattern.2:  \\B(/\\S+?):(\\d+)(?=:|$)
+            URxvt.matcher.launcher.2: gvim +$2 $1
 
     xim-onthespot
         This (experimental) perl extension implements OnTheSpot editing. It
@@ -319,6 +338,11 @@ PREPACKAGED EXTENSIONS
 
            URxvt.selection-pastebin.url: http://www.ta-sa.org/files/txt/%
 
+        *Note to xrdb users:* xrdb uses the C preprocessor, which might
+        interpret the double "/" characters as comment start. Use "\057\057"
+        instead, which works regardless of wether xrdb is used to parse the
+        resource file or not.
+
     example-refresh-hooks
         Displays a very simple digital clock in the upper right corner of
         the window. Illustrates overwriting the refresh callbacks to create
@@ -356,11 +380,12 @@ API DOCUMENTATION
 
   Extension Objects
     Every perl extension is a perl class. A separate perl object is created
-    for each terminal and each extension and passed as the first parameter
-    to hooks. So extensions can use their $self object without having to
-    think about other extensions, with the exception of methods and members
-    that begin with an underscore character "_": these are reserved for
-    internal use.
+    for each terminal, and each terminal has its own set of extenion
+    objects, which are passed as the first parameter to hooks. So extensions
+    can use their $self object without having to think about clashes with
+    other extensions or other terminals, with the exception of methods and
+    members that begin with an underscore character "_": these are reserved
+    for internal use.
 
     Although it isn't a "urxvt::term" object, you can call all methods of
     the "urxvt::term" class on this object.
@@ -1156,7 +1181,7 @@ API DOCUMENTATION
                         ->cb (sub {
                            $term->{overlay}->set (0, 0,
                               sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2,1,0]);
-                        });
+                        });                                                                                                                                      
 
     $timer = new urxvt::timer
         Create a new timer object in started state. It is scheduled to fire
@@ -1254,7 +1279,7 @@ API DOCUMENTATION
                         ->cb (sub {
                            my ($pw, $exit_status) = @_;
                            ...
-                        });
+                        });                                                                                                                                      
 
     $pw = new urxvt::pw
         Create a new process watcher in stopped state.

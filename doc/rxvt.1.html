@@ -55,7 +55,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>7.9</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>8.0</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -67,7 +67,7 @@ a significant advantage on a machine serving many X sessions.</p>
 <p>See <code>rxvt(7)</code> (try <code>man 7 rxvt</code>) for a list of
 frequently asked questions and answer to them and some common
 problems. That document is also accessible on the World-Wide-Web at
-<a href="http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html">http://cvs.schmorp.de/browse/*checkout*/rxvt-unicode/doc/rxvt.7.html</a>.</p>
+<a href="http://cvs.schmorp.de/browse/rxvt-unicode/doc/rxvt.7.html">http://cvs.schmorp.de/browse/rxvt-unicode/doc/rxvt.7.html</a>.</p>
 <p>
 </p>
 <hr />
@@ -1386,7 +1386,8 @@ performed in an exact manner; however, the closest match is assured.</p>
 <code>\e</code>, <code>\E</code>: escape, <code>\n</code>: newline, <code>\r</code>: carriage return, <code>\t</code>: tab,
 <code>\000</code>: octal number) or verbatim control characters (<code>^?</code>: delete,
 <code>^@</code>: null, <code>^A</code> ...) and may be enclosed with double quotes so that it
-can start or end with whitespace.</p>
+can start or end with whitespace. <strong>This feature is deprecated and will
+be removed</strong>.</p>
 </dd>
 <dd>
 <p>Please note that you need to double the <code>\</code> in resource files, as

@@ -166,7 +166,7 @@ src/perl/selection-autotransform
 src/perl/selection-pastebin
 src/perl/searchable-scrollback
 src/perl/automove-background
-src/perl/mark-urls
+src/perl/matcher
 src/perl/tabbed
 src/perl/xim-onthespot
 src/perl/readline

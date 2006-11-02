@@ -164,7 +164,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
        libgcc_s.so.1 => /lib/libgcc_s.so.1 (0x00002aaaaada2000)
        libc.so.6 => /lib/libc.so.6 (0x00002aaaaaeb0000)     
        libdl.so.2 => /lib/libdl.so.2 (0x00002aaaab0ee000)   
-       /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)
+       /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)     
 
     No large bloated libraries (of course, none were linked in statically),
     except maybe libX11 :)
@@ -774,12 +774,16 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     arises).
 
     The correct solution for this problem is to install the terminfo, this
-    can be done like this (with ncurses' infocmp):
+    can be done like this (with ncurses' infocmp and works as user and
+    admin):
 
        REMOTE=remotesystem.domain
-       infocmp rxvt-unicode | ssh $REMOTE "cat >/tmp/ti && tic /tmp/ti"
+       infocmp rxvt-unicode | ssh $REMOTE "mkdir -p .terminfo && cat >/tmp/ti && tic /tmp/ti"
 
     ... or by installing rxvt-unicode normally on the remote system,
+
+    One some systems you might need to set $TERMINFO to the full path of
+    $HOME/.terminfo for this to work.
 
     If you cannot or do not want to do this, then you can simply set
     "TERM=rxvt" or even "TERM=xterm", and live with the small number of
@@ -983,7 +987,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
            xprop -root XIM_SERVERS
 
-
+    *
 
    My input method wants <some encoding> but I want UTF-8, what can I do?
     You can specify separate locales for the input method and the rest of

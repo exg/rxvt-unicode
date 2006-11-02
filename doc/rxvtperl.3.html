@@ -345,13 +345,35 @@ following four resources (shown with defaults):</p>
 indices.</p>
 </dd>
 </li>
-<dt><strong><a name="item_mark_2durls">mark-urls</a></strong>
+<dt><strong><a name="item_matcher">matcher</a></strong>
 
 <dd>
-<p>Uses per-line display filtering (<code>on_line_update</code>) to underline urls and
-make them clickable. When middle-clicked, the program specified in the
-resource <code>urlLauncher</code> (default <code>x-www-browser</code>) will be started with
-the URL as first argument.</p>
+<p>Uses per-line display filtering (<code>on_line_update</code>) to underline text
+matching a certain pattern and make it clickable. When clicked with the
+mouse button specified in the <code>matcher.button</code> resource (default 2, or
+middle), the program specified in the <code>matcher.launcher</code> resource
+(default, the <code>urlLauncher</code> resource, <code>sensible-browser</code>) will be started
+with the matched text as first argument.  The default configuration is
+suitable for matching URLs and launching a web browser, like the
+former ``mark-urls'' extension.</p>
+</dd>
+<dd>
+<p>The default pattern to match URLs can be overridden with the
+<code>matcher.pattern.0</code> resource, and additional patterns can be specified
+with numbered patterns, in a manner similar to the ``selection'' extension.
+The launcher can also be overridden on a per-pattern basis.</p>
+</dd>
+<dd>
+<p>Example configuration:</p>
+</dd>
+<dd>
+<pre>
+    URxvt.perl-ext:           default,matcher
+    URxvt.urlLauncher:        sensible-browser
+    URxvt.matcher.button:     1
+    URxvt.matcher.pattern.1:  \\bwww\\.[\\w-]+\\.[\\w./?&amp;@#-]*[\\w/-]
+    URxvt.matcher.pattern.2:  \\B(/\\S+?):(\\d+)(?=:|$)
+    URxvt.matcher.launcher.2: gvim +$2 $1</pre>
 </dd>
 </li>
 <dt><strong><a name="item_xim_2donthespot">xim-onthespot</a></strong>
@@ -491,6 +513,12 @@ for the filename):</p>
 <pre>
    URxvt.selection-pastebin.url: <a href="http://www.ta-sa.org/files/txt/%">http://www.ta-sa.org/files/txt/%</a></pre>
 </dd>
+<dd>
+<p><em>Note to xrdb users:</em> xrdb uses the C preprocessor, which might interpret
+the double <code>/</code> characters as comment start. Use <code>\057\057</code> instead,
+which works regardless of wether xrdb is used to parse the resource file
+or not.</p>
+</dd>
 </li>
 <dt><strong><a name="item_example_2drefresh_2dhooks">example-refresh-hooks</a></strong>
 
@@ -547,11 +575,12 @@ locale-specific way.</p>
 </p>
 <h2><a name="extension_objects">Extension Objects</a></h2>
 <p>Every perl extension is a perl class. A separate perl object is created
-for each terminal and each extension and passed as the first parameter to
-hooks. So extensions can use their <code>$self</code> object without having to think
-about other extensions, with the exception of methods and members that
-begin with an underscore character <code>_</code>: these are reserved for internal
-use.</p>
+for each terminal, and each terminal has its own set of extenion objects,
+which are passed as the first parameter to hooks. So extensions can use
+their <code>$self</code> object without having to think about clashes with other
+extensions or other terminals, with the exception of methods and members
+that begin with an underscore character <code>_</code>: these are reserved for
+internal use.</p>
 <p>Although it isn't a <code>urxvt::term</code> object, you can call all methods of the
 <code>urxvt::term</code> class on this object.</p>
 <p>It has the following methods and data members:</p>
