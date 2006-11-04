@@ -83,7 +83,7 @@ sub on_sel_extend {
    my @matches;
 
    if ($markofs < $line->l) {
-      # convert markofs form character to UTF-8 offset space
+      # convert markofs from character to UTF-8 offset space
       {
          my $prefix = substr $text, 0, $markofs;
          utf8::encode $prefix;
