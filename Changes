@@ -23,6 +23,12 @@ DUMB: support tex fonts
 TODO: http://www.cl.cam.ac.uk/~mgk25/ucs/scw-proposal.html
 
 TODO: wcwidth optimisaiton for <= 0xff is bogus, go to 0x7f or measure (Dai.H.)
+TODO: strwidth bug
+TODO:
+19:55 <Wolf_on_Air> not much to document, it needs 
+19:55 <Wolf_on_Air> URxvt.keysym.M-c:                       perl:clipboard:copy
+19:55 <Wolf_on_Air> URxvt.keysym.M-v:                       perl:clipboard:paste
+http://triplefusion.net/system/macosx-clipboard
 8.0  Thu Nov  2 18:35:19 CET 2006
 	- combining characters cleared the area instead of creating an overlay,
           thus losing the ability to draw combining characters properly in most
