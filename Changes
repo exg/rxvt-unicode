@@ -25,10 +25,18 @@ TODO: http://www.cl.cam.ac.uk/~mgk25/ucs/scw-proposal.html
 TODO: wcwidth optimisaiton for <= 0xff is bogus, go to 0x7f or measure (Dai.H.)
 TODO: strwidth bug
 TODO:
-19:55 <Wolf_on_Air> not much to document, it needs 
-19:55 <Wolf_on_Air> URxvt.keysym.M-c:                       perl:clipboard:copy
-19:55 <Wolf_on_Air> URxvt.keysym.M-v:                       perl:clipboard:paste
-http://triplefusion.net/system/macosx-clipboard
+TODO: 0:52 <mmc> I think, that urxvt has the same bug as rxvt: FocusIn detail=NotifyPointer 
+TODO:            (and I care only on case mode=NotifyGrab) is interpreted as FocusIn, so 
+TODO:            the cursor is filled (while the input focus is actually elsewhere).
+TODO: 0:57 <schmorp> how to reproduce?
+TODO: 0:59  * MinceR snickers
+TODO: 1:00 <mmc> reproduce: place pointer above the rxvt window. Then grab the keyboard 
+TODO:            somehow (I do it by invoking prompt of my window manager). 
+TODO: 
+TODO: 9:55 <Wolf_on_Air> not much to document, it needs 
+TODO: 9:55 <Wolf_on_Air> URxvt.keysym.M-c:                       perl:clipboard:copy
+TODO: 9:55 <Wolf_on_Air> URxvt.keysym.M-v:                       perl:clipboard:paste
+TODO: http://triplefusion.net/system/macosx-clipboard
 8.0  Thu Nov  2 18:35:19 CET 2006
 	- combining characters cleared the area instead of creating an overlay,
           thus losing the ability to draw combining characters properly in most
