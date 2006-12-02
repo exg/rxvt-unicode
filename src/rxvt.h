@@ -702,9 +702,13 @@ enum {
 #define Height2Pixel(n)         ((int32_t)(n) * (int32_t)fheight)
 
 #define OPTION(opt)		(options & (opt))
-#define DEFAULT_OPTIONS		(Opt_scrollBar | Opt_scrollTtyOutput \
-				 | Opt_jumpScroll | Opt_secondaryScreen \
-				 | Opt_pastableTabs | Opt_intensityStyles)
+#define DEFAULT_OPTIONS		(Opt_scrollBar		\
+                                | Opt_scrollTtyOutput	\
+				| Opt_jumpScroll	\
+                                | Opt_secondaryScreen	\
+                                | Opt_secondaryScroll	\
+				| Opt_pastableTabs	\
+                                | Opt_intensityStyles)
 
 // for m >= -n, ensure remainder lies between 0..n-1
 #define MOD(m,n) (((m) + (n)) % (n))

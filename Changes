@@ -37,6 +37,10 @@ TODO: 9:55 <Wolf_on_Air> not much to document, it needs
 TODO: 9:55 <Wolf_on_Air> URxvt.keysym.M-c:                       perl:clipboard:copy
 TODO: 9:55 <Wolf_on_Air> URxvt.keysym.M-v:                       perl:clipboard:paste
 TODO: http://triplefusion.net/system/macosx-clipboard
+8.
+	- secondaryScroll is now enable by default (as per the manpage),
+          reported by exg.
+
 8.0  Thu Nov  2 18:35:19 CET 2006
 	- combining characters cleared the area instead of creating an overlay,
           thus losing the ability to draw combining characters properly in most
