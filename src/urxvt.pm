@@ -1125,6 +1125,10 @@ sub urxvt::anyevent::condvar::wait {
    }
 }
 
+sub urxvt::anyevent::one_event {
+   Carp::croak "AnyEvent->one_event blocking wait unsupported in urxvt, use a non-blocking API";
+}
+
 package urxvt::term;
 
 =head2 The C<urxvt::term> Class
