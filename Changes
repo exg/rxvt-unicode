@@ -32,6 +32,7 @@ DUMB: support tex fonts
         - correct the description of [percent]color rgba format in the manpage.
         - incorporated macosx-clipboard extension by Samuel Ljungkvist.
         - ignore (some) useless focus events. (reported by mmc)
+	- updated compose table to unicode 5.0.0.
 
 8.0  Thu Nov  2 18:35:19 CET 2006
 	- combining characters cleared the area instead of creating an overlay,
