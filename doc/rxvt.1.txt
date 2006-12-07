@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 8.0, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 8.1, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -1010,7 +1010,7 @@ RESOURCES (available also as long-options)
 
     urlLauncher: *string*
         Specifies the program to be started with a URL argument. Used by the
-        "selection-popup" and "mark-urls" perl extensions.
+        "selection-popup" and "matcher" perl extensions.
 
     transient-for: *windowid*
         Compile *frills*: Sets the WM_TRANSIENT_FOR property to the given
@@ -1204,8 +1204,9 @@ COLORS AND GRAPHICS
     digits/component) colour specifications, in addition to the ones
     provided by X, where the additional A component specifies opacity
     (alpha) values. The minimum value of 0 is completely transparent). You
-    can also prefix any color with "[a]", where "a" is on to four hex digits
-    specifiying the opacity value.
+    can also prefix any color with "[percent]", where "percent" is a decimal
+    percentage (0-100) that specifies the opacity of the color, where 0 is
+    completely transparent and 100 is completelxy opaque.
 
     You probably need to specify "-depth 32", too, and have the luck that
     your X-server uses ARGB pixel layout, as X is far from just supporting
@@ -1214,7 +1215,7 @@ COLORS AND GRAPHICS
     For example, the following selects an almost completely transparent red
     background, and an almost opaque pink foreground:
 
-       rxvt -depth 32 -bg rgba:0000/0000/0000/2222 -fg "[e]pink"
+       rxvt -depth 32 -bg rgba:0000/0000/0000/aaaa -fg "[80]pink"
 
     *Please note that transparency of any kind if completely unsupported by
     the author. Don't bug him with installation questions!*

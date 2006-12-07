@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2006-11-02" "8.0" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2006-12-07" "8.1" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -1175,7 +1175,7 @@ Sets the hotkey that starts the incremental scrollback buffer search
 .IP "\fBurlLauncher\fR: \fIstring\fR" 4
 .IX Item "urlLauncher: string"
 Specifies the program to be started with a \s-1URL\s0 argument. Used by the
-\&\f(CW\*(C`selection\-popup\*(C'\fR and \f(CW\*(C`mark\-urls\*(C'\fR perl extensions.
+\&\f(CW\*(C`selection\-popup\*(C'\fR and \f(CW\*(C`matcher\*(C'\fR perl extensions.
 .IP "\fBtransient-for\fR: \fIwindowid\fR" 4
 .IX Item "transient-for: windowid"
 Compile \fIfrills\fR: Sets the \s-1WM_TRANSIENT_FOR\s0 property to the given window id.
@@ -1370,8 +1370,10 @@ their act together, rxvt-unicode will support \f(CW\*(C`rgba:rrrr/gggg/bbbb/aaaa
 (recommended, but \fB\s-1MUST\s0\fR have 4 digits/component) colour specifications,
 in addition to the ones provided by X, where the additional A component
 specifies opacity (alpha) values. The minimum value of \f(CW0\fR is completely
-transparent). You can also prefix any color with \f(CW\*(C`[a]\*(C'\fR, where \f(CW\*(C`a\*(C'\fR is on
-to four hex digits specifiying the opacity value.
+transparent). You can also prefix any color with \f(CW\*(C`[percent]\*(C'\fR, where
+\&\f(CW\*(C`percent\*(C'\fR is a decimal percentage (0\-100) that specifies the opacity of
+the color, where \f(CW0\fR is completely transparent and \f(CW100\fR is completelxy
+opaque.
 .PP
 You probably need to specify \fB\*(L"\-depth 32\*(R"\fR, too, and have the luck that
 your X\-server uses \s-1ARGB\s0 pixel layout, as X is far from just supporting
@@ -1381,7 +1383,7 @@ For example, the following selects an almost completely transparent red
 background, and an almost opaque pink foreground:
 .PP
 .Vb 1
-\&   @@RXVT_NAME@@ -depth 32 -bg rgba:0000/0000/0000/2222 -fg "[e]pink"
+\&   @@RXVT_NAME@@ -depth 32 -bg rgba:0000/0000/0000/aaaa -fg "[80]pink"
 .Ve
 .PP
 \&\fIPlease note that transparency of any kind if completely unsupported by

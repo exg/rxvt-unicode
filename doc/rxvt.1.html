@@ -55,7 +55,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>8.0</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>8.1</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -1559,7 +1559,7 @@ for details.</p>
 
 <dd>
 <p>Specifies the program to be started with a URL argument. Used by the
-<code>selection-popup</code> and <code>mark-urls</code> perl extensions.</p>
+<code>selection-popup</code> and <code>matcher</code> perl extensions.</p>
 </dd>
 </li>
 <dt><strong><a name="item_transient_2dfor_3a_windowid"><strong>transient-for</strong>: <em>windowid</em></a></strong>
@@ -1777,15 +1777,17 @@ their act together, rxvt-unicode will support <code>rgba:rrrr/gggg/bbbb/aaaa</co
 (recommended, but <strong>MUST</strong> have 4 digits/component) colour specifications,
 in addition to the ones provided by X, where the additional A component
 specifies opacity (alpha) values. The minimum value of <code>0</code> is completely
-transparent). You can also prefix any color with <code>[a]</code>, where <code>a</code> is on
-to four hex digits specifiying the opacity value.</p>
+transparent). You can also prefix any color with <code>[percent]</code>, where
+<code>percent</code> is a decimal percentage (0-100) that specifies the opacity of
+the color, where <code>0</code> is completely transparent and <code>100</code> is completelxy
+opaque.</p>
 <p>You probably need to specify <strong>``-depth 32''</strong>, too, and have the luck that
 your X-server uses ARGB pixel layout, as X is far from just supporting
 ARGB visuals out of the box, and rxvt-unicode just fudges around.</p>
 <p>For example, the following selects an almost completely transparent red
 background, and an almost opaque pink foreground:</p>
 <pre>
-   rxvt -depth 32 -bg rgba:0000/0000/0000/2222 -fg &quot;[e]pink&quot;</pre>
+   rxvt -depth 32 -bg rgba:0000/0000/0000/aaaa -fg &quot;[80]pink&quot;</pre>
 <p><em>Please note that transparency of any kind if completely unsupported by
 the author. Don't bug him with installation questions!</em></p>
 <p>
