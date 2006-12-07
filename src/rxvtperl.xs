@@ -1130,7 +1130,7 @@ rxvt_term::strwidth (SV *str)
             int w = WCWIDTH (*wc);
 
             if (w)
-              RETVAL += min (w, 1);
+              RETVAL += max (w, 1);
           }
         rxvt_pop_locale ();
 

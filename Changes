@@ -22,8 +22,6 @@ DUMB: support tex fonts
 
 TODO: http://www.cl.cam.ac.uk/~mgk25/ucs/scw-proposal.html
 
-TODO: strwidth bug
-TODO:
 TODO: 0:52 <mmc> I think, that urxvt has the same bug as rxvt: FocusIn detail=NotifyPointer 
 TODO:            (and I care only on case mode=NotifyGrab) is interpreted as FocusIn, so 
 TODO:            the cursor is filled (while the input focus is actually elsewhere).
@@ -39,6 +37,9 @@ TODO: http://triplefusion.net/system/macosx-clipboard
 8. 
         - fix the assumption that chars < 256 are single-width. Now
           only assume this for codepoints 32 to 126 (reported by Dai.H.).
+        - $term->strwidth returned wide chars as width 1, because some jerk
+          confused min and max. Fixing this also fixes xim-onthespot.
+          Reported by Takano Akio.
 	- secondaryScroll is now enabled by default (as per the manpage),
           reported by exg.
         - correct the description of [percent]color rgba format in the manpage.
