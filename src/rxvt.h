@@ -686,10 +686,9 @@ enum {
  */
 #define dLocal(type,name)       type const name = this->name
 
-// for speed reasons, we assume that all latin1 characters
-// are single-width (the first unicode combining character
-// is actually 0x300, but ascii is what matters most).
-#define WCWIDTH(c) ((c) & ~0xff ? wcwidth (c) : 1)
+// for speed reasons, we assume that all codepoints 32 to 126 are
+// single-width.
+#define WCWIDTH(c)		(IN_RANGE_INC (c, 0x20, 0x7e) ? 1 : wcwidth (c))
 
 /* convert pixel dimensions to row/column values.  Everything as int32_t */
 #define Pixel2Col(x)            Pixel2Width((int32_t)(x))
