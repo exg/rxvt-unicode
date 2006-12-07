@@ -40,6 +40,7 @@ TODO: http://triplefusion.net/system/macosx-clipboard
 8.
 	- secondaryScroll is now enable by default (as per the manpage),
           reported by exg.
+        - correct the description of [percent]color rgba format in the manpage.
 
 8.0  Thu Nov  2 18:35:19 CET 2006
 	- combining characters cleared the area instead of creating an overlay,
