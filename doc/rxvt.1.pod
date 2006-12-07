@@ -1380,8 +1380,10 @@ their act together, rxvt-unicode will support C<rgba:rrrr/gggg/bbbb/aaaa>
 (recommended, but B<MUST> have 4 digits/component) colour specifications,
 in addition to the ones provided by X, where the additional A component
 specifies opacity (alpha) values. The minimum value of C<0> is completely
-transparent). You can also prefix any color with C<[a]>, where C<a> is on
-to four hex digits specifiying the opacity value.
+transparent). You can also prefix any color with C<[percent]>, where
+C<percent> is a decimal percentage (0-100) that specifies the opacity of
+the color, where C<0> is completely transparent and C<100> is completelxy
+opaque.
 
 You probably need to specify B<"-depth 32">, too, and have the luck that
 your X-server uses ARGB pixel layout, as X is far from just supporting
@@ -1390,7 +1392,7 @@ ARGB visuals out of the box, and rxvt-unicode just fudges around.
 For example, the following selects an almost completely transparent red
 background, and an almost opaque pink foreground:
 
-   @@RXVT_NAME@@ -depth 32 -bg rgba:0000/0000/0000/2222 -fg "[e]pink"
+   @@RXVT_NAME@@ -depth 32 -bg rgba:0000/0000/0000/aaaa -fg "[80]pink"
 
 I<Please note that transparency of any kind if completely unsupported by
 the author. Don't bug him with installation questions!>

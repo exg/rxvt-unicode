@@ -1112,20 +1112,20 @@ sub DESTROY {
 }
 
 sub condvar {
-   bless \my $flag, urxvt::anyevent::condvar::
+   bless \my $flag, urxvt::anyevent::
 }
 
-sub urxvt::anyevent::condvar::broadcast {
+sub broadcast {
    ${$_[0]}++;
 }
 
-sub urxvt::anyevent::condvar::wait {
+sub wait {
    unless (${$_[0]}) {
       Carp::croak "AnyEvent->condvar blocking wait unsupported in urxvt, use a non-blocking API";
    }
 }
 
-sub urxvt::anyevent::one_event {
+sub one_event {
    Carp::croak "AnyEvent->one_event blocking wait unsupported in urxvt, use a non-blocking API";
 }
 
