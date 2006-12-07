@@ -1460,11 +1460,13 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case FocusIn:
-        focus_in ();
+        if (ev.xfocus.detail != NotifyInferior && ev.xfocus.detail != NotifyPointer)
+          focus_in ();
         break;
 
       case FocusOut:
-        focus_out ();
+        if (ev.xfocus.detail != NotifyInferior && ev.xfocus.detail != NotifyPointer)
+          focus_out ();
         break;
 
       case ConfigureNotify:
