@@ -20,6 +20,8 @@ WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the
 WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
+TODO: fix rounding of colors when !xft (#aaaaaa => #a9a900) (do not use correct, but expected value)
+
 8.1  Thu Dec  7 22:27:25 CET 2006
         - ｹﾘｽﾏｽﾌ゚ﾚｾ゙ﾝﾄ - zomg!!1, it's too early.
         - fix the assumption that chars < 256 are single-width. Now
