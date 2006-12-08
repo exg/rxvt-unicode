@@ -125,7 +125,7 @@ install-perl:
 @IF_PERL@	$(INSTALL) -d $(DESTDIR)$(libdir)/urxvt
 @IF_PERL@	$(INSTALL) -d $(DESTDIR)$(libdir)/urxvt/perl
 @IF_PERL@	$(INSTALL_DATA) urxvt.pm $(DESTDIR)$(libdir)/urxvt/urxvt.pm
-@IF_PERL@	for ext in perl/*; do test -f "$$ext" && $(INSTALL_DATA) "$$ext" $(DESTDIR)$(libdir)/urxvt/"$$ext"; done
+@IF_PERL@	for ext in $(srcdir)/perl/*; do test -f "$$ext" && $(INSTALL_DATA) "$$ext" $(DESTDIR)$(libdir)/urxvt/perl/"`basename "$$ext"`"; done
 
 install: allbin alldoc install-perl
 	$(INSTALL) -d $(DESTDIR)$(bindir)
@@ -138,7 +138,7 @@ perlxsi.c: Makefile
 
 rxvtperl.C: rxvtperl.xs typemap
 	#$(PERL) @PERLPRIVLIBEXP@/ExtUtils/xsubpp -csuffix .C -C++ -typemap @PERLPRIVLIBEXP@/ExtUtils/typemap -typemap typemap -prototypes rxvtperl.xs >$@
-	$(PERL) @PERLPRIVLIBEXP@/ExtUtils/xsubpp -C++ -typemap @PERLPRIVLIBEXP@/ExtUtils/typemap -typemap typemap -prototypes rxvtperl.xs >$@
+	$(PERL) @PERLPRIVLIBEXP@/ExtUtils/xsubpp -C++ -typemap @PERLPRIVLIBEXP@/ExtUtils/typemap -typemap $(srcdir)/typemap -prototypes $(srcdir)/rxvtperl.xs >$@
 
 rxvtperl.o: rxvtperl.C perlxsi.c
 	$(COMPILE) @PERLFLAGS@ -DLIBDIR="\"$(libdir)/urxvt\"" -c $<

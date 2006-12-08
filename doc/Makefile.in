@@ -95,19 +95,19 @@ distclean:
 
 install:
 	$(INSTALL) -d $(DESTDIR)$(man1dir)
-	$(SED) $(SEDREPLACE) < rxvt.1.man.in >rxvt.1.man
+	$(SED) $(SEDREPLACE) < $(srcdir)/rxvt.1.man.in >rxvt.1.man
 	$(INSTALL_DATA) rxvt.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME).$(man1ext)
-	$(SED) $(SEDREPLACE) < rxvtc.1.man.in >rxvtc.1.man
+	$(SED) $(SEDREPLACE) < $(srcdir)/rxvtc.1.man.in >rxvtc.1.man
 	$(INSTALL_DATA) rxvtc.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME)c.$(man1ext)
-	$(SED) $(SEDREPLACE) < rxvtd.1.man.in >rxvtd.1.man
+	$(SED) $(SEDREPLACE) < $(srcdir)/rxvtd.1.man.in >rxvtd.1.man
 	$(INSTALL_DATA) rxvtd.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME)d.$(man1ext)
 	$(INSTALL) -d $(DESTDIR)$(man7dir)
-	$(SED) $(SEDREPLACE) < rxvt.7.man.in >rxvt.7.man
+	$(SED) $(SEDREPLACE) < $(srcdir)/rxvt.7.man.in >rxvt.7.man
 	$(INSTALL_DATA) rxvt.7.man $(DESTDIR)$(man7dir)/$(RXVTNAME).$(man7ext)
 @IF_PERL@	$(INSTALL) -d $(DESTDIR)$(man3dir)
-@IF_PERL@	$(SED) $(SEDREPLACE) < rxvtperl.3.man.in >rxvtperl.3.man
+@IF_PERL@	$(SED) $(SEDREPLACE) < $(srcdir)/rxvtperl.3.man.in >rxvtperl.3.man
 @IF_PERL@	$(INSTALL_DATA) rxvtperl.3.man $(DESTDIR)$(man3dir)/$(RXVTNAME)perl.$(man3ext)
-	if test -x "@TIC@"; then if test -n "@TIC@"; then @TIC@ etc/rxvt-unicode.terminfo; fi; fi
+	if test -x "@TIC@"; then if test -n "@TIC@"; then @TIC@ $(srcdir)/etc/rxvt-unicode.terminfo; fi; fi
 
 uninstall:
 	-(cd $(mandir); rm -f $(RXVTNAME).$(manext) )
