@@ -943,7 +943,7 @@ SET_BGCOLOR (int rend, int new_color)
 int
 GET_CUSTOM (int rend)
 	CODE:
-        RETVAL = (rend && RS_customMask) >> RS_customShift;
+        RETVAL = (rend & RS_customMask) >> RS_customShift;
 	OUTPUT:
         RETVAL
 
