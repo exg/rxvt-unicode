@@ -155,6 +155,8 @@ src/table/jis0213_2.h
 
 src/urxvt.pm
 src/typemap
+src/iom_perl.h
+src/iom_perl.xs
 src/rxvtperl.h
 src/rxvtperl.xs
 

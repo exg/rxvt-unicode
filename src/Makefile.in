@@ -136,9 +136,9 @@ install: allbin alldoc install-perl
 perlxsi.c: Makefile
 	$(PERL) -MExtUtils::Embed -e xsinit -- -std urxvt
 
-rxvtperl.C: rxvtperl.xs typemap
+rxvtperl.C: rxvtperl.xs iom_perl.h iom_perl.xs typemap
 	#$(PERL) @PERLPRIVLIBEXP@/ExtUtils/xsubpp -csuffix .C -C++ -typemap @PERLPRIVLIBEXP@/ExtUtils/typemap -typemap typemap -prototypes rxvtperl.xs >$@
-	$(PERL) @PERLPRIVLIBEXP@/ExtUtils/xsubpp -C++ -typemap @PERLPRIVLIBEXP@/ExtUtils/typemap -typemap typemap -prototypes $(srcdir)/rxvtperl.xs >$@
+	PERL="$(PERL)" $(PERL) @PERLPRIVLIBEXP@/ExtUtils/xsubpp -C++ -typemap @PERLPRIVLIBEXP@/ExtUtils/typemap -typemap typemap -prototypes $(srcdir)/rxvtperl.xs >$@
 
 rxvtperl.o: rxvtperl.C perlxsi.c
 	$(COMPILE) @PERLFLAGS@ -DLIBDIR="\"$(libdir)/urxvt\"" -c $<
