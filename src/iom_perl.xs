@@ -4,30 +4,33 @@
 
 BOOT:
 {
-  HV *stash     = gv_stashpv ("IOM_CLASS", 1);
-  SV *baseclass = newSVpv ("IOM_CLASS::watcher", 0);
+  {
+    HV *stash     = gv_stashpv ("IOM_CLASS", 1);
+    SV *baseclass = newSVpv ("IOM_CLASS::watcher", 0);
 
-  static const struct {
-    const char *name;
-    IV iv;
-  } *civ, const_iv[] = {
-#   define const_iv(name) { # name, (IV)name }
-    const_iv (EVENT_NONE),
-    const_iv (EVENT_READ),
-    const_iv (EVENT_WRITE),
-  };
+    static const struct {
+      const char *name;
+      IV iv;
+    } *civ, iom_const_iv[] = {
+#   define iom_const_iv(name) { # name, (IV)name }
+      iom_const_iv (EVENT_NONE),
+      iom_const_iv (EVENT_READ),
+      iom_const_iv (EVENT_WRITE),
+#   undef iom_const
+    };
 
-  for (civ = const_iv + sizeof (const_iv) / sizeof (const_iv [0]); civ-- > const_iv; )
-    newCONSTSUB (stash, (char *)civ->name, newSViv (civ->iv));
+    for (civ = iom_const_iv + sizeof (iom_const_iv) / sizeof (iom_const_iv [0]); civ-- > iom_const_iv; )
+      newCONSTSUB (stash, (char *)civ->name, newSViv (civ->iv));
 
-  /* slightly dirty to put the same scalar into all those arrays, but */
-  /* we do not expect users to modify them anyways */
-  av_push (get_av ("IOM_CLASS" "::timer::ISA", 1), SvREFCNT_inc (baseclass));
-  av_push (get_av ("IOM_CLASS"   "::iow::ISA", 1), SvREFCNT_inc (baseclass));
-  av_push (get_av ("IOM_CLASS"    "::pw::ISA", 1), SvREFCNT_inc (baseclass));
-  av_push (get_av ("IOM_CLASS"    "::iw::ISA", 1), SvREFCNT_inc (baseclass));
+    /* slightly dirty to put the same scalar into all those arrays, but */
+    /* we do not expect users to modify them anyways */
+    av_push (get_av ("IOM_CLASS" "::timer::ISA", 1), SvREFCNT_inc (baseclass));
+    av_push (get_av ("IOM_CLASS"   "::iow::ISA", 1), SvREFCNT_inc (baseclass));
+    av_push (get_av ("IOM_CLASS"    "::pw::ISA", 1), SvREFCNT_inc (baseclass));
+    av_push (get_av ("IOM_CLASS"    "::iw::ISA", 1), SvREFCNT_inc (baseclass));
 
-  SvREFCNT_dec (baseclass);
+    SvREFCNT_dec (baseclass);
+  }
 }
 
 #############################################################################
@@ -36,7 +39,7 @@ BOOT:
 
 MODULE = IOM_MODULE             PACKAGE = IOM_CLASS::watcher
 
-CHAINED
+IOM_CHAINED
 perl_watcher::cb (SV *cb)
 	CODE:
         THIS->cb (cb);
@@ -66,35 +69,35 @@ timer::at ()
         OUTPUT:
         RETVAL
 
-CHAINED
+IOM_CHAINED
 timer::interval (NV interval)
 	CODE:
         THIS->interval = interval;
         OUTPUT:
         RETVAL
 
-CHAINED
+IOM_CHAINED
 timer::set (NV tstamp)
 	CODE:
         THIS->set (tstamp);
         OUTPUT:
         RETVAL
 
-CHAINED
+IOM_CHAINED
 timer::start (NV tstamp = THIS->at)
 	CODE:
         THIS->start (tstamp);
         OUTPUT:
         RETVAL
 
-CHAINED
+IOM_CHAINED
 timer::after (NV delay)
 	CODE:
         THIS->start (NOW + delay);
         OUTPUT:
         RETVAL
 
-CHAINED
+IOM_CHAINED
 timer::stop ()
 	CODE:
         THIS->stop ();
@@ -119,28 +122,28 @@ iow::new ()
         OUTPUT:
         RETVAL
 
-CHAINED
+IOM_CHAINED
 iow::fd (int fd)
 	CODE:
         THIS->fd = fd;
         OUTPUT:
         RETVAL
 
-CHAINED
+IOM_CHAINED
 iow::events (short events)
 	CODE:
         THIS->events = events;
         OUTPUT:
         RETVAL
 
-CHAINED
+IOM_CHAINED
 iow::start ()
 	CODE:
         THIS->start ();
         OUTPUT:
         RETVAL
 
-CHAINED
+IOM_CHAINED
 iow::stop ()
 	CODE:
         THIS->stop ();
@@ -165,14 +168,14 @@ iw::new ()
         OUTPUT:
         RETVAL
 
-CHAINED
+IOM_CHAINED
 iw::start ()
 	CODE:
         THIS->start ();
         OUTPUT:
         RETVAL
 
-CHAINED
+IOM_CHAINED
 iw::stop ()
 	CODE:
         THIS->stop ();
@@ -197,14 +200,14 @@ pw::new ()
         OUTPUT:
         RETVAL
 
-CHAINED
+IOM_CHAINED
 pw::start (int pid)
 	CODE:
         THIS->start (pid);
         OUTPUT:
         RETVAL
 
-CHAINED
+IOM_CHAINED
 pw::stop ()
 	CODE:
         THIS->stop ();

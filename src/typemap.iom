@@ -1,0 +1,22 @@
+rxvt_term *		T_TERM
+
+overlay *		T_OVERLAY
+
+Time			T_UV
+Atom			T_UV
+Window			T_UV
+
+
+INPUT
+
+T_TERM
+	$var = SvTERM ($arg);
+T_OVERLAY
+	$var = SvOVERLAY ($arg);
+
+
+OUTPUT
+
+T_TERM
+	$arg = newSVterm ($var);
+

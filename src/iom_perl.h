@@ -1,3 +1,5 @@
+typedef int IOM_CHAINED;
+
 /////////////////////////////////////////////////////////////////////////////
 
 #define SvWATCHER(sv) (perl_watcher *)SvPTR (sv, IOM_CLASS "::watcher")

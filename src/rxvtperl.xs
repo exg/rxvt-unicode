@@ -52,8 +52,6 @@
 #undef ROW
 #define ROW(n) THIS->row_buf [LINENO (n)]
 
-typedef int CHAINED UNUSED;
-
 /////////////////////////////////////////////////////////////////////////////
 
 static wchar_t *
