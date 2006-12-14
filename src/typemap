@@ -1,36 +1,22 @@
-perl_watcher *		T_IOM_WATCHER
-timer *			T_IOM_TIMER
-iow *			T_IOM_IOW
-pw *			T_IOM_PW
-iw *			T_IOM_IW
+rxvt_term *		T_TERM
 
-IOM_CHAINED		T_IOM_CHAINED
+overlay *		T_OVERLAY
+
+Time			T_UV
+Atom			T_UV
+Window			T_UV
 
 
 INPUT
 
-T_IOM_WATCHER
-	$var = SvWATCHER ($arg);
-T_IOM_TIMER
-	$var = SvTIMER ($arg);
-T_IOM_IOW
-	$var = SvIOW ($arg);
-T_IOM_PW
-	$var = SvPW ($arg);
-T_IOM_IW
-	$var = SvIW ($arg);
+T_TERM
+	$var = SvTERM ($arg);
+T_OVERLAY
+	$var = SvOVERLAY ($arg);
 
 
 OUTPUT
 
-T_IOM_TIMER
-	$arg = newSVtimer ($var);
-T_IOM_IOW
-	$arg = newSViow ($var);
-T_IOM_PW
-	$arg = newSVpw ($var);
-T_IOM_IW
-	$arg = newSViw ($var);
-T_IOM_CHAINED
-	$arg = newSVsv (ST(0));
+T_TERM
+	$arg = newSVterm ($var);
 

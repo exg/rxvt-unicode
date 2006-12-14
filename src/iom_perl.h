@@ -52,7 +52,7 @@ perl_watcher::invoke (const char *type, SV *self, int arg)
   LEAVE;
 
   if (SvTRUE (ERRSV))
-    rxvt_warn ("%s callback evaluation error: %s", type, SvPV_nolen (ERRSV));
+    IOM_WARN ("%s callback evaluation error: %s", type, SvPV_nolen (ERRSV));
 }
 
 #define newSVtimer(timer) new_ref ((timer)->self, IOM_CLASS "::timer")
