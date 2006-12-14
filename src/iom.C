@@ -122,7 +122,6 @@ static struct sw0 : sig_watcher
               w->call (*w, status);
             }
          }
-
   }
 
   sw0 ()
