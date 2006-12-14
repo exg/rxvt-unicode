@@ -1,4 +1,36 @@
 #############################################################################
+# IOM_CLASS constants
+#############################################################################
+
+BOOT:
+{
+  HV *stash     = gv_stashpv ("IOM_CLASS", 1);
+  SV *baseclass = newSVpv ("IOM_CLASS::watcher", 0);
+
+  static const struct {
+    const char *name;
+    IV iv;
+  } *civ, const_iv[] = {
+#   define const_iv(name) { # name, (IV)name }
+    const_iv (EVENT_NONE),
+    const_iv (EVENT_READ),
+    const_iv (EVENT_WRITE),
+  };
+
+  for (civ = const_iv + sizeof (const_iv) / sizeof (const_iv [0]); civ-- > const_iv; )
+    newCONSTSUB (stash, (char *)civ->name, newSViv (civ->iv));
+
+  /* slightly dirty to put the same scalar into all those arrays, but */
+  /* we do not expect users to modify them anyways */
+  av_push (get_av ("IOM_CLASS" "::timer::ISA", 1), SvREFCNT_inc (baseclass));
+  av_push (get_av ("IOM_CLASS"   "::iow::ISA", 1), SvREFCNT_inc (baseclass));
+  av_push (get_av ("IOM_CLASS"    "::pw::ISA", 1), SvREFCNT_inc (baseclass));
+  av_push (get_av ("IOM_CLASS"    "::iw::ISA", 1), SvREFCNT_inc (baseclass));
+
+  SvREFCNT_dec (baseclass);
+}
+
+#############################################################################
 # IOM_CLASS::watcher
 #############################################################################
 

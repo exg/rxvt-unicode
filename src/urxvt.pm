@@ -1956,11 +1956,6 @@ sub DESTROY {
 
 package urxvt::watcher;
 
-@urxvt::timer::ISA = __PACKAGE__;
-@urxvt::iow::ISA   = __PACKAGE__;
-@urxvt::pw::ISA    = __PACKAGE__;
-@urxvt::iw::ISA    = __PACKAGE__;
-
 =head2 The C<urxvt::timer> Class
 
 This class implements timer watchers/events. Time is represented as a

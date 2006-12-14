@@ -677,10 +677,6 @@ BOOT:
     const_iv (GrabModeSync),
     const_iv (GrabModeAsync),
 
-    const_iv (EVENT_NONE),
-    const_iv (EVENT_READ),
-    const_iv (EVENT_WRITE),
-
     const_iv (NoEventMask),
     const_iv (KeyPressMask),
     const_iv (KeyReleaseMask),
