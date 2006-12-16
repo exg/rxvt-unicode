@@ -26,6 +26,8 @@ TODO: fix rounding of colors when !xft (#aaaaaa => #a9a900) (do not use correct,
         - fixed typo in urxvt::GET_CUSTOM, causing the result to be wrong.
           (patch by Sergey Vlasov).
         - unbundled iom perl interface somewhat.
+        - scrollbar-xterm now uses the selected scrollColor instead of fg
+          (found by Aiviru).
 
 8.1  Thu Dec  7 22:27:25 CET 2006
         - ｹﾘｽﾏｽﾌ゚ﾚｾ゙ﾝﾄ - zomg!!1, it's too early!!!

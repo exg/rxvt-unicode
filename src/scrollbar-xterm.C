@@ -49,7 +49,7 @@ rxvt_term::scrollbar_show_xterm (int update, int last_top, int last_bot, int scr
         rxvt_fatal ("can't create bitmap\n");
 
       gcvalue.fill_style = FillOpaqueStippled;
-      gcvalue.foreground = pix_colors_focused[Color_fg];
+      gcvalue.foreground = pix_colors_focused[Color_scroll];
       gcvalue.background = pix_colors_focused[Color_bg];
 
       xscrollbarGC = XCreateGC (dpy, scrollBar.win,
