@@ -1,5 +1,11 @@
 typedef int IOM_CHAINED;
 
+static SV *
+iom_new_ref (HV *hv, const char *klass)
+{
+  return sv_bless (newRV ((SV *)hv), gv_stashpv (klass, 1));
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 #define SvWATCHER(sv) (perl_watcher *)SvPTR (sv, IOM_CLASS "::watcher")
@@ -55,7 +61,7 @@ perl_watcher::invoke (const char *type, SV *self, int arg)
     IOM_WARN ("%s callback evaluation error: %s", type, SvPV_nolen (ERRSV));
 }
 
-#define newSVtimer(timer) new_ref ((timer)->self, IOM_CLASS "::timer")
+#define newSVtimer(timer) iom_new_ref ((timer)->self, IOM_CLASS "::timer")
 #define SvTIMER(sv) (timer *)(perl_watcher *)SvPTR ((sv), IOM_CLASS "::timer")
 
 struct timer : perl_watcher, time_watcher
@@ -76,7 +82,7 @@ struct timer : perl_watcher, time_watcher
   }
 };
 
-#define newSViow(iow) new_ref ((iow)->self, IOM_CLASS "::iow")
+#define newSViow(iow) iom_new_ref ((iow)->self, IOM_CLASS "::iow")
 #define SvIOW(sv) (iow *)(perl_watcher *)SvPTR ((sv), IOM_CLASS "::iow")
 
 struct iow : perl_watcher, io_watcher
@@ -92,7 +98,7 @@ struct iow : perl_watcher, io_watcher
   }
 };
 
-#define newSViw(iw) new_ref ((iw)->self, IOM_CLASS "::iw")
+#define newSViw(iw) iom_new_ref ((iw)->self, IOM_CLASS "::iw")
 #define SvIW(sv) (iw *)(perl_watcher *)SvPTR ((sv), IOM_CLASS "::iw")
 
 struct iw : perl_watcher, idle_watcher
@@ -108,7 +114,7 @@ struct iw : perl_watcher, idle_watcher
   }
 };
 
-#define newSVpw(pw) new_ref ((pw)->self, IOM_CLASS "::pw")
+#define newSVpw(pw) iom_new_ref ((pw)->self, IOM_CLASS "::pw")
 #define SvPW(sv) (pw *)(perl_watcher *)SvPTR ((sv), IOM_CLASS "::pw")
 
 struct pw : perl_watcher, child_watcher
