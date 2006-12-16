@@ -75,7 +75,7 @@ rxvt-unicode then uses 8 bytes per screen cell.
 Try C<@@URXVT_NAME@@d -f -o>, which tells @@URXVT_NAME@@d to open the
 display, create the listening socket and then fork.
 
-=head3 How can I start @@URXVT_NAME@@d automatically when I run URXVT_NAME@@c?
+=head3 How can I start @@URXVT_NAME@@d automatically when I run @@URXVT_NAME@@c?
 
 If you want to start @@URXVT_NAME@@d automatically whenever you run
 @@URXVT_NAME@@c and the daemon isn't running yet, use this script:
