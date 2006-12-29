@@ -520,23 +520,6 @@ which works regardless of wether xrdb is used to parse the resource file
 or not.</p>
 </dd>
 </li>
-<dt><strong><a name="item_macosx_2dclipboard">macosx-clipboard</a></strong>
-
-<dd>
-<p>An extension for use on Mac OS X that enabled rxvt to use the
-system clipboard by implementing two keyboard events.</p>
-</dd>
-<dd>
-<p>This example configuration enables the extension and binds the copy and
-paste functionality to Meta-C and Meta-V:</p>
-</dd>
-<dd>
-<pre>
-   URxvt.perl-ext-common: default,macosx-clipboard
-   URxvt.keysym.M-c: perl:macosx-clipboard:copy
-   URxvt.keysym.M-v: perl:macosx-clipboard:paste</pre>
-</dd>
-</li>
 <dt><strong><a name="item_example_2drefresh_2dhooks">example-refresh-hooks</a></strong>
 
 <dd>

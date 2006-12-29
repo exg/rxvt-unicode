@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2006-11-02" "8.0" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2006-12-29" "8.1" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -217,8 +217,8 @@ rxvt-unicode then uses 8 bytes per screen cell.
 Try \f(CW\*(C`@@URXVT_NAME@@d \-f \-o\*(C'\fR, which tells @@URXVT_NAME@@d to open the
 display, create the listening socket and then fork.
 .PP
-\fIHow can I start @@URXVT_NAME@@d automatically when I run URXVT_NAME@@c?\fR
-.IX Subsection "How can I start @@URXVT_NAME@@d automatically when I run URXVT_NAME@@c?"
+\fIHow can I start @@URXVT_NAME@@d automatically when I run @@URXVT_NAME@@c?\fR
+.IX Subsection "How can I start @@URXVT_NAME@@d automatically when I run @@URXVT_NAME@@c?"
 .PP
 If you want to start @@URXVT_NAME@@d automatically whenever you run
 @@URXVT_NAME@@c and the daemon isn't running yet, use this script:

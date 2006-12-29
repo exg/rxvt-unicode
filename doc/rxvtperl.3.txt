@@ -343,17 +343,6 @@ PREPACKAGED EXTENSIONS
         instead, which works regardless of wether xrdb is used to parse the
         resource file or not.
 
-    macosx-clipboard
-        An extension for use on Mac OS X that enabled rxvt to use the system
-        clipboard by implementing two keyboard events.
-
-        This example configuration enables the extension and binds the copy
-        and paste functionality to Meta-C and Meta-V:
-
-           URxvt.perl-ext-common: default,macosx-clipboard
-           URxvt.keysym.M-c: perl:macosx-clipboard:copy
-           URxvt.keysym.M-v: perl:macosx-clipboard:paste
-
     example-refresh-hooks
         Displays a very simple digital clock in the upper right corner of
         the window. Illustrates overwriting the refresh callbacks to create

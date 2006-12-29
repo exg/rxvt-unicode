@@ -64,7 +64,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     Try "urxvtd -f -o", which tells urxvtd to open the display, create the
     listening socket and then fork.
 
-   How can I start urxvtd automatically when I run URXVT_NAME@@c?
+   How can I start urxvtd automatically when I run urxvtc?
     If you want to start urxvtd automatically whenever you run urxvtc and
     the daemon isn't running yet, use this script:
 

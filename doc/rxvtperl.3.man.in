@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 3"
-.TH @@RXVT_NAME@@ 3 "2006-12-07" "8.1" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 3 "2006-12-29" "8.1" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -528,19 +528,6 @@ for the filename):
 the double \f(CW\*(C`/\*(C'\fR characters as comment start. Use \f(CW\*(C`\e057\e057\*(C'\fR instead,
 which works regardless of wether xrdb is used to parse the resource file
 or not.
-.IP "macosx-clipboard" 4
-.IX Item "macosx-clipboard"
-An extension for use on Mac \s-1OS\s0 X that enabled @@RXVT_NAME@@ to use the
-system clipboard by implementing two keyboard events.
-.Sp
-This example configuration enables the extension and binds the copy and
-paste functionality to Meta-C and Meta\-V:
-.Sp
-.Vb 3
-\&   URxvt.perl-ext-common: default,macosx-clipboard
-\&   URxvt.keysym.M-c: perl:macosx-clipboard:copy
-\&   URxvt.keysym.M-v: perl:macosx-clipboard:paste
-.Ve
 .IP "example-refresh-hooks" 4
 .IX Item "example-refresh-hooks"
 Displays a very simple digital clock in the upper right corner of the
