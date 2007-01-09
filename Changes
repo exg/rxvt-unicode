@@ -28,10 +28,14 @@ TODO: fix rounding of colors when !xft (#aaaaaa => #a9a900) (do not use correct,
         - unbundled iom perl interface somewhat.
         - scrollbar-xterm now uses the selected scrollColor instead of fg
           (found by Aiviru).
+        - disabled linux kernel bug workaround again: disabling it gives
+          a 50% speed hit on affected machines, while enabling it gives
+          a similar speed hit to screen, which is likely the more common
+          case to work around for :/
         - urxvt::rend2mask perl function, and utilization of it by matcher
-          (patch by Moshe Kamensky)
-        - use perl:matcher on a keysym to open most recently displayed URL
-        - with matcher, when multiple patterns match, last wins, not first
+          (patch by Moshe Kamensky).
+        - use perl:matcher on a keysym to open most recently displayed URL.
+        - with matcher, when multiple patterns match, last wins, not first.
 
 8.1  Thu Dec  7 22:27:25 CET 2006
         - ｹﾘｽﾏｽﾌ゚ﾚｾ゙ﾝﾄ - zomg!!1, it's too early!!!

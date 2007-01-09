@@ -391,10 +391,15 @@
 
 /*
  * Enable the linux yield/usleep hack, which can dramatically improve
- * performance without hurting. See command.C for details.
+ * performance by working around the linux kernel tty ratelimit bug.
+ * Unfortunately, it seems screen is negatively affected by this on some
+ * machines, so it is disabled by default. Use freebsd or any other kernel
+ * that doesn't suffer form this bug and it will be fast either way.
+ *
+ * See command.C for details.
  */
 #if __linux__
-# define LINUX_YIELD_HACK 1
+# define LINUX_YIELD_HACK 0
 #endif
 
 #endif
