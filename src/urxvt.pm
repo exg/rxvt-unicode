@@ -262,6 +262,7 @@ Example configuration:
 
     URxvt.perl-ext:           default,matcher
     URxvt.urlLauncher:        sensible-browser
+    URxvt.keysym.C-Delete:    perl:matcher
     URxvt.matcher.button:     1
     URxvt.matcher.pattern.1:  \\bwww\\.[\\w-]+\\.[\\w./?&@#-]*[\\w/-]
     URxvt.matcher.pattern.2:  \\B(/\\S+?):(\\d+)(?=:|$)
@@ -990,6 +991,31 @@ sub invoke {
 
 sub SET_COLOR($$$) {
    SET_BGCOLOR (SET_FGCOLOR ($_[0], $_[1]), $_[2])
+}
+
+sub rend2mask {
+   no strict 'refs';
+   my ($str, $mask) = (@_, 0);
+   my %color = ( fg => undef, bg => undef );
+   my @failed;
+   for my $spec ( split /\s+/, $str ) {
+      if ( $spec =~ /^([fb]g)[_:-]?(\d+)/i ) {
+         $color{lc($1)} = $2;
+      } else {
+         my $neg = $spec =~ s/^[-^]//;
+         unless ( exists &{"RS_$spec"} ) {
+            push @failed, $spec;
+            next;
+         }
+         my $cur = &{"RS_$spec"};
+         if ( $neg ) {
+            $mask &= ~$cur;
+         } else {
+            $mask |= $cur;
+         }
+      }
+   }
+   ($mask, @color{qw(fg bg)}, \@failed)
 }
 
 # urxvt::term::extension
@@ -2150,3 +2176,5 @@ numbers indicate more verbose output.
 =cut
 
 1
+
+# vim: sw=3:

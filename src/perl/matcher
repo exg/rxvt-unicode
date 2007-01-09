@@ -4,13 +4,56 @@
 
 my $url =
    qr{
-      (?:https?://|ftp://|news://|mailto:|file://|\bwww\.)[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),~#]+
-      [ab-zA-Z0-9\-\@;\/?:&=%\$_+*()~]   # exclude some trailing characters (heuristic)
+      (?:https?://|ftp://|news://|mailto:|file://|\bwww\.)
+      [a-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27,~#]*
+      (
+         \([a-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27,~#]*\)| # Allow a pair of matched parentheses
+         [a-zA-Z0-9\-\@;\/?:&=%\$_+*~]  # exclude some trailing characters (heuristic)
+      )+
    }x;
+
+sub on_user_command {
+   my ($self, $cmd) = @_;
+   if($cmd =~ s/^matcher\b//) {
+      $self->most_recent;
+   }
+   my $row = $self->nrow;
+   my @exec;
+   while($row-- > $self->top_row) {
+      #my $line = $self->line ($row);
+      #my $text = $line->t;
+      @exec = $self->command_for($row);
+      last if(@exec);
+   }
+   if(@exec) {
+      return $self->exec_async (@exec);
+   }
+   ()
+}
+
+sub most_recent {
+   my ($self) = shift;
+   ()
+}
 
 sub my_resource {
    my $self = shift;
    $self->x_resource("$self->{name}.$_[0]");
+}
+
+# turn a rendition spec in the resource into a sub that implements it on $_
+sub parse_rend {
+   my ($self, $str) = @_;
+   my ($mask, $fg, $bg, $failed) = $str ? urxvt::rend2mask($str) 
+                                        : (urxvt::RS_Uline, undef, undef, []);
+   warn "Failed to parse rendition string: " . join(',', @$failed) if @$failed;
+   my @rend;
+   push @rend, sub { $_ |= $mask } if $mask;
+   push @rend, sub { $_ = urxvt::SET_FGCOLOR($_, $fg) } if defined $fg;
+   push @rend, sub { $_ = urxvt::SET_BGCOLOR($_, $bg) } if defined $bg;
+   sub {
+      for my $s ( @rend ) { &$s };
+   }
 }
 
 sub on_start {
@@ -48,7 +91,8 @@ sub on_start {
       utf8::encode $res;
       my $launcher = $self->my_resource("launcher.$idx");
       $launcher =~ s/\$&|\$\{&\}/\${0}/g if ($launcher);
-      push @matchers, [qr($res)x,$launcher];
+      my $rend = $self->parse_rend($self->my_resource("rend.$idx"));
+      unshift @matchers, [qr($res)x,$launcher,$rend];
    }
    $self->{matchers} = \@matchers;
 
@@ -66,11 +110,12 @@ sub on_line_update {
    # find all urls (if any)
    for my $matcher (@{$self->{matchers}}) {
       while ($text =~ /$matcher->[0]/g) {
+         #print "$&\n";
          my $rend = $line->r;
 
          # mark all characters as underlined. we _must_ not toggle underline,
          # as we might get called on an already-marked url.
-         $_ |= urxvt::RS_Uline
+         &{$matcher->[2]}
          for @{$rend}[ $-[0] .. $+[0] - 1];
 
          $line->r ($rend);
@@ -99,7 +144,7 @@ sub command_for {
          my $match = $&;
          my @begin = @-;
          my @end = @+;
-         if ($-[0] <= $col && $+[0] >= $col) {
+         if (!defined($col) || ($-[0] <= $col && $+[0] >= $col)) {
             if ($launcher !~ /\$/) {
                return ($launcher,$match);
             } else {
