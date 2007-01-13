@@ -119,7 +119,7 @@ optList[] = {
               STRG (Rs_color + Color_fade, "fadeColor", "fadecolor", "color", "target color for off-focus fading"),
 #endif
 #if TINTING
-              STRG (Rs_shade, "shading", "sh", "%", "shade background by x% when tinting."),
+              STRG (Rs_shade, "shading", "sh", "%", "shade background by x % when tinting."),
 #endif
               BOOL (Rs_utmpInhibit, "utmpInhibit", "ut", Opt_utmpInhibit, "utmp inhibit"),
 #ifndef NO_BELL

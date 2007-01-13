@@ -146,7 +146,7 @@ I<tintColor>. Example:
 
 I<number> Darken (0 .. 100) or lighten (-1 .. -100) the transparent
 background image in addition to tinting it (i.e. B<-tint> must be
-specified, too, e.g. C<-tint white>).
+specified, too, e.g. C<-tint white>); resource I<shading>.
 
 =item B<-bg> I<colour>
 
@@ -622,8 +622,8 @@ B<-tint>.
 
 =item B<shading:> I<number>
 
-Darken (0 .. 100) or lighten (-1 .. -100) the transparent background
-image in addition to tinting it.
+Darken (0 .. 100) or lighten (-1 .. -100) the transparent background image
+in addition to tinting it; option B<-sh>.
 
 =item B<scrollColor:> I<colour>
 
