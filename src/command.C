@@ -1483,11 +1483,9 @@ rxvt_term::x_cb (XEvent &ev)
 
             HOOK_INVOKE ((this, HOOK_CONFIGURE_NOTIFY, DT_XEVENT, &ev, DT_END));
 
-#ifdef TRANSPARENT		/* XXX: maybe not needed - leave in for now */
-#if 0
+#ifdef TRANSPARENT
             if (OPTION (Opt_transparent))
               check_our_parents ();
-#endif
 #endif
           }
         break;
