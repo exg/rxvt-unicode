@@ -125,6 +125,8 @@ ptytty_proxy::~ptytty_proxy ()
 {
   if (id)
     {
+      close (pty);
+
       NEED_TOKEN;
 
       command cmd;
