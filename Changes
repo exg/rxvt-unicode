@@ -21,6 +21,7 @@ WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
 TODO: fix rounding of colors when !xft (#aaaaaa => #a9a900) (do not use correct, but expected value)
+TODO: tick_2_tert, 
 03:05 <Aiviru> Hrm. I've found that my problem isn't so much urxvt, though it /does/ seem to ignore colorRV
 	- fix make depend in src/, reported by exg.
         - fixed typo in urxvt::GET_CUSTOM, causing the result to be wrong.
