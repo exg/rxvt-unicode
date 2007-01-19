@@ -566,8 +566,8 @@ foreground colour is the default.
 
 =item B<colorRV:> I<colour>
 
-Use the specified colour as the background for reverse video
-characters.
+Use the specified colour as the background for reverse video characters
+when OPTION_HC is disabled (--disable-frills).
 
 =item B<underlineColor:> I<colour>
 
