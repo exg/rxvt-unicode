@@ -1315,11 +1315,6 @@ rxvt_term::run_command (const char *const *argv)
     if (!pty->get ())
       rxvt_fatal ("can't initialize pseudo-tty, aborting.\n");
 
-  pty->set_utf8_mode (enc_utf8);
-
-  /* set initial window size */
-  tt_winch ();
-
   int er;
 
 #ifndef NO_BACKSPACE_KEY
@@ -1332,6 +1327,11 @@ rxvt_term::run_command (const char *const *argv)
     er = -1;
 
   rxvt_get_ttymode (&tio, er);
+  pty->set_utf8_mode (enc_utf8);
+  SET_TTYMODE (STDIN_FILENO, &tio);       /* init terminal attributes */
+
+  /* set initial window size */
+  tt_winch ();
 
 #if ENABLE_FRILLS
   if (rs[Rs_pty_fd])
@@ -1395,8 +1395,6 @@ int
 rxvt_term::run_child (const char *const *argv)
 {
   char *login;
-
-  SET_TTYMODE (STDIN_FILENO, &tio);       /* init terminal attributes */
 
   if (OPTION (Opt_console))
     {     /* be virtual console, fail silently */
