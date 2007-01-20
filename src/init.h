@@ -20,26 +20,11 @@
 /* ways to deal with getting/setting termios structure */
 
 /* termios interface */
-# ifdef TCSANOW			/* POSIX */
-#  define GET_TERMIOS(fd,tios)	tcgetattr (fd, tios)
-#  define SET_TERMIOS(fd,tios)		\
-        cfsetospeed (tios, BAUDRATE),	\
-        cfsetispeed (tios, BAUDRATE),	\
-        tcsetattr (fd, TCSANOW, tios)
-# else
-#  ifdef TIOCSETA
-#   define GET_TERMIOS(fd,tios)	ioctl (fd, TIOCGETA, tios)
-#   define SET_TERMIOS(fd,tios)		\
-        tios->c_cflag |= BAUDRATE,	\
-        ioctl (fd, TIOCSETA, tios)
-#  else
-#   define GET_TERMIOS(fd,tios)	ioctl (fd, TCGETS, tios)
-#   define SET_TERMIOS(fd,tios)		\
-        tios->c_cflag |= BAUDRATE,	\
-        ioctl (fd, TCSETS, tios)
-#  endif
-# endif
-# define SET_TTYMODE(fd,tios)		SET_TERMIOS (fd, tios)
+#define GET_TERMIOS(fd,tios)	tcgetattr (fd, tios)
+#define SET_TERMIOS(fd,tios)		\
+      cfsetospeed (tios, BAUDRATE),	\
+      cfsetispeed (tios, BAUDRATE),	\
+      tcsetattr (fd, TCSANOW, tios)
 
 /* use the fastest baud-rate */
 #ifdef B38400
