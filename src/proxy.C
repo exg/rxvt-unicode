@@ -125,7 +125,10 @@ ptytty_proxy::~ptytty_proxy ()
 {
   if (id)
     {
-      close (pty);
+      close_tty ();
+
+      if (pty >= 0)
+        close (pty);
 
       NEED_TOKEN;
 
