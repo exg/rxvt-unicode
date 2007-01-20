@@ -1279,8 +1279,8 @@ rxvt_term::run_command (const char *const *argv)
     er = -1;
 
   rxvt_get_ttymode (&tio, er);
-  pty->set_utf8_mode (enc_utf8);
   SET_TERMIOS (pty->tty, &tio);       /* init terminal attributes */
+  pty->set_utf8_mode (enc_utf8);
 
   /* set initial window size */
   tt_winch ();
