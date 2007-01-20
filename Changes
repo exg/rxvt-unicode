@@ -41,6 +41,7 @@ TODO: fix rounding of colors when !xft (#aaaaaa => #a9a900) (do not use correct,
         - delay setting the IUTF8 flag to after the tty settings have been
           set so its value does not get lost (reported and analysed by Andrei
           Paskevich).
+        - rip out support for obsolete sgtty.h interface.
 
 8.1  Thu Dec  7 22:27:25 CET 2006
         - ｹﾘｽﾏｽﾌ゚ﾚｾ゙ﾝﾄ - zomg!!1, it's too early!!!

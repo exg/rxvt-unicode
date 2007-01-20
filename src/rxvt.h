@@ -72,19 +72,8 @@
 typedef char *XPointer;
 #endif
 
-#ifdef HAVE_TERMIOS_H
-# include <termios.h>
+#include <termios.h>
 typedef struct termios ttymode_t;
-#else
-# include <sgtty.h>
-typedef struct {
-  struct sgttyb   sg;
-  struct tchars   tc;
-  struct ltchars  lc;
-  int             line;
-  int             local;
-} ttymode_t;
-#endif
 
 #ifdef XPM_BACKGROUND
 # ifdef XPM_INC_X11

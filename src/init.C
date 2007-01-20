@@ -1081,7 +1081,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 void
 rxvt_get_ttymode (ttymode_t *tio, int erase)
 {
-#ifdef HAVE_TERMIOS_H
   /*
    * standard System V termios interface
    */
@@ -1158,53 +1157,6 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
                   | ECHOCTL | ECHOKE
 # endif
                   | ECHOE | ECHOK);
-# else                          /* HAVE_TERMIOS_H */
-
-  /*
-  * sgtty interface
-  */
-
-  /* get parameters -- gtty */
-  if (ioctl (STDIN_FILENO, TIOCGETP, & (tio->sg)) < 0)
-    {
-      tio->sg.sg_erase = CERASE;      /* ^H */
-      tio->sg.sg_kill = CKILL;        /* ^U */
-    }
-
-  if (erase != -1)
-    tio->sg.sg_erase = (char)erase;
-
-  tio->sg.sg_flags = (CRMOD | ECHO | EVENP | ODDP);
-
-  /* get special characters */
-  if (ioctl (STDIN_FILENO, TIOCGETC, & (tio->tc)) < 0)
-    {
-      tio->tc.t_intrc = CINTR;        /* ^C */
-      tio->tc.t_quitc = CQUIT;        /* ^\ */
-      tio->tc.t_startc = CSTART;      /* ^Q */
-      tio->tc.t_stopc = CSTOP;        /* ^S */
-      tio->tc.t_eofc = CEOF;  /* ^D */
-      tio->tc.t_brkc = -1;
-    }
-
-  /* get local special chars */
-  if (ioctl (STDIN_FILENO, TIOCGLTC, & (tio->lc)) < 0)
-    {
-      tio->lc.t_suspc = CSUSP;        /* ^Z */
-      tio->lc.t_dsuspc = CDSUSP;      /* ^Y */
-      tio->lc.t_rprntc = CRPRNT;      /* ^R */
-      tio->lc.t_flushc = CFLUSH;      /* ^O */
-      tio->lc.t_werasc = CWERASE;     /* ^W */
-      tio->lc.t_lnextc = CLNEXT;      /* ^V */
-    }
-  /* get line discipline */
-  ioctl (STDIN_FILENO, TIOCGETD, & (tio->line));
-# ifdef NTTYDISC
-  tio->line = NTTYDISC;
-# endif                         /* NTTYDISC */
-
-  tio->local = (LCRTBS | LCRTERA | LCTLECH | LPASS8 | LCRTKIL);
-#endif                          /* HAVE_TERMIOS_H */
 
   /*
    * Debugging
