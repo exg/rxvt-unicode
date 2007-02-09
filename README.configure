@@ -39,7 +39,7 @@ CONFIGURE OPTIONS
 
            all             all available codeset groups 
            zh              common chinese encodings 
-           zh_ext          rarely used but very big chinese encodigs 
+           zh_ext          rarely used but very big chinese encodings 
            jp              common japanese encodings 
            jp_ext          rarely used but big japanese encodings 
            kr              korean encodings 
@@ -184,10 +184,10 @@ CONFIGURE OPTIONS
 
           some round-trip time optimisations
           nearest color allocation on pseudocolor screens
-          UTF8_STRING supporr for selection
+          UTF8_STRING support for selection
           sgr modes 90..97 and 100..107
           backindex and forwardindex escape sequences
-          view change/zero scorllback esacpe sequences
+          view change/zero scrollback escape sequences
           locale switching escape sequence
           window op and some xterm/OSC escape sequences
           rectangular selections
