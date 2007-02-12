@@ -709,12 +709,9 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
 
   if (screen->visual->c_class == TrueColor)
     {
-      c.pixel = (color.r * (screen->visual->red_mask   >> ctz (screen->visual->red_mask  ))
-                         / rgba::MAX_CC) << ctz (screen->visual->red_mask  )
-              | (color.g * (screen->visual->green_mask >> ctz (screen->visual->green_mask))
-                         / rgba::MAX_CC) << ctz (screen->visual->green_mask)
-              | (color.b * (screen->visual->blue_mask  >> ctz (screen->visual->blue_mask ))
-                         / rgba::MAX_CC) << ctz (screen->visual->blue_mask );
+      c.pixel = (color.r >> (16 - popcount (screen->visual->red_mask  )) << ctz (screen->visual->red_mask  ))
+              | (color.g >> (16 - popcount (screen->visual->green_mask)) << ctz (screen->visual->green_mask))
+              | (color.b >> (16 - popcount (screen->visual->blue_mask )) << ctz (screen->visual->blue_mask ));
 
       return true;
     }
