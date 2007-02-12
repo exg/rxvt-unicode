@@ -33,6 +33,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <errno.h>
 
 // helper/proxy support
 
@@ -297,8 +298,27 @@ ptytty::create ()
 }
 
 void
+ptytty::sanitise_stdfd ()
+{
+  // sanitise stdin/stdout/stderr to point to *something*.
+  for (int fd = 0; fd <= 2; ++fd)
+    if (fcntl (fd, F_GETFL) < 0 && errno == EBADF)
+      {
+        int fd2 = open ("/dev/tty", fd ? O_WRONLY : O_RDONLY);
+
+        if (fd2 < 0)
+          fd2 = open ("/dev/null", fd ? O_WRONLY : O_RDONLY);
+
+        if (fd2 != fd)
+          abort ();
+      }
+}
+
+void
 ptytty::init ()
 {
+  sanitise_stdfd ();
+
   uid_t uid = getuid ();
   gid_t gid = getgid ();
       

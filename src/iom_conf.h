@@ -20,7 +20,7 @@
 #ifndef RXVT_IOM_CONF_H__
 #define RXVT_IOM_CONF_H__
 
-#include <rxvtutil.h>
+#include "rxvtutil.h"
 
 #define IOM_IO    1
 #define IOM_TIME  1
@@ -28,6 +28,9 @@
 #define IOM_SIG   1
 #define IOM_IDLE  1
 #define IOM_CHILD 1
+
+#include "libptytty.h"
+#define IOM_PREINIT ptytty::sanitise_stdfd ();
 
 #endif
 

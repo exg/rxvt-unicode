@@ -23,6 +23,7 @@ struct ptytty {
   bool make_controlling_tty ();
   void set_utf8_mode (bool on);
 
+  static void sanitise_stdfd ();
   static void init ();
   static ptytty *create (); // create a new pty object
 
@@ -56,6 +57,7 @@ void ptytty_close_tty (PTYTTY ptytty);
 int ptytty_make_controlling_tty (PTYTTY ptytty);
 void ptytty_set_utf8_mode (PTYTTY ptytty, int on);
 
+void ptytty_sanitise_stdfd ();
 void ptytty_init ();
 PTYTTY ptytty_create ();
 

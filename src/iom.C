@@ -151,6 +151,9 @@ static bool iom_valid;
 static struct init {
   init ()
   {
+#ifdef IOM_PREINIT
+    { IOM_PREINIT }
+#endif
     iom_valid = true;
 
 #if IOM_SIG
@@ -174,6 +177,10 @@ static struct init {
     io_manager::set_now ();
 
     tw0.start (TSTAMP_MAX);
+#endif
+
+#ifdef IOM_POSTINIT
+    { IOM_POSTINIT }
 #endif
   }
 
