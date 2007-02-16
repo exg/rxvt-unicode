@@ -47,6 +47,10 @@ DUMB: support tex fonts
         - update iom.C, make it call ptytty::sanitise_stdfd on init.
         - when !XFT, change rounding of colours to use a less correct formula to
           meet user expectancies (#aaa becomes #a000a000a000 not #9f9f9f9f9f9f).
+        - change the starting offset of the pixmap set with backgroundPixmap
+          from (50,50) to (0,0).
+        - fix a typo in button_release, now meta-button2 request the value of
+          the Clipboard selection as it should (patch by Serge Koksharov).
 
 8.1  Thu Dec  7 22:27:25 CET 2006
         - ｹﾘｽﾏｽﾌ゚ﾚｾ゙ﾝﾄ - zomg!!1, it's too early!!!

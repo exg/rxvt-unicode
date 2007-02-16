@@ -208,7 +208,7 @@ rxvt_term::init_vars ()
   oldcursor.row = oldcursor.col = -1;
 #ifdef XPM_BACKGROUND
   /*  bgPixmap.w = bgPixmap.h = 0; */
-  bgPixmap.x = bgPixmap.y = 50;
+  bgPixmap.x = bgPixmap.y = 0;
   bgPixmap.pixmap = None;
 #endif
 
