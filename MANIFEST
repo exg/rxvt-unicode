@@ -5,7 +5,6 @@ INSTALL
 MANIFEST
 README.configure
 README.FAQ
-reconf
 update_ptytty
 configure
 configure.ac
