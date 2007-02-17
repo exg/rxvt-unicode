@@ -51,6 +51,8 @@ DUMB: support tex fonts
           from (50,50) to (0,0).
         - fix a typo in button_release, now meta-button2 request the value of
           the Clipboard selection as it should (patch by Serge Koksharov).
+        - fix a bug in drawing a cell with a nonspacing char when using an xft
+          font with inheritPixmap and tintColor.
 
 8.1  Thu Dec  7 22:27:25 CET 2006
         - ｹﾘｽﾏｽﾌ゚ﾚｾ゙ﾝﾄ - zomg!!1, it's too early!!!
