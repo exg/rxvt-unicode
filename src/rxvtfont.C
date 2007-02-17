@@ -1276,9 +1276,8 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
   bool buffered = bg >= 0                         // we don't use a transparent bg
 #ifndef FORCE_UNBUFFERED_XFT
-# if defined(XPM_BACKGROUND) || defined(TRANSPARENT)
+# ifdef TRANSPARENT
                   || !term->am_transparent        // we aren't transparent
-                  || term->am_pixmap_trans        // we have a pixmap
 # endif
 #endif
                   ;
