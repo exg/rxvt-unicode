@@ -177,7 +177,9 @@ rxvt_term::resize_pixmap ()
     { /* So be it: I'm not using pixmaps */
       pixmap = None;
 
+#ifdef TRANSPARENT
       if (!OPTION (Opt_transparent) || !am_transparent)
+#endif
         XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
 
       return;
@@ -262,7 +264,9 @@ rxvt_term::resize_pixmap ()
   XSetWindowBackgroundPixmap (dpy, vt, pixmap);
 
   XFreeGC (dpy, gc);
+#ifdef TRANSPARENT
   am_transparent = 0;
+#endif
 }
 
 /*

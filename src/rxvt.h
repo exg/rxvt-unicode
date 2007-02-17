@@ -907,8 +907,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   unsigned char   want_refresh:1,
 #ifdef TRANSPARENT
                   want_full_refresh:1,	/* awaiting full screen refresh      */
-#endif
-#if defined(XPM_BACKGROUND) || defined(TRANSPARENT)
                   am_transparent:1,	/* is a transparent term             */
                   am_pixmap_trans:1, 	/* transparency w/known root pixmap  */
 #endif
