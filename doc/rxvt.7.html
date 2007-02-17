@@ -1001,13 +1001,14 @@ how to do this).</p>
 getting two unrelated other characters or similar, or if program output is
 subtly garbled, then you should check your locale settings.</p>
 <p>Rxvt-unicode must be started with the same <code>LC_CTYPE</code> setting as the
-programs. Often rxvt-unicode is started in the <a href="#item_c"><code>C</code></a> locale, while the
-login script running within the rxvt-unicode window changes the locale to
-something else, e.g. <code>en_GB.UTF-8</code>. Needless to say, this is not going to work.</p>
+programs running in it. Often rxvt-unicode is started in the <a href="#item_c"><code>C</code></a> locale,
+while the login script running within the rxvt-unicode window changes the
+locale to something else, e.g. <code>en_GB.UTF-8</code>. Needless to say, this is
+not going to work, and is the most common cause for problems.</p>
 <p>The best thing is to fix your startup environment, as you will likely run
 into other problems. If nothing works you can try this in your .profile.</p>
 <pre>
-  printf '\33]701;%s\007' &quot;$LC_CTYPE&quot;</pre>
+  printf '\33]701;%s\007' &quot;$LC_CTYPE&quot;   # $LANG or $LC_ALL are worth a try, too</pre>
 <p>If this doesn't work, then maybe you use a <code>LC_CTYPE</code> specification not
 supported on your systems. Some systems have a <code>locale</code> command which
 displays this (also, <code>perl -e0</code> can be used to check locale settings, as
@@ -2266,7 +2267,7 @@ memory usage unless you use a font requiring one of these encodings.</p>
 <table>
 <tr><td>all</td><td>all available codeset groups</td></tr>
 <tr><td>zh</td><td>common chinese encodings</td></tr>
-<tr><td>zh_ext</td><td>rarely used but very big chinese encodigs</td></tr>
+<tr><td>zh_ext</td><td>rarely used but very big chinese encodings</td></tr>
 <tr><td>jp</td><td>common japanese encodings</td></tr>
 <tr><td>jp_ext</td><td>rarely used but big japanese encodings</td></tr>
 <tr><td>kr</td><td>korean encodings</td></tr>
@@ -2487,10 +2488,10 @@ in combination with other switches) is:</p>
 <pre>
   some round-trip time optimisations
   nearest color allocation on pseudocolor screens
-  UTF8_STRING supporr for selection
+  UTF8_STRING support for selection
   sgr modes 90..97 and 100..107
   backindex and forwardindex escape sequences
-  view change/zero scorllback esacpe sequences
+  view change/zero scrollback escape sequences
   locale switching escape sequence
   window op and some xterm/OSC escape sequences
   rectangular selections

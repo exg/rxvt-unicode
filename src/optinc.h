@@ -38,8 +38,8 @@
  nodef(insecure)
  nodef(borderLess)
  nodef(hold)
- nodef(skipBuiltinGlyphs)
  nodef(override_redirect)
+ nodef(skipBuiltinGlyphs)
 #endif
 #if ENABLE_STYLES
  def(intensityStyles,      29) // font styles imply intensity

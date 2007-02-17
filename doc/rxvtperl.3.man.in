@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 3"
-.TH @@RXVT_NAME@@ 3 "2006-12-29" "8.1" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 3 "2007-02-17" "8.2" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -411,9 +411,10 @@ The launcher can also be overridden on a per-pattern basis.
 .Sp
 Example configuration:
 .Sp
-.Vb 6
+.Vb 7
 \&    URxvt.perl-ext:           default,matcher
 \&    URxvt.urlLauncher:        sensible-browser
+\&    URxvt.keysym.C-Delete:    perl:matcher
 \&    URxvt.matcher.button:     1
 \&    URxvt.matcher.pattern.1:  \e\ebwww\e\e.[\e\ew-]+\e\e.[\e\ew./?&@#-]*[\e\ew/-]
 \&    URxvt.matcher.pattern.2:  \e\eB(/\e\eS+?):(\e\ed+)(?=:|$)

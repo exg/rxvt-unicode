@@ -882,16 +882,16 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     is subtly garbled, then you should check your locale settings.
 
     Rxvt-unicode must be started with the same "LC_CTYPE" setting as the
-    programs. Often rxvt-unicode is started in the "C" locale, while the
-    login script running within the rxvt-unicode window changes the locale
-    to something else, e.g. "en_GB.UTF-8". Needless to say, this is not
-    going to work.
+    programs running in it. Often rxvt-unicode is started in the "C" locale,
+    while the login script running within the rxvt-unicode window changes
+    the locale to something else, e.g. "en_GB.UTF-8". Needless to say, this
+    is not going to work, and is the most common cause for problems.
 
     The best thing is to fix your startup environment, as you will likely
     run into other problems. If nothing works you can try this in your
     .profile.
 
-      printf '\33]701;%s\007' "$LC_CTYPE"
+      printf '\33]701;%s\007' "$LC_CTYPE"   # $LANG or $LC_ALL are worth a try, too
 
     If this doesn't work, then maybe you use a "LC_CTYPE" specification not
     supported on your systems. Some systems have a "locale" command which

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2006-12-29" "8.1" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2007-02-17" "8.2" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -1233,15 +1233,16 @@ getting two unrelated other characters or similar, or if program output is
 subtly garbled, then you should check your locale settings.
 .PP
 Rxvt-unicode must be started with the same \f(CW\*(C`LC_CTYPE\*(C'\fR setting as the
-programs. Often rxvt-unicode is started in the \f(CW\*(C`C\*(C'\fR locale, while the
-login script running within the rxvt-unicode window changes the locale to
-something else, e.g. \f(CW\*(C`en_GB.UTF\-8\*(C'\fR. Needless to say, this is not going to work.
+programs running in it. Often rxvt-unicode is started in the \f(CW\*(C`C\*(C'\fR locale,
+while the login script running within the rxvt-unicode window changes the
+locale to something else, e.g. \f(CW\*(C`en_GB.UTF\-8\*(C'\fR. Needless to say, this is
+not going to work, and is the most common cause for problems.
 .PP
 The best thing is to fix your startup environment, as you will likely run
 into other problems. If nothing works you can try this in your .profile.
 .PP
 .Vb 1
-\&  printf '\e33]701;%s\e007' "$LC_CTYPE"
+\&  printf '\e33]701;%s\e007' "$LC_CTYPE"   # $LANG or $LC_ALL are worth a try, too
 .Ve
 .PP
 If this doesn't work, then maybe you use a \f(CW\*(C`LC_CTYPE\*(C'\fR specification not
@@ -2480,7 +2481,7 @@ memory usage unless you use a font requiring one of these encodings.
 l l .
 all	all available codeset groups
 zh	common chinese encodings
-zh_ext	rarely used but very big chinese encodigs
+zh_ext	rarely used but very big chinese encodings
 jp	common japanese encodings
 jp_ext	rarely used but big japanese encodings
 kr	korean encodings
@@ -2627,10 +2628,10 @@ It also enables some non-essential features otherwise disabled, such as:
 .Vb 11
 \&  some round-trip time optimisations
 \&  nearest color allocation on pseudocolor screens
-\&  UTF8_STRING supporr for selection
+\&  UTF8_STRING support for selection
 \&  sgr modes 90..97 and 100..107
 \&  backindex and forwardindex escape sequences
-\&  view change/zero scorllback esacpe sequences
+\&  view change/zero scrollback escape sequences
 \&  locale switching escape sequence
 \&  window op and some xterm/OSC escape sequences
 \&  rectangular selections

@@ -55,7 +55,7 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>rxvt-unicode</strong>, version <strong>8.1</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>8.2</strong>, is a colour vt102 terminal
 emulator intended as an <em>xterm</em>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -211,7 +211,7 @@ used to brighten or darken the image in addition to tinting it; resource
 <dd>
 <p><em>number</em> Darken (0 .. 100) or lighten (-1 .. -100) the transparent
 background image in addition to tinting it (i.e. <strong>-tint</strong> must be
-specified, too, e.g. <code>-tint white</code>).</p>
+specified, too, e.g. <code>-tint white</code>); resource <em>shading</em>.</p>
 </dd>
 </li>
 <dt><strong><a name="item__2dbg_colour"><strong>-bg</strong> <em>colour</em></a></strong>
@@ -770,8 +770,8 @@ foreground colour is the default.</p>
 <dt><strong><a name="item_colorrv_3a_colour"><strong>colorRV:</strong> <em>colour</em></a></strong>
 
 <dd>
-<p>Use the specified colour as the background for reverse video
-characters.</p>
+<p>Use the specified colour as the background for reverse video characters
+when OPTION_HC is disabled (--disable-frills).</p>
 </dd>
 </li>
 <dt><strong><a name="item_underlinecolor_3a_colour"><strong>underlineColor:</strong> <em>colour</em></a></strong>
@@ -847,8 +847,8 @@ colour is black; option <strong>-fadecolor</strong>.</p>
 <dt><strong><a name="item_shading_3a_number"><strong>shading:</strong> <em>number</em></a></strong>
 
 <dd>
-<p>Darken (0 .. 100) or lighten (-1 .. -100) the transparent background
-image in addition to tinting it.</p>
+<p>Darken (0 .. 100) or lighten (-1 .. -100) the transparent background image
+in addition to tinting it; option <strong>-sh</strong>.</p>
 </dd>
 </li>
 <dt><strong><a name="item_scrollcolor_3a_colour"><strong>scrollColor:</strong> <em>colour</em></a></strong>

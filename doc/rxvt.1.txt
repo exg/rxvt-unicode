@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 8.1, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 8.2, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -127,7 +127,7 @@ OPTIONS
 
     -sh *number* Darken (0 .. 100) or lighten (-1 .. -100) the transparent
         background image in addition to tinting it (i.e. -tint must be
-        specified, too, e.g. "-tint white").
+        specified, too, e.g. "-tint white"); resource *shading*.
 
     -bg *colour*
         Window background colour; resource background.
@@ -486,7 +486,7 @@ RESOURCES (available also as long-options)
 
     colorRV: *colour*
         Use the specified colour as the background for reverse video
-        characters.
+        characters when OPTION_HC is disabled (--disable-frills).
 
     underlineColor: *colour*
         If set, use the specified colour as the colour for the underline
@@ -533,7 +533,7 @@ RESOURCES (available also as long-options)
 
     shading: *number*
         Darken (0 .. 100) or lighten (-1 .. -100) the transparent background
-        image in addition to tinting it.
+        image in addition to tinting it; option -sh.
 
     scrollColor: *colour*
         Use the specified colour for the scrollbar [default #B2B2B2].

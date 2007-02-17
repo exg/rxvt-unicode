@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2006-12-07" "8.1" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2007-02-17" "8.2" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -261,7 +261,7 @@ used to brighten or darken the image in addition to tinting it; resource
 .IX Item "-sh"
 \&\fInumber\fR Darken (0 .. 100) or lighten (\-1 .. \-100) the transparent
 background image in addition to tinting it (i.e. \fB\-tint\fR must be
-specified, too, e.g. \f(CW\*(C`\-tint white\*(C'\fR).
+specified, too, e.g. \f(CW\*(C`\-tint white\*(C'\fR); resource \fIshading\fR.
 .IP "\fB\-bg\fR \fIcolour\fR" 4
 .IX Item "-bg colour"
 Window background colour; resource \fBbackground\fR.
@@ -633,8 +633,8 @@ Use the specified colour to display underlined characters when the
 foreground colour is the default.
 .IP "\fBcolorRV:\fR \fIcolour\fR" 4
 .IX Item "colorRV: colour"
-Use the specified colour as the background for reverse video
-characters.
+Use the specified colour as the background for reverse video characters
+when \s-1OPTION_HC\s0 is disabled (\-\-disable\-frills).
 .IP "\fBunderlineColor:\fR \fIcolour\fR" 4
 .IX Item "underlineColor: colour"
 If set, use the specified colour as the colour for the underline
@@ -679,8 +679,8 @@ Tint the transparent background pixmap with the given colour; option
 \&\fB\-tint\fR.
 .IP "\fBshading:\fR \fInumber\fR" 4
 .IX Item "shading: number"
-Darken (0 .. 100) or lighten (\-1 .. \-100) the transparent background
-image in addition to tinting it.
+Darken (0 .. 100) or lighten (\-1 .. \-100) the transparent background image
+in addition to tinting it; option \fB\-sh\fR.
 .IP "\fBscrollColor:\fR \fIcolour\fR" 4
 .IX Item "scrollColor: colour"
 Use the specified colour for the scrollbar [default #B2B2B2].

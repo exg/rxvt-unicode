@@ -240,6 +240,7 @@ PREPACKAGED EXTENSIONS
 
             URxvt.perl-ext:           default,matcher
             URxvt.urlLauncher:        sensible-browser
+            URxvt.keysym.C-Delete:    perl:matcher
             URxvt.matcher.button:     1
             URxvt.matcher.pattern.1:  \\bwww\\.[\\w-]+\\.[\\w./?&@#-]*[\\w/-]
             URxvt.matcher.pattern.2:  \\B(/\\S+?):(\\d+)(?=:|$)
