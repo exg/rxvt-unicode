@@ -20,6 +20,7 @@ WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the
 WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
+TODO: add bell event (or generic event to act on such controls).
 	- nuke reconf script, serves no purpose anymore.
 
 8.2  Sat Feb 17 21:35:28 CET 2007
