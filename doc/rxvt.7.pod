@@ -564,7 +564,7 @@ question) there are two standard values that can be used for
 Backspace: C<^H> and C<^?>.
 
 Historically, either value is correct, but rxvt-unicode adopts the debian
-policy of using C<^?> when unsure, because it's the one only only correct
+policy of using C<^?> when unsure, because it's the one and only correct
 choice :).
 
 Rxvt-unicode tries to inherit the current stty settings and uses the value
