@@ -24,6 +24,7 @@ TODO: add bell event (or generic event to act on such controls).
 	- nuke reconf script, serves no purpose anymore.
         - do not process focus events caused by grabs
           (patch by Mikachu).
+        - better option handling (exg).
 
 8.2  Sat Feb 17 21:35:28 CET 2007
 	- fix make depend in src/, reported by exg.
