@@ -187,7 +187,7 @@ rxvt_term::scrollbar_show_rxvt (int update, int last_top, int last_bot, int scro
   {
     int xofs;
 
-    if (OPTION (Opt_scrollBar_right))
+    if (option (Opt_scrollBar_right))
       xofs = 0;
     else
       xofs = sbshadow ? sbwidth : sbwidth - 1;

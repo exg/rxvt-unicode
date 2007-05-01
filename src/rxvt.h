@@ -689,8 +689,6 @@ enum {
 #define Width2Pixel(n)          ((int32_t)(n) * (int32_t)fwidth)
 #define Height2Pixel(n)         ((int32_t)(n) * (int32_t)fheight)
 
-#define OPTION(opt)		option(opt)
-
 // for m >= -n, ensure remainder lies between 0..n-1
 #define MOD(m,n) (((m) + (n)) % (n))
 
@@ -1289,7 +1287,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 #ifndef NO_BRIGHTCOLOR
     if (r & RS_Bold
 # if ENABLE_STYLES
-        && OPTION (Opt_intensityStyles)
+        && option (Opt_intensityStyles)
 # endif
         && IN_RANGE_INC (base, minCOLOR, minBrightCOLOR))
       base += minBrightCOLOR - minCOLOR;
@@ -1303,7 +1301,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 #ifndef NO_BRIGHTCOLOR
     if (r & RS_Blink
 # if ENABLE_STYLES
-        && OPTION (Opt_intensityStyles)
+        && option (Opt_intensityStyles)
 # endif
         && IN_RANGE_INC (base, minCOLOR, minBrightCOLOR))
       base += minBrightCOLOR - minCOLOR;
@@ -1316,7 +1314,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
     return options[opt >> 3] & (1 << (opt & 7));
   }
 
-  void set_option (uint8_t opt, bool set) NOTHROW
+  void set_option (uint8_t opt, bool set = true) NOTHROW
   {
     if (set)
       options[opt >> 3] |= (1 << (opt & 7));

@@ -213,13 +213,13 @@ rxvt_term::init_vars ()
 
   last_bot = last_state = -1;
 
-  set_option (Opt_scrollBar, 1);
-  set_option (Opt_scrollTtyOutput, 1);
-  set_option (Opt_jumpScroll, 1);
-  set_option (Opt_secondaryScreen, 1);
-  set_option (Opt_secondaryScroll, 1);
-  set_option (Opt_pastableTabs, 1);
-  set_option (Opt_intensityStyles, 1);
+  set_option (Opt_scrollBar);
+  set_option (Opt_scrollTtyOutput);
+  set_option (Opt_jumpScroll);
+  set_option (Opt_secondaryScreen);
+  set_option (Opt_secondaryScroll);
+  set_option (Opt_pastableTabs);
+  set_option (Opt_intensityStyles);
 
   return true;
 }
@@ -430,7 +430,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
 #ifdef XTERM_REVERSE_VIDEO
   /* this is how xterm implements reverseVideo */
-  if (OPTION (Opt_reverseVideo))
+  if (option (Opt_reverseVideo))
     {
       if (!rs[Rs_color + Color_fg])
         rs[Rs_color + Color_fg] = def_colorName[Color_bg];
@@ -446,7 +446,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
 #ifndef XTERM_REVERSE_VIDEO
   /* this is how we implement reverseVideo */
-  if (OPTION (Opt_reverseVideo))
+  if (option (Opt_reverseVideo))
     ::swap (rs[Rs_color + Color_fg], rs[Rs_color + Color_bg]);
 #endif
 
@@ -630,16 +630,16 @@ rxvt_term::init_command (const char *const *argv)
    */
 
 #ifdef META8_OPTION
-  meta_char = OPTION (Opt_meta8) ? 0x80 : C0_ESC;
+  meta_char = option (Opt_meta8) ? 0x80 : C0_ESC;
 #endif
 
   get_ourmods ();
 
-  if (!OPTION (Opt_scrollTtyOutput))
+  if (!option (Opt_scrollTtyOutput))
     priv_modes |= PrivMode_TtyOutputInh;
-  if (OPTION (Opt_scrollTtyKeypress))
+  if (option (Opt_scrollTtyKeypress))
     priv_modes |= PrivMode_Keypress;
-  if (!OPTION (Opt_jumpScroll))
+  if (!option (Opt_jumpScroll))
     priv_modes |= PrivMode_smoothScroll;
 
 #ifndef NO_BACKSPACE_KEY
@@ -679,7 +679,7 @@ rxvt_term::Get_Colours ()
       if (!set_color (xcol, name))
         {
 #ifndef XTERM_REVERSE_VIDEO
-          if (i < 2 && OPTION (Opt_reverseVideo))
+          if (i < 2 && option (Opt_reverseVideo))
             name = def_colorName [1 - i];
           else
 #endif
@@ -896,10 +896,10 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   parent = display->root;
 
-  attributes.override_redirect = !!OPTION (Opt_override_redirect);
+  attributes.override_redirect = !!option (Opt_override_redirect);
 
 #if ENABLE_FRILLS
-  if (OPTION (Opt_borderLess))
+  if (option (Opt_borderLess))
     {
       if (XInternAtom (dpy, "_MOTIF_WM_INFO", True) == None)
         {
@@ -959,7 +959,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   wmHint.flags         = InputHint | StateHint | WindowGroupHint;
   wmHint.input         = True;
-  wmHint.initial_state = OPTION (Opt_iconic) ? IconicState : NormalState;
+  wmHint.initial_state = option (Opt_iconic) ? IconicState : NormalState;
   wmHint.window_group  = top;
 
   XmbSetWMProperties (dpy, top, NULL, NULL, (char **)argv, argc,
@@ -1026,7 +1026,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   vt_emask = ExposureMask | ButtonPressMask | ButtonReleaseMask | PropertyChangeMask;
 
-  if (OPTION (Opt_pointerBlank))
+  if (option (Opt_pointerBlank))
     vt_emask |= PointerMotionMask;
   else
     vt_emask |= Button1MotionMask | Button3MotionMask;
@@ -1037,7 +1037,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
 #ifdef XPM_BACKGROUND
   if (rs[Rs_backgroundPixmap] != NULL
-      && !OPTION (Opt_transparent))
+      && !option (Opt_transparent))
     {
       const char *p = rs[Rs_backgroundPixmap];
 
@@ -1331,8 +1331,8 @@ rxvt_term::run_command (const char *const *argv)
         _exit (EXIT_FAILURE);
 
       default:
-        if (!OPTION (Opt_utmpInhibit))
-          pty->login (cmd_pid, OPTION (Opt_loginShell), rs[Rs_display_name]);
+        if (!option (Opt_utmpInhibit))
+          pty->login (cmd_pid, option (Opt_loginShell), rs[Rs_display_name]);
 
         pty->close_tty ();
 
@@ -1355,7 +1355,7 @@ rxvt_term::run_child (const char *const *argv)
 {
   char *login;
 
-  if (OPTION (Opt_console))
+  if (option (Opt_console))
     {     /* be virtual console, fail silently */
 #ifdef TIOCCONS
       unsigned int on = 1;
@@ -1414,7 +1414,7 @@ rxvt_term::run_child (const char *const *argv)
 
       argv0 = (const char *)rxvt_r_basename (shell);
 
-      if (OPTION (Opt_loginShell))
+      if (option (Opt_loginShell))
         {
           login = (char *)rxvt_malloc ((strlen (argv0) + 2) * sizeof (char));
 

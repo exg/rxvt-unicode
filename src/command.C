@@ -879,7 +879,7 @@ rxvt_term::key_press (XKeyEvent &ev)
   if (len <= 0)
     return;			/* not mapped */
 
-  if (OPTION (Opt_scrollTtyKeypress))
+  if (option (Opt_scrollTtyKeypress))
     if (view_start)
       {
         view_start = 0;
@@ -1234,7 +1234,7 @@ rxvt_term::pty_fill ()
     {
       pty_ev.stop ();
 
-      if (!OPTION (Opt_hold))
+      if (!option (Opt_hold))
         destroy ();
     }
   
@@ -1265,7 +1265,7 @@ rxvt_term::pointer_unblank ()
 #ifdef POINTER_BLANK
   hidden_pointer = 0;
 
-  if (OPTION (Opt_pointerBlank))
+  if (option (Opt_pointerBlank))
     pointer_ev.start (NOW + pointerBlankDelay);
 #endif
 }
@@ -1274,7 +1274,7 @@ rxvt_term::pointer_unblank ()
 void
 rxvt_term::pointer_blank ()
 {
-  if (!OPTION (Opt_pointerBlank))
+  if (!option (Opt_pointerBlank))
     return;
 
   XDefineCursor (dpy, vt, display->blank_cursor);
@@ -1488,7 +1488,7 @@ rxvt_term::x_cb (XEvent &ev)
             HOOK_INVOKE ((this, HOOK_CONFIGURE_NOTIFY, DT_XEVENT, &ev, DT_END));
 
 #ifdef TRANSPARENT
-            if (OPTION (Opt_transparent))
+            if (option (Opt_transparent))
               check_our_parents ();
 #endif
           }
@@ -1687,7 +1687,7 @@ rxvt_term::x_cb (XEvent &ev)
     }
 
 #if defined(CURSOR_BLINK)
-  if (OPTION (Opt_cursorBlink) && ev.type == KeyPress)
+  if (option (Opt_cursorBlink) && ev.type == KeyPress)
     {
       if (hidden_cursor)
         {
@@ -1700,7 +1700,7 @@ rxvt_term::x_cb (XEvent &ev)
 #endif
 
 #if defined(POINTER_BLANK)
-  if (OPTION (Opt_pointerBlank) && pointerBlankDelay > 0)
+  if (option (Opt_pointerBlank) && pointerBlankDelay > 0)
     {
       if (ev.type == MotionNotify
           || ev.type == ButtonPress
@@ -1732,7 +1732,7 @@ rxvt_term::focus_in ()
         }
 #endif
 #if CURSOR_BLINK
-      if (OPTION (Opt_cursorBlink))
+      if (option (Opt_cursorBlink))
         cursor_blink_ev.start (NOW + CURSOR_BLINK_INTERVAL);
 #endif
 #if OFF_FOCUS_FADING
@@ -1769,7 +1769,7 @@ rxvt_term::focus_out ()
         XUnsetICFocus (Input_Context);
 #endif
 #if CURSOR_BLINK
-      if (OPTION (Opt_cursorBlink))
+      if (option (Opt_cursorBlink))
         cursor_blink_ev.stop ();
       hidden_cursor = 0;
 #endif
@@ -1820,7 +1820,7 @@ rxvt_term::rootwin_cb (XEvent &ev)
 
         /* FALLTHROUGH */
       case ReparentNotify:
-        if (OPTION (Opt_transparent) && check_our_parents () && am_transparent)
+        if (option (Opt_transparent) && check_our_parents () && am_transparent)
           want_refresh = want_full_refresh = 1;
         break;
     }
@@ -2176,7 +2176,7 @@ rxvt_term::button_release (XButtonEvent &ev)
 
               if (ev.state & ShiftMask)
                 i = 1;
-              else if (OPTION (Opt_mouseWheelScrollPage))
+              else if (option (Opt_mouseWheelScrollPage))
                 i = nrow - 1;
               else
                 i = 5;
@@ -2457,7 +2457,7 @@ rxvt_term::check_our_parents ()
 
   pchanged = 0;
 
-  if (!OPTION (Opt_transparent))
+  if (!option (Opt_transparent))
     return pchanged;	/* Don't try any more */
 
   XGetWindowAttributes (dpy, display->root, &wrootattr);
@@ -2737,7 +2737,7 @@ rxvt_term::cmd_parse ()
 
                   refresh_count++;
 
-                  if (!OPTION (Opt_jumpScroll)
+                  if (!option (Opt_jumpScroll)
                       || (refresh_count >= refresh_limit * (nrow - 1)))
                     {
                       refreshnow = true;
@@ -2787,7 +2787,7 @@ rxvt_term::cmd_parse ()
            */
           if (refreshnow)
             {
-              if (OPTION (Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
+              if (option (Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
                 refresh_limit++;
               else
                 {
@@ -3463,7 +3463,7 @@ rxvt_term::process_csi_seq ()
               scr_report_position ();
               break;
             case 7:			/* unofficial extension */
-              if (OPTION (Opt_insecure))
+              if (option (Opt_insecure))
                 tt_printf ("%-.250s\012", rs[Rs_display_name]);
               break;
             case 8:			/* unofficial extension */
@@ -3637,7 +3637,7 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
         {
           char *s;
           XGetIconName (dpy, parent[0], &s);
-          tt_printf ("\033]L%-.250s\234", OPTION (Opt_insecure) && s ? s : "");	/* 8bit ST */
+          tt_printf ("\033]L%-.250s\234", option (Opt_insecure) && s ? s : "");	/* 8bit ST */
           XFree (s);
         }
         break;
@@ -3645,7 +3645,7 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
         {
           char *s;
           XFetchName (dpy, parent[0], &s);
-          tt_printf ("\033]l%-.250s\234", OPTION (Opt_insecure) && s ? s : "");	/* 8bit ST */
+          tt_printf ("\033]l%-.250s\234", option (Opt_insecure) && s ? s : "");	/* 8bit ST */
           XFree (s);
         }
         break;
@@ -3963,7 +3963,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 #endif
         if (query)
           tt_printf ("\33]%d;%-.250s%c", saveop,
-                     OPTION (Opt_insecure) && fontset[op - URxvt_font]->fontdesc
+                     option (Opt_insecure) && fontset[op - URxvt_font]->fontdesc
                        ? fontset[op - URxvt_font]->fontdesc : "",
                      resp);
         else
@@ -3987,7 +3987,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 #if !ENABLE_MINIMAL
       case URxvt_locale:
         if (query)
-          tt_printf ("\33]%d;%-.250s%c", op, OPTION (Opt_insecure) ? locale : "", resp);
+          tt_printf ("\33]%d;%-.250s%c", op, option (Opt_insecure) ? locale : "", resp);
         else
           {
             set_locale (str);
@@ -4138,7 +4138,7 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
 #endif
           case 1048:		/* alternative cursor save */
           case 1049:
-            if (OPTION (Opt_secondaryScreen))
+            if (option (Opt_secondaryScreen))
               if (mode == 0)
                 scr_cursor (RESTORE);
               else if (mode == 1)
@@ -4213,14 +4213,14 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
               set_option (Opt_scrollTtyKeypress, state);
               break;
             case 1047:		/* secondary screen w/ clearing last */
-              if (OPTION (Opt_secondaryScreen))
+              if (option (Opt_secondaryScreen))
                 if (current_screen != PRIMARY)
                   scr_erase_screen (2);
               scr_change_screen (state);
               break;
             case 1049:		/* secondary screen w/ clearing first */
               scr_change_screen (state);
-              if (OPTION (Opt_secondaryScreen))
+              if (option (Opt_secondaryScreen))
                 if (current_screen != PRIMARY)
                   scr_erase_screen (2);
               break;

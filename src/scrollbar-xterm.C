@@ -61,7 +61,7 @@ rxvt_term::scrollbar_show_xterm (int update, int last_top, int last_bot, int scr
 
   if (update)
     {
-      xsb = OPTION (Opt_scrollBar_right) ? 1 : 0;
+      xsb = option (Opt_scrollBar_right) ? 1 : 0;
       if (last_top < scrollBar.top)
         XClearArea (dpy, scrollBar.win,
                    sb_shadow + xsb, last_top,

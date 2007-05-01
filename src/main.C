@@ -309,7 +309,7 @@ rxvt_term::child_cb (child_watcher &w, int status)
 
   cmd_pid = 0;
 
-  if (!OPTION (Opt_hold))
+  if (!option (Opt_hold))
     destroy ();
 }
 
@@ -483,7 +483,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 #endif
 
 #ifdef HAVE_SCROLLBARS
-  if (OPTION (Opt_scrollBar))
+  if (option (Opt_scrollBar))
     scrollBar.setIdle ();    /* set existence for size calculations */
 #endif
 
@@ -500,11 +500,11 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 #endif
 
 #ifdef HAVE_SCROLLBARS
-  if (OPTION (Opt_scrollBar))
+  if (option (Opt_scrollBar))
     resize_scrollbar ();      /* create and map scrollbar */
 #endif
 #ifdef TRANSPARENT
-  if (OPTION (Opt_transparent))
+  if (option (Opt_transparent))
     {
       XSelectInput (dpy, display->root, PropertyChangeMask);
       check_our_parents ();
@@ -711,7 +711,7 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
       sb_w = scrollbar_TotalWidth ();
       szHint.base_width += sb_w;
 
-      if (!OPTION (Opt_scrollBar_right))
+      if (!option (Opt_scrollBar_right))
         window_vt_x += sb_w;
     }
 
@@ -742,7 +742,7 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
       szHint.height = szHint.base_height + height;
     }
 
-  if (scrollBar.state && OPTION (Opt_scrollBar_right))
+  if (scrollBar.state && option (Opt_scrollBar_right))
     window_sb_x = szHint.width - sb_w;
 
   if (recalc_x)

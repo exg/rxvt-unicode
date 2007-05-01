@@ -178,7 +178,7 @@ rxvt_term::resize_pixmap ()
       pixmap = None;
 
 #ifdef TRANSPARENT
-      if (!OPTION (Opt_transparent) || !am_transparent)
+      if (!option (Opt_transparent) || !am_transparent)
 #endif
         XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
 

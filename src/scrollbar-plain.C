@@ -43,7 +43,7 @@ rxvt_term::scrollbar_show_plain (int update, int last_top, int last_bot, int scr
       pscrollbarGC = XCreateGC (dpy, scrollBar.win, GCForeground, &gcvalue);
     }
 
-  xsb = OPTION (Opt_scrollBar_right) ? 1 : 0;
+  xsb = option (Opt_scrollBar_right) ? 1 : 0;
 
   if (update)
     {
