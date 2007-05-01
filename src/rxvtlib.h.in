@@ -206,8 +206,8 @@ typedef struct {
 
 /* rxvt_vars.options */
 enum {
-# define def(name,idx) Opt_ ## name = 1UL << (idx),
-# define nodef(name)   Opt_ ## name = 0,
+# define def(name,idx) Opt_ ## name = 1UL << (idx), Opt_ ## name ## _idx = idx,
+# define nodef(name)   Opt_ ## name = 0, Opt_ ## name ## _idx = 0,
 # include "optinc.h"
 # undef nodef
 # undef def
