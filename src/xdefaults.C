@@ -76,7 +76,7 @@ static const struct
   {
     const uint8_t   index;      /* Option index */
     const uint8_t   flag;	/* Option flag */
-    const int       doff;	/* data offset */
+    const int16_t   doff;	/* resource value index or -1 */
     const char     *kw;		/* keyword */
     const char     *opt;	/* option */
     const char     *arg;	/* argument */
