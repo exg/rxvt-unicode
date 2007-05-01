@@ -191,7 +191,6 @@ rxvt_term::init_vars ()
 
   MEvent.time = CurrentTime;
   MEvent.button = AnyButton;
-  options = DEFAULT_OPTIONS;
   want_refresh = 1;
   priv_modes = SavedModes = PrivMode_Default;
   ncol = 80;
@@ -213,6 +212,14 @@ rxvt_term::init_vars ()
 #endif
 
   last_bot = last_state = -1;
+
+  set_option (Opt_scrollBar, 1);
+  set_option (Opt_scrollTtyOutput, 1);
+  set_option (Opt_jumpScroll, 1);
+  set_option (Opt_secondaryScreen, 1);
+  set_option (Opt_secondaryScroll, 1);
+  set_option (Opt_pastableTabs, 1);
+  set_option (Opt_intensityStyles, 1);
 
   return true;
 }

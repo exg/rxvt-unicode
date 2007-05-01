@@ -56,11 +56,11 @@
 
 /* BOOL () - regular boolean `-/+' flag */
 #define BOOL(rsp, kw, opt, option, flag, desc)			\
-    { option ## _idx, (Optflag_Boolean | (flag)), (rsp), (kw), (opt), NULL, (desc)}
+    { (option), (Optflag_Boolean | (flag)), (rsp), (kw), (opt), NULL, (desc)}
 
 /* SWCH () - `-' flag */
 #define SWCH(opt, option, flag, desc)				\
-    { option ## _idx, (flag), -1, NULL, (opt), NULL, (desc)}
+    { (option), (flag), -1, NULL, (opt), NULL, (desc)}
 
 /* convenient macros */
 #define optList_strlen(i)						\
@@ -551,7 +551,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
             }
           else
             {		/* boolean value */
-              set_option (1UL << optList[entry].index, flag == resval_on);
+              set_option (optList[entry].index, flag == resval_on);
 
               if (optList[entry].doff != -1)
                 rs[optList[entry].doff] = flag;
@@ -829,7 +829,7 @@ rxvt_term::extract_resources ()
               if (optList_isReverse (entry))
                 s = !s;
 
-              set_option (1UL << optList[entry].index, s);
+              set_option (optList[entry].index, s);
             }
         }
     }

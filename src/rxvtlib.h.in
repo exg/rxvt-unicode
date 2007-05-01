@@ -206,11 +206,12 @@ typedef struct {
 
 /* rxvt_vars.options */
 enum {
-# define def(name,idx) Opt_ ## name = 1UL << (idx), Opt_ ## name ## _idx = idx,
-# define nodef(name)   Opt_ ## name = 0, Opt_ ## name ## _idx = 0,
+# define def(name,idx) Opt_ ## name = idx,
+# define nodef(name)   Opt_ ## name = 0,
 # include "optinc.h"
 # undef nodef
 # undef def
+Opt_count
 };
 
 /* ------------------------------------------------------------------------- */
@@ -235,7 +236,7 @@ typedef struct {
 
 struct rxvt_vars : TermWin_t {
   scrollBar_t     scrollBar;
-  uint32_t        options;
+  uint8_t         options[(Opt_count + 7) >> 3];
   XSizeHints      szHint;
   rxvt_color     *pix_colors;
   rxvt_color     *pix_colors_focused;

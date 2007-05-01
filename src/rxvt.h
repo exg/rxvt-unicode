@@ -689,14 +689,7 @@ enum {
 #define Width2Pixel(n)          ((int32_t)(n) * (int32_t)fwidth)
 #define Height2Pixel(n)         ((int32_t)(n) * (int32_t)fheight)
 
-#define OPTION(opt)		(options & (opt))
-#define DEFAULT_OPTIONS		(Opt_scrollBar		\
-                                | Opt_scrollTtyOutput	\
-				| Opt_jumpScroll	\
-                                | Opt_secondaryScreen	\
-                                | Opt_secondaryScroll	\
-				| Opt_pastableTabs	\
-                                | Opt_intensityStyles)
+#define OPTION(opt)		option(opt)
 
 // for m >= -n, ensure remainder lies between 0..n-1
 #define MOD(m,n) (((m) + (n)) % (n))
@@ -1318,17 +1311,17 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
     return base;
   }
 
-  bool option (uint32_t opt) const NOTHROW
+  bool option (uint8_t opt) const NOTHROW
   {
-    return OPTION (opt);
+    return options[opt >> 3] & (1 << (opt & 7));
   }
 
-  void set_option (uint32_t opt, bool set) NOTHROW
+  void set_option (uint8_t opt, bool set) NOTHROW
   {
     if (set)
-      options |= opt;
+      options[opt >> 3] |= (1 << (opt & 7));
     else
-      options &= ~opt;
+      options[opt >> 3] &= ~(1 << (opt & 7));
   }
 
   void scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs) const NOTHROW;

@@ -1476,17 +1476,14 @@ const char *
 rxvt_term::x_resource (const char *name)
 
 bool
-rxvt_term::option (U32 optval, int set = -1)
+rxvt_term::option (U8 optval, int set = -1)
 	CODE:
 {
-	RETVAL = THIS->options & optval;
+	RETVAL = THIS->option (optval);
 
         if (set >= 0)
           {
-            if (set)
-              THIS->options |= optval;
-            else
-              THIS->options &= ~optval;
+            THIS->set_option (optval, set);
 
             if (THIS->check_ev.is_active ()) // avoid doing this before START
               switch (optval)
