@@ -753,6 +753,11 @@ set; option B<-n>.
 B<True>: de-iconify (map) on receipt of a bell character. B<False>: no
 de-iconify (map) on receipt of a bell character [default].
 
+=item B<urgentOnBell:> I<boolean>
+
+B<True>: set the urgency hint for the wm on receipt of a bell character.
+B<False>: do not set the urgency hint [default].
+
 =item B<visualBell:> I<boolean>
 
 B<True>: use visual bell on receipt of a bell character; option B<-vb>.

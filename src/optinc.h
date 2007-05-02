@@ -34,12 +34,14 @@
  def(hold,                 26) // hold window open after exit
  def(override_redirect,    27)
  def(skipBuiltinGlyphs,    28) // do not use internal glyphs
+ def(urgentOnBell,         30)
 #else
  nodef(insecure)
  nodef(borderLess)
  nodef(hold)
  nodef(override_redirect)
  nodef(skipBuiltinGlyphs)
+ nodef(urgentOnBell)
 #endif
 #if ENABLE_STYLES
  def(intensityStyles,      29) // font styles imply intensity

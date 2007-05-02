@@ -1892,6 +1892,19 @@ rxvt_term::scr_bell () NOTHROW
 #  endif
     XMapWindow (dpy, parent[0]);
 # endif
+# if ENABLE_FRILLS
+  if (option (Opt_urgentOnBell))
+    {
+      XWMHints *h;
+
+      h = XGetWMHints(dpy, parent[0]);
+      if (h != NULL)
+        {
+          h->flags |= XUrgencyHint;
+          XSetWMHints(dpy, parent[0], h);
+        }
+    }
+# endif
 
   if (option (Opt_visualBell))
     {

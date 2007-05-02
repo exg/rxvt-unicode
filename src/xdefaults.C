@@ -123,6 +123,9 @@ optList[] = {
 #endif
               BOOL (Rs_utmpInhibit, "utmpInhibit", "ut", Opt_utmpInhibit, 0, "utmp inhibit"),
 #ifndef NO_BELL
+# if ENABLE_FRILLS
+              BOOL (Rs_urgentOnBell, "urgentOnBell", NULL, Opt_urgentOnBell, 0, "set the urgency hint for the wm on bell"),
+# endif
               BOOL (Rs_visualBell, "visualBell", "vb", Opt_visualBell, 0, "visual bell"),
 # if ! defined(NO_MAPALERT) && defined(MAPALERT_OPTION)
               BOOL (Rs_mapAlert, "mapAlert", NULL, Opt_mapAlert, 0, NULL),

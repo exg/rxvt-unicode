@@ -1742,6 +1742,19 @@ rxvt_term::focus_in ()
           scr_recolour ();
         }
 #endif
+#if ENABLE_FRILLS
+      if (option (Opt_urgentOnBell))
+        {
+          XWMHints *h;
+
+          h = XGetWMHints(dpy, parent[0]);
+          if (h != NULL)
+            {
+              h->flags &= ~XUrgencyHint;
+              XSetWMHints(dpy, parent[0], h);
+            }
+        }
+#endif
     }
 }
 
