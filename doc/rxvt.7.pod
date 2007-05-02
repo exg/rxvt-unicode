@@ -2395,6 +2395,7 @@ in combination with other switches) is:
 
   MWM-hints
   EWMH-hints (pid, utf8 names) and protocols (ping)
+  urgency hint
   seperate underline colour (-underlineColor)
   settable border widths and borderless switch (-w, -b, -bl)
   visual depth selection (-depth)
