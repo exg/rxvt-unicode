@@ -214,6 +214,7 @@ dnl# --------------------------------------------------------------------------
 dnl# find utmp
 AC_CACHE_CHECK(where utmp is located, path_utmp,
 [AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <utmp.h>
 #include <errno.h>
@@ -250,6 +251,7 @@ dnl# find utmpx - if a utmp file exists at the same location and is more than
 dnl# a day newer, then dump the utmpx.  People leave lots of junk around.
 AC_CACHE_CHECK(where utmpx is located, path_utmpx,
 [AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <utmpx.h>
 #include <errno.h>
@@ -295,6 +297,7 @@ dnl# --------------------------------------------------------------------------
 dnl# find wtmp
 AC_CACHE_CHECK(where wtmp is located, path_wtmp,
 [AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #ifdef HAVE_UTMP_H
 #include <utmp.h>
@@ -331,6 +334,7 @@ dnl# --------------------------------------------------------------------------
 dnl# find wtmpx
 AC_CACHE_CHECK(where wtmpx is located, path_wtmpx,
 [AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
+#include <stdlib.h>
 #ifdef HAVE_UTMPX_H
 #include <utmpx.h>
 #endif
@@ -366,6 +370,7 @@ dnl# --------------------------------------------------------------------------
 dnl# find lastlog
 AC_CACHE_CHECK(where lastlog is located, path_lastlog,
 [AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #ifdef HAVE_UTMPX_H
 #include <utmpx.h>
@@ -409,6 +414,7 @@ dnl# --------------------------------------------------------------------------
 dnl# find lastlogx
 AC_CACHE_CHECK(where lastlogx is located, path_lastlogx,
 [AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
+#include <stdlib.h>
 #ifdef HAVE_UTMPX_H
 #include <utmpx.h>
 #endif
