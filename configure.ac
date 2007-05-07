@@ -501,7 +501,8 @@ ac_save_LIBS=$LIBS
 CFLAGS="$CFLAGS $X_CFLAGS"
 LIBS=`echo "$LIBS $X_LIBS $X_EXTRA_LIBS -lX11" | sed "$R_TRANSLATE"`
 AC_CACHE_CHECK([for -rpath dynamic library path recording], rxvt_cv_rpath,
-[AC_RUN_IFELSE([AC_LANG_SOURCE([[
+[AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <X11/Xlib.h>
+#include <stdlib.h>
 main()
 {
     exit(0);
@@ -514,7 +515,8 @@ if test x$rxvt_cv_rpath != xyes; then
   changequote([, ])dnl
   LIBS=`echo "$ac_save_LIBS $X_LIBS $X_EXTRA_LIBS -lX11" | sed "$R_TRANSLATE"`
   AC_CACHE_CHECK([for -R dynamic library path recording], rxvt_cv_R,
-[AC_RUN_IFELSE([AC_LANG_SOURCE([[
+[AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <X11/Xlib.h>
+#include <stdlib.h>
 main()
 {
     exit(0);
@@ -686,6 +688,7 @@ if test x$rxvt_cv_rpath = xyes -o x$rxvt_cv_R = xyes; then
 fi
 AC_CACHE_CHECK(for working Xlocale, rxvt_cv_func_xlocale,
 [AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <X11/Xlib.h>
+#include <stdlib.h>
 main() {
 char *p;
 if ((p = XSetLocaleModifiers("@im=none")) != NULL && *p)
