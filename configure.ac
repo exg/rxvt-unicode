@@ -895,13 +895,6 @@ AC_SUBST(PERL)
 AC_SUBST(IF_PERL)
 AC_SUBST(PERL_O)
 
-     AC_TRY_LINK([
-#include <EXTERN.h>
-#include <perl.h>
-#include <XSUB.h>
-],[
-     PerlInterpreter *perl = perl_alloc ();
-],[rxvt_perl_link=yes],[rxvt_perl_link=no])
 if test x$support_perl = xyes; then
    support_frills=yes
 fi
