@@ -2400,7 +2400,7 @@ in combination with other switches) is:
   settable border widths and borderless switch (-w, -b, -bl)
   visual depth selection (-depth)
   settable extra linespacing /-lsp)
-  iso-14755-2 and -3, and visual feedback
+  iso-14755 5.1 (basic) support
   tripleclickwords (-tcw)
   settable insecure mode (-insecure)
   keysym remapping support
