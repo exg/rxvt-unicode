@@ -1200,14 +1200,14 @@ application. Instead, pressing Button1 and Button3 sends B<ESC [ 6 ~>
 up and down arrows sends B<ESC [ A> (Up) and B<ESC [ B> (Down),
 respectively.
 
-=head1 TEXT SELECTION AND INSERTION
+=head1 THE SELECTION: SELECTING AND PASTING TEXT
 
-The behaviour of text selection and insertion mechanism is similar to
-I<xterm>(1).
+The behaviour of text selection and insertion/pasting mechanism is similar
+to I<xterm>(1).
 
 =over 4
 
-=item B<Selection>:
+=item B<Selecting>:
 
 Left click at the beginning of the region, drag to the end of the region
 and release; Right click to extend the marked region; Left double-click
@@ -1221,11 +1221,11 @@ normal one. In this mode, every selected row becomes its own line in the
 selection, and trailing whitespace is visually underlined and removed from
 the selection.
 
-=item B<Insertion>:
+=item B<Pasting>:
 
 Pressing and releasing the Middle mouse button in an B<@@RXVT_NAME@@>
 window causes the value of the PRIMARY selection (or CLIPBOARD with the
-Meta modifier) to be inserted as if it had been typed on the keyboard.
+B<Meta> modifier) to be inserted as if it had been typed on the keyboard.
 
 Pressing B<Shift-Insert> causes the value of the PRIMARY selection to be
 inserted too.
