@@ -388,7 +388,8 @@ for more info.
 =item B<-tcw>
 
 Change the meaning of triple-click selection with the left mouse
-button. Instead of selecting a full line it will extend the selection the
+button. Only effective when the original (non-perl) selection code is
+in-use. Instead of selecting a full line it will extend the selection the
 end of the logical line only. resource B<tripleclickwords>.
 
 =item B<-insecure>
@@ -727,9 +728,10 @@ reachable.
 
 =item B<selectstyle:> I<mode>
 
-Set mouse selection style to B<old> which is 2.20, B<oldword> which is
-xterm style with 2.20 old word selection, or anything else which gives
-xterm style selection.
+Set mouse selection style to B<old> which is 2.20, B<oldword> which
+is xterm style with 2.20 old word selection, or anything else which
+gives xterm style selection. Only effective when the original (non-perl)
+selection code is in use.
 
 =item B<scrollstyle:> I<mode>
 
@@ -923,10 +925,10 @@ with the B<Execute> key.
 The characters used as delimiters for double-click word selection
 (whitespace delimiting is added automatically if resource is given).
 
-When the selection extension is in use (the default if compiled in, see
-the @@RXVT_NAME@@perl(3) manpage), a suitable regex using these characters
-will be created (if the resource exists, otherwise, no regex will be
-created). In this mode, characters outside ISO-8859-1 can be used.
+When the perl selection extension is in use (the default if compiled
+in, see the @@RXVT_NAME@@perl(3) manpage), a suitable regex using these
+characters will be created (if the resource exists, otherwise, no regex
+will be created). In this mode, characters outside ISO-8859-1 can be used.
 
 When the selection extension is not used, only ISO-8859-1 characters can
 be used. If not specified, the built-in default is used:
