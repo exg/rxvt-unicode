@@ -27,6 +27,8 @@ DUMB: support tex fonts
         - better option handling, support more than 30 options (exg).
         - add urgentOnBell resource to set the urgency hint
           (patch by Philip Paeps).
+        - add binding for backspace in iso14755 5.1 to remove the last
+          digit.
 
 8.2  Sat Feb 17 21:35:28 CET 2007
 	- fix make depend in src/, reported by exg.

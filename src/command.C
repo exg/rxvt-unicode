@@ -502,6 +502,14 @@ rxvt_term::key_press (XKeyEvent &ev)
 # endif
               return;
             }
+          else if (keysym == XK_BackSpace)
+            {
+              iso14755buf = ((iso14755buf & ISO_14755_MASK) >> 4) | ISO_14755_51;
+# if ISO_14755
+              iso14755_51 (iso14755buf & ISO_14755_MASK);
+# endif
+              return;
+            }
           else if ((hv = hex_keyval (ev)) >= 0)
             {
               iso14755buf = ((iso14755buf << 4) & ISO_14755_MASK)
