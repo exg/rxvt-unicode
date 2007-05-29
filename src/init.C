@@ -48,7 +48,7 @@ const char *const def_colorName[] =
     "rgb:00/00/00",             // 0: black             (Black)
     "rgb:cd/00/00",             // 1: red               (Red3)
     "rgb:00/cd/00",             // 2: green             (Green3)
-    "rgb:cd/cd/00",             // 3: ywlloe            (Yellow3)
+    "rgb:cd/cd/00",             // 3: yellow            (Yellow3)
     "rgb:00/00/cd",             // 4: blue              (Blue3)
     "rgb:cd/00/cd",             // 5: magenta           (Magenta3)
     "rgb:00/cd/cd",             // 6: cyan              (Cyan3)
