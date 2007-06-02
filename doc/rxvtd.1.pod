@@ -6,6 +6,8 @@
 
 B<@@RXVT_NAME@@d> [-q|--quiet] [-o|--opendisplay] [-f|--fork]
 
+B<@@RXVT_NAME@@d> -q -o -f    # for .xsession use
+
 =head1 DESCRIPTION
 
 This manpage describes the @@RXVT_NAME@@d daemon, which is the same vt102
@@ -82,7 +84,7 @@ specify the absolute path of the socket to create.
 Only used when the C<--opendisplay> option is specified. Must contain a
 valid X display name.
 
-=over
+=back
 
 =head1 SEE ALSO
 

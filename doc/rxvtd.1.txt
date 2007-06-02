@@ -4,6 +4,8 @@ NAME
 SYNOPSIS
     rxvtd [-q|--quiet] [-o|--opendisplay] [-f|--fork]
 
+    rxvtd -q -o -f # for .xsession use
+
 DESCRIPTION
     This manpage describes the rxvtd daemon, which is the same vt102
     terminal emulator as rxvt, but runs as a daemon that can open multiple
@@ -64,5 +66,5 @@ ENVIRONMENT
         a valid X display name.
 
 SEE ALSO
-            rxvt(7), rxvtc(1)
+    rxvt(7), rxvtc(1)
 
