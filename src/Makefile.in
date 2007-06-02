@@ -61,7 +61,7 @@ RXVTD_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)d$(EXEEXT)
 # Distribution variables
 #
 
-.SUFFIXES:	.C .o
+.SUFFIXES:	.C .c .o
 
 #-------------------------------------------------------------------------
 # inference rules

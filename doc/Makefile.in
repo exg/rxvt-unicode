@@ -48,7 +48,7 @@ rxvtperl.3.pod: ../src/urxvt.pm
 	$(CP) $< $@
 
 %.tbl: %.pod
-	./podtbl <$< >$@
+	$(srcdir)/podtbl <$< >$@
 
 %.1.man.in: %.1.tbl
 	pod2man -n @@RXVT_NAME@@ -r"$(VERSION)" -q\" -s1 -c "RXVT-UNICODE" <$< >$@
@@ -77,7 +77,7 @@ alldoc:	rxvt.1.man.in rxvt.7.man.in rxvtc.1.man.in rxvtd.1.man.in rxvtperl.3.man
 	rxvt.1.txt    rxvt.7.txt    rxvtc.1.txt    rxvtd.1.txt    rxvtperl.3.txt \
 	rxvt.1.html   rxvt.7.html   rxvtc.1.html   rxvtd.1.html   rxvtperl.3.html \
 	../README.configure ../README.FAQ
-	infocmp -C rxvt-unicode >etc/rxvt-unicode.termcap
+	infocmp -C rxvt-unicode >$(srcdir)/etc/rxvt-unicode.termcap
 
 clean:
 	rm -f *~

@@ -24,7 +24,7 @@
 #define FEATURE_H
 
 #ifndef X11USRLIBDIR
-# define X11USRLIBDIR		"/usr/X11R6/lib"
+# define X11USRLIBDIR		"/usr/lib"
 #endif
 #ifndef X11LIBDIR
 # define X11LIBDIR		X11USRLIBDIR "/X11"
