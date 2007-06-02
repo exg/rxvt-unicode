@@ -28,6 +28,9 @@ thus must be encoded as UTF-8.
 Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
 scripts will be shared (but not enabled) for all terminals.
 
+You can disable the embedded perl interpreter by setting both "perl-ext"
+and "perl-ext-common" resources to the empty string.
+
 =head1 PREPACKAGED EXTENSIONS
 
 This section describes the extensions delivered with this release. You can

@@ -2479,10 +2479,13 @@ Add support to have the pointer disappear when typing or inactive.
 =item --enable-perl (default: on)
 
 Enable an embedded perl interpreter. See the B<@@RXVT_NAME@@perl(3)>
-manpage (F<doc/rxvtperl.txt>) for more info on this feature, or the files
-in F<src/perl-ext/> for the extensions that are installed by default. The
-perl interpreter that is used can be specified via the C<PERL> environment
-variable when running configure.
+manpage (F<doc/rxvtperl.txt>) for more info on this feature, or the
+files in F<src/perl-ext/> for the extensions that are installed by
+default. The perl interpreter that is used can be specified via the
+C<PERL> environment variable when running configure. Even when compiled
+in, perl will I<not> be initialised when all extensions have been disabled
+C<-pe "" --perl-ext-common "">, so it should be safe to enable from a
+resource standpoint.
 
 =item --with-name=NAME (default: urxvt)
 
