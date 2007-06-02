@@ -113,7 +113,7 @@ clean:
 	rm -f *.o *.lo .libs/* librxvt.la tmpproto *.tmp
 
 realclean: clean
-	rm -f tags TAGS librxvt.h
+	rm -f tags TAGS rxvtlib.h
 
 cleandir: realclean
 
