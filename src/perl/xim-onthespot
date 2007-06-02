@@ -3,8 +3,8 @@
 #
 # problems with this implementation include
 # 
-# - primary, secondary, teriary is NOT different to other hilighting
-# - if rend values are missing, they are not interpolated
+# - primary, secondary, tertiary are NO different to other hilighting styles
+# - if rend values are missing, they are not being interpolated
 #
 
 my $SIZEOF_LONG = length pack "l!", 0;

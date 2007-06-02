@@ -503,7 +503,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     two standard values that can be used for Backspace: "^H" and "^?".
 
     Historically, either value is correct, but rxvt-unicode adopts the
-    debian policy of using "^?" when unsure, because it's the one only only
+    debian policy of using "^?" when unsure, because it's the one and only
     correct choice :).
 
     Rxvt-unicode tries to inherit the current stty settings and uses the

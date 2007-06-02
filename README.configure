@@ -1,10 +1,9 @@
 CONFIGURE OPTIONS
     General hint: if you get compile errors, then likely your configuration
     hasn't been tested well. Either try with "--enable-everything" or use
-    the ./reconf script as a base for experiments. ./reconf is used by
-    myself, so it should generally be a working config. Of course, you
-    should always report when a combination doesn't work, so it can be
-    fixed. Marc Lehmann <rxvt@schmorp.de>.
+    the default configuration (i.e. "--enable-xxx" or "--disable-xxx"). Of
+    course, you should always report when a combination doesn't work, so it
+    can be fixed. Marc Lehmann <rxvt@schmorp.de>.
 
     All
 
@@ -169,7 +168,7 @@ CONFIGURE OPTIONS
           settable border widths and borderless switch (-w, -b, -bl)
           visual depth selection (-depth)
           settable extra linespacing /-lsp)
-          iso-14755-2 and -3, and visual feedback
+          iso-14755 5.1 (basic) support
           tripleclickwords (-tcw)
           settable insecure mode (-insecure)
           keysym remapping support
