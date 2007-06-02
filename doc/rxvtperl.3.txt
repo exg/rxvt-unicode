@@ -284,6 +284,10 @@ PREPACKAGED EXTENSIONS
 
            rxvt -pixmap background.xpm -pe automove-background
 
+        <http://wiki.archlinux.org/index.php/Perl_Background_Rotation/Extens
+        ions> shows how this extension can be used to implement an
+        automatically blurred transparent background.
+
     block-graphics-to-ascii
         A not very useful example of filtering all text output to the
         terminal by replacing all line-drawing characters (U+2500 .. U+259F)

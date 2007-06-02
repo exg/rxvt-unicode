@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 3"
-.TH @@RXVT_NAME@@ 3 "2007-02-17" "8.2" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 3 "2007-06-02" "8.2" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -461,6 +461,10 @@ supported in this mode. Example:
 .Vb 1
 \&   @@RXVT_NAME@@ -pixmap background.xpm -pe automove-background
 .Ve
+.Sp
+<http://wiki.archlinux.org/index.php/Perl_Background_Rotation/Extensions>
+shows how this extension can be used to implement an automatically blurred
+transparent background.
 .IP "block-graphics-to-ascii" 4
 .IX Item "block-graphics-to-ascii"
 A not very useful example of filtering all text output to the terminal

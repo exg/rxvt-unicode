@@ -308,6 +308,10 @@ supported in this mode. Example:
 
    @@RXVT_NAME@@ -pixmap background.xpm -pe automove-background
 
+L<http://wiki.archlinux.org/index.php/Perl_Background_Rotation/Extensions>
+shows how this extension can be used to implement an automatically blurred
+transparent background.
+
 =item block-graphics-to-ascii
 
 A not very useful example of filtering all text output to the terminal
