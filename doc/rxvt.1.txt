@@ -329,7 +329,8 @@ OPTIONS
 
     -tcw
         Change the meaning of triple-click selection with the left mouse
-        button. Instead of selecting a full line it will extend the
+        button. Only effective when the original (non-perl) selection code
+        is in-use. Instead of selecting a full line it will extend the
         selection the end of the logical line only. resource
         tripleclickwords.
 
@@ -632,7 +633,8 @@ RESOURCES (available also as long-options)
     selectstyle: *mode*
         Set mouse selection style to old which is 2.20, oldword which is
         xterm style with 2.20 old word selection, or anything else which
-        gives xterm style selection.
+        gives xterm style selection. Only effective when the original
+        (non-perl) selection code is in use.
 
     scrollstyle: *mode*
         Set scrollbar style to rxvt, plain, next or xterm. plain is the
@@ -651,6 +653,10 @@ RESOURCES (available also as long-options)
     mapAlert: *boolean*
         True: de-iconify (map) on receipt of a bell character. False: no
         de-iconify (map) on receipt of a bell character [default].
+
+    urgentOnBell: *boolean*
+        True: set the urgency hint for the wm on receipt of a bell
+        character. False: do not set the urgency hint [default].
 
     visualBell: *boolean*
         True: use visual bell on receipt of a bell character; option -vb.
@@ -789,8 +795,8 @@ RESOURCES (available also as long-options)
         The characters used as delimiters for double-click word selection
         (whitespace delimiting is added automatically if resource is given).
 
-        When the selection extension is in use (the default if compiled in,
-        see the rxvtperl(3) manpage), a suitable regex using these
+        When the perl selection extension is in use (the default if compiled
+        in, see the rxvtperl(3) manpage), a suitable regex using these
         characters will be created (if the resource exists, otherwise, no
         regex will be created). In this mode, characters outside ISO-8859-1
         can be used.
@@ -852,7 +858,7 @@ RESOURCES (available also as long-options)
         Turn on/off secondary screen (default enabled).
 
     secondaryScroll: *boolean*
-        Turn on/off secondary screen scroll (default enabled). If the this
+        Turn on/off secondary screen scroll (default enabled). If this
         option is enabled, scrolls on the secondary screen will change the
         scrollback buffer and switching to/from the secondary screen will
         instead scroll the screen up.
@@ -1043,11 +1049,11 @@ MOUSE REPORTING
     (Next) and ESC [ 5 ~ (Prior), respectively. Similarly, clicking on the
     up and down arrows sends ESC [ A (Up) and ESC [ B (Down), respectively.
 
-TEXT SELECTION AND INSERTION
-    The behaviour of text selection and insertion mechanism is similar to
-    *xterm*(1).
+THE SELECTION: SELECTING AND PASTING TEXT
+    The behaviour of text selection and insertion/pasting mechanism is
+    similar to *xterm*(1).
 
-    Selection:
+    Selecting:
         Left click at the beginning of the region, drag to the end of the
         region and release; Right click to extend the marked region; Left
         double-click to select a word; Left triple-click to select the
@@ -1060,7 +1066,7 @@ TEXT SELECTION AND INSERTION
         the selection, and trailing whitespace is visually underlined and
         removed from the selection.
 
-    Insertion:
+    Pasting:
         Pressing and releasing the Middle mouse button in an rxvt window
         causes the value of the PRIMARY selection (or CLIPBOARD with the
         Meta modifier) to be inserted as if it had been typed on the

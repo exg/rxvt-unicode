@@ -23,7 +23,7 @@
 	<li><a href="#resources__available_also_as_longoptions_">RESOURCES (available also as long-options)</a></li>
 	<li><a href="#the_scrollbar">THE SCROLLBAR</a></li>
 	<li><a href="#mouse_reporting">MOUSE REPORTING</a></li>
-	<li><a href="#text_selection_and_insertion">TEXT SELECTION AND INSERTION</a></li>
+	<li><a href="#the_selection__selecting_and_pasting_text">THE SELECTION: SELECTING AND PASTING TEXT</a></li>
 	<li><a href="#changing_fonts">CHANGING FONTS</a></li>
 	<li><a href="#iso_14755_support">ISO 14755 SUPPORT</a></li>
 	<li><a href="#login_stamp">LOGIN STAMP</a></li>
@@ -544,7 +544,8 @@ for more info.</p>
 
 <dd>
 <p>Change the meaning of triple-click selection with the left mouse
-button. Instead of selecting a full line it will extend the selection the
+button. Only effective when the original (non-perl) selection code is
+in-use. Instead of selecting a full line it will extend the selection the
 end of the logical line only. resource <strong>tripleclickwords</strong>.</p>
 </dd>
 </li>
@@ -982,9 +983,10 @@ reachable.</p>
 <dt><strong><a name="item_selectstyle_3a_mode"><strong>selectstyle:</strong> <em>mode</em></a></strong>
 
 <dd>
-<p>Set mouse selection style to <strong>old</strong> which is 2.20, <strong>oldword</strong> which is
-xterm style with 2.20 old word selection, or anything else which gives
-xterm style selection.</p>
+<p>Set mouse selection style to <strong>old</strong> which is 2.20, <strong>oldword</strong> which
+is xterm style with 2.20 old word selection, or anything else which
+gives xterm style selection. Only effective when the original (non-perl)
+selection code is in use.</p>
 </dd>
 </li>
 <dt><strong><a name="item_scrollstyle_3a_mode"><strong>scrollstyle:</strong> <em>mode</em></a></strong>
@@ -1015,6 +1017,13 @@ set; option <strong>-n</strong>.</p>
 <dd>
 <p><strong>True</strong>: de-iconify (map) on receipt of a bell character. <strong>False</strong>: no
 de-iconify (map) on receipt of a bell character [default].</p>
+</dd>
+</li>
+<dt><strong><a name="item_urgentonbell_3a_boolean"><strong>urgentOnBell:</strong> <em>boolean</em></a></strong>
+
+<dd>
+<p><strong>True</strong>: set the urgency hint for the wm on receipt of a bell character.
+<strong>False</strong>: do not set the urgency hint [default].</p>
 </dd>
 </li>
 <dt><strong><a name="item_visualbell_3a_boolean"><strong>visualBell:</strong> <em>boolean</em></a></strong>
@@ -1245,10 +1254,10 @@ with the <strong>Execute</strong> key.</p>
 (whitespace delimiting is added automatically if resource is given).</p>
 </dd>
 <dd>
-<p>When the selection extension is in use (the default if compiled in, see
-the <code>rxvtperl(3)</code> manpage), a suitable regex using these characters
-will be created (if the resource exists, otherwise, no regex will be
-created). In this mode, characters outside ISO-8859-1 can be used.</p>
+<p>When the perl selection extension is in use (the default if compiled
+in, see the <code>rxvtperl(3)</code> manpage), a suitable regex using these
+characters will be created (if the resource exists, otherwise, no regex
+will be created). In this mode, characters outside ISO-8859-1 can be used.</p>
 </dd>
 <dd>
 <p>When the selection extension is not used, only ISO-8859-1 characters can
@@ -1340,7 +1349,7 @@ in the entry on <strong>keysym</strong> following.</p>
 <dt><strong><a name="item_secondaryscroll_3a_boolean"><strong>secondaryScroll:</strong> <em>boolean</em></a></strong>
 
 <dd>
-<p>Turn on/off secondary screen scroll (default enabled). If the this
+<p>Turn on/off secondary screen scroll (default enabled). If this
 option is enabled, scrolls on the secondary screen will change the
 scrollback buffer and switching to/from the secondary screen will
 instead scroll the screen up.</p>
@@ -1604,11 +1613,11 @@ respectively.</p>
 <p>
 </p>
 <hr />
-<h1><a name="text_selection_and_insertion">TEXT SELECTION AND INSERTION</a></h1>
-<p>The behaviour of text selection and insertion mechanism is similar to
-<em>xterm</em>(1).</p>
+<h1><a name="the_selection__selecting_and_pasting_text">THE SELECTION: SELECTING AND PASTING TEXT</a></h1>
+<p>The behaviour of text selection and insertion/pasting mechanism is similar
+to <em>xterm</em>(1).</p>
 <dl>
-<dt><strong><a name="item_selection_3a"><strong>Selection</strong>:</a></strong>
+<dt><strong><a name="item_selecting_3a"><strong>Selecting</strong>:</a></strong>
 
 <dd>
 <p>Left click at the beginning of the region, drag to the end of the region
@@ -1625,12 +1634,12 @@ selection, and trailing whitespace is visually underlined and removed from
 the selection.</p>
 </dd>
 </li>
-<dt><strong><a name="item_insertion_3a"><strong>Insertion</strong>:</a></strong>
+<dt><strong><a name="item_pasting_3a"><strong>Pasting</strong>:</a></strong>
 
 <dd>
 <p>Pressing and releasing the Middle mouse button in an <strong>rxvt</strong>
 window causes the value of the PRIMARY selection (or CLIPBOARD with the
-Meta modifier) to be inserted as if it had been typed on the keyboard.</p>
+<strong>Meta</strong> modifier) to be inserted as if it had been typed on the keyboard.</p>
 </dd>
 <dd>
 <p>Pressing <strong>Shift-Insert</strong> causes the value of the PRIMARY selection to be

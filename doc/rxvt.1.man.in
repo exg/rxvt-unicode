@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2007-02-17" "8.2" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2007-06-02" "8.2" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -465,7 +465,8 @@ for more info.
 .IP "\fB\-tcw\fR" 4
 .IX Item "-tcw"
 Change the meaning of triple-click selection with the left mouse
-button. Instead of selecting a full line it will extend the selection the
+button. Only effective when the original (non\-perl) selection code is
+in\-use. Instead of selecting a full line it will extend the selection the
 end of the logical line only. resource \fBtripleclickwords\fR.
 .IP "\fB\-insecure\fR" 4
 .IX Item "-insecure"
@@ -779,9 +780,10 @@ option \fB+is\fR) disables this behaviour, the high intensity colours are not
 reachable.
 .IP "\fBselectstyle:\fR \fImode\fR" 4
 .IX Item "selectstyle: mode"
-Set mouse selection style to \fBold\fR which is 2.20, \fBoldword\fR which is
-xterm style with 2.20 old word selection, or anything else which gives
-xterm style selection.
+Set mouse selection style to \fBold\fR which is 2.20, \fBoldword\fR which
+is xterm style with 2.20 old word selection, or anything else which
+gives xterm style selection. Only effective when the original (non\-perl)
+selection code is in use.
 .IP "\fBscrollstyle:\fR \fImode\fR" 4
 .IX Item "scrollstyle: mode"
 Set scrollbar style to \fBrxvt\fR, \fBplain\fR, \fBnext\fR or \fBxterm\fR. \fBplain\fR is
@@ -800,6 +802,10 @@ set; option \fB\-n\fR.
 .IX Item "mapAlert: boolean"
 \&\fBTrue\fR: de-iconify (map) on receipt of a bell character. \fBFalse\fR: no
 de-iconify (map) on receipt of a bell character [default].
+.IP "\fBurgentOnBell:\fR \fIboolean\fR" 4
+.IX Item "urgentOnBell: boolean"
+\&\fBTrue\fR: set the urgency hint for the wm on receipt of a bell character.
+\&\fBFalse\fR: do not set the urgency hint [default].
 .IP "\fBvisualBell:\fR \fIboolean\fR" 4
 .IX Item "visualBell: boolean"
 \&\fBTrue\fR: use visual bell on receipt of a bell character; option \fB\-vb\fR.
@@ -939,10 +945,10 @@ with the \fBExecute\fR key.
 The characters used as delimiters for double-click word selection
 (whitespace delimiting is added automatically if resource is given).
 .Sp
-When the selection extension is in use (the default if compiled in, see
-the @@RXVT_NAME@@\fIperl\fR\|(3) manpage), a suitable regex using these characters
-will be created (if the resource exists, otherwise, no regex will be
-created). In this mode, characters outside \s-1ISO\-8859\-1\s0 can be used.
+When the perl selection extension is in use (the default if compiled
+in, see the @@RXVT_NAME@@\fIperl\fR\|(3) manpage), a suitable regex using these
+characters will be created (if the resource exists, otherwise, no regex
+will be created). In this mode, characters outside \s-1ISO\-8859\-1\s0 can be used.
 .Sp
 When the selection extension is not used, only \s-1ISO\-8859\-1\s0 characters can
 be used. If not specified, the built-in default is used:
@@ -1001,7 +1007,7 @@ in the entry on \fBkeysym\fR following.
 Turn on/off secondary screen (default enabled).
 .IP "\fBsecondaryScroll:\fR \fIboolean\fR" 4
 .IX Item "secondaryScroll: boolean"
-Turn on/off secondary screen scroll (default enabled). If the this
+Turn on/off secondary screen scroll (default enabled). If this
 option is enabled, scrolls on the secondary screen will change the
 scrollback buffer and switching to/from the secondary screen will
 instead scroll the screen up.
@@ -1206,12 +1212,12 @@ application. Instead, pressing Button1 and Button3 sends \fB\s-1ESC\s0 [ 6 ~\fR
 (Next) and \fB\s-1ESC\s0 [ 5 ~\fR (Prior), respectively. Similarly, clicking on the
 up and down arrows sends \fB\s-1ESC\s0 [ A\fR (Up) and \fB\s-1ESC\s0 [ B\fR (Down),
 respectively.
-.SH "TEXT SELECTION AND INSERTION"
-.IX Header "TEXT SELECTION AND INSERTION"
-The behaviour of text selection and insertion mechanism is similar to
-\&\fIxterm\fR(1).
-.IP "\fBSelection\fR:" 4
-.IX Item "Selection:"
+.SH "THE SELECTION: SELECTING AND PASTING TEXT"
+.IX Header "THE SELECTION: SELECTING AND PASTING TEXT"
+The behaviour of text selection and insertion/pasting mechanism is similar
+to \fIxterm\fR(1).
+.IP "\fBSelecting\fR:" 4
+.IX Item "Selecting:"
 Left click at the beginning of the region, drag to the end of the region
 and release; Right click to extend the marked region; Left double-click
 to select a word; Left triple-click to select the entire logical line
@@ -1223,11 +1229,11 @@ Starting a selection while pressing the \fBMeta\fR key (or \fBMeta+Ctrl\fR keys)
 normal one. In this mode, every selected row becomes its own line in the
 selection, and trailing whitespace is visually underlined and removed from
 the selection.
-.IP "\fBInsertion\fR:" 4
-.IX Item "Insertion:"
+.IP "\fBPasting\fR:" 4
+.IX Item "Pasting:"
 Pressing and releasing the Middle mouse button in an \fB@@RXVT_NAME@@\fR
 window causes the value of the \s-1PRIMARY\s0 selection (or \s-1CLIPBOARD\s0 with the
-Meta modifier) to be inserted as if it had been typed on the keyboard.
+\&\fBMeta\fR modifier) to be inserted as if it had been typed on the keyboard.
 .Sp
 Pressing \fBShift-Insert\fR causes the value of the \s-1PRIMARY\s0 selection to be
 inserted too.

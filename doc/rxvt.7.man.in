@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2007-02-17" "8.2" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2007-06-02" "8.2" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -774,7 +774,7 @@ question) there are two standard values that can be used for
 Backspace: \f(CW\*(C`^H\*(C'\fR and \f(CW\*(C`^?\*(C'\fR.
 .PP
 Historically, either value is correct, but rxvt-unicode adopts the debian
-policy of using \f(CW\*(C`^?\*(C'\fR when unsure, because it's the one only only correct
+policy of using \f(CW\*(C`^?\*(C'\fR when unsure, because it's the one and only correct
 choice :).
 .PP
 Rxvt-unicode tries to inherit the current stty settings and uses the value
@@ -2443,10 +2443,9 @@ XK_KP_9	9			ESC O y
 .IX Header "CONFIGURE OPTIONS"
 General hint: if you get compile errors, then likely your configuration
 hasn't been tested well. Either try with \f(CW\*(C`\-\-enable\-everything\*(C'\fR or use
-the \fI./reconf\fR script as a base for experiments. \fI./reconf\fR is used by
-myself, so it should generally be a working config. Of course, you should
-always report when a combination doesn't work, so it can be fixed. Marc
-Lehmann <rxvt@schmorp.de>.
+the default configuration (i.e. \f(CW\*(C`\-\-enable\-xxx\*(C'\fR or \f(CW\*(C`\-\-disable\-xxx\*(C'\fR). Of
+course, you should always report when a combination doesn't work, so it
+can be fixed. Marc Lehmann <rxvt@schmorp.de>.
 .PP
 All
 .IP "\-\-enable\-everything" 4
@@ -2604,14 +2603,15 @@ disable this.
 A non-exhaustive list of features enabled by \f(CW\*(C`\-\-enable\-frills\*(C'\fR (possibly
 in combination with other switches) is:
 .Sp
-.Vb 16
+.Vb 17
 \&  MWM-hints
 \&  EWMH-hints (pid, utf8 names) and protocols (ping)
+\&  urgency hint
 \&  seperate underline colour (-underlineColor)
 \&  settable border widths and borderless switch (-w, -b, -bl)
 \&  visual depth selection (-depth)
 \&  settable extra linespacing /-lsp)
-\&  iso-14755-2 and -3, and visual feedback
+\&  iso-14755 5.1 (basic) support
 \&  tripleclickwords (-tcw)
 \&  settable insecure mode (-insecure)
 \&  keysym remapping support

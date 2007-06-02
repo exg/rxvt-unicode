@@ -653,7 +653,7 @@ Backspace keysym (not likely for Linux ... see the following
 question) there are two standard values that can be used for
 Backspace: <code>^H</code> and <code>^?</code>.</p>
 <p>Historically, either value is correct, but rxvt-unicode adopts the debian
-policy of using <code>^?</code> when unsure, because it's the one only only correct
+policy of using <code>^?</code> when unsure, because it's the one and only correct
 choice :).</p>
 <p>Rxvt-unicode tries to inherit the current stty settings and uses the value
 of `erase' to guess the value for backspace.  If rxvt-unicode wasn't
@@ -2218,10 +2218,9 @@ your system.</p>
 <h1><a name="configure_options">CONFIGURE OPTIONS</a></h1>
 <p>General hint: if you get compile errors, then likely your configuration
 hasn't been tested well. Either try with <a href="#item__2d_2denable_2deverything"><code>--enable-everything</code></a> or use
-the <em>./reconf</em> script as a base for experiments. <em>./reconf</em> is used by
-myself, so it should generally be a working config. Of course, you should
-always report when a combination doesn't work, so it can be fixed. Marc
-Lehmann &lt;<a href="mailto:rxvt@schmorp.de">rxvt@schmorp.de</a>&gt;.</p>
+the default configuration (i.e. <code>--enable-xxx</code> or <code>--disable-xxx</code>). Of
+course, you should always report when a combination doesn't work, so it
+can be fixed. Marc Lehmann &lt;<a href="mailto:rxvt@schmorp.de">rxvt@schmorp.de</a>&gt;.</p>
 <p>All</p>
 <dl>
 <dt><strong><a name="item__2d_2denable_2deverything">--enable-everything</a></strong>
@@ -2466,11 +2465,12 @@ in combination with other switches) is:</p>
 <pre>
   MWM-hints
   EWMH-hints (pid, utf8 names) and protocols (ping)
+  urgency hint
   seperate underline colour (-underlineColor)
   settable border widths and borderless switch (-w, -b, -bl)
   visual depth selection (-depth)
   settable extra linespacing /-lsp)
-  iso-14755-2 and -3, and visual feedback
+  iso-14755 5.1 (basic) support
   tripleclickwords (-tcw)
   settable insecure mode (-insecure)
   keysym remapping support
