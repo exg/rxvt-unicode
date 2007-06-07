@@ -109,9 +109,6 @@ install:
 @IF_PERL@	$(INSTALL_DATA) rxvtperl.3.man $(DESTDIR)$(man3dir)/$(RXVTNAME)perl.$(man3ext)
 	if test -x "@TIC@"; then if test -n "@TIC@"; then @TIC@ $(srcdir)/etc/rxvt-unicode.terminfo; fi; fi
 
-uninstall:
-	-(cd $(mandir); rm -f $(RXVTNAME).$(manext) )
-
 distdepend: alldoc
 
 # ------------------------------------------------------------------------
