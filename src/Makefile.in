@@ -127,11 +127,13 @@ install-perl:
 @IF_PERL@	$(INSTALL_DATA) $(srcdir)/urxvt.pm $(DESTDIR)$(libdir)/urxvt/urxvt.pm
 @IF_PERL@	for ext in $(srcdir)/perl/*; do test -f "$$ext" && $(INSTALL_DATA) "$$ext" $(DESTDIR)$(libdir)/urxvt/perl/"`basename "$$ext"`"; done
 
-install: allbin alldoc install-perl
+install-bin: allbin
 	$(INSTALL) -d $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) rxvt  $(RXVT_BINNAME)
 	$(INSTALL_PROGRAM) rxvtc $(RXVTC_BINNAME)
 	$(INSTALL_PROGRAM) rxvtd $(RXVTD_BINNAME)
+
+install: install-bin alldoc install-perl
 
 perlxsi.c: Makefile
 	$(PERL) -MExtUtils::Embed -e xsinit -- -std urxvt
