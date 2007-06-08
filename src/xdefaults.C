@@ -60,7 +60,7 @@
 
 /* SWCH () - `-' flag */
 #define SWCH(opt, option, flag, desc)				\
-    { (option), (flag), -1, NULL, (opt), NULL, (desc)}
+    { (option), (Optflag_Boolean | (flag)), -1, NULL, (opt), NULL, (desc)}
 
 /* convenient macros */
 #define optList_strlen(i)						\
@@ -540,6 +540,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
         {
           if (optList_isReverse (entry))
             flag = flag == resval_on ? resval_off : resval_on;
+fprintf( stderr, "entry = %d, opt = [%s], flag = 0x%X, resval_on = %d\n", entry, opt, *flag, *resval_on );
 
           if (optList_strlen (entry))
             {
@@ -548,7 +549,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
                * X resources to set these values before we settle for
                * default values
                */
-
+fprintf( stderr, "string\n");
               if (optList[entry].doff != -1)
                 {
                   if (flag == resval_on && !argv [i+1])
