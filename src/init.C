@@ -1037,7 +1037,10 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
 #ifdef XPM_BACKGROUND
   if (rs[Rs_backgroundPixmap] != NULL
-      && !option (Opt_transparent))
+#ifndef HAVE_AFTERIMAGE  
+      && !OPTION (Opt_transparent)
+#endif	  
+    )
     {
       const char *p = rs[Rs_backgroundPixmap];
 

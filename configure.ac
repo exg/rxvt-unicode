@@ -113,6 +113,8 @@ support_scroll_xterm=yes
 support_scroll_plain=yes
 support_xim=yes
 support_xpm=yes
+support_afterimage=yes
+support_afterstep=yes
 support_xft=yes
 support_unicode3=no
 support_combining=yes
@@ -157,6 +159,8 @@ AC_ARG_ENABLE(everything,
        support_wtmp=no
        support_xim=no
        support_xpm=no
+       support_afterimage=no
+       support_afterstep=no
        support_xft=no
        support_unicode3=no
        support_combining=no
@@ -186,6 +190,8 @@ AC_ARG_ENABLE(everything,
        support_wtmp=yes
        support_xim=yes
        support_xpm=yes
+       support_afterimage=yes
+       support_afterstep=yes
        support_xft=yes
        support_unicode3=yes
        support_combining=yes
@@ -222,9 +228,23 @@ AC_ARG_ENABLE(font-styles,
   fi])
 
 AC_ARG_ENABLE(xpm-background,
-  [  --enable-xpm-background enable XPM background pixmaps],
+  [  --enable-xpm-background enable background pixmaps],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_xpm=$enableval
+  fi])
+
+AC_ARG_ENABLE(afterimage,
+  [  --enable-afterimage enable integration with libAfterImage for background images],
+  [if test x$enableval = xyes -o x$enableval = xno; then
+    support_afterimage=$enableval
+  fi])
+
+AC_ARG_WITH(afterimage_config,  [  --with-afterimage-config=DIR  use libAfterImage config script in DIR], afterimage_config="$withval",afterimage_config=NO)
+
+AC_ARG_ENABLE(afterstep,
+  [  --enable-afterstep enable integration with AfterStep window manager],
+  [if test x$enableval = xyes -o x$enableval = xno; then
+    support_afterstep=$enableval
   fi])
 
 AC_ARG_ENABLE(transparency,
@@ -443,7 +463,40 @@ AC_PATH_XTRA
 dnl# the only reasonable way to find libXpm is do-it-yourself
 dnl# only check if we want xpm-background
 
-if test x$support_xpm = xyes; then
+LIBAFTERIMAGE_CFLAGS=
+AFTERIMAGE_LIBS=
+have_afterimage=
+
+if test x$support_afterimage == xyes; then
+	AC_MSG_CHECKING(installed libAfterImage)
+	support_afterimage=no
+	if test "$afterimage_config" = "NO" ; then 
+		if afterimage-config --version > /dev/null 2>&1 ; then 	
+			afterimage_config=afterimage-config
+		else
+			if test -x /usr/local/bin/afterimage-config; then 	    
+				afterimage_config=/usr/local/bin/afterimage-config 
+			fi
+		fi
+	else
+	    afterimage_config=$afterimage_config/afterimage-config
+	fi
+	if $afterimage_config --version > /dev/null 2>&1 ; then 
+		LIBAFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
+		AFTERIMAGE_LIBS=`$afterimage_config --libs`
+		if test "x$AFTERIMAGE_LIBS" != "x"; then
+			support_afterimage=yes
+		fi
+	fi						
+
+	if test "x$support_afterimage" = "xyes"; then
+		AC_MSG_RESULT($AFTERIMAGE_LIBS)
+	else
+		AC_MSG_RESULT(afterimage-config not found in $afterimage_config - can't use libAfterImage for images.)
+	fi
+fi
+
+if test x$support_afterimage != xyes -a x$support_xpm = xyes ; then
   VT_FIND_LIBXPM
   if test x$no_xpm = xyes; then
     support_xpm=needsmanualspecification
@@ -805,9 +858,18 @@ if test x$support_xim = xyes -o x$multichar_set = xyes; then
     AC_DEFINE(USE_XIM, 1, Define if you want to have XIM (X Input Method) protocol support - required for multibyte characters input)
   fi
 fi
-if test x$support_xpm = xyes; then
-  AC_DEFINE(XPM_BACKGROUND, 1, Define if you want to have sexy-looking background pixmaps. Needs libXpm)
+if test x$support_xpm = xyes -o x$support_afterimage = xyes ; then
+  AC_DEFINE(XPM_BACKGROUND, 1, Define if you want to have sexy-looking background pixmaps. Needs libXpm or libAfterImage)
 fi
+
+if test x$support_afterimage = xyes; then
+  AC_DEFINE(HAVE_AFTERIMAGE, 1, Define if you want to use libAfterImage for image processing)
+fi
+
+if test x$support_afterstep = xyes; then
+  AC_DEFINE(AFTERSTEP_INTEGRATION, 1, Define if you want to integrate with AfterStep window manager)
+fi
+
 if test x$support_scroll_rxvt = xyes; then
   AC_DEFINE(RXVT_SCROLLBAR, 1, Support Rxvt original style scrollbars)
   scrolltypes="rxvt"
@@ -919,6 +981,9 @@ AC_SUBST(LIBS)
 AC_SUBST(X_LIBS)
 AC_SUBST(X_EXTRA_LIBS)
 
+AC_SUBST(LIBAFTERIMAGE_CFLAGS)
+AC_SUBST(AFTERIMAGE_LIBS)
+
 AC_ARG_PROGRAM
 
 dnl# test for "sun" or "__sun__" before include sys_ioctl
@@ -964,6 +1029,14 @@ echo "Configuration:
 
 if test x$support_xpm = xyes; then
   echo "  Xpm library:                $XPM_LIBS"
+fi
+
+if test x$support_afterimage = xyes; then
+  echo "  AfterImage library:                $AFTERIMAGE_LIBS"
+fi
+
+if test x$support_afterstep = xyes; then
+  echo "  With AfterStep integration"
 fi
 
 if test x$term != x; then

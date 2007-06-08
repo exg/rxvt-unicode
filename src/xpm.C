@@ -85,7 +85,20 @@ rxvt_term::scale_pixmap (const char *geom)
       strncpy (str, geom, n);
       str[n] = '\0';
 
-      flags = XParseGeometry (str, &x, &y, &w, &h);
+      if (strcmp(str, "auto") == 0) 
+        {
+          if (!bgpixmap->auto_resize) 
+            changed++;
+          bgpixmap->auto_resize = True ; 
+          w = szHint.width ; 
+          h = szHint.height ;
+          flags = WidthValue|HeightValue ;
+        }
+      else
+        {
+          bgpixmap->auto_resize = False ;  				
+          flags = XParseGeometry (str, &x, &y, &w, &h);
+        }
 
       if (!flags)
         {
@@ -171,7 +184,10 @@ rxvt_term::resize_pixmap ()
   GC gc;
 
   if (pixmap != None)
-    XFreePixmap (dpy, pixmap);
+    {
+      XFreePixmap (dpy, pixmap);
+      pixmap = None ;
+    }
 
   if (bgPixmap.pixmap == None)
     { /* So be it: I'm not using pixmaps */
@@ -195,6 +211,11 @@ rxvt_term::resize_pixmap ()
       unsigned int xpmh = xpmAttr.height,
                    xpmw = xpmAttr.width;
 
+      if (bgPixmap.auto_resize) 
+        {
+          w = szHint.width ; 
+          h = szHint.height ;
+        }	
       /*
        * don't zoom pixmap too much nor expand really small pixmaps
        */
@@ -215,6 +236,20 @@ rxvt_term::resize_pixmap ()
           XCopyArea (dpy, bgPixmap.pixmap, pixmap, gc, 0, 0,        x,        y, xpmw - x, xpmh - y);
         }
       else
+#ifdef HAVE_AFTERIMAGE
+#ifdef TRANSPARENT
+      if (!option(Opt_transparent) || !am_transparent)
+      /* will do that in check_our_parents otherwise */
+#endif
+        {
+          ASImage *scaled_im = scale_asimage( display->asv, original_asim, w, h, ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT );
+          if (scaled_im) 
+            {
+              pixmap = asimage2pixmap( display->asv, display->root, scaled_im, gc, True );
+              destroy_asimage( &scaled_im );
+            }
+        }
+#else   /* HAVE_AFTERIMAGE */
         {
           float incr, p;
           Pixmap tmp;
@@ -259,6 +294,7 @@ rxvt_term::resize_pixmap ()
 
           XFreePixmap (dpy, tmp);
         }
+#endif /* HAVE_AFTERIMAGE */
     }
 
   XSetWindowBackgroundPixmap (dpy, vt, pixmap);
@@ -369,6 +405,24 @@ rxvt_term::set_bgPixmap (const char *file)
        */
       /*      XGetWindowAttributes (dpy, vt, &attr); */
 
+#ifdef HAVE_AFTERIMAGE
+      if (asimman == NULL) 
+        asimman = create_generic_imageman(rs[Rs_path]);		
+      if ((f = strchr (file, ';')) == NULL)
+        original_asim = get_asimage( asimman, file, 0xFFFFFFFF, 100 ); 	  
+      else
+        {
+          f = strndup( file, f - file );
+          original_asim = get_asimage( asimman, f, 0xFFFFFFFF, 100 ); 	  
+          free( f );
+        }
+      if (original_asim)
+        {
+          bgPixmap.pixmap = asimage2pixmap( display->asv, display->root, original_asim, NULL, True );
+          xpmAttr.width = original_asim->width ; 
+          xpmAttr.height = original_asim->height ; 
+        }
+#else /* HAVE_AFTERIMAGE */
       xpmAttr.closeness = 30000;
       xpmAttr.colormap = cmap;
       xpmAttr.visual = visual;
@@ -391,8 +445,8 @@ rxvt_term::set_bgPixmap (const char *file)
 
           rxvt_warn ("couldn't load XPM file \"%.*s\", ignoring.\n", (p - file), file);
         }
-
       free (f);
+#endif /* HAVE_AFTERIMAGE */
     }
 
   resize_pixmap ();

@@ -142,11 +142,26 @@ I<tintColor>. Example:
 
    @@RXVT_NAME@@ -tr -tint blue -sh 40
 
-=item B<-sh>
+=item B<-sh> I<number> 
 
-I<number> Darken (0 .. 100) or lighten (-1 .. -100) the transparent
-background image in addition to tinting it (i.e. B<-tint> must be
-specified, too, e.g. C<-tint white>); resource I<shading>.
+Darken (0 .. 100) or lighten (-1 .. -100) the transparent
+background image in addition to (or instead of) tinting it; 
+resource I<shading>.
+
+=item B<-blt> I<string>
+
+Specify background blending type. If background pixmap is specified 
+at the same time as transparency - such pixmap will be blended over 
+transparency image, using method specified. Supported values are :
+B<add>, B<alphablend>, B<allanon> - color values averaging, B<colorize>, 
+B<darken>, B<diff>, B<dissipate>, B<hue>, B<lighten>, B<overlay>, 
+B<saturate>, B<screen>, B<sub>, B<tint>, B<value>. The default is 
+alpha-blending; resource I<blendType>.
+
+=item B<-blr> I<number>
+
+Apply Gaussian Blur with the specified radius to the transparent 
+background image; resource I<blurRadius>.
 
 =item B<-bg> I<colour>
 
@@ -158,10 +173,10 @@ Window foreground colour; resource B<foreground>.
 
 =item B<-pixmap> I<file[;geom]>
 
-Compile I<XPM>: Specify XPM file for the background and also optionally
-specify its scaling with a geometry string. Note you may need to
+Compile I<afterimage>: Specify image file for the background and also 
+optionally specify its scaling with a geometry string. Note you may need to
 add quotes to avoid special shell interpretation of the C<;> in the
-command-line; resource B<backgroundPixmap>.
+command-line; for more details see resource B<backgroundPixmap>.
 
 =item B<-cr> I<colour>
 
@@ -626,6 +641,15 @@ B<-tint>.
 Darken (0 .. 100) or lighten (-1 .. -100) the transparent background image
 in addition to tinting it; option B<-sh>.
 
+=item B<blendType:> I<string>
+
+Specify background blending type; option B<-blt>.
+
+=item B<blurRadius:> I<number>
+
+Apply Gaussian Blurr with the specified radius to the transparent 
+background image; option B<-blr>.
+
 =item B<scrollColor:> I<colour>
 
 Use the specified colour for the scrollbar [default #B2B2B2].
@@ -642,15 +666,20 @@ and the text.
 
 =item B<backgroundPixmap:> I<file[;geom]>
 
-Use the specified XPM file (note the `.xpm' extension is optional) for
-the background and also optionally specify its scaling with a geometry
-string B<WxH+X+Y>, in which B<"W" / "H"> specify the
-horizontal/vertical scale (percent) and B<"X" / "Y"> locate the image
-centre (percent). A scale of 0 displays the image with tiling. A scale
-of 1 displays the image without any scaling. A scale of 2 to 9
-specifies an integer number of images in that direction. No image will
-be magnified beyond 10 times its original size. The maximum permitted
-scale is 1000. [default 0x0+50+50]
+Use the specified image file for the background and also optionally 
+specify its scaling with a geometry string B<WxH+X+Y>, 
+in which B<"W" / "H"> specify the horizontal/vertical scale (percent), 
+and B<"X" / "Y"> locate the image centre (percent). 
+A scale of 0 displays the image with tiling. A scale of 1 displays the 
+image without any scaling. A scale of 2 to 9 specifies an integer 
+number of images in that direction. No image will be magnified beyond 
+10 times its original size. The maximum permitted scale is 1000. 
+Special string of B<"auto"> used as a geometry will cause image to be 
+automatically scaled to match window size.
+If used in conjunction with B<-tr> option - specified pixmap will be 
+blended over transparency image using either alpha-blending, or any 
+other blending type, specified with B<-blt "type"> option.
+[default 0x0+50+50]
 
 =item B<path:> I<path>
 

@@ -260,6 +260,11 @@ optList[] = {
               RSTRG (Rs_perl_ext_1, "perl-ext-common", "string"), //, "colon-separated list of perl extensions to enable"),TODO
               STRG (Rs_perl_ext_2, "perl-ext", "pe", "string", "colon-separated list of perl extensions to enable for this instance"),
 #endif
+
+#ifdef HAVE_AFTERIMAGE
+              STRG (Rs_blendtype, "blendType", "blt", "string", "background image blending type - alpha, tint, etc..."),
+              STRG (Rs_blurradius, "blurRadius", "blr", "number", "Gaussian Blur radius to apply to the root background"),
+#endif
 #ifndef NO_RESOURCES
               INFO ("xrm", "string", "X resource"),
 #endif

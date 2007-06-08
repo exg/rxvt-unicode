@@ -75,7 +75,11 @@ typedef char *XPointer;
 #include <termios.h>
 typedef struct termios ttymode_t;
 
-#ifdef XPM_BACKGROUND
+#ifdef HAVE_AFTERIMAGE
+#  include <afterimage.h>
+#undef min
+#undef max
+#elif defined(XPM_BACKGROUND)
 # ifdef XPM_INC_X11
 #  include <X11/xpm.h>
 # else
@@ -179,6 +183,7 @@ struct grwin_t;
 #ifdef XPM_BACKGROUND
 typedef struct {
   short w, h, x, y;
+  bool auto_resize ; 
   Pixmap pixmap;
 } bgPixmap_t;
 #endif
@@ -1018,7 +1023,13 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   row_col_t       oldcursor;
 #ifdef XPM_BACKGROUND
   bgPixmap_t      bgPixmap;
+#ifdef HAVE_AFTERIMAGE  
+  ASImageManager *asimman;
+  ASImage        *original_asim;
+  struct { unsigned int width, height; } xpmAttr; /* all we need is width/height */
+#else
   XpmAttributes   xpmAttr;    /* originally loaded pixmap and its scaling */
+#endif  
 #endif
 
 #if ENABLE_OVERLAY
@@ -1089,6 +1100,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 #if TRANSPARENT || ENABLE_PERL
   void rootwin_cb (XEvent &xev);
   xevent_watcher rootwin_ev;
+  void check_our_parents_cb (time_watcher &w);
+  time_watcher check_our_aprents_ev;
 #endif
 
   void x_cb (XEvent &xev);

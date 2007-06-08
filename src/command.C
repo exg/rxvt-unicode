@@ -1491,6 +1491,13 @@ rxvt_term::x_cb (XEvent &ev)
               {
                 seen_resize = 1;
                 resize_all_windows (ev.xconfigure.width, ev.xconfigure.height, 1);
+#ifdef XPM_BACKGROUND
+                if (!option(Opt_transparent) && bgPixmap.auto_resize) 
+                  {
+                    resize_pixmap ();
+                    scr_touch (true);
+                  }	
+#endif
               }
 
             HOOK_INVOKE ((this, HOOK_CONFIGURE_NOTIFY, DT_XEVENT, &ev, DT_END));
@@ -1841,8 +1848,8 @@ rxvt_term::rootwin_cb (XEvent &ev)
 
         /* FALLTHROUGH */
       case ReparentNotify:
-        if (option (Opt_transparent) && check_our_parents () && am_transparent)
-          want_refresh = want_full_refresh = 1;
+        if (option (Opt_transparent))
+          check_our_parents ();
         break;
     }
 # endif
@@ -2230,7 +2237,7 @@ rxvt_term::button_release (XButtonEvent &ev)
 }
 
 #ifdef TRANSPARENT
-#if TINTING
+#if TINTING && !defined(HAVE_AFTERIMAGE)
 /* taken from aterm-0.4.2 */
 
 typedef uint32_t RUINT32T;
@@ -2468,6 +2475,16 @@ void ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, i
 int
 rxvt_term::check_our_parents ()
 {
+#if TRANSPARENT || ENABLE_PERL
+  check_our_aprents_ev.stop();
+  check_our_aprents_ev.start(NOW + 1./3.);
+#endif
+  return 0;
+}
+
+void
+rxvt_term::check_our_parents_cb (time_watcher &w)
+{
   int i, pchanged, aformat, have_pixmap, rootdepth;
   unsigned long nitems, bytes_after;
   Atom atype;
@@ -2475,11 +2492,13 @@ rxvt_term::check_our_parents ()
   Window root, oldp, *list;
   Pixmap rootpixmap = None;
   XWindowAttributes wattr, wrootattr;
+  int sx, sy;
+  Window cr;
 
   pchanged = 0;
 
   if (!option (Opt_transparent))
-    return pchanged;	/* Don't try any more */
+    return /*pchanged*/;	/* Don't try any more */
 
   XGetWindowAttributes (dpy, display->root, &wrootattr);
   rootdepth = wrootattr.depth;
@@ -2495,12 +2514,19 @@ rxvt_term::check_our_parents ()
           am_transparent = am_pixmap_trans = 0;
         }
 
-      return pchanged;	/* Don't try any more */
+      return /*pchanged*/;	/* Don't try any more */
     }
 
   /* Get all X ops out of the queue so that our information is up-to-date. */
   XSync (dpy, False);
 
+  XTranslateCoordinates (dpy, parent[0], display->root,
+                          0, 0, &sx, &sy, &cr);
+
+    /* check if we are outside of the visible part of the virtual screen : */
+  if( sx + (int)szHint.width <= 0 || sy + (int)szHint.height <= 0 
+      || sx >= wrootattr.width || sy >= wrootattr.height ) 
+    return /* 0 */ ;
   /*
    * Make the frame window set by the window manager have
    * the root background. Some window managers put multiple nested frame
@@ -2519,7 +2545,11 @@ rxvt_term::check_our_parents ()
 
   if (!i || prop == NULL
 #if TINTING
-      || !ISSET_PIXCOLOR (Color_tint)
+      || (!ISSET_PIXCOLOR (Color_tint) && rs[Rs_shade] == NULL
+#ifdef HAVE_AFTERIMAGE
+          && original_asim == NULL && rs[Rs_blurradius] == NULL
+#endif
+         )
 #endif
       )
     have_pixmap = 0;
@@ -2532,48 +2562,192 @@ rxvt_term::check_our_parents ()
 
   if (have_pixmap)
     {
+      Bool success = False ; 
+      GC gc;
+      XGCValues gcvalue;
+#ifdef HAVE_AFTERIMAGE
+      {
+        Pixmap tmp_pmap = None ; 
+        ShadingInfo shade;
+        ARGB32 tint ;
+        unsigned int pmap_w = 0, pmap_h = 0;
+
+        if (get_drawable_size( rootpixmap, &pmap_w, &pmap_h ))
+          {			
+            int root_x = 0, root_y = 0;
+ 
+  	         shade.shading = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100; 
+            if (ISSET_PIXCOLOR (Color_tint))
+              {
+                rgba c;
+                pix_colors_focused [Color_tint].get (c);
+                shade.tintColor.red = c.r; 
+                shade.tintColor.green = c.g; 
+                shade.tintColor.blue = c.b; 
+              }
+            else
+              shade.tintColor.red = shade.tintColor.green = shade.tintColor.blue = 0xFFFF;
+            tint = shading2tint32( &shade );
+            gc = XCreateGC (dpy, vt, 0UL, &gcvalue);
+            if (GetWinPosition (parent[0], &root_x, &root_y)  )
+              {
+                ASImageLayer *layers = create_image_layers( 2 );
+                ASImage *merged_im = NULL;
+                int back_x, back_y, back_w, back_h;
+                /* merge_layers does good job at tiling background appropriately, 
+                   so all we need is to cut out smallest possible piece : */
+#define MAKE_ROOTPMAP_GEOM(xy,wh,widthheight) \
+          do{ while( root_##xy < 0 ) root_##xy += (int)wrootattr.widthheight; \
+                back_##xy = root_##xy % pmap_##wh;   /* that gives us left side of the closest tile : */ \
+                if( pmap_##wh >= back_##xy + szHint.widthheight ) \
+                  back_##wh = szHint.widthheight;/* background is large - limit it by our size */ \
+                else \
+                  { /* small background - need the whole of it for successfull tiling :*/ \
+                    back_##xy = 0; \
+                    back_##wh = pmap_##wh; \
+                  }}while(0)
+    
+                MAKE_ROOTPMAP_GEOM(x,w,width);
+                MAKE_ROOTPMAP_GEOM(y,h,height);
+
+                layers[0].im = pixmap2asimage (display->asv, rootpixmap, back_x, back_y, back_w, back_h, AllPlanes, ASA_ASImage, 100);
+                layers[0].clip_x = (back_w == pmap_w)?root_x:0;
+                layers[0].clip_y = (back_h == pmap_h)?root_y:0;
+                layers[0].clip_width = szHint.width;
+                layers[0].clip_height = szHint.height;
+                layers[0].tint = tint;
+                if (rs[Rs_blurradius] && layers[0].im)
+                  {
+                    double r = atof(rs[Rs_blurradius]);
+                    ASImage* tmp = blur_asimage_gauss(display->asv, layers[0].im, r, r, 0xFFFFFFFF, ASA_ASImage, 100, ASIMAGE_QUALITY_DEFAULT );
+                    if( tmp )
+                      {
+                        destroy_asimage( &layers[0].im );
+                        layers[0].im = tmp;
+                      }
+                  }
+                if (original_asim != NULL)
+                  {
+                    int fore_w, fore_h;
+                    layers[1].im = original_asim;
+                    if( bgPixmap.auto_resize )
+                      {
+                        fore_w = szHint.width;
+                        fore_h = szHint.height;
+                      }
+                    else
+                      {
+                        fore_w = bgPixmap.w;
+                        fore_h = bgPixmap.h;
+                      }
+                    if (fore_w != original_asim->width
+                        || fore_h != original_asim->height)
+                      {
+                        layers[1].im = scale_asimage( display->asv,
+                                                      original_asim,
+                                                      fore_w, fore_h,
+                                                      ASA_ASImage, 100,
+                                                      ASIMAGE_QUALITY_DEFAULT );
+                      }
+
+                    layers[1].clip_width = szHint.width;
+                    layers[1].clip_height = szHint.height;
+
+                    if (rs[Rs_blendtype])
+                      {
+                        layers[1].merge_scanlines = blend_scanlines_name2func(rs[Rs_blendtype]);
+                        if( layers[1].merge_scanlines == NULL )
+                          layers[1].merge_scanlines = alphablend_scanlines;
+                      }
+                  }                    
+                merged_im = merge_layers( display->asv, layers, layers[1].im?2:1,
+                                          szHint.width, szHint.height,
+                                          ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT );
+                if (layers[1].im != original_asim)
+                  destroy_asimage( &(layers[1].im) );
+                destroy_asimage( &(layers[0].im) );
+                if (merged_im != NULL)
+                  {
+                    tmp_pmap = asimage2pixmap( display->asv, DefaultRootWindow(dpy), merged_im, gc, True );
+                    destroy_asimage( &merged_im );
+                  }
+                free( layers );
+              }
+          }
+        if (tmp_pmap != None)
+          {
+            success = True;
+            if (pixmap != None)
+              XFreePixmap (dpy, pixmap);
+            pixmap = tmp_pmap;
+          }
+      }
+#else  /* HAVE_AFTERIMAGE */
+      {
       /*
        * Copy display->root pixmap transparency
        */
-      int sx, sy, nx, ny;
-      unsigned int nw, nh;
-      Window cr;
-      XImage *image;
-      GC gc;
-      XGCValues gcvalue;
+        int nx, ny;
+        unsigned int nw, nh;
+        XImage *image;
 
-      XTranslateCoordinates (dpy, parent[0], display->root,
-                             0, 0, &sx, &sy, &cr);
-      nw = (unsigned int)szHint.width;
-      nh = (unsigned int)szHint.height;
-      nx = ny = 0;
+        nw = (unsigned int)szHint.width;
+        nh = (unsigned int)szHint.height;
+        nx = ny = 0;
 
-      if (sx < 0)
-        {
-          nw += sx;
-          nx = -sx;
-          sx = 0;
-        }
+        if (sx < 0)
+          {
+            nw += sx;
+            nx = -sx;
+            sx = 0;
+          }
 
-      if (sy < 0)
-        {
-          nh += sy;
-          ny = -sy;
-          sy = 0;
-        }
+        if (sy < 0)
+          {
+            nh += sy;
+            ny = -sy;
+            sy = 0;
+          }
 
-      min_it (nw, (unsigned int) (wrootattr.width - sx));
-      min_it (nh, (unsigned int) (wrootattr.height - sy));
+        min_it (nw, (unsigned int) (wrootattr.width - sx));
+        min_it (nh, (unsigned int) (wrootattr.height - sy));
 
-      XSync (dpy, False);
-      allowedxerror = -1;
-      image = XGetImage (dpy, rootpixmap, sx, sy, nw, nh, AllPlanes, ZPixmap);
+        XSync (dpy, False);
+        allowedxerror = -1;
+        image = XGetImage (dpy, rootpixmap, sx, sy, nw, nh, AllPlanes, ZPixmap);
 
-      /* XXX: handle BadMatch - usually because we're outside the pixmap */
-      /* XXX: may need a delay here? */
-      allowedxerror = 0;
+        /* XXX: handle BadMatch - usually because we're outside the pixmap */
+        /* XXX: may need a delay here? */
+        allowedxerror = 0;
+        if (image != NULL)
+          {
+            if (pixmap != None)
+              XFreePixmap (dpy, pixmap);
 
-      if (image == NULL)
+#if TINTING
+            if (ISSET_PIXCOLOR (Color_tint))
+              {
+                int shade = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100;
+
+                rgba c;
+                pix_colors_focused [Color_tint].get (c);
+                ShadeXImage (this, image, shade, c.r, c.g, c.b);
+              }
+#endif
+
+            pixmap = XCreatePixmap (dpy, vt, szHint.width, szHint.height, image->depth);
+            gc = XCreateGC (dpy, vt, 0UL, &gcvalue);
+            XPutImage (dpy, pixmap, gc, image, 0, 0,
+                       nx, ny, image->width, image->height);
+            XDestroyImage (image);
+            success = True ;
+          }
+      }
+#endif  /* HAVE_AFTERIMAGE */
+      if (gc != NULL) 
+        XFreeGC (dpy, gc);
+
+      if (!success)
         {
           if (am_transparent && am_pixmap_trans)
             {
@@ -2589,27 +2763,6 @@ rxvt_term::check_our_parents ()
         }
       else
         {
-          if (pixmap != None)
-            XFreePixmap (dpy, pixmap);
-
-#if TINTING
-          if (ISSET_PIXCOLOR (Color_tint))
-            {
-              int shade = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100;
-
-              rgba c;
-              pix_colors_focused [Color_tint].get (c);
-
-              ShadeXImage (this, image, shade, c.r, c.g, c.b);
-            }
-#endif
-
-          pixmap = XCreatePixmap (dpy, vt, szHint.width, szHint.height, image->depth);
-          gc = XCreateGC (dpy, vt, 0UL, &gcvalue);
-          XPutImage (dpy, pixmap, gc, image, 0, 0,
-                     nx, ny, image->width, image->height);
-          XFreeGC (dpy, gc);
-          XDestroyImage (image);
           XSetWindowBackgroundPixmap (dpy, parent[0], pixmap);
           XClearWindow (dpy, parent[0]);
 
@@ -2697,7 +2850,7 @@ rxvt_term::check_our_parents ()
         flush ();
     }
 
-  return pchanged;
+//  return pchanged;
 }
 #endif
 
@@ -3948,6 +4101,11 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
               scr_touch (true);
 #endif
             }
+#if TRANSPARENT && defined(HAVE_AFTERIMAGE)
+			    if (option(Opt_transparent))
+		          check_our_parents ();
+#endif	  
+			
         }
         break;
 

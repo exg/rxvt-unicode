@@ -1,5 +1,8 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Define if you want to integrate with AfterStep window manager */
+#undef AFTERSTEP_INTEGRATION
+
 /* clone device filename */
 #undef CLONE_DEVICE
 
@@ -38,6 +41,9 @@
 
 /* Define if you want extended chinese codesets */
 #undef ENCODING_ZH_EXT
+
+/* Define if you want to use libAfterImage for image processing */
+#undef HAVE_AFTERIMAGE
 
 /* Define to 1 if you have the <assert.h> header file. */
 #undef HAVE_ASSERT_H
@@ -405,7 +411,8 @@
 /* Define ONLY iff Xlib.h supports it */
 #undef XLIB_ILLEGAL_ACCESS
 
-/* Define if you want to have sexy-looking background pixmaps. Needs libXpm */
+/* Define if you want to have sexy-looking background pixmaps. Needs libXpm or
+   libAfterImage */
 #undef XPM_BACKGROUND
 
 /* Define if you include <X11/xpm.h> on a normal include path (be careful) */

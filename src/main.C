@@ -152,6 +152,7 @@ rxvt_term::rxvt_term ()
     :
 #if TRANSPARENT || ENABLE_PERL
     rootwin_ev (this, &rxvt_term::rootwin_cb),
+    check_our_aprents_ev(this, &rxvt_term::check_our_parents_cb),
 #endif
 #ifdef HAVE_SCROLLBARS
     scrollbar_ev (this, &rxvt_term::x_cb),

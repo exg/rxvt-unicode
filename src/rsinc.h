@@ -111,3 +111,7 @@
   def (perl_ext_2)
   def (perl_lib)
 #endif
+#ifdef HAVE_AFTERIMAGE
+  def (blendtype)
+  def (blurradius)
+#endif

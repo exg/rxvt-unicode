@@ -445,6 +445,11 @@ bool rxvt_display::ref_init ()
   screen = DefaultScreen     (dpy);
   root   = DefaultRootWindow (dpy);
 
+#ifdef HAVE_AFTERIMAGE
+  ::dpy = dpy; /* init global var from libAfter... */
+  asv = create_asvisual_for_id( dpy, screen, DefaultDepth(dpy,screen), XVisualIDFromVisual(DefaultVisual(dpy,screen)), None, NULL );
+#endif
+
   assert (sizeof (xa_names) / sizeof (char *) == NUM_XA);
   XInternAtoms (dpy, (char **)xa_names, NUM_XA, False, xa);
 
