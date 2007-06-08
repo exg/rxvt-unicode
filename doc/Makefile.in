@@ -97,6 +97,7 @@ realclean: clean
 cleandir: realclean
 
 distclean:
+	rm -f Makefile
 
 install:
 	$(INSTALL) -d $(DESTDIR)$(man1dir)

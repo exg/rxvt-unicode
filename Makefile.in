@@ -112,10 +112,10 @@ cleandir: realclean
 # In that case most of those commands do nothing, except cleaning *~
 # and cleaning source links.
 distclean:
-	(cd $(srcdir); rm -f *~ config.cache config.h config.log config.status libtool rxvtlib.h)
-	@for I in $(allsubdirs); do (cd $$I; $(MAKE) $@; rm -f Makefile) || exit 1; done
+	rm -f *~ config.cache config.h config.log config.status libtool
+	@for I in $(allsubdirs); do (cd $$I; $(MAKE) $@) || exit 1; done
 	rm -f Makefile
-    
+
 distdir:
 	cd doc && $(MAKE) distdepend
 	cd src && $(MAKE) depend

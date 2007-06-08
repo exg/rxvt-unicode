@@ -118,7 +118,7 @@ realclean: clean
 cleandir: realclean
 
 distclean: realclean
-	(cd $(srcdir); rm -f Makefile)
+	rm -f Makefile
 
 install-perl:
 @IF_PERL@	$(INSTALL) -d $(DESTDIR)$(libdir)
