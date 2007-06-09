@@ -16,11 +16,13 @@ WISH: selection-color-pair instead of reverse video
 WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 WISH: anyevent mouse notification / manage MotionMask better.
-WISH: http://www120.pair.com/mccarthy/nextstep/intro.htmld/Workspace.html is the correct nextstep scrollbar look.
 WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
+TODO: skipscorll option
 8.
+	- initial transparency improvement/afterstep support
+          patch by Sasha Vasko.
 	- nuke reconf script, serves no purpose anymore.
         - do not process focus events caused by grabs
           (patch by Mikachu).
