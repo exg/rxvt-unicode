@@ -473,13 +473,7 @@ if test x$support_afterimage == xyes; then
   AC_MSG_CHECKING(installed libAfterImage)
   support_afterimage=no
   if test "x$afterimage_config" = "x" ; then
-    if afterimage-config --version > /dev/null 2>&1 ; then
-      afterimage_config=afterimage-config
-    else
-      if test -x /usr/local/bin/afterimage-config; then
-        afterimage_config=/usr/local/bin/afterimage-config
-      fi
-    fi
+    AC_PATH_PROG(afterimage_config, afterimage-config, no)
   else
     afterimage_config=$afterimage_config/afterimage-config
   fi
