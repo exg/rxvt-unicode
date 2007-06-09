@@ -469,7 +469,7 @@ LIBAFTERIMAGE_CFLAGS=
 AFTERIMAGE_LIBS=
 have_afterimage=
 
-if test x$support_afterimage == xyes; then
+if test x$support_afterimage = xyes; then
   AC_MSG_CHECKING(installed libAfterImage)
   support_afterimage=no
   if test "x$afterimage_config" = "x" ; then
@@ -488,7 +488,7 @@ if test x$support_afterimage == xyes; then
   if test "x$support_afterimage" = "xyes"; then
     AC_MSG_RESULT($AFTERIMAGE_LIBS)
   else
-    AC_MSG_RESULT(afterimage-config not found in $afterimage_config - can't use libAfterImage for images.)
+    AC_MSG_RESULT(afterimage-config not found - can't use libAfterImage for images.)
   fi
 fi
 
