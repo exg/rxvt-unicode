@@ -48,4 +48,9 @@
 #else
  nodef(intensityStyles)
 #endif
+#if ISO_14755
+ def(iso14755_52,          31)
+#else
+ nodef(iso14755_52)
+#endif
 

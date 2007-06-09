@@ -260,7 +260,9 @@ optList[] = {
               RSTRG (Rs_perl_ext_1, "perl-ext-common", "string"), //, "colon-separated list of perl extensions to enable"),TODO
               STRG (Rs_perl_ext_2, "perl-ext", "pe", "string", "colon-separated list of perl extensions to enable for this instance"),
 #endif
-
+#if ISO_14755
+              BOOL (Rs_iso14755_52, "iso14755_52", NULL, Opt_iso14755_52, 0, NULL),
+#endif
 #ifdef HAVE_AFTERIMAGE
               STRG (Rs_blendtype, "blendType", "blt", "string", "background image blending type - alpha, tint, etc..."),
               STRG (Rs_blurradius, "blurRadius", "blr", "number", "Gaussian Blur radius to apply to the root background"),
@@ -548,6 +550,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
                * X resources to set these values before we settle for
                * default values
                */
+
               if (optList[entry].doff != -1)
                 {
                   if (flag == resval_on && !argv [i+1])

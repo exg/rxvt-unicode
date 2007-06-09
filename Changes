@@ -31,6 +31,7 @@ DUMB: support tex fonts
           digit.
         - go with the times and expect x11 library files in /usr/lib, not
           /usr/X11R6/lib.
+        - add iso14755_52 resource to disable iso14755 5.2.
 
 8.2  Sat Feb 17 21:35:28 CET 2007
 	- fix make depend in src/, reported by exg.

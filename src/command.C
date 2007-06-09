@@ -975,7 +975,7 @@ rxvt_term::key_release (XKeyEvent &ev)
         if (iso14755buf & ISO_14755_51)
           commit_iso14755 ();
 #if ISO_14755
-        else if (iso14755buf & ISO_14755_STARTED)
+        else if (option (Opt_iso14755_52) && iso14755buf & ISO_14755_STARTED)
           {
             iso14755buf = ISO_14755_52; // iso14755 part 5.2: remember empty begin/end pair
 

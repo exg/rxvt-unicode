@@ -111,6 +111,9 @@
   def (perl_ext_2)
   def (perl_lib)
 #endif
+#if ISO_14755
+  def (iso14755_52)
+#endif
 #ifdef HAVE_AFTERIMAGE
   def (blendtype)
   def (blurradius)
