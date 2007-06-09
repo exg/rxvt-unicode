@@ -24,6 +24,7 @@ TODO: really enable libafterimage by default (6mb => 10mb rss without using it)?
 TODO: document -blr units, and possibly fix blur (20 seems to be about 3 pixels,
       80 seems to be about 3 pixels, too, just much slower).
 TODO: when window partilaly off-screen, -blr does not have any effetc anymore.
+TODO: rid of global dpy variable.
 8.
 	- fix a lot of commandline switches (-C, -iconic, -ic, , -tr)
           that were being ignored (Sasha Vasko).
