@@ -470,32 +470,32 @@ AFTERIMAGE_LIBS=
 have_afterimage=
 
 if test x$support_afterimage == xyes; then
-	AC_MSG_CHECKING(installed libAfterImage)
-	support_afterimage=no
-	if test "x$afterimage_config" = "x" ; then
-		if afterimage-config --version > /dev/null 2>&1 ; then
-			afterimage_config=afterimage-config
-		else
-			if test -x /usr/local/bin/afterimage-config; then
-				afterimage_config=/usr/local/bin/afterimage-config
-			fi
-		fi
-	else
-	    afterimage_config=$afterimage_config/afterimage-config
-	fi
-	if $afterimage_config --version > /dev/null 2>&1 ; then
-		LIBAFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
-		AFTERIMAGE_LIBS=`$afterimage_config --libs`
-		if test "x$AFTERIMAGE_LIBS" != "x"; then
-			support_afterimage=yes
-		fi
-	fi
+  AC_MSG_CHECKING(installed libAfterImage)
+  support_afterimage=no
+  if test "x$afterimage_config" = "x" ; then
+    if afterimage-config --version > /dev/null 2>&1 ; then
+      afterimage_config=afterimage-config
+    else
+      if test -x /usr/local/bin/afterimage-config; then
+        afterimage_config=/usr/local/bin/afterimage-config
+      fi
+    fi
+  else
+    afterimage_config=$afterimage_config/afterimage-config
+  fi
+  if $afterimage_config --version > /dev/null 2>&1 ; then
+    LIBAFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
+    AFTERIMAGE_LIBS=`$afterimage_config --libs`
+    if test "x$AFTERIMAGE_LIBS" != "x"; then
+      support_afterimage=yes
+    fi
+  fi
 
-	if test "x$support_afterimage" = "xyes"; then
-		AC_MSG_RESULT($AFTERIMAGE_LIBS)
-	else
-		AC_MSG_RESULT(afterimage-config not found in $afterimage_config - can't use libAfterImage for images.)
-	fi
+  if test "x$support_afterimage" = "xyes"; then
+    AC_MSG_RESULT($AFTERIMAGE_LIBS)
+  else
+    AC_MSG_RESULT(afterimage-config not found in $afterimage_config - can't use libAfterImage for images.)
+  fi
 fi
 
 if test x$support_afterimage != xyes -a x$support_xpm = xyes ; then
