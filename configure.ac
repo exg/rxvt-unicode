@@ -472,7 +472,7 @@ have_afterimage=
 if test x$support_afterimage = xyes; then
   support_afterimage=no
 
-   if test "x$afterimage_config" = "x" ; then
+  if test "x$afterimage_config" = "x" ; then
     AC_PATH_PROG(afterimage_config, afterimage-config, no)
   else
     afterimage_config=$afterimage_config/afterimage-config
