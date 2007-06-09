@@ -15,10 +15,10 @@ VERSION=`sed -n -e 's/^.*[ \t]VERSION.*"\(.*\)"$/\1/p' ${srcdir}/src/version.h`
 DATE=`sed -n -e 's/^.*[ \t]DATE.*"\(.*\)"$/\1/p' ${srcdir}/src/version.h`
 dnl LIBVERSION=`sed -n -e 's/^.*[ \t]LIBVERSION.*"\(.*\)"$/\1/p' ${srcdir}/src/version.h`
 changequote([, ])dnl
-AC_SUBST(VERSION)dnl 
-AC_SUBST(DATE)dnl 
-AC_SUBST(LSMDATE)dnl 
-AC_SUBST(LIBVERSION)dnl 
+AC_SUBST(VERSION)dnl
+AC_SUBST(DATE)dnl
+AC_SUBST(LSMDATE)dnl
+AC_SUBST(LIBVERSION)dnl
 echo ""
 echo "configuring for rxvt $VERSION"
 echo ""
@@ -470,24 +470,24 @@ have_afterimage=
 if test x$support_afterimage == xyes; then
 	AC_MSG_CHECKING(installed libAfterImage)
 	support_afterimage=no
-	if test "$afterimage_config" = "NO" ; then 
-		if afterimage-config --version > /dev/null 2>&1 ; then 	
+	if test "$afterimage_config" = "NO" ; then
+		if afterimage-config --version > /dev/null 2>&1 ; then
 			afterimage_config=afterimage-config
 		else
-			if test -x /usr/local/bin/afterimage-config; then 	    
-				afterimage_config=/usr/local/bin/afterimage-config 
+			if test -x /usr/local/bin/afterimage-config; then
+				afterimage_config=/usr/local/bin/afterimage-config
 			fi
 		fi
 	else
 	    afterimage_config=$afterimage_config/afterimage-config
 	fi
-	if $afterimage_config --version > /dev/null 2>&1 ; then 
+	if $afterimage_config --version > /dev/null 2>&1 ; then
 		LIBAFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
 		AFTERIMAGE_LIBS=`$afterimage_config --libs`
 		if test "x$AFTERIMAGE_LIBS" != "x"; then
 			support_afterimage=yes
 		fi
-	fi						
+	fi
 
 	if test "x$support_afterimage" = "xyes"; then
 		AC_MSG_RESULT($AFTERIMAGE_LIBS)
@@ -560,8 +560,8 @@ main()
 {
     exit(0);
     (void) XOpenDisplay("foobar");
-}]])],[rxvt_cv_rpath=yes],[rxvt_cv_rpath=no],[dnl                  
-  AC_MSG_WARN(You may need to check the LIBS line)])])             
+}]])],[rxvt_cv_rpath=yes],[rxvt_cv_rpath=no],[dnl
+  AC_MSG_WARN(You may need to check the LIBS line)])])
 if test x$rxvt_cv_rpath != xyes; then
   changequote(, )dnl
   R_TRANSLATE='s/-L\([^ ]*\)/-L\1 '$LDARG'-R\1/g'
@@ -574,7 +574,7 @@ main()
 {
     exit(0);
     (void) XOpenDisplay("foobar");
-}]])],[rxvt_cv_R=yes],[rxvt_cv_R=no],[rxvt_cv_R=no])])             
+}]])],[rxvt_cv_R=yes],[rxvt_cv_R=no],[rxvt_cv_R=no])])
   if test x$rxvt_cv_R != xyes; then
     LIBS="$ac_save_LIBS $X_LIBS $X_EXTRA_LIBS -lX11"
   fi
@@ -718,7 +718,7 @@ AC_CACHE_CHECK(where ttys/ttytab is located, rxvt_cv_path_ttytab,
 [for ttys_file in   dnl
   /etc/ttys /etc/ttytab;
 do
-  if test -f "$ttys_file" ; then 
+  if test -f "$ttys_file" ; then
     rxvt_cv_path_ttytab=$ttys_file
     break
   fi
