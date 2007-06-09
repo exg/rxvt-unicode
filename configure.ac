@@ -239,7 +239,9 @@ AC_ARG_ENABLE(afterimage,
     support_afterimage=$enableval
   fi])
 
-AC_ARG_WITH(afterimage_config,  [  --with-afterimage-config=DIR  use libAfterImage config script in DIR], afterimage_config="$withval",afterimage_config=NO)
+AC_ARG_WITH(afterimage_config,
+  [  --with-afterimage-config=DIR  use libAfterImage config script in DIR],
+  [afterimage_config="$withval"])
 
 AC_ARG_ENABLE(afterstep,
   [  --enable-afterstep enable integration with AfterStep window manager],
@@ -470,7 +472,7 @@ have_afterimage=
 if test x$support_afterimage == xyes; then
 	AC_MSG_CHECKING(installed libAfterImage)
 	support_afterimage=no
-	if test "$afterimage_config" = "NO" ; then
+	if test "x$afterimage_config" = "x" ; then
 		if afterimage-config --version > /dev/null 2>&1 ; then
 			afterimage_config=afterimage-config
 		else
