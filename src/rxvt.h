@@ -1101,7 +1101,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void rootwin_cb (XEvent &xev);
   xevent_watcher rootwin_ev;
   void check_our_parents_cb (time_watcher &w);
-  time_watcher check_our_aprents_ev;
+  time_watcher check_our_parents_ev;
 #endif
 
   void x_cb (XEvent &xev);

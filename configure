@@ -694,6 +694,7 @@ X_CFLAGS
 X_PRE_LIBS
 X_LIBS
 X_EXTRA_LIBS
+afterimage_config
 XPM_CPPFLAGS
 XPM_CFLAGS
 XPM_LIBS
@@ -714,6 +715,8 @@ PERL_O
 DEBUG
 DINCLUDE
 DLIB
+LIBAFTERIMAGE_CFLAGS
+AFTERIMAGE_LIBS
 include_stdint_h
 include_stdarg_h
 include_stdlib_h
@@ -1332,7 +1335,9 @@ Optional Features:
   --enable-combining      enable composition of base and combining characters
   --enable-xft            enable xft support on systems that have it
   --enable-font-styles    enable bold and italic support
-  --enable-xpm-background enable XPM background pixmaps
+  --enable-xpm-background enable background pixmaps
+  --enable-afterimage enable integration with libAfterImage for background images
+  --enable-afterstep enable integration with AfterStep window manager
   --enable-transparency   enable transparent backgrounds
   --enable-tinting        enable tinting of transparent bg
   --enable-fading         enable colors fading when off focus
@@ -1364,6 +1369,7 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --with-afterimage-config=DIR  use libAfterImage config script in DIR
   --with-codesets=NAME,.. compile in additional codesets (jp,jp_ext,kr,zh,zh_ext,all)
   --with-res-name=NAME    use this as default resource name (default: urxvt)
   --with-res-class=CLASS  use this as the resource class (default: URxvt)
@@ -4430,6 +4436,8 @@ support_scroll_xterm=yes
 support_scroll_plain=yes
 support_xim=yes
 support_xpm=yes
+support_afterimage=yes
+support_afterstep=yes
 support_xft=yes
 support_unicode3=no
 support_combining=yes
@@ -4473,6 +4481,8 @@ if test "${enable_everything+set}" = set; then
        support_wtmp=no
        support_xim=no
        support_xpm=no
+       support_afterimage=no
+       support_afterstep=no
        support_xft=no
        support_unicode3=no
        support_combining=no
@@ -4502,6 +4512,8 @@ if test "${enable_everything+set}" = set; then
        support_wtmp=yes
        support_xim=yes
        support_xpm=yes
+       support_afterimage=yes
+       support_afterstep=yes
        support_xft=yes
        support_unicode3=yes
        support_combining=yes
@@ -4551,6 +4563,29 @@ fi
 if test "${enable_xpm_background+set}" = set; then
   enableval=$enable_xpm_background; if test x$enableval = xyes -o x$enableval = xno; then
     support_xpm=$enableval
+  fi
+fi
+
+
+# Check whether --enable-afterimage was given.
+if test "${enable_afterimage+set}" = set; then
+  enableval=$enable_afterimage; if test x$enableval = xyes -o x$enableval = xno; then
+    support_afterimage=$enableval
+  fi
+fi
+
+
+
+# Check whether --with-afterimage_config was given.
+if test "${with_afterimage_config+set}" = set; then
+  withval=$with_afterimage_config; afterimage_config="$withval"
+fi
+
+
+# Check whether --enable-afterstep was given.
+if test "${enable_afterstep+set}" = set; then
+  enableval=$enable_afterstep; if test x$enableval = xyes -o x$enableval = xno; then
+    support_afterstep=$enableval
   fi
 fi
 
@@ -6686,7 +6721,79 @@ fi
 
 
 
-if test x$support_xpm = xyes; then
+LIBAFTERIMAGE_CFLAGS=
+AFTERIMAGE_LIBS=
+have_afterimage=
+
+if test x$support_afterimage = xyes; then
+  support_afterimage=no
+
+   if test "x$afterimage_config" = "x" ; then
+    # Extract the first word of "afterimage-config", so it can be a program name with args.
+set dummy afterimage-config; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_afterimage_config+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $afterimage_config in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_afterimage_config="$afterimage_config" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_afterimage_config="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_path_afterimage_config" && ac_cv_path_afterimage_config="no"
+  ;;
+esac
+fi
+afterimage_config=$ac_cv_path_afterimage_config
+if test -n "$afterimage_config"; then
+  { echo "$as_me:$LINENO: result: $afterimage_config" >&5
+echo "${ECHO_T}$afterimage_config" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+  else
+    afterimage_config=$afterimage_config/afterimage-config
+  fi
+
+  { echo "$as_me:$LINENO: checking for libAfterImage" >&5
+echo $ECHO_N "checking for libAfterImage... $ECHO_C" >&6; }
+  if $afterimage_config --version >/dev/null 2>&1 ; then
+    LIBAFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
+    AFTERIMAGE_LIBS=`$afterimage_config --libs`
+    if test "x$AFTERIMAGE_LIBS" != "x"; then
+      support_afterimage=yes
+    fi
+  fi
+
+  if test "x$support_afterimage" = "xyes"; then
+    { echo "$as_me:$LINENO: result: $AFTERIMAGE_LIBS" >&5
+echo "${ECHO_T}$AFTERIMAGE_LIBS" >&6; }
+  else
+    { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+  fi
+fi
+
+if test x$support_afterimage != xyes -a x$support_xpm = xyes ; then
 
 
 
@@ -13421,13 +13528,30 @@ _ACEOF
 
   fi
 fi
-if test x$support_xpm = xyes; then
+if test x$support_xpm = xyes -o x$support_afterimage = xyes ; then
 
 cat >>confdefs.h <<\_ACEOF
 #define XPM_BACKGROUND 1
 _ACEOF
 
 fi
+
+if test x$support_afterimage = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_AFTERIMAGE 1
+_ACEOF
+
+fi
+
+if test x$support_afterstep = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define AFTERSTEP_INTEGRATION 1
+_ACEOF
+
+fi
+
 if test x$support_scroll_rxvt = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
@@ -13723,6 +13847,9 @@ if test x$rxvt_cv_rpath = xyes -o x$rxvt_cv_R = xyes; then
   X_EXTRA_LIBS=`echo $X_EXTRA_LIBS | sed "$R_TRANSLATE"`
   XPM_LIBS=`echo $XPM_LIBS | sed "$R_TRANSLATE"`
 fi
+
+
+
 
 
 
@@ -14513,6 +14640,7 @@ X_CFLAGS!$X_CFLAGS$ac_delim
 X_PRE_LIBS!$X_PRE_LIBS$ac_delim
 X_LIBS!$X_LIBS$ac_delim
 X_EXTRA_LIBS!$X_EXTRA_LIBS$ac_delim
+afterimage_config!$afterimage_config$ac_delim
 XPM_CPPFLAGS!$XPM_CPPFLAGS$ac_delim
 XPM_CFLAGS!$XPM_CFLAGS$ac_delim
 XPM_LIBS!$XPM_LIBS$ac_delim
@@ -14528,7 +14656,6 @@ PERL!$PERL$ac_delim
 PERLLIB!$PERLLIB$ac_delim
 PERLFLAGS!$PERLFLAGS$ac_delim
 PERLPRIVLIBEXP!$PERLPRIVLIBEXP$ac_delim
-IF_PERL!$IF_PERL$ac_delim
 _ACEOF
 
   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
@@ -14570,10 +14697,13 @@ _ACEOF
 ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
+IF_PERL!$IF_PERL$ac_delim
 PERL_O!$PERL_O$ac_delim
 DEBUG!$DEBUG$ac_delim
 DINCLUDE!$DINCLUDE$ac_delim
 DLIB!$DLIB$ac_delim
+LIBAFTERIMAGE_CFLAGS!$LIBAFTERIMAGE_CFLAGS$ac_delim
+AFTERIMAGE_LIBS!$AFTERIMAGE_LIBS$ac_delim
 include_stdint_h!$include_stdint_h$ac_delim
 include_stdarg_h!$include_stdarg_h$ac_delim
 include_stdlib_h!$include_stdlib_h$ac_delim
@@ -14591,7 +14721,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 19; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 22; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
@@ -15032,6 +15162,14 @@ echo "Configuration:
 
 if test x$support_xpm = xyes; then
   echo "  Xpm library:                $XPM_LIBS"
+fi
+
+if test x$support_afterimage = xyes; then
+  echo "  AfterImage support:         yes"
+fi
+
+if test x$support_afterstep = xyes; then
+  echo "  AfterStep intergration:     yes"
 fi
 
 if test x$term != x; then

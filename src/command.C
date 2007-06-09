@@ -2476,8 +2476,8 @@ int
 rxvt_term::check_our_parents ()
 {
 #if TRANSPARENT || ENABLE_PERL
-  check_our_aprents_ev.stop();
-  check_our_aprents_ev.start(NOW + 1./3.);
+  check_our_parents_ev.stop ();
+  check_our_parents_ev.start (NOW + .1);
 #endif
   return 0;
 }

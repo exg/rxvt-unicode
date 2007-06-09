@@ -470,14 +470,16 @@ AFTERIMAGE_LIBS=
 have_afterimage=
 
 if test x$support_afterimage = xyes; then
-  AC_MSG_CHECKING(installed libAfterImage)
   support_afterimage=no
-  if test "x$afterimage_config" = "x" ; then
+
+   if test "x$afterimage_config" = "x" ; then
     AC_PATH_PROG(afterimage_config, afterimage-config, no)
   else
     afterimage_config=$afterimage_config/afterimage-config
   fi
-  if $afterimage_config --version > /dev/null 2>&1 ; then
+
+  AC_MSG_CHECKING(for libAfterImage)
+  if $afterimage_config --version >/dev/null 2>&1 ; then
     LIBAFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
     AFTERIMAGE_LIBS=`$afterimage_config --libs`
     if test "x$AFTERIMAGE_LIBS" != "x"; then
@@ -488,7 +490,7 @@ if test x$support_afterimage = xyes; then
   if test "x$support_afterimage" = "xyes"; then
     AC_MSG_RESULT($AFTERIMAGE_LIBS)
   else
-    AC_MSG_RESULT(afterimage-config not found - can't use libAfterImage for images.)
+    AC_MSG_RESULT(no)
   fi
 fi
 
@@ -1028,11 +1030,11 @@ if test x$support_xpm = xyes; then
 fi
 
 if test x$support_afterimage = xyes; then
-  echo "  AfterImage library:                $AFTERIMAGE_LIBS"
+  echo "  AfterImage support:         yes"
 fi
 
 if test x$support_afterstep = xyes; then
-  echo "  With AfterStep integration"
+  echo "  AfterStep intergration:     yes"
 fi
 
 if test x$term != x; then
