@@ -34,6 +34,7 @@
 /* place holders used for parsing command-line options */
 #define Optflag_Reverse              1
 #define Optflag_Boolean              2
+#define Optflag_Switch               4
 
 /* monolithic option/resource structure: */
 /*
@@ -60,7 +61,7 @@
 
 /* SWCH () - `-' flag */
 #define SWCH(opt, option, flag, desc)				\
-    { (option), (Optflag_Boolean | (flag)), -1, NULL, (opt), NULL, (desc)}
+    { (option), (Optflag_Switch | (flag)), -1, NULL, (opt), NULL, (desc)}
 
 /* convenient macros */
 #define optList_strlen(i)						\
