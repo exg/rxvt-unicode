@@ -25,19 +25,20 @@ TODO: document -blr units, and possibly fix blur (20 seems to be about 3 pixels,
 TODO: when window partially off-screen, -blr does not have any effect anymore.
 TODO: rid of global dpy variable.
 8.
-	- initial transparency improvement/afterstep support
-          patch by Sasha Vasko.
-	- nuke reconf script, serves no purpose anymore.
-        - do not process focus events caused by grabs
-          (patch by Mikachu).
-        - better option handling, support more than 30 options (exg).
-        - add urgentOnBell resource to set the urgency hint
-          (patch by Philip Paeps).
-        - add binding for backspace in iso14755 5.1 to remove the last
-          digit.
         - go with the times and expect x11 library files in /usr/lib, not
           /usr/X11R6/lib.
+	- initial transparency improvement/afterstep support
+          patch by Sasha Vasko.
+        - add urgentOnBell resource to set the urgency hint
+          (patch by Philip Paeps).
+        - do not process focus events caused by grabs
+          (patch by Mikachu).
         - add iso14755_52 resource to disable iso14755 5.2.
+        - add binding for backspace in iso14755 5.1 to remove the last
+          digit.
+        - better option handling, support more than 30 options (exg).
+	- nuke reconf script, serves no purpose anymore.
+        - disabled matcher/on_user_command processing in matcher extension.
 
 8.2  Sat Feb 17 21:35:28 CET 2007
 	- fix make depend in src/, reported by exg.

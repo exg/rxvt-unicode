@@ -12,33 +12,33 @@ my $url =
       )+
    }x;
 
-sub on_user_command {
-   my ($self, $cmd) = @_;
-   if($cmd =~ s/^matcher\b//) {
-      $self->most_recent;
-   }
-   my $row = $self->nrow;
-   my @exec;
-   while($row-- > $self->top_row) {
-      #my $line = $self->line ($row);
-      #my $text = $line->t;
-      @exec = $self->command_for($row);
-      last if(@exec);
-   }
-   if(@exec) {
-      return $self->exec_async (@exec);
-   }
-   ()
-}
-
-sub most_recent {
-   my ($self) = shift;
-   ()
-}
+#sub on_user_command {
+#   my ($self, $cmd) = @_;
+#   if($cmd =~ s/^matcher\b//) {
+#      $self->most_recent;
+#   }
+#   my $row = $self->nrow;
+#   my @exec;
+#   while($row-- > $self->top_row) {
+#      #my $line = $self->line ($row);
+#      #my $text = $line->t;
+#      @exec = $self->command_for($row);
+#      last if(@exec);
+#   }
+#   if(@exec) {
+#      return $self->exec_async (@exec);
+#   }
+#   ()
+#}
+#
+#sub most_recent {
+#   my ($self) = shift;
+#   ()
+#}
 
 sub my_resource {
    my $self = shift;
-   $self->x_resource("$self->{name}.$_[0]");
+   $self->x_resource ("$self->{name}.$_[0]");
 }
 
 # turn a rendition spec in the resource into a sub that implements it on $_
