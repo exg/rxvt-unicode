@@ -1100,6 +1100,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 #if TRANSPARENT || ENABLE_PERL
   void rootwin_cb (XEvent &xev);
   xevent_watcher rootwin_ev;
+#endif
+#if TRANSPARENT
   void check_our_parents_cb (time_watcher &w);
   time_watcher check_our_parents_ev;
 #endif
