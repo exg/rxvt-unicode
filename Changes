@@ -38,7 +38,8 @@ TODO: rid of global dpy variable.
           digit.
         - better option handling, support more than 30 options (exg).
 	- nuke reconf script, serves no purpose anymore.
-        - disabled matcher/on_user_command processing in matcher extension.
+	- fixed and documented matcher/on_user_command processing in matcher
+	  extension.
 
 8.2  Sat Feb 17 21:35:28 CET 2007
 	- fix make depend in src/, reported by exg.

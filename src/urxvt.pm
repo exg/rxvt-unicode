@@ -261,6 +261,9 @@ C<matcher.pattern.0> resource, and additional patterns can be specified
 with numbered patterns, in a manner similar to the "selection" extension.
 The launcher can also be overridden on a per-pattern basis.
 
+It is possible to activate the most recently seen match from the keyboard.
+Simply bind a keysym to "perl:matcher" as seen in the example below.
+
 Example configuration:
 
     URxvt.perl-ext:           default,matcher
