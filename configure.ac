@@ -1034,7 +1034,7 @@ if test x$support_afterimage = xyes; then
 fi
 
 if test x$support_afterstep = xyes; then
-  echo "  AfterStep intergration:     yes"
+  echo "  AfterStep integration:      yes"
 fi
 
 if test x$term != x; then
