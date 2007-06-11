@@ -2475,10 +2475,8 @@ void ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, i
 int
 rxvt_term::check_our_parents ()
 {
-#if TRANSPARENT || ENABLE_PERL
   check_our_parents_ev.stop ();
   check_our_parents_ev.start (NOW + .1);
-#endif
   return 0;
 }
 
