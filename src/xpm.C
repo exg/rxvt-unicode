@@ -454,3 +454,619 @@ rxvt_term::set_bgPixmap (const char *file)
 }
 
 #endif				/* XPM_BACKGROUND */
+
+#ifdef TRANSPARENT
+#if TINTING && !defined(HAVE_AFTERIMAGE)
+/* taken from aterm-0.4.2 */
+
+typedef uint32_t RUINT32T;
+
+void ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, int bm)
+{
+  int sh_r, sh_g, sh_b;
+  RUINT32T mask_r, mask_g, mask_b;
+  RUINT32T *lookup, *lookup_r, *lookup_g, *lookup_b;
+  unsigned int lower_lim_r, lower_lim_g, lower_lim_b;
+  unsigned int upper_lim_r, upper_lim_g, upper_lim_b;
+  int i;
+
+  Visual *visual = term->visual;
+
+  if( visual->c_class != TrueColor || srcImage->format != ZPixmap ) return ;
+
+  /* for convenience */
+  mask_r = visual->red_mask;
+  mask_g = visual->green_mask;
+  mask_b = visual->blue_mask;
+
+  /* boring lookup table pre-initialization */
+  switch (srcImage->bits_per_pixel) {
+    case 15:
+      if ((mask_r != 0x7c00) ||
+          (mask_g != 0x03e0) ||
+          (mask_b != 0x001f))
+        return;
+        lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(32+32+32));
+        lookup_r = lookup;
+        lookup_g = lookup+32;
+        lookup_b = lookup+32+32;
+        sh_r = 10;
+        sh_g = 5;
+        sh_b = 0;
+      break;
+    case 16:
+      if ((mask_r != 0xf800) ||
+          (mask_g != 0x07e0) ||
+          (mask_b != 0x001f))
+        return;
+        lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(32+64+32));
+        lookup_r = lookup;
+        lookup_g = lookup+32;
+        lookup_b = lookup+32+64;
+        sh_r = 11;
+        sh_g = 5;
+        sh_b = 0;
+      break;
+    case 24:
+      if ((mask_r != 0xff0000) ||
+          (mask_g != 0x00ff00) ||
+          (mask_b != 0x0000ff))
+        return;
+        lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(256+256+256));
+        lookup_r = lookup;
+        lookup_g = lookup+256;
+        lookup_b = lookup+256+256;
+        sh_r = 16;
+        sh_g = 8;
+        sh_b = 0;
+      break;
+    case 32:
+      if ((mask_r != 0xff0000) ||
+          (mask_g != 0x00ff00) ||
+          (mask_b != 0x0000ff))
+        return;
+        lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(256+256+256));
+        lookup_r = lookup;
+        lookup_g = lookup+256;
+        lookup_b = lookup+256+256;
+        sh_r = 16;
+        sh_g = 8;
+        sh_b = 0;
+      break;
+    default:
+      return; /* we do not support this color depth */
+  }
+
+  /* prepare limits for color transformation (each channel is handled separately) */
+  if (shade < 0) {
+    shade = -shade;
+    if (shade < 0) shade = 0;
+    if (shade > 100) shade = 100;
+
+    lower_lim_r = 65535-rm;
+    lower_lim_g = 65535-gm;
+    lower_lim_b = 65535-bm;
+
+    lower_lim_r = 65535-(unsigned int)(((RUINT32T)lower_lim_r)*((RUINT32T)shade)/100);
+    lower_lim_g = 65535-(unsigned int)(((RUINT32T)lower_lim_g)*((RUINT32T)shade)/100);
+    lower_lim_b = 65535-(unsigned int)(((RUINT32T)lower_lim_b)*((RUINT32T)shade)/100);
+
+    upper_lim_r = upper_lim_g = upper_lim_b = 65535;
+  } else {
+    if (shade < 0) shade = 0;
+    if (shade > 100) shade = 100;
+
+    lower_lim_r = lower_lim_g = lower_lim_b = 0;
+
+    upper_lim_r = (unsigned int)((((RUINT32T)rm)*((RUINT32T)shade))/100);
+    upper_lim_g = (unsigned int)((((RUINT32T)gm)*((RUINT32T)shade))/100);
+    upper_lim_b = (unsigned int)((((RUINT32T)bm)*((RUINT32T)shade))/100);
+  }
+
+  /* switch red and blue bytes if necessary, we need it for some weird XServers like XFree86 3.3.3.1 */
+  if ((srcImage->bits_per_pixel == 24) && (mask_r >= 0xFF0000 ))
+  {
+    unsigned int tmp;
+
+    tmp = lower_lim_r;
+    lower_lim_r = lower_lim_b;
+    lower_lim_b = tmp;
+
+    tmp = upper_lim_r;
+    upper_lim_r = upper_lim_b;
+    upper_lim_b = tmp;
+  }
+
+  /* fill our lookup tables */
+  for (i = 0; i <= mask_r>>sh_r; i++)
+  {
+    RUINT32T tmp;
+    tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_r-lower_lim_r));
+    tmp += ((RUINT32T)(mask_r>>sh_r))*((RUINT32T)lower_lim_r);
+    lookup_r[i] = (tmp/65535)<<sh_r;
+  }
+  for (i = 0; i <= mask_g>>sh_g; i++)
+  {
+    RUINT32T tmp;
+    tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_g-lower_lim_g));
+    tmp += ((RUINT32T)(mask_g>>sh_g))*((RUINT32T)lower_lim_g);
+    lookup_g[i] = (tmp/65535)<<sh_g;
+  }
+  for (i = 0; i <= mask_b>>sh_b; i++)
+  {
+    RUINT32T tmp;
+    tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_b-lower_lim_b));
+    tmp += ((RUINT32T)(mask_b>>sh_b))*((RUINT32T)lower_lim_b);
+    lookup_b[i] = (tmp/65535)<<sh_b;
+  }
+
+  /* apply table to input image (replacing colors by newly calculated ones) */
+  switch (srcImage->bits_per_pixel)
+  {
+    case 15:
+    {
+      unsigned short *p1, *pf, *p, *pl;
+      p1 = (unsigned short *) srcImage->data;
+      pf = (unsigned short *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
+      while (p1 < pf)
+      {
+        p = p1;
+        pl = p1 + srcImage->width;
+        for (; p < pl; p++)
+        {
+          *p = lookup_r[(*p & 0x7c00)>>10] |
+               lookup_g[(*p & 0x03e0)>> 5] |
+               lookup_b[(*p & 0x001f)];
+        }
+        p1 = (unsigned short *) ((char *) p1 + srcImage->bytes_per_line);
+      }
+      break;
+    }
+    case 16:
+    {
+      unsigned short *p1, *pf, *p, *pl;
+      p1 = (unsigned short *) srcImage->data;
+      pf = (unsigned short *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
+      while (p1 < pf)
+      {
+        p = p1;
+        pl = p1 + srcImage->width;
+        for (; p < pl; p++)
+        {
+          *p = lookup_r[(*p & 0xf800)>>11] |
+               lookup_g[(*p & 0x07e0)>> 5] |
+               lookup_b[(*p & 0x001f)];
+        }
+        p1 = (unsigned short *) ((char *) p1 + srcImage->bytes_per_line);
+      }
+      break;
+    }
+    case 24:
+    {
+      unsigned char *p1, *pf, *p, *pl;
+      p1 = (unsigned char *) srcImage->data;
+      pf = (unsigned char *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
+      while (p1 < pf)
+      {
+        p = p1;
+        pl = p1 + srcImage->width * 3;
+        for (; p < pl; p += 3)
+        {
+          p[0] = lookup_r[(p[0] & 0xff0000)>>16];
+          p[1] = lookup_r[(p[1] & 0x00ff00)>> 8];
+          p[2] = lookup_r[(p[2] & 0x0000ff)];
+        }
+        p1 = (unsigned char *) ((char *) p1 + srcImage->bytes_per_line);
+      }
+      break;
+    }
+    case 32:
+    {
+      RUINT32T *p1, *pf, *p, *pl;
+      p1 = (RUINT32T *) srcImage->data;
+      pf = (RUINT32T *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
+
+      while (p1 < pf)
+      {
+        p = p1;
+        pl = p1 + srcImage->width;
+        for (; p < pl; p++)
+        {
+          *p = lookup_r[(*p & 0xff0000)>>16] |
+               lookup_g[(*p & 0x00ff00)>> 8] |
+               lookup_b[(*p & 0x0000ff)] |
+               (*p & ~0xffffff);
+        }
+        p1 = (RUINT32T *) ((char *) p1 + srcImage->bytes_per_line);
+      }
+      break;
+    }
+  }
+
+  free (lookup);
+}
+#endif
+
+/*
+ * Check our parents are still who we think they are.
+ * Do transparency updates if required
+ */
+int
+rxvt_term::check_our_parents ()
+{
+  check_our_parents_ev.stop ();
+  check_our_parents_ev.start (NOW + .1);
+  return 0;
+}
+
+void
+rxvt_term::check_our_parents_cb (time_watcher &w)
+{
+  int i, pchanged, aformat, have_pixmap, rootdepth;
+  unsigned long nitems, bytes_after;
+  Atom atype;
+  unsigned char *prop = NULL;
+  Window root, oldp, *list;
+  Pixmap rootpixmap = None;
+  XWindowAttributes wattr, wrootattr;
+  int sx, sy;
+  Window cr;
+
+  pchanged = 0;
+
+  if (!option (Opt_transparent))
+    return /*pchanged*/;	/* Don't try any more */
+
+  XGetWindowAttributes (dpy, display->root, &wrootattr);
+  rootdepth = wrootattr.depth;
+
+  XGetWindowAttributes (dpy, parent[0], &wattr);
+
+  if (rootdepth != wattr.depth)
+    {
+      if (am_transparent)
+        {
+          pchanged = 1;
+          XSetWindowBackground (dpy, vt, pix_colors_focused[Color_bg]);
+          am_transparent = am_pixmap_trans = 0;
+        }
+
+      return /*pchanged*/;	/* Don't try any more */
+    }
+
+  /* Get all X ops out of the queue so that our information is up-to-date. */
+  XSync (dpy, False);
+
+  XTranslateCoordinates (dpy, parent[0], display->root,
+                          0, 0, &sx, &sy, &cr);
+
+    /* check if we are outside of the visible part of the virtual screen : */
+  if( sx + (int)szHint.width <= 0 || sy + (int)szHint.height <= 0 
+      || sx >= wrootattr.width || sy >= wrootattr.height ) 
+    return /* 0 */ ;
+  /*
+   * Make the frame window set by the window manager have
+   * the root background. Some window managers put multiple nested frame
+   * windows for each client, so we have to take care about that.
+   */
+  i = (xa[XA_XROOTPMAP_ID]
+       && XGetWindowProperty (dpy, display->root, xa[XA_XROOTPMAP_ID],
+                              0L, 1L, False, XA_PIXMAP, &atype, &aformat,
+                              &nitems, &bytes_after, &prop) == Success);
+
+  if (!i || prop == NULL)
+     i = (xa[XA_ESETROOT_PMAP_ID]
+          && XGetWindowProperty (dpy, display->root, xa[XA_ESETROOT_PMAP_ID],
+                                 0L, 1L, False, XA_PIXMAP, &atype, &aformat,
+                                 &nitems, &bytes_after, &prop) == Success);
+
+  if (!i || prop == NULL
+#if TINTING
+      || (!ISSET_PIXCOLOR (Color_tint) && rs[Rs_shade] == NULL
+#ifdef HAVE_AFTERIMAGE
+          && original_asim == NULL && rs[Rs_blurradius] == NULL
+#endif
+         )
+#endif
+      )
+    have_pixmap = 0;
+  else
+    {
+      have_pixmap = 1;
+      rootpixmap = *(Pixmap *)prop;
+      XFree (prop);
+    }
+
+  if (have_pixmap)
+    {
+      Bool success = False ; 
+      GC gc;
+      XGCValues gcvalue;
+#ifdef HAVE_AFTERIMAGE
+      {
+        Pixmap tmp_pmap = None ; 
+        ShadingInfo shade;
+        ARGB32 tint ;
+        unsigned int pmap_w = 0, pmap_h = 0;
+
+        if (get_drawable_size( rootpixmap, &pmap_w, &pmap_h ))
+          {			
+            int root_x = 0, root_y = 0;
+ 
+  	         shade.shading = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100; 
+            if (ISSET_PIXCOLOR (Color_tint))
+              {
+                rgba c;
+                pix_colors_focused [Color_tint].get (c);
+                shade.tintColor.red = c.r; 
+                shade.tintColor.green = c.g; 
+                shade.tintColor.blue = c.b; 
+              }
+            else
+              shade.tintColor.red = shade.tintColor.green = shade.tintColor.blue = 0xFFFF;
+            tint = shading2tint32( &shade );
+            gc = XCreateGC (dpy, vt, 0UL, &gcvalue);
+            if (GetWinPosition (parent[0], &root_x, &root_y)  )
+              {
+                ASImageLayer *layers = create_image_layers( 2 );
+                ASImage *merged_im = NULL;
+                int back_x, back_y, back_w, back_h;
+                /* merge_layers does good job at tiling background appropriately, 
+                   so all we need is to cut out smallest possible piece : */
+#define MAKE_ROOTPMAP_GEOM(xy,wh,widthheight) \
+          do{ while( root_##xy < 0 ) root_##xy += (int)wrootattr.widthheight; \
+                back_##xy = root_##xy % pmap_##wh;   /* that gives us left side of the closest tile : */ \
+                if( pmap_##wh >= back_##xy + szHint.widthheight ) \
+                  back_##wh = szHint.widthheight;/* background is large - limit it by our size */ \
+                else \
+                  { /* small background - need the whole of it for successfull tiling :*/ \
+                    back_##xy = 0; \
+                    back_##wh = pmap_##wh; \
+                  }}while(0)
+    
+                MAKE_ROOTPMAP_GEOM(x,w,width);
+                MAKE_ROOTPMAP_GEOM(y,h,height);
+
+                layers[0].im = pixmap2asimage (display->asv, rootpixmap, back_x, back_y, back_w, back_h, AllPlanes, ASA_ASImage, 100);
+                layers[0].clip_x = (back_w == pmap_w)?root_x:0;
+                layers[0].clip_y = (back_h == pmap_h)?root_y:0;
+                layers[0].clip_width = szHint.width;
+                layers[0].clip_height = szHint.height;
+                layers[0].tint = tint;
+                if (rs[Rs_blurradius] && layers[0].im)
+                  {
+                    double r = atof(rs[Rs_blurradius]);
+                    ASImage* tmp = blur_asimage_gauss(display->asv, layers[0].im, r, r, 0xFFFFFFFF, ASA_ASImage, 100, ASIMAGE_QUALITY_DEFAULT );
+                    if( tmp )
+                      {
+                        destroy_asimage( &layers[0].im );
+                        layers[0].im = tmp;
+                      }
+                  }
+                if (original_asim != NULL)
+                  {
+                    int fore_w, fore_h;
+                    layers[1].im = original_asim;
+                    if( bgPixmap.auto_resize )
+                      {
+                        fore_w = szHint.width;
+                        fore_h = szHint.height;
+                      }
+                    else
+                      {
+                        fore_w = bgPixmap.w;
+                        fore_h = bgPixmap.h;
+                      }
+                    if (fore_w != original_asim->width
+                        || fore_h != original_asim->height)
+                      {
+                        layers[1].im = scale_asimage( display->asv,
+                                                      original_asim,
+                                                      fore_w, fore_h,
+                                                      ASA_ASImage, 100,
+                                                      ASIMAGE_QUALITY_DEFAULT );
+                      }
+
+                    layers[1].clip_width = szHint.width;
+                    layers[1].clip_height = szHint.height;
+
+                    if (rs[Rs_blendtype])
+                      {
+                        layers[1].merge_scanlines = blend_scanlines_name2func(rs[Rs_blendtype]);
+                        if( layers[1].merge_scanlines == NULL )
+                          layers[1].merge_scanlines = alphablend_scanlines;
+                      }
+                  }                    
+                merged_im = merge_layers( display->asv, layers, layers[1].im?2:1,
+                                          szHint.width, szHint.height,
+                                          ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT );
+                if (layers[1].im != original_asim)
+                  destroy_asimage( &(layers[1].im) );
+                destroy_asimage( &(layers[0].im) );
+                if (merged_im != NULL)
+                  {
+                    tmp_pmap = asimage2pixmap( display->asv, DefaultRootWindow(dpy), merged_im, gc, True );
+                    destroy_asimage( &merged_im );
+                  }
+                free( layers );
+              }
+          }
+        if (tmp_pmap != None)
+          {
+            success = True;
+            if (pixmap != None)
+              XFreePixmap (dpy, pixmap);
+            pixmap = tmp_pmap;
+          }
+      }
+#else  /* HAVE_AFTERIMAGE */
+      {
+      /*
+       * Copy display->root pixmap transparency
+       */
+        int nx, ny;
+        unsigned int nw, nh;
+        XImage *image;
+
+        nw = (unsigned int)szHint.width;
+        nh = (unsigned int)szHint.height;
+        nx = ny = 0;
+
+        if (sx < 0)
+          {
+            nw += sx;
+            nx = -sx;
+            sx = 0;
+          }
+
+        if (sy < 0)
+          {
+            nh += sy;
+            ny = -sy;
+            sy = 0;
+          }
+
+        min_it (nw, (unsigned int) (wrootattr.width - sx));
+        min_it (nh, (unsigned int) (wrootattr.height - sy));
+
+        XSync (dpy, False);
+        allowedxerror = -1;
+        image = XGetImage (dpy, rootpixmap, sx, sy, nw, nh, AllPlanes, ZPixmap);
+
+        /* XXX: handle BadMatch - usually because we're outside the pixmap */
+        /* XXX: may need a delay here? */
+        allowedxerror = 0;
+        if (image != NULL)
+          {
+            if (pixmap != None)
+              XFreePixmap (dpy, pixmap);
+
+#if TINTING
+            if (ISSET_PIXCOLOR (Color_tint))
+              {
+                int shade = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100;
+
+                rgba c;
+                pix_colors_focused [Color_tint].get (c);
+                ShadeXImage (this, image, shade, c.r, c.g, c.b);
+              }
+#endif
+
+            pixmap = XCreatePixmap (dpy, vt, szHint.width, szHint.height, image->depth);
+            gc = XCreateGC (dpy, vt, 0UL, &gcvalue);
+            XPutImage (dpy, pixmap, gc, image, 0, 0,
+                       nx, ny, image->width, image->height);
+            XDestroyImage (image);
+            success = True ;
+          }
+      }
+#endif  /* HAVE_AFTERIMAGE */
+      if (gc != NULL) 
+        XFreeGC (dpy, gc);
+
+      if (!success)
+        {
+          if (am_transparent && am_pixmap_trans)
+            {
+              pchanged = 1;
+              if (pixmap != None)
+                {
+                  XFreePixmap (dpy, pixmap);
+                  pixmap = None;
+                }
+            }
+
+          am_pixmap_trans = 0;
+        }
+      else
+        {
+          XSetWindowBackgroundPixmap (dpy, parent[0], pixmap);
+          XClearWindow (dpy, parent[0]);
+
+          if (!am_transparent || !am_pixmap_trans)
+            pchanged = 1;
+
+          am_transparent = am_pixmap_trans = 1;
+        }
+    }
+
+  if (am_pixmap_trans)
+    XSetWindowBackgroundPixmap (dpy, vt, ParentRelative);
+  else
+    {
+      unsigned int n;
+      /*
+       * InheritPixmap transparency
+       */
+      for (i = 1; i < (int) (sizeof (parent) / sizeof (Window)); i++)
+        {
+          oldp = parent[i];
+          XQueryTree (dpy, parent[i - 1], &root, &parent[i], &list, &n);
+          XFree (list);
+
+          if (parent[i] == display->root)
+            {
+              if (oldp != None)
+                pchanged = 1;
+
+              break;
+            }
+
+          if (oldp != parent[i])
+            pchanged = 1;
+        }
+
+      n = 0;
+
+      if (pchanged)
+        for (; n < (unsigned int)i; n++)
+          {
+            XGetWindowAttributes (dpy, parent[n], &wattr);
+
+            if (wattr.depth != rootdepth || wattr.c_class == InputOnly)
+              {
+                n = (int) (sizeof (parent) / sizeof (Window)) + 1;
+                break;
+              }
+          }
+
+      if (n > (sizeof (parent) / sizeof (parent[0])))
+        {
+          XSetWindowBackground (dpy, parent[0], pix_colors_focused[Color_border]);
+          XSetWindowBackground (dpy, vt, pix_colors_focused[Color_bg]);
+          am_transparent = 0;
+          /* XXX: also turn off Opt_transparent? */
+        }
+      else
+        {
+          for (n = 0; n < (unsigned int)i; n++)
+            {
+              XSetWindowBackgroundPixmap (dpy, parent[n], ParentRelative);
+              XClearWindow (dpy, parent[n]);
+            }
+
+          XSetWindowBackgroundPixmap (dpy, vt, ParentRelative);
+          am_transparent = 1;
+        }
+
+      for (; i < (int) (sizeof (parent) / sizeof (Window)); i++)
+        parent[i] = None;
+    }
+
+  if (scrollBar.win)
+    {
+      XSetWindowBackgroundPixmap (dpy, scrollBar.win, ParentRelative);
+      scrollBar.setIdle ();
+      scrollbar_show (0);
+    }
+
+  if (am_transparent)
+    {
+      want_refresh = want_full_refresh = 1;
+      if (am_pixmap_trans)
+        flush ();
+    }
+
+//  return pchanged;
+}
+#endif
