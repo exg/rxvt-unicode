@@ -538,7 +538,7 @@ rxvt_term::key_press (XKeyEvent &ev)
 # endif
           }
 #endif
-      
+
 #ifdef PRINTPIPE
       if (keysym == XK_Print)
         {
@@ -1188,7 +1188,7 @@ rxvt_term::slip_wheel_cb (time_watcher &w)
 static struct event_handler
 {
   check_watcher yield_ev;
-  
+
   void yield_cb (check_watcher &w)
   {
     // this should really be sched_yield(), but the linux guys thought
@@ -1245,7 +1245,7 @@ rxvt_term::pty_fill ()
       if (!option (Opt_hold))
         destroy ();
     }
-  
+
   return false;
 }
 
@@ -1492,11 +1492,11 @@ rxvt_term::x_cb (XEvent &ev)
                 seen_resize = 1;
                 resize_all_windows (ev.xconfigure.width, ev.xconfigure.height, 1);
 #ifdef XPM_BACKGROUND
-                if (!option(Opt_transparent) && bgPixmap.auto_resize) 
+                if (!option (Opt_transparent) && bgPixmap.auto_resize)
                   {
                     resize_pixmap ();
                     scr_touch (true);
-                  }	
+                  }
 #endif
               }
 
@@ -2510,7 +2510,7 @@ rxvt_term::process_print_pipe ()
                     break;	/* done = 1 */
                 }
             }
-          
+
           for (i = 0; i < len; i++)
             if (putc (buf[i], fd) == EOF)
               {
@@ -3338,7 +3338,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
   dLocal (Display *, dpy);
 
   assert (str != NULL);
-  
+
   if (HOOK_INVOKE ((this, HOOK_OSC_SEQ, DT_INT, op, DT_STR, str, DT_END)))
     return;
 
@@ -3484,10 +3484,9 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 #endif
             }
 #if TRANSPARENT && defined(HAVE_AFTERIMAGE)
-			    if (option(Opt_transparent))
-		          check_our_parents ();
-#endif	  
-			
+          if (option (Opt_transparent))
+            check_our_parents ();
+#endif
         }
         break;
 
