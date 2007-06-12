@@ -74,9 +74,6 @@ clean distclean realclean:
 rxvt:
 	(cd src; ${MAKE})
 
-tests:
-	(cd src/test; ${MAKE} tests)
-
 #-------------------------------------------------------------------------
 configure: configure.ac aclocal.m4 config.h.in
 	cd $(srcdir); ./autogen.sh
@@ -103,11 +100,6 @@ Makefiles:
 
 cleandir: realclean
 
-# distclean goal is for making a clean source tree, but if you have run
-# configure from a different directory, then doesn't destroy all your
-# hardly compiled and linked stuff. That's why there is always $(srcdir)/
-# In that case most of those commands do nothing, except cleaning *~
-# and cleaning source links.
 distclean-local:
 	rm -f *~ config.cache config.h config.log config.status libtool
 	rm -f Makefile
