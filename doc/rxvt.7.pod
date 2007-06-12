@@ -2271,7 +2271,7 @@ support these extra characters, but Xft does.
 
 Please note that rxvt-unicode can store unicode code points >65535
 even without this flag, but the number of such characters is
-limited to a view thousand (shared with combining characters,
+limited to a few thousand (shared with combining characters,
 see next switch), and right now rxvt-unicode cannot display them
 (input/output and cut&paste still work, though).
 
