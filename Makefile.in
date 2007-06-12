@@ -63,12 +63,9 @@ MKDIR = $(srcdir)/mkinstalldirs
 all allbin alldoc tags:
 	@for I in ${subdirs}; do (cd $$I; ${MAKE} $@) || exit 1; done
 
-realclean: clean
-	rm -f config.h config.status config.log libtool
+distclean realclean: distclean-local
 
-clean:
-	rm -f *~ config.cache
-	rm -f -r autom4te.cache
+clean distclean realclean:
 	@for I in ${subdirs}; do (cd $$I; ${MAKE} $@) || exit 1; done
 
 #
@@ -111,9 +108,8 @@ cleandir: realclean
 # hardly compiled and linked stuff. That's why there is always $(srcdir)/
 # In that case most of those commands do nothing, except cleaning *~
 # and cleaning source links.
-distclean:
+distclean-local:
 	rm -f *~ config.cache config.h config.log config.status libtool
-	@for I in $(allsubdirs); do (cd $$I; $(MAKE) $@) || exit 1; done
 	rm -f Makefile
 
 distdir:
