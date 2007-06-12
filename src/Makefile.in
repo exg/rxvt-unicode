@@ -112,13 +112,13 @@ clean:
 	rm -f rxvt rxvtc rxvtd perlxsi.c rxvtperl.C
 	rm -f *.o *.lo .libs/* librxvt.la tmpproto *.tmp
 
-realclean: clean
+distclean: clean
+	rm -f Makefile rxvtlib.h
+
+realclean: distclean
 	rm -f tags TAGS
 
 cleandir: realclean
-
-distclean: realclean
-	rm -f Makefile rxvtlib.h
 
 install-perl:
 @IF_PERL@	$(INSTALL) -d $(DESTDIR)$(libdir)
@@ -133,7 +133,7 @@ install-bin: allbin
 	$(INSTALL_PROGRAM) rxvtc $(RXVTC_BINNAME)
 	$(INSTALL_PROGRAM) rxvtd $(RXVTD_BINNAME)
 
-install: install-bin alldoc install-perl
+install: install-bin install-perl
 
 perlxsi.c: Makefile
 	$(PERL) -MExtUtils::Embed -e xsinit -- -std urxvt

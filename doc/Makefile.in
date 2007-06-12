@@ -88,7 +88,10 @@ clean:
 	rm -f *~
 	rm -f rxvt.1.man rxvt.7.man rxvtc.1.man rxvtd.1.man rxvtperl.3.man
 
-realclean: clean
+distclean: clean
+	rm -f Makefile
+
+realclean: distclean
 	rm -f rxvt.1.man.in rxvt.7.man.in rxvtc.1.man.in rxvtd.1.man.in rxvtperl.3.man.in
 	rm -f rxvt.1.txt    rxvt.7.txt    rxvtc.1.txt    rxvtd.1.txt    rxvtperl.3.txt
 	rm -f rxvt.1.html   rxvt.7.html   rxvtc.1.html   rxvtd.1.html   rxvtperl.3.html
@@ -96,9 +99,6 @@ realclean: clean
 	rm -f $(srcdir)/etc/rxvt-unicode.termcap
 
 cleandir: realclean
-
-distclean:
-	rm -f Makefile
 
 install:
 	$(INSTALL) -d $(DESTDIR)$(man1dir)
