@@ -113,12 +113,12 @@ clean:
 	rm -f *.o *.lo .libs/* librxvt.la tmpproto *.tmp
 
 realclean: clean
-	rm -f tags TAGS rxvtlib.h
+	rm -f tags TAGS
 
 cleandir: realclean
 
 distclean: realclean
-	rm -f Makefile
+	rm -f Makefile rxvtlib.h
 
 install-perl:
 @IF_PERL@	$(INSTALL) -d $(DESTDIR)$(libdir)
