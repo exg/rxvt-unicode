@@ -15,9 +15,6 @@ man3dir = @mandir@/man3
 man3ext = 3
 man7dir = @mandir@/man7
 man7ext = 7
-CP = @CP@
-SED = @SED@
-ECHO = @ECHO@
 PERL = @PERL@
 INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL@ -m 755
@@ -38,14 +35,14 @@ SEDREPLACE = -e 's%@@RXVT_VERSION@@%$(VERSION)%g;'	\
 	     -e 's%@@URXVT_NAME@@%urxvt%g;'
 
 all:
-	$(SED) $(SEDREPLACE) < $(srcdir)/rxvt.1.man.in >rxvt.1.man
-	$(SED) $(SEDREPLACE) < $(srcdir)/rxvtc.1.man.in >rxvtc.1.man
-	$(SED) $(SEDREPLACE) < $(srcdir)/rxvtd.1.man.in >rxvtd.1.man
-	$(SED) $(SEDREPLACE) < $(srcdir)/rxvt.7.man.in >rxvt.7.man
-@IF_PERL@	$(SED) $(SEDREPLACE) < $(srcdir)/rxvtperl.3.man.in >rxvtperl.3.man
+	sed $(SEDREPLACE) < $(srcdir)/rxvt.1.man.in >rxvt.1.man
+	sed $(SEDREPLACE) < $(srcdir)/rxvtc.1.man.in >rxvtc.1.man
+	sed $(SEDREPLACE) < $(srcdir)/rxvtd.1.man.in >rxvtd.1.man
+	sed $(SEDREPLACE) < $(srcdir)/rxvt.7.man.in >rxvt.7.man
+@IF_PERL@	sed $(SEDREPLACE) < $(srcdir)/rxvtperl.3.man.in >rxvtperl.3.man
 
 rxvtperl.3.pod: ../src/urxvt.pm
-	$(CP) $< $@
+	cp $< $@
 
 %.tbl: %.pod
 	$(srcdir)/podtbl <$< >$@
@@ -60,16 +57,16 @@ rxvtperl.3.pod: ../src/urxvt.pm
 	pod2man -n @@RXVT_NAME@@ -r"$(VERSION)" -q\" -s7 -c "RXVT-UNICODE" <$< >$@
 
 %.html: %.tbl
-	$(SED) $(SEDREPLACE) <$< | pod2html >$@
+	sed $(SEDREPLACE) <$< | pod2html >$@
 
 %.txt: %.tbl
-	$(SED) $(SEDREPLACE) <$< | pod2text >$@
+	sed $(SEDREPLACE) <$< | pod2text >$@
 
 ../README.configure: rxvt.7.tbl
-	$(SED) $(SEDREPLACE) <$< | podselect -section "CONFIGURE OPTIONS" | pod2text >$@
+	sed $(SEDREPLACE) <$< | podselect -section "CONFIGURE OPTIONS" | pod2text >$@
 
 ../README.FAQ: rxvt.7.tbl
-	$(SED) $(SEDREPLACE) <$< | podselect -section "RXVT-UNICODE\/URXVT FREQUENTLY ASKED QUESTIONS" | pod2text >$@
+	sed $(SEDREPLACE) <$< | podselect -section "RXVT-UNICODE\/URXVT FREQUENTLY ASKED QUESTIONS" | pod2text >$@
 
 tags allbin:
 

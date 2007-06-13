@@ -445,9 +445,6 @@ AC_ARG_WITH(terminfo,
 
 dnl# --------------------------------------------------------------------------
 
-AC_PATH_PROG(CP, cp, cp)
-AC_PATH_PROG(SED, sed, sed)
-AC_PATH_PROG(ECHO, echo, echo)
 AC_PATH_PROG(TIC, tic)
 
 dnl# need a neat way to detect SVR4 or its features
