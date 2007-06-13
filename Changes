@@ -33,13 +33,13 @@ TODO: rid of global dpy variable.
           (patch by Philip Paeps).
         - do not process focus events caused by grabs
           (patch by Mikachu).
-        - add iso14755_52 resource to disable iso14755 5.2.
+        - add iso14755_52 resource to disable iso14755 5.2 (exg).
         - add binding for backspace in iso14755 5.1 to remove the last
-          digit.
+          digit (exg).
         - better option handling, support more than 30 options (exg).
 	- nuke reconf script, serves no purpose anymore.
 	- fixed and documented matcher/on_user_command processing in matcher
-	  extension.
+	  extension (tpope).
 
 8.2  Sat Feb 17 21:35:28 CET 2007
 	- fix make depend in src/, reported by exg.
@@ -56,7 +56,7 @@ TODO: rid of global dpy variable.
           (patch by Moshe Kamensky).
         - use perl:matcher on a keysym to open most recently displayed URL.
         - with matcher, when multiple patterns match, last wins, not first.
-        - fix make and make install with srcdir != builddir.
+        - fix make and make install with srcdir != builddir (exg).
         - updated bundled libptytty to fix a bug where the tty would be kept
           open (see the libptytty ChangeLog for details).
         - delay setting the IUTF8 flag to after the tty settings have been
@@ -69,11 +69,11 @@ TODO: rid of global dpy variable.
         - when !XFT, change rounding of colours to use a less correct formula to
           meet user expectancies (#aaa becomes #a000a000a000 not #9f9f9f9f9f9f).
         - change the starting offset of the pixmap set with backgroundPixmap
-          from (50,50) to (0,0).
+          from (50,50) to (0,0) (exg).
         - fix a typo in button_release, now meta-button2 request the value of
           the Clipboard selection as it should (patch by Serge Koksharov).
         - fix a bug in drawing a cell with a nonspacing char when using an xft
-          font with inheritPixmap and tintColor.
+          font with inheritPixmap and tintColor (exg).
 
 8.1  Thu Dec  7 22:27:25 CET 2006
         - ｹﾘｽﾏｽﾌ゚ﾚｾ゙ﾝﾄ - zomg!!1, it's too early!!!
@@ -152,7 +152,7 @@ TODO: rid of global dpy variable.
           (patch by Wu Fengguang).
         - removed rxvtlib.h from the tarball, it had no reason to be there
           (spotted by Decklin Foster).
-        - fix compiling with TRANSPARENT but !XPM_BACKGROUND, as reported 
+        - fix compiling with TRANSPARENT but !XPM_BACKGROUND, as reported
           by omatunto_.
         - slap in a using namespace std, might help on platforms that don't
           follow C++ closely enough.
@@ -222,7 +222,7 @@ TODO: rid of global dpy variable.
 
 7.5  Tue Jan 31 15:15:43 CET 2006
         - further improvements to the careful mode detection, and font width
-          detection: 
+          detection:
           - fully double-wide fonts will now be correctly treated,
           - overlap detection was improved.
           - detect totally broken fonts (usually synthesized by xft).
