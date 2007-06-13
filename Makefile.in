@@ -46,15 +46,11 @@ VERNAME = rxvt-unicode-$(VERSION)
 
 srcdir =	@srcdir@
 VPATH =		@srcdir@
-.PATH:		@srcdir@
 
 first_rule: all
 dummy:
 
 subdirs = src doc
-allsubdirs = $(subdirs)
-
-DIST =	INSTALL README.configure configure Makefile Makefile.in ChangeLog
 
 MKDIR = $(srcdir)/mkinstalldirs
 

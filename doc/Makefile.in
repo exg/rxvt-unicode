@@ -26,10 +26,6 @@ INSTALL_DATA = @INSTALL@ -m 644
 
 srcdir =	@srcdir@
 VPATH =		@srcdir@
-.PATH:		@srcdir@
-
-basedir = ..
-thisdir = doc
 
 first_rule: all
 dummy:

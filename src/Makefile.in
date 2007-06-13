@@ -28,16 +28,11 @@ DINCLUDE = @DINCLUDE@
 DLIB = @DLIB@
 XINC = @X_CFLAGS@ @XPM_CFLAGS@  @LIBAFTERIMAGE_CFLAGS@
 XLIB = @X_LIBS@ @XPM_LIBS@  @AFTERIMAGE_LIBS@ -lX11 @X_EXTRA_LIBS@
-COMPILE = $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS) $(DEBUG) $(DINCLUDE) $(XINC) -I$(basedir) -I$(srcdir) -I.
+COMPILE = $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS) $(DEBUG) $(DINCLUDE) $(XINC) -I.. -I$(srcdir) -I.
 LINK = @LINKER@ $(LDFLAGS)
 
 srcdir =	@srcdir@
 VPATH =		@srcdir@
-.PATH:		@srcdir@
-
-top_builddir = ..
-basedir = ..
-thisdir = src
 
 DEBUG=-DDEBUG_STRICT
 
