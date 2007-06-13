@@ -24,11 +24,9 @@ CPPFLAGS = @CPPFLAGS@ @XPM_CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 DEFS = @DEFS@
 LIBS = @LIBS@
-DINCLUDE = @DINCLUDE@
-DLIB = @DLIB@
 XINC = @X_CFLAGS@ @XPM_CFLAGS@  @LIBAFTERIMAGE_CFLAGS@
 XLIB = @X_LIBS@ @XPM_LIBS@  @AFTERIMAGE_LIBS@ -lX11 @X_EXTRA_LIBS@
-COMPILE = $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS) $(DEBUG) $(DINCLUDE) $(XINC) -I.. -I$(srcdir) -I.
+COMPILE = $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS) $(DEBUG) $(XINC) -I.. -I$(srcdir) -I.
 LINK = @LINKER@ $(LDFLAGS)
 
 srcdir =	@srcdir@
@@ -77,16 +75,16 @@ RXVTD_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)d$(EXEEXT)
 all: allbin
 
 rxvt: rxvt.o $(COMMON)
-	$(LINK) -o $@ rxvt.o $(COMMON) $(LIBS) $(XLIB) $(DLIB) @PERLLIB@
-#	$(LIBTOOL) --mode=link $(LINK) rxvt.o librxvt.la $(LIBS) $(XLIB) $(DLIB) -o $@
+	$(LINK) -o $@ rxvt.o $(COMMON) $(LIBS) $(XLIB) @PERLLIB@
+#	$(LIBTOOL) --mode=link $(LINK) rxvt.o librxvt.la $(LIBS) $(XLIB) -o $@
 
 rxvtd: rxvtd.o $(COMMON) $(COMMON_DAEMON)
-	$(LINK) -o $@ rxvtd.o $(COMMON) $(COMMON_DAEMON) $(LIBS) $(XLIB) $(DLIB) @PERLLIB@
-#	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o librxvt.la $(LIBS) $(XLIB) $(DLIB) -o $@
+	$(LINK) -o $@ rxvtd.o $(COMMON) $(COMMON_DAEMON) $(LIBS) $(XLIB) @PERLLIB@
+#	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o librxvt.la $(LIBS) $(XLIB) -o $@
 
 rxvtc: rxvtc.o $(COMMON_DAEMON) fdpass.o
-	$(LINK) -o $@ rxvtc.o $(COMMON_DAEMON) fdpass.o $(LIBS) $(DLIB)
-#	$(LIBTOOL) --mode=link $(LINK) rxvtc.o rxvtdaemon.o $(LIBS) $(DLIB) -o $@
+	$(LINK) -o $@ rxvtc.o $(COMMON_DAEMON) fdpass.o $(LIBS)
+#	$(LIBTOOL) --mode=link $(LINK) rxvtc.o rxvtdaemon.o $(LIBS) -o $@
 
 #librxvt.la: $(LIBOBJS)
 #	$(LIBTOOL) --mode=link $(LINK) -rpath $(libdir) -version-info $(LIBVERSION) $(LIBOBJS) $(LIBS) -o $@

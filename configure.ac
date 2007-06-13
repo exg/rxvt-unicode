@@ -959,8 +959,6 @@ if test x$support_perl = xyes; then
    support_frills=yes
 fi
 
-AC_SUBST(DEBUG)
-AC_SUBST(DINCLUDE)
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
@@ -968,13 +966,11 @@ AC_SUBST(X_CFLAGS)
 
 dnl# Attack the libs
 if test x$rxvt_cv_rpath = xyes -o x$rxvt_cv_R = xyes; then
-  DLIB=`echo $DLIB | sed "$R_TRANSLATE"`
   LIBS=`echo $LIBS | sed "$R_TRANSLATE"`
   X_LIBS=`echo $X_LIBS | sed "$R_TRANSLATE"`
   X_EXTRA_LIBS=`echo $X_EXTRA_LIBS | sed "$R_TRANSLATE"`
   XPM_LIBS=`echo $XPM_LIBS | sed "$R_TRANSLATE"`
 fi
-AC_SUBST(DLIB)
 AC_SUBST(LIBS)
 AC_SUBST(X_LIBS)
 AC_SUBST(X_EXTRA_LIBS)
