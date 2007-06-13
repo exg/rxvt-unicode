@@ -30,8 +30,6 @@ dummy:
 
 subdirs = src doc
 
-MKDIR = $(srcdir)/mkinstalldirs
-
 #-------------------------------------------------------------------------
 
 all allbin alldoc tags:
@@ -59,11 +57,7 @@ config.status:
 config.h.in: configure.ac
 	cd $(srcdir); ./autogen.sh
 
-installdirs:
-	$(MKDIR) $(DESTDIR)$(bindir)
-	$(MKDIR) $(DESTDIR)$(mandir)
-
-install: installdirs
+install:
 	@for I in $(subdirs); do (cd $$I; $(MAKE) DESTDIR=$(DESTDIR) $@) || exit 1; done
 
 check: all
