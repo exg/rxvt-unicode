@@ -61,7 +61,6 @@
 #endif
 #ifdef TRANSPARENT
   def (transparent)
-  def (transparent_all)
 #endif
 #if XFT
   def (depth)
