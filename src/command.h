@@ -10,9 +10,6 @@
 
 #define ESC_ARGS	32	/* max # of args for esc sequences */
 
-/* a large REFRESH_PERIOD causes problems with `cat' */
-#define REFRESH_PERIOD		1
-
 #ifndef MULTICLICK_TIME
 # define MULTICLICK_TIME	500
 #endif

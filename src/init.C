@@ -201,7 +201,6 @@ rxvt_term::init_vars ()
   saveLines = SAVELINES;
   numpix_colors = TOTAL_COLORS;
 
-  refresh_limit = 1;
   refresh_type = SLOW_REFRESH;
 
   oldcursor.row = oldcursor.col = -1;

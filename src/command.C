@@ -1112,7 +1112,6 @@ rxvt_term::flush_cb (time_watcher &w)
 {
   make_current ();
 
-  refresh_limit = 1;
   refresh_count = 0;
   flush ();
 }
@@ -1695,7 +1694,6 @@ rxvt_term::x_cb (XEvent &ev)
             scr_move_to (scrollbar_position (ev.xbutton.y) - csrO,
                          scrollbar_size ());
             want_refresh = 1;
-            refresh_limit = 0;
             scrollbar_show (1);
           }
         break;
@@ -2293,13 +2291,16 @@ rxvt_term::cmd_parse ()
 
                   refresh_count++;
 
-                  if (!option (Opt_jumpScroll)
-                      || (refresh_count >= refresh_limit * (nrow - 1)))
+                  if (!option (Opt_jumpScroll) || refresh_count >= nrow - 1)
                     {
-                      refreshnow = true;
                       refresh_count = 0;
-                      ch = NOCHAR;
-                      break;
+
+                      if (!option (Opt_skipScroll) || io_manager::now () > NOW + .1)
+                        {
+                          refreshnow = true;
+                          ch = NOCHAR;
+                          break;
+                        }
                     }
 
                   // scr_add_lines only works for nlines <= nrow - 1.
@@ -2337,21 +2338,14 @@ rxvt_term::cmd_parse ()
 
           /*
            * If there have been a lot of new lines, then update the screen
-           * What the heck I'll cheat and only refresh less than every page-full.
-           * the number of pages between refreshes is refresh_limit, which
-           * is incremented here because we must be doing flat-out scrolling.
+           * What the heck we'll cheat and only refresh less than every page-full.
+           * if skipScroll is enabled.
            */
           if (refreshnow)
             {
-              if (option (Opt_jumpScroll) && refresh_limit < REFRESH_PERIOD)
-                refresh_limit++;
-              else
-                {
-                  flag = true;
-                  //TODO: due to popular request, implement "skipscroll" option here
-                  scr_refresh ();
-                  want_refresh = 1;
-                }
+              flag = true;
+              scr_refresh ();
+              want_refresh = 1;
             }
 
         }

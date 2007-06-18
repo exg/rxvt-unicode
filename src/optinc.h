@@ -17,6 +17,7 @@
  def(tripleclickwords,     14)
  def(scrollWithBuffer,     15)
  def(jumpScroll,           16)
+ def(skipScroll,           16)
  def(mouseWheelScrollPage, 17)
 #if POINTER_BLANK
  def(pointerBlank,         18)

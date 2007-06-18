@@ -22,6 +22,7 @@
 #endif
   def (loginShell)
   def (jumpScroll)
+  def (skipScroll)
 #ifdef HAVE_SCROLLBARS
   def (scrollBar)
   def (scrollBar_right)
