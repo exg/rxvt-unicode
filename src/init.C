@@ -215,6 +215,7 @@ rxvt_term::init_vars ()
   set_option (Opt_scrollBar);
   set_option (Opt_scrollTtyOutput);
   set_option (Opt_jumpScroll);
+  set_option (Opt_skipScroll);
   set_option (Opt_secondaryScreen);
   set_option (Opt_secondaryScroll);
   set_option (Opt_pastableTabs);

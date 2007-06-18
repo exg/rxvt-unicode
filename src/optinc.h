@@ -17,24 +17,24 @@
  def(tripleclickwords,     14)
  def(scrollWithBuffer,     15)
  def(jumpScroll,           16)
- def(skipScroll,           16)
- def(mouseWheelScrollPage, 17)
+ def(skipScroll,           17)
+ def(mouseWheelScrollPage, 18)
 #if POINTER_BLANK
- def(pointerBlank,         18)
+ def(pointerBlank,         19)
 #else
  nodef(pointerBlank)
 #endif
- def(cursorBlink,          19)
- def(secondaryScreen,      20)
- def(secondaryScroll,      21)
- def(pastableTabs,         22)
- def(cursorUnderline,      23)
+ def(cursorBlink,          20)
+ def(secondaryScreen,      21)
+ def(secondaryScroll,      22)
+ def(pastableTabs,         23)
+ def(cursorUnderline,      24)
 #if ENABLE_FRILLS
- def(insecure,             24) // insecure esc sequences
- def(borderLess,           25) // mwm borderless hints
- def(hold,                 26) // hold window open after exit
- def(override_redirect,    27)
- def(skipBuiltinGlyphs,    28) // do not use internal glyphs
+ def(insecure,             25) // insecure esc sequences
+ def(borderLess,           26) // mwm borderless hints
+ def(hold,                 27) // hold window open after exit
+ def(override_redirect,    28)
+ def(skipBuiltinGlyphs,    29) // do not use internal glyphs
  def(urgentOnBell,         30)
 #else
  nodef(insecure)
@@ -45,12 +45,12 @@
  nodef(urgentOnBell)
 #endif
 #if ENABLE_STYLES
- def(intensityStyles,      29) // font styles imply intensity
+ def(intensityStyles,      31) // font styles imply intensity
 #else
  nodef(intensityStyles)
 #endif
 #if ISO_14755
- def(iso14755_52,          31)
+ def(iso14755_52,          32)
 #else
  nodef(iso14755_52)
 #endif

@@ -110,7 +110,11 @@ Turn on/off simulated reverse video; resource B<reverseVideo>.
 
 =item B<-j>|B<+j>
 
-Turn on/off jump scrolling; resource B<jumpScroll>.
+Turn on/off jump scrolling (allow multiple lines per refresh); resource B<jumpScroll>.
+
+=item B<-ss>|B<+ss>
+
+Turn on/off skip scrolling (allow multiple screens per refresh); resource B<skipScroll>.
 
 =item B<-ip>|B<+ip> | B<-tr>|B<+tr>
 
@@ -609,9 +613,25 @@ B<+rv>. See note in B<COLORS AND GRAPHICS> section.
 
 =item B<jumpScroll:> I<boolean>
 
-B<True>: specify that jump scrolling should be used. When scrolling
-quickly, fewer screen updates are performed [default]; option B<-j>.
-B<False>: specify that smooth scrolling should be used; option B<+j>.
+B<True>: specify that jump scrolling should be used. When receiving lots
+of lines, @@RXVT_NAME@@ will only scroll once a whole screen height of lines
+has been read, resulting in fewer updates while still displaying every
+received line; option B<-j>.
+
+B<False>: specify that smooth scrolling should be used. @@RXVT_NAME@@ will
+force a screen refresh on each new line it received; option B<+j>.
+
+=item B<skipScroll:> I<boolean>
+
+B<True>: (the default) specify that skip scrolling should be used. When
+receiving lots of lines, @@RXVT_NAME@@ will only scroll once in a while
+(around 60 times per second), resulting in far fewer updates. This can
+result in @@RXVT_NAME@@ not ever displaying some of the lines it receives;
+option B<-ss>.
+
+B<False>: specify that everything is to be displayed, even
+if the refresh is too fast for the human eye to read anything (or the
+monitor to display anything); option B<+ss>.
 
 =item B<inheritPixmap:> I<boolean>
 

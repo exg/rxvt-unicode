@@ -18,13 +18,13 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
-TODO: skipscroll option
 TODO: really enable libafterimage by default (6mb => 10mb rss without using it)?
 TODO: document -blr units, and possibly fix blur (20 seems to be about 3 pixels,
       80 seems to be about 3 pixels, too, just much slower).
 TODO: when window partially off-screen, -blr does not have any effect anymore.
 TODO: rid of global dpy variable.
 8.
+	- new option: skipScroll/-ss, enabled by default.
         - go with the times and expect x11 library files in /usr/lib, not
           /usr/X11R6/lib.
 	- initial transparency improvement/afterstep support
