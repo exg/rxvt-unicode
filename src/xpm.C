@@ -780,7 +780,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
   if (have_pixmap)
     {
       Bool success = False ; 
-      GC gc;
+      GC gc = NULL;
       XGCValues gcvalue;
 #ifdef HAVE_AFTERIMAGE
       {
