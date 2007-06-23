@@ -632,7 +632,7 @@ rxvt_realloc (void *ptr, size_t size)
 
 /*----------------------------------------------------------------------*/
 /*
- * window size/position calculcations for XSizeHint and other storage.
+ * window size/position calculations for XSizeHint and other storage.
  * if width/height are non-zero then override calculated width/height
  */
 void
