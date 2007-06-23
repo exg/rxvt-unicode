@@ -188,7 +188,7 @@ typedef struct {
   unsigned int      screen;     /* screen being used                         */
   unsigned int      clicks;     /* number of clicks                          */
   selection_op_t    op;         /* current operation                         */
-  bool              rect;       /* rectangluar selection?                    */
+  bool              rect;       /* rectangular selection?                    */
   row_col_t         beg;        /* beginning of selection   <= mark          */
   row_col_t         mark;       /* point of initial click   <= end           */
   row_col_t         end;        /* one character past end point              */
