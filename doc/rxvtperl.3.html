@@ -1,547 +1,415 @@
-<?xml version="1.0" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title>rxvtperl - rxvt-unicode's embedded perl interpreter</title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link rev="made" href="mailto:perl-binary@plan9.de" />
-</head>
+	<title>rxvtperl</title>
+	<meta name="description" content="Pod documentation for rxvtperl" />
+	<meta name="inputfile" content="&lt;standard input&gt;" />
+	<meta name="outputfile" content="&lt;standard output&gt;" />
+	<meta name="created" content="Mon Jun 25 00:11:18 2007" />
+	<meta name="generator" content="Pod::Xhtml 1.57" />
+<link rel="stylesheet" href="http://res.tst.eu/pod.css"/></head>
+<body>
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
 
-<body style="background-color: white">
-
-<p><a name="__index__"></a></p>
-<!-- INDEX BEGIN -->
-
-<ul>
-
-	<li><a href="#name">NAME</a></li>
-	<li><a href="#synopsis">SYNOPSIS</a></li>
-	<li><a href="#description">DESCRIPTION</a></li>
-	<li><a href="#prepackaged_extensions">PREPACKAGED EXTENSIONS</a></li>
-	<li><a href="#api_documentation">API DOCUMENTATION</a></li>
-	<ul>
-
-		<li><a href="#general_api_considerations">General API Considerations</a></li>
-		<li><a href="#extension_objects">Extension Objects</a></li>
-		<li><a href="#hooks">Hooks</a></li>
-		<li><a href="#variables_in_the_urxvt_package">Variables in the <code>urxvt</code> Package</a></li>
-		<li><a href="#functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></li>
-		<li><a href="#rendition">RENDITION</a></li>
-		<li><a href="#the_urxvt__anyevent_class">The <code>urxvt::anyevent</code> Class</a></li>
-		<li><a href="#the_urxvt__term_class">The <code>urxvt::term</code> Class</a></li>
-		<li><a href="#the_urxvt__popup_class">The <code>urxvt::popup</code> Class</a></li>
-		<li><a href="#the_urxvt__timer_class">The <code>urxvt::timer</code> Class</a></li>
-		<li><a href="#the_urxvt__iow_class">The <code>urxvt::iow</code> Class</a></li>
-		<li><a href="#the_urxvt__iw_class">The <code>urxvt::iw</code> Class</a></li>
-		<li><a href="#the_urxvt__pw_class">The <code>urxvt::pw</code> Class</a></li>
-	</ul>
-
-	<li><a href="#environment">ENVIRONMENT</a></li>
-	<ul>
-
-		<li><a href="#urxvt_perl_verbosity">URXVT_PERL_VERBOSITY</a></li>
-	</ul>
-
-	<li><a href="#author">AUTHOR</a></li>
+<ul><li><a href="#NAME">NAME</a></li>
+<li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#PREPACKAGED_EXTENSIONS">PREPACKAGED EXTENSIONS</a></li>
+<li><a href="#API_DOCUMENTATION">API DOCUMENTATION</a>
+<ul><li><a href="#General_API_Considerations">General API Considerations</a></li>
+<li><a href="#Extension_Objects">Extension Objects</a></li>
+<li><a href="#Hooks">Hooks</a></li>
+<li><a href="#Variables_in_the_code_urxvt_code_Pac">Variables in the <code>urxvt</code> Package</a></li>
+<li><a href="#Functions_in_the_code_urxvt_code_Pac">Functions in the <code>urxvt</code> Package</a></li>
+<li><a href="#RENDITION">RENDITION</a></li>
+<li><a href="#The_code_urxvt_anyevent_code_Class">The <code>urxvt::anyevent</code> Class</a></li>
+<li><a href="#The_code_urxvt_term_code_Class">The <code>urxvt::term</code> Class</a></li>
+<li><a href="#The_code_urxvt_popup_code_Class">The <code>urxvt::popup</code> Class</a></li>
+<li><a href="#The_code_urxvt_timer_code_Class">The <code>urxvt::timer</code> Class</a></li>
+<li><a href="#The_code_urxvt_iow_code_Class">The <code>urxvt::iow</code> Class</a></li>
+<li><a href="#The_code_urxvt_iw_code_Class">The <code>urxvt::iw</code> Class</a></li>
+<li><a href="#The_code_urxvt_pw_code_Class">The <code>urxvt::pw</code> Class</a></li>
 </ul>
+</li>
+<li><a href="#ENVIRONMENT">ENVIRONMENT</a>
+<ul><li><a href="#URXVT_PERL_VERBOSITY">URXVT_PERL_VERBOSITY</a></li>
+</ul>
+</li>
+<li><a href="#AUTHOR">AUTHOR</a>
+</li>
+</ul><hr />
 <!-- INDEX END -->
 
-<hr />
-<p>
-</p>
-<hr />
-<h1><a name="name">NAME</a></h1>
+<h1 id="NAME">NAME</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="NAME_CONTENT">
 <p>rxvtperl - rxvt-unicode's embedded perl interpreter</p>
-<p>
-</p>
-<hr />
-<h1><a name="synopsis">SYNOPSIS</a></h1>
-<pre>
-   # create a file grab_test in $HOME:</pre>
-<pre>
+
+</div>
+<h1 id="SYNOPSIS">SYNOPSIS</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="SYNOPSIS_CONTENT">
+<pre>   # create a file grab_test in $HOME:
+
    sub on_sel_grab {
       warn &quot;you selected &quot;, $_[0]-&gt;selection;
       ()
-   }</pre>
-<pre>
-   # start a rxvt using it:</pre>
-<pre>
-   rxvt --perl-lib $HOME -pe grab_test</pre>
-<p>
-</p>
-<hr />
-<h1><a name="description">DESCRIPTION</a></h1>
+   }
+
+   # start a rxvt using it:
+
+   rxvt --perl-lib $HOME -pe grab_test
+
+</pre>
+
+</div>
+<h1 id="DESCRIPTION">DESCRIPTION</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="DESCRIPTION_CONTENT">
 <p>Every time a terminal object gets created, extension scripts specified via
 the <code>perl</code> resource are loaded and associated with it.</p>
 <p>Scripts are compiled in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as UTF-8.</p>
 <p>Each script will only ever be loaded once, even in rxvtd, where
 scripts will be shared (but not enabled) for all terminals.</p>
-<p>
-</p>
-<hr />
-<h1><a name="prepackaged_extensions">PREPACKAGED EXTENSIONS</a></h1>
-<p>This section describes the extensions delivered with this release. You can
-find them in <em>/opt/rxvt/lib/urxvt/perl/</em>.</p>
-<p>You can activate them like this:</p>
-<pre>
-  rxvt -pe &lt;extensionname&gt;</pre>
-<p>Or by adding them to the resource for extensions loaded by default:</p>
-<pre>
-  URxvt.perl-ext-common: default,automove-background,selection-autotransform</pre>
-<dl>
-<dt><strong><a name="item_selection">selection (enabled by default)</a></strong>
+<p>You can disable the embedded perl interpreter by setting both &quot;perl-ext&quot;
+and &quot;perl-ext-common&quot; resources to the empty string.</p>
 
-<dd>
-<p>(More) intelligent selection. This extension tries to be more intelligent
+</div>
+<h1 id="PREPACKAGED_EXTENSIONS">PREPACKAGED EXTENSIONS</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="PREPACKAGED_EXTENSIONS_CONTENT">
+<p>This section describes the extensions delivered with this release. You can
+find them in <cite>/opt/rxvt/lib/urxvt/perl/</cite>.</p>
+<p>You can activate them like this:</p>
+<pre>  rxvt -pe &lt;extensionname&gt;
+
+</pre>
+<p>Or by adding them to the resource for extensions loaded by default:</p>
+<pre>  URxvt.perl-ext-common: default,automove-background,selection-autotransform
+
+</pre>
+<dl>
+	<dt>selection (enabled by default)</dt>
+	<dd>
+		<p>(More) intelligent selection. This extension tries to be more intelligent
 when the user extends selections (double-click and further clicks). Right
 now, it tries to select words, urls and complete shell-quoted
-arguments, which is very convenient, too, if your <em>ls</em> supports
+arguments, which is very convenient, too, if your <cite>ls</cite> supports
 <code>--quoting-style=shell</code>.</p>
-</dd>
-<dd>
-<p>A double-click usually selects the word under the cursor, further clicks
+		<p>A double-click usually selects the word under the cursor, further clicks
 will enlarge the selection.</p>
-</dd>
-<dd>
-<p>The selection works by trying to match a number of regexes and displaying
+		<p>The selection works by trying to match a number of regexes and displaying
 them in increasing order of length. You can add your own regexes by
 specifying resources of the form:</p>
-</dd>
-<dd>
-<pre>
-   URxvt.selection.pattern-0: perl-regex
+<pre>   URxvt.selection.pattern-0: perl-regex
    URxvt.selection.pattern-1: perl-regex
-   ...</pre>
-</dd>
-<dd>
-<p>The index number (0, 1...) must not have any holes, and each regex must
+   ...
+
+</pre>
+		<p>The index number (0, 1...) must not have any holes, and each regex must
 contain at least one pair of capturing parentheses, which will be used for
 the match. For example, the following adds a regex that matches everything
 between two vertical bars:</p>
-</dd>
-<dd>
-<pre>
-   URxvt.selection.pattern-0: \\|([^|]+)\\|</pre>
-</dd>
-<dd>
-<p>Another example: Programs I use often output ``absolute path: '' at the
+<pre>   URxvt.selection.pattern-0: \\|([^|]+)\\|
+
+</pre>
+		<p>Another example: Programs I use often output &quot;absolute path: &quot; at the
 beginning of a line when they process multiple files. The following
 pattern matches the filename (note, there is a single space at the very
 end):</p>
-</dd>
-<dd>
-<pre>
-   URxvt.selection.pattern-0: ^(/[^:]+):\</pre>
-</dd>
-<dd>
-<p>You can look at the source of the selection extension to see more
+<pre>   URxvt.selection.pattern-0: ^(/[^:]+):\ 
+
+</pre>
+		<p>You can look at the source of the selection extension to see more
 interesting uses, such as parsing a line from beginning to end.</p>
-</dd>
-<dd>
-<p>This extension also offers following bindable keyboard commands:</p>
-</dd>
-<dl>
-<dt><strong><a name="item_rot13">rot13</a></strong>
+		<p>This extension also offers following bindable keyboard commands:</p>
+		<p>
+			<dl>
+				<dt>rot13</dt>
+				<dd>
+					<p>Rot-13 the selection when activated. Used via keyboard trigger:</p>
+<pre>   URxvt.keysym.C-M-r: perl:selection:rot13
 
-<dd>
-<p>Rot-13 the selection when activated. Used via keyboard trigger:</p>
-</dd>
-<dd>
-<pre>
-   URxvt.keysym.C-M-r: perl:selection:rot13</pre>
-</dd>
-</li>
-</dl>
-<dt><strong><a name="item_popup">option-popup (enabled by default)</a></strong>
-
-<dd>
-<p>Binds a popup menu to Ctrl-Button2 that lets you toggle (some) options at
+</pre>
+				</dd>
+			</dl>
+		</p>
+	</dd>
+	<dt>option-popup (enabled by default)</dt>
+	<dd>
+		<p>Binds a popup menu to Ctrl-Button2 that lets you toggle (some) options at
 runtime.</p>
-</dd>
-<dd>
-<p>Other extensions can extend this popup menu by pushing a code reference
+		<p>Other extensions can extend this popup menu by pushing a code reference
 onto <code>@{ $term-</code>{option_popup_hook} }&gt;, which gets called whenever the
 popup is being displayed.</p>
-</dd>
-<dd>
-<p>It's sole argument is the popup menu, which can be modified.  It should
+		<p>It's sole argument is the popup menu, which can be modified.  It should
 either return nothing or a string, the initial boolean value and a code
 reference. The string will be used as button text and the code reference
 will be called when the toggle changes, with the new boolean value as
 first argument.</p>
-</dd>
-<dd>
-<p>The following will add an entry <code>myoption</code> that changes
+		<p>The following will add an entry <code>myoption</code> that changes
 <code>$self-</code>{myoption}&gt;:</p>
-</dd>
-<dd>
-<pre>
-   push @{ $self-&gt;{term}{option_popup_hook} }, sub {
+<pre>   push @{ $self-&gt;{term}{option_popup_hook} }, sub {
       (&quot;my option&quot; =&gt; $myoption, sub { $self-&gt;{myoption} = $_[0] })
-   };</pre>
-</dd>
-</li>
-<dt><strong>selection-popup (enabled by default)</strong>
+   };
 
-<dd>
-<p>Binds a popup menu to Ctrl-Button3 that lets you convert the selection
+</pre>
+	</dd>
+	<dt>selection-popup (enabled by default)</dt>
+	<dd>
+		<p>Binds a popup menu to Ctrl-Button3 that lets you convert the selection
 text into various other formats/action (such as uri unescaping, perl
 evaluation, web-browser starting etc.), depending on content.</p>
-</dd>
-<dd>
-<p>Other extensions can extend this popup menu by pushing a code reference
+		<p>Other extensions can extend this popup menu by pushing a code reference
 onto <code>@{ $term-</code>{selection_popup_hook} }&gt;, which gets called whenever the
 popup is being displayed.</p>
-</dd>
-<dd>
-<p>It's sole argument is the popup menu, which can be modified. The selection
+		<p>It's sole argument is the popup menu, which can be modified. The selection
 is in <code>$_</code>, which can be used to decide whether to add something or not.
 It should either return nothing or a string and a code reference. The
 string will be used as button text and the code reference will be called
 when the button gets activated and should transform <code>$_</code>.</p>
-</dd>
-<dd>
-<p>The following will add an entry <code>a to b</code> that transforms all <code>a</code>s in
+		<p>The following will add an entry <code>a to b</code> that transforms all <code>a</code>s in
 the selection to <code>b</code>s, but only if the selection currently contains any
 <code>a</code>s:</p>
-</dd>
-<dd>
-<pre>
-   push @{ $self-&gt;{term}{selection_popup_hook} }, sub {
+<pre>   push @{ $self-&gt;{term}{selection_popup_hook} }, sub {
       /a/ ? (&quot;a to be&quot; =&gt; sub { s/a/b/g }
           : ()
-   };</pre>
-</dd>
-</li>
-<dt><strong><a name="item_searchable_2dscrollback_3chotkey_3e__28enabled_by_">searchable-scrollback&lt;hotkey&gt; (enabled by default)</a></strong>
+   };
 
-<dd>
-<p>Adds regex search functionality to the scrollback buffer, triggered
+</pre>
+	</dd>
+	<dt>searchable-scrollback&lt;hotkey&gt; (enabled by default)</dt>
+	<dd>
+		<p>Adds regex search functionality to the scrollback buffer, triggered
 by a hotkey (default: <code>M-s</code>). While in search mode, normal terminal
 input/output is suspended and a regex is displayed at the bottom of the
 screen.</p>
-</dd>
-<dd>
-<p>Inputting characters appends them to the regex and continues incremental
+		<p>Inputting characters appends them to the regex and continues incremental
 search. <code>BackSpace</code> removes a character from the regex, <code>Up</code> and <code>Down</code>
 search upwards/downwards in the scrollback buffer, <code>End</code> jumps to the
 bottom. <code>Escape</code> leaves search mode and returns to the point where search
 was started, while <code>Enter</code> or <code>Return</code> stay at the current position and
 additionally stores the first match in the current line into the primary
 selection.</p>
-</dd>
-<dd>
-<p>The regex defaults to ``(?i)'', resulting in a case-insensitive search. To
+		<p>The regex defaults to &quot;(?i)&quot;, resulting in a case-insensitive search. To
 get a case-sensitive search you can delete this prefix using <code>BackSpace</code>
-or simply use an uppercase character which removes the ``(?i)'' prefix.</p>
-</dd>
-<dd>
-<p>See <em>perlre</em> for more info about perl regular expression syntax.</p>
-</dd>
-</li>
-<dt><strong><a name="item_readline">readline (enabled by default)</a></strong>
-
-<dd>
-<p>A support package that tries to make editing with readline easier. At
+or simply use an uppercase character which removes the &quot;(?i)&quot; prefix.</p>
+		<p>See <cite>perlre</cite> for more info about perl regular expression syntax.</p>
+	</dd>
+	<dt>readline (enabled by default)</dt>
+	<dd>
+		<p>A support package that tries to make editing with readline easier. At
 the moment, it reacts to clicking shift-left mouse button by trying to
 move the text cursor to this position. It does so by generating as many
 cursor-left or cursor-right keypresses as required (the this only works
 for programs that correctly support wide characters).</p>
-</dd>
-<dd>
-<p>To avoid too many false positives, this is only done when:</p>
-</dd>
-<dl>
-<dt><strong><a name="item__2d_the_tty_is_in_icanon_state_2e">- the tty is in ICANON state.</a></strong>
-
-<dt><strong><a name="item__2d_the_text_cursor_is_visible_2e">- the text cursor is visible.</a></strong>
-
-<dt><strong><a name="item__2d_the_primary_screen_is_currently_being_displaye">- the primary screen is currently being displayed.</a></strong>
-
-<dt><strong><a name="item_same">- the mouse is on the same (multi-row-) line as the text cursor.</a></strong>
-
-</dl>
-<p>The normal selection mechanism isn't disabled, so quick successive clicks
+		<p>To avoid too many false positives, this is only done when:</p>
+		<p>
+			<dl>
+				<dt>- the tty is in ICANON state.</dt>
+				<dt>- the text cursor is visible.</dt>
+				<dt>- the primary screen is currently being displayed.</dt>
+				<dt>- the mouse is on the same (multi-row-) line as the text cursor.</dt>
+			</dl>
+		</p>
+		<p>The normal selection mechanism isn't disabled, so quick successive clicks
 might interfere with selection creation in harmless ways.</p>
-<dt><strong><a name="item_selection_2dautotransform">selection-autotransform</a></strong>
-
-<dd>
-<p>This selection allows you to do automatic transforms on a selection
+	</dd>
+	<dt>selection-autotransform</dt>
+	<dd>
+		<p>This selection allows you to do automatic transforms on a selection
 whenever a selection is made.</p>
-</dd>
-<dd>
-<p>It works by specifying perl snippets (most useful is a single <code>s///</code>
+		<p>It works by specifying perl snippets (most useful is a single <code>s///</code>
 operator) that modify <code>$_</code> as resources:</p>
-</dd>
-<dd>
-<pre>
-   URxvt.selection-autotransform.0: transform
+<pre>   URxvt.selection-autotransform.0: transform
    URxvt.selection-autotransform.1: transform
-   ...</pre>
-</dd>
-<dd>
-<p>For example, the following will transform selections of the form
+   ...
+
+</pre>
+		<p>For example, the following will transform selections of the form
 <code>filename:number</code>, often seen in compiler messages, into <code>vi +$filename
 $word</code>:</p>
-</dd>
-<dd>
-<pre>
-   URxvt.selection-autotransform.0: s/^([^:[:space:]]+):(\\d+):?$/vi +$2 \\Q$1\\E\\x0d/</pre>
-</dd>
-<dd>
-<p>And this example matches the same,but replaces it with vi-commands you can
+<pre>   URxvt.selection-autotransform.0: s/^([^:[:space:]]+):(\\d+):?$/vi +$2 \\Q$1\\E\\x0d/
+
+</pre>
+		<p>And this example matches the same,but replaces it with vi-commands you can
 paste directly into your (vi :) editor:</p>
-</dd>
-<dd>
-<pre>
-   URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\\d+):?$/:e \\Q$1\\E\\x0d:$2\\x0d/</pre>
-</dd>
-<dd>
-<p>Of course, this can be modified to suit your needs and your editor :)</p>
-</dd>
-<dd>
-<p>To expand the example above to typical perl error messages (``XXX at
-FILENAME line YYY.''), you need a slightly more elaborate solution:</p>
-</dd>
-<dd>
-<pre>
-   URxvt.selection.pattern-0: ( at .*? line \\d+[,.])
-   URxvt.selection-autotransform.0: s/^ at (.*?) line (\\d+)[,.]$/:e \\Q$1\E\\x0d:$2\\x0d/</pre>
-</dd>
-<dd>
-<p>The first line tells the selection code to treat the unchanging part of
+<pre>   URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\\d+):?$/:e \\Q$1\\E\\x0d:$2\\x0d/
+
+</pre>
+		<p>Of course, this can be modified to suit your needs and your editor :)</p>
+		<p>To expand the example above to typical perl error messages (&quot;XXX at
+FILENAME line YYY.&quot;), you need a slightly more elaborate solution:</p>
+<pre>   URxvt.selection.pattern-0: ( at .*? line \\d+[,.])
+   URxvt.selection-autotransform.0: s/^ at (.*?) line (\\d+)[,.]$/:e \\Q$1\E\\x0d:$2\\x0d/
+
+</pre>
+		<p>The first line tells the selection code to treat the unchanging part of
 every error message as a selection pattern, and the second line transforms
 the message into vi commands to load the file.</p>
-</dd>
-</li>
-<dt><strong><a name="item_tabbed">tabbed</a></strong>
-
-<dd>
-<p>This transforms the terminal into a tabbar with additional terminals, that
-is, it implements what is commonly referred to as ``tabbed terminal''. The topmost line
-displays a ``[NEW]'' button, which, when clicked, will add a new tab, followed by one
+	</dd>
+	<dt>tabbed</dt>
+	<dd>
+		<p>This transforms the terminal into a tabbar with additional terminals, that
+is, it implements what is commonly referred to as &quot;tabbed terminal&quot;. The topmost line
+displays a &quot;[NEW]&quot; button, which, when clicked, will add a new tab, followed by one
 button per tab.</p>
-</dd>
-<dd>
-<p>Clicking a button will activate that tab. Pressing <strong>Shift-Left</strong> and
+		<p>Clicking a button will activate that tab. Pressing <strong>Shift-Left</strong> and
 <strong>Shift-Right</strong> will switch to the tab left or right of the current one,
 while <strong>Shift-Down</strong> creates a new tab.</p>
-</dd>
-<dd>
-<p>The tabbar itself can be configured similarly to a normal terminal, but
+		<p>The tabbar itself can be configured similarly to a normal terminal, but
 with a resource class of <code>URxvt.tabbed</code>. In addition, it supports the
 following four resources (shown with defaults):</p>
-</dd>
-<dd>
-<pre>
-   URxvt.tabbed.tabbar-fg: &lt;colour-index, default 3&gt;
+<pre>   URxvt.tabbed.tabbar-fg: &lt;colour-index, default 3&gt;
    URxvt.tabbed.tabbar-bg: &lt;colour-index, default 0&gt;
    URxvt.tabbed.tab-fg:    &lt;colour-index, default 0&gt;
-   URxvt.tabbed.tab-bg:    &lt;colour-index, default 1&gt;</pre>
-</dd>
-<dd>
-<p>See <em>COLOR AND GRAPHICS</em> in the <code>rxvt(1)</code> manpage for valid
-indices.</p>
-</dd>
-</li>
-<dt><strong><a name="item_matcher">matcher</a></strong>
+   URxvt.tabbed.tab-bg:    &lt;colour-index, default 1&gt;
 
-<dd>
-<p>Uses per-line display filtering (<code>on_line_update</code>) to underline text
+</pre>
+		<p>See <i>COLOR AND GRAPHICS</i> in the rxvt(1) manpage for valid
+indices.</p>
+	</dd>
+	<dt>matcher</dt>
+	<dd>
+		<p>Uses per-line display filtering (<code>on_line_update</code>) to underline text
 matching a certain pattern and make it clickable. When clicked with the
 mouse button specified in the <code>matcher.button</code> resource (default 2, or
 middle), the program specified in the <code>matcher.launcher</code> resource
 (default, the <code>urlLauncher</code> resource, <code>sensible-browser</code>) will be started
 with the matched text as first argument.  The default configuration is
 suitable for matching URLs and launching a web browser, like the
-former ``mark-urls'' extension.</p>
-</dd>
-<dd>
-<p>The default pattern to match URLs can be overridden with the
+former &quot;mark-urls&quot; extension.</p>
+		<p>The default pattern to match URLs can be overridden with the
 <code>matcher.pattern.0</code> resource, and additional patterns can be specified
-with numbered patterns, in a manner similar to the ``selection'' extension.
+with numbered patterns, in a manner similar to the &quot;selection&quot; extension.
 The launcher can also be overridden on a per-pattern basis.</p>
-</dd>
-<dd>
-<p>Example configuration:</p>
-</dd>
-<dd>
-<pre>
-    URxvt.perl-ext:           default,matcher
+		<p>It is possible to activate the most recently seen match from the keyboard.
+Simply bind a keysym to &quot;perl:matcher&quot; as seen in the example below.</p>
+		<p>Example configuration:</p>
+<pre>    URxvt.perl-ext:           default,matcher
     URxvt.urlLauncher:        sensible-browser
     URxvt.keysym.C-Delete:    perl:matcher
     URxvt.matcher.button:     1
     URxvt.matcher.pattern.1:  \\bwww\\.[\\w-]+\\.[\\w./?&amp;@#-]*[\\w/-]
     URxvt.matcher.pattern.2:  \\B(/\\S+?):(\\d+)(?=:|$)
-    URxvt.matcher.launcher.2: gvim +$2 $1</pre>
-</dd>
-</li>
-<dt><strong><a name="item_xim_2donthespot">xim-onthespot</a></strong>
+    URxvt.matcher.launcher.2: gvim +$2 $1
 
-<dd>
-<p>This (experimental) perl extension implements OnTheSpot editing. It does
+</pre>
+	</dd>
+	<dt>xim-onthespot</dt>
+	<dd>
+		<p>This (experimental) perl extension implements OnTheSpot editing. It does
 not work perfectly, and some input methods don't seem to work well with
 OnTheSpot editing in general, but it seems to work at leats for SCIM and
 kinput2.</p>
-</dd>
-<dd>
-<p>You enable it by specifying this extension and a preedit style of
+		<p>You enable it by specifying this extension and a preedit style of
 <code>OnTheSpot</code>, i.e.:</p>
-</dd>
-<dd>
-<pre>
-   rxvt -pt OnTheSpot -pe xim-onthespot</pre>
-</dd>
-</li>
-<dt><strong><a name="item_kuake_3chotkey_3e">kuake&lt;hotkey&gt;</a></strong>
+<pre>   rxvt -pt OnTheSpot -pe xim-onthespot
 
-<dd>
-<p>A very primitive quake-console-like extension. It was inspired by a
+</pre>
+	</dd>
+	<dt>kuake&lt;hotkey&gt;</dt>
+	<dd>
+		<p>A very primitive quake-console-like extension. It was inspired by a
 description of how the programs <code>kuake</code> and <code>yakuake</code> work: Whenever the
 user presses a global accelerator key (by default <code>F10</code>), the terminal
 will show or hide itself. Another press of the accelerator key will hide
 or show it again.</p>
-</dd>
-<dd>
-<p>Initially, the window will not be shown when using this extension.</p>
-</dd>
-<dd>
-<p>This is useful if you need a single terminal thats not using any desktop
+		<p>Initially, the window will not be shown when using this extension.</p>
+		<p>This is useful if you need a single terminal thats not using any desktop
 space most of the time but is quickly available at the press of a key.</p>
-</dd>
-<dd>
-<p>The accelerator key is grabbed regardless of any modifiers, so this
+		<p>The accelerator key is grabbed regardless of any modifiers, so this
 extension will actually grab a physical key just for this function.</p>
-</dd>
-<dd>
-<p>If you want a quake-like animation, tell your window manager to do so
+		<p>If you want a quake-like animation, tell your window manager to do so
 (fvwm can do it).</p>
-</dd>
-</li>
-<dt><strong><a name="item_automove_2dbackground">automove-background</a></strong>
-
-<dd>
-<p>This is basically a very small extension that dynamically changes the
+	</dd>
+	<dt>automove-background</dt>
+	<dd>
+		<p>This is basically a very small extension that dynamically changes the
 background pixmap offset to the window position, in effect creating the
 same effect as pseudo transparency with a custom pixmap. No scaling is
 supported in this mode. Example:</p>
-</dd>
-<dd>
-<pre>
-   rxvt -pixmap background.xpm -pe automove-background</pre>
-</dd>
-<dd>
-<p><a href="http://wiki.archlinux.org/index.php/Perl_Background_Rotation/Extensions">http://wiki.archlinux.org/index.php/Perl_Background_Rotation/Extensions</a>
+<pre>   rxvt -pixmap background.xpm -pe automove-background
+
+</pre>
+		<p><a href="http://wiki.archlinux.org/index.php/Perl_Background_Rotation/Extensions">http://wiki.archlinux.org/index.php/Perl_Background_Rotation/Extensions</a>
 shows how this extension can be used to implement an automatically blurred
 transparent background.</p>
-</dd>
-</li>
-<dt><strong><a name="item_block_2dgraphics_2dto_2dascii">block-graphics-to-ascii</a></strong>
-
-<dd>
-<p>A not very useful example of filtering all text output to the terminal
+	</dd>
+	<dt>block-graphics-to-ascii</dt>
+	<dd>
+		<p>A not very useful example of filtering all text output to the terminal
 by replacing all line-drawing characters (U+2500 .. U+259F) by a
 similar-looking ascii character.</p>
-</dd>
-</li>
-<dt><strong><a name="item_digital_2dclock">digital-clock</a></strong>
-
-<dd>
-<p>Displays a digital clock using the built-in overlay.</p>
-</dd>
-</li>
-<dt><strong><a name="item_remote_2dclipboard">remote-clipboard</a></strong>
-
-<dd>
-<p>Somewhat of a misnomer, this extension adds two menu entries to the
+	</dd>
+	<dt>digital-clock</dt>
+	<dd>
+		<p>Displays a digital clock using the built-in overlay.</p>
+	</dd>
+	<dt>remote-clipboard</dt>
+	<dd>
+		<p>Somewhat of a misnomer, this extension adds two menu entries to the
 selection popup that allows one ti run external commands to store the
 selection somewhere and fetch it again.</p>
-</dd>
-<dd>
-<p>We use it to implement a ``distributed selection mechanism'', which just
+		<p>We use it to implement a &quot;distributed selection mechanism&quot;, which just
 means that one command uploads the file to a remote server, and another
 reads it.</p>
-</dd>
-<dd>
-<p>The commands can be set using the <code>URxvt.remote-selection.store</code> and
+		<p>The commands can be set using the <code>URxvt.remote-selection.store</code> and
 <code>URxvt.remote-selection.fetch</code> resources. The first should read the
 selection to store from STDIN (always in UTF-8), the second should provide
 the selection data on STDOUT (also in UTF-8).</p>
-</dd>
-<dd>
-<p>The defaults (which are likely useless to you) use rsh and cat:</p>
-</dd>
-<dd>
-<pre>
-   URxvt.remote-selection.store: rsh ruth 'cat &gt;/tmp/distributed-selection'
-   URxvt.remote-selection.fetch: rsh ruth 'cat /tmp/distributed-selection'</pre>
-</dd>
-</li>
-<dt><strong><a name="item_selection_2dpastebin">selection-pastebin</a></strong>
+		<p>The defaults (which are likely useless to you) use rsh and cat:</p>
+<pre>   URxvt.remote-selection.store: rsh ruth 'cat &gt;/tmp/distributed-selection'
+   URxvt.remote-selection.fetch: rsh ruth 'cat /tmp/distributed-selection'
 
-<dd>
-<p>This is a little rarely useful extension that Uploads the selection as
+</pre>
+	</dd>
+	<dt>selection-pastebin</dt>
+	<dd>
+		<p>This is a little rarely useful extension that Uploads the selection as
 textfile to a remote site (or does other things). (The implementation is
 not currently secure for use in a multiuser environment as it writes to
-<em>/tmp</em> directly.).</p>
-</dd>
-<dd>
-<p>It listens to the <code>selection-pastebin:remote-pastebin</code> keyboard command,
+<cite>/tmp</cite> directly.).</p>
+		<p>It listens to the <code>selection-pastebin:remote-pastebin</code> keyboard command,
 i.e.</p>
-</dd>
-<dd>
-<pre>
-   URxvt.keysym.C-M-e: perl:selection-pastebin:remote-pastebin</pre>
-</dd>
-<dd>
-<p>Pressing this combination runs a command with <code>%</code> replaced by the name of
+<pre>   URxvt.keysym.C-M-e: perl:selection-pastebin:remote-pastebin
+
+</pre>
+		<p>Pressing this combination runs a command with <code>%</code> replaced by the name of
 the textfile. This command can be set via a resource:</p>
-</dd>
-<dd>
-<pre>
-   URxvt.selection-pastebin.cmd: rsync -apP % ruth:/var/www/www.ta-sa.org/files/txt/.</pre>
-</dd>
-<dd>
-<p>And the default is likely not useful to anybody but the few people around
+<pre>   URxvt.selection-pastebin.cmd: rsync -apP % ruth:/var/www/www.ta-sa.org/files/txt/.
+
+</pre>
+		<p>And the default is likely not useful to anybody but the few people around
 here :)</p>
-</dd>
-<dd>
-<p>The name of the textfile is the hex encoded md5 sum of the selection, so
+		<p>The name of the textfile is the hex encoded md5 sum of the selection, so
 the same content should lead to the same filename.</p>
-</dd>
-<dd>
-<p>After a successful upload the selection will be replaced by the text given
+		<p>After a successful upload the selection will be replaced by the text given
 in the <code>selection-pastebin-url</code> resource (again, the % is the placeholder
 for the filename):</p>
-</dd>
-<dd>
-<pre>
-   URxvt.selection-pastebin.url: <a href="http://www.ta-sa.org/files/txt/%">http://www.ta-sa.org/files/txt/%</a></pre>
-</dd>
-<dd>
-<p><em>Note to xrdb users:</em> xrdb uses the C preprocessor, which might interpret
+<pre>   URxvt.selection-pastebin.url: http://www.ta-sa.org/files/txt/%
+
+</pre>
+		<p><i>Note to xrdb users:</i> xrdb uses the C preprocessor, which might interpret
 the double <code>/</code> characters as comment start. Use <code>\057\057</code> instead,
 which works regardless of wether xrdb is used to parse the resource file
 or not.</p>
-</dd>
-</li>
-<dt><strong><a name="item_example_2drefresh_2dhooks">example-refresh-hooks</a></strong>
-
-<dd>
-<p>Displays a very simple digital clock in the upper right corner of the
+	</dd>
+	<dt>example-refresh-hooks</dt>
+	<dd>
+		<p>Displays a very simple digital clock in the upper right corner of the
 window. Illustrates overwriting the refresh callbacks to create your own
 overlays or changes.</p>
-</dd>
-</li>
+	</dd>
 </dl>
-<p>
-</p>
-<hr />
-<h1><a name="api_documentation">API DOCUMENTATION</a></h1>
-<p>
-</p>
-<h2><a name="general_api_considerations">General API Considerations</a></h2>
+
+</div>
+<h1 id="API_DOCUMENTATION">API DOCUMENTATION</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="API_DOCUMENTATION_CONTENT">
+
+</div>
+<h2 id="General_API_Considerations">General API Considerations</h2>
+<div id="General_API_Considerations_CONTENT">
 <p>All objects (such as terminals, time watchers etc.) are typical
 reference-to-hash objects. The hash can be used to store anything you
 like. All members starting with an underscore (such as <code>_ptr</code> or
@@ -554,32 +422,27 @@ terminal is destroyed.</p>
 <p>Argument names also often indicate the type of a parameter. Here are some
 hints on what they mean:</p>
 <dl>
-<dt><strong><a name="item__text">$text</a></strong>
-
-<dd>
-<p>Rxvt-unicodes special way of encoding text, where one ``unicode'' character
-always represents one screen cell. See <a href="#item_row_t">ROW_t</a> for a discussion of this format.</p>
-</dd>
-</li>
-<dt><strong><a name="item__string">$string</a></strong>
-
-<dd>
-<p>A perl text string, with an emphasis on <em>text</em>. It can store all unicode
+	<dt>$text</dt>
+	<dd>
+		<p>Rxvt-unicodes special way of encoding text, where one &quot;unicode&quot; character
+always represents one screen cell. See <cite>ROW_t</cite> for a discussion of this format.</p>
+	</dd>
+	<dt>$string</dt>
+	<dd>
+		<p>A perl text string, with an emphasis on <i>text</i>. It can store all unicode
 characters and is to be distinguished with text encoded in a specific
 encoding (often locale-specific) and binary data.</p>
-</dd>
-</li>
-<dt><strong><a name="item__octets">$octets</a></strong>
-
-<dd>
-<p>Either binary data or - more common - a text string encoded in a
+	</dd>
+	<dt>$octets</dt>
+	<dd>
+		<p>Either binary data or - more common - a text string encoded in a
 locale-specific way.</p>
-</dd>
-</li>
+	</dd>
 </dl>
-<p>
-</p>
-<h2><a name="extension_objects">Extension Objects</a></h2>
+
+</div>
+<h2 id="Extension_Objects">Extension Objects</h2>
+<div id="Extension_Objects_CONTENT">
 <p>Every perl extension is a perl class. A separate perl object is created
 for each terminal, and each terminal has its own set of extenion objects,
 which are passed as the first parameter to hooks. So extensions can use
@@ -591,602 +454,441 @@ internal use.</p>
 <code>urxvt::term</code> class on this object.</p>
 <p>It has the following methods and data members:</p>
 <dl>
-<dt><strong><a name="item__urxvt_term">$urxvt_term = $self-&gt;{term}</a></strong>
-
-<dd>
-<p>Returns the <code>urxvt::term</code> object associated with this instance of the
-extension. This member <em>must not</em> be changed in any way.</p>
-</dd>
-</li>
-<dt><strong><a name="item_enable">$self-&gt;enable ($hook_name =&gt; $cb, [$hook_name =&gt; $cb..])</a></strong>
-
-<dd>
-<p>Dynamically enable the given hooks (named without the <code>on_</code> prefix) for
+	<dt>$urxvt_term = $self-&gt;{term}</dt>
+	<dd>
+		<p>Returns the <code>urxvt::term</code> object associated with this instance of the
+extension. This member <i>must not</i> be changed in any way.</p>
+	</dd>
+	<dt>$self-&gt;enable ($hook_name =&gt; $cb, [$hook_name =&gt; $cb..])</dt>
+	<dd>
+		<p>Dynamically enable the given hooks (named without the <code>on_</code> prefix) for
 this extension, replacing any previous hook. This is useful when you want
 to overwrite time-critical hooks only temporarily.</p>
-</dd>
-</li>
-<dt><strong><a name="item_disable">$self-&gt;disable ($hook_name[, $hook_name..])</a></strong>
-
-<dd>
-<p>Dynamically disable the given hooks.</p>
-</dd>
-</li>
+	</dd>
+	<dt>$self-&gt;disable ($hook_name[, $hook_name..])</dt>
+	<dd>
+		<p>Dynamically disable the given hooks.</p>
+	</dd>
 </dl>
-<p>
-</p>
-<h2><a name="hooks">Hooks</a></h2>
+
+</div>
+<h2 id="Hooks">Hooks</h2>
+<div id="Hooks_CONTENT">
 <p>The following subroutines can be declared in extension files, and will be
 called whenever the relevant event happens.</p>
 <p>The first argument passed to them is an extension object as described in
 the in the <code>Extension Objects</code> section.</p>
 <p><strong>All</strong> of these hooks must return a boolean value. If any of the called
-hooks returns true, then the event counts as being <em>consumed</em>, and the
+hooks returns true, then the event counts as being <i>consumed</i>, and the
 relevant action might not be carried out by the C++ code.</p>
-<p><em>When in doubt, return a false value (preferably <code>()</code>). </em>&gt;</p>
+<p><i>When in doubt, return a false value (preferably <code>()</code>).</i></p>
 <dl>
-<dt><strong><a name="item_on_init__24term">on_init $term</a></strong>
-
-<dd>
-<p>Called after a new terminal object has been initialized, but before
+	<dt>on_init $term</dt>
+	<dd>
+		<p>Called after a new terminal object has been initialized, but before
 windows are created or the command gets run. Most methods are unsafe to
 call or deliver senseless data, as terminal size and other characteristics
 have not yet been determined. You can safely query and change resources
 and options, though. For many purposes the <code>on_start</code> hook is a better
 place.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_start__24term">on_start $term</a></strong>
-
-<dd>
-<p>Called at the very end of initialisation of a new terminal, just before
+	</dd>
+	<dt>on_start $term</dt>
+	<dd>
+		<p>Called at the very end of initialisation of a new terminal, just before
 trying to map (display) the toplevel and returning to the main loop.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_destroy__24term">on_destroy $term</a></strong>
-
-<dd>
-<p>Called whenever something tries to destroy terminal, when the terminal is
+	</dd>
+	<dt>on_destroy $term</dt>
+	<dd>
+		<p>Called whenever something tries to destroy terminal, when the terminal is
 still fully functional (not for long, though).</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_reset__24term">on_reset $term</a></strong>
-
-<dd>
-<p>Called after the screen is ``reset'' for any reason, such as resizing or
+	</dd>
+	<dt>on_reset $term</dt>
+	<dd>
+		<p>Called after the screen is &quot;reset&quot; for any reason, such as resizing or
 control sequences. Here is where you can react on changes to size-related
 variables.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_child_start__24term_2c__24pid">on_child_start $term, $pid</a></strong>
-
-<dd>
-<p>Called just after the child process has been <code>fork</code>ed.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_child_exit__24term_2c__24status">on_child_exit $term, $status</a></strong>
-
-<dd>
-<p>Called just after the child process has exited. <code>$status</code> is the status
+	</dd>
+	<dt>on_child_start $term, $pid</dt>
+	<dd>
+		<p>Called just after the child process has been <code>fork</code>ed.</p>
+	</dd>
+	<dt>on_child_exit $term, $status</dt>
+	<dd>
+		<p>Called just after the child process has exited. <code>$status</code> is the status
 from <code>waitpid</code>.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_sel_make__24term_2c__24eventtime">on_sel_make $term, $eventtime</a></strong>
-
-<dd>
-<p>Called whenever a selection has been made by the user, but before the
+	</dd>
+	<dt>on_sel_make $term, $eventtime</dt>
+	<dd>
+		<p>Called whenever a selection has been made by the user, but before the
 selection text is copied, so changes to the beginning, end or type of the
 selection will be honored.</p>
-</dd>
-<dd>
-<p>Returning a true value aborts selection making by urxvt, in which case you
-have to make a selection yourself by calling <a href="#item_selection_grab"><code>$term-&gt;selection_grab</code></a>.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_sel_grab__24term_2c__24eventtime">on_sel_grab $term, $eventtime</a></strong>
-
-<dd>
-<p>Called whenever a selection has been copied, but before the selection is
+		<p>Returning a true value aborts selection making by urxvt, in which case you
+have to make a selection yourself by calling <code>$term-&gt;selection_grab</code>.</p>
+	</dd>
+	<dt>on_sel_grab $term, $eventtime</dt>
+	<dd>
+		<p>Called whenever a selection has been copied, but before the selection is
 requested from the server.  The selection text can be queried and changed
-by calling <a href="#item_selection"><code>$term-&gt;selection</code></a>.</p>
-</dd>
-<dd>
-<p>Returning a true value aborts selection grabbing. It will still be highlighted.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_sel_extend__24term">on_sel_extend $term</a></strong>
-
-<dd>
-<p>Called whenever the user tries to extend the selection (e.g. with a double
+by calling <code>$term-&gt;selection</code>.</p>
+		<p>Returning a true value aborts selection grabbing. It will still be highlighted.</p>
+	</dd>
+	<dt>on_sel_extend $term</dt>
+	<dd>
+		<p>Called whenever the user tries to extend the selection (e.g. with a double
 click) and is either supposed to return false (normal operation), or
 should extend the selection itself and return true to suppress the built-in
 processing. This can happen multiple times, as long as the callback
 returns true, it will be called on every further click by the user and is
 supposed to enlarge the selection more and more, if possible.</p>
-</dd>
-<dd>
-<p>See the <em>selection</em> example extension.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_view_change__24term_2c__24offset">on_view_change $term, $offset</a></strong>
-
-<dd>
-<p>Called whenever the view offset changes, i.e. the user or program
+		<p>See the <cite>selection</cite> example extension.</p>
+	</dd>
+	<dt>on_view_change $term, $offset</dt>
+	<dd>
+		<p>Called whenever the view offset changes, i.e. the user or program
 scrolls. Offset <code>0</code> means display the normal terminal, positive values
 show this many lines of scrollback.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_scroll_back__24term_2c__24lines_2c__24saved">on_scroll_back $term, $lines, $saved</a></strong>
-
-<dd>
-<p>Called whenever lines scroll out of the terminal area into the scrollback
+	</dd>
+	<dt>on_scroll_back $term, $lines, $saved</dt>
+	<dd>
+		<p>Called whenever lines scroll out of the terminal area into the scrollback
 buffer. <code>$lines</code> is the number of lines scrolled out and may be larger
 than the scroll back buffer or the terminal.</p>
-</dd>
-<dd>
-<p>It is called before lines are scrolled out (so rows 0 .. min ($lines - 1,
+		<p>It is called before lines are scrolled out (so rows 0 .. min ($lines - 1,
 $nrow - 1) represent the lines to be scrolled out). <code>$saved</code> is the total
 number of lines that will be in the scrollback buffer.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_osc_seq__24term_2c__24op_2c__24args">on_osc_seq $term, $op, $args</a></strong>
-
-<dd>
-<p>Called on every OSC sequence and can be used to suppress it or modify its
+	</dd>
+	<dt>on_osc_seq $term, $op, $args</dt>
+	<dd>
+		<p>Called on every OSC sequence and can be used to suppress it or modify its
 behaviour.  The default should be to return an empty list. A true value
 suppresses execution of the request completely. Make sure you don't get
 confused by recursive invocations when you output an osc sequence within
 this callback.</p>
-</dd>
-<dd>
-<p><code>on_osc_seq_perl</code> should be used for new behaviour.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_osc_seq_perl__24term_2c__24string">on_osc_seq_perl $term, $string</a></strong>
-
-<dd>
-<p>Called whenever the <strong>ESC ] 777 ; string ST</strong> command sequence (OSC =
+		<p><code>on_osc_seq_perl</code> should be used for new behaviour.</p>
+	</dd>
+	<dt>on_osc_seq_perl $term, $string</dt>
+	<dd>
+		<p>Called whenever the <strong>ESC ] 777 ; string ST</strong> command sequence (OSC =
 operating system command) is processed. Cursor position and other state
 information is up-to-date when this happens. For interoperability, the
 string should start with the extension name and a colon, to distinguish
 it from commands for other extensions, and this might be enforced in the
 future.</p>
-</dd>
-<dd>
-<p>Be careful not ever to trust (in a security sense) the data you receive,
+		<p>Be careful not ever to trust (in a security sense) the data you receive,
 as its source can not easily be controlled (e-mail content, messages from
 other users on the same system etc.).</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_add_lines__24term_2c__24string">on_add_lines $term, $string</a></strong>
-
-<dd>
-<p>Called whenever text is about to be output, with the text as argument. You
+	</dd>
+	<dt>on_add_lines $term, $string</dt>
+	<dd>
+		<p>Called whenever text is about to be output, with the text as argument. You
 can filter/change and output the text yourself by returning a true value
-and calling <a href="#item_scr_add_lines"><code>$term-&gt;scr_add_lines</code></a> yourself. Please note that this
+and calling <code>$term-&gt;scr_add_lines</code> yourself. Please note that this
 might be very slow, however, as your hook is called for <strong>all</strong> text being
 output.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_tt_write__24term_2c__24octets">on_tt_write $term, $octets</a></strong>
-
-<dd>
-<p>Called whenever some data is written to the tty/pty and can be used to
+	</dd>
+	<dt>on_tt_write $term, $octets</dt>
+	<dd>
+		<p>Called whenever some data is written to the tty/pty and can be used to
 suppress or filter tty input.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_line_update__24term_2c__24row">on_line_update $term, $row</a></strong>
-
-<dd>
-<p>Called whenever a line was updated or changed. Can be used to filter
+	</dd>
+	<dt>on_line_update $term, $row</dt>
+	<dd>
+		<p>Called whenever a line was updated or changed. Can be used to filter
 screen output (e.g. underline urls or other useless stuff). Only lines
 that are being shown will be filtered, and, due to performance reasons,
 not always immediately.</p>
-</dd>
-<dd>
-<p>The row number is always the topmost row of the line if the line spans
+		<p>The row number is always the topmost row of the line if the line spans
 multiple rows.</p>
-</dd>
-<dd>
-<p>Please note that, if you change the line, then the hook might get called
+		<p>Please note that, if you change the line, then the hook might get called
 later with the already-modified line (e.g. if unrelated parts change), so
 you cannot just toggle rendition bits, but only set them.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_refresh_begin__24term">on_refresh_begin $term</a></strong>
-
-<dd>
-<p>Called just before the screen gets redrawn. Can be used for overlay
+	</dd>
+	<dt>on_refresh_begin $term</dt>
+	<dd>
+		<p>Called just before the screen gets redrawn. Can be used for overlay
 or similar effects by modify terminal contents in refresh_begin, and
 restoring them in refresh_end. The built-in overlay and selection display
 code is run after this hook, and takes precedence.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_refresh_end__24term">on_refresh_end $term</a></strong>
-
-<dd>
-<p>Called just after the screen gets redrawn. See <code>on_refresh_begin</code>.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_user_command__24term_2c__24string">on_user_command $term, $string</a></strong>
-
-<dd>
-<p>Called whenever a user-configured event is being activated (e.g. via
+	</dd>
+	<dt>on_refresh_end $term</dt>
+	<dd>
+		<p>Called just after the screen gets redrawn. See <code>on_refresh_begin</code>.</p>
+	</dd>
+	<dt>on_user_command $term, $string</dt>
+	<dd>
+		<p>Called whenever a user-configured event is being activated (e.g. via
 a <code>perl:string</code> action bound to a key, see description of the <strong>keysym</strong>
-resource in the <code>rxvt(1)</code> manpage).</p>
-</dd>
-<dd>
-<p>The event is simply the action string. This interface is assumed to change
+resource in the rxvt(1) manpage).</p>
+		<p>The event is simply the action string. This interface is assumed to change
 slightly in the future.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_resize_all_windows__24tern_2c__24new_width_2c__">on_resize_all_windows $tern, $new_width, $new_height</a></strong>
-
-<dd>
-<p>Called just after the new window size has been calculated, but before
+	</dd>
+	<dt>on_resize_all_windows $tern, $new_width, $new_height</dt>
+	<dd>
+		<p>Called just after the new window size has been calculated, but before
 windows are actually being resized or hints are being set. If this hook
 returns TRUE, setting of the window hints is being skipped.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_x_event__24term_2c__24event">on_x_event $term, $event</a></strong>
-
-<dd>
-<p>Called on every X event received on the vt window (and possibly other
+	</dd>
+	<dt>on_x_event $term, $event</dt>
+	<dd>
+		<p>Called on every X event received on the vt window (and possibly other
 windows). Should only be used as a last resort. Most event structure
 members are not passed.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_root_event__24term_2c__24event">on_root_event $term, $event</a></strong>
-
-<dd>
-<p>Like <code>on_x_event</code>, but is called for events on the root window.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_focus_in__24term">on_focus_in $term</a></strong>
-
-<dd>
-<p>Called whenever the window gets the keyboard focus, before rxvt-unicode
+	</dd>
+	<dt>on_root_event $term, $event</dt>
+	<dd>
+		<p>Like <code>on_x_event</code>, but is called for events on the root window.</p>
+	</dd>
+	<dt>on_focus_in $term</dt>
+	<dd>
+		<p>Called whenever the window gets the keyboard focus, before rxvt-unicode
 does focus in processing.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_focus_out__24term">on_focus_out $term</a></strong>
-
-<dd>
-<p>Called whenever the window loses keyboard focus, before rxvt-unicode does
+	</dd>
+	<dt>on_focus_out $term</dt>
+	<dd>
+		<p>Called whenever the window loses keyboard focus, before rxvt-unicode does
 focus out processing.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_configure_notify__24term_2c__24event">on_configure_notify $term, $event</a></strong>
-
-<dt><strong><a name="item_on_property_notify__24term_2c__24event">on_property_notify $term, $event</a></strong>
-
-<dt><strong><a name="item_on_key_press__24term_2c__24event_2c__24keysym_2c__">on_key_press $term, $event, $keysym, $octets</a></strong>
-
-<dt><strong><a name="item_on_key_release__24term_2c__24event_2c__24keysym">on_key_release $term, $event, $keysym</a></strong>
-
-<dt><strong><a name="item_on_button_press__24term_2c__24event">on_button_press $term, $event</a></strong>
-
-<dt><strong><a name="item_on_button_release__24term_2c__24event">on_button_release $term, $event</a></strong>
-
-<dt><strong><a name="item_on_motion_notify__24term_2c__24event">on_motion_notify $term, $event</a></strong>
-
-<dt><strong><a name="item_on_map_notify__24term_2c__24event">on_map_notify $term, $event</a></strong>
-
-<dt><strong><a name="item_on_unmap_notify__24term_2c__24event">on_unmap_notify $term, $event</a></strong>
-
-<dd>
-<p>Called whenever the corresponding X event is received for the terminal If
+	</dd>
+	<dt>on_configure_notify $term, $event</dt>
+	<dt>on_property_notify $term, $event</dt>
+	<dt>on_key_press $term, $event, $keysym, $octets</dt>
+	<dt>on_key_release $term, $event, $keysym</dt>
+	<dt>on_button_press $term, $event</dt>
+	<dt>on_button_release $term, $event</dt>
+	<dt>on_motion_notify $term, $event</dt>
+	<dt>on_map_notify $term, $event</dt>
+	<dt>on_unmap_notify $term, $event</dt>
+	<dd>
+		<p>Called whenever the corresponding X event is received for the terminal If
 the hook returns true, then the even will be ignored by rxvt-unicode.</p>
-</dd>
-<dd>
-<p>The event is a hash with most values as named by Xlib (see the XEvent
+		<p>The event is a hash with most values as named by Xlib (see the XEvent
 manpage), with the additional members <code>row</code> and <code>col</code>, which are the
 (real, not screen-based) row and column under the mouse cursor.</p>
-</dd>
-<dd>
-<p><code>on_key_press</code> additionally receives the string rxvt-unicode would
+		<p><code>on_key_press</code> additionally receives the string rxvt-unicode would
 output, if any, in locale-specific encoding.</p>
-</dd>
-<dd>
-<p>subwindow.</p>
-</dd>
-</li>
-<dt><strong><a name="item_on_client_message__24term_2c__24event">on_client_message $term, $event</a></strong>
-
-<dt><strong><a name="item_on_wm_protocols__24term_2c__24event">on_wm_protocols $term, $event</a></strong>
-
-<dt><strong><a name="item_on_wm_delete_window__24term_2c__24event">on_wm_delete_window $term, $event</a></strong>
-
-<dd>
-<p>Called when various types of ClientMessage events are received (all with
+		<p>subwindow.</p>
+	</dd>
+	<dt>on_client_message $term, $event</dt>
+	<dt>on_wm_protocols $term, $event</dt>
+	<dt>on_wm_delete_window $term, $event</dt>
+	<dd>
+		<p>Called when various types of ClientMessage events are received (all with
 format=32, WM_PROTOCOLS or WM_PROTOCOLS:WM_DELETE_WINDOW).</p>
-</dd>
-</li>
+	</dd>
 </dl>
-<p>
-</p>
-<h2><a name="variables_in_the_urxvt_package">Variables in the <code>urxvt</code> Package</a></h2>
+
+</div>
+<h2 id="Variables_in_the_code_urxvt_code_Pac">Variables in the <code>urxvt</code> Package</h2>
+<div id="Variables_in_the_code_urxvt_code_Pac-2">
 <dl>
-<dt><strong><a name="item__urxvt__libdir">$urxvt::LIBDIR</a></strong>
-
-<dd>
-<p>The rxvt-unicode library directory, where, among other things, the perl
+	<dt>$urxvt::LIBDIR</dt>
+	<dd>
+		<p>The rxvt-unicode library directory, where, among other things, the perl
 modules and scripts are stored.</p>
-</dd>
-</li>
-<dt><strong><a name="item__urxvt__resclass_">$urxvt::RESCLASS, $urxvt::RESCLASS</a></strong>
-
-<dd>
-<p>The resource class and name rxvt-unicode uses to look up X resources.</p>
-</dd>
-</li>
-<dt><strong><a name="item__urxvt__rxvtname">$urxvt::RXVTNAME</a></strong>
-
-<dd>
-<p>The basename of the installed binaries, usually <code>urxvt</code>.</p>
-</dd>
-</li>
-<dt><strong><a name="item__urxvt__term">$urxvt::TERM</a></strong>
-
-<dd>
-<p>The current terminal. This variable stores the current <code>urxvt::term</code>
+	</dd>
+	<dt>$urxvt::RESCLASS, $urxvt::RESCLASS</dt>
+	<dd>
+		<p>The resource class and name rxvt-unicode uses to look up X resources.</p>
+	</dd>
+	<dt>$urxvt::RXVTNAME</dt>
+	<dd>
+		<p>The basename of the installed binaries, usually <code>urxvt</code>.</p>
+	</dd>
+	<dt>$urxvt::TERM</dt>
+	<dd>
+		<p>The current terminal. This variable stores the current <code>urxvt::term</code>
 object, whenever a callback/hook is executing.</p>
-</dd>
-</li>
-<dt><strong><a name="item__urxvt__term_init">@urxvt::TERM_INIT</a></strong>
-
-<dd>
-<p>All code references in this array will be called as methods of the next newly
+	</dd>
+	<dt>@urxvt::TERM_INIT</dt>
+	<dd>
+		<p>All code references in this array will be called as methods of the next newly
 created <code>urxvt::term</code> object (during the <code>on_init</code> phase). The array
 gets cleared before the code references that were in it are being executed,
 so references can push themselves onto it again if they so desire.</p>
-</dd>
-<dd>
-<p>This complements to the perl-eval command line option, but gets executed
+		<p>This complements to the perl-eval command line option, but gets executed
 first.</p>
-</dd>
-</li>
-<dt><strong><a name="item__urxvt__term_ext">@urxvt::TERM_EXT</a></strong>
-
-<dd>
-<p>Works similar to <code>@TERM_INIT</code>, but contains perl package/class names, which
+	</dd>
+	<dt>@urxvt::TERM_EXT</dt>
+	<dd>
+		<p>Works similar to <code>@TERM_INIT</code>, but contains perl package/class names, which
 get registered as normal extensions after calling the hooks in <code>@TERM_INIT</code>
 but before other extensions. Gets cleared just like <code>@TERM_INIT</code>.</p>
-</dd>
-</li>
+	</dd>
 </dl>
-<p>
-</p>
-<h2><a name="functions_in_the_urxvt_package">Functions in the <code>urxvt</code> Package</a></h2>
-<dl>
-<dt><strong><a name="item_urxvt_3a_3afatal__24errormessage">urxvt::fatal $errormessage</a></strong>
 
-<dd>
-<p>Fatally aborts execution with the given error message. Avoid at all
+</div>
+<h2 id="Functions_in_the_code_urxvt_code_Pac">Functions in the <code>urxvt</code> Package</h2>
+<div id="Functions_in_the_code_urxvt_code_Pac-2">
+<dl>
+	<dt>urxvt::fatal $errormessage</dt>
+	<dd>
+		<p>Fatally aborts execution with the given error message. Avoid at all
 costs! The only time this is acceptable is when the terminal process
 starts up.</p>
-</dd>
-</li>
-<dt><strong><a name="item_urxvt_3a_3awarn__24string">urxvt::warn $string</a></strong>
-
-<dd>
-<p>Calls <code>rxvt_warn</code> with the given string which should not include a
+	</dd>
+	<dt>urxvt::warn $string</dt>
+	<dd>
+		<p>Calls <code>rxvt_warn</code> with the given string which should not include a
 newline. The module also overwrites the <code>warn</code> builtin with a function
 that calls this function.</p>
-</dd>
-<dd>
-<p>Using this function has the advantage that its output ends up in the
+		<p>Using this function has the advantage that its output ends up in the
 correct place, e.g. on stderr of the connecting urxvtc client.</p>
-</dd>
-<dd>
-<p>Messages have a size limit of 1023 bytes currently.</p>
-</dd>
-</li>
-<dt><strong><a name="item__terms">@terms = urxvt::termlist</a></strong>
-
-<dd>
-<p>Returns all urxvt::term objects that exist in this process, regardless of
+		<p>Messages have a size limit of 1023 bytes currently.</p>
+	</dd>
+	<dt>@terms = urxvt::termlist</dt>
+	<dd>
+		<p>Returns all urxvt::term objects that exist in this process, regardless of
 whether they are started, being destroyed etc., so be careful. Only term
 objects that have perl extensions attached will be returned (because there
 is no urxvt::term objet associated with others).</p>
-</dd>
-</li>
-<dt><strong><a name="item__time">$time = urxvt::NOW</a></strong>
-
-<dd>
-<p>Returns the ``current time'' (as per the event loop).</p>
-</dd>
-</li>
-<dt><strong><a name="item_urxvt_3a_3acurrenttime">urxvt::CurrentTime</a></strong>
-
-<dt><strong><a name="item_urxvt_3a_3ashiftmask_2c_lockmask_2c_controlmask_2c">urxvt::ShiftMask, LockMask, ControlMask, Mod1Mask, Mod2Mask,
+	</dd>
+	<dt>$time = urxvt::NOW</dt>
+	<dd>
+		<p>Returns the &quot;current time&quot; (as per the event loop).</p>
+	</dd>
+	<dt>urxvt::CurrentTime</dt>
+	<dt>urxvt::ShiftMask, LockMask, ControlMask, Mod1Mask, Mod2Mask,
 Mod3Mask, Mod4Mask, Mod5Mask, Button1Mask, Button2Mask, Button3Mask,
-Button4Mask, Button5Mask, AnyModifier</a></strong>
-
-<dt><strong><a name="item_urxvt_3a_3anoeventmask_2c_keypressmask_2c_keyrelea">urxvt::NoEventMask, KeyPressMask, KeyReleaseMask,
+Button4Mask, Button5Mask, AnyModifier</dt>
+	<dt>urxvt::NoEventMask, KeyPressMask, KeyReleaseMask,
 ButtonPressMask, ButtonReleaseMask, EnterWindowMask, LeaveWindowMask,
 PointerMotionMask, PointerMotionHintMask, Button1MotionMask, Button2MotionMask,
 Button3MotionMask, Button4MotionMask, Button5MotionMask, ButtonMotionMask,
 KeymapStateMask, ExposureMask, VisibilityChangeMask, StructureNotifyMask,
 ResizeRedirectMask, SubstructureNotifyMask, SubstructureRedirectMask,
-FocusChangeMask, PropertyChangeMask, ColormapChangeMask, OwnerGrabButtonMask</a></strong>
-
-<dt><strong><a name="item_urxvt_3a_3akeypress_2c_keyrelease_2c_buttonpress_2">urxvt::KeyPress, KeyRelease, ButtonPress, ButtonRelease, MotionNotify,
+FocusChangeMask, PropertyChangeMask, ColormapChangeMask, OwnerGrabButtonMask</dt>
+	<dt>urxvt::KeyPress, KeyRelease, ButtonPress, ButtonRelease, MotionNotify,
 EnterNotify, LeaveNotify, FocusIn, FocusOut, KeymapNotify, Expose,
 GraphicsExpose, NoExpose, VisibilityNotify, CreateNotify, DestroyNotify,
 UnmapNotify, MapNotify, MapRequest, ReparentNotify, ConfigureNotify,
 ConfigureRequest, GravityNotify, ResizeRequest, CirculateNotify,
 CirculateRequest, PropertyNotify, SelectionClear, SelectionRequest,
-SelectionNotify, ColormapNotify, ClientMessage, MappingNotify</a></strong>
-
-<dd>
-<p>Various constants for use in X calls and event processing.</p>
-</dd>
-</li>
+SelectionNotify, ColormapNotify, ClientMessage, MappingNotify</dt>
+	<dd>
+		<p>Various constants for use in X calls and event processing.</p>
+	</dd>
 </dl>
-<p>
-</p>
-<h2><a name="rendition">RENDITION</a></h2>
+
+</div>
+<h2 id="RENDITION">RENDITION</h2>
+<div id="RENDITION_CONTENT">
 <p>Rendition bitsets contain information about colour, font, font styles and
 similar information for each screen cell.</p>
-<p>The following ``macros'' deal with changes in rendition sets. You should
+<p>The following &quot;macros&quot; deal with changes in rendition sets. You should
 never just create a bitset, you should always modify an existing one,
 as they contain important information required for correct operation of
 rxvt-unicode.</p>
 <dl>
-<dt><strong><a name="item__rend">$rend = urxvt::DEFAULT_RSTYLE</a></strong>
-
-<dd>
-<p>Returns the default rendition, as used when the terminal is starting up or
+	<dt>$rend = urxvt::DEFAULT_RSTYLE</dt>
+	<dd>
+		<p>Returns the default rendition, as used when the terminal is starting up or
 being reset. Useful as a base to start when creating renditions.</p>
-</dd>
-</li>
-<dt><strong>$rend = urxvt::OVERLAY_RSTYLE</strong>
-
-<dd>
-<p>Return the rendition mask used for overlays by default.</p>
-</dd>
-</li>
-<dt><strong><a name="item__rendbit">$rendbit = urxvt::RS_Bold, RS_Italic, RS_Blink, RS_RVid, RS_Uline</a></strong>
-
-<dd>
-<p>Return the bit that enabled bold, italic, blink, reverse-video and
+	</dd>
+	<dt>$rend = urxvt::OVERLAY_RSTYLE</dt>
+	<dd>
+		<p>Return the rendition mask used for overlays by default.</p>
+	</dd>
+	<dt>$rendbit = urxvt::RS_Bold, RS_Italic, RS_Blink, RS_RVid, RS_Uline</dt>
+	<dd>
+		<p>Return the bit that enabled bold, italic, blink, reverse-video and
 underline, respectively. To enable such a style, just logically OR it into
 the bitset.</p>
-</dd>
-</li>
-<dt><strong><a name="item__foreground">$foreground = urxvt::GET_BASEFG $rend</a></strong>
-
-<dt><strong><a name="item__background">$background = urxvt::GET_BASEBG $rend</a></strong>
-
-<dd>
-<p>Return the foreground/background colour index, respectively.</p>
-</dd>
-</li>
-<dt><strong>$rend = urxvt::SET_FGCOLOR $rend, $new_colour</strong>
-
-<dt><strong>$rend = urxvt::SET_BGCOLOR $rend, $new_colour</strong>
-
-<dt><strong>$rend = urxvt::SET_COLOR $rend, $new_fg, $new_bg</strong>
-
-<dd>
-<p>Replace the foreground/background colour in the rendition mask with the
+	</dd>
+	<dt>$foreground = urxvt::GET_BASEFG $rend</dt>
+	<dt>$background = urxvt::GET_BASEBG $rend</dt>
+	<dd>
+		<p>Return the foreground/background colour index, respectively.</p>
+	</dd>
+	<dt>$rend = urxvt::SET_FGCOLOR $rend, $new_colour</dt>
+	<dt>$rend = urxvt::SET_BGCOLOR $rend, $new_colour</dt>
+	<dt>$rend = urxvt::SET_COLOR $rend, $new_fg, $new_bg</dt>
+	<dd>
+		<p>Replace the foreground/background colour in the rendition mask with the
 specified one.</p>
-</dd>
-</li>
-<dt><strong><a name="item__value">$value = urxvt::GET_CUSTOM $rend</a></strong>
-
-<dd>
-<p>Return the ``custom'' value: Every rendition has 5 bits for use by
+	</dd>
+	<dt>$value = urxvt::GET_CUSTOM $rend</dt>
+	<dd>
+		<p>Return the &quot;custom&quot; value: Every rendition has 5 bits for use by
 extensions. They can be set and changed as you like and are initially
 zero.</p>
-</dd>
-</li>
-<dt><strong>$rend = urxvt::SET_CUSTOM $rend, $new_value</strong>
-
-<dd>
-<p>Change the custom value.</p>
-</dd>
-</li>
+	</dd>
+	<dt>$rend = urxvt::SET_CUSTOM $rend, $new_value</dt>
+	<dd>
+		<p>Change the custom value.</p>
+	</dd>
 </dl>
-<p>
-</p>
-<h2><a name="the_urxvt__anyevent_class">The <code>urxvt::anyevent</code> Class</a></h2>
+
+</div>
+<h2 id="The_code_urxvt_anyevent_code_Class">The <code>urxvt::anyevent</code> Class</h2>
+<div id="The_code_urxvt_anyevent_code_Class_C">
 <p>The sole purpose of this class is to deliver an interface to the
 <code>AnyEvent</code> module - any module using it will work inside urxvt without
 further programming. The only exception is that you cannot wait on
 condition variables, but non-blocking condvar use is ok. What this means
 is that you cannot use blocking APIs, but the non-blocking variant should
 work.</p>
-<p>
-</p>
-<h2><a name="the_urxvt__term_class">The <code>urxvt::term</code> Class</a></h2>
-<dl>
-<dt><strong><a name="item__term">$term = new urxvt::term $envhashref, $rxvtname, [arg...]</a></strong>
 
-<dd>
-<p>Creates a new terminal, very similar as if you had started it with system
+</div>
+<h2 id="The_code_urxvt_term_code_Class">The <code>urxvt::term</code> Class</h2>
+<div id="The_code_urxvt_term_code_Class_CONTE">
+<dl>
+	<dt>$term = new urxvt::term $envhashref, $rxvtname, [arg...]</dt>
+	<dd>
+		<p>Creates a new terminal, very similar as if you had started it with system
 <code>$rxvtname, arg...</code>. <code>$envhashref</code> must be a reference to a <code>%ENV</code>-like
 hash which defines the environment of the new terminal.</p>
-</dd>
-<dd>
-<p>Croaks (and probably outputs an error message) if the new instance
+		<p>Croaks (and probably outputs an error message) if the new instance
 couldn't be created.  Returns <code>undef</code> if the new instance didn't
 initialise perl, and the terminal object otherwise. The <code>init</code> and
-<a href="#item_start"><code>start</code></a> hooks will be called before this call returns, and are free to
+<code>start</code> hooks will be called before this call returns, and are free to
 refer to global data (which is race free).</p>
-</dd>
-</li>
-<dt><strong><a name="item_destroy">$term-&gt;destroy</a></strong>
-
-<dd>
-<p>Destroy the terminal object (close the window, free resources
+	</dd>
+	<dt>$term-&gt;destroy</dt>
+	<dd>
+		<p>Destroy the terminal object (close the window, free resources
 etc.). Please note that rxvt will not exit as long as any event
 watchers (timers, io watchers) are still active.</p>
-</dd>
-</li>
-<dt><strong><a name="item_exec_async">$term-&gt;exec_async ($cmd[, @args])</a></strong>
-
-<dd>
-<p>Works like the combination of the <code>fork</code>/<code>exec</code> builtins, which executes
-(``starts'') programs in the background. This function takes care of setting
+	</dd>
+	<dt>$term-&gt;exec_async ($cmd[, @args])</dt>
+	<dd>
+		<p>Works like the combination of the <code>fork</code>/<code>exec</code> builtins, which executes
+(&quot;starts&quot;) programs in the background. This function takes care of setting
 the user environment before exec'ing the command (e.g. <code>PATH</code>) and should
 be preferred over explicit calls to <code>exec</code> or <code>system</code>.</p>
-</dd>
-<dd>
-<p>Returns the pid of the subprocess or <code>undef</code> on error.</p>
-</dd>
-</li>
-<dt><strong><a name="item_option">$isset = $term-&gt;option ($optval[, $set])</a></strong>
-
-<dd>
-<p>Returns true if the option specified by <code>$optval</code> is enabled, and
+		<p>Returns the pid of the subprocess or <code>undef</code> on error.</p>
+	</dd>
+	<dt>$isset = $term-&gt;option ($optval[, $set])</dt>
+	<dd>
+		<p>Returns true if the option specified by <code>$optval</code> is enabled, and
 optionally change it. All option values are stored by name in the hash
 <code>%urxvt::OPTION</code>. Options not enabled in this binary are not in the hash.</p>
-</dd>
-<dd>
-<p>Here is a likely non-exhaustive list of option names, please see the
-source file <em>/src/optinc.h</em> to see the actual list:</p>
-</dd>
-<dd>
-<pre>
- borderLess console cursorBlink cursorUnderline hold iconic insecure
+		<p>Here is a likely non-exhaustive list of option names, please see the
+source file <cite>/src/optinc.h</cite> to see the actual list:</p>
+<pre> borderLess console cursorBlink cursorUnderline hold iconic insecure
  intensityStyles jumpScroll loginShell mapAlert meta8 mouseWheelScrollPage
  override-redirect pastableTabs pointerBlank reverseVideo scrollBar
  scrollBar_floating scrollBar_right scrollTtyKeypress scrollTtyOutput
  scrollWithBuffer secondaryScreen secondaryScroll skipBuiltinGlyphs
- transparent tripleclickwords utmpInhibit visualBell</pre>
-</dd>
-</li>
-<dt><strong><a name="item_resource">$value = $term-&gt;resource ($name[, $newval])</a></strong>
+ transparent tripleclickwords utmpInhibit visualBell
 
-<dd>
-<p>Returns the current resource value associated with a given name and
+</pre>
+	</dd>
+	<dt>$value = $term-&gt;resource ($name[, $newval])</dt>
+	<dd>
+		<p>Returns the current resource value associated with a given name and
 optionally sets a new value. Setting values is most useful in the <code>init</code>
 hook. Unset resources are returned and accepted as <code>undef</code>.</p>
-</dd>
-<dd>
-<p>The new value must be properly encoded to a suitable character encoding
+		<p>The new value must be properly encoded to a suitable character encoding
 before passing it to this method. Similarly, the returned value may need
 to be converted from the used encoding to text.</p>
-</dd>
-<dd>
-<p>Resource names are as defined in <em>src/rsinc.h</em>. Colours can be specified
+		<p>Resource names are as defined in <cite>src/rsinc.h</cite>. Colours can be specified
 as resource names of the form <code>color+&lt;index&gt;</code>, e.g. <code>color+5</code>. (will
 likely change).</p>
-</dd>
-<dd>
-<p>Please note that resource strings will currently only be freed when the
+		<p>Please note that resource strings will currently only be freed when the
 terminal is destroyed, so changing options frequently will eat memory.</p>
-</dd>
-<dd>
-<p>Here is a likely non-exhaustive list of resource names, not all of which
-are supported in every build, please see the source file <em>/src/rsinc.h</em>
+		<p>Here is a likely non-exhaustive list of resource names, not all of which
+are supported in every build, please see the source file <cite>/src/rsinc.h</cite>
 to see the actual list:</p>
-</dd>
-<dd>
-<pre>
-  answerbackstring backgroundPixmap backspace_key boldFont boldItalicFont
+<pre>  answerbackstring backgroundPixmap backspace_key boldFont boldItalicFont
   borderLess color cursorBlink cursorUnderline cutchars delete_key
   display_name embed ext_bwidth fade font geometry hold iconName
   imFont imLocale inputMethod insecure int_bwidth intensityStyles
@@ -1198,687 +900,488 @@ to see the actual list:</p>
   scrollTtyKeypress scrollTtyOutput scrollWithBuffer scrollstyle
   secondaryScreen secondaryScroll selectstyle shade term_name title
   transient_for transparent transparent_all tripleclickwords utmpInhibit
-  visualBell</pre>
-</dd>
-</li>
-<dt><strong><a name="item_x_resource">$value = $term-&gt;x_resource ($pattern)</a></strong>
+  visualBell
 
-<dd>
-<p>Returns the X-Resource for the given pattern, excluding the program or
-class name, i.e.  <a href="#item_x_resource"><code>$term-&gt;x_resource (&quot;boldFont&quot;)</code></a> should return the
+</pre>
+	</dd>
+	<dt>$value = $term-&gt;x_resource ($pattern)</dt>
+	<dd>
+		<p>Returns the X-Resource for the given pattern, excluding the program or
+class name, i.e.  <code>$term-&gt;x_resource (&quot;boldFont&quot;)</code> should return the
 same value as used by this instance of rxvt-unicode. Returns <code>undef</code> if no
 resource with that pattern exists.</p>
-</dd>
-<dd>
-<p>This method should only be called during the <code>on_start</code> hook, as there is
+		<p>This method should only be called during the <code>on_start</code> hook, as there is
 only one resource database per display, and later invocations might return
 the wrong resources.</p>
-</dd>
-</li>
-<dt><strong><a name="item_parse_keysym">$success = $term-&gt;parse_keysym ($keysym_spec, $command_string)</a></strong>
-
-<dd>
-<p>Adds a keymap translation exactly as specified via a resource. See the
-<code>keysym</code> resource in the <code>rxvt(1)</code> manpage.</p>
-</dd>
-</li>
-<dt><strong><a name="item_rstyle">$rend = $term-&gt;rstyle ([$new_rstyle])</a></strong>
-
-<dd>
-<p>Return and optionally change the current rendition. Text that is output by
+	</dd>
+	<dt>$success = $term-&gt;parse_keysym ($keysym_spec, $command_string)</dt>
+	<dd>
+		<p>Adds a keymap translation exactly as specified via a resource. See the
+<code>keysym</code> resource in the rxvt(1) manpage.</p>
+	</dd>
+	<dt>$rend = $term-&gt;rstyle ([$new_rstyle])</dt>
+	<dd>
+		<p>Return and optionally change the current rendition. Text that is output by
 the terminal application will use this style.</p>
-</dd>
-</li>
-<dt><strong><a name="item_screen_cur">($row, $col) = $term-&gt;screen_cur ([$row, $col])</a></strong>
-
-<dd>
-<p>Return the current coordinates of the text cursor position and optionally
+	</dd>
+	<dt>($row, $col) = $term-&gt;screen_cur ([$row, $col])</dt>
+	<dd>
+		<p>Return the current coordinates of the text cursor position and optionally
 set it (which is usually bad as applications don't expect that).</p>
-</dd>
-</li>
-<dt><strong><a name="item_selection_mark">($row, $col) = $term-&gt;selection_mark ([$row, $col])</a></strong>
-
-<dt><strong><a name="item_selection_beg">($row, $col) = $term-&gt;selection_beg ([$row, $col])</a></strong>
-
-<dt><strong><a name="item_selection_end">($row, $col) = $term-&gt;selection_end ([$row, $col])</a></strong>
-
-<dd>
-<p>Return the current values of the selection mark, begin or end positions,
+	</dd>
+	<dt>($row, $col) = $term-&gt;selection_mark ([$row, $col])</dt>
+	<dt>($row, $col) = $term-&gt;selection_beg ([$row, $col])</dt>
+	<dt>($row, $col) = $term-&gt;selection_end ([$row, $col])</dt>
+	<dd>
+		<p>Return the current values of the selection mark, begin or end positions,
 and optionally set them to new values.</p>
-</dd>
-</li>
-<dt><strong><a name="item_selection_make">$term-&gt;selection_make ($eventtime[, $rectangular])</a></strong>
-
-<dd>
-<p>Tries to make a selection as set by <a href="#item_selection_beg"><code>selection_beg</code></a> and
-<a href="#item_selection_end"><code>selection_end</code></a>. If <code>$rectangular</code> is true (default: false), a
+	</dd>
+	<dt>$term-&gt;selection_make ($eventtime[, $rectangular])</dt>
+	<dd>
+		<p>Tries to make a selection as set by <code>selection_beg</code> and
+<code>selection_end</code>. If <code>$rectangular</code> is true (default: false), a
 rectangular selection will be made. This is the prefered function to make
 a selection.</p>
-</dd>
-</li>
-<dt><strong><a name="item_selection_grab">$success = $term-&gt;selection_grab ($eventtime)</a></strong>
-
-<dd>
-<p>Try to request the primary selection text from the server (for example, as
+	</dd>
+	<dt>$success = $term-&gt;selection_grab ($eventtime)</dt>
+	<dd>
+		<p>Try to request the primary selection text from the server (for example, as
 set by the next method). No visual feedback will be given. This function
 is mostly useful from within <code>on_sel_grab</code> hooks.</p>
-</dd>
-</li>
-<dt><strong>$oldtext = $term-&gt;selection ([$newtext])</strong>
-
-<dd>
-<p>Return the current selection text and optionally replace it by <code>$newtext</code>.</p>
-</dd>
-</li>
-<dt><strong><a name="item_overlay_simple">$term-&gt;overlay_simple ($x, $y, $text)</a></strong>
-
-<dd>
-<p>Create a simple multi-line overlay box. See the next method for details.</p>
-</dd>
-</li>
-<dt><strong><a name="item_overlay">$term-&gt;overlay ($x, $y, $width, $height[, $rstyle[, $border]])</a></strong>
-
-<dd>
-<p>Create a new (empty) overlay at the given position with the given
+	</dd>
+	<dt>$oldtext = $term-&gt;selection ([$newtext])</dt>
+	<dd>
+		<p>Return the current selection text and optionally replace it by <code>$newtext</code>.</p>
+	</dd>
+	<dt>$term-&gt;overlay_simple ($x, $y, $text)</dt>
+	<dd>
+		<p>Create a simple multi-line overlay box. See the next method for details.</p>
+	</dd>
+	<dt>$term-&gt;overlay ($x, $y, $width, $height[, $rstyle[, $border]])</dt>
+	<dd>
+		<p>Create a new (empty) overlay at the given position with the given
 width/height. <code>$rstyle</code> defines the initial rendition style
 (default: <code>OVERLAY_RSTYLE</code>).</p>
-</dd>
-<dd>
-<p>If <code>$border</code> is <code>2</code> (default), then a decorative border will be put
+		<p>If <code>$border</code> is <code>2</code> (default), then a decorative border will be put
 around the box.</p>
-</dd>
-<dd>
-<p>If either <code>$x</code> or <code>$y</code> is negative, then this is counted from the
+		<p>If either <code>$x</code> or <code>$y</code> is negative, then this is counted from the
 right/bottom side, respectively.</p>
-</dd>
-<dd>
-<p>This method returns an urxvt::overlay object. The overlay will be visible
+		<p>This method returns an urxvt::overlay object. The overlay will be visible
 as long as the perl object is referenced.</p>
-</dd>
-<dd>
-<p>The methods currently supported on <code>urxvt::overlay</code> objects are:</p>
-</dd>
-<dl>
-<dt><strong><a name="item_set">$overlay-&gt;set ($x, $y, $text, $rend)</a></strong>
-
-<dd>
-<p>Similar to <a href="#item_row_t"><code>$term-&gt;ROW_t</code></a> and <a href="#item_row_r"><code>$term-&gt;ROW_r</code></a> in that it puts
+		<p>The methods currently supported on <code>urxvt::overlay</code> objects are:</p>
+		<p>
+			<dl>
+				<dt>$overlay-&gt;set ($x, $y, $text, $rend)</dt>
+				<dd>
+					<p>Similar to <code>$term-&gt;ROW_t</code> and <code>$term-&gt;ROW_r</code> in that it puts
 text in rxvt-unicode's special encoding and an array of rendition values
 at a specific position inside the overlay.</p>
-</dd>
-</li>
-<dt><strong><a name="item_hide">$overlay-&gt;hide</a></strong>
-
-<dd>
-<p>If visible, hide the overlay, but do not destroy it.</p>
-</dd>
-</li>
-<dt><strong><a name="item_show">$overlay-&gt;show</a></strong>
-
-<dd>
-<p>If hidden, display the overlay again.</p>
-</dd>
-</li>
-</dl>
-<dt><strong>$popup = $term-&gt;popup ($event)</strong>
-
-<dd>
-<p>Creates a new <code>urxvt::popup</code> object that implements a popup menu. The
-<code>$event</code> <em>must</em> be the event causing the menu to pop up (a button event,
+				</dd>
+				<dt>$overlay-&gt;hide</dt>
+				<dd>
+					<p>If visible, hide the overlay, but do not destroy it.</p>
+				</dd>
+				<dt>$overlay-&gt;show</dt>
+				<dd>
+					<p>If hidden, display the overlay again.</p>
+				</dd>
+			</dl>
+		</p>
+	</dd>
+	<dt>$popup = $term-&gt;popup ($event)</dt>
+	<dd>
+		<p>Creates a new <code>urxvt::popup</code> object that implements a popup menu. The
+<code>$event</code> <i>must</i> be the event causing the menu to pop up (a button event,
 currently).</p>
-</dd>
-</li>
-<dt><strong><a name="item_strwidth">$cellwidth = $term-&gt;strwidth ($string)</a></strong>
-
-<dd>
-<p>Returns the number of screen-cells this string would need. Correctly
+	</dd>
+	<dt>$cellwidth = $term-&gt;strwidth ($string)</dt>
+	<dd>
+		<p>Returns the number of screen-cells this string would need. Correctly
 accounts for wide and combining characters.</p>
-</dd>
-</li>
-<dt><strong><a name="item_locale_encode">$octets = $term-&gt;locale_encode ($string)</a></strong>
-
-<dd>
-<p>Convert the given text string into the corresponding locale encoding.</p>
-</dd>
-</li>
-<dt><strong><a name="item_locale_decode">$string = $term-&gt;locale_decode ($octets)</a></strong>
-
-<dd>
-<p>Convert the given locale-encoded octets into a perl string.</p>
-</dd>
-</li>
-<dt><strong><a name="item_scr_xor_span">$term-&gt;scr_xor_span ($beg_row, $beg_col, $end_row, $end_col[, $rstyle])</a></strong>
-
-<dd>
-<p>XORs the rendition values in the given span with the provided value
-(default: <code>RS_RVid</code>), which <em>MUST NOT</em> contain font styles. Useful in
+	</dd>
+	<dt>$octets = $term-&gt;locale_encode ($string)</dt>
+	<dd>
+		<p>Convert the given text string into the corresponding locale encoding.</p>
+	</dd>
+	<dt>$string = $term-&gt;locale_decode ($octets)</dt>
+	<dd>
+		<p>Convert the given locale-encoded octets into a perl string.</p>
+	</dd>
+	<dt>$term-&gt;scr_xor_span ($beg_row, $beg_col, $end_row, $end_col[, $rstyle])</dt>
+	<dd>
+		<p>XORs the rendition values in the given span with the provided value
+(default: <code>RS_RVid</code>), which <i>MUST NOT</i> contain font styles. Useful in
 refresh hooks to provide effects similar to the selection.</p>
-</dd>
-</li>
-<dt><strong><a name="item_scr_xor_rect">$term-&gt;scr_xor_rect ($beg_row, $beg_col, $end_row, $end_col[, $rstyle1[, $rstyle2]])</a></strong>
-
-<dd>
-<p>Similar to <a href="#item_scr_xor_span"><code>scr_xor_span</code></a>, but xors a rectangle instead. Trailing
+	</dd>
+	<dt>$term-&gt;scr_xor_rect ($beg_row, $beg_col, $end_row, $end_col[, $rstyle1[, $rstyle2]])</dt>
+	<dd>
+		<p>Similar to <code>scr_xor_span</code>, but xors a rectangle instead. Trailing
 whitespace will additionally be xored with the <code>$rstyle2</code>, which defaults
 to <code>RS_RVid | RS_Uline</code>, which removes reverse video again and underlines
-it instead. Both styles <em>MUST NOT</em> contain font styles.</p>
-</dd>
-</li>
-<dt><strong><a name="item_scr_bell">$term-&gt;scr_bell</a></strong>
-
-<dd>
-<p>Ring the bell!</p>
-</dd>
-</li>
-<dt><strong><a name="item_scr_add_lines">$term-&gt;scr_add_lines ($string)</a></strong>
-
-<dd>
-<p>Write the given text string to the screen, as if output by the application
+it instead. Both styles <i>MUST NOT</i> contain font styles.</p>
+	</dd>
+	<dt>$term-&gt;scr_bell</dt>
+	<dd>
+		<p>Ring the bell!</p>
+	</dd>
+	<dt>$term-&gt;scr_add_lines ($string)</dt>
+	<dd>
+		<p>Write the given text string to the screen, as if output by the application
 running inside the terminal. It may not contain command sequences (escape
 codes), but is free to use line feeds, carriage returns and tabs. The
 string is a normal text string, not in locale-dependent encoding.</p>
-</dd>
-<dd>
-<p>Normally its not a good idea to use this function, as programs might be
+		<p>Normally its not a good idea to use this function, as programs might be
 confused by changes in cursor position or scrolling. Its useful inside a
 <code>on_add_lines</code> hook, though.</p>
-</dd>
-</li>
-<dt><strong><a name="item_scr_change_screen">$term-&gt;scr_change_screen ($screen)</a></strong>
-
-<dd>
-<p>Switch to given screen - 0 primary, 1 secondary.</p>
-</dd>
-</li>
-<dt><strong><a name="item_cmd_parse">$term-&gt;cmd_parse ($octets)</a></strong>
-
-<dd>
-<p>Similar to <a href="#item_scr_add_lines"><code>scr_add_lines</code></a>, but the argument must be in the
+	</dd>
+	<dt>$term-&gt;scr_change_screen ($screen)</dt>
+	<dd>
+		<p>Switch to given screen - 0 primary, 1 secondary.</p>
+	</dd>
+	<dt>$term-&gt;cmd_parse ($octets)</dt>
+	<dd>
+		<p>Similar to <code>scr_add_lines</code>, but the argument must be in the
 locale-specific encoding of the terminal and can contain command sequences
 (escape codes) that will be interpreted.</p>
-</dd>
-</li>
-<dt><strong><a name="item_tt_write">$term-&gt;tt_write ($octets)</a></strong>
-
-<dd>
-<p>Write the octets given in <code>$data</code> to the tty (i.e. as program input). To
+	</dd>
+	<dt>$term-&gt;tt_write ($octets)</dt>
+	<dd>
+		<p>Write the octets given in <code>$data</code> to the tty (i.e. as program input). To
 pass characters instead of octets, you should convert your strings first
-to the locale-specific encoding using <a href="#item_locale_encode"><code>$term-&gt;locale_encode</code></a>.</p>
-</dd>
-</li>
-<dt><strong><a name="item_pty_ev_events">$old_events = $term-&gt;pty_ev_events ([$new_events])</a></strong>
-
-<dd>
-<p>Replaces the event mask of the pty watcher by the given event mask. Can
+to the locale-specific encoding using <code>$term-&gt;locale_encode</code>.</p>
+	</dd>
+	<dt>$old_events = $term-&gt;pty_ev_events ([$new_events])</dt>
+	<dd>
+		<p>Replaces the event mask of the pty watcher by the given event mask. Can
 be used to suppress input and output handling to the pty/tty. See the
-description of <a href="#item_events"><code>urxvt::timer-&gt;events</code></a>. Make sure to always restore
+description of <code>urxvt::timer-&gt;events</code>. Make sure to always restore
 the previous value.</p>
-</dd>
-</li>
-<dt><strong><a name="item_pty_fd">$fd = $term-&gt;pty_fd</a></strong>
-
-<dd>
-<p>Returns the master file descriptor for the pty in use, or <code>-1</code> if no pty
+	</dd>
+	<dt>$fd = $term-&gt;pty_fd</dt>
+	<dd>
+		<p>Returns the master file descriptor for the pty in use, or <code>-1</code> if no pty
 is used.</p>
-</dd>
-</li>
-<dt><strong><a name="item_parent">$windowid = $term-&gt;parent</a></strong>
-
-<dd>
-<p>Return the window id of the toplevel window.</p>
-</dd>
-</li>
-<dt><strong><a name="item_vt">$windowid = $term-&gt;vt</a></strong>
-
-<dd>
-<p>Return the window id of the terminal window.</p>
-</dd>
-</li>
-<dt><strong><a name="item_vt_emask_add">$term-&gt;vt_emask_add ($x_event_mask)</a></strong>
-
-<dd>
-<p>Adds the specified events to the vt event mask. Useful e.g. when you want
+	</dd>
+	<dt>$windowid = $term-&gt;parent</dt>
+	<dd>
+		<p>Return the window id of the toplevel window.</p>
+	</dd>
+	<dt>$windowid = $term-&gt;vt</dt>
+	<dd>
+		<p>Return the window id of the terminal window.</p>
+	</dd>
+	<dt>$term-&gt;vt_emask_add ($x_event_mask)</dt>
+	<dd>
+		<p>Adds the specified events to the vt event mask. Useful e.g. when you want
 to receive pointer events all the times:</p>
-</dd>
-<dd>
-<pre>
-   $term-&gt;vt_emask_add (urxvt::PointerMotionMask);</pre>
-</dd>
-</li>
-<dt><strong><a name="item_focus_in">$term-&gt;focus_in</a></strong>
+<pre>   $term-&gt;vt_emask_add (urxvt::PointerMotionMask);
 
-<dt><strong><a name="item_focus_out">$term-&gt;focus_out</a></strong>
-
-<dt><strong><a name="item_key_press">$term-&gt;key_press ($state, $keycode[, $time])</a></strong>
-
-<dt><strong><a name="item_key_release">$term-&gt;key_release ($state, $keycode[, $time])</a></strong>
-
-<dd>
-<p>Deliver various fake events to to terminal.</p>
-</dd>
-</li>
-<dt><strong><a name="item_width">$window_width = $term-&gt;width</a></strong>
-
-<dt><strong><a name="item_height">$window_height = $term-&gt;height</a></strong>
-
-<dt><strong><a name="item_fwidth">$font_width = $term-&gt;fwidth</a></strong>
-
-<dt><strong><a name="item_fheight">$font_height = $term-&gt;fheight</a></strong>
-
-<dt><strong><a name="item_fbase">$font_ascent = $term-&gt;fbase</a></strong>
-
-<dt><strong><a name="item_nrow">$terminal_rows = $term-&gt;nrow</a></strong>
-
-<dt><strong><a name="item_ncol">$terminal_columns = $term-&gt;ncol</a></strong>
-
-<dt><strong><a name="item_focus">$has_focus = $term-&gt;focus</a></strong>
-
-<dt><strong><a name="item_mapped">$is_mapped = $term-&gt;mapped</a></strong>
-
-<dt><strong><a name="item_savelines">$max_scrollback = $term-&gt;saveLines</a></strong>
-
-<dt><strong><a name="item_total_rows">$nrow_plus_saveLines = $term-&gt;total_rows</a></strong>
-
-<dt><strong><a name="item_top_row">$topmost_scrollback_row = $term-&gt;top_row</a></strong>
-
-<dd>
-<p>Return various integers describing terminal characteristics.</p>
-</dd>
-</li>
-<dt><strong><a name="item_display_id">$x_display = $term-&gt;display_id</a></strong>
-
-<dd>
-<p>Return the DISPLAY used by rxvt-unicode.</p>
-</dd>
-</li>
-<dt><strong><a name="item_locale">$lc_ctype = $term-&gt;locale</a></strong>
-
-<dd>
-<p>Returns the LC_CTYPE category string used by this rxvt-unicode.</p>
-</dd>
-</li>
-<dt><strong><a name="item_env">$env = $term-&gt;env</a></strong>
-
-<dd>
-<p>Returns a copy of the environment in effect for the terminal as a hashref
+</pre>
+	</dd>
+	<dt>$term-&gt;focus_in</dt>
+	<dt>$term-&gt;focus_out</dt>
+	<dt>$term-&gt;key_press ($state, $keycode[, $time])</dt>
+	<dt>$term-&gt;key_release ($state, $keycode[, $time])</dt>
+	<dd>
+		<p>Deliver various fake events to to terminal.</p>
+	</dd>
+	<dt>$window_width = $term-&gt;width</dt>
+	<dt>$window_height = $term-&gt;height</dt>
+	<dt>$font_width = $term-&gt;fwidth</dt>
+	<dt>$font_height = $term-&gt;fheight</dt>
+	<dt>$font_ascent = $term-&gt;fbase</dt>
+	<dt>$terminal_rows = $term-&gt;nrow</dt>
+	<dt>$terminal_columns = $term-&gt;ncol</dt>
+	<dt>$has_focus = $term-&gt;focus</dt>
+	<dt>$is_mapped = $term-&gt;mapped</dt>
+	<dt>$max_scrollback = $term-&gt;saveLines</dt>
+	<dt>$nrow_plus_saveLines = $term-&gt;total_rows</dt>
+	<dt>$topmost_scrollback_row = $term-&gt;top_row</dt>
+	<dd>
+		<p>Return various integers describing terminal characteristics.</p>
+	</dd>
+	<dt>$x_display = $term-&gt;display_id</dt>
+	<dd>
+		<p>Return the DISPLAY used by rxvt-unicode.</p>
+	</dd>
+	<dt>$lc_ctype = $term-&gt;locale</dt>
+	<dd>
+		<p>Returns the LC_CTYPE category string used by this rxvt-unicode.</p>
+	</dd>
+	<dt>$env = $term-&gt;env</dt>
+	<dd>
+		<p>Returns a copy of the environment in effect for the terminal as a hashref
 similar to <code>\%ENV</code>.</p>
-</dd>
-</li>
-<dt><strong><a name="item_envv">@envv = $term-&gt;envv</a></strong>
-
-<dd>
-<p>Returns the environment as array of strings of the form <code>VAR=VALUE</code>.</p>
-</dd>
-</li>
-<dt><strong><a name="item_argv">@argv = $term-&gt;argv</a></strong>
-
-<dd>
-<p>Return the argument vector as this terminal, similar to @ARGV, but
+	</dd>
+	<dt>@envv = $term-&gt;envv</dt>
+	<dd>
+		<p>Returns the environment as array of strings of the form <code>VAR=VALUE</code>.</p>
+	</dd>
+	<dt>@argv = $term-&gt;argv</dt>
+	<dd>
+		<p>Return the argument vector as this terminal, similar to @ARGV, but
 includes the program name as first element.</p>
-</dd>
-</li>
-<dt><strong><a name="item_modlevel3mask">$modifiermask = $term-&gt;ModLevel3Mask</a></strong>
-
-<dt><strong><a name="item_modmetamask">$modifiermask = $term-&gt;ModMetaMask</a></strong>
-
-<dt><strong><a name="item_modnumlockmask">$modifiermask = $term-&gt;ModNumLockMask</a></strong>
-
-<dd>
-<p>Return the modifier masks corresponding to the ``ISO Level 3 Shift'' (often
+	</dd>
+	<dt>$modifiermask = $term-&gt;ModLevel3Mask</dt>
+	<dt>$modifiermask = $term-&gt;ModMetaMask</dt>
+	<dt>$modifiermask = $term-&gt;ModNumLockMask</dt>
+	<dd>
+		<p>Return the modifier masks corresponding to the &quot;ISO Level 3 Shift&quot; (often
 AltGr), the meta key (often Alt) and the num lock key, if applicable.</p>
-</dd>
-</li>
-<dt><strong><a name="item_current_screen">$screen = $term-&gt;current_screen</a></strong>
-
-<dd>
-<p>Returns the currently displayed screen (0 primary, 1 secondary).</p>
-</dd>
-</li>
-<dt><strong><a name="item_hidden_cursor">$cursor_is_hidden = $term-&gt;hidden_cursor</a></strong>
-
-<dd>
-<p>Returns whether the cursor is currently hidden or not.</p>
-</dd>
-</li>
-<dt><strong><a name="item_view_start">$view_start = $term-&gt;view_start ([$newvalue])</a></strong>
-
-<dd>
-<p>Returns the row number of the topmost displayed line. Maximum value is
+	</dd>
+	<dt>$screen = $term-&gt;current_screen</dt>
+	<dd>
+		<p>Returns the currently displayed screen (0 primary, 1 secondary).</p>
+	</dd>
+	<dt>$cursor_is_hidden = $term-&gt;hidden_cursor</dt>
+	<dd>
+		<p>Returns whether the cursor is currently hidden or not.</p>
+	</dd>
+	<dt>$view_start = $term-&gt;view_start ([$newvalue])</dt>
+	<dd>
+		<p>Returns the row number of the topmost displayed line. Maximum value is
 <code>0</code>, which displays the normal terminal contents. Lower values scroll
 this many lines into the scrollback buffer.</p>
-</dd>
-</li>
-<dt><strong><a name="item_want_refresh">$term-&gt;want_refresh</a></strong>
-
-<dd>
-<p>Requests a screen refresh. At the next opportunity, rxvt-unicode will
+	</dd>
+	<dt>$term-&gt;want_refresh</dt>
+	<dd>
+		<p>Requests a screen refresh. At the next opportunity, rxvt-unicode will
 compare the on-screen display with its stored representation. If they
 differ, it redraws the differences.</p>
-</dd>
-<dd>
-<p>Used after changing terminal contents to display them.</p>
-</dd>
-</li>
-<dt><strong><a name="item_row_t">$text = $term-&gt;ROW_t ($row_number[, $new_text[, $start_col]])</a></strong>
-
-<dd>
-<p>Returns the text of the entire row with number <code>$row_number</code>. Row <code>0</code>
+		<p>Used after changing terminal contents to display them.</p>
+	</dd>
+	<dt>$text = $term-&gt;ROW_t ($row_number[, $new_text[, $start_col]])</dt>
+	<dd>
+		<p>Returns the text of the entire row with number <code>$row_number</code>. Row <code>0</code>
 is the topmost terminal line, row <code>$term-&gt;$ncol-1</code> is the bottommost
 terminal line. The scrollback buffer starts at line <code>-1</code> and extends to
 line <code>-$term-&gt;nsaved</code>. Nothing will be returned if a nonexistent line
 is requested.</p>
-</dd>
-<dd>
-<p>If <code>$new_text</code> is specified, it will replace characters in the current
+		<p>If <code>$new_text</code> is specified, it will replace characters in the current
 line, starting at column <code>$start_col</code> (default <code>0</code>), which is useful
 to replace only parts of a line. The font index in the rendition will
 automatically be updated.</p>
-</dd>
-<dd>
-<p><a href="#item__text"><code>$text</code></a> is in a special encoding: tabs and wide characters that use more
+		<p><code>$text</code> is in a special encoding: tabs and wide characters that use more
 than one cell when displayed are padded with <code>$urxvt::NOCHAR</code> (chr 65535)
 characters. Characters with combining characters and other characters that
 do not fit into the normal tetx encoding will be replaced with characters
 in the private use area.</p>
-</dd>
-<dd>
-<p>You have to obey this encoding when changing text. The advantage is
+		<p>You have to obey this encoding when changing text. The advantage is
 that <code>substr</code> and similar functions work on screen cells and not on
 characters.</p>
-</dd>
-<dd>
-<p>The methods <a href="#item_special_encode"><code>$term-&gt;special_encode</code></a> and <a href="#item_special_decode"><code>$term-&gt;special_decode</code></a>
+		<p>The methods <code>$term-&gt;special_encode</code> and <code>$term-&gt;special_decode</code>
 can be used to convert normal strings into this encoding and vice versa.</p>
-</dd>
-</li>
-<dt><strong><a name="item_row_r">$rend = $term-&gt;ROW_r ($row_number[, $new_rend[, $start_col]])</a></strong>
-
-<dd>
-<p>Like <a href="#item_row_t"><code>$term-&gt;ROW_t</code></a>, but returns an arrayref with rendition
+	</dd>
+	<dt>$rend = $term-&gt;ROW_r ($row_number[, $new_rend[, $start_col]])</dt>
+	<dd>
+		<p>Like <code>$term-&gt;ROW_t</code>, but returns an arrayref with rendition
 bitsets. Rendition bitsets contain information about colour, font, font
-styles and similar information. See also <a href="#item_row_t"><code>$term-&gt;ROW_t</code></a>.</p>
-</dd>
-<dd>
-<p>When setting rendition, the font mask will be ignored.</p>
-</dd>
-<dd>
-<p>See the section on RENDITION, above.</p>
-</dd>
-</li>
-<dt><strong><a name="item_row_l">$length = $term-&gt;ROW_l ($row_number[, $new_length])</a></strong>
-
-<dd>
-<p>Returns the number of screen cells that are in use (``the line
-length''). Unlike the urxvt core, this returns <a href="#item_ncol"><code>$term-&gt;ncol</code></a> if the
+styles and similar information. See also <code>$term-&gt;ROW_t</code>.</p>
+		<p>When setting rendition, the font mask will be ignored.</p>
+		<p>See the section on RENDITION, above.</p>
+	</dd>
+	<dt>$length = $term-&gt;ROW_l ($row_number[, $new_length])</dt>
+	<dd>
+		<p>Returns the number of screen cells that are in use (&quot;the line
+length&quot;). Unlike the urxvt core, this returns <code>$term-&gt;ncol</code> if the
 line is joined with the following one.</p>
-</dd>
-</li>
-<dt><strong><a name="item_is_longer">$bool = $term-&gt;is_longer ($row_number)</a></strong>
-
-<dd>
-<p>Returns true if the row is part of a multiple-row logical ``line'' (i.e.
+	</dd>
+	<dt>$bool = $term-&gt;is_longer ($row_number)</dt>
+	<dd>
+		<p>Returns true if the row is part of a multiple-row logical &quot;line&quot; (i.e.
 joined with the following row), which means all characters are in use
 and it is continued on the next row (and possibly a continuation of the
 previous row(s)).</p>
-</dd>
-</li>
-<dt><strong><a name="item_line">$line = $term-&gt;line ($row_number)</a></strong>
-
-<dd>
-<p>Create and return a new <code>urxvt::line</code> object that stores information
+	</dd>
+	<dt>$line = $term-&gt;line ($row_number)</dt>
+	<dd>
+		<p>Create and return a new <code>urxvt::line</code> object that stores information
 about the logical line that row <code>$row_number</code> is part of. It supports the
 following methods:</p>
-</dd>
-<dl>
-<dt><strong><a name="item_t">$text = $line-&gt;t ([$new_text])</a></strong>
-
-<dd>
-<p>Returns or replaces the full text of the line, similar to <a href="#item_row_t"><code>ROW_t</code></a></p>
-</dd>
-</li>
-<dt><strong><a name="item_r">$rend = $line-&gt;r ([$new_rend])</a></strong>
-
-<dd>
-<p>Returns or replaces the full rendition array of the line, similar to <a href="#item_row_r"><code>ROW_r</code></a></p>
-</dd>
-</li>
-<dt><strong><a name="item_l">$length = $line-&gt;l</a></strong>
-
-<dd>
-<p>Returns the length of the line in cells, similar to <a href="#item_row_l"><code>ROW_l</code></a>.</p>
-</dd>
-</li>
-<dt><strong><a name="item_beg">$rownum = $line-&gt;beg</a></strong>
-
-<dt><strong><a name="item_end">$rownum = $line-&gt;end</a></strong>
-
-<dd>
-<p>Return the row number of the first/last row of the line, respectively.</p>
-</dd>
-</li>
-<dt><strong><a name="item_offset_of">$offset = $line-&gt;offset_of ($row, $col)</a></strong>
-
-<dd>
-<p>Returns the character offset of the given row|col pair within the logical
+		<p>
+			<dl>
+				<dt>$text = $line-&gt;t ([$new_text])</dt>
+				<dd>
+					<p>Returns or replaces the full text of the line, similar to <code>ROW_t</code></p>
+				</dd>
+				<dt>$rend = $line-&gt;r ([$new_rend])</dt>
+				<dd>
+					<p>Returns or replaces the full rendition array of the line, similar to <code>ROW_r</code></p>
+				</dd>
+				<dt>$length = $line-&gt;l</dt>
+				<dd>
+					<p>Returns the length of the line in cells, similar to <code>ROW_l</code>.</p>
+				</dd>
+				<dt>$rownum = $line-&gt;beg</dt>
+				<dt>$rownum = $line-&gt;end</dt>
+				<dd>
+					<p>Return the row number of the first/last row of the line, respectively.</p>
+				</dd>
+				<dt>$offset = $line-&gt;offset_of ($row, $col)</dt>
+				<dd>
+					<p>Returns the character offset of the given row|col pair within the logical
 line. Works for rows outside the line, too, and returns corresponding
 offsets outside the string.</p>
-</dd>
-</li>
-<dt><strong><a name="item_coord_of">($row, $col) = $line-&gt;coord_of ($offset)</a></strong>
-
-<dd>
-<p>Translates a string offset into terminal coordinates again.</p>
-</dd>
-</li>
-</dl>
-<dt><strong><a name="item_special_encode">$text = $term-&gt;special_encode $string</a></strong>
-
-<dd>
-<p>Converts a perl string into the special encoding used by rxvt-unicode,
+				</dd>
+				<dt>($row, $col) = $line-&gt;coord_of ($offset)</dt>
+				<dd>
+					<p>Translates a string offset into terminal coordinates again.</p>
+				</dd>
+			</dl>
+		</p>
+	</dd>
+	<dt>$text = $term-&gt;special_encode $string</dt>
+	<dd>
+		<p>Converts a perl string into the special encoding used by rxvt-unicode,
 where one character corresponds to one screen cell. See
-<a href="#item_row_t"><code>$term-&gt;ROW_t</code></a> for details.</p>
-</dd>
-</li>
-<dt><strong><a name="item_special_decode">$string = $term-&gt;special_decode $text</a></strong>
-
-<dd>
-<p>Converts rxvt-unicodes text representation into a perl string. See
-<a href="#item_row_t"><code>$term-&gt;ROW_t</code></a> for details.</p>
-</dd>
-</li>
-<dt><strong><a name="item_grab_button">$success = $term-&gt;grab_button ($button, $modifiermask[, $window = $term-&gt;vt])</a></strong>
-
-<dt><strong><a name="item_ungrab_button">$term-&gt;ungrab_button ($button, $modifiermask[, $window = $term-&gt;vt])</a></strong>
-
-<dd>
-<p>Register/unregister a synchronous button grab. See the XGrabButton
+<code>$term-&gt;ROW_t</code> for details.</p>
+	</dd>
+	<dt>$string = $term-&gt;special_decode $text</dt>
+	<dd>
+		<p>Converts rxvt-unicodes text representation into a perl string. See
+<code>$term-&gt;ROW_t</code> for details.</p>
+	</dd>
+	<dt>$success = $term-&gt;grab_button ($button, $modifiermask[, $window = $term-&gt;vt])</dt>
+	<dt>$term-&gt;ungrab_button ($button, $modifiermask[, $window = $term-&gt;vt])</dt>
+	<dd>
+		<p>Register/unregister a synchronous button grab. See the XGrabButton
 manpage.</p>
-</dd>
-</li>
-<dt><strong><a name="item_grab">$success = $term-&gt;grab ($eventtime[, $sync])</a></strong>
-
-<dd>
-<p>Calls XGrabPointer and XGrabKeyboard in asynchronous (default) or
+	</dd>
+	<dt>$success = $term-&gt;grab ($eventtime[, $sync])</dt>
+	<dd>
+		<p>Calls XGrabPointer and XGrabKeyboard in asynchronous (default) or
 synchronous (<code>$sync</code> is true). Also remembers the grab timestamp.</p>
-</dd>
-</li>
-<dt><strong><a name="item_allow_events_async">$term-&gt;allow_events_async</a></strong>
-
-<dd>
-<p>Calls XAllowEvents with AsyncBoth for the most recent grab.</p>
-</dd>
-</li>
-<dt><strong><a name="item_allow_events_sync">$term-&gt;allow_events_sync</a></strong>
-
-<dd>
-<p>Calls XAllowEvents with SyncBoth for the most recent grab.</p>
-</dd>
-</li>
-<dt><strong><a name="item_allow_events_replay">$term-&gt;allow_events_replay</a></strong>
-
-<dd>
-<p>Calls XAllowEvents with both ReplayPointer and ReplayKeyboard for the most
+	</dd>
+	<dt>$term-&gt;allow_events_async</dt>
+	<dd>
+		<p>Calls XAllowEvents with AsyncBoth for the most recent grab.</p>
+	</dd>
+	<dt>$term-&gt;allow_events_sync</dt>
+	<dd>
+		<p>Calls XAllowEvents with SyncBoth for the most recent grab.</p>
+	</dd>
+	<dt>$term-&gt;allow_events_replay</dt>
+	<dd>
+		<p>Calls XAllowEvents with both ReplayPointer and ReplayKeyboard for the most
 recent grab.</p>
-</dd>
-</li>
-<dt><strong><a name="item_ungrab">$term-&gt;ungrab</a></strong>
-
-<dd>
-<p>Calls XUngrab for the most recent grab. Is called automatically on
+	</dd>
+	<dt>$term-&gt;ungrab</dt>
+	<dd>
+		<p>Calls XUngrab for the most recent grab. Is called automatically on
 evaluation errors, as it is better to lose the grab in the error case as
 the session.</p>
-</dd>
-</li>
-<dt><strong><a name="item_xinternatom">$atom = $term-&gt;XInternAtom ($atom_name[, $only_if_exists])</a></strong>
-
-<dt><strong><a name="item_xgetatomname">$atom_name = $term-&gt;XGetAtomName ($atom)</a></strong>
-
-<dt><strong><a name="item_xlistproperties">@atoms = $term-&gt;XListProperties ($window)</a></strong>
-
-<dt><strong><a name="item_xgetwindowproperty">($type,$format,$octets) = $term-&gt;XGetWindowProperty ($window, $property)</a></strong>
-
-<dt><strong><a name="item_xchangewindowproperty">$term-&gt;XChangeWindowProperty ($window, $property, $type, $format, $octets)</a></strong>
-
-<dt><strong><a name="item_xdeleteproperty">$term-&gt;XDeleteProperty ($window, $property)</a></strong>
-
-<dt><strong><a name="item_defaultrootwindow">$window = $term-&gt;DefaultRootWindow</a></strong>
-
-<dt><strong><a name="item_xreparentwindow">$term-&gt;XReparentWindow ($window, $parent, [$x, $y])</a></strong>
-
-<dt><strong><a name="item_xmapwindow">$term-&gt;XMapWindow ($window)</a></strong>
-
-<dt><strong><a name="item_xunmapwindow">$term-&gt;XUnmapWindow ($window)</a></strong>
-
-<dt><strong><a name="item_xmoveresizewindow">$term-&gt;XMoveResizeWindow ($window, $x, $y, $width, $height)</a></strong>
-
-<dt><strong><a name="item_xtranslatecoordinates">($x, $y, $child_window) = $term-&gt;XTranslateCoordinates ($src, $dst, $x, $y)</a></strong>
-
-<dt><strong><a name="item_xchangeinput">$term-&gt;XChangeInput ($window, $add_events[, $del_events])</a></strong>
-
-<dd>
-<p>Various X or X-related functions. The <a href="#item__term"><code>$term</code></a> object only serves as
+	</dd>
+	<dt>$atom = $term-&gt;XInternAtom ($atom_name[, $only_if_exists])</dt>
+	<dt>$atom_name = $term-&gt;XGetAtomName ($atom)</dt>
+	<dt>@atoms = $term-&gt;XListProperties ($window)</dt>
+	<dt>($type,$format,$octets) = $term-&gt;XGetWindowProperty ($window, $property)</dt>
+	<dt>$term-&gt;XChangeWindowProperty ($window, $property, $type, $format, $octets)</dt>
+	<dt>$term-&gt;XDeleteProperty ($window, $property)</dt>
+	<dt>$window = $term-&gt;DefaultRootWindow</dt>
+	<dt>$term-&gt;XReparentWindow ($window, $parent, [$x, $y])</dt>
+	<dt>$term-&gt;XMapWindow ($window)</dt>
+	<dt>$term-&gt;XUnmapWindow ($window)</dt>
+	<dt>$term-&gt;XMoveResizeWindow ($window, $x, $y, $width, $height)</dt>
+	<dt>($x, $y, $child_window) = $term-&gt;XTranslateCoordinates ($src, $dst, $x, $y)</dt>
+	<dt>$term-&gt;XChangeInput ($window, $add_events[, $del_events])</dt>
+	<dd>
+		<p>Various X or X-related functions. The <code>$term</code> object only serves as
 the source of the display, otherwise those functions map more-or-less
 directory onto the X functions of the same name.</p>
-</dd>
-</li>
+	</dd>
 </dl>
-<p>
-</p>
-<h2><a name="the_urxvt__popup_class">The <code>urxvt::popup</code> Class</a></h2>
+
+</div>
+<h2 id="The_code_urxvt_popup_code_Class">The <code>urxvt::popup</code> Class</h2>
+<div id="The_code_urxvt_popup_code_Class_CONT">
 <dl>
-<dt><strong><a name="item_add_title">$popup-&gt;add_title ($title)</a></strong>
-
-<dd>
-<p>Adds a non-clickable title to the popup.</p>
-</dd>
-</li>
-<dt><strong><a name="item_add_separator">$popup-&gt;add_separator ([$sepchr])</a></strong>
-
-<dd>
-<p>Creates a separator, optionally using the character given as <code>$sepchr</code>.</p>
-</dd>
-</li>
-<dt><strong><a name="item_add_button">$popup-&gt;add_button ($text, $cb)</a></strong>
-
-<dd>
-<p>Adds a clickable button to the popup. <code>$cb</code> is called whenever it is
+	<dt>$popup-&gt;add_title ($title)</dt>
+	<dd>
+		<p>Adds a non-clickable title to the popup.</p>
+	</dd>
+	<dt>$popup-&gt;add_separator ([$sepchr])</dt>
+	<dd>
+		<p>Creates a separator, optionally using the character given as <code>$sepchr</code>.</p>
+	</dd>
+	<dt>$popup-&gt;add_button ($text, $cb)</dt>
+	<dd>
+		<p>Adds a clickable button to the popup. <code>$cb</code> is called whenever it is
 selected.</p>
-</dd>
-</li>
-<dt><strong><a name="item_add_toggle">$popup-&gt;add_toggle ($text, $initial_value, $cb)</a></strong>
-
-<dd>
-<p>Adds a toggle/checkbox item to the popup. The callback gets called
+	</dd>
+	<dt>$popup-&gt;add_toggle ($text, $initial_value, $cb)</dt>
+	<dd>
+		<p>Adds a toggle/checkbox item to the popup. The callback gets called
 whenever it gets toggled, with a boolean indicating its new value as its
 first argument.</p>
-</dd>
-</li>
-<dt><strong>$popup-&gt;show</strong>
-
-<dd>
-<p>Displays the popup (which is initially hidden).</p>
-</dd>
-</li>
+	</dd>
+	<dt>$popup-&gt;show</dt>
+	<dd>
+		<p>Displays the popup (which is initially hidden).</p>
+	</dd>
 </dl>
-<p>
-</p>
-<h2><a name="the_urxvt__timer_class">The <code>urxvt::timer</code> Class</a></h2>
+
+</div>
+<h2 id="The_code_urxvt_timer_code_Class">The <code>urxvt::timer</code> Class</h2>
+<div id="The_code_urxvt_timer_code_Class_CONT">
 <p>This class implements timer watchers/events. Time is represented as a
 fractional number of seconds since the epoch. Example:</p>
-<pre>
-   $term-&gt;{overlay} = $term-&gt;overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);
+<pre>   $term-&gt;{overlay} = $term-&gt;overlay (-1, 0, 8, 1, urxvt::OVERLAY_RSTYLE, 0);
    $term-&gt;{timer} = urxvt::timer
                     -&gt;new
                     -&gt;interval (1)
                     -&gt;cb (sub {
                        $term-&gt;{overlay}-&gt;set (0, 0,
                           sprintf &quot;%2d:%02d:%02d&quot;, (localtime urxvt::NOW)[2,1,0]);
-                    });</pre>
+                    });                                                                                                                                      
+
+</pre>
 <dl>
-<dt><strong><a name="item__timer">$timer = new urxvt::timer</a></strong>
-
-<dd>
-<p>Create a new timer object in started state. It is scheduled to fire
+	<dt>$timer = new urxvt::timer</dt>
+	<dd>
+		<p>Create a new timer object in started state. It is scheduled to fire
 immediately.</p>
-</dd>
-</li>
-<dt><strong><a name="item_cb">$timer = $timer-&gt;cb (sub { my ($timer) = @_; ... })</a></strong>
-
-<dd>
-<p>Set the callback to be called when the timer triggers.</p>
-</dd>
-</li>
-<dt><strong><a name="item_at">$tstamp = $timer-&gt;at</a></strong>
-
-<dd>
-<p>Return the time this watcher will fire next.</p>
-</dd>
-</li>
-<dt><strong>$timer = $timer-&gt;set ($tstamp)</strong>
-
-<dd>
-<p>Set the time the event is generated to $tstamp.</p>
-</dd>
-</li>
-<dt><strong><a name="item_interval">$timer = $timer-&gt;interval ($interval)</a></strong>
-
-<dd>
-<p>Normally (and when <code>$interval</code> is <code>0</code>), the timer will automatically
+	</dd>
+	<dt>$timer = $timer-&gt;cb (sub { my ($timer) = @_; ... })</dt>
+	<dd>
+		<p>Set the callback to be called when the timer triggers.</p>
+	</dd>
+	<dt>$tstamp = $timer-&gt;at</dt>
+	<dd>
+		<p>Return the time this watcher will fire next.</p>
+	</dd>
+	<dt>$timer = $timer-&gt;set ($tstamp)</dt>
+	<dd>
+		<p>Set the time the event is generated to $tstamp.</p>
+	</dd>
+	<dt>$timer = $timer-&gt;interval ($interval)</dt>
+	<dd>
+		<p>Normally (and when <code>$interval</code> is <code>0</code>), the timer will automatically
 stop after it has fired once. If <code>$interval</code> is non-zero, then the timer
 is automatically rescheduled at the given intervals.</p>
-</dd>
-</li>
-<dt><strong><a name="item_start">$timer = $timer-&gt;start</a></strong>
-
-<dd>
-<p>Start the timer.</p>
-</dd>
-</li>
-<dt><strong>$timer = $timer-&gt;start ($tstamp)</strong>
-
-<dd>
-<p>Set the event trigger time to <code>$tstamp</code> and start the timer.</p>
-</dd>
-</li>
-<dt><strong><a name="item_after">$timer = $timer-&gt;after ($delay)</a></strong>
-
-<dd>
-<p>Like <a href="#item_start"><code>start</code></a>, but sets the expiry timer to c&lt;urxvt::NOW + $delay&gt;.</p>
-</dd>
-</li>
-<dt><strong><a name="item_stop">$timer = $timer-&gt;stop</a></strong>
-
-<dd>
-<p>Stop the timer.</p>
-</dd>
-</li>
+	</dd>
+	<dt>$timer = $timer-&gt;start</dt>
+	<dd>
+		<p>Start the timer.</p>
+	</dd>
+	<dt>$timer = $timer-&gt;start ($tstamp)</dt>
+	<dd>
+		<p>Set the event trigger time to <code>$tstamp</code> and start the timer.</p>
+	</dd>
+	<dt>$timer = $timer-&gt;after ($delay)</dt>
+	<dd>
+		<p>Like <code>start</code>, but sets the expiry timer to c&lt;urxvt::NOW + $delay&gt;.</p>
+	</dd>
+	<dt>$timer = $timer-&gt;stop</dt>
+	<dd>
+		<p>Stop the timer.</p>
+	</dd>
 </dl>
-<p>
-</p>
-<h2><a name="the_urxvt__iow_class">The <code>urxvt::iow</code> Class</a></h2>
+
+</div>
+<h2 id="The_code_urxvt_iow_code_Class">The <code>urxvt::iow</code> Class</h2>
+<div id="The_code_urxvt_iow_code_Class_CONTEN">
 <p>This class implements io watchers/events. Example:</p>
-<pre>
-  $term-&gt;{socket} = ...
+<pre>  $term-&gt;{socket} = ...
   $term-&gt;{iow} = urxvt::iow
                  -&gt;new
                  -&gt;fd (fileno $term-&gt;{socket})
@@ -1889,87 +1392,73 @@ is automatically rescheduled at the given intervals.</p>
                    # $revents must be 1 here, no need to check
                    sysread $term-&gt;{socket}, my $buf, 8192
                       or end-of-file;
-                 });</pre>
+                 });
+
+
+
+
+</pre>
 <dl>
-<dt><strong><a name="item__iow">$iow = new urxvt::iow</a></strong>
-
-<dd>
-<p>Create a new io watcher object in stopped state.</p>
-</dd>
-</li>
-<dt><strong>$iow = $iow-&gt;cb (sub { my ($iow, $reventmask) = @_; ... })</strong>
-
-<dd>
-<p>Set the callback to be called when io events are triggered. <code>$reventmask</code>
-is a bitset as described in the <a href="#item_events"><code>events</code></a> method.</p>
-</dd>
-</li>
-<dt><strong><a name="item_fd">$iow = $iow-&gt;fd ($fd)</a></strong>
-
-<dd>
-<p>Set the file descriptor (not handle) to watch.</p>
-</dd>
-</li>
-<dt><strong><a name="item_events">$iow = $iow-&gt;events ($eventmask)</a></strong>
-
-<dd>
-<p>Set the event mask to watch. The only allowed values are
+	<dt>$iow = new urxvt::iow</dt>
+	<dd>
+		<p>Create a new io watcher object in stopped state.</p>
+	</dd>
+	<dt>$iow = $iow-&gt;cb (sub { my ($iow, $reventmask) = @_; ... })</dt>
+	<dd>
+		<p>Set the callback to be called when io events are triggered. <code>$reventmask</code>
+is a bitset as described in the <code>events</code> method.</p>
+	</dd>
+	<dt>$iow = $iow-&gt;fd ($fd)</dt>
+	<dd>
+		<p>Set the file descriptor (not handle) to watch.</p>
+	</dd>
+	<dt>$iow = $iow-&gt;events ($eventmask)</dt>
+	<dd>
+		<p>Set the event mask to watch. The only allowed values are
 <code>urxvt::EVENT_READ</code> and <code>urxvt::EVENT_WRITE</code>, which might be ORed
 together, or <code>urxvt::EVENT_NONE</code>.</p>
-</dd>
-</li>
-<dt><strong>$iow = $iow-&gt;start</strong>
-
-<dd>
-<p>Start watching for requested events on the given handle.</p>
-</dd>
-</li>
-<dt><strong>$iow = $iow-&gt;stop</strong>
-
-<dd>
-<p>Stop watching for events on the given file handle.</p>
-</dd>
-</li>
+	</dd>
+	<dt>$iow = $iow-&gt;start</dt>
+	<dd>
+		<p>Start watching for requested events on the given handle.</p>
+	</dd>
+	<dt>$iow = $iow-&gt;stop</dt>
+	<dd>
+		<p>Stop watching for events on the given file handle.</p>
+	</dd>
 </dl>
-<p>
-</p>
-<h2><a name="the_urxvt__iw_class">The <code>urxvt::iw</code> Class</a></h2>
+
+</div>
+<h2 id="The_code_urxvt_iw_code_Class">The <code>urxvt::iw</code> Class</h2>
+<div id="The_code_urxvt_iw_code_Class_CONTENT">
 <p>This class implements idle watchers, that get called automatically when
 the process is idle. They should return as fast as possible, after doing
 some useful work.</p>
 <dl>
-<dt><strong><a name="item__iw">$iw = new urxvt::iw</a></strong>
-
-<dd>
-<p>Create a new idle watcher object in stopped state.</p>
-</dd>
-</li>
-<dt><strong>$iw = $iw-&gt;cb (sub { my ($iw) = @_; ... })</strong>
-
-<dd>
-<p>Set the callback to be called when the watcher triggers.</p>
-</dd>
-</li>
-<dt><strong>$timer = $timer-&gt;start</strong>
-
-<dd>
-<p>Start the watcher.</p>
-</dd>
-</li>
-<dt><strong>$timer = $timer-&gt;stop</strong>
-
-<dd>
-<p>Stop the watcher.</p>
-</dd>
-</li>
+	<dt>$iw = new urxvt::iw</dt>
+	<dd>
+		<p>Create a new idle watcher object in stopped state.</p>
+	</dd>
+	<dt>$iw = $iw-&gt;cb (sub { my ($iw) = @_; ... })</dt>
+	<dd>
+		<p>Set the callback to be called when the watcher triggers.</p>
+	</dd>
+	<dt>$timer = $timer-&gt;start</dt>
+	<dd>
+		<p>Start the watcher.</p>
+	</dd>
+	<dt>$timer = $timer-&gt;stop</dt>
+	<dd>
+		<p>Stop the watcher.</p>
+	</dd>
 </dl>
-<p>
-</p>
-<h2><a name="the_urxvt__pw_class">The <code>urxvt::pw</code> Class</a></h2>
+
+</div>
+<h2 id="The_code_urxvt_pw_code_Class">The <code>urxvt::pw</code> Class</h2>
+<div id="The_code_urxvt_pw_code_Class_CONTENT">
 <p>This class implements process watchers. They create an event whenever a
 process exits, after which they stop automatically.</p>
-<pre>
-   my $pid = fork;
+<pre>   my $pid = fork;
    ...
    $term-&gt;{pw} = urxvt::pw
                     -&gt;new
@@ -1977,60 +1466,52 @@ process exits, after which they stop automatically.</p>
                     -&gt;cb (sub {
                        my ($pw, $exit_status) = @_;
                        ...
-                    });</pre>
+                    });                                                                                                                                      
+
+</pre>
 <dl>
-<dt><strong><a name="item__pw">$pw = new urxvt::pw</a></strong>
-
-<dd>
-<p>Create a new process watcher in stopped state.</p>
-</dd>
-</li>
-<dt><strong>$pw = $pw-&gt;cb (sub { my ($pw, $exit_status) = @_; ... })</strong>
-
-<dd>
-<p>Set the callback to be called when the timer triggers.</p>
-</dd>
-</li>
-<dt><strong>$pw = $timer-&gt;start ($pid)</strong>
-
-<dd>
-<p>Tells the watcher to start watching for process <code>$pid</code>.</p>
-</dd>
-</li>
-<dt><strong>$pw = $pw-&gt;stop</strong>
-
-<dd>
-<p>Stop the watcher.</p>
-</dd>
-</li>
+	<dt>$pw = new urxvt::pw</dt>
+	<dd>
+		<p>Create a new process watcher in stopped state.</p>
+	</dd>
+	<dt>$pw = $pw-&gt;cb (sub { my ($pw, $exit_status) = @_; ... })</dt>
+	<dd>
+		<p>Set the callback to be called when the timer triggers.</p>
+	</dd>
+	<dt>$pw = $timer-&gt;start ($pid)</dt>
+	<dd>
+		<p>Tells the watcher to start watching for process <code>$pid</code>.</p>
+	</dd>
+	<dt>$pw = $pw-&gt;stop</dt>
+	<dd>
+		<p>Stop the watcher.</p>
+	</dd>
 </dl>
-<p>
-</p>
-<hr />
-<h1><a name="environment">ENVIRONMENT</a></h1>
-<p>
-</p>
-<h2><a name="urxvt_perl_verbosity">URXVT_PERL_VERBOSITY</a></h2>
+
+</div>
+<h1 id="ENVIRONMENT">ENVIRONMENT</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="ENVIRONMENT_CONTENT">
+
+</div>
+<h2 id="URXVT_PERL_VERBOSITY">URXVT_PERL_VERBOSITY</h2>
+<div id="URXVT_PERL_VERBOSITY_CONTENT">
 <p>This variable controls the verbosity level of the perl extension. Higher
 numbers indicate more verbose output.</p>
 <dl>
-<dt><strong><a name="item__3d_3d_0__2d_fatal_messages">== 0 - fatal messages</a></strong>
-
-<dt><strong><a name="item__3e_3d_3__2d_script_loading_and_management">&gt;= 3 - script loading and management</a></strong>
-
-<dt><strong><a name="item__3e_3d10__2d_all_called_hooks">&gt;=10 - all called hooks</a></strong>
-
-<dt><strong><a name="item__3e_3d11__2d_hook_return_values">&gt;=11 - hook return values</a></strong>
-
+	<dt>== 0 - fatal messages</dt>
+	<dt>&gt;= 3 - script loading and management</dt>
+	<dt>&gt;=10 - all called hooks</dt>
+	<dt>&gt;=11 - hook return values</dt>
 </dl>
-<p>
-</p>
-<hr />
-<h1><a name="author">AUTHOR</a></h1>
-<pre>
- Marc Lehmann &lt;pcg@goof.com&gt;
- <a href="http://software.schmorp.de/pkg/rxvt-unicode">http://software.schmorp.de/pkg/rxvt-unicode</a></pre>
 
-</body>
+</div>
+<h1 id="AUTHOR">AUTHOR</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="AUTHOR_CONTENT">
+<pre> Marc Lehmann &lt;pcg@goof.com&gt;
+ http://software.schmorp.de/pkg/rxvt-unicode
 
+</pre>
+
+</div>
+</div></body>
 </html>

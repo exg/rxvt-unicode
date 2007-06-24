@@ -1,99 +1,97 @@
-<?xml version="1.0" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title>rxvtc - control the rxvtd daemon</title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link rev="made" href="mailto:perl-binary@plan9.de" />
-</head>
+	<title>rxvtc</title>
+	<meta name="description" content="Pod documentation for rxvtc" />
+	<meta name="inputfile" content="&lt;standard input&gt;" />
+	<meta name="outputfile" content="&lt;standard output&gt;" />
+	<meta name="created" content="Mon Jun 25 00:11:17 2007" />
+	<meta name="generator" content="Pod::Xhtml 1.57" />
+<link rel="stylesheet" href="http://res.tst.eu/pod.css"/></head>
+<body>
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
 
-<body style="background-color: white">
-
-<p><a name="__index__"></a></p>
-<!-- INDEX BEGIN -->
-
-<ul>
-
-	<li><a href="#name">NAME</a></li>
-	<li><a href="#synopsis">SYNOPSIS</a></li>
-	<li><a href="#description">DESCRIPTION</a></li>
-	<li><a href="#options">OPTIONS</a></li>
-	<li><a href="#exit_status">EXIT STATUS</a></li>
-	<li><a href="#environment">ENVIRONMENT</a></li>
-	<li><a href="#see_also">SEE ALSO</a></li>
-</ul>
+<ul><li><a href="#NAME">NAME</a></li>
+<li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#OPTIONS">OPTIONS</a></li>
+<li><a href="#EXIT_STATUS">EXIT STATUS</a></li>
+<li><a href="#ENVIRONMENT">ENVIRONMENT</a></li>
+<li><a href="#SEE_ALSO">SEE ALSO</a>
+</li>
+</ul><hr />
 <!-- INDEX END -->
 
-<hr />
-<p>
-</p>
-<h1><a name="name">NAME</a></h1>
+<h1 id="NAME">NAME</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="NAME_CONTENT">
 <p>rxvtc - control the rxvtd daemon</p>
-<p>
-</p>
-<hr />
-<h1><a name="synopsis">SYNOPSIS</a></h1>
+
+</div>
+<h1 id="SYNOPSIS">SYNOPSIS</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="SYNOPSIS_CONTENT">
 <p><strong>rxvtc</strong> [same options as for rxvt]</p>
-<p>
-</p>
-<hr />
-<h1><a name="description">DESCRIPTION</a></h1>
+
+</div>
+<h1 id="DESCRIPTION">DESCRIPTION</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="DESCRIPTION_CONTENT">
 <p>This manpage describes the <strong>rxvtc</strong> client program. It connects
 to the <strong>rxvtd</strong> daemon and requests a new terminal window. It
 takes the same arguments as the <strong>rxvt</strong> program. The environment
 will also be respected. Currently, it always returns immediately after
 contacting the daemon.</p>
-<p>
-</p>
-<hr />
-<h1><a name="options">OPTIONS</a></h1>
+
+</div>
+<h1 id="OPTIONS">OPTIONS</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="OPTIONS_CONTENT">
 <p>All options that are valid for <strong>rxvt</strong> are valid for
 <strong>rxvtc</strong>, too. Please note that options are interpreted in the
 context of the daemon process. However, as current working directory,
 process environment and any file descriptor (e.g. for <code>-pty-fd</code>) are
 preserved, this rarely makes a difference.</p>
-<p>
-</p>
-<hr />
-<h1><a name="exit_status">EXIT STATUS</a></h1>
+
+</div>
+<h1 id="EXIT_STATUS">EXIT STATUS</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="EXIT_STATUS_CONTENT">
 <p>If everything went well, rxvtc returns with an exit status of <code>0</code>.
 If contacting the daemon fails, it exits with the exit status <code>2</code>. In all other error
 cases it returns with status <code>1</code>.</p>
 <p>This can be used to implement auto-starting behaviour, by checking for an
 exit status of <code>2</code>, running <code>rxvtd -f -q</code> and retrying the call
 to rxvtc, like this:</p>
-<pre>
-   #!/bin/sh
+<pre>   #!/bin/sh
    rxvtc &quot;$@&quot;
    if [ $? -eq 2 ]; then
       rxvtd -q -o -f
       rxvtc &quot;$@&quot;
-   fi</pre>
-<p>
-</p>
-<hr />
-<h1><a name="environment">ENVIRONMENT</a></h1>
+   fi
+
+</pre>
+
+</div>
+<h1 id="ENVIRONMENT">ENVIRONMENT</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="ENVIRONMENT_CONTENT">
 <p>All environment variables of the current process will be made available
 to the new instance, and will be interpreted as if <strong>rxvt</strong> were
 started directly.</p>
 <dl>
-<dt><strong><a name="item_rxvt_socket"><strong>RXVT_SOCKET</strong></a></strong>
-
-<dd>
-<p>Both rxvtc and rxvtd use the environment variable
-<em>RXVT_SOCKET</em> to create a listening socket and to contact the
+	<dt><strong>RXVT_SOCKET</strong></dt>
+	<dd>
+		<p>Both rxvtc and rxvtd use the environment variable
+<cite>RXVT_SOCKET</cite> to create a listening socket and to contact the
 rxvtd, respectively. If the variable is missing,
-<em>$HOME/.rxvt-unicode-<em>&lt;nodename</em> </em>&gt; &gt;&gt;&gt; is used.  The variable must
+<cite>$HOME/.rxvt-unicode-<i>&lt;nodename&gt;</i></cite> is used.  The variable must
 specify the absolute path of the socket to create.</p>
-</dd>
-</li>
+	</dd>
 </dl>
-<p>
-</p>
-<hr />
-<h1><a name="see_also">SEE ALSO</a></h1>
-<p>rxvt(7), <code>rxvtd(1)</code></p>
 
-</body>
+</div>
+<h1 id="SEE_ALSO">SEE ALSO</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="SEE_ALSO_CONTENT">
+<p>rxvt(7), rxvtd(1)</p>
 
+</div>
+</div></body>
 </html>

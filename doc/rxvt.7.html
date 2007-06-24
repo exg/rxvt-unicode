@@ -1,200 +1,209 @@
-<?xml version="1.0" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title>REFERENCE - FAQ, command sequences and other background information</title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link rev="made" href="mailto:perl-binary@plan9.de" />
-</head>
+	<title>RXVT REFERENCE</title>
+	<meta name="description" content="Pod documentation for RXVT REFERENCE" />
+	<meta name="inputfile" content="&lt;standard input&gt;" />
+	<meta name="outputfile" content="&lt;standard output&gt;" />
+	<meta name="created" content="Mon Jun 25 00:11:17 2007" />
+	<meta name="generator" content="Pod::Xhtml 1.57" />
+<link rel="stylesheet" href="http://res.tst.eu/pod.css"/></head>
+<body>
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
 
-<body style="background-color: white">
-
-<p><a name="__index__"></a></p>
-<!-- INDEX BEGIN -->
-
-<ul>
-
-	<li><a href="#name">NAME</a></li>
-	<li><a href="#synopsis">SYNOPSIS</a></li>
-	<li><a href="#description">DESCRIPTION</a></li>
-	<li><a href="#rxvtunicode_urxvt_frequently_asked_questions">RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS</a></li>
-	<ul>
-
-		<li><a href="#meta__features___commandline_issues">Meta, Features &amp; Commandline Issues</a></li>
-		<ul>
-
-			<li><a href="#my_question_isn_t_answered_here__can_i_ask_a_human">My question isn't answered here, can I ask a human?</a></li>
-			<li><a href="#does_it_support_tabs__can_i_have_a_tabbed_rxvtunicode">Does it support tabs, can I have a tabbed rxvt-unicode?</a></li>
-			<li><a href="#how_do_i_know_which_rxvtunicode_version_i_m_using">How do I know which rxvt-unicode version I'm using?</a></li>
-			<li><a href="#rxvtunicode_uses_gobs_of_memory__how_can_i_reduce_that">Rxvt-unicode uses gobs of memory, how can I reduce that?</a></li>
-			<li><a href="#how_can_i_start_urxvtd_in_a_racefree_way">How can I start urxvtd in a race-free way?</a></li>
-			<li><a href="#how_can_i_start_urxvtd_automatically_when_i_run_urxvtc">How can I start urxvtd automatically when I run urxvtc?</a></li>
-			<li><a href="#how_do_i_distinguish_whether_i_m_running_rxvtunicode_or_a_regular_xterm_i_need_this_to_decide_about_setting_colors_etc_">How do I distinguish whether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.</a></li>
-			<li><a href="#how_do_i_set_the_correct__full_ip_address_for_the_display_variable">How do I set the correct, full IP address for the DISPLAY variable?</a></li>
-			<li><a href="#how_do_i_compile_the_manual_pages_on_my_own">How do I compile the manual pages on my own?</a></li>
-			<li><a href="#isn_t_rxvtunicode_supposed_to_be_small_don_t_all_those_features_bloat">Isn't rxvt-unicode supposed to be small? Don't all those features bloat?</a></li>
-			<li><a href="#why_c____isn_t_that_unportable_bloated_uncool">Why C++, isn't that unportable/bloated/uncool?</a></li>
-		</ul>
-
-		<li><a href="#rendering__font___look_and_feel_issues">Rendering, Font &amp; Look and Feel Issues</a></li>
-		<ul>
-
-			<li><a href="#i_can_t_get_transparency_working__what_am_i_doing_wrong">I can't get transparency working, what am I doing wrong?</a></li>
-			<li><a href="#why_does_rxvtunicode_sometimes_leave_pixel_droppings">Why does rxvt-unicode sometimes leave pixel droppings?</a></li>
-			<li><a href="#how_can_i_keep_rxvtunicode_from_using_reverse_video_so_much">How can I keep rxvt-unicode from using reverse video so much?</a></li>
-			<li><a href="#some_programs_assume_totally_weird_colours__red_instead_of_blue___how_can_i_fix_that">Some programs assume totally weird colours (red instead of blue), how can I fix that?</a></li>
-			<li><a href="#can_i_switch_the_fonts_at_runtime">Can I switch the fonts at runtime?</a></li>
-			<li><a href="#why_do_italic_characters_look_as_if_clipped">Why do italic characters look as if clipped?</a></li>
-			<li><a href="#can_i_speed_up_xft_rendering_somehow">Can I speed up Xft rendering somehow?</a></li>
-			<li><a href="#rxvtunicode_doesn_t_seem_to_antialias_its_fonts__what_is_wrong">Rxvt-unicode doesn't seem to anti-alias its fonts, what is wrong?</a></li>
-			<li><a href="#what_s_with_this_bold_blink_stuff">What's with this bold/blink stuff?</a></li>
-			<li><a href="#i_don_t_like_the_screen_colors__how_do_i_change_them">I don't like the screen colors.  How do I change them?</a></li>
-			<li><a href="#why_do_some_characters_look_so_much_different_than_others">Why do some characters look so much different than others?</a></li>
-			<li><a href="#how_does_rxvtunicode_choose_fonts">How does rxvt-unicode choose fonts?</a></li>
-			<li><a href="#why_do_some_chinese_characters_look_so_different_than_others">Why do some chinese characters look so different than others?</a></li>
-		</ul>
-
-		<li><a href="#keyboard__mouse___user_interaction">Keyboard, Mouse &amp; User Interaction</a></li>
-		<ul>
-
-			<li><a href="#the_new_selection_selects_pieces_that_are_too_big__how_can_i_select_single_words">The new selection selects pieces that are too big, how can I select single words?</a></li>
-			<li><a href="#i_don_t_like_the_new_selection_popups_hotkeys_perl__how_do_i_change_disable_it">I don't like the new selection/popups/hotkeys/perl, how do I change/disable it?</a></li>
-			<li><a href="#the_cursor_moves_when_selecting_text_in_the_current_input_line__how_do_i_switch_this_off">The cursor moves when selecting text in the current input line, how do I switch this off?</a></li>
-			<li><a href="#during_rlogin_ssh_telnet_etc__sessions__clicking_near_the_cursor_outputs_strange_escape_sequences__how_do_i_fix_this">During rlogin/ssh/telnet/etc. sessions, clicking near the cursor outputs strange escape sequences, how do I fix this?</a></li>
-			<li><a href="#my_numerical_keypad_acts_weird_and_generates_differing_output">My numerical keypad acts weird and generates differing output?</a></li>
-			<li><a href="#my_compose__multi_key__key_is_no_longer_working_">My Compose (Multi_key) key is no longer working.</a></li>
-			<li><a href="#i_cannot_type_ctrlshift2_to_get_an_ascii_nul_character_due_to_iso_14755">I cannot type <code>Ctrl-Shift-2</code> to get an ASCII NUL character due to ISO 14755</a></li>
-			<li><a href="#mouse_cut_paste_suddenly_no_longer_works_">Mouse cut/paste suddenly no longer works.</a></li>
-			<li><a href="#what_s_with_the_strange_backspace_delete_key_behaviour">What's with the strange Backspace/Delete key behaviour?</a></li>
-			<li><a href="#i_don_t_like_the_keybindings__how_do_i_change_them">I don't like the key-bindings.  How do I change them?</a></li>
-			<li><a href="#i_m_using_keyboard_model_xxx_that_has_extra_prior_next_insert_keys__how_do_i_make_use_of_them_for_example__the_sun_keyboard_type_4_has_the_following_map">I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How do I make use of them? For example, the Sun Keyboard type 4 has the following map</a></li>
-		</ul>
-
-		<li><a href="#terminal_configuration">Terminal Configuration</a></li>
-		<ul>
-
-			<li><a href="#can_i_see_a_typical_configuration">Can I see a typical configuration?</a></li>
-			<li><a href="#why_doesn_t_rxvtunicode_read_my_resources">Why doesn't rxvt-unicode read my resources?</a></li>
-			<li><a href="#when_i_login_to_another_system_it_tells_me_about_missing_terminfo_data">When I log-in to another system it tells me about missing terminfo data?</a></li>
-			<li><a href="#tic_outputs_some_error_when_compiling_the_terminfo_entry_"><code>tic</code> outputs some error when compiling the terminfo entry.</a></li>
-			<li><a href="#bash_s_readline_does_not_work_correctly_under_urxvt_"><code>bash</code>'s readline does not work correctly under urxvt.</a></li>
-			<li><a href="#i_need_a_termcap_file_entry_">I need a termcap file entry.</a></li>
-			<li><a href="#why_does_ls_no_longer_have_coloured_output">Why does <code>ls</code> no longer have coloured output?</a></li>
-			<li><a href="#why_doesn_t_vim_emacs_etc__use_the_88_colour_mode">Why doesn't vim/emacs etc. use the 88 colour mode?</a></li>
-			<li><a href="#why_doesn_t_vim_emacs_etc__make_use_of_italic">Why doesn't vim/emacs etc. make use of italic?</a></li>
-			<li><a href="#why_are_the_secondary_screenrelated_options_not_working_properly">Why are the secondary screen-related options not working properly?</a></li>
-		</ul>
-
-		<li><a href="#encoding___locale___input_method_issues">Encoding / Locale / Input Method Issues</a></li>
-		<ul>
-
-			<li><a href="#rxvtunicode_does_not_seem_to_understand_the_selected_encoding">Rxvt-unicode does not seem to understand the selected encoding?</a></li>
-			<li><a href="#unicode_does_not_seem_to_work">Unicode does not seem to work?</a></li>
-			<li><a href="#how_does_rxvtunicode_determine_the_encoding_to_use">How does rxvt-unicode determine the encoding to use?</a></li>
-			<li><a href="#is_there_an_option_to_switch_encodings">Is there an option to switch encodings?</a></li>
-			<li><a href="#can_i_switch_locales_at_runtime">Can I switch locales at runtime?</a></li>
-			<li><a href="#i_have_problems_getting_my_input_method_working_">I have problems getting my input method working.</a></li>
-			<li><a href="#my_input_method_wants__some_encoding__but_i_want_utf8__what_can_i_do">My input method wants &lt;some encoding&gt; but I want UTF-8, what can I do?</a></li>
-			<li><a href="#rxvtunicode_crashes_when_the_x_input_method_changes_or_exits_">Rxvt-unicode crashes when the X Input Method changes or exits.</a></li>
-		</ul>
-
-		<li><a href="#operating_systems___package_maintaining">Operating Systems / Package Maintaining</a></li>
-		<ul>
-
-			<li><a href="#i_am_using_debian_gnu_linux_and_have_a_problem___">I am using Debian GNU/Linux and have a problem...</a></li>
-			<li><a href="#i_am_maintaining_rxvtunicode_for_distribution_os_xxx__any_recommendation">I am maintaining rxvt-unicode for distribution/OS XXX, any recommendation?</a></li>
-			<li><a href="#i_need_to_make_it_setuid_setgid_to_support_utmp_ptys_on_my_os__is_this_safe">I need to make it setuid/setgid to support utmp/ptys on my OS, is this safe?</a></li>
-			<li><a href="#on_solaris_9__many_linedrawing_characters_are_too_wide_">On Solaris 9, many line-drawing characters are too wide.</a></li>
-			<li><a href="#i_am_on_freebsd_and_rxvtunicode_does_not_seem_to_work_at_all_">I am on FreeBSD and rxvt-unicode does not seem to work at all.</a></li>
-			<li><a href="#i_use_solaris_9_and_it_doesn_t_compile_work_etc_">I use Solaris 9 and it doesn't compile/work/etc.</a></li>
-			<li><a href="#how_can_i_use_rxvtunicode_under_cygwin">How can I use rxvt-unicode under cygwin?</a></li>
-		</ul>
-
-	</ul>
-
-	<li><a href="#rxvtunicode_technical_reference">RXVT-UNICODE TECHNICAL REFERENCE</a></li>
-	<ul>
-
-		<li><a href="#definitions">Definitions</a></li>
-		<li><a href="#values">Values</a></li>
-		<li><a href="#escape_sequences">Escape Sequences</a></li>
-		<li><a href="#csi__command_sequence_introducer__sequences">CSI (Command Sequence Introducer) Sequences</a></li>
-		<li><a href="#dec_private_modes">DEC Private Modes</a></li>
-		<li><a href="#xterm_operating_system_commands">XTerm Operating System Commands</a></li>
-	</ul>
-
-	<li><a href="#xpm">XPM</a></li>
-	<li><a href="#mouse_reporting">Mouse Reporting</a></li>
-	<li><a href="#key_codes">Key Codes</a></li>
-	<li><a href="#configure_options">CONFIGURE OPTIONS</a></li>
-	<li><a href="#authors">AUTHORS</a></li>
+<ul><li><a href="#NAME">NAME</a></li>
+<li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#RXVT_UNICODE_URXVT_FREQUENTLY_ASKED_">RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS</a>
+<ul><li><a href="#Meta_Features_amp_Commandline_Issues">Meta, Features &amp; Commandline Issues</a>
+<ul><li><a href="#My_question_isn_t_answered_here_can_">My question isn't answered here, can I ask a human?</a></li>
+<li><a href="#Does_it_support_tabs_can_I_have_a_ta">Does it support tabs, can I have a tabbed rxvt-unicode?</a></li>
+<li><a href="#How_do_I_know_which_rxvt_unicode_ver">How do I know which rxvt-unicode version I'm using?</a></li>
+<li><a href="#Rxvt_unicode_uses_gobs_of_memory_how">Rxvt-unicode uses gobs of memory, how can I reduce that?</a></li>
+<li><a href="#How_can_I_start_urxvtd_in_a_race_fre">How can I start urxvtd in a race-free way?</a></li>
+<li><a href="#How_can_I_start_urxvtd_automatically">How can I start urxvtd automatically when I run urxvtc?</a></li>
+<li><a href="#How_do_I_distinguish_whether_I_m_run">How do I distinguish whether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.</a></li>
+<li><a href="#How_do_I_set_the_correct_full_IP_add">How do I set the correct, full IP address for the DISPLAY variable?</a></li>
+<li><a href="#How_do_I_compile_the_manual_pages_on">How do I compile the manual pages on my own?</a></li>
+<li><a href="#Isn_t_rxvt_unicode_supposed_to_be_sm">Isn't rxvt-unicode supposed to be small? Don't all those features bloat?</a></li>
+<li><a href="#Why_C_isn_t_that_unportable_bloated_">Why C++, isn't that unportable/bloated/uncool?</a></li>
 </ul>
+</li>
+<li><a href="#Rendering_Font_amp_Look_and_Feel_Iss">Rendering, Font &amp; Look and Feel Issues</a>
+<ul><li><a href="#I_can_t_get_transparency_working_wha">I can't get transparency working, what am I doing wrong?</a></li>
+<li><a href="#Why_does_rxvt_unicode_sometimes_leav">Why does rxvt-unicode sometimes leave pixel droppings?</a></li>
+<li><a href="#How_can_I_keep_rxvt_unicode_from_usi">How can I keep rxvt-unicode from using reverse video so much?</a></li>
+<li><a href="#Some_programs_assume_totally_weird_c">Some programs assume totally weird colours (red instead of blue), how can I fix that?</a></li>
+<li><a href="#Can_I_switch_the_fonts_at_runtime">Can I switch the fonts at runtime?</a></li>
+<li><a href="#Why_do_italic_characters_look_as_if_">Why do italic characters look as if clipped?</a></li>
+<li><a href="#Can_I_speed_up_Xft_rendering_somehow">Can I speed up Xft rendering somehow?</a></li>
+<li><a href="#Rxvt_unicode_doesn_t_seem_to_anti_al">Rxvt-unicode doesn't seem to anti-alias its fonts, what is wrong?</a></li>
+<li><a href="#What_s_with_this_bold_blink_stuff">What's with this bold/blink stuff?</a></li>
+<li><a href="#I_don_t_like_the_screen_colors_How_d">I don't like the screen colors.  How do I change them?</a></li>
+<li><a href="#Why_do_some_characters_look_so_much_">Why do some characters look so much different than others?</a></li>
+<li><a href="#How_does_rxvt_unicode_choose_fonts">How does rxvt-unicode choose fonts?</a></li>
+<li><a href="#Why_do_some_chinese_characters_look_">Why do some chinese characters look so different than others?</a></li>
+</ul>
+</li>
+<li><a href="#Keyboard_Mouse_amp_User_Interaction">Keyboard, Mouse &amp; User Interaction</a>
+<ul><li><a href="#The_new_selection_selects_pieces_tha">The new selection selects pieces that are too big, how can I select single words?</a></li>
+<li><a href="#I_don_t_like_the_new_selection_popup">I don't like the new selection/popups/hotkeys/perl, how do I change/disable it?</a></li>
+<li><a href="#The_cursor_moves_when_selecting_text">The cursor moves when selecting text in the current input line, how do I switch this off?</a></li>
+<li><a href="#During_rlogin_ssh_telnet_etc_session">During rlogin/ssh/telnet/etc. sessions, clicking near the cursor outputs strange escape sequences, how do I fix this?</a></li>
+<li><a href="#My_numerical_keypad_acts_weird_and_g">My numerical keypad acts weird and generates differing output?</a></li>
+<li><a href="#My_Compose_Multi_key_key_is_no_longe">My Compose (Multi_key) key is no longer working.</a></li>
+<li><a href="#I_cannot_type_code_Ctrl_Shift_2_code">I cannot type <code>Ctrl-Shift-2</code> to get an ASCII NUL character due to ISO 14755</a></li>
+<li><a href="#Mouse_cut_paste_suddenly_no_longer_w">Mouse cut/paste suddenly no longer works.</a></li>
+<li><a href="#What_s_with_the_strange_Backspace_De">What's with the strange Backspace/Delete key behaviour?</a></li>
+<li><a href="#I_don_t_like_the_key_bindings_How_do">I don't like the key-bindings.  How do I change them?</a></li>
+<li><a href="#I_m_using_keyboard_model_XXX_that_ha">I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How do I make use of them? For example, the Sun Keyboard type 4 has the following map</a></li>
+</ul>
+</li>
+<li><a href="#Terminal_Configuration">Terminal Configuration</a>
+<ul><li><a href="#Can_I_see_a_typical_configuration">Can I see a typical configuration?</a></li>
+<li><a href="#Why_doesn_t_rxvt_unicode_read_my_res">Why doesn't rxvt-unicode read my resources?</a></li>
+<li><a href="#When_I_log_in_to_another_system_it_t">When I log-in to another system it tells me about missing terminfo data?</a></li>
+<li><a href="#code_tic_code_outputs_some_error_whe"><code>tic</code> outputs some error when compiling the terminfo entry.</a></li>
+<li><a href="#code_bash_code_s_readline_does_not_w"><code>bash</code>'s readline does not work correctly under urxvt.</a></li>
+<li><a href="#I_need_a_termcap_file_entry">I need a termcap file entry.</a></li>
+<li><a href="#Why_does_code_ls_code_no_longer_have">Why does <code>ls</code> no longer have coloured output?</a></li>
+<li><a href="#Why_doesn_t_vim_emacs_etc_use_the_88">Why doesn't vim/emacs etc. use the 88 colour mode?</a></li>
+<li><a href="#Why_doesn_t_vim_emacs_etc_make_use_o">Why doesn't vim/emacs etc. make use of italic?</a></li>
+<li><a href="#Why_are_the_secondary_screen_related">Why are the secondary screen-related options not working properly?</a></li>
+</ul>
+</li>
+<li><a href="#Encoding_Locale_Input_Method_Issues">Encoding / Locale / Input Method Issues</a>
+<ul><li><a href="#Rxvt_unicode_does_not_seem_to_unders">Rxvt-unicode does not seem to understand the selected encoding?</a></li>
+<li><a href="#Unicode_does_not_seem_to_work">Unicode does not seem to work?</a></li>
+<li><a href="#How_does_rxvt_unicode_determine_the_">How does rxvt-unicode determine the encoding to use?</a></li>
+<li><a href="#Is_there_an_option_to_switch_encodin">Is there an option to switch encodings?</a></li>
+<li><a href="#Can_I_switch_locales_at_runtime">Can I switch locales at runtime?</a></li>
+<li><a href="#I_have_problems_getting_my_input_met">I have problems getting my input method working.</a></li>
+<li><a href="#My_input_method_wants_lt_some_encodi">My input method wants &lt;some encoding&gt; but I want UTF-8, what can I do?</a></li>
+<li><a href="#Rxvt_unicode_crashes_when_the_X_Inpu">Rxvt-unicode crashes when the X Input Method changes or exits.</a></li>
+</ul>
+</li>
+<li><a href="#Operating_Systems_Package_Maintainin">Operating Systems / Package Maintaining</a>
+<ul><li><a href="#I_am_using_Debian_GNU_Linux_and_have">I am using Debian GNU/Linux and have a problem...</a></li>
+<li><a href="#I_am_maintaining_rxvt_unicode_for_di">I am maintaining rxvt-unicode for distribution/OS XXX, any recommendation?</a></li>
+<li><a href="#I_need_to_make_it_setuid_setgid_to_s">I need to make it setuid/setgid to support utmp/ptys on my OS, is this safe?</a></li>
+<li><a href="#On_Solaris_9_many_line_drawing_chara">On Solaris 9, many line-drawing characters are too wide.</a></li>
+<li><a href="#I_am_on_FreeBSD_and_rxvt_unicode_doe">I am on FreeBSD and rxvt-unicode does not seem to work at all.</a></li>
+<li><a href="#I_use_Solaris_9_and_it_doesn_t_compi">I use Solaris 9 and it doesn't compile/work/etc.</a></li>
+<li><a href="#How_can_I_use_rxvt_unicode_under_cyg">How can I use rxvt-unicode under cygwin?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#RXVT_UNICODE_TECHNICAL_REFERENCE">RXVT-UNICODE TECHNICAL REFERENCE</a>
+<ul><li><a href="#Definitions">Definitions</a></li>
+<li><a href="#Values">Values</a></li>
+<li><a href="#Escape_Sequences">Escape Sequences</a></li>
+</ul>
+</li>
+<li><a href="#CSI">CSI</a>
+<ul><li><a href="#CSI_Command_Sequence_Introducer_Sequ">CSI (Command Sequence Introducer) Sequences</a></li>
+</ul>
+</li>
+<li><a href="#ESCOBPsA">ESCOBPsA</a></li>
+<li><a href="#ESCOBPsC">ESCOBPsC</a></li>
+<li><a href="#ESCOBPsG">ESCOBPsG</a></li>
+<li><a href="#PrivateModes">PrivateModes</a>
+<ul><li><a href="#DEC_Private_Modes">DEC Private Modes</a></li>
+</ul>
+</li>
+<li><a href="#Priv66">Priv66</a></li>
+<li><a href="#XTerm">XTerm</a>
+<ul><li><a href="#XTerm_Operating_System_Commands">XTerm Operating System Commands</a></li>
+</ul>
+</li>
+<li><a href="#XPM">XPM</a></li>
+<li><a href="#Mouse">Mouse</a></li>
+<li><a href="#Mouse_Reporting">Mouse Reporting</a></li>
+<li><a href="#KeyCodes">KeyCodes</a></li>
+<li><a href="#Key_Codes">Key Codes</a></li>
+<li><a href="#CONFIGURE_OPTIONS">CONFIGURE OPTIONS</a></li>
+<li><a href="#AUTHORS">AUTHORS</a>
+</li>
+</ul><hr />
 <!-- INDEX END -->
 
-<hr />
-<p>
-</p>
-<h1><a name="name">NAME</a></h1>
+<h1 id="NAME">NAME</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="NAME_CONTENT">
 <p>RXVT REFERENCE - FAQ, command sequences and other background information</p>
-<p>
-</p>
-<hr />
-<h1><a name="synopsis">SYNOPSIS</a></h1>
-<pre>
-   # set a new font set
-   printf '\33]50;%s\007' 9x15,xft:Kochi&quot; Mincho&quot;</pre>
-<pre>
+
+</div>
+<h1 id="SYNOPSIS">SYNOPSIS</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="SYNOPSIS_CONTENT">
+<pre>   # set a new font set
+   printf '\33]50;%s\007' 9x15,xft:Kochi&quot; Mincho&quot;
+
    # change the locale and tell rxvt-unicode about it
-   export LC_CTYPE=ja_JP.EUC-JP; printf &quot;\33]701;$LC_CTYPE\007&quot;</pre>
-<pre>
+   export LC_CTYPE=ja_JP.EUC-JP; printf &quot;\33]701;$LC_CTYPE\007&quot;
+
    # set window title
-   printf '\33]2;%s\007' &quot;new window title&quot;</pre>
-<p>
-</p>
-<hr />
-<h1><a name="description">DESCRIPTION</a></h1>
+   printf '\33]2;%s\007' &quot;new window title&quot;
+
+</pre>
+
+</div>
+<h1 id="DESCRIPTION">DESCRIPTION</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="DESCRIPTION_CONTENT">
 <p>This document contains the FAQ, the RXVT TECHNICAL REFERENCE documenting
 all escape sequences, and other background information.</p>
 <p>The newest version of this document is also available on the World Wide Web at
 <a href="http://cvs.schmorp.de/browse/rxvt-unicode/doc/rxvt.7.html">http://cvs.schmorp.de/browse/rxvt-unicode/doc/rxvt.7.html</a>.</p>
-<p>
-</p>
-<hr />
-<h1><a name="rxvtunicode_urxvt_frequently_asked_questions">RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS</a></h1>
-<p>
-</p>
-<h2><a name="meta__features___commandline_issues">Meta, Features &amp; Commandline Issues</a></h2>
-<p>
-</p>
-<h3><a name="my_question_isn_t_answered_here__can_i_ask_a_human">My question isn't answered here, can I ask a human?</a></h3>
+
+</div>
+<h1 id="RXVT_UNICODE_URXVT_FREQUENTLY_ASKED_">RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="RXVT_UNICODE_URXVT_FREQUENTLY_ASKED_-2">
+
+
+
+
+
+</div>
+<h2 id="Meta_Features_amp_Commandline_Issues">Meta, Features &amp; Commandline Issues</h2>
+<div id="Meta_Features_amp_Commandline_Issues-2">
+
+</div>
+<h3 id="My_question_isn_t_answered_here_can_">My question isn't answered here, can I ask a human?</h3>
+<div id="My_question_isn_t_answered_here_can_-2">
 <p>Before sending me mail, you could go to IRC: <code>irc.freenode.net</code>,
 channel <code>#rxvt-unicode</code> has some rxvt-unicode enthusiasts that might be
 interested in learning about new and exciting problems (but not FAQs :).</p>
-<p>
-</p>
-<h3><a name="does_it_support_tabs__can_i_have_a_tabbed_rxvtunicode">Does it support tabs, can I have a tabbed rxvt-unicode?</a></h3>
+
+</div>
+<h3 id="Does_it_support_tabs_can_I_have_a_ta">Does it support tabs, can I have a tabbed rxvt-unicode?</h3>
+<div id="Does_it_support_tabs_can_I_have_a_ta-2">
 <p>Beginning with version 7.3, there is a perl extension that implements a
 simple tabbed terminal. It is installed by default, so any of these should
 give you tabs:</p>
-<pre>
-   urxvt -pe tabbed</pre>
-<pre>
-   URxvt.perl-ext-common: default,tabbed</pre>
+<pre>   urxvt -pe tabbed
+
+   URxvt.perl-ext-common: default,tabbed
+
+</pre>
 <p>It will also work fine with tabbing functionality of many window managers
 or similar tabbing programs, and its embedding-features allow it to be
-embedded into other programs, as witnessed by <em>doc/rxvt-tabbed</em> or
+embedded into other programs, as witnessed by <cite>doc/rxvt-tabbed</cite> or
 the upcoming <code>Gtk2::URxvt</code> perl module, which features a tabbed urxvt
 (murxvt) terminal as an example embedding application.</p>
-<p>
-</p>
-<h3><a name="how_do_i_know_which_rxvtunicode_version_i_m_using">How do I know which rxvt-unicode version I'm using?</a></h3>
+
+</div>
+<h3 id="How_do_I_know_which_rxvt_unicode_ver">How do I know which rxvt-unicode version I'm using?</h3>
+<div id="How_do_I_know_which_rxvt_unicode_ver-2">
 <p>The version number is displayed with the usage (-h). Also the escape
 sequence <code>ESC [ 8 n</code> sets the window title to the version number. When
 using the urxvtc client, the version displayed is that of the
 daemon.</p>
-<p>
-</p>
-<h3><a name="rxvtunicode_uses_gobs_of_memory__how_can_i_reduce_that">Rxvt-unicode uses gobs of memory, how can I reduce that?</a></h3>
+
+</div>
+<h3 id="Rxvt_unicode_uses_gobs_of_memory_how">Rxvt-unicode uses gobs of memory, how can I reduce that?</h3>
+<div id="Rxvt_unicode_uses_gobs_of_memory_how-2">
 <p>Rxvt-unicode tries to obey the rule of not charging you for something you
 don't use. One thing you should try is to configure out all settings that
 you don't need, for example, Xft support is a resource hog by design,
@@ -206,47 +215,51 @@ scrollback buffers: Without <code>--enable-unicode3</code>, rxvt-unicode will us
 kilobyte per line. A scrollback buffer of 10000 lines will then (if full)
 use 10 Megabytes of memory. With <code>--enable-unicode3</code> it gets worse, as
 rxvt-unicode then uses 8 bytes per screen cell.</p>
-<p>
-</p>
-<h3><a name="how_can_i_start_urxvtd_in_a_racefree_way">How can I start urxvtd in a race-free way?</a></h3>
+
+</div>
+<h3 id="How_can_I_start_urxvtd_in_a_race_fre">How can I start urxvtd in a race-free way?</h3>
+<div id="How_can_I_start_urxvtd_in_a_race_fre-2">
 <p>Try <code>urxvtd -f -o</code>, which tells urxvtd to open the
 display, create the listening socket and then fork.</p>
-<p>
-</p>
-<h3><a name="how_can_i_start_urxvtd_automatically_when_i_run_urxvtc">How can I start urxvtd automatically when I run urxvtc?</a></h3>
+
+</div>
+<h3 id="How_can_I_start_urxvtd_automatically">How can I start urxvtd automatically when I run urxvtc?</h3>
+<div id="How_can_I_start_urxvtd_automatically-2">
 <p>If you want to start urxvtd automatically whenever you run
 urxvtc and the daemon isn't running yet, use this script:</p>
-<pre>
-   #!/bin/sh
+<pre>   #!/bin/sh
    urxvtc &quot;$@&quot;
    if [ $? -eq 2 ]; then
       urxvtd -q -o -f
       urxvtc &quot;$@&quot;
-   fi</pre>
+   fi
+
+</pre>
 <p>This tries to create a new terminal, and if fails with exit status 2,
 meaning it couldn't connect to the daemon, it will start the daemon and
 re-run the command. Subsequent invocations of the script will re-use the
 existing daemon.</p>
-<p>
-</p>
-<h3><a name="how_do_i_distinguish_whether_i_m_running_rxvtunicode_or_a_regular_xterm_i_need_this_to_decide_about_setting_colors_etc_">How do I distinguish whether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.</a></h3>
-<p>The original rxvt and rxvt-unicode always export the variable ``COLORTERM'',
+
+</div>
+<h3 id="How_do_I_distinguish_whether_I_m_run">How do I distinguish whether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.</h3>
+<div id="How_do_I_distinguish_whether_I_m_run-2">
+<p>The original rxvt and rxvt-unicode always export the variable &quot;COLORTERM&quot;,
 so you can check and see if that is set. Note that several programs, JED,
 slrn, Midnight Commander automatically check this variable to decide
 whether or not to use color.</p>
-<p>
-</p>
-<h3><a name="how_do_i_set_the_correct__full_ip_address_for_the_display_variable">How do I set the correct, full IP address for the DISPLAY variable?</a></h3>
+
+</div>
+<h3 id="How_do_I_set_the_correct_full_IP_add">How do I set the correct, full IP address for the DISPLAY variable?</h3>
+<div id="How_do_I_set_the_correct_full_IP_add-2">
 <p>If you've compiled rxvt-unicode with DISPLAY_IS_IP and have enabled
 insecure mode then it is possible to use the following shell script
 snippets to correctly set the display. If your version of rxvt-unicode
 wasn't also compiled with ESCZ_ANSWER (as assumed in these snippets) then
 the COLORTERM variable can be used to distinguish rxvt-unicode from a
 regular xterm.</p>
-<p>Courtesy of Chuck Blake &lt;<a href="mailto:cblake@BBN.COM">cblake@BBN.COM</a>&gt; with the following shell script
+<p>Courtesy of Chuck Blake &lt;cblake@BBN.COM&gt; with the following shell script
 snippets:</p>
-<pre>
-   # Bourne/Korn/POSIX family of shells:
+<pre>   # Bourne/Korn/POSIX family of shells:
    [ ${TERM:-foo} = foo ] &amp;&amp; TERM=xterm # assume an xterm if we don't know
    if [ ${TERM:-foo} = xterm ]; then
       stty -icanon -echo min 0 time 15 # see if enhanced rxvt or not
@@ -257,16 +270,20 @@ snippets:</p>
          echo -n '^[[7n'        # query the rxvt we are in for the DISPLAY string
          read DISPLAY           # set it in our local shell
       fi
-   fi</pre>
-<p>
-</p>
-<h3><a name="how_do_i_compile_the_manual_pages_on_my_own">How do I compile the manual pages on my own?</a></h3>
-<p>You need to have a recent version of perl installed as <em>/usr/bin/perl</em>,
-one that comes with <em>pod2man</em>, <em>pod2text</em> and <em>pod2html</em>. Then go to
+   fi
+
+</pre>
+
+</div>
+<h3 id="How_do_I_compile_the_manual_pages_on">How do I compile the manual pages on my own?</h3>
+<div id="How_do_I_compile_the_manual_pages_on-2">
+<p>You need to have a recent version of perl installed as <cite>/usr/bin/perl</cite>,
+one that comes with <cite>pod2man</cite>, <cite>pod2text</cite> and <cite>pod2html</cite>. Then go to
 the doc subdirectory and enter <code>make alldoc</code>.</p>
-<p>
-</p>
-<h3><a name="isn_t_rxvtunicode_supposed_to_be_small_don_t_all_those_features_bloat">Isn't rxvt-unicode supposed to be small? Don't all those features bloat?</a></h3>
+
+</div>
+<h3 id="Isn_t_rxvt_unicode_supposed_to_be_sm">Isn't rxvt-unicode supposed to be small? Don't all those features bloat?</h3>
+<div id="Isn_t_rxvt_unicode_supposed_to_be_sm-2">
 <p>I often get asked about this, and I think, no, they didn't cause extra
 bloat. If you compare a minimal rxvt and a minimal urxvt, you can see
 that the urxvt binary is larger (due to some encoding tables always being
@@ -274,17 +291,19 @@ compiled in), but it actually uses less memory (RSS) after startup. Even
 with <code>--disable-everything</code>, this comparison is a bit unfair, as many
 features unique to urxvt (locale, encoding conversion, iso14755 etc.) are
 already in use in this mode.</p>
-<pre>
-    text    data     bss     drs     rss filename
+<pre>    text    data     bss     drs     rss filename
    98398    1664      24   15695    1824 rxvt --disable-everything
-  188985    9048   66616   18222    1788 urxvt --disable-everything</pre>
-<p>When you <a href="#item__2d_2denable_2deverything"><code>--enable-everything</code></a> (which <em>is</em> unfair, as this involves xft
+  188985    9048   66616   18222    1788 urxvt --disable-everything
+
+</pre>
+<p>When you <code>--enable-everything</code> (which <i>is</i> unfair, as this involves xft
 and full locale/XIM support which are quite bloaty inside libX11 and my
 libc), the two diverge, but not unreasonably so.</p>
-<pre>
-    text    data     bss     drs     rss filename
+<pre>    text    data     bss     drs     rss filename
   163431    2152      24   20123    2060 rxvt --enable-everything
- 1035683   49680   66648   29096    3680 urxvt --enable-everything</pre>
+ 1035683   49680   66648   29096    3680 urxvt --enable-everything
+
+</pre>
 <p>The very large size of the text section is explained by the east-asian
 encoding tables, which, if unused, take up disk space but nothing else
 and can be compiled out unless you rely on X11 core fonts that use those
@@ -302,9 +321,10 @@ still fares rather well. And compared to some monsters like gnome-terminal
 43180k in daemons that stay around after exit, plus half a minute of
 startup time, including the hundreds of warnings it spits out), it fares
 extremely well *g*.</p>
-<p>
-</p>
-<h3><a name="why_c____isn_t_that_unportable_bloated_uncool">Why C++, isn't that unportable/bloated/uncool?</a></h3>
+
+</div>
+<h3 id="Why_C_isn_t_that_unportable_bloated_">Why C++, isn't that unportable/bloated/uncool?</h3>
+<div id="Why_C_isn_t_that_unportable_bloated_-2">
 <p>Is this a question? :) It comes up very often. The simple answer is: I had
 to write it, and C++ allowed me to write and maintain it in a fraction
 of the time and effort (which is a scarce resource for me). Put even
@@ -318,26 +338,34 @@ in C that use gobs of memory, an certainly possible to write programs in
 C++ that don't. C++ also often comes with large libraries, but this is
 not necessarily the case with GCC. Here is what rxvt links against on my
 system with a minimal config:</p>
-<pre>
-   libX11.so.6 =&gt; /usr/X11R6/lib/libX11.so.6 (0x00002aaaaabc3000)
+<pre>   libX11.so.6 =&gt; /usr/X11R6/lib/libX11.so.6 (0x00002aaaaabc3000)
    libc.so.6 =&gt; /lib/libc.so.6 (0x00002aaaaadde000)
    libdl.so.2 =&gt; /lib/libdl.so.2 (0x00002aaaab01d000)
-   /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)</pre>
+   /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)
+
+</pre>
 <p>And here is rxvt-unicode:</p>
-<pre>
-   libX11.so.6 =&gt; /usr/X11R6/lib/libX11.so.6 (0x00002aaaaabc3000)
+<pre>   libX11.so.6 =&gt; /usr/X11R6/lib/libX11.so.6 (0x00002aaaaabc3000)
    libgcc_s.so.1 =&gt; /lib/libgcc_s.so.1 (0x00002aaaaada2000)
    libc.so.6 =&gt; /lib/libc.so.6 (0x00002aaaaaeb0000)     
    libdl.so.2 =&gt; /lib/libdl.so.2 (0x00002aaaab0ee000)   
-   /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)</pre>
+   /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)     
+
+</pre>
 <p>No large bloated libraries (of course, none were linked in statically),
 except maybe libX11 :)</p>
-<p>
-</p>
-<h2><a name="rendering__font___look_and_feel_issues">Rendering, Font &amp; Look and Feel Issues</a></h2>
-<p>
-</p>
-<h3><a name="i_can_t_get_transparency_working__what_am_i_doing_wrong">I can't get transparency working, what am I doing wrong?</a></h3>
+
+
+
+
+
+</div>
+<h2 id="Rendering_Font_amp_Look_and_Feel_Iss">Rendering, Font &amp; Look and Feel Issues</h2>
+<div id="Rendering_Font_amp_Look_and_Feel_Iss-2">
+
+</div>
+<h3 id="I_can_t_get_transparency_working_wha">I can't get transparency working, what am I doing wrong?</h3>
+<div id="I_can_t_get_transparency_working_wha-2">
 <p>First of all, transparency isn't officially supported in rxvt-unicode, so
 you are mostly on your own. Do not bug the author about it (but you may
 bug everybody else). Also, if you can't get it working consider it a rite
@@ -345,42 +373,47 @@ of passage: ... and you failed.</p>
 <p>Here are four ways to get transparency. <strong>Do</strong> read the manpage and option
 descriptions for the programs mentioned and rxvt-unicode. Really, do it!</p>
 <p>1. Use inheritPixmap:</p>
-<pre>
-   Esetroot wallpaper.jpg
-   urxvt -ip -tint red -sh 40</pre>
+<pre>   Esetroot wallpaper.jpg
+   urxvt -ip -tint red -sh 40
+
+</pre>
 <p>That works. If you think it doesn't, you lack transparency and tinting
 support, or you are unable to read.</p>
 <p>2. Use a simple pixmap and emulate pseudo-transparency. This enables you
 to use effects other than tinting and shading: Just shade/tint/whatever
 your picture with gimp or any other tool:</p>
-<pre>
-   convert wallpaper.jpg -blur 20x20 -modulate 30 background.xpm
-   urxvt -pixmap background.xpm -pe automove-background</pre>
+<pre>   convert wallpaper.jpg -blur 20x20 -modulate 30 background.xpm
+   urxvt -pixmap background.xpm -pe automove-background
+
+</pre>
 <p>That works. If you think it doesn't, you lack XPM and Perl support, or you
 are unable to read.</p>
 <p>3. Use an ARGB visual:</p>
-<pre>
-   urxvt -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc</pre>
+<pre>   urxvt -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc
+
+</pre>
 <p>This requires XFT support, and the support of your X-server. If that
 doesn't work for you, blame Xorg and Keith Packard. ARGB visuals aren't
 there yet, no matter what they claim. Rxvt-Unicode contains the necessary
 bugfixes and workarounds for Xft and Xlib to make it work, but that
 doesn't mean that your WM has the required kludges in place.</p>
 <p>4. Use xcompmgr and let it do the job:</p>
-<pre>
-  xprop -frame -f _NET_WM_WINDOW_OPACITY 32c \
-        -set _NET_WM_WINDOW_OPACITY 0xc0000000</pre>
+<pre>  xprop -frame -f _NET_WM_WINDOW_OPACITY 32c \
+        -set _NET_WM_WINDOW_OPACITY 0xc0000000
+
+</pre>
 <p>Then click on a window you want to make transparent. Replace <code>0xc0000000</code>
 by other values to change the degree of opacity. If it doesn't work and
 your server crashes, you got to keep the pieces.</p>
-<p>
-</p>
-<h3><a name="why_does_rxvtunicode_sometimes_leave_pixel_droppings">Why does rxvt-unicode sometimes leave pixel droppings?</a></h3>
+
+</div>
+<h3 id="Why_does_rxvt_unicode_sometimes_leav">Why does rxvt-unicode sometimes leave pixel droppings?</h3>
+<div id="Why_does_rxvt_unicode_sometimes_leav-2">
 <p>Most fonts were not designed for terminal use, which means that character
 size varies a lot. A font that is otherwise fine for terminal use might
 contain some characters that are simply too wide. Rxvt-unicode will avoid
-these characters. For characters that are just ``a bit'' too wide a special
-``careful'' rendering mode is used that redraws adjacent characters.</p>
+these characters. For characters that are just &quot;a bit&quot; too wide a special
+&quot;careful&quot; rendering mode is used that redraws adjacent characters.</p>
 <p>All of this requires that fonts do not lie about character sizes,
 however: Xft fonts often draw glyphs larger than their acclaimed bounding
 box, and rxvt-unicode has no way of detecting this (the correct way is to
@@ -392,19 +425,22 @@ the <code>-lsp</code> option to give the font more height. If that doesn't work,
 might be forced to use a different font.</p>
 <p>All of this is not a problem when using X11 core fonts, as their bounding
 box data is correct.</p>
-<p>
-</p>
-<h3><a name="how_can_i_keep_rxvtunicode_from_using_reverse_video_so_much">How can I keep rxvt-unicode from using reverse video so much?</a></h3>
+
+</div>
+<h3 id="How_can_I_keep_rxvt_unicode_from_usi">How can I keep rxvt-unicode from using reverse video so much?</h3>
+<div id="How_can_I_keep_rxvt_unicode_from_usi-2">
 <p>First of all, make sure you are running with the right terminal settings
 (<code>TERM=rxvt-unicode</code>), which will get rid of most of these effects. Then
 make sure you have specified colours for italic and bold, as otherwise
 rxvt-unicode might use reverse video to simulate the effect:</p>
-<pre>
-   URxvt.colorBD:  white
-   URxvt.colorIT:  green</pre>
-<p>
-</p>
-<h3><a name="some_programs_assume_totally_weird_colours__red_instead_of_blue___how_can_i_fix_that">Some programs assume totally weird colours (red instead of blue), how can I fix that?</a></h3>
+<pre>   URxvt.colorBD:  white
+   URxvt.colorIT:  green
+
+</pre>
+
+</div>
+<h3 id="Some_programs_assume_totally_weird_c">Some programs assume totally weird colours (red instead of blue), how can I fix that?</h3>
+<div id="Some_programs_assume_totally_weird_c-2">
 <p>For some unexplainable reason, some rare programs assume a very weird
 colour palette when confronted with a terminal with more than the standard
 8 colours (rxvt-unicode supports 88). The right fix is, of course, to fix
@@ -412,46 +448,53 @@ these programs not to assume non-ISO colours without very good reasons.</p>
 <p>In the meantime, you can either edit your <code>rxvt-unicode</code> terminfo
 definition to only claim 8 colour support or use <code>TERM=rxvt</code>, which will
 fix colours but keep you from using other rxvt-unicode features.</p>
-<p>
-</p>
-<h3><a name="can_i_switch_the_fonts_at_runtime">Can I switch the fonts at runtime?</a></h3>
+
+</div>
+<h3 id="Can_I_switch_the_fonts_at_runtime">Can I switch the fonts at runtime?</h3>
+<div id="Can_I_switch_the_fonts_at_runtime_CO">
 <p>Yes, using an escape sequence. Try something like this, which has the same
 effect as using the <code>-fn</code> switch, and takes effect immediately:</p>
-<pre>
-   printf '\33]50;%s\007' &quot;9x15bold,xft:Kochi Gothic&quot;</pre>
+<pre>   printf '\33]50;%s\007' &quot;9x15bold,xft:Kochi Gothic&quot;
+
+</pre>
 <p>This is useful if you e.g. work primarily with japanese (and prefer a
 japanese font), but you have to switch to chinese temporarily, where
 japanese fonts would only be in your way.</p>
 <p>You can think of this as a kind of manual ISO-2022 switching.</p>
-<p>
-</p>
-<h3><a name="why_do_italic_characters_look_as_if_clipped">Why do italic characters look as if clipped?</a></h3>
+
+</div>
+<h3 id="Why_do_italic_characters_look_as_if_">Why do italic characters look as if clipped?</h3>
+<div id="Why_do_italic_characters_look_as_if_-2">
 <p>Many fonts have difficulties with italic characters and hinting. For
 example, the otherwise very nicely hinted font <code>xft:Bitstream Vera Sans
 Mono</code> completely fails in its italic face. A workaround might be to
 enable freetype autohinting, i.e. like this:</p>
-<pre>
-   URxvt.italicFont:        xft:Bitstream Vera Sans Mono:italic:autohint=true
-   URxvt.boldItalicFont:    xft:Bitstream Vera Sans Mono:bold:italic:autohint=true</pre>
-<p>
-</p>
-<h3><a name="can_i_speed_up_xft_rendering_somehow">Can I speed up Xft rendering somehow?</a></h3>
+<pre>   URxvt.italicFont:        xft:Bitstream Vera Sans Mono:italic:autohint=true
+   URxvt.boldItalicFont:    xft:Bitstream Vera Sans Mono:bold:italic:autohint=true
+
+</pre>
+
+</div>
+<h3 id="Can_I_speed_up_Xft_rendering_somehow">Can I speed up Xft rendering somehow?</h3>
+<div id="Can_I_speed_up_Xft_rendering_somehow-2">
 <p>Yes, the most obvious way to speed it up is to avoid Xft entirely, as
 it is simply slow. If you still want Xft fonts you might try to disable
 antialiasing (by appending <code>:antialias=false</code>), which saves lots of
 memory and also speeds up rendering considerably.</p>
-<p>
-</p>
-<h3><a name="rxvtunicode_doesn_t_seem_to_antialias_its_fonts__what_is_wrong">Rxvt-unicode doesn't seem to anti-alias its fonts, what is wrong?</a></h3>
+
+</div>
+<h3 id="Rxvt_unicode_doesn_t_seem_to_anti_al">Rxvt-unicode doesn't seem to anti-alias its fonts, what is wrong?</h3>
+<div id="Rxvt_unicode_doesn_t_seem_to_anti_al-2">
 <p>Rxvt-unicode will use whatever you specify as a font. If it needs to
 fall back to its default font search list it will prefer X11 core
 fonts, because they are small and fast, and then use Xft fonts. It has
 antialiasing disabled for most of them, because the author thinks they
 look best that way.</p>
 <p>If you want antialiasing, you have to specify the fonts manually.</p>
-<p>
-</p>
-<h3><a name="what_s_with_this_bold_blink_stuff">What's with this bold/blink stuff?</a></h3>
+
+</div>
+<h3 id="What_s_with_this_bold_blink_stuff">What's with this bold/blink stuff?</h3>
+<div id="What_s_with_this_bold_blink_stuff_CO">
 <p>If no bold colour is set via <code>colorBD:</code>, bold will invert text using the
 standard foreground colour.</p>
 <p>For the standard background colour, blinking will actually make the
@@ -462,23 +505,23 @@ ignored.</p>
 foreground/background colors.</p>
 <p>color0-7 are the low-intensity colors.</p>
 <p>color8-15 are the corresponding high-intensity colors.</p>
-<p>
-</p>
-<h3><a name="i_don_t_like_the_screen_colors__how_do_i_change_them">I don't like the screen colors.  How do I change them?</a></h3>
-<p>You can change the screen colors at run-time using <em>~/.Xdefaults</em>
+
+</div>
+<h3 id="I_don_t_like_the_screen_colors_How_d">I don't like the screen colors.  How do I change them?</h3>
+<div id="I_don_t_like_the_screen_colors_How_d-2">
+<p>You can change the screen colors at run-time using <cite>~/.Xdefaults</cite>
 resources (or as long-options).</p>
 <p>Here are values that are supposed to resemble a VGA screen,
 including the murky brown that passes for low-intensity yellow:</p>
-<pre>
-   URxvt.color0:   #000000
+<pre>   URxvt.color0:   #000000
    URxvt.color1:   #A80000
    URxvt.color2:   #00A800
    URxvt.color3:   #A8A800
    URxvt.color4:   #0000A8
    URxvt.color5:   #A800A8
    URxvt.color6:   #00A8A8
-   URxvt.color7:   #A8A8A8</pre>
-<pre>
+   URxvt.color7:   #A8A8A8
+
    URxvt.color8:   #000054
    URxvt.color9:   #FF0054
    URxvt.color10:  #00FF54
@@ -486,10 +529,11 @@ including the murky brown that passes for low-intensity yellow:</p>
    URxvt.color12:  #0000FF
    URxvt.color13:  #FF00FF
    URxvt.color14:  #00FFFF
-   URxvt.color15:  #FFFFFF</pre>
+   URxvt.color15:  #FFFFFF
+
+</pre>
 <p>And here is a more complete set of non-standard colors.</p>
-<pre>
-   URxvt.cursorColor:  #dc74d1
+<pre>   URxvt.cursorColor:  #dc74d1
    URxvt.pointerColor: #dc74d1
    URxvt.background:   #0e0e0e
    URxvt.foreground:   #4ad5e1
@@ -506,15 +550,19 @@ including the murky brown that passes for low-intensity yellow:</p>
    URxvt.color6:       #73f7ff
    URxvt.color14:      #73f7ff
    URxvt.color7:       #e1dddd
-   URxvt.color15:      #e1dddd</pre>
-<p>They have been described (not by me) as ``pretty girly''.</p>
-<p>
-</p>
-<h3><a name="why_do_some_characters_look_so_much_different_than_others">Why do some characters look so much different than others?</a></h3>
+   URxvt.color15:      #e1dddd
+
+</pre>
+<p>They have been described (not by me) as &quot;pretty girly&quot;.</p>
+
+</div>
+<h3 id="Why_do_some_characters_look_so_much_">Why do some characters look so much different than others?</h3>
+<div id="Why_do_some_characters_look_so_much_-2">
 <p>See next entry.</p>
-<p>
-</p>
-<h3><a name="how_does_rxvtunicode_choose_fonts">How does rxvt-unicode choose fonts?</a></h3>
+
+</div>
+<h3 id="How_does_rxvt_unicode_choose_fonts">How does rxvt-unicode choose fonts?</h3>
+<div id="How_does_rxvt_unicode_choose_fonts_C">
 <p>Most fonts do not contain the full range of Unicode, which is
 fine. Chances are that the font you (or the admin/package maintainer of
 your system/os) have specified does not cover all the characters you want
@@ -527,8 +575,9 @@ intelligence to detect that a specific glyph is wrong: it has to believe
 the font that the characters it claims to contain indeed look correct.</p>
 <p>In that case, select a font of your taste and add it to the font list,
 e.g.:</p>
-<pre>
-   urxvt -fn basefont,font2,font3...</pre>
+<pre>   urxvt -fn basefont,font2,font3...
+
+</pre>
 <p>When rxvt-unicode sees a character, it will first look at the base
 font. If the base font does not contain the character, it will go to the
 next font, and so on. Specifying your own fonts will also speed up this
@@ -536,9 +585,10 @@ search and use less resources within rxvt-unicode and the X-server.</p>
 <p>The only limitation is that none of the fonts may be larger than the base
 font, as the base font defines the terminal character cell size, which
 must be the same due to the way terminals work.</p>
-<p>
-</p>
-<h3><a name="why_do_some_chinese_characters_look_so_different_than_others">Why do some chinese characters look so different than others?</a></h3>
+
+</div>
+<h3 id="Why_do_some_chinese_characters_look_">Why do some chinese characters look so different than others?</h3>
+<div id="Why_do_some_chinese_characters_look_-2">
 <p>This is because there is a difference between script and language --
 rxvt-unicode does not know which language the text that is output is,
 as it only knows the unicode character codes. If rxvt-unicode first
@@ -556,50 +606,59 @@ first. If you expect more chinese, put a chinese font first.</p>
 runtime (the internal data structure has no problem with using different
 fonts for the same character at the same time, but no interface for this
 has been designed yet).</p>
-<p>Until then, you might get away with switching fonts at runtime (see <a href="#can_i_switch_the_fonts_at_runtime">Can I switch the fonts at runtime?</a> later in this document).</p>
-<p>
-</p>
-<h2><a name="keyboard__mouse___user_interaction">Keyboard, Mouse &amp; User Interaction</a></h2>
-<p>
-</p>
-<h3><a name="the_new_selection_selects_pieces_that_are_too_big__how_can_i_select_single_words">The new selection selects pieces that are too big, how can I select single words?</a></h3>
+<p>Until then, you might get away with switching fonts at runtime (see <a href="#Can_I_switch_the_fonts_at_runtime">Can I switch the fonts at runtime?</a> later in this document).</p>
+
+</div>
+<h2 id="Keyboard_Mouse_amp_User_Interaction">Keyboard, Mouse &amp; User Interaction</h2>
+<div id="Keyboard_Mouse_amp_User_Interaction_">
+
+</div>
+<h3 id="The_new_selection_selects_pieces_tha">The new selection selects pieces that are too big, how can I select single words?</h3>
+<div id="The_new_selection_selects_pieces_tha-2">
 <p>If you want to select e.g. alphanumeric words, you can use the following
 setting:</p>
-<pre>
-   URxvt.selection.pattern-0: ([[:word:]]+)</pre>
+<pre>   URxvt.selection.pattern-0: ([[:word:]]+)
+
+</pre>
 <p>If you click more than twice, the selection will be extended
 more and more.</p>
 <p>To get a selection that is very similar to the old code, try this pattern:</p>
-<pre>
-   URxvt.selection.pattern-0: ([^&quot;&amp;'()*,;&lt;=&gt;?@[\\\\]^`{|})]+)</pre>
-<p>Please also note that the <em>LeftClick Shift-LeftClik</em> combination also
+<pre>   URxvt.selection.pattern-0: ([^&quot;&amp;'()*,;&lt;=&gt;?@[\\\\]^`{|})]+)
+
+</pre>
+<p>Please also note that the <i>LeftClick Shift-LeftClik</i> combination also
 selects words like the old code.</p>
-<p>
-</p>
-<h3><a name="i_don_t_like_the_new_selection_popups_hotkeys_perl__how_do_i_change_disable_it">I don't like the new selection/popups/hotkeys/perl, how do I change/disable it?</a></h3>
+
+</div>
+<h3 id="I_don_t_like_the_new_selection_popup">I don't like the new selection/popups/hotkeys/perl, how do I change/disable it?</h3>
+<div id="I_don_t_like_the_new_selection_popup-2">
 <p>You can disable the perl extension completely by setting the
 <strong>perl-ext-common</strong> resource to the empty string, which also keeps
 rxvt-unicode from initialising perl, saving memory.</p>
 <p>If you only want to disable specific features, you first have to
 identify which perl extension is responsible. For this, read the section
-<strong>PREPACKAGED EXTENSIONS</strong> in the <code>urxvtperl(3)</code> manpage. For
+<strong>PREPACKAGED EXTENSIONS</strong> in the urxvtperl(3) manpage. For
 example, to disable the <strong>selection-popup</strong> and <strong>option-popup</strong>, specify
 this <strong>perl-ext-common</strong> resource:</p>
-<pre>
-   URxvt.perl-ext-common: default,-selection-popup,-option-popup</pre>
+<pre>   URxvt.perl-ext-common: default,-selection-popup,-option-popup
+
+</pre>
 <p>This will keep the default extensions, but disable the two popup
 extensions. Some extensions can also be configured, for example,
 scrollback search mode is triggered by <strong>M-s</strong>. You can move it to any
 other combination either by setting the <strong>searchable-scrollback</strong> resource:</p>
-<pre>
-   URxvt.searchable-scrollback: CM-s</pre>
-<p>
-</p>
-<h3><a name="the_cursor_moves_when_selecting_text_in_the_current_input_line__how_do_i_switch_this_off">The cursor moves when selecting text in the current input line, how do I switch this off?</a></h3>
+<pre>   URxvt.searchable-scrollback: CM-s
+
+</pre>
+
+</div>
+<h3 id="The_cursor_moves_when_selecting_text">The cursor moves when selecting text in the current input line, how do I switch this off?</h3>
+<div id="The_cursor_moves_when_selecting_text-2">
 <p>See next entry.</p>
-<p>
-</p>
-<h3><a name="during_rlogin_ssh_telnet_etc__sessions__clicking_near_the_cursor_outputs_strange_escape_sequences__how_do_i_fix_this">During rlogin/ssh/telnet/etc. sessions, clicking near the cursor outputs strange escape sequences, how do I fix this?</a></h3>
+
+</div>
+<h3 id="During_rlogin_ssh_telnet_etc_session">During rlogin/ssh/telnet/etc. sessions, clicking near the cursor outputs strange escape sequences, how do I fix this?</h3>
+<div id="During_rlogin_ssh_telnet_etc_session-2">
 <p>These are caused by the <code>readline</code> perl extension. Under normal
 circumstances, it will move your cursor around when you click into the
 line that contains it. It tries hard not to do this at the wrong moment,
@@ -607,20 +666,23 @@ but when running a program that doesn't parse cursor movements or in some
 cases during rlogin sessions, it fails to detect this properly.</p>
 <p>You can permanently switch this feature off by disabling the <code>readline</code>
 extension:</p>
-<pre>
-   URxvt.perl-ext-common: default,-readline</pre>
-<p>
-</p>
-<h3><a name="my_numerical_keypad_acts_weird_and_generates_differing_output">My numerical keypad acts weird and generates differing output?</a></h3>
+<pre>   URxvt.perl-ext-common: default,-readline
+
+</pre>
+
+</div>
+<h3 id="My_numerical_keypad_acts_weird_and_g">My numerical keypad acts weird and generates differing output?</h3>
+<div id="My_numerical_keypad_acts_weird_and_g-2">
 <p>Some Debian GNUL/Linux users seem to have this problem, although no
 specific details were reported so far. It is possible that this is caused
 by the wrong <code>TERM</code> setting, although the details of whether and how
 this can happen are unknown, as <code>TERM=rxvt</code> should offer a compatible
 keymap. See the answer to the previous question, and please report if that
 helped.</p>
-<p>
-</p>
-<h3><a name="my_compose__multi_key__key_is_no_longer_working_">My Compose (Multi_key) key is no longer working.</a></h3>
+
+</div>
+<h3 id="My_Compose_Multi_key_key_is_no_longe">My Compose (Multi_key) key is no longer working.</h3>
+<div id="My_Compose_Multi_key_key_is_no_longe-2">
 <p>The most common causes for this are that either your locale is not set
 correctly, or you specified a <strong>preeditStyle</strong> that is not supported by
 your input method. For example, if you specified <strong>OverTheSpot</strong> and
@@ -629,25 +691,28 @@ does not support this (for instance because it is not visual), then
 rxvt-unicode will continue without an input method.</p>
 <p>In this case either do not specify a <strong>preeditStyle</strong> or specify more than
 one pre-edit style, such as <strong>OverTheSpot,Root,None</strong>.</p>
-<p>
-</p>
-<h3><a name="i_cannot_type_ctrlshift2_to_get_an_ascii_nul_character_due_to_iso_14755">I cannot type <code>Ctrl-Shift-2</code> to get an ASCII NUL character due to ISO 14755</a></h3>
+
+</div>
+<h3 id="I_cannot_type_code_Ctrl_Shift_2_code">I cannot type <code>Ctrl-Shift-2</code> to get an ASCII NUL character due to ISO 14755</h3>
+<div id="I_cannot_type_code_Ctrl_Shift_2_code-2">
 <p>Either try <code>Ctrl-2</code> alone (it often is mapped to ASCII NUL even on
 international keyboards) or simply use ISO 14755 support to your
 advantage, typing &lt;Ctrl-Shift-0&gt; to get a ASCII NUL. This works for other
 codes, too, such as <code>Ctrl-Shift-1-d</code> to type the default telnet escape
 character and so on.</p>
-<p>
-</p>
-<h3><a name="mouse_cut_paste_suddenly_no_longer_works_">Mouse cut/paste suddenly no longer works.</a></h3>
+
+</div>
+<h3 id="Mouse_cut_paste_suddenly_no_longer_w">Mouse cut/paste suddenly no longer works.</h3>
+<div id="Mouse_cut_paste_suddenly_no_longer_w-2">
 <p>Make sure that mouse reporting is actually turned off since killing
 some editors prematurely may leave the mouse in mouse report mode. I've
 heard that tcsh may use mouse reporting unless it otherwise specified. A
 quick check is to see if cut/paste works when the Alt or Shift keys are
 depressed.</p>
-<p>
-</p>
-<h3><a name="what_s_with_the_strange_backspace_delete_key_behaviour">What's with the strange Backspace/Delete key behaviour?</a></h3>
+
+</div>
+<h3 id="What_s_with_the_strange_Backspace_De">What's with the strange Backspace/Delete key behaviour?</h3>
+<div id="What_s_with_the_strange_Backspace_De-2">
 <p>Assuming that the physical Backspace key corresponds to the
 Backspace keysym (not likely for Linux ... see the following
 question) there are two standard values that can be used for
@@ -661,24 +726,26 @@ started from a terminal (say, from a menu or by remote shell), then the
 system value of `erase', which corresponds to CERASE in &lt;termios.h&gt;, will
 be used (which may not be the same as your stty setting).</p>
 <p>For starting a new rxvt-unicode:</p>
-<pre>
-   # use Backspace = ^H
+<pre>   # use Backspace = ^H
    $ stty erase ^H
-   $ urxvt</pre>
-<pre>
+   $ urxvt
+
    # use Backspace = ^?
    $ stty erase ^?
-   $ urxvt</pre>
+   $ urxvt
+
+</pre>
 <p>Toggle with <code>ESC [ 36 h</code> / <code>ESC [ 36 l</code>.</p>
 <p>For an existing rxvt-unicode:</p>
-<pre>
-   # use Backspace = ^H
+<pre>   # use Backspace = ^H
    $ stty erase ^H
-   $ echo -n &quot;^[[36h&quot;</pre>
-<pre>
+   $ echo -n &quot;^[[36h&quot;
+
    # use Backspace = ^?
    $ stty erase ^?
-   $ echo -n &quot;^[[36l&quot;</pre>
+   $ echo -n &quot;^[[36l&quot;
+
+</pre>
 <p>This helps satisfy some of the Backspace discrepancies that occur, but
 if you use Backspace = <code>^H</code>, make sure that the termcap/terminfo value
 properly reflects that.</p>
@@ -691,15 +758,15 @@ key has been assigned an escape sequence to match the vt100 for Execute
 some editors (vim I'm told) expect Backspace = ^H,
 GNU Emacs (and Emacs-like editors) use ^H for help.</p>
 <p>Perhaps someday this will all be resolved in a consistent manner.</p>
-<p>
-</p>
-<h3><a name="i_don_t_like_the_keybindings__how_do_i_change_them">I don't like the key-bindings.  How do I change them?</a></h3>
+
+</div>
+<h3 id="I_don_t_like_the_key_bindings_How_do">I don't like the key-bindings.  How do I change them?</h3>
+<div id="I_don_t_like_the_key_bindings_How_do-2">
 <p>There are some compile-time selections available via configure. Unless
-you have run ``configure'' with the <a href="#item__2d_2ddisable_2dresources"><code>--disable-resources</code></a> option you can
+you have run &quot;configure&quot; with the <code>--disable-resources</code> option you can
 use the `keysym' resource to alter the keystrings associated with keysyms.</p>
 <p>Here's an example for a URxvt session started using <code>urxvt -name URxvt</code></p>
-<pre>
-   URxvt.keysym.Home:          \033[1~
+<pre>   URxvt.keysym.Home:          \033[1~
    URxvt.keysym.End:           \033[4~
    URxvt.keysym.C-apostrophe:  \033&lt;C-'&gt;
    URxvt.keysym.C-slash:       \033&lt;C-/&gt;
@@ -718,51 +785,67 @@ use the `keysym' resource to alter the keystrings associated with keysyms.</p>
    URxvt.keysym.M-Right:       \033&lt;M-Right&gt;
    URxvt.keysym.M-C-0:         list \033&lt;M-C- 0123456789 &gt;
    URxvt.keysym.M-C-a:         list \033&lt;M-C- abcdefghijklmnopqrstuvwxyz &gt;
-   URxvt.keysym.F12:           command:\033]701;zh_CN.GBK\007</pre>
+   URxvt.keysym.F12:           command:\033]701;zh_CN.GBK\007
+
+</pre>
 <p>See some more examples in the documentation for the <strong>keysym</strong> resource.</p>
-<p>
-</p>
-<h3><a name="i_m_using_keyboard_model_xxx_that_has_extra_prior_next_insert_keys__how_do_i_make_use_of_them_for_example__the_sun_keyboard_type_4_has_the_following_map">I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How do I make use of them? For example, the Sun Keyboard type 4 has the following map</a></h3>
-<pre>
-   KP_Insert == Insert
+
+</div>
+<h3 id="I_m_using_keyboard_model_XXX_that_ha">I'm using keyboard model XXX that has extra Prior/Next/Insert keys. How do I make use of them? For example, the Sun Keyboard type 4 has the following map</h3>
+<div id="I_m_using_keyboard_model_XXX_that_ha-2">
+<pre>   KP_Insert == Insert
    F22 == Print
    F27 == Home
    F29 == Prior
    F33 == End
-   F35 == Next</pre>
+   F35 == Next
+
+</pre>
 <p>Rather than have rxvt-unicode try to accommodate all the various possible
 keyboard mappings, it is better to use `xmodmap' to remap the keys as
 required for your particular machine.</p>
-<p>
-</p>
-<h2><a name="terminal_configuration">Terminal Configuration</a></h2>
-<p>
-</p>
-<h3><a name="can_i_see_a_typical_configuration">Can I see a typical configuration?</a></h3>
+
+
+
+
+
+
+
+
+</div>
+<h2 id="Terminal_Configuration">Terminal Configuration</h2>
+<div id="Terminal_Configuration_CONTENT">
+
+</div>
+<h3 id="Can_I_see_a_typical_configuration">Can I see a typical configuration?</h3>
+<div id="Can_I_see_a_typical_configuration_CO">
 <p>The default configuration tries to be xterm-like, which I don't like that
 much, but it's least surprise to regular users.</p>
 <p>As a rxvt or rxvt-unicode user, you are practically supposed to invest
 time into customising your terminal. To get you started, here is the
 author's .Xdefaults entries, with comments on what they do. It's certainly
-not <em>typical</em>, but what's typical...</p>
-<pre>
-   URxvt.cutchars: &quot;()*,&lt;&gt;[]{}|'
-   URxvt.print-pipe: cat &gt;/tmp/xxx</pre>
+not <i>typical</i>, but what's typical...</p>
+<pre>   URxvt.cutchars: &quot;()*,&lt;&gt;[]{}|'
+   URxvt.print-pipe: cat &gt;/tmp/xxx
+
+</pre>
 <p>These are just for testing stuff.</p>
-<pre>
-   URxvt.imLocale: ja_JP.UTF-8
-   URxvt.preeditType: OnTheSpot,None</pre>
+<pre>   URxvt.imLocale: ja_JP.UTF-8
+   URxvt.preeditType: OnTheSpot,None
+
+</pre>
 <p>This tells rxvt-unicode to use a special locale when communicating with
 the X Input Method, and also tells it to only use the OnTheSpot pre-edit
 type, which requires the <code>xim-onthespot</code> perl extension but rewards me
 with correct-looking fonts.</p>
-<pre>
-   URxvt.perl-lib: /root/lib/urxvt
+<pre>   URxvt.perl-lib: /root/lib/urxvt
    URxvt.perl-ext-common: default,selection-autotransform,selection-pastebin,xim-onthespot,remote-clipboard
    URxvt.selection.pattern-0: ( at .*? line \\d+)
    URxvt.selection.pattern-1: ^(/[^:]+):\ 
    URxvt.selection-autotransform.0: s/^([^:[:space:]]+):(\\d+):?$/:e \\Q$1\\E\\x0d:$2\\x0d/
-   URxvt.selection-autotransform.1: s/^ at (.*?) line (\\d+)$/:e \\Q$1\\E\\x0d:$2\\x0d/</pre>
+   URxvt.selection-autotransform.1: s/^ at (.*?) line (\\d+)$/:e \\Q$1\\E\\x0d:$2\\x0d/
+
+</pre>
 <p>This is my perl configuration. The first two set the perl library
 directory and also tells urxvt to use a large number of extensions. I
 develop for myself mostly, so I actually use most of the extensions I
@@ -770,54 +853,62 @@ write.</p>
 <p>The selection stuff mainly makes the selection perl-error-message aware
 and tells it to convert perl error messages into vi-commands to load the
 relevant file and go tot he error line number.</p>
-<pre>
-   URxvt.scrollstyle:      plain
-   URxvt.secondaryScroll:  true</pre>
+<pre>   URxvt.scrollstyle:      plain
+   URxvt.secondaryScroll:  true
+
+</pre>
 <p>As the documentation says: plain is the preferred scrollbar for the
 author. The <code>secondaryScroll</code> configures urxvt to scroll in full-screen
 apps, like screen, so lines scrolled out of screen end up in urxvt's
 scrollback buffer.</p>
-<pre>
-   URxvt.background:       #000000
+<pre>   URxvt.background:       #000000
    URxvt.foreground:       gray90
    URxvt.color7:           gray90
    URxvt.colorBD:          #ffffff
    URxvt.cursorColor:      #e0e080
    URxvt.throughColor:     #8080f0
-   URxvt.highlightColor:   #f0f0f0</pre>
+   URxvt.highlightColor:   #f0f0f0
+
+</pre>
 <p>Some colours. Not sure which ones are being used or even non-defaults, but
 these are in my .Xdefaults. Most notably, they set foreground/background
 to light gray/black, and also make sure that the colour 7 matches the
 default foreground colour.</p>
-<pre>
-   URxvt.underlineColor:   yellow</pre>
+<pre>   URxvt.underlineColor:   yellow
+
+</pre>
 <p>Another colour, makes underline lines look different. Sometimes hurts, but
 is mostly a nice effect.</p>
-<pre>
-   URxvt.geometry:         154x36
+<pre>   URxvt.geometry:         154x36
    URxvt.loginShell:       false
    URxvt.meta:             ignore
-   URxvt.utmpInhibit:      true</pre>
+   URxvt.utmpInhibit:      true
+
+</pre>
 <p>Uh, well, should be mostly self-explanatory. By specifying some defaults
 manually, I can quickly switch them for testing.</p>
-<pre>
-   URxvt.saveLines:        8192</pre>
+<pre>   URxvt.saveLines:        8192
+
+</pre>
 <p>A large scrollback buffer is essential. Really.</p>
-<pre>
-   URxvt.mapAlert:         true</pre>
+<pre>   URxvt.mapAlert:         true
+
+</pre>
 <p>The only case I use it is for my IRC window, which I like to keep
 iconified till people msg me (which beeps).</p>
-<pre>
-   URxvt.visualBell:       true</pre>
+<pre>   URxvt.visualBell:       true
+
+</pre>
 <p>The audible bell is often annoying, especially when in a crowd.</p>
-<pre>
-   URxvt.insecure:         true</pre>
+<pre>   URxvt.insecure:         true
+
+</pre>
 <p>Please don't hack my mutt! Ooops...</p>
-<pre>
-   URxvt.pastableTabs:     false</pre>
+<pre>   URxvt.pastableTabs:     false
+
+</pre>
 <p>I once thought this is a great idea.</p>
-<pre>
-   urxvt.font:             9x15bold,\
+<pre>   urxvt.font:             9x15bold,\
                            -misc-fixed-bold-r-normal--15-140-75-75-c-90-iso10646-1,\
                            -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1, \
                            [codeset=JISX0208]xft:Kochi Gothic, \
@@ -825,7 +916,9 @@ iconified till people msg me (which beeps).</p>
                            xft:Code2000:antialias=false
    urxvt.boldFont:         -xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso8859-15
    urxvt.italicFont:       xft:Bitstream Vera Sans Mono:italic:autohint=true
-   urxvt.boldItalicFont:   xft:Bitstream Vera Sans Mono:bold:italic:autohint=true</pre>
+   urxvt.boldItalicFont:   xft:Bitstream Vera Sans Mono:bold:italic:autohint=true
+
+</pre>
 <p>I wrote rxvt-unicode to be able to specify fonts exactly. So don't be
 overwhelmed. A special note: the <code>9x15bold</code> mentioned above is actually
 the version from XFree-3.3, as XFree-4 replaced it by a totally different
@@ -842,8 +935,7 @@ normal fonts.</p>
 class name. Thats because I use different configs for different purposes,
 for example, my IRC window is started with <code>-name IRC</code>, and uses these
 defaults:</p>
-<pre>
-   IRC*title:              IRC
+<pre>   IRC*title:              IRC
    IRC*geometry:           87x12+535+542
    IRC*saveLines:          0
    IRC*mapAlert:           true
@@ -851,7 +943,9 @@ defaults:</p>
    IRC*boldFont:           suxuseuro
    IRC*colorBD:            white
    IRC*keysym.M-C-1:       command:\033]710;suxuseuro\007\033]711;suxuseuro\007
-   IRC*keysym.M-C-2:       command:\033]710;9x15bold\007\033]711;9x15bold\007</pre>
+   IRC*keysym.M-C-2:       command:\033]710;9x15bold\007\033]711;9x15bold\007
+
+</pre>
 <p><code>Alt-Shift-1</code> and <code>Alt-Shift-2</code> switch between two different font
 sizes. <code>suxuseuro</code> allows me to keep an eye (and actually read)
 stuff while keeping a very small window. If somebody pastes something
@@ -859,47 +953,52 @@ complicated (e.g. japanese), I temporarily switch to a larger font.</p>
 <p>The above is all in my <code>.Xdefaults</code> (I don't use <code>.Xresources</code> nor
 <code>xrdb</code>). I also have some resources in a separate <code>.Xdefaults-hostname</code>
 file for different hosts, for example, on ym main desktop, I use:</p>
-<pre>
-   URxvt.keysym.C-M-q: command:\033[3;5;5t
+<pre>   URxvt.keysym.C-M-q: command:\033[3;5;5t
    URxvt.keysym.C-M-y: command:\033[3;5;606t
    URxvt.keysym.C-M-e: command:\033[3;1605;5t
    URxvt.keysym.C-M-c: command:\033[3;1605;606t
-   URxvt.keysym.C-M-p: perl:test</pre>
+   URxvt.keysym.C-M-p: perl:test
+
+</pre>
 <p>The first for keysym definitions allow me to quickly bring some windows
 in the layout I like most. Ion users might start laughing but will stop
 immediately when I tell them that I use my own Fvwm2 module for much the
 same effect as Ion provides, and I only very rarely use the above key
 combinations :-&gt;</p>
-<p>
-</p>
-<h3><a name="why_doesn_t_rxvtunicode_read_my_resources">Why doesn't rxvt-unicode read my resources?</a></h3>
+
+</div>
+<h3 id="Why_doesn_t_rxvt_unicode_read_my_res">Why doesn't rxvt-unicode read my resources?</h3>
+<div id="Why_doesn_t_rxvt_unicode_read_my_res-2">
 <p>Well, why, indeed? It does, in a way very similar to other X
 applications. Most importantly, this means that if you or your OS loads
 resources into the X display (the right way to do it), rxvt-unicode will
 ignore any resource files in your home directory. It will only read
-<em>$HOME/.Xdefaults</em> when no resources are attached to the display.</p>
-<p>If you have or use an <em>$HOME/.Xresources</em> file, chances are that
+<cite>$HOME/.Xdefaults</cite> when no resources are attached to the display.</p>
+<p>If you have or use an <cite>$HOME/.Xresources</cite> file, chances are that
 resources are loaded into your X-server. In this case, you have to
-re-login after every change (or run <em>xrdb -merge $HOME/.Xresources</em>).</p>
+re-login after every change (or run <cite>xrdb -merge $HOME/.Xresources</cite>).</p>
 <p>Also consider the form resources have to use:</p>
-<pre>
-  URxvt.resource: value</pre>
+<pre>  URxvt.resource: value
+
+</pre>
 <p>If you want to use another form (there are lots of different ways of
 specifying resources), make sure you understand whether and why it
 works. If unsure, use the form above.</p>
-<p>
-</p>
-<h3><a name="when_i_login_to_another_system_it_tells_me_about_missing_terminfo_data">When I log-in to another system it tells me about missing terminfo data?</a></h3>
+
+</div>
+<h3 id="When_I_log_in_to_another_system_it_t">When I log-in to another system it tells me about missing terminfo data?</h3>
+<div id="When_I_log_in_to_another_system_it_t-2">
 <p>The terminal description used by rxvt-unicode is not as widely available
 as that for xterm, or even rxvt (for which the same problem often arises).</p>
 <p>The correct solution for this problem is to install the terminfo, this can
 be done like this (with ncurses' infocmp and works as user and admin):</p>
-<pre>
-   REMOTE=remotesystem.domain
-   infocmp rxvt-unicode | ssh $REMOTE &quot;mkdir -p .terminfo &amp;&amp; cat &gt;/tmp/ti &amp;&amp; tic /tmp/ti&quot;</pre>
+<pre>   REMOTE=remotesystem.domain
+   infocmp rxvt-unicode | ssh $REMOTE &quot;mkdir -p .terminfo &amp;&amp; cat &gt;/tmp/ti &amp;&amp; tic /tmp/ti&quot;
+
+</pre>
 <p>... or by installing rxvt-unicode normally on the remote system,</p>
 <p>One some systems you might need to set <code>$TERMINFO</code> to the full path of
-<em>$HOME/.terminfo</em> for this to work.</p>
+<cite>$HOME/.terminfo</cite> for this to work.</p>
 <p>If you cannot or do not want to do this, then you can simply set
 <code>TERM=rxvt</code> or even <code>TERM=xterm</code>, and live with the small number of
 problems arising, which includes wrong keymapping, less and different
@@ -908,22 +1007,26 @@ quick-and-dirty workaround for rare cases, though.</p>
 <p>If you always want to do this (and are fine with the consequences) you
 can either recompile rxvt-unicode with the desired TERM value or use a
 resource to set it:</p>
-<pre>
-   URxvt.termName: rxvt</pre>
+<pre>   URxvt.termName: rxvt
+
+</pre>
 <p>If you don't plan to use <strong>rxvt</strong> (quite common...) you could also replace
 the rxvt terminfo file with the rxvt-unicode one and use <code>TERM=rxvt</code>.</p>
-<p>
-</p>
-<h3><a name="tic_outputs_some_error_when_compiling_the_terminfo_entry_"><code>tic</code> outputs some error when compiling the terminfo entry.</a></h3>
+
+</div>
+<h3 id="code_tic_code_outputs_some_error_whe"><code>tic</code> outputs some error when compiling the terminfo entry.</h3>
+<div id="code_tic_code_outputs_some_error_whe-2">
 <p>Most likely it's the empty definition for <code>enacs=</code>. Just replace it by
 <code>enacs=\E[0@</code> and try again.</p>
-<p>
-</p>
-<h3><a name="bash_s_readline_does_not_work_correctly_under_urxvt_"><code>bash</code>'s readline does not work correctly under urxvt.</a></h3>
+
+</div>
+<h3 id="code_bash_code_s_readline_does_not_w"><code>bash</code>'s readline does not work correctly under urxvt.</h3>
+<div id="code_bash_code_s_readline_does_not_w-2">
 <p>See next entry.</p>
-<p>
-</p>
-<h3><a name="i_need_a_termcap_file_entry_">I need a termcap file entry.</a></h3>
+
+</div>
+<h3 id="I_need_a_termcap_file_entry">I need a termcap file entry.</h3>
+<div id="I_need_a_termcap_file_entry_CONTENT">
 <p>One reason you might want this is that some distributions or operating
 systems still compile some programs using the long-obsoleted termcap
 library (Fedora Core's bash is one example) and rely on a termcap entry
@@ -931,11 +1034,11 @@ for <code>rxvt-unicode</code>.</p>
 <p>You could use rxvt's termcap entry with reasonable results in many cases.
 You can also create a termcap entry by using terminfo's infocmp program
 like this:</p>
-<pre>
-   infocmp -C rxvt-unicode</pre>
+<pre>   infocmp -C rxvt-unicode
+
+</pre>
 <p>Or you could use this termcap entry, generated by the command above:</p>
-<pre>
-   rxvt-unicode|rxvt-unicode terminal (X Window System):\
+<pre>   rxvt-unicode|rxvt-unicode terminal (X Window System):\
            :am:bw:eo:km:mi:ms:xn:xo:\
            :co#80:it#8:li#24:lm#0:\
            :AL=\E[%dL:DC=\E[%dP:DL=\E[%dM:DO=\E[%dB:IC=\E[%d@:\
@@ -954,31 +1057,39 @@ like this:</p>
            :sc=\E7:se=\E[27m:sf=^J:so=\E[7m:sr=\EM:st=\EH:ta=^I:\
            :te=\E[r\E[?1049l:ti=\E[?1049h:ue=\E[24m:up=\E[A:\
            :us=\E[4m:vb=\E[?5h\E[?5l:ve=\E[?25h:vi=\E[?25l:\
-           :vs=\E[?25h:</pre>
-<p>
-</p>
-<h3><a name="why_does_ls_no_longer_have_coloured_output">Why does <code>ls</code> no longer have coloured output?</a></h3>
+           :vs=\E[?25h:
+
+</pre>
+
+</div>
+<h3 id="Why_does_code_ls_code_no_longer_have">Why does <code>ls</code> no longer have coloured output?</h3>
+<div id="Why_does_code_ls_code_no_longer_have-2">
 <p>The <code>ls</code> in the GNU coreutils unfortunately doesn't use terminfo to
 decide whether a terminal has colour, but uses its own configuration
 file. Needless to say, <code>rxvt-unicode</code> is not in its default file (among
 with most other terminals supporting colour). Either add:</p>
-<pre>
-   TERM rxvt-unicode</pre>
+<pre>   TERM rxvt-unicode
+
+</pre>
 <p>to <code>/etc/DIR_COLORS</code> or simply add:</p>
-<pre>
-   alias ls='ls --color=auto'</pre>
+<pre>   alias ls='ls --color=auto'
+
+</pre>
 <p>to your <code>.profile</code> or <code>.bashrc</code>.</p>
-<p>
-</p>
-<h3><a name="why_doesn_t_vim_emacs_etc__use_the_88_colour_mode">Why doesn't vim/emacs etc. use the 88 colour mode?</a></h3>
+
+</div>
+<h3 id="Why_doesn_t_vim_emacs_etc_use_the_88">Why doesn't vim/emacs etc. use the 88 colour mode?</h3>
+<div id="Why_doesn_t_vim_emacs_etc_use_the_88-2">
 <p>See next entry.</p>
-<p>
-</p>
-<h3><a name="why_doesn_t_vim_emacs_etc__make_use_of_italic">Why doesn't vim/emacs etc. make use of italic?</a></h3>
+
+</div>
+<h3 id="Why_doesn_t_vim_emacs_etc_make_use_o">Why doesn't vim/emacs etc. make use of italic?</h3>
+<div id="Why_doesn_t_vim_emacs_etc_make_use_o-2">
 <p>See next entry.</p>
-<p>
-</p>
-<h3><a name="why_are_the_secondary_screenrelated_options_not_working_properly">Why are the secondary screen-related options not working properly?</a></h3>
+
+</div>
+<h3 id="Why_are_the_secondary_screen_related">Why are the secondary screen-related options not working properly?</h3>
+<div id="Why_are_the_secondary_screen_related-2">
 <p>Make sure you are using <code>TERM=rxvt-unicode</code>. Some pre-packaged
 distributions (most notably Debian GNU/Linux) break rxvt-unicode
 by setting <code>TERM</code> to <code>rxvt</code>, which doesn't have these extra
@@ -987,53 +1098,64 @@ GNU/Linux) furthermore fail to even install the <code>rxvt-unicode</code> termin
 file, so you will need to install it on your own (See the question <strong>When
 I log-in to another system it tells me about missing terminfo data?</strong> on
 how to do this).</p>
-<p>
-</p>
-<h2><a name="encoding___locale___input_method_issues">Encoding / Locale / Input Method Issues</a></h2>
-<p>
-</p>
-<h3><a name="rxvtunicode_does_not_seem_to_understand_the_selected_encoding">Rxvt-unicode does not seem to understand the selected encoding?</a></h3>
+
+
+
+
+
+</div>
+<h2 id="Encoding_Locale_Input_Method_Issues">Encoding / Locale / Input Method Issues</h2>
+<div id="Encoding_Locale_Input_Method_Issues_">
+
+</div>
+<h3 id="Rxvt_unicode_does_not_seem_to_unders">Rxvt-unicode does not seem to understand the selected encoding?</h3>
+<div id="Rxvt_unicode_does_not_seem_to_unders-2">
 <p>See next entry.</p>
-<p>
-</p>
-<h3><a name="unicode_does_not_seem_to_work">Unicode does not seem to work?</a></h3>
+
+</div>
+<h3 id="Unicode_does_not_seem_to_work">Unicode does not seem to work?</h3>
+<div id="Unicode_does_not_seem_to_work_CONTEN">
 <p>If you encounter strange problems like typing an accented character but
 getting two unrelated other characters or similar, or if program output is
 subtly garbled, then you should check your locale settings.</p>
 <p>Rxvt-unicode must be started with the same <code>LC_CTYPE</code> setting as the
-programs running in it. Often rxvt-unicode is started in the <a href="#item_c"><code>C</code></a> locale,
+programs running in it. Often rxvt-unicode is started in the <code>C</code> locale,
 while the login script running within the rxvt-unicode window changes the
 locale to something else, e.g. <code>en_GB.UTF-8</code>. Needless to say, this is
 not going to work, and is the most common cause for problems.</p>
 <p>The best thing is to fix your startup environment, as you will likely run
 into other problems. If nothing works you can try this in your .profile.</p>
-<pre>
-  printf '\33]701;%s\007' &quot;$LC_CTYPE&quot;   # $LANG or $LC_ALL are worth a try, too</pre>
+<pre>  printf '\33]701;%s\007' &quot;$LC_CTYPE&quot;   # $LANG or $LC_ALL are worth a try, too
+
+</pre>
 <p>If this doesn't work, then maybe you use a <code>LC_CTYPE</code> specification not
 supported on your systems. Some systems have a <code>locale</code> command which
 displays this (also, <code>perl -e0</code> can be used to check locale settings, as
 it will complain loudly if it cannot set the locale). If it displays something
 like:</p>
-<pre>
-  locale: Cannot set LC_CTYPE to default locale: ...</pre>
+<pre>  locale: Cannot set LC_CTYPE to default locale: ...
+
+</pre>
 <p>Then the locale you specified is not supported on your system.</p>
 <p>If nothing works and you are sure that everything is set correctly then
 you will need to remember a little known fact: Some programs just don't
 support locales :(</p>
-<p>
-</p>
-<h3><a name="how_does_rxvtunicode_determine_the_encoding_to_use">How does rxvt-unicode determine the encoding to use?</a></h3>
+
+</div>
+<h3 id="How_does_rxvt_unicode_determine_the_">How does rxvt-unicode determine the encoding to use?</h3>
+<div id="How_does_rxvt_unicode_determine_the_-2">
 <p>See next entry.</p>
-<p>
-</p>
-<h3><a name="is_there_an_option_to_switch_encodings">Is there an option to switch encodings?</a></h3>
+
+</div>
+<h3 id="Is_there_an_option_to_switch_encodin">Is there an option to switch encodings?</h3>
+<div id="Is_there_an_option_to_switch_encodin-2">
 <p>Unlike some other terminals, rxvt-unicode has no encoding switch, and no
-specific ``utf-8'' mode, such as xterm. In fact, it doesn't even know about
+specific &quot;utf-8&quot; mode, such as xterm. In fact, it doesn't even know about
 UTF-8 or any other encodings with respect to terminal I/O.</p>
 <p>The reasons is that there exists a perfectly fine mechanism for selecting
 the encoding, doing I/O and (most important) communicating this to all
 applications so everybody agrees on character properties such as width
-and code number. This mechanism is the <em>locale</em>. Applications not using
+and code number. This mechanism is the <i>locale</i>. Applications not using
 that info will have problems (for example, <code>xterm</code> gets the width of
 characters wrong as it uses its own, locale-independent table under all
 locales).</p>
@@ -1053,74 +1175,73 @@ i.e. <code>de_DE.UTF-8</code> and <code>ja_JP.UTF-8</code> are the normally same
 rxvt-unicode.</p>
 <p>If you want to use a specific encoding you have to make sure you start
 rxvt-unicode with the correct <code>LC_CTYPE</code> category.</p>
-<p>
-</p>
-<h3><a name="can_i_switch_locales_at_runtime">Can I switch locales at runtime?</a></h3>
+
+</div>
+<h3 id="Can_I_switch_locales_at_runtime">Can I switch locales at runtime?</h3>
+<div id="Can_I_switch_locales_at_runtime_CONT">
 <p>Yes, using an escape sequence. Try something like this, which sets
 rxvt-unicode's idea of <code>LC_CTYPE</code>.</p>
-<pre>
-  printf '\33]701;%s\007' ja_JP.SJIS</pre>
+<pre>  printf '\33]701;%s\007' ja_JP.SJIS
+
+</pre>
 <p>See also the previous answer.</p>
 <p>Sometimes this capability is rather handy when you want to work in
 one locale (e.g. <code>de_DE.UTF-8</code>) but some programs don't support it
 (e.g. UTF-8). For example, I use this script to start <code>xjdic</code>, which
 first switches to a locale supported by xjdic and back later:</p>
-<pre>
-   printf '\33]701;%s\007' ja_JP.SJIS
+<pre>   printf '\33]701;%s\007' ja_JP.SJIS
    xjdic -js
-   printf '\33]701;%s\007' de_DE.UTF-8</pre>
+   printf '\33]701;%s\007' de_DE.UTF-8
+
+</pre>
 <p>You can also use xterm's <code>luit</code> program, which usually works fine, except
 for some locales where character width differs between program- and
 rxvt-unicode-locales.</p>
-<p>
-</p>
-<h3><a name="i_have_problems_getting_my_input_method_working_">I have problems getting my input method working.</a></h3>
+
+</div>
+<h3 id="I_have_problems_getting_my_input_met">I have problems getting my input method working.</h3>
+<div id="I_have_problems_getting_my_input_met-2">
 <p>Try a search engine, as this is slightly different for every input method server.</p>
 <p>Here is a checklist:</p>
 <dl>
-<dt><strong><a name="item__2d_make_sure_your_locale_and_the_imlocale_are_sup">- Make sure your locale <em>and</em> the imLocale are supported on your OS.</a></strong>
-
-<dd>
-<p>Try <code>locale -a</code> or check the documentation for your OS.</p>
-</dd>
-</li>
-<dt><strong><a name="item__2d_make_sure_your_locale_or_imlocale_matches_a_lo">- Make sure your locale or imLocale matches a locale supported by your XIM.</a></strong>
-
-<dd>
-<p>For example, <strong>kinput2</strong> does not support UTF-8 locales, you should use
+	<dt>- Make sure your locale <i>and</i> the imLocale are supported on your OS.</dt>
+	<dd>
+		<p>Try <code>locale -a</code> or check the documentation for your OS.</p>
+	</dd>
+	<dt>- Make sure your locale or imLocale matches a locale supported by your XIM.</dt>
+	<dd>
+		<p>For example, <strong>kinput2</strong> does not support UTF-8 locales, you should use
 <code>ja_JP.EUC-JP</code> or equivalent.</p>
-</dd>
-</li>
-<dt><strong><a name="item__2d_make_sure_your_xim_server_is_actually_running_">- Make sure your XIM server is actually running.</a></strong>
-
-<dt><strong><a name="item__2d_make_sure_the_xmodifiers_environment_variable_">- Make sure the <code>XMODIFIERS</code> environment variable is set correctly when <em>starting</em> rxvt-unicode.</a></strong>
-
-<dd>
-<p>When you want to use e.g. <strong>kinput2</strong>, it must be set to
+	</dd>
+	<dt>- Make sure your XIM server is actually running.</dt>
+	<dt>- Make sure the <code>XMODIFIERS</code> environment variable is set correctly when <i>starting</i> rxvt-unicode.</dt>
+	<dd>
+		<p>When you want to use e.g. <strong>kinput2</strong>, it must be set to
 <code>@im=kinput2</code>. For <strong>scim</strong>, use <code>@im=SCIM</code>. You can see what input
 method servers are running with this command:</p>
-</dd>
-<dd>
-<pre>
-   xprop -root XIM_SERVERS</pre>
-</dd>
-</li>
-<dt>
+<pre>   xprop -root XIM_SERVERS
+
+</pre>
+	</dd>
+	<dt></dt>
 </dl>
-<p>
-</p>
-<h3><a name="my_input_method_wants__some_encoding__but_i_want_utf8__what_can_i_do">My input method wants &lt;some encoding&gt; but I want UTF-8, what can I do?</a></h3>
+
+</div>
+<h3 id="My_input_method_wants_lt_some_encodi">My input method wants &lt;some encoding&gt; but I want UTF-8, what can I do?</h3>
+<div id="My_input_method_wants_lt_some_encodi-2">
 <p>You can specify separate locales for the input method and the rest of the
 terminal, using the resource <code>imlocale</code>:</p>
-<pre>
-   URxvt.imlocale: ja_JP.EUC-JP</pre>
+<pre>   URxvt.imlocale: ja_JP.EUC-JP
+
+</pre>
 <p>Now you can start your terminal with <code>LC_CTYPE=ja_JP.UTF-8</code> and still
 use your input method. Please note, however, that, depending on your Xlib
 version, you may not be able to input characters outside <code>EUC-JP</code> in a
 normal way then, as your input method limits you.</p>
-<p>
-</p>
-<h3><a name="rxvtunicode_crashes_when_the_x_input_method_changes_or_exits_">Rxvt-unicode crashes when the X Input Method changes or exits.</a></h3>
+
+</div>
+<h3 id="Rxvt_unicode_crashes_when_the_X_Inpu">Rxvt-unicode crashes when the X Input Method changes or exits.</h3>
+<div id="Rxvt_unicode_crashes_when_the_X_Inpu-2">
 <p>Unfortunately, this is unavoidable, as the XIM protocol is racy by
 design. Applications can avoid some crashes at the expense of memory
 leaks, and Input Methods can avoid some crashes by careful ordering at
@@ -1128,12 +1249,18 @@ exit time. <strong>kinput2</strong> (and derived input methods) generally succee
 while <strong>SCIM</strong> (or similar input methods) fails. In the end, however,
 crashes cannot be completely avoided even if both sides cooperate.</p>
 <p>So the only workaround is not to kill your Input Method Servers.</p>
-<p>
-</p>
-<h2><a name="operating_systems___package_maintaining">Operating Systems / Package Maintaining</a></h2>
-<p>
-</p>
-<h3><a name="i_am_using_debian_gnu_linux_and_have_a_problem___">I am using Debian GNU/Linux and have a problem...</a></h3>
+
+
+
+
+
+</div>
+<h2 id="Operating_Systems_Package_Maintainin">Operating Systems / Package Maintaining</h2>
+<div id="Operating_Systems_Package_Maintainin-2">
+
+</div>
+<h3 id="I_am_using_Debian_GNU_Linux_and_have">I am using Debian GNU/Linux and have a problem...</h3>
+<div id="I_am_using_Debian_GNU_Linux_and_have-2">
 <p>The Debian GNU/Linux package of rxvt-unicode in sarge contains large
 patches that considerably change the behaviour of rxvt-unicode (but
 unfortunately this notice has been removed). Before reporting a bug to
@@ -1146,10 +1273,11 @@ Tracking System (use <code>reportbug</code> to report the bug).</p>
 probably should use the Debian BTS, too, because, after all, it's also a
 bug in the Debian version and it serves as a reminder for other users that
 might encounter the same issue.</p>
-<p>
-</p>
-<h3><a name="i_am_maintaining_rxvtunicode_for_distribution_os_xxx__any_recommendation">I am maintaining rxvt-unicode for distribution/OS XXX, any recommendation?</a></h3>
-<p>You should build one binary with the default options. <em>configure</em>
+
+</div>
+<h3 id="I_am_maintaining_rxvt_unicode_for_di">I am maintaining rxvt-unicode for distribution/OS XXX, any recommendation?</h3>
+<div id="I_am_maintaining_rxvt_unicode_for_di-2">
+<p>You should build one binary with the default options. <cite>configure</cite>
 now enables most useful options, and the trend goes to making them
 runtime-switchable, too, so there is usually no drawback to enabling them,
 except higher disk and possibly memory usage. The perl interpreter should
@@ -1162,11 +1290,12 @@ behaviour. If your distribution aims at low memory, add an empty
 perl interpreter disabled until the user enables it.</p>
 <p>If you can/want build more binaries, I recommend building a minimal
 one with <code>--disable-everything</code> (very useful) and a maximal one with
-<a href="#item__2d_2denable_2deverything"><code>--enable-everything</code></a> (less useful, it will be very big due to a lot of
+<code>--enable-everything</code> (less useful, it will be very big due to a lot of
 encodings built-in that increase download times and are rarely used).</p>
-<p>
-</p>
-<h3><a name="i_need_to_make_it_setuid_setgid_to_support_utmp_ptys_on_my_os__is_this_safe">I need to make it setuid/setgid to support utmp/ptys on my OS, is this safe?</a></h3>
+
+</div>
+<h3 id="I_need_to_make_it_setuid_setgid_to_s">I need to make it setuid/setgid to support utmp/ptys on my OS, is this safe?</h3>
+<div id="I_need_to_make_it_setuid_setgid_to_s-2">
 <p>It should be, starting with release 7.1. You are encouraged to properly
 install urxvt with privileges necessary for your OS now.</p>
 <p>When rxvt-unicode detects that it runs setuid or setgid, it will fork
@@ -1174,22 +1303,25 @@ into a helper process for privileged operations (pty handling on some
 systems, utmp/wtmp/lastlog handling on others) and drop privileges
 immediately. This is much safer than most other terminals that keep
 privileges while running (but is more relevant to urxvt, as it contains
-things as perl interpreters, which might be ``helpful'' to attackers).</p>
+things as perl interpreters, which might be &quot;helpful&quot; to attackers).</p>
 <p>This forking is done as the very first within main(), which is very early
 and reduces possible bugs to initialisation code run before main(), or
 things like the dynamic loader of your system, which should result in very
 little risk.</p>
-<p>
-</p>
-<h3><a name="on_solaris_9__many_linedrawing_characters_are_too_wide_">On Solaris 9, many line-drawing characters are too wide.</a></h3>
+
+</div>
+<h3 id="On_Solaris_9_many_line_drawing_chara">On Solaris 9, many line-drawing characters are too wide.</h3>
+<div id="On_Solaris_9_many_line_drawing_chara-2">
 <p>Seems to be a known bug, read
 <a href="http://nixdoc.net/files/forum/about34198.html">http://nixdoc.net/files/forum/about34198.html</a>. Some people use the
 following ugly workaround to get non-double-wide-characters working:</p>
-<pre>
-   #define wcwidth(x) wcwidth(x) &gt; 1 ? 1 : wcwidth(x)</pre>
-<p>
-</p>
-<h3><a name="i_am_on_freebsd_and_rxvtunicode_does_not_seem_to_work_at_all_">I am on FreeBSD and rxvt-unicode does not seem to work at all.</a></h3>
+<pre>   #define wcwidth(x) wcwidth(x) &gt; 1 ? 1 : wcwidth(x)
+
+</pre>
+
+</div>
+<h3 id="I_am_on_FreeBSD_and_rxvt_unicode_doe">I am on FreeBSD and rxvt-unicode does not seem to work at all.</h3>
+<div id="I_am_on_FreeBSD_and_rxvt_unicode_doe-2">
 <p>Rxvt-unicode requires the symbol <code>__STDC_ISO_10646__</code> to be defined
 in your compile environment, or an implementation that implements it,
 whether it defines the symbol or not. <code>__STDC_ISO_10646__</code> requires that
@@ -1214,14 +1346,16 @@ encodings slightly different than the terminal emulator).</p>
 <p>The rxvt-unicode author insists that the right way to fix this is in the
 system libraries once and for all, instead of forcing every app to carry
 complete replacements for them :)</p>
-<p>
-</p>
-<h3><a name="i_use_solaris_9_and_it_doesn_t_compile_work_etc_">I use Solaris 9 and it doesn't compile/work/etc.</a></h3>
-<p>Try the diff in <em>doc/solaris9.patch</em> as a base. It fixes the worst
+
+</div>
+<h3 id="I_use_Solaris_9_and_it_doesn_t_compi">I use Solaris 9 and it doesn't compile/work/etc.</h3>
+<div id="I_use_Solaris_9_and_it_doesn_t_compi-2">
+<p>Try the diff in <cite>doc/solaris9.patch</cite> as a base. It fixes the worst
 problems with <code>wcwidth</code> and a compile problem.</p>
-<p>
-</p>
-<h3><a name="how_can_i_use_rxvtunicode_under_cygwin">How can I use rxvt-unicode under cygwin?</a></h3>
+
+</div>
+<h3 id="How_can_I_use_rxvt_unicode_under_cyg">How can I use rxvt-unicode under cygwin?</h3>
+<div id="How_can_I_use_rxvt_unicode_under_cyg-2">
 <p>rxvt-unicode should compile and run out of the box on cygwin, using
 the X11 libraries that come with cygwin. libW11 emulation is no
 longer supported (and makes no sense, either, as it only supported a
@@ -1231,1239 +1365,689 @@ old libW11 emulation.</p>
 <p>At the time of this writing, cygwin didn't seem to support any multi-byte
 encodings (you might try <code>LC_CTYPE=C-UTF-8</code>), so you are likely limited
 to 8-bit encodings.</p>
-<p>
-</p>
-<hr />
-<h1><a name="rxvtunicode_technical_reference">RXVT-UNICODE TECHNICAL REFERENCE</a></h1>
+
+</div>
+<h1 id="RXVT_UNICODE_TECHNICAL_REFERENCE">RXVT-UNICODE TECHNICAL REFERENCE</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="RXVT_UNICODE_TECHNICAL_REFERENCE_CON">
 <p>The rest of this document describes various technical aspects of
 <strong>rxvt-unicode</strong>. First the description of supported command sequences,
 followed by pixmap support and last by a description of all features
 selectable at <code>configure</code> time.</p>
-<p>
-</p>
-<h2><a name="definitions">Definitions</a></h2>
+
+</div>
+<h2 id="Definitions">Definitions</h2>
+<div id="Definitions_CONTENT">
 <dl>
-<dt><strong><a name="item_c"><strong><code>c</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>The literal character c.</p>
-</dd>
-</li>
-<dt><strong><a name="item_c"><strong><code>C</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>A single (required) character.</p>
-</dd>
-</li>
-<dt><strong><a name="item_ps"><strong><code>Ps</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>A single (usually optional) numeric parameter, composed of one or more
+	<dt><strong><code>c</code></strong></dt>
+	<dd>
+		<p>The literal character c.</p>
+	</dd>
+	<dt><strong><code>C</code></strong></dt>
+	<dd>
+		<p>A single (required) character.</p>
+	</dd>
+	<dt><strong><code>Ps</code></strong></dt>
+	<dd>
+		<p>A single (usually optional) numeric parameter, composed of one or more
 digits.</p>
-</dd>
-</li>
-<dt><strong><a name="item_pm"><strong><code>Pm</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>A multiple numeric parameter composed of any number of single numeric
+	</dd>
+	<dt><strong><code>Pm</code></strong></dt>
+	<dd>
+		<p>A multiple numeric parameter composed of any number of single numeric
 parameters, separated by <code>;</code> character(s).</p>
-</dd>
-</li>
-<dt><strong><a name="item_pt"><strong><code>Pt</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>A text parameter composed of printable characters.</p>
-</dd>
-</li>
+	</dd>
+	<dt><strong><code>Pt</code></strong></dt>
+	<dd>
+		<p>A text parameter composed of printable characters.</p>
+	</dd>
 </dl>
-<p>
-</p>
-<h2><a name="values">Values</a></h2>
+
+</div>
+<h2 id="Values">Values</h2>
+<div id="Values_CONTENT">
 <dl>
-<dt><strong><a name="item_enq"><strong><code>ENQ</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Enquiry (Ctrl-E) = Send Device Attributes (DA)
-request attributes from terminal. See <strong><a href="#item_esc__5b_ps_c"><code>ESC [ Ps c</code></a> </strong>&gt;.</p>
-</dd>
-</li>
-<dt><strong><a name="item_bel"><strong><code>BEL</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Bell (Ctrl-G)</p>
-</dd>
-</li>
-<dt><strong><a name="item_bs"><strong><code>BS</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Backspace (Ctrl-H)</p>
-</dd>
-</li>
-<dt><strong><a name="item_tab"><strong><code>TAB</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Horizontal Tab (HT) (Ctrl-I)</p>
-</dd>
-</li>
-<dt><strong><a name="item_lf"><strong><code>LF</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Line Feed or New Line (NL) (Ctrl-J)</p>
-</dd>
-</li>
-<dt><strong><a name="item_vt"><strong><code>VT</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Vertical Tab (Ctrl-K) same as <strong><a href="#item_lf"><code>LF</code></a> </strong>&gt;</p>
-</dd>
-</li>
-<dt><strong><a name="item_ff"><strong><code>FF</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Form Feed or New Page (NP) (Ctrl-L) same as <strong><a href="#item_lf"><code>LF</code></a> </strong>&gt;</p>
-</dd>
-</li>
-<dt><strong><a name="item_cr"><strong><code>CR</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Carriage Return (Ctrl-M)</p>
-</dd>
-</li>
-<dt><strong><a name="item_so"><strong><code>SO</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Shift Out (Ctrl-N), invokes the G1 character set.
+	<dt><strong><code>ENQ</code></strong></dt>
+	<dd>
+		<p>Enquiry (Ctrl-E) = Send Device Attributes (DA)
+request attributes from terminal. See <strong><code>ESC [ Ps c</code></strong>.</p>
+	</dd>
+	<dt><strong><code>BEL</code></strong></dt>
+	<dd>
+		<p>Bell (Ctrl-G)</p>
+	</dd>
+	<dt><strong><code>BS</code></strong></dt>
+	<dd>
+		<p>Backspace (Ctrl-H)</p>
+	</dd>
+	<dt><strong><code>TAB</code></strong></dt>
+	<dd>
+		<p>Horizontal Tab (HT) (Ctrl-I)</p>
+	</dd>
+	<dt><strong><code>LF</code></strong></dt>
+	<dd>
+		<p>Line Feed or New Line (NL) (Ctrl-J)</p>
+	</dd>
+	<dt><strong><code>VT</code></strong></dt>
+	<dd>
+		<p>Vertical Tab (Ctrl-K) same as <strong><code>LF</code></strong></p>
+	</dd>
+	<dt><strong><code>FF</code></strong></dt>
+	<dd>
+		<p>Form Feed or New Page (NP) (Ctrl-L) same as <strong><code>LF</code></strong></p>
+	</dd>
+	<dt><strong><code>CR</code></strong></dt>
+	<dd>
+		<p>Carriage Return (Ctrl-M)</p>
+	</dd>
+	<dt><strong><code>SO</code></strong></dt>
+	<dd>
+		<p>Shift Out (Ctrl-N), invokes the G1 character set.
 Switch to Alternate Character Set</p>
-</dd>
-</li>
-<dt><strong><a name="item_si"><strong><code>SI</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Shift In (Ctrl-O), invokes the G0 character set (the default).
+	</dd>
+	<dt><strong><code>SI</code></strong></dt>
+	<dd>
+		<p>Shift In (Ctrl-O), invokes the G0 character set (the default).
 Switch to Standard Character Set</p>
-</dd>
-</li>
-<dt><strong><a name="item_spc"><strong><code>SPC</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Space Character</p>
-</dd>
-</li>
+	</dd>
+	<dt><strong><code>SPC</code></strong></dt>
+	<dd>
+		<p>Space Character</p>
+	</dd>
 </dl>
-<p>
-</p>
-<h2><a name="escape_sequences">Escape Sequences</a></h2>
+
+</div>
+<h2 id="Escape_Sequences">Escape Sequences</h2>
+<div id="Escape_Sequences_CONTENT">
 <dl>
-<dt><strong><a name="item_esc__23_8"><strong><code>ESC # 8</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>DEC Screen Alignment Test (DECALN)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc_7"><strong><code>ESC 7</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Save Cursor (SC)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc_8"><strong><code>ESC 8</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Restore Cursor</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__3d"><strong><code>ESC =</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Application Keypad (SMKX). See also next sequence.</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc"><strong><code>ESC</code> </strong>&gt;&gt;</a></strong>
-
-<dd>
-<p>Normal Keypad (RMKX)</p>
-</dd>
-<dd>
-<p><strong>Note:</strong> If the numeric keypad is activated, eg, <strong>Num_Lock</strong> has been
+	<dt><strong><code>ESC # 8</code></strong></dt>
+	<dd>
+		<p>DEC Screen Alignment Test (DECALN)</p>
+	</dd>
+	<dt><strong><code>ESC 7</code></strong></dt>
+	<dd>
+		<p>Save Cursor (SC)</p>
+	</dd>
+	<dt><strong><code>ESC 8</code></strong></dt>
+	<dd>
+		<p>Restore Cursor</p>
+	</dd>
+	<dt><strong><code>ESC =</code></strong></dt>
+	<dd>
+		<p>Application Keypad (SMKX). See also next sequence.</p>
+	</dd>
+	<dt><strong><code>ESC</code></strong></dt>
+	<dd>
+		<p>Normal Keypad (RMKX)</p>
+		<p><strong>Note:</strong> If the numeric keypad is activated, eg, <strong>Num_Lock</strong> has been
 pressed, numbers or control functions are generated by the numeric keypad
 (see Key Codes).</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc_d"><strong><code>ESC D</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Index (IND)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc_e"><strong><code>ESC E</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Next Line (NEL)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc_h"><strong><code>ESC H</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Tab Set (HTS)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc_m"><strong><code>ESC M</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Reverse Index (RI)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc_n"><strong><code>ESC N</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Single Shift Select of G2 Character Set (SS2): affects next character
-only <em>unimplemented</em></p>
-</dd>
-</li>
-<dt><strong><a name="item_esc_o"><strong><code>ESC O</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Single Shift Select of G3 Character Set (SS3): affects next character
-only <em>unimplemented</em></p>
-</dd>
-</li>
-<dt><strong><a name="item_esc_z"><strong><code>ESC Z</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Obsolete form of returns: <strong><code>ESC [ ? 1 ; 2 C</code> </strong>&gt; <em>rxvt-unicode compile-time option</em></p>
-</dd>
-</li>
-<dt><strong><a name="item_esc_c"><strong><code>ESC c</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Full reset (RIS)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc_n"><strong><code>ESC n</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Invoke the G2 Character Set (LS2)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc_o"><strong><code>ESC o</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Invoke the G3 Character Set (LS3)</p>
-</dd>
-</li>
-<dt><strong><strong><code>ESC ( C</code> </strong>&gt;</strong>
-
-<dd>
-<p>Designate G0 Character Set (ISO 2022), see below for values of <a href="#item_c"><code>C</code></a>.</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__29_c"><strong><code>ESC ) C</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Designate G1 Character Set (ISO 2022), see below for values of <a href="#item_c"><code>C</code></a>.</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__2a_c"><strong><code>ESC * C</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Designate G2 Character Set (ISO 2022), see below for values of <a href="#item_c"><code>C</code></a>.</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__2b_c"><strong><code>ESC + C</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Designate G3 Character Set (ISO 2022), see below for values of <a href="#item_c"><code>C</code></a>.</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__24_c"><strong><code>ESC $ C</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Designate Kanji Character Set</p>
-</dd>
-<dd>
-<p>Where <strong><a href="#item_c"><code>C</code></a> </strong>&gt; is one of:</p>
-</dd>
-<table>
-<tr><td>C = 0 </td><td>DEC Special Character and Line Drawing Set</td></tr>
-<tr><td>C = A </td><td>United Kingdom (UK)</td></tr>
-<tr><td>C = B </td><td>United States (USASCII)</td></tr>
-<tr><td>C = <</td><td>Multinational character set unimplemented</td></tr>
-<tr><td>C = 5 </td><td>Finnish character set unimplemented</td></tr>
-<tr><td>C = C </td><td>Finnish character set unimplemented</td></tr>
-<tr><td>C = K </td><td>German character set unimplemented</td></tr>
-</table></li>
+	</dd>
+	<dt><strong><code>ESC D</code></strong></dt>
+	<dd>
+		<p>Index (IND)</p>
+	</dd>
+	<dt><strong><code>ESC E</code></strong></dt>
+	<dd>
+		<p>Next Line (NEL)</p>
+	</dd>
+	<dt><strong><code>ESC H</code></strong></dt>
+	<dd>
+		<p>Tab Set (HTS)</p>
+	</dd>
+	<dt><strong><code>ESC M</code></strong></dt>
+	<dd>
+		<p>Reverse Index (RI)</p>
+	</dd>
+	<dt><strong><code>ESC N</code></strong></dt>
+	<dd>
+		<p>Single Shift Select of G2 Character Set (SS2): affects next character
+only <i>unimplemented</i></p>
+	</dd>
+	<dt><strong><code>ESC O</code></strong></dt>
+	<dd>
+		<p>Single Shift Select of G3 Character Set (SS3): affects next character
+only <i>unimplemented</i></p>
+	</dd>
+	<dt><strong><code>ESC Z</code></strong></dt>
+	<dd>
+		<p>Obsolete form of returns: <strong><code>ESC [ ? 1 ; 2 C</code></strong> <i>rxvt-unicode compile-time option</i></p>
+	</dd>
+	<dt><strong><code>ESC c</code></strong></dt>
+	<dd>
+		<p>Full reset (RIS)</p>
+	</dd>
+	<dt><strong><code>ESC n</code></strong></dt>
+	<dd>
+		<p>Invoke the G2 Character Set (LS2)</p>
+	</dd>
+	<dt><strong><code>ESC o</code></strong></dt>
+	<dd>
+		<p>Invoke the G3 Character Set (LS3)</p>
+	</dd>
+	<dt><strong><code>ESC ( C</code></strong></dt>
+	<dd>
+		<p>Designate G0 Character Set (ISO 2022), see below for values of <code>C</code>.</p>
+	</dd>
+	<dt><strong><code>ESC ) C</code></strong></dt>
+	<dd>
+		<p>Designate G1 Character Set (ISO 2022), see below for values of <code>C</code>.</p>
+	</dd>
+	<dt><strong><code>ESC * C</code></strong></dt>
+	<dd>
+		<p>Designate G2 Character Set (ISO 2022), see below for values of <code>C</code>.</p>
+	</dd>
+	<dt><strong><code>ESC + C</code></strong></dt>
+	<dd>
+		<p>Designate G3 Character Set (ISO 2022), see below for values of <code>C</code>.</p>
+	</dd>
+	<dt><strong><code>ESC $ C</code></strong></dt>
+	<dd>
+		<p>Designate Kanji Character Set</p>
+		<p>Where <strong><code>C</code></strong> is one of:</p>
+	</dd>
 </dl>
-<p></p>
-<p>
-</p>
-<h2><a name="csi__command_sequence_introducer__sequences">CSI (Command Sequence Introducer) Sequences</a></h2>
+<p><span id="CSI">CSI</span></p>
+
+</div>
+<h2 id="CSI_Command_Sequence_Introducer_Sequ">CSI (Command Sequence Introducer) Sequences</h2>
+<div id="CSI_Command_Sequence_Introducer_Sequ-2">
 <dl>
-<dt><strong><a name="item_esc__5b_ps__40"><strong><code>ESC [ Ps @</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Insert <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; (Blank) <code>Character(s)</code> [default: 1] (ICH)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_a"><strong><code>ESC [ Ps A</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Cursor Up <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] (CUU)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_b"><strong><code>ESC [ Ps B</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Cursor Down <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] (CUD)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_c"><strong><code>ESC [ Ps C</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Cursor Forward <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] (CUF)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_d"><strong><code>ESC [ Ps D</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Cursor Backward <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] (CUB)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_e"><strong><code>ESC [ Ps E</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Cursor Down <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] and to first column</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_f"><strong><code>ESC [ Ps F</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Cursor Up <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; Times [default: 1] and to first column</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_g"><strong><code>ESC [ Ps G</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Cursor to Column <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; (HPA)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_3bps_h"><strong><code>ESC [ Ps;Ps H</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Cursor Position [row;column] [default: 1;1] (CUP)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_i"><strong><code>ESC [ Ps I</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Move forward <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; tab stops [default: 1]</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_j"><strong><code>ESC [ Ps J</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Erase in Display (ED)</p>
-</dd>
-<table>
-<tr><td>Ps = 0</td><td>Clear Below (default)</td></tr>
-<tr><td>Ps = 1</td><td>Clear Above</td></tr>
-<tr><td>Ps = 2</td><td>Clear All</td></tr>
-</table></li>
-<dt><strong><a name="item_esc__5b_ps_k"><strong><code>ESC [ Ps K</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Erase in Line (EL)</p>
-</dd>
-<table>
-<tr><td>Ps = 0</td><td>Clear to Right (default)</td></tr>
-<tr><td>Ps = 1</td><td>Clear to Left</td></tr>
-<tr><td>Ps = 2</td><td>Clear All</td></tr>
-</table></li>
-<dt><strong><a name="item_esc__5b_ps_l"><strong><code>ESC [ Ps L</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Insert <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; <code>Line(s)</code> [default: 1] (IL)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_m"><strong><code>ESC [ Ps M</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Delete <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; <code>Line(s)</code> [default: 1] (DL)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_p"><strong><code>ESC [ Ps P</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Delete <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; <code>Character(s)</code> [default: 1] (DCH)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_3bps_3bps_3bps_3bps_t"><strong><code>ESC [ Ps;Ps;Ps;Ps;Ps T</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Initiate . <em>unimplemented</em> Parameters are
+	<dt><strong><code>ESC [ Ps @</code></strong></dt>
+	<dd>
+		<p>Insert <strong><code>Ps</code></strong> (Blank) Character(s) [default: 1] (ICH)<span id="ESCOBPsA">ESCOBPsA</span></p>
+	</dd>
+	<dt><strong><code>ESC [ Ps A</code></strong></dt>
+	<dd>
+		<p>Cursor Up <strong><code>Ps</code></strong> Times [default: 1] (CUU)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps B</code></strong></dt>
+	<dd>
+		<p>Cursor Down <strong><code>Ps</code></strong> Times [default: 1] (CUD)<span id="ESCOBPsC">ESCOBPsC</span></p>
+	</dd>
+	<dt><strong><code>ESC [ Ps C</code></strong></dt>
+	<dd>
+		<p>Cursor Forward <strong><code>Ps</code></strong> Times [default: 1] (CUF)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps D</code></strong></dt>
+	<dd>
+		<p>Cursor Backward <strong><code>Ps</code></strong> Times [default: 1] (CUB)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps E</code></strong></dt>
+	<dd>
+		<p>Cursor Down <strong><code>Ps</code></strong> Times [default: 1] and to first column</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps F</code></strong></dt>
+	<dd>
+		<p>Cursor Up <strong><code>Ps</code></strong> Times [default: 1] and to first column<span id="ESCOBPsG">ESCOBPsG</span></p>
+	</dd>
+	<dt><strong><code>ESC [ Ps G</code></strong></dt>
+	<dd>
+		<p>Cursor to Column <strong><code>Ps</code></strong> (HPA)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps;Ps H</code></strong></dt>
+	<dd>
+		<p>Cursor Position [row;column] [default: 1;1] (CUP)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps I</code></strong></dt>
+	<dd>
+		<p>Move forward <strong><code>Ps</code></strong> tab stops [default: 1]</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps J</code></strong></dt>
+	<dd>
+		<p>Erase in Display (ED)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps K</code></strong></dt>
+	<dd>
+		<p>Erase in Line (EL)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps L</code></strong></dt>
+	<dd>
+		<p>Insert <strong><code>Ps</code></strong> Line(s) [default: 1] (IL)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps M</code></strong></dt>
+	<dd>
+		<p>Delete <strong><code>Ps</code></strong> Line(s) [default: 1] (DL)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps P</code></strong></dt>
+	<dd>
+		<p>Delete <strong><code>Ps</code></strong> Character(s) [default: 1] (DCH)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps;Ps;Ps;Ps;Ps T</code></strong></dt>
+	<dd>
+		<p>Initiate . <i>unimplemented</i> Parameters are
 [func;startx;starty;firstrow;lastrow].</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_w"><strong><code>ESC [ Ps W</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Tabulator functions</p>
-</dd>
-<table>
-<tr><td>Ps = 0</td><td>Tab Set (HTS)</td></tr>
-<tr><td>Ps = 2</td><td>Tab Clear (TBC), Clear Current Column (default)</td></tr>
-<tr><td>Ps = 5</td><td>Tab Clear (TBC), Clear All</td></tr>
-</table></li>
-<dt><strong><a name="item_esc__5b_ps_x"><strong><code>ESC [ Ps X</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Erase <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; <code>Character(s)</code> [default: 1] (ECH)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_z"><strong><code>ESC [ Ps Z</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Move backward <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; [default: 1] tab stops</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps__27"><strong><code>ESC [ Ps '</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>See <strong><a href="#item_esc__5b_ps_g"><code>ESC [ Ps G</code></a> </strong>&gt;</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_a"><strong><code>ESC [ Ps a</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>See <strong><a href="#item_esc__5b_ps_c"><code>ESC [ Ps C</code></a> </strong>&gt;</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_c"><strong><code>ESC [ Ps c</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Send Device Attributes (DA)
-<strong><code>Ps = 0</code> </strong>&gt; (or omitted): request attributes from terminal
-returns: <strong><code>ESC [ ? 1 ; 2 c</code> </strong>&gt; (``I am a VT100 with Advanced Video
+	</dd>
+	<dt><strong><code>ESC [ Ps W</code></strong></dt>
+	<dd>
+		<p>Tabulator functions</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps X</code></strong></dt>
+	<dd>
+		<p>Erase <strong><code>Ps</code></strong> Character(s) [default: 1] (ECH)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps Z</code></strong></dt>
+	<dd>
+		<p>Move backward <strong><code>Ps</code></strong> [default: 1] tab stops</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps '</code></strong></dt>
+	<dd>
+		<p>See <strong><code>ESC [ Ps G</code></strong></p>
+	</dd>
+	<dt><strong><code>ESC [ Ps a</code></strong></dt>
+	<dd>
+		<p>See <strong><code>ESC [ Ps C</code></strong></p>
+	</dd>
+	<dt><strong><code>ESC [ Ps c</code></strong></dt>
+	<dd>
+		<p>Send Device Attributes (DA)
+<strong><code>Ps = 0</code></strong> (or omitted): request attributes from terminal
+returns: <strong><code>ESC [ ? 1 ; 2 c</code></strong> (``I am a VT100 with Advanced Video
 Option'')</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_d"><strong><code>ESC [ Ps d</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Cursor to Line <strong><a href="#item_ps"><code>Ps</code></a> </strong>&gt; (VPA)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_e"><strong><code>ESC [ Ps e</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>See <strong><a href="#item_esc__5b_ps_a"><code>ESC [ Ps A</code></a> </strong>&gt;</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_3bps_f"><strong><code>ESC [ Ps;Ps f</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Horizontal and Vertical Position [row;column] (HVP) [default: 1;1]</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_g"><strong><code>ESC [ Ps g</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Tab Clear (TBC)</p>
-</dd>
-<table>
-<tr><td>Ps = 0</td><td>Clear Current Column (default)</td></tr>
-<tr><td>Ps = 3</td><td>Clear All (TBC)</td></tr>
-</table></li>
-<dt><strong><a name="item_esc__5b_pm_h"><strong><code>ESC [ Pm h</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Set Mode (SM). See <strong><a href="#item_esc__5b_pm_l"><code>ESC [ Pm l</code></a> </strong>&gt; sequence for description of <a href="#item_pm"><code>Pm</code></a>.</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_i"><strong><code>ESC [ Ps i</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Printing. See also the <code>print-pipe</code> resource.</p>
-</dd>
-<table>
-<tr><td>Ps = 0</td><td>print screen (MC0)</td></tr>
-<tr><td>Ps = 4</td><td>disable transparent print mode (MC4)</td></tr>
-<tr><td>Ps = 5</td><td>enable transparent print mode (MC5)</td></tr>
-</table></li>
-<dt><strong><a name="item_esc__5b_pm_l"><strong><code>ESC [ Pm l</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Reset Mode (RM)</p>
-</dd>
-<dl>
-<dt><strong><a name="item_ps__3d_4"><strong><code>Ps = 4</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>Insert Mode (SMIR)</td></tr>
-<tr><td>l</td><td>Replace Mode (RMIR)</td></tr>
-</table><dt><strong><a name="item_20"><strong><code>Ps = 20</code> </strong>&gt; (partially implemented)</a></strong>
-
-<table>
-<tr><td>h</td><td>Automatic Newline (LNM)</td></tr>
-<tr><td>l</td><td>Normal Linefeed (LNM)</td></tr>
-</table></dl>
-<dt><strong><a name="item_esc__5b_pm_m"><strong><code>ESC [ Pm m</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Character Attributes (SGR)</p>
-</dd>
-<table>
-<tr><td>Ps = 0</td><td>Normal (default)</td></tr>
-<tr><td>Ps = 1 / 21</td><td>On / Off Bold (bright fg)</td></tr>
-<tr><td>Ps = 3 / 23</td><td>On / Off Italic</td></tr>
-<tr><td>Ps = 4 / 24</td><td>On / Off Underline</td></tr>
-<tr><td>Ps = 5 / 25</td><td>On / Off Slow Blink (bright bg)</td></tr>
-<tr><td>Ps = 6 / 26</td><td>On / Off Rapid Blink (bright bg)</td></tr>
-<tr><td>Ps = 7 / 27</td><td>On / Off Inverse</td></tr>
-<tr><td>Ps = 8 / 27</td><td>On / Off Invisible (NYI)</td></tr>
-<tr><td>Ps = 30 / 40</td><td>fg/bg Black</td></tr>
-<tr><td>Ps = 31 / 41</td><td>fg/bg Red</td></tr>
-<tr><td>Ps = 32 / 42</td><td>fg/bg Green</td></tr>
-<tr><td>Ps = 33 / 43</td><td>fg/bg Yellow</td></tr>
-<tr><td>Ps = 34 / 44</td><td>fg/bg Blue</td></tr>
-<tr><td>Ps = 35 / 45</td><td>fg/bg Magenta</td></tr>
-<tr><td>Ps = 36 / 46</td><td>fg/bg Cyan</td></tr>
-<tr><td>Ps = 38;5 / 48;5</td><td>set fg/bg to color #m (ISO 8613-6)</td></tr>
-<tr><td>Ps = 37 / 47</td><td>fg/bg White</td></tr>
-<tr><td>Ps = 39 / 49</td><td>fg/bg Default</td></tr>
-<tr><td>Ps = 90 / 100</td><td>fg/bg Bright Black</td></tr>
-<tr><td>Ps = 91 / 101</td><td>fg/bg Bright Red</td></tr>
-<tr><td>Ps = 92 / 102</td><td>fg/bg Bright Green</td></tr>
-<tr><td>Ps = 93 / 103</td><td>fg/bg Bright Yellow</td></tr>
-<tr><td>Ps = 94 / 104</td><td>fg/bg Bright Blue</td></tr>
-<tr><td>Ps = 95 / 105</td><td>fg/bg Bright Magenta</td></tr>
-<tr><td>Ps = 96 / 106</td><td>fg/bg Bright Cyan</td></tr>
-<tr><td>Ps = 97 / 107</td><td>fg/bg Bright White</td></tr>
-<tr><td>Ps = 99 / 109</td><td>fg/bg Bright Default</td></tr>
-</table></li>
-<dt><strong><a name="item_esc__5b_ps_n"><strong><code>ESC [ Ps n</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Device Status Report (DSR)</p>
-</dd>
-<table>
-<tr><td>Ps = 5</td><td>Status Report ESC [ 0 n (``OK'')</td></tr>
-<tr><td>Ps = 6</td><td>Report Cursor Position (CPR) [row;column] as ESC [ r ; c R</td></tr>
-<tr><td>Ps = 7</td><td>Request Display Name</td></tr>
-<tr><td>Ps = 8</td><td>Request Version Number (place in window title)</td></tr>
-</table></li>
-<dt><strong><a name="item_esc__5b_ps_3bps_r"><strong><code>ESC [ Ps;Ps r</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Set Scrolling Region [top;bottom]
+	</dd>
+	<dt><strong><code>ESC [ Ps d</code></strong></dt>
+	<dd>
+		<p>Cursor to Line <strong><code>Ps</code></strong> (VPA)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps e</code></strong></dt>
+	<dd>
+		<p>See <strong><code>ESC [ Ps A</code></strong></p>
+	</dd>
+	<dt><strong><code>ESC [ Ps;Ps f</code></strong></dt>
+	<dd>
+		<p>Horizontal and Vertical Position [row;column] (HVP) [default: 1;1]</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps g</code></strong></dt>
+	<dd>
+		<p>Tab Clear (TBC)</p>
+	</dd>
+	<dt><strong><code>ESC [ Pm h</code></strong></dt>
+	<dd>
+		<p>Set Mode (SM). See <strong><code>ESC [ Pm l</code></strong> sequence for description of <code>Pm</code>.</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps i</code></strong></dt>
+	<dd>
+		<p>Printing. See also the <code>print-pipe</code> resource.</p>
+	</dd>
+	<dt><strong><code>ESC [ Pm l</code></strong></dt>
+	<dd>
+		<p>Reset Mode (RM)</p>
+		<p>
+			<dl>
+				<dt><strong><code>Ps = 4</code></strong></dt>
+				<dt><strong><code>Ps = 20</code></strong> (partially implemented)</dt>
+			</dl>
+		</p>
+	</dd>
+	<dt><strong><code>ESC [ Pm m</code></strong></dt>
+	<dd>
+		<p>Character Attributes (SGR)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps n</code></strong></dt>
+	<dd>
+		<p>Device Status Report (DSR)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps;Ps r</code></strong></dt>
+	<dd>
+		<p>Set Scrolling Region [top;bottom]
 [default: full size of window] (CSR)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_s"><strong><code>ESC [ s</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Save Cursor (SC)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_3bpt_t"><strong><code>ESC [ Ps;Pt t</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Window Operations</p>
-</dd>
-<table>
-<tr><td>Ps = 1</td><td>Deiconify (map) window</td></tr>
-<tr><td>Ps = 2</td><td>Iconify window</td></tr>
-<tr><td>Ps = 3</td><td>ESC [ 3 ; X ; Y t Move window to (X|Y)</td></tr>
-<tr><td>Ps = 4</td><td>ESC [ 4 ; H ; W t Resize to WxH pixels</td></tr>
-<tr><td>Ps = 5</td><td>Raise window</td></tr>
-<tr><td>Ps = 6</td><td>Lower window</td></tr>
-<tr><td>Ps = 7</td><td>Refresh screen once</td></tr>
-<tr><td>Ps = 8</td><td>ESC [ 8 ; R ; C t Resize to R rows and C columns</td></tr>
-<tr><td>Ps = 11</td><td>Report window state (responds with Ps = 1 or Ps = 2)</td></tr>
-<tr><td>Ps = 13</td><td>Report window position (responds with Ps = 3)</td></tr>
-<tr><td>Ps = 14</td><td>Report window pixel size (responds with Ps = 4)</td></tr>
-<tr><td>Ps = 18</td><td>Report window text size (responds with Ps = 7)</td></tr>
-<tr><td>Ps = 19</td><td>Currently the same as Ps = 18, but responds with Ps = 9</td></tr>
-<tr><td>Ps = 20</td><td>Reports icon label (ESC ] L NAME \234)</td></tr>
-<tr><td>Ps = 21</td><td>Reports window title (ESC ] l NAME \234)</td></tr>
-<tr><td>Ps = 24..</td><td>Set window height to Ps rows</td></tr>
-</table></li>
-<dt><strong><a name="item_esc__5b_u"><strong><code>ESC [ u</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Restore Cursor</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b_ps_x"><strong><code>ESC [ Ps x</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Request Terminal Parameters (DECREQTPARM)</p>
-</dd>
-</li>
+	</dd>
+	<dt><strong><code>ESC [ s</code></strong></dt>
+	<dd>
+		<p>Save Cursor (SC)</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps;Pt t</code></strong></dt>
+	<dd>
+		<p>Window Operations</p>
+	</dd>
+	<dt><strong><code>ESC [ u</code></strong></dt>
+	<dd>
+		<p>Restore Cursor</p>
+	</dd>
+	<dt><strong><code>ESC [ Ps x</code></strong></dt>
+	<dd>
+		<p>Request Terminal Parameters (DECREQTPARM)</p>
+	</dd>
 </dl>
-<p></p>
-<p>
-</p>
-<h2><a name="dec_private_modes">DEC Private Modes</a></h2>
+<p><span id="PrivateModes">PrivateModes</span></p>
+
+</div>
+<h2 id="DEC_Private_Modes">DEC Private Modes</h2>
+<div id="DEC_Private_Modes_CONTENT">
 <dl>
-<dt><strong><a name="item_esc__5b__3f_pm_h"><strong><code>ESC [ ? Pm h</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>DEC Private Mode Set (DECSET)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b__3f_pm_l"><strong><code>ESC [ ? Pm l</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>DEC Private Mode Reset (DECRST)</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b__3f_pm_r"><strong><code>ESC [ ? Pm r</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Restore previously saved DEC Private Mode Values.</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b__3f_pm_s"><strong><code>ESC [ ? Pm s</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Save DEC Private Mode Values.</p>
-</dd>
-</li>
-<dt><strong><a name="item_esc__5b__3f_pm_t"><strong><code>ESC [ ? Pm t</code> </strong>&gt;</a></strong>
-
-<dd>
-<p>Toggle DEC Private Mode Values (rxvt extension). <em>where</em></p>
-</dd>
-<dl>
-<dt><strong><a name="item_1"><strong><code>Pm = 1</code> </strong>&gt; (DECCKM)</a></strong>
-
-<table>
-<tr><td>h</td><td>Application Cursor Keys</td></tr>
-<tr><td>l</td><td>Normal Cursor Keys</td></tr>
-</table><dt><strong><a name="item_2"><strong><code>Pm = 2</code> </strong>&gt; (ANSI/VT52 mode)</a></strong>
-
-<table>
-<tr><td>h</td><td>Enter VT52 mode</td></tr>
-<tr><td>l</td><td>Enter VT52 mode</td></tr>
-</table><dt><strong><a name="item_pm__3d_3"><strong><code>Pm = 3</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>132 Column Mode (DECCOLM)</td></tr>
-<tr><td>l</td><td>80 Column Mode (DECCOLM)</td></tr>
-</table><dt><strong><a name="item_pm__3d_4"><strong><code>Pm = 4</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>Smooth (Slow) Scroll (DECSCLM)</td></tr>
-<tr><td>l</td><td>Jump (Fast) Scroll (DECSCLM)</td></tr>
-</table><dt><strong><a name="item_pm__3d_5"><strong><code>Pm = 5</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>Reverse Video (DECSCNM)</td></tr>
-<tr><td>l</td><td>Normal Video (DECSCNM)</td></tr>
-</table><dt><strong><a name="item_pm__3d_6"><strong><code>Pm = 6</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>Origin Mode (DECOM)</td></tr>
-<tr><td>l</td><td>Normal Cursor Mode (DECOM)</td></tr>
-</table><dt><strong><a name="item_pm__3d_7"><strong><code>Pm = 7</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>Wraparound Mode (DECAWM)</td></tr>
-<tr><td>l</td><td>No Wraparound Mode (DECAWM)</td></tr>
-</table><dt><strong><a name="item_pm__3d_8_unimplemented"><strong><code>Pm = 8</code> </strong>&gt; <em>unimplemented</em></a></strong>
-
-<table>
-<tr><td>h</td><td>Auto-repeat Keys (DECARM)</td></tr>
-<tr><td>l</td><td>No Auto-repeat Keys (DECARM)</td></tr>
-</table><dt><strong><a name="item_pm__3d_9_x10_xterm"><strong><code>Pm = 9</code> </strong>&gt; X10 XTerm</a></strong>
-
-<table>
-<tr><td>h</td><td>Send Mouse X & Y on button press.</td></tr>
-<tr><td>l</td><td>No mouse reporting.</td></tr>
-</table><dt><strong><a name="item_pm__3d_25"><strong><code>Pm = 25</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>Visible cursor {cnorm/cvvis}</td></tr>
-<tr><td>l</td><td>Invisible cursor {civis}</td></tr>
-</table><dt><strong><a name="item_pm__3d_30"><strong><code>Pm = 30</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>scrollBar visisble</td></tr>
-<tr><td>l</td><td>scrollBar invisisble</td></tr>
-</table><dt><strong><a name="item_35"><strong><code>Pm = 35</code> </strong>&gt; (<strong>rxvt</strong>)</a></strong>
-
-<table>
-<tr><td>h</td><td>Allow XTerm Shift+key sequences</td></tr>
-<tr><td>l</td><td>Disallow XTerm Shift+key sequences</td></tr>
-</table><dt><strong><a name="item_pm__3d_38_unimplemented"><strong><code>Pm = 38</code> </strong>&gt; <em>unimplemented</em></a></strong>
-
-<dd>
-<p>Enter Tektronix Mode (DECTEK)</p>
-</dd>
-</li>
-<dt><strong><a name="item_pm__3d_40"><strong><code>Pm = 40</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>Allow 80/132 Mode</td></tr>
-<tr><td>l</td><td>Disallow 80/132 Mode</td></tr>
-</table><dt><strong><a name="item_pm__3d_44_unimplemented"><strong><code>Pm = 44</code> </strong>&gt; <em>unimplemented</em></a></strong>
-
-<table>
-<tr><td>h</td><td>Turn On Margin Bell</td></tr>
-<tr><td>l</td><td>Turn Off Margin Bell</td></tr>
-</table><dt><strong><a name="item_pm__3d_45_unimplemented"><strong><code>Pm = 45</code> </strong>&gt; <em>unimplemented</em></a></strong>
-
-<table>
-<tr><td>h</td><td>Reverse-wraparound Mode</td></tr>
-<tr><td>l</td><td>No Reverse-wraparound Mode</td></tr>
-</table><dt><strong><a name="item_pm__3d_46_unimplemented"><strong><code>Pm = 46</code> </strong>&gt; <em>unimplemented</em></a></strong>
-
-<dt><strong><a name="item_pm__3d_47"><strong><code>Pm = 47</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>Use Alternate Screen Buffer</td></tr>
-<tr><td>l</td><td>Use Normal Screen Buffer</td></tr>
-</table><p></p>
-<dt><strong><a name="item_pm__3d_66"><strong><code>Pm = 66</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>Application Keypad (DECPAM) == ESC =</td></tr>
-<tr><td>l</td><td>Normal Keypad (DECPNM) == ESC ></td></tr>
-</table><dt><strong><a name="item_pm__3d_67"><strong><code>Pm = 67</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>Backspace key sends BS (DECBKM)</td></tr>
-<tr><td>l</td><td>Backspace key sends DEL</td></tr>
-</table><dt><strong><a name="item_1000"><strong><code>Pm = 1000</code> </strong>&gt; (X11 XTerm)</a></strong>
-
-<table>
-<tr><td>h</td><td>Send Mouse X & Y on button press and release.</td></tr>
-<tr><td>l</td><td>No mouse reporting.</td></tr>
-</table><dt><strong><a name="item_1001"><strong><code>Pm = 1001</code> </strong>&gt; (X11 XTerm) <em>unimplemented</em></a></strong>
-
-<table>
-<tr><td>h</td><td>Use Hilite Mouse Tracking.</td></tr>
-<tr><td>l</td><td>No mouse reporting.</td></tr>
-</table><dt><strong><a name="item_1010"><strong><code>Pm = 1010</code> </strong>&gt; (<strong>rxvt</strong>)</a></strong>
-
-<table>
-<tr><td>h</td><td>Don't scroll to bottom on TTY output</td></tr>
-<tr><td>l</td><td>Scroll to bottom on TTY output</td></tr>
-</table><dt><strong><a name="item_1011"><strong><code>Pm = 1011</code> </strong>&gt; (<strong>rxvt</strong>)</a></strong>
-
-<table>
-<tr><td>h</td><td>Scroll to bottom when a key is pressed</td></tr>
-<tr><td>l</td><td>Don't scroll to bottom when a key is pressed</td></tr>
-</table><dt><strong><a name="item_1021"><strong><code>Pm = 1021</code> </strong>&gt; (<strong>rxvt</strong>)</a></strong>
-
-<table>
-<tr><td>h</td><td>Bold/italic implies high intensity (see option -is)</td></tr>
-<tr><td>l</td><td>Font styles have no effect on intensity (Compile styles)</td></tr>
-</table><dt><strong><a name="item_pm__3d_1047"><strong><code>Pm = 1047</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>Use Alternate Screen Buffer</td></tr>
-<tr><td>l</td><td>Use Normal Screen Buffer - clear Alternate Screen Buffer if returning from it</td></tr>
-</table><dt><strong><a name="item_pm__3d_1048"><strong><code>Pm = 1048</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>Save cursor position</td></tr>
-<tr><td>l</td><td>Restore cursor position</td></tr>
-</table><dt><strong><a name="item_pm__3d_1049"><strong><code>Pm = 1049</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>h</td><td>Use Alternate Screen Buffer - clear Alternate Screen Buffer if switching to it</td></tr>
-<tr><td>l</td><td>Use Normal Screen Buffer</td></tr>
-</table></dl>
+	<dt><strong><code>ESC [ ? Pm h</code></strong></dt>
+	<dd>
+		<p>DEC Private Mode Set (DECSET)</p>
+	</dd>
+	<dt><strong><code>ESC [ ? Pm l</code></strong></dt>
+	<dd>
+		<p>DEC Private Mode Reset (DECRST)</p>
+	</dd>
+	<dt><strong><code>ESC [ ? Pm r</code></strong></dt>
+	<dd>
+		<p>Restore previously saved DEC Private Mode Values.</p>
+	</dd>
+	<dt><strong><code>ESC [ ? Pm s</code></strong></dt>
+	<dd>
+		<p>Save DEC Private Mode Values.</p>
+	</dd>
+	<dt><strong><code>ESC [ ? Pm t</code></strong></dt>
+	<dd>
+		<p>Toggle DEC Private Mode Values (rxvt extension). <i>where</i></p>
+		<p>
+			<dl>
+				<dt><strong><code>Pm = 1</code></strong> (DECCKM)</dt>
+				<dt><strong><code>Pm = 2</code></strong> (ANSI/VT52 mode)</dt>
+				<dt><strong><code>Pm = 3</code></strong></dt>
+				<dt><strong><code>Pm = 4</code></strong></dt>
+				<dt><strong><code>Pm = 5</code></strong></dt>
+				<dt><strong><code>Pm = 6</code></strong></dt>
+				<dt><strong><code>Pm = 7</code></strong></dt>
+				<dt><strong><code>Pm = 8</code></strong> <i>unimplemented</i></dt>
+				<dt><strong><code>Pm = 9</code></strong> X10 XTerm</dt>
+				<dt><strong><code>Pm = 25</code></strong></dt>
+				<dt><strong><code>Pm = 30</code></strong></dt>
+				<dt><strong><code>Pm = 35</code></strong> (<strong>rxvt</strong>)</dt>
+				<dt><strong><code>Pm = 38</code></strong> <i>unimplemented</i></dt>
+				<dd>
+					<p>Enter Tektronix Mode (DECTEK)</p>
+				</dd>
+				<dt><strong><code>Pm = 40</code></strong></dt>
+				<dt><strong><code>Pm = 44</code></strong> <i>unimplemented</i></dt>
+				<dt><strong><code>Pm = 45</code></strong> <i>unimplemented</i></dt>
+				<dt><strong><code>Pm = 46</code></strong> <i>unimplemented</i></dt>
+				<dt><strong><code>Pm = 47</code></strong></dt>
+				<dd>
+					<p><span id="Priv66">Priv66</span></p>
+				</dd>
+				<dt><strong><code>Pm = 66</code></strong></dt>
+				<dt><strong><code>Pm = 67</code></strong></dt>
+				<dt><strong><code>Pm = 1000</code></strong> (X11 XTerm)</dt>
+				<dt><strong><code>Pm = 1001</code></strong> (X11 XTerm) <i>unimplemented</i></dt>
+				<dt><strong><code>Pm = 1010</code></strong> (<strong>rxvt</strong>)</dt>
+				<dt><strong><code>Pm = 1011</code></strong> (<strong>rxvt</strong>)</dt>
+				<dt><strong><code>Pm = 1021</code></strong> (<strong>rxvt</strong>)</dt>
+				<dt><strong><code>Pm = 1047</code></strong></dt>
+				<dt><strong><code>Pm = 1048</code></strong></dt>
+				<dt><strong><code>Pm = 1049</code></strong></dt>
+			</dl>
+		</p>
+	</dd>
 </dl>
-<p></p>
-<p>
-</p>
-<h2><a name="xterm_operating_system_commands">XTerm Operating System Commands</a></h2>
-<dl>
-<dt><strong><a name="item_esc__5d_ps_3bpt_st"><strong><code>ESC ] Ps;Pt ST</code> </strong>&gt;</a></strong>
+<p><span id="XTerm">XTerm</span></p>
 
-<dd>
-<p>Set XTerm Parameters. 8-bit ST: 0x9c, 7-bit ST sequence: ESC \ (0x1b,
+</div>
+<h2 id="XTerm_Operating_System_Commands">XTerm Operating System Commands</h2>
+<div id="XTerm_Operating_System_Commands_CONT">
+<dl>
+	<dt><strong><code>ESC ] Ps;Pt ST</code></strong></dt>
+	<dd>
+		<p>Set XTerm Parameters. 8-bit ST: 0x9c, 7-bit ST sequence: ESC \ (0x1b,
 0x5c), backwards compatible terminator BEL (0x07) is also accepted. any
 <strong>octet</strong> can be escaped by prefixing it with SYN (0x16, ^V).</p>
-</dd>
-<table>
-<tr><td>Ps = 0</td><td>Change Icon Name and Window Title to Pt</td></tr>
-<tr><td>Ps = 1</td><td>Change Icon Name to Pt</td></tr>
-<tr><td>Ps = 2</td><td>Change Window Title to Pt</td></tr>
-<tr><td>Ps = 3</td><td>If Pt starts with a ?, query the (STRING) property of the window and return it. If Pt contains a =, set the named property to the given value, else delete the specified property.</td></tr>
-<tr><td>Ps = 4</td><td>Pt is a semi-colon separated sequence of one or more semi-colon separated number/name pairs, where number is an index to a colour and name is the name of a colour. Each pair causes the numbered colour to be changed to name. Numbers 0-7 corresponds to low-intensity (normal) colours and 8-15 corresponds to high-intensity colours. 0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white</td></tr>
-<tr><td>Ps = 10</td><td>Change colour of text foreground to Pt (NB: may change in future)</td></tr>
-<tr><td>Ps = 11</td><td>Change colour of text background to Pt (NB: may change in future)</td></tr>
-<tr><td>Ps = 12</td><td>Change colour of text cursor foreground to Pt</td></tr>
-<tr><td>Ps = 13</td><td>Change colour of mouse foreground to Pt</td></tr>
-<tr><td>Ps = 17</td><td>Change colour of highlight characters to Pt</td></tr>
-<tr><td>Ps = 18</td><td>Change colour of bold characters to Pt [deprecated, see 706]</td></tr>
-<tr><td>Ps = 19</td><td>Change colour of underlined characters to Pt [deprecated, see 707]</td></tr>
-<tr><td>Ps = 20</td><td>Change background pixmap parameters (see section XPM) (Compile XPM).</td></tr>
-<tr><td>Ps = 39</td><td>Change default foreground colour to Pt.</td></tr>
-<tr><td>Ps = 46</td><td>Change Log File to Pt unimplemented</td></tr>
-<tr><td>Ps = 49</td><td>Change default background colour to Pt.</td></tr>
-<tr><td>Ps = 50</td><td>Set fontset to Pt, with the following special values of Pt (rxvt) #+n change up n #-n change down n if n is missing of 0, a value of 1 is used empty change to font0 n change to font n</td></tr>
-<tr><td>Ps = 55</td><td>Log all scrollback buffer and all of screen to Pt</td></tr>
-<tr><td>Ps = 701</td><td>Change current locale to Pt, or, if Pt is ?, return the current locale (Compile frills).</td></tr>
-<tr><td>Ps = 702</td><td>Request version if Pt is ?, returning rxvt-unicode, the resource name, the major and minor version numbers, e.g. ESC ] 702 ; rxvt-unicode ; urxvt ; 7 ; 4 ST.</td></tr>
-<tr><td>Ps = 704</td><td>Change colour of italic characters to Pt</td></tr>
-<tr><td>Ps = 705</td><td>Change background pixmap tint colour to Pt (Compile transparency).</td></tr>
-<tr><td>Ps = 706</td><td>Change colour of bold characters to Pt</td></tr>
-<tr><td>Ps = 707</td><td>Change colour of underlined characters to Pt</td></tr>
-<tr><td>Ps = 710</td><td>Set normal fontset to Pt. Same as Ps = 50.</td></tr>
-<tr><td>Ps = 711</td><td>Set bold fontset to Pt. Similar to Ps = 50 (Compile styles).</td></tr>
-<tr><td>Ps = 712</td><td>Set italic fontset to Pt. Similar to Ps = 50 (Compile styles).</td></tr>
-<tr><td>Ps = 713</td><td>Set bold-italic fontset to Pt. Similar to Ps = 50 (Compile styles).</td></tr>
-<tr><td>Ps = 720</td><td>Move viewing window up by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).</td></tr>
-<tr><td>Ps = 721</td><td>Move viewing window down by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).</td></tr>
-<tr><td>Ps = 777</td><td>Call the perl extension with the given string, which should be of the form extension:parameters (Compile perl).</td></tr>
-</table></li>
+	</dd>
 </dl>
-<p>
-</p>
-<hr />
-<h1><a name="xpm">XPM</a></h1>
-<p>For the XPM XTerm escape sequence <strong><code>ESC ] 20 ; Pt ST</code> </strong>&gt; then value
-of <strong><a href="#item_pt"><code>Pt</code></a> </strong>&gt; can be the name of the background pixmap followed by a
+
+</div>
+<h1 id="XPM">XPM</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="XPM_CONTENT">
+<p>For the XPM XTerm escape sequence <strong><code>ESC ] 20 ; Pt ST</code></strong> then value
+of <strong><code>Pt</code></strong> can be the name of the background pixmap followed by a
 sequence of scaling/positioning commands separated by semi-colons. The
 scaling/positioning commands are as follows:</p>
 <dl>
-<dt><strong><a name="item_query_scale_2fposition">query scale/position</a></strong>
-
-<dd>
-<p><strong>?</strong></p>
-</dd>
-</li>
-<dt><strong><a name="item_change_scale_and_position">change scale and position</a></strong>
-
-<dd>
-<p><strong>WxH+X+Y</strong></p>
-</dd>
-<dd>
-<p><strong>WxH+X</strong> (== <strong>WxH+X+X</strong>)</p>
-</dd>
-<dd>
-<p><strong>WxH</strong> (same as <strong>WxH+50+50</strong>)</p>
-</dd>
-<dd>
-<p><strong>W+X+Y</strong> (same as <strong>WxW+X+Y</strong>)</p>
-</dd>
-<dd>
-<p><strong>W+X</strong> (same as <strong>WxW+X+X</strong>)</p>
-</dd>
-<dd>
-<p><strong>W</strong> (same as <strong>WxW+50+50</strong>)</p>
-</dd>
-</li>
-<dt><strong><a name="item_position">change position (absolute)</a></strong>
-
-<dd>
-<p><strong>=+X+Y</strong></p>
-</dd>
-<dd>
-<p><strong>=+X</strong> (same as <strong>=+X+Y</strong>)</p>
-</dd>
-</li>
-<dt><strong>change position (relative)</strong>
-
-<dd>
-<p><strong>+X+Y</strong></p>
-</dd>
-<dd>
-<p><strong>+X</strong> (same as <strong>+X+Y</strong>)</p>
-</dd>
-</li>
-<dt><strong><a name="item_rescale">rescale (relative)</a></strong>
-
-<dd>
-<p><strong>Wx0</strong> -&gt; <strong>W *= (W/100)</strong></p>
-</dd>
-<dd>
-<p><strong>0xH</strong> -&gt; <strong>H *= (H/100)</strong></p>
-</dd>
-</li>
+	<dt>query scale/position</dt>
+	<dd>
+		<p><strong>?</strong></p>
+	</dd>
+	<dt>change scale and position</dt>
+	<dd>
+		<p><strong>WxH+X+Y</strong></p>
+		<p><strong>WxH+X</strong> (== <strong>WxH+X+X</strong>)</p>
+		<p><strong>WxH</strong> (same as <strong>WxH+50+50</strong>)</p>
+		<p><strong>W+X+Y</strong> (same as <strong>WxW+X+Y</strong>)</p>
+		<p><strong>W+X</strong> (same as <strong>WxW+X+X</strong>)</p>
+		<p><strong>W</strong> (same as <strong>WxW+50+50</strong>)</p>
+	</dd>
+	<dt>change position (absolute)</dt>
+	<dd>
+		<p><strong>=+X+Y</strong></p>
+		<p><strong>=+X</strong> (same as <strong>=+X+Y</strong>)</p>
+	</dd>
+	<dt>change position (relative)</dt>
+	<dd>
+		<p><strong>+X+Y</strong></p>
+		<p><strong>+X</strong> (same as <strong>+X+Y</strong>)</p>
+	</dd>
+	<dt>rescale (relative)</dt>
+	<dd>
+		<p><strong>Wx0</strong> -&gt; <strong>W *= (W/100)</strong></p>
+		<p><strong>0xH</strong> -&gt; <strong>H *= (H/100)</strong></p>
+	</dd>
 </dl>
 <p>For example:</p>
 <dl>
-<dt><strong><a name="item__5ce_5d20_3bfunky_5ca"><strong>\E]20;funky\a</strong></a></strong>
-
-<dd>
-<p>load <strong>funky.xpm</strong> as a tiled image</p>
-</dd>
-</li>
-<dt><strong><a name="item__5ce_5d20_3bmona_3b100_5ca"><strong>\E]20;mona;100\a</strong></a></strong>
-
-<dd>
-<p>load <strong>mona.xpm</strong> with a scaling of 100%</p>
-</dd>
-</li>
-<dt><strong><a name="item__5ce_5d20_3b_3b200_3b_3f_5ca"><strong>\E]20;;200;?\a</strong></a></strong>
-
-<dd>
-<p>rescale the current pixmap to 200% and display the image geometry in
+	<dt><strong>\E]20;funky\a</strong></dt>
+	<dd>
+		<p>load <strong>funky.xpm</strong> as a tiled image</p>
+	</dd>
+	<dt><strong>\E]20;mona;100\a</strong></dt>
+	<dd>
+		<p>load <strong>mona.xpm</strong> with a scaling of 100%</p>
+	</dd>
+	<dt><strong>\E]20;;200;?\a</strong></dt>
+	<dd>
+		<p>rescale the current pixmap to 200% and display the image geometry in
 the title</p>
-</dd>
-</li>
+	</dd>
 </dl>
-<p>
-</p>
-<hr />
-<h1><a name="mouse_reporting">Mouse Reporting</a></h1>
-<dl>
-<dt><strong><a name="item_esc__5b_m__3cb_3e__3cx_3e__3cy_3e"><strong><code>ESC [ M &lt;b&gt; &lt;x&gt; &lt;y&gt;</code> </strong>&gt;</a></strong>
 
-<dd>
-<p>report mouse position</p>
-</dd>
-</li>
+</div>
+<h1 id="Mouse_Reporting">Mouse Reporting</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="Mouse_Reporting_CONTENT">
+<dl>
+	<dt><strong><code>ESC [ M &lt;b&gt; &lt;x&gt; &lt;y&gt;</code></strong></dt>
+	<dd>
+		<p>report mouse position</p>
+	</dd>
 </dl>
-<p>The lower 2 bits of <strong><code>&lt;b&gt;</code> </strong>&gt; indicate the button:</p>
+<p>The lower 2 bits of <strong><code>&lt;b&gt;</code></strong> indicate the button:</p>
 <dl>
-<dt><strong><a name="item_button__3d__28_3cb_3e__2d_space_29__26_3">Button = <strong><code>(&lt;b&gt; - SPACE) &amp; 3</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>0</td><td>Button1 pressed</td></tr>
-<tr><td>1</td><td>Button2 pressed</td></tr>
-<tr><td>2</td><td>Button3 pressed</td></tr>
-<tr><td>3</td><td>button released (X11 mouse report)</td></tr>
-</table></dl>
-<p>The upper bits of <strong><code>&lt;b&gt;</code> </strong>&gt; indicate the modifiers when the
+	<dt>Button = <strong><code>(&lt;b&gt; - SPACE) &amp; 3</code></strong></dt>
+</dl>
+<p>The upper bits of <strong><code>&lt;b&gt;</code></strong> indicate the modifiers when the
 button was pressed and are added together (X11 mouse report only):</p>
 <dl>
-<dt><strong><a name="item_state__3d__28_3cb_3e__2d_space_29__26_60">State = <strong><code>(&lt;b&gt; - SPACE) &amp; 60</code> </strong>&gt;</a></strong>
-
-<table>
-<tr><td>4</td><td>Shift</td></tr>
-<tr><td>8</td><td>Meta</td></tr>
-<tr><td>16</td><td>Control</td></tr>
-<tr><td>32</td><td>Double Click (rxvt extension)</td></tr>
-</table><p>Col = <strong><code>&lt;x&gt; - SPACE</code> </strong>&gt;</p>
-<p>Row = <strong><code>&lt;y&gt; - SPACE</code> </strong>&gt;</p>
+	<dt>State = <strong><code>(&lt;b&gt; - SPACE) &amp; 60</code></strong></dt>
+	<dd>
+		<p>Col = <strong><code>&lt;x&gt; - SPACE</code></strong></p>
+		<p>Row = <strong><code>&lt;y&gt; - SPACE</code></strong></p>
+	</dd>
 </dl>
-<p>
-</p>
-<hr />
-<h1><a name="key_codes">Key Codes</a></h1>
+
+</div>
+<h1 id="Key_Codes">Key Codes</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="Key_Codes_CONTENT">
 <p>Note: <strong>Shift</strong> + <strong>F1</strong>-<strong>F10</strong> generates <strong>F11</strong>-<strong>F20</strong></p>
 <p>For the keypad, use <strong>Shift</strong> to temporarily override Application-Keypad
 setting use <strong>Num_Lock</strong> to toggle Application-Keypad setting if
 <strong>Num_Lock</strong> is off, toggle Application-Keypad setting. Also note that
 values of <strong>Home</strong>, <strong>End</strong>, <strong>Delete</strong> may have been compiled differently on
 your system.</p>
-<table>
-<tr><td></td><td>Normal</td><td>Shift</td><td>Control</td><td>Ctrl+Shift</td></tr>
-<tr><td>Tab</td><td>^I</td><td>ESC [ Z</td><td>^I</td><td>ESC [ Z</td></tr>
-<tr><td>BackSpace</td><td>^H</td><td>^?</td><td>^?</td><td>^?</td></tr>
-<tr><td>Find</td><td>ESC [ 1 ~</td><td>ESC [ 1 $</td><td>ESC [ 1 ^</td><td>ESC [ 1 @</td></tr>
-<tr><td>Insert</td><td>ESC [ 2 ~</td><td>paste</td><td>ESC [ 2 ^</td><td>ESC [ 2 @</td></tr>
-<tr><td>Execute</td><td>ESC [ 3 ~</td><td>ESC [ 3 $</td><td>ESC [ 3 ^</td><td>ESC [ 3 @</td></tr>
-<tr><td>Select</td><td>ESC [ 4 ~</td><td>ESC [ 4 $</td><td>ESC [ 4 ^</td><td>ESC [ 4 @</td></tr>
-<tr><td>Prior</td><td>ESC [ 5 ~</td><td>scroll-up</td><td>ESC [ 5 ^</td><td>ESC [ 5 @</td></tr>
-<tr><td>Next</td><td>ESC [ 6 ~</td><td>scroll-down</td><td>ESC [ 6 ^</td><td>ESC [ 6 @</td></tr>
-<tr><td>Home</td><td>ESC [ 7 ~</td><td>ESC [ 7 $</td><td>ESC [ 7 ^</td><td>ESC [ 7 @</td></tr>
-<tr><td>End</td><td>ESC [ 8 ~</td><td>ESC [ 8 $</td><td>ESC [ 8 ^</td><td>ESC [ 8 @</td></tr>
-<tr><td>Delete</td><td>ESC [ 3 ~</td><td>ESC [ 3 $</td><td>ESC [ 3 ^</td><td>ESC [ 3 @</td></tr>
-<tr><td>F1</td><td>ESC [ 11 ~</td><td>ESC [ 23 ~</td><td>ESC [ 11 ^</td><td>ESC [ 23 ^</td></tr>
-<tr><td>F2</td><td>ESC [ 12 ~</td><td>ESC [ 24 ~</td><td>ESC [ 12 ^</td><td>ESC [ 24 ^</td></tr>
-<tr><td>F3</td><td>ESC [ 13 ~</td><td>ESC [ 25 ~</td><td>ESC [ 13 ^</td><td>ESC [ 25 ^</td></tr>
-<tr><td>F4</td><td>ESC [ 14 ~</td><td>ESC [ 26 ~</td><td>ESC [ 14 ^</td><td>ESC [ 26 ^</td></tr>
-<tr><td>F5</td><td>ESC [ 15 ~</td><td>ESC [ 28 ~</td><td>ESC [ 15 ^</td><td>ESC [ 28 ^</td></tr>
-<tr><td>F6</td><td>ESC [ 17 ~</td><td>ESC [ 29 ~</td><td>ESC [ 17 ^</td><td>ESC [ 29 ^</td></tr>
-<tr><td>F7</td><td>ESC [ 18 ~</td><td>ESC [ 31 ~</td><td>ESC [ 18 ^</td><td>ESC [ 31 ^</td></tr>
-<tr><td>F8</td><td>ESC [ 19 ~</td><td>ESC [ 32 ~</td><td>ESC [ 19 ^</td><td>ESC [ 32 ^</td></tr>
-<tr><td>F9</td><td>ESC [ 20 ~</td><td>ESC [ 33 ~</td><td>ESC [ 20 ^</td><td>ESC [ 33 ^</td></tr>
-<tr><td>F10</td><td>ESC [ 21 ~</td><td>ESC [ 34 ~</td><td>ESC [ 21 ^</td><td>ESC [ 34 ^</td></tr>
-<tr><td>F11</td><td>ESC [ 23 ~</td><td>ESC [ 23 $</td><td>ESC [ 23 ^</td><td>ESC [ 23 @</td></tr>
-<tr><td>F12</td><td>ESC [ 24 ~</td><td>ESC [ 24 $</td><td>ESC [ 24 ^</td><td>ESC [ 24 @</td></tr>
-<tr><td>F13</td><td>ESC [ 25 ~</td><td>ESC [ 25 $</td><td>ESC [ 25 ^</td><td>ESC [ 25 @</td></tr>
-<tr><td>F14</td><td>ESC [ 26 ~</td><td>ESC [ 26 $</td><td>ESC [ 26 ^</td><td>ESC [ 26 @</td></tr>
-<tr><td>F15 (Help)</td><td>ESC [ 28 ~</td><td>ESC [ 28 $</td><td>ESC [ 28 ^</td><td>ESC [ 28 @</td></tr>
-<tr><td>F16 (Menu)</td><td>ESC [ 29 ~</td><td>ESC [ 29 $</td><td>ESC [ 29 ^</td><td>ESC [ 29 @</td></tr>
-<tr><td>F17</td><td>ESC [ 31 ~</td><td>ESC [ 31 $</td><td>ESC [ 31 ^</td><td>ESC [ 31 @</td></tr>
-<tr><td>F18</td><td>ESC [ 32 ~</td><td>ESC [ 32 $</td><td>ESC [ 32 ^</td><td>ESC [ 32 @</td></tr>
-<tr><td>F19</td><td>ESC [ 33 ~</td><td>ESC [ 33 $</td><td>ESC [ 33 ^</td><td>ESC [ 33 @</td></tr>
-<tr><td>F20</td><td>ESC [ 34 ~</td><td>ESC [ 34 $</td><td>ESC [ 34 ^</td><td>ESC [ 34 @</td></tr>
-<tr><td></td><td></td><td></td><td></td><td>Application</td></tr>
-<tr><td>Up</td><td>ESC [ A</td><td>ESC [ a</td><td>ESC O a</td><td>ESC O A</td></tr>
-<tr><td>Down</td><td>ESC [ B</td><td>ESC [ b</td><td>ESC O b</td><td>ESC O B</td></tr>
-<tr><td>Right</td><td>ESC [ C</td><td>ESC [ c</td><td>ESC O c</td><td>ESC O C</td></tr>
-<tr><td>Left</td><td>ESC [ D</td><td>ESC [ d</td><td>ESC O d</td><td>ESC O D</td></tr>
-<tr><td>KP_Enter</td><td>^M</td><td></td><td></td><td>ESC O M</td></tr>
-<tr><td>KP_F1</td><td>ESC O P</td><td></td><td></td><td>ESC O P</td></tr>
-<tr><td>KP_F2</td><td>ESC O Q</td><td></td><td></td><td>ESC O Q</td></tr>
-<tr><td>KP_F3</td><td>ESC O R</td><td></td><td></td><td>ESC O R</td></tr>
-<tr><td>KP_F4</td><td>ESC O S</td><td></td><td></td><td>ESC O S</td></tr>
-<tr><td>XK_KP_Multiply</td><td>*</td><td></td><td></td><td>ESC O j</td></tr>
-<tr><td>XK_KP_Add</td><td>+</td><td></td><td></td><td>ESC O k</td></tr>
-<tr><td>XK_KP_Separator</td><td>,</td><td></td><td></td><td>ESC O l</td></tr>
-<tr><td>XK_KP_Subtract</td><td>-</td><td></td><td></td><td>ESC O m</td></tr>
-<tr><td>XK_KP_Decimal</td><td>.</td><td></td><td></td><td>ESC O n</td></tr>
-<tr><td>XK_KP_Divide</td><td>/</td><td></td><td></td><td>ESC O o</td></tr>
-<tr><td>XK_KP_0</td><td>0</td><td></td><td></td><td>ESC O p</td></tr>
-<tr><td>XK_KP_1</td><td>1</td><td></td><td></td><td>ESC O q</td></tr>
-<tr><td>XK_KP_2</td><td>2</td><td></td><td></td><td>ESC O r</td></tr>
-<tr><td>XK_KP_3</td><td>3</td><td></td><td></td><td>ESC O s</td></tr>
-<tr><td>XK_KP_4</td><td>4</td><td></td><td></td><td>ESC O t</td></tr>
-<tr><td>XK_KP_5</td><td>5</td><td></td><td></td><td>ESC O u</td></tr>
-<tr><td>XK_KP_6</td><td>6</td><td></td><td></td><td>ESC O v</td></tr>
-<tr><td>XK_KP_7</td><td>7</td><td></td><td></td><td>ESC O w</td></tr>
-<tr><td>XK_KP_8</td><td>8</td><td></td><td></td><td>ESC O x</td></tr>
-<tr><td>XK_KP_9</td><td>9</td><td></td><td></td><td>ESC O y</td></tr>
-</table><p>
-</p>
-<hr />
-<h1><a name="configure_options">CONFIGURE OPTIONS</a></h1>
+
+</div>
+<h1 id="CONFIGURE_OPTIONS">CONFIGURE OPTIONS</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="CONFIGURE_OPTIONS_CONTENT">
 <p>General hint: if you get compile errors, then likely your configuration
-hasn't been tested well. Either try with <a href="#item__2d_2denable_2deverything"><code>--enable-everything</code></a> or use
+hasn't been tested well. Either try with <code>--enable-everything</code> or use
 the default configuration (i.e. <code>--enable-xxx</code> or <code>--disable-xxx</code>). Of
 course, you should always report when a combination doesn't work, so it
-can be fixed. Marc Lehmann &lt;<a href="mailto:rxvt@schmorp.de">rxvt@schmorp.de</a>&gt;.</p>
+can be fixed. Marc Lehmann &lt;rxvt@schmorp.de&gt;.</p>
 <p>All</p>
 <dl>
-<dt><strong><a name="item__2d_2denable_2deverything">--enable-everything</a></strong>
-
-<dd>
-<p>Add (or remove) support for all non-multichoice options listed in ``./configure
---help''.</p>
-</dd>
-<dd>
-<p>You can specify this and then disable options you do not like by
-<em>following</em> this with the appropriate <code>--disable-...</code> arguments,
+	<dt>--enable-everything</dt>
+	<dd>
+		<p>Add (or remove) support for all non-multichoice options listed in &quot;./configure
+--help&quot;.</p>
+		<p>You can specify this and then disable options you do not like by
+<i>following</i> this with the appropriate <code>--disable-...</code> arguments,
 or you can start with a minimal configuration by specifying
 <code>--disable-everything</code> and than adding just the <code>--enable-...</code> arguments
 you want.</p>
-</dd>
-</li>
-<dt><strong><a name="item_xft">--enable-xft (default: enabled)</a></strong>
-
-<dd>
-<p>Add support for Xft (anti-aliases, among others) fonts. Xft fonts are
+	</dd>
+	<dt>--enable-xft (default: enabled)</dt>
+	<dd>
+		<p>Add support for Xft (anti-aliases, among others) fonts. Xft fonts are
 slower and require lots of memory, but as long as you don't use them, you
 don't pay for them.</p>
-</dd>
-</li>
-<dt><strong><a name="item_styles">--enable-font-styles (default: on)</a></strong>
-
-<dd>
-<p>Add support for <strong>bold</strong>, <em>italic</em> and <strong><em>bold italic</em> </strong>&gt; font
+	</dd>
+	<dt>--enable-font-styles (default: on)</dt>
+	<dd>
+		<p>Add support for <strong>bold</strong>, <i>italic</i> and <strong><i>bold italic</i></strong> font
 styles. The fonts can be set manually or automatically.</p>
-</dd>
-</li>
-<dt><strong><a name="item__2d_2dwith_2dcodesets_3dname_2c_2e_2e_2e__28defaul">--with-codesets=NAME,... (default: all)</a></strong>
-
-<dd>
-<p>Compile in support for additional codeset (encoding) groups (<code>eu</code>, <code>vn</code>
+	</dd>
+	<dt>--with-codesets=NAME,... (default: all)</dt>
+	<dd>
+		<p>Compile in support for additional codeset (encoding) groups (<code>eu</code>, <code>vn</code>
 are always compiled in, which includes most 8-bit character sets). These
 codeset tables are used for driving X11 core fonts, they are not required
 for Xft fonts, although having them compiled in lets rxvt-unicode choose
 replacement fonts more intelligently. Compiling them in will make your
 binary bigger (all of together cost about 700kB), but it doesn't increase
 memory usage unless you use a font requiring one of these encodings.</p>
-</dd>
-<table>
-<tr><td>all</td><td>all available codeset groups</td></tr>
-<tr><td>zh</td><td>common chinese encodings</td></tr>
-<tr><td>zh_ext</td><td>rarely used but very big chinese encodings</td></tr>
-<tr><td>jp</td><td>common japanese encodings</td></tr>
-<tr><td>jp_ext</td><td>rarely used but big japanese encodings</td></tr>
-<tr><td>kr</td><td>korean encodings</td></tr>
-</table></li>
-<dt><strong><a name="item_xim">--enable-xim (default: on)</a></strong>
-
-<dd>
-<p>Add support for XIM (X Input Method) protocol. This allows using
+	</dd>
+	<dt>--enable-xim (default: on)</dt>
+	<dd>
+		<p>Add support for XIM (X Input Method) protocol. This allows using
 alternative input methods (e.g. kinput2) and will also correctly
 set up the input for people using dead keys or compose keys.</p>
-</dd>
-</li>
-<dt><strong><a name="item_unicode3">--enable-unicode3 (default: off)</a></strong>
-
-<dd>
-<p>Recommended to stay off unless you really need non-BMP characters.</p>
-</dd>
-<dd>
-<p>Enable direct support for displaying unicode codepoints above
+	</dd>
+	<dt>--enable-unicode3 (default: off)</dt>
+	<dd>
+		<p>Recommended to stay off unless you really need non-BMP characters.</p>
+		<p>Enable direct support for displaying unicode codepoints above
 65535 (the basic multilingual page). This increases storage
 requirements per character from 2 to 4 bytes. X11 fonts do not yet
 support these extra characters, but Xft does.</p>
-</dd>
-<dd>
-<p>Please note that rxvt-unicode can store unicode code points &gt;65535
+		<p>Please note that rxvt-unicode can store unicode code points &gt;65535
 even without this flag, but the number of such characters is
-limited to a view thousand (shared with combining characters,
+limited to a few thousand (shared with combining characters,
 see next switch), and right now rxvt-unicode cannot display them
 (input/output and cut&amp;paste still work, though).</p>
-</dd>
-</li>
-<dt><strong><a name="item_combining">--enable-combining (default: on)</a></strong>
-
-<dd>
-<p>Enable automatic composition of combining characters into
+	</dd>
+	<dt>--enable-combining (default: on)</dt>
+	<dd>
+		<p>Enable automatic composition of combining characters into
 composite characters. This is required for proper viewing of text
 where accents are encoded as seperate unicode characters. This is
 done by using precomposited characters when available or creating
 new pseudo-characters when no precomposed form exists.</p>
-</dd>
-<dd>
-<p>Without --enable-unicode3, the number of additional precomposed
+		<p>Without --enable-unicode3, the number of additional precomposed
 characters is somewhat limited (the 6400 private use characters will be
 (ab-)used). With --enable-unicode3, no practical limit exists.</p>
-</dd>
-<dd>
-<p>This option will also enable storage (but not display) of characters
+		<p>This option will also enable storage (but not display) of characters
 beyond plane 0 (&gt;65535) when --enable-unicode3 was not specified.</p>
-</dd>
-<dd>
-<p>The combining table also contains entries for arabic presentation forms,
+		<p>The combining table also contains entries for arabic presentation forms,
 but these are not currently used. Bug me if you want these to be used (and
 tell me how these are to be used...).</p>
-</dd>
-</li>
-<dt><strong><a name="item_fallback">--enable-fallback(=CLASS) (default: Rxvt)</a></strong>
-
-<dd>
-<p>When reading resource settings, also read settings for class CLASS. To
+	</dd>
+	<dt>--enable-fallback(=CLASS) (default: Rxvt)</dt>
+	<dd>
+		<p>When reading resource settings, also read settings for class CLASS. To
 disable resource fallback use --disable-fallback.</p>
-</dd>
-</li>
-<dt><strong><a name="item_name">--with-res-name=NAME (default: urxvt)</a></strong>
-
-<dd>
-<p>Use the given name as default application name when
+	</dd>
+	<dt>--with-res-name=NAME (default: urxvt)</dt>
+	<dd>
+		<p>Use the given name as default application name when
 reading resources. Specify --with-res-name=rxvt to replace rxvt.</p>
-</dd>
-</li>
-<dt><strong><a name="item__2d_2dwith_2dres_2dclass_3dclass__2fdefault_3a_urx">--with-res-class=CLASS /default: URxvt)</a></strong>
-
-<dd>
-<p>Use the given class as default application class
+	</dd>
+	<dt>--with-res-class=CLASS /default: URxvt)</dt>
+	<dd>
+		<p>Use the given class as default application class
 when reading resources. Specify --with-res-class=Rxvt to replace
 rxvt.</p>
-</dd>
-</li>
-<dt><strong><a name="item_utmp">--enable-utmp (default: on)</a></strong>
-
-<dd>
-<p>Write user and tty to utmp file (used by programs like <em>w</em>) at
+	</dd>
+	<dt>--enable-utmp (default: on)</dt>
+	<dd>
+		<p>Write user and tty to utmp file (used by programs like <cite>w</cite>) at
 start of rxvt execution and delete information when rxvt exits.</p>
-</dd>
-</li>
-<dt><strong><a name="item_wtmp">--enable-wtmp (default: on)</a></strong>
-
-<dd>
-<p>Write user and tty to wtmp file (used by programs like <em>last</em>) at
+	</dd>
+	<dt>--enable-wtmp (default: on)</dt>
+	<dd>
+		<p>Write user and tty to wtmp file (used by programs like <cite>last</cite>) at
 start of rxvt execution and write logout when rxvt exits.  This
 option requires --enable-utmp to also be specified.</p>
-</dd>
-</li>
-<dt><strong><a name="item_lastlog">--enable-lastlog (default: on)</a></strong>
-
-<dd>
-<p>Write user and tty to lastlog file (used by programs like
-<em>lastlogin</em>) at start of rxvt execution.  This option requires
+	</dd>
+	<dt>--enable-lastlog (default: on)</dt>
+	<dd>
+		<p>Write user and tty to lastlog file (used by programs like
+<cite>lastlogin</cite>) at start of rxvt execution.  This option requires
 --enable-utmp to also be specified.</p>
-</dd>
-</li>
-<dt><strong><a name="item_background">--enable-xpm-background (default: on)</a></strong>
-
-<dd>
-<p>Add support for XPM background pixmaps.</p>
-</dd>
-</li>
-<dt><strong><a name="item_transparency">--enable-transparency (default: on)</a></strong>
-
-<dd>
-<p>Add support for inheriting parent backgrounds thus giving a fake
+	</dd>
+	<dt>--enable-xpm-background (default: on)</dt>
+	<dd>
+		<p>Add support for XPM background pixmaps.</p>
+	</dd>
+	<dt>--enable-transparency (default: on)</dt>
+	<dd>
+		<p>Add support for inheriting parent backgrounds thus giving a fake
 transparency to the term.</p>
-</dd>
-</li>
-<dt><strong><a name="item_fading">--enable-fading (default: on)</a></strong>
-
-<dd>
-<p>Add support for fading the text when focus is lost (requires <code>--enable-transparency</code>).</p>
-</dd>
-</li>
-<dt><strong><a name="item_tinting">--enable-tinting (default: on)</a></strong>
-
-<dd>
-<p>Add support for tinting of transparent backgrounds (requires <code>--enable-transparency</code>).</p>
-</dd>
-</li>
-<dt><strong><a name="item_scroll">--enable-rxvt-scroll (default: on)</a></strong>
-
-<dd>
-<p>Add support for the original rxvt scrollbar.</p>
-</dd>
-</li>
-<dt><strong>--enable-next-scroll (default: on)</strong>
-
-<dd>
-<p>Add support for a NeXT-like scrollbar.</p>
-</dd>
-</li>
-<dt><strong>--enable-xterm-scroll (default: on)</strong>
-
-<dd>
-<p>Add support for an Xterm-like scrollbar.</p>
-</dd>
-</li>
-<dt><strong>--enable-plain-scroll (default: on)</strong>
-
-<dd>
-<p>Add support for a very unobtrusive, plain-looking scrollbar that
+	</dd>
+	<dt>--enable-fading (default: on)</dt>
+	<dd>
+		<p>Add support for fading the text when focus is lost (requires <code>--enable-transparency</code>).</p>
+	</dd>
+	<dt>--enable-tinting (default: on)</dt>
+	<dd>
+		<p>Add support for tinting of transparent backgrounds (requires <code>--enable-transparency</code>).</p>
+	</dd>
+	<dt>--enable-rxvt-scroll (default: on)</dt>
+	<dd>
+		<p>Add support for the original rxvt scrollbar.</p>
+	</dd>
+	<dt>--enable-next-scroll (default: on)</dt>
+	<dd>
+		<p>Add support for a NeXT-like scrollbar.</p>
+	</dd>
+	<dt>--enable-xterm-scroll (default: on)</dt>
+	<dd>
+		<p>Add support for an Xterm-like scrollbar.</p>
+	</dd>
+	<dt>--enable-plain-scroll (default: on)</dt>
+	<dd>
+		<p>Add support for a very unobtrusive, plain-looking scrollbar that
 is the favourite of the rxvt-unicode author, having used it for
 many years.</p>
-</dd>
-</li>
-<dt><strong><a name="item_ttygid">--enable-ttygid (default: off)</a></strong>
-
-<dd>
-<p>Change tty device setting to group ``tty'' - only use this if
+	</dd>
+	<dt>--enable-ttygid (default: off)</dt>
+	<dd>
+		<p>Change tty device setting to group &quot;tty&quot; - only use this if
 your system uses this type of security.</p>
-</dd>
-</li>
-<dt><strong><a name="item__2d_2ddisable_2dbackspace_2dkey">--disable-backspace-key</a></strong>
-
-<dd>
-<p>Removes any handling of the backspace key by us - let the X server do it.</p>
-</dd>
-</li>
-<dt><strong><a name="item__2d_2ddisable_2ddelete_2dkey">--disable-delete-key</a></strong>
-
-<dd>
-<p>Removes any handling of the delete key by us - let the X server
+	</dd>
+	<dt>--disable-backspace-key</dt>
+	<dd>
+		<p>Removes any handling of the backspace key by us - let the X server do it.</p>
+	</dd>
+	<dt>--disable-delete-key</dt>
+	<dd>
+		<p>Removes any handling of the delete key by us - let the X server
 do it.</p>
-</dd>
-</li>
-<dt><strong><a name="item__2d_2ddisable_2dresources">--disable-resources</a></strong>
-
-<dd>
-<p>Removes any support for resource checking.</p>
-</dd>
-</li>
-<dt><strong><a name="item__2d_2ddisable_2dswapscreen">--disable-swapscreen</a></strong>
-
-<dd>
-<p>Remove support for secondary/swap screen.</p>
-</dd>
-</li>
-<dt><strong><a name="item_frills">--enable-frills (default: on)</a></strong>
-
-<dd>
-<p>Add support for many small features that are not essential but nice to
+	</dd>
+	<dt>--disable-resources</dt>
+	<dd>
+		<p>Removes any support for resource checking.</p>
+	</dd>
+	<dt>--disable-swapscreen</dt>
+	<dd>
+		<p>Remove support for secondary/swap screen.</p>
+	</dd>
+	<dt>--enable-frills (default: on)</dt>
+	<dd>
+		<p>Add support for many small features that are not essential but nice to
 have. Normally you want this, but for very small binaries you may want to
 disable this.</p>
-</dd>
-<dd>
-<p>A non-exhaustive list of features enabled by <code>--enable-frills</code> (possibly
+		<p>A non-exhaustive list of features enabled by <code>--enable-frills</code> (possibly
 in combination with other switches) is:</p>
-</dd>
-<dd>
-<pre>
-  MWM-hints
+<pre>  MWM-hints
   EWMH-hints (pid, utf8 names) and protocols (ping)
   urgency hint
   seperate underline colour (-underlineColor)
@@ -2479,14 +2063,11 @@ in combination with other switches) is:</p>
   user-pty (-pty-fd)
   hold on exit (-hold)
   skip builtin block graphics (-sbg)
-  separate highlightcolor support (-hc)</pre>
-</dd>
-<dd>
-<p>It also enables some non-essential features otherwise disabled, such as:</p>
-</dd>
-<dd>
-<pre>
-  some round-trip time optimisations
+  separate highlightcolor support (-hc)
+
+</pre>
+		<p>It also enables some non-essential features otherwise disabled, such as:</p>
+<pre>  some round-trip time optimisations
   nearest color allocation on pseudocolor screens
   UTF8_STRING support for selection
   sgr modes 90..97 and 100..107
@@ -2496,144 +2077,112 @@ in combination with other switches) is:</p>
   window op and some xterm/OSC escape sequences
   rectangular selections
   trailing space removal for selections
-  verbose X error handling</pre>
-</dd>
-</li>
-<dt><strong><a name="item_iso14755">--enable-iso14755 (default: on)</a></strong>
+  verbose X error handling
 
-<dd>
-<p>Enable extended ISO 14755 support (see rxvt(1), or
-<em>doc/rxvt.1.txt</em>). Basic support (section 5.1) is enabled by
+</pre>
+	</dd>
+	<dt>--enable-iso14755 (default: on)</dt>
+	<dd>
+		<p>Enable extended ISO 14755 support (see rxvt(1), or
+<cite>doc/rxvt.1.txt</cite>). Basic support (section 5.1) is enabled by
 <code>--enable-frills</code>, while support for 5.2, 5.3 and 5.4 is enabled with
 this switch.</p>
-</dd>
-</li>
-<dt><strong><a name="item_keepscrolling">--enable-keepscrolling (default: on)</a></strong>
-
-<dd>
-<p>Add support for continual scrolling of the display when you hold
+	</dd>
+	<dt>--enable-keepscrolling (default: on)</dt>
+	<dd>
+		<p>Add support for continual scrolling of the display when you hold
 the mouse button down on a scrollbar arrow.</p>
-</dd>
-</li>
-<dt><strong><a name="item_mousewheel">--enable-mousewheel (default: on)</a></strong>
-
-<dd>
-<p>Add support for scrolling via mouse wheel or buttons 4 &amp; 5.</p>
-</dd>
-</li>
-<dt><strong><a name="item_slipwheeling">--enable-slipwheeling (default: on)</a></strong>
-
-<dd>
-<p>Add support for continual scrolling (using the mouse wheel as an
+	</dd>
+	<dt>--enable-mousewheel (default: on)</dt>
+	<dd>
+		<p>Add support for scrolling via mouse wheel or buttons 4 &amp; 5.</p>
+	</dd>
+	<dt>--enable-slipwheeling (default: on)</dt>
+	<dd>
+		<p>Add support for continual scrolling (using the mouse wheel as an
 accelerator) while the control key is held down.  This option
 requires --enable-mousewheel to also be specified.</p>
-</dd>
-</li>
-<dt><strong><a name="item__2d_2ddisable_2dnew_2dselection">--disable-new-selection</a></strong>
-
-<dd>
-<p>Remove support for mouse selection style like that of xterm.</p>
-</dd>
-</li>
-<dt><strong><a name="item_dmalloc">--enable-dmalloc (default: off)</a></strong>
-
-<dd>
-<p>Use Gray Watson's malloc - which is good for debugging See
+	</dd>
+	<dt>--disable-new-selection</dt>
+	<dd>
+		<p>Remove support for mouse selection style like that of xterm.</p>
+	</dd>
+	<dt>--enable-dmalloc (default: off)</dt>
+	<dd>
+		<p>Use Gray Watson's malloc - which is good for debugging See
 <a href="http://www.letters.com/dmalloc/">http://www.letters.com/dmalloc/</a> for details If you use either this or the
 next option, you may need to edit src/Makefile after compiling to point
 DINCLUDE and DLIB to the right places.</p>
-</dd>
-<dd>
-<p>You can only use either this option and the following (should
+		<p>You can only use either this option and the following (should
 you use either) .</p>
-</dd>
-</li>
-<dt><strong><a name="item_dlmalloc">--enable-dlmalloc (default: off)</a></strong>
-
-<dd>
-<p>Use Doug Lea's malloc - which is good for a production version
+	</dd>
+	<dt>--enable-dlmalloc (default: off)</dt>
+	<dd>
+		<p>Use Doug Lea's malloc - which is good for a production version
 See <a href="http://g.oswego.edu/dl/html/malloc.html">http://g.oswego.edu/dl/html/malloc.html</a> for details.</p>
-</dd>
-</li>
-<dt><strong><a name="item_resize">--enable-smart-resize (default: on)</a></strong>
-
-<dd>
-<p>Add smart growth/shrink behaviour when changing font size via hot
+	</dd>
+	<dt>--enable-smart-resize (default: on)</dt>
+	<dd>
+		<p>Add smart growth/shrink behaviour when changing font size via hot
 keys. This should keep the window corner which is closest to a corner of
 the screen in a fixed position.</p>
-</dd>
-</li>
-<dt><strong><a name="item_blank">--enable-pointer-blank (default: on)</a></strong>
-
-<dd>
-<p>Add support to have the pointer disappear when typing or inactive.</p>
-</dd>
-</li>
-<dt><strong><a name="item_perl">--enable-perl (default: on)</a></strong>
-
-<dd>
-<p>Enable an embedded perl interpreter. See the <strong>rxvtperl(3)</strong>
-manpage (<em>doc/rxvtperl.txt</em>) for more info on this feature, or the files
-in <em>src/perl-ext/</em> for the extensions that are installed by default. The
-perl interpreter that is used can be specified via the <code>PERL</code> environment
-variable when running configure.</p>
-</dd>
-</li>
-<dt><strong>--with-name=NAME (default: urxvt)</strong>
-
-<dd>
-<p>Set the basename for the installed binaries, resulting
+	</dd>
+	<dt>--enable-pointer-blank (default: on)</dt>
+	<dd>
+		<p>Add support to have the pointer disappear when typing or inactive.</p>
+	</dd>
+	<dt>--enable-perl (default: on)</dt>
+	<dd>
+		<p>Enable an embedded perl interpreter. See the <strong>rxvtperl(3)</strong>
+manpage (<cite>doc/rxvtperl.txt</cite>) for more info on this feature, or the
+files in <cite>src/perl-ext/</cite> for the extensions that are installed by
+default. The perl interpreter that is used can be specified via the
+<code>PERL</code> environment variable when running configure. Even when compiled
+in, perl will <i>not</i> be initialised when all extensions have been disabled
+<code>-pe &quot;&quot; --perl-ext-common &quot;&quot;</code>, so it should be safe to enable from a
+resource standpoint.</p>
+	</dd>
+	<dt>--with-name=NAME (default: urxvt)</dt>
+	<dd>
+		<p>Set the basename for the installed binaries, resulting
 in <code>urxvt</code>, <code>urxvtd</code> etc.). Specify <code>--with-name=rxvt</code> to replace with
 <code>rxvt</code>.</p>
-</dd>
-</li>
-<dt><strong>--with-term=NAME (default: rxvt-unicode)</strong>
-
-<dd>
-<p>Change the environmental variable for the terminal to NAME.</p>
-</dd>
-</li>
-<dt><strong><a name="item__2d_2dwith_2dterminfo_3dpath">--with-terminfo=PATH</a></strong>
-
-<dd>
-<p>Change the environmental variable for the path to the terminfo tree to
+	</dd>
+	<dt>--with-term=NAME (default: rxvt-unicode)</dt>
+	<dd>
+		<p>Change the environmental variable for the terminal to NAME.</p>
+	</dd>
+	<dt>--with-terminfo=PATH</dt>
+	<dd>
+		<p>Change the environmental variable for the path to the terminfo tree to
 PATH.</p>
-</dd>
-</li>
-<dt><strong><a name="item__2d_2dwith_2dx">--with-x</a></strong>
-
-<dd>
-<p>Use the X Window System (pretty much default, eh?).</p>
-</dd>
-</li>
-<dt><strong><a name="item__2d_2dwith_2dxpm_2dincludes_3ddir">--with-xpm-includes=DIR</a></strong>
-
-<dd>
-<p>Look for the XPM includes in DIR.</p>
-</dd>
-</li>
-<dt><strong><a name="item__2d_2dwith_2dxpm_2dlibrary_3ddir">--with-xpm-library=DIR</a></strong>
-
-<dd>
-<p>Look for the XPM library in DIR.</p>
-</dd>
-</li>
-<dt><strong><a name="item__2d_2dwith_2dxpm">--with-xpm</a></strong>
-
-<dd>
-<p>Not needed - define via --enable-xpm-background.</p>
-</dd>
-</li>
+	</dd>
+	<dt>--with-x</dt>
+	<dd>
+		<p>Use the X Window System (pretty much default, eh?).</p>
+	</dd>
+	<dt>--with-xpm-includes=DIR</dt>
+	<dd>
+		<p>Look for the XPM includes in DIR.</p>
+	</dd>
+	<dt>--with-xpm-library=DIR</dt>
+	<dd>
+		<p>Look for the XPM library in DIR.</p>
+	</dd>
+	<dt>--with-xpm</dt>
+	<dd>
+		<p>Not needed - define via --enable-xpm-background.</p>
+	</dd>
 </dl>
-<p>
-</p>
-<hr />
-<h1><a name="authors">AUTHORS</a></h1>
-<p>Marc Lehmann &lt;<a href="mailto:rxvt@schmorp.de">rxvt@schmorp.de</a>&gt; converted this document to pod and
+
+</div>
+<h1 id="AUTHORS">AUTHORS</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="AUTHORS_CONTENT">
+<p>Marc Lehmann &lt;rxvt@schmorp.de&gt; converted this document to pod and
 reworked it from the original Rxvt documentation, which was done by Geoff
-Wing &lt;<a href="mailto:gcw@pobox.com">gcw@pobox.com</a>&gt;, who in turn used the XTerm documentation and other
+Wing &lt;gcw@pobox.com&gt;, who in turn used the XTerm documentation and other
 sources.</p>
 
-</body>
-
+</div>
+</div></body>
 </html>

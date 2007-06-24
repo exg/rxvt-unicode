@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 3"
-.TH @@RXVT_NAME@@ 3 "2007-06-02" "8.2" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 3 "2007-06-25" "8.2" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -162,6 +162,9 @@ thus must be encoded as \s-1UTF\-8\s0.
 .PP
 Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
 scripts will be shared (but not enabled) for all terminals.
+.PP
+You can disable the embedded perl interpreter by setting both \*(L"perl\-ext\*(R"
+and \*(L"perl\-ext\-common\*(R" resources to the empty string.
 .SH "PREPACKAGED EXTENSIONS"
 .IX Header "PREPACKAGED EXTENSIONS"
 This section describes the extensions delivered with this release. You can
@@ -408,6 +411,9 @@ The default pattern to match URLs can be overridden with the
 \&\f(CW\*(C`matcher.pattern.0\*(C'\fR resource, and additional patterns can be specified
 with numbered patterns, in a manner similar to the \*(L"selection\*(R" extension.
 The launcher can also be overridden on a per-pattern basis.
+.Sp
+It is possible to activate the most recently seen match from the keyboard.
+Simply bind a keysym to \*(L"perl:matcher\*(R" as seen in the example below.
 .Sp
 Example configuration:
 .Sp

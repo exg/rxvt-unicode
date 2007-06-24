@@ -1834,7 +1834,7 @@ CONFIGURE OPTIONS
 
         Please note that rxvt-unicode can store unicode code points >65535
         even without this flag, but the number of such characters is limited
-        to a view thousand (shared with combining characters, see next
+        to a few thousand (shared with combining characters, see next
         switch), and right now rxvt-unicode cannot display them
         (input/output and cut&paste still work, though).
 
@@ -2016,7 +2016,10 @@ CONFIGURE OPTIONS
         (doc/rxvtperl.txt) for more info on this feature, or the files in
         src/perl-ext/ for the extensions that are installed by default. The
         perl interpreter that is used can be specified via the "PERL"
-        environment variable when running configure.
+        environment variable when running configure. Even when compiled in,
+        perl will *not* be initialised when all extensions have been
+        disabled "-pe "" --perl-ext-common """, so it should be safe to
+        enable from a resource standpoint.
 
     --with-name=NAME (default: urxvt)
         Set the basename for the installed binaries, resulting in "urxvt",

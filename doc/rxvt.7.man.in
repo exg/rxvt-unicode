@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2007-06-02" "8.2" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2007-06-25" "8.2" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -2502,7 +2502,7 @@ support these extra characters, but Xft does.
 .Sp
 Please note that rxvt-unicode can store unicode code points >65535
 even without this flag, but the number of such characters is
-limited to a view thousand (shared with combining characters,
+limited to a few thousand (shared with combining characters,
 see next switch), and right now rxvt-unicode cannot display them
 (input/output and cut&paste still work, though).
 .IP "\-\-enable\-combining (default: on)" 4
@@ -2683,10 +2683,13 @@ Add support to have the pointer disappear when typing or inactive.
 .IP "\-\-enable\-perl (default: on)" 4
 .IX Item "--enable-perl (default: on)"
 Enable an embedded perl interpreter. See the \fB@@RXVT_NAME@@\f(BIperl\fB\|(3)\fR
-manpage (\fIdoc/rxvtperl.txt\fR) for more info on this feature, or the files
-in \fIsrc/perl\-ext/\fR for the extensions that are installed by default. The
-perl interpreter that is used can be specified via the \f(CW\*(C`PERL\*(C'\fR environment
-variable when running configure.
+manpage (\fIdoc/rxvtperl.txt\fR) for more info on this feature, or the
+files in \fIsrc/perl\-ext/\fR for the extensions that are installed by
+default. The perl interpreter that is used can be specified via the
+\&\f(CW\*(C`PERL\*(C'\fR environment variable when running configure. Even when compiled
+in, perl will \fInot\fR be initialised when all extensions have been disabled
+\&\f(CW\*(C`\-pe "" \-\-perl\-ext\-common ""\*(C'\fR, so it should be safe to enable from a
+resource standpoint.
 .IP "\-\-with\-name=NAME (default: urxvt)" 4
 .IX Item "--with-name=NAME (default: urxvt)"
 Set the basename for the installed binaries, resulting

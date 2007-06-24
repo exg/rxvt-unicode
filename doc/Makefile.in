@@ -57,7 +57,7 @@ rxvtperl.3.pod: ../src/urxvt.pm
 	pod2man -n @@RXVT_NAME@@ -r"$(VERSION)" -q\" -s7 -c "RXVT-UNICODE" <$< >$@
 
 %.html: %.tbl
-	sed $(SEDREPLACE) <$< | pod2html >$@
+	sed $(SEDREPLACE) <$< | pod2xhtml --css http://res.tst.eu/pod.css >$@
 
 %.txt: %.tbl
 	sed $(SEDREPLACE) <$< | pod2text >$@

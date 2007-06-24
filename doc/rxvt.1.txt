@@ -97,7 +97,12 @@ OPTIONS
         Turn on/off simulated reverse video; resource reverseVideo.
 
     -j|+j
-        Turn on/off jump scrolling; resource jumpScroll.
+        Turn on/off jump scrolling (allow multiple lines per refresh);
+        resource jumpScroll.
+
+    -ss|+ss
+        Turn on/off skip scrolling (allow multiple screens per refresh);
+        resource skipScroll.
 
     -ip|+ip | -tr|+tr
         Turn on/off inheriting parent window's pixmap. Alternative form is
@@ -125,9 +130,21 @@ OPTIONS
 
            rxvt -tr -tint blue -sh 40
 
-    -sh *number* Darken (0 .. 100) or lighten (-1 .. -100) the transparent
-        background image in addition to tinting it (i.e. -tint must be
-        specified, too, e.g. "-tint white"); resource *shading*.
+    -sh *number*
+        Darken (0 .. 100) or lighten (-1 .. -100) the transparent background
+        image in addition to (or instead of) tinting it; resource *shading*.
+
+    -blt *string*
+        Specify background blending type. If background pixmap is specified
+        at the same time as transparency - such pixmap will be blended over
+        transparency image, using method specified. Supported values are :
+        add, alphablend, allanon - color values averaging, colorize, darken,
+        diff, dissipate, hue, lighten, overlay, saturate, screen, sub, tint,
+        value. The default is alpha-blending; resource *blendType*.
+
+    -blr *number*
+        Apply Gaussian Blur with the specified radius to the transparent
+        background image; resource *blurRadius*.
 
     -bg *colour*
         Window background colour; resource background.
@@ -136,10 +153,10 @@ OPTIONS
         Window foreground colour; resource foreground.
 
     -pixmap *file[;geom]*
-        Compile *XPM*: Specify XPM file for the background and also
+        Compile *afterimage*: Specify image file for the background and also
         optionally specify its scaling with a geometry string. Note you may
         need to add quotes to avoid special shell interpretation of the ";"
-        in the command-line; resource backgroundPixmap.
+        in the command-line; for more details see resource backgroundPixmap.
 
     -cr *colour*
         The cursor colour; resource cursorColor.
@@ -508,9 +525,24 @@ RESOURCES (available also as long-options)
         note in COLORS AND GRAPHICS section.
 
     jumpScroll: *boolean*
-        True: specify that jump scrolling should be used. When scrolling
-        quickly, fewer screen updates are performed [default]; option -j.
-        False: specify that smooth scrolling should be used; option +j.
+        True: specify that jump scrolling should be used. When receiving
+        lots of lines, rxvt will only scroll once a whole screen height of
+        lines has been read, resulting in fewer updates while still
+        displaying every received line; option -j.
+
+        False: specify that smooth scrolling should be used. rxvt will force
+        a screen refresh on each new line it received; option +j.
+
+    skipScroll: *boolean*
+        True: (the default) specify that skip scrolling should be used. When
+        receiving lots of lines, rxvt will only scroll once in a while
+        (around 60 times per second), resulting in far fewer updates. This
+        can result in rxvt not ever displaying some of the lines it
+        receives; option -ss.
+
+        False: specify that everything is to be displayed, even if the
+        refresh is too fast for the human eye to read anything (or the
+        monitor to display anything); option +ss.
 
     inheritPixmap: *boolean*
         True: make the background inherit the parent windows' pixmap, giving
@@ -536,6 +568,13 @@ RESOURCES (available also as long-options)
         Darken (0 .. 100) or lighten (-1 .. -100) the transparent background
         image in addition to tinting it; option -sh.
 
+    blendType: *string*
+        Specify background blending type; option -blt.
+
+    blurRadius: *number*
+        Apply Gaussian Blurr with the specified radius to the transparent
+        background image; option -blr.
+
     scrollColor: *colour*
         Use the specified colour for the scrollbar [default #B2B2B2].
 
@@ -548,15 +587,19 @@ RESOURCES (available also as long-options)
         scrollbar and the text.
 
     backgroundPixmap: *file[;geom]*
-        Use the specified XPM file (note the `.xpm' extension is optional)
-        for the background and also optionally specify its scaling with a
-        geometry string WxH+X+Y, in which "W" / "H" specify the
-        horizontal/vertical scale (percent) and "X" / "Y" locate the image
-        centre (percent). A scale of 0 displays the image with tiling. A
-        scale of 1 displays the image without any scaling. A scale of 2 to 9
-        specifies an integer number of images in that direction. No image
-        will be magnified beyond 10 times its original size. The maximum
-        permitted scale is 1000. [default 0x0+50+50]
+        Use the specified image file for the background and also optionally
+        specify its scaling with a geometry string WxH+X+Y, in which "W" /
+        "H" specify the horizontal/vertical scale (percent), and "X" / "Y"
+        locate the image centre (percent). A scale of 0 displays the image
+        with tiling. A scale of 1 displays the image without any scaling. A
+        scale of 2 to 9 specifies an integer number of images in that
+        direction. No image will be magnified beyond 10 times its original
+        size. The maximum permitted scale is 1000. Special string of "auto"
+        used as a geometry will cause image to be automatically scaled to
+        match window size. If used in conjunction with -tr option -
+        specified pixmap will be blended over transparency image using
+        either alpha-blending, or any other blending type, specified with
+        -blt "type" option. [default 0x0+50+50]
 
     path: *path*
         Specify the colon-delimited search path for finding XPM files.
@@ -1026,6 +1069,9 @@ RESOURCES (available also as long-options)
         Compile *frills*: Sets override-redirect for the terminal window,
         making it almost invisible to window managers; option
         -override-redirect.
+
+    iso14755_52: *boolean*
+        Turn on/off ISO 14755 5.2 mode (default enabled).
 
 THE SCROLLBAR
     Lines of text that scroll off the top of the rxvt window (resource:
