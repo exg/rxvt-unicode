@@ -2451,21 +2451,6 @@ requires --enable-mousewheel to also be specified.
 
 Remove support for mouse selection style like that of xterm.
 
-=item --enable-dmalloc (default: off)
-
-Use Gray Watson's malloc - which is good for debugging See
-L<http://www.letters.com/dmalloc/> for details If you use either this or the
-next option, you may need to edit src/Makefile after compiling to point
-DINCLUDE and DLIB to the right places.
-
-You can only use either this option and the following (should
-you use either) .
-
-=item --enable-dlmalloc (default: off)
-
-Use Doug Lea's malloc - which is good for a production version
-See L<http://g.oswego.edu/dl/html/malloc.html> for details.
-
 =item --enable-smart-resize (default: on)
 
 Add smart growth/shrink behaviour when changing font size via hot
