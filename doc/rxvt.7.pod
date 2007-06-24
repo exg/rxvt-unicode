@@ -127,8 +127,8 @@ snippets:
 =head3 How do I compile the manual pages on my own?
 
 You need to have a recent version of perl installed as F</usr/bin/perl>,
-one that comes with F<pod2man>, F<pod2text> and F<pod2html>. Then go to
-the doc subdirectory and enter C<make alldoc>.
+one that comes with F<pod2man>, F<pod2text> and F<pod2xhtml> (from
+F<Pod::XHTML>). Then go to the doc subdirectory and enter C<make alldoc>.
 
 =head3 Isn't rxvt-unicode supposed to be small? Don't all those features bloat?
 
