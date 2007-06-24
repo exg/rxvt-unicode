@@ -78,13 +78,14 @@ sub verbatim {
    print $fh "\n=end roff\n\n";
 
    # html
-   print $fh "=begin html\n\n";
+   # pod::xhtml fails on begin/end blocks
+#   print $fh "=begin xhtml\n\n";
 
-   print $fh "<table>\n";
-   print $fh map "<tr><td>" . +(join "</td><td>", htmlfcodes @$_) . "</td></tr>\n", @$table;
-   print $fh "</table>\n";
+   print $fh "=for html <table>";
+   print $fh map "<tr><td>" . +(join "</td><td>", htmlfcodes @$_) . "</td></tr>", @$table;
+   print $fh "</table>\n\n";
 
-   print $fh "\n=end html\n\n";
+#   print $fh "\n=end xhtml\n\n";
 
 }
 

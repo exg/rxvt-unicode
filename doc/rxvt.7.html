@@ -6,7 +6,7 @@
 	<meta name="description" content="Pod documentation for RXVT REFERENCE" />
 	<meta name="inputfile" content="&lt;standard input&gt;" />
 	<meta name="outputfile" content="&lt;standard output&gt;" />
-	<meta name="created" content="Mon Jun 25 00:11:17 2007" />
+	<meta name="created" content="Mon Jun 25 00:30:33 2007" />
 	<meta name="generator" content="Pod::Xhtml 1.57" />
 <link rel="stylesheet" href="http://res.tst.eu/pod.css"/></head>
 <body>
@@ -278,8 +278,8 @@ snippets:</p>
 <h3 id="How_do_I_compile_the_manual_pages_on">How do I compile the manual pages on my own?</h3>
 <div id="How_do_I_compile_the_manual_pages_on-2">
 <p>You need to have a recent version of perl installed as <cite>/usr/bin/perl</cite>,
-one that comes with <cite>pod2man</cite>, <cite>pod2text</cite> and <cite>pod2html</cite>. Then go to
-the doc subdirectory and enter <code>make alldoc</code>.</p>
+one that comes with <cite>pod2man</cite>, <cite>pod2text</cite> and <cite>pod2xhtml</cite> (from
+<cite>Pod::XHTML</cite>). Then go to the doc subdirectory and enter <code>make alldoc</code>.</p>
 
 </div>
 <h3 id="Isn_t_rxvt_unicode_supposed_to_be_sm">Isn't rxvt-unicode supposed to be small? Don't all those features bloat?</h3>
@@ -1544,7 +1544,7 @@ only <i>unimplemented</i></p>
 	<dd>
 		<p>Designate Kanji Character Set</p>
 		<p>Where <strong><code>C</code></strong> is one of:</p>
-	</dd>
+<table><tr><td>C = 0 </td><td>DEC Special Character and Line Drawing Set</td></tr><tr><td>C = A </td><td>United Kingdom (UK)</td></tr><tr><td>C = B </td><td>United States (USASCII)</td></tr><tr><td>C = <</td><td>Multinational character set unimplemented</td></tr><tr><td>C = 5 </td><td>Finnish character set unimplemented</td></tr><tr><td>C = C </td><td>Finnish character set unimplemented</td></tr><tr><td>C = K </td><td>German character set unimplemented</td></tr></table>	</dd>
 </dl>
 <p><span id="CSI">CSI</span></p>
 
@@ -1595,11 +1595,11 @@ only <i>unimplemented</i></p>
 	<dt><strong><code>ESC [ Ps J</code></strong></dt>
 	<dd>
 		<p>Erase in Display (ED)</p>
-	</dd>
+<table><tr><td>Ps = 0</td><td>Clear Below (default)</td></tr><tr><td>Ps = 1</td><td>Clear Above</td></tr><tr><td>Ps = 2</td><td>Clear All</td></tr></table>	</dd>
 	<dt><strong><code>ESC [ Ps K</code></strong></dt>
 	<dd>
 		<p>Erase in Line (EL)</p>
-	</dd>
+<table><tr><td>Ps = 0</td><td>Clear to Right (default)</td></tr><tr><td>Ps = 1</td><td>Clear to Left</td></tr><tr><td>Ps = 2</td><td>Clear All</td></tr></table>	</dd>
 	<dt><strong><code>ESC [ Ps L</code></strong></dt>
 	<dd>
 		<p>Insert <strong><code>Ps</code></strong> Line(s) [default: 1] (IL)</p>
@@ -1620,7 +1620,7 @@ only <i>unimplemented</i></p>
 	<dt><strong><code>ESC [ Ps W</code></strong></dt>
 	<dd>
 		<p>Tabulator functions</p>
-	</dd>
+<table><tr><td>Ps = 0</td><td>Tab Set (HTS)</td></tr><tr><td>Ps = 2</td><td>Tab Clear (TBC), Clear Current Column (default)</td></tr><tr><td>Ps = 5</td><td>Tab Clear (TBC), Clear All</td></tr></table>	</dd>
 	<dt><strong><code>ESC [ Ps X</code></strong></dt>
 	<dd>
 		<p>Erase <strong><code>Ps</code></strong> Character(s) [default: 1] (ECH)</p>
@@ -1659,7 +1659,7 @@ Option'')</p>
 	<dt><strong><code>ESC [ Ps g</code></strong></dt>
 	<dd>
 		<p>Tab Clear (TBC)</p>
-	</dd>
+<table><tr><td>Ps = 0</td><td>Clear Current Column (default)</td></tr><tr><td>Ps = 3</td><td>Clear All (TBC)</td></tr></table>	</dd>
 	<dt><strong><code>ESC [ Pm h</code></strong></dt>
 	<dd>
 		<p>Set Mode (SM). See <strong><code>ESC [ Pm l</code></strong> sequence for description of <code>Pm</code>.</p>
@@ -1667,25 +1667,25 @@ Option'')</p>
 	<dt><strong><code>ESC [ Ps i</code></strong></dt>
 	<dd>
 		<p>Printing. See also the <code>print-pipe</code> resource.</p>
-	</dd>
+<table><tr><td>Ps = 0</td><td>print screen (MC0)</td></tr><tr><td>Ps = 4</td><td>disable transparent print mode (MC4)</td></tr><tr><td>Ps = 5</td><td>enable transparent print mode (MC5)</td></tr></table>	</dd>
 	<dt><strong><code>ESC [ Pm l</code></strong></dt>
 	<dd>
 		<p>Reset Mode (RM)</p>
 		<p>
 			<dl>
 				<dt><strong><code>Ps = 4</code></strong></dt>
-				<dt><strong><code>Ps = 20</code></strong> (partially implemented)</dt>
-			</dl>
+<table><tr><td>h</td><td>Insert Mode (SMIR)</td></tr><tr><td>l</td><td>Replace Mode (RMIR)</td></tr></table>				<dt><strong><code>Ps = 20</code></strong> (partially implemented)</dt>
+<table><tr><td>h</td><td>Automatic Newline (LNM)</td></tr><tr><td>l</td><td>Normal Linefeed (LNM)</td></tr></table>			</dl>
 		</p>
 	</dd>
 	<dt><strong><code>ESC [ Pm m</code></strong></dt>
 	<dd>
 		<p>Character Attributes (SGR)</p>
-	</dd>
+<table><tr><td>Ps = 0</td><td>Normal (default)</td></tr><tr><td>Ps = 1 / 21</td><td>On / Off Bold (bright fg)</td></tr><tr><td>Ps = 3 / 23</td><td>On / Off Italic</td></tr><tr><td>Ps = 4 / 24</td><td>On / Off Underline</td></tr><tr><td>Ps = 5 / 25</td><td>On / Off Slow Blink (bright bg)</td></tr><tr><td>Ps = 6 / 26</td><td>On / Off Rapid Blink (bright bg)</td></tr><tr><td>Ps = 7 / 27</td><td>On / Off Inverse</td></tr><tr><td>Ps = 8 / 27</td><td>On / Off Invisible (NYI)</td></tr><tr><td>Ps = 30 / 40</td><td>fg/bg Black</td></tr><tr><td>Ps = 31 / 41</td><td>fg/bg Red</td></tr><tr><td>Ps = 32 / 42</td><td>fg/bg Green</td></tr><tr><td>Ps = 33 / 43</td><td>fg/bg Yellow</td></tr><tr><td>Ps = 34 / 44</td><td>fg/bg Blue</td></tr><tr><td>Ps = 35 / 45</td><td>fg/bg Magenta</td></tr><tr><td>Ps = 36 / 46</td><td>fg/bg Cyan</td></tr><tr><td>Ps = 38;5 / 48;5</td><td>set fg/bg to color #m (ISO 8613-6)</td></tr><tr><td>Ps = 37 / 47</td><td>fg/bg White</td></tr><tr><td>Ps = 39 / 49</td><td>fg/bg Default</td></tr><tr><td>Ps = 90 / 100</td><td>fg/bg Bright Black</td></tr><tr><td>Ps = 91 / 101</td><td>fg/bg Bright Red</td></tr><tr><td>Ps = 92 / 102</td><td>fg/bg Bright Green</td></tr><tr><td>Ps = 93 / 103</td><td>fg/bg Bright Yellow</td></tr><tr><td>Ps = 94 / 104</td><td>fg/bg Bright Blue</td></tr><tr><td>Ps = 95 / 105</td><td>fg/bg Bright Magenta</td></tr><tr><td>Ps = 96 / 106</td><td>fg/bg Bright Cyan</td></tr><tr><td>Ps = 97 / 107</td><td>fg/bg Bright White</td></tr><tr><td>Ps = 99 / 109</td><td>fg/bg Bright Default</td></tr></table>	</dd>
 	<dt><strong><code>ESC [ Ps n</code></strong></dt>
 	<dd>
 		<p>Device Status Report (DSR)</p>
-	</dd>
+<table><tr><td>Ps = 5</td><td>Status Report ESC [ 0 n (``OK'')</td></tr><tr><td>Ps = 6</td><td>Report Cursor Position (CPR) [row;column] as ESC [ r ; c R</td></tr><tr><td>Ps = 7</td><td>Request Display Name</td></tr><tr><td>Ps = 8</td><td>Request Version Number (place in window title)</td></tr></table>	</dd>
 	<dt><strong><code>ESC [ Ps;Ps r</code></strong></dt>
 	<dd>
 		<p>Set Scrolling Region [top;bottom]
@@ -1698,7 +1698,7 @@ Option'')</p>
 	<dt><strong><code>ESC [ Ps;Pt t</code></strong></dt>
 	<dd>
 		<p>Window Operations</p>
-	</dd>
+<table><tr><td>Ps = 1</td><td>Deiconify (map) window</td></tr><tr><td>Ps = 2</td><td>Iconify window</td></tr><tr><td>Ps = 3</td><td>ESC [ 3 ; X ; Y t Move window to (X|Y)</td></tr><tr><td>Ps = 4</td><td>ESC [ 4 ; H ; W t Resize to WxH pixels</td></tr><tr><td>Ps = 5</td><td>Raise window</td></tr><tr><td>Ps = 6</td><td>Lower window</td></tr><tr><td>Ps = 7</td><td>Refresh screen once</td></tr><tr><td>Ps = 8</td><td>ESC [ 8 ; R ; C t Resize to R rows and C columns</td></tr><tr><td>Ps = 11</td><td>Report window state (responds with Ps = 1 or Ps = 2)</td></tr><tr><td>Ps = 13</td><td>Report window position (responds with Ps = 3)</td></tr><tr><td>Ps = 14</td><td>Report window pixel size (responds with Ps = 4)</td></tr><tr><td>Ps = 18</td><td>Report window text size (responds with Ps = 7)</td></tr><tr><td>Ps = 19</td><td>Currently the same as Ps = 18, but responds with Ps = 9</td></tr><tr><td>Ps = 20</td><td>Reports icon label (ESC ] L NAME \234)</td></tr><tr><td>Ps = 21</td><td>Reports window title (ESC ] l NAME \234)</td></tr><tr><td>Ps = 24..</td><td>Set window height to Ps rows</td></tr></table>	</dd>
 	<dt><strong><code>ESC [ u</code></strong></dt>
 	<dd>
 		<p>Restore Cursor</p>
@@ -1736,40 +1736,40 @@ Option'')</p>
 		<p>
 			<dl>
 				<dt><strong><code>Pm = 1</code></strong> (DECCKM)</dt>
-				<dt><strong><code>Pm = 2</code></strong> (ANSI/VT52 mode)</dt>
-				<dt><strong><code>Pm = 3</code></strong></dt>
-				<dt><strong><code>Pm = 4</code></strong></dt>
-				<dt><strong><code>Pm = 5</code></strong></dt>
-				<dt><strong><code>Pm = 6</code></strong></dt>
-				<dt><strong><code>Pm = 7</code></strong></dt>
-				<dt><strong><code>Pm = 8</code></strong> <i>unimplemented</i></dt>
-				<dt><strong><code>Pm = 9</code></strong> X10 XTerm</dt>
-				<dt><strong><code>Pm = 25</code></strong></dt>
-				<dt><strong><code>Pm = 30</code></strong></dt>
-				<dt><strong><code>Pm = 35</code></strong> (<strong>rxvt</strong>)</dt>
-				<dt><strong><code>Pm = 38</code></strong> <i>unimplemented</i></dt>
+<table><tr><td>h</td><td>Application Cursor Keys</td></tr><tr><td>l</td><td>Normal Cursor Keys</td></tr></table>				<dt><strong><code>Pm = 2</code></strong> (ANSI/VT52 mode)</dt>
+<table><tr><td>h</td><td>Enter VT52 mode</td></tr><tr><td>l</td><td>Enter VT52 mode</td></tr></table>				<dt><strong><code>Pm = 3</code></strong></dt>
+<table><tr><td>h</td><td>132 Column Mode (DECCOLM)</td></tr><tr><td>l</td><td>80 Column Mode (DECCOLM)</td></tr></table>				<dt><strong><code>Pm = 4</code></strong></dt>
+<table><tr><td>h</td><td>Smooth (Slow) Scroll (DECSCLM)</td></tr><tr><td>l</td><td>Jump (Fast) Scroll (DECSCLM)</td></tr></table>				<dt><strong><code>Pm = 5</code></strong></dt>
+<table><tr><td>h</td><td>Reverse Video (DECSCNM)</td></tr><tr><td>l</td><td>Normal Video (DECSCNM)</td></tr></table>				<dt><strong><code>Pm = 6</code></strong></dt>
+<table><tr><td>h</td><td>Origin Mode (DECOM)</td></tr><tr><td>l</td><td>Normal Cursor Mode (DECOM)</td></tr></table>				<dt><strong><code>Pm = 7</code></strong></dt>
+<table><tr><td>h</td><td>Wraparound Mode (DECAWM)</td></tr><tr><td>l</td><td>No Wraparound Mode (DECAWM)</td></tr></table>				<dt><strong><code>Pm = 8</code></strong> <i>unimplemented</i></dt>
+<table><tr><td>h</td><td>Auto-repeat Keys (DECARM)</td></tr><tr><td>l</td><td>No Auto-repeat Keys (DECARM)</td></tr></table>				<dt><strong><code>Pm = 9</code></strong> X10 XTerm</dt>
+<table><tr><td>h</td><td>Send Mouse X & Y on button press.</td></tr><tr><td>l</td><td>No mouse reporting.</td></tr></table>				<dt><strong><code>Pm = 25</code></strong></dt>
+<table><tr><td>h</td><td>Visible cursor {cnorm/cvvis}</td></tr><tr><td>l</td><td>Invisible cursor {civis}</td></tr></table>				<dt><strong><code>Pm = 30</code></strong></dt>
+<table><tr><td>h</td><td>scrollBar visisble</td></tr><tr><td>l</td><td>scrollBar invisisble</td></tr></table>				<dt><strong><code>Pm = 35</code></strong> (<strong>rxvt</strong>)</dt>
+<table><tr><td>h</td><td>Allow XTerm Shift+key sequences</td></tr><tr><td>l</td><td>Disallow XTerm Shift+key sequences</td></tr></table>				<dt><strong><code>Pm = 38</code></strong> <i>unimplemented</i></dt>
 				<dd>
 					<p>Enter Tektronix Mode (DECTEK)</p>
 				</dd>
 				<dt><strong><code>Pm = 40</code></strong></dt>
-				<dt><strong><code>Pm = 44</code></strong> <i>unimplemented</i></dt>
-				<dt><strong><code>Pm = 45</code></strong> <i>unimplemented</i></dt>
-				<dt><strong><code>Pm = 46</code></strong> <i>unimplemented</i></dt>
+<table><tr><td>h</td><td>Allow 80/132 Mode</td></tr><tr><td>l</td><td>Disallow 80/132 Mode</td></tr></table>				<dt><strong><code>Pm = 44</code></strong> <i>unimplemented</i></dt>
+<table><tr><td>h</td><td>Turn On Margin Bell</td></tr><tr><td>l</td><td>Turn Off Margin Bell</td></tr></table>				<dt><strong><code>Pm = 45</code></strong> <i>unimplemented</i></dt>
+<table><tr><td>h</td><td>Reverse-wraparound Mode</td></tr><tr><td>l</td><td>No Reverse-wraparound Mode</td></tr></table>				<dt><strong><code>Pm = 46</code></strong> <i>unimplemented</i></dt>
 				<dt><strong><code>Pm = 47</code></strong></dt>
-				<dd>
+<table><tr><td>h</td><td>Use Alternate Screen Buffer</td></tr><tr><td>l</td><td>Use Normal Screen Buffer</td></tr></table>				<dd>
 					<p><span id="Priv66">Priv66</span></p>
 				</dd>
 				<dt><strong><code>Pm = 66</code></strong></dt>
-				<dt><strong><code>Pm = 67</code></strong></dt>
-				<dt><strong><code>Pm = 1000</code></strong> (X11 XTerm)</dt>
-				<dt><strong><code>Pm = 1001</code></strong> (X11 XTerm) <i>unimplemented</i></dt>
-				<dt><strong><code>Pm = 1010</code></strong> (<strong>rxvt</strong>)</dt>
-				<dt><strong><code>Pm = 1011</code></strong> (<strong>rxvt</strong>)</dt>
-				<dt><strong><code>Pm = 1021</code></strong> (<strong>rxvt</strong>)</dt>
-				<dt><strong><code>Pm = 1047</code></strong></dt>
-				<dt><strong><code>Pm = 1048</code></strong></dt>
-				<dt><strong><code>Pm = 1049</code></strong></dt>
-			</dl>
+<table><tr><td>h</td><td>Application Keypad (DECPAM) == ESC =</td></tr><tr><td>l</td><td>Normal Keypad (DECPNM) == ESC ></td></tr></table>				<dt><strong><code>Pm = 67</code></strong></dt>
+<table><tr><td>h</td><td>Backspace key sends BS (DECBKM)</td></tr><tr><td>l</td><td>Backspace key sends DEL</td></tr></table>				<dt><strong><code>Pm = 1000</code></strong> (X11 XTerm)</dt>
+<table><tr><td>h</td><td>Send Mouse X & Y on button press and release.</td></tr><tr><td>l</td><td>No mouse reporting.</td></tr></table>				<dt><strong><code>Pm = 1001</code></strong> (X11 XTerm) <i>unimplemented</i></dt>
+<table><tr><td>h</td><td>Use Hilite Mouse Tracking.</td></tr><tr><td>l</td><td>No mouse reporting.</td></tr></table>				<dt><strong><code>Pm = 1010</code></strong> (<strong>rxvt</strong>)</dt>
+<table><tr><td>h</td><td>Don't scroll to bottom on TTY output</td></tr><tr><td>l</td><td>Scroll to bottom on TTY output</td></tr></table>				<dt><strong><code>Pm = 1011</code></strong> (<strong>rxvt</strong>)</dt>
+<table><tr><td>h</td><td>Scroll to bottom when a key is pressed</td></tr><tr><td>l</td><td>Don't scroll to bottom when a key is pressed</td></tr></table>				<dt><strong><code>Pm = 1021</code></strong> (<strong>rxvt</strong>)</dt>
+<table><tr><td>h</td><td>Bold/italic implies high intensity (see option -is)</td></tr><tr><td>l</td><td>Font styles have no effect on intensity (Compile styles)</td></tr></table>				<dt><strong><code>Pm = 1047</code></strong></dt>
+<table><tr><td>h</td><td>Use Alternate Screen Buffer</td></tr><tr><td>l</td><td>Use Normal Screen Buffer - clear Alternate Screen Buffer if returning from it</td></tr></table>				<dt><strong><code>Pm = 1048</code></strong></dt>
+<table><tr><td>h</td><td>Save cursor position</td></tr><tr><td>l</td><td>Restore cursor position</td></tr></table>				<dt><strong><code>Pm = 1049</code></strong></dt>
+<table><tr><td>h</td><td>Use Alternate Screen Buffer - clear Alternate Screen Buffer if switching to it</td></tr><tr><td>l</td><td>Use Normal Screen Buffer</td></tr></table>			</dl>
 		</p>
 	</dd>
 </dl>
@@ -1784,7 +1784,7 @@ Option'')</p>
 		<p>Set XTerm Parameters. 8-bit ST: 0x9c, 7-bit ST sequence: ESC \ (0x1b,
 0x5c), backwards compatible terminator BEL (0x07) is also accepted. any
 <strong>octet</strong> can be escaped by prefixing it with SYN (0x16, ^V).</p>
-	</dd>
+<table><tr><td>Ps = 0</td><td>Change Icon Name and Window Title to Pt</td></tr><tr><td>Ps = 1</td><td>Change Icon Name to Pt</td></tr><tr><td>Ps = 2</td><td>Change Window Title to Pt</td></tr><tr><td>Ps = 3</td><td>If Pt starts with a ?, query the (STRING) property of the window and return it. If Pt contains a =, set the named property to the given value, else delete the specified property.</td></tr><tr><td>Ps = 4</td><td>Pt is a semi-colon separated sequence of one or more semi-colon separated number/name pairs, where number is an index to a colour and name is the name of a colour. Each pair causes the numbered colour to be changed to name. Numbers 0-7 corresponds to low-intensity (normal) colours and 8-15 corresponds to high-intensity colours. 0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white</td></tr><tr><td>Ps = 10</td><td>Change colour of text foreground to Pt (NB: may change in future)</td></tr><tr><td>Ps = 11</td><td>Change colour of text background to Pt (NB: may change in future)</td></tr><tr><td>Ps = 12</td><td>Change colour of text cursor foreground to Pt</td></tr><tr><td>Ps = 13</td><td>Change colour of mouse foreground to Pt</td></tr><tr><td>Ps = 17</td><td>Change colour of highlight characters to Pt</td></tr><tr><td>Ps = 18</td><td>Change colour of bold characters to Pt [deprecated, see 706]</td></tr><tr><td>Ps = 19</td><td>Change colour of underlined characters to Pt [deprecated, see 707]</td></tr><tr><td>Ps = 20</td><td>Change background pixmap parameters (see section XPM) (Compile XPM).</td></tr><tr><td>Ps = 39</td><td>Change default foreground colour to Pt.</td></tr><tr><td>Ps = 46</td><td>Change Log File to Pt unimplemented</td></tr><tr><td>Ps = 49</td><td>Change default background colour to Pt.</td></tr><tr><td>Ps = 50</td><td>Set fontset to Pt, with the following special values of Pt (rxvt) #+n change up n #-n change down n if n is missing of 0, a value of 1 is used empty change to font0 n change to font n</td></tr><tr><td>Ps = 55</td><td>Log all scrollback buffer and all of screen to Pt</td></tr><tr><td>Ps = 701</td><td>Change current locale to Pt, or, if Pt is ?, return the current locale (Compile frills).</td></tr><tr><td>Ps = 702</td><td>Request version if Pt is ?, returning rxvt-unicode, the resource name, the major and minor version numbers, e.g. ESC ] 702 ; rxvt-unicode ; urxvt ; 7 ; 4 ST.</td></tr><tr><td>Ps = 704</td><td>Change colour of italic characters to Pt</td></tr><tr><td>Ps = 705</td><td>Change background pixmap tint colour to Pt (Compile transparency).</td></tr><tr><td>Ps = 706</td><td>Change colour of bold characters to Pt</td></tr><tr><td>Ps = 707</td><td>Change colour of underlined characters to Pt</td></tr><tr><td>Ps = 710</td><td>Set normal fontset to Pt. Same as Ps = 50.</td></tr><tr><td>Ps = 711</td><td>Set bold fontset to Pt. Similar to Ps = 50 (Compile styles).</td></tr><tr><td>Ps = 712</td><td>Set italic fontset to Pt. Similar to Ps = 50 (Compile styles).</td></tr><tr><td>Ps = 713</td><td>Set bold-italic fontset to Pt. Similar to Ps = 50 (Compile styles).</td></tr><tr><td>Ps = 720</td><td>Move viewing window up by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).</td></tr><tr><td>Ps = 721</td><td>Move viewing window down by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).</td></tr><tr><td>Ps = 777</td><td>Call the perl extension with the given string, which should be of the form extension:parameters (Compile perl).</td></tr></table>	</dd>
 </dl>
 
 </div>
@@ -1853,12 +1853,12 @@ the title</p>
 <p>The lower 2 bits of <strong><code>&lt;b&gt;</code></strong> indicate the button:</p>
 <dl>
 	<dt>Button = <strong><code>(&lt;b&gt; - SPACE) &amp; 3</code></strong></dt>
-</dl>
+<table><tr><td>0</td><td>Button1 pressed</td></tr><tr><td>1</td><td>Button2 pressed</td></tr><tr><td>2</td><td>Button3 pressed</td></tr><tr><td>3</td><td>button released (X11 mouse report)</td></tr></table></dl>
 <p>The upper bits of <strong><code>&lt;b&gt;</code></strong> indicate the modifiers when the
 button was pressed and are added together (X11 mouse report only):</p>
 <dl>
 	<dt>State = <strong><code>(&lt;b&gt; - SPACE) &amp; 60</code></strong></dt>
-	<dd>
+<table><tr><td>4</td><td>Shift</td></tr><tr><td>8</td><td>Meta</td></tr><tr><td>16</td><td>Control</td></tr><tr><td>32</td><td>Double Click (rxvt extension)</td></tr></table>	<dd>
 		<p>Col = <strong><code>&lt;x&gt; - SPACE</code></strong></p>
 		<p>Row = <strong><code>&lt;y&gt; - SPACE</code></strong></p>
 	</dd>
@@ -1873,7 +1873,7 @@ setting use <strong>Num_Lock</strong> to toggle Application-Keypad setting if
 <strong>Num_Lock</strong> is off, toggle Application-Keypad setting. Also note that
 values of <strong>Home</strong>, <strong>End</strong>, <strong>Delete</strong> may have been compiled differently on
 your system.</p>
-
+<table><tr><td></td><td>Normal</td><td>Shift</td><td>Control</td><td>Ctrl+Shift</td></tr><tr><td>Tab</td><td>^I</td><td>ESC [ Z</td><td>^I</td><td>ESC [ Z</td></tr><tr><td>BackSpace</td><td>^H</td><td>^?</td><td>^?</td><td>^?</td></tr><tr><td>Find</td><td>ESC [ 1 ~</td><td>ESC [ 1 $</td><td>ESC [ 1 ^</td><td>ESC [ 1 @</td></tr><tr><td>Insert</td><td>ESC [ 2 ~</td><td>paste</td><td>ESC [ 2 ^</td><td>ESC [ 2 @</td></tr><tr><td>Execute</td><td>ESC [ 3 ~</td><td>ESC [ 3 $</td><td>ESC [ 3 ^</td><td>ESC [ 3 @</td></tr><tr><td>Select</td><td>ESC [ 4 ~</td><td>ESC [ 4 $</td><td>ESC [ 4 ^</td><td>ESC [ 4 @</td></tr><tr><td>Prior</td><td>ESC [ 5 ~</td><td>scroll-up</td><td>ESC [ 5 ^</td><td>ESC [ 5 @</td></tr><tr><td>Next</td><td>ESC [ 6 ~</td><td>scroll-down</td><td>ESC [ 6 ^</td><td>ESC [ 6 @</td></tr><tr><td>Home</td><td>ESC [ 7 ~</td><td>ESC [ 7 $</td><td>ESC [ 7 ^</td><td>ESC [ 7 @</td></tr><tr><td>End</td><td>ESC [ 8 ~</td><td>ESC [ 8 $</td><td>ESC [ 8 ^</td><td>ESC [ 8 @</td></tr><tr><td>Delete</td><td>ESC [ 3 ~</td><td>ESC [ 3 $</td><td>ESC [ 3 ^</td><td>ESC [ 3 @</td></tr><tr><td>F1</td><td>ESC [ 11 ~</td><td>ESC [ 23 ~</td><td>ESC [ 11 ^</td><td>ESC [ 23 ^</td></tr><tr><td>F2</td><td>ESC [ 12 ~</td><td>ESC [ 24 ~</td><td>ESC [ 12 ^</td><td>ESC [ 24 ^</td></tr><tr><td>F3</td><td>ESC [ 13 ~</td><td>ESC [ 25 ~</td><td>ESC [ 13 ^</td><td>ESC [ 25 ^</td></tr><tr><td>F4</td><td>ESC [ 14 ~</td><td>ESC [ 26 ~</td><td>ESC [ 14 ^</td><td>ESC [ 26 ^</td></tr><tr><td>F5</td><td>ESC [ 15 ~</td><td>ESC [ 28 ~</td><td>ESC [ 15 ^</td><td>ESC [ 28 ^</td></tr><tr><td>F6</td><td>ESC [ 17 ~</td><td>ESC [ 29 ~</td><td>ESC [ 17 ^</td><td>ESC [ 29 ^</td></tr><tr><td>F7</td><td>ESC [ 18 ~</td><td>ESC [ 31 ~</td><td>ESC [ 18 ^</td><td>ESC [ 31 ^</td></tr><tr><td>F8</td><td>ESC [ 19 ~</td><td>ESC [ 32 ~</td><td>ESC [ 19 ^</td><td>ESC [ 32 ^</td></tr><tr><td>F9</td><td>ESC [ 20 ~</td><td>ESC [ 33 ~</td><td>ESC [ 20 ^</td><td>ESC [ 33 ^</td></tr><tr><td>F10</td><td>ESC [ 21 ~</td><td>ESC [ 34 ~</td><td>ESC [ 21 ^</td><td>ESC [ 34 ^</td></tr><tr><td>F11</td><td>ESC [ 23 ~</td><td>ESC [ 23 $</td><td>ESC [ 23 ^</td><td>ESC [ 23 @</td></tr><tr><td>F12</td><td>ESC [ 24 ~</td><td>ESC [ 24 $</td><td>ESC [ 24 ^</td><td>ESC [ 24 @</td></tr><tr><td>F13</td><td>ESC [ 25 ~</td><td>ESC [ 25 $</td><td>ESC [ 25 ^</td><td>ESC [ 25 @</td></tr><tr><td>F14</td><td>ESC [ 26 ~</td><td>ESC [ 26 $</td><td>ESC [ 26 ^</td><td>ESC [ 26 @</td></tr><tr><td>F15 (Help)</td><td>ESC [ 28 ~</td><td>ESC [ 28 $</td><td>ESC [ 28 ^</td><td>ESC [ 28 @</td></tr><tr><td>F16 (Menu)</td><td>ESC [ 29 ~</td><td>ESC [ 29 $</td><td>ESC [ 29 ^</td><td>ESC [ 29 @</td></tr><tr><td>F17</td><td>ESC [ 31 ~</td><td>ESC [ 31 $</td><td>ESC [ 31 ^</td><td>ESC [ 31 @</td></tr><tr><td>F18</td><td>ESC [ 32 ~</td><td>ESC [ 32 $</td><td>ESC [ 32 ^</td><td>ESC [ 32 @</td></tr><tr><td>F19</td><td>ESC [ 33 ~</td><td>ESC [ 33 $</td><td>ESC [ 33 ^</td><td>ESC [ 33 @</td></tr><tr><td>F20</td><td>ESC [ 34 ~</td><td>ESC [ 34 $</td><td>ESC [ 34 ^</td><td>ESC [ 34 @</td></tr><tr><td></td><td></td><td></td><td></td><td>Application</td></tr><tr><td>Up</td><td>ESC [ A</td><td>ESC [ a</td><td>ESC O a</td><td>ESC O A</td></tr><tr><td>Down</td><td>ESC [ B</td><td>ESC [ b</td><td>ESC O b</td><td>ESC O B</td></tr><tr><td>Right</td><td>ESC [ C</td><td>ESC [ c</td><td>ESC O c</td><td>ESC O C</td></tr><tr><td>Left</td><td>ESC [ D</td><td>ESC [ d</td><td>ESC O d</td><td>ESC O D</td></tr><tr><td>KP_Enter</td><td>^M</td><td></td><td></td><td>ESC O M</td></tr><tr><td>KP_F1</td><td>ESC O P</td><td></td><td></td><td>ESC O P</td></tr><tr><td>KP_F2</td><td>ESC O Q</td><td></td><td></td><td>ESC O Q</td></tr><tr><td>KP_F3</td><td>ESC O R</td><td></td><td></td><td>ESC O R</td></tr><tr><td>KP_F4</td><td>ESC O S</td><td></td><td></td><td>ESC O S</td></tr><tr><td>XK_KP_Multiply</td><td>*</td><td></td><td></td><td>ESC O j</td></tr><tr><td>XK_KP_Add</td><td>+</td><td></td><td></td><td>ESC O k</td></tr><tr><td>XK_KP_Separator</td><td>,</td><td></td><td></td><td>ESC O l</td></tr><tr><td>XK_KP_Subtract</td><td>-</td><td></td><td></td><td>ESC O m</td></tr><tr><td>XK_KP_Decimal</td><td>.</td><td></td><td></td><td>ESC O n</td></tr><tr><td>XK_KP_Divide</td><td>/</td><td></td><td></td><td>ESC O o</td></tr><tr><td>XK_KP_0</td><td>0</td><td></td><td></td><td>ESC O p</td></tr><tr><td>XK_KP_1</td><td>1</td><td></td><td></td><td>ESC O q</td></tr><tr><td>XK_KP_2</td><td>2</td><td></td><td></td><td>ESC O r</td></tr><tr><td>XK_KP_3</td><td>3</td><td></td><td></td><td>ESC O s</td></tr><tr><td>XK_KP_4</td><td>4</td><td></td><td></td><td>ESC O t</td></tr><tr><td>XK_KP_5</td><td>5</td><td></td><td></td><td>ESC O u</td></tr><tr><td>XK_KP_6</td><td>6</td><td></td><td></td><td>ESC O v</td></tr><tr><td>XK_KP_7</td><td>7</td><td></td><td></td><td>ESC O w</td></tr><tr><td>XK_KP_8</td><td>8</td><td></td><td></td><td>ESC O x</td></tr><tr><td>XK_KP_9</td><td>9</td><td></td><td></td><td>ESC O y</td></tr></table>
 </div>
 <h1 id="CONFIGURE_OPTIONS">CONFIGURE OPTIONS</h1><p><a href="#TOP" class="toplink">Top</a></p>
 <div id="CONFIGURE_OPTIONS_CONTENT">
@@ -1914,7 +1914,7 @@ for Xft fonts, although having them compiled in lets rxvt-unicode choose
 replacement fonts more intelligently. Compiling them in will make your
 binary bigger (all of together cost about 700kB), but it doesn't increase
 memory usage unless you use a font requiring one of these encodings.</p>
-	</dd>
+<table><tr><td>all</td><td>all available codeset groups</td></tr><tr><td>zh</td><td>common chinese encodings</td></tr><tr><td>zh_ext</td><td>rarely used but very big chinese encodings</td></tr><tr><td>jp</td><td>common japanese encodings</td></tr><tr><td>jp_ext</td><td>rarely used but big japanese encodings</td></tr><tr><td>kr</td><td>korean encodings</td></tr></table>	</dd>
 	<dt>--enable-xim (default: on)</dt>
 	<dd>
 		<p>Add support for XIM (X Input Method) protocol. This allows using

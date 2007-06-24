@@ -277,8 +277,8 @@ snippets:
 .IX Subsection "How do I compile the manual pages on my own?"
 .PP
 You need to have a recent version of perl installed as \fI/usr/bin/perl\fR,
-one that comes with \fIpod2man\fR, \fIpod2text\fR and \fIpod2html\fR. Then go to
-the doc subdirectory and enter \f(CW\*(C`make alldoc\*(C'\fR.
+one that comes with \fIpod2man\fR, \fIpod2text\fR and \fIpod2xhtml\fR (from
+\&\fIPod::XHTML\fR). Then go to the doc subdirectory and enter \f(CW\*(C`make alldoc\*(C'\fR.
 .PP
 \fIIsn't rxvt-unicode supposed to be small? Don't all those features bloat?\fR
 .IX Subsection "Isn't rxvt-unicode supposed to be small? Don't all those features bloat?"
