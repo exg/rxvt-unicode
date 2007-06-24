@@ -2447,10 +2447,6 @@ Add support for continual scrolling (using the mouse wheel as an
 accelerator) while the control key is held down.  This option
 requires --enable-mousewheel to also be specified.
 
-=item --disable-new-selection
-
-Remove support for mouse selection style like that of xterm.
-
 =item --enable-smart-resize (default: on)
 
 Add smart growth/shrink behaviour when changing font size via hot
