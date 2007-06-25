@@ -2338,7 +2338,7 @@ transparency to the term.
 
 =item --enable-fading (default: on)
 
-Add support for fading the text when focus is lost (requires C<--enable-transparency>).
+Add support for fading the text when focus is lost.
 
 =item --enable-tinting (default: on)
 
