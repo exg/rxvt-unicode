@@ -2437,6 +2437,11 @@ this switch.
 Add support for continual scrolling of the display when you hold
 the mouse button down on a scrollbar arrow.
 
+=item --enable-selectionscrolling (default: on)
+
+Add support for scrolling when the selection moves to the top or
+bottom of the screen.
+
 =item --enable-mousewheel (default: on)
 
 Add support for scrolling via mouse wheel or buttons 4 & 5.
