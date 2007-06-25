@@ -11,7 +11,7 @@
 # ifdef HAVE_SETLOCALE
 #  include <clocale>
 # endif
-#endif				/* HAVE_XLOCALE */
+#endif
 
 #ifdef TTY_GID_SUPPORT
 # include <grp.h>

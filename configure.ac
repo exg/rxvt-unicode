@@ -745,10 +745,7 @@ exit (XSupportsLocale() ? 0 : 1);
 else
 exit (1);}]])],[dnl
   rxvt_cv_func_xlocale=yes],[rxvt_cv_func_xlocale=no],[dnl
-  AC_MSG_WARN(Define NO_XLOCALE in config.h manually)])])
-if test x$rxvt_cv_func_xlocale = xyes; then
-  AC_DEFINE(HAVE_XLOCALE, 1, Define if Xlocale support works)
-fi
+  :])])
 
 AC_CACHE_CHECK(for working X setlocale, rxvt_cv_func_xsetlocale,
 [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#define X_LOCALE 1

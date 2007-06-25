@@ -13,7 +13,7 @@
 # ifdef HAVE_SETLOCALE
 #  include <clocale>
 # endif
-#endif				/* HAVE_XLOCALE */
+#endif
 
 #ifdef HAVE_NL_LANGINFO
 # include <langinfo.h>
