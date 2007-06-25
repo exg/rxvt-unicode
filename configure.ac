@@ -80,9 +80,7 @@ AC_DEFINE(_GNU_SOURCE, 1, Use all glibc features.)
 
 case $host in
    *-*-solaris* )
-      AC_DEFINE(_XOPEN_SOURCE_EXTENDED, 1, Needed to get declarations for msg_control and msg_controllen on Solaris)
-      AC_DEFINE(_XOPEN_SOURCE,          2, Needed to get declarations for msg_control and msg_controllen on Solaris)
-      AC_DEFINE(__EXTENSIONS__,         1, Needed to get declarations for msg_control and msg_controllen on Solaris)
+      AC_DEFINE(_XOPEN_SOURCE, 500, Needed to get declarations for msg_control and msg_controllen on Solaris)
       ;;
 esac
 
