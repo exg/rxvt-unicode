@@ -746,6 +746,11 @@ else
 exit (1);}]])],[dnl
   rxvt_cv_func_xlocale=yes],[rxvt_cv_func_xlocale=no],[dnl
   :])])
+if test x$support_xim = xyes; then
+  if test x$rxvt_cv_func_xlocale = xyes; then
+    AC_DEFINE(USE_XIM, 1, Define if you want to have XIM (X Input Method) protocol support - required for multibyte characters input)
+  fi
+fi
 
 AC_CACHE_CHECK(for working X setlocale, rxvt_cv_func_xsetlocale,
 [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#define X_LOCALE 1
@@ -845,11 +850,6 @@ if test x$support_mousewheel = xyes; then
 fi
 if test x$support_mouseslipwheel = xyes; then
   AC_DEFINE(MOUSE_SLIP_WHEELING, 1, Define to have CTRL cause wheel events to accelerate scrolling. Release CTRL to halt scrolling)
-fi
-if test x$support_xim = xyes -o x$multichar_set = xyes; then
-  if test x$rxvt_cv_func_xlocale = xyes; then
-    AC_DEFINE(USE_XIM, 1, Define if you want to have XIM (X Input Method) protocol support - required for multibyte characters input)
-  fi
 fi
 if test x$support_xpm = xyes -o x$support_afterimage = xyes ; then
   AC_DEFINE(XPM_BACKGROUND, 1, Define if you want to have sexy-looking background pixmaps. Needs libXpm or libAfterImage)
