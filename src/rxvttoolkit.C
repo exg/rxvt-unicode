@@ -477,7 +477,7 @@ bool rxvt_display::ref_init ()
   socklen_t sl = sizeof (sa);
 
   if (!getsockname (fd, (sockaddr *)&sa, &sl))
-    is_local = sa.sun_family == AF_LOCAL;
+    is_local = sa.sun_family == AF_UNIX;
 
   x_ev.start (fd, EVENT_READ);
   fcntl (fd, F_SETFD, FD_CLOEXEC);
