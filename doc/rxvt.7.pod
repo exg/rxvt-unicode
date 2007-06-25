@@ -2452,10 +2452,10 @@ Add support for continual scrolling (using the mouse wheel as an
 accelerator) while the control key is held down.  This option
 requires --enable-mousewheel to also be specified.
 
-=item --enable-smart-resize (default: on)
+=item --enable-smart-resize (default: off)
 
-Add smart growth/shrink behaviour when changing font size via hot
-keys. This should keep the window corner which is closest to a corner of
+Add smart growth/shrink behaviour when resizing.
+This should keep the window corner which is closest to a corner of
 the screen in a fixed position.
 
 =item --enable-pointer-blank (default: on)
