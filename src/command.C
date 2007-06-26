@@ -2576,7 +2576,7 @@ rxvt_term::process_nonprinting (unicode_t ch)
       case 0x9b: 	/* CSI */
         process_csi_seq ();
         break;
-      case 0x9d: 	/* CSI */
+      case 0x9d: 	/* OSC */
         process_osc_seq ();
         break;
 #endif
