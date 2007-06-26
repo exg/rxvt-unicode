@@ -11,8 +11,7 @@ using namespace std;
 #define PP_STRINGIFY_(a) #a
 #define PP_STRINGIFY(a) PP_STRINGIFY_(a)
 
-// actually, some gcc-3.x versions work, too
-#define HAVE_GCC_BUILTINS (__GNUC__ >= 4)
+#define HAVE_GCC_BUILTINS (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ == 4))
 
 #ifndef __attribute__
 # if __GNUC__
