@@ -2869,7 +2869,7 @@ rxvt_term::process_csi_seq ()
           case '>':
             if (ch == CSI_DA)	/* secondary device attributes */
               {
-                // first parameter is normally 0 for vt100, 1 for some newer vtxxx, 'R' for rxvt,
+                // first parameter is normally 0 for vt100, 1 for vt220, 'R' for rxvt,
                 // 'U' for rxvt-unicode != 7.[34] (where it was broken).
                 //
                 // second parameter is xterm patch level for xterm, MMmmpp (e.g. 20703) for rxvt
