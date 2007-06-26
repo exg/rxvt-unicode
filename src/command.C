@@ -2814,8 +2814,8 @@ rxvt_term::process_csi_seq ()
   int n, ndef;
   int arg[ESC_ARGS];
 
-  for (nargs = ESC_ARGS; nargs > 0;)
-    arg[--nargs] = 0;
+  memset (arg, 0, sizeof (arg));
+  nargs = 0;
 
   priv = 0;
   ch = cmd_getc ();
