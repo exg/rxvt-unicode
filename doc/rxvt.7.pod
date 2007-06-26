@@ -1153,14 +1153,6 @@ and reduces possible bugs to initialisation code run before main(), or
 things like the dynamic loader of your system, which should result in very
 little risk.
 
-=head3 On Solaris 9, many line-drawing characters are too wide.
-
-Seems to be a known bug, read
-L<http://nixdoc.net/files/forum/about34198.html>. Some people use the
-following ugly workaround to get non-double-wide-characters working:
-
-   #define wcwidth(x) wcwidth(x) > 1 ? 1 : wcwidth(x)
-
 =head3 I am on FreeBSD and rxvt-unicode does not seem to work at all.
 
 Rxvt-unicode requires the symbol C<__STDC_ISO_10646__> to be defined
@@ -1193,11 +1185,6 @@ The rxvt-unicode author insists that the right way to fix this is in the
 system libraries once and for all, instead of forcing every app to carry
 complete replacements for them :)
 
-=head3 I use Solaris 9 and it doesn't compile/work/etc.
-
-Try the diff in F<doc/solaris9.patch> as a base. It fixes the worst
-problems with C<wcwidth> and a compile problem.
-
 =head3 How can I use rxvt-unicode under cygwin?
 
 rxvt-unicode should compile and run out of the box on cygwin, using
@@ -1210,6 +1197,19 @@ old libW11 emulation.
 At the time of this writing, cygwin didn't seem to support any multi-byte
 encodings (you might try C<LC_CTYPE=C-UTF-8>), so you are likely limited
 to 8-bit encodings.
+
+=head3 Character widths are not correct.
+
+urxvt uses the system wcwidth function to know the information about
+the width of characters, so on systems with incorrect locale data you
+will likely get bad results. Two notorious examples are Solaris 9,
+where single-width characters like U+2514 are reported as double-width,
+and Darwin 8, where combining chars are reported having width 1.
+
+The solution is to upgrade your system or switch to a better one. A
+possibly working workaround is to use a wcwidth implementation like
+
+http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
 
 =head1 RXVT-UNICODE TECHNICAL REFERENCE
 
