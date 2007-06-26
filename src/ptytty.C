@@ -65,7 +65,7 @@
  *                  GET PSEUDO TELETYPE - MASTER AND SLAVE                   *
  * ------------------------------------------------------------------------- */
 /*
- * Returns pty file descriptor, or -1 on failure 
+ * Returns pty file descriptor, or -1 on failure
  * If successful, ttydev is set to the name of the slave device.
  * fd_tty _may_ also be set to an open fd to the slave device
  */
@@ -107,7 +107,7 @@
     int pfd;
     int res;
     char tty_name[32];
-    
+
     res = openpty (&pfd, fd_tty, tty_name, NULL, NULL);
 
     if (res != -1)
@@ -208,7 +208,7 @@
 
 /*----------------------------------------------------------------------*/
 /*
- * Returns tty file descriptor, or -1 on failure 
+ * Returns tty file descriptor, or -1 on failure
  */
 static int
 get_tty (char *ttydev)
@@ -253,7 +253,13 @@ control_tty (int fd_tty)
     }
 #endif
 
+#ifdef TIOCSCTTY
   ioctl (fd_tty, TIOCSCTTY, NULL);
+#else
+  fd = open (name, O_RDWR);
+  if (fd >= 0)
+    close (fd);
+#endif
 
   int fd = open ("/dev/tty", O_WRONLY);
   if (fd < 0)
