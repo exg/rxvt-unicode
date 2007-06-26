@@ -223,6 +223,8 @@ get_tty (char *ttydev)
 static int
 control_tty (int fd_tty)
 {
+  int fd;
+
   setsid ();
 
 #if defined(HAVE_DEV_PTMX) && defined(I_PUSH)
@@ -256,12 +258,12 @@ control_tty (int fd_tty)
 #ifdef TIOCSCTTY
   ioctl (fd_tty, TIOCSCTTY, NULL);
 #else
-  fd = open (name, O_RDWR);
+  fd = open (ttyname (fd_tty), O_RDWR);
   if (fd >= 0)
     close (fd);
 #endif
 
-  int fd = open ("/dev/tty", O_WRONLY);
+  fd = open ("/dev/tty", O_WRONLY);
   if (fd < 0)
     return -1; /* fatal */
 
