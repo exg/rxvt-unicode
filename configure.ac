@@ -687,9 +687,6 @@ ac_save_LIBS=$LIBS
 ac_save_CFLAGS=$CFLAGS
 CFLAGS="$CFLAGS $X_CFLAGS"
 LIBS="$LIBS $X_LIBS $X_EXTRA_LIBS -lX11"
-if test x$rxvt_cv_rpath = xyes -o x$rxvt_cv_R = xyes; then
-  LIBS=`echo $LIBS | sed "$R_TRANSLATE"`
-fi
 AC_CACHE_CHECK(for working Xlocale, rxvt_cv_func_xlocale,
 [AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <X11/Xlib.h>
 #include <stdlib.h>
@@ -916,12 +913,6 @@ AC_SUBST(LDFLAGS)
 AC_SUBST(X_CFLAGS)
 
 dnl# Attack the libs
-if test x$rxvt_cv_rpath = xyes -o x$rxvt_cv_R = xyes; then
-  LIBS=`echo $LIBS | sed "$R_TRANSLATE"`
-  X_LIBS=`echo $X_LIBS | sed "$R_TRANSLATE"`
-  X_EXTRA_LIBS=`echo $X_EXTRA_LIBS | sed "$R_TRANSLATE"`
-  XPM_LIBS=`echo $XPM_LIBS | sed "$R_TRANSLATE"`
-fi
 AC_SUBST(LIBS)
 AC_SUBST(X_LIBS)
 AC_SUBST(X_EXTRA_LIBS)
