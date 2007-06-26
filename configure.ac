@@ -48,10 +48,7 @@ if test x$GCC = xyes && test x$GXX = xyes; then
    LINKER="$CC"
    AC_LINK_IFELSE(
       [AC_LANG_PROGRAM([struct test { }; void f() try { throw new test; } catch (...) { throw; }],[])],
-      [
-         AC_MSG_RESULT(ok)
-         CXXLIB="-lsupc++"
-      ],
+      [AC_MSG_RESULT(ok)],
       [
          AC_MSG_RESULT([no, making everything bigger and slower])
          LIBS="$save_LIBS"
@@ -61,7 +58,6 @@ if test x$GCC = xyes && test x$GXX = xyes; then
    CXX="$save_CXX"
 fi
 AC_SUBST(LINKER,[$LINKER])
-AC_SUBST(CXXLIB)
 
 dnl# --------------------------------------------------------------------------
 dnl# Supply default CXXFLAGS, if not specified by `CXXFLAGS=flags ./configure'

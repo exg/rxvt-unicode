@@ -21,7 +21,6 @@ DEFS = @DEFS@
 LIBS = @LIBS@
 XINC = @X_CFLAGS@ @XPM_CFLAGS@  @LIBAFTERIMAGE_CFLAGS@
 XLIB = @X_LIBS@ @XPM_LIBS@  @AFTERIMAGE_LIBS@ -lX11 @X_EXTRA_LIBS@
-CXXLIB = @CXXLIB@
 COMPILE = $(CXX) $(DEFS) $(CPPFLAGS) $(CXXFLAGS) $(DEBUG) $(XINC) -I.. -I$(srcdir) -I.
 LINK = @LINKER@ $(LDFLAGS)
 
@@ -79,8 +78,8 @@ rxvtd: rxvtd.o $(COMMON) $(COMMON_DAEMON)
 #	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o librxvt.la $(LIBS) $(XLIB) -o $@
 
 rxvtc: rxvtc.o $(COMMON_DAEMON) fdpass.o
-	$(LINK) -o $@ rxvtc.o $(COMMON_DAEMON) fdpass.o $(CXXLIB)
-#	$(LIBTOOL) --mode=link $(LINK) rxvtc.o rxvtdaemon.o $(CXXLIB) -o $@
+	$(LINK) -o $@ rxvtc.o $(COMMON_DAEMON) fdpass.o $(LIBS)
+#	$(LIBTOOL) --mode=link $(LINK) rxvtc.o rxvtdaemon.o $(LIBS) -o $@
 
 #librxvt.la: $(LIBOBJS)
 #	$(LIBTOOL) --mode=link $(LINK) -rpath $(libdir) -version-info $(LIBVERSION) $(LIBOBJS) $(LIBS) -o $@
