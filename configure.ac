@@ -531,49 +531,6 @@ AC_CACHE_CHECK(whether termios.h and sys/ioctl.h may both be included, rxvt_cv_h
 #include <termios.h>
 #endif]], [[int a = ECHO;]])],[rxvt_cv_header_sysioctl=yes],[rxvt_cv_header_sysioctl=no])])
 
-dnl# ELF systems may want to store paths for dynamic libraries.
-dnl# Lets see if the compiler can accept "-Rpath" or "-Wl,-Rpath"
-dnl# At least one version of SunOS wants "-R path" but it's not checked yet.
-if test -n "$GCC"; then
-  LDARG="-Wl,"
-else
-  LDARG=""
-fi
-changequote(, )dnl
-R_TRANSLATE='s/-L\([^ ]*\)/-L\1 '$LDARG'-rpath '$LDARG'\1/g'
-changequote([, ])dnl
-
-ac_save_CFLAGS=$CFLAGS
-ac_save_LIBS=$LIBS
-CFLAGS="$CFLAGS $X_CFLAGS"
-LIBS=`echo "$LIBS $X_LIBS $X_EXTRA_LIBS -lX11" | sed "$R_TRANSLATE"`
-AC_CACHE_CHECK([for -rpath dynamic library path recording], rxvt_cv_rpath,
-[AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <X11/Xlib.h>
-#include <stdlib.h>
-main()
-{
-    exit(0);
-    (void) XOpenDisplay("foobar");
-}]])],[rxvt_cv_rpath=yes],[rxvt_cv_rpath=no],[dnl
-  AC_MSG_WARN(You may need to check the LIBS line)])])
-if test x$rxvt_cv_rpath != xyes; then
-  changequote(, )dnl
-  R_TRANSLATE='s/-L\([^ ]*\)/-L\1 '$LDARG'-R\1/g'
-  changequote([, ])dnl
-  LIBS=`echo "$ac_save_LIBS $X_LIBS $X_EXTRA_LIBS -lX11" | sed "$R_TRANSLATE"`
-  AC_CACHE_CHECK([for -R dynamic library path recording], rxvt_cv_R,
-[AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <X11/Xlib.h>
-#include <stdlib.h>
-main()
-{
-    exit(0);
-    (void) XOpenDisplay("foobar");
-}]])],[rxvt_cv_R=yes],[rxvt_cv_R=no],[rxvt_cv_R=no])])
-  if test x$rxvt_cv_R != xyes; then
-    LIBS="$ac_save_LIBS $X_LIBS $X_EXTRA_LIBS -lX11"
-  fi
-fi
-
 AC_CACHE_CHECK([for XPointer], rxvt_cv_xpointer,
 [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <X11/Xlib.h>]], [[XPointer dummy;]])],[rxvt_cv_xpointer=yes],[rxvt_cv_xpointer=no])])
 if test x$rxvt_cv_xpointer = xyes; then
