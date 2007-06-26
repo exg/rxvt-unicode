@@ -60,7 +60,7 @@
   def (preeditType)
   def (inputMethod)
 #endif
-#ifdef TRANSPARENT
+#ifdef ENABLE_TRANSPARENCY
   def (transparent)
 #endif
 #if XFT

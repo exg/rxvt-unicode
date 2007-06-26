@@ -1037,7 +1037,7 @@ rxvt_term::flush ()
 {
   flush_ev.stop ();
 
-#ifdef TRANSPARENT
+#ifdef ENABLE_TRANSPARENCY
   if (want_full_refresh)
     {
       want_full_refresh = 0;
@@ -1501,7 +1501,7 @@ rxvt_term::x_cb (XEvent &ev)
 
             HOOK_INVOKE ((this, HOOK_CONFIGURE_NOTIFY, DT_XEVENT, &ev, DT_END));
 
-#ifdef TRANSPARENT
+#ifdef ENABLE_TRANSPARENCY
             if (option (Opt_transparent))
               check_our_parents ();
 #endif
@@ -1545,11 +1545,11 @@ rxvt_term::x_cb (XEvent &ev)
         HOOK_INVOKE ((this, HOOK_UNMAP_NOTIFY, DT_XEVENT, &ev, DT_END));
         break;
 
-#ifdef TRANSPARENT
+#ifdef ENABLE_TRANSPARENCY
       case ReparentNotify:
         rootwin_cb (ev);
         break;
-#endif				/* TRANSPARENT */
+#endif				/* ENABLE_TRANSPARENCY */
 
       case GraphicsExpose:
       case Expose:
@@ -1583,7 +1583,7 @@ rxvt_term::x_cb (XEvent &ev)
                 scrollbar_show (0);
               }
 
-#ifdef TRANSPARENT
+#ifdef ENABLE_TRANSPARENCY
             if (am_transparent && ev.xany.window == parent[0])
               XClearWindow (dpy, ev.xany.window);
 #endif
@@ -1822,7 +1822,7 @@ rxvt_term::update_fade_color (unsigned int idx)
 #endif
 }
 
-#if TRANSPARENT || ENABLE_PERL
+#if ENABLE_TRANSPARENCY || ENABLE_PERL
 void
 rxvt_term::rootwin_cb (XEvent &ev)
 {
@@ -1832,7 +1832,7 @@ rxvt_term::rootwin_cb (XEvent &ev)
       && HOOK_INVOKE ((this, HOOK_ROOT_EVENT, DT_XEVENT, &ev, DT_END)))
     return;
 
-# if TRANSPARENT
+# if ENABLE_TRANSPARENCY
   switch (ev.type)
     {
       case PropertyNotify:
@@ -3437,7 +3437,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
         process_color_seq (op, Color_IT, str, resp);
         break;
 #endif
-#if TRANSPARENT && TINTING
+#if ENABLE_TRANSPARENCY && TINTING
       case URxvt_Color_tint:
         process_color_seq (op, Color_tint, str, resp);
 
@@ -3477,7 +3477,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
               scr_touch (true);
 #endif
             }
-#if TRANSPARENT && defined(HAVE_AFTERIMAGE)
+#if ENABLE_TRANSPARENCY && defined(HAVE_AFTERIMAGE)
           if (option (Opt_transparent))
             check_our_parents ();
 #endif

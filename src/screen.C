@@ -1653,7 +1653,7 @@ rxvt_term::scr_rvideo_mode (bool on) NOTHROW
 #if XPM_BACKGROUND
       if (bgPixmap.pixmap == None)
 #endif
-#if TRANSPARENT
+#if ENABLE_TRANSPARENCY
         if (!option (Opt_transparent) || am_transparent == 0)
 #endif
           XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
@@ -2010,7 +2010,7 @@ rxvt_term::scr_refresh () NOTHROW
 #if XPM_BACKGROUND
   have_bg |= bgPixmap.pixmap != None;
 #endif
-#if TRANSPARENT
+#if ENABLE_TRANSPARENCY
   have_bg |= option (Opt_transparent) && am_transparent;
 #endif
   ocrow = oldcursor.row; /* is there an old outline cursor on screen? */
@@ -2484,7 +2484,7 @@ void
 rxvt_term::scr_recolour () NOTHROW
 {
   if (1
-#if TRANSPARENT
+#if ENABLE_TRANSPARENCY
       && !am_transparent
 #endif
 #if XPM_BACKGROUND

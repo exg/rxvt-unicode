@@ -1276,7 +1276,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
   bool buffered = bg >= 0                         // we don't use a transparent bg
 #ifndef FORCE_UNBUFFERED_XFT
-# ifdef TRANSPARENT
+# ifdef ENABLE_TRANSPARENCY
                   || !term->am_transparent        // we aren't transparent
 # endif
 #endif
@@ -1323,7 +1323,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
           if (0)
             ;
-#ifdef TRANSPARENT
+#ifdef ENABLE_TRANSPARENCY
           else if (bg < 0 && term->am_pixmap_trans)
             XCopyArea (disp, term->pixmap, d2, gc,
                        x + term->window_vt_x, y + term->window_vt_y,

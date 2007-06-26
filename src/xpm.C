@@ -193,7 +193,7 @@ rxvt_term::resize_pixmap ()
     { /* So be it: I'm not using pixmaps */
       pixmap = None;
 
-#ifdef TRANSPARENT
+#ifdef ENABLE_TRANSPARENCY
       if (!option (Opt_transparent) || !am_transparent)
 #endif
         XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
@@ -237,7 +237,7 @@ rxvt_term::resize_pixmap ()
         }
       else
 #ifdef HAVE_AFTERIMAGE
-#ifdef TRANSPARENT
+#ifdef ENABLE_TRANSPARENCY
       if (!option(Opt_transparent) || !am_transparent)
       /* will do that in check_our_parents otherwise */
 #endif
@@ -300,7 +300,7 @@ rxvt_term::resize_pixmap ()
   XSetWindowBackgroundPixmap (dpy, vt, pixmap);
 
   XFreeGC (dpy, gc);
-#ifdef TRANSPARENT
+#ifdef ENABLE_TRANSPARENCY
   am_transparent = 0;
 #endif
 }
@@ -455,7 +455,7 @@ rxvt_term::set_bgPixmap (const char *file)
 
 #endif				/* XPM_BACKGROUND */
 
-#ifdef TRANSPARENT
+#ifdef ENABLE_TRANSPARENCY
 #if TINTING && !defined(HAVE_AFTERIMAGE)
 /* taken from aterm-0.4.2 */
 

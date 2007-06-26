@@ -901,7 +901,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   struct mbstate  mbstate;              // current input multibyte state
 
   unsigned char   want_refresh:1,
-#ifdef TRANSPARENT
+#ifdef ENABLE_TRANSPARENCY
                   want_full_refresh:1,	/* awaiting full screen refresh      */
                   am_transparent:1,	/* is a transparent term             */
                   am_pixmap_trans:1, 	/* transparency w/known root pixmap  */
@@ -1096,11 +1096,11 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
     XSelectInput (dpy, vt, vt_emask | vt_emask_perl | vt_emask_xim);
   }
 
-#if TRANSPARENT || ENABLE_PERL
+#if ENABLE_TRANSPARENCY || ENABLE_PERL
   void rootwin_cb (XEvent &xev);
   xevent_watcher rootwin_ev;
 #endif
-#if TRANSPARENT
+#if ENABLE_TRANSPARENCY
   int check_our_parents ();
   void check_our_parents_cb (time_watcher &w);
   time_watcher check_our_parents_ev;

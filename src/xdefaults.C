@@ -109,7 +109,7 @@ optList[] = {
               BOOL (Rs_scrollTtyOutput, NULL, "si",  Opt_scrollTtyOutput, Optflag_Reverse, "scroll-on-tty-output inhibit"),
               BOOL (Rs_scrollTtyKeypress, "scrollTtyKeypress", "sk", Opt_scrollTtyKeypress, 0, "scroll-on-keypress"),
               BOOL (Rs_scrollWithBuffer, "scrollWithBuffer", "sw", Opt_scrollWithBuffer, 0, "scroll-with-buffer"),
-#if TRANSPARENT
+#if ENABLE_TRANSPARENCY
               BOOL (Rs_transparent, "inheritPixmap", "ip", Opt_transparent, 0, "inherit parent pixmap"),
               SWCH ("tr", Opt_transparent, 0, NULL),
 # if TINTING
@@ -327,7 +327,7 @@ static const char optionsstring[] = "options: "
 #if defined(XPM_BACKGROUND)
                                     "XPM,"
 #endif
-#if defined(TRANSPARENT)
+#if defined(ENABLE_TRANSPARENCY)
                                     "transparent,"
 #endif
 #if TINTING

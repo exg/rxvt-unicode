@@ -832,7 +832,7 @@ if test x$support_tinting = xyes; then
   AC_DEFINE(TINTING, 1, Define if you want your background to be tinted)
 fi
 if test x$support_inheritpixmap = xyes; then
-  AC_DEFINE(TRANSPARENT, 1, Define if you want your background to use the parent window background)
+  AC_DEFINE(ENABLE_TRANSPARENCY, 1, Define if you want your background to use the parent window background)
 fi
 if test x$support_keepscrolling = xno; then
   AC_DEFINE(NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING, 1, Define for continual scrolling when you keep the scrollbar button pressed)

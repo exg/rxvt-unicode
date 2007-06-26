@@ -92,8 +92,8 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
    How do I compile the manual pages on my own?
     You need to have a recent version of perl installed as /usr/bin/perl,
-    one that comes with pod2man, pod2text and pod2html. Then go to the doc
-    subdirectory and enter "make alldoc".
+    one that comes with pod2man, pod2text and pod2xhtml (from Pod::XHTML).
+    Then go to the doc subdirectory and enter "make alldoc".
 
    Isn't rxvt-unicode supposed to be small? Don't all those features bloat?
     I often get asked about this, and I think, no, they didn't cause extra

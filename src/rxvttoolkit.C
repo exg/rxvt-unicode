@@ -66,7 +66,7 @@ const char *const xa_names[] =
   "WM_LOCALE_NAME",
   "XIM_SERVERS",
 #endif
-#ifdef TRANSPARENT
+#ifdef ENABLE_TRANSPARENCY
   "_XROOTPMAP_ID",
   "ESETROOT_PMAP_ID",
 #endif

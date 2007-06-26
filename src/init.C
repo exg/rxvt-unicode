@@ -185,7 +185,7 @@ rxvt_term::init_vars ()
   pix_colors_unfocused = new rxvt_color [TOTAL_COLORS];
 #endif
 
-#if defined(XPM_BACKGROUND) || defined(TRANSPARENT)
+#if defined(XPM_BACKGROUND) || defined(ENABLE_TRANSPARENCY)
   pixmap = None;
 #endif
 

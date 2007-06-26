@@ -150,10 +150,10 @@ int rxvt_composite_vec::expand (unicode_t c, wchar_t *r)
 
 rxvt_term::rxvt_term ()
     :
-#if TRANSPARENT || ENABLE_PERL
+#if ENABLE_TRANSPARENCY || ENABLE_PERL
     rootwin_ev (this, &rxvt_term::rootwin_cb),
 #endif
-#if TRANSPARENT
+#if ENABLE_TRANSPARENCY
     check_our_parents_ev(this, &rxvt_term::check_our_parents_cb),
 #endif
 #ifdef HAVE_SCROLLBARS
@@ -336,7 +336,7 @@ rxvt_term::destroy ()
 #if HAVE_SCROLLBARS
       scrollbar_ev.stop (display);
 #endif
-#if TRANSPARENT || ENABLE_PERL
+#if ENABLE_TRANSPARENCY || ENABLE_PERL
       rootwin_ev.stop (display);
 #endif
       incr_ev.stop ();
@@ -506,7 +506,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
   if (option (Opt_scrollBar))
     resize_scrollbar ();      /* create and map scrollbar */
 #endif
-#ifdef TRANSPARENT
+#ifdef ENABLE_TRANSPARENCY
   if (option (Opt_transparent))
     {
       XSelectInput (dpy, display->root, PropertyChangeMask);

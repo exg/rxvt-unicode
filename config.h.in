@@ -21,6 +21,9 @@
 /* Define if you want bold and italic support */
 #undef ENABLE_STYLES
 
+/* Define if you want your background to use the parent window background */
+#undef ENABLE_TRANSPARENCY
+
 /* Define if you want european extended codesets */
 #undef ENCODING_EU
 
@@ -229,9 +232,6 @@
 /* Define to 1 if you have the <X11/Xft/Xft.h> header file. */
 #undef HAVE_X11_XFT_XFT_H
 
-/* Define if Xlocale support works */
-#undef HAVE_XLOCALE
-
 /* Define if you have XPointer typedef */
 #undef HAVE_XPOINTER
 
@@ -365,9 +365,6 @@
 /* Define if you want your background to be tinted */
 #undef TINTING
 
-/* Define if you want your background to use the parent window background */
-#undef TRANSPARENT
-
 /* Define location of ttys/ttytab */
 #undef TTYTAB_FILENAME
 
@@ -436,12 +433,6 @@
 
 /* Needed to get declarations for msg_control and msg_controllen on Solaris */
 #undef _XOPEN_SOURCE
-
-/* Needed to get declarations for msg_control and msg_controllen on Solaris */
-#undef _XOPEN_SOURCE_EXTENDED
-
-/* Needed to get declarations for msg_control and msg_controllen on Solaris */
-#undef __EXTENSIONS__
 
 /* Define to empty if `const' does not conform to ANSI C. */
 #undef const
