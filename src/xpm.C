@@ -412,7 +412,10 @@ rxvt_term::set_bgPixmap (const char *file)
         original_asim = get_asimage( asimman, file, 0xFFFFFFFF, 100 ); 	  
       else
         {
-          f = strndup( file, f - file );
+          size_t len = f - file;
+          f = (char *)malloc (len + 1);
+          strncpy (f, file, len);
+          f[len] = '\0';
           original_asim = get_asimage( asimman, f, 0xFFFFFFFF, 100 ); 	  
           free( f );
         }
