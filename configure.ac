@@ -532,8 +532,6 @@ AC_CACHE_CHECK([for XPointer], rxvt_cv_xpointer,
 if test x$rxvt_cv_xpointer = xyes; then
   AC_DEFINE(HAVE_XPOINTER, 1, Define if you have XPointer typedef)
 fi
-LIBS=$ac_save_LIBS
-CFLAGS=$ac_save_CFLAGS
 
 AC_CACHE_CHECK([for XLIB_ILLEGAL_ACCESS], rxvt_xlib_illegal_access,
 [AC_COMPILE_IFELSE(
