@@ -7108,8 +7108,6 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
 fi
-LIBS=$ac_save_LIBS
-CFLAGS=$ac_save_CFLAGS
 
 echo "$as_me:$LINENO: checking for XLIB_ILLEGAL_ACCESS" >&5
 echo $ECHO_N "checking for XLIB_ILLEGAL_ACCESS... $ECHO_C" >&6
