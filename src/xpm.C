@@ -464,7 +464,8 @@ rxvt_term::set_bgPixmap (const char *file)
 
 typedef uint32_t RUINT32T;
 
-void ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, int bm)
+static void
+ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, int bm)
 {
   int sh_r, sh_g, sh_b;
   RUINT32T mask_r, mask_g, mask_b;
