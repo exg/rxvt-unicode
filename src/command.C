@@ -1437,10 +1437,6 @@ rxvt_term::x_cb (XEvent &ev)
           }
         break;
 
-      case MappingNotify:
-        XRefreshKeyboardMapping (&ev.xmapping);
-        break;
-
         /*
          * XXX: this is not the _current_ arrangement
          * Here's my conclusion:

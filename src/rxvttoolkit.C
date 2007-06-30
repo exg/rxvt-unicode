@@ -561,6 +561,9 @@ void rxvt_display::x_cb (io_watcher &w, short revents)
               && xev.xproperty.atom == xa[XA_XIM_SERVERS])
             im_change_check ();
 #endif
+          if (xev.type == MappingNotify)
+            XRefreshKeyboardMapping (&xev.xmapping);
+
           for (int i = xw.size (); i--; )
             {
               if (!xw[i])
