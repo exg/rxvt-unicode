@@ -28,6 +28,79 @@
 
 #ifdef XPM_BACKGROUND
 
+#ifndef HAVE_AFTERIMAGE
+/*
+ * search for FILE in the current working directory, and within the
+ * colon-delimited PATHLIST, adding the file extension EXT if required.
+ *
+ * FILE is either semi-colon or zero terminated
+ */
+static char *
+rxvt_File_search_path (const char *pathlist, const char *file, const char *ext)
+{
+  int             maxpath, len;
+  const char     *p, *path;
+  char            name[256];
+
+  if (!access (file, R_OK))	/* found (plain name) in current directory */
+    return strdup (file);
+
+  /* semi-colon delimited */
+  if ((p = strchr (file, ';')))
+    len = (p - file);
+  else
+    len = strlen (file);
+
+  /* leave room for an extra '/' and trailing '\0' */
+  maxpath = sizeof (name) - (len + (ext ? strlen (ext) : 0) + 2);
+  if (maxpath <= 0)
+    return NULL;
+
+  /* check if we can find it now */
+  strncpy (name, file, len);
+  name[len] = '\0';
+
+  if (!access (name, R_OK))
+    return strdup (name);
+  if (ext)
+    {
+      strcat (name, ext);
+      if (!access (name, R_OK))
+        return strdup (name);
+    }
+  for (path = pathlist; path != NULL && *path != '\0'; path = p)
+    {
+      int             n;
+
+      /* colon delimited */
+      if ((p = strchr (path, ':')) == NULL)
+        p = strchr (path, '\0');
+
+      n = (p - path);
+      if (*p != '\0')
+        p++;
+
+      if (n > 0 && n <= maxpath)
+        {
+          strncpy (name, path, n);
+          if (name[n - 1] != '/')
+            name[n++] = '/';
+          name[n] = '\0';
+          strncat (name, file, len);
+
+          if (!access (name, R_OK))
+            return strdup (name);
+          if (ext)
+            {
+              strcat (name, ext);
+              if (!access (name, R_OK))
+                return strdup (name);
+            }
+        }
+    }
+  return NULL;
+}
+
 /*
  * Calculate tiling sizes and increments
  * At start, p == 0, incr == xpmwidthheight
@@ -103,6 +176,7 @@ rxvt_pixmap_incr (unsigned int *wh, unsigned int *xy, float *incr, float *p, uns
   *incr = cincr;
   *p = cp;
 }
+#endif
 
 /*
  * These GEOM strings indicate absolute size/position:
@@ -432,7 +506,7 @@ rxvt_term::set_bgPixmap (const char *file)
                            | XpmDepth | XpmSize | XpmReturnPixels);
 
       /* search environment variables here too */
-      f = (char *)rxvt_File_find (file, ".xpm", rs[Rs_path]);
+      f = rxvt_File_search_path (rs[Rs_path], file, ".xpm");
       if (f == NULL
           || XpmReadFileToPixmap (dpy, display->root, f,
                                   &bgPixmap.pixmap, NULL,
