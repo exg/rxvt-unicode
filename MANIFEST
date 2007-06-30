@@ -23,6 +23,7 @@ doc/rxvt-tabbed
 doc/pty-fd
 doc/etc/rxvt-unicode.terminfo
 doc/etc/rxvt-unicode.termcap
+doc/wcwidth.patch
 
 doc/.cvsignore
 doc/Makefile.in
