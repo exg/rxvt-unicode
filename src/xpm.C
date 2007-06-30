@@ -28,7 +28,81 @@
 
 #ifdef XPM_BACKGROUND
 
-static void      rxvt_pixmap_incr                 (unsigned int *wh, unsigned int *xy, float *incr, float *p, unsigned int widthheight, unsigned int xpmwidthheight);
+/*
+ * Calculate tiling sizes and increments
+ * At start, p == 0, incr == xpmwidthheight
+ */
+static void
+rxvt_pixmap_incr (unsigned int *wh, unsigned int *xy, float *incr, float *p, unsigned int widthheight, unsigned int xpmwidthheight)
+{
+  unsigned int    cwh, cxy;
+  float           cincr, cp;
+
+  cp = 0;
+  cincr = (float)xpmwidthheight;
+  cxy = *xy;
+  cwh = *wh;
+  if (cwh == 1)
+    {	/* display one image, no horizontal/vertical scaling */
+      cincr = (float)widthheight;
+      if (xpmwidthheight <= widthheight)
+        {
+          cwh = xpmwidthheight;
+          cxy = (cxy * (widthheight - cwh)) / 100;	/* beware! order */
+          cwh += cxy;
+        }
+      else
+        {
+          cxy = 0;
+          cwh = widthheight;
+        }
+    }
+  else if (cwh < 10)
+    {	/* fit WH images across/down screen */
+      cincr *= cwh;
+      cxy = 0;
+      cwh = widthheight;
+    }
+  else
+    {
+      cincr *= 100.0 / cwh;
+      if (cwh < 100)
+        {	/* contract */
+          float           pos;
+
+          cwh = (cwh * widthheight) / 100;
+          pos = (float)cxy / 100 * widthheight - (cwh / 2);
+
+          cxy = (widthheight - cwh);
+          if (pos <= 0)
+            cxy = 0;
+          else if (pos < cxy)
+            cxy = (int) pos;
+          cwh += cxy;
+        }
+      else
+        {	/* expand */
+          if (cxy > 0)
+            {	/* position */
+              float           pos;
+
+              pos = (float)cxy / 100 * xpmwidthheight - (cincr / 2);
+              cp = xpmwidthheight - cincr;
+              if (pos <= 0)
+                cp = 0;
+              else if (pos < cp)
+                cp = pos;
+            }
+          cxy = 0;
+          cwh = widthheight;
+        }
+    }
+  cincr /= widthheight;
+  *wh = cwh;
+  *xy = cxy;
+  *incr = cincr;
+  *p = cp;
+}
 
 /*
  * These GEOM strings indicate absolute size/position:
@@ -303,82 +377,6 @@ rxvt_term::resize_pixmap ()
 #ifdef ENABLE_TRANSPARENCY
   am_transparent = 0;
 #endif
-}
-
-/*
- * Calculate tiling sizes and increments
- * At start, p == 0, incr == xpmwidthheight
- */
-static void
-rxvt_pixmap_incr (unsigned int *wh, unsigned int *xy, float *incr, float *p, unsigned int widthheight, unsigned int xpmwidthheight)
-{
-  unsigned int    cwh, cxy;
-  float           cincr, cp;
-
-  cp = 0;
-  cincr = (float)xpmwidthheight;
-  cxy = *xy;
-  cwh = *wh;
-  if (cwh == 1)
-    {	/* display one image, no horizontal/vertical scaling */
-      cincr = (float)widthheight;
-      if (xpmwidthheight <= widthheight)
-        {
-          cwh = xpmwidthheight;
-          cxy = (cxy * (widthheight - cwh)) / 100;	/* beware! order */
-          cwh += cxy;
-        }
-      else
-        {
-          cxy = 0;
-          cwh = widthheight;
-        }
-    }
-  else if (cwh < 10)
-    {	/* fit WH images across/down screen */
-      cincr *= cwh;
-      cxy = 0;
-      cwh = widthheight;
-    }
-  else
-    {
-      cincr *= 100.0 / cwh;
-      if (cwh < 100)
-        {	/* contract */
-          float           pos;
-
-          cwh = (cwh * widthheight) / 100;
-          pos = (float)cxy / 100 * widthheight - (cwh / 2);
-
-          cxy = (widthheight - cwh);
-          if (pos <= 0)
-            cxy = 0;
-          else if (pos < cxy)
-            cxy = (int) pos;
-          cwh += cxy;
-        }
-      else
-        {	/* expand */
-          if (cxy > 0)
-            {	/* position */
-              float           pos;
-
-              pos = (float)cxy / 100 * xpmwidthheight - (cincr / 2);
-              cp = xpmwidthheight - cincr;
-              if (pos <= 0)
-                cp = 0;
-              else if (pos < cp)
-                cp = pos;
-            }
-          cxy = 0;
-          cwh = widthheight;
-        }
-    }
-  cincr /= widthheight;
-  *wh = cwh;
-  *xy = cxy;
-  *incr = cincr;
-  *p = cp;
 }
 
 Pixmap
