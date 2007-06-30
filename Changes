@@ -40,6 +40,7 @@ TODO: rid of global dpy variable.
 	- nuke reconf script, serves no purpose anymore.
 	- fixed and documented matcher/on_user_command processing in matcher
 	  extension (tpope).
+	- compile out of the box on Solaris 10 (exg).
 
 8.2  Sat Feb 17 21:35:28 CET 2007
 	- fix make depend in src/, reported by exg.
