@@ -23,6 +23,8 @@ TODO: document -blr units, and possibly fix blur (20 seems to be about 3 pixels,
       80 seems to be about 3 pixels, too, just much slower).
 TODO: when window partially off-screen, -blr does not have any effect anymore.
 TODO: rid of global dpy variable.
+TODO: borderLess resource might not work on some systems - might be another
+      gentoo phantom bug or a real problem, such as using it too early.
 8.
 	- new option: skipScroll/-ss, enabled by default.
         - go with the times and expect x11 library files in /usr/lib, not
