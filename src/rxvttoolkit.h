@@ -189,10 +189,6 @@ struct rxvt_screen {
   void clear ();
 };
 
-#ifdef HAVE_AFTERIMAGE  
-struct ASVisual;
-#endif
-
 struct rxvt_display : refcounted {
   io_manager_vec<xevent_watcher> xw;
 
@@ -210,9 +206,6 @@ struct rxvt_display : refcounted {
   Display   *dpy;
   int       screen;
   Window    root;
-#ifdef HAVE_AFTERIMAGE  
-  struct ASVisual  *asv;
-#endif
   rxvt_term *selection_owner;
   Atom      xa[NUM_XA];
   bool      is_local;

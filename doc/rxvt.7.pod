@@ -2331,6 +2331,20 @@ F<lastlogin>) at start of rxvt execution.  This option requires
 
 Add support for XPM background pixmaps.
 
+=item --enable-afterimage (default: on)
+
+Add support for libAfterImage to be used for transparency and
+background pixmaps from many file formats.
+Supported formats include JPG, PNG, GIF, XPM, BMP, ICO, XCF,
+TGA and AfterStep image XML.
+It relies on external libraries for reading images in TIFF
+and SVG formats. This option also adds such eye candy as
+blending pixmap over root background, scaling and bluring of
+background pixmaps. Beware that with tis option enabled rxvt's
+memory footprint will increase by anywhere between 750KBytes to 3 MB.
+Memory footprint may somewhat be lowered if libAfterImage is
+configured without support for SVG.
+
 =item --enable-transparency (default: on)
 
 Add support for inheriting parent backgrounds thus giving a fake
@@ -2472,6 +2486,10 @@ C<PERL> environment variable when running configure. Even when compiled
 in, perl will I<not> be initialised when all extensions have been disabled
 C<-pe "" --perl-ext-common "">, so it should be safe to enable from a
 resource standpoint.
+
+=item --with-afterimage-config=DIR
+
+Look for the libAfterImage config script in DIR.
 
 =item --with-name=NAME (default: urxvt)
 

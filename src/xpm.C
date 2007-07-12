@@ -390,10 +390,10 @@ rxvt_term::resize_pixmap ()
       /* will do that in check_our_parents otherwise */
 #endif
         {
-          ASImage *scaled_im = scale_asimage( display->asv, original_asim, w, h, ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT );
+          ASImage *scaled_im = scale_asimage( asv, original_asim, w, h, ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT );
           if (scaled_im) 
             {
-              pixmap = asimage2pixmap( display->asv, display->root, scaled_im, gc, True );
+              pixmap = AFTERIMAGE_DPY_OP(asimage2pixmap( asv, display->root, scaled_im, gc, True ));
               destroy_asimage( &scaled_im );
             }
         }
@@ -493,7 +493,7 @@ rxvt_term::set_bgPixmap (const char *file)
         }
       if (original_asim)
         {
-          bgPixmap.pixmap = asimage2pixmap( display->asv, display->root, original_asim, NULL, True );
+          bgPixmap.pixmap = AFTERIMAGE_DPY_OP(asimage2pixmap( asv, display->root, original_asim, NULL, True ));
           xpmAttr.width = original_asim->width ; 
           xpmAttr.height = original_asim->height ; 
         }
@@ -903,7 +903,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                 MAKE_ROOTPMAP_GEOM(x,w,width);
                 MAKE_ROOTPMAP_GEOM(y,h,height);
 
-                layers[0].im = pixmap2asimage (display->asv, rootpixmap, back_x, back_y, back_w, back_h, AllPlanes, ASA_ASImage, 100);
+                layers[0].im = AFTERIMAGE_DPY_OP(pixmap2asimage (asv, rootpixmap, back_x, back_y, back_w, back_h, AllPlanes, ASA_ASImage, 100));
                 layers[0].clip_x = (back_w == pmap_w)?root_x:0;
                 layers[0].clip_y = (back_h == pmap_h)?root_y:0;
                 layers[0].clip_width = szHint.width;
@@ -912,7 +912,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                 if (rs[Rs_blurradius] && layers[0].im)
                   {
                     double r = atof(rs[Rs_blurradius]);
-                    ASImage* tmp = blur_asimage_gauss(display->asv, layers[0].im, r, r, 0xFFFFFFFF, ASA_ASImage, 100, ASIMAGE_QUALITY_DEFAULT );
+                    ASImage* tmp = blur_asimage_gauss(asv, layers[0].im, r, r, 0xFFFFFFFF, ASA_ASImage, 100, ASIMAGE_QUALITY_DEFAULT );
                     if( tmp )
                       {
                         destroy_asimage( &layers[0].im );
@@ -936,7 +936,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                     if (fore_w != original_asim->width
                         || fore_h != original_asim->height)
                       {
-                        layers[1].im = scale_asimage( display->asv,
+                        layers[1].im = scale_asimage( asv,
                                                       original_asim,
                                                       fore_w, fore_h,
                                                       ASA_ASImage, 100,
@@ -953,7 +953,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                           layers[1].merge_scanlines = alphablend_scanlines;
                       }
                   }                    
-                merged_im = merge_layers( display->asv, layers, layers[1].im?2:1,
+                merged_im = merge_layers( asv, layers, layers[1].im?2:1,
                                           szHint.width, szHint.height,
                                           ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT );
                 if (layers[1].im != original_asim)
@@ -961,7 +961,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                 destroy_asimage( &(layers[0].im) );
                 if (merged_im != NULL)
                   {
-                    tmp_pmap = asimage2pixmap( display->asv, DefaultRootWindow(dpy), merged_im, gc, True );
+                    tmp_pmap = AFTERIMAGE_DPY_OP(asimage2pixmap( asv, DefaultRootWindow(dpy), merged_im, gc, True ));
                     destroy_asimage( &merged_im );
                   }
                 free( layers );
