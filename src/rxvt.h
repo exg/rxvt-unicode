@@ -885,6 +885,10 @@ extern class rxvt_composite_vec rxvt_composite;
 class keyboard_manager;
 #endif
 
+/* to get libAfterImage to work with multiple displays we use that hack :  */
+/* should not need that with libAfterImage  version >= 1.15 */
+#define AFTERIMAGE_DPY_OP(op) ((::dpy = dpy), (op))
+
 struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 
   // special markers with magic addresses
@@ -1023,9 +1027,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   bgPixmap_t      bgPixmap;
 #ifdef HAVE_AFTERIMAGE  
   struct ASVisual  *asv;
-  /* to get libAfterImage to work with multiple displays we use that hack :  */
-  /* should not need that with libAfterImage  version >= 1.15 */
-#define AFTERIMAGE_DPY_OP(_op)  ({::dpy = dpy; _op;})
   ASImageManager *asimman;
   ASImage        *original_asim;
   struct { unsigned int width, height; } xpmAttr; /* all we need is width/height */
