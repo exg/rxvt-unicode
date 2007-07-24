@@ -390,11 +390,11 @@ rxvt_term::resize_pixmap ()
       /* will do that in check_our_parents otherwise */
 #endif
         {
-          ASImage *scaled_im = scale_asimage( asv, original_asim, w, h, ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT );
+          ASImage *scaled_im = scale_asimage (asv, original_asim, w, h, ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT);
           if (scaled_im) 
             {
-              pixmap = AFTERIMAGE_DPY_OP(asimage2pixmap( asv, display->root, scaled_im, gc, True ));
-              destroy_asimage( &scaled_im );
+              pixmap = AFTERIMAGE_DPY_OP (asimage2pixmap(asv, display->root, scaled_im, gc, True));
+              destroy_asimage (&scaled_im);
             }
         }
 #else   /* HAVE_AFTERIMAGE */
@@ -493,7 +493,7 @@ rxvt_term::set_bgPixmap (const char *file)
         }
       if (original_asim)
         {
-          bgPixmap.pixmap = AFTERIMAGE_DPY_OP(asimage2pixmap( asv, display->root, original_asim, NULL, True ));
+          bgPixmap.pixmap = AFTERIMAGE_DPY_OP (asimage2pixmap (asv, display->root, original_asim, NULL, True));
           xpmAttr.width = original_asim->width ; 
           xpmAttr.height = original_asim->height ; 
         }
@@ -903,7 +903,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                 MAKE_ROOTPMAP_GEOM(x,w,width);
                 MAKE_ROOTPMAP_GEOM(y,h,height);
 
-                layers[0].im = AFTERIMAGE_DPY_OP(pixmap2asimage (asv, rootpixmap, back_x, back_y, back_w, back_h, AllPlanes, ASA_ASImage, 100));
+                layers[0].im = AFTERIMAGE_DPY_OP (pixmap2asimage (asv, rootpixmap, back_x, back_y, back_w, back_h, AllPlanes, ASA_ASImage, 100));
                 layers[0].clip_x = (back_w == pmap_w)?root_x:0;
                 layers[0].clip_y = (back_h == pmap_h)?root_y:0;
                 layers[0].clip_width = szHint.width;
@@ -961,7 +961,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                 destroy_asimage( &(layers[0].im) );
                 if (merged_im != NULL)
                   {
-                    tmp_pmap = AFTERIMAGE_DPY_OP(asimage2pixmap( asv, DefaultRootWindow(dpy), merged_im, gc, True ));
+                    tmp_pmap = AFTERIMAGE_DPY_OP (asimage2pixmap (asv, DefaultRootWindow(dpy), merged_im, gc, True));
                     destroy_asimage( &merged_im );
                   }
                 free( layers );
