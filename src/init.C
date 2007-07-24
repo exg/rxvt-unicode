@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------------*
+ /*----------------------------------------------------------------------*
  * File:        init.C
  *----------------------------------------------------------------------*
  *
@@ -320,7 +320,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
 #ifdef HAVE_AFTERIMAGE
   ::dpy = NULL ; /* init global var from libAfter... */
-  asv = AFTERIMAGE_DPY_OP(create_asvisual_for_id (dpy, display->screen, depth, XVisualIDFromVisual (visual), cmap, NULL));
+  asv = AFTERIMAGE_DPY_OP (create_asvisual_for_id (dpy, display->screen, depth, XVisualIDFromVisual (visual), cmap, NULL));
 #endif
   free (r_argv);
 
