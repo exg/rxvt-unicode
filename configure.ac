@@ -462,6 +462,7 @@ dnl# only check if we want xpm-background
 LIBAFTERIMAGE_CFLAGS=
 AFTERIMAGE_LIBS=
 have_afterimage=
+AFTERIMAGE_VERSION=
 
 if test x$support_afterimage = xyes; then
   support_afterimage=no
@@ -469,13 +470,18 @@ if test x$support_afterimage = xyes; then
   if test "x$afterimage_config" = "x" ; then
     AC_PATH_PROG(afterimage_config, afterimage-config, no)
   fi
-
-  AC_MSG_CHECKING(for libAfterImage)
-  if $afterimage_config --version >/dev/null 2>&1 ; then
+  AC_PROG_AWK
+  AC_MSG_CHECKING(for libAfterImage version >= 1.15 )
+  AFTERIMAGE_VERSION=`$afterimage_config --version`
+  if test -n $AFTERIMAGE_VERSION  ; then
     LIBAFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
     AFTERIMAGE_LIBS=`$afterimage_config --libs`
     if test "x$AFTERIMAGE_LIBS" != "x"; then
-      support_afterimage=yes
+      libai_ver_major=`echo $AFTERIMAGE_VERSION | $AWK -F . '{print $1}'`
+      libai_ver_minor=`echo $AFTERIMAGE_VERSION | $AWK -F . '{print $2}'`
+      if test "$libai_ver_major -gt 1 -o ($libai_ver_major -eq 1 -a $libai_ver_minor -ge 15)"; then
+        support_afterimage=yes;
+      fi
     fi
   fi
 
@@ -880,10 +886,12 @@ if test x$support_perl = xyes; then
         PERLLIB="`$PERL -MExtUtils::Embed -e ldopts`"
         PERLPRIVLIBEXP="`$PERL -MConfig -e 'print $Config{privlibexp}'`"
      else
-        AC_MSG_ERROR([no, unable to link])
+        AC_MSG_RESULT([no, unable to link])
+        rxvt_perl_link=no
      fi
   else
-     AC_MSG_ERROR([no working perl found, or perl not version >= 5.8])
+     AC_MSG_RESULT([no working perl found, or perl not version >= 5.8])
+     support_perl=no
   fi
 fi
 AC_SUBST(PERLLIB)
