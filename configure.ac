@@ -459,9 +459,8 @@ AC_PATH_XTRA
 dnl# the only reasonable way to find libXpm is do-it-yourself
 dnl# only check if we want xpm-background
 
-LIBAFTERIMAGE_CFLAGS=
+AFTERIMAGE_CFLAGS=
 AFTERIMAGE_LIBS=
-have_afterimage=
 AFTERIMAGE_VERSION=
 
 if test x$support_afterimage = xyes; then
@@ -471,16 +470,16 @@ if test x$support_afterimage = xyes; then
     AC_PATH_PROG(afterimage_config, afterimage-config, no)
   fi
   AC_PROG_AWK
-  AC_MSG_CHECKING(for libAfterImage version >= 1.15 )
+  AC_MSG_CHECKING(for libAfterImage version >= 1.15)
   AFTERIMAGE_VERSION=`$afterimage_config --version`
-  if test -n $AFTERIMAGE_VERSION  ; then
-    LIBAFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
+  if test -n $AFTERIMAGE_VERSION ; then
+    AFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
     AFTERIMAGE_LIBS=`$afterimage_config --libs`
     if test "x$AFTERIMAGE_LIBS" != "x"; then
       libai_ver_major=`echo $AFTERIMAGE_VERSION | $AWK -F . '{print $1}'`
       libai_ver_minor=`echo $AFTERIMAGE_VERSION | $AWK -F . '{print $2}'`
       if test $libai_ver_major -gt 1 -o \( $libai_ver_major -eq 1 -a $libai_ver_minor -ge 15 \); then
-        support_afterimage=yes;
+        support_afterimage=yes
       fi
     fi
   fi
@@ -917,7 +916,7 @@ AC_SUBST(LIBS)
 AC_SUBST(X_LIBS)
 AC_SUBST(X_EXTRA_LIBS)
 
-AC_SUBST(LIBAFTERIMAGE_CFLAGS)
+AC_SUBST(AFTERIMAGE_CFLAGS)
 AC_SUBST(AFTERIMAGE_LIBS)
 
 AC_ARG_PROGRAM
