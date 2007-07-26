@@ -855,39 +855,40 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
 
   if (have_pixmap)
     {
-      Bool success = False ; 
+      Bool success = False;
       GC gc = NULL;
       XGCValues gcvalue;
+      unsigned int pmap_w = 0, pmap_h = 0;
+
 #ifdef HAVE_AFTERIMAGE
       {
-        Pixmap tmp_pmap = None ; 
+        Pixmap tmp_pmap = None;
         ShadingInfo shade;
-        ARGB32 tint ;
-        unsigned int pmap_w = 0, pmap_h = 0;
+        ARGB32 tint;
 
-        if (get_dpy_drawable_size( dpy, rootpixmap, &pmap_w, &pmap_h ))
+        if (get_dpy_drawable_size (dpy, rootpixmap, &pmap_w, &pmap_h))
           {			
             int root_x = 0, root_y = 0;
  
-  	         shade.shading = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100; 
+  	        shade.shading = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100;
             if (ISSET_PIXCOLOR (Color_tint))
               {
                 rgba c;
                 pix_colors_focused [Color_tint].get (c);
                 shade.tintColor.red = c.r; 
-                shade.tintColor.green = c.g; 
-                shade.tintColor.blue = c.b; 
+                shade.tintColor.green = c.g;
+                shade.tintColor.blue = c.b;
               }
             else
               shade.tintColor.red = shade.tintColor.green = shade.tintColor.blue = 0xFFFF;
-            tint = shading2tint32( &shade );
+            tint = shading2tint32 (&shade);
             gc = XCreateGC (dpy, vt, 0UL, &gcvalue);
-            if (get_dpy_window_position(dpy, display->root, parent[0], NULL, NULL, &root_x, &root_y))
+            if (get_dpy_window_position (dpy, display->root, parent[0], NULL, NULL, &root_x, &root_y))
               {
-                ASImageLayer *layers = create_image_layers( 2 );
+                ASImageLayer *layers = create_image_layers (2);
                 ASImage *merged_im = NULL;
                 int back_x, back_y, back_w, back_h;
-                /* merge_layers does good job at tiling background appropriately, 
+                /* merge_layers does good job at tiling background appropriately,
                    so all we need is to cut out smallest possible piece : */
 #define MAKE_ROOTPMAP_GEOM(xy,wh,widthheight) \
           do{ while( root_##xy < 0 ) root_##xy += (int)wrootattr.widthheight; \
@@ -912,10 +913,10 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                 if (rs[Rs_blurradius] && layers[0].im)
                   {
                     double r = atof(rs[Rs_blurradius]);
-                    ASImage* tmp = blur_asimage_gauss(asv, layers[0].im, r, r, 0xFFFFFFFF, ASA_ASImage, 100, ASIMAGE_QUALITY_DEFAULT );
-                    if( tmp )
+                    ASImage* tmp = blur_asimage_gauss (asv, layers[0].im, r, r, 0xFFFFFFFF, ASA_ASImage, 100, ASIMAGE_QUALITY_DEFAULT);
+                    if (tmp)
                       {
-                        destroy_asimage( &layers[0].im );
+                        destroy_asimage (&layers[0].im);
                         layers[0].im = tmp;
                       }
                   }
@@ -923,7 +924,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                   {
                     int fore_w, fore_h;
                     layers[1].im = original_asim;
-                    if( bgPixmap.auto_resize )
+                    if (bgPixmap.auto_resize)
                       {
                         fore_w = szHint.width;
                         fore_h = szHint.height;
@@ -936,11 +937,11 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                     if (fore_w != original_asim->width
                         || fore_h != original_asim->height)
                       {
-                        layers[1].im = scale_asimage( asv,
+                        layers[1].im = scale_asimage (asv,
                                                       original_asim,
                                                       fore_w, fore_h,
                                                       ASA_ASImage, 100,
-                                                      ASIMAGE_QUALITY_DEFAULT );
+                                                      ASIMAGE_QUALITY_DEFAULT);
                       }
 
                     layers[1].clip_width = szHint.width;
@@ -948,23 +949,23 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
 
                     if (rs[Rs_blendtype])
                       {
-                        layers[1].merge_scanlines = blend_scanlines_name2func(rs[Rs_blendtype]);
-                        if( layers[1].merge_scanlines == NULL )
+                        layers[1].merge_scanlines = blend_scanlines_name2func (rs[Rs_blendtype]);
+                        if (layers[1].merge_scanlines == NULL)
                           layers[1].merge_scanlines = alphablend_scanlines;
                       }
-                  }                    
-                merged_im = merge_layers( asv, layers, layers[1].im?2:1,
+                  }
+                merged_im = merge_layers (asv, layers, layers[1].im?2:1,
                                           szHint.width, szHint.height,
-                                          ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT );
+                                          ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT);
                 if (layers[1].im != original_asim)
-                  destroy_asimage( &(layers[1].im) );
-                destroy_asimage( &(layers[0].im) );
+                  destroy_asimage (&(layers[1].im));
+                destroy_asimage (&(layers[0].im));
                 if (merged_im != NULL)
                   {
                     tmp_pmap = asimage2pixmap (asv, DefaultRootWindow(dpy), merged_im, gc, True);
-                    destroy_asimage( &merged_im );
+                    destroy_asimage (&merged_im);
                   }
-                free( layers );
+                free (layers);
               }
           }
         if (tmp_pmap != None)
@@ -980,61 +981,83 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
       /*
        * Copy display->root pixmap transparency
        */
-        int nx, ny;
-        unsigned int nw, nh;
-        XImage *image;
-
-        nw = (unsigned int)szHint.width;
-        nh = (unsigned int)szHint.height;
-        nx = ny = 0;
-
-        if (sx < 0)
-          {
-            nw += sx;
-            nx = -sx;
-            sx = 0;
-          }
-
-        if (sy < 0)
-          {
-            nh += sy;
-            ny = -sy;
-            sy = 0;
-          }
-
-        min_it (nw, (unsigned int) (wrootattr.width - sx));
-        min_it (nh, (unsigned int) (wrootattr.height - sy));
-
-        XSync (dpy, False);
+        Window wjunk;
+        int junk;
+        unsigned int ujunk;
+        /* root pixmap may be bad - allow a error */
         allowedxerror = -1;
-        image = XGetImage (dpy, rootpixmap, sx, sy, nw, nh, AllPlanes, ZPixmap);
-
-        /* XXX: handle BadMatch - usually because we're outside the pixmap */
-        /* XXX: may need a delay here? */
-        allowedxerror = 0;
-        if (image != NULL)
+        if (XGetGeometry (dpy, rootpixmap, &wjunk, &junk, &junk, &pmap_w, &pmap_h, &ujunk, &ujunk))
           {
+            XImage *image = NULL;
+            int shade = 100;
+            rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
+            Bool whole_tint = False;
+
+            while (sx < 0) sx += (int)wrootattr.width;
+            while (sy < 0) sy += (int)wrootattr.height;
+
             if (pixmap != None)
               XFreePixmap (dpy, pixmap);
+            pixmap = XCreatePixmap (dpy, vt, szHint.width, szHint.height, rootdepth);
 
 #if TINTING
+            if (rs[Rs_shade])
+              shade = atoi (rs[Rs_shade]);
             if (ISSET_PIXCOLOR (Color_tint))
+              pix_colors_focused [Color_tint].get (c);
+#define IS_COMPONENT_WHOLESOME(c)  ((c) <=0x000700 || (c)>=0x00f700)
+            if (shade >= 100)
+              whole_tint = (IS_COMPONENT_WHOLESOME(c.r)
+                            && IS_COMPONENT_WHOLESOME(c.g)
+                            && IS_COMPONENT_WHOLESOME(c.b));
+#undef  IS_COMPONENT_WHOLESOME
+
+            /* If No tinting to be done - simply tile root pixmap on our pixmap -
+             * no need in XImage at all, thus following if() only for case with tinting */
+            if (whole_tint || pmap_w < sx + szHint.width || pmap_h < sy + szHint.height)
+#endif /* TINTING */
               {
-                int shade = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100;
-
-                rgba c;
-                pix_colors_focused [Color_tint].get (c);
-                ShadeXImage (this, image, shade, c.r, c.g, c.b);
+                gcvalue.tile = rootpixmap;
+                gcvalue.fill_style = FillTiled;
+                gcvalue.ts_x_origin = -sx;
+                gcvalue.ts_y_origin = -sy;
+                gc = XCreateGC (dpy, rootpixmap, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcvalue);
+                XFillRectangle (dpy, pixmap, gc, 0, 0, szHint.width, szHint.height);
+#if TINTING
+                if (whole_tint)
+                  {
+                    /* In this case we can tint image server-side geting significant
+                     * performance improvements, as we eliminate XImage transfer
+                     */
+                    gcvalue.foreground = Pixel (pix_colors_focused [Color_tint]);
+                    gcvalue.function = GXand;
+                    gcvalue.fill_style = FillSolid;
+                    XChangeGC (dpy, gc, GCFillStyle | GCForeground | GCFunction, &gcvalue);
+                    XFillRectangle (dpy, pixmap, gc, 0, 0, szHint.width, szHint.height);
+                    success = True;
+                  }
+                else
+                  image = XGetImage (dpy, pixmap, 0, 0, szHint.width, szHint.height, AllPlanes, ZPixmap);
+#else
+                success = True;
+#endif /* TINTING */
               }
-#endif
-
-            pixmap = XCreatePixmap (dpy, vt, szHint.width, szHint.height, image->depth);
-            gc = XCreateGC (dpy, vt, 0UL, &gcvalue);
-            XPutImage (dpy, pixmap, gc, image, 0, 0,
-                       nx, ny, image->width, image->height);
-            XDestroyImage (image);
-            success = True ;
+#if TINTING
+            if (!success && image == NULL)
+                image = XGetImage (dpy, rootpixmap, sx, sy, szHint.width, szHint.height, AllPlanes, ZPixmap);
+            if (image != NULL)
+              {
+                if (gc == NULL)
+                  gc = XCreateGC (dpy, vt, 0UL, &gcvalue);
+                if (ISSET_PIXCOLOR (Color_tint) || shade != 100)
+                  ShadeXImage (this, image, shade, c.r, c.g, c.b);
+                XPutImage (dpy, pixmap, gc, image, 0, 0, 0, 0, image->width, image->height);
+                XDestroyImage (image);
+                success = True;
+              }
+#endif    
           }
+        allowedxerror = 0;
       }
 #endif  /* HAVE_AFTERIMAGE */
       if (gc != NULL) 
