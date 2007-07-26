@@ -479,7 +479,7 @@ if test x$support_afterimage = xyes; then
     if test "x$AFTERIMAGE_LIBS" != "x"; then
       libai_ver_major=`echo $AFTERIMAGE_VERSION | $AWK -F . '{print $1}'`
       libai_ver_minor=`echo $AFTERIMAGE_VERSION | $AWK -F . '{print $2}'`
-      if test "$libai_ver_major -gt 1 -o ($libai_ver_major -eq 1 -a $libai_ver_minor -ge 15)"; then
+      if test $libai_ver_major -gt 1 -o \( $libai_ver_major -eq 1 -a $libai_ver_minor -ge 15 \); then
         support_afterimage=yes;
       fi
     fi
