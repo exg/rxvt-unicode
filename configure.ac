@@ -886,12 +886,10 @@ if test x$support_perl = xyes; then
         PERLLIB="`$PERL -MExtUtils::Embed -e ldopts`"
         PERLPRIVLIBEXP="`$PERL -MConfig -e 'print $Config{privlibexp}'`"
      else
-        AC_MSG_RESULT([no, unable to link])
-        rxvt_perl_link=no
+        AC_MSG_ERROR([no, unable to link])
      fi
   else
-     AC_MSG_RESULT([no working perl found, or perl not version >= 5.8])
-     support_perl=no
+     AC_MSG_ERROR([no working perl found, or perl not version >= 5.8])
   fi
 fi
 AC_SUBST(PERLLIB)
