@@ -319,9 +319,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 #endif
 
 #ifdef HAVE_AFTERIMAGE
-  //TODO: why set it to 0 and then to dpy?
-  ::dpy = NULL; /* init global var from libAfter... */
-  asv = AFTERIMAGE_DPY_OP (create_asvisual_for_id (dpy, display->screen, depth, XVisualIDFromVisual (visual), cmap, NULL));
+  asv = create_asvisual_for_id (dpy, display->screen, depth, XVisualIDFromVisual (visual), cmap, NULL);
 #endif
   free (r_argv);
 
