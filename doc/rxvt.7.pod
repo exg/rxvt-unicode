@@ -2340,7 +2340,7 @@ TGA and AfterStep image XML.
 It relies on external libraries for reading images in TIFF
 and SVG formats. This option also adds such eye candy as
 blending pixmap over root background, scaling and bluring of
-background pixmaps. Beware that with tis option enabled rxvt's
+background pixmaps. Beware that with this option enabled rxvt's
 memory footprint will increase by anywhere between 750KBytes to 3 MB.
 Memory footprint may somewhat be lowered if libAfterImage is
 configured without support for SVG.
