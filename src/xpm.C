@@ -1026,7 +1026,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
 #if TINTING
                 if (whole_tint)
                   {
-                    /* In this case we can tint image server-side geting significant
+                    /* In this case we can tint image server-side getting significant
                      * performance improvements, as we eliminate XImage transfer
                      */
                     gcvalue.foreground = Pixel (pix_colors_focused [Color_tint]);
