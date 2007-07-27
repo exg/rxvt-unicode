@@ -233,18 +233,18 @@ rxvt_term::scale_pixmap (const char *geom)
       strncpy (str, geom, n);
       str[n] = '\0';
 
-      if (strcmp(str, "auto") == 0) 
+      if (strcmp(str, "auto") == 0)
         {
-          if (!bgpixmap->auto_resize) 
+          if (!bgpixmap->auto_resize)
             changed++;
-          bgpixmap->auto_resize = True ; 
-          w = szHint.width ; 
+          bgpixmap->auto_resize = True ;
+          w = szHint.width ;
           h = szHint.height ;
           flags = WidthValue|HeightValue ;
         }
       else
         {
-          bgpixmap->auto_resize = False ;  				
+          bgpixmap->auto_resize = False ;
           flags = XParseGeometry (str, &x, &y, &w, &h);
         }
 
@@ -359,11 +359,11 @@ rxvt_term::resize_pixmap ()
       unsigned int xpmh = xpmAttr.height,
                    xpmw = xpmAttr.width;
 
-      if (bgPixmap.auto_resize) 
+      if (bgPixmap.auto_resize)
         {
-          w = szHint.width ; 
+          w = szHint.width ;
           h = szHint.height ;
-        }	
+        }
       /*
        * don't zoom pixmap too much nor expand really small pixmaps
        */
@@ -391,7 +391,7 @@ rxvt_term::resize_pixmap ()
 #endif
         {
           ASImage *scaled_im = scale_asimage (asv, original_asim, w, h, ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT);
-          if (scaled_im) 
+          if (scaled_im)
             {
               pixmap = asimage2pixmap(asv, display->root, scaled_im, gc, True);
               destroy_asimage (&scaled_im);
@@ -478,24 +478,24 @@ rxvt_term::set_bgPixmap (const char *file)
       /*      XGetWindowAttributes (dpy, vt, &attr); */
 
 #ifdef HAVE_AFTERIMAGE
-      if (asimman == NULL) 
-        asimman = create_generic_imageman(rs[Rs_path]);		
+      if (asimman == NULL)
+        asimman = create_generic_imageman(rs[Rs_path]);
       if ((f = strchr (file, ';')) == NULL)
-        original_asim = get_asimage( asimman, file, 0xFFFFFFFF, 100 ); 	  
+        original_asim = get_asimage( asimman, file, 0xFFFFFFFF, 100 );
       else
         {
           size_t len = f - file;
           f = (char *)malloc (len + 1);
           strncpy (f, file, len);
           f[len] = '\0';
-          original_asim = get_asimage( asimman, f, 0xFFFFFFFF, 100 ); 	  
+          original_asim = get_asimage( asimman, f, 0xFFFFFFFF, 100 );
           free( f );
         }
       if (original_asim)
         {
           bgPixmap.pixmap = asimage2pixmap (asv, display->root, original_asim, NULL, True);
-          xpmAttr.width = original_asim->width ; 
-          xpmAttr.height = original_asim->height ; 
+          xpmAttr.width = original_asim->width ;
+          xpmAttr.height = original_asim->height ;
         }
 #else /* HAVE_AFTERIMAGE */
       xpmAttr.closeness = 30000;
@@ -817,8 +817,8 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                           0, 0, &sx, &sy, &cr);
 
     /* check if we are outside of the visible part of the virtual screen : */
-  if( sx + (int)szHint.width <= 0 || sy + (int)szHint.height <= 0 
-      || sx >= wrootattr.width || sy >= wrootattr.height ) 
+  if( sx + (int)szHint.width <= 0 || sy + (int)szHint.height <= 0
+      || sx >= wrootattr.width || sy >= wrootattr.height )
     return /* 0 */ ;
   /*
    * Make the frame window set by the window manager have
@@ -867,15 +867,15 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
         ARGB32 tint;
 
         if (get_dpy_drawable_size (dpy, rootpixmap, &pmap_w, &pmap_h))
-          {			
+          {
             int root_x = 0, root_y = 0;
- 
+
   	        shade.shading = rs[Rs_shade] ? atoi (rs[Rs_shade]) : 100;
             if (ISSET_PIXCOLOR (Color_tint))
               {
                 rgba c;
                 pix_colors_focused [Color_tint].get (c);
-                shade.tintColor.red = c.r; 
+                shade.tintColor.red = c.r;
                 shade.tintColor.green = c.g;
                 shade.tintColor.blue = c.b;
               }
@@ -900,7 +900,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                     back_##xy = 0; \
                     back_##wh = pmap_##wh; \
                   }}while(0)
-    
+
                 MAKE_ROOTPMAP_GEOM(x,w,width);
                 MAKE_ROOTPMAP_GEOM(y,h,height);
 
@@ -1055,12 +1055,12 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                 XDestroyImage (image);
                 success = True;
               }
-#endif    
+#endif
           }
         allowedxerror = 0;
       }
 #endif  /* HAVE_AFTERIMAGE */
-      if (gc != NULL) 
+      if (gc != NULL)
         XFreeGC (dpy, gc);
 
       if (!success)
