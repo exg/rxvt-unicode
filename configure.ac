@@ -469,15 +469,14 @@ if test x$support_afterimage = xyes; then
   if test "x$afterimage_config" = "x" ; then
     AC_PATH_PROG(afterimage_config, afterimage-config, no)
   fi
-  AC_PROG_AWK
   AC_MSG_CHECKING(for libAfterImage version >= 1.15)
   AFTERIMAGE_VERSION=`$afterimage_config --version`
   if test -n $AFTERIMAGE_VERSION ; then
     AFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
     AFTERIMAGE_LIBS=`$afterimage_config --libs`
     if test "x$AFTERIMAGE_LIBS" != "x"; then
-      libai_ver_major=`echo $AFTERIMAGE_VERSION | $AWK -F . '{print $1}'`
-      libai_ver_minor=`echo $AFTERIMAGE_VERSION | $AWK -F . '{print $2}'`
+      libai_ver_major=`echo $AFTERIMAGE_VERSION | cut -f 1 -d .`
+      libai_ver_minor=`echo $AFTERIMAGE_VERSION | cut -f 2 -d .`
       if test $libai_ver_major -gt 1 -o \( $libai_ver_major -eq 1 -a $libai_ver_minor -ge 15 \); then
         support_afterimage=yes
       fi
