@@ -521,7 +521,7 @@ rxvt_term::key_press (XKeyEvent &ev)
             }
           else
             {
-# if ENABLE_OVERLAY
+# if ISO_14755
               scr_overlay_off ();
 # endif
               iso14755buf = 0;
@@ -532,7 +532,7 @@ rxvt_term::key_press (XKeyEvent &ev)
         if (!(iso14755buf & ISO_14755_STARTED))
           {
             iso14755buf |= ISO_14755_STARTED;
-# if ENABLE_OVERLAY
+# if ISO_14755
             scr_overlay_new (0, -1, sizeof ("ISO 14755 mode") - 1, 1);
             scr_overlay_set (0, 0, "ISO 14755 mode");
 # endif
@@ -936,7 +936,7 @@ rxvt_term::key_release (XKeyEvent &ev)
   if (iso14755buf)
     if (iso14755buf & ISO_14755_52)
       {
-# if ENABLE_OVERLAY
+# if ISO_14755
         scr_overlay_off ();
 # endif
 # if ISO_14755
@@ -969,7 +969,7 @@ rxvt_term::key_release (XKeyEvent &ev)
       }
     else if ((ev.state & (ShiftMask | ControlMask)) != (ShiftMask | ControlMask))
       {
-# if ENABLE_OVERLAY
+# if ISO_14755
         scr_overlay_off ();
 # endif
         if (iso14755buf & ISO_14755_51)
@@ -1781,7 +1781,7 @@ rxvt_term::focus_out ()
       if (iso14755buf)
         {
           iso14755buf = 0;
-# if ENABLE_OVERLAY
+# if ISO_14755
           scr_overlay_off ();
 # endif
         }
