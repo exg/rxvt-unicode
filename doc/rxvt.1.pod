@@ -1307,7 +1307,7 @@ rxvt-unicode will automatically re-apply these fonts to the output so far.
 
 ISO 14755 is a standard for entering and viewing unicode characters
 and character codes using the keyboard. It consists of 4 parts. The
-first part is available rxvt-unicode has been compiled with
+first part is available if rxvt-unicode has been compiled with
 C<--enable-frills>, the rest is available when rxvt-unicode was compiled
 with C<--enable-iso14755>.
 
