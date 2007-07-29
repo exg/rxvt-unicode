@@ -140,30 +140,13 @@ format_keyrange_string (const char *str, int keysym_offset, char *buf, int bufsi
   return len;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// return: #bits of '1'
-#if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ > 3)
-# define bitcount(n) (__extension__ ({ uint32_t n__ = (n); __builtin_popcount (n__); }))
-#else
-static int
-bitcount (uint16_t n)
-{
-  int i;
-
-  for (i = 0; n; ++i, n &= n - 1)
-    ;
-
-  return i;
-}
-#endif
-
 // return: priority_of_a - priority_of_b
 static int
 compare_priority (keysym_t *a, keysym_t *b)
 {
   // (the more '1's in state; the less range): the greater priority
-  int ca = bitcount (a->state /* & OtherModMask */);
-  int cb = bitcount (b->state /* & OtherModMask */);
+  int ca = popcount (a->state /* & OtherModMask */);
+  int cb = popcount (b->state /* & OtherModMask */);
 
   if (ca != cb)
     return ca - cb;
