@@ -119,7 +119,6 @@ char *           rxvt_wcstombs                    (const wchar_t *str, int len =
 wchar_t *        rxvt_mbstowcs                    (const char *str, int len = -1);
 char *           rxvt_wcstoutf8                   (const wchar_t *str, int len = -1);
 wchar_t *        rxvt_utf8towcs                   (const char *str, int len = -1);
-char *           rxvt_strdup_cpp                  (const char *str);
 
 #define rxvt_strdup(s) ((s) ? strdup(s) : 0)
 
