@@ -24,6 +24,7 @@ TODO: document -blr units, and possibly fix blur (20 seems to be about 3 pixels,
 TODO: when window partially off-screen, -blr does not have any effect anymore.
 TODO: borderLess resource might not work on some systems - might be another
       gentoo phantom bug or a real problem, such as using it too early.
+TODO: incremental reggex search should not nuke the selection, its evilish
 8.
 	- new option: skipScroll/-ss, enabled by default.
         - go with the times and expect x11 library files in /usr/lib, not
