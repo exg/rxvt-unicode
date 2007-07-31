@@ -471,7 +471,7 @@ if test x$support_afterimage = xyes; then
   fi
   AC_MSG_CHECKING(for libAfterImage version >= 1.15)
   AFTERIMAGE_VERSION=`$afterimage_config --version`
-  if test -n $AFTERIMAGE_VERSION ; then
+  if test -n "$AFTERIMAGE_VERSION" ; then
     AFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
     AFTERIMAGE_LIBS=`$afterimage_config --libs`
     if test "x$AFTERIMAGE_LIBS" != "x"; then
