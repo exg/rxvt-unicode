@@ -730,7 +730,7 @@ rxvt_term::key_press (XKeyEvent &ev)
                     strcpy (kbuf, "\033[1~");
                     break;
 
-#ifdef XK_KP_End
+#ifdef XK_KP_Insert
                   case XK_KP_Insert:
                     /* allow shift to override */
                     if ((priv_modes & PrivMode_aplKP) ? !shft : shft)
