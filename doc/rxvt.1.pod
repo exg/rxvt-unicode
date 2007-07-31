@@ -141,31 +141,37 @@ is opaque black. resource B<fadeColor>.
 Tint the transparent background pixmap with the given colour when
 transparency is enabled with B<-tr> or B<-ip>. This only works for
 non-tiled backgrounds, currently. See also the B<-sh> option that can be
-used to brighten or darken the image in addition to tinting it; resource
+used to brighten or darken the image in addition to tinting it.
+Please note that certain tint colors could be applued on the server-side,
+thus yeilding performance gain of two orders of magnitude. This colors are:
+blue, red, green, cyan, magenta, yellow, and those close to this; resource
 I<tintColor>. Example:
 
    @@RXVT_NAME@@ -tr -tint blue -sh 40
 
-=item B<-sh> I<number> 
+=item B<-sh> I<number>
 
 Darken (0 .. 100) or lighten (-1 .. -100) the transparent
-background image in addition to (or instead of) tinting it; 
+background image in addition to (or instead of) tinting it;
 resource I<shading>.
 
 =item B<-blt> I<string>
 
-Specify background blending type. If background pixmap is specified 
-at the same time as transparency - such pixmap will be blended over 
+Specify background blending type. If background pixmap is specified
+at the same time as transparency - such pixmap will be blended over
 transparency image, using method specified. Supported values are :
-B<add>, B<alphablend>, B<allanon> - color values averaging, B<colorize>, 
-B<darken>, B<diff>, B<dissipate>, B<hue>, B<lighten>, B<overlay>, 
-B<saturate>, B<screen>, B<sub>, B<tint>, B<value>. The default is 
+B<add>, B<alphablend>, B<allanon> - color values averaging, B<colorize>,
+B<darken>, B<diff>, B<dissipate>, B<hue>, B<lighten>, B<overlay>,
+B<saturate>, B<screen>, B<sub>, B<tint>, B<value>. The default is
 alpha-blending; resource I<blendType>.
 
-=item B<-blr> I<number>
+=item B<-blr> I<HxV>
 
-Apply Gaussian Blur with the specified radius to the transparent 
-background image; resource I<blurRadius>.
+Apply Gaussian Blur with the specified radii to the transparent
+background image. If single number is specified - both vertical and
+horizontal radii are considered to be the same. Setting one of the
+radii to 1 and another to a large number creates interesting effects
+on some backgrounds. Maximum radius value is 128; resource I<blurRadius>.
 
 =item B<-bg> I<colour>
 
