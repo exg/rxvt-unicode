@@ -267,7 +267,7 @@ optList[] = {
 #endif
 #ifdef HAVE_AFTERIMAGE
               STRG (Rs_blendtype, "blendType", "blt", "string", "background image blending type - alpha, tint, etc..."),
-              STRG (Rs_blurradius, "blurRadius", "blr", "number", "Gaussian Blur radius to apply to the root background"),
+              STRG (Rs_blurradius, "blurRadius", "blr", "HxV", "Gaussian Blur radii to apply to the root background"),
 #endif
 #ifndef NO_RESOURCES
               INFO ("xrm", "string", "X resource"),

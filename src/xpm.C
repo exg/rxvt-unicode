@@ -954,10 +954,17 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
 
               if (rs[Rs_blurradius] && back_im)
                 {
-                  double r = atof(rs[Rs_blurradius]);
-                  ASImage* tmp = blur_asimage_gauss (asv, back_im, r, r, 0xFFFFFFFF,
-                                                     (original_asim == NULL || tint == TINT_LEAVE_SAME)?ASA_XImage:ASA_ASImage,
-                                                     100, ASIMAGE_QUALITY_DEFAULT);
+                  ASImage* tmp;
+                  int junk;
+                  unsigned int hr = 1, vr = 1;
+                  int flags = XParseGeometry (rs[Rs_blurradius], &junk, &junk, &hr, &vr);
+                  if (!(flags&WidthValue))
+                    hr = 1;
+                  if (!(flags&HeightValue))
+                    vr = hr;
+                  tmp = blur_asimage_gauss (asv, back_im, hr, vr, 0xFFFFFFFF,
+                                            (original_asim == NULL || tint == TINT_LEAVE_SAME)?ASA_XImage:ASA_ASImage,
+                                            100, ASIMAGE_QUALITY_DEFAULT);
                   if (tmp)
                     {
                       destroy_asimage (&back_im);
