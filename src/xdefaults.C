@@ -330,6 +330,9 @@ static const char optionsstring[] = "options: "
 #if defined(ENABLE_TRANSPARENCY)
                                     "transparent,"
 #endif
+#if HAVE_AFTERIMAGE
+                                    "afterimage,"
+#endif
 #if TINTING
                                     "tint,"
 #endif
