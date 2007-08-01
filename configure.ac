@@ -243,11 +243,11 @@ AC_ARG_WITH(afterimage_config,
     afterimage_config=$withval/afterimage-config
   fi])
 
-AC_ARG_ENABLE(afterstep,
-  [  --enable-afterstep enable integration with AfterStep window manager],
-  [if test x$enableval = xyes -o x$enableval = xno; then
-    support_afterstep=$enableval
-  fi])
+dnl AC_ARG_ENABLE(afterstep,
+dnl   [  --enable-afterstep enable integration with AfterStep window manager],
+dnl   [if test x$enableval = xyes -o x$enableval = xno; then
+dnl     support_afterstep=$enableval
+dnl   fi])
 
 AC_ARG_ENABLE(transparency,
   [  --enable-transparency   enable transparent backgrounds],
@@ -806,9 +806,9 @@ if test x$support_afterimage = xyes; then
   AC_DEFINE(HAVE_AFTERIMAGE, 1, Define if you want to use libAfterImage for image processing)
 fi
 
-if test x$support_afterstep = xyes; then
-  AC_DEFINE(AFTERSTEP_INTEGRATION, 1, Define if you want to integrate with AfterStep window manager)
-fi
+dnl if test x$support_afterstep = xyes; then
+dnl   AC_DEFINE(AFTERSTEP_INTEGRATION, 1, Define if you want to integrate with AfterStep window manager)
+dnl fi
 
 if test x$support_scroll_rxvt = xyes; then
   AC_DEFINE(RXVT_SCROLLBAR, 1, Support Rxvt original style scrollbars)
@@ -969,9 +969,9 @@ if test x$support_afterimage = xyes; then
   echo "  AfterImage support:         yes"
 fi
 
-if test x$support_afterstep = xyes; then
-  echo "  AfterStep integration:      yes"
-fi
+dnl if test x$support_afterstep = xyes; then
+dnl   echo "  AfterStep integration:      yes"
+dnl fi
 
 if test x$term != x; then
   echo "  set TERM to:                $term"

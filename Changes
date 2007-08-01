@@ -22,7 +22,7 @@ DUMB: support tex fonts
 	- new option: skipScroll/-ss, enabled by default.
         - go with the times and expect x11 library files in /usr/lib, not
           /usr/X11R6/lib.
-	- initial transparency improvement/afterstep support
+	- initial transparency improvement/afterimage support
           patch by Sasha Vasko.
         - add urgentOnBell resource to set the urgency hint
           (patch by Philip Paeps).
