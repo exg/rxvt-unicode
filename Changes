@@ -19,8 +19,6 @@ WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
 TODO: really enable libafterimage by default (6mb => 10mb rss without using it)?
-TODO: borderLess resource might not work on some systems - might be another
-      gentoo phantom bug or a real problem, such as using it too early.
 TODO: incremental reggex search should not nuke the selection, its evilish
 8.
 	- new option: skipScroll/-ss, enabled by default.
@@ -41,6 +39,8 @@ TODO: incremental reggex search should not nuke the selection, its evilish
 	  extension (tpope).
 	- compile out of the box on Solaris 10 (exg).
         - fix MappingNotify events (reported by Stephan Walter).
+        - zero-initialise mwmhints, this seems to solve all sorts of minor
+          problems.
 
 8.2  Sat Feb 17 21:35:28 CET 2007
 	- fix make depend in src/, reported by exg.

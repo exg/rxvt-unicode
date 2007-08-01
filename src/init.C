@@ -884,7 +884,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   XClassHint classHint;
   XWMHints wmHint;
 #if ENABLE_FRILLS
-  MWMHints mwmhints;
+  MWMHints mwmhints = { };
 #endif
   XGCValues gcvalue;
   XSetWindowAttributes attributes;
