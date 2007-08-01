@@ -142,9 +142,9 @@ Tint the transparent background pixmap with the given colour when
 transparency is enabled with B<-tr> or B<-ip>. This only works for
 non-tiled backgrounds, currently. See also the B<-sh> option that can be
 used to brighten or darken the image in addition to tinting it.
-Please note that certain tint colors could be applued on the server-side,
-thus yeilding performance gain of two orders of magnitude. This colors are:
-blue, red, green, cyan, magenta, yellow, and those close to this; resource
+Please note that certain tint colours can be applied on the server-side,
+thus yielding performance gain of two orders of magnitude. These colours are:
+blue, red, green, cyan, magenta, yellow, and those close to them; resource
 I<tintColor>. Example:
 
    @@RXVT_NAME@@ -tr -tint blue -sh 40
