@@ -125,7 +125,7 @@ sub key_press {
    delete $self->{manpage_overlay};
 
    if ($keysym == 0xff0d || $keysym == 0xff8d) { # enter
-      if ($self->{found}) {
+      if ($self->{found} && $event->{state} & urxvt::ShiftMask) {
          my ($br, $bc, $er, $ec) = @{ $self->{found}[0] };
          $self->selection_beg ($br, $bc);
          $self->selection_end ($er, $ec);

@@ -18,7 +18,6 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
-TODO: incremental reggex search should not nuke the selection, its evilish
 8.
 	- new option: skipScroll/-ss, enabled by default.
         - go with the times and expect x11 library files in /usr/lib, not

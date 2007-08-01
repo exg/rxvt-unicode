@@ -154,7 +154,7 @@ search upwards/downwards in the scrollback buffer, C<End> jumps to the
 bottom. C<Escape> leaves search mode and returns to the point where search
 was started, while C<Enter> or C<Return> stay at the current position and
 additionally stores the first match in the current line into the primary
-selection.
+selection if the C<Shift> modifier is active.
 
 The regex defaults to "(?i)", resulting in a case-insensitive search. To
 get a case-sensitive search you can delete this prefix using C<BackSpace>
