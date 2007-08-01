@@ -35,10 +35,10 @@ SEDREPLACE = -e 's%@@RXVT_VERSION@@%$(VERSION)%g;'	\
 	     -e 's%@@URXVT_NAME@@%urxvt%g;'
 
 all:
-	sed $(SEDREPLACE) < $(srcdir)/rxvt.1.man.in >rxvt.1.man
+	sed $(SEDREPLACE) < $(srcdir)/rxvt.1.man.in  >rxvt.1.man
 	sed $(SEDREPLACE) < $(srcdir)/rxvtc.1.man.in >rxvtc.1.man
 	sed $(SEDREPLACE) < $(srcdir)/rxvtd.1.man.in >rxvtd.1.man
-	sed $(SEDREPLACE) < $(srcdir)/rxvt.7.man.in >rxvt.7.man
+	sed $(SEDREPLACE) < $(srcdir)/rxvt.7.man.in  >rxvt.7.man
 @IF_PERL@	sed $(SEDREPLACE) < $(srcdir)/rxvtperl.3.man.in >rxvtperl.3.man
 
 rxvtperl.3.pod: ../src/urxvt.pm
@@ -94,16 +94,14 @@ cleandir: realclean
 
 install:
 	$(INSTALL) -d $(DESTDIR)$(man1dir)
-	$(INSTALL_DATA) rxvt.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME).$(man1ext)
+	$(INSTALL) -d $(DESTDIR)$(man7dir)
+	$(INSTALL_DATA) rxvt.1.man  $(DESTDIR)$(man1dir)/$(RXVTNAME).$(man1ext)
 	$(INSTALL_DATA) rxvtc.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME)c.$(man1ext)
 	$(INSTALL_DATA) rxvtd.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME)d.$(man1ext)
-	$(INSTALL) -d $(DESTDIR)$(man7dir)
-	$(INSTALL_DATA) rxvt.7.man $(DESTDIR)$(man7dir)/$(RXVTNAME).$(man7ext)
+	$(INSTALL_DATA) rxvt.7.man  $(DESTDIR)$(man7dir)/$(RXVTNAME).$(man7ext)
 @IF_PERL@	$(INSTALL) -d $(DESTDIR)$(man3dir)
 @IF_PERL@	$(INSTALL_DATA) rxvtperl.3.man $(DESTDIR)$(man3dir)/$(RXVTNAME)perl.$(man3ext)
 	if test -x "@TIC@"; then if test -n "@TIC@"; then @TIC@ $(srcdir)/etc/rxvt-unicode.terminfo; fi; fi
 
 distdepend: alldoc
 
-# ------------------------------------------------------------------------
-# DO NOT DELETE: ugly dependency list follows

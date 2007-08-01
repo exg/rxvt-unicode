@@ -6,7 +6,7 @@
 	<meta name="description" content="Pod documentation for RXVT REFERENCE" />
 	<meta name="inputfile" content="&lt;standard input&gt;" />
 	<meta name="outputfile" content="&lt;standard output&gt;" />
-	<meta name="created" content="Mon Jun 25 00:30:33 2007" />
+	<meta name="created" content="Wed Aug  1 20:30:03 2007" />
 	<meta name="generator" content="Pod::Xhtml 1.57" />
 <link rel="stylesheet" href="http://res.tst.eu/pod.css"/></head>
 <body>
@@ -90,10 +90,9 @@
 <ul><li><a href="#I_am_using_Debian_GNU_Linux_and_have">I am using Debian GNU/Linux and have a problem...</a></li>
 <li><a href="#I_am_maintaining_rxvt_unicode_for_di">I am maintaining rxvt-unicode for distribution/OS XXX, any recommendation?</a></li>
 <li><a href="#I_need_to_make_it_setuid_setgid_to_s">I need to make it setuid/setgid to support utmp/ptys on my OS, is this safe?</a></li>
-<li><a href="#On_Solaris_9_many_line_drawing_chara">On Solaris 9, many line-drawing characters are too wide.</a></li>
 <li><a href="#I_am_on_FreeBSD_and_rxvt_unicode_doe">I am on FreeBSD and rxvt-unicode does not seem to work at all.</a></li>
-<li><a href="#I_use_Solaris_9_and_it_doesn_t_compi">I use Solaris 9 and it doesn't compile/work/etc.</a></li>
 <li><a href="#How_can_I_use_rxvt_unicode_under_cyg">How can I use rxvt-unicode under cygwin?</a></li>
+<li><a href="#Character_widths_are_not_correct">Character widths are not correct.</a></li>
 </ul>
 </li>
 </ul>
@@ -279,7 +278,7 @@ snippets:</p>
 <div id="How_do_I_compile_the_manual_pages_on-2">
 <p>You need to have a recent version of perl installed as <cite>/usr/bin/perl</cite>,
 one that comes with <cite>pod2man</cite>, <cite>pod2text</cite> and <cite>pod2xhtml</cite> (from
-<cite>Pod::XHTML</cite>). Then go to the doc subdirectory and enter <code>make alldoc</code>.</p>
+<cite>Pod::Xhtml</cite>). Then go to the doc subdirectory and enter <code>make alldoc</code>.</p>
 
 </div>
 <h3 id="Isn_t_rxvt_unicode_supposed_to_be_sm">Isn't rxvt-unicode supposed to be small? Don't all those features bloat?</h3>
@@ -1310,16 +1309,6 @@ things like the dynamic loader of your system, which should result in very
 little risk.</p>
 
 </div>
-<h3 id="On_Solaris_9_many_line_drawing_chara">On Solaris 9, many line-drawing characters are too wide.</h3>
-<div id="On_Solaris_9_many_line_drawing_chara-2">
-<p>Seems to be a known bug, read
-<a href="http://nixdoc.net/files/forum/about34198.html">http://nixdoc.net/files/forum/about34198.html</a>. Some people use the
-following ugly workaround to get non-double-wide-characters working:</p>
-<pre>   #define wcwidth(x) wcwidth(x) &gt; 1 ? 1 : wcwidth(x)
-
-</pre>
-
-</div>
 <h3 id="I_am_on_FreeBSD_and_rxvt_unicode_doe">I am on FreeBSD and rxvt-unicode does not seem to work at all.</h3>
 <div id="I_am_on_FreeBSD_and_rxvt_unicode_doe-2">
 <p>Rxvt-unicode requires the symbol <code>__STDC_ISO_10646__</code> to be defined
@@ -1348,12 +1337,6 @@ system libraries once and for all, instead of forcing every app to carry
 complete replacements for them :)</p>
 
 </div>
-<h3 id="I_use_Solaris_9_and_it_doesn_t_compi">I use Solaris 9 and it doesn't compile/work/etc.</h3>
-<div id="I_use_Solaris_9_and_it_doesn_t_compi-2">
-<p>Try the diff in <cite>doc/solaris9.patch</cite> as a base. It fixes the worst
-problems with <code>wcwidth</code> and a compile problem.</p>
-
-</div>
 <h3 id="How_can_I_use_rxvt_unicode_under_cyg">How can I use rxvt-unicode under cygwin?</h3>
 <div id="How_can_I_use_rxvt_unicode_under_cyg-2">
 <p>rxvt-unicode should compile and run out of the box on cygwin, using
@@ -1365,6 +1348,18 @@ old libW11 emulation.</p>
 <p>At the time of this writing, cygwin didn't seem to support any multi-byte
 encodings (you might try <code>LC_CTYPE=C-UTF-8</code>), so you are likely limited
 to 8-bit encodings.</p>
+
+</div>
+<h3 id="Character_widths_are_not_correct">Character widths are not correct.</h3>
+<div id="Character_widths_are_not_correct_CON">
+<p>urxvt uses the system wcwidth function to know the information about
+the width of characters, so on systems with incorrect locale data you
+will likely get bad results. Two notorious examples are Solaris 9,
+where single-width characters like U+2514 are reported as double-width,
+and Darwin 8, where combining chars are reported having width 1.</p>
+<p>The solution is to upgrade your system or switch to a better one. A
+possibly working workaround is to use a wcwidth implementation like</p>
+<p>http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c</p>
 
 </div>
 <h1 id="RXVT_UNICODE_TECHNICAL_REFERENCE">RXVT-UNICODE TECHNICAL REFERENCE</h1><p><a href="#TOP" class="toplink">Top</a></p>
@@ -1987,6 +1982,19 @@ option requires --enable-utmp to also be specified.</p>
 	<dd>
 		<p>Add support for XPM background pixmaps.</p>
 	</dd>
+	<dt>--enable-afterimage (default: on)</dt>
+	<dd>
+		<p>Add support for libAfterImage to be used for transparency and background
+images. It adds support for many file formats including JPG, PNG,
+SVG, TIFF, GIF, XPM, BMP, ICO, XCF, TGA and AfterStep image XML
+(<a href="http://www.afterstep.org/visualdoc.php?show=asimagexml">http://www.afterstep.org/visualdoc.php?show=asimagexml</a>).</p>
+		<p>This option also adds such eye candy as blending an image over the root
+background, as well as dynamic scaling and bluring of background images.</p>
+		<p>Note that with this option enabled, rxvt's memory footprint might
+increase by a few megabytes even if no extra features are used (mostly due
+to third-party libraries used by libAI). Memory footprint may somewhat be
+lowered if libAfterImage is configured without support for SVG.</p>
+	</dd>
 	<dt>--enable-transparency (default: on)</dt>
 	<dd>
 		<p>Add support for inheriting parent backgrounds thus giving a fake
@@ -1994,7 +2002,7 @@ transparency to the term.</p>
 	</dd>
 	<dt>--enable-fading (default: on)</dt>
 	<dd>
-		<p>Add support for fading the text when focus is lost (requires <code>--enable-transparency</code>).</p>
+		<p>Add support for fading the text when focus is lost.</p>
 	</dd>
 	<dt>--enable-tinting (default: on)</dt>
 	<dd>
@@ -2093,6 +2101,11 @@ this switch.</p>
 		<p>Add support for continual scrolling of the display when you hold
 the mouse button down on a scrollbar arrow.</p>
 	</dd>
+	<dt>--enable-selectionscrolling (default: on)</dt>
+	<dd>
+		<p>Add support for scrolling when the selection moves to the top or
+bottom of the screen.</p>
+	</dd>
 	<dt>--enable-mousewheel (default: on)</dt>
 	<dd>
 		<p>Add support for scrolling via mouse wheel or buttons 4 &amp; 5.</p>
@@ -2103,28 +2116,10 @@ the mouse button down on a scrollbar arrow.</p>
 accelerator) while the control key is held down.  This option
 requires --enable-mousewheel to also be specified.</p>
 	</dd>
-	<dt>--disable-new-selection</dt>
+	<dt>--enable-smart-resize (default: off)</dt>
 	<dd>
-		<p>Remove support for mouse selection style like that of xterm.</p>
-	</dd>
-	<dt>--enable-dmalloc (default: off)</dt>
-	<dd>
-		<p>Use Gray Watson's malloc - which is good for debugging See
-<a href="http://www.letters.com/dmalloc/">http://www.letters.com/dmalloc/</a> for details If you use either this or the
-next option, you may need to edit src/Makefile after compiling to point
-DINCLUDE and DLIB to the right places.</p>
-		<p>You can only use either this option and the following (should
-you use either) .</p>
-	</dd>
-	<dt>--enable-dlmalloc (default: off)</dt>
-	<dd>
-		<p>Use Doug Lea's malloc - which is good for a production version
-See <a href="http://g.oswego.edu/dl/html/malloc.html">http://g.oswego.edu/dl/html/malloc.html</a> for details.</p>
-	</dd>
-	<dt>--enable-smart-resize (default: on)</dt>
-	<dd>
-		<p>Add smart growth/shrink behaviour when changing font size via hot
-keys. This should keep the window corner which is closest to a corner of
+		<p>Add smart growth/shrink behaviour when resizing.
+This should keep the window corner which is closest to a corner of
 the screen in a fixed position.</p>
 	</dd>
 	<dt>--enable-pointer-blank (default: on)</dt>
@@ -2141,6 +2136,10 @@ default. The perl interpreter that is used can be specified via the
 in, perl will <i>not</i> be initialised when all extensions have been disabled
 <code>-pe &quot;&quot; --perl-ext-common &quot;&quot;</code>, so it should be safe to enable from a
 resource standpoint.</p>
+	</dd>
+	<dt>--with-afterimage-config=DIR</dt>
+	<dd>
+		<p>Look for the libAfterImage config script in DIR.</p>
 	</dd>
 	<dt>--with-name=NAME (default: urxvt)</dt>
 	<dd>

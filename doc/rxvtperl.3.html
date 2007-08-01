@@ -6,7 +6,7 @@
 	<meta name="description" content="Pod documentation for rxvtperl" />
 	<meta name="inputfile" content="&lt;standard input&gt;" />
 	<meta name="outputfile" content="&lt;standard output&gt;" />
-	<meta name="created" content="Mon Jun 25 00:30:34 2007" />
+	<meta name="created" content="Wed Aug  1 20:30:04 2007" />
 	<meta name="generator" content="Pod::Xhtml 1.57" />
 <link rel="stylesheet" href="http://res.tst.eu/pod.css"/></head>
 <body>
@@ -190,7 +190,7 @@ search upwards/downwards in the scrollback buffer, <code>End</code> jumps to the
 bottom. <code>Escape</code> leaves search mode and returns to the point where search
 was started, while <code>Enter</code> or <code>Return</code> stay at the current position and
 additionally stores the first match in the current line into the primary
-selection.</p>
+selection if the <code>Shift</code> modifier is active.</p>
 		<p>The regex defaults to &quot;(?i)&quot;, resulting in a case-insensitive search. To
 get a case-sensitive search you can delete this prefix using <code>BackSpace</code>
 or simply use an uppercase character which removes the &quot;(?i)&quot; prefix.</p>

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2007-06-25" "8.2" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2007-08-01" "8.3" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -278,7 +278,7 @@ snippets:
 .PP
 You need to have a recent version of perl installed as \fI/usr/bin/perl\fR,
 one that comes with \fIpod2man\fR, \fIpod2text\fR and \fIpod2xhtml\fR (from
-\&\fIPod::XHTML\fR). Then go to the doc subdirectory and enter \f(CW\*(C`make alldoc\*(C'\fR.
+\&\fIPod::Xhtml\fR). Then go to the doc subdirectory and enter \f(CW\*(C`make alldoc\*(C'\fR.
 .PP
 \fIIsn't rxvt-unicode supposed to be small? Don't all those features bloat?\fR
 .IX Subsection "Isn't rxvt-unicode supposed to be small? Don't all those features bloat?"
@@ -1442,17 +1442,6 @@ and reduces possible bugs to initialisation code run before \fImain()\fR, or
 things like the dynamic loader of your system, which should result in very
 little risk.
 .PP
-\fIOn Solaris 9, many line-drawing characters are too wide.\fR
-.IX Subsection "On Solaris 9, many line-drawing characters are too wide."
-.PP
-Seems to be a known bug, read
-<http://nixdoc.net/files/forum/about34198.html>. Some people use the
-following ugly workaround to get non-double-wide-characters working:
-.PP
-.Vb 1
-\&   #define wcwidth(x) wcwidth(x) > 1 ? 1 : wcwidth(x)
-.Ve
-.PP
 \fII am on FreeBSD and rxvt-unicode does not seem to work at all.\fR
 .IX Subsection "I am on FreeBSD and rxvt-unicode does not seem to work at all."
 .PP
@@ -1486,12 +1475,6 @@ The rxvt-unicode author insists that the right way to fix this is in the
 system libraries once and for all, instead of forcing every app to carry
 complete replacements for them :)
 .PP
-\fII use Solaris 9 and it doesn't compile/work/etc.\fR
-.IX Subsection "I use Solaris 9 and it doesn't compile/work/etc."
-.PP
-Try the diff in \fIdoc/solaris9.patch\fR as a base. It fixes the worst
-problems with \f(CW\*(C`wcwidth\*(C'\fR and a compile problem.
-.PP
 \fIHow can I use rxvt-unicode under cygwin?\fR
 .IX Subsection "How can I use rxvt-unicode under cygwin?"
 .PP
@@ -1505,6 +1488,20 @@ old libW11 emulation.
 At the time of this writing, cygwin didn't seem to support any multi-byte
 encodings (you might try \f(CW\*(C`LC_CTYPE=C\-UTF\-8\*(C'\fR), so you are likely limited
 to 8\-bit encodings.
+.PP
+\fICharacter widths are not correct.\fR
+.IX Subsection "Character widths are not correct."
+.PP
+urxvt uses the system wcwidth function to know the information about
+the width of characters, so on systems with incorrect locale data you
+will likely get bad results. Two notorious examples are Solaris 9,
+where single-width characters like U+2514 are reported as double\-width,
+and Darwin 8, where combining chars are reported having width 1.
+.PP
+The solution is to upgrade your system or switch to a better one. A
+possibly working workaround is to use a wcwidth implementation like
+.PP
+http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
 .SH "RXVT-UNICODE TECHNICAL REFERENCE"
 .IX Header "RXVT-UNICODE TECHNICAL REFERENCE"
 The rest of this document describes various technical aspects of
@@ -2553,13 +2550,27 @@ Write user and tty to lastlog file (used by programs like
 .IP "\-\-enable\-xpm\-background (default: on)" 4
 .IX Item "--enable-xpm-background (default: on)"
 Add support for \s-1XPM\s0 background pixmaps.
+.IP "\-\-enable\-afterimage (default: on)" 4
+.IX Item "--enable-afterimage (default: on)"
+Add support for libAfterImage to be used for transparency and background
+images. It adds support for many file formats including \s-1JPG\s0, \s-1PNG\s0,
+\&\s-1SVG\s0, \s-1TIFF\s0, \s-1GIF\s0, \s-1XPM\s0, \s-1BMP\s0, \s-1ICO\s0, \s-1XCF\s0, \s-1TGA\s0 and AfterStep image \s-1XML\s0
+(<http://www.afterstep.org/visualdoc.php?show=asimagexml>).
+.Sp
+This option also adds such eye candy as blending an image over the root
+background, as well as dynamic scaling and bluring of background images.
+.Sp
+Note that with this option enabled, @@RXVT_NAME@@'s memory footprint might
+increase by a few megabytes even if no extra features are used (mostly due
+to third-party libraries used by libAI). Memory footprint may somewhat be
+lowered if libAfterImage is configured without support for \s-1SVG\s0.
 .IP "\-\-enable\-transparency (default: on)" 4
 .IX Item "--enable-transparency (default: on)"
 Add support for inheriting parent backgrounds thus giving a fake
 transparency to the term.
 .IP "\-\-enable\-fading (default: on)" 4
 .IX Item "--enable-fading (default: on)"
-Add support for fading the text when focus is lost (requires \f(CW\*(C`\-\-enable\-transparency\*(C'\fR).
+Add support for fading the text when focus is lost.
 .IP "\-\-enable\-tinting (default: on)" 4
 .IX Item "--enable-tinting (default: on)"
 Add support for tinting of transparent backgrounds (requires \f(CW\*(C`\-\-enable\-transparency\*(C'\fR).
@@ -2648,6 +2659,10 @@ this switch.
 .IX Item "--enable-keepscrolling (default: on)"
 Add support for continual scrolling of the display when you hold
 the mouse button down on a scrollbar arrow.
+.IP "\-\-enable\-selectionscrolling (default: on)" 4
+.IX Item "--enable-selectionscrolling (default: on)"
+Add support for scrolling when the selection moves to the top or
+bottom of the screen.
 .IP "\-\-enable\-mousewheel (default: on)" 4
 .IX Item "--enable-mousewheel (default: on)"
 Add support for scrolling via mouse wheel or buttons 4 & 5.
@@ -2656,26 +2671,10 @@ Add support for scrolling via mouse wheel or buttons 4 & 5.
 Add support for continual scrolling (using the mouse wheel as an
 accelerator) while the control key is held down.  This option
 requires \-\-enable\-mousewheel to also be specified.
-.IP "\-\-disable\-new\-selection" 4
-.IX Item "--disable-new-selection"
-Remove support for mouse selection style like that of xterm.
-.IP "\-\-enable\-dmalloc (default: off)" 4
-.IX Item "--enable-dmalloc (default: off)"
-Use Gray Watson's malloc \- which is good for debugging See
-<http://www.letters.com/dmalloc/> for details If you use either this or the
-next option, you may need to edit src/Makefile after compiling to point
-\&\s-1DINCLUDE\s0 and \s-1DLIB\s0 to the right places.
-.Sp
-You can only use either this option and the following (should
-you use either) .
-.IP "\-\-enable\-dlmalloc (default: off)" 4
-.IX Item "--enable-dlmalloc (default: off)"
-Use Doug Lea's malloc \- which is good for a production version
-See <http://g.oswego.edu/dl/html/malloc.html> for details.
-.IP "\-\-enable\-smart\-resize (default: on)" 4
-.IX Item "--enable-smart-resize (default: on)"
-Add smart growth/shrink behaviour when changing font size via hot
-keys. This should keep the window corner which is closest to a corner of
+.IP "\-\-enable\-smart\-resize (default: off)" 4
+.IX Item "--enable-smart-resize (default: off)"
+Add smart growth/shrink behaviour when resizing.
+This should keep the window corner which is closest to a corner of
 the screen in a fixed position.
 .IP "\-\-enable\-pointer\-blank (default: on)" 4
 .IX Item "--enable-pointer-blank (default: on)"
@@ -2690,6 +2689,9 @@ default. The perl interpreter that is used can be specified via the
 in, perl will \fInot\fR be initialised when all extensions have been disabled
 \&\f(CW\*(C`\-pe "" \-\-perl\-ext\-common ""\*(C'\fR, so it should be safe to enable from a
 resource standpoint.
+.IP "\-\-with\-afterimage\-config=DIR" 4
+.IX Item "--with-afterimage-config=DIR"
+Look for the libAfterImage config script in \s-1DIR\s0.
 .IP "\-\-with\-name=NAME (default: urxvt)" 4
 .IX Item "--with-name=NAME (default: urxvt)"
 Set the basename for the installed binaries, resulting

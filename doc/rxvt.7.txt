@@ -112,7 +112,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
    How do I compile the manual pages on my own?
     You need to have a recent version of perl installed as /usr/bin/perl,
-    one that comes with pod2man, pod2text and pod2xhtml (from Pod::XHTML).
+    one that comes with pod2man, pod2text and pod2xhtml (from Pod::Xhtml).
     Then go to the doc subdirectory and enter "make alldoc".
 
    Isn't rxvt-unicode supposed to be small? Don't all those features bloat?
@@ -1081,13 +1081,6 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     main(), or things like the dynamic loader of your system, which should
     result in very little risk.
 
-   On Solaris 9, many line-drawing characters are too wide.
-    Seems to be a known bug, read
-    <http://nixdoc.net/files/forum/about34198.html>. Some people use the
-    following ugly workaround to get non-double-wide-characters working:
-
-       #define wcwidth(x) wcwidth(x) > 1 ? 1 : wcwidth(x)
-
    I am on FreeBSD and rxvt-unicode does not seem to work at all.
     Rxvt-unicode requires the symbol "__STDC_ISO_10646__" to be defined in
     your compile environment, or an implementation that implements it,
@@ -1119,10 +1112,6 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     system libraries once and for all, instead of forcing every app to carry
     complete replacements for them :)
 
-   I use Solaris 9 and it doesn't compile/work/etc.
-    Try the diff in doc/solaris9.patch as a base. It fixes the worst
-    problems with "wcwidth" and a compile problem.
-
    How can I use rxvt-unicode under cygwin?
     rxvt-unicode should compile and run out of the box on cygwin, using the
     X11 libraries that come with cygwin. libW11 emulation is no longer
@@ -1134,6 +1123,18 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     At the time of this writing, cygwin didn't seem to support any
     multi-byte encodings (you might try "LC_CTYPE=C-UTF-8"), so you are
     likely limited to 8-bit encodings.
+
+   Character widths are not correct.
+    urxvt uses the system wcwidth function to know the information about the
+    width of characters, so on systems with incorrect locale data you will
+    likely get bad results. Two notorious examples are Solaris 9, where
+    single-width characters like U+2514 are reported as double-width, and
+    Darwin 8, where combining chars are reported having width 1.
+
+    The solution is to upgrade your system or switch to a better one. A
+    possibly working workaround is to use a wcwidth implementation like
+
+    http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
 
 RXVT-UNICODE TECHNICAL REFERENCE
     The rest of this document describes various technical aspects of
@@ -1885,13 +1886,29 @@ CONFIGURE OPTIONS
     --enable-xpm-background (default: on)
         Add support for XPM background pixmaps.
 
+    --enable-afterimage (default: on)
+        Add support for libAfterImage to be used for transparency and
+        background images. It adds support for many file formats including
+        JPG, PNG, SVG, TIFF, GIF, XPM, BMP, ICO, XCF, TGA and AfterStep
+        image XML
+        (<http://www.afterstep.org/visualdoc.php?show=asimagexml>).
+
+        This option also adds such eye candy as blending an image over the
+        root background, as well as dynamic scaling and bluring of
+        background images.
+
+        Note that with this option enabled, rxvt's memory footprint might
+        increase by a few megabytes even if no extra features are used
+        (mostly due to third-party libraries used by libAI). Memory
+        footprint may somewhat be lowered if libAfterImage is configured
+        without support for SVG.
+
     --enable-transparency (default: on)
         Add support for inheriting parent backgrounds thus giving a fake
         transparency to the term.
 
     --enable-fading (default: on)
-        Add support for fading the text when focus is lost (requires
-        "--enable-transparency").
+        Add support for fading the text when focus is lost.
 
     --enable-tinting (default: on)
         Add support for tinting of transparent backgrounds (requires
@@ -1979,6 +1996,10 @@ CONFIGURE OPTIONS
         Add support for continual scrolling of the display when you hold the
         mouse button down on a scrollbar arrow.
 
+    --enable-selectionscrolling (default: on)
+        Add support for scrolling when the selection moves to the top or
+        bottom of the screen.
+
     --enable-mousewheel (default: on)
         Add support for scrolling via mouse wheel or buttons 4 & 5.
 
@@ -1987,26 +2008,10 @@ CONFIGURE OPTIONS
         accelerator) while the control key is held down. This option
         requires --enable-mousewheel to also be specified.
 
-    --disable-new-selection
-        Remove support for mouse selection style like that of xterm.
-
-    --enable-dmalloc (default: off)
-        Use Gray Watson's malloc - which is good for debugging See
-        <http://www.letters.com/dmalloc/> for details If you use either this
-        or the next option, you may need to edit src/Makefile after
-        compiling to point DINCLUDE and DLIB to the right places.
-
-        You can only use either this option and the following (should you
-        use either) .
-
-    --enable-dlmalloc (default: off)
-        Use Doug Lea's malloc - which is good for a production version See
-        <http://g.oswego.edu/dl/html/malloc.html> for details.
-
-    --enable-smart-resize (default: on)
-        Add smart growth/shrink behaviour when changing font size via hot
-        keys. This should keep the window corner which is closest to a
-        corner of the screen in a fixed position.
+    --enable-smart-resize (default: off)
+        Add smart growth/shrink behaviour when resizing. This should keep
+        the window corner which is closest to a corner of the screen in a
+        fixed position.
 
     --enable-pointer-blank (default: on)
         Add support to have the pointer disappear when typing or inactive.
@@ -2020,6 +2025,9 @@ CONFIGURE OPTIONS
         perl will *not* be initialised when all extensions have been
         disabled "-pe "" --perl-ext-common """, so it should be safe to
         enable from a resource standpoint.
+
+    --with-afterimage-config=DIR
+        Look for the libAfterImage config script in DIR.
 
     --with-name=NAME (default: urxvt)
         Set the basename for the installed binaries, resulting in "urxvt",

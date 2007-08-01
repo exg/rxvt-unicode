@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2007-06-25" "8.2" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2007-08-01" "8.3" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -254,7 +254,10 @@ is opaque black. resource \fBfadeColor\fR.
 Tint the transparent background pixmap with the given colour when
 transparency is enabled with \fB\-tr\fR or \fB\-ip\fR. This only works for
 non-tiled backgrounds, currently. See also the \fB\-sh\fR option that can be
-used to brighten or darken the image in addition to tinting it; resource
+used to brighten or darken the image in addition to tinting it.
+Please note that certain tint colours can be applied on the server\-side,
+thus yielding performance gain of two orders of magnitude. These colours are:
+blue, red, green, cyan, magenta, yellow, and those close to them; resource
 \&\fItintColor\fR. Example:
 .Sp
 .Vb 1
@@ -263,21 +266,24 @@ used to brighten or darken the image in addition to tinting it; resource
 .IP "\fB\-sh\fR \fInumber\fR" 4
 .IX Item "-sh number"
 Darken (0 .. 100) or lighten (\-1 .. \-100) the transparent
-background image in addition to (or instead of) tinting it; 
+background image in addition to (or instead of) tinting it;
 resource \fIshading\fR.
 .IP "\fB\-blt\fR \fIstring\fR" 4
 .IX Item "-blt string"
-Specify background blending type. If background pixmap is specified 
-at the same time as transparency \- such pixmap will be blended over 
+Specify background blending type. If background pixmap is specified
+at the same time as transparency \- such pixmap will be blended over
 transparency image, using method specified. Supported values are :
-\&\fBadd\fR, \fBalphablend\fR, \fBallanon\fR \- color values averaging, \fBcolorize\fR, 
-\&\fBdarken\fR, \fBdiff\fR, \fBdissipate\fR, \fBhue\fR, \fBlighten\fR, \fBoverlay\fR, 
-\&\fBsaturate\fR, \fBscreen\fR, \fBsub\fR, \fBtint\fR, \fBvalue\fR. The default is 
+\&\fBadd\fR, \fBalphablend\fR, \fBallanon\fR \- color values averaging, \fBcolorize\fR,
+\&\fBdarken\fR, \fBdiff\fR, \fBdissipate\fR, \fBhue\fR, \fBlighten\fR, \fBoverlay\fR,
+\&\fBsaturate\fR, \fBscreen\fR, \fBsub\fR, \fBtint\fR, \fBvalue\fR. The default is
 alpha\-blending; resource \fIblendType\fR.
-.IP "\fB\-blr\fR \fInumber\fR" 4
-.IX Item "-blr number"
-Apply Gaussian Blur with the specified radius to the transparent 
-background image; resource \fIblurRadius\fR.
+.IP "\fB\-blr\fR \fIHxV\fR" 4
+.IX Item "-blr HxV"
+Apply Gaussian Blur with the specified radii to the transparent
+background image. If single number is specified \- both vertical and
+horizontal radii are considered to be the same. Setting one of the
+radii to 1 and another to a large number creates interesting effects
+on some backgrounds. Maximum radius value is 128; resource \fIblurRadius\fR.
 .IP "\fB\-bg\fR \fIcolour\fR" 4
 .IX Item "-bg colour"
 Window background colour; resource \fBbackground\fR.
@@ -1306,7 +1312,7 @@ rxvt-unicode will automatically re-apply these fonts to the output so far.
 .IX Header "ISO 14755 SUPPORT"
 \&\s-1ISO\s0 14755 is a standard for entering and viewing unicode characters
 and character codes using the keyboard. It consists of 4 parts. The
-first part is available rxvt-unicode has been compiled with
+first part is available if rxvt-unicode has been compiled with
 \&\f(CW\*(C`\-\-enable\-frills\*(C'\fR, the rest is available when rxvt-unicode was compiled
 with \f(CW\*(C`\-\-enable\-iso14755\*(C'\fR.
 .IP "* 5.1: Basic method" 4

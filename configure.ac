@@ -469,24 +469,28 @@ if test x$support_afterimage = xyes; then
   if test "x$afterimage_config" = "x" ; then
     AC_PATH_PROG(afterimage_config, afterimage-config, no)
   fi
-  AC_MSG_CHECKING(for libAfterImage version >= 1.15)
-  AFTERIMAGE_VERSION=`$afterimage_config --version`
-  if test -n "$AFTERIMAGE_VERSION" ; then
-    AFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
-    AFTERIMAGE_LIBS=`$afterimage_config --libs`
-    if test "x$AFTERIMAGE_LIBS" != "x"; then
-      libai_ver_major=`echo $AFTERIMAGE_VERSION | cut -f 1 -d .`
-      libai_ver_minor=`echo $AFTERIMAGE_VERSION | cut -f 2 -d .`
-      if test $libai_ver_major -gt 1 -o \( $libai_ver_major -eq 1 -a $libai_ver_minor -ge 15 \); then
-        support_afterimage=yes
+  if test "x$afterimage_config" != "xno" ; then
+    AC_MSG_CHECKING(for libAfterImage version >= 1.15)
+    xAFTERIMAGE_VERSION=`$afterimage_config --version`
+    if test -n "$xAFTERIMAGE_VERSION" ; then
+      xAFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
+      xAFTERIMAGE_LIBS=`$afterimage_config --libs`
+      if test "x$xAFTERIMAGE_LIBS" != "x"; then
+        libai_ver_major=`echo $xAFTERIMAGE_VERSION | cut -f 1 -d .`
+        libai_ver_minor=`echo $xAFTERIMAGE_VERSION | cut -f 2 -d .`
+        if test $libai_ver_major -gt 1 -o \( $libai_ver_major -eq 1 -a $libai_ver_minor -ge 15 \); then
+          support_afterimage=yes
+          AFTERIMAGE_CFLAGS="$xAFTERIMAGE_CFLAGS"
+          AFTERIMAGE_LIBS="$xAFTERIMAGE_LIBS"
+          AFTERIMAGE_VERSION="$xAFTERIMAGE_VERSION"
+        fi
       fi
     fi
-  fi
-
-  if test "x$support_afterimage" = "xyes"; then
-    AC_MSG_RESULT($AFTERIMAGE_LIBS)
-  else
-    AC_MSG_RESULT(no)
+    if test "x$support_afterimage" = "xyes"; then
+      AC_MSG_RESULT($AFTERIMAGE_LIBS)
+    else
+      AC_MSG_RESULT(no)
+    fi
   fi
 fi
 
@@ -986,6 +990,7 @@ if test x$RESFALLBACK != x; then
 fi
 echo
 echo "  embedded perl:              $support_perl"
+echo "  libafterimage:              $support_afterimage"
 echo
 if test x$support_xpm = xneedsmanualspecification; then
   echo ".----------------------------------------------------------------."

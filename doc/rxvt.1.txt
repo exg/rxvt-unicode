@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 8.2, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 8.3, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -125,8 +125,11 @@ OPTIONS
         Tint the transparent background pixmap with the given colour when
         transparency is enabled with -tr or -ip. This only works for
         non-tiled backgrounds, currently. See also the -sh option that can
-        be used to brighten or darken the image in addition to tinting it;
-        resource *tintColor*. Example:
+        be used to brighten or darken the image in addition to tinting it.
+        Please note that certain tint colours can be applied on the
+        server-side, thus yielding performance gain of two orders of
+        magnitude. These colours are: blue, red, green, cyan, magenta,
+        yellow, and those close to them; resource *tintColor*. Example:
 
            rxvt -tr -tint blue -sh 40
 
@@ -142,9 +145,13 @@ OPTIONS
         diff, dissipate, hue, lighten, overlay, saturate, screen, sub, tint,
         value. The default is alpha-blending; resource *blendType*.
 
-    -blr *number*
-        Apply Gaussian Blur with the specified radius to the transparent
-        background image; resource *blurRadius*.
+    -blr *HxV*
+        Apply Gaussian Blur with the specified radii to the transparent
+        background image. If single number is specified - both vertical and
+        horizontal radii are considered to be the same. Setting one of the
+        radii to 1 and another to a large number creates interesting effects
+        on some backgrounds. Maximum radius value is 128; resource
+        *blurRadius*.
 
     -bg *colour*
         Window background colour; resource background.
@@ -1140,9 +1147,9 @@ CHANGING FONTS
 ISO 14755 SUPPORT
     ISO 14755 is a standard for entering and viewing unicode characters and
     character codes using the keyboard. It consists of 4 parts. The first
-    part is available rxvt-unicode has been compiled with "--enable-frills",
-    the rest is available when rxvt-unicode was compiled with
-    "--enable-iso14755".
+    part is available if rxvt-unicode has been compiled with
+    "--enable-frills", the rest is available when rxvt-unicode was compiled
+    with "--enable-iso14755".
 
     * 5.1: Basic method
         This allows you to enter unicode characters using their hexcode.

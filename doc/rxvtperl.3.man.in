@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 3"
-.TH @@RXVT_NAME@@ 3 "2007-06-25" "8.2" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 3 "2007-08-01" "8.3" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -297,7 +297,7 @@ search upwards/downwards in the scrollback buffer, \f(CW\*(C`End\*(C'\fR jumps t
 bottom. \f(CW\*(C`Escape\*(C'\fR leaves search mode and returns to the point where search
 was started, while \f(CW\*(C`Enter\*(C'\fR or \f(CW\*(C`Return\*(C'\fR stay at the current position and
 additionally stores the first match in the current line into the primary
-selection.
+selection if the \f(CW\*(C`Shift\*(C'\fR modifier is active.
 .Sp
 The regex defaults to \*(L"(?i)\*(R", resulting in a case-insensitive search. To
 get a case-sensitive search you can delete this prefix using \f(CW\*(C`BackSpace\*(C'\fR

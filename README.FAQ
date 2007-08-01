@@ -92,7 +92,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
    How do I compile the manual pages on my own?
     You need to have a recent version of perl installed as /usr/bin/perl,
-    one that comes with pod2man, pod2text and pod2xhtml (from Pod::XHTML).
+    one that comes with pod2man, pod2text and pod2xhtml (from Pod::Xhtml).
     Then go to the doc subdirectory and enter "make alldoc".
 
    Isn't rxvt-unicode supposed to be small? Don't all those features bloat?
@@ -1061,13 +1061,6 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     main(), or things like the dynamic loader of your system, which should
     result in very little risk.
 
-   On Solaris 9, many line-drawing characters are too wide.
-    Seems to be a known bug, read
-    <http://nixdoc.net/files/forum/about34198.html>. Some people use the
-    following ugly workaround to get non-double-wide-characters working:
-
-       #define wcwidth(x) wcwidth(x) > 1 ? 1 : wcwidth(x)
-
    I am on FreeBSD and rxvt-unicode does not seem to work at all.
     Rxvt-unicode requires the symbol "__STDC_ISO_10646__" to be defined in
     your compile environment, or an implementation that implements it,
@@ -1099,10 +1092,6 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     system libraries once and for all, instead of forcing every app to carry
     complete replacements for them :)
 
-   I use Solaris 9 and it doesn't compile/work/etc.
-    Try the diff in doc/solaris9.patch as a base. It fixes the worst
-    problems with "wcwidth" and a compile problem.
-
    How can I use rxvt-unicode under cygwin?
     rxvt-unicode should compile and run out of the box on cygwin, using the
     X11 libraries that come with cygwin. libW11 emulation is no longer
@@ -1114,4 +1103,16 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     At the time of this writing, cygwin didn't seem to support any
     multi-byte encodings (you might try "LC_CTYPE=C-UTF-8"), so you are
     likely limited to 8-bit encodings.
+
+   Character widths are not correct.
+    urxvt uses the system wcwidth function to know the information about the
+    width of characters, so on systems with incorrect locale data you will
+    likely get bad results. Two notorious examples are Solaris 9, where
+    single-width characters like U+2514 are reported as double-width, and
+    Darwin 8, where combining chars are reported having width 1.
+
+    The solution is to upgrade your system or switch to a better one. A
+    possibly working workaround is to use a wcwidth implementation like
+
+    http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
 

@@ -1328,7 +1328,6 @@ Optional Features:
   --enable-font-styles    enable bold and italic support
   --enable-xpm-background enable background pixmaps
   --enable-afterimage enable integration with libAfterImage for background images
-  --enable-afterstep enable integration with AfterStep window manager
   --enable-transparency   enable transparent backgrounds
   --enable-tinting        enable tinting of transparent bg
   --enable-fading         enable colors fading when off focus
@@ -4565,13 +4564,6 @@ if test "${with_afterimage_config+set}" = set; then
 fi
 
 
-# Check whether --enable-afterstep was given.
-if test "${enable_afterstep+set}" = set; then
-  enableval=$enable_afterstep; if test x$enableval = xyes -o x$enableval = xno; then
-    support_afterstep=$enableval
-  fi
-fi
-
 
 # Check whether --enable-transparency was given.
 if test "${enable_transparency+set}" = set; then
@@ -6508,27 +6500,31 @@ fi
 
 
   fi
-  { echo "$as_me:$LINENO: checking for libAfterImage version >= 1.15" >&5
+  if test "x$afterimage_config" != "xno" ; then
+    { echo "$as_me:$LINENO: checking for libAfterImage version >= 1.15" >&5
 echo $ECHO_N "checking for libAfterImage version >= 1.15... $ECHO_C" >&6; }
-  AFTERIMAGE_VERSION=`$afterimage_config --version`
-  if test -n $AFTERIMAGE_VERSION ; then
-    AFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
-    AFTERIMAGE_LIBS=`$afterimage_config --libs`
-    if test "x$AFTERIMAGE_LIBS" != "x"; then
-      libai_ver_major=`echo $AFTERIMAGE_VERSION | cut -f 1 -d .`
-      libai_ver_minor=`echo $AFTERIMAGE_VERSION | cut -f 2 -d .`
-      if test $libai_ver_major -gt 1 -o \( $libai_ver_major -eq 1 -a $libai_ver_minor -ge 15 \); then
-        support_afterimage=yes
+    xAFTERIMAGE_VERSION=`$afterimage_config --version`
+    if test -n "$xAFTERIMAGE_VERSION" ; then
+      xAFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
+      xAFTERIMAGE_LIBS=`$afterimage_config --libs`
+      if test "x$xAFTERIMAGE_LIBS" != "x"; then
+        libai_ver_major=`echo $xAFTERIMAGE_VERSION | cut -f 1 -d .`
+        libai_ver_minor=`echo $xAFTERIMAGE_VERSION | cut -f 2 -d .`
+        if test $libai_ver_major -gt 1 -o \( $libai_ver_major -eq 1 -a $libai_ver_minor -ge 15 \); then
+          support_afterimage=yes
+          AFTERIMAGE_CFLAGS="$xAFTERIMAGE_CFLAGS"
+          AFTERIMAGE_LIBS="$xAFTERIMAGE_LIBS"
+          AFTERIMAGE_VERSION="$xAFTERIMAGE_VERSION"
+        fi
       fi
     fi
-  fi
-
-  if test "x$support_afterimage" = "xyes"; then
-    { echo "$as_me:$LINENO: result: $AFTERIMAGE_LIBS" >&5
+    if test "x$support_afterimage" = "xyes"; then
+      { echo "$as_me:$LINENO: result: $AFTERIMAGE_LIBS" >&5
 echo "${ECHO_T}$AFTERIMAGE_LIBS" >&6; }
-  else
-    { echo "$as_me:$LINENO: result: no" >&5
+    else
+      { echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
+    fi
   fi
 fi
 
@@ -13127,13 +13123,6 @@ _ACEOF
 
 fi
 
-if test x$support_afterstep = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define AFTERSTEP_INTEGRATION 1
-_ACEOF
-
-fi
 
 if test x$support_scroll_rxvt = xyes; then
 
@@ -14740,9 +14729,6 @@ if test x$support_afterimage = xyes; then
   echo "  AfterImage support:         yes"
 fi
 
-if test x$support_afterstep = xyes; then
-  echo "  AfterStep integration:      yes"
-fi
 
 if test x$term != x; then
   echo "  set TERM to:                $term"
@@ -14757,6 +14743,7 @@ if test x$RESFALLBACK != x; then
 fi
 echo
 echo "  embedded perl:              $support_perl"
+echo "  libafterimage:              $support_afterimage"
 echo
 if test x$support_xpm = xneedsmanualspecification; then
   echo ".----------------------------------------------------------------."

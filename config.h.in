@@ -1,8 +1,5 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* Define if you want to integrate with AfterStep window manager */
-#undef AFTERSTEP_INTEGRATION
-
 /* clone device filename */
 #undef CLONE_DEVICE
 

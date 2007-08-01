@@ -109,13 +109,29 @@ CONFIGURE OPTIONS
     --enable-xpm-background (default: on)
         Add support for XPM background pixmaps.
 
+    --enable-afterimage (default: on)
+        Add support for libAfterImage to be used for transparency and
+        background images. It adds support for many file formats including
+        JPG, PNG, SVG, TIFF, GIF, XPM, BMP, ICO, XCF, TGA and AfterStep
+        image XML
+        (<http://www.afterstep.org/visualdoc.php?show=asimagexml>).
+
+        This option also adds such eye candy as blending an image over the
+        root background, as well as dynamic scaling and bluring of
+        background images.
+
+        Note that with this option enabled, rxvt's memory footprint might
+        increase by a few megabytes even if no extra features are used
+        (mostly due to third-party libraries used by libAI). Memory
+        footprint may somewhat be lowered if libAfterImage is configured
+        without support for SVG.
+
     --enable-transparency (default: on)
         Add support for inheriting parent backgrounds thus giving a fake
         transparency to the term.
 
     --enable-fading (default: on)
-        Add support for fading the text when focus is lost (requires
-        "--enable-transparency").
+        Add support for fading the text when focus is lost.
 
     --enable-tinting (default: on)
         Add support for tinting of transparent backgrounds (requires
@@ -203,6 +219,10 @@ CONFIGURE OPTIONS
         Add support for continual scrolling of the display when you hold the
         mouse button down on a scrollbar arrow.
 
+    --enable-selectionscrolling (default: on)
+        Add support for scrolling when the selection moves to the top or
+        bottom of the screen.
+
     --enable-mousewheel (default: on)
         Add support for scrolling via mouse wheel or buttons 4 & 5.
 
@@ -211,26 +231,10 @@ CONFIGURE OPTIONS
         accelerator) while the control key is held down. This option
         requires --enable-mousewheel to also be specified.
 
-    --disable-new-selection
-        Remove support for mouse selection style like that of xterm.
-
-    --enable-dmalloc (default: off)
-        Use Gray Watson's malloc - which is good for debugging See
-        <http://www.letters.com/dmalloc/> for details If you use either this
-        or the next option, you may need to edit src/Makefile after
-        compiling to point DINCLUDE and DLIB to the right places.
-
-        You can only use either this option and the following (should you
-        use either) .
-
-    --enable-dlmalloc (default: off)
-        Use Doug Lea's malloc - which is good for a production version See
-        <http://g.oswego.edu/dl/html/malloc.html> for details.
-
-    --enable-smart-resize (default: on)
-        Add smart growth/shrink behaviour when changing font size via hot
-        keys. This should keep the window corner which is closest to a
-        corner of the screen in a fixed position.
+    --enable-smart-resize (default: off)
+        Add smart growth/shrink behaviour when resizing. This should keep
+        the window corner which is closest to a corner of the screen in a
+        fixed position.
 
     --enable-pointer-blank (default: on)
         Add support to have the pointer disappear when typing or inactive.
@@ -244,6 +248,9 @@ CONFIGURE OPTIONS
         perl will *not* be initialised when all extensions have been
         disabled "-pe "" --perl-ext-common """, so it should be safe to
         enable from a resource standpoint.
+
+    --with-afterimage-config=DIR
+        Look for the libAfterImage config script in DIR.
 
     --with-name=NAME (default: urxvt)
         Set the basename for the installed binaries, resulting in "urxvt",

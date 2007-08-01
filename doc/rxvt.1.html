@@ -6,7 +6,7 @@
 	<meta name="description" content="Pod documentation for rxvt-unicode (ouR XVT, unicode)" />
 	<meta name="inputfile" content="&lt;standard input&gt;" />
 	<meta name="outputfile" content="&lt;standard output&gt;" />
-	<meta name="created" content="Mon Jun 25 00:30:33 2007" />
+	<meta name="created" content="Wed Aug  1 20:30:03 2007" />
 	<meta name="generator" content="Pod::Xhtml 1.57" />
 <link rel="stylesheet" href="http://res.tst.eu/pod.css"/></head>
 <body>
@@ -52,7 +52,7 @@
 </div>
 <h1 id="DESCRIPTION">DESCRIPTION</h1><p><a href="#TOP" class="toplink">Top</a></p>
 <div id="DESCRIPTION_CONTENT">
-<p><strong>rxvt-unicode</strong>, version <strong>8.2</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>8.3</strong>, is a colour vt102 terminal
 emulator intended as an <i>xterm</i>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -178,32 +178,38 @@ is opaque black. resource <strong>fadeColor</strong>.</p>
 		<p>Tint the transparent background pixmap with the given colour when
 transparency is enabled with <strong>-tr</strong> or <strong>-ip</strong>. This only works for
 non-tiled backgrounds, currently. See also the <strong>-sh</strong> option that can be
-used to brighten or darken the image in addition to tinting it; resource
+used to brighten or darken the image in addition to tinting it.
+Please note that certain tint colours can be applied on the server-side,
+thus yielding performance gain of two orders of magnitude. These colours are:
+blue, red, green, cyan, magenta, yellow, and those close to them; resource
 <i>tintColor</i>. Example:</p>
 <pre>   rxvt -tr -tint blue -sh 40
 
 </pre>
 	</dd>
-	<dt><strong>-sh</strong> <i>number</i> </dt>
+	<dt><strong>-sh</strong> <i>number</i></dt>
 	<dd>
 		<p>Darken (0 .. 100) or lighten (-1 .. -100) the transparent
-background image in addition to (or instead of) tinting it; 
+background image in addition to (or instead of) tinting it;
 resource <i>shading</i>.</p>
 	</dd>
 	<dt><strong>-blt</strong> <i>string</i></dt>
 	<dd>
-		<p>Specify background blending type. If background pixmap is specified 
-at the same time as transparency - such pixmap will be blended over 
+		<p>Specify background blending type. If background pixmap is specified
+at the same time as transparency - such pixmap will be blended over
 transparency image, using method specified. Supported values are :
-<strong>add</strong>, <strong>alphablend</strong>, <strong>allanon</strong> - color values averaging, <strong>colorize</strong>, 
-<strong>darken</strong>, <strong>diff</strong>, <strong>dissipate</strong>, <strong>hue</strong>, <strong>lighten</strong>, <strong>overlay</strong>, 
-<strong>saturate</strong>, <strong>screen</strong>, <strong>sub</strong>, <strong>tint</strong>, <strong>value</strong>. The default is 
+<strong>add</strong>, <strong>alphablend</strong>, <strong>allanon</strong> - color values averaging, <strong>colorize</strong>,
+<strong>darken</strong>, <strong>diff</strong>, <strong>dissipate</strong>, <strong>hue</strong>, <strong>lighten</strong>, <strong>overlay</strong>,
+<strong>saturate</strong>, <strong>screen</strong>, <strong>sub</strong>, <strong>tint</strong>, <strong>value</strong>. The default is
 alpha-blending; resource <i>blendType</i>.</p>
 	</dd>
-	<dt><strong>-blr</strong> <i>number</i></dt>
+	<dt><strong>-blr</strong> <i>HxV</i></dt>
 	<dd>
-		<p>Apply Gaussian Blur with the specified radius to the transparent 
-background image; resource <i>blurRadius</i>.</p>
+		<p>Apply Gaussian Blur with the specified radii to the transparent
+background image. If single number is specified - both vertical and
+horizontal radii are considered to be the same. Setting one of the
+radii to 1 and another to a large number creates interesting effects
+on some backgrounds. Maximum radius value is 128; resource <i>blurRadius</i>.</p>
 	</dd>
 	<dt><strong>-bg</strong> <i>colour</i></dt>
 	<dd>
@@ -1298,7 +1304,7 @@ supported in rxvt-unicode. Bug me if you need this.</p>
 <div id="ISO_14755_SUPPORT_CONTENT">
 <p>ISO 14755 is a standard for entering and viewing unicode characters
 and character codes using the keyboard. It consists of 4 parts. The
-first part is available rxvt-unicode has been compiled with
+first part is available if rxvt-unicode has been compiled with
 <code>--enable-frills</code>, the rest is available when rxvt-unicode was compiled
 with <code>--enable-iso14755</code>.</p>
 <dl>
