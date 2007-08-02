@@ -28,156 +28,6 @@
 
 #ifdef XPM_BACKGROUND
 
-#ifndef HAVE_AFTERIMAGE
-/*
- * search for FILE in the current working directory, and within the
- * colon-delimited PATHLIST, adding the file extension EXT if required.
- *
- * FILE is either semi-colon or zero terminated
- */
-static char *
-rxvt_File_search_path (const char *pathlist, const char *file, const char *ext)
-{
-  int             maxpath, len;
-  const char     *p, *path;
-  char            name[256];
-
-  if (!access (file, R_OK))	/* found (plain name) in current directory */
-    return strdup (file);
-
-  /* semi-colon delimited */
-  if ((p = strchr (file, ';')))
-    len = (p - file);
-  else
-    len = strlen (file);
-
-  /* leave room for an extra '/' and trailing '\0' */
-  maxpath = sizeof (name) - (len + (ext ? strlen (ext) : 0) + 2);
-  if (maxpath <= 0)
-    return NULL;
-
-  /* check if we can find it now */
-  strncpy (name, file, len);
-  name[len] = '\0';
-
-  if (!access (name, R_OK))
-    return strdup (name);
-  if (ext)
-    {
-      strcat (name, ext);
-      if (!access (name, R_OK))
-        return strdup (name);
-    }
-  for (path = pathlist; path != NULL && *path != '\0'; path = p)
-    {
-      int             n;
-
-      /* colon delimited */
-      if ((p = strchr (path, ':')) == NULL)
-        p = strchr (path, '\0');
-
-      n = (p - path);
-      if (*p != '\0')
-        p++;
-
-      if (n > 0 && n <= maxpath)
-        {
-          strncpy (name, path, n);
-          if (name[n - 1] != '/')
-            name[n++] = '/';
-          name[n] = '\0';
-          strncat (name, file, len);
-
-          if (!access (name, R_OK))
-            return strdup (name);
-          if (ext)
-            {
-              strcat (name, ext);
-              if (!access (name, R_OK))
-                return strdup (name);
-            }
-        }
-    }
-  return NULL;
-}
-
-/*
- * Calculate tiling sizes and increments
- * At start, p == 0, incr == xpmwidthheight
- */
-static void
-rxvt_pixmap_incr (unsigned int *wh, unsigned int *xy, float *incr, float *p, unsigned int widthheight, unsigned int xpmwidthheight)
-{
-  unsigned int    cwh, cxy;
-  float           cincr, cp;
-
-  cp = 0;
-  cincr = (float)xpmwidthheight;
-  cxy = *xy;
-  cwh = *wh;
-  if (cwh == 1)
-    {	/* display one image, no horizontal/vertical scaling */
-      cincr = (float)widthheight;
-      if (xpmwidthheight <= widthheight)
-        {
-          cwh = xpmwidthheight;
-          cxy = (cxy * (widthheight - cwh)) / 100;	/* beware! order */
-          cwh += cxy;
-        }
-      else
-        {
-          cxy = 0;
-          cwh = widthheight;
-        }
-    }
-  else if (cwh < 10)
-    {	/* fit WH images across/down screen */
-      cincr *= cwh;
-      cxy = 0;
-      cwh = widthheight;
-    }
-  else
-    {
-      cincr *= 100.0 / cwh;
-      if (cwh < 100)
-        {	/* contract */
-          float           pos;
-
-          cwh = (cwh * widthheight) / 100;
-          pos = (float)cxy / 100 * widthheight - (cwh / 2);
-
-          cxy = (widthheight - cwh);
-          if (pos <= 0)
-            cxy = 0;
-          else if (pos < cxy)
-            cxy = (int) pos;
-          cwh += cxy;
-        }
-      else
-        {	/* expand */
-          if (cxy > 0)
-            {	/* position */
-              float           pos;
-
-              pos = (float)cxy / 100 * xpmwidthheight - (cincr / 2);
-              cp = xpmwidthheight - cincr;
-              if (pos <= 0)
-                cp = 0;
-              else if (pos < cp)
-                cp = pos;
-            }
-          cxy = 0;
-          cwh = widthheight;
-        }
-    }
-  cincr /= widthheight;
-  *wh = cwh;
-  *xy = cxy;
-  *incr = cincr;
-  *p = cp;
-}
-#endif
-
 /*
  * These GEOM strings indicate absolute size/position:
  * @ `WxH+X+Y'
@@ -384,7 +234,6 @@ rxvt_term::resize_pixmap ()
           XCopyArea (dpy, bgPixmap.pixmap, pixmap, gc, 0, 0,        x,        y, xpmw - x, xpmh - y);
         }
       else
-#ifdef HAVE_AFTERIMAGE
 #ifdef ENABLE_TRANSPARENCY
       if (!option(Opt_transparent) || !am_transparent)
       /* will do that in check_our_parents otherwise */
@@ -397,52 +246,6 @@ rxvt_term::resize_pixmap ()
               destroy_asimage (&scaled_im);
             }
         }
-#else   /* HAVE_AFTERIMAGE */
-        {
-          float incr, p;
-          Pixmap tmp;
-
-          pixmap = XCreatePixmap (dpy, vt, width, height, depth);
-          /*
-           * horizontal scaling
-           */
-          rxvt_pixmap_incr (&w, &x, &incr, &p, width, xpmw);
-
-          tmp = XCreatePixmap (dpy, vt, width, xpmh, depth);
-          XFillRectangle (dpy, tmp, gc, 0, 0, width, xpmh);
-
-          for ( /*nil */ ; x < w; x++, p += incr)
-            {
-              if (p >= xpmw)
-                p = 0;
-
-              /* copy one column from the original pixmap to the tmp pixmap */
-              XCopyArea (dpy, bgPixmap.pixmap, tmp, gc, (int)p, 0, 1, xpmh, (int)x, 0);
-            }
-
-          /*
-           * vertical scaling
-           */
-          rxvt_pixmap_incr (&h, &y, &incr, &p, height, xpmh);
-
-          if (y > 0)
-            XFillRectangle (dpy, pixmap, gc, 0, 0, width, y);
-
-          if (h < height)
-            XFillRectangle (dpy, pixmap, gc, 0, (int)h, width, height - h + 1);
-
-          for ( /*nil */ ; y < h; y++, p += incr)
-            {
-              if (p >= xpmh)
-                p = 0;
-
-              /* copy one row from the tmp pixmap to the main pixmap */
-              XCopyArea (dpy, tmp, pixmap, gc, 0, (int)p, width, 1, 0, (int)y);
-            }
-
-          XFreePixmap (dpy, tmp);
-        }
-#endif /* HAVE_AFTERIMAGE */
     }
 
   XSetWindowBackgroundPixmap (dpy, vt, pixmap);
@@ -477,7 +280,6 @@ rxvt_term::set_bgPixmap (const char *file)
        */
       /*      XGetWindowAttributes (dpy, vt, &attr); */
 
-#ifdef HAVE_AFTERIMAGE
       if (asimman == NULL)
         asimman = create_generic_imageman(rs[Rs_path]);
       if ((f = strchr (file, ';')) == NULL)
@@ -497,31 +299,6 @@ rxvt_term::set_bgPixmap (const char *file)
           xpmAttr.width = original_asim->width ;
           xpmAttr.height = original_asim->height ;
         }
-#else /* HAVE_AFTERIMAGE */
-      xpmAttr.closeness = 30000;
-      xpmAttr.colormap = cmap;
-      xpmAttr.visual = visual;
-      xpmAttr.depth = depth;
-      xpmAttr.valuemask = (XpmCloseness | XpmColormap | XpmVisual
-                           | XpmDepth | XpmSize | XpmReturnPixels);
-
-      /* search environment variables here too */
-      f = rxvt_File_search_path (rs[Rs_path], file, ".xpm");
-      if (f == NULL
-          || XpmReadFileToPixmap (dpy, display->root, f,
-                                  &bgPixmap.pixmap, NULL,
-                                  &xpmAttr))
-        {
-          char *p;
-
-          /* semi-colon delimited */
-          if ((p = strchr (file, ';')) == NULL)
-            p = strchr (file, '\0');
-
-          rxvt_warn ("couldn't load XPM file \"%.*s\", ignoring.\n", (p - file), file);
-        }
-      free (f);
-#endif /* HAVE_AFTERIMAGE */
     }
 
   resize_pixmap ();

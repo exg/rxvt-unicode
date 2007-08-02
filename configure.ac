@@ -110,7 +110,6 @@ support_scroll_next=yes
 support_scroll_xterm=yes
 support_scroll_plain=yes
 support_xim=yes
-support_xpm=yes
 support_afterimage=yes
 support_afterstep=yes
 support_xft=yes
@@ -156,7 +155,6 @@ AC_ARG_ENABLE(everything,
        support_utmp=no
        support_wtmp=no
        support_xim=no
-       support_xpm=no
        support_afterimage=no
        support_afterstep=no
        support_xft=no
@@ -187,7 +185,6 @@ AC_ARG_ENABLE(everything,
        support_utmp=yes
        support_wtmp=yes
        support_xim=yes
-       support_xpm=yes
        support_afterimage=yes
        support_afterstep=yes
        support_xft=yes
@@ -223,12 +220,6 @@ AC_ARG_ENABLE(font-styles,
   [  --enable-font-styles    enable bold and italic support],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_styles=$enableval
-  fi])
-
-AC_ARG_ENABLE(xpm-background,
-  [  --enable-xpm-background enable background pixmaps],
-  [if test x$enableval = xyes -o x$enableval = xno; then
-    support_xpm=$enableval
   fi])
 
 AC_ARG_ENABLE(afterimage,
@@ -456,9 +447,6 @@ dnl## ], [AC_MSG_RESULT(yes); AC_DEFINE(PERHAPS_SVR4)], AC_MSG_RESULT(perhaps no
 
 AC_PATH_XTRA
 
-dnl# the only reasonable way to find libXpm is do-it-yourself
-dnl# only check if we want xpm-background
-
 AFTERIMAGE_CFLAGS=
 AFTERIMAGE_LIBS=
 AFTERIMAGE_VERSION=
@@ -491,13 +479,6 @@ if test x$support_afterimage = xyes; then
     else
       AC_MSG_RESULT(no)
     fi
-  fi
-fi
-
-if test x$support_afterimage != xyes -a x$support_xpm = xyes ; then
-  VT_FIND_LIBXPM
-  if test x$no_xpm = xyes; then
-    support_xpm=needsmanualspecification
   fi
 fi
 
@@ -802,12 +783,9 @@ fi
 if test x$support_mouseslipwheel = xyes; then
   AC_DEFINE(MOUSE_SLIP_WHEELING, 1, Define to have CTRL cause wheel events to accelerate scrolling. Release CTRL to halt scrolling)
 fi
-if test x$support_xpm = xyes -o x$support_afterimage = xyes ; then
-  AC_DEFINE(XPM_BACKGROUND, 1, Define if you want to have sexy-looking background pixmaps. Needs libXpm or libAfterImage)
-fi
-
 if test x$support_afterimage = xyes; then
   AC_DEFINE(HAVE_AFTERIMAGE, 1, Define if you want to use libAfterImage for image processing)
+  AC_DEFINE(XPM_BACKGROUND, 1, Define if you want to have sexy-looking background pixmaps. Needs libAfterImage)
 fi
 
 dnl if test x$support_afterstep = xyes; then
@@ -965,10 +943,6 @@ echo "Configuration:
   Compiler flags:             $CXXFLAGS
   Linker:                     $LINKER"
 
-if test x$support_xpm = xyes; then
-  echo "  Xpm library:                $XPM_LIBS"
-fi
-
 if test x$support_afterimage = xyes; then
   echo "  AfterImage support:         yes"
 fi
@@ -992,16 +966,6 @@ echo
 echo "  embedded perl:              $support_perl"
 echo "  libafterimage:              $support_afterimage"
 echo
-if test x$support_xpm = xneedsmanualspecification; then
-  echo ".----------------------------------------------------------------."
-  echo ". WARNING: --enable-xpm-background was specified however the     ."
-  echo ".          XPM includes files and libraries could not be found.  ."
-  echo ".          XPM backgrounds are now being DISABLED!  If you want  ."
-  echo ".          to use them you should rerun   configure   with the   ."
-  echo ".          appropriate --with-xpm-includes=/path/to/xpm/includes ."
-  echo ".          and --with-xpm-library=/path/to/xpm/library lines.    ."
-  echo ".----------------------------------------------------------------."
-fi
 if test x$support_xim = xyes -a x$rxvt_cv_func_xlocale = xno; then
   echo ".----------------------------------------------------------------."
   echo ". WARNING: --enable-xim was specified however the locale support ."

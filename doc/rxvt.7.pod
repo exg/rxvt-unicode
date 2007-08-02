@@ -2327,10 +2327,6 @@ Write user and tty to lastlog file (used by programs like
 F<lastlogin>) at start of rxvt execution.  This option requires
 --enable-utmp to also be specified.
 
-=item --enable-xpm-background (default: on)
-
-Add support for XPM background pixmaps.
-
 =item --enable-afterimage (default: on)
 
 Add support for libAfterImage to be used for transparency and background
@@ -2510,18 +2506,6 @@ PATH.
 =item --with-x
 
 Use the X Window System (pretty much default, eh?).
-
-=item --with-xpm-includes=DIR
-
-Look for the XPM includes in DIR.
-
-=item --with-xpm-library=DIR
-
-Look for the XPM library in DIR.
-
-=item --with-xpm
-
-Not needed - define via --enable-xpm-background.
 
 =back
 
