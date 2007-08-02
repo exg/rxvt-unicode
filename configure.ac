@@ -943,14 +943,6 @@ echo "Configuration:
   Compiler flags:             $CXXFLAGS
   Linker:                     $LINKER"
 
-if test x$support_afterimage = xyes; then
-  echo "  AfterImage support:         yes"
-fi
-
-dnl if test x$support_afterstep = xyes; then
-dnl   echo "  AfterStep integration:      yes"
-dnl fi
-
 if test x$term != x; then
   echo "  set TERM to:                $term"
 fi
@@ -965,6 +957,7 @@ fi
 echo
 echo "  embedded perl:              $support_perl"
 echo "  libafterimage:              $support_afterimage"
+dnl echo "  AfterStep integration:      $support_afterstep"
 echo
 if test x$support_xim = xyes -a x$rxvt_cv_func_xlocale = xno; then
   echo ".----------------------------------------------------------------."
