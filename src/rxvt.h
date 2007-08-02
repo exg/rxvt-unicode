@@ -79,12 +79,6 @@ typedef struct termios ttymode_t;
 #  include <afterimage.h>
 #undef min
 #undef max
-#elif defined(XPM_BACKGROUND)
-# ifdef XPM_INC_X11
-#  include <X11/xpm.h>
-# else
-#  include <xpm.h>
-# endif
 #endif
 
 #ifndef STDIN_FILENO
@@ -758,12 +752,6 @@ enum {
 #define scrollbar_size()                (scrollBar.end - scrollBar.beg \
                                          - scrollbar_minheight ())
 
-#ifdef XPM_BACKGROUND
-# define XPMClearArea(a, b, c, d, e, f, g)      XClearArea((a), (b), (c), (d), (e), (f), (g))
-#else
-# define XPMClearArea(a, b, c, d, e, f, g)
-#endif
-
 typedef callback<void (const char *)> log_callback;
 typedef callback<int (int)> getfd_callback;
 
@@ -1020,14 +1008,10 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   row_col_t       oldcursor;
 #ifdef XPM_BACKGROUND
   bgPixmap_t      bgPixmap;
-#ifdef HAVE_AFTERIMAGE  
   struct ASVisual  *asv;
   ASImageManager *asimman;
   ASImage        *original_asim;
   struct { unsigned int width, height; } xpmAttr; /* all we need is width/height */
-#else
-  XpmAttributes   xpmAttr;    /* originally loaded pixmap and its scaling */
-#endif  
 #endif
 
 #if ENABLE_OVERLAY
