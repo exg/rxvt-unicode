@@ -689,9 +689,6 @@ X_PRE_LIBS
 X_LIBS
 X_EXTRA_LIBS
 afterimage_config
-XPM_CPPFLAGS
-XPM_CFLAGS
-XPM_LIBS
 rxvt_int16_typedef
 rxvt_uint16_typedef
 rxvt_int32_typedef
@@ -1326,7 +1323,6 @@ Optional Features:
   --enable-combining      enable composition of base and combining characters
   --enable-xft            enable xft support on systems that have it
   --enable-font-styles    enable bold and italic support
-  --enable-xpm-background enable background pixmaps
   --enable-afterimage enable integration with libAfterImage for background images
   --enable-transparency   enable transparent backgrounds
   --enable-tinting        enable tinting of transparent bg
@@ -1367,9 +1363,6 @@ Optional Packages:
   --with-term=NAME        set the terminal to NAME (default: rxvt)
   --with-terminfo=PATH    set the path to the terminfo tree to PATH
   --with-x                use the X Window System
-  --with-xpm-includes=DIR use XPM includes in DIR
-  --with-xpm-library=DIR  use XPM library in DIR
-  --with-xpm              use XPM
 
 Some influential environment variables:
   CC          C compiler command
@@ -4415,7 +4408,6 @@ support_scroll_next=yes
 support_scroll_xterm=yes
 support_scroll_plain=yes
 support_xim=yes
-support_xpm=yes
 support_afterimage=yes
 support_afterstep=yes
 support_xft=yes
@@ -4460,7 +4452,6 @@ if test "${enable_everything+set}" = set; then
        support_utmp=no
        support_wtmp=no
        support_xim=no
-       support_xpm=no
        support_afterimage=no
        support_afterstep=no
        support_xft=no
@@ -4491,7 +4482,6 @@ if test "${enable_everything+set}" = set; then
        support_utmp=yes
        support_wtmp=yes
        support_xim=yes
-       support_xpm=yes
        support_afterimage=yes
        support_afterstep=yes
        support_xft=yes
@@ -4535,14 +4525,6 @@ fi
 if test "${enable_font_styles+set}" = set; then
   enableval=$enable_font_styles; if test x$enableval = xyes -o x$enableval = xno; then
     support_styles=$enableval
-  fi
-fi
-
-
-# Check whether --enable-xpm-background was given.
-if test "${enable_xpm_background+set}" = set; then
-  enableval=$enable_xpm_background; if test x$enableval = xyes -o x$enableval = xno; then
-    support_xpm=$enableval
   fi
 fi
 
@@ -6449,7 +6431,6 @@ fi
 fi
 
 
-
 AFTERIMAGE_CFLAGS=
 AFTERIMAGE_LIBS=
 AFTERIMAGE_VERSION=
@@ -6525,358 +6506,6 @@ echo "${ECHO_T}$AFTERIMAGE_LIBS" >&6; }
       { echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
     fi
-  fi
-fi
-
-if test x$support_afterimage != xyes -a x$support_xpm = xyes ; then
-
-
-
-# Initialize some more variables set by options.
-# The variables have the same names as the options, with
-# dashes changed to underlines.
-
-# If we find XPM, set shell vars xpm_includes and xpm_libraries to the
-# paths, otherwise set no_xpm=yes.
-# Uses ac_ vars as temps to allow command line to override cache and checks.
-{ echo "$as_me:$LINENO: checking for libXpm" >&5
-echo $ECHO_N "checking for libXpm... $ECHO_C" >&6; }
-
-
-# Check whether --with-xpm_includes was given.
-if test "${with_xpm_includes+set}" = set; then
-  withval=$with_xpm_includes; xpm_includes="$withval"
-else
-  xpm_includes=NO
-fi
-
-
-# Check whether --with-xpm_library was given.
-if test "${with_xpm_library+set}" = set; then
-  withval=$with_xpm_library; xpm_libraries="$withval"
-else
-  xpm_libraries=NO
-fi
-
-
-# --without-xpm overrides everything else, but does not touch the cache.
-
-# Check whether --with-xpm was given.
-if test "${with_xpm+set}" = set; then
-  withval=$with_xpm;
-fi
-
-if test "$with_xpm" = no; then
-  have_xpm=disabled
-else
-  if test "${ac_cv_have_xpm+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-
-  vt_xpm_include_X11=no
-  if test -n "$xpm_includes"; then
-    vt_xpm_includes=$xpm_includes
-  else
-    vt_xpm_includes=NO
-  fi
-  if test -n "$xpm_libraries"; then
-    vt_xpm_libraries=$xpm_libraries
-  else
-    vt_xpm_libraries=NO
-  fi
-
-  if test "$vt_xpm_includes" = NO; then
-  # Guess where to find xpm.h
-
-ac_save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS $X_CFLAGS"
-
-  # First, try using that file with no special directory specified.
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-#include <X11/xpm.h>
-_ACEOF
-if { (ac_try="$ac_cpp conftest.$ac_ext"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_cpp conftest.$ac_ext") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } >/dev/null && {
-	 test -z "$ac_cxx_preproc_warn_flag$ac_cxx_werror_flag" ||
-	 test ! -s conftest.err
-       }; then
-  # We can compile using X headers with no special include directory.
-vt_xpm_includes=
-vt_xpm_include_X11=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-  CPPFLAGS="$ac_save_CPPFLAGS"
-# Look for the header file in a standard set of common directories.
-  for ac_dir in               \
-    /usr/X11/include          \
-    /usr/X11R6/include        \
-    /usr/X11R5/include        \
-    /usr/X11R4/include        \
-                              \
-    /usr/include/X11          \
-    /usr/include/X11R6        \
-    /usr/include/X11R5        \
-    /usr/include/X11R4        \
-                              \
-    /usr/local/X11/include    \
-    /usr/local/X11R6/include  \
-    /usr/local/X11R5/include  \
-    /usr/local/X11R4/include  \
-                              \
-    /usr/local/include/X11    \
-    /usr/local/include/X11R6  \
-    /usr/local/include/X11R5  \
-    /usr/local/include/X11R4  \
-                              \
-    /usr/X386/include         \
-    /usr/x386/include         \
-    /usr/XFree86/include/X11  \
-                              \
-    /usr/include              \
-    /usr/local/include        \
-    /usr/unsupported/include  \
-    /usr/athena/include       \
-    /usr/local/x11r5/include  \
-    /usr/lpp/Xamples/include  \
-                              \
-    /usr/openwin/include      \
-    /usr/openwin/share/include \
-    ; \
-  do
-    if test -r "$ac_dir/X11/xpm.h"; then
-      vt_xpm_includes="$ac_dir"
-      vt_xpm_include_X11=yes
-      break
-    else
-      if test -r "$ac_dir/xpm.h"; then
-        vt_xpm_includes=$ac_dir
-        break
-      fi
-    fi
-  done
-fi
-
-rm -f conftest.err conftest.$ac_ext
-fi
-
-if test "$vt_xpm_libraries" = NO; then
-  # Check for the libraries.
-
-  # See if we find them without any special options.
-  # Don't add to $LIBS permanently.
-  ac_save_LIBS="$LIBS"
-  LIBS="$LIBS $X_LIBS -lXpm -lX11"
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-int
-main ()
-{
-XpmReadFileToPixmap()
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_link") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_cxx_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest$ac_exeext &&
-       $as_test_x conftest$ac_exeext; then
-  LIBS="$ac_save_LIBS"
-# We can link libXpm with no special library path.
-vt_xpm_libraries=
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	LIBS="$ac_save_LIBS"
-# First see if replacing the include by lib works.
-for ac_dir in \
-    `echo "$vt_xpm_includes" | sed 's,include/X11,lib,;s,include,lib,'` \
-    /usr/X11/lib          \
-    /usr/X11R6/lib        \
-    /usr/X11R5/lib        \
-    /usr/X11R4/lib        \
-                          \
-    /usr/lib/X11          \
-    /usr/lib/X11R6        \
-    /usr/lib/X11R5        \
-    /usr/lib/X11R4        \
-                          \
-    /usr/local/X11/lib    \
-    /usr/local/X11R6/lib  \
-    /usr/local/X11R5/lib  \
-    /usr/local/X11R4/lib  \
-                          \
-    /usr/local/lib/X11    \
-    /usr/local/lib/X11R6  \
-    /usr/local/lib/X11R5  \
-    /usr/local/lib/X11R4  \
-                          \
-    /usr/X386/lib         \
-    /usr/x386/lib         \
-    /usr/XFree86/lib/X11  \
-                          \
-    /usr/lib              \
-    /usr/local/lib        \
-    /usr/unsupported/lib  \
-    /usr/athena/lib       \
-    /usr/local/x11r5/lib  \
-    /usr/lpp/Xamples/lib  \
-                          \
-    /usr/openwin/lib      \
-    /usr/openwin/share/lib \
-    ; \
-do
-  for ac_extension in a so sl; do
-    if test -r $ac_dir/libXpm.$ac_extension; then
-      vt_xpm_libraries=$ac_dir
-      break 2
-    fi
-  done
-done
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
-      conftest$ac_exeext conftest.$ac_ext
-fi
-
-
-  if test "$vt_xpm_includes" = NO -o "$vt_xpm_libraries" = NO; then
-    ac_cv_have_xpm="have_xpm=no"
-  else
-    ac_cv_have_xpm="have_xpm=yes \
-        vt_xpm_includes=$vt_xpm_includes vt_xpm_libraries=$vt_xpm_libraries \
-	vt_xpm_include_X11=$vt_xpm_include_X11"
-  fi
-fi
-  eval "$ac_cv_have_xpm"
-fi
-
-if test "$have_xpm" != yes; then
-  { echo "$as_me:$LINENO: result: $have_xpm" >&5
-echo "${ECHO_T}$have_xpm" >&6; }
-  no_xpm=yes
-else
-  if test "$xpm_includes" != NO; then
-    if test "$xpm_includes" = "$vt_xpm_includes"; then
-      if test -r "$xpm_includes/X11/xpm.h"; then
-	vt_xpm_include_X11=yes
-      fi
-    else
-      vt_xpm_include_X11=no
-      if test -z "$xpm_includes"; then
-	cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-#include <X11/xpm.h>
-_ACEOF
-if { (ac_try="$ac_cpp conftest.$ac_ext"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_cpp conftest.$ac_ext") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } >/dev/null && {
-	 test -z "$ac_cxx_preproc_warn_flag$ac_cxx_werror_flag" ||
-	 test ! -s conftest.err
-       }; then
-  vt_xpm_include_X11=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-
-fi
-
-rm -f conftest.err conftest.$ac_ext
-      else
-        if test -r "$xpm_includes/X11/xpm.h"; then
-	  vt_xpm_include_X11=yes
-        fi
-      fi
-    fi
-    vt_xpm_includes=$xpm_includes
-  fi
-  if test "x$xpm_libraries" != xNO; then
-    vt_xpm_libraries=$xpm_libraries
-  fi
-  # Update the cache value to reflect the command line values.
-  ac_cv_have_xpm="have_xpm=yes \
-	vt_xpm_includes=$vt_xpm_includes vt_xpm_libraries=$vt_xpm_libraries \
-	vt_xpm_include_X11=$vt_xpm_include_X11"
-  eval "$ac_cv_have_xpm"
-  { echo "$as_me:$LINENO: result: -I$vt_xpm_includes, -L$vt_xpm_libraries" >&5
-echo "${ECHO_T}-I$vt_xpm_includes, -L$vt_xpm_libraries" >&6; }
-  if test -n "$vt_xpm_includes"; then
-    XPM_CPPFLAGS="-DHAVE_LIBXPM"
-  fi
-  if test -n "$vt_xpm_includes"; then
-    XPM_CFLAGS="-I$vt_xpm_includes"
-  fi
-  XPM_LIBS="-lXpm"
-  if test -n "$vt_xpm_libraries"; then
-    XPM_LIBS="-L$vt_xpm_libraries $XPM_LIBS"
-  fi
-  if test "x$vt_xpm_include_X11" = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define XPM_INC_X11 1
-_ACEOF
-
-  fi
-fi
-
-
-
-
-
-  if test x$no_xpm = xyes; then
-    support_xpm=needsmanualspecification
   fi
 fi
 
@@ -13107,18 +12736,15 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
 fi
-if test x$support_xpm = xyes -o x$support_afterimage = xyes ; then
-
-cat >>confdefs.h <<\_ACEOF
-#define XPM_BACKGROUND 1
-_ACEOF
-
-fi
-
 if test x$support_afterimage = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
 #define HAVE_AFTERIMAGE 1
+_ACEOF
+
+
+cat >>confdefs.h <<\_ACEOF
+#define XPM_BACKGROUND 1
 _ACEOF
 
 fi
@@ -14205,9 +13831,6 @@ X_PRE_LIBS!$X_PRE_LIBS$ac_delim
 X_LIBS!$X_LIBS$ac_delim
 X_EXTRA_LIBS!$X_EXTRA_LIBS$ac_delim
 afterimage_config!$afterimage_config$ac_delim
-XPM_CPPFLAGS!$XPM_CPPFLAGS$ac_delim
-XPM_CFLAGS!$XPM_CFLAGS$ac_delim
-XPM_LIBS!$XPM_LIBS$ac_delim
 rxvt_int16_typedef!$rxvt_int16_typedef$ac_delim
 rxvt_uint16_typedef!$rxvt_uint16_typedef$ac_delim
 rxvt_int32_typedef!$rxvt_int32_typedef$ac_delim
@@ -14226,6 +13849,9 @@ AFTERIMAGE_CFLAGS!$AFTERIMAGE_CFLAGS$ac_delim
 AFTERIMAGE_LIBS!$AFTERIMAGE_LIBS$ac_delim
 include_stdint_h!$include_stdint_h$ac_delim
 include_stdarg_h!$include_stdarg_h$ac_delim
+include_stdlib_h!$include_stdlib_h$ac_delim
+include_unistd_h!$include_unistd_h$ac_delim
+include_string_h!$include_string_h$ac_delim
 _ACEOF
 
   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
@@ -14267,9 +13893,6 @@ _ACEOF
 ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
-include_stdlib_h!$include_stdlib_h$ac_delim
-include_unistd_h!$include_unistd_h$ac_delim
-include_string_h!$include_string_h$ac_delim
 include_fcntl_h!$include_fcntl_h$ac_delim
 include_util_h!$include_util_h$ac_delim
 include_assert_h!$include_assert_h$ac_delim
@@ -14282,7 +13905,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 13; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 10; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
@@ -14721,15 +14344,6 @@ echo "Configuration:
   Compiler flags:             $CXXFLAGS
   Linker:                     $LINKER"
 
-if test x$support_xpm = xyes; then
-  echo "  Xpm library:                $XPM_LIBS"
-fi
-
-if test x$support_afterimage = xyes; then
-  echo "  AfterImage support:         yes"
-fi
-
-
 if test x$term != x; then
   echo "  set TERM to:                $term"
 fi
@@ -14745,16 +14359,6 @@ echo
 echo "  embedded perl:              $support_perl"
 echo "  libafterimage:              $support_afterimage"
 echo
-if test x$support_xpm = xneedsmanualspecification; then
-  echo ".----------------------------------------------------------------."
-  echo ". WARNING: --enable-xpm-background was specified however the     ."
-  echo ".          XPM includes files and libraries could not be found.  ."
-  echo ".          XPM backgrounds are now being DISABLED!  If you want  ."
-  echo ".          to use them you should rerun   configure   with the   ."
-  echo ".          appropriate --with-xpm-includes=/path/to/xpm/includes ."
-  echo ".          and --with-xpm-library=/path/to/xpm/library lines.    ."
-  echo ".----------------------------------------------------------------."
-fi
 if test x$support_xim = xyes -a x$rxvt_cv_func_xlocale = xno; then
   echo ".----------------------------------------------------------------."
   echo ". WARNING: --enable-xim was specified however the locale support ."
