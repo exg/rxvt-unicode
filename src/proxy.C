@@ -321,7 +321,7 @@ ptytty::init ()
 
   uid_t uid = getuid ();
   gid_t gid = getgid ();
-      
+
   // before doing anything else, check for setuid/setgid operation,
   // start the helper process and drop privileges
   if (uid != geteuid ()

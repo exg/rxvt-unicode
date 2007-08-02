@@ -306,7 +306,7 @@ AC_CACHE_CHECK(where wtmp is located, path_wtmp,
 main()
 {
     char **w, *wtmplist[] = {
-    "/var/log/wtmp", "/var/adm/wtmp", "/etc/wtmp", "/usr/etc/wtmp", "/usr/adm/wtmp", NULL }; 
+    "/var/log/wtmp", "/var/adm/wtmp", "/etc/wtmp", "/usr/etc/wtmp", "/usr/adm/wtmp", NULL };
     FILE *a, *f=fopen("conftestval", "w");
     if (!f) exit(1);
 #ifdef WTMP_FILE
@@ -342,7 +342,7 @@ AC_CACHE_CHECK(where wtmpx is located, path_wtmpx,
 main()
 {
     char **w, *wtmplist[] = {
-    "/var/log/wtmpx", "/var/adm/wtmpx", NULL }; 
+    "/var/log/wtmpx", "/var/adm/wtmpx", NULL };
     FILE *a, *f=fopen("conftestval", "w");
     if (!f) exit(1);
 #ifdef WTMPX_FILE
