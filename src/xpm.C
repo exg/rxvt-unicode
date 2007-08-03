@@ -330,7 +330,7 @@ rxvt_term::set_bgPixmap (const char *file)
 #endif				/* HAVE_BG_PIXMAP */
 
 #ifdef ENABLE_TRANSPARENCY
-#if TINTING && !defined(HAVE_AFTERIMAGE)
+#ifndef HAVE_AFTERIMAGE
 /* taken from aterm-0.4.2 */
 
 typedef uint32_t RUINT32T;
@@ -648,13 +648,11 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
 
   /* TODO: the below logic needs to be cleaned up */
   if (!i || prop == NULL
-#if TINTING
       || (!ISSET_PIXCOLOR (Color_tint) && rs[Rs_shade] == NULL
 #ifdef HAVE_AFTERIMAGE
           && bgPixmap.original_asim == NULL && rs[Rs_blurradius] == NULL
 #endif
          )
-#endif
       )
     rootpixmap = None;
   else
@@ -684,7 +682,6 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
       while (sx < 0) sx += (int)wrootattr.width;
       while (sy < 0) sy += (int)wrootattr.height;
 
-#if TINTING
       if (rs[Rs_shade])
         shade = atoi (rs[Rs_shade]);
       if (ISSET_PIXCOLOR (Color_tint))
@@ -696,7 +693,6 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                       && IS_COMPONENT_WHOLESOME(c.b));
       no_tint = (c.r >= 0x00f700 && c.g >= 0x00f700 && c.b >= 0x00f700);
 #undef  IS_COMPONENT_WHOLESOME
-#endif /* TINTING */
       /* theer are no performance advantages to reusing same pixmap */
       if (bgPixmap.pixmap != None)
         XFreePixmap (dpy, bgPixmap.pixmap);
@@ -721,7 +717,6 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
       gc = XCreateGC (dpy, rootpixmap, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcvalue);
       XFillRectangle (dpy, bgPixmap.pixmap, gc, 0, 0, szHint.width, szHint.height);
 
-#if TINTING
       if (whole_tint && !no_tint)
         {
           /* In this case we can tint image server-side getting significant
@@ -733,7 +728,6 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
           XChangeGC (dpy, gc, GCFillStyle | GCForeground | GCFunction, &gcvalue);
           XFillRectangle (dpy, bgPixmap.pixmap, gc, 0, 0, szHint.width, szHint.height);
         }
-#endif
       success = True;
 #ifdef HAVE_AFTERIMAGE
       if (rs[Rs_blurradius] || bgPixmap.original_asim != NULL || (!whole_tint && (!no_tint || shade !=100)))
@@ -838,7 +832,6 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
             success = False;
         }
 #else  /* HAVE_AFTERIMAGE */
-#if TINTING
       if (!whole_tint && (!no_tint || shade !=100))
         {
           XImage *image = XGetImage (dpy, bgPixmap.pixmap, 0, 0, szHint.width, szHint.height, AllPlanes, ZPixmap);
@@ -855,7 +848,6 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
               success = True;
             }
         }
-#endif
 #endif  /* HAVE_AFTERIMAGE */
       PRINT_BACKGROUND_OP_TIME;
 

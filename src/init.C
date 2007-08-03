@@ -168,7 +168,7 @@ const char *const def_colorName[] =
     COLOR_SCROLLBAR,
     COLOR_SCROLLTROUGH,
 #endif                          /* KEEP_SCROLLCOLOR */
-#if TINTING
+#if ENABLE_TRANSPARENCY
     NULL,
 #endif
 #if OFF_FOCUS_FADING

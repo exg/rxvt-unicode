@@ -2351,10 +2351,6 @@ transparency to the term.
 
 Add support for fading the text when focus is lost.
 
-=item --enable-tinting (default: on)
-
-Add support for tinting of transparent backgrounds (requires C<--enable-transparency>).
-
 =item --enable-rxvt-scroll (default: on)
 
 Add support for the original rxvt scrollbar.

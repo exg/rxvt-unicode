@@ -62,6 +62,7 @@
 #endif
 #ifdef ENABLE_TRANSPARENCY
   def (transparent)
+  def (shade)
 #endif
 #if XFT
   def (depth)
@@ -101,9 +102,6 @@
 #endif
 #ifdef OFF_FOCUS_FADING
   def (fade)
-#endif
-#ifdef TINTING
-  def (shade)
 #endif
 #if ENABLE_PERL
   def (perl_eval)

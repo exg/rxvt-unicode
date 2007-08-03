@@ -97,7 +97,6 @@ dnl AC_PROG_LIBTOOL()dnl#		libtool
 
 support_frills=yes
 support_inheritpixmap=yes
-support_tinting=yes
 support_fading=yes
 support_keepscrolling=yes
 support_selectionscrolling=yes
@@ -139,7 +138,6 @@ AC_ARG_ENABLE(everything,
     if test x$enableval = xno; then
        support_frills=no
        support_inheritpixmap=no
-       support_tinting=no
        support_fading=no
        support_keepscrolling=no
        support_selectionscrolling=no
@@ -169,7 +167,6 @@ AC_ARG_ENABLE(everything,
     if test x$enableval = xyes; then
        support_frills=yes
        support_inheritpixmap=yes
-       support_tinting=yes
        support_fading=yes
        support_keepscrolling=yes
        support_selectionscrolling=yes
@@ -244,12 +241,6 @@ AC_ARG_ENABLE(transparency,
   [  --enable-transparency   enable transparent backgrounds],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_inheritpixmap=$enableval
-  fi])
-
-AC_ARG_ENABLE(tinting,
-  [  --enable-tinting        enable tinting of transparent bg],
-  [if test x$enableval = xyes -o x$enableval = xno; then
-    support_tinting=$enableval
   fi])
 
 AC_ARG_ENABLE(fading,
@@ -764,9 +755,6 @@ if test x$support_8bitctrls = xyes; then
 fi
 if test x$support_fading = xyes; then
   AC_DEFINE(OFF_FOCUS_FADING, 1, Define if you want faded colors when focus is lost)
-fi
-if test x$support_tinting = xyes; then
-  AC_DEFINE(TINTING, 1, Define if you want your background to be tinted)
 fi
 if test x$support_inheritpixmap = xyes; then
   AC_DEFINE(ENABLE_TRANSPARENCY, 1, Define if you want your background to use the parent window background)

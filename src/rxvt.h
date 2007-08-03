@@ -591,7 +591,7 @@ enum colour_list {
   Color_scroll,
   Color_trough,
 #endif
-#if TINTING
+#if ENABLE_TRANSPARENCY
   Color_tint,
 #endif
 #if OFF_FOCUS_FADING

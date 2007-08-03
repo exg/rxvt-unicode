@@ -112,16 +112,12 @@ optList[] = {
 #if ENABLE_TRANSPARENCY
               BOOL (Rs_transparent, "inheritPixmap", "ip", Opt_transparent, 0, "inherit parent pixmap"),
               SWCH ("tr", Opt_transparent, 0, NULL),
-# if TINTING
               STRG (Rs_color + Color_tint, "tintColor", "tint", "color", "tint color"),
-# endif
+              STRG (Rs_shade, "shading", "sh", "%", "shade background by x %."),
 #endif
 #if OFF_FOCUS_FADING
               STRG (Rs_fade, "fading", "fade", "%", "fade colors x% percent when rxvt-unicode is losing focus"),
               STRG (Rs_color + Color_fade, "fadeColor", "fadecolor", "color", "target color for off-focus fading"),
-#endif
-#if TINTING
-              STRG (Rs_shade, "shading", "sh", "%", "shade background by x % when tinting."),
 #endif
               BOOL (Rs_utmpInhibit, "utmpInhibit", "ut", Opt_utmpInhibit, 0, "utmp inhibit"),
 #ifndef NO_BELL
@@ -329,12 +325,10 @@ static const char optionsstring[] = "options: "
 #endif
 #if defined(ENABLE_TRANSPARENCY)
                                     "transparent,"
+                                    "tint,"
 #endif
 #if HAVE_AFTERIMAGE
                                     "afterimage,"
-#endif
-#if TINTING
-                                    "tint,"
 #endif
 #if defined(USE_XIM)
                                     "XIM,"
