@@ -97,7 +97,7 @@ rxvt_term::scale_pixmap (const char *geom)
           bgpixmap->auto_resize = False ;
           flags = XParseGeometry (str, &x, &y, &w, &h);
         }
-
+/* code below is garbage and needs to be rewritten */
       if (!flags)
         {
           flags |= WidthValue;
@@ -153,12 +153,6 @@ rxvt_term::scale_pixmap (const char *geom)
           y += bgpixmap->y;
         }
 
-      if (xpmAttr.width && xpmAttr.height)
-        {
-          x = MOD(x, xpmAttr.width);
-          y = MOD(y, xpmAttr.height);
-        }
-
       if (bgpixmap->x != x)
         {
           bgpixmap->x = x;
@@ -180,83 +174,83 @@ rxvt_term::resize_pixmap ()
 {
   XGCValues gcvalue;
   GC gc;
+  unsigned int w = bgPixmap.w, h = bgPixmap.h;
+  unsigned int x = bgPixmap.x, y = bgPixmap.y;
+  ASImage *im = bgPixmap.original_asim;
 
-  if (pixmap != None)
+/* preliminary cleanup - this needs to be integrated with check_our_parents() code */
+  if (bgPixmap.pixmap != None)
     {
-      XFreePixmap (dpy, pixmap);
-      pixmap = None ;
+      XFreePixmap (dpy, bgPixmap.pixmap);
+      bgPixmap.pixmap = None ;
     }
-
-  if (bgPixmap.pixmap == None)
-    { /* So be it: I'm not using pixmaps */
-      pixmap = None;
-
 #ifdef ENABLE_TRANSPARENCY
-      if (!option (Opt_transparent) || !am_transparent)
+  if (option(Opt_transparent) && am_transparent)
+    {
+      /*  we need to re-generate transparency pixmap in that case ! */
+      check_our_parents ();
+      return;      
+    }
 #endif
-        XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
 
+  if (bgPixmap.original_asim == NULL)
+    { /* So be it: I'm not using pixmaps */
+      XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
       return;
     }
 
   gcvalue.foreground = pix_colors[Color_bg];
   gc = XCreateGC (dpy, vt, GCForeground, &gcvalue);
 
-  if (bgPixmap.pixmap != None)
-    {	/* we have a specified pixmap */
-      unsigned int w = bgPixmap.w, h = bgPixmap.h,
-                   x = bgPixmap.x, y = bgPixmap.y;
-      unsigned int xpmh = xpmAttr.height,
-                   xpmw = xpmAttr.width;
-
-      if (bgPixmap.auto_resize)
-        {
-          w = szHint.width ;
-          h = szHint.height ;
-        }
-      /*
-       * don't zoom pixmap too much nor expand really small pixmaps
-       */
-      if (w > 32767 || h > 32767)
+  if (bgPixmap.auto_resize)
+    {
+      w = szHint.width;
+      h = szHint.height;
+    }
+  else
+    { /* don't zoom pixmap too much nor expand really small pixmaps  */
+      if (w > 16000)
         w = 1;
-      else if (width > (10 * xpmw)
-               || height > (10 * xpmh))
-        w = 0;		/* tile */
+      if (h > 16000)
+        h = 1;
+    }
+  if (w == 0) w = im->width; 
+  else if (w < 10) w *= im->width;
+  if (h == 0) h = im->height; 
+  else if (w < 10) h *= im->height;
 
-      if (!w)
+  if (w != im->width || h != im->height)
+    {
+      ASImage *tmp = scale_asimage (asv, im, w, h, (x == 0 && y == 0)?ASA_XImage:ASA_ASImage, 0, ASIMAGE_QUALITY_DEFAULT);
+      if (tmp != NULL)
+        im = tmp;
+    }
+  if (x != 0 || y != 0)
+    {
+      ASImage *tmp = tile_asimage (asv, im, x, y, w, h, TINT_LEAVE_SAME, ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT);
+      if (tmp != NULL)
         {
-          /* basic X tiling - let the X server do it */
-          pixmap = XCreatePixmap (dpy, vt, xpmw, xpmh, depth);
-
-          XCopyArea (dpy, bgPixmap.pixmap, pixmap, gc, x, y, xpmw - x, xpmh - y,        0,        0);
-          XCopyArea (dpy, bgPixmap.pixmap, pixmap, gc, x, 0, xpmw - x,        y,        0, xpmh - y);
-          XCopyArea (dpy, bgPixmap.pixmap, pixmap, gc, 0, y,        x, xpmh - y, xpmw - x,        0);
-          XCopyArea (dpy, bgPixmap.pixmap, pixmap, gc, 0, 0,        x,        y, xpmw - x, xpmh - y);
-        }
-      else
-#ifdef ENABLE_TRANSPARENCY
-      if (!option(Opt_transparent) || !am_transparent)
-      /* will do that in check_our_parents otherwise */
-#endif
-        {
-          ASImage *scaled_im = scale_asimage (asv, original_asim, w, h, ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT);
-          if (scaled_im)
-            {
-              pixmap = asimage2pixmap(asv, display->root, scaled_im, gc, True);
-              destroy_asimage (&scaled_im);
-            }
+          if (im != bgPixmap.original_asim)
+            destroy_asimage (&im);
+          im = tmp;
         }
     }
+  bgPixmap.pixmap = XCreatePixmap (dpy, vt, w, h, depth);
+  bgPixmap.pmap_width = w;
+  bgPixmap.pmap_height = h;
+  bgPixmap.pmap_depth = depth;
 
-  XSetWindowBackgroundPixmap (dpy, vt, pixmap);
+  asimage2drawable (asv, bgPixmap.pixmap, im, gc, 0, 0, 0, 0, w, h, True);
+
+  if (im != bgPixmap.original_asim)
+    destroy_asimage (&im);
+
+  XSetWindowBackgroundPixmap (dpy, vt, bgPixmap.pixmap);
 
   XFreeGC (dpy, gc);
-#ifdef ENABLE_TRANSPARENCY
-  am_transparent = 0;
-#endif
 }
 
-Pixmap
+void
 rxvt_term::set_bgPixmap (const char *file)
 {
   char *f;
@@ -273,36 +267,22 @@ rxvt_term::set_bgPixmap (const char *file)
 
   if (*file != '\0')
     {
-      /*      XWindowAttributes attr; */
-
-      /*
-       * we already have the required attributes
-       */
-      /*      XGetWindowAttributes (dpy, vt, &attr); */
-
       if (asimman == NULL)
         asimman = create_generic_imageman(rs[Rs_path]);
       if ((f = strchr (file, ';')) == NULL)
-        original_asim = get_asimage( asimman, file, 0xFFFFFFFF, 100 );
+        bgPixmap.original_asim = get_asimage( asimman, file, 0xFFFFFFFF, 100 );
       else
         {
           size_t len = f - file;
           f = (char *)malloc (len + 1);
           strncpy (f, file, len);
           f[len] = '\0';
-          original_asim = get_asimage( asimman, f, 0xFFFFFFFF, 100 );
+          bgPixmap.original_asim = get_asimage( asimman, f, 0xFFFFFFFF, 100 );
           free( f );
-        }
-      if (original_asim)
-        {
-          bgPixmap.pixmap = asimage2pixmap (asv, display->root, original_asim, NULL, True);
-          xpmAttr.width = original_asim->width ;
-          xpmAttr.height = original_asim->height ;
         }
     }
 
   resize_pixmap ();
-  return bgPixmap.pixmap;
 }
 
 #endif				/* XPM_BACKGROUND */
@@ -629,7 +609,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
 #if TINTING
       || (!ISSET_PIXCOLOR (Color_tint) && rs[Rs_shade] == NULL
 #ifdef HAVE_AFTERIMAGE
-          && original_asim == NULL && rs[Rs_blurradius] == NULL
+          && bgPixmap.original_asim == NULL && rs[Rs_blurradius] == NULL
 #endif
          )
 #endif
@@ -676,9 +656,12 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
 #undef  IS_COMPONENT_WHOLESOME
 #endif /* TINTING */
       /* theer are no performance advantages to reusing same pixmap */
-      if (pixmap != None)
-        XFreePixmap (dpy, pixmap);
-      pixmap = XCreatePixmap (dpy, vt, szHint.width, szHint.height, rootdepth);
+      if (bgPixmap.pixmap != None)
+        XFreePixmap (dpy, bgPixmap.pixmap);
+      bgPixmap.pixmap = XCreatePixmap (dpy, vt, szHint.width, szHint.height, rootdepth);
+      bgPixmap.pmap_width = szHint.width;
+      bgPixmap.pmap_height = szHint.height;
+      bgPixmap.pmap_depth = rootdepth;
 
 #if 0 /* TODO : identify cases where this will be detrimental to performance : */
       /* we want to tile root pixmap into our own pixmap in this cases :
@@ -694,7 +677,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
       gcvalue.ts_x_origin = -sx;
       gcvalue.ts_y_origin = -sy;
       gc = XCreateGC (dpy, rootpixmap, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcvalue);
-      XFillRectangle (dpy, pixmap, gc, 0, 0, szHint.width, szHint.height);
+      XFillRectangle (dpy, bgPixmap.pixmap, gc, 0, 0, szHint.width, szHint.height);
 
 #if TINTING
       if (whole_tint && !no_tint)
@@ -706,17 +689,17 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
           gcvalue.function = GXand;
           gcvalue.fill_style = FillSolid;
           XChangeGC (dpy, gc, GCFillStyle | GCForeground | GCFunction, &gcvalue);
-          XFillRectangle (dpy, pixmap, gc, 0, 0, szHint.width, szHint.height);
+          XFillRectangle (dpy, bgPixmap.pixmap, gc, 0, 0, szHint.width, szHint.height);
         }
 #endif
       success = True;
 #ifdef HAVE_AFTERIMAGE
-      if (rs[Rs_blurradius] || original_asim != NULL || (!whole_tint && (!no_tint || shade !=100)))
+      if (rs[Rs_blurradius] || bgPixmap.original_asim != NULL || (!whole_tint && (!no_tint || shade !=100)))
         {
           ARGB32 tint = TINT_LEAVE_SAME;
           ASImage *back_im = NULL;
 
-          back_im = pixmap2ximage (asv, pixmap, 0, 0, szHint.width, szHint.height, AllPlanes, 100);
+          back_im = pixmap2ximage (asv, bgPixmap.pixmap, 0, 0, szHint.width, szHint.height, AllPlanes, 100);
           if (back_im != NULL)
             {
               if (!whole_tint && (!no_tint || shade !=100))
@@ -740,7 +723,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                   if (!(flags&HeightValue))
                     vr = hr;
                   tmp = blur_asimage_gauss (asv, back_im, hr, vr, 0xFFFFFFFF,
-                                            (original_asim == NULL || tint == TINT_LEAVE_SAME)?ASA_XImage:ASA_ASImage,
+                                            (bgPixmap.original_asim == NULL || tint == TINT_LEAVE_SAME)?ASA_XImage:ASA_ASImage,
                                             100, ASIMAGE_QUALITY_DEFAULT);
                   if (tmp)
                     {
@@ -749,7 +732,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                     }
                 }
 
-              if (original_asim != NULL)
+              if (bgPixmap.original_asim != NULL)
                 {
                   ASImageLayer *layers = create_image_layers (2);
                   ASImage *merged_im = NULL;
@@ -759,7 +742,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                   layers[0].clip_width = szHint.width;
                   layers[0].clip_height = szHint.height;
                   layers[0].tint = tint;
-                  layers[1].im = original_asim;
+                  layers[1].im = bgPixmap.original_asim;
                   if (bgPixmap.auto_resize)
                     {
                       fore_w = szHint.width;
@@ -767,14 +750,14 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                     }
                   else
                     {
-                      fore_w = bgPixmap.w;
-                      fore_h = bgPixmap.h;
+                      fore_w = (bgPixmap.w == 0) ? bgPixmap.original_asim->width : bgPixmap.w;
+                      fore_h = (bgPixmap.h == 0) ? bgPixmap.original_asim->height : bgPixmap.h;
                     }
-                  if (fore_w != original_asim->width
-                      || fore_h != original_asim->height)
+                  if (fore_w != bgPixmap.original_asim->width
+                      || fore_h != bgPixmap.original_asim->height)
                     {
                       layers[1].im = scale_asimage (asv,
-                                                    original_asim,
+                                                    bgPixmap.original_asim,
                                                     fore_w, fore_h,
                                                     ASA_ASImage, 100,
                                                     ASIMAGE_QUALITY_DEFAULT);
@@ -791,7 +774,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                   PRINT_BACKGROUND_OP_TIME;
                   merged_im = merge_layers (asv, layers, 2, szHint.width, szHint.height,
                                             ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT);
-                  if (layers[1].im != original_asim)
+                  if (layers[1].im != bgPixmap.original_asim)
                       destroy_asimage (&(layers[1].im));
                   free (layers);
 
@@ -812,7 +795,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                     }
                     PRINT_BACKGROUND_OP_TIME;
                 }
-              asimage2drawable (asv, pixmap, back_im, gc, 0, 0, 0, 0, szHint.width, szHint.height, True);
+              asimage2drawable (asv, bgPixmap.pixmap, back_im, gc, 0, 0, 0, 0, szHint.width, szHint.height, True);
               destroy_asimage (&back_im);
             } /* back_im != NULL */
           else
@@ -822,7 +805,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
 #if TINTING
       if (!whole_tint && (!no_tint || shade !=100))
         {
-          XImage *image = XGetImage (dpy, pixmap, 0, 0, szHint.width, szHint.height, AllPlanes, ZPixmap);
+          XImage *image = XGetImage (dpy, bgPixmap.pixmap, 0, 0, szHint.width, szHint.height, AllPlanes, ZPixmap);
           success = False;
           if (image != NULL)
             {
@@ -831,7 +814,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                 gc = XCreateGC (dpy, vt, 0UL, &gcvalue);
               if (ISSET_PIXCOLOR (Color_tint) || shade != 100)
                 ShadeXImage (this, image, shade, c.r, c.g, c.b);
-              XPutImage (dpy, pixmap, gc, image, 0, 0, 0, 0, image->width, image->height);
+              XPutImage (dpy, bgPixmap.pixmap, gc, image, 0, 0, 0, 0, image->width, image->height);
               XDestroyImage (image);
               success = True;
             }
@@ -848,10 +831,10 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
           if (am_transparent && am_pixmap_trans)
             {
               pchanged = 1;
-              if (pixmap != None)
+              if (bgPixmap.pixmap != None)
                 {
-                  XFreePixmap (dpy, pixmap);
-                  pixmap = None;
+                  XFreePixmap (dpy, bgPixmap.pixmap);
+                  bgPixmap.pixmap = None;
                 }
             }
 
@@ -859,7 +842,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
         }
       else
         {
-          XSetWindowBackgroundPixmap (dpy, parent[0], pixmap);
+          XSetWindowBackgroundPixmap (dpy, parent[0], bgPixmap.pixmap);
           XClearWindow (dpy, parent[0]);
 
           if (!am_transparent || !am_pixmap_trans)

@@ -185,9 +185,6 @@ rxvt_term::init_vars ()
   pix_colors_unfocused = new rxvt_color [TOTAL_COLORS];
 #endif
 
-#if defined(XPM_BACKGROUND) || defined(ENABLE_TRANSPARENCY)
-  pixmap = None;
-#endif
 
   MEvent.time = CurrentTime;
   MEvent.button = AnyButton;
@@ -204,7 +201,10 @@ rxvt_term::init_vars ()
   refresh_type = SLOW_REFRESH;
 
   oldcursor.row = oldcursor.col = -1;
+#if defined(XPM_BACKGROUND) || defined(ENABLE_TRANSPARENCY)
 #ifdef XPM_BACKGROUND
+  bgPixmap.original_asim = NULL;
+#endif
   /*  bgPixmap.w = bgPixmap.h = 0; */
   bgPixmap.x = bgPixmap.y = 0;
   bgPixmap.pixmap = None;

@@ -1122,8 +1122,8 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
   // TODO, with nvidia-8178, resizes kill the alpha channel, report if not fixed in newer version
   //scr_touch (false);
 
-#ifdef XPM_BACKGROUND
-  if (pixmap)
+#if defined(XPM_BACKGROUND) || defined(ENABLE_TRANSPARENCY)
+  if (bgPixmap.pixmap)
     scr_touch (false);
 #endif
 

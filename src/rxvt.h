@@ -172,11 +172,16 @@ struct grwin_t;
 # undef KEEP_SCROLLCOLOR
 #endif
 
-#ifdef XPM_BACKGROUND
+#if defined(XPM_BACKGROUND) || defined(ENABLE_TRANSPARENCY)
 typedef struct {
+#ifdef  XPM_BACKGROUND
+  ASImage  *original_asim;
   short w, h, x, y;
-  bool auto_resize ; 
+  bool auto_resize;
+#endif  
   Pixmap pixmap;
+  unsigned int pmap_width, pmap_height;
+  unsigned int pmap_depth;
 } bgPixmap_t;
 #endif
 
@@ -1006,12 +1011,12 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   XComposeStatus  compose;
   ttymode_t       tio;
   row_col_t       oldcursor;
-#ifdef XPM_BACKGROUND
+#if defined(XPM_BACKGROUND) || defined(ENABLE_TRANSPARENCY)
   bgPixmap_t      bgPixmap;
+#endif 
+#ifdef XPM_BACKGROUND
   struct ASVisual  *asv;
   ASImageManager *asimman;
-  ASImage        *original_asim;
-  struct { unsigned int width, height; } xpmAttr; /* all we need is width/height */
 #endif
 
 #if ENABLE_OVERLAY
@@ -1434,7 +1439,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   // xpm.C
   int scale_pixmap (const char *geom);
   void resize_pixmap ();
-  Pixmap set_bgPixmap (const char *file);
+  void set_bgPixmap (const char *file);
 };
 
 /*
