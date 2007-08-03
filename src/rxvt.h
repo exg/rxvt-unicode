@@ -173,16 +173,41 @@ struct grwin_t;
 #endif
 
 #if defined(XPM_BACKGROUND) || defined(ENABLE_TRANSPARENCY)
-typedef struct {
-#ifdef  XPM_BACKGROUND
+# define HAVE_BG_PIXMAP 1/* to simplify further usage */
+struct  bgPixmap_t {
+# ifdef  XPM_BACKGROUND
+
+#  ifdef HAVE_AFTERIMAGE
   ASImage  *original_asim;
-  short w, h, x, y;
-  bool auto_resize;
-#endif  
+#  endif
+
+  unsigned int h_scale, v_scale;/* percents of the window size */
+  int h_align, v_align;         /* percents of the window size:
+                                  0 - left align, 50 - center, 100 - right */
+
+  bool handle_geometry (const char *geom);
+
+# endif
+
+#  define bgPmap_geometrySet      (1UL<<0)
+#  define bgPmap_hScale           (1UL<<1)
+#  define bgPmap_vScale           (1UL<<2)
+#  define bgPmap_Scale            (bgPmap_hScale|bgPmap_vScale)
+#  define bgPmap_propScale        (1UL<<3)
+#  define bgPmap_geometryFlags    (bgPmap_geometrySet|bgPmap_Scale|bgPmap_propScale)
+
+#  define bgPmap_Transparent      (1UL<<16)
+  unsigned long flags;
+
   Pixmap pixmap;
   unsigned int pmap_width, pmap_height;
   unsigned int pmap_depth;
-} bgPixmap_t;
+
+  bool window_size_sensitive();
+
+};
+#else
+# undef HAVE_BG_PIXMAP
 #endif
 
 /*
@@ -1011,11 +1036,11 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   XComposeStatus  compose;
   ttymode_t       tio;
   row_col_t       oldcursor;
-#if defined(XPM_BACKGROUND) || defined(ENABLE_TRANSPARENCY)
+#ifdef HAVE_BG_PIXMAP
   bgPixmap_t      bgPixmap;
-#endif 
-#ifdef XPM_BACKGROUND
-  struct ASVisual  *asv;
+#endif
+#ifdef HAVE_AFTERIMAGE
+  ASVisual       *asv;
   ASImageManager *asimman;
 #endif
 
@@ -1437,7 +1462,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void get_xdefaults (FILE *stream, const char *name);
   void extract_resources ();
   // xpm.C
-  int scale_pixmap (const char *geom);
+//int scale_pixmap (const char *geom);
   void resize_pixmap ();
   void set_bgPixmap (const char *file);
 };

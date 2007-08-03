@@ -1323,7 +1323,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
           if (0)
             ;
-#if defined(ENABLE_TRANSPARENCY) || defined(XPM_BACKGROUND)
+#ifdef HAVE_BG_PIXMAP
           else if (bg < 0 && term->bgPixmap.pixmap)
             {
               if (term->bgPixmap.pmap_width >= x + term->window_vt_x+w

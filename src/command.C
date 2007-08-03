@@ -1486,8 +1486,9 @@ rxvt_term::x_cb (XEvent &ev)
               {
                 seen_resize = 1;
                 resize_all_windows (ev.xconfigure.width, ev.xconfigure.height, 1);
-#ifdef XPM_BACKGROUND
-                if (!option (Opt_transparent) && bgPixmap.auto_resize)
+#ifdef HAVE_BG_PIXMAP
+                /* TODO: replace with update_pixmap() that should unify transparency and bg image handling ! */
+                if (!option (Opt_transparent) && bgPixmap.window_size_sensitive ())
                   {
                     resize_pixmap ();
                     scr_touch (true);
@@ -3450,7 +3451,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
         {
           if (*str != ';')
             {
-              scale_pixmap ("");	/* reset to default scaling */
+              bgPixmap.handle_geometry ("");	/* reset to default scaling */
               set_bgPixmap (str);	/* change pixmap */
               scr_touch (true);
             }
@@ -3460,7 +3461,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
           while ((str = strchr (str, ';')) != NULL)
             {
               str++;
-              changed += scale_pixmap (str);
+              changed += bgPixmap.handle_geometry (str);
             }
 
           if (changed)

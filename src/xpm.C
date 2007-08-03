@@ -26,52 +26,83 @@
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
 
-#ifdef XPM_BACKGROUND
-
 /*
- * These GEOM strings indicate absolute size/position:
- * @ `WxH+X+Y'
- * @ `WxH+X'    -> Y = X
- * @ `WxH'      -> Y = X = 50
- * @ `W+X+Y'    -> H = W
- * @ `W+X'      -> H = W, Y = X
- * @ `W'        -> H = W, X = Y = 50
- * @ `0xH'      -> H *= H/100, X = Y = 50 (W unchanged)
- * @ `Wx0'      -> W *= W/100, X = Y = 50 (H unchanged)
- * @ `=+X+Y'    -> (H, W unchanged)
- * @ `=+X'      -> Y = X (H, W unchanged)
+ * Pixmap geometry string interpretation :
+ * Each geometry string contains zero or one scale/position
+ * adjustment and may optionally be followed by a colon and one or more
+ * colon-delimited pixmap operations.
+ * The following table shows the valid geometry strings and their
+ * affects on the background image :
  *
- * These GEOM strings adjust position relative to current position:
- * @ `+X+Y'
- * @ `+X'       -> Y = X
+ * WxH+X+Y  	Set scaling to W% by H%, and position to X% by Y%.
+ *            W and H are percentages of the terminal window size.
+ *            X and Y are also percentages; e.g., +50+50 centers
+ *            the image in the window.
+ * WxH+X 	    Assumes Y == X
+ * WxH 	      Assumes Y == X == 50 (centers the image)
+ * W+X+Y 	    Assumes H == W
+ * W+X 	      Assumes H == W and Y == X
+ * W 	        Assumes H == W and Y == X == 50
  *
- * And this GEOM string is for querying current scale/position:
- * @ `?'
+ * Adjusting position only :
+ * =+X+Y 	    Set position to X% by Y% (absolute).
+ * =+X 	      Set position to X% by X%.
+ * +X+Y 	    Adjust position horizontally X% and vertically Y%
+ *            from current position (relative).
+ * +X+X 	    Adjust position horizontally X% and vertically X%
+ *            from current position.
+ *
+ * Adjusting scale only :
+ * Wx0 	      Multiply horizontal scaling factor by W%
+ * 0xH 	      Multiply vertical scaling factor by H%
+ * 0x0 	      No scaling (show image at normal size).
+ *
+ * Pixmap Operations : (should be prepended by a colon)
+ * tile 	    Tile image. Scaling/position modifiers above will affect
+ *            the tile size and origin.
+ * propscale 	When scaling, scale proportionally. That is, maintain the
+ *            proper aspect ratio for the image. Any portion of the
+ *            background not covered by the image is filled with the
+ *            current background color.
+ * hscale     Scale horizontally, tile vertically ?
+ * vscale     Tile horizontally, scale vertically ?
+ * scale      Scale both up and down
+ * auto       Same as 100x100+50+50
  */
-int
-rxvt_term::scale_pixmap (const char *geom)
+
+#ifdef HAVE_BG_PIXMAP
+bool
+bgPixmap_t::window_size_sensitive ()
 {
-  int flags, changed = 0;
+  return (flags&(bgPmap_Scale|bgPmap_Transparent));
+}
+
+#ifdef XPM_BACKGROUND
+bool
+bgPixmap_t::handle_geometry (const char *geom)
+{
+  int geom_flags, changed = 0;
   int x = 0, y = 0;
   unsigned int w = 0, h = 0;
   unsigned int n;
+  unsigned long new_flags = (flags&(~bgPmap_geometryFlags)) ;
   char *p;
-  bgPixmap_t *bgpixmap = &bgPixmap;
-
 #define MAXLEN_GEOM		sizeof("[10000x10000+10000+10000]")
 
   if (geom == NULL)
-    return 0;
+    return false;
 
   char str[MAXLEN_GEOM];
 
   if (!strcmp (geom, "?"))
     {
+#if 0 /* TODO: */    
       sprintf (str, "[%dx%d+%d+%d]",	/* can't presume snprintf () ! */
-              min (bgpixmap->w, 32767), min (bgpixmap->h, 32767),
-              min (bgpixmap->x, 32767), min (bgpixmap->y, 32767));
+              min (h_scale, 32767), min (v_scale, 32767),
+              min (h_align, 32767), min (v_align, 32767));
       process_xterm_seq (XTerm_title, str, CHAR_ST);
-      return 0;
+#endif      
+      return false;
     }
 
   if ((p = strchr (geom, ';')) == NULL)
@@ -80,93 +111,99 @@ rxvt_term::scale_pixmap (const char *geom)
   n = (p - geom);
   if (n < MAXLEN_GEOM)
     {
+      new_flags |= bgPmap_geometrySet;
+
       strncpy (str, geom, n);
       str[n] = '\0';
 
       if (strcmp(str, "auto") == 0)
         {
-          if (!bgpixmap->auto_resize)
-            changed++;
-          bgpixmap->auto_resize = True ;
-          w = szHint.width ;
-          h = szHint.height ;
-          flags = WidthValue|HeightValue ;
+          w = h = 100;
+          geom_flags = WidthValue|HeightValue ;
         }
       else
         {
-          bgpixmap->auto_resize = False ;
-          flags = XParseGeometry (str, &x, &y, &w, &h);
+          geom_flags = XParseGeometry (str, &x, &y, &w, &h);
         }
 /* code below is garbage and needs to be rewritten */
-      if (!flags)
+      if (!geom_flags)
         {
-          flags |= WidthValue;
+          geom_flags |= WidthValue;
           w = 0;
         }			/* default is tile */
 
-      if (flags & WidthValue)
+      if (geom_flags & WidthValue)
         {
-          if (!(flags & XValue))
+          if (!(geom_flags & XValue))
             x = 50;
 
-          if (!(flags & HeightValue))
+          if (!(geom_flags & HeightValue))
             h = w;
 
           if (w && !h)
             {
-              w = (bgpixmap->w * w) / 100;
-              h = bgpixmap->h;
+              w = (h_scale * w) / 100;
+              h = v_scale;
             }
           else if (h && !w)
             {
-              w = bgpixmap->w;
-              h = (bgpixmap->h * h) / 100;
+              w = h_scale;
+              h = (v_scale * h) / 100;
             }
 
           min_it (w, 32767);
           min_it (h, 32767);
 
-          if (bgpixmap->w != (short)w)
+          if (h_scale != w)
             {
-              bgpixmap->w = (short)w;
+              h_scale = w;
               changed++;
             }
 
-          if (bgpixmap->h != (short)h)
+          if (v_scale != h)
             {
-              bgpixmap->h = (short)h;
+              v_scale = h;
               changed++;
             }
         }
-
-      if (!(flags & YValue))
+      if (!(geom_flags & YValue))
         {
-          if (flags & XNegative)
-            flags |= YNegative;
+          if (geom_flags & XNegative)
+            geom_flags |= YNegative;
 
           y = x;
         }
 
-      if (!(flags & WidthValue) && geom[0] != '=')
+      if (!(geom_flags & WidthValue) && geom[0] != '=')
         {
-          x += bgpixmap->x;
-          y += bgpixmap->y;
+          x += h_align;
+          y += v_align;
         }
 
-      if (bgpixmap->x != x)
+      if (h_align != x)
         {
-          bgpixmap->x = x;
+          h_align = x;
           changed++;
         }
 
-      if (bgpixmap->y != y)
+      if (v_align != y)
         {
-          bgpixmap->y = y;
+          v_align = y;
           changed++;
         }
+
+      if (h_scale != 0)
+        new_flags |= bgPmap_hScale;
+      if (v_scale != 0)
+        new_flags |= bgPmap_vScale;
     }
 
-  return changed;
+  if (new_flags != flags)
+    {
+      flags = new_flags;
+      changed++;
+    }
+  return (changed > 0);
 }
 
 void
@@ -174,10 +211,15 @@ rxvt_term::resize_pixmap ()
 {
   XGCValues gcvalue;
   GC gc;
-  unsigned int w = bgPixmap.w, h = bgPixmap.h;
-  unsigned int x = bgPixmap.x, y = bgPixmap.y;
+  unsigned int w = bgPixmap.h_scale*szHint.width/100;
+  unsigned int h = bgPixmap.v_scale*szHint.height/100;
+  int x = bgPixmap.h_align*szHint.width/100;
+  int y = bgPixmap.v_align*szHint.height/100;
+#ifdef HAVE_AFTERIMAGE
   ASImage *im = bgPixmap.original_asim;
-
+#else
+  void *im = NULL;
+#endif
 /* preliminary cleanup - this needs to be integrated with check_our_parents() code */
   if (bgPixmap.pixmap != None)
     {
@@ -193,7 +235,7 @@ rxvt_term::resize_pixmap ()
     }
 #endif
 
-  if (bgPixmap.original_asim == NULL)
+  if (im == NULL)
     { /* So be it: I'm not using pixmaps */
       XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
       return;
@@ -202,22 +244,17 @@ rxvt_term::resize_pixmap ()
   gcvalue.foreground = pix_colors[Color_bg];
   gc = XCreateGC (dpy, vt, GCForeground, &gcvalue);
 
-  if (bgPixmap.auto_resize)
-    {
-      w = szHint.width;
-      h = szHint.height;
-    }
-  else
-    { /* don't zoom pixmap too much nor expand really small pixmaps  */
-      if (w > 16000)
-        w = 1;
-      if (h > 16000)
-        h = 1;
-    }
-  if (w == 0) w = im->width; 
-  else if (w < 10) w *= im->width;
-  if (h == 0) h = im->height; 
-  else if (w < 10) h *= im->height;
+  /* don't zoom pixmap too much nor expand really small pixmaps  */
+  if (w > 16000)
+    w = 1;
+  if (h > 16000)
+    h = 1;
+  
+#ifdef HAVE_AFTERIMAGE
+  if (w == 0)
+    w = im->width;
+  if (h == 0)
+    h = im->height;
 
   if (w != im->width || h != im->height)
     {
@@ -225,6 +262,9 @@ rxvt_term::resize_pixmap ()
       if (tmp != NULL)
         im = tmp;
     }
+  bgPixmap.pmap_width = MIN(w,szHint.width);
+  bgPixmap.pmap_height = MIN(h,szHint.height);
+#if 0 /* TODO: fix that! */
   if (x != 0 || y != 0)
     {
       ASImage *tmp = tile_asimage (asv, im, x, y, w, h, TINT_LEAVE_SAME, ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT);
@@ -235,17 +275,17 @@ rxvt_term::resize_pixmap ()
           im = tmp;
         }
     }
-  bgPixmap.pixmap = XCreatePixmap (dpy, vt, w, h, depth);
-  bgPixmap.pmap_width = w;
-  bgPixmap.pmap_height = h;
+#endif    
+  bgPixmap.pixmap = XCreatePixmap (dpy, vt, bgPixmap.pmap_width, bgPixmap.pmap_height, depth);
   bgPixmap.pmap_depth = depth;
 
-  asimage2drawable (asv, bgPixmap.pixmap, im, gc, 0, 0, 0, 0, w, h, True);
+  asimage2drawable (asv, bgPixmap.pixmap, im, gc, 0, 0, 0, 0, bgPixmap.pmap_width, bgPixmap.pmap_height, True);
 
   if (im != bgPixmap.original_asim)
     destroy_asimage (&im);
-
-  XSetWindowBackgroundPixmap (dpy, vt, bgPixmap.pixmap);
+#endif
+  if( bgPixmap.pixmap )
+    XSetWindowBackgroundPixmap (dpy, vt, bgPixmap.pixmap);
 
   XFreeGC (dpy, gc);
 }
@@ -264,9 +304,9 @@ rxvt_term::set_bgPixmap (const char *file)
     }
 
   XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
-
   if (*file != '\0')
     {
+#ifdef HAVE_AFTERIMAGE
       if (asimman == NULL)
         asimman = create_generic_imageman(rs[Rs_path]);
       if ((f = strchr (file, ';')) == NULL)
@@ -280,12 +320,14 @@ rxvt_term::set_bgPixmap (const char *file)
           bgPixmap.original_asim = get_asimage( asimman, f, 0xFFFFFFFF, 100 );
           free( f );
         }
+#endif    
     }
 
   resize_pixmap ();
 }
 
 #endif				/* XPM_BACKGROUND */
+#endif				/* HAVE_BG_PIXMAP */
 
 #ifdef ENABLE_TRANSPARENCY
 #if TINTING && !defined(HAVE_AFTERIMAGE)
@@ -743,16 +785,10 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                   layers[0].clip_height = szHint.height;
                   layers[0].tint = tint;
                   layers[1].im = bgPixmap.original_asim;
-                  if (bgPixmap.auto_resize)
-                    {
-                      fore_w = szHint.width;
-                      fore_h = szHint.height;
-                    }
-                  else
-                    {
-                      fore_w = (bgPixmap.w == 0) ? bgPixmap.original_asim->width : bgPixmap.w;
-                      fore_h = (bgPixmap.h == 0) ? bgPixmap.original_asim->height : bgPixmap.h;
-                    }
+
+                  fore_w = (bgPixmap.h_scale == 0) ? bgPixmap.original_asim->width : bgPixmap.h_scale*szHint.width/100;
+                  fore_h = (bgPixmap.v_scale == 0) ? bgPixmap.original_asim->height : bgPixmap.v_scale*szHint.height/100;
+
                   if (fore_w != bgPixmap.original_asim->width
                       || fore_h != bgPixmap.original_asim->height)
                     {

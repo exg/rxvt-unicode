@@ -1650,7 +1650,7 @@ rxvt_term::scr_rvideo_mode (bool on) NOTHROW
       rvideo_state = on;
 
       ::swap (pix_colors[Color_fg], pix_colors[Color_bg]);
-#if XPM_BACKGROUND
+#ifdef HAVE_BG_PIXMAP
       if (bgPixmap.pixmap == None)
 #endif
 #if ENABLE_TRANSPARENCY
@@ -2007,7 +2007,7 @@ rxvt_term::scr_refresh () NOTHROW
   have_bg = 0;
   refresh_count = 0;
 
-#if XPM_BACKGROUND
+#ifdef HAVE_BG_PIXMAP
   have_bg |= bgPixmap.pixmap != None;
 #endif
 #if ENABLE_TRANSPARENCY
@@ -2487,7 +2487,7 @@ rxvt_term::scr_recolour () NOTHROW
 #if ENABLE_TRANSPARENCY
       && !am_transparent
 #endif
-#if XPM_BACKGROUND
+#ifdef HAVE_BG_PIXMAP
       && !bgPixmap.pixmap
 #endif
       )

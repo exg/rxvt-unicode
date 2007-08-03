@@ -201,12 +201,14 @@ rxvt_term::init_vars ()
   refresh_type = SLOW_REFRESH;
 
   oldcursor.row = oldcursor.col = -1;
-#if defined(XPM_BACKGROUND) || defined(ENABLE_TRANSPARENCY)
-#ifdef XPM_BACKGROUND
+#ifdef HAVE_BG_PIXMAP
+#ifdef HAVE_AFTERIMAGE
   bgPixmap.original_asim = NULL;
 #endif
   /*  bgPixmap.w = bgPixmap.h = 0; */
-  bgPixmap.x = bgPixmap.y = 0;
+  bgPixmap.h_scale = bgPixmap.v_scale = 0;
+  bgPixmap.h_align = bgPixmap.v_align = 0;
+  bgPixmap.flags = 0;
   bgPixmap.pixmap = None;
 #endif
 
@@ -1047,7 +1049,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
       if ((p = strchr (p, ';')) != NULL)
         {
           p++;
-          scale_pixmap (p);
+          bgPixmap.handle_geometry (p);
         }
 
       set_bgPixmap (rs[Rs_backgroundPixmap]);
