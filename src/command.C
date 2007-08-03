@@ -3445,15 +3445,14 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
         break;
 #endif
 
+#if XPM_BACKGROUND
       case Rxvt_Pixmap:
         {
           if (*str != ';')
             {
-#if XPM_BACKGROUND
               scale_pixmap ("");	/* reset to default scaling */
               set_bgPixmap (str);	/* change pixmap */
               scr_touch (true);
-#endif
             }
 
           int changed = 0;
@@ -3461,17 +3460,13 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
           while ((str = strchr (str, ';')) != NULL)
             {
               str++;
-#if XPM_BACKGROUND
               changed += scale_pixmap (str);
-#endif
             }
 
           if (changed)
             {
-#ifdef XPM_BACKGROUND
               resize_pixmap ();
               scr_touch (true);
-#endif
             }
 #if ENABLE_TRANSPARENCY && defined(HAVE_AFTERIMAGE)
           if (option (Opt_transparent))
@@ -3479,6 +3474,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 #endif
         }
         break;
+#endif
 
       case Rxvt_restoreFG:
         set_window_color (Color_fg, str);
