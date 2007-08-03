@@ -206,8 +206,10 @@ rxvt_term::init_vars ()
   bgPixmap.original_asim = NULL;
 #endif
   /*  bgPixmap.w = bgPixmap.h = 0; */
+#ifdef XPM_BACKGROUND
   bgPixmap.h_scale = bgPixmap.v_scale = 0;
   bgPixmap.h_align = bgPixmap.v_align = 0;
+#endif
   bgPixmap.flags = 0;
   bgPixmap.pixmap = None;
 #endif

@@ -1486,7 +1486,7 @@ rxvt_term::x_cb (XEvent &ev)
               {
                 seen_resize = 1;
                 resize_all_windows (ev.xconfigure.width, ev.xconfigure.height, 1);
-#ifdef HAVE_BG_PIXMAP
+#ifdef XPM_BACKGROUND
                 /* TODO: replace with update_pixmap() that should unify transparency and bg image handling ! */
                 if (!option (Opt_transparent) && bgPixmap.window_size_sensitive ())
                   {
