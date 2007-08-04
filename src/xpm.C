@@ -49,7 +49,7 @@
  * =+X 	      Set position to X% by X%.
  * +X+Y 	    Adjust position horizontally X% and vertically Y%
  *            from current position (relative).
- * +X+X 	    Adjust position horizontally X% and vertically X%
+ * +X   	    Adjust position horizontally X% and vertically X%
  *            from current position.
  *
  * Adjusting scale only :
@@ -74,20 +74,67 @@
 bool
 bgPixmap_t::window_size_sensitive ()
 {
-  return (flags&(bgPmap_Scale|bgPmap_Transparent));
+#ifdef XPM_BACKGROUND
+#ifdef HAVE_AFTERIMAGE
+  if (original_asim != NULL)
+#endif
+    {
+      if (h_scale != 0 || v_scale != 0)
+        return true;
+    }
+#endif
+#ifdef ENABLE_TRANSPARENCY
+  if (flags & bgPmap_Transparent)
+    return true;
+#endif
+  return false;
 }
 
 #ifdef XPM_BACKGROUND
+static inline bool
+check_set_scale_value (int geom_flags, int flag, unsigned int &scale, unsigned int new_value)
+{
+  if (geom_flags & flag)
+    {
+      if (new_value > 1000)
+        new_value = 1000;
+      if (new_value != scale)
+        {
+          scale = new_value;
+          return true;
+        }
+    }
+  return false;
+}
+
+static inline bool
+check_set_align_value (int geom_flags, int flag, int &align, int new_value)
+{
+  if (geom_flags & flag)
+    {
+      if (new_value < -100)
+        new_value = -100;
+      else if (new_value > 200)
+        new_value = 200;
+      if (new_value != align)
+        {
+          align = new_value;
+          return true;
+        }
+    }
+  return false;
+}
+
 bool
 bgPixmap_t::handle_geometry (const char *geom)
 {
-  int geom_flags, changed = 0;
+  int geom_flags = 0, changed = 0;
   int x = 0, y = 0;
   unsigned int w = 0, h = 0;
   unsigned int n;
-  unsigned long new_flags = (flags&(~bgPmap_geometryFlags)) ;
+  unsigned long new_flags = (flags&(~bgPmap_geometryFlags));
   char *p;
-#define MAXLEN_GEOM		sizeof("[10000x10000+10000+10000]")
+#define MAXLEN_GEOM		256 /* could be longer then regular geometry string */
 
   if (geom == NULL)
     return false;
@@ -104,98 +151,161 @@ bgPixmap_t::handle_geometry (const char *geom)
 #endif      
       return false;
     }
-
+  while (isspace(*geom)) ++geom;
   if ((p = strchr (geom, ';')) == NULL)
     p = strchr (geom, '\0');
 
   n = (p - geom);
   if (n < MAXLEN_GEOM)
     {
+      char *ops;
       new_flags |= bgPmap_geometrySet;
 
       strncpy (str, geom, n);
       str[n] = '\0';
-
-      if (strcmp(str, "auto") == 0)
-        {
-          w = h = 100;
-          geom_flags = WidthValue|HeightValue ;
-        }
+      if (str[0] == ':')
+        ops = &str[0];
+      else if (str[0] != 'x' && str[0] != 'X' && isalpha(str[0]))
+        ops = &str[0];
       else
         {
+          char *tmp;
+          ops = strchr (str, ':');
+          if (ops != NULL)
+            {
+              for (tmp = ops-1; tmp >= str && isspace(*tmp); --tmp);
+              *(++tmp) = '\0';
+              if (ops == tmp) ++ops;
+            }
+        }
+
+      if (ops > str || ops == NULL)
+        {
+          /* we have geometry string - let's handle it prior to applying ops */
           geom_flags = XParseGeometry (str, &x, &y, &w, &h);
-        }
-/* code below is garbage and needs to be rewritten */
-      if (!geom_flags)
-        {
-          geom_flags |= WidthValue;
-          w = 0;
-        }			/* default is tile */
 
-      if (geom_flags & WidthValue)
-        {
-          if (!(geom_flags & XValue))
-            x = 50;
-
-          if (!(geom_flags & HeightValue))
-            h = w;
-
-          if (w && !h)
+          if ((geom_flags & XValue) && !(geom_flags & YValue))
             {
-              w = (h_scale * w) / 100;
-              h = v_scale;
-            }
-          else if (h && !w)
-            {
-              w = h_scale;
-              h = (v_scale * h) / 100;
+              y = x;
+              geom_flags |= YValue;
             }
 
-          min_it (w, 32767);
-          min_it (h, 32767);
-
-          if (h_scale != w)
-            {
-              h_scale = w;
-              changed++;
+          if (flags & bgPmap_geometrySet)
+            {/* new geometry is an adjustment to the old one ! */
+              if ((geom_flags & WidthValue) && (geom_flags & HeightValue))
+                {
+                  if (w == 0 && h != 0)
+                    {
+                      w = h_scale;
+                      h = (v_scale * h) / 100;
+                    }
+                  else if (h == 0 && w != 0)
+                    {
+                      w = (h_scale * w) / 100;
+                      h = v_scale;
+                    }
+                }
+              if (geom_flags & XValue)
+                {
+                  if (str[0] != '=')
+                    {
+                      y += v_align;
+                      x += h_align;
+                    }
+                }
             }
-
-          if (v_scale != h)
+          else /* setting up geometry from scratch */
             {
-              v_scale = h;
-              changed++;
+              if (!(geom_flags & XValue))
+                {/* use default geometry - centered */
+                  x = y = bgPmap_defaultAlign;
+                }
+              else if (!(geom_flags & YValue))
+                y = x;
+
+              if ((geom_flags & (WidthValue|HeightValue)) == 0)
+                {/* use default geometry - scaled */
+                  w = h = bgPmap_defaultScale;
+                }
+              else if (geom_flags & WidthValue)
+                {
+                  if (!(geom_flags & HeightValue))
+                      h = w;
+                }
+              else
+                  w = h;
             }
+        } /* done parsing geometry string */
+      else if (!(flags & bgPmap_geometrySet))
+        { /* default geometry - scaled and centered */
+            x = y = bgPmap_defaultAlign;
+            w = h = bgPmap_defaultScale;
         }
-      if (!(geom_flags & YValue))
+        
+      if (!(flags & bgPmap_geometrySet))
+        geom_flags |= WidthValue|HeightValue|XValue|YValue;
+
+      if (ops)
         {
-          if (geom_flags & XNegative)
-            geom_flags |= YNegative;
-
-          y = x;
+          while (*ops)
+            {
+              while (*ops == ':' || isspace(*ops)) ++ops;
+#define CHECK_GEOM_OPS(op_str)  (strncasecmp (ops, (op_str), sizeof(op_str)-1) == 0)
+              if (CHECK_GEOM_OPS("tile"))
+                {
+                  w = h = 0;
+                  geom_flags |= WidthValue|HeightValue;
+                }
+              else if (CHECK_GEOM_OPS("propscale"))
+                {
+                  if (w == 0 && h == 0)
+                    {
+                      w = 100;
+                      geom_flags |= WidthValue;
+                    }
+                  new_flags |= bgPmap_propScale;
+                }
+              else if (CHECK_GEOM_OPS("hscale"))
+                {
+                  if (w == 0)
+                    w = 100;
+                  h = 0;
+                  geom_flags |= WidthValue|HeightValue;
+                }
+              else if (CHECK_GEOM_OPS("vscale"))
+                {
+                  if (h == 0)
+                    h = 100;
+                  w = 0;
+                  geom_flags |= WidthValue|HeightValue;
+                }
+              else if (CHECK_GEOM_OPS("scale"))
+                {
+                  if (h == 0)
+                    h = 100;
+                  if (w == 0)
+                    w = 100;
+                  geom_flags |= WidthValue|HeightValue;
+                }
+              else if (CHECK_GEOM_OPS("auto"))
+                {
+                  w = h = 100;
+                  x = y = 50;
+                  geom_flags |= WidthValue|HeightValue|XValue|YValue;
+                }
+#undef CHECK_GEOM_OPS
+              while (*ops != ':' && *ops != '\0') ++ops;
+            } /* done parsing ops */
         }
 
-      if (!(geom_flags & WidthValue) && geom[0] != '=')
-        {
-          x += h_align;
-          y += v_align;
-        }
-
-      if (h_align != x)
-        {
-          h_align = x;
-          changed++;
-        }
-
-      if (v_align != y)
-        {
-          v_align = y;
-          changed++;
-        }
-
-      if (h_scale != 0)
-        new_flags |= bgPmap_hScale;
-      if (v_scale != 0)
-        new_flags |= bgPmap_vScale;
+      if (check_set_scale_value (geom_flags, WidthValue, h_scale, w))
+        ++changed;
+      if (check_set_scale_value (geom_flags, HeightValue, v_scale, h))
+        ++changed;
+      if (check_set_align_value (geom_flags, XValue, h_align, x))
+        ++changed;
+      if (check_set_align_value (geom_flags, YValue, v_align, y))
+        ++changed;
     }
 
   if (new_flags != flags)
@@ -203,6 +313,8 @@ bgPixmap_t::handle_geometry (const char *geom)
       flags = new_flags;
       changed++;
     }
+//fprintf( stderr, "flags = %lX, scale = %ux%u, align=%+d%+d\n",
+//         flags, h_scale, v_scale, h_align, v_align);
   return (changed > 0);
 }
 

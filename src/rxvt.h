@@ -181,6 +181,8 @@ struct  bgPixmap_t {
   ASImage  *original_asim;
 #  endif
 
+#define bgPmap_defaultScale 100
+#define bgPmap_defaultAlign 50
   unsigned int h_scale, v_scale;/* percents of the window size */
   int h_align, v_align;         /* percents of the window size:
                                   0 - left align, 50 - center, 100 - right */
@@ -190,11 +192,8 @@ struct  bgPixmap_t {
 # endif
 
 #  define bgPmap_geometrySet      (1UL<<0)
-#  define bgPmap_hScale           (1UL<<1)
-#  define bgPmap_vScale           (1UL<<2)
-#  define bgPmap_Scale            (bgPmap_hScale|bgPmap_vScale)
-#  define bgPmap_propScale        (1UL<<3)
-#  define bgPmap_geometryFlags    (bgPmap_geometrySet|bgPmap_Scale|bgPmap_propScale)
+#  define bgPmap_propScale        (1UL<<1)
+#  define bgPmap_geometryFlags    (bgPmap_geometrySet|bgPmap_propScale)
 
 #  define bgPmap_Transparent      (1UL<<16)
   unsigned long flags;
