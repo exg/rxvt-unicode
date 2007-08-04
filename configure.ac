@@ -765,6 +765,9 @@ fi
 if test x$support_selectionscrolling = xyes; then
   AC_DEFINE(SELECTION_SCROLLING, 1, Define to allow scrolling when the selection moves to the top or bottom of the screen)
 fi
+if test x$support_frills = xyes; then
+  AC_DEFINE(ENABLE_FRILLS, 1, Define if you want handling for rarely used but handy features)
+fi
 if test x$support_mousewheel = xyes; then
   AC_DEFINE(MOUSE_WHEEL, 1, Define to use wheel events (button4 and button5) to scroll)
 fi
@@ -866,14 +869,6 @@ AC_SUBST(PERLPRIVLIBEXP)
 AC_SUBST(PERL)
 AC_SUBST(IF_PERL)
 AC_SUBST(PERL_O)
-
-if test x$support_perl = xyes; then
-   support_frills=yes
-fi
-
-if test x$support_frills = xyes; then
-  AC_DEFINE(ENABLE_FRILLS, 1, Define if you want handling for rarely used but handy features)
-fi
 
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
