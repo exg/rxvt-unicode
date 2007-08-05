@@ -125,6 +125,40 @@ check_set_align_value (int geom_flags, int flag, int &align, int new_value)
   return false;
 }
 
+static inline int
+make_align_position (int align, int window_size, int image_size)
+{
+  int diff = window_size - image_size;
+  int smaller = MIN (image_size,window_size);
+
+  if (align >= 0 && align <= 50)
+    return diff * align / 100;
+  else if (align > 50 && align <= 100)
+    return window_size - image_size + diff * align / 100;
+  else if (align > 100 && align <= 200 )
+    return ((align - 100) * smaller / 100) + window_size - smaller;
+  else if (align > -100 && align < 0)
+    return ((align + 100) * smaller / 100) - image_size;
+  return 0;
+}
+
+static inline void
+make_clip_rectangle (int pos, int size, int target_size, short &clip_pos, unsigned short &clip_size)
+{
+  if (pos < 0)
+    {
+      clip_pos = 0;
+      clip_size = MIN (target_size, size + pos);
+    }
+  else
+    {
+      clip_pos = pos;
+      clip_size = size;
+      if (pos < target_size && (int)clip_size > target_size - pos)
+        clip_pos = target_size - pos;
+    }
+}
+
 bool
 bgPixmap_t::handle_geometry (const char *geom)
 {
@@ -317,6 +351,28 @@ bgPixmap_t::handle_geometry (const char *geom)
 //         flags, h_scale, v_scale, h_align, v_align);
   return (changed > 0);
 }
+
+#ifdef HAVE_AFTERIMAGE
+ASImage *
+bgPixmap_t::resize_asim (rxvt_term *target, ASImage *background, XRectangle &dst_rect)
+{
+  if (original_asim == NULL || target == NULL)
+    return NULL;
+
+  int target_width = (int)target->szHint.width;
+  int target_height = (int)target->szHint.height;
+  int w = h_scale * target_width / 100;
+  int h = v_scale * target_height / 100;
+  int x = make_align_position (h_align, target_width, w);
+  int y = make_align_position (v_align, target_height, h);
+
+  make_clip_rectangle (x, w, target_width, dst_rect.x, dst_rect.width);
+  make_clip_rectangle (y, h, target_height, dst_rect.y, dst_rect.height);
+
+  /* TODO : actuall scaling code :) */
+
+}
+#endif
 
 void
 rxvt_term::resize_pixmap ()

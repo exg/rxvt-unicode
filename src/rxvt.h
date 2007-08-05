@@ -178,7 +178,9 @@ struct  bgPixmap_t {
 # ifdef  XPM_BACKGROUND
 
 #  ifdef HAVE_AFTERIMAGE
-  ASImage  *original_asim;
+  ASImage *original_asim;
+
+  ASImage *resize_asim (rxvt_term *target, ASImage *background, XRectangle &dst_rect);
 #  endif
 
 #define bgPmap_defaultScale 100
