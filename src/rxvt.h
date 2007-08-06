@@ -180,7 +180,7 @@ struct  bgPixmap_t {
 #  ifdef HAVE_AFTERIMAGE
   ASImage *original_asim;
 
-  ASImage *resize_asim (rxvt_term *target, ASImage *background, XRectangle &dst_rect);
+  bool render_asim (rxvt_term *target, ASImage *background, ARGB32 tint);
 #  endif
 
 #define bgPmap_defaultScale 100

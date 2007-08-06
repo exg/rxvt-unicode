@@ -143,9 +143,14 @@ make_align_position (int align, int window_size, int image_size)
 }
 
 static inline void
-make_clip_rectangle (int pos, int size, int target_size, short &clip_pos, unsigned short &clip_size)
+make_clip_rectangle (int pos, int size, int target_size, int &clip_pos, int &clip_size)
 {
-  if (pos < 0)
+  if (size <= 0)
+    { /* special case - tiling */
+      clip_pos = pos;
+      clip_size = target_size;
+    }
+  else if (pos < 0)
     {
       clip_pos = 0;
       clip_size = MIN (target_size, size + pos);
@@ -353,24 +358,168 @@ bgPixmap_t::handle_geometry (const char *geom)
 }
 
 #ifdef HAVE_AFTERIMAGE
-ASImage *
-bgPixmap_t::resize_asim (rxvt_term *target, ASImage *background, XRectangle &dst_rect)
+bool
+bgPixmap_t::render_asim (rxvt_term *target, ASImage *background, ARGB32 background_tint)
 {
-  if (original_asim == NULL || target == NULL)
-    return NULL;
+  if (target == NULL)
+    return false;
 
   int target_width = (int)target->szHint.width;
   int target_height = (int)target->szHint.height;
+  int new_pmap_width = target_width, new_pmap_height = target_height;
+  ASImage *result = NULL;
+
+  int x = 0;
+  int y = 0;
   int w = h_scale * target_width / 100;
   int h = v_scale * target_height / 100;
-  int x = make_align_position (h_align, target_width, w);
-  int y = make_align_position (v_align, target_height, h);
 
-  make_clip_rectangle (x, w, target_width, dst_rect.x, dst_rect.width);
-  make_clip_rectangle (y, h, target_height, dst_rect.y, dst_rect.height);
+  if (original_asim)
+    {
+      x = make_align_position (h_align, target_width, w > 0 ? w : (int)original_asim->width);
+      y = make_align_position (v_align, target_height, h > 0 ? h : (int)original_asim->height);
+    }
+
+  int dst_x, dst_y;
+  int clip_width, clip_height;
+
+  make_clip_rectangle (x, w, target_width, dst_x, clip_width);
+  make_clip_rectangle (y, h, target_height, dst_y, clip_height);
 
   /* TODO : actuall scaling code :) */
+  if (dst_x >= target_width || dst_y >= target_height
+      || clip_width <= 0 || clip_height <= 0 || original_asim == NULL)
+    {
+      result = background;
+      dst_x = dst_y = 0;
+      if (background)
+        {
+          new_pmap_width = clip_width = background->width;
+          new_pmap_height = clip_height = background->height;
+        }
+      else
+          new_pmap_width = new_pmap_height = 0;
+    }
+  else
+    {
+      result = original_asim;
+      if ((w > 0 && w != original_asim->width)
+          || (h > 0 && h != original_asim->height))
+        {
+          result = scale_asimage (target->asv, original_asim, 
+                                  w > 0 ? w : original_asim->width, 
+                                  h > 0 ? h : original_asim->height,
+                                  background ? ASA_ASImage : ASA_XImage,
+                                  100, ASIMAGE_QUALITY_DEFAULT);
+        }
+      if (background == NULL)
+        {/* if tiling - pixmap has to be sized exactly as the image */
+          if (h_scale == 0)
+            new_pmap_width = result->width;
+          if (v_scale == 0)
+            new_pmap_height = result->height;
+        }
+      else
+        {/* if blending background and image - pixmap has to be sized same as target window */
+          ASImageLayer *layers = create_image_layers (2);
+          ASImage *merged_im = NULL;
 
+          layers[0].im = background;
+          layers[0].clip_width = target_width;
+          layers[0].clip_height = target_height;
+          layers[0].tint = background_tint;
+          layers[1].im = result;
+          if (w <= 0)
+            {/* tile horizontally */
+              layers[1].dst_x = dst_x - (int)result->width;
+              layers[1].clip_width = result->width;
+            }
+          else
+            {/* clip horizontally */
+              layers[1].dst_x = dst_x;
+              layers[1].clip_width = clip_width;
+            }
+          if (h <= 0)
+            {
+              layers[1].dst_y = dst_y - (int)result->height;
+              layers[1].clip_height = result->height;
+            }
+          else
+            {
+              layers[1].dst_y = dst_y;
+              layers[1].clip_height = clip_height;
+            }
+          if (target->rs[Rs_blendtype])
+            {
+              layers[1].merge_scanlines = blend_scanlines_name2func (target->rs[Rs_blendtype]);
+              if (layers[1].merge_scanlines == NULL)
+                layers[1].merge_scanlines = alphablend_scanlines;
+            }
+          ASImage *tmp = merge_layers (target->asv, layers, 2, target_width, target_height,
+                                       ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT);
+          if (tmp)
+            {
+              if (result != original_asim)
+                destroy_asimage (&result);
+              result = tmp;
+              dst_x = dst_y = 0;
+              clip_width = target_width;
+              clip_height = target_height;
+            }
+          free (layers);
+        }
+    }
+
+  if (pixmap)
+    {
+      if (result == NULL
+          || pmap_width != new_pmap_width
+          || pmap_height != new_pmap_height
+          || pmap_depth != target->depth)
+        {
+          XFreePixmap (target->dpy, pixmap);
+          pixmap = None;
+        }
+    }
+
+  if (result)
+    {
+      XGCValues gcv;
+      GC gc;
+
+      /* create Pixmap */
+      if (pixmap == None)
+        {
+          pixmap = XCreatePixmap (target->dpy, target->vt, new_pmap_width, new_pmap_height, target->depth);
+          pmap_width = new_pmap_width;
+          pmap_height = new_pmap_height;
+          pmap_depth = target->depth;
+        }
+      /* fill with background color ( if result's not completely overlapping it)*/
+      gcv.foreground = target->pix_colors[Color_bg];
+      gc = XCreateGC (target->dpy, target->vt, GCForeground, &gcv);
+
+      if (dst_x > 0 || dst_y > 0
+          || dst_x + clip_width < new_pmap_width
+          || dst_y + clip_height < new_pmap_height)
+        {
+          XFillRectangle (target->dpy, pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
+        }
+      /* put result on pixmap */
+      asimage2drawable (target->asv, pixmap, result, gc, 0, 0, dst_x, dst_y, clip_width, clip_height, True);
+
+      /* set target's background to pixmap */
+      XSetWindowBackgroundPixmap (target->dpy, target->vt, pixmap);
+
+      XFreeGC (target->dpy, gc);
+    }
+  else
+    {
+      /* set target background to a pixel */
+      XSetWindowBackground (target->dpy, target->vt, target->pix_colors[Color_bg]);
+    }
+
+  return true;
 }
 #endif
 
