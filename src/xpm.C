@@ -963,14 +963,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                                  0L, 1L, False, XA_PIXMAP, &atype, &aformat,
                                  &nitems, &bytes_after, &prop) == Success);
 
-  /* TODO: the below logic needs to be cleaned up */
-  if (!i || prop == NULL
-      || (!ISSET_PIXCOLOR (Color_tint) && rs[Rs_shade] == NULL
-#ifdef HAVE_AFTERIMAGE
-          && bgPixmap.original_asim == NULL && rs[Rs_blurradius] == NULL
-#endif
-         )
-      )
+  if (!i || prop == NULL)
     rootpixmap = None;
   else
     {
@@ -1200,65 +1193,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
   if (am_pixmap_trans)
     XSetWindowBackgroundPixmap (dpy, vt, ParentRelative);
   else
-    {
-      unsigned int n;
-      /*
-       * InheritPixmap transparency
-       */
-      for (i = 1; i < (int) (sizeof (parent) / sizeof (Window)); i++)
-        {
-          oldp = parent[i];
-          XQueryTree (dpy, parent[i - 1], &root, &parent[i], &list, &n);
-          XFree (list);
-
-          if (parent[i] == display->root)
-            {
-              if (oldp != None)
-                pchanged = 1;
-
-              break;
-            }
-
-          if (oldp != parent[i])
-            pchanged = 1;
-        }
-
-      n = 0;
-
-      if (pchanged)
-        for (; n < (unsigned int)i; n++)
-          {
-            XGetWindowAttributes (dpy, parent[n], &wattr);
-
-            if (wattr.depth != rootdepth || wattr.c_class == InputOnly)
-              {
-                n = (int) (sizeof (parent) / sizeof (Window)) + 1;
-                break;
-              }
-          }
-
-      if (n > (sizeof (parent) / sizeof (parent[0])))
-        {
-          XSetWindowBackground (dpy, parent[0], pix_colors_focused[Color_border]);
-          XSetWindowBackground (dpy, vt, pix_colors_focused[Color_bg]);
-          am_transparent = 0;
-          /* XXX: also turn off Opt_transparent? */
-        }
-      else
-        {
-          for (n = 0; n < (unsigned int)i; n++)
-            {
-              XSetWindowBackgroundPixmap (dpy, parent[n], ParentRelative);
-              XClearWindow (dpy, parent[n]);
-            }
-
-          XSetWindowBackgroundPixmap (dpy, vt, ParentRelative);
-          am_transparent = 1;
-        }
-
-      for (; i < (int) (sizeof (parent) / sizeof (Window)); i++)
-        parent[i] = None;
-    }
+    return;
 
   if (scrollBar.win)
     {
