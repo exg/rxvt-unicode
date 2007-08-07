@@ -180,7 +180,7 @@ struct  bgPixmap_t {
 #  ifdef HAVE_AFTERIMAGE
   ASImage *original_asim;
 
-  bool render_asim (rxvt_term *target, ASImage *background, ARGB32 tint);
+  bool render_asim (rxvt_term *target, ASImage *background, ARGB32 background_tint);
 #  endif
 
 #define bgPmap_defaultScale 100
@@ -190,6 +190,11 @@ struct  bgPixmap_t {
                                   0 - left align, 50 - center, 100 - right */
 
   bool handle_geometry (const char *geom);
+  void set_defaultGeometry ()
+  {
+    h_scale = v_scale = bgPmap_defaultScale;
+    h_align = v_align = bgPmap_defaultAlign;
+  };
 
 # endif
 

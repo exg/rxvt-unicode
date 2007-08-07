@@ -1053,6 +1053,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
           p++;
           bgPixmap.handle_geometry (p);
         }
+      else
+        bgPixmap.set_defaultGeometry ();
 
       set_bgPixmap (rs[Rs_backgroundPixmap]);
       scr_touch (true);

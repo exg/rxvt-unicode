@@ -134,7 +134,7 @@ make_align_position (int align, int window_size, int image_size)
   if (align >= 0 && align <= 50)
     return diff * align / 100;
   else if (align > 50 && align <= 100)
-    return window_size - image_size + diff * align / 100;
+    return window_size - image_size - diff * (100 - align) / 100;
   else if (align > 100 && align <= 200 )
     return ((align - 100) * smaller / 100) + window_size - smaller;
   else if (align > -100 && align < 0)
@@ -142,26 +142,23 @@ make_align_position (int align, int window_size, int image_size)
   return 0;
 }
 
-static inline void
-make_clip_rectangle (int pos, int size, int target_size, int &clip_pos, int &clip_size)
+static inline int
+make_clip_rectangle (int pos, int size, int target_size, int &dst_pos, int &dst_size)
 {
-  if (size <= 0)
-    { /* special case - tiling */
-      clip_pos = pos;
-      clip_size = target_size;
-    }
-  else if (pos < 0)
+  int src_pos = 0;
+  dst_pos = 0;
+  dst_size = size;
+  if (pos < 0 && size > target_size)
     {
-      clip_pos = 0;
-      clip_size = MIN (target_size, size + pos);
+      src_pos = -pos;
+      dst_size += pos;
     }
-  else
-    {
-      clip_pos = pos;
-      clip_size = size;
-      if (pos < target_size && (int)clip_size > target_size - pos)
-        clip_pos = target_size - pos;
-    }
+  else if (pos > 0)
+    dst_pos = pos;
+
+  if (dst_pos + dst_size > target_size)
+    dst_size = target_size - dst_pos;
+  return src_pos;
 }
 
 bool
@@ -269,16 +266,16 @@ bgPixmap_t::handle_geometry (const char *geom)
               else if (geom_flags & WidthValue)
                 {
                   if (!(geom_flags & HeightValue))
-                      h = w;
+                    h = w;
                 }
               else
-                  w = h;
+                w = h;
             }
         } /* done parsing geometry string */
       else if (!(flags & bgPmap_geometrySet))
         { /* default geometry - scaled and centered */
-            x = y = bgPmap_defaultAlign;
-            w = h = bgPmap_defaultScale;
+          x = y = bgPmap_defaultAlign;
+          w = h = bgPmap_defaultScale;
         }
         
       if (!(flags & bgPmap_geometrySet))
@@ -380,25 +377,28 @@ bgPixmap_t::render_asim (rxvt_term *target, ASImage *background, ARGB32 backgrou
       y = make_align_position (v_align, target_height, h > 0 ? h : (int)original_asim->height);
     }
 
-  int dst_x, dst_y;
-  int clip_width, clip_height;
-
-  make_clip_rectangle (x, w, target_width, dst_x, clip_width);
-  make_clip_rectangle (y, h, target_height, dst_y, clip_height);
-
-  /* TODO : actuall scaling code :) */
-  if (dst_x >= target_width || dst_y >= target_height
-      || clip_width <= 0 || clip_height <= 0 || original_asim == NULL)
+  if (original_asim == NULL
+      || x >= target_width
+      || y >= target_height
+      || (w > 0 && x + w <= 0)
+      || (h > 0 && y + h <= 0))
     {
-      result = background;
-      dst_x = dst_y = 0;
       if (background)
         {
-          new_pmap_width = clip_width = background->width;
-          new_pmap_height = clip_height = background->height;
+          new_pmap_width = background->width;
+          new_pmap_height = background->height;
+          result = background;
+          if (background_tint != TINT_LEAVE_SAME)
+            {
+              ASImage* tmp = tile_asimage (target->asv, background, 0, 0,
+                                           target_width, target_height, background_tint,
+                                           ASA_XImage, 100, ASIMAGE_QUALITY_DEFAULT);
+              if (tmp)
+                result = tmp;
+            }
         }
       else
-          new_pmap_width = new_pmap_height = 0;
+        new_pmap_width = new_pmap_height = 0;
     }
   else
     {
@@ -418,6 +418,22 @@ bgPixmap_t::render_asim (rxvt_term *target, ASImage *background, ARGB32 backgrou
             new_pmap_width = result->width;
           if (v_scale == 0)
             new_pmap_height = result->height;
+          /* we also need to tile our image in one or both directions */
+          if (h_scale == 0 || v_scale == 0)
+            {
+              ASImage *tmp = tile_asimage (target->asv, result,
+                                            (h_scale > 0) ? 0 : (int)result->width - x, 
+                                            (v_scale > 0) ? 0 : (int)result->height - y, 
+                                            result->width, result->height,
+                                            TINT_LEAVE_SAME, ASA_XImage,
+                                            100, ASIMAGE_QUALITY_DEFAULT);
+              if (tmp)
+                {
+                  if (result != original_asim)
+                    destroy_asimage (&result);
+                  result = tmp;
+                }
+            }
         }
       else
         {/* if blending background and image - pixmap has to be sized same as target window */
@@ -431,23 +447,25 @@ bgPixmap_t::render_asim (rxvt_term *target, ASImage *background, ARGB32 backgrou
           layers[1].im = result;
           if (w <= 0)
             {/* tile horizontally */
-              layers[1].dst_x = dst_x - (int)result->width;
-              layers[1].clip_width = result->width;
+              while (x > 0) x -= (int)result->width;
+              layers[1].dst_x = x;
+              layers[1].clip_width = result->width+target_width;
             }
           else
             {/* clip horizontally */
-              layers[1].dst_x = dst_x;
-              layers[1].clip_width = clip_width;
+              layers[1].dst_x = x;
+              layers[1].clip_width = result->width;
             }
           if (h <= 0)
             {
-              layers[1].dst_y = dst_y - (int)result->height;
-              layers[1].clip_height = result->height;
+              while (y > 0) y -= (int)result->height;
+              layers[1].dst_y = y;
+              layers[1].clip_height = result->height + target_height;
             }
           else
             {
-              layers[1].dst_y = dst_y;
-              layers[1].clip_height = clip_height;
+              layers[1].dst_y = y;
+              layers[1].clip_height = result->height;
             }
           if (target->rs[Rs_blendtype])
             {
@@ -462,9 +480,6 @@ bgPixmap_t::render_asim (rxvt_term *target, ASImage *background, ARGB32 backgrou
               if (result != original_asim)
                 destroy_asimage (&result);
               result = tmp;
-              dst_x = dst_y = 0;
-              clip_width = target_width;
-              clip_height = target_height;
             }
           free (layers);
         }
@@ -499,14 +514,29 @@ bgPixmap_t::render_asim (rxvt_term *target, ASImage *background, ARGB32 backgrou
       gcv.foreground = target->pix_colors[Color_bg];
       gc = XCreateGC (target->dpy, target->vt, GCForeground, &gcv);
 
-      if (dst_x > 0 || dst_y > 0
-          || dst_x + clip_width < new_pmap_width
-          || dst_y + clip_height < new_pmap_height)
+      int src_x = 0, src_y = 0, dst_x = 0, dst_y = 0;
+      int dst_width = result->width, dst_height = result->height;
+      if (background == NULL)
         {
-          XFillRectangle (target->dpy, pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
+          if (h_scale > 0)
+            src_x = make_clip_rectangle (x, result->width, new_pmap_width, dst_x, dst_width);
+          if (v_scale > 0)
+            src_y = make_clip_rectangle (y, result->height, new_pmap_height, dst_y, dst_height);
+
+          if (dst_x > 0 || dst_y > 0
+              || dst_x + dst_width < new_pmap_width
+              || dst_y + dst_height < new_pmap_height)
+            {
+              XFillRectangle (target->dpy, pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
+            }
         }
+
       /* put result on pixmap */
-      asimage2drawable (target->asv, pixmap, result, gc, 0, 0, dst_x, dst_y, clip_width, clip_height, True);
+      if (dst_x < new_pmap_width && dst_y < new_pmap_height)
+        asimage2drawable (target->asv, pixmap, result, gc, src_x, src_y, dst_x, dst_y, dst_width, dst_height, True);
+    
+      if (result != background && result != original_asim)
+        destroy_asimage (&result);
 
       /* set target's background to pixmap */
       XSetWindowBackgroundPixmap (target->dpy, target->vt, pixmap);
@@ -526,23 +556,7 @@ bgPixmap_t::render_asim (rxvt_term *target, ASImage *background, ARGB32 backgrou
 void
 rxvt_term::resize_pixmap ()
 {
-  XGCValues gcvalue;
-  GC gc;
-  unsigned int w = bgPixmap.h_scale*szHint.width/100;
-  unsigned int h = bgPixmap.v_scale*szHint.height/100;
-  int x = bgPixmap.h_align*szHint.width/100;
-  int y = bgPixmap.v_align*szHint.height/100;
-#ifdef HAVE_AFTERIMAGE
-  ASImage *im = bgPixmap.original_asim;
-#else
-  void *im = NULL;
-#endif
-/* preliminary cleanup - this needs to be integrated with check_our_parents() code */
-  if (bgPixmap.pixmap != None)
-    {
-      XFreePixmap (dpy, bgPixmap.pixmap);
-      bgPixmap.pixmap = None ;
-    }
+
 #ifdef ENABLE_TRANSPARENCY
   if (option(Opt_transparent) && am_transparent)
     {
@@ -551,60 +565,9 @@ rxvt_term::resize_pixmap ()
       return;      
     }
 #endif
-
-  if (im == NULL)
-    { /* So be it: I'm not using pixmaps */
-      XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
-      return;
-    }
-
-  gcvalue.foreground = pix_colors[Color_bg];
-  gc = XCreateGC (dpy, vt, GCForeground, &gcvalue);
-
-  /* don't zoom pixmap too much nor expand really small pixmaps  */
-  if (w > 16000)
-    w = 1;
-  if (h > 16000)
-    h = 1;
-  
 #ifdef HAVE_AFTERIMAGE
-  if (w == 0)
-    w = im->width;
-  if (h == 0)
-    h = im->height;
-
-  if (w != im->width || h != im->height)
-    {
-      ASImage *tmp = scale_asimage (asv, im, w, h, (x == 0 && y == 0)?ASA_XImage:ASA_ASImage, 0, ASIMAGE_QUALITY_DEFAULT);
-      if (tmp != NULL)
-        im = tmp;
-    }
-  bgPixmap.pmap_width = MIN(w,szHint.width);
-  bgPixmap.pmap_height = MIN(h,szHint.height);
-#if 0 /* TODO: fix that! */
-  if (x != 0 || y != 0)
-    {
-      ASImage *tmp = tile_asimage (asv, im, x, y, w, h, TINT_LEAVE_SAME, ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT);
-      if (tmp != NULL)
-        {
-          if (im != bgPixmap.original_asim)
-            destroy_asimage (&im);
-          im = tmp;
-        }
-    }
-#endif    
-  bgPixmap.pixmap = XCreatePixmap (dpy, vt, bgPixmap.pmap_width, bgPixmap.pmap_height, depth);
-  bgPixmap.pmap_depth = depth;
-
-  asimage2drawable (asv, bgPixmap.pixmap, im, gc, 0, 0, 0, 0, bgPixmap.pmap_width, bgPixmap.pmap_height, True);
-
-  if (im != bgPixmap.original_asim)
-    destroy_asimage (&im);
+  bgPixmap.render_asim(this, NULL, TINT_LEAVE_SAME);
 #endif
-  if( bgPixmap.pixmap )
-    XSetWindowBackgroundPixmap (dpy, vt, bgPixmap.pixmap);
-
-  XFreeGC (dpy, gc);
 }
 
 void
@@ -639,8 +602,7 @@ rxvt_term::set_bgPixmap (const char *file)
         }
 #endif    
     }
-
-  resize_pixmap ();
+    resize_pixmap (); /* TODO: temporary fix - should be done by the caller! */
 }
 
 #endif				/* XPM_BACKGROUND */
@@ -1077,66 +1039,11 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                       back_im = tmp;
                     }
                 }
-
-              if (bgPixmap.original_asim != NULL)
-                {
-                  ASImageLayer *layers = create_image_layers (2);
-                  ASImage *merged_im = NULL;
-                  int fore_w, fore_h;
-
-                  layers[0].im = back_im;
-                  layers[0].clip_width = szHint.width;
-                  layers[0].clip_height = szHint.height;
-                  layers[0].tint = tint;
-                  layers[1].im = bgPixmap.original_asim;
-
-                  fore_w = (bgPixmap.h_scale == 0) ? bgPixmap.original_asim->width : bgPixmap.h_scale*szHint.width/100;
-                  fore_h = (bgPixmap.v_scale == 0) ? bgPixmap.original_asim->height : bgPixmap.v_scale*szHint.height/100;
-
-                  if (fore_w != bgPixmap.original_asim->width
-                      || fore_h != bgPixmap.original_asim->height)
-                    {
-                      layers[1].im = scale_asimage (asv,
-                                                    bgPixmap.original_asim,
-                                                    fore_w, fore_h,
-                                                    ASA_ASImage, 100,
-                                                    ASIMAGE_QUALITY_DEFAULT);
-                    }
-                  layers[1].clip_width = szHint.width;
-                  layers[1].clip_height = szHint.height;
-
-                  if (rs[Rs_blendtype])
-                    {
-                      layers[1].merge_scanlines = blend_scanlines_name2func (rs[Rs_blendtype]);
-                      if (layers[1].merge_scanlines == NULL)
-                        layers[1].merge_scanlines = alphablend_scanlines;
-                    }
-                  PRINT_BACKGROUND_OP_TIME;
-                  merged_im = merge_layers (asv, layers, 2, szHint.width, szHint.height,
-                                            ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT);
-                  if (layers[1].im != bgPixmap.original_asim)
-                      destroy_asimage (&(layers[1].im));
-                  free (layers);
-
-                  if (merged_im != NULL)
-                    {
-                      destroy_asimage (&back_im);
-                      back_im = merged_im;
-                    }
-                    PRINT_BACKGROUND_OP_TIME;
-                }
-              else if (tint != TINT_LEAVE_SAME)
-                {
-                  ASImage* tmp = tile_asimage (asv, back_im, 0, 0, szHint.width, szHint.height, tint, ASA_XImage, 100, ASIMAGE_QUALITY_DEFAULT);
-                  if (tmp)
-                    {
-                      destroy_asimage (&back_im);
-                      back_im = tmp;
-                    }
-                    PRINT_BACKGROUND_OP_TIME;
-                }
-              asimage2drawable (asv, bgPixmap.pixmap, back_im, gc, 0, 0, 0, 0, szHint.width, szHint.height, True);
+              /* TODO: temporary fix - redo the logic, so that same function can do both
+                 transparency and non-transparency */
+              bgPixmap.render_asim (this, back_im, tint);
               destroy_asimage (&back_im);
+
             } /* back_im != NULL */
           else
             success = False;
