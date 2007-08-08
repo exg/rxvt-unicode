@@ -213,6 +213,7 @@ rxvt_term::init_vars ()
   bgPixmap.flags = 0;
   bgPixmap.pixmap = None;
 #endif
+  bgPixmap.set_target (this);
 
   last_bot = last_state = -1;
 

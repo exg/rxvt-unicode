@@ -175,12 +175,17 @@ struct grwin_t;
 #if defined(XPM_BACKGROUND) || defined(ENABLE_TRANSPARENCY)
 # define HAVE_BG_PIXMAP 1/* to simplify further usage */
 struct  bgPixmap_t {
-# ifdef  XPM_BACKGROUND
+# define bgPmap_geometrySet      (1UL<<0)
+# define bgPmap_propScale        (1UL<<1)
+# define bgPmap_geometryFlags    (bgPmap_geometrySet|bgPmap_propScale)
 
+# define bgPmap_Transparent      (1UL<<16)
+  unsigned long flags;
+
+# ifdef  XPM_BACKGROUND
 #  ifdef HAVE_AFTERIMAGE
   ASImage *original_asim;
-
-  bool render_asim (rxvt_term *target, ASImage *background, ARGB32 background_tint);
+  bool render_asim (ASImage *background, ARGB32 background_tint);
 #  endif
 
 #define bgPmap_defaultScale 100
@@ -188,28 +193,34 @@ struct  bgPixmap_t {
   unsigned int h_scale, v_scale;/* percents of the window size */
   int h_align, v_align;         /* percents of the window size:
                                   0 - left align, 50 - center, 100 - right */
-
   bool handle_geometry (const char *geom);
   void set_defaultGeometry ()
   {
     h_scale = v_scale = bgPmap_defaultScale;
     h_align = v_align = bgPmap_defaultAlign;
+    flags |= bgPmap_geometrySet;
   };
 
-# endif
+# endif /* XPM_BACKGROUND */
 
-#  define bgPmap_geometrySet      (1UL<<0)
-#  define bgPmap_propScale        (1UL<<1)
-#  define bgPmap_geometryFlags    (bgPmap_geometrySet|bgPmap_propScale)
-
-#  define bgPmap_Transparent      (1UL<<16)
-  unsigned long flags;
+  rxvt_term *target;
+  bool set_target (rxvt_term *new_target)
+  {
+    if (new_target)
+      if (target != new_target)
+        {
+          target = new_target;
+          return true;
+        }
+    return false;
+  };
 
   Pixmap pixmap;
   unsigned int pmap_width, pmap_height;
   unsigned int pmap_depth;
 
   bool window_size_sensitive();
+  void apply_background();
 
 };
 #else

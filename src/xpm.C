@@ -74,23 +74,23 @@
 bool
 bgPixmap_t::window_size_sensitive ()
 {
-#ifdef XPM_BACKGROUND
-#ifdef HAVE_AFTERIMAGE
+# ifdef XPM_BACKGROUND
+#  ifdef HAVE_AFTERIMAGE
   if (original_asim != NULL)
-#endif
+#  endif
     {
       if (h_scale != 0 || v_scale != 0)
         return true;
     }
-#endif
-#ifdef ENABLE_TRANSPARENCY
+# endif
+# ifdef ENABLE_TRANSPARENCY
   if (flags & bgPmap_Transparent)
     return true;
-#endif
+# endif
   return false;
 }
 
-#ifdef XPM_BACKGROUND
+# ifdef XPM_BACKGROUND
 static inline bool
 check_set_scale_value (int geom_flags, int flag, unsigned int &scale, unsigned int new_value)
 {
@@ -170,7 +170,7 @@ bgPixmap_t::handle_geometry (const char *geom)
   unsigned int n;
   unsigned long new_flags = (flags&(~bgPmap_geometryFlags));
   char *p;
-#define MAXLEN_GEOM		256 /* could be longer then regular geometry string */
+#  define MAXLEN_GEOM		256 /* could be longer then regular geometry string */
 
   if (geom == NULL)
     return false;
@@ -179,12 +179,13 @@ bgPixmap_t::handle_geometry (const char *geom)
 
   if (!strcmp (geom, "?"))
     {
-#if 0 /* TODO: */    
-      sprintf (str, "[%dx%d+%d+%d]",	/* can't presume snprintf () ! */
-              min (h_scale, 32767), min (v_scale, 32767),
-              min (h_align, 32767), min (v_align, 32767));
-      process_xterm_seq (XTerm_title, str, CHAR_ST);
-#endif      
+      if (target)
+        {
+          sprintf (str, "[%dx%d+%d+%d]",	/* can't presume snprintf () ! */
+                   min (h_scale, 32767), min (v_scale, 32767),
+                   min (h_align, 32767), min (v_align, 32767));
+          target->process_xterm_seq (XTerm_title, str, CHAR_ST);
+        }
       return false;
     }
   while (isspace(*geom)) ++geom;
@@ -286,7 +287,7 @@ bgPixmap_t::handle_geometry (const char *geom)
           while (*ops)
             {
               while (*ops == ':' || isspace(*ops)) ++ops;
-#define CHECK_GEOM_OPS(op_str)  (strncasecmp (ops, (op_str), sizeof(op_str)-1) == 0)
+#  define CHECK_GEOM_OPS(op_str)  (strncasecmp (ops, (op_str), sizeof(op_str)-1) == 0)
               if (CHECK_GEOM_OPS("tile"))
                 {
                   w = h = 0;
@@ -329,7 +330,7 @@ bgPixmap_t::handle_geometry (const char *geom)
                   x = y = 50;
                   geom_flags |= WidthValue|HeightValue|XValue|YValue;
                 }
-#undef CHECK_GEOM_OPS
+#  undef CHECK_GEOM_OPS
               while (*ops != ':' && *ops != '\0') ++ops;
             } /* done parsing ops */
         }
@@ -354,9 +355,9 @@ bgPixmap_t::handle_geometry (const char *geom)
   return (changed > 0);
 }
 
-#ifdef HAVE_AFTERIMAGE
+#  ifdef HAVE_AFTERIMAGE
 bool
-bgPixmap_t::render_asim (rxvt_term *target, ASImage *background, ARGB32 background_tint)
+bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
 {
   if (target == NULL)
     return false;
@@ -538,36 +539,33 @@ bgPixmap_t::render_asim (rxvt_term *target, ASImage *background, ARGB32 backgrou
       if (result != background && result != original_asim)
         destroy_asimage (&result);
 
-      /* set target's background to pixmap */
-      XSetWindowBackgroundPixmap (target->dpy, target->vt, pixmap);
-
       XFreeGC (target->dpy, gc);
-    }
-  else
-    {
-      /* set target background to a pixel */
-      XSetWindowBackground (target->dpy, target->vt, target->pix_colors[Color_bg]);
+      if (background)
+        flags |= bgPmap_Transparent;
+      else
+        flags &= ~bgPmap_Transparent;
     }
 
   return true;
 }
-#endif
+#  endif /* HAVE_AFTERIMAGE */
 
 void
 rxvt_term::resize_pixmap ()
 {
 
-#ifdef ENABLE_TRANSPARENCY
+#  ifdef ENABLE_TRANSPARENCY
   if (option(Opt_transparent) && am_transparent)
     {
       /*  we need to re-generate transparency pixmap in that case ! */
       check_our_parents ();
       return;      
     }
-#endif
-#ifdef HAVE_AFTERIMAGE
-  bgPixmap.render_asim(this, NULL, TINT_LEAVE_SAME);
-#endif
+#  endif
+#  ifdef HAVE_AFTERIMAGE
+  bgPixmap.render_asim(NULL, TINT_LEAVE_SAME);
+  bgPixmap.apply_background();
+#  endif
 }
 
 void
@@ -586,7 +584,7 @@ rxvt_term::set_bgPixmap (const char *file)
   XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
   if (*file != '\0')
     {
-#ifdef HAVE_AFTERIMAGE
+#  ifdef HAVE_AFTERIMAGE
       if (asimman == NULL)
         asimman = create_generic_imageman(rs[Rs_path]);
       if ((f = strchr (file, ';')) == NULL)
@@ -600,13 +598,102 @@ rxvt_term::set_bgPixmap (const char *file)
           bgPixmap.original_asim = get_asimage( asimman, f, 0xFFFFFFFF, 100 );
           free( f );
         }
-#endif    
+#  endif    
     }
     resize_pixmap (); /* TODO: temporary fix - should be done by the caller! */
 }
 
-#endif				/* XPM_BACKGROUND */
+# endif	/* XPM_BACKGROUND */
+
+# ifdef ENABLE_TRANSPARENCY
+/* make_transparency_pixmap() 
+ * Builds a pixmap sized the same as terminal window, with depth same as the root window
+ * that pixmap contains tiled portion of the root pixmap that is supposed to be covered by 
+ * our window.
+ */
+#if 0
+bool
+bgPixmap_t::make_transparency_pixmap()
+{
+  if (target == NULL)
+    return false;
+
+  int sx, sy;
+  Window cr;
+  XTranslateCoordinates (target->dpy, target->parent[0], target->display->root,
+                          0, 0, &sx, &sy, &cr);
+
+    /* check if we are outside of the visible part of the virtual screen : */
+  if( sx + (int)szHint.width <= 0 || sy + (int)szHint.height <= 0
+      || sx >= wrootattr.width || sy >= wrootattr.height )
+    return false ;
+  
+  XWindowAttributes wattr, wrootattr;
+
+  XGetWindowAttributes (dpy, display->root, &wrootattr);
+ 
+  /*
+   * Make the frame window set by the window manager have
+   * the root background. Some window managers put multiple nested frame
+   * windows for each client, so we have to take care about that.
+   */
+  i = (xa[XA_XROOTPMAP_ID]
+       && XGetWindowProperty (dpy, display->root, xa[XA_XROOTPMAP_ID],
+                              0L, 1L, False, XA_PIXMAP, &atype, &aformat,
+                              &nitems, &bytes_after, &prop) == Success);
+
+  if (!i || prop == NULL)
+     i = (xa[XA_ESETROOT_PMAP_ID]
+          && XGetWindowProperty (dpy, display->root, xa[XA_ESETROOT_PMAP_ID],
+                                 0L, 1L, False, XA_PIXMAP, &atype, &aformat,
+                                 &nitems, &bytes_after, &prop) == Success);
+
+  if (!i || prop == NULL)
+    rootpixmap = None;
+
+}
+#endif /* 0 */
+# endif /* ENABLE_TRANSPARENCY */
+
+void
+bgPixmap_t::apply_background()
+{
+  if (target)
+    {
+      if (pixmap != None)
+        { /* set target's background to pixmap */
+# ifdef ENABLE_TRANSPARENCY
+          if (flags & bgPmap_Transparent)
+            {
+              XSetWindowBackgroundPixmap (target->dpy, target->parent[0], pixmap);
+              XSetWindowBackgroundPixmap (target->dpy, target->vt, ParentRelative);
+              if (target->scrollBar.win)
+                XSetWindowBackgroundPixmap (target->dpy, target->scrollBar.win, ParentRelative);
+            }
+          else
+# endif
+            {
+              /* force old pixmap dereference in case it was transparent before :*/
+              XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_bg]);
+              XSetWindowBackgroundPixmap (target->dpy, target->vt, pixmap);
+              /* do we also need to set scrollbar's background here ? */
+            }
+        }
+      else
+        { /* set target background to a pixel */
+          XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_bg]);
+          XSetWindowBackground (target->dpy, target->vt, target->pix_colors[Color_bg]);
+          /* do we also need to set scrollbar's background here ? */
+        }
+      /* don't want Expose on the parent */
+      XClearArea (target->dpy, target->parent[0], 0, 0, 0, 0, False);
+      /* do want Expose on the vt */
+      XClearArea (target->dpy, target->parent[0], 0, 0, 0, 0, True);
+    }
+}
 #endif				/* HAVE_BG_PIXMAP */
+
+
 
 #ifdef ENABLE_TRANSPARENCY
 #ifndef HAVE_AFTERIMAGE
@@ -856,7 +943,7 @@ rxvt_term::check_our_parents ()
 void
 rxvt_term::check_our_parents_cb (time_watcher &w)
 {
-  int i, pchanged, aformat, rootdepth;
+  int i, aformat, rootdepth;
   unsigned long nitems, bytes_after;
   Atom atype;
   unsigned char *prop = NULL;
@@ -867,10 +954,8 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
   Window cr;
   unsigned int rootpixmap_w = 0, rootpixmap_h = 0;
 
-  pchanged = 0;
-
   if (!option (Opt_transparent))
-    return /*pchanged*/;	/* Don't try any more */
+    return;	/* Don't try any more */
 
 #if 0
   struct timeval stv;
@@ -892,12 +977,11 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
     {
       if (am_transparent)
         {
-          pchanged = 1;
           XSetWindowBackground (dpy, vt, pix_colors_focused[Color_bg]);
           am_transparent = am_pixmap_trans = 0;
         }
 
-      return /*pchanged*/;	/* Don't try any more */
+      return;	/* Don't try any more */
     }
 
   /* Get all X ops out of the queue so that our information is up-to-date. */
@@ -1041,7 +1125,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                 }
               /* TODO: temporary fix - redo the logic, so that same function can do both
                  transparency and non-transparency */
-              bgPixmap.render_asim (this, back_im, tint);
+              bgPixmap.render_asim (back_im, tint);
               destroy_asimage (&back_im);
 
             } /* back_im != NULL */
@@ -1070,52 +1154,30 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
 
       if (gc != NULL)
         XFreeGC (dpy, gc);
-
+      
+      bgPixmap.apply_background();
       if (!success)
-        {
-          if (am_transparent && am_pixmap_trans)
-            {
-              pchanged = 1;
-              if (bgPixmap.pixmap != None)
-                {
-                  XFreePixmap (dpy, bgPixmap.pixmap);
-                  bgPixmap.pixmap = None;
-                }
-            }
-
           am_pixmap_trans = 0;
-        }
       else
         {
-          XSetWindowBackgroundPixmap (dpy, parent[0], bgPixmap.pixmap);
-          XClearWindow (dpy, parent[0]);
-
-          if (!am_transparent || !am_pixmap_trans)
-            pchanged = 1;
-
           am_transparent = am_pixmap_trans = 1;
         }
     } /* rootpixmap != None */
 
   if (am_pixmap_trans)
-    XSetWindowBackgroundPixmap (dpy, vt, ParentRelative);
-  else
-    return;
-
-  if (scrollBar.win)
     {
-      XSetWindowBackgroundPixmap (dpy, scrollBar.win, ParentRelative);
-      scrollBar.setIdle ();
-      scrollbar_show (0);
-    }
+      if (scrollBar.win)
+        {
+          scrollBar.setIdle ();
+          scrollbar_show (0);
+        }
 
-  if (am_transparent)
-    {
-      want_refresh = want_full_refresh = 1;
-      if (am_pixmap_trans)
-        flush ();
+      if (am_transparent)
+        {
+          want_refresh = want_full_refresh = 1;
+          if (am_pixmap_trans)
+            flush ();
+        }
     }
-
-//  return pchanged;
 }
 #endif
