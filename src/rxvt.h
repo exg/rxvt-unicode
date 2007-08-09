@@ -204,23 +204,20 @@ struct  bgPixmap_t {
 # endif /* XPM_BACKGROUND */
 
   rxvt_term *target;
-  bool set_target (rxvt_term *new_target)
-  {
-    if (new_target)
-      if (target != new_target)
-        {
-          target = new_target;
-          return true;
-        }
-    return false;
-  };
+  bool set_target (rxvt_term *new_target);
+
+# ifdef ENABLE_TRANSPARENCY
+  int root_depth; /* obtained when target is set */
+  Pixmap root_pixmap; /* current root pixmap set */
+  bool make_transparency_pixmap ();
+# endif
 
   Pixmap pixmap;
   unsigned int pmap_width, pmap_height;
   unsigned int pmap_depth;
 
-  bool window_size_sensitive();
-  void apply_background();
+  bool window_size_sensitive ();
+  void apply_background ();
 
 };
 #else
@@ -1482,6 +1479,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 //int scale_pixmap (const char *geom);
   void resize_pixmap ();
   void set_bgPixmap (const char *file);
+  void get_window_origin (int &x, int &y);
+  Pixmap get_pixmap_property (int prop_id);
 };
 
 /*

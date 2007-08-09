@@ -611,49 +611,139 @@ rxvt_term::set_bgPixmap (const char *file)
  * that pixmap contains tiled portion of the root pixmap that is supposed to be covered by 
  * our window.
  */
-#if 0
 bool
 bgPixmap_t::make_transparency_pixmap()
 {
   if (target == NULL)
     return false;
 
-  int sx, sy;
-  Window cr;
-  XTranslateCoordinates (target->dpy, target->parent[0], target->display->root,
-                          0, 0, &sx, &sy, &cr);
-
-    /* check if we are outside of the visible part of the virtual screen : */
-  if( sx + (int)szHint.width <= 0 || sy + (int)szHint.height <= 0
-      || sx >= wrootattr.width || sy >= wrootattr.height )
-    return false ;
-  
-  XWindowAttributes wattr, wrootattr;
-
-  XGetWindowAttributes (dpy, display->root, &wrootattr);
- 
-  /*
-   * Make the frame window set by the window manager have
-   * the root background. Some window managers put multiple nested frame
-   * windows for each client, so we have to take care about that.
+  /* root dimentions may change from call to call - but Display structure should
+   * be always up-to-date, so let's use it :
    */
-  i = (xa[XA_XROOTPMAP_ID]
-       && XGetWindowProperty (dpy, display->root, xa[XA_XROOTPMAP_ID],
-                              0L, 1L, False, XA_PIXMAP, &atype, &aformat,
-                              &nitems, &bytes_after, &prop) == Success);
+  Window root = target->display->root;
+  int screen = target->display->screen;
+  Display *dpy = target->dpy;
+  int root_width = DisplayWidth (dpy, screen);
+  int root_height = DisplayHeight (dpy, screen);
+  unsigned int root_pmap_width, root_pmap_height;
+  int window_width = target->szHint.width;
+  int window_height = target->szHint.height;
+  int sx, sy;
 
-  if (!i || prop == NULL)
-     i = (xa[XA_ESETROOT_PMAP_ID]
-          && XGetWindowProperty (dpy, display->root, xa[XA_ESETROOT_PMAP_ID],
-                                 0L, 1L, False, XA_PIXMAP, &atype, &aformat,
-                                 &nitems, &bytes_after, &prop) == Success);
+  target->get_window_origin (sx, sy);
 
-  if (!i || prop == NULL)
-    rootpixmap = None;
+  /* check if we are outside of the visible part of the virtual screen : */
+  if (sx + window_width <= 0 || sy + window_height <= 0
+      || sx >= root_width || sy >= root_height)
+    return false;
 
+  if (root_pixmap != None)
+    {/* we want to validate the pixmap and get it's size at the same time : */
+      int junk;
+      unsigned int ujunk;
+      /* root pixmap may be bad - allow a error */
+      target->allowedxerror = -1;
+      if (!XGetGeometry (dpy, root_pixmap, &root, &junk, &junk, &root_pmap_width, &root_pmap_height, &ujunk, &ujunk))
+        root_pixmap = None;
+      target->allowedxerror = 0;
+    }
+
+  Pixmap tiled_root_pmap = XCreatePixmap (dpy, root, window_width, window_height, root_depth);
+  GC gc = NULL;
+
+  if (tiled_root_pmap == None) /* something really bad happened - abort */
+    return false;
+
+  if (root_pixmap == None)
+    { /* use tricks to obtain the root background image :*/
+      /* we want to create Overrideredirect window overlapping out window
+         with background type of Parent Relative and then grab it */
+      XSetWindowAttributes attr;
+      Window src;
+      bool success = false;
+
+      attr.background_pixmap = ParentRelative;
+      attr.backing_store = Always;
+      attr.event_mask = ExposureMask;
+      attr.override_redirect = True;
+  	  src = XCreateWindow (dpy, root, sx, sy, window_width, window_height, 0,
+                           CopyFromParent, CopyFromParent, CopyFromParent,
+                           CWBackPixmap|CWBackingStore|CWOverrideRedirect|CWEventMask,
+                           &attr);
+
+      if (src != None)
+        {
+          XEvent event;
+          int ev_count = 0;
+          XGrabServer (dpy);
+          XMapRaised (dpy, src);
+          XSync (dpy, False);
+          /* XSync should get window where it's properly exposed,
+           * but to be on the safe side - let's check for the actuall event to arrive : */
+          while (XCheckWindowEvent (dpy, src, ExposureMask, &event))
+            ++ev_count;
+          if (ev_count > 0);
+            { /* hooray! - we can grab the image! */
+              gc = XCreateGC (dpy, root, 0, NULL);
+              XCopyArea (dpy, src, tiled_root_pmap, gc, 0, 0, window_width, window_height, 0, 0);
+              success = true;
+            }
+          XDestroyWindow (dpy, src);
+          XUngrabServer (dpy);
+          //fprintf (stderr, "%s:%d: ev_count = %d\n", __FUNCTION__, __LINE__, ev_count);
+        }
+        if (!success)
+          {
+            XFreePixmap (dpy, tiled_root_pmap);
+            tiled_root_pmap = None;
+          }
+    }
+  else
+    {/* strightforward pixmap copy */
+      XGCValues gcv;
+      gcv.tile = root_pixmap;
+      gcv.fill_style = FillTiled;
+      while (sx < 0) sx += (int)window_width;
+      while (sy < 0) sy += (int)window_height;
+      gcv.ts_x_origin = -sx;
+      gcv.ts_y_origin = -sy;
+      gc = XCreateGC (dpy, root, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
+      XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
+    }
+
+    if (gc)
+      XFreeGC (dpy, gc);
+
+    if (tiled_root_pmap != None)
+      {
+        if (pixmap)
+          XFreePixmap (dpy, pixmap);
+        pixmap = tiled_root_pmap;
+        pmap_width = window_width;
+        pmap_height = window_height;
+        pmap_depth = root_depth;
+      }
 }
-#endif /* 0 */
+
 # endif /* ENABLE_TRANSPARENCY */
+
+bool 
+bgPixmap_t::set_target (rxvt_term *new_target)
+{
+  if (new_target)
+    if (target != new_target)
+      {
+        target = new_target;
+# ifdef ENABLE_TRANSPARENCY
+        root_depth = DefaultDepthOfScreen (ScreenOfDisplay (target->dpy, target->display->screen));
+        root_pixmap = target->get_pixmap_property (XA_XROOTPMAP_ID);
+        if (root_pixmap == None)
+          root_pixmap = target->get_pixmap_property (XA_ESETROOT_PMAP_ID);
+# endif
+        return true;
+      }
+  return false;
+}
 
 void
 bgPixmap_t::apply_background()
@@ -693,6 +783,34 @@ bgPixmap_t::apply_background()
 }
 #endif				/* HAVE_BG_PIXMAP */
 
+
+void
+rxvt_term::get_window_origin (int &x, int &y)
+{
+  Window cr;
+  XTranslateCoordinates (dpy, parent[0], display->root, 0, 0, &x, &y, &cr);
+}
+
+Pixmap
+rxvt_term::get_pixmap_property (int prop_id)
+{
+  if (prop_id > 0 && prop_id < NUM_XA)
+    if (xa[prop_id])
+      {
+        int aformat, rootdepth;
+        unsigned long nitems, bytes_after;
+        Atom atype;
+        unsigned char *prop = NULL;
+        int result = XGetWindowProperty (dpy, display->root, xa[prop_id],
+                                         0L, 1L, False, XA_PIXMAP, &atype, &aformat,
+                                         &nitems, &bytes_after, &prop);
+        if (result == Success && prop && atype == XA_PIXMAP)
+          {
+            return *(Pixmap *)prop;
+          }
+      }
+  return None;
+}
 
 
 #ifdef ENABLE_TRANSPARENCY
@@ -956,7 +1074,6 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
 
   if (!option (Opt_transparent))
     return;	/* Don't try any more */
-
 #if 0
   struct timeval stv;
 	gettimeofday (&stv,NULL);
@@ -1049,29 +1166,8 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
                       && IS_COMPONENT_WHOLESOME(c.b));
       no_tint = (c.r >= 0x00f700 && c.g >= 0x00f700 && c.b >= 0x00f700);
 #undef  IS_COMPONENT_WHOLESOME
-      /* theer are no performance advantages to reusing same pixmap */
-      if (bgPixmap.pixmap != None)
-        XFreePixmap (dpy, bgPixmap.pixmap);
-      bgPixmap.pixmap = XCreatePixmap (dpy, vt, szHint.width, szHint.height, rootdepth);
-      bgPixmap.pmap_width = szHint.width;
-      bgPixmap.pmap_height = szHint.height;
-      bgPixmap.pmap_depth = rootdepth;
 
-#if 0 /* TODO : identify cases where this will be detrimental to performance : */
-      /* we want to tile root pixmap into our own pixmap in this cases :
-       * 1) rootpixmap does not cover our window entirely
-       * 2) whole_tint - we can use server-side tinting or tinting disabled
-       */
-      if ( whole_tint || no_tint || pmap_w < sx + szHint.width || pmap_h < sy + szHint.height)
-        {
-        }
-#endif
-      gcvalue.tile = rootpixmap;
-      gcvalue.fill_style = FillTiled;
-      gcvalue.ts_x_origin = -sx;
-      gcvalue.ts_y_origin = -sy;
-      gc = XCreateGC (dpy, rootpixmap, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcvalue);
-      XFillRectangle (dpy, bgPixmap.pixmap, gc, 0, 0, szHint.width, szHint.height);
+      bgPixmap.make_transparency_pixmap();
 
       if (whole_tint && !no_tint)
         {
@@ -1081,7 +1177,10 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
           gcvalue.foreground = Pixel (pix_colors_focused [Color_tint]);
           gcvalue.function = GXand;
           gcvalue.fill_style = FillSolid;
-          XChangeGC (dpy, gc, GCFillStyle | GCForeground | GCFunction, &gcvalue);
+          if (gc)
+            XChangeGC (dpy, gc, GCFillStyle | GCForeground | GCFunction, &gcvalue);
+          else
+            gc = XCreateGC (dpy, root, GCFillStyle | GCForeground | GCFunction, &gcvalue);
           XFillRectangle (dpy, bgPixmap.pixmap, gc, 0, 0, szHint.width, szHint.height);
         }
       success = True;

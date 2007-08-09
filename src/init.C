@@ -213,8 +213,6 @@ rxvt_term::init_vars ()
   bgPixmap.flags = 0;
   bgPixmap.pixmap = None;
 #endif
-  bgPixmap.set_target (this);
-
   last_bot = last_state = -1;
 
   set_option (Opt_scrollBar);
@@ -327,6 +325,8 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   asv = create_asvisual_for_id (dpy, display->screen, depth, XVisualIDFromVisual (visual), cmap, NULL);
 #endif
   free (r_argv);
+
+  bgPixmap.set_target (this);
 
   for (int i = NUM_RESOURCES; i--; )
     if (rs [i] == resval_undef)
