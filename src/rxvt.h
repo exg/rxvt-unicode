@@ -175,11 +175,20 @@ struct grwin_t;
 #if defined(XPM_BACKGROUND) || defined(ENABLE_TRANSPARENCY)
 # define HAVE_BG_PIXMAP 1/* to simplify further usage */
 struct  bgPixmap_t {
-# define bgPmap_geometrySet      (1UL<<0)
-# define bgPmap_propScale        (1UL<<1)
-# define bgPmap_geometryFlags    (bgPmap_geometrySet|bgPmap_propScale)
 
-# define bgPmap_Transparent      (1UL<<16)
+  enum {
+    geometrySet     = (1UL<<0),
+    propScale       = (1UL<<1),
+    geometryFlags   = (geometrySet|propScale),
+
+    tintSet         = (1UL<<8),
+    tintNeeded      = (1UL<<9),
+    tintServerSide  = (1UL<<10),
+    tintFlags       = (tintSet|tintServerSide|tintNeeded),
+
+    isTransparent   = (1UL<<16)
+  };
+
   unsigned long flags;
 
 # ifdef  XPM_BACKGROUND
@@ -188,27 +197,39 @@ struct  bgPixmap_t {
   bool render_asim (ASImage *background, ARGB32 background_tint);
 #  endif
 
-#define bgPmap_defaultScale 100
-#define bgPmap_defaultAlign 50
+  enum { defaultScale = 100, defaultAlign = 50 };
+
   unsigned int h_scale, v_scale;/* percents of the window size */
   int h_align, v_align;         /* percents of the window size:
                                   0 - left align, 50 - center, 100 - right */
-  bool handle_geometry (const char *geom);
+  void unset_geometry () { flags = flags & ~geometryFlags; };
+  bool set_geometry (const char *geom);
   void set_defaultGeometry ()
   {
-    h_scale = v_scale = bgPmap_defaultScale;
-    h_align = v_align = bgPmap_defaultAlign;
-    flags |= bgPmap_geometrySet;
+    h_scale = v_scale = defaultScale;
+    h_align = v_align = defaultAlign;
+    flags |= geometrySet;
   };
 
+  bool set_file (const char *file);
 # endif /* XPM_BACKGROUND */
 
   rxvt_term *target;
   bool set_target (rxvt_term *new_target);
 
 # ifdef ENABLE_TRANSPARENCY
-  int root_depth; /* obtained when target is set */
-  Pixmap root_pixmap; /* current root pixmap set */
+  int         root_depth; /* obtained when target is set */
+  Pixmap      root_pixmap; /* current root pixmap set */
+  rxvt_color  tint;
+  int         shade;
+  int         h_blurRadius, v_blurRadius;
+
+  bool set_transparent ();
+  bool set_blur_radius (const char *geom);
+  bool set_tint (rxvt_color &new_tint);
+  bool unset_tint ();
+  bool set_shade (const char *shade_str);
+  bool set_root_pixmap ();
   bool make_transparency_pixmap ();
 # endif
 
@@ -218,6 +239,7 @@ struct  bgPixmap_t {
 
   bool window_size_sensitive ();
   void apply_background ();
+  bool render_background ();
 
 };
 #else
@@ -1476,9 +1498,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void get_xdefaults (FILE *stream, const char *name);
   void extract_resources ();
   // xpm.C
-//int scale_pixmap (const char *geom);
-  void resize_pixmap ();
-  void set_bgPixmap (const char *file);
   void get_window_origin (int &x, int &y);
   Pixmap get_pixmap_property (int prop_id);
 };

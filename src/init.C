@@ -326,8 +326,6 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 #endif
   free (r_argv);
 
-  bgPixmap.set_target (this);
-
   for (int i = NUM_RESOURCES; i--; )
     if (rs [i] == resval_undef)
       rs [i] = 0;
@@ -1043,24 +1041,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   vt_select_input ();
 
   vt_ev.start (display, vt);
-
-#ifdef XPM_BACKGROUND
-  if (rs[Rs_backgroundPixmap] != NULL)
-    {
-      const char *p = rs[Rs_backgroundPixmap];
-
-      if ((p = strchr (p, ';')) != NULL)
-        {
-          p++;
-          bgPixmap.handle_geometry (p);
-        }
-      else
-        bgPixmap.set_defaultGeometry ();
-
-      set_bgPixmap (rs[Rs_backgroundPixmap]);
-      scr_touch (true);
-    }
-#endif
 
   /* graphics context for the vt window */
   gcvalue.foreground         = pix_colors[Color_fg];

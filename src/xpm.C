@@ -84,7 +84,7 @@ bgPixmap_t::window_size_sensitive ()
     }
 # endif
 # ifdef ENABLE_TRANSPARENCY
-  if (flags & bgPmap_Transparent)
+  if (flags & isTransparent)
     return true;
 # endif
   return false;
@@ -162,13 +162,13 @@ make_clip_rectangle (int pos, int size, int target_size, int &dst_pos, int &dst_
 }
 
 bool
-bgPixmap_t::handle_geometry (const char *geom)
+bgPixmap_t::set_geometry (const char *geom)
 {
   int geom_flags = 0, changed = 0;
   int x = 0, y = 0;
   unsigned int w = 0, h = 0;
   unsigned int n;
-  unsigned long new_flags = (flags&(~bgPmap_geometryFlags));
+  unsigned long new_flags = (flags & (~geometryFlags));
   char *p;
 #  define MAXLEN_GEOM		256 /* could be longer then regular geometry string */
 
@@ -177,17 +177,6 @@ bgPixmap_t::handle_geometry (const char *geom)
 
   char str[MAXLEN_GEOM];
 
-  if (!strcmp (geom, "?"))
-    {
-      if (target)
-        {
-          sprintf (str, "[%dx%d+%d+%d]",	/* can't presume snprintf () ! */
-                   min (h_scale, 32767), min (v_scale, 32767),
-                   min (h_align, 32767), min (v_align, 32767));
-          target->process_xterm_seq (XTerm_title, str, CHAR_ST);
-        }
-      return false;
-    }
   while (isspace(*geom)) ++geom;
   if ((p = strchr (geom, ';')) == NULL)
     p = strchr (geom, '\0');
@@ -196,7 +185,7 @@ bgPixmap_t::handle_geometry (const char *geom)
   if (n < MAXLEN_GEOM)
     {
       char *ops;
-      new_flags |= bgPmap_geometrySet;
+      new_flags |= geometrySet;
 
       strncpy (str, geom, n);
       str[n] = '\0';
@@ -227,7 +216,7 @@ bgPixmap_t::handle_geometry (const char *geom)
               geom_flags |= YValue;
             }
 
-          if (flags & bgPmap_geometrySet)
+          if (flags & geometrySet)
             {/* new geometry is an adjustment to the old one ! */
               if ((geom_flags & WidthValue) && (geom_flags & HeightValue))
                 {
@@ -255,14 +244,14 @@ bgPixmap_t::handle_geometry (const char *geom)
             {
               if (!(geom_flags & XValue))
                 {/* use default geometry - centered */
-                  x = y = bgPmap_defaultAlign;
+                  x = y = defaultAlign;
                 }
               else if (!(geom_flags & YValue))
                 y = x;
 
               if ((geom_flags & (WidthValue|HeightValue)) == 0)
                 {/* use default geometry - scaled */
-                  w = h = bgPmap_defaultScale;
+                  w = h = defaultScale;
                 }
               else if (geom_flags & WidthValue)
                 {
@@ -273,13 +262,13 @@ bgPixmap_t::handle_geometry (const char *geom)
                 w = h;
             }
         } /* done parsing geometry string */
-      else if (!(flags & bgPmap_geometrySet))
+      else if (!(flags & geometrySet))
         { /* default geometry - scaled and centered */
-          x = y = bgPmap_defaultAlign;
-          w = h = bgPmap_defaultScale;
+          x = y = defaultAlign;
+          w = h = defaultScale;
         }
         
-      if (!(flags & bgPmap_geometrySet))
+      if (!(flags & geometrySet))
         geom_flags |= WidthValue|HeightValue|XValue|YValue;
 
       if (ops)
@@ -300,7 +289,7 @@ bgPixmap_t::handle_geometry (const char *geom)
                       w = 100;
                       geom_flags |= WidthValue;
                     }
-                  new_flags |= bgPmap_propScale;
+                  new_flags |= propScale;
                 }
               else if (CHECK_GEOM_OPS("hscale"))
                 {
@@ -540,79 +529,159 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
         destroy_asimage (&result);
 
       XFreeGC (target->dpy, gc);
-      if (background)
-        flags |= bgPmap_Transparent;
-      else
-        flags &= ~bgPmap_Transparent;
     }
 
   return true;
 }
 #  endif /* HAVE_AFTERIMAGE */
 
-void
-rxvt_term::resize_pixmap ()
-{
-
-#  ifdef ENABLE_TRANSPARENCY
-  if (option(Opt_transparent) && am_transparent)
-    {
-      /*  we need to re-generate transparency pixmap in that case ! */
-      check_our_parents ();
-      return;      
-    }
-#  endif
-#  ifdef HAVE_AFTERIMAGE
-  bgPixmap.render_asim(NULL, TINT_LEAVE_SAME);
-  bgPixmap.apply_background();
-#  endif
-}
-
-void
-rxvt_term::set_bgPixmap (const char *file)
+bool
+bgPixmap_t::set_file (const char *file)
 {
   char *f;
 
   assert (file != NULL);
 
-  if (bgPixmap.pixmap != None)
-    {
-      XFreePixmap (dpy, bgPixmap.pixmap);
-      bgPixmap.pixmap = None;
-    }
-
-  XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
   if (*file != '\0')
     {
 #  ifdef HAVE_AFTERIMAGE
-      if (asimman == NULL)
-        asimman = create_generic_imageman(rs[Rs_path]);
+      if (target->asimman == NULL)
+        target->asimman = create_generic_imageman(target->rs[Rs_path]);
       if ((f = strchr (file, ';')) == NULL)
-        bgPixmap.original_asim = get_asimage( asimman, file, 0xFFFFFFFF, 100 );
+        original_asim = get_asimage( target->asimman, file, 0xFFFFFFFF, 100 );
       else
         {
           size_t len = f - file;
           f = (char *)malloc (len + 1);
           strncpy (f, file, len);
           f[len] = '\0';
-          bgPixmap.original_asim = get_asimage( asimman, f, 0xFFFFFFFF, 100 );
+          original_asim = get_asimage( target->asimman, f, 0xFFFFFFFF, 100 );
           free( f );
         }
+      return (original_asim != NULL);
 #  endif    
     }
-    resize_pixmap (); /* TODO: temporary fix - should be done by the caller! */
+  return false;
 }
 
 # endif	/* XPM_BACKGROUND */
 
 # ifdef ENABLE_TRANSPARENCY
+bool 
+bgPixmap_t::set_transparent ()
+{
+  if (!(flags & isTransparent))
+    {
+      flags |= isTransparent;
+      return true;
+    }
+}
+
+bool
+bgPixmap_t::set_blur_radius (const char *geom)
+{
+  int changed = 0;
+  unsigned int hr, vr;
+  int junk;
+  int geom_flags = XParseGeometry (geom, &junk, &junk, &hr, &vr);
+  if (!(geom_flags&WidthValue))
+    hr = 1;
+  if (!(geom_flags&HeightValue))
+    vr = hr;
+
+  if (h_blurRadius != hr)
+    {
+      ++changed;
+      h_blurRadius = hr;
+    }
+  if (v_blurRadius != vr)
+    {
+      ++changed;
+      v_blurRadius = vr;
+    }
+  return (changed>0);
+}
+
+static inline unsigned long
+compute_tint_shade_flags (rxvt_color *tint, int shade)
+{
+  unsigned long flags = 0;
+
+  if (shade > 0 && shade <100)
+    flags |= bgPixmap_t::tintNeeded;
+  else if (tint)
+    {
+      rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
+      tint->get (c);
+
+      flags |= bgPixmap_t::tintNeeded;
+      if ((c.r > 0x000700 || c.g > 0x000700 || c.b > 0x000700)
+          && (c.r < 0x00f700 || c.g < 0x00f700 || c.b < 0x00f700))
+      {
+         flags |= bgPixmap_t::tintNeeded;
+#define IS_COMPONENT_WHOLESOME(cmp)  ((cmp) <= 0x000700 || (cmp) >= 0x00f700)
+          if (IS_COMPONENT_WHOLESOME (c.r)
+              && IS_COMPONENT_WHOLESOME (c.g)
+              && IS_COMPONENT_WHOLESOME (c.b))
+            flags |= bgPixmap_t::tintServerSide;
+#undef  IS_COMPONENT_WHOLESOME
+      }
+    }
+  return flags;
+}
+
+bool
+bgPixmap_t::set_tint (rxvt_color &new_tint)
+{
+  if (tint != new_tint)
+    {
+      unsigned long new_flags = compute_tint_shade_flags (&new_tint, shade);
+      tint = new_tint;
+      flags = (flags & ~tintFlags) | new_flags | tintSet;
+      return true;
+    }
+  return false;
+}
+
+bool
+bgPixmap_t::unset_tint ()
+{
+  unsigned long new_flags = compute_tint_shade_flags (NULL, shade);
+
+  if (new_flags != (flags & tintFlags))
+    {
+     flags = (flags&~tintFlags)|new_flags;
+     return true;
+    }
+  return false;
+}
+
+bool
+bgPixmap_t::set_shade (const char *shade_str)
+{
+  int new_shade = (shade_str) ? atoi (shade_str) : 0;
+
+  if (new_shade == 100)
+    new_shade = 0;
+
+  if (new_shade != shade)
+    {
+      unsigned long new_flags = compute_tint_shade_flags (&tint, new_shade);
+      shade = new_shade;
+      flags = (flags & ~tintFlags) | new_flags;
+      return true;
+    }
+  return false;
+}
+
+
 /* make_transparency_pixmap() 
  * Builds a pixmap sized the same as terminal window, with depth same as the root window
  * that pixmap contains tiled portion of the root pixmap that is supposed to be covered by 
  * our window.
  */
 bool
-bgPixmap_t::make_transparency_pixmap()
+bgPixmap_t::make_transparency_pixmap ()
 {
   if (target == NULL)
     return false;
@@ -629,6 +698,7 @@ bgPixmap_t::make_transparency_pixmap()
   int window_width = target->szHint.width;
   int window_height = target->szHint.height;
   int sx, sy;
+  XGCValues gcv;
 
   target->get_window_origin (sx, sy);
 
@@ -700,7 +770,6 @@ bgPixmap_t::make_transparency_pixmap()
     }
   else
     {/* strightforward pixmap copy */
-      XGCValues gcv;
       gcv.tile = root_pixmap;
       gcv.fill_style = FillTiled;
       while (sx < 0) sx += (int)window_width;
@@ -711,11 +780,29 @@ bgPixmap_t::make_transparency_pixmap()
       XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
     }
 
-    if (gc)
-      XFreeGC (dpy, gc);
-
     if (tiled_root_pmap != None)
       {
+        if (flags & tintNeeded) 
+          {
+            if ((flags & tintServerSide)
+                && h_blurRadius <= 1  && v_blurRadius <= 1
+# ifdef HAVE_AFTERIMAGE
+                && original_asim == NULL
+# endif
+               )
+              { /* In this case we can tint image server-side getting significant
+                 * performance improvements, as we eliminate XImage transfer
+                 */
+                gcv.foreground = Pixel (tint);
+                gcv.function = GXand;
+                gcv.fill_style = FillSolid;
+                if (gc)
+                  XChangeGC (dpy, gc, GCFillStyle | GCForeground | GCFunction, &gcv);
+                else
+                  gc = XCreateGC (dpy, root, GCFillStyle | GCForeground | GCFunction, &gcv);
+                XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
+              }
+           }
         if (pixmap)
           XFreePixmap (dpy, pixmap);
         pixmap = tiled_root_pmap;
@@ -723,9 +810,48 @@ bgPixmap_t::make_transparency_pixmap()
         pmap_height = window_height;
         pmap_depth = root_depth;
       }
+      
+    if (gc)
+      XFreeGC (dpy, gc);
 }
 
+bool
+bgPixmap_t::set_root_pixmap ()
+{
+  Pixmap new_root_pixmap = None;
+  
+  new_root_pixmap = target->get_pixmap_property (XA_XROOTPMAP_ID);
+  if (new_root_pixmap == None)
+    new_root_pixmap = target->get_pixmap_property (XA_ESETROOT_PMAP_ID);
+
+  if (new_root_pixmap != root_pixmap)
+    {
+      root_pixmap = new_root_pixmap;
+      return true;
+    }
+  return false;
+}
 # endif /* ENABLE_TRANSPARENCY */
+
+bool
+bgPixmap_t::render_background ()
+{
+  /* TODO: temporary implementation - need to move check_parents stuff in here */
+# ifdef ENABLE_TRANSPARENCY
+  if (flags & isTransparent)
+    {
+      /*  we need to re-generate transparency pixmap in that case ! */
+      target->check_our_parents ();
+      return true;      
+    }
+# endif
+# ifdef HAVE_AFTERIMAGE
+  render_asim (NULL, TINT_LEAVE_SAME);
+  apply_background ();
+  return true;      
+# endif
+  return false;
+}
 
 bool 
 bgPixmap_t::set_target (rxvt_term *new_target)
@@ -736,9 +862,6 @@ bgPixmap_t::set_target (rxvt_term *new_target)
         target = new_target;
 # ifdef ENABLE_TRANSPARENCY
         root_depth = DefaultDepthOfScreen (ScreenOfDisplay (target->dpy, target->display->screen));
-        root_pixmap = target->get_pixmap_property (XA_XROOTPMAP_ID);
-        if (root_pixmap == None)
-          root_pixmap = target->get_pixmap_property (XA_ESETROOT_PMAP_ID);
 # endif
         return true;
       }
@@ -753,7 +876,7 @@ bgPixmap_t::apply_background()
       if (pixmap != None)
         { /* set target's background to pixmap */
 # ifdef ENABLE_TRANSPARENCY
-          if (flags & bgPmap_Transparent)
+          if (flags & isTransparent)
             {
               XSetWindowBackgroundPixmap (target->dpy, target->parent[0], pixmap);
               XSetWindowBackgroundPixmap (target->dpy, target->vt, ParentRelative);
@@ -1171,17 +1294,6 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
 
       if (whole_tint && !no_tint)
         {
-          /* In this case we can tint image server-side getting significant
-           * performance improvements, as we eliminate XImage transfer
-           */
-          gcvalue.foreground = Pixel (pix_colors_focused [Color_tint]);
-          gcvalue.function = GXand;
-          gcvalue.fill_style = FillSolid;
-          if (gc)
-            XChangeGC (dpy, gc, GCFillStyle | GCForeground | GCFunction, &gcvalue);
-          else
-            gc = XCreateGC (dpy, root, GCFillStyle | GCForeground | GCFunction, &gcvalue);
-          XFillRectangle (dpy, bgPixmap.pixmap, gc, 0, 0, szHint.width, szHint.height);
         }
       success = True;
 #ifdef HAVE_AFTERIMAGE

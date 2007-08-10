@@ -506,14 +506,55 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
   if (option (Opt_scrollBar))
     resize_scrollbar ();      /* create and map scrollbar */
 #endif
+#ifdef HAVE_BG_PIXMAP
+  {
+    bool changed = false;
+    bgPixmap.set_target (this);
+
 #ifdef ENABLE_TRANSPARENCY
-  if (option (Opt_transparent))
-    {
-      XSelectInput (dpy, display->root, PropertyChangeMask);
-      check_our_parents ();
-      rootwin_ev.start (display, display->root);
-    }
+    if (option (Opt_transparent))
+      {
+        bgPixmap.set_transparent ();
+#ifdef HAVE_AFTERIMAGE        
+        if (rs [Rs_blurradius])
+          bgPixmap.set_blur_radius (rs [Rs_blurradius]);
+#endif          
+        if (ISSET_PIXCOLOR (Color_tint))
+          bgPixmap.set_tint (pix_colors_focused [Color_tint]);
+        if (rs [Rs_shade])
+          bgPixmap.set_shade (rs [Rs_shade]);
+        changed = true;
+
+        bgPixmap.set_root_pixmap ();
+        XSelectInput (dpy, display->root, PropertyChangeMask);
+        rootwin_ev.start (display, display->root);
+      }
 #endif
+
+#ifdef XPM_BACKGROUND
+    if (rs[Rs_backgroundPixmap] != NULL)
+      {
+        const char *p = rs[Rs_backgroundPixmap];
+
+        if ((p = strchr (p, ';')) != NULL)
+          {
+            p++;
+            bgPixmap.set_geometry (p);
+          }
+        else
+          bgPixmap.set_defaultGeometry ();
+
+        changed = bgPixmap.set_file (rs[Rs_backgroundPixmap]);
+      }
+#endif
+    if (changed)
+      {
+        bgPixmap.render_background ();
+        scr_touch (true);
+      }
+  }
+#endif
+
 #if ENABLE_PERL
   rootwin_ev.start (display, display->root);
 #endif
@@ -1112,7 +1153,8 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
 
       scr_clear ();
 #ifdef XPM_BACKGROUND
-      resize_pixmap ();
+      /* TODO: should that really be here ? */
+      bgPixmap.render_background ();
 #endif
     }
 

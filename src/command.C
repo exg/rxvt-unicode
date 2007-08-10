@@ -1490,7 +1490,7 @@ rxvt_term::x_cb (XEvent &ev)
                 /* TODO: replace with update_pixmap() that should unify transparency and bg image handling ! */
                 if (!option (Opt_transparent) && bgPixmap.window_size_sensitive ())
                   {
-                    resize_pixmap ();
+                    bgPixmap.render_background ();
                     scr_touch (true);
                   }
 #endif
@@ -1500,7 +1500,7 @@ rxvt_term::x_cb (XEvent &ev)
 
 #ifdef ENABLE_TRANSPARENCY
             if (option (Opt_transparent))
-              check_our_parents ();
+              bgPixmap.render_background ();
 #endif
           }
         break;
@@ -1837,14 +1837,12 @@ rxvt_term::rootwin_cb (XEvent &ev)
          * if user used some Esetroot compatible prog to set the root bg,
          * use the property to determine the pixmap.  We use it later on.
          */
-        if (ev.xproperty.atom != xa[XA_XROOTPMAP_ID]
-            && ev.xproperty.atom != xa[XA_ESETROOT_PMAP_ID])
-          return;
-
-        /* FALLTHROUGH */
-      case ReparentNotify:
-        if (option (Opt_transparent))
-          check_our_parents ();
+        if (ev.xproperty.atom == xa[XA_XROOTPMAP_ID]
+            || ev.xproperty.atom == xa[XA_ESETROOT_PMAP_ID])
+          {
+            bgPixmap.set_root_pixmap ();
+            bgPixmap.render_background ();
+          }
         break;
     }
 # endif
@@ -3437,43 +3435,61 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 #if ENABLE_TRANSPARENCY
       case URxvt_Color_tint:
         process_color_seq (op, Color_tint, str, resp);
-
-        check_our_parents ();
-
-        if (am_transparent)
-          want_full_refresh = want_refresh = 1;
+        {
+          bool changed = false;
+          if (ISSET_PIXCOLOR (Color_tint))
+            changed = bgPixmap.set_tint (pix_colors_focused [Color_tint]);
+          else
+            changed = bgPixmap.unset_tint ();
+          if (changed)
+            {
+              bgPixmap.render_background ();
+              if (am_transparent)
+                want_full_refresh = want_refresh = 1;
+            }
+        }
 
         break;
 #endif
 
 #if XPM_BACKGROUND
       case Rxvt_Pixmap:
-        {
-          if (*str != ';')
-            {
-              bgPixmap.handle_geometry ("");	/* reset to default scaling */
-              set_bgPixmap (str);	/* change pixmap */
-              scr_touch (true);
-            }
+        if (!strcmp (str, "?"))
+          {
+            char str[256];
 
-          int changed = 0;
+            sprintf (str, "[%dx%d+%d+%d]",	/* can't presume snprintf () ! */
+                     min (bgPixmap.h_scale, 32767), min (bgPixmap.v_scale, 32767),
+                     min (bgPixmap.h_align, 32767), min (bgPixmap.v_align, 32767));
+            process_xterm_seq (XTerm_title, str, CHAR_ST);
+          }
+        else
+          {
+            int changed = 0;
 
-          while ((str = strchr (str, ';')) != NULL)
-            {
-              str++;
-              changed += bgPixmap.handle_geometry (str);
-            }
-
-          if (changed)
-            {
-              resize_pixmap ();
-              scr_touch (true);
-            }
-#if ENABLE_TRANSPARENCY && defined(HAVE_AFTERIMAGE)
-          if (option (Opt_transparent))
-            check_our_parents ();
-#endif
-        }
+            if (*str != ';')
+              {
+                /* reset to default scaling :*/
+                bgPixmap.unset_geometry ();
+                if (bgPixmap.set_file (str))	/* change pixmap */
+                  changed++;
+                str = strchr (str, ';');
+                if (str == NULL)
+                  bgPixmap.set_defaultGeometry ();
+              }
+            while (str)
+              {
+                str++;
+                if (bgPixmap.set_geometry (str))
+                  changed++;
+                str = strchr (str, ';');
+              }
+            if (changed)
+              {
+                bgPixmap.render_background ();
+                scr_touch (true);
+              }
+          }
         break;
 #endif
 
