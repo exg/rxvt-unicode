@@ -3623,12 +3623,10 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
   int state;
 
   static const struct
-    {
-      const int       argval;
-      const unsigned long bit;
-    }
-
-  argtopriv[] = {
+  {
+    const int       argval;
+    const unsigned long bit;
+  } argtopriv[] = {
                   { 1, PrivMode_aplCUR },
                   { 2, PrivMode_vt52 },
                   { 3, PrivMode_132 },

@@ -163,6 +163,7 @@ rxvt_term::scr_reset ()
   scr_overlay_off ();
 #endif
 
+  rvideo_mode = false;
   view_start = 0;
   num_scr = 0;
 
@@ -239,7 +240,6 @@ rxvt_term::scr_reset ()
       selection.op = SELECTION_CLEAR;
       selection.screen = PRIMARY;
       selection.clicks = 0;
-      rvideo_state = rvideo_mode = false;
     }
   else
     {
@@ -1916,7 +1916,6 @@ rxvt_term::scr_bell () NOTHROW
     }
   else
     XBell (dpy, 0);
-
 #endif
 }
 
