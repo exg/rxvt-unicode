@@ -18,6 +18,9 @@ WISH: anyevent mouse notification / manage MotionMask better.
 WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
+	- fix possible race betwen visual bell and poweron.
+          (reported by Martin von Gagern, gentoo?).
+
 8.3  Wed Aug  1 20:21:31 CEST 2007
 	- new option: skipScroll/-ss, enabled by default.
         - go with the times and expect x11 library files in /usr/lib, not
