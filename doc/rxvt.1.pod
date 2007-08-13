@@ -28,7 +28,7 @@ internally. That means it can store and display most scripts in the
 world. Being a terminal emulator, however, some things are very difficult,
 especially cursive scripts such as arabic, vertically written scripts
 like mongolian or scripts requiring extremely complex combining rules,
-like tibetan or devenagari. Don't expect pretty output when using these
+like tibetan or devanagari. Don't expect pretty output when using these
 scripts. Most other scripts, latin, cyrillic, kanji, thai etc. should work
 fine, though. A somewhat difficult case are right-to-left scripts, such
 as hebrew: B<rxvt-unicode> adopts the view that bidirectional algorithms
