@@ -910,18 +910,14 @@ rxvt_term::create_windows (int argc, const char *const *argv)
     {
       if (XInternAtom (dpy, "_MOTIF_WM_INFO", True) == None)
         {
-          /*     print_warning("Window Manager does not support MWM hints.  Bypassing window manager control for borderless window.\n");*/
+          // rxvt_warn("Window Manager does not support MWM hints.  Bypassing window manager control for borderless window.\n");
           attributes.override_redirect = true;
-          mwmhints.flags = 0;
         }
       else
         {
           mwmhints.flags = MWM_HINTS_DECORATIONS;
-          mwmhints.decorations = 0;
         }
     }
-  else
-    mwmhints.flags = 0;
 #endif
 
 #if ENABLE_XEMBED
