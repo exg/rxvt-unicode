@@ -1490,7 +1490,7 @@ rxvt_term::x_cb (XEvent &ev)
                 /* TODO: replace with update_pixmap() that should unify transparency and bg image handling ! */
                 if (!option (Opt_transparent) && bgPixmap.window_size_sensitive ())
                   {
-                    bgPixmap.render_background ();
+                    bgPixmap.render ();
                     scr_touch (true);
                   }
 #endif
@@ -1500,7 +1500,7 @@ rxvt_term::x_cb (XEvent &ev)
 
 #ifdef ENABLE_TRANSPARENCY
             if (option (Opt_transparent))
-              bgPixmap.render_background ();
+              bgPixmap.render ();
 #endif
           }
         break;
@@ -1579,11 +1579,6 @@ rxvt_term::x_cb (XEvent &ev)
                 scrollBar.setIdle ();
                 scrollbar_show (0);
               }
-
-#ifdef ENABLE_TRANSPARENCY
-            if (am_transparent && ev.xany.window == parent[0])
-              XClearWindow (dpy, ev.xany.window);
-#endif
           }
         break;
 
@@ -1841,7 +1836,7 @@ rxvt_term::rootwin_cb (XEvent &ev)
             || ev.xproperty.atom == xa[XA_ESETROOT_PMAP_ID])
           {
             bgPixmap.set_root_pixmap ();
-            bgPixmap.render_background ();
+            bgPixmap.render ();
           }
         break;
     }
@@ -3442,11 +3437,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
           else
             changed = bgPixmap.unset_tint ();
           if (changed)
-            {
-              bgPixmap.render_background ();
-              if (am_transparent)
-                want_full_refresh = want_refresh = 1;
-            }
+            bgPixmap.render ();
         }
 
         break;
@@ -3486,7 +3477,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
               }
             if (changed)
               {
-                bgPixmap.render_background ();
+                bgPixmap.render ();
                 scr_touch (true);
               }
           }

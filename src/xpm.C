@@ -680,11 +680,13 @@ bgPixmap_t::set_shade (const char *shade_str)
  * that pixmap contains tiled portion of the root pixmap that is supposed to be covered by 
  * our window.
  */
-bool
+unsigned long
 bgPixmap_t::make_transparency_pixmap ()
 {
+  unsigned long result = 0;
+
   if (target == NULL)
-    return false;
+    return 0;
 
   /* root dimentions may change from call to call - but Display structure should
    * be always up-to-date, so let's use it :
@@ -705,7 +707,7 @@ bgPixmap_t::make_transparency_pixmap ()
   /* check if we are outside of the visible part of the virtual screen : */
   if (sx + window_width <= 0 || sy + window_height <= 0
       || sx >= root_width || sy >= root_height)
-    return false;
+    return 0;
 
   if (root_pixmap != None)
     {/* we want to validate the pixmap and get it's size at the same time : */
@@ -722,7 +724,7 @@ bgPixmap_t::make_transparency_pixmap ()
   GC gc = NULL;
 
   if (tiled_root_pmap == None) /* something really bad happened - abort */
-    return false;
+    return 0;
 
   if (root_pixmap == None)
     { /* use tricks to obtain the root background image :*/
@@ -755,8 +757,11 @@ bgPixmap_t::make_transparency_pixmap ()
           if (ev_count > 0);
             { /* hooray! - we can grab the image! */
               gc = XCreateGC (dpy, root, 0, NULL);
-              XCopyArea (dpy, src, tiled_root_pmap, gc, 0, 0, window_width, window_height, 0, 0);
-              success = true;
+              if (gc)
+                {
+                  XCopyArea (dpy, src, tiled_root_pmap, gc, 0, 0, window_width, window_height, 0, 0);
+                  success = true;
+                }
             }
           XDestroyWindow (dpy, src);
           XUngrabServer (dpy);
@@ -767,6 +772,8 @@ bgPixmap_t::make_transparency_pixmap ()
             XFreePixmap (dpy, tiled_root_pmap);
             tiled_root_pmap = None;
           }
+        else
+          result |= transpPmapTiled;
     }
   else
     {/* strightforward pixmap copy */
@@ -777,7 +784,11 @@ bgPixmap_t::make_transparency_pixmap ()
       gcv.ts_x_origin = -sx;
       gcv.ts_y_origin = -sy;
       gc = XCreateGC (dpy, root, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
-      XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
+      if (gc)
+        {
+          XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
+          result |= transpPmapTiled;
+        }
     }
 
     if (tiled_root_pmap != None)
@@ -800,7 +811,11 @@ bgPixmap_t::make_transparency_pixmap ()
                   XChangeGC (dpy, gc, GCFillStyle | GCForeground | GCFunction, &gcv);
                 else
                   gc = XCreateGC (dpy, root, GCFillStyle | GCForeground | GCFunction, &gcv);
-                XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
+                if (gc)
+                  {
+                    XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
+                    result |= transpPmapTinted;
+                  }
               }
            }
         if (pixmap)
@@ -813,6 +828,8 @@ bgPixmap_t::make_transparency_pixmap ()
       
     if (gc)
       XFreeGC (dpy, gc);
+    
+    return result;    
 }
 
 bool
@@ -834,23 +851,110 @@ bgPixmap_t::set_root_pixmap ()
 # endif /* ENABLE_TRANSPARENCY */
 
 bool
-bgPixmap_t::render_background ()
+bgPixmap_t::render ()
 {
-  /* TODO: temporary implementation - need to move check_parents stuff in here */
+  unsigned long background_flags = 0;
+
+  if (target == NULL)
+    return false;
+
+  invalidate();
 # ifdef ENABLE_TRANSPARENCY
   if (flags & isTransparent)
     {
       /*  we need to re-generate transparency pixmap in that case ! */
-      target->check_our_parents ();
-      return true;      
+      background_flags = make_transparency_pixmap ();
+      if (background_flags == 0)
+        return false;
     }
 # endif
+
+  XImage *result = NULL;
 # ifdef HAVE_AFTERIMAGE
-  render_asim (NULL, TINT_LEAVE_SAME);
-  apply_background ();
-  return true;      
+  if (original_asim
+      || (background_flags & transpTransformations) != (flags & transpTransformations))
+    {
+      ASImage *background = NULL;
+      ARGB32 as_tint = TINT_LEAVE_SAME;
+      if (background_flags)
+          background = pixmap2ximage (target->asv, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, 100);
+
+      if (!(background_flags & transpPmapTinted) && (flags & tintNeeded))
+        {
+          ShadingInfo as_shade;
+          as_shade.shading = (shade == 0) ? 100 : shade;
+
+          rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
+          tint.get (c);
+          as_shade.tintColor.red = c.r;
+          as_shade.tintColor.green = c.g;
+          as_shade.tintColor.blue = c.b;
+
+          as_tint = shading2tint32 (&as_shade);
+        }
+      if (render_asim (background, as_tint))
+        flags = flags & ~isInvalid;
+      if (background)
+          destroy_asimage (&background);
+    }
+  else if (background_flags && pmap_depth != target->depth)
+    {
+      result = XGetImage (target->dpy, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, ZPixmap);
+    }
+# else /* our own client-side tinting */
+  if (background_flags &&
+      (!(background_flags & transpPmapTinted) && (flags & tintNeeded)) || pmap_depth != target->depth)
+    {
+      result = XGetImage (target->dpy, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, ZPixmap);
+      success = False;
+      if (result != NULL && !(background_flags & transpPmapTinted) && (flags & tintNeeded))
+        {
+          rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
+          tint.get (c);
+          ShadeXImage (this, result, shade, c.r, c.g, c.b);
+        }
+    }
 # endif
-  return false;
+  if (result != NULL)
+    {
+      GC gc = XCreateGC (target->dpy, target->vt, 0UL, NULL);
+      if (gc)
+        {
+          if (pmap_depth != target->depth && pixmap != None)
+            {
+              XFreePixmap (target->dpy, pixmap);
+              pixmap = None;
+            }
+          if (pixmap == None)
+            {
+              pixmap = XCreatePixmap (target->dpy, target->vt, result->width, result->height, target->depth);
+              pmap_width = result->width;
+              pmap_height = result->height;
+              pmap_depth = target->depth;
+            }
+          XPutImage (target->dpy, pixmap, gc, result, 0, 0, 0, 0, result->width, result->height);
+          XFreeGC (target->dpy, gc);
+          flags = flags & ~isInvalid;
+        }
+        XDestroyImage (result);
+    }
+
+  if (flags & isInvalid)
+    {
+      if (pixmap != None)
+        {
+          XFreePixmap (target->dpy, pixmap);
+          pixmap = None;
+        }
+// TODO : we need to get rid of that garbadge :
+      target->am_transparent = target->am_pixmap_trans = 0;
+    }
+  else
+    target->am_transparent = target->am_pixmap_trans = 1;
+
+  apply ();
+
+  return true;      
 }
 
 bool 
@@ -869,7 +973,7 @@ bgPixmap_t::set_target (rxvt_term *new_target)
 }
 
 void
-bgPixmap_t::apply_background()
+bgPixmap_t::apply()
 {
   if (target)
     {
@@ -880,28 +984,47 @@ bgPixmap_t::apply_background()
             {
               XSetWindowBackgroundPixmap (target->dpy, target->parent[0], pixmap);
               XSetWindowBackgroundPixmap (target->dpy, target->vt, ParentRelative);
+#  if HAVE_SCROLLBARS
               if (target->scrollBar.win)
                 XSetWindowBackgroundPixmap (target->dpy, target->scrollBar.win, ParentRelative);
+#  endif
             }
           else
 # endif
             {
               /* force old pixmap dereference in case it was transparent before :*/
-              XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_bg]);
+              XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_border]);
               XSetWindowBackgroundPixmap (target->dpy, target->vt, pixmap);
               /* do we also need to set scrollbar's background here ? */
+# if HAVE_SCROLLBARS
+              if (target->scrollBar.win)
+                  XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
+# endif
             }
         }
       else
         { /* set target background to a pixel */
-          XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_bg]);
+          XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_border]);
           XSetWindowBackground (target->dpy, target->vt, target->pix_colors[Color_bg]);
           /* do we also need to set scrollbar's background here ? */
+# if HAVE_SCROLLBARS
+          if (target->scrollBar.win)
+              XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
+# endif
         }
       /* don't want Expose on the parent */
       XClearArea (target->dpy, target->parent[0], 0, 0, 0, 0, False);
       /* do want Expose on the vt */
       XClearArea (target->dpy, target->parent[0], 0, 0, 0, 0, True);
+#if HAVE_SCROLLBARS
+      if (target->scrollBar.win)
+        {
+          target->scrollBar.setIdle ();
+          target->scrollbar_show (0);
+        }
+#endif
+      target->want_refresh = target->want_full_refresh = 1;
+      target->flush ();
     }
 }
 #endif				/* HAVE_BG_PIXMAP */
@@ -1184,6 +1307,8 @@ rxvt_term::check_our_parents ()
 void
 rxvt_term::check_our_parents_cb (time_watcher &w)
 {
+#if 0  /* replaced by a bgPixmap_t::render() - leve here temporarily for reference */
+
   int i, aformat, rootdepth;
   unsigned long nitems, bytes_after;
   Atom atype;
@@ -1366,7 +1491,7 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
       if (gc != NULL)
         XFreeGC (dpy, gc);
       
-      bgPixmap.apply_background();
+      bgPixmap.apply();
       if (!success)
           am_pixmap_trans = 0;
       else
@@ -1390,5 +1515,6 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
             flush ();
         }
     }
+#endif    
 }
 #endif

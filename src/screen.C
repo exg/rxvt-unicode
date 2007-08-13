@@ -1651,9 +1651,6 @@ rxvt_term::scr_rvideo_mode (bool on) NOTHROW
 #ifdef HAVE_BG_PIXMAP
       if (bgPixmap.pixmap == None)
 #endif
-#if ENABLE_TRANSPARENCY
-        if (!option (Opt_transparent) || am_transparent == 0)
-#endif
           XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
 
       XGCValues gcvalue;
@@ -2006,9 +2003,6 @@ rxvt_term::scr_refresh () NOTHROW
 
 #ifdef HAVE_BG_PIXMAP
   have_bg |= bgPixmap.pixmap != None;
-#endif
-#if ENABLE_TRANSPARENCY
-  have_bg |= option (Opt_transparent) && am_transparent;
 #endif
   ocrow = oldcursor.row; /* is there an old outline cursor on screen? */
 
@@ -2480,28 +2474,22 @@ rxvt_term::scr_remap_chars () NOTHROW
 void
 rxvt_term::scr_recolour () NOTHROW
 {
-  if (1
-#if ENABLE_TRANSPARENCY
-      && !am_transparent
-#endif
 #ifdef HAVE_BG_PIXMAP
-      && !bgPixmap.pixmap
+  bgPixmap.apply ();
+#else
+  XSetWindowBackground (dpy, parent[0], pix_colors[Color_border]);
+  XClearWindow (dpy, parent[0]);
+  XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
+# if HAVE_SCROLLBARS
+  if (scrollBar.win)
+   {
+     XSetWindowBackground (dpy, scrollBar.win, pix_colors[Color_border]);
+     scrollBar.setIdle ();
+     scrollbar_show (0);
+   }
+# endif
 #endif
-      )
-    {
-      XSetWindowBackground (dpy, parent[0], pix_colors[Color_border]);
-      XClearWindow (dpy, parent[0]);
-      XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
-#if HAVE_SCROLLBARS
-      if (scrollBar.win)
-        {
-          XSetWindowBackground (dpy, scrollBar.win, pix_colors[Color_border]);
-          scrollBar.setIdle ();
-          scrollbar_show (0);
-        }
-#endif
-    }
-
+  
   scr_clear ();
   scr_touch (true);
   want_refresh = 1;

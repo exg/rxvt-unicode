@@ -185,8 +185,10 @@ struct  bgPixmap_t {
     tintNeeded      = (1UL<<9),
     tintServerSide  = (1UL<<10),
     tintFlags       = (tintSet|tintServerSide|tintNeeded),
+    blurNeeded      = (1UL<<11),
 
-    isTransparent   = (1UL<<16)
+    isTransparent   = (1UL<<16),
+    isInvalid       = (1UL<<17)
   };
 
   unsigned long flags;
@@ -230,7 +232,14 @@ struct  bgPixmap_t {
   bool unset_tint ();
   bool set_shade (const char *shade_str);
   bool set_root_pixmap ();
-  bool make_transparency_pixmap ();
+  
+  enum {
+    transpPmapTiled = (1UL<<0),
+    transpPmapTinted = tintNeeded,
+    transpPmapBlured = blurNeeded,
+    transpTransformations = (tintNeeded|blurNeeded)
+  };
+  unsigned long make_transparency_pixmap ();/* returns combination of the above flags */
 # endif
 
   Pixmap pixmap;
@@ -238,9 +247,9 @@ struct  bgPixmap_t {
   unsigned int pmap_depth;
 
   bool window_size_sensitive ();
-  void apply_background ();
-  bool render_background ();
-
+  void apply ();
+  bool render ();
+  void invalidate () { flags |= isInvalid; };
 };
 #else
 # undef HAVE_BG_PIXMAP

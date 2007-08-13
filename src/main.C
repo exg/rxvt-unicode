@@ -549,7 +549,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 #endif
     if (changed)
       {
-        bgPixmap.render_background ();
+        bgPixmap.render ();
         scr_touch (true);
       }
   }
@@ -1154,7 +1154,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
       scr_clear ();
 #ifdef XPM_BACKGROUND
       /* TODO: should that really be here ? */
-      bgPixmap.render_background ();
+      bgPixmap.render ();
 #endif
     }
 
