@@ -28,8 +28,6 @@
 #include "rxvt.h"               /* NECESSARY */
 #include "rxvtperl.h"           /* NECESSARY */
 
-#include <X11/Xmd.h>            /* get the typedef for CARD32 */
-
 #include <inttypes.h>
 
 #include "salloc.C" // HACK, should be a seperate compile!
