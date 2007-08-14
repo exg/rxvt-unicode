@@ -850,6 +850,11 @@ bgPixmap_t::set_root_pixmap ()
 }
 # endif /* ENABLE_TRANSPARENCY */
 
+# ifndef HAVE_AFTERIMAGE
+static void ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, int bm);
+#endif
+
+
 bool
 bgPixmap_t::render ()
 {
@@ -866,6 +871,9 @@ bgPixmap_t::render ()
       background_flags = make_transparency_pixmap ();
       if (background_flags == 0)
         return false;
+      else if ((background_flags & transpTransformations) == (flags & transpTransformations)
+                && pmap_depth == target->depth)
+        flags = flags & ~isInvalid;
     }
 # endif
 
@@ -902,16 +910,14 @@ bgPixmap_t::render ()
       result = XGetImage (target->dpy, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, ZPixmap);
     }
 # else /* our own client-side tinting */
-  if (background_flags &&
-      (!(background_flags & transpPmapTinted) && (flags & tintNeeded)) || pmap_depth != target->depth)
+  if (background_flags && (flags & isInvalid))
     {
       result = XGetImage (target->dpy, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, ZPixmap);
-      success = False;
       if (result != NULL && !(background_flags & transpPmapTinted) && (flags & tintNeeded))
         {
           rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
           tint.get (c);
-          ShadeXImage (this, result, shade, c.r, c.g, c.b);
+          ShadeXImage (target, result, shade, c.r, c.g, c.b);
         }
     }
 # endif
@@ -1077,8 +1083,11 @@ ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, int bm
 
   Visual *visual = term->visual;
 
-  if( visual->c_class != TrueColor || srcImage->format != ZPixmap ) return ;
+  if (visual->c_class != TrueColor || srcImage->format != ZPixmap) return ;
 
+  if (shade == 0)
+    shade = 100;
+    
   /* for convenience */
   mask_r = visual->red_mask;
   mask_g = visual->green_mask;
