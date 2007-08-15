@@ -1151,11 +1151,13 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
                          window_vt_x, window_vt_y,
                          width, height);
 
-      scr_clear ();
 #ifdef XPM_BACKGROUND
-      /* TODO: should that really be here ? */
-      bgPixmap.render ();
+                /* TODO: replace with update_pixmap() that should unify transparency and bg image handling ! */
+      if (bgPixmap.window_size_sensitive ())
+          bgPixmap.render ();
 #endif
+
+      scr_clear ();
     }
 
   if (fix_screen || old_height == 0)
@@ -1165,8 +1167,9 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
   //scr_touch (false);
 
 #ifdef HAVE_BG_PIXMAP
-  if (bgPixmap.pixmap)
-    scr_touch (false);
+//  TODO: this don't seem to have any effect - do we still need it ? If so - in which case exactly ?
+//  if (bgPixmap.pixmap)
+//    scr_touch (false);
 #endif
 
 #ifdef USE_XIM

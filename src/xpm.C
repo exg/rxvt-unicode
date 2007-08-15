@@ -1031,8 +1031,10 @@ bgPixmap_t::apply()
           target->scrollbar_show (0);
         }
 #endif
+      /* Is that really neccessary? we did a XClearArea to generate Expose events alreday ! */
       target->want_refresh = target->want_full_refresh = 1;
-      target->flush ();
+      /* TODO: why do we need a flush here ??? It causes segfault on resize ! */
+//      target->flush ();
     }
 }
 #endif				/* HAVE_BG_PIXMAP */

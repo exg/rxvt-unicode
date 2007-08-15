@@ -1485,22 +1485,16 @@ rxvt_term::x_cb (XEvent &ev)
               {
                 seen_resize = 1;
                 resize_all_windows (ev.xconfigure.width, ev.xconfigure.height, 1);
-#ifdef XPM_BACKGROUND
-                /* TODO: replace with update_pixmap() that should unify transparency and bg image handling ! */
-                if (!option (Opt_transparent) && bgPixmap.window_size_sensitive ())
-                  {
-                    bgPixmap.render ();
-                    scr_touch (true);
-                  }
+              }
+            else
+              {
+#ifdef ENABLE_TRANSPARENCY
+                if (option (Opt_transparent))
+                  if (bgPixmap.render ())
+                    scr_touch (false);
 #endif
               }
-
             HOOK_INVOKE ((this, HOOK_CONFIGURE_NOTIFY, DT_XEVENT, &ev, DT_END));
-
-#ifdef ENABLE_TRANSPARENCY
-            if (option (Opt_transparent))
-              bgPixmap.render ();
-#endif
           }
         break;
 
