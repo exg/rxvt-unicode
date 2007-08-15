@@ -893,7 +893,8 @@ bgPixmap_t::render ()
           as_shade.shading = (shade == 0) ? 100 : shade;
 
           rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
-          tint.get (c);
+          if (flags & tintSet)
+            tint.get (c);
           as_shade.tintColor.red = c.r;
           as_shade.tintColor.green = c.g;
           as_shade.tintColor.blue = c.b;
@@ -916,7 +917,8 @@ bgPixmap_t::render ()
       if (result != NULL && !(background_flags & transpPmapTinted) && (flags & tintNeeded))
         {
           rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
-          tint.get (c);
+          if (flags & tintSet)
+            tint.get (c);
           ShadeXImage (target, result, shade, c.r, c.g, c.b);
         }
     }
