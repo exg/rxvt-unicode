@@ -97,7 +97,6 @@ static unsigned short iso14755_symtab[] = {
 
   XK_Shift_Lock,	0x21eb,
   XK_ISO_Lock,		0x21eb,
-  XK_ISO_Lock,		0x21eb,
   XK_Caps_Lock,		0x21ec,
   XK_Num_Lock,		0x21ed,
   XK_ISO_Level3_Shift,	0x21ee,
