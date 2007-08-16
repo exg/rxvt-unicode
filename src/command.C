@@ -1476,6 +1476,9 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case ConfigureNotify:
+/*      fprintf (stderr, "ConfigureNotify for %X, parent is %X, geom is %dx%d%+d%+d, old geom was %dx%d\n",
+              ev.xconfigure.window, parent[0], ev.xconfigure.width, ev.xconfigure.height, ev.xconfigure.x, ev.xconfigure.y,
+              szHint.width, szHint.height);*/
         if (ev.xconfigure.window == parent[0])
           {
             while (XCheckTypedWindowEvent (dpy, ev.xconfigure.window, ConfigureNotify, &ev))
@@ -1490,8 +1493,7 @@ rxvt_term::x_cb (XEvent &ev)
               {
 #ifdef ENABLE_TRANSPARENCY
                 if (option (Opt_transparent))
-                  if (bgPixmap.render ())
-                    scr_touch (false);
+                  update_background ();
 #endif
               }
             HOOK_INVOKE ((this, HOOK_CONFIGURE_NOTIFY, DT_XEVENT, &ev, DT_END));
@@ -1829,7 +1831,7 @@ rxvt_term::rootwin_cb (XEvent &ev)
             || ev.xproperty.atom == xa[XA_ESETROOT_PMAP_ID])
           {
             bgPixmap.set_root_pixmap ();
-            bgPixmap.render ();
+            update_background ();
           }
         break;
     }
@@ -3430,7 +3432,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
           else
             changed = bgPixmap.unset_tint ();
           if (changed)
-            bgPixmap.render ();
+            update_background ();
         }
 
         break;
@@ -3469,10 +3471,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
                 str = strchr (str, ';');
               }
             if (changed)
-              {
-                bgPixmap.render ();
-                scr_touch (true);
-              }
+                update_background ();
           }
         break;
 #endif

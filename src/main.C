@@ -153,8 +153,8 @@ rxvt_term::rxvt_term ()
 #if ENABLE_TRANSPARENCY || ENABLE_PERL
     rootwin_ev (this, &rxvt_term::rootwin_cb),
 #endif
-#if ENABLE_TRANSPARENCY
-    check_our_parents_ev(this, &rxvt_term::check_our_parents_cb),
+#if HAVE_BG_PIXMAP
+    update_background_ev(this, &rxvt_term::update_background_cb),
 #endif
 #ifdef HAVE_SCROLLBARS
     scrollbar_ev (this, &rxvt_term::x_cb),
@@ -508,7 +508,6 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 #endif
 #ifdef HAVE_BG_PIXMAP
   {
-    bool changed = false;
     bgPixmap.set_target (this);
 
 #ifdef ENABLE_TRANSPARENCY
@@ -523,7 +522,6 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
           bgPixmap.set_tint (pix_colors_focused [Color_tint]);
         if (rs [Rs_shade])
           bgPixmap.set_shade (rs [Rs_shade]);
-        changed = true;
 
         bgPixmap.set_root_pixmap ();
         XSelectInput (dpy, display->root, PropertyChangeMask);
@@ -544,14 +542,13 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
         else
           bgPixmap.set_defaultGeometry ();
 
-        changed = bgPixmap.set_file (rs[Rs_backgroundPixmap]);
+        bgPixmap.set_file (rs[Rs_backgroundPixmap]);
       }
+    /* do not want to render Pixmap yet if we are size/position dependant - 
+     * wait for ConfigureNotify at least */
+    if (!bgPixmap.window_size_sensitive ())
+      update_background();
 #endif
-    if (changed)
-      {
-        bgPixmap.render ();
-        scr_touch (true);
-      }
   }
 #endif
 
@@ -1154,7 +1151,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
 #ifdef XPM_BACKGROUND
                 /* TODO: replace with update_pixmap() that should unify transparency and bg image handling ! */
       if (bgPixmap.window_size_sensitive ())
-          bgPixmap.render ();
+          update_background ();
 #endif
 
       scr_clear ();

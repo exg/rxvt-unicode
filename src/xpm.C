@@ -90,6 +90,23 @@ bgPixmap_t::window_size_sensitive ()
   return false;
 }
 
+bool bgPixmap_t::need_client_side_rendering ()
+{
+# ifdef HAVE_AFTERIMAGE
+  if (original_asim != NULL)
+    return true;
+#endif
+# ifdef ENABLE_TRANSPARENCY
+  if (flags & isTransparent)
+    {
+      if ((flags & blurNeeded)
+          || ((flags & tintNeeded) && !(flags & tintServerSide)))
+        return true;    
+    }
+# endif
+  return false;
+}
+
 # ifdef XPM_BACKGROUND
 static inline bool
 check_set_scale_value (int geom_flags, int flag, unsigned int &scale, unsigned int new_value)
@@ -599,6 +616,10 @@ bgPixmap_t::set_blur_radius (const char *geom)
       ++changed;
       v_blurRadius = vr;
     }
+  if (v_blurRadius == 0 && h_blurRadius == 0)
+    flags &= ~blurNeeded;
+  else
+    flags |= blurNeeded;
   return (changed>0);
 }
 
@@ -901,6 +922,19 @@ bgPixmap_t::render ()
 
           as_tint = shading2tint32 (&as_shade);
         }
+
+      if (!(background_flags & transpPmapBlured) && (flags & blurNeeded) && background != NULL)
+        {
+          ASImage* tmp = blur_asimage_gauss (target->asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
+                                             (original_asim == NULL || tint == TINT_LEAVE_SAME)?ASA_XImage:ASA_ASImage,
+                                             100, ASIMAGE_QUALITY_DEFAULT);
+          if (tmp)
+            {
+              destroy_asimage (&background);
+              background = tmp;
+            }
+        }
+
       if (render_asim (background, as_tint))
         flags = flags & ~isInvalid;
       if (background)
@@ -1045,6 +1079,7 @@ rxvt_term::get_window_origin (int &x, int &y)
 {
   Window cr;
   XTranslateCoordinates (dpy, parent[0], display->root, 0, 0, &x, &y, &cr);
+/*  fprintf( stderr, "origin is %+d%+d\n", x, y);*/
 }
 
 Pixmap
@@ -1310,17 +1345,37 @@ ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, int bm
  * Do transparency updates if required
  */
 int
-rxvt_term::check_our_parents ()
+rxvt_term::update_background ()
 {
-  check_our_parents_ev.stop ();
-  check_our_parents_ev.start (NOW + .1);
+  bgPixmap.invalidate();
+  /* no chance of real time refresh if we are blurring ! */
+  if (bgPixmap.invalid_since + 0.5 < NOW && !(bgPixmap.flags & bgPixmap_t::blurNeeded))
+    bgPixmap.render();
+  else
+    {
+      update_background_ev.stop ();
+      if (!bgPixmap.need_client_side_rendering())
+        update_background_ev.start (NOW + .05);
+      else if (bgPixmap.flags & bgPixmap_t::blurNeeded)
+        update_background_ev.start (NOW + .2); /* very slow !!! */
+      else
+        update_background_ev.start (NOW + .07);
+    }
   return 0;
 }
 
 void
+rxvt_term::update_background_cb (time_watcher &w)
+{
+  bgPixmap.render ();
+}
+#endif    /* HAVE_BG_PIXMAP */
+
+
+#if 0  /* replaced by a bgPixmap_t::render() - leve here temporarily for reference */
+void
 rxvt_term::check_our_parents_cb (time_watcher &w)
 {
-#if 0  /* replaced by a bgPixmap_t::render() - leve here temporarily for reference */
 
   int i, aformat, rootdepth;
   unsigned long nitems, bytes_after;
@@ -1528,6 +1583,5 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
             flush ();
         }
     }
-#endif    
 }
-#endif
+#endif    

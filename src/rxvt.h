@@ -241,15 +241,23 @@ struct  bgPixmap_t {
   };
   unsigned long make_transparency_pixmap ();/* returns combination of the above flags */
 # endif
+  double invalid_since;
 
   Pixmap pixmap;
   unsigned int pmap_width, pmap_height;
   unsigned int pmap_depth;
 
   bool window_size_sensitive ();
+  bool need_client_side_rendering ();
   void apply ();
   bool render ();
-  void invalidate () { flags |= isInvalid; };
+  void invalidate () {
+    if (!(flags & isInvalid))
+      { 
+        flags |= isInvalid; 
+        invalid_since = NOW;
+      }
+  };
 };
 #else
 # undef HAVE_BG_PIXMAP
@@ -1158,10 +1166,10 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void rootwin_cb (XEvent &xev);
   xevent_watcher rootwin_ev;
 #endif
-#if ENABLE_TRANSPARENCY
-  int check_our_parents ();
-  void check_our_parents_cb (time_watcher &w);
-  time_watcher check_our_parents_ev;
+#ifdef HAVE_BG_PIXMAP
+  int update_background ();
+  void update_background_cb (time_watcher &w);
+  time_watcher update_background_ev;
 #endif
 
   void x_cb (XEvent &xev);
