@@ -545,7 +545,9 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
         bgPixmap.set_file (rs[Rs_backgroundPixmap]);
       }
     /* do not want to render Pixmap yet if we are size/position dependant - 
-     * wait for ConfigureNotify at least */
+     * wait for ConfigureNotify at least 
+     * TODO: this does not work for some reason when transparency is disabled !!!!
+     */
     if (!bgPixmap.window_size_sensitive ())
       update_background();
 #endif

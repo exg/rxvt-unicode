@@ -193,6 +193,13 @@ struct  bgPixmap_t {
 
   unsigned long flags;
 
+  enum {
+    transpPmapTiled = (1UL<<0),
+    transpPmapTinted = tintNeeded,
+    transpPmapBlured = blurNeeded,
+    transpTransformations = (tintNeeded|blurNeeded)
+  }; /* this flags are returned by make_transparency_pixmap if called */
+
 # ifdef  XPM_BACKGROUND
 #  ifdef HAVE_AFTERIMAGE
   ASImage *original_asim;
@@ -232,14 +239,8 @@ struct  bgPixmap_t {
   bool unset_tint ();
   bool set_shade (const char *shade_str);
   bool set_root_pixmap ();
-  
-  enum {
-    transpPmapTiled = (1UL<<0),
-    transpPmapTinted = tintNeeded,
-    transpPmapBlured = blurNeeded,
-    transpTransformations = (tintNeeded|blurNeeded)
-  };
-  unsigned long make_transparency_pixmap ();/* returns combination of the above flags */
+
+  unsigned long make_transparency_pixmap ();/* returns combination of the transpTransformations flags */
 # endif
   double invalid_since;
 
@@ -972,8 +973,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   unsigned char   want_refresh:1,
 #ifdef ENABLE_TRANSPARENCY
                   want_full_refresh:1,	/* awaiting full screen refresh      */
-                  am_transparent:1,	/* is a transparent term             */
-                  am_pixmap_trans:1, 	/* transparency w/known root pixmap  */
 #endif
                   current_screen:1,	/* primary or secondary              */
                   num_scr_allow:1,

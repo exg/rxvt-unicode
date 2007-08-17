@@ -95,7 +95,7 @@ bool bgPixmap_t::need_client_side_rendering ()
 # ifdef HAVE_AFTERIMAGE
   if (original_asim != NULL)
     return true;
-#endif
+# endif
 # ifdef ENABLE_TRANSPARENCY
   if (flags & isTransparent)
     {
@@ -635,17 +635,16 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
       rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
       tint->get (c);
 
-      flags |= bgPixmap_t::tintNeeded;
       if ((c.r > 0x000700 || c.g > 0x000700 || c.b > 0x000700)
           && (c.r < 0x00f700 || c.g < 0x00f700 || c.b < 0x00f700))
       {
          flags |= bgPixmap_t::tintNeeded;
-#define IS_COMPONENT_WHOLESOME(cmp)  ((cmp) <= 0x000700 || (cmp) >= 0x00f700)
+#  define IS_COMPONENT_WHOLESOME(cmp)  ((cmp) <= 0x000700 || (cmp) >= 0x00f700)
           if (IS_COMPONENT_WHOLESOME (c.r)
               && IS_COMPONENT_WHOLESOME (c.g)
               && IS_COMPONENT_WHOLESOME (c.b))
             flags |= bgPixmap_t::tintServerSide;
-#undef  IS_COMPONENT_WHOLESOME
+#  undef  IS_COMPONENT_WHOLESOME
       }
     }
   return flags;
@@ -814,29 +813,22 @@ bgPixmap_t::make_transparency_pixmap ()
 
     if (tiled_root_pmap != None)
       {
-        if (flags & tintNeeded) 
+        if (flags & tintNeeded && !need_client_side_rendering ()) 
           {
-            if ((flags & tintServerSide)
-                && h_blurRadius <= 1  && v_blurRadius <= 1
-# ifdef HAVE_AFTERIMAGE
-                && original_asim == NULL
-# endif
-               )
-              { /* In this case we can tint image server-side getting significant
-                 * performance improvements, as we eliminate XImage transfer
-                 */
-                gcv.foreground = Pixel (tint);
-                gcv.function = GXand;
-                gcv.fill_style = FillSolid;
-                if (gc)
-                  XChangeGC (dpy, gc, GCFillStyle | GCForeground | GCFunction, &gcv);
-                else
-                  gc = XCreateGC (dpy, root, GCFillStyle | GCForeground | GCFunction, &gcv);
-                if (gc)
-                  {
-                    XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
-                    result |= transpPmapTinted;
-                  }
+            /* In this case we can tint image server-side getting significant
+             * performance improvements, as we eliminate XImage transfer
+             */
+            gcv.foreground = Pixel (tint);
+            gcv.function = GXand;
+            gcv.fill_style = FillSolid;
+            if (gc)
+              XChangeGC (dpy, gc, GCFillStyle | GCForeground | GCFunction, &gcv);
+            else
+              gc = XCreateGC (dpy, root, GCFillStyle | GCForeground | GCFunction, &gcv);
+            if (gc)
+              {
+                XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
+                result |= transpPmapTinted;
               }
            }
         if (pixmap)
@@ -873,7 +865,7 @@ bgPixmap_t::set_root_pixmap ()
 
 # ifndef HAVE_AFTERIMAGE
 static void ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, int bm);
-#endif
+# endif
 
 
 bool
@@ -908,6 +900,7 @@ bgPixmap_t::render ()
       if (background_flags)
           background = pixmap2ximage (target->asv, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, 100);
 
+#  ifdef ENABLE_TRANSPARENCY
       if (!(background_flags & transpPmapTinted) && (flags & tintNeeded))
         {
           ShadingInfo as_shade;
@@ -922,7 +915,6 @@ bgPixmap_t::render ()
 
           as_tint = shading2tint32 (&as_shade);
         }
-
       if (!(background_flags & transpPmapBlured) && (flags & blurNeeded) && background != NULL)
         {
           ASImage* tmp = blur_asimage_gauss (target->asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
@@ -934,6 +926,7 @@ bgPixmap_t::render ()
               background = tmp;
             }
         }
+#  endif
 
       if (render_asim (background, as_tint))
         flags = flags & ~isInvalid;
@@ -956,13 +949,13 @@ bgPixmap_t::render ()
           ShadeXImage (target, result, shade, c.r, c.g, c.b);
         }
     }
-# endif
+# endif /* HAVE_AFTERIMAGE */
   if (result != NULL)
     {
       GC gc = XCreateGC (target->dpy, target->vt, 0UL, NULL);
       if (gc)
         {
-          if (pmap_depth != target->depth && pixmap != None)
+          if (/*pmap_depth != target->depth &&*/ pixmap != None)
             {
               XFreePixmap (target->dpy, pixmap);
               pixmap = None;
@@ -974,7 +967,19 @@ bgPixmap_t::render ()
               pmap_height = result->height;
               pmap_depth = target->depth;
             }
-          XPutImage (target->dpy, pixmap, gc, result, 0, 0, 0, 0, result->width, result->height);
+          if (pmap_depth != result->depth)
+            { /* Bad Match error will ensue ! stupid X !!!! */
+              if( result->depth == 24 && pmap_depth == 32)
+                result->depth = 32;
+              else if( result->depth == 32 && pmap_depth == 24)
+                result->depth = 24;
+              else
+                {
+                  /* TODO: implement image recoding */
+                }
+            }
+          if (pmap_depth == result->depth)
+            XPutImage (target->dpy, pixmap, gc, result, 0, 0, 0, 0, result->width, result->height);
           XFreeGC (target->dpy, gc);
           flags = flags & ~isInvalid;
         }
@@ -988,11 +993,7 @@ bgPixmap_t::render ()
           XFreePixmap (target->dpy, pixmap);
           pixmap = None;
         }
-// TODO : we need to get rid of that garbadge :
-      target->am_transparent = target->am_pixmap_trans = 0;
     }
-  else
-    target->am_transparent = target->am_pixmap_trans = 1;
 
   apply ();
 
@@ -1058,21 +1059,22 @@ bgPixmap_t::apply()
       XClearArea (target->dpy, target->parent[0], 0, 0, 0, 0, False);
       /* do want Expose on the vt */
       XClearArea (target->dpy, target->parent[0], 0, 0, 0, 0, True);
-#if HAVE_SCROLLBARS
+# if HAVE_SCROLLBARS
       if (target->scrollBar.win)
         {
           target->scrollBar.setIdle ();
           target->scrollbar_show (0);
         }
-#endif
+# endif
       /* Is that really neccessary? we did a XClearArea to generate Expose events alreday ! */
-      target->want_refresh = target->want_full_refresh = 1;
+      target->want_refresh = 1;
+# ifdef ENABLE_TRANSPARENCY
+      target->want_full_refresh = 1;
+# endif
       /* TODO: why do we need a flush here ??? It causes segfault on resize ! */
 //      target->flush ();
     }
 }
-#endif				/* HAVE_BG_PIXMAP */
-
 
 void
 rxvt_term::get_window_origin (int &x, int &y)
@@ -1103,9 +1105,38 @@ rxvt_term::get_pixmap_property (int prop_id)
   return None;
 }
 
+/*
+ * Check our parents are still who we think they are.
+ * Do transparency updates if required
+ */
+int
+rxvt_term::update_background ()
+{
+  bgPixmap.invalidate();
+  /* no chance of real time refresh if we are blurring ! */
+  if (bgPixmap.invalid_since + 0.5 < NOW && !(bgPixmap.flags & bgPixmap_t::blurNeeded))
+    bgPixmap.render();
+  else
+    {
+      update_background_ev.stop ();
+      if (!bgPixmap.need_client_side_rendering())
+        update_background_ev.start (NOW + .05);
+      else if (bgPixmap.flags & bgPixmap_t::blurNeeded)
+        update_background_ev.start (NOW + .2); /* very slow !!! */
+      else
+        update_background_ev.start (NOW + .07);
+    }
+  return 0;
+}
 
-#ifdef ENABLE_TRANSPARENCY
-#ifndef HAVE_AFTERIMAGE
+void
+rxvt_term::update_background_cb (time_watcher &w)
+{
+  bgPixmap.render ();
+}
+#endif    /* HAVE_BG_PIXMAP */
+
+#if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
 /* taken from aterm-0.4.2 */
 
 typedef uint32_t RUINT32T;
@@ -1338,39 +1369,7 @@ ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, int bm
 
   free (lookup);
 }
-#endif
-
-/*
- * Check our parents are still who we think they are.
- * Do transparency updates if required
- */
-int
-rxvt_term::update_background ()
-{
-  bgPixmap.invalidate();
-  /* no chance of real time refresh if we are blurring ! */
-  if (bgPixmap.invalid_since + 0.5 < NOW && !(bgPixmap.flags & bgPixmap_t::blurNeeded))
-    bgPixmap.render();
-  else
-    {
-      update_background_ev.stop ();
-      if (!bgPixmap.need_client_side_rendering())
-        update_background_ev.start (NOW + .05);
-      else if (bgPixmap.flags & bgPixmap_t::blurNeeded)
-        update_background_ev.start (NOW + .2); /* very slow !!! */
-      else
-        update_background_ev.start (NOW + .07);
-    }
-  return 0;
-}
-
-void
-rxvt_term::update_background_cb (time_watcher &w)
-{
-  bgPixmap.render ();
-}
-#endif    /* HAVE_BG_PIXMAP */
-
+#endif /* defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE) */
 
 #if 0  /* replaced by a bgPixmap_t::render() - leve here temporarily for reference */
 void

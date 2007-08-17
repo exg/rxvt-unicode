@@ -745,8 +745,20 @@ rxvt_color::set (rxvt_screen *screen, const char *name)
   else
     c.a = rgba::MAX_CC;
 
+  // parse the non-standard "#aarrggbb" format
+  if (name[0] == '#' && strlen (name) == 1+2+2+2+2 && 4 == sscanf (name+1, "%2hx%2hx%2hx%2hx%c", &c.a, &c.r, &c.g, &c.b, &eos))
+    {
+      if (c.r)
+        c.r = (c.r << 8) | 0x0ff;
+      if (c.g)
+        c.g = (c.g << 8) | 0x0ff;
+      if (c.b)
+        c.b = (c.b << 8) | 0x0ff;
+      if (c.a)
+        c.a = (c.a << 8) | 0x0ff;
+    }
   // parse the non-standard "rgba:rrrr/gggg/bbbb/aaaa" format
-  if (strlen (name) != 4+5*4 || 4 != sscanf (name, "rgba:%4hx/%4hx/%4hx/%4hx%c", &c.r, &c.g, &c.b, &c.a, &eos))
+  else if (strlen (name) != 4+5*4 || 4 != sscanf (name, "rgba:%4hx/%4hx/%4hx/%4hx%c", &c.r, &c.g, &c.b, &c.a, &eos))
     {
       XColor xc, xc_exact;
 
