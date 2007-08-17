@@ -549,7 +549,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
      * TODO: this does not work for some reason when transparency is disabled !!!!
      */
     if (!bgPixmap.window_size_sensitive ())
-      update_background();
+      update_background ();
 #endif
   }
 #endif
