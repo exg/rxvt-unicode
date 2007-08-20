@@ -1324,54 +1324,57 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
           bool back_rendered = false;
 
 #ifdef HAVE_BG_PIXMAP
-          if (term->bgPixmap.pixmap && (bg < 0 || term->pix_colors[bg].c.color.alpha < 0x0ff00))
+          if (term->bgPixmap.pixmap)
             {
-              if (term->bgPixmap.pmap_width >= x + term->window_vt_x+w
-                  && term->bgPixmap.pmap_height >= y + term->window_vt_y+h)
+              Picture dst = 0;
+              if (bg >= 0 && term->pix_colors[bg].c.color.alpha < 0x0ff00)
+                dst = XftDrawPicture(d2);
+                
+              if (bg < 0 || dst != 0)
                 {
-                  XCopyArea (disp, term->bgPixmap.pixmap, d2, gc,
-                             x + term->window_vt_x, y + term->window_vt_y,
-                             w, h, 0, 0);
-                }
-              else
-                {
-                  XGCValues gcv;
+                  if (term->bgPixmap.pmap_width >= x + term->window_vt_x+w
+                      && term->bgPixmap.pmap_height >= y + term->window_vt_y+h)
+                    {
+                      XCopyArea (disp, term->bgPixmap.pixmap, d2, gc,
+                                 x + term->window_vt_x, y + term->window_vt_y,
+                                 w, h, 0, 0);
+                    }
+                  else
+                    {
+                      XGCValues gcv;
 
-                  gcv.fill_style  = FillTiled;
-                  gcv.tile        = term->bgPixmap.pixmap;
-                  gcv.ts_x_origin = -x;
-                  gcv.ts_y_origin = -y;
+                      gcv.fill_style  = FillTiled;
+                      gcv.tile        = term->bgPixmap.pixmap;
+                      gcv.ts_x_origin = -x;
+                      gcv.ts_y_origin = -y;
 
-#if 0
-                  GC gc2 = XCreateGC (disp, d2,
-                                      GCTile | GCTileStipXOrigin | GCTileStipYOrigin | GCFillStyle,
-                                      &gcv);
-#endif     
-                  XChangeGC (disp, gc,
-                             GCTile | GCTileStipXOrigin | GCTileStipYOrigin | GCFillStyle,
-                             &gcv);
+    #if 0
+                      GC gc2 = XCreateGC (disp, d2,
+                                          GCTile | GCTileStipXOrigin | GCTileStipYOrigin | GCFillStyle,
+                                          &gcv);
+    #endif     
+                      XChangeGC (disp, gc,
+                                 GCTile | GCTileStipXOrigin | GCTileStipYOrigin | GCFillStyle,
+                                 &gcv);
 
-                  XFillRectangle (disp, d2, gc/*gc2*/, 0, 0, w, h);
+                      XFillRectangle (disp, d2, gc/*gc2*/, 0, 0, w, h);
 
-                  gcv.fill_style = FillSolid;
-                  XChangeGC (disp, gc, GCFillStyle, &gcv);
-                  /* XFreeGC (disp, gc2); */
+                      gcv.fill_style = FillSolid;
+                      XChangeGC (disp, gc, GCFillStyle, &gcv);
+                      /* XFreeGC (disp, gc2); */
 
-                }
-              if (bg > 0)
-                {
-                  Picture dst = XftDrawPicture(d2);
-                  if (dst != 0)
+                    }
+                  if (bg >= 0)
                     {
                       Picture solid_color_pict = XftDrawSrcPicture (d2, &term->pix_colors[bg].c);
                       XRenderComposite (disp, PictOpOver, solid_color_pict, None, dst, 0, 0, 0, 0, 0, 0, w, h);
                     }
+                  back_rendered = true;
                 }
-              back_rendered = true;
             }
 #endif
 
-          if(bg > 0 && !back_rendered)
+          if(bg >= 0 && !back_rendered)
             XftDrawRect (d2, &term->pix_colors[bg].c, 0, 0, w, h);
 
           XftDrawGlyphSpec (d2, &term->pix_colors[fg].c, f, enc, ep - enc);

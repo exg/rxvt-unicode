@@ -542,14 +542,10 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
         else
           bgPixmap.set_defaultGeometry ();
 
-        bgPixmap.set_file (rs[Rs_backgroundPixmap]);
+        if (bgPixmap.set_file (rs[Rs_backgroundPixmap]))
+          if (!option (Opt_transparent))
+            update_background ();
       }
-    /* do not want to render Pixmap yet if we are size/position dependant - 
-     * wait for ConfigureNotify at least 
-     * TODO: this does not work for some reason when transparency is disabled !!!!
-     */
-    if (!bgPixmap.window_size_sensitive ())
-      update_background ();
 #endif
   }
 #endif
@@ -1151,7 +1147,6 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
                          width, height);
 
 #ifdef XPM_BACKGROUND
-                /* TODO: replace with update_pixmap() that should unify transparency and bg image handling ! */
       if (bgPixmap.window_size_sensitive ())
           update_background ();
 #endif
