@@ -183,9 +183,10 @@ struct  bgPixmap_t {
 
     tintSet         = (1UL<<8),
     tintNeeded      = (1UL<<9),
-    tintServerSide  = (1UL<<10),
-    tintFlags       = (tintSet|tintServerSide|tintNeeded),
-    blurNeeded      = (1UL<<11),
+    tintWholesome   = (1UL<<10),
+    tintServerSide  = (1UL<<11),
+    tintFlags       = (tintSet|tintServerSide|tintNeeded|tintWholesome),
+    blurNeeded      = (1UL<<12),
 
     isTransparent   = (1UL<<16),
     isInvalid       = (1UL<<17)

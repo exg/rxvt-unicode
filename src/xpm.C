@@ -26,6 +26,23 @@
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
 
+#define DO_TIMING_TEST 0
+
+#if DO_TIMING_TEST
+#define TIMING_TEST_START(id) \
+	struct timeval timing_test_##id##_stv;\
+  gettimeofday (&timing_test_##id##_stv, NULL);
+  
+#define TIMING_TEST_PRINT_RESULT(id) \
+  do{ struct timeval tv;gettimeofday (&tv, NULL); tv.tv_sec -= (timing_test_##id##_stv).tv_sec;\
+      fprintf (stderr, "%s: %s: %d: elapsed  %ld usec\n", #id, __FILE__, __LINE__,\
+               tv.tv_sec * 1000000 + tv.tv_usec - (timing_test_##id##_stv).tv_usec);}while (0)
+
+#else
+#define TIMING_TEST_START(id) do{}while (0)
+#define TIMING_TEST_PRINT_RESULT(id) do{}while (0)
+#endif
+
 /*
  * Pixmap geometry string interpretation :
  * Each geometry string contains zero or one scale/position
@@ -378,6 +395,8 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
   int w = h_scale * target_width / 100;
   int h = v_scale * target_height / 100;
 
+  TIMING_TEST_START (asim);
+
   if (original_asim)
     {
       x = make_align_position (h_align, target_width, w > 0 ? w : (int)original_asim->width);
@@ -491,6 +510,7 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
           free (layers);
         }
     }
+  TIMING_TEST_PRINT_RESULT (asim);
 
   if (pixmap)
     {
@@ -546,6 +566,7 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
         destroy_asimage (&result);
 
       XFreeGC (target->dpy, gc);
+      TIMING_TEST_PRINT_RESULT (asim);
     }
 
   return true;
@@ -627,26 +648,40 @@ static inline unsigned long
 compute_tint_shade_flags (rxvt_color *tint, int shade)
 {
   unsigned long flags = 0;
+  rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
 
-  if (shade > 0 && shade <100)
+  if (tint)
+    {
+      tint->get (c);
+#  define IS_COMPONENT_WHOLESOME(cmp)  ((cmp) <= 0x000700 || (cmp) >= 0x00f700)
+      if (IS_COMPONENT_WHOLESOME (c.r)
+          && IS_COMPONENT_WHOLESOME (c.g)
+          && IS_COMPONENT_WHOLESOME (c.b))
+        flags |= bgPixmap_t::tintWholesome;
+#  undef  IS_COMPONENT_WHOLESOME
+    }
+
+  if ((shade > 0 && shade < 100) || (shade > 100 && shade < 200))
     flags |= bgPixmap_t::tintNeeded;
   else if (tint)
     {
-      rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
-      tint->get (c);
-
       if ((c.r > 0x000700 || c.g > 0x000700 || c.b > 0x000700)
           && (c.r < 0x00f700 || c.g < 0x00f700 || c.b < 0x00f700))
       {
-         flags |= bgPixmap_t::tintNeeded;
-#  define IS_COMPONENT_WHOLESOME(cmp)  ((cmp) <= 0x000700 || (cmp) >= 0x00f700)
-          if (IS_COMPONENT_WHOLESOME (c.r)
-              && IS_COMPONENT_WHOLESOME (c.g)
-              && IS_COMPONENT_WHOLESOME (c.b))
-            flags |= bgPixmap_t::tintServerSide;
-#  undef  IS_COMPONENT_WHOLESOME
+        flags |= bgPixmap_t::tintNeeded;
       }
     }
+    
+  if (flags & bgPixmap_t::tintNeeded)
+    {
+      if (flags & bgPixmap_t::tintWholesome)
+        flags |= bgPixmap_t::tintServerSide;
+#if XFT
+      /* TODO: add logic for XRENDER tinting */
+      flags |= bgPixmap_t::tintServerSide;
+#endif
+    }
+
   return flags;
 }
 
@@ -686,7 +721,7 @@ bgPixmap_t::set_shade (const char *shade_str)
 
   if (new_shade != shade)
     {
-      unsigned long new_flags = compute_tint_shade_flags (&tint, new_shade);
+      unsigned long new_flags = compute_tint_shade_flags ((flags & tintSet) ? &tint : NULL, new_shade);
       shade = new_shade;
       flags = (flags & ~tintFlags) | new_flags;
       return true;
@@ -722,6 +757,7 @@ bgPixmap_t::make_transparency_pixmap ()
   int sx, sy;
   XGCValues gcv;
 
+  TIMING_TEST_START (tp);
   target->get_window_origin (sx, sy);
 
   /* check if we are outside of the visible part of the virtual screen : */
@@ -810,39 +846,133 @@ bgPixmap_t::make_transparency_pixmap ()
           result |= transpPmapTiled;
         }
     }
+  TIMING_TEST_PRINT_RESULT (tp);
 
-    if (tiled_root_pmap != None)
-      {
-        if (flags & tintNeeded && !need_client_side_rendering ()) 
-          {
-            /* In this case we can tint image server-side getting significant
-             * performance improvements, as we eliminate XImage transfer
-             */
-            gcv.foreground = Pixel (tint);
-            gcv.function = GXand;
-            gcv.fill_style = FillSolid;
-            if (gc)
-              XChangeGC (dpy, gc, GCFillStyle | GCForeground | GCFunction, &gcv);
-            else
-              gc = XCreateGC (dpy, root, GCFillStyle | GCForeground | GCFunction, &gcv);
-            if (gc)
-              {
-                XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
-                result |= transpPmapTinted;
-              }
-           }
-        if (pixmap)
-          XFreePixmap (dpy, pixmap);
-        pixmap = tiled_root_pmap;
-        pmap_width = window_width;
-        pmap_height = window_height;
-        pmap_depth = root_depth;
-      }
+  if (tiled_root_pmap != None)
+    {
+      if ((flags & tintNeeded) && !need_client_side_rendering ()) 
+        {
+          if (flags & tintWholesome)
+            {
+              /* In this case we can tint image server-side getting significant
+               * performance improvements, as we eliminate XImage transfer
+               */
+              gcv.foreground = Pixel (tint);
+              gcv.function = GXand;
+              gcv.fill_style = FillSolid;
+              if (gc)
+                XChangeGC (dpy, gc, GCFillStyle | GCForeground | GCFunction, &gcv);
+              else
+                gc = XCreateGC (dpy, root, GCFillStyle | GCForeground | GCFunction, &gcv);
+              if (gc)
+                {
+                  XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
+                  result |= transpPmapTinted;
+                }
+            }
+          else
+            {
+#if XFT  /* TODO : implement proper detection of XRENDER, as XFT may be present without XRENDER ! */
+              rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
+              if (flags & tintSet)
+                tint.get (c);
+              if (shade > 0 && shade < 100)
+                {
+                  c.r = (c.r * shade) / 100;
+                  c.g = (c.g * shade) / 100;
+                  c.b = (c.b * shade) / 100;
+                }
+              else if( shade > 100 && shade < 200)
+                {
+                  c.r = (c.r * (200 - shade)) / 100;
+                  c.g = (c.g * (200 - shade)) / 100;
+                  c.b = (c.b * (200 - shade)) / 100;
+                }
+
+              XRenderPictFormat pf;
+              pf.type = PictTypeDirect;
+              pf.depth = 32;
+              pf.direct.redMask = 0xff;
+              pf.direct.greenMask = 0xff;
+              pf.direct.blueMask = 0xff;
+              pf.direct.alphaMask = 0xff;
+          
+              XRenderPictFormat *solid_format = XRenderFindFormat (dpy,
+                                                    					    (PictFormatType|
+					                                                         PictFormatDepth|
+					                                                         PictFormatRedMask|
+					                                                         PictFormatGreenMask|
+					                                                         PictFormatBlueMask|
+					                                                         PictFormatAlphaMask),
+					                                                        &pf,
+					                                                        0);
+              XRenderPictFormat *root_format = XRenderFindVisualFormat (dpy, DefaultVisualOfScreen (ScreenOfDisplay (dpy, target->display->screen)));
+              XRenderPictureAttributes pa ;
+
+              Picture back_pic = XRenderCreatePicture (dpy, tiled_root_pmap, root_format, 0, &pa);
+
+              pa.repeat = True;
+
+              Pixmap overlay_pmap = XCreatePixmap (dpy, root, 1, 1, 32);
+              Picture overlay_pic = XRenderCreatePicture (dpy, overlay_pmap, solid_format, CPRepeat, &pa);
+              XFreePixmap (dpy, overlay_pmap);
+
+              pa.component_alpha = True;              
+              Pixmap mask_pmap = XCreatePixmap (dpy, root, 1, 1, 32);
+              Picture mask_pic = XRenderCreatePicture (dpy, mask_pmap, solid_format, CPRepeat|CPComponentAlpha, &pa);
+              XFreePixmap (dpy, mask_pmap);
+
+              if (mask_pic && overlay_pic && back_pic)
+                {
+                  XRenderColor mask_c;
+
+                  memset (&mask_c, (shade > 100) ? 0xFF : 0x0, sizeof(mask_c));
+                  mask_c.alpha = 0xffff;
+                  XRenderFillRectangle (dpy, PictOpSrc, overlay_pic, &mask_c, 0, 0, 1, 1);
+                  memset (&mask_c,  0x0, sizeof(mask_c));
+                  mask_c.alpha = 0;
+                  if (c.r == c.b && c.b == c.g) /* pure shading */
+                    {
+                      mask_c.red = mask_c.green = mask_c.blue = 0xffff-c.r;
+                      XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
+                      XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
+                    }
+                  else
+                    {
+                      mask_c.red = 0xffff-c.r;
+                      XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
+                      XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
+                      mask_c.red = 0;
+                      mask_c.green = 0xffff-c.g;
+                      XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
+                      XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
+                      mask_c.green = 0;
+                      mask_c.blue = 0xffff-c.b;
+                      XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
+                      XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
+                    }
+                    result |= transpPmapTinted;
+                }
+              XRenderFreePicture (dpy, mask_pic);
+              XRenderFreePicture (dpy, overlay_pic);
+              XRenderFreePicture (dpy, back_pic);
+#endif
+            }
+         }
+      if (pixmap)
+        XFreePixmap (dpy, pixmap);
+      pixmap = tiled_root_pmap;
+      pmap_width = window_width;
+      pmap_height = window_height;
+      pmap_depth = root_depth;
+    }
       
-    if (gc)
-      XFreeGC (dpy, gc);
+  if (gc)
+    XFreeGC (dpy, gc);
+
+  TIMING_TEST_PRINT_RESULT (tp);
     
-    return result;    
+  return result;    
 }
 
 bool
@@ -1157,7 +1287,7 @@ ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, int bm
 
   if (shade == 0)
     shade = 100;
-    
+
   /* for convenience */
   mask_r = visual->red_mask;
   mask_g = visual->green_mask;
@@ -1389,16 +1519,6 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
 
   if (!option (Opt_transparent))
     return;	/* Don't try any more */
-#if 0
-  struct timeval stv;
-	gettimeofday (&stv,NULL);
-#define PRINT_BACKGROUND_OP_TIME do{ struct timeval tv;gettimeofday (&tv,NULL); tv.tv_sec-= stv.tv_sec;\
-                                     fprintf (stderr,"%d: elapsed  %ld usec\n",__LINE__,\
-                                              tv.tv_sec*1000000+tv.tv_usec-stv.tv_usec );}while(0)
-#else                                           
-#define PRINT_BACKGROUND_OP_TIME do{}while(0)                                          
-#endif
- 
 
   XGetWindowAttributes (dpy, display->root, &wrootattr);
   rootdepth = wrootattr.depth;
@@ -1542,7 +1662,6 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
           success = False;
           if (image != NULL)
             {
-              PRINT_BACKGROUND_OP_TIME;
               if (gc == NULL)
                 gc = XCreateGC (dpy, vt, 0UL, &gcvalue);
               if (ISSET_PIXCOLOR (Color_tint) || shade != 100)
@@ -1553,7 +1672,6 @@ rxvt_term::check_our_parents_cb (time_watcher &w)
             }
         }
 #endif  /* HAVE_AFTERIMAGE */
-      PRINT_BACKGROUND_OP_TIME;
 
       if (gc != NULL)
         XFreeGC (dpy, gc);
