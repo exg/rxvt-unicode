@@ -1221,7 +1221,7 @@ rxvt_term::get_pixmap_property (int prop_id)
   if (prop_id > 0 && prop_id < NUM_XA)
     if (xa[prop_id])
       {
-        int aformat, rootdepth;
+        int aformat;
         unsigned long nitems, bytes_after;
         Atom atype;
         unsigned char *prop = NULL;
