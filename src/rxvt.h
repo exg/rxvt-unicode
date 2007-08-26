@@ -101,9 +101,6 @@ class out_of_input { };
  *****************************************************************************
  */
 // main.C
-RETSIGTYPE       rxvt_Child_signal                (int sig) NOTHROW;
-RETSIGTYPE       rxvt_Exit_signal                 (int sig) NOTHROW;
-void             rxvt_clean_exit                  () NOTHROW;
 void           * rxvt_malloc                      (size_t size);
 void           * rxvt_calloc                      (size_t number, size_t size);
 void           * rxvt_realloc                     (void *ptr, size_t size);
@@ -1518,17 +1515,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void get_window_origin (int &x, int &y);
   Pixmap get_pixmap_property (int prop_id);
 };
-
-/*
- *****************************************************************************
- * PROTOTYPES
- *****************************************************************************
- */
-#ifdef PROTOTYPES
-# define __PROTO(p)     p
-#else
-# define __PROTO(p)     ()
-#endif
 
 #endif                          /* _RXVT_H_ */
 
