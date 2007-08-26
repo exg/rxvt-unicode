@@ -661,20 +661,35 @@ ac_save_LIBS=$LIBS
 ac_save_CFLAGS=$CFLAGS
 CFLAGS="$CFLAGS $X_CFLAGS"
 LIBS="$LIBS $X_LIBS $X_EXTRA_LIBS -lX11"
-AC_CACHE_CHECK(for working Xlocale, rxvt_cv_func_xlocale,
-[AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <X11/Xlib.h>
-#include <stdlib.h>
-main() {
-char *p;
-if ((p = XSetLocaleModifiers("@im=none")) != NULL && *p)
-exit (XSupportsLocale() ? 0 : 1);
-else
-exit (1);}]])],[dnl
-  rxvt_cv_func_xlocale=yes],[rxvt_cv_func_xlocale=no],[dnl
-  :])])
 if test x$support_xim = xyes; then
+  AC_CACHE_CHECK(for working Xlocale, rxvt_cv_func_xlocale,
+  [AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <X11/Xlib.h>
+  #include <stdlib.h>
+  main() {
+  char *p;
+  if ((p = XSetLocaleModifiers("@im=none")) != NULL && *p)
+  exit (XSupportsLocale() ? 0 : 1);
+  else
+  exit (1);}]])],[dnl
+    rxvt_cv_func_xlocale=yes],[rxvt_cv_func_xlocale=no],[dnl
+    :])])
   if test x$rxvt_cv_func_xlocale = xyes; then
     AC_DEFINE(USE_XIM, 1, Define if you want to have XIM (X Input Method) protocol support - required for multibyte characters input)
+    AC_CACHE_CHECK(for broken XIM callback, rxvt_broken_ximcb,
+    [AC_COMPILE_IFELSE([
+    #include <X11/Xlib.h>
+
+    void im_destroy_cb (XIC unused1, XPointer client_data, XPointer unused3);
+
+    void f() {
+      XIMCallback cb;
+      cb.callback = im_destroy_cb;
+    }
+    ],rxvt_broken_ximcb=yes,rxvt_broken_ximcb=no)])
+
+    if test x$rxvt_broken_ximcb = xyes; then
+       AC_DEFINE(XIMCB_PROTO_BROKEN, 1, Define if your XIMCallback specifies XIC as first type.)
+    fi
   fi
 fi
 
@@ -700,22 +715,6 @@ if test x$rxvt_cv_func_nl_langinfo = xyes; then
 fi
 
 SCM_RIGHTS_CHECK
-
-AC_CACHE_CHECK(for broken XIM callback, rxvt_broken_ximcb,
-[AC_COMPILE_IFELSE([
-#include <X11/Xlib.h>
-
-void im_destroy_cb (XIC unused1, XPointer client_data, XPointer unused3);
-
-void f() {
-  XIMCallback cb;
-  cb.callback = im_destroy_cb;
-}
-],rxvt_broken_ximcb=yes,rxvt_broken_ximcb=no)])
-
-if test x$rxvt_broken_ximcb = xyes; then
-   AC_DEFINE(XIMCB_PROTO_BROKEN, 1, Define if your XIMCallback specifies XIC as first type.)
-fi
 
 PTY_CHECK
 
