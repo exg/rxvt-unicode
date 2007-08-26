@@ -1325,7 +1325,6 @@ Optional Features:
   --enable-font-styles    enable bold and italic support
   --enable-afterimage enable integration with libAfterImage for background images
   --enable-transparency   enable transparent backgrounds
-  --enable-tinting        enable tinting of transparent bg
   --enable-fading         enable colors fading when off focus
   --enable-rxvt-scroll    enable rxvt style scrollbar
   --enable-next-scroll    enable NeXT style scrollbar
@@ -4395,7 +4394,6 @@ fi
 
 support_frills=yes
 support_inheritpixmap=yes
-support_tinting=yes
 support_fading=yes
 support_keepscrolling=yes
 support_selectionscrolling=yes
@@ -4436,7 +4434,6 @@ if test "${enable_everything+set}" = set; then
     if test x$enableval = xno; then
        support_frills=no
        support_inheritpixmap=no
-       support_tinting=no
        support_fading=no
        support_keepscrolling=no
        support_selectionscrolling=no
@@ -4466,7 +4463,6 @@ if test "${enable_everything+set}" = set; then
     if test x$enableval = xyes; then
        support_frills=yes
        support_inheritpixmap=yes
-       support_tinting=yes
        support_fading=yes
        support_keepscrolling=yes
        support_selectionscrolling=yes
@@ -4551,14 +4547,6 @@ fi
 if test "${enable_transparency+set}" = set; then
   enableval=$enable_transparency; if test x$enableval = xyes -o x$enableval = xno; then
     support_inheritpixmap=$enableval
-  fi
-fi
-
-
-# Check whether --enable-tinting was given.
-if test "${enable_tinting+set}" = set; then
-  enableval=$enable_tinting; if test x$enableval = xyes -o x$enableval = xno; then
-    support_tinting=$enableval
   fi
 fi
 
@@ -11305,13 +11293,14 @@ ac_save_LIBS=$LIBS
 ac_save_CFLAGS=$CFLAGS
 CFLAGS="$CFLAGS $X_CFLAGS"
 LIBS="$LIBS $X_LIBS $X_EXTRA_LIBS -lX11"
-{ echo "$as_me:$LINENO: checking for working Xlocale" >&5
+if test x$support_xim = xyes; then
+  { echo "$as_me:$LINENO: checking for working Xlocale" >&5
 echo $ECHO_N "checking for working Xlocale... $ECHO_C" >&6; }
 if test "${rxvt_cv_func_xlocale+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   if test "$cross_compiling" = yes; then
-    :
+      :
 else
   cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
@@ -11320,13 +11309,13 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 #include <X11/Xlib.h>
-#include <stdlib.h>
-main() {
-char *p;
-if ((p = XSetLocaleModifiers("@im=none")) != NULL && *p)
-exit (XSupportsLocale() ? 0 : 1);
-else
-exit (1);}
+  #include <stdlib.h>
+  main() {
+  char *p;
+  if ((p = XSetLocaleModifiers("@im=none")) != NULL && *p)
+  exit (XSupportsLocale() ? 0 : 1);
+  else
+  exit (1);}
 _ACEOF
 rm -f conftest$ac_exeext
 if { (ac_try="$ac_link"
@@ -11348,7 +11337,7 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
-    rxvt_cv_func_xlocale=yes
+      rxvt_cv_func_xlocale=yes
 else
   echo "$as_me: program exited with status $ac_status" >&5
 echo "$as_me: failed program was:" >&5
@@ -11364,13 +11353,66 @@ fi
 fi
 { echo "$as_me:$LINENO: result: $rxvt_cv_func_xlocale" >&5
 echo "${ECHO_T}$rxvt_cv_func_xlocale" >&6; }
-if test x$support_xim = xyes; then
   if test x$rxvt_cv_func_xlocale = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
 #define USE_XIM 1
 _ACEOF
 
+    { echo "$as_me:$LINENO: checking for broken XIM callback" >&5
+echo $ECHO_N "checking for broken XIM callback... $ECHO_C" >&6; }
+if test "${rxvt_broken_ximcb+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+
+    #include <X11/Xlib.h>
+
+    void im_destroy_cb (XIC unused1, XPointer client_data, XPointer unused3);
+
+    void f() {
+      XIMCallback cb;
+      cb.callback = im_destroy_cb;
+    }
+
+_ACEOF
+rm -f conftest.$ac_objext
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_compile") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_cxx_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
+  rxvt_broken_ximcb=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	rxvt_broken_ximcb=no
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+{ echo "$as_me:$LINENO: result: $rxvt_broken_ximcb" >&5
+echo "${ECHO_T}$rxvt_broken_ximcb" >&6; }
+
+    if test x$rxvt_broken_ximcb = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define XIMCB_PROTO_BROKEN 1
+_ACEOF
+
+    fi
   fi
 fi
 
@@ -11647,61 +11689,6 @@ echo "$as_me: error: libptytty requires unix-compliant filehandle passing abilit
    { (exit 1); exit 1; }; }
 fi
 
-
-{ echo "$as_me:$LINENO: checking for broken XIM callback" >&5
-echo $ECHO_N "checking for broken XIM callback... $ECHO_C" >&6; }
-if test "${rxvt_broken_ximcb+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  cat >conftest.$ac_ext <<_ACEOF
-
-#include <X11/Xlib.h>
-
-void im_destroy_cb (XIC unused1, XPointer client_data, XPointer unused3);
-
-void f() {
-  XIMCallback cb;
-  cb.callback = im_destroy_cb;
-}
-
-_ACEOF
-rm -f conftest.$ac_objext
-if { (ac_try="$ac_compile"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_compile") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_cxx_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest.$ac_objext; then
-  rxvt_broken_ximcb=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	rxvt_broken_ximcb=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-{ echo "$as_me:$LINENO: result: $rxvt_broken_ximcb" >&5
-echo "${ECHO_T}$rxvt_broken_ximcb" >&6; }
-
-if test x$rxvt_broken_ximcb = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define XIMCB_PROTO_BROKEN 1
-_ACEOF
-
-fi
 
 
 
@@ -12694,13 +12681,6 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
 fi
-if test x$support_tinting = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define TINTING 1
-_ACEOF
-
-fi
 if test x$support_inheritpixmap = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
@@ -12719,6 +12699,13 @@ if test x$support_selectionscrolling = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
 #define SELECTION_SCROLLING 1
+_ACEOF
+
+fi
+if test x$support_frills = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define ENABLE_FRILLS 1
 _ACEOF
 
 fi
@@ -13026,18 +13013,6 @@ fi
 
 
 
-
-if test x$support_perl = xyes; then
-   support_frills=yes
-fi
-
-if test x$support_frills = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define ENABLE_FRILLS 1
-_ACEOF
-
-fi
 
 
 
