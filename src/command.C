@@ -2797,9 +2797,8 @@ rxvt_term::process_csi_seq ()
   unicode_t ch, priv, i;
   unsigned int nargs, p;
   int n, ndef;
-  int arg[ESC_ARGS];
+  int arg[ESC_ARGS] = { };
 
-  memset (arg, 0, sizeof (arg));
   nargs = 0;
 
   priv = 0;
