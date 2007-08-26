@@ -698,11 +698,6 @@ enum {
 /* #define PrivMode_MouseX11Track       (1LU<<20) */
 
 #define PrivMode_mouse_report   (PrivMode_MouseX10|PrivMode_MouseX11)
-#define PrivMode(test,bit)              \
-    if (test)                           \
-        priv_modes |= (bit);            \
-    else                                \
-        priv_modes &= ~(bit)
 
 #ifdef ALLOW_132_MODE
 # define PrivMode_Default (PrivMode_Autowrap|PrivMode_ShiftKeys|PrivMode_VisibleCursor|PrivMode_132OK)
@@ -1397,6 +1392,14 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
       options[opt >> 3] |= (1 << (opt & 7));
     else
       options[opt >> 3] &= ~(1 << (opt & 7));
+  }
+
+  void PrivMode (int set, unsigned bit) NOTHROW
+  {
+    if (set)
+      priv_modes |= bit;
+    else
+      priv_modes &= ~bit;
   }
 
   void scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs) const NOTHROW;
