@@ -613,6 +613,7 @@ bgPixmap_t::set_transparent ()
       flags |= isTransparent;
       return true;
     }
+  return false;
 }
 
 bool
