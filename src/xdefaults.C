@@ -568,8 +568,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
         }
       else
 #ifdef KEYSYM_RESOURCE
-        /* if (!strncmp (opt, "keysym.", sizeof ("keysym.") - 1)) */
-        if (rxvt_Str_match (opt, "keysym."))
+        if (!strncmp (opt, "keysym.", sizeof ("keysym.") - 1))
           {
             const char *str = argv[++i];
 
@@ -675,7 +674,8 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
 
   if (arg == NULL)
     {
-      if ((n = rxvt_Str_match (str, "keysym.")) == 0)
+      n = sizeof ("keysym.") - 1;
+      if (strncmp (str, "keysym.", n))
         return 0;
 
       str += n;		/* skip `keysym.' */
