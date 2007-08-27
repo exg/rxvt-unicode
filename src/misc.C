@@ -250,16 +250,6 @@ rxvt_Str_match (const char *s1, const char *s2) NOTHROW
   return ((strncmp (s1, s2, n) == 0) ? n : 0);
 }
 
-const char *
-rxvt_Str_skip_space (const char *str) NOTHROW
-{
-  if (str)
-    while (*str && isspace (*str))
-      str++;
-
-  return str;
-}
-
 /*
  * remove leading/trailing space and strip-off leading/trailing quotes.
  * in place.
