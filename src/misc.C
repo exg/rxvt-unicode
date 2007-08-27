@@ -235,22 +235,6 @@ rxvt_exit_failure () THROW ((class rxvt_failure_exception))
 }
 
 /*
- * check that the first characters of S1 match S2
- *
- * No Match
- *      return: 0
- * Match
- *      return: strlen (S2)
- */
-int
-rxvt_Str_match (const char *s1, const char *s2) NOTHROW
-{
-  int n = strlen (s2);
-
-  return ((strncmp (s1, s2, n) == 0) ? n : 0);
-}
-
-/*
  * remove leading/trailing space and strip-off leading/trailing quotes.
  * in place.
  */

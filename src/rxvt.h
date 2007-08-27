@@ -120,7 +120,6 @@ void             rxvt_warn                        (const char *fmt,...) NOTHROW;
 void             rxvt_fatal                       (const char *fmt, ...) THROW ((class rxvt_failure_exception)) NORETURN;
 void             rxvt_exit_failure                () THROW ((class rxvt_failure_exception)) NORETURN;
 
-int              rxvt_Str_match                   (const char *s1, const char *s2) NOTHROW;
 char           * rxvt_Str_trim                    (char *str) NOTHROW;
 int              rxvt_Str_escaped                 (char *str) NOTHROW;
 char          ** rxvt_splitcommastring            (const char *cs) NOTHROW;
