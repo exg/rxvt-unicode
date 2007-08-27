@@ -75,12 +75,6 @@ wcs2sv (wchar_t *wstr, int len = -1)
 }
 
 static SV *
-new_ref (HV *hv, const char *klass)
-{
-  return sv_bless (newRV ((SV *)hv), gv_stashpv (klass, 1));
-}
-
-static SV *
 newSVptr (void *ptr, const char *klass)
 {
   HV *hv = newHV ();
@@ -1403,7 +1397,6 @@ rxvt_term::special_decode (SV *text)
 	CODE:
 {
         wchar_t *wstr = sv2wcs (text);
-        int wlen = wcslen (wstr);
         int dlen = 0;
 
         // find length

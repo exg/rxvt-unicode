@@ -484,7 +484,6 @@ void
 rxvt_term::init_env ()
 {
   int i;
-  unsigned int u;
   char *val;
 
 #ifdef DISPLAY_IS_IP

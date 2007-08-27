@@ -760,7 +760,7 @@ rxvt_color::set (rxvt_screen *screen, const char *name)
   // parse the non-standard "rgba:rrrr/gggg/bbbb/aaaa" format
   else if (strlen (name) != 4+5*4 || 4 != sscanf (name, "rgba:%4hx/%4hx/%4hx/%4hx%c", &c.r, &c.g, &c.b, &c.a, &eos))
     {
-      XColor xc, xc_exact;
+      XColor xc;
 
       if (XParseColor (screen->dpy, screen->cmap, name, &xc))
         {
