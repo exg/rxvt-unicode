@@ -1348,11 +1348,6 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                       gcv.ts_x_origin = -x;
                       gcv.ts_y_origin = -y;
 
-    #if 0
-                      GC gc2 = XCreateGC (disp, d2,
-                                          GCTile | GCTileStipXOrigin | GCTileStipYOrigin | GCFillStyle,
-                                          &gcv);
-    #endif     
                       XChangeGC (disp, gc,
                                  GCTile | GCTileStipXOrigin | GCTileStipYOrigin | GCFillStyle,
                                  &gcv);
@@ -1361,14 +1356,14 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
                       gcv.fill_style = FillSolid;
                       XChangeGC (disp, gc, GCFillStyle, &gcv);
-                      /* XFreeGC (disp, gc2); */
-
                     }
+
                   if (bg >= 0)
                     {
                       Picture solid_color_pict = XftDrawSrcPicture (d2, &term->pix_colors[bg].c);
                       XRenderComposite (disp, PictOpOver, solid_color_pict, None, dst, 0, 0, 0, 0, 0, 0, w, h);
                     }
+
                   back_rendered = true;
                 }
             }
