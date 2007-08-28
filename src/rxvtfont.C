@@ -1328,7 +1328,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
             {
               Picture dst = 0;
               if (bg >= 0 && term->pix_colors[bg].c.color.alpha < 0x0ff00)
-                dst = XftDrawPicture(d2);
+                dst = XftDrawPicture (d2);
                 
               if (bg < 0 || dst != 0)
                 {
