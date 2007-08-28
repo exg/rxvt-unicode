@@ -1352,7 +1352,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                                  GCTile | GCTileStipXOrigin | GCTileStipYOrigin | GCFillStyle,
                                  &gcv);
 
-                      XFillRectangle (disp, d2, gc/*gc2*/, 0, 0, w, h);
+                      XFillRectangle (disp, d2, gc, 0, 0, w, h);
 
                       gcv.fill_style = FillSolid;
                       XChangeGC (disp, gc, GCFillStyle, &gcv);
