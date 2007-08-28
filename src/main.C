@@ -1146,7 +1146,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
                          window_vt_x, window_vt_y,
                          width, height);
 
-#ifdef XPM_BACKGROUND
+#ifdef HAVE_BG_PIXMAP
       if (bgPixmap.window_size_sensitive ())
           update_background ();
 #endif
