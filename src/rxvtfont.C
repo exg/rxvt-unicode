@@ -1369,7 +1369,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
             }
 #endif
 
-          if(bg >= 0 && !back_rendered)
+          if (bg >= 0 && !back_rendered)
             XftDrawRect (d2, &term->pix_colors[bg].c, 0, 0, w, h);
 
           XftDrawGlyphSpec (d2, &term->pix_colors[fg].c, f, enc, ep - enc);
