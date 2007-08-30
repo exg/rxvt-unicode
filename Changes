@@ -15,9 +15,9 @@ WISH: selection-color-pair instead of reverse video
 WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 WISH: anyevent mouse notification / manage MotionMask better.
-WISH: kick out xpm.C, replace by pixbuf
 DUMB: support tex fonts
 
+	- overhaul of the transparency/pixmap code (sasha).
 	- fix possible race betwen visual bell and poweron.
           (reported by Martin von Gagern, gentoo?).
 
