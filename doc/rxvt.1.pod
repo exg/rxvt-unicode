@@ -349,7 +349,7 @@ resource B<skipBuiltinGlyphs>.
 
 Compile I<frills>: Lines (pixel height) to insert between each row of
 the display. Useful to work around font rendering problems; resource
-B<linespace>.
+B<lineSpace>.
 
 =item B<-tn> I<termname>
 
@@ -918,7 +918,7 @@ option B<-sbg>.
 Specifies the terminal type name to be set in the B<TERM> environment
 variable; option B<-tn>.
 
-=item B<linespace:> I<number>
+=item B<lineSpace:> I<number>
 
 Specifies number of lines (pixel height) to insert between each row of
 the display [default 0]; option B<-lsp>.
