@@ -235,8 +235,7 @@ rxvt_exit_failure () THROW ((class rxvt_failure_exception))
 }
 
 /*
- * remove leading/trailing space and strip-off leading/trailing quotes.
- * in place.
+ * remove leading/trailing space in place.
  */
 char           *
 rxvt_Str_trim (char *str) NOTHROW
@@ -255,15 +254,6 @@ rxvt_Str_trim (char *str) NOTHROW
   /* dump return and other trailing whitespace */
   while (r > s && isspace (*r))
     r--;
-
-#if 0
-  /* skip matching leading/trailing quotes */
-  if (*s == '"' && *r == '"' && n > 1)
-    {
-      s++;
-      n -= 2;
-    }
-#endif
 
   memmove (str, s, r + 1 - s);
   str[r + 1 - s] = 0;
