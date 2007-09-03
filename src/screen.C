@@ -407,7 +407,7 @@ rxvt_term::scr_reset ()
   prev_nrow = nrow;
   prev_ncol = ncol;
 
-  tabs = (char *)rxvt_malloc (ncol * sizeof (char));
+  tabs = (char *)rxvt_malloc (ncol);
 
   for (int col = ncol; --col; )
     tabs [col] = col % TABSIZE == 0;
@@ -1623,7 +1623,7 @@ void
 rxvt_term::scr_set_tab (int mode) NOTHROW
 {
   if (mode < 0)
-    memset (tabs, 0, ncol * sizeof (char));
+    memset (tabs, 0, ncol);
   else if (screen.cur.col < ncol)
     tabs [screen.cur.col] = !!mode;
 }

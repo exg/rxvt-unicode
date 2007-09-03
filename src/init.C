@@ -508,7 +508,7 @@ rxvt_term::init_env ()
     rs[Rs_display_name] = val;   /* use broken `:0' value */
 
   i = strlen (val);
-  env_display = (char *)rxvt_malloc ((i + 9) * sizeof (char));
+  env_display = (char *)rxvt_malloc (i + 9);
 
   sprintf (env_display, "DISPLAY=%s", val);
 
@@ -539,7 +539,7 @@ rxvt_term::init_env ()
 
   if (rs[Rs_term_name] != NULL)
     {
-      env_term = (char *)rxvt_malloc ((strlen (rs[Rs_term_name]) + 6) * sizeof (char));
+      env_term = (char *)rxvt_malloc (strlen (rs[Rs_term_name]) + 6);
       sprintf (env_term, "TERM=%s", rs[Rs_term_name]);
       putenv (env_term);
     }
@@ -1401,7 +1401,7 @@ rxvt_term::run_child (const char *const *argv)
 
       if (option (Opt_loginShell))
         {
-          login = (char *)rxvt_malloc ((strlen (argv0) + 2) * sizeof (char));
+          login = (char *)rxvt_malloc (strlen (argv0) + 2);
 
           login[0] = '-';
           strcpy (&login[1], argv0);
