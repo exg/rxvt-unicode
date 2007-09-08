@@ -237,7 +237,7 @@ rxvt_exit_failure () THROW ((class rxvt_failure_exception))
 /*
  * remove leading/trailing space in place.
  */
-char           *
+char *
 rxvt_strtrim (char *str) NOTHROW
 {
   char *r, *s;
@@ -264,9 +264,8 @@ rxvt_strtrim (char *str) NOTHROW
 /*
  * Split a comma-separated string into an array, stripping leading and
  * trailing spaces from each entry.  Empty strings are properly returned
- * Caller should free each entry and array when done
  */
-char          **
+char **
 rxvt_splitcommastring (const char *cs) NOTHROW
 {
   int             l, n, p;
