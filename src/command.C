@@ -565,7 +565,7 @@ rxvt_term::key_press (XKeyEvent &ev)
                     break;
 #endif
 #ifndef NO_DELETE_KEY
-# ifdef XK_KP_Prior
+# ifdef XK_KP_Delete
                   case XK_KP_Delete:
                     /* allow shift to override */
                     if ((priv_modes & PrivMode_aplKP) ? !shft : shft)
