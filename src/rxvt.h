@@ -121,7 +121,6 @@ void             rxvt_fatal                       (const char *fmt, ...) THROW (
 void             rxvt_exit_failure                () THROW ((class rxvt_failure_exception)) NORETURN;
 
 char           * rxvt_Str_trim                    (char *str) NOTHROW;
-int              rxvt_Str_escaped                 (char *str) NOTHROW;
 char          ** rxvt_splitcommastring            (const char *cs) NOTHROW;
 void             rxvt_freecommastring             (char **cs) NOTHROW;
 
