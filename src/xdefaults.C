@@ -758,8 +758,7 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
       newarg = newargstr;
     }
 
-  rxvt_Str_trim (newarg);
-  if (*newarg == '\0' || (n = rxvt_Str_escaped (newarg)) == 0)
+  if (*newarg == '\0')
     return -1;
 
   keyboard->register_user_translation (sym, state, newarg);

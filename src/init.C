@@ -404,8 +404,6 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   else
     {
       val = strdup (rs[Rs_backspace_key]);
-      rxvt_Str_trim (val);
-      rxvt_Str_escaped (val);
       key_backspace = val;
     }
 #endif
@@ -420,16 +418,9 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   else
     {
       val = strdup (rs[Rs_delete_key]);
-      rxvt_Str_trim (val);
-      rxvt_Str_escaped (val);
       key_delete = val;
     }
 #endif
-  if (rs[Rs_answerbackstring])
-    {
-      rxvt_Str_trim ((char *)rs[Rs_answerbackstring]);
-      rxvt_Str_escaped ((char *)rs[Rs_answerbackstring]);
-    }
 
 #ifdef HAVE_SCROLLBARS
   setup_scrollbar (rs[Rs_scrollBar_align], rs[Rs_scrollstyle], rs[Rs_scrollBar_thickness]);
