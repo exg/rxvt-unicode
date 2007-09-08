@@ -296,7 +296,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
       cmd_argv[i] = NULL;
     }
 
-  rs[Rs_name] = rxvt_r_basename (argv[0]);
+  rs[Rs_name] = rxvt_basename (argv[0]);
 
   /*
    * Open display, get options/resources and create the window
@@ -349,7 +349,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   if (cmd_argv && cmd_argv[0])
     {
       if (!rs[Rs_title])
-        rs[Rs_title] = rxvt_r_basename (cmd_argv[0]);
+        rs[Rs_title] = rxvt_basename (cmd_argv[0]);
       if (!rs[Rs_iconName])
         rs[Rs_iconName] = rs[Rs_title];
     }
@@ -1388,7 +1388,7 @@ rxvt_term::run_child (const char *const *argv)
       if ((shell = getenv ("SHELL")) == NULL || *shell == '\0')
         shell = "/bin/sh";
 
-      argv0 = (const char *)rxvt_r_basename (shell);
+      argv0 = (const char *)rxvt_basename (shell);
 
       if (option (Opt_loginShell))
         {

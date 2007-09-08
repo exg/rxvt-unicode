@@ -165,7 +165,7 @@ rxvt_utf8towcs (const char *str, int len)
 }
 
 char *
-rxvt_r_basename (const char *str) NOTHROW
+rxvt_basename (const char *str) NOTHROW
 {
   char *base = strrchr (str, '/');
 
@@ -238,7 +238,7 @@ rxvt_exit_failure () THROW ((class rxvt_failure_exception))
  * remove leading/trailing space in place.
  */
 char           *
-rxvt_Str_trim (char *str) NOTHROW
+rxvt_strtrim (char *str) NOTHROW
 {
   char *r, *s;
 
@@ -290,7 +290,7 @@ rxvt_splitcommastring (const char *cs) NOTHROW
       ret[l] = (char *)malloc (p + 1);
       strncpy (ret[l], s, p);
       ret[l][p] = '\0';
-      rxvt_Str_trim (ret[l]);
+      rxvt_strtrim (ret[l]);
       s = ++t;
     }
 

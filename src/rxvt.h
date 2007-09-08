@@ -113,14 +113,14 @@ wchar_t *        rxvt_utf8towcs                   (const char *str, int len = -1
 
 #define rxvt_strdup(s) ((s) ? strdup(s) : 0)
 
-char *           rxvt_r_basename                  (const char *str) NOTHROW;
+char *           rxvt_basename                    (const char *str) NOTHROW;
 void             rxvt_vlog                        (const char *fmt, va_list arg_ptr) NOTHROW;
 void             rxvt_log                         (const char *fmt,...) NOTHROW;
 void             rxvt_warn                        (const char *fmt,...) NOTHROW;
 void             rxvt_fatal                       (const char *fmt, ...) THROW ((class rxvt_failure_exception)) NORETURN;
 void             rxvt_exit_failure                () THROW ((class rxvt_failure_exception)) NORETURN;
 
-char           * rxvt_Str_trim                    (char *str) NOTHROW;
+char           * rxvt_strtrim                     (char *str) NOTHROW;
 char          ** rxvt_splitcommastring            (const char *cs) NOTHROW;
 void             rxvt_freecommastring             (char **cs) NOTHROW;
 
