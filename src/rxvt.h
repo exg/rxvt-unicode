@@ -1068,12 +1068,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 /* ---------- */
   Cursor          leftptr_cursor;
 /* ---------- */
-#ifndef NO_BACKSPACE_KEY
-  const char     *key_backspace;
-#endif
-#ifndef NO_DELETE_KEY
-  const char     *key_delete;
-#endif
   struct mouse_event MEvent;
   XComposeStatus  compose;
   ttymode_t       tio;

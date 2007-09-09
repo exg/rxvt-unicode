@@ -561,7 +561,7 @@ rxvt_term::key_press (XKeyEvent &ev)
                         kbuf[1] = '\0';
                       }
                     else
-                      strcpy (kbuf, key_backspace);
+                      strcpy (kbuf, rs[Rs_backspace_key]);
                     break;
 #endif
 #ifndef NO_DELETE_KEY
@@ -576,7 +576,7 @@ rxvt_term::key_press (XKeyEvent &ev)
                     /* FALLTHROUGH */
 # endif
                   case XK_Delete:
-                    strcpy (kbuf, key_delete);
+                    strcpy (kbuf, rs[Rs_delete_key]);
                     break;
 #endif
                   case XK_Tab:

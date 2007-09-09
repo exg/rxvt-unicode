@@ -267,7 +267,6 @@ const char **
 rxvt_term::init_resources (int argc, const char *const *argv)
 {
   int i, r_argc;
-  char *val;
   const char **cmd_argv, **r_argv;
 
   /*
@@ -397,29 +396,19 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 #ifndef NO_BACKSPACE_KEY
   if (!rs[Rs_backspace_key])
 # ifdef DEFAULT_BACKSPACE
-    key_backspace = DEFAULT_BACKSPACE;
+    rs[Rs_backspace_key] = DEFAULT_BACKSPACE;
 # else
-    key_backspace = "DEC";       /* can toggle between \010 or \177 */
+    rs[Rs_backspace_key] = "DEC";       /* can toggle between \010 or \177 */
 # endif
-  else
-    {
-      val = strdup (rs[Rs_backspace_key]);
-      key_backspace = val;
-    }
 #endif
 
 #ifndef NO_DELETE_KEY
   if (!rs[Rs_delete_key])
 # ifdef DEFAULT_DELETE
-    key_delete = DEFAULT_DELETE;
+    rs[Rs_delete_key] = DEFAULT_DELETE;
 # else
-    key_delete = "\033[3~";
+    rs[Rs_delete_key] = "\033[3~";
 # endif
-  else
-    {
-      val = strdup (rs[Rs_delete_key]);
-      key_delete = val;
-    }
 #endif
 
 #ifdef HAVE_SCROLLBARS
@@ -640,7 +629,7 @@ rxvt_term::init_command (const char *const *argv)
     priv_modes |= PrivMode_smoothScroll;
 
 #ifndef NO_BACKSPACE_KEY
-  if (strcmp (key_backspace, "DEC") == 0)
+  if (strcmp (rs[Rs_backspace_key], "DEC") == 0)
     priv_modes |= PrivMode_HaveBackSpace;
 #endif
 
@@ -1253,9 +1242,9 @@ rxvt_term::run_command (const char *const *argv)
   int er;
 
 #ifndef NO_BACKSPACE_KEY
-  if (key_backspace[0] && !key_backspace[1])
-    er = key_backspace[0];
-  else if (strcmp (key_backspace, "DEC") == 0)
+  if (rs[Rs_backspace_key][0] && !rs[Rs_backspace_key][1])
+    er = rs[Rs_backspace_key][0];
+  else if (strcmp (rs[Rs_backspace_key], "DEC") == 0)
     er = '\177';            /* the initial state anyway */
   else
 #endif
