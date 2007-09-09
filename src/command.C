@@ -549,6 +549,7 @@ rxvt_term::key_press (XKeyEvent &ev)
       if (keysym >= 0xFF00 && keysym <= 0xFFFF)
         {
             {
+              bool kp = priv_modes & PrivMode_aplKP ? !shft : shft;
               newlen = 1;
               switch (keysym)
                 {
@@ -568,7 +569,7 @@ rxvt_term::key_press (XKeyEvent &ev)
 # ifdef XK_KP_Delete
                   case XK_KP_Delete:
                     /* allow shift to override */
-                    if ((priv_modes & PrivMode_aplKP) ? !shft : shft)
+                    if (kp)
                       {
                         strcpy (kbuf, "\033On");
                         break;
@@ -601,7 +602,7 @@ rxvt_term::key_press (XKeyEvent &ev)
                   case XK_KP_Down:	/* \033Or or standard */
                   case XK_KP_Right:	/* \033Ov or standard */
                   case XK_KP_Left:	/* \033Ot or standard */
-                    if ((priv_modes & PrivMode_aplKP) ? !shft : shft)
+                    if (kp)
                       {
                         strcpy (kbuf, "\033OZ");
                         kbuf[2] = "txvr"[keysym - XK_KP_Left];
@@ -634,7 +635,7 @@ rxvt_term::key_press (XKeyEvent &ev)
 # ifdef XK_KP_Prior
                   case XK_KP_Prior:
                     /* allow shift to override */
-                    if ((priv_modes & PrivMode_aplKP) ? !shft : shft)
+                    if (kp)
                       {
                         strcpy (kbuf, "\033Oy");
                         break;
@@ -647,7 +648,7 @@ rxvt_term::key_press (XKeyEvent &ev)
 # ifdef XK_KP_Next
                   case XK_KP_Next:
                     /* allow shift to override */
-                    if ((priv_modes & PrivMode_aplKP) ? !shft : shft)
+                    if (kp)
                       {
                         strcpy (kbuf, "\033Os");
                         break;
@@ -660,7 +661,7 @@ rxvt_term::key_press (XKeyEvent &ev)
 #endif
                   case XK_KP_Enter:
                     /* allow shift to override */
-                    if ((priv_modes & PrivMode_aplKP) ? !shft : shft)
+                    if (kp)
                       {
                         strcpy (kbuf, "\033OM");
                         break;
@@ -713,7 +714,7 @@ rxvt_term::key_press (XKeyEvent &ev)
                   case XK_KP_8:		/* "\033Ox" : "8" */
                   case XK_KP_9:		/* "\033Oy" : "9" */
                     /* allow shift to override */
-                    if ((priv_modes & PrivMode_aplKP) ? !shft : shft)
+                    if (kp)
                       {
                         strcpy (kbuf, "\033Oj");
                         kbuf[2] += (keysym - XK_KP_Multiply);
@@ -732,7 +733,7 @@ rxvt_term::key_press (XKeyEvent &ev)
 #ifdef XK_KP_Insert
                   case XK_KP_Insert:
                     /* allow shift to override */
-                    if ((priv_modes & PrivMode_aplKP) ? !shft : shft)
+                    if (kp)
                       {
                         strcpy (kbuf, "\033Op");
                         break;
@@ -755,7 +756,7 @@ rxvt_term::key_press (XKeyEvent &ev)
 #ifdef XK_KP_End
                   case XK_KP_End:
                     /* allow shift to override */
-                    if ((priv_modes & PrivMode_aplKP) ? !shft : shft)
+                    if (kp)
                       {
                         strcpy (kbuf, "\033Oq");
                         break;
@@ -768,7 +769,7 @@ rxvt_term::key_press (XKeyEvent &ev)
 #ifdef XK_KP_Home
                   case XK_KP_Home:
                     /* allow shift to override */
-                    if ((priv_modes & PrivMode_aplKP) ? !shft : shft)
+                    if (kp)
                       {
                         strcpy (kbuf, "\033Ow");
                         break;
