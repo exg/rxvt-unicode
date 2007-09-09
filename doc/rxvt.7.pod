@@ -462,6 +462,13 @@ has been designed yet).
 Until then, you might get away with switching fonts at runtime (see L<Can
 I switch the fonts at runtime?> later in this document).
 
+=head3 How can I make mplayer display video correctly?
+
+We are working on it, in the meantime, as a workaround, use something like:
+
+   @@URXVT_NAME@@ -b 600 -geometry 20x1 -e sh -c 'mplayer -wid $WINDOWID file...'
+
+
 =head2 Keyboard, Mouse & User Interaction
 
 =head3 The new selection selects pieces that are too big, how can I select single words?
@@ -655,7 +662,6 @@ See some more examples in the documentation for the B<keysym> resource.
 Rather than have rxvt-unicode try to accommodate all the various possible
 keyboard mappings, it is better to use `xmodmap' to remap the keys as
 required for your particular machine.
-
 
 
 =head2 Terminal Configuration
