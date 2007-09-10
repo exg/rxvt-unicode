@@ -2209,9 +2209,9 @@ your system.
 
 General hint: if you get compile errors, then likely your configuration
 hasn't been tested well. Either try with C<--enable-everything> or use
-the default configuration (i.e. C<--enable-xxx> or C<--disable-xxx>). Of
-course, you should always report when a combination doesn't work, so it
-can be fixed. Marc Lehmann <rxvt@schmorp.de>.
+the default configuration (i.e. no C<--enable-xxx> or C<--disable-xxx>
+switches). Of course, you should always report when a combination doesn't
+work, so it can be fixed. Marc Lehmann <rxvt@schmorp.de>.
 
 All
 
