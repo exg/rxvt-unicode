@@ -670,19 +670,20 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
 {
   unsigned long flags = 0;
   rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
+  bool has_shade = (shade > 0 && shade < 100) || (shade > 100 && shade < 200);
 
   if (tint)
     {
       tint->get (c);
 #  define IS_COMPONENT_WHOLESOME(cmp)  ((cmp) <= 0x000700 || (cmp) >= 0x00f700)
-      if (IS_COMPONENT_WHOLESOME (c.r)
+      if (!has_shade && IS_COMPONENT_WHOLESOME (c.r)
           && IS_COMPONENT_WHOLESOME (c.g)
           && IS_COMPONENT_WHOLESOME (c.b))
         flags |= bgPixmap_t::tintWholesome;
 #  undef  IS_COMPONENT_WHOLESOME
     }
 
-  if ((shade > 0 && shade < 100) || (shade > 100 && shade < 200))
+  if (has_shade)
     flags |= bgPixmap_t::tintNeeded;
   else if (tint)
     {
@@ -697,9 +698,12 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
     {
       if (flags & bgPixmap_t::tintWholesome)
         flags |= bgPixmap_t::tintServerSide;
+      else
+        {
 #if XFT
-      flags |= bgPixmap_t::tintServerSide;
+          flags |= bgPixmap_t::tintServerSide;
 #endif
+        }
     }
 
   return flags;
@@ -743,7 +747,7 @@ bgPixmap_t::set_shade (const char *shade_str)
     {
       unsigned long new_flags = compute_tint_shade_flags ((flags & tintSet) ? &tint : NULL, new_shade);
       shade = new_shade;
-      flags = (flags & ~tintFlags) | new_flags;
+      flags = (flags & (~tintFlags | tintSet)) | new_flags;
       return true;
     }
   return false;
@@ -961,30 +965,14 @@ bgPixmap_t::make_transparency_pixmap ()
                       memset (&mask_c, (shade > 100) ? 0xFF : 0x0, sizeof (mask_c));
                       mask_c.alpha = 0xffff;
                       XRenderFillRectangle (dpy, PictOpSrc, overlay_pic, &mask_c, 0, 0, 1, 1);
-                      memset (&mask_c,  0x0, sizeof (mask_c));
-                      mask_c.alpha = 0;
 
-                      if (c.r == c.b && c.b == c.g) /* pure shading */
-                        {
-                          mask_c.red = mask_c.green = mask_c.blue = 0xffff - c.r;
-                          XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
-                          XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
-                        }
-                      else
-                        {
-                          mask_c.red = 0xffff - c.r;
-                          XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
-                          XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
-                          mask_c.red = 0;
-                          mask_c.green = 0xffff - c.g;
-                          XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
-                          XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
-                          mask_c.green = 0;
-                          mask_c.blue = 0xffff - c.b;
-                          XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
-                          XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
-                        }
-                        result |= transpPmapTinted;
+                      mask_c.alpha = 0;
+                      mask_c.red = 0xffff - c.r;
+                      mask_c.green = 0xffff - c.g;
+                      mask_c.blue = 0xffff - c.b;
+                      XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
+                      XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
+                      result |= transpPmapTinted;
                     }
                   XRenderFreePicture (dpy, mask_pic);
                   XRenderFreePicture (dpy, overlay_pic);
@@ -1044,6 +1032,8 @@ bgPixmap_t::render ()
 
   if (target == NULL)
     return false;
+
+  TIMING_TEST_START (tp);
 
   invalidate();
 # ifdef ENABLE_TRANSPARENCY
@@ -1166,6 +1156,8 @@ bgPixmap_t::render ()
     }
 
   apply ();
+
+  TIMING_TEST_PRINT_RESULT (tp);
 
   return true;      
 }
