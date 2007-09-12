@@ -529,7 +529,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
       }
 #endif
 
-#ifdef XPM_BACKGROUND
+#ifdef BG_IMAGE_FROM_FILE
     if (rs[Rs_backgroundPixmap] != NULL)
       {
         const char *p = rs[Rs_backgroundPixmap];
@@ -1040,7 +1040,7 @@ rxvt_term::set_colorfgbg ()
     if (pix_colors[Color_bg] == pix_colors[i])
       {
         sprintf (bstr, "%d", (i - Color_Black));
-#ifdef XPM_BACKGROUND
+#ifdef BG_IMAGE_FROM_FILE
         xpmb = "default;";
 #endif
         break;

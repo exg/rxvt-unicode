@@ -16,7 +16,7 @@
 #endif
   def (name)
   def (title)
-#ifdef XPM_BACKGROUND
+#ifdef BG_IMAGE_FROM_FILE
   def (path)
   def (backgroundPixmap)
 #endif

@@ -188,7 +188,7 @@ optList[] = {
               STRG (Rs_color + Color_pointer_fg, "pointerColor", "pr", "color", "pointer color"),
               STRG (Rs_color + Color_pointer_bg, "pointerColor2", "pr2", "color", "pointer bg color"),
               STRG (Rs_color + Color_border, "borderColor", "bd", "color", "border color"),
-#ifdef XPM_BACKGROUND
+#ifdef BG_IMAGE_FROM_FILE
               RSTRG (Rs_path, "path", "search path"),
               STRG (Rs_backgroundPixmap, "backgroundPixmap", "pixmap", "file[;geom]", "background pixmap"),
 #endif
@@ -319,9 +319,6 @@ static const char optionsstring[] = "options: "
                                     ","
 #if OFF_FOCUS_FADING
                                     "fade,"
-#endif
-#if defined(XPM_BACKGROUND)
-                                    "XPM,"
 #endif
 #if defined(ENABLE_TRANSPARENCY)
                                     "transparent,"

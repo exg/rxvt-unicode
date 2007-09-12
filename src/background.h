@@ -9,9 +9,11 @@
 #  include <afterimage.h>
 #endif
 
-#if defined(XPM_BACKGROUND) || defined(ENABLE_TRANSPARENCY)
+#if defined(BG_IMAGE_FROM_FILE) || defined(ENABLE_TRANSPARENCY)
 # define HAVE_BG_PIXMAP 1/* to simplify further usage */
 struct  bgPixmap_t {
+
+  bgPixmap_t();
 
   enum {
     geometrySet     = (1UL<<0),
@@ -41,7 +43,7 @@ struct  bgPixmap_t {
     transpTransformations = (tintNeeded|blurNeeded)
   }; /* this flags are returned by make_transparency_pixmap if called */
 
-# ifdef  XPM_BACKGROUND
+# ifdef  BG_IMAGE_FROM_FILE
 #  ifdef HAVE_AFTERIMAGE
   ASImage *original_asim;
   bool render_asim (ASImage *background, ARGB32 background_tint);
@@ -62,7 +64,7 @@ struct  bgPixmap_t {
   };
 
   bool set_file (const char *file);
-# endif /* XPM_BACKGROUND */
+# endif /* BG_IMAGE_FROM_FILE */
 
   rxvt_term *target;
   bool set_target (rxvt_term *new_target);

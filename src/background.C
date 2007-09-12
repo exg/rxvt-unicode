@@ -89,10 +89,24 @@
  */
 
 #ifdef HAVE_BG_PIXMAP
+bgPixmap_t::bgPixmap_t()
+{
+#ifdef HAVE_AFTERIMAGE
+  original_asim = NULL;
+#endif
+#ifdef BG_IMAGE_FROM_FILE
+  h_scale = v_scale = 0;
+  h_align = v_align = 0;
+#endif
+  flags = 0;
+  pixmap = None;
+}
+
+
 bool
 bgPixmap_t::window_size_sensitive ()
 {
-# ifdef XPM_BACKGROUND
+# ifdef BG_IMAGE_FROM_FILE
 #  ifdef HAVE_AFTERIMAGE
   if (original_asim != NULL)
 #  endif
@@ -126,7 +140,7 @@ bool bgPixmap_t::need_client_side_rendering ()
   return false;
 }
 
-# ifdef XPM_BACKGROUND
+# ifdef BG_IMAGE_FROM_FILE
 static inline bool
 check_set_scale_value (int geom_flags, int flag, unsigned int &scale, unsigned int new_value)
 {
@@ -604,7 +618,7 @@ bgPixmap_t::set_file (const char *file)
   return false;
 }
 
-# endif	/* XPM_BACKGROUND */
+# endif	/* BG_IMAGE_FROM_FILE */
 
 # ifdef ENABLE_TRANSPARENCY
 bool 

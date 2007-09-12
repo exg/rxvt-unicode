@@ -405,9 +405,9 @@
 /* Define ONLY iff Xlib.h supports it */
 #undef XLIB_ILLEGAL_ACCESS
 
-/* Define if you want to have sexy-looking background pixmaps. Needs libXpm or
+/* Define if you want to have sexy-looking background pixmaps. Needs
    libAfterImage */
-#undef XPM_BACKGROUND
+#undef BG_IMAGE_FROM_FILE
 
 /* Define if you include <X11/xpm.h> on a normal include path (be careful) */
 #undef XPM_INC_X11

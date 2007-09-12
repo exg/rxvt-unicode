@@ -3423,7 +3423,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
         break;
 #endif
 
-#if XPM_BACKGROUND
+#if BG_IMAGE_FROM_FILE
       case Rxvt_Pixmap:
         if (!strcmp (str, "?"))
           {

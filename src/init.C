@@ -201,18 +201,6 @@ rxvt_term::init_vars ()
   refresh_type = SLOW_REFRESH;
 
   oldcursor.row = oldcursor.col = -1;
-#ifdef HAVE_BG_PIXMAP
-#ifdef HAVE_AFTERIMAGE
-  bgPixmap.original_asim = NULL;
-#endif
-  /*  bgPixmap.w = bgPixmap.h = 0; */
-#ifdef XPM_BACKGROUND
-  bgPixmap.h_scale = bgPixmap.v_scale = 0;
-  bgPixmap.h_align = bgPixmap.v_align = 0;
-#endif
-  bgPixmap.flags = 0;
-  bgPixmap.pixmap = None;
-#endif
   last_bot = last_state = -1;
 
   set_option (Opt_scrollBar);

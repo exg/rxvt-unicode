@@ -775,7 +775,7 @@ if test x$support_mouseslipwheel = xyes; then
 fi
 if test x$support_afterimage = xyes; then
   AC_DEFINE(HAVE_AFTERIMAGE, 1, Define if you want to use libAfterImage for image processing)
-  AC_DEFINE(XPM_BACKGROUND, 1, Define if you want to have sexy-looking background pixmaps. Needs libAfterImage)
+  AC_DEFINE(BG_IMAGE_FROM_FILE, 1, Define if you want to have sexy-looking background pixmaps. Needs libAfterImage)
 fi
 
 dnl if test x$support_afterstep = xyes; then

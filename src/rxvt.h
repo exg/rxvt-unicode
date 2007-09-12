@@ -222,7 +222,7 @@ typedef struct _mwmhints {
 
 /* COLORTERM, TERM environment variables */
 #define COLORTERMENV    "rxvt"
-#ifdef XPM_BACKGROUND
+#ifdef BG_IMAGE_FROM_FILE
 # define COLORTERMENVFULL COLORTERMENV "-xpm"
 #else
 # define COLORTERMENVFULL COLORTERMENV

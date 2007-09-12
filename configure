@@ -12731,7 +12731,7 @@ _ACEOF
 
 
 cat >>confdefs.h <<\_ACEOF
-#define XPM_BACKGROUND 1
+#define BG_IMAGE_FROM_FILE 1
 _ACEOF
 
 fi
