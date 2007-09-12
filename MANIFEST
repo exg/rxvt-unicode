@@ -55,6 +55,8 @@ doc/rxvtperl.3.html
 
 src/.cvsignore
 src/Makefile.in
+src/background.C
+src/background.h
 src/callback.h
 src/command.C
 src/command.h
@@ -98,7 +100,6 @@ src/scrollbar-plain.C
 src/scrollbar.C
 src/version.h
 src/xdefaults.C
-src/xpm.C
 
 src/libptytty.h
 src/ptytty_conf.h

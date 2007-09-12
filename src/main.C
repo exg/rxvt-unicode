@@ -1702,4 +1702,63 @@ rxvt_term::IMSetPosition ()
 }
 #endif                          /* USE_XIM */
 
+void
+rxvt_term::get_window_origin (int &x, int &y)
+{
+  Window cr;
+  XTranslateCoordinates (dpy, parent[0], display->root, 0, 0, &x, &y, &cr);
+/*  fprintf( stderr, "origin is %+d%+d\n", x, y);*/
+}
+
+Pixmap
+rxvt_term::get_pixmap_property (int prop_id)
+{
+  if (prop_id > 0 && prop_id < NUM_XA)
+    if (xa[prop_id])
+      {
+        int aformat;
+        unsigned long nitems, bytes_after;
+        Atom atype;
+        unsigned char *prop = NULL;
+        int result = XGetWindowProperty (dpy, display->root, xa[prop_id],
+                                         0L, 1L, False, XA_PIXMAP, &atype, &aformat,
+                                         &nitems, &bytes_after, &prop);
+        if (result == Success && prop && atype == XA_PIXMAP)
+          {
+            return *(Pixmap *)prop;
+          }
+      }
+  return None;
+}
+
+#ifdef HAVE_BG_PIXMAP
+int
+rxvt_term::update_background ()
+{
+  bgPixmap.invalidate();
+
+  /* no chance of real time refresh if we are blurring ! */
+  if (bgPixmap.invalid_since + 0.5 < NOW && !(bgPixmap.flags & bgPixmap_t::blurNeeded))
+    bgPixmap.render();
+  else
+    {
+      update_background_ev.stop ();
+      if (!bgPixmap.need_client_side_rendering())
+        update_background_ev.start (NOW + .05);
+      else if (bgPixmap.flags & bgPixmap_t::blurNeeded)
+        update_background_ev.start (NOW + .2); /* very slow !!! */
+      else
+        update_background_ev.start (NOW + .07);
+    }
+  return 0;
+}
+
+void
+rxvt_term::update_background_cb (time_watcher &w)
+{
+  bgPixmap.render ();
+}
+
+#endif /* HAVE_BG_PIXMAP */
+
 /*----------------------- end-of-file (C source) -----------------------*/

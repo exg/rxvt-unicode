@@ -33,9 +33,9 @@ first_rule: all
 dummy:
 
 COMMON = \
-        command.o rxvtfont.o init.o logging.o main.o misc.o netdisp.o           \
+        background.o command.o rxvtfont.o init.o logging.o main.o misc.o netdisp.o \
 	ptytty.o proxy.o screen.o scrollbar.o scrollbar-next.o scrollbar-rxvt.o \
-	scrollbar-xterm.o scrollbar-plain.o xdefaults.o xpm.o encoding.o        \
+	scrollbar-xterm.o scrollbar-plain.o xdefaults.o encoding.o        \
 	rxvttoolkit.o rxvtutil.o iom.o keyboard.o fdpass.o @PERL_O@
 
 COMMON_DAEMON = rxvtdaemon.o
@@ -232,9 +232,9 @@ xdefaults.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 xdefaults.o: rxvtutil.h rxvtfont.h rxvttoolkit.h iom.h iom_conf.h libptytty.h
 xdefaults.o: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h version.h
 xdefaults.o: keyboard.h
-xpm.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h rxvtutil.h
-xpm.o: rxvtfont.h rxvttoolkit.h iom.h iom_conf.h libptytty.h callback.h
-xpm.o: salloc.h rxvtperl.h hookinc.h rsinc.h
+background.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h rxvtutil.h
+background.o: rxvtfont.h rxvttoolkit.h iom.h iom_conf.h libptytty.h callback.h
+background.o: salloc.h rxvtperl.h hookinc.h rsinc.h background.h
 
 command.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 command.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h iom.h iom_conf.h libptytty.h
