@@ -1037,15 +1037,6 @@ rxvt_term::flush ()
 {
   flush_ev.stop ();
 
-#ifdef ENABLE_TRANSPARENCY
-  if (want_full_refresh)
-    {
-      want_full_refresh = 0;
-      scr_clear ();
-      scr_touch (false);
-    }
-#endif
-
   if (want_refresh)
     {
       if (SHOULD_INVOKE (HOOK_LINE_UPDATE))
@@ -1492,8 +1483,8 @@ rxvt_term::x_cb (XEvent &ev)
               }
             else
               {
-#ifdef ENABLE_TRANSPARENCY
-                if (option (Opt_transparent))
+#ifdef HAVE_BG_PIXMAP
+                if (bgPixmap.window_position_sensitive ())
                   update_background ();
 #endif
               }
@@ -1537,12 +1528,6 @@ rxvt_term::x_cb (XEvent &ev)
 #endif
         HOOK_INVOKE ((this, HOOK_UNMAP_NOTIFY, DT_XEVENT, &ev, DT_END));
         break;
-
-#ifdef ENABLE_TRANSPARENCY
-      case ReparentNotify:
-        rootwin_cb (ev);
-        break;
-#endif				/* ENABLE_TRANSPARENCY */
 
       case GraphicsExpose:
       case Expose:

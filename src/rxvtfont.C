@@ -1333,12 +1333,19 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                 
               if (bg < 0 || dst != 0)
                 {
-                  if (term->bgPixmap.pmap_width >= x + term->window_vt_x+w
-                      && term->bgPixmap.pmap_height >= y + term->window_vt_y+h)
+                  int src_x = x, src_y = y ; 
+                  
+                  if (term->bgPixmap.is_parentOrigin ())
+                    {
+                      src_x += term->window_vt_x;
+                      src_y += term->window_vt_y;
+                    }
+                    
+                  if (term->bgPixmap.pmap_width >= src_x+w
+                      && term->bgPixmap.pmap_height >= src_y+h)
                     {
                       XCopyArea (disp, term->bgPixmap.pixmap, d2, gc,
-                                 x + term->window_vt_x, y + term->window_vt_y,
-                                 w, h, 0, 0);
+                                 src_x, src_y, w, h, 0, 0);
                     }
                   else
                     {
@@ -1346,8 +1353,8 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
                       gcv.fill_style  = FillTiled;
                       gcv.tile        = term->bgPixmap.pixmap;
-                      gcv.ts_x_origin = -x;
-                      gcv.ts_y_origin = -y;
+                      gcv.ts_x_origin = -src_x;
+                      gcv.ts_y_origin = -src_y;
 
                       XChangeGC (disp, gc,
                                  GCTile | GCTileStipXOrigin | GCTileStipYOrigin | GCFillStyle,

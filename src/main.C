@@ -543,7 +543,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
           bgPixmap.set_defaultGeometry ();
 
         if (bgPixmap.set_file (rs[Rs_backgroundPixmap]))
-          if (!option (Opt_transparent))
+          if (!bgPixmap.window_position_sensitive ())
             update_background ();
       }
 #endif
@@ -1148,7 +1148,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
 
 #ifdef HAVE_BG_PIXMAP
       if (bgPixmap.window_size_sensitive ())
-          update_background ();
+        update_background ();
 #endif
 
       scr_clear ();

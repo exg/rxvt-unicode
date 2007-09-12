@@ -96,7 +96,8 @@ bgPixmap_t::window_size_sensitive ()
   if (original_asim != NULL)
 #  endif
     {
-      if (h_scale != 0 || v_scale != 0)
+      if (h_scale != 0 || v_scale != 0
+          || h_align != 0 || v_align != 0)
         return true;
     }
 # endif
@@ -116,7 +117,7 @@ bool bgPixmap_t::need_client_side_rendering ()
 # ifdef ENABLE_TRANSPARENCY
   if (flags & isTransparent)
     {
-      if ((flags & blurNeeded)
+      if (((flags & blurNeeded) && !(flags & blurServerSide))
           || ((flags & tintNeeded) && !(flags & tintServerSide)))
         return true;    
     }
@@ -623,6 +624,7 @@ bgPixmap_t::set_blur_radius (const char *geom)
   unsigned int hr, vr;
   int junk;
   int geom_flags = XParseGeometry (geom, &junk, &junk, &hr, &vr);
+
   if (!(geom_flags&WidthValue))
     hr = 1;
   if (!(geom_flags&HeightValue))
@@ -633,15 +635,18 @@ bgPixmap_t::set_blur_radius (const char *geom)
       ++changed;
       h_blurRadius = hr;
     }
+
   if (v_blurRadius != vr)
     {
       ++changed;
       v_blurRadius = vr;
     }
+    
   if (v_blurRadius == 0 && h_blurRadius == 0)
     flags &= ~blurNeeded;
   else
     flags |= blurNeeded;
+
   return (changed>0);
 }
 
@@ -678,7 +683,6 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
       if (flags & bgPixmap_t::tintWholesome)
         flags |= bgPixmap_t::tintServerSide;
 #if XFT
-      /* TODO: add logic for XRENDER tinting */
       flags |= bgPixmap_t::tintServerSide;
 #endif
     }
@@ -730,7 +734,6 @@ bgPixmap_t::set_shade (const char *shade_str)
   return false;
 }
 
-
 /* make_transparency_pixmap() 
  * Builds a pixmap sized the same as terminal window, with depth same as the root window
  * that pixmap contains tiled portion of the root pixmap that is supposed to be covered by 
@@ -772,8 +775,10 @@ bgPixmap_t::make_transparency_pixmap ()
       unsigned int ujunk;
       /* root pixmap may be bad - allow a error */
       target->allowedxerror = -1;
+
       if (!XGetGeometry (dpy, root_pixmap, &root, &junk, &junk, &root_pmap_width, &root_pmap_height, &ujunk, &ujunk))
         root_pixmap = None;
+
       target->allowedxerror = 0;
     }
 
@@ -807,10 +812,12 @@ bgPixmap_t::make_transparency_pixmap ()
           XGrabServer (dpy);
           XMapRaised (dpy, src);
           XSync (dpy, False);
+
           /* XSync should get window where it's properly exposed,
            * but to be on the safe side - let's check for the actuall event to arrive : */
           while (XCheckWindowEvent (dpy, src, ExposureMask, &event))
             ++ev_count;
+
           if (ev_count > 0);
             { /* hooray! - we can grab the image! */
               gc = XCreateGC (dpy, root, 0, NULL);
@@ -824,6 +831,7 @@ bgPixmap_t::make_transparency_pixmap ()
           XUngrabServer (dpy);
           //fprintf (stderr, "%s:%d: ev_count = %d\n", __FUNCTION__, __LINE__, ev_count);
         }
+
         if (!success)
           {
             XFreePixmap (dpy, tiled_root_pmap);
@@ -836,11 +844,14 @@ bgPixmap_t::make_transparency_pixmap ()
     {/* strightforward pixmap copy */
       gcv.tile = root_pixmap;
       gcv.fill_style = FillTiled;
+
       while (sx < 0) sx += (int)window_width;
       while (sy < 0) sy += (int)window_height;
+
       gcv.ts_x_origin = -sx;
       gcv.ts_y_origin = -sy;
       gc = XCreateGC (dpy, root, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
+
       if (gc)
         {
           XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
@@ -851,117 +862,129 @@ bgPixmap_t::make_transparency_pixmap ()
 
   if (tiled_root_pmap != None)
     {
-      if ((flags & tintNeeded) && !need_client_side_rendering ()) 
+      if (!need_client_side_rendering ()) 
         {
-          if (flags & tintWholesome)
+          if ((flags & tintNeeded)) 
             {
-              /* In this case we can tint image server-side getting significant
-               * performance improvements, as we eliminate XImage transfer
-               */
-              gcv.foreground = Pixel (tint);
-              gcv.function = GXand;
-              gcv.fill_style = FillSolid;
-              if (gc)
-                XChangeGC (dpy, gc, GCFillStyle | GCForeground | GCFunction, &gcv);
-              else
-                gc = XCreateGC (dpy, root, GCFillStyle | GCForeground | GCFunction, &gcv);
-              if (gc)
+              if (flags & tintWholesome)
                 {
-                  XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
-                  result |= transpPmapTinted;
-                }
-            }
-          else
-            {
-#if XFT  /* TODO : implement proper detection of XRENDER, as XFT may be present without XRENDER ! */
-              rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
-              if (flags & tintSet)
-                tint.get (c);
-              if (shade > 0 && shade < 100)
-                {
-                  c.r = (c.r * shade) / 100;
-                  c.g = (c.g * shade) / 100;
-                  c.b = (c.b * shade) / 100;
-                }
-              else if( shade > 100 && shade < 200)
-                {
-                  c.r = (c.r * (200 - shade)) / 100;
-                  c.g = (c.g * (200 - shade)) / 100;
-                  c.b = (c.b * (200 - shade)) / 100;
-                }
-
-              XRenderPictFormat pf;
-              pf.type = PictTypeDirect;
-              pf.depth = 32;
-              pf.direct.redMask = 0xff;
-              pf.direct.greenMask = 0xff;
-              pf.direct.blueMask = 0xff;
-              pf.direct.alphaMask = 0xff;
-          
-              XRenderPictFormat *solid_format = XRenderFindFormat (dpy,
-                                                    					    (PictFormatType|
-					                                                         PictFormatDepth|
-					                                                         PictFormatRedMask|
-					                                                         PictFormatGreenMask|
-					                                                         PictFormatBlueMask|
-					                                                         PictFormatAlphaMask),
-					                                                        &pf,
-					                                                        0);
-              XRenderPictFormat *root_format = XRenderFindVisualFormat (dpy, DefaultVisualOfScreen (ScreenOfDisplay (dpy, target->display->screen)));
-              XRenderPictureAttributes pa ;
-
-              Picture back_pic = XRenderCreatePicture (dpy, tiled_root_pmap, root_format, 0, &pa);
-
-              pa.repeat = True;
-
-              Pixmap overlay_pmap = XCreatePixmap (dpy, root, 1, 1, 32);
-              Picture overlay_pic = XRenderCreatePicture (dpy, overlay_pmap, solid_format, CPRepeat, &pa);
-              XFreePixmap (dpy, overlay_pmap);
-
-              pa.component_alpha = True;              
-              Pixmap mask_pmap = XCreatePixmap (dpy, root, 1, 1, 32);
-              Picture mask_pic = XRenderCreatePicture (dpy, mask_pmap, solid_format, CPRepeat|CPComponentAlpha, &pa);
-              XFreePixmap (dpy, mask_pmap);
-
-              if (mask_pic && overlay_pic && back_pic)
-                {
-                  XRenderColor mask_c;
-
-                  memset (&mask_c, (shade > 100) ? 0xFF : 0x0, sizeof(mask_c));
-                  mask_c.alpha = 0xffff;
-                  XRenderFillRectangle (dpy, PictOpSrc, overlay_pic, &mask_c, 0, 0, 1, 1);
-                  memset (&mask_c,  0x0, sizeof(mask_c));
-                  mask_c.alpha = 0;
-                  if (c.r == c.b && c.b == c.g) /* pure shading */
-                    {
-                      mask_c.red = mask_c.green = mask_c.blue = 0xffff-c.r;
-                      XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
-                      XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
-                    }
+                  /* In this case we can tint image server-side getting significant
+                   * performance improvements, as we eliminate XImage transfer
+                   */
+                  gcv.foreground = Pixel (tint);
+                  gcv.function = GXand;
+                  gcv.fill_style = FillSolid;
+                  if (gc)
+                    XChangeGC (dpy, gc, GCFillStyle | GCForeground | GCFunction, &gcv);
                   else
+                    gc = XCreateGC (dpy, root, GCFillStyle | GCForeground | GCFunction, &gcv);
+                  if (gc)
                     {
-                      mask_c.red = 0xffff-c.r;
-                      XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
-                      XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
-                      mask_c.red = 0;
-                      mask_c.green = 0xffff-c.g;
-                      XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
-                      XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
-                      mask_c.green = 0;
-                      mask_c.blue = 0xffff-c.b;
-                      XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
-                      XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
+                      XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
+                      result |= transpPmapTinted;
                     }
-                    result |= transpPmapTinted;
                 }
-              XRenderFreePicture (dpy, mask_pic);
-              XRenderFreePicture (dpy, overlay_pic);
-              XRenderFreePicture (dpy, back_pic);
-#endif
-            }
-         }
+              else
+                {
+#  if XFT
+                  Picture back_pic = 0;
+                  rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
+
+                  if (flags & tintSet)
+                    tint.get (c);
+
+                  if (shade > 0 && shade < 100)
+                    {
+                      c.r = (c.r * shade) / 100;
+                      c.g = (c.g * shade) / 100;
+                      c.b = (c.b * shade) / 100;
+                    }
+                  else if( shade > 100 && shade < 200)
+                    {
+                      c.r = (c.r * (200 - shade)) / 100;
+                      c.g = (c.g * (200 - shade)) / 100;
+                      c.b = (c.b * (200 - shade)) / 100;
+                    }
+
+                  XRenderPictFormat pf;
+                  pf.type = PictTypeDirect;
+                  pf.depth = 32;
+                  pf.direct.redMask = 0xff;
+                  pf.direct.greenMask = 0xff;
+                  pf.direct.blueMask = 0xff;
+                  pf.direct.alphaMask = 0xff;
+
+                  XRenderPictFormat *solid_format = XRenderFindFormat (dpy,
+                                                    					        (PictFormatType|
+					                                                             PictFormatDepth|
+					                                                             PictFormatRedMask|
+					                                                             PictFormatGreenMask|
+					                                                             PictFormatBlueMask|
+					                                                             PictFormatAlphaMask),
+					                                                            &pf,
+					                                                            0);
+                  XRenderPictFormat *root_format = XRenderFindVisualFormat (dpy, DefaultVisualOfScreen (ScreenOfDisplay (dpy, target->display->screen)));
+                  XRenderPictureAttributes pa ;
+
+                  back_pic = XRenderCreatePicture (dpy, tiled_root_pmap, root_format, 0, &pa);
+
+                  pa.repeat = True;
+
+                  Pixmap overlay_pmap = XCreatePixmap (dpy, root, 1, 1, 32);
+                  Picture overlay_pic = XRenderCreatePicture (dpy, overlay_pmap, solid_format, CPRepeat, &pa);
+                  XFreePixmap (dpy, overlay_pmap);
+
+                  pa.component_alpha = True;              
+                  Pixmap mask_pmap = XCreatePixmap (dpy, root, 1, 1, 32);
+                  Picture mask_pic = XRenderCreatePicture (dpy, mask_pmap, solid_format, CPRepeat|CPComponentAlpha, &pa);
+                  XFreePixmap (dpy, mask_pmap);
+
+                  if (mask_pic && overlay_pic && back_pic)
+                    {
+                      XRenderColor mask_c;
+
+                      memset (&mask_c, (shade > 100) ? 0xFF : 0x0, sizeof (mask_c));
+                      mask_c.alpha = 0xffff;
+                      XRenderFillRectangle (dpy, PictOpSrc, overlay_pic, &mask_c, 0, 0, 1, 1);
+                      memset (&mask_c,  0x0, sizeof (mask_c));
+                      mask_c.alpha = 0;
+
+                      if (c.r == c.b && c.b == c.g) /* pure shading */
+                        {
+                          mask_c.red = mask_c.green = mask_c.blue = 0xffff - c.r;
+                          XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
+                          XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
+                        }
+                      else
+                        {
+                          mask_c.red = 0xffff - c.r;
+                          XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
+                          XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
+                          mask_c.red = 0;
+                          mask_c.green = 0xffff - c.g;
+                          XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
+                          XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
+                          mask_c.green = 0;
+                          mask_c.blue = 0xffff - c.b;
+                          XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
+                          XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
+                        }
+                        result |= transpPmapTinted;
+                    }
+                  XRenderFreePicture (dpy, mask_pic);
+                  XRenderFreePicture (dpy, overlay_pic);
+                  XRenderFreePicture (dpy, back_pic);
+#   if DO_TIMING_TEST
+                  XSync (dpy, False);
+#   endif                  
+#  endif
+                }
+             }
+        } /* server side rendering completed */
+
       if (pixmap)
         XFreePixmap (dpy, pixmap);
+
       pixmap = tiled_root_pmap;
       pmap_width = window_width;
       pmap_height = window_height;
@@ -1081,6 +1104,7 @@ bgPixmap_t::render ()
         }
     }
 # endif /* HAVE_AFTERIMAGE */
+
   if (result != NULL)
     {
       GC gc = XCreateGC (target->dpy, target->vt, 0UL, NULL);
@@ -1151,6 +1175,7 @@ bgPixmap_t::apply()
 {
   if (target)
     {
+      flags &= ~isVtOrigin;
       if (pixmap != None)
         { /* set target's background to pixmap */
 # ifdef ENABLE_TRANSPARENCY
@@ -1166,6 +1191,7 @@ bgPixmap_t::apply()
           else
 # endif
             {
+              flags |= isVtOrigin;
               /* force old pixmap dereference in case it was transparent before :*/
               XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_border]);
               XSetWindowBackgroundPixmap (target->dpy, target->vt, pixmap);
@@ -1186,10 +1212,12 @@ bgPixmap_t::apply()
               XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
 # endif
         }
+
       /* don't want Expose on the parent */
       XClearArea (target->dpy, target->parent[0], 0, 0, 0, 0, False);
-      /* do want Expose on the vt */
-      XClearArea (target->dpy, target->parent[0], 0, 0, 0, 0, True);
+      /* do want Expose on the vt, so we get refreshed properly */
+      XClearArea (target->dpy, target->vt, 0, 0, 0, 0, True);
+
 # if HAVE_SCROLLBARS
       if (target->scrollBar.win)
         {
@@ -1197,13 +1225,6 @@ bgPixmap_t::apply()
           target->scrollbar_show (0);
         }
 # endif
-      /* Is that really neccessary? we did a XClearArea to generate Expose events alreday ! */
-      target->want_refresh = 1;
-# ifdef ENABLE_TRANSPARENCY
-      target->want_full_refresh = 1;
-# endif
-      /* TODO: why do we need a flush here ??? It causes segfault on resize ! */
-//      target->flush ();
     }
 }
 
@@ -1244,6 +1265,7 @@ int
 rxvt_term::update_background ()
 {
   bgPixmap.invalidate();
+
   /* no chance of real time refresh if we are blurring ! */
   if (bgPixmap.invalid_since + 0.5 < NOW && !(bgPixmap.flags & bgPixmap_t::blurNeeded))
     bgPixmap.render();

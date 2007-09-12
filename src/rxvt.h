@@ -181,9 +181,12 @@ struct  bgPixmap_t {
     tintServerSide  = (1UL<<11),
     tintFlags       = (tintSet|tintServerSide|tintNeeded|tintWholesome),
     blurNeeded      = (1UL<<12),
+    blurServerSide  = (1UL<<13), /* this don't work yet */
 
     isTransparent   = (1UL<<16),
-    isInvalid       = (1UL<<17)
+    isInvalid       = (1UL<<17),
+    isVtOrigin      = (1UL<<18)  /* if set pixmap has origin at corner of
+                                    vt window instead of parent[0]! */
   };
 
   unsigned long flags;
@@ -244,6 +247,14 @@ struct  bgPixmap_t {
   unsigned int pmap_depth;
 
   bool window_size_sensitive ();
+  bool window_position_sensitive () {
+    return (flags & isTransparent);
+  };
+
+  bool is_parentOrigin () {
+    return !(flags & isVtOrigin);
+  };
+
   bool need_client_side_rendering ();
   void apply ();
   bool render ();
@@ -961,9 +972,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   struct mbstate  mbstate;              // current input multibyte state
 
   unsigned char   want_refresh:1,
-#ifdef ENABLE_TRANSPARENCY
-                  want_full_refresh:1,	/* awaiting full screen refresh      */
-#endif
                   current_screen:1,	/* primary or secondary              */
                   num_scr_allow:1,
                   bypass_keystate:1,
