@@ -1346,7 +1346,7 @@ rxvt_term::run_child (const char *const *argv)
   sigprocmask (SIG_SETMASK, &ss, 0);
 
   /* command interpreter path */
-  if (argv != NULL)
+  if (argv)
     {
 # ifdef DEBUG_CMD
       int             i;
@@ -1376,7 +1376,7 @@ rxvt_term::run_child (const char *const *argv)
           argv0 = login;
         }
 
-      execlp (shell, argv0, NULL);
+      execlp (shell, argv0, (char *)0);
       /* no error message: STDERR is closed! */
     }
 
