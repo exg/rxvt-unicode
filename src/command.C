@@ -3996,7 +3996,6 @@ void rxvt_term::pty_write ()
         {
           free (v_buffer);
           v_buffer = 0;
-          v_buflen = 0;
 
           pty_ev.set (EVENT_READ);
           return;
