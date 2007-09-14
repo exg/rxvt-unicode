@@ -331,6 +331,6 @@ xdefaults.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 xdefaults.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h iom.h iom_conf.h
 xdefaults.lo: libptytty.h callback.h salloc.h rxvtperl.h hookinc.h rsinc.h
 xdefaults.lo: version.h keyboard.h
-xpm.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h rxvtutil.h
-xpm.lo: rxvtfont.h rxvttoolkit.h iom.h iom_conf.h libptytty.h callback.h
-xpm.lo: salloc.h rxvtperl.h hookinc.h rsinc.h
+background.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h rxvtutil.h
+background.lo: rxvtfont.h rxvttoolkit.h iom.h iom_conf.h libptytty.h callback.h
+background.lo: salloc.h rxvtperl.h hookinc.h rsinc.h background.h
