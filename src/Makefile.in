@@ -33,7 +33,7 @@ first_rule: all
 dummy:
 
 COMMON = \
-        background.o command.o rxvtfont.o init.o logging.o main.o misc.o netdisp.o \
+        background.o command.o rxvtfont.o init.o logging.o main.o misc.o \
 	ptytty.o proxy.o screen.o scrollbar.o scrollbar-next.o scrollbar-rxvt.o \
 	scrollbar-xterm.o scrollbar-plain.o xdefaults.o encoding.o        \
 	rxvttoolkit.o rxvtutil.o iom.o keyboard.o fdpass.o @PERL_O@
@@ -175,9 +175,6 @@ main.o: salloc.h rxvtperl.h hookinc.h rsinc.h keyboard.h
 misc.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h rxvtutil.h
 misc.o: rxvtfont.h rxvttoolkit.h iom.h iom_conf.h libptytty.h callback.h
 misc.o: salloc.h rxvtperl.h hookinc.h rsinc.h
-netdisp.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-netdisp.o: rxvtutil.h rxvtfont.h rxvttoolkit.h iom.h iom_conf.h libptytty.h
-netdisp.o: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h
 proxy.o: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h rxvtlib.h
 proxy.o: optinc.h feature.h encoding.h rxvtutil.h rxvtfont.h rxvttoolkit.h
 proxy.o: iom.h iom_conf.h callback.h salloc.h rxvtperl.h hookinc.h rsinc.h
@@ -273,9 +270,6 @@ main.lo: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h keyboard.h
 misc.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 misc.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h iom.h iom_conf.h libptytty.h
 misc.lo: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h
-netdisp.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-netdisp.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h iom.h iom_conf.h libptytty.h
-netdisp.lo: callback.h salloc.h rxvtperl.h hookinc.h rsinc.h
 proxy.lo: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h rxvtlib.h
 proxy.lo: optinc.h feature.h encoding.h rxvtutil.h rxvtfont.h rxvttoolkit.h
 proxy.lo: iom.h iom_conf.h callback.h salloc.h rxvtperl.h hookinc.h rsinc.h
