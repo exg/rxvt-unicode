@@ -1731,13 +1731,10 @@ rxvt_term::focus_in ()
 #if ENABLE_FRILLS
       if (option (Opt_urgentOnBell))
         {
-          XWMHints *h;
-
-          h = XGetWMHints(dpy, parent[0]);
-          if (h != NULL)
+          if (XWMHints *h = XGetWMHints(dpy, parent[0]))
             {
               h->flags &= ~XUrgencyHint;
-              XSetWMHints(dpy, parent[0], h);
+              XSetWMHints (dpy, parent[0], h);
             }
         }
 #endif
