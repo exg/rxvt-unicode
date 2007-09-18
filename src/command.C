@@ -1036,6 +1036,14 @@ void
 rxvt_term::flush ()
 {
   flush_ev.stop ();
+  
+#ifdef HAVE_BG_PIXMAP  
+  if (bgPixmap.check_clearChanged ())
+    {
+      scr_clear (true);
+      scr_touch (false);
+    }
+#endif
 
   if (want_refresh)
     {
@@ -1468,9 +1476,9 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case ConfigureNotify:
-/*      fprintf (stderr, "ConfigureNotify for %X, parent is %X, geom is %dx%d%+d%+d, old geom was %dx%d\n",
+      /* fprintf (stderr, "ConfigureNotify for %X, parent is %X, geom is %dx%d%+d%+d, old geom was %dx%d\n",
               ev.xconfigure.window, parent[0], ev.xconfigure.width, ev.xconfigure.height, ev.xconfigure.x, ev.xconfigure.y,
-              szHint.width, szHint.height);*/
+              szHint.width, szHint.height); */
         if (ev.xconfigure.window == parent[0])
           {
             while (XCheckTypedWindowEvent (dpy, ev.xconfigure.window, ConfigureNotify, &ev))
@@ -1534,16 +1542,19 @@ rxvt_term::x_cb (XEvent &ev)
         if (ev.xany.window == vt)
           {
             do
-              scr_expose (ev.xexpose.x, ev.xexpose.y,
-                          ev.xexpose.width, ev.xexpose.height, False);
+              {
+                scr_expose (ev.xexpose.x, ev.xexpose.y,
+                            ev.xexpose.width, ev.xexpose.height, False);
+              }
             while (XCheckTypedWindowEvent (dpy, vt, ev.xany.type, &ev));
 
             ev.xany.type = ev.xany.type == Expose ? GraphicsExpose : Expose;
 
             while (XCheckTypedWindowEvent (dpy, vt, ev.xany.type, &ev))
-              scr_expose (ev.xexpose.x, ev.xexpose.y,
-                          ev.xexpose.width, ev.xexpose.height, False);
-
+              {
+                scr_expose (ev.xexpose.x, ev.xexpose.y,
+                            ev.xexpose.width, ev.xexpose.height, False);
+              }
             want_refresh = 1;
           }
         else

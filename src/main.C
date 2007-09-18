@@ -1735,11 +1735,11 @@ rxvt_term::get_pixmap_property (int prop_id)
 int
 rxvt_term::update_background ()
 {
-  bgPixmap.invalidate();
+  bgPixmap.invalidate ();
 
   /* no chance of real time refresh if we are blurring ! */
   if (bgPixmap.invalid_since + 0.5 < NOW && !(bgPixmap.flags & bgPixmap_t::blurNeeded))
-    bgPixmap.render();
+    bgPixmap.render ();
   else
     {
       update_background_ev.stop ();

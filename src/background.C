@@ -1219,11 +1219,9 @@ bgPixmap_t::apply()
               XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
 # endif
         }
-
-      /* don't want Expose on the parent */
-      XClearArea (target->dpy, target->parent[0], 0, 0, 0, 0, False);
-      /* do want Expose on the vt, so we get refreshed properly */
-      XClearArea (target->dpy, target->vt, 0, 0, 0, 0, True);
+      /* don't want Expose on the parent or vt. It is better to use 
+         scr_touch or we get a great deal of flicker otherwise: */
+      XClearWindow (target->dpy, target->parent[0]);
 
 # if HAVE_SCROLLBARS
       if (target->scrollBar.win)
@@ -1232,6 +1230,9 @@ bgPixmap_t::apply()
           target->scrollbar_show (0);
         }
 # endif
+
+      target->want_refresh = 1;
+      flags |= hasChanged;
     }
 }
 

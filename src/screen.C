@@ -2486,11 +2486,11 @@ rxvt_term::scr_recolour () NOTHROW
      scrollbar_show (0);
    }
 # endif
-#endif
-  
   scr_clear ();
   scr_touch (true);
   want_refresh = 1;
+#endif
+  
 }
 
 /* ------------------------------------------------------------------------- */

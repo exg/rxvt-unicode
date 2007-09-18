@@ -30,8 +30,9 @@ struct  bgPixmap_t {
 
     isTransparent   = (1UL<<16),
     isInvalid       = (1UL<<17),
-    isVtOrigin      = (1UL<<18)  /* if set pixmap has origin at corner of
+    isVtOrigin      = (1UL<<18),  /* if set pixmap has origin at corner of
                                     vt window instead of parent[0]! */
+    hasChanged      = (1UL<<19)
   };
 
   unsigned long flags;
@@ -43,6 +44,8 @@ struct  bgPixmap_t {
     transpTransformations = (tintNeeded|blurNeeded)
   }; /* this flags are returned by make_transparency_pixmap if called */
 
+  bool check_clearChanged () { bool r = flags & hasChanged; flags &= ~hasChanged; return r; };
+  
 # ifdef  BG_IMAGE_FROM_FILE
 #  ifdef HAVE_AFTERIMAGE
   ASImage *original_asim;
