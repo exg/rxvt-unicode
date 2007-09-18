@@ -1040,7 +1040,7 @@ rxvt_term::flush ()
 #ifdef HAVE_BG_PIXMAP  
   if (bgPixmap.check_clearChanged ())
     {
-      scr_clear (true);
+//      scr_clear (true); This needs to be researched further!
       scr_touch (false);
     }
 #endif
