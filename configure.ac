@@ -421,7 +421,7 @@ AC_ARG_WITH(terminfo,
 
 dnl# --------------------------------------------------------------------------
 
-AC_PATH_PROG(TIC, tic)
+AC_PATH_PROG(TIC, tic, :)
 
 dnl# need a neat way to detect SVR4 or its features
 dnl# in src/command.c we use these functions:
