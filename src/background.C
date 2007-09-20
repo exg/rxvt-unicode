@@ -864,8 +864,8 @@ bgPixmap_t::make_transparency_pixmap ()
       gcv.tile = root_pixmap;
       gcv.fill_style = FillTiled;
 
-      while (sx < 0) sx += (int)window_width;
-      while (sy < 0) sy += (int)window_height;
+      while (sx < 0) sx += (int)root_width;
+      while (sy < 0) sy += (int)root_height;
 
       gcv.ts_x_origin = -sx;
       gcv.ts_y_origin = -sy;
