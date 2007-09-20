@@ -239,7 +239,22 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color) 
   else if (color >= 0)
     {
 #if XFT
-      XftDrawRect (d, &term->pix_colors[color].c, x, y, w, h);
+      bool done = false;
+#ifdef HAVE_BG_PIXMAP
+      if (term->bgPixmap.pixmap && color >= 0 && term->pix_colors[color].c.color.alpha < 0x0ff00)
+        {
+          Picture dst = XftDrawPicture (d);
+          if (dst != 0)
+            {
+              XClearArea (disp, d, x, y, w, h, false);
+              Picture solid_color_pict = XftDrawSrcPicture (d, &term->pix_colors[color].c);
+              XRenderComposite (disp, PictOpOver, solid_color_pict, None, dst, 0, 0, 0, 0, x, y, w, h);
+              done = true;
+            }
+        }
+#endif        
+      if (!done)
+        XftDrawRect (d, &term->pix_colors[color].c, x, y, w, h);
 #else
       XSetForeground (disp, gc, term->pix_colors[color]);
       XFillRectangle (disp, d, gc, x, y, w, h);
@@ -1318,10 +1333,10 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
   if (buffered)
     {
+      bool back_rendered = false;
       if (ep != enc)
         {
           rxvt_drawable &d2 = d.screen->scratch_drawable (w, h);
-          bool back_rendered = false;
 
 #ifdef HAVE_BG_PIXMAP
           if (term->bgPixmap.pixmap)
