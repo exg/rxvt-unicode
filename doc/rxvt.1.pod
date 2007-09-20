@@ -121,9 +121,8 @@ Turn on/off skip scrolling (allow multiple screens per refresh); resource B<skip
 Turn on/off inheriting parent window's pixmap. Alternative form is
 B<-tr>; resource B<inheritPixmap>.
 
-I<Please note that transparency of any kind if completely unsupported by
-the author. Don't bug him with installation questions! Read the FAQ (man 7
-@@RXVT_NAME@@)!>
+I<Please address all transparency related issues to Sasha Vasko at 
+sasha@aftercode.net. Read the FAQ (man 7 @@RXVT_NAME@@)!>
 
 =item B<-fade> I<number>
 
@@ -709,7 +708,7 @@ other blending type, specified with B<-blt "type"> option.
 
 =item B<path:> I<path>
 
-Specify the colon-delimited search path for finding XPM files.
+Specify the colon-delimited search path for finding background image files.
 
 =item B<font:> I<fontlist>
 
@@ -1477,8 +1476,9 @@ resources or on the command line.
 =item B<COLORTERM>
 
 Either C<rxvt>, C<rxvt-xpm>, depending on whether @@RXVT_NAME@@ was
-compiled with XPM support, and optionally with the added extension
-C<-mono> to indicate that rxvt-unicode runs on a monochrome screen.
+compiled with background image support, and optionally with the added 
+extension C<-mono> to indicate that rxvt-unicode runs on a monochrome 
+screen.
 
 =item B<COLORFGBG>
 
@@ -1487,8 +1487,8 @@ the colour code used as default foreground/text colour (or the string
 C<default> to indicate that the default-colour escape sequence is to be
 used), C<bg> is the colour code used as default background colour (or the
 string C<default>), and C<xpm> is the string C<default> if @@RXVT_NAME@@
-was compiled with XPM support. Libraries like C<ncurses> and C<slang> can
-(and do) use this information to optimize screen output.
+was compiled with background image support. Libraries like C<ncurses> 
+and C<slang> can (and do) use this information to optimize screen output.
 
 =item B<WINDOWID>
 
