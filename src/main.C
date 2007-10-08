@@ -944,10 +944,10 @@ rxvt_term::set_icon_name (const char *str)
 #endif
 }
 
-#ifdef XTERM_COLOR_CHANGE
 void
 rxvt_term::set_window_color (int idx, const char *color)
 {
+#ifdef XTERM_COLOR_CHANGE
   rxvt_color xcol;
   int i;
   
@@ -994,11 +994,8 @@ done:
   update_fade_color (idx);
   recolour_cursor ();
   scr_recolour ();
-}
-
-#else
-# define set_window_color (idx,color)   ((void)0)
 #endif                          /* XTERM_COLOR_CHANGE */
+}
 
 void
 rxvt_term::recolour_cursor ()
