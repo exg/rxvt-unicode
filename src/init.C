@@ -321,7 +321,7 @@ rxvt_term::init_secondary ()
       /* TODO: BOO HISS */
       dup2 (STDERR_FILENO, STDIN_FILENO);
     }
-  else if (i > STDIN_FILENO)
+  else if (i != STDIN_FILENO)
     {
       dup2 (i, STDIN_FILENO);
       close (i);
