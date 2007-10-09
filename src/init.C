@@ -355,15 +355,10 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     if (!strcmp (argv[r_argc], "-e"))
       break;
 
-  r_argv = (const char **)rxvt_malloc (sizeof (char *) * (r_argc + 1));
-
-  for (i = 0; i < r_argc; i++)
-    r_argv[i] = (const char *)argv[i];
-
-  r_argv[i] = NULL;
-
   if (r_argc == argc)
     cmd_argv = NULL;
+  else if (!argv[r_argc + 1])
+    rxvt_fatal ("-e requires an argument\n");
   else
     {
       cmd_argv = (const char **)rxvt_malloc (sizeof (char *) * (argc - r_argc));
@@ -373,6 +368,13 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
       cmd_argv[i] = NULL;
     }
+
+  r_argv = (const char **)rxvt_malloc (sizeof (char *) * (r_argc + 1));
+
+  for (i = 0; i < r_argc; i++)
+    r_argv[i] = (const char *)argv[i];
+
+  r_argv[i] = NULL;
 
   rs[Rs_name] = rxvt_basename (argv[0]);
 
