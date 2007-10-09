@@ -21,6 +21,9 @@ DUMB: support tex fonts
 	- overhaul of the transparency/pixmap code (sasha).
 	- fix possible race betwen visual bell and poweron.
           (reported by Martin von Gagern, gentoo?).
+        - rxvt -e no longer crashes the child.
+        - fixed some minor memleaks on incorrect usage or
+          missing DISPLAY.
 
 8.3  Wed Aug  1 20:21:31 CEST 2007
 	- new option: skipScroll/-ss, enabled by default.
