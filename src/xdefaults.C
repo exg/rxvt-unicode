@@ -549,7 +549,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
 
               if (optList[entry].doff != -1)
                 {
-                  if (flag == resval_on && !argv [i+1])
+                  if (flag == resval_on && i+1 == argc)
                     rxvt_fatal ("option '%s' needs an argument, aborting.\n", argv [i]);
 
                   rs[optList[entry].doff] = flag == resval_on ? argv[++i] : resval_undef;
@@ -567,10 +567,8 @@ rxvt_term::get_options (int argc, const char *const *argv)
 #ifdef KEYSYM_RESOURCE
         if (!strncmp (opt, "keysym.", sizeof ("keysym.") - 1))
           {
-            const char *str = argv[++i];
-
-            if (str != NULL)
-              parse_keysym (opt + sizeof ("keysym.") - 1, str);
+            if (i+1 < argc)
+              parse_keysym (opt + sizeof ("keysym.") - 1, argv[++i]);
           }
         else
 #endif
