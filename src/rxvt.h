@@ -1411,7 +1411,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   // xdefaults.C
   void get_options (int argc, const char *const *argv);
   int parse_keysym (const char *str, const char *arg);
-  void get_xdefaults (FILE *stream, const char *name);
   void extract_resources ();
 };
 
