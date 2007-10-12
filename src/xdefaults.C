@@ -776,8 +776,8 @@ get_res (XrmDatabase database, const char *program, const char *option)
   return result.addr;
 }
 
-static const char *
-x_resource (const char *name)
+const char *
+rxvt_term::x_resource (const char *name)
 {
   XrmDatabase database = XrmGetDatabase (dpy);
 
