@@ -1317,7 +1317,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 #endif
   void scr_touch (bool refresh) NOTHROW;
   void scr_expose (int x, int y, int width, int height, bool refresh) NOTHROW;
-  rxvt_fontset *scr_find_fontset (rend_t r = DEFAULT_RSTYLE);
   void scr_recolour () NOTHROW;
   void scr_remap_chars () NOTHROW;
   void scr_remap_chars (line_t &l) NOTHROW;
