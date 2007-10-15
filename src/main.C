@@ -203,7 +203,8 @@ rxvt_term::rxvt_term ()
 
 // clean up the most important stuff, do *not* call x or free mem etc.
 // for use before an emergency exit
-void rxvt_term::emergency_cleanup ()
+void
+rxvt_term::emergency_cleanup ()
 {
   if (cmd_pid)
     kill (-cmd_pid, SIGHUP);
@@ -903,14 +904,16 @@ rxvt_term::set_fonts ()
   return true;
 }
 
-void rxvt_term::set_string_property (Atom prop, const char *str, int len)
+void
+rxvt_term::set_string_property (Atom prop, const char *str, int len)
 {
   XChangeProperty (dpy, parent[0],
                    prop, XA_STRING, 8, PropModeReplace,
                    (const unsigned char *)str, len >= 0 ? len : strlen (str));
 }
 
-void rxvt_term::set_utf8_property (Atom prop, const char *str, int len)
+void
+rxvt_term::set_utf8_property (Atom prop, const char *str, int len)
 {
   wchar_t *ws = rxvt_mbstowcs (str, len);
   char *s = rxvt_wcstoutf8 (ws);
