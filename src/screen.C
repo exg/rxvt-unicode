@@ -3664,18 +3664,6 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
  *                              MOUSE ROUTINES                               *
  * ------------------------------------------------------------------------- */
 
-/*
- * return col/row values corresponding to x/y pixel values
- */
-void
-rxvt_term::pixel_position (int *x, int *y) NOTHROW
-{
-  *x = Pixel2Col (*x);
-  /* max_it (*x, 0); min_it (*x, (int)ncol - 1); */
-  *y = Pixel2Row (*y);
-  /* max_it (*y, 0); min_it (*y, (int)nrow - 1); */
-}
-
 /* ------------------------------------------------------------------------- */
 #ifdef USE_XIM
 void

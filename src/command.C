@@ -1304,9 +1304,8 @@ rxvt_term::mouse_report (XButtonEvent &ev)
   int button_number, key_state = 0;
   int x, y;
 
-  x = ev.x;
-  y = ev.y;
-  pixel_position (&x, &y);
+  x = Pixel2Col (ev.x);
+  y = Pixel2Row (ev.y);
 
   if (MEvent.button == AnyButton)
     button_number = 3;

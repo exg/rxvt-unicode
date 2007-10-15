@@ -1366,8 +1366,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void selection_extend (int x, int y, int flag) NOTHROW;
   void selection_rotate (int x, int y) NOTHROW;
 
-  void pixel_position (int *x, int *y) NOTHROW;
-
 #if defined(NEXT_SCROLLBAR)
   // scrollbar-next.C
   Pixmap renderPixmap (const char *const *data, int width, int height);
