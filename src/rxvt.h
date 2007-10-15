@@ -1041,9 +1041,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 # endif
 #endif
 
-  // modifies first argument(!)
-  void paste (char *data, unsigned int len) NOTHROW;
-
   long vt_emask, vt_emask_perl, vt_emask_xim;
 
   void vt_select_input () const NOTHROW
@@ -1062,7 +1059,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 #endif
 
   void x_cb (XEvent &xev);
-  void flush ();
   xevent_watcher termwin_ev;
   xevent_watcher vt_ev;
 #ifdef HAVE_SCROLLBARS
@@ -1072,7 +1068,9 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void child_cb (child_watcher &w, int status); child_watcher child_ev;
   void check_cb (check_watcher &w); check_watcher check_ev;
   void destroy_cb (time_watcher &w); time_watcher destroy_ev;
+  void flush ();
   void flush_cb (time_watcher &w); time_watcher flush_ev;
+  bool pty_fill ();
   void pty_cb (io_watcher &w, short revents); io_watcher pty_ev;
   void incr_cb (time_watcher &w) NOTHROW; time_watcher incr_ev;
 
@@ -1106,24 +1104,11 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void tt_write (const char *data, unsigned int len);
   void pty_write ();
 
-  void tt_winch ();
-
-  rxvt_term ();
-  ~rxvt_term ();
-  void destroy ();
-  void emergency_cleanup ();
-
-  bool init (int argc, const char *const *argv, stringvec *envv);
-
   bool init (stringvec *argv, stringvec *envv)
   {
     this->argv = argv;
     return init (argv->size (), argv->begin (), envv);
   }
-  
-  bool init_vars ();
-
-  bool pty_fill ();
 
   void make_current () const // make this the "currently active" urxvt instance
   {
@@ -1131,22 +1116,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
     set_environ (envv);
     rxvt_set_locale (locale);
   }
-
-  void init_secondary ();
-  const char **init_resources (int argc, const char *const *argv);
-  const char *x_resource (const char *name);
-  void init_env ();
-  void set_locale (const char *locale);
-  void init_xlocale ();
-  void init_command (const char *const *argv);
-  void run_command (const char *const *argv);
-  int run_child (const char *const *argv);
-
-  void color_aliases (int idx);
-  void recolour_cursor ();
-  void create_windows (int argc, const char *const *argv);
-  void resize_all_windows (unsigned int newwidth, unsigned int newheight, int ignoreparent);
-  void window_calc (unsigned int newwidth, unsigned int newheight);
 
 #if USE_XIM
   rxvt_xim *input_method;
@@ -1166,8 +1135,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   bool IM_get_IC (const char *modifiers);
   void IMSetPosition ();
 #endif
-
-  void resize_scrollbar ();
 
   // command.C
   void key_press (XKeyEvent &ev);
@@ -1206,9 +1173,29 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void process_sgr_mode (unsigned int nargs, const int *arg);
   void process_graphics ();
   // init.C
+  bool init_vars ();
+  void init_secondary ();
+  const char **init_resources (int argc, const char *const *argv);
+  void init_env ();
+  void set_locale (const char *locale);
+  void init_xlocale ();
+  void init_command (const char *const *argv);
+  void run_command (const char *const *argv);
+  int run_child (const char *const *argv);
+  void color_aliases (int idx);
+  void create_windows (int argc, const char *const *argv);
   void Get_Colours ();
   void get_ourmods ();
   // main.C
+  void tt_winch ();
+  rxvt_term ();
+  ~rxvt_term ();
+  void destroy ();
+  void emergency_cleanup ();
+  bool init (int argc, const char *const *argv, stringvec *envv);
+  void recolour_cursor ();
+  void resize_all_windows (unsigned int newwidth, unsigned int newheight, int ignoreparent);
+  void window_calc (unsigned int newwidth, unsigned int newheight);
   bool set_fonts ();
   void set_string_property (Atom prop, const char *str, int len = -1);
   void set_utf8_property (Atom prop, const char *str, int len = -1);
@@ -1301,6 +1288,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
       priv_modes &= ~bit;
   }
 
+  // modifies first argument(!)
+  void paste (char *data, unsigned int len) NOTHROW;
   void scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs) const NOTHROW;
   void scr_blank_screen_mem (line_t &l, rend_t efs) const NOTHROW;
   int scr_scroll_text (int row1, int row2, int count) NOTHROW;
@@ -1403,6 +1392,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 #endif
 
   // scrollbar.C
+  void resize_scrollbar ();
   int scrollbar_mapping (int map);
   int scrollbar_show (int update);
   void setup_scrollbar (const char *scrollalign, const char *scrollstyle, const char *thickness);
@@ -1410,6 +1400,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   // xdefaults.C
   void get_options (int argc, const char *const *argv);
   int parse_keysym (const char *str, const char *arg);
+  const char *x_resource (const char *name);
   void extract_resources ();
 };
 
