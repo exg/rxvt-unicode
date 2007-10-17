@@ -1,5 +1,9 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Define if you want to have sexy-looking background pixmaps. Needs
+   libAfterImage */
+#undef BG_IMAGE_FROM_FILE
+
 /* clone device filename */
 #undef CLONE_DEVICE
 
@@ -359,9 +363,6 @@
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
 #undef TIME_WITH_SYS_TIME
 
-/* Define if you want your background to be tinted */
-#undef TINTING
-
 /* Define location of ttys/ttytab */
 #undef TTYTAB_FILENAME
 
@@ -404,13 +405,6 @@
 
 /* Define ONLY iff Xlib.h supports it */
 #undef XLIB_ILLEGAL_ACCESS
-
-/* Define if you want to have sexy-looking background pixmaps. Needs
-   libAfterImage */
-#undef BG_IMAGE_FROM_FILE
-
-/* Define if you include <X11/xpm.h> on a normal include path (be careful) */
-#undef XPM_INC_X11
 
 /* Support Xterm style scrollbars */
 #undef XTERM_SCROLLBAR
