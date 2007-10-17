@@ -280,7 +280,7 @@ AC_ARG_ENABLE(plain-scroll,
   fi])
 
 AC_ARG_WITH(codesets,
-  [  --with-codesets=NAME,.. compile in additional codesets (jp,jp_ext,kr,zh,zh_ext,all)],
+  [  --with-codesets=CS,... compile in additional codesets (jp,jp_ext,kr,zh,zh_ext,all)],
   [codesets="$withval"])
 
 AC_ARG_ENABLE(xim,
@@ -315,7 +315,7 @@ AC_ARG_ENABLE(8bitctrls,
 
 RESFALLBACK=Rxvt
 AC_ARG_ENABLE(fallback,
-  [  --enable-fallback(=CLASS) fall back on CLASS resources in addition to URxvt ones (default: Rxvt)],
+  [  --enable-fallback@<:@=CLASS@:>@ fall back on CLASS resources in addition to URxvt ones (default: Rxvt)],
   [
    test x$enableval = xyes && enableval=Rxvt
    test x$enableval = xno  && enableval=
@@ -384,7 +384,7 @@ AC_ARG_ENABLE(mousewheel,
   fi])
 
 AC_ARG_ENABLE(slipwheeling,
-  [  --enable-slipwheeling   enable slip wheel scrolling     (requires previous)],
+  [  --enable-slipwheeling   enable slip wheel scrolling (requires --enable-mousewheel)],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_mouseslipwheel=$enableval
   fi])
