@@ -40,12 +40,17 @@
 #include <csignal>
 #include <cstring>
 
-#ifdef TTY_GID_SUPPORT
-# include <grp.h>
-#endif
-
 #ifdef HAVE_TERMIOS_H
 # include <termios.h>
+#endif
+
+#ifdef HAVE_XSETLOCALE
+# define X_LOCALE
+# include <X11/Xlocale.h>
+#else
+# ifdef HAVE_SETLOCALE
+#  include <clocale>
+# endif
 #endif
 
 vector<rxvt_term *> rxvt_term::termlist;

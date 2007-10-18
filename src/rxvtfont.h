@@ -6,19 +6,6 @@
 # include <X11/Xft/Xft.h>
 #endif
 
-#ifdef HAVE_XSETLOCALE
-# define X_LOCALE
-# include <X11/Xlocale.h>
-#else
-# ifdef HAVE_SETLOCALE
-#  include <clocale>
-# endif
-#endif
-
-#ifdef HAVE_NL_LANGINFO
-# include <langinfo.h>
-#endif
-
 #include <inttypes.h>
 
 #include "feature.h"

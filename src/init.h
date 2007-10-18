@@ -4,19 +4,6 @@
 #undef CERASE /* TODO */
 #define CERASE	'\010'	/* ^H */
 
-#ifdef HAVE_XSETLOCALE
-# define X_LOCALE
-# include <X11/Xlocale.h>
-#else
-# ifdef HAVE_SETLOCALE
-#  include <clocale>
-# endif
-#endif
-
-#ifdef TTY_GID_SUPPORT
-# include <grp.h>
-#endif
-
 /* ways to deal with getting/setting termios structure */
 
 /* termios interface */

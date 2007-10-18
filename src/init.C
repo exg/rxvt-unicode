@@ -43,6 +43,19 @@
 
 #include <csignal>
 
+#ifdef HAVE_XSETLOCALE
+# define X_LOCALE
+# include <X11/Xlocale.h>
+#else
+# ifdef HAVE_SETLOCALE
+#  include <clocale>
+# endif
+#endif
+
+#ifdef HAVE_NL_LANGINFO
+# include <langinfo.h>
+#endif
+
 #ifdef DISPLAY_IS_IP
 /* On Solaris link with -lsocket and -lnsl */
 #include <sys/types.h>
