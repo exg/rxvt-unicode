@@ -86,11 +86,13 @@ rxvtc: rxvtc.o $(COMMON_DAEMON) fdpass.o
 
 #-------------------------------------------------------------------------
 
+#EXUBERANT_OPTS = -I NOTHROW
+
 tags: *.[Ch]
-	ctags *.[Ch]
+	ctags $(EXUBERANT_OPTS) *.[Ch]
 
 TAGS: *.[Ch]
-	etags *.[Ch]
+	etags $(EXUBERANT_OPTS) *.[Ch]
 
 allbin: rxvt rxvtd rxvtc
 
