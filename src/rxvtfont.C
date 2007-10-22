@@ -1060,7 +1060,7 @@ struct rxvt_font_xft : rxvt_font {
              const text_t *text, int len,
              int fg, int bg);
 
-  bool has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &carefull) const;
+  bool has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &careful) const;
 
 protected:
   XftFont *f;
