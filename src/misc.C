@@ -81,7 +81,7 @@ rxvt_wcstoutf8 (const wchar_t *str, int len)
         *p++ = 0xc0 | ( w >>  6),
         *p++ = 0x80 | ( w        & 0x3f);
       else if (w < 0x010000)
-        *p++ = 0xe0 | ( w >> 12       ),
+        *p++ = 0xe0 | ( w >> 12),
         *p++ = 0x80 | ((w >>  6) & 0x3f),
         *p++ = 0x80 | ( w        & 0x3f);
       else if (w < 0x110000)
