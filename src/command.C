@@ -1303,9 +1303,17 @@ rxvt_term::mouse_report (XButtonEvent &ev)
 {
   int button_number, key_state = 0;
   int x, y;
+  int code = 32;
 
   x = Pixel2Col (ev.x);
   y = Pixel2Row (ev.y);
+  if (ev.type == MotionNotify) {
+    if (x == mouse_row && y == mouse_col)
+      return;
+    mouse_row = x;
+    mouse_col = y;
+    code += 32;
+  }
 
   if (MEvent.button == AnyButton)
     button_number = 3;
@@ -1361,7 +1369,7 @@ rxvt_term::mouse_report (XButtonEvent &ev)
 #endif
 
   tt_printf ("\033[M%c%c%c",
-            (32 + button_number + key_state),
+            (code + button_number + key_state),
             (32 + x + 1),
             (32 + y + 1));
 }
@@ -1578,6 +1586,9 @@ rxvt_term::x_cb (XEvent &ev)
         if (hidden_pointer)
           pointer_unblank ();
 #endif
+        if ((priv_modes & PrivMode_MouseBtnEvent && ev.xbutton.state & (Button1Mask|Button2Mask|Button3Mask))
+            || priv_modes & PrivMode_MouseAnyEvent)
+          mouse_report (ev.xbutton);
         if ((priv_modes & PrivMode_mouse_report) && !bypass_keystate)
           break;
 
@@ -2850,10 +2861,10 @@ rxvt_term::process_csi_seq ()
                 // 'U' for rxvt-unicode != 7.[34] (where it was broken).
                 //
                 // second parameter is xterm patch level for xterm, MMmmpp (e.g. 20703) for rxvt
-                // and Mm (e.g. 72 for 7.2) for urxvt <= 7.2, and 94 for later versions, to signify
-                // that we do not support xterm mouse reporting (should be 95 when we do).
+                // and Mm (e.g. 72 for 7.2) for urxvt <= 7.2, 94 for urxvt <= 8.3, and 95 for later
+                // versions.
                 //
-                tt_printf ("\033[>%d;94;0c", 'U');
+                tt_printf ("\033[>%d;95;0c", 'U');
               }
             break;
           case '?':
@@ -3628,8 +3639,8 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
 #endif
                   { 1000, PrivMode_MouseX11 },
                  // 1001 Use Hilite Mouse Tracking. NYI, TODO
-                 // 1002 Use Cell Motion Mouse Tracking. NYI, TODO
-                 // 1003 Use All Motion Mouse Tracking. NYI, TODO
+                  { 1002, PrivMode_MouseBtnEvent },
+                  { 1003, PrivMode_MouseAnyEvent },
                   { 1010, PrivMode_TtyOutputInh }, // rxvt extension
                   { 1011, PrivMode_Keypress }, // rxvt extension
                  // 1035 enable modifiers for alt, numlock NYI
@@ -3713,7 +3724,7 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
             /* case 8:	- auto repeat, can't do on a per window basis */
             case 9:			/* X10 mouse reporting */
               if (state)		/* orthogonal */
-                priv_modes &= ~PrivMode_MouseX11;
+                priv_modes &= ~(PrivMode_MouseX11|PrivMode_MouseBtnEvent|PrivMode_MouseAnyEvent);
               break;
 #ifdef scrollBar_esc
             case scrollBar_esc:
@@ -3736,12 +3747,22 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
             /* case 67:	- backspace key */
             case 1000:		/* X11 mouse reporting */
               if (state)		/* orthogonal */
-                priv_modes &= ~PrivMode_MouseX10;
+                priv_modes &= ~(PrivMode_MouseX10|PrivMode_MouseBtnEvent|PrivMode_MouseAnyEvent);
               break;
 #if 0
             case 1001:
               break;		/* X11 mouse highlighting */
 #endif
+            case 1002:
+            case 1003:
+              if (state) {
+                priv_modes &= ~(PrivMode_MouseX10|PrivMode_MouseX11);
+                priv_modes &= arg[i] == 1003 ? ~PrivMode_MouseBtnEvent : ~PrivMode_MouseAnyEvent;
+                vt_emask_mouse = PointerMotionMask;
+              } else
+                vt_emask_mouse = NoEventMask;
+              vt_select_input ();
+              break;
             case 1010:		/* scroll to bottom on TTY output inhibit */
               set_option (Opt_scrollTtyOutput, !state);
               break;

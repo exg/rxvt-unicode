@@ -1906,6 +1906,24 @@ X<Priv66>
 
 =end table
 
+=item B<< C<Pm = 1002> >> (X11 XTerm)
+
+=begin table
+
+	B<< C<h> >>	Send Mouse X & Y on button press and release, and motion with a button pressed.
+	B<< C<l> >>	No mouse reporting.
+
+=end table
+
+=item B<< C<Pm = 1003> >> (X11 XTerm)
+
+=begin table
+
+	B<< C<h> >>	Send Mouse X & Y on button press and release, and motion.
+	B<< C<l> >>	No mouse reporting.
+
+=end table
+
 =item B<< C<Pm = 1010> >> (B<rxvt>)
 
 =begin table

@@ -600,10 +600,12 @@ enum {
 #define PrivMode_smoothScroll   (1UL<<17)
 #define PrivMode_vt52           (1UL<<18)
 #define PrivMode_LFNL		(1UL<<19)
+#define PrivMode_MouseBtnEvent  (1UL<<20)
+#define PrivMode_MouseAnyEvent  (1UL<<21)
 /* too annoying to implement X11 highlight tracking */
 /* #define PrivMode_MouseX11Track       (1LU<<20) */
 
-#define PrivMode_mouse_report   (PrivMode_MouseX10|PrivMode_MouseX11)
+#define PrivMode_mouse_report   (PrivMode_MouseX10|PrivMode_MouseX11|PrivMode_MouseBtnEvent|PrivMode_MouseAnyEvent)
 
 #ifdef ALLOW_132_MODE
 # define PrivMode_Default (PrivMode_Autowrap|PrivMode_ShiftKeys|PrivMode_VisibleCursor|PrivMode_132OK)
@@ -926,6 +928,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
                   window_vt_x,
                   window_vt_y,
                   window_sb_x,
+                  mouse_row,
+                  mouse_col,
 # ifdef POINTER_BLANK
                   pointerBlankDelay,
 # endif
@@ -1041,11 +1045,11 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 # endif
 #endif
 
-  long vt_emask, vt_emask_perl, vt_emask_xim;
+  long vt_emask, vt_emask_perl, vt_emask_xim, vt_emask_mouse;
 
   void vt_select_input () const NOTHROW
   {
-    XSelectInput (dpy, vt, vt_emask | vt_emask_perl | vt_emask_xim);
+    XSelectInput (dpy, vt, vt_emask | vt_emask_perl | vt_emask_xim | vt_emask_mouse);
   }
 
 #if ENABLE_TRANSPARENCY || ENABLE_PERL

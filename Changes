@@ -24,6 +24,7 @@ DUMB: support tex fonts
         - rxvt -e no longer crashes the child.
         - fixed some minor memleaks on incorrect usage or
           missing DISPLAY.
+        - implement xterm 1002/1003 mouse tracking modes (exg).
 
 8.3  Wed Aug  1 20:21:31 CEST 2007
 	- new option: skipScroll/-ss, enabled by default.
