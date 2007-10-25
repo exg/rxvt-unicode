@@ -51,15 +51,6 @@
 #define TV_FRAC tv_usec
 #define TV_MULT 1000000L
 
-#ifndef IOM_LIBEVENT
-#if IOM_IO
-static io_manager_vec<io_watcher>    iow;
-#endif
-#if IOM_TIME
-static io_manager_vec<time_watcher>  tw;
-#endif
-#endif
-
 #if IOM_CHECK
 static io_manager_vec<check_watcher> cw;
 #endif
@@ -83,6 +74,36 @@ static vector<sig_vec *> sw;
 static io_manager_vec<child_watcher>  pw;
 #endif
 
+#ifdef IOM_LIBEVENT
+static bool need_set_now; // need to set_now in callback
+#else
+  #if IOM_IO
+  static io_manager_vec<io_watcher>    iow;
+  #endif
+  #if IOM_TIME
+  static io_manager_vec<time_watcher>  tw;
+  #endif
+#endif
+
+#if IOM_TIME
+tstamp io_manager::now ()
+{
+  struct timeval tv;
+
+  gettimeofday (&tv, 0);
+  return (tstamp)tv.tv_sec + (tstamp)tv.tv_usec / 1000000.;
+}
+
+void io_manager::set_now ()
+{
+  NOW = now ();
+  #ifdef IOM_LIBEVENT
+  need_set_now = false;
+  #endif
+}
+#endif
+
+#ifndef IOM_LIBEVENT
 // this is a dummy time watcher to ensure that the first
 // time watcher is _always_ valid, this gets rid of a lot
 // of null-pointer-checks
@@ -101,6 +122,7 @@ static struct tw0 : time_watcher
   : time_watcher (this, &tw0::cb)
   { }
 } tw0;
+#endif
 
 tstamp NOW;
 
@@ -135,61 +157,49 @@ static struct sw0 : sig_watcher
 } sw0;
 #endif
 
-#if IOM_TIME
-tstamp io_manager::now ()
-{
-  struct timeval tv;
-
-  gettimeofday (&tv, 0);
-  return (tstamp)tv.tv_sec + (tstamp)tv.tv_usec / 1000000.;
-}
-
-void io_manager::set_now ()
-{
-  NOW = now ();
-}
-#endif
-
 static bool iom_valid;
 
 // used for initialisation only
 static struct init {
   init ()
   {
-#ifdef IOM_PREINIT
-    { IOM_PREINIT }
-#endif
-#ifdef IOM_LIBEVENT
-    event_init ();
-#endif
+    #ifdef IOM_PREINIT
+      { IOM_PREINIT }
+    #endif
+
+    #ifdef IOM_LIBEVENT
+      event_init ();
+    #endif
     iom_valid = true;
 
-#if IOM_SIG
-    sigemptyset (&sigs);
+    #if IOM_SIG
+      sigemptyset (&sigs);
 
-    if (pipe (sigpipe))
-      {
-        perror ("io_manager: unable to create signal pipe, aborting.");
-        abort ();
-      }
+      if (pipe (sigpipe))
+        {
+          perror ("io_manager: unable to create signal pipe, aborting.");
+          abort ();
+        }
 
-    fcntl (sigpipe[0], F_SETFL, O_NONBLOCK); fcntl (sigpipe[0], F_SETFD, FD_CLOEXEC);
-    fcntl (sigpipe[1], F_SETFL, O_NONBLOCK); fcntl (sigpipe[1], F_SETFD, FD_CLOEXEC);
-#endif
+      fcntl (sigpipe[0], F_SETFL, O_NONBLOCK); fcntl (sigpipe[0], F_SETFD, FD_CLOEXEC);
+      fcntl (sigpipe[1], F_SETFL, O_NONBLOCK); fcntl (sigpipe[1], F_SETFD, FD_CLOEXEC);
+    #endif
 
-#if IOM_CHILD
-    sw0.start (SIGCHLD);
-#endif
+    #if IOM_CHILD
+      sw0.start (SIGCHLD);
+    #endif
 
-#if IOM_TIME
-    io_manager::set_now ();
+    #if IOM_TIME
+      io_manager::set_now ();
 
-    tw0.start (TSTAMP_MAX);
-#endif
+      #ifndef IOM_LIBEVENT
+        tw0.start (TSTAMP_MAX);
+      #endif
+    #endif
 
-#ifdef IOM_POSTINIT
-    { IOM_POSTINIT }
-#endif
+    #ifdef IOM_POSTINIT
+      { IOM_POSTINIT }
+    #endif
   }
 
   ~init ()
@@ -237,35 +247,57 @@ void io_manager::unreg (watcher &w, io_manager_vec<watcher> &queue)
 }
 
 #if IOM_TIME
-# ifdef IOM_LIBEVENT
-  void iom_time_c_callback (int fd, short events, void *data)
-  {
-    time_watcher *w = static_cast<time_watcher *>(data);
-    w->call (*w);
-  }
-# else
-  void io_manager::reg   (time_watcher &w)  { io_manager::reg   (w, tw); }
-  void io_manager::unreg (time_watcher &w)  { io_manager::unreg (w, tw); }
-# endif
+  #ifdef IOM_LIBEVENT
+    void iom_time_c_callback (int fd, short events, void *data)
+    {
+      if (need_set_now) io_manager::set_now ();
+      time_watcher *w = static_cast<time_watcher *>(data);
+      w->call (*w);
+    }
 
-void time_watcher::trigger ()
-{
-  call (*this);
-  start ();
-}
+    void time_watcher::start ()
+    {
+      stop ();
+      evtimer_set (&ev, iom_time_c_callback, (void *)this);
+      struct timeval tv;
+      tv.tv_sec  = (long)at;
+      tv.tv_usec = (long)((at - (tstamp)tv.tv_sec) * 1000000.);
+      evtimer_add (&ev, &tv);
+      active = 1;
+    }
+  #else
+    void io_manager::reg   (time_watcher &w)  { io_manager::reg   (w, tw); }
+    void io_manager::unreg (time_watcher &w)  { io_manager::unreg (w, tw); }
+  #endif
+
+  void time_watcher::trigger ()
+  {
+    call (*this);
+    start ();
+  }
 #endif
 
 #if IOM_IO
-# ifdef IOM_LIBEVENT
-  void iom_io_c_callback (int fd, short events, void *data)
-  {
-    io_watcher *w = static_cast<io_watcher *>(data);
-    w->call (*w, events);
-  }
-# else
-  void io_manager::reg   (io_watcher &w)    { io_manager::reg   (w, iow); }
-  void io_manager::unreg (io_watcher &w)    { io_manager::unreg (w, iow); }
-# endif
+  #ifdef IOM_LIBEVENT
+    void iom_io_c_callback (int fd, short events, void *data)
+    {
+      if (need_set_now) io_manager::set_now ();
+      io_watcher *w = static_cast<io_watcher *>(data);
+      w->call (*w, events);
+    }
+
+    void io_watcher::set (int fd_, short events_)
+    {
+      if (active) event_del (&ev);
+      fd = fd_;
+      events = events_;
+      event_set (&ev, fd_, events_ | EV_PERSIST, iom_io_c_callback, (void *)this);
+      if (active) event_add (&ev, 0);
+    }
+  #else
+    void io_manager::reg   (io_watcher &w)    { io_manager::reg   (w, iow); }
+    void io_manager::unreg (io_watcher &w)    { io_manager::unreg (w, iow); }
+  #endif
 #endif
 
 #if IOM_CHECK
@@ -408,8 +440,8 @@ void io_manager::loop ()
         }
       else
 #endif
-#ifndef IOM_LIBEVENT
         {
+          #ifndef IOM_LIBEVENT
           #if IOM_TIME
             // find earliest active watcher
             time_watcher *next = tw[0]; // the first time-watcher must exist at ALL times
@@ -426,135 +458,134 @@ void io_manager::loop ()
                 to = &tval;
               }
           #endif
-        }
-
-#if IOM_IO || IOM_SIG
-      fd_set rfd, wfd;
-
-      FD_ZERO (&rfd);
-      FD_ZERO (&wfd);
-
-      int fds = 0;
-
-      #if IOM_IO
-        for (io_manager_vec<io_watcher>::const_iterator i = iow.end (); i-- > iow.begin (); )
-          if (*i)
-            {
-              if ((*i)->events & EVENT_READ ) FD_SET ((*i)->fd, &rfd);
-              if ((*i)->events & EVENT_WRITE) FD_SET ((*i)->fd, &wfd);
-
-              if ((*i)->fd >= fds) fds = (*i)->fd + 1;
-            }
-      #endif
-
-      if (!to && !fds) //TODO: also check idle_watchers and check_watchers?
-        break; // no events
-
-      #if IOM_SIG
-        FD_SET (sigpipe[0], &rfd);
-        if (sigpipe[0] >= fds) fds = sigpipe[0] + 1;
-      #endif
-
-      #if IOM_SIG
-        // there is no race, as we use a pipe for signals, so select
-        // will return if a signal is caught.
-        sigprocmask (SIG_UNBLOCK, &sigs, NULL);
-      #endif
-      fds = select (fds, &rfd, &wfd, NULL, to);
-      #if IOM_SIG
-        sigprocmask (SIG_BLOCK, &sigs, NULL);
-      #endif
-
-#else
-      if (to)
-        event_loop (EVLOOP_NONBLOCK);
-      else
-        event_loop (EVLOOP_ONCE);
-#endif
-
-      #if IOM_TIME
-        {
-          // update time, try to compensate for gross non-monotonic time changes
-          tstamp diff = NOW;
-          set_now ();
-          diff = NOW - diff;
-
-          if (diff < 0)
-            for (io_manager_vec<time_watcher>::const_iterator i = tw.end (); i-- > tw.begin (); )
-              if (*i)
-                (*i)->at += diff;
-        }
-      #endif
-
-#ifndef IOM_LIBEVENT
-      if (fds > 0)
-        {
-          #if IOM_SIG
-            if (FD_ISSET (sigpipe[0], &rfd))
-              {
-                char ch;
-
-                while (read (sigpipe[0], &ch, 1) > 0)
-                  ;
-
-                for (vector<sig_vec *>::iterator svp = sw.end (); svp-- > sw.begin (); )
-                  if (*svp && (*svp)->pending)
-                    {
-                      sig_vec &sv = **svp;
-                      for (int i = sv.size (); i--; )
-                        if (!sv[i])
-                          sv.erase_unordered (i);
-                        else
-                          sv[i]->call (*sv[i]);
-
-                      sv.pending = false;
-                    }
-              }
           #endif
+        }
+
+      #ifndef IOM_LIBEVENT
+        #if IOM_IO || IOM_SIG
+          fd_set rfd, wfd;
+
+          FD_ZERO (&rfd);
+          FD_ZERO (&wfd);
+
+          int fds = 0;
 
           #if IOM_IO
-            for (int i = iow.size (); i--; )
-              if (!iow[i])
-                iow.erase_unordered (i);
-              else
+            for (io_manager_vec<io_watcher>::const_iterator i = iow.end (); i-- > iow.begin (); )
+              if (*i)
                 {
-                  io_watcher &w = *iow[i];
-                  short revents = w.events;
+                  if ((*i)->events & EVENT_READ ) FD_SET ((*i)->fd, &rfd);
+                  if ((*i)->events & EVENT_WRITE) FD_SET ((*i)->fd, &wfd);
 
-                  if (!FD_ISSET (w.fd, &rfd)) revents &= ~EVENT_READ;
-                  if (!FD_ISSET (w.fd, &wfd)) revents &= ~EVENT_WRITE;
-
-                  if (revents)
-                    w.call (w, revents);
+                  if ((*i)->fd >= fds) fds = (*i)->fd + 1;
                 }
           #endif
-        }
-      else if (fds < 0 && errno != EINTR)
-        {
-          perror ("io_manager: fatal error while waiting for I/O or time event, aborting.");
-          abort ();
-        }
-#else
-      if (0)
-        ;
-#endif
+
+          if (!to && !fds) //TODO: also check idle_watchers and check_watchers?
+            break; // no events
+
+          #if IOM_SIG
+            FD_SET (sigpipe[0], &rfd);
+            if (sigpipe[0] >= fds) fds = sigpipe[0] + 1;
+          #endif
+
+          #if IOM_SIG
+            // there is no race, as we use a pipe for signals, so select
+            // will return if a signal is caught.
+            sigprocmask (SIG_UNBLOCK, &sigs, NULL);
+          #endif
+          fds = select (fds, &rfd, &wfd, NULL, to);
+          #if IOM_SIG
+            sigprocmask (SIG_BLOCK, &sigs, NULL);
+          #endif
+        #elif IOM_TIME
+          if (!to)
+            break;
+
+          select (0, 0, 0, 0, to);
+        #endif
+
+        #if IOM_TIME
+          {
+            // update time, try to compensate for gross non-monotonic time changes
+            tstamp diff = NOW;
+            set_now ();
+            diff = NOW - diff;
+
+            if (diff < 0)
+              for (io_manager_vec<time_watcher>::const_iterator i = tw.end (); i-- > tw.begin (); )
+                if (*i)
+                  (*i)->at += diff;
+          }
+        #endif
+
+        if (fds > 0)
+          {
+            #if IOM_SIG
+              if (FD_ISSET (sigpipe[0], &rfd))
+                {
+                  char ch;
+
+                  while (read (sigpipe[0], &ch, 1) > 0)
+                    ;
+
+                  for (vector<sig_vec *>::iterator svp = sw.end (); svp-- > sw.begin (); )
+                    if (*svp && (*svp)->pending)
+                      {
+                        sig_vec &sv = **svp;
+                        for (int i = sv.size (); i--; )
+                          if (!sv[i])
+                            sv.erase_unordered (i);
+                          else
+                            sv[i]->call (*sv[i]);
+
+                        sv.pending = false;
+                      }
+                }
+            #endif
+
+            #if IOM_IO
+              for (int i = iow.size (); i--; )
+                if (!iow[i])
+                  iow.erase_unordered (i);
+                else
+                  {
+                    io_watcher &w = *iow[i];
+                    short revents = w.events;
+
+                    if (!FD_ISSET (w.fd, &rfd)) revents &= ~EVENT_READ;
+                    if (!FD_ISSET (w.fd, &wfd)) revents &= ~EVENT_WRITE;
+
+                    if (revents)
+                      w.call (w, revents);
+                  }
+            #endif
+          }
+        else if (fds < 0 && errno != EINTR)
+          {
+            perror ("io_manager: fatal error while waiting for I/O or time event, aborting.");
+            abort ();
+          }
 #if IOM_IDLE
-      else
-        for (int i = iw.size (); i--; )
-          if (!iw[i])
-            iw.erase_unordered (i);
-          else
-            iw[i]->call (*iw[i]);
+        else
+          for (int i = iw.size (); i--; )
+            if (!iw[i])
+              iw.erase_unordered (i);
+            else
+              iw[i]->call (*iw[i]);
 #endif
 
-#elif IOM_TIME
-      if (!to)
-        break;
+      #else
+        need_set_now = true;
 
-      select (0, 0, 0, 0, to);
-      set_now ();
-      break;
-#endif
+        if (to)
+          event_loop (EVLOOP_NONBLOCK);
+        else
+          event_loop (EVLOOP_ONCE);
+
+        if (need_set_now) set_now ();
+      #endif
+        //TODO: IOM_IDLE
     }
 }
 

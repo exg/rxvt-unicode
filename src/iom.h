@@ -47,6 +47,11 @@ extern tstamp NOW;
 # include IOM_LIBEVENT
 # undef IOM_IO
 # define IOM_IO 1
+# undef IOM_TIME
+# define IOM_TIME 1
+# undef IOM_IDLE // NYI
+# undef IOM_SIG // NYI
+# undef IOM_CHILD // NYI
 #endif
 
 struct watcher;
@@ -141,11 +146,11 @@ void iom_io_c_callback (int fd, short events, void *data);
 struct io_watcher : watcher, callback<void (io_watcher &, short)> {
   struct event ev;
   int fd;
+  short events;
 
-  void set (int fd_, short events_) { fd = fd_; event_set (&ev, fd_, events_, iom_io_c_callback, (void *)this); }
-
+  void set (int fd_, short events_);
   void set (short events_) { set (fd, events_); }
-  void start () { event_add (&ev, 0); active = 1; }
+  void start () { if (!active) event_add (&ev, 0); active = 1; }
   void start (int fd_, short events_) { set (fd_, events_); start (); }
   void stop () { if (active) event_del (&ev); active = 0; }
 
@@ -188,25 +193,21 @@ struct time_watcher : watcher, callback<void (time_watcher &)> {
 
   void trigger ();
 
-  void set (tstamp when) { at = when; }
-  void operator () () { trigger (); }
-  void start ()
+  void set (tstamp when)
   {
-    struct timeval tv;
-    tv.tv_sec  = (long)at;
-    tv.tv_usec = (long)((at - (tstamp)tv.tv_sec) * 1000000.);
-    evtimer_add (&ev, &tv);
-    active = 1;
+    at = when;
+    if (active)
+      start ();
   }
-  void start (tstamp when) { set (when); start (); }
+  void operator () () { trigger (); }
+  void start ();
+  void start (tstamp when) { at = when; start (); }
   void stop () { if (active) evtimer_del (&ev); active = 0; }
 
   template<class O, class M>
   time_watcher (O object, M method)
   : callback<void (time_watcher &)> (object, method), at (0)
-  {
-    evtimer_set (&ev, iom_time_c_callback, (void *)this);
-  }
+  { }
   ~time_watcher () { stop (); }
 };
 #else
