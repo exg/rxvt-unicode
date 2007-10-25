@@ -25,6 +25,7 @@ DUMB: support tex fonts
         - fixed some minor memleaks on incorrect usage or
           missing DISPLAY.
         - implement xterm 1002/1003 mouse tracking modes (exg).
+        - updated io_manager.
 
 8.3  Wed Aug  1 20:21:31 CEST 2007
 	- new option: skipScroll/-ss, enabled by default.

@@ -41,6 +41,14 @@ extern tstamp NOW;
 // TSTAMP_MAX must still fit into a positive struct timeval
 #define TSTAMP_MAX (double)(1UL<<31)
 
+//#define IOM_LIBEVENT "event.h" *NOT* a supported feature
+#ifdef IOM_LIBEVENT
+# include <sys/time.h>
+# include IOM_LIBEVENT
+# undef IOM_IO
+# define IOM_IO 1
+#endif
+
 struct watcher;
 #if IOM_IO
 struct io_watcher;
@@ -92,20 +100,22 @@ public:
 #endif
 
   // register a watcher
+#ifndef IOM_LIBEVENT
 #if IOM_IO
   static void reg (io_watcher    &w); static void unreg (io_watcher    &w);
 #endif
 #if IOM_TIME
   static void reg (time_watcher  &w); static void unreg (time_watcher  &w);
 #endif
+#if IOM_SIG
+  static void reg (sig_watcher   &w); static void unreg (sig_watcher   &w);
+#endif
 #if IOM_CHECK
   static void reg (check_watcher &w); static void unreg (check_watcher &w);
 #endif
+#endif
 #if IOM_IDLE
   static void reg (idle_watcher  &w); static void unreg (idle_watcher  &w);
-#endif
-#if IOM_SIG
-  static void reg (sig_watcher   &w); static void unreg (sig_watcher   &w);
 #endif
 #if IOM_CHILD
   static void reg (child_watcher &w); static void unreg (child_watcher &w);
@@ -123,6 +133,29 @@ struct watcher {
 };
 
 #if IOM_IO
+#ifdef IOM_LIBEVENT
+enum { EVENT_UNDEF = -1, EVENT_NONE = 0, EVENT_READ = EV_READ, EVENT_WRITE = EV_WRITE };
+
+void iom_io_c_callback (int fd, short events, void *data);
+
+struct io_watcher : watcher, callback<void (io_watcher &, short)> {
+  struct event ev;
+  int fd;
+
+  void set (int fd_, short events_) { fd = fd_; event_set (&ev, fd_, events_, iom_io_c_callback, (void *)this); }
+
+  void set (short events_) { set (fd, events_); }
+  void start () { event_add (&ev, 0); active = 1; }
+  void start (int fd_, short events_) { set (fd_, events_); start (); }
+  void stop () { if (active) event_del (&ev); active = 0; }
+
+  template<class O, class M>
+  io_watcher (O object, M method)
+  : callback<void (io_watcher &, short)> (object, method)
+  { }
+  ~io_watcher () { stop (); }
+};
+#else
 enum { EVENT_UNDEF = -1, EVENT_NONE = 0, EVENT_READ = 1, EVENT_WRITE = 2 };
 
 struct io_watcher : watcher, callback<void (io_watcher &, short)> {
@@ -133,7 +166,7 @@ struct io_watcher : watcher, callback<void (io_watcher &, short)> {
 
   void set (short events_) { set (fd, events_); }
   void start () { io_manager::reg (*this); }
-  void start (int fd_, short events_) { set (fd_, events_); io_manager::reg (*this); }
+  void start (int fd_, short events_) { set (fd_, events_); start (); }
   void stop () { io_manager::unreg (*this); }
 
   template<class O, class M>
@@ -143,8 +176,40 @@ struct io_watcher : watcher, callback<void (io_watcher &, short)> {
   ~io_watcher () { stop (); }
 };
 #endif
+#endif
 
 #if IOM_TIME
+#ifdef IOM_LIBEVENT
+void iom_time_c_callback (int fd, short events, void *data);
+
+struct time_watcher : watcher, callback<void (time_watcher &)> {
+  struct event ev;
+  tstamp at;
+
+  void trigger ();
+
+  void set (tstamp when) { at = when; }
+  void operator () () { trigger (); }
+  void start ()
+  {
+    struct timeval tv;
+    tv.tv_sec  = (long)at;
+    tv.tv_usec = (long)((at - (tstamp)tv.tv_sec) * 1000000.);
+    evtimer_add (&ev, &tv);
+    active = 1;
+  }
+  void start (tstamp when) { set (when); start (); }
+  void stop () { if (active) evtimer_del (&ev); active = 0; }
+
+  template<class O, class M>
+  time_watcher (O object, M method)
+  : callback<void (time_watcher &)> (object, method), at (0)
+  {
+    evtimer_set (&ev, iom_time_c_callback, (void *)this);
+  }
+  ~time_watcher () { stop (); }
+};
+#else
 struct time_watcher : watcher, callback<void (time_watcher &)> {
   tstamp at;
 
@@ -153,7 +218,7 @@ struct time_watcher : watcher, callback<void (time_watcher &)> {
   void set (tstamp when) { at = when; }
   void operator () () { trigger (); }
   void start () { io_manager::reg (*this); }
-  void start (tstamp when) { set (when); io_manager::reg (*this); }
+  void start (tstamp when) { set (when); start (); }
   void stop () { io_manager::unreg (*this); }
 
   template<class O, class M>
@@ -162,6 +227,7 @@ struct time_watcher : watcher, callback<void (time_watcher &)> {
   { }
   ~time_watcher () { stop (); }
 };
+#endif
 #endif
 
 #if IOM_CHECK
