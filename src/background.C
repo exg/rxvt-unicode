@@ -132,9 +132,12 @@ bool bgPixmap_t::need_client_side_rendering ()
 # ifdef ENABLE_TRANSPARENCY
   if (flags & isTransparent)
     {
-      if (((flags & blurNeeded) && !(flags & blurServerSide))
-          || ((flags & tintNeeded) && !(flags & tintServerSide)))
-        return true;    
+#  ifdef HAVE_AFTERIMAGE		// can't blur without libAI anyways
+      if ((flags & blurNeeded) && !(flags & blurServerSide))
+				return true;
+#  endif
+      if ((flags & tintNeeded) && !(flags & tintServerSide))
+        return true;
     }
 # endif
   return false;
@@ -934,14 +937,14 @@ bgPixmap_t::make_transparency_pixmap ()
                   pf.direct.alphaMask = 0xff;
 
                   XRenderPictFormat *solid_format = XRenderFindFormat (dpy,
-                                                    					        (PictFormatType|
-					                                                             PictFormatDepth|
-					                                                             PictFormatRedMask|
-					                                                             PictFormatGreenMask|
-					                                                             PictFormatBlueMask|
-					                                                             PictFormatAlphaMask),
-					                                                            &pf,
-					                                                            0);
+																																			 (PictFormatType|
+																																			  PictFormatDepth|
+																																			  PictFormatRedMask|
+																																			  PictFormatGreenMask|
+																																			  PictFormatBlueMask|
+																																			  PictFormatAlphaMask),
+																																			 &pf,
+																																			 0);
                   XRenderPictFormat *root_format = XRenderFindVisualFormat (dpy, DefaultVisualOfScreen (ScreenOfDisplay (dpy, target->display->screen)));
                   XRenderPictureAttributes pa ;
 
@@ -1096,7 +1099,12 @@ bgPixmap_t::render ()
     {
       result = XGetImage (target->dpy, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, ZPixmap);
     }
-# else /* our own client-side tinting */
+
+# elif !XFT /* our own client-side tinting */
+
+  /* ATTENTION: We ASSUME that XFT will let us do all the tinint neccessary server-side.
+	   This may need to be changed in need_client_seide_rendering() logic is altered !!! */
+
   if (background_flags && (flags & isInvalid))
     {
       result = XGetImage (target->dpy, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, ZPixmap);
@@ -1238,7 +1246,7 @@ bgPixmap_t::apply()
 
 #endif    /* HAVE_BG_PIXMAP */
 
-#if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
+#if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE) && !XFT
 /* taken from aterm-0.4.2 */
 
 typedef uint32_t RUINT32T;
