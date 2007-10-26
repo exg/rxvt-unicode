@@ -116,10 +116,14 @@ Turn on/off jump scrolling (allow multiple lines per refresh); resource B<jumpSc
 
 Turn on/off skip scrolling (allow multiple screens per refresh); resource B<skipScroll>.
 
-=item B<-ip>|B<+ip> | B<-tr>|B<+tr>
+=item B<-tr>|B<+tr>
 
-Turn on/off inheriting parent window's pixmap. Alternative form is
-B<-tr>; resource B<inheritPixmap>.
+Turn on/off illusion of a transparent window background. Obsolete form of it is
+B<-ip> and it should not be used anymore; resource B<transparent>.
+
+I<Please note that old resource name of B<inheritPixmap> is obsolete and should be 
+changed to B<transparent>. Backwards compatibility support for B<inheritPixmap> will 
+be phased out in future versions of rxvt!>
 
 I<Please address all transparency related issues to Sasha Vasko at 
 sasha@aftercode.net. Read the FAQ (man 7 @@RXVT_NAME@@)!>
@@ -138,7 +142,7 @@ is opaque black. resource B<fadeColor>.
 =item B<-tint> I<colour>
 
 Tint the transparent background pixmap with the given colour when
-transparency is enabled with B<-tr> or B<-ip>. This only works for
+transparency is enabled with B<-tr>. This only works for
 non-tiled backgrounds, currently. See also the B<-sh> option that can be
 used to brighten or darken the image in addition to tinting it.
 Please note that certain tint colours can be applied on the server-side,
@@ -162,7 +166,7 @@ transparency image, using method specified. Supported values are :
 B<add>, B<alphablend>, B<allanon> - color values averaging, B<colorize>,
 B<darken>, B<diff>, B<dissipate>, B<hue>, B<lighten>, B<overlay>,
 B<saturate>, B<screen>, B<sub>, B<tint>, B<value>. The default is
-alpha-blending; resource I<blendType>.
+alpha-blending. Compile I<afterimage>; resource I<blendType>.
 
 =item B<-blr> I<HxV>
 
@@ -170,7 +174,8 @@ Apply Gaussian Blur with the specified radii to the transparent
 background image. If single number is specified - both vertical and
 horizontal radii are considered to be the same. Setting one of the
 radii to 1 and another to a large number creates interesting effects
-on some backgrounds. Maximum radius value is 128; resource I<blurRadius>.
+on some backgrounds. Maximum radius value is 128. Compile I<afterimage>;
+resource I<blurRadius>.
 
 =item B<-bg> I<colour>
 
