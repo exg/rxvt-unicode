@@ -111,7 +111,7 @@ optList[] = {
               BOOL (Rs_scrollWithBuffer, "scrollWithBuffer", "sw", Opt_scrollWithBuffer, 0, "scroll-with-buffer"),
 #if ENABLE_TRANSPARENCY
               BOOL (Rs_transparent, "inheritPixmap", "ip", Opt_transparent, 0, "inherit parent pixmap"),
-              SWCH ("tr", Opt_transparent, 0, NULL),
+              BOOL (Rs_transparent, "transparent", "tr", Opt_transparent, 0, "inherit parent pixmap"),
               STRG (Rs_color + Color_tint, "tintColor", "tint", "color", "tint color"),
               STRG (Rs_shade, "shading", "sh", "%", "shade background by x %."),
 #endif
