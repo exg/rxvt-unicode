@@ -75,12 +75,6 @@ typedef char *XPointer;
 #include <termios.h>
 typedef struct termios ttymode_t;
 
-#ifdef HAVE_AFTERIMAGE
-#  include <afterimage.h>
-#undef min
-#undef max
-#endif
-
 #include "background.h"
 
 #ifndef STDIN_FILENO

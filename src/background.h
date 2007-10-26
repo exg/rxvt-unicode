@@ -6,7 +6,9 @@
 #define BACKGROUND_H_
 
 #ifdef HAVE_AFTERIMAGE
-#  include <afterimage.h>
+# include <afterimage.h>
+# undef min
+# undef max
 #endif
 
 #if defined(BG_IMAGE_FROM_FILE) || defined(ENABLE_TRANSPARENCY)
