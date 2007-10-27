@@ -21,7 +21,7 @@ DUMB: support tex fonts
 	- overhaul of the transparency/pixmap code (sasha).
 	- fix possible race betwen visual bell and poweron.
           (reported by Martin von Gagern, gentoo?).
-        - rxvt -e no longer crashes the child.
+        - urxvt -e no longer crashes the child.
         - fixed some minor memleaks on incorrect usage or
           missing DISPLAY.
         - implement xterm 1002/1003 mouse tracking modes (exg).
