@@ -73,8 +73,6 @@ src/keyboard.C
 src/keyboard.h
 src/main.C
 src/misc.C
-src/netdisp.C
-src/netdisp.h
 src/optinc.h
 src/rxvtutil.C
 src/rxvtutil.h
