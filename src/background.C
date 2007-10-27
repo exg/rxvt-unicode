@@ -134,7 +134,7 @@ bool bgPixmap_t::need_client_side_rendering ()
     {
 #  ifdef HAVE_AFTERIMAGE		// can't blur without libAI anyways
       if ((flags & blurNeeded) && !(flags & blurServerSide))
-				return true;
+        return true;
 #  endif
       if ((flags & tintNeeded) && !(flags & tintServerSide))
         return true;
@@ -937,14 +937,14 @@ bgPixmap_t::make_transparency_pixmap ()
                   pf.direct.alphaMask = 0xff;
 
                   XRenderPictFormat *solid_format = XRenderFindFormat (dpy,
-																																			 (PictFormatType|
-																																			  PictFormatDepth|
-																																			  PictFormatRedMask|
-																																			  PictFormatGreenMask|
-																																			  PictFormatBlueMask|
-																																			  PictFormatAlphaMask),
-																																			 &pf,
-																																			 0);
+                                                                       (PictFormatType|
+                                                                        PictFormatDepth|
+                                                                        PictFormatRedMask|
+                                                                        PictFormatGreenMask|
+                                                                        PictFormatBlueMask|
+                                                                        PictFormatAlphaMask),
+                                                                       &pf,
+                                                                       0);
                   XRenderPictFormat *root_format = XRenderFindVisualFormat (dpy, DefaultVisualOfScreen (ScreenOfDisplay (dpy, target->display->screen)));
                   XRenderPictureAttributes pa ;
 
@@ -1102,8 +1102,8 @@ bgPixmap_t::render ()
 
 # elif !XFT /* our own client-side tinting */
 
-  /* ATTENTION: We ASSUME that XFT will let us do all the tinint neccessary server-side.
-	   This may need to be changed in need_client_seide_rendering() logic is altered !!! */
+  /* ATTENTION: We ASSUME that XFT will let us do all the tinting neccessary server-side.
+     This may need to be changed in need_client_side_rendering() logic is altered !!! */
 
   if (background_flags && (flags & isInvalid))
     {
