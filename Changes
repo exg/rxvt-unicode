@@ -15,7 +15,6 @@ TODO: investigate -pe tabbed -g 80x25 being 23 not 24 or 25 lines
 WISH: selection-color-pair instead of reverse video
 WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
-WISH: anyevent mouse notification / manage MotionMask better.
 DUMB: support tex fonts
 
 8.4  Sat Oct 27 14:02:13 CEST 2007
