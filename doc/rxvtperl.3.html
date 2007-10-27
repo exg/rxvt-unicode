@@ -2,11 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-	<title>rxvtperl</title>
-	<meta name="description" content="Pod documentation for rxvtperl" />
+	<title>urxvtperl</title>
+	<meta name="description" content="Pod documentation for urxvtperl" />
 	<meta name="inputfile" content="&lt;standard input&gt;" />
 	<meta name="outputfile" content="&lt;standard output&gt;" />
-	<meta name="created" content="Wed Aug  1 20:30:04 2007" />
+	<meta name="created" content="Sat Oct 27 14:07:34 2007" />
 	<meta name="generator" content="Pod::Xhtml 1.57" />
 <link rel="stylesheet" href="http://res.tst.eu/pod.css"/></head>
 <body>
@@ -45,7 +45,7 @@
 
 <h1 id="NAME">NAME</h1><p><a href="#TOP" class="toplink">Top</a></p>
 <div id="NAME_CONTENT">
-<p>rxvtperl - rxvt-unicode's embedded perl interpreter</p>
+<p>urxvtperl - rxvt-unicode's embedded perl interpreter</p>
 
 </div>
 <h1 id="SYNOPSIS">SYNOPSIS</h1><p><a href="#TOP" class="toplink">Top</a></p>
@@ -57,9 +57,9 @@
       ()
    }
 
-   # start a rxvt using it:
+   # start a urxvt using it:
 
-   rxvt --perl-lib $HOME -pe grab_test
+   urxvt --perl-lib $HOME -pe grab_test
 
 </pre>
 
@@ -70,7 +70,7 @@
 the <code>perl</code> resource are loaded and associated with it.</p>
 <p>Scripts are compiled in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as UTF-8.</p>
-<p>Each script will only ever be loaded once, even in rxvtd, where
+<p>Each script will only ever be loaded once, even in urxvtd, where
 scripts will be shared (but not enabled) for all terminals.</p>
 <p>You can disable the embedded perl interpreter by setting both &quot;perl-ext&quot;
 and &quot;perl-ext-common&quot; resources to the empty string.</p>
@@ -79,9 +79,9 @@ and &quot;perl-ext-common&quot; resources to the empty string.</p>
 <h1 id="PREPACKAGED_EXTENSIONS">PREPACKAGED EXTENSIONS</h1><p><a href="#TOP" class="toplink">Top</a></p>
 <div id="PREPACKAGED_EXTENSIONS_CONTENT">
 <p>This section describes the extensions delivered with this release. You can
-find them in <cite>/opt/rxvt/lib/urxvt/perl/</cite>.</p>
+find them in <cite>/usr/local/lib/urxvt/perl/</cite>.</p>
 <p>You can activate them like this:</p>
-<pre>  rxvt -pe &lt;extensionname&gt;
+<pre>  urxvt -pe &lt;extensionname&gt;
 
 </pre>
 <p>Or by adding them to the resource for extensions loaded by default:</p>
@@ -266,7 +266,7 @@ following four resources (shown with defaults):</p>
    URxvt.tabbed.tab-bg:    &lt;colour-index, default 1&gt;
 
 </pre>
-		<p>See <i>COLOR AND GRAPHICS</i> in the rxvt(1) manpage for valid
+		<p>See <i>COLOR AND GRAPHICS</i> in the urxvt(1) manpage for valid
 indices.</p>
 	</dd>
 	<dt>matcher</dt>
@@ -304,7 +304,7 @@ OnTheSpot editing in general, but it seems to work at leats for SCIM and
 kinput2.</p>
 		<p>You enable it by specifying this extension and a preedit style of
 <code>OnTheSpot</code>, i.e.:</p>
-<pre>   rxvt -pt OnTheSpot -pe xim-onthespot
+<pre>   urxvt -pt OnTheSpot -pe xim-onthespot
 
 </pre>
 	</dd>
@@ -329,7 +329,7 @@ extension will actually grab a physical key just for this function.</p>
 background pixmap offset to the window position, in effect creating the
 same effect as pseudo transparency with a custom pixmap. No scaling is
 supported in this mode. Example:</p>
-<pre>   rxvt -pixmap background.xpm -pe automove-background
+<pre>   urxvt -pixmap background.xpm -pe automove-background
 
 </pre>
 		<p><a href="http://wiki.archlinux.org/index.php/Perl_Background_Rotation/Extensions">http://wiki.archlinux.org/index.php/Perl_Background_Rotation/Extensions</a>
@@ -618,7 +618,7 @@ code is run after this hook, and takes precedence.</p>
 	<dd>
 		<p>Called whenever a user-configured event is being activated (e.g. via
 a <code>perl:string</code> action bound to a key, see description of the <strong>keysym</strong>
-resource in the rxvt(1) manpage).</p>
+resource in the urxvt(1) manpage).</p>
 		<p>The event is simply the action string. This interface is assumed to change
 slightly in the future.</p>
 	</dd>
@@ -845,7 +845,7 @@ refer to global data (which is race free).</p>
 	<dt>$term-&gt;destroy</dt>
 	<dd>
 		<p>Destroy the terminal object (close the window, free resources
-etc.). Please note that rxvt will not exit as long as any event
+etc.). Please note that urxvt will not exit as long as any event
 watchers (timers, io watchers) are still active.</p>
 	</dd>
 	<dt>$term-&gt;exec_async ($cmd[, @args])</dt>
@@ -917,7 +917,7 @@ the wrong resources.</p>
 	<dt>$success = $term-&gt;parse_keysym ($keysym_spec, $command_string)</dt>
 	<dd>
 		<p>Adds a keymap translation exactly as specified via a resource. See the
-<code>keysym</code> resource in the rxvt(1) manpage.</p>
+<code>keysym</code> resource in the urxvt(1) manpage.</p>
 	</dd>
 	<dt>$rend = $term-&gt;rstyle ([$new_rstyle])</dt>
 	<dd>

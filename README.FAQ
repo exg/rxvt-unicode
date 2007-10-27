@@ -171,10 +171,10 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
   Rendering, Font & Look and Feel Issues
    I can't get transparency working, what am I doing wrong?
-    First of all, transparency isn't officially supported in rxvt-unicode,
-    so you are mostly on your own. Do not bug the author about it (but you
-    may bug everybody else). Also, if you can't get it working consider it a
-    rite of passage: ... and you failed.
+    First of all, please address all transparency related issues to Sasha
+    Vasko at sasha@aftercode.net and do not bug the author about it. Also,
+    if you can't get it working consider it a rite of passage: ... and you
+    failed.
 
     Here are four ways to get transparency. Do read the manpage and option
     descriptions for the programs mentioned and rxvt-unicode. Really, do it!
@@ -191,11 +191,11 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     to use effects other than tinting and shading: Just shade/tint/whatever
     your picture with gimp or any other tool:
 
-       convert wallpaper.jpg -blur 20x20 -modulate 30 background.xpm
-       urxvt -pixmap background.xpm -pe automove-background
+       convert wallpaper.jpg -blur 20x20 -modulate 30 background.jpg
+       urxvt -pixmap background.jpg -pe automove-background
 
-    That works. If you think it doesn't, you lack XPM and Perl support, or
-    you are unable to read.
+    That works. If you think it doesn't, you lack AfterImage and Perl
+    support, or you are unable to read.
 
     3. Use an ARGB visual:
 
@@ -410,6 +410,12 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
     Until then, you might get away with switching fonts at runtime (see "Can
     I switch the fonts at runtime?" later in this document).
+
+   How can I make mplayer display video correctly?
+    We are working on it, in the meantime, as a workaround, use something
+    like:
+
+       urxvt -b 600 -geometry 20x1 -e sh -c 'mplayer -wid $WINDOWID file...'
 
   Keyboard, Mouse & User Interaction
    The new selection selects pieces that are too big, how can I select single words?

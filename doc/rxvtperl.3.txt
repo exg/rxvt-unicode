@@ -1,5 +1,5 @@
 NAME
-    rxvtperl - rxvt-unicode's embedded perl interpreter
+    urxvtperl - rxvt-unicode's embedded perl interpreter
 
 SYNOPSIS
        # create a file grab_test in $HOME:
@@ -9,9 +9,9 @@ SYNOPSIS
           ()
        }
 
-       # start a rxvt using it:
+       # start a urxvt using it:
 
-       rxvt --perl-lib $HOME -pe grab_test
+       urxvt --perl-lib $HOME -pe grab_test
 
 DESCRIPTION
     Every time a terminal object gets created, extension scripts specified
@@ -20,7 +20,7 @@ DESCRIPTION
     Scripts are compiled in a 'use strict' and 'use utf8' environment, and
     thus must be encoded as UTF-8.
 
-    Each script will only ever be loaded once, even in rxvtd, where scripts
+    Each script will only ever be loaded once, even in urxvtd, where scripts
     will be shared (but not enabled) for all terminals.
 
     You can disable the embedded perl interpreter by setting both "perl-ext"
@@ -28,11 +28,11 @@ DESCRIPTION
 
 PREPACKAGED EXTENSIONS
     This section describes the extensions delivered with this release. You
-    can find them in /opt/rxvt/lib/urxvt/perl/.
+    can find them in /usr/local/lib/urxvt/perl/.
 
     You can activate them like this:
 
-      rxvt -pe <extensionname>
+      urxvt -pe <extensionname>
 
     Or by adding them to the resource for extensions loaded by default:
 
@@ -222,7 +222,7 @@ PREPACKAGED EXTENSIONS
            URxvt.tabbed.tab-fg:    <colour-index, default 0>
            URxvt.tabbed.tab-bg:    <colour-index, default 1>
 
-        See *COLOR AND GRAPHICS* in the rxvt(1) manpage for valid indices.
+        See *COLOR AND GRAPHICS* in the urxvt(1) manpage for valid indices.
 
     matcher
         Uses per-line display filtering ("on_line_update") to underline text
@@ -263,7 +263,7 @@ PREPACKAGED EXTENSIONS
         You enable it by specifying this extension and a preedit style of
         "OnTheSpot", i.e.:
 
-           rxvt -pt OnTheSpot -pe xim-onthespot
+           urxvt -pt OnTheSpot -pe xim-onthespot
 
     kuake<hotkey>
         A very primitive quake-console-like extension. It was inspired by a
@@ -290,7 +290,7 @@ PREPACKAGED EXTENSIONS
         creating the same effect as pseudo transparency with a custom
         pixmap. No scaling is supported in this mode. Example:
 
-           rxvt -pixmap background.xpm -pe automove-background
+           urxvt -pixmap background.xpm -pe automove-background
 
         <http://wiki.archlinux.org/index.php/Perl_Background_Rotation/Extens
         ions> shows how this extension can be used to implement an
@@ -559,7 +559,7 @@ API DOCUMENTATION
     on_user_command $term, $string
         Called whenever a user-configured event is being activated (e.g. via
         a "perl:string" action bound to a key, see description of the keysym
-        resource in the rxvt(1) manpage).
+        resource in the urxvt(1) manpage).
 
         The event is simply the action string. This interface is assumed to
         change slightly in the future.
@@ -756,7 +756,7 @@ API DOCUMENTATION
 
     $term->destroy
         Destroy the terminal object (close the window, free resources etc.).
-        Please note that rxvt will not exit as long as any event watchers
+        Please note that urxvt will not exit as long as any event watchers
         (timers, io watchers) are still active.
 
     $term->exec_async ($cmd[, @args])
@@ -831,7 +831,7 @@ API DOCUMENTATION
 
     $success = $term->parse_keysym ($keysym_spec, $command_string)
         Adds a keymap translation exactly as specified via a resource. See
-        the "keysym" resource in the rxvt(1) manpage.
+        the "keysym" resource in the urxvt(1) manpage.
 
     $rend = $term->rstyle ([$new_rstyle])
         Return and optionally change the current rendition. Text that is

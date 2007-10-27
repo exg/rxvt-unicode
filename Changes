@@ -18,6 +18,7 @@ WISH: look into XAddConnectionWatch, does anybody need that?
 WISH: anyevent mouse notification / manage MotionMask better.
 DUMB: support tex fonts
 
+8.4  Sat Oct 27 14:02:13 CEST 2007
 	- overhaul of the transparency/pixmap code (sasha).
 	- fix possible race betwen visual bell and poweron.
           (reported by Martin von Gagern, gentoo?).
@@ -25,6 +26,7 @@ DUMB: support tex fonts
         - fixed some minor memleaks on incorrect usage or
           missing DISPLAY.
         - implement xterm 1002/1003 mouse tracking modes (exg).
+        - source code organisational cleanups (exg).
         - updated io_manager.
 
 8.3  Wed Aug  1 20:21:31 CEST 2007

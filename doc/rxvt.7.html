@@ -6,7 +6,7 @@
 	<meta name="description" content="Pod documentation for RXVT REFERENCE" />
 	<meta name="inputfile" content="&lt;standard input&gt;" />
 	<meta name="outputfile" content="&lt;standard output&gt;" />
-	<meta name="created" content="Wed Aug  1 20:30:03 2007" />
+	<meta name="created" content="Sat Oct 27 14:07:34 2007" />
 	<meta name="generator" content="Pod::Xhtml 1.57" />
 <link rel="stylesheet" href="http://res.tst.eu/pod.css"/></head>
 <body>
@@ -46,6 +46,7 @@
 <li><a href="#Why_do_some_characters_look_so_much_">Why do some characters look so much different than others?</a></li>
 <li><a href="#How_does_rxvt_unicode_choose_fonts">How does rxvt-unicode choose fonts?</a></li>
 <li><a href="#Why_do_some_chinese_characters_look_">Why do some chinese characters look so different than others?</a></li>
+<li><a href="#How_can_I_make_mplayer_display_video">How can I make mplayer display video correctly?</a></li>
 </ul>
 </li>
 <li><a href="#Keyboard_Mouse_amp_User_Interaction">Keyboard, Mouse &amp; User Interaction</a>
@@ -119,7 +120,7 @@
 <ul><li><a href="#XTerm_Operating_System_Commands">XTerm Operating System Commands</a></li>
 </ul>
 </li>
-<li><a href="#XPM">XPM</a></li>
+<li><a href="#BACKGROUND_IMAGE">BACKGROUND IMAGE</a></li>
 <li><a href="#Mouse">Mouse</a></li>
 <li><a href="#Mouse_Reporting">Mouse Reporting</a></li>
 <li><a href="#KeyCodes">KeyCodes</a></li>
@@ -365,10 +366,9 @@ except maybe libX11 :)</p>
 </div>
 <h3 id="I_can_t_get_transparency_working_wha">I can't get transparency working, what am I doing wrong?</h3>
 <div id="I_can_t_get_transparency_working_wha-2">
-<p>First of all, transparency isn't officially supported in rxvt-unicode, so
-you are mostly on your own. Do not bug the author about it (but you may
-bug everybody else). Also, if you can't get it working consider it a rite
-of passage: ... and you failed.</p>
+<p>First of all, please address all transparency related issues to Sasha Vasko at 
+sasha@aftercode.net and do not bug the author about it. Also, if you can't 
+get it working consider it a rite of passage: ... and you failed.</p>
 <p>Here are four ways to get transparency. <strong>Do</strong> read the manpage and option
 descriptions for the programs mentioned and rxvt-unicode. Really, do it!</p>
 <p>1. Use inheritPixmap:</p>
@@ -381,11 +381,11 @@ support, or you are unable to read.</p>
 <p>2. Use a simple pixmap and emulate pseudo-transparency. This enables you
 to use effects other than tinting and shading: Just shade/tint/whatever
 your picture with gimp or any other tool:</p>
-<pre>   convert wallpaper.jpg -blur 20x20 -modulate 30 background.xpm
-   urxvt -pixmap background.xpm -pe automove-background
+<pre>   convert wallpaper.jpg -blur 20x20 -modulate 30 background.jpg
+   urxvt -pixmap background.jpg -pe automove-background
 
 </pre>
-<p>That works. If you think it doesn't, you lack XPM and Perl support, or you
+<p>That works. If you think it doesn't, you lack AfterImage and Perl support, or you
 are unable to read.</p>
 <p>3. Use an ARGB visual:</p>
 <pre>   urxvt -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc
@@ -608,6 +608,17 @@ has been designed yet).</p>
 <p>Until then, you might get away with switching fonts at runtime (see <a href="#Can_I_switch_the_fonts_at_runtime">Can I switch the fonts at runtime?</a> later in this document).</p>
 
 </div>
+<h3 id="How_can_I_make_mplayer_display_video">How can I make mplayer display video correctly?</h3>
+<div id="How_can_I_make_mplayer_display_video-2">
+<p>We are working on it, in the meantime, as a workaround, use something like:</p>
+<pre>   urxvt -b 600 -geometry 20x1 -e sh -c 'mplayer -wid $WINDOWID file...'
+
+
+
+
+</pre>
+
+</div>
 <h2 id="Keyboard_Mouse_amp_User_Interaction">Keyboard, Mouse &amp; User Interaction</h2>
 <div id="Keyboard_Mouse_amp_User_Interaction_">
 
@@ -803,9 +814,6 @@ use the `keysym' resource to alter the keystrings associated with keysyms.</p>
 <p>Rather than have rxvt-unicode try to accommodate all the various possible
 keyboard mappings, it is better to use `xmodmap' to remap the keys as
 required for your particular machine.</p>
-
-
-
 
 
 
@@ -1758,7 +1766,9 @@ Option'')</p>
 <table><tr><td>h</td><td>Application Keypad (DECPAM) == ESC =</td></tr><tr><td>l</td><td>Normal Keypad (DECPNM) == ESC ></td></tr></table>				<dt><strong><code>Pm = 67</code></strong></dt>
 <table><tr><td>h</td><td>Backspace key sends BS (DECBKM)</td></tr><tr><td>l</td><td>Backspace key sends DEL</td></tr></table>				<dt><strong><code>Pm = 1000</code></strong> (X11 XTerm)</dt>
 <table><tr><td>h</td><td>Send Mouse X & Y on button press and release.</td></tr><tr><td>l</td><td>No mouse reporting.</td></tr></table>				<dt><strong><code>Pm = 1001</code></strong> (X11 XTerm) <i>unimplemented</i></dt>
-<table><tr><td>h</td><td>Use Hilite Mouse Tracking.</td></tr><tr><td>l</td><td>No mouse reporting.</td></tr></table>				<dt><strong><code>Pm = 1010</code></strong> (<strong>rxvt</strong>)</dt>
+<table><tr><td>h</td><td>Use Hilite Mouse Tracking.</td></tr><tr><td>l</td><td>No mouse reporting.</td></tr></table>				<dt><strong><code>Pm = 1002</code></strong> (X11 XTerm)</dt>
+<table><tr><td>h</td><td>Send Mouse X & Y on button press and release, and motion with a button pressed.</td></tr><tr><td>l</td><td>No mouse reporting.</td></tr></table>				<dt><strong><code>Pm = 1003</code></strong> (X11 XTerm)</dt>
+<table><tr><td>h</td><td>Send Mouse X & Y on button press and release, and motion.</td></tr><tr><td>l</td><td>No mouse reporting.</td></tr></table>				<dt><strong><code>Pm = 1010</code></strong> (<strong>rxvt</strong>)</dt>
 <table><tr><td>h</td><td>Don't scroll to bottom on TTY output</td></tr><tr><td>l</td><td>Scroll to bottom on TTY output</td></tr></table>				<dt><strong><code>Pm = 1011</code></strong> (<strong>rxvt</strong>)</dt>
 <table><tr><td>h</td><td>Scroll to bottom when a key is pressed</td></tr><tr><td>l</td><td>Don't scroll to bottom when a key is pressed</td></tr></table>				<dt><strong><code>Pm = 1021</code></strong> (<strong>rxvt</strong>)</dt>
 <table><tr><td>h</td><td>Bold/italic implies high intensity (see option -is)</td></tr><tr><td>l</td><td>Font styles have no effect on intensity (Compile styles)</td></tr></table>				<dt><strong><code>Pm = 1047</code></strong></dt>
@@ -1779,14 +1789,14 @@ Option'')</p>
 		<p>Set XTerm Parameters. 8-bit ST: 0x9c, 7-bit ST sequence: ESC \ (0x1b,
 0x5c), backwards compatible terminator BEL (0x07) is also accepted. any
 <strong>octet</strong> can be escaped by prefixing it with SYN (0x16, ^V).</p>
-<table><tr><td>Ps = 0</td><td>Change Icon Name and Window Title to Pt</td></tr><tr><td>Ps = 1</td><td>Change Icon Name to Pt</td></tr><tr><td>Ps = 2</td><td>Change Window Title to Pt</td></tr><tr><td>Ps = 3</td><td>If Pt starts with a ?, query the (STRING) property of the window and return it. If Pt contains a =, set the named property to the given value, else delete the specified property.</td></tr><tr><td>Ps = 4</td><td>Pt is a semi-colon separated sequence of one or more semi-colon separated number/name pairs, where number is an index to a colour and name is the name of a colour. Each pair causes the numbered colour to be changed to name. Numbers 0-7 corresponds to low-intensity (normal) colours and 8-15 corresponds to high-intensity colours. 0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white</td></tr><tr><td>Ps = 10</td><td>Change colour of text foreground to Pt (NB: may change in future)</td></tr><tr><td>Ps = 11</td><td>Change colour of text background to Pt (NB: may change in future)</td></tr><tr><td>Ps = 12</td><td>Change colour of text cursor foreground to Pt</td></tr><tr><td>Ps = 13</td><td>Change colour of mouse foreground to Pt</td></tr><tr><td>Ps = 17</td><td>Change colour of highlight characters to Pt</td></tr><tr><td>Ps = 18</td><td>Change colour of bold characters to Pt [deprecated, see 706]</td></tr><tr><td>Ps = 19</td><td>Change colour of underlined characters to Pt [deprecated, see 707]</td></tr><tr><td>Ps = 20</td><td>Change background pixmap parameters (see section XPM) (Compile XPM).</td></tr><tr><td>Ps = 39</td><td>Change default foreground colour to Pt.</td></tr><tr><td>Ps = 46</td><td>Change Log File to Pt unimplemented</td></tr><tr><td>Ps = 49</td><td>Change default background colour to Pt.</td></tr><tr><td>Ps = 50</td><td>Set fontset to Pt, with the following special values of Pt (rxvt) #+n change up n #-n change down n if n is missing of 0, a value of 1 is used empty change to font0 n change to font n</td></tr><tr><td>Ps = 55</td><td>Log all scrollback buffer and all of screen to Pt</td></tr><tr><td>Ps = 701</td><td>Change current locale to Pt, or, if Pt is ?, return the current locale (Compile frills).</td></tr><tr><td>Ps = 702</td><td>Request version if Pt is ?, returning rxvt-unicode, the resource name, the major and minor version numbers, e.g. ESC ] 702 ; rxvt-unicode ; urxvt ; 7 ; 4 ST.</td></tr><tr><td>Ps = 704</td><td>Change colour of italic characters to Pt</td></tr><tr><td>Ps = 705</td><td>Change background pixmap tint colour to Pt (Compile transparency).</td></tr><tr><td>Ps = 706</td><td>Change colour of bold characters to Pt</td></tr><tr><td>Ps = 707</td><td>Change colour of underlined characters to Pt</td></tr><tr><td>Ps = 710</td><td>Set normal fontset to Pt. Same as Ps = 50.</td></tr><tr><td>Ps = 711</td><td>Set bold fontset to Pt. Similar to Ps = 50 (Compile styles).</td></tr><tr><td>Ps = 712</td><td>Set italic fontset to Pt. Similar to Ps = 50 (Compile styles).</td></tr><tr><td>Ps = 713</td><td>Set bold-italic fontset to Pt. Similar to Ps = 50 (Compile styles).</td></tr><tr><td>Ps = 720</td><td>Move viewing window up by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).</td></tr><tr><td>Ps = 721</td><td>Move viewing window down by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).</td></tr><tr><td>Ps = 777</td><td>Call the perl extension with the given string, which should be of the form extension:parameters (Compile perl).</td></tr></table>	</dd>
+<table><tr><td>Ps = 0</td><td>Change Icon Name and Window Title to Pt</td></tr><tr><td>Ps = 1</td><td>Change Icon Name to Pt</td></tr><tr><td>Ps = 2</td><td>Change Window Title to Pt</td></tr><tr><td>Ps = 3</td><td>If Pt starts with a ?, query the (STRING) property of the window and return it. If Pt contains a =, set the named property to the given value, else delete the specified property.</td></tr><tr><td>Ps = 4</td><td>Pt is a semi-colon separated sequence of one or more semi-colon separated number/name pairs, where number is an index to a colour and name is the name of a colour. Each pair causes the numbered colour to be changed to name. Numbers 0-7 corresponds to low-intensity (normal) colours and 8-15 corresponds to high-intensity colours. 0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white</td></tr><tr><td>Ps = 10</td><td>Change colour of text foreground to Pt (NB: may change in future)</td></tr><tr><td>Ps = 11</td><td>Change colour of text background to Pt (NB: may change in future)</td></tr><tr><td>Ps = 12</td><td>Change colour of text cursor foreground to Pt</td></tr><tr><td>Ps = 13</td><td>Change colour of mouse foreground to Pt</td></tr><tr><td>Ps = 17</td><td>Change colour of highlight characters to Pt</td></tr><tr><td>Ps = 18</td><td>Change colour of bold characters to Pt [deprecated, see 706]</td></tr><tr><td>Ps = 19</td><td>Change colour of underlined characters to Pt [deprecated, see 707]</td></tr><tr><td>Ps = 20</td><td>Change background pixmap parameters (see section BACKGROUND IMAGE) (Compile AfterImage).</td></tr><tr><td>Ps = 39</td><td>Change default foreground colour to Pt.</td></tr><tr><td>Ps = 46</td><td>Change Log File to Pt unimplemented</td></tr><tr><td>Ps = 49</td><td>Change default background colour to Pt.</td></tr><tr><td>Ps = 50</td><td>Set fontset to Pt, with the following special values of Pt (rxvt) #+n change up n #-n change down n if n is missing of 0, a value of 1 is used empty change to font0 n change to font n</td></tr><tr><td>Ps = 55</td><td>Log all scrollback buffer and all of screen to Pt</td></tr><tr><td>Ps = 701</td><td>Change current locale to Pt, or, if Pt is ?, return the current locale (Compile frills).</td></tr><tr><td>Ps = 702</td><td>Request version if Pt is ?, returning rxvt-unicode, the resource name, the major and minor version numbers, e.g. ESC ] 702 ; rxvt-unicode ; urxvt ; 7 ; 4 ST.</td></tr><tr><td>Ps = 704</td><td>Change colour of italic characters to Pt</td></tr><tr><td>Ps = 705</td><td>Change background pixmap tint colour to Pt (Compile transparency).</td></tr><tr><td>Ps = 706</td><td>Change colour of bold characters to Pt</td></tr><tr><td>Ps = 707</td><td>Change colour of underlined characters to Pt</td></tr><tr><td>Ps = 710</td><td>Set normal fontset to Pt. Same as Ps = 50.</td></tr><tr><td>Ps = 711</td><td>Set bold fontset to Pt. Similar to Ps = 50 (Compile styles).</td></tr><tr><td>Ps = 712</td><td>Set italic fontset to Pt. Similar to Ps = 50 (Compile styles).</td></tr><tr><td>Ps = 713</td><td>Set bold-italic fontset to Pt. Similar to Ps = 50 (Compile styles).</td></tr><tr><td>Ps = 720</td><td>Move viewing window up by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).</td></tr><tr><td>Ps = 721</td><td>Move viewing window down by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).</td></tr><tr><td>Ps = 777</td><td>Call the perl extension with the given string, which should be of the form extension:parameters (Compile perl).</td></tr></table>	</dd>
 </dl>
 
 </div>
-<h1 id="XPM">XPM</h1><p><a href="#TOP" class="toplink">Top</a></p>
-<div id="XPM_CONTENT">
-<p>For the XPM XTerm escape sequence <strong><code>ESC ] 20 ; Pt ST</code></strong> then value
-of <strong><code>Pt</code></strong> can be the name of the background pixmap followed by a
+<h1 id="BACKGROUND_IMAGE">BACKGROUND IMAGE</h1><p><a href="#TOP" class="toplink">Top</a></p>
+<div id="BACKGROUND_IMAGE_CONTENT">
+<p>For the BACGROUND IMAGE XTerm escape sequence <strong><code>ESC ] 20 ; Pt ST</code></strong> then value
+of <strong><code>Pt</code></strong> can be the name of the background image file followed by a
 sequence of scaling/positioning commands separated by semi-colons. The
 scaling/positioning commands are as follows:</p>
 <dl>
@@ -1821,13 +1831,13 @@ scaling/positioning commands are as follows:</p>
 </dl>
 <p>For example:</p>
 <dl>
-	<dt><strong>\E]20;funky\a</strong></dt>
+	<dt><strong>\E]20;funky.jpg\a</strong></dt>
 	<dd>
-		<p>load <strong>funky.xpm</strong> as a tiled image</p>
+		<p>load <strong>funky.jpg</strong> as a tiled image</p>
 	</dd>
-	<dt><strong>\E]20;mona;100\a</strong></dt>
+	<dt><strong>\E]20;mona.jpg;100\a</strong></dt>
 	<dd>
-		<p>load <strong>mona.xpm</strong> with a scaling of 100%</p>
+		<p>load <strong>mona.jpg</strong> with a scaling of 100%</p>
 	</dd>
 	<dt><strong>\E]20;;200;?\a</strong></dt>
 	<dd>
@@ -1874,9 +1884,9 @@ your system.</p>
 <div id="CONFIGURE_OPTIONS_CONTENT">
 <p>General hint: if you get compile errors, then likely your configuration
 hasn't been tested well. Either try with <code>--enable-everything</code> or use
-the default configuration (i.e. <code>--enable-xxx</code> or <code>--disable-xxx</code>). Of
-course, you should always report when a combination doesn't work, so it
-can be fixed. Marc Lehmann &lt;rxvt@schmorp.de&gt;.</p>
+the default configuration (i.e. no <code>--enable-xxx</code> or <code>--disable-xxx</code>
+switches). Of course, you should always report when a combination doesn't
+work, so it can be fixed. Marc Lehmann &lt;rxvt@schmorp.de&gt;.</p>
 <p>All</p>
 <dl>
 	<dt>--enable-everything</dt>
@@ -1978,10 +1988,6 @@ option requires --enable-utmp to also be specified.</p>
 <cite>lastlogin</cite>) at start of rxvt execution.  This option requires
 --enable-utmp to also be specified.</p>
 	</dd>
-	<dt>--enable-xpm-background (default: on)</dt>
-	<dd>
-		<p>Add support for XPM background pixmaps.</p>
-	</dd>
 	<dt>--enable-afterimage (default: on)</dt>
 	<dd>
 		<p>Add support for libAfterImage to be used for transparency and background
@@ -1990,7 +1996,7 @@ SVG, TIFF, GIF, XPM, BMP, ICO, XCF, TGA and AfterStep image XML
 (<a href="http://www.afterstep.org/visualdoc.php?show=asimagexml">http://www.afterstep.org/visualdoc.php?show=asimagexml</a>).</p>
 		<p>This option also adds such eye candy as blending an image over the root
 background, as well as dynamic scaling and bluring of background images.</p>
-		<p>Note that with this option enabled, rxvt's memory footprint might
+		<p>Note that with this option enabled, urxvt's memory footprint might
 increase by a few megabytes even if no extra features are used (mostly due
 to third-party libraries used by libAI). Memory footprint may somewhat be
 lowered if libAfterImage is configured without support for SVG.</p>
@@ -2003,10 +2009,6 @@ transparency to the term.</p>
 	<dt>--enable-fading (default: on)</dt>
 	<dd>
 		<p>Add support for fading the text when focus is lost.</p>
-	</dd>
-	<dt>--enable-tinting (default: on)</dt>
-	<dd>
-		<p>Add support for tinting of transparent backgrounds (requires <code>--enable-transparency</code>).</p>
 	</dd>
 	<dt>--enable-rxvt-scroll (default: on)</dt>
 	<dd>
@@ -2091,7 +2093,7 @@ in combination with other switches) is:</p>
 	</dd>
 	<dt>--enable-iso14755 (default: on)</dt>
 	<dd>
-		<p>Enable extended ISO 14755 support (see rxvt(1), or
+		<p>Enable extended ISO 14755 support (see urxvt(1), or
 <cite>doc/rxvt.1.txt</cite>). Basic support (section 5.1) is enabled by
 <code>--enable-frills</code>, while support for 5.2, 5.3 and 5.4 is enabled with
 this switch.</p>
@@ -2128,7 +2130,7 @@ the screen in a fixed position.</p>
 	</dd>
 	<dt>--enable-perl (default: on)</dt>
 	<dd>
-		<p>Enable an embedded perl interpreter. See the <strong>rxvtperl(3)</strong>
+		<p>Enable an embedded perl interpreter. See the <strong>urxvtperl(3)</strong>
 manpage (<cite>doc/rxvtperl.txt</cite>) for more info on this feature, or the
 files in <cite>src/perl-ext/</cite> for the extensions that are installed by
 default. The perl interpreter that is used can be specified via the
@@ -2159,18 +2161,6 @@ PATH.</p>
 	<dt>--with-x</dt>
 	<dd>
 		<p>Use the X Window System (pretty much default, eh?).</p>
-	</dd>
-	<dt>--with-xpm-includes=DIR</dt>
-	<dd>
-		<p>Look for the XPM includes in DIR.</p>
-	</dd>
-	<dt>--with-xpm-library=DIR</dt>
-	<dd>
-		<p>Look for the XPM library in DIR.</p>
-	</dd>
-	<dt>--with-xpm</dt>
-	<dd>
-		<p>Not needed - define via --enable-xpm-background.</p>
 	</dd>
 </dl>
 

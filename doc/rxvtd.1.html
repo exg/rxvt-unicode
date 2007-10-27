@@ -2,11 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-	<title>rxvtd</title>
-	<meta name="description" content="Pod documentation for rxvtd" />
+	<title>urxvtd</title>
+	<meta name="description" content="Pod documentation for urxvtd" />
 	<meta name="inputfile" content="&lt;standard input&gt;" />
 	<meta name="outputfile" content="&lt;standard output&gt;" />
-	<meta name="created" content="Mon Jun 25 00:30:33 2007" />
+	<meta name="created" content="Sat Oct 27 14:07:34 2007" />
 	<meta name="generator" content="Pod::Xhtml 1.57" />
 <link rel="stylesheet" href="http://res.tst.eu/pod.css"/></head>
 <body>
@@ -27,54 +27,54 @@
 
 <h1 id="NAME">NAME</h1><p><a href="#TOP" class="toplink">Top</a></p>
 <div id="NAME_CONTENT">
-<p>rxvtd - rxvt terminal daemon</p>
+<p>urxvtd - urxvt terminal daemon</p>
 
 </div>
 <h1 id="SYNOPSIS">SYNOPSIS</h1><p><a href="#TOP" class="toplink">Top</a></p>
 <div id="SYNOPSIS_CONTENT">
-<p><strong>rxvtd</strong> [-q|--quiet] [-o|--opendisplay] [-f|--fork]</p>
-<p><strong>rxvtd</strong> -q -o -f    # for .xsession use</p>
+<p><strong>urxvtd</strong> [-q|--quiet] [-o|--opendisplay] [-f|--fork]</p>
+<p><strong>urxvtd</strong> -q -o -f    # for .xsession use</p>
 
 </div>
 <h1 id="DESCRIPTION">DESCRIPTION</h1><p><a href="#TOP" class="toplink">Top</a></p>
 <div id="DESCRIPTION_CONTENT">
-<p>This manpage describes the rxvtd daemon, which is the same vt102
-terminal emulator as rxvt, but runs as a daemon that can open
+<p>This manpage describes the urxvtd daemon, which is the same vt102
+terminal emulator as urxvt, but runs as a daemon that can open
 multiple terminal windows within the same process.</p>
 <p>You can run it from your X startup scripts, for example, although it is
 not dependent on a working DISPLAY and, in fact, can open windows on
 multiple X displays on the same time.</p>
-<p>Advantages of running a rxvt daemon include faster creation time
+<p>Advantages of running a urxvt daemon include faster creation time
 for terminal windows and a lot of saved memory.</p>
 <p>The disadvantage is a possible impact on stability - if the
 main program crashes, all processes in the terminal windows are
 terminated. For example, as there is no way to cleanly react to abnormal
 connection closes, <code>xkill</code> and server resets/restarts will kill the
-<strong>rxvtd</strong> instance including all windows it has opened.</p>
+<strong>urxvtd</strong> instance including all windows it has opened.</p>
 
 </div>
 <h1 id="OPTIONS">OPTIONS</h1><p><a href="#TOP" class="toplink">Top</a></p>
 <div id="OPTIONS_CONTENT">
-<p><strong>rxvtd</strong> currently understands a few options only. Bundling of
+<p><strong>urxvtd</strong> currently understands a few options only. Bundling of
 options is not yet supported.</p>
 <dl>
 	<dt><strong>-q</strong>, <strong>--quiet</strong></dt>
 	<dd>
-		<p>Normally, <strong>rxvtd</strong> outputs the message <code>rxvt-unicode daemon
+		<p>Normally, <strong>urxvtd</strong> outputs the message <code>rxvt-unicode daemon
 listening on &lt;path&gt;</code> after binding to its control socket. This option
 will suppress this message (errors and warnings will still be logged).</p>
 	</dd>
 	<dt><strong>-o</strong>, <strong>--opendisplay</strong></dt>
 	<dd>
-		<p>This forces <strong>rxvtd</strong> to open a connection to the current
+		<p>This forces <strong>urxvtd</strong> to open a connection to the current
 <code>$DISPLAY</code> and keep it open.</p>
-		<p>This is useful if you want to bind an instance of <strong>rxvtd</strong> to
+		<p>This is useful if you want to bind an instance of <strong>urxvtd</strong> to
 the lifetime of a specific display/server. If the server does a reset,
-<strong>rxvtd</strong> will be killed automatically.</p>
+<strong>urxvtd</strong> will be killed automatically.</p>
 	</dd>
 	<dt><strong>-f</strong>, <strong>--fork</strong></dt>
 	<dd>
-		<p>This makes <strong>rxvtd</strong> fork after it has bound itself to its control
+		<p>This makes <strong>urxvtd</strong> fork after it has bound itself to its control
 socket.</p>
 	</dd>
 </dl>
@@ -82,14 +82,14 @@ socket.</p>
 </div>
 <h1 id="EXAMPLES">EXAMPLES</h1><p><a href="#TOP" class="toplink">Top</a></p>
 <div id="EXAMPLES_CONTENT">
-<p>This is a useful invocation of <strong>rxvtd</strong> in a <cite>.xsession</cite>-style
+<p>This is a useful invocation of <strong>urxvtd</strong> in a <cite>.xsession</cite>-style
 script:</p>
-<pre>   rxvtd -q -f -o
+<pre>   urxvtd -q -f -o
 
 </pre>
 <p>This waits till the control socket is available, opens the current display
 and forks into the background. When you log-out, the server is reset and
-<strong>rxvtd</strong> is killed.</p>
+<strong>urxvtd</strong> is killed.</p>
 
 </div>
 <h1 id="ENVIRONMENT">ENVIRONMENT</h1><p><a href="#TOP" class="toplink">Top</a></p>
@@ -97,9 +97,9 @@ and forks into the background. When you log-out, the server is reset and
 <dl>
 	<dt><strong>RXVT_SOCKET</strong></dt>
 	<dd>
-		<p>Both <strong>rxvtc</strong> and <strong>rxvtd</strong> use the environment
+		<p>Both <strong>urxvtc</strong> and <strong>urxvtd</strong> use the environment
 variable <cite>RXVT_SOCKET</cite> to create a listening socket and to contact
-the rxvtd, respectively. If the variable is missing,
+the urxvtd, respectively. If the variable is missing,
 <cite>$HOME/.rxvt-unicode-<i>&lt;nodename&gt;</i></cite> is used. The variable must
 specify the absolute path of the socket to create.</p>
 	</dd>
@@ -113,7 +113,7 @@ valid X display name.</p>
 </div>
 <h1 id="SEE_ALSO">SEE ALSO</h1><p><a href="#TOP" class="toplink">Top</a></p>
 <div id="SEE_ALSO_CONTENT">
-<p>rxvt(7), rxvtc(1)
+<p>urxvt(7), urxvtc(1)
 </p>
 
 </div>
