@@ -1,11 +1,6 @@
 # From: Thomas Dickey <dickey@clark.net> 04 Oct 1997
 # Updated: Özgür Kesim <kesim@math.fu-berlin.de> 02 Nov 1997
 # Updated: Marc Lehmann <pcg@goof.com>, 17 Feb 2005
-# Notes:
-# It has an AIX extension
-#       box2=lqkxjmwuvtn,
-# but the latter does not work correctly.
-#
 rxvt-unicode|rxvt-unicode terminal (X Window System), 
 	am, bce, eo, km, msgr, xenl, hs,
 	cols#80, it#8, lines#24, 
