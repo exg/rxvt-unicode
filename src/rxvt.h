@@ -107,8 +107,6 @@ wchar_t *        rxvt_mbstowcs                    (const char *str, int len = -1
 char *           rxvt_wcstoutf8                   (const wchar_t *str, int len = -1);
 wchar_t *        rxvt_utf8towcs                   (const char *str, int len = -1);
 
-#define rxvt_strdup(s) ((s) ? strdup(s) : 0)
-
 char *           rxvt_basename                    (const char *str) NOTHROW;
 void             rxvt_vlog                        (const char *fmt, va_list arg_ptr) NOTHROW;
 void             rxvt_log                         (const char *fmt,...) NOTHROW;

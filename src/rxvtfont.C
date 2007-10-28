@@ -514,7 +514,7 @@ rxvt_font_x11::get_property (XFontStruct *f, Atom property, const char *repl) co
   if (XGetFontProperty (f, property, &value))
     return XGetAtomName (term->dpy, value);
   else
-    return rxvt_strdup (repl);
+    return repl ? strdup (repl) : 0;
 }
 
 rxvt_fontprop

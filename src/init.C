@@ -659,7 +659,7 @@ rxvt_term::set_locale (const char *locale)
     }
 
 
-  this->locale = rxvt_strdup (this->locale);
+  this->locale = strdup (this->locale);
   SET_LOCALE (this->locale);
   mbstate.reset ();
 #endif
