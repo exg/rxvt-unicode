@@ -371,7 +371,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   if (r_argc == argc)
     cmd_argv = NULL;
   else if (!argv[r_argc + 1])
-    rxvt_fatal ("-e requires an argument\n");
+    rxvt_fatal ("option '-e' requires an argument, aborting.\n");
   else
     {
       cmd_argv = (const char **)rxvt_malloc (sizeof (char *) * (argc - r_argc));
