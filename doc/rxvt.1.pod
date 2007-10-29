@@ -147,14 +147,15 @@ non-tiled backgrounds, currently. See also the B<-sh> option that can be
 used to brighten or darken the image in addition to tinting it.
 Please note that certain tint colours can be applied on the server-side,
 thus yielding performance gain of two orders of magnitude. These colours are:
-blue, red, green, cyan, magenta, yellow, and those close to them; resource
+blue, red, green, cyan, magenta, yellow, and those close to them. Also 
+pure black and pure white colors essentialy mean no tinting; resource
 I<tintColor>. Example:
 
    @@RXVT_NAME@@ -tr -tint blue -sh 40
 
 =item B<-sh> I<number>
 
-Darken (0 .. 100) or lighten (-1 .. -100) the transparent
+Darken (0 .. 100) or lighten (100 .. 200) the transparent
 background image in addition to (or instead of) tinting it;
 resource I<shading>.
 

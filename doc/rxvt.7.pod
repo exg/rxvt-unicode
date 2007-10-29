@@ -218,10 +218,10 @@ get it working consider it a rite of passage: ... and you failed.
 Here are four ways to get transparency. B<Do> read the manpage and option
 descriptions for the programs mentioned and rxvt-unicode. Really, do it!
 
-1. Use inheritPixmap:
+1. Use transparent mode:
 
    Esetroot wallpaper.jpg
-   @@URXVT_NAME@@ -ip -tint red -sh 40
+   @@URXVT_NAME@@ -tr -tint red -sh 40
 
 That works. If you think it doesn't, you lack transparency and tinting
 support, or you are unable to read.
@@ -2367,8 +2367,7 @@ lowered if libAfterImage is configured without support for SVG.
 
 =item --enable-transparency (default: on)
 
-Add support for inheriting parent backgrounds thus giving a fake
-transparency to the term.
+Add support for backgrounds, creating illusion of transparency in the term.
 
 =item --enable-fading (default: on)
 
