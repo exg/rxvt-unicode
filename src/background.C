@@ -743,7 +743,9 @@ bgPixmap_t::set_shade (const char *shade_str)
 {
   int new_shade = (shade_str) ? atoi (shade_str) : 0;
 
-  if (new_shade == 100)
+  if (new_shade < 0 && new_shade > -100)
+		new_shade = 200 - (100 + new_shade);
+  else if (new_shade == 100)
     new_shade = 0;
 
   if (new_shade != shade)
