@@ -64,7 +64,7 @@ dnl# Supply default CXXFLAGS, if not specified by `CXXFLAGS=flags ./configure'
 dnl#
 if test -z "$orig_CXXFLAGS"; then
   if test x$GCC = xyes && test "x$GXX" = xyes; then
-     CXXFLAGS="-g -O3 -fno-threadsafe-statics -fno-enforce-eh-specs"
+    CXXFLAGS="-g -O3 -fno-threadsafe-statics -fno-enforce-eh-specs"
     AC_COMPILE_IFELSE([AC_LANG_PROGRAM([],[])], [], [CXXFLAGS="-g -O3"])
   else
     CXXFLAGS="-O"
@@ -296,7 +296,7 @@ AC_ARG_ENABLE(plain-scroll,
   fi])
 
 AC_ARG_WITH(codesets,
-  [  --with-codesets=CS,... compile in additional codesets (jp,jp_ext,kr,zh,zh_ext,all)],
+  [  --with-codesets=CS,...  compile in additional codesets (jp,jp_ext,kr,zh,zh_ext,all)],
   [codesets="$withval"])
 
 AC_ARG_ENABLE(xim,
@@ -673,8 +673,8 @@ dnl# --------------------------------------------------------------------------
 dnl# --------------------------------------------------------------------------
 
 dnl# this is a really hack test for some basic Xlocale stuff
-ac_save_LIBS=$LIBS
-ac_save_CFLAGS=$CFLAGS
+save_LIBS=$LIBS
+save_CFLAGS=$CFLAGS
 CFLAGS="$CFLAGS $X_CFLAGS"
 LIBS="$LIBS $X_LIBS $X_EXTRA_LIBS -lX11"
 if test x$support_xim = xyes; then
@@ -715,8 +715,8 @@ AC_CACHE_CHECK(for working X setlocale, rxvt_cv_func_xsetlocale,
 if test x$rxvt_cv_func_xsetlocale = xyes; then
   AC_DEFINE(HAVE_XSETLOCALE, 1, Define if setlocale (defined to Xsetlocale) works)
 fi
-LIBS=$ac_save_LIBS
-CFLAGS=$ac_save_CFLAGS
+LIBS=$save_LIBS
+CFLAGS=$save_CFLAGS
 
 AC_CACHE_CHECK(for working plain setlocale, rxvt_cv_func_setlocale,
 [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <clocale>]], [[setlocale(LC_CTYPE, "");]])],[rxvt_cv_func_setlocale=yes],[rxvt_cv_func_setlocale=no])])
