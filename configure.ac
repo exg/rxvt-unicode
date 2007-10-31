@@ -195,6 +195,22 @@ AC_ARG_ENABLE(everything,
     fi
   ])
 
+WARNINGS=no
+AC_ARG_ENABLE(warnings,
+  [  --enable-warnings       turn on g++ warnings],
+  [if test x$enableval = xyes; then
+    WARNINGS=yes
+  fi])
+if test x$GXX = xyes; then
+  if test $WARNINGS = yes; then
+    save_CXXFLAGS="$CXXFLAGS"
+    CXXFLAGS="$CXXFLAGS -Wall -Wno-sign-compare -Wno-reorder -Wno-non-virtual-dtor"
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([],[])], [], [CXXFLAGS="$save_CXXFLAGS"])
+  else
+    CXXFLAGS="$CXXFLAGS -w"
+  fi
+fi
+
 AC_ARG_ENABLE(unicode3,
   [  --enable-unicode3       use 21 instead of 16 bits to represent unicode characters],
   [if test x$enableval = xyes -o x$enableval = xno; then
