@@ -215,7 +215,7 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
         {
           char *middle = strchr  (translation + 5, translation [4]);
           char *suffix = strrchr (translation + 5, translation [4]);
-          
+
           if (suffix && middle && suffix > middle + 1)
             {
               key->type  = keysym_t::LIST;
@@ -467,7 +467,7 @@ keyboard_manager::find_keysym (KeySym keysym, unsigned int state)
   int hashkey = keysym & KEYSYM_HASH_MASK;
   unsigned int index = hash [hashkey];
   unsigned int end = hashkey < KEYSYM_HASH_BUDGETS - 1
-                     ? hash [hashkey + 1] 
+                     ? hash [hashkey + 1]
                      : keymap.size ();
 
   for (; index < end; ++index)

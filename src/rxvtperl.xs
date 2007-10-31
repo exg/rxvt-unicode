@@ -384,7 +384,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
   if (htype == HOOK_REFRESH_END)
     {
       AV *av = (AV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, 0));
-      
+
       for (int i = 0; i <= AvFILL (av); i++)
         ((overlay *)SvIV (*av_fetch (av, i, 0)))->swap ();
     }
@@ -593,7 +593,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
   if (htype == HOOK_REFRESH_BEGIN)
     {
       AV *av = (AV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, 0));
-      
+
       for (int i = AvFILL (av); i >= 0; i--)
         ((overlay *)SvIV (*av_fetch (av, i, 0)))->swap ();
     }
@@ -601,7 +601,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
     {
       clearSVptr ((SV *)term->perl.self);
       SvREFCNT_dec ((SV *)term->perl.self);
-      
+
       // don't allow further calls
       term->perl.self = 0;
     }
@@ -1674,7 +1674,7 @@ rxvt_term::XListProperties (Window window)
         EXTEND (SP, count);
         while (count--)
           PUSHs (newSVuv ((U32)props [count]));
-        
+
         XFree (props);
 }
 

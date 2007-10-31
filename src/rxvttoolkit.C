@@ -668,7 +668,7 @@ insert_component (unsigned int value, unsigned int mask, unsigned int shift)
 {
   return (value * (mask + 1) >> 16) << shift;
 }
- 
+
 bool
 rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
 {
@@ -797,7 +797,7 @@ rxvt_color::set (rxvt_screen *screen, const rgba &color)
 
       for (int i = 0; i < cmap_size; i++)
         colors [i].pixel = i;
- 
+
       // many kilobytes transfer per colour, but pseudocolor isn't worth
       // many extra optimisations.
       XQueryColors (screen->dpy, screen->cmap, colors, cmap_size);
@@ -820,7 +820,7 @@ rxvt_color::set (rxvt_screen *screen, const rgba &color)
 
       //rxvt_warn ("could not allocate %04x %04x %04x, getting %04x %04x %04x instead (%d)\n",
       //    color.r, color.g, color.b, best->red, best->green, best->blue, diff);
-          
+
       got = alloc (screen, rgba (best->red, best->green, best->blue));
 
       delete [] colors;
@@ -858,7 +858,7 @@ rxvt_color::get (XColor &color)
   color.pixel = (Pixel)*this;
 }
 
-void 
+void
 rxvt_color::free (rxvt_screen *screen)
 {
   if (screen->visual->c_class == TrueColor)

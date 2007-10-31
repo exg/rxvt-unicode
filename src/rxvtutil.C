@@ -94,11 +94,11 @@ void *
 rxvt_temp_buf (int len)
 {
   if (len > temp_len)
-    { 
+    {
       temp_buf = realloc (temp_buf, len);
       temp_len = len;
     }
-  
+
   return temp_buf;
 }
 

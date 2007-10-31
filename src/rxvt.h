@@ -93,7 +93,7 @@ class out_of_input { };
 
 /*
  *****************************************************************************
- * PROTOTYPES                    
+ * PROTOTYPES
  *****************************************************************************
  */
 // main.C
@@ -183,24 +183,24 @@ typedef struct _mwmhints {
 
 #if ENABLE_XEMBED
 // XEMBED messages
-# define XEMBED_EMBEDDED_NOTIFY          0 
-# define XEMBED_WINDOW_ACTIVATE          1 
-# define XEMBED_WINDOW_DEACTIVATE        2 
-# define XEMBED_REQUEST_FOCUS            3 
-# define XEMBED_FOCUS_IN                 4 
-# define XEMBED_FOCUS_OUT                5 
-# define XEMBED_FOCUS_NEXT               6 
+# define XEMBED_EMBEDDED_NOTIFY          0
+# define XEMBED_WINDOW_ACTIVATE          1
+# define XEMBED_WINDOW_DEACTIVATE        2
+# define XEMBED_REQUEST_FOCUS            3
+# define XEMBED_FOCUS_IN                 4
+# define XEMBED_FOCUS_OUT                5
+# define XEMBED_FOCUS_NEXT               6
 # define XEMBED_FOCUS_PREV               7
 
-# define XEMBED_MODALITY_ON              10 
-# define XEMBED_MODALITY_OFF             11 
-# define XEMBED_REGISTER_ACCELERATOR     12 
-# define XEMBED_UNREGISTER_ACCELERATOR   13 
+# define XEMBED_MODALITY_ON              10
+# define XEMBED_MODALITY_OFF             11
+# define XEMBED_REGISTER_ACCELERATOR     12
+# define XEMBED_UNREGISTER_ACCELERATOR   13
 # define XEMBED_ACTIVATE_ACCELERATOR     14
 
 // XEMBED detail code
-# define XEMBED_FOCUS_CURRENT            0 
-# define XEMBED_FOCUS_FIRST              1 
+# define XEMBED_FOCUS_CURRENT            0
+# define XEMBED_FOCUS_FIRST              1
 # define XEMBED_FOCUS_LAST               2
 
 # define XEMBED_MAPPED			(1 << 0)
@@ -423,7 +423,7 @@ enum {
   C0_BS , C0_HT , C0_LF , C0_VT , C0_FF , C0_CR , C0_SO , C0_SI ,
   C0_DLE, C0_DC1, C0_DC2, D0_DC3, C0_DC4, C0_NAK, C0_SYN, C0_ETB,
   C0_CAN, C0_EM , C0_SUB, C0_ESC, C0_IS4, C0_IS3, C0_IS2, C0_IS1,
-}; 
+};
 #define CHAR_ST                 0x9c    /* 0234 */
 
 /*
@@ -855,7 +855,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   static const char resval_undef [];    // options specifically unset
   static const char resval_on [];       // boolean options switched on
   static const char resval_off [];      // or off
-  
+
   log_callback   *log_hook;             // log error messages through this hook, if != 0
   getfd_callback *getfd_hook;           // convert remote to local fd, if != 0
 #if ENABLE_PERL
@@ -1076,7 +1076,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 #ifdef TEXT_BLINK
   void text_blink_cb (time_watcher &w); time_watcher text_blink_ev;
 #endif
-#ifndef NO_BELL     
+#ifndef NO_BELL
   void bell_cb (time_watcher &w); time_watcher bell_ev;
 #endif
 

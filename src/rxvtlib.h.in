@@ -103,7 +103,7 @@ struct line_t;
  *  |························= row_buf[2] etc.
  *  |
  *  +------------+···········= term_start + top_row
- *  | scrollback |                                      
+ *  | scrollback |
  *  | scrollback +---------+·= term_start + view_start
  *  | scrollback | display |
  *  | scrollback | display |

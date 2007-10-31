@@ -33,7 +33,7 @@
 #define TIMING_TEST_START(id) \
 	struct timeval timing_test_##id##_stv;\
   gettimeofday (&timing_test_##id##_stv, NULL);
-  
+
 #define TIMING_TEST_PRINT_RESULT(id) \
   do{ struct timeval tv;gettimeofday (&tv, NULL); tv.tv_sec -= (timing_test_##id##_stv).tv_sec;\
       fprintf (stderr, "%s: %s: %d: elapsed  %ld usec\n", #id, __FILE__, __LINE__,\
@@ -320,7 +320,7 @@ bgPixmap_t::set_geometry (const char *geom)
           x = y = defaultAlign;
           w = h = defaultScale;
         }
-        
+
       if (!(flags & geometrySet))
         geom_flags |= WidthValue|HeightValue|XValue|YValue;
 
@@ -451,8 +451,8 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
       if ((w > 0 && w != original_asim->width)
           || (h > 0 && h != original_asim->height))
         {
-          result = scale_asimage (target->asv, original_asim, 
-                                  w > 0 ? w : original_asim->width, 
+          result = scale_asimage (target->asv, original_asim,
+                                  w > 0 ? w : original_asim->width,
                                   h > 0 ? h : original_asim->height,
                                   background ? ASA_ASImage : ASA_XImage,
                                   100, ASIMAGE_QUALITY_DEFAULT);
@@ -467,8 +467,8 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
           if (h_scale == 0 || v_scale == 0)
             {
               ASImage *tmp = tile_asimage (target->asv, result,
-                                            (h_scale > 0) ? 0 : (int)result->width - x, 
-                                            (v_scale > 0) ? 0 : (int)result->height - y, 
+                                            (h_scale > 0) ? 0 : (int)result->width - x,
+                                            (v_scale > 0) ? 0 : (int)result->height - y,
                                             result->width, result->height,
                                             TINT_LEAVE_SAME, ASA_XImage,
                                             100, ASIMAGE_QUALITY_DEFAULT);
@@ -580,7 +580,7 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
       /* put result on pixmap */
       if (dst_x < new_pmap_width && dst_y < new_pmap_height)
         asimage2drawable (target->asv, pixmap, result, gc, src_x, src_y, dst_x, dst_y, dst_width, dst_height, True);
-    
+
       if (result != background && result != original_asim)
         destroy_asimage (&result);
 
@@ -616,7 +616,7 @@ bgPixmap_t::set_file (const char *file)
           free (f);
         }
       return (original_asim != NULL);
-#  endif    
+#  endif
     }
   return false;
 }
@@ -624,7 +624,7 @@ bgPixmap_t::set_file (const char *file)
 # endif	/* BG_IMAGE_FROM_FILE */
 
 # ifdef ENABLE_TRANSPARENCY
-bool 
+bool
 bgPixmap_t::set_transparent ()
 {
   if (!(flags & isTransparent))
@@ -659,7 +659,7 @@ bgPixmap_t::set_blur_radius (const char *geom)
       ++changed;
       v_blurRadius = vr;
     }
-    
+
   if (v_blurRadius == 0 && h_blurRadius == 0)
     flags &= ~blurNeeded;
   else
@@ -696,7 +696,7 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
         flags |= bgPixmap_t::tintNeeded;
       }
     }
-    
+
   if (flags & bgPixmap_t::tintNeeded)
     {
       if (flags & bgPixmap_t::tintWholesome)
@@ -758,9 +758,9 @@ bgPixmap_t::set_shade (const char *shade_str)
   return false;
 }
 
-/* make_transparency_pixmap() 
+/* make_transparency_pixmap()
  * Builds a pixmap sized the same as terminal window, with depth same as the root window
- * that pixmap contains tiled portion of the root pixmap that is supposed to be covered by 
+ * that pixmap contains tiled portion of the root pixmap that is supposed to be covered by
  * our window.
  */
 unsigned long
@@ -886,9 +886,9 @@ bgPixmap_t::make_transparency_pixmap ()
 
   if (tiled_root_pmap != None)
     {
-      if (!need_client_side_rendering ()) 
+      if (!need_client_side_rendering ())
         {
-          if ((flags & tintNeeded)) 
+          if ((flags & tintNeeded))
             {
               if (flags & tintWholesome)
                 {
@@ -958,7 +958,7 @@ bgPixmap_t::make_transparency_pixmap ()
                   Picture overlay_pic = XRenderCreatePicture (dpy, overlay_pmap, solid_format, CPRepeat, &pa);
                   XFreePixmap (dpy, overlay_pmap);
 
-                  pa.component_alpha = True;              
+                  pa.component_alpha = True;
                   Pixmap mask_pmap = XCreatePixmap (dpy, root, 1, 1, 32);
                   Picture mask_pic = XRenderCreatePicture (dpy, mask_pmap, solid_format, CPRepeat|CPComponentAlpha, &pa);
                   XFreePixmap (dpy, mask_pmap);
@@ -984,7 +984,7 @@ bgPixmap_t::make_transparency_pixmap ()
                   XRenderFreePicture (dpy, back_pic);
 #   if DO_TIMING_TEST
                   XSync (dpy, False);
-#   endif                  
+#   endif
 #  endif
                 }
              }
@@ -998,20 +998,20 @@ bgPixmap_t::make_transparency_pixmap ()
       pmap_height = window_height;
       pmap_depth = root_depth;
     }
-      
+
   if (gc)
     XFreeGC (dpy, gc);
 
   TIMING_TEST_PRINT_RESULT (tp);
-    
-  return result;    
+
+  return result;
 }
 
 bool
 bgPixmap_t::set_root_pixmap ()
 {
   Pixmap new_root_pixmap = None;
-  
+
   new_root_pixmap = target->get_pixmap_property (XA_XROOTPMAP_ID);
   if (new_root_pixmap == None)
     new_root_pixmap = target->get_pixmap_property (XA_ESETROOT_PMAP_ID);
@@ -1169,10 +1169,10 @@ bgPixmap_t::render ()
 
   TIMING_TEST_PRINT_RESULT (tp);
 
-  return true;      
+  return true;
 }
 
-bool 
+bool
 bgPixmap_t::set_target (rxvt_term *new_target)
 {
   if (new_target)
@@ -1229,7 +1229,7 @@ bgPixmap_t::apply()
               XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
 # endif
         }
-      /* don't want Expose on the parent or vt. It is better to use 
+      /* don't want Expose on the parent or vt. It is better to use
          scr_touch or we get a great deal of flicker otherwise: */
       XClearWindow (target->dpy, target->parent[0]);
 

@@ -276,7 +276,7 @@ rxvt_term::scr_reset ()
 
       line_t *old_buf = row_buf;
       row_buf = (line_t *)rxvt_calloc (total_rows + nrow, sizeof (line_t));
-        
+
       int p    = MOD (term_start + prev_nrow, prev_total_rows);  // previous row
       int pend = MOD (term_start + top_row  , prev_total_rows);
       int q    = total_rows; // rewrapped row
@@ -330,7 +330,7 @@ rxvt_term::scr_reset ()
                   // see below for cursor adjustment rationale
                   if (p == ocur.row)
                     screen.cur.row = q - (total_rows - nrow);
-                  
+
                   // fill a single destination line
                   while (lofs < llen && qcol < ncol)
                     {
@@ -366,7 +366,7 @@ rxvt_term::scr_reset ()
 
           term_start = total_rows - nrow;
           top_row = q - term_start;
- 
+
           // make sure all terminal lines exist
           while (top_row > 0)
             scr_blank_screen_mem (ROW (--top_row), DEFAULT_RSTYLE);
@@ -374,7 +374,7 @@ rxvt_term::scr_reset ()
       else
         {
           // if no scrollback exists (yet), wing, instead of wrap
-          
+
           for (int row = min (nrow, prev_nrow); row--; )
             {
               line_t &pline = old_buf [MOD (term_start + row, prev_total_rows)];
@@ -666,7 +666,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
           ::swap (l1, l2);
           l2.touch ();
         }
-      
+
       // move and/or clear selection, if any
       if (selection.op && current_screen == selection.screen)
         {
@@ -712,7 +712,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
               selection.beg.row  -= count;
               selection.end.row  -= count;
               selection.mark.row -= count;
-              
+
               selection_check (0);
             }
         }
@@ -834,7 +834,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
       if (screen.flags & Screen_WrapNext)
         {
           scr_do_wrap ();
-          
+
           line->l = ncol;
           line->is_longer (1);
 
@@ -1062,7 +1062,7 @@ rxvt_term::scr_tab (int count, bool ht) NOTHROW
             if (!--count)
               break;
           }
-        else 
+        else
           ht &= l.t[i] == ' '
                 && RS_SAME (l.r[i], base_rend);
 
@@ -1673,7 +1673,7 @@ rxvt_term::scr_report_position () NOTHROW
 {
   tt_printf ("\033[%d;%dR", screen.cur.row + 1, screen.cur.col + 1);
 }
-
+
 /* ------------------------------------------------------------------------- *
  *                                  FONTS                                    *
  * ------------------------------------------------------------------------- */
@@ -1736,7 +1736,7 @@ rxvt_term::scr_charset_set (int set, unsigned int ch) NOTHROW
   set_font_style ();
 }
 
-
+
 /* ------------------------------------------------------------------------- *
  *                        MAJOR SCREEN MANIPULATION                          *
  * ------------------------------------------------------------------------- */
@@ -2490,7 +2490,7 @@ rxvt_term::scr_recolour () NOTHROW
   scr_touch (true);
   want_refresh = 1;
 #endif
-  
+
 }
 
 /* ------------------------------------------------------------------------- */
@@ -2607,7 +2607,7 @@ rxvt_term::scr_dump (int fd) NOTHROW
     }
 }
 #endif
-
+
 /* ------------------------------------------------------------------------- *
  *                           CHARACTER SELECTION                             *
  * ------------------------------------------------------------------------- */
@@ -2754,7 +2754,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
           incr_buf_size = 0;
           incr_ev.stop ();
         }
-      else 
+      else
         {
           if (selection_wait == Sel_normal
               && (win != display->root || prop != XA_CUT_BUFFER0)) // avoid recursion
@@ -2842,7 +2842,7 @@ rxvt_term::selection_property (Window win, Atom prop) NOTHROW
 
 /* ------------------------------------------------------------------------- */
 /*
- * Request the current selection: 
+ * Request the current selection:
  * Order: > internal selection if available
  *        > PRIMARY, SECONDARY, CLIPBOARD if ownership is claimed (+)
  *        > CUT_BUFFER0
@@ -3130,7 +3130,7 @@ rxvt_term::selection_start_colrow (int col, int row) NOTHROW
   while (selection.mark.col > 0
          && ROW(selection.mark.row).t[selection.mark.col] == NOCHAR)
     --selection.mark.col;
-  
+
   if (selection.op)
     {      /* clear the old selection */
       selection.beg.row = selection.end.row = selection.mark.row;
@@ -3659,7 +3659,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
 
   XSendEvent (dpy, rq.requestor, False, 0L, (XEvent *)&ev);
 }
-
+
 /* ------------------------------------------------------------------------- *
  *                              MOUSE ROUTINES                               *
  * ------------------------------------------------------------------------- */

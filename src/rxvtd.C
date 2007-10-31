@@ -72,7 +72,7 @@ unix_listener::unix_listener (const char *sockname)
 : accept_ev (this, &unix_listener::accept_cb)
 {
   sockaddr_un sa;
-  
+
   if (strlen (sockname) >= sizeof(sa.sun_path))
     {
       fputs ("socket name too long, aborting.\n", stderr);
@@ -163,7 +163,7 @@ void server::read_cb (io_watcher &w, short revents)
         {
           stringvec *argv = new stringvec;
           stringvec *envv = new stringvec;
-           
+
           for (;;)
             {
               if (!recv (tok))
@@ -193,12 +193,12 @@ void server::read_cb (io_watcher &w, short revents)
 
           {
             rxvt_term *term = new rxvt_term;
-            
+
             term->log_hook = &log_cb;
             term->getfd_hook = &getfd_cb;
 
             bool success;
-            
+
             try
               {
                 success = term->init (argv, envv);
@@ -246,7 +246,7 @@ main (int argc, const char *const *argv)
           return EXIT_FAILURE;
         }
     }
-  
+
   chdir ("/");
 
   if (opt_opendisplay)

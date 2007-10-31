@@ -1036,8 +1036,8 @@ void
 rxvt_term::flush ()
 {
   flush_ev.stop ();
-  
-#ifdef HAVE_BG_PIXMAP  
+
+#ifdef HAVE_BG_PIXMAP
   if (bgPixmap.check_clearChanged ())
     {
 //      scr_clear (true); This needs to be researched further!

@@ -49,25 +49,25 @@ const struct n2cs {
   { "ISO885915",	CS_ISO8859_15       },
   { "FCD885915",	CS_ISO8859_15       },
   { "ISO885916",	CS_ISO8859_16       },
-                                            
+
   { "TIS620*",		CS_ISO8859_11	    }, // close enough
 
   { "ISO10646*",	CS_UNICODE          },
   { "UNICODE",		CS_UNICODE          },
   { "UTF8",		CS_UNICODE          },
-                                            
+
   { "ASCII",		CS_US_ASCII         },
   { "USASCII",		CS_US_ASCII         },
   { "ANSIX341968",	CS_US_ASCII         },
   { "ISO646.1991-IRV",  CS_US_ASCII         }, // older versions used the currency sign
-                                            
+
   { "KOI8R*",		CS_KOI8_R           },
   { "GOST1976874*",     CS_KOI8_R           },
   { "KOI8RU",		CS_KOI8_U           },
   { "KOI8U",		CS_KOI8_U           },
 
   { "VISCII*",		CS_VISCII	    },
-                                            
+
   { "JISX0201*",	CS_JIS0201_1976_0   },
   { "JISC6226*",	CS_JIS0208_1990_0   }, // also wrongly matches -1987-0? (check Encode::JP)
   { "JISX0208*",	CS_JIS0208_1990_0   }, // also wrongly matches -1987-0? (check Encode::JP)
@@ -75,11 +75,11 @@ const struct n2cs {
   { "JISX021320001",	CS_JIS0213_1        },
   { "JISX021320002",	CS_JIS0213_2        },
   { "JISX0221*",	CS_UNICODE          }, // _very_ close
-                                            
+
   { "KSC5601*",		CS_KSC5601_1987_0   },
   { "KSX1001*",		CS_KSC5601_1987_0   },
   { "KSC5700*",		CS_UNICODE          }, // unicode plus extensions
-                                            
+
   { "BIG5P*",		CS_BIG5_PLUS        },
   { "BIG5ETEN*",	CS_BIG5_EXT         },
   { "BIG5*",		CS_BIG5             },
@@ -220,7 +220,7 @@ static uint32_t cs_unicode_16_from_unicode (unicode_t unicode) { return unicode 
 #else
 # define ENC(base) { cs_ ## base ## _from_unicode }
 #endif
-  
+
 
 // order must match table in encoding.h(!)
 const rxvt_codeset_conv rxvt_codeset[NUM_CODESETS] = {

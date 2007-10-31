@@ -95,7 +95,7 @@ class rxvt_composite_vec rxvt_composite;
 text_t rxvt_composite_vec::compose (unicode_t c1, unicode_t c2)
 {
   compose_char *cc;
-  
+
   // break compose chains, as stupid readline really likes to duplicate
   // composing characters for some reason near the end of a line.
   cc = (*this)[c1];
@@ -185,7 +185,7 @@ rxvt_term::rxvt_term ()
 #ifdef USE_XIM
     im_ev (this, &rxvt_term::im_cb),
 #endif
-#ifndef NO_BELL     
+#ifndef NO_BELL
     bell_ev (this, &rxvt_term::bell_cb),
 #endif
     termwin_ev (this, &rxvt_term::x_cb),
@@ -436,7 +436,7 @@ print_x_error (Display *dpy, XErrorEvent *event)
 				  mesg, BUFSIZ);
 	rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->resourceid);
     }
-    XGetErrorDatabaseText(dpy, mtype, "ErrorSerial", "Error Serial #%d", 
+    XGetErrorDatabaseText(dpy, mtype, "ErrorSerial", "Error Serial #%d",
 			  mesg, BUFSIZ);
     rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->serial);
 }
@@ -520,10 +520,10 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
     if (option (Opt_transparent))
       {
         bgPixmap.set_transparent ();
-#ifdef HAVE_AFTERIMAGE        
+#ifdef HAVE_AFTERIMAGE
         if (rs [Rs_blurradius])
           bgPixmap.set_blur_radius (rs [Rs_blurradius]);
-#endif          
+#endif
         if (ISSET_PIXCOLOR (Color_tint))
           bgPixmap.set_tint (pix_colors_focused [Color_tint]);
         if (rs [Rs_shade])
@@ -592,7 +592,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 static struct sig_handlers
 {
   sig_watcher sw_term, sw_int;
-  
+
   /*
    * Catch a fatal signal and tidy up before quitting
    */
@@ -904,7 +904,7 @@ rxvt_term::set_fonts ()
       resize_all_windows (0, 0, 0);
       scr_remap_chars ();
       scr_touch (true);
-    }   
+    }
 
   return true;
 }
@@ -958,7 +958,7 @@ rxvt_term::set_window_color (int idx, const char *color)
 #ifdef XTERM_COLOR_CHANGE
   rxvt_color xcol;
   int i;
-  
+
   if (color == NULL || *color == '\0')
     return;
 
@@ -1349,7 +1349,7 @@ xim_preedit_draw (XIC ic, XPointer client_data, XIMPreeditDrawCallbackStruct *ca
         }
       else
         str = (void *)text->string.wide_char;
-      
+
       HOOK_INVOKE ((term, HOOK_XIM_PREEDIT_DRAW,
                     DT_INT, call_data->caret,
                     DT_INT, call_data->chg_first,
@@ -1678,7 +1678,7 @@ rxvt_term::IMSetPosition ()
     {
       im_set_size (preedit_rect);
       preedit_attr = XVaCreateNestedList (0, XNArea, &preedit_rect, NULL);
-    
+
       XSetICValues (Input_Context,
                     XNPreeditAttributes, preedit_attr, NULL);
     }

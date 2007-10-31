@@ -156,9 +156,9 @@ const char *const def_colorName[] =
     "rgb:00/00/cd",             // 4: blue              (Blue3)
     "rgb:cd/00/cd",             // 5: magenta           (Magenta3)
     "rgb:00/cd/cd",             // 6: cyan              (Cyan3)
-# ifdef XTERM_COLORS                                    
+# ifdef XTERM_COLORS
     "rgb:e5/e5/e5",             // 7: white             (Grey90)
-# else                                                  
+# else
     "rgb:fa/eb/d7",             // 7: white             (AntiqueWhite)
 # endif
     /* high-intensity colors */
@@ -749,7 +749,7 @@ rxvt_term::Get_Colours ()
 #ifdef OFF_FOCUS_FADING
   pix_colors = pix_colors_focused;
 #endif
-  
+
   for (i = 0; i < (depth <= 2 ? 2 : NRS_COLORS); i++)
     {
       const char *name = rs[Rs_color + i];

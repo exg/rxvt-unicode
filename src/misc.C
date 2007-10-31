@@ -118,7 +118,7 @@ rxvt_utf8towcs (const char *str, int len)
       else if (s[0] < 0x80)
         *p++ = *s++;
       else if (len >= 2
-               && s[0] >= 0xc2 && s[0] <= 0xdf 
+               && s[0] >= 0xc2 && s[0] <= 0xdf
                && (s[1] & 0xc0) == 0x80)
         {
           *p++ = ((s[0] & 0x1f) << 6)
@@ -146,9 +146,9 @@ rxvt_utf8towcs (const char *str, int len)
                && (s[2] & 0xc0) == 0x80
                && (s[3] & 0xc0) == 0x80)
         {
-          *p++ = ((s[0] & 0x07) << 18) 
-               | ((s[1] & 0x3f) << 12) 
-               | ((s[2] & 0x3f) <<  6) 
+          *p++ = ((s[0] & 0x07) << 18)
+               | ((s[1] & 0x3f) << 12)
+               | ((s[2] & 0x3f) <<  6)
                |  (s[3] & 0x3f);
           s += 4;
         }

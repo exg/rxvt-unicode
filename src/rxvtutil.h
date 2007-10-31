@@ -92,7 +92,7 @@ struct zero_initialized {
 };
 
 /* simplevec taken (and heavily modified), from:
- * 
+ *
  *  MICO --- a free CORBA implementation
  *  Copyright (C) 1997-98 Kay Roemer & Arno Puder
  */

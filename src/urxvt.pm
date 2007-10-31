@@ -930,7 +930,7 @@ sub invoke {
 
    if ($htype == 0) { # INIT
       my @dirs = ((split /:/, $TERM->resource ("perl_lib")), "$LIBDIR/perl");
-      
+
       my %ext_arg;
 
       {
@@ -2004,7 +2004,7 @@ fractional number of seconds since the epoch. Example:
                     ->cb (sub {
                        $term->{overlay}->set (0, 0,
                           sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2,1,0]);
-                    });                                                                                                                                      
+                    });
 
 =over 4
 
@@ -2137,7 +2137,7 @@ process exits, after which they stop automatically.
                     ->cb (sub {
                        my ($pw, $exit_status) = @_;
                        ...
-                    });                                                                                                                                      
+                    });
 
 =over 4
 

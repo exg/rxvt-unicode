@@ -47,7 +47,7 @@ struct  bgPixmap_t {
   }; /* this flags are returned by make_transparency_pixmap if called */
 
   bool check_clearChanged () { bool r = flags & hasChanged; flags &= ~hasChanged; return r; };
-  
+
 # ifdef  BG_IMAGE_FROM_FILE
 #  ifdef HAVE_AFTERIMAGE
   ASImage *original_asim;
@@ -110,8 +110,8 @@ struct  bgPixmap_t {
   bool render ();
   void invalidate () {
     if (!(flags & isInvalid))
-      { 
-        flags |= isInvalid; 
+      {
+        flags |= isInvalid;
         invalid_since = NOW;
       }
   };

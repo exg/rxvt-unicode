@@ -308,7 +308,7 @@ struct rxvt_color {
 
   void get (rgba &color);
   void get (XColor &color);
- 
+
   bool set (rxvt_screen *screen, const char *name);
   bool set (rxvt_screen *screen, const rgba &color);
 
