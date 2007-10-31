@@ -74,7 +74,7 @@ sub on_button_press {
          /[\\"'\ \t|&;<>()]/
             and $add_button->("shell quote" => sub { $_ = "\Q$_" });
 
-         /^(http|ftp|telnet|irc|news):\//
+         /^(https?|ftp|telnet|irc|news):\//
             and $add_button->("run $self->{browser}" => sub { $self->exec_async ($self->{browser}, $_) });
 
          for my $hook (@{ $self->{term}{selection_popup_hook} || [] }) {
