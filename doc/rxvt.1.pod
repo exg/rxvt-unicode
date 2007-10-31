@@ -148,7 +148,7 @@ used to brighten or darken the image in addition to tinting it.
 Please note that certain tint colours can be applied on the server-side,
 thus yielding performance gain of two orders of magnitude. These colours are:
 blue, red, green, cyan, magenta, yellow, and those close to them. Also 
-pure black and pure white colors essentialy mean no tinting; resource
+pure black and pure white colors essentially mean no tinting; resource
 I<tintColor>. Example:
 
    @@RXVT_NAME@@ -tr -tint blue -sh 40
