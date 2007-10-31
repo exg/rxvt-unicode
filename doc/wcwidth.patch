@@ -1,27 +1,21 @@
-Index: src/Makefile.in
-===================================================================
-RCS file: /schmorpforge/rxvt-unicode/src/Makefile.in,v
-retrieving revision 1.100
-diff -u -r1.100 Makefile.in
---- src/Makefile.in	26 Jun 2007 21:59:13 -0000	1.100
-+++ src/Makefile.in	27 Jun 2007 11:08:25 -0000
-@@ -36,7 +36,7 @@
-         command.o rxvtfont.o init.o logging.o main.o misc.o netdisp.o           \
+diff --git a/src/Makefile.in b/src/Makefile.in
+index 2136e69..3d7ddea 100644
+--- a/src/Makefile.in
++++ b/src/Makefile.in
+@@ -36,7 +36,7 @@ COMMON = \
+         background.o command.o rxvtfont.o init.o logging.o main.o misc.o \
  	ptytty.o proxy.o screen.o scrollbar.o scrollbar-next.o scrollbar-rxvt.o \
- 	scrollbar-xterm.o scrollbar-plain.o xdefaults.o xpm.o encoding.o        \
+ 	scrollbar-xterm.o scrollbar-plain.o xdefaults.o encoding.o \
 -	rxvttoolkit.o rxvtutil.o iom.o keyboard.o fdpass.o @PERL_O@
 +	rxvttoolkit.o rxvtutil.o iom.o keyboard.o fdpass.o @PERL_O@ wcwidth.o
  
  COMMON_DAEMON = rxvtdaemon.o
  
-Index: src/rxvt.h
-===================================================================
-RCS file: /schmorpforge/rxvt-unicode/src/rxvt.h,v
-retrieving revision 1.275
-diff -u -r1.275 rxvt.h
---- src/rxvt.h	26 Jun 2007 00:40:19 -0000	1.275
-+++ src/rxvt.h	27 Jun 2007 11:08:26 -0000
-@@ -680,6 +680,12 @@
+diff --git a/src/rxvt.h b/src/rxvt.h
+index 64b7fc0..1897040 100644
+--- a/src/rxvt.h
++++ b/src/rxvt.h
+@@ -649,6 +649,12 @@ enum {
   */
  #define dLocal(type,name)       type const name = this->name
  
@@ -34,8 +28,11 @@ diff -u -r1.275 rxvt.h
  // for speed reasons, we assume that all codepoints 32 to 126 are
  // single-width.
  #define WCWIDTH(c)		(IN_RANGE_INC (c, 0x20, 0x7e) ? 1 : wcwidth (c))
---- src/wcwidth.C	1970-01-01 01:00:00.000000000 +0100
-+++ src/wcwidth.C	2007-06-14 13:11:38.000000000 +0200
+diff --git a/src/wcwidth.C b/src/wcwidth.C
+new file mode 100644
+index 0000000..c3d90a6
+--- /dev/null
++++ b/src/wcwidth.C
 @@ -0,0 +1,218 @@
 +/*
 + * This is an implementation of wcwidth() and wcswidth() (defined in
