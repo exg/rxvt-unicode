@@ -14,7 +14,7 @@ sub msg {
 sub on_start {
    my ($self) = @_;
 
-   $self->{browser} = $self->x_resource ("urlLauncher") || "x-www-browser";
+   $self->{browser} = $self->x_resource ("urlLauncher") || "sensible-browser";
 
    $self->grab_button (3, urxvt::ControlMask);
 
