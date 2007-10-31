@@ -1319,6 +1319,7 @@ Optional Features:
   --enable-everything     enable standard non-multichoice features
                      NOTE: this option is order dependent
                      NOTE: automatically enabled with --enable-shared
+  --enable-warnings       turn on g++ warnings
   --enable-unicode3       use 21 instead of 16 bits to represent unicode characters
   --enable-combining      enable composition of base and combining characters
   --enable-xft            enable xft support on systems that have it
@@ -1336,14 +1337,14 @@ Optional Features:
   --disable-delete-key    disable handling of the delete key
   --disable-resources     disable all resource checking
   --enable-8bitctrls      enable 8 bit control sequences (not recommended)
-  --enable-fallback(=CLASS) fall back on CLASS resources in addition to URxvt ones (default: Rxvt)
+  --enable-fallback[=CLASS] fall back on CLASS resources in addition to URxvt ones (default: Rxvt)
   --disable-swapscreen    disable swap screen support
   --enable-iso14755       enable support for extended ISO 14755 modes
   --enable-frills         enable support for rarely used features
   --enable-keepscrolling  enable continual scrolling on scrollbar arrow press
   --enable-selectionscrolling  enable scrolling during selections
   --enable-mousewheel     enable scrolling via mouse wheel or buttons 4 & 5
-  --enable-slipwheeling   enable slip wheel scrolling     (requires previous)
+  --enable-slipwheeling   enable slip wheel scrolling (requires --enable-mousewheel)
   --enable-smart-resize   enable smart growth/shrink behaviour
   --enable-text-blink     enable blinking text
   --enable-pointer-blank  enable pointer blank when typing or inactive pointer
@@ -1355,7 +1356,7 @@ Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-afterimage-config=DIR  use libAfterImage config script in DIR
-  --with-codesets=NAME,.. compile in additional codesets (jp,jp_ext,kr,zh,zh_ext,all)
+  --with-codesets=CS,...  compile in additional codesets (jp,jp_ext,kr,zh,zh_ext,all)
   --with-res-name=NAME    use this as default resource name (default: urxvt)
   --with-res-class=CLASS  use this as the resource class (default: URxvt)
   --with-name=NAME        set the basename for the installed binaries (default: urxvt)
@@ -3871,7 +3872,7 @@ LINKER=$LINKER
 
 if test -z "$orig_CXXFLAGS"; then
   if test x$GCC = xyes && test "x$GXX" = xyes; then
-     CXXFLAGS="-g -O3 -fno-threadsafe-statics -fno-enforce-eh-specs"
+    CXXFLAGS="-g -O3 -fno-threadsafe-statics -fno-enforce-eh-specs"
     cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -4492,6 +4493,64 @@ if test "${enable_everything+set}" = set; then
 
 fi
 
+
+WARNINGS=no
+# Check whether --enable-warnings was given.
+if test "${enable_warnings+set}" = set; then
+  enableval=$enable_warnings; if test x$enableval = xyes; then
+    WARNINGS=yes
+  fi
+fi
+
+if test x$GXX = xyes; then
+  if test $WARNINGS = yes; then
+    save_CXXFLAGS="$CXXFLAGS"
+    CXXFLAGS="$CXXFLAGS -Wall -Wno-sign-compare -Wno-reorder -Wno-non-virtual-dtor"
+    cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_compile") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_cxx_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
+  :
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	CXXFLAGS="$save_CXXFLAGS"
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  else
+    CXXFLAGS="$CXXFLAGS -w"
+  fi
+fi
 
 # Check whether --enable-unicode3 was given.
 if test "${enable_unicode3+set}" = set; then
@@ -11290,8 +11349,8 @@ _ACEOF
 fi
 
 
-ac_save_LIBS=$LIBS
-ac_save_CFLAGS=$CFLAGS
+save_LIBS=$LIBS
+save_CFLAGS=$CFLAGS
 CFLAGS="$CFLAGS $X_CFLAGS"
 LIBS="$LIBS $X_LIBS $X_EXTRA_LIBS -lX11"
 if test x$support_xim = xyes; then
@@ -11476,8 +11535,8 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
 fi
-LIBS=$ac_save_LIBS
-CFLAGS=$ac_save_CFLAGS
+LIBS=$save_LIBS
+CFLAGS=$save_CFLAGS
 
 { echo "$as_me:$LINENO: checking for working plain setlocale" >&5
 echo $ECHO_N "checking for working plain setlocale... $ECHO_C" >&6; }
