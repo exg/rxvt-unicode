@@ -788,7 +788,7 @@ struct line_t {
 
 /****************************************************************************/
 
-// primivite wrapper around mbstate_t to ensure initialisation
+// primitive wrapper around mbstate_t to ensure initialisation
 struct mbstate {
   mbstate_t mbs;
 
