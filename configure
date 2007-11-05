@@ -9638,13 +9638,7 @@ _ACEOF
 
 
 
-
-
-for ac_func in \
-	unsetenv \
-	setutent \
-	on_exit \
-
+for ac_func in unsetenv
 do
 as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
 { echo "$as_me:$LINENO: checking for $ac_func" >&5
@@ -9793,9 +9787,9 @@ fi
 
 
 for ac_func in \
-	ttyslot \
 	updwtmp \
 	updwtmpx \
+	updlastlogx \
 
 do
 as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
@@ -11226,13 +11220,6 @@ cat >>confdefs.h <<_ACEOF
 #define LASTLOG_FILE "$path_lastlog"
 _ACEOF
 
-  if test -d "$path_lastlog"; then
-
-cat >>confdefs.h <<\_ACEOF
-#define LASTLOG_IS_DIR 1
-_ACEOF
-
-  fi
 fi
 
 { echo "$as_me:$LINENO: checking where lastlogx is located" >&5
@@ -11323,30 +11310,6 @@ _ACEOF
 fi
 
 
-
-{ echo "$as_me:$LINENO: checking where ttys/ttytab is located" >&5
-echo $ECHO_N "checking where ttys/ttytab is located... $ECHO_C" >&6; }
-if test "${rxvt_cv_path_ttytab+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  for ttys_file in     /etc/ttys /etc/ttytab;
-do
-  if test -f "$ttys_file" ; then
-    rxvt_cv_path_ttytab=$ttys_file
-    break
-  fi
-done
-
-fi
-{ echo "$as_me:$LINENO: result: $rxvt_cv_path_ttytab" >&5
-echo "${ECHO_T}$rxvt_cv_path_ttytab" >&6; }
-if test x$rxvt_cv_path_ttytab != x; then
-
-cat >>confdefs.h <<_ACEOF
-#define TTYTAB_FILENAME "$rxvt_cv_path_ttytab"
-_ACEOF
-
-fi
 
 
 save_LIBS=$LIBS

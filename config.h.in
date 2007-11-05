@@ -94,9 +94,6 @@
 /* Define if nl_langinfo(CODESET) works */
 #undef HAVE_NL_LANGINFO
 
-/* Define to 1 if you have the `on_exit' function. */
-#undef HAVE_ON_EXIT
-
 /* Define to 1 if you have the `openpty' function. */
 #undef HAVE_OPENPTY
 
@@ -123,9 +120,6 @@
 
 /* Define to 1 if you have the `setuid' function. */
 #undef HAVE_SETUID
-
-/* Define to 1 if you have the `setutent' function. */
-#undef HAVE_SETUTENT
 
 /* Define to 1 if you have the <stdarg.h> header file. */
 #undef HAVE_STDARG_H
@@ -187,9 +181,6 @@
 /* Define to 1 if you have the <termios.h> header file. */
 #undef HAVE_TERMIOS_H
 
-/* Define to 1 if you have the `ttyslot' function. */
-#undef HAVE_TTYSLOT
-
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
@@ -199,6 +190,9 @@
 
 /* Define to 1 if you have the `unsetenv' function. */
 #undef HAVE_UNSETENV
+
+/* Define to 1 if you have the `updlastlogx' function. */
+#undef HAVE_UPDLASTLOGX
 
 /* Define to 1 if you have the `updwtmp' function. */
 #undef HAVE_UPDWTMP
@@ -250,9 +244,6 @@
 
 /* Define location of lastlog */
 #undef LASTLOG_FILE
-
-/* Define if lastlog is provided via a directory */
-#undef LASTLOG_IS_DIR
 
 /* Define if you want to have lastlog support when utmp/utmpx is enabled */
 #undef LASTLOG_SUPPORT
@@ -362,9 +353,6 @@
 
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
 #undef TIME_WITH_SYS_TIME
-
-/* Define location of ttys/ttytab */
-#undef TTYTAB_FILENAME
 
 /* "" */
 #undef TTY_GID_SUPPORT
