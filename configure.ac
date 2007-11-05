@@ -644,11 +644,7 @@ dnl# --------------------------------------------------------------------------
 AC_TYPE_SIGNAL
 dnl> AC_FUNC_VPRINTF
 
-AC_CHECK_FUNCS( \
-	unsetenv \
-	setutent \
-	on_exit \
-)
+AC_CHECK_FUNCS(unsetenv)
 
 UTMP_CHECK
 
