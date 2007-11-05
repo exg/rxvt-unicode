@@ -650,21 +650,6 @@ UTMP_CHECK
 
 dnl# --------------------------------------------------------------------------
 
-dnl# find ttys/ttytab
-AC_CACHE_CHECK(where ttys/ttytab is located, rxvt_cv_path_ttytab,
-[for ttys_file in   dnl
-  /etc/ttys /etc/ttytab;
-do
-  if test -f "$ttys_file" ; then
-    rxvt_cv_path_ttytab=$ttys_file
-    break
-  fi
-done
-])
-if test x$rxvt_cv_path_ttytab != x; then
-  AC_DEFINE_UNQUOTED(TTYTAB_FILENAME, "$rxvt_cv_path_ttytab", Define location of ttys/ttytab)
-fi
-
 dnl# --------------------------------------------------------------------------
 dnl# --------------------------------------------------------------------------
 
