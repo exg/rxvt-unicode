@@ -85,19 +85,19 @@ support_wtmp=yes
 support_lastlog=yes
 
 AC_ARG_ENABLE(utmp,
-  [  --enable-utmp           enable utmp (utmpx) support],
+  [AS_HELP_STRING([--enable-utmp],[enable utmp (utmpx) support])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_utmp=$enableval
   fi])
 
 AC_ARG_ENABLE(wtmp,
-  [  --enable-wtmp           enable wtmp (wtmpx) support (requires --enable-utmp)],
+  [AS_HELP_STRING([--enable-wtmp],[enable wtmp (wtmpx) support (requires --enable-utmp)])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_wtmp=$enableval
   fi])
 
 AC_ARG_ENABLE(lastlog,
-  [  --enable-lastlog        enable lastlog support (requires --enable-utmp)],
+  [AS_HELP_STRING([--enable-lastlog],[enable lastlog support (requires --enable-utmp)])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_lastlog=$enableval
   fi])
@@ -113,9 +113,9 @@ if test x$support_lastlog = xyes; then
 fi
 
 AC_CHECK_FUNCS( \
-	ttyslot \
 	updwtmp \
 	updwtmpx \
+	updlastlogx \
 )
 
 AC_CHECK_HEADERS( \
@@ -405,9 +405,6 @@ main()
   AC_MSG_WARN(Define LASTLOG_FILE in config.h manually)])])
 if test x$path_lastlog != x; then
   AC_DEFINE_UNQUOTED(LASTLOG_FILE, "$path_lastlog", Define location of lastlog)
-  if test -d "$path_lastlog"; then
-    AC_DEFINE(LASTLOG_IS_DIR, 1, Define if lastlog is provided via a directory)
-  fi
 fi
 dnl# --------------------------------------------------------------------------
 
