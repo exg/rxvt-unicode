@@ -55,7 +55,7 @@ sub new_terminal {
 
       $rxvt->get_toplevel->set_geometry_hints ($rxvt, $hints, [qw(base-size resize-inc)]);
    };
-   
+
    $rxvt->signal_connect_after (realize => sub {
       my $win = $_[0]->window;
 

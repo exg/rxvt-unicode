@@ -199,9 +199,9 @@ And here is rxvt-unicode:
 
    libX11.so.6 => /usr/X11R6/lib/libX11.so.6 (0x00002aaaaabc3000)
    libgcc_s.so.1 => /lib/libgcc_s.so.1 (0x00002aaaaada2000)
-   libc.so.6 => /lib/libc.so.6 (0x00002aaaaaeb0000)     
-   libdl.so.2 => /lib/libdl.so.2 (0x00002aaaab0ee000)   
-   /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)     
+   libc.so.6 => /lib/libc.so.6 (0x00002aaaaaeb0000)
+   libdl.so.2 => /lib/libdl.so.2 (0x00002aaaab0ee000)
+   /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)
 
 No large bloated libraries (of course, none were linked in statically),
 except maybe libX11 :)
@@ -211,8 +211,8 @@ except maybe libX11 :)
 
 =head3 I can't get transparency working, what am I doing wrong?
 
-First of all, please address all transparency related issues to Sasha Vasko at 
-sasha@aftercode.net and do not bug the author about it. Also, if you can't 
+First of all, please address all transparency related issues to Sasha Vasko at
+sasha@aftercode.net and do not bug the author about it. Also, if you can't
 get it working consider it a rite of passage: ... and you failed.
 
 Here are four ways to get transparency. B<Do> read the manpage and option
@@ -612,7 +612,7 @@ key has been assigned an escape sequence to match the vt100 for Execute
 
 Some other Backspace problems:
 
-some editors use termcap/terminfo, 
+some editors use termcap/terminfo,
 some editors (vim I'm told) expect Backspace = ^H,
 GNU Emacs (and Emacs-like editors) use ^H for help.
 
@@ -1075,7 +1075,7 @@ method servers are running with this command:
 
    xprop -root XIM_SERVERS
 
-=item 
+=item
 
 =back
 
