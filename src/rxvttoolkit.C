@@ -185,7 +185,7 @@ rxvt_xim::ref_init ()
   ximcallback.client_data = (XPointer)this;
   ximcallback.callback = im_destroy_cb;
 
-  XSetIMValues (xim, XNDestroyCallback, &ximcallback, 0);
+  XSetIMValues (xim, XNDestroyCallback, &ximcallback, (char *)0);
 
   return true;
 }
