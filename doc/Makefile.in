@@ -34,6 +34,8 @@ SEDREPLACE = -e 's%@@RXVT_VERSION@@%$(VERSION)%g;'	\
 	     -e 's%@@RXVT_LIBDIR@@%$(libdir)%g;'	\
 	     -e 's%@@URXVT_NAME@@%urxvt%g;'
 
+POD2MAN = pod2man -n @@RXVT_NAME@@ -r"$(VERSION)" -q\" -c "RXVT-UNICODE"
+
 all:
 	sed $(SEDREPLACE) < $(srcdir)/rxvt.1.man.in  >rxvt.1.man
 	sed $(SEDREPLACE) < $(srcdir)/rxvtc.1.man.in >rxvtc.1.man
@@ -48,13 +50,13 @@ rxvtperl.3.pod: ../src/urxvt.pm
 	$(srcdir)/podtbl <$< >$@
 
 %.1.man.in: %.1.tbl
-	pod2man -n @@RXVT_NAME@@ -r"$(VERSION)" -q\" -s1 -c "RXVT-UNICODE" <$< >$@
+	$(POD2MAN) -s1 <$< >$@
 
 %.3.man.in: %.3.tbl
-	pod2man -n @@RXVT_NAME@@ -r"$(VERSION)" -q\" -s3 -c "RXVT-UNICODE" <$< >$@
+	$(POD2MAN) -s3 <$< >$@
 
 %.7.man.in: %.7.tbl
-	pod2man -n @@RXVT_NAME@@ -r"$(VERSION)" -q\" -s7 -c "RXVT-UNICODE" <$< >$@
+	$(POD2MAN) -s7 <$< >$@
 
 %.html: %.tbl
 	sed $(SEDREPLACE) <$< | pod2xhtml --css http://res.tst.eu/pod.css >$@
