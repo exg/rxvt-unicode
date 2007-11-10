@@ -19,6 +19,9 @@ DUMB: support tex fonts
 TODO: align default value of cutchars with rxvt.1.pod and add it as a fallback in perl 'selection'
       http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=377194
 
+	- fix a serious bug while setting the XIM destroy callback
+          on (typical) 64 bit systems.
+
 8.4  Sat Oct 27 14:02:13 CEST 2007
 	- overhaul of the transparency/pixmap code (sasha).
 	- fix possible race betwen visual bell and poweron.
