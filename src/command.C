@@ -598,10 +598,10 @@ rxvt_term::key_press (XKeyEvent &ev)
                     break;
 
 #ifdef XK_KP_Left
-                  case XK_KP_Up:	/* \033Ox or standard */
-                  case XK_KP_Down:	/* \033Or or standard */
-                  case XK_KP_Right:	/* \033Ov or standard */
                   case XK_KP_Left:	/* \033Ot or standard */
+                  case XK_KP_Up:	/* \033Ox or standard */
+                  case XK_KP_Right:	/* \033Ov or standard */
+                  case XK_KP_Down:	/* \033Or or standard */
                     if (kp)
                       {
                         strcpy (kbuf, "\033OZ");
