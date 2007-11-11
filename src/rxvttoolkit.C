@@ -464,7 +464,7 @@ bool rxvt_display::ref_init ()
   int fd = XConnectionNumber (dpy);
 
   // try to detect wether we have a local connection.
-  // assume unix domains socket == local, everything else not
+  // assume unix domain socket == local, everything else not
   // TODO: might want to check for inet/127.0.0.1
   is_local = 0;
   sockaddr_un sa;
