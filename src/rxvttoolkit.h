@@ -29,7 +29,7 @@
 # include <X11/Xft/Xft.h>
 #endif
 
-#include "iom.h"
+#include "ev_cpp.h"
 
 #include "rxvtlib.h"
 #include "rxvtutil.h"
@@ -101,6 +101,27 @@ struct rxvt_display;
 
 struct im_watcher;
 struct xevent_watcher;
+
+template<class watcher>
+struct event_vec : vector<watcher *> {
+  void erase_unordered (unsigned int pos)
+  {
+    watcher *w = (*this)[this->size () - 1];
+    this->pop_back ();
+
+    if (!this->empty ())
+      if (((*this)[pos] = w)) // '=' is correct!
+        w->active = pos + 1;
+  }
+};
+
+struct rxvt_watcher {
+  int active; /* 0 == inactive, else index into respective vector */
+
+  bool is_active () { return active; }
+
+  rxvt_watcher () : active (0) { }
+};
 
 struct refcounted {
   int referenced;
@@ -190,9 +211,9 @@ struct rxvt_screen {
 };
 
 struct rxvt_display : refcounted {
-  io_manager_vec<xevent_watcher> xw;
+  event_vec<xevent_watcher> xw;
 
-  io_watcher x_ev; void x_cb (io_watcher &w, short revents);
+  ev::io x_ev; void x_cb (ev::io &w, int revents);
 
 #ifdef USE_XIM
   refcache<rxvt_xim> xims;
@@ -236,7 +257,7 @@ struct rxvt_display : refcounted {
 };
 
 #ifdef USE_XIM
-struct im_watcher : watcher, callback<void (void)> {
+struct im_watcher : rxvt_watcher, callback<void (void)> {
   template<class O, class M>
   im_watcher (O object, M method)
   : callback<void (void)> (object, method)
@@ -246,6 +267,7 @@ struct im_watcher : watcher, callback<void (void)> {
   {
     display->reg (this);
   }
+
   void stop (rxvt_display *display)
   {
     display->unreg (this);
@@ -253,7 +275,7 @@ struct im_watcher : watcher, callback<void (void)> {
 };
 #endif
 
-struct xevent_watcher : watcher, callback<void (XEvent &)> {
+struct xevent_watcher : rxvt_watcher, callback<void (XEvent &)> {
   Window window;
 
   template<class O, class M>
@@ -266,6 +288,7 @@ struct xevent_watcher : watcher, callback<void (XEvent &)> {
     this->window = window;
     display->reg (this);
   }
+
   void stop (rxvt_display *display)
   {
     display->unreg (this);

@@ -33,7 +33,7 @@
 
 #include "unistd.h"
 
-#include "iom.h"
+#include "ev_cpp.h"
 #include "rxvt.h"
 #include "keyboard.h"
 #include "rxvtutil.h"
@@ -777,7 +777,7 @@ _exit (int status)
 NV
 NOW ()
 	CODE:
-        RETVAL = NOW;
+        RETVAL = ev::now ();
         OUTPUT:
         RETVAL
 
@@ -1141,10 +1141,10 @@ rxvt_term::envv ()
 }
 
 int
-rxvt_term::pty_ev_events (int events = EVENT_UNDEF)
+rxvt_term::pty_ev_events (int events = ev::UNDEF)
 	CODE:
         RETVAL = THIS->pty_ev.events;
-        if (events != EVENT_UNDEF)
+        if (events != ev::UNDEF)
           THIS->pty_ev.set (events);
 	OUTPUT:
         RETVAL
@@ -1478,7 +1478,7 @@ rxvt_term::option (U8 optval, int set = -1)
           {
             THIS->set_option (optval, set);
 
-            if (THIS->check_ev.is_active ()) // avoid doing this before START
+            if (THIS->prepare_ev.is_active ()) // avoid doing this before START
               switch (optval)
                 {
                   case Opt_skipBuiltinGlyphs:

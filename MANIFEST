@@ -66,9 +66,8 @@ src/feature.h
 src/hookinc.h
 src/init.C
 src/init.h
-src/iom.C
-src/iom.h
-src/iom_conf.h
+src/ev_cpp.C
+src/ev_cpp.h
 src/keyboard.C
 src/keyboard.h
 src/main.C
@@ -178,3 +177,12 @@ src/perl/block-graphics-to-ascii
 src/perl/digital-clock
 src/perl/macosx-clipboard
 
+libev/ev.h
+libev/ev.c
+libev/ev_vars.h
+libev/ev_wrap.h
+libev/ev_win32.c
+libev/ev_select.c
+libev/ev_poll.c
+libev/ev_epoll.c
+libev/ev_kqueue.c

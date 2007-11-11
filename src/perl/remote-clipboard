@@ -40,7 +40,7 @@ sub store {
       $self->{iow} = urxvt::iow
                      ->new
                      ->fd (fileno $fh)
-                     ->events (urxvt::EVENT_WRITE)
+                     ->events (urxvt::EV_WRITE)
                      ->start
                      ->cb (sub {
          if (my $len = syswrite $fh, $txt) {
@@ -65,7 +65,7 @@ sub fetch {
       $self->{iow} = urxvt::iow
                      ->new
                      ->fd (fileno $fh)
-                     ->events (urxvt::EVENT_READ)
+                     ->events (urxvt::EV_READ)
                      ->start
                      ->cb (sub {
          if (my $len = sysread $fh, $txt, 8192, length $txt) {

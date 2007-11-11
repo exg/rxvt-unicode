@@ -13,9 +13,9 @@ BOOT:
       IV iv;
     } *civ, iom_const_iv[] = {
 #   define iom_const_iv(name) { # name, (IV)name }
-      iom_const_iv (EVENT_NONE),
-      iom_const_iv (EVENT_READ),
-      iom_const_iv (EVENT_WRITE),
+      iom_const_iv (EV_NONE),
+      iom_const_iv (EV_READ),
+      iom_const_iv (EV_WRITE),
 #   undef iom_const
     };
 
@@ -56,7 +56,7 @@ SV *
 timer::new ()
 	CODE:
         timer *w =  new timer;
-        w->start (NOW);
+        w->start (0);
         RETVAL = newSVptr ((void *)(perl_watcher *)w, "IOM_CLASS::timer");
         w->self = (HV *)SvRV (RETVAL);
         OUTPUT:
@@ -70,9 +70,9 @@ timer::at ()
         RETVAL
 
 IOM_CHAINED
-timer::interval (NV interval)
+timer::interval (NV repeat)
 	CODE:
-        THIS->interval = interval;
+        THIS->repeat = repeat;
         OUTPUT:
         RETVAL
 
@@ -84,16 +84,16 @@ timer::set (NV tstamp)
         RETVAL
 
 IOM_CHAINED
-timer::start (NV tstamp = THIS->at)
+timer::start (NV tstamp = ev::now ())
 	CODE:
-        THIS->start (tstamp);
+        THIS->start (tstamp - ev::now ());
         OUTPUT:
         RETVAL
 
 IOM_CHAINED
 timer::after (NV delay)
 	CODE:
-        THIS->start (NOW + delay);
+        THIS->start (delay);
         OUTPUT:
         RETVAL
 

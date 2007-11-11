@@ -437,6 +437,10 @@ AC_ARG_WITH(terminfo,
 
 dnl# --------------------------------------------------------------------------
 
+m4_include([libev/libev.m4])
+
+dnl# --------------------------------------------------------------------------
+
 AC_PATH_PROG(TIC, tic, :)
 
 dnl# need a neat way to detect SVR4 or its features

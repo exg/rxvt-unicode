@@ -191,7 +191,7 @@ rxvt_term::rxvt_term ()
     termwin_ev (this, &rxvt_term::x_cb),
     vt_ev (this, &rxvt_term::x_cb),
     child_ev (this, &rxvt_term::child_cb),
-    check_ev (this, &rxvt_term::check_cb),
+    prepare_ev (this, &rxvt_term::prepare_cb),
     flush_ev (this, &rxvt_term::flush_cb),
     destroy_ev (this, &rxvt_term::destroy_cb),
     pty_ev (this, &rxvt_term::pty_cb),
@@ -312,7 +312,7 @@ rxvt_term::~rxvt_term ()
 
 // child has exited, usually destroys
 void
-rxvt_term::child_cb (child_watcher &w, int status)
+rxvt_term::child_cb (ev::child &w, int status)
 {
   HOOK_INVOKE ((this, HOOK_CHILD_EXIT, DT_INT, status, DT_END));
 
@@ -350,7 +350,7 @@ rxvt_term::destroy ()
       vt_ev.stop (display);
     }
 
-  check_ev.stop ();
+  prepare_ev.stop ();
   pty_ev.stop ();
 #ifdef CURSOR_BLINK
   cursor_blink_ev.stop ();
@@ -368,11 +368,11 @@ rxvt_term::destroy ()
   pointer_ev.stop ();
 #endif
 
-  destroy_ev.start (0);
+  destroy_ev.start ();
 }
 
 void
-rxvt_term::destroy_cb (time_watcher &w)
+rxvt_term::destroy_cb (ev::check &w, int revents)
 {
   make_current ();
 
@@ -567,9 +567,9 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
   free (cmd_argv);
 
   if (pty->pty >= 0)
-    pty_ev.start (pty->pty, EVENT_READ);
+    pty_ev.start (pty->pty, ev::READ);
 
-  check_ev.start ();
+  prepare_ev.start ();
 
   HOOK_INVOKE ((this, HOOK_START, DT_END));
 
@@ -591,16 +591,16 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 
 static struct sig_handlers
 {
-  sig_watcher sw_term, sw_int;
+  ev::sig sw_term, sw_int;
 
   /*
    * Catch a fatal signal and tidy up before quitting
    */
   void
-  sig_term (sig_watcher &w)
+  sig_term (ev::sig &w, int revents)
   {
     rxvt_emergency_cleanup ();
-    signal (w.signum, SIG_DFL);
+    w.stop ();
     kill (getpid (), w.signum);
   }
 
@@ -617,14 +617,15 @@ void
 rxvt_init ()
 {
   ptytty::init ();
+  ev::ev_default_loop (0);
 
   rxvt_environ = environ;
 
   signal (SIGHUP,  SIG_IGN);
   signal (SIGPIPE, SIG_IGN);
 
-  sig_handlers.sw_term.start (SIGTERM);
-  sig_handlers.sw_int.start  (SIGINT);
+  sig_handlers.sw_term.start (SIGTERM); ev::ev_unref ();
+  sig_handlers.sw_int.start  (SIGINT);  ev::ev_unref ();
 
   /* need to trap SIGURG for SVR4 (Unixware) rlogin */
   /* signal (SIGURG, SIG_DFL); */
@@ -1742,24 +1743,26 @@ rxvt_term::update_background ()
 {
   bgPixmap.invalidate ();
 
-  /* no chance of real time refresh if we are blurring ! */
-  if (bgPixmap.invalid_since + 0.5 < NOW && !(bgPixmap.flags & bgPixmap_t::blurNeeded))
+  /* no chance of real time refresh if we are blurring! */
+  if (bgPixmap.invalid_since + 0.5 < ev::now () && !(bgPixmap.flags & bgPixmap_t::blurNeeded))
     bgPixmap.render ();
   else
     {
       update_background_ev.stop ();
+
       if (!bgPixmap.need_client_side_rendering())
-        update_background_ev.start (NOW + .05);
+        update_background_ev.start (.05);
       else if (bgPixmap.flags & bgPixmap_t::blurNeeded)
-        update_background_ev.start (NOW + .2); /* very slow !!! */
+        update_background_ev.start (.20); /* very slow !!! */
       else
-        update_background_ev.start (NOW + .07);
+        update_background_ev.start (.07);
     }
+
   return 0;
 }
 
 void
-rxvt_term::update_background_cb (time_watcher &w)
+rxvt_term::update_background_cb (ev::timer &w, int revents)
 {
   bgPixmap.render ();
 }

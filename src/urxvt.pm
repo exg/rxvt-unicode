@@ -2057,7 +2057,7 @@ This class implements io watchers/events. Example:
   $term->{iow} = urxvt::iow
                  ->new
                  ->fd (fileno $term->{socket})
-                 ->events (urxvt::EVENT_READ)
+                 ->events (urxvt::EV_READ)
                  ->start
                  ->cb (sub {
                    my ($iow, $revents) = @_;
@@ -2085,8 +2085,8 @@ Set the file descriptor (not handle) to watch.
 =item $iow = $iow->events ($eventmask)
 
 Set the event mask to watch. The only allowed values are
-C<urxvt::EVENT_READ> and C<urxvt::EVENT_WRITE>, which might be ORed
-together, or C<urxvt::EVENT_NONE>.
+C<urxvt::EV_READ> and C<urxvt::EV_WRITE>, which might be ORed
+together, or C<urxvt::EV_NONE>.
 
 =item $iow = $iow->start
 

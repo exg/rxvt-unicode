@@ -38,7 +38,7 @@
 #include "rxvtutil.h"
 #include "rxvtfont.h"
 #include "rxvttoolkit.h"
-#include "iom.h"
+#include "ev_cpp.h"
 #include "salloc.h"
 #include "libptytty.h"
 
@@ -1050,8 +1050,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 #endif
 #ifdef HAVE_BG_PIXMAP
   int update_background ();
-  void update_background_cb (time_watcher &w);
-  time_watcher update_background_ev;
+  void update_background_cb (ev::timer &w, int revents);
+  ev::timer update_background_ev;
 #endif
 
   void x_cb (XEvent &xev);
@@ -1061,37 +1061,37 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   xevent_watcher scrollbar_ev;
 #endif
 
-  void child_cb (child_watcher &w, int status); child_watcher child_ev;
-  void check_cb (check_watcher &w); check_watcher check_ev;
-  void destroy_cb (time_watcher &w); time_watcher destroy_ev;
+  void child_cb (ev::child &w, int revents); ev::child child_ev;
+  void prepare_cb (ev::prepare &w, int revents); ev::prepare prepare_ev;
+  void destroy_cb (ev::check &w, int revents); ev::check destroy_ev;
   void flush ();
-  void flush_cb (time_watcher &w); time_watcher flush_ev;
+  void flush_cb (ev::timer &w, int revents); ev::timer flush_ev;
   bool pty_fill ();
-  void pty_cb (io_watcher &w, short revents); io_watcher pty_ev;
-  void incr_cb (time_watcher &w) NOTHROW; time_watcher incr_ev;
+  void pty_cb (ev::io &w, int revents); ev::io pty_ev;
+  void incr_cb (ev::timer &w, int revents) NOTHROW; ev::timer incr_ev;
 
 #ifdef CURSOR_BLINK
-  void cursor_blink_cb (time_watcher &w); time_watcher cursor_blink_ev;
+  void cursor_blink_cb (ev::timer &w, int revents); ev::timer cursor_blink_ev;
 #endif
 #ifdef TEXT_BLINK
-  void text_blink_cb (time_watcher &w); time_watcher text_blink_ev;
+  void text_blink_cb (ev::timer &w, int revents); ev::timer text_blink_ev;
 #endif
 #ifndef NO_BELL
-  void bell_cb (time_watcher &w); time_watcher bell_ev;
+  void bell_cb (ev::timer &w, int revents); ev::timer bell_ev;
 #endif
 
 #ifndef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
-  void cont_scroll_cb (time_watcher &w); time_watcher cont_scroll_ev;
+  void cont_scroll_cb (ev::timer &w, int revents); ev::timer cont_scroll_ev;
 #endif
 #ifdef SELECTION_SCROLLING
-  void sel_scroll_cb (time_watcher &w); time_watcher sel_scroll_ev;
+  void sel_scroll_cb (ev::timer &w, int revents); ev::timer sel_scroll_ev;
 #endif
 #if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
-  void slip_wheel_cb (time_watcher &w); time_watcher slip_wheel_ev;
+  void slip_wheel_cb (ev::timer &w, int revents); ev::timer slip_wheel_ev;
 #endif
 
 #ifdef POINTER_BLANK
-  void pointer_cb (time_watcher &w); time_watcher pointer_ev;
+  void pointer_cb (ev::timer &w, int revents); ev::timer pointer_ev;
   void pointer_blank ();
 #endif
   void pointer_unblank ();

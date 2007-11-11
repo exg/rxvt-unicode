@@ -112,7 +112,7 @@ struct  bgPixmap_t {
     if (!(flags & isInvalid))
       {
         flags |= isInvalid;
-        invalid_since = NOW;
+        invalid_since = ev::now ();
       }
   };
 };

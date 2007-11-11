@@ -37,7 +37,7 @@ sub enter {
    return if $self->{overlay};
 
    $self->{view_start} = $self->view_start;
-   $self->{pty_ev_events} = $self->pty_ev_events (urxvt::EVENT_NONE);
+   $self->{pty_ev_events} = $self->pty_ev_events (urxvt::EV_NONE);
    $self->{row} = $self->nrow - 1;
    $self->{search} = "(?i)";
 

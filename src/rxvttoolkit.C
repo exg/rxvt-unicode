@@ -473,7 +473,7 @@ bool rxvt_display::ref_init ()
   if (!getsockname (fd, (sockaddr *)&sa, &sl))
     is_local = sa.sun_family == AF_UNIX;
 
-  x_ev.start (fd, EVENT_READ);
+  x_ev.start (fd, ev::READ);
   fcntl (fd, F_SETFD, FD_CLOEXEC);
 
   XSelectInput (dpy, root, PropertyChangeMask);
@@ -540,7 +540,7 @@ void rxvt_display::im_change_check ()
 }
 #endif
 
-void rxvt_display::x_cb (io_watcher &w, short revents)
+void rxvt_display::x_cb (ev::io &w, int revents)
 {
   do
     {
@@ -577,7 +577,7 @@ void rxvt_display::x_cb (io_watcher &w, short revents)
 void rxvt_display::flush ()
 {
   if (XEventsQueued (dpy, QueuedAlready))
-    x_cb (x_ev, EVENT_READ);
+    x_cb (x_ev, ev::READ);
 
   XFlush (dpy);
 }

@@ -38,13 +38,12 @@
 #include "rxvt.h"
 #include "rxvtdaemon.h"
 #include "libptytty.h"
-#include "iom.h"
 
 struct server : rxvt_connection {
   log_callback log_cb;
   getfd_callback getfd_cb;
 
-  void read_cb (io_watcher &w, short revents); io_watcher read_ev;
+  void read_cb (ev::io &w, int revents); ev::io read_ev;
   void log_msg (const char *msg);
   int getfd (int remote_fd);
 
@@ -54,7 +53,7 @@ struct server : rxvt_connection {
     getfd_cb (this, &server::getfd)
   {
     this->fd = fd;
-    read_ev.start (fd, EVENT_READ);
+    read_ev.start (fd, ev::READ);
   }
 
   void err (const char *format = 0, ...);
@@ -63,7 +62,7 @@ struct server : rxvt_connection {
 struct unix_listener {
   int fd;
 
-  void accept_cb (io_watcher &w, short revents); io_watcher accept_ev;
+  void accept_cb (ev::io &w, int revents); ev::io accept_ev;
 
   unix_listener (const char *sockname);
 };
@@ -108,10 +107,10 @@ unix_listener::unix_listener (const char *sockname)
       exit (EXIT_FAILURE);
     }
 
-  accept_ev.start (fd, EVENT_READ);
+  accept_ev.start (fd, ev::READ);
 }
 
-void unix_listener::accept_cb (io_watcher &w, short revents)
+void unix_listener::accept_cb (ev::io &w, int revents)
 {
   int fd2 = accept (fd, 0, 0);
 
@@ -153,7 +152,7 @@ void server::err (const char *format, ...)
   delete this;
 }
 
-void server::read_cb (io_watcher &w, short revents)
+void server::read_cb (ev::io &w, int revents)
 {
   auto_str tok;
 
@@ -276,7 +275,7 @@ main (int argc, const char *const *argv)
         _exit (EXIT_SUCCESS);
     }
 
-  io_manager::loop ();
+  ev::ev_loop (0);
 
   return EXIT_SUCCESS;
 }

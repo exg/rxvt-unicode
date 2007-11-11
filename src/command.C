@@ -1096,18 +1096,18 @@ rxvt_term::flush ()
 }
 
 void
-rxvt_term::check_cb (check_watcher &w)
+rxvt_term::prepare_cb (ev::prepare &w, int revents)
 {
   make_current ();
 
   display->flush ();
 
   if (want_refresh && !flush_ev.active)
-    flush_ev.start (NOW + 1. / 60.); // refresh at max. 60 hz normally
+    flush_ev.start (1. / 60.); // refresh at max. 60 hz normally
 }
 
 void
-rxvt_term::flush_cb (time_watcher &w)
+rxvt_term::flush_cb (ev::timer &w, int revents)
 {
   make_current ();
 
@@ -1117,57 +1117,54 @@ rxvt_term::flush_cb (time_watcher &w)
 
 #ifdef CURSOR_BLINK
 void
-rxvt_term::cursor_blink_cb (time_watcher &w)
+rxvt_term::cursor_blink_cb (ev::timer &w, int revents)
 {
   hidden_cursor = !hidden_cursor;
   want_refresh = 1;
-
-  w.start (w.at + CURSOR_BLINK_INTERVAL);
 }
 #endif
 
 #ifdef TEXT_BLINK
 void
-rxvt_term::text_blink_cb (time_watcher &w)
+rxvt_term::text_blink_cb (ev::timer &w, int revents)
 {
   if (scr_refresh_rend (RS_Blink, RS_Blink))
     {
       hidden_text = !hidden_text;
       want_refresh = 1;
-      w.start (w.at + TEXT_BLINK_INTERVAL);
     }
 }
 #endif
 
 #ifndef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
 void
-rxvt_term::cont_scroll_cb (time_watcher &w)
+rxvt_term::cont_scroll_cb (ev::timer &w, int revents)
 {
   if ((scrollbar_isUp() || scrollbar_isDn()) &&
       scr_page (scrollbar_isUp() ? UP : DN, 1))
-    {
-      want_refresh = 1;
-      w.start (w.at + SCROLLBAR_CONTINUOUS_DELAY);
-    }
+    want_refresh = 1;
+  else
+    w.stop ();
 }
 #endif
 
 #ifdef SELECTION_SCROLLING
 void
-rxvt_term::sel_scroll_cb (time_watcher &w)
+rxvt_term::sel_scroll_cb (ev::timer &w, int revents)
 {
   if (scr_page (scroll_selection_dir, scroll_selection_lines))
     {
       selection_extend (selection_save_x, selection_save_y, selection_save_state);
       want_refresh = 1;
-      w.start (w.at + SCROLLBAR_CONTINUOUS_DELAY);
     }
+  else
+    w.stop ();
 }
 #endif
 
 #if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
 void
-rxvt_term::slip_wheel_cb (time_watcher &w)
+rxvt_term::slip_wheel_cb (ev::timer &w, int revents)
 {
   if (mouse_slip_wheel_speed == 0
       || mouse_slip_wheel_speed < 0 ? scr_page (DN, -mouse_slip_wheel_speed)
@@ -1177,17 +1174,18 @@ rxvt_term::slip_wheel_cb (time_watcher &w)
         mouse_slip_wheel_speed = 0;
 
       want_refresh = 1;
-      w.start (w.at + SCROLLBAR_CONTINUOUS_DELAY);
     }
+  else
+    w.stop ();
 }
 #endif
 
 #if LINUX_YIELD_HACK
 static struct event_handler
 {
-  check_watcher yield_ev;
+  ev::prepare yield_ev;
 
-  void yield_cb (check_watcher &w)
+  void yield_cb (ev::prepare &w, int revents)
   {
     // this should really be sched_yield(), but the linux guys thought
     // that giving a process calling sched_yield () less cpu time than
@@ -1248,17 +1246,17 @@ rxvt_term::pty_fill ()
 }
 
 void
-rxvt_term::pty_cb (io_watcher &w, short revents)
+rxvt_term::pty_cb (ev::io &w, int revents)
 {
   make_current ();
 
-  if (revents & EVENT_READ)
+  if (revents & ev::READ)
     // loop, but don't allow a single term to monopolize us
     while (pty_fill ())
       if (cmd_parse ())
         break;
 
-  if (revents & EVENT_WRITE)
+  if (revents & ev::WRITE)
     pty_write ();
 }
 
@@ -1272,7 +1270,7 @@ rxvt_term::pointer_unblank ()
   hidden_pointer = 0;
 
   if (option (Opt_pointerBlank))
-    pointer_ev.start (NOW + pointerBlankDelay);
+    pointer_ev.start (pointerBlankDelay);
 #endif
 }
 
@@ -1290,7 +1288,7 @@ rxvt_term::pointer_blank ()
 }
 
 void
-rxvt_term::pointer_cb (time_watcher &w)
+rxvt_term::pointer_cb (ev::timer &w, int revents)
 {
   make_current ();
 
@@ -1531,7 +1529,7 @@ rxvt_term::x_cb (XEvent &ev)
       case MapNotify:
         mapped = 1;
 #ifdef TEXT_BLINK
-        text_blink_ev.start (NOW + TEXT_BLINK_INTERVAL);
+        text_blink_ev.start (TEXT_BLINK_INTERVAL);
 #endif
         HOOK_INVOKE ((this, HOOK_MAP_NOTIFY, DT_XEVENT, &ev, DT_END));
         break;
@@ -1633,7 +1631,7 @@ rxvt_term::x_cb (XEvent &ev)
                          * already in the middle of scrolling.
                          */
                         if (!sel_scroll_ev.active)
-                          sel_scroll_ev.start (NOW + SCROLLBAR_INITIAL_DELAY);
+                          sel_scroll_ev.start (SCROLLBAR_INITIAL_DELAY, SCROLLBAR_CONTINUOUS_DELAY);
 
                         /* save the event params so we can highlight
                          * the selection in the pending-scroll loop
@@ -1702,7 +1700,7 @@ rxvt_term::x_cb (XEvent &ev)
           want_refresh = 1;
         }
 
-      cursor_blink_ev.start (NOW + CURSOR_BLINK_INTERVAL);
+      cursor_blink_ev.again ();
     }
 #endif
 
@@ -1740,7 +1738,7 @@ rxvt_term::focus_in ()
 #endif
 #if CURSOR_BLINK
       if (option (Opt_cursorBlink))
-        cursor_blink_ev.start (NOW + CURSOR_BLINK_INTERVAL);
+        cursor_blink_ev.start (CURSOR_BLINK_INTERVAL, CURSOR_BLINK_INTERVAL);
 #endif
 #if OFF_FOCUS_FADING
       if (rs[Rs_fade])
@@ -1788,6 +1786,7 @@ rxvt_term::focus_out ()
 #if CURSOR_BLINK
       if (option (Opt_cursorBlink))
         cursor_blink_ev.stop ();
+
       hidden_cursor = 0;
 #endif
 #if OFF_FOCUS_FADING
@@ -2030,7 +2029,7 @@ rxvt_term::button_press (XButtonEvent &ev)
           if (upordown)
             {
 #ifndef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
-              cont_scroll_ev.start (NOW + SCROLLBAR_INITIAL_DELAY);
+              cont_scroll_ev.start (SCROLLBAR_INITIAL_DELAY, SCROLLBAR_CONTINUOUS_DELAY);
 #endif
               if (scr_page (upordown < 0 ? UP : DN, 1))
                 {
@@ -2203,10 +2202,7 @@ rxvt_term::button_release (XButtonEvent &ev)
                   if (mouse_slip_wheel_speed < -nrow) mouse_slip_wheel_speed = -nrow;
                   if (mouse_slip_wheel_speed > +nrow) mouse_slip_wheel_speed = +nrow;
 
-                  if (slip_wheel_ev.at < NOW)
-                    slip_wheel_ev.at = NOW + SCROLLBAR_CONTINUOUS_DELAY;
-
-                  slip_wheel_ev.start ();
+                  slip_wheel_ev.start (SCROLLBAR_CONTINUOUS_DELAY, SCROLLBAR_CONTINUOUS_DELAY);
                 }
               else
                 {
@@ -2284,7 +2280,7 @@ rxvt_term::cmd_parse ()
                     {
                       refresh_count = 0;
 
-                      if (!option (Opt_skipScroll) || io_manager::now () > NOW + 1. / 60.)
+                      if (!option (Opt_skipScroll) || ev::ev_time () > ev::now () + 1. / 60.)
                         {
                           refreshnow = true;
                           ch = NOCHAR;
@@ -4009,7 +4005,7 @@ rxvt_term::tt_write (const char *data, unsigned int len)
   memcpy (v_buffer + v_buflen, data, len);
   v_buflen += len;
 
-  pty_ev.set (EVENT_READ | EVENT_WRITE);
+  pty_ev.set (ev::READ | ev::WRITE);
 }
 
 void rxvt_term::pty_write ()
@@ -4025,14 +4021,14 @@ void rxvt_term::pty_write ()
           free (v_buffer);
           v_buffer = 0;
 
-          pty_ev.set (EVENT_READ);
+          pty_ev.set (ev::READ);
           return;
         }
 
       memmove (v_buffer, v_buffer + written, v_buflen);
     }
   else if (written != -1 || (errno != EAGAIN && errno != EINTR))
-    pty_ev.set (EVENT_READ);
+    pty_ev.set (ev::READ);
 }
 
 /*----------------------- end-of-file (C source) -----------------------*/

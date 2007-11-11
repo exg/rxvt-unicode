@@ -1868,7 +1868,7 @@ rxvt_term::scr_changeview (int new_view_start) NOTHROW
 
 #ifndef NO_BELL
 void
-rxvt_term::bell_cb (time_watcher &w)
+rxvt_term::bell_cb (ev::timer &w, int revents)
 {
   rvideo_bell = false;
   scr_rvideo_mode (rvideo_mode);
@@ -1905,7 +1905,7 @@ rxvt_term::scr_bell () NOTHROW
       scr_rvideo_mode (rvideo_mode);
       display->flush ();
 
-      bell_ev.start (NOW + VISUAL_BELL_DURATION);
+      bell_ev.start (VISUAL_BELL_DURATION);
     }
   else
     XBell (dpy, 0);
@@ -2321,7 +2321,7 @@ rxvt_term::scr_refresh () NOTHROW
                 {
                   if (!text_blink_ev.active)
                     {
-                      text_blink_ev.start (NOW + TEXT_BLINK_INTERVAL);
+                      text_blink_ev.start (TEXT_BLINK_INTERVAL, TEXT_BLINK_INTERVAL);
                       hidden_text = 0;
                     }
                   else if (hidden_text)
@@ -2735,7 +2735,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
 
       selection_wait = Sel_incr;
       incr_buf_fill = 0;
-      incr_ev.start (NOW + 10);
+      incr_ev.start (10);
 
       goto bailout;
     }
@@ -2771,7 +2771,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
     }
   else if (selection_wait == Sel_incr)
     {
-      incr_ev.start (NOW + 10);
+      incr_ev.start (10);
 
       while (incr_buf_fill + ct.nitems > incr_buf_size)
         {
@@ -2821,7 +2821,7 @@ bailout:
 }
 
 void
-rxvt_term::incr_cb (time_watcher &w) NOTHROW
+rxvt_term::incr_cb (ev::timer &w, int revents) NOTHROW
 {
   selection_wait = Sel_none;
 

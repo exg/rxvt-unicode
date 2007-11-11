@@ -64,20 +64,15 @@ perl_watcher::invoke (const char *type, SV *self, int arg)
 #define newSVtimer(timer) iom_new_ref ((timer)->self, IOM_CLASS "::timer")
 #define SvTIMER(sv) (timer *)(perl_watcher *)SvPTR ((sv), IOM_CLASS "::timer")
 
-struct timer : perl_watcher, time_watcher
+struct timer : perl_watcher, ev::timer
 {
-  tstamp interval;
-
   timer ()
-  : time_watcher (this, &timer::execute)
+  : ev::timer (this, &timer::execute)
   {
   }
 
-  void execute (time_watcher &w)
+  void execute (ev::timer &w, int revents)
   {
-    if (interval)
-      start (at + interval);
-
     invoke (IOM_CLASS "::timer", newSVtimer (this));
   }
 };
@@ -85,14 +80,14 @@ struct timer : perl_watcher, time_watcher
 #define newSViow(iow) iom_new_ref ((iow)->self, IOM_CLASS "::iow")
 #define SvIOW(sv) (iow *)(perl_watcher *)SvPTR ((sv), IOM_CLASS "::iow")
 
-struct iow : perl_watcher, io_watcher
+struct iow : perl_watcher, ev::io
 {
   iow ()
-  : io_watcher (this, &iow::execute)
+  : ev::io (this, &iow::execute)
   {
   }
 
-  void execute (io_watcher &w, short revents)
+  void execute (ev::io &w, int revents)
   {
     invoke (IOM_CLASS "::iow", newSViow (this), revents);
   }
@@ -101,14 +96,14 @@ struct iow : perl_watcher, io_watcher
 #define newSViw(iw) iom_new_ref ((iw)->self, IOM_CLASS "::iw")
 #define SvIW(sv) (iw *)(perl_watcher *)SvPTR ((sv), IOM_CLASS "::iw")
 
-struct iw : perl_watcher, idle_watcher
+struct iw : perl_watcher, ev::idle
 {
   iw ()
-  : idle_watcher (this, &iw::execute)
+  : ev::idle (this, &iw::execute)
   {
   }
 
-  void execute (idle_watcher &w)
+  void execute (ev::idle &w, int revents)
   {
     invoke (IOM_CLASS "::iw", newSViw (this));
   }
@@ -117,16 +112,16 @@ struct iw : perl_watcher, idle_watcher
 #define newSVpw(pw) iom_new_ref ((pw)->self, IOM_CLASS "::pw")
 #define SvPW(sv) (pw *)(perl_watcher *)SvPTR ((sv), IOM_CLASS "::pw")
 
-struct pw : perl_watcher, child_watcher
+struct pw : perl_watcher, ev::child
 {
   pw ()
-  : child_watcher (this, &pw::execute)
+  : ev::child (this, &pw::execute)
   {
   }
 
-  void execute (child_watcher &w, int status)
+  void execute (ev::child &w, int revents)
   {
-    invoke (IOM_CLASS "::pw", newSVpw (this), status);
+    invoke (IOM_CLASS "::pw", newSVpw (this), w.rstatus);
   }
 };
 
