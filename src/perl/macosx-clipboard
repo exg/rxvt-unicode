@@ -37,6 +37,20 @@ use utf8;
 
 our($appkit, $pasteboard);
 
+$appkit = NSBundle->alloc->init->initWithPath_('/System/Library/Frameworks/AppKit.framework');
+$appkit->load if $appkit;
+
+if ($appkit->isLoaded) {
+   no strict 'refs';
+   for my $class (qw(NSPasteboard)) {
+      @{$class . '::ISA'} = 'PerlObjCBridge';
+   }
+} else {
+   undef $appkit;
+}
+
+$pasteboard = NSPasteboard->generalPasteboard;
+
 sub copy {
    my ($self) = @_;
 
@@ -56,25 +70,6 @@ sub paste {
       utf8::decode($str);
       $self->tt_write($self->locale_encode($str));
    }
-   ()
-}
-
-sub on_start {
-   my ($self) = @_;
-
-   $appkit = NSBundle->alloc->init->initWithPath_('/System/Library/Frameworks/AppKit.framework');
-   $appkit->load if $appkit;
-
-   if ($appkit->isLoaded) {
-      no strict 'refs';
-      for my $class (qw(NSPasteboard)) {
-         @{$class . '::ISA'} = 'PerlObjCBridge';
-      }
-   } else {
-      undef $appkit;
-   }
-
-   $pasteboard = NSPasteboard->generalPasteboard;
    ()
 }
 
