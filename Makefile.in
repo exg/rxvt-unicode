@@ -30,15 +30,14 @@ dummy:
 
 subdirs = src doc
 
+RECURSIVE_TARGETS = all allbin alldoc tags clean distclean realclean install
+
 #-------------------------------------------------------------------------
 
-all allbin alldoc tags:
+$(RECURSIVE_TARGETS):
 	@for I in ${subdirs}; do (cd $$I; ${MAKE} $@) || exit 1; done
 
 distclean realclean: distclean-local
-
-clean distclean realclean:
-	@for I in ${subdirs}; do (cd $$I; ${MAKE} $@) || exit 1; done
 
 #
 # entry points for other programs
@@ -56,9 +55,6 @@ config.status:
 
 config.h.in: configure.ac
 	cd $(srcdir); ./autogen.sh
-
-install:
-	@for I in $(subdirs); do (cd $$I; $(MAKE) DESTDIR=$(DESTDIR) $@) || exit 1; done
 
 check: all
 	echo "no tests"
