@@ -35,7 +35,7 @@ RECURSIVE_TARGETS = all allbin alldoc tags clean distclean realclean install
 #-------------------------------------------------------------------------
 
 $(RECURSIVE_TARGETS):
-	@for I in ${subdirs}; do (cd $$I; ${MAKE} $@) || exit 1; done
+	@for I in $(subdirs); do (cd $$I; $(MAKE) $@) || exit 1; done
 
 distclean realclean: distclean-local
 
@@ -43,7 +43,7 @@ distclean realclean: distclean-local
 # entry points for other programs
 #
 rxvt:
-	(cd src; ${MAKE})
+	(cd src; $(MAKE))
 
 #-------------------------------------------------------------------------
 configure: configure.ac aclocal.m4 config.h.in
