@@ -551,6 +551,36 @@ rxvt_term::key_press (XKeyEvent &ev)
             {
               bool kp = priv_modes & PrivMode_aplKP ? !shft : shft;
               newlen = 1;
+#ifdef XK_KP_Home
+              static const KeySym keypadtrans[] = {
+                XK_KP_7, // XK_KP_Home
+                XK_KP_4, // XK_KP_Left
+                XK_KP_8, // XK_KP_Up
+                XK_KP_6, // XK_KP_Right
+                XK_KP_2, // XK_KP_Down
+#ifndef UNSHIFTED_SCROLLKEYS
+                XK_KP_9, // XK_KP_Prior
+                XK_KP_3, // XK_KP_Next
+#else
+                XK_Prior,
+                XK_Next,
+#endif
+                XK_KP_1, // XK_KP_End
+                XK_KP_5, // XK_KP_Begin
+              };
+
+              if (IN_RANGE_INC (keysym, XK_KP_Home, XK_KP_Begin))
+                {
+                  unsigned int index = keysym - XK_KP_Home;
+                  keysym = kp ? keypadtrans[index] : XK_Home + index;
+                }
+              else if (keysym == XK_KP_Insert)
+                keysym = kp ? XK_KP_0 : XK_Insert;
+#ifndef NO_DELETE_KEY
+              else if (keysym == XK_KP_Delete)
+                keysym = kp ? XK_KP_Decimal : XK_Delete;
+#endif
+#endif
               switch (keysym)
                 {
 #ifndef NO_BACKSPACE_KEY
@@ -566,16 +596,6 @@ rxvt_term::key_press (XKeyEvent &ev)
                     break;
 #endif
 #ifndef NO_DELETE_KEY
-# ifdef XK_KP_Delete
-                  case XK_KP_Delete:
-                    /* allow shift to override */
-                    if (kp)
-                      {
-                        strcpy (kbuf, "\033On");
-                        break;
-                      }
-                    /* FALLTHROUGH */
-# endif
                   case XK_Delete:
                     strcpy (kbuf, rs[Rs_delete_key]);
                     break;
@@ -597,22 +617,6 @@ rxvt_term::key_press (XKeyEvent &ev)
                       }
                     break;
 
-#ifdef XK_KP_Left
-                  case XK_KP_Left:	/* \033Ot or standard */
-                  case XK_KP_Up:	/* \033Ox or standard */
-                  case XK_KP_Right:	/* \033Ov or standard */
-                  case XK_KP_Down:	/* \033Or or standard */
-                    if (kp)
-                      {
-                        strcpy (kbuf, "\033OZ");
-                        kbuf[2] = "txvr"[keysym - XK_KP_Left];
-                        break;
-                      }
-                    else
-                      /* translate to std. cursor key */
-                      keysym = XK_Left + (keysym - XK_KP_Left);
-                    /* FALLTHROUGH */
-#endif
                   case XK_Up:	/* "\033[A" */
                   case XK_Down:	/* "\033[B" */
                   case XK_Right:	/* "\033[C" */
@@ -632,29 +636,9 @@ rxvt_term::key_press (XKeyEvent &ev)
                     break;
 
 #ifndef UNSHIFTED_SCROLLKEYS
-# ifdef XK_KP_Prior
-                  case XK_KP_Prior:
-                    /* allow shift to override */
-                    if (kp)
-                      {
-                        strcpy (kbuf, "\033Oy");
-                        break;
-                      }
-                    /* FALLTHROUGH */
-# endif
                   case XK_Prior:
                     strcpy (kbuf, "\033[5~");
                     break;
-# ifdef XK_KP_Next
-                  case XK_KP_Next:
-                    /* allow shift to override */
-                    if (kp)
-                      {
-                        strcpy (kbuf, "\033Os");
-                        break;
-                      }
-                    /* FALLTHROUGH */
-# endif
                   case XK_Next:
                     strcpy (kbuf, "\033[6~");
                     break;
@@ -683,12 +667,6 @@ rxvt_term::key_press (XKeyEvent &ev)
                       }
                     break;
 
-#ifdef XK_KP_Begin
-                  case XK_KP_Begin:
-                    strcpy (kbuf, "\033Ou");
-                    break;
-
-#endif
                   case XK_KP_F1:	/* "\033OP" */
                   case XK_KP_F2:	/* "\033OQ" */
                   case XK_KP_F3:	/* "\033OR" */
@@ -730,16 +708,6 @@ rxvt_term::key_press (XKeyEvent &ev)
                     strcpy (kbuf, "\033[1~");
                     break;
 
-#ifdef XK_KP_Insert
-                  case XK_KP_Insert:
-                    /* allow shift to override */
-                    if (kp)
-                      {
-                        strcpy (kbuf, "\033Op");
-                        break;
-                      }
-                    /* FALLTHROUGH */
-#endif
                   case XK_Insert:
                     strcpy (kbuf, "\033[2~");
                     break;
@@ -753,29 +721,9 @@ rxvt_term::key_press (XKeyEvent &ev)
                   case XK_Select:
                     strcpy (kbuf, "\033[4~");
                     break;
-#ifdef XK_KP_End
-                  case XK_KP_End:
-                    /* allow shift to override */
-                    if (kp)
-                      {
-                        strcpy (kbuf, "\033Oq");
-                        break;
-                      }
-                    /* FALLTHROUGH */
-#endif
                   case XK_End:
                     strcpy (kbuf, KS_END);
                     break;
-#ifdef XK_KP_Home
-                  case XK_KP_Home:
-                    /* allow shift to override */
-                    if (kp)
-                      {
-                        strcpy (kbuf, "\033Ow");
-                        break;
-                      }
-                    /* FALLTHROUGH */
-#endif
                   case XK_Home:
                     strcpy (kbuf, KS_HOME);
                     break;
