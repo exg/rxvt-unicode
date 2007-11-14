@@ -16,16 +16,16 @@ WISH: selection-color-pair instead of reverse video
 WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
+
 TODO: align default value of cutchars with rxvt.1.pod and add it as a fallback in perl 'selection'
       http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=377194
-
 TODO: automove-background
-TODO: pixmap memory leak
         - expect major compatibility issues and please test and report.
       	- converted from the veritable io manager event loop to
           the high performance libev (http://software.schmorp.de/pkg/libev).
 	- fix a serious bug while setting the XIM destroy callback
           on (typical) 64 bit systems.
+	- fix memory leak in pixmap code.
 
 8.4  Sat Oct 27 14:02:13 CEST 2007
 	- overhaul of the transparency/pixmap code (sasha).
