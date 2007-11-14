@@ -102,6 +102,15 @@ bgPixmap_t::bgPixmap_t()
   pixmap = None;
 }
 
+bgPixmap_t::~bgPixmap_t()
+{
+#ifdef HAVE_AFTERIMAGE
+  if (original_asim)
+    safe_asimage_destroy (original_asim);
+#endif
+  if (pixmap && target)
+    XFreePixmap (target->dpy, pixmap);
+}
 
 bool
 bgPixmap_t::window_size_sensitive ()

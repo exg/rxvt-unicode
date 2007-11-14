@@ -16,6 +16,7 @@
 struct  bgPixmap_t {
 
   bgPixmap_t();
+  ~bgPixmap_t();
 
   enum {
     geometrySet     = (1UL<<0),
