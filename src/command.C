@@ -1253,13 +1253,14 @@ rxvt_term::mouse_report (XButtonEvent &ev)
 
   x = Pixel2Col (ev.x);
   y = Pixel2Row (ev.y);
-  if (ev.type == MotionNotify) {
-    if (x == mouse_row && y == mouse_col)
-      return;
-    mouse_row = x;
-    mouse_col = y;
-    code += 32;
-  }
+  if (ev.type == MotionNotify)
+    {
+      if (x == mouse_row && y == mouse_col)
+        return;
+      mouse_row = x;
+      mouse_col = y;
+      code += 32;
+    }
 
   if (MEvent.button == AnyButton)
     button_number = 3;
@@ -3699,11 +3700,13 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
 #endif
             case 1002:
             case 1003:
-              if (state) {
-                priv_modes &= ~(PrivMode_MouseX10|PrivMode_MouseX11);
-                priv_modes &= arg[i] == 1003 ? ~PrivMode_MouseBtnEvent : ~PrivMode_MouseAnyEvent;
-                vt_emask_mouse = PointerMotionMask;
-              } else
+              if (state)
+                {
+                  priv_modes &= ~(PrivMode_MouseX10|PrivMode_MouseX11);
+                  priv_modes &= arg[i] == 1003 ? ~PrivMode_MouseBtnEvent : ~PrivMode_MouseAnyEvent;
+                  vt_emask_mouse = PointerMotionMask;
+                }
+              else
                 vt_emask_mouse = NoEventMask;
               vt_select_input ();
               break;
