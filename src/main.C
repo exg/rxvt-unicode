@@ -1005,7 +1005,7 @@ done:
   update_fade_color (idx);
   recolour_cursor ();
   scr_recolour ();
-#endif                          /* XTERM_COLOR_CHANGE */
+#endif /* XTERM_COLOR_CHANGE */
 }
 
 void
@@ -1708,7 +1708,7 @@ rxvt_term::IMSetPosition ()
 
    XFree (preedit_attr);
 }
-#endif                          /* USE_XIM */
+#endif /* USE_XIM */
 
 void
 rxvt_term::get_window_origin (int &x, int &y)

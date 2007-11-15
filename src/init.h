@@ -99,4 +99,4 @@
 
 #define CONSOLE		"/dev/console"	/* console device */
 
-#endif	/* _INIT_H_ */
+#endif /* _INIT_H_ */

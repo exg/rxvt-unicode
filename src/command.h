@@ -80,4 +80,4 @@
 # define ESCZ_ANSWER	VT100_ANS	/* obsolete ANSI ESC[c */
 #endif
 
-#endif	/* _COMMAND_H_ */
+#endif /* _COMMAND_H_ */

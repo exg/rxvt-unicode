@@ -84,5 +84,5 @@ rxvt_term::scrollbar_show_xterm (int update, int last_top, int last_bot, int scr
             xsb ? 0 : sbwidth, scrollBar.end);
   return 1;
 }
-#endif				/* XTERM_SCROLLBAR */
+#endif /* XTERM_SCROLLBAR */
 /*----------------------- end-of-file (C source) -----------------------*/

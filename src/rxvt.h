@@ -1398,5 +1398,5 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void extract_resources ();
 };
 
-#endif                          /* _RXVT_H_ */
+#endif /* _RXVT_H_ */
 

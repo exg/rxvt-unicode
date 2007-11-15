@@ -169,14 +169,14 @@ optList[] = {
               RSTRG (Rs_color + Color_IT, "colorIT", "color"),
               RSTRG (Rs_color + Color_UL, "colorUL", "color"),
               RSTRG (Rs_color + Color_RV, "colorRV", "color"),
-#endif				/* ! NO_BOLD_UNDERLINE_REVERSE */
+#endif /* ! NO_BOLD_UNDERLINE_REVERSE */
 #if ENABLE_FRILLS
               RSTRG (Rs_color + Color_underline, "underlineColor", "color"),
 #endif
 #ifdef KEEP_SCROLLCOLOR
               RSTRG (Rs_color + Color_scroll, "scrollColor", "color"),
               RSTRG (Rs_color + Color_trough, "troughColor", "color"),
-#endif				/* KEEP_SCROLLCOLOR */
+#endif /* KEEP_SCROLLCOLOR */
 #ifdef OPTION_HC
               STRG (Rs_color + Color_HC, "highlightColor", "hc", "color", "highlight color"),
 #endif
@@ -184,7 +184,7 @@ optList[] = {
               STRG (Rs_color + Color_cursor, "cursorColor", "cr", "color", "cursor color"),
               /* command-line option = resource name */
               RSTRG (Rs_color + Color_cursor2, "cursorColor2", "color"),
-#endif				/* NO_CURSORCOLOR */
+#endif /* NO_CURSORCOLOR */
               STRG (Rs_color + Color_pointer_fg, "pointerColor", "pr", "color", "pointer color"),
               STRG (Rs_color + Color_pointer_bg, "pointerColor2", "pr2", "color", "pointer bg color"),
               STRG (Rs_color + Color_border, "borderColor", "bd", "color", "border color"),
@@ -205,7 +205,7 @@ optList[] = {
               STRG (Rs_preeditType, "preeditType", "pt", "style", "input style: style = OverTheSpot|OffTheSpot|Root"),
               STRG (Rs_imLocale, "imLocale", "imlocale", "string", "locale to use for input method"),
               STRG (Rs_imFont, "imFont", "imfont", "fontname", "fontset for styles OverTheSpot and OffTheSpot"),
-#endif				/* USE_XIM */
+#endif /* USE_XIM */
               STRG (Rs_name, NULL, "name", "string", "client instance, icon, and title strings"),
               STRG (Rs_title, "title", "title", "string", "title name for window"),
               STRG (Rs_title, NULL, "T", NULL, NULL),	/* short form */
@@ -246,7 +246,7 @@ optList[] = {
               STRG (Rs_modifier, "modifier", "mod", "modifier", "meta modifier = alt|meta|hyper|super|mod1|...|mod5"),
 #ifdef CUTCHAR_RESOURCE
               RSTRG (Rs_cutchars, "cutchars", "string"),
-#endif				/* CUTCHAR_RESOURCE */
+#endif /* CUTCHAR_RESOURCE */
               RSTRG (Rs_answerbackstring, "answerbackString", "string"),
 #ifndef NO_SECONDARY_SCREEN
               BOOL (Rs_secondaryScreen, "secondaryScreen", "ssc", Opt_secondaryScreen, 0, "enable secondary screen"),
@@ -760,8 +760,8 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
   return 1;
 }
 
-# endif				/* KEYSYM_RESOURCE */
-#endif				/* NO_RESOURCES */
+# endif /* KEYSYM_RESOURCE */
+#endif /* NO_RESOURCES */
 
 static char *
 get_res (XrmDatabase database, const char *program, const char *option)
@@ -865,7 +865,7 @@ rxvt_term::extract_resources ()
 #   endif
 #  endif
 
-#endif				/* NO_RESOURCES */
+#endif /* NO_RESOURCES */
 }
 
 /*----------------------- end-of-file (C source) -----------------------*/

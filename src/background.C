@@ -630,7 +630,7 @@ bgPixmap_t::set_file (const char *file)
   return false;
 }
 
-# endif	/* BG_IMAGE_FROM_FILE */
+# endif /* BG_IMAGE_FROM_FILE */
 
 # ifdef ENABLE_TRANSPARENCY
 bool
@@ -1255,7 +1255,7 @@ bgPixmap_t::apply()
     }
 }
 
-#endif    /* HAVE_BG_PIXMAP */
+#endif /* HAVE_BG_PIXMAP */
 
 #if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE) && !XFT
 /* taken from aterm-0.4.2 */

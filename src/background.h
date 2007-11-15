@@ -123,4 +123,4 @@ struct  bgPixmap_t {
 
 
 
-#endif	/* _BACKGROUND_H_ */
+#endif /* _BACKGROUND_H_ */

@@ -1852,7 +1852,7 @@ rxvt_term::button_press (XButtonEvent &ev)
 #else
           MEvent.button = ev.button;
           mouse_report (ev);
-#endif				/* MOUSE_REPORT_DOUBLECLICK */
+#endif /* MOUSE_REPORT_DOUBLECLICK */
 
         }
       else
@@ -1956,7 +1956,7 @@ rxvt_term::button_press (XButtonEvent &ev)
               }
         }
       else
-#endif				/* NO_SCROLLBAR_REPORT */
+#endif /* NO_SCROLLBAR_REPORT */
 
         {
           char            upordown = 0;
@@ -2103,7 +2103,7 @@ rxvt_term::button_release (XButtonEvent &ev)
 #else				/* MOUSE_REPORT_DOUBLECLICK */
           MEvent.button = AnyButton;
           mouse_report (ev);
-#endif				/* MOUSE_REPORT_DOUBLECLICK */
+#endif /* MOUSE_REPORT_DOUBLECLICK */
           return;
         }
 
@@ -2450,7 +2450,7 @@ rxvt_term::process_print_pipe ()
 
   pclose_printer (fd);
 }
-#endif				/* PRINTPIPE */
+#endif /* PRINTPIPE */
 /*}}} */
 
 /* *INDENT-OFF* */

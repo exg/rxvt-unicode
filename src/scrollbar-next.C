@@ -295,5 +295,5 @@ rxvt_term::scrollbar_show_next (int update, int last_top, int last_bot, int scro
 
   return 1;
 }
-#endif				/* NEXT_SCROLLBAR */
+#endif /* NEXT_SCROLLBAR */
 /*----------------------- end-of-file (C source) -----------------------*/

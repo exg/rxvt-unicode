@@ -214,6 +214,6 @@ rxvt_term::scrollbar_show_rxvt (int update, int last_top, int last_bot, int scro
 
   return 1;
 }
-#endif				/* RXVT_SCROLLBAR */
+#endif /* RXVT_SCROLLBAR */
 /*----------------------- end-of-file (C source) -----------------------*/
 
