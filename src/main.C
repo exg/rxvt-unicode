@@ -1740,6 +1740,14 @@ rxvt_term::get_pixmap_property (int prop_id)
 }
 
 #ifdef HAVE_BG_PIXMAP
+# if TRACE_PIXMAPS
+#  undef update_background
+int rxvt_term::trace_update_background (const char* file, int line)
+{
+  fprintf (stderr, "%s:%d:update_background()\n", file, line);
+  update_background ();
+}
+# endif
 int
 rxvt_term::update_background ()
 {

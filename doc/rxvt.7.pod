@@ -231,9 +231,9 @@ to use effects other than tinting and shading: Just shade/tint/whatever
 your picture with gimp or any other tool:
 
    convert wallpaper.jpg -blur 20x20 -modulate 30 background.jpg
-   @@URXVT_NAME@@ -pixmap background.jpg -pe automove-background
+   @@URXVT_NAME@@ -pixmap "background.jpg;:root"
 
-That works. If you think it doesn't, you lack AfterImage and Perl support, or you
+That works. If you think it doesn't, you lack AfterImage support, or you
 are unable to read.
 
 3. Use an ARGB visual:

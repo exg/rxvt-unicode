@@ -55,7 +55,10 @@ struct  bgPixmap_t {
   bool render_asim (ASImage *background, ARGB32 background_tint);
 #  endif
 
-  enum { defaultScale = 100, defaultAlign = 50 };
+  enum { 
+    noScale = 0, windowScale = 100, defaultScale = windowScale, 
+    centerAlign = 50, defaultAlign = centerAlign, 
+	rootAlign = -10000 };
 
   unsigned int h_scale, v_scale;/* percents of the window size */
   int h_align, v_align;         /* percents of the window size:
@@ -98,9 +101,7 @@ struct  bgPixmap_t {
   unsigned int pmap_depth;
 
   bool window_size_sensitive ();
-  bool window_position_sensitive () {
-    return (flags & isTransparent);
-  };
+  bool window_position_sensitive ();
 
   bool is_parentOrigin () {
     return !(flags & isVtOrigin);

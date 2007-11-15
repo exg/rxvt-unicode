@@ -115,6 +115,11 @@ bgPixmap_t::~bgPixmap_t()
 bool
 bgPixmap_t::window_size_sensitive ()
 {
+# ifdef ENABLE_TRANSPARENCY
+  if (flags & isTransparent)
+    return true;
+# endif
+
 # ifdef BG_IMAGE_FROM_FILE
 #  ifdef HAVE_AFTERIMAGE
   if (original_asim != NULL)
@@ -125,12 +130,30 @@ bgPixmap_t::window_size_sensitive ()
         return true;
     }
 # endif
+
+  return false;
+}
+
+bool 
+bgPixmap_t::window_position_sensitive () 
+{
 # ifdef ENABLE_TRANSPARENCY
   if (flags & isTransparent)
     return true;
 # endif
+
+# ifdef BG_IMAGE_FROM_FILE
+#  ifdef HAVE_AFTERIMAGE
+  if (original_asim != NULL)
+#  endif
+    {
+      if (h_align == rootAlign || v_align == rootAlign)
+        return true;
+    }
+# endif
+
   return false;
-}
+};
 
 bool bgPixmap_t::need_client_side_rendering ()
 {
@@ -174,10 +197,13 @@ check_set_align_value (int geom_flags, int flag, int &align, int new_value)
 {
   if (geom_flags & flag)
     {
-      if (new_value < -100)
-        new_value = -100;
-      else if (new_value > 200)
-        new_value = 200;
+      if (new_value != bgPixmap_t::rootAlign)
+        {
+          if (new_value < -100)
+            new_value = -100;
+          else if (new_value > 200)
+            new_value = 200;
+        }
       if (new_value != align)
         {
           align = new_value;
@@ -341,14 +367,14 @@ bgPixmap_t::set_geometry (const char *geom)
 #  define CHECK_GEOM_OPS(op_str)  (strncasecmp (ops, (op_str), sizeof(op_str)-1) == 0)
               if (CHECK_GEOM_OPS("tile"))
                 {
-                  w = h = 0;
+                  w = h = noScale;
                   geom_flags |= WidthValue|HeightValue;
                 }
               else if (CHECK_GEOM_OPS("propscale"))
                 {
                   if (w == 0 && h == 0)
                     {
-                      w = 100;
+                      w = windowScale;
                       geom_flags |= WidthValue;
                     }
                   new_flags |= propScale;
@@ -356,29 +382,35 @@ bgPixmap_t::set_geometry (const char *geom)
               else if (CHECK_GEOM_OPS("hscale"))
                 {
                   if (w == 0)
-                    w = 100;
-                  h = 0;
+                    w = windowScale;
+                  h = noScale;
                   geom_flags |= WidthValue|HeightValue;
                 }
               else if (CHECK_GEOM_OPS("vscale"))
                 {
                   if (h == 0)
-                    h = 100;
-                  w = 0;
+                    h = windowScale;
+                  w = noScale;
                   geom_flags |= WidthValue|HeightValue;
                 }
               else if (CHECK_GEOM_OPS("scale"))
                 {
                   if (h == 0)
-                    h = 100;
+                    h = windowScale;
                   if (w == 0)
-                    w = 100;
+                    w = windowScale;
                   geom_flags |= WidthValue|HeightValue;
                 }
               else if (CHECK_GEOM_OPS("auto"))
                 {
-                  w = h = 100;
-                  x = y = 50;
+                  w = h = windowScale;
+                  x = y = centerAlign;
+                  geom_flags |= WidthValue|HeightValue|XValue|YValue;
+                }
+              else if (CHECK_GEOM_OPS("root"))
+                {
+                  w = h = noScale;
+                  x = y = rootAlign;
                   geom_flags |= WidthValue|HeightValue|XValue|YValue;
                 }
 #  undef CHECK_GEOM_OPS
@@ -427,8 +459,16 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
 
   if (original_asim)
     {
-      x = make_align_position (h_align, target_width, w > 0 ? w : (int)original_asim->width);
-      y = make_align_position (v_align, target_height, h > 0 ? h : (int)original_asim->height);
+      if (h_align == rootAlign || v_align == rootAlign)
+        {
+          target->get_window_origin(x, y);
+          x = -x;
+          y = -y;
+        }
+      if (h_align != rootAlign)
+        x = make_align_position (h_align, target_width, w > 0 ? w : (int)original_asim->width);
+      if (v_align != rootAlign)
+        y = make_align_position (v_align, target_height, h > 0 ? h : (int)original_asim->height);
     }
 
   if (original_asim == NULL
@@ -467,18 +507,20 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
                                   100, ASIMAGE_QUALITY_DEFAULT);
         }
       if (background == NULL)
-        {/* if tiling - pixmap has to be sized exactly as the image */
+        {/* if tiling - pixmap has to be sized exactly as the image,
+            but there is no need to make it bigger then the window! */
           if (h_scale == 0)
-            new_pmap_width = result->width;
+            new_pmap_width = min (result->width, target_width);
           if (v_scale == 0)
-            new_pmap_height = result->height;
+            new_pmap_height = min (result->height, target_height);
           /* we also need to tile our image in one or both directions */
           if (h_scale == 0 || v_scale == 0)
             {
               ASImage *tmp = tile_asimage (target->asv, result,
                                             (h_scale > 0) ? 0 : (int)result->width - x,
                                             (v_scale > 0) ? 0 : (int)result->height - y,
-                                            result->width, result->height,
+                                            new_pmap_width, 
+                                            new_pmap_height,
                                             TINT_LEAVE_SAME, ASA_XImage,
                                             100, ASIMAGE_QUALITY_DEFAULT);
               if (tmp)

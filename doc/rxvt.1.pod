@@ -186,7 +186,7 @@ Window background colour; resource B<background>.
 
 Window foreground colour; resource B<foreground>.
 
-=item B<-pixmap> I<file[;geom]>
+=item B<-pixmap> I<file[;geom[:op1][:op2][...]]>
 
 Compile I<afterimage>: Specify image file for the background and also
 optionally specify its scaling with a geometry string. Note you may need to
@@ -695,7 +695,7 @@ Use the specified colour for the scrollbar's trough area [default
 The colour of the border around the text area and between the scrollbar
 and the text.
 
-=item B<backgroundPixmap:> I<file[;geom]>
+=item B<backgroundPixmap:> I<file[;geom[:op1][:op2][...]]>
 
 Use the specified image file for the background and also optionally
 specify its scaling with a geometry string B<WxH+X+Y>,
@@ -705,8 +705,17 @@ A scale of 0 displays the image with tiling. A scale of 1 displays the
 image without any scaling. A scale of 2 to 9 specifies an integer
 number of images in that direction. No image will be magnified beyond
 10 times its original size. The maximum permitted scale is 1000.
-Special string of B<"auto"> used as a geometry will cause image to be
-automatically scaled to match window size.
+Additional operations can be specified after colon B<:op1:op2...>. 
+Supported operations are: 
+  B<"tile"> - force background image to be tiled and not scaled. Equivalent to 0x0,
+  B<"propscale"> - will scale image keeping proportions, 
+  B<"auto"> - will scale image to match window size. Equivalent to 100x100;
+  B<"hscale"> - will scale image horizontally to the window size; 
+  B<"vscale"> - will scale image vertically to the window size;
+  B<"scale"> - will scale image to match window size;
+  B<"root"> - will tile image as if it was a root window background, auto-adjusting
+    whenever terminal window moves. 
+
 If used in conjunction with B<-tr> option - specified pixmap will be
 blended over transparency image using either alpha-blending, or any
 other blending type, specified with B<-blt "type"> option.
