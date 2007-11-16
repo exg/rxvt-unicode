@@ -42,7 +42,7 @@ You can activate them like this:
 
 Or by adding them to the resource for extensions loaded by default:
 
-  URxvt.perl-ext-common: default,automove-background,selection-autotransform
+  URxvt.perl-ext-common: default,selection-autotransform
 
 =over 4
 
@@ -304,19 +304,6 @@ extension will actually grab a physical key just for this function.
 
 If you want a quake-like animation, tell your window manager to do so
 (fvwm can do it).
-
-=item automove-background
-
-This is basically a very small extension that dynamically changes the
-background pixmap offset to the window position, in effect creating the
-same effect as pseudo transparency with a custom pixmap. No scaling is
-supported in this mode. Example:
-
-   @@RXVT_NAME@@ -pixmap background.xpm -pe automove-background
-
-L<http://wiki.archlinux.org/index.php/Perl_Background_Rotation/Extensions>
-shows how this extension can be used to implement an automatically blurred
-transparent background.
 
 =item block-graphics-to-ascii
 
