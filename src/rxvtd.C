@@ -52,7 +52,6 @@ struct server : rxvt_connection {
     log_cb (this, &server::log_msg),
     getfd_cb (this, &server::getfd)
   {
-    this->fd = fd;
     fcntl (fd, F_SETFD, FD_CLOEXEC);
     fcntl (fd, F_SETFL, 0);
     read_ev.start (fd, ev::READ);
