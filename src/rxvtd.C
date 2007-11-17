@@ -53,6 +53,8 @@ struct server : rxvt_connection {
     getfd_cb (this, &server::getfd)
   {
     this->fd = fd;
+    fcntl (fd, F_SETFD, FD_CLOEXEC);
+    fcntl (fd, F_SETFL, 0);
     read_ev.start (fd, ev::READ);
   }
 
@@ -85,6 +87,7 @@ unix_listener::unix_listener (const char *sockname)
     }
 
   fcntl (fd, F_SETFD, FD_CLOEXEC);
+  fcntl (fd, F_SETFL, O_NONBLOCK);
 
   sa.sun_family = AF_UNIX;
   strcpy (sa.sun_path, sockname);
@@ -115,10 +118,7 @@ void unix_listener::accept_cb (ev::io &w, int revents)
   int fd2 = accept (fd, 0, 0);
 
   if (fd2 >= 0)
-    {
-      fcntl (fd2, F_SETFD, FD_CLOEXEC);
-      new server (fd2);
-    }
+    new server (fd2);
 }
 
 int server::getfd (int remote_fd)
