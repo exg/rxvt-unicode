@@ -94,7 +94,7 @@ realclean: distclean
 
 cleandir: realclean
 
-install:
+install: all
 	$(INSTALL) -d $(DESTDIR)$(man1dir)
 	$(INSTALL) -d $(DESTDIR)$(man7dir)
 	$(INSTALL_DATA) rxvt.1.man  $(DESTDIR)$(man1dir)/$(RXVTNAME).$(man1ext)
