@@ -1067,7 +1067,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 
   void child_cb (ev::child &w, int revents); ev::child child_ev;
   void prepare_cb (ev::prepare &w, int revents); ev::prepare prepare_ev;
-  void destroy_cb (ev::check &w, int revents); ev::check destroy_ev;
+  void destroy_cb (ev::idle &w, int revents); ev::idle destroy_ev;
   void flush ();
   void flush_cb (ev::timer &w, int revents); ev::timer flush_ev;
   bool pty_fill ();

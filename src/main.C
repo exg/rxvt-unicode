@@ -372,7 +372,7 @@ rxvt_term::destroy ()
 }
 
 void
-rxvt_term::destroy_cb (ev::check &w, int revents)
+rxvt_term::destroy_cb (ev::idle &w, int revents)
 {
   make_current ();
 
