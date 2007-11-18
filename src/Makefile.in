@@ -36,7 +36,8 @@ COMMON = \
         background.o command.o rxvtfont.o init.o logging.o main.o misc.o \
 	ptytty.o proxy.o screen.o scrollbar.o scrollbar-next.o scrollbar-rxvt.o \
 	scrollbar-xterm.o scrollbar-plain.o xdefaults.o encoding.o \
-	rxvttoolkit.o rxvtutil.o keyboard.o fdpass.o ev_cpp.o @PERL_O@
+	rxvttoolkit.o rxvtutil.o keyboard.o \
+	fdpass.o ev_cpp.o @PERL_O@
 
 COMMON_DAEMON = rxvtdaemon.o
 
@@ -77,7 +78,7 @@ rxvtd: rxvtd.o $(COMMON) $(COMMON_DAEMON)
 	$(LINK) -o $@ rxvtd.o $(COMMON) $(COMMON_DAEMON) $(LIBS) $(XLIB) @PERLLIB@
 #	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o librxvt.la $(LIBS) $(XLIB) -o $@
 
-rxvtc: rxvtc.o $(COMMON_DAEMON) fdpass.o
+rxvtc: rxvtc.o $(COMMON_DAEMON) fdpass.o ev_cpp.o
 	$(LINK) -o $@ rxvtc.o $(COMMON_DAEMON) fdpass.o $(LIBS)
 #	$(LIBTOOL) --mode=link $(LINK) rxvtc.o rxvtdaemon.o $(LIBS) -o $@
 
