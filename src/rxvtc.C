@@ -77,7 +77,17 @@ extern char **environ;
 int
 main (int argc, const char *const *argv)
 {
+  // instead of getcwd we could opendir (".") and pass the fd for fchdir *g*
+  char cwd[PATH_MAX];
+
+  if (!getcwd (cwd, sizeof (cwd)))
+    {
+      perror ("unable to determine current working directory");
+      exit (STATUS_FAILURE);
+    }
+
   client c;
+
   {
     sigset_t ss;
 
@@ -88,16 +98,6 @@ main (int argc, const char *const *argv)
   }
 
   c.send ("NEW");
-
-  // instead of getcwd we could opendir (".") and pass the fd for fchdir *g*
-  char cwd[PATH_MAX];
-
-  if (!getcwd (cwd, sizeof (cwd)))
-    {
-      perror ("unable to determine current working directory");
-      exit (STATUS_FAILURE);
-    }
-
   c.send ("CWD"), c.send (cwd);
 
   for (char **var = environ; *var; var++)
