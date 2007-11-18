@@ -273,6 +273,8 @@ main (int argc, const char *const *argv)
         }
       else if (pid > 0)
         _exit (EXIT_SUCCESS);
+
+      ev::ev_default_fork ();
     }
 
   ev::ev_loop (0);
