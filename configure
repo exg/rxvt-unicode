@@ -4894,6 +4894,7 @@ fi
 
 
 
+LIBEV_M4_AVOID_LIBRT=1
 
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -5691,6 +5692,7 @@ if test $ac_cv_func_clock_gettime = yes; then
   :
 else
 
+   if test -z "$LIBEV_M4_AVOID_LIBRT"; then
 
 { echo "$as_me:$LINENO: checking for clock_gettime in -lrt" >&5
 echo $ECHO_N "checking for clock_gettime in -lrt... $ECHO_C" >&6; }
@@ -5856,6 +5858,7 @@ _ACEOF
 fi
 done
 
+   fi
 
 fi
 
@@ -13026,6 +13029,8 @@ fi
     fi
   fi
 
+  save_LIBS="$LIBS"
+  LIBS="$LIBS $X_LIBS"
 
 for ac_header in X11/Xft/Xft.h
 do
@@ -13168,10 +13173,7 @@ fi
 
 done
 
-  ac_save_LIBS="$LIBS"
-  LIBS="$LIBS $X_LIBS"
-
-{ echo "$as_me:$LINENO: checking for XftDrawString32 in -lXft" >&5
+  { echo "$as_me:$LINENO: checking for XftDrawString32 in -lXft" >&5
 echo $ECHO_N "checking for XftDrawString32 in -lXft... $ECHO_C" >&6; }
 if test "${ac_cv_lib_Xft_XftDrawString32+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -13233,17 +13235,12 @@ fi
 { echo "$as_me:$LINENO: result: $ac_cv_lib_Xft_XftDrawString32" >&5
 echo "${ECHO_T}$ac_cv_lib_Xft_XftDrawString32" >&6; }
 if test $ac_cv_lib_Xft_XftDrawString32 = yes; then
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBXFT 1
-_ACEOF
-
-  LIBS="-lXft $LIBS"
-
+  :
 else
   support_xft=no
 fi
 
-  LIBS="$ac_save_LIBS"
+  LIBS="$save_LIBS"
 
   if test x$support_xft = xyes; then
 
