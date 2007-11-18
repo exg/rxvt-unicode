@@ -39,7 +39,8 @@
 #define STATUS_FAILURE           1
 #define STATUS_CONNECTION_FAILED 2
 
-struct client : rxvt_connection {
+struct client : rxvt_connection
+{
   client ();
 };
 
