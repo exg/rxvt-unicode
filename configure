@@ -5370,7 +5370,9 @@ done
 
 
 
-for ac_header in sys/epoll.h sys/event.h sys/queue.h port.h
+
+
+for ac_header in sys/epoll.h sys/event.h sys/queue.h port.h poll.h sys/select.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
 if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
@@ -5513,7 +5515,9 @@ done
 
 
 
-for ac_func in epoll_ctl kqueue port_create
+
+
+for ac_func in epoll_ctl kqueue port_create poll select
 do
 as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
 { echo "$as_me:$LINENO: checking for $ac_func" >&5

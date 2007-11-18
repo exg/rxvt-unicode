@@ -109,6 +109,12 @@
 /* Define to 1 if you have the `openpty' function. */
 #undef HAVE_OPENPTY
 
+/* Define to 1 if you have the `poll' function. */
+#undef HAVE_POLL
+
+/* Define to 1 if you have the <poll.h> header file. */
+#undef HAVE_POLL_H
+
 /* Define to 1 if you have the `port_create' function. */
 #undef HAVE_PORT_CREATE
 
@@ -123,6 +129,9 @@
 
 /* Define to 1 if you have the `revoke' function. */
 #undef HAVE_REVOKE
+
+/* Define to 1 if you have the `select' function. */
+#undef HAVE_SELECT
 
 /* Define to 1 if you have the `seteuid' function. */
 #undef HAVE_SETEUID
