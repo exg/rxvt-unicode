@@ -27,6 +27,7 @@ TODO: align default value of cutchars with rxvt.1.pod and add it as a fallback i
 	- fix a serious bug while setting the XIM destroy callback
           on (typical) 64 bit systems.
 	- fix memory leak in pixmap code.
+        - do not link rxvtc against every lib on the planet anymore.
 
 8.4  Sat Oct 27 14:02:13 CEST 2007
 	- overhaul of the transparency/pixmap code (sasha).

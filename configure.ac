@@ -19,6 +19,7 @@ AC_SUBST(VERSION)dnl
 AC_SUBST(DATE)dnl
 AC_SUBST(LSMDATE)dnl
 AC_SUBST(LIBVERSION)dnl
+
 echo ""
 echo "configuring for rxvt $VERSION"
 echo ""
@@ -727,18 +728,21 @@ dnl# --------------------------------------------------------------------------
 if test x$support_xft = xyes; then
   AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
   if test $PKG_CONFIG != no && $PKG_CONFIG --exists xft; then
-    LIBS="$LIBS `$PKG_CONFIG xft --libs`"
+    X_LIBS="`$PKG_CONFIG xft --libs` $X_LIBS"
     CPPFLAGS="$CPPFLAGS `$PKG_CONFIG xft --cflags`"
   else
     AC_PATH_PROG(XFT_CONFIG, xft-config, no)
     if test $XFT_CONFIG != no; then
-      LIBS="$LIBS `$XFT_CONFIG --libs`"
+      X_LIBS="`$XFT_CONFIG --libs` $X_LIBS"
       CPPFLAGS="$CPPFLAGS `$XFT_CONFIG --cflags`"
     fi
   fi
 
+  save_LIBS="$LIBS"
+  LIBS="$LIBS $X_LIBS"
   AC_CHECK_HEADERS(X11/Xft/Xft.h,,[support_xft=no])
-  AC_CHECK_LIB(Xft,XftDrawString32,,[support_xft=no])
+  AC_CHECK_LIB(Xft,XftDrawString32,:,[support_xft=no])
+  LIBS="$save_LIBS"
 
   if test x$support_xft = xyes; then
     AC_DEFINE(XFT, 1, Define to enable xft support)
