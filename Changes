@@ -22,11 +22,11 @@ TODO: align default value of cutchars with rxvt.1.pod and add it as a fallback i
         - expect major portability issues in this release: please test and report.
       	- converted from the veritable io manager event loop to
           the high performance libev (http://software.schmorp.de/pkg/libev).
-	- automove-background functionality re-implemented internaly using :root op in pixmap
-	  geometry string. For example: rxvt -pixmap "image.jpg;:root"
+	- fix memory leak in pixmap code.
 	- fix a serious bug while setting the XIM destroy callback
           on (typical) 64 bit systems.
-	- fix memory leak in pixmap code.
+	- automove-background functionality re-implemented internaly using :root op in pixmap
+	  geometry string. For example: rxvt -pixmap "image.jpg;:root"
         - do not link rxvtc against every lib on the planet anymore.
 
 8.4  Sat Oct 27 14:02:13 CEST 2007
