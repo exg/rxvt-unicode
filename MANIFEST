@@ -177,6 +177,7 @@ src/perl/digital-clock
 src/perl/macosx-clipboard
 
 libev/ev.h
+libev/ev++.h
 libev/ev.c
 libev/ev_vars.h
 libev/ev_wrap.h
