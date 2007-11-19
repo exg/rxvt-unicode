@@ -162,8 +162,8 @@ update_lastlog (const char *fname, const char *pty, const char *host)
   if (S_ISDIR (st.st_mode))
     {
       sprintf (lastlogfile, "%.*s/%.*s",
-               sizeof (lastlogfile) - sizeof (pwent->pw_name) - 2, fname,
-               sizeof (pwent->pw_name),
+               (int)(sizeof (lastlogfile) - sizeof (pwent->pw_name) - 2), fname,
+               (int)sizeof (pwent->pw_name),
                (!pwent->pw_name || pwent->pw_name[0] == '\0') ? "unknown"
                : pwent->pw_name);
       if ((fd = open (lastlogfile, O_WRONLY | O_CREAT, 0644)) >= 0)
@@ -180,9 +180,9 @@ update_lastlog (const char *fname, const char *pty, const char *host)
           write (fd, &ll, sizeof (ll));
         close (fd);
       }
-# endif				/* HAVE_STRUCT_LASTLOG */
+# endif /* HAVE_STRUCT_LASTLOG */
 }
-#endif				/* LASTLOG_SUPPORT */
+#endif /* LASTLOG_SUPPORT */
 
 /* ------------------------------------------------------------------------- */
 
@@ -208,6 +208,7 @@ ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
 #endif
   int i;
   struct passwd *pwent = getpwuid (getuid ());
+  const char *name = (pwent && pwent->pw_name) ? pwent->pw_name : "?";
 
   if (!strncmp (pty, "/dev/", 5))
     pty += 5;		/* skip /dev/ prefix */
@@ -248,8 +249,7 @@ ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
   strncpy (ut->ut_line, pty, sizeof (ut->ut_line));
   ut->ut_time = time (NULL);
 # ifdef HAVE_UTMP_PID
-  strncpy (ut->ut_user, (pwent && pwent->pw_name) ? pwent->pw_name : "?",
-          sizeof (ut->ut_user));
+  strncpy (ut->ut_user, name, sizeof (ut->ut_user));
   strncpy (ut->ut_id, ut_id, sizeof (ut->ut_id));
   ut->ut_time = time (NULL);
   ut->ut_pid = cmd_pid;
@@ -261,8 +261,7 @@ ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
   endutent ();			/* close the file */
   utmp_pos = 0;
 # else
-  strncpy (ut->ut_name, (pwent && pwent->pw_name) ? pwent->pw_name : "?",
-          sizeof (ut->ut_name));
+  strncpy (ut->ut_name, name, sizeof (ut->ut_name));
 #  ifdef HAVE_UTMP_HOST
   strncpy (ut->ut_host, hostname, sizeof (ut->ut_host));
 #  endif
@@ -271,8 +270,7 @@ ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
 
 #ifdef HAVE_STRUCT_UTMPX
   strncpy (utx->ut_line, pty, sizeof (utx->ut_line));
-  strncpy (utx->ut_user, (pwent && pwent->pw_name) ? pwent->pw_name : "?",
-          sizeof (utx->ut_user));
+  strncpy (utx->ut_user, name, sizeof (utx->ut_user));
   strncpy (utx->ut_id, ut_id, sizeof (utx->ut_id));
 # if HAVE_UTMPX_SESSION
   utx->ut_session = getsid (0);

@@ -332,7 +332,7 @@ static struct ttyconf {
           gid = gr->gr_gid;
         }
       else
-#endif                          /* TTY_GID_SUPPORT */
+#endif /* TTY_GID_SUPPORT */
         {
           mode = S_IRUSR | S_IWUSR | S_IWGRP | S_IWOTH;
           gid = 0;
