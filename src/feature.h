@@ -228,7 +228,7 @@
  * Default separating chars for multiple-click selection
  * Space and tab are separate separating characters and are not settable
  */
-#define CUTCHARS	"()*,<>[]{}|"
+#define CUTCHARS	"\"&'()*,;<=>?@[\\]^`{|}"
 
 /*
  * Add run-time support for changing the cutchars for double click selection

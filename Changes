@@ -17,8 +17,6 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
-TODO: align default value of cutchars with rxvt.1.pod and add it as a fallback in perl 'selection'
-      http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=377194
         - expect major portability issues in this release: please test and report.
       	- converted from the veritable io manager event loop to
           the high performance libev (http://software.schmorp.de/pkg/libev).
