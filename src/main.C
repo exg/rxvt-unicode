@@ -183,19 +183,19 @@ rxvt_term::rxvt_term ()
     pointer_ev (this, &rxvt_term::pointer_cb),
 #endif
 #ifdef USE_XIM
-    im_ev (this, &rxvt_term::im_cb),
+    im_ev      (this, &rxvt_term::im_cb),
 #endif
 #ifndef NO_BELL
-    bell_ev (this, &rxvt_term::bell_cb),
+    bell_ev    (this, &rxvt_term::bell_cb),
 #endif
     termwin_ev (this, &rxvt_term::x_cb),
-    vt_ev (this, &rxvt_term::x_cb),
-    child_ev (this, &rxvt_term::child_cb),
+    vt_ev      (this, &rxvt_term::x_cb),
+    child_ev   (this, &rxvt_term::child_cb),
     prepare_ev (this, &rxvt_term::prepare_cb),
-    flush_ev (this, &rxvt_term::flush_cb),
+    flush_ev   (this, &rxvt_term::flush_cb),
     destroy_ev (this, &rxvt_term::destroy_cb),
-    pty_ev (this, &rxvt_term::pty_cb),
-    incr_ev (this, &rxvt_term::incr_cb)
+    pty_ev     (this, &rxvt_term::pty_cb),
+    incr_ev    (this, &rxvt_term::incr_cb)
 {
   cmdbuf_ptr = cmdbuf_endp = cmdbuf_base;
 
@@ -286,6 +286,7 @@ rxvt_term::~rxvt_term ()
   delete [] pix_colors_unfocused;
 #endif
 
+  bgPixmap.destroy ();
   displays.put (display);
 
   scr_release ();

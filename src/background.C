@@ -89,7 +89,7 @@
  */
 
 #ifdef HAVE_BG_PIXMAP
-bgPixmap_t::bgPixmap_t()
+bgPixmap_t::bgPixmap_t ()
 {
 #ifdef HAVE_AFTERIMAGE
   original_asim = NULL;
@@ -102,12 +102,14 @@ bgPixmap_t::bgPixmap_t()
   pixmap = None;
 }
 
-bgPixmap_t::~bgPixmap_t()
+void
+bgPixmap_t::destroy ()
 {
 #ifdef HAVE_AFTERIMAGE
   if (original_asim)
     safe_asimage_destroy (original_asim);
 #endif
+
   if (pixmap && target)
     XFreePixmap (target->dpy, pixmap);
 }

@@ -13,10 +13,10 @@
 
 #if defined(BG_IMAGE_FROM_FILE) || defined(ENABLE_TRANSPARENCY)
 # define HAVE_BG_PIXMAP 1/* to simplify further usage */
-struct  bgPixmap_t {
-
-  bgPixmap_t();
-  ~bgPixmap_t();
+struct bgPixmap_t
+{
+  bgPixmap_t ();
+  void destroy ();
 
   enum {
     geometrySet     = (1UL<<0),
