@@ -21,7 +21,7 @@ DEFS = @DEFS@
 LIBS = @LIBS@
 XINC = @X_CFLAGS@ @AFTERIMAGE_CFLAGS@
 XLIB = @X_LIBS@ @AFTERIMAGE_LIBS@ -lX11 @X_EXTRA_LIBS@
-COMPILE = $(CXX) -I$(srcdir)/../libev -I$(srcdir)/.. -I.. -I$(srcdir) -I. $(DEFS) $(CPPFLAGS) $(CXXFLAGS) $(DEBUG) $(XINC) 
+COMPILE = $(CXX) -I$(srcdir)/../libev -I.. -I$(srcdir) -I. $(DEFS) $(CPPFLAGS) $(CXXFLAGS) $(DEBUG) $(XINC)
 LINK = @LINKER@ $(LDFLAGS)
 
 srcdir =	@srcdir@
