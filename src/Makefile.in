@@ -204,10 +204,10 @@ rxvtfont.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 rxvtfont.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
 rxvtfont.o: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
 rxvtfont.o: table/linedraw.h
-rxvtperl.o: ../config.h ev_cpp.h rxvt.h rxvtlib.h optinc.h feature.h
-rxvtperl.o: encoding.h rxvtutil.h rxvtfont.h rxvttoolkit.h callback.h
-rxvtperl.o: salloc.h libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
-rxvtperl.o: keyboard.h perlxsi.c ./iom_perl.h
+rxvtperl.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+rxvtperl.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
+rxvtperl.o: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h keyboard.h
+rxvtperl.o: perlxsi.c ./iom_perl.h
 rxvttoolkit.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 rxvttoolkit.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h
 rxvttoolkit.o: salloc.h libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
@@ -303,10 +303,10 @@ rxvtfont.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 rxvtfont.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
 rxvtfont.lo: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
 rxvtfont.lo: table/linedraw.h
-rxvtperl.lo: ../config.h ev_cpp.h rxvt.h rxvtlib.h optinc.h feature.h
-rxvtperl.lo: encoding.h rxvtutil.h rxvtfont.h rxvttoolkit.h callback.h
-rxvtperl.lo: salloc.h libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
-rxvtperl.lo: keyboard.h perlxsi.c ./iom_perl.h
+rxvtperl.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+rxvtperl.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
+rxvtperl.lo: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h keyboard.h
+rxvtperl.lo: perlxsi.c ./iom_perl.h
 rxvttoolkit.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 rxvttoolkit.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h
 rxvttoolkit.lo: salloc.h libptytty.h rxvtperl.h hookinc.h background.h
