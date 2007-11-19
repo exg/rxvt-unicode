@@ -17,9 +17,11 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
+8.5
         - expect major portability issues in this release: please test and report.
       	- converted from the veritable io manager event loop to
           the high performance libev (http://software.schmorp.de/pkg/libev).
+        - minor tuning to the perl selection (include single words and more quoting chars).
 	- fix memory leak in pixmap code.
 	- fix a serious bug while setting the XIM destroy callback
           on (typical) 64 bit systems.
