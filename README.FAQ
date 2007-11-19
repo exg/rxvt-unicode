@@ -162,9 +162,9 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
        libX11.so.6 => /usr/X11R6/lib/libX11.so.6 (0x00002aaaaabc3000)
        libgcc_s.so.1 => /lib/libgcc_s.so.1 (0x00002aaaaada2000)
-       libc.so.6 => /lib/libc.so.6 (0x00002aaaaaeb0000)     
-       libdl.so.2 => /lib/libdl.so.2 (0x00002aaaab0ee000)   
-       /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)     
+       libc.so.6 => /lib/libc.so.6 (0x00002aaaaaeb0000)
+       libdl.so.2 => /lib/libdl.so.2 (0x00002aaaab0ee000)
+       /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)
 
     No large bloated libraries (of course, none were linked in statically),
     except maybe libX11 :)
@@ -179,10 +179,10 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     Here are four ways to get transparency. Do read the manpage and option
     descriptions for the programs mentioned and rxvt-unicode. Really, do it!
 
-    1. Use inheritPixmap:
+    1. Use transparent mode:
 
        Esetroot wallpaper.jpg
-       urxvt -ip -tint red -sh 40
+       urxvt -tr -tint red -sh 40
 
     That works. If you think it doesn't, you lack transparency and tinting
     support, or you are unable to read.
@@ -192,10 +192,10 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     your picture with gimp or any other tool:
 
        convert wallpaper.jpg -blur 20x20 -modulate 30 background.jpg
-       urxvt -pixmap background.jpg -pe automove-background
+       urxvt -pixmap "background.jpg;:root"
 
-    That works. If you think it doesn't, you lack AfterImage and Perl
-    support, or you are unable to read.
+    That works. If you think it doesn't, you lack AfterImage support, or you
+    are unable to read.
 
     3. Use an ARGB visual:
 

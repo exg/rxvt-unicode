@@ -165,7 +165,6 @@ src/perl/selection-popup
 src/perl/selection-autotransform
 src/perl/selection-pastebin
 src/perl/searchable-scrollback
-src/perl/automove-background
 src/perl/matcher
 src/perl/tabbed
 src/perl/xim-onthespot

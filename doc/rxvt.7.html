@@ -6,7 +6,7 @@
 	<meta name="description" content="Pod documentation for RXVT REFERENCE" />
 	<meta name="inputfile" content="&lt;standard input&gt;" />
 	<meta name="outputfile" content="&lt;standard output&gt;" />
-	<meta name="created" content="Sat Oct 27 14:07:34 2007" />
+	<meta name="created" content="Mon Nov 19 13:01:50 2007" />
 	<meta name="generator" content="Pod::Xhtml 1.57" />
 <link rel="stylesheet" href="http://res.tst.eu/pod.css"/></head>
 <body>
@@ -347,9 +347,9 @@ system with a minimal config:</p>
 <p>And here is rxvt-unicode:</p>
 <pre>   libX11.so.6 =&gt; /usr/X11R6/lib/libX11.so.6 (0x00002aaaaabc3000)
    libgcc_s.so.1 =&gt; /lib/libgcc_s.so.1 (0x00002aaaaada2000)
-   libc.so.6 =&gt; /lib/libc.so.6 (0x00002aaaaaeb0000)     
-   libdl.so.2 =&gt; /lib/libdl.so.2 (0x00002aaaab0ee000)   
-   /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)     
+   libc.so.6 =&gt; /lib/libc.so.6 (0x00002aaaaaeb0000)
+   libdl.so.2 =&gt; /lib/libdl.so.2 (0x00002aaaab0ee000)
+   /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)
 
 </pre>
 <p>No large bloated libraries (of course, none were linked in statically),
@@ -366,14 +366,14 @@ except maybe libX11 :)</p>
 </div>
 <h3 id="I_can_t_get_transparency_working_wha">I can't get transparency working, what am I doing wrong?</h3>
 <div id="I_can_t_get_transparency_working_wha-2">
-<p>First of all, please address all transparency related issues to Sasha Vasko at 
-sasha@aftercode.net and do not bug the author about it. Also, if you can't 
+<p>First of all, please address all transparency related issues to Sasha Vasko at
+sasha@aftercode.net and do not bug the author about it. Also, if you can't
 get it working consider it a rite of passage: ... and you failed.</p>
 <p>Here are four ways to get transparency. <strong>Do</strong> read the manpage and option
 descriptions for the programs mentioned and rxvt-unicode. Really, do it!</p>
-<p>1. Use inheritPixmap:</p>
+<p>1. Use transparent mode:</p>
 <pre>   Esetroot wallpaper.jpg
-   urxvt -ip -tint red -sh 40
+   urxvt -tr -tint red -sh 40
 
 </pre>
 <p>That works. If you think it doesn't, you lack transparency and tinting
@@ -382,10 +382,10 @@ support, or you are unable to read.</p>
 to use effects other than tinting and shading: Just shade/tint/whatever
 your picture with gimp or any other tool:</p>
 <pre>   convert wallpaper.jpg -blur 20x20 -modulate 30 background.jpg
-   urxvt -pixmap background.jpg -pe automove-background
+   urxvt -pixmap &quot;background.jpg;:root&quot;
 
 </pre>
-<p>That works. If you think it doesn't, you lack AfterImage and Perl support, or you
+<p>That works. If you think it doesn't, you lack AfterImage support, or you
 are unable to read.</p>
 <p>3. Use an ARGB visual:</p>
 <pre>   urxvt -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc
@@ -764,7 +764,7 @@ To avoid confusion between the Backspace and Delete keys, the Delete
 key has been assigned an escape sequence to match the vt100 for Execute
 (<code>ESC [ 3 ~</code>) and is in the supplied termcap/terminfo.</p>
 <p>Some other Backspace problems:</p>
-<p>some editors use termcap/terminfo, 
+<p>some editors use termcap/terminfo,
 some editors (vim I'm told) expect Backspace = ^H,
 GNU Emacs (and Emacs-like editors) use ^H for help.</p>
 <p>Perhaps someday this will all be resolved in a consistent manner.</p>
@@ -1996,15 +1996,14 @@ SVG, TIFF, GIF, XPM, BMP, ICO, XCF, TGA and AfterStep image XML
 (<a href="http://www.afterstep.org/visualdoc.php?show=asimagexml">http://www.afterstep.org/visualdoc.php?show=asimagexml</a>).</p>
 		<p>This option also adds such eye candy as blending an image over the root
 background, as well as dynamic scaling and bluring of background images.</p>
-		<p>Note that with this option enabled, urxvt's memory footprint might
+		<p>Note that with this option enabled, rxvt's memory footprint might
 increase by a few megabytes even if no extra features are used (mostly due
 to third-party libraries used by libAI). Memory footprint may somewhat be
 lowered if libAfterImage is configured without support for SVG.</p>
 	</dd>
 	<dt>--enable-transparency (default: on)</dt>
 	<dd>
-		<p>Add support for inheriting parent backgrounds thus giving a fake
-transparency to the term.</p>
+		<p>Add support for backgrounds, creating illusion of transparency in the term.</p>
 	</dd>
 	<dt>--enable-fading (default: on)</dt>
 	<dd>
@@ -2093,7 +2092,7 @@ in combination with other switches) is:</p>
 	</dd>
 	<dt>--enable-iso14755 (default: on)</dt>
 	<dd>
-		<p>Enable extended ISO 14755 support (see urxvt(1), or
+		<p>Enable extended ISO 14755 support (see rxvt(1), or
 <cite>doc/rxvt.1.txt</cite>). Basic support (section 5.1) is enabled by
 <code>--enable-frills</code>, while support for 5.2, 5.3 and 5.4 is enabled with
 this switch.</p>
@@ -2130,7 +2129,7 @@ the screen in a fixed position.</p>
 	</dd>
 	<dt>--enable-perl (default: on)</dt>
 	<dd>
-		<p>Enable an embedded perl interpreter. See the <strong>urxvtperl(3)</strong>
+		<p>Enable an embedded perl interpreter. See the <strong>rxvtperl(3)</strong>
 manpage (<cite>doc/rxvtperl.txt</cite>) for more info on this feature, or the
 files in <cite>src/perl-ext/</cite> for the extensions that are installed by
 default. The perl interpreter that is used can be specified via the

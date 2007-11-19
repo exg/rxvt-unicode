@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2007-10-27" "8.4" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2007-11-19" "8.4" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -358,8 +358,8 @@ And here is rxvt\-unicode:
 .Vb 5
 \&   libX11.so.6 => /usr/X11R6/lib/libX11.so.6 (0x00002aaaaabc3000)
 \&   libgcc_s.so.1 => /lib/libgcc_s.so.1 (0x00002aaaaada2000)
-\&   libc.so.6 => /lib/libc.so.6 (0x00002aaaaaeb0000)     
-\&   libdl.so.2 => /lib/libdl.so.2 (0x00002aaaab0ee000)   
+\&   libc.so.6 => /lib/libc.so.6 (0x00002aaaaaeb0000)
+\&   libdl.so.2 => /lib/libdl.so.2 (0x00002aaaab0ee000)
 \&   /lib64/ld-linux-x86-64.so.2 (0x00002aaaaaaab000)
 .Ve
 .PP
@@ -370,18 +370,18 @@ except maybe libX11 :)
 \fII can't get transparency working, what am I doing wrong?\fR
 .IX Subsection "I can't get transparency working, what am I doing wrong?"
 .PP
-First of all, please address all transparency related issues to Sasha Vasko at 
-sasha@aftercode.net and do not bug the author about it. Also, if you can't 
+First of all, please address all transparency related issues to Sasha Vasko at
+sasha@aftercode.net and do not bug the author about it. Also, if you can't
 get it working consider it a rite of passage: ... and you failed.
 .PP
 Here are four ways to get transparency. \fBDo\fR read the manpage and option
 descriptions for the programs mentioned and rxvt\-unicode. Really, do it!
 .PP
-1. Use inheritPixmap:
+1. Use transparent mode:
 .PP
 .Vb 2
 \&   Esetroot wallpaper.jpg
-\&   @@URXVT_NAME@@ -ip -tint red -sh 40
+\&   @@URXVT_NAME@@ -tr -tint red -sh 40
 .Ve
 .PP
 That works. If you think it doesn't, you lack transparency and tinting
@@ -393,10 +393,10 @@ your picture with gimp or any other tool:
 .PP
 .Vb 2
 \&   convert wallpaper.jpg -blur 20x20 -modulate 30 background.jpg
-\&   @@URXVT_NAME@@ -pixmap background.jpg -pe automove-background
+\&   @@URXVT_NAME@@ -pixmap "background.jpg;:root"
 .Ve
 .PP
-That works. If you think it doesn't, you lack AfterImage and Perl support, or you
+That works. If you think it doesn't, you lack AfterImage support, or you
 are unable to read.
 .PP
 3. Use an \s-1ARGB\s0 visual:
@@ -832,7 +832,7 @@ key has been assigned an escape sequence to match the vt100 for Execute
 .PP
 Some other Backspace problems:
 .PP
-some editors use termcap/terminfo, 
+some editors use termcap/terminfo,
 some editors (vim I'm told) expect Backspace = ^H,
 \&\s-1GNU\s0 Emacs (and Emacs-like editors) use ^H for help.
 .PP
@@ -2589,8 +2589,7 @@ to third-party libraries used by libAI). Memory footprint may somewhat be
 lowered if libAfterImage is configured without support for \s-1SVG\s0.
 .IP "\-\-enable\-transparency (default: on)" 4
 .IX Item "--enable-transparency (default: on)"
-Add support for inheriting parent backgrounds thus giving a fake
-transparency to the term.
+Add support for backgrounds, creating illusion of transparency in the term.
 .IP "\-\-enable\-fading (default: on)" 4
 .IX Item "--enable-fading (default: on)"
 Add support for fading the text when focus is lost.

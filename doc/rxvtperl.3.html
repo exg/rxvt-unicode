@@ -2,11 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-	<title>urxvtperl</title>
-	<meta name="description" content="Pod documentation for urxvtperl" />
+	<title>rxvtperl</title>
+	<meta name="description" content="Pod documentation for rxvtperl" />
 	<meta name="inputfile" content="&lt;standard input&gt;" />
 	<meta name="outputfile" content="&lt;standard output&gt;" />
-	<meta name="created" content="Sat Oct 27 14:07:34 2007" />
+	<meta name="created" content="Mon Nov 19 13:01:50 2007" />
 	<meta name="generator" content="Pod::Xhtml 1.57" />
 <link rel="stylesheet" href="http://res.tst.eu/pod.css"/></head>
 <body>
@@ -45,7 +45,7 @@
 
 <h1 id="NAME">NAME</h1><p><a href="#TOP" class="toplink">Top</a></p>
 <div id="NAME_CONTENT">
-<p>urxvtperl - rxvt-unicode's embedded perl interpreter</p>
+<p>rxvtperl - rxvt-unicode's embedded perl interpreter</p>
 
 </div>
 <h1 id="SYNOPSIS">SYNOPSIS</h1><p><a href="#TOP" class="toplink">Top</a></p>
@@ -57,9 +57,9 @@
       ()
    }
 
-   # start a urxvt using it:
+   # start a rxvt using it:
 
-   urxvt --perl-lib $HOME -pe grab_test
+   rxvt --perl-lib $HOME -pe grab_test
 
 </pre>
 
@@ -70,7 +70,7 @@
 the <code>perl</code> resource are loaded and associated with it.</p>
 <p>Scripts are compiled in a 'use strict' and 'use utf8' environment, and
 thus must be encoded as UTF-8.</p>
-<p>Each script will only ever be loaded once, even in urxvtd, where
+<p>Each script will only ever be loaded once, even in rxvtd, where
 scripts will be shared (but not enabled) for all terminals.</p>
 <p>You can disable the embedded perl interpreter by setting both &quot;perl-ext&quot;
 and &quot;perl-ext-common&quot; resources to the empty string.</p>
@@ -79,13 +79,13 @@ and &quot;perl-ext-common&quot; resources to the empty string.</p>
 <h1 id="PREPACKAGED_EXTENSIONS">PREPACKAGED EXTENSIONS</h1><p><a href="#TOP" class="toplink">Top</a></p>
 <div id="PREPACKAGED_EXTENSIONS_CONTENT">
 <p>This section describes the extensions delivered with this release. You can
-find them in <cite>/usr/local/lib/urxvt/perl/</cite>.</p>
+find them in <cite>/opt/rxvt/lib/urxvt/perl/</cite>.</p>
 <p>You can activate them like this:</p>
-<pre>  urxvt -pe &lt;extensionname&gt;
+<pre>  rxvt -pe &lt;extensionname&gt;
 
 </pre>
 <p>Or by adding them to the resource for extensions loaded by default:</p>
-<pre>  URxvt.perl-ext-common: default,automove-background,selection-autotransform
+<pre>  URxvt.perl-ext-common: default,selection-autotransform
 
 </pre>
 <dl>
@@ -142,7 +142,7 @@ runtime.</p>
 		<p>Other extensions can extend this popup menu by pushing a code reference
 onto <code>@{ $term-</code>{option_popup_hook} }&gt;, which gets called whenever the
 popup is being displayed.</p>
-		<p>It's sole argument is the popup menu, which can be modified.  It should
+		<p>Its sole argument is the popup menu, which can be modified.  It should
 either return nothing or a string, the initial boolean value and a code
 reference. The string will be used as button text and the code reference
 will be called when the toggle changes, with the new boolean value as
@@ -163,7 +163,7 @@ evaluation, web-browser starting etc.), depending on content.</p>
 		<p>Other extensions can extend this popup menu by pushing a code reference
 onto <code>@{ $term-</code>{selection_popup_hook} }&gt;, which gets called whenever the
 popup is being displayed.</p>
-		<p>It's sole argument is the popup menu, which can be modified. The selection
+		<p>Its sole argument is the popup menu, which can be modified. The selection
 is in <code>$_</code>, which can be used to decide whether to add something or not.
 It should either return nothing or a string and a code reference. The
 string will be used as button text and the code reference will be called
@@ -172,7 +172,7 @@ when the button gets activated and should transform <code>$_</code>.</p>
 the selection to <code>b</code>s, but only if the selection currently contains any
 <code>a</code>s:</p>
 <pre>   push @{ $self-&gt;{term}{selection_popup_hook} }, sub {
-      /a/ ? (&quot;a to be&quot; =&gt; sub { s/a/b/g }
+      /a/ ? (&quot;a to b&quot; =&gt; sub { s/a/b/g }
           : ()
    };
 
@@ -266,7 +266,7 @@ following four resources (shown with defaults):</p>
    URxvt.tabbed.tab-bg:    &lt;colour-index, default 1&gt;
 
 </pre>
-		<p>See <i>COLOR AND GRAPHICS</i> in the urxvt(1) manpage for valid
+		<p>See <i>COLOR AND GRAPHICS</i> in the rxvt(1) manpage for valid
 indices.</p>
 	</dd>
 	<dt>matcher</dt>
@@ -300,11 +300,11 @@ Simply bind a keysym to &quot;perl:matcher&quot; as seen in the example below.</
 	<dd>
 		<p>This (experimental) perl extension implements OnTheSpot editing. It does
 not work perfectly, and some input methods don't seem to work well with
-OnTheSpot editing in general, but it seems to work at leats for SCIM and
+OnTheSpot editing in general, but it seems to work at least for SCIM and
 kinput2.</p>
 		<p>You enable it by specifying this extension and a preedit style of
 <code>OnTheSpot</code>, i.e.:</p>
-<pre>   urxvt -pt OnTheSpot -pe xim-onthespot
+<pre>   rxvt -pt OnTheSpot -pe xim-onthespot
 
 </pre>
 	</dd>
@@ -316,25 +316,12 @@ user presses a global accelerator key (by default <code>F10</code>), the termina
 will show or hide itself. Another press of the accelerator key will hide
 or show it again.</p>
 		<p>Initially, the window will not be shown when using this extension.</p>
-		<p>This is useful if you need a single terminal thats not using any desktop
+		<p>This is useful if you need a single terminal that is not using any desktop
 space most of the time but is quickly available at the press of a key.</p>
 		<p>The accelerator key is grabbed regardless of any modifiers, so this
 extension will actually grab a physical key just for this function.</p>
 		<p>If you want a quake-like animation, tell your window manager to do so
 (fvwm can do it).</p>
-	</dd>
-	<dt>automove-background</dt>
-	<dd>
-		<p>This is basically a very small extension that dynamically changes the
-background pixmap offset to the window position, in effect creating the
-same effect as pseudo transparency with a custom pixmap. No scaling is
-supported in this mode. Example:</p>
-<pre>   urxvt -pixmap background.xpm -pe automove-background
-
-</pre>
-		<p><a href="http://wiki.archlinux.org/index.php/Perl_Background_Rotation/Extensions">http://wiki.archlinux.org/index.php/Perl_Background_Rotation/Extensions</a>
-shows how this extension can be used to implement an automatically blurred
-transparent background.</p>
 	</dd>
 	<dt>block-graphics-to-ascii</dt>
 	<dd>
@@ -349,7 +336,7 @@ similar-looking ascii character.</p>
 	<dt>remote-clipboard</dt>
 	<dd>
 		<p>Somewhat of a misnomer, this extension adds two menu entries to the
-selection popup that allows one ti run external commands to store the
+selection popup that allows one to run external commands to store the
 selection somewhere and fetch it again.</p>
 		<p>We use it to implement a &quot;distributed selection mechanism&quot;, which just
 means that one command uploads the file to a remote server, and another
@@ -618,7 +605,7 @@ code is run after this hook, and takes precedence.</p>
 	<dd>
 		<p>Called whenever a user-configured event is being activated (e.g. via
 a <code>perl:string</code> action bound to a key, see description of the <strong>keysym</strong>
-resource in the urxvt(1) manpage).</p>
+resource in the rxvt(1) manpage).</p>
 		<p>The event is simply the action string. This interface is assumed to change
 slightly in the future.</p>
 	</dd>
@@ -845,7 +832,7 @@ refer to global data (which is race free).</p>
 	<dt>$term-&gt;destroy</dt>
 	<dd>
 		<p>Destroy the terminal object (close the window, free resources
-etc.). Please note that urxvt will not exit as long as any event
+etc.). Please note that rxvt will not exit as long as any event
 watchers (timers, io watchers) are still active.</p>
 	</dd>
 	<dt>$term-&gt;exec_async ($cmd[, @args])</dt>
@@ -917,7 +904,7 @@ the wrong resources.</p>
 	<dt>$success = $term-&gt;parse_keysym ($keysym_spec, $command_string)</dt>
 	<dd>
 		<p>Adds a keymap translation exactly as specified via a resource. See the
-<code>keysym</code> resource in the urxvt(1) manpage.</p>
+<code>keysym</code> resource in the rxvt(1) manpage.</p>
 	</dd>
 	<dt>$rend = $term-&gt;rstyle ([$new_rstyle])</dt>
 	<dd>
@@ -1332,7 +1319,7 @@ fractional number of seconds since the epoch. Example:</p>
                     -&gt;cb (sub {
                        $term-&gt;{overlay}-&gt;set (0, 0,
                           sprintf &quot;%2d:%02d:%02d&quot;, (localtime urxvt::NOW)[2,1,0]);
-                    });                                                                                                                                      
+                    });
 
 </pre>
 <dl>
@@ -1385,7 +1372,7 @@ is automatically rescheduled at the given intervals.</p>
   $term-&gt;{iow} = urxvt::iow
                  -&gt;new
                  -&gt;fd (fileno $term-&gt;{socket})
-                 -&gt;events (urxvt::EVENT_READ)
+                 -&gt;events (urxvt::EV_READ)
                  -&gt;start
                  -&gt;cb (sub {
                    my ($iow, $revents) = @_;
@@ -1415,8 +1402,8 @@ is a bitset as described in the <code>events</code> method.</p>
 	<dt>$iow = $iow-&gt;events ($eventmask)</dt>
 	<dd>
 		<p>Set the event mask to watch. The only allowed values are
-<code>urxvt::EVENT_READ</code> and <code>urxvt::EVENT_WRITE</code>, which might be ORed
-together, or <code>urxvt::EVENT_NONE</code>.</p>
+<code>urxvt::EV_READ</code> and <code>urxvt::EV_WRITE</code>, which might be ORed
+together, or <code>urxvt::EV_NONE</code>.</p>
 	</dd>
 	<dt>$iow = $iow-&gt;start</dt>
 	<dd>
@@ -1466,7 +1453,7 @@ process exits, after which they stop automatically.</p>
                     -&gt;cb (sub {
                        my ($pw, $exit_status) = @_;
                        ...
-                    });                                                                                                                                      
+                    });
 
 </pre>
 <dl>
