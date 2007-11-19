@@ -73,7 +73,7 @@ distdir:
 	cd src && $(MAKE) depend
 	rm -rf $(VERNAME)
 	mkdir $(VERNAME)
-	rsync -aR `cat MANIFEST` $(VERNAME)/.
+	rsync -aR --copy-unsafe-links `cat MANIFEST` $(VERNAME)/.
 
 tar.gz: distdir
 	tar cvf - $(VERNAME) | gzip -vf9 > $(VERNAME).tar.gz
