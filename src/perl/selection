@@ -53,7 +53,7 @@ my @mark_patterns = (
    qr{ \< ([^>]+) \> }x,
    qr{ \( ([^)]+) \) }x,
    qr{ \{ ([^}]+) \} }x,
-   qr{ \[ ([^]]+) \] }x,
+   qr{ \[ ([^\]]+) \] }x,
 
    # urls, just a heuristic
    qr{(
