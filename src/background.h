@@ -55,10 +55,14 @@ struct bgPixmap_t
   bool render_asim (ASImage *background, ARGB32 background_tint);
 #  endif
 
-  enum { 
-    noScale = 0, windowScale = 100, defaultScale = windowScale, 
-    centerAlign = 50, defaultAlign = centerAlign, 
-	rootAlign = -10000 };
+  enum {
+    noScale = 0,
+    windowScale = 100,
+    defaultScale = windowScale,
+    centerAlign = 50,
+    defaultAlign = centerAlign,
+    rootAlign = -10000
+  };
 
   unsigned int h_scale, v_scale;/* percents of the window size */
   int h_align, v_align;         /* percents of the window size:

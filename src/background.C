@@ -3,9 +3,6 @@
  *----------------------------------------------------------------------*
  *
  * All portions of code are copyright by their respective author/s.
- * Copyright (c) 1997      Carsten Haitzler <raster@zip.com.au>
- * Copyright (c) 1997,1998 Oezguer Kesim <kesim@math.fu-berlin.de>
- * Copyright (c) 1998-2001 Geoff Wing <gcw@pobox.com>
  * Copyright (c) 2005-2006 Marc Lehmann <pcg@goof.com>
  * Copyright (c) 2007      Sasha Vasko <sasha@aftercode.net>
  *
