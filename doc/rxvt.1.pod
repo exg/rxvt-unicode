@@ -1002,7 +1002,7 @@ will be created). In this mode, characters outside ISO-8859-1 can be used.
 When the selection extension is not used, only ISO-8859-1 characters can
 be used. If not specified, the built-in default is used:
 
-B<< BACKSLASH `"'&()*,;<=>?@[]{|} >>
+B<< BACKSLASH `"'&()*,;<=>?@[]^{|} >>
 
 =item B<preeditType:> I<style>
 
