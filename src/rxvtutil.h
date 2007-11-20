@@ -13,18 +13,15 @@ using namespace std;
 
 #define HAVE_GCC_BUILTINS (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ == 4))
 
-#ifndef __attribute__
-# if __GNUC__
-#  if (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || (__GNUC__ < 2)
-#   define __attribute__(x)
-#  endif
-# endif
-# define __attribute__(x)
+#if __GNUC__ >= 3
+# define rxvt_attribute(x) __attribute__(x)
+#else
+# define rxvt_attribute(x)
 #endif
 
-#define NORETURN __attribute__ ((noreturn))
-#define UNUSED   __attribute__ ((unused))
-#define CONST    __attribute__ ((const))
+#define NORETURN rxvt_attribute ((noreturn))
+#define UNUSED   rxvt_attribute ((unused))
+#define CONST    rxvt_attribute ((const))
 
 // increases code size unless -fno-enforce-eh-specs
 #if __GNUC__
@@ -69,8 +66,8 @@ T lerp (T a, U b, P p)
 
 // some bit functions, xft fuck me plenty
 #if HAVE_GCC_BUILTINS
-static inline int ctz      (unsigned int x) CONST { return __builtin_ctz      (x); }
-static inline int popcount (unsigned int x) CONST { return __builtin_popcount (x); }
+static inline int ctz      (unsigned int x) { return __builtin_ctz      (x); }
+static inline int popcount (unsigned int x) { return __builtin_popcount (x); }
 #else
 // count trailing zero bits and count # of one bits
 int ctz      (unsigned int x) CONST;
