@@ -17,6 +17,9 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
+8.5a Wed Nov 21 10:16:33 CET 2007
+	- make it compile with --disable-transparency.
+
 8.5  Wed Nov 21 05:19:20 CET 2007
         - expect major portability issues in this release: please test and report.
       	- converted from the veritable io manager event loop to
