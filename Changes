@@ -17,7 +17,7 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
-8.5
+8.5  Wed Nov 21 05:19:20 CET 2007
         - expect major portability issues in this release: please test and report.
       	- converted from the veritable io manager event loop to
           the high performance libev (http://software.schmorp.de/pkg/libev).
@@ -28,6 +28,7 @@ DUMB: support tex fonts
 	- automove-background functionality re-implemented internaly using :root op in pixmap
 	  geometry string. For example: rxvt -pixmap "image.jpg;:root"
         - do not link rxvtc against every lib on the planet anymore.
+        - parallel builds should work once more.
 
 8.4  Sat Oct 27 14:02:13 CEST 2007
 	- overhaul of the transparency/pixmap code (sasha).
