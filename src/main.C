@@ -286,7 +286,9 @@ rxvt_term::~rxvt_term ()
   delete [] pix_colors_unfocused;
 #endif
 
+#ifdef HAVE_BG_PIXMAP
   bgPixmap.destroy ();
+#endif
   displays.put (display);
 
   scr_release ();
