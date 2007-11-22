@@ -13,7 +13,7 @@ using namespace std;
 
 #define HAVE_GCC_BUILTINS (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ == 4))
 
-#if __GNUC__ >= 3
+#if __GNUC__ >= 4
 # define rxvt_attribute(x) __attribute__(x)
 #else
 # define rxvt_attribute(x)
