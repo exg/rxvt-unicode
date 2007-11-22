@@ -311,6 +311,9 @@ rxvt_term::~rxvt_term ()
 #ifdef KEYSYM_RESOURCE
   delete keyboard;
 #endif
+#ifndef NO_RESOURCES
+  XrmDestroyDatabase (option_db);
+#endif
 }
 
 // child has exited, usually destroys

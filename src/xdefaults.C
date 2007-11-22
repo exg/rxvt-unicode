@@ -567,7 +567,12 @@ rxvt_term::get_options (int argc, const char *const *argv)
       else if (!strncmp (opt, "keysym.", sizeof ("keysym.") - 1))
         {
           if (i+1 < argc)
-            parse_keysym (opt + sizeof ("keysym.") - 1, argv[++i]);
+            {
+              char *res = (char *)malloc (strlen (opt) + strlen (argv[++i]) + 6);
+              sprintf (res, "*.%s: %s\n", opt, argv[i]);
+              XrmPutLineResource (&option_db, res);
+              free (res);
+            }
         }
 #endif
       else
@@ -802,6 +807,9 @@ void
 rxvt_term::extract_resources ()
 {
 #ifndef NO_RESOURCES
+  XrmDatabase database = XrmGetDatabase (dpy);
+  XrmMergeDatabases (option_db, &database);
+  option_db = NULL;
   /*
    * Query resources for options that affect us
    */
@@ -840,7 +848,6 @@ rxvt_term::extract_resources ()
    * [R5 or later]: enumerate the resource database
    */
 #  ifdef KEYSYM_RESOURCE
-  XrmDatabase database = XrmGetDatabase (dpy);
   XrmName name_prefix[3];
   XrmClass class_prefix[3];
 

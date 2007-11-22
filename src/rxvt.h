@@ -1013,6 +1013,9 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 #ifdef KEYSYM_RESOURCE
   keyboard_manager *keyboard;
 #endif
+#ifndef NO_RESOURCES
+  XrmDatabase option_db;
+#endif
 
   const char     *rs[NUM_RESOURCES];
   /* command input buffering */
