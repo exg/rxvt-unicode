@@ -563,19 +563,18 @@ rxvt_term::get_options (int argc, const char *const *argv)
                 rs[optList[entry].doff] = flag;
             }
         }
-      else
 #ifdef KEYSYM_RESOURCE
-        if (!strncmp (opt, "keysym.", sizeof ("keysym.") - 1))
-          {
-            if (i+1 < argc)
-              parse_keysym (opt + sizeof ("keysym.") - 1, argv[++i]);
-          }
-        else
+      else if (!strncmp (opt, "keysym.", sizeof ("keysym.") - 1))
+        {
+          if (i+1 < argc)
+            parse_keysym (opt + sizeof ("keysym.") - 1, argv[++i]);
+        }
 #endif
-          {
-            bad_option = 1;
-            rxvt_warn ("\"%s\": unknown or malformed option.\n", opt);
-          }
+      else
+        {
+          bad_option = 1;
+          rxvt_warn ("\"%s\": unknown or malformed option.\n", opt);
+        }
     }
 
   if (bad_option)
