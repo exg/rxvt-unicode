@@ -17,6 +17,9 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
+	- disable kqueue on anything but netbsd as it seems to be broken
+          everywhere else w.r.t. ptys.
+
 8.5a Wed Nov 21 10:16:33 CET 2007
 	- make it compile with --disable-transparency.
 
