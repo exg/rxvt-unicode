@@ -542,7 +542,7 @@ void rxvt_display::im_change_check ()
 
 void rxvt_display::x_cb (ev::io &w, int revents)
 {
-  do
+  while (XEventsQueued (dpy, QueuedAfterReading))
     {
       XEvent xev;
       XNextEvent (dpy, &xev);
@@ -569,17 +569,13 @@ void rxvt_display::x_cb (ev::io &w, int revents)
         }
 #endif
     }
-  while (XEventsQueued (dpy, QueuedAlready));
 
   XFlush (dpy);
 }
 
 void rxvt_display::flush ()
 {
-  if (XEventsQueued (dpy, QueuedAlready))
-    x_cb (x_ev, ev::READ);
-
-  XFlush (dpy);
+  x_cb (x_ev, ev::READ);
 }
 
 void rxvt_display::reg (xevent_watcher *w)

@@ -19,6 +19,9 @@ DUMB: support tex fonts
 
         - upgrade libev to disable kqueue on anything but netbsd as it
           seems to be broken everywhere else w.r.t. ptys.
+        - allow for spurious event notifications, as at least epoll and
+          especially solaris ports like to lie about them (symptoms:
+          urxvt "hangs" until there is some x11 related activity).
 
 8.5a Wed Nov 21 10:16:33 CET 2007
 	- make it compile with --disable-transparency.
