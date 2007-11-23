@@ -265,9 +265,6 @@ optList[] = {
               STRG (Rs_blendtype, "blendType", "blt", "string", "background image blending type - alpha, tint, etc..."),
               STRG (Rs_blurradius, "blurRadius", "blr", "HxV", "Gaussian Blur radii to apply to the root background"),
 #endif
-#ifndef NO_RESOURCES
-              INFO ("xrm", "string", "X resource"),
-#endif
               INFO ("e", "command arg ...", "command to execute")
             };
 
@@ -563,6 +560,13 @@ rxvt_term::get_options (int argc, const char *const *argv)
                 rs[optList[entry].doff] = flag;
             }
         }
+#ifndef NO_RESOURCES
+      else if (!strcmp (opt, "xrm"))
+        {
+          if (i+1 < argc)
+            XrmPutLineResource (&option_db, argv[++i]);
+        }
+#endif
 #ifdef KEYSYM_RESOURCE
       else if (!strncmp (opt, "keysym.", sizeof ("keysym.") - 1))
         {
