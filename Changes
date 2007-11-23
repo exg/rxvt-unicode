@@ -17,6 +17,7 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
+8.6  Fri Nov 23 14:10:57 CET 2007
         - upgrade libev to disable kqueue on anything but netbsd as it
           seems to be broken everywhere else w.r.t. ptys.
         - allow for spurious event notifications, as at least epoll and

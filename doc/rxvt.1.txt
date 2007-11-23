@@ -6,7 +6,7 @@ SYNOPSIS
     rxvt [options] [-e command [ args ]]
 
 DESCRIPTION
-    rxvt-unicode, version 8.4, is a colour vt102 terminal emulator intended
+    rxvt-unicode, version 8.6, is a colour vt102 terminal emulator intended
     as an *xterm*(1) replacement for users who do not require features such
     as Tektronix 4014 emulation and toolkit-style configurability. As a
     result, rxvt-unicode uses much less swap space -- a significant
@@ -387,6 +387,19 @@ OPTIONS
         it exits. Instead, it will wait till it is being killed or closed by
         the user; resource hold.
 
+    -xrm *string*
+        Works like the X Toolkit option of the same name, by adding the
+        *string* as if it were specified in a resource file. Resource values
+        specified this way take precedence over all other resource
+        specifications.
+
+        Note that you need to use the *same* syntax as in the .Xdefaults
+        file, e.g. "*.background: black". Also note that all rxvt-specific
+        options can be specified as long-options on the commandline, so use
+        of -xrm is mostly limited to cases where you want to specify other
+        resources (e.g. for input methods) or for compatibility with other
+        programs.
+
     -keysym.*sym* *string*
         Remap a key symbol. See resource keysym.
 
@@ -462,6 +475,7 @@ RESOURCES (available also as long-options)
       3. RESOURCE_MANAGER property on root-window OR $HOME/.Xdefaults
       4. SCREEN_RESOURCES for the current screen
       5. $XENVIRONMENT file OR $HOME/.Xdefaults-<nodename>
+      6. resources specified via -xrm on the commandline
 
     Note that when reading X resources, rxvt recognizes two class names:
     Rxvt and URxvt. The class name Rxvt allows resources common to both rxvt

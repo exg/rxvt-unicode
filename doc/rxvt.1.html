@@ -6,7 +6,7 @@
 	<meta name="description" content="Pod documentation for rxvt-unicode (ouR XVT, unicode)" />
 	<meta name="inputfile" content="&lt;standard input&gt;" />
 	<meta name="outputfile" content="&lt;standard output&gt;" />
-	<meta name="created" content="Mon Nov 19 13:01:50 2007" />
+	<meta name="created" content="Fri Nov 23 12:34:59 2007" />
 	<meta name="generator" content="Pod::Xhtml 1.57" />
 <link rel="stylesheet" href="http://res.tst.eu/pod.css"/></head>
 <body>
@@ -52,7 +52,7 @@
 </div>
 <h1 id="DESCRIPTION">DESCRIPTION</h1><p><a href="#TOP" class="toplink">Top</a></p>
 <div id="DESCRIPTION_CONTENT">
-<p><strong>rxvt-unicode</strong>, version <strong>8.4</strong>, is a colour vt102 terminal
+<p><strong>rxvt-unicode</strong>, version <strong>8.6</strong>, is a colour vt102 terminal
 emulator intended as an <i>xterm</i>(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, <strong>rxvt-unicode</strong> uses much less swap space --
@@ -487,6 +487,18 @@ will not immediately destroy its window when the program executed within
 it exits. Instead, it will wait till it is being killed or closed by the
 user; resource <strong>hold</strong>.</p>
 	</dd>
+	<dt><strong>-xrm</strong> <i>string</i></dt>
+	<dd>
+		<p>Works like the X Toolkit option of the same name, by adding the <i>string</i>
+as if it were specified in a resource file. Resource values specified this
+way take precedence over all other resource specifications.</p>
+		<p>Note that you need to use the <i>same</i> syntax as in the .Xdefaults file,
+e.g. <code>*.background: black</code>. Also note that all rxvt-specific
+options can be specified as long-options on the commandline, so use
+of <strong>-xrm</strong> is mostly limited to cases where you want to specify other
+resources (e.g. for input methods) or for compatibility with other
+programs.</p>
+	</dd>
 	<dt><strong>-keysym.</strong><i>sym</i> <i>string</i></dt>
 	<dd>
 		<p>Remap a key symbol. See resource <strong>keysym</strong>.</p>
@@ -563,6 +575,7 @@ with later settings overwriting earlier ones:</p>
   3. RESOURCE_MANAGER property on root-window OR $HOME/.Xdefaults
   4. SCREEN_RESOURCES for the current screen
   5. $XENVIRONMENT file OR $HOME/.Xdefaults-&lt;nodename&gt;
+  6. resources specified via -xrm on the commandline
 
 </pre>
 <p>Note that when reading X resources, <strong>rxvt</strong> recognizes two class
