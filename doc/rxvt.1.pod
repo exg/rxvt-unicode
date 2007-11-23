@@ -451,6 +451,19 @@ will not immediately destroy its window when the program executed within
 it exits. Instead, it will wait till it is being killed or closed by the
 user; resource B<hold>.
 
+=item B<-xrm> I<string>
+
+Works like the X Toolkit option of the same name, by adding the I<string>
+as if it were specified in a resource file. Resource values specified this
+way take precedence over all other resource specifications.
+
+Note that you need to use the I<same> syntax as in the .Xdefaults file,
+e.g. C<*.background: black>. Also note that all @@RXVT_NAME@@-specific
+options can be specified as long-options on the commandline, so use
+of B<-xrm> is mostly limited to cases where you want to specify other
+resources (e.g. for input methods) or for compatibility with other
+programs.
+
 =item B<-keysym.>I<sym> I<string>
 
 Remap a key symbol. See resource B<keysym>.
@@ -533,6 +546,7 @@ with later settings overwriting earlier ones:
   3. RESOURCE_MANAGER property on root-window OR $HOME/.Xdefaults
   4. SCREEN_RESOURCES for the current screen
   5. $XENVIRONMENT file OR $HOME/.Xdefaults-<nodename>
+  6. resources specified via -xrm on the commandline
 
 Note that when reading X resources, B<@@RXVT_NAME@@> recognizes two class
 names: B<Rxvt> and B<URxvt>. The class name B<Rxvt> allows resources
