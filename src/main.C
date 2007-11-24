@@ -624,7 +624,7 @@ rxvt_init ()
 {
   ptytty::init ();
 
-  if (!ev::ev_default_loop (0))
+  if (!ev_default_loop (0))
     rxvt_fatal ("cannot initialise libev (bad value for LIBEV_METHODS?)\n");
 
   rxvt_environ = environ;
@@ -632,8 +632,8 @@ rxvt_init ()
   signal (SIGHUP,  SIG_IGN);
   signal (SIGPIPE, SIG_IGN);
 
-  sig_handlers.sw_term.start (SIGTERM); ev::ev_unref ();
-  sig_handlers.sw_int.start  (SIGINT);  ev::ev_unref ();
+  sig_handlers.sw_term.start (SIGTERM); ev_unref ();
+  sig_handlers.sw_int.start  (SIGINT);  ev_unref ();
 
   /* need to trap SIGURG for SVR4 (Unixware) rlogin */
   /* signal (SIGURG, SIG_DFL); */

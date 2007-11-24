@@ -274,10 +274,10 @@ main (int argc, const char *const *argv)
       else if (pid > 0)
         _exit (EXIT_SUCCESS);
 
-      ev::ev_default_fork ();
+      ev_default_fork ();
     }
 
-  ev::ev_loop (0);
+  ev_loop (0);
 
   return EXIT_SUCCESS;
 }

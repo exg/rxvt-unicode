@@ -52,7 +52,7 @@ try
 #endif
       return EXIT_FAILURE;
 
-    ev::ev_loop (0);
+    ev_loop (0);
 
     return EXIT_SUCCESS;
   }

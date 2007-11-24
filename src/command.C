@@ -2229,7 +2229,7 @@ rxvt_term::cmd_parse ()
                     {
                       refresh_count = 0;
 
-                      if (!option (Opt_skipScroll) || ev::ev_time () > ev::now () + 1. / 60.)
+                      if (!option (Opt_skipScroll) || ev_time () > ev::now () + 1. / 60.)
                         {
                           refreshnow = true;
                           ch = NOCHAR;
