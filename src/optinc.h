@@ -34,15 +34,18 @@
  def(borderLess,           26) // mwm borderless hints
  def(hold,                 27) // hold window open after exit
  def(override_redirect,    28)
- def(skipBuiltinGlyphs,    29) // do not use internal glyphs
- def(urgentOnBell,         30)
+ def(urgentOnBell,         29)
 #else
  nodef(insecure)
  nodef(borderLess)
  nodef(hold)
  nodef(override_redirect)
- nodef(skipBuiltinGlyphs)
  nodef(urgentOnBell)
+#endif
+#ifdef BUILTIN_GLYPHS
+ def(skipBuiltinGlyphs,    30) // do not use internal glyphs
+#else
+ nodef(skipBuiltinGlyphs)
 #endif
 #if ENABLE_STYLES
  def(intensityStyles,      31) // font styles imply intensity

@@ -20,6 +20,7 @@
 # define ENABLE_XIM_ONTHESPOT 1
 # define CURSOR_BLINK         1
 # define OPTION_HC            1
+# define BUILTIN_GLYPHS       1
 #else
 # define ENABLE_MINIMAL 1
 #endif

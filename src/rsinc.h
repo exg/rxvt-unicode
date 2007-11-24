@@ -77,8 +77,10 @@
   def (borderLess)
   def (lineSpace)
   def (cursorUnderline)
-  def (skipBuiltinGlyphs)
   def (urgentOnBell)
+#endif
+#ifdef BUILTIN_GLYPHS
+  def (skipBuiltinGlyphs)
 #endif
 #if CURSOR_BLINK
   def (cursorBlink)

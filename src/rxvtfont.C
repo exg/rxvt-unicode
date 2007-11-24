@@ -264,8 +264,6 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color) 
 
 /////////////////////////////////////////////////////////////////////////////
 
-#include "table/linedraw.h"
-
 struct rxvt_font_default : rxvt_font {
   struct rxvt_fontset *fs;
 
@@ -358,8 +356,10 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
       int width = text - tp;
       int fwidth = term->fwidth * width;
 
+#ifdef BUILTIN_GLYPHS
       if (0x2500 <= t && t <= 0x259f)
         {
+# include "table/linedraw.h"
           uint16_t offs = linedraw_offs[t - 0x2500];
           uint32_t *a = linedraw_command + (offs >> 4);
           uint32_t *b = a + (offs & 15);
@@ -436,6 +436,10 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
                 }
             }
         }
+#else
+      if (0)
+        ;
+#endif
 #if ENABLE_COMBINING
       else if (IS_COMPOSE (t) && (cc = rxvt_composite[t]))
         {

@@ -227,8 +227,10 @@ optList[] = {
               STRG (Rs_ext_bwidth, NULL, "borderwidth", NULL, NULL),
               STRG (Rs_int_bwidth, "internalBorder", "b", "number", "internal border in pixels"),
               BOOL (Rs_borderLess, "borderLess", "bl", Opt_borderLess, 0, "borderless window"),
-              BOOL (Rs_skipBuiltinGlyphs, "skipBuiltinGlyphs", "sbg", Opt_skipBuiltinGlyphs, 0, "do not use internal glyphs"),
               STRG (Rs_lineSpace, "lineSpace", "lsp", "number", "number of extra pixels between rows"),
+#endif
+#ifdef BUILTIN_GLYPHS
+              BOOL (Rs_skipBuiltinGlyphs, "skipBuiltinGlyphs", "sbg", Opt_skipBuiltinGlyphs, 0, "do not use internal glyphs"),
 #endif
 #ifdef POINTER_BLANK
               RSTRG (Rs_pointerBlankDelay, "pointerBlankDelay", "number"),
