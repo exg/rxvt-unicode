@@ -308,9 +308,11 @@ struct rxvt_font_default : rxvt_font {
     if (unicode <= 0x009f)
       return true;
 
+#ifdef BUILTIN_GLYPHS
     if (unicode >= 0x2500 && unicode <= 0x259f &&
         !term->option (Opt_skipBuiltinGlyphs))
       return true;
+#endif
 
     if (IS_COMPOSE (unicode))
       return true;
