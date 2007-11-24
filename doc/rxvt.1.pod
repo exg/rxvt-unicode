@@ -118,12 +118,10 @@ Turn on/off skip scrolling (allow multiple screens per refresh); resource B<skip
 
 =item B<-tr>|B<+tr>
 
-Turn on/off illusion of a transparent window background. Obsolete form of it is
-B<-ip> and it should not be used anymore; resource B<transparent>.
+Turn on/off illusion of a transparent window background; resource B<transparent>.
 
-I<Please note that old resource name of B<inheritPixmap> is obsolete and should be
-changed to B<transparent>. Backwards compatibility support for B<inheritPixmap> will
-be phased out in future versions of rxvt!>
+B<-ip> is still accepted as an obsolete alias but will be removed in
+future versions.
 
 I<Please address all transparency related issues to Sasha Vasko at
 sasha@aftercode.net. Read the FAQ (man 7 @@RXVT_NAME@@)!>
@@ -658,14 +656,15 @@ B<False>: specify that everything is to be displayed, even
 if the refresh is too fast for the human eye to read anything (or the
 monitor to display anything); option B<+ss>.
 
-=item B<inheritPixmap:> I<boolean>
+=item B<transparent:> I<boolean>
 
-B<True>: make the background inherit the parent windows' pixmap, giving
-artificial transparency. B<False>: do not inherit the parent windows'
-pixmap.
+Turn on/off illusion of a transparent window background.
 
-I<Please note that transparency of any kind if completely unsupported by
-the author. Don't bug him with installation questions!>
+B<inheritPixmap> is still accepted as an obsolete alias but will be removed in
+future versions.
+
+I<Please address all transparency related issues to Sasha Vasko at
+sasha@aftercode.net. Read the FAQ (man 7 @@RXVT_NAME@@)!>
 
 =item B<fading:> I<number>
 
