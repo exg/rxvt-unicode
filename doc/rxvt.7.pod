@@ -343,10 +343,9 @@ If you want antialiasing, you have to specify the fonts manually.
 If no bold colour is set via C<colorBD:>, bold will invert text using the
 standard foreground colour.
 
-For the standard background colour, blinking will actually make the
-text blink when compiled with C<--enable-text-blink>. with standard
-colours. Without C<--enable-text-blink>, the blink attribute will be
-ignored.
+For the standard background colour, blinking will actually make
+the text blink when compiled with C<--enable-text-blink>. Without
+C<--enable-text-blink>, the blink attribute will be ignored.
 
 On ANSI colours, bold/blink attributes are used to set high-intensity
 foreground/background colors.
