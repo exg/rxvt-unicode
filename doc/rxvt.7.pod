@@ -2436,6 +2436,7 @@ in combination with other switches) is:
   XEmbed support (-embed)
   user-pty (-pty-fd)
   hold on exit (-hold)
+  compile in built-in block graphics
   skip builtin block graphics (-sbg)
   separate highlightcolor support (-hc)
 

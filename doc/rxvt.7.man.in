@@ -2632,7 +2632,7 @@ disable this.
 A non-exhaustive list of features enabled by \f(CW\*(C`\-\-enable\-frills\*(C'\fR (possibly
 in combination with other switches) is:
 .Sp
-.Vb 17
+.Vb 18
 \&  MWM-hints
 \&  EWMH-hints (pid, utf8 names) and protocols (ping)
 \&  urgency hint
@@ -2648,6 +2648,7 @@ in combination with other switches) is:
 \&  XEmbed support (-embed)
 \&  user-pty (-pty-fd)
 \&  hold on exit (-hold)
+\&  compile in built-in block graphics
 \&  skip builtin block graphics (-sbg)
 \&  separate highlightcolor support (-hc)
 .Ve
