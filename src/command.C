@@ -1051,7 +1051,7 @@ rxvt_term::prepare_cb (ev::prepare &w, int revents)
   display->flush ();
 
   if (want_refresh && !flush_ev.active)
-    flush_ev.start (1. / 60.); // refresh at max. 60 hz normally
+    flush_ev.start (1. / 60.); // refresh at max. 60 Hz normally
 }
 
 void
