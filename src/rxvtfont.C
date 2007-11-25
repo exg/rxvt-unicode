@@ -612,7 +612,7 @@ rxvt_font_x11::set_properties (rxvt_fontprop &p, const char *name)
 
 // fix the size of scalable fonts
 static bool
-replace_field (char *buf, const char *name, int index, const char old, const char *replace)
+replace_field (char **ptr, const char *name, int index, const char old, const char *replace)
 {
   int slashes = 0;
   const char *field, *end;
@@ -632,17 +632,17 @@ replace_field (char *buf, const char *name, int index, const char old, const cha
 
   if (slashes >= 13 && (!old || *field == old))
     {
-      // TODO: check for overflow in font-name
-      strncpy (buf, name, field - name);
-      buf += field - name;
-      strcpy (buf, replace);
-      strcat (buf, end);
+      size_t len = field - name;
+      *ptr = (char *)malloc (len + strlen (replace) + strlen (end) + 1);
+      strncpy (*ptr, name, len);
+      strcpy (*ptr + len, replace);
+      strcat (*ptr, end);
 
       return true;
     }
   else
     {
-      strcpy (buf, name);
+      *ptr = strdup (name);
 
       return false;
     }
@@ -660,7 +660,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop, bool force_prop)
   // first morph the font if required
   if (force_prop)
     {
-      char fname[1024];
+      char *fname;
 
       if (name[0] != '-')
         {
@@ -682,18 +682,18 @@ rxvt_font_x11::load (const rxvt_fontprop &prop, bool force_prop)
 
       if (prop.weight != rxvt_fontprop::unset)
         {
-          replace_field (fname, name, 2, 0,
+          replace_field (&fname, name, 2, 0,
                          prop.weight < rxvt_fontprop::bold
                            ? "medium" : "bold");
-          set_name (strdup (fname));
+          set_name (fname);
         }
 
       if (prop.slant != rxvt_fontprop::unset)
         {
-          replace_field (fname, name, 3, 0,
+          replace_field (&fname, name, 3, 0,
                          prop.slant < rxvt_fontprop::italic
                            ? "r" : "i"); // TODO: handle "o"blique, too
-          set_name (strdup (fname));
+          set_name (fname);
         }
     }
 
@@ -728,14 +728,18 @@ rxvt_font_x11::load (const rxvt_fontprop &prop, bool force_prop)
   for (int i = 0; i < count; i++)
     {
       rxvt_fontprop p;
-      char fname[1024];
+      char *fname;
 
       int diff = 0;
 
-      if (replace_field (fname, list[i], 6, '0', field_str))
+      if (replace_field (&fname, list[i], 6, '0', field_str))
         diff += 10; // slightly penalize scalable fonts
-      else if (replace_field (fname, list[i], 11, '0', "0"))
-        diff += 300; // more heavily penalize what looks like scaled bitmap fonts
+      else
+        {
+          free (fname);
+          if (replace_field (&fname, list[i], 11, '0', "0"))
+            diff += 300; // more heavily penalize what looks like scaled bitmap fonts
+        }
 
       if (!set_properties (p, fname))
         continue;
@@ -749,7 +753,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop, bool force_prop)
       if (prop.slant  != rxvt_fontprop::unset) diff += abs (prop.slant  - p.slant);
       //if (prop.width  != rxvt_fontprop::unset) diff += abs (prop.width  - p.width);
 
-      fonts[i].name = strdup (fname);
+      fonts[i].name = fname;
       fonts[i].diff = diff;
     }
 
