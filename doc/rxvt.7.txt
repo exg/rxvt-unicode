@@ -319,8 +319,8 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     standard foreground colour.
 
     For the standard background colour, blinking will actually make the text
-    blink when compiled with "--enable-blinking". with standard colours.
-    Without "--enable-blinking", the blink attribute will be ignored.
+    blink when compiled with "--enable-text-blink". Without
+    "--enable-text-blink", the blink attribute will be ignored.
 
     On ANSI colours, bold/blink attributes are used to set high-intensity
     foreground/background colors.

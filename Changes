@@ -17,7 +17,9 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
-8.7
+8.7  Sun Nov 25 10:23:49 CET 2007
+        - update libev with an important bugfix that would cause crashes
+          when closing windows (when using rxvtd, and update is recommended).
         - do not compile in the block builtin graphics with --disable-frills.
 
 8.6  Fri Nov 23 14:10:57 CET 2007

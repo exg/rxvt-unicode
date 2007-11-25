@@ -163,7 +163,7 @@ encoding.o: table/cns11643_1992_f.h table/big5_ext.h table/big5_plus.h
 encoding.o: table/viscii.h table/jis0201_1976_0.h table/jis0208_1990_0.h
 encoding.o: table/jis0212_1990_0.h table/jis0213_1.h table/jis0213_2.h
 encoding.o: table/compose.h table/category.h
-ev_cpp.o: rxvttoolkit.h ev_cpp.h rxvtlib.h optinc.h rxvtutil.h callback.h
+ev_cpp.o: ev_cpp.h
 fdpass.o: ../config.h libptytty.h
 init.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h rxvtutil.h
 init.o: rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h libptytty.h
@@ -262,7 +262,7 @@ encoding.lo: table/cns11643_1992_f.h table/big5_ext.h table/big5_plus.h
 encoding.lo: table/viscii.h table/jis0201_1976_0.h table/jis0208_1990_0.h
 encoding.lo: table/jis0212_1990_0.h table/jis0213_1.h table/jis0213_2.h
 encoding.lo: table/compose.h table/category.h
-ev_cpp.lo: rxvttoolkit.h ev_cpp.h rxvtlib.h optinc.h rxvtutil.h callback.h
+ev_cpp.lo: ev_cpp.h
 fdpass.lo: ../config.h libptytty.h
 init.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 init.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
