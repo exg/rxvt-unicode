@@ -350,7 +350,8 @@ bgPixmap_t::set_geometry (const char *geom)
             }
         } /* done parsing geometry string */
       else if (!(flags & geometrySet))
-        { /* default geometry - scaled and centered */
+        {
+          /* default geometry - scaled and centered */
           x = y = defaultAlign;
           w = h = defaultScale;
         }
@@ -863,7 +864,8 @@ bgPixmap_t::make_transparency_pixmap ()
     return 0;
 
   if (root_pixmap == None)
-    { /* use tricks to obtain the root background image :*/
+    {
+      /* use tricks to obtain the root background image :*/
       /* we want to create Overrideredirect window overlapping out window
          with background type of Parent Relative and then grab it */
       XSetWindowAttributes attr;
@@ -893,7 +895,8 @@ bgPixmap_t::make_transparency_pixmap ()
             ++ev_count;
 
           if (ev_count > 0);
-            { /* hooray! - we can grab the image! */
+            {
+              /* hooray! - we can grab the image! */
               gc = XCreateGC (dpy, root, 0, NULL);
               if (gc)
                 {
@@ -1188,7 +1191,8 @@ bgPixmap_t::render ()
               pmap_depth = target->depth;
             }
           if (pmap_depth != result->depth)
-            { /* Bad Match error will ensue ! stupid X !!!! */
+            {
+              /* Bad Match error will ensue ! stupid X !!!! */
               if( result->depth == 24 && pmap_depth == 32)
                 result->depth = 32;
               else if( result->depth == 32 && pmap_depth == 24)
@@ -1244,7 +1248,8 @@ bgPixmap_t::apply()
     {
       flags &= ~isVtOrigin;
       if (pixmap != None)
-        { /* set target's background to pixmap */
+        {
+          /* set target's background to pixmap */
 # ifdef ENABLE_TRANSPARENCY
           if (flags & isTransparent)
             {
@@ -1270,7 +1275,8 @@ bgPixmap_t::apply()
             }
         }
       else
-        { /* set target background to a pixel */
+        {
+          /* set target background to a pixel */
           XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_border]);
           XSetWindowBackground (target->dpy, target->vt, target->pix_colors[Color_bg]);
           /* do we also need to set scrollbar's background here ? */

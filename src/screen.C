@@ -1188,7 +1188,8 @@ rxvt_term::scr_gotorc (int row, int col, int relative) NOTHROW
   else
     {
       if (screen.flags & Screen_Relative)
-        {        /* relative origin mode */
+        {
+          /* relative origin mode */
           screen.cur.row = row + screen.tscroll;
           min_it (screen.cur.row, screen.bscroll);
         }
@@ -1474,7 +1475,8 @@ rxvt_term::scr_insdel_chars (int count, int insdel) NOTHROW
                 || (selection.end.col + count >= ncol))
               CLEAR_SELECTION ();
             else
-              {              /* shift selection */
+              {
+                /* shift selection */
                 selection.beg.col  += count;
                 selection.mark.col += count; /* XXX: yes? */
                 selection.end.col  += count;
@@ -2854,7 +2856,8 @@ void
 rxvt_term::selection_request (Time tm, int selnum) NOTHROW
 {
   if (selection.text && selnum == Sel_Primary)
-    { /* internal selection */
+    {
+      /* internal selection */
       char *str = rxvt_wcstombs (selection.text, selection.len);
       paste (str, strlen (str));
       free (str);
@@ -3132,7 +3135,8 @@ rxvt_term::selection_start_colrow (int col, int row) NOTHROW
     --selection.mark.col;
 
   if (selection.op)
-    {      /* clear the old selection */
+    {
+      /* clear the old selection */
       selection.beg.row = selection.end.row = selection.mark.row;
       selection.beg.col = selection.end.col = selection.mark.col;
     }
@@ -3331,7 +3335,8 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
    *     time of the most recent button3 press
    */
   if (button3 && buttonpress)
-    { /* button3 press */
+    {
+      /* button3 press */
       /*
        * first determine which edge of the selection we are closest to
        */
@@ -3359,7 +3364,8 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
         }
     }
   else
-    { /* button1 drag or button3 drag */
+    {
+      /* button1 drag or button3 drag */
       if (ROWCOL_IS_AFTER (selection.mark, pos))
         {
           if (selection.mark.row == selection.end.row
@@ -3450,7 +3456,8 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
     }
 
   if (button3 && buttonpress)
-    { /* mark may need to be changed */
+    {
+      /* mark may need to be changed */
       if (closeto == LEFT)
         {
           selection.mark.row = selection.end.row;

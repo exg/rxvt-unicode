@@ -427,7 +427,8 @@ rxvt_usage (int type)
               len += 4 + strlen (optList[i].opt) + (optList_isBool (i) ? 2: 0);
               col += len;
               if (col > 79)
-                {	/* assume regular width */
+                {
+                  /* assume regular width */
                   rxvt_log ("\n");
                   col = 1 + len;
                 }
@@ -555,7 +556,8 @@ rxvt_term::get_options (int argc, const char *const *argv)
                 }
             }
           else
-            {		/* boolean value */
+            {
+              /* boolean value */
               set_option (optList[entry].index, flag == resval_on);
 
               if (optList[entry].doff != -1)

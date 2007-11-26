@@ -2753,7 +2753,8 @@ rxvt_term::process_csi_seq ()
   priv = 0;
   ch = cmd_getc ();
   if (ch >= '<' && ch <= '?')
-    {	/* '<' '=' '>' '?' */
+    {
+      /* '<' '=' '>' '?' */
       priv = ch;
       ch = cmd_getc ();
     }
@@ -3896,7 +3897,8 @@ rxvt_term::process_graphics ()
   unicode_t ch, cmd = cmd_getc ();
 
   if (cmd == 'Q')
-    {		/* query graphics */
+    {
+      /* query graphics */
       tt_printf ("\033G0\012");	/* no graphics */
       return;
     }

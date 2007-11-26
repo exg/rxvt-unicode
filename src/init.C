@@ -1415,7 +1415,8 @@ rxvt_term::run_child (const char *const *argv)
   char *login;
 
   if (option (Opt_console))
-    {     /* be virtual console, fail silently */
+    {
+      /* be virtual console, fail silently */
 #ifdef TIOCCONS
       unsigned int on = 1;
 
