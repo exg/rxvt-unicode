@@ -981,14 +981,16 @@ rxvt_term::set_window_color (int idx, const char *color)
       i = atoi (color);
 
       if (i >= 8 && i <= 15)
-        {        /* bright colors */
+        {
+          /* bright colors */
           i -= 8;
           pix_colors_focused[idx] = pix_colors_focused[minBrightCOLOR + i];
           goto done;
         }
 
       if (i >= 0 && i <= 7)
-        { /* normal colors */
+        {
+          /* normal colors */
           pix_colors_focused[idx] = pix_colors_focused[minCOLOR + i];
           goto done;
         }
@@ -1003,8 +1005,6 @@ rxvt_term::set_window_color (int idx, const char *color)
 
   pix_colors_focused[idx] = xcol;
 
-  /* XSetWindowAttributes attr; */
-  /* Cursor cursor; */
 done:
   /*TODO: handle Color_BD, scrollbar background, etc. */
 
