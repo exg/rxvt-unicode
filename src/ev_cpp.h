@@ -1,3 +1,4 @@
+#define EV_MINIMAL 1
 #define EV_USE_POLL 0
 #define EV_MULTIPLICITY 0
 #define EV_PERIODIC_ENABLE 0
