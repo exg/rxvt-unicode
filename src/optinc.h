@@ -1,6 +1,5 @@
 // all resource indices, used by rxvtlib.h and rxvtperl.xs
 
- def(console,               0)
  def(loginShell,            1)
  def(iconic,                2)
  def(visualBell,            3)
@@ -57,4 +56,5 @@
 #else
  nodef(iso14755_52)
 #endif
+ def(console,              33)
 
