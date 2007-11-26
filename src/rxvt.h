@@ -1273,7 +1273,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 
   bool option (uint8_t opt) const NOTHROW
   {
-    if (!opt) return 0;
+    if (!opt)
+      return 0;
 
     --opt;
     return options[opt >> 3] & (1 << (opt & 7));
