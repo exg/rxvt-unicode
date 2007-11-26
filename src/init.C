@@ -855,13 +855,10 @@ rxvt_term::color_aliases (int idx)
       int i = atoi (rs[Rs_color + idx]);
 
       if (i >= 8 && i <= 15)
-        {        /* bright colors */
-          i -= 8;
-          rs[Rs_color + idx] = rs[Rs_color + minBrightCOLOR + i];
-          return;
-        }
-
-      if (i >= 0 && i <= 7)   /* normal colors */
+        /* bright colors */
+        rs[Rs_color + idx] = rs[Rs_color + minBrightCOLOR + i - 8];
+      else if (i >= 0 && i <= 7)
+        /* normal colors */
         rs[Rs_color + idx] = rs[Rs_color + minCOLOR + i];
     }
 }
