@@ -1037,7 +1037,7 @@ void
 rxvt_term::set_colorfgbg ()
 {
   unsigned int i;
-  const char *xpmb = "\0";
+  const char *xpmb = "";
   char fstr[sizeof ("default") + 1], bstr[sizeof ("default") + 1];
 
   strcpy (fstr, "default");
