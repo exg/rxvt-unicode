@@ -1055,7 +1055,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 #ifdef HAVE_BG_PIXMAP
   int update_background ();
 #if TRACE_PIXMAPS
-  int trace_update_background (const char* file, int line);
+  int trace_update_background (const char *file, int line);
 # define update_background() trace_update_background (__FILE__, __LINE__)
 #endif
   void update_background_cb (ev::timer &w, int revents);
