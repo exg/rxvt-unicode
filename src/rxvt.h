@@ -31,9 +31,6 @@
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
 #include <X11/Xatom.h>
-#if ENABLE_FRILLS
-# include <X11/Xmd.h>
-#endif
 
 #include "encoding.h"
 #include "rxvtutil.h"
@@ -171,16 +168,6 @@ struct mouse_event {
   unsigned int state;    /* key or button mask */
   unsigned int button;   /* detail */
 };
-
-#if ENABLE_FRILLS
-typedef struct _mwmhints {
-  CARD32 flags;
-  CARD32 functions;
-  CARD32 decorations;
-  INT32  input_mode;
-  CARD32 status;
-} MWMHints;
-#endif
 
 #if ENABLE_XEMBED
 // XEMBED messages
@@ -614,6 +601,17 @@ enum {
 
 #ifndef PATH_MAX
 # define PATH_MAX 16384
+#endif
+
+#if ENABLE_FRILLS
+# include <X11/Xmd.h>
+typedef struct _mwmhints {
+  CARD32 flags;
+  CARD32 functions;
+  CARD32 decorations;
+  INT32  input_mode;
+  CARD32 status;
+} MWMHints;
 #endif
 
 /* Motif window hints */
