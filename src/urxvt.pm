@@ -167,7 +167,7 @@ See L<perlre> for more info about perl regular expression syntax.
 A support package that tries to make editing with readline easier. At
 the moment, it reacts to clicking shift-left mouse button by trying to
 move the text cursor to this position. It does so by generating as many
-cursor-left or cursor-right keypresses as required (the this only works
+cursor-left or cursor-right keypresses as required (this only works
 for programs that correctly support wide characters).
 
 To avoid too many false positives, this is only done when:
