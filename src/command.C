@@ -3584,7 +3584,6 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
                   { 67, PrivMode_BackSpace },
 #endif
                   { 1000, PrivMode_MouseX11 },
-                 // 1001 Use Hilite Mouse Tracking. NYI, TODO
                   { 1002, PrivMode_MouseBtnEvent },
                   { 1003, PrivMode_MouseAnyEvent },
                   { 1010, PrivMode_TtyOutputInh }, // rxvt extension
@@ -3695,10 +3694,6 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
               if (state)		/* orthogonal */
                 priv_modes &= ~(PrivMode_MouseX10|PrivMode_MouseBtnEvent|PrivMode_MouseAnyEvent);
               break;
-#if 0
-            case 1001:
-              break;		/* X11 mouse highlighting */
-#endif
             case 1002:
             case 1003:
               if (state)
