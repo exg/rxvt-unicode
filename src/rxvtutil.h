@@ -64,6 +64,25 @@ T lerp (T a, U b, P p)
   return (long(a) * long(100 - p) + long(b) * long(p) + 50) / 100;
 }
 
+template <typename I, typename T>
+I find (I first, I last, const T& value)
+{
+  while (first != last && *first != value)
+    ++first;
+
+  return first;
+}
+
+// return a very temporary (and never deallocated) buffer. keep small.
+void *rxvt_temp_buf (int len);
+
+template<typename T>
+static inline T *
+rxvt_temp_buf (int len)
+{
+  return (T *)rxvt_temp_buf (len * sizeof (T));
+}
+
 // some bit functions, xft fuck me plenty
 #if HAVE_GCC_BUILTINS
 static inline int ctz      (unsigned int x) { return __builtin_ctz      (x); }
@@ -347,6 +366,15 @@ template<typename T>
 struct vector : simplevec<T>
 { };
 
+struct stringvec : simplevec<char *>
+{
+  ~stringvec ()
+  {
+    for (char **c = begin (); c != end (); c++)
+      free (*c);
+  }
+};
+
 #if 0
 template<typename T>
 struct rxvt_vec : simplevec<void *> {
@@ -361,16 +389,6 @@ struct rxvt_vec : simplevec<void *> {
   T &operator [] (int i) { return * (T *) (& ((* (simplevec<void *> *)this)[i])); }
   const T &operator [] (int i) const { return * (const T *) (& ((* (const simplevec<void *> *)this)[i])); }
 };
-#endif
-
-template <typename I, typename T>
-I find (I first, I last, const T& value)
-{
-  while (first != last && *first != value)
-    ++first;
-
-  return first;
-}
 
 template<typename T>
 struct auto_ptr {
@@ -431,25 +449,7 @@ struct auto_ptr {
 };
 
 typedef auto_ptr<char> auto_str;
-
-struct stringvec : simplevec<char *>
-{
-  ~stringvec ()
-  {
-    for (char **c = begin (); c != end (); c++)
-      free (*c);
-  }
-};
-
-// return a very temporary (and never deallocated) buffer. keep small.
-void *rxvt_temp_buf (int len);
-
-template<typename T>
-static inline T *
-rxvt_temp_buf (int len)
-{
-  return (T *)rxvt_temp_buf (len * sizeof (T));
-}
+#endif
 
 #endif
 
