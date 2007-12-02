@@ -4,7 +4,7 @@
 
 /*
     callback.h -- C++ callback mechanism
-    Copyright (C) 2003-2006 Marc Lehmann <pcg@goof.com>
+    Copyright (C) 2003-2007 Marc Lehmann <pcg@goof.com>
  
     This file is part of GVPE.
 
@@ -26,7 +26,7 @@
 #ifndef CALLBACK_H__
 #define CALLBACK_H__
 
-#define CALLBACK_H_VERSION 2
+#define CALLBACK_H_VERSION 3
 
 template<class signature>
 struct callback_funtype_trait;
@@ -37,47 +37,34 @@ struct callback_get_impl;
 template<class R>
 class callback0
 {
-  struct object { };
+  struct klass; // it is vital that this is never defined
 
-  typedef R (object::*ptr_type)();
+  typedef R (klass::*ptr_type)();
 
-  void *obj;
-  R (object::*meth)();
-
-  /* a proxy is a kind of recipe on how to call a specific class method	*/
-  struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)()) const = 0;
-  };
-  template<class O1, class O2>
-  struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)()) const
-      {
-        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)()>(meth)))
-          ();
-      }
-  };
-
-  proxy_base *prxy;
+  klass *o;
+  R (klass::*m)();
 
 public:
   template<class O1, class O2>
   explicit callback0 (O1 *object, R (O2::*method)())
-    {
-      static proxy<O1,O2> p;
-      obj  = reinterpret_cast<void *>(object);
-      meth = reinterpret_cast<R (object::*)()>(method);
-      prxy = &p;
-    }
+  {
+    o = reinterpret_cast<klass *>(object);
+    m = reinterpret_cast<R (klass::*)()>(method);
+  }
 
+  // this works because a standards-compliant C++ compiler
+  // basically can't help it: it doesn't have the knowledge
+  // required to miscompile (klass is not defined anywhere
+  // and nothing is known about the constructor arguments) :)
   R call() const
-    {
-      return prxy->call (obj, meth);
-    }
+  {
+    return (o->*m) ();
+  }
 
   R operator ()() const
-    {
-      return call ();
-    }
+  {
+    return call ();
+  }
 };
 
 template<class R>
@@ -104,47 +91,34 @@ struct callback_get_impl<0, signature>
 template<class R, class A1>
 class callback1
 {
-  struct object { };
+  struct klass; // it is vital that this is never defined
 
-  typedef R (object::*ptr_type)(A1);
+  typedef R (klass::*ptr_type)(A1);
 
-  void *obj;
-  R (object::*meth)(A1);
-
-  /* a proxy is a kind of recipe on how to call a specific class method	*/
-  struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1), A1 a1) const = 0;
-  };
-  template<class O1, class O2>
-  struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1), A1 a1) const
-      {
-        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1)>(meth)))
-          (a1);
-      }
-  };
-
-  proxy_base *prxy;
+  klass *o;
+  R (klass::*m)(A1);
 
 public:
   template<class O1, class O2>
   explicit callback1 (O1 *object, R (O2::*method)(A1))
-    {
-      static proxy<O1,O2> p;
-      obj  = reinterpret_cast<void *>(object);
-      meth = reinterpret_cast<R (object::*)(A1)>(method);
-      prxy = &p;
-    }
+  {
+    o = reinterpret_cast<klass *>(object);
+    m = reinterpret_cast<R (klass::*)(A1)>(method);
+  }
 
+  // this works because a standards-compliant C++ compiler
+  // basically can't help it: it doesn't have the knowledge
+  // required to miscompile (klass is not defined anywhere
+  // and nothing is known about the constructor arguments) :)
   R call(A1 a1) const
-    {
-      return prxy->call (obj, meth, a1);
-    }
+  {
+    return (o->*m) (a1);
+  }
 
   R operator ()(A1 a1) const
-    {
-      return call (a1);
-    }
+  {
+    return call (a1);
+  }
 };
 
 template<class R, class A1>
@@ -171,47 +145,34 @@ struct callback_get_impl<1, signature>
 template<class R, class A1, class A2>
 class callback2
 {
-  struct object { };
+  struct klass; // it is vital that this is never defined
 
-  typedef R (object::*ptr_type)(A1, A2);
+  typedef R (klass::*ptr_type)(A1, A2);
 
-  void *obj;
-  R (object::*meth)(A1, A2);
-
-  /* a proxy is a kind of recipe on how to call a specific class method	*/
-  struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2), A1 a1, A2 a2) const = 0;
-  };
-  template<class O1, class O2>
-  struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2), A1 a1, A2 a2) const
-      {
-        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2)>(meth)))
-          (a1, a2);
-      }
-  };
-
-  proxy_base *prxy;
+  klass *o;
+  R (klass::*m)(A1, A2);
 
 public:
   template<class O1, class O2>
   explicit callback2 (O1 *object, R (O2::*method)(A1, A2))
-    {
-      static proxy<O1,O2> p;
-      obj  = reinterpret_cast<void *>(object);
-      meth = reinterpret_cast<R (object::*)(A1, A2)>(method);
-      prxy = &p;
-    }
+  {
+    o = reinterpret_cast<klass *>(object);
+    m = reinterpret_cast<R (klass::*)(A1, A2)>(method);
+  }
 
+  // this works because a standards-compliant C++ compiler
+  // basically can't help it: it doesn't have the knowledge
+  // required to miscompile (klass is not defined anywhere
+  // and nothing is known about the constructor arguments) :)
   R call(A1 a1, A2 a2) const
-    {
-      return prxy->call (obj, meth, a1, a2);
-    }
+  {
+    return (o->*m) (a1, a2);
+  }
 
   R operator ()(A1 a1, A2 a2) const
-    {
-      return call (a1, a2);
-    }
+  {
+    return call (a1, a2);
+  }
 };
 
 template<class R, class A1, class A2>
@@ -238,47 +199,34 @@ struct callback_get_impl<2, signature>
 template<class R, class A1, class A2, class A3>
 class callback3
 {
-  struct object { };
+  struct klass; // it is vital that this is never defined
 
-  typedef R (object::*ptr_type)(A1, A2, A3);
+  typedef R (klass::*ptr_type)(A1, A2, A3);
 
-  void *obj;
-  R (object::*meth)(A1, A2, A3);
-
-  /* a proxy is a kind of recipe on how to call a specific class method	*/
-  struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3), A1 a1, A2 a2, A3 a3) const = 0;
-  };
-  template<class O1, class O2>
-  struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3), A1 a1, A2 a2, A3 a3) const
-      {
-        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3)>(meth)))
-          (a1, a2, a3);
-      }
-  };
-
-  proxy_base *prxy;
+  klass *o;
+  R (klass::*m)(A1, A2, A3);
 
 public:
   template<class O1, class O2>
   explicit callback3 (O1 *object, R (O2::*method)(A1, A2, A3))
-    {
-      static proxy<O1,O2> p;
-      obj  = reinterpret_cast<void *>(object);
-      meth = reinterpret_cast<R (object::*)(A1, A2, A3)>(method);
-      prxy = &p;
-    }
+  {
+    o = reinterpret_cast<klass *>(object);
+    m = reinterpret_cast<R (klass::*)(A1, A2, A3)>(method);
+  }
 
+  // this works because a standards-compliant C++ compiler
+  // basically can't help it: it doesn't have the knowledge
+  // required to miscompile (klass is not defined anywhere
+  // and nothing is known about the constructor arguments) :)
   R call(A1 a1, A2 a2, A3 a3) const
-    {
-      return prxy->call (obj, meth, a1, a2, a3);
-    }
+  {
+    return (o->*m) (a1, a2, a3);
+  }
 
   R operator ()(A1 a1, A2 a2, A3 a3) const
-    {
-      return call (a1, a2, a3);
-    }
+  {
+    return call (a1, a2, a3);
+  }
 };
 
 template<class R, class A1, class A2, class A3>
@@ -305,47 +253,34 @@ struct callback_get_impl<3, signature>
 template<class R, class A1, class A2, class A3, class A4>
 class callback4
 {
-  struct object { };
+  struct klass; // it is vital that this is never defined
 
-  typedef R (object::*ptr_type)(A1, A2, A3, A4);
+  typedef R (klass::*ptr_type)(A1, A2, A3, A4);
 
-  void *obj;
-  R (object::*meth)(A1, A2, A3, A4);
-
-  /* a proxy is a kind of recipe on how to call a specific class method	*/
-  struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4), A1 a1, A2 a2, A3 a3, A4 a4) const = 0;
-  };
-  template<class O1, class O2>
-  struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4), A1 a1, A2 a2, A3 a3, A4 a4) const
-      {
-        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4)>(meth)))
-          (a1, a2, a3, a4);
-      }
-  };
-
-  proxy_base *prxy;
+  klass *o;
+  R (klass::*m)(A1, A2, A3, A4);
 
 public:
   template<class O1, class O2>
   explicit callback4 (O1 *object, R (O2::*method)(A1, A2, A3, A4))
-    {
-      static proxy<O1,O2> p;
-      obj  = reinterpret_cast<void *>(object);
-      meth = reinterpret_cast<R (object::*)(A1, A2, A3, A4)>(method);
-      prxy = &p;
-    }
+  {
+    o = reinterpret_cast<klass *>(object);
+    m = reinterpret_cast<R (klass::*)(A1, A2, A3, A4)>(method);
+  }
 
+  // this works because a standards-compliant C++ compiler
+  // basically can't help it: it doesn't have the knowledge
+  // required to miscompile (klass is not defined anywhere
+  // and nothing is known about the constructor arguments) :)
   R call(A1 a1, A2 a2, A3 a3, A4 a4) const
-    {
-      return prxy->call (obj, meth, a1, a2, a3, a4);
-    }
+  {
+    return (o->*m) (a1, a2, a3, a4);
+  }
 
   R operator ()(A1 a1, A2 a2, A3 a3, A4 a4) const
-    {
-      return call (a1, a2, a3, a4);
-    }
+  {
+    return call (a1, a2, a3, a4);
+  }
 };
 
 template<class R, class A1, class A2, class A3, class A4>
@@ -372,47 +307,34 @@ struct callback_get_impl<4, signature>
 template<class R, class A1, class A2, class A3, class A4, class A5>
 class callback5
 {
-  struct object { };
+  struct klass; // it is vital that this is never defined
 
-  typedef R (object::*ptr_type)(A1, A2, A3, A4, A5);
+  typedef R (klass::*ptr_type)(A1, A2, A3, A4, A5);
 
-  void *obj;
-  R (object::*meth)(A1, A2, A3, A4, A5);
-
-  /* a proxy is a kind of recipe on how to call a specific class method	*/
-  struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const = 0;
-  };
-  template<class O1, class O2>
-  struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const
-      {
-        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5)>(meth)))
-          (a1, a2, a3, a4, a5);
-      }
-  };
-
-  proxy_base *prxy;
+  klass *o;
+  R (klass::*m)(A1, A2, A3, A4, A5);
 
 public:
   template<class O1, class O2>
   explicit callback5 (O1 *object, R (O2::*method)(A1, A2, A3, A4, A5))
-    {
-      static proxy<O1,O2> p;
-      obj  = reinterpret_cast<void *>(object);
-      meth = reinterpret_cast<R (object::*)(A1, A2, A3, A4, A5)>(method);
-      prxy = &p;
-    }
+  {
+    o = reinterpret_cast<klass *>(object);
+    m = reinterpret_cast<R (klass::*)(A1, A2, A3, A4, A5)>(method);
+  }
 
+  // this works because a standards-compliant C++ compiler
+  // basically can't help it: it doesn't have the knowledge
+  // required to miscompile (klass is not defined anywhere
+  // and nothing is known about the constructor arguments) :)
   R call(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const
-    {
-      return prxy->call (obj, meth, a1, a2, a3, a4, a5);
-    }
+  {
+    return (o->*m) (a1, a2, a3, a4, a5);
+  }
 
   R operator ()(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const
-    {
-      return call (a1, a2, a3, a4, a5);
-    }
+  {
+    return call (a1, a2, a3, a4, a5);
+  }
 };
 
 template<class R, class A1, class A2, class A3, class A4, class A5>
@@ -439,47 +361,34 @@ struct callback_get_impl<5, signature>
 template<class R, class A1, class A2, class A3, class A4, class A5, class A6>
 class callback6
 {
-  struct object { };
+  struct klass; // it is vital that this is never defined
 
-  typedef R (object::*ptr_type)(A1, A2, A3, A4, A5, A6);
+  typedef R (klass::*ptr_type)(A1, A2, A3, A4, A5, A6);
 
-  void *obj;
-  R (object::*meth)(A1, A2, A3, A4, A5, A6);
-
-  /* a proxy is a kind of recipe on how to call a specific class method	*/
-  struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const = 0;
-  };
-  template<class O1, class O2>
-  struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const
-      {
-        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5, A6)>(meth)))
-          (a1, a2, a3, a4, a5, a6);
-      }
-  };
-
-  proxy_base *prxy;
+  klass *o;
+  R (klass::*m)(A1, A2, A3, A4, A5, A6);
 
 public:
   template<class O1, class O2>
   explicit callback6 (O1 *object, R (O2::*method)(A1, A2, A3, A4, A5, A6))
-    {
-      static proxy<O1,O2> p;
-      obj  = reinterpret_cast<void *>(object);
-      meth = reinterpret_cast<R (object::*)(A1, A2, A3, A4, A5, A6)>(method);
-      prxy = &p;
-    }
+  {
+    o = reinterpret_cast<klass *>(object);
+    m = reinterpret_cast<R (klass::*)(A1, A2, A3, A4, A5, A6)>(method);
+  }
 
+  // this works because a standards-compliant C++ compiler
+  // basically can't help it: it doesn't have the knowledge
+  // required to miscompile (klass is not defined anywhere
+  // and nothing is known about the constructor arguments) :)
   R call(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const
-    {
-      return prxy->call (obj, meth, a1, a2, a3, a4, a5, a6);
-    }
+  {
+    return (o->*m) (a1, a2, a3, a4, a5, a6);
+  }
 
   R operator ()(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const
-    {
-      return call (a1, a2, a3, a4, a5, a6);
-    }
+  {
+    return call (a1, a2, a3, a4, a5, a6);
+  }
 };
 
 template<class R, class A1, class A2, class A3, class A4, class A5, class A6>
@@ -506,47 +415,34 @@ struct callback_get_impl<6, signature>
 template<class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
 class callback7
 {
-  struct object { };
+  struct klass; // it is vital that this is never defined
 
-  typedef R (object::*ptr_type)(A1, A2, A3, A4, A5, A6, A7);
+  typedef R (klass::*ptr_type)(A1, A2, A3, A4, A5, A6, A7);
 
-  void *obj;
-  R (object::*meth)(A1, A2, A3, A4, A5, A6, A7);
-
-  /* a proxy is a kind of recipe on how to call a specific class method	*/
-  struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6, A7), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const = 0;
-  };
-  template<class O1, class O2>
-  struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6, A7), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const
-      {
-        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5, A6, A7)>(meth)))
-          (a1, a2, a3, a4, a5, a6, a7);
-      }
-  };
-
-  proxy_base *prxy;
+  klass *o;
+  R (klass::*m)(A1, A2, A3, A4, A5, A6, A7);
 
 public:
   template<class O1, class O2>
   explicit callback7 (O1 *object, R (O2::*method)(A1, A2, A3, A4, A5, A6, A7))
-    {
-      static proxy<O1,O2> p;
-      obj  = reinterpret_cast<void *>(object);
-      meth = reinterpret_cast<R (object::*)(A1, A2, A3, A4, A5, A6, A7)>(method);
-      prxy = &p;
-    }
+  {
+    o = reinterpret_cast<klass *>(object);
+    m = reinterpret_cast<R (klass::*)(A1, A2, A3, A4, A5, A6, A7)>(method);
+  }
 
+  // this works because a standards-compliant C++ compiler
+  // basically can't help it: it doesn't have the knowledge
+  // required to miscompile (klass is not defined anywhere
+  // and nothing is known about the constructor arguments) :)
   R call(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const
-    {
-      return prxy->call (obj, meth, a1, a2, a3, a4, a5, a6, a7);
-    }
+  {
+    return (o->*m) (a1, a2, a3, a4, a5, a6, a7);
+  }
 
   R operator ()(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const
-    {
-      return call (a1, a2, a3, a4, a5, a6, a7);
-    }
+  {
+    return call (a1, a2, a3, a4, a5, a6, a7);
+  }
 };
 
 template<class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
@@ -573,47 +469,34 @@ struct callback_get_impl<7, signature>
 template<class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8>
 class callback8
 {
-  struct object { };
+  struct klass; // it is vital that this is never defined
 
-  typedef R (object::*ptr_type)(A1, A2, A3, A4, A5, A6, A7, A8);
+  typedef R (klass::*ptr_type)(A1, A2, A3, A4, A5, A6, A7, A8);
 
-  void *obj;
-  R (object::*meth)(A1, A2, A3, A4, A5, A6, A7, A8);
-
-  /* a proxy is a kind of recipe on how to call a specific class method	*/
-  struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6, A7, A8), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) const = 0;
-  };
-  template<class O1, class O2>
-  struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6, A7, A8), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) const
-      {
-        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5, A6, A7, A8)>(meth)))
-          (a1, a2, a3, a4, a5, a6, a7, a8);
-      }
-  };
-
-  proxy_base *prxy;
+  klass *o;
+  R (klass::*m)(A1, A2, A3, A4, A5, A6, A7, A8);
 
 public:
   template<class O1, class O2>
   explicit callback8 (O1 *object, R (O2::*method)(A1, A2, A3, A4, A5, A6, A7, A8))
-    {
-      static proxy<O1,O2> p;
-      obj  = reinterpret_cast<void *>(object);
-      meth = reinterpret_cast<R (object::*)(A1, A2, A3, A4, A5, A6, A7, A8)>(method);
-      prxy = &p;
-    }
+  {
+    o = reinterpret_cast<klass *>(object);
+    m = reinterpret_cast<R (klass::*)(A1, A2, A3, A4, A5, A6, A7, A8)>(method);
+  }
 
+  // this works because a standards-compliant C++ compiler
+  // basically can't help it: it doesn't have the knowledge
+  // required to miscompile (klass is not defined anywhere
+  // and nothing is known about the constructor arguments) :)
   R call(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) const
-    {
-      return prxy->call (obj, meth, a1, a2, a3, a4, a5, a6, a7, a8);
-    }
+  {
+    return (o->*m) (a1, a2, a3, a4, a5, a6, a7, a8);
+  }
 
   R operator ()(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) const
-    {
-      return call (a1, a2, a3, a4, a5, a6, a7, a8);
-    }
+  {
+    return call (a1, a2, a3, a4, a5, a6, a7, a8);
+  }
 };
 
 template<class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8>
@@ -640,47 +523,34 @@ struct callback_get_impl<8, signature>
 template<class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9>
 class callback9
 {
-  struct object { };
+  struct klass; // it is vital that this is never defined
 
-  typedef R (object::*ptr_type)(A1, A2, A3, A4, A5, A6, A7, A8, A9);
+  typedef R (klass::*ptr_type)(A1, A2, A3, A4, A5, A6, A7, A8, A9);
 
-  void *obj;
-  R (object::*meth)(A1, A2, A3, A4, A5, A6, A7, A8, A9);
-
-  /* a proxy is a kind of recipe on how to call a specific class method	*/
-  struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6, A7, A8, A9), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9) const = 0;
-  };
-  template<class O1, class O2>
-  struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6, A7, A8, A9), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9) const
-      {
-        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5, A6, A7, A8, A9)>(meth)))
-          (a1, a2, a3, a4, a5, a6, a7, a8, a9);
-      }
-  };
-
-  proxy_base *prxy;
+  klass *o;
+  R (klass::*m)(A1, A2, A3, A4, A5, A6, A7, A8, A9);
 
 public:
   template<class O1, class O2>
   explicit callback9 (O1 *object, R (O2::*method)(A1, A2, A3, A4, A5, A6, A7, A8, A9))
-    {
-      static proxy<O1,O2> p;
-      obj  = reinterpret_cast<void *>(object);
-      meth = reinterpret_cast<R (object::*)(A1, A2, A3, A4, A5, A6, A7, A8, A9)>(method);
-      prxy = &p;
-    }
+  {
+    o = reinterpret_cast<klass *>(object);
+    m = reinterpret_cast<R (klass::*)(A1, A2, A3, A4, A5, A6, A7, A8, A9)>(method);
+  }
 
+  // this works because a standards-compliant C++ compiler
+  // basically can't help it: it doesn't have the knowledge
+  // required to miscompile (klass is not defined anywhere
+  // and nothing is known about the constructor arguments) :)
   R call(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9) const
-    {
-      return prxy->call (obj, meth, a1, a2, a3, a4, a5, a6, a7, a8, a9);
-    }
+  {
+    return (o->*m) (a1, a2, a3, a4, a5, a6, a7, a8, a9);
+  }
 
   R operator ()(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9) const
-    {
-      return call (a1, a2, a3, a4, a5, a6, a7, a8, a9);
-    }
+  {
+    return call (a1, a2, a3, a4, a5, a6, a7, a8, a9);
+  }
 };
 
 template<class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9>
@@ -707,47 +577,34 @@ struct callback_get_impl<9, signature>
 template<class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
 class callback10
 {
-  struct object { };
+  struct klass; // it is vital that this is never defined
 
-  typedef R (object::*ptr_type)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10);
+  typedef R (klass::*ptr_type)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10);
 
-  void *obj;
-  R (object::*meth)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10);
-
-  /* a proxy is a kind of recipe on how to call a specific class method	*/
-  struct proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10) const = 0;
-  };
-  template<class O1, class O2>
-  struct proxy : proxy_base {
-    virtual R call (void *obj, R (object::*meth)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10), A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10) const
-      {
-        return (R)((reinterpret_cast<O1 *>(obj)) ->* (reinterpret_cast<R (O2::*)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>(meth)))
-          (a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
-      }
-  };
-
-  proxy_base *prxy;
+  klass *o;
+  R (klass::*m)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10);
 
 public:
   template<class O1, class O2>
   explicit callback10 (O1 *object, R (O2::*method)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10))
-    {
-      static proxy<O1,O2> p;
-      obj  = reinterpret_cast<void *>(object);
-      meth = reinterpret_cast<R (object::*)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>(method);
-      prxy = &p;
-    }
+  {
+    o = reinterpret_cast<klass *>(object);
+    m = reinterpret_cast<R (klass::*)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>(method);
+  }
 
+  // this works because a standards-compliant C++ compiler
+  // basically can't help it: it doesn't have the knowledge
+  // required to miscompile (klass is not defined anywhere
+  // and nothing is known about the constructor arguments) :)
   R call(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10) const
-    {
-      return prxy->call (obj, meth, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
-    }
+  {
+    return (o->*m) (a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+  }
 
   R operator ()(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10) const
-    {
-      return call (a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
-    }
+  {
+    return call (a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+  }
 };
 
 template<class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
@@ -779,9 +636,9 @@ struct callback : callback_get_impl<callback_funtype_trait<signature>::arity, si
 
   template<class O, class M>
   explicit callback (O object, M method)
-    : base_type (object, method)
-    {
-    }
+  : base_type (object, method)
+  {
+  }
 };
 
 #endif
