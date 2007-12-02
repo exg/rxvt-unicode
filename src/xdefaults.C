@@ -113,10 +113,10 @@ optList[] = {
               BOOL (Rs_transparent, "inheritPixmap", "ip", Opt_transparent, 0, "inherit parent pixmap"),
               BOOL (Rs_transparent, "transparent", "tr", Opt_transparent, 0, "inherit parent pixmap"),
               STRG (Rs_color + Color_tint, "tintColor", "tint", "color", "tint color"),
-              STRG (Rs_shade, "shading", "sh", "%", "shade background by x %."),
+              STRG (Rs_shade, "shading", "sh", "number", "shade background by number %."),
 #endif
 #if OFF_FOCUS_FADING
-              STRG (Rs_fade, "fading", "fade", "%", "fade colors x% percent when rxvt-unicode is losing focus"),
+              STRG (Rs_fade, "fading", "fade", "number", "fade colors by number % when losing focus"),
               STRG (Rs_color + Color_fade, "fadeColor", "fadecolor", "color", "target color for off-focus fading"),
 #endif
               BOOL (Rs_utmpInhibit, "utmpInhibit", "ut", Opt_utmpInhibit, 0, "utmp inhibit"),
