@@ -375,6 +375,7 @@ struct stringvec : simplevec<char *>
   }
 };
 
+#if 0
 template<typename T>
 struct rxvt_vec : simplevec<void *> {
   typedef T *iterator;
@@ -388,6 +389,7 @@ struct rxvt_vec : simplevec<void *> {
   T &operator [] (int i) { return * (T *) (& ((* (simplevec<void *> *)this)[i])); }
   const T &operator [] (int i) const { return * (const T *) (& ((* (const simplevec<void *> *)this)[i])); }
 };
+#endif
 
 template<typename T>
 struct auto_ptr {
