@@ -375,7 +375,6 @@ struct stringvec : simplevec<char *>
   }
 };
 
-#if 0
 template<typename T>
 struct rxvt_vec : simplevec<void *> {
   typedef T *iterator;
@@ -449,7 +448,6 @@ struct auto_ptr {
 };
 
 typedef auto_ptr<char> auto_str;
-#endif
 
 #endif
 
