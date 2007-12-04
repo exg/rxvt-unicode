@@ -602,13 +602,7 @@ static struct sig_handlers
   /*
    * Catch a fatal signal and tidy up before quitting
    */
-  void
-  sig_term (ev::sig &w, int revents)
-  {
-    rxvt_emergency_cleanup ();
-    w.stop ();
-    kill (getpid (), w.signum);
-  }
+  void sig_term (ev::sig &w, int revents);
 
   sig_handlers ()
   {
@@ -616,6 +610,14 @@ static struct sig_handlers
     sw_int .set<sig_handlers, &sig_handlers::sig_term> (this);
   }
 } sig_handlers;
+
+void
+sig_handlers::sig_term (ev::sig &w, int revents)
+{
+  rxvt_emergency_cleanup ();
+  w.stop ();
+  kill (getpid (), w.signum);
+}
 
 char **rxvt_environ; // startup environment
 

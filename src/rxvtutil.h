@@ -364,7 +364,8 @@ bool operator< (const simplevec<T> &v1, const simplevec<T> &v2)
 
 template<typename T>
 struct vector : simplevec<T>
-{ };
+{
+};
 
 struct stringvec : simplevec<char *>
 {
