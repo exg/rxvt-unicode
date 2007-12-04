@@ -297,9 +297,9 @@ rxvt_screen::clear ()
 
 rxvt_display::rxvt_display (const char *id)
 : refcounted (id)
-, x_ev (this, &rxvt_display::x_cb)
 , selection_owner (0)
 {
+  x_ev.set<rxvt_display, &rxvt_display::x_cb> (this);
 }
 
 XrmDatabase

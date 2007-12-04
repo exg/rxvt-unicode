@@ -48,10 +48,11 @@ struct server : rxvt_connection {
   int getfd (int remote_fd);
 
   server (int fd)
-  : read_ev (this, &server::read_cb)
   {
-    callback_set (log_cb  , this, server, log_msg);
-    callback_set (getfd_cb, this, server, getfd);
+    read_ev.set <server, &server::read_cb> (this);
+    log_cb.set  <server, &server::log_msg> (this);
+    getfd_cb.set<server, &server::getfd>   (this);
+
     this->fd = fd;
     fcntl (fd, F_SETFD, FD_CLOEXEC);
     fcntl (fd, F_SETFL, 0);
@@ -70,8 +71,9 @@ struct unix_listener {
 };
 
 unix_listener::unix_listener (const char *sockname)
-: accept_ev (this, &unix_listener::accept_cb)
 {
+  accept_ev.set<unix_listener, &unix_listener::accept_cb> (this);
+
   sockaddr_un sa;
 
   if (strlen (sockname) >= sizeof(sa.sun_path))

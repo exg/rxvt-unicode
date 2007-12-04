@@ -154,49 +154,48 @@ int rxvt_composite_vec::expand (unicode_t c, wchar_t *r)
 #endif
 
 rxvt_term::rxvt_term ()
-    :
+{
 #if HAVE_BG_PIXMAP
-    update_background_ev(this, &rxvt_term::update_background_cb),
+  update_background_ev.set<rxvt_term, &rxvt_term::update_background_cb> (this);
 #endif
 #ifdef CURSOR_BLINK
-    cursor_blink_ev (this, &rxvt_term::cursor_blink_cb),
+  cursor_blink_ev.set     <rxvt_term, &rxvt_term::cursor_blink_cb> (this);
 #endif
 #ifdef TEXT_BLINK
-    text_blink_ev (this, &rxvt_term::text_blink_cb),
+  text_blink_ev.set       <rxvt_term, &rxvt_term::text_blink_cb>   (this);
 #endif
 #ifndef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
-    cont_scroll_ev (this, &rxvt_term::cont_scroll_cb),
+  cont_scroll_ev.set      <rxvt_term, &rxvt_term::cont_scroll_cb>  (this);
 #endif
 #ifdef SELECTION_SCROLLING
-    sel_scroll_ev (this, &rxvt_term::sel_scroll_cb),
+  sel_scroll_ev.set       <rxvt_term, &rxvt_term::sel_scroll_cb>   (this);
 #endif
 #if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
-    slip_wheel_ev (this, &rxvt_term::slip_wheel_cb),
+  slip_wheel_ev.set       <rxvt_term, &rxvt_term::slip_wheel_cb>   (this);
 #endif
-#ifdef POINTER_BLANK
-    pointer_ev (this, &rxvt_term::pointer_cb),
-#endif
-#ifndef NO_BELL
-    bell_ev    (this, &rxvt_term::bell_cb),
-#endif
-    child_ev   (this, &rxvt_term::child_cb),
-    prepare_ev (this, &rxvt_term::prepare_cb),
-    flush_ev   (this, &rxvt_term::flush_cb),
-    destroy_ev (this, &rxvt_term::destroy_cb),
-    pty_ev     (this, &rxvt_term::pty_cb),
-    incr_ev    (this, &rxvt_term::incr_cb)
-{
 #if ENABLE_TRANSPARENCY || ENABLE_PERL
-  callback_set (rootwin_ev  , this, rxvt_term, rootwin_cb);
+  rootwin_ev.set          <rxvt_term, &rxvt_term::x_cb>       (this),
 #endif
 #ifdef HAVE_SCROLLBARS
-  callback_set (scrollbar_ev, this, rxvt_term, x_cb);
+  scrollbar_ev.set        <rxvt_term, &rxvt_term::x_cb>       (this),
 #endif
 #ifdef USE_XIM
-  callback_set (im_ev       , this, rxvt_term, im_cb);
+  im_ev.set               <rxvt_term, &rxvt_term::im_cb>      (this),
 #endif
-  callback_set (termwin_ev  , this, rxvt_term, x_cb);
-  callback_set (vt_ev       , this, rxvt_term, x_cb);
+#ifdef POINTER_BLANK
+  pointer_ev.set          <rxvt_term, &rxvt_term::pointer_cb> (this);
+#endif
+#ifndef NO_BELL
+  bell_ev.set             <rxvt_term, &rxvt_term::bell_cb>    (this);
+#endif
+  child_ev.set            <rxvt_term, &rxvt_term::child_cb>   (this);
+  prepare_ev.set          <rxvt_term, &rxvt_term::prepare_cb> (this);
+  flush_ev.set            <rxvt_term, &rxvt_term::flush_cb>   (this);
+  destroy_ev.set          <rxvt_term, &rxvt_term::destroy_cb> (this);
+  pty_ev.set              <rxvt_term, &rxvt_term::pty_cb>     (this);
+  incr_ev.set             <rxvt_term, &rxvt_term::incr_cb>    (this);
+  termwin_ev.set          <rxvt_term, &rxvt_term::x_cb>       (this);
+  vt_ev.set               <rxvt_term, &rxvt_term::x_cb>       (this);
 
   cmdbuf_ptr = cmdbuf_endp = cmdbuf_base;
 
@@ -612,9 +611,9 @@ static struct sig_handlers
   }
 
   sig_handlers ()
-  : sw_term (this, &sig_handlers::sig_term),
-    sw_int  (this, &sig_handlers::sig_term)
   {
+    sw_term.set<sig_handlers, &sig_handlers::sig_term> (this);
+    sw_int .set<sig_handlers, &sig_handlers::sig_term> (this);
   }
 } sig_handlers;
 

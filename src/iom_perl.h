@@ -67,8 +67,8 @@ perl_watcher::invoke (const char *type, SV *self, int arg)
 struct timer : perl_watcher, ev::timer
 {
   timer ()
-  : ev::timer (this, &timer::execute)
   {
+    set<timer, &timer::execute> (this);
   }
 
   void execute (ev::timer &w, int revents)
@@ -83,8 +83,8 @@ struct timer : perl_watcher, ev::timer
 struct iow : perl_watcher, ev::io
 {
   iow ()
-  : ev::io (this, &iow::execute)
   {
+    set<iow, &iow::execute> (this);
   }
 
   void execute (ev::io &w, int revents)
@@ -99,8 +99,8 @@ struct iow : perl_watcher, ev::io
 struct iw : perl_watcher, ev::idle
 {
   iw ()
-  : ev::idle (this, &iw::execute)
   {
+    set<iw, &iw::execute> (this);
   }
 
   void execute (ev::idle &w, int revents)
@@ -115,8 +115,8 @@ struct iw : perl_watcher, ev::idle
 struct pw : perl_watcher, ev::child
 {
   pw ()
-  : ev::child (this, &pw::execute)
   {
+    set<pw, &pw::execute> (this);
   }
 
   void execute (ev::child &w, int revents)
