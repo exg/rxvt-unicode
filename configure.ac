@@ -284,16 +284,16 @@ AC_ARG_ENABLE(xterm-scroll,
     support_scroll_xterm=$enableval
   fi])
 
-AC_ARG_ENABLE(perl,
-  [  --enable-perl           enable embedded perl interpreter],
-  [if test x$enableval = xyes -o x$enableval = xno; then
-    support_perl=$enableval
-  fi])
-
 AC_ARG_ENABLE(plain-scroll,
   [  --enable-plain-scroll   enable plain style scrollbar],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_scroll_plain=$enableval
+  fi])
+
+AC_ARG_ENABLE(perl,
+  [  --enable-perl           enable embedded perl interpreter],
+  [if test x$enableval = xyes -o x$enableval = xno; then
+    support_perl=$enableval
   fi])
 
 AC_ARG_WITH(codesets,
