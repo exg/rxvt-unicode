@@ -48,10 +48,10 @@ struct server : rxvt_connection {
   int getfd (int remote_fd);
 
   server (int fd)
-  : read_ev (this, &server::read_cb),
-    log_cb (this, &server::log_msg),
-    getfd_cb (this, &server::getfd)
+  : read_ev (this, &server::read_cb)
   {
+    callback_set (log_cb  , this, server, log_msg);
+    callback_set (getfd_cb, this, server, getfd);
     this->fd = fd;
     fcntl (fd, F_SETFD, FD_CLOEXEC);
     fcntl (fd, F_SETFL, 0);

@@ -155,14 +155,8 @@ int rxvt_composite_vec::expand (unicode_t c, wchar_t *r)
 
 rxvt_term::rxvt_term ()
     :
-#if ENABLE_TRANSPARENCY || ENABLE_PERL
-    rootwin_ev (this, &rxvt_term::rootwin_cb),
-#endif
 #if HAVE_BG_PIXMAP
     update_background_ev(this, &rxvt_term::update_background_cb),
-#endif
-#ifdef HAVE_SCROLLBARS
-    scrollbar_ev (this, &rxvt_term::x_cb),
 #endif
 #ifdef CURSOR_BLINK
     cursor_blink_ev (this, &rxvt_term::cursor_blink_cb),
@@ -182,14 +176,9 @@ rxvt_term::rxvt_term ()
 #ifdef POINTER_BLANK
     pointer_ev (this, &rxvt_term::pointer_cb),
 #endif
-#ifdef USE_XIM
-    im_ev      (this, &rxvt_term::im_cb),
-#endif
 #ifndef NO_BELL
     bell_ev    (this, &rxvt_term::bell_cb),
 #endif
-    termwin_ev (this, &rxvt_term::x_cb),
-    vt_ev      (this, &rxvt_term::x_cb),
     child_ev   (this, &rxvt_term::child_cb),
     prepare_ev (this, &rxvt_term::prepare_cb),
     flush_ev   (this, &rxvt_term::flush_cb),
@@ -197,6 +186,18 @@ rxvt_term::rxvt_term ()
     pty_ev     (this, &rxvt_term::pty_cb),
     incr_ev    (this, &rxvt_term::incr_cb)
 {
+#if ENABLE_TRANSPARENCY || ENABLE_PERL
+  callback_set (rootwin_ev  , this, rxvt_term, rootwin_cb);
+#endif
+#ifdef HAVE_SCROLLBARS
+  callback_set (scrollbar_ev, this, rxvt_term, x_cb);
+#endif
+#ifdef USE_XIM
+  callback_set (im_ev       , this, rxvt_term, im_cb);
+#endif
+  callback_set (termwin_ev  , this, rxvt_term, x_cb);
+  callback_set (vt_ev       , this, rxvt_term, x_cb);
+
   cmdbuf_ptr = cmdbuf_endp = cmdbuf_base;
 
   termlist.push_back (this);
