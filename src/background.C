@@ -304,7 +304,8 @@ bgPixmap_t::set_geometry (const char *geom)
             }
 
           if (flags & geometrySet)
-            {/* new geometry is an adjustment to the old one ! */
+            {
+              /* new geometry is an adjustment to the old one ! */
               if ((geom_flags & WidthValue) && (geom_flags & HeightValue))
                 {
                   if (w == 0 && h != 0)
@@ -330,14 +331,16 @@ bgPixmap_t::set_geometry (const char *geom)
           else /* setting up geometry from scratch */
             {
               if (!(geom_flags & XValue))
-                {/* use default geometry - centered */
+                {
+                  /* use default geometry - centered */
                   x = y = defaultAlign;
                 }
               else if (!(geom_flags & YValue))
                 y = x;
 
               if ((geom_flags & (WidthValue|HeightValue)) == 0)
-                {/* use default geometry - scaled */
+                {
+                  /* use default geometry - scaled */
                   w = h = defaultScale;
                 }
               else if (geom_flags & WidthValue)
@@ -507,8 +510,9 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
                                   100, ASIMAGE_QUALITY_DEFAULT);
         }
       if (background == NULL)
-        {/* if tiling - pixmap has to be sized exactly as the image,
-            but there is no need to make it bigger then the window! */
+        {
+          /* if tiling - pixmap has to be sized exactly as the image,
+             but there is no need to make it bigger then the window! */
           if (h_scale == 0)
             new_pmap_width = min (result->width, target_width);
           if (v_scale == 0)
@@ -532,7 +536,8 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
             }
         }
       else
-        {/* if blending background and image - pixmap has to be sized same as target window */
+        {
+          /* if blending background and image - pixmap has to be sized same as target window */
           ASImageLayer *layers = create_image_layers (2);
           ASImage *merged_im = NULL;
 
@@ -542,13 +547,15 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
           layers[0].tint = background_tint;
           layers[1].im = result;
           if (w <= 0)
-            {/* tile horizontally */
+            {
+              /* tile horizontally */
               while (x > 0) x -= (int)result->width;
               layers[1].dst_x = x;
               layers[1].clip_width = result->width+target_width;
             }
           else
-            {/* clip horizontally */
+            {
+              /* clip horizontally */
               layers[1].dst_x = x;
               layers[1].clip_width = result->width;
             }
@@ -845,7 +852,8 @@ bgPixmap_t::make_transparency_pixmap ()
     return 0;
 
   if (root_pixmap != None)
-    {/* we want to validate the pixmap and get it's size at the same time : */
+    {
+      /* we want to validate the pixmap and get it's size at the same time : */
       int junk;
       unsigned int ujunk;
       /* root pixmap may be bad - allow a error */
@@ -918,7 +926,8 @@ bgPixmap_t::make_transparency_pixmap ()
           result |= transpPmapTiled;
     }
   else
-    {/* strightforward pixmap copy */
+    {
+      /* strightforward pixmap copy */
       gcv.tile = root_pixmap;
       gcv.fill_style = FillTiled;
 

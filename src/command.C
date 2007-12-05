@@ -1959,7 +1959,7 @@ rxvt_term::button_press (XButtonEvent &ev)
 #endif /* NO_SCROLLBAR_REPORT */
 
         {
-          char            upordown = 0;
+          char upordown = 0;
 
           if (scrollBar.style == R_SB_NEXT)
             {
