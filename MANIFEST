@@ -31,7 +31,6 @@ doc/Makefile.in
 doc/README.xvt
 doc/changes.txt
 doc/podtbl
-doc/rxvt-unicode.spec
 
 doc/rxvt.1.pod
 doc/rxvt.7.pod
