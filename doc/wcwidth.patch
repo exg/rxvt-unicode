@@ -2,12 +2,12 @@ diff --git a/src/Makefile.in b/src/Makefile.in
 index 2136e69..3d7ddea 100644
 --- a/src/Makefile.in
 +++ b/src/Makefile.in
-@@ -36,7 +36,7 @@ COMMON = \
-         background.o command.o rxvtfont.o init.o logging.o main.o misc.o \
+@@ -37,7 +37,7 @@ COMMON = \
  	ptytty.o proxy.o screen.o scrollbar.o scrollbar-next.o scrollbar-rxvt.o \
  	scrollbar-xterm.o scrollbar-plain.o xdefaults.o encoding.o \
--	rxvttoolkit.o rxvtutil.o iom.o keyboard.o fdpass.o @PERL_O@
-+	rxvttoolkit.o rxvtutil.o iom.o keyboard.o fdpass.o @PERL_O@ wcwidth.o
+ 	rxvttoolkit.o rxvtutil.o keyboard.o \
+-	fdpass.o ev_cpp.o @PERL_O@
++	fdpass.o ev_cpp.o wcwidth.o @PERL_O@
  
  COMMON_DAEMON = rxvtdaemon.o
  
@@ -15,7 +15,7 @@ diff --git a/src/rxvt.h b/src/rxvt.h
 index 64b7fc0..1897040 100644
 --- a/src/rxvt.h
 +++ b/src/rxvt.h
-@@ -649,6 +649,12 @@ enum {
+@@ -646,6 +646,12 @@ typedef struct _mwmhints {
   */
  #define dLocal(type,name)       type const name = this->name
  
