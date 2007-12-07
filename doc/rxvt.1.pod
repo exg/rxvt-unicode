@@ -417,8 +417,8 @@ for more info.
 
 Change the meaning of triple-click selection with the left mouse
 button. Only effective when the original (non-perl) selection code is
-in-use. Instead of selecting a full line it will extend the selection the
-end of the logical line only. resource B<tripleclickwords>.
+in-use. Instead of selecting a full line it will extend the selection to
+the end of the logical line only. resource B<tripleclickwords>.
 
 =item B<-insecure>
 
