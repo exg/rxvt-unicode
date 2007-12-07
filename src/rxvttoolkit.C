@@ -305,7 +305,7 @@ rxvt_display::rxvt_display (const char *id)
 XrmDatabase
 rxvt_display::get_resources (bool refresh)
 {
-  char *homedir = (char *)getenv ("HOME");
+  char *homedir = getenv ("HOME");
   char fname[1024];
 
   /*
@@ -320,7 +320,7 @@ rxvt_display::get_resources (bool refresh)
   // 6. System wide per application default file.
 
   /* Add in $XAPPLRESDIR/Rxvt only; not bothering with XUSERFILESEARCHPATH */
-  if ((xe = (char *)getenv ("XAPPLRESDIR")))
+  if ((xe = getenv ("XAPPLRESDIR")))
     {
       snprintf (fname, sizeof (fname), "%s/%s", xe, RESCLASS);
 
@@ -402,7 +402,7 @@ rxvt_display::get_resources (bool refresh)
 
   // 3. User's per host defaults file
   /* Add in XENVIRONMENT file */
-  if ((xe = (char *)getenv ("XENVIRONMENT"))
+  if ((xe = getenv ("XENVIRONMENT"))
       && (rdb1 = XrmGetFileDatabase (xe)))
     XrmMergeDatabases (rdb1, &database);
   else if (homedir)
