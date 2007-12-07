@@ -32,7 +32,7 @@ like tibetan or devanagari. Don't expect pretty output when using these
 scripts. Most other scripts, latin, cyrillic, kanji, thai etc. should work
 fine, though. A somewhat difficult case are right-to-left scripts, such
 as hebrew: B<rxvt-unicode> adopts the view that bidirectional algorithms
-belong into the application, not the terminal emulator (too many things --
+belong in the application, not the terminal emulator (too many things --
 such as cursor-movement while editing -- break otherwise), but that might
 change.
 
