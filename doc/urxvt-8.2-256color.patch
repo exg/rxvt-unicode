@@ -1,19 +1,6 @@
 by gno
 gno [n=user@notbald.gropeep.org]
 
-diff -ur rxvt-unicode.orig/config.h.in rxvt-unicode/config.h.in
---- rxvt-unicode.orig/config.h.in	2007-06-25 17:40:18.000000000 -0700
-+++ rxvt-unicode/config.h.in	2007-06-27 17:05:31.000000000 -0700
-@@ -415,6 +415,9 @@
- /* Define if you include <X11/xpm.h> on a normal include path (be careful) */
- #undef XPM_INC_X11
- 
-+/* Set to 88 or 256 depending on Xterm color cube you want */
-+#undef XTERM_COLORS
-+
- /* Support Xterm style scrollbars */
- #undef XTERM_SCROLLBAR
- 
 diff -ur rxvt-unicode.orig/configure.ac rxvt-unicode/configure.ac
 --- rxvt-unicode.orig/configure.ac	2007-06-26 14:59:13.000000000 -0700
 +++ rxvt-unicode/configure.ac	2007-06-27 17:05:31.000000000 -0700
