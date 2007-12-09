@@ -2326,7 +2326,7 @@ disable resource fallback use --disable-fallback.
 Use the given name as default application name when
 reading resources. Specify --with-res-name=rxvt to replace rxvt.
 
-=item --with-res-class=CLASS /default: URxvt)
+=item --with-res-class=CLASS (default: URxvt)
 
 Use the given class as default application class
 when reading resources. Specify --with-res-class=Rxvt to replace
