@@ -17,8 +17,7 @@ dnl LIBVERSION=`sed -n -e 's/^.*[ \t]LIBVERSION.*"\(.*\)"$/\1/p' ${srcdir}/src/v
 changequote([, ])dnl
 AC_SUBST(VERSION)dnl
 AC_SUBST(DATE)dnl
-AC_SUBST(LSMDATE)dnl
-AC_SUBST(LIBVERSION)dnl
+dnl AC_SUBST(LIBVERSION)dnl
 
 echo ""
 echo "configuring for rxvt $VERSION"
@@ -123,11 +122,11 @@ dnl# --------------------------------------------------------------------------
 dnl# CHECKING COMMAND LINE OPTIONS
 dnl# --------------------------------------------------------------------------
 
-if test "x$enable_shared" = xyes; then
-    AC_DEFINE(LIBRXVT, 1, Build shared library version - specify via configure only)
-    INSTALL_LIBRXVT=yes
-fi
-AC_SUBST(INSTALL_LIBRXVT)
+dnl if test "x$enable_shared" = xyes; then
+dnl     AC_DEFINE(LIBRXVT, 1, Build shared library version - specify via configure only)
+dnl     INSTALL_LIBRXVT=yes
+dnl fi
+dnl AC_SUBST(INSTALL_LIBRXVT)
 
 AC_ARG_ENABLE(everything,
   [  --enable-everything     enable standard non-multichoice features
