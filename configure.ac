@@ -32,6 +32,7 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 
 AC_AIX
+AC_GNU_SOURCE
 AC_ISC_POSIX
 AC_LANG(C++)
 
@@ -69,8 +70,6 @@ if test -z "$orig_CXXFLAGS"; then
   fi
   CFLAGS="$CXXFLAGS"
 fi
-
-AC_DEFINE(_GNU_SOURCE, 1, Use all glibc features.)
 
 case $host in
    *-*-solaris* )
