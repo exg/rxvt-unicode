@@ -2390,11 +2390,6 @@ Add support for a very unobtrusive, plain-looking scrollbar that
 is the favourite of the rxvt-unicode author, having used it for
 many years.
 
-=item --enable-ttygid (default: off)
-
-Change tty device setting to group "tty" - only use this if
-your system uses this type of security.
-
 =item --disable-backspace-key
 
 Removes any handling of the backspace key by us - let the X server do it.
