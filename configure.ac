@@ -27,8 +27,6 @@ echo ""
 orig_CXXFLAGS="$CXXFLAGS"
 
 dnl# Checks for programs.
-dnl AC_MAKE_SET
-
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_CPP
@@ -484,7 +482,6 @@ fi
 dnl# --------------------------------------------------------------------------
 dnl# CHECKING FOR HEADER FILES
 dnl# --------------------------------------------------------------------------
-AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS( \
 	assert.h \
 	fcntl.h \
@@ -504,8 +501,6 @@ AC_CHECK_HEADERS( \
 	cwchar \
 	clocale \
 )
-
-AC_HEADER_TIME
 
 dnl# check to allow both <termios.h> and <sys/ioctl.h>
 AC_CACHE_CHECK(whether termios.h and sys/ioctl.h may both be included, rxvt_cv_header_sysioctl,
@@ -535,11 +530,6 @@ AC_CACHE_CHECK([for XLIB_ILLEGAL_ACCESS], rxvt_xlib_illegal_access,
 if test x$rxvt_xlib_illegal_access = xyes; then
    AC_DEFINE(XLIB_ILLEGAL_ACCESS, 1, Define ONLY iff Xlib.h supports it)
 fi
-
-AC_C_CONST
-AC_C_INLINE
-
-dnl> AC_HEADER_STDC	 dnl# skip this test, Sun always fails anyhow.
 
 dnl# --------------------------------------------------------------------------
 dnl# CHECKING FOR MISSING TYPEDEFS
@@ -633,9 +623,6 @@ AC_SUBST(rxvt_u_intp_define)
 dnl# --------------------------------------------------------------------------
 dnl# CHECKING FOR LIBRARY FUNCTIONS
 dnl# --------------------------------------------------------------------------
-AC_TYPE_SIGNAL
-dnl> AC_FUNC_VPRINTF
-
 AC_CHECK_FUNCS(unsetenv)
 
 UTMP_CHECK
