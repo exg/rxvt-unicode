@@ -133,8 +133,7 @@ AC_SUBST(INSTALL_LIBRXVT)
 
 AC_ARG_ENABLE(everything,
   [  --enable-everything     enable standard non-multichoice features
-                     NOTE: this option is order dependent
-                     NOTE: automatically enabled with --enable-shared],
+                     NOTE: this option is order dependent],
   [
     if test x$enableval = xno; then
        support_frills=no
@@ -444,19 +443,6 @@ m4_include([libev/libev.m4])
 dnl# --------------------------------------------------------------------------
 
 AC_PATH_PROG(TIC, tic, :)
-
-dnl# need a neat way to detect SVR4 or its features
-dnl# in src/command.c we use these functions:
-dnl# grantpt(), unlockpt(), ptsname(), which are defined in <sys/ptms.h>
-dnl# - but are these also defined for other systems?
-
-dnl# hack to find if this is SVR4 -- who knows?
-dnl## AC_MSG_CHECKING(for SVR4)
-dnl## AC_EGREP_CPP(yes,
-dnl## [#if defined (SVR4) || defined (_SVR4) || defined (__svr4__)
-dnl##   yes;
-dnl## #endif
-dnl## ], [AC_MSG_RESULT(yes); AC_DEFINE(PERHAPS_SVR4)], AC_MSG_RESULT(perhaps not?))
 
 AC_PATH_XTRA
 
