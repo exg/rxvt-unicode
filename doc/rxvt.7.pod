@@ -2487,6 +2487,10 @@ Add smart growth/shrink behaviour when resizing.
 This should keep the window corner which is closest to a corner of
 the screen in a fixed position.
 
+=item --enable-text-blink (default: on)
+
+Add support for blinking text.
+
 =item --enable-pointer-blank (default: on)
 
 Add support to have the pointer disappear when typing or inactive.
