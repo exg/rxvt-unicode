@@ -77,10 +77,6 @@ case $host in
       ;;
 esac
 
-dnl if test x$GXX = xyes; then
-dnl    CXXFLAGS="$CXXFLAGS" dnl I once had -fno-exceptions, but I am using them now...
-dnl fi
-
 dnl# FreeBSD needs to link libxpg4
 AC_CHECK_FUNC(setlocale,     [], [AC_CHECK_LIB(xpg4,   setlocale,     [LIBS="$LIBS -lxpg4"])])
 
