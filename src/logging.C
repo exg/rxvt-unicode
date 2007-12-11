@@ -106,7 +106,8 @@ update_wtmp (const char *fname, const struct utmp *putmp)
     else if (errno != EAGAIN && errno != EACCES)
       break;
   if (!gotlock)
-    {		/* give it up */
+    {
+      /* give it up */
       close (fd);
       return;
     }
@@ -218,7 +219,7 @@ ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
     strncpy (ut_id, pty + 3, sizeof (ut_id));
   else if (sscanf (pty, "pts/%d", &i) == 1)
     sprintf (ut_id, "vt%02x", (i & 0xff));	/* sysv naming */
-  else if (strncmp (pty, "pty", 3) && strncmp (pty, "tty", 3))
+  else
     {
       ptytty_warn ("can't parse tty name \"%s\", not adding utmp entry.\n", pty);
       return;
@@ -232,7 +233,6 @@ ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
   strncpy (ut->ut_id, ut_id, sizeof (ut->ut_id));
   ut->ut_type = DEAD_PROCESS;
   getutid (ut);		/* position to entry in utmp file */
-  strncpy (this->ut_id, ut_id, sizeof (this->ut_id));
 # endif
 #endif
 
@@ -242,29 +242,24 @@ ptytty_unix::login (int cmd_pid, bool login_shell, const char *hostname)
   strncpy (utx->ut_id, ut_id, sizeof (utx->ut_id));
   utx->ut_type = DEAD_PROCESS;
   getutxid (utx);		/* position to entry in utmp file */
-  strncpy (this->ut_id, ut_id, sizeof (this->ut_id));
 #endif
 
 #ifdef HAVE_STRUCT_UTMP
   strncpy (ut->ut_line, pty, sizeof (ut->ut_line));
+# ifdef HAVE_UTMP_HOST
+  strncpy (ut->ut_host, hostname, sizeof (ut->ut_host));
+# endif
   ut->ut_time = time (NULL);
 # ifdef HAVE_UTMP_PID
   strncpy (ut->ut_user, name, sizeof (ut->ut_user));
   strncpy (ut->ut_id, ut_id, sizeof (ut->ut_id));
-  ut->ut_time = time (NULL);
   ut->ut_pid = cmd_pid;
-#  ifdef HAVE_UTMP_HOST
-  strncpy (ut->ut_host, hostname, sizeof (ut->ut_host));
-#  endif
   ut->ut_type = USER_PROCESS;
   pututline (ut);
   endutent ();			/* close the file */
   utmp_pos = 0;
 # else
   strncpy (ut->ut_name, name, sizeof (ut->ut_name));
-#  ifdef HAVE_UTMP_HOST
-  strncpy (ut->ut_host, hostname, sizeof (ut->ut_host));
-#  endif
 # endif
 #endif
 

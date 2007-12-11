@@ -88,7 +88,8 @@
       {
         if (grantpt (pfd) == 0	/* change slave permissions */
             && unlockpt (pfd) == 0)
-          {	/* slave now unlocked */
+          {
+            /* slave now unlocked */
             *ttydev = strdup (ptsname (pfd));	/* get slave's name */
             return pfd;
           }
@@ -327,7 +328,8 @@ static struct ttyconf {
       struct group *gr = getgrnam ("tty");
 
       if (gr)
-        {           /* change group ownership of tty to "tty" */
+        {
+          /* change group ownership of tty to "tty" */
           mode = S_IRUSR | S_IWUSR | S_IWGRP;
           gid = gr->gr_gid;
         }
