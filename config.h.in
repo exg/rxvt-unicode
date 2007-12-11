@@ -79,6 +79,9 @@
 /* Define to 1 if you have the `getpt' function. */
 #undef HAVE_GETPT
 
+/* Define to 1 if you have the `inotify_init' function. */
+#undef HAVE_INOTIFY_INIT
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
@@ -184,6 +187,9 @@
 /* Define to 1 if you have the <sys/event.h> header file. */
 #undef HAVE_SYS_EVENT_H
 
+/* Define to 1 if you have the <sys/inotify.h> header file. */
+#undef HAVE_SYS_INOTIFY_H
+
 /* Define to 1 if you have the <sys/ioctl.h> header file. */
 #undef HAVE_SYS_IOCTL_H
 
@@ -210,9 +216,6 @@
 
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
-
-/* Define to 1 if you have <sys/wait.h> that is POSIX.1 compatible. */
-#undef HAVE_SYS_WAIT_H
 
 /* Define to 1 if you have the <termios.h> header file. */
 #undef HAVE_TERMIOS_H
@@ -284,9 +287,6 @@
 /* Define if you want to have lastlog support when utmp/utmpx is enabled */
 #undef LASTLOG_SUPPORT
 
-/* Build shared library version - specify via configure only */
-#undef LIBRXVT
-
 /* Define to have CTRL cause wheel events to accelerate scrolling. Release
    CTRL to halt scrolling */
 #undef MOUSE_SLIP_WHEELING
@@ -347,9 +347,6 @@
 /* Default resource name */
 #undef RESNAME
 
-/* Define as the return type of signal handlers (`int' or `void'). */
-#undef RETSIGTYPE
-
 /* Binary base name */
 #undef RXVTNAME
 
@@ -386,9 +383,6 @@
 
 /* Define if you want blinking text support */
 #undef TEXT_BLINK
-
-/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
-#undef TIME_WITH_SYS_TIME
 
 /* "" */
 #undef TTY_GID_SUPPORT
@@ -443,23 +437,16 @@
 # undef _ALL_SOURCE
 #endif
 
-/* Use all glibc features. */
-#undef _GNU_SOURCE
+/* Enable GNU extensions on systems that have them.  */
+#ifndef _GNU_SOURCE
+# undef _GNU_SOURCE
+#endif
 
 /* Needed to get declarations for msg_control and msg_controllen on Solaris */
 #undef _XOPEN_SOURCE
 
-/* Define to empty if `const' does not conform to ANSI C. */
-#undef const
-
 /* Define to `int' if <sys/types.h> doesn't define. */
 #undef gid_t
-
-/* Define to `__inline__' or `__inline' if that's what the C compiler
-   calls it, or to nothing if 'inline' is not supported under any name.  */
-#ifndef __cplusplus
-#undef inline
-#endif
 
 /* Define to `int' if <sys/types.h> does not define. */
 #undef mode_t
