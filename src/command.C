@@ -1081,6 +1081,8 @@ rxvt_term::text_blink_cb (ev::timer &w, int revents)
       hidden_text = !hidden_text;
       want_refresh = 1;
     }
+  else
+    w.stop ();
 }
 #endif
 
@@ -1687,7 +1689,7 @@ rxvt_term::focus_in ()
 #endif
 #if CURSOR_BLINK
       if (option (Opt_cursorBlink))
-        cursor_blink_ev.start (CURSOR_BLINK_INTERVAL, CURSOR_BLINK_INTERVAL);
+        cursor_blink_ev.again ();
 #endif
 #if OFF_FOCUS_FADING
       if (rs[Rs_fade])

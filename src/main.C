@@ -157,7 +157,7 @@ rxvt_term::rxvt_term ()
   update_background_ev.set<rxvt_term, &rxvt_term::update_background_cb> (this);
 #endif
 #ifdef CURSOR_BLINK
-  cursor_blink_ev.set     <rxvt_term, &rxvt_term::cursor_blink_cb> (this);
+  cursor_blink_ev.set     <rxvt_term, &rxvt_term::cursor_blink_cb> (this); cursor_blink_ev.set (0., CURSOR_BLINK_INTERVAL);
 #endif
 #ifdef TEXT_BLINK
   text_blink_ev.set       <rxvt_term, &rxvt_term::text_blink_cb>   (this); text_blink_ev.set (0., TEXT_BLINK_INTERVAL);
