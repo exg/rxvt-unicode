@@ -490,6 +490,7 @@ AC_CHECK_HEADERS( \
 	sys/sockio.h \
 	sys/strredir.h \
 	sys/time.h \
+	time.h \
 	stdint.h \
 	wchar.h \
 	cwchar \
