@@ -482,7 +482,6 @@ AC_CHECK_HEADERS( \
 	stdarg.h \
 	stdlib.h \
 	string.h \
-	termios.h \
 	unistd.h \
 	sys/byteorder.h \
 	sys/ioctl.h \
@@ -501,9 +500,8 @@ dnl# check to allow both <termios.h> and <sys/ioctl.h>
 AC_CACHE_CHECK(whether termios.h and sys/ioctl.h may both be included, rxvt_cv_header_sysioctl,
 [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
 #include <sys/ioctl.h>
-#ifdef HAVE_TERMIOS_H
 #include <termios.h>
-#endif]], [[int a = ECHO;]])],[rxvt_cv_header_sysioctl=yes],[rxvt_cv_header_sysioctl=no])])
+]], [[int a = ECHO;]])],[rxvt_cv_header_sysioctl=yes],[rxvt_cv_header_sysioctl=no])])
 
 AC_CACHE_CHECK([for XPointer], rxvt_cv_xpointer,
 [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <X11/Xlib.h>]], [[XPointer dummy;]])],[rxvt_cv_xpointer=yes],[rxvt_cv_xpointer=no])])

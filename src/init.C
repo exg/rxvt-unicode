@@ -1228,7 +1228,6 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
    * Debugging
    */
 #ifdef DEBUG_TTYMODE
-#ifdef HAVE_TERMIOS_H
   /* c_iflag bits */
   fprintf (stderr, "Input flags\n");
 
@@ -1301,7 +1300,6 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
 
   fprintf (stderr, "\n");
 # undef FOO
-# endif /* HAVE_TERMIOS_H */
 #endif /* DEBUG_TTYMODE */
 }
 
