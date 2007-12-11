@@ -188,7 +188,7 @@ rxvt_term::rxvt_term ()
 #endif
   child_ev.set            <rxvt_term, &rxvt_term::child_cb>   (this);
   prepare_ev.set          <rxvt_term, &rxvt_term::prepare_cb> (this);
-  flush_ev.set            <rxvt_term, &rxvt_term::flush_cb>   (this); flush_ev.set (0., 1. / 60.); // refresh at max. 60 Hz normally
+  flush_ev.set            <rxvt_term, &rxvt_term::flush_cb>   (this);
   destroy_ev.set          <rxvt_term, &rxvt_term::destroy_cb> (this);
   pty_ev.set              <rxvt_term, &rxvt_term::pty_cb>     (this);
   incr_ev.set             <rxvt_term, &rxvt_term::incr_cb>    (this);

@@ -2323,7 +2323,7 @@ rxvt_term::scr_refresh () NOTHROW
                 {
                   if (!ev_is_active (&text_blink_ev))
                     {
-                      text_blink_ev.start (TEXT_BLINK_INTERVAL, TEXT_BLINK_INTERVAL);
+                      text_blink_ev.again ();
                       hidden_text = 0;
                     }
                   else if (hidden_text)
