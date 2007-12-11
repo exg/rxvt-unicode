@@ -531,56 +531,10 @@ dnl AC_CHECK_SIZEOF(long, 4)
 AC_CHECK_SIZEOF(long long, 8)
 AC_CHECK_SIZEOF(int *, 4)
 
-dnl# see usage below
-AC_DEFUN([RXVT_CHECK_SIZE],
-  [AC_CACHE_CHECK([for $2], $1,
-    [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdint.h>]], [[$2 dummy;]])],[$1=yes],[dnl
-if test "$ac_cv_sizeof_char" -ge $3; then
-  $1="$4 char"
-else
-  if test "$ac_cv_sizeof_short" -ge $3; then
-    $1="$4 short"
-  else
-    if test "$ac_cv_sizeof_int" -ge $3; then
-      $1="$4 int"
-    else
-      if test "$ac_cv_sizeof_long" -ge $3; then
-        $1="$4 long"
-      else
-        if test "$ac_cv_sizeof_long_long" -ge $3; then
-          $1="$4 long long"
-        else
-          $1="$4 $5" # we _must_ have a (possibly wrong) default
-        fi
-      fi
-    fi
-  fi
-fi])])]
-if test x"$$1" != xyes; then
-  $6="typedef $$1 $2;"
-else
-  if test x"$4" = x; then
-    $6="/* typedef $5 $2; */"
-  else
-    $6="/* typedef $4 $5 $2; */"
-  fi
-fi dnl
-)
-dnl#
-dnl# Look for types the system may know about anyway.
-dnl#
-RXVT_CHECK_SIZE(rxvt_cv_int16_t, int16_t, 2, , short, rxvt_int16_typedef)
-AC_SUBST(rxvt_int16_typedef)
-RXVT_CHECK_SIZE(rxvt_cv_uint16_t, uint16_t, 2, unsigned, short, rxvt_uint16_typedef)
-AC_SUBST(rxvt_uint16_typedef)
-RXVT_CHECK_SIZE(rxvt_cv_int32_t, int32_t, 4, , int, rxvt_int32_typedef)
-AC_SUBST(rxvt_int32_typedef)
-RXVT_CHECK_SIZE(rxvt_cv_uint32_t, uint32_t, 4, unsigned, int, rxvt_uint32_typedef)
-AC_SUBST(rxvt_uint32_typedef)
-dnl RXVT_CHECK_SIZE(rxvt_cv_int64_t, int64_t, 8, , long long, rxvt_int64_typedef)
-dnl AC_SUBST(rxvt_int64_typedef)
-dnl RXVT_CHECK_SIZE(rxvt_cv_uint64_t, uint64_t, 8, unsigned, long long, rxvt_uint64_typedef)
-dnl AC_SUBST(rxvt_uint64_typedef)
+AC_TYPE_INT16_T
+AC_TYPE_UINT16_T
+AC_TYPE_INT32_T
+AC_TYPE_UINT32_T
 
 dnl# --------------------------------------------------------------------------
 dnl# CHECKING FOR LIBRARY FUNCTIONS

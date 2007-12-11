@@ -33,15 +33,6 @@ extern "C" {
 #include <X11/Xresource.h>
 }
 
-/*
- * If we haven't pulled in typedef's like  int16_t  then do them ourself
- * type of (normal and unsigned) basic sizes
- */
-@rxvt_int16_typedef@
-@rxvt_uint16_typedef@
-@rxvt_int32_typedef@
-@rxvt_uint32_typedef@
-
 struct rxvt_fontset;
 struct rxvt_color;
 struct rxvt_vars;               /* defined later on */
