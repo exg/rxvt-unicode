@@ -49,9 +49,6 @@
 /* Define if you want to use libAfterImage for image processing */
 #undef HAVE_AFTERIMAGE
 
-/* Define to 1 if you have the <assert.h> header file. */
-#undef HAVE_ASSERT_H
-
 /* Define to 1 if you have the <clocale> header file. */
 #undef HAVE_CLOCALE
 
@@ -72,9 +69,6 @@
 
 /* Define to 1 if you have the `epoll_ctl' function. */
 #undef HAVE_EPOLL_CTL
-
-/* Define to 1 if you have the <fcntl.h> header file. */
-#undef HAVE_FCNTL_H
 
 /* Define to 1 if you have the `getpt' function. */
 #undef HAVE_GETPT
@@ -151,9 +145,6 @@
 /* Define to 1 if you have the `setuid' function. */
 #undef HAVE_SETUID
 
-/* Define to 1 if you have the <stdarg.h> header file. */
-#undef HAVE_STDARG_H
-
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 
@@ -211,14 +202,8 @@
 /* Define to 1 if you have the <sys/strredir.h> header file. */
 #undef HAVE_SYS_STRREDIR_H
 
-/* Define to 1 if you have the <sys/time.h> header file. */
-#undef HAVE_SYS_TIME_H
-
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
-
-/* Define to 1 if you have the <termios.h> header file. */
-#undef HAVE_TERMIOS_H
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
@@ -360,18 +345,6 @@
    the screen */
 #undef SELECTION_SCROLLING
 
-/* The size of `int', as computed by sizeof. */
-#undef SIZEOF_INT
-
-/* The size of `int *', as computed by sizeof. */
-#undef SIZEOF_INT_P
-
-/* The size of `long long', as computed by sizeof. */
-#undef SIZEOF_LONG_LONG
-
-/* The size of `short', as computed by sizeof. */
-#undef SIZEOF_SHORT
-
 /* Define to use "smart" resize behavior */
 #undef SMART_RESIZE
 
@@ -442,11 +415,24 @@
 # undef _GNU_SOURCE
 #endif
 
+/* Define for Solaris 2.5.1 so the uint32_t typedef from <sys/synch.h>,
+   <pthread.h>, or <semaphore.h> is not used. If the typedef was allowed, the
+   #define below would cause a syntax error. */
+#undef _UINT32_T
+
 /* Needed to get declarations for msg_control and msg_controllen on Solaris */
 #undef _XOPEN_SOURCE
 
 /* Define to `int' if <sys/types.h> doesn't define. */
 #undef gid_t
+
+/* Define to the type of a signed integer type of width exactly 16 bits if
+   such a type exists and the standard includes do not define it. */
+#undef int16_t
+
+/* Define to the type of a signed integer type of width exactly 32 bits if
+   such a type exists and the standard includes do not define it. */
+#undef int32_t
 
 /* Define to `int' if <sys/types.h> does not define. */
 #undef mode_t
@@ -456,3 +442,11 @@
 
 /* Define to `int' if <sys/types.h> doesn't define. */
 #undef uid_t
+
+/* Define to the type of an unsigned integer type of width exactly 16 bits if
+   such a type exists and the standard includes do not define it. */
+#undef uint16_t
+
+/* Define to the type of an unsigned integer type of width exactly 32 bits if
+   such a type exists and the standard includes do not define it. */
+#undef uint32_t
