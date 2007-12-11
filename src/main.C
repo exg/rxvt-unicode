@@ -829,7 +829,7 @@ rxvt_term::tt_winch ()
   (void)ioctl (pty->pty, TIOCSWINSZ, &ws);
 
 #if 0
-  // TIOCSWINSZ⎈ is supposed to do this automatically and correctly
+  // TIOCSWINSZ is supposed to do this automatically and correctly
   if (cmd_pid)               /* force through to the command */
     kill (-cmd_pid, SIGWINCH);
 #endif
