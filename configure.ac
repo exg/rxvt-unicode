@@ -477,19 +477,10 @@ dnl# --------------------------------------------------------------------------
 dnl# CHECKING FOR HEADER FILES
 dnl# --------------------------------------------------------------------------
 AC_CHECK_HEADERS( \
-	assert.h \
-	fcntl.h \
-	stdarg.h \
-	stdlib.h \
-	string.h \
-	unistd.h \
 	sys/byteorder.h \
 	sys/ioctl.h \
-	sys/select.h \
 	sys/sockio.h \
 	sys/strredir.h \
-	sys/time.h \
-	time.h \
 	stdint.h \
 	wchar.h \
 	cwchar \
@@ -846,17 +837,8 @@ fi dnl
 AC_SUBST($1)])
 
 RXVT_DEFINE_TO_INCLUDE(include_stdint_h, stdint.h, ac_cv_header_stdint_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_stdarg_h, cstdarg, ac_cv_header_stdarg_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_stdlib_h, cstdlib, ac_cv_header_stdlib_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_unistd_h, unistd.h, ac_cv_header_unistd_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_string_h, cstring, ac_cv_header_string_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_fcntl_h, fcntl.h, ac_cv_header_fcntl_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_assert_h, assert.h, ac_cv_header_assert_h, yes, notset, dontmatch)
 RXVT_DEFINE_TO_INCLUDE(include_sys_ioctl_h, sys/ioctl.h, rxvt_cv_header_sysioctl, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_sys_select_h, sys/select.h, ac_cv_header_sys_select_h, yes, notset, dontmatch)
 RXVT_DEFINE_TO_INCLUDE(include_sys_strredir_h, sys/strredir.h, ac_cv_header_sys_strredir_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_sys_time_h, sys/time.h, ac_cv_header_sys_time_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_time_h, time.h, ac_cv_header_sys_time_h, no, ac_cv_header_time, yes)
 
 AC_CONFIG_FILES([Makefile \
 doc/Makefile \

@@ -43,6 +43,8 @@
 
 #include <csignal>
 
+#include <fcntl.h>
+
 #ifdef HAVE_XSETLOCALE
 # define X_LOCALE
 # include <X11/Xlocale.h>

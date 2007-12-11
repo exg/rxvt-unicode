@@ -27,6 +27,7 @@
 #define DO_TIMING_TEST 0
 
 #if DO_TIMING_TEST
+# include <sys/time.h>
 #define TIMING_TEST_START(id) \
 	struct timeval timing_test_##id##_stv;\
   gettimeofday (&timing_test_##id##_stv, NULL);

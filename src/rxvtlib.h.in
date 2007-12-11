@@ -4,18 +4,14 @@
 #include <cstdio>
 #include <cctype>
 #include <cerrno>
-@include_stdarg_h@
-@include_stdlib_h@
+#include <cstdarg>
+#include <cstdlib>
 @include_stdint_h@
 #include <sys/types.h>
-@include_unistd_h@
-@include_string_h@
-@include_fcntl_h@
-@include_assert_h@
+#include <unistd.h>
+#include <cstring>
+#include <assert.h>
 @include_sys_ioctl_h@
-@include_sys_time_h@
-@include_time_h@
-@include_sys_select_h@
 @include_sys_strredir_h@
 
 #include <sys/wait.h>
