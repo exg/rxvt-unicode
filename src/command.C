@@ -1051,7 +1051,7 @@ rxvt_term::prepare_cb (ev::prepare &w, int revents)
   display->flush ();
 
   if (want_refresh && !ev_is_active (&flush_ev))
-    flush_ev.start (1. / 60.); // refresh at max. 60 Hz normally
+    flush_ev.again ();
 }
 
 void
@@ -1478,7 +1478,7 @@ rxvt_term::x_cb (XEvent &ev)
       case MapNotify:
         mapped = 1;
 #ifdef TEXT_BLINK
-        text_blink_ev.start (TEXT_BLINK_INTERVAL);
+        text_blink_ev.again ();
 #endif
         HOOK_INVOKE ((this, HOOK_MAP_NOTIFY, DT_XEVENT, &ev, DT_END));
         break;
