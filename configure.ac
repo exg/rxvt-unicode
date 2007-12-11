@@ -520,17 +520,8 @@ dnl# CHECKING FOR MISSING TYPEDEFS
 dnl# --------------------------------------------------------------------------
 dnl# Missing typedefs and replacements
 AC_TYPE_MODE_T
-dnl> AC_CHECK_TYPE(umode_t, int)
-dnl> AC_CHECK_TYPE(off_t, long)
 AC_TYPE_PID_T
 AC_TYPE_UID_T
-
-AC_CHECK_SIZEOF(short, 2)
-AC_CHECK_SIZEOF(int, 4)
-dnl AC_CHECK_SIZEOF(long, 4)
-AC_CHECK_SIZEOF(long long, 8)
-AC_CHECK_SIZEOF(int *, 4)
-
 AC_TYPE_INT16_T
 AC_TYPE_UINT16_T
 AC_TYPE_INT32_T
