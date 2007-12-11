@@ -1050,7 +1050,7 @@ rxvt_term::prepare_cb (ev::prepare &w, int revents)
 
   display->flush ();
 
-  if (want_refresh && !flush_ev.active)
+  if (want_refresh && !ev_is_active (&flush_ev))
     flush_ev.start (1. / 60.); // refresh at max. 60 Hz normally
 }
 
@@ -1579,7 +1579,7 @@ rxvt_term::x_cb (XEvent &ev)
                         /* don't clobber the current delay if we are
                          * already in the middle of scrolling.
                          */
-                        if (!sel_scroll_ev.active)
+                        if (!ev_is_active (&sel_scroll_ev))
                           sel_scroll_ev.start (SCROLLBAR_INITIAL_DELAY, SCROLLBAR_CONTINUOUS_DELAY);
 
                         /* save the event params so we can highlight
@@ -1612,7 +1612,7 @@ rxvt_term::x_cb (XEvent &ev)
                         /* we are within the text window, so we
                          * shouldn't be scrolling
                          */
-                        if (sel_scroll_ev.active)
+                        if (ev_is_active (&sel_scroll_ev))
                           sel_scroll_ev.stop();
                       }
 #endif
@@ -2068,7 +2068,7 @@ rxvt_term::button_release (XButtonEvent &ev)
     }
 
 #ifdef SELECTION_SCROLLING
-  if (sel_scroll_ev.active)
+  if (ev_is_active (&sel_scroll_ev))
     sel_scroll_ev.stop();
 #endif
 

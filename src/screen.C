@@ -2321,7 +2321,7 @@ rxvt_term::scr_refresh () NOTHROW
 #ifdef TEXT_BLINK
               if (rend & RS_Blink && (back == Color_bg || fore == Color_bg))
                 {
-                  if (!text_blink_ev.active)
+                  if (!ev_is_active (&text_blink_ev))
                     {
                       text_blink_ev.start (TEXT_BLINK_INTERVAL, TEXT_BLINK_INTERVAL);
                       hidden_text = 0;

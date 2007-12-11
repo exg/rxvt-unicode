@@ -331,7 +331,7 @@ rxvt_term::child_cb (ev::child &w, int status)
 void
 rxvt_term::destroy ()
 {
-  if (destroy_ev.active)
+  if (ev_is_active (&destroy_ev))
     return;
 
   HOOK_INVOKE ((this, HOOK_DESTROY, DT_END));
