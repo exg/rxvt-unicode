@@ -40,7 +40,7 @@
 #include <csignal>
 #include <cstring>
 
-# include <termios.h>
+#include <termios.h>
 
 #ifdef HAVE_XSETLOCALE
 # define X_LOCALE
