@@ -874,7 +874,6 @@ RXVT_DEFINE_TO_INCLUDE(include_stdlib_h, cstdlib, ac_cv_header_stdlib_h, yes, no
 RXVT_DEFINE_TO_INCLUDE(include_unistd_h, unistd.h, ac_cv_header_unistd_h, yes, notset, dontmatch)
 RXVT_DEFINE_TO_INCLUDE(include_string_h, cstring, ac_cv_header_string_h, yes, notset, dontmatch)
 RXVT_DEFINE_TO_INCLUDE(include_fcntl_h, fcntl.h, ac_cv_header_fcntl_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_util_h, util.h, ac_cv_header_util_h, yes, notset, dontmatch)
 RXVT_DEFINE_TO_INCLUDE(include_assert_h, assert.h, ac_cv_header_assert_h, yes, notset, dontmatch)
 RXVT_DEFINE_TO_INCLUDE(include_sys_ioctl_h, sys/ioctl.h, rxvt_cv_header_sysioctl, yes, notset, dontmatch)
 RXVT_DEFINE_TO_INCLUDE(include_sys_select_h, sys/select.h, ac_cv_header_sys_select_h, yes, notset, dontmatch)
