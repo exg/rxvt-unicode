@@ -46,11 +46,6 @@ extern "C" {
 @rxvt_int32_typedef@
 @rxvt_uint32_typedef@
 
-/* whatever normal size corresponds to a integer pointer */
-@rxvt_intp_define@
-/* whatever normal size corresponds to a unsigned integer pointer */
-@rxvt_u_intp_define@
-
 struct rxvt_fontset;
 struct rxvt_color;
 struct rxvt_vars;               /* defined later on */

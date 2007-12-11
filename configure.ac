@@ -592,28 +592,6 @@ dnl RXVT_CHECK_SIZE(rxvt_cv_int64_t, int64_t, 8, , long long, rxvt_int64_typedef
 dnl AC_SUBST(rxvt_int64_typedef)
 dnl RXVT_CHECK_SIZE(rxvt_cv_uint64_t, uint64_t, 8, unsigned, long long, rxvt_uint64_typedef)
 dnl AC_SUBST(rxvt_uint64_typedef)
-dnl#
-dnl# Now look for another we use
-dnl#
-if test "$ac_cv_sizeof_int_p" -eq 8; then
-  rxvt_intp_define="#define intp_t int64_t"
-  rxvt_u_intp_define="#define u_intp_t u_int64_t"
-else
-  if test "$ac_cv_sizeof_int_p" -eq 4; then
-    rxvt_intp_define="#define intp_t int32_t"
-    rxvt_u_intp_define="#define u_intp_t u_int32_t"
-  else
-    if test "$ac_cv_sizeof_int_p" -eq 2; then
-      rxvt_intp_define="#define intp_t int16_t"
-      rxvt_u_intp_define="#define u_intp_t u_int16_t"
-    else
-      rxvt_intp_define="#error set intp_t"
-      rxvt_u_intp_define="#error set u_intp_t"
-    fi
-  fi
-fi
-AC_SUBST(rxvt_intp_define)
-AC_SUBST(rxvt_u_intp_define)
 
 dnl# --------------------------------------------------------------------------
 dnl# CHECKING FOR LIBRARY FUNCTIONS
