@@ -1173,7 +1173,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void process_sgr_mode (unsigned int nargs, const int *arg);
   void process_graphics ();
   // init.C
-  bool init_vars ();
+  void init_vars ();
   void init_secondary ();
   const char **init_resources (int argc, const char *const *argv);
   void init_env ();

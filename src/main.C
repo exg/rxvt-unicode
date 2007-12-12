@@ -484,8 +484,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
   set_locale ("");
   set_environ (envv); // few things in X do not call setlocale :(
 
-  if (!init_vars ())
-    return false;
+  init_vars ();
 
   init_secondary ();
 
