@@ -14,6 +14,9 @@ require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, B<rxvt-unicode> uses much less swap space --
 a significant advantage on a machine serving many X sessions.
 
+This document is also available on the World-Wide-Web at
+L<http://pod.tst.eu/http://cvs.schmorp.de/rxvt-unicode/doc/rxvt.1.pod>.
+
 =head1 FREQUENTLY ASKED QUESTIONS
 
 See @@RXVT_NAME@@(7) (try C<man 7 @@RXVT_NAME@@>) for a list of
