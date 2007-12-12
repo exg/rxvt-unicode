@@ -1104,10 +1104,10 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void tt_write (const char *data, unsigned int len);
   void pty_write ();
 
-  bool init (stringvec *argv, stringvec *envv)
+  void init (stringvec *argv, stringvec *envv)
   {
     this->argv = argv;
-    return init (argv->size (), argv->begin (), envv);
+    init (argv->size (), argv->begin (), envv);
   }
 
   void make_current () const // make this the "currently active" urxvt instance
@@ -1192,7 +1192,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   ~rxvt_term ();
   void destroy ();
   void emergency_cleanup ();
-  bool init (int argc, const char *const *argv, stringvec *envv);
+  void init (int argc, const char *const *argv, stringvec *envv);
   void recolour_cursor ();
   void resize_all_windows (unsigned int newwidth, unsigned int newheight, int ignoreparent);
   void window_calc (unsigned int newwidth, unsigned int newheight);

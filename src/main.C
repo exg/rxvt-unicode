@@ -475,7 +475,7 @@ rxvt_xioerror_handler (Display *display)
 }
 
 /*----------------------------------------------------------------------*/
-bool
+void
 rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 {
   this->envv = envv;
@@ -588,8 +588,6 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 
   XMapWindow (dpy, vt);
   XMapWindow (dpy, parent[0]);
-
-  return true;
 }
 
 static struct sig_handlers
