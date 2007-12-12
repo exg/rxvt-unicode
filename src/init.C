@@ -12,8 +12,6 @@
  * Copyright (c) 1997,1998 Oezguer Kesim <kesim@math.fu-berlin.de>
  * Copyright (c) 1998-2001 Geoff Wing <gcw@pobox.com>
  *                              - extensive modifications
- * Copyright (c) 1999      D J Hawkey Jr <hawkeyd@visi.com>
- *                              - QNX support
  * Copyright (c) 2003-2006 Marc Lehmann <pcg@goof.com>
  *
  * This program is free software; you can redistribute it and/or modify
