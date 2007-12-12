@@ -505,7 +505,8 @@ entries and will not tinker with pty/tty permissions - you have to do that
 yourself if you want that.
 
 As an extremely special case, specifying C<-1> will completely suppress
-pty/tty operations.
+pty/tty operations, which is probably only useful in conjunction with some
+perl extension that manages the terminal.
 
 Here is a example in perl that illustrates how this option can be used (a
 longer example is in F<doc/pty-fd>):
@@ -529,10 +530,11 @@ this terminal instance. See resource B<perl-ext> for details.
 
 =back
 
-=head1 RESOURCES (available also as long-options)
+=head1 RESOURCES
 
 Note: `@@RXVT_NAME@@ --help' gives a list of all resources (long
-options) compiled into your version.
+options) compiled into your version. All resources are also available as
+long-options.
 
 You can set and change the resources using X11 tools like B<xrdb>. Many
 distribution do also load settings from the B<~/.Xresources> file when X
