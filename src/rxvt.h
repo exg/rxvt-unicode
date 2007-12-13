@@ -147,7 +147,6 @@ static inline void set_environ (char **envv)
  * STRUCTURES AND TYPEDEFS
  *****************************************************************************
  */
-struct grwin_t;
 
 /* If we're using either the rxvt scrollbar, keep the
  * scrollColor resource.
