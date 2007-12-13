@@ -137,7 +137,7 @@ rxvtperl.o: rxvtperl.C perlxsi.c
 
 depend:
 	makedepend -f Makefile.in -I. -Y *.C >/dev/null 2>&1
-	makedepend -f Makefile.in -I. -Y *.C -a -o .lo >/dev/null 2>&1
+#	makedepend -f Makefile.in -I. -Y *.C -a -o .lo >/dev/null 2>&1
 
 # DO NOT DELETE: nice dependency list follows
 
@@ -239,103 +239,3 @@ xdefaults.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 xdefaults.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
 xdefaults.o: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h version.h
 xdefaults.o: keyboard.h
-
-background.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-background.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h
-background.lo: salloc.h libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
-command.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-command.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
-command.lo: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h version.h
-command.lo: command.h keyboard.h
-encoding.lo: ../config.h encoding.h table/iso8859_1.h table/iso8859_15.h
-encoding.lo: table/iso8859_2.h table/iso8859_3.h table/iso8859_4.h
-encoding.lo: table/iso8859_5.h table/iso8859_6.h table/iso8859_7.h
-encoding.lo: table/iso8859_8.h table/iso8859_9.h table/iso8859_10.h
-encoding.lo: table/iso8859_11.h table/iso8859_13.h table/iso8859_14.h
-encoding.lo: table/iso8859_16.h table/koi8_r.h table/koi8_u.h
-encoding.lo: table/ksc5601_1987_0.h table/big5.h table/gbk_0.h
-encoding.lo: table/gb2312_1980_0.h table/cns11643_1992_1.h
-encoding.lo: table/cns11643_1992_2.h table/cns11643_1992_3.h
-encoding.lo: table/cns11643_1992_4.h table/cns11643_1992_5.h
-encoding.lo: table/cns11643_1992_6.h table/cns11643_1992_7.h
-encoding.lo: table/cns11643_1992_f.h table/big5_ext.h table/big5_plus.h
-encoding.lo: table/viscii.h table/jis0201_1976_0.h table/jis0208_1990_0.h
-encoding.lo: table/jis0212_1990_0.h table/jis0213_1.h table/jis0213_2.h
-encoding.lo: table/compose.h table/category.h
-ev_cpp.lo: ev_cpp.h
-fdpass.lo: ../config.h libptytty.h
-init.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-init.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
-init.lo: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h init.h
-keyboard.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-keyboard.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
-keyboard.lo: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h keyboard.h
-keyboard.lo: command.h
-logging.lo: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h rxvtlib.h
-logging.lo: optinc.h feature.h encoding.h rxvtutil.h rxvtfont.h rxvttoolkit.h
-logging.lo: ev_cpp.h callback.h salloc.h rxvtperl.h hookinc.h background.h
-logging.lo: rsinc.h
-main.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-main.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
-main.lo: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h keyboard.h
-misc.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-misc.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
-misc.lo: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
-proxy.lo: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h rxvtlib.h
-proxy.lo: optinc.h feature.h encoding.h rxvtutil.h rxvtfont.h rxvttoolkit.h
-proxy.lo: ev_cpp.h callback.h salloc.h rxvtperl.h hookinc.h background.h
-proxy.lo: rsinc.h
-ptytty.lo: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h rxvtlib.h
-ptytty.lo: optinc.h feature.h encoding.h rxvtutil.h rxvtfont.h rxvttoolkit.h
-ptytty.lo: ev_cpp.h callback.h salloc.h rxvtperl.h hookinc.h background.h
-ptytty.lo: rsinc.h
-rxvt.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-rxvt.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
-rxvt.lo: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
-rxvtc.lo: ../config.h rxvtdaemon.h rxvtutil.h libptytty.h rxvt.h rxvtlib.h
-rxvtc.lo: optinc.h feature.h encoding.h rxvtfont.h rxvttoolkit.h ev_cpp.h
-rxvtc.lo: callback.h salloc.h rxvtperl.h hookinc.h background.h rsinc.h
-rxvtd.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-rxvtd.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
-rxvtd.lo: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h rxvtdaemon.h
-rxvtdaemon.lo: rxvtdaemon.h rxvtutil.h
-rxvtfont.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-rxvtfont.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
-rxvtfont.lo: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
-rxvtfont.lo: table/linedraw.h
-rxvtperl.lo: ../config.h ev_cpp.h rxvt.h rxvtlib.h optinc.h feature.h
-rxvtperl.lo: encoding.h rxvtutil.h rxvtfont.h rxvttoolkit.h callback.h
-rxvtperl.lo: salloc.h libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
-rxvtperl.lo: keyboard.h perlxsi.c ./iom_perl.h
-rxvttoolkit.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-rxvttoolkit.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h
-rxvttoolkit.lo: salloc.h libptytty.h rxvtperl.h hookinc.h background.h
-rxvttoolkit.lo: rsinc.h
-rxvtutil.lo: rxvtutil.h
-salloc.lo: salloc.h
-screen.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-screen.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
-screen.lo: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h salloc.C
-scrollbar-next.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-scrollbar-next.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h
-scrollbar-next.lo: salloc.h libptytty.h rxvtperl.h hookinc.h background.h
-scrollbar-next.lo: rsinc.h
-scrollbar-plain.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h
-scrollbar-plain.lo: encoding.h rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h
-scrollbar-plain.lo: callback.h salloc.h libptytty.h rxvtperl.h hookinc.h
-scrollbar-plain.lo: background.h rsinc.h
-scrollbar-rxvt.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-scrollbar-rxvt.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h
-scrollbar-rxvt.lo: salloc.h libptytty.h rxvtperl.h hookinc.h background.h
-scrollbar-rxvt.lo: rsinc.h
-scrollbar-xterm.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h
-scrollbar-xterm.lo: encoding.h rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h
-scrollbar-xterm.lo: callback.h salloc.h libptytty.h rxvtperl.h hookinc.h
-scrollbar-xterm.lo: background.h rsinc.h
-scrollbar.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-scrollbar.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h
-scrollbar.lo: salloc.h libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
-xdefaults.lo: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
-xdefaults.lo: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h
-xdefaults.lo: salloc.h libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
-xdefaults.lo: version.h keyboard.h
