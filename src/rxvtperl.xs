@@ -859,18 +859,11 @@ _new (AV *env, AV *arg)
 
         envv->push_back (0);
 
-        bool success;
-
         try
           {
-            success = term->init (argv, envv);
+            term->init (argv, envv);
           }
         catch (const class rxvt_failure_exception &e)
-          {
-            success = false;
-          }
-
-        if (!success)
           {
             term->destroy ();
             croak ("error while initializing new terminal instance");

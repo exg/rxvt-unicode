@@ -198,11 +198,11 @@ void server::read_cb (ev::io &w, int revents)
             term->log_hook = &log_cb;
             term->getfd_hook = &getfd_cb;
 
-            bool success;
+            bool success = true;
 
             try
               {
-                success = term->init (argv, envv);
+                term->init (argv, envv);
               }
             catch (const class rxvt_failure_exception &e)
               {
