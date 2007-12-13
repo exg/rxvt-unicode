@@ -41,16 +41,6 @@ doc/rxvt.7.man.in
 doc/rxvtc.1.man.in
 doc/rxvtd.1.man.in
 doc/rxvtperl.3.man.in
-doc/rxvt.1.txt
-doc/rxvt.7.txt
-doc/rxvtc.1.txt
-doc/rxvtd.1.txt
-doc/rxvtperl.3.txt
-doc/rxvt.1.html
-doc/rxvt.7.html
-doc/rxvtc.1.html
-doc/rxvtd.1.html
-doc/rxvtperl.3.html
 
 src/.cvsignore
 src/Makefile.in
