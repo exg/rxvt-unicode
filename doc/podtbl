@@ -22,8 +22,8 @@ sub htmlfcodes {
       L => "i",    # broken
       F => "tt",
       S => "nobr", # non-std
-      X => "span", # brokwn
-      Z => "span", # brokwn
+      X => "span", # broken
+      Z => "span", # broken
    );
    # strip formatting codes, dumb version
    map {
