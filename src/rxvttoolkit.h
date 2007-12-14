@@ -103,7 +103,8 @@ struct im_watcher;
 struct xevent_watcher;
 
 template<class watcher>
-struct event_vec : vector<watcher *> {
+struct event_vec : vector<watcher *>
+{
   void erase_unordered (unsigned int pos)
   {
     watcher *w = (*this)[this->size () - 1];
@@ -115,7 +116,8 @@ struct event_vec : vector<watcher *> {
   }
 };
 
-struct rxvt_watcher {
+struct rxvt_watcher
+{
   int active; /* 0 == inactive, else index into respective vector */
 
   bool is_active () { return active; }
@@ -123,7 +125,8 @@ struct rxvt_watcher {
   rxvt_watcher () : active (0) { }
 };
 
-struct refcounted {
+struct refcounted
+{
   int referenced;
   char *id;
 
@@ -134,7 +137,8 @@ struct refcounted {
 };
 
 template<class T>
-struct refcache : vector<T *> {
+struct refcache : vector<T *>
+{
   T *get (const char *id);
   void put (T *obj);
   void clear ();
@@ -149,7 +153,8 @@ struct refcache : vector<T *> {
 
 struct rxvt_screen;
 
-struct rxvt_drawable {
+struct rxvt_drawable
+{
   rxvt_screen *screen;
   Drawable drawable;
   operator Drawable() { return drawable; }
@@ -175,7 +180,8 @@ struct rxvt_drawable {
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef USE_XIM
-struct rxvt_xim : refcounted {
+struct rxvt_xim : refcounted
+{
   void destroy ();
   rxvt_display *display;
 
@@ -188,7 +194,8 @@ struct rxvt_xim : refcounted {
 };
 #endif
 
-struct rxvt_screen {
+struct rxvt_screen
+{
   rxvt_display *display;
   Display *dpy;
   int depth;
@@ -210,7 +217,8 @@ struct rxvt_screen {
   void clear ();
 };
 
-struct rxvt_display : refcounted {
+struct rxvt_display : refcounted
+{
   event_vec<xevent_watcher> xw;
 
   ev::io x_ev; void x_cb (ev::io &w, int revents);
@@ -270,7 +278,8 @@ struct im_watcher : rxvt_watcher, callback<void (void)> {
 };
 #endif
 
-struct xevent_watcher : rxvt_watcher, callback<void (XEvent &)> {
+struct xevent_watcher : rxvt_watcher, callback<void (XEvent &)>
+{
   Window window;
 
   void start (rxvt_display *display, Window window)
@@ -291,7 +300,8 @@ extern refcache<rxvt_display> displays;
 
 typedef unsigned long Pixel;
 
-struct rgba {
+struct rgba
+{
   unsigned short r, g, b, a;
 
   enum { MIN_CC = 0x0000, MAX_CC  = 0xffff };
@@ -304,7 +314,8 @@ struct rgba {
   { }
 };
 
-struct rxvt_color {
+struct rxvt_color
+{
 #if XFT
   XftColor c;
 #else
