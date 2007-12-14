@@ -26,6 +26,7 @@ DUMB: support tex fonts
           fixes a problem with urxvt not refreshing.
         - the text blink callback was called even when no blinking
           text was visible.
+        - pre-8.4 slipwheeling behaviour has been reinstated.
 
 8.7  Sun Nov 25 10:23:49 CET 2007
         - update libev with an important bugfix that would cause crashes
