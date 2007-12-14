@@ -1760,7 +1760,7 @@ rxvt_term::update_background ()
     {
       update_background_ev.stop ();
 
-      if (!bgPixmap.need_client_side_rendering())
+      if (!bgPixmap.need_client_side_rendering ())
         update_background_ev.start (.05);
       else if (bgPixmap.flags & bgPixmap_t::blurNeeded)
         update_background_ev.start (.20); /* very slow !!! */
