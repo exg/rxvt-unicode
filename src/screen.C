@@ -1874,6 +1874,7 @@ rxvt_term::bell_cb (ev::timer &w, int revents)
 {
   rvideo_bell = false;
   scr_rvideo_mode (rvideo_mode);
+  refresh_check ();
 }
 #endif
 
