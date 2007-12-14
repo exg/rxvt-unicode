@@ -81,6 +81,19 @@ typedef struct termios ttymode_t;
 # define STDERR_FILENO  2
 #endif
 
+#if !defined (EACCESS) && defined(EAGAIN)
+# define EACCESS EAGAIN
+#endif
+
+#ifndef EXIT_SUCCESS            /* missing from <stdlib.h> */
+# define EXIT_SUCCESS           0       /* exit function success */
+# define EXIT_FAILURE           1       /* exit function failure */
+#endif
+
+#ifndef PATH_MAX
+# define PATH_MAX 16384
+#endif
+
 /****************************************************************************/
 
 // exception thrown on fatal (per-instance) errors
@@ -212,17 +225,6 @@ struct mouse_event {
 
 #if defined (NO_MOUSE_REPORT) && !defined (NO_MOUSE_REPORT_SCROLLBAR)
 # define NO_MOUSE_REPORT_SCROLLBAR 1
-#endif
-
-/* now look for other badly set stuff */
-
-#if !defined (EACCESS) && defined(EAGAIN)
-# define EACCESS EAGAIN
-#endif
-
-#ifndef EXIT_SUCCESS            /* missing from <stdlib.h> */
-# define EXIT_SUCCESS           0       /* exit function success */
-# define EXIT_FAILURE           1       /* exit function failure */
 #endif
 
 #define scrollBar_esc           30
@@ -595,10 +597,6 @@ enum {
 #define KBUFSZ                 512     // size of keyboard mapping buffer
 #define CBUFSIZ                2048    // size of command buffer
 #define UBUFSIZ                2048    // character buffer
-
-#ifndef PATH_MAX
-# define PATH_MAX 16384
-#endif
 
 #if ENABLE_FRILLS
 # include <X11/Xmd.h>
