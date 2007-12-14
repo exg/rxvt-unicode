@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2007-11-25" "8.7" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2007-12-14" "8.7" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -154,7 +154,10 @@ This document contains the \s-1FAQ\s0, the \s-1RXVT\s0 \s-1TECHNICAL\s0 \s-1REFE
 all escape sequences, and other background information.
 .PP
 The newest version of this document is also available on the World Wide Web at
-<http://cvs.schmorp.de/browse/rxvt\-unicode/doc/rxvt.7.html>.
+<http://pod.tst.eu/http://cvs.schmorp.de/rxvt\-unicode/doc/rxvt.7.pod>.
+.PP
+The main manual page for @@RXVT_NAME@@ itself is available at
+<http://pod.tst.eu/http://cvs.schmorp.de/rxvt\-unicode/doc/rxvt.1.pod>.
 .SH "RXVT\-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS"
 .IX Header "RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS"
 .Sh "Meta, Features & Commandline Issues"
@@ -2553,8 +2556,8 @@ disable resource fallback use \-\-disable\-fallback.
 .IX Item "--with-res-name=NAME (default: urxvt)"
 Use the given name as default application name when
 reading resources. Specify \-\-with\-res\-name=rxvt to replace rxvt.
-.IP "\-\-with\-res\-class=CLASS /default: URxvt)" 4
-.IX Item "--with-res-class=CLASS /default: URxvt)"
+.IP "\-\-with\-res\-class=CLASS (default: URxvt)" 4
+.IX Item "--with-res-class=CLASS (default: URxvt)"
 Use the given class as default application class
 when reading resources. Specify \-\-with\-res\-class=Rxvt to replace
 rxvt.
@@ -2606,10 +2609,6 @@ Add support for an Xterm-like scrollbar.
 Add support for a very unobtrusive, plain-looking scrollbar that
 is the favourite of the rxvt-unicode author, having used it for
 many years.
-.IP "\-\-enable\-ttygid (default: off)" 4
-.IX Item "--enable-ttygid (default: off)"
-Change tty device setting to group \*(L"tty\*(R" \- only use this if
-your system uses this type of security.
 .IP "\-\-disable\-backspace\-key" 4
 .IX Item "--disable-backspace-key"
 Removes any handling of the backspace key by us \- let the X server do it.
@@ -2695,6 +2694,9 @@ requires \-\-enable\-mousewheel to also be specified.
 Add smart growth/shrink behaviour when resizing.
 This should keep the window corner which is closest to a corner of
 the screen in a fixed position.
+.IP "\-\-enable\-text\-blink (default: on)" 4
+.IX Item "--enable-text-blink (default: on)"
+Add support for blinking text.
 .IP "\-\-enable\-pointer\-blank (default: on)" 4
 .IX Item "--enable-pointer-blank (default: on)"
 Add support to have the pointer disappear when typing or inactive.

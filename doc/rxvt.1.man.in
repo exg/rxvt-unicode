@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2007-11-23" "8.6" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2007-12-14" "8.7" "RXVT-UNICODE"
 .SH "NAME"
 rxvt\-unicode (ouR XVT, unicode) \- (a VT102 emulator for the X window system)
 .SH "SYNOPSIS"
@@ -142,12 +142,15 @@ emulator intended as an \fIxterm\fR(1) replacement for users who do not
 require features such as Tektronix 4014 emulation and toolkit-style
 configurability. As a result, \fBrxvt-unicode\fR uses much less swap space \*(--
 a significant advantage on a machine serving many X sessions.
+.PP
+This document is also available on the World-Wide-Web at
+<http://pod.tst.eu/http://cvs.schmorp.de/rxvt\-unicode/doc/rxvt.1.pod>.
 .SH "FREQUENTLY ASKED QUESTIONS"
 .IX Header "FREQUENTLY ASKED QUESTIONS"
 See @@RXVT_NAME@@(7) (try \f(CW\*(C`man 7 @@RXVT_NAME@@\*(C'\fR) for a list of
 frequently asked questions and answer to them and some common
 problems. That document is also accessible on the World-Wide-Web at
-<http://cvs.schmorp.de/browse/rxvt\-unicode/doc/rxvt.7.html>.
+<http://pod.tst.eu/http://cvs.schmorp.de/rxvt\-unicode/doc/rxvt.7.pod>.
 .SH "RXVT-UNICODE VS. RXVT"
 .IX Header "RXVT-UNICODE VS. RXVT"
 Unlike the original rxvt, \fBrxvt-unicode\fR stores all text in Unicode
@@ -159,7 +162,7 @@ like tibetan or devanagari. Don't expect pretty output when using these
 scripts. Most other scripts, latin, cyrillic, kanji, thai etc. should work
 fine, though. A somewhat difficult case are right-to-left scripts, such
 as hebrew: \fBrxvt-unicode\fR adopts the view that bidirectional algorithms
-belong into the application, not the terminal emulator (too many things \*(--
+belong in the application, not the terminal emulator (too many things \*(--
 such as cursor-movement while editing \*(-- break otherwise), but that might
 change.
 .PP
@@ -234,12 +237,10 @@ Turn on/off jump scrolling (allow multiple lines per refresh); resource \fBjumpS
 Turn on/off skip scrolling (allow multiple screens per refresh); resource \fBskipScroll\fR.
 .IP "\fB\-tr\fR|\fB+tr\fR" 4
 .IX Item "-tr|+tr"
-Turn on/off illusion of a transparent window background. Obsolete form of it is
-\&\fB\-ip\fR and it should not be used anymore; resource \fBtransparent\fR.
+Turn on/off illusion of a transparent window background; resource \fBtransparent\fR.
 .Sp
-\&\fIPlease note that old resource name of \f(BIinheritPixmap\fI is obsolete and should be
-changed to \f(BItransparent\fI. Backwards compatibility support for \f(BIinheritPixmap\fI will
-be phased out in future versions of rxvt!\fR
+\&\fB\-ip\fR is still accepted as an obsolete alias but will be removed in
+future versions.
 .Sp
 \&\fIPlease address all transparency related issues to Sasha Vasko at
 sasha@aftercode.net. Read the \s-1FAQ\s0 (man 7 @@RXVT_NAME@@)!\fR
@@ -493,8 +494,8 @@ for more info.
 .IX Item "-tcw"
 Change the meaning of triple-click selection with the left mouse
 button. Only effective when the original (non\-perl) selection code is
-in\-use. Instead of selecting a full line it will extend the selection the
-end of the logical line only. resource \fBtripleclickwords\fR.
+in\-use. Instead of selecting a full line it will extend the selection to
+the end of the logical line only. resource \fBtripleclickwords\fR.
 .IP "\fB\-insecure\fR" 4
 .IX Item "-insecure"
 Enable \*(L"insecure\*(R" mode, which currently enables most of the escape
@@ -574,7 +575,8 @@ entries and will not tinker with pty/tty permissions \- you have to do that
 yourself if you want that.
 .Sp
 As an extremely special case, specifying \f(CW\*(C`\-1\*(C'\fR will completely suppress
-pty/tty operations.
+pty/tty operations, which is probably only useful in conjunction with some
+perl extension that manages the terminal.
 .Sp
 Here is a example in perl that illustrates how this option can be used (a
 longer example is in \fIdoc/pty\-fd\fR):
@@ -600,10 +602,11 @@ longer example is in \fIdoc/pty\-fd\fR):
 .IX Item "-pe string"
 Comma-separated list of perl extension scripts to use (or not to use) in
 this terminal instance. See resource \fBperl-ext\fR for details.
-.SH "RESOURCES (available also as long\-options)"
-.IX Header "RESOURCES (available also as long-options)"
+.SH "RESOURCES"
+.IX Header "RESOURCES"
 Note: `@@RXVT_NAME@@ \-\-help' gives a list of all resources (long
-options) compiled into your version.
+options) compiled into your version. All resources are also available as
+long\-options.
 .PP
 You can set and change the resources using X11 tools like \fBxrdb\fR. Many
 distribution do also load settings from the \fB~/.Xresources\fR file when X
@@ -714,14 +717,15 @@ option \fB\-ss\fR.
 \&\fBFalse\fR: specify that everything is to be displayed, even
 if the refresh is too fast for the human eye to read anything (or the
 monitor to display anything); option \fB+ss\fR.
-.IP "\fBinheritPixmap:\fR \fIboolean\fR" 4
-.IX Item "inheritPixmap: boolean"
-\&\fBTrue\fR: make the background inherit the parent windows' pixmap, giving
-artificial transparency. \fBFalse\fR: do not inherit the parent windows'
-pixmap.
+.IP "\fBtransparent:\fR \fIboolean\fR" 4
+.IX Item "transparent: boolean"
+Turn on/off illusion of a transparent window background.
 .Sp
-\&\fIPlease note that transparency of any kind if completely unsupported by
-the author. Don't bug him with installation questions!\fR
+\&\fBinheritPixmap\fR is still accepted as an obsolete alias but will be removed in
+future versions.
+.Sp
+\&\fIPlease address all transparency related issues to Sasha Vasko at
+sasha@aftercode.net. Read the \s-1FAQ\s0 (man 7 @@RXVT_NAME@@)!\fR
 .IP "\fBfading:\fR \fInumber\fR" 4
 .IX Item "fading: number"
 Fade the text by the given percentage when focus is lost; option \fB\-fade\fR.

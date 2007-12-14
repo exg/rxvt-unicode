@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 3"
-.TH @@RXVT_NAME@@ 3 "2007-11-19" "8.4" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 3 "2007-12-14" "8.7" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@perl \- rxvt\-unicode's embedded perl interpreter
 .SH "SYNOPSIS"
@@ -309,7 +309,7 @@ See perlre for more info about perl regular expression syntax.
 A support package that tries to make editing with readline easier. At
 the moment, it reacts to clicking shift-left mouse button by trying to
 move the text cursor to this position. It does so by generating as many
-cursor-left or cursor-right keypresses as required (the this only works
+cursor-left or cursor-right keypresses as required (this only works
 for programs that correctly support wide characters).
 .Sp
 To avoid too many false positives, this is only done when:

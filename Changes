@@ -28,6 +28,8 @@ DUMB: support tex fonts
           text was visible.
         - pre-8.4 slipwheeling behaviour has been reinstated, with
           some minor improvements.
+        - streamlined x events processing to only flush once per
+          display and not once per terminal window.
         - quite a bit of minor code cleanups and codesize optimisations.
 
 8.7  Sun Nov 25 10:23:49 CET 2007
