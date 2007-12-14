@@ -1116,8 +1116,7 @@ rxvt_term::sel_scroll_cb (ev::timer &w, int revents)
 void
 rxvt_term::slip_wheel_cb (ev::timer &w, int revents)
 {
-  if (mouse_slip_wheel_speed < 0 ? scr_page (DN, -mouse_slip_wheel_speed)
-                                 : scr_page (UP,  mouse_slip_wheel_speed))
+  if (scr_page (mouse_slip_wheel_speed < 0 ? DN : UP, abs (mouse_slip_wheel_speed)))
     want_refresh = 1;
 
   if (view_start == top_row || view_start == 0 || mouse_slip_wheel_speed == 0)
