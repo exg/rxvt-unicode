@@ -114,7 +114,8 @@ struct bgPixmap_t
   bool need_client_side_rendering ();
   void apply ();
   bool render ();
-  void invalidate () {
+  void invalidate ()
+  {
     if (!(flags & isInvalid))
       {
         flags |= isInvalid;

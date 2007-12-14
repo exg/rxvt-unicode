@@ -1774,7 +1774,9 @@ rxvt_term::update_background ()
 void
 rxvt_term::update_background_cb (ev::timer &w, int revents)
 {
+  make_current ();
   bgPixmap.render ();
+  refresh_check ();
 }
 
 #endif /* HAVE_BG_PIXMAP */

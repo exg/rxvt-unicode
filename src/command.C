@@ -1213,6 +1213,8 @@ rxvt_term::pty_cb (ev::io &w, int revents)
 
   if (revents & ev::WRITE)
     pty_write ();
+
+  refresh_check ();
 }
 
 void
@@ -2312,8 +2314,6 @@ rxvt_term::cmd_parse ()
           ch = NOCHAR;
         }
     }
-
-  refresh_check ();
 
   return flag;
 }
