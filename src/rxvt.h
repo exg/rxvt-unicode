@@ -657,9 +657,6 @@ typedef struct _mwmhints {
 #define Width2Pixel(n)          ((int32_t)(n) * (int32_t)fwidth)
 #define Height2Pixel(n)         ((int32_t)(n) * (int32_t)fheight)
 
-// for m >= -n, ensure remainder lies between 0..n-1
-#define MOD(m,n) (((m) + (n)) % (n))
-
 #define LINENO(n) MOD (term_start + int(n), total_rows)
 #define ROW(n) row_buf [LINENO (n)]
 

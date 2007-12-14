@@ -101,6 +101,9 @@ int popcount (unsigned int x) CONST;
 #define IN_RANGE_EXC(val,beg,end) \
   ((unsigned int)(val) - (unsigned int)(beg) <  (unsigned int)(end) - (unsigned int)(beg))
 
+// for m >= -n, ensure remainder lies between 0..n-1
+#define MOD(m,n) (((m) + (n)) % (n))
+
 // makes dynamically allocated objects zero-initialised
 struct zero_initialized {
   void *operator new (size_t s);
