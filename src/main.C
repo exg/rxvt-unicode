@@ -187,7 +187,6 @@ rxvt_term::rxvt_term ()
   bell_ev.set             <rxvt_term, &rxvt_term::bell_cb>    (this);
 #endif
   child_ev.set            <rxvt_term, &rxvt_term::child_cb>   (this);
-  prepare_ev.set          <rxvt_term, &rxvt_term::prepare_cb> (this);
   flush_ev.set            <rxvt_term, &rxvt_term::flush_cb>   (this);
   destroy_ev.set          <rxvt_term, &rxvt_term::destroy_cb> (this);
   pty_ev.set              <rxvt_term, &rxvt_term::pty_cb>     (this);
@@ -354,7 +353,7 @@ rxvt_term::destroy ()
       vt_ev.stop (display);
     }
 
-  prepare_ev.stop ();
+  flush_ev.stop ();
   pty_ev.stop ();
 #ifdef CURSOR_BLINK
   cursor_blink_ev.stop ();
@@ -571,8 +570,6 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 
   if (pty->pty >= 0)
     pty_ev.start (pty->pty, ev::READ);
-
-  prepare_ev.start ();
 
   HOOK_INVOKE ((this, HOOK_START, DT_END));
 

@@ -216,6 +216,7 @@ overlay::show ()
   av_push (overlay_av, newSViv ((long)this));
 
   THIS->want_refresh = 1;
+  THIS->refresh_check ();
 }
 
 void
@@ -239,6 +240,7 @@ overlay::hide ()
   overlay_av = 0;
 
   THIS->want_refresh = 1;
+  THIS->refresh_check ();
 }
 
 void overlay::swap ()
@@ -293,6 +295,7 @@ void overlay::set (int x, int y, SV *text, SV *rend)
     }
 
   THIS->want_refresh = 1;
+  THIS->refresh_check ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1226,6 +1229,7 @@ void
 rxvt_term::want_refresh ()
 	CODE:
         THIS->want_refresh = 1;
+	THIS->refresh_check ();
 
 void
 rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0, int start_ofs = 0, int max_len = MAX_COLS)
@@ -1471,7 +1475,7 @@ rxvt_term::option (U8 optval, int set = -1)
           {
             THIS->set_option (optval, set);
 
-            if (THIS->prepare_ev.is_active ()) // avoid doing this before START
+            if (THIS->env_colorfgbg [0]) // avoid doing this before START
               switch (optval)
                 {
                   case Opt_skipBuiltinGlyphs:
@@ -1479,10 +1483,12 @@ rxvt_term::option (U8 optval, int set = -1)
                     THIS->scr_remap_chars ();
                     THIS->scr_touch (true);
                     THIS->want_refresh = 1;
+                    THIS->refresh_check ();
                     break;
 
                   case Opt_cursorUnderline:
                     THIS->want_refresh = 1;
+                    THIS->refresh_check ();
                     break;
 
 #                  case Opt_scrollBar_floating:
@@ -1550,7 +1556,10 @@ rxvt_term::screen_cur (...)
             clamp_it (rc.row, THIS->top_row, THIS->nrow - 1);
 
             if (ix)
-              THIS->want_refresh = 1;
+              {
+                THIS->want_refresh = 1;
+                THIS->refresh_check ();
+              }
           }
 }
 

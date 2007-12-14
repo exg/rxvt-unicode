@@ -289,7 +289,6 @@ rxvt_term::init_vars ()
   pix_colors_unfocused = new rxvt_color [TOTAL_COLORS];
 #endif
 
-
   MEvent.time = CurrentTime;
   MEvent.button = AnyButton;
   want_refresh = 1;

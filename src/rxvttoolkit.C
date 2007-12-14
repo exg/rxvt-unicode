@@ -299,7 +299,8 @@ rxvt_display::rxvt_display (const char *id)
 : refcounted (id)
 , selection_owner (0)
 {
-  x_ev.set<rxvt_display, &rxvt_display::x_cb> (this);
+  x_ev    .set<rxvt_display, &rxvt_display::x_cb    > (this);
+  flush_ev.set<rxvt_display, &rxvt_display::flush_cb> (this);
 }
 
 XrmDatabase
@@ -473,6 +474,7 @@ bool rxvt_display::ref_init ()
   if (!getsockname (fd, (sockaddr *)&sa, &sl))
     is_local = sa.sun_family == AF_UNIX;
 
+  flush_ev.start ();
   x_ev.start (fd, ev::READ);
   fcntl (fd, F_SETFD, FD_CLOEXEC);
 
@@ -569,13 +571,16 @@ void rxvt_display::x_cb (ev::io &w, int revents)
         }
 #endif
     }
-
-  XFlush (dpy);
 }
 
 void rxvt_display::flush ()
 {
-  x_cb (x_ev, ev::READ);
+  XFlush (dpy);
+}
+
+void rxvt_display::flush_cb (ev::prepare &w, int revents)
+{
+  flush ();
 }
 
 void rxvt_display::reg (xevent_watcher *w)

@@ -221,7 +221,8 @@ struct rxvt_display : refcounted
 {
   event_vec<xevent_watcher> xw;
 
-  ev::io x_ev; void x_cb (ev::io &w, int revents);
+  ev::prepare flush_ev; void flush_cb (ev::prepare &w, int revents);
+  ev::io      x_ev    ; void x_cb     (ev::io      &w, int revents);
 
 #ifdef USE_XIM
   refcache<rxvt_xim> xims;

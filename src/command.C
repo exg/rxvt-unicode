@@ -1043,13 +1043,10 @@ rxvt_term::flush ()
   display->flush ();
 }
 
+/* checks wether a refresh is requested and starts the refresh timer */
 void
-rxvt_term::prepare_cb (ev::prepare &w, int revents)
+rxvt_term::refresh_check ()
 {
-  make_current ();
-
-  display->flush ();
-
   if (want_refresh && !flush_ev.is_active ())
     flush_ev.start (1. / 60.); // refresh at max. 60 Hz normally
 }
@@ -1069,6 +1066,7 @@ rxvt_term::cursor_blink_cb (ev::timer &w, int revents)
 {
   hidden_cursor = !hidden_cursor;
   want_refresh = 1;
+  refresh_check ();
 }
 #endif
 
@@ -1080,6 +1078,7 @@ rxvt_term::text_blink_cb (ev::timer &w, int revents)
     {
       hidden_text = !hidden_text;
       want_refresh = 1;
+  refresh_check ();
     }
   else
     w.stop ();
@@ -1092,7 +1091,10 @@ rxvt_term::cont_scroll_cb (ev::timer &w, int revents)
 {
   if ((scrollbar_isUp () || scrollbar_isDn ())
       && scr_page (scrollbar_isUp () ? UP : DN, 1))
-    want_refresh = 1;
+    {
+      want_refresh = 1;
+      refresh_check ();
+    }
   else
     w.stop ();
 }
@@ -1106,6 +1108,7 @@ rxvt_term::sel_scroll_cb (ev::timer &w, int revents)
     {
       selection_extend (selection_save_x, selection_save_y, selection_save_state);
       want_refresh = 1;
+      refresh_check ();
     }
   else
     w.stop ();
@@ -1117,7 +1120,10 @@ void
 rxvt_term::slip_wheel_cb (ev::timer &w, int revents)
 {
   if (scr_changeview (view_start - mouse_slip_wheel_speed))
-    want_refresh = 1;
+    {
+      want_refresh = 1;
+      refresh_check ();
+    }
 
   if (view_start == top_row || view_start == 0 || mouse_slip_wheel_speed == 0)
     {
@@ -1508,6 +1514,7 @@ rxvt_term::x_cb (XEvent &ev)
                 scr_expose (ev.xexpose.x, ev.xexpose.y,
                             ev.xexpose.width, ev.xexpose.height, False);
               }
+
             want_refresh = 1;
           }
         else
@@ -1664,6 +1671,8 @@ rxvt_term::x_cb (XEvent &ev)
         pointer_blank ();
     }
 #endif
+
+  refresh_check ();
 }
 
 void
@@ -1786,6 +1795,8 @@ rxvt_term::rootwin_cb (XEvent &ev)
         break;
     }
 # endif
+
+  refresh_check ();
 }
 #endif
 
@@ -2299,6 +2310,8 @@ rxvt_term::cmd_parse ()
           ch = NOCHAR;
         }
     }
+
+  refresh_check ();
 
   return flag;
 }

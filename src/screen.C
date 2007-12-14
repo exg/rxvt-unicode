@@ -598,14 +598,14 @@ rxvt_term::scr_color (unsigned int color, int fgbg) NOTHROW
  */
 void
 rxvt_term::scr_rendition (int set, int style) NOTHROW
-  {
-    if (set)
-      rstyle |= style;
-    else if (style == ~RS_None)
-      rstyle = DEFAULT_RSTYLE;
-    else
-      rstyle &= ~style;
-  }
+{
+  if (set)
+    rstyle |= style;
+  else if (style == ~RS_None)
+    rstyle = DEFAULT_RSTYLE;
+  else
+    rstyle &= ~style;
+}
 
 /* ------------------------------------------------------------------------- */
 /*
