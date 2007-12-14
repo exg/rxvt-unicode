@@ -1090,8 +1090,8 @@ rxvt_term::text_blink_cb (ev::timer &w, int revents)
 void
 rxvt_term::cont_scroll_cb (ev::timer &w, int revents)
 {
-  if ((scrollbar_isUp() || scrollbar_isDn()) &&
-      scr_page (scrollbar_isUp() ? UP : DN, 1))
+  if ((scrollbar_isUp () || scrollbar_isDn ())
+      && scr_page (scrollbar_isUp () ? UP : DN, 1))
     want_refresh = 1;
   else
     w.stop ();
@@ -1116,7 +1116,7 @@ rxvt_term::sel_scroll_cb (ev::timer &w, int revents)
 void
 rxvt_term::slip_wheel_cb (ev::timer &w, int revents)
 {
-  if (scr_page (mouse_slip_wheel_speed < 0 ? DN : UP, abs (mouse_slip_wheel_speed)))
+  if (scr_changeview (view_start - mouse_slip_wheel_speed))
     want_refresh = 1;
 
   if (view_start == top_row || view_start == 0 || mouse_slip_wheel_speed == 0)
