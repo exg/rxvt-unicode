@@ -247,7 +247,7 @@ for details.
 
 =item B<-is>|B<+is>
 
-Compile I<font-styles>: Bold/Italic font styles imply high intensity
+Compile I<font-styles>: Bold/Blink font styles imply high intensity
 foreground/background (default). See resource B<intensityStyles> for
 details.
 
@@ -808,7 +808,7 @@ text font will being used for the given style.
 =item B<intensityStyles:> I<boolean>
 
 When font styles are not enabled, or this option is enabled (B<True>,
-option B<-is>, the default), bold and italic font styles imply high
+option B<-is>, the default), bold/blink font styles imply high
 intensity foreground/background colours. Disabling this option (B<False>,
 option B<+is>) disables this behaviour, the high intensity colours are not
 reachable.
