@@ -1905,7 +1905,7 @@ rxvt_term::scr_bell () NOTHROW
     {
       rvideo_bell = true;
       scr_rvideo_mode (rvideo_mode);
-      display->flush ();
+      flush ();
 
       bell_ev.start (VISUAL_BELL_DURATION);
     }
@@ -2265,8 +2265,7 @@ rxvt_term::scr_refresh () NOTHROW
               bool invert = rend & RS_RVid;
 
 #ifndef NO_BOLD_UNDERLINE_REVERSE
-              if (rend & RS_Bold
-                  && fore == Color_fg)
+              if (rend & RS_Bold && fore == Color_fg)
                 {
                   if (ISSET_PIXCOLOR (Color_BD))
                     fore = Color_BD;
@@ -2276,8 +2275,7 @@ rxvt_term::scr_refresh () NOTHROW
 # endif
                 }
 
-              if (rend & RS_Italic
-                  && fore == Color_fg)
+              if (rend & RS_Italic && fore == Color_fg)
                 {
                   if (ISSET_PIXCOLOR (Color_IT))
                     fore = Color_IT;
@@ -2477,9 +2475,11 @@ rxvt_term::scr_recolour () NOTHROW
 #ifdef HAVE_BG_PIXMAP
   bgPixmap.apply ();
 #else
+
   XSetWindowBackground (dpy, parent[0], pix_colors[Color_border]);
   XClearWindow (dpy, parent[0]);
   XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
+
 # if HAVE_SCROLLBARS
   if (scrollBar.win)
    {
@@ -2488,11 +2488,12 @@ rxvt_term::scr_recolour () NOTHROW
      scrollbar_show (0);
    }
 # endif
+
   scr_clear ();
   scr_touch (true);
   want_refresh = 1;
-#endif
 
+#endif
 }
 
 /* ------------------------------------------------------------------------- */

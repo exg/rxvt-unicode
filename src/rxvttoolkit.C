@@ -575,12 +575,13 @@ void rxvt_display::x_cb (ev::io &w, int revents)
 
 void rxvt_display::flush ()
 {
-  XFlush (dpy);
+  flush_ev.start ();
 }
 
 void rxvt_display::flush_cb (ev::prepare &w, int revents)
 {
-  flush ();
+  w.stop ();
+  XFlush (dpy);
 }
 
 void rxvt_display::reg (xevent_watcher *w)
