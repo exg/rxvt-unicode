@@ -573,11 +573,6 @@ void rxvt_display::x_cb (ev::io &w, int revents)
     }
 }
 
-void rxvt_display::flush ()
-{
-  flush_ev.start ();
-}
-
 void rxvt_display::flush_cb (ev::prepare &w, int revents)
 {
   w.stop ();
