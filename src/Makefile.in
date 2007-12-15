@@ -204,10 +204,6 @@ rxvtfont.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 rxvtfont.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h salloc.h
 rxvtfont.o: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
 rxvtfont.o: table/linedraw.h
-rxvtperl.o: ../config.h ev_cpp.h rxvt.h rxvtlib.h optinc.h feature.h
-rxvtperl.o: encoding.h rxvtutil.h rxvtfont.h rxvttoolkit.h callback.h
-rxvtperl.o: salloc.h libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
-rxvtperl.o: keyboard.h perlxsi.c ./iom_perl.h
 rxvttoolkit.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
 rxvttoolkit.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h callback.h
 rxvttoolkit.o: salloc.h libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
