@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2007-12-14" "8.7" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2007-12-15" "8.8" "RXVT-UNICODE"
 .SH "NAME"
 @@RXVT_NAME@@c \- control the @@RXVT_NAME@@d daemon
 .SH "SYNOPSIS"
