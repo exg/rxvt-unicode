@@ -286,6 +286,7 @@ rxvt_term::~rxvt_term ()
 #ifdef HAVE_BG_PIXMAP
   bgPixmap.destroy ();
 #endif
+  display->flush (); /* ideally .put should do this */
   displays.put (display);
 
   scr_release ();

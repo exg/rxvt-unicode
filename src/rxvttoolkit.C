@@ -503,6 +503,7 @@ rxvt_display::~rxvt_display ()
   XFreeCursor (dpy, blank_cursor);
 #endif
   x_ev.stop ();
+  flush_ev.stop ();
 #ifdef USE_XIM
   xims.clear ();
 #endif
