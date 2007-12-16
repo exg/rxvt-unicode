@@ -176,4 +176,5 @@ libev/ev_poll.c
 libev/ev_epoll.c
 libev/ev_kqueue.c
 libev/ev_port.c
+libev/libev.m4
 
