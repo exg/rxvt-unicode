@@ -1627,7 +1627,7 @@ automatically be updated.
 C<$text> is in a special encoding: tabs and wide characters that use more
 than one cell when displayed are padded with C<$urxvt::NOCHAR> (chr 65535)
 characters. Characters with combining characters and other characters that
-do not fit into the normal tetx encoding will be replaced with characters
+do not fit into the normal text encoding will be replaced with characters
 in the private use area.
 
 You have to obey this encoding when changing text. The advantage is
