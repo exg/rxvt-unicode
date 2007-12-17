@@ -52,7 +52,6 @@
 #ifndef NO_DELETE_KEY
   def (delete_key)
 #endif
-  def (selectstyle)
 #ifdef PRINTPIPE
   def (print_pipe)
 #endif

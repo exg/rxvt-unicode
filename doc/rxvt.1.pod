@@ -813,13 +813,6 @@ intensity foreground/background colours. Disabling this option (B<False>,
 option B<+is>) disables this behaviour, the high intensity colours are not
 reachable.
 
-=item B<selectstyle:> I<mode>
-
-Set mouse selection style to B<old> which is 2.20, B<oldword> which
-is xterm style with 2.20 old word selection, or anything else which
-gives xterm style selection. Only effective when the original (non-perl)
-selection code is in use.
-
 =item B<scrollstyle:> I<mode>
 
 Set scrollbar style to B<rxvt>, B<plain>, B<next> or B<xterm>. B<plain> is

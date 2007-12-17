@@ -241,7 +241,6 @@ optList[] = {
 #ifndef NO_DELETE_KEY
               RSTRG (Rs_delete_key, "deletekey", "string"),
 #endif
-              RSTRG (Rs_selectstyle, "selectstyle", "mode"),
 #ifdef PRINTPIPE
               RSTRG (Rs_print_pipe, "print-pipe", "string"),
 #endif

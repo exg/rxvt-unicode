@@ -1287,7 +1287,7 @@ to see the actual list:
   preeditType print_pipe pty_fd reverseVideo saveLines scrollBar
   scrollBar_align scrollBar_floating scrollBar_right scrollBar_thickness
   scrollTtyKeypress scrollTtyOutput scrollWithBuffer scrollstyle
-  secondaryScreen secondaryScroll selectstyle shade term_name title
+  secondaryScreen secondaryScroll shade term_name title
   transient_for transparent transparent_all tripleclickwords utmpInhibit
   visualBell
 
