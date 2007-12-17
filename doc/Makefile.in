@@ -72,7 +72,7 @@ rxvtperl.3.pod: ../src/urxvt.pm
 
 tags allbin:
 
-alldoc:	rxvt.1.man.in rxvt.7.man.in rxvtc.1.man.in rxvtd.1.man.in rxvtperl.3.man.in \
+alldoc: rxvt.1.man.in rxvt.7.man.in rxvtc.1.man.in rxvtd.1.man.in rxvtperl.3.man.in \
 	../README.configure ../README.FAQ
 	infocmp -C rxvt-unicode >$(srcdir)/etc/rxvt-unicode.termcap
 
