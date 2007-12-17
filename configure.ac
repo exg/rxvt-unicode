@@ -484,7 +484,6 @@ AC_CHECK_HEADERS( \
 	stdint.h \
 	wchar.h \
 	cwchar \
-	clocale \
 )
 
 dnl# check to allow both <termios.h> and <sys/ioctl.h>
