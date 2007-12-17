@@ -14,9 +14,6 @@
 @include_sys_ioctl_h@
 @include_sys_strredir_h@
 
-#include <sys/wait.h>
-#include <sys/stat.h>
-
 #if HAVE_CWCHAR
 # include <cwchar>
 #elif HAVE_WCHAR_H
