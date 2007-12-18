@@ -305,5 +305,35 @@ rxvt_freecommastring (char **cs) NOTHROW
   free (cs);
 }
 
+void *
+rxvt_malloc (size_t size)
+{
+  void *p = malloc (size);
 
+  if (!p)
+    rxvt_fatal ("memory allocation failure. aborting.\n");
 
+  return p;
+}
+
+void *
+rxvt_calloc (size_t number, size_t size)
+{
+  void *p = calloc (number, size);
+
+  if (!p)
+    rxvt_fatal ("memory allocation failure. aborting.\n");
+
+  return p;
+}
+
+void *
+rxvt_realloc (void *ptr, size_t size)
+{
+  void *p = realloc (ptr, size);
+
+  if (!p)
+    rxvt_fatal ("memory allocation failure. aborting.\n");
+
+  return p;
+}
