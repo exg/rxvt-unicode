@@ -1732,7 +1732,7 @@ rxvt_term::update_background ()
         refresh = .20; /* very slow !!! */
       else
         refresh = .07;
-        update_background_ev.start (refresh);
+      update_background_ev.start (refresh);
     }
 
   return 0;
