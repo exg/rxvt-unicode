@@ -414,6 +414,8 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 #endif
 
 #ifdef HAVE_AFTERIMAGE
+  set_application_name ((char*)rs[Rs_name]);
+  set_output_threshold (OUTPUT_LEVEL_WARNING);
   asv = create_asvisual_for_id (dpy, display->screen, depth, XVisualIDFromVisual (visual), cmap, NULL);
 #endif
   free (r_argv);
