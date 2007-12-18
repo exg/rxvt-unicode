@@ -299,7 +299,6 @@ rxvt_term::init_vars ()
   ext_bwidth = EXTERNALBORDERWIDTH;
   lineSpace = LINESPACE;
   saveLines = SAVELINES;
-  numpix_colors = TOTAL_COLORS;
 
   refresh_type = SLOW_REFRESH;
 
