@@ -1759,14 +1759,16 @@ rxvt_term::update_background ()
     bgPixmap.render ();
   else
     {
+      ev_tstamp refresh;
       update_background_ev.stop ();
 
       if (!bgPixmap.need_client_side_rendering ())
-        update_background_ev.start (.05);
+        refresh = .05;
       else if (bgPixmap.flags & bgPixmap_t::blurNeeded)
-        update_background_ev.start (.20); /* very slow !!! */
+        refresh = .20; /* very slow !!! */
       else
-        update_background_ev.start (.07);
+        refresh = .07;
+        update_background_ev.start (refresh);
     }
 
   return 0;
