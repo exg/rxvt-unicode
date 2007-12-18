@@ -200,7 +200,7 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
 
   int width = wcswidth (fname, wcslen (fname));
 
-  max_it (width, 8+5); // for char + hey
+  max_it (width, 8+5); // for char + hex
   max_it (width, strlen (attr));
 
   if (y >= 0)
