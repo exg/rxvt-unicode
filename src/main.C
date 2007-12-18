@@ -1679,7 +1679,7 @@ rxvt_term::get_window_origin (int &x, int &y)
 {
   Window cr;
   XTranslateCoordinates (dpy, parent[0], display->root, 0, 0, &x, &y, &cr);
-/*  fprintf( stderr, "origin is %+d%+d\n", x, y);*/
+/*  fprintf (stderr, "origin is %+d%+d\n", x, y);*/
 }
 
 Pixmap

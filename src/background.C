@@ -437,7 +437,7 @@ bgPixmap_t::set_geometry (const char *geom)
       flags = new_flags;
       changed++;
     }
-//fprintf( stderr, "flags = %lX, scale = %ux%u, align=%+d%+d\n",
+//fprintf (stderr, "flags = %lX, scale = %ux%u, align=%+d%+d\n",
 //         flags, h_scale, v_scale, h_align, v_align);
   return (changed > 0);
 }
@@ -986,7 +986,7 @@ bgPixmap_t::make_transparency_pixmap ()
                       c.g = (c.g * shade) / 100;
                       c.b = (c.b * shade) / 100;
                     }
-                  else if( shade > 100 && shade < 200)
+                  else if (shade > 100 && shade < 200)
                     {
                       c.r = (c.r * (200 - shade)) / 100;
                       c.g = (c.g * (200 - shade)) / 100;
@@ -1203,9 +1203,9 @@ bgPixmap_t::render ()
           if (pmap_depth != result->depth)
             {
               /* Bad Match error will ensue ! stupid X !!!! */
-              if( result->depth == 24 && pmap_depth == 32)
+              if (result->depth == 24 && pmap_depth == 32)
                 result->depth = 32;
-              else if( result->depth == 32 && pmap_depth == 24)
+              else if (result->depth == 32 && pmap_depth == 24)
                 result->depth = 24;
               else
                 {
