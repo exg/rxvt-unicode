@@ -20,6 +20,7 @@ DUMB: support tex fonts
 	- fix redraw bug in xterm scrollbar with -sr (reported by Mikachu).
 	- fix the issue where urxvtd would not immediately close a window
           when the command exited but only on the next X event.
+        - correctly provide dependencies for libev (µikachu).
 
 8.8  Sat Dec 15 19:40:39 CET 2007
         - option -C was aliased to all unsupported options, activating
