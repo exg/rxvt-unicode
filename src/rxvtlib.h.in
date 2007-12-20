@@ -32,9 +32,7 @@ extern "C" {
 
 struct rxvt_fontset;
 struct rxvt_color;
-struct rxvt_vars;               /* defined later on */
 struct rxvt_term;
-struct rxvt_im;
 struct rxvt_drawable;
 
 typedef struct rxvt_term *rxvt_t;
