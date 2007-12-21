@@ -1148,7 +1148,7 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
   /*
    * standard System V termios interface
    */
-  if (GET_TERMIOS (STDIN_FILENO, tio) < 0)
+  if (tcgetattr (STDIN_FILENO, tio) < 0)
     {
       // return error - use system defaults,
       // where possible, and zero elsewhere
@@ -1341,7 +1341,10 @@ rxvt_term::run_command (const char *const *argv)
     er = -1;
 
   rxvt_get_ttymode (&tio, er);
-  SET_TERMIOS (pty->tty, &tio);       /* init terminal attributes */
+  /* init terminal attributes */
+  cfsetospeed (&tio, BAUDRATE);
+  cfsetispeed (&tio, BAUDRATE);
+  tcsetattr (pty->tty, TCSANOW, &tio);
   pty->set_utf8_mode (enc_utf8);
 
   /* set initial window size */
