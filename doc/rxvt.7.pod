@@ -486,7 +486,7 @@ To get a selection that is very similar to the old code, try this pattern:
 
    URxvt.selection.pattern-0: ([^"&'()*,;<=>?@[\\\\]^`{|})]+)
 
-Please also note that the I<LeftClick Shift-LeftClik> combination also
+Please also note that the I<LeftClick Shift-LeftClick> combination also
 selects words like the old code.
 
 =head3 I don't like the new selection/popups/hotkeys/perl, how do I change/disable it?
