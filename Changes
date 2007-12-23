@@ -19,9 +19,12 @@ DUMB: support tex fonts
 
 	- fix the issue where urxvtd would not immediately close a window
           when the command exited but only on the next X event.
+        - fix the issue where making a selection in one urxvtd window
+          would not clear it visually in another.
         - changed terminfo file not to use application keypad mode.
 	- fix redraw bug in xterm scrollbar with -sr (reported by Mikachu).
         - correctly provide dependencies for libev (µikachu).
+        - minor code reorganisations and cleanups.
 
 8.8  Sat Dec 15 19:40:39 CET 2007
         - option -C was aliased to all unsupported options, activating

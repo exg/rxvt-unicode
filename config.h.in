@@ -49,9 +49,6 @@
 /* Define if you want to use libAfterImage for image processing */
 #undef HAVE_AFTERIMAGE
 
-/* Define to 1 if you have the <clocale> header file. */
-#undef HAVE_CLOCALE
-
 /* Define to 1 if you have the `clock_gettime' function. */
 #undef HAVE_CLOCK_GETTIME
 
@@ -99,6 +96,9 @@
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the `nanonsleep' function. */
+#undef HAVE_NANONSLEEP
 
 /* Define if nl_langinfo(CODESET) works */
 #undef HAVE_NL_LANGINFO
