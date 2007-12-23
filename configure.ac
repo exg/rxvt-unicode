@@ -722,13 +722,13 @@ if test x$support_perl = xyes; then
      save_LIBS="$LIBS"
      CXXFLAGS="$CXXFLAGS `$PERL -MExtUtils::Embed -e ccopts`"
      LIBS="$LIBS `$PERL -MExtUtils::Embed -e ldopts`"
-     AC_TRY_LINK([
+     AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <EXTERN.h>
 #include <perl.h>
 #include <XSUB.h>
-],[
+]], [[
      PerlInterpreter *perl = perl_alloc ();
-],[rxvt_perl_link=yes],[rxvt_perl_link=no])
+]])],[rxvt_perl_link=yes],[rxvt_perl_link=no])
      CXXFLAGS="$save_CXXFLAGS"
      LIBS="$save_LIBS"
 
