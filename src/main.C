@@ -172,7 +172,7 @@ rxvt_term::rxvt_term ()
   slip_wheel_ev.set       <rxvt_term, &rxvt_term::slip_wheel_cb>   (this);
 #endif
 #if ENABLE_TRANSPARENCY || ENABLE_PERL
-  rootwin_ev.set          <rxvt_term, &rxvt_term::x_cb>       (this),
+  rootwin_ev.set          <rxvt_term, &rxvt_term::rootwin_cb> (this),
 #endif
 #ifdef HAVE_SCROLLBARS
   scrollbar_ev.set        <rxvt_term, &rxvt_term::x_cb>       (this),
@@ -523,12 +523,14 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
     if (option (Opt_transparent))
       {
         bgPixmap.set_transparent ();
+
 #ifdef HAVE_AFTERIMAGE
         if (rs [Rs_blurradius])
           bgPixmap.set_blur_radius (rs [Rs_blurradius]);
 #endif
         if (ISSET_PIXCOLOR (Color_tint))
           bgPixmap.set_tint (pix_colors_focused [Color_tint]);
+
         if (rs [Rs_shade])
           bgPixmap.set_shade (rs [Rs_shade]);
 
@@ -539,11 +541,11 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 #endif
 
 #ifdef BG_IMAGE_FROM_FILE
-    if (rs[Rs_backgroundPixmap] != NULL)
+    if (rs[Rs_backgroundPixmap])
       {
         const char *p = rs[Rs_backgroundPixmap];
 
-        if ((p = strchr (p, ';')) != NULL)
+        if ((p = strchr (p, ';')) != 0)
           {
             p++;
             bgPixmap.set_geometry (p);
@@ -1706,25 +1708,29 @@ rxvt_term::get_pixmap_property (int prop_id)
 #ifdef HAVE_BG_PIXMAP
 # if TRACE_PIXMAPS
 #  undef update_background
-int rxvt_term::trace_update_background (const char *file, int line)
+void
+rxvt_term::trace_update_background (const char *file, int line)
 {
   fprintf (stderr, "%s:%d:update_background()\n", file, line);
   update_background ();
 }
 # endif
 
-int
+void
 rxvt_term::update_background ()
 {
   bgPixmap.invalidate ();
 
   /* no chance of real time refresh if we are blurring! */
-  if (bgPixmap.invalid_since + 0.5 < ev::now () && !(bgPixmap.flags & bgPixmap_t::blurNeeded))
-    bgPixmap.render ();
+  if (bgPixmap.invalid_since + 0.50 < ev::now ()
+      && !(bgPixmap.flags & bgPixmap_t::blurNeeded))
+    {
+      update_background_ev.stop ();
+      bgPixmap.render ();
+    }
   else
     {
       ev_tstamp refresh;
-      update_background_ev.stop ();
 
       if (!bgPixmap.need_client_side_rendering ())
         refresh = .05;
@@ -1732,10 +1738,9 @@ rxvt_term::update_background ()
         refresh = .20; /* very slow !!! */
       else
         refresh = .07;
+
       update_background_ev.start (refresh);
     }
-
-  return 0;
 }
 
 void

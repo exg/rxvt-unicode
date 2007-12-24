@@ -781,6 +781,7 @@ bgPixmap_t::set_tint (rxvt_color &new_tint)
       flags = (flags & ~tintFlags) | new_flags | tintSet;
       return true;
     }
+
   return false;
 }
 
@@ -794,6 +795,7 @@ bgPixmap_t::unset_tint ()
      flags = (flags&~tintFlags)|new_flags;
      return true;
     }
+
   return false;
 }
 
@@ -803,7 +805,7 @@ bgPixmap_t::set_shade (const char *shade_str)
   int new_shade = (shade_str) ? atoi (shade_str) : 0;
 
   if (new_shade < 0 && new_shade > -100)
-		new_shade = 200 - (100 + new_shade);
+    new_shade = 200 - (100 + new_shade);
   else if (new_shade == 100)
     new_shade = 0;
 
@@ -814,6 +816,7 @@ bgPixmap_t::set_shade (const char *shade_str)
       flags = (flags & (~tintFlags | tintSet)) | new_flags;
       return true;
     }
+
   return false;
 }
 
@@ -913,6 +916,7 @@ bgPixmap_t::make_transparency_pixmap ()
                   success = true;
                 }
             }
+
           XDestroyWindow (dpy, src);
           XUngrabServer (dpy);
           //fprintf (stderr, "%s:%d: ev_count = %d\n", __FUNCTION__, __LINE__, ev_count);
@@ -1042,6 +1046,7 @@ bgPixmap_t::make_transparency_pixmap ()
                       XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
                       result |= transpPmapTinted;
                     }
+
                   XRenderFreePicture (dpy, mask_pic);
                   XRenderFreePicture (dpy, overlay_pic);
                   XRenderFreePicture (dpy, back_pic);
@@ -1073,9 +1078,7 @@ bgPixmap_t::make_transparency_pixmap ()
 bool
 bgPixmap_t::set_root_pixmap ()
 {
-  Pixmap new_root_pixmap = None;
-
-  new_root_pixmap = target->get_pixmap_property (XA_XROOTPMAP_ID);
+  Pixmap new_root_pixmap = target->get_pixmap_property (XA_XROOTPMAP_ID);
   if (new_root_pixmap == None)
     new_root_pixmap = target->get_pixmap_property (XA_ESETROOT_PMAP_ID);
 
@@ -1084,6 +1087,7 @@ bgPixmap_t::set_root_pixmap ()
       root_pixmap = new_root_pixmap;
       return true;
     }
+
   return false;
 }
 # endif /* ENABLE_TRANSPARENCY */
@@ -1091,7 +1095,6 @@ bgPixmap_t::set_root_pixmap ()
 # ifndef HAVE_AFTERIMAGE
 static void ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, int bm);
 # endif
-
 
 bool
 bgPixmap_t::render ()
@@ -1183,9 +1186,10 @@ bgPixmap_t::render ()
     }
 # endif /* HAVE_AFTERIMAGE */
 
-  if (result != NULL)
+  if (result)
     {
       GC gc = XCreateGC (target->dpy, target->vt, 0UL, NULL);
+
       if (gc)
         {
           if (/*pmap_depth != target->depth &&*/ pixmap != None)
@@ -1193,13 +1197,15 @@ bgPixmap_t::render ()
               XFreePixmap (target->dpy, pixmap);
               pixmap = None;
             }
+
           if (pixmap == None)
             {
               pixmap = XCreatePixmap (target->dpy, target->vt, result->width, result->height, target->depth);
-              pmap_width = result->width;
+              pmap_width  = result->width;
               pmap_height = result->height;
-              pmap_depth = target->depth;
+              pmap_depth  = target->depth;
             }
+
           if (pmap_depth != result->depth)
             {
               /* Bad Match error will ensue ! stupid X !!!! */
@@ -1212,11 +1218,14 @@ bgPixmap_t::render ()
                   /* TODO: implement image recoding */
                 }
             }
+
           if (pmap_depth == result->depth)
             XPutImage (target->dpy, pixmap, gc, result, 0, 0, 0, 0, result->width, result->height);
+
           XFreeGC (target->dpy, gc);
           flags = flags & ~isInvalid;
         }
+
         XDestroyImage (result);
     }
 
@@ -1252,7 +1261,7 @@ bgPixmap_t::set_target (rxvt_term *new_target)
 }
 
 void
-bgPixmap_t::apply()
+bgPixmap_t::apply ()
 {
   if (target)
     {

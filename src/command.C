@@ -1459,6 +1459,7 @@ rxvt_term::x_cb (XEvent &ev)
                   update_background ();
 #endif
               }
+
             HOOK_INVOKE ((this, HOOK_CONFIGURE_NOTIFY, DT_XEVENT, &ev, DT_END));
           }
         break;
@@ -1796,6 +1797,7 @@ rxvt_term::rootwin_cb (XEvent &ev)
             bgPixmap.set_root_pixmap ();
             update_background ();
           }
+
         break;
     }
 # endif
@@ -3391,10 +3393,12 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
         process_color_seq (op, Color_tint, str, resp);
         {
           bool changed = false;
+
           if (ISSET_PIXCOLOR (Color_tint))
             changed = bgPixmap.set_tint (pix_colors_focused [Color_tint]);
           else
             changed = bgPixmap.unset_tint ();
+
           if (changed)
             update_background ();
         }
@@ -3427,6 +3431,7 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
                 if (str == NULL)
                   bgPixmap.set_defaultGeometry ();
               }
+
             while (str)
               {
                 str++;
@@ -3434,8 +3439,9 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
                   changed++;
                 str = strchr (str, ';');
               }
+
             if (changed)
-                update_background ();
+              update_background ();
           }
         break;
 #endif
