@@ -1698,10 +1698,9 @@ rxvt_term::get_pixmap_property (int prop_id)
                                          0L, 1L, False, XA_PIXMAP, &atype, &aformat,
                                          &nitems, &bytes_after, &prop);
         if (result == Success && prop && atype == XA_PIXMAP)
-          {
-            return *(Pixmap *)prop;
-          }
+          return *(Pixmap *)prop;
       }
+
   return None;
 }
 
