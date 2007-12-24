@@ -2925,8 +2925,6 @@ rxvt_term::selection_clear () NOTHROW
 
   if (display->selection_owner == this)
     display->selection_owner = 0;
-
-  flush ();
 }
 
 /* ------------------------------------------------------------------------- */

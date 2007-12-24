@@ -432,7 +432,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
        URxvt.selection.pattern-0: ([^"&'()*,;<=>?@[\\\\]^`{|})]+)
 
-    Please also note that the *LeftClick Shift-LeftClik* combination also
+    Please also note that the *LeftClick Shift-LeftClick* combination also
     selects words like the old code.
 
    I don't like the new selection/popups/hotkeys/perl, how do I change/disable it?

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2007-12-15" "8.8" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2007-12-24" "8.9" "RXVT-UNICODE"
 .SH "NAME"
 RXVT REFERENCE \- FAQ, command sequences and other background information
 .SH "SYNOPSIS"
@@ -684,7 +684,7 @@ To get a selection that is very similar to the old code, try this pattern:
 \&   URxvt.selection.pattern-0: ([^"&'()*,;<=>?@[\e\e\e\e]^`{|})]+)
 .Ve
 .PP
-Please also note that the \fILeftClick Shift-LeftClik\fR combination also
+Please also note that the \fILeftClick Shift-LeftClick\fR combination also
 selects words like the old code.
 .PP
 \fII don't like the new selection/popups/hotkeys/perl, how do I change/disable it?\fR

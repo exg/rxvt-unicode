@@ -601,7 +601,10 @@ void rxvt_display::unreg (xevent_watcher *w)
 void rxvt_display::set_selection_owner (rxvt_term *owner)
 {
   if (selection_owner && selection_owner != owner)
-    selection_owner->selection_clear ();
+    {
+      selection_owner->selection_clear ();
+      flush ();
+    }
 
   selection_owner = owner;
 }
