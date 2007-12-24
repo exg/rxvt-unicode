@@ -28,6 +28,7 @@ DUMB: support tex fonts
 	- fix redraw bug in xterm scrollbar with -sr (reported by Mikachu).
         - correctly provide dependencies for libev (µikachu).
         - minor code reorganisations and cleanups.
+        - be more robust in case the urxvt-popup extension cannot be loaded.
 
 8.8  Sat Dec 15 19:40:39 CET 2007
         - option -C was aliased to all unsupported options, activating

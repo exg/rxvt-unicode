@@ -1956,14 +1956,21 @@ sub show {
    delete $env->{LC_ALL};
    $env->{LC_CTYPE} = $self->{term}->locale;
 
-   urxvt::term->new ($env, "popup",
-                     "--perl-lib" => "", "--perl-ext-common" => "",
-                     "-pty-fd" => -1, "-sl" => 0,
-                     "-b" => 1, "-bd" => "grey80", "-bl", "-override-redirect",
-                     "--transient-for" => $self->{term}->parent,
-                     "-display" => $self->{term}->display_id,
-                     "-pe" => "urxvt-popup")
-      or die "unable to create popup window\n";
+   my $term = urxvt::term->new (
+      $env, "popup",
+      "--perl-lib" => "", "--perl-ext-common" => "",
+      "-pty-fd" => -1, "-sl" => 0,
+      "-b" => 1, "-bd" => "grey80", "-bl", "-override-redirect",
+      "--transient-for" => $self->{term}->parent,
+      "-display" => $self->{term}->display_id,
+      "-pe" => "urxvt-popup",
+   ) or die "unable to create popup window\n";
+
+   unless (delete $term->{urxvt_popup_init_done}) {
+      $term->ungrab;
+      $term->destroy;
+      die "unable to initialise popup window\n";
+   }
 }
 
 sub DESTROY {

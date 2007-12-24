@@ -108,6 +108,8 @@ sub on_init {
 
    $self->resource (geometry => "${width}x${height}$pos");
 
+   $self->{term}{urxvt_popup_init_done} = 1;
+
    ()
 }
 
