@@ -135,7 +135,8 @@ void             rxvt_freecommastring             (char **cs) NOTHROW;
 extern char **environ;
 extern char **rxvt_environ; // the original environ pointer
 
-static inline void set_environ (stringvec *envv)
+static inline void
+set_environ (stringvec *envv)
 {
 #if ENABLE_PERL
   assert (envv);
@@ -145,7 +146,8 @@ static inline void set_environ (stringvec *envv)
     environ = (char **)envv->begin ();
 }
 
-static inline void set_environ (char **envv)
+static inline void
+set_environ (char **envv)
 {
 #if ENABLE_PERL
   assert (envv);
