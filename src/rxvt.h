@@ -108,9 +108,10 @@ class out_of_input { };
  *****************************************************************************
  */
 // main.C
-void           * rxvt_malloc                      (size_t size);
-void           * rxvt_calloc                      (size_t number, size_t size);
-void           * rxvt_realloc                     (void *ptr, size_t size);
+#define SET_LOCALE(locale) rxvt_set_locale (locale)
+extern bool rxvt_set_locale (const char *locale) NOTHROW;
+extern void rxvt_push_locale (const char *locale) NOTHROW;
+extern void rxvt_pop_locale () NOTHROW;
 
 // misc.C
 char *           rxvt_wcstombs                    (const wchar_t *str, int len = -1);
@@ -128,6 +129,10 @@ void             rxvt_exit_failure                () THROW ((class rxvt_failure_
 char           * rxvt_strtrim                     (char *str) NOTHROW;
 char          ** rxvt_splitcommastring            (const char *cs) NOTHROW;
 void             rxvt_freecommastring             (char **cs) NOTHROW;
+
+void           * rxvt_malloc                      (size_t size);
+void           * rxvt_calloc                      (size_t number, size_t size);
+void           * rxvt_realloc                     (void *ptr, size_t size);
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -724,11 +729,6 @@ typedef struct _mwmhints {
 
 typedef callback<void (const char *)> log_callback;
 typedef callback<int (int)> getfd_callback;
-
-#define SET_LOCALE(locale) rxvt_set_locale (locale)
-extern bool rxvt_set_locale (const char *locale) NOTHROW;
-extern void rxvt_push_locale (const char *locale) NOTHROW;
-extern void rxvt_pop_locale () NOTHROW;
 
 /****************************************************************************/
 
