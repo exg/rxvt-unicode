@@ -31,7 +31,6 @@
 
 #include "ev_cpp.h"
 
-#include "rxvtlib.h"
 #include "rxvtutil.h"
 
 #include "callback.h"

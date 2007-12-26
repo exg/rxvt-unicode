@@ -21,7 +21,6 @@
 
 #include "../config.h"
 #include "rxvt.h"
-#include "rxvtlib.h"
 #include "rxvtutil.h"
 #include "rxvtfont.h"
 
