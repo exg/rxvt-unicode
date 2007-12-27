@@ -486,13 +486,6 @@ AC_CHECK_HEADERS( \
 	cwchar \
 )
 
-dnl# check to allow both <termios.h> and <sys/ioctl.h>
-AC_CACHE_CHECK(whether termios.h and sys/ioctl.h may both be included, rxvt_cv_header_sysioctl,
-[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
-#include <sys/ioctl.h>
-#include <termios.h>
-]], [[int a = ECHO;]])],[rxvt_cv_header_sysioctl=yes],[rxvt_cv_header_sysioctl=no])])
-
 AC_CACHE_CHECK([for XPointer], rxvt_cv_xpointer,
 [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <X11/Xlib.h>]], [[XPointer dummy;]])],[rxvt_cv_xpointer=yes],[rxvt_cv_xpointer=no])])
 if test x$rxvt_cv_xpointer = xyes; then
@@ -769,8 +762,6 @@ AC_SUBST(AFTERIMAGE_LIBS)
 
 AC_ARG_PROGRAM
 
-dnl# test for "sun" or "__sun__" before include sys_ioctl
-
 dnl# revert HAVE_BLAH_H into a "#include <blah.h>"
 AC_DEFUN([RXVT_DEFINE_TO_INCLUDE], dnl
 [if test "$$3" = "$4" -o "$$5" = "$6"; then
@@ -781,7 +772,7 @@ fi dnl
 AC_SUBST($1)])
 
 RXVT_DEFINE_TO_INCLUDE(include_stdint_h, stdint.h, ac_cv_header_stdint_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_sys_ioctl_h, sys/ioctl.h, rxvt_cv_header_sysioctl, yes, notset, dontmatch)
+RXVT_DEFINE_TO_INCLUDE(include_sys_ioctl_h, sys/ioctl.h, ac_cv_header_sys_ioctl_h, yes, notset, dontmatch)
 RXVT_DEFINE_TO_INCLUDE(include_sys_strredir_h, sys/strredir.h, ac_cv_header_sys_strredir_h, yes, notset, dontmatch)
 
 AC_CONFIG_FILES([Makefile \
