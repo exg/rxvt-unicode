@@ -741,7 +741,7 @@ typedef callback<int (int)> getfd_callback;
 struct line_t {
    text_t *t; // terminal the text
    rend_t *r; // rendition, uses RS_ flags
-   tlen_t_ l; // length of each text line, LINE_CONT == continued on next line
+   tlen_t_ l; // length of each text line
    uint32_t f; // flags
 
    bool is_longer ()
