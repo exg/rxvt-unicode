@@ -283,11 +283,7 @@ const char *const def_colorName[] =
 void
 rxvt_term::init_vars ()
 {
-  pix_colors           = //
-  pix_colors_focused   = new rxvt_color [TOTAL_COLORS];
-#ifdef OFF_FOCUS_FADING
-  pix_colors_unfocused = new rxvt_color [TOTAL_COLORS];
-#endif
+  pix_colors = pix_colors_focused;
 
   MEvent.time = CurrentTime;
   MEvent.button = AnyButton;

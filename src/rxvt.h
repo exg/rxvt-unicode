@@ -1054,10 +1054,6 @@ struct rxvt_vars : TermWin_t {
   uint8_t         options[(Opt_count + 7) >> 3];
   XSizeHints      szHint;
   rxvt_color     *pix_colors;
-  rxvt_color     *pix_colors_focused;
-#ifdef OFF_FOCUS_FADING
-  rxvt_color     *pix_colors_unfocused;
-#endif
   Cursor          TermWin_cursor;       /* cursor for vt window */
   int             sb_shadow;    /* scrollbar shadow width                    */
   int             numlock_state;
@@ -1068,6 +1064,10 @@ struct rxvt_vars : TermWin_t {
   screen_t        screen;
   screen_t        swap;
   selection_t     selection;
+  rxvt_color      pix_colors_focused[TOTAL_COLORS];
+#ifdef OFF_FOCUS_FADING
+  rxvt_color      pix_colors_unfocused[TOTAL_COLORS];
+#endif
 };
 
 struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {

@@ -278,11 +278,6 @@ rxvt_term::~rxvt_term ()
       clear ();
     }
 
-  delete [] pix_colors_focused;
-#if OFF_FOCUS_FADING
-  delete [] pix_colors_unfocused;
-#endif
-
 #ifdef HAVE_BG_PIXMAP
   bgPixmap.destroy ();
 #endif
