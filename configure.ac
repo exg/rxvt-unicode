@@ -762,23 +762,9 @@ AC_SUBST(AFTERIMAGE_LIBS)
 
 AC_ARG_PROGRAM
 
-dnl# revert HAVE_BLAH_H into a "#include <blah.h>"
-AC_DEFUN([RXVT_DEFINE_TO_INCLUDE], dnl
-[if test "$$3" = "$4" -o "$$5" = "$6"; then
-  $1="#include <$2>"
-else
-  $1="/* #include <$2> */"
-fi dnl
-AC_SUBST($1)])
-
-RXVT_DEFINE_TO_INCLUDE(include_stdint_h, stdint.h, ac_cv_header_stdint_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_sys_ioctl_h, sys/ioctl.h, ac_cv_header_sys_ioctl_h, yes, notset, dontmatch)
-RXVT_DEFINE_TO_INCLUDE(include_sys_strredir_h, sys/strredir.h, ac_cv_header_sys_strredir_h, yes, notset, dontmatch)
-
 AC_CONFIG_FILES([Makefile \
 doc/Makefile \
 src/Makefile \
-src/rxvtlib.h \
 ])
 AC_OUTPUT
 

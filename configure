@@ -696,9 +696,6 @@ IF_PERL
 PERL_O
 AFTERIMAGE_CFLAGS
 AFTERIMAGE_LIBS
-include_stdint_h
-include_sys_ioctl_h
-include_sys_strredir_h
 LIBOBJS
 LTLIBOBJS'
 ac_subst_files=''
@@ -7763,59 +7760,6 @@ fi
 done
 
 
-{ echo "$as_me:$LINENO: checking whether termios.h and sys/ioctl.h may both be included" >&5
-echo $ECHO_N "checking whether termios.h and sys/ioctl.h may both be included... $ECHO_C" >&6; }
-if test "${rxvt_cv_header_sysioctl+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-#include <stdio.h>
-#include <sys/ioctl.h>
-#include <termios.h>
-
-int
-main ()
-{
-int a = ECHO;
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext
-if { (ac_try="$ac_compile"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_compile") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_cxx_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest.$ac_objext; then
-  rxvt_cv_header_sysioctl=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	rxvt_cv_header_sysioctl=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-{ echo "$as_me:$LINENO: result: $rxvt_cv_header_sysioctl" >&5
-echo "${ECHO_T}$rxvt_cv_header_sysioctl" >&6; }
-
 { echo "$as_me:$LINENO: checking for XPointer" >&5
 echo $ECHO_N "checking for XPointer... $ECHO_C" >&6; }
 if test "${rxvt_cv_xpointer+set}" = set; then
@@ -11901,26 +11845,7 @@ program_transform_name=`echo $program_transform_name | sed -f conftest.sed`
 rm -f conftest.sed
 
 
-
-
-
-if test "$ac_cv_header_stdint_h" = "yes" -o "$notset" = "dontmatch"; then
-  include_stdint_h="#include <stdint.h>"
-else
-  include_stdint_h="/* #include <stdint.h> */"
-fi
-if test "$rxvt_cv_header_sysioctl" = "yes" -o "$notset" = "dontmatch"; then
-  include_sys_ioctl_h="#include <sys/ioctl.h>"
-else
-  include_sys_ioctl_h="/* #include <sys/ioctl.h> */"
-fi
-if test "$ac_cv_header_sys_strredir_h" = "yes" -o "$notset" = "dontmatch"; then
-  include_sys_strredir_h="#include <sys/strredir.h>"
-else
-  include_sys_strredir_h="/* #include <sys/strredir.h> */"
-fi
-
-ac_config_files="$ac_config_files Makefile doc/Makefile src/Makefile src/rxvtlib.h"
+ac_config_files="$ac_config_files Makefile doc/Makefile src/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -12479,7 +12404,6 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
-    "src/rxvtlib.h") CONFIG_FILES="$CONFIG_FILES src/rxvtlib.h" ;;
 
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
@@ -12624,14 +12548,11 @@ IF_PERL!$IF_PERL$ac_delim
 PERL_O!$PERL_O$ac_delim
 AFTERIMAGE_CFLAGS!$AFTERIMAGE_CFLAGS$ac_delim
 AFTERIMAGE_LIBS!$AFTERIMAGE_LIBS$ac_delim
-include_stdint_h!$include_stdint_h$ac_delim
-include_sys_ioctl_h!$include_sys_ioctl_h$ac_delim
-include_sys_strredir_h!$include_sys_strredir_h$ac_delim
 LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 88; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 85; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

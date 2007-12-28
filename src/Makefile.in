@@ -104,7 +104,7 @@ clean:
 	rm -f *.o *.lo .libs/* librxvt.la tmpproto *.tmp
 
 distclean: clean
-	rm -f Makefile rxvtlib.h
+	rm -f Makefile
 
 realclean: distclean
 	rm -f tags TAGS
@@ -141,11 +141,11 @@ depend:
 
 # DO NOT DELETE: nice dependency list follows
 
-background.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+background.o: ../config.h rxvt.h optinc.h feature.h encoding.h
 background.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../libev/ev++.h
 background.o: ../libev/ev.h callback.h salloc.h libptytty.h rxvtperl.h
 background.o: hookinc.h background.h rsinc.h
-command.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+command.o: ../config.h rxvt.h optinc.h feature.h encoding.h
 command.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../libev/ev++.h
 command.o: ../libev/ev.h callback.h salloc.h libptytty.h rxvtperl.h hookinc.h
 command.o: background.h rsinc.h version.h command.h keyboard.h
@@ -167,86 +167,86 @@ encoding.o: table/compose.h table/category.h
 ev_cpp.o: ev_cpp.h ../libev/ev++.h ../libev/ev.h ../libev/ev.c ../config.h
 ev_cpp.o: ../libev/ev_vars.h ../libev/ev_epoll.c ../libev/ev_select.c
 fdpass.o: ../config.h libptytty.h
-init.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h rxvtutil.h
+init.o: ../config.h rxvt.h optinc.h feature.h encoding.h rxvtutil.h
 init.o: rxvtfont.h rxvttoolkit.h ev_cpp.h ../libev/ev++.h ../libev/ev.h
 init.o: callback.h salloc.h libptytty.h rxvtperl.h hookinc.h background.h
 init.o: rsinc.h init.h
-keyboard.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+keyboard.o: ../config.h rxvt.h optinc.h feature.h encoding.h
 keyboard.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../libev/ev++.h
 keyboard.o: ../libev/ev.h callback.h salloc.h libptytty.h rxvtperl.h
 keyboard.o: hookinc.h background.h rsinc.h keyboard.h command.h
-logging.o: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h rxvtlib.h
+logging.o: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h
 logging.o: optinc.h feature.h encoding.h rxvtutil.h rxvtfont.h rxvttoolkit.h
 logging.o: ev_cpp.h ../libev/ev++.h ../libev/ev.h callback.h salloc.h
 logging.o: rxvtperl.h hookinc.h background.h rsinc.h
-main.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h rxvtutil.h
+main.o: ../config.h rxvt.h optinc.h feature.h encoding.h rxvtutil.h
 main.o: rxvtfont.h rxvttoolkit.h ev_cpp.h ../libev/ev++.h ../libev/ev.h
 main.o: callback.h salloc.h libptytty.h rxvtperl.h hookinc.h background.h
 main.o: rsinc.h keyboard.h
-misc.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h rxvtutil.h
+misc.o: ../config.h rxvt.h optinc.h feature.h encoding.h rxvtutil.h
 misc.o: rxvtfont.h rxvttoolkit.h ev_cpp.h ../libev/ev++.h ../libev/ev.h
 misc.o: callback.h salloc.h libptytty.h rxvtperl.h hookinc.h background.h
 misc.o: rsinc.h
-proxy.o: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h rxvtlib.h
+proxy.o: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h
 proxy.o: optinc.h feature.h encoding.h rxvtutil.h rxvtfont.h rxvttoolkit.h
 proxy.o: ev_cpp.h ../libev/ev++.h ../libev/ev.h callback.h salloc.h
 proxy.o: rxvtperl.h hookinc.h background.h rsinc.h
-ptytty.o: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h rxvtlib.h
+ptytty.o: ../config.h ptytty.h libptytty.h ptytty_conf.h rxvt.h
 ptytty.o: optinc.h feature.h encoding.h rxvtutil.h rxvtfont.h rxvttoolkit.h
 ptytty.o: ev_cpp.h ../libev/ev++.h ../libev/ev.h callback.h salloc.h
 ptytty.o: rxvtperl.h hookinc.h background.h rsinc.h
-rxvt.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h rxvtutil.h
+rxvt.o: ../config.h rxvt.h optinc.h feature.h encoding.h rxvtutil.h
 rxvt.o: rxvtfont.h rxvttoolkit.h ev_cpp.h ../libev/ev++.h ../libev/ev.h
 rxvt.o: callback.h salloc.h libptytty.h rxvtperl.h hookinc.h background.h
 rxvt.o: rsinc.h
-rxvtc.o: ../config.h rxvtdaemon.h rxvtutil.h libptytty.h rxvt.h rxvtlib.h
+rxvtc.o: ../config.h rxvtdaemon.h rxvtutil.h libptytty.h rxvt.h
 rxvtc.o: optinc.h feature.h encoding.h rxvtfont.h rxvttoolkit.h ev_cpp.h
 rxvtc.o: ../libev/ev++.h ../libev/ev.h callback.h salloc.h rxvtperl.h
 rxvtc.o: hookinc.h background.h rsinc.h
-rxvtd.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+rxvtd.o: ../config.h rxvt.h optinc.h feature.h encoding.h
 rxvtd.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../libev/ev++.h
 rxvtd.o: ../libev/ev.h callback.h salloc.h libptytty.h rxvtperl.h hookinc.h
 rxvtd.o: background.h rsinc.h rxvtdaemon.h
 rxvtdaemon.o: rxvtdaemon.h rxvtutil.h
-rxvtfont.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+rxvtfont.o: ../config.h rxvt.h optinc.h feature.h encoding.h
 rxvtfont.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../libev/ev++.h
 rxvtfont.o: ../libev/ev.h callback.h salloc.h libptytty.h rxvtperl.h
 rxvtfont.o: hookinc.h background.h rsinc.h table/linedraw.h
 rxvtperl.o: ../config.h ev_cpp.h ../libev/ev++.h ../libev/ev.h rxvt.h
-rxvtperl.o: rxvtlib.h optinc.h feature.h encoding.h rxvtutil.h rxvtfont.h
+rxvtperl.o: optinc.h feature.h encoding.h rxvtutil.h rxvtfont.h
 rxvtperl.o: rxvttoolkit.h callback.h salloc.h libptytty.h rxvtperl.h
 rxvtperl.o: hookinc.h background.h rsinc.h keyboard.h perlxsi.c ./iom_perl.h
-rxvttoolkit.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+rxvttoolkit.o: ../config.h rxvt.h optinc.h feature.h encoding.h
 rxvttoolkit.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../libev/ev++.h
 rxvttoolkit.o: ../libev/ev.h callback.h salloc.h libptytty.h rxvtperl.h
 rxvttoolkit.o: hookinc.h background.h rsinc.h
 rxvtutil.o: rxvtutil.h
 salloc.o: salloc.h
-screen.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+screen.o: ../config.h rxvt.h optinc.h feature.h encoding.h
 screen.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../libev/ev++.h
 screen.o: ../libev/ev.h callback.h salloc.h libptytty.h rxvtperl.h hookinc.h
 screen.o: background.h rsinc.h salloc.C
-scrollbar-next.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+scrollbar-next.o: ../config.h rxvt.h optinc.h feature.h encoding.h
 scrollbar-next.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h
 scrollbar-next.o: ../libev/ev++.h ../libev/ev.h callback.h salloc.h
 scrollbar-next.o: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
-scrollbar-plain.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+scrollbar-plain.o: ../config.h rxvt.h optinc.h feature.h encoding.h
 scrollbar-plain.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h
 scrollbar-plain.o: ../libev/ev++.h ../libev/ev.h callback.h salloc.h
 scrollbar-plain.o: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
-scrollbar-rxvt.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+scrollbar-rxvt.o: ../config.h rxvt.h optinc.h feature.h encoding.h
 scrollbar-rxvt.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h
 scrollbar-rxvt.o: ../libev/ev++.h ../libev/ev.h callback.h salloc.h
 scrollbar-rxvt.o: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
-scrollbar-xterm.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+scrollbar-xterm.o: ../config.h rxvt.h optinc.h feature.h encoding.h
 scrollbar-xterm.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h
 scrollbar-xterm.o: ../libev/ev++.h ../libev/ev.h callback.h salloc.h
 scrollbar-xterm.o: libptytty.h rxvtperl.h hookinc.h background.h rsinc.h
-scrollbar.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+scrollbar.o: ../config.h rxvt.h optinc.h feature.h encoding.h
 scrollbar.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../libev/ev++.h
 scrollbar.o: ../libev/ev.h callback.h salloc.h libptytty.h rxvtperl.h
 scrollbar.o: hookinc.h background.h rsinc.h
-xdefaults.o: ../config.h rxvt.h rxvtlib.h optinc.h feature.h encoding.h
+xdefaults.o: ../config.h rxvt.h optinc.h feature.h encoding.h
 xdefaults.o: rxvtutil.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../libev/ev++.h
 xdefaults.o: ../libev/ev.h callback.h salloc.h libptytty.h rxvtperl.h
 xdefaults.o: hookinc.h background.h rsinc.h version.h keyboard.h

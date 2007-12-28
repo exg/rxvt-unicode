@@ -1,4 +1,4 @@
-// all resource indices, used by rxvtlib.h and rxvtperl.xs
+// all resource indices, used by rxvt.h and rxvtperl.xs
 
  def(loginShell,            1)
  def(iconic,                2)
