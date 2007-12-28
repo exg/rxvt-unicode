@@ -13,11 +13,9 @@ dnl RXVT version
 changequote(, )dnl
 VERSION=`sed -n -e 's/^.*[ \t]VERSION.*"\(.*\)"$/\1/p' ${srcdir}/src/version.h`
 DATE=`sed -n -e 's/^.*[ \t]DATE.*"\(.*\)"$/\1/p' ${srcdir}/src/version.h`
-dnl LIBVERSION=`sed -n -e 's/^.*[ \t]LIBVERSION.*"\(.*\)"$/\1/p' ${srcdir}/src/version.h`
 changequote([, ])dnl
 AC_SUBST(VERSION)dnl
 AC_SUBST(DATE)dnl
-dnl AC_SUBST(LIBVERSION)dnl
 
 echo ""
 echo "configuring for rxvt $VERSION"
@@ -84,10 +82,6 @@ dnl# solaris needs to link libnsl and socket
 AC_CHECK_FUNC(gethostbyname, [], [AC_CHECK_LIB(nsl,    gethostbyname, [LIBS="$LIBS -lnsl"])])
 AC_CHECK_FUNC(socket,        [], [AC_CHECK_LIB(socket, socket,        [LIBS="$LIBS -lsocket"])])
 
-dnl AC_ENABLE_SHARED(no)dnl#	libtool
-dnl AC_ENABLE_STATIC(yes)dnl#	libtool
-dnl AC_PROG_LIBTOOL()dnl#		libtool
-
 support_frills=yes
 support_inheritpixmap=yes
 support_fading=yes
@@ -116,12 +110,6 @@ codesets=all
 dnl# --------------------------------------------------------------------------
 dnl# CHECKING COMMAND LINE OPTIONS
 dnl# --------------------------------------------------------------------------
-
-dnl if test "x$enable_shared" = xyes; then
-dnl     AC_DEFINE(LIBRXVT, 1, Build shared library version - specify via configure only)
-dnl     INSTALL_LIBRXVT=yes
-dnl fi
-dnl AC_SUBST(INSTALL_LIBRXVT)
 
 AC_ARG_ENABLE(everything,
   [  --enable-everything     enable standard non-multichoice features

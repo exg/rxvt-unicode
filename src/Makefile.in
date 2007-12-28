@@ -57,33 +57,18 @@ RXVTD_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)d$(EXEEXT)
 .C.o:
 	$(COMPILE) -c $<
 
-#.C.lo:
-#	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-#
-#.s.lo:
-#	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-#
-#.S.lo:
-#	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
 #-------------------------------------------------------------------------
 
 all: allbin
 
 rxvt: rxvt.o $(COMMON)
 	$(LINK) -o $@ rxvt.o $(COMMON) $(LIBS) $(XLIB) @PERLLIB@
-#	$(LIBTOOL) --mode=link $(LINK) rxvt.o librxvt.la $(LIBS) $(XLIB) -o $@
 
 rxvtd: rxvtd.o $(COMMON) $(COMMON_DAEMON)
 	$(LINK) -o $@ rxvtd.o $(COMMON) $(COMMON_DAEMON) $(LIBS) $(XLIB) @PERLLIB@
-#	$(LIBTOOL) --mode=link $(LINK) rxvtd.o rxvtdaemon.o librxvt.la $(LIBS) $(XLIB) -o $@
 
 rxvtc: rxvtc.o $(COMMON_DAEMON) fdpass.o ev_cpp.o
 	$(LINK) -o $@ rxvtc.o $(COMMON_DAEMON) fdpass.o ev_cpp.o $(LIBS)
-#	$(LIBTOOL) --mode=link $(LINK) rxvtc.o rxvtdaemon.o $(LIBS) -o $@
-
-#librxvt.la: $(LIBOBJS)
-#	$(LIBTOOL) --mode=link $(LINK) -rpath $(libdir) -version-info $(LIBVERSION) $(LIBOBJS) $(LIBS) -o $@
 
 #-------------------------------------------------------------------------
 
@@ -101,7 +86,7 @@ alldoc:
 
 clean:
 	rm -f rxvt rxvtc rxvtd perlxsi.c rxvtperl.C
-	rm -f *.o *.lo .libs/* librxvt.la tmpproto *.tmp
+	rm -f *.o tmpproto *.tmp
 
 distclean: clean
 	rm -f Makefile
@@ -137,7 +122,6 @@ rxvtperl.o: rxvtperl.C perlxsi.c
 
 depend:
 	makedepend -f Makefile.in -I. -I.. -I../libev -Y *.C >/dev/null 2>&1
-#	makedepend -f Makefile.in -I. -Y *.C -a -o .lo >/dev/null 2>&1
 
 # DO NOT DELETE: nice dependency list follows
 
