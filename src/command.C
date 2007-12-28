@@ -222,7 +222,7 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
       sprintf (buf, "%8x", ch);
       scr_overlay_set (0, y, buf);
       scr_overlay_set (9, y, '=');
-# if !UNICODE3
+# if !UNICODE_3
       if (ch >= 0x10000)
         ch = 0xfffd;
 # endif

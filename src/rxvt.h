@@ -794,7 +794,7 @@ struct mbstate {
 
 #define UNICODE_MASK 0x1fffffUL
 
-#if UNICODE3
+#if UNICODE_3
 # define COMPOSE_LO 0x40000000UL
 # define COMPOSE_HI 0x400fffffUL
 # define IS_COMPOSE(n) ((int32_t)(n) >= COMPOSE_LO)
