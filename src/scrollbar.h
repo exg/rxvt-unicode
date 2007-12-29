@@ -39,7 +39,6 @@ typedef struct {
 #define scrollbarrxvt_upButton(y)       ((y) < scrollBar.beg)
 #define scrollbarrxvt_dnButton(y)       ((y) > scrollBar.end)
 #define SCROLLRXVT_MINHEIGHT    10
-#define SCROLLXTERM_MINHEIGHT   10
 
 #define scrollbar_minheight()   (scrollBar.style == R_SB_NEXT        \
                                  ? SCROLLNEXT_MINHEIGHT                 \
