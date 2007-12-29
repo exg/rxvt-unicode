@@ -1139,7 +1139,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
  *                            GET TTY CURRENT STATE                          *
  * ------------------------------------------------------------------------- */
 void
-rxvt_get_ttymode (ttymode_t *tio, int erase)
+rxvt_get_ttymode (struct termios *tio, int erase)
 {
   /*
    * standard System V termios interface
@@ -1148,7 +1148,7 @@ rxvt_get_ttymode (ttymode_t *tio, int erase)
     {
       // return error - use system defaults,
       // where possible, and zero elsewhere
-      memset (tio, 0, sizeof (ttymode_t));
+      memset (tio, 0, sizeof (struct termios));
 
       tio->c_cc[VINTR] = CINTR;
       tio->c_cc[VQUIT] = CQUIT;

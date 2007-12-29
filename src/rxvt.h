@@ -114,7 +114,6 @@ typedef char *XPointer;
 #endif
 
 #include <termios.h>
-typedef struct termios ttymode_t;
 
 #include "background.h"
 
@@ -1073,7 +1072,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 /* ---------- */
   struct mouse_event MEvent;
   XComposeStatus  compose;
-  ttymode_t       tio;
+  struct termios  tio;
   row_col_t       oldcursor;
 #ifdef HAVE_BG_PIXMAP
   bgPixmap_t      bgPixmap;
