@@ -1009,7 +1009,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
                   last_bot,   /* scrollbar last bottom position            */
                   last_top,   /* scrollbar last top position               */
                   last_state, /* scrollbar last state                      */
-                  scrollbar_len,
                   window_vt_x,
                   window_vt_y,
                   window_sb_x,

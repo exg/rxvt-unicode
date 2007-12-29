@@ -147,6 +147,7 @@ rxvt_term::scrollbar_show (int update)
   int             ret = 0;
 #ifdef HAVE_SCROLLBARS
   int             top, bot, len, adj;
+  int             scrollbar_len = 0;
 
   if (!scrollBar.state)
     return 0;
