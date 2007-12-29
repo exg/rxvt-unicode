@@ -14,7 +14,7 @@ typedef struct {
   unsigned int    bot;          /* slider bottom position                   */
   unsigned int    style;        /* style: rxvt, xterm, next                 */
   unsigned int    width;        /* scrollbar width                          */
-  int             sb_shadow;    /* scrollbar shadow width                   */
+  int             shadow;       /* scrollbar shadow width                   */
   Window          win;
   int             (rxvt_term::*update)(int, int, int, int);
 
@@ -24,7 +24,7 @@ typedef struct {
   void setDn()     { state = 'D'; }
 } scrollBar_t;
 
-#define scrollbar_TotalWidth()  (scrollBar.width + scrollBar.sb_shadow * 2)
+#define scrollbar_TotalWidth()  (scrollBar.width + scrollBar.shadow * 2)
 #define scrollbar_isMotion()    (scrollBar.state == 'm')
 #define scrollbar_isUp()        (scrollBar.state == 'U')
 #define scrollbar_isDn()        (scrollBar.state == 'D')

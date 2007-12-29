@@ -149,7 +149,7 @@ draw_button (rxvt_term *term, int x, int y, int state, int dirn)
 int
 rxvt_term::scrollbar_show_rxvt (int update, int last_top, int last_bot, int scrollbar_len)
 {
-  int sbshadow = scrollBar.sb_shadow;
+  int sbshadow = scrollBar.shadow;
   int sbwidth = (int)scrollBar.width;
 
   if ((scrollBar.init & R_SB_RXVT) == 0)
