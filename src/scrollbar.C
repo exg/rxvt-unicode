@@ -72,9 +72,9 @@ rxvt_term::resize_scrollbar ()
 #define R_SCROLLBEG_NEXT	0
 #define R_SCROLLEND_NEXT	szHint.height - (SB_BUTTON_TOTAL_HEIGHT + \
                                                     SB_PADDING)
-#define R_SCROLLBEG_RXVT	(scrollBar.width + 1) + sb_shadow
+#define R_SCROLLBEG_RXVT	(scrollBar.width + 1) + scrollBar.sb_shadow
 #define R_SCROLLEND_RXVT	szHint.height - R_SCROLLBEG_RXVT - \
-                                    (2 * sb_shadow)
+                                    (2 * scrollBar.sb_shadow)
 
 #if defined(PLAIN_SCROLLBAR)
   if (scrollBar.style == R_SB_PLAIN)
@@ -231,7 +231,7 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
 
 # ifdef RXVT_SCROLLBAR
   if (! option (Opt_scrollBar_floating) && style == R_SB_RXVT)
-    sb_shadow = SHADOW_WIDTH;
+    scrollBar.sb_shadow = SHADOW_WIDTH;
 # endif
 
   scrollBar.style = style;

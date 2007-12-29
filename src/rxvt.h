@@ -661,12 +661,6 @@ typedef struct _mwmhints {
 # define FONTSET(style) fontset[0]
 #endif
 
-#ifdef HAVE_SCROLLBARS
-# define scrollbar_TotalWidth() (scrollBar.width + sb_shadow * 2)
-#else
-# define scrollbar_TotalWidth() (0)
-#endif
-
 typedef callback<void (const char *)> log_callback;
 typedef callback<int (int)> getfd_callback;
 
@@ -934,7 +928,6 @@ struct rxvt_vars : TermWin_t {
   XSizeHints      szHint;
   rxvt_color     *pix_colors;
   Cursor          TermWin_cursor;       /* cursor for vt window */
-  int             sb_shadow;    /* scrollbar shadow width                    */
   int             numlock_state;
   line_t         *row_buf;      // all lines, scrollback + terminal, circular, followed by temp_buf
   line_t         *drawn_buf;    // text on screen
