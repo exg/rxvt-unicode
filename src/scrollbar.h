@@ -15,6 +15,7 @@ typedef struct {
   unsigned int    style;        /* style: rxvt, xterm, next                 */
   unsigned int    width;        /* scrollbar width                          */
   int             shadow;       /* scrollbar shadow width                   */
+  unsigned char   align;
   Window          win;
   int             (rxvt_term::*update)(int, int, int, int);
 

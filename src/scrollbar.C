@@ -238,13 +238,13 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
   scrollBar.style = style;
   scrollBar.width = width;
 
-  /* scrollbar_align = R_SB_ALIGN_CENTRE; */
+  /* scrollBar.align = R_SB_ALIGN_CENTRE; */
   if (scrollalign)
     {
       if (strncasecmp (scrollalign, "top", 3) == 0)
-        scrollbar_align = R_SB_ALIGN_TOP;
+        scrollBar.align = R_SB_ALIGN_TOP;
       else if (strncasecmp (scrollalign, "bottom", 6) == 0)
-        scrollbar_align = R_SB_ALIGN_BOTTOM;
+        scrollBar.align = R_SB_ALIGN_BOTTOM;
     }
 #endif
 }

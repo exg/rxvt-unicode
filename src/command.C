@@ -2009,7 +2009,7 @@ rxvt_term::button_press (XButtonEvent &ev)
             switch (ev.button)
               {
                 case Button2:
-                  switch (scrollbar_align)
+                  switch (scrollBar.align)
                     {
                       case R_SB_ALIGN_TOP:
                         csrO = 0;
@@ -2031,7 +2031,7 @@ rxvt_term::button_press (XButtonEvent &ev)
                   break;
 
                 case Button1:
-                  if (scrollbar_align == R_SB_ALIGN_CENTRE)
+                  if (scrollBar.align == R_SB_ALIGN_CENTRE)
                     csrO = ev.y - scrollBar.top;
                   /* FALLTHROUGH */
 

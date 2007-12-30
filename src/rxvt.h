@@ -978,7 +978,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 #ifdef META8_OPTION
                   meta_char,            /* Alt-key prefix */
 #endif
-                  scrollbar_align,
                   selection_wait,
                   selection_type;
 /* ---------- */
