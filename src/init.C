@@ -1115,15 +1115,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   drawable = new rxvt_drawable (this, vt);
 
-#ifdef RXVT_SCROLLBAR
-  gcvalue.foreground = pix_colors[Color_topShadow];
-  topShadowGC = XCreateGC (dpy, vt, GCForeground, &gcvalue);
-  gcvalue.foreground = pix_colors[Color_bottomShadow];
-  botShadowGC = XCreateGC (dpy, vt, GCForeground, &gcvalue);
-  gcvalue.foreground = pix_colors[ (depth <= 2 ? Color_fg : Color_scroll)];
-  scrollbarGC = XCreateGC (dpy, vt, GCForeground, &gcvalue);
-#endif
-
 #ifdef OFF_FOCUS_FADING
   // initially we are in unfocused state
   if (rs[Rs_fade])

@@ -154,8 +154,16 @@ rxvt_term::scrollbar_show_rxvt (int update, int last_top, int last_bot, int scro
 
   if ((scrollBar.init & R_SB_RXVT) == 0)
     {
+      XGCValues gcvalue;
+
       scrollBar.init |= R_SB_RXVT;
 
+      gcvalue.foreground = pix_colors[Color_topShadow];
+      topShadowGC = XCreateGC (dpy, vt, GCForeground, &gcvalue);
+      gcvalue.foreground = pix_colors[Color_bottomShadow];
+      botShadowGC = XCreateGC (dpy, vt, GCForeground, &gcvalue);
+      gcvalue.foreground = pix_colors[ (depth <= 2 ? Color_fg : Color_scroll)];
+      scrollbarGC = XCreateGC (dpy, vt, GCForeground, &gcvalue);
       if (sbshadow)
         {
           XSetWindowBackground (dpy, scrollBar.win, pix_colors_focused[Color_trough]);
