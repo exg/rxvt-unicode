@@ -299,7 +299,6 @@ rxvt_term::init_vars ()
   refresh_type = SLOW_REFRESH;
 
   oldcursor.row = oldcursor.col = -1;
-  last_bot = last_state = -1;
 
   set_option (Opt_scrollBar);
   set_option (Opt_scrollTtyOutput);

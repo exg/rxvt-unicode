@@ -1005,9 +1005,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
                   mouse_slip_wheel_speed,
 #endif
                   refresh_count,
-                  last_bot,   /* scrollbar last bottom position            */
-                  last_top,   /* scrollbar last top position               */
-                  last_state, /* scrollbar last state                      */
                   window_vt_x,
                   window_vt_y,
                   window_sb_x,

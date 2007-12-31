@@ -164,17 +164,17 @@ rxvt_term::scrollbar_show (int update)
                       scrollbar_minheight () + adj;
       scrollBar.bot = (scrollBar.top + scrollbar_len);
       /* no change */
-      if (scrollBar.top == last_top
-          && scrollBar.bot == last_bot
-          && (scrollBar.state == last_state || !scrollbar_isUpDn ()))
+      if (scrollBar.top == scrollBar.last_top
+          && scrollBar.bot == scrollBar.last_bot
+          && (scrollBar.state == scrollBar.last_state || !scrollbar_isUpDn ()))
         return 0;
     }
 
-  ret = (this->*scrollBar.update) (update, last_top, last_bot, scrollbar_len);
+  ret = (this->*scrollBar.update) (update, scrollBar.last_top, scrollBar.last_bot, scrollbar_len);
 
-  last_top = scrollBar.top;
-  last_bot = scrollBar.bot;
-  last_state = scrollBar.state;
+  scrollBar.last_top = scrollBar.top;
+  scrollBar.last_bot = scrollBar.bot;
+  scrollBar.last_state = scrollBar.state;
 #endif
 
   return ret;
@@ -246,6 +246,7 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
       else if (strncasecmp (scrollalign, "bottom", 6) == 0)
         scrollBar.align = R_SB_ALIGN_BOTTOM;
     }
+  scrollBar.last_bot = scrollBar.last_state = -1;
 #endif
 }
 
