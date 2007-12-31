@@ -1532,7 +1532,7 @@ rxvt_term::x_cb (XEvent &ev)
             while (XCheckTypedWindowEvent (dpy, ev.xany.window, GraphicsExpose, &unused_event))
               ;
 
-            if (isScrollbarWindow (ev.xany.window))
+            if (scrollBar.state && ev.xany.window == scrollBar.win)
               {
                 scrollBar.setIdle ();
                 scrollbar_show (0);
@@ -1632,7 +1632,7 @@ rxvt_term::x_cb (XEvent &ev)
 #endif
               }
           }
-        else if (isScrollbarWindow (ev.xany.window) && scrollbar_isMotion ())
+        else if (scrollbar_isMotion () && ev.xany.window == scrollBar.win)
           {
             while (XCheckTypedWindowEvent (dpy, scrollBar.win,
                                            MotionNotify, &ev))
@@ -1926,7 +1926,7 @@ rxvt_term::button_press (XButtonEvent &ev)
   /*
    * Scrollbar window processing of button press
    */
-  if (isScrollbarWindow (ev.window))
+  if (scrollBar.state && ev.window == scrollBar.win)
     {
       scrollBar.setIdle ();
       /*

@@ -33,7 +33,6 @@ typedef struct {
 #define scrollbar_isUp()        (scrollBar.state == 'U')
 #define scrollbar_isDn()        (scrollBar.state == 'D')
 #define scrollbar_isUpDn()      (scrollbar_isUp () || scrollbar_isDn ())
-#define isScrollbarWindow(w)    (scrollBar.state && (w) == scrollBar.win)
 
 #define scrollbarnext_dnval()   (scrollBar.end + (scrollBar.width + 1))
 #define scrollbarnext_upButton(y)       ((y) > scrollBar.end \
