@@ -1814,8 +1814,8 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =begin table
 
-	B<< C<h> >>	scrollBar visisble
-	B<< C<l> >>	scrollBar invisisble
+	B<< C<h> >>	scrollBar visible
+	B<< C<l> >>	scrollBar invisible
 
 =end table
 
