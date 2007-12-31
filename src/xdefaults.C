@@ -7,6 +7,7 @@
  *				- original version
  * Copyright (c) 1997,1998 mj olesen <olesen@me.queensu.ca>
  * Copyright (c) 2003-2006 Marc Lehmann <pcg@goof.com>
+ * Copyright (c) 2007      Emanuele Giaquinta <e.giaquinta@glauco.it>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
