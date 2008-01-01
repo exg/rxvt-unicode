@@ -147,7 +147,6 @@ rxvt_term::scrollbar_show (int update)
   int             ret = 0;
 #ifdef HAVE_SCROLLBARS
   int             top, bot, len, adj;
-  int             scrollbar_len = 0;
 
   if (!scrollBar.state)
     return 0;
@@ -160,9 +159,9 @@ rxvt_term::scrollbar_show (int update)
       adj = (((bot - top) * scrollbar_size ()) % len) > 0 ? 1 : 0;
 
       scrollBar.top = (scrollBar.beg + (top * scrollbar_size ()) / len);
-      scrollbar_len = ((bot - top) * scrollbar_size ()) / len +
+      scrollBar.len = ((bot - top) * scrollbar_size ()) / len +
                       scrollbar_minheight () + adj;
-      scrollBar.bot = (scrollBar.top + scrollbar_len);
+      scrollBar.bot = (scrollBar.top + ScrollBar.len);
       /* no change */
       if (scrollBar.top == scrollBar.last_top
           && scrollBar.bot == scrollBar.last_bot
@@ -170,7 +169,7 @@ rxvt_term::scrollbar_show (int update)
         return 0;
     }
 
-  ret = (this->*scrollBar.update) (update, scrollBar.last_top, scrollBar.last_bot, scrollbar_len);
+  ret = (this->*scrollBar.update) (update, scrollBar.last_top, scrollBar.last_bot, scrollBar.len);
 
   scrollBar.last_top = scrollBar.top;
   scrollBar.last_bot = scrollBar.bot;

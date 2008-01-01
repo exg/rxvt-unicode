@@ -18,6 +18,7 @@ typedef struct {
   int             last_bot;     /* scrollbar last bottom position           */
   int             last_top;     /* scrollbar last top position              */
   int             last_state;   /* scrollbar last state                     */
+  int             len;
   unsigned char   align;
   Window          win;
   int             (rxvt_term::*update)(int, int, int, int);
