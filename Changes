@@ -17,6 +17,8 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
+TODO: with -ip, the scorllbar doesn't refresh after resizing.
+
 8.9  Mon Dec 24 07:51:40 CET 2007
 	- fix the issue where urxvtd would not immediately close a window
           when the command exited but only on the next X event.
