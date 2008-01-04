@@ -42,7 +42,7 @@
 #include "perlxsi.c"
 
 #ifdef HAVE_SCROLLBARS
-# define GRAB_CURSOR THIS->leftptr_cursor
+# define GRAB_CURSOR THIS->scrollBar.leftptr_cursor
 #else
 # define GRAB_CURSOR None
 #endif
@@ -302,7 +302,7 @@ void overlay::set (int x, int y, SV *text, SV *rend)
 
 #define IOM_CLASS "urxvt"
 #define IOM_WARN rxvt_warn
-#include <iom_perl.h>
+#include "iom_perl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 

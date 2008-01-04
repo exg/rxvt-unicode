@@ -1056,8 +1056,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   char *          incr_buf;
   size_t          incr_buf_size, incr_buf_fill;
 /* ---------- */
-  Cursor          leftptr_cursor;
-/* ---------- */
   struct mouse_event MEvent;
   XComposeStatus  compose;
   struct termios  tio;

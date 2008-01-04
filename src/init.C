@@ -1077,11 +1077,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   /* vt cursor: Black-on-White is standard, but this is more popular */
   TermWin_cursor = XCreateFontCursor (dpy, XC_xterm);
 
-#ifdef HAVE_SCROLLBARS
-  /* cursor scrollBar: Black-on-White */
-  leftptr_cursor = XCreateFontCursor (dpy, XC_left_ptr);
-#endif
-
   /* the vt window */
   vt = XCreateSimpleWindow (dpy, top,
                             window_vt_x, window_vt_y,

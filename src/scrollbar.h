@@ -21,6 +21,7 @@ typedef struct {
   int             len;
   unsigned char   align;
   Window          win;
+  Cursor          leftptr_cursor;
   int             (rxvt_term::*update)(int, int, int, int);
 
   void setIdle()   { state =  1 ; }

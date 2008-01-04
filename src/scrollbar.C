@@ -120,7 +120,7 @@ rxvt_term::resize_scrollbar ()
                                            0,
                                            pix_colors[Color_fg],
                                            pix_colors[Color_border]);
-      XDefineCursor (dpy, scrollBar.win, leftptr_cursor);
+      XDefineCursor (dpy, scrollBar.win, scrollBar.leftptr_cursor);
 
       XSelectInput (dpy, scrollBar.win,
                    ExposureMask | ButtonPressMask | ButtonReleaseMask
@@ -246,6 +246,8 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
         scrollBar.align = R_SB_ALIGN_BOTTOM;
     }
   scrollBar.last_bot = scrollBar.last_state = -1;
+  /* cursor scrollBar: Black-on-White */
+  scrollBar.leftptr_cursor = XCreateFontCursor (dpy, XC_left_ptr);
 #endif
 }
 
