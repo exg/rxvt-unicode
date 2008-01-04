@@ -902,7 +902,7 @@ bgPixmap_t::make_transparency_pixmap ()
           XSync (dpy, False);
 
           /* XSync should get window where it's properly exposed,
-           * but to be on the safe side - let's check for the actuall event to arrive : */
+           * but to be on the safe side - let's check for the actual event to arrive : */
           while (XCheckWindowEvent (dpy, src, ExposureMask, &event))
             ++ev_count;
 

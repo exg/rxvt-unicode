@@ -1723,7 +1723,7 @@ rxvt_term::update_background ()
   if (!bgPixmap.need_client_side_rendering ())
     refresh = .05;
   else if (bgPixmap.flags & bgPixmap_t::blurNeeded)
-    /* no chance of real time refresh if we are blurring! */
+    /* no chance of real time refresh if we are bluring! */
     refresh = .50;
   else
     refresh = .07;
