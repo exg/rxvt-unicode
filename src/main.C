@@ -1713,34 +1713,30 @@ rxvt_term::trace_update_background (const char *file, int line)
 void
 rxvt_term::update_background ()
 {
+  if (update_background_ev.is_active ())
+    return;
+
   bgPixmap.invalidate ();
 
-  /* no chance of real time refresh if we are blurring! */
-  if (bgPixmap.invalid_since + 0.50 < ev::now ()
-      && !(bgPixmap.flags & bgPixmap_t::blurNeeded))
-    {
-      update_background_ev.stop ();
-      bgPixmap.render ();
-    }
+  ev_tstamp refresh;
+
+  if (!bgPixmap.need_client_side_rendering ())
+    refresh = .05;
+  else if (bgPixmap.flags & bgPixmap_t::blurNeeded)
+    /* no chance of real time refresh if we are blurring! */
+    refresh = .50;
   else
-    {
-      ev_tstamp refresh;
+    refresh = .07;
 
-      if (!bgPixmap.need_client_side_rendering ())
-        refresh = .05;
-      else if (bgPixmap.flags & bgPixmap_t::blurNeeded)
-        refresh = .20; /* very slow !!! */
-      else
-        refresh = .07;
-
-      update_background_ev.start (refresh);
-    }
+  update_background_ev.start (refresh);
 }
 
 void
 rxvt_term::update_background_cb (ev::timer &w, int revents)
 {
   make_current ();
+
+  update_background_ev.stop ();
   bgPixmap.render ();
   refresh_check ();
 }
