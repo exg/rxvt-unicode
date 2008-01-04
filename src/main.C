@@ -1718,17 +1718,12 @@ rxvt_term::update_background ()
 
   bgPixmap.invalidate ();
 
-  ev_tstamp refresh;
+  ev_tstamp to_wait = 0.5 - (ev::now () - bgPixmap.valid_since);
 
-  if (!bgPixmap.need_client_side_rendering ())
-    refresh = .05;
-  else if (bgPixmap.flags & bgPixmap_t::blurNeeded)
-    /* no chance of real time refresh if we are bluring! */
-    refresh = .50;
+  if ( to_wait <= 0. )
+    bgPixmap.render ();
   else
-    refresh = .07;
-
-  update_background_ev.start (refresh);
+    update_background_ev.start (to_wait);
 }
 
 void

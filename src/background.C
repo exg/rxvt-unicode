@@ -98,6 +98,7 @@ bgPixmap_t::bgPixmap_t ()
 #endif
   flags = 0;
   pixmap = None;
+  valid_since = invalid_since = 0;
 }
 
 void
@@ -1239,6 +1240,9 @@ bgPixmap_t::render ()
     }
 
   apply ();
+
+  XSync (target->dpy, False);
+  valid_since = ev::now ();
 
   TIMING_TEST_PRINT_RESULT (tp);
 

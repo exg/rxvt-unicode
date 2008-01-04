@@ -98,7 +98,7 @@ struct bgPixmap_t
 
   unsigned long make_transparency_pixmap ();/* returns combination of the transpTransformations flags */
 # endif
-  double invalid_since;
+  double invalid_since, valid_since;
 
   Pixmap pixmap;
   unsigned int pmap_width, pmap_height;
