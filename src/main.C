@@ -1720,7 +1720,7 @@ rxvt_term::update_background ()
 
   ev_tstamp to_wait = 0.5 - (ev::now () - bgPixmap.valid_since);
 
-  if ( to_wait <= 0. )
+  if (to_wait <= 0.)
     bgPixmap.render ();
   else
     update_background_ev.start (to_wait);
