@@ -259,7 +259,7 @@ bgPixmap_t::set_geometry (const char *geom)
   unsigned int n;
   unsigned long new_flags = (flags & (~geometryFlags));
   char *p;
-#  define MAXLEN_GEOM		256 /* could be longer then regular geometry string */
+#  define MAXLEN_GEOM		256 /* could be longer than regular geometry string */
 
   if (geom == NULL)
     return false;
@@ -514,7 +514,7 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
       if (background == NULL)
         {
           /* if tiling - pixmap has to be sized exactly as the image,
-             but there is no need to make it bigger then the window! */
+             but there is no need to make it bigger than the window! */
           if (h_scale == 0)
             new_pmap_width = min (result->width, target_width);
           if (v_scale == 0)
