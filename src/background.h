@@ -107,7 +107,8 @@ struct bgPixmap_t
   bool window_size_sensitive ();
   bool window_position_sensitive ();
 
-  bool is_parentOrigin () {
+  bool is_parentOrigin ()
+  {
     return !(flags & isVtOrigin);
   };
 
