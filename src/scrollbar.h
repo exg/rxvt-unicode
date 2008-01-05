@@ -5,7 +5,7 @@
 
 struct rxvt_term;
 
-typedef struct {
+struct scrollBar_t {
   char            state;        /* scrollbar state                          */
   char            init;         /* scrollbar has been initialised           */
   unsigned int    beg;          /* slider sub-window begin height           */
@@ -28,7 +28,7 @@ typedef struct {
   void setMotion() { state = 'm'; }
   void setUp()     { state = 'U'; }
   void setDn()     { state = 'D'; }
-} scrollBar_t;
+};
 
 #define scrollbar_TotalWidth()  (scrollBar.width + scrollBar.shadow * 2)
 #define scrollbar_isMotion()    (scrollBar.state == 'm')
