@@ -12,7 +12,7 @@
 #endif
 
 #if defined(BG_IMAGE_FROM_FILE) || defined(ENABLE_TRANSPARENCY)
-# define HAVE_BG_PIXMAP 1/* to simplify further usage */
+# define HAVE_BG_PIXMAP 1 /* to simplify further usage */
 struct bgPixmap_t
 {
   bgPixmap_t ();
@@ -29,12 +29,12 @@ struct bgPixmap_t
     tintServerSide  = (1UL<<11),
     tintFlags       = (tintSet|tintServerSide|tintNeeded|tintWholesome),
     blurNeeded      = (1UL<<12),
-    blurServerSide  = (1UL<<13), /* this don't work yet */
+    blurServerSide  = (1UL<<13), /* this doesn't work yet */
 
     isTransparent   = (1UL<<16),
     isInvalid       = (1UL<<17),
     isVtOrigin      = (1UL<<18),  /* if set pixmap has origin at corner of
-                                    vt window instead of parent[0]! */
+                                     vt window instead of parent[0]! */
     hasChanged      = (1UL<<19)
   };
 
@@ -45,7 +45,7 @@ struct bgPixmap_t
     transpPmapTinted = tintNeeded,
     transpPmapBlured = blurNeeded,
     transpTransformations = (tintNeeded|blurNeeded)
-  }; /* this flags are returned by make_transparency_pixmap if called */
+  }; /* these flags are returned by make_transparency_pixmap if called */
 
   bool check_clearChanged () { bool r = flags & hasChanged; flags &= ~hasChanged; return r; };
 
