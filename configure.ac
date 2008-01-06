@@ -113,7 +113,7 @@ dnl# --------------------------------------------------------------------------
 
 AC_ARG_ENABLE(everything,
   [  --enable-everything     enable standard non-multichoice features
-                     NOTE: this option is order dependent],
+                          NOTE: this option is order dependent],
   [
     if test x$enableval = xno; then
        support_frills=no
@@ -216,7 +216,7 @@ AC_ARG_ENABLE(font-styles,
   fi])
 
 AC_ARG_ENABLE(afterimage,
-  [  --enable-afterimage enable integration with libAfterImage for background images],
+  [  --enable-afterimage     enable integration with libAfterImage for background images],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_afterimage=$enableval
   fi])

@@ -1295,13 +1295,13 @@ Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-everything     enable standard non-multichoice features
-                     NOTE: this option is order dependent
+                          NOTE: this option is order dependent
   --enable-warnings       turn on g++ warnings
   --enable-unicode3       use 21 instead of 16 bits to represent unicode characters
   --enable-combining      enable composition of base and combining characters
   --enable-xft            enable xft support on systems that have it
   --enable-font-styles    enable bold and italic support
-  --enable-afterimage enable integration with libAfterImage for background images
+  --enable-afterimage     enable integration with libAfterImage for background images
   --enable-transparency   enable transparent backgrounds
   --enable-fading         enable colors fading when off focus
   --enable-rxvt-scroll    enable rxvt style scrollbar
@@ -4368,7 +4368,6 @@ fi
 fi
 
 
-
 support_frills=yes
 support_inheritpixmap=yes
 support_fading=yes
@@ -4393,7 +4392,6 @@ support_iso14755=yes
 support_styles=yes
 support_perl=yes
 codesets=all
-
 
 
 # Check whether --enable-everything was given.
