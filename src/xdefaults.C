@@ -628,12 +628,7 @@ rxvt_define_key (XrmDatabase *database UNUSED,
 /*
  * look for something like this (XK_Delete)
  * rxvt*keysym.0xFFFF: "\177"
- *
- * arg will be
- *      NULL for ~/.Xdefaults and
- *      non-NULL for command-line options (need to allocate)
  */
-#define NEWARGLIM	500	/* `reasonable' size */
 
 struct keysym_vocabulary_t
 {
@@ -673,30 +668,21 @@ keysym_vocabulary_t keysym_vocabulary[] =
 int
 rxvt_term::parse_keysym (const char *str, const char *arg)
 {
-  int n, sym;
+  int sym;
   unsigned int state = 0;
-  const char *pmodend = NULL;
-  char *newarg = NULL;
-  char newargstr[NEWARGLIM];
+  const char *key = strrchr (str, '-');
 
-  if (arg == NULL)
-    {
-      n = sizeof ("keysym.") - 1;
-      if (strncmp (str, "keysym.", n))
-        return 0;
-
-      str += n;		/* skip `keysym.' */
-      if (!(pmodend = strchr (str, ':')))
-        return -1;
-    }
+  if (!key)
+    key = str;
   else
-    pmodend = str + strlen(str);
+    key++;
 
-  for (--pmodend; str < pmodend; --pmodend)
-    if (*pmodend == '-')
-      break;
+  // string or key is empty
+  if (*arg == '\0' || *key == '\0')
+    return -1;
 
-  while (str < pmodend)
+  // parse modifiers
+  while (str < key)
     {
       unsigned int i;
 
@@ -717,58 +703,17 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
         ++str;
     }
 
-  /* some scanf () have trouble with a 0x prefix */
-  if (str[0] == '0' && toupper (str[1]) == 'X')
+  // convert keysym name to keysym number
+  if ((sym = XStringToKeysym (str)) == None)
     {
-      str += 2;
-
-      if (arg)
-        {
-          if (sscanf (str, (strchr (str, ':') ? "%x:" : "%x"), &sym) != 1)
-            return -1;
-        }
-      else
-        {
-          if (sscanf (str, "%x:", &sym) != 1)
-            return -1;
-
-          /* cue to ':', it's there since sscanf () worked */
-          strncpy (newargstr, strchr (str, ':') + 1, NEWARGLIM - 1);
-          newargstr[NEWARGLIM - 1] = '\0';
-          newarg = newargstr;
-        }
-    }
-  else
-    {
-      /*
-       * convert keysym name to keysym number
-       */
-      strncpy (newargstr, str, NEWARGLIM - 1);
-      newargstr[NEWARGLIM - 1] = '\0';
-
-      if (arg == NULL)
-        {
-          if ((newarg = strchr (newargstr, ':')) == NULL)
-            return -1;
-
-          *newarg++ = '\0';	/* terminate keysym name */
-        }
-
-      if ((sym = XStringToKeysym (newargstr)) == None)
+      // fallback on hexadecimal parsing
+      char *end;
+      sym = strtol (str, &end, 16);
+      if (*end)
         return -1;
-    }
+    }  
 
-  if (newarg == NULL)
-    {
-      strncpy (newargstr, arg, NEWARGLIM - 1);
-      newargstr[NEWARGLIM - 1] = '\0';
-      newarg = newargstr;
-    }
-
-  if (*newarg == '\0')
-    return -1;
-
-  keyboard->register_user_translation (sym, state, newarg);
+  keyboard->register_user_translation (sym, state, arg);
   return 1;
 }
 
