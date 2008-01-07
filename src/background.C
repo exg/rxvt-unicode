@@ -276,7 +276,7 @@ bgPixmap_t::set_geometry (const char *geom)
       char *ops;
       new_flags |= geometrySet;
 
-      strncpy (str, geom, n);
+      memcpy (str, geom, n);
       str[n] = '\0';
       if (str[0] == ':')
         ops = &str[0];
@@ -670,7 +670,7 @@ bgPixmap_t::set_file (const char *file)
         {
           size_t len = f - file;
           f = (char *)malloc (len + 1);
-          strncpy (f, file, len);
+          memcpy (f, file, len);
           f[len] = '\0';
           original_asim = get_asimage (target->asimman, f, 0xFFFFFFFF, 100);
           free (f);

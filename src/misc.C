@@ -287,7 +287,7 @@ rxvt_splitcommastring (const char *cs) NOTHROW
       for ( ; *t && *t != ','; t++) ;
       p = t - s;
       ret[l] = (char *)malloc (p + 1);
-      strncpy (ret[l], s, p);
+      memcpy (ret[l], s, p);
       ret[l][p] = '\0';
       rxvt_strtrim (ret[l]);
       s = ++t;

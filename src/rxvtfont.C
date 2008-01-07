@@ -633,7 +633,7 @@ replace_field (char **ptr, const char *name, int index, const char old, const ch
     {
       size_t len = field - name;
       *ptr = (char *)malloc (len + strlen (replace) + strlen (end) + 1);
-      strncpy (*ptr, name, len);
+      memcpy (*ptr, name, len);
       strcpy (*ptr + len, replace);
       strcat (*ptr, end);
 
@@ -1534,7 +1534,7 @@ rxvt_fontset::add_fonts (const char *desc)
 
           if (end - desc < 511)
             {
-              strncpy (buf, desc, end - desc);
+              memcpy (buf, desc, end - desc);
               buf[end - desc] = 0;
 
               fonts.push_back (new_font (buf, cs));
