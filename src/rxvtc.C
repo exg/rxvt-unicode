@@ -49,7 +49,7 @@ client::client ()
   sockaddr_un sa;
   char *sockname = rxvt_connection::unix_sockname ();
 
-  if (strlen(sockname) >= sizeof(sa.sun_path))
+  if (strlen (sockname) >= sizeof (sa.sun_path))
     {
       fputs ("socket name too long, aborting.\n", stderr);
       exit (STATUS_FAILURE);
