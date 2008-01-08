@@ -636,7 +636,7 @@ struct keysym_vocabulary_t
   unsigned short len;
   unsigned short value;
 };
-keysym_vocabulary_t keysym_vocabulary[] =
+static const keysym_vocabulary_t keysym_vocabulary[] =
 {
   { "ISOLevel3", 9, Level3Mask    },
   { "AppKeypad", 9, AppKeypadMask },
