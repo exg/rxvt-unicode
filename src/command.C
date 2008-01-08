@@ -2172,13 +2172,11 @@ rxvt_term::button_release (XButtonEvent &ev)
                     slip_wheel_ev.start (SCROLLBAR_CONTINUOUS_DELAY, SCROLLBAR_CONTINUOUS_DELAY);
                 }
               else
-                {
 # endif
+                {
                   scr_page (v, i);
                   scrollbar_show (1);
-# ifdef MOUSE_SLIP_WHEELING
                 }
-# endif
             }
             break;
 #endif
