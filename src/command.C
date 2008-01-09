@@ -3672,7 +3672,10 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
               break;
             case 3:			/* 80/132 */
               if (priv_modes & PrivMode_132OK)
-                set_widthheight (((state ? 132 : 80) * fwidth), height);
+                {
+                  scr_poweron ();
+                  set_widthheight (((state ? 132 : 80) * fwidth), 24 * fheight);
+                }
               break;
             case 4:			/* smooth scrolling */
               set_option (Opt_jumpScroll, !state);

@@ -1019,7 +1019,8 @@ rxvt_term::scr_backspace () NOTHROW
         {
 #ifdef TERMCAP_HAS_BW
           screen.cur.col = ncol - 1;
-          screen.cur.row--;
+          --screen.cur.row;
+
           want_refresh = 1;
 #endif
         }
