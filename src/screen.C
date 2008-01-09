@@ -1026,7 +1026,7 @@ rxvt_term::scr_backspace () NOTHROW
 #endif
         }
     }
-  else if (!(screen.flags & Screen_WrapNext))
+  else
     scr_gotorc (0, -1, RELATIVE);
 
   screen.flags &= ~Screen_WrapNext;
