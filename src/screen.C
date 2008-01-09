@@ -1013,18 +1013,14 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
 void
 rxvt_term::scr_backspace () NOTHROW
 {
-  want_refresh = 1;
-
   if (screen.cur.col == 0)
     {
-      screen.flags &= ~Screen_WrapNext;
-
       if (screen.cur.row > 0)
         {
 #ifdef TERMCAP_HAS_BW
           screen.cur.col = ncol - 1;
           screen.cur.row--;
-          return;
+          want_refresh = 1;
 #endif
         }
     }
