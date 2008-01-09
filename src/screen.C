@@ -1017,6 +1017,8 @@ rxvt_term::scr_backspace () NOTHROW
 
   if (screen.cur.col == 0)
     {
+      screen.flags &= ~Screen_WrapNext;
+
       if (screen.cur.row > 0)
         {
 #ifdef TERMCAP_HAS_BW
@@ -1028,8 +1030,6 @@ rxvt_term::scr_backspace () NOTHROW
     }
   else
     scr_gotorc (0, -1, RELATIVE);
-
-  screen.flags &= ~Screen_WrapNext;
 }
 
 /* ------------------------------------------------------------------------- */
