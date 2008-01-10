@@ -454,8 +454,9 @@ keyboard_manager::setup_hash ()
 
           assert (index >= 0);
           keysym_t *b = keymap [index];
-          assert (i == (signed) index ||	// the normally expected result
-            (a->keysym + j) >= b->keysym && (a->keysym + j) <= (b->keysym + b->range) && compare_priority (a, b) <= 0);	// is effectively the same or a closer match
+          assert (i == index	// the normally expected result
+                  || IN_RANGE_INC (a->keysym + j, b->keysym, b->keysym + b->range)
+                  && compare_priority (a, b) <= 0);	// is effectively the same or a closer match
         }
     }
 #endif
