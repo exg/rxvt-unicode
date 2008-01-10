@@ -91,9 +91,11 @@ private:
   uint16_t hash[KEYSYM_HASH_BUDGETS];
   vector<keysym_t *> keymap;
 
+#if STOCK_KEYMAP
   // stock keymaps are all static data
   static keysym_t stock_keymap[];
-  // user keymaps and their .string are dynamicaly allocated and freed
+#endif
+  // user keymaps and their .string are dynamically allocated and freed
   vector<keysym_t *> user_keymap;
   vector<const char *> user_translations;
 };
