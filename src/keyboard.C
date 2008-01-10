@@ -70,7 +70,7 @@
 
 keysym_t keyboard_manager::stock_keymap[] = {
   /* examples */
-  /*        keysym,                state, range,               handler,              str */
+  /*        keysym,                state, range,                  type,              str */
 //{XK_ISO_Left_Tab,                    0,     1,      keysym_t::STRING,           "\033[Z"},
 //{            'a',                    0,    26, keysym_t::RANGE_META8,           "a" "%c"},
 //{            'a',          ControlMask,    26, keysym_t::RANGE_META8,          "" "%c"},
