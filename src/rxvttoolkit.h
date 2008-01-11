@@ -75,7 +75,7 @@ enum {
   XA_XEMBED_INFO,
 #endif
 #if !ENABLE_MINIMAL
-  // these are usually allocated by other subsystens, but we do it
+  // these are usually allocated by other subsystems, but we do it
   // here to avoid a server roundtrip.
   XA_SCREEN_RESOURCES,
   XA_XDCCC_LINEAR_RGB_CORRECTION,
