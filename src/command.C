@@ -1081,7 +1081,7 @@ rxvt_term::text_blink_cb (ev::timer &w, int revents)
     {
       hidden_text = !hidden_text;
       want_refresh = 1;
-  refresh_check ();
+      refresh_check ();
     }
   else
     w.stop ();

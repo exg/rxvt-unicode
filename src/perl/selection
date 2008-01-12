@@ -38,10 +38,7 @@ my @mark_patterns = (
    qr{ ([^[:space:]]+) }x,
 
    # common types of "parentheses"
-   qr{ (?<![^[:space:]])  ` ([^‘’]+)  ` (?![^[:space:]]) }x,
-   qr{ (?<![^[:space:]])  ‘ ([^‘’]+)  ’ (?![^[:space:]]) }x,
-   qr{ (?<![^[:space:]])  ` ([^`']+)  ' (?![^[:space:]]) }x,
-
+   qr{ (?<![^[:space:]])  [`'] ([^`']+)  [`'] (?![^[:space:]]) }x,
    qr{ (?<![^[:space:]])  ‘ ([^‘’]+)  ’ (?![^[:space:]]) }x,
    qr{ (?<![^[:space:]])  “ ([^“”]+)  ” (?![^[:space:]]) }x,
 

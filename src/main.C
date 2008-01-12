@@ -583,6 +583,8 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 
   XMapWindow (dpy, vt);
   XMapWindow (dpy, parent[0]);
+
+  refresh_check ();
 }
 
 static struct sig_handlers
