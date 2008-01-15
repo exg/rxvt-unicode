@@ -1440,7 +1440,7 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case ConfigureNotify:
-      /* fprintf (stderr, "ConfigureNotify for %X, parent is %X, geom is %dx%d%+d%+d, old geom was %dx%d\n",
+       /*fprintf (stderr, "ConfigureNotify for %X, parent is %X, geom is %dx%d%+d%+d, old geom was %dx%d\n",
               ev.xconfigure.window, parent[0], ev.xconfigure.width, ev.xconfigure.height, ev.xconfigure.x, ev.xconfigure.y,
               szHint.width, szHint.height); */
         if (ev.xconfigure.window == parent[0])
@@ -1457,7 +1457,12 @@ rxvt_term::x_cb (XEvent &ev)
               {
 #ifdef HAVE_BG_PIXMAP
                 if (bgPixmap.window_position_sensitive ())
-                  update_background ();
+                  {
+                    if (mapped)
+                      update_background ();
+                    else
+                      bgPixmap.invalidate ();
+                  }
 #endif
               }
 
@@ -1487,6 +1492,22 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case MapNotify:
+#ifdef HAVE_BG_PIXMAP
+        /* This is needed spcifically to fix the case of no window manager or a
+         * non-reparenting window manager. In those cases we never get first
+         * ConfigureNotify. Also that speeds startup under normal WM, by taking
+         * care of multiplicity of ConfigureNotify events arriwing while WM does
+         * reparenting.
+         * We should not render background immidiately, as there could be several
+         * ConfigureNotify's to follow. Lets take care of all of them in one scoop
+         * by scheduling background redraw as soon as we can, but giving a short
+         * bit of time for ConfigureNotifies to arrive.
+         * We should render background PRIOR to drawing any text, but AFTER all
+         * of ConfigureNotifys for the best results.
+         */
+        if (bgPixmap.flags & bgPixmap_t::isInvalid)
+          update_background_ev.start (0.025);
+#endif
         mapped = 1;
 #ifdef TEXT_BLINK
         text_blink_ev.start ();

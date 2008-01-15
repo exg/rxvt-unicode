@@ -513,6 +513,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 #ifdef HAVE_BG_PIXMAP
   {
     bgPixmap.set_target (this);
+    bgPixmap.invalidate ();
 
 #ifdef ENABLE_TRANSPARENCY
     if (option (Opt_transparent))
