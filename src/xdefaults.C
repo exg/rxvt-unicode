@@ -496,20 +496,21 @@ rxvt_term::get_options (int argc, const char *const *argv)
   for (i = 1; i < argc; i++)
     {
       unsigned int entry, longopt = 0;
-      const char *flag, *opt;
+      const char *opt;
+      int flag;
 
       opt = argv[i];
 
       if (*opt == '-')
         {
-          flag = resval_on;
+          flag = 1;
 
           if (*++opt == '-')
             longopt = *opt++;	/* long option */
         }
       else if (*opt == '+')
         {
-          flag = resval_off;
+          flag = 0;
 
           if (*++opt == '+')
             longopt = *opt++;	/* long option */
@@ -537,7 +538,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
       if (entry < optList_size)
         {
           if (optList_isReverse (entry))
-            flag = flag == resval_on ? resval_off : resval_on;
+            flag = !flag;
 
           if (optList_strlen (entry))
             {
@@ -549,19 +550,19 @@ rxvt_term::get_options (int argc, const char *const *argv)
 
               if (optList[entry].doff != -1)
                 {
-                  if (flag == resval_on && i+1 == argc)
+                  if (flag && i+1 == argc)
                     rxvt_fatal ("option '%s' requires an argument, aborting.\n", argv [i]);
 
-                  rs[optList[entry].doff] = flag == resval_on ? argv[++i] : resval_undef;
+                  rs[optList[entry].doff] = flag ? argv[++i] : resval_undef;
                 }
             }
           else
             {
               /* boolean value */
-              set_option (optList[entry].index, flag == resval_on);
+              set_option (optList[entry].index, flag);
 
               if (optList[entry].doff != -1)
-                rs[optList[entry].doff] = flag;
+                rs[optList[entry].doff] = flag ? resval_on : resval_off;
             }
         }
 #ifndef NO_RESOURCES
