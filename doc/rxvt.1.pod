@@ -275,6 +275,15 @@ B<visualBell>.
 
 Turn on/off scrollbar; resource B<scrollBar>.
 
+=item B<-sr>|B<+sr>
+
+Put scrollbar on right/left; resource B<scrollBar_right>.
+
+=item B<-st>|B<+st>
+
+Display rxvt (non XTerm/NeXT) scrollbar without/with a trough;
+resource B<scrollBar_floating>.
+
 =item B<-si>|B<+si>
 
 Turn on/off scroll-to-bottom on TTY output inhibit; resource
@@ -290,15 +299,6 @@ B<scrollTtyKeypress>.
 Turn on/off scrolling with the scrollback buffer as new lines appear.
 This only takes effect if B<-si> is also given; resource
 B<scrollWithBuffer>.
-
-=item B<-sr>|B<+sr>
-
-Put scrollbar on right/left; resource B<scrollBar_right>.
-
-=item B<-st>|B<+st>
-
-Display rxvt (non XTerm/NeXT) scrollbar without/with a trough;
-resource B<scrollBar_floating>.
 
 =item B<-ptab>|B<+ptab>
 
@@ -813,11 +813,6 @@ intensity foreground/background colours. Disabling this option (B<False>,
 option B<+is>) disables this behaviour, the high intensity colours are not
 reachable.
 
-=item B<scrollstyle:> I<mode>
-
-Set scrollbar style to B<rxvt>, B<plain>, B<next> or B<xterm>. B<plain> is
-the author's favourite.
-
 =item B<title:> I<string>
 
 Set window title string, the default title is the command-line
@@ -871,6 +866,11 @@ Example:
 
 This creates a new file in your home directory with the screen contents
 every time you hit C<Print>.
+
+=item B<scrollstyle:> I<mode>
+
+Set scrollbar style to B<rxvt>, B<plain>, B<next> or B<xterm>. B<plain> is
+the author's favourite.
 
 =item B<scrollBar:> I<boolean>
 
