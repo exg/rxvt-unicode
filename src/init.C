@@ -333,17 +333,6 @@ init_secondary ()
     }
 
   dup2 (STDERR_FILENO, STDOUT_FILENO);
-
-#if 0 // schmorp sayz closing filies is murder
-  for (i = STDERR_FILENO + 1; i < num_fds; i++)
-    {
-#ifdef __sgi                    /* Alex Coventry says we need 4 & 7 too */
-      if (i == 4 || i == 7)
-        continue;
-#endif
-      close (i);
-    }
-#endif
 }
 
 /*----------------------------------------------------------------------*/
