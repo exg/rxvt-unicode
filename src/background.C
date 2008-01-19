@@ -89,6 +89,8 @@
 #ifdef HAVE_BG_PIXMAP
 bgPixmap_t::bgPixmap_t ()
 {
+  // this is basically redundant as bgPixmap_t is only used in
+  // zero_initialised-derived structs
 #ifdef HAVE_AFTERIMAGE
   original_asim = NULL;
 #endif
@@ -99,6 +101,7 @@ bgPixmap_t::bgPixmap_t ()
   flags = 0;
   pixmap = None;
   valid_since = invalid_since = 0;
+  target = 0;
 }
 
 void
@@ -123,7 +126,7 @@ bgPixmap_t::window_size_sensitive ()
 
 # ifdef BG_IMAGE_FROM_FILE
 #  ifdef HAVE_AFTERIMAGE
-  if (original_asim != NULL)
+  if (original_asim)
 #  endif
     {
       if (h_scale != 0 || v_scale != 0
@@ -145,7 +148,7 @@ bgPixmap_t::window_position_sensitive ()
 
 # ifdef BG_IMAGE_FROM_FILE
 #  ifdef HAVE_AFTERIMAGE
-  if (original_asim != NULL)
+  if (original_asim)
 #  endif
     {
       if (h_align == rootAlign || v_align == rootAlign)
@@ -159,7 +162,7 @@ bgPixmap_t::window_position_sensitive ()
 bool bgPixmap_t::need_client_side_rendering ()
 {
 # ifdef HAVE_AFTERIMAGE
-  if (original_asim != NULL)
+  if (original_asim)
     return true;
 # endif
 # ifdef ENABLE_TRANSPARENCY
@@ -470,13 +473,15 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
           x = -x;
           y = -y;
         }
+
       if (h_align != rootAlign)
         x = make_align_position (h_align, target_width, w > 0 ? w : (int)original_asim->width);
+
       if (v_align != rootAlign)
         y = make_align_position (v_align, target_height, h > 0 ? h : (int)original_asim->height);
     }
 
-  if (original_asim == NULL
+  if (!original_asim
       || x >= target_width
       || y >= target_height
       || (w > 0 && x + w <= 0)
@@ -487,6 +492,7 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
           new_pmap_width = background->width;
           new_pmap_height = background->height;
           result = background;
+
           if (background_tint != TINT_LEAVE_SAME)
             {
               ASImage* tmp = tile_asimage (target->asv, background, 0, 0,
@@ -502,6 +508,7 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
   else
     {
       result = original_asim;
+
       if ((w > 0 && w != original_asim->width)
           || (h > 0 && h != original_asim->height))
         {
@@ -511,6 +518,7 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
                                   background ? ASA_ASImage : ASA_XImage,
                                   100, ASIMAGE_QUALITY_DEFAULT);
         }
+
       if (background == NULL)
         {
           /* if tiling - pixmap has to be sized exactly as the image,
@@ -523,16 +531,17 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
           if (h_scale == 0 || v_scale == 0)
             {
               ASImage *tmp = tile_asimage (target->asv, result,
-                                            (h_scale > 0) ? 0 : (int)result->width - x,
-                                            (v_scale > 0) ? 0 : (int)result->height - y,
-                                            new_pmap_width, 
-                                            new_pmap_height,
-                                            TINT_LEAVE_SAME, ASA_XImage,
-                                            100, ASIMAGE_QUALITY_DEFAULT);
+                                           (h_scale > 0) ? 0 : (int)result->width - x,
+                                           (v_scale > 0) ? 0 : (int)result->height - y,
+                                           new_pmap_width, 
+                                           new_pmap_height,
+                                           TINT_LEAVE_SAME, ASA_XImage,
+                                           100, ASIMAGE_QUALITY_DEFAULT);
               if (tmp)
                 {
                   if (result != original_asim)
                     destroy_asimage (&result);
+
                   result = tmp;
                 }
             }
@@ -548,6 +557,7 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
           layers[0].clip_height = target_height;
           layers[0].tint = background_tint;
           layers[1].im = result;
+
           if (w <= 0)
             {
               /* tile horizontally */
@@ -561,6 +571,7 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
               layers[1].dst_x = x;
               layers[1].clip_width = result->width;
             }
+
           if (h <= 0)
             {
               while (y > 0) y -= (int)result->height;
@@ -572,20 +583,25 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
               layers[1].dst_y = y;
               layers[1].clip_height = result->height;
             }
+
           if (target->rs[Rs_blendtype])
             {
               layers[1].merge_scanlines = blend_scanlines_name2func (target->rs[Rs_blendtype]);
               if (layers[1].merge_scanlines == NULL)
                 layers[1].merge_scanlines = alphablend_scanlines;
             }
+
           ASImage *tmp = merge_layers (target->asv, layers, 2, target_width, target_height,
                                        ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT);
+
           if (tmp)
             {
               if (result != original_asim)
                 destroy_asimage (&result);
+
               result = tmp;
             }
+
           free (layers);
         }
     }
@@ -657,13 +673,14 @@ bgPixmap_t::set_file (const char *file)
 {
   char *f;
 
-  assert (file != NULL);
+  assert (file);
 
-  if (*file != '\0')
+  if (*file)
     {
 #  ifdef HAVE_AFTERIMAGE
       if (target->asimman == NULL)
         target->asimman = create_generic_imageman (target->rs[Rs_path]);
+
       if ((f = strchr (file, ';')) == NULL)
         original_asim = get_asimage (target->asimman, file, 0xFFFFFFFF, 100);
       else
@@ -675,9 +692,11 @@ bgPixmap_t::set_file (const char *file)
           original_asim = get_asimage (target->asimman, f, 0xFFFFFFFF, 100);
           free (f);
         }
-      return (original_asim != NULL);
+
+      return original_asim;
 #  endif
     }
+
   return false;
 }
 
@@ -692,6 +711,7 @@ bgPixmap_t::set_transparent ()
       flags |= isTransparent;
       return true;
     }
+
   return false;
 }
 
