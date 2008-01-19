@@ -228,6 +228,10 @@ rxvt_term::~rxvt_term ()
 #endif
   delete fontset[0];
 
+#ifdef HAVE_BG_PIXMAP
+  bgPixmap.destroy ();
+#endif
+
   if (display)
     {
       selection_clear ();
@@ -276,13 +280,10 @@ rxvt_term::~rxvt_term ()
           }
 
       clear ();
-    }
 
-#ifdef HAVE_BG_PIXMAP
-  bgPixmap.destroy ();
-#endif
-  display->flush (); /* ideally .put should do this */
-  displays.put (display);
+      display->flush (); /* ideally .put should do this */
+      displays.put (display);
+    }
 
   scr_release ();
 
