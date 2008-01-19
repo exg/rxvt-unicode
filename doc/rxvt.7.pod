@@ -2003,17 +2003,17 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 	B<< C<Ps = 2> >>	Change Window Title to B<< C<Pt> >>
 	B<< C<Ps = 3> >>	If B<< C<Pt> >> starts with a B<< C<?> >>, query the (STRING) property of the window and return it. If B<< C<Pt> >> contains a B<< C<=> >>, set the named property to the given value, else delete the specified property.
 	B<< C<Ps = 4> >>	B<< C<Pt> >> is a semi-colon separated sequence of one or more semi-colon separated B<number>/B<name> pairs, where B<number> is an index to a colour and B<name> is the name of a colour. Each pair causes the B<number>ed colour to be changed to B<name>. Numbers 0-7 corresponds to low-intensity (normal) colours and 8-15 corresponds to high-intensity colours. 0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white
-	B<< C<Ps = 10> >>	Change colour of text foreground to B<< C<Pt> >> B<(NB: may change in future)>
-	B<< C<Ps = 11> >>	Change colour of text background to B<< C<Pt> >> B<(NB: may change in future)>
+	B<< C<Ps = 10> >>	Change colour of text foreground to B<< C<Pt> >>
+	B<< C<Ps = 11> >>	Change colour of text background to B<< C<Pt> >>
 	B<< C<Ps = 12> >>	Change colour of text cursor foreground to B<< C<Pt> >>
 	B<< C<Ps = 13> >>	Change colour of mouse foreground to B<< C<Pt> >>
 	B<< C<Ps = 17> >>	Change colour of highlight characters to B<< C<Pt> >>
 	B<< C<Ps = 18> >>	Change colour of bold characters to B<< C<Pt> >> [deprecated, see 706]
 	B<< C<Ps = 19> >>	Change colour of underlined characters to B<< C<Pt> >> [deprecated, see 707]
 	B<< C<Ps = 20> >>	Change background pixmap parameters (see section BACKGROUND IMAGE) (Compile AfterImage).
-	B<< C<Ps = 39> >>	Change default foreground colour to B<< C<Pt> >>.
+	B<< C<Ps = 39> >>	Change default foreground colour to B<< C<Pt> >>. [deprecated, use 10]
 	B<< C<Ps = 46> >>	Change Log File to B<< C<Pt> >> I<unimplemented>
-	B<< C<Ps = 49> >>	Change default background colour to B<< C<Pt> >>.
+	B<< C<Ps = 49> >>	Change default background colour to B<< C<Pt> >>. [deprecated, use 11]
 	B<< C<Ps = 50> >>	Set fontset to B<< C<Pt> >>, with the following special values of B<< C<Pt> >> (B<rxvt>) B<< C<#+n> >> change up B<< C<n> >> B<< C<#-n> >> change down B<< C<n> >> if B<< C<n> >> is missing of 0, a value of 1 is used I<empty> change to font0 B<< C<n> >> change to font B<< C<n> >>
 	B<< C<Ps = 55> >>	Log all scrollback buffer and all of screen to B<< C<Pt> >>
 	B<< C<Ps = 701> >>	Change current locale to B<< C<Pt> >>, or, if B<< C<Pt> >> is B<< C<?> >>, return the current locale (Compile frills).

@@ -3375,9 +3375,11 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
             process_color_seq (op, color, name, resp);
           }
         break;
+      case Rxvt_restoreFG:
       case XTerm_Color00:
         process_color_seq (op, Color_fg, str, resp);
         break;
+      case Rxvt_restoreBG:
       case XTerm_Color01:
         process_color_seq (op, Color_bg, str, resp);
         break;
@@ -3465,13 +3467,6 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
           }
         break;
 #endif
-
-      case Rxvt_restoreFG:
-        set_window_color (Color_fg, str);
-        break;
-      case Rxvt_restoreBG:
-        set_window_color (Color_bg, str);
-        break;
 
       case XTerm_logfile:
         // TODO, when secure mode?

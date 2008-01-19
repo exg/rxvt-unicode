@@ -396,8 +396,8 @@ enum {
   XTerm_title            =  2,
   XTerm_property         =  3,      // change X property
   XTerm_Color            =  4,      // change colors
-  XTerm_Color00          = 10,      // not implemented, CLASH!
-  XTerm_Color01          = 11,      // not implemented
+  XTerm_Color00          = 10,      // change fg color
+  XTerm_Color01          = 11,      // change bg color
   XTerm_Color_cursor     = 12,      // change actual 'Cursor' color
   XTerm_Color_pointer_fg = 13,      // change actual 'Pointer' fg color
   XTerm_Color_pointer_bg = 14,      // change actual 'Pointer' bg color
@@ -412,13 +412,15 @@ enum {
   XTerm_emacs51          = 51,      // reserved for emacs shell
   /*
    * rxvt extensions of XTerm OSCs: ESC ] Ps;Pt (ST|BEL)
-   * at least Rxvt_Color_BD and Rxvt_Color_UL clash with xterm
    */
-  Rxvt_Color_BD          = 18,      // change actual 'Bold' color
-  Rxvt_Color_UL          = 19,      // change actual 'Underline' color
+
+  // deprecated
+  Rxvt_Color_BD          = 18,
+  Rxvt_Color_UL          = 19,
+  Rxvt_restoreFG         = 39,
+  Rxvt_restoreBG         = 49,
+
   Rxvt_Pixmap            = 20,      // new bg pixmap
-  Rxvt_restoreFG         = 39,      // change default fg color
-  Rxvt_restoreBG         = 49,      // change default bg color
   Rxvt_dumpscreen        = 55,      // dump scrollback and all of screen
 
   URxvt_locale           = 701,     // change locale
@@ -426,8 +428,8 @@ enum {
 
   URxvt_Color_IT         = 704,     // change actual 'Italic' colour
   URxvt_Color_tint       = 705,     // change actual tint colour
-  URxvt_Color_BD         = 706,
-  URxvt_Color_UL         = 707,
+  URxvt_Color_BD         = 706,     // change actual 'Bold' color
+  URxvt_Color_UL         = 707,     // change actual 'Underline' color
 
   URxvt_font             = 710,
   URxvt_boldFont         = 711,
