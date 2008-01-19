@@ -7,5 +7,6 @@
 #define EV_CONFIG_H <config.h>
 #define EV_MINPRI 0
 #define EV_MAXPRI 0
+#define EV_USE_STDEXCEPT 0
 
 #include "ev++.h"
