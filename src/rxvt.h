@@ -1263,7 +1263,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void process_graphics ();
   // init.C
   void init_vars ();
-  void init_secondary ();
   const char **init_resources (int argc, const char *const *argv);
   void init (int argc, const char *const *argv, stringvec *envv);
   void init_env ();

@@ -312,8 +312,8 @@ rxvt_term::init_vars ()
   set_option (Opt_iso14755_52);
 }
 
-void
-rxvt_term::init_secondary ()
+static void
+init_secondary ()
 {
   int i;
 
