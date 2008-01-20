@@ -65,8 +65,8 @@
     { (option), (Optflag_Switch | (flag)), -1, NULL, (opt), NULL, (desc)}
 
 /* convenient macros */
-#define optList_strlen(i)						\
-    (optList[i].flag ? 0 : (optList[i].arg ? strlen (optList[i].arg) : 1))
+#define optList_isString(i)						\
+    (optList[i].flag == 0)
 #define optList_isBool(i)						\
     (optList[i].flag & Optflag_Boolean)
 #define optList_isReverse(i)						\
@@ -415,12 +415,8 @@ rxvt_usage (int type)
             {
               int len = 0;
 
-              if (!optList_isBool (i))
-                {
-                  len = optList_strlen (i);
-                  if (len > 0)
-                    len++;	/* account for space */
-                }
+              if (optList[i].arg)
+                len = strlen (optList[i].arg) + 1;
 #ifdef DEBUG_STRICT
               assert (optList[i].opt != NULL);
 #endif
@@ -434,7 +430,7 @@ rxvt_usage (int type)
                 }
 
               rxvt_log (" [-%s%s", (optList_isBool (i) ? "/+" : ""), optList[i].opt);
-              if (optList_strlen (i))
+              if (optList[i].arg)
                 rxvt_log (" %s]", optList[i].arg);
               else
                 rxvt_log ("]");
@@ -540,7 +536,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
           if (optList_isReverse (entry))
             flag = !flag;
 
-          if (optList_strlen (entry))
+          if (optList_isString (entry))
             {
               /*
                * special cases are handled in main.c:main () to allow
