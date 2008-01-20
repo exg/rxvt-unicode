@@ -18,7 +18,6 @@ WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
 9.0
-	- OSC 39/49 are deprecated and aliased to OSC 10/11.
 	- fix a crash bug where urxvtd would crash when urxvtc was called
           with wrong arguments (I wish debian maintainers in general would
           report bugs and their proposed fixes to the original package maintaienrs
@@ -26,10 +25,11 @@ DUMB: support tex fonts
         - check for refresh after initialising to avoid staying blank
           till the first event arrives. or so.
 	- continuously update transparency while moving/resizing now.
-	- scrollbar code cleanups.
+	- OSC 39/49 are deprecated and aliased to OSC 10/11.
         - cub1 now acts as advertised (and ignores the "wrapped" state).
         - the 132/80 mode switch now forces a height of 24, too, and
           resets the terminal.
+	- scrollbar code cleanups.
 
 8.9  Mon Dec 24 07:51:40 CET 2007
 	- fix the issue where urxvtd would not immediately close a window

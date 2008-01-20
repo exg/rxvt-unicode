@@ -2850,6 +2850,7 @@ rxvt_term::process_csi_seq ()
                 tt_printf ("\033[>%d;95;0c", 'U');
               }
             break;
+
           case '?':
             if (ch == 'h' || ch == 'l' || ch == 'r' || ch == 's' || ch == 't')
               process_terminal_mode (ch, priv, nargs, arg);
