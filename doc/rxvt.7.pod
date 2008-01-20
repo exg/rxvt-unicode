@@ -1980,6 +1980,15 @@ X<Priv66>
 
 =end table
 
+=item B<< C<Pm = 2004> >>
+
+=begin table
+
+	B<< C<h> >>	Enable bracketed paste mode - prepend / append to the pasted text the control sequences C<ESC [ 200 ~> / C<ESC [ 201 ~>
+	B<< C<l> >>	Disable bracketed paste mode
+
+=end table
+
 =back
 
 =back

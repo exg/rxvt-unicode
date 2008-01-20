@@ -2651,7 +2651,13 @@ rxvt_term::paste (char *data, unsigned int len) NOTHROW
     if (data[i] == C0_LF)
       data[i] = C0_CR;
 
+  if (priv_modes & PrivMode_BracketPaste)
+    tt_printf ("\e[200~");
+
   tt_write (data, len);
+
+  if (priv_modes & PrivMode_BracketPaste)
+    tt_printf ("\e[201~");
 }
 
 /* ------------------------------------------------------------------------- */

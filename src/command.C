@@ -3632,6 +3632,7 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
                  // 1048 save and restore cursor
                   { 1049, PrivMode_Screen }, /* xterm extension, clear screen on ti rather than te */
                  // 1051, 1052, 1060, 1061 keyboard emulation NYI
+                  { 2004, PrivMode_BracketPaste },
                 };
 
   if (nargs == 0)

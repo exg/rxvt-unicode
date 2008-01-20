@@ -556,6 +556,7 @@ enum {
 #define PrivMode_LFNL		(1UL<<19)
 #define PrivMode_MouseBtnEvent  (1UL<<20)
 #define PrivMode_MouseAnyEvent  (1UL<<21)
+#define PrivMode_BracketPaste   (1UL<<22)
 
 #define PrivMode_mouse_report   (PrivMode_MouseX10|PrivMode_MouseX11|PrivMode_MouseBtnEvent|PrivMode_MouseAnyEvent)
 

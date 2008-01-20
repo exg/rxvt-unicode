@@ -18,6 +18,7 @@ WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
 9.0
+	- implement bracketed paste mode (xterm private mode 2004).
 	- fix a crash bug where urxvtd would crash when urxvtc was called
           with wrong arguments (I wish debian maintainers in general would
           report bugs and their proposed fixes to the original package maintaienrs
