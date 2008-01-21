@@ -18,11 +18,11 @@ WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
 9.0
-	- implement bracketed paste mode (xterm private mode 2004).
 	- fix a crash bug where urxvtd would crash when urxvtc was called
           with wrong arguments (I wish debian maintainers in general would
           report bugs and their proposed fixes to the original package maintaienrs
           instead of sitting on them for good measure to see if anybody notices).
+	- implement bracketed paste mode (xterm private mode 2004).
         - check for refresh after initialising to avoid staying blank
           till the first event arrives. or so.
 	- continuously update transparency while moving/resizing now.
@@ -1276,7 +1276,7 @@ DUMB: support tex fonts
 1.4  Fri Jan 16 23:03:22 CET 2004
 	- fix stupid segfault on esc-c
 	- small font tunings
-	- much better io manager, less bugs, higher speed
+	- much better io manager, fewer bugs, higher speed
 	- better error reporting for unknown options
 
 1.3  2003-12-26
@@ -1296,7 +1296,7 @@ DUMB: support tex fonts
 	- Support for non-utf-8-locales
 	- much improved font choosing
 
-1.0
+1.0  2003-12-18
 	- first release
 	- originally cloned from rxvt-CVS 2003-11-19 00:26
 	- removed rclock et al.
