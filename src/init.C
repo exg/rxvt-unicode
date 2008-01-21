@@ -317,13 +317,8 @@ init_secondary ()
 {
   int i;
 
-  /*
-   * Close all unused file descriptors
-   * We don't want them, we don't need them.
-   */
   if ((i = open ("/dev/null", O_RDONLY)) < 0)
     {
-      /* TODO: BOO HISS */
       dup2 (STDERR_FILENO, STDIN_FILENO);
     }
   else if (i != STDIN_FILENO)
