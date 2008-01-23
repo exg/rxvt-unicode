@@ -239,10 +239,12 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color) 
     {
 #if XFT
       bool done = false;
-#ifdef HAVE_BG_PIXMAP
-      if (term->bgPixmap.pixmap && color >= 0 && term->pix_colors[color].c.color.alpha < 0x0ff00)
+
+# ifdef HAVE_BG_PIXMAP
+      if (term->bgPixmap.pixmap && color >= 0 && !term->pix_colors[color].is_opaque ())
         {
           Picture dst = XftDrawPicture (d);
+
           if (dst != 0)
             {
               XClearArea (disp, d, x, y, w, h, false);
@@ -251,9 +253,10 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color) 
               done = true;
             }
         }
-#endif
+# endif
       if (!done)
         XftDrawRect (d, &term->pix_colors[color].c, x, y, w, h);
+
 #else
       XSetForeground (disp, gc, term->pix_colors[color]);
       XFillRectangle (disp, d, gc, x, y, w, h);

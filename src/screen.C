@@ -89,24 +89,22 @@ static inline void fill_text (text_t *start, text_t value, int len)
  * CLEAR_CHARS: clear <num> chars starting from pixel position <x,y>
  * ERASE_ROWS : set <num> rows starting from row <row> to the foreground colour
  */
-#define drawBuffer      vt
-
 #define CLEAR_ROWS(row, num)                                           \
-    if (mapped)                                                \
-        XClearArea (dpy, drawBuffer, 0,                   \
-                    Row2Pixel (row), (unsigned int)width,      \
+    if (mapped)                                                        \
+        XClearArea (dpy, vt, 0,                                        \
+                    Row2Pixel (row), (unsigned int)width,              \
                     (unsigned int)Height2Pixel (num), False)
 
 #define CLEAR_CHARS(x, y, num)                                         \
-    if (mapped)                                                \
-        XClearArea (dpy, drawBuffer, x, y,                \
+    if (mapped)                                                        \
+        XClearArea (dpy, vt, x, y,                                     \
                     (unsigned int)Width2Pixel (num),                   \
                     (unsigned int)Height2Pixel (1), False)
 
 #define ERASE_ROWS(row, num)                                           \
-    XFillRectangle (dpy, drawBuffer, gc,          \
+    XFillRectangle (dpy, vt, gc,                                       \
                     0, Row2Pixel (row),                                \
-                    (unsigned int)width,                       \
+                    (unsigned int)width,                               \
                     (unsigned int)Height2Pixel (num))
 
 /* ------------------------------------------------------------------------- *
@@ -2377,7 +2375,7 @@ rxvt_term::scr_refresh () NOTHROW
 #endif
                 XSetForeground (dpy, gc, pix_colors[fore]);
 
-              XDrawLine (dpy, drawBuffer, gc,
+              XDrawLine (dpy, vt, gc,
                          xpixel, ypixel + font->ascent + 1,
                          xpixel + Width2Pixel (count) - 1, ypixel + font->ascent + 1);
             }
@@ -2425,7 +2423,7 @@ rxvt_term::scr_refresh () NOTHROW
 #endif
             XSetForeground (dpy, gc, pix_colors[ccol1]);
 
-          XDrawRectangle (dpy, drawBuffer, gc,
+          XDrawRectangle (dpy, vt, gc,
                           Col2Pixel (col),
                           Row2Pixel (oldcursor.row),
                           (unsigned int) (Width2Pixel (cursorwidth) - 1),
