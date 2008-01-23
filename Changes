@@ -25,6 +25,9 @@ DUMB: support tex fonts
         - drawing xft compose characters was causing garbage to be drawn.
         - correctly clear xft character background in all cases.
 	- implement bracketed paste mode (xterm private mode 2004).
+        - improve documentation on alpha channel handling, make urxvt
+          work better on servers lacking the RENDER extension when alpha
+          channels or background images are used.
         - check for refresh after initialising to avoid staying blank
           till the first event arrives. or so.
         - the FORCE_UNBUFFERED_XFT feature macro works again.
