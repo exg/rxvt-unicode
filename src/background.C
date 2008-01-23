@@ -372,13 +372,14 @@ bgPixmap_t::set_geometry (const char *geom)
           while (*ops)
             {
               while (*ops == ':' || isspace(*ops)) ++ops;
-#  define CHECK_GEOM_OPS(op_str)  (strncasecmp (ops, (op_str), sizeof(op_str)-1) == 0)
-              if (CHECK_GEOM_OPS("tile"))
+
+#  define CHECK_GEOM_OPS(op_str)  (strncasecmp (ops, (op_str), sizeof (op_str) - 1) == 0)
+              if (CHECK_GEOM_OPS ("tile"))
                 {
                   w = h = noScale;
                   geom_flags |= WidthValue|HeightValue;
                 }
-              else if (CHECK_GEOM_OPS("propscale"))
+              else if (CHECK_GEOM_OPS ("propscale"))
                 {
                   if (w == 0 && h == 0)
                     {
@@ -387,53 +388,49 @@ bgPixmap_t::set_geometry (const char *geom)
                     }
                   new_flags |= propScale;
                 }
-              else if (CHECK_GEOM_OPS("hscale"))
+              else if (CHECK_GEOM_OPS ("hscale"))
                 {
-                  if (w == 0)
-                    w = windowScale;
+                  if (w == 0) w = windowScale;
+
                   h = noScale;
                   geom_flags |= WidthValue|HeightValue;
                 }
-              else if (CHECK_GEOM_OPS("vscale"))
+              else if (CHECK_GEOM_OPS ("vscale"))
                 {
-                  if (h == 0)
-                    h = windowScale;
+                  if (h == 0) h = windowScale;
+
                   w = noScale;
                   geom_flags |= WidthValue|HeightValue;
                 }
-              else if (CHECK_GEOM_OPS("scale"))
+              else if (CHECK_GEOM_OPS ("scale"))
                 {
-                  if (h == 0)
-                    h = windowScale;
-                  if (w == 0)
-                    w = windowScale;
+                  if (h == 0) h = windowScale;
+                  if (w == 0) w = windowScale;
+
                   geom_flags |= WidthValue|HeightValue;
                 }
-              else if (CHECK_GEOM_OPS("auto"))
+              else if (CHECK_GEOM_OPS ("auto"))
                 {
                   w = h = windowScale;
                   x = y = centerAlign;
                   geom_flags |= WidthValue|HeightValue|XValue|YValue;
                 }
-              else if (CHECK_GEOM_OPS("root"))
+              else if (CHECK_GEOM_OPS ("root"))
                 {
                   w = h = noScale;
                   x = y = rootAlign;
                   geom_flags |= WidthValue|HeightValue|XValue|YValue;
                 }
 #  undef CHECK_GEOM_OPS
+
               while (*ops != ':' && *ops != '\0') ++ops;
             } /* done parsing ops */
         }
 
-      if (check_set_scale_value (geom_flags, WidthValue, h_scale, w))
-        ++changed;
-      if (check_set_scale_value (geom_flags, HeightValue, v_scale, h))
-        ++changed;
-      if (check_set_align_value (geom_flags, XValue, h_align, x))
-        ++changed;
-      if (check_set_align_value (geom_flags, YValue, v_align, y))
-        ++changed;
+      if (check_set_scale_value (geom_flags, WidthValue, h_scale, w))  ++changed;
+      if (check_set_scale_value (geom_flags, HeightValue, v_scale, h)) ++changed;
+      if (check_set_align_value (geom_flags, XValue, h_align, x))      ++changed;
+      if (check_set_align_value (geom_flags, YValue, v_align, y))      ++changed;
     }
 
   if (new_flags != flags)
@@ -441,6 +438,7 @@ bgPixmap_t::set_geometry (const char *geom)
       flags = new_flags;
       changed++;
     }
+
 //fprintf (stderr, "flags = %lX, scale = %ux%u, align=%+d%+d\n",
 //         flags, h_scale, v_scale, h_align, v_align);
   return (changed > 0);
@@ -640,17 +638,13 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
       int dst_width = result->width, dst_height = result->height;
       if (background == NULL)
         {
-          if (h_scale > 0)
-            src_x = make_clip_rectangle (x, result->width, new_pmap_width, dst_x, dst_width);
-          if (v_scale > 0)
-            src_y = make_clip_rectangle (y, result->height, new_pmap_height, dst_y, dst_height);
+          if (h_scale > 0) src_x = make_clip_rectangle (x, result->width , new_pmap_width , dst_x, dst_width );
+          if (v_scale > 0) src_y = make_clip_rectangle (y, result->height, new_pmap_height, dst_y, dst_height);
 
           if (dst_x > 0 || dst_y > 0
               || dst_x + dst_width < new_pmap_width
               || dst_y + dst_height < new_pmap_height)
-            {
-              XFillRectangle (target->dpy, pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
-            }
+            XFillRectangle (target->dpy, pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
         }
 
       /* put result on pixmap */
