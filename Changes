@@ -17,8 +17,6 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
-DO NOT USE, CURRENTLY TOTALLY BROKEN W.R.T. XFT FONTS
-TODO: document #aarrggbb or (better?) remove
 9.0
 	- fix a crash bug where urxvtd would crash when urxvtc was called
           with wrong arguments (I wish debian maintainers in general would
@@ -36,6 +34,7 @@ TODO: document #aarrggbb or (better?) remove
         - the 132/80 mode switch now forces a height of 24, too, and
           resets the terminal.
 	- scrollbar code cleanups.
+        - removed (undocumented) #aarrggbb format.
 
 8.9  Mon Dec 24 07:51:40 CET 2007
 	- fix the issue where urxvtd would not immediately close a window

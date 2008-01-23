@@ -1455,29 +1455,51 @@ on White.
 
 =back
 
-=head2 ALPHA CHANNEL SUPPORT
+=head2 ALPHA CHANNEL SUPPORT / TRANSPARENT COLOURS
 
 If Xft support has been compiled in and as long as Xft/Xrender/X don't get
-their act together, rxvt-unicode will support C<rgba:rrrr/gggg/bbbb/aaaa>
-(recommended, but B<MUST> have 4 digits/component) colour specifications,
-in addition to the ones provided by X, where the additional A component
-specifies opacity (alpha) values. The minimum value of C<0> is completely
-transparent). You can also prefix any color with C<[percent]>, where
-C<percent> is a decimal percentage (0-100) that specifies the opacity of
-the color, where C<0> is completely transparent and C<100> is completelxy
-opaque.
+their act together, rxvt-unicode will do it's own alpha channel management:
 
-You probably need to specify B<"-depth 32">, too, and have the luck that
-your X-server uses ARGB pixel layout, as X is far from just supporting
-ARGB visuals out of the box, and rxvt-unicode just fudges around.
+You can prefix any color with an opaquenes percentage enclosed in
+brackets, i.e. C<[percent]>, where C<percent> is a decimal percentage
+(0-100) that specifies the opacity of the color, where C<0> is completely
+transparent and C<100> is completely opaque. For example, C<[50]red> is a
+half-transparent red, while C<[95]#00ff00> is an almost opaque green. This
+is the recommended format to specify transparency values, and works with
+all ways to specify a colour.
 
-For example, the following selects an almost completely transparent red
+For complete control, rxvt-unicode also supports
+C<rgba:rrrr/gggg/bbbb/aaaa> (exactly four hex digits/component) colour
+specifications, where the additional C<aaaa> component specifies opacity
+(alpha) values. The minimum value of C<0000> is completely transparent,
+while C<ffff> is completely opaque). The two example colours from
+earlier could also be specified as C<rgba:ff00/0000/0000/8000> and
+C<rgba:0000/ff00/0000/f332>.
+
+You probably need to specify B<"-depth 32">, too, to force a visual with
+alpha channels, and have the luck that your X-server uses ARGB pixel
+layout, as X is far from just supporting ARGB visuals out of the box, and
+rxvt-unicode just fudges around.
+
+For example, the following selects an almost completely transparent black
 background, and an almost opaque pink foreground:
 
-   @@RXVT_NAME@@ -depth 32 -bg rgba:0000/0000/0000/aaaa -fg "[80]pink"
+   @@RXVT_NAME@@ -depth 32 -bg rgba:0000/0000/0000/4444 -fg "[80]pink"
 
-I<Please note that transparency of any kind if completely unsupported by
-the author. Don't bug him with installation questions!>
+When not using a background image, then the interpretation of the
+alpha channel is up to your compositing manager (most interpret it as
+transparency of course).
+
+When using a background pixmap or pseudo-transparency, then the background
+colour will always behave as if it were completely transparent (so the
+background image shows instead), regardless of how it was specified, while
+other colours will either be transparent as specified (the background
+image will show through) on servers supporting the RENDER extension, or
+fully opaque on servers not supporting the RENDER EXTENSION.
+
+Please note that due to bugs in Xft, specifying alpha values might result
+in garbage being displayed when the X-server does not support the RENDER
+extension.
 
 =head1 ENVIRONMENT
 
