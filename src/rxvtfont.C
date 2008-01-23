@@ -1353,6 +1353,8 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
               Picture dst = 0;
 
               if (bg >= 0 && term->pix_colors[bg].is_opaque ())
+                XftDrawRect (d2, &term->pix_colors[bg].c, 0, 0, w, h);
+              else
                 dst = XftDrawPicture (d2);
 
               if (dst)
