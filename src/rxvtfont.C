@@ -242,7 +242,7 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color) 
 
 # ifdef HAVE_BG_PIXMAP
       if (term->bgPixmap.pixmap
-          && color >= 0 && !term->pix_colors[color].is_opaque ()
+          && !term->pix_colors[color].is_opaque ()
           && ((Picture dst = XftDrawPicture (d))))
         {
           XClearArea (disp, d, x, y, w, h, false);
