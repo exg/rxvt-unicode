@@ -1351,58 +1351,52 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
           rxvt_drawable &d2 = d.screen->scratch_drawable (w, h);
 
 #ifdef HAVE_BG_PIXMAP
-          if (term->bgPixmap.pixmap)
+
+          if (term->bgPixmap.pixmap
+              && !(bg >= 0 && term->pix_colors[bg].is_opaque ()))
             {
-              Picture dst = 0;
+              Picture dst = XftDrawPicture (d2);
 
-              if (bg >= 0 && term->pix_colors[bg].is_opaque ())
-                XftDrawRect (d2, &term->pix_colors[bg].c, 0, 0, w, h);
-              else
-                dst = XftDrawPicture (d2);
+              int src_x = x, src_y = y;
 
-              if (dst)
+              if (term->bgPixmap.is_parentOrigin ())
                 {
-                  int src_x = x, src_y = y;
-
-                  if (term->bgPixmap.is_parentOrigin ())
-                    {
-                      src_x += term->window_vt_x;
-                      src_y += term->window_vt_y;
-                    }
-
-                  if (term->bgPixmap.pmap_width >= src_x+w
-                      && term->bgPixmap.pmap_height >= src_y+h)
-                    {
-                      XCopyArea (disp, term->bgPixmap.pixmap, d2, gc,
-                                 src_x, src_y, w, h, 0, 0);
-                    }
-                  else
-                    {
-                      XGCValues gcv;
-
-                      gcv.fill_style  = FillTiled;
-                      gcv.tile        = term->bgPixmap.pixmap;
-                      gcv.ts_x_origin = -src_x;
-                      gcv.ts_y_origin = -src_y;
-
-                      XChangeGC (disp, gc,
-                                 GCTile | GCTileStipXOrigin | GCTileStipYOrigin | GCFillStyle,
-                                 &gcv);
-
-                      XFillRectangle (disp, d2, gc, 0, 0, w, h);
-
-                      gcv.fill_style = FillSolid;
-                      XChangeGC (disp, gc, GCFillStyle, &gcv);
-                    }
-
-                  if (bg >= 0)
-                    {
-                      Picture solid_color_pict = XftDrawSrcPicture (d2, &term->pix_colors[bg].c);
-                      XRenderComposite (disp, PictOpOver, solid_color_pict, None, dst, 0, 0, 0, 0, 0, 0, w, h);
-                    }
-
-                  back_rendered = true;
+                  src_x += term->window_vt_x;
+                  src_y += term->window_vt_y;
                 }
+
+              if (term->bgPixmap.pmap_width >= src_x+w
+                  && term->bgPixmap.pmap_height >= src_y+h)
+                {
+                  XCopyArea (disp, term->bgPixmap.pixmap, d2, gc,
+                             src_x, src_y, w, h, 0, 0);
+                }
+              else
+                {
+                  XGCValues gcv;
+
+                  gcv.fill_style  = FillTiled;
+                  gcv.tile        = term->bgPixmap.pixmap;
+                  gcv.ts_x_origin = -src_x;
+                  gcv.ts_y_origin = -src_y;
+
+                  XChangeGC (disp, gc,
+                             GCTile | GCTileStipXOrigin | GCTileStipYOrigin | GCFillStyle,
+                             &gcv);
+
+                  XFillRectangle (disp, d2, gc, 0, 0, w, h);
+
+                  gcv.fill_style = FillSolid;
+                  XChangeGC (disp, gc, GCFillStyle, &gcv);
+                }
+
+              if (bg >= 0 && dst) // colour must be (and is) non-opaque here
+                {
+                  Picture solid_color_pict = XftDrawSrcPicture (d2, &term->pix_colors[bg].c);
+                  XRenderComposite (disp, PictOpOver, solid_color_pict, None, dst, 0, 0, 0, 0, 0, 0, w, h);
+                }
+
+              back_rendered = true;
             }
 #endif
 
