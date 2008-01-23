@@ -1344,16 +1344,15 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
     {
       if (ep != enc)
         {
-          bool back_rendered = false;
           rxvt_drawable &d2 = d.screen->scratch_drawable (w, h);
 
 #ifdef HAVE_BG_PIXMAP
+          Picture dst = 0;
 
           if (term->bgPixmap.pixmap
-              && !(bg >= 0 && term->pix_colors[bg].is_opaque ()))
+              && (bg == Color_transparent || bg == Color_bg
+                  || (bg >= 0 && !term->pix_colors[bg].is_opaque () && ((dst = XftDrawPicture (d2))))))
             {
-              Picture dst = XftDrawPicture (d2);
-
               int src_x = x, src_y = y;
 
               if (term->bgPixmap.is_parentOrigin ())
@@ -1362,8 +1361,8 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                   src_y += term->window_vt_y;
                 }
 
-              if (term->bgPixmap.pmap_width >= src_x+w
-                  && term->bgPixmap.pmap_height >= src_y+h)
+              if (term->bgPixmap.pmap_width >= src_x + w
+                  && term->bgPixmap.pmap_height >= src_y + h)
                 {
                   XCopyArea (disp, term->bgPixmap.pixmap, d2, gc,
                              src_x, src_y, w, h, 0, 0);
@@ -1387,17 +1386,15 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                   XChangeGC (disp, gc, GCFillStyle, &gcv);
                 }
 
-              if (bg >= 0 && dst) // colour must be (and is) non-opaque here
+              if (dst)
                 {
                   Picture solid_color_pict = XftDrawSrcPicture (d2, &term->pix_colors[bg].c);
+
                   XRenderComposite (disp, PictOpOver, solid_color_pict, None, dst, 0, 0, 0, 0, 0, 0, w, h);
                 }
-
-              back_rendered = true;
             }
+          else
 #endif
-
-          if (!back_rendered)
             XftDrawRect (d2, &term->pix_colors[bg < 0 ? Color_bg : bg].c, 0, 0, w, h);
 
           XftDrawGlyphSpec (d2, &term->pix_colors[fg].c, f, enc, ep - enc);
