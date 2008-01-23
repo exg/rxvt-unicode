@@ -331,6 +331,16 @@ struct rxvt_color
   bool operator == (const rxvt_color &b) const { return Pixel (*this) == Pixel (b); }
   bool operator != (const rxvt_color &b) const { return Pixel (*this) != Pixel (b); }
 
+  bool is_opaque () const
+  {
+#if XFT
+    //TODO: only supports 24 bit truecolour
+    return c.color.alpha < 0xff00;
+#else
+    return 1;
+#endif
+  }
+
   bool alloc (rxvt_screen *screen, const rgba &color);
   void free (rxvt_screen *screen);
 
