@@ -238,23 +238,20 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color) 
   else if (color >= 0)
     {
 #if XFT
-      bool done = false;
+      Picture dst;
 
 # ifdef HAVE_BG_PIXMAP
-      if (term->bgPixmap.pixmap && color >= 0 && !term->pix_colors[color].is_opaque ())
+      if (term->bgPixmap.pixmap
+          && color >= 0 && !term->pix_colors[color].is_opaque ()
+          && ((Picture dst = XftDrawPicture (d))))
         {
-          Picture dst = XftDrawPicture (d);
+          XClearArea (disp, d, x, y, w, h, false);
 
-          if (dst != 0)
-            {
-              XClearArea (disp, d, x, y, w, h, false);
-              Picture solid_color_pict = XftDrawSrcPicture (d, &term->pix_colors[color].c);
-              XRenderComposite (disp, PictOpOver, solid_color_pict, None, dst, 0, 0, 0, 0, x, y, w, h);
-              done = true;
-            }
+          Picture solid_color_pict = XftDrawSrcPicture (d, &term->pix_colors[color].c);
+          XRenderComposite (disp, PictOpOver, solid_color_pict, None, dst, 0, 0, 0, 0, x, y, w, h);
         }
+      else
 # endif
-      if (!done)
         XftDrawRect (d, &term->pix_colors[color].c, x, y, w, h);
 
 #else

@@ -18,6 +18,7 @@ WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
 DO NOT USE, CURRENTLY TOTALLY BROKEN W.R.T. XFT FONTS
+TODO: document #aarrggbb or (better?) remove
 9.0
 	- fix a crash bug where urxvtd would crash when urxvtc was called
           with wrong arguments (I wish debian maintainers in general would
