@@ -1455,7 +1455,7 @@ on White.
 
 =back
 
-=head2 ALPHA CHANNEL SUPPORT / TRANSPARENT COLOURS
+=head2 ALPHA CHANNEL SUPPORT
 
 If Xft support has been compiled in and as long as Xft/Xrender/X don't get
 their act together, rxvt-unicode will do it's own alpha channel management:
