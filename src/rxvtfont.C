@@ -1298,15 +1298,15 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
   int w = term->fwidth * len;
   int h = term->fheight;
 
-  /* TODO: this logic needs some more thinking, since we no longer do pseudo-transparency.
+  /*
    * Maybe make buffering into a resource flag? Compile time option doesn't seems like a
    * good idea from the perspective of packaging for wide variety of user configs.
    */
-  bool buffered = true
+  bool buffered = bg >= 0;
 #ifdef FORCE_UNBUFFERED_XFT
-                  && bg >= 0
+  buffered = false;
 #endif
-                  ;
+
   // cut trailing spaces
   while (len && text [len - 1] == ' ')
     len--;
@@ -1342,9 +1342,9 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
   if (buffered)
     {
-      bool back_rendered = false;
       if (ep != enc)
         {
+          bool back_rendered = false;
           rxvt_drawable &d2 = d.screen->scratch_drawable (w, h);
 
 #ifdef HAVE_BG_PIXMAP
@@ -1352,7 +1352,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
             {
               Picture dst = 0;
 
-              if (bg >= 0 && term->pix_colors[bg].c.color.alpha < 0x0ff00)
+              if (bg >= 0 && term->pix_colors[bg].c.color.alpha < 0xff00)
                 dst = XftDrawPicture (d2);
 
               if (bg < 0 || dst != 0)
@@ -1401,7 +1401,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
             }
 #endif
 
-          if (bg >= 0 && !back_rendered)
+          if (!back_rendered)
             XftDrawRect (d2, &term->pix_colors[bg].c, 0, 0, w, h);
 
           XftDrawGlyphSpec (d2, &term->pix_colors[fg].c, f, enc, ep - enc);
