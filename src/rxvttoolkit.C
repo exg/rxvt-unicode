@@ -742,25 +742,17 @@ rxvt_color::set (rxvt_screen *screen, const char *name)
   char eos;
   int skip;
 
+  c.a = rgba::MAX_CC;
+
   // parse the nonstandard "[alphapercent]" prefix
   if (1 <= sscanf (name, "[%hd]%n", &c.a, &skip))
     {
       c.a = lerp<int, int, int> (0, rgba::MAX_CC, c.a);
       name += skip;
     }
-  else
-    c.a = rgba::MAX_CC;
 
-  // parse the non-standard "#aarrggbb" format
-  if (name[0] == '#' && strlen (name) == 1+2+2+2+2 && 4 == sscanf (name+1, "%2hx%2hx%2hx%2hx%c", &c.a, &c.r, &c.g, &c.b, &eos))
-    {
-      c.r <<= 8;
-      c.g <<= 8;
-      c.b <<= 8;
-      c.a <<= 8;
-    }
   // parse the non-standard "rgba:rrrr/gggg/bbbb/aaaa" format
-  else if (strlen (name) != 4+5*4 || 4 != sscanf (name, "rgba:%4hx/%4hx/%4hx/%4hx%c", &c.r, &c.g, &c.b, &c.a, &eos))
+  if (strlen (name) != 4+5*4 || 4 != sscanf (name, "rgba:%4hx/%4hx/%4hx/%4hx%c", &c.r, &c.g, &c.b, &c.a, &eos))
     {
       XColor xc;
 
