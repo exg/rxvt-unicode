@@ -675,7 +675,7 @@ insert_component (unsigned int value, unsigned int mask, unsigned int shift)
 bool
 rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
 {
-  //TODO: only supports 24 bit truecolour
+  //TODO: only supports 24 bit
   int alpha = color.a >= 0xff00 ? 0xffff : color.a;
 
 #if XFT

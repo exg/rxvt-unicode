@@ -1306,6 +1306,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 #ifdef FORCE_UNBUFFERED_XFT
   buffered = false;
 #endif
+  buffered=false;//D
 
   // cut trailing spaces
   while (len && text [len - 1] == ' ')
@@ -1395,7 +1396,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
             }
           else
 #endif
-            XftDrawRect (d2, &term->pix_colors[bg < 0 ? Color_bg : bg].c, 0, 0, w, h);
+            XftDrawRect (d2, &term->pix_colors[bg == Color_transparent ? Color_bg : bg].c, 0, 0, w, h);
 
           XftDrawGlyphSpec (d2, &term->pix_colors[fg].c, f, enc, ep - enc);
           XCopyArea (disp, d2, d, gc, 0, 0, w, h, x, y);
