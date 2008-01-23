@@ -1390,11 +1390,8 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                       XChangeGC (disp, gc, GCFillStyle, &gcv);
                     }
 
-                  if (bg >= 0)
-                    {
-                      Picture solid_color_pict = XftDrawSrcPicture (d2, &term->pix_colors[bg].c);
-                      XRenderComposite (disp, PictOpOver, solid_color_pict, None, dst, 0, 0, 0, 0, 0, 0, w, h);
-                    }
+                  Picture solid_color_pict = XftDrawSrcPicture (d2, &term->pix_colors[bg].c);
+                  XRenderComposite (disp, PictOpOver, solid_color_pict, None, dst, 0, 0, 0, 0, 0, 0, w, h);
 
                   back_rendered = true;
                 }
