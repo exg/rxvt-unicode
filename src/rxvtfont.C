@@ -1396,7 +1396,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
             }
           else
 #endif
-            XftDrawRect (d2, &term->pix_colors[bg == Color_transparent ? Color_bg : bg].c, 0, 0, w, h);
+            clear_rect (d, x, y, w, h, bg);
 
           XftDrawGlyphSpec (d2, &term->pix_colors[fg].c, f, enc, ep - enc);
           XCopyArea (disp, d2, d, gc, 0, 0, w, h, x, y);
