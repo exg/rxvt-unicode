@@ -334,8 +334,7 @@ struct rxvt_color
   bool is_opaque () const
   {
 #if XFT
-    //TODO: only supports 24 bit truecolour
-    return c.color.alpha < 0xff00;
+    return c.color.alpha == rgba::MAX_CC;
 #else
     return 1;
 #endif
