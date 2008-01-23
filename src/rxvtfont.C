@@ -1306,7 +1306,6 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 #ifdef FORCE_UNBUFFERED_XFT
   buffered = false;
 #endif
-  buffered=false;//D
 
   // cut trailing spaces
   while (len && text [len - 1] == ' ')
