@@ -103,6 +103,11 @@ B<DISPLAY> environment variable is used.
 Compile I<xft>: Attempt to find a visual with the given bit depth;
 resource B<depth>.
 
+[Please note that many X servers (and libXft) are buggy with
+respect to C<-depth 32> and/or alpha channels, and will cause all sorts
+of graphical corruption. This is harmless, but we can't do anything about
+this, so watch out]
+
 =item B<-geometry> I<geom>
 
 Window geometry (B<-g> still respected); resource B<geometry>.
