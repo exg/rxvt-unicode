@@ -37,7 +37,9 @@ DUMB: support tex fonts
         - the 132/80 mode switch now forces a height of 24, too, and
           resets the terminal.
 	- scrollbar code cleanups.
+        - stopping children is no longer confused with children exiting.
         - removed (undocumented) #aarrggbb format.
+        - updated libev.
 
 8.9  Mon Dec 24 07:51:40 CET 2007
 	- fix the issue where urxvtd would not immediately close a window
