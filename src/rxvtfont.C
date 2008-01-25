@@ -1347,7 +1347,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
           rxvt_drawable &d2 = d.screen->scratch_drawable (w, h);
 
 #ifdef HAVE_BG_PIXMAP
-          Picture dst = 0;
+          Picture dst = 0; // the only assignment is done conditionally in the following if condition
 
           if (term->bgPixmap.pixmap
               && (bg == Color_transparent || bg == Color_bg
@@ -1390,6 +1390,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                 {
                   Picture solid_color_pict = XftDrawSrcPicture (d2, &term->pix_colors[bg].c);
 
+                  // dst can only be set when bg >= 0
                   XRenderComposite (disp, PictOpOver, solid_color_pict, None, dst, 0, 0, 0, 0, 0, 0, w, h);
                 }
             }
