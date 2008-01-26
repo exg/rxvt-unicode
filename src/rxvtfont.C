@@ -1299,7 +1299,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
   int h = term->fheight;
 
   bool buffered = bg >= Color_transparent
-    && term->option (Opt_buffered);
+                  && term->option (Opt_buffered);
 
   // cut trailing spaces
   while (len && text [len - 1] == ' ')
