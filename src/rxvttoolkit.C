@@ -558,7 +558,6 @@ void rxvt_display::x_cb (ev::io &w, int revents)
               && xev.xproperty.atom == xa[XA_XIM_SERVERS])
             im_change_check ();
 #endif
-
           if (xev.type == MappingNotify)
             XRefreshKeyboardMapping (&xev.xmapping);
 
