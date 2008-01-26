@@ -132,7 +132,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2008-01-25" "9.0" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2008-01-26" "9.0" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -644,6 +644,12 @@ extensions not documented here):
 .IX Item "depth: bitdepth"
 Compile \fIxft\fR: Attempt to find a visual with the given bit depth;
 option \fB\-depth\fR.
+.IP "\fBbuffered:\fR \fIboolean\fR" 4
+.IX Item "buffered: boolean"
+Compile \fIxft\fR: Turn on/off double-buffering for xft (default enabled).
+On some card/driver combination enabling it slightly decreases
+performance, on most it greatly helps it. The slowdown is small, so it
+should normally be enabled.
 .IP "\fBgeometry:\fR \fIgeom\fR" 4
 .IX Item "geometry: geom"
 Create the window with the specified X window geometry [default 80x24];

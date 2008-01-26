@@ -17,11 +17,11 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
-9.01
-	- add buffered resource to disable xft double-buffering.
+9.01 Sat Jan 26 20:49:27 CET 2008
 	- be more aggressive about handling X events, this seems to be required
           with newer xlibs (should fix the "screen stays black until event is
           received" problem, again :)
+	- add buffered resource to control xft double-buffering.
 
 9.0  Fri Jan 25 19:34:04 CET 2008
 	- fix a crash bug where urxvtd would crash when urxvtc was called
