@@ -18,6 +18,7 @@ WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
 9.01
+	- add buffered resource to disable xft double-buffering.
 	- be more aggressive about handling X events, this seems to be required
           with newer xlibs (should fix the "screen stays black until event is
           received" problem, again :)
