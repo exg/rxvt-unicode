@@ -550,14 +550,16 @@ void rxvt_display::x_cb (ev::io &w, int revents)
       XEvent xev;
       XNextEvent (dpy, &xev);
 
+      flush_ev.start ();
+
 #ifdef USE_XIM
       if (!XFilterEvent (&xev, None))
+#endif
         {
           if (xev.type == PropertyNotify
               && xev.xany.window == root
               && xev.xproperty.atom == xa[XA_XIM_SERVERS])
             im_change_check ();
-#endif
           if (xev.type == MappingNotify)
             XRefreshKeyboardMapping (&xev.xmapping);
 
@@ -568,9 +570,7 @@ void rxvt_display::x_cb (ev::io &w, int revents)
               else if (xw[i]->window == xev.xany.window)
                 xw[i]->call (xev);
             }
-#ifdef USE_XIM
         }
-#endif
     }
 }
 
