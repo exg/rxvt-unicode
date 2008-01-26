@@ -65,6 +65,7 @@
 #endif
 #if XFT
   def (depth)
+  def (buffered)
 #endif
 #if ENABLE_FRILLS
   def (transient_for)

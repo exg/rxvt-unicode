@@ -1302,10 +1302,8 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
    * Maybe make buffering into a resource flag? Compile time option doesn't seems like a
    * good idea from the perspective of packaging for wide variety of user configs.
    */
-  bool buffered = bg >= Color_transparent;
-#ifdef FORCE_UNBUFFERED_XFT
-  buffered = false;
-#endif
+  bool buffered = bg >= Color_transparent
+    && term->option (Opt_buffered);
 
   // cut trailing spaces
   while (len && text [len - 1] == ' ')

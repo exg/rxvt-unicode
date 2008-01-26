@@ -574,6 +574,13 @@ extensions not documented here):
 Compile I<xft>: Attempt to find a visual with the given bit depth;
 option B<-depth>.
 
+=item B<buffered:> I<boolean>
+
+Compile I<xft>: Turn on/off double-buffering for xft (default enabled).
+On some card/driver combination enabling it slightly decreases
+performance, on most it greatly helps it. The slowdown is small, so it
+should normally be enabled.
+
 =item B<geometry:> I<geom>
 
 Create the window with the specified X window geometry [default 80x24];

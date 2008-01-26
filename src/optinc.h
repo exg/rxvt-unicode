@@ -57,4 +57,7 @@
  nodef(iso14755_52)
 #endif
  def(console,              33)
+#if XFT
+ def(buffered,             34)
+#endif
 

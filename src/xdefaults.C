@@ -217,6 +217,7 @@ optList[] = {
 #endif
 #if XFT
               STRG (Rs_depth, "depth", "depth", "number", "depth of visual to request"),
+              BOOL (Rs_buffered, "buffered", NULL, Opt_buffered, 0, NULL),
 #endif
 #if ENABLE_FRILLS
               RSTRG (Rs_transient_for, "transient-for", "windowid"),
