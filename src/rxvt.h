@@ -283,6 +283,10 @@ struct mouse_event {
 # define HAVE_SCROLLBARS 1
 #endif
 
+#if !defined (RXVT_SCROLLBAR) && !defined (NEXT_SCROLLBAR)
+# define NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING 1
+#endif
+
 enum {
   NO_REFRESH       = 0,  /* Window not visible at all!        */
   FAST_REFRESH     = 1,  /* Fully exposed window              */
