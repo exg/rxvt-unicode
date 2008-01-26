@@ -550,8 +550,6 @@ void rxvt_display::x_cb (ev::io &w, int revents)
       XEvent xev;
       XNextEvent (dpy, &xev);
 
-      flush_ev.start ();
-
 #ifdef USE_XIM
       if (!XFilterEvent (&xev, None))
 #endif
@@ -560,6 +558,7 @@ void rxvt_display::x_cb (ev::io &w, int revents)
               && xev.xany.window == root
               && xev.xproperty.atom == xa[XA_XIM_SERVERS])
             im_change_check ();
+
           if (xev.type == MappingNotify)
             XRefreshKeyboardMapping (&xev.xmapping);
 
@@ -572,12 +571,11 @@ void rxvt_display::x_cb (ev::io &w, int revents)
             }
         }
     }
-
-  XFlush (dpy);
 }
 
-void rxvt_display::flush_cb (ev::idle &w, int revents)
+void rxvt_display::flush_cb (ev::prepare &w, int revents)
 {
+  w.stop ();
   XFlush (dpy);
 }
 
