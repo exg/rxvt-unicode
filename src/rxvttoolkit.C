@@ -571,12 +571,15 @@ void rxvt_display::x_cb (ev::io &w, int revents)
             }
         }
     }
-
-  flush_ev.start ();
 }
 
 void rxvt_display::flush_cb (ev::prepare &w, int revents)
 {
+  XFlush (dpy);
+  if (XEventsQueued (dpy, QueuedAfterReading))
+  x_cb(x_ev,0);//D
+  XFlush (dpy);
+  if (XEventsQueued (dpy, QueuedAfterReading))
   x_cb(x_ev,0);//D
   XFlush (dpy);
   w.stop ();
