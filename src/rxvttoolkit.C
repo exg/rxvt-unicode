@@ -545,39 +545,40 @@ void rxvt_display::im_change_check ()
 
 void rxvt_display::x_cb (ev::io &w, int revents)
 {
-  while (XEventsQueued (dpy, QueuedAfterReading))
-    {
-      XEvent xev;
-      XNextEvent (dpy, &xev);
-
-#ifdef USE_XIM
-      if (!XFilterEvent (&xev, None))
-        {
-          if (xev.type == PropertyNotify
-              && xev.xany.window == root
-              && xev.xproperty.atom == xa[XA_XIM_SERVERS])
-            im_change_check ();
-#endif
-          if (xev.type == MappingNotify)
-            XRefreshKeyboardMapping (&xev.xmapping);
-
-          for (int i = xw.size (); i--; )
-            {
-              if (!xw[i])
-                xw.erase_unordered (i);
-              else if (xw[i]->window == xev.xany.window)
-                xw[i]->call (xev);
-            }
-#ifdef USE_XIM
-        }
-#endif
-    }
+  flush_ev.start ();
 }
 
 void rxvt_display::flush_cb (ev::prepare &w, int revents)
 {
   while (XEventsQueued (dpy, QueuedAfterFlush))
-    x_cb (x_ev, EV_READ);
+    do
+      {
+        XEvent xev;
+        XNextEvent (dpy, &xev);
+
+#ifdef USE_XIM
+        if (!XFilterEvent (&xev, None))
+          {
+            if (xev.type == PropertyNotify
+                && xev.xany.window == root
+                && xev.xproperty.atom == xa[XA_XIM_SERVERS])
+              im_change_check ();
+#endif
+            if (xev.type == MappingNotify)
+              XRefreshKeyboardMapping (&xev.xmapping);
+
+            for (int i = xw.size (); i--; )
+              {
+                if (!xw[i])
+                  xw.erase_unordered (i);
+                else if (xw[i]->window == xev.xany.window)
+                  xw[i]->call (xev);
+              }
+#ifdef USE_XIM
+          }
+#endif
+      }
+    while (XEventsQueued (dpy, QueuedAlready));
 
   w.stop ();
 }
