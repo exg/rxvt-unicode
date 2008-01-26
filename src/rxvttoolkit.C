@@ -576,9 +576,7 @@ void rxvt_display::x_cb (ev::io &w, int revents)
 void rxvt_display::flush_cb (ev::prepare &w, int revents)
 {
   while (XEventsQueued (dpy, QueuedAfterFlush))
-    {
-      x_cb(x_ev,0);//D
-    }
+    x_cb (x_ev, EV_READ);
 
   w.stop ();
 }
