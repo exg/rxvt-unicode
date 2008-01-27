@@ -36,7 +36,6 @@ rxvt_term::scrollbar_mapping (int map)
 {
   int change = 0;
 
-#ifdef HAVE_SCROLLBARS
   if (map)
     {
       scrollBar.setIdle ();
@@ -56,7 +55,6 @@ rxvt_term::scrollbar_mapping (int map)
       XUnmapWindow (dpy, scrollBar.win);
       change = 1;
     }
-#endif
 
   return change;
 }
@@ -64,7 +62,6 @@ rxvt_term::scrollbar_mapping (int map)
 void
 rxvt_term::resize_scrollbar ()
 {
-#ifdef HAVE_SCROLLBARS
   int delayed_init = 0;
 
 #define R_SCROLLBEG_XTERM	0
@@ -135,7 +132,6 @@ rxvt_term::resize_scrollbar ()
 
   if (delayed_init)
     XMapWindow (dpy, scrollBar.win);
-#endif
 }
 
 /*
@@ -145,7 +141,6 @@ int
 rxvt_term::scrollbar_show (int update)
 {
   int             ret = 0;
-#ifdef HAVE_SCROLLBARS
   int             top, bot, len, adj;
 
   if (!scrollBar.state)
@@ -174,7 +169,6 @@ rxvt_term::scrollbar_show (int update)
   scrollBar.last_top = scrollBar.top;
   scrollBar.last_bot = scrollBar.bot;
   scrollBar.last_state = scrollBar.state;
-#endif
 
   return ret;
 }
@@ -182,7 +176,6 @@ rxvt_term::scrollbar_show (int update)
 void
 rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, const char *thickness)
 {
-#ifdef HAVE_SCROLLBARS
   int             i;
   short           style, width;
 
@@ -248,7 +241,6 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
   scrollBar.last_bot = scrollBar.last_state = -1;
   /* cursor scrollBar: Black-on-White */
   scrollBar.leftptr_cursor = XCreateFontCursor (dpy, XC_left_ptr);
-#endif
 }
 
 /*----------------------- end-of-file (C source) -----------------------*/

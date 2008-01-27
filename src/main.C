@@ -174,9 +174,7 @@ rxvt_term::rxvt_term ()
 #if ENABLE_TRANSPARENCY || ENABLE_PERL
   rootwin_ev.set          <rxvt_term, &rxvt_term::rootwin_cb> (this),
 #endif
-#ifdef HAVE_SCROLLBARS
   scrollbar_ev.set        <rxvt_term, &rxvt_term::x_cb>       (this),
-#endif
 #ifdef USE_XIM
   im_ev.set               <rxvt_term, &rxvt_term::im_cb>      (this),
 #endif
@@ -339,9 +337,7 @@ rxvt_term::destroy ()
 #if USE_XIM
       im_ev.stop (display);
 #endif
-#if HAVE_SCROLLBARS
       scrollbar_ev.stop (display);
-#endif
 #if ENABLE_TRANSPARENCY || ENABLE_PERL
       rootwin_ev.stop (display);
 #endif

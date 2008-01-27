@@ -2396,12 +2396,6 @@ Add support for a NeXT-like scrollbar.
 
 Add support for an Xterm-like scrollbar.
 
-=item --enable-plain-scroll (default: on)
-
-Add support for a very unobtrusive, plain-looking scrollbar that
-is the favourite of the rxvt-unicode author, having used it for
-many years.
-
 =item --disable-backspace-key
 
 Removes any handling of the backspace key by us - let the X server do it.

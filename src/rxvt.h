@@ -270,10 +270,6 @@ struct mouse_event {
 
 #define scrollBar_esc           30
 
-#if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR) || defined(PLAIN_SCROLLBAR)
-# define HAVE_SCROLLBARS 1
-#endif
-
 #if !defined (RXVT_SCROLLBAR) && !defined (NEXT_SCROLLBAR)
 # define NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING 1
 #endif
@@ -494,9 +490,7 @@ enum colour_list {
 #ifdef OPTION_HC
   Color_HC,
 #endif
-#ifdef HAVE_SCROLLBARS
   Color_scroll,
-#endif
 #ifdef RXVT_SCROLLBAR
   Color_trough,
 #endif
@@ -1150,9 +1144,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void x_cb (XEvent &xev);
   xevent_watcher termwin_ev;
   xevent_watcher vt_ev;
-#ifdef HAVE_SCROLLBARS
   xevent_watcher scrollbar_ev;
-#endif
 
   void child_cb (ev::child &w, int revents); ev::child child_ev;
   void destroy_cb (ev::idle &w, int revents); ev::idle destroy_ev;

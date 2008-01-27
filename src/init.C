@@ -269,9 +269,7 @@ const char *const def_colorName[] =
 #ifdef OPTION_HC
     NULL,
 #endif
-#ifdef HAVE_SCROLLBARS
     COLOR_SCROLLBAR,
-#endif
 #ifdef RXVT_SCROLLBAR
     COLOR_SCROLLTROUGH,
 #endif
@@ -489,9 +487,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 # endif
 #endif
 
-#ifdef HAVE_SCROLLBARS
   setup_scrollbar (rs[Rs_scrollBar_align], rs[Rs_scrollstyle], rs[Rs_scrollBar_thickness]);
-#endif
 
 #ifdef XTERM_REVERSE_VIDEO
   /* this is how xterm implements reverseVideo */
@@ -557,10 +553,8 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
   keyboard->register_done ();
 #endif
 
-#ifdef HAVE_SCROLLBARS
   if (option (Opt_scrollBar))
     scrollBar.setIdle ();    /* set existence for size calculations */
-#endif
 
   pty = ptytty::create ();
 
@@ -574,10 +568,8 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
   XSynchronize (dpy, True);
 #endif
 
-#ifdef HAVE_SCROLLBARS
   if (option (Opt_scrollBar))
     resize_scrollbar ();      /* create and map scrollbar */
-#endif
 #ifdef HAVE_BG_PIXMAP
   {
     bgPixmap.set_target (this);

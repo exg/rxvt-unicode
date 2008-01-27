@@ -98,14 +98,12 @@ optList[] = {
               BOOL (Rs_jumpScroll, "jumpScroll", "j", Opt_jumpScroll, 0, "jump scrolling"),
               BOOL (Rs_skipScroll, "skipScroll", "ss", Opt_skipScroll, 0, "skip scrolling"),
               BOOL (Rs_pastableTabs, "pastableTabs", "ptab", Opt_pastableTabs, 0, "tab characters are pastable"),
-#if HAVE_SCROLLBARS
               RSTRG (Rs_scrollstyle, "scrollstyle", "mode"),
               BOOL (Rs_scrollBar, "scrollBar", "sb", Opt_scrollBar, 0, "scrollbar"),
               BOOL (Rs_scrollBar_right, "scrollBar_right", "sr", Opt_scrollBar_right, 0, "scrollbar right"),
               BOOL (Rs_scrollBar_floating, "scrollBar_floating", "st", Opt_scrollBar_floating, 0, "scrollbar without a trough"),
               RSTRG (Rs_scrollBar_align, "scrollBar_align", "mode"),
               STRG (Rs_scrollBar_thickness, "thickness", "sbt", "number", "scrollbar thickness/width in pixels"),
-#endif
               BOOL (Rs_scrollTtyOutput, "scrollTtyOutput", NULL, Opt_scrollTtyOutput, 0, NULL),
               BOOL (Rs_scrollTtyOutput, NULL, "si",  Opt_scrollTtyOutput, Optflag_Reverse, "scroll-on-tty-output inhibit"),
               BOOL (Rs_scrollTtyKeypress, "scrollTtyKeypress", "sk", Opt_scrollTtyKeypress, 0, "scroll-on-keypress"),
@@ -174,9 +172,7 @@ optList[] = {
 #if ENABLE_FRILLS
               RSTRG (Rs_color + Color_underline, "underlineColor", "color"),
 #endif
-#ifdef HAVE_SCROLLBARS
               RSTRG (Rs_color + Color_scroll, "scrollColor", "color"),
-#endif
 #ifdef RXVT_SCROLLBAR
               RSTRG (Rs_color + Color_trough, "troughColor", "color"),
 #endif
@@ -365,31 +361,15 @@ static const char optionsstring[] = "options: "
 #if defined(NO_RESOURCES)
                                     "NoResources,"
 #endif
-                                    "scrollbars="
-#if !defined(HAVE_SCROLLBARS)
-                                    "NONE"
-#else
-# if defined(PLAIN_SCROLLBAR)
-                                    "plain"
-#  if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR)
-                                    "+"
-#  endif
-# endif
-# if defined(RXVT_SCROLLBAR)
-                                    "rxvt"
-#  if defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR)
-                                    "+"
-#  endif
-# endif
-# if defined(NEXT_SCROLLBAR)
-                                    "NeXT"
-#  if defined(XTERM_SCROLLBAR)
-                                    "+"
-#  endif
-# endif
-# if defined(XTERM_SCROLLBAR)
-                                    "xterm"
-# endif
+                                    "scrollbars=plain"
+#if defined(RXVT_SCROLLBAR)
+                                    "+rxvt"
+#endif
+#if defined(NEXT_SCROLLBAR)
+                                    "+NeXT"
+#endif
+#if defined(XTERM_SCROLLBAR)
+                                    "+xterm"
 #endif
                                     "\nUsage: ";		/* Usage */
 

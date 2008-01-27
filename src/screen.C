@@ -2476,14 +2476,12 @@ rxvt_term::scr_recolour () NOTHROW
   XClearWindow (dpy, parent[0]);
   XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
 
-# if HAVE_SCROLLBARS
   if (scrollBar.win)
    {
      XSetWindowBackground (dpy, scrollBar.win, pix_colors[Color_border]);
      scrollBar.setIdle ();
      scrollbar_show (0);
    }
-# endif
 
   scr_clear ();
   scr_touch (true);

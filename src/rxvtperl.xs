@@ -41,11 +41,7 @@
 
 #include "perlxsi.c"
 
-#ifdef HAVE_SCROLLBARS
-# define GRAB_CURSOR THIS->scrollBar.leftptr_cursor
-#else
-# define GRAB_CURSOR None
-#endif
+#define GRAB_CURSOR THIS->scrollBar.leftptr_cursor
 
 #undef LINENO
 #define LINENO(n) MOD (THIS->term_start + int(n), THIS->total_rows)

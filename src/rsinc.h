@@ -23,14 +23,12 @@
   def (loginShell)
   def (jumpScroll)
   def (skipScroll)
-#ifdef HAVE_SCROLLBARS
   def (scrollBar)
   def (scrollBar_right)
   def (scrollBar_floating)
   def (scrollBar_align)
   def (scrollstyle)
   def (scrollBar_thickness)
-#endif
   def (scrollTtyOutput)
   def (scrollTtyKeypress)
   def (scrollWithBuffer)

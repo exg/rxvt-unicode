@@ -1307,7 +1307,6 @@ Optional Features:
   --enable-rxvt-scroll    enable rxvt style scrollbar
   --enable-next-scroll    enable NeXT style scrollbar
   --enable-xterm-scroll   enable Xterm style scrollbar
-  --enable-plain-scroll   enable plain style scrollbar
   --enable-perl           enable embedded perl interpreter
   --enable-xim            XIM (X Input Method) protocol support
   --disable-backspace-key disable handling of the backspace key
@@ -4380,7 +4379,6 @@ support_pointer_blank=yes
 support_scroll_rxvt=yes
 support_scroll_next=yes
 support_scroll_xterm=yes
-support_scroll_plain=yes
 support_xim=yes
 support_afterimage=yes
 support_afterstep=yes
@@ -4411,7 +4409,6 @@ if test "${enable_everything+set}" = set; then
        support_scroll_rxvt=no
        support_scroll_next=no
        support_scroll_xterm=no
-       support_scroll_plain=no
        support_utmp=no
        support_wtmp=no
        support_xim=no
@@ -4440,7 +4437,6 @@ if test "${enable_everything+set}" = set; then
        support_scroll_rxvt=yes
        support_scroll_next=yes
        support_scroll_xterm=yes
-       support_scroll_plain=yes
        support_utmp=yes
        support_wtmp=yes
        support_xim=yes
@@ -4603,14 +4599,6 @@ fi
 if test "${enable_xterm_scroll+set}" = set; then
   enableval=$enable_xterm_scroll; if test x$enableval = xyes -o x$enableval = xno; then
     support_scroll_xterm=$enableval
-  fi
-fi
-
-
-# Check whether --enable-plain-scroll was given.
-if test "${enable_plain_scroll+set}" = set; then
-  enableval=$enable_plain_scroll; if test x$enableval = xyes -o x$enableval = xno; then
-    support_scroll_plain=$enableval
   fi
 fi
 
@@ -11540,13 +11528,20 @@ _ACEOF
 fi
 
 
+scrolltypes=plain
+
+cat >>confdefs.h <<\_ACEOF
+#define PLAIN_SCROLLBAR 1
+_ACEOF
+
+
 if test x$support_scroll_rxvt = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
 #define RXVT_SCROLLBAR 1
 _ACEOF
 
-  scrolltypes="rxvt"
+  scrolltypes="$scrolltypes rxvt"
 fi
 if test x$support_scroll_next = xyes; then
 
@@ -11563,14 +11558,6 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
   scrolltypes="$scrolltypes xterm"
-fi
-if test x$support_scroll_plain = xyes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define PLAIN_SCROLLBAR 1
-_ACEOF
-
-  scrolltypes="$scrolltypes plain"
 fi
 if test x$support_pointer_blank = xyes; then
 

@@ -1292,10 +1292,8 @@ bgPixmap_t::apply ()
             {
               XSetWindowBackgroundPixmap (target->dpy, target->parent[0], pixmap);
               XSetWindowBackgroundPixmap (target->dpy, target->vt, ParentRelative);
-#  if HAVE_SCROLLBARS
               if (target->scrollBar.win)
                 XSetWindowBackgroundPixmap (target->dpy, target->scrollBar.win, ParentRelative);
-#  endif
             }
           else
 # endif
@@ -1305,10 +1303,8 @@ bgPixmap_t::apply ()
               XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_border]);
               XSetWindowBackgroundPixmap (target->dpy, target->vt, pixmap);
               /* do we also need to set scrollbar's background here ? */
-# if HAVE_SCROLLBARS
               if (target->scrollBar.win)
                   XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
-# endif
             }
         }
       else
@@ -1317,22 +1313,18 @@ bgPixmap_t::apply ()
           XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_border]);
           XSetWindowBackground (target->dpy, target->vt, target->pix_colors[Color_bg]);
           /* do we also need to set scrollbar's background here ? */
-# if HAVE_SCROLLBARS
           if (target->scrollBar.win)
               XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
-# endif
         }
       /* don't want Expose on the parent or vt. It is better to use
          scr_touch or we get a great deal of flicker otherwise: */
       XClearWindow (target->dpy, target->parent[0]);
 
-# if HAVE_SCROLLBARS
       if (target->scrollBar.win)
         {
           target->scrollBar.setIdle ();
           target->scrollbar_show (0);
         }
-# endif
 
       target->want_refresh = 1;
       flags |= hasChanged;

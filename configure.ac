@@ -94,7 +94,6 @@ support_pointer_blank=yes
 support_scroll_rxvt=yes
 support_scroll_next=yes
 support_scroll_xterm=yes
-support_scroll_plain=yes
 support_xim=yes
 support_afterimage=yes
 support_afterstep=yes
@@ -129,7 +128,6 @@ AC_ARG_ENABLE(everything,
        support_scroll_rxvt=no
        support_scroll_next=no
        support_scroll_xterm=no
-       support_scroll_plain=no
        support_utmp=no
        support_wtmp=no
        support_xim=no
@@ -158,7 +156,6 @@ AC_ARG_ENABLE(everything,
        support_scroll_rxvt=yes
        support_scroll_next=yes
        support_scroll_xterm=yes
-       support_scroll_plain=yes
        support_utmp=yes
        support_wtmp=yes
        support_xim=yes
@@ -261,12 +258,6 @@ AC_ARG_ENABLE(xterm-scroll,
   [  --enable-xterm-scroll   enable Xterm style scrollbar],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_scroll_xterm=$enableval
-  fi])
-
-AC_ARG_ENABLE(plain-scroll,
-  [  --enable-plain-scroll   enable plain style scrollbar],
-  [if test x$enableval = xyes -o x$enableval = xno; then
-    support_scroll_plain=$enableval
   fi])
 
 AC_ARG_ENABLE(perl,
@@ -648,9 +639,12 @@ dnl if test x$support_afterstep = xyes; then
 dnl   AC_DEFINE(AFTERSTEP_INTEGRATION, 1, Define if you want to integrate with AfterStep window manager)
 dnl fi
 
+scrolltypes=plain
+AC_DEFINE(PLAIN_SCROLLBAR, 1, Support plain style scrollbars)
+
 if test x$support_scroll_rxvt = xyes; then
   AC_DEFINE(RXVT_SCROLLBAR, 1, Support Rxvt original style scrollbars)
-  scrolltypes="rxvt"
+  scrolltypes="$scrolltypes rxvt"
 fi
 if test x$support_scroll_next = xyes; then
   AC_DEFINE(NEXT_SCROLLBAR, 1, Support NeXT style scrollbars)
@@ -659,10 +653,6 @@ fi
 if test x$support_scroll_xterm = xyes; then
   AC_DEFINE(XTERM_SCROLLBAR, 1, Support Xterm style scrollbars)
   scrolltypes="$scrolltypes xterm"
-fi
-if test x$support_scroll_plain = xyes; then
-  AC_DEFINE(PLAIN_SCROLLBAR, 1, Support plain style scrollbars)
-  scrolltypes="$scrolltypes plain"
 fi
 if test x$support_pointer_blank = xyes; then
   AC_DEFINE(POINTER_BLANK, 1, Define if you want hide the pointer while typing)
