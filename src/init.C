@@ -269,10 +269,12 @@ const char *const def_colorName[] =
 #ifdef OPTION_HC
     NULL,
 #endif
-#ifdef KEEP_SCROLLCOLOR
+#ifdef HAVE_SCROLLBARS
     COLOR_SCROLLBAR,
+#endif
+#ifdef RXVT_SCROLLBAR
     COLOR_SCROLLTROUGH,
-#endif /* KEEP_SCROLLCOLOR */
+#endif
 #if ENABLE_TRANSPARENCY
     NULL,
 #endif
@@ -910,7 +912,7 @@ rxvt_term::Get_Colours ()
    * The calculations of topShadow/bottomShadow values are adapted
    * from the fvwm window manager.
    */
-#ifdef KEEP_SCROLLCOLOR
+#ifdef RXVT_SCROLLBAR
   if (depth <= 2)
     {
       /* Monochrome */
@@ -935,7 +937,7 @@ rxvt_term::Get_Colours ()
                        ))
         alias_color (Color_topShadow, Color_White);
     }
-#endif /* KEEP_SCROLLCOLOR */
+#endif
 
 #ifdef OFF_FOCUS_FADING
   for (i = 0; i < (depth <= 2 ? 2 : NRS_COLORS); i++)

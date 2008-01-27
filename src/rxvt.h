@@ -211,15 +211,6 @@ set_environ (char **envv)
  *****************************************************************************
  */
 
-/* If we're using either the rxvt scrollbar, keep the
- * scrollColor resource.
- */
-#if defined(RXVT_SCROLLBAR) || defined(NEXT_SCROLLBAR) || defined(PLAIN_SCROLLBAR)
-# define KEEP_SCROLLCOLOR 1
-#else
-# undef KEEP_SCROLLCOLOR
-#endif
-
 /*
  * the 'essential' information for reporting Mouse Events
  * pared down from XButtonEvent
@@ -503,8 +494,10 @@ enum colour_list {
 #ifdef OPTION_HC
   Color_HC,
 #endif
-#ifdef KEEP_SCROLLCOLOR
+#ifdef HAVE_SCROLLBARS
   Color_scroll,
+#endif
+#ifdef RXVT_SCROLLBAR
   Color_trough,
 #endif
 #if ENABLE_TRANSPARENCY
@@ -514,7 +507,7 @@ enum colour_list {
   Color_fade,
 #endif
   NRS_COLORS,                 /* */
-#ifdef KEEP_SCROLLCOLOR
+#ifdef RXVT_SCROLLBAR
   Color_topShadow = NRS_COLORS,
   Color_bottomShadow,
   TOTAL_COLORS

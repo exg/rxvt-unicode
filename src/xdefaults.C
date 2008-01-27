@@ -174,10 +174,12 @@ optList[] = {
 #if ENABLE_FRILLS
               RSTRG (Rs_color + Color_underline, "underlineColor", "color"),
 #endif
-#ifdef KEEP_SCROLLCOLOR
+#ifdef HAVE_SCROLLBARS
               RSTRG (Rs_color + Color_scroll, "scrollColor", "color"),
+#endif
+#ifdef RXVT_SCROLLBAR
               RSTRG (Rs_color + Color_trough, "troughColor", "color"),
-#endif /* KEEP_SCROLLCOLOR */
+#endif
 #ifdef OPTION_HC
               STRG (Rs_color + Color_HC, "highlightColor", "hc", "color", "highlight color"),
 #endif
