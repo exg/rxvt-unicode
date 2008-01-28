@@ -1968,15 +1968,9 @@ rxvt_term::button_press (XButtonEvent &ev)
            * arrow buttons - send up/down
            * click on scrollbar - send pageup/down
            */
-          if ((scrollBar.style == R_SB_NEXT
-               && scrollbarnext_upButton (ev.y))
-              || (scrollBar.style == R_SB_RXVT
-                  && scrollbarrxvt_upButton (ev.y)))
+          if (scrollBar.upButton (ev.y))
             tt_printf ("\033[A");
-          else if ((scrollBar.style == R_SB_NEXT
-                    && scrollbarnext_dnButton (ev.y))
-                   || (scrollBar.style == R_SB_RXVT
-                       && scrollbarrxvt_dnButton (ev.y)))
+          else if (scrollBar.dnButton (ev.y))
             tt_printf ("\033[B");
           else
             switch (ev.button)
@@ -1998,20 +1992,10 @@ rxvt_term::button_press (XButtonEvent &ev)
         {
           char upordown = 0;
 
-          if (scrollBar.style == R_SB_NEXT)
-            {
-              if (scrollbarnext_upButton (ev.y))
-                upordown = -1;	/* up */
-              else if (scrollbarnext_dnButton (ev.y))
-                upordown = 1;	/* down */
-            }
-          else if (scrollBar.style == R_SB_RXVT)
-            {
-              if (scrollbarrxvt_upButton (ev.y))
-                upordown = -1;	/* up */
-              else if (scrollbarrxvt_dnButton (ev.y))
-                upordown = 1;	/* down */
-            }
+          if (scrollBar.upButton (ev.y))
+            upordown = -1; /* up */
+          else if (scrollBar.dnButton (ev.y))
+            upordown = 1;  /* down */
 
           if (upordown)
             {

@@ -5,6 +5,11 @@
 
 struct rxvt_term;
 
+#define R_SB_NEXT               1
+#define R_SB_XTERM              2
+#define R_SB_PLAIN              4
+#define R_SB_RXVT               8
+
 struct scrollBar_t {
   char            state;        /* scrollbar state                          */
   char            init;         /* scrollbar has been initialised           */
@@ -28,6 +33,23 @@ struct scrollBar_t {
   void setMotion() { state = 'm'; }
   void setUp()     { state = 'U'; }
   void setDn()     { state = 'D'; }
+
+  bool upButton (int y)
+  {
+    if (style == R_SB_NEXT)
+      return y > end && y <= end + width + 1;
+    if (style == R_SB_RXVT)
+      return y < beg;
+    return false;
+  }
+  bool dnButton (int y)
+  {
+    if (style == R_SB_NEXT)
+      return y > end + width + 1;
+    if (style == R_SB_RXVT)
+      return y > end;
+    return false;
+  }
 };
 
 #define scrollbar_TotalWidth()  (scrollBar.width + scrollBar.shadow * 2)
@@ -36,13 +58,7 @@ struct scrollBar_t {
 #define scrollbar_isDn()        (scrollBar.state == 'D')
 #define scrollbar_isUpDn()      (scrollbar_isUp () || scrollbar_isDn ())
 
-#define scrollbarnext_dnval()   (scrollBar.end + (scrollBar.width + 1))
-#define scrollbarnext_upButton(y)       ((y) > scrollBar.end \
-                                         && (y) <= scrollbarnext_dnval ())
-#define scrollbarnext_dnButton(y)       ((y) > scrollbarnext_dnval())
 #define SCROLLNEXT_MINHEIGHT    SB_THUMB_MIN_HEIGHT
-#define scrollbarrxvt_upButton(y)       ((y) < scrollBar.beg)
-#define scrollbarrxvt_dnButton(y)       ((y) > scrollBar.end)
 #define SCROLLRXVT_MINHEIGHT    10
 
 #define scrollbar_minheight()   (scrollBar.style == R_SB_NEXT        \
@@ -57,11 +73,6 @@ struct scrollBar_t {
 #define R_SB_ALIGN_CENTRE       0
 #define R_SB_ALIGN_TOP          1
 #define R_SB_ALIGN_BOTTOM       2
-
-#define R_SB_NEXT               1
-#define R_SB_XTERM              2
-#define R_SB_PLAIN              4
-#define R_SB_RXVT               8
 
 #define SB_WIDTH_NEXT           19
 #define SB_WIDTH_XTERM          15
