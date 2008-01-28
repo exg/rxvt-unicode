@@ -59,5 +59,7 @@
  def(console,              33)
 #if XFT
  def(buffered,             34)
+#else
+ nodef(buffered)
 #endif
 
