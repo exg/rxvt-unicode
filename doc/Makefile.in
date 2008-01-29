@@ -34,7 +34,7 @@ SEDREPLACE = -e 's%@@RXVT_VERSION@@%$(VERSION)%g;'	\
 	     -e 's%@@RXVT_LIBDIR@@%$(libdir)%g;'	\
 	     -e 's%@@URXVT_NAME@@%urxvt%g;'
 
-POD2MAN = pod2man -n @@RXVT_NAME@@ -r"$(VERSION)" -q\" -c "RXVT-UNICODE"
+POD2MAN = pod2man -n @@RXVT_NAME@@ -r @@RXVT_VERSION@@ -q\" -c "RXVT-UNICODE"
 
 all:
 	sed $(SEDREPLACE) < $(srcdir)/rxvt.1.man.in  >rxvt.1.man
