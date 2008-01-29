@@ -138,11 +138,6 @@ CONFIGURE OPTIONS
     --enable-xterm-scroll (default: on)
         Add support for an Xterm-like scrollbar.
 
-    --enable-plain-scroll (default: on)
-        Add support for a very unobtrusive, plain-looking scrollbar that is
-        the favourite of the rxvt-unicode author, having used it for many
-        years.
-
     --disable-backspace-key
         Removes any handling of the backspace key by us - let the X server
         do it.
