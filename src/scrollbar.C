@@ -175,10 +175,16 @@ rxvt_term::scrollbar_show (int update)
 }
 
 void
-rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, const char *thickness)
+scrollBar_t::setup (rxvt_term *term)
 {
   int             i;
   short           style, width;
+  const char *scrollalign, *scrollstyle, *thickness;
+
+  this->term = term;
+  scrollalign = term->rs[Rs_scrollBar_align];
+  scrollstyle = term->rs[Rs_scrollstyle];
+  thickness = term->rs[Rs_scrollBar_thickness];
 
 # if defined(RXVT_SCROLLBAR)
   style = R_SB_RXVT;
@@ -224,24 +230,24 @@ rxvt_term::setup_scrollbar (const char *scrollalign, const char *scrollstyle, co
       width = min (i, SB_WIDTH_MAXIMUM);
 
 # ifdef RXVT_SCROLLBAR
-  if (! option (Opt_scrollBar_floating) && style == R_SB_RXVT)
+  if (! term->option (Opt_scrollBar_floating) && style == R_SB_RXVT)
     scrollBar.shadow = SHADOW_WIDTH;
 # endif
 
-  scrollBar.style = style;
-  scrollBar.width = width;
+  this->style = style;
+  this->width = width;
 
   /* scrollBar.align = R_SB_ALIGN_CENTRE; */
   if (scrollalign)
     {
       if (strncasecmp (scrollalign, "top", 3) == 0)
-        scrollBar.align = R_SB_ALIGN_TOP;
+        align = R_SB_ALIGN_TOP;
       else if (strncasecmp (scrollalign, "bottom", 6) == 0)
-        scrollBar.align = R_SB_ALIGN_BOTTOM;
+        align = R_SB_ALIGN_BOTTOM;
     }
-  scrollBar.last_bot = scrollBar.last_state = -1;
+  last_bot = last_state = -1;
   /* cursor scrollBar: Black-on-White */
-  scrollBar.leftptr_cursor = XCreateFontCursor (dpy, XC_left_ptr);
+  leftptr_cursor = XCreateFontCursor (term->dpy, XC_left_ptr);
 }
 
 /*----------------------- end-of-file (C source) -----------------------*/

@@ -18,6 +18,7 @@ enum sb_state {
 };
 
 struct scrollBar_t {
+  rxvt_term *term;
   char            state;        /* scrollbar state                          */
   char            init;         /* scrollbar has been initialised           */
   unsigned int    beg;          /* slider sub-window begin height           */
@@ -35,6 +36,7 @@ struct scrollBar_t {
   Window          win;
   Cursor          leftptr_cursor;
   int             (rxvt_term::*update)(int, int, int, int);
+  void setup (rxvt_term *);
 
   bool upButton (int y)
   {

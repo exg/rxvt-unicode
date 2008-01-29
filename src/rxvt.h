@@ -1481,7 +1481,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void resize_scrollbar ();
   int scrollbar_mapping (int map);
   int scrollbar_show (int update);
-  void setup_scrollbar (const char *scrollalign, const char *scrollstyle, const char *thickness);
 
   // xdefaults.C
   void get_options (int argc, const char *const *argv);

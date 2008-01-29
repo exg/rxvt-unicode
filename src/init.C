@@ -487,7 +487,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 # endif
 #endif
 
-  setup_scrollbar (rs[Rs_scrollBar_align], rs[Rs_scrollstyle], rs[Rs_scrollBar_thickness]);
+    scrollBar.setup (this);
 
 #ifdef XTERM_REVERSE_VIDEO
   /* this is how xterm implements reverseVideo */
