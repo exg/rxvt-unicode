@@ -38,7 +38,7 @@ rxvt_term::scrollbar_mapping (int map)
 
   if (map)
     {
-      scrollBar.setIdle ();
+      scrollBar.state = STATE_IDLE;
 
       if (!scrollBar.win)
         resize_scrollbar ();
@@ -160,7 +160,8 @@ rxvt_term::scrollbar_show (int update)
       /* no change */
       if (scrollBar.top == scrollBar.last_top
           && scrollBar.bot == scrollBar.last_bot
-          && (scrollBar.state == scrollBar.last_state || !scrollbar_isUpDn ()))
+          && (scrollBar.state == scrollBar.last_state
+              || !(scrollBar.state == STATE_UP || scrollBar.state == STATE_DOWN)))
         return 0;
     }
 

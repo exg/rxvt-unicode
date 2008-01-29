@@ -1555,7 +1555,7 @@ rxvt_term::x_cb (XEvent &ev)
 
             if (scrollBar.state && ev.xany.window == scrollBar.win)
               {
-                scrollBar.setIdle ();
+                scrollBar.state = STATE_IDLE;
                 scrollbar_show (0);
               }
           }
@@ -1653,7 +1653,7 @@ rxvt_term::x_cb (XEvent &ev)
 #endif
               }
           }
-        else if (scrollbar_isMotion () && ev.xany.window == scrollBar.win)
+        else if (scrollBar.state == STATE_MOTION && ev.xany.window == scrollBar.win)
           {
             while (XCheckTypedWindowEvent (dpy, scrollBar.win,
                                            MotionNotify, &ev))
@@ -1956,7 +1956,7 @@ rxvt_term::button_press (XButtonEvent &ev)
       else if (scrollBar.dnButton (ev.y))
         upordown = 1;  /* down */
 
-      scrollBar.setIdle ();
+      scrollBar.state = STATE_IDLE;
       /*
        * Rxvt-style scrollbar:
        * move up if mouse is above slider
@@ -2006,9 +2006,9 @@ rxvt_term::button_press (XButtonEvent &ev)
               if (scr_page (upordown < 0 ? UP : DN, 1))
                 {
                   if (upordown < 0)
-                    scrollBar.setUp ();
+                    scrollBar.state = STATE_UP;
                   else
-                    scrollBar.setDn ();
+                    scrollBar.state = STATE_DOWN;
                 }
             }
           else
@@ -2033,7 +2033,7 @@ rxvt_term::button_press (XButtonEvent &ev)
                       || scrollbar_below_slider (ev.y))
                     scr_move_to (scrollbar_position (ev.y) - csrO, scrollbar_size ());
 
-                  scrollBar.setMotion ();
+                  scrollBar.state = STATE_MOTION;
                   break;
 
                 case Button1:
@@ -2057,7 +2057,7 @@ rxvt_term::button_press (XButtonEvent &ev)
                         scr_page (DN, nrow / 4);
 # endif
                       else
-                        scrollBar.setMotion ();
+                        scrollBar.state = STATE_MOTION;
                     }
                   else
                     {
@@ -2084,9 +2084,9 @@ rxvt_term::button_release (XButtonEvent &ev)
   if (!bypass_keystate)
     reportmode = !! (priv_modes & PrivMode_mouse_report);
 
-  if (scrollbar_isUpDn ())
+  if (scrollBar.state == STATE_UP || scrollBar.state == STATE_DOWN)
     {
-      scrollBar.setIdle ();
+      scrollBar.state = STATE_IDLE;
       scrollbar_show (0);
     }
 

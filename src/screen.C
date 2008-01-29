@@ -2479,7 +2479,7 @@ rxvt_term::scr_recolour () NOTHROW
   if (scrollBar.win)
    {
      XSetWindowBackground (dpy, scrollBar.win, pix_colors[Color_border]);
-     scrollBar.setIdle ();
+     scrollBar.state = STATE_IDLE;
      scrollbar_show (0);
    }
 

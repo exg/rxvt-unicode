@@ -1322,7 +1322,7 @@ bgPixmap_t::apply ()
 
       if (target->scrollBar.win)
         {
-          target->scrollBar.setIdle ();
+          target->scrollBar.state = STATE_IDLE;
           target->scrollbar_show (0);
         }
 

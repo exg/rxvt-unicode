@@ -10,6 +10,13 @@ struct rxvt_term;
 #define R_SB_PLAIN              4
 #define R_SB_RXVT               8
 
+enum sb_state {
+  STATE_IDLE = 1,
+  STATE_MOTION,
+  STATE_UP,
+  STATE_DOWN,
+};
+
 struct scrollBar_t {
   char            state;        /* scrollbar state                          */
   char            init;         /* scrollbar has been initialised           */
@@ -28,11 +35,6 @@ struct scrollBar_t {
   Window          win;
   Cursor          leftptr_cursor;
   int             (rxvt_term::*update)(int, int, int, int);
-
-  void setIdle()   { state =  1 ; }
-  void setMotion() { state = 'm'; }
-  void setUp()     { state = 'U'; }
-  void setDn()     { state = 'D'; }
 
   bool upButton (int y)
   {
@@ -53,10 +55,6 @@ struct scrollBar_t {
 };
 
 #define scrollbar_TotalWidth()  (scrollBar.width + scrollBar.shadow * 2)
-#define scrollbar_isMotion()    (scrollBar.state == 'm')
-#define scrollbar_isUp()        (scrollBar.state == 'U')
-#define scrollbar_isDn()        (scrollBar.state == 'D')
-#define scrollbar_isUpDn()      (scrollbar_isUp () || scrollbar_isDn ())
 
 #define SCROLLNEXT_MINHEIGHT    SB_THUMB_MIN_HEIGHT
 #define SCROLLRXVT_MINHEIGHT    10
