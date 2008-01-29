@@ -1284,6 +1284,7 @@ bgPixmap_t::apply ()
   if (target)
     {
       flags &= ~isVtOrigin;
+
       if (pixmap != None)
         {
           /* set target's background to pixmap */
@@ -1292,6 +1293,7 @@ bgPixmap_t::apply ()
             {
               XSetWindowBackgroundPixmap (target->dpy, target->parent[0], pixmap);
               XSetWindowBackgroundPixmap (target->dpy, target->vt, ParentRelative);
+
               if (target->scrollBar.win)
                 XSetWindowBackgroundPixmap (target->dpy, target->scrollBar.win, ParentRelative);
             }
@@ -1303,8 +1305,9 @@ bgPixmap_t::apply ()
               XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_border]);
               XSetWindowBackgroundPixmap (target->dpy, target->vt, pixmap);
               /* do we also need to set scrollbar's background here ? */
+
               if (target->scrollBar.win)
-                  XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
+                XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
             }
         }
       else
@@ -1314,8 +1317,9 @@ bgPixmap_t::apply ()
           XSetWindowBackground (target->dpy, target->vt, target->pix_colors[Color_bg]);
           /* do we also need to set scrollbar's background here ? */
           if (target->scrollBar.win)
-              XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
+            XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
         }
+
       /* don't want Expose on the parent or vt. It is better to use
          scr_touch or we get a great deal of flicker otherwise: */
       XClearWindow (target->dpy, target->parent[0]);
