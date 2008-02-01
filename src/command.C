@@ -1949,12 +1949,12 @@ rxvt_term::button_press (XButtonEvent &ev)
    */
   if (scrollBar.state && ev.window == scrollBar.win)
     {
-      int upordown = 0;
+      page_dirn direction = NO_DIR;
 
       if (scrollBar.upButton (ev.y))
-        upordown = -1; /* up */
+        direction = UP; /* up */
       else if (scrollBar.dnButton (ev.y))
-        upordown = 1;  /* down */
+        direction = DN;  /* down */
 
       scrollBar.state = STATE_IDLE;
       /*
@@ -1975,9 +1975,9 @@ rxvt_term::button_press (XButtonEvent &ev)
            * arrow buttons - send up/down
            * click on scrollbar - send pageup/down
            */
-          if (upordown < 0)
+          if (direction == UP)
             tt_printf ("\033[A");
-          else if (upordown > 0)
+          else if (direction == DN)
             tt_printf ("\033[B");
           else
             switch (ev.button)
@@ -1997,15 +1997,15 @@ rxvt_term::button_press (XButtonEvent &ev)
 #endif /* NO_SCROLLBAR_REPORT */
 
         {
-          if (upordown)
+          if (direction != NO_DIR)
             {
 #ifndef NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING
               if (!cont_scroll_ev.is_active ())
                 cont_scroll_ev.start (SCROLLBAR_INITIAL_DELAY, SCROLLBAR_CONTINUOUS_DELAY);
 #endif
-              if (scr_page (upordown < 0 ? UP : DN, 1))
+              if (scr_page (direction, 1))
                 {
-                  if (upordown < 0)
+                  if (direction == UP)
                     scrollBar.state = STATE_UP;
                   else
                     scrollBar.state = STATE_DOWN;
