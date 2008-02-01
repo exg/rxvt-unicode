@@ -1092,8 +1092,8 @@ rxvt_term::text_blink_cb (ev::timer &w, int revents)
 void
 rxvt_term::cont_scroll_cb (ev::timer &w, int revents)
 {
-  if ((scrollbar_isUp () || scrollbar_isDn ())
-      && scr_page (scrollbar_isUp () ? UP : DN, 1))
+  if ((scrollBar.state == STATE_UP || scrollBar.state == STATE_DOWN)
+      && scr_page (scrollBar.state == STATE_UP ? UP : DN, 1))
     {
       want_refresh = 1;
       refresh_check ();
