@@ -17,6 +17,8 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
+TODO: bgPixmap.apply all to do in scr_recolour?
+
 9.02 Tue Jan 29 11:58:36 CET 2008
 	- the "exg makes everybody happy" release.
 	- fix build with !xft.

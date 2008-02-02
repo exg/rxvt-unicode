@@ -1995,7 +1995,6 @@ rxvt_term::button_press (XButtonEvent &ev)
         }
       else
 #endif /* NO_SCROLLBAR_REPORT */
-
         {
           if (direction != NO_DIR)
             {
