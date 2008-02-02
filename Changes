@@ -22,7 +22,7 @@ TODO: bgPixmap.apply all to do in scr_recolour?
 9.02 Tue Jan 29 11:58:36 CET 2008
 	- the "exg makes everybody happy" release.
 	- fix build with !xft.
-	- always compile in plain style scrollbar.
+	- always compile in plain style scrollbar (simplifies code and looks great).
 
 9.01 Sat Jan 26 20:49:27 CET 2008
 	- be more aggressive about handling X events, this seems to be required
