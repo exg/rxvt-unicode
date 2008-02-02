@@ -2108,6 +2108,7 @@ rescale the current pixmap to 200% and display the image geometry in
 the title
 
 =back
+
 X<Mouse>
 
 =head1 Mouse Reporting
@@ -2158,9 +2159,10 @@ Col = B<< C<< <x> - SPACE >> >>
 Row = B<< C<< <y> - SPACE >> >>
 
 =back
-X<KeyCodes>
 
 =head1 Key Codes
+
+X<KeyCodes>
 
 Note: B<Shift> + B<F1>-B<F10> generates B<F11>-B<F20>
 
