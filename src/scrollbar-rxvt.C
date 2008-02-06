@@ -151,6 +151,7 @@ rxvt_term::scrollbar_show_rxvt (int update, int last_top, int last_bot, int scro
 {
   int sbshadow = scrollBar.shadow;
   int sbwidth = (int)scrollBar.width;
+  int state;
 
   if ((scrollBar.init & R_SB_RXVT) == 0)
     {
@@ -217,8 +218,10 @@ rxvt_term::scrollbar_show_rxvt (int update, int last_top, int last_bot, int scro
   draw_shadow (this, sbshadow, scrollBar.top, sbwidth, scrollbar_len);
 
   /* Redraw scrollbar arrows */
-  draw_button (this, sbshadow, sbshadow,          (scrollbar_isUp () ? -1 : +1), UP);
-  draw_button (this, sbshadow, scrollBar.end + 1, (scrollbar_isDn () ? -1 : +1), DN);
+  state = scrollBar.state == STATE_UP ? -1 : +1;
+  draw_button (this, sbshadow, sbshadow,          state, UP);
+  state = scrollBar.state == STATE_DOWN ? -1 : +1;
+  draw_button (this, sbshadow, scrollBar.end + 1, state, DN);
 
   return 1;
 }

@@ -282,12 +282,12 @@ rxvt_term::scrollbar_show_next (int update, int last_top, int last_bot, int scro
                  height - SB_BUTTON_SINGLE_HEIGHT, SB_BUTTON_WIDTH,
                  SB_BUTTON_HEIGHT);
 
-      s = (scrollbar_isUp ()) ? upArrowHi : upArrow;
+      s = scrollBar.state == STATE_UP ? upArrowHi : upArrow;
       XCopyArea (dpy, s, scrollBar.win, whiteGC, 0, 0,
                  ARROW_WIDTH, ARROW_HEIGHT, SB_BUTTON_FACE_X,
                  height - SB_BUTTON_BOTH_HEIGHT + SB_BEVEL_WIDTH_UPPER_LEFT);
 
-      s = (scrollbar_isDn ()) ? downArrowHi : downArrow;
+      s = scrollBar.state == STATE_DOWN ? downArrowHi : downArrow;
       XCopyArea (dpy, s, scrollBar.win, whiteGC, 0, 0,
                  ARROW_WIDTH, ARROW_HEIGHT, SB_BUTTON_FACE_X,
                  height - SB_BUTTON_SINGLE_HEIGHT + SB_BEVEL_WIDTH_UPPER_LEFT);
