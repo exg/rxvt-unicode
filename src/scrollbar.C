@@ -231,13 +231,13 @@ scrollBar_t::setup (rxvt_term *term)
 
 # ifdef RXVT_SCROLLBAR
   if (! term->option (Opt_scrollBar_floating) && style == R_SB_RXVT)
-    scrollBar.shadow = SHADOW_WIDTH;
+    shadow = SHADOW_WIDTH;
 # endif
 
   this->style = style;
   this->width = width;
 
-  /* scrollBar.align = R_SB_ALIGN_CENTRE; */
+  /* align = R_SB_ALIGN_CENTRE; */
   if (scrollalign)
     {
       if (strncasecmp (scrollalign, "top", 3) == 0)
