@@ -803,7 +803,6 @@ rxvt_term::set_window_color (int idx, const char *color)
 {
 #ifdef XTERM_COLOR_CHANGE
   rxvt_color xcol;
-  int i;
 
   if (color == NULL || *color == '\0')
     return;
@@ -815,7 +814,7 @@ rxvt_term::set_window_color (int idx, const char *color)
   /* handle color aliases */
   if (isdigit (*color))
     {
-      i = atoi (color);
+      int i = atoi (color);
 
       if (i >= 8 && i <= 15)
         {
