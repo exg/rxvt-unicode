@@ -99,15 +99,6 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
  * SYSTEM HACKS
  *****************************************************************************
  */
-/* Consistent defines - please report on the necessity
- * @ Unixware: defines (__svr4__)
- */
-#if defined (SVR4) && !defined (__svr4__)
-# define __svr4__ 1
-#endif
-#if defined (sun) && !defined (__sun__)
-# define __sun__ 1
-#endif
 
 #ifndef HAVE_XPOINTER
 typedef char *XPointer;
