@@ -2459,10 +2459,9 @@ It also enables some non-essential features otherwise disabled, such as:
 
 =item --enable-iso14755 (default: on)
 
-Enable extended ISO 14755 support (see @@RXVT_NAME@@(1), or
-F<doc/rxvt.1.txt>). Basic support (section 5.1) is enabled by
-C<--enable-frills>, while support for 5.2, 5.3 and 5.4 is enabled with
-this switch.
+Enable extended ISO 14755 support (see @@RXVT_NAME@@(1)).
+Basic support (section 5.1) is enabled by C<--enable-frills>, while
+support for 5.2, 5.3 and 5.4 is enabled with this switch.
 
 =item --enable-keepscrolling (default: on)
 
@@ -2501,11 +2500,11 @@ Add support to have the pointer disappear when typing or inactive.
 =item --enable-perl (default: on)
 
 Enable an embedded perl interpreter. See the B<@@RXVT_NAME@@perl(3)>
-manpage (F<doc/rxvtperl.txt>) for more info on this feature, or the
-files in F<src/perl/> for the extensions that are installed by
-default. The perl interpreter that is used can be specified via the
-C<PERL> environment variable when running configure. Even when compiled
-in, perl will I<not> be initialised when all extensions have been disabled
+manpage for more info on this feature, or the files in F<src/perl/>
+for the extensions that are installed by default.
+The perl interpreter that is used can be specified via the C<PERL>
+environment variable when running configure. Even when compiled in,
+perl will I<not> be initialised when all extensions have been disabled
 C<-pe "" --perl-ext-common "">, so it should be safe to enable from a
 resource standpoint.
 
