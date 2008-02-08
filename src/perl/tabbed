@@ -325,6 +325,19 @@ sub tab_key_press {
          return 1;
       }
    }
+   elsif ($event->{state} & urxvt::ControlMask) {
+      if ($keysym == 0xff51 || $keysym == 0xff53) {
+         my ($idx1) = grep $self->{tabs}[$_] == $tab, 0 .. $#{ $self->{tabs} };
+         my  $idx2  = ($idx1 + ($keysym == 0xff51 ? -1 : +1)) % @{ $self->{tabs} };
+
+         ($self->{tabs}[$idx1], $self->{tabs}[$idx2]) =
+            ($self->{tabs}[$idx2], $self->{tabs}[$idx1]);
+
+         $self->make_current ($self->{tabs}[$idx2]);
+
+         return 1;
+      }
+   }
 
    ()
 }

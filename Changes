@@ -19,6 +19,8 @@ DUMB: support tex fonts
 
 TODO: bgPixmap.apply all to do in scr_recolour?
 
+	- made tabs moveable (based on a patch by Petr Machata).
+      	
 9.02 Tue Jan 29 11:58:36 CET 2008
 	- the "exg makes everybody happy" release.
 	- fix build with !xft.
