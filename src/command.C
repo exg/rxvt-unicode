@@ -304,7 +304,6 @@ void
 rxvt_term::key_press (XKeyEvent &ev)
 {
   int ctrl, meta, shft, len;
-  unsigned int newlen;
   KeySym keysym;
   int valid_keysym;
   char kbuf[KBUFSZ];
@@ -551,7 +550,7 @@ rxvt_term::key_press (XKeyEvent &ev)
         {
             {
               bool kp = priv_modes & PrivMode_aplKP ? !shft : shft;
-              newlen = 1;
+              unsigned int newlen = 1;
 #ifdef XK_KP_Home
               static const KeySym keypadtrans[] = {
                 XK_KP_7, // XK_KP_Home
