@@ -548,7 +548,6 @@ rxvt_term::key_press (XKeyEvent &ev)
 
       if (keysym >= 0xFF00 && keysym <= 0xFFFF)
         {
-            {
               bool kp = priv_modes & PrivMode_aplKP ? !shft : shft;
               unsigned int newlen = 1;
 #ifdef XK_KP_Home
@@ -790,7 +789,6 @@ rxvt_term::key_press (XKeyEvent &ev)
 
               if (newlen)
                 len = strlen (kbuf);
-            }
 
           /*
            * Pass meta for all function keys, if 'meta' option set
