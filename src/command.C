@@ -281,8 +281,8 @@ rxvt_term::commit_iso14755 ()
   iso14755buf = 0;
 }
 
-int
-rxvt_term::hex_keyval (XKeyEvent &ev)
+static int
+hex_keyval (XKeyEvent &ev)
 {
   // check wether this event corresponds to a hex digit
   // if the modifiers had not been pressed.
