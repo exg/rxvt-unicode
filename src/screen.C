@@ -1994,11 +1994,11 @@ rxvt_term::scr_refresh () NOTHROW
   /*
    * A: set up vars
    */
-  have_bg = 0;
   refresh_count = 0;
 
+  have_bg = 0;
 #ifdef HAVE_BG_PIXMAP
-  have_bg |= bgPixmap.pixmap != None;
+  have_bg = bgPixmap.pixmap != None;
 #endif
   ocrow = oldcursor.row; /* is there an old outline cursor on screen? */
 
