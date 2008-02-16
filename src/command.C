@@ -643,137 +643,137 @@ rxvt_term::key_press (XKeyEvent &ev)
 
       if (keysym >= 0xFF00 && keysym <= 0xFFFF)
         {
-              bool kp = priv_modes & PrivMode_aplKP ? !shft : shft;
-              unsigned int newlen = 1;
+          bool kp = priv_modes & PrivMode_aplKP ? !shft : shft;
+          unsigned int newlen = 1;
 
-              switch (translate_keypad (keysym, kp))
-                {
+          switch (translate_keypad (keysym, kp))
+            {
 #ifndef NO_BACKSPACE_KEY
-                  case XK_BackSpace:
-                    if (priv_modes & PrivMode_HaveBackSpace)
-                      {
-                        kbuf[0] = (!! (priv_modes & PrivMode_BackSpace)
-                                   ^ !!ctrl) ? '\b' : '\177';
-                        kbuf[1] = '\0';
-                      }
-                    else
-                      strcpy (kbuf, rs[Rs_backspace_key]);
-                    break;
+              case XK_BackSpace:
+                if (priv_modes & PrivMode_HaveBackSpace)
+                  {
+                    kbuf[0] = (!! (priv_modes & PrivMode_BackSpace)
+                               ^ !!ctrl) ? '\b' : '\177';
+                    kbuf[1] = '\0';
+                  }
+                else
+                  strcpy (kbuf, rs[Rs_backspace_key]);
+                break;
 #endif
 #ifndef NO_DELETE_KEY
-                  case XK_Delete:
-                    strcpy (kbuf, rs[Rs_delete_key]);
-                    break;
+              case XK_Delete:
+                strcpy (kbuf, rs[Rs_delete_key]);
+                break;
 #endif
-                  case XK_Tab:
-                    if (shft)
-                      strcpy (kbuf, "\033[Z");
-                    else
-                      {
+              case XK_Tab:
+                if (shft)
+                  strcpy (kbuf, "\033[Z");
+                else
+                  {
 #ifdef CTRL_TAB_MAKES_META
-                        if (ctrl)
-                          meta = 1;
+                    if (ctrl)
+                      meta = 1;
 #endif
 #ifdef MOD4_TAB_MAKES_META
-                        if (ev.state & Mod4Mask)
-                          meta = 1;
+                    if (ev.state & Mod4Mask)
+                      meta = 1;
 #endif
-                        newlen = 0;
-                      }
+                    newlen = 0;
+                  }
+                break;
+
+              case XK_Up:	/* "\033[A" */
+              case XK_Down:	/* "\033[B" */
+              case XK_Right:	/* "\033[C" */
+              case XK_Left:	/* "\033[D" */
+                strcpy (kbuf, "\033[Z");
+                kbuf[2] = "DACB"[keysym - XK_Left];
+                /* do Shift first */
+                if (shft)
+                  kbuf[2] = "dacb"[keysym - XK_Left];
+                else if (ctrl)
+                  {
+                    kbuf[1] = 'O';
+                    kbuf[2] = "dacb"[keysym - XK_Left];
+                  }
+                else if (priv_modes & PrivMode_aplCUR)
+                  kbuf[1] = 'O';
+                break;
+
+              case XK_KP_Enter:
+                /* allow shift to override */
+                if (kp)
+                  {
+                    strcpy (kbuf, "\033OM");
                     break;
+                  }
 
-                  case XK_Up:	/* "\033[A" */
-                  case XK_Down:	/* "\033[B" */
-                  case XK_Right:	/* "\033[C" */
-                  case XK_Left:	/* "\033[D" */
-                    strcpy (kbuf, "\033[Z");
-                    kbuf[2] = "DACB"[keysym - XK_Left];
-                    /* do Shift first */
-                    if (shft)
-                      kbuf[2] = "dacb"[keysym - XK_Left];
-                    else if (ctrl)
-                      {
-                        kbuf[1] = 'O';
-                        kbuf[2] = "dacb"[keysym - XK_Left];
-                      }
-                    else if (priv_modes & PrivMode_aplCUR)
-                      kbuf[1] = 'O';
-                    break;
+                /* FALLTHROUGH */
 
-                  case XK_KP_Enter:
-                    /* allow shift to override */
-                    if (kp)
-                      {
-                        strcpy (kbuf, "\033OM");
-                        break;
-                      }
+              case XK_Return:
+                if (priv_modes & PrivMode_LFNL)
+                  {
+                    kbuf[0] = '\015';
+                    kbuf[1] = '\012';
+                    kbuf[2] = '\0';
+                  }
+                else
+                  {
+                    kbuf[0] = '\015';
+                    kbuf[1] = '\0';
+                  }
+                break;
 
-                    /* FALLTHROUGH */
+              case XK_KP_F1:	/* "\033OP" */
+              case XK_KP_F2:	/* "\033OQ" */
+              case XK_KP_F3:	/* "\033OR" */
+              case XK_KP_F4:	/* "\033OS" */
+                strcpy (kbuf, "\033OP");
+                kbuf[2] += (keysym - XK_KP_F1);
+                break;
 
-                  case XK_Return:
-                    if (priv_modes & PrivMode_LFNL)
-                      {
-                        kbuf[0] = '\015';
-                        kbuf[1] = '\012';
-                        kbuf[2] = '\0';
-                      }
-                    else
-                      {
-                        kbuf[0] = '\015';
-                        kbuf[1] = '\0';
-                      }
-                    break;
+              case XK_KP_Multiply:	/* "\033Oj" : "*" */
+              case XK_KP_Add:		/* "\033Ok" : "+" */
+              case XK_KP_Separator:	/* "\033Ol" : "," */
+              case XK_KP_Subtract:	/* "\033Om" : "-" */
+              case XK_KP_Decimal:	/* "\033On" : "." */
+              case XK_KP_Divide:	/* "\033Oo" : "/" */
+              case XK_KP_0:		/* "\033Op" : "0" */
+              case XK_KP_1:		/* "\033Oq" : "1" */
+              case XK_KP_2:		/* "\033Or" : "2" */
+              case XK_KP_3:		/* "\033Os" : "3" */
+              case XK_KP_4:		/* "\033Ot" : "4" */
+              case XK_KP_5:		/* "\033Ou" : "5" */
+              case XK_KP_6:		/* "\033Ov" : "6" */
+              case XK_KP_7:		/* "\033Ow" : "7" */
+              case XK_KP_8:		/* "\033Ox" : "8" */
+              case XK_KP_9:		/* "\033Oy" : "9" */
+                /* allow shift to override */
+                if (kp)
+                  {
+                    strcpy (kbuf, "\033Oj");
+                    kbuf[2] += (keysym - XK_KP_Multiply);
+                  }
+                else
+                  {
+                    kbuf[0] = ('*' + (keysym - XK_KP_Multiply));
+                    kbuf[1] = '\0';
+                  }
+                break;
 
-                  case XK_KP_F1:	/* "\033OP" */
-                  case XK_KP_F2:	/* "\033OQ" */
-                  case XK_KP_F3:	/* "\033OR" */
-                  case XK_KP_F4:	/* "\033OS" */
-                    strcpy (kbuf, "\033OP");
-                    kbuf[2] += (keysym - XK_KP_F1);
-                    break;
-
-                  case XK_KP_Multiply:	/* "\033Oj" : "*" */
-                  case XK_KP_Add:	/* "\033Ok" : "+" */
-                  case XK_KP_Separator:	/* "\033Ol" : "," */
-                  case XK_KP_Subtract:	/* "\033Om" : "-" */
-                  case XK_KP_Decimal:	/* "\033On" : "." */
-                  case XK_KP_Divide:	/* "\033Oo" : "/" */
-                  case XK_KP_0:		/* "\033Op" : "0" */
-                  case XK_KP_1:		/* "\033Oq" : "1" */
-                  case XK_KP_2:		/* "\033Or" : "2" */
-                  case XK_KP_3:		/* "\033Os" : "3" */
-                  case XK_KP_4:		/* "\033Ot" : "4" */
-                  case XK_KP_5:		/* "\033Ou" : "5" */
-                  case XK_KP_6:		/* "\033Ov" : "6" */
-                  case XK_KP_7:		/* "\033Ow" : "7" */
-                  case XK_KP_8:		/* "\033Ox" : "8" */
-                  case XK_KP_9:		/* "\033Oy" : "9" */
-                    /* allow shift to override */
-                    if (kp)
-                      {
-                        strcpy (kbuf, "\033Oj");
-                        kbuf[2] += (keysym - XK_KP_Multiply);
-                      }
-                    else
-                      {
-                        kbuf[0] = ('*' + (keysym - XK_KP_Multiply));
-                        kbuf[1] = '\0';
-                      }
-                    break;
-
-                  default:
-                    {
-                      int param = map_function_key (keysym);
-                      if (param > 0)
-                        sprintf (kbuf,"\033[%d~", param);
-                      else
-                        newlen = 0;
-                    }
-                    break;
+              default:
+                {
+                  int param = map_function_key (keysym);
+                  if (param > 0)
+                    sprintf (kbuf,"\033[%d~", param);
+                  else
+                    newlen = 0;
                 }
+                break;
+            }
 
-              if (newlen)
-                len = strlen (kbuf);
+          if (newlen)
+            len = strlen (kbuf);
 
           /*
            * Pass meta for all function keys, if 'meta' option set
