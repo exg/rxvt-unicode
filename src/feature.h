@@ -216,14 +216,9 @@
 #define CUTCHARS	"\"&'()*,;<=>?@[\\]^`{|}"
 
 /*
- * Add run-time support for changing the cutchars for double click selection
- */
-#define CUTCHAR_RESOURCE
-
-/*
  * Have mouse reporting include double-click info for button1
  */
-//#define MOUSE_REPORT_DOUBLECLICK
+/* #define MOUSE_REPORT_DOUBLECLICK */
 
 /*
  * Set delay between multiple click events [default: 500 milliseconds]

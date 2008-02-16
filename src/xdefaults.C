@@ -245,9 +245,7 @@ optList[] = {
               RSTRG (Rs_print_pipe, "print-pipe", "string"),
 #endif
               STRG (Rs_modifier, "modifier", "mod", "modifier", "meta modifier = alt|meta|hyper|super|mod1|...|mod5"),
-#ifdef CUTCHAR_RESOURCE
               RSTRG (Rs_cutchars, "cutchars", "string"),
-#endif /* CUTCHAR_RESOURCE */
               RSTRG (Rs_answerbackstring, "answerbackString", "string"),
 #ifndef NO_SECONDARY_SCREEN
               BOOL (Rs_secondaryScreen, "secondaryScreen", "ssc", Opt_secondaryScreen, 0, "enable secondary screen"),
