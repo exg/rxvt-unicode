@@ -300,6 +300,42 @@ hex_keyval (XKeyEvent &ev)
 }
 #endif
 
+static inline KeySym
+translate_keypad (KeySym keysym, bool kp)
+{
+#ifdef XK_KP_Home
+  static const KeySym keypadtrans[] = {
+    XK_KP_7, // XK_KP_Home
+    XK_KP_4, // XK_KP_Left
+    XK_KP_8, // XK_KP_Up
+    XK_KP_6, // XK_KP_Right
+    XK_KP_2, // XK_KP_Down
+# ifndef UNSHIFTED_SCROLLKEYS
+    XK_KP_9, // XK_KP_Prior
+    XK_KP_3, // XK_KP_Next
+# else
+    XK_Prior,
+    XK_Next,
+# endif
+    XK_KP_1, // XK_KP_End
+    XK_KP_5, // XK_KP_Begin
+  };
+
+  if (IN_RANGE_INC (keysym, XK_KP_Home, XK_KP_Begin))
+    {
+      unsigned int index = keysym - XK_KP_Home;
+      keysym = kp ? keypadtrans[index] : XK_Home + index;
+    }
+  else if (keysym == XK_KP_Insert)
+    keysym = kp ? XK_KP_0 : XK_Insert;
+# ifndef NO_DELETE_KEY
+  else if (keysym == XK_KP_Delete)
+    keysym = kp ? XK_KP_Decimal : XK_Delete;
+# endif
+#endif
+  return keysym;
+}
+
 void
 rxvt_term::key_press (XKeyEvent &ev)
 {
@@ -550,37 +586,8 @@ rxvt_term::key_press (XKeyEvent &ev)
         {
               bool kp = priv_modes & PrivMode_aplKP ? !shft : shft;
               unsigned int newlen = 1;
-#ifdef XK_KP_Home
-              static const KeySym keypadtrans[] = {
-                XK_KP_7, // XK_KP_Home
-                XK_KP_4, // XK_KP_Left
-                XK_KP_8, // XK_KP_Up
-                XK_KP_6, // XK_KP_Right
-                XK_KP_2, // XK_KP_Down
-#ifndef UNSHIFTED_SCROLLKEYS
-                XK_KP_9, // XK_KP_Prior
-                XK_KP_3, // XK_KP_Next
-#else
-                XK_Prior,
-                XK_Next,
-#endif
-                XK_KP_1, // XK_KP_End
-                XK_KP_5, // XK_KP_Begin
-              };
 
-              if (IN_RANGE_INC (keysym, XK_KP_Home, XK_KP_Begin))
-                {
-                  unsigned int index = keysym - XK_KP_Home;
-                  keysym = kp ? keypadtrans[index] : XK_Home + index;
-                }
-              else if (keysym == XK_KP_Insert)
-                keysym = kp ? XK_KP_0 : XK_Insert;
-#ifndef NO_DELETE_KEY
-              else if (keysym == XK_KP_Delete)
-                keysym = kp ? XK_KP_Decimal : XK_Delete;
-#endif
-#endif
-              switch (keysym)
+              switch (translate_keypad (keysym, kp))
                 {
 #ifndef NO_BACKSPACE_KEY
                   case XK_BackSpace:
