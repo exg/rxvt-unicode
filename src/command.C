@@ -378,6 +378,12 @@ map_function_key (KeySym keysym)
         case XK_Next:
           param = 6;
           break;
+        case XK_Home:
+          param = 7;
+          break;
+        case XK_End:
+          param = 8;
+          break;
 #endif
         case XK_Help:
           param = 28;
@@ -753,13 +759,6 @@ rxvt_term::key_press (XKeyEvent &ev)
                         kbuf[0] = ('*' + (keysym - XK_KP_Multiply));
                         kbuf[1] = '\0';
                       }
-                    break;
-
-                  case XK_End:
-                    strcpy (kbuf, KS_END);
-                    break;
-                  case XK_Home:
-                    strcpy (kbuf, KS_HOME);
                     break;
 
                   default:

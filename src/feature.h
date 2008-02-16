@@ -158,14 +158,6 @@
 #define DEFAULT_DELETE		"\033[3~"
 
 /*
- * To use
- *	Home = "\E[1~", End = "\E[4~"
- * instead of
- *	Home = "\E[7~", End = "\E[8~"	[default]
- */
-/* #define LINUX_KEYS */
-
-/*
  * Enable the keysym resource which allows you to define strings associated
  * with various KeySyms (0xFF00 - 0xFFFF).
  * Required by perl.

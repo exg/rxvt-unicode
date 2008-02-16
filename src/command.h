@@ -20,17 +20,6 @@
 # define SCROLLBAR_CONTINUOUS_DELAY	0.05
 #endif
 
-/*
- * key-strings: if only these keys were standardized <sigh>
- */
-#ifdef LINUX_KEYS
-# define KS_HOME	"\033[1~"	/* Home == Find */
-# define KS_END		"\033[4~"	/* End == Select */
-#else
-# define KS_HOME	"\033[7~"	/* Home */
-# define KS_END		"\033[8~"	/* End */
-#endif
-
 #ifdef SCROLL_ON_SHIFT
 # define SCROLL_SHIFTKEY (shft)
 # define NOSCROLL_SHIFTKEY 0
