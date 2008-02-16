@@ -336,6 +336,59 @@ translate_keypad (KeySym keysym, bool kp)
   return keysym;
 }
 
+static inline int
+map_function_key (KeySym keysym)
+{
+  int param = 0;
+
+  if (IN_RANGE_INC (keysym, XK_F1, XK_F35))
+    {
+      param = 11 + keysym - XK_F1;
+      if (keysym >= XK_F17)
+        param += 4;
+      else if (keysym >= XK_F15)
+        param += 3;
+      else if (keysym >= XK_F11)
+        param += 2;
+      else if (keysym >= XK_F6)
+        param += 1;
+    }
+  else
+    switch (keysym)
+      {
+        case XK_Find:
+          param = 1;
+          break;
+        case XK_Insert:
+          param = 2;
+          break;
+#ifdef DXK_Remove
+        case DXK_Remove:
+#endif
+        case XK_Execute:
+          param = 3;
+          break;
+        case XK_Select:
+          param = 4;
+          break;
+#ifndef UNSHIFTED_SCROLLKEYS
+        case XK_Prior:
+          param = 5;
+          break;
+        case XK_Next:
+          param = 6;
+          break;
+#endif
+        case XK_Help:
+          param = 28;
+          break;
+        case XK_Menu:
+          param = 29;
+          break;
+      }
+  return param;
+}
+
 void
 rxvt_term::key_press (XKeyEvent &ev)
 {
@@ -641,14 +694,6 @@ rxvt_term::key_press (XKeyEvent &ev)
                       kbuf[1] = 'O';
                     break;
 
-#ifndef UNSHIFTED_SCROLLKEYS
-                  case XK_Prior:
-                    strcpy (kbuf, "\033[5~");
-                    break;
-                  case XK_Next:
-                    strcpy (kbuf, "\033[6~");
-                    break;
-#endif
                   case XK_KP_Enter:
                     /* allow shift to override */
                     if (kp)
@@ -710,23 +755,6 @@ rxvt_term::key_press (XKeyEvent &ev)
                       }
                     break;
 
-                  case XK_Find:
-                    strcpy (kbuf, "\033[1~");
-                    break;
-
-                  case XK_Insert:
-                    strcpy (kbuf, "\033[2~");
-                    break;
-#ifdef DXK_Remove		/* support for DEC remove like key */
-                  case DXK_Remove:
-                    /* FALLTHROUGH */
-#endif
-                  case XK_Execute:
-                    strcpy (kbuf, "\033[3~");
-                    break;
-                  case XK_Select:
-                    strcpy (kbuf, "\033[4~");
-                    break;
                   case XK_End:
                     strcpy (kbuf, KS_END);
                     break;
@@ -734,63 +762,14 @@ rxvt_term::key_press (XKeyEvent &ev)
                     strcpy (kbuf, KS_HOME);
                     break;
 
-#define FKEY(n, fkey)							\
-    sprintf ((char *)kbuf,"\033[%2d~", (int) ((n) + (keysym - fkey)))
-
-                  case XK_F1:	/* "\033[11~" */
-                  case XK_F2:	/* "\033[12~" */
-                  case XK_F3:	/* "\033[13~" */
-                  case XK_F4:	/* "\033[14~" */
-                  case XK_F5:	/* "\033[15~" */
-                    FKEY (11, XK_F1);
-                    break;
-                  case XK_F6:	/* "\033[17~" */
-                  case XK_F7:	/* "\033[18~" */
-                  case XK_F8:	/* "\033[19~" */
-                  case XK_F9:	/* "\033[20~" */
-                  case XK_F10:	/* "\033[21~" */
-                    FKEY (17, XK_F6);
-                    break;
-                  case XK_F11:	/* "\033[23~" */
-                  case XK_F12:	/* "\033[24~" */
-                  case XK_F13:	/* "\033[25~" */
-                  case XK_F14:	/* "\033[26~" */
-                    FKEY (23, XK_F11);
-                    break;
-                  case XK_F15:	/* "\033[28~" */
-                  case XK_F16:	/* "\033[29~" */
-                    FKEY (28, XK_F15);
-                    break;
-                  case XK_Help:	/* "\033[28~" */
-                    FKEY (28, XK_Help);
-                    break;
-                  case XK_Menu:	/* "\033[29~" */
-                    FKEY (29, XK_Menu);
-                    break;
-                  case XK_F17:	/* "\033[31~" */
-                  case XK_F18:	/* "\033[32~" */
-                  case XK_F19:	/* "\033[33~" */
-                  case XK_F20:	/* "\033[34~" */
-                  case XK_F21:	/* "\033[35~" */
-                  case XK_F22:	/* "\033[36~" */
-                  case XK_F23:	/* "\033[37~" */
-                  case XK_F24:	/* "\033[38~" */
-                  case XK_F25:	/* "\033[39~" */
-                  case XK_F26:	/* "\033[40~" */
-                  case XK_F27:	/* "\033[41~" */
-                  case XK_F28:	/* "\033[42~" */
-                  case XK_F29:	/* "\033[43~" */
-                  case XK_F30:	/* "\033[44~" */
-                  case XK_F31:	/* "\033[45~" */
-                  case XK_F32:	/* "\033[46~" */
-                  case XK_F33:	/* "\033[47~" */
-                  case XK_F34:	/* "\033[48~" */
-                  case XK_F35:	/* "\033[49~" */
-                    FKEY (31, XK_F17);
-                    break;
-#undef FKEY
                   default:
-                    newlen = 0;
+                    {
+                      int param = map_function_key (keysym);
+                      if (param > 0)
+                        sprintf (kbuf,"\033[%d~", param);
+                      else
+                        newlen = 0;
+                    }
                     break;
                 }
 
