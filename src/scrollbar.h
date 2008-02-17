@@ -10,6 +10,35 @@ struct rxvt_term;
 #define R_SB_PLAIN              4
 #define R_SB_RXVT               8
 
+#define R_SB_ALIGN_CENTRE       0
+#define R_SB_ALIGN_TOP          1
+#define R_SB_ALIGN_BOTTOM       2
+
+#define SB_WIDTH_NEXT           19
+#define SB_WIDTH_XTERM          15
+#define SB_WIDTH_PLAIN          7
+#ifndef SB_WIDTH_RXVT
+# define SB_WIDTH_RXVT          10
+#endif
+
+/*
+ * NeXT scrollbar defines
+ */
+#define SB_PADDING              1
+#define SB_BORDER_WIDTH         1
+#define SB_BEVEL_WIDTH_UPPER_LEFT       1
+#define SB_BEVEL_WIDTH_LOWER_RIGHT      2
+#define SB_LEFT_PADDING         (SB_PADDING + SB_BORDER_WIDTH)
+#define SB_MARGIN_SPACE         (SB_PADDING * 2)
+#define SB_BUTTON_WIDTH         (SB_WIDTH_NEXT - SB_MARGIN_SPACE - SB_BORDER_WIDTH)
+#define SB_BUTTON_HEIGHT        (SB_BUTTON_WIDTH)
+#define SB_BUTTON_SINGLE_HEIGHT (SB_BUTTON_HEIGHT + SB_PADDING)
+#define SB_BUTTON_BOTH_HEIGHT   (SB_BUTTON_SINGLE_HEIGHT * 2)
+#define SB_BUTTON_TOTAL_HEIGHT  (SB_BUTTON_BOTH_HEIGHT + SB_PADDING)
+#define SB_BUTTON_BEVEL_X       (SB_LEFT_PADDING)
+#define SB_BUTTON_FACE_X        (SB_BUTTON_BEVEL_X + SB_BEVEL_WIDTH_UPPER_LEFT)
+#define SB_THUMB_MIN_HEIGHT     (SB_BUTTON_WIDTH - (SB_PADDING * 2))
+
 enum sb_state {
   STATE_IDLE = 1,
   STATE_MOTION,
@@ -72,34 +101,6 @@ struct scrollBar_t {
 #define scrollbar_size()                (scrollBar.end - scrollBar.beg \
                                          - scrollbar_minheight ())
 
-#define R_SB_ALIGN_CENTRE       0
-#define R_SB_ALIGN_TOP          1
-#define R_SB_ALIGN_BOTTOM       2
-
-#define SB_WIDTH_NEXT           19
-#define SB_WIDTH_XTERM          15
-#define SB_WIDTH_PLAIN          7
-#ifndef SB_WIDTH_RXVT
-# define SB_WIDTH_RXVT          10
-#endif
-
-/*
- * NeXT scrollbar defines
- */
-#define SB_PADDING              1
-#define SB_BORDER_WIDTH         1
-#define SB_BEVEL_WIDTH_UPPER_LEFT       1
-#define SB_BEVEL_WIDTH_LOWER_RIGHT      2
-#define SB_LEFT_PADDING         (SB_PADDING + SB_BORDER_WIDTH)
-#define SB_MARGIN_SPACE         (SB_PADDING * 2)
-#define SB_BUTTON_WIDTH         (SB_WIDTH_NEXT - SB_MARGIN_SPACE - SB_BORDER_WIDTH)
-#define SB_BUTTON_HEIGHT        (SB_BUTTON_WIDTH)
-#define SB_BUTTON_SINGLE_HEIGHT (SB_BUTTON_HEIGHT + SB_PADDING)
-#define SB_BUTTON_BOTH_HEIGHT   (SB_BUTTON_SINGLE_HEIGHT * 2)
-#define SB_BUTTON_TOTAL_HEIGHT  (SB_BUTTON_BOTH_HEIGHT + SB_PADDING)
-#define SB_BUTTON_BEVEL_X       (SB_LEFT_PADDING)
-#define SB_BUTTON_FACE_X        (SB_BUTTON_BEVEL_X + SB_BEVEL_WIDTH_UPPER_LEFT)
-#define SB_THUMB_MIN_HEIGHT     (SB_BUTTON_WIDTH - (SB_PADDING * 2))
  /*
   *    +-------------+
   *    |             | <---< SB_PADDING
