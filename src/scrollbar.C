@@ -112,7 +112,7 @@ rxvt_term::resize_scrollbar ()
       scrollBar.win = XCreateSimpleWindow (dpy,
                                            parent[0],
                                            window_sb_x, 0,
-                                           scrollbar_TotalWidth (),
+                                           scrollBar.total_width (),
                                            szHint.height,
                                            0,
                                            pix_colors[Color_fg],

@@ -599,7 +599,7 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
 
   if (scrollBar.state)
     {
-      sb_w = scrollbar_TotalWidth ();
+      sb_w = scrollBar.total_width ();
       szHint.base_width += sb_w;
 
       if (!option (Opt_scrollBar_right))
@@ -987,7 +987,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
         {
           XMoveResizeWindow (dpy, scrollBar.win,
                              window_sb_x, 0,
-                             scrollbar_TotalWidth (), szHint.height);
+                             scrollBar.total_width (), szHint.height);
           resize_scrollbar ();
         }
 

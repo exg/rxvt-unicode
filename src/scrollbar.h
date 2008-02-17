@@ -54,9 +54,11 @@ struct scrollBar_t {
       return y > end;
     return false;
   }
+  unsigned total_width ()
+  {
+    return width + shadow * 2;
+  }
 };
-
-#define scrollbar_TotalWidth()  (scrollBar.width + scrollBar.shadow * 2)
 
 #define SCROLLNEXT_MINHEIGHT    SB_THUMB_MIN_HEIGHT
 #define SCROLLRXVT_MINHEIGHT    10
