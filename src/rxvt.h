@@ -1358,7 +1358,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
       options[opt >> 3] &= ~(1 << (opt & 7));
   }
 
-  void PrivMode (int set, unsigned bit) NOTHROW
+  void set_privmode (unsigned bit, int set) NOTHROW
   {
     if (set)
       priv_modes |= bit;

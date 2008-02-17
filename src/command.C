@@ -421,7 +421,7 @@ rxvt_term::key_press (XKeyEvent &ev)
   if (numlock_state || (ev.state & ModNumLockMask))
     {
       numlock_state = (ev.state & ModNumLockMask);
-      PrivMode ((!numlock_state), PrivMode_aplKP);
+      set_privmode (PrivMode_aplKP, !numlock_state);
     }
 
   kbuf[0] = 0;
@@ -2566,7 +2566,7 @@ rxvt_term::process_escape_vt52 (unicode_t ch)
         tt_printf ("\033/Z");	/* I am a VT100 emulating a VT52 */
         break;
       case '<':		/* turn off VT52 mode */
-        PrivMode (0, PrivMode_vt52);
+        set_privmode (PrivMode_vt52, 0);
         break;
       case 'F':     	/* use special graphics character set */
       case 'G':           /* use regular character set */
@@ -2630,7 +2630,7 @@ rxvt_term::process_escape_seq ()
 #endif
       case '=':
       case '>':
-        PrivMode ((ch == '='), PrivMode_aplKP);
+        set_privmode (PrivMode_aplKP, ch == '=');
         break;
 
       case C1_40:
@@ -3543,7 +3543,7 @@ rxvt_term::privcases (int mode, unsigned long bit)
         state = (SavedModes & bit) ? 1 : 0;	/* no overlapping */
       else
         state = (mode == 't') ? ! (priv_modes & bit) : mode;
-      PrivMode (state, bit);
+      set_privmode (bit, state);
     }
 
   return state;
@@ -3651,7 +3651,7 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
                * parameter.  Return from VT52 mode with an ESC < from
                * within VT52 mode
                */
-              PrivMode (1, PrivMode_vt52);
+              set_privmode (PrivMode_vt52, 1);
               break;
             case 3:			/* 80/132 */
               if (priv_modes & PrivMode_132OK)
