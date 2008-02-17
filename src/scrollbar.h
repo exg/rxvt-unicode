@@ -83,23 +83,23 @@ struct scrollBar_t {
       return y > end;
     return false;
   }
+  unsigned min_height ()
+  {
+    return style == R_SB_NEXT ? SB_THUMB_MIN_HEIGHT : 10;
+  }
+  unsigned size ()
+  {
+    return end - beg - min_height ();
+  }
   unsigned total_width ()
   {
     return width + shadow * 2;
   }
 };
 
-#define SCROLLNEXT_MINHEIGHT    SB_THUMB_MIN_HEIGHT
-#define SCROLLRXVT_MINHEIGHT    10
-
-#define scrollbar_minheight()   (scrollBar.style == R_SB_NEXT        \
-                                 ? SCROLLNEXT_MINHEIGHT                 \
-                                 : SCROLLRXVT_MINHEIGHT)
 #define scrollbar_above_slider(y)       ((y) < scrollBar.top)
 #define scrollbar_below_slider(y)       ((y) > scrollBar.bot)
 #define scrollbar_position(y)           ((y) - scrollBar.beg)
-#define scrollbar_size()                (scrollBar.end - scrollBar.beg \
-                                         - scrollbar_minheight ())
 
  /*
   *    +-------------+

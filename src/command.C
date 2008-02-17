@@ -1647,7 +1647,7 @@ rxvt_term::x_cb (XEvent &ev)
                           &ev.xbutton.x, &ev.xbutton.y,
                           &unused_mask);
             scr_move_to (scrollbar_position (ev.xbutton.y) - csrO,
-                         scrollbar_size ());
+                         scrollBar.size ());
             want_refresh = 1;
             scrollbar_show (1);
           }
@@ -2012,7 +2012,7 @@ rxvt_term::button_press (XButtonEvent &ev)
                   if (scrollBar.style == R_SB_XTERM
                       || scrollbar_above_slider (ev.y)
                       || scrollbar_below_slider (ev.y))
-                    scr_move_to (scrollbar_position (ev.y) - csrO, scrollbar_size ());
+                    scr_move_to (scrollbar_position (ev.y) - csrO, scrollBar.size ());
 
                   scrollBar.state = STATE_MOTION;
                   break;
@@ -2045,7 +2045,7 @@ rxvt_term::button_press (XButtonEvent &ev)
                       scr_page ((ev.button == Button1 ? DN : UP),
                                 (nrow
                                  * scrollbar_position (ev.y)
-                                 / scrollbar_size ()));
+                                 / scrollBar.size ()));
                     }
 
                   break;

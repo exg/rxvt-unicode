@@ -151,11 +151,11 @@ rxvt_term::scrollbar_show (int update)
       top = view_start - top_row;
       bot = top + (nrow - 1);
       len = max (nrow - 1 - top_row, 1);
-      adj = (((bot - top) * scrollbar_size ()) % len) > 0 ? 1 : 0;
+      adj = (((bot - top) * scrollBar.size ()) % len) > 0 ? 1 : 0;
 
-      scrollBar.top = (scrollBar.beg + (top * scrollbar_size ()) / len);
-      scrollBar.len = ((bot - top) * scrollbar_size ()) / len +
-                      scrollbar_minheight () + adj;
+      scrollBar.top = (scrollBar.beg + (top * scrollBar.size ()) / len);
+      scrollBar.len = ((bot - top) * scrollBar.size ()) / len +
+                      scrollBar.min_height () + adj;
       scrollBar.bot = (scrollBar.top + scrollBar.len);
       /* no change */
       if (scrollBar.top == scrollBar.last_top
