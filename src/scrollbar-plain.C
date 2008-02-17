@@ -49,12 +49,12 @@ rxvt_term::scrollbar_show_plain (int update, int last_top, int last_bot, int scr
     {
       if (last_top < scrollBar.top)
         XClearArea (dpy, scrollBar.win,
-                    scrollBar.shadow, last_top,
+                    0, last_top,
                     sbwidth + 1, scrollBar.top - last_top, False);
 
       if (scrollBar.bot < last_bot)
         XClearArea (dpy, scrollBar.win,
-                    scrollBar.shadow, scrollBar.bot,
+                    0, scrollBar.bot,
                     sbwidth + 1, last_bot - scrollBar.bot, False);
     }
   else
