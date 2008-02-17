@@ -238,14 +238,13 @@
 #define SHADOW_WIDTH 1
 
 /*
- * When using Rxvt scrollbar, clicking above or below the slider will move
- * 1/4 of the screen height, if possible.  Setting RXVT_SCROLL_FULL will move
- * it one screen height less one line, if possible
+ * clicking above or below the scrollbar slider (all styles minus
+ * xterm) will scroll by (height - 1) rather than (height / 4).
  */
 #define RXVT_SCROLL_FULL 1
 
 /*
- * (Hops) draw an internal border line on inside edge of the scrollbar
+ * (Hops) draw an internal border line on inside edge of the rxvt scrollbar
  */
 /* #define SB_BORDER */
 
@@ -272,8 +271,8 @@
 /* #define ESCZ_ANSWER	"\033[?1;2C" */
 
 /*
- * Allow foreground/background colour to be changed with an
- * xterm escape sequence "\E]39;colour^G"
+ * Allow foreground/background colour to be changed with xterm
+ * operating system commands.
  */
 #define XTERM_COLOR_CHANGE
 
