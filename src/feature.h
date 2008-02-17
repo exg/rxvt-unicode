@@ -97,51 +97,10 @@
 #define MAX_SAVELINES   10000000
 
 /*
- * Define default colours for certain items.  If you have a low colour
- * display, then consider using colours which are already pre-allocated:
- *
- *   Black		(#000000)
- *   Red3		(#CD0000)
- *   Green3		(#00CD00)
- *   Yellow3		(#CDCD00)
- *   Blue3		(#0000CD)
- *   Magenta3		(#CD00CD)
- *   Cyan3		(#00CDCD)
- *   AntiqueWhite	(#FAEBD7)
- *   Grey25		(#404040)
- *   Red		(#FF0000)
- *   Green		(#00FF00)
- *   Yellow		(#FFFF00)
- *   Blue		(#0000FF)
- *   Magenta		(#FF00FF)
- *   Cyan		(#00FFFF)
- *   White		(#FFFFFF)
- */
-/* These colours MUST be defined */
-#define COLOR_FOREGROUND	"rgb:00/00/00"
-#define COLOR_BACKGROUND	"rgb:ff/ff/ff"
-#define COLOR_SCROLLBAR		"rgb:b2/b2/b2"	/* scrollColor match Netscape */
-#define COLOR_SCROLLTROUGH	"rgb:96/96/96"
-
-/*
- * The cursor colours are special.  Be very careful about setting these:
- * foreground/background colours may be modified by command line or resources
- * prior to this allocation.  Also, they are not valid if NO_CURSORCOLOR is
- * defined
- */
-#define COLOR_CURSOR_FOREGROUND	NULL	/* if NULL, use background colour */
-#define COLOR_CURSOR_BACKGROUND	NULL	/* if NULL, use foreground colour */
-
-/*
  * Define to remove support for XCopyArea () support.  XCopyArea () is useful
  * for scrolling on non-local X displays
  */
 #define NO_SLOW_LINK_SUPPORT
-
-/*
- * Printer pipe which will be used for emulation of attached vt100 printer
- */
-#define PRINTPIPE	"lpr"
 
 /*
  * Allow 80/132 mode switching on startup
@@ -149,13 +108,6 @@
 /* #define ALLOW_132_MODE */
 
 /*---------------------------------KEYS---------------------------------*/
-
-/*
- * Define defaults for backspace and delete keys - unless they have been
- * configured out with --disable-backspace-key / --disable-delete-key
- */
-#define DEFAULT_BACKSPACE	"DEC"		/* SPECIAL */
-#define DEFAULT_DELETE		"\033[3~"
 
 /*
  * Enable the keysym resource which allows you to define strings associated
@@ -193,7 +145,7 @@
  *      (rather than a proportion (1/5) of savedlines buffer)
  *      when paging the savedlines with SHIFT-{Prior,Next} keys.
  */
-#define PAGING_CONTEXT_LINES 1 /* */
+#define PAGING_CONTEXT_LINES 1
 
 /*
  * Have either Ctrl+Tab or Mod4+Tab emit \e\t
@@ -208,12 +160,6 @@
  * from the scrollbar when XTerm mouse reporting is enabled
  */
 /* #define NO_SCROLLBAR_REPORT */
-
-/*
- * Default separating chars for multiple-click selection
- * Space and tab are separate separating characters and are not settable
- */
-#define CUTCHARS	"\"&'()*,;<=>?@[\\]^`{|}"
 
 /*
  * Have mouse reporting include double-click info for button1
@@ -337,26 +283,6 @@
 /* #define NO_SECONDARY_SCREEN_CURSOR */
 
 /*
- * Width of the term internal border
- */
-#define INTERNALBORDERWIDTH	2
-
-/*
- * Width of the term external border
- */
-#define EXTERNALBORDERWIDTH	0
-
-/*
- * Default number of extra dots between lines
- */
-#define LINESPACE	0
-
-/*
- * Default number of lines in the scrollback buffer
- */
-#define SAVELINES	1000
-
-/*
  * Provide termcap/terminfo bw support (wrap backwards on cub1)
  */
 #define TERMCAP_HAS_BW 1
@@ -381,6 +307,82 @@
 #if __linux__
 # define LINUX_YIELD_HACK 0
 #endif
+
+/* DEFAULT RESOURCES VALUES */
+
+/*
+ * Define default colours for certain items.  If you have a low colour
+ * display, then consider using colours which are already pre-allocated:
+ *
+ *   Black		(#000000)
+ *   Red3		(#CD0000)
+ *   Green3		(#00CD00)
+ *   Yellow3		(#CDCD00)
+ *   Blue3		(#0000CD)
+ *   Magenta3		(#CD00CD)
+ *   Cyan3		(#00CDCD)
+ *   AntiqueWhite	(#FAEBD7)
+ *   Grey25		(#404040)
+ *   Red		(#FF0000)
+ *   Green		(#00FF00)
+ *   Yellow		(#FFFF00)
+ *   Blue		(#0000FF)
+ *   Magenta		(#FF00FF)
+ *   Cyan		(#00FFFF)
+ *   White		(#FFFFFF)
+ */
+/* These colours MUST be defined */
+#define COLOR_FOREGROUND	"rgb:00/00/00"
+#define COLOR_BACKGROUND	"rgb:ff/ff/ff"
+#define COLOR_SCROLLBAR		"rgb:b2/b2/b2"	/* scrollColor match Netscape */
+#define COLOR_SCROLLTROUGH	"rgb:96/96/96"
+
+/*
+ * The cursor colours are special.  Be very careful about setting these:
+ * foreground/background colours may be modified by command line or resources
+ * prior to this allocation.  Also, they are not valid if NO_CURSORCOLOR is
+ * defined
+ */
+#define COLOR_CURSOR_FOREGROUND	NULL	/* if NULL, use background colour */
+#define COLOR_CURSOR_BACKGROUND	NULL	/* if NULL, use foreground colour */
+
+/*
+ * Printer pipe which will be used for emulation of attached vt100 printer
+ */
+#define PRINTPIPE	"lpr"
+
+/*
+ * Define defaults for backspace and delete keys - unless they have been
+ * configured out with --disable-backspace-key / --disable-delete-key
+ */
+#define DEFAULT_BACKSPACE	"DEC"		/* SPECIAL */
+#define DEFAULT_DELETE		"\033[3~"
+
+/*
+ * Default separating chars for multiple-click selection
+ * Space and tab are separate separating characters and are not settable
+ */
+#define CUTCHARS	"\"&'()*,;<=>?@[\\]^`{|}"
+
+/*
+ * Width of the term internal border
+ */
+#define INTERNALBORDERWIDTH	2
+
+/*
+ * Width of the term external border
+ */
+#define EXTERNALBORDERWIDTH	0
+
+/*
+ * Default number of extra dots between lines
+ */
+#define LINESPACE	0
+
+/*
+ * Default number of lines in the scrollback buffer
+ */
+#define SAVELINES	1000
 
 #endif
 
