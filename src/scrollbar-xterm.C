@@ -43,8 +43,8 @@ rxvt_term::scrollbar_show_xterm (int update, int last_top, int last_bot, int scr
 
       scrollBar.init |= R_SB_XTERM;
       gcvalue.stipple = XCreateBitmapFromData (dpy, scrollBar.win,
-                                              (char *)x_stp_bits, x_stp_width,
-                                              x_stp_height);
+                                               (char *)x_stp_bits, x_stp_width,
+                                               x_stp_height);
       if (!gcvalue.stipple)
         rxvt_fatal ("can't create bitmap\n");
 
@@ -65,24 +65,24 @@ rxvt_term::scrollbar_show_xterm (int update, int last_top, int last_bot, int scr
     {
       if (last_top < scrollBar.top)
         XClearArea (dpy, scrollBar.win,
-                   xsb, last_top,
-                   sbwidth, (scrollBar.top - last_top), False);
+                    xsb, last_top,
+                    sbwidth, (scrollBar.top - last_top), False);
 
       if (scrollBar.bot < last_bot)
         XClearArea (dpy, scrollBar.win,
-                   xsb, scrollBar.bot,
-                   sbwidth, (last_bot - scrollBar.bot), False);
+                    xsb, scrollBar.bot,
+                    sbwidth, (last_bot - scrollBar.bot), False);
     }
   else
     XClearWindow (dpy, scrollBar.win);
 
   /* scrollbar slider */
   XFillRectangle (dpy, scrollBar.win, xscrollbarGC,
-                 xsb + 1, scrollBar.top, sbwidth - 2, scrollbar_len);
+                  xsb + 1, scrollBar.top, sbwidth - 2, scrollbar_len);
 
   XDrawLine (dpy, scrollBar.win, ShadowGC,
-            xsb ? 0 : sbwidth, scrollBar.beg,
-            xsb ? 0 : sbwidth, scrollBar.end);
+             xsb ? 0 : sbwidth, scrollBar.beg,
+             xsb ? 0 : sbwidth, scrollBar.end);
   return 1;
 }
 #endif /* XTERM_SCROLLBAR */
