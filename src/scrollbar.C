@@ -68,47 +68,7 @@ rxvt_term::resize_scrollbar ()
   if (option (Opt_scrollBar_right))
     window_sb_x = szHint.width - scrollBar.total_width ();
 
-#define R_SCROLLBEG_XTERM	0
-#define R_SCROLLEND_XTERM	szHint.height
-#define R_SCROLLBEG_NEXT	0
-#define R_SCROLLEND_NEXT	szHint.height - (SB_BUTTON_TOTAL_HEIGHT + \
-                                                    SB_PADDING)
-#define R_SCROLLBEG_RXVT	(scrollBar.width + 1) + scrollBar.shadow
-#define R_SCROLLEND_RXVT	szHint.height - R_SCROLLBEG_RXVT - \
-                                    (2 * scrollBar.shadow)
-
-#if defined(PLAIN_SCROLLBAR)
-  if (scrollBar.style == R_SB_PLAIN)
-    {
-      scrollBar.beg = R_SCROLLBEG_XTERM;
-      scrollBar.end = R_SCROLLEND_XTERM;
-      scrollBar.update = &rxvt_term::scrollbar_show_plain;
-    }
-#endif
-#if defined(XTERM_SCROLLBAR)
-  if (scrollBar.style == R_SB_XTERM)
-    {
-      scrollBar.beg = R_SCROLLBEG_XTERM;
-      scrollBar.end = R_SCROLLEND_XTERM;
-      scrollBar.update = &rxvt_term::scrollbar_show_xterm;
-    }
-#endif
-#if defined(NEXT_SCROLLBAR)
-  if (scrollBar.style == R_SB_NEXT)
-    {
-      scrollBar.beg = R_SCROLLBEG_NEXT;
-      scrollBar.end = R_SCROLLEND_NEXT;
-      scrollBar.update = &rxvt_term::scrollbar_show_next;
-    }
-#endif
-#if defined(RXVT_SCROLLBAR)
-  if (scrollBar.style == R_SB_RXVT)
-    {
-      scrollBar.beg = R_SCROLLBEG_RXVT;
-      scrollBar.end = R_SCROLLEND_RXVT;
-      scrollBar.update = &rxvt_term::scrollbar_show_rxvt;
-    }
-#endif
+  scrollBar.update_data ();
 
   if (!scrollBar.win)
     {
@@ -254,6 +214,43 @@ scrollBar_t::setup (rxvt_term *term)
   last_bot = last_state = -1;
   /* cursor scrollBar: Black-on-White */
   leftptr_cursor = XCreateFontCursor (term->dpy, XC_left_ptr);
+}
+
+void
+scrollBar_t::update_data ()
+{
+#if defined(PLAIN_SCROLLBAR)
+  if (style == R_SB_PLAIN)
+    {
+      beg = 0;
+      end = term->szHint.height;
+      update = &rxvt_term::scrollbar_show_plain;
+    }
+#endif
+#if defined(XTERM_SCROLLBAR)
+  if (style == R_SB_XTERM)
+    {
+      beg = 0;
+      end = term->szHint.height;
+      update = &rxvt_term::scrollbar_show_xterm;
+    }
+#endif
+#if defined(NEXT_SCROLLBAR)
+  if (style == R_SB_NEXT)
+    {
+      beg = 0;
+      end = term->szHint.height - (SB_BUTTON_TOTAL_HEIGHT + SB_PADDING);
+      update = &rxvt_term::scrollbar_show_next;
+    }
+#endif
+#if defined(RXVT_SCROLLBAR)
+  if (style == R_SB_RXVT)
+    {
+      beg = (width + 1) + shadow;
+      end = term->szHint.height - beg - (2 * shadow);
+      update = &rxvt_term::scrollbar_show_rxvt;
+    }
+#endif
 }
 
 /*----------------------- end-of-file (C source) -----------------------*/

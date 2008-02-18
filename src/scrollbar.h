@@ -66,6 +66,8 @@ struct scrollBar_t {
   Cursor          leftptr_cursor;
   int             (rxvt_term::*update)(int, int, int, int);
   void setup (rxvt_term *);
+  // update style dependent data
+  void update_data ();
 
   bool upButton (int y)
   {
