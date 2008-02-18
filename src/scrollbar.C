@@ -106,22 +106,22 @@ rxvt_term::resize_scrollbar ()
  * Update current scrollbar view w.r.t. slider heights, etc.
  */
 int
-rxvt_term::scrollbar_show (int update)
+rxvt_term::scrollbar_show (int refresh)
 {
   int             ret = 0;
 
   if (!scrollBar.state)
     return 0;
 
-  if (update)
+  if (refresh)
     {
-      int top = view_start - top_row;
-      int bot = top + (nrow - 1);
-      int len = max (nrow - 1 - top_row, 1);
-      int size = (bot - top) * scrollBar.size ();
+      int sb_top = view_start - top_row;
+      int sb_bot = sb_top + (nrow - 1);
+      int sb_len = max (nrow - 1 - top_row, 1);
+      int sb_size = (sb_bot - sb_top) * scrollBar.size ();
 
-      scrollBar.top = (scrollBar.beg + (top * scrollBar.size ()) / len);
-      scrollBar.len = size / len + scrollBar.min_height () + (size % len > 0);
+      scrollBar.top = (scrollBar.beg + (sb_top * scrollBar.size ()) / sb_len);
+      scrollBar.len = sb_size / sb_len + scrollBar.min_height () + (sb_size % sb_len > 0);
       scrollBar.bot = (scrollBar.top + scrollBar.len);
       /* no change */
       if (scrollBar.top == scrollBar.last_top
@@ -131,7 +131,7 @@ rxvt_term::scrollbar_show (int update)
         return 0;
     }
 
-  ret = (this->*scrollBar.update) (update, scrollBar.last_top, scrollBar.last_bot, scrollBar.len);
+  ret = (this->*scrollBar.update) (refresh, scrollBar.last_top, scrollBar.last_bot, scrollBar.len);
 
   scrollBar.last_top = scrollBar.top;
   scrollBar.last_bot = scrollBar.bot;
