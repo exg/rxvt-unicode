@@ -992,7 +992,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
                   refresh_count,
                   window_vt_x,
                   window_vt_y,
-                  window_sb_x,
                   mouse_row,
                   mouse_col,
 # ifdef POINTER_BLANK

@@ -527,7 +527,7 @@ void
 rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
 {
   short recalc_x, recalc_y;
-  int x, y, sb_w, flags;
+  int x, y, flags;
   unsigned int w, h;
   unsigned int max_width, max_height;
 
@@ -594,12 +594,11 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
 
   szHint.base_width = szHint.base_height = 2 * int_bwidth;
 
-  sb_w = 0;
   window_vt_x = window_vt_y = int_bwidth;
 
   if (scrollBar.state)
     {
-      sb_w = scrollBar.total_width ();
+      int sb_w = scrollBar.total_width ();
       szHint.base_width += sb_w;
 
       if (!option (Opt_scrollBar_right))
@@ -632,9 +631,6 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
       min_it (height, max_height);
       szHint.height = szHint.base_height + height;
     }
-
-  if (scrollBar.state && option (Opt_scrollBar_right))
-    window_sb_x = szHint.width - sb_w;
 
   if (recalc_x)
     szHint.x += DisplayWidth  (dpy, display->screen) - szHint.width  - 2 * ext_bwidth;
@@ -984,12 +980,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
   if (fix_screen || newwidth != old_width || newheight != old_height)
     {
       if (scrollBar.state)
-        {
-          XMoveResizeWindow (dpy, scrollBar.win,
-                             window_sb_x, 0,
-                             scrollBar.total_width (), szHint.height);
-          resize_scrollbar ();
-        }
+        resize_scrollbar ();
 
       XMoveResizeWindow (dpy, vt,
                          window_vt_x, window_vt_y,

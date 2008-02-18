@@ -63,6 +63,10 @@ void
 rxvt_term::resize_scrollbar ()
 {
   int delayed_init = 0;
+  int window_sb_x = 0;
+
+  if (option (Opt_scrollBar_right))
+    window_sb_x = szHint.width - scrollBar.total_width ();
 
 #define R_SCROLLBEG_XTERM	0
 #define R_SCROLLEND_XTERM	szHint.height
@@ -127,6 +131,10 @@ rxvt_term::resize_scrollbar ()
 
       delayed_init = 1;
     }
+  else
+    XMoveResizeWindow (dpy, scrollBar.win,
+                       window_sb_x, 0,
+                       scrollBar.total_width (), szHint.height);
 
   scrollbar_show (1);
 
