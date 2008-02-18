@@ -108,7 +108,7 @@ rxvt_term::resize_scrollbar ()
 int
 rxvt_term::scrollbar_show (int refresh)
 {
-  int             ret = 0;
+  int ret;
 
   if (!scrollBar.state)
     return 0;
