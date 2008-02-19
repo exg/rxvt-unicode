@@ -62,7 +62,7 @@ scrollBar_t::show_plain (int update)
 
   /* scrollbar slider */
   XFillRectangle (term->dpy, win, pscrollbarGC,
-                  1 - xsb, top, sbwidth, len);
+                  1 - xsb, top, sbwidth, bot - top);
 
   return 1;
 }

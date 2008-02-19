@@ -208,14 +208,14 @@ scrollBar_t::show_rxvt (int update)
 
   XFillRectangle (term->dpy, win, scrollbarGC,
                   sbshadow, top, sbwidth,
-                  len);
+                  bot - top);
 
   if (sbshadow)
     /* trough shadow */
     draw_shadow (this, 0, 0, sbwidth + 2 * sbshadow, end + (sbwidth + 1) + sbshadow);
 
   /* shadow for scrollbar slider */
-  draw_shadow (this, sbshadow, top, sbwidth, len);
+  draw_shadow (this, sbshadow, top, sbwidth, bot - top);
 
   /* Redraw scrollbar arrows */
   draw_button (this, sbshadow, sbshadow, UP);

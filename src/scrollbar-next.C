@@ -266,17 +266,17 @@ scrollBar_t::show_next (int update)
 
       XFillRectangle (term->dpy, win, grayGC,
                       SB_LEFT_PADDING, top + SB_PADDING,
-                      SB_BUTTON_WIDTH, len);
+                      SB_BUTTON_WIDTH, bot - top);
 
       XCopyArea (term->dpy, dimple, win, whiteGC, 0, 0,
                  SCROLLER_DIMPLE_WIDTH, SCROLLER_DIMPLE_HEIGHT,
                  (SB_WIDTH_NEXT - SCROLLER_DIMPLE_WIDTH) / 2,
                  top + SB_BEVEL_WIDTH_UPPER_LEFT +
-                 (len - SCROLLER_DIMPLE_HEIGHT) / 2);
+                 (bot - top - SCROLLER_DIMPLE_HEIGHT) / 2);
 
       drawBevel (this, SB_BUTTON_BEVEL_X,
                  top + SB_PADDING, SB_BUTTON_WIDTH,
-                 len);
+                 bot - top);
       drawBevel (this, SB_BUTTON_BEVEL_X,
                  height - SB_BUTTON_BOTH_HEIGHT, SB_BUTTON_WIDTH,
                  SB_BUTTON_HEIGHT);

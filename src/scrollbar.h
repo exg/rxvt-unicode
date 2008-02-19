@@ -60,7 +60,6 @@ struct scrollBar_t {
   int             last_bot;     /* scrollbar last bottom position           */
   int             last_top;     /* scrollbar last top position              */
   int             last_state;   /* scrollbar last state                     */
-  int             len;
   unsigned char   align;
   Window          win;
   Cursor          leftptr_cursor;

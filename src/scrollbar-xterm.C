@@ -78,7 +78,7 @@ scrollBar_t::show_xterm (int update)
 
   /* scrollbar slider */
   XFillRectangle (term->dpy, win, xscrollbarGC,
-                  xsb + 1, top, sbwidth - 2, len);
+                  xsb + 1, top, sbwidth - 2, bot - top);
 
   XDrawLine (term->dpy, win, ShadowGC,
              xsb ? 0 : sbwidth, beg,
