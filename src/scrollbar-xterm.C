@@ -32,57 +32,57 @@
 const unsigned char x_stp_bits[] = { 0xaa, 0x55 };
 
 int
-rxvt_term::scrollbar_show_xterm (int update, int last_top, int last_bot, int scrollbar_len)
+scrollBar_t::show_xterm (int update)
 {
   int xsb = 0;
-  int sbwidth = scrollBar.width - 1;
+  int sbwidth = width - 1;
 
-  if ((scrollBar.init & R_SB_XTERM) == 0)
+  if ((init & R_SB_XTERM) == 0)
     {
       XGCValues       gcvalue;
 
-      scrollBar.init |= R_SB_XTERM;
-      gcvalue.stipple = XCreateBitmapFromData (dpy, scrollBar.win,
+      init |= R_SB_XTERM;
+      gcvalue.stipple = XCreateBitmapFromData (term->dpy, win,
                                                (char *)x_stp_bits, x_stp_width,
                                                x_stp_height);
       if (!gcvalue.stipple)
         rxvt_fatal ("can't create bitmap\n");
 
       gcvalue.fill_style = FillOpaqueStippled;
-      gcvalue.foreground = pix_colors_focused[Color_scroll];
-      gcvalue.background = pix_colors_focused[Color_bg];
+      gcvalue.foreground = term->pix_colors_focused[Color_scroll];
+      gcvalue.background = term->pix_colors_focused[Color_bg];
 
-      xscrollbarGC = XCreateGC (dpy, scrollBar.win,
+      xscrollbarGC = XCreateGC (term->dpy, win,
                                 GCForeground | GCBackground
                                 | GCFillStyle | GCStipple, &gcvalue);
-      gcvalue.foreground = pix_colors_focused[Color_border];
-      ShadowGC = XCreateGC (dpy, scrollBar.win, GCForeground, &gcvalue);
+      gcvalue.foreground = term->pix_colors_focused[Color_border];
+      ShadowGC = XCreateGC (term->dpy, win, GCForeground, &gcvalue);
     }
 
-  xsb = option (Opt_scrollBar_right) ? 1 : 0;
+  xsb = term->option (Opt_scrollBar_right) ? 1 : 0;
 
   if (update)
     {
-      if (last_top < scrollBar.top)
-        XClearArea (dpy, scrollBar.win,
+      if (last_top < top)
+        XClearArea (term->dpy, win,
                     xsb, last_top,
-                    sbwidth, (scrollBar.top - last_top), False);
+                    sbwidth, (top - last_top), False);
 
-      if (scrollBar.bot < last_bot)
-        XClearArea (dpy, scrollBar.win,
-                    xsb, scrollBar.bot,
-                    sbwidth, (last_bot - scrollBar.bot), False);
+      if (bot < last_bot)
+        XClearArea (term->dpy, win,
+                    xsb, bot,
+                    sbwidth, (last_bot - bot), False);
     }
   else
-    XClearWindow (dpy, scrollBar.win);
+    XClearWindow (term->dpy, win);
 
   /* scrollbar slider */
-  XFillRectangle (dpy, scrollBar.win, xscrollbarGC,
-                  xsb + 1, scrollBar.top, sbwidth - 2, scrollbar_len);
+  XFillRectangle (term->dpy, win, xscrollbarGC,
+                  xsb + 1, top, sbwidth - 2, len);
 
-  XDrawLine (dpy, scrollBar.win, ShadowGC,
-             xsb ? 0 : sbwidth, scrollBar.beg,
-             xsb ? 0 : sbwidth, scrollBar.end);
+  XDrawLine (term->dpy, win, ShadowGC,
+             xsb ? 0 : sbwidth, beg,
+             xsb ? 0 : sbwidth, end);
   return 1;
 }
 #endif /* XTERM_SCROLLBAR */

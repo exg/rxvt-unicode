@@ -131,7 +131,7 @@ scrollBar_t::show (int refresh)
         return 0;
     }
 
-  ret = (term->*update) (refresh, last_top, last_bot, len);
+  ret = (this->*update) (refresh);
 
   last_top = top;
   last_bot = bot;
@@ -217,6 +217,35 @@ scrollBar_t::setup (rxvt_term *term)
 }
 
 void
+scrollBar_t::destroy ()
+{
+#ifdef XTERM_SCROLLBAR
+  if (xscrollbarGC) XFreeGC (term->dpy, xscrollbarGC);
+  if (ShadowGC)     XFreeGC (term->dpy, ShadowGC);
+#endif
+#ifdef PLAIN_SCROLLBAR
+  if (pscrollbarGC) XFreeGC (term->dpy, pscrollbarGC);
+#endif
+#ifdef NEXT_SCROLLBAR
+  if (blackGC)      XFreeGC (term->dpy, blackGC);
+  if (whiteGC)      XFreeGC (term->dpy, whiteGC);
+  if (grayGC)       XFreeGC (term->dpy, grayGC);
+  if (darkGC)       XFreeGC (term->dpy, darkGC);
+  if (stippleGC)    XFreeGC (term->dpy, stippleGC);
+  if (dimple)       XFreePixmap (term->dpy, dimple);
+  if (upArrow)      XFreePixmap (term->dpy, upArrow);
+  if (downArrow)    XFreePixmap (term->dpy, downArrow);
+  if (upArrowHi)    XFreePixmap (term->dpy, upArrowHi);
+  if (downArrowHi)  XFreePixmap (term->dpy, downArrowHi);
+#endif
+#ifdef RXVT_SCROLLBAR
+  if (topShadowGC)  XFreeGC (term->dpy, topShadowGC);
+  if (botShadowGC)  XFreeGC (term->dpy, botShadowGC);
+  if (scrollbarGC)  XFreeGC (term->dpy, scrollbarGC);
+#endif
+}
+
+void
 scrollBar_t::update_data ()
 {
 #if defined(PLAIN_SCROLLBAR)
@@ -224,7 +253,7 @@ scrollBar_t::update_data ()
     {
       beg = 0;
       end = term->szHint.height;
-      update = &rxvt_term::scrollbar_show_plain;
+      update = &scrollBar_t::show_plain;
     }
 #endif
 #if defined(XTERM_SCROLLBAR)
@@ -232,7 +261,7 @@ scrollBar_t::update_data ()
     {
       beg = 0;
       end = term->szHint.height;
-      update = &rxvt_term::scrollbar_show_xterm;
+      update = &scrollBar_t::show_xterm;
     }
 #endif
 #if defined(NEXT_SCROLLBAR)
@@ -240,7 +269,7 @@ scrollBar_t::update_data ()
     {
       beg = 0;
       end = term->szHint.height - (SB_BUTTON_TOTAL_HEIGHT + SB_PADDING);
-      update = &rxvt_term::scrollbar_show_next;
+      update = &scrollBar_t::show_next;
     }
 #endif
 #if defined(RXVT_SCROLLBAR)
@@ -248,7 +277,7 @@ scrollBar_t::update_data ()
     {
       beg = (width + 1) + shadow;
       end = term->szHint.height - beg - (2 * shadow);
-      update = &rxvt_term::scrollbar_show_rxvt;
+      update = &scrollBar_t::show_rxvt;
     }
 #endif
 }

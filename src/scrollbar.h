@@ -64,13 +64,14 @@ struct scrollBar_t {
   unsigned char   align;
   Window          win;
   Cursor          leftptr_cursor;
-  int             (rxvt_term::*update)(int, int, int, int);
+  int             (scrollBar_t::*update)(int);
   void setup (rxvt_term *);
   // update style dependent data
   void update_data ();
   void resize ();
   int map (int);
   int show (int);
+  void destroy ();
 
   bool upButton (int y)
   {
@@ -100,6 +101,46 @@ struct scrollBar_t {
   {
     return width + shadow * 2;
   }
+
+#if defined(NEXT_SCROLLBAR)
+  GC              blackGC,
+                  whiteGC,
+                  grayGC,
+                  darkGC,
+                  stippleGC;
+  Pixmap          dimple,
+                  upArrow,
+                  downArrow,
+                  upArrowHi,
+                  downArrowHi;
+#endif
+
+#if defined(RXVT_SCROLLBAR)
+  GC              scrollbarGC,
+                  topShadowGC,
+                  botShadowGC;
+#endif
+
+#if defined(XTERM_SCROLLBAR)
+  GC              xscrollbarGC,
+                  ShadowGC;
+#endif
+
+#if defined(PLAIN_SCROLLBAR)
+  GC              pscrollbarGC;
+#endif
+
+  // scrollbar-next.C
+  int show_next (int);
+  // scrollbar-rxvt.C
+  int show_rxvt (int);
+  // scrollbar-xterm.C
+  int show_xterm (int);
+  // scrollbar-plain.C
+  int show_plain (int);
+
+private:
+  void init_next ();
 };
 
 #define scrollbar_above_slider(y)       ((y) < scrollBar.top)

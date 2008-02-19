@@ -237,30 +237,7 @@ rxvt_term::~rxvt_term ()
 #ifdef USE_XIM
       im_destroy ();
 #endif
-#ifdef XTERM_SCROLLBAR
-      if (xscrollbarGC) XFreeGC (dpy, xscrollbarGC);
-      if (ShadowGC)     XFreeGC (dpy, ShadowGC);
-#endif
-#ifdef PLAIN_SCROLLBAR
-      if (pscrollbarGC) XFreeGC (dpy, pscrollbarGC);
-#endif
-#ifdef NEXT_SCROLLBAR
-      if (blackGC)      XFreeGC (dpy, blackGC);
-      if (whiteGC)      XFreeGC (dpy, whiteGC);
-      if (grayGC)       XFreeGC (dpy, grayGC);
-      if (darkGC)       XFreeGC (dpy, darkGC);
-      if (stippleGC)    XFreeGC (dpy, stippleGC);
-      if (dimple)       XFreePixmap (dpy, dimple);
-      if (upArrow)      XFreePixmap (dpy, upArrow);
-      if (downArrow)    XFreePixmap (dpy, downArrow);
-      if (upArrowHi)    XFreePixmap (dpy, upArrowHi);
-      if (downArrowHi)  XFreePixmap (dpy, downArrowHi);
-#endif
-#ifdef RXVT_SCROLLBAR
-      if (topShadowGC)  XFreeGC (dpy, topShadowGC);
-      if (botShadowGC)  XFreeGC (dpy, botShadowGC);
-      if (scrollbarGC)  XFreeGC (dpy, scrollbarGC);
-#endif
+      scrollBar.destroy ();
       if (gc)   XFreeGC (dpy, gc);
 
       delete drawable;

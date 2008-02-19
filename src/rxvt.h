@@ -1009,31 +1009,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 /* ---------- */
   Atom            *xa;
 /* ---------- */
-#ifdef RXVT_SCROLLBAR
-  GC              scrollbarGC,
-                  topShadowGC,
-                  botShadowGC;
-#endif
-#ifdef XTERM_SCROLLBAR
-  GC              xscrollbarGC,
-                  ShadowGC;
-#endif
-#ifdef PLAIN_SCROLLBAR
-  GC              pscrollbarGC;
-#endif
-#ifdef NEXT_SCROLLBAR
-  GC              blackGC,
-                  whiteGC,
-                  grayGC,
-                  darkGC,
-                  stippleGC;
-  Pixmap          dimple,
-                  upArrow,
-                  downArrow,
-                  upArrowHi,
-                  downArrowHi;
-#endif
-/* ---------- */
   Time            selection_time,
                   selection_request_time;
   pid_t           cmd_pid;    /* process id of child */
@@ -1442,29 +1417,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   void selection_click (int clicks, int x, int y) NOTHROW;
   void selection_extend (int x, int y, int flag) NOTHROW;
   void selection_rotate (int x, int y) NOTHROW;
-
-#if defined(NEXT_SCROLLBAR)
-  // scrollbar-next.C
-  Pixmap renderPixmap (const char *const *data, int width, int height);
-  void init_scrollbar_stuff ();
-  void drawBevel (Drawable d, int x1, int y1, int w, int h);
-  int scrollbar_show_next (int update, int last_top, int last_bot, int scrollbar_len);
-#endif
-
-#if defined(RXVT_SCROLLBAR)
-  // scrollbar-rxvt.C
-  int scrollbar_show_rxvt (int update, int last_top, int last_bot, int scrollbar_len);
-#endif
-
-#if defined(XTERM_SCROLLBAR)
-  // scrollbar-xterm.C
-  int scrollbar_show_xterm (int update, int last_top, int last_bot, int scrollbar_len);
-#endif
-
-#if defined(PLAIN_SCROLLBAR)
-  // scrollbar-plain.C
-  int scrollbar_show_plain (int update, int last_top, int last_bot, int scrollbar_len);
-#endif
 
   // xdefaults.C
   void get_options (int argc, const char *const *argv);

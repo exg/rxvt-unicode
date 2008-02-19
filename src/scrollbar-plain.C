@@ -28,41 +28,41 @@
 #if defined(PLAIN_SCROLLBAR)
 
 int
-rxvt_term::scrollbar_show_plain (int update, int last_top, int last_bot, int scrollbar_len)
+scrollBar_t::show_plain (int update)
 {
   int xsb = 0;
-  int sbwidth = scrollBar.width - 1;
+  int sbwidth = width - 1;
 
-  if ((scrollBar.init & R_SB_PLAIN) == 0)
+  if ((init & R_SB_PLAIN) == 0)
     {
       XGCValues gcvalue;
 
-      scrollBar.init |= R_SB_PLAIN;
-      gcvalue.foreground = pix_colors_focused[Color_scroll];
+      init |= R_SB_PLAIN;
+      gcvalue.foreground = term->pix_colors_focused[Color_scroll];
 
-      pscrollbarGC = XCreateGC (dpy, scrollBar.win, GCForeground, &gcvalue);
+      pscrollbarGC = XCreateGC (term->dpy, win, GCForeground, &gcvalue);
     }
 
-  xsb = option (Opt_scrollBar_right) ? 1 : 0;
+  xsb = term->option (Opt_scrollBar_right) ? 1 : 0;
 
   if (update)
     {
-      if (last_top < scrollBar.top)
-        XClearArea (dpy, scrollBar.win,
+      if (last_top < top)
+        XClearArea (term->dpy, win,
                     0, last_top,
-                    sbwidth + 1, scrollBar.top - last_top, False);
+                    sbwidth + 1, top - last_top, False);
 
-      if (scrollBar.bot < last_bot)
-        XClearArea (dpy, scrollBar.win,
-                    0, scrollBar.bot,
-                    sbwidth + 1, last_bot - scrollBar.bot, False);
+      if (bot < last_bot)
+        XClearArea (term->dpy, win,
+                    0, bot,
+                    sbwidth + 1, last_bot - bot, False);
     }
   else
-    XClearWindow (dpy, scrollBar.win);
+    XClearWindow (term->dpy, win);
 
   /* scrollbar slider */
-  XFillRectangle (dpy, scrollBar.win, pscrollbarGC,
-                  1 - xsb, scrollBar.top, sbwidth, scrollbar_len);
+  XFillRectangle (term->dpy, win, pscrollbarGC,
+                  1 - xsb, top, sbwidth, len);
 
   return 1;
 }
