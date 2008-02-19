@@ -65,8 +65,6 @@ struct scrollBar_t {
   Cursor          leftptr_cursor;
   int             (scrollBar_t::*update)(int);
   void setup (rxvt_term *);
-  // update style dependent data
-  void update_data ();
   void resize ();
   int map (int);
   int show (int);
@@ -129,6 +127,10 @@ struct scrollBar_t {
   GC              pscrollbarGC;
 #endif
 
+private:
+  // update style dependent data
+  void update_data ();
+
   // scrollbar-next.C
   int show_next (int);
   // scrollbar-rxvt.C
@@ -138,7 +140,6 @@ struct scrollBar_t {
   // scrollbar-plain.C
   int show_plain (int);
 
-private:
   void init_next ();
 };
 
