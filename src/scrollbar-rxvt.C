@@ -47,7 +47,7 @@ draw_shadow (rxvt_term *term, int x, int y, int w, int h)
 
 /* draw triangular button with a shadow of 2 pixels */
 static void
-draw_button (rxvt_term *term, int x, int y, int state, int dirn)
+draw_button (rxvt_term *term, int x, int y, int dirn)
 {
   unsigned int sz, sz2;
   XPoint pt[3];
@@ -56,19 +56,16 @@ draw_button (rxvt_term *term, int x, int y, int state, int dirn)
   sz = term->scrollBar.width;
   sz2 = sz / 2;
 
-  switch (state)
+  if ((dirn == UP && term->scrollBar.state == STATE_UP)
+      || (dirn == DN && term->scrollBar.state == STATE_DOWN))
     {
-      case +1:
-        top = term->topShadowGC;
-        bot = term->botShadowGC;
-        break;
-      case -1:
-        top = term->botShadowGC;
-        bot = term->topShadowGC;
-        break;
-      default:
-        top = bot = term->scrollbarGC;
-        break;
+      top = term->botShadowGC;
+      bot = term->topShadowGC;
+    }
+  else
+    {
+      top = term->topShadowGC;
+      bot = term->botShadowGC;
     }
 
   /* fill triangle */
@@ -151,7 +148,6 @@ rxvt_term::scrollbar_show_rxvt (int update, int last_top, int last_bot, int scro
 {
   int sbshadow = scrollBar.shadow;
   int sbwidth = (int)scrollBar.width;
-  int state;
 
   if ((scrollBar.init & R_SB_RXVT) == 0)
     {
@@ -218,10 +214,8 @@ rxvt_term::scrollbar_show_rxvt (int update, int last_top, int last_bot, int scro
   draw_shadow (this, sbshadow, scrollBar.top, sbwidth, scrollbar_len);
 
   /* Redraw scrollbar arrows */
-  state = scrollBar.state == STATE_UP ? -1 : +1;
-  draw_button (this, sbshadow, sbshadow,          state, UP);
-  state = scrollBar.state == STATE_DOWN ? -1 : +1;
-  draw_button (this, sbshadow, scrollBar.end + 1, state, DN);
+  draw_button (this, sbshadow, sbshadow,          UP);
+  draw_button (this, sbshadow, scrollBar.end + 1, DN);
 
   return 1;
 }
