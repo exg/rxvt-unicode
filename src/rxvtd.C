@@ -248,8 +248,10 @@ main (int argc, const char *const *argv)
         }
     }
 
+  // optionally open display and never release it.
   if (opt_opendisplay)
-    displays.get (getenv ("DISPLAY")); // open display and never release it
+    if (const char *dpy = getenv ("DISPLAY"))
+      displays.get (dpy ? dpy : ":0"); // move string logic into rxvt_display maybe?
 
   char *sockname = rxvt_connection::unix_sockname ();
   unix_listener l (sockname);
