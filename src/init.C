@@ -1526,11 +1526,6 @@ rxvt_term::run_child (const char *const *argv)
   signal (SIGTTOU, SIG_IGN);
 #endif /* SIGTSTP */
 
-  // unblock signals (signals are blocked by iom.C
-  sigset_t ss;
-  sigemptyset (&ss);
-  sigprocmask (SIG_SETMASK, &ss, 0);
-
   /* command interpreter path */
   if (argv)
     {
