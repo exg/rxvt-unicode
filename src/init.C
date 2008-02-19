@@ -834,7 +834,7 @@ rxvt_term::init_command (const char *const *argv)
 
 /*----------------------------------------------------------------------*/
 void
-rxvt_term::Get_Colours ()
+rxvt_term::get_colours ()
 {
   int i;
 
@@ -1061,7 +1061,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   dLocal (Display *, dpy);
 
   /* grab colors before netscape does */
-  Get_Colours ();
+  get_colours ();
 
   if (!set_fonts ())
     rxvt_fatal ("unable to load base fontset, please specify a valid one using -fn, aborting.\n");

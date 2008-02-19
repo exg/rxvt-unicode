@@ -1229,7 +1229,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   int run_child (const char *const *argv);
   void color_aliases (int idx);
   void create_windows (int argc, const char *const *argv);
-  void Get_Colours ();
+  void get_colours ();
   void get_ourmods ();
   // main.C
   void tt_winch ();
