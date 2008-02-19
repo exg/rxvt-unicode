@@ -1017,7 +1017,7 @@ rxvt_term::flush ()
         }
 
       scr_refresh ();
-      scrollbar_show (1);
+      scrollBar.show (1);
 #ifdef USE_XIM
       IMSendSpot ();
 #endif
@@ -1538,7 +1538,7 @@ rxvt_term::x_cb (XEvent &ev)
             if (scrollBar.state && ev.xany.window == scrollBar.win)
               {
                 scrollBar.state = STATE_IDLE;
-                scrollbar_show (0);
+                scrollBar.show (0);
               }
           }
         break;
@@ -1649,7 +1649,7 @@ rxvt_term::x_cb (XEvent &ev)
             scr_move_to (scrollbar_position (ev.xbutton.y) - csrO,
                          scrollBar.size ());
             want_refresh = 1;
-            scrollbar_show (1);
+            scrollBar.show (1);
           }
         break;
     }
@@ -2068,7 +2068,7 @@ rxvt_term::button_release (XButtonEvent &ev)
   if (scrollBar.state == STATE_UP || scrollBar.state == STATE_DOWN)
     {
       scrollBar.state = STATE_IDLE;
-      scrollbar_show (0);
+      scrollBar.show (0);
     }
 
 #ifdef SELECTION_SCROLLING
@@ -2161,7 +2161,7 @@ rxvt_term::button_release (XButtonEvent &ev)
 # endif
                 {
                   scr_page (v, i);
-                  scrollbar_show (1);
+                  scrollBar.show (1);
                 }
             }
             break;
@@ -2693,7 +2693,7 @@ rxvt_term::process_escape_seq ()
       case 'c':
         mbstate.reset ();
         scr_poweron ();
-        scrollbar_show (1);
+        scrollBar.show (1);
         break;
 
         /* 8.3.79: LOCKING-SHIFT TWO (see ISO2022) */
@@ -3679,7 +3679,7 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
               break;
 #ifdef scrollBar_esc
             case scrollBar_esc:
-              if (scrollbar_mapping (state))
+              if (scrollBar.map (state))
                 {
                   resize_all_windows (0, 0, 0);
                   scr_touch (true);

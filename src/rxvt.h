@@ -1466,11 +1466,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   int scrollbar_show_plain (int update, int last_top, int last_bot, int scrollbar_len);
 #endif
 
-  // scrollbar.C
-  void resize_scrollbar ();
-  int scrollbar_mapping (int map);
-  int scrollbar_show (int update);
-
   // xdefaults.C
   void get_options (int argc, const char *const *argv);
   int parse_keysym (const char *str, const char *arg);

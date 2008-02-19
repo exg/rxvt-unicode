@@ -569,7 +569,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 #endif
 
   if (option (Opt_scrollBar))
-    resize_scrollbar ();      /* create and map scrollbar */
+    scrollBar.resize ();      /* create and map scrollbar */
 #ifdef HAVE_BG_PIXMAP
   {
     bgPixmap.set_target (this);

@@ -980,7 +980,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
   if (fix_screen || newwidth != old_width || newheight != old_height)
     {
       if (scrollBar.state)
-        resize_scrollbar ();
+        scrollBar.resize ();
 
       XMoveResizeWindow (dpy, vt,
                          window_vt_x, window_vt_y,

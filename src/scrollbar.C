@@ -32,27 +32,27 @@
  * Map or unmap a scrollbar.  Returns non-zero upon change of state
  */
 int
-rxvt_term::scrollbar_mapping (int map)
+scrollBar_t::map (int map)
 {
   int change = 0;
 
   if (map)
     {
-      scrollBar.state = STATE_IDLE;
+      state = STATE_IDLE;
 
-      if (!scrollBar.win)
-        resize_scrollbar ();
+      if (!win)
+        resize ();
 
-      if (scrollBar.win)
+      if (win)
         {
-          XMapWindow (dpy, scrollBar.win);
+          XMapWindow (term->dpy, win);
           change = 1;
         }
     }
   else
     {
-      scrollBar.state = 0;
-      XUnmapWindow (dpy, scrollBar.win);
+      state = 0;
+      XUnmapWindow (term->dpy, win);
       change = 1;
     }
 
@@ -60,82 +60,82 @@ rxvt_term::scrollbar_mapping (int map)
 }
 
 void
-rxvt_term::resize_scrollbar ()
+scrollBar_t::resize ()
 {
   int delayed_init = 0;
   int window_sb_x = 0;
 
-  if (option (Opt_scrollBar_right))
-    window_sb_x = szHint.width - scrollBar.total_width ();
+  if (term->option (Opt_scrollBar_right))
+    window_sb_x = term->szHint.width - total_width ();
 
-  scrollBar.update_data ();
+  update_data ();
 
-  if (!scrollBar.win)
+  if (!win)
     {
       /* create the scrollbar window */
-      scrollBar.win = XCreateSimpleWindow (dpy,
-                                           parent[0],
-                                           window_sb_x, 0,
-                                           scrollBar.total_width (),
-                                           szHint.height,
-                                           0,
-                                           pix_colors[Color_fg],
-                                           pix_colors[Color_border]);
-      XDefineCursor (dpy, scrollBar.win, scrollBar.leftptr_cursor);
+      win = XCreateSimpleWindow (term->dpy,
+                                 term->parent[0],
+                                 window_sb_x, 0,
+                                 total_width (),
+                                 term->szHint.height,
+                                 0,
+                                 term->pix_colors[Color_fg],
+                                 term->pix_colors[Color_border]);
+      XDefineCursor (term->dpy, win, leftptr_cursor);
 
-      XSelectInput (dpy, scrollBar.win,
+      XSelectInput (term->dpy, win,
                    ExposureMask | ButtonPressMask | ButtonReleaseMask
                    | Button1MotionMask | Button2MotionMask
                    | Button3MotionMask);
-      scrollbar_ev.start (display, scrollBar.win);
+      term->scrollbar_ev.start (term->display, win);
 
       delayed_init = 1;
     }
   else
-    XMoveResizeWindow (dpy, scrollBar.win,
+    XMoveResizeWindow (term->dpy, win,
                        window_sb_x, 0,
-                       scrollBar.total_width (), szHint.height);
+                       total_width (), term->szHint.height);
 
-  scrollbar_show (1);
+  show (1);
 
   if (delayed_init)
-    XMapWindow (dpy, scrollBar.win);
+    XMapWindow (term->dpy, win);
 }
 
 /*
  * Update current scrollbar view w.r.t. slider heights, etc.
  */
 int
-rxvt_term::scrollbar_show (int refresh)
+scrollBar_t::show (int refresh)
 {
   int ret;
 
-  if (!scrollBar.state)
+  if (!state)
     return 0;
 
   if (refresh)
     {
-      int sb_top = view_start - top_row;
-      int sb_bot = sb_top + (nrow - 1);
-      int sb_len = max (nrow - 1 - top_row, 1);
-      int sb_size = (sb_bot - sb_top) * scrollBar.size ();
+      int sb_top = term->view_start - term->top_row;
+      int sb_bot = sb_top + (term->nrow - 1);
+      int sb_len = max (term->nrow - 1 - term->top_row, 1);
+      int sb_size = (sb_bot - sb_top) * size ();
 
-      scrollBar.top = (scrollBar.beg + (sb_top * scrollBar.size ()) / sb_len);
-      scrollBar.len = sb_size / sb_len + scrollBar.min_height () + (sb_size % sb_len > 0);
-      scrollBar.bot = (scrollBar.top + scrollBar.len);
+      top = beg + (sb_top * size ()) / sb_len;
+      len = sb_size / sb_len + min_height () + (sb_size % sb_len > 0);
+      bot = top + len;
       /* no change */
-      if (scrollBar.top == scrollBar.last_top
-          && scrollBar.bot == scrollBar.last_bot
-          && (scrollBar.state == scrollBar.last_state
-              || !(scrollBar.state == STATE_UP || scrollBar.state == STATE_DOWN)))
+      if (top == last_top
+          && bot == last_bot
+          && (state == last_state
+              || !(state == STATE_UP || state == STATE_DOWN)))
         return 0;
     }
 
-  ret = (this->*scrollBar.update) (refresh, scrollBar.last_top, scrollBar.last_bot, scrollBar.len);
+  ret = (term->*update) (refresh, last_top, last_bot, len);
 
-  scrollBar.last_top = scrollBar.top;
-  scrollBar.last_bot = scrollBar.bot;
-  scrollBar.last_state = scrollBar.state;
+  last_top = top;
+  last_bot = bot;
+  last_state = state;
 
   return ret;
 }

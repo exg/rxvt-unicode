@@ -1327,7 +1327,7 @@ bgPixmap_t::apply ()
       if (target->scrollBar.win)
         {
           target->scrollBar.state = STATE_IDLE;
-          target->scrollbar_show (0);
+          target->scrollBar.show (0);
         }
 
       target->want_refresh = 1;

@@ -68,6 +68,9 @@ struct scrollBar_t {
   void setup (rxvt_term *);
   // update style dependent data
   void update_data ();
+  void resize ();
+  int map (int);
+  int show (int);
 
   bool upButton (int y)
   {
