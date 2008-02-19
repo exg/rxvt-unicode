@@ -248,13 +248,13 @@ main (int argc, const char *const *argv)
         }
     }
 
-  chdir ("/");
-
   if (opt_opendisplay)
     displays.get (getenv ("DISPLAY")); // open display and never release it
 
   char *sockname = rxvt_connection::unix_sockname ();
   unix_listener l (sockname);
+
+  chdir ("/");
 
   if (!opt_quiet)
     {
