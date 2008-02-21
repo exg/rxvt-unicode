@@ -803,7 +803,7 @@ typedef struct {
  *  |  terminal  +---------+
  *  |  terminal  |
  *  |  terminal  |
- *  +------------+···········= term_stat + nrow - 1
+ *  +------------+···········= term_start + nrow - 1
  *  |
  *  |
  *  END······················= total_rows
