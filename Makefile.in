@@ -65,7 +65,7 @@ Makefiles:
 cleandir: realclean
 
 distclean-local:
-	rm -f *~ config.cache config.h config.log config.status
+	rm -f config.cache config.h config.log config.status
 	rm -f Makefile
 
 distdir:

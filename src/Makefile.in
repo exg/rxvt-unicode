@@ -86,7 +86,7 @@ alldoc:
 
 clean:
 	rm -f rxvt rxvtc rxvtd perlxsi.c rxvtperl.C
-	rm -f *.o tmpproto *.tmp
+	rm -f *.o
 
 distclean: clean
 	rm -f Makefile
