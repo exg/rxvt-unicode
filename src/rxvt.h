@@ -849,7 +849,7 @@ struct TermWin_t {
  *   beg:       row/column of beginning of selection  : never past mark
  *   mark:      row/column of initial click           : never past end
  *   end:       row/column of one character past end of selection
- * * Note: -nsaved <= beg.row <= mark.row <= end.row < nrow
+ * * Note: top_row <= beg.row <= mark.row <= end.row < nrow
  * * Note: col == -1 ==> we're left of screen
  *
  */

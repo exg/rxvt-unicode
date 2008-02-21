@@ -2587,7 +2587,7 @@ rxvt_term::scr_dump (int fd) NOTHROW
   unsigned int    width, towrite;
   char            r1[] = "\n";
 
-  for (row = saveLines - nsaved;
+  for (row = saveLines + top_row;
        row < saveLines + nrow - 1; row++)
     {
       width = row_buf[row].l >= 0 ? row_buf[row].l

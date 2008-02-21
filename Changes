@@ -17,8 +17,9 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
+TODO: fix perl doc for $term->ROW_t
 TODO: coloured pastebin
-TODO: mabbe unlink the RXVT_SOCKET on exit?
+TODO: maybe unlink the RXVT_SOCKET on exit?
 
 	- made tabs moveable (based on a patch by Petr Machata).
         - support relative paths for RXVT_SOCKET in urxvtd.
