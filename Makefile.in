@@ -46,21 +46,20 @@ rxvt:
 	(cd src; $(MAKE))
 
 #-------------------------------------------------------------------------
-configure: configure.ac aclocal.m4 config.h.in
+$(srcdir)/configure: $(srcdir)/configure.ac $(srcdir)/ptytty.m4 $(srcdir)/libev/libev.m4
 	cd $(srcdir); ./autogen.sh
 
-config.status:
-	if test -x config.status; then config.status --recheck; \
-	else $(SHELL) configure; fi
-
-config.h.in: configure.ac
-	cd $(srcdir); ./autogen.sh
+config.status: $(srcdir)/configure
+	./config.status --recheck
 
 check: all
 	echo "no tests"
 
-Makefiles:
-	$(SHELL) config.status
+Makefile:     $(srcdir)/Makefile.in
+doc/Makefile: $(srcdir)/doc/Makefile.in
+src/Makefile: $(srcdir)/src/Makefile.in
+Makefile doc/Makefile src/Makefile: config.status
+	./config.status
 
 cleandir: realclean
 
