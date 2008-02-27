@@ -21,8 +21,12 @@ TODO: fix perl doc for $term->ROW_t
 TODO: coloured pastebin
 TODO: maybe unlink the RXVT_SOCKET on exit?
 
+TODO: rxvt -font 10x20 -xrm "*.tabbed.font: 10x20" -pe tabbed
+      how does one affect the tab windows themselves? seems not to work anymore.
+
 	- made tabs moveable (based on a patch by Petr Machata).
         - support relative paths for RXVT_SOCKET in urxvtd.
+        - better diagnostic on 0x0 window geometries.
       	
 9.02 Tue Jan 29 11:58:36 CET 2008
 	- the "exg makes everybody happy" release.
