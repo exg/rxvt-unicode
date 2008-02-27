@@ -524,13 +524,19 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
 
       if (flags & WidthValue)
         {
-          ncol = clamp (w, 0, std::numeric_limits<int16_t>::max ());
+          if (!w)
+            rxvt_fatal ("illegal window geometry (width and height must be non-zero), aborting.\n");
+
+          ncol = clamp (w, 1, std::numeric_limits<int16_t>::max ());
           szHint.flags |= USSize;
         }
 
       if (flags & HeightValue)
         {
-          nrow = clamp (h, 0, std::numeric_limits<int16_t>::max ());
+          if (!h)
+            rxvt_fatal ("illegal window geometry (width and height must be non-zero), aborting.\n");
+
+          nrow = clamp (h, 1, std::numeric_limits<int16_t>::max ());
           szHint.flags |= USSize;
         }
 
@@ -561,9 +567,6 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
                 szHint.win_gravity = SouthWestGravity;
             }
         }
-
-      if (!szHint.width || !szHint.height)
-        rxvt_fatal ("window width or height must not be zero, aborting.\n");
     }
 
   /* TODO: BOUNDS */
