@@ -561,6 +561,9 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
                 szHint.win_gravity = SouthWestGravity;
             }
         }
+
+      if (!szHint.width || !szHint.height)
+        rxvt_fatal ("window width or height must not be zero, aborting.\n");
     }
 
   /* TODO: BOUNDS */
