@@ -24,10 +24,12 @@ TODO: maybe unlink the RXVT_SOCKET on exit?
 TODO: rxvt -font 10x20 -xrm "*.tabbed.font: 10x20" -pe tabbed
       how does one affect the tab windows themselves? seems not to work anymore.
 
+TODO: memory leak for((i=0;i<1000;++o)); do rxvtc -g 1x1 -e exit;done
 	- made tabs moveable (based on a patch by Petr Machata).
         - support relative paths for RXVT_SOCKET in urxvtd.
         - better diagnostic on 0x0 window geometries.
       	
+TODO: implement initial chdir for tabs by making it a resource?
 9.02 Tue Jan 29 11:58:36 CET 2008
 	- the "exg makes everybody happy" release.
 	- fix build with !xft.
