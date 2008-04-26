@@ -24,8 +24,9 @@ TODO: maybe unlink the RXVT_SOCKET on exit?
 TODO: rxvt -font 10x20 -xrm "*.tabbed.font: 10x20" -pe tabbed
       how does one affect the tab windows themselves? seems not to work anymore.
 
-TODO: memory leak for((i=0;i<1000;++o)); do rxvtc -g 1x1 -e exit;done
 TODO: implement initial chdir for tabs by making it a resource?
+	- upgrade to libev-3.31, fixing a bug in the select backend
+          with more than 31 file descriptors on non-linux 64 bit systems.
 	- correctly reset the multibyte state to the initial one
           after EILSEQ (patch by Neil Booth). This fixes the
           issue of rxvt-unicode not properly displaying text after an illegal
