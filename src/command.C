@@ -2326,7 +2326,10 @@ rxvt_term::next_char () NOTHROW
         }
 
       if (len == (size_t)-1)
-        return (unsigned char)*cmdbuf_ptr++; // the _occasional_ latin1 character is allowed to slip through
+        {
+          mbrtowc (0, 0, 0, mbstate); // reset now undefined conversion state
+          return (unsigned char)*cmdbuf_ptr++; // the _occasional_ latin1 character is allowed to slip through
+        }
 
       // assume wchar == unicode
       cmdbuf_ptr += len;

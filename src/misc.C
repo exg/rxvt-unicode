@@ -40,7 +40,10 @@ rxvt_wcstombs (const wchar_t *str, int len)
       ssize_t l = wcrtomb (dst, *str++, mbs);
 
       if (l < 0)
-        *dst++ = '?';
+        {
+          *dst++ = '?';
+          wcrtomb (0, 0, mbs); // reset undefined state
+        }
       else
         dst += l;
     }
