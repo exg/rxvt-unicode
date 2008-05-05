@@ -9,6 +9,7 @@ AC_CHECK_HEADERS( \
   libutil.h \
   sys/ioctl.h \
   sys/stropts.h \
+  stropts.h \
 )
 
 AC_CHECK_FUNCS( \
@@ -65,8 +66,8 @@ esac
 
 if test x$ac_cv_func_getpt = xyes -o x$ac_cv_func_posix_openpt = xyes -o x$have_clone = xyes; then
   AC_MSG_CHECKING(for UNIX98 ptys)
-  AC_TRY_LINK([#include <stdlib.h>],
-              [grantpt(0);unlockpt(0);ptsname(0);],
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdlib.h>]],
+              [[grantpt(0);unlockpt(0);ptsname(0);]])],
               [unix98_pty=yes
                AC_DEFINE(UNIX98_PTY, 1, "")
                AC_MSG_RESULT(yes)],
@@ -118,11 +119,7 @@ AC_CHECK_FUNCS( \
 	updlastlogx \
 )
 
-AC_CHECK_HEADERS( \
-	utmp.h \
-	utmpx.h \
-	lastlog.h \
-)
+AC_CHECK_HEADERS(lastlog.h)
 
 dnl# --------------------------------------------------------------------------
 dnl# DO ALL UTMP AND WTMP CHECKING
@@ -130,7 +127,7 @@ dnl# --------------------------------------------------------------------------
 dnl# check for host field in utmp structure
 
 dnl# --------------------------------------------
-AC_CHECK_HEADER(utmp.h,
+AC_CHECK_HEADERS(utmp.h,
 [AC_CACHE_CHECK([for struct utmp], struct_utmp,
 [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
 #include <utmp.h>]], [[struct utmp ut;]])],[struct_utmp=yes],[struct_utmp=no])])
@@ -152,11 +149,11 @@ AC_CACHE_CHECK(for ut_pid in utmp struct, struct_utmp_pid,
 if test x$struct_utmp_pid = xyes; then
   AC_DEFINE(HAVE_UTMP_PID, 1, Define if struct utmp contains ut_pid)
 fi
-) dnl# AC_CHECK_HEADER(utmp.h
+) dnl# AC_CHECK_HEADERS(utmp.h
 
 dnl# --------------------------------------------
 
-AC_CHECK_HEADER(utmpx.h,
+AC_CHECK_HEADERS(utmpx.h,
 [AC_CACHE_CHECK([for struct utmpx], struct_utmpx,
 [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
 #include <utmpx.h>]], [[struct utmpx ut;]])],[struct_utmpx=yes],[struct_utmpx=no])])
@@ -173,14 +170,12 @@ if test x$struct_utmpx_host = xyes; then
 fi
 
 AC_CACHE_CHECK(for session in utmpx struct, struct_utmpx_session,
-[AC_TRY_COMPILE([#include <sys/types.h>
-#include <utmpx.h>],
-[struct utmpx utx; utx.ut_session;],
-struct_utmpx_session=yes, struct_utmpx_session=no)])
+[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
+#include <utmpx.h>]], [[struct utmpx utx; utx.ut_session;]])],[struct_utmpx_session=yes],[struct_utmpx_session=no])])
 if test x$struct_utmpx_session = xyes; then
   AC_DEFINE(HAVE_UTMPX_SESSION, 1, Define if struct utmpx contains ut_session)
 fi
-) dnl# AC_CHECK_HEADER(utmpx.h
+) dnl# AC_CHECK_HEADERS(utmpx.h
 
 dnl# --------------------------------------------------------------------------
 dnl# check for struct lastlog
@@ -446,12 +441,12 @@ fi
 AC_DEFUN([SCM_RIGHTS_CHECK],
 [
 AC_CACHE_CHECK(for unix-compliant filehandle passing ability, can_pass_fds,
-[AC_TRY_LINK([
+[AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <cstddef> // broken bsds (is that redundant?) need this
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
-],[
+]], [[
 {
   msghdr msg;
   iovec iov;
@@ -475,7 +470,7 @@ AC_CACHE_CHECK(for unix-compliant filehandle passing ability, can_pass_fds,
 
   return sendmsg (3, &msg, 0);
 }
-],[can_pass_fds=yes],[can_pass_fds=no])])
+]])],[can_pass_fds=yes],[can_pass_fds=no])])
 if test x$can_pass_fds = xyes; then
    AC_DEFINE(HAVE_UNIX_FDPASS, 1, Define if sys/socket.h defines the necessary macros/functions for file handle passing)
 else
@@ -486,7 +481,7 @@ fi
 AC_DEFUN([TTY_GROUP_CHECK],
 [
 AC_CACHE_CHECK([for tty group], tty_group,
-[AC_TRY_RUN([
+[AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -506,8 +501,7 @@ main()
     return 0;
   else
     return 1;
-}],
-[tty_group=yes],[tty_group=no],[tty_group=no])])
+}]])],[tty_group=yes],[tty_group=no],[tty_group=no])])
 if test x$tty_group = xyes; then
   AC_DEFINE(TTY_GID_SUPPORT, 1, "")
 fi])

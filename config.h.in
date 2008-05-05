@@ -67,6 +67,9 @@
 /* Define to 1 if you have the `epoll_ctl' function. */
 #undef HAVE_EPOLL_CTL
 
+/* Define to 1 if you have the `eventfd' function. */
+#undef HAVE_EVENTFD
+
 /* Define to 1 if you have the `getpt' function. */
 #undef HAVE_GETPT
 
@@ -157,6 +160,9 @@
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
+/* Define to 1 if you have the <stropts.h> header file. */
+#undef HAVE_STROPTS_H
+
 /* Define if utmp.h or lastlog.h has struct lastlog */
 #undef HAVE_STRUCT_LASTLOG
 
@@ -174,6 +180,9 @@
 
 /* Define to 1 if you have the <sys/epoll.h> header file. */
 #undef HAVE_SYS_EPOLL_H
+
+/* Define to 1 if you have the <sys/eventfd.h> header file. */
+#undef HAVE_SYS_EVENTFD_H
 
 /* Define to 1 if you have the <sys/event.h> header file. */
 #undef HAVE_SYS_EVENT_H
@@ -205,6 +214,9 @@
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
 
+/* Define to 1 if you have the `ttyslot' function. */
+#undef HAVE_TTYSLOT
+
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
@@ -214,9 +226,6 @@
 
 /* Define to 1 if you have the `unsetenv' function. */
 #undef HAVE_UNSETENV
-
-/* Define to 1 if you have the `updlastlogx' function. */
-#undef HAVE_UPDLASTLOGX
 
 /* Define to 1 if you have the `updwtmp' function. */
 #undef HAVE_UPDWTMP
@@ -268,6 +277,9 @@
 
 /* Define location of lastlog */
 #undef LASTLOG_FILE
+
+/* Define if lastlog is provided via a directory */
+#undef LASTLOG_IS_DIR
 
 /* Define if you want to have lastlog support when utmp/utmpx is enabled */
 #undef LASTLOG_SUPPORT

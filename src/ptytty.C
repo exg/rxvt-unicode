@@ -34,6 +34,7 @@
 #include <csignal>
 
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -43,7 +44,7 @@
 #if defined(HAVE_DEV_PTMX) && defined(HAVE_SYS_STROPTS_H)
 # include <sys/stropts.h>      /* for I_PUSH */
 #endif
-#ifdef HAVE_ISASTREAM
+#if defined(HAVE_ISASTREAM) && defined(HAVE_STROPTS_H)
 # include <stropts.h>
 #endif
 #if defined(HAVE_PTY_H)
@@ -129,10 +130,11 @@
 
     slave = _getpty (&pfd, O_RDWR | O_NONBLOCK | O_NOCTTY, 0622, 0);
 
-    if (slave != NULL) {
-      *ttydev = strdup (slave);
-      return pfd;
-    }
+    if (slave != NULL)
+      {
+        *ttydev = strdup (slave);
+        return pfd;
+      }
 
     return -1;
   }
@@ -248,7 +250,7 @@ control_tty (int fd_tty)
    * close () - on the master side which causes a hang up to be sent
    * through - Geoff Wing
    */
-# ifdef HAVE_ISASTREAM
+#if defined(HAVE_ISASTREAM) && defined(HAVE_STROPTS_H)
   if (isastream (fd_tty) == 1)
 # endif
     {
