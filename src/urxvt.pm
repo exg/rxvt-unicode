@@ -1093,7 +1093,7 @@ work.
 
 =cut
 
-our $VERSION = 1;
+our $VERSION = '3.4';
 
 $INC{"urxvt/anyevent.pm"} = 1; # mark us as there
 push @AnyEvent::REGISTRY, [urxvt => urxvt::anyevent::];
@@ -1132,20 +1132,6 @@ sub io {
 
 sub DESTROY {
    $_[0][1]->stop;
-}
-
-sub condvar {
-   bless \my $flag, urxvt::anyevent::
-}
-
-sub broadcast {
-   ${$_[0]}++;
-}
-
-sub wait {
-   unless (${$_[0]}) {
-      Carp::croak "AnyEvent->condvar blocking wait unsupported in urxvt, use a non-blocking API";
-   }
 }
 
 sub one_event {

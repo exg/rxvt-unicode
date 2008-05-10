@@ -35,6 +35,7 @@ TODO: implement initial chdir for tabs by making it a resource?
 	- made tabs moveable (based on a patch by Petr Machata).
         - support relative paths for RXVT_SOCKET in urxvtd.
         - better diagnostic on 0x0 window geometries.
+        - update Anyevent API to version 3.4 and above.
 
 9.02 Tue Jan 29 11:58:36 CET 2008
 	- the "exg makes everybody happy" release.
