@@ -94,9 +94,9 @@ Print out a message describing available options.
 
 =item B<-display> I<displayname>
 
-Attempt to open a window on the named X display (B<-d> still
-respected). In the absence of this option, the display specified by the
-B<DISPLAY> environment variable is used.
+Attempt to open a window on the named X display (the older form B<-d>
+is still respected. but deprecated). In the absence of this option, the
+display specified by the B<DISPLAY> environment variable is used.
 
 =item B<-depth> I<bitdepth>
 
@@ -1555,7 +1555,8 @@ C<--with-terminfo=PATH>.
 =item B<DISPLAY>
 
 Used by @@RXVT_NAME@@ to connect to the display and set to the correct
-display in its child processes.
+display in its child processes if C<-display> isn't used to override. It
+defaults to C<:0> if it doesn't exist.
 
 =item B<SHELL>
 
