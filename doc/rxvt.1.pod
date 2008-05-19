@@ -1091,8 +1091,8 @@ Turn on/off secondary screen (default enabled).
 
 Turn on/off secondary screen scroll (default enabled). If this
 option is enabled, scrolls on the secondary screen will change the
-scrollback buffer and switching to/from the secondary screen will
-instead scroll the screen up.
+scrollback buffer and, when secondaryScreen is off, switching
+to/from the secondary screen will instead scroll the screen up.
 
 =item B<hold>: I<boolean>
 

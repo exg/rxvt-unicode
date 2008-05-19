@@ -1152,7 +1152,7 @@ does it support it. Instead, it uses its own internal representation of
 B<wchar_t>. This is, of course, completely fine with respect to standards.
 
 However, that means rxvt-unicode only works in C<POSIX>, C<ISO-8859-1> and
-C<UTF-8> locales under FreeBSD (which all use Unicode as B<wchar_t>.
+C<UTF-8> locales under FreeBSD (which all use Unicode as B<wchar_t>).
 
 C<__STDC_ISO_10646__> is the only sane way to support multi-language
 apps in an OS, as using a locale-dependent (and non-standardized)
