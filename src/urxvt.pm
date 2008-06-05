@@ -1599,10 +1599,9 @@ Used after changing terminal contents to display them.
 
 =item $text = $term->ROW_t ($row_number[, $new_text[, $start_col]])
 
-Returns the text of the entire row with number C<$row_number>. Row C<0>
-is the topmost terminal line, row C<< $term->$ncol-1 >> is the bottommost
-terminal line. The scrollback buffer starts at line C<-1> and extends to
-line C<< -$term->nsaved >>. Nothing will be returned if a nonexistent line
+Returns the text of the entire row with number C<$row_number>. Row C<< $term->top_row >>
+is the topmost terminal line, row C<< $term->nrow-1 >> is the bottommost
+terminal line. Nothing will be returned if a nonexistent line
 is requested.
 
 If C<$new_text> is specified, it will replace characters in the current

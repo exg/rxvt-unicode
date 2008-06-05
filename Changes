@@ -18,8 +18,6 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
-TODO: fix perl doc for $term->ROW_t
-
 TODO: rxvt -font 10x20 -xrm "*.tabbed.font: 10x20" -pe tabbed
       how does one affect the tab windows themselves? seems not to work anymore.
 
