@@ -541,7 +541,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 
   SET_R (this);
   set_locale ("");
-  set_environ (envv); // few things in X do not call setlocale :(
+  set_environ (envv); // a few things in X do not call setlocale :(
 
   init_vars ();
 
@@ -552,6 +552,16 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 #ifdef KEYSYM_RESOURCE
   keyboard->register_done ();
 #endif
+
+  if (const char *path = rs[Rs_chdir])
+    if (*path) // ignored if empty
+      {
+        if (*path != '/')
+          rxvt_fatal ("specified shell working directory must start with a slash, aborting.\n");
+
+        if (chdir (path))
+          rxvt_fatal ("unable to change into specified shell working directory, aborting.\n");
+      }
 
   if (option (Opt_scrollBar))
     scrollBar.state = STATE_IDLE;    /* set existence for size calculations */

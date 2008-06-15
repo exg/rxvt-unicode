@@ -5,6 +5,7 @@
   def (iconName)
   def (geometry)
   def (reverseVideo)
+  def (chdir)
   def (color)
   reserve (color, TOTAL_COLORS)
   def (font)

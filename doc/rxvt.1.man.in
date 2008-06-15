@@ -132,7 +132,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2008-01-26" "9.0" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2008-06-15" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -223,9 +223,9 @@ The following options are available:
 Print out a message describing available options.
 .IP "\fB\-display\fR \fIdisplayname\fR" 4
 .IX Item "-display displayname"
-Attempt to open a window on the named X display (\fB\-d\fR still
-respected). In the absence of this option, the display specified by the
-\&\fB\s-1DISPLAY\s0\fR environment variable is used.
+Attempt to open a window on the named X display (the older form \fB\-d\fR
+is still respected. but deprecated). In the absence of this option, the
+display specified by the \fB\s-1DISPLAY\s0\fR environment variable is used.
 .IP "\fB\-depth\fR \fIbitdepth\fR" 4
 .IX Item "-depth bitdepth"
 Compile \fIxft\fR: Attempt to find a visual with the given bit depth;
@@ -1099,8 +1099,8 @@ Turn on/off secondary screen (default enabled).
 .IX Item "secondaryScroll: boolean"
 Turn on/off secondary screen scroll (default enabled). If this
 option is enabled, scrolls on the secondary screen will change the
-scrollback buffer and switching to/from the secondary screen will
-instead scroll the screen up.
+scrollback buffer and, when secondaryScreen is off, switching
+to/from the secondary screen will instead scroll the screen up.
 .IP "\fBhold\fR: \fIboolean\fR" 4
 .IX Item "hold: boolean"
 Turn on/off hold window after exit support. If enabled, @@RXVT_NAME@@
@@ -1537,7 +1537,8 @@ Set to the terminfo directory iff @@RXVT_NAME@@ was configured with
 .IP "\fB\s-1DISPLAY\s0\fR" 4
 .IX Item "DISPLAY"
 Used by @@RXVT_NAME@@ to connect to the display and set to the correct
-display in its child processes.
+display in its child processes if \f(CW\*(C`\-display\*(C'\fR isn't used to override. It
+defaults to \f(CW\*(C`:0\*(C'\fR if it doesn't exist.
 .IP "\fB\s-1SHELL\s0\fR" 4
 .IX Item "SHELL"
 The shell to be used for command execution, defaults to \f(CW\*(C`/bin/sh\*(C'\fR.

@@ -98,7 +98,6 @@ main (int argc, const char *const *argv)
   }
 
   c.send ("NEW");
-  c.send ("CWD"), c.send (cwd);
 
   for (char **var = environ; *var; var++)
     c.send ("ENV"), c.send (*var);
@@ -106,6 +105,9 @@ main (int argc, const char *const *argv)
   const char *base = strrchr (argv[0], '/');
   base = base ? base + 1 : argv[0];
   c.send ("ARG"), c.send (strcmp (base, RXVTNAME "c") ? base : RXVTNAME);
+
+  c.send ("ARG"), c.send ("-cd");
+  c.send ("ARG"), c.send (cwd);
 
   for (int i = 1; i < argc; i++)
     c.send ("ARG"), c.send (argv[i]);

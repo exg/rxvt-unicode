@@ -132,7 +132,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 3"
-.TH @@RXVT_NAME@@ 3 "2008-01-25" "8.9" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 3 "2008-06-15" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -1363,10 +1363,9 @@ Used after changing terminal contents to display them.
 .ie n .IP "$text\fR = \f(CW$term\fR\->ROW_t ($row_number[, \f(CW$new_text\fR[, \f(CW$start_col]])" 4
 .el .IP "\f(CW$text\fR = \f(CW$term\fR\->ROW_t ($row_number[, \f(CW$new_text\fR[, \f(CW$start_col\fR]])" 4
 .IX Item "$text = $term->ROW_t ($row_number[, $new_text[, $start_col]])"
-Returns the text of the entire row with number \f(CW$row_number\fR. Row \f(CW0\fR
-is the topmost terminal line, row \f(CW\*(C`$term\->$ncol\-1\*(C'\fR is the bottommost
-terminal line. The scrollback buffer starts at line \f(CW\*(C`\-1\*(C'\fR and extends to
-line \f(CW\*(C`\-$term\->nsaved\*(C'\fR. Nothing will be returned if a nonexistent line
+Returns the text of the entire row with number \f(CW$row_number\fR. Row \f(CW\*(C`$term\->top_row\*(C'\fR
+is the topmost terminal line, row \f(CW\*(C`$term\->nrow\-1\*(C'\fR is the bottommost
+terminal line. Nothing will be returned if a nonexistent line
 is requested.
 .Sp
 If \f(CW$new_text\fR is specified, it will replace characters in the current

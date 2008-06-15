@@ -457,6 +457,12 @@ will not immediately destroy its window when the program executed within
 it exits. Instead, it will wait till it is being killed or closed by the
 user; resource B<hold>.
 
+=item B<-cd> I<path>
+
+Sets the working directory for the shell (or the command specified via
+B<-e>). The I<path> must be an absolute path and it must exist for
+@@RXVT_NAME@@ to start; resource B<chdir>.
+
 =item B<-xrm> I<string>
 
 Works like the X Toolkit option of the same name, by adding the I<string>
@@ -1100,6 +1106,13 @@ Turn on/off hold window after exit support. If enabled, @@RXVT_NAME@@
 will not immediately destroy its window when the program executed within
 it exits. Instead, it will wait till it is being killed or closed by the
 user.
+
+=item B<chdir>: I<path>
+
+Sets the working directory for the shell (or the command specified via
+B<-e>). The I<path> must be an absolute path and it must exist for
+@@RXVT_NAME@@ to start. If it isn't specified then the current working
+directory will be used; option B<-cd>.
 
 =item B<keysym.>I<sym>: I<string>
 

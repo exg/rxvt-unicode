@@ -93,6 +93,7 @@ optList[] = {
               SWCH ("C", Opt_console, 0, "intercept console messages"),
               SWCH ("iconic", Opt_iconic, 0, "start iconic"),
               SWCH ("ic", Opt_iconic, 0, NULL),	/* short form */
+              STRG (Rs_chdir, "chdir", "cd", "string", "start shell in this directory"),
               BOOL (Rs_reverseVideo, "reverseVideo", "rv", Opt_reverseVideo, 0, "reverse video"),
               BOOL (Rs_loginShell, "loginShell", "ls", Opt_loginShell, 0, "login shell"),
               BOOL (Rs_jumpScroll, "jumpScroll", "j", Opt_jumpScroll, 0, "jump scrolling"),

@@ -174,16 +174,6 @@ void server::read_cb (ev::io &w, int revents)
                 break;
               else if (!strcmp (tok, "ENV") && recv (tok))
                 envv->push_back (strdup (tok));
-              else if (!strcmp (tok, "CWD") && recv (tok))
-                {
-                  if (chdir (tok))
-                    {
-                      delete envv;
-                      delete argv;
-                      return err ("unable to change to working directory to '%s', aborting: %s.\n",
-                                  (char *)tok, strerror (errno));
-                    }
-                }
               else if (!strcmp (tok, "ARG") && recv (tok))
                 argv->push_back (strdup (tok));
               else
@@ -211,7 +201,7 @@ void server::read_cb (ev::io &w, int revents)
 
             term->log_hook = 0;
 
-            chdir ("/");
+            chdir ("/"); // init might change to different working directory
 
             if (!success)
               term->destroy ();

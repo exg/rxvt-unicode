@@ -22,6 +22,8 @@ TODO: rxvt -font 10x20 -xrm "*.tabbed.font: 10x20" -pe tabbed
       how does one affect the tab windows themselves? seems not to work anymore.
 
 TODO: implement initial chdir for tabs by making it a resource?
+	- new option --cd/chdir to set the starting working directory.
+        - tabbed extension now starts in the "correct" working directory.
 	- work around fedore 9 prividing isastream but not the relevant
           header file for it (report by Tuncer Ayaz).
 	- upgrade to libev-3.31, fixing a bug in the select backend

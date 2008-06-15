@@ -57,7 +57,6 @@ sub new_tab {
          for @{ $self->{resource} || [] };
 
       $term->resource (perl_ext_2 => $term->resource ("perl_ext_2") . ",-tabbed");
-      
    };
 
    push @urxvt::TERM_EXT, urxvt::ext::tabbed::tab::;
@@ -209,7 +208,7 @@ sub on_motion_notify {
 sub on_init {
    my ($self) = @_;
 
-   for (qw(name perl_ext_1 perl_ext_2)) {
+   for (qw(name chdir perl_ext_1 perl_ext_2)) {
       my $val = $self->resource ($_);
 
       push @{ $self->{resource} }, [$_ => $val]
