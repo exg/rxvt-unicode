@@ -641,6 +641,7 @@ BOOT:
     IV iv;
   } *civ, const_iv[] = {
 #   define const_iv(name) { # name, (IV)name }
+    const_iv (NUM_RESOURCES),
     const_iv (DEFAULT_RSTYLE),
     const_iv (OVERLAY_RSTYLE),
     const_iv (RS_Bold),
@@ -1432,12 +1433,20 @@ rxvt_term::_resource (char *name, int index, SV *newval = 0)
 
         rs = rslist + sizeof (rslist) / sizeof (rslist [0]);
 
-        do {
-          if (rs-- == rslist)
-            croak ("no such resource '%s', requested", name);
-        } while (strcmp (name, rs->name));
+        if (*name)
+          {
+            do {
+              if (rs-- == rslist)
+                croak ("no such resource '%s', requested", name);
+            } while (strcmp (name, rs->name));
 
-        index += rs->value;
+            index += rs->value;
+          }
+        else
+          {
+            --rs;
+            name = "";
+          }
 
         if (!IN_RANGE_EXC (index, 0, NUM_RESOURCES))
           croak ("requested out-of-bound resource %s+%d,", name, index - rs->value);

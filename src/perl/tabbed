@@ -53,8 +53,12 @@ sub new_tab {
       my ($term) = @_;
       $term->{parent} = $self;
 
-      $term->resource ($_->[0] => $_->[1])
-         for @{ $self->{resource} || [] };
+      for (0 .. urxvt::NUM_RESOURCES - 1) {
+         my $value = $self->{resource}[$_];
+
+         $term->resource ("+$_" => $value)
+            if defined $value;
+      }
 
       $term->resource (perl_ext_2 => $term->resource ("perl_ext_2") . ",-tabbed");
    };
@@ -207,12 +211,7 @@ sub on_motion_notify {
 sub on_init {
    my ($self) = @_;
 
-   for (qw(name chdir perl_ext_1 perl_ext_2)) {
-      my $val = $self->resource ($_);
-
-      push @{ $self->{resource} }, [$_ => $val]
-        if defined $val;
-   }
+   $self->{resource} = [map $self->resource ("+$_"), 0 .. urxvt::NUM_RESOURCES - 1];
 
    $self->resource (int_bwidth => 0);
    $self->resource (name => "URxvt.tabbed");

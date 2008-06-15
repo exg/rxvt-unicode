@@ -8,7 +8,8 @@ TODO: overlays collide with the way the out-of-focus cursor is being drawn
 TODO: "slow" rendering mode for bidi and scripts, pango!
 TODO: read property sequence is broken with respect to utf-8 etc.
 TODO: slow drag selection on remote display - other things seem fast (rxvt illness, motion hints?)
-TODO: investigate -pe tabbed -g 80x25 being 23 not 24 or 25 lines
+TODO: better resource handling for tabbar in -pe tabbed.
+WISH: investigate -pe tabbed -g 80x25 being 23 not 24 or 25 lines
       => when setting the constraints, the wm might (correctly)
          resize the outer window, which might result in a smaller window overall.
          or something like that. guys, send me a patch.
@@ -17,9 +18,6 @@ WISH: selection-color-pair instead of reverse video
 WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
-
-TODO: rxvt -font 10x20 -xrm "*.tabbed.font: 10x20" -pe tabbed
-      how does one affect the tab windows themselves? seems not to work anymore.
 
 	- new option --cd/chdir to set the starting working directory.
         - tabbed extension now starts in the "correct" working directory.
@@ -37,6 +35,8 @@ TODO: rxvt -font 10x20 -xrm "*.tabbed.font: 10x20" -pe tabbed
 	- made tabs moveable (based on a patch by Petr Machata).
         - implement ESC [ 3 K as a more rational alternative to ESC [ 0 K.
         - support relative paths for RXVT_SOCKET in urxvtd.
+        - the tabbed extension now blindly copies over all (rxvt-) resources
+          from the toplevel window to the children.
         - better diagnostic on 0x0 window geometries.
         - update AnyEvent API to version 3.4 and above.
         - document the default value of :0 for DISPLAY.

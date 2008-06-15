@@ -1282,7 +1282,7 @@ to see the actual list:
 sub resource($$;$) {
    my ($self, $name) = (shift, shift);
    unshift @_, $self, $name, ($name =~ s/\s*\+\s*(\d+)$// ? $1 : 0);
-   &urxvt::term::_resource
+   goto &urxvt::term::_resource
 }
 
 =item $value = $term->x_resource ($pattern)
