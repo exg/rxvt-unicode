@@ -532,6 +532,11 @@ Turn on/off hold window after exit support. If enabled, @@RXVT_NAME@@
 will not immediately destroy its window when the program executed within
 it exits. Instead, it will wait till it is being killed or closed by the
 user; resource \fBhold\fR.
+.IP "\fB\-cd\fR \fIpath\fR" 4
+.IX Item "-cd path"
+Sets the working directory for the shell (or the command specified via
+\&\fB\-e\fR). The \fIpath\fR must be an absolute path and it must exist for
+@@RXVT_NAME@@ to start; resource \fBchdir\fR.
 .IP "\fB\-xrm\fR \fIstring\fR" 4
 .IX Item "-xrm string"
 Works like the X Toolkit option of the same name, by adding the \fIstring\fR
@@ -1107,6 +1112,12 @@ Turn on/off hold window after exit support. If enabled, @@RXVT_NAME@@
 will not immediately destroy its window when the program executed within
 it exits. Instead, it will wait till it is being killed or closed by the
 user.
+.IP "\fBchdir\fR: \fIpath\fR" 4
+.IX Item "chdir: path"
+Sets the working directory for the shell (or the command specified via
+\&\fB\-e\fR). The \fIpath\fR must be an absolute path and it must exist for
+@@RXVT_NAME@@ to start. If it isn't specified then the current working
+directory will be used; option \fB\-cd\fR.
 .IP "\fBkeysym.\fR\fIsym\fR: \fIstring\fR" 4
 .IX Item "keysym.sym: string"
 Compile \fIfrills\fR: Associate \fIstring\fR with keysym \fIsym\fR. The

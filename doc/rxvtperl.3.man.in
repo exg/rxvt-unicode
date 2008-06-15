@@ -1049,7 +1049,7 @@ to see the actual list:
 .Sp
 .Vb 10
 \&  answerbackstring backgroundPixmap backspace_key boldFont boldItalicFont
-\&  borderLess color cursorBlink cursorUnderline cutchars delete_key
+\&  borderLess chdir color cursorBlink cursorUnderline cutchars delete_key
 \&  display_name embed ext_bwidth fade font geometry hold iconName
 \&  imFont imLocale inputMethod insecure int_bwidth intensityStyles
 \&  italicFont jumpScroll lineSpace loginShell mapAlert meta8 modifier
@@ -1507,9 +1507,9 @@ the session.
 .ie n .IP "($type,$format,$octets) = $term\fR\->XGetWindowProperty ($window, \f(CW$property)" 4
 .el .IP "($type,$format,$octets) = \f(CW$term\fR\->XGetWindowProperty ($window, \f(CW$property\fR)" 4
 .IX Item "($type,$format,$octets) = $term->XGetWindowProperty ($window, $property)"
-.ie n .IP "$term\fR\->XChangeWindowProperty ($window, \f(CW$property\fR, \f(CW$type\fR, \f(CW$format\fR, \f(CW$octets)" 4
-.el .IP "\f(CW$term\fR\->XChangeWindowProperty ($window, \f(CW$property\fR, \f(CW$type\fR, \f(CW$format\fR, \f(CW$octets\fR)" 4
-.IX Item "$term->XChangeWindowProperty ($window, $property, $type, $format, $octets)"
+.ie n .IP "$term\fR\->XChangeProperty ($window, \f(CW$property\fR, \f(CW$type\fR, \f(CW$format\fR, \f(CW$octets)" 4
+.el .IP "\f(CW$term\fR\->XChangeProperty ($window, \f(CW$property\fR, \f(CW$type\fR, \f(CW$format\fR, \f(CW$octets\fR)" 4
+.IX Item "$term->XChangeProperty ($window, $property, $type, $format, $octets)"
 .ie n .IP "$term\fR\->XDeleteProperty ($window, \f(CW$property)" 4
 .el .IP "\f(CW$term\fR\->XDeleteProperty ($window, \f(CW$property\fR)" 4
 .IX Item "$term->XDeleteProperty ($window, $property)"

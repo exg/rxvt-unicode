@@ -19,6 +19,7 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
+9.05 Sun Jun 15 20:09:20 CEST 2008
 	- new option --cd/chdir to set the starting working directory.
         - tabbed extension now starts in the "correct" working directory.
 	- work around fedora 9 providing isastream but not the relevant
