@@ -1809,7 +1809,7 @@ the session.
 
 =item ($type,$format,$octets) = $term->XGetWindowProperty ($window, $property)
 
-=item $term->XChangeWindowProperty ($window, $property, $type, $format, $octets)
+=item $term->XChangeProperty ($window, $property, $type, $format, $octets)
 
 =item $term->XDeleteProperty ($window, $property)
 

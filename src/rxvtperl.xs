@@ -1705,7 +1705,7 @@ rxvt_term::XGetWindowProperty (Window window, Atom property)
 }
 
 void
-rxvt_term::XChangeWindowProperty (Window window, Atom property, Atom type, int format, SV *data)
+rxvt_term::XChangeProperty (Window window, Atom property, Atom type, int format, SV *data)
 	CODE:
 {
 	STRLEN len;

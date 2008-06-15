@@ -21,23 +21,26 @@ DUMB: support tex fonts
 TODO: rxvt -font 10x20 -xrm "*.tabbed.font: 10x20" -pe tabbed
       how does one affect the tab windows themselves? seems not to work anymore.
 
-TODO: implement initial chdir for tabs by making it a resource?
 	- new option --cd/chdir to set the starting working directory.
         - tabbed extension now starts in the "correct" working directory.
-	- work around fedore 9 prividing isastream but not the relevant
+	- work around fedora 9 providing isastream but not the relevant
           header file for it (report by Tuncer Ayaz).
-	- upgrade to libev-3.31, fixing a bug in the select backend
+	- upgrade libev, fixing a bug in the select backend
           with more than 31 file descriptors on non-linux 64 bit systems.
 	- correctly reset the multibyte state to the initial one
           after EILSEQ (patch by Neil Booth). This fixes the
           issue of rxvt-unicode not properly displaying text after an illegal
           sequence on NetBSD and probably other systems.
-        - implement ESC [ 3 K as a more rational alternative to ESC [ 0 K.
+        - more intelligent property handling with -pe tabbed, works around
+          broken window managers (kwm et al.), saves bandwidth and should
+          help working window managers as well.
 	- made tabs moveable (based on a patch by Petr Machata).
+        - implement ESC [ 3 K as a more rational alternative to ESC [ 0 K.
         - support relative paths for RXVT_SOCKET in urxvtd.
         - better diagnostic on 0x0 window geometries.
-        - update Anyevent API to version 3.4 and above.
+        - update AnyEvent API to version 3.4 and above.
         - document the default value of :0 for DISPLAY.
+        - rename perl method XChangeWindowProperty to XChangeProperty.
 
 9.02 Tue Jan 29 11:58:36 CET 2008
 	- the "exg makes everybody happy" release.

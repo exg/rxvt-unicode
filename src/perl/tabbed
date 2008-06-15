@@ -98,17 +98,13 @@ sub copy_properties {
 
    my $wm_normal_hints = $self->XInternAtom ("WM_NORMAL_HINTS");
 
-   my %our_props = map +($_ => undef), $self->XListProperties ($self->parent);
+   my $current = delete $self->{current_properties};
 
-   delete $our_props{$self->XInternAtom ($_)}
-      for qw(WM_STATE WM_ICON_SIZE
-             _NET_WM_VISIBLE_NAME _NET_WM_VISIBLE_ICON_NAME _NET_WM_ICON_GEOMETRY _NET_FRAME_EXTENTS);
-
+   # pass 1: copy over properties different or nonexisting
    for my $atom ($tab->XListProperties ($tab->parent)) {
       my ($type, $format, $items) = $self->XGetWindowProperty ($tab->parent, $atom);
       
-      delete $our_props{$atom};
-
+      # fix up size hints
       if ($atom == $wm_normal_hints) {
          my (@hints) = unpack "l!*", $items;
       
@@ -117,14 +113,17 @@ sub copy_properties {
          $items = pack "l!*", @hints;
       }
 
-      my ($dtype, $dformat, $ditems) = $self->XGetWindowProperty ($self->parent, $atom);
+      my $cur = delete $current->{$atom};
 
-      if ($dtype != $type or $dformat != $format or $ditems ne $items) {
-         $self->XChangeWindowProperty ($self->parent, $atom, $type, $format, $items);
-      }
+      # update if changed, we assume empty items and zero type and format will not happen
+      $self->XChangeProperty ($self->parent, $atom, $type, $format, $items)
+         if $cur->[0] != $type or $cur->[1] != $format or $cur->[2] ne $items;
+
+      $self->{current_properties}{$atom} = [$type, $format, $items];
    }
 
-   $self->XDeleteProperty ($self->parent, $_) for keys %our_props;
+   # pass 2, delete all extraneous properties
+   $self->XDeleteProperty ($self->parent, $_) for keys %$current;
 }
 
 sub make_current {
