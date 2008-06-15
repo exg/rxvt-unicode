@@ -1459,6 +1459,8 @@ Erase in Line (EL)
 	B<< C<Ps = 0> >>	Clear to Right (default)
 	B<< C<Ps = 1> >>	Clear to Left
 	B<< C<Ps = 2> >>	Clear All
+	B<< C<Ps = 3> >>	Like Ps = 0, but is ignored when wrapped
+	                	(@@RXVT_NAME@@ extension)
 
 =end table
 

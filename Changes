@@ -30,6 +30,7 @@ TODO: implement initial chdir for tabs by making it a resource?
           after EILSEQ (patch by Neil Booth). This fixes the
           issue of rxvt-unicode not properly displaying text after an illegal
           sequence on NetBSD and probably other systems.
+        - implement ESC [ 3 K as a more rational alternative to ESC [ 0 K.
 	- made tabs moveable (based on a patch by Petr Machata).
         - support relative paths for RXVT_SOCKET in urxvtd.
         - better diagnostic on 0x0 window geometries.
