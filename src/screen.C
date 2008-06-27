@@ -85,27 +85,13 @@ static inline void fill_text (text_t *start, text_t value, int len)
     ROW_AND_COL_IN_ROW_AT_OR_BEFORE ((X).row, (X).col, (Y).row, (Y).col)
 
 /*
- * CLEAR_ROWS : clear <num> rows starting from row <row>
  * CLEAR_CHARS: clear <num> chars starting from pixel position <x,y>
- * ERASE_ROWS : set <num> rows starting from row <row> to the foreground colour
  */
-#define CLEAR_ROWS(row, num)                                           \
-    if (mapped)                                                        \
-        XClearArea (dpy, vt, 0,                                        \
-                    Row2Pixel (row), (unsigned int)width,              \
-                    (unsigned int)Height2Pixel (num), False)
-
 #define CLEAR_CHARS(x, y, num)                                         \
     if (mapped)                                                        \
         XClearArea (dpy, vt, x, y,                                     \
                     (unsigned int)Width2Pixel (num),                   \
                     (unsigned int)Height2Pixel (1), False)
-
-#define ERASE_ROWS(row, num)                                           \
-    XFillRectangle (dpy, vt, gc,                                       \
-                    0, Row2Pixel (row),                                \
-                    (unsigned int)width,                               \
-                    (unsigned int)Height2Pixel (num))
 
 /* ------------------------------------------------------------------------- *
  *                        SCREEN `COMMON' ROUTINES                           *
@@ -1338,19 +1324,28 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
 
   min_it (num, nrow - row);
 
+  /*TODO: the xlceararea/xfillrectangle below don't take scroll offste into account, ask mikachu for details */
   if (rstyle & (RS_RVid | RS_Uline))
     ren = (rend_t) ~RS_None;
   else if (GET_BASEBG (rstyle) == Color_bg)
     {
       ren = DEFAULT_RSTYLE;
-      CLEAR_ROWS (row, num);
+
+      if (mapped)
+        XClearArea (dpy, vt, 0,
+                    Row2Pixel (row), (unsigned int)width,
+                    (unsigned int)Height2Pixel (num), False);
     }
   else
     {
       ren = rstyle & (RS_fgMask | RS_bgMask);
+
       gcvalue.foreground = pix_colors[bgcolor_of (rstyle)];
       XChangeGC (dpy, gc, GCForeground, &gcvalue);
-      ERASE_ROWS (row, num);
+      XFillRectangle (dpy, vt, gc,
+                      0, Row2Pixel (row),
+                      (unsigned int)width,
+                      (unsigned int)Height2Pixel (num));
       gcvalue.foreground = pix_colors[Color_fg];
       XChangeGC (dpy, gc, GCForeground, &gcvalue);
     }
