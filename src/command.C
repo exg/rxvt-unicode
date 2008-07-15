@@ -2383,7 +2383,7 @@ rxvt_term::cmd_get8 () THROW ((class out_of_input))
 FILE *
 rxvt_term::popen_printer ()
 {
-  FILE *stream = popen (rs[Rs_print_pipe], "w");
+  FILE *stream = popen (rs[Rs_print_pipe] ? rs[Rs_print_pipe] : PRINTPIPE, "w");
 
   if (stream == NULL)
     rxvt_warn ("can't open printer pipe, not printing.\n");
@@ -2404,17 +2404,16 @@ rxvt_term::pclose_printer (FILE *stream)
 void
 rxvt_term::process_print_pipe ()
 {
-  int done;
-  FILE *fd;
+  FILE *fd = popen_printer ();
 
-  if ((fd = popen_printer ()) == NULL)
+  if (!fd)
     return;
 
   /*
    * Send all input to the printer until either ESC[4i or ESC[?4i
    * is received.
    */
-  for (done = 0; !done;)
+  for (int done = 0; !done; )
     {
       unsigned char buf[8];
       unicode_t ch;

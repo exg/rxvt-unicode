@@ -1923,9 +1923,9 @@ rxvt_term::scr_printscreen (int fullhist) NOTHROW
 {
 #ifdef PRINTPIPE
   int nrows, row_start;
-  FILE *fd;
+  FILE *fd = popen_printer ();
 
-  if ((fd = popen_printer ()) == NULL)
+  if (!fd)
     return;
 
   if (fullhist)

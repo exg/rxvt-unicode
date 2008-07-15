@@ -461,11 +461,6 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   if (!saveLines)
     set_option (Opt_scrollBar, 0);
 
-#ifdef PRINTPIPE
-  if (!rs[Rs_print_pipe])
-    rs[Rs_print_pipe] = PRINTPIPE;
-#endif
-
   if (!rs[Rs_cutchars])
     rs[Rs_cutchars] = CUTCHARS;
 
