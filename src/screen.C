@@ -773,7 +773,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
     {
       c = (unicode_t)*str++; // convert to rxvt-unicodes representation
 
-      if (c < 0x20)
+      if (expect_false (c < 0x20))
         if (c == C0_LF)
           {
             max_it (line->l, screen.cur.col);
@@ -802,9 +802,11 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
             continue;
           }
 
-      if (checksel            /* see if we're writing within selection */
-          && !ROWCOL_IS_BEFORE (screen.cur, selection.beg)
-          && ROWCOL_IS_BEFORE (screen.cur, selection.end))
+      if (expect_false (
+            checksel            /* see if we're writing within selection */
+            && !ROWCOL_IS_BEFORE (screen.cur, selection.beg)
+            && ROWCOL_IS_BEFORE (screen.cur, selection.end)
+         ))
         {
           checksel = 0;
           /*
@@ -815,7 +817,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
           CLEAR_SELECTION ();
         }
 
-      if (screen.flags & Screen_WrapNext)
+      if (expect_false (screen.flags & Screen_WrapNext))
         {
           scr_do_wrap ();
 
@@ -827,7 +829,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
         }
 
       // some utf-8 decoders "decode" surrogate characters: let's fix this.
-      if (IN_RANGE_INC (c, 0xd800, 0xdfff))
+      if (expect_false (IN_RANGE_INC (c, 0xd800, 0xdfff)))
         c = 0xfffd;
 
       // rely on wcwidth to tell us the character width, do wcwidth before
@@ -836,7 +838,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
       // locale.
       int width = WCWIDTH (c);
 
-      if (charsets [screen.charset] == '0') // DEC SPECIAL
+      if (expect_false (charsets [screen.charset] == '0')) // DEC SPECIAL
         {
           // vt100 special graphics and line drawing
           // 5f-7e standard vt100
@@ -859,7 +861,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
             }
         }
 
-      if (screen.flags & Screen_Insert)
+      if (expect_false (screen.flags & Screen_Insert))
         scr_insdel_chars (width, INSERT);
 
       if (width != 0)
@@ -875,9 +877,11 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
 #endif
 
           // nuke the character at this position, if required
-          if (line->t[screen.cur.col] == NOCHAR
-              || (screen.cur.col < ncol - 1
-                  && line->t[screen.cur.col + 1] == NOCHAR))
+          if (expect_false (
+                line->t[screen.cur.col] == NOCHAR
+                || (screen.cur.col < ncol - 1
+                    && line->t[screen.cur.col + 1] == NOCHAR)
+             ))
             {
               int col = screen.cur.col;
 
@@ -898,7 +902,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
           rend_t rend = SET_FONT (rstyle, FONTSET (rstyle)->find_font (c));
 
           // if the character doesn't fit into the remaining columns...
-          if (screen.cur.col > ncol - width && ncol >= width)
+          if (expect_false (screen.cur.col > ncol - width && ncol >= width))
             {
               // ...output spaces
               c = ' ';
@@ -913,7 +917,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
               line->t[screen.cur.col] = c;
               line->r[screen.cur.col] = rend;
 
-              if (screen.cur.col < ncol - 1)
+              if (expect_true (screen.cur.col < ncol - 1))
                 screen.cur.col++;
               else
                 {
@@ -925,10 +929,10 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
 
               c = NOCHAR;
             }
-          while (--width > 0);
+          while (expect_false (--width > 0));
 
           // pad with spaces when overwriting wide character with smaller one
-          if (!width)
+          if (expect_false (!width))
             {
               line->touch ();
 
@@ -939,47 +943,50 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
                 }
             }
         }
+#if ENABLE_COMBINING
       else // width == 0
         {
-#if ENABLE_COMBINING
-          // handle combining characters
-          // we just tag the accent on the previous on-screen character.
-          // this is arguably not correct, but also arguably not wrong.
-          // we don't handle double-width characters nicely yet.
-          line_t *linep;
-          text_t *tp;
-          rend_t *rp;
-
-          if (screen.cur.col > 0)
+          if (c != 0xfeff) // ignore BOM
             {
-              linep = line;
-              tp = line->t + screen.cur.col - 1;
-              rp = line->r + screen.cur.col - 1;
+              // handle combining characters
+              // we just tag the accent on the previous on-screen character.
+              // this is arguably not correct, but also arguably not wrong.
+              // we don't handle double-width characters nicely yet.
+              line_t *linep;
+              text_t *tp;
+              rend_t *rp;
+
+              if (screen.cur.col > 0)
+                {
+                  linep = line;
+                  tp = line->t + screen.cur.col - 1;
+                  rp = line->r + screen.cur.col - 1;
+                }
+              else if (screen.cur.row > 0
+                       && ROW(screen.cur.row - 1).is_longer ())
+                {
+                  linep = &ROW(screen.cur.row - 1);
+                  tp = line->t + ncol - 1;
+                  rp = line->r + ncol - 1;
+                }
+              else
+                continue;
+
+              linep->touch ();
+
+              while (*tp == NOCHAR && tp > linep->t)
+                tp--, rp--;
+
+              // first try to find a precomposed character
+              unicode_t n = rxvt_compose (*tp, c);
+              if (n == NOCHAR)
+                n = rxvt_composite.compose (*tp, c);
+
+              *tp = n;
+              *rp = SET_FONT (*rp, FONTSET (*rp)->find_font (*tp));
             }
-          else if (screen.cur.row > 0
-                   && ROW(screen.cur.row - 1).is_longer ())
-            {
-              linep = &ROW(screen.cur.row - 1);
-              tp = line->t + ncol - 1;
-              rp = line->r + ncol - 1;
-            }
-          else
-            continue;
-
-          linep->touch ();
-
-          while (*tp == NOCHAR && tp > linep->t)
-            tp--, rp--;
-
-          // first try to find a precomposed character
-          unicode_t n = rxvt_compose (*tp, c);
-          if (n == NOCHAR)
-            n = rxvt_composite.compose (*tp, c);
-
-          *tp = n;
-          *rp = SET_FONT (*rp, FONTSET (*rp)->find_font (*tp));
-#endif
         }
+#endif
     }
 
   max_it (line->l, screen.cur.col);

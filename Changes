@@ -21,6 +21,9 @@ DUMB: support tex fonts
 
 TODO:   /*TODO: the xlceararea/xfillrectangle below don't take scroll offste into account, ask mikachu for details */
 
+	- ignore byte-order marks and do not treat them like combining characters.
+        - do some µ-optimisations to the character fast path.
+
 9.05 Sun Jun 15 20:09:20 CEST 2008
 	- new option --cd/chdir to set the starting working directory.
         - tabbed extension now starts in the "correct" working directory.

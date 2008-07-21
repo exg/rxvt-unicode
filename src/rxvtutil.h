@@ -15,9 +15,17 @@ using namespace std;
 
 #if __GNUC__ >= 4
 # define rxvt_attribute(x) __attribute__(x)
+# define expect(expr,value)         __builtin_expect ((expr),(value))
 #else
 # define rxvt_attribute(x)
+# define expect(expr,value)         (expr)
 #endif
+
+// put into ifs if you are very sure that the expression
+// is mostly true or mosty false. note that these return
+// booleans, not the expression.
+#define expect_false(expr) expect ((expr) != 0, 0)
+#define expect_true(expr)  expect ((expr) != 0, 1)
 
 #define NORETURN rxvt_attribute ((noreturn))
 #define UNUSED   rxvt_attribute ((unused))

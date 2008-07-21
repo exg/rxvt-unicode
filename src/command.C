@@ -2181,7 +2181,7 @@ rxvt_term::cmd_parse ()
 
   for (;;)
     {
-      if (ch == NOCHAR)
+      if (expect_false (ch == NOCHAR))
         {
           seq_begin = cmdbuf_ptr;
           ch = next_char ();
@@ -2190,9 +2190,9 @@ rxvt_term::cmd_parse ()
             break;
         }
 
-      if (!IS_CONTROL (ch) || ch == C0_LF || ch == C0_CR || ch == C0_HT)
+      if (expect_true (!IS_CONTROL (ch) || ch == C0_LF || ch == C0_CR || ch == C0_HT))
         {
-          if (!seen_input)
+          if (expect_false (!seen_input))
             {
               seen_input = 1;
               // many badly-written programs (e.g. jed) contain a race condition:
@@ -2215,12 +2215,12 @@ rxvt_term::cmd_parse ()
 
           for (;;)
             {
-              if (ch == NOCHAR || (IS_CONTROL (ch) && ch != C0_LF && ch != C0_CR && ch != C0_HT))
+              if (expect_false (ch == NOCHAR || (IS_CONTROL (ch) && ch != C0_LF && ch != C0_CR && ch != C0_HT)))
                 break;
 
               *str++ = ch;
 
-              if (ch == C0_LF || str >= eol)
+              if (expect_false (ch == C0_LF || str >= eol))
                 {
                   if (ch == C0_LF)
                     nlines++;
@@ -2312,7 +2312,7 @@ rxvt_term::next_char () NOTHROW
   while (cmdbuf_ptr < cmdbuf_endp)
     {
       // assume 7-bit to be ascii ALWAYS
-      if ((unsigned char)*cmdbuf_ptr <= 0x7f && *cmdbuf_ptr != 0x1b)
+      if (expect_true ((unsigned char)*cmdbuf_ptr <= 0x7f && *cmdbuf_ptr != 0x1b))
         return *cmdbuf_ptr++;
 
       wchar_t wc;
