@@ -2212,7 +2212,7 @@ rxvt_term::scr_refresh () NOTHROW
           // redraw one or more characters
 
           // seek to the beginning of wide characters
-          while (stp[col] == NOCHAR && col > 0)
+          while (expect_false (stp[col] == NOCHAR && col > 0))
             --col;
 
           rend_t rend = srp[col];     /* screen rendition (target rendtion) */
@@ -2259,7 +2259,7 @@ rxvt_term::scr_refresh () NOTHROW
           count -= i; /* dump any matching trailing chars */
 
           // sometimes we optimize away the trailing NOCHAR's, add them back
-          while (i && text[count] == NOCHAR)
+          while (expect_false (i && text[count] == NOCHAR))
             count++, i--;
 
           /*
@@ -2269,7 +2269,7 @@ rxvt_term::scr_refresh () NOTHROW
           int back = bgcolor_of (rend); // desired background
 
           // only do special processing if any attributes are set, which is unlikely
-          if (rend & (RS_Bold | RS_Italic | RS_Uline | RS_RVid | RS_Blink | RS_Careful))
+          if (expect_false (rend & (RS_Bold | RS_Italic | RS_Uline | RS_RVid | RS_Blink | RS_Careful)))
             {
               bool invert = rend & RS_RVid;
 
@@ -2362,7 +2362,7 @@ rxvt_term::scr_refresh () NOTHROW
            */
           rxvt_font *font = (*fontset[GET_STYLE (rend)])[GET_FONT (rend)];
 
-          if (have_bg && back == Color_bg)
+          if (expect_true (have_bg && back == Color_bg))
             {
               // this is very ugly, maybe push it into ->draw?
 
@@ -2379,7 +2379,7 @@ rxvt_term::scr_refresh () NOTHROW
           else
             font->draw (*drawable, xpixel, ypixel, text, count, fore, back);
 
-          if (rend & RS_Uline && font->descent > 1 && fore != back)
+          if (expect_false (rend & RS_Uline && font->descent > 1 && fore != back))
             {
 #if ENABLE_FRILLS
               if (ISSET_PIXCOLOR (Color_underline))
