@@ -1099,7 +1099,9 @@ rxvt_term::ModLevel3Mask ()
             case 1: RETVAL = THIS->ModMetaMask;    break;
             case 2: RETVAL = THIS->ModNumLockMask; break;
             case 3: RETVAL = THIS->current_screen; break;
+#ifdef CURSOR_BLINK
             case 4: RETVAL = THIS->hidden_cursor;  break;
+#endif
           }
         OUTPUT:
         RETVAL
