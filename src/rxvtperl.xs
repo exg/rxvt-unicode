@@ -312,6 +312,7 @@ rxvt_perl_interp::~rxvt_perl_interp ()
     {
       perl_destruct (perl);
       perl_free (perl);
+      PERL_SYS_TERM ();
     }
 }
 
@@ -325,7 +326,7 @@ rxvt_perl_interp::init (rxvt_term *term)
       perl_environ = rxvt_environ;
       swap (perl_environ, environ);
 
-      char *argv[] = {
+      char *args[] = {
         "",
         "-e"
         "BEGIN {"
@@ -335,11 +336,14 @@ rxvt_perl_interp::init (rxvt_term *term)
         ""
         "use urxvt;"
       };
+      int argc = sizeof (args) / sizeof (args[0]);
+      char **argv = args;
 
+      PERL_SYS_INIT3 (&argc, &argv, &environ);
       perl = perl_alloc ();
       perl_construct (perl);
 
-      if (perl_parse (perl, xs_init, 2, argv, (char **)NULL)
+      if (perl_parse (perl, xs_init, argc, argv, (char **)NULL)
           || perl_run (perl))
         {
           rxvt_warn ("unable to initialize perl-interpreter, continuing without.\n");

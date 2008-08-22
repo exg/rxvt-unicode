@@ -21,6 +21,7 @@ DUMB: support tex fonts
 
 TODO:   /*TODO: the xlceararea/xfillrectangle below don't take scroll offste into account, ask mikachu for details */
 
+	- perl 5.10 needs PELR_SYS_INIT3 on hppa.
 	- ignore byte-order marks and do not treat them like combining characters.
         - fix build issue when CURSOR_BLINK is not defined (Emanuele Giaquinta).
         - do some µ-optimisations to the character fast path.
