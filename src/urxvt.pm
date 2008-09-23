@@ -110,7 +110,7 @@ will be called when the toggle changes, with the new boolean value as
 first argument.
 
 The following will add an entry C<myoption> that changes
-C<$self->{myoption}>:
+C<< $self->{myoption} >>:
 
    push @{ $self->{term}{option_popup_hook} }, sub {
       ("my option" => $myoption, sub { $self->{myoption} = $_[0] })
