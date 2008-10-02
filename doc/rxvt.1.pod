@@ -342,7 +342,8 @@ B<externalBorder>.
 
 Compile I<frills>: Set MWM hints to request a borderless window, i.e.
 if honoured by the WM, the rxvt-unicode window will not have window
-decorations; resource B<borderLess>.
+decorations; resource B<borderLess>. If the window manager does not
+support MWM hints (e.g. kwin), enables override-redirect mode.
 
 =item B<-override-redirect>
 
