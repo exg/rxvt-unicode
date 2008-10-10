@@ -22,6 +22,8 @@ DUMB: support tex fonts
 TODO:   /*TODO: the xlceararea/xfillrectangle below don't take scroll offste into account, ask mikachu for details */
 
 TODO: artificially enlargen wide characters at end to correctly cut&paste.
+	- remove bogus "setuid/setgid security issues" from rxvt.1.pod, they
+          no longer apply.
 	- perl 5.10 needs PERL_SYS_INIT3 on hppa.
 	- ignore byte-order marks and do not treat them like combining characters.
         - fix build issue when CURSOR_BLINK is not defined (Emanuele Giaquinta).

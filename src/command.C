@@ -3274,7 +3274,6 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 
   if (HOOK_INVOKE ((this, HOOK_OSC_SEQ, DT_INT, op, DT_STR, str, DT_END)))
     return;
-  fprintf (stderr, "op %d<%s>\n", op, str);//D
 
   switch (op)
     {

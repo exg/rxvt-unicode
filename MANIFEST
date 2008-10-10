@@ -164,6 +164,7 @@ src/perl/example-refresh-hooks
 src/perl/block-graphics-to-ascii
 src/perl/digital-clock
 src/perl/macosx-clipboard
+src/perl/overlay-osc
 
 libev/ev.h
 libev/ev++.h
