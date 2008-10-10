@@ -1388,11 +1388,13 @@ The methods currently supported on C<urxvt::overlay> objects are:
 
 =over 4
 
-=item $overlay->set ($x, $y, $text, $rend)
+=item $overlay->set ($x, $y, $text[, $rend])
 
 Similar to C<< $term->ROW_t >> and C<< $term->ROW_r >> in that it puts
 text in rxvt-unicode's special encoding and an array of rendition values
 at a specific position inside the overlay.
+
+If C<$rend> is missing, then the rendition will not be changed.
 
 =item $overlay->hide
 

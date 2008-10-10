@@ -3,15 +3,19 @@
 # allows programs to open popups
 # printf "\033]777;overlay;action;args\007"
 #
-# action "simple;<id>;<x>;<y>;<h|t>;<text>"
+# action "simple;<id>;<timeout>;<x>;<y>;<h|t>;<text>"
 #   printf "\033]777;overlay;simple;ov1;0;0;t;test\007"
 #
-## action "complex;<id>;<x>;<y>;<w>;<h>;<rstyle>;<border>;<h|t>;<text>"
 
 # action "timeout;<id>;<seconds>"
 #   printf "\033]777;overlay;timeout;ov1;6\007"
 
 # action "destroy;<id>"
+#   printf "\033]777;overlay;destroy;ov1\007"
+
+# TODO:
+## action "complex;<id>;<timeout>;<x>;<y>;<width>;<height>;<rstyle>;<border>"
+## action "set;<id>;<x>;<y>;<h|t>;<hextext>;<rendition...>"
 
 sub on_osc_seq_perl {
    my ($self, $osc, $resp) = @_;
@@ -32,7 +36,7 @@ sub on_osc_seq_perl {
       }
 
    } elsif ($1 eq "simple") {
-      my ($id, $x, $y, $t, $txt) = split /;/, $osc, 5;
+      my ($id, $to, $x, $y, $t, $txt) = split /;/, $osc, 6;
       if ($t eq "h") {
          $txt = pack "H*", $txt;
          utf8::decode $txt;
@@ -41,7 +45,7 @@ sub on_osc_seq_perl {
          ov => $self->overlay_simple ($x, $y, $txt),
          to => urxvt::timer
             ->new
-            ->start (urxvt::NOW + 60)
+            ->start (urxvt::NOW + $to)
             ->cb(sub {
                delete $self->{ov}{$id};
             }),
