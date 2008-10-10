@@ -543,28 +543,41 @@ It is called before lines are scrolled out (so rows 0 .. min ($lines - 1,
 $nrow - 1) represent the lines to be scrolled out). C<$saved> is the total
 number of lines that will be in the scrollback buffer.
 
-=item on_osc_seq $term, $op, $args
+=item on_osc_seq $term, $op, $args, $resp
 
 Called on every OSC sequence and can be used to suppress it or modify its
-behaviour.  The default should be to return an empty list. A true value
+behaviour. The default should be to return an empty list. A true value
 suppresses execution of the request completely. Make sure you don't get
-confused by recursive invocations when you output an osc sequence within
+confused by recursive invocations when you output an OSC sequence within
 this callback.
 
 C<on_osc_seq_perl> should be used for new behaviour.
 
-=item on_osc_seq_perl $term, $string
+=item on_osc_seq_perl $term, $args, $resp
 
 Called whenever the B<ESC ] 777 ; string ST> command sequence (OSC =
 operating system command) is processed. Cursor position and other state
 information is up-to-date when this happens. For interoperability, the
-string should start with the extension name and a colon, to distinguish
-it from commands for other extensions, and this might be enforced in the
-future.
+string should start with the extension name (sans -osc) and a semicolon,
+to distinguish it from commands for other extensions, and this might be
+enforced in the future.
+
+For example, C<overlay-osc> uses this:
+
+   sub on_osc_seq_perl {
+      my ($self, $osc, $resp) = @_;
+
+      return unless $osc =~ s/^overlay;//;
+
+      ... process remaining $osc string
+   }
 
 Be careful not ever to trust (in a security sense) the data you receive,
 as its source can not easily be controlled (e-mail content, messages from
 other users on the same system etc.).
+
+For responses, C<$resp> contains the end-of-args separator used by the
+sender.
 
 =item on_add_lines $term, $string
 
@@ -595,8 +608,8 @@ you cannot just toggle rendition bits, but only set them.
 
 =item on_refresh_begin $term
 
-Called just before the screen gets redrawn. Can be used for overlay
-or similar effects by modify terminal contents in refresh_begin, and
+Called just before the screen gets redrawn. Can be used for overlay or
+similar effects by modifying the terminal contents in refresh_begin, and
 restoring them in refresh_end. The built-in overlay and selection display
 code is run after this hook, and takes precedence.
 

@@ -421,7 +421,7 @@ enum {
   URxvt_view_up          = 720,
   URxvt_view_down        = 721,
 
-  URxvt_perl             = 777,
+  URxvt_perl             = 777,     // for use by perl extensions, starts with "extension-name;"
 };
 
 /* Words starting with `Color_' are colours.  Others are counts */
