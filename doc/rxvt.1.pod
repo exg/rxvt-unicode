@@ -854,6 +854,8 @@ de-iconify (map) on receipt of a bell character [default].
 B<True>: set the urgency hint for the wm on receipt of a bell character.
 B<False>: do not set the urgency hint [default].
 
+@@RXVT_NAME@@ resets the urgency hint on every focus change.
+
 =item B<visualBell:> I<boolean>
 
 B<True>: use visual bell on receipt of a bell character; option B<-vb>.

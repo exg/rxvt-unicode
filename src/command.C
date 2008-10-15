@@ -1685,14 +1685,26 @@ rxvt_term::x_cb (XEvent &ev)
 }
 
 void
+rxvt_term::set_urgency (bool enable)
+{
+  if (enable == urgency_hint)
+    return;
+
+  if (XWMHints *h = XGetWMHints (dpy, parent[0]))
+    {
+      h->flags = h->flags & ~XUrgencyHint | (enable ? XUrgencyHint : 0);
+      XSetWMHints (dpy, parent[0], h);
+      urgency_hint = enable;
+    }
+}
+
+void
 rxvt_term::focus_in ()
 {
   if (!focus)
     {
       focus = 1;
       want_refresh = 1;
-
-      HOOK_INVOKE ((this, HOOK_FOCUS_IN, DT_END));
 
 #if USE_XIM
       if (Input_Context != NULL)
@@ -1714,14 +1726,10 @@ rxvt_term::focus_in ()
 #endif
 #if ENABLE_FRILLS
       if (option (Opt_urgentOnBell))
-        {
-          if (XWMHints *h = XGetWMHints(dpy, parent[0]))
-            {
-              h->flags &= ~XUrgencyHint;
-              XSetWMHints (dpy, parent[0], h);
-            }
-        }
+        set_urgency (0);
 #endif
+
+      HOOK_INVOKE ((this, HOOK_FOCUS_IN, DT_END));
     }
 }
 
@@ -1733,8 +1741,10 @@ rxvt_term::focus_out ()
       focus = 0;
       want_refresh = 1;
 
-      HOOK_INVOKE ((this, HOOK_FOCUS_OUT, DT_END));
-
+#if ENABLE_FRILLS
+      if (option (Opt_urgentOnBell))
+        set_urgency (0);
+#endif
 #if ENABLE_FRILLS || ISO_14755
       if (iso14755buf)
         {
@@ -1761,6 +1771,8 @@ rxvt_term::focus_out ()
           scr_recolour ();
         }
 #endif
+
+      HOOK_INVOKE ((this, HOOK_FOCUS_OUT, DT_END));
     }
 }
 

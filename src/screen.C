@@ -1901,13 +1901,7 @@ rxvt_term::scr_bell () NOTHROW
 
 # if ENABLE_FRILLS
   if (option (Opt_urgentOnBell))
-    {
-      if (XWMHints *h = XGetWMHints(dpy, parent[0]))
-        {
-          h->flags |= XUrgencyHint;
-          XSetWMHints (dpy, parent[0], h);
-        }
-    }
+    set_urgency (1);
 # endif
 
   if (option (Opt_visualBell))

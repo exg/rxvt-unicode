@@ -23,9 +23,10 @@ TODO:   /*TODO: the xlceararea/xfillrectangle below don't take scroll offste int
 
 TODO: artificially enlargen wide characters at end to correctly cut&paste.
 TODO: cursor over overlays, when focus change?
-TODO: focus leave == reset urgent hint?
 	- remove bogus "setuid/setgid security issues" from rxvt.1.pod, they
           no longer apply.
+        - the urgency hint is now cleared on both focus in and focus out.
+        - cache urgency hint locally to avoid server rtt on every focus change.
 	- perl 5.10 needs PERL_SYS_INIT3 on hppa.
 	- ignore byte-order marks and do not treat them like combining characters.
         - fix build issue when CURSOR_BLINK is not defined (Emanuele Giaquinta).
