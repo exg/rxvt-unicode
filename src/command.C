@@ -1129,8 +1129,11 @@ static struct event_handler
     // that giving a process calling sched_yield () less cpu time than
     // ones with high nice levels is a useful thing to do. It surely is is
     // allowed by the sus... as is returning ENOSYS.
+    // since the linux guys additionally thought that breaking the only
+    // known workaroudn against their unusable sched_yield hack is cool,
+    // we just nanosleep a bit and hope for the best.
 
-    struct timespec ts = { 0, 0 };
+    struct timespec ts = { 0, 1000 };
     nanosleep (&ts, 0);
 
     w.stop ();
