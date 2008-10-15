@@ -22,6 +22,8 @@ DUMB: support tex fonts
 TODO:   /*TODO: the xlceararea/xfillrectangle below don't take scroll offste into account, ask mikachu for details */
 
 TODO: artificially enlargen wide characters at end to correctly cut&paste.
+TODO: cursor over overlays, when focus change?
+TODO: focus leave == reset urgent hint?
 	- remove bogus "setuid/setgid security issues" from rxvt.1.pod, they
           no longer apply.
 	- perl 5.10 needs PERL_SYS_INIT3 on hppa.
