@@ -1193,9 +1193,8 @@ rxvt_term::pty_cb (ev::io &w, int revents)
 
   if (revents & ev::READ)
     // loop, but don't allow a single term to monopolize us
-    while (pty_fill ())
-      if (cmd_parse ())
-        break;
+    for (int i = CBUFCNT; i-- && pty_fill (); )
+      cmd_parse ();
 
   if (revents & ev::WRITE)
     pty_write ();
@@ -2187,10 +2186,9 @@ rxvt_term::button_release (XButtonEvent &ev)
 
 /*}}} */
 
-bool
+void
 rxvt_term::cmd_parse ()
 {
-  bool flag = false;
   wchar_t ch = NOCHAR;
   char *seq_begin; // remember start of esc-sequence here
 
@@ -2294,11 +2292,9 @@ rxvt_term::cmd_parse ()
            */
           if (refreshnow)
             {
-              flag = true;
               scr_refresh ();
               want_refresh = 1;
             }
-
         }
       else
         {
@@ -2316,8 +2312,6 @@ rxvt_term::cmd_parse ()
           ch = NOCHAR;
         }
     }
-
-  return flag;
 }
 
 // read the next character

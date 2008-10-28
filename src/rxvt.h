@@ -552,6 +552,7 @@ enum {
 #define IMBUFSIZ               128     // input modifier buffer sizes
 #define KBUFSZ                 512     // size of keyboard mapping buffer
 #define CBUFSIZ                2048    // size of command buffer
+#define CBUFCNT                8       // never call pty_fill/cmd_parse more than this often in a row
 #define UBUFSIZ                2048    // character buffer
 
 #if ENABLE_FRILLS
@@ -1194,7 +1195,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   uint32_t next_octet () NOTHROW;
   uint32_t cmd_get8 () THROW ((class out_of_input));
 
-  bool cmd_parse ();
+  void cmd_parse ();
   void mouse_report (XButtonEvent &ev);
   void button_press (XButtonEvent &ev);
   void button_release (XButtonEvent &ev);

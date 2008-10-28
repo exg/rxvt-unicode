@@ -21,6 +21,8 @@ DUMB: support tex fonts
 
 TODO:   /*TODO: the xlceararea/xfillrectangle below don't take scroll offste into account, ask mikachu for details */
 
+TODO: investgate wm resize race: while sleep 0.001; do printf "\033[?30l";sleep 0.001;printf "\033[?30h";done
+TODO: investigate miroslav patches
 TODO: artificially enlargen wide characters at end to correctly cut&paste.
 TODO: cursor over overlays, when focus change?
 	- remove bogus "setuid/setgid security issues" from rxvt.1.pod, they
@@ -31,6 +33,8 @@ TODO: cursor over overlays, when focus change?
 	- ignore byte-order marks and do not treat them like combining characters.
         - fix build issue when CURSOR_BLINK is not defined (Emanuele Giaquinta).
         - do some µ-optimisations to the character fast path.
+        - use a less cunning, but more robust algorithm to avoid one terminal
+          monopolising the whole process by outputting a lot of text.
         - try to work around linux first breaking sched_yield and now breaking
           the only known workaround.
 
