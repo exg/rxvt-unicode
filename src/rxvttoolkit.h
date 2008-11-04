@@ -61,6 +61,7 @@ enum {
   XA_NET_WM_NAME,
   XA_NET_WM_ICON_NAME,
   XA_NET_WM_PING,
+  XA_NET_WM_ICON,
 #endif
 #if USE_XIM
   XA_WM_LOCALE_NAME,

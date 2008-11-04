@@ -37,6 +37,7 @@ TODO: cursor over overlays, when focus change?
           monopolising the whole process by outputting a lot of text.
         - try to work around linux first breaking sched_yield and now breaking
           the only known workaround.
+        - new option -icon, resource iconFile (based on patch by Frank Schmitt).
 
 9.05 Sun Jun 15 20:09:20 CEST 2008
 	- new option --cd/chdir to set the starting working directory.

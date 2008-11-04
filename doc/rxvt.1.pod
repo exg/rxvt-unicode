@@ -184,6 +184,12 @@ radii to 1 and another to a large number creates interesting effects
 on some backgrounds. Maximum radius value is 128. Compile I<afterimage>;
 resource I<blurRadius>.
 
+=item B<-icon> I<file>
+
+Compile I<afterimage>: Use the specified image as application icon. This
+is used by many window managers, taskbars and pagers to represent the
+appliation window; resource I<iconFile>.
+
 =item B<-bg> I<colour>
 
 Window background colour; resource B<background>.
@@ -715,8 +721,12 @@ Specify background blending type; option B<-blt>.
 
 =item B<blurRadius:> I<number>
 
-Apply Gaussian Blurr with the specified radius to the transparent
+Apply gaussian blur with the specified radius to the transparent
 background image; option B<-blr>.
+
+=item B<iconFile:> I<file>
+
+Set the application icon pixmap; option B<-icon>.
 
 =item B<scrollColor:> I<colour>
 
