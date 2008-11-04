@@ -54,7 +54,6 @@ TODO: tput reset, reset more stuff/mouse reporting
           as mouse reporting.
         - redundantly clear mouse reporting and a few other states in
           tput init/tput reset, for older urxvts.
-        - no longer clear the screen in tput init.
 
 9.05 Sun Jun 15 20:09:20 CEST 2008
 	- new option --cd/chdir to set the starting working directory.
