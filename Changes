@@ -22,7 +22,6 @@ DUMB: support tex fonts
 TODO:   /*TODO: the xlceararea/xfillrectangle below don't take scroll offste into account, ask mikachu for details */
 
 TODO: cursor over overlays, when focus change?
-TODO: tput reset, reset more stuff/mouse reporting
 	- the aterm code now frees the as visual and image manager objects
           when a window was closed.
         - do not (wrongly) adjust the virtual line length inside

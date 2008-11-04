@@ -160,7 +160,9 @@ rxvt_term::scr_kill_char (line_t &l, int col) const NOTHROW
 void
 rxvt_term::scr_reset ()
 {
+  scr_soft_reset ();
   view_start = 0;
+
   num_scr = 0;
 
   if (ncol == 0)
@@ -436,7 +438,6 @@ rxvt_term::scr_poweron ()
 {
   scr_release ();
   prev_nrow = prev_ncol = 0;
-  scr_soft_reset ();
   scr_reset ();
 
   scr_clear (true);
