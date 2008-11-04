@@ -1499,7 +1499,6 @@ rxvt_term::scr_insdel_chars (int count, int insdel) NOTHROW
         selection_check (1);
         screen.cur.col -= count;
 
-        line->l = max (line->l - count, 0);
         scr_blank_line (*line, screen.cur.col, count, rstyle);
         break;
 

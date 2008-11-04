@@ -27,6 +27,8 @@ TODO: artificially enlargen wide characters at end to correctly cut&paste.
 TODO: cursor over overlays, when focus change?
 	- the aterm code now frees the as visual and image manager objects
           when a window was closed.
+        - do not (wrongly) adjust the virtual line length inside
+          scr_insdel_chars/ERASE (Miroslav Lichvar).
 	- remove bogus "setuid/setgid security issues" from rxvt.1.pod, they
           no longer apply.
         - the urgency hint is now cleared on both focus in and focus out.
