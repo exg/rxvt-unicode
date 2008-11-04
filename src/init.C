@@ -394,16 +394,16 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     select_visual (strtol (rs[Rs_depth], 0, 0));
 #endif
 
-#ifdef HAVE_AFTERIMAGE
-  set_application_name ((char*)rs[Rs_name]);
-  set_output_threshold (OUTPUT_LEVEL_WARNING);
-  asv = create_asvisual_for_id (dpy, display->screen, depth, XVisualIDFromVisual (visual), cmap, NULL);
-#endif
   free (r_argv);
 
   for (int i = NUM_RESOURCES; i--; )
     if (rs [i] == resval_undef)
       rs [i] = 0;
+
+#ifdef HAVE_AFTERIMAGE
+  set_application_name ((char *)rs[Rs_name]);
+  set_output_threshold (OUTPUT_LEVEL_WARNING);
+#endif
 
 #if ENABLE_PERL
   if (!rs[Rs_perl_ext_1])
@@ -425,6 +425,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     {
       if (!rs[Rs_title])
         rs[Rs_title] = rxvt_basename (cmd_argv[0]);
+
       if (!rs[Rs_iconName])
         rs[Rs_iconName] = rs[Rs_title];
     }
@@ -432,6 +433,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     {
       if (!rs[Rs_title])
         rs[Rs_title] = rs[Rs_name];
+
       if (!rs[Rs_iconName])
         rs[Rs_iconName] = rs[Rs_name];
     }
@@ -1143,10 +1145,13 @@ rxvt_term::create_windows (int argc, const char *const *argv)
    * set up icon hint
    * rs [Rs_iconfile] is path to icon, asv has been created in init_resources
    */
-  if (rs [Rs_iconfile] && asv)
+
+  if (rs [Rs_iconfile])
     {
+      init_asv ();
+
       ASImage *im = file2ASImage (rs [Rs_iconfile], 0xFFFFFFFF, SCREEN_GAMMA, 0, NULL);
-      if (im)
+      if (asv && im)
         {
           int w = im->width;
           int h = im->height;
@@ -1167,7 +1172,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
               destroy_asimage (&result);
               XChangeProperty (dpy, top, xa[XA_NET_WM_ICON], XA_CARDINAL, 32,
-                              PropModeReplace, (const unsigned char*) buffer, 2 + w * h);
+                               PropModeReplace, (const unsigned char*) buffer, 2 + w * h);
               free (buffer);
             }
           else

@@ -1029,6 +1029,12 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
 #ifdef HAVE_AFTERIMAGE
   ASVisual       *asv;
   ASImageManager *asimman;
+
+  void init_asv ()
+  {
+    if (!asv)
+      asv = create_asvisual_for_id (dpy, display->screen, depth, XVisualIDFromVisual (visual), cmap, NULL);
+  }
 #endif
 
 #if ENABLE_OVERLAY

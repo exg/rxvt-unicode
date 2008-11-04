@@ -3,7 +3,7 @@
  *----------------------------------------------------------------------*
  *
  * All portions of code are copyright by their respective author/s.
- * Copyright (c) 2005-2006 Marc Lehmann <pcg@goof.com>
+ * Copyright (c) 2005-2008 Marc Lehmann <pcg@goof.com>
  * Copyright (c) 2007      Sasha Vasko <sasha@aftercode.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -451,10 +451,14 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
   if (target == NULL)
     return false;
 
-  int target_width = (int)target->szHint.width;
-  int target_height = (int)target->szHint.height;
-  int new_pmap_width = target_width, new_pmap_height = target_height;
-  ASImage *result = NULL;
+  target->init_asv ();
+
+  ASImage *result = 0;
+
+  int target_width    = target->szHint.width;
+  int target_height   = target->szHint.height;
+  int new_pmap_width  = target_width;
+  int new_pmap_height = target_height;
 
   int x = 0;
   int y = 0;
@@ -665,19 +669,15 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
 bool
 bgPixmap_t::set_file (const char *file)
 {
-  char *f;
-
   assert (file);
 
   if (*file)
     {
 #  ifdef HAVE_AFTERIMAGE
-      if (target->asimman == NULL)
+      if (!target->asimman)
         target->asimman = create_generic_imageman (target->rs[Rs_path]);
 
-      if ((f = strchr (file, ';')) == NULL)
-        original_asim = get_asimage (target->asimman, file, 0xFFFFFFFF, 100);
-      else
+      if (char *f = strchr (file, ';'))
         {
           size_t len = f - file;
           f = (char *)malloc (len + 1);
@@ -686,6 +686,8 @@ bgPixmap_t::set_file (const char *file)
           original_asim = get_asimage (target->asimman, f, 0xFFFFFFFF, 100);
           free (f);
         }
+      else
+        original_asim = get_asimage (target->asimman, file, 0xFFFFFFFF, 100);
 
       return original_asim;
 #  endif
@@ -1119,9 +1121,11 @@ bgPixmap_t::render ()
   if (target == NULL)
     return false;
 
+  target->init_asv ();
+
   TIMING_TEST_START (tp);
 
-  invalidate();
+  invalidate ();
 # ifdef ENABLE_TRANSPARENCY
   if (flags & isTransparent)
     {
@@ -1143,7 +1147,7 @@ bgPixmap_t::render ()
       ASImage *background = NULL;
       ARGB32 as_tint = TINT_LEAVE_SAME;
       if (background_flags)
-          background = pixmap2ximage (target->asv, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, 100);
+        background = pixmap2ximage (target->asv, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, 100);
 
 #  ifdef ENABLE_TRANSPARENCY
       if (!(background_flags & transpPmapTinted) && (flags & tintNeeded))
@@ -1160,6 +1164,7 @@ bgPixmap_t::render ()
 
           as_tint = shading2tint32 (&as_shade);
         }
+
       if (!(background_flags & transpPmapBlured) && (flags & blurNeeded) && background != NULL)
         {
           ASImage* tmp = blur_asimage_gauss (target->asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
@@ -1176,12 +1181,10 @@ bgPixmap_t::render ()
       if (render_asim (background, as_tint))
         flags = flags & ~isInvalid;
       if (background)
-          destroy_asimage (&background);
+        destroy_asimage (&background);
     }
   else if (background_flags && pmap_depth != target->depth)
-    {
-      result = XGetImage (target->dpy, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, ZPixmap);
-    }
+    result = XGetImage (target->dpy, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, ZPixmap);
 
 # elif !XFT /* our own client-side tinting */
 
@@ -1191,6 +1194,7 @@ bgPixmap_t::render ()
   if (background_flags && (flags & isInvalid))
     {
       result = XGetImage (target->dpy, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, ZPixmap);
+
       if (result != NULL && !(background_flags & transpPmapTinted) && (flags & tintNeeded))
         {
           rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
@@ -1275,6 +1279,7 @@ bgPixmap_t::set_target (rxvt_term *new_target)
 # endif
         return true;
       }
+
   return false;
 }
 

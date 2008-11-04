@@ -19,35 +19,41 @@ struct bgPixmap_t
   void destroy ();
 
   enum {
-    geometrySet     = (1UL<<0),
-    propScale       = (1UL<<1),
-    geometryFlags   = (geometrySet|propScale),
+    geometrySet     = 1 <<  0,
+    propScale       = 1 <<  1,
+    geometryFlags   = geometrySet | propScale,
 
-    tintSet         = (1UL<<8),
-    tintNeeded      = (1UL<<9),
-    tintWholesome   = (1UL<<10),
-    tintServerSide  = (1UL<<11),
-    tintFlags       = (tintSet|tintServerSide|tintNeeded|tintWholesome),
-    blurNeeded      = (1UL<<12),
-    blurServerSide  = (1UL<<13), /* this doesn't work yet */
+    tintSet         = 1 <<  8,
+    tintNeeded      = 1 <<  9,
+    tintWholesome   = 1 << 10,
+    tintServerSide  = 1 << 11,
+    tintFlags       = tintSet | tintServerSide | tintNeeded | tintWholesome,
 
-    isTransparent   = (1UL<<16),
-    isInvalid       = (1UL<<17),
-    isVtOrigin      = (1UL<<18),  /* if set pixmap has origin at corner of
-                                     vt window instead of parent[0]! */
-    hasChanged      = (1UL<<19)
+    blurNeeded      = 1 << 12,
+    blurServerSide  = 1 << 13, /* this doesn't work yet */
+
+    isTransparent   = 1 << 16,
+    isInvalid       = 1 << 17,
+    isVtOrigin      = 1 << 18,  /* if set pixmap has origin at corner of
+                                   vt window instead of parent[0]! */
+    hasChanged      = 1 << 19,
   };
 
-  unsigned long flags;
+  unsigned int flags;
 
   enum {
-    transpPmapTiled = (1UL<<0),
-    transpPmapTinted = tintNeeded,
-    transpPmapBlured = blurNeeded,
-    transpTransformations = (tintNeeded|blurNeeded)
+    transpPmapTiled       = 1 << 0,
+    transpPmapTinted      = tintNeeded,
+    transpPmapBlured      = blurNeeded,
+    transpTransformations = tintNeeded | blurNeeded,
   }; /* these flags are returned by make_transparency_pixmap if called */
 
-  bool check_clearChanged () { bool r = flags & hasChanged; flags &= ~hasChanged; return r; };
+  bool check_clearChanged ()
+  {
+    bool r = flags & hasChanged;
+    flags &= ~hasChanged;
+    return r;
+  };
 
 # ifdef  BG_IMAGE_FROM_FILE
 #  ifdef HAVE_AFTERIMAGE
@@ -67,7 +73,10 @@ struct bgPixmap_t
   unsigned int h_scale, v_scale;/* percents of the window size */
   int h_align, v_align;         /* percents of the window size:
                                   0 - left align, 50 - center, 100 - right */
-  void unset_geometry () { flags = flags & ~geometryFlags; };
+  void unset_geometry ()
+  {
+    flags = flags & ~geometryFlags;
+  };
   bool set_geometry (const char *geom);
   void set_defaultGeometry ()
   {
