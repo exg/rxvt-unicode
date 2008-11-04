@@ -21,9 +21,8 @@ DUMB: support tex fonts
 
 TODO:   /*TODO: the xlceararea/xfillrectangle below don't take scroll offste into account, ask mikachu for details */
 
-TODO: investgate wm resize race: while sleep 0.001; do printf "\033[?30l";sleep 0.001;printf "\033[?30h";done
-TODO: investigate miroslav patches
 TODO: cursor over overlays, when focus change?
+TODO: tput reset, reset more stuff/mouse reporting
 	- the aterm code now frees the as visual and image manager objects
           when a window was closed.
         - do not (wrongly) adjust the virtual line length inside
@@ -46,7 +45,10 @@ TODO: cursor over overlays, when focus change?
         - try to work around linux first breaking sched_yield and now breaking
           the only known workaround.
         - new option -icon to set _NET_WM_ICON (based on patch by Frank Schmitt).
-        - intiialise the as visual only on demand, instead of unconditionally.
+        - initialise the as visual only on demand, instead of unconditionally,
+          to save memory in the common case of not using visual gimmicks.
+        - try to work around a race between urxvt and wm's on programmatic
+          resizes by temporarily disabling size hints.
 
 9.05 Sun Jun 15 20:09:20 CEST 2008
 	- new option --cd/chdir to set the starting working directory.
