@@ -1121,8 +1121,6 @@ bgPixmap_t::render ()
   if (target == NULL)
     return false;
 
-  target->init_asv ();
-
   TIMING_TEST_START (tp);
 
   invalidate ();
@@ -1141,6 +1139,8 @@ bgPixmap_t::render ()
 
   XImage *result = NULL;
 # ifdef HAVE_AFTERIMAGE
+  target->init_asv ();
+
   if (original_asim
       || (background_flags & transpTransformations) != (flags & transpTransformations))
     {

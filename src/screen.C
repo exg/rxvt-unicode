@@ -1466,10 +1466,17 @@ rxvt_term::scr_insdel_chars (int count, int insdel) NOTHROW
   line->touch ();
   line->is_longer (0);
 
+  // nuke wide char at beginning
+  if (line->t[screen.cur.col] == NOCHAR)
+    scr_kill_char (*line, screen.cur.col);
+
   switch (insdel)
     {
       case INSERT:
         line->l = min (line->l + count, ncol);
+
+        if (line->t[screen.cur.col] == NOCHAR)
+          scr_kill_char (*line, screen.cur.col);
 
         for (int col = ncol - 1; (col - count) >= screen.cur.col; col--)
           {
@@ -1499,6 +1506,10 @@ rxvt_term::scr_insdel_chars (int count, int insdel) NOTHROW
         screen.cur.col += count;     /* don't worry if > ncol */
         selection_check (1);
         screen.cur.col -= count;
+
+        // nuke wide char after the end
+        if (screen.cur.col + count < ncol && line->t[screen.cur.col + count] == NOCHAR)
+          scr_kill_char (*line, screen.cur.col + count);
 
         scr_blank_line (*line, screen.cur.col, count, rstyle);
         break;
