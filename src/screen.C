@@ -134,6 +134,25 @@ rxvt_term::scr_blank_screen_mem (line_t &l, rend_t efs) const NOTHROW
   l.f = 0;
 }
 
+// nuke a single wide character at the given column
+void
+rxvt_term::scr_kill_char (line_t &l, int col) const NOTHROW
+{
+  // find begin
+  while (col > 0 && l.t[col] == NOCHAR)
+    col--;
+
+  rend_t rend = l.r[col] & ~RS_baseattrMask;
+  rend = SET_FONT (rend, FONTSET (rend)->find_font (' '));
+
+  // found begin, nuke
+  do {
+    l.t[col] = ' ';
+    l.r[col] = rend;
+    col++;
+  } while (col < ncol && l.t[col] == NOCHAR);
+}
+
 /* ------------------------------------------------------------------------- *
  *                          SCREEN INITIALISATION                            *
  * ------------------------------------------------------------------------- */
@@ -882,22 +901,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
                 || (screen.cur.col < ncol - 1
                     && line->t[screen.cur.col + 1] == NOCHAR)
              ))
-            {
-              int col = screen.cur.col;
-
-              // find begin
-              while (col > 0 && line->t[col] == NOCHAR)
-                col--;
-
-              rend_t rend = SET_FONT (line->r[col], FONTSET (line->r[col])->find_font (' '));
-
-              // found begin, nuke
-              do {
-                line->t[col] = ' ';
-                line->r[col] = rend;
-                col++;
-              } while (col < ncol && line->t[col] == NOCHAR);
-            }
+            scr_kill_char (*line, screen.cur.col);
 
           rend_t rend = SET_FONT (rstyle, FONTSET (rstyle)->find_font (c));
 
