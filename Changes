@@ -49,6 +49,12 @@ TODO: tput reset, reset more stuff/mouse reporting
           to save memory in the common case of not using visual gimmicks.
         - try to work around a race between urxvt and wm's on programmatic
           resizes by temporarily disabling size hints.
+        - implement the DECSTR soft reset sequence and use it for tput init,
+          and make hard RIS and DECSTR both reset more private modes, such
+          as mouse reporting.
+        - redundantly clear mouse reporting and a few other states in
+          tput init/tput reset, for older urxvts.
+        - no longer clear the screen in tput init.
 
 9.05 Sun Jun 15 20:09:20 CEST 2008
 	- new option --cd/chdir to set the starting working directory.

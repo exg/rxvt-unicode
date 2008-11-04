@@ -160,11 +160,6 @@ rxvt_term::scr_kill_char (line_t &l, int col) const NOTHROW
 void
 rxvt_term::scr_reset ()
 {
-#if ENABLE_OVERLAY
-  scr_overlay_off ();
-#endif
-
-  rvideo_mode = false;
   view_start = 0;
   num_scr = 0;
 
@@ -176,9 +171,6 @@ rxvt_term::scr_reset ()
 
   if (ncol == prev_ncol && nrow == prev_nrow)
     return;
-
-  if (current_screen != PRIMARY)
-    scr_swap_screen ();
 
   // we need at least two lines for wrapping to work correctly
   while (nrow + saveLines < 2)
@@ -401,22 +393,12 @@ rxvt_term::scr_reset ()
 
       clamp_it (screen.cur.row, 0, nrow - 1);
       clamp_it (screen.cur.col, 0, ncol - 1);
-
-      free (tabs);
     }
 
   CLEAR_ALL_SELECTION ();
 
   prev_nrow = nrow;
   prev_ncol = ncol;
-
-  tabs = (char *)rxvt_malloc (ncol);
-
-  for (int col = ncol; --col; )
-    tabs [col] = col % TABSIZE == 0;
-
-  if (current_screen != PRIMARY)
-    scr_swap_screen ();
 
   tt_winch ();
 
@@ -438,25 +420,54 @@ rxvt_term::scr_release () NOTHROW
       free (row_buf);
       free (swap_buf);
       free (drawn_buf);
-      free (tabs);
+      row_buf = 0; // signal that we freed all the arrays above
 
-      row_buf = 0; // signal that we freed all the arrays
+      free (tabs);
+      tabs = 0;
     }
 }
 
 /* ------------------------------------------------------------------------- */
 /*
- * Hard reset
+ * Hard/Soft reset
  */
 void
 rxvt_term::scr_poweron ()
 {
   scr_release ();
   prev_nrow = prev_ncol = 0;
+  scr_soft_reset ();
   scr_reset ();
 
   scr_clear (true);
   scr_refresh ();
+}
+
+void
+rxvt_term::scr_soft_reset ()
+{
+  /* only affects modes, nothing drastic such as clearing the screen */
+#if ENABLE_OVERLAY
+  scr_overlay_off ();
+#endif
+
+  rvideo_mode = false;
+
+  if (current_screen != PRIMARY)
+    scr_swap_screen ();
+
+  free (tabs);
+  tabs = (char *)rxvt_malloc (ncol);
+
+  for (int col = ncol; --col; )
+    tabs [col] = col % TABSIZE == 0;
+
+  if (current_screen != PRIMARY)
+    scr_swap_screen ();
+
+  scr_scroll_region (0, MAX_ROWS - 1);
+  scr_rendition (0, ~RS_None);
+  scr_insert_mode (0);
 }
 
 /* ------------------------------------------------------------------------- *

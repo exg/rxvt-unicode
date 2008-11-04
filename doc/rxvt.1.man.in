@@ -132,7 +132,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2008-06-15" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2008-11-04" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -302,6 +302,11 @@ horizontal radii are considered to be the same. Setting one of the
 radii to 1 and another to a large number creates interesting effects
 on some backgrounds. Maximum radius value is 128. Compile \fIafterimage\fR;
 resource \fIblurRadius\fR.
+.IP "\fB\-icon\fR \fIfile\fR" 4
+.IX Item "-icon file"
+Compile \fIafterimage\fR: Use the specified image as application icon. This
+is used by many window managers, taskbars and pagers to represent the
+appliation window; resource \fIiconFile\fR.
 .IP "\fB\-bg\fR \fIcolour\fR" 4
 .IX Item "-bg colour"
 Window background colour; resource \fBbackground\fR.
@@ -434,7 +439,8 @@ and \fB\-borderwidth\fR. See resource entry for limits; resource
 .IX Item "-bl"
 Compile \fIfrills\fR: Set \s-1MWM\s0 hints to request a borderless window, i.e.
 if honoured by the \s-1WM\s0, the rxvt-unicode window will not have window
-decorations; resource \fBborderLess\fR.
+decorations; resource \fBborderLess\fR. If the window manager does not
+support \s-1MWM\s0 hints (e.g. kwin), enables override-redirect mode.
 .IP "\fB\-override\-redirect\fR" 4
 .IX Item "-override-redirect"
 Compile \fIfrills\fR: Sets override-redirect on the window; resource
@@ -765,8 +771,11 @@ in addition to tinting it; option \fB\-sh\fR.
 Specify background blending type; option \fB\-blt\fR.
 .IP "\fBblurRadius:\fR \fInumber\fR" 4
 .IX Item "blurRadius: number"
-Apply Gaussian Blurr with the specified radius to the transparent
+Apply gaussian blur with the specified radius to the transparent
 background image; option \fB\-blr\fR.
+.IP "\fBiconFile:\fR \fIfile\fR" 4
+.IX Item "iconFile: file"
+Set the application icon pixmap; option \fB\-icon\fR.
 .IP "\fBscrollColor:\fR \fIcolour\fR" 4
 .IX Item "scrollColor: colour"
 Use the specified colour for the scrollbar [default #B2B2B2].
@@ -897,6 +906,8 @@ de-iconify (map) on receipt of a bell character [default].
 .IX Item "urgentOnBell: boolean"
 \&\fBTrue\fR: set the urgency hint for the wm on receipt of a bell character.
 \&\fBFalse\fR: do not set the urgency hint [default].
+.Sp
+@@RXVT_NAME@@ resets the urgency hint on every focus change.
 .IP "\fBvisualBell:\fR \fIboolean\fR" 4
 .IX Item "visualBell: boolean"
 \&\fBTrue\fR: use visual bell on receipt of a bell character; option \fB\-vb\fR.
@@ -1247,15 +1258,13 @@ all instances, while \fBperl-ext\fR is used for specific instances.
 .IP "\fBperl-eval\fR: \fIstring\fR" 4
 .IX Item "perl-eval: string"
 Perl code to be evaluated when all extensions have been registered. See
-the @@RXVT_NAME@@\fIperl\fR\|(3) manpage. Due to security reasons, this resource
-will be ignored when running setuid/setgid.
+the @@RXVT_NAME@@\fIperl\fR\|(3) manpage.
 .IP "\fBperl-lib\fR: \fIpath\fR" 4
 .IX Item "perl-lib: path"
 Colon-separated list of additional directories that hold extension
 scripts. When looking for extensions specified by the \f(CW\*(C`perl\*(C'\fR resource,
 @@RXVT_NAME@@ will first look in these directories and then in
-\&\fI@@RXVT_LIBDIR@@/urxvt/perl/\fR. Due to security reasons, this resource
-will be ignored when running setuid/setgid.
+\&\fI@@RXVT_LIBDIR@@/urxvt/perl/\fR.
 .Sp
 See the @@RXVT_NAME@@\fIperl\fR\|(3) manpage.
 .IP "\fBselection.pattern\-\f(BIidx\fB\fR: \fIperl-regex\fR" 4

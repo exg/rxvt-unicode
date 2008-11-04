@@ -2690,17 +2690,17 @@ rxvt_term::process_escape_seq ()
         tt_write (ESCZ_ANSWER, sizeof (ESCZ_ANSWER) - 1);
         break;			/* steal obsolete ESC [ c */
 
-        /* 8.3.16: CONTROL SEQUENCE INTRODUCER */
+        /* 8.3.16: CONTROL SEQUENCE INTRODUCER (CSI) */
       case C1_CSI:		/* ESC [ */
         process_csi_seq ();
         break;
 
-        /* 8.3.90: OPERATING SYSTEM COMMAND */
+        /* 8.3.90: OPERATING SYSTEM COMMAND (OSC) */
       case C1_OSC:		/* ESC ] */
         process_osc_seq ();
         break;
 
-        /* 8.3.106: RESET TO INITIAL STATE */
+        /* 8.3.106: RESET TO INITIAL STATE (RIS) */
       case 'c':
         mbstate.reset ();
         scr_poweron ();
@@ -2765,9 +2765,9 @@ rxvt_term::process_csi_seq ()
 
   priv = 0;
   ch = cmd_getc ();
-  if (ch >= '<' && ch <= '?')
+  if ((ch >= '<' && ch <= '?') || ch == '!')
     {
-      /* '<' '=' '>' '?' */
+      /* '<' '=' '>' '?' '!' */
       priv = ch;
       ch = cmd_getc ();
     }
@@ -2831,7 +2831,22 @@ rxvt_term::process_csi_seq ()
             if (ch == 'h' || ch == 'l' || ch == 'r' || ch == 's' || ch == 't')
               process_terminal_mode (ch, priv, nargs, arg);
             break;
+
+          case '!':
+            if (ch == CSI_70)
+              {
+                /* DECSTR: soft terminal reset, used by our terminfo since 9.06 */
+                scr_soft_reset ();
+
+                static const int pm_h[] = { 7, 25 };
+                static const int pm_l[] = { 1, 3, 4, 5, 6, 7, 9, 66, 1000, 1001, 1049 };
+
+                process_terminal_mode ('h', 0, sizeof (pm_h) / sizeof (pm_h[0]), pm_h);
+                process_terminal_mode ('l', 0, sizeof (pm_l) / sizeof (pm_l[0]), pm_l);
+              }
+          break;
         }
+
       return;
     }
 

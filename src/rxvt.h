@@ -1377,6 +1377,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen {
   enum cursor_mode { SAVE, RESTORE };
 
   void scr_poweron ();
+  void scr_soft_reset () NOTHROW;
   void scr_cursor (cursor_mode mode) NOTHROW;
   void scr_do_wrap () NOTHROW;
   void scr_swap_screen () NOTHROW;

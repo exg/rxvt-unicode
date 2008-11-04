@@ -132,7 +132,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 3"
-.TH @@RXVT_NAME@@ 3 "2008-06-15" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 3 "2008-11-04" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -252,7 +252,7 @@ will be called when the toggle changes, with the new boolean value as
 first argument.
 .Sp
 The following will add an entry \f(CW\*(C`myoption\*(C'\fR that changes
-\&\f(CW\*(C`$self\-\*(C'\fR{myoption}>:
+\&\f(CW\*(C`$self\->{myoption}\*(C'\fR:
 .Sp
 .Vb 3
 \&   push @{ $self\->{term}{option_popup_hook} }, sub {
@@ -684,29 +684,44 @@ than the scroll back buffer or the terminal.
 It is called before lines are scrolled out (so rows 0 .. min ($lines \- 1,
 \&\f(CW$nrow\fR \- 1) represent the lines to be scrolled out). \f(CW$saved\fR is the total
 number of lines that will be in the scrollback buffer.
-.ie n .IP "on_osc_seq $term\fR, \f(CW$op\fR, \f(CW$args" 4
-.el .IP "on_osc_seq \f(CW$term\fR, \f(CW$op\fR, \f(CW$args\fR" 4
-.IX Item "on_osc_seq $term, $op, $args"
+.ie n .IP "on_osc_seq $term\fR, \f(CW$op\fR, \f(CW$args\fR, \f(CW$resp" 4
+.el .IP "on_osc_seq \f(CW$term\fR, \f(CW$op\fR, \f(CW$args\fR, \f(CW$resp\fR" 4
+.IX Item "on_osc_seq $term, $op, $args, $resp"
 Called on every \s-1OSC\s0 sequence and can be used to suppress it or modify its
-behaviour.  The default should be to return an empty list. A true value
+behaviour. The default should be to return an empty list. A true value
 suppresses execution of the request completely. Make sure you don't get
-confused by recursive invocations when you output an osc sequence within
+confused by recursive invocations when you output an \s-1OSC\s0 sequence within
 this callback.
 .Sp
 \&\f(CW\*(C`on_osc_seq_perl\*(C'\fR should be used for new behaviour.
-.ie n .IP "on_osc_seq_perl $term\fR, \f(CW$string" 4
-.el .IP "on_osc_seq_perl \f(CW$term\fR, \f(CW$string\fR" 4
-.IX Item "on_osc_seq_perl $term, $string"
+.ie n .IP "on_osc_seq_perl $term\fR, \f(CW$args\fR, \f(CW$resp" 4
+.el .IP "on_osc_seq_perl \f(CW$term\fR, \f(CW$args\fR, \f(CW$resp\fR" 4
+.IX Item "on_osc_seq_perl $term, $args, $resp"
 Called whenever the \fB\s-1ESC\s0 ] 777 ; string \s-1ST\s0\fR command sequence (\s-1OSC\s0 =
 operating system command) is processed. Cursor position and other state
 information is up-to-date when this happens. For interoperability, the
-string should start with the extension name and a colon, to distinguish
-it from commands for other extensions, and this might be enforced in the
-future.
+string should start with the extension name (sans \-osc) and a semicolon,
+to distinguish it from commands for other extensions, and this might be
+enforced in the future.
+.Sp
+For example, \f(CW\*(C`overlay\-osc\*(C'\fR uses this:
+.Sp
+.Vb 2
+\&   sub on_osc_seq_perl {
+\&      my ($self, $osc, $resp) = @_;
+\&
+\&      return unless $osc =~ s/^overlay;//;
+\&
+\&      ... process remaining $osc string
+\&   }
+.Ve
 .Sp
 Be careful not ever to trust (in a security sense) the data you receive,
 as its source can not easily be controlled (e\-mail content, messages from
 other users on the same system etc.).
+.Sp
+For responses, \f(CW$resp\fR contains the end-of-args separator used by the
+sender.
 .ie n .IP "on_add_lines $term\fR, \f(CW$string" 4
 .el .IP "on_add_lines \f(CW$term\fR, \f(CW$string\fR" 4
 .IX Item "on_add_lines $term, $string"
@@ -737,8 +752,8 @@ you cannot just toggle rendition bits, but only set them.
 .ie n .IP "on_refresh_begin $term" 4
 .el .IP "on_refresh_begin \f(CW$term\fR" 4
 .IX Item "on_refresh_begin $term"
-Called just before the screen gets redrawn. Can be used for overlay
-or similar effects by modify terminal contents in refresh_begin, and
+Called just before the screen gets redrawn. Can be used for overlay or
+similar effects by modifying the terminal contents in refresh_begin, and
 restoring them in refresh_end. The built-in overlay and selection display
 code is run after this hook, and takes precedence.
 .ie n .IP "on_refresh_end $term" 4
@@ -1140,12 +1155,14 @@ as long as the perl object is referenced.
 .Sp
 The methods currently supported on \f(CW\*(C`urxvt::overlay\*(C'\fR objects are:
 .RS 4
-.ie n .IP "$overlay\fR\->set ($x, \f(CW$y\fR, \f(CW$text\fR, \f(CW$rend)" 4
-.el .IP "\f(CW$overlay\fR\->set ($x, \f(CW$y\fR, \f(CW$text\fR, \f(CW$rend\fR)" 4
-.IX Item "$overlay->set ($x, $y, $text, $rend)"
+.ie n .IP "$overlay\fR\->set ($x, \f(CW$y\fR, \f(CW$text\fR[, \f(CW$rend])" 4
+.el .IP "\f(CW$overlay\fR\->set ($x, \f(CW$y\fR, \f(CW$text\fR[, \f(CW$rend\fR])" 4
+.IX Item "$overlay->set ($x, $y, $text[, $rend])"
 Similar to \f(CW\*(C`$term\->ROW_t\*(C'\fR and \f(CW\*(C`$term\->ROW_r\*(C'\fR in that it puts
 text in rxvt-unicode's special encoding and an array of rendition values
 at a specific position inside the overlay.
+.Sp
+If \f(CW$rend\fR is missing, then the rendition will not be changed.
 .ie n .IP "$overlay\->hide" 4
 .el .IP "\f(CW$overlay\fR\->hide" 4
 .IX Item "$overlay->hide"
