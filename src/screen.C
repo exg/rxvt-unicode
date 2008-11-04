@@ -462,9 +462,6 @@ rxvt_term::scr_soft_reset ()
   for (int col = ncol; --col; )
     tabs [col] = col % TABSIZE == 0;
 
-  if (current_screen != PRIMARY)
-    scr_swap_screen ();
-
   scr_scroll_region (0, MAX_ROWS - 1);
   scr_rendition (0, ~RS_None);
   scr_insert_mode (0);
