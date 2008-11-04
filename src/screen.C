@@ -1353,7 +1353,7 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
 
       if (mapped)
         XClearArea (dpy, vt, 0,
-                    Row2Pixel (row), (unsigned int)width,
+                    Row2Pixel (row - view_start), (unsigned int)width,
                     (unsigned int)Height2Pixel (num), False);
     }
   else
@@ -1363,7 +1363,7 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
       gcvalue.foreground = pix_colors[bgcolor_of (rstyle)];
       XChangeGC (dpy, gc, GCForeground, &gcvalue);
       XFillRectangle (dpy, vt, gc,
-                      0, Row2Pixel (row),
+                      0, Row2Pixel (row - view_start),
                       (unsigned int)width,
                       (unsigned int)Height2Pixel (num));
       gcvalue.foreground = pix_colors[Color_fg];
