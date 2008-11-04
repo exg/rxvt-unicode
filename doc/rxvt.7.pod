@@ -35,6 +35,18 @@ Before sending me mail, you could go to IRC: C<irc.freenode.net>,
 channel C<#rxvt-unicode> has some rxvt-unicode enthusiasts that might be
 interested in learning about new and exciting problems (but not FAQs :).
 
+=head3 I use Gentoo, and I have a problem...
+
+There are three big problems with Gentoo Linux: first of all, most if not
+all Gentoo systems are completely broken (missing or mismatched header
+files, broken compiler etc. are just the tip of the iceberg); secondly,
+the Gentoo maintainer thinks it is a good idea to add broken patches to
+the code; and lastly, it should be called Gentoo GNU/Linux.
+
+For these reasons, it is impossible to support rxvt-unicode on
+Gentoo. Problems appearing on Gentoo systems will usually simply be
+ignored unless they can be reproduced on non-Gentoo systems.
+
 =head3 Does it support tabs, can I have a tabbed rxvt-unicode?
 
 Beginning with version 7.3, there is a perl extension that implements a
