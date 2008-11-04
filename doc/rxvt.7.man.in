@@ -132,7 +132,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2008-06-15" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2008-11-04" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -171,6 +171,19 @@ The main manual page for @@RXVT_NAME@@ itself is available at
 Before sending me mail, you could go to \s-1IRC:\s0 \f(CW\*(C`irc.freenode.net\*(C'\fR,
 channel \f(CW\*(C`#rxvt\-unicode\*(C'\fR has some rxvt-unicode enthusiasts that might be
 interested in learning about new and exciting problems (but not FAQs :).
+.PP
+\fII use Gentoo, and I have a problem...\fR
+.IX Subsection "I use Gentoo, and I have a problem..."
+.PP
+There are three big problems with Gentoo Linux: first of all, most if not
+all Gentoo systems are completely broken (missing or mismatched header
+files, broken compiler etc. are just the tip of the iceberg); secondly,
+the Gentoo maintainer thinks it is a good idea to add broken patches to
+the code; and lastly, it should be called Gentoo GNU/Linux.
+.PP
+For these reasons, it is impossible to support rxvt-unicode on
+Gentoo. Problems appearing on Gentoo systems will usually simply be
+ignored unless they can be reproduced on non-Gentoo systems.
 .PP
 \fIDoes it support tabs, can I have a tabbed rxvt-unicode?\fR
 .IX Subsection "Does it support tabs, can I have a tabbed rxvt-unicode?"
