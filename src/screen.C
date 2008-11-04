@@ -908,8 +908,8 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
           // if the character doesn't fit into the remaining columns...
           if (expect_false (screen.cur.col > ncol - width && ncol >= width))
             {
-              // ...output spaces
-              c = ' ';
+              // ... artificially enlargen the previous one
+              c = NOCHAR;
               // and try the same character next loop iteration
               --str;
             }
