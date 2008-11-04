@@ -161,8 +161,8 @@ void
 rxvt_term::scr_reset ()
 {
   scr_soft_reset ();
-  view_start = 0;
 
+  view_start = 0;
   num_scr = 0;
 
   if (ncol == 0)
