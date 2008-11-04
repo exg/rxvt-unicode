@@ -29,6 +29,8 @@ TODO: cursor over overlays, when focus change?
           when a window was closed.
         - do not (wrongly) adjust the virtual line length inside
           scr_insdel_chars/ERASE (Miroslav Lichvar).
+        - fix an issue where wide tab characters caused character shifts
+          when part of them was deleted (tracked down by Miroslav Lichvar).
 	- remove bogus "setuid/setgid security issues" from rxvt.1.pod, they
           no longer apply.
         - the urgency hint is now cleared on both focus in and focus out.

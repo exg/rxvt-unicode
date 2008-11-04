@@ -145,7 +145,7 @@ rxvt_term::scr_kill_char (line_t &l, int col) const NOTHROW
   rend_t rend = l.r[col] & ~RS_baseattrMask;
   rend = SET_FONT (rend, FONTSET (rend)->find_font (' '));
 
-  // found begin, nuke
+  // found start, nuke
   do {
     l.t[col] = ' ';
     l.r[col] = rend;
@@ -1466,7 +1466,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel) NOTHROW
   line->touch ();
   line->is_longer (0);
 
-  // nuke wide char at beginning
+  // nuke wide spanning the start
   if (line->t[screen.cur.col] == NOCHAR)
     scr_kill_char (*line, screen.cur.col);
 
@@ -1515,38 +1515,35 @@ rxvt_term::scr_insdel_chars (int count, int insdel) NOTHROW
         break;
 
       case DELETE:
-        {
-          line->l = max (line->l - count, 0);
+        line->l = max (line->l - count, 0);
 
-          rend_t tr = line->r[ncol - 1] & (RS_fgMask | RS_bgMask | RS_baseattrMask);
+        // nuke wide char spanning the end
+        if (screen.cur.col + count < ncol && line->t[screen.cur.col + count] == NOCHAR)
+          scr_kill_char (*line, screen.cur.col + count);
 
-          for (int col = screen.cur.col; (col + count) < ncol; col++)
-            {
-              line->t[col] = line->t[col + count];
-              line->r[col] = line->r[col + count];
-            }
+        for (int col = screen.cur.col; (col + count) < ncol; col++)
+          {
+            line->t[col] = line->t[col + count];
+            line->r[col] = line->r[col + count];
+          }
 
-          // nuke wide char at the end
-          if (line->t[screen.cur.col] == NOCHAR)
-            scr_kill_char (*line, screen.cur.col);
+        scr_blank_line (*line, ncol - count, count,
+                        line->r[ncol - 1] & (RS_fgMask | RS_bgMask | RS_baseattrMask));
 
-          scr_blank_line (*line, ncol - count, count, tr);
-
-          if (selection.op && current_screen == selection.screen
-              && ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur))
-            {
-              if (selection.end.row != screen.cur.row
-                  || (screen.cur.col >= selection.beg.col - count)
-                  || selection.end.col >= ncol)
-                CLEAR_SELECTION ();
-              else
-                {
-                  /* shift selection */
-                  selection.beg.col  -= count;
-                  selection.mark.col -= count; /* XXX: yes? */
-                  selection.end.col  -= count;
-                }
-            }
+        if (selection.op && current_screen == selection.screen
+            && ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur))
+          {
+            if (selection.end.row != screen.cur.row
+                || (screen.cur.col >= selection.beg.col - count)
+                || selection.end.col >= ncol)
+              CLEAR_SELECTION ();
+            else
+              {
+                /* shift selection */
+                selection.beg.col  -= count;
+                selection.mark.col -= count; /* XXX: yes? */
+                selection.end.col  -= count;
+              }
           }
 
         break;
