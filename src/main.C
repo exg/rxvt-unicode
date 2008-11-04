@@ -627,7 +627,7 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
   if (recalc_y)
     szHint.y += DisplayHeight (dpy, display->screen) - szHint.height - 2 * ext_bwidth;
 
-  ncol = width / fwidth;
+  ncol = width  / fwidth;
   nrow = height / fheight;
 }
 
@@ -913,8 +913,14 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
 
   window_calc (newwidth, newheight);
 
-  if (!HOOK_INVOKE ((this, HOOK_RESIZE_ALL_WINDOWS, DT_INT, newwidth, DT_INT, newheight, DT_END)))
-    XSetWMNormalHints (dpy, parent[0], &szHint);
+  bool set_hint = !HOOK_INVOKE ((this, HOOK_RESIZE_ALL_WINDOWS, DT_INT, newwidth, DT_INT, newheight, DT_END));
+
+  if (set_hint)
+    {
+      szHint.flags &= ~(PBaseSize | PResizeInc);
+      XSetWMNormalHints (dpy, parent[0], &szHint);
+      szHint.flags |= PBaseSize | PResizeInc;
+    }
 
   if (!ignoreparent)
     {
@@ -982,6 +988,9 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
 
       scr_clear ();
     }
+
+  if (set_hint)
+    XSetWMNormalHints (dpy, parent[0], &szHint);
 
   if (fix_screen || old_height == 0)
     scr_reset ();
