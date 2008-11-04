@@ -1448,9 +1448,6 @@ rxvt_term::scr_insdel_lines (int count, int insdel) NOTHROW
 void
 rxvt_term::scr_insdel_chars (int count, int insdel) NOTHROW
 {
-  int col, row;
-  rend_t tr;
-
   want_refresh = 1;
   ZERO_SCROLLBACK ();
 
@@ -1462,7 +1459,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel) NOTHROW
   selection_check (1);
   min_it (count, ncol - screen.cur.col);
 
-  row = screen.cur.row;
+  int row = screen.cur.row;
 
   line_t *line = &ROW(row);
 
@@ -1472,13 +1469,13 @@ rxvt_term::scr_insdel_chars (int count, int insdel) NOTHROW
   switch (insdel)
     {
       case INSERT:
-        for (col = ncol - 1; (col - count) >= screen.cur.col; col--)
+        line->l = min (line->l + count, ncol);
+
+        for (int col = ncol - 1; (col - count) >= screen.cur.col; col--)
           {
             line->t[col] = line->t[col - count];
             line->r[col] = line->r[col - count];
           }
-
-        line->l = min (line->l + count, ncol);
 
         if (selection.op && current_screen == selection.screen
             && ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur))
@@ -1507,31 +1504,38 @@ rxvt_term::scr_insdel_chars (int count, int insdel) NOTHROW
         break;
 
       case DELETE:
-        tr = line->r[ncol - 1] & (RS_fgMask | RS_bgMask | RS_baseattrMask);
+        {
+          line->l = max (line->l - count, 0);
 
-        for (col = screen.cur.col; (col + count) < ncol; col++)
-          {
-            line->t[col] = line->t[col + count];
-            line->r[col] = line->r[col + count];
-          }
+          rend_t tr = line->r[ncol - 1] & (RS_fgMask | RS_bgMask | RS_baseattrMask);
 
-        line->l = max (line->l - count, 0);
-        scr_blank_line (*line, ncol - count, count, tr);
+          for (int col = screen.cur.col; (col + count) < ncol; col++)
+            {
+              line->t[col] = line->t[col + count];
+              line->r[col] = line->r[col + count];
+            }
 
-        if (selection.op && current_screen == selection.screen
-            && ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur))
-          {
-            if (selection.end.row != screen.cur.row
-                || (screen.cur.col >= selection.beg.col - count)
-                || selection.end.col >= ncol)
-              CLEAR_SELECTION ();
-            else
-              {
-                /* shift selection */
-                selection.beg.col  -= count;
-                selection.mark.col -= count; /* XXX: yes? */
-                selection.end.col  -= count;
-              }
+          // nuke wide char at the end
+          if (line->t[screen.cur.col] == NOCHAR)
+            scr_kill_char (*line, screen.cur.col);
+
+          scr_blank_line (*line, ncol - count, count, tr);
+
+          if (selection.op && current_screen == selection.screen
+              && ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur))
+            {
+              if (selection.end.row != screen.cur.row
+                  || (screen.cur.col >= selection.beg.col - count)
+                  || selection.end.col >= ncol)
+                CLEAR_SELECTION ();
+              else
+                {
+                  /* shift selection */
+                  selection.beg.col  -= count;
+                  selection.mark.col -= count; /* XXX: yes? */
+                  selection.end.col  -= count;
+                }
+            }
           }
 
         break;
