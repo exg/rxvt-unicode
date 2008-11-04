@@ -1351,7 +1351,7 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
     {
       ren = DEFAULT_RSTYLE;
 
-      if (mapped)
+      if (mapped && !view_start)
         XClearArea (dpy, vt, 0,
                     Row2Pixel (row - view_start), (unsigned int)width,
                     (unsigned int)Height2Pixel (num), False);
@@ -1360,20 +1360,24 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
     {
       ren = rstyle & (RS_fgMask | RS_bgMask);
 
-      gcvalue.foreground = pix_colors[bgcolor_of (rstyle)];
-      XChangeGC (dpy, gc, GCForeground, &gcvalue);
-      XFillRectangle (dpy, vt, gc,
-                      0, Row2Pixel (row - view_start),
-                      (unsigned int)width,
-                      (unsigned int)Height2Pixel (num));
-      gcvalue.foreground = pix_colors[Color_fg];
-      XChangeGC (dpy, gc, GCForeground, &gcvalue);
+      if (mapped && !view_start)
+        {
+          gcvalue.foreground = pix_colors[bgcolor_of (rstyle)];
+          XChangeGC (dpy, gc, GCForeground, &gcvalue);
+          XFillRectangle (dpy, vt, gc,
+                          0, Row2Pixel (row - view_start),
+                          (unsigned int)width,
+                          (unsigned int)Height2Pixel (num));
+          gcvalue.foreground = pix_colors[Color_fg];
+          XChangeGC (dpy, gc, GCForeground, &gcvalue);
+        }
     }
 
   for (; num--; row++)
     {
       scr_blank_screen_mem (ROW(row), rstyle);
-      scr_blank_line (drawn_buf [row], 0, ncol, ren);
+      if (!view_start)
+        scr_blank_line (drawn_buf [row], 0, ncol, ren);
     }
 }
 
