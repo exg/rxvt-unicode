@@ -25,6 +25,8 @@ TODO: investgate wm resize race: while sleep 0.001; do printf "\033[?30l";sleep 
 TODO: investigate miroslav patches
 TODO: artificially enlargen wide characters at end to correctly cut&paste.
 TODO: cursor over overlays, when focus change?
+	- the aterm code now frees the as visual and image manager objects
+          when a window was closed.
 	- remove bogus "setuid/setgid security issues" from rxvt.1.pod, they
           no longer apply.
         - the urgency hint is now cleared on both focus in and focus out.
@@ -37,7 +39,7 @@ TODO: cursor over overlays, when focus change?
           monopolising the whole process by outputting a lot of text.
         - try to work around linux first breaking sched_yield and now breaking
           the only known workaround.
-        - new option -icon, resource iconFile (based on patch by Frank Schmitt).
+        - new option -icon to set _NET_WM_ICON (based on patch by Frank Schmitt).
         - intiialise the as visual only on demand, instead of unconditionally.
 
 9.05 Sun Jun 15 20:09:20 CEST 2008

@@ -229,6 +229,12 @@ rxvt_term::~rxvt_term ()
 #ifdef HAVE_BG_PIXMAP
   bgPixmap.destroy ();
 #endif
+#ifdef HAVE_AFTERIMAGE
+  if (asv)
+    destroy_asvisual (asv, 0);
+  if (asimman)
+    destroy_image_manager (asimman, 0);
+#endif
 
   if (display)
     {
