@@ -2839,7 +2839,7 @@ rxvt_term::process_csi_seq ()
                 scr_soft_reset ();
 
                 static const int pm_h[] = { 7, 25 };
-                static const int pm_l[] = { 1, 3, 4, 5, 6, 7, 9, 66, 1000, 1001, 1049 };
+                static const int pm_l[] = { 1, 3, 4, 5, 6, 9, 66, 1000, 1001, 1049 };
 
                 process_terminal_mode ('h', 0, sizeof (pm_h) / sizeof (pm_h[0]), pm_h);
                 process_terminal_mode ('l', 0, sizeof (pm_l) / sizeof (pm_l[0]), pm_l);
