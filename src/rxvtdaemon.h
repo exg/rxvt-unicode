@@ -3,7 +3,8 @@
 
 #include "rxvtutil.h"
 
-struct rxvt_connection {
+struct rxvt_connection
+{
   int fd;
 
   static char *unix_sockname ();

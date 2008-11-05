@@ -113,7 +113,8 @@ int popcount (unsigned int x) CONST;
 #define MOD(m,n) (((m) + (n)) % (n))
 
 // makes dynamically allocated objects zero-initialised
-struct zero_initialized {
+struct zero_initialized
+{
   void *operator new (size_t s);
   void operator delete (void *p, size_t s);
 };
@@ -124,7 +125,8 @@ struct zero_initialized {
  *  Copyright (C) 1997-98 Kay Roemer & Arno Puder
  */
 template<class T>
-struct simplevec {
+struct simplevec
+{
     typedef T* iterator;
     typedef const T* const_iterator;
     typedef unsigned long size_type;
@@ -389,7 +391,8 @@ struct stringvec : simplevec<char *>
 
 #if 0
 template<typename T>
-struct rxvt_vec : simplevec<void *> {
+struct rxvt_vec : simplevec<void *>
+{
   typedef T *iterator;
 
   void push_back (T d) { simplevec<void *>::push_back ((void *)d); }
@@ -404,7 +407,8 @@ struct rxvt_vec : simplevec<void *> {
 #endif
 
 template<typename T>
-struct auto_ptr {
+struct auto_ptr
+{
   T *p;
 
   auto_ptr () : p (0) { }

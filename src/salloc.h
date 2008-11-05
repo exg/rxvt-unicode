@@ -5,7 +5,8 @@
 
 // small blocks allocator
 
-struct rxvt_salloc {
+struct rxvt_salloc
+{
   struct chain {
     struct chain *next;
   };

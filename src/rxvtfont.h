@@ -15,7 +15,8 @@
 
 struct rxvt_term;
 
-struct rxvt_fontprop {
+struct rxvt_fontprop
+{
   enum {
     unset  = -1,
     medium = 100, bold = 200,
@@ -25,7 +26,8 @@ struct rxvt_fontprop {
   int weight, slant;
 };
 
-struct rxvt_font {
+struct rxvt_font
+{
   // managed by the fontset
   rxvt_term *term;
   void set_term (rxvt_term *term) { this->term = term; }
@@ -62,7 +64,8 @@ struct rxvt_font {
 
 struct rxvt_fallback_font;
 
-struct rxvt_fontset {
+struct rxvt_fontset
+{
   char *fontdesc;
 
   rxvt_fontset (rxvt_term *term);

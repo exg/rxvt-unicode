@@ -68,7 +68,8 @@ enum {
   NOCHAR           = 0xffff, // must be invalid in ANY codeset (!)
 };
 
-struct rxvt_codeset_conv {
+struct rxvt_codeset_conv
+{
   uint32_t (*from_unicode) (unicode_t unicode);
 #if ENCODING_TO_UNICODE
   unicode_t (*to_unicode) (uint32_t enc);
@@ -82,7 +83,8 @@ extern unicode_t rxvt_compose (unicode_t c1, unicode_t c2);
 #define FROM_UNICODE(cs,code) rxvt_codeset[cs].from_unicode (code)
 #define TO_UNICODE(cs,code)   rxvt_codeset[cs].to_unicode   (code)
 
-struct unicode { // namespace für arme
+struct unicode // namespace für arme
+{
   static bool is_space (unicode_t c);
 };
 

@@ -4,7 +4,7 @@
 # printf "\033]777;overlay;action;args\007"
 #
 # action "simple;<id>;<timeout>;<x>;<y>;<h|t>;<text>"
-#   printf "\033]777;overlay;simple;ov1;0;0;t;test\007"
+#   printf "\033]777;overlay;simple;ov1;5;0;0;t;test\007"
 #
 
 # action "timeout;<id>;<seconds>"

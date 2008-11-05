@@ -270,7 +270,8 @@ struct rxvt_display : refcounted
 };
 
 #ifdef USE_XIM
-struct im_watcher : rxvt_watcher, callback<void (void)> {
+struct im_watcher : rxvt_watcher, callback<void (void)>
+{
   void start (rxvt_display *display)
   {
     display->reg (this);

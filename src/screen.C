@@ -2010,8 +2010,6 @@ rxvt_term::scr_printscreen (int fullhist) NOTHROW
 void
 rxvt_term::scr_refresh () NOTHROW
 {
-  unsigned char have_bg,
-                showcursor; /* show the cursor                           */
   int16_t col, row,   /* column/row we're processing               */
           ocrow;      /* old cursor row                            */
   int i;              /* tmp                                       */
@@ -2032,7 +2030,8 @@ rxvt_term::scr_refresh () NOTHROW
    */
   refresh_count = 0;
 
-  have_bg = 0;
+  unsigned int old_screen_flags = screen.flags;
+  char have_bg = 0;
 #ifdef HAVE_BG_PIXMAP
   have_bg = bgPixmap.pixmap != None;
 #endif
@@ -2043,13 +2042,19 @@ rxvt_term::scr_refresh () NOTHROW
    */
   scr_reverse_selection ();
 
+  HOOK_INVOKE ((this, HOOK_REFRESH_BEGIN, DT_END));
+#if ENABLE_OVERLAY
+  scr_swap_overlay ();
+#endif
+
+  char showcursor = screen.flags & Screen_VisibleCursor;
+
   /*
    * C: set the cursor character (s)
    */
   {
     unsigned char setoldcursor;
 
-    showcursor = (screen.flags & Screen_VisibleCursor);
 #ifdef CURSOR_BLINK
     if (hidden_cursor)
       showcursor = 0;
@@ -2131,11 +2136,6 @@ rxvt_term::scr_refresh () NOTHROW
           }
       }
   }
-
-  HOOK_INVOKE ((this, HOOK_REFRESH_BEGIN, DT_END));
-#if ENABLE_OVERLAY
-  scr_swap_overlay ();
-#endif
 
 #ifndef NO_SLOW_LINK_SUPPORT
   /*
@@ -2418,11 +2418,6 @@ rxvt_term::scr_refresh () NOTHROW
         }                     /* for (col....) */
     }                         /* for (row....) */
 
-#if ENABLE_OVERLAY
-  scr_swap_overlay ();
-#endif
-  HOOK_INVOKE ((this, HOOK_REFRESH_END, DT_END));
-
   /*
    * G: cleanup cursor and display outline cursor if necessary
    */
@@ -2470,8 +2465,14 @@ rxvt_term::scr_refresh () NOTHROW
   /*
    * H: cleanup selection
    */
+#if ENABLE_OVERLAY
+  scr_swap_overlay ();
+#endif
+  HOOK_INVOKE ((this, HOOK_REFRESH_END, DT_END));
+
   scr_reverse_selection ();
 
+  screen.flags = old_screen_flags;
   num_scr = 0;
   num_scr_allow = 1;
 }
@@ -3740,16 +3741,16 @@ rxvt_term::scr_overlay_new (int x, int y, int w, int h) NOTHROW
   x -= 1; clamp_it (x, 0, ncol - w);
   y -= 1; clamp_it (y, 0, nrow - h);
 
-  ov_x = x; ov_y = y;
-  ov_w = w; ov_h = h;
+  ov.x = x; ov.y = y;
+  ov.w = w; ov.h = h;
 
-  ov_text = new text_t *[h];
-  ov_rend = new rend_t *[h];
+  ov.text = new text_t *[h];
+  ov.rend = new rend_t *[h];
 
   for (y = 0; y < h; y++)
     {
-      text_t *tp = ov_text[y] = new text_t[w];
-      rend_t *rp = ov_rend[y] = new rend_t[w];
+      text_t *tp = ov.text[y] = new text_t[w];
+      rend_t *rp = ov.rend[y] = new rend_t[w];
 
       text_t t0, t1, t2;
       rend_t r = OVERLAY_RSTYLE;
@@ -3778,31 +3779,31 @@ rxvt_term::scr_overlay_new (int x, int y, int w, int h) NOTHROW
 void
 rxvt_term::scr_overlay_off () NOTHROW
 {
-  if (!ov_text)
+  if (!ov.text)
     return;
 
   want_refresh = 1;
 
-  for (int y = 0; y < ov_h; y++)
+  for (int y = 0; y < ov.h; y++)
     {
-      delete [] ov_text[y];
-      delete [] ov_rend[y];
+      delete [] ov.text[y];
+      delete [] ov.rend[y];
     }
 
-  delete [] ov_text; ov_text = 0;
-  delete [] ov_rend; ov_rend = 0;
+  delete [] ov.text; ov.text = 0;
+  delete [] ov.rend; ov.rend = 0;
 }
 
 void
 rxvt_term::scr_overlay_set (int x, int y, text_t text, rend_t rend) NOTHROW
 {
-  if (!ov_text || x >= ov_w - 2 || y >= ov_h - 2)
+  if (!ov.text || x >= ov.w - 2 || y >= ov.h - 2)
     return;
 
   x++, y++;
 
-  ov_text[y][x] = text;
-  ov_rend[y][x] = rend;
+  ov.text[y][x] = text;
+  ov.rend[y][x] = rend;
 }
 
 void
@@ -3831,19 +3832,24 @@ rxvt_term::scr_overlay_set (int x, int y, const wchar_t *s) NOTHROW
 void
 rxvt_term::scr_swap_overlay () NOTHROW
 {
-  if (!ov_text)
+  if (!ov.text)
     return;
 
+  // hide cursor if it is within the overlay area
+  if (IN_RANGE_EXC (screen.cur.col - ov.x, 0, ov.w)
+      && IN_RANGE_EXC (screen.cur.row - ov.y, 0, ov.h))
+    screen.flags &= ~Screen_VisibleCursor;
+
   // swap screen mem with overlay
-  for (int y = ov_h; y--; )
+  for (int y = ov.h; y--; )
     {
-      text_t *t1 = ov_text[y];
-      rend_t *r1 = ov_rend[y];
+      text_t *t1 = ov.text[y];
+      rend_t *r1 = ov.rend[y];
 
-      text_t *t2 = ROW(y + ov_y + view_start).t + ov_x;
-      rend_t *r2 = ROW(y + ov_y + view_start).r + ov_x;
+      text_t *t2 = ROW(y + ov.y + view_start).t + ov.x;
+      rend_t *r2 = ROW(y + ov.y + view_start).r + ov.x;
 
-      for (int x = ov_w; x--; )
+      for (int x = ov.w; x--; )
         {
           text_t t = *t1; *t1++ = *t2; *t2++ = t;
           rend_t r = *r1; *r1++ = *r2; *r2++ = SET_FONT (r, FONTSET (r)->find_font (t));

@@ -46,7 +46,8 @@ enum sb_state {
   STATE_DOWN,
 };
 
-struct scrollBar_t {
+struct scrollBar_t
+{
   rxvt_term *term;
   char            state;        /* scrollbar state                          */
   char            init;         /* scrollbar has been initialised           */
