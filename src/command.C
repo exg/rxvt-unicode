@@ -3753,15 +3753,17 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
               scr_change_screen (state);
               break;
             case 1049:		/* secondary screen w/ clearing first */
-              if (state)
-                scr_cursor (SAVE);
+              if (option (Opt_secondaryScreen))
+                if (state)
+                  scr_cursor (SAVE);
 
               scr_change_screen (state);
 
-              if (state)
-                scr_erase_screen (2);
-              else
-                scr_cursor (RESTORE);
+              if (option (Opt_secondaryScreen))
+                if (state)
+                  scr_erase_screen (2);
+                else
+                  scr_cursor (RESTORE);
               break;
             default:
               break;
