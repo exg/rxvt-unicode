@@ -160,8 +160,6 @@ rxvt_term::scr_kill_char (line_t &l, int col) const NOTHROW
 void
 rxvt_term::scr_reset ()
 {
-  scr_soft_reset ();
-
   view_start = 0;
   num_scr = 0;
 
@@ -282,6 +280,7 @@ rxvt_term::scr_reset ()
         {
           // Re-wrap lines. This is rather ugly, possibly because I am too dumb
           // to come up with a lean and mean algorithm.
+          // TODO: maybe optimise when width didn't change
 
           row_col_t ocur = screen.cur;
           ocur.row = MOD (term_start + ocur.row, prev_total_rows);
@@ -438,6 +437,8 @@ rxvt_term::scr_poweron ()
 {
   scr_release ();
   prev_nrow = prev_ncol = 0;
+  rvideo_mode = false;
+  scr_soft_reset ();
   scr_reset ();
 
   scr_clear (true);
@@ -451,8 +452,6 @@ rxvt_term::scr_soft_reset ()
 #if ENABLE_OVERLAY
   scr_overlay_off ();
 #endif
-
-  rvideo_mode = false;
 
   if (current_screen != PRIMARY)
     scr_swap_screen ();
@@ -1543,8 +1542,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel) NOTHROW
             line->r[col] = line->r[col + count];
           }
 
-        scr_blank_line (*line, ncol - count, count,
-                        line->r[ncol - 1] & (RS_fgMask | RS_bgMask | RS_baseattrMask));
+        scr_blank_line (*line, ncol - count, count, rstyle);
 
         if (selection.op && current_screen == selection.screen
             && ROWCOL_IN_ROW_AT_OR_AFTER (selection.beg, screen.cur))

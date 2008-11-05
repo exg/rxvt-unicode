@@ -971,6 +971,9 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
 #endif
     }
 
+  if (set_hint)
+    XSetWMNormalHints (dpy, parent[0], &szHint);
+
   fix_screen = ncol != prev_ncol || nrow != prev_nrow;
 
   if (fix_screen || newwidth != old_width || newheight != old_height)
@@ -986,15 +989,12 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
       if (bgPixmap.window_size_sensitive ())
         update_background ();
 #endif
-
-      scr_clear ();
     }
 
-  if (set_hint)
-    XSetWMNormalHints (dpy, parent[0], &szHint);
-
   if (fix_screen || old_height == 0)
-    scr_reset ();
+    {
+      scr_reset ();
+    }
 
   // TODO, with nvidia-8178, resizes kill the alpha channel, report if not fixed in newer version
   //scr_touch (false);

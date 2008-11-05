@@ -569,7 +569,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 
   init_xlocale ();
 
-  scr_reset (); // initialize screen
+  scr_poweron (); // initialize screen
 
 #if 0
   XSynchronize (dpy, True);

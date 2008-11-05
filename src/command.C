@@ -3586,29 +3586,30 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
     const int       argval;
     const unsigned long bit;
   } argtopriv[] = {
-                  { 1, PrivMode_aplCUR },
+                  { 1, PrivMode_aplCUR },       // DECCKM
                   { 2, PrivMode_vt52 },
-                  { 3, PrivMode_132 },
-                  { 4, PrivMode_smoothScroll },
-                  { 5, PrivMode_rVideo },
-                  { 6, PrivMode_relOrigin },
-                  { 7, PrivMode_Autowrap },
-                 // 8, bi-directional support mode
+                  { 3, PrivMode_132 },          // DECCOLM
+                  { 4, PrivMode_smoothScroll }, // DECSCLM
+                  { 5, PrivMode_rVideo },       // DECSCNM
+                  { 6, PrivMode_relOrigin },    // DECOM
+                  { 7, PrivMode_Autowrap },     // DECAWM
+                 // 8, auto-repeat keys         // DECARM
                   { 9, PrivMode_MouseX10 },
                  // 18, 19 printing-related
-                  { 25, PrivMode_VisibleCursor },
+                  { 25, PrivMode_VisibleCursor }, // cnorm/cvvis/civis
 #ifdef scrollBar_esc
                   { scrollBar_esc, PrivMode_scrollBar },
 #endif
-                  { 35, PrivMode_ShiftKeys }, // rxvt extension
+                  { 35, PrivMode_ShiftKeys },   // rxvt extension
+                 // 38, tektronix mode          // DECTEK
                   { 40, PrivMode_132OK },
                  // 41 xterm more fixes NYI
                  // 45 margin bell NYI
                  // 46 start logging
                   { 47, PrivMode_Screen },
-                  { 66, PrivMode_aplKP },
+                  { 66, PrivMode_aplKP },       // DECPAM/DECPNM
 #ifndef NO_BACKSPACE_KEY
-                  { 67, PrivMode_BackSpace },
+                  { 67, PrivMode_BackSpace },   // DECBKM
 #endif
                   { 1000, PrivMode_MouseX11 },
                   { 1002, PrivMode_MouseBtnEvent },
@@ -3680,10 +3681,7 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
               break;
             case 3:			/* 80/132 */
               if (priv_modes & PrivMode_132OK)
-                {
-                  scr_poweron ();
-                  set_widthheight (((state ? 132 : 80) * fwidth), 24 * fheight);
-                }
+                set_widthheight ((state ? 132 : 80) * fwidth, 24 * fheight);
               break;
             case 4:			/* smooth scrolling */
               set_option (Opt_jumpScroll, !state);
@@ -3735,6 +3733,7 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
                 }
               else
                 vt_emask_mouse = NoEventMask;
+
               vt_select_input ();
               break;
             case 1010:		/* scroll to bottom on TTY output inhibit */
@@ -3747,6 +3746,7 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
               if (option (Opt_secondaryScreen))
                 if (current_screen != PRIMARY)
                   scr_erase_screen (2);
+
               scr_change_screen (state);
               break;
             case 1049:		/* secondary screen w/ clearing first */
