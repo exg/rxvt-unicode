@@ -20,6 +20,7 @@ WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
 TODO: cursor restore/rendition restore on rmcup
+	- NOTICE: this release updates terminfo/termcap.
 	- the aterm code now frees the as visual and image manager objects
           when a window was closed.
         - do not (wrongly) adjust the virtual line length inside
@@ -44,8 +45,9 @@ TODO: cursor restore/rendition restore on rmcup
         - new option -icon to set _NET_WM_ICON (based on patch by Frank Schmitt).
         - initialise the as visual only on demand, instead of unconditionally,
           to save memory in the common case of not using visual gimmicks.
-        - try to work around a race between urxvt and wm's on programmatic
-          resizes by temporarily disabling size hints.
+        - try to work around bugs in a few wm's that errornously resize
+          client windows on hint property updates by temporarily
+          disabling size hints.
         - implement the DECSTR soft reset sequence and use it for tput init,
           and make hard RIS and DECSTR both reset more private modes, such
           as mouse reporting.
