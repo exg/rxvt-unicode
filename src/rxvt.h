@@ -413,6 +413,7 @@ enum {
   URxvt_Color_tint       = 705,     // change actual tint colour
   URxvt_Color_BD         = 706,     // change actual 'Bold' color
   URxvt_Color_UL         = 707,     // change actual 'Underline' color
+  URxvt_Color_border     = 708,
 
   URxvt_font             = 710,
   URxvt_boldFont         = 711,

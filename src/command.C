@@ -3402,6 +3402,9 @@ rxvt_term::process_xterm_seq (int op, const char *str, char resp)
         process_color_seq (op, Color_IT, str, resp);
         break;
 #endif
+      case URxvt_Color_border:
+        process_color_seq (op, Color_border, str, resp);
+        break;
 #if ENABLE_TRANSPARENCY
       case URxvt_Color_tint:
         process_color_seq (op, Color_tint, str, resp);
