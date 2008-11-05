@@ -305,6 +305,12 @@ extension will actually grab a physical key just for this function.
 If you want a quake-like animation, tell your window manager to do so
 (fvwm can do it).
 
+=item overlay-osc
+
+This extension implements some OSC commands to display timed popups on the
+screen - useful for status displays from within scripts. You have to read
+the sources for more info.
+
 =item block-graphics-to-ascii
 
 A not very useful example of filtering all text output to the terminal

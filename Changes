@@ -56,6 +56,7 @@ TODO: cursor restore/rendition restore on rmcup
           droppings when urxvt viewed the scrollback buffer.
         - use current rendition style in DCH sequence.
         - the 132/80 mode switch no longer forces a screen reset.
+        - new perl extension "overlay-osc", for status displays and the like.
 
 9.05 Sun Jun 15 20:09:20 CEST 2008
 	- new option --cd/chdir to set the starting working directory.
