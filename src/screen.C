@@ -396,6 +396,12 @@ rxvt_term::scr_reset ()
       clamp_it (screen.cur.col, 0, ncol - 1);
     }
 
+  free (tabs);
+  tabs = (char *)rxvt_malloc (ncol);
+
+  for (int col = ncol; --col; )
+    tabs [col] = col % TABSIZE == 0;
+
   CLEAR_ALL_SELECTION ();
 
   prev_nrow = nrow;
@@ -455,12 +461,6 @@ rxvt_term::scr_soft_reset ()
 
   if (current_screen != PRIMARY)
     scr_swap_screen ();
-
-  free (tabs);
-  tabs = (char *)rxvt_malloc (ncol);
-
-  for (int col = ncol; --col; )
-    tabs [col] = col % TABSIZE == 0;
 
   scr_scroll_region (0, MAX_ROWS - 1);
   scr_rendition (0, ~RS_None);
