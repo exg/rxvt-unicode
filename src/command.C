@@ -3662,7 +3662,6 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
             break;
 #endif
           case 1048:		/* alternative cursor save */
-          case 1049:
             if (option (Opt_secondaryScreen))
               if (mode == 0)
                 scr_cursor (RESTORE);
@@ -3748,16 +3747,21 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
               break;
             case 1047:		/* secondary screen w/ clearing last */
               if (option (Opt_secondaryScreen))
-                if (current_screen != PRIMARY)
+                if (!state)
                   scr_erase_screen (2);
 
               scr_change_screen (state);
               break;
             case 1049:		/* secondary screen w/ clearing first */
+              if (state)
+                scr_cursor (SAVE);
+
               scr_change_screen (state);
-              if (option (Opt_secondaryScreen))
-                if (current_screen != PRIMARY)
-                  scr_erase_screen (2);
+
+              if (state)
+                scr_erase_screen (2);
+              else
+                scr_cursor (RESTORE);
               break;
             default:
               break;

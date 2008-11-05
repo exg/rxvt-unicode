@@ -61,6 +61,7 @@ TODO: cursor restore/rendition restore on rmcup
         - new perl extension "overlay-osc", for status displays and the like.
         - fix some minor cursor drawing issues with overlays by allowing
           overlays to modify screen flags (to disable the cursor themselves).
+        - work around programs not restoring rstyle before rmcup.
 
 9.05 Sun Jun 15 20:09:20 CEST 2008
 	- new option --cd/chdir to set the starting working directory.
