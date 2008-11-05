@@ -19,13 +19,8 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
-TODO:   /*TODO: the xlceararea/xfillrectangle below don't take scroll offste into account, ask mikachu for details */
-00:25:39 <Mikachu> put your prompt around the middle row in the terminal
-                   and while sleep 0.1; do printf '\e[J'; done
-00:26:31 <schmorp> i assume scorllttyoutput or so wouldinterfere?
-
-
 TODO: cursor over overlays, when focus change?
+TODO: cursor restore/rendition restore on rmcup
 	- the aterm code now frees the as visual and image manager objects
           when a window was closed.
         - do not (wrongly) adjust the virtual line length inside

@@ -188,7 +188,7 @@ resource I<blurRadius>.
 
 Compile I<afterimage>: Use the specified image as application icon. This
 is used by many window managers, taskbars and pagers to represent the
-appliation window; resource I<iconFile>.
+application window; resource I<iconFile>.
 
 =item B<-bg> I<colour>
 
