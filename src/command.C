@@ -3595,7 +3595,8 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
                   { 7, PrivMode_Autowrap },     // DECAWM
                  // 8, auto-repeat keys         // DECARM
                   { 9, PrivMode_MouseX10 },
-                 // 18, 19 printing-related
+                 // 18 end FF to printer after print screen
+                 // 19 Print screen prints full screen/scorll region
                   { 25, PrivMode_VisibleCursor }, // cnorm/cvvis/civis
 #ifdef scrollBar_esc
                   { scrollBar_esc, PrivMode_scrollBar },
