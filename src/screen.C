@@ -1344,7 +1344,9 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
 
   min_it (num, nrow - row);
 
-  /*TODO: the xlceararea/xfillrectangle below don't take scroll offste into account, ask mikachu for details */
+  // TODO: the code below does not work when view_start != 0
+  // the workaround is to disable the clear and use a normal refresh
+  // when view_start != 0. mysterious.
   if (rstyle & (RS_RVid | RS_Uline))
     ren = (rend_t) ~RS_None;
   else if (GET_BASEBG (rstyle) == Color_bg)
@@ -1376,6 +1378,7 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
   for (; num--; row++)
     {
       scr_blank_screen_mem (ROW(row), rstyle);
+
       if (!view_start)
         scr_blank_line (drawn_buf [row], 0, ncol, ren);
     }
