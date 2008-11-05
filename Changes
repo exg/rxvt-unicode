@@ -53,7 +53,7 @@ TODO: cursor restore/rendition restore on rmcup
         - redundantly clear mouse reporting and a few other states in
           tput init/tput reset, for older urxvts.
         - partial/full clear screens did cause flickering and possibly pixel
-          droppings when urxvt viewed the scorllback buffer.
+          droppings when urxvt viewed the scrollback buffer.
         - use current rendition style in DCH sequence.
         - the 132/80 mode switch no longer forces a screen reset.
 
