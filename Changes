@@ -21,6 +21,7 @@ DUMB: support tex fonts
 
 9.06 Sat Nov  8 17:47:18 CET 2008
 	- NOTICE: this release updates terminfo/termcap.
+        - updates libev to 3.48.
 	- the aterm code now frees the as visual and image manager objects
           when a window was closed.
         - do not (wrongly) adjust the virtual line length inside
