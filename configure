@@ -8560,9 +8560,9 @@ fi
 
 
 for ac_func in \
-	ttyslot \
 	updwtmp \
 	updwtmpx \
+	updlastlogx \
 
 do
 as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
@@ -8658,13 +8658,7 @@ done
 
 
 
-
-
-for ac_header in \
-	utmp.h \
-	utmpx.h \
-	lastlog.h \
-
+for ac_header in lastlog.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
 if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
@@ -8805,18 +8799,23 @@ done
 
 
 
-if test "${ac_cv_header_utmp_h+set}" = set; then
-  { echo "$as_me:$LINENO: checking for utmp.h" >&5
-echo $ECHO_N "checking for utmp.h... $ECHO_C" >&6; }
-if test "${ac_cv_header_utmp_h+set}" = set; then
+
+for ac_header in utmp.h
+do
+as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
+if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
+  { echo "$as_me:$LINENO: checking for $ac_header" >&5
+echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
+if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 fi
-{ echo "$as_me:$LINENO: result: $ac_cv_header_utmp_h" >&5
-echo "${ECHO_T}$ac_cv_header_utmp_h" >&6; }
+ac_res=`eval echo '${'$as_ac_Header'}'`
+	       { echo "$as_me:$LINENO: result: $ac_res" >&5
+echo "${ECHO_T}$ac_res" >&6; }
 else
   # Is the header compilable?
-{ echo "$as_me:$LINENO: checking utmp.h usability" >&5
-echo $ECHO_N "checking utmp.h usability... $ECHO_C" >&6; }
+{ echo "$as_me:$LINENO: checking $ac_header usability" >&5
+echo $ECHO_N "checking $ac_header usability... $ECHO_C" >&6; }
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -8824,7 +8823,7 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 $ac_includes_default
-#include <utmp.h>
+#include <$ac_header>
 _ACEOF
 rm -f conftest.$ac_objext
 if { (ac_try="$ac_compile"
@@ -8856,15 +8855,15 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 echo "${ECHO_T}$ac_header_compiler" >&6; }
 
 # Is the header present?
-{ echo "$as_me:$LINENO: checking utmp.h presence" >&5
-echo $ECHO_N "checking utmp.h presence... $ECHO_C" >&6; }
+{ echo "$as_me:$LINENO: checking $ac_header presence" >&5
+echo $ECHO_N "checking $ac_header presence... $ECHO_C" >&6; }
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
 cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
-#include <utmp.h>
+#include <$ac_header>
 _ACEOF
 if { (ac_try="$ac_cpp conftest.$ac_ext"
 case "(($ac_try" in
@@ -8897,41 +8896,45 @@ echo "${ECHO_T}$ac_header_preproc" >&6; }
 # So?  What about this header?
 case $ac_header_compiler:$ac_header_preproc:$ac_cxx_preproc_warn_flag in
   yes:no: )
-    { echo "$as_me:$LINENO: WARNING: utmp.h: accepted by the compiler, rejected by the preprocessor!" >&5
-echo "$as_me: WARNING: utmp.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
-    { echo "$as_me:$LINENO: WARNING: utmp.h: proceeding with the compiler's result" >&5
-echo "$as_me: WARNING: utmp.h: proceeding with the compiler's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the compiler's result" >&5
+echo "$as_me: WARNING: $ac_header: proceeding with the compiler's result" >&2;}
     ac_header_preproc=yes
     ;;
   no:yes:* )
-    { echo "$as_me:$LINENO: WARNING: utmp.h: present but cannot be compiled" >&5
-echo "$as_me: WARNING: utmp.h: present but cannot be compiled" >&2;}
-    { echo "$as_me:$LINENO: WARNING: utmp.h:     check for missing prerequisite headers?" >&5
-echo "$as_me: WARNING: utmp.h:     check for missing prerequisite headers?" >&2;}
-    { echo "$as_me:$LINENO: WARNING: utmp.h: see the Autoconf documentation" >&5
-echo "$as_me: WARNING: utmp.h: see the Autoconf documentation" >&2;}
-    { echo "$as_me:$LINENO: WARNING: utmp.h:     section \"Present But Cannot Be Compiled\"" >&5
-echo "$as_me: WARNING: utmp.h:     section \"Present But Cannot Be Compiled\"" >&2;}
-    { echo "$as_me:$LINENO: WARNING: utmp.h: proceeding with the preprocessor's result" >&5
-echo "$as_me: WARNING: utmp.h: proceeding with the preprocessor's result" >&2;}
-    { echo "$as_me:$LINENO: WARNING: utmp.h: in the future, the compiler will take precedence" >&5
-echo "$as_me: WARNING: utmp.h: in the future, the compiler will take precedence" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: present but cannot be compiled" >&5
+echo "$as_me: WARNING: $ac_header: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header:     check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: $ac_header:     check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: see the Autoconf documentation" >&5
+echo "$as_me: WARNING: $ac_header: see the Autoconf documentation" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&5
+echo "$as_me: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: $ac_header: proceeding with the preprocessor's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: in the future, the compiler will take precedence" >&5
+echo "$as_me: WARNING: $ac_header: in the future, the compiler will take precedence" >&2;}
 
     ;;
 esac
-{ echo "$as_me:$LINENO: checking for utmp.h" >&5
-echo $ECHO_N "checking for utmp.h... $ECHO_C" >&6; }
-if test "${ac_cv_header_utmp_h+set}" = set; then
+{ echo "$as_me:$LINENO: checking for $ac_header" >&5
+echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
+if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  ac_cv_header_utmp_h=$ac_header_preproc
+  eval "$as_ac_Header=\$ac_header_preproc"
 fi
-{ echo "$as_me:$LINENO: result: $ac_cv_header_utmp_h" >&5
-echo "${ECHO_T}$ac_cv_header_utmp_h" >&6; }
+ac_res=`eval echo '${'$as_ac_Header'}'`
+	       { echo "$as_me:$LINENO: result: $ac_res" >&5
+echo "${ECHO_T}$ac_res" >&6; }
 
 fi
-if test $ac_cv_header_utmp_h = yes; then
-  { echo "$as_me:$LINENO: checking for struct utmp" >&5
+if test `eval echo '${'$as_ac_Header'}'` = yes; then
+  cat >>confdefs.h <<_ACEOF
+#define `echo "HAVE_$ac_header" | $as_tr_cpp` 1
+_ACEOF
+ { echo "$as_me:$LINENO: checking for struct utmp" >&5
 echo $ECHO_N "checking for struct utmp... $ECHO_C" >&6; }
 if test "${struct_utmp+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -9108,20 +9111,26 @@ fi
 
 fi
 
+done
 
 
-if test "${ac_cv_header_utmpx_h+set}" = set; then
-  { echo "$as_me:$LINENO: checking for utmpx.h" >&5
-echo $ECHO_N "checking for utmpx.h... $ECHO_C" >&6; }
-if test "${ac_cv_header_utmpx_h+set}" = set; then
+
+for ac_header in utmpx.h
+do
+as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
+if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
+  { echo "$as_me:$LINENO: checking for $ac_header" >&5
+echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
+if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 fi
-{ echo "$as_me:$LINENO: result: $ac_cv_header_utmpx_h" >&5
-echo "${ECHO_T}$ac_cv_header_utmpx_h" >&6; }
+ac_res=`eval echo '${'$as_ac_Header'}'`
+	       { echo "$as_me:$LINENO: result: $ac_res" >&5
+echo "${ECHO_T}$ac_res" >&6; }
 else
   # Is the header compilable?
-{ echo "$as_me:$LINENO: checking utmpx.h usability" >&5
-echo $ECHO_N "checking utmpx.h usability... $ECHO_C" >&6; }
+{ echo "$as_me:$LINENO: checking $ac_header usability" >&5
+echo $ECHO_N "checking $ac_header usability... $ECHO_C" >&6; }
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -9129,7 +9138,7 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 $ac_includes_default
-#include <utmpx.h>
+#include <$ac_header>
 _ACEOF
 rm -f conftest.$ac_objext
 if { (ac_try="$ac_compile"
@@ -9161,15 +9170,15 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 echo "${ECHO_T}$ac_header_compiler" >&6; }
 
 # Is the header present?
-{ echo "$as_me:$LINENO: checking utmpx.h presence" >&5
-echo $ECHO_N "checking utmpx.h presence... $ECHO_C" >&6; }
+{ echo "$as_me:$LINENO: checking $ac_header presence" >&5
+echo $ECHO_N "checking $ac_header presence... $ECHO_C" >&6; }
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
 cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
-#include <utmpx.h>
+#include <$ac_header>
 _ACEOF
 if { (ac_try="$ac_cpp conftest.$ac_ext"
 case "(($ac_try" in
@@ -9202,41 +9211,45 @@ echo "${ECHO_T}$ac_header_preproc" >&6; }
 # So?  What about this header?
 case $ac_header_compiler:$ac_header_preproc:$ac_cxx_preproc_warn_flag in
   yes:no: )
-    { echo "$as_me:$LINENO: WARNING: utmpx.h: accepted by the compiler, rejected by the preprocessor!" >&5
-echo "$as_me: WARNING: utmpx.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
-    { echo "$as_me:$LINENO: WARNING: utmpx.h: proceeding with the compiler's result" >&5
-echo "$as_me: WARNING: utmpx.h: proceeding with the compiler's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the compiler's result" >&5
+echo "$as_me: WARNING: $ac_header: proceeding with the compiler's result" >&2;}
     ac_header_preproc=yes
     ;;
   no:yes:* )
-    { echo "$as_me:$LINENO: WARNING: utmpx.h: present but cannot be compiled" >&5
-echo "$as_me: WARNING: utmpx.h: present but cannot be compiled" >&2;}
-    { echo "$as_me:$LINENO: WARNING: utmpx.h:     check for missing prerequisite headers?" >&5
-echo "$as_me: WARNING: utmpx.h:     check for missing prerequisite headers?" >&2;}
-    { echo "$as_me:$LINENO: WARNING: utmpx.h: see the Autoconf documentation" >&5
-echo "$as_me: WARNING: utmpx.h: see the Autoconf documentation" >&2;}
-    { echo "$as_me:$LINENO: WARNING: utmpx.h:     section \"Present But Cannot Be Compiled\"" >&5
-echo "$as_me: WARNING: utmpx.h:     section \"Present But Cannot Be Compiled\"" >&2;}
-    { echo "$as_me:$LINENO: WARNING: utmpx.h: proceeding with the preprocessor's result" >&5
-echo "$as_me: WARNING: utmpx.h: proceeding with the preprocessor's result" >&2;}
-    { echo "$as_me:$LINENO: WARNING: utmpx.h: in the future, the compiler will take precedence" >&5
-echo "$as_me: WARNING: utmpx.h: in the future, the compiler will take precedence" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: present but cannot be compiled" >&5
+echo "$as_me: WARNING: $ac_header: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header:     check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: $ac_header:     check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: see the Autoconf documentation" >&5
+echo "$as_me: WARNING: $ac_header: see the Autoconf documentation" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&5
+echo "$as_me: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: $ac_header: proceeding with the preprocessor's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: in the future, the compiler will take precedence" >&5
+echo "$as_me: WARNING: $ac_header: in the future, the compiler will take precedence" >&2;}
 
     ;;
 esac
-{ echo "$as_me:$LINENO: checking for utmpx.h" >&5
-echo $ECHO_N "checking for utmpx.h... $ECHO_C" >&6; }
-if test "${ac_cv_header_utmpx_h+set}" = set; then
+{ echo "$as_me:$LINENO: checking for $ac_header" >&5
+echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
+if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  ac_cv_header_utmpx_h=$ac_header_preproc
+  eval "$as_ac_Header=\$ac_header_preproc"
 fi
-{ echo "$as_me:$LINENO: result: $ac_cv_header_utmpx_h" >&5
-echo "${ECHO_T}$ac_cv_header_utmpx_h" >&6; }
+ac_res=`eval echo '${'$as_ac_Header'}'`
+	       { echo "$as_me:$LINENO: result: $ac_res" >&5
+echo "${ECHO_T}$ac_res" >&6; }
 
 fi
-if test $ac_cv_header_utmpx_h = yes; then
-  { echo "$as_me:$LINENO: checking for struct utmpx" >&5
+if test `eval echo '${'$as_ac_Header'}'` = yes; then
+  cat >>confdefs.h <<_ACEOF
+#define `echo "HAVE_$ac_header" | $as_tr_cpp` 1
+_ACEOF
+ { echo "$as_me:$LINENO: checking for struct utmpx" >&5
 echo $ECHO_N "checking for struct utmpx... $ECHO_C" >&6; }
 if test "${struct_utmpx+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -9413,6 +9426,7 @@ fi
 
 fi
 
+done
 
 { echo "$as_me:$LINENO: checking for struct lastlog" >&5
 echo $ECHO_N "checking for struct lastlog... $ECHO_C" >&6; }
@@ -9993,13 +10007,6 @@ cat >>confdefs.h <<_ACEOF
 #define LASTLOG_FILE "$path_lastlog"
 _ACEOF
 
-  if test -d "$path_lastlog"; then
-
-cat >>confdefs.h <<\_ACEOF
-#define LASTLOG_IS_DIR 1
-_ACEOF
-
-  fi
 fi
 
 { echo "$as_me:$LINENO: checking where lastlogx is located" >&5

@@ -132,7 +132,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 3"
-.TH @@RXVT_NAME@@ 3 "2008-11-04" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 3 "2008-11-08" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -458,6 +458,11 @@ extension will actually grab a physical key just for this function.
 .Sp
 If you want a quake-like animation, tell your window manager to do so
 (fvwm can do it).
+.IP "overlay-osc" 4
+.IX Item "overlay-osc"
+This extension implements some \s-1OSC\s0 commands to display timed popups on the
+screen \- useful for status displays from within scripts. You have to read
+the sources for more info.
 .IP "block-graphics-to-ascii" 4
 .IX Item "block-graphics-to-ascii"
 A not very useful example of filtering all text output to the terminal

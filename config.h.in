@@ -214,9 +214,6 @@
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
 
-/* Define to 1 if you have the `ttyslot' function. */
-#undef HAVE_TTYSLOT
-
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
@@ -226,6 +223,9 @@
 
 /* Define to 1 if you have the `unsetenv' function. */
 #undef HAVE_UNSETENV
+
+/* Define to 1 if you have the `updlastlogx' function. */
+#undef HAVE_UPDLASTLOGX
 
 /* Define to 1 if you have the `updwtmp' function. */
 #undef HAVE_UPDWTMP
@@ -277,9 +277,6 @@
 
 /* Define location of lastlog */
 #undef LASTLOG_FILE
-
-/* Define if lastlog is provided via a directory */
-#undef LASTLOG_IS_DIR
 
 /* Define if you want to have lastlog support when utmp/utmpx is enabled */
 #undef LASTLOG_SUPPORT

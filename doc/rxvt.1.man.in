@@ -132,7 +132,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2008-11-04" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2008-11-08" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -306,7 +306,7 @@ resource \fIblurRadius\fR.
 .IX Item "-icon file"
 Compile \fIafterimage\fR: Use the specified image as application icon. This
 is used by many window managers, taskbars and pagers to represent the
-appliation window; resource \fIiconFile\fR.
+application window; resource \fIiconFile\fR.
 .IP "\fB\-bg\fR \fIcolour\fR" 4
 .IX Item "-bg colour"
 Window background colour; resource \fBbackground\fR.

@@ -132,7 +132,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2008-11-04" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2008-11-08" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -2257,6 +2257,7 @@ Ps = 704	Change colour of italic characters to Pt
 Ps = 705	Change background pixmap tint colour to Pt (Compile transparency).
 Ps = 706	Change colour of bold characters to Pt
 Ps = 707	Change colour of underlined characters to Pt
+Ps = 708	Change colour of the border to Pt
 Ps = 710	Set normal fontset to Pt. Same as Ps = 50.
 Ps = 711	Set bold fontset to Pt. Similar to Ps = 50 (Compile styles).
 Ps = 712	Set italic fontset to Pt. Similar to Ps = 50 (Compile styles).
