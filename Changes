@@ -101,7 +101,7 @@ DUMB: support tex fonts
 9.0  Fri Jan 25 19:34:04 CET 2008
 	- fix a crash bug where urxvtd would crash when urxvtc was called
           with wrong arguments (I wish debian maintainers in general would
-          report bugs and their proposed fixes to the original package maintaienrs
+          report bugs and their proposed fixes to the original package maintainers
           instead of sitting on them for good measure to see if anybody notices).
         - drawing xft compose characters was causing garbage to be drawn.
         - correctly clear xft character background in all cases.
@@ -175,14 +175,14 @@ DUMB: support tex fonts
 	- fix memory leak in pixmap code.
 	- fix a serious bug while setting the XIM destroy callback
           on (typical) 64 bit systems.
-	- automove-background functionality re-implemented internaly using :root op in pixmap
+	- automove-background functionality re-implemented internally using :root op in pixmap
 	  geometry string. For example: rxvt -pixmap "image.jpg;:root"
         - do not link rxvtc against every lib on the planet anymore.
         - parallel builds should work once more.
 
 8.4  Sat Oct 27 14:02:13 CEST 2007
 	- overhaul of the transparency/pixmap code (sasha).
-	- fix possible race betwen visual bell and poweron.
+	- fix possible race between visual bell and poweron.
           (reported by Martin von Gagern, gentoo?).
         - urxvt -e no longer crashes the child.
         - fixed some minor memleaks on incorrect usage or
@@ -299,7 +299,7 @@ DUMB: support tex fonts
           resource used") and seems to be logical behaviour, too. .Xdefaults
           resources have a lower priority than display-specific resources.
         - add "kuake" perl extension that does a similar thing to the kuake
-          terminal emulator (see man urxtvperl).
+          terminal emulator (see man urxvtperl).
         - use less "correct" color scaling that is compatible with libX11 and
           Xft (avoids off-by-one colors resulting in striped backgrounds).
         - the "depth" resource is now respected.
@@ -350,7 +350,7 @@ DUMB: support tex fonts
           to correctly position their preedit window.
         - un-optimise the line clearing on newly scrolled-in lines a bit: the
           former reasoning was that any fg colour on default bg looks the same
-          in empty spaces, but thats not true when reversing (e.g. selection),
+          in empty spaces, but that's not true when reversing (e.g. selection),
           so also check for matching fg colours. This fixes the problem where
           selecting newly scrolled-in lines would exhibit wrong colours.
         - fix a bug in the perl interface causing focus in events to generate
@@ -369,7 +369,7 @@ DUMB: support tex fonts
         - +option now really sets the option to default, instead of using the
           resource value.
         - options that require an argument now really _require_ an argument.
-        - the tabbed extension now forwards focus and keys events to th
+        - the tabbed extension now forwards focus and key events to the
           relevant tab window.
         - tab colours are now configurable and have sensible defaults
           (initial patch by hednod).
