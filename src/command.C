@@ -1686,6 +1686,7 @@ rxvt_term::x_cb (XEvent &ev)
   refresh_check ();
 }
 
+#if ENABLE_FRILLS
 void
 rxvt_term::set_urgency (bool enable)
 {
@@ -1699,6 +1700,7 @@ rxvt_term::set_urgency (bool enable)
       urgency_hint = enable;
     }
 }
+#endif
 
 void
 rxvt_term::focus_in ()
