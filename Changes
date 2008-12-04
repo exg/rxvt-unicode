@@ -19,6 +19,8 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
+TODO: exg-- patch
+TODO: selection_beg/end should set screen, or so
 	- urxvt did not compile without frills enabled
           (analysed by Matthew Rosewarne).
 

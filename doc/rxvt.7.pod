@@ -812,7 +812,7 @@ defaults:
    IRC*keysym.M-C-1:       command:\033]710;suxuseuro\007\033]711;suxuseuro\007
    IRC*keysym.M-C-2:       command:\033]710;9x15bold\007\033]711;9x15bold\007
 
-C<Alt-Shift-1> and C<Alt-Shift-2> switch between two different font
+C<Alt-Ctrl-1> and C<Alt-Ctrl-2> switch between two different font
 sizes. C<suxuseuro> allows me to keep an eye (and actually read)
 stuff while keeping a very small window. If somebody pastes something
 complicated (e.g. japanese), I temporarily switch to a larger font.
