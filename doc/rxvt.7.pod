@@ -1210,6 +1210,12 @@ possibly working workaround is to use a wcwidth implementation like
 
 http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
 
+=head3 I want 256 colors
+
+Are you sure you need 256 colors? 88 colors should be enough for most
+purposes. If you really need more, there is an unsupported patch for
+it in the doc directory, but please do not ask for it to be applied.
+
 =head1 RXVT-UNICODE TECHNICAL REFERENCE
 
 The rest of this document describes various technical aspects of

@@ -33,6 +33,14 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
+#if defined(ENABLE_FRILLS) && defined(_POSIX_MEMLOCK) && _POSIX_MEMLOCK > 0
+# define ENABLE_MLOCK 1
+#endif
+
+#if ENABLE_MLOCK
+# include <sys/mman.h>
+#endif
+
 #include <cerrno>
 
 #include "rxvt.h"
@@ -217,6 +225,9 @@ void server::read_cb (ev::io &w, int revents)
 }
 
 int opt_fork, opt_opendisplay, opt_quiet;
+#if ENABLE_MLOCK
+int opt_lock;
+#endif
 
 int
 main (int argc, const char *const *argv)
@@ -231,6 +242,10 @@ main (int argc, const char *const *argv)
         opt_opendisplay = 1;
       else if (!strcmp (argv [i], "-q") || !strcmp (argv [i], "--quiet"))
         opt_quiet = 1;
+#if ENABLE_MLOCK
+      else if (!strcmp (argv [i], "-m") || !strcmp (argv [i], "--mlock"))
+        opt_lock = 1;
+#endif
       else
         {
           rxvt_log ("%s: unknown option '%s', aborting.\n", argv [0], argv [i]);
@@ -256,10 +271,21 @@ main (int argc, const char *const *argv)
 
   free (sockname);
 
+  pid_t pid = 0;
   if (opt_fork)
     {
-      pid_t pid = fork ();
+      pid = fork ();
+    }
 
+#if ENABLE_MLOCK
+  // Optionally preform a mlockall so this process does not get swapped out.
+  if (opt_lock && pid == 0)
+    if (mlockall(MCL_CURRENT | MCL_FUTURE) == -1)
+      perror("unable to lock into ram");
+#endif
+
+  if (opt_fork)
+    {
       if (pid < 0)
         {
           rxvt_log ("unable to fork daemon, aborting.\n");

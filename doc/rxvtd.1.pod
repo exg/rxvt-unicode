@@ -4,7 +4,7 @@
 
 =head1 SYNOPSIS
 
-B<@@RXVT_NAME@@d> [-q|--quiet] [-o|--opendisplay] [-f|--fork]
+B<@@RXVT_NAME@@d> [-q|--quiet] [-o|--opendisplay] [-f|--fork] [-m|--mlock]
 
 B<@@RXVT_NAME@@d> -q -o -f    # for .xsession use
 
@@ -53,6 +53,21 @@ B<@@RXVT_NAME@@d> will be killed automatically.
 
 This makes B<@@RXVT_NAME@@d> fork after it has bound itself to its control
 socket.
+
+=item B<-m>, B<--mlock>
+
+This makes B<@@RXVT_NAME@@d> call mlockall(2) on itself. This locks
+B<@@RXVT_NAME@@d> in RAM and prevents it from being swapped out to disk,
+at the cost of consuming a lot more memory on most operating systems.
+
+Note: In order to use this feature, your system administrator must have set
+your user's RLIMIT_MEMLOCK to a size greater than or equal to the size of the
+B<@@RXVT_NAME@@d> binary (or to unlimited). See F</etc/security/limits.conf>.
+
+Note 2: There is a known bug in glibc (possibly fixed in 2.8 and later
+versions) where calloc returns non-zeroed memory when mlockall is in
+effect. If you experience crashes or other odd behaviour while using
+--mlock, try it without it.
 
 =back
 
