@@ -2338,7 +2338,7 @@ rxvt_term::next_char () NOTHROW
 
       if (len == (size_t)-1)
         {
-          mbrtowc (0, 0, 0, mbstate); // reset now undefined conversion state
+          mbstate.reset (); // reset now undefined conversion state
           return (unsigned char)*cmdbuf_ptr++; // the _occasional_ latin1 character is allowed to slip through
         }
 

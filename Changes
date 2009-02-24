@@ -25,6 +25,8 @@ TODO: selection_beg/end should set screen, or so
           systems supporting it (patch by Russell Harmon).
 	- urxvt did not compile without frills enabled
           (analysed by Matthew Rosewarne).
+        - correctly reset the mbstate after an illegal
+          input sequence when handling terminal output (Emanuele Giaquinta).
 
 9.06 Sat Nov  8 17:47:18 CET 2008
 	- NOTICE: this release updates terminfo/termcap.
