@@ -21,12 +21,17 @@ DUMB: support tex fonts
 
 TODO: exg-- patch
 TODO: selection_beg/end should set screen, or so
+        - the binary search algorithm to find precomposed characters
+          was faulty, skipping some possible combinations (found by
+          Mikachu).
 	- enable --mlock option for urxvt with frills on
           systems supporting it (patch by Russell Harmon).
 	- urxvt did not compile without frills enabled
           (analysed by Matthew Rosewarne).
         - correctly reset the mbstate after an illegal
           input sequence when handling terminal output (Emanuele Giaquinta).
+        - avoid redrawing wide characters with combining enabled on every
+          refresgh (reported by Mikachu).
 
 9.06 Sat Nov  8 17:47:18 CET 2008
 	- NOTICE: this release updates terminfo/termcap.

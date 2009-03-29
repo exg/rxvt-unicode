@@ -290,7 +290,7 @@ rxvt_compose (unicode_t c1, unicode_t c2)
   int r = sizeof (rxvt_compose_table) / sizeof (rxvt_compose_entry) - 1;
   int m;
 
-  while (r > l)
+  while (r >= l)
     {
       m = (l + r) / 2;
       rxvt_compose_entry &c = rxvt_compose_table[m];
