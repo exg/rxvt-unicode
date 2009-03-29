@@ -265,7 +265,7 @@ optList[] = {
               STRG (Rs_blendtype, "blendType", "blt", "string", "background image blending type - alpha, tint, etc..."),
               STRG (Rs_blurradius, "blurRadius", "blr", "HxV", "gaussian blur radii to apply to the root background"),
 # if ENABLE_EWMH
-              STRG (Rs_iconfile, "iconFile", "icon", "file", "path to aplication icon image"),
+              STRG (Rs_iconfile, "iconFile", "icon", "file", "path to application icon image"),
 # endif
 #endif
               INFO ("e", "command arg ...", "command to execute")
