@@ -2252,7 +2252,8 @@ rxvt_term::scr_refresh () NOTHROW
               if (stp[col] == NOCHAR)
                 {
                   dtp[col] = stp[col];
-                  drp[col] = rend;
+                  drp[col] = srp[col];
+
                   count++;
                   i++;
 

@@ -40,7 +40,7 @@ struct rxvt_font
   int ascent, descent,
       width, height;
 
-  void set_name (char *name);
+  void set_name (char *name_);
 
   rxvt_font ();
   virtual ~rxvt_font () { free (name); };

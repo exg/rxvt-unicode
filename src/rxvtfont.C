@@ -218,13 +218,13 @@ rxvt_font::rxvt_font ()
 }
 
 void
-rxvt_font::set_name (char *name)
+rxvt_font::set_name (char *name_)
 {
-  if (this->name == name)
+  if (name == name_)
     return;
 
-  if (this->name) free (this->name); // let the compiler optimize
-  this->name = name;
+  if (name) free (name); // let the compiler optimize
+  name = name_;
 }
 
 void
