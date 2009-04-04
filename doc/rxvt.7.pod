@@ -859,12 +859,13 @@ The terminal description used by rxvt-unicode is not as widely available
 as that for xterm, or even rxvt (for which the same problem often arises).
 
 The correct solution for this problem is to install the terminfo, this can
-be done like this (with ncurses' infocmp and works as user and admin):
+be done by simply installing rxvt-unicode on the remote system as well
+(in case you have a nice package manager ready), or you can install the
+terminfo database manually like this (with ncurses infocmp. works as
+user and root):
 
    REMOTE=remotesystem.domain
    infocmp rxvt-unicode | ssh $REMOTE "mkdir -p .terminfo && cat >/tmp/ti && tic /tmp/ti"
-
-... or by installing rxvt-unicode normally on the remote system,
 
 One some systems you might need to set C<$TERMINFO> to the full path of
 F<$HOME/.terminfo> for this to work.
@@ -883,6 +884,12 @@ resource to set it:
 
 If you don't plan to use B<rxvt> (quite common...) you could also replace
 the rxvt terminfo file with the rxvt-unicode one and use C<TERM=rxvt>.
+
+=head3 nano fails with "Error opening terminal: rxvt-unicode"
+
+This exceptionally confusing and useless error message is printed by nano
+when it can't find the terminfo database. Nothing is wrong with your
+terminal, read the previous answer for a solution.
 
 =head3 C<tic> outputs some error when compiling the terminfo entry.
 

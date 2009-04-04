@@ -81,8 +81,8 @@ const struct rxvt_fallback_font {
 #if ENCODING_JP || ENCODING_JP_EXT
 # if XFT
   // prefer xft for complex scripts
-  { CS_JIS0208_1990_0, "xft:Kochi Gothic:antialias=false"          },
   { CS_JIS0208_1990_0, "xft:Sazanami Mincho:antialias=false"       },
+  { CS_JIS0208_1990_0, "xft:Kochi Gothic:antialias=false"          },
   { CS_JIS0208_1990_0, "xft:Mincho:antialias=false"                },
   { CS_JIS0208_1990_0, "xft::lang=ja:antialias=false"              },
 # endif
