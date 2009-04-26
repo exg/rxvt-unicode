@@ -1126,8 +1126,8 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   old_width = szHint.width;
   old_height = szHint.height;
 
-  process_xterm_seq (XTerm_title,    rs[Rs_title],    CHAR_ST);
-  process_xterm_seq (XTerm_iconName, rs[Rs_iconName], CHAR_ST);
+  set_title     (rs [Rs_title]);
+  set_icon_name (rs [Rs_iconName]);
 
   classHint.res_name  = (char *)rs[Rs_name];
   classHint.res_class = (char *)RESCLASS;

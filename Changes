@@ -19,8 +19,12 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
+TODO: `/etc/udev/rules.d/41-mythtv-permissions.rules'
 TODO: exg-- patch
 TODO: selection_beg/end should set screen, or so
+TODO:        - upgrade to libev-xx
+TODO: -rv interacts badly with popups.
+TODO:	- gcc-4.4/const/Milos Jakubicek.
         - the binary search algorithm to find precomposed characters
           was faulty, skipping some possible combinations (found by
           Mikachu).
@@ -31,7 +35,12 @@ TODO: selection_beg/end should set screen, or so
         - correctly reset the mbstate after an illegal
           input sequence when handling terminal output (Emanuele Giaquinta).
         - avoid redrawing wide characters with combining enabled on every
-          refresgh (reported by Mikachu).
+          refresh (reported by Mikachu).
+        - fix a typo preventing the ISO-646.1991 character set from being
+          recognized (http://achurch.org/patch-pile/).
+        - better warning for x11 font encoding detection failures, also,
+          try to decude encoding from both font properties and name
+          (adapted from http://achurch.org/patch-pile/).
 
 9.06 Sat Nov  8 17:47:18 CET 2008
 	- NOTICE: this release updates terminfo/termcap.

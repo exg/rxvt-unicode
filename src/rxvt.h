@@ -1256,7 +1256,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void process_dcs_seq ();
   void process_osc_seq ();
   void process_color_seq (int report, int color, const char *str, char resp);
-  void process_xterm_seq (int op, const char *str, char resp);
+  void process_xterm_seq (int op, char *str, char resp);
   int privcases (int mode, unsigned long bit);
   void process_terminal_mode (int mode, int priv, unsigned int nargs, const int *arg);
   void process_sgr_mode (unsigned int nargs, const int *arg);

@@ -1077,18 +1077,17 @@ rxvt_term::im_set_preedit_area (XRectangle &preedit_rect,
 bool
 rxvt_term::IMisRunning ()
 {
-  char *p;
   Atom atom;
   Window win;
   char server[IMBUFSIZ];
 
   /* get current locale modifier */
-  if ((p = XSetLocaleModifiers (NULL)) != NULL)
+  if (char *p = XSetLocaleModifiers (0))
     {
       strcpy (server, "@server=");
-      strncat (server, & (p[4]), IMBUFSIZ - 9); /* skip "@im=" */
+      strncat (server, p + 4, IMBUFSIZ - 9); /* skip "@im=" */
 
-      if ((p = strchr (server + 1, '@')) != NULL)      /* first one only */
+      if (p = strchr (server + 1, '@'))      /* first one only */
         *p = '\0';
 
       atom = XInternAtom (dpy, server, False);
