@@ -167,7 +167,7 @@ rxvt_utf8towcs (const char *str, int len)
   return r;
 }
 
-char *
+const char *
 rxvt_basename (const char *str) NOTHROW
 {
   char *base = strrchr (str, '/');

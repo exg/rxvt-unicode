@@ -1603,7 +1603,7 @@ rxvt_term::run_child (const char *const *argv)
       if ((shell = getenv ("SHELL")) == NULL || *shell == '\0')
         shell = "/bin/sh";
 
-      argv0 = (const char *)rxvt_basename (shell);
+      argv0 = rxvt_basename (shell);
 
       if (option (Opt_loginShell))
         {
