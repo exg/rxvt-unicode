@@ -27,6 +27,8 @@
 
 #include "ptytty.h"
 
+#include <cstdio>
+#include <cstring>
 #include <csignal>
 
 #include <sys/types.h>

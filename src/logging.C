@@ -42,6 +42,7 @@
 #if UTMP_SUPPORT
 
 #include <cstdio>
+#include <cstring>
 
 #include <sys/types.h>
 #include <sys/stat.h>
