@@ -43,6 +43,9 @@ TODO:	- gcc-4.4/const/Milos Jakubicek.
           (adapted from http://achurch.org/patch-pile/).
         - resizing the window with the scrollbar disabled via the escapes
           sequence could make the window bigger again (Mikachu).
+        - make sure the alignment for fd passing control messages
+          is correct and work around some NetBSD issues (Taylor R Campbell).
+        - update to libptytty 1.3.
 
 9.06 Sat Nov  8 17:47:18 CET 2008
 	- NOTICE: this release updates terminfo/termcap.
