@@ -1329,7 +1329,7 @@ bgPixmap_t::apply ()
          scr_touch or we get a great deal of flicker otherwise: */
       XClearWindow (target->dpy, target->parent[0]);
 
-      if (target->scrollBar.win)
+      if (target->scrollBar.state && target->scrollBar.win)
         {
           target->scrollBar.state = STATE_IDLE;
           target->scrollBar.show (0);

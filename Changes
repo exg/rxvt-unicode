@@ -39,8 +39,10 @@ TODO:	- gcc-4.4/const/Milos Jakubicek.
         - fix a typo preventing the ISO-646.1991 character set from being
           recognized (http://achurch.org/patch-pile/).
         - better warning for x11 font encoding detection failures, also,
-          try to decude encoding from both font properties and name
+          try to deduce encoding from both font properties and name
           (adapted from http://achurch.org/patch-pile/).
+        - resizing the window with the scrollbar disabled via the escapes
+          sequence could make the window bigger again (Mikachu).
 
 9.06 Sat Nov  8 17:47:18 CET 2008
 	- NOTICE: this release updates terminfo/termcap.
@@ -544,7 +546,7 @@ TODO:	- gcc-4.4/const/Milos Jakubicek.
           as kwin puts our windows behind the terminal (what a shoddy wm).
         - fixed struct utmp check in configure for OpenBSD.
         - complete overhaul of the pty/utmp management stuff and configure
-          (Emanuele Giaquinta).
+          (Emanuele Giaquinta=exg).
 	- add tsl/fsl and related capabilities to the terminfo description,
           to set the window title.
         - swap the environment in some more cases. This hopefully fixes
@@ -765,7 +767,7 @@ TODO:	- gcc-4.4/const/Milos Jakubicek.
 	  in Perl/Gtk2.
 	- fix assertion failure ("crash") on mousewheel-scrolling
 	  when the terminal height is small, by removing the assert.
-	  (reported by Mikael Magnusson).
+	  (reported by Mikael Magnusson=Mikachu).
 	- SYNCCVS. backported bugfixes done to rxvt
 	  (sourceforge bugs #1028739, #1028732), except for
 	  pts/%s fix as it seems to collide with freebsd,
