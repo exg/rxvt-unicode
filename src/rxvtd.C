@@ -278,10 +278,10 @@ main (int argc, const char *const *argv)
     }
 
 #if ENABLE_MLOCK
-  // Optionally preform a mlockall so this process does not get swapped out.
-  if (opt_lock && pid == 0)
-    if (mlockall(MCL_CURRENT | MCL_FUTURE) == -1)
-      perror("unable to lock into ram");
+  // Optionally perform an mlockall so this process does not get swapped out.
+  if (opt_lock && !pid)
+    if (mlockall (MCL_CURRENT | MCL_FUTURE) < 0)
+      perror ("unable to lock into ram");
 #endif
 
   if (opt_fork)
