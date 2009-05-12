@@ -648,7 +648,7 @@ rxvt_term::tt_winch ()
   ws.ws_row = nrow;
   ws.ws_xpixel = width;
   ws.ws_ypixel = height;
-  (void)ioctl (pty->pty, TIOCSWINSZ, &ws);
+  ioctl (pty->pty, TIOCSWINSZ, &ws);
 
 #if 0
   // TIOCSWINSZ is supposed to do this automatically and correctly
