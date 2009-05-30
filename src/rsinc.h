@@ -75,6 +75,7 @@
   def (int_bwidth)
   def (borderLess)
   def (lineSpace)
+  def (letterSpace)
   def (cursorUnderline)
   def (urgentOnBell)
 #endif

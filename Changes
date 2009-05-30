@@ -24,12 +24,12 @@ TODO: exg-- patch
 TODO: selection_beg/end should set screen, or so
 TODO:        - upgrade to libev-xx
 TODO: -rv interacts badly with popups.
-TODO: -letterspace option
 	- port to glibc-2.10 changes (strchr etc. returning const char *
           in C++), based on patches by Milos Jakubicek and Oliver Mader.
         - the binary search algorithm to find precomposed characters
           was faulty, skipping some possible combinations (found by
           Mikachu).
+        - new -letterspace option, patch by Mark H. Wilkinson.
 	- enable --mlock option for urxvt with frills on
           systems supporting it (patch by Russell Harmon).
 	- urxvt did not compile without frills enabled

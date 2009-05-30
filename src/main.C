@@ -690,6 +690,7 @@ rxvt_term::set_fonts ()
 
   prop = (*fs)[1]->properties ();
   prop.height += lineSpace;
+  prop.width += letterSpace;
 
   fs->set_prop (prop, false);
 

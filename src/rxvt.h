@@ -849,6 +849,7 @@ struct TermWin_t
   int            int_bwidth;    /* internal border width                    */
   int            ext_bwidth;    /* external border width                    */
   int            lineSpace;     /* number of extra pixels between rows      */
+  int            letterSpace;   /* number of extra pixels between columns   */
   int            saveLines;     /* number of lines that fit in scrollback   */
   int            total_rows;    /* total number of rows in this terminal    */
   int            term_start;    /* term lines start here                    */

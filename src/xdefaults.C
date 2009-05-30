@@ -229,6 +229,7 @@ optList[] = {
               STRG (Rs_int_bwidth, "internalBorder", "b", "number", "internal border in pixels"),
               BOOL (Rs_borderLess, "borderLess", "bl", Opt_borderLess, 0, "borderless window"),
               STRG (Rs_lineSpace, "lineSpace", "lsp", "number", "number of extra pixels between rows"),
+              STRG (Rs_letterSpace, "letterSpace", "letsp", "number", "letter spacing adjustment"),
 #endif
 #ifdef BUILTIN_GLYPHS
               BOOL (Rs_skipBuiltinGlyphs, "skipBuiltinGlyphs", "sbg", Opt_skipBuiltinGlyphs, 0, "do not use internal glyphs"),

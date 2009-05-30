@@ -295,6 +295,7 @@ rxvt_term::init_vars ()
   int_bwidth = INTERNALBORDERWIDTH;
   ext_bwidth = EXTERNALBORDERWIDTH;
   lineSpace = LINESPACE;
+  letterSpace = LETTERSPACE;
   saveLines = SAVELINES;
 
   refresh_type = SLOW_REFRESH;
@@ -450,6 +451,9 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
   if (rs[Rs_lineSpace] && (i = atoi (rs[Rs_lineSpace])) >= 0)
     lineSpace = min (i, std::numeric_limits<int16_t>::max ());
+
+  if (rs[Rs_letterSpace])
+    letterSpace = atoi (rs[Rs_letterSpace]);
 #endif
 
 #ifdef POINTER_BLANK

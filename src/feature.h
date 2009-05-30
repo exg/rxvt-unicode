@@ -379,6 +379,11 @@
 #define LINESPACE	0
 
 /*
+ * Default number of extra dots between columns
+ */
+#define LETTERSPACE	0
+
+/*
  * Default number of lines in the scrollback buffer
  */
 #define SAVELINES	1000

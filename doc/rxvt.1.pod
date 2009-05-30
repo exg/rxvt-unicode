@@ -369,6 +369,13 @@ Compile I<frills>: Lines (pixel height) to insert between each row of
 the display. Useful to work around font rendering problems; resource
 B<lineSpace>.
 
+=item B<-letsp> I<number>
+
+Compile I<frills>: Amount to adjust the computed character width by
+to control overall letter spacing. Negative values will tighten up the
+letter spacing, positive values will space letters out more. Useful to
+work around odd font metrics; resource B<letterSpace>.
+
 =item B<-tn> I<termname>
 
 This option specifies the name of the terminal type to be set in the
