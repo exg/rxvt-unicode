@@ -2443,7 +2443,7 @@ in combination with other switches) is:
   tripleclickwords (-tcw)
   settable insecure mode (-insecure)
   keysym remapping support
-  cursor blinking and underline cursor (-cb, -uc)
+  cursor blinking and underline cursor (-bc, -uc)
   XEmbed support (-embed)
   user-pty (-pty-fd)
   hold on exit (-hold)

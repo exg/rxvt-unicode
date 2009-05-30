@@ -323,6 +323,10 @@ on a tab character is displayed as a wide cursor; resource B<pastableTabs>.
 
 Blink the cursor; resource B<cursorBlink>.
 
+=item B<-uc>|B<+uc>
+
+Make the cursor underlined; resource B<cursorUnderline>.
+
 =item B<-iconic>
 
 Start iconified, if the window manager supports that option.
@@ -1005,6 +1009,11 @@ movement only; option C<-ptab>.
 
 B<True>: blink the cursor. B<False>: do not blink the cursor [default];
 option B<-bc>.
+
+=item B<cursorUnderline:> I<boolean>
+
+B<True>: Make the cursor underlined. B<False>: Make the cursor a box [default];
+option B<-uc>.
 
 =item B<pointerBlank:> I<boolean>
 

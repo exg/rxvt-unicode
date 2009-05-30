@@ -50,6 +50,7 @@ TODO: -rv interacts badly with popups.
         - update to libptytty 1.3.
         - replace maxosc-pastebin by a nicer version by Reza Jelveh, and move
           the old version to macosx-pastebin-native.
+        - document the -uc option (exg).
 
 9.06 Sat Nov  8 17:47:18 CET 2008
 	- NOTICE: this release updates terminfo/termcap.
