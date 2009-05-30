@@ -375,6 +375,20 @@ the double C</> characters as comment start. Use C<\057\057> instead,
 which works regardless of wether xrdb is used to parse the resource file
 or not.
 
+=item macosx-pastebin and macosx-pastebin-native
+
+These two modules implement an extended clipboard for Mac OS X. They are
+used like this:
+
+   URxvt.perl-ext-common: default,macosx-clipboard
+   URxvt.keysym.M-c: perl:macosx-clipboard:copy
+   URxvt.keysym.M-v: perl:macosx-clipboard:paste
+
+The difference between them is that the native variant requires a
+perl from apple's devkit or so, and C<maxosx-pastebin> requires the
+C<Mac::Pasteboard> module, works with other perls, has fewer bugs, is
+simpler etc. etc.
+
 =item example-refresh-hooks
 
 Displays a very simple digital clock in the upper right corner of the

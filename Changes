@@ -48,6 +48,8 @@ TODO: -letterspace option
         - make sure the alignment for fd passing control messages
           is correct and work around some NetBSD issues (Taylor R Campbell).
         - update to libptytty 1.3.
+        - replace maxosc-pastebin by a nicer version by Reza Jelveh, and move
+          the old version to macosx-pastebin-native.
 
 9.06 Sat Nov  8 17:47:18 CET 2008
 	- NOTICE: this release updates terminfo/termcap.
