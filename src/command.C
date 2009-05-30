@@ -3338,7 +3338,7 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
           }
         else
           {
-            char *eq = strchr (str, '='); // constness lost, but verified to be ok
+            char *eq = strchr (str, '=');
 
             if (eq)
               {

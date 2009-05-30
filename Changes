@@ -24,7 +24,9 @@ TODO: exg-- patch
 TODO: selection_beg/end should set screen, or so
 TODO:        - upgrade to libev-xx
 TODO: -rv interacts badly with popups.
-TODO:	- gcc-4.4/const/Milos Jakubicek.
+TODO: -letterspace option
+	- port to glibc-2.10 changes (strchr etc. returning const char *
+          in C++), based on patches by Milos Jakubicek and Oliver Mader.
         - the binary search algorithm to find precomposed characters
           was faulty, skipping some possible combinations (found by
           Mikachu).
