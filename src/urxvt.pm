@@ -1157,7 +1157,7 @@ sub io {
 
    bless [$arg{fh}, urxvt::iow
              ->new
-             ->fd (defined fileno $arg{fh})
+             ->fd ($fd)
              ->events (($arg{poll} =~ /r/ ? 1 : 0)
                      | ($arg{poll} =~ /w/ ? 2 : 0))
              ->start
