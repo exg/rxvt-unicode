@@ -214,6 +214,20 @@ pw::stop ()
         OUTPUT:
         RETVAL
 
+int
+pw::rpid ()
+	CODE:
+        RETVAL = THIS->rpid;
+        OUTPUT:
+        RETVAL
+
+int
+pw::rstatus ()
+	CODE:
+        RETVAL = THIS->rstatus;
+        OUTPUT:
+        RETVAL
+
 void
 pw::DESTROY ()
 

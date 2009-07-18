@@ -24,6 +24,8 @@ TODO: exg-- patch
 TODO: selection_beg/end should set screen, or so
 TODO:        - upgrade to libev-xx
 TODO: -rv interacts badly with popups.
+TODO: idle/interval timer implementation für anyevent
+TODO: perl-shell-window?
 	- port to glibc-2.10 changes (strchr etc. returning const char *
           in C++), based on patches by Milos Jakubicek and Oliver Mader.
         - the binary search algorithm to find precomposed characters
@@ -51,6 +53,7 @@ TODO: -rv interacts badly with popups.
         - replace maxosc-pastebin by a nicer version by Reza Jelveh, and move
           the old version to macosx-pastebin-native.
         - document the -uc option (exg).
+        - assertions in libev are now enabled depending on frills.
 
 9.06 Sat Nov  8 17:47:18 CET 2008
 	- NOTICE: this release updates terminfo/termcap.

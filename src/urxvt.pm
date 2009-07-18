@@ -1138,8 +1138,11 @@ sub timer {
 
    urxvt::timer
       ->new
-      ->start (urxvt::NOW + $arg{after})
+      ->after ($arg{after})
+      ->interval ($arg{interval})
+      ->start
       ->cb (sub {
+        #TODO interval?
         $_[0]->stop; # need to cancel manually
         $cb->();
       })
@@ -1149,18 +1152,47 @@ sub io {
    my ($class, %arg) = @_;
 
    my $cb = $arg{cb};
+   my $fd = fileno $arg{fh};
+   defined $fd or $fd = $arg{fh};
 
    bless [$arg{fh}, urxvt::iow
              ->new
-             ->fd (fileno $arg{fh})
+             ->fd (defined fileno $arg{fh})
              ->events (($arg{poll} =~ /r/ ? 1 : 0)
                      | ($arg{poll} =~ /w/ ? 2 : 0))
              ->start
-             ->cb (sub {
-                $cb->(($_[1] & 1 ? 'r' : '')
-                    . ($_[1] & 2 ? 'w' : ''));
-             })],
-         urxvt::anyevent::
+             ->cb ($cb)
+         ], urxvt::anyevent::
+}
+
+sub idle {
+   my ($class, %arg) = @_;
+
+   my $cb = $arg{cb};
+
+   urxvt::iw
+      ->new
+      ->start
+      ->cb (sub {
+        #TODO really cancel?
+        $_[0]->stop; # need to cancel manually
+        $cb->();
+      })
+}
+
+sub child {
+   my ($class, %arg) = @_;
+
+   my $cb = $arg{cb};
+
+   urxvt::pw
+      ->new
+      ->start ($arg{pid})
+      ->cb (sub {
+        #TODO really cancel?
+        $_[0]->stop; # need to cancel manually
+        $cb->($_[0]->rpid, $_[0]->rstatus);
+      })
 }
 
 sub DESTROY {
