@@ -2,6 +2,7 @@
 #define EV_USE_POLL 0
 #define EV_USE_INOTIFY 0
 #define EV_USE_EVENTFD 0
+#define EV_USE_SIGNALFD 0
 #define EV_MULTIPLICITY 0
 #define EV_PERIODIC_ENABLE 0
 #define EV_STAT_ENABLE 0

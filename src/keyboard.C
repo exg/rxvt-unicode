@@ -145,8 +145,8 @@ static int
 compare_priority (keysym_t *a, keysym_t *b)
 {
   // (the more '1's in state; the less range): the greater priority
-  int ca = popcount (a->state /* & OtherModMask */);
-  int cb = popcount (b->state /* & OtherModMask */);
+  int ca = rxvt_popcount (a->state /* & OtherModMask */);
+  int cb = rxvt_popcount (b->state /* & OtherModMask */);
 
   if (ca != cb)
     return ca - cb;

@@ -93,12 +93,13 @@ rxvt_temp_buf (int len)
 
 // some bit functions, xft fuck me plenty
 #if HAVE_GCC_BUILTINS
-static inline int ctz      (unsigned int x) { return __builtin_ctz      (x); }
-static inline int popcount (unsigned int x) { return __builtin_popcount (x); }
+/* netbsd stupidly defines popcount itself and puts it into string.h */
+static inline int rxvt_ctz      (unsigned int x) { return __builtin_ctz      (x); }
+static inline int rxvt_popcount (unsigned int x) { return __builtin_popcount (x); }
 #else
 // count trailing zero bits and count # of one bits
-int ctz      (unsigned int x) CONST;
-int popcount (unsigned int x) CONST;
+int rxvt_ctz      (unsigned int x) CONST;
+int rxvt_popcount (unsigned int x) CONST;
 #endif
 
 // in range including end

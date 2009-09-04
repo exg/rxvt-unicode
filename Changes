@@ -54,6 +54,10 @@ TODO: perl-shell-window?
           the old version to macosx-pastebin-native.
         - document the -uc option (exg).
         - assertions in libev are now enabled depending on frills.
+        - work around arrogant bsd idiocies again: netbsd spills the default
+          namespace with lots of symbols "for gnu/gcc compatibility" even
+          though neither of them does it, and then calls the rest of the world
+          in need of fixing. go figure.
 
 9.06 Sat Nov  8 17:47:18 CET 2008
 	- NOTICE: this release updates terminfo/termcap.

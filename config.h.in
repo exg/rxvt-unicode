@@ -52,6 +52,9 @@
 /* Define to 1 if you have the `clock_gettime' function. */
 #undef HAVE_CLOCK_GETTIME
 
+/* "use syscall interface for clock_gettime" */
+#undef HAVE_CLOCK_SYSCALL
+
 /* Define to 1 if you have the <cwchar> header file. */
 #undef HAVE_CWCHAR
 
@@ -148,6 +151,9 @@
 /* Define to 1 if you have the `setuid' function. */
 #undef HAVE_SETUID
 
+/* Define to 1 if you have the `signalfd' function. */
+#undef HAVE_SIGNALFD
+
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 
@@ -198,6 +204,9 @@
 
 /* Define to 1 if you have the <sys/select.h> header file. */
 #undef HAVE_SYS_SELECT_H
+
+/* Define to 1 if you have the <sys/signalfd.h> header file. */
+#undef HAVE_SYS_SIGNALFD_H
 
 /* Define to 1 if you have the <sys/sockio.h> header file. */
 #undef HAVE_SYS_SOCKIO_H
