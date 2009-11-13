@@ -2,7 +2,7 @@ rxvt-unicode changelog <= google-friendly title
 
 TODO: init_secondary serves what purpose? maybe move it to earlier startup phase and re-think
 TODO: xcopyarea pass broken, fix and improve
-TODO: event mechanism that replaces on_keyboard_command with something more scalable.
+TODO: event mechanism that replaces on_user_command with something more scalable.
 TODO: slipwheeling needs a keyboard grab to get key release events.
 TODO: overlays collide with the way the out-of-focus cursor is being drawn
 TODO: "slow" rendering mode for bidi and scripts, pango!
@@ -26,6 +26,8 @@ TODO:        - upgrade to libev-xx
 TODO: -rv interacts badly with popups.
 TODO: idle/interval timer implementation für anyevent
 TODO: perl-shell-window?
+TODO: restore signal mask when starting shells
+TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
 	- port to glibc-2.10 changes (strchr etc. returning const char *
           in C++), based on patches by Milos Jakubicek and Oliver Mader.
         - the binary search algorithm to find precomposed characters
@@ -58,6 +60,7 @@ TODO: perl-shell-window?
           namespace with lots of symbols "for gnu/gcc compatibility" even
           though neither of them does it, and then calls the rest of the world
           in need of fixing. go figure.
+        - on_keyboard_command is on_user_command (patch by Michael Witten).
 
 9.06 Sat Nov  8 17:47:18 CET 2008
 	- NOTICE: this release updates terminfo/termcap.

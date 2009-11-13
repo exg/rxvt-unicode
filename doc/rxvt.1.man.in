@@ -1188,7 +1188,7 @@ when Control-Meta-c is being pressed":
 .Ve
 .Sp
 If \fIstring\fR takes the form \f(CW\*(C`perl:STRING\*(C'\fR, then the specified \fB\s-1STRING\s0\fR
-is passed to the \f(CW\*(C`on_keyboard_command\*(C'\fR perl handler. See the @@RXVT_NAME@@\fIperl\fR\|(3)
+is passed to the \f(CW\*(C`on_user_command\*(C'\fR perl handler. See the @@RXVT_NAME@@\fIperl\fR\|(3)
 manpage. For example, the \fIselection\fR extension (activated via
 \&\f(CW\*(C`@@RXVT_NAME@@ \-pe selection\*(C'\fR) listens for \f(CW\*(C`selection:rot13\*(C'\fR events:
 .Sp

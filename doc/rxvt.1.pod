@@ -1190,7 +1190,7 @@ when Control-Meta-c is being pressed":
   URxvt.keysym.M-C-c: command:\033]701;zh_CN.GBK\007
 
 If I<string> takes the form C<perl:STRING>, then the specified B<STRING>
-is passed to the C<on_keyboard_command> perl handler. See the @@RXVT_NAME@@perl(3)
+is passed to the C<on_user_command> perl handler. See the @@RXVT_NAME@@perl(3)
 manpage. For example, the F<selection> extension (activated via
 C<@@RXVT_NAME@@ -pe selection>) listens for C<selection:rot13> events:
 
