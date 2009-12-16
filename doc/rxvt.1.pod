@@ -1498,14 +1498,10 @@ always swapping the foreground/background colours. This is in contrast to
 I<xterm>(1) where the colours are only swapped if they have not otherwise
 been specified. For example,
 
-=over 4
+   @@RXVT_NAME@@ -fg Black -bg White -rv
 
-=item B<@@RXVT_NAME@@ -fg Black -bg White -rv>
-
-would yield White on Black, while on I<xterm>(1) it would yield Black
-on White.
-
-=back
+would yield White on Black, while on I<xterm>(1) it would yield Black on
+White.
 
 =head2 ALPHA CHANNEL SUPPORT
 
