@@ -1126,7 +1126,7 @@ work.
 
 =cut
 
-our $VERSION = '3.4';
+our $VERSION = '5.23';
 
 $INC{"urxvt/anyevent.pm"} = 1; # mark us as there
 push @AnyEvent::REGISTRY, [urxvt => urxvt::anyevent::];
@@ -1141,8 +1141,7 @@ sub timer {
       ->after ($arg{after})
       ->interval ($arg{interval})
       ->start
-      ->cb (sub {
-        #TODO interval?
+      ->cb ($argv{interval} ? $cb : sub {
         $_[0]->stop; # need to cancel manually
         $cb->();
       })
@@ -1173,11 +1172,7 @@ sub idle {
    urxvt::iw
       ->new
       ->start
-      ->cb (sub {
-        #TODO really cancel?
-        $_[0]->stop; # need to cancel manually
-        $cb->();
-      })
+      ->cb ($cb)
 }
 
 sub child {
@@ -1189,7 +1184,6 @@ sub child {
       ->new
       ->start ($arg{pid})
       ->cb (sub {
-        #TODO really cancel?
         $_[0]->stop; # need to cancel manually
         $cb->($_[0]->rpid, $_[0]->rstatus);
       })

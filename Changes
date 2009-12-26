@@ -24,9 +24,7 @@ TODO: exg-- patch
 TODO: selection_beg/end should set screen, or so
 TODO:        - upgrade to libev-xx
 TODO: -rv interacts badly with popups.
-TODO: idle/interval timer implementation für anyevent
 TODO: perl-shell-window?
-TODO: restore signal mask when starting shells
 TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
 	- port to glibc-2.10 changes (strchr etc. returning const char *
           in C++), based on patches by Milos Jakubicek and Oliver Mader.
@@ -56,6 +54,7 @@ TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
           the old version to macosx-pastebin-native.
         - document the -uc option (exg).
         - assertions in libev are now enabled depending on frills.
+        - update AnyEvent implementation to version 5.23 API.
         - work around arrogant bsd idiocies again: netbsd spills the default
           namespace with lots of symbols "for gnu/gcc compatibility" even
           though neither of them does it, and then calls the rest of the world
