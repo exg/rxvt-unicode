@@ -62,10 +62,11 @@ timer::new ()
         OUTPUT:
         RETVAL
 
+# deprecated
 NV
 timer::at ()
 	CODE:
-        RETVAL = THIS->at;
+        RETVAL = THIS->remaining () + ev_now ();
         OUTPUT:
         RETVAL
 
@@ -77,23 +78,23 @@ timer::interval (NV repeat)
         RETVAL
 
 IOM_CHAINED
-timer::set (NV tstamp)
+timer::set (NV tstamp, NV repeat = THIS->repeat)
 	CODE:
-        THIS->set (tstamp);
+        THIS->set (tstamp, repeat);
         OUTPUT:
         RETVAL
 
 IOM_CHAINED
-timer::start (NV tstamp = ev::now ())
+timer::start (NV tstamp = ev::now (), NV repeat = THIS->repeat)
 	CODE:
-        THIS->start (tstamp - ev::now ());
+        THIS->start (tstamp - ev::now (), repeat);
         OUTPUT:
         RETVAL
 
 IOM_CHAINED
-timer::after (NV delay)
+timer::after (NV delay, NV repeat = THIS->repeat)
 	CODE:
-        THIS->start (delay);
+        THIS->start (delay, repeat);
         OUTPUT:
         RETVAL
 

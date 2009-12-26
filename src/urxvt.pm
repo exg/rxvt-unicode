@@ -1138,10 +1138,8 @@ sub timer {
 
    urxvt::timer
       ->new
-      ->after ($arg{after})
-      ->interval ($arg{interval})
-      ->start
-      ->cb ($argv{interval} ? $cb : sub {
+      ->after ($arg{after}, $arg{interval})
+      ->cb ($arg{interval} ? $cb : sub {
         $_[0]->stop; # need to cancel manually
         $cb->();
       })
@@ -2057,17 +2055,14 @@ immediately.
 
 Set the callback to be called when the timer triggers.
 
-=item $tstamp = $timer->at
+=item $timer = $timer->set ($tstamp[, $interval])
 
-Return the time this watcher will fire next.
-
-=item $timer = $timer->set ($tstamp)
-
-Set the time the event is generated to $tstamp.
+Set the time the event is generated to $tstamp (and optionally specifies a
+new $interval).
 
 =item $timer = $timer->interval ($interval)
 
-Normally (and when C<$interval> is C<0>), the timer will automatically
+By default (and when C<$interval> is C<0>), the timer will automatically
 stop after it has fired once. If C<$interval> is non-zero, then the timer
 is automatically rescheduled at the given intervals.
 
@@ -2075,11 +2070,12 @@ is automatically rescheduled at the given intervals.
 
 Start the timer.
 
-=item $timer = $timer->start ($tstamp)
+=item $timer = $timer->start ($tstamp[, $interval])
 
-Set the event trigger time to C<$tstamp> and start the timer.
+Set the event trigger time to C<$tstamp> and start the timer. Optionally
+also replaces the interval.
 
-=item $timer = $timer->after ($delay)
+=item $timer = $timer->after ($delay[, $interval])
 
 Like C<start>, but sets the expiry timer to c<urxvt::NOW + $delay>.
 
