@@ -60,6 +60,7 @@ TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
           the new ->selection_screen method.
         - implement --enable-assert configure option and get rid of DEBUG_STRICT
           (based on patch by exg).
+        - allow `xxx' quoting style for perl selection.
         - upgrade to libev-3.9 prerelease.
 
 9.06 Sat Nov  8 17:47:18 CET 2008
