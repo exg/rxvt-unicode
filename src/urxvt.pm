@@ -1374,8 +1374,15 @@ set it (which is usually bad as applications don't expect that).
 
 =item ($row, $col) = $term->selection_end ([$row, $col])
 
-Return the current values of the selection mark, begin or end positions,
-and optionally set them to new values.
+Return the current values of the selection mark, begin or end positions.
+
+When arguments are given, then the selection coordinates are set to
+C<$row> and C<$col>, and the selection screen is set to the current
+screen.
+
+=item $screen = $term->selection_screen ([$screen])
+
+Returns the current selection screen, and then optionally sets it.
 
 =item $term->selection_make ($eventtime[, $rectangular])
 

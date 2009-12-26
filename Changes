@@ -19,11 +19,8 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
-TODO: `/etc/udev/rules.d/41-mythtv-permissions.rules'
 TODO: exg-- patch
 TODO: selection_beg/end should set screen, or so
-TODO:        - upgrade to libev-xx
-TODO: -rv interacts badly with popups.
 TODO: perl-shell-window?
 TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
 	- port to glibc-2.10 changes (strchr etc. returning const char *
@@ -60,6 +57,9 @@ TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
           though neither of them does it, and then calls the rest of the world
           in need of fixing. go figure.
         - on_keyboard_command is on_user_command (patch by Michael Witten).
+        - setting the selection from perl will now reset the selection screen
+          to the current screen. the srceen can be manipulated using
+          the new ->selection_screen method.
 
 9.06 Sat Nov  8 17:47:18 CET 2008
 	- NOTICE: this release updates terminfo/termcap.
@@ -112,7 +112,7 @@ TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
         - tabbed extension now starts in the "correct" working directory.
 	- work around fedora 9 providing isastream but not the relevant
           header file for it (report by Tuncer Ayaz).
-	- upgrade libev, fixing a bug in the select backend
+	- upgrade libev, fixing a bug in the select backend.
           with more than 31 file descriptors on non-linux 64 bit systems.
 	- correctly reset the multibyte state to the initial one
           after EILSEQ (patch by Neil Booth). This fixes the

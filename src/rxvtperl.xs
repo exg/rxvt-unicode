@@ -1552,7 +1552,7 @@ rxvt_term::screen_cur (...)
             PUSHs (sv_2mortal (newSViv (rc.col)));
           }
 
-        if (items == 3)
+        if (items >= 3)
           {
             rc.row = SvIV (ST (1));
             rc.col = SvIV (ST (2));
@@ -1578,17 +1578,21 @@ rxvt_term::screen_cur (...)
 
             if (ix)
               {
+                THIS->selection.screen = THIS->current_screen;
+
                 THIS->want_refresh = 1;
                 THIS->refresh_check ();
               }
           }
 }
 
-char
-rxvt_term::cur_charset ()
+int
+rxvt_term::selection_screen (int screen = -1)
 	CODE:
-        RETVAL = THIS->charsets [THIS->screen.charset];
-	OUTPUT:
+        RETVAL = THIS->selection.screen;
+        if (screen >= 0)
+          THIS->selection.screen = screen;
+        OUTPUT:
         RETVAL
 
 void
@@ -1621,6 +1625,13 @@ rxvt_term::selection (SV *newtext = 0)
             THIS->selection.len = wcslen (THIS->selection.text);
           }
 }
+
+char
+rxvt_term::cur_charset ()
+	CODE:
+        RETVAL = THIS->charsets [THIS->screen.charset];
+	OUTPUT:
+        RETVAL
 
 void
 rxvt_term::scr_xor_rect (int beg_row, int beg_col, int end_row, int end_col, U32 rstyle1 = RS_RVid, U32 rstyle2 = RS_RVid | RS_Uline)
