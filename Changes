@@ -19,8 +19,6 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
-TODO: exg-- patch
-TODO: selection_beg/end should set screen, or so
 TODO: perl-shell-window?
 TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
 	- port to glibc-2.10 changes (strchr etc. returning const char *
@@ -60,6 +58,9 @@ TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
         - setting the selection from perl will now reset the selection screen
           to the current screen. the srceen can be manipulated using
           the new ->selection_screen method.
+        - implement --enable-assert configure option and get rid of DEBUG_STRICT
+          (based on patch by exg).
+        - upgrade to libev-3.9 prerelease.
 
 9.06 Sat Nov  8 17:47:18 CET 2008
 	- NOTICE: this release updates terminfo/termcap.

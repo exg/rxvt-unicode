@@ -2261,8 +2261,8 @@ All
 
 =item --enable-everything
 
-Add (or remove) support for all non-multichoice options listed in "./configure
---help".
+Add (or remove) support for all non-multichoice options listed in
+C<./configure --help>, except for C<--enable-assert>.
 
 You can specify this and then disable options you do not like by
 I<following> this with the appropriate C<--disable-...> arguments,
@@ -2519,6 +2519,11 @@ environment variable when running configure. Even when compiled in,
 perl will I<not> be initialised when all extensions have been disabled
 C<-pe "" --perl-ext-common "">, so it should be safe to enable from a
 resource standpoint.
+
+=item --enable-assert (default: off)
+
+Enables the assertions in the code, normally disabled. This switch is only
+useful when developing rxvt-unicode.
 
 =item --with-afterimage-config=DIR
 

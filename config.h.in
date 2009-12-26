@@ -297,6 +297,9 @@
 /* Define to use wheel events (button4 and button5) to scroll */
 #undef MOUSE_WHEEL
 
+/* Disable assertions (good for debugging) */
+#undef NDEBUG
+
 /* Support NeXT style scrollbars */
 #undef NEXT_SCROLLBAR
 

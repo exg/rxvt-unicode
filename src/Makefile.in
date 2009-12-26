@@ -21,13 +21,11 @@ DEFS = @DEFS@
 LIBS = @LIBS@
 XINC = @X_CFLAGS@ @AFTERIMAGE_CFLAGS@
 XLIB = @X_LIBS@ @AFTERIMAGE_LIBS@ -lX11 @X_EXTRA_LIBS@
-COMPILE = $(CXX) -I.. -I$(srcdir) -I. -I$(srcdir)/../libev $(DEFS) $(CPPFLAGS) $(CXXFLAGS) $(DEBUG) $(XINC)
+COMPILE = $(CXX) -I.. -I$(srcdir) -I. -I$(srcdir)/../libev $(DEFS) $(CPPFLAGS) $(CXXFLAGS) $(XINC)
 LINK = @LINKER@ $(LDFLAGS)
 
 srcdir =	@srcdir@
 VPATH =		@srcdir@
-
-DEBUG=-DDEBUG_STRICT
 
 first_rule: all
 dummy:

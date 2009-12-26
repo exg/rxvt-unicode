@@ -1296,6 +1296,7 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-everything     enable standard non-multichoice features
                           NOTE: this option is order dependent
+  --enable-assert         enable assertions
   --enable-warnings       turn on g++ warnings
   --enable-unicode3       use 21 instead of 16 bits to represent unicode characters
   --enable-combining      enable composition of base and combining characters
@@ -4454,6 +4455,22 @@ if test "${enable_everything+set}" = set; then
 
 fi
 
+
+ASSERTIONS=no
+# Check whether --enable-assert was given.
+if test "${enable_assert+set}" = set; then
+  enableval=$enable_assert; if test x$enableval = xyes; then
+    ASSERTIONS=yes
+  fi
+fi
+
+if test x$ASSERTIONS = xno; then
+
+cat >>confdefs.h <<\_ACEOF
+#define NDEBUG 1
+_ACEOF
+
+fi
 
 WARNINGS=no
 # Check whether --enable-warnings was given.

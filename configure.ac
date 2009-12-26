@@ -172,6 +172,16 @@ AC_ARG_ENABLE(everything,
     fi
   ])
 
+ASSERTIONS=no
+AC_ARG_ENABLE(assert,
+  [  --enable-assert         enable assertions],
+  [if test x$enableval = xyes; then
+    ASSERTIONS=yes
+  fi])
+if test x$ASSERTIONS = xno; then
+  AC_DEFINE(NDEBUG, 1, Disable assertions (good for debugging))
+fi
+
 WARNINGS=no
 AC_ARG_ENABLE(warnings,
   [  --enable-warnings       turn on g++ warnings],

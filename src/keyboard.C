@@ -428,7 +428,7 @@ keyboard_manager::setup_hash ()
 
   keymap.swap (sorted_keymap);
 
-#ifdef DEBUG_STRICT
+#ifndef NDEBUG
   // check for invariants
   for (i = 0; i < KEYSYM_HASH_BUDGETS; ++i)
     {
