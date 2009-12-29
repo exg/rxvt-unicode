@@ -1963,7 +1963,7 @@ rxvt_term::scr_printscreen (int fullhist) NOTHROW
 
   wctomb (0, 0);
 
-  for (int r1 = 0; r1 < nrows; r1++)
+  for (int r1 = row_start; r1 < row_start + nrows; r1++)
     {
       text_t *tp = ROW(r1).t;
       int len    = ROW(r1).l;

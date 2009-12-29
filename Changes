@@ -47,7 +47,7 @@ TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
         - update to libptytty 1.3.
         - replace maxosc-pastebin by a nicer version by Reza Jelveh, and move
           the old version to macosx-pastebin-native.
-        - document the -uc option (exg).
+        - document the -uc option (Emanuele Giaquinta).
         - assertions in libev are now enabled depending on frills.
         - update AnyEvent implementation to version 5.23 API.
         - work around arrogant bsd idiocies again: netbsd spills the default
@@ -59,7 +59,8 @@ TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
           to the current screen. the srceen can be manipulated using
           the new ->selection_screen method.
         - implement --enable-assert configure option and get rid of DEBUG_STRICT
-          (based on patch by exg).
+          (based on patch by Emanuele Giaquinta).
+        - fix printpipe data output (patch by Emanuele Giaquinta).
         - allow `xxx' quoting style for perl selection.
         - upgrade to libev-3.9 prerelease.
 
