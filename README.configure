@@ -9,7 +9,7 @@ CONFIGURE OPTIONS
 
     --enable-everything
         Add (or remove) support for all non-multichoice options listed in
-        "./configure --help".
+        "./configure --help", except for "--enable-assert".
 
         You can specify this and then disable options you do not like by
         *following* this with the appropriate "--disable-..." arguments, or
@@ -171,7 +171,7 @@ CONFIGURE OPTIONS
           tripleclickwords (-tcw)
           settable insecure mode (-insecure)
           keysym remapping support
-          cursor blinking and underline cursor (-cb, -uc)
+          cursor blinking and underline cursor (-bc, -uc)
           XEmbed support (-embed)
           user-pty (-pty-fd)
           hold on exit (-hold)
@@ -235,6 +235,10 @@ CONFIGURE OPTIONS
         initialised when all extensions have been disabled "-pe ""
         --perl-ext-common """, so it should be safe to enable from a
         resource standpoint.
+
+    --enable-assert (default: off)
+        Enables the assertions in the code, normally disabled. This switch
+        is only useful when developing rxvt-unicode.
 
     --with-afterimage-config=DIR
         Look for the libAfterImage config script in DIR.

@@ -1,26 +1,5 @@
 rxvt-unicode changelog <= google-friendly title
 
-TODO: init_secondary serves what purpose? maybe move it to earlier startup phase and re-think
-TODO: xcopyarea pass broken, fix and improve
-TODO: event mechanism that replaces on_user_command with something more scalable.
-TODO: slipwheeling needs a keyboard grab to get key release events.
-TODO: overlays collide with the way the out-of-focus cursor is being drawn
-TODO: "slow" rendering mode for bidi and scripts, pango!
-TODO: read property sequence is broken with respect to utf-8 etc.
-TODO: slow drag selection on remote display - other things seem fast (rxvt illness, motion hints?)
-TODO: better resource handling for tabbar in -pe tabbed.
-WISH: investigate -pe tabbed -g 80x25 being 23 not 24 or 25 lines
-      => when setting the constraints, the wm might (correctly)
-         resize the outer window, which might result in a smaller window overall.
-         or something like that. guys, send me a patch.
-WISH: coloured pastebin
-WISH: selection-color-pair instead of reverse video
-WISH: load system-wide config file even if we don't have one
-WISH: look into XAddConnectionWatch, does anybody need that?
-DUMB: support tex fonts
-
-TODO: perl-shell-window?
-TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
 9.07 Wed Dec 30 07:07:18 CET 2009
 	- port to glibc-2.10 changes (strchr etc. returning const char *
           in C++), based on patches by Milos Jakubicek and Oliver Mader.

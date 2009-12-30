@@ -500,6 +500,10 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     In this case either do not specify a preeditStyle or specify more than
     one pre-edit style, such as OverTheSpot,Root,None.
 
+    If it still doesn't work, then maybe your input method doesn't support
+    compose sequences - to fall back to the built-in one, make sure you
+    don't specify an input method via "-im" or "XMODIFIERS".
+
    I cannot type "Ctrl-Shift-2" to get an ASCII NUL character due to ISO 14755
     Either try "Ctrl-2" alone (it often is mapped to ASCII NUL even on
     international keyboards) or simply use ISO 14755 support to your
@@ -745,7 +749,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
        IRC*keysym.M-C-1:       command:\033]710;suxuseuro\007\033]711;suxuseuro\007
        IRC*keysym.M-C-2:       command:\033]710;9x15bold\007\033]711;9x15bold\007
 
-    "Alt-Shift-1" and "Alt-Shift-2" switch between two different font sizes.
+    "Alt-Ctrl-1" and "Alt-Ctrl-2" switch between two different font sizes.
     "suxuseuro" allows me to keep an eye (and actually read) stuff while
     keeping a very small window. If somebody pastes something complicated
     (e.g. japanese), I temporarily switch to a larger font.
@@ -791,13 +795,13 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     arises).
 
     The correct solution for this problem is to install the terminfo, this
-    can be done like this (with ncurses' infocmp and works as user and
-    admin):
+    can be done by simply installing rxvt-unicode on the remote system as
+    well (in case you have a nice package manager ready), or you can install
+    the terminfo database manually like this (with ncurses infocmp. works as
+    user and root):
 
        REMOTE=remotesystem.domain
        infocmp rxvt-unicode | ssh $REMOTE "mkdir -p .terminfo && cat >/tmp/ti && tic /tmp/ti"
-
-    ... or by installing rxvt-unicode normally on the remote system,
 
     One some systems you might need to set $TERMINFO to the full path of
     $HOME/.terminfo for this to work.
@@ -816,6 +820,11 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
     If you don't plan to use rxvt (quite common...) you could also replace
     the rxvt terminfo file with the rxvt-unicode one and use "TERM=rxvt".
+
+   nano fails with "Error opening terminal: rxvt-unicode"
+    This exceptionally confusing and useless error message is printed by
+    nano when it can't find the terminfo database. Nothing is wrong with
+    your terminal, read the previous answer for a solution.
 
    "tic" outputs some error when compiling the terminfo entry.
     Most likely it's the empty definition for "enacs=". Just replace it by
@@ -1112,4 +1121,9 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     possibly working workaround is to use a wcwidth implementation like
 
     http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
+
+   I want 256 colors
+    Are you sure you need 256 colors? 88 colors should be enough for most
+    purposes. If you really need more, there is an unsupported patch for it
+    in the doc directory, but please do not ask for it to be applied.
 
