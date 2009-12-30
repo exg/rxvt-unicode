@@ -21,6 +21,7 @@ DUMB: support tex fonts
 
 TODO: perl-shell-window?
 TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
+9.07 Wed Dec 30 07:07:18 CET 2009
 	- port to glibc-2.10 changes (strchr etc. returning const char *
           in C++), based on patches by Milos Jakubicek and Oliver Mader.
         - the binary search algorithm to find precomposed characters
@@ -63,6 +64,7 @@ TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
         - fix printpipe data output (patch by Emanuele Giaquinta).
         - allow `xxx' quoting style for perl selection.
         - upgrade to libev-3.9 prerelease.
+        - updated compose tables to unicode 5.2.0.
 
 9.06 Sat Nov  8 17:47:18 CET 2008
 	- NOTICE: this release updates terminfo/termcap.
