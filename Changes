@@ -1,5 +1,6 @@
 rxvt-unicode changelog <= google-friendly title
 
+	- new on_bell perl hook (Emanuele Giaquinta).       
 	- new iso14755 option to disable ISO 14755 at runtime (Emanuele Giaquinta).
 
 9.07 Wed Dec 30 07:07:18 CET 2009

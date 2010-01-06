@@ -711,6 +711,10 @@ subwindow.
 Called when various types of ClientMessage events are received (all with
 format=32, WM_PROTOCOLS or WM_PROTOCOLS:WM_DELETE_WINDOW).
 
+=item on_bell $term
+
+Called on receipt of a bell character.
+
 =back
 
 =cut

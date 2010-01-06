@@ -1935,6 +1935,7 @@ rxvt_term::scr_bell () NOTHROW
     }
   else
     XBell (dpy, 0);
+  HOOK_INVOKE ((this, HOOK_BELL, DT_END));
 #endif
 }
 
