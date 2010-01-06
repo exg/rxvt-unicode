@@ -310,6 +310,7 @@ rxvt_term::init_vars ()
   set_option (Opt_secondaryScroll);
   set_option (Opt_pastableTabs);
   set_option (Opt_intensityStyles);
+  set_option (Opt_iso14755);
   set_option (Opt_iso14755_52);
   set_option (Opt_buffered);
 }

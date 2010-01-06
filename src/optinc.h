@@ -52,8 +52,10 @@
  nodef(intensityStyles)
 #endif
 #if ISO_14755
+ def(iso14755,             35)
  def(iso14755_52,          32)
 #else
+ nodef(iso14755)
  nodef(iso14755_52)
 #endif
  def(console,              33)

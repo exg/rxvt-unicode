@@ -621,8 +621,9 @@ rxvt_term::key_press (XKeyEvent &ev)
               iso14755buf = 0;
             }
         }
-      else if ((ctrl && (keysym == XK_Shift_L || keysym == XK_Shift_R))
-               || (shft && (keysym == XK_Control_L || keysym == XK_Control_R)))
+      else if (option (Opt_iso14755) &&
+               ((ctrl && (keysym == XK_Shift_L || keysym == XK_Shift_R))
+                || (shft && (keysym == XK_Control_L || keysym == XK_Control_R))))
         if (!(iso14755buf & ISO_14755_STARTED))
           {
             iso14755buf |= ISO_14755_STARTED;

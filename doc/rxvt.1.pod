@@ -1298,6 +1298,10 @@ Compile I<frills>: Sets the WM_TRANSIENT_FOR property to the given window id.
 Compile I<frills>: Sets override-redirect for the terminal window, making
 it almost invisible to window managers; option B<-override-redirect>.
 
+=item B<iso14755:> I<boolean>
+
+Turn on/off ISO 14755 (default enabled).
+
 =item B<iso14755_52:> I<boolean>
 
 Turn on/off ISO 14755 5.2 mode (default enabled).
