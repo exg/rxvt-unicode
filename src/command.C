@@ -581,7 +581,7 @@ rxvt_term::key_press (XKeyEvent &ev)
 
 #if ENABLE_FRILLS || ISO_14755
       // ISO 14755 support
-      if (shft && ctrl)
+      if (iso14755buf & (ISO_14755_STARTED | ISO_14755_51))
         {
           int hv;
 
