@@ -65,8 +65,8 @@ rxvt: rxvt.o $(COMMON)
 rxvtd: rxvtd.o $(COMMON) $(COMMON_DAEMON)
 	$(LINK) -o $@ rxvtd.o $(COMMON) $(COMMON_DAEMON) $(LIBS) $(XLIB) @PERLLIB@
 
-rxvtc: rxvtc.o $(COMMON_DAEMON) fdpass.o ev_cpp.o
-	$(LINK) -o $@ rxvtc.o $(COMMON_DAEMON) fdpass.o ev_cpp.o $(LIBS)
+rxvtc: rxvtc.o $(COMMON_DAEMON) fdpass.o
+	$(LINK) -o $@ rxvtc.o $(COMMON_DAEMON) fdpass.o $(LIBS)
 
 #-------------------------------------------------------------------------
 
