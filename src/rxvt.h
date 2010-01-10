@@ -342,7 +342,7 @@ enum {
 #define RS_baseattrMask         (RS_Italic | RS_Bold | RS_Blink | RS_RVid | RS_Uline)
 #define RS_attrMask             (RS_baseattrMask | RS_fontMask)
 
-#define RS_fontCount		127		// not 127 or 256, see rxvtfont.h
+#define RS_fontCount		127		// not 128 or 256, see rxvtfont.h
 #define RS_fontMask             0xff000000UL    // plenty(?) of fonts, includes RS_Careful
 #define RS_fontShift            24
 
