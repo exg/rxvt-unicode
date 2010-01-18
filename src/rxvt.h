@@ -1006,7 +1006,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 #ifndef NO_BELL
   bool            rvideo_bell;
 #endif
-  int             num_scr;              /* screen: number lines scrolled */
+  int             num_scr;              /* screen: number of lines scrolled */
   int             prev_ncol,            /* screen: previous number of columns */
                   prev_nrow;            /* screen: previous number of rows */
 /* ---------- */
