@@ -546,7 +546,7 @@ rxvt_term::scr_change_screen (int scrn)
 
   selection_check (2);        /* check for boundary cross */
 
-  int i = current_screen; current_screen = scrn; scrn = i;
+  current_screen = scrn;
 
 #if NSCREENS
   if (option (Opt_secondaryScreen))
