@@ -914,6 +914,8 @@ struct selection_t
   row_col_t         beg;        /* beginning of selection   <= mark          */
   row_col_t         mark;       /* point of initial click   <= end           */
   row_col_t         end;        /* one character past end point              */
+  wchar_t          *clip_text;  /* text copied to the clipboard              */
+  unsigned int      clip_len;   /* length of clipboard text                  */
 };
 
 /* ------------------------------------------------------------------------- */
@@ -1046,7 +1048,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   Atom            *xa;
 /* ---------- */
   Time            selection_time,
-                  selection_request_time;
+                  selection_request_time,
+                  clipboard_time;
   pid_t           cmd_pid;    /* process id of child */
   char *          incr_buf;
   size_t          incr_buf_size, incr_buf_fill;
@@ -1453,9 +1456,10 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void selection_property (Window win, Atom prop) NOTHROW;
   void selection_request (Time tm, int selnum = Sel_Primary) NOTHROW;
   int selection_request_other (Atom target, int selnum) NOTHROW;
-  void selection_clear () NOTHROW;
+  void selection_clear (bool clipboard = false) NOTHROW;
+  void clipboard_copy (Time tm);
   void selection_make (Time tm);
-  bool selection_grab (Time tm) NOTHROW;
+  bool selection_grab (Time tm, bool clipboard = false) NOTHROW;
   void selection_start_colrow (int col, int row) NOTHROW;
   void selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, row_col_t *ret) NOTHROW;
   void selection_extend_colrow (int32_t col, int32_t row, int button3, int buttonpress, int clickchange) NOTHROW;

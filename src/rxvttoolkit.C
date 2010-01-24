@@ -299,6 +299,7 @@ rxvt_screen::clear ()
 rxvt_display::rxvt_display (const char *id)
 : refcounted (id)
 , selection_owner (0)
+, clipboard_owner (0)
 {
   x_ev    .set<rxvt_display, &rxvt_display::x_cb    > (this);
   flush_ev.set<rxvt_display, &rxvt_display::flush_cb> (this);
@@ -602,17 +603,17 @@ void rxvt_display::unreg (xevent_watcher *w)
     }
 }
 
-void rxvt_display::set_selection_owner (rxvt_term *owner)
+void rxvt_display::set_selection_owner (rxvt_term *owner, bool clipboard)
 {
-  if (selection_owner && selection_owner != owner)
-    {
-      rxvt_term *owner = selection_owner;
+  rxvt_term * &cur_owner = !clipboard ? selection_owner : clipboard_owner;
 
-      owner->selection_clear ();
-      owner->flush ();
+  if (cur_owner && cur_owner != owner)
+    {
+      cur_owner->selection_clear (clipboard);
+      cur_owner->flush ();
     }
 
-  selection_owner = owner;
+  cur_owner = owner;
 }
 
 #ifdef USE_XIM

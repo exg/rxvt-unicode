@@ -1596,7 +1596,10 @@ rxvt_term::selection_screen (int screen = -1)
         RETVAL
 
 void
-rxvt_term::selection_clear ()
+rxvt_term::selection_clear (bool clipboard = false)
+
+void
+rxvt_term::clipboard_copy (Time eventtime)
 
 void
 rxvt_term::selection_make (Time eventtime, bool rect = false)
@@ -1606,7 +1609,7 @@ rxvt_term::selection_make (Time eventtime, bool rect = false)
         THIS->selection_make (eventtime);
 
 int
-rxvt_term::selection_grab (Time eventtime)
+rxvt_term::selection_grab (Time eventtime, bool clipboard = false)
 
 void
 rxvt_term::selection (SV *newtext = 0)

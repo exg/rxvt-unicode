@@ -233,6 +233,8 @@ rxvt_term::scr_reset ()
       selection.op = SELECTION_CLEAR;
       selection.screen = PRIMARY;
       selection.clicks = 0;
+      selection.clip_text = NULL;
+      selection.clip_len = 0;
     }
   else
     {
@@ -2946,16 +2948,42 @@ rxvt_term::selection_request_other (Atom target, int selnum) NOTHROW
  * EXT: SelectionClear
  */
 void
-rxvt_term::selection_clear () NOTHROW
+rxvt_term::selection_clear (bool clipboard) NOTHROW
 {
-  want_refresh = 1;
-  free (selection.text);
-  selection.text = NULL;
-  selection.len = 0;
-  CLEAR_SELECTION ();
+  if (!clipboard)
+    {
+      want_refresh = 1;
+      free (selection.text);
+      selection.text = NULL;
+      selection.len = 0;
+      CLEAR_SELECTION ();
 
-  if (display->selection_owner == this)
-    display->selection_owner = 0;
+      if (display->selection_owner == this)
+        display->selection_owner = 0;
+    }
+  else
+    {
+      free (selection.clip_text);
+      selection.clip_text = NULL;
+      selection.clip_len = 0;
+
+      if (display->clipboard_owner == this)
+        display->clipboard_owner = 0;
+    }
+}
+
+void
+rxvt_term::clipboard_copy (Time tm)
+{
+  if (selection.len > 0)
+    {
+      free (selection.clip_text);
+      selection.clip_len = selection.len;
+      selection.clip_text = (wchar_t *) malloc (sizeof (wchar_t) * selection.clip_len);
+      memcpy (selection.clip_text, selection.text,
+              sizeof (wchar_t) * selection.clip_len);
+      selection_grab (tm, true);
+    }
 }
 
 /* ------------------------------------------------------------------------- */
@@ -3091,19 +3119,30 @@ rxvt_term::selection_make (Time tm)
 }
 
 bool
-rxvt_term::selection_grab (Time tm) NOTHROW
+rxvt_term::selection_grab (Time tm, bool clipboard) NOTHROW
 {
-  selection_time = tm;
+  Atom sel;
 
-  XSetSelectionOwner (dpy, XA_PRIMARY, vt, tm);
-  if (XGetSelectionOwner (dpy, XA_PRIMARY) == vt)
+  if (!clipboard)
     {
-      display->set_selection_owner (this);
+      selection_time = tm;
+      sel = XA_PRIMARY;
+    }
+  else
+    {
+      clipboard_time = tm;
+      sel = xa[XA_CLIPBOARD];
+    }
+
+  XSetSelectionOwner (dpy, sel, vt, tm);
+  if (XGetSelectionOwner (dpy, sel) == vt)
+    {
+      display->set_selection_owner (this, clipboard);
       return true;
     }
   else
     {
-      selection_clear ();
+      selection_clear (clipboard);
       return false;
     }
 
@@ -3608,10 +3647,16 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
       /* TODO: Handle MULTIPLE */
     }
 #endif
-  else if (rq.target == xa[XA_TIMESTAMP] && selection.text)
+  else if (rq.target == xa[XA_TIMESTAMP] && rq.selection == XA_PRIMARY && selection.text)
     {
       XChangeProperty (dpy, rq.requestor, rq.property, rq.target,
                        32, PropModeReplace, (unsigned char *)&selection_time, 1);
+      ev.property = rq.property;
+    }
+  else if (rq.target == xa[XA_TIMESTAMP] && rq.selection == xa[XA_CLIPBOARD] && selection.clip_text)
+    {
+      XChangeProperty (dpy, rq.requestor, rq.property, rq.target,
+                       32, PropModeReplace, (unsigned char *)&clipboard_time, 1);
       ev.property = rq.property;
     }
   else if (rq.target == XA_STRING
@@ -3654,10 +3699,15 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
           style = enc_compound_text;
         }
 
-      if (selection.text)
+      if (rq.selection == XA_PRIMARY && selection.text)
         {
           cl = selection.text;
           selectlen = selection.len;
+        }
+      else if (rq.selection == xa[XA_CLIPBOARD] && selection.clip_text)
+        {
+          cl = selection.clip_text;
+          selectlen = selection.clip_len;
         }
       else
         {

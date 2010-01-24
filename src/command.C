@@ -1464,7 +1464,7 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case SelectionClear:
-        selection_clear ();
+        selection_clear (ev.xselectionclear.selection == xa[XA_CLIPBOARD]);
         break;
 
       case SelectionNotify:

@@ -239,6 +239,7 @@ rxvt_term::~rxvt_term ()
   if (display)
     {
       selection_clear ();
+      selection_clear (true);
 
 #ifdef USE_XIM
       im_destroy ();
@@ -273,6 +274,7 @@ rxvt_term::~rxvt_term ()
     free (allocated [i]);
 
   free (selection.text);
+  free (selection.clip_text);
   // TODO: manage env vars in child only(!)
   free (env_display);
   free (env_term);

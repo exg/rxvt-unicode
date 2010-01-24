@@ -237,6 +237,7 @@ struct rxvt_display : refcounted
   int       screen;
   Window    root;
   rxvt_term *selection_owner;
+  rxvt_term *clipboard_owner;
   Atom      xa[NUM_XA];
   bool      is_local;
 #ifdef POINTER_BLANK
@@ -255,7 +256,7 @@ struct rxvt_display : refcounted
   }
 
   Atom atom (const char *name);
-  void set_selection_owner (rxvt_term *owner);
+  void set_selection_owner (rxvt_term *owner, bool clipboard);
 
   void reg (xevent_watcher *w);
   void unreg (xevent_watcher *w);
