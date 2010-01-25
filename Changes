@@ -1,6 +1,6 @@
 rxvt-unicode changelog <= google-friendly title
 
-	- new on_bell perl hook (Emanuele Giaquinta).       
+	- new on_bell perl hook (Emanuele Giaquinta).
 	- new iso14755 option to disable ISO 14755 at runtime (Emanuele Giaquinta).
 
 9.07 Wed Dec 30 07:07:18 CET 2009
@@ -28,7 +28,7 @@ rxvt-unicode changelog <= google-friendly title
         - make sure the alignment for fd passing control messages
           is correct and work around some NetBSD issues (Taylor R Campbell).
         - update to libptytty 1.3.
-        - replace maxosc-pastebin by a nicer version by Reza Jelveh, and move
+        - replace macosx-pastebin by a nicer version by Reza Jelveh, and move
           the old version to macosx-pastebin-native.
         - document the -uc option (Emanuele Giaquinta).
         - assertions in libev are now enabled depending on frills.
@@ -39,7 +39,7 @@ rxvt-unicode changelog <= google-friendly title
           in need of fixing. go figure.
         - on_keyboard_command is on_user_command (patch by Michael Witten).
         - setting the selection from perl will now reset the selection screen
-          to the current screen. the srceen can be manipulated using
+          to the current screen. the screen can be manipulated using
           the new ->selection_screen method.
         - implement --enable-assert configure option and get rid of DEBUG_STRICT
           (based on patch by Emanuele Giaquinta).
@@ -75,7 +75,7 @@ rxvt-unicode changelog <= google-friendly title
         - new option -icon to set _NET_WM_ICON (based on patch by Frank Schmitt).
         - initialise the as visual only on demand, instead of unconditionally,
           to save memory in the common case of not using visual gimmicks.
-        - try to work around bugs in a few wm's that errornously resize
+        - try to work around bugs in a few wm's that erroneously resize
           client windows on hint property updates by temporarily
           disabling size hints.
         - implement the DECSTR soft reset sequence and use it for tput init,
