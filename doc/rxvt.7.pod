@@ -720,7 +720,7 @@ write.
 
 The selection stuff mainly makes the selection perl-error-message aware
 and tells it to convert perl error messages into vi-commands to load the
-relevant file and go tot he error line number.
+relevant file and go to the error line number.
 
    URxvt.scrollstyle:      plain
    URxvt.secondaryScroll:  true
@@ -802,7 +802,7 @@ font is already bold, and I want to see a difference between bold and
 normal fonts.
 
 Please note that I used the C<urxvt> instance name and not the C<URxvt>
-class name. Thats because I use different configs for different purposes,
+class name. That is because I use different configs for different purposes,
 for example, my IRC window is started with C<-name IRC>, and uses these
 defaults:
 
@@ -1135,7 +1135,7 @@ except higher disk and possibly memory usage. The perl interpreter should
 be enabled, as important functionality (menus, selection, likely more in
 the future) depends on it.
 
-You should not overwrite the C<perl-ext-common> snd C<perl-ext> resources
+You should not overwrite the C<perl-ext-common> and C<perl-ext> resources
 system-wide (except maybe with C<defaults>). This will result in useful
 behaviour. If your distribution aims at low memory, add an empty
 C<perl-ext-common> resource to the app-defaults file. This will keep the
