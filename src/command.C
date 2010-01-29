@@ -3432,7 +3432,7 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
           {
             char str[256];
 
-            sprintf (str, "[%dx%d+%d+%d]",	/* can't presume snprintf () ! */
+            sprintf (str, "[%dx%d+%d+%d]",
                      min (bgPixmap.h_scale, 32767), min (bgPixmap.v_scale, 32767),
                      min (bgPixmap.h_align, 32767), min (bgPixmap.v_align, 32767));
             process_xterm_seq (XTerm_title, str, CHAR_ST);
