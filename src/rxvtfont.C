@@ -1295,7 +1295,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                      int fg, int bg)
 {
   XGlyphInfo extents;
-  XftGlyphSpec *enc = (XftGlyphSpec *)rxvt_temp_buf (len * sizeof (XftGlyphSpec));
+  XftGlyphSpec *enc = rxvt_temp_buf<XftGlyphSpec> (len);
   XftGlyphSpec *ep = enc;
 
   dTermDisplay;

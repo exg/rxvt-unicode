@@ -1167,7 +1167,7 @@ xim_preedit_draw (XIC ic, XPointer client_data, XIMPreeditDrawCallbackStruct *ca
 
   if (text)
     {
-      void *str;
+      wchar_t *str;
 
       if (!text->encoding_is_wchar && text->string.multi_byte)
         {
@@ -1175,14 +1175,14 @@ xim_preedit_draw (XIC ic, XPointer client_data, XIMPreeditDrawCallbackStruct *ca
           if (term->rs[Rs_imLocale])
             SET_LOCALE (term->rs[Rs_imLocale]);
 
-          str = rxvt_temp_buf ((text->length + 1) * sizeof (wchar_t));
-          mbstowcs ((wchar_t *)str, text->string.multi_byte, text->length + 1);
+          str = rxvt_temp_buf<wchar_t> (text->length + 1);
+          mbstowcs (str, text->string.multi_byte, text->length + 1);
 
           if (term->rs[Rs_imLocale])
             SET_LOCALE (term->locale);
         }
       else
-        str = (void *)text->string.wide_char;
+        str = text->string.wide_char;
 
       HOOK_INVOKE ((term, HOOK_XIM_PREEDIT_DRAW,
                     DT_INT, call_data->caret,
