@@ -556,10 +556,9 @@ rxvt_term::get_options (int argc, const char *const *argv)
         {
           if (i+1 < argc)
             {
-              char *res = (char *)malloc (strlen (opt) + strlen (argv[++i]) + 6);
+              char *res = rxvt_temp_buf<char> (strlen (opt) + strlen (argv[++i]) + 6);
               sprintf (res, "*.%s: %s\n", opt, argv[i]);
               XrmPutLineResource (&option_db, res);
-              free (res);
             }
         }
 #endif

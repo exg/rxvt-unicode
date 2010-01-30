@@ -429,11 +429,11 @@ bool rxvt_display::ref_init ()
 #ifdef LOCAL_X_IS_UNIX
   if (id[0] == ':')
     {
-      val = rxvt_malloc (5 + strlen (id) + 1);
+      if (!(val = rxvt_temp_buf<char> (5 + strlen (id) + 1)))
+        return false;
       strcpy (val, "unix/");
       strcat (val, id);
       dpy = XOpenDisplay (val);
-      free (val);
     }
   else
 #endif
@@ -636,15 +636,13 @@ rxvt_xim *rxvt_display::get_xim (const char *locale, const char *modifiers)
   l = strlen (locale);
   m = strlen (modifiers);
 
-  if (!(id = (char *)malloc (l + m + 2)))
+  if (!(id = rxvt_temp_buf<char> (l + m + 2)))
     return 0;
 
   memcpy (id, locale, l); id[l] = '\n';
   memcpy (id + l + 1, modifiers, m); id[l + m + 1] = 0;
 
   rxvt_xim *xim = xims.get (id);
-
-  free (id);
 
   return xim;
 }
