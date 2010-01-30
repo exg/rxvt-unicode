@@ -497,7 +497,7 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
 
           if (background_tint != TINT_LEAVE_SAME)
             {
-              ASImage* tmp = tile_asimage (target->asv, background, 0, 0,
+              ASImage *tmp = tile_asimage (target->asv, background, 0, 0,
                                            target_width, target_height, background_tint,
                                            ASA_XImage, 100, ASIMAGE_QUALITY_DEFAULT);
               if (tmp)
@@ -1110,7 +1110,7 @@ bgPixmap_t::set_root_pixmap ()
 # endif /* ENABLE_TRANSPARENCY */
 
 # ifndef HAVE_AFTERIMAGE
-static void ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, int bm);
+static void ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm);
 # endif
 
 bool
@@ -1167,7 +1167,7 @@ bgPixmap_t::render ()
 
       if (!(background_flags & transpPmapBlured) && (flags & blurNeeded) && background != NULL)
         {
-          ASImage* tmp = blur_asimage_gauss (target->asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
+          ASImage *tmp = blur_asimage_gauss (target->asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
                                              (original_asim == NULL || tint == TINT_LEAVE_SAME)?ASA_XImage:ASA_ASImage,
                                              100, ASIMAGE_QUALITY_DEFAULT);
           if (tmp)
@@ -1348,7 +1348,7 @@ bgPixmap_t::apply ()
 typedef uint32_t RUINT32T;
 
 static void
-ShadeXImage(rxvt_term *term, XImage* srcImage, int shade, int rm, int gm, int bm)
+ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm)
 {
   int sh_r, sh_g, sh_b;
   RUINT32T mask_r, mask_g, mask_b;

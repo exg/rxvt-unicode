@@ -1160,7 +1160,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
         {
           int w = im->width;
           int h = im->height;
-          long* buffer = (long *)malloc ((2 + w * h) * sizeof (long));
+          long *buffer = (long *)malloc ((2 + w * h) * sizeof (long));
           ASImage *result = scale_asimage (asv, im,
                                            w, h, ASA_ARGB32,
                                            100, ASIMAGE_QUALITY_DEFAULT);
@@ -1177,7 +1177,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
               destroy_asimage (&result);
               XChangeProperty (dpy, top, xa[XA_NET_WM_ICON], XA_CARDINAL, 32,
-                               PropModeReplace, (const unsigned char*) buffer, 2 + w * h);
+                               PropModeReplace, (const unsigned char *) buffer, 2 + w * h);
               free (buffer);
             }
           else
