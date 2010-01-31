@@ -1144,7 +1144,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   XmbSetWMProperties (dpy, top, NULL, NULL, (char **)argv, argc,
                       &szHint, &wmHint, &classHint);
-#if ENABLE_EWMH 
+#if ENABLE_EWMH
 # ifdef HAVE_AFTERIMAGE
   /*
    * set up icon hint

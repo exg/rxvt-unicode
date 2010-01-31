@@ -690,7 +690,7 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
       sym = strtol (str, &end, 16);
       if (*end)
         return -1;
-    }  
+    }
 
   keyboard->register_user_translation (sym, state, arg);
   return 1;

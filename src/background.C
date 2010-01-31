@@ -138,8 +138,8 @@ bgPixmap_t::window_size_sensitive ()
   return false;
 }
 
-bool 
-bgPixmap_t::window_position_sensitive () 
+bool
+bgPixmap_t::window_position_sensitive ()
 {
 # ifdef ENABLE_TRANSPARENCY
   if (flags & isTransparent)
@@ -535,7 +535,7 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
               ASImage *tmp = tile_asimage (target->asv, result,
                                            (h_scale > 0) ? 0 : (int)result->width - x,
                                            (v_scale > 0) ? 0 : (int)result->height - y,
-                                           new_pmap_width, 
+                                           new_pmap_width,
                                            new_pmap_height,
                                            TINT_LEAVE_SAME, ASA_XImage,
                                            100, ASIMAGE_QUALITY_DEFAULT);
