@@ -481,7 +481,7 @@ if test x$rxvt_cv_xpointer = xyes; then
   AC_DEFINE(HAVE_XPOINTER, 1, Define if you have XPointer typedef)
 fi
 
-AC_CACHE_CHECK([for XLIB_ILLEGAL_ACCESS], rxvt_xlib_illegal_access,
+AC_CACHE_CHECK([for XLIB_ILLEGAL_ACCESS], rxvt_cv_xlib_illegal_access,
 [AC_COMPILE_IFELSE(
    [AC_LANG_PROGRAM([
 #define XLIB_ILLEGAL_ACCESS
@@ -490,9 +490,9 @@ AC_CACHE_CHECK([for XLIB_ILLEGAL_ACCESS], rxvt_xlib_illegal_access,
       Display *dpy;
       dpy->xdefaults = (char *)0;
    ])],
-   [rxvt_xlib_illegal_access=yes],[rxvt_xlib_illegal_access=no]
+   [rxvt_cv_xlib_illegal_access=yes],[rxvt_cv_xlib_illegal_access=no]
 )])
-if test x$rxvt_xlib_illegal_access = xyes; then
+if test x$rxvt_cv_xlib_illegal_access = xyes; then
    AC_DEFINE(XLIB_ILLEGAL_ACCESS, 1, Define ONLY iff Xlib.h supports it)
 fi
 
@@ -539,7 +539,7 @@ if test x$support_xim = xyes; then
     :])])
   if test x$rxvt_cv_func_xlocale = xyes; then
     AC_DEFINE(USE_XIM, 1, Define if you want to have XIM (X Input Method) protocol support - required for multibyte characters input)
-    AC_CACHE_CHECK(for broken XIM callback, rxvt_broken_ximcb,
+    AC_CACHE_CHECK(for broken XIM callback, rxvt_cv_broken_ximcb,
     [AC_COMPILE_IFELSE([
     #include <X11/Xlib.h>
 
@@ -549,9 +549,9 @@ if test x$support_xim = xyes; then
       XIMCallback cb;
       cb.callback = im_destroy_cb;
     }
-    ],rxvt_broken_ximcb=yes,rxvt_broken_ximcb=no)])
+    ],rxvt_cv_broken_ximcb=yes,rxvt_cv_broken_ximcb=no)])
 
-    if test x$rxvt_broken_ximcb = xyes; then
+    if test x$rxvt_cv_broken_ximcb = xyes; then
        AC_DEFINE(XIMCB_PROTO_BROKEN, 1, Define if your XIMCallback specifies XIC as first type.)
     fi
   fi
