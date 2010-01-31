@@ -399,7 +399,7 @@ AC_ARG_ENABLE(text-blink,
   fi])
 
 AC_ARG_ENABLE(pointer-blank,
-  [  --enable-pointer-blank  enable pointer blank when typing or inactive pointer],
+  [  --enable-pointer-blank  enable pointer blanking when typing or inactive],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_pointer_blank=$enableval
   fi])
