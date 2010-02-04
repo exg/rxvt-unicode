@@ -507,6 +507,8 @@ rxvt_term::key_press (XKeyEvent &ev)
 #else
               lnsppg = nrow * 4 / 5;
 #endif
+              max_it (lnsppg, 1);
+
               if (keysym == XK_Prior)
                 {
                   scr_page (UP, lnsppg);
