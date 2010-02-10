@@ -164,11 +164,8 @@ void
 rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
 {
   rxvt_fontset *fs = FONTSET (r);
-  rxvt_font *f = (*fs)[fs->find_font (ch)];
-  wchar_t *chr, *alloc, ch2, *fname;
+  wchar_t *chr, *alloc, ch2, **fname;
   int len;
-
-  fname = rxvt_utf8towcs (f->name);
 
 # if ENABLE_COMBINING
   if (IS_COMPOSE (ch))
@@ -199,7 +196,14 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
            r & RS_Uline   ? " uline"   : "",
            r & RS_Careful ? " careful" : "");
 
-  int width = wcswidth (fname, wcslen (fname));
+  int width = 0;
+  fname = rxvt_temp_buf<wchar_t *> (len);
+  for (int i = 0; i < len; i++)
+    {
+      rxvt_font *f = (*fs)[fs->find_font (chr[i])];
+      fname[i] = rxvt_utf8towcs (f->name);
+      max_it (width, wcswidth (fname[i], wcslen (fname[i])));
+    }
 
   max_it (width, 8+5); // for char + hex
   max_it (width, strlen (attr));
@@ -210,7 +214,7 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
       x = 0;
     }
 
-  scr_overlay_new (x, y, width, len + 2);
+  scr_overlay_new (x, y, width, len * 2 + 1);
 
   r = SET_STYLE (OVERLAY_RSTYLE, GET_STYLE (r));
 
@@ -239,9 +243,11 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
 //    scr_overlay_set (0, 0, buf);
 //  }
   scr_overlay_set (0, len    , attr);
-  scr_overlay_set (0, len + 1, fname);
-
-  free (fname);
+  for (int i = 0; i < len; i++)
+    {
+      scr_overlay_set (0, len + 1 + i, fname[i]);
+      free (fname[i]);
+    }
 
 # if ENABLE_COMBINING
   if (alloc)
