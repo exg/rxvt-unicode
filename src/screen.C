@@ -1836,7 +1836,7 @@ rxvt_term::scr_expose (int x, int y, int ewidth, int eheight, bool refresh) NOTH
       min_it (rc[i].col, ncol - 1);
       min_it (rc[i].row, nrow - 1);
     }
-// TODO: this line somehow causes segfault if scr_expose() is called just after resize
+
   for (i = rc[PART_BEG].row; i <= rc[PART_END].row; i++)
     fill_text (&drawn_buf[i].t[rc[PART_BEG].col], 0, rc[PART_END].col - rc[PART_BEG].col + 1);
 
