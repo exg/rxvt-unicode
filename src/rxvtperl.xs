@@ -1599,9 +1599,6 @@ void
 rxvt_term::selection_clear (bool clipboard = false)
 
 void
-rxvt_term::clipboard_copy (Time eventtime)
-
-void
 rxvt_term::selection_make (Time eventtime, bool rect = false)
 	CODE:
         THIS->selection.op = SELECTION_CONT;
@@ -1612,20 +1609,23 @@ int
 rxvt_term::selection_grab (Time eventtime, bool clipboard = false)
 
 void
-rxvt_term::selection (SV *newtext = 0)
+rxvt_term::selection (SV *newtext = 0, bool clipboard = false)
         PPCODE:
 {
+        wchar_t * &text   = clipboard ? THIS->selection.clip_text : THIS->selection.text;
+        unsigned int &len = clipboard ? THIS->selection.clip_len  : THIS->selection.len;
+
         if (GIMME_V != G_VOID)
-          XPUSHs (THIS->selection.text
-                  ? sv_2mortal (wcs2sv (THIS->selection.text, THIS->selection.len))
+          XPUSHs (text
+                  ? sv_2mortal (wcs2sv (text, len))
                   : &PL_sv_undef);
 
         if (newtext)
           {
-            free (THIS->selection.text);
+            free (text);
 
-            THIS->selection.text = sv2wcs (newtext);
-            THIS->selection.len = wcslen (THIS->selection.text);
+            text = sv2wcs (newtext);
+            len = wcslen (text);
           }
 }
 
