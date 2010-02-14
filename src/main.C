@@ -997,9 +997,6 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
   if (fix_screen || old_height == 0)
     scr_reset ();
 
-  // TODO, with nvidia-8178, resizes kill the alpha channel, report if not fixed in newer version
-  //scr_touch (false);
-
 #ifdef HAVE_BG_PIXMAP
 //  TODO: this don't seem to have any effect - do we still need it ? If so - in which case exactly ?
 //  if (bgPixmap.pixmap)
