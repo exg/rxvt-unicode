@@ -21,11 +21,14 @@ DUMB: support tex fonts
 
 TODO: perl-shell-window?
 TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
-TODO: scorllback search does nto fidn evry first line?
-TODO: when using perl selection, triple clicking on a word with a
-      non ascii char does not end in the whole line being selected
-      http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=523072
+TODO: scrollback search does not find every first line?
 
+	- add support for grabbing the clipboard selection and extend
+	  selection{_clear,_grab,} perl bindings to optionally work
+	  on the clipboard selection (based on patch by Dana Jansens).
+	- extend ISO 14755 5.4 mode to also print the font name of the
+	  characters other than first one in the selected cell
+	  (Emanuele Giaquinta).
 	- make sure pagewise scrolling scrolls at least one line
           (found by Mikachu).
 	- new on_bell perl hook (Emanuele Giaquinta).
