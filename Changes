@@ -22,6 +22,9 @@ DUMB: support tex fonts
 TODO: perl-shell-window?
 TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
 TODO: scorllback search does nto fidn evry first line?
+TODO: when using perl selection, triple clicking on a word with a
+      non ascii char does not end in the whole line being selected
+      http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=523072
 
 	- make sure pagewise scrolling scrolls at least one line
           (found by Mikachu).
