@@ -343,7 +343,7 @@ The defaults (which are likely useless to you) use rsh and cat:
 
 =item selection-pastebin
 
-This is a little rarely useful extension that Uploads the selection as
+This is a little rarely useful extension that uploads the selection as
 textfile to a remote site (or does other things). (The implementation is
 not currently secure for use in a multiuser environment as it writes to
 F</tmp> directly.).
@@ -375,7 +375,7 @@ the double C</> characters as comment start. Use C<\057\057> instead,
 which works regardless of wether xrdb is used to parse the resource file
 or not.
 
-=item macosx-pastebin and macosx-pastebin-native
+=item macosx-clipboard and macosx-clipboard-native
 
 These two modules implement an extended clipboard for Mac OS X. They are
 used like this:
@@ -385,7 +385,7 @@ used like this:
    URxvt.keysym.M-v: perl:macosx-clipboard:paste
 
 The difference between them is that the native variant requires a
-perl from apple's devkit or so, and C<maxosx-pastebin> requires the
+perl from apple's devkit or so, and C<macosx-clipboard> requires the
 C<Mac::Pasteboard> module, works with other perls, has fewer bugs, is
 simpler etc. etc.
 
@@ -419,7 +419,7 @@ hints on what they mean:
 
 =item $text
 
-Rxvt-unicodes special way of encoding text, where one "unicode" character
+Rxvt-unicode's special way of encoding text, where one "unicode" character
 always represents one screen cell. See L<ROW_t> for a discussion of this format.
 
 =item $string
@@ -690,8 +690,8 @@ focus out processing.
 
 =item on_unmap_notify $term, $event
 
-Called whenever the corresponding X event is received for the terminal If
-the hook returns true, then the even will be ignored by rxvt-unicode.
+Called whenever the corresponding X event is received for the terminal. If
+the hook returns true, then the event will be ignored by rxvt-unicode.
 
 The event is a hash with most values as named by Xlib (see the XEvent
 manpage), with the additional members C<row> and C<col>, which are the
@@ -1867,7 +1867,7 @@ recent grab.
 
 =item $term->ungrab
 
-Calls XUngrab for the most recent grab. Is called automatically on
+Calls XUngrabPointer and XUngrabKeyboard for the most recent grab. Is called automatically on
 evaluation errors, as it is better to lose the grab in the error case as
 the session.
 
@@ -1899,7 +1899,7 @@ the session.
 
 Various X or X-related functions. The C<$term> object only serves as
 the source of the display, otherwise those functions map more-or-less
-directory onto the X functions of the same name.
+directly onto the X functions of the same name.
 
 =back
 
