@@ -609,8 +609,9 @@ void rxvt_display::set_selection_owner (rxvt_term *owner, bool clipboard)
 
   if (cur_owner && cur_owner != owner)
     {
-      cur_owner->selection_clear (clipboard);
-      cur_owner->flush ();
+      rxvt_term *term = cur_owner;
+      term->selection_clear (clipboard);
+      term->flush ();
     }
 
   cur_owner = owner;
