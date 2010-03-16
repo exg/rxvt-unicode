@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2009-12-30" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2010-02-06" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -1295,6 +1295,9 @@ Compile \fIfrills\fR: Sets the \s-1WM_TRANSIENT_FOR\s0 property to the given win
 .IX Item "override-redirect: boolean"
 Compile \fIfrills\fR: Sets override-redirect for the terminal window, making
 it almost invisible to window managers; option \fB\-override\-redirect\fR.
+.IP "\fBiso14755:\fR \fIboolean\fR" 4
+.IX Item "iso14755: boolean"
+Turn on/off \s-1ISO\s0 14755 (default enabled).
 .IP "\fBiso14755_52:\fR \fIboolean\fR" 4
 .IX Item "iso14755_52: boolean"
 Turn on/off \s-1ISO\s0 14755 5.2 mode (default enabled).

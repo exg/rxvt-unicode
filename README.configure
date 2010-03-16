@@ -64,7 +64,7 @@ CONFIGURE OPTIONS
     --enable-combining (default: on)
         Enable automatic composition of combining characters into composite
         characters. This is required for proper viewing of text where
-        accents are encoded as seperate unicode characters. This is done by
+        accents are encoded as separate unicode characters. This is done by
         using precomposited characters when available or creating new
         pseudo-characters when no precomposed form exists.
 
@@ -163,7 +163,7 @@ CONFIGURE OPTIONS
           MWM-hints
           EWMH-hints (pid, utf8 names) and protocols (ping)
           urgency hint
-          seperate underline colour (-underlineColor)
+          separate underline colour (-underlineColor)
           settable border widths and borderless switch (-w, -b, -bl)
           visual depth selection (-depth)
           settable extra linespacing /-lsp)

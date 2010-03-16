@@ -1324,7 +1324,7 @@ Optional Features:
   --enable-slipwheeling   enable slip wheel scrolling (requires --enable-mousewheel)
   --enable-smart-resize   enable smart growth/shrink behaviour
   --enable-text-blink     enable blinking text
-  --enable-pointer-blank  enable pointer blank when typing or inactive pointer
+  --enable-pointer-blank  enable pointer blanking when typing or inactive
   --enable-utmp           enable utmp (utmpx) support
   --enable-wtmp           enable wtmp (wtmpx) support (requires --enable-utmp)
   --enable-lastlog        enable lastlog support (requires --enable-utmp)
@@ -5343,8 +5343,7 @@ done
 
 
 
-
-for ac_header in sys/inotify.h sys/epoll.h sys/event.h sys/queue.h port.h poll.h sys/select.h sys/eventfd.h sys/signalfd.h
+for ac_header in sys/inotify.h sys/epoll.h sys/event.h port.h poll.h sys/select.h sys/eventfd.h sys/signalfd.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
 if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
@@ -5680,7 +5679,8 @@ _ACEOF
 cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
-#include <syscall.h>
+#include <unistd.h>
+                       #include <sys/syscall.h>
                        #include <time.h>
 int
 main ()
@@ -7880,7 +7880,7 @@ fi
 
 { echo "$as_me:$LINENO: checking for XLIB_ILLEGAL_ACCESS" >&5
 echo $ECHO_N "checking for XLIB_ILLEGAL_ACCESS... $ECHO_C" >&6; }
-if test "${rxvt_xlib_illegal_access+set}" = set; then
+if test "${rxvt_cv_xlib_illegal_access+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat >conftest.$ac_ext <<_ACEOF
@@ -7921,20 +7921,20 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
 	 test -z "$ac_cxx_werror_flag" ||
 	 test ! -s conftest.err
        } && test -s conftest.$ac_objext; then
-  rxvt_xlib_illegal_access=yes
+  rxvt_cv_xlib_illegal_access=yes
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-	rxvt_xlib_illegal_access=no
+	rxvt_cv_xlib_illegal_access=no
 
 fi
 
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
-{ echo "$as_me:$LINENO: result: $rxvt_xlib_illegal_access" >&5
-echo "${ECHO_T}$rxvt_xlib_illegal_access" >&6; }
-if test x$rxvt_xlib_illegal_access = xyes; then
+{ echo "$as_me:$LINENO: result: $rxvt_cv_xlib_illegal_access" >&5
+echo "${ECHO_T}$rxvt_cv_xlib_illegal_access" >&6; }
+if test x$rxvt_cv_xlib_illegal_access = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
 #define XLIB_ILLEGAL_ACCESS 1
@@ -10244,7 +10244,7 @@ _ACEOF
 
     { echo "$as_me:$LINENO: checking for broken XIM callback" >&5
 echo $ECHO_N "checking for broken XIM callback... $ECHO_C" >&6; }
-if test "${rxvt_broken_ximcb+set}" = set; then
+if test "${rxvt_cv_broken_ximcb+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat >conftest.$ac_ext <<_ACEOF
@@ -10276,20 +10276,20 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
 	 test -z "$ac_cxx_werror_flag" ||
 	 test ! -s conftest.err
        } && test -s conftest.$ac_objext; then
-  rxvt_broken_ximcb=yes
+  rxvt_cv_broken_ximcb=yes
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-	rxvt_broken_ximcb=no
+	rxvt_cv_broken_ximcb=no
 fi
 
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
-{ echo "$as_me:$LINENO: result: $rxvt_broken_ximcb" >&5
-echo "${ECHO_T}$rxvt_broken_ximcb" >&6; }
+{ echo "$as_me:$LINENO: result: $rxvt_cv_broken_ximcb" >&5
+echo "${ECHO_T}$rxvt_cv_broken_ximcb" >&6; }
 
-    if test x$rxvt_broken_ximcb = xyes; then
+    if test x$rxvt_cv_broken_ximcb = xyes; then
 
 cat >>confdefs.h <<\_ACEOF
 #define XIMCB_PROTO_BROKEN 1

@@ -652,7 +652,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
 
     The selection stuff mainly makes the selection perl-error-message aware
     and tells it to convert perl error messages into vi-commands to load the
-    relevant file and go tot he error line number.
+    relevant file and go to the error line number.
 
        URxvt.scrollstyle:      plain
        URxvt.secondaryScroll:  true
@@ -735,7 +735,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     bold and normal fonts.
 
     Please note that I used the "urxvt" instance name and not the "URxvt"
-    class name. Thats because I use different configs for different
+    class name. That is because I use different configs for different
     purposes, for example, my IRC window is started with "-name IRC", and
     uses these defaults:
 
@@ -1040,7 +1040,7 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     should be enabled, as important functionality (menus, selection, likely
     more in the future) depends on it.
 
-    You should not overwrite the "perl-ext-common" snd "perl-ext" resources
+    You should not overwrite the "perl-ext-common" and "perl-ext" resources
     system-wide (except maybe with "defaults"). This will result in useful
     behaviour. If your distribution aims at low memory, add an empty
     "perl-ext-common" resource to the app-defaults file. This will keep the

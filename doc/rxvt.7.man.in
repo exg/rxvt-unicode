@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2009-12-30" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2010-02-06" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -940,7 +940,7 @@ write.
 .PP
 The selection stuff mainly makes the selection perl-error-message aware
 and tells it to convert perl error messages into vi-commands to load the
-relevant file and go tot he error line number.
+relevant file and go to the error line number.
 .PP
 .Vb 2
 \&   URxvt.scrollstyle:      plain
@@ -1042,7 +1042,7 @@ font is already bold, and I want to see a difference between bold and
 normal fonts.
 .PP
 Please note that I used the \f(CW\*(C`urxvt\*(C'\fR instance name and not the \f(CW\*(C`URxvt\*(C'\fR
-class name. Thats because I use different configs for different purposes,
+class name. That is because I use different configs for different purposes,
 for example, my \s-1IRC\s0 window is started with \f(CW\*(C`\-name IRC\*(C'\fR, and uses these
 defaults:
 .PP
@@ -1414,7 +1414,7 @@ except higher disk and possibly memory usage. The perl interpreter should
 be enabled, as important functionality (menus, selection, likely more in
 the future) depends on it.
 .PP
-You should not overwrite the \f(CW\*(C`perl\-ext\-common\*(C'\fR snd \f(CW\*(C`perl\-ext\*(C'\fR resources
+You should not overwrite the \f(CW\*(C`perl\-ext\-common\*(C'\fR and \f(CW\*(C`perl\-ext\*(C'\fR resources
 system-wide (except maybe with \f(CW\*(C`defaults\*(C'\fR). This will result in useful
 behaviour. If your distribution aims at low memory, add an empty
 \&\f(CW\*(C`perl\-ext\-common\*(C'\fR resource to the app-defaults file. This will keep the
@@ -2505,7 +2505,7 @@ see next switch), and right now rxvt-unicode cannot display them
 .IX Item "--enable-combining (default: on)"
 Enable automatic composition of combining characters into
 composite characters. This is required for proper viewing of text
-where accents are encoded as seperate unicode characters. This is
+where accents are encoded as separate unicode characters. This is
 done by using precomposited characters when available or creating
 new pseudo-characters when no precomposed form exists.
 .Sp
@@ -2601,7 +2601,7 @@ in combination with other switches) is:
 \&  MWM\-hints
 \&  EWMH\-hints (pid, utf8 names) and protocols (ping)
 \&  urgency hint
-\&  seperate underline colour (\-underlineColor)
+\&  separate underline colour (\-underlineColor)
 \&  settable border widths and borderless switch (\-w, \-b, \-bl)
 \&  visual depth selection (\-depth)
 \&  settable extra linespacing /\-lsp)
