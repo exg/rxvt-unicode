@@ -1335,7 +1335,7 @@ Restore Cursor
 
 Application Keypad (SMKX). See also next sequence.
 
-=item B<<< C<< ESC >> >>>
+=item B<<< C<< ESC > >> >>>
 
 Normal Keypad (RMKX)
 
