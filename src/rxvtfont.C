@@ -1677,7 +1677,7 @@ rxvt_fontset::find_font (unicode_t unicode)
                   if (find_font (font) < 0)
                     {
                       char fontname[4096];
-                      sprintf (fontname, "xft:%-.4090s", font);
+                      snprintf (fontname, sizeof (fontname), "xft:%s", font);
 
                       fonts.push_back (new_font (fontname, CS_UNICODE));
                     }
