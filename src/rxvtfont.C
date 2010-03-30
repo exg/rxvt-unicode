@@ -1695,7 +1695,7 @@ rxvt_fontset::find_font_idx (unicode_t unicode, bool &careful)
 
 found:
   // found a font, cache it
-  if (i < 255)
+  if (i < 127)
     {
       while (hi >= fmap.size ())
         fmap.push_back (0);
