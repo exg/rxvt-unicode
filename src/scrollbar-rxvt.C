@@ -150,7 +150,6 @@ draw_button (scrollBar_t *sb, int x, int y, int dirn)
 int
 scrollBar_t::show_rxvt (int update)
 {
-  int sbshadow = shadow;
   int sbwidth = (int)width;
 
   if ((init & R_SB_RXVT) == 0)
@@ -165,7 +164,7 @@ scrollBar_t::show_rxvt (int update)
       botShadowGC = XCreateGC (term->dpy, term->vt, GCForeground, &gcvalue);
       gcvalue.foreground = term->pix_colors[ (term->depth <= 2 ? Color_fg : Color_scroll)];
       scrollbarGC = XCreateGC (term->dpy, term->vt, GCForeground, &gcvalue);
-      if (sbshadow)
+      if (shadow)
         {
           XSetWindowBackground (term->dpy, win, term->pix_colors_focused[Color_trough]);
           XClearWindow (term->dpy, win);
@@ -177,13 +176,13 @@ scrollBar_t::show_rxvt (int update)
         {
           if (last_top < top)
             XClearArea (term->dpy, win,
-                        sbshadow, last_top,
+                        shadow, last_top,
                         sbwidth, (top - last_top),
                         False);
 
           if (bot < last_bot)
             XClearArea (term->dpy, win,
-                        sbshadow, bot,
+                        shadow, bot,
                         sbwidth, (last_bot - bot),
                         False);
         }
@@ -199,7 +198,7 @@ scrollBar_t::show_rxvt (int update)
     if (term->option (Opt_scrollBar_right))
       xofs = 0;
     else
-      xofs = sbshadow ? sbwidth : sbwidth - 1;
+      xofs = shadow ? sbwidth : sbwidth - 1;
 
     XDrawLine (term->dpy, win, botShadowGC,
                xofs, 0, xofs, end + sbwidth);
@@ -207,19 +206,19 @@ scrollBar_t::show_rxvt (int update)
 #endif
 
   XFillRectangle (term->dpy, win, scrollbarGC,
-                  sbshadow, top, sbwidth,
+                  shadow, top, sbwidth,
                   bot - top);
 
-  if (sbshadow)
+  if (shadow)
     /* trough shadow */
-    draw_shadow (this, 0, 0, sbwidth + 2 * sbshadow, end + (sbwidth + 1) + sbshadow);
+    draw_shadow (this, 0, 0, sbwidth + 2 * shadow, end + (sbwidth + 1) + shadow);
 
   /* shadow for scrollbar slider */
-  draw_shadow (this, sbshadow, top, sbwidth, bot - top);
+  draw_shadow (this, shadow, top, sbwidth, bot - top);
 
   /* Redraw scrollbar arrows */
-  draw_button (this, sbshadow, sbshadow, UP);
-  draw_button (this, sbshadow, end + 1,  DN);
+  draw_button (this, shadow, shadow, UP);
+  draw_button (this, shadow, end + 1,  DN);
 
   return 1;
 }
