@@ -2379,7 +2379,7 @@ rxvt_term::scr_refresh () NOTHROW
           /*
            * Actually do the drawing of the string here
            */
-          rxvt_font *font = fontset [GET_STYLE (rend)]->get (*text, GET_FONT (rend));
+          rxvt_font *font = (*fontset[GET_STYLE (rend)])[GET_FONT (rend)];
 
           if (expect_true (have_bg && back == Color_bg))
             {
