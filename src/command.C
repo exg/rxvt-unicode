@@ -200,7 +200,7 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
   fname = rxvt_temp_buf<wchar_t *> (len);
   for (int i = 0; i < len; i++)
     {
-      rxvt_font *f = (*fs)[fs->find_font (chr[i])];
+      rxvt_font *f = fs->get (chr[i]);
       fname[i] = rxvt_utf8towcs (f->name);
       max_it (width, wcswidth (fname[i], wcslen (fname[i])));
     }

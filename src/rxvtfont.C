@@ -450,7 +450,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
           chrs [1] = NOCHAR;
 
           *chrs = cc->c1;
-          rxvt_font *f1 = (*fs)[fs->find_font (cc->c1)];
+          rxvt_font *f1 = fs->get (cc->c1);
           f1->draw (d, x, y, chrs, width, fg, bg);
 
           if (cc->c2 != NOCHAR)
@@ -461,7 +461,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
               *chrs = cc->c2;
               rxvt_font *f2 = (f1->has_char (cc->c2, 0, careful) && !careful)
                                 ? f1
-                                : (*fs)[fs->find_font (cc->c2)];
+                                : fs->get (cc->c2);
 
               f2->draw (d, x, y, chrs, width, fg, Color_none);
             }
@@ -1588,7 +1588,7 @@ rxvt_fontset::find_font (const char *name) const
 }
 
 int
-rxvt_fontset::find_font (unicode_t unicode)
+rxvt_fontset::find_font_ (unicode_t unicode)
 {
   if (unicode >= 1<<20)
     return 0;
@@ -1709,6 +1709,12 @@ found:
     }
 
   return i;
+}
+
+int
+rxvt_fontset::find_font (unicode_t unicode)
+{
+  return min<int> (fontCount, find_font_ (unicode));
 }
 
 

@@ -75,14 +75,17 @@ struct rxvt_fontset
 
   bool populate (const char *desc);
   void set_prop (const rxvt_fontprop &prop, bool force_prop) { this->prop = prop; this->force_prop = force_prop; }
+  int find_font_ (uint32_t unicode); // same as find_font, but does not limit index
   int find_font (uint32_t unicode);
   int find_font (const char *name) const;
   bool realize_font (int i);
 
   // font-id's MUST fit into a signed 16 bit integer, and within 0..255
-  rxvt_font *operator [] (int id) const
+  rxvt_font *get (uint32_t unicode, int id = fontCount)
   {
-    return fonts[id & fontCount];
+    id &= fontCount;
+
+    return fonts[id == fontCount ? find_font_ (unicode) : id];
   }
 
 private:
