@@ -114,10 +114,6 @@ typedef char *XPointer;
 # define STDERR_FILENO  2
 #endif
 
-#if !defined (EACCESS) && defined(EAGAIN)
-# define EACCESS EAGAIN
-#endif
-
 #ifndef EXIT_SUCCESS            /* missing from <stdlib.h> */
 # define EXIT_SUCCESS           0       /* exit function success */
 # define EXIT_FAILURE           1       /* exit function failure */
