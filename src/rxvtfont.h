@@ -68,6 +68,8 @@ struct rxvt_fontset
 {
   char *fontdesc;
 
+  enum { fontCount = 127 }; // must be power-of-two - 1, also has to match RS_fontMask in rxvt.h
+
   rxvt_fontset (rxvt_term *term);
   ~rxvt_fontset ();
 
@@ -80,7 +82,7 @@ struct rxvt_fontset
   // font-id's MUST fit into a signed 16 bit integer, and within 0..255
   rxvt_font *operator [] (int id) const
   {
-    return fonts[id & 0x7f];
+    return fonts[id & fontCount];
   }
 
 private:
