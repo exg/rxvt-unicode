@@ -1588,17 +1588,23 @@ rxvt_fontset::find_font (const char *name) const
 }
 
 int
-rxvt_fontset::find_font_ (unicode_t unicode)
+rxvt_fontset::find_font_idx (unicode_t unicode, bool &careful)
 {
   if (unicode >= 1<<20)
     return 0;
 
   unicode_t hi = unicode >> 8;
 
-  if (hi < fmap.size ()
-      && fmap[hi]
-      && (*fmap[hi])[unicode & 0xff] != 0xff)
-    return (*fmap[hi])[unicode & 0xff];
+  if (hi < fmap.size () && fmap[hi])
+    {
+      unsigned char m = (*fmap[hi])[unicode & 0xff];
+
+      if (m != 0xff)
+        {
+          careful = m & 128;
+          return m & 127;
+        }
+    }
 
   unsigned int i;
 
@@ -1621,14 +1627,8 @@ rxvt_fontset::find_font_ (unicode_t unicode)
       if (f->cs == CS_UNKNOWN)
         goto next_font;
 
-      bool careful;
       if (f->has_char (unicode, &prop, careful))
-        {
-          if (careful)
-            i |= 128;
-
-          goto found;
-        }
+        goto found;
 
     next_font:
       if (i == fonts.size () - 1)
@@ -1691,6 +1691,7 @@ rxvt_fontset::find_font_ (unicode_t unicode)
 
   /* we must return SOME font */
   i = 0;
+  careful = false;
 
 found:
   // found a font, cache it
@@ -1705,7 +1706,7 @@ found:
           memset (fmap[hi], 0xff, sizeof (pagemap));
         }
 
-      (*fmap[hi])[unicode & 0xff] = i;
+      (*fmap[hi])[unicode & 0xff] = i | (careful ? 128 : 0);
     }
 
   return i;
@@ -1714,8 +1715,9 @@ found:
 int
 rxvt_fontset::find_font (unicode_t unicode)
 {
-  return min<int> (fontCount, find_font_ (unicode));
+  bool careful;
+  int id = find_font_idx (unicode, careful);
+
+  return min<int> (fontCount, id) | (careful ? Careful : 0);
 }
-
-
 

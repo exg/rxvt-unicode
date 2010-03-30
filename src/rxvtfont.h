@@ -68,14 +68,14 @@ struct rxvt_fontset
 {
   char *fontdesc;
 
-  enum { fontCount = 127 }; // must be power-of-two - 1, also has to match RS_fontMask in rxvt.h
+  enum { fontCount = 3 }; // must be power-of-two - 1, also has to match RS_fontMask in rxvt.h
+  enum { Careful = fontCount + 1 };
 
   rxvt_fontset (rxvt_term *term);
   ~rxvt_fontset ();
 
   bool populate (const char *desc);
   void set_prop (const rxvt_fontprop &prop, bool force_prop) { this->prop = prop; this->force_prop = force_prop; }
-  int find_font_ (uint32_t unicode); // same as find_font, but does not limit index
   int find_font (uint32_t unicode);
   int find_font (const char *name) const;
   bool realize_font (int i);
@@ -83,9 +83,11 @@ struct rxvt_fontset
   // font-id's MUST fit into a signed 16 bit integer, and within 0..255
   rxvt_font *get (uint32_t unicode, int id = fontCount)
   {
+    bool dummy;
+
     id &= fontCount;
 
-    return fonts[id == fontCount ? find_font_ (unicode) : id];
+    return fonts[id == fontCount ? find_font_idx (unicode, dummy) : id];
   }
 
 private:
@@ -101,6 +103,7 @@ private:
   void clear ();
   rxvt_font *new_font (const char *name, codeset cs);
   void add_fonts (const char *desc);
+  int find_font_idx (uint32_t unicode, bool &careful); // same as find_font, but does not limit index
 };
 
 #endif /* _DEFAULTFONT_H_ */
