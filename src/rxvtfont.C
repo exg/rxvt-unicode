@@ -1674,8 +1674,7 @@ rxvt_fontset::find_font_idx (unicode_t unicode)
       bool careful;
       if (f->has_char (unicode, &prop, careful))
         {
-          if (careful)
-            i |= 128;
+          i = (i << 1) | careful;
 
           goto found;
         }
@@ -1764,7 +1763,6 @@ found:
 int
 rxvt_fontset::find_font (unicode_t unicode)
 {
-  int id = find_font_idx (unicode);
-
-  return min<int> (fontCount, id & 127) | (id & 128 ? Careful : 0);
+  return min<int> ((fontCount << 1) | 1, find_font_idx (unicode));
 }
+

@@ -690,7 +690,7 @@ rxvt_term::set_fonts ()
   delete fontset[0];
   fontset[0] = fs;
 
-  prop = (*fs)[1]->properties ();
+  prop = (*fs)[rxvt_fontset::firstFont]->properties ();
   prop.height += lineSpace;
   prop.width += letterSpace;
 

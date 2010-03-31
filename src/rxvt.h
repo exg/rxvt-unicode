@@ -321,7 +321,7 @@ enum {
 #define RS_Uline                0x00040000UL    // underline
 
 // toggle this to force redraw, must be != RS_Careful
-#define RS_redraw               0x01000000UL
+#define RS_redraw               0x02000000UL
 
 // 5 custom bits for extensions
 #define RS_customCount          32
@@ -329,7 +329,11 @@ enum {
 #define RS_customShift          19
 
 // other flags
-#define RS_Careful		0x80000000UL	/* be careful when drawing these */
+#define RS_Careful		0x10000000UL	/* be careful when drawing these */
+
+#define RS_fontCount		rxvt_fontset::fontCount
+#define RS_fontMask             0xf0000000UL    // plenty(?) of fonts, includes RS_Careful
+#define RS_fontShift            28
 
 #define RS_styleCount		4
 #define RS_styleMask		(RS_Bold | RS_Italic)
@@ -337,10 +341,6 @@ enum {
 
 #define RS_baseattrMask         (RS_Italic | RS_Bold | RS_Blink | RS_RVid | RS_Uline)
 #define RS_attrMask             (RS_baseattrMask | RS_fontMask)
-
-#define RS_fontCount		rxvt_fontset::fontCount
-#define RS_fontMask             0xff000000UL    // plenty(?) of fonts, includes RS_Careful
-#define RS_fontShift            24
 
 #define DEFAULT_RSTYLE  (RS_None | Color_fg | (Color_bg << Color_Bits))
 #define OVERLAY_RSTYLE  (RS_None | Color_Black | (Color_Yellow << Color_Bits))
