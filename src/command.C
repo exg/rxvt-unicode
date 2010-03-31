@@ -1035,7 +1035,7 @@ rxvt_term::flush ()
   display->flush ();
 }
 
-/* checks wether a refresh is requested and starts the refresh timer */
+/* checks whether a refresh is requested and starts the refresh timer */
 void
 rxvt_term::refresh_check ()
 {

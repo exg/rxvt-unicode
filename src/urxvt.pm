@@ -372,7 +372,7 @@ for the filename):
 
 I<Note to xrdb users:> xrdb uses the C preprocessor, which might interpret
 the double C</> characters as comment start. Use C<\057\057> instead,
-which works regardless of wether xrdb is used to parse the resource file
+which works regardless of whether xrdb is used to parse the resource file
 or not.
 
 =item macosx-clipboard and macosx-clipboard-native

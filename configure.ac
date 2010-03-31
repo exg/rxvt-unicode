@@ -34,7 +34,7 @@ AC_GNU_SOURCE
 AC_ISC_POSIX
 AC_LANG(C++)
 
-dnl check wether we can link with gcc -lsupc++
+dnl check whether we can link with gcc -lsupc++
 if test x$GCC = xyes && test x$GXX = xyes; then
    dnl FreeBSD (at least up to 5.3) has a broken GCC, workaround it
    AC_MSG_CHECKING([for working libsupc++])

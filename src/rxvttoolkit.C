@@ -466,7 +466,7 @@ bool rxvt_display::ref_init ()
 
   int fd = XConnectionNumber (dpy);
 
-  // try to detect wether we have a local connection.
+  // try to detect whether we have a local connection.
   // assume unix domain socket == local, everything else not
   // TODO: might want to check for inet/127.0.0.1
   is_local = 0;
@@ -490,7 +490,7 @@ bool rxvt_display::ref_init ()
 void
 rxvt_display::ref_next ()
 {
-  // TODO: somehow check wether the database files/resources changed
+  // TODO: somehow check whether the database files/resources changed
   // before affording re-loading/parsing
   XrmDestroyDatabase (XrmGetDatabase (dpy));
   XrmSetDatabase (dpy, get_resources (true));

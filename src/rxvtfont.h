@@ -34,7 +34,7 @@ struct rxvt_font
 
   char *name;
   codeset cs;
-  bool loaded; // wether we tried loading it before (not wether it's loaded)
+  bool loaded; // whether we tried loading it before (not whether it's loaded)
 
   // managed by the font object
   int ascent, descent,

@@ -988,9 +988,9 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 #if POINTER_BLANK
                   hidden_pointer:1,
 #endif
-                  enc_utf8:1,		/* wether locale uses utf-8 */
-                  seen_input:1,         /* wether we have seen some program output yet */
-                  seen_resize:1,	/* wether we had a resize event */
+                  enc_utf8:1,		/* whether locale uses utf-8 */
+                  seen_input:1,         /* whether we have seen some program output yet */
+                  seen_resize:1,	/* whether we had a resize event */
                   parsed_geometry:1;
 
   unsigned char   refresh_type,

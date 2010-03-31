@@ -501,7 +501,7 @@ struct rxvt_font_x11 : rxvt_font {
              const text_t *text, int len,
              int fg, int bg);
 
-  bool slow; // wether this is a proportional font or has other funny characteristics
+  bool slow; // whether this is a proportional font or has other funny characteristics
   XFontStruct *f;
   bool enc2b, encm;
 
@@ -917,7 +917,7 @@ rxvt_font_x11::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
   if (ch == NOCHAR)
     return false;
 
-  /* check wether the character exists in _this_ font. horrible. */
+  /* check whether the character exists in _this_ font. horrible. */
   XCharStruct *xcs;
 
   if (encm)
@@ -957,7 +957,7 @@ rxvt_font_x11::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
   if (!prop || prop->width == rxvt_fontprop::unset)
     return true;
 
-  // check wether character overlaps previous/next character
+  // check whether character overlaps previous/next character
   int w = xcs->rbearing - xcs->lbearing;
   int wcw = max (WCWIDTH (unicode), 1);
 
