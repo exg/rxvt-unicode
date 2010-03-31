@@ -315,30 +315,30 @@ enum {
 #define RS_bgMask               (RS_colorMask << RS_bgShift)
 
 // font styles
-#define RS_Bold                 0x00004000UL    // value 1
-#define RS_Italic		0x00008000UL    // value 2
+#define RS_Bold                 0x08000000UL    // value 1
+#define RS_Italic		0x10000000UL    // value 2
 
 // fake styles
-#define RS_Blink                0x00010000UL    // blink
-#define RS_RVid                 0x00020000UL    // reverse video
-#define RS_Uline                0x00040000UL    // underline
+#define RS_Blink                0x20000000UL    // blink
+#define RS_RVid                 0x40000000UL    // reverse video
+#define RS_Uline                0x80000000UL    // underline
 
 // 5 custom bits for extensions
 #define RS_customCount          16
-#define RS_customMask           0x00780000UL
-#define RS_customShift          19
+#define RS_customMask           0x07800000UL
+#define RS_customShift          23
 
 // must have space for rxvt_fontset::fontCount * 2 + 2 values
-#define RS_fontMask             0xf8000000UL    // includes RS_Careful
-#define RS_fontShift            27
-#define RS_Careful		0x08000000UL	/* be careful when drawing these */
+#define RS_fontMask             0x001f0000UL    // includes RS_Careful
+#define RS_fontShift            16
+#define RS_Careful		0x00010000UL	/* be careful when drawing these */
 
 // toggle this to force redraw, must be != RS_Careful and otherwise "pretty neutral"
-#define RS_redraw               0x02000000UL
+#define RS_redraw               0x00020000UL
 
 #define RS_styleCount		4
 #define RS_styleMask		(RS_Bold | RS_Italic)
-#define RS_styleShift		14
+#define RS_styleShift		27
 
 #define RS_baseattrMask         (RS_Italic | RS_Bold | RS_Blink | RS_RVid | RS_Uline)
 #define RS_attrMask             (RS_baseattrMask | RS_fontMask)
@@ -460,7 +460,11 @@ enum colour_list {
   Color_White = maxCOLOR,
 #endif
   minTermCOLOR = Color_White + 1,
+#ifndef XTERM_256_COLORS
   maxTermCOLOR = Color_White + 72,
+#else
+  maxTermCOLOR = Color_White + 240,
+#endif
 #ifndef NO_CURSORCOLOR
   Color_cursor,
   Color_cursor2,
@@ -500,7 +504,11 @@ enum colour_list {
 #endif
 };
 
+#ifndef XTERM_256_COLORS
 #define Color_Bits      7 // 0 .. maxTermCOLOR
+#else
+#define Color_Bits      9 // 0 .. maxTermCOLOR
+#endif
 
 /*
  * Resource list
