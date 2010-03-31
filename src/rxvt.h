@@ -330,7 +330,7 @@ enum {
 
 // must have space for rxvt_fontset::fontCount * 2 + 2 values
 #define RS_fontMask             0x001f0000UL    // includes RS_Careful
-#define RS_fontShift            16
+#define RS_fontShift            18
 #define RS_Careful		0x00010000UL	/* be careful when drawing these */
 
 // toggle this to force redraw, must be != RS_Careful and otherwise "pretty neutral"
