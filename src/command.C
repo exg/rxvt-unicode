@@ -290,7 +290,7 @@ rxvt_term::commit_iso14755 ()
 static int
 hex_keyval (XKeyEvent &ev)
 {
-  // check wether this event corresponds to a hex digit
+  // check whether this event corresponds to a hex digit
   // if the modifiers had not been pressed.
   for (int index = 0; index < 8; index++)
     {
@@ -1139,7 +1139,7 @@ static struct event_handler
     // ones with high nice levels is a useful thing to do. It surely is is
     // allowed by the sus... as is returning ENOSYS.
     // since the linux guys additionally thought that breaking the only
-    // known workaroudn against their unusable sched_yield hack is cool,
+    // known workaround against their unusable sched_yield hack is cool,
     // we just nanosleep a bit and hope for the best.
 
     struct timespec ts = { 0, 1000 };
