@@ -308,8 +308,11 @@ enum {
 
 #define RS_None                 0
 
-#define RS_fgMask               0x0000007fUL    // 128 colors
-#define RS_bgMask               0x00003f80UL    // 128 colors
+#define RS_colorMask		0x0000007fUL	// 128 colors
+#define RS_fgShift		0
+#define RS_bgShift		Color_Bits
+#define RS_fgMask               (RS_colorMask << RS_fgShift)
+#define RS_bgMask               (RS_colorMask << RS_bgShift)
 
 // font styles
 #define RS_Bold                 0x00004000UL    // value 1
@@ -319,9 +322,6 @@ enum {
 #define RS_Blink                0x00010000UL    // blink
 #define RS_RVid                 0x00020000UL    // reverse video
 #define RS_Uline                0x00040000UL    // underline
-
-// toggle this to force redraw, must be != RS_Careful and otherwise "pretty neutral"
-#define RS_redraw               0x02000000UL
 
 // 5 custom bits for extensions
 #define RS_customCount          16
@@ -333,6 +333,9 @@ enum {
 #define RS_fontShift            27
 #define RS_Careful		0x08000000UL	/* be careful when drawing these */
 
+// toggle this to force redraw, must be != RS_Careful and otherwise "pretty neutral"
+#define RS_redraw               0x02000000UL
+
 #define RS_styleCount		4
 #define RS_styleMask		(RS_Bold | RS_Italic)
 #define RS_styleShift		14
@@ -340,8 +343,8 @@ enum {
 #define RS_baseattrMask         (RS_Italic | RS_Bold | RS_Blink | RS_RVid | RS_Uline)
 #define RS_attrMask             (RS_baseattrMask | RS_fontMask)
 
-#define DEFAULT_RSTYLE  (RS_None | Color_fg | (Color_bg << Color_Bits))
-#define OVERLAY_RSTYLE  (RS_None | Color_Black | (Color_Yellow << Color_Bits))
+#define DEFAULT_RSTYLE  (RS_None | (Color_fg    << RS_fgShift) | (Color_bg     << RS_bgShift))
+#define OVERLAY_RSTYLE  (RS_None | (Color_Black << RS_fgShift) | (Color_Yellow << RS_bgShift))
 
 #define Sel_none                0       /* Not waiting */
 #define Sel_normal              0x01    /* normal selection */
@@ -618,8 +621,8 @@ typedef struct _mwmhints
 #define ROW(n) ROW_of (this, n)
 
 /* how to build & extract colors and attributes */
-#define GET_BASEFG(x)           (((x) & RS_fgMask))
-#define GET_BASEBG(x)           (((x) & RS_bgMask)>>Color_Bits)
+#define GET_BASEFG(x)           (((x) & RS_fgMask) >> RS_fgShift)
+#define GET_BASEBG(x)           (((x) & RS_bgMask) >> RS_bgShift)
 
 #define GET_FONT(x)             (((x) & RS_fontMask) >> RS_fontShift)
 #define SET_FONT(x,fid)         (((x) & ~RS_fontMask) | ((fid) << RS_fontShift))
@@ -630,10 +633,10 @@ typedef struct _mwmhints
 #define GET_ATTR(x)             (((x) & RS_attrMask))
 #define GET_BGATTR(x)                                                   \
     (((x) & RS_RVid) ? (((x) & (RS_attrMask & ~RS_RVid))                \
-                        | (((x) & RS_fgMask)<<Color_Bits))              \
+                        | (((x) & RS_colorMask) << RS_bgShift))              \
                      : ((x) & (RS_attrMask | RS_bgMask)))
-#define SET_FGCOLOR(x,fg)       (((x) & ~RS_fgMask)   | (fg))
-#define SET_BGCOLOR(x,bg)       (((x) & ~RS_bgMask)   | ((bg)<<Color_Bits))
+#define SET_FGCOLOR(x,fg)       (((x) & ~RS_fgMask)   | ((fg) << RS_fgShift))
+#define SET_BGCOLOR(x,bg)       (((x) & ~RS_bgMask)   | ((bg) << RS_bgShift))
 #define SET_ATTR(x,a)           (((x) & ~RS_attrMask) | (a))
 
 #define RS_SAME(a,b)		(!(((a) ^ (b)) & ~RS_Careful))
