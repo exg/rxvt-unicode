@@ -1541,6 +1541,9 @@ rxvt_fontset::new_font (const char *name, codeset cs)
 void
 rxvt_fontset::push_font (rxvt_font *font)
 {
+  // the fontCount index is reserved for the overflow font, it is only
+  // necessary when we get fontCount or more fonts, as they cannot be
+  // represented in the rendition.
   if (fonts.size () == fontCount)
     {
       rxvt_font *f = new rxvt_font_overflow (this);

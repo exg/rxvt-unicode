@@ -324,16 +324,14 @@ enum {
 #define RS_redraw               0x02000000UL
 
 // 5 custom bits for extensions
-#define RS_customCount          32
-#define RS_customMask           0x00f80000UL
+#define RS_customCount          16
+#define RS_customMask           0x00780000UL
 #define RS_customShift          19
 
-// other flags
-#define RS_Careful		0x10000000UL	/* be careful when drawing these */
-
-#define RS_fontCount		rxvt_fontset::fontCount
-#define RS_fontMask             0xf0000000UL    // plenty(?) of fonts, includes RS_Careful
-#define RS_fontShift            28
+// must have space for rxvt_fontset::fontCount * 2 + 2 values
+#define RS_fontMask             0xf8000000UL    // includes RS_Careful
+#define RS_fontShift            27
+#define RS_Careful		0x08000000UL	/* be careful when drawing these */
 
 #define RS_styleCount		4
 #define RS_styleMask		(RS_Bold | RS_Italic)
