@@ -484,6 +484,56 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
     }
 }
 
+struct rxvt_font_meta : rxvt_font {
+  struct rxvt_fontset *fs;
+
+  rxvt_font_meta (rxvt_fontset *fs)
+  : rxvt_font ()
+  {
+    this->fs = fs;
+  }
+
+  rxvt_fontprop properties ()
+  {
+    rxvt_fontprop p;
+
+    p.width = p.height = 1;
+    p.ascent = rxvt_fontprop::unset;
+    p.weight = rxvt_fontprop::medium;
+    p.slant = rxvt_fontprop::roman;
+
+    return p;
+  }
+
+  bool load (const rxvt_fontprop &prop, bool force_prop)
+  {
+    width = 1; height = 1;
+    ascent = 1; descent = 0;
+
+    set_name (strdup ("built-in meta font"));
+
+    return true;
+  }
+
+  bool has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &careful) const
+  {
+    return false;
+  }
+
+  void draw (rxvt_drawable &d, int x, int y,
+             const text_t *text, int len,
+             int fg, int bg)
+  {
+    while (len--)
+      {
+        int fid = fs->find_font_idx (*text);
+        (*fs)[fid]->draw (d, x, y, text, 1, fg, bg);
+        ++text;
+        x += term->fwidth;
+      }
+  }
+};
+
 /////////////////////////////////////////////////////////////////////////////
 
 struct rxvt_font_x11 : rxvt_font {
@@ -1588,7 +1638,7 @@ rxvt_fontset::find_font (const char *name) const
 }
 
 int
-rxvt_fontset::find_font (unicode_t unicode)
+rxvt_fontset::find_font_idx (unicode_t unicode)
 {
   if (unicode >= 1<<20)
     return 0;
@@ -1711,3 +1761,10 @@ found:
   return i;
 }
 
+int
+rxvt_fontset::find_font (unicode_t unicode)
+{
+  int id = find_font_idx (unicode);
+
+  return min<int> (fontCount, id & 127) | (id & 128 ? Careful : 0);
+}

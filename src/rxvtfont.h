@@ -69,12 +69,14 @@ struct rxvt_fontset
   char *fontdesc;
 
   enum { fontCount = 127 }; // must be power-of-two - 1, also has to match RS_fontMask in rxvt.h
+  enum { Careful = fontCount + 1 };
 
   rxvt_fontset (rxvt_term *term);
   ~rxvt_fontset ();
 
   bool populate (const char *desc);
   void set_prop (const rxvt_fontprop &prop, bool force_prop) { this->prop = prop; this->force_prop = force_prop; }
+  int find_font_idx (uint32_t unicode);
   int find_font (uint32_t unicode);
   int find_font (const char *name) const;
   bool realize_font (int i);
