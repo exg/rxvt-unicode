@@ -320,7 +320,7 @@ enum {
 #define RS_RVid                 0x00020000UL    // reverse video
 #define RS_Uline                0x00040000UL    // underline
 
-// toggle this to force redraw, must be != RS_Careful
+// toggle this to force redraw, must be != RS_Careful and otherwise "pretty neutral"
 #define RS_redraw               0x02000000UL
 
 // 5 custom bits for extensions
