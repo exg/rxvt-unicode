@@ -308,7 +308,11 @@ enum {
 
 #define RS_None                 0
 
+#ifndef USE_256_COLORS
 #define RS_colorMask		0x0000007fUL	// 128 colors
+#else
+#define RS_colorMask		0x000001ffUL
+#endif
 #define RS_fgShift		0
 #define RS_bgShift		Color_Bits
 #define RS_fgMask               (RS_colorMask << RS_fgShift)
@@ -460,7 +464,7 @@ enum colour_list {
   Color_White = maxCOLOR,
 #endif
   minTermCOLOR = Color_White + 1,
-#ifndef XTERM_256_COLORS
+#ifndef USE_256_COLORS
   maxTermCOLOR = Color_White + 72,
 #else
   maxTermCOLOR = Color_White + 240,
@@ -504,7 +508,7 @@ enum colour_list {
 #endif
 };
 
-#ifndef XTERM_256_COLORS
+#ifndef USE_256_COLORS
 #define Color_Bits      7 // 0 .. maxTermCOLOR
 #else
 #define Color_Bits      9 // 0 .. maxTermCOLOR
