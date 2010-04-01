@@ -25,6 +25,7 @@ TODO: scrollback search does not find every first line?
 TODO:        - upgrade to libev-4.00.
 
 TODO: make fontCount dependent on ENABLE_256... in an INTELLIGENT way
+	- add support for 256 colors.
 	- add support for grabbing the clipboard selection and extend
 	  selection{_clear,_grab,} perl bindings to optionally work
 	  on the clipboard selection (based on patch by Dana Jansens).
