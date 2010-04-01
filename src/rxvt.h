@@ -253,7 +253,7 @@ struct mouse_event
 #  define TERMENV        "rxvt-unicode-256color"
 # else
 #  define TERMENV        "rxvt-unicode"
-#endif
+# endif
 #endif
 
 #if defined (NO_MOUSE_REPORT) && !defined (NO_MOUSE_REPORT_SCROLLBAR)
