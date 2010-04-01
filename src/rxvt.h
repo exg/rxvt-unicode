@@ -249,7 +249,11 @@ struct mouse_event
 # define COLORTERMENVFULL COLORTERMENV
 #endif
 #ifndef TERMENV
-# define TERMENV        "rxvt-unicode"
+# ifdef USE_256_COLORS
+#  define TERMENV        "rxvt-unicode-256color"
+# else
+#  define TERMENV        "rxvt-unicode"
+#endif
 #endif
 
 #if defined (NO_MOUSE_REPORT) && !defined (NO_MOUSE_REPORT_SCROLLBAR)

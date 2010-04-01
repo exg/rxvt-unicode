@@ -162,3 +162,7 @@ rxvt-unicode|rxvt-unicode terminal (X Window System),
 	tsl=\E]2;,
 	fsl=\007,
 	dsl=\E]2;\007,
+
+rxvt-unicode-256color|rxvt-unicode terminal with 256 colors (X Window System),
+	colors#256,
+	use=rxvt-unicode,
