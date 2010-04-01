@@ -306,6 +306,9 @@ enum {
   SECONDARY,
 };
 
+// define various rendition bits and masks. the rendition word
+// is 32 bits in size, and we should use it as efficiently as possible
+
 #define RS_None                 0
 
 // GET_BGATTR depends on RS_fgShift > RS_bgShift

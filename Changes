@@ -22,7 +22,9 @@ DUMB: support tex fonts
 TODO: perl-shell-window?
 TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
 TODO: scrollback search does not find every first line?
+TODO:        - upgrade to libev-4.00.
 
+TODO: make fontCount dependent on ENABLE_256... in an INTELLIGENT way
 	- add support for grabbing the clipboard selection and extend
 	  selection{_clear,_grab,} perl bindings to optionally work
 	  on the clipboard selection (based on patch by Dana Jansens).
@@ -34,6 +36,7 @@ TODO: scrollback search does not find every first line?
 	- new on_bell perl hook (Emanuele Giaquinta).
 	- new iso14755 option to disable ISO 14755 at runtime
           (Emanuele Giaquinta).
+        - reduce the number of custom bits to 4.
 
 9.07 Wed Dec 30 07:07:18 CET 2009
 	- port to glibc-2.10 changes (strchr etc. returning const char *
