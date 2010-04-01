@@ -315,24 +315,6 @@ enum {
 #define RS_bgMask               (RS_colorMask << RS_bgShift)
 #define RS_fgMask               (RS_colorMask << RS_fgShift)
 
-// font styles
-#define RS_Bold                 0x08000000UL    // value 1
-#define RS_Italic		0x10000000UL    // value 2
-
-#define RS_styleCount		4
-#define RS_styleMask		(RS_Bold | RS_Italic)
-#define RS_styleShift		27
-
-// fake styles
-#define RS_Blink                0x20000000UL    // blink
-#define RS_RVid                 0x40000000UL    // reverse video
-#define RS_Uline                0x80000000UL    // underline
-
-// 5 custom bits for extensions
-#define RS_customCount          16UL
-#define RS_customShift          23
-#define RS_customMask           ((RS_customCount - 1UL) << RS_customShift)
-
 // must have space for rxvt_fontset::fontCount * 2 + 2 values
 #define RS_fontShift            (RS_fgShift + Color_Bits)
 #define RS_Careful		(1UL << RS_fontShift)	/* be careful when drawing these */
@@ -340,6 +322,24 @@ enum {
 
 // toggle this to force redraw, must be != RS_Careful and otherwise "pretty neutral"
 #define RS_redraw		(2UL << RS_fontShift)
+
+// 5 custom bits for extensions
+#define RS_customCount          16UL
+#define RS_customShift          23
+#define RS_customMask           ((RS_customCount - 1UL) << RS_customShift)
+
+// font styles
+#define RS_Bold                 (1UL << RS_styleShift)
+#define RS_Italic		(2UL << RS_styleShift)
+
+#define RS_styleCount		4
+#define RS_styleShift		27
+#define RS_styleMask		(RS_Bold | RS_Italic)
+
+// fake styles
+#define RS_Blink                (1UL << 29)
+#define RS_RVid                 (1UL << 30)    // reverse video
+#define RS_Uline                (1UL << 31)    // underline
 
 #define RS_baseattrMask         (RS_Italic | RS_Bold | RS_Blink | RS_RVid | RS_Uline)
 #define RS_attrMask             (RS_baseattrMask | RS_fontMask)
