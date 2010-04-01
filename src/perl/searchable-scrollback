@@ -82,7 +82,7 @@ sub search {
 
    no re 'eval'; # just to be sure
    if (my $re = eval { qr/$search/ }) {
-      while ($self->nrow > $row && $row > $self->top_row) {
+      while ($self->nrow > $row && $row >= $self->top_row) {
          my $line = $self->line ($row)
             or last;
 
