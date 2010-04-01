@@ -24,7 +24,6 @@ doc/pty-fd
 doc/etc/rxvt-unicode.terminfo
 doc/etc/rxvt-unicode.termcap
 doc/wcwidth.patch
-doc/urxvt-8.2-256color.patch
 
 doc/.cvsignore
 doc/Makefile.in
