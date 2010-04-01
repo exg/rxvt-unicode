@@ -309,10 +309,10 @@ enum {
 #define RS_None                 0
 
 #define RS_colorMask		((1UL << Color_Bits) - 1UL)
-#define RS_fgShift		Color_Bits
 #define RS_bgShift		0
-#define RS_fgMask               (RS_colorMask << RS_fgShift)
+#define RS_fgShift		(RS_bgShift + Color_Bits)
 #define RS_bgMask               (RS_colorMask << RS_bgShift)
+#define RS_fgMask               (RS_colorMask << RS_fgShift)
 
 // font styles
 #define RS_Bold                 0x08000000UL    // value 1
@@ -324,14 +324,14 @@ enum {
 #define RS_Uline                0x80000000UL    // underline
 
 // 5 custom bits for extensions
-#define RS_customCount          16
-#define RS_customMask           0x07800000UL
+#define RS_customCount          16UL
 #define RS_customShift          23
+#define RS_customMask           ((RS_customCount - 1UL) << RS_customShift)
 
 // must have space for rxvt_fontset::fontCount * 2 + 2 values
-#define RS_fontMask             0x007c0000UL    // includes RS_Careful
-#define RS_fontShift            18
+#define RS_fontShift            (RS_fgShift + Color_Bits)
 #define RS_Careful		(1UL << RS_fontShift)	/* be careful when drawing these */
+#define RS_fontMask             ((rxvt_fontset::fontCount << (RS_fontShift + 1)) | RS_Careful)   // includes RS_Careful
 
 // toggle this to force redraw, must be != RS_Careful and otherwise "pretty neutral"
 #define RS_redraw		(2UL << RS_fontShift)
