@@ -308,11 +308,7 @@ enum {
 
 #define RS_None                 0
 
-#ifndef USE_256_COLORS
-#define RS_colorMask		0x0000007fUL	// 128 colors
-#else
-#define RS_colorMask		0x000001ffUL
-#endif
+#define RS_colorMask		((1UL << Color_Bits) - 1UL)
 #define RS_fgShift		0
 #define RS_bgShift		Color_Bits
 #define RS_fgMask               (RS_colorMask << RS_fgShift)
