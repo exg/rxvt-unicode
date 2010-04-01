@@ -1221,12 +1221,6 @@ possibly working workaround is to use a wcwidth implementation like
 
 http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
 
-=head3 I want 256 colors
-
-Are you sure you need 256 colors? 88 colors should be enough for most
-purposes. If you really need more, there is an unsupported patch for
-it in the doc directory, but please do not ask for it to be applied.
-
 =head1 RXVT-UNICODE TECHNICAL REFERENCE
 
 The rest of this document describes various technical aspects of
@@ -2269,6 +2263,10 @@ I<following> this with the appropriate C<--disable-...> arguments,
 or you can start with a minimal configuration by specifying
 C<--disable-everything> and than adding just the C<--enable-...> arguments
 you want.
+
+=item --enable-256-color (default: off)
+
+Add support for 256 colors.
 
 =item --enable-xft (default: enabled)
 

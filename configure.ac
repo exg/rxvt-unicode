@@ -198,6 +198,16 @@ if test x$GXX = xyes; then
   fi
 fi
 
+support_256_color=no
+AC_ARG_ENABLE(256-color,
+  [  --enable-256-color      enable 256-color support],
+  [if test x$enableval = xyes; then
+    support_256_color=yes
+  fi])
+if test x$support_256_color = xyes; then
+  AC_DEFINE(USE_256_COLORS, 1, Define if you want 256-color support)
+fi
+
 AC_ARG_ENABLE(unicode3,
   [  --enable-unicode3       use 21 instead of 16 bits to represent unicode characters],
   [if test x$enableval = xyes -o x$enableval = xno; then
