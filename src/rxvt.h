@@ -331,10 +331,10 @@ enum {
 // must have space for rxvt_fontset::fontCount * 2 + 2 values
 #define RS_fontMask             0x007c0000UL    // includes RS_Careful
 #define RS_fontShift            18
-#define RS_Careful		0x00010000UL	/* be careful when drawing these */
+#define RS_Careful		(1UL << RS_fontShift)	/* be careful when drawing these */
 
 // toggle this to force redraw, must be != RS_Careful and otherwise "pretty neutral"
-#define RS_redraw               0x00020000UL
+#define RS_redraw		(2UL << RS_fontShift)
 
 #define RS_styleCount		4
 #define RS_styleMask		(RS_Bold | RS_Italic)
