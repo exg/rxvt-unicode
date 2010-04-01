@@ -2087,7 +2087,7 @@ rxvt_term::scr_refresh () NOTHROW
           ccol2 = Color_bg;
 #endif
 
-        if (showcursor && focus)
+        if (focus)
           {
             if (option (Opt_cursorUnderline))
               *crp ^= RS_Uline;

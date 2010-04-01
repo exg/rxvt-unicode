@@ -308,6 +308,7 @@ enum {
 
 #define RS_None                 0
 
+// GET_BGATTR depends on RS_fgShift > RS_bgShift
 #define RS_colorMask		((1UL << Color_Bits) - 1UL)
 #define RS_bgShift		0
 #define RS_fgShift		(RS_bgShift + Color_Bits)
@@ -317,6 +318,10 @@ enum {
 // font styles
 #define RS_Bold                 0x08000000UL    // value 1
 #define RS_Italic		0x10000000UL    // value 2
+
+#define RS_styleCount		4
+#define RS_styleMask		(RS_Bold | RS_Italic)
+#define RS_styleShift		27
 
 // fake styles
 #define RS_Blink                0x20000000UL    // blink
@@ -335,10 +340,6 @@ enum {
 
 // toggle this to force redraw, must be != RS_Careful and otherwise "pretty neutral"
 #define RS_redraw		(2UL << RS_fontShift)
-
-#define RS_styleCount		4
-#define RS_styleMask		(RS_Bold | RS_Italic)
-#define RS_styleShift		27
 
 #define RS_baseattrMask         (RS_Italic | RS_Bold | RS_Blink | RS_RVid | RS_Uline)
 #define RS_attrMask             (RS_baseattrMask | RS_fontMask)
@@ -639,10 +640,13 @@ typedef struct _mwmhints
 #define SET_STYLE(x,style)	(((x) & ~RS_styleMask) | ((style) << RS_styleShift))
 
 #define GET_ATTR(x)             (((x) & RS_attrMask))
-#define GET_BGATTR(x)                                                   \
-    (((x) & RS_RVid) ? (((x) & (RS_attrMask & ~RS_RVid))                \
-                        | (((x) & RS_colorMask) << RS_bgShift))              \
-                     : ((x) & (RS_attrMask | RS_bgMask)))
+// return attributes defining the background, encoding doesn't matter
+// depends on RS_fgShift > RS_bgShift
+#define GET_BGATTR(x)                                      \
+  (expect_false ((x) & RS_RVid)                            \
+    ? (((x) & (RS_attrMask & ~RS_RVid))                    \
+      | (((x) & RS_fgMask) >> (RS_fgShift - RS_bgShift)))  \
+    : ((x) & (RS_attrMask | RS_bgMask)))
 #define SET_FGCOLOR(x,fg)       (((x) & ~RS_fgMask)   | ((fg) << RS_fgShift))
 #define SET_BGCOLOR(x,bg)       (((x) & ~RS_bgMask)   | ((bg) << RS_bgShift))
 #define SET_ATTR(x,a)           (((x) & ~RS_attrMask) | (a))
