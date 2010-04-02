@@ -651,7 +651,10 @@ rxvt_term::key_press (XKeyEvent &ev)
 
           if (ev.state & ModNumLockMask)
             kp = false;
-          switch (translate_keypad (keysym, kp))
+
+          keysym = translate_keypad (keysym, kp);
+
+          switch (keysym)
             {
 #ifndef NO_BACKSPACE_KEY
               case XK_BackSpace:
