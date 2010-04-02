@@ -1881,8 +1881,8 @@ X<Priv66>
 
 =begin table
 
-	B<< C<h> >>	Application Keypad (DECPAM) == C<ESC =>
-	B<< C<l> >>	Normal Keypad (DECPNM) == C<< ESC > >>
+	B<< C<h> >>	Application Keypad (DECKPAM/DECPAM) == C<ESC =>
+	B<< C<l> >>	Normal Keypad (DECKPNM/DECPNM) == C<< ESC > >>
 
 =end table
 
