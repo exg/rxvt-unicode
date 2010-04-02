@@ -424,12 +424,6 @@ rxvt_term::key_press (XKeyEvent &ev)
   ctrl = ev.state & ControlMask;
   meta = ev.state & ModMetaMask;
 
-  if (numlock_state || (ev.state & ModNumLockMask))
-    {
-      numlock_state = (ev.state & ModNumLockMask);
-      set_privmode (PrivMode_aplKP, !numlock_state);
-    }
-
   kbuf[0] = 0;
 
 #ifdef USE_XIM
@@ -655,6 +649,8 @@ rxvt_term::key_press (XKeyEvent &ev)
           bool kp = priv_modes & PrivMode_aplKP ? !shft : shft;
           unsigned int newlen = 1;
 
+          if (ev.state & ModNumLockMask)
+            kp = false;
           switch (translate_keypad (keysym, kp))
             {
 #ifndef NO_BACKSPACE_KEY
