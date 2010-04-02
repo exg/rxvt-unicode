@@ -19,12 +19,11 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 
-TODO: http://tmp.tomaw.net/6b9a367dbac63ced0aa7be2b19da5ae0.txt
 TODO: perl-shell-window?
-TODO: zweimal numlock? falsche codes rxvt urxvt for numpad?
 TODO:        - upgrade to libev-4.00.
 
 TODO: make fontCount dependent on ENABLE_256... in an INTELLIGENT way
+	- fix numlock handling (Emanuele Giaquinta).
 	- searchable-scrollback no longer ignores the first line
 	  (Emanuele Giaquinta).
 	- add support for 256 colors.
