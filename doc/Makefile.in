@@ -74,7 +74,7 @@ tags allbin:
 
 alldoc: rxvt.1.man.in rxvt.7.man.in rxvtc.1.man.in rxvtd.1.man.in rxvtperl.3.man.in \
 	../README.configure ../README.FAQ
-	infocmp -C rxvt-unicode >$(srcdir)/etc/rxvt-unicode.termcap
+	tic -C $(srcdir)/etc/rxvt-unicode.terminfo >$(srcdir)/etc/rxvt-unicode.termcap
 
 clean:
 	rm -f rxvt.1.man rxvt.7.man rxvtc.1.man rxvtd.1.man rxvtperl.3.man
