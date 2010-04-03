@@ -14,7 +14,6 @@ WISH: investigate -pe tabbed -g 80x25 being 23 not 24 or 25 lines
          resize the outer window, which might result in a smaller window overall.
          or something like that. guys, send me a patch.
 WISH: coloured pastebin
-WISH: selection-color-pair instead of reverse video
 WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
@@ -23,10 +22,15 @@ TODO: perl-shell-window?
 TODO:        - upgrade to libev-4.00.
 
 TODO: make fontCount dependent on ENABLE_256... in an INTELLIGENT way
+TODO: --enable-256c documentation
 	- fix numlock handling, the most longstanding bug to date (Emanuele Giaquinta).
 	- searchable-scrollback no longer ignores the first line
 	  (Emanuele Giaquinta).
 	- add support for 256 colors.
+        - add rxvt-unicode-256color terminfo and use it by default in that mode.
+        - actually added macosx-clipboard-native, which should have been in
+          the 9.07 release but had been forgotten.
+        - fix definition of sgr0 to work around limitations in luit.
 	- add support for grabbing the clipboard selection and extend
 	  selection{_clear,_grab,} perl bindings to optionally work
 	  on the clipboard selection (based on patch by Dana Jansens).
