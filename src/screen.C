@@ -2906,11 +2906,11 @@ rxvt_term::selection_request (Time tm, int selnum) NOTHROW
 #if X_HAVE_UTF8_STRING
       selection_type = Sel_UTF8String;
       if (selection_request_other (xa[XA_UTF8_STRING], selnum))
-	return;
+        return;
 #else
       selection_type = Sel_CompoundText;
       if (selection_request_other (xa[XA_COMPOUND_TEXT], selnum))
-	return;
+        return;
 #endif
     }
 

@@ -29,7 +29,7 @@
 #if DO_TIMING_TEST
 # include <sys/time.h>
 #define TIMING_TEST_START(id) \
-	struct timeval timing_test_##id##_stv;\
+  struct timeval timing_test_##id##_stv;\
   gettimeofday (&timing_test_##id##_stv, NULL);
 
 #define TIMING_TEST_PRINT_RESULT(id) \

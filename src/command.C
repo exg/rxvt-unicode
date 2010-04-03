@@ -2152,7 +2152,7 @@ rxvt_term::button_release (XButtonEvent &ev)
 
           case Button2:
             if (IN_RANGE_EXC (ev.x, 0, width) && IN_RANGE_EXC (ev.y, 0, height)) // inside window?
-	      selection_request (ev.time, ev.state & ModMetaMask ? Sel_Clipboard : Sel_Primary);
+              selection_request (ev.time, ev.state & ModMetaMask ? Sel_Clipboard : Sel_Primary);
             break;
 
 #ifdef MOUSE_WHEEL
