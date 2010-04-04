@@ -21,6 +21,7 @@ DUMB: support tex fonts
 TODO: perl-shell-window?
 TODO:        - upgrade to libev-4.00.
 
+TODO: rewrite colorRV/highlightColor logic
 TODO: make fontCount dependent on ENABLE_256... in an INTELLIGENT way
 TODO: --enable-256c documentation
 	- fix numlock handling, the most longstanding bug to date (Emanuele Giaquinta).
