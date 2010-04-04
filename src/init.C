@@ -512,6 +512,7 @@ const char *const def_colorName[] =
 #endif
 #ifdef OPTION_HC
     NULL,
+    NULL,
 #endif
     COLOR_SCROLLBAR,
 #ifdef RXVT_SCROLLBAR

@@ -491,6 +491,7 @@ enum colour_list {
 #endif
 #ifdef OPTION_HC
   Color_HC,
+  Color_HTC,
 #endif
   Color_scroll,
 #ifdef RXVT_SCROLLBAR

@@ -179,6 +179,7 @@ optList[] = {
 #endif
 #ifdef OPTION_HC
               STRG (Rs_color + Color_HC, "highlightColor", "hc", "color", "highlight color"),
+              RSTRG (Rs_color + Color_HTC, "highlightTextColor", "color"),
 #endif
 #ifndef NO_CURSORCOLOR
               STRG (Rs_color + Color_cursor, "cursorColor", "cr", "color", "cursor color"),
