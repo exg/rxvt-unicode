@@ -814,7 +814,7 @@ wide and 15 pixels high.
 
 The second font is just used to add additional unicode characters not in
 the base font, likewise the third, which is unfortunately non-bold, but
-the bold version of the font does contain less characters, so this is a
+the bold version of the font does contain fewer characters, so this is a
 useful supplement.
 
 The third font is an Xft font with aliasing turned off, and the characters
