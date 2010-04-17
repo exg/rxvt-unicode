@@ -2233,7 +2233,7 @@ rxvt_term::scr_refresh () NOTHROW
           while (expect_false (stp[col] == NOCHAR && col > 0))
             --col;
 
-          rend_t rend = srp[col];     /* screen rendition (target rendtion) */
+          rend_t rend = srp[col];     /* screen rendition (target rendition) */
           text_t *text = stp + col;
           int count = 1;
 
