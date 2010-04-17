@@ -2330,6 +2330,7 @@ rxvt_term::scr_refresh () NOTHROW
                       // if invert is 0 reverse video is set so we use bg color as fg color
                       else if (!invert)
                         fore = back;
+
                       back = Color_HC;
                       invert = 0;
                     }
