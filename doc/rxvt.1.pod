@@ -648,15 +648,20 @@ foreground colour is the default. If font styles are not available
 Use the specified colour to display underlined characters when the
 foreground colour is the default.
 
-=item B<colorRV:> I<colour>
-
-Use the specified colour as the background for reverse video characters
-when OPTION_HC is disabled (--disable-frills).
-
 =item B<underlineColor:> I<colour>
 
 If set, use the specified colour as the colour for the underline
 itself. If unset, use the foreground colour.
+
+=item B<highlightColor:> I<colour>
+
+If set, use the specified colour as the background for highlighted
+characters. If unset, use reverse video.
+
+=item B<highlightTextColor:> I<colour>
+
+If set and highlightColor is set, use the specified colour as the
+foreground for highlighted characters.
 
 =item B<cursorColor:> I<colour>
 

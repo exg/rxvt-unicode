@@ -330,6 +330,8 @@ enum {
 // toggle this to force redraw, must be != RS_Careful and otherwise "pretty neutral"
 #define RS_redraw		(2UL << RS_fontShift)
 
+#define RS_Sel                  (1UL << 22)
+
 // 5 custom bits for extensions
 #define RS_customCount          16UL
 #define RS_customShift          23
@@ -391,7 +393,7 @@ enum {
   XTerm_Color_pointer_bg = 14,      // change actual 'Pointer' bg color
   XTerm_Color05          = 15,      // not implemented (tektronix fg)
   XTerm_Color06          = 16,      // not implemented (tektronix bg)
-  XTerm_Color_RV         = 17,      // change actual 'Highlight' color
+  XTerm_Color_HC         = 17,      // change actual 'Highlight' color
   XTerm_logfile          = 46,      // not implemented
   XTerm_font             = 50,
 

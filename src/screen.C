@@ -2288,7 +2288,7 @@ rxvt_term::scr_refresh () NOTHROW
           int back = bgcolor_of (rend); // desired background
 
           // only do special processing if any attributes are set, which is unlikely
-          if (expect_false (rend & (RS_Bold | RS_Italic | RS_Uline | RS_RVid | RS_Blink | RS_Careful)))
+          if (expect_false (rend & (RS_baseattrMask | RS_Careful | RS_Sel)))
             {
               bool invert = rend & RS_RVid;
 
@@ -2317,25 +2317,30 @@ rxvt_term::scr_refresh () NOTHROW
                 fore = Color_UL;
 #endif
 
-              if (invert)
+#ifdef OPTION_HC
+              if (rend & RS_Sel)
                 {
-#ifdef OPTION_HC
-                  if ((showcursor && row == screen.cur.row && text - stp == screen.cur.col)
-                      || !ISSET_PIXCOLOR (Color_HC))
-#endif
-                    /* invert the column if no highlightColor is set or it is the
-                     * current cursor column */
-                    ::swap (fore, back);
-#ifdef OPTION_HC
-                  else if (ISSET_PIXCOLOR (Color_HC))
-                    back = Color_HC;
+                  /* invert the column if no highlightColor is set or it is the
+                   * current cursor column */
+                  if (!(showcursor && row == screen.cur.row && text - stp == screen.cur.col)
+                      && ISSET_PIXCOLOR (Color_HC))
+                    {
+                      if (ISSET_PIXCOLOR (Color_HTC))
+                        fore = Color_HTC;
+                      // if invert is 0 reverse video is set so we use bg color as fg color
+                      else if (!invert)
+                        fore = back;
+                      back = Color_HC;
+                      invert = 0;
+                    }
+                }
 #endif
 
+              if (invert)
+                {
+                    ::swap (fore, back);
+
 #ifndef NO_BOLD_UNDERLINE_REVERSE
-# ifndef OPTION_HC
-                  if (ISSET_PIXCOLOR (Color_RV))
-                    back = Color_RV;
-# endif
                   if (fore == back)
                     {
                       fore = Color_bg;
@@ -2598,12 +2603,12 @@ rxvt_term::scr_reverse_selection () NOTHROW
       if (selection.rect)
         scr_xor_rect (selection.beg.row, selection.beg.col,
                       selection.end.row, selection.end.col,
-                      RS_RVid, RS_RVid | RS_Uline);
+                      RS_Sel | RS_RVid, RS_Sel | RS_RVid | RS_Uline);
       else
 #endif
         scr_xor_span (selection.beg.row, selection.beg.col,
                       selection.end.row, selection.end.col,
-                      RS_RVid);
+                      RS_Sel | RS_RVid);
     }
 }
 

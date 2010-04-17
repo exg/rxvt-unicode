@@ -3396,10 +3396,12 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
       case XTerm_Color_pointer_bg:
         process_color_seq (op, Color_pointer_bg, str, resp);
         break;
-#ifndef NO_BOLD_UNDERLINE_REVERSE
-      case XTerm_Color_RV:
-        process_color_seq (op, Color_RV, str, resp);
+#ifdef OPTION_HC
+      case XTerm_Color_HC:
+        process_color_seq (op, Color_HC, str, resp);
         break;
+#endif
+#ifndef NO_BOLD_UNDERLINE_REVERSE
       case Rxvt_Color_BD:
       case URxvt_Color_BD:
         process_color_seq (op, Color_BD, str, resp);
