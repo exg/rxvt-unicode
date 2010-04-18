@@ -3400,6 +3400,9 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
       case XTerm_Color_HC:
         process_color_seq (op, Color_HC, str, resp);
         break;
+      case XTerm_Color_HTC:
+        process_color_seq (op, Color_HTC, str, resp);
+        break;
 #endif
 #ifndef NO_BOLD_UNDERLINE_REVERSE
       case URxvt_Color_BD:

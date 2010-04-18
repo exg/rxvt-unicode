@@ -393,7 +393,8 @@ enum {
   XTerm_Color_pointer_bg = 14,      // change actual 'Pointer' bg color
   XTerm_Color05          = 15,      // not implemented (tektronix fg)
   XTerm_Color06          = 16,      // not implemented (tektronix bg)
-  XTerm_Color_HC         = 17,      // change actual 'Highlight' color
+  XTerm_Color_HC         = 17,      // change actual 'Highlight' bg color
+  XTerm_Color_HTC        = 19,      // change actual 'Highlight' fg color
   XTerm_logfile          = 46,      // not implemented
   XTerm_font             = 50,
 
