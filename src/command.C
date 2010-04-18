@@ -3402,11 +3402,9 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
         break;
 #endif
 #ifndef NO_BOLD_UNDERLINE_REVERSE
-      case Rxvt_Color_BD:
       case URxvt_Color_BD:
         process_color_seq (op, Color_BD, str, resp);
         break;
-      case Rxvt_Color_UL:
       case URxvt_Color_UL:
         process_color_seq (op, Color_UL, str, resp);
         break;

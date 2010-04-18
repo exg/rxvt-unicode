@@ -405,8 +405,6 @@ enum {
    */
 
   // deprecated
-  Rxvt_Color_BD          = 18,
-  Rxvt_Color_UL          = 19,
   Rxvt_restoreFG         = 39,
   Rxvt_restoreBG         = 49,
 

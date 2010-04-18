@@ -2022,8 +2022,6 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 	B<< C<Ps = 12> >>	Change colour of text cursor foreground to B<< C<Pt> >>
 	B<< C<Ps = 13> >>	Change colour of mouse foreground to B<< C<Pt> >>
 	B<< C<Ps = 17> >>	Change colour of highlight characters to B<< C<Pt> >>
-	B<< C<Ps = 18> >>	Change colour of bold characters to B<< C<Pt> >> [deprecated, see 706]
-	B<< C<Ps = 19> >>	Change colour of underlined characters to B<< C<Pt> >> [deprecated, see 707]
 	B<< C<Ps = 20> >>	Change background pixmap parameters (see section BACKGROUND IMAGE) (Compile AfterImage).
 	B<< C<Ps = 39> >>	Change default foreground colour to B<< C<Pt> >>. [deprecated, use 10]
 	B<< C<Ps = 46> >>	Change Log File to B<< C<Pt> >> I<unimplemented>
