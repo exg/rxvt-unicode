@@ -21,9 +21,15 @@ DUMB: support tex fonts
 TODO: perl-shell-window?
 TODO:        - upgrade to libev-4.00.
 
-TODO: rewrite colorRV/highlightColor logic
 TODO: make fontCount dependent on ENABLE_256... in an INTELLIGENT way
 TODO: --enable-256c documentation
+	- make OSC 17 / 19 apply to highlightColor / highlightTextColor.
+	- remove deprecated OSC 18 / 19.
+	- add highlightTextColor resource to change the foreground colour of
+	  highlighted characters.
+	- make highlightColor apply also to selected cells with reverse video
+	  but not to non selected cells with reverse video.
+	- remove colorRV resource (it was enabled only with frills off).
 	- fix numlock handling, the most longstanding bug to date (Emanuele Giaquinta).
 	- searchable-scrollback no longer ignores the first line
 	  (Emanuele Giaquinta).
