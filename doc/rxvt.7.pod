@@ -2450,7 +2450,7 @@ in combination with other switches) is:
   hold on exit (-hold)
   compile in built-in block graphics
   skip builtin block graphics (-sbg)
-  separate highlightcolor support (-hc)
+  separate highlight colour (-highlightColor, -highlightTextColor)
 
 It also enables some non-essential features otherwise disabled, such as:
 
