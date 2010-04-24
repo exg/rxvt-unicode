@@ -2439,7 +2439,7 @@ in combination with other switches) is:
   separate underline colour (-underlineColor)
   settable border widths and borderless switch (-w, -b, -bl)
   visual depth selection (-depth)
-  settable extra linespacing /-lsp)
+  settable extra linespacing (-lsp)
   iso-14755 5.1 (basic) support
   tripleclickwords (-tcw)
   settable insecure mode (-insecure)
