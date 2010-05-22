@@ -99,7 +99,7 @@ install-perl:
 @IF_PERL@	$(INSTALL) -d $(DESTDIR)$(libdir)/urxvt
 @IF_PERL@	$(INSTALL) -d $(DESTDIR)$(libdir)/urxvt/perl
 @IF_PERL@	$(INSTALL_DATA) $(srcdir)/urxvt.pm $(DESTDIR)$(libdir)/urxvt/urxvt.pm
-@IF_PERL@	for ext in $(srcdir)/perl/*; do test -f "$$ext" && $(INSTALL_DATA) "$$ext" $(DESTDIR)$(libdir)/urxvt/perl/"`basename "$$ext"`"; done
+@IF_PERL@	for ext in $(srcdir)/perl/*; do test -f "$$ext" && $(INSTALL_DATA) "$$ext" $(DESTDIR)$(libdir)/urxvt/perl/; done
 
 install-bin: allbin
 	$(INSTALL) -d $(DESTDIR)$(bindir)
