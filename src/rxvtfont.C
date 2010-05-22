@@ -1484,7 +1484,7 @@ rxvt_fontset::clear ()
   force_prop = false;
 
   for (rxvt_font **i = fonts.begin (); i != fonts.end (); i++)
-    FONT_UNREF (*i);
+    (*i)->unref ();
 
   for (pagemap **p = fmap.begin (); p != fmap.end (); p++)
     delete *p;

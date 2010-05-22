@@ -58,9 +58,13 @@ struct rxvt_font
                      int x, int y,
                      const text_t *text, int len,
                      int fg, int bg) = 0;
-};
 
-#define FONT_UNREF(f) do { (f)->clear (); delete (f); } while (0)
+  void unref ()
+  {
+    clear ();
+    delete this;
+  }
+};
 
 struct rxvt_fallback_font;
 
