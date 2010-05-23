@@ -1505,11 +1505,15 @@ The RGB cube uses indices 16..79 (16..231) using the following formulas:
    index_256 = (r * 16 + g) * 16 + b + 16   # r, g, b = 0..15
 
 The grayscale ramp uses indices 80..87 (232..239), from 10% to 90% in 10%
-steps (1/26 to 25/26 in 1/26 steps).
+steps (1/26 to 25/26 in 1/26 steps) - black and white are already part of
+the RGB cube.
 
 Together, all those colours implement the 88 (256) colour xterm
 colours. Only the first 16 can be changed using resources currently, the
 rest can only be changed via command sequences ("escape codes").
+
+Applications are advised to use terminfo or command sequences to discover
+number and RGB values of all colours (yes, you can query this...).
 
 Note that B<-rv> (B<"reverseVideo: True">) simulates reverse video by
 always swapping the foreground/background colours. This is in contrast to
