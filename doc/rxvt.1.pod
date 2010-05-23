@@ -154,7 +154,7 @@ used to brighten or darken the image in addition to tinting it.
 Please note that certain tint colours can be applied on the server-side,
 thus yielding performance gain of two orders of magnitude. These colours are:
 blue, red, green, cyan, magenta, yellow, and those close to them. Also
-pure black and pure white colors essentially mean no tinting; resource
+pure black and pure white colours essentially mean no tinting; resource
 I<tintColor>. Example:
 
    @@RXVT_NAME@@ -tr -tint blue -sh 40
@@ -170,7 +170,7 @@ resource I<shading>.
 Specify background blending type. If background pixmap is specified
 at the same time as transparency - such pixmap will be blended over
 transparency image, using method specified. Supported values are :
-B<add>, B<alphablend>, B<allanon> - color values averaging, B<colorize>,
+B<add>, B<alphablend>, B<allanon> - colour values averaging, B<colorize>,
 B<darken>, B<diff>, B<dissipate>, B<hue>, B<lighten>, B<overlay>,
 B<saturate>, B<screen>, B<sub>, B<tint>, B<value>. The default is
 alpha-blending. Compile I<afterimage>; resource I<blendType>.
@@ -627,7 +627,7 @@ corresponds to low-intensity (normal) colours and 8-15 corresponds to
 high-intensity (bold = bright foreground, blink = bright background)
 colours. The canonical names are as follows: 0=black, 1=red, 2=green,
 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white, but the actual colour
-names used are listed in the B<COLORS AND GRAPHICS> section.
+names used are listed in the B<COLOURS AND GRAPHICS> section.
 
 Colours higher than 15 cannot be set using resources (yet), but can be
 changed using an escape command (see @@RXVT_NAME@@(7)).
@@ -678,7 +678,7 @@ use the background colour.
 
 B<True>: simulate reverse video by foreground and background colours;
 option B<-rv>. B<False>: regular screen colours [default]; option
-B<+rv>. See note in B<COLORS AND GRAPHICS> section.
+B<+rv>. See note in B<COLOURS AND GRAPHICS> section.
 
 =item B<jumpScroll:> I<boolean>
 
@@ -1458,7 +1458,7 @@ it can be seen via the I<who(1)> command, and can accept messages.  To
 allow this feature, B<@@RXVT_NAME@@> may need to be installed setuid root
 on some systems or setgid to root or to some other group on others.
 
-=head1 COLORS AND GRAPHICS
+=head1 COLOURS AND GRAPHICS
 
 In addition to the default foreground and background colours,
 B<@@RXVT_NAME@@> can display up to 16 colours (8 ANSI colours plus
@@ -1517,9 +1517,9 @@ White.
 If Xft support has been compiled in and as long as Xft/Xrender/X don't get
 their act together, rxvt-unicode will do it's own alpha channel management:
 
-You can prefix any color with an opaquenes percentage enclosed in
+You can prefix any colour with an opaquenes percentage enclosed in
 brackets, i.e. C<[percent]>, where C<percent> is a decimal percentage
-(0-100) that specifies the opacity of the color, where C<0> is completely
+(0-100) that specifies the opacity of the colour, where C<0> is completely
 transparent and C<100> is completely opaque. For example, C<[50]red> is a
 half-transparent red, while C<[95]#00ff00> is an almost opaque green. This
 is the recommended format to specify transparency values, and works with
@@ -1637,7 +1637,7 @@ If set and accessible, gives the name of a X resource file to be loaded by
 
 =item B</usr/lib/X11/rgb.txt>
 
-Color names.
+Colour names.
 
 =back
 

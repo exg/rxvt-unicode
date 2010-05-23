@@ -107,12 +107,13 @@ meaning it couldn't connect to the daemon, it will start the daemon and
 re-run the command. Subsequent invocations of the script will re-use the
 existing daemon.
 
-=head3 How do I distinguish whether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.
+=head3 How do I distinguish whether I'm running rxvt-unicode or a regular
+xterm? I need this to decide about setting colours etc.
 
 The original rxvt and rxvt-unicode always export the variable "COLORTERM",
 so you can check and see if that is set. Note that several programs, JED,
 slrn, Midnight Commander automatically check this variable to decide
-whether or not to use color.
+whether or not to use colour.
 
 =head3 How do I set the correct, full IP address for the DISPLAY variable?
 
@@ -363,15 +364,15 @@ the text blink when compiled with C<--enable-text-blink>. Without
 C<--enable-text-blink>, the blink attribute will be ignored.
 
 On ANSI colours, bold/blink attributes are used to set high-intensity
-foreground/background colors.
+foreground/background colours.
 
-color0-7 are the low-intensity colors.
+color0-7 are the low-intensity colours.
 
-color8-15 are the corresponding high-intensity colors.
+color8-15 are the corresponding high-intensity colours.
 
-=head3 I don't like the screen colors.  How do I change them?
+=head3 I don't like the screen colours.  How do I change them?
 
-You can change the screen colors at run-time using F<~/.Xdefaults>
+You can change the screen colours at run-time using F<~/.Xdefaults>
 resources (or as long-options).
 
 Here are values that are supposed to resemble a VGA screen,
@@ -395,7 +396,7 @@ including the murky brown that passes for low-intensity yellow:
    URxvt.color14:  #00FFFF
    URxvt.color15:  #FFFFFF
 
-And here is a more complete set of non-standard colors.
+And here is a more complete set of non-standard colours.
 
    URxvt.cursorColor:  #dc74d1
    URxvt.pointerColor: #dc74d1
@@ -1625,7 +1626,7 @@ Character Attributes (SGR)
 	B<< C<Ps = 34 / 44> >>	fg/bg Blue
 	B<< C<Ps = 35 / 45> >>	fg/bg Magenta
 	B<< C<Ps = 36 / 46> >>	fg/bg Cyan
-	B<< C<Ps = 38;5 / 48;5> >>	set fg/bg to color #m (ISO 8613-6)
+	B<< C<Ps = 38;5 / 48;5> >>	set fg/bg to colour #m (ISO 8613-6)
 	B<< C<Ps = 37 / 47> >>	fg/bg White
 	B<< C<Ps = 39 / 49> >>	fg/bg Default
 	B<< C<Ps = 90 / 100> >>	fg/bg Bright Black
@@ -2254,18 +2255,15 @@ All
 
 =item --enable-everything
 
-Add (or remove) support for all non-multichoice options listed in
-C<./configure --help>, except for C<--enable-assert>.
+Add (or remove) support for all non-multichoice options listed
+in C<./configure --help>, except for C<--enable-assert> and
+C<--enable-256-color>.
 
 You can specify this and then disable options you do not like by
 I<following> this with the appropriate C<--disable-...> arguments,
 or you can start with a minimal configuration by specifying
 C<--disable-everything> and than adding just the C<--enable-...> arguments
 you want.
-
-=item --enable-256-color (default: off)
-
-Add support for 256 colors.
 
 =item --enable-xft (default: enabled)
 
@@ -2455,7 +2453,7 @@ in combination with other switches) is:
 It also enables some non-essential features otherwise disabled, such as:
 
   some round-trip time optimisations
-  nearest color allocation on pseudocolor screens
+  nearest colour allocation on pseudocolor screens
   UTF8_STRING support for selection
   sgr modes 90..97 and 100..107
   backindex and forwardindex escape sequences
@@ -2521,6 +2519,19 @@ resource standpoint.
 
 Enables the assertions in the code, normally disabled. This switch is only
 useful when developing rxvt-unicode.
+
+=item --enable-256-color (default: off)
+
+Force use of so-called 256 colour mode, to work around buggy applications
+that do not support termcap/terminfo, or simply improve support for
+applications hardcoding the xterm 256 colour table.
+
+This switch breaks termcap/terminfo compatibility to C<TERM=rxvt-unicode>,
+and consequently sets C<TERM> to C<rxvt-unicode-256color> by default
+(F<doc/etc/> conatins termcap/terminfo defintiions for both).
+
+It also results in higher memory usage and can slow down @@RXVT_NAME@@
+dramatically when more than six fonts are in use by a terminal instance.
 
 =item --with-afterimage-config=DIR
 
