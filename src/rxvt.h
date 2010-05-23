@@ -325,7 +325,8 @@ enum {
 // must have space for rxvt_fontset::fontCount * 2 + 2 values
 #define RS_fontShift            (RS_fgShift + Color_Bits)
 #define RS_Careful		(1UL << RS_fontShift)	/* be careful when drawing these */
-#define RS_fontMask             ((rxvt_fontset::fontCount << (RS_fontShift + 1)) | RS_Careful)   // includes RS_Careful
+#define RS_fontCount		rxvt_fontset::fontCount
+#define RS_fontMask             ((RS_fontCount << (RS_fontShift + 1)) | RS_Careful)   // includes RS_Careful
 
 // toggle this to force redraw, must be != RS_Careful and otherwise "pretty neutral"
 #define RS_redraw		(2UL << RS_fontShift)
