@@ -333,7 +333,7 @@ enum {
 
 #define RS_Sel                  (1UL << 22)
 
-// 5 custom bits for extensions
+// 4 custom bits for extensions
 #define RS_customCount          16UL
 #define RS_customShift          23
 #define RS_customMask           ((RS_customCount - 1UL) << RS_customShift)
