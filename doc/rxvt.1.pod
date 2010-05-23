@@ -1461,9 +1461,12 @@ on some systems or setgid to root or to some other group on others.
 =head1 COLOURS AND GRAPHICS
 
 In addition to the default foreground and background colours,
-B<@@RXVT_NAME@@> can display up to 16 colours (8 ANSI colours plus
-high-intensity bold/blink versions of the same). Here is a list of the
-colours with their names.
+B<@@RXVT_NAME@@> can display up to 88/256 colours: 8 ANSI colours plus
+high-intensity (potentially bold/blink) versions of the same, and 72 (or
+240 in 256 colour mode) colours arranged in an 4x4x4 (or 6x6x6) colour RGB
+cube plus a 8 (24) colour greyscale ramp.
+
+Here is a list of the ANSI colours with their names.
 
 =begin table
 
@@ -1493,14 +1496,20 @@ B<background>, B<cursorColor>, B<cursorColor2>, B<colorBD>, B<colorUL> as
 a number 0-15, as a convenient shorthand to reference the colour name of
 color0-color15.
 
-In addition to the colours defined above, @@RXVT_NAME@@ offers an
-additional 72 colours. The first 64 of those (with indices 16 to 79)
-consist of a 4*4*4 RGB colour cube (i.e. I<index = r * 16 + g * 4 + b +
-16>), followed by 8 additional shades of gray (with indices 80 to 87).
+The following text gives values for the standard 88 colour mode (and
+values for the 256 colour mode in parentheses).
 
-Together, all those colours implement the 88 colour xterm colours. Only
-the first 16 can be changed using resources currently, the rest can only
-be changed via command sequences ("escape codes").
+The RGB cube uses indices 16..79 (16..231) using the following formulas:
+
+   index_88  = (r *  4 + g) *  4 + b + 16   # r, g, b = 0..3
+   index_256 = (r * 16 + g) * 16 + b + 16   # r, g, b = 0..15
+
+The grayscale ramp uses indices 80..87 (232..239), from 10% to 90% in 10%
+steps (1/26 to 25/26 in 1/26 steps).
+
+Together, all those colours implement the 88 (256) colour xterm
+colours. Only the first 16 can be changed using resources currently, the
+rest can only be changed via command sequences ("escape codes").
 
 Note that B<-rv> (B<"reverseVideo: True">) simulates reverse video by
 always swapping the foreground/background colours. This is in contrast to
