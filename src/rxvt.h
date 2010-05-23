@@ -249,7 +249,7 @@ struct mouse_event
 # define COLORTERMENVFULL COLORTERMENV
 #endif
 #ifndef TERMENV
-# ifdef USE_256_COLORS
+# if USE_256_COLORS
 #  define TERMENV        "rxvt-unicode-256color"
 # else
 #  define TERMENV        "rxvt-unicode"
@@ -469,10 +469,10 @@ enum colour_list {
   Color_White = maxCOLOR,
 #endif
   minTermCOLOR = Color_White + 1,
-#ifndef USE_256_COLORS
-  maxTermCOLOR = Color_White + 72,
-#else
+#if USE_256_COLORS
   maxTermCOLOR = Color_White + 240,
+#else
+  maxTermCOLOR = Color_White + 72,
 #endif
 #ifndef NO_CURSORCOLOR
   Color_cursor,
@@ -514,10 +514,10 @@ enum colour_list {
 #endif
 };
 
-#ifndef USE_256_COLORS
-#define Color_Bits      7 // 0 .. maxTermCOLOR
+#if USE_256_COLORS
+# define Color_Bits      9 // 0 .. maxTermCOLOR
 #else
-#define Color_Bits      9 // 0 .. maxTermCOLOR
+# define Color_Bits      7 // 0 .. maxTermCOLOR
 #endif
 
 /*
