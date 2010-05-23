@@ -37,6 +37,7 @@
 
 #include <limits>
 
+#include <cassert>
 #include <csignal>
 #include <cstring>
 
@@ -480,6 +481,9 @@ char **rxvt_environ; // startup environment
 void
 rxvt_init ()
 {
+  assert (("fontMask must not overlap other RS masks",
+           0 == (RS_fontMask & (RS_Sel | RS_baseattrMask | RS_customMask | RS_bgMask | RS_fgMask))));
+
   ptytty::init ();
 
   if (!ev_default_loop (0))
