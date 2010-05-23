@@ -617,6 +617,8 @@ typedef struct _mwmhints
  * MACRO DEFINES
  *****************************************************************************
  */
+
+// speed hack, copy some member variable into a local variable of the same name
 #define dLocal(type,name)       type const name = this->name
 
 // for speed reasons, we assume that all codepoints 32 to 126 are

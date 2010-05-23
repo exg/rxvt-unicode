@@ -21,7 +21,6 @@ DUMB: support tex fonts
 TODO: perl-shell-window?
 TODO:        - upgrade to libev-4.00.
 
-TODO: make fontCount dependent on ENABLE_256... in an INTELLIGENT way
 TODO: --enable-256c documentation
 	- make OSC 17 / 19 apply to highlightColor / highlightTextColor.
 	- remove deprecated OSC 18 / 19.

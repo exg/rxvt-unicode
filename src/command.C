@@ -3233,13 +3233,12 @@ rxvt_term::get_to_st (unicode_t &ends_how)
 void
 rxvt_term::process_dcs_seq ()
 {
-  char *s;
-  unicode_t eh;
-
   /*
    * Not handled yet
    */
-  s = get_to_st (eh);
+
+  unicode_t eh;
+  char *s = get_to_st (eh);
   if (s)
     free (s);
 
@@ -3253,15 +3252,15 @@ rxvt_term::process_dcs_seq ()
 void
 rxvt_term::process_osc_seq ()
 {
-  unicode_t ch, eh;
   int arg;
 
-  ch = cmd_getc ();
+  unicode_t ch = cmd_getc ();
   for (arg = 0; isdigit (ch); ch = cmd_getc ())
     arg = arg * 10 + (ch - '0');
 
   if (ch == ';')
     {
+      unicode_t eh;
       char *s = get_to_st (eh);
 
       if (s)
@@ -3584,6 +3583,7 @@ rxvt_term::privcases (int mode, unsigned long bit)
         state = (SavedModes & bit) ? 1 : 0;	/* no overlapping */
       else
         state = (mode == 't') ? ! (priv_modes & bit) : mode;
+
       set_privmode (bit, state);
     }
 
