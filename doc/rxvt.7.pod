@@ -2528,7 +2528,7 @@ applications hardcoding the xterm 256 colour table.
 
 This switch breaks termcap/terminfo compatibility to C<TERM=rxvt-unicode>,
 and consequently sets C<TERM> to C<rxvt-unicode-256color> by default
-(F<doc/etc/> conatins termcap/terminfo defintiions for both).
+(F<doc/etc/> contains termcap/terminfo definitions for both).
 
 It also results in higher memory usage and can slow down @@RXVT_NAME@@
 dramatically when more than six fonts are in use by a terminal instance.
