@@ -1542,8 +1542,9 @@ rxvt_get_ttymode (struct termios *tio, int erase)
       // return error - use system defaults,
       // where possible, and zero elsewhere
       memset (tio, 0, sizeof (struct termios));
-      for (int i = 0; i < NCCS; i++)
-        tio->c_cc[i] = VDISABLE;
+      if (VDISABLE)
+        for (int i = 0; i < NCCS; i++)
+          tio->c_cc[i] = VDISABLE;
 
       tio->c_cc[VINTR] = CINTR;
       tio->c_cc[VQUIT] = CQUIT;
