@@ -1535,7 +1535,9 @@ rxvt_get_ttymode (struct termios *tio, int erase)
   /*
    * standard System V termios interface
    */
-  if (tcgetattr (STDIN_FILENO, tio) < 0)
+  // does not work as stdin is not a tty
+  // if (tcgetattr (STDIN_FILENO, tio) < 0)
+  if (1)
     {
       // return error - use system defaults,
       // where possible, and zero elsewhere
