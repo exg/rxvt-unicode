@@ -54,6 +54,7 @@ TODO:        - upgrade to libev-4.00.
         - no longer use CERASE to DEL - use the system default. affects
           default value for VERASE only when no compatible setting for
           backspacekey was given.
+        - use higher than 38400 baudrate setting, if detected.
 
 9.07 Wed Dec 30 07:07:18 CET 2009
 	- port to glibc-2.10 changes (strchr etc. returning const char *
