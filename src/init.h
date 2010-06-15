@@ -1,18 +1,19 @@
 #ifndef INIT_H_
 #define INIT_H_
 
-#undef CERASE /* TODO */
-#define CERASE	'\010'	/* ^H */
-
 /* use the fastest baud-rate */
-#ifdef B38400
+#if defined(B4000000)
+# define BAUDRATE	B4000000
+#elif defined(B921600)
+# define BAUDRATE	B921600
+#elif defined(B115200)
+# define BAUDRATE	B115200
+#elif defined(B38400)
 # define BAUDRATE	B38400
+#elif defined(B19200)
+# define BAUDRATE	B19200
 #else
-# ifdef B19200
-#  define BAUDRATE	B19200
-# else
-#  define BAUDRATE	B9600
-# endif
+# define BAUDRATE	B9600
 #endif
 
 /* Disable special character functions */
