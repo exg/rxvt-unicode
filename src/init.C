@@ -1530,7 +1530,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
  *                            GET TTY CURRENT STATE                          *
  * ------------------------------------------------------------------------- */
 void
-rxvt_get_ttymode (struct termios *tio, int erase)
+rxvt_get_ttymode (struct termios *tio)
 {
   /*
    * standard System V termios interface
@@ -1580,9 +1580,6 @@ rxvt_get_ttymode (struct termios *tio, int erase)
 # if VTIME != VEOL
   tio->c_cc[VTIME] = 0;
 # endif
-
-  if (erase != -1)
-    tio->c_cc[VERASE] = erase;
 
   /* input modes */
   tio->c_iflag = (BRKINT | IGNPAR | ICRNL
@@ -1711,18 +1708,15 @@ rxvt_term::run_command (const char *const *argv)
     if (!pty->get ())
       rxvt_fatal ("can't initialize pseudo-tty, aborting.\n");
 
-  int er;
+  rxvt_get_ttymode (&tio);
 
 #ifndef NO_BACKSPACE_KEY
   if (rs[Rs_backspace_key][0] && !rs[Rs_backspace_key][1])
-    er = rs[Rs_backspace_key][0];
+    tio.c_cc[VERASE] = rs[Rs_backspace_key][0];
   else if (strcmp (rs[Rs_backspace_key], "DEC") == 0)
-    er = '\177';            /* the initial state anyway */
-  else
+    tio.c_cc[VERASE] = '\177';            /* the initial state anyway */
 #endif
-    er = -1;
 
-  rxvt_get_ttymode (&tio, er);
   /* init terminal attributes */
   cfsetospeed (&tio, BAUDRATE);
   cfsetispeed (&tio, BAUDRATE);
