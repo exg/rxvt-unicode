@@ -1042,7 +1042,7 @@ large number (e.g. C<987654321>) to effectively disable the timeout.
 =item B<backspacekey:> I<string>
 
 The string to send when the backspace key is pressed. If set to B<DEC>
-or unset it will send B<Delete> (code 127) or, if shifted, B<Backspace>
+or unset it will send B<Delete> (code 127) or, with control, B<Backspace>
 (code 8) - which can be reversed with the appropriate DEC private mode
 escape sequence.
 
