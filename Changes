@@ -51,7 +51,7 @@ TODO:        - upgrade to libev-4.00.
 	- add support for grabbing the clipboard selection and extend
 	  selection{_clear,_grab,} perl bindings to optionally work
 	  on the clipboard selection (based on patch by Dana Jansens).
-        - no longer use CERASE to DEL - use the system default. affects
+        - no longer force CERASE to DEL - use the system default. affects
           default value for VERASE only when no compatible setting for
           backspacekey was given.
         - use higher than 38400 baudrate setting, if detected.
