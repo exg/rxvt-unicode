@@ -1530,7 +1530,7 @@ White.
 If Xft support has been compiled in and as long as Xft/Xrender/X don't get
 their act together, rxvt-unicode will do it's own alpha channel management:
 
-You can prefix any colour with an opaquenes percentage enclosed in
+You can prefix any colour with an opaqueness percentage enclosed in
 brackets, i.e. C<[percent]>, where C<percent> is a decimal percentage
 (0-100) that specifies the opacity of the colour, where C<0> is completely
 transparent and C<100> is completely opaque. For example, C<[50]red> is a
