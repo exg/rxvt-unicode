@@ -1582,7 +1582,7 @@ rxvt_get_ttymode (struct termios *tio, int erase)
 # endif
 
   if (erase != -1)
-    tio->c_cc[VERASE] = (char)erase;
+    tio->c_cc[VERASE] = erase;
 
   /* input modes */
   tio->c_iflag = (BRKINT | IGNPAR | ICRNL
@@ -1614,7 +1614,7 @@ rxvt_get_ttymode (struct termios *tio, int erase)
   /* cpp token stringize doesn't work on all machines <sigh> */
 # define FOO(flag,name)                 \
     if ((tio->c_iflag) & flag)          \
-        fprintf (stderr, "%s ", name)
+      fprintf (stderr, "%s ", name)
 
   /* c_iflag bits */
   FOO (IGNBRK, "IGNBRK");
