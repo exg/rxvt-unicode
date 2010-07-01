@@ -1529,7 +1529,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 /* ------------------------------------------------------------------------- *
  *                            GET TTY CURRENT STATE                          *
  * ------------------------------------------------------------------------- */
-void
+static void
 rxvt_get_ttymode (struct termios *tio)
 {
   /*
