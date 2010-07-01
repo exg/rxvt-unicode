@@ -57,6 +57,7 @@ TODO:        - upgrade to libev-4.00.
         - use higher than 38400 baudrate setting, if detected.
         - erase screen would clear to the wrong background when blinking
           was enabled (which selects high intensity under some circumstances).
+        - it was verified that urxvt handles µ and μ correctly.
 
 9.07 Wed Dec 30 07:07:18 CET 2009
 	- port to glibc-2.10 changes (strchr etc. returning const char *
