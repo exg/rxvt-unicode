@@ -32,7 +32,8 @@
 
 #include "salloc.C" // HACK, should be a seperate compile!
 
-static inline void fill_text (text_t *start, text_t value, int len)
+static inline void
+fill_text (text_t *start, text_t value, int len)
 {
   while (len--)
     *start++ = value;
