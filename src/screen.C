@@ -1340,7 +1340,7 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
   // TODO: the code below does not work when view_start != 0
   // the workaround is to disable the clear and use a normal refresh
   // when view_start != 0. mysterious.
-  if (rstyle & (RS_RVid | RS_Uline))
+  if (rstyle & (RS_Blink | RS_RVid | RS_Uline))
     ren = (rend_t) ~RS_None;
   else if (GET_BASEBG (rstyle) == Color_bg)
     {
