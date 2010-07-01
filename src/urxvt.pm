@@ -1395,15 +1395,21 @@ C<selection_end>. If C<$rectangular> is true (default: false), a
 rectangular selection will be made. This is the prefered function to make
 a selection.
 
-=item $success = $term->selection_grab ($eventtime)
+=item $success = $term->selection_grab ($eventtime[, $clipboard])
 
-Try to request the primary selection text from the server (for example, as
-set by the next method). No visual feedback will be given. This function
+Try to acquire ownership of the primary (clipboard if C<$clipboard> is
+true) selection from the server. The corresponding text can be set
+with the next method. No visual feedback will be given. This function
 is mostly useful from within C<on_sel_grab> hooks.
 
-=item $oldtext = $term->selection ([$newtext])
+=item $oldtext = $term->selection ([$newtext, $clipboard])
 
-Return the current selection text and optionally replace it by C<$newtext>.
+Return the current selection (clipboard if C<$clipboard> is true) text
+and optionally replace it by C<$newtext>.
+
+=item $term->selection_clear ([$clipboard])
+
+Revoke ownership of the primary (clipboard if C<$clipboard> is true) selection.
 
 =item $term->overlay_simple ($x, $y, $text)
 
