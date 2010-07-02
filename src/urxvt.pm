@@ -1392,7 +1392,7 @@ Returns the current selection screen, and then optionally sets it.
 
 Tries to make a selection as set by C<selection_beg> and
 C<selection_end>. If C<$rectangular> is true (default: false), a
-rectangular selection will be made. This is the prefered function to make
+rectangular selection will be made. This is the preferred function to make
 a selection.
 
 =item $success = $term->selection_grab ($eventtime[, $clipboard])
