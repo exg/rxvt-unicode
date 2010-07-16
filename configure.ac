@@ -76,11 +76,11 @@ case $host in
 esac
 
 dnl# FreeBSD needs to link libxpg4
-AC_CHECK_FUNC(setlocale,     [], [AC_CHECK_LIB(xpg4,   setlocale,     [LIBS="$LIBS -lxpg4"])])
+AC_SEARCH_LIBS(setlocale,     xpg4)
 
 dnl# solaris needs to link libnsl and socket
-AC_CHECK_FUNC(gethostbyname, [], [AC_CHECK_LIB(nsl,    gethostbyname, [LIBS="$LIBS -lnsl"])])
-AC_CHECK_FUNC(socket,        [], [AC_CHECK_LIB(socket, socket,        [LIBS="$LIBS -lsocket"])])
+AC_SEARCH_LIBS(gethostbyname, nsl)
+AC_SEARCH_LIBS(socket,        socket)
 
 support_frills=yes
 support_inheritpixmap=yes
