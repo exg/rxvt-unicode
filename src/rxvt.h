@@ -1310,6 +1310,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void window_calc (unsigned int newwidth, unsigned int newheight);
   bool set_fonts ();
   void set_string_property (Atom prop, const char *str, int len = -1);
+  void set_mbstring_property (Atom prop, const char *str, int len = -1);
   void set_utf8_property (Atom prop, const char *str, int len = -1);
   void set_title (const char *str);
   void set_icon_name (const char *str);

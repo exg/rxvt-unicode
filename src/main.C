@@ -756,6 +756,18 @@ rxvt_term::set_string_property (Atom prop, const char *str, int len)
 }
 
 void
+rxvt_term::set_mbstring_property (Atom prop, const char *str, int len)
+{
+  XTextProperty ct;
+
+  if (XmbTextListToTextProperty (dpy, (char **)&str, 1, XStdICCTextStyle, &ct) >= 0)
+    {
+      XSetTextProperty (dpy, parent[0], &ct, prop);
+      XFree (ct.value);
+    }
+}
+
+void
 rxvt_term::set_utf8_property (Atom prop, const char *str, int len)
 {
   wchar_t *ws = rxvt_mbstowcs (str, len);
@@ -775,7 +787,7 @@ rxvt_term::set_utf8_property (Atom prop, const char *str, int len)
 void
 rxvt_term::set_title (const char *str)
 {
-  set_string_property (XA_WM_NAME, str);
+  set_mbstring_property (XA_WM_NAME, str);
 #if ENABLE_EWMH
   set_utf8_property (xa[XA_NET_WM_NAME], str);
 #endif
@@ -784,7 +796,7 @@ rxvt_term::set_title (const char *str)
 void
 rxvt_term::set_icon_name (const char *str)
 {
-  set_string_property (XA_WM_ICON_NAME, str);
+  set_mbstring_property (XA_WM_ICON_NAME, str);
 #if ENABLE_EWMH
   set_utf8_property (xa[XA_NET_WM_ICON_NAME], str);
 #endif

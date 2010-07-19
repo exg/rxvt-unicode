@@ -21,6 +21,8 @@ TODO: perl-shell-window? perl-unix-socket?
 
 TODO:        - upgrade to libev-4.00.
 
+	- Use COMPOUND_TEXT encoding for WM_NAME/WM_ICON_NAME value when it
+	  is not fully convertible to STRING (patch by James Cloos).
         - fix a buffer overflow that would cause wrong key sequences to
           be generated for numpad keys (introduced in 9.05).
         - fix definition of sgr0 to work around limitations in luit.
