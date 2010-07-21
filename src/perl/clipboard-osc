@@ -1,0 +1,15 @@
+#! perl
+
+sub on_osc_seq_perl {
+   my ($self, $osc, $resp) = @_;
+
+   return unless $osc =~ s/^clipboard;([^;]+)//;
+
+   if ($1 eq "copy") {
+      my $text = $self->selection ();
+      $self->selection ($text, 1);
+      $self->selection_grab (urxvt::CurrentTime, 1);
+   }
+
+   1
+}
