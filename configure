@@ -1865,73 +1865,6 @@ fi
 
 } # ac_fn_cxx_try_link
 
-# ac_fn_cxx_check_func LINENO FUNC VAR
-# ------------------------------------
-# Tests whether FUNC exists, setting the cache variable VAR accordingly
-ac_fn_cxx_check_func ()
-{
-  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
-$as_echo_n "checking for $2... " >&6; }
-if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-/* Define $2 to an innocuous variant, in case <limits.h> declares $2.
-   For example, HP-UX 11i <limits.h> declares gettimeofday.  */
-#define $2 innocuous_$2
-
-/* System header to define __stub macros and hopefully few prototypes,
-    which can conflict with char $2 (); below.
-    Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
-    <limits.h> exists even on freestanding compilers.  */
-
-#ifdef __STDC__
-# include <limits.h>
-#else
-# include <assert.h>
-#endif
-
-#undef $2
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char $2 ();
-/* The GNU C library defines this for functions which it implements
-    to always fail with ENOSYS.  Some functions are actually named
-    something starting with __ and the normal name is an alias.  */
-#if defined __stub_$2 || defined __stub___$2
-choke me
-#endif
-
-int
-main ()
-{
-return $2 ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
-  eval "$3=yes"
-else
-  eval "$3=no"
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-fi
-eval ac_res=\$$3
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
-
-} # ac_fn_cxx_check_func
-
 # ac_fn_cxx_try_cpp LINENO
 # ------------------------
 # Try to preprocess conftest.$ac_ext, and return whether this succeeded.
@@ -2055,6 +1988,73 @@ fi
   eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
 
 } # ac_fn_cxx_check_header_mongrel
+
+# ac_fn_cxx_check_func LINENO FUNC VAR
+# ------------------------------------
+# Tests whether FUNC exists, setting the cache variable VAR accordingly
+ac_fn_cxx_check_func ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+$as_echo_n "checking for $2... " >&6; }
+if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+/* Define $2 to an innocuous variant, in case <limits.h> declares $2.
+   For example, HP-UX 11i <limits.h> declares gettimeofday.  */
+#define $2 innocuous_$2
+
+/* System header to define __stub macros and hopefully few prototypes,
+    which can conflict with char $2 (); below.
+    Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
+    <limits.h> exists even on freestanding compilers.  */
+
+#ifdef __STDC__
+# include <limits.h>
+#else
+# include <assert.h>
+#endif
+
+#undef $2
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char $2 ();
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined __stub_$2 || defined __stub___$2
+choke me
+#endif
+
+int
+main ()
+{
+return $2 ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"; then :
+  eval "$3=yes"
+else
+  eval "$3=no"
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+fi
+eval ac_res=\$$3
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+
+} # ac_fn_cxx_check_func
 
 # ac_fn_cxx_check_type LINENO TYPE VAR INCLUDES
 # ---------------------------------------------
@@ -4480,17 +4480,12 @@ $as_echo "#define _XOPEN_SOURCE 500" >>confdefs.h
       ;;
 esac
 
-ac_fn_cxx_check_func "$LINENO" "setlocale" "ac_cv_func_setlocale"
-if test "x$ac_cv_func_setlocale" = x""yes; then :
-
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for setlocale in -lxpg4" >&5
-$as_echo_n "checking for setlocale in -lxpg4... " >&6; }
-if test "${ac_cv_lib_xpg4_setlocale+set}" = set; then :
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing setlocale" >&5
+$as_echo_n "checking for library containing setlocale... " >&6; }
+if test "${ac_cv_search_setlocale+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lxpg4  $LIBS"
+  ac_func_search_save_LIBS=$LIBS
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -4509,35 +4504,45 @@ return setlocale ();
   return 0;
 }
 _ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_lib_xpg4_setlocale=yes
-else
-  ac_cv_lib_xpg4_setlocale=no
+for ac_lib in '' xpg4; do
+  if test -z "$ac_lib"; then
+    ac_res="none required"
+  else
+    ac_res=-l$ac_lib
+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+  fi
+  if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_search_setlocale=$ac_res
 fi
 rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
+    conftest$ac_exeext
+  if test "${ac_cv_search_setlocale+set}" = set; then :
+  break
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_xpg4_setlocale" >&5
-$as_echo "$ac_cv_lib_xpg4_setlocale" >&6; }
-if test "x$ac_cv_lib_xpg4_setlocale" = x""yes; then :
-  LIBS="$LIBS -lxpg4"
-fi
-
-fi
-
-
-ac_fn_cxx_check_func "$LINENO" "gethostbyname" "ac_cv_func_gethostbyname"
-if test "x$ac_cv_func_gethostbyname" = x""yes; then :
+done
+if test "${ac_cv_search_setlocale+set}" = set; then :
 
 else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for gethostbyname in -lnsl" >&5
-$as_echo_n "checking for gethostbyname in -lnsl... " >&6; }
-if test "${ac_cv_lib_nsl_gethostbyname+set}" = set; then :
+  ac_cv_search_setlocale=no
+fi
+rm conftest.$ac_ext
+LIBS=$ac_func_search_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_setlocale" >&5
+$as_echo "$ac_cv_search_setlocale" >&6; }
+ac_res=$ac_cv_search_setlocale
+if test "$ac_res" != no; then :
+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+
+fi
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing gethostbyname" >&5
+$as_echo_n "checking for library containing gethostbyname... " >&6; }
+if test "${ac_cv_search_gethostbyname+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lnsl  $LIBS"
+  ac_func_search_save_LIBS=$LIBS
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -4556,34 +4561,44 @@ return gethostbyname ();
   return 0;
 }
 _ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_lib_nsl_gethostbyname=yes
-else
-  ac_cv_lib_nsl_gethostbyname=no
+for ac_lib in '' nsl; do
+  if test -z "$ac_lib"; then
+    ac_res="none required"
+  else
+    ac_res=-l$ac_lib
+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+  fi
+  if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_search_gethostbyname=$ac_res
 fi
 rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
+    conftest$ac_exeext
+  if test "${ac_cv_search_gethostbyname+set}" = set; then :
+  break
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_nsl_gethostbyname" >&5
-$as_echo "$ac_cv_lib_nsl_gethostbyname" >&6; }
-if test "x$ac_cv_lib_nsl_gethostbyname" = x""yes; then :
-  LIBS="$LIBS -lnsl"
-fi
-
-fi
-
-ac_fn_cxx_check_func "$LINENO" "socket" "ac_cv_func_socket"
-if test "x$ac_cv_func_socket" = x""yes; then :
+done
+if test "${ac_cv_search_gethostbyname+set}" = set; then :
 
 else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for socket in -lsocket" >&5
-$as_echo_n "checking for socket in -lsocket... " >&6; }
-if test "${ac_cv_lib_socket_socket+set}" = set; then :
+  ac_cv_search_gethostbyname=no
+fi
+rm conftest.$ac_ext
+LIBS=$ac_func_search_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_gethostbyname" >&5
+$as_echo "$ac_cv_search_gethostbyname" >&6; }
+ac_res=$ac_cv_search_gethostbyname
+if test "$ac_res" != no; then :
+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing socket" >&5
+$as_echo_n "checking for library containing socket... " >&6; }
+if test "${ac_cv_search_socket+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lsocket  $LIBS"
+  ac_func_search_save_LIBS=$LIBS
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -4602,20 +4617,35 @@ return socket ();
   return 0;
 }
 _ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_lib_socket_socket=yes
-else
-  ac_cv_lib_socket_socket=no
+for ac_lib in '' socket; do
+  if test -z "$ac_lib"; then
+    ac_res="none required"
+  else
+    ac_res=-l$ac_lib
+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+  fi
+  if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_search_socket=$ac_res
 fi
 rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
+    conftest$ac_exeext
+  if test "${ac_cv_search_socket+set}" = set; then :
+  break
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_socket_socket" >&5
-$as_echo "$ac_cv_lib_socket_socket" >&6; }
-if test "x$ac_cv_lib_socket_socket" = x""yes; then :
-  LIBS="$LIBS -lsocket"
+done
+if test "${ac_cv_search_socket+set}" = set; then :
+
+else
+  ac_cv_search_socket=no
 fi
+rm conftest.$ac_ext
+LIBS=$ac_func_search_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_socket" >&5
+$as_echo "$ac_cv_search_socket" >&6; }
+ac_res=$ac_cv_search_socket
+if test "$ac_res" != no; then :
+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
 
 fi
 
@@ -6909,76 +6939,6 @@ _ACEOF
 fi
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking where utmpx is located" >&5
-$as_echo_n "checking where utmpx is located... " >&6; }
-if test "${pt_cv_path_utmpx+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test "$cross_compiling" = yes; then :
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Define UTMPX_FILE in config.h manually" >&5
-$as_echo "$as_me: WARNING: Define UTMPX_FILE in config.h manually" >&2;}
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <utmpx.h>
-#include <errno.h>
-#include <sys/stat.h>
-#ifdef HAVE_STRING_H
-#include <string.h>
-#endif
-main()
-{
-    char **u, *p, *utmplist[] = {
-#ifdef UTMPX_FILE
-	UTMPX_FILE,
-#endif
-#ifdef _PATH_UTMPX
-	_PATH_UTMPX,
-#endif
-    "/var/adm/utmpx", "/etc/utmpx", NULL };
-    FILE *a, *f=fopen("conftestval", "w");
-    struct stat statu, statux;
-    if (!f) exit(1);
-    for (u = utmplist; *u; u++) {
-	if ((a = fopen(*u, "r")) != NULL || errno == EACCES) {
-	    if (stat(*u, &statux) < 0)
-		continue;
-	    p = strdup(*u);
-	    p[strlen(p) - 1] = '\0';
-	    if (stat(p, &statu) >= 0
-		&& (statu.st_mtime - statux.st_mtime > 86400))
-		continue;
-	    fprintf(f, "%s\n", *u);
-	    exit(0);
-	}
-    }
-    exit(0);
-}
-_ACEOF
-if ac_fn_cxx_try_run "$LINENO"; then :
-  pt_cv_path_utmpx=`cat conftestval`
-else
-  pt_cv_path_utmpx=
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $pt_cv_path_utmpx" >&5
-$as_echo "$pt_cv_path_utmpx" >&6; }
-if test x$pt_cv_path_utmpx != x; then
-
-cat >>confdefs.h <<_ACEOF
-#define UTMPX_FILE "$pt_cv_path_utmpx"
-_ACEOF
-
-fi
-
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking where wtmp is located" >&5
 $as_echo_n "checking where wtmp is located... " >&6; }
 if test "${pt_cv_path_wtmp+set}" = set; then :
@@ -7516,31 +7476,11 @@ done
 
 have_clone=no
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for /dev/ptym/clone" >&5
-$as_echo_n "checking for /dev/ptym/clone... " >&6; }
-if test -e /dev/ptym/clone; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-
-$as_echo "#define HAVE_DEV_CLONE 1" >>confdefs.h
-
-
-$as_echo "#define CLONE_DEVICE \"/dev/ptym/clone\"" >>confdefs.h
-
-  have_clone=yes
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for /dev/ptc" >&5
 $as_echo_n "checking for /dev/ptc... " >&6; }
 if test -e /dev/ptc; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
-$as_echo "#define HAVE_DEV_PTC 1" >>confdefs.h
-
 
 $as_echo "#define CLONE_DEVICE \"/dev/ptc\"" >>confdefs.h
 
@@ -7607,22 +7547,12 @@ rm -f core conftest.err conftest.$ac_objext \
 fi
 
 if test -z "$unix98_pty"; then
-  for ac_func in openpty
-do :
-  ac_fn_cxx_check_func "$LINENO" "openpty" "ac_cv_func_openpty"
-if test "x$ac_cv_func_openpty" = x""yes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_OPENPTY 1
-_ACEOF
-
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for openpty in -lutil" >&5
-$as_echo_n "checking for openpty in -lutil... " >&6; }
-if test "${ac_cv_lib_util_openpty+set}" = set; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing openpty" >&5
+$as_echo_n "checking for library containing openpty... " >&6; }
+if test "${ac_cv_search_openpty+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lutil  $LIBS"
+  ac_func_search_save_LIBS=$LIBS
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -7641,24 +7571,39 @@ return openpty ();
   return 0;
 }
 _ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_lib_util_openpty=yes
-else
-  ac_cv_lib_util_openpty=no
+for ac_lib in '' util; do
+  if test -z "$ac_lib"; then
+    ac_res="none required"
+  else
+    ac_res=-l$ac_lib
+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+  fi
+  if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_search_openpty=$ac_res
 fi
 rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_util_openpty" >&5
-$as_echo "$ac_cv_lib_util_openpty" >&6; }
-if test "x$ac_cv_lib_util_openpty" = x""yes; then :
-  $as_echo "#define HAVE_OPENPTY 1" >>confdefs.h
- LIBS="$LIBS -lutil"
-fi
-
+    conftest$ac_exeext
+  if test "${ac_cv_search_openpty+set}" = set; then :
+  break
 fi
 done
+if test "${ac_cv_search_openpty+set}" = set; then :
+
+else
+  ac_cv_search_openpty=no
+fi
+rm conftest.$ac_ext
+LIBS=$ac_func_search_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_openpty" >&5
+$as_echo "$ac_cv_search_openpty" >&6; }
+ac_res=$ac_cv_search_openpty
+if test "$ac_res" != no; then :
+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+
+$as_echo "#define HAVE_OPENPTY 1" >>confdefs.h
+
+fi
 
 fi
 

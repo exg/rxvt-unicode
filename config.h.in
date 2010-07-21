@@ -58,12 +58,6 @@
 /* Define to 1 if you have the <cwchar> header file. */
 #undef HAVE_CWCHAR
 
-/* Define to 1 if you have /dev/ptym/clone */
-#undef HAVE_DEV_CLONE
-
-/* Define to 1 if you have /dev/ptc */
-#undef HAVE_DEV_PTC
-
 /* Define to 1 if you have /dev/ptmx */
 #undef HAVE_DEV_PTMX
 
@@ -109,7 +103,7 @@
 /* Define if nl_langinfo(CODESET) works */
 #undef HAVE_NL_LANGINFO
 
-/* Define to 1 if you have the `openpty' function. */
+/* "" */
 #undef HAVE_OPENPTY
 
 /* Define to 1 if you have the `poll' function. */
@@ -415,9 +409,6 @@
 /* Define if you want to have XIM (X Input Method) protocol support - required
    for multibyte characters input */
 #undef USE_XIM
-
-/* Define location of utmpx */
-#undef UTMPX_FILE
 
 /* Define location of utmp */
 #undef UTMP_FILE
