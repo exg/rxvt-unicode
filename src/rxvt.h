@@ -1478,7 +1478,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void selection_request (Time tm, int selnum = Sel_Primary) NOTHROW;
   int selection_request_other (Atom target, int selnum) NOTHROW;
   void selection_clear (bool clipboard = false) NOTHROW;
-  void clipboard_copy (Time tm);
   void selection_make (Time tm);
   bool selection_grab (Time tm, bool clipboard = false) NOTHROW;
   void selection_start_colrow (int col, int row) NOTHROW;

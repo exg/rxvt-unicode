@@ -2979,20 +2979,6 @@ rxvt_term::selection_clear (bool clipboard) NOTHROW
     }
 }
 
-void
-rxvt_term::clipboard_copy (Time tm)
-{
-  if (selection.len > 0)
-    {
-      free (selection.clip_text);
-      selection.clip_len = selection.len;
-      selection.clip_text = (wchar_t *) malloc (sizeof (wchar_t) * selection.clip_len);
-      memcpy (selection.clip_text, selection.text,
-              sizeof (wchar_t) * selection.clip_len);
-      selection_grab (tm, true);
-    }
-}
-
 /* ------------------------------------------------------------------------- */
 /*
  * Copy a selection into the cut buffer
