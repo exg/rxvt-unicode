@@ -497,9 +497,6 @@ rxvt_init ()
   sig_handlers.sw_term.start (SIGTERM); ev_unref ();
   sig_handlers.sw_int.start  (SIGINT);  ev_unref ();
 
-  /* need to trap SIGURG for SVR4 (Unixware) rlogin */
-  /* signal (SIGURG, SIG_DFL); */
-
   old_xerror_handler = XSetErrorHandler ((XErrorHandler) rxvt_xerror_handler);
   // TODO: handle this with exceptions and tolerate the memory loss
   XSetIOErrorHandler (rxvt_xioerror_handler);
