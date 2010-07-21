@@ -1813,7 +1813,7 @@ rxvt_term::run_child (const char *const *argv)
   signal (SIGHUP,  SIG_DFL);
   signal (SIGPIPE, SIG_DFL);
   /*
-   * mimick login's behavior by disabling the job control signals
+   * mimic login's behavior by disabling the job control signals
    * a shell that wants them can turn them back on
    */
 #ifdef SIGTSTP
