@@ -35,7 +35,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *----------------------------------------------------------------------*/
 
-#include "../config.h"
+#include "config.h"
 
 #include "ptytty.h"
 
@@ -164,9 +164,7 @@ update_lastlog (const char *fname, const char *pty, const char *host)
     return;
   if (S_ISDIR (st.st_mode))
     {
-      sprintf (lastlogfile, "%.*s/%.*s",
-               (int)(sizeof (lastlogfile) - sizeof (pwent->pw_name) - 2), fname,
-               (int)sizeof (pwent->pw_name),
+      snprintf (lastlogfile, sizeof (lastlogfile), "%s/%s", fname,
                (!pwent->pw_name || pwent->pw_name[0] == '\0') ? "unknown"
                : pwent->pw_name);
       if ((fd = open (lastlogfile, O_WRONLY | O_CREAT, 0644)) >= 0)

@@ -26,20 +26,9 @@ AC_CHECK_FUNCS( \
 
 have_clone=no
 
-AC_MSG_CHECKING(for /dev/ptym/clone)
-if test -e /dev/ptym/clone; then
-  AC_MSG_RESULT(yes)
-  AC_DEFINE(HAVE_DEV_CLONE, 1, [Define to 1 if you have /dev/ptym/clone])
-  AC_DEFINE(CLONE_DEVICE, "/dev/ptym/clone", [clone device filename])
-  have_clone=yes
-else
-  AC_MSG_RESULT(no)
-fi
-
 AC_MSG_CHECKING(for /dev/ptc)
 if test -e /dev/ptc; then
   AC_MSG_RESULT(yes)
-  AC_DEFINE(HAVE_DEV_PTC, 1, [Define to 1 if you have /dev/ptc])
   AC_DEFINE(CLONE_DEVICE, "/dev/ptc", [clone device filename])
   have_clone=yes
 else
@@ -75,7 +64,7 @@ if test x$ac_cv_func_getpt = xyes -o x$ac_cv_func_posix_openpt = xyes -o x$have_
 fi
 
 if test -z "$unix98_pty"; then
-  AC_CHECK_FUNCS(openpty, [], [AC_CHECK_LIB(util, openpty, [AC_DEFINE(HAVE_OPENPTY) LIBS="$LIBS -lutil"])])
+  AC_SEARCH_LIBS(openpty, util, AC_DEFINE(HAVE_OPENPTY, 1, ""))
 fi
 ])
 
@@ -238,53 +227,6 @@ main()
   AC_MSG_WARN(Define UTMP_FILE in config.h manually)])])
 if test x$pt_cv_path_utmp != x; then
   AC_DEFINE_UNQUOTED(UTMP_FILE, "$pt_cv_path_utmp", Define location of utmp)
-fi
-
-dnl# --------------------------------------------------------------------------
-
-dnl# find utmpx - if a utmp file exists at the same location and is more than
-dnl# a day newer, then dump the utmpx.  People leave lots of junk around.
-AC_CACHE_CHECK(where utmpx is located, pt_cv_path_utmpx,
-[AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <utmpx.h>
-#include <errno.h>
-#include <sys/stat.h>
-#ifdef HAVE_STRING_H
-#include <string.h>
-#endif
-main()
-{
-    char **u, *p, *utmplist[] = {
-#ifdef UTMPX_FILE
-	UTMPX_FILE,
-#endif
-#ifdef _PATH_UTMPX
-	_PATH_UTMPX,
-#endif
-    "/var/adm/utmpx", "/etc/utmpx", NULL };
-    FILE *a, *f=fopen("conftestval", "w");
-    struct stat statu, statux;
-    if (!f) exit(1);
-    for (u = utmplist; *u; u++) {
-	if ((a = fopen(*u, "r")) != NULL || errno == EACCES) {
-	    if (stat(*u, &statux) < 0)
-		continue;
-	    p = strdup(*u);
-	    p[strlen(p) - 1] = '\0';
-	    if (stat(p, &statu) >= 0
-		&& (statu.st_mtime - statux.st_mtime > 86400))
-		continue;
-	    fprintf(f, "%s\n", *u);
-	    exit(0);
-	}
-    }
-    exit(0);
-}]])],[pt_cv_path_utmpx=`cat conftestval`],[pt_cv_path_utmpx=],[dnl
-  AC_MSG_WARN(Define UTMPX_FILE in config.h manually)])])
-if test x$pt_cv_path_utmpx != x; then
-  AC_DEFINE_UNQUOTED(UTMPX_FILE, "$pt_cv_path_utmpx", Define location of utmpx)
 fi
 
 dnl# --------------------------------------------------------------------------
