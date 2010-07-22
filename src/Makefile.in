@@ -23,6 +23,7 @@ XINC = @X_CFLAGS@ @AFTERIMAGE_CFLAGS@
 XLIB = @X_LIBS@ @AFTERIMAGE_LIBS@ -lX11 @X_EXTRA_LIBS@
 COMPILE = $(CXX) -I.. -I$(srcdir) -I. -I$(srcdir)/../libev $(DEFS) $(CPPFLAGS) $(CXXFLAGS) $(XINC)
 LINK = @LINKER@ $(LDFLAGS)
+EXEEXT = @EXEEXT@
 
 srcdir =	@srcdir@
 VPATH =		@srcdir@
