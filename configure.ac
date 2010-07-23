@@ -351,7 +351,6 @@ AC_ARG_WITH(name,
   [RXVTNAME="$withval"])
 AC_DEFINE_UNQUOTED(RXVTNAME,"$RXVTNAME", [Binary base name])
 
-RXVTNAME=`echo "$RXVTNAME"|sed "$program_transform_name"`
 AC_SUBST(RXVTNAME)
 
 AC_ARG_ENABLE(swapscreen,
@@ -750,8 +749,6 @@ dnl# Attack the libs
 
 AC_SUBST(AFTERIMAGE_CFLAGS)
 AC_SUBST(AFTERIMAGE_LIBS)
-
-AC_ARG_PROGRAM
 
 AC_CONFIG_FILES([Makefile \
 doc/Makefile \

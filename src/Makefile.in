@@ -40,10 +40,9 @@ COMMON = \
 
 COMMON_DAEMON = rxvtdaemon.o
 
-RXVT_BASENAME=`echo $(RXVTNAME)|sed 's/$(EXEEXT)$$//'|sed '$(transform)'`
-RXVT_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)$(EXEEXT)
-RXVTC_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)c$(EXEEXT)
-RXVTD_BINNAME=$(DESTDIR)$(bindir)/$(RXVT_BASENAME)d$(EXEEXT)
+RXVT_BINNAME=$(DESTDIR)$(bindir)/$(RXVTNAME)$(EXEEXT)
+RXVTC_BINNAME=$(DESTDIR)$(bindir)/$(RXVTNAME)c$(EXEEXT)
+RXVTD_BINNAME=$(DESTDIR)$(bindir)/$(RXVTNAME)d$(EXEEXT)
 
 #
 # Distribution variables
