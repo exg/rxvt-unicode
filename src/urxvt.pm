@@ -646,7 +646,7 @@ resource in the @@RXVT_NAME@@(1) manpage).
 The event is simply the action string. This interface is assumed to change
 slightly in the future.
 
-=item on_resize_all_windows $tern, $new_width, $new_height
+=item on_resize_all_windows $term, $new_width, $new_height
 
 Called just after the new window size has been calculated, but before
 windows are actually being resized or hints are being set. If this hook
@@ -1547,7 +1547,7 @@ locale-specific encoding of the terminal and can contain command sequences
 
 =item $term->tt_write ($octets)
 
-Write the octets given in C<$data> to the tty (i.e. as program input). To
+Write the octets given in C<$octets> to the tty (i.e. as program input). To
 pass characters instead of octets, you should convert your strings first
 to the locale-specific encoding using C<< $term->locale_encode >>.
 
