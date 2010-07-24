@@ -2681,7 +2681,7 @@ rxvt_term::selection_check (int check_more) NOTHROW
  * Paste a selection direct to the command fd
  */
 void
-rxvt_term::paste (char *data, unsigned int len) NOTHROW
+rxvt_term::tt_paste (char *data, unsigned int len) NOTHROW
 {
   /* convert normal newline chars into common keyboard Return key sequence */
   for (unsigned int i = 0; i < len; i++)
@@ -2695,6 +2695,15 @@ rxvt_term::paste (char *data, unsigned int len) NOTHROW
 
   if (priv_modes & PrivMode_BracketPaste)
     tt_printf ("\e[201~");
+}
+
+void
+rxvt_term::paste (char *data, unsigned int len) NOTHROW
+{
+  if (HOOK_INVOKE ((this, HOOK_TT_PASTE, DT_STR_LEN, data, len, DT_END)))
+    return;
+
+  tt_paste (data, len);
 }
 
 /* ------------------------------------------------------------------------- */

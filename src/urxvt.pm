@@ -612,6 +612,13 @@ output.
 Called whenever some data is written to the tty/pty and can be used to
 suppress or filter tty input.
 
+=item on_tt_paste $term, $octets
+
+Called whenever text is about to be pasted, with the text as argument. You
+can filter/change and paste the text yourself by returning a true value
+and calling C<< $term->tt_paste >> yourself. C<$octets> is
+locale-encoded.
+
 =item on_line_update $term, $row
 
 Called whenever a line was updated or changed. Can be used to filter
@@ -1550,6 +1557,12 @@ locale-specific encoding of the terminal and can contain command sequences
 Write the octets given in C<$octets> to the tty (i.e. as program input). To
 pass characters instead of octets, you should convert your strings first
 to the locale-specific encoding using C<< $term->locale_encode >>.
+
+=item $term->tt_paste ($octets)
+
+Write the octets given in C<$octets> to the tty as a paste, converting NL to
+CR and bracketing the data with control sequences if bracketed paste mode
+is set.
 
 =item $old_events = $term->pty_ev_events ([$new_events])
 

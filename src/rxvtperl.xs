@@ -1677,6 +1677,14 @@ rxvt_term::tt_write (SV *octets)
           str, len
 
 void
+rxvt_term::tt_paste (SV *octets)
+      INIT:
+        STRLEN len;
+        char *str = SvPVbyte (octets, len);
+      C_ARGS:
+        str, len
+
+void
 rxvt_term::cmd_parse (SV *octets)
 	CODE:
 {

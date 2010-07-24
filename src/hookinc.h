@@ -54,3 +54,5 @@
 
   def (BELL)
 
+  def (TT_PASTE)
+

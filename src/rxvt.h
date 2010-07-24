@@ -1410,6 +1410,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   }
 
   // modifies first argument(!)
+  void tt_paste (char *data, unsigned int len) NOTHROW;
   void paste (char *data, unsigned int len) NOTHROW;
   void scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs) const NOTHROW;
   void scr_blank_screen_mem (line_t &l, rend_t efs) const NOTHROW;
