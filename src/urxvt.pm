@@ -395,6 +395,11 @@ Displays a very simple digital clock in the upper right corner of the
 window. Illustrates overwriting the refresh callbacks to create your own
 overlays or changes.
 
+=item confirm-paste
+
+Displays a confirmation dialog when a paste containing at least a full
+line is detected.
+
 =back
 
 =head1 API DOCUMENTATION

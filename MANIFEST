@@ -165,6 +165,7 @@ src/perl/digital-clock
 src/perl/macosx-clipboard
 src/perl/macosx-clipboard-native
 src/perl/overlay-osc
+src/perl/confirm-paste
 
 libev/ev.h
 libev/ev++.h

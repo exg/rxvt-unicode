@@ -1,0 +1,43 @@
+#! perl
+
+sub msg {
+   my ($self, $msg) = @_;
+
+   $self->{overlay} = $self->overlay (0, -1, $self->strwidth ($msg), 1);
+   $self->{overlay}->set (0, 0, $msg);
+}
+
+sub on_tt_paste {
+   my ($self, $str) = @_;
+
+   my $count = ($str =~ tr/\012\015//);
+
+   return unless $count;
+
+   $self->{paste} = \$str;
+   $self->msg ("Paste of $count lines, continue? (y/n)");
+   $self->enable (key_press => \&key_press);
+
+   1
+}
+
+sub leave {
+   my ($self) = @_;
+
+   $self->{paste} = undef;
+   delete $self->{overlay};
+   $self->disable ("key_press");
+}
+
+sub key_press {
+   my ($self, $event, $keysym, $string) =  @_;
+
+   if ($keysym == 121) { # y
+      $self->tt_paste (${$self->{paste}});
+      $self->leave;
+   } elsif ($keysym == 110) { # n
+      $self->leave;
+   }
+
+   1
+}

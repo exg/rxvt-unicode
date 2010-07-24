@@ -21,6 +21,7 @@ TODO: perl-shell-window? perl-unix-socket?
 
 TODO:        - upgrade to libev-4.00.
 
+	- new perl extension "confirm-paste" (Emanuele Giaquinta).
 	- new on_tt_paste perl hook and tt_paste perl binding (Emanuele Giaquinta).
 	- fix utmpx detection on upcoming FreeBSD 9.
 	- Use COMPOUND_TEXT encoding for WM_NAME/WM_ICON_NAME value when it
