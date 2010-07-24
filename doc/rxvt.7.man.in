@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2010-02-06" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2010-07-24" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -246,13 +246,13 @@ meaning it couldn't connect to the daemon, it will start the daemon and
 re-run the command. Subsequent invocations of the script will re-use the
 existing daemon.
 .PP
-\fIHow do I distinguish whether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc.\fR
-.IX Subsection "How do I distinguish whether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colors etc."
+\fIHow do I distinguish whether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colours etc.\fR
+.IX Subsection "How do I distinguish whether I'm running rxvt-unicode or a regular xterm? I need this to decide about setting colours etc."
 .PP
 The original rxvt and rxvt-unicode always export the variable \*(L"\s-1COLORTERM\s0\*(R",
 so you can check and see if that is set. Note that several programs, \s-1JED\s0,
 slrn, Midnight Commander automatically check this variable to decide
-whether or not to use color.
+whether or not to use colour.
 .PP
 \fIHow do I set the correct, full \s-1IP\s0 address for the \s-1DISPLAY\s0 variable?\fR
 .IX Subsection "How do I set the correct, full IP address for the DISPLAY variable?"
@@ -538,16 +538,16 @@ the text blink when compiled with \f(CW\*(C`\-\-enable\-text\-blink\*(C'\fR. Wit
 \&\f(CW\*(C`\-\-enable\-text\-blink\*(C'\fR, the blink attribute will be ignored.
 .PP
 On \s-1ANSI\s0 colours, bold/blink attributes are used to set high-intensity
-foreground/background colors.
+foreground/background colours.
 .PP
-color0\-7 are the low-intensity colors.
+color0\-7 are the low-intensity colours.
 .PP
-color8\-15 are the corresponding high-intensity colors.
+color8\-15 are the corresponding high-intensity colours.
 .PP
-\fII don't like the screen colors.  How do I change them?\fR
-.IX Subsection "I don't like the screen colors.  How do I change them?"
+\fII don't like the screen colours.  How do I change them?\fR
+.IX Subsection "I don't like the screen colours.  How do I change them?"
 .PP
-You can change the screen colors at run-time using \fI~/.Xdefaults\fR
+You can change the screen colours at run-time using \fI~/.Xdefaults\fR
 resources (or as long-options).
 .PP
 Here are values that are supposed to resemble a \s-1VGA\s0 screen,
@@ -573,7 +573,7 @@ including the murky brown that passes for low-intensity yellow:
 \&   URxvt.color15:  #FFFFFF
 .Ve
 .PP
-And here is a more complete set of non-standard colors.
+And here is a more complete set of non-standard colours.
 .PP
 .Vb 10
 \&   URxvt.cursorColor:  #dc74d1
@@ -1503,13 +1503,6 @@ The solution is to upgrade your system or switch to a better one. A
 possibly working workaround is to use a wcwidth implementation like
 .PP
 http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
-.PP
-\fII want 256 colors\fR
-.IX Subsection "I want 256 colors"
-.PP
-Are you sure you need 256 colors? 88 colors should be enough for most
-purposes. If you really need more, there is an unsupported patch for
-it in the doc directory, but please do not ask for it to be applied.
 .SH "RXVT-UNICODE TECHNICAL REFERENCE"
 .IX Header "RXVT-UNICODE TECHNICAL REFERENCE"
 The rest of this document describes various technical aspects of
@@ -1607,9 +1600,9 @@ Restore Cursor
 .el .IP "\fB\f(CBESC =\fB\fR" 4
 .IX Item "ESC ="
 Application Keypad (\s-1SMKX\s0). See also next sequence.
-.ie n .IP "\fB\fB""ESC""\fB\fR" 4
-.el .IP "\fB\f(CBESC\fB\fR" 4
-.IX Item "ESC"
+.ie n .IP "\fB\fB""ESC >""\fB\fR" 4
+.el .IP "\fB\f(CBESC >\fB\fR" 4
+.IX Item "ESC >"
 Normal Keypad (\s-1RMKX\s0)
 .Sp
 \&\fBNote:\fR If the numeric keypad is activated, eg, \fBNum_Lock\fR has been
@@ -1891,7 +1884,7 @@ Ps = 33 / 43	fg/bg Yellow
 Ps = 34 / 44	fg/bg Blue
 Ps = 35 / 45	fg/bg Magenta
 Ps = 36 / 46	fg/bg Cyan
-Ps = 38;5 / 48;5	set fg/bg to color #m (ISO 8613-6)
+Ps = 38;5 / 48;5	set fg/bg to colour #m (ISO 8613-6)
 Ps = 37 / 47	fg/bg White
 Ps = 39 / 49	fg/bg Default
 Ps = 90 / 100	fg/bg Bright Black
@@ -2127,8 +2120,8 @@ l	Use Normal Screen Buffer
 .IX Item "Pm = 66"
 .TS
 l l .
-h	Application Keypad (DECPAM) == ESC =
-l	Normal Keypad (DECPNM) == ESC >
+h	Application Keypad (DECKPAM/DECPAM) == ESC =
+l	Normal Keypad (DECKPNM/DECPNM) == ESC >
 .TE
 .PD 0
 .ie n .IP "\fB\fB""Pm = 67""\fB\fR" 4
@@ -2253,9 +2246,8 @@ Ps = 10	Change colour of text foreground to Pt
 Ps = 11	Change colour of text background to Pt
 Ps = 12	Change colour of text cursor foreground to Pt
 Ps = 13	Change colour of mouse foreground to Pt
-Ps = 17	Change colour of highlight characters to Pt
-Ps = 18	Change colour of bold characters to Pt [deprecated, see 706]
-Ps = 19	Change colour of underlined characters to Pt [deprecated, see 707]
+Ps = 17	Change background colour of highlight characters to Pt
+Ps = 19	Change foreground colour of highlight characters to Pt
 Ps = 20	Change background pixmap parameters (see section BACKGROUND IMAGE) (Compile AfterImage).
 Ps = 39	Change default foreground colour to Pt. [deprecated, use 10]
 Ps = 46	Change Log File to Pt unimplemented
@@ -2447,8 +2439,9 @@ work, so it can be fixed. Marc Lehmann <rxvt@schmorp.de>.
 All
 .IP "\-\-enable\-everything" 4
 .IX Item "--enable-everything"
-Add (or remove) support for all non-multichoice options listed in
-\&\f(CW\*(C`./configure \-\-help\*(C'\fR, except for \f(CW\*(C`\-\-enable\-assert\*(C'\fR.
+Add (or remove) support for all non-multichoice options listed
+in \f(CW\*(C`./configure \-\-help\*(C'\fR, except for \f(CW\*(C`\-\-enable\-assert\*(C'\fR and
+\&\f(CW\*(C`\-\-enable\-256\-color\*(C'\fR.
 .Sp
 You can specify this and then disable options you do not like by
 \&\fIfollowing\fR this with the appropriate \f(CW\*(C`\-\-disable\-...\*(C'\fR arguments,
@@ -2604,7 +2597,7 @@ in combination with other switches) is:
 \&  separate underline colour (\-underlineColor)
 \&  settable border widths and borderless switch (\-w, \-b, \-bl)
 \&  visual depth selection (\-depth)
-\&  settable extra linespacing /\-lsp)
+\&  settable extra linespacing (\-lsp)
 \&  iso\-14755 5.1 (basic) support
 \&  tripleclickwords (\-tcw)
 \&  settable insecure mode (\-insecure)
@@ -2615,14 +2608,14 @@ in combination with other switches) is:
 \&  hold on exit (\-hold)
 \&  compile in built\-in block graphics
 \&  skip builtin block graphics (\-sbg)
-\&  separate highlightcolor support (\-hc)
+\&  separate highlight colour (\-highlightColor, \-highlightTextColor)
 .Ve
 .Sp
 It also enables some non-essential features otherwise disabled, such as:
 .Sp
 .Vb 11
 \&  some round\-trip time optimisations
-\&  nearest color allocation on pseudocolor screens
+\&  nearest colour allocation on pseudocolor screens
 \&  UTF8_STRING support for selection
 \&  sgr modes 90..97 and 100..107
 \&  backindex and forwardindex escape sequences
@@ -2679,6 +2672,18 @@ resource standpoint.
 .IX Item "--enable-assert (default: off)"
 Enables the assertions in the code, normally disabled. This switch is only
 useful when developing rxvt-unicode.
+.IP "\-\-enable\-256\-color (default: off)" 4
+.IX Item "--enable-256-color (default: off)"
+Force use of so-called 256 colour mode, to work around buggy applications
+that do not support termcap/terminfo, or simply improve support for
+applications hardcoding the xterm 256 colour table.
+.Sp
+This switch breaks termcap/terminfo compatibility to \f(CW\*(C`TERM=rxvt\-unicode\*(C'\fR,
+and consequently sets \f(CW\*(C`TERM\*(C'\fR to \f(CW\*(C`rxvt\-unicode\-256color\*(C'\fR by default
+(\fIdoc/etc/\fR contains termcap/terminfo definitions for both).
+.Sp
+It also results in higher memory usage and can slow down @@RXVT_NAME@@
+dramatically when more than six fonts are in use by a terminal instance.
 .IP "\-\-with\-afterimage\-config=DIR" 4
 .IX Item "--with-afterimage-config=DIR"
 Look for the libAfterImage config script in \s-1DIR\s0.

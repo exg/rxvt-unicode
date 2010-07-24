@@ -1,5 +1,11 @@
-#	Reconstructed via infocmp from file: /etc/terminfo/r/rxvt-unicode
+# From: Thomas Dickey <dickey@clark.net> 04 Oct 1997
+# Updated: Özgür Kesim <kesim@math.fu-berlin.de> 02 Nov 1997
+# Updated: Marc Lehmann <pcg@goof.com>, 17 Feb 2005
+# Updated: Marc Lehmann <schmorp@schmorp.de>, 04 Nov 2008: change init/reset sequences
 # (untranslatable capabilities removed to fit entry within 1023 bytes)
+# (sgr removed to fit entry within 1023 bytes)
+# (acsc removed to fit entry within 1023 bytes)
+# (terminfo-only capabilities suppressed to fit entry within 1023 bytes)
 rxvt-unicode|rxvt-unicode terminal (X Window System):\
 	:am:bw:eo:hs:km:mi:ms:xn:xo:\
 	:co#80:it#8:li#24:lm#0:\
@@ -15,8 +21,11 @@ rxvt-unicode|rxvt-unicode terminal (X Window System):\
 	:k6=\E[17~:k7=\E[18~:k8=\E[19~:k9=\E[20~:kD=\E[3~:\
 	:kI=\E[2~:kN=\E[6~:kP=\E[5~:kb=\177:kd=\E[B:ke=\E>:\
 	:kh=\E[7~:kl=\E[D:kr=\E[C:ks=\E=:ku=\E[A:le=^H:mb=\E[5m:\
-	:md=\E[1m:me=\E[m\017:mr=\E[7m:nd=\E[C:rc=\E8:sc=\E7:\
+	:md=\E[1m:me=\E[0m:mr=\E[7m:nd=\E[C:rc=\E8:sc=\E7:\
 	:se=\E[27m:sf=^J:so=\E[7m:sr=\EM:st=\EH:ta=^I:\
 	:te=\E[r\E[?1049l:ti=\E[?1049h:ts=\E]2;:ue=\E[24m:\
 	:up=\E[A:us=\E[4m:vb=\E[?5h\E[?5l:ve=\E[?25h:vi=\E[?25l:\
 	:vs=\E[?25h:
+
+rxvt-unicode-256color|rxvt-unicode terminal with 256 colors (X Window System):\
+	:Co#256:tc=rxvt-unicode:

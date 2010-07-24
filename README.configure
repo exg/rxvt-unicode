@@ -9,7 +9,8 @@ CONFIGURE OPTIONS
 
     --enable-everything
         Add (or remove) support for all non-multichoice options listed in
-        "./configure --help", except for "--enable-assert".
+        "./configure --help", except for "--enable-assert" and
+        "--enable-256-color".
 
         You can specify this and then disable options you do not like by
         *following* this with the appropriate "--disable-..." arguments, or
@@ -166,7 +167,7 @@ CONFIGURE OPTIONS
           separate underline colour (-underlineColor)
           settable border widths and borderless switch (-w, -b, -bl)
           visual depth selection (-depth)
-          settable extra linespacing /-lsp)
+          settable extra linespacing (-lsp)
           iso-14755 5.1 (basic) support
           tripleclickwords (-tcw)
           settable insecure mode (-insecure)
@@ -177,13 +178,13 @@ CONFIGURE OPTIONS
           hold on exit (-hold)
           compile in built-in block graphics
           skip builtin block graphics (-sbg)
-          separate highlightcolor support (-hc)
+          separate highlight colour (-highlightColor, -highlightTextColor)
 
         It also enables some non-essential features otherwise disabled, such
         as:
 
           some round-trip time optimisations
-          nearest color allocation on pseudocolor screens
+          nearest colour allocation on pseudocolor screens
           UTF8_STRING support for selection
           sgr modes 90..97 and 100..107
           backindex and forwardindex escape sequences
@@ -239,6 +240,20 @@ CONFIGURE OPTIONS
     --enable-assert (default: off)
         Enables the assertions in the code, normally disabled. This switch
         is only useful when developing rxvt-unicode.
+
+    --enable-256-color (default: off)
+        Force use of so-called 256 colour mode, to work around buggy
+        applications that do not support termcap/terminfo, or simply improve
+        support for applications hardcoding the xterm 256 colour table.
+
+        This switch breaks termcap/terminfo compatibility to
+        "TERM=rxvt-unicode", and consequently sets "TERM" to
+        "rxvt-unicode-256color" by default (doc/etc/ contains
+        termcap/terminfo definitions for both).
+
+        It also results in higher memory usage and can slow down rxvt
+        dramatically when more than six fonts are in use by a terminal
+        instance.
 
     --with-afterimage-config=DIR
         Look for the libAfterImage config script in DIR.

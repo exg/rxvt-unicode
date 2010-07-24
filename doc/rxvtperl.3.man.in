@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 3"
-.TH @@RXVT_NAME@@ 3 "2010-02-06" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 3 "2010-07-24" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -486,7 +486,7 @@ The defaults (which are likely useless to you) use rsh and cat:
 .Ve
 .IP "selection-pastebin" 4
 .IX Item "selection-pastebin"
-This is a little rarely useful extension that Uploads the selection as
+This is a little rarely useful extension that uploads the selection as
 textfile to a remote site (or does other things). (The implementation is
 not currently secure for use in a multiuser environment as it writes to
 \&\fI/tmp\fR directly.).
@@ -521,10 +521,10 @@ for the filename):
 .Sp
 \&\fINote to xrdb users:\fR xrdb uses the C preprocessor, which might interpret
 the double \f(CW\*(C`/\*(C'\fR characters as comment start. Use \f(CW\*(C`\e057\e057\*(C'\fR instead,
-which works regardless of wether xrdb is used to parse the resource file
+which works regardless of whether xrdb is used to parse the resource file
 or not.
-.IP "macosx-pastebin and macosx-pastebin-native" 4
-.IX Item "macosx-pastebin and macosx-pastebin-native"
+.IP "macosx-clipboard and macosx-clipboard-native" 4
+.IX Item "macosx-clipboard and macosx-clipboard-native"
 These two modules implement an extended clipboard for Mac \s-1OS\s0 X. They are
 used like this:
 .Sp
@@ -535,7 +535,7 @@ used like this:
 .Ve
 .Sp
 The difference between them is that the native variant requires a
-perl from apple's devkit or so, and \f(CW\*(C`maxosx\-pastebin\*(C'\fR requires the
+perl from apple's devkit or so, and \f(CW\*(C`macosx\-clipboard\*(C'\fR requires the
 \&\f(CW\*(C`Mac::Pasteboard\*(C'\fR module, works with other perls, has fewer bugs, is
 simpler etc. etc.
 .IP "example-refresh-hooks" 4
@@ -543,6 +543,10 @@ simpler etc. etc.
 Displays a very simple digital clock in the upper right corner of the
 window. Illustrates overwriting the refresh callbacks to create your own
 overlays or changes.
+.IP "confirm-paste" 4
+.IX Item "confirm-paste"
+Displays a confirmation dialog when a paste containing at least a full
+line is detected.
 .SH "API DOCUMENTATION"
 .IX Header "API DOCUMENTATION"
 .SS "General \s-1API\s0 Considerations"
@@ -563,7 +567,7 @@ hints on what they mean:
 .ie n .IP "$text" 4
 .el .IP "\f(CW$text\fR" 4
 .IX Item "$text"
-Rxvt-unicodes special way of encoding text, where one \*(L"unicode\*(R" character
+Rxvt-unicode's special way of encoding text, where one \*(L"unicode\*(R" character
 always represents one screen cell. See ROW_t for a discussion of this format.
 .ie n .IP "$string" 4
 .el .IP "\f(CW$string\fR" 4
@@ -747,6 +751,13 @@ output.
 .IX Item "on_tt_write $term, $octets"
 Called whenever some data is written to the tty/pty and can be used to
 suppress or filter tty input.
+.ie n .IP "on_tt_paste $term, $octets" 4
+.el .IP "on_tt_paste \f(CW$term\fR, \f(CW$octets\fR" 4
+.IX Item "on_tt_paste $term, $octets"
+Called whenever text is about to be pasted, with the text as argument. You
+can filter/change and paste the text yourself by returning a true value
+and calling \f(CW\*(C`$term\->tt_paste\*(C'\fR yourself. \f(CW$octets\fR is
+locale-encoded.
 .ie n .IP "on_line_update $term, $row" 4
 .el .IP "on_line_update \f(CW$term\fR, \f(CW$row\fR" 4
 .IX Item "on_line_update $term, $row"
@@ -781,9 +792,9 @@ resource in the @@RXVT_NAME@@(1) manpage).
 .Sp
 The event is simply the action string. This interface is assumed to change
 slightly in the future.
-.ie n .IP "on_resize_all_windows $tern, $new_width, $new_height" 4
-.el .IP "on_resize_all_windows \f(CW$tern\fR, \f(CW$new_width\fR, \f(CW$new_height\fR" 4
-.IX Item "on_resize_all_windows $tern, $new_width, $new_height"
+.ie n .IP "on_resize_all_windows $term, $new_width, $new_height" 4
+.el .IP "on_resize_all_windows \f(CW$term\fR, \f(CW$new_width\fR, \f(CW$new_height\fR" 4
+.IX Item "on_resize_all_windows $term, $new_width, $new_height"
 Called just after the new window size has been calculated, but before
 windows are actually being resized or hints are being set. If this hook
 returns \s-1TRUE\s0, setting of the window hints is being skipped.
@@ -836,8 +847,8 @@ focus out processing.
 .el .IP "on_unmap_notify \f(CW$term\fR, \f(CW$event\fR" 4
 .IX Item "on_unmap_notify $term, $event"
 .PD
-Called whenever the corresponding X event is received for the terminal If
-the hook returns true, then the even will be ignored by rxvt-unicode.
+Called whenever the corresponding X event is received for the terminal. If
+the hook returns true, then the event will be ignored by rxvt-unicode.
 .Sp
 The event is a hash with most values as named by Xlib (see the XEvent
 manpage), with the additional members \f(CW\*(C`row\*(C'\fR and \f(CW\*(C`col\*(C'\fR, which are the
@@ -1144,18 +1155,24 @@ Returns the current selection screen, and then optionally sets it.
 .IX Item "$term->selection_make ($eventtime[, $rectangular])"
 Tries to make a selection as set by \f(CW\*(C`selection_beg\*(C'\fR and
 \&\f(CW\*(C`selection_end\*(C'\fR. If \f(CW$rectangular\fR is true (default: false), a
-rectangular selection will be made. This is the prefered function to make
+rectangular selection will be made. This is the preferred function to make
 a selection.
-.ie n .IP "$success = $term\->selection_grab ($eventtime)" 4
-.el .IP "\f(CW$success\fR = \f(CW$term\fR\->selection_grab ($eventtime)" 4
-.IX Item "$success = $term->selection_grab ($eventtime)"
-Try to request the primary selection text from the server (for example, as
-set by the next method). No visual feedback will be given. This function
+.ie n .IP "$success = $term\->selection_grab ($eventtime[, $clipboard])" 4
+.el .IP "\f(CW$success\fR = \f(CW$term\fR\->selection_grab ($eventtime[, \f(CW$clipboard\fR])" 4
+.IX Item "$success = $term->selection_grab ($eventtime[, $clipboard])"
+Try to acquire ownership of the primary (clipboard if \f(CW$clipboard\fR is
+true) selection from the server. The corresponding text can be set
+with the next method. No visual feedback will be given. This function
 is mostly useful from within \f(CW\*(C`on_sel_grab\*(C'\fR hooks.
-.ie n .IP "$oldtext = $term\->selection ([$newtext])" 4
-.el .IP "\f(CW$oldtext\fR = \f(CW$term\fR\->selection ([$newtext])" 4
-.IX Item "$oldtext = $term->selection ([$newtext])"
-Return the current selection text and optionally replace it by \f(CW$newtext\fR.
+.ie n .IP "$oldtext = $term\->selection ([$newtext, $clipboard])" 4
+.el .IP "\f(CW$oldtext\fR = \f(CW$term\fR\->selection ([$newtext, \f(CW$clipboard\fR])" 4
+.IX Item "$oldtext = $term->selection ([$newtext, $clipboard])"
+Return the current selection (clipboard if \f(CW$clipboard\fR is true) text
+and optionally replace it by \f(CW$newtext\fR.
+.ie n .IP "$term\->selection_clear ([$clipboard])" 4
+.el .IP "\f(CW$term\fR\->selection_clear ([$clipboard])" 4
+.IX Item "$term->selection_clear ([$clipboard])"
+Revoke ownership of the primary (clipboard if \f(CW$clipboard\fR is true) selection.
 .ie n .IP "$term\->overlay_simple ($x, $y, $text)" 4
 .el .IP "\f(CW$term\fR\->overlay_simple ($x, \f(CW$y\fR, \f(CW$text\fR)" 4
 .IX Item "$term->overlay_simple ($x, $y, $text)"
@@ -1257,9 +1274,15 @@ locale-specific encoding of the terminal and can contain command sequences
 .ie n .IP "$term\->tt_write ($octets)" 4
 .el .IP "\f(CW$term\fR\->tt_write ($octets)" 4
 .IX Item "$term->tt_write ($octets)"
-Write the octets given in \f(CW$data\fR to the tty (i.e. as program input). To
+Write the octets given in \f(CW$octets\fR to the tty (i.e. as program input). To
 pass characters instead of octets, you should convert your strings first
 to the locale-specific encoding using \f(CW\*(C`$term\->locale_encode\*(C'\fR.
+.ie n .IP "$term\->tt_paste ($octets)" 4
+.el .IP "\f(CW$term\fR\->tt_paste ($octets)" 4
+.IX Item "$term->tt_paste ($octets)"
+Write the octets given in \f(CW$octets\fR to the tty as a paste, converting \s-1NL\s0 to
+\&\s-1CR\s0 and bracketing the data with control sequences if bracketed paste mode
+is set.
 .ie n .IP "$old_events = $term\->pty_ev_events ([$new_events])" 4
 .el .IP "\f(CW$old_events\fR = \f(CW$term\fR\->pty_ev_events ([$new_events])" 4
 .IX Item "$old_events = $term->pty_ev_events ([$new_events])"
@@ -1531,7 +1554,7 @@ recent grab.
 .ie n .IP "$term\->ungrab" 4
 .el .IP "\f(CW$term\fR\->ungrab" 4
 .IX Item "$term->ungrab"
-Calls XUngrab for the most recent grab. Is called automatically on
+Calls XUngrabPointer and XUngrabKeyboard for the most recent grab. Is called automatically on
 evaluation errors, as it is better to lose the grab in the error case as
 the session.
 .ie n .IP "$atom = $term\->XInternAtom ($atom_name[, $only_if_exists])" 4
@@ -1577,7 +1600,7 @@ the session.
 .PD
 Various X or X\-related functions. The \f(CW$term\fR object only serves as
 the source of the display, otherwise those functions map more-or-less
-directory onto the X functions of the same name.
+directly onto the X functions of the same name.
 .ie n .SS "The ""urxvt::popup"" Class"
 .el .SS "The \f(CWurxvt::popup\fP Class"
 .IX Subsection "The urxvt::popup Class"
