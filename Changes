@@ -36,12 +36,12 @@ TODO:        - upgrade to libev-4.00.
 	- new on_bell perl hook (Emanuele Giaquinta).
 	- make sure pagewise scrolling scrolls at least one line
           (found by Mikachu).
-	- make OSC 17 / 19 apply to highlightColor / highlightTextColor.
-	- remove deprecated OSC 18 / 19.
+	- remove deprecated OSC 18 / 19 and make OSC 17 / 19 apply to
+	  highlightColor / highlightTextColor (Emanuele Giaquinta).
 	- add highlightTextColor resource to change the foreground colour of
-	  highlighted characters.
+	  highlighted characters (Emanuele Giaquinta).
 	- make highlightColor apply also to selected cells with reverse video
-	  but not to non selected cells with reverse video.
+	  but not to non selected cells with reverse video (Emanuele Giaquinta).
 	- remove colorRV resource (it was enabled only with frills off).
 	- fix numlock handling, the most longstanding bug to date (Emanuele Giaquinta).
 	- searchable-scrollback no longer ignores the first line
@@ -49,7 +49,7 @@ TODO:        - upgrade to libev-4.00.
         - reduce the number of custom bits to 4, to make room
           for 256 colours.
 	- add support for 256 colors.
-        - add rxvt-unicode-256color terminfo and use it by default in that mode.
+        - add rxvt-unicode-256color terminfo and use it by default in 256 colors mode.
         - actually added macosx-clipboard-native, which should have been in
           the 9.07 release but had been forgotten.
 	- add support for grabbing the clipboard selection and extend
