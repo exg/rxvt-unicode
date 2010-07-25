@@ -224,14 +224,14 @@ void server::read_cb (ev::io &w, int revents)
     return err ();
 }
 
-int opt_fork, opt_opendisplay, opt_quiet;
-#if ENABLE_MLOCK
-int opt_lock;
-#endif
-
 int
 main (int argc, const char *const *argv)
 {
+  int opt_fork, opt_opendisplay, opt_quiet;
+#if ENABLE_MLOCK
+  int opt_lock;
+#endif
+
   rxvt_init ();
 
   for (int i = 1; i < argc; i++)
