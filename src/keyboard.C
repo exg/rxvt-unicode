@@ -54,7 +54,7 @@
  * it is computed from hash_budget_size[]:
  * index: 0      I1         I2         I3             In
  * value: 0...0, N1, 0...0, N2, 0...0, N3,    ...,    Nn, 0...0
- *        0...0, 0.......0, N1.....N1, N1+N2...N1+N2, ... (the compution of hash[])
+ *        0...0, 0.......0, N1.....N1, N1+N2...N1+N2, ... (the computation of hash[])
  * or we can say
  * hash_budget_size[Ii] = Ni; hash_budget_size[elsewhere] = 0,
  * where
@@ -150,7 +150,7 @@ compare_priority (keysym_t *a, keysym_t *b)
 
   if (ca != cb)
     return ca - cb;
-//else if (a->state != b->state) // this behavior is to be disscussed
+//else if (a->state != b->state) // this behavior is to be discussed
 //  return b->state - a->state;
   else
     return b->range - a->range;

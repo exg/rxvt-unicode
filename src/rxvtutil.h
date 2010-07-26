@@ -22,7 +22,7 @@ using namespace std;
 #endif
 
 // put into ifs if you are very sure that the expression
-// is mostly true or mosty false. note that these return
+// is mostly true or mostly false. note that these return
 // booleans, not the expression.
 #define expect_false(expr) expect ((expr) != 0, 0)
 #define expect_true(expr)  expect ((expr) != 0, 1)

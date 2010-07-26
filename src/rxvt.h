@@ -809,7 +809,7 @@ struct overlay_base
   text_t **text;
   rend_t **rend;
 
-  // while tempting to add swap() etc. here, it effetcively only increases code size
+  // while tempting to add swap() etc. here, it effectively only increases code size
 };
 
 /* ------------------------------------------------------------------------- */

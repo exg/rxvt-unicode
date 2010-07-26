@@ -385,7 +385,7 @@ print_x_error (Display *dpy, XErrorEvent *event)
     char *mtype = "XlibMessage";
     XGetErrorText(dpy, event->error_code, buffer, BUFSIZ);
     XGetErrorDatabaseText(dpy, mtype, "XError", "X Error", mesg, BUFSIZ);
-    rxvt_warn ("An X Error occured, trying to continue after report.\n");
+    rxvt_warn ("An X Error occurred, trying to continue after report.\n");
     rxvt_warn ("%s:  %s\n", mesg, buffer);
     XGetErrorDatabaseText(dpy, mtype, "MajorCode", "Request Major code %d", mesg, BUFSIZ);
     rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->request_code);

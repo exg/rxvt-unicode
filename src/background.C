@@ -850,7 +850,7 @@ bgPixmap_t::make_transparency_pixmap ()
   if (target == NULL)
     return 0;
 
-  /* root dimentions may change from call to call - but Display structure should
+  /* root dimensions may change from call to call - but Display structure should
    * be always up-to-date, so let's use it :
    */
   Window root = target->display->root;
@@ -949,7 +949,7 @@ bgPixmap_t::make_transparency_pixmap ()
     }
   else
     {
-      /* strightforward pixmap copy */
+      /* straightforward pixmap copy */
       gcv.tile = root_pixmap;
       gcv.fill_style = FillTiled;
 
@@ -1188,7 +1188,7 @@ bgPixmap_t::render ()
 
 # elif !XFT /* our own client-side tinting */
 
-  /* ATTENTION: We ASSUME that XFT will let us do all the tinting neccessary server-side.
+  /* ATTENTION: We ASSUME that XFT will let us do all the tinting necessary server-side.
      This may need to be changed in need_client_side_rendering() logic is altered !!! */
 
   if (background_flags && (flags & isInvalid))

@@ -1485,12 +1485,12 @@ rxvt_term::x_cb (XEvent &ev)
 
       case MapNotify:
 #ifdef HAVE_BG_PIXMAP
-        /* This is needed spcifically to fix the case of no window manager or a
+        /* This is needed specifically to fix the case of no window manager or a
          * non-reparenting window manager. In those cases we never get first
          * ConfigureNotify. Also that speeds startup under normal WM, by taking
-         * care of multiplicity of ConfigureNotify events arriwing while WM does
+         * care of multiplicity of ConfigureNotify events arriving while WM does
          * reparenting.
-         * We should not render background immidiately, as there could be several
+         * We should not render background immediately, as there could be several
          * ConfigureNotify's to follow. Lets take care of all of them in one scoop
          * by scheduling background redraw as soon as we can, but giving a short
          * bit of time for ConfigureNotifies to arrive.
@@ -1871,7 +1871,7 @@ rxvt_term::button_press (XButtonEvent &ev)
 #ifdef MOUSE_REPORT_DOUBLECLICK
           if (ev.button == MEvent.button && clickintime)
             {
-              /* same button, within alloted time */
+              /* same button, within allowed time */
               MEvent.clicks++;
 
               if (MEvent.clicks > 1)
