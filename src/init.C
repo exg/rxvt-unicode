@@ -560,24 +560,6 @@ rxvt_term::init_vars ()
   set_option (Opt_buffered);
 }
 
-static void
-init_secondary ()
-{
-  int i;
-
-  if ((i = open ("/dev/null", O_RDONLY)) < 0)
-    {
-      dup2 (STDERR_FILENO, STDIN_FILENO);
-    }
-  else if (i != STDIN_FILENO)
-    {
-      dup2 (i, STDIN_FILENO);
-      close (i);
-    }
-
-  dup2 (STDERR_FILENO, STDOUT_FILENO);
-}
-
 /*----------------------------------------------------------------------*/
 const char **
 rxvt_term::init_resources (int argc, const char *const *argv)
@@ -791,8 +773,6 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
   set_environ (envv); // a few things in X do not call setlocale :(
 
   init_vars ();
-
-  init_secondary ();
 
   const char **cmd_argv = init_resources (argc, argv);
 

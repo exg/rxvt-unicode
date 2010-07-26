@@ -1,6 +1,5 @@
 rxvt-unicode changelog <= google-friendly title
 
-TODO: init_secondary serves what purpose? maybe move it to earlier startup phase and re-think
 TODO: xcopyarea pass broken, fix and improve
 TODO: event mechanism that replaces on_user_command with something more scalable.
 TODO: slipwheeling needs a keyboard grab to get key release events.

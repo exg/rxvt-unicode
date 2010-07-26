@@ -484,6 +484,10 @@ rxvt_init ()
   assert (("fontMask must not overlap other RS masks",
            0 == (RS_fontMask & (RS_Sel | RS_baseattrMask | RS_customMask | RS_bgMask | RS_fgMask))));
 
+  // get rid of stdin/stdout as we don't need them, to free resources
+  dup2 (STDERR_FILENO, STDIN_FILENO);
+  dup2 (STDERR_FILENO, STDOUT_FILENO);
+
   ptytty::init ();
 
   if (!ev_default_loop (0))
