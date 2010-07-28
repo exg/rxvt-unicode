@@ -32,6 +32,7 @@
 
 #include "../config.h"          /* NECESSARY */
 #include "rxvt.h"               /* NECESSARY */
+#include "init.h"
 #include "keyboard.h"
 #include "rxvtperl.h"
 
@@ -52,6 +53,7 @@
 # endif
 #endif
 
+struct termios rxvt_term::def_tio;
 vector<rxvt_term *> rxvt_term::termlist;
 
 // used to tell global functions which terminal instance is "active"
@@ -476,6 +478,70 @@ sig_handlers::sig_term (ev::sig &w, int revents)
   kill (getpid (), w.signum);
 }
 
+static void
+rxvt_get_ttymode (struct termios *tio)
+{
+  if (tcgetattr (STDIN_FILENO, tio) < 0)
+    memset (tio, 0, sizeof (struct termios));
+
+  for (int i = 0; i < NCCS; i++)
+    tio->c_cc[i] = VDISABLE;
+
+  tio->c_cc[VINTR] = CINTR;
+  tio->c_cc[VQUIT] = CQUIT;
+  tio->c_cc[VERASE] = CERASE;
+#ifdef VERASE2
+  tio->c_cc[VERASE2] = CERASE2;
+#endif
+  tio->c_cc[VKILL] = CKILL;
+  tio->c_cc[VEOF] = CEOF;
+  tio->c_cc[VSTART] = CSTART;
+  tio->c_cc[VSTOP] = CSTOP;
+  tio->c_cc[VSUSP] = CSUSP;
+# ifdef VDSUSP
+  tio->c_cc[VDSUSP] = CDSUSP;
+# endif
+# ifdef VREPRINT
+  tio->c_cc[VREPRINT] = CRPRNT;
+# endif
+# ifdef VDISCRD
+  tio->c_cc[VDISCRD] = CFLUSH;
+# endif
+# ifdef VWERSE
+  tio->c_cc[VWERSE] = CWERASE;
+# endif
+# ifdef VLNEXT
+  tio->c_cc[VLNEXT] = CLNEXT;
+# endif
+
+# if VMIN != VEOF
+  tio->c_cc[VMIN] = 1;
+# endif
+# if VTIME != VEOL
+  tio->c_cc[VTIME] = 0;
+# endif
+
+  /* input modes */
+  tio->c_iflag = (BRKINT | IGNPAR | ICRNL
+# ifdef IMAXBEL
+                  | IMAXBEL
+# endif
+                  | IXON);
+
+  /* output modes */
+  tio->c_oflag = (OPOST | ONLCR);
+
+  /* control modes */
+  tio->c_cflag = (CS8 | CREAD);
+
+  /* local modes */
+  tio->c_lflag = (ISIG | ICANON | IEXTEN | ECHO
+# if defined (ECHOCTL) && defined (ECHOKE)
+                  | ECHOCTL | ECHOKE
+# endif
+                  | ECHOE | ECHOK);
+}
+
 char **rxvt_environ; // startup environment
 
 void
@@ -483,6 +549,8 @@ rxvt_init ()
 {
   assert (("fontMask must not overlap other RS masks",
            0 == (RS_fontMask & (RS_Sel | RS_baseattrMask | RS_customMask | RS_bgMask | RS_fgMask))));
+
+  rxvt_get_ttymode (&rxvt_term::def_tio);
 
   // get rid of stdin/stdout as we don't need them, to free resources
   dup2 (STDERR_FILENO, STDIN_FILENO);

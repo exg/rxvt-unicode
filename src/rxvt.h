@@ -1076,7 +1076,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 /* ---------- */
   struct mouse_event MEvent;
   XComposeStatus  compose;
-  struct termios  tio;
+  static struct termios def_tio;
   row_col_t       oldcursor;
 #ifdef HAVE_BG_PIXMAP
   bgPixmap_t      bgPixmap;
