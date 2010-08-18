@@ -824,7 +824,7 @@ complicated (e.g. japanese), I temporarily switch to a larger font.
 
 The above is all in my C<.Xdefaults> (I don't use C<.Xresources> nor
 C<xrdb>). I also have some resources in a separate C<.Xdefaults-hostname>
-file for different hosts, for example, on ym main desktop, I use:
+file for different hosts, for example, on my main desktop, I use:
 
    URxvt.keysym.C-M-q: command:\033[3;5;5t
    URxvt.keysym.C-M-y: command:\033[3;5;606t
