@@ -592,33 +592,16 @@ Historically, either value is correct, but rxvt-unicode adopts the debian
 policy of using C<^?> when unsure, because it's the one and only correct
 choice :).
 
-Rxvt-unicode tries to inherit the current stty settings and uses the value
-of `erase' to guess the value for backspace.  If rxvt-unicode wasn't
-started from a terminal (say, from a menu or by remote shell), then the
-system value of `erase', which corresponds to CERASE in <termios.h>, will
-be used (which may not be the same as your stty setting).
-
-For starting a new rxvt-unicode:
+It is possible to toggle between C<^H> and C<^?> with the DECBKM
+private mode:
 
    # use Backspace = ^H
    $ stty erase ^H
-   $ @@URXVT_NAME@@
+   $ echo -n "^[[?67h"
 
    # use Backspace = ^?
    $ stty erase ^?
-   $ @@URXVT_NAME@@
-
-Toggle with C<ESC [ 36 h> / C<ESC [ 36 l>.
-
-For an existing rxvt-unicode:
-
-   # use Backspace = ^H
-   $ stty erase ^H
-   $ echo -n "^[[36h"
-
-   # use Backspace = ^?
-   $ stty erase ^?
-   $ echo -n "^[[36l"
+   $ echo -n "^[[?67l"
 
 This helps satisfy some of the Backspace discrepancies that occur, but
 if you use Backspace = C<^H>, make sure that the termcap/terminfo value
