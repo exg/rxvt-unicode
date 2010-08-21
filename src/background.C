@@ -52,7 +52,7 @@
  * adjustment and may optionally be followed by a colon and one or more
  * colon-delimited pixmap operations.
  * The following table shows the valid geometry strings and their
- * affects on the background image :
+ * effects on the background image :
  *
  * WxH+X+Y  	Set scaling to W% by H%, and position to X% by Y%.
  *            W and H are percentages of the terminal window size.
