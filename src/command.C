@@ -773,19 +773,7 @@ rxvt_term::key_press (XKeyEvent &ev)
                 {
                   int param = map_function_key (keysym);
                   if (param > 0)
-                    {
-                      int n = sprintf (kbuf,"\033[%d~", param);
-                      /*
-                       * pass Shift/Control indicators for function keys ending with `~'
-                       *
-                       * eg,
-                       *   Prior = "ESC[5~"
-                       *   Shift+Prior = "ESC[5$"
-                       *   Ctrl+Prior = "ESC[5^"
-                       *   Ctrl+Shift+Prior = "ESC[5@"
-                       */
-                      kbuf[n-1] = (shft ? (ctrl ? '@' : '$') : (ctrl ? '^' : '~'));
-                    }
+                    sprintf (kbuf,"\033[%d~", param);
                   else
                     newlen = 0;
                 }
@@ -846,8 +834,18 @@ rxvt_term::key_press (XKeyEvent &ev)
       }
 
   /*
+   * these modifications only affect the static keybuffer
+   * pass Shift/Control indicators for function keys ending with `~'
+   *
+   * eg,
+   *   Prior = "ESC[5~"
+   *   Shift+Prior = "ESC[5$"
+   *   Ctrl+Prior = "ESC[5^"
+   *   Ctrl+Shift+Prior = "ESC[5@"
    * Meta adds an Escape prefix (with META8_OPTION, if meta == <escape>).
    */
+  if (kbuf[0] == C0_ESC && kbuf[1] == '[' && kbuf[len - 1] == '~')
+    kbuf[len - 1] = (shft ? (ctrl ? '@' : '$') : (ctrl ? '^' : '~'));
 
   /* escape prefix */
   if (meta
