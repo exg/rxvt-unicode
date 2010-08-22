@@ -22,6 +22,9 @@ TODO:        - upgrade to libev-4.00.
 
 	- new perl extension "confirm-paste" (Emanuele Giaquinta).
 	- new on_tt_paste perl hook and tt_paste perl binding (Emanuele Giaquinta).
+	- new on_bell perl hook (Emanuele Giaquinta).
+	- searchable-scrollback no longer ignores the first line
+	  (Emanuele Giaquinta).
 	- fix utmpx detection on upcoming FreeBSD 9.
 	- Use COMPOUND_TEXT encoding for WM_NAME/WM_ICON_NAME value when it
 	  is not fully convertible to STRING (patch by James Cloos).
@@ -33,7 +36,6 @@ TODO:        - upgrade to libev-4.00.
 	  (Emanuele Giaquinta).
 	- new iso14755 option to disable ISO 14755 at runtime
           (Emanuele Giaquinta).
-	- new on_bell perl hook (Emanuele Giaquinta).
 	- make sure pagewise scrolling scrolls at least one line
           (found by Mikachu).
 	- remove deprecated OSC 18 / 19 and make OSC 17 / 19 apply to
@@ -44,18 +46,16 @@ TODO:        - upgrade to libev-4.00.
 	  but not to non selected cells with reverse video (Emanuele Giaquinta).
 	- remove colorRV resource (it was enabled only with frills off).
 	- fix numlock handling, the most longstanding bug to date (Emanuele Giaquinta).
-	- searchable-scrollback no longer ignores the first line
-	  (Emanuele Giaquinta).
         - reduce the number of custom bits to 4, to make room
           for 256 colours.
-	- add support for 256 colors.
+	- add support for 256 colors (Emanuele Giaquinta, Marc Lehmann).
         - add rxvt-unicode-256color terminfo and use it by default in 256 colors mode.
         - actually added macosx-clipboard-native, which should have been in
           the 9.07 release but had been forgotten.
 	- add support for grabbing the clipboard selection and extend
 	  selection{_clear,_grab,} perl bindings to optionally work
 	  on the clipboard selection (based on patch by Dana Jansens).
-        - no longer force CERASE to DEL - use the system default. affects
+        - no longer force CERASE to BACKSPACE - use the system default. affects
           default value for VERASE only when no compatible setting for
           backspacekey was given.
         - use higher than 38400 baudrate setting, if detected.
