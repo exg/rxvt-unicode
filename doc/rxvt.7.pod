@@ -2158,7 +2158,7 @@ Note: B<Shift> + B<F1>-B<F10> generates B<F11>-B<F20>
 For the keypad, use B<Shift> to temporarily override Application-Keypad
 setting use B<Num_Lock> to toggle Application-Keypad setting if
 B<Num_Lock> is off, toggle Application-Keypad setting. Also note that
-values of B<Home>, B<End>, B<Delete> may have been compiled differently on
+values of B<BackSpace>, B<Delete> may have been compiled differently on
 your system.
 
 =begin table
