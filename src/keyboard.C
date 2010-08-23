@@ -51,17 +51,17 @@
  * where
  * A1 = 0;
  * Ai+1 = N1 + N2 + ... + Ni.
- * it is computed from hash_budget_size[]:
+ * it is computed from hash_bucket_size[]:
  * index: 0      I1         I2         I3             In
  * value: 0...0, N1, 0...0, N2, 0...0, N3,    ...,    Nn, 0...0
  *        0...0, 0.......0, N1.....N1, N1+N2...N1+N2, ... (the computation of hash[])
  * or we can say
- * hash_budget_size[Ii] = Ni; hash_budget_size[elsewhere] = 0,
+ * hash_bucket_size[Ii] = Ni; hash_bucket_size[elsewhere] = 0,
  * where
  * set {I1, I2, ..., In} = { hashkey of keymap[0]->keysym, ..., keymap[keymap.size-1]->keysym }
  * where hashkey of keymap[i]->keysym = keymap[i]->keysym & KEYSYM_HASH_MASK
- *       n(the number of groups) = the number of non-zero member of hash_budget_size[];
- *       Ni(the size of group i) = hash_budget_size[Ii].
+ *       n(the number of groups) = the number of non-zero member of hash_bucket_size[];
+ *       Ni(the size of group i) = hash_bucket_size[Ii].
  */
 
 #if STOCK_KEYMAP
@@ -380,40 +380,40 @@ keyboard_manager::setup_hash ()
 {
   unsigned int i, index, hashkey;
   vector <keysym_t *> sorted_keymap;
-  uint16_t hash_budget_size[KEYSYM_HASH_BUDGETS];	// size of each budget
-  uint16_t hash_budget_counter[KEYSYM_HASH_BUDGETS];	// #elements in each budget
+  uint16_t hash_bucket_size[KEYSYM_HASH_BUCKETS];	// size of each bucket
+  uint16_t hash_bucket_counter[KEYSYM_HASH_BUCKETS];	// #elements in each bucket
 
-  memset (hash_budget_size, 0, sizeof (hash_budget_size));
-  memset (hash_budget_counter, 0, sizeof (hash_budget_counter));
+  memset (hash_bucket_size, 0, sizeof (hash_bucket_size));
+  memset (hash_bucket_counter, 0, sizeof (hash_bucket_counter));
 
   // determine hash bucket size
   for (i = 0; i < keymap.size (); ++i)
-    for (int j = min (keymap [i]->range, KEYSYM_HASH_BUDGETS) - 1; j >= 0; --j)
+    for (int j = min (keymap [i]->range, KEYSYM_HASH_BUCKETS) - 1; j >= 0; --j)
       {
         hashkey = (keymap [i]->keysym + j) & KEYSYM_HASH_MASK;
-        ++hash_budget_size [hashkey];
+        ++hash_bucket_size [hashkey];
       }
 
-  // now we know the size of each budget
-  // compute the index of each budget
+  // now we know the size of each bucket
+  // compute the index of each bucket
   hash [0] = 0;
-  for (index = 0, i = 1; i < KEYSYM_HASH_BUDGETS; ++i)
+  for (index = 0, i = 1; i < KEYSYM_HASH_BUCKETS; ++i)
     {
-      index += hash_budget_size [i - 1];
+      index += hash_bucket_size [i - 1];
       hash [i] = index;
     }
 
   // and allocate just enough space
-  sorted_keymap.insert (sorted_keymap.begin (), index + hash_budget_size [i - 1], 0);
+  sorted_keymap.insert (sorted_keymap.begin (), index + hash_bucket_size [i - 1], 0);
 
   // fill in sorted_keymap
-  // it is sorted in each budget
+  // it is sorted in each bucket
   for (i = 0; i < keymap.size (); ++i)
-    for (int j = min (keymap [i]->range, KEYSYM_HASH_BUDGETS) - 1; j >= 0; --j)
+    for (int j = min (keymap [i]->range, KEYSYM_HASH_BUCKETS) - 1; j >= 0; --j)
       {
         hashkey = (keymap [i]->keysym + j) & KEYSYM_HASH_MASK;
 
-        index = hash [hashkey] + hash_budget_counter [hashkey];
+        index = hash [hashkey] + hash_bucket_counter [hashkey];
 
         while (index > hash [hashkey]
                && compare_priority (keymap [i], sorted_keymap [index - 1]) > 0)
@@ -423,17 +423,17 @@ keyboard_manager::setup_hash ()
           }
 
         sorted_keymap [index] = keymap [i];
-        ++hash_budget_counter [hashkey];
+        ++hash_bucket_counter [hashkey];
       }
 
   keymap.swap (sorted_keymap);
 
 #ifndef NDEBUG
   // check for invariants
-  for (i = 0; i < KEYSYM_HASH_BUDGETS; ++i)
+  for (i = 0; i < KEYSYM_HASH_BUCKETS; ++i)
     {
       index = hash[i];
-      for (int j = 0; j < hash_budget_size [i]; ++j)
+      for (int j = 0; j < hash_bucket_size [i]; ++j)
         {
           if (keymap [index + j]->range == 1)
             assert (i == (keymap [index + j]->keysym & KEYSYM_HASH_MASK));
@@ -467,7 +467,7 @@ keyboard_manager::find_keysym (KeySym keysym, unsigned int state)
 {
   int hashkey = keysym & KEYSYM_HASH_MASK;
   unsigned int index = hash [hashkey];
-  unsigned int end = hashkey < KEYSYM_HASH_BUDGETS - 1
+  unsigned int end = hashkey < KEYSYM_HASH_BUCKETS - 1
                      ? hash [hashkey + 1]
                      : keymap.size ();
 
