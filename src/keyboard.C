@@ -173,6 +173,21 @@ keyboard_manager::clear ()
 {
   keymap.clear ();
   hash [0] = 2;
+
+  for (unsigned int i = 0; i < user_translations.size (); ++i)
+    {
+      free ((void *)user_translations [i]);
+      user_translations [i] = 0;
+    }
+
+  for (unsigned int i = 0; i < user_keymap.size (); ++i)
+    {
+      delete user_keymap [i];
+      user_keymap [i] = 0;
+    }
+
+  user_keymap.clear ();
+  user_translations.clear ();
 }
 
 // a wrapper for register_keymap,
@@ -214,6 +229,8 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
       else if (strncmp (translation, "builtin:", 8) == 0)
         key->type = keysym_t::BUILTIN;
 
+      user_keymap.push_back (key);
+      user_translations.push_back (translation);
       register_keymap (key);
     }
   else

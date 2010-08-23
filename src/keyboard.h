@@ -95,6 +95,9 @@ private:
   // stock keymaps are all static data
   static keysym_t stock_keymap[];
 #endif
+  // user keymaps and their .string are dynamically allocated and freed
+  vector<keysym_t *> user_keymap;
+  vector<const char *> user_translations;
 };
 
 #endif /* KEYSYM_RESOURCE */
