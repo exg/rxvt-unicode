@@ -64,35 +64,6 @@
  *       Ni(the size of group i) = hash_bucket_size[Ii].
  */
 
-#if STOCK_KEYMAP
-////////////////////////////////////////////////////////////////////////////////
-// default keycode translation map and keyevent handlers
-
-keysym_t keyboard_manager::stock_keymap[] = {
-  /* examples */
-  /*        keysym,                state, range,                  type,              str */
-//{XK_ISO_Left_Tab,                    0,     1,      keysym_t::STRING,           "\033[Z"},
-//{            'a',                    0,    26, keysym_t::RANGE_META8,           "a" "%c"},
-//{            'a',          ControlMask,    26, keysym_t::RANGE_META8,          "" "%c"},
-//{        XK_Left,                    0,     4,        keysym_t::LIST,     ".\033[.DACB."},
-//{        XK_Left,            ShiftMask,     4,        keysym_t::LIST,     ".\033[.dacb."},
-//{        XK_Left,          ControlMask,     4,        keysym_t::LIST,     ".\033O.dacb."},
-//{         XK_Tab,          ControlMask,     1,      keysym_t::STRING,      "\033<C-Tab>"},
-//{  XK_apostrophe,          ControlMask,     1,      keysym_t::STRING,        "\033<C-'>"},
-//{       XK_slash,          ControlMask,     1,      keysym_t::STRING,        "\033<C-/>"},
-//{   XK_semicolon,          ControlMask,     1,      keysym_t::STRING,        "\033<C-;>"},
-//{       XK_grave,          ControlMask,     1,      keysym_t::STRING,        "\033<C-`>"},
-//{       XK_comma,          ControlMask,     1,      keysym_t::STRING,     "\033<C-\054>"},
-//{      XK_Return,          ControlMask,     1,      keysym_t::STRING,   "\033<C-Return>"},
-//{      XK_Return,            ShiftMask,     1,      keysym_t::STRING,   "\033<S-Return>"},
-//{            ' ',            ShiftMask,     1,      keysym_t::STRING,    "\033<S-Space>"},
-//{            '.',          ControlMask,     1,      keysym_t::STRING,        "\033<C-.>"},
-//{            '0',          ControlMask,    10,       keysym_t::RANGE,   "0" "\033<C-%c>"},
-//{            '0', MetaMask|ControlMask,    10,       keysym_t::RANGE, "0" "\033<M-C-%c>"},
-//{            'a', MetaMask|ControlMask,    26,       keysym_t::RANGE, "a" "\033<M-C-%c>"},
-};
-#endif
-
 static void
 output_string (rxvt_term *rt, const char *str)
 {
@@ -102,42 +73,6 @@ output_string (rxvt_term *rt, const char *str)
     HOOK_INVOKE((rt, HOOK_USER_COMMAND, DT_STR, str + 5, DT_END));
   else
     rt->tt_write (str, strlen (str));
-}
-
-static void
-output_string_meta8 (rxvt_term *rt, unsigned int state, char *buf, int buflen)
-{
-  if (state & rt->ModMetaMask)
-    {
-#ifdef META8_OPTION
-      if (rt->meta_char == 0x80)	/* set 8-bit on */
-        {
-          for (char *ch = buf; ch < buf + buflen; ch++)
-            *ch |= 0x80;
-        }
-      else if (rt->meta_char == C0_ESC)	/* escape prefix */
-#endif
-        {
-          const char ch = C0_ESC;
-          rt->tt_write (&ch, 1);
-        }
-    }
-
-  rt->tt_write (buf, buflen);
-}
-
-static int
-format_keyrange_string (const char *str, int keysym_offset, char *buf, int bufsize)
-{
-  size_t len = snprintf (buf, bufsize, str + 1, keysym_offset + str [0]);
-
-  if (len >= (size_t)bufsize)
-    {
-      rxvt_warn ("format_keyrange_string: formatting failed, ignoring key.\n");
-      *buf = 0;
-    }
-
-  return len;
 }
 
 // return: priority_of_a - priority_of_b
@@ -171,23 +106,16 @@ keyboard_manager::~keyboard_manager ()
 void
 keyboard_manager::clear ()
 {
-  keymap.clear ();
   hash [0] = 2;
 
-  for (unsigned int i = 0; i < user_translations.size (); ++i)
+  for (unsigned int i = 0; i < keymap.size (); ++i)
     {
-      free ((void *)user_translations [i]);
-      user_translations [i] = 0;
+      free ((void *)keymap [i]->str);
+      delete keymap [i];
+      keymap [i] = 0;
     }
 
-  for (unsigned int i = 0; i < user_keymap.size (); ++i)
-    {
-      delete user_keymap [i];
-      user_keymap [i] = 0;
-    }
-
-  user_keymap.clear ();
-  user_translations.clear ();
+  keymap.clear ();
 }
 
 // a wrapper for register_keymap,
@@ -229,8 +157,6 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
       else if (strncmp (translation, "builtin:", 8) == 0)
         key->type = keysym_t::BUILTIN;
 
-      user_keymap.push_back (key);
-      user_translations.push_back (translation);
       register_keymap (key);
     }
   else
@@ -254,17 +180,6 @@ keyboard_manager::register_keymap (keysym_t *key)
 void
 keyboard_manager::register_done ()
 {
-#if STOCK_KEYMAP
-  int n = sizeof (stock_keymap) / sizeof (keysym_t);
-
-  //TODO: shield against repeated calls and empty keymap
-  //if (keymap.back () != &stock_keymap[n - 1])
-    for (int i = 0; i < n; ++i)
-      register_keymap (&stock_keymap[i]);
-#endif
-
-  purge_duplicate_keymap ();
-
   setup_hash ();
 }
 
@@ -303,26 +218,6 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
                 output_string (term, str);
                 break;
 
-              case keysym_t::RANGE:
-                {
-                  char buf[STRING_MAX];
-
-                  if (format_keyrange_string (str, keysym_offset, buf, sizeof (buf)) > 0)
-                    output_string (term, buf);
-                }
-                break;
-
-              case keysym_t::RANGE_META8:
-                {
-                  int len;
-                  char buf[STRING_MAX];
-
-                  len = format_keyrange_string (str, keysym_offset, buf, sizeof (buf));
-                  if (len > 0)
-                    output_string_meta8 (term, state, buf, len);
-                }
-                break;
-
               case keysym_t::LIST:
                 {
                   char buf[STRING_MAX];
@@ -349,30 +244,6 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
     }
 
   return false;
-}
-
-// purge duplicate keymap entries
-void keyboard_manager::purge_duplicate_keymap ()
-{
-  for (unsigned int i = 0; i < keymap.size (); ++i)
-    {
-      for (unsigned int j = 0; j < i; ++j)
-        {
-          if (keymap [i] == keymap [j])
-            {
-              while (keymap [i] == keymap.back ())
-                keymap.pop_back ();
-
-              if (i < keymap.size ())
-                {
-                  keymap[i] = keymap.back ();
-                  keymap.pop_back ();
-                }
-
-              break;
-            }
-        }
-    }
 }
 
 void
