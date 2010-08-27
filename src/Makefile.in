@@ -24,6 +24,8 @@ XLIB = @X_LIBS@ @AFTERIMAGE_LIBS@ -lX11 @X_EXTRA_LIBS@
 COMPILE = $(CXX) -I.. -I$(srcdir) -I. -I$(srcdir)/../libev $(DEFS) $(CPPFLAGS) $(CXXFLAGS) $(XINC)
 LINK = @LINKER@ $(LDFLAGS)
 EXEEXT = @EXEEXT@
+PERLFLAGS = @PERLFLAGS@
+PERLLIB = @PERLLIB@
 
 srcdir =	@srcdir@
 VPATH =		@srcdir@
@@ -60,10 +62,10 @@ RXVTD_BINNAME=$(DESTDIR)$(bindir)/$(RXVTNAME)d$(EXEEXT)
 all: allbin
 
 rxvt: rxvt.o $(COMMON)
-	$(LINK) -o $@ rxvt.o $(COMMON) $(LIBS) $(XLIB) @PERLLIB@
+	$(LINK) -o $@ rxvt.o $(COMMON) $(LIBS) $(XLIB) $(PERLLIB)
 
 rxvtd: rxvtd.o $(COMMON) $(COMMON_DAEMON)
-	$(LINK) -o $@ rxvtd.o $(COMMON) $(COMMON_DAEMON) $(LIBS) $(XLIB) @PERLLIB@
+	$(LINK) -o $@ rxvtd.o $(COMMON) $(COMMON_DAEMON) $(LIBS) $(XLIB) $(PERLLIB)
 
 rxvtc: rxvtc.o $(COMMON_DAEMON) fdpass.o
 	$(LINK) -o $@ rxvtc.o $(COMMON_DAEMON) fdpass.o $(LIBS)
@@ -116,7 +118,7 @@ rxvtperl.C: rxvtperl.xs iom_perl.h iom_perl.xs typemap typemap.iom
 	PERL="$(PERL)" $(PERL) @PERLPRIVLIBEXP@/ExtUtils/xsubpp -C++ -typemap @PERLPRIVLIBEXP@/ExtUtils/typemap -typemap typemap.iom -typemap typemap -prototypes $(srcdir)/rxvtperl.xs >$@
 
 rxvtperl.o: rxvtperl.C perlxsi.c
-	$(COMPILE) @PERLFLAGS@ -DLIBDIR="\"$(libdir)/urxvt\"" -c $<
+	$(COMPILE) $(PERLFLAGS) -DLIBDIR="\"$(libdir)/urxvt\"" -c $<
 
 depend:
 	makedepend -f Makefile.in -I. -I.. -I../libev -Y *.C >/dev/null 2>&1
