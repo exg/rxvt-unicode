@@ -1385,34 +1385,34 @@ rxvt_term::create_windows (int argc, const char *const *argv)
         {
           int w = im->width;
           int h = im->height;
-          long *buffer = (long *)malloc ((2 + w * h) * sizeof (long));
           ASImage *result = scale_asimage (asv, im,
                                            w, h, ASA_ARGB32,
                                            100, ASIMAGE_QUALITY_DEFAULT);
           destroy_asimage (&im);
 
-          if (buffer && result)
+          if (result)
             {
-              ARGB32 *asbuf = result->alt.argb32;
-              buffer [0] = w;
-              buffer [1] = h;
+              long *buffer = (long *)malloc ((2 + w * h) * sizeof (long));
+              if (buffer)
+                {
+                  ARGB32 *asbuf = result->alt.argb32;
+                  buffer [0] = w;
+                  buffer [1] = h;
 
-              for (unsigned int i = 0; i < w * h; ++i)
-                buffer [i + 2] = asbuf [i];
+                  for (unsigned int i = 0; i < w * h; ++i)
+                    buffer [i + 2] = asbuf [i];
 
-              destroy_asimage (&result);
-              XChangeProperty (dpy, top, xa[XA_NET_WM_ICON], XA_CARDINAL, 32,
-                               PropModeReplace, (const unsigned char *) buffer, 2 + w * h);
-              free (buffer);
-            }
-          else
-            {
-              if (!buffer)
+                  XChangeProperty (dpy, top, xa[XA_NET_WM_ICON], XA_CARDINAL, 32,
+                                   PropModeReplace, (const unsigned char *) buffer, 2 + w * h);
+                  free (buffer);
+                }
+              else
                 rxvt_warn ("Memory allocation for icon hint failed, continuing without.\n");
 
-              if (!result)
-                rxvt_warn ("Icon image transformation to ARGB failed, continuing without.\n");
+              destroy_asimage (&result);
             }
+          else
+            rxvt_warn ("Icon image transformation to ARGB failed, continuing without.\n");
         }
       else
         rxvt_warn ("Loading image icon failed, continuing without.\n");
