@@ -1373,7 +1373,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 # ifdef HAVE_AFTERIMAGE
   /*
    * set up icon hint
-   * rs [Rs_iconfile] is path to icon, asv has been created in init_resources
+   * rs [Rs_iconfile] is path to icon
    */
 
   if (rs [Rs_iconfile])
