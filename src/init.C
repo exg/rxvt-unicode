@@ -1381,7 +1381,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
       init_asv ();
 
       ASImage *im = file2ASImage (rs [Rs_iconfile], 0xFFFFFFFF, SCREEN_GAMMA, 0, NULL);
-      if (asv && im)
+      if (im)
         {
           int w = im->width;
           int h = im->height;
