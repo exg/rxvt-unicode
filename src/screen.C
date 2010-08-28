@@ -1338,16 +1338,13 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
 
   min_it (num, nrow - row);
 
-  // TODO: the code below does not work when view_start != 0
-  // the workaround is to disable the clear and use a normal refresh
-  // when view_start != 0. mysterious.
   if (rstyle & (RS_Blink | RS_RVid | RS_Uline))
     ren = (rend_t) ~RS_None;
   else if (GET_BASEBG (rstyle) == Color_bg)
     {
       ren = DEFAULT_RSTYLE;
 
-      if (mapped && !view_start)
+      if (mapped)
         XClearArea (dpy, vt, 0,
                     Row2Pixel (row - view_start), (unsigned int)width,
                     (unsigned int)Height2Pixel (num), False);
@@ -1356,7 +1353,7 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
     {
       ren = rstyle & (RS_fgMask | RS_bgMask);
 
-      if (mapped && !view_start)
+      if (mapped)
         {
           gcvalue.foreground = pix_colors[bgcolor_of (rstyle)];
           XChangeGC (dpy, gc, GCForeground, &gcvalue);
@@ -1373,8 +1370,8 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
     {
       scr_blank_screen_mem (ROW(row), rstyle);
 
-      if (!view_start)
-        scr_blank_line (drawn_buf [row], 0, ncol, ren);
+      if (row - view_start < nrow)
+        scr_blank_line (drawn_buf [row - view_start], 0, ncol, ren);
     }
 }
 
