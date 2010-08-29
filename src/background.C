@@ -450,12 +450,47 @@ bgPixmap_t::set_geometry (const char *geom)
 
 #  ifdef HAVE_AFTERIMAGE
 bool
-bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
+bgPixmap_t::render_asim (unsigned long background_flags)
 {
   if (target == NULL)
     return false;
 
   target->init_asv ();
+
+  ASImage *background = NULL;
+  ARGB32 background_tint = TINT_LEAVE_SAME;
+
+#   ifdef ENABLE_TRANSPARENCY
+  if (background_flags)
+    background = pixmap2ximage (target->asv, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, 100);
+
+  if (!(background_flags & transpPmapTinted) && (flags & tintNeeded))
+    {
+      ShadingInfo as_shade;
+      as_shade.shading = (shade == 0) ? 100 : shade;
+
+      rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
+      if (flags & tintSet)
+        tint.get (c);
+      as_shade.tintColor.red = c.r;
+      as_shade.tintColor.green = c.g;
+      as_shade.tintColor.blue = c.b;
+
+      background_tint = shading2tint32 (&as_shade);
+    }
+
+  if (!(background_flags & transpPmapBlured) && (flags & blurNeeded) && background != NULL)
+    {
+      ASImage *tmp = blur_asimage_gauss (target->asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
+                                         (original_asim == NULL || tint == TINT_LEAVE_SAME)?ASA_XImage:ASA_ASImage,
+                                         100, ASIMAGE_QUALITY_DEFAULT);
+      if (tmp)
+        {
+          destroy_asimage (&background);
+          background = tmp;
+        }
+    }
+#   endif
 
   ASImage *result = 0;
 
@@ -664,6 +699,9 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
       XFreeGC (target->dpy, gc);
       TIMING_TEST_PRINT_RESULT (asim);
     }
+
+  if (background)
+    destroy_asimage (&background);
 
   return true;
 }
@@ -1142,46 +1180,8 @@ bgPixmap_t::render ()
   if (original_asim
       || (background_flags & transpTransformations) != (flags & transpTransformations))
     {
-      target->init_asv ();
-
-      ASImage *background = NULL;
-      ARGB32 as_tint = TINT_LEAVE_SAME;
-      if (background_flags)
-        background = pixmap2ximage (target->asv, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, 100);
-
-#  ifdef ENABLE_TRANSPARENCY
-      if (!(background_flags & transpPmapTinted) && (flags & tintNeeded))
-        {
-          ShadingInfo as_shade;
-          as_shade.shading = (shade == 0) ? 100 : shade;
-
-          rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
-          if (flags & tintSet)
-            tint.get (c);
-          as_shade.tintColor.red = c.r;
-          as_shade.tintColor.green = c.g;
-          as_shade.tintColor.blue = c.b;
-
-          as_tint = shading2tint32 (&as_shade);
-        }
-
-      if (!(background_flags & transpPmapBlured) && (flags & blurNeeded) && background != NULL)
-        {
-          ASImage *tmp = blur_asimage_gauss (target->asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
-                                             (original_asim == NULL || tint == TINT_LEAVE_SAME)?ASA_XImage:ASA_ASImage,
-                                             100, ASIMAGE_QUALITY_DEFAULT);
-          if (tmp)
-            {
-              destroy_asimage (&background);
-              background = tmp;
-            }
-        }
-#  endif
-
-      if (render_asim (background, as_tint))
+      if (render_asim (background_flags))
         flags = flags & ~isInvalid;
-      if (background)
-        destroy_asimage (&background);
     }
   else if (background_flags && pmap_depth != target->depth)
     result = XGetImage (target->dpy, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, ZPixmap);

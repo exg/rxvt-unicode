@@ -58,7 +58,7 @@ struct bgPixmap_t
 # ifdef  BG_IMAGE_FROM_FILE
 #  ifdef HAVE_AFTERIMAGE
   ASImage *original_asim;
-  bool render_asim (ASImage *background, ARGB32 background_tint);
+  bool render_asim (unsigned long background_flags);
 #  endif
 
   enum {
