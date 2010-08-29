@@ -1299,6 +1299,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void create_windows (int argc, const char *const *argv);
   void get_colours ();
   void get_ourmods ();
+  void set_icon (const char *file);
   // main.C
   void tt_winch ();
   rxvt_term ();
