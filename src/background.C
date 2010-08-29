@@ -556,7 +556,6 @@ bgPixmap_t::render_asim (ASImage *background, ARGB32 background_tint)
         {
           /* if blending background and image - pixmap has to be sized same as target window */
           ASImageLayer *layers = create_image_layers (2);
-          ASImage *merged_im = NULL;
 
           layers[0].im = background;
           layers[0].clip_width = target_width;
