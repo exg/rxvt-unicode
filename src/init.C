@@ -1297,6 +1297,13 @@ rxvt_term::set_icon (const char *file)
   int w = im->width;
   int h = im->height;
 
+  if (!IN_RANGE_INC (w, 1, 32767) || !IN_RANGE_INC (h, 1, 32767))
+    {
+      rxvt_warn ("Icon image too big, continuing without.\n");
+      destroy_asimage (&im);
+      return;
+    }
+
   ASImage *result = scale_asimage (asv, im,
                                    w, h, ASA_ARGB32,
                                    100, ASIMAGE_QUALITY_DEFAULT);
