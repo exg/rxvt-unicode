@@ -676,21 +676,19 @@ bgPixmap_t::set_file (const char *file)
 
   if (*file)
     {
-#  ifdef HAVE_AFTERIMAGE
-      if (!target->asimman)
-        target->asimman = create_generic_imageman (target->rs[Rs_path]);
-
       if (const char *p = strchr (file, ';'))
         {
           size_t len = p - file;
           char *f = rxvt_temp_buf<char> (len + 1);
           memcpy (f, file, len);
           f[len] = '\0';
-          original_asim = get_asimage (target->asimman, f, 0xFFFFFFFF, 100);
+          file = f;
         }
-      else
-        original_asim = get_asimage (target->asimman, file, 0xFFFFFFFF, 100);
 
+#  ifdef HAVE_AFTERIMAGE
+      if (!target->asimman)
+        target->asimman = create_generic_imageman (target->rs[Rs_path]);
+      original_asim = get_asimage (target->asimman, file, 0xFFFFFFFF, 100);
       return original_asim;
 #  endif
     }
