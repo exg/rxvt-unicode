@@ -683,11 +683,10 @@ bgPixmap_t::set_file (const char *file)
       if (const char *p = strchr (file, ';'))
         {
           size_t len = p - file;
-          char *f = (char *)malloc (len + 1);
+          char *f = rxvt_temp_buf<char> (len + 1);
           memcpy (f, file, len);
           f[len] = '\0';
           original_asim = get_asimage (target->asimman, f, 0xFFFFFFFF, 100);
-          free (f);
         }
       else
         original_asim = get_asimage (target->asimman, file, 0xFFFFFFFF, 100);
