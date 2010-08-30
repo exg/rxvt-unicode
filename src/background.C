@@ -482,7 +482,7 @@ bgPixmap_t::render_asim (unsigned long background_flags)
   if (!(background_flags & transpPmapBlured) && (flags & blurNeeded) && background != NULL)
     {
       ASImage *tmp = blur_asimage_gauss (target->asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
-                                         (original_asim == NULL || tint == TINT_LEAVE_SAME)?ASA_XImage:ASA_ASImage,
+                                         (original_asim == NULL || tint == TINT_LEAVE_SAME) ? ASA_XImage : ASA_ASImage,
                                          100, ASIMAGE_QUALITY_DEFAULT);
       if (tmp)
         {
@@ -510,7 +510,7 @@ bgPixmap_t::render_asim (unsigned long background_flags)
     {
       if (h_align == rootAlign || v_align == rootAlign)
         {
-          target->get_window_origin(x, y);
+          target->get_window_origin (x, y);
           x = -x;
           y = -y;
         }
@@ -672,7 +672,7 @@ bgPixmap_t::render_asim (unsigned long background_flags)
           pmap_height = new_pmap_height;
           pmap_depth = target->depth;
         }
-      /* fill with background color ( if result's not completely overlapping it)*/
+      /* fill with background color (if result's not completely overlapping it) */
       gcv.foreground = target->pix_colors[Color_bg];
       gc = XCreateGC (target->dpy, target->vt, GCForeground, &gcv);
 
