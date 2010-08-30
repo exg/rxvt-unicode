@@ -465,11 +465,16 @@ if test x$support_afterimage = xyes; then
     fi
     if test "x$support_afterimage" = "xyes"; then
       AC_MSG_RESULT($AFTERIMAGE_LIBS)
+      AC_DEFINE(HAVE_AFTERIMAGE, 1, Define if you want to use libAfterImage for image processing)
+      AC_DEFINE(BG_IMAGE_FROM_FILE, 1, Define if you want to have sexy-looking background pixmaps.)
     else
       AC_MSG_RESULT(no)
     fi
   fi
 fi
+
+AC_SUBST(AFTERIMAGE_CFLAGS)
+AC_SUBST(AFTERIMAGE_LIBS)
 
 dnl# --------------------------------------------------------------------------
 dnl# CHECKING FOR HEADER FILES
@@ -649,10 +654,6 @@ fi
 if test x$support_mouseslipwheel = xyes; then
   AC_DEFINE(MOUSE_SLIP_WHEELING, 1, Define to have CTRL cause wheel events to accelerate scrolling. Release CTRL to halt scrolling)
 fi
-if test x$support_afterimage = xyes; then
-  AC_DEFINE(HAVE_AFTERIMAGE, 1, Define if you want to use libAfterImage for image processing)
-  AC_DEFINE(BG_IMAGE_FROM_FILE, 1, Define if you want to have sexy-looking background pixmaps. Needs libAfterImage)
-fi
 
 dnl if test x$support_afterstep = xyes; then
 dnl   AC_DEFINE(AFTERSTEP_INTEGRATION, 1, Define if you want to integrate with AfterStep window manager)
@@ -744,11 +745,6 @@ AC_SUBST(PERL)
 AC_SUBST(IF_PERL)
 AC_SUBST(PERL_O)
 
-
-dnl# Attack the libs
-
-AC_SUBST(AFTERIMAGE_CFLAGS)
-AC_SUBST(AFTERIMAGE_LIBS)
 
 AC_CONFIG_FILES([Makefile \
 doc/Makefile \
