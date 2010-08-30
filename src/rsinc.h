@@ -118,5 +118,7 @@
 #ifdef HAVE_AFTERIMAGE
   def (blendtype)
   def (blurradius)
+#endif
+#ifdef ENABLE_EWMH
   def (iconfile)
 #endif
