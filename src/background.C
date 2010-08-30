@@ -1175,7 +1175,6 @@ bgPixmap_t::render ()
     }
 # endif
 
-  XImage *result = NULL;
 # ifdef HAVE_AFTERIMAGE
   if (original_asim
       || (background_flags & transpTransformations) != (flags & transpTransformations))
@@ -1183,18 +1182,18 @@ bgPixmap_t::render ()
       if (render_asim (background_flags))
         flags = flags & ~isInvalid;
     }
-  else if (background_flags && pmap_depth != target->depth)
-    result = XGetImage (target->dpy, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, ZPixmap);
+# endif
 
-# elif !XFT /* our own client-side tinting */
-
-  /* ATTENTION: We ASSUME that XFT will let us do all the tinting necessary server-side.
-     This may need to be changed in need_client_side_rendering() logic is altered !!! */
+  XImage *result = NULL;
 
   if (background_flags && (flags & isInvalid))
     {
       result = XGetImage (target->dpy, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, ZPixmap);
 
+#  if !defined(HAVE_AFTERIMAGE) && !XFT
+      /* our own client-side tinting */
+      /* ATTENTION: We ASSUME that XFT will let us do all the tinting necessary server-side.
+         This may need to be changed in need_client_side_rendering() logic is altered !!! */
       if (result != NULL && !(background_flags & transpPmapTinted) && (flags & tintNeeded))
         {
           rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
@@ -1202,8 +1201,8 @@ bgPixmap_t::render ()
             tint.get (c);
           ShadeXImage (target, result, shade, c.r, c.g, c.b);
         }
+#  endif
     }
-# endif /* HAVE_AFTERIMAGE */
 
   if (result)
     {
