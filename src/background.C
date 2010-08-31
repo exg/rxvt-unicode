@@ -447,7 +447,7 @@ bgPixmap_t::set_geometry (const char *geom)
 
 #  ifdef HAVE_AFTERIMAGE
 bool
-bgPixmap_t::render_asim (unsigned long background_flags)
+bgPixmap_t::render_image (unsigned long background_flags)
 {
   if (target == NULL)
     return false;
@@ -1174,11 +1174,11 @@ bgPixmap_t::render ()
     }
 # endif
 
-# ifdef HAVE_AFTERIMAGE
-  if (original_asim
+# ifdef BG_IMAGE_FROM_FILE
+  if (have_image
       || (background_flags & transpTransformations) != (flags & transpTransformations))
     {
-      if (render_asim (background_flags))
+      if (render_image (background_flags))
         flags = flags & ~isInvalid;
     }
 # endif
