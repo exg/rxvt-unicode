@@ -61,6 +61,8 @@ struct bgPixmap_t
   bool render_asim (unsigned long background_flags);
 #  endif
 
+  bool have_image;
+
   enum {
     noScale = 0,
     windowScale = 100,

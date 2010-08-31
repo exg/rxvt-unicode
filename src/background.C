@@ -99,6 +99,7 @@ bgPixmap_t::bgPixmap_t ()
   original_asim = NULL;
 #endif
 #ifdef BG_IMAGE_FROM_FILE
+  have_image = false;
   h_scale = v_scale = 0;
   h_align = v_align = 0;
 #endif
@@ -129,9 +130,7 @@ bgPixmap_t::window_size_sensitive ()
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
-#  ifdef HAVE_AFTERIMAGE
-  if (original_asim)
-#  endif
+  if (have_image)
     {
       if (h_scale != 0 || v_scale != 0
           || h_align != 0 || v_align != 0)
@@ -151,9 +150,7 @@ bgPixmap_t::window_position_sensitive ()
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
-#  ifdef HAVE_AFTERIMAGE
-  if (original_asim)
-#  endif
+  if (have_image)
     {
       if (h_align == rootAlign || v_align == rootAlign)
         return true;
@@ -727,7 +724,9 @@ bgPixmap_t::set_file (const char *file)
       if (!target->asimman)
         target->asimman = create_generic_imageman (target->rs[Rs_path]);
       original_asim = get_asimage (target->asimman, file, 0xFFFFFFFF, 100);
-      return original_asim;
+      if (original_asim)
+        have_image = true;
+      return have_image;
 #  endif
     }
 
