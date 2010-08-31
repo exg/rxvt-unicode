@@ -443,8 +443,8 @@ bgPixmap_t::set_geometry (const char *geom)
       changed++;
     }
 
-//fprintf (stderr, "flags = %lX, scale = %ux%u, align=%+d%+d\n",
-//         flags, h_scale, v_scale, h_align, v_align);
+  //fprintf (stderr, "flags = %lX, scale = %ux%u, align=%+d%+d\n",
+  //         flags, h_scale, v_scale, h_align, v_align);
   return (changed > 0);
 }
 
@@ -806,9 +806,9 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
     {
       if ((c.r > 0x000700 || c.g > 0x000700 || c.b > 0x000700)
           && (c.r < 0x00f700 || c.g < 0x00f700 || c.b < 0x00f700))
-      {
-        flags |= bgPixmap_t::tintNeeded;
-      }
+        {
+          flags |= bgPixmap_t::tintNeeded;
+        }
     }
 
   if (flags & bgPixmap_t::tintNeeded)
@@ -847,8 +847,8 @@ bgPixmap_t::unset_tint ()
 
   if (new_flags != (flags & tintFlags))
     {
-     flags = (flags&~tintFlags)|new_flags;
-     return true;
+      flags = (flags&~tintFlags)|new_flags;
+      return true;
     }
 
   return false;
@@ -943,7 +943,7 @@ bgPixmap_t::make_transparency_pixmap ()
       attr.backing_store = Always;
       attr.event_mask = ExposureMask;
       attr.override_redirect = True;
-  	  src = XCreateWindow (dpy, root, sx, sy, window_width, window_height, 0,
+      src = XCreateWindow (dpy, root, sx, sy, window_width, window_height, 0,
                            CopyFromParent, CopyFromParent, CopyFromParent,
                            CWBackPixmap|CWBackingStore|CWOverrideRedirect|CWEventMask,
                            &attr);
@@ -977,13 +977,13 @@ bgPixmap_t::make_transparency_pixmap ()
           //fprintf (stderr, "%s:%d: ev_count = %d\n", __FUNCTION__, __LINE__, ev_count);
         }
 
-        if (!success)
-          {
-            XFreePixmap (dpy, tiled_root_pmap);
-            tiled_root_pmap = None;
-          }
-        else
-          result |= transpPmapTiled;
+      if (!success)
+        {
+          XFreePixmap (dpy, tiled_root_pmap);
+          tiled_root_pmap = None;
+        }
+      else
+        result |= transpPmapTiled;
     }
   else
     {
@@ -1110,7 +1110,7 @@ bgPixmap_t::make_transparency_pixmap ()
 #   endif
 #  endif
                 }
-             }
+            }
         } /* server side rendering completed */
 
       if (pixmap)
@@ -1170,7 +1170,7 @@ bgPixmap_t::render ()
       if (background_flags == 0)
         return false;
       else if ((background_flags & transpTransformations) == (flags & transpTransformations)
-                && pmap_depth == target->depth)
+               && pmap_depth == target->depth)
         flags = flags & ~isInvalid;
     }
 # endif
@@ -1244,7 +1244,7 @@ bgPixmap_t::render ()
           flags = flags & ~isInvalid;
         }
 
-        XDestroyImage (result);
+      XDestroyImage (result);
     }
 
   if (flags & isInvalid)
