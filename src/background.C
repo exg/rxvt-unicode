@@ -644,22 +644,23 @@ bgPixmap_t::render_image (unsigned long background_flags)
     }
   TIMING_TEST_PRINT_RESULT (asim);
 
-  if (pixmap)
-    {
-      if (result == NULL
-          || pmap_width != new_pmap_width
-          || pmap_height != new_pmap_height
-          || pmap_depth != target->depth)
-        {
-          XFreePixmap (target->dpy, pixmap);
-          pixmap = None;
-        }
-    }
+  bool ret = false;
 
   if (result)
     {
       XGCValues gcv;
       GC gc;
+
+      if (pixmap)
+        {
+          if (pmap_width != new_pmap_width
+              || pmap_height != new_pmap_height
+              || pmap_depth != target->depth)
+            {
+              XFreePixmap (target->dpy, pixmap);
+              pixmap = None;
+            }
+        }
 
       /* create Pixmap */
       if (pixmap == None)
@@ -695,12 +696,14 @@ bgPixmap_t::render_image (unsigned long background_flags)
 
       XFreeGC (target->dpy, gc);
       TIMING_TEST_PRINT_RESULT (asim);
+
+      ret = true;
     }
 
   if (background)
     destroy_asimage (&background);
 
-  return true;
+  return ret;
 }
 #  endif /* HAVE_AFTERIMAGE */
 
