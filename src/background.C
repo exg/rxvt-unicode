@@ -54,33 +54,33 @@
  * The following table shows the valid geometry strings and their
  * effects on the background image :
  *
- * WxH+X+Y  	Set scaling to W% by H%, and position to X% by Y%.
+ * WxH+X+Y    Set scaling to W% by H%, and position to X% by Y%.
  *            W and H are percentages of the terminal window size.
  *            X and Y are also percentages; e.g., +50+50 centers
  *            the image in the window.
- * WxH+X 	    Assumes Y == X
- * WxH 	      Assumes Y == X == 50 (centers the image)
- * W+X+Y 	    Assumes H == W
- * W+X 	      Assumes H == W and Y == X
- * W 	        Assumes H == W and Y == X == 50
+ * WxH+X      Assumes Y == X
+ * WxH        Assumes Y == X == 50 (centers the image)
+ * W+X+Y      Assumes H == W
+ * W+X        Assumes H == W and Y == X
+ * W          Assumes H == W and Y == X == 50
  *
  * Adjusting position only :
- * =+X+Y 	    Set position to X% by Y% (absolute).
- * =+X 	      Set position to X% by X%.
- * +X+Y 	    Adjust position horizontally X% and vertically Y%
+ * =+X+Y      Set position to X% by Y% (absolute).
+ * =+X        Set position to X% by X%.
+ * +X+Y       Adjust position horizontally X% and vertically Y%
  *            from current position (relative).
- * +X   	    Adjust position horizontally X% and vertically X%
+ * +X         Adjust position horizontally X% and vertically X%
  *            from current position.
  *
  * Adjusting scale only :
- * Wx0 	      Multiply horizontal scaling factor by W%
- * 0xH 	      Multiply vertical scaling factor by H%
- * 0x0 	      No scaling (show image at normal size).
+ * Wx0        Multiply horizontal scaling factor by W%
+ * 0xH        Multiply vertical scaling factor by H%
+ * 0x0        No scaling (show image at normal size).
  *
  * Pixmap Operations : (should be prepended by a colon)
- * tile 	    Tile image. Scaling/position modifiers above will affect
+ * tile       Tile image. Scaling/position modifiers above will affect
  *            the tile size and origin.
- * propscale 	When scaling, scale proportionally. That is, maintain the
+ * propscale  When scaling, scale proportionally. That is, maintain the
  *            proper aspect ratio for the image. Any portion of the
  *            background not covered by the image is filled with the
  *            current background color.
