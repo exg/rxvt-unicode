@@ -759,9 +759,9 @@ bgPixmap_t::set_blur_radius (const char *geom)
   int junk;
   int geom_flags = XParseGeometry (geom, &junk, &junk, &hr, &vr);
 
-  if (!(geom_flags&WidthValue))
+  if (!(geom_flags & WidthValue))
     hr = 1;
-  if (!(geom_flags&HeightValue))
+  if (!(geom_flags & HeightValue))
     vr = hr;
 
   if (h_blurRadius != hr)
@@ -781,7 +781,7 @@ bgPixmap_t::set_blur_radius (const char *geom)
   else
     flags |= blurNeeded;
 
-  return (changed>0);
+  return (changed > 0);
 }
 
 static inline unsigned long
@@ -849,7 +849,7 @@ bgPixmap_t::unset_tint ()
 
   if (new_flags != (flags & tintFlags))
     {
-      flags = (flags&~tintFlags)|new_flags;
+      flags = (flags & ~tintFlags) | new_flags;
       return true;
     }
 
