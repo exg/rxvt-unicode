@@ -634,6 +634,11 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   set_output_threshold (OUTPUT_LEVEL_WARNING);
 #endif
 
+#ifdef HAVE_PIXBUF
+  g_type_init ();
+  gdk_pixbuf_xlib_init (dpy, display->screen);
+#endif
+
 #if ENABLE_PERL
   if (!rs[Rs_perl_ext_1])
     rs[Rs_perl_ext_1] = "default";
@@ -1333,6 +1338,63 @@ rxvt_term::set_icon (const char *file)
     rxvt_warn ("Memory allocation for icon hint failed, continuing without.\n");
 
   destroy_asimage (&result);
+#endif
+
+#ifdef HAVE_PIXBUF
+  GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (file, NULL);
+  if (!pixbuf)
+    {
+      rxvt_warn ("Loading image icon failed, continuing without.\n");
+      return;
+    }
+
+  unsigned int w = gdk_pixbuf_get_width (pixbuf);
+  unsigned int h = gdk_pixbuf_get_height (pixbuf);
+
+  if (!IN_RANGE_INC (w, 1, 16383) || !IN_RANGE_INC (h, 1, 16383))
+    {
+      rxvt_warn ("Icon image too big, continuing without.\n");
+      g_object_unref (pixbuf);
+      return;
+    }
+
+  if (long *buffer = (long *)malloc ((2 + w * h) * sizeof (long)))
+    {
+      int rowstride = gdk_pixbuf_get_rowstride (pixbuf);
+      unsigned char *row = gdk_pixbuf_get_pixels (pixbuf);
+      int channels = gdk_pixbuf_get_n_channels (pixbuf);
+
+      buffer [0] = w;
+      buffer [1] = h;
+      for (int i = 0; i < h; i++)
+        {
+          for (int j = 0; j < w; j++)
+            {
+              unsigned char *pixel = row + j * channels;
+              long value;
+
+              if (channels == 4)
+                value = pixel[3];
+              else
+                value = (unsigned char)0x00ff;
+
+              value = (value << 8) + pixel[0];
+              value = (value << 8) + pixel[1];
+              value = (value << 8) + pixel[2];
+              buffer[(i * w + j) + 2] = value;
+            }
+
+          row += rowstride;
+        }
+
+      XChangeProperty (dpy, parent[0], xa[XA_NET_WM_ICON], XA_CARDINAL, 32,
+                       PropModeReplace, (const unsigned char *) buffer, 2 + w * h);
+      free (buffer);
+    }
+  else
+    rxvt_warn ("Memory allocation for icon hint failed, continuing without.\n");
+
+  g_object_unref (pixbuf);
 #endif
 }
 

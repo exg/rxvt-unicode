@@ -192,6 +192,9 @@ optList[] = {
 #ifdef BG_IMAGE_FROM_FILE
               RSTRG (Rs_path, "path", "search path"),
               STRG (Rs_backgroundPixmap, "backgroundPixmap", "pixmap", "file[;geom]", "background pixmap"),
+# if ENABLE_EWMH
+              STRG (Rs_iconfile, "iconFile", "icon", "file", "path to application icon image"),
+# endif
 #endif
               /* fonts: command-line option = resource name */
               STRG (Rs_font, "font", "fn", "fontname", "normal text font"),
@@ -267,9 +270,6 @@ optList[] = {
 #ifdef HAVE_AFTERIMAGE
               STRG (Rs_blendtype, "blendType", "blt", "string", "background image blending type - alpha, tint, etc..."),
               STRG (Rs_blurradius, "blurRadius", "blr", "HxV", "gaussian blur radii to apply to the root background"),
-# if ENABLE_EWMH
-              STRG (Rs_iconfile, "iconFile", "icon", "file", "path to application icon image"),
-# endif
 #endif
               INFO ("e", "command arg ...", "command to execute")
             };

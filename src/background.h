@@ -11,6 +11,10 @@
 # undef max
 #endif
 
+#ifdef HAVE_PIXBUF
+#include <gdk-pixbuf-xlib/gdk-pixbuf-xlib.h>
+#endif
+
 #if defined(BG_IMAGE_FROM_FILE) || defined(ENABLE_TRANSPARENCY)
 # define HAVE_BG_PIXMAP 1 /* to simplify further usage */
 struct bgPixmap_t
@@ -58,6 +62,10 @@ struct bgPixmap_t
 # ifdef  BG_IMAGE_FROM_FILE
 #  ifdef HAVE_AFTERIMAGE
   ASImage *original_asim;
+#  endif
+
+#  ifdef HAVE_PIXBUF
+  GdkPixbuf *pixbuf;
 #  endif
 
   bool render_image (unsigned long background_flags);

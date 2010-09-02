@@ -250,6 +250,12 @@ dnl   [if test x$enableval = xyes -o x$enableval = xno; then
 dnl     support_afterstep=$enableval
 dnl   fi])
 
+AC_ARG_ENABLE(pixbuf,
+  [  --enable-pixbuf         enable integration with gdk-pixbuf for background images],
+  [if test x$enableval = xyes -o x$enableval = xno; then
+    support_pixbuf=$enableval
+  fi])
+
 AC_ARG_ENABLE(transparency,
   [  --enable-transparency   enable transparent backgrounds],
   [if test x$enableval = xyes -o x$enableval = xno; then
@@ -435,6 +441,32 @@ dnl# --------------------------------------------------------------------------
 AC_PATH_PROG(TIC, tic, :)
 
 AC_PATH_XTRA
+
+PIXBUF_CFLAGS=
+PIXBUF_LIBS=
+
+if test x$support_pixbuf = xyes; then
+  support_pixbuf=no
+  AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+  AC_MSG_CHECKING(for gdk-pixbuf)
+  if test $PKG_CONFIG != no && $PKG_CONFIG --exists gdk-pixbuf-xlib-2.0; then
+    PIXBUF_CFLAGS="`$PKG_CONFIG gdk-pixbuf-xlib-2.0 --cflags`"
+    PIXBUF_LIBS="`$PKG_CONFIG gdk-pixbuf-xlib-2.0 --libs`"
+    support_pixbuf=yes
+  fi
+
+  if test x$support_pixbuf = xyes; then
+    AC_MSG_RESULT(ok)
+    support_afterimage=no
+    AC_DEFINE(HAVE_PIXBUF, 1, Define if you want to use gdk-pixbuf for image processing)
+    AC_DEFINE(BG_IMAGE_FROM_FILE, 1, Define if you want to have sexy-looking background pixmaps.)
+  else
+    AC_MSG_RESULT(no)
+  fi
+fi
+
+AC_SUBST(PIXBUF_CFLAGS)
+AC_SUBST(PIXBUF_LIBS)
 
 AFTERIMAGE_CFLAGS=
 AFTERIMAGE_LIBS=

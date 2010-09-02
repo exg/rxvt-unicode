@@ -98,6 +98,9 @@ bgPixmap_t::bgPixmap_t ()
 #ifdef HAVE_AFTERIMAGE
   original_asim = NULL;
 #endif
+#ifdef HAVE_PIXBUF
+  pixbuf = NULL;
+#endif
 #ifdef BG_IMAGE_FROM_FILE
   have_image = false;
   h_scale = v_scale = 0;
@@ -115,6 +118,11 @@ bgPixmap_t::destroy ()
 #ifdef HAVE_AFTERIMAGE
   if (original_asim)
     safe_asimage_destroy (original_asim);
+#endif
+
+#ifdef HAVE_PIXBUF
+  if (pixbuf)
+    g_object_unref (pixbuf);
 #endif
 
   if (pixmap && target)
@@ -707,6 +715,155 @@ bgPixmap_t::render_image (unsigned long background_flags)
 }
 #  endif /* HAVE_AFTERIMAGE */
 
+#  ifdef HAVE_PIXBUF
+bool
+bgPixmap_t::render_image (unsigned long background_flags)
+{
+  if (target == NULL)
+    return false;
+
+  if (!pixbuf)
+    return false;
+
+  // TODO: add alpha blending
+  if (background_flags)
+    return false;
+
+  GdkPixbuf *result;
+
+  int image_width = gdk_pixbuf_get_width (pixbuf);
+  int image_height = gdk_pixbuf_get_height (pixbuf);
+
+  int target_width    = target->szHint.width;
+  int target_height   = target->szHint.height;
+  int new_pmap_width  = target_width;
+  int new_pmap_height = target_height;
+
+  int x = 0;
+  int y = 0;
+  int w = h_scale * target_width / 100;
+  int h = v_scale * target_height / 100;
+
+  if (h_align == rootAlign || v_align == rootAlign)
+    {
+      target->get_window_origin (x, y);
+      x = -x;
+      y = -y;
+    }
+
+  if (h_align != rootAlign)
+    x = make_align_position (h_align, target_width, w > 0 ? w : image_width);
+
+  if (v_align != rootAlign)
+    y = make_align_position (v_align, target_height, h > 0 ? h : image_height);
+
+  if (x >= target_width
+      || y >= target_height
+      || (w > 0 && x + w <= 0)
+      || (h > 0 && y + h <= 0))
+    return false;
+
+  result = pixbuf;
+
+  if ((w > 0 && w != image_width)
+      || (h > 0 && h != image_height))
+    {
+      result = gdk_pixbuf_scale_simple (pixbuf,
+                                        w > 0 ? w : image_width,
+                                        h > 0 ? h : image_height,
+                                        GDK_INTERP_BILINEAR);
+    }
+
+  bool ret = false;
+
+  if (result)
+    {
+      XGCValues gcv;
+      GC gc;
+
+      image_width = gdk_pixbuf_get_width (result);
+      image_height = gdk_pixbuf_get_height (result);
+
+      if (h_scale == 0)
+        new_pmap_width = min (image_width, target_width);
+      if (v_scale == 0)
+        new_pmap_height = min (image_height, target_height);
+
+      if (pixmap)
+        {
+          if (pmap_width != new_pmap_width
+              || pmap_height != new_pmap_height
+              || pmap_depth != target->depth)
+            {
+              XFreePixmap (target->dpy, pixmap);
+              pixmap = None;
+            }
+        }
+
+      if (pixmap == None)
+        {
+          pixmap = XCreatePixmap (target->dpy, target->vt, new_pmap_width, new_pmap_height, target->depth);
+          pmap_width = new_pmap_width;
+          pmap_height = new_pmap_height;
+          pmap_depth = target->depth;
+        }
+
+      gcv.foreground = target->pix_colors[Color_bg];
+      gc = XCreateGC (target->dpy, target->vt, GCForeground, &gcv);
+
+      if (h_scale == 0 || v_scale == 0)
+        {
+          Pixmap tile = XCreatePixmap (target->dpy, target->vt, image_width, image_height, target->depth);
+          gdk_pixbuf_xlib_render_to_drawable (result, tile, gc,
+                                              0, 0,
+                                              0, 0,
+                                              image_width, image_height,
+                                              XLIB_RGB_DITHER_NONE,
+                                              0, 0);
+
+          gcv.tile = tile;
+          gcv.fill_style = FillTiled;
+          gcv.ts_x_origin = x;
+          gcv.ts_y_origin = y;
+          XChangeGC (target->dpy, gc, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
+
+          XFillRectangle (target->dpy, pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
+          XFreePixmap (target->dpy, tile);
+        }
+      else
+        {
+          int src_x, src_y, dst_x, dst_y;
+          int dst_width, dst_height;
+
+          src_x = make_clip_rectangle (x, image_width , new_pmap_width , dst_x, dst_width );
+          src_y = make_clip_rectangle (y, image_height, new_pmap_height, dst_y, dst_height);
+
+          if (dst_x > 0 || dst_y > 0
+              || dst_x + dst_width < new_pmap_width
+              || dst_y + dst_height < new_pmap_height)
+            XFillRectangle (target->dpy, pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
+
+          if (dst_x < new_pmap_width && dst_y < new_pmap_height)
+            gdk_pixbuf_xlib_render_to_drawable (result, pixmap, gc,
+                                                src_x, src_y,
+                                                dst_x, dst_y,
+                                                dst_width, dst_height,
+                                                XLIB_RGB_DITHER_NONE,
+                                                0, 0);
+        }
+
+      if (result != pixbuf)
+        g_object_unref (result);
+
+      XFreeGC (target->dpy, gc);
+
+      ret = true;
+    }
+
+  return ret;
+}
+#  endif /* HAVE_PIXBUF */
+
 bool
 bgPixmap_t::set_file (const char *file)
 {
@@ -728,6 +885,13 @@ bgPixmap_t::set_file (const char *file)
         target->asimman = create_generic_imageman (target->rs[Rs_path]);
       original_asim = get_asimage (target->asimman, file, 0xFFFFFFFF, 100);
       if (original_asim)
+        have_image = true;
+      return have_image;
+#  endif
+
+#  ifdef HAVE_PIXBUF
+      pixbuf = gdk_pixbuf_new_from_file (file, NULL);
+      if (pixbuf)
         have_image = true;
       return have_image;
 #  endif
