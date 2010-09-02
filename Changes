@@ -20,6 +20,8 @@ TODO: perl-shell-window? perl-unix-socket?
 
 TODO:        - upgrade to libev-4.00.
 
+	- add support for using gdk-pixbuf as image backend. blending and
+	  blurring are not supported (Emanuele Giaquinta).
 	- new perl extension "confirm-paste" (Emanuele Giaquinta).
 	- new on_tt_paste perl hook and tt_paste perl binding (Emanuele Giaquinta).
 	- new on_bell perl hook (Emanuele Giaquinta).
