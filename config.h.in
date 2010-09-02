@@ -1,7 +1,6 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* Define if you want to have sexy-looking background pixmaps. Needs
-   libAfterImage */
+/* Define if you want to have sexy-looking background pixmaps. */
 #undef BG_IMAGE_FROM_FILE
 
 /* clone device filename */
@@ -105,6 +104,9 @@
 
 /* "" */
 #undef HAVE_OPENPTY
+
+/* Define if you want to use gdk-pixbuf for image processing */
+#undef HAVE_PIXBUF
 
 /* Define to 1 if you have the `poll' function. */
 #undef HAVE_POLL
