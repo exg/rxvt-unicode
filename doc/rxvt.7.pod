@@ -2361,7 +2361,7 @@ SVG, TIFF, GIF, XPM, BMP, ICO, XCF, TGA and AfterStep image XML
 (L<http://www.afterstep.org/visualdoc.php?show=asimagexml>).
 
 This option also adds such eye candy as blending an image over the root
-background, as well as dynamic scaling and bluring of background images.
+background, as well as dynamic scaling and blurring of background images.
 
 Note that with this option enabled, @@RXVT_NAME@@'s memory footprint might
 increase by a few megabytes even if no extra features are used (mostly due
