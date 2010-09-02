@@ -230,7 +230,7 @@ static inline int
 make_align_position (int align, int window_size, int image_size)
 {
   int diff = window_size - image_size;
-  int smaller = MIN (image_size,window_size);
+  int smaller = min (image_size, window_size);
 
   if (align >= 0 && align <= 50)
     return diff * align / 100;
