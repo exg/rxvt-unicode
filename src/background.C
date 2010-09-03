@@ -567,18 +567,17 @@ bgPixmap_t::render_image (unsigned long background_flags)
 
       if (background == NULL)
         {
-          /* if tiling - pixmap has to be sized exactly as the image,
-             but there is no need to make it bigger than the window! */
-          if (h_scale == 0)
-            new_pmap_width = min (result->width, target_width);
-          if (v_scale == 0)
-            new_pmap_height = min (result->height, target_height);
-          /* we also need to tile our image in one or both directions */
           if (h_scale == 0 || v_scale == 0)
             {
+              /* if tiling - pixmap has to be sized exactly as the image,
+                 but there is no need to make it bigger than the window! */
+              new_pmap_width = min (result->width, target_width);
+              new_pmap_height = min (result->height, target_height);
+
+              /* we also need to tile our image in both directions */
               ASImage *tmp = tile_asimage (target->asv, result,
-                                           (h_scale > 0) ? 0 : (int)result->width - x,
-                                           (v_scale > 0) ? 0 : (int)result->height - y,
+                                           (int)result->width - x,
+                                           (int)result->height - y,
                                            new_pmap_width,
                                            new_pmap_height,
                                            TINT_LEAVE_SAME, ASA_XImage,
@@ -686,8 +685,11 @@ bgPixmap_t::render_image (unsigned long background_flags)
       int dst_width = result->width, dst_height = result->height;
       if (background == NULL)
         {
-          if (h_scale > 0) src_x = make_clip_rectangle (x, result->width , new_pmap_width , dst_x, dst_width );
-          if (v_scale > 0) src_y = make_clip_rectangle (y, result->height, new_pmap_height, dst_y, dst_height);
+          if (!(h_scale == 0 || v_scale == 0))
+            {
+              src_x = make_clip_rectangle (x, result->width , new_pmap_width , dst_x, dst_width );
+              src_y = make_clip_rectangle (y, result->height, new_pmap_height, dst_y, dst_height);
+            }
 
           if (dst_x > 0 || dst_y > 0
               || dst_x + dst_width < new_pmap_width
