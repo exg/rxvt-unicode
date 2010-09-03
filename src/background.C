@@ -786,10 +786,11 @@ bgPixmap_t::render_image (unsigned long background_flags)
       image_width = gdk_pixbuf_get_width (result);
       image_height = gdk_pixbuf_get_height (result);
 
-      if (h_scale == 0)
-        new_pmap_width = min (image_width, target_width);
-      if (v_scale == 0)
-        new_pmap_height = min (image_height, target_height);
+      if (h_scale == 0 || v_scale == 0)
+        {
+          new_pmap_width = min (image_width, target_width);
+          new_pmap_height = min (image_height, target_height);
+        }
 
       if (pixmap)
         {
