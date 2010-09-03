@@ -186,7 +186,7 @@ resource I<blurRadius>.
 
 =item B<-icon> I<file>
 
-Compile I<afterimage>: Use the specified image as application icon. This
+Compile I<afterimage> or I<pixbuf>: Use the specified image as application icon. This
 is used by many window managers, taskbars and pagers to represent the
 application window; resource I<iconFile>.
 
@@ -200,7 +200,7 @@ Window foreground colour; resource B<foreground>.
 
 =item B<-pixmap> I<file[;geom[:op1][:op2][...]]>
 
-Compile I<afterimage>: Specify image file for the background and also
+Compile I<afterimage> or I<pixbuf>: Specify image file for the background and also
 optionally specify its scaling with a geometry string. Note you may need to
 add quotes to avoid special shell interpretation of the C<;> in the
 command-line; for more details see resource B<backgroundPixmap>.

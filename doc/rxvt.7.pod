@@ -249,7 +249,7 @@ your picture with gimp or any other tool:
    convert wallpaper.jpg -blur 20x20 -modulate 30 background.jpg
    @@URXVT_NAME@@ -pixmap "background.jpg;:root"
 
-That works. If you think it doesn't, you lack AfterImage support, or you
+That works. If you think it doesn't, you lack libAfterImage or GDK-PixBuf support, or you
 are unable to read.
 
 3. Use an ARGB visual:
@@ -2007,7 +2007,7 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 	B<< C<Ps = 13> >>	Change colour of mouse foreground to B<< C<Pt> >>
 	B<< C<Ps = 17> >>	Change background colour of highlight characters to B<< C<Pt> >>
 	B<< C<Ps = 19> >>	Change foreground colour of highlight characters to B<< C<Pt> >>
-	B<< C<Ps = 20> >>	Change background pixmap parameters (see section BACKGROUND IMAGE) (Compile AfterImage).
+	B<< C<Ps = 20> >>	Change background pixmap parameters (see section BACKGROUND IMAGE) (Compile afterimage or pixbuf).
 	B<< C<Ps = 39> >>	Change default foreground colour to B<< C<Pt> >>. [deprecated, use 10]
 	B<< C<Ps = 46> >>	Change Log File to B<< C<Pt> >> I<unimplemented>
 	B<< C<Ps = 49> >>	Change default background colour to B<< C<Pt> >>. [deprecated, use 11]
@@ -2368,6 +2368,12 @@ Note that with this option enabled, @@RXVT_NAME@@'s memory footprint might
 increase by a few megabytes even if no extra features are used (mostly due
 to third-party libraries used by libAI). Memory footprint may somewhat be
 lowered if libAfterImage is configured without support for SVG.
+
+=item --enable-pixbuf (default: off)
+
+Add support for GDK-PixBuf to be used for background images.
+It adds support for many file formats including JPG, PNG,
+TIFF, GIF, XPM, BMP, ICO and TGA.
 
 =item --enable-transparency (default: on)
 
