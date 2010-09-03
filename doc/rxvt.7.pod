@@ -2355,13 +2355,14 @@ F<lastlogin>) at start of rxvt execution.  This option requires
 
 =item --enable-afterimage (default: on)
 
-Add support for libAfterImage to be used for transparency and background
+Add support for libAfterImage to be used for background
 images. It adds support for many file formats including JPG, PNG,
 SVG, TIFF, GIF, XPM, BMP, ICO, XCF, TGA and AfterStep image XML
 (L<http://www.afterstep.org/visualdoc.php?show=asimagexml>).
 
-This option also adds such eye candy as blending an image over the root
-background, as well as dynamic scaling and blurring of background images.
+This option also adds the possibility, when transparency is enabled,
+of blending an image over the root background and blurring the root
+background.
 
 Note that with this option enabled, @@RXVT_NAME@@'s memory footprint might
 increase by a few megabytes even if no extra features are used (mostly due
