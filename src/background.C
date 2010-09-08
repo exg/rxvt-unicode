@@ -453,6 +453,29 @@ bgPixmap_t::set_geometry (const char *geom)
   return (changed > 0);
 }
 
+void
+bgPixmap_t::get_image_geometry (int image_width, int image_height, int &w, int &h, int &x, int &y)
+{
+  int target_width = target->szHint.width;
+  int target_height = target->szHint.height;
+
+  w = h_scale * target_width / 100;
+  h = v_scale * target_height / 100;
+
+  if (h_align == rootAlign || v_align == rootAlign)
+    {
+      target->get_window_origin (x, y);
+      x = -x;
+      y = -y;
+    }
+
+  if (h_align != rootAlign)
+    x = make_align_position (h_align, target_width, w > 0 ? w : image_width);
+
+  if (v_align != rootAlign)
+    y = make_align_position (v_align, target_height, h > 0 ? h : image_height);
+}
+
 #  ifdef HAVE_AFTERIMAGE
 bool
 bgPixmap_t::render_image (unsigned long background_flags)
@@ -506,26 +529,13 @@ bgPixmap_t::render_image (unsigned long background_flags)
 
   int x = 0;
   int y = 0;
-  int w = h_scale * target_width / 100;
-  int h = v_scale * target_height / 100;
+  int w = 0;
+  int h = 0;
 
   TIMING_TEST_START (asim);
 
   if (original_asim)
-    {
-      if (h_align == rootAlign || v_align == rootAlign)
-        {
-          target->get_window_origin (x, y);
-          x = -x;
-          y = -y;
-        }
-
-      if (h_align != rootAlign)
-        x = make_align_position (h_align, target_width, w > 0 ? w : (int)original_asim->width);
-
-      if (v_align != rootAlign)
-        y = make_align_position (v_align, target_height, h > 0 ? h : (int)original_asim->height);
-    }
+    get_image_geometry (original_asim->width, original_asim->height, w, h, x, y);
 
   if (!original_asim
       || x >= target_width
@@ -743,21 +753,10 @@ bgPixmap_t::render_image (unsigned long background_flags)
 
   int x = 0;
   int y = 0;
-  int w = h_scale * target_width / 100;
-  int h = v_scale * target_height / 100;
+  int w = 0;
+  int h = 0;
 
-  if (h_align == rootAlign || v_align == rootAlign)
-    {
-      target->get_window_origin (x, y);
-      x = -x;
-      y = -y;
-    }
-
-  if (h_align != rootAlign)
-    x = make_align_position (h_align, target_width, w > 0 ? w : image_width);
-
-  if (v_align != rootAlign)
-    y = make_align_position (v_align, target_height, h > 0 ? h : image_height);
+  get_image_geometry (image_width, image_height, w, h, x, y);
 
   if (x >= target_width
       || y >= target_height

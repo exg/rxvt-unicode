@@ -68,6 +68,7 @@ struct bgPixmap_t
   GdkPixbuf *pixbuf;
 #  endif
 
+  void get_image_geometry (int image_width, int image_height, int &w, int &h, int &x, int &y);
   bool render_image (unsigned long background_flags);
   bool have_image;
 
