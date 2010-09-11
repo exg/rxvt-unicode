@@ -762,12 +762,10 @@ and the text.
 
 Use the specified image file for the background and also
 optionally specify its scaling with a geometry string B<WxH+X+Y>,
-(default C<0x0+50+50>) in which B<"W" / "H"> specify the
+(default C<100x100+50+50>) in which B<"W" / "H"> specify the
 horizontal/vertical scale (percent), and B<"X" / "Y"> locate the image
-centre (percent).  A scale of 0 displays the image with tiling. A scale
-of 1 displays the image without any scaling. A scale of 2 to 9 specifies
-an integer number of images in that direction. No image will be magnified
-beyond 10 times its original size. The maximum permitted scale is 1000.
+centre (percent).  A scale of 0 displays the image with tiling.
+The maximum permitted scale is 1000.
 Additional operations can be specified after colon B<:op1:op2...>.
 Supported operations are:
 
