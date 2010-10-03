@@ -389,11 +389,6 @@ bgPixmap_t::set_geometry (const char *geom)
                 }
               else if (CHECK_GEOM_OPS ("propscale"))
                 {
-                  if (w == 0 && h == 0)
-                    {
-                      w = windowScale;
-                      geom_flags |= WidthValue;
-                    }
                   new_flags |= propScale;
                 }
               else if (CHECK_GEOM_OPS ("hscale"))
@@ -458,8 +453,18 @@ bgPixmap_t::get_image_geometry (int image_width, int image_height, int &w, int &
   int target_width = target->szHint.width;
   int target_height = target->szHint.height;
 
-  w = h_scale * target_width / 100;
-  h = v_scale * target_height / 100;
+  if (flags & propScale)
+    {
+      float scale = (float)target_width / image_width;
+      min_it (scale, (float)target_height / image_height);
+      w = image_width * scale + 0.5;
+      h = image_height * scale + 0.5;
+    }
+  else
+    {
+      w = h_scale * target_width / 100;
+      h = v_scale * target_height / 100;
+    }
 
   if (h_align == rootAlign || v_align == rootAlign)
     {
