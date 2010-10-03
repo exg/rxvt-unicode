@@ -25,7 +25,8 @@ struct bgPixmap_t
   enum {
     geometrySet     = 1 <<  0,
     propScale       = 1 <<  1,
-    geometryFlags   = geometrySet | propScale,
+    rootAlign       = 1 <<  2,
+    geometryFlags   = geometrySet | propScale | rootAlign,
 
     tintSet         = 1 <<  8,
     tintNeeded      = 1 <<  9,
@@ -79,7 +80,6 @@ struct bgPixmap_t
     defaultScale = windowScale,
     centerAlign = 50,
     defaultAlign = centerAlign,
-    rootAlign = -10000
   };
 
   unsigned int h_scale, v_scale;/* percents of the window size */

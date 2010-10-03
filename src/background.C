@@ -159,7 +159,7 @@ bgPixmap_t::window_position_sensitive ()
 # ifdef BG_IMAGE_FROM_FILE
   if (have_image)
     {
-      if (h_align == rootAlign || v_align == rootAlign)
+      if (flags & rootAlign)
         return true;
     }
 # endif
@@ -209,13 +209,10 @@ check_set_align_value (int geom_flags, int flag, int &align, int new_value)
 {
   if (geom_flags & flag)
     {
-      if (new_value != bgPixmap_t::rootAlign)
-        {
-          if (new_value < -100)
-            new_value = -100;
-          else if (new_value > 200)
-            new_value = 200;
-        }
+      if (new_value < -100)
+        new_value = -100;
+      else if (new_value > 200)
+        new_value = 200;
       if (new_value != align)
         {
           align = new_value;
@@ -420,9 +417,9 @@ bgPixmap_t::set_geometry (const char *geom)
                 }
               else if (CHECK_GEOM_OPS ("root"))
                 {
+                  new_flags |= rootAlign;
                   w = h = noScale;
-                  x = y = rootAlign;
-                  geom_flags |= WidthValue|HeightValue|XValue|YValue;
+                  geom_flags |= WidthValue|HeightValue;
                 }
 #  undef CHECK_GEOM_OPS
 
@@ -466,18 +463,17 @@ bgPixmap_t::get_image_geometry (int image_width, int image_height, int &w, int &
       h = v_scale * target_height / 100;
     }
 
-  if (h_align == rootAlign || v_align == rootAlign)
+  if (flags & rootAlign)
     {
       target->get_window_origin (x, y);
       x = -x;
       y = -y;
     }
-
-  if (h_align != rootAlign)
-    x = make_align_position (h_align, target_width, w > 0 ? w : image_width);
-
-  if (v_align != rootAlign)
-    y = make_align_position (v_align, target_height, h > 0 ? h : image_height);
+  else
+    {
+      x = make_align_position (h_align, target_width, w > 0 ? w : image_width);
+      y = make_align_position (v_align, target_height, h > 0 ? h : image_height);
+    }
 
   flags &= ~sizeSensitive;
   if (h_scale != 0 || v_scale != 0
