@@ -140,8 +140,7 @@ bgPixmap_t::window_size_sensitive ()
 # ifdef BG_IMAGE_FROM_FILE
   if (have_image)
     {
-      if (h_scale != 0 || v_scale != 0
-          || h_align != 0 || v_align != 0)
+      if (flags & sizeSensitive)
         return true;
     }
 # endif
@@ -474,6 +473,12 @@ bgPixmap_t::get_image_geometry (int image_width, int image_height, int &w, int &
 
   if (v_align != rootAlign)
     y = make_align_position (v_align, target_height, h > 0 ? h : image_height);
+
+  flags &= ~sizeSensitive;
+  if (h_scale != 0 || v_scale != 0
+      || h_align != 0 || v_align != 0
+      || image_width > target_width || image_height > target_height)
+    flags |= sizeSensitive;
 }
 
 #  ifdef HAVE_AFTERIMAGE

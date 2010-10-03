@@ -41,6 +41,7 @@ struct bgPixmap_t
     isVtOrigin      = 1 << 18,  /* if set pixmap has origin at corner of
                                    vt window instead of parent[0]! */
     hasChanged      = 1 << 19,
+    sizeSensitive   = 1 << 20,
   };
 
   unsigned int flags;
