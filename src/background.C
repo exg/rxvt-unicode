@@ -249,7 +249,7 @@ make_clip_rectangle (int pos, int size, int target_size, int &dst_pos, int &dst_
   int src_pos = 0;
   dst_pos = 0;
   dst_size = size;
-  if (pos < 0 && size > target_size)
+  if (pos < 0)
     {
       src_pos = -pos;
       dst_size += pos;
