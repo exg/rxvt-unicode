@@ -96,7 +96,6 @@ support_scroll_next=yes
 support_scroll_xterm=yes
 support_xim=yes
 support_afterimage=yes
-support_afterstep=yes
 support_xft=yes
 support_unicode3=no
 support_combining=yes
@@ -132,7 +131,6 @@ AC_ARG_ENABLE(everything,
        support_wtmp=no
        support_xim=no
        support_afterimage=no
-       support_afterstep=no
        support_xft=no
        support_unicode3=no
        support_combining=no
@@ -160,7 +158,6 @@ AC_ARG_ENABLE(everything,
        support_wtmp=yes
        support_xim=yes
        support_afterimage=yes
-       support_afterstep=yes
        support_xft=yes
        support_unicode3=yes
        support_combining=yes
@@ -243,12 +240,6 @@ AC_ARG_WITH(afterimage_config,
   [if test "x$withval" != x; then
     afterimage_config=$withval/afterimage-config
   fi])
-
-dnl AC_ARG_ENABLE(afterstep,
-dnl   [  --enable-afterstep enable integration with AfterStep window manager],
-dnl   [if test x$enableval = xyes -o x$enableval = xno; then
-dnl     support_afterstep=$enableval
-dnl   fi])
 
 AC_ARG_ENABLE(pixbuf,
   [  --enable-pixbuf         enable integration with gdk-pixbuf for background images],
@@ -687,10 +678,6 @@ if test x$support_mouseslipwheel = xyes; then
   AC_DEFINE(MOUSE_SLIP_WHEELING, 1, Define to have CTRL cause wheel events to accelerate scrolling. Release CTRL to halt scrolling)
 fi
 
-dnl if test x$support_afterstep = xyes; then
-dnl   AC_DEFINE(AFTERSTEP_INTEGRATION, 1, Define if you want to integrate with AfterStep window manager)
-dnl fi
-
 scrolltypes=plain
 AC_DEFINE(PLAIN_SCROLLBAR, 1, Support plain style scrollbars)
 
@@ -807,7 +794,6 @@ fi
 echo
 echo "  embedded perl:              $support_perl"
 echo "  libafterimage:              $support_afterimage"
-dnl echo "  AfterStep integration:      $support_afterstep"
 echo
 if test x$support_xim = xyes -a x$rxvt_cv_func_xlocale = xno; then
   echo ".----------------------------------------------------------------."
