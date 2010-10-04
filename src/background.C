@@ -541,10 +541,11 @@ bgPixmap_t::render_image (unsigned long background_flags)
     get_image_geometry (original_asim->width, original_asim->height, w, h, x, y);
 
   if (!original_asim
-      || x >= target_width
-      || y >= target_height
-      || (w > 0 && x + w <= 0)
-      || (h > 0 && y + h <= 0))
+      || (!(flags & rootAlign)
+          && (x >= target_width
+              || y >= target_height
+              || (w > 0 && x + w <= 0)
+              || (h > 0 && y + h <= 0))))
     {
       if (background)
         {
@@ -761,10 +762,11 @@ bgPixmap_t::render_image (unsigned long background_flags)
 
   get_image_geometry (image_width, image_height, w, h, x, y);
 
-  if (x >= target_width
-      || y >= target_height
-      || (w > 0 && x + w <= 0)
-      || (h > 0 && y + h <= 0))
+  if (!(flags & rootAlign)
+      && (x >= target_width
+          || y >= target_height
+          || (w > 0 && x + w <= 0)
+          || (h > 0 && y + h <= 0)))
     return false;
 
   result = pixbuf;
