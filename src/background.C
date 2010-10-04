@@ -228,10 +228,8 @@ make_align_position (int align, int window_size, int image_size)
   int diff = window_size - image_size;
   int smaller = min (image_size, window_size);
 
-  if (align >= 0 && align <= 50)
+  if (align >= 0 && align <= 100)
     return diff * align / 100;
-  else if (align > 50 && align <= 100)
-    return window_size - image_size - diff * (100 - align) / 100;
   else if (align > 100 && align <= 200 )
     return ((align - 100) * smaller / 100) + window_size - smaller;
   else if (align >= -100 && align < 0)
@@ -243,15 +241,14 @@ static inline int
 make_clip_rectangle (int pos, int size, int target_size, int &dst_pos, int &dst_size)
 {
   int src_pos = 0;
-  dst_pos = 0;
+  dst_pos = pos;
   dst_size = size;
   if (pos < 0)
     {
       src_pos = -pos;
+      dst_pos = 0;
       dst_size += pos;
     }
-  else if (pos > 0)
-    dst_pos = pos;
 
   if (dst_pos + dst_size > target_size)
     dst_size = target_size - dst_pos;
