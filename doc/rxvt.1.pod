@@ -1200,7 +1200,7 @@ C<@@RXVT_NAME@@ -pe selection>) listens for C<selection:rot13> events:
   URxvt.keysym.M-C-c: perl:selection:rot13
 
 Due the the large number of modifier combinations, a defined key mapping
-will match if at I<at least> the specified identifiers are being set, and
+will match if I<at least> the specified identifiers are being set, and
 no other key mappings with those and more bits are being defined. That
 means that defining a key map for C<a> will automatically provide
 definitions for C<Meta-a>, C<Shift-a> and so on, unless some of those are defined
