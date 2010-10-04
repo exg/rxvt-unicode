@@ -460,6 +460,9 @@ bgPixmap_t::get_image_geometry (int image_width, int image_height, int &w, int &
       h = v_scale * target_height / 100;
     }
 
+  if (!w) w = image_width;
+  if (!h) h = image_height;
+
   if (flags & rootAlign)
     {
       target->get_window_origin (x, y);
@@ -468,8 +471,8 @@ bgPixmap_t::get_image_geometry (int image_width, int image_height, int &w, int &
     }
   else
     {
-      x = make_align_position (h_align, target_width, w > 0 ? w : image_width);
-      y = make_align_position (v_align, target_height, h > 0 ? h : image_height);
+      x = make_align_position (h_align, target_width, w);
+      y = make_align_position (v_align, target_height, h);
     }
 
   flags &= ~sizeSensitive;
@@ -544,8 +547,8 @@ bgPixmap_t::render_image (unsigned long background_flags)
       || (!(flags & rootAlign)
           && (x >= target_width
               || y >= target_height
-              || (w > 0 && x + w <= 0)
-              || (h > 0 && y + h <= 0))))
+              || (x + w <= 0)
+              || (y + h <= 0))))
     {
       if (background)
         {
@@ -569,12 +572,11 @@ bgPixmap_t::render_image (unsigned long background_flags)
     {
       result = original_asim;
 
-      if ((w > 0 && w != original_asim->width)
-          || (h > 0 && h != original_asim->height))
+      if ((w != original_asim->width)
+          || (h != original_asim->height))
         {
           result = scale_asimage (target->asv, original_asim,
-                                  w > 0 ? w : original_asim->width,
-                                  h > 0 ? h : original_asim->height,
+                                  w, h,
                                   background ? ASA_ASImage : ASA_XImage,
                                   100, ASIMAGE_QUALITY_DEFAULT);
         }
@@ -765,18 +767,17 @@ bgPixmap_t::render_image (unsigned long background_flags)
   if (!(flags & rootAlign)
       && (x >= target_width
           || y >= target_height
-          || (w > 0 && x + w <= 0)
-          || (h > 0 && y + h <= 0)))
+          || (x + w <= 0)
+          || (y + h <= 0)))
     return false;
 
   result = pixbuf;
 
-  if ((w > 0 && w != image_width)
-      || (h > 0 && h != image_height))
+  if ((w != image_width)
+      || (h != image_height))
     {
       result = gdk_pixbuf_scale_simple (pixbuf,
-                                        w > 0 ? w : image_width,
-                                        h > 0 ? h : image_height,
+                                        w, h,
                                         GDK_INTERP_BILINEAR);
     }
 
