@@ -478,7 +478,7 @@ bgPixmap_t::get_image_geometry (int image_width, int image_height, int &w, int &
   flags &= ~sizeSensitive;
   if (h_scale != 0 || v_scale != 0
       || h_align != 0 || v_align != 0
-      || image_width > target_width || image_height > target_height)
+      || w > target_width || h > target_height)
     flags |= sizeSensitive;
 }
 
