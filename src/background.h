@@ -115,6 +115,7 @@ struct bgPixmap_t
   bool set_tint (rxvt_color &new_tint);
   bool unset_tint ();
   bool set_shade (const char *shade_str);
+  bool tint_pixmap (Pixmap pixmap);
   bool set_root_pixmap ();
 
   unsigned long make_transparency_pixmap ();/* returns combination of the transpTransformations flags */
