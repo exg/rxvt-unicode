@@ -234,7 +234,7 @@ make_align_position (int align, int window_size, int image_size)
     return window_size - image_size - diff * (100 - align) / 100;
   else if (align > 100 && align <= 200 )
     return ((align - 100) * smaller / 100) + window_size - smaller;
-  else if (align > -100 && align < 0)
+  else if (align >= -100 && align < 0)
     return ((align + 100) * smaller / 100) - image_size;
   return 0;
 }
