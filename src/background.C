@@ -1050,12 +1050,9 @@ bgPixmap_t::set_shade (const char *shade_str)
 }
 
 bool
-bgPixmap_t::tint_pixmap (Pixmap pixmap)
+bgPixmap_t::tint_pixmap (Pixmap pixmap, Window root, int width, int height)
 {
-  Window root = target->display->root;
   Display *dpy = target->dpy;
-  int window_width = target->szHint.width;
-  int window_height = target->szHint.height;
   bool ret = false;
 
   if (flags & tintWholesome)
@@ -1072,7 +1069,7 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap)
       gc = XCreateGC (dpy, root, GCFillStyle | GCForeground | GCFunction, &gcv);
       if (gc)
         {
-          XFillRectangle (dpy, pixmap, gc, 0, 0, window_width, window_height);
+          XFillRectangle (dpy, pixmap, gc, 0, 0, width, height);
           ret = true;
           XFreeGC (dpy, gc);
         }
@@ -1144,7 +1141,7 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap)
           mask_c.green = 0xffff - c.g;
           mask_c.blue = 0xffff - c.b;
           XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
-          XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, window_width, window_height);
+          XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, width, height);
           ret = true;
         }
 
@@ -1297,7 +1294,7 @@ bgPixmap_t::make_transparency_pixmap ()
         {
           if ((flags & tintNeeded))
             {
-              if (tint_pixmap (tiled_root_pmap))
+              if (tint_pixmap (tiled_root_pmap, root, window_width, window_height))
                 result |= transpPmapTinted;
             }
         } /* server side rendering completed */
