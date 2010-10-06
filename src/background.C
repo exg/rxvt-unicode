@@ -618,7 +618,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
           layers[0].tint = background_tint;
           layers[1].im = result;
 
-          if (w <= 0)
+          if (h_scale == 0 || v_scale == 0)
             {
               /* tile horizontally */
               while (x > 0) x -= (int)result->width;
@@ -632,7 +632,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
               layers[1].clip_width = result->width;
             }
 
-          if (h <= 0)
+          if (h_scale == 0 || v_scale == 0)
             {
               while (y > 0) y -= (int)result->height;
               layers[1].dst_y = y;
