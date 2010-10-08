@@ -694,7 +694,7 @@ if test x$support_scroll_xterm = xyes; then
   scrolltypes="$scrolltypes xterm"
 fi
 if test x$support_pointer_blank = xyes; then
-  AC_DEFINE(POINTER_BLANK, 1, Define if you want hide the pointer while typing)
+  AC_DEFINE(POINTER_BLANK, 1, Define if you want to hide the pointer while typing)
 fi
 if test x$support_text_blink = xyes; then
   AC_DEFINE(TEXT_BLINK, 1, Define if you want blinking text support)
