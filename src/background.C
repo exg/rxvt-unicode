@@ -1003,7 +1003,7 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
 bool
 bgPixmap_t::set_tint (rxvt_color &new_tint)
 {
-  if (tint != new_tint)
+  if (!(flags & tintSet) || tint != new_tint)
     {
       unsigned long new_flags = compute_tint_shade_flags (&new_tint, shade);
       tint = new_tint;
