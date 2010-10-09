@@ -1090,9 +1090,9 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap, Window root, int width, int height)
         }
       else if (shade > 100 && shade < 200)
         {
-          c.r = (c.r * (200 - shade)) / 100;
-          c.g = (c.g * (200 - shade)) / 100;
-          c.b = (c.b * (200 - shade)) / 100;
+          c.r = ((0xffff - c.r) * (200 - shade)) / 100;
+          c.g = ((0xffff - c.g) * (200 - shade)) / 100;
+          c.b = ((0xffff - c.b) * (200 - shade)) / 100;
         }
 
       XRenderPictFormat pf;
