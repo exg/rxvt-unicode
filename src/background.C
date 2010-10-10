@@ -106,6 +106,9 @@ bgPixmap_t::bgPixmap_t ()
   h_scale = v_scale = 0;
   h_align = v_align = 0;
 #endif
+#ifdef ENABLE_TRANSPARENCY
+  shade = 100;
+#endif
   flags = 0;
   pixmap = None;
   valid_since = invalid_since = 0;
@@ -501,7 +504,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
   if (!(background_flags & transpPmapTinted) && (flags & tintNeeded))
     {
       ShadingInfo as_shade;
-      as_shade.shading = (shade == 0) ? 100 : shade;
+      as_shade.shading = shade;
 
       rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
       if (flags & tintSet)
@@ -961,7 +964,7 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
 {
   unsigned long flags = 0;
   rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
-  bool has_shade = (shade > 0 && shade < 100) || (shade > 100 && shade < 200);
+  bool has_shade = shade != 100;
 
   if (tint)
     {
@@ -1031,12 +1034,11 @@ bgPixmap_t::unset_tint ()
 bool
 bgPixmap_t::set_shade (const char *shade_str)
 {
-  int new_shade = (shade_str) ? atoi (shade_str) : 0;
+  int new_shade = (shade_str) ? atoi (shade_str) : 100;
 
-  if (new_shade < 0 && new_shade > -100)
+  clamp_it (new_shade, -100, 200);
+  if (new_shade < 0)
     new_shade = 200 - (100 + new_shade);
-  else if (new_shade == 100)
-    new_shade = 0;
 
   if (new_shade != shade)
     {
@@ -1082,13 +1084,13 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap, Window root, int width, int height)
       if (flags & tintSet)
         tint.get (c);
 
-      if (shade > 0 && shade < 100)
+      if (shade <= 100)
         {
           c.r = (c.r * shade) / 100;
           c.g = (c.g * shade) / 100;
           c.b = (c.b * shade) / 100;
         }
-      else if (shade > 100 && shade < 200)
+      else
         {
           c.r = ((0xffff - c.r) * (200 - shade)) / 100;
           c.g = ((0xffff - c.g) * (200 - shade)) / 100;
@@ -1530,9 +1532,6 @@ ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm
 
   if (visual->c_class != TrueColor || srcImage->format != ZPixmap) return ;
 
-  if (shade == 0)
-    shade = 100;
-
   /* for convenience */
   mask_r = visual->red_mask;
   mask_g = visual->green_mask;
@@ -1597,10 +1596,8 @@ ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm
   }
 
   /* prepare limits for color transformation (each channel is handled separately) */
-  if (shade < 0) {
-    shade = -shade;
-    if (shade < 0) shade = 0;
-    if (shade > 100) shade = 100;
+  if (shade > 100) {
+    shade = 200 - shade;
 
     lower_lim_r = 65535-rm;
     lower_lim_g = 65535-gm;
@@ -1612,8 +1609,6 @@ ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm
 
     upper_lim_r = upper_lim_g = upper_lim_b = 65535;
   } else {
-    if (shade < 0) shade = 0;
-    if (shade > 100) shade = 100;
 
     lower_lim_r = lower_lim_g = lower_lim_b = 0;
 
