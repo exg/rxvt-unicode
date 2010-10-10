@@ -1095,23 +1095,7 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap, Window root, int width, int height)
           c.b = ((0xffff - c.b) * (200 - shade)) / 100;
         }
 
-      XRenderPictFormat pf;
-      pf.type = PictTypeDirect;
-      pf.depth = 32;
-      pf.direct.redMask = 0xff;
-      pf.direct.greenMask = 0xff;
-      pf.direct.blueMask = 0xff;
-      pf.direct.alphaMask = 0xff;
-
-      XRenderPictFormat *solid_format = XRenderFindFormat (dpy,
-                                                           (PictFormatType|
-                                                            PictFormatDepth|
-                                                            PictFormatRedMask|
-                                                            PictFormatGreenMask|
-                                                            PictFormatBlueMask|
-                                                            PictFormatAlphaMask),
-                                                           &pf,
-                                                           0);
+      XRenderPictFormat *solid_format = XRenderFindStandardFormat (dpy, PictStandardARGB32);
       XRenderPictFormat *root_format = XRenderFindVisualFormat (dpy, DefaultVisualOfScreen (ScreenOfDisplay (dpy, target->display->screen)));
       XRenderPictureAttributes pa;
 
