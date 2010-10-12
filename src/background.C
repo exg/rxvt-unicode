@@ -1052,7 +1052,7 @@ bgPixmap_t::set_shade (const char *shade_str)
 }
 
 bool
-bgPixmap_t::tint_pixmap (Pixmap pixmap, Window root, int width, int height)
+bgPixmap_t::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 {
   Display *dpy = target->dpy;
   bool ret = false;
@@ -1068,7 +1068,7 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap, Window root, int width, int height)
       gcv.foreground = Pixel (tint);
       gcv.function = GXand;
       gcv.fill_style = FillSolid;
-      gc = XCreateGC (dpy, root, GCFillStyle | GCForeground | GCFunction, &gcv);
+      gc = XCreateGC (dpy, pixmap, GCFillStyle | GCForeground | GCFunction, &gcv);
       if (gc)
         {
           XFillRectangle (dpy, pixmap, gc, 0, 0, width, height);
@@ -1098,19 +1098,19 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap, Window root, int width, int height)
         }
 
       XRenderPictFormat *solid_format = XRenderFindStandardFormat (dpy, PictStandardARGB32);
-      XRenderPictFormat *root_format = XRenderFindVisualFormat (dpy, DefaultVisualOfScreen (ScreenOfDisplay (dpy, target->display->screen)));
+      XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
       XRenderPictureAttributes pa;
 
-      Picture back_pic = XRenderCreatePicture (dpy, pixmap, root_format, 0, &pa);
+      Picture back_pic = XRenderCreatePicture (dpy, pixmap, format, 0, &pa);
 
       pa.repeat = True;
 
-      Pixmap overlay_pmap = XCreatePixmap (dpy, root, 1, 1, 32);
+      Pixmap overlay_pmap = XCreatePixmap (dpy, pixmap, 1, 1, 32);
       Picture overlay_pic = XRenderCreatePicture (dpy, overlay_pmap, solid_format, CPRepeat, &pa);
       XFreePixmap (dpy, overlay_pmap);
 
       pa.component_alpha = True;
-      Pixmap mask_pmap = XCreatePixmap (dpy, root, 1, 1, 32);
+      Pixmap mask_pmap = XCreatePixmap (dpy, pixmap, 1, 1, 32);
       Picture mask_pic = XRenderCreatePicture (dpy, mask_pmap, solid_format, CPRepeat|CPComponentAlpha, &pa);
       XFreePixmap (dpy, mask_pmap);
 
@@ -1280,7 +1280,7 @@ bgPixmap_t::make_transparency_pixmap ()
         {
           if ((flags & tintNeeded))
             {
-              if (tint_pixmap (tiled_root_pmap, root, window_width, window_height))
+              if (tint_pixmap (tiled_root_pmap, DefaultVisual (dpy, target->display->screen), window_width, window_height))
                 result |= transpPmapTinted;
             }
         } /* server side rendering completed */
