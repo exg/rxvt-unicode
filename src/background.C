@@ -516,7 +516,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
       background_tint = shading2tint32 (&as_shade);
     }
 
-  if (!(background_flags & transpPmapBlured) && (flags & blurNeeded) && background != NULL)
+  if (!(background_flags & transpPmapBlurred) && (flags & blurNeeded) && background != NULL)
     {
       ASImage *tmp = blur_asimage_gauss (target->asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
                                          (original_asim == NULL || tint == TINT_LEAVE_SAME) ? ASA_XImage : ASA_ASImage,

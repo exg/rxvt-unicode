@@ -50,7 +50,7 @@ struct bgPixmap_t
   enum {
     transpPmapTiled       = 1 << 0,
     transpPmapTinted      = tintNeeded,
-    transpPmapBlured      = blurNeeded,
+    transpPmapBlurred     = blurNeeded,
     transpTransformations = tintNeeded | blurNeeded,
   }; /* these flags are returned by make_transparency_pixmap if called */
 
