@@ -1180,7 +1180,7 @@ bgPixmap_t::make_transparency_pixmap ()
 
   if (root_pixmap != None)
     {
-      /* we want to validate the pixmap and get it's size at the same time : */
+      /* we want to validate the pixmap and get its size at the same time : */
       int junk;
       unsigned int ujunk;
       /* root pixmap may be bad - allow a error */
