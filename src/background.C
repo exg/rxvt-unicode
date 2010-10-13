@@ -1318,6 +1318,7 @@ bgPixmap_t::make_transparency_pixmap ()
   int window_height = target->szHint.height;
   int sx, sy;
   XGCValues gcv;
+  GC gc;
 
   TIMING_TEST_START (tp);
   target->get_window_origin (sx, sy);
@@ -1341,85 +1342,30 @@ bgPixmap_t::make_transparency_pixmap ()
       target->allowedxerror = 0;
     }
 
+  if (root_pixmap == None)
+    return 0;
+
   Pixmap tiled_root_pmap = XCreatePixmap (dpy, root, window_width, window_height, root_depth);
-  GC gc = NULL;
 
   if (tiled_root_pmap == None) /* something really bad happened - abort */
     return 0;
 
-  if (root_pixmap == None)
+  /* straightforward pixmap copy */
+  gcv.tile = root_pixmap;
+  gcv.fill_style = FillTiled;
+
+  while (sx < 0) sx += (int)root_width;
+  while (sy < 0) sy += (int)root_height;
+
+  gcv.ts_x_origin = -sx;
+  gcv.ts_y_origin = -sy;
+  gc = XCreateGC (dpy, root, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
+
+  if (gc)
     {
-      /* use tricks to obtain the root background image :*/
-      /* we want to create Overrideredirect window overlapping out window
-         with background type of Parent Relative and then grab it */
-      XSetWindowAttributes attr;
-      Window src;
-      bool success = false;
-
-      attr.background_pixmap = ParentRelative;
-      attr.backing_store = Always;
-      attr.event_mask = ExposureMask;
-      attr.override_redirect = True;
-      src = XCreateWindow (dpy, root, sx, sy, window_width, window_height, 0,
-                           CopyFromParent, CopyFromParent, CopyFromParent,
-                           CWBackPixmap|CWBackingStore|CWOverrideRedirect|CWEventMask,
-                           &attr);
-
-      if (src != None)
-        {
-          XEvent event;
-          int ev_count = 0;
-          XGrabServer (dpy);
-          XMapRaised (dpy, src);
-          XSync (dpy, False);
-
-          /* XSync should get window where it's properly exposed,
-           * but to be on the safe side - let's check for the actual event to arrive : */
-          while (XCheckWindowEvent (dpy, src, ExposureMask, &event))
-            ++ev_count;
-
-          if (ev_count > 0);
-            {
-              /* hooray! - we can grab the image! */
-              gc = XCreateGC (dpy, root, 0, NULL);
-              if (gc)
-                {
-                  XCopyArea (dpy, src, tiled_root_pmap, gc, 0, 0, window_width, window_height, 0, 0);
-                  success = true;
-                }
-            }
-
-          XDestroyWindow (dpy, src);
-          XUngrabServer (dpy);
-          //fprintf (stderr, "%s:%d: ev_count = %d\n", __FUNCTION__, __LINE__, ev_count);
-        }
-
-      if (!success)
-        {
-          XFreePixmap (dpy, tiled_root_pmap);
-          tiled_root_pmap = None;
-        }
-      else
-        result |= transpPmapTiled;
-    }
-  else
-    {
-      /* straightforward pixmap copy */
-      gcv.tile = root_pixmap;
-      gcv.fill_style = FillTiled;
-
-      while (sx < 0) sx += (int)root_width;
-      while (sy < 0) sy += (int)root_height;
-
-      gcv.ts_x_origin = -sx;
-      gcv.ts_y_origin = -sy;
-      gc = XCreateGC (dpy, root, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
-
-      if (gc)
-        {
-          XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
-          result |= transpPmapTiled;
-        }
+      XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
+      result |= transpPmapTiled;
+      XFreeGC (dpy, gc);
     }
   TIMING_TEST_PRINT_RESULT (tp);
 
@@ -1447,9 +1393,6 @@ bgPixmap_t::make_transparency_pixmap ()
       pmap_height = window_height;
       pmap_depth = root_depth;
     }
-
-  if (gc)
-    XFreeGC (dpy, gc);
 
   TIMING_TEST_PRINT_RESULT (tp);
 
