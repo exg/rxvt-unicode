@@ -746,9 +746,10 @@ bgPixmap_t::render_image (unsigned long background_flags)
   if (!pixbuf)
     return false;
 
-  // TODO: add alpha blending
+#if !XFT
   if (background_flags)
     return false;
+#endif
 
   GdkPixbuf *result;
 
@@ -790,14 +791,23 @@ bgPixmap_t::render_image (unsigned long background_flags)
     {
       XGCValues gcv;
       GC gc;
+      Pixmap root_pmap;
 
       image_width = gdk_pixbuf_get_width (result);
       image_height = gdk_pixbuf_get_height (result);
 
-      if (h_scale == 0 || v_scale == 0)
+      if (background_flags)
         {
-          new_pmap_width = min (image_width, target_width);
-          new_pmap_height = min (image_height, target_height);
+          root_pmap = pixmap;
+          pixmap = None;
+        }
+      else
+        {
+          if (h_scale == 0 || v_scale == 0)
+            {
+              new_pmap_width = min (image_width, target_width);
+              new_pmap_height = min (image_height, target_height);
+            }
         }
 
       if (pixmap)
@@ -862,6 +872,44 @@ bgPixmap_t::render_image (unsigned long background_flags)
                                                 XLIB_RGB_DITHER_NONE,
                                                 0, 0);
         }
+
+#if XFT
+      if (background_flags)
+        {
+          Display *dpy = target->dpy;
+          XRenderPictureAttributes pa;
+
+          XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, DefaultVisual (dpy, target->display->screen));
+          Picture src = XRenderCreatePicture (dpy, root_pmap, src_format, 0, &pa);
+
+          XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, target->visual);
+          Picture dst = XRenderCreatePicture (dpy, pixmap, dst_format, 0, &pa);
+
+          pa.repeat = True;
+          Pixmap mask_pmap = XCreatePixmap (dpy, target->vt, 1, 1, 8);
+          XRenderPictFormat *mask_format = XRenderFindStandardFormat (dpy, PictStandardA8);
+          Picture mask = XRenderCreatePicture (dpy, mask_pmap, mask_format, CPRepeat, &pa);
+          XFreePixmap (dpy, mask_pmap);
+
+          if (src && dst && mask)
+            {
+              XRenderColor mask_c;
+
+              mask_c.alpha = 0x8000;
+              mask_c.red = 0;
+              mask_c.green = 0;
+              mask_c.blue = 0;
+              XRenderFillRectangle (dpy, PictOpSrc, mask, &mask_c, 0, 0, 1, 1);
+              XRenderComposite (dpy, PictOpOver, src, mask, dst, 0, 0, 0, 0, 0, 0, target_width, target_height);
+            }
+
+          XRenderFreePicture (dpy, src);
+          XRenderFreePicture (dpy, dst);
+          XRenderFreePicture (dpy, mask);
+
+          XFreePixmap (dpy, root_pmap);
+        }
+#endif
 
       if (result != pixbuf)
         g_object_unref (result);
