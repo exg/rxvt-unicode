@@ -2360,10 +2360,6 @@ images. It adds support for many file formats including JPG, PNG,
 SVG, TIFF, GIF, XPM, BMP, ICO, XCF, TGA and AfterStep image XML
 (L<http://www.afterstep.org/visualdoc.php?show=asimagexml>).
 
-This option also adds the possibility, when transparency is enabled,
-of blending an image over the root background and blurring the root
-background.
-
 Note that with this option enabled, @@RXVT_NAME@@'s memory footprint might
 increase by a few megabytes even if no extra features are used (mostly due
 to third-party libraries used by libAI). Memory footprint may somewhat be

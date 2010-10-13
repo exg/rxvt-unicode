@@ -181,7 +181,7 @@ Apply Gaussian Blur with the specified radii to the transparent
 background image. If single number is specified - both vertical and
 horizontal radii are considered to be the same. Setting one of the
 radii to 1 and another to a large number creates interesting effects
-on some backgrounds. Maximum radius value is 128. Compile I<afterimage>;
+on some backgrounds. Maximum radius value is 128. Compile I<afterimage> or I<xft>;
 resource I<blurRadius>.
 
 =item B<-icon> I<file>
@@ -779,8 +779,9 @@ Supported operations are:
               whenever terminal window moves
 
 If used in conjunction with B<-tr> option, the specified pixmap will be
-blended over transparency image using either alpha-blending, or any
-other blending type, specified with B<-blt "type"> option.
+blended over transparency image using alpha-blending. If I<afterimage>
+support has been compiled in it is possible to choose other blending
+types with B<-blt "type"> option.
 
 =item B<path:> I<path>
 
