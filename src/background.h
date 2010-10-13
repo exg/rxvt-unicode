@@ -35,7 +35,7 @@ struct bgPixmap_t
     tintFlags       = tintSet | tintServerSide | tintNeeded | tintWholesome,
 
     blurNeeded      = 1 << 12,
-    blurServerSide  = 1 << 13, /* this doesn't work yet */
+    blurServerSide  = 1 << 13,
 
     isTransparent   = 1 << 16,
     isInvalid       = 1 << 17,
@@ -115,6 +115,7 @@ struct bgPixmap_t
   bool set_tint (rxvt_color &new_tint);
   bool unset_tint ();
   bool set_shade (const char *shade_str);
+  bool blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height);
   bool tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height);
   bool set_root_pixmap ();
 

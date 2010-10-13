@@ -114,6 +114,7 @@ optList[] = {
               BOOL (Rs_transparent, "transparent", "tr", Opt_transparent, 0, "inherit parent pixmap"),
               STRG (Rs_color + Color_tint, "tintColor", "tint", "color", "tint color"),
               STRG (Rs_shade, "shading", "sh", "number", "shade background by number %."),
+              STRG (Rs_blurradius, "blurRadius", "blr", "HxV", "gaussian blur radii to apply to the root background"),
 #endif
 #if OFF_FOCUS_FADING
               STRG (Rs_fade, "fading", "fade", "number", "fade colors by number % when losing focus"),
@@ -269,7 +270,6 @@ optList[] = {
 #endif
 #ifdef HAVE_AFTERIMAGE
               STRG (Rs_blendtype, "blendType", "blt", "string", "background image blending type - alpha, tint, etc..."),
-              STRG (Rs_blurradius, "blurRadius", "blr", "HxV", "gaussian blur radii to apply to the root background"),
 #endif
               INFO ("e", "command arg ...", "command to execute")
             };

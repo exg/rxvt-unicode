@@ -21,6 +21,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *---------------------------------------------------------------------*/
 
+#include <cmath>
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
 
@@ -179,7 +180,7 @@ bool bgPixmap_t::need_client_side_rendering ()
 # ifdef ENABLE_TRANSPARENCY
   if (flags & isTransparent)
     {
-#  ifdef HAVE_AFTERIMAGE		// can't blur without libAI anyways
+#  ifdef HAVE_AFTERIMAGE
       if ((flags & blurNeeded) && !(flags & blurServerSide))
         return true;
 #  endif
@@ -987,6 +988,9 @@ bgPixmap_t::set_blur_radius (const char *geom)
   if (!(geom_flags & HeightValue))
     vr = hr;
 
+  min_it (hr, 128);
+  min_it (vr, 128);
+
   if (h_blurRadius != hr)
     {
       ++changed;
@@ -1003,6 +1007,18 @@ bgPixmap_t::set_blur_radius (const char *geom)
     flags &= ~blurNeeded;
   else
     flags |= blurNeeded;
+
+#if XFT
+      XFilters *filters = XRenderQueryFilters (target->dpy, target->display->root);
+      if (filters)
+        {
+          for (int i = 0; i < filters->nfilter; i++)
+            if (!strcmp (filters->filter[i], FilterConvolution))
+              flags |= bgPixmap_t::blurServerSide;
+
+          XFree (filters);
+        }
+#endif
 
   return (changed > 0);
 }
@@ -1097,6 +1113,91 @@ bgPixmap_t::set_shade (const char *shade_str)
     }
 
   return false;
+}
+
+static void
+get_gaussian_kernel (int radius, int width, double *kernel, XFixed *params)
+{
+    double sigma = radius / 2.0;
+    double scale = sqrt (2.0 * M_PI) * sigma;
+    double sum = 0.0;
+
+    for (int i = 0; i < width; i++)
+      {
+	double x = i - width / 2;
+	kernel[i] = exp (-(x * x) / (2.0 * sigma * sigma)) / scale;
+	sum += kernel[i];
+      }
+
+    params[0] = XDoubleToFixed (width);
+    params[1] = XDoubleToFixed (1);
+
+    for (int i = 0; i < width; i++)
+      params[i+2] = XDoubleToFixed (kernel[i] / sum);
+}
+
+bool
+bgPixmap_t::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
+{
+  bool ret = false;
+#if XFT
+  int size = max (h_blurRadius, v_blurRadius) * 2 + 1;
+  double *kernel = (double *)malloc (size * sizeof (double));
+  XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
+
+  Display *dpy = target->dpy;
+  XRenderPictureAttributes pa;
+  XRenderPictFormat *format = XRenderFindVisualFormat (dpy, target->visual);
+
+  Picture src = XRenderCreatePicture (dpy, pixmap, format, 0, &pa);
+  Picture dst = XRenderCreatePicture (dpy, pixmap, format, 0, &pa);
+
+  if (kernel && params && src && dst)
+    {
+      if (h_blurRadius)
+        {
+          size = h_blurRadius * 2 + 1;
+          get_gaussian_kernel (h_blurRadius, size, kernel, params);
+
+          XRenderSetPictureFilter (dpy, src, FilterConvolution, params, size+2);
+          XRenderComposite (dpy,
+                            PictOpSrc,
+                            src,
+                            None,
+                            dst,
+                            0, 0,
+                            0, 0,
+                            0, 0,
+                            width, height);
+        }
+
+      if (v_blurRadius)
+        {
+          size = v_blurRadius * 2 + 1;
+          get_gaussian_kernel (v_blurRadius, size, kernel, params);
+          swap (params[0], params[1]);
+
+          XRenderSetPictureFilter (dpy, src, FilterConvolution, params, size+2);
+          XRenderComposite (dpy,
+                            PictOpSrc,
+                            src,
+                            None,
+                            dst,
+                            0, 0,
+                            0, 0,
+                            0, 0,
+                            width, height);
+        }
+
+      ret = true;
+    }
+
+  free (kernel);
+  free (params);
+  XRenderFreePicture (dpy, src);
+  XRenderFreePicture (dpy, dst);
+#endif
+  return ret;
 }
 
 bool
@@ -1326,6 +1427,11 @@ bgPixmap_t::make_transparency_pixmap ()
     {
       if (!need_client_side_rendering ())
         {
+          if ((flags & blurNeeded))
+            {
+              if (blur_pixmap (tiled_root_pmap, DefaultVisual (dpy, target->display->screen), window_width, window_height))
+                result |= transpPmapBlurred;
+            }
           if ((flags & tintNeeded))
             {
               if (tint_pixmap (tiled_root_pmap, DefaultVisual (dpy, target->display->screen), window_width, window_height))

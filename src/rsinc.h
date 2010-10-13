@@ -61,6 +61,7 @@
 #ifdef ENABLE_TRANSPARENCY
   def (transparent)
   def (shade)
+  def (blurradius)
 #endif
 #if XFT
   def (depth)
@@ -117,7 +118,6 @@
 #endif
 #ifdef HAVE_AFTERIMAGE
   def (blendtype)
-  def (blurradius)
 #endif
 #ifdef ENABLE_EWMH
   def (iconfile)

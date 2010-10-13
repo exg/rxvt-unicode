@@ -661,6 +661,7 @@ if test x$support_fading = xyes; then
 fi
 if test x$support_inheritpixmap = xyes; then
   AC_DEFINE(ENABLE_TRANSPARENCY, 1, Define if you want your background to use the parent window background)
+  test x$support_xft = xyes && LIBS="$LIBS -lm"
 fi
 if test x$support_keepscrolling = xno; then
   AC_DEFINE(NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING, 1, Define for continual scrolling when you keep the scrollbar button pressed)

@@ -822,10 +822,9 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
       {
         bgPixmap.set_transparent ();
 
-#ifdef HAVE_AFTERIMAGE
         if (rs [Rs_blurradius])
           bgPixmap.set_blur_radius (rs [Rs_blurradius]);
-#endif
+
         if (ISSET_PIXCOLOR (Color_tint))
           bgPixmap.set_tint (pix_colors_focused [Color_tint]);
 
