@@ -943,17 +943,27 @@ bgPixmap_t::set_file (const char *file)
 #  ifdef HAVE_AFTERIMAGE
       if (!target->asimman)
         target->asimman = create_generic_imageman (target->rs[Rs_path]);
-      original_asim = get_asimage (target->asimman, file, 0xFFFFFFFF, 100);
-      if (original_asim)
-        have_image = true;
-      return have_image;
+      ASImage *image = get_asimage (target->asimman, file, 0xFFFFFFFF, 100);
+      if (image)
+        {
+          if (original_asim)
+            safe_asimage_destroy (original_asim);
+          original_asim = image;
+          have_image = true;
+          return true;
+        }
 #  endif
 
 #  ifdef HAVE_PIXBUF
-      pixbuf = gdk_pixbuf_new_from_file (file, NULL);
-      if (pixbuf)
-        have_image = true;
-      return have_image;
+      GdkPixbuf *image = gdk_pixbuf_new_from_file (file, NULL);
+      if (image)
+        {
+          if (pixbuf)
+            g_object_unref (pixbuf);
+          pixbuf = image;
+          have_image = true;
+          return true;
+        }
 #  endif
     }
 
