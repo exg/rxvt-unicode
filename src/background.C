@@ -5,6 +5,7 @@
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 2005-2008 Marc Lehmann <pcg@goof.com>
  * Copyright (c) 2007      Sasha Vasko <sasha@aftercode.net>
+ * Copyright (c) 2010      Emanuele Giaquinta <e.giaquinta@glauco.it>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -176,17 +177,6 @@ bool bgPixmap_t::need_client_side_rendering ()
 # ifdef HAVE_AFTERIMAGE
   if (original_asim)
     return true;
-# endif
-# ifdef ENABLE_TRANSPARENCY
-  if (flags & isTransparent)
-    {
-#  ifdef HAVE_AFTERIMAGE
-      if ((flags & blurNeeded) && !(flags & blurServerSide))
-        return true;
-#  endif
-      if ((flags & tintNeeded) && !(flags & tintServerSide))
-        return true;
-    }
 # endif
   return false;
 }
@@ -1383,12 +1373,12 @@ bgPixmap_t::make_transparency_pixmap ()
     {
       if (!need_client_side_rendering ())
         {
-          if ((flags & blurNeeded))
+          if (flags & (blurNeeded | blurServerSide))
             {
               if (blur_pixmap (tiled_root_pmap, DefaultVisual (dpy, target->display->screen), window_width, window_height))
                 result |= transpPmapBlurred;
             }
-          if ((flags & tintNeeded))
+          if (flags & (tintNeeded | tintServerSide))
             {
               if (tint_pixmap (tiled_root_pmap, DefaultVisual (dpy, target->display->screen), window_width, window_height))
                 result |= transpPmapTinted;
