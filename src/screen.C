@@ -1028,6 +1028,10 @@ rxvt_term::scr_backspace () NOTHROW
 #endif
         }
     }
+#ifdef TERMCAP_HAS_BW
+  else if (screen.flags & Screen_WrapNext)
+    screen.flags &= ~Screen_WrapNext;
+#endif
   else
     scr_gotorc (0, -1, RELATIVE);
 }
