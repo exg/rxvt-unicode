@@ -433,6 +433,8 @@ AC_PATH_PROG(TIC, tic, :)
 
 AC_PATH_XTRA
 
+image_lib=none
+
 PIXBUF_CFLAGS=
 PIXBUF_LIBS=
 
@@ -448,6 +450,7 @@ if test x$support_pixbuf = xyes; then
 
   if test x$support_pixbuf = xyes; then
     AC_MSG_RESULT(ok)
+    image_lib=gdk-pixbuf
     support_afterimage=no
     AC_DEFINE(HAVE_PIXBUF, 1, Define if you want to use gdk-pixbuf for image processing)
     AC_DEFINE(BG_IMAGE_FROM_FILE, 1, Define if you want to have sexy-looking background pixmaps.)
@@ -488,6 +491,7 @@ if test x$support_afterimage = xyes; then
     fi
     if test "x$support_afterimage" = "xyes"; then
       AC_MSG_RESULT($AFTERIMAGE_LIBS)
+      image_lib=libafterimage
       AC_DEFINE(HAVE_AFTERIMAGE, 1, Define if you want to use libAfterImage for image processing)
       AC_DEFINE(BG_IMAGE_FROM_FILE, 1, Define if you want to have sexy-looking background pixmaps.)
     else
@@ -794,7 +798,7 @@ if test x$RESFALLBACK != x; then
 fi
 echo
 echo "  embedded perl:              $support_perl"
-echo "  libafterimage:              $support_afterimage"
+echo "  image library:              $image_lib"
 echo
 if test x$support_xim = xyes -a x$rxvt_cv_func_xlocale = xno; then
   echo ".----------------------------------------------------------------."

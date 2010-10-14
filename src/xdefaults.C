@@ -330,6 +330,9 @@ static const char optionsstring[] = "options: "
 #if HAVE_AFTERIMAGE
                                     "afterimage,"
 #endif
+#if HAVE_PIXBUF
+                                    "pixbuf,"
+#endif
 #if defined(USE_XIM)
                                     "XIM,"
 #endif
