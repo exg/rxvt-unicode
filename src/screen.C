@@ -900,14 +900,6 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
 # endif
 #endif
 
-          // nuke the character at this position, if required
-          if (expect_false (
-                line->t[screen.cur.col] == NOCHAR
-                || (screen.cur.col < ncol - 1
-                    && line->t[screen.cur.col + 1] == NOCHAR)
-             ))
-            scr_kill_char (*line, screen.cur.col);
-
           rend_t rend = SET_FONT (rstyle, FONTSET (rstyle)->find_font (c));
 
           // if the character doesn't fit into the remaining columns...
@@ -923,6 +915,14 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
               else
                 screen.cur.col = ncol - width;
             }
+
+          // nuke the character at this position, if required
+          if (expect_false (
+                line->t[screen.cur.col] == NOCHAR
+                || (screen.cur.col < ncol - 1
+                    && line->t[screen.cur.col + 1] == NOCHAR)
+             ))
+            scr_kill_char (*line, screen.cur.col);
 
           line->touch ();
 
