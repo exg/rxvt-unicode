@@ -146,6 +146,8 @@ rxvt_term::scr_kill_char (line_t &l, int col) const NOTHROW
   rend_t rend = l.r[col] & ~RS_baseattrMask;
   rend = SET_FONT (rend, FONTSET (rend)->find_font (' '));
 
+  l.touch ();
+
   // found start, nuke
   do {
     l.t[col] = ' ';
@@ -938,7 +940,8 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
                   line->l = ncol;
                   if (screen.flags & Screen_Autowrap)
                     screen.flags |= Screen_WrapNext;
-                  break;
+
+                  goto end_of_line;
                 }
 
               c = NOCHAR;
@@ -946,16 +949,14 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
           while (expect_false (--width > 0));
 
           // pad with spaces when overwriting wide character with smaller one
-          if (expect_false (!width))
+          for (int c = screen.cur.col; expect_false (c < ncol && line->t[c] == NOCHAR); c++)
             {
-              line->touch ();
-
-              for (int c = screen.cur.col; c < ncol && line->t[c] == NOCHAR; c++)
-                {
-                  line->t[c] = ' ';
-                  line->r[c] = rend;
-                }
+              line->t[c] = ' ';
+              line->r[c] = rend;
             }
+
+end_of_line:
+          ;
         }
 #if ENABLE_COMBINING
       else // width == 0
