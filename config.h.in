@@ -337,7 +337,7 @@
 /* Support plain style scrollbars */
 #undef PLAIN_SCROLLBAR
 
-/* Define if you want hide the pointer while typing */
+/* Define if you want to hide the pointer while typing */
 #undef POINTER_BLANK
 
 /* Resource class */

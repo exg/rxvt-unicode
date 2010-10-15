@@ -4663,7 +4663,6 @@ support_scroll_next=yes
 support_scroll_xterm=yes
 support_xim=yes
 support_afterimage=yes
-support_afterstep=yes
 support_xft=yes
 support_unicode3=no
 support_combining=yes
@@ -4695,7 +4694,6 @@ if test "${enable_everything+set}" = set; then :
        support_wtmp=no
        support_xim=no
        support_afterimage=no
-       support_afterstep=no
        support_xft=no
        support_unicode3=no
        support_combining=no
@@ -4723,7 +4721,6 @@ if test "${enable_everything+set}" = set; then :
        support_wtmp=yes
        support_xim=yes
        support_afterimage=yes
-       support_afterstep=yes
        support_xft=yes
        support_unicode3=yes
        support_combining=yes
@@ -4846,7 +4843,6 @@ if test "${with_afterimage_config+set}" = set; then :
     afterimage_config=$withval/afterimage-config
   fi
 fi
-
 
 
 # Check whether --enable-pixbuf was given.
@@ -6235,6 +6231,8 @@ fi
 fi
 
 
+image_lib=none
+
 PIXBUF_CFLAGS=
 PIXBUF_LIBS=
 
@@ -6292,6 +6290,7 @@ $as_echo_n "checking for gdk-pixbuf... " >&6; }
   if test x$support_pixbuf = xyes; then
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
+    image_lib=gdk-pixbuf
     support_afterimage=no
 
 $as_echo "#define HAVE_PIXBUF 1" >>confdefs.h
@@ -6379,6 +6378,7 @@ $as_echo_n "checking for libAfterImage version >= 1.15... " >&6; }
     if test "x$support_afterimage" = "xyes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $AFTERIMAGE_LIBS" >&5
 $as_echo "$AFTERIMAGE_LIBS" >&6; }
+      image_lib=libafterimage
 
 $as_echo "#define HAVE_AFTERIMAGE 1" >>confdefs.h
 
@@ -7930,6 +7930,7 @@ if test x$support_inheritpixmap = xyes; then
 
 $as_echo "#define ENABLE_TRANSPARENCY 1" >>confdefs.h
 
+  test x$support_xft = xyes && LIBS="$LIBS -lm"
 fi
 if test x$support_keepscrolling = xno; then
 
@@ -7956,7 +7957,6 @@ if test x$support_mouseslipwheel = xyes; then
 $as_echo "#define MOUSE_SLIP_WHEELING 1" >>confdefs.h
 
 fi
-
 
 scrolltypes=plain
 
@@ -9461,7 +9461,7 @@ if test x$RESFALLBACK != x; then
 fi
 echo
 echo "  embedded perl:              $support_perl"
-echo "  libafterimage:              $support_afterimage"
+echo "  image library:              $image_lib"
 echo
 if test x$support_xim = xyes -a x$rxvt_cv_func_xlocale = xno; then
   echo ".----------------------------------------------------------------."
