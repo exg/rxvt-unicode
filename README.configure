@@ -107,21 +107,21 @@ CONFIGURE OPTIONS
         also be specified.
 
     --enable-afterimage (default: on)
-        Add support for libAfterImage to be used for transparency and
-        background images. It adds support for many file formats including
-        JPG, PNG, SVG, TIFF, GIF, XPM, BMP, ICO, XCF, TGA and AfterStep
-        image XML
+        Add support for libAfterImage to be used for background images. It
+        adds support for many file formats including JPG, PNG, SVG, TIFF,
+        GIF, XPM, BMP, ICO, XCF, TGA and AfterStep image XML
         (<http://www.afterstep.org/visualdoc.php?show=asimagexml>).
-
-        This option also adds such eye candy as blending an image over the
-        root background, as well as dynamic scaling and bluring of
-        background images.
 
         Note that with this option enabled, rxvt's memory footprint might
         increase by a few megabytes even if no extra features are used
         (mostly due to third-party libraries used by libAI). Memory
         footprint may somewhat be lowered if libAfterImage is configured
         without support for SVG.
+
+    --enable-pixbuf (default: off)
+        Add support for GDK-PixBuf to be used for background images. It adds
+        support for many file formats including JPG, PNG, TIFF, GIF, XPM,
+        BMP, ICO and TGA.
 
     --enable-transparency (default: on)
         Add support for backgrounds, creating illusion of transparency in

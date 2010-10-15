@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2010-07-24" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2010-10-15" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -292,11 +292,11 @@ Apply Gaussian Blur with the specified radii to the transparent
 background image. If single number is specified \- both vertical and
 horizontal radii are considered to be the same. Setting one of the
 radii to 1 and another to a large number creates interesting effects
-on some backgrounds. Maximum radius value is 128. Compile \fIafterimage\fR;
+on some backgrounds. Maximum radius value is 128. Compile \fIafterimage\fR or \fIxft\fR;
 resource \fIblurRadius\fR.
 .IP "\fB\-icon\fR \fIfile\fR" 4
 .IX Item "-icon file"
-Compile \fIafterimage\fR: Use the specified image as application icon. This
+Compile \fIafterimage\fR or \fIpixbuf\fR: Use the specified image as application icon. This
 is used by many window managers, taskbars and pagers to represent the
 application window; resource \fIiconFile\fR.
 .IP "\fB\-bg\fR \fIcolour\fR" 4
@@ -307,7 +307,7 @@ Window background colour; resource \fBbackground\fR.
 Window foreground colour; resource \fBforeground\fR.
 .IP "\fB\-pixmap\fR \fIfile[;geom[:op1][:op2][...]]\fR" 4
 .IX Item "-pixmap file[;geom[:op1][:op2][...]]"
-Compile \fIafterimage\fR: Specify image file for the background and also
+Compile \fIafterimage\fR or \fIpixbuf\fR: Specify image file for the background and also
 optionally specify its scaling with a geometry string. Note you may need to
 add quotes to avoid special shell interpretation of the \f(CW\*(C`;\*(C'\fR in the
 command-line; for more details see resource \fBbackgroundPixmap\fR.
@@ -796,12 +796,10 @@ and the text.
 .IX Item "backgroundPixmap: file[;geom[:op1][:op2][...]]"
 Use the specified image file for the background and also
 optionally specify its scaling with a geometry string \fBWxH+X+Y\fR,
-(default \f(CW\*(C`0x0+50+50\*(C'\fR) in which \fB\*(L"W\*(R" / \*(L"H\*(R"\fR specify the
+(default \f(CW\*(C`100x100+50+50\*(C'\fR) in which \fB\*(L"W\*(R" / \*(L"H\*(R"\fR specify the
 horizontal/vertical scale (percent), and \fB\*(L"X\*(R" / \*(L"Y\*(R"\fR locate the image
-centre (percent).  A scale of 0 displays the image with tiling. A scale
-of 1 displays the image without any scaling. A scale of 2 to 9 specifies
-an integer number of images in that direction. No image will be magnified
-beyond 10 times its original size. The maximum permitted scale is 1000.
+centre (percent).  A scale of 0 displays the image with tiling.
+The maximum permitted scale is 1000.
 Additional operations can be specified after colon \fB:op1:op2...\fR.
 Supported operations are:
 .Sp
@@ -817,8 +815,9 @@ Supported operations are:
 .Ve
 .Sp
 If used in conjunction with \fB\-tr\fR option, the specified pixmap will be
-blended over transparency image using either alpha-blending, or any
-other blending type, specified with \fB\-blt \*(L"type\*(R"\fR option.
+blended over transparency image using alpha-blending. If \fIafterimage\fR
+support has been compiled in it is possible to choose other blending
+types with \fB\-blt \*(L"type\*(R"\fR option.
 .IP "\fBpath:\fR \fIpath\fR" 4
 .IX Item "path: path"
 Specify the colon-delimited search path for finding background image files.
@@ -1161,7 +1160,7 @@ keysym value (\fB0x0000 \- 0xFFFF\fR). Note that the lookup of \fIsym\fRs is not
 performed in an exact manner; however, the closest match is assured.
 .Sp
 \&\fIstring\fR may contain escape values (\f(CW\*(C`\en\*(C'\fR: newline, \f(CW\*(C`\e000\*(C'\fR: octal
-number), see \s-1RESOURCES\s0 in \f(CW\*(C`man 7 X\*(C'\fR for futher details.
+number), see \s-1RESOURCES\s0 in \f(CW\*(C`man 7 X\*(C'\fR for further details.
 .Sp
 You can define a range of keysyms in one shot by providing a \fIstring\fR
 with pattern \fBlist/PREFIX/MIDDLE/SUFFIX\fR, where the delimiter `/'
@@ -1200,7 +1199,7 @@ manpage. For example, the \fIselection\fR extension (activated via
 .Ve
 .Sp
 Due the the large number of modifier combinations, a defined key mapping
-will match if at \fIat least\fR the specified identifiers are being set, and
+will match if \fIat least\fR the specified identifiers are being set, and
 no other key mappings with those and more bits are being defined. That
 means that defining a key map for \f(CW\*(C`a\*(C'\fR will automatically provide
 definitions for \f(CW\*(C`Meta\-a\*(C'\fR, \f(CW\*(C`Shift\-a\*(C'\fR and so on, unless some of those are defined

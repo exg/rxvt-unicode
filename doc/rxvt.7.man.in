@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2010-07-24" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2010-10-15" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -405,7 +405,7 @@ your picture with gimp or any other tool:
 \&   @@URXVT_NAME@@ \-pixmap "background.jpg;:root"
 .Ve
 .PP
-That works. If you think it doesn't, you lack AfterImage support, or you
+That works. If you think it doesn't, you lack libAfterImage or GDK-PixBuf support, or you
 are unable to read.
 .PP
 3. Use an \s-1ARGB\s0 visual:
@@ -796,36 +796,17 @@ Historically, either value is correct, but rxvt-unicode adopts the debian
 policy of using \f(CW\*(C`^?\*(C'\fR when unsure, because it's the one and only correct
 choice :).
 .PP
-Rxvt-unicode tries to inherit the current stty settings and uses the value
-of `erase' to guess the value for backspace.  If rxvt-unicode wasn't
-started from a terminal (say, from a menu or by remote shell), then the
-system value of `erase', which corresponds to \s-1CERASE\s0 in <termios.h>, will
-be used (which may not be the same as your stty setting).
-.PP
-For starting a new rxvt-unicode:
+It is possible to toggle between \f(CW\*(C`^H\*(C'\fR and \f(CW\*(C`^?\*(C'\fR with the \s-1DECBKM\s0
+private mode:
 .PP
 .Vb 3
 \&   # use Backspace = ^H
 \&   $ stty erase ^H
-\&   $ @@URXVT_NAME@@
+\&   $ echo \-n "^[[?67h"
 \&
 \&   # use Backspace = ^?
 \&   $ stty erase ^?
-\&   $ @@URXVT_NAME@@
-.Ve
-.PP
-Toggle with \f(CW\*(C`ESC [ 36 h\*(C'\fR / \f(CW\*(C`ESC [ 36 l\*(C'\fR.
-.PP
-For an existing rxvt-unicode:
-.PP
-.Vb 3
-\&   # use Backspace = ^H
-\&   $ stty erase ^H
-\&   $ echo \-n "^[[36h"
-\&
-\&   # use Backspace = ^?
-\&   $ stty erase ^?
-\&   $ echo \-n "^[[36l"
+\&   $ echo \-n "^[[?67l"
 .Ve
 .PP
 This helps satisfy some of the Backspace discrepancies that occur, but
@@ -1065,7 +1046,7 @@ complicated (e.g. japanese), I temporarily switch to a larger font.
 .PP
 The above is all in my \f(CW\*(C`.Xdefaults\*(C'\fR (I don't use \f(CW\*(C`.Xresources\*(C'\fR nor
 \&\f(CW\*(C`xrdb\*(C'\fR). I also have some resources in a separate \f(CW\*(C`.Xdefaults\-hostname\*(C'\fR
-file for different hosts, for example, on ym main desktop, I use:
+file for different hosts, for example, on my main desktop, I use:
 .PP
 .Vb 5
 \&   URxvt.keysym.C\-M\-q: command:\e033[3;5;5t
@@ -2248,7 +2229,7 @@ Ps = 12	Change colour of text cursor foreground to Pt
 Ps = 13	Change colour of mouse foreground to Pt
 Ps = 17	Change background colour of highlight characters to Pt
 Ps = 19	Change foreground colour of highlight characters to Pt
-Ps = 20	Change background pixmap parameters (see section BACKGROUND IMAGE) (Compile AfterImage).
+Ps = 20	Change background pixmap parameters (see section BACKGROUND IMAGE) (Compile afterimage or pixbuf).
 Ps = 39	Change default foreground colour to Pt. [deprecated, use 10]
 Ps = 46	Change Log File to Pt unimplemented
 Ps = 49	Change default background colour to Pt. [deprecated, use 11]
@@ -2365,7 +2346,7 @@ Note: \fBShift\fR + \fBF1\fR\-\fBF10\fR generates \fBF11\fR\-\fBF20\fR
 For the keypad, use \fBShift\fR to temporarily override Application-Keypad
 setting use \fBNum_Lock\fR to toggle Application-Keypad setting if
 \&\fBNum_Lock\fR is off, toggle Application-Keypad setting. Also note that
-values of \fBHome\fR, \fBEnd\fR, \fBDelete\fR may have been compiled differently on
+values of \fBBackSpace\fR, \fBDelete\fR may have been compiled differently on
 your system.
 .TS
 l l l l l .
@@ -2541,18 +2522,20 @@ Write user and tty to lastlog file (used by programs like
 \&\-\-enable\-utmp to also be specified.
 .IP "\-\-enable\-afterimage (default: on)" 4
 .IX Item "--enable-afterimage (default: on)"
-Add support for libAfterImage to be used for transparency and background
+Add support for libAfterImage to be used for background
 images. It adds support for many file formats including \s-1JPG\s0, \s-1PNG\s0,
 \&\s-1SVG\s0, \s-1TIFF\s0, \s-1GIF\s0, \s-1XPM\s0, \s-1BMP\s0, \s-1ICO\s0, \s-1XCF\s0, \s-1TGA\s0 and AfterStep image \s-1XML\s0
 (<http://www.afterstep.org/visualdoc.php?show=asimagexml>).
-.Sp
-This option also adds such eye candy as blending an image over the root
-background, as well as dynamic scaling and bluring of background images.
 .Sp
 Note that with this option enabled, @@RXVT_NAME@@'s memory footprint might
 increase by a few megabytes even if no extra features are used (mostly due
 to third-party libraries used by libAI). Memory footprint may somewhat be
 lowered if libAfterImage is configured without support for \s-1SVG\s0.
+.IP "\-\-enable\-pixbuf (default: off)" 4
+.IX Item "--enable-pixbuf (default: off)"
+Add support for GDK-PixBuf to be used for background images.
+It adds support for many file formats including \s-1JPG\s0, \s-1PNG\s0,
+\&\s-1TIFF\s0, \s-1GIF\s0, \s-1XPM\s0, \s-1BMP\s0, \s-1ICO\s0 and \s-1TGA\s0.
 .IP "\-\-enable\-transparency (default: on)" 4
 .IX Item "--enable-transparency (default: on)"
 Add support for backgrounds, creating illusion of transparency in the term.

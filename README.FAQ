@@ -206,8 +206,8 @@ xterm? I need this to decide about setting colours etc.
        convert wallpaper.jpg -blur 20x20 -modulate 30 background.jpg
        urxvt -pixmap "background.jpg;:root"
 
-    That works. If you think it doesn't, you lack AfterImage support, or you
-    are unable to read.
+    That works. If you think it doesn't, you lack libAfterImage or
+    GDK-PixBuf support, or you are unable to read.
 
     3. Use an ARGB visual:
 
@@ -528,34 +528,16 @@ xterm? I need this to decide about setting colours etc.
     debian policy of using "^?" when unsure, because it's the one and only
     correct choice :).
 
-    Rxvt-unicode tries to inherit the current stty settings and uses the
-    value of `erase' to guess the value for backspace. If rxvt-unicode
-    wasn't started from a terminal (say, from a menu or by remote shell),
-    then the system value of `erase', which corresponds to CERASE in
-    <termios.h>, will be used (which may not be the same as your stty
-    setting).
-
-    For starting a new rxvt-unicode:
+    It is possible to toggle between "^H" and "^?" with the DECBKM private
+    mode:
 
        # use Backspace = ^H
        $ stty erase ^H
-       $ urxvt
+       $ echo -n "^[[?67h"
 
        # use Backspace = ^?
        $ stty erase ^?
-       $ urxvt
-
-    Toggle with "ESC [ 36 h" / "ESC [ 36 l".
-
-    For an existing rxvt-unicode:
-
-       # use Backspace = ^H
-       $ stty erase ^H
-       $ echo -n "^[[36h"
-
-       # use Backspace = ^?
-       $ stty erase ^?
-       $ echo -n "^[[36l"
+       $ echo -n "^[[?67l"
 
     This helps satisfy some of the Backspace discrepancies that occur, but
     if you use Backspace = "^H", make sure that the termcap/terminfo value
@@ -757,7 +739,7 @@ xterm? I need this to decide about setting colours etc.
 
     The above is all in my ".Xdefaults" (I don't use ".Xresources" nor
     "xrdb"). I also have some resources in a separate ".Xdefaults-hostname"
-    file for different hosts, for example, on ym main desktop, I use:
+    file for different hosts, for example, on my main desktop, I use:
 
        URxvt.keysym.C-M-q: command:\033[3;5;5t
        URxvt.keysym.C-M-y: command:\033[3;5;606t
