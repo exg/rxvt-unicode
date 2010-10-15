@@ -636,7 +636,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
 #ifdef HAVE_PIXBUF
   g_type_init ();
-  gdk_pixbuf_xlib_init (dpy, display->screen);
+  gdk_pixbuf_xlib_init_with_depth (dpy, display->screen, depth);
 #endif
 
 #if ENABLE_PERL
