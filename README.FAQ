@@ -183,10 +183,10 @@ xterm? I need this to decide about setting colours etc.
 
   Rendering, Font & Look and Feel Issues
    I can't get transparency working, what am I doing wrong?
-    First of all, please address all transparency related issues to Sasha
-    Vasko at sasha@aftercode.net and do not bug the author about it. Also,
-    if you can't get it working consider it a rite of passage: ... and you
-    failed.
+    First of all, transparency isn't officially supported in rxvt-unicode,
+    so you are mostly on your own. Do not bug the author about it (but you
+    may bug everybody else). Also, if you can't get it working consider it a
+    rite of passage: ... and you failed.
 
     Here are four ways to get transparency. Do read the manpage and option
     descriptions for the programs mentioned and rxvt-unicode. Really, do it!

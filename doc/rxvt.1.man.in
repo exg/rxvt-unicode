@@ -245,9 +245,6 @@ Turn on/off illusion of a transparent window background; resource \fBtransparent
 .Sp
 \&\fB\-ip\fR is still accepted as an obsolete alias but will be removed in
 future versions.
-.Sp
-\&\fIPlease address all transparency related issues to Sasha Vasko at
-sasha@aftercode.net. Read the \s-1FAQ\s0 (man 7 @@RXVT_NAME@@)!\fR
 .IP "\fB\-fade\fR \fInumber\fR" 4
 .IX Item "-fade number"
 Fade the text by the given percentage when focus is lost. Small values
@@ -753,9 +750,6 @@ Turn on/off illusion of a transparent window background.
 .Sp
 \&\fBinheritPixmap\fR is still accepted as an obsolete alias but will be removed in
 future versions.
-.Sp
-\&\fIPlease address all transparency related issues to Sasha Vasko at
-sasha@aftercode.net. Read the \s-1FAQ\s0 (man 7 @@RXVT_NAME@@)!\fR
 .IP "\fBfading:\fR \fInumber\fR" 4
 .IX Item "fading: number"
 Fade the text by the given percentage when focus is lost; option \fB\-fade\fR.

@@ -158,6 +158,7 @@ src/perl/tabbed
 src/perl/xim-onthespot
 src/perl/readline
 src/perl/remote-clipboard
+src/perl/clipboard-osc
 src/perl/kuake
 src/perl/example-refresh-hooks
 src/perl/block-graphics-to-ascii
