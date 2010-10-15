@@ -131,9 +131,6 @@ Turn on/off illusion of a transparent window background; resource B<transparent>
 B<-ip> is still accepted as an obsolete alias but will be removed in
 future versions.
 
-I<Please address all transparency related issues to Sasha Vasko at
-sasha@aftercode.net. Read the FAQ (man 7 @@RXVT_NAME@@)!>
-
 =item B<-fade> I<number>
 
 Fade the text by the given percentage when focus is lost. Small values
@@ -708,9 +705,6 @@ Turn on/off illusion of a transparent window background.
 
 B<inheritPixmap> is still accepted as an obsolete alias but will be removed in
 future versions.
-
-I<Please address all transparency related issues to Sasha Vasko at
-sasha@aftercode.net. Read the FAQ (man 7 @@RXVT_NAME@@)!>
 
 =item B<fading:> I<number>
 

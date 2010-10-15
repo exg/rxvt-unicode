@@ -54,6 +54,8 @@ TODO:        - upgrade to libev-4.00.
         - add rxvt-unicode-256color terminfo and use it by default in 256 colors mode.
         - actually added macosx-clipboard-native, which should have been in
           the 9.07 release but had been forgotten.
+        - fix hang if DECAWM is not set and there are not enough columns to insert a
+          character (Emanuele Giaquinta).
         - cub1 ("backspace") will not respect wrapping when past the rightmost column,
           working around a shortcoming of most tty line discipline's line editing.
 	- add support for grabbing the clipboard selection and extend
