@@ -919,11 +919,10 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
             }
 
           // nuke the character at this position, if required
-          if (expect_false (
-                line->t[screen.cur.col] == NOCHAR
-                || (screen.cur.col < ncol - 1
-                    && line->t[screen.cur.col + 1] == NOCHAR)
-             ))
+          // due to wonderful coincidents everywehere else in this loop
+          // we never have to check for overwriting a wide char itself,
+          // only it's tail.
+          if (expect_false (line->t[screen.cur.col] == NOCHAR))
             scr_kill_char (*line, screen.cur.col);
 
           line->touch ();
