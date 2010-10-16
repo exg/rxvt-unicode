@@ -2,7 +2,7 @@ diff --git a/src/Makefile.in b/src/Makefile.in
 index 2136e69..3d7ddea 100644
 --- a/src/Makefile.in
 +++ b/src/Makefile.in
-@@ -37,7 +37,7 @@ COMMON = \
+@@ -38,7 +38,7 @@ COMMON = \
  	ptytty.o proxy.o screen.o scrollbar.o scrollbar-next.o scrollbar-rxvt.o \
  	scrollbar-xterm.o scrollbar-plain.o xdefaults.o encoding.o \
  	rxvttoolkit.o rxvtutil.o keyboard.o \
@@ -15,8 +15,8 @@ diff --git a/src/rxvt.h b/src/rxvt.h
 index 64b7fc0..1897040 100644
 --- a/src/rxvt.h
 +++ b/src/rxvt.h
-@@ -646,6 +646,12 @@ typedef struct _mwmhints {
-  */
+@@ -621,6 +621,12 @@ typedef struct _mwmhints {
+ // speed hack, copy some member variable into a local variable of the same name
  #define dLocal(type,name)       type const name = this->name
  
 +int mk_wcwidth(wchar_t c);
