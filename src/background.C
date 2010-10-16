@@ -1115,6 +1115,7 @@ bgPixmap_t::set_shade (const char *shade_str)
   return false;
 }
 
+#if XFT
 static void
 get_gaussian_kernel (int radius, int width, double *kernel, XFixed *params)
 {
@@ -1135,6 +1136,7 @@ get_gaussian_kernel (int radius, int width, double *kernel, XFixed *params)
     for (int i = 0; i < width; i++)
       params[i+2] = XDoubleToFixed (kernel[i] / sum);
 }
+#endif
 
 bool
 bgPixmap_t::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
