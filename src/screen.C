@@ -919,7 +919,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
             }
 
           // nuke the character at this position, if required
-          // due to wonderful coincidents everywhere else in this loop
+          // due to wonderful coincidences everywhere else in this loop
           // we never have to check for overwriting a wide char itself,
           // only its tail.
           if (expect_false (line->t[screen.cur.col] == NOCHAR))
