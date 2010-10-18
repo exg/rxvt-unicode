@@ -1772,8 +1772,8 @@ ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm
               for (; p < pl; p++)
                 {
                   *p = lookup_r[(*p & 0x7c00)>>10] |
-                    lookup_g[(*p & 0x03e0)>> 5] |
-                    lookup_b[(*p & 0x001f)];
+                       lookup_g[(*p & 0x03e0)>> 5] |
+                       lookup_b[(*p & 0x001f)];
                 }
               p1 = (unsigned short *) ((char *) p1 + srcImage->bytes_per_line);
             }
@@ -1791,8 +1791,8 @@ ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm
               for (; p < pl; p++)
                 {
                   *p = lookup_r[(*p & 0xf800)>>11] |
-                    lookup_g[(*p & 0x07e0)>> 5] |
-                    lookup_b[(*p & 0x001f)];
+                       lookup_g[(*p & 0x07e0)>> 5] |
+                       lookup_b[(*p & 0x001f)];
                 }
               p1 = (unsigned short *) ((char *) p1 + srcImage->bytes_per_line);
             }
@@ -1830,9 +1830,9 @@ ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm
               for (; p < pl; p++)
                 {
                   *p = lookup_r[(*p & 0xff0000)>>16] |
-                    lookup_g[(*p & 0x00ff00)>> 8] |
-                    lookup_b[(*p & 0x0000ff)] |
-                    (*p & ~0xffffff);
+                       lookup_g[(*p & 0x00ff00)>> 8] |
+                       lookup_b[(*p & 0x0000ff)] |
+                       (*p & ~0xffffff);
                 }
               p1 = (RUINT32T *) ((char *) p1 + srcImage->bytes_per_line);
             }
