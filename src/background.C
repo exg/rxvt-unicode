@@ -1377,12 +1377,12 @@ bgPixmap_t::make_transparency_pixmap ()
         {
           if (flags & (blurNeeded | blurServerSide))
             {
-              if (blur_pixmap (tiled_root_pmap, DefaultVisual (dpy, target->display->screen), window_width, window_height))
+              if (blur_pixmap (tiled_root_pmap, DefaultVisual (dpy, screen), window_width, window_height))
                 result |= transpPmapBlurred;
             }
           if (flags & (tintNeeded | tintServerSide))
             {
-              if (tint_pixmap (tiled_root_pmap, DefaultVisual (dpy, target->display->screen), window_width, window_height))
+              if (tint_pixmap (tiled_root_pmap, DefaultVisual (dpy, screen), window_width, window_height))
                 result |= transpPmapTinted;
             }
         } /* server side rendering completed */
