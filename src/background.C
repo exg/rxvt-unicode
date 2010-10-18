@@ -1125,9 +1125,9 @@ get_gaussian_kernel (int radius, int width, double *kernel, XFixed *params)
 
     for (int i = 0; i < width; i++)
       {
-	double x = i - width / 2;
-	kernel[i] = exp (-(x * x) / (2.0 * sigma * sigma)) / scale;
-	sum += kernel[i];
+        double x = i - width / 2;
+        kernel[i] = exp (-(x * x) / (2.0 * sigma * sigma)) / scale;
+        sum += kernel[i];
       }
 
     params[0] = XDoubleToFixed (width);
@@ -1637,12 +1637,13 @@ ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm
   mask_b = visual->blue_mask;
 
   /* boring lookup table pre-initialization */
-  switch (srcImage->bits_per_pixel) {
-    case 15:
-      if ((mask_r != 0x7c00) ||
-          (mask_g != 0x03e0) ||
-          (mask_b != 0x001f))
-        return;
+  switch (srcImage->bits_per_pixel)
+    {
+      case 15:
+        if ((mask_r != 0x7c00) ||
+            (mask_g != 0x03e0) ||
+            (mask_b != 0x001f))
+          return;
         lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(32+32+32));
         lookup_r = lookup;
         lookup_g = lookup+32;
@@ -1650,12 +1651,12 @@ ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm
         sh_r = 10;
         sh_g = 5;
         sh_b = 0;
-      break;
-    case 16:
-      if ((mask_r != 0xf800) ||
-          (mask_g != 0x07e0) ||
-          (mask_b != 0x001f))
-        return;
+        break;
+      case 16:
+        if ((mask_r != 0xf800) ||
+            (mask_g != 0x07e0) ||
+            (mask_b != 0x001f))
+          return;
         lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(32+64+32));
         lookup_r = lookup;
         lookup_g = lookup+32;
@@ -1663,12 +1664,12 @@ ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm
         sh_r = 11;
         sh_g = 5;
         sh_b = 0;
-      break;
-    case 24:
-      if ((mask_r != 0xff0000) ||
-          (mask_g != 0x00ff00) ||
-          (mask_b != 0x0000ff))
-        return;
+        break;
+      case 24:
+        if ((mask_r != 0xff0000) ||
+            (mask_g != 0x00ff00) ||
+            (mask_b != 0x0000ff))
+          return;
         lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(256+256+256));
         lookup_r = lookup;
         lookup_g = lookup+256;
@@ -1676,12 +1677,12 @@ ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm
         sh_r = 16;
         sh_g = 8;
         sh_b = 0;
-      break;
-    case 32:
-      if ((mask_r != 0xff0000) ||
-          (mask_g != 0x00ff00) ||
-          (mask_b != 0x0000ff))
-        return;
+        break;
+      case 32:
+        if ((mask_r != 0xff0000) ||
+            (mask_g != 0x00ff00) ||
+            (mask_b != 0x0000ff))
+          return;
         lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(256+256+256));
         lookup_r = lookup;
         lookup_g = lookup+256;
@@ -1689,152 +1690,155 @@ ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm
         sh_r = 16;
         sh_g = 8;
         sh_b = 0;
-      break;
-    default:
-      return; /* we do not support this color depth */
-  }
+        break;
+      default:
+        return; /* we do not support this color depth */
+    }
 
   /* prepare limits for color transformation (each channel is handled separately) */
-  if (shade > 100) {
-    shade = 200 - shade;
+  if (shade > 100)
+    {
+      shade = 200 - shade;
 
-    lower_lim_r = 65535-rm;
-    lower_lim_g = 65535-gm;
-    lower_lim_b = 65535-bm;
+      lower_lim_r = 65535-rm;
+      lower_lim_g = 65535-gm;
+      lower_lim_b = 65535-bm;
 
-    lower_lim_r = 65535-(unsigned int)(((RUINT32T)lower_lim_r)*((RUINT32T)shade)/100);
-    lower_lim_g = 65535-(unsigned int)(((RUINT32T)lower_lim_g)*((RUINT32T)shade)/100);
-    lower_lim_b = 65535-(unsigned int)(((RUINT32T)lower_lim_b)*((RUINT32T)shade)/100);
+      lower_lim_r = 65535-(unsigned int)(((RUINT32T)lower_lim_r)*((RUINT32T)shade)/100);
+      lower_lim_g = 65535-(unsigned int)(((RUINT32T)lower_lim_g)*((RUINT32T)shade)/100);
+      lower_lim_b = 65535-(unsigned int)(((RUINT32T)lower_lim_b)*((RUINT32T)shade)/100);
 
-    upper_lim_r = upper_lim_g = upper_lim_b = 65535;
-  } else {
+      upper_lim_r = upper_lim_g = upper_lim_b = 65535;
+    }
+  else
+    {
 
-    lower_lim_r = lower_lim_g = lower_lim_b = 0;
+      lower_lim_r = lower_lim_g = lower_lim_b = 0;
 
-    upper_lim_r = (unsigned int)((((RUINT32T)rm)*((RUINT32T)shade))/100);
-    upper_lim_g = (unsigned int)((((RUINT32T)gm)*((RUINT32T)shade))/100);
-    upper_lim_b = (unsigned int)((((RUINT32T)bm)*((RUINT32T)shade))/100);
-  }
+      upper_lim_r = (unsigned int)((((RUINT32T)rm)*((RUINT32T)shade))/100);
+      upper_lim_g = (unsigned int)((((RUINT32T)gm)*((RUINT32T)shade))/100);
+      upper_lim_b = (unsigned int)((((RUINT32T)bm)*((RUINT32T)shade))/100);
+    }
 
   /* switch red and blue bytes if necessary, we need it for some weird XServers like XFree86 3.3.3.1 */
   if ((srcImage->bits_per_pixel == 24) && (mask_r >= 0xFF0000))
-  {
-    unsigned int tmp;
+    {
+      unsigned int tmp;
 
-    tmp = lower_lim_r;
-    lower_lim_r = lower_lim_b;
-    lower_lim_b = tmp;
+      tmp = lower_lim_r;
+      lower_lim_r = lower_lim_b;
+      lower_lim_b = tmp;
 
-    tmp = upper_lim_r;
-    upper_lim_r = upper_lim_b;
-    upper_lim_b = tmp;
-  }
+      tmp = upper_lim_r;
+      upper_lim_r = upper_lim_b;
+      upper_lim_b = tmp;
+    }
 
   /* fill our lookup tables */
   for (i = 0; i <= mask_r>>sh_r; i++)
-  {
-    RUINT32T tmp;
-    tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_r-lower_lim_r));
-    tmp += ((RUINT32T)(mask_r>>sh_r))*((RUINT32T)lower_lim_r);
-    lookup_r[i] = (tmp/65535)<<sh_r;
-  }
+    {
+      RUINT32T tmp;
+      tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_r-lower_lim_r));
+      tmp += ((RUINT32T)(mask_r>>sh_r))*((RUINT32T)lower_lim_r);
+      lookup_r[i] = (tmp/65535)<<sh_r;
+    }
   for (i = 0; i <= mask_g>>sh_g; i++)
-  {
-    RUINT32T tmp;
-    tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_g-lower_lim_g));
-    tmp += ((RUINT32T)(mask_g>>sh_g))*((RUINT32T)lower_lim_g);
-    lookup_g[i] = (tmp/65535)<<sh_g;
-  }
+    {
+      RUINT32T tmp;
+      tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_g-lower_lim_g));
+      tmp += ((RUINT32T)(mask_g>>sh_g))*((RUINT32T)lower_lim_g);
+      lookup_g[i] = (tmp/65535)<<sh_g;
+    }
   for (i = 0; i <= mask_b>>sh_b; i++)
-  {
-    RUINT32T tmp;
-    tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_b-lower_lim_b));
-    tmp += ((RUINT32T)(mask_b>>sh_b))*((RUINT32T)lower_lim_b);
-    lookup_b[i] = (tmp/65535)<<sh_b;
-  }
+    {
+      RUINT32T tmp;
+      tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_b-lower_lim_b));
+      tmp += ((RUINT32T)(mask_b>>sh_b))*((RUINT32T)lower_lim_b);
+      lookup_b[i] = (tmp/65535)<<sh_b;
+    }
 
   /* apply table to input image (replacing colors by newly calculated ones) */
   switch (srcImage->bits_per_pixel)
-  {
-    case 15:
     {
-      unsigned short *p1, *pf, *p, *pl;
-      p1 = (unsigned short *) srcImage->data;
-      pf = (unsigned short *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
-      while (p1 < pf)
-      {
-        p = p1;
-        pl = p1 + srcImage->width;
-        for (; p < pl; p++)
+      case 15:
         {
-          *p = lookup_r[(*p & 0x7c00)>>10] |
-               lookup_g[(*p & 0x03e0)>> 5] |
-               lookup_b[(*p & 0x001f)];
+          unsigned short *p1, *pf, *p, *pl;
+          p1 = (unsigned short *) srcImage->data;
+          pf = (unsigned short *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
+          while (p1 < pf)
+            {
+              p = p1;
+              pl = p1 + srcImage->width;
+              for (; p < pl; p++)
+                {
+                  *p = lookup_r[(*p & 0x7c00)>>10] |
+                    lookup_g[(*p & 0x03e0)>> 5] |
+                    lookup_b[(*p & 0x001f)];
+                }
+              p1 = (unsigned short *) ((char *) p1 + srcImage->bytes_per_line);
+            }
+          break;
         }
-        p1 = (unsigned short *) ((char *) p1 + srcImage->bytes_per_line);
-      }
-      break;
-    }
-    case 16:
-    {
-      unsigned short *p1, *pf, *p, *pl;
-      p1 = (unsigned short *) srcImage->data;
-      pf = (unsigned short *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
-      while (p1 < pf)
-      {
-        p = p1;
-        pl = p1 + srcImage->width;
-        for (; p < pl; p++)
+      case 16:
         {
-          *p = lookup_r[(*p & 0xf800)>>11] |
-               lookup_g[(*p & 0x07e0)>> 5] |
-               lookup_b[(*p & 0x001f)];
+          unsigned short *p1, *pf, *p, *pl;
+          p1 = (unsigned short *) srcImage->data;
+          pf = (unsigned short *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
+          while (p1 < pf)
+            {
+              p = p1;
+              pl = p1 + srcImage->width;
+              for (; p < pl; p++)
+                {
+                  *p = lookup_r[(*p & 0xf800)>>11] |
+                    lookup_g[(*p & 0x07e0)>> 5] |
+                    lookup_b[(*p & 0x001f)];
+                }
+              p1 = (unsigned short *) ((char *) p1 + srcImage->bytes_per_line);
+            }
+          break;
         }
-        p1 = (unsigned short *) ((char *) p1 + srcImage->bytes_per_line);
-      }
-      break;
-    }
-    case 24:
-    {
-      unsigned char *p1, *pf, *p, *pl;
-      p1 = (unsigned char *) srcImage->data;
-      pf = (unsigned char *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
-      while (p1 < pf)
-      {
-        p = p1;
-        pl = p1 + srcImage->width * 3;
-        for (; p < pl; p += 3)
+      case 24:
         {
-          p[0] = lookup_r[(p[0] & 0xff0000)>>16];
-          p[1] = lookup_r[(p[1] & 0x00ff00)>> 8];
-          p[2] = lookup_r[(p[2] & 0x0000ff)];
+          unsigned char *p1, *pf, *p, *pl;
+          p1 = (unsigned char *) srcImage->data;
+          pf = (unsigned char *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
+          while (p1 < pf)
+            {
+              p = p1;
+              pl = p1 + srcImage->width * 3;
+              for (; p < pl; p += 3)
+                {
+                  p[0] = lookup_r[(p[0] & 0xff0000)>>16];
+                  p[1] = lookup_r[(p[1] & 0x00ff00)>> 8];
+                  p[2] = lookup_r[(p[2] & 0x0000ff)];
+                }
+              p1 = (unsigned char *) ((char *) p1 + srcImage->bytes_per_line);
+            }
+          break;
         }
-        p1 = (unsigned char *) ((char *) p1 + srcImage->bytes_per_line);
-      }
-      break;
-    }
-    case 32:
-    {
-      RUINT32T *p1, *pf, *p, *pl;
-      p1 = (RUINT32T *) srcImage->data;
-      pf = (RUINT32T *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
+      case 32:
+        {
+          RUINT32T *p1, *pf, *p, *pl;
+          p1 = (RUINT32T *) srcImage->data;
+          pf = (RUINT32T *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
 
-      while (p1 < pf)
-      {
-        p = p1;
-        pl = p1 + srcImage->width;
-        for (; p < pl; p++)
-        {
-          *p = lookup_r[(*p & 0xff0000)>>16] |
-               lookup_g[(*p & 0x00ff00)>> 8] |
-               lookup_b[(*p & 0x0000ff)] |
-               (*p & ~0xffffff);
+          while (p1 < pf)
+            {
+              p = p1;
+              pl = p1 + srcImage->width;
+              for (; p < pl; p++)
+                {
+                  *p = lookup_r[(*p & 0xff0000)>>16] |
+                    lookup_g[(*p & 0x00ff00)>> 8] |
+                    lookup_b[(*p & 0x0000ff)] |
+                    (*p & ~0xffffff);
+                }
+              p1 = (RUINT32T *) ((char *) p1 + srcImage->bytes_per_line);
+            }
+          break;
         }
-        p1 = (RUINT32T *) ((char *) p1 + srcImage->bytes_per_line);
-      }
-      break;
     }
-  }
 
   free (lookup);
 }
