@@ -224,7 +224,7 @@ make_align_position (int align, int window_size, int image_size)
 
   if (align >= 0 && align <= 100)
     return diff * align / 100;
-  else if (align > 100 && align <= 200 )
+  else if (align > 100 && align <= 200)
     return ((align - 100) * smaller / 100) + window_size - smaller;
   else if (align >= -100 && align < 0)
     return ((align + 100) * smaller / 100) - image_size;
@@ -1629,7 +1629,7 @@ ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm
 
   Visual *visual = term->visual;
 
-  if (visual->c_class != TrueColor || srcImage->format != ZPixmap) return ;
+  if (visual->c_class != TrueColor || srcImage->format != ZPixmap) return;
 
   /* for convenience */
   mask_r = visual->red_mask;
@@ -1717,7 +1717,7 @@ ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm
   }
 
   /* switch red and blue bytes if necessary, we need it for some weird XServers like XFree86 3.3.3.1 */
-  if ((srcImage->bits_per_pixel == 24) && (mask_r >= 0xFF0000 ))
+  if ((srcImage->bits_per_pixel == 24) && (mask_r >= 0xFF0000))
   {
     unsigned int tmp;
 
