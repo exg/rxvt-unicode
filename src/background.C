@@ -1009,15 +1009,15 @@ bgPixmap_t::set_blur_radius (const char *geom)
     flags |= blurNeeded;
 
 #if XFT
-      XFilters *filters = XRenderQueryFilters (target->dpy, target->display->root);
-      if (filters)
-        {
-          for (int i = 0; i < filters->nfilter; i++)
-            if (!strcmp (filters->filter[i], FilterConvolution))
-              flags |= bgPixmap_t::blurServerSide;
+  XFilters *filters = XRenderQueryFilters (target->dpy, target->display->root);
+  if (filters)
+    {
+      for (int i = 0; i < filters->nfilter; i++)
+        if (!strcmp (filters->filter[i], FilterConvolution))
+          flags |= bgPixmap_t::blurServerSide;
 
-          XFree (filters);
-        }
+      XFree (filters);
+    }
 #endif
 
   return (changed > 0);
@@ -1119,22 +1119,22 @@ bgPixmap_t::set_shade (const char *shade_str)
 static void
 get_gaussian_kernel (int radius, int width, double *kernel, XFixed *params)
 {
-    double sigma = radius / 2.0;
-    double scale = sqrt (2.0 * M_PI) * sigma;
-    double sum = 0.0;
+  double sigma = radius / 2.0;
+  double scale = sqrt (2.0 * M_PI) * sigma;
+  double sum = 0.0;
 
-    for (int i = 0; i < width; i++)
-      {
-        double x = i - width / 2;
-        kernel[i] = exp (-(x * x) / (2.0 * sigma * sigma)) / scale;
-        sum += kernel[i];
-      }
+  for (int i = 0; i < width; i++)
+    {
+      double x = i - width / 2;
+      kernel[i] = exp (-(x * x) / (2.0 * sigma * sigma)) / scale;
+      sum += kernel[i];
+    }
 
-    params[0] = XDoubleToFixed (width);
-    params[1] = XDoubleToFixed (1);
+  params[0] = XDoubleToFixed (width);
+  params[1] = XDoubleToFixed (1);
 
-    for (int i = 0; i < width; i++)
-      params[i+2] = XDoubleToFixed (kernel[i] / sum);
+  for (int i = 0; i < width; i++)
+    params[i+2] = XDoubleToFixed (kernel[i] / sum);
 }
 #endif
 
