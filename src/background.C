@@ -1149,7 +1149,7 @@ bgPixmap_t::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 
   Display *dpy = target->dpy;
   XRenderPictureAttributes pa;
-  XRenderPictFormat *format = XRenderFindVisualFormat (dpy, target->visual);
+  XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
 
   Picture src = XRenderCreatePicture (dpy, pixmap, format, 0, &pa);
   Picture dst = XRenderCreatePicture (dpy, pixmap, format, 0, &pa);
@@ -1419,7 +1419,7 @@ bgPixmap_t::set_root_pixmap ()
 # endif /* ENABLE_TRANSPARENCY */
 
 # ifndef HAVE_AFTERIMAGE
-static void ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm);
+static void ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm);
 # endif
 
 bool
@@ -1473,7 +1473,7 @@ bgPixmap_t::render ()
           rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
           if (flags & tintSet)
             tint.get (c);
-          ShadeXImage (target, result, shade, c.r, c.g, c.b);
+          ShadeXImage (DefaultVisual (target->dpy, target->display->screen), result, shade, c.r, c.g, c.b);
         }
 #  endif
 
@@ -1618,7 +1618,7 @@ bgPixmap_t::apply ()
 typedef uint32_t RUINT32T;
 
 static void
-ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm)
+ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
 {
   int sh_r, sh_g, sh_b;
   RUINT32T mask_r, mask_g, mask_b;
@@ -1626,8 +1626,6 @@ ShadeXImage(rxvt_term *term, XImage *srcImage, int shade, int rm, int gm, int bm
   unsigned int lower_lim_r, lower_lim_g, lower_lim_b;
   unsigned int upper_lim_r, upper_lim_g, upper_lim_b;
   int i;
-
-  Visual *visual = term->visual;
 
   if (visual->c_class != TrueColor || srcImage->format != ZPixmap) return;
 
