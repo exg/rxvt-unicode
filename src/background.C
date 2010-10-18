@@ -1635,7 +1635,7 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
   mask_b = visual->blue_mask;
 
   /* boring lookup table pre-initialization */
-  switch (srcImage->bits_per_pixel)
+  switch (srcImage->depth)
     {
       case 15:
         if ((mask_r != 0x7c00) ||
@@ -1718,20 +1718,6 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
       upper_lim_b = (unsigned int)((((RUINT32T)bm)*((RUINT32T)shade))/100);
     }
 
-  /* switch red and blue bytes if necessary, we need it for some weird XServers like XFree86 3.3.3.1 */
-  if ((srcImage->bits_per_pixel == 24) && (mask_r >= 0xFF0000))
-    {
-      unsigned int tmp;
-
-      tmp = lower_lim_r;
-      lower_lim_r = lower_lim_b;
-      lower_lim_b = tmp;
-
-      tmp = upper_lim_r;
-      upper_lim_r = upper_lim_b;
-      upper_lim_b = tmp;
-    }
-
   /* fill our lookup tables */
   for (i = 0; i <= mask_r>>sh_r; i++)
     {
@@ -1758,63 +1744,6 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
   /* apply table to input image (replacing colors by newly calculated ones) */
   switch (srcImage->bits_per_pixel)
     {
-      case 15:
-        {
-          unsigned short *p1, *pf, *p, *pl;
-          p1 = (unsigned short *) srcImage->data;
-          pf = (unsigned short *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
-          while (p1 < pf)
-            {
-              p = p1;
-              pl = p1 + srcImage->width;
-              for (; p < pl; p++)
-                {
-                  *p = lookup_r[(*p & 0x7c00)>>10] |
-                       lookup_g[(*p & 0x03e0)>> 5] |
-                       lookup_b[(*p & 0x001f)];
-                }
-              p1 = (unsigned short *) ((char *) p1 + srcImage->bytes_per_line);
-            }
-          break;
-        }
-      case 16:
-        {
-          unsigned short *p1, *pf, *p, *pl;
-          p1 = (unsigned short *) srcImage->data;
-          pf = (unsigned short *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
-          while (p1 < pf)
-            {
-              p = p1;
-              pl = p1 + srcImage->width;
-              for (; p < pl; p++)
-                {
-                  *p = lookup_r[(*p & 0xf800)>>11] |
-                       lookup_g[(*p & 0x07e0)>> 5] |
-                       lookup_b[(*p & 0x001f)];
-                }
-              p1 = (unsigned short *) ((char *) p1 + srcImage->bytes_per_line);
-            }
-          break;
-        }
-      case 24:
-        {
-          unsigned char *p1, *pf, *p, *pl;
-          p1 = (unsigned char *) srcImage->data;
-          pf = (unsigned char *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
-          while (p1 < pf)
-            {
-              p = p1;
-              pl = p1 + srcImage->width * 3;
-              for (; p < pl; p += 3)
-                {
-                  p[0] = lookup_r[(p[0] & 0xff0000)>>16];
-                  p[1] = lookup_r[(p[1] & 0x00ff00)>> 8];
-                  p[2] = lookup_r[(p[2] & 0x0000ff)];
-                }
-              p1 = (unsigned char *) ((char *) p1 + srcImage->bytes_per_line);
-            }
-          break;
-        }
       case 32:
         {
           RUINT32T *p1, *pf, *p, *pl;
@@ -1836,6 +1765,17 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
             }
           break;
         }
+      default:
+        for (int y = 0; y < srcImage->height; y++)
+          for (int x = 0; x < srcImage->width; x++)
+            {
+              unsigned long pixel = XGetPixel (srcImage, x, y);
+              pixel = lookup_r[(pixel & mask_r) >> sh_r] |
+                      lookup_g[(pixel & mask_g) >> sh_g] |
+                      lookup_b[(pixel & mask_b) >> sh_b];
+              XPutPixel (srcImage, x, y, pixel);
+            }
+        break;
     }
 
   free (lookup);
