@@ -1626,6 +1626,7 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
   unsigned int lower_lim_r, lower_lim_g, lower_lim_b;
   unsigned int upper_lim_r, upper_lim_g, upper_lim_b;
   int i;
+  int host_byte_order = byteorder.big_endian () ? MSBFirst : LSBFirst;
 
   if (visual->c_class != TrueColor || srcImage->format != ZPixmap) return;
 
@@ -1742,40 +1743,39 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
     }
 
   /* apply table to input image (replacing colors by newly calculated ones) */
-  switch (srcImage->bits_per_pixel)
+  if (srcImage->bits_per_pixel == 32
+      && (srcImage->depth == 24 || srcImage->depth == 32)
+      && srcImage->byte_order == host_byte_order)
     {
-      case 32:
-        {
-          RUINT32T *p1, *pf, *p, *pl;
-          p1 = (RUINT32T *) srcImage->data;
-          pf = (RUINT32T *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
+      RUINT32T *p1, *pf, *p, *pl;
+      p1 = (RUINT32T *) srcImage->data;
+      pf = (RUINT32T *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
 
-          while (p1 < pf)
+      while (p1 < pf)
+        {
+          p = p1;
+          pl = p1 + srcImage->width;
+          for (; p < pl; p++)
             {
-              p = p1;
-              pl = p1 + srcImage->width;
-              for (; p < pl; p++)
-                {
-                  *p = lookup_r[(*p & 0xff0000)>>16] |
-                       lookup_g[(*p & 0x00ff00)>> 8] |
-                       lookup_b[(*p & 0x0000ff)] |
-                       (*p & ~0xffffff);
-                }
-              p1 = (RUINT32T *) ((char *) p1 + srcImage->bytes_per_line);
+              *p = lookup_r[(*p & 0xff0000) >> 16] |
+                   lookup_g[(*p & 0x00ff00) >> 8] |
+                   lookup_b[(*p & 0x0000ff)] |
+                   (*p & 0xff000000);
             }
-          break;
+          p1 = (RUINT32T *) ((char *) p1 + srcImage->bytes_per_line);
         }
-      default:
-        for (int y = 0; y < srcImage->height; y++)
-          for (int x = 0; x < srcImage->width; x++)
-            {
-              unsigned long pixel = XGetPixel (srcImage, x, y);
-              pixel = lookup_r[(pixel & mask_r) >> sh_r] |
-                      lookup_g[(pixel & mask_g) >> sh_g] |
-                      lookup_b[(pixel & mask_b) >> sh_b];
-              XPutPixel (srcImage, x, y, pixel);
-            }
-        break;
+    }
+  else
+    {
+      for (int y = 0; y < srcImage->height; y++)
+        for (int x = 0; x < srcImage->width; x++)
+          {
+            unsigned long pixel = XGetPixel (srcImage, x, y);
+            pixel = lookup_r[(pixel & mask_r) >> sh_r] |
+                    lookup_g[(pixel & mask_g) >> sh_g] |
+                    lookup_b[(pixel & mask_b) >> sh_b];
+            XPutPixel (srcImage, x, y, pixel);
+          }
     }
 
   free (lookup);
