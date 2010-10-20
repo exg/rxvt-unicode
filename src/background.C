@@ -1615,14 +1615,12 @@ bgPixmap_t::apply ()
 #if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE) && !XFT
 /* taken from aterm-0.4.2 */
 
-typedef uint32_t RUINT32T;
-
 static void
 ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
 {
   int sh_r, sh_g, sh_b;
-  RUINT32T mask_r, mask_g, mask_b;
-  RUINT32T *lookup, *lookup_r, *lookup_g, *lookup_b;
+  uint32_t mask_r, mask_g, mask_b;
+  uint32_t *lookup, *lookup_r, *lookup_g, *lookup_b;
   unsigned int lower_lim_r, lower_lim_g, lower_lim_b;
   unsigned int upper_lim_r, upper_lim_g, upper_lim_b;
   int i;
@@ -1643,7 +1641,7 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
             (mask_g != 0x03e0) ||
             (mask_b != 0x001f))
           return;
-        lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(32+32+32));
+        lookup = (uint32_t *) malloc (sizeof (uint32_t)*(32+32+32));
         lookup_r = lookup;
         lookup_g = lookup+32;
         lookup_b = lookup+32+32;
@@ -1656,7 +1654,7 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
             (mask_g != 0x07e0) ||
             (mask_b != 0x001f))
           return;
-        lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(32+64+32));
+        lookup = (uint32_t *) malloc (sizeof (uint32_t)*(32+64+32));
         lookup_r = lookup;
         lookup_g = lookup+32;
         lookup_b = lookup+32+64;
@@ -1669,7 +1667,7 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
             (mask_g != 0x00ff00) ||
             (mask_b != 0x0000ff))
           return;
-        lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(256+256+256));
+        lookup = (uint32_t *) malloc (sizeof (uint32_t)*(256+256+256));
         lookup_r = lookup;
         lookup_g = lookup+256;
         lookup_b = lookup+256+256;
@@ -1682,7 +1680,7 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
             (mask_g != 0x00ff00) ||
             (mask_b != 0x0000ff))
           return;
-        lookup = (RUINT32T *) malloc (sizeof (RUINT32T)*(256+256+256));
+        lookup = (uint32_t *) malloc (sizeof (uint32_t)*(256+256+256));
         lookup_r = lookup;
         lookup_g = lookup+256;
         lookup_b = lookup+256+256;
@@ -1703,9 +1701,9 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
       lower_lim_g = 65535-gm;
       lower_lim_b = 65535-bm;
 
-      lower_lim_r = 65535-(unsigned int)(((RUINT32T)lower_lim_r)*((RUINT32T)shade)/100);
-      lower_lim_g = 65535-(unsigned int)(((RUINT32T)lower_lim_g)*((RUINT32T)shade)/100);
-      lower_lim_b = 65535-(unsigned int)(((RUINT32T)lower_lim_b)*((RUINT32T)shade)/100);
+      lower_lim_r = 65535-(unsigned int)(((uint32_t)lower_lim_r)*((uint32_t)shade)/100);
+      lower_lim_g = 65535-(unsigned int)(((uint32_t)lower_lim_g)*((uint32_t)shade)/100);
+      lower_lim_b = 65535-(unsigned int)(((uint32_t)lower_lim_b)*((uint32_t)shade)/100);
 
       upper_lim_r = upper_lim_g = upper_lim_b = 65535;
     }
@@ -1714,31 +1712,31 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
 
       lower_lim_r = lower_lim_g = lower_lim_b = 0;
 
-      upper_lim_r = (unsigned int)((((RUINT32T)rm)*((RUINT32T)shade))/100);
-      upper_lim_g = (unsigned int)((((RUINT32T)gm)*((RUINT32T)shade))/100);
-      upper_lim_b = (unsigned int)((((RUINT32T)bm)*((RUINT32T)shade))/100);
+      upper_lim_r = (unsigned int)((((uint32_t)rm)*((uint32_t)shade))/100);
+      upper_lim_g = (unsigned int)((((uint32_t)gm)*((uint32_t)shade))/100);
+      upper_lim_b = (unsigned int)((((uint32_t)bm)*((uint32_t)shade))/100);
     }
 
   /* fill our lookup tables */
   for (i = 0; i <= mask_r>>sh_r; i++)
     {
-      RUINT32T tmp;
-      tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_r-lower_lim_r));
-      tmp += ((RUINT32T)(mask_r>>sh_r))*((RUINT32T)lower_lim_r);
+      uint32_t tmp;
+      tmp = ((uint32_t)i)*((uint32_t)(upper_lim_r-lower_lim_r));
+      tmp += ((uint32_t)(mask_r>>sh_r))*((uint32_t)lower_lim_r);
       lookup_r[i] = (tmp/65535)<<sh_r;
     }
   for (i = 0; i <= mask_g>>sh_g; i++)
     {
-      RUINT32T tmp;
-      tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_g-lower_lim_g));
-      tmp += ((RUINT32T)(mask_g>>sh_g))*((RUINT32T)lower_lim_g);
+      uint32_t tmp;
+      tmp = ((uint32_t)i)*((uint32_t)(upper_lim_g-lower_lim_g));
+      tmp += ((uint32_t)(mask_g>>sh_g))*((uint32_t)lower_lim_g);
       lookup_g[i] = (tmp/65535)<<sh_g;
     }
   for (i = 0; i <= mask_b>>sh_b; i++)
     {
-      RUINT32T tmp;
-      tmp = ((RUINT32T)i)*((RUINT32T)(upper_lim_b-lower_lim_b));
-      tmp += ((RUINT32T)(mask_b>>sh_b))*((RUINT32T)lower_lim_b);
+      uint32_t tmp;
+      tmp = ((uint32_t)i)*((uint32_t)(upper_lim_b-lower_lim_b));
+      tmp += ((uint32_t)(mask_b>>sh_b))*((uint32_t)lower_lim_b);
       lookup_b[i] = (tmp/65535)<<sh_b;
     }
 
@@ -1747,9 +1745,9 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
       && (srcImage->depth == 24 || srcImage->depth == 32)
       && srcImage->byte_order == host_byte_order)
     {
-      RUINT32T *p1, *pf, *p, *pl;
-      p1 = (RUINT32T *) srcImage->data;
-      pf = (RUINT32T *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
+      uint32_t *p1, *pf, *p, *pl;
+      p1 = (uint32_t *) srcImage->data;
+      pf = (uint32_t *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
 
       while (p1 < pf)
         {
@@ -1762,7 +1760,7 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
                    lookup_b[(*p & 0x0000ff)] |
                    (*p & 0xff000000);
             }
-          p1 = (RUINT32T *) ((char *) p1 + srcImage->bytes_per_line);
+          p1 = (uint32_t *) ((char *) p1 + srcImage->bytes_per_line);
         }
     }
   else
