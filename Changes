@@ -53,7 +53,7 @@ TODO: curses startcolor is supposed to reset palette
           for 256 colours.
 	- add support for 256 colors (Emanuele Giaquinta, Marc Lehmann).
         - add rxvt-unicode-256color terminfo and use it by default in 256 colors mode.
-        - update rxvt-unicode temrinfo to state 7744 colour pairs to cover all
+        - update rxvt-unicode terminfo to state 7744 colour pairs to cover all
           88*88 possible pairs.
         - actually added macosx-clipboard-native, which should have been in
           the 9.07 release but had been forgotten.
