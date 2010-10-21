@@ -19,6 +19,7 @@ DUMB: support tex fonts
 TODO: perl-shell-window? perl-unix-socket?
 
 TODO:        - upgrade to libev-4.00.
+TODO: curses startcolor is supposed to reset palette
 
 	- add support for blending and blurring with XRender (Emanuele Giaquinta).
 	- add support for using gdk-pixbuf as image backend (Emanuele Giaquinta).
@@ -52,6 +53,8 @@ TODO:        - upgrade to libev-4.00.
           for 256 colours.
 	- add support for 256 colors (Emanuele Giaquinta, Marc Lehmann).
         - add rxvt-unicode-256color terminfo and use it by default in 256 colors mode.
+        - update rxvt-unicode temrinfo to state 7744 colour pairs to cover all
+          88*88 possible pairs.
         - actually added macosx-clipboard-native, which should have been in
           the 9.07 release but had been forgotten.
         - fix hang if DECAWM is not set and there are not enough columns to insert a
