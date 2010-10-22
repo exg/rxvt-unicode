@@ -532,8 +532,6 @@ bgPixmap_t::render_image (unsigned long background_flags)
   int w = 0;
   int h = 0;
 
-  TIMING_TEST_START (asim);
-
   if (original_asim)
     get_image_geometry (original_asim->width, original_asim->height, w, h, x, y);
 
@@ -659,7 +657,6 @@ bgPixmap_t::render_image (unsigned long background_flags)
           free (layers);
         }
     }
-  TIMING_TEST_PRINT_RESULT (asim);
 
   bool ret = false;
 
@@ -715,7 +712,6 @@ bgPixmap_t::render_image (unsigned long background_flags)
         destroy_asimage (&result);
 
       XFreeGC (target->dpy, gc);
-      TIMING_TEST_PRINT_RESULT (asim);
 
       ret = true;
     }
@@ -1285,9 +1281,6 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
       XRenderFreePicture (dpy, mask_pic);
       XRenderFreePicture (dpy, overlay_pic);
       XRenderFreePicture (dpy, back_pic);
-#   if DO_TIMING_TEST
-      XSync (dpy, False);
-#   endif
 #  endif
     }
 
@@ -1322,7 +1315,6 @@ bgPixmap_t::make_transparency_pixmap ()
   XGCValues gcv;
   GC gc;
 
-  TIMING_TEST_START (tp);
   target->get_window_origin (sx, sy);
 
   /* check if we are outside of the visible part of the virtual screen : */
@@ -1369,7 +1361,6 @@ bgPixmap_t::make_transparency_pixmap ()
       result |= transpPmapTiled;
       XFreeGC (dpy, gc);
     }
-  TIMING_TEST_PRINT_RESULT (tp);
 
   if (tiled_root_pmap != None)
     {
@@ -1395,8 +1386,6 @@ bgPixmap_t::make_transparency_pixmap ()
       pmap_height = window_height;
       pmap_depth = root_depth;
     }
-
-  TIMING_TEST_PRINT_RESULT (tp);
 
   return result;
 }
@@ -1429,8 +1418,6 @@ bgPixmap_t::render ()
 
   if (target == NULL)
     return false;
-
-  TIMING_TEST_START (tp);
 
   invalidate ();
 # ifdef ENABLE_TRANSPARENCY
@@ -1529,10 +1516,7 @@ bgPixmap_t::render ()
 
   apply ();
 
-  XSync (target->dpy, False);
   valid_since = ev::now ();
-
-  TIMING_TEST_PRINT_RESULT (tp);
 
   return true;
 }
