@@ -355,13 +355,5 @@ struct rxvt_color
   void fade (rxvt_screen *screen, int percent, rxvt_color &result, const rgba &to = rgba (0, 0, 0));
 };
 
-#if TRACE_PIXMAPS
-Pixmap trace_XCreatePixmap (const char *file, int line, Display *dpy, Window r, unsigned int w, unsigned int h, unsigned int d);
-void trace_XFreePixmap (const char *file, int line, Display *dpy, Pixmap p);
-
-# define XCreatePixmap(dpy,r,w,h,d) trace_XCreatePixmap (__FILE__,__LINE__,dpy,r,w,h,d)
-# define XFreePixmap(dpy,p) trace_XFreePixmap (__FILE__,__LINE__,dpy,p)
-#endif
-
 #endif
 

@@ -430,8 +430,6 @@ bgPixmap_t::set_geometry (const char *geom)
       changed++;
     }
 
-  //fprintf (stderr, "flags = %lX, scale = %ux%u, align=%+d%+d\n",
-  //         flags, h_scale, v_scale, h_align, v_align);
   return (changed > 0);
 }
 

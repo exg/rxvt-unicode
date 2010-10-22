@@ -1628,7 +1628,6 @@ rxvt_term::get_window_origin (int &x, int &y)
 {
   Window cr;
   XTranslateCoordinates (dpy, parent[0], display->root, 0, 0, &x, &y, &cr);
-/*  fprintf (stderr, "origin is %+d%+d\n", x, y);*/
 }
 
 Pixmap
@@ -1652,15 +1651,6 @@ rxvt_term::get_pixmap_property (int prop_id)
 }
 
 #ifdef HAVE_BG_PIXMAP
-# if TRACE_PIXMAPS
-#  undef update_background
-void
-rxvt_term::trace_update_background (const char *file, int line)
-{
-  fprintf (stderr, "%s:%d:update_background()\n", file, line);
-  update_background ();
-}
-# endif
 
 void
 rxvt_term::update_background ()

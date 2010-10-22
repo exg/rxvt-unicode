@@ -886,19 +886,3 @@ rxvt_color::fade (rxvt_screen *screen, int percent, rxvt_color &result, const rg
   );
 }
 
-#if TRACE_PIXMAPS
-# undef XCreatePixmap
-# undef XFreePixmap
-Pixmap trace_XCreatePixmap (const char *file, int line, Display *dpy, Window r, unsigned int w, unsigned int h, unsigned int d)
-{
-  Pixmap res = XCreatePixmap (dpy, r, w, h, d);
-  fprintf (stderr, "%s:%d: XCreatePixmap (%p,%lX,%u,%u,%u) returned %lX\n", file, line, dpy, r, w, h, d, res);
-  return res;
-}
-
-void trace_XFreePixmap (const char *file, int line, Display *dpy, Pixmap p)
-{
-  fprintf (stderr, "%s:%d: XFreePixmap (%p,%lX)\n", file, line, dpy, p);
-  XFreePixmap (dpy,p);
-}
-#endif
