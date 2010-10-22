@@ -558,7 +558,7 @@ rxvt_init ()
 
   ptytty::init ();
 
-  if (!ev_default_loop (0))
+  if (!ev_default_loop ())
     rxvt_fatal ("cannot initialise libev (bad value for LIBEV_METHODS?)\n");
 
   rxvt_environ = environ;

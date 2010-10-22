@@ -18,7 +18,7 @@ WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 TODO: perl-shell-window? perl-unix-socket?
 
-TODO:        - upgrade to libev-4.00.
+TODO:        - upgrade to libev-4.00, reelase libev 4.0 first.
 TODO: curses startcolor is supposed to reset palette
 
 	- add support for blending and blurring with XRender (Emanuele Giaquinta).
@@ -72,6 +72,7 @@ TODO: curses startcolor is supposed to reset palette
           was enabled (which selects high intensity under some circumstances).
         - it was verified that urxvt handles µ and μ correctly.
         - scr_kill_char didn't touch the line.
+        - upgrade and port to libev-4.0 prerelease.
 
 9.07 Wed Dec 30 07:07:18 CET 2009
 	- port to glibc-2.10 changes (strchr etc. returning const char *

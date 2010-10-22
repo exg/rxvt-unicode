@@ -1,3 +1,4 @@
+#define EV_COMPAT3 0
 #define EV_USE_SELECT 1
 #define EV_USE_EPOLL 1
 #define EV_PREPARE_ENABLE 1

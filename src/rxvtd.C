@@ -297,7 +297,7 @@ main (int argc, const char *const *argv)
       ev_default_fork ();
     }
 
-  ev_loop (0);
+  ev_run ();
 
   return EXIT_SUCCESS;
 }

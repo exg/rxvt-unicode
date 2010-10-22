@@ -51,7 +51,7 @@ try
     t->init (argc, argv, 0);
 #endif
 
-    ev_loop (0);
+    ev_run ();
 
     return EXIT_SUCCESS;
   }
