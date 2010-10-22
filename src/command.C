@@ -977,8 +977,9 @@ rxvt_term::flush ()
   flush_ev.stop ();
 
 #ifdef HAVE_BG_PIXMAP
-  if (bgPixmap.check_clearChanged ())
+  if (bgPixmap.flags & bgPixmap_t::hasChanged)
     {
+      bgPixmap.flags &= ~bgPixmap_t::hasChanged;
 //      scr_clear (true); This needs to be researched further!
       scr_touch (false);
     }

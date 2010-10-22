@@ -1540,8 +1540,6 @@ bgPixmap_t::apply ()
 {
   if (target)
     {
-      flags &= ~isVtOrigin;
-
       if (pixmap != None)
         {
           /* set target's background to pixmap */
@@ -1557,7 +1555,6 @@ bgPixmap_t::apply ()
           else
 # endif
             {
-              flags |= isVtOrigin;
               /* force old pixmap dereference in case it was transparent before :*/
               XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_border]);
               XSetWindowBackgroundPixmap (target->dpy, target->vt, pixmap);

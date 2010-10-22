@@ -39,8 +39,6 @@ struct bgPixmap_t
 
     isTransparent   = 1 << 16,
     isInvalid       = 1 << 17,
-    isVtOrigin      = 1 << 18,  /* if set pixmap has origin at corner of
-                                   vt window instead of parent[0]! */
     hasChanged      = 1 << 19,
     sizeSensitive   = 1 << 20,
   };
@@ -53,13 +51,6 @@ struct bgPixmap_t
     transpPmapBlurred     = blurNeeded,
     transpTransformations = tintNeeded | blurNeeded,
   }; /* these flags are returned by make_transparency_pixmap if called */
-
-  bool check_clearChanged ()
-  {
-    bool r = flags & hasChanged;
-    flags &= ~hasChanged;
-    return r;
-  };
 
 # ifdef  BG_IMAGE_FROM_FILE
 #  ifdef HAVE_AFTERIMAGE
@@ -129,11 +120,6 @@ struct bgPixmap_t
 
   bool window_size_sensitive ();
   bool window_position_sensitive ();
-
-  bool is_parentOrigin ()
-  {
-    return !(flags & isVtOrigin);
-  };
 
   bool need_client_side_rendering ();
   void apply ();
