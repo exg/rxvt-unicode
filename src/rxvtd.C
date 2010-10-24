@@ -294,7 +294,7 @@ main (int argc, const char *const *argv)
       else if (pid > 0)
         _exit (EXIT_SUCCESS);
 
-      ev_default_fork ();
+      ev_loop_fork (EV_DEFAULT_UC);
     }
 
   ev_run ();
