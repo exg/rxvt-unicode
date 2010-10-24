@@ -556,8 +556,6 @@ rxvt_init ()
   dup2 (STDERR_FILENO, STDIN_FILENO);
   dup2 (STDERR_FILENO, STDOUT_FILENO);
 
-  ptytty::init ();
-
   if (!ev_default_loop ())
     rxvt_fatal ("cannot initialise libev (bad value for LIBEV_METHODS?)\n");
 

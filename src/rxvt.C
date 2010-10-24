@@ -30,6 +30,7 @@ int
 main (int argc, const char *const *argv)
 try
   {
+    ptytty::init ();
     rxvt_init ();
 
     rxvt_term *t = new rxvt_term;
