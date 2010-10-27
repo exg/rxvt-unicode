@@ -18,8 +18,7 @@ WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 TODO: perl-shell-window? perl-unix-socket?
 
-TODO:        - upgrade to libev-4.00, reelase libev 4.0 first.
-TODO: curses startcolor is supposed to reset palette
+TODO: curses start_color is supposed to reset palette
 
         - it was verified that urxvt handles µ and μ correctly.
 	- cleanup and minor fixes of the image code (Emanuele Giaquinta).
