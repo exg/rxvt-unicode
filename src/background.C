@@ -1306,7 +1306,6 @@ bgPixmap_t::make_transparency_pixmap ()
   Display *dpy = target->dpy;
   int root_width = DisplayWidth (dpy, screen);
   int root_height = DisplayHeight (dpy, screen);
-  unsigned int root_pmap_width, root_pmap_height;
   int window_width = target->szHint.width;
   int window_height = target->szHint.height;
   int sx, sy;
@@ -1319,20 +1318,6 @@ bgPixmap_t::make_transparency_pixmap ()
   if (sx + window_width <= 0 || sy + window_height <= 0
       || sx >= root_width || sy >= root_height)
     return 0;
-
-  if (root_pixmap != None)
-    {
-      /* we want to validate the pixmap and get its size at the same time : */
-      int junk;
-      unsigned int ujunk;
-      /* root pixmap may be bad - allow a error */
-      target->allowedxerror = -1;
-
-      if (!XGetGeometry (dpy, root_pixmap, &root, &junk, &junk, &root_pmap_width, &root_pmap_height, &ujunk, &ujunk))
-        root_pixmap = None;
-
-      target->allowedxerror = 0;
-    }
 
   if (root_pixmap == None)
     return 0;
@@ -1396,6 +1381,22 @@ bgPixmap_t::set_root_pixmap ()
     new_root_pixmap = target->get_pixmap_property (XA_ESETROOT_PMAP_ID);
 
   root_pixmap = new_root_pixmap;
+
+  // validate root pixmap
+  if (root_pixmap != None)
+    {
+      unsigned int width, height;
+      Window wdummy;
+      int idummy;
+      unsigned int udummy;
+
+      target->allowedxerror = -1;
+
+      if (!XGetGeometry (target->dpy, root_pixmap, &wdummy, &idummy, &idummy, &width, &height, &udummy, &udummy))
+        root_pixmap = None;
+
+      target->allowedxerror = 0;
+    }
 }
 # endif /* ENABLE_TRANSPARENCY */
 
