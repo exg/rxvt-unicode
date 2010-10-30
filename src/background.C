@@ -1388,20 +1388,14 @@ bgPixmap_t::make_transparency_pixmap ()
   return result;
 }
 
-bool
+void
 bgPixmap_t::set_root_pixmap ()
 {
   Pixmap new_root_pixmap = target->get_pixmap_property (XA_XROOTPMAP_ID);
   if (new_root_pixmap == None)
     new_root_pixmap = target->get_pixmap_property (XA_ESETROOT_PMAP_ID);
 
-  if (new_root_pixmap != root_pixmap)
-    {
-      root_pixmap = new_root_pixmap;
-      return true;
-    }
-
-  return false;
+  root_pixmap = new_root_pixmap;
 }
 # endif /* ENABLE_TRANSPARENCY */
 

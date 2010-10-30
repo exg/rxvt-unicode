@@ -108,7 +108,7 @@ struct bgPixmap_t
   bool set_shade (const char *shade_str);
   bool blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height);
   bool tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height);
-  bool set_root_pixmap ();
+  void set_root_pixmap ();
 
   unsigned long make_transparency_pixmap ();/* returns combination of the transpTransformations flags */
 # endif
