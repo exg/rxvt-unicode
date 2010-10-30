@@ -1286,8 +1286,8 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 }
 
 /* make_transparency_pixmap()
- * Builds a pixmap sized the same as terminal window, with depth same as the root window
- * that pixmap contains tiled portion of the root pixmap that is supposed to be covered by
+ * Builds a pixmap of the same size as the terminal window that contains
+ * the tiled portion of the root pixmap that is supposed to be covered by
  * our window.
  */
 unsigned long
@@ -1446,8 +1446,6 @@ bgPixmap_t::render ()
     {
 #  if !defined(HAVE_AFTERIMAGE) && !XFT
       /* our own client-side tinting */
-      /* ATTENTION: We ASSUME that XFT will let us do all the tinting necessary server-side.
-         This may need to be changed in need_client_side_rendering() logic is altered !!! */
       if (!(background_flags & transpPmapTinted) && (flags & tintNeeded))
         {
           rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
