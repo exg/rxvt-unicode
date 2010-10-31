@@ -731,7 +731,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
   if (!pixbuf)
     return false;
 
-#if !XFT
+#if !XRENDER
   if (background_flags)
     return false;
 #endif
@@ -858,7 +858,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
                                                 0, 0);
         }
 
-#if XFT
+#if XRENDER
       if (background_flags)
         {
           Display *dpy = target->dpy;
@@ -1002,7 +1002,7 @@ bgPixmap_t::set_blur_radius (const char *geom)
   else
     flags |= blurNeeded;
 
-#if XFT
+#if XRENDER
   XFilters *filters = XRenderQueryFilters (target->dpy, target->display->root);
   if (filters)
     {
@@ -1052,7 +1052,7 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
         flags |= bgPixmap_t::tintServerSide;
       else
         {
-#if XFT
+#if XRENDER
           flags |= bgPixmap_t::tintServerSide;
 #endif
         }
@@ -1109,7 +1109,7 @@ bgPixmap_t::set_shade (const char *shade_str)
   return false;
 }
 
-#if XFT
+#if XRENDER
 static void
 get_gaussian_kernel (int radius, int width, double *kernel, XFixed *params)
 {
@@ -1136,7 +1136,7 @@ bool
 bgPixmap_t::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 {
   bool ret = false;
-#if XFT
+#if XRENDER
   int size = max (h_blurRadius, v_blurRadius) * 2 + 1;
   double *kernel = (double *)malloc (size * sizeof (double));
   XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
@@ -1223,7 +1223,7 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
     }
   else
     {
-#  if XFT
+#  if XRENDER
       rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
 
       if (flags & tintSet)
@@ -1444,7 +1444,7 @@ bgPixmap_t::render ()
 
   if (result)
     {
-#  if !defined(HAVE_AFTERIMAGE) && !XFT
+#  if !defined(HAVE_AFTERIMAGE) && !XRENDER
       /* our own client-side tinting */
       if (!(background_flags & transpPmapTinted) && (flags & tintNeeded))
         {
@@ -1584,7 +1584,7 @@ bgPixmap_t::apply ()
 
 #endif /* HAVE_BG_PIXMAP */
 
-#if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE) && !XFT
+#if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE) && !XRENDER
 /* taken from aterm-0.4.2 */
 
 static void

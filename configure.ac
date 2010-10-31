@@ -651,6 +651,25 @@ if test x$support_xft = xyes; then
     AC_DEFINE(XFT, 1, Define to enable xft support)
   fi
 fi
+if test x$support_inheritpixmap = xyes; then
+  support_xrender=yes
+  AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+  if test $PKG_CONFIG != no && $PKG_CONFIG --exists xrender; then
+    X_LIBS="`$PKG_CONFIG xrender --libs` $X_LIBS"
+    CPPFLAGS="$CPPFLAGS `$PKG_CONFIG xrender --cflags`"
+
+    save_LIBS="$LIBS"
+    LIBS="$LIBS $X_LIBS"
+    AC_CHECK_HEADER(X11/extensions/Xrender.h,,[support_xrender=no])
+    AC_CHECK_FUNC(XRenderFindStandardFormat,,[support_xrender=no])
+    LIBS="$save_LIBS"
+  fi
+
+  if test x$support_xrender = xyes; then
+    LIBS="$LIBS -lm"
+    AC_DEFINE(XRENDER, 1, Define to enable xrender support)
+  fi
+fi
 if test x$support_styles = xyes; then
   AC_DEFINE(ENABLE_STYLES, 1, Define if you want bold and italic support)
 fi
@@ -665,7 +684,6 @@ if test x$support_fading = xyes; then
 fi
 if test x$support_inheritpixmap = xyes; then
   AC_DEFINE(ENABLE_TRANSPARENCY, 1, Define if you want your background to use the parent window background)
-  test x$support_xft = xyes && LIBS="$LIBS -lm"
 fi
 if test x$support_keepscrolling = xno; then
   AC_DEFINE(NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING, 1, Define for continual scrolling when you keep the scrollbar button pressed)
