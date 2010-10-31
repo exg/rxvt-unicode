@@ -436,6 +436,9 @@
 /* Define ONLY iff Xlib.h supports it */
 #undef XLIB_ILLEGAL_ACCESS
 
+/* Define to enable xrender support */
+#undef XRENDER
+
 /* Support Xterm style scrollbars */
 #undef XTERM_SCROLLBAR
 
