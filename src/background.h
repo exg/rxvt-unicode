@@ -95,7 +95,6 @@ struct bgPixmap_t
   bool set_target (rxvt_term *new_target);
 
 # ifdef ENABLE_TRANSPARENCY
-  Pixmap      recoded_root_pmap; /* copy of root pixmap converted to target->depth */
   Pixmap      root_pixmap; /* current root pixmap set */
   rxvt_color  tint;
   int         shade;

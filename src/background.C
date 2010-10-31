@@ -110,7 +110,6 @@ bgPixmap_t::bgPixmap_t ()
 #endif
 #ifdef ENABLE_TRANSPARENCY
   shade = 100;
-  recoded_root_pmap = None;
 #endif
   flags = 0;
   pixmap = None;
@@ -129,11 +128,6 @@ bgPixmap_t::destroy ()
 #ifdef HAVE_PIXBUF
   if (pixbuf)
     g_object_unref (pixbuf);
-#endif
-
-#ifdef ENABLE_TRANSPARENCY
-  if (recoded_root_pmap && target)
-    XFreePixmap (target->dpy, recoded_root_pmap);
 #endif
 
   if (pixmap && target)
@@ -1309,8 +1303,10 @@ bgPixmap_t::make_transparency_pixmap ()
    */
   int screen = target->display->screen;
   Display *dpy = target->dpy;
+  int root_depth = DefaultDepth (dpy, screen);
   int root_width = DisplayWidth (dpy, screen);
   int root_height = DisplayHeight (dpy, screen);
+  unsigned int root_pmap_width, root_pmap_height;
   int window_width = target->szHint.width;
   int window_height = target->szHint.height;
   int sx, sy;
@@ -1324,6 +1320,47 @@ bgPixmap_t::make_transparency_pixmap ()
       || sx >= root_width || sy >= root_height)
     return 0;
 
+  // validate root pixmap and get its size
+  if (root_pixmap != None)
+    {
+      Window wdummy;
+      int idummy;
+      unsigned int udummy;
+
+      target->allowedxerror = -1;
+
+      if (!XGetGeometry (dpy, root_pixmap, &wdummy, &idummy, &idummy, &root_pmap_width, &root_pmap_height, &udummy, &udummy))
+        root_pixmap = None;
+
+      target->allowedxerror = 0;
+    }
+
+  Pixmap recoded_root_pmap = root_pixmap;
+
+  if (root_pixmap != None && root_depth != target->depth)
+    {
+#if XRENDER
+      XRenderPictureAttributes pa;
+
+      XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, DefaultVisual (dpy, screen));
+      Picture src = XRenderCreatePicture (dpy, root_pixmap, src_format, 0, &pa);
+
+      recoded_root_pmap = XCreatePixmap (dpy, target->vt, root_pmap_width, root_pmap_height, target->depth);
+      XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, target->visual);
+      Picture dst = XRenderCreatePicture (dpy, recoded_root_pmap, dst_format, 0, &pa);
+
+      if (src && dst)
+        XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, root_pmap_width, root_pmap_height);
+      else
+        root_pixmap = None;
+
+      XRenderFreePicture (dpy, src);
+      XRenderFreePicture (dpy, dst);
+#else
+      root_pixmap = None;
+#endif
+    }
+
   if (root_pixmap == None)
     return 0;
 
@@ -1333,7 +1370,7 @@ bgPixmap_t::make_transparency_pixmap ()
     return 0;
 
   /* straightforward pixmap copy */
-  gcv.tile = root_pixmap;
+  gcv.tile = recoded_root_pmap;
   gcv.fill_style = FillTiled;
 
   while (sx < 0) sx += (int)root_width;
@@ -1375,6 +1412,9 @@ bgPixmap_t::make_transparency_pixmap ()
       pmap_depth = target->depth;
     }
 
+  if (recoded_root_pmap != root_pixmap)
+    XFreePixmap (dpy, recoded_root_pmap);
+
   return result;
 }
 
@@ -1386,54 +1426,6 @@ bgPixmap_t::set_root_pixmap ()
     new_root_pixmap = target->get_pixmap_property (XA_ESETROOT_PMAP_ID);
 
   root_pixmap = new_root_pixmap;
-
-  unsigned int width, height;
-  int depth = DefaultDepth (target->dpy, target->display->screen);
-
-  // validate root pixmap
-  if (root_pixmap != None)
-    {
-      Window wdummy;
-      int idummy;
-      unsigned int udummy;
-
-      target->allowedxerror = -1;
-
-      if (!XGetGeometry (target->dpy, root_pixmap, &wdummy, &idummy, &idummy, &width, &height, &udummy, &udummy))
-        root_pixmap = None;
-
-      target->allowedxerror = 0;
-    }
-
-  if (root_pixmap != None && depth != target->depth)
-    {
-#if XRENDER
-      Display *dpy = target->dpy;
-      XRenderPictureAttributes pa;
-
-      XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, DefaultVisual (dpy, target->display->screen));
-      Picture src = XRenderCreatePicture (dpy, root_pixmap, src_format, 0, &pa);
-
-      if (recoded_root_pmap)
-        XFreePixmap (dpy, recoded_root_pmap);
-      recoded_root_pmap = XCreatePixmap (dpy, target->vt, width, height, target->depth);
-      XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, target->visual);
-      Picture dst = XRenderCreatePicture (dpy, recoded_root_pmap, dst_format, 0, &pa);
-
-      if (src && dst)
-        {
-          XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, width, height);
-          root_pixmap = recoded_root_pmap;
-        }
-      else
-        root_pixmap = None;
-
-      XRenderFreePicture (dpy, src);
-      XRenderFreePicture (dpy, dst);
-#else
-      root_pixmap = None;
-#endif
-    }
 }
 # endif /* ENABLE_TRANSPARENCY */
 
