@@ -1352,7 +1352,10 @@ bgPixmap_t::make_transparency_pixmap ()
       if (src && dst)
         XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, root_pmap_width, root_pmap_height);
       else
-        root_pixmap = None;
+        {
+          XFreePixmap (dpy, recoded_root_pmap);
+          root_pixmap = None;
+        }
 
       XRenderFreePicture (dpy, src);
       XRenderFreePicture (dpy, dst);
