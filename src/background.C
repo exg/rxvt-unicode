@@ -110,6 +110,7 @@ bgPixmap_t::bgPixmap_t ()
 #endif
 #ifdef ENABLE_TRANSPARENCY
   shade = 100;
+  recoded_root_pmap = None;
 #endif
   flags = 0;
   pixmap = None;
@@ -128,6 +129,11 @@ bgPixmap_t::destroy ()
 #ifdef HAVE_PIXBUF
   if (pixbuf)
     g_object_unref (pixbuf);
+#endif
+
+#ifdef ENABLE_TRANSPARENCY
+  if (recoded_root_pmap && target)
+    XFreePixmap (target->dpy, recoded_root_pmap);
 #endif
 
   if (pixmap && target)
@@ -864,7 +870,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
           Display *dpy = target->dpy;
           XRenderPictureAttributes pa;
 
-          XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, DefaultVisual (dpy, target->display->screen));
+          XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, target->visual);
           Picture src = XRenderCreatePicture (dpy, root_pmap, src_format, 0, &pa);
 
           XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, target->visual);
@@ -1003,7 +1009,7 @@ bgPixmap_t::set_blur_radius (const char *geom)
     flags |= blurNeeded;
 
 #if XRENDER
-  XFilters *filters = XRenderQueryFilters (target->dpy, target->display->root);
+  XFilters *filters = XRenderQueryFilters (target->dpy, target->vt);
   if (filters)
     {
       for (int i = 0; i < filters->nfilter; i++)
@@ -1301,7 +1307,6 @@ bgPixmap_t::make_transparency_pixmap ()
   /* root dimensions may change from call to call - but Display structure should
    * be always up-to-date, so let's use it :
    */
-  Window root = target->display->root;
   int screen = target->display->screen;
   Display *dpy = target->dpy;
   int root_width = DisplayWidth (dpy, screen);
@@ -1322,7 +1327,7 @@ bgPixmap_t::make_transparency_pixmap ()
   if (root_pixmap == None)
     return 0;
 
-  Pixmap tiled_root_pmap = XCreatePixmap (dpy, root, window_width, window_height, root_depth);
+  Pixmap tiled_root_pmap = XCreatePixmap (dpy, target->vt, window_width, window_height, target->depth);
 
   if (tiled_root_pmap == None) /* something really bad happened - abort */
     return 0;
@@ -1336,7 +1341,7 @@ bgPixmap_t::make_transparency_pixmap ()
 
   gcv.ts_x_origin = -sx;
   gcv.ts_y_origin = -sy;
-  gc = XCreateGC (dpy, root, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
+  gc = XCreateGC (dpy, target->vt, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
 
   if (gc)
     {
@@ -1351,12 +1356,12 @@ bgPixmap_t::make_transparency_pixmap ()
         {
           if (flags & (blurNeeded | blurServerSide))
             {
-              if (blur_pixmap (tiled_root_pmap, DefaultVisual (dpy, screen), window_width, window_height))
+              if (blur_pixmap (tiled_root_pmap, target->visual, window_width, window_height))
                 result |= transpPmapBlurred;
             }
           if (flags & (tintNeeded | tintServerSide))
             {
-              if (tint_pixmap (tiled_root_pmap, DefaultVisual (dpy, screen), window_width, window_height))
+              if (tint_pixmap (tiled_root_pmap, target->visual, window_width, window_height))
                 result |= transpPmapTinted;
             }
         } /* server side rendering completed */
@@ -1367,7 +1372,7 @@ bgPixmap_t::make_transparency_pixmap ()
       pixmap = tiled_root_pmap;
       pmap_width = window_width;
       pmap_height = window_height;
-      pmap_depth = root_depth;
+      pmap_depth = target->depth;
     }
 
   return result;
@@ -1382,10 +1387,12 @@ bgPixmap_t::set_root_pixmap ()
 
   root_pixmap = new_root_pixmap;
 
+  unsigned int width, height;
+  int depth = DefaultDepth (target->dpy, target->display->screen);
+
   // validate root pixmap
   if (root_pixmap != None)
     {
-      unsigned int width, height;
       Window wdummy;
       int idummy;
       unsigned int udummy;
@@ -1396,6 +1403,36 @@ bgPixmap_t::set_root_pixmap ()
         root_pixmap = None;
 
       target->allowedxerror = 0;
+    }
+
+  if (root_pixmap != None && depth != target->depth)
+    {
+#if XRENDER
+      Display *dpy = target->dpy;
+      XRenderPictureAttributes pa;
+
+      XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, DefaultVisual (dpy, target->display->screen));
+      Picture src = XRenderCreatePicture (dpy, root_pixmap, src_format, 0, &pa);
+
+      if (recoded_root_pmap)
+        XFreePixmap (dpy, recoded_root_pmap);
+      recoded_root_pmap = XCreatePixmap (dpy, target->vt, width, height, target->depth);
+      XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, target->visual);
+      Picture dst = XRenderCreatePicture (dpy, recoded_root_pmap, dst_format, 0, &pa);
+
+      if (src && dst)
+        {
+          XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, width, height);
+          root_pixmap = recoded_root_pmap;
+        }
+      else
+        root_pixmap = None;
+
+      XRenderFreePicture (dpy, src);
+      XRenderFreePicture (dpy, dst);
+#else
+      root_pixmap = None;
+#endif
     }
 }
 # endif /* ENABLE_TRANSPARENCY */
@@ -1420,8 +1457,7 @@ bgPixmap_t::render ()
       background_flags = make_transparency_pixmap ();
       if (background_flags == 0)
         return false;
-      else if ((background_flags & transpTransformations) == (flags & transpTransformations)
-               && pmap_depth == target->depth)
+      else if ((background_flags & transpTransformations) == (flags & transpTransformations))
         flags = flags & ~isInvalid;
     }
 # endif
@@ -1459,35 +1495,7 @@ bgPixmap_t::render ()
 
       if (gc)
         {
-          if (/*pmap_depth != target->depth &&*/ pixmap != None)
-            {
-              XFreePixmap (target->dpy, pixmap);
-              pixmap = None;
-            }
-
-          if (pixmap == None)
-            {
-              pixmap = XCreatePixmap (target->dpy, target->vt, result->width, result->height, target->depth);
-              pmap_width  = result->width;
-              pmap_height = result->height;
-              pmap_depth  = target->depth;
-            }
-
-          if (pmap_depth != result->depth)
-            {
-              /* Bad Match error will ensue ! stupid X !!!! */
-              if (result->depth == 24 && pmap_depth == 32)
-                result->depth = 32;
-              else if (result->depth == 32 && pmap_depth == 24)
-                result->depth = 24;
-              else
-                {
-                  /* TODO: implement image recoding */
-                }
-            }
-
-          if (pmap_depth == result->depth)
-            XPutImage (target->dpy, pixmap, gc, result, 0, 0, 0, 0, result->width, result->height);
+          XPutImage (target->dpy, pixmap, gc, result, 0, 0, 0, 0, result->width, result->height);
 
           XFreeGC (target->dpy, gc);
           flags = flags & ~isInvalid;
@@ -1519,9 +1527,6 @@ bgPixmap_t::set_target (rxvt_term *new_target)
     if (target != new_target)
       {
         target = new_target;
-# ifdef ENABLE_TRANSPARENCY
-        root_depth = DefaultDepthOfScreen (ScreenOfDisplay (target->dpy, target->display->screen));
-# endif
         return true;
       }
 
