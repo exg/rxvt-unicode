@@ -1394,12 +1394,14 @@ bgPixmap_t::make_transparency_pixmap ()
     {
       if (!need_client_side_rendering ())
         {
-          if (flags & (blurNeeded | blurServerSide))
+          if ((flags & blurNeeded)
+              && (flags & blurServerSide))
             {
               if (blur_pixmap (tiled_root_pmap, target->visual, window_width, window_height))
                 result |= transpPmapBlurred;
             }
-          if (flags & (tintNeeded | tintServerSide))
+          if ((flags & tintNeeded)
+              && (flags & tintServerSide))
             {
               if (tint_pixmap (tiled_root_pmap, target->visual, window_width, window_height))
                 result |= transpPmapTinted;
