@@ -731,10 +731,9 @@ bgPixmap_t::render_image (unsigned long background_flags)
   if (!pixbuf)
     return false;
 
-#if !XRENDER
-  if (background_flags)
+  if (background_flags
+      && !(flags & HAS_RENDER))
     return false;
-#endif
 
   GdkPixbuf *result;
 
@@ -1000,18 +999,6 @@ bgPixmap_t::set_blur_radius (const char *geom)
   else
     flags |= blurNeeded;
 
-#if XRENDER
-  XFilters *filters = XRenderQueryFilters (target->dpy, target->vt);
-  if (filters)
-    {
-      for (int i = 0; i < filters->nfilter; i++)
-        if (!strcmp (filters->filter[i], FilterConvolution))
-          flags |= bgPixmap_t::blurServerSide;
-
-      XFree (filters);
-    }
-#endif
-
   return (changed > 0);
 }
 
@@ -1041,18 +1028,6 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
           && (c.r < 0x00f700 || c.g < 0x00f700 || c.b < 0x00f700))
         {
           flags |= bgPixmap_t::tintNeeded;
-        }
-    }
-
-  if (flags & bgPixmap_t::tintNeeded)
-    {
-      if (flags & bgPixmap_t::tintWholesome)
-        flags |= bgPixmap_t::tintServerSide;
-      else
-        {
-#if XRENDER
-          flags |= bgPixmap_t::tintServerSide;
-#endif
         }
     }
 
@@ -1338,28 +1313,31 @@ bgPixmap_t::make_transparency_pixmap ()
   if (root_pixmap != None && root_depth != target->depth)
     {
 #if XRENDER
-      XRenderPictureAttributes pa;
-
-      XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, DefaultVisual (dpy, screen));
-      Picture src = XRenderCreatePicture (dpy, root_pixmap, src_format, 0, &pa);
-
-      recoded_root_pmap = XCreatePixmap (dpy, target->vt, root_pmap_width, root_pmap_height, target->depth);
-      XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, target->visual);
-      Picture dst = XRenderCreatePicture (dpy, recoded_root_pmap, dst_format, 0, &pa);
-
-      if (src && dst)
-        XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, root_pmap_width, root_pmap_height);
-      else
+      if (flags & HAS_RENDER)
         {
-          XFreePixmap (dpy, recoded_root_pmap);
-          root_pixmap = None;
-        }
+          XRenderPictureAttributes pa;
 
-      XRenderFreePicture (dpy, src);
-      XRenderFreePicture (dpy, dst);
-#else
-      root_pixmap = None;
+          XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, DefaultVisual (dpy, screen));
+          Picture src = XRenderCreatePicture (dpy, root_pixmap, src_format, 0, &pa);
+
+          recoded_root_pmap = XCreatePixmap (dpy, target->vt, root_pmap_width, root_pmap_height, target->depth);
+          XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, target->visual);
+          Picture dst = XRenderCreatePicture (dpy, recoded_root_pmap, dst_format, 0, &pa);
+
+          if (src && dst)
+            XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, root_pmap_width, root_pmap_height);
+          else
+            {
+              XFreePixmap (dpy, recoded_root_pmap);
+              root_pixmap = None;
+            }
+
+          XRenderFreePicture (dpy, src);
+          XRenderFreePicture (dpy, dst);
+        }
+      else
 #endif
+      root_pixmap = None;
     }
 
   if (root_pixmap == None)
@@ -1393,13 +1371,13 @@ bgPixmap_t::make_transparency_pixmap ()
       if (!need_client_side_rendering ())
         {
           if ((flags & blurNeeded)
-              && (flags & blurServerSide))
+              && (flags & HAS_RENDER_CONV))
             {
               if (blur_pixmap (tiled_root_pmap, target->visual, window_width, window_height))
                 result |= transpPmapBlurred;
             }
           if ((flags & tintNeeded)
-              && (flags & tintServerSide))
+              && (flags & (tintWholesome | HAS_RENDER)))
             {
               if (tint_pixmap (tiled_root_pmap, target->visual, window_width, window_height))
                 result |= transpPmapTinted;
@@ -1519,6 +1497,22 @@ void
 bgPixmap_t::set_target (rxvt_term *new_target)
 {
   target = new_target;
+
+  flags &= ~(HAS_RENDER | HAS_RENDER_CONV);
+#if XRENDER
+  int major, minor;
+  if (XRenderQueryVersion (target->dpy, &major, &minor))
+    flags |= HAS_RENDER;
+  XFilters *filters = XRenderQueryFilters (target->dpy, target->vt);
+  if (filters)
+    {
+      for (int i = 0; i < filters->nfilter; i++)
+        if (!strcmp (filters->filter[i], FilterConvolution))
+          flags |= HAS_RENDER_CONV;
+
+      XFree (filters);
+    }
+#endif
 }
 
 void

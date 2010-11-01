@@ -31,11 +31,12 @@ struct bgPixmap_t
     tintSet         = 1 <<  8,
     tintNeeded      = 1 <<  9,
     tintWholesome   = 1 << 10,
-    tintServerSide  = 1 << 11,
-    tintFlags       = tintSet | tintServerSide | tintNeeded | tintWholesome,
+    tintFlags       = tintSet | tintNeeded | tintWholesome,
 
-    blurNeeded      = 1 << 12,
-    blurServerSide  = 1 << 13,
+    blurNeeded      = 1 << 11,
+
+    HAS_RENDER      = 1 << 12,
+    HAS_RENDER_CONV = 1 << 13,
 
     isTransparent   = 1 << 16,
     isInvalid       = 1 << 17,
