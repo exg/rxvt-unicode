@@ -1517,17 +1517,10 @@ bgPixmap_t::render ()
   return true;
 }
 
-bool
+void
 bgPixmap_t::set_target (rxvt_term *new_target)
 {
-  if (new_target)
-    if (target != new_target)
-      {
-        target = new_target;
-        return true;
-      }
-
-  return false;
+  target = new_target;
 }
 
 void

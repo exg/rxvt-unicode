@@ -92,7 +92,7 @@ struct bgPixmap_t
 # endif /* BG_IMAGE_FROM_FILE */
 
   rxvt_term *target;
-  bool set_target (rxvt_term *new_target);
+  void set_target (rxvt_term *new_target);
 
 # ifdef ENABLE_TRANSPARENCY
   Pixmap      root_pixmap; /* current root pixmap set */
