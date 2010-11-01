@@ -911,45 +911,43 @@ bgPixmap_t::render_image (unsigned long background_flags)
 bool
 bgPixmap_t::set_file (const char *file)
 {
-  assert (file);
+  if (!file || !*file)
+    return false;
 
-  if (*file)
+  if (const char *p = strchr (file, ';'))
     {
-      if (const char *p = strchr (file, ';'))
-        {
-          size_t len = p - file;
-          char *f = rxvt_temp_buf<char> (len + 1);
-          memcpy (f, file, len);
-          f[len] = '\0';
-          file = f;
-        }
+      size_t len = p - file;
+      char *f = rxvt_temp_buf<char> (len + 1);
+      memcpy (f, file, len);
+      f[len] = '\0';
+      file = f;
+    }
 
 #  ifdef HAVE_AFTERIMAGE
-      if (!target->asimman)
-        target->asimman = create_generic_imageman (target->rs[Rs_path]);
-      ASImage *image = get_asimage (target->asimman, file, 0xFFFFFFFF, 100);
-      if (image)
-        {
-          if (original_asim)
-            safe_asimage_destroy (original_asim);
-          original_asim = image;
-          have_image = true;
-          return true;
-        }
+  if (!target->asimman)
+    target->asimman = create_generic_imageman (target->rs[Rs_path]);
+  ASImage *image = get_asimage (target->asimman, file, 0xFFFFFFFF, 100);
+  if (image)
+    {
+      if (original_asim)
+        safe_asimage_destroy (original_asim);
+      original_asim = image;
+      have_image = true;
+      return true;
+    }
 #  endif
 
 #  ifdef HAVE_PIXBUF
-      GdkPixbuf *image = gdk_pixbuf_new_from_file (file, NULL);
-      if (image)
-        {
-          if (pixbuf)
-            g_object_unref (pixbuf);
-          pixbuf = image;
-          have_image = true;
-          return true;
-        }
-#  endif
+  GdkPixbuf *image = gdk_pixbuf_new_from_file (file, NULL);
+  if (image)
+    {
+      if (pixbuf)
+        g_object_unref (pixbuf);
+      pixbuf = image;
+      have_image = true;
+      return true;
     }
+#  endif
 
   return false;
 }
@@ -1526,55 +1524,55 @@ bgPixmap_t::set_target (rxvt_term *new_target)
 void
 bgPixmap_t::apply ()
 {
-  if (target)
+  if (target == NULL)
+    return;
+
+  if (pixmap != None)
     {
-      if (pixmap != None)
-        {
-          /* set target's background to pixmap */
+      /* set target's background to pixmap */
 # ifdef ENABLE_TRANSPARENCY
-          if (flags & isTransparent)
-            {
-              XSetWindowBackgroundPixmap (target->dpy, target->parent[0], pixmap);
-              XSetWindowBackgroundPixmap (target->dpy, target->vt, ParentRelative);
+      if (flags & isTransparent)
+        {
+          XSetWindowBackgroundPixmap (target->dpy, target->parent[0], pixmap);
+          XSetWindowBackgroundPixmap (target->dpy, target->vt, ParentRelative);
 
-              if (target->scrollBar.win)
-                XSetWindowBackgroundPixmap (target->dpy, target->scrollBar.win, ParentRelative);
-            }
-          else
-# endif
-            {
-              /* force old pixmap dereference in case it was transparent before :*/
-              XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_border]);
-              XSetWindowBackgroundPixmap (target->dpy, target->vt, pixmap);
-              /* do we also need to set scrollbar's background here ? */
-
-              if (target->scrollBar.win)
-                XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
-            }
+          if (target->scrollBar.win)
+            XSetWindowBackgroundPixmap (target->dpy, target->scrollBar.win, ParentRelative);
         }
       else
+# endif
         {
-          /* set target background to a pixel */
+          /* force old pixmap dereference in case it was transparent before :*/
           XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_border]);
-          XSetWindowBackground (target->dpy, target->vt, target->pix_colors[Color_bg]);
+          XSetWindowBackgroundPixmap (target->dpy, target->vt, pixmap);
           /* do we also need to set scrollbar's background here ? */
+
           if (target->scrollBar.win)
             XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
         }
-
-      /* don't want Expose on the parent or vt. It is better to use
-         scr_touch or we get a great deal of flicker otherwise: */
-      XClearWindow (target->dpy, target->parent[0]);
-
-      if (target->scrollBar.state && target->scrollBar.win)
-        {
-          target->scrollBar.state = STATE_IDLE;
-          target->scrollBar.show (0);
-        }
-
-      target->want_refresh = 1;
-      flags |= hasChanged;
     }
+  else
+    {
+      /* set target background to a pixel */
+      XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_border]);
+      XSetWindowBackground (target->dpy, target->vt, target->pix_colors[Color_bg]);
+      /* do we also need to set scrollbar's background here ? */
+      if (target->scrollBar.win)
+        XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
+    }
+
+  /* don't want Expose on the parent or vt. It is better to use
+     scr_touch or we get a great deal of flicker otherwise: */
+  XClearWindow (target->dpy, target->parent[0]);
+
+  if (target->scrollBar.state && target->scrollBar.win)
+    {
+      target->scrollBar.state = STATE_IDLE;
+      target->scrollBar.show (0);
+    }
+
+  target->want_refresh = 1;
+  flags |= hasChanged;
 }
 
 #endif /* HAVE_BG_PIXMAP */
