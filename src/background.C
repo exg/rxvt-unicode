@@ -26,6 +26,10 @@
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
 
+#if XRENDER
+# include <X11/extensions/Xrender.h>
+#endif
+
 #define DO_TIMING_TEST 0
 
 #if DO_TIMING_TEST
