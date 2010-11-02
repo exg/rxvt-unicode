@@ -29,6 +29,7 @@ TODO: curses start_color is supposed to reset palette
 	- new on_bell perl hook (Emanuele Giaquinta).
 	- searchable-scrollback no longer ignores the first line
 	  (Emanuele Giaquinta).
+	- properly set VSTATUS in termios for *BSD (reported by Ed Schouten).
 	- fix utmpx detection on upcoming FreeBSD 9.
 	- Use COMPOUND_TEXT encoding for WM_NAME/WM_ICON_NAME value when it
 	  is not fully convertible to STRING (patch by James Cloos).

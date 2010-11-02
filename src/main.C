@@ -513,6 +513,9 @@ rxvt_get_ttymode (struct termios *tio)
 # ifdef VLNEXT
   tio->c_cc[VLNEXT] = CLNEXT;
 # endif
+# ifdef VSTATUS
+  tio->c_cc[VSTATUS] = CSTATUS;
+# endif
 
 # if VMIN != VEOF
   tio->c_cc[VMIN] = 1;
