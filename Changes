@@ -17,8 +17,7 @@ WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
 TODO: perl-shell-window? perl-unix-socket?
-
-TODO: curses start_color is supposed to reset palette
+TODO: command line editing when icanon?
 
         - it was verified that urxvt handles µ and μ correctly.
 	- cleanup and minor fixes of the image code (Emanuele Giaquinta).

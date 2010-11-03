@@ -28,4 +28,4 @@ rxvt-unicode|rxvt-unicode terminal (X Window System):\
 	:vs=\E[?25h:
 
 rxvt-unicode-256color|rxvt-unicode terminal with 256 colors (X Window System):\
-	:Co#256:tc=rxvt-unicode:
+	:Co#256:pa#32767:tc=rxvt-unicode:
