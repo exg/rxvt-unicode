@@ -256,7 +256,8 @@ make_clip_rectangle (int pos, int size, int target_size, int &dst_pos, int &dst_
 bool
 bgPixmap_t::set_geometry (const char *geom)
 {
-  int geom_flags = 0, changed = 0;
+  bool changed = false;
+  int geom_flags = 0;
   int x = 0, y = 0;
   unsigned int w = 0, h = 0;
   unsigned int n;
@@ -422,19 +423,19 @@ bgPixmap_t::set_geometry (const char *geom)
             } /* done parsing ops */
         }
 
-      if (check_set_scale_value (geom_flags, WidthValue, h_scale, w))  ++changed;
-      if (check_set_scale_value (geom_flags, HeightValue, v_scale, h)) ++changed;
-      if (check_set_align_value (geom_flags, XValue, h_align, x))      ++changed;
-      if (check_set_align_value (geom_flags, YValue, v_align, y))      ++changed;
+      if (check_set_scale_value (geom_flags, WidthValue, h_scale, w))  changed = true;
+      if (check_set_scale_value (geom_flags, HeightValue, v_scale, h)) changed = true;
+      if (check_set_align_value (geom_flags, XValue, h_align, x))      changed = true;
+      if (check_set_align_value (geom_flags, YValue, v_align, y))      changed = true;
     }
 
   if (new_flags != flags)
     {
       flags = new_flags;
-      changed++;
+      changed = true;
     }
 
-  return (changed > 0);
+  return changed;
 }
 
 void
@@ -973,7 +974,7 @@ bgPixmap_t::set_transparent ()
 bool
 bgPixmap_t::set_blur_radius (const char *geom)
 {
-  int changed = 0;
+  bool changed = false;
   unsigned int hr, vr;
   int junk;
   int geom_flags = XParseGeometry (geom, &junk, &junk, &hr, &vr);
@@ -988,13 +989,13 @@ bgPixmap_t::set_blur_radius (const char *geom)
 
   if (h_blurRadius != hr)
     {
-      ++changed;
+      changed = true;
       h_blurRadius = hr;
     }
 
   if (v_blurRadius != vr)
     {
-      ++changed;
+      changed = true;
       v_blurRadius = vr;
     }
 
@@ -1003,7 +1004,7 @@ bgPixmap_t::set_blur_radius (const char *geom)
   else
     flags |= blurNeeded;
 
-  return (changed > 0);
+  return changed;
 }
 
 static inline unsigned long
