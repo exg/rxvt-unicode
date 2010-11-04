@@ -2374,7 +2374,10 @@ TIFF, GIF, XPM, BMP, ICO and TGA.
 
 =item --enable-transparency (default: on)
 
-Add support for backgrounds, creating illusion of transparency in the term.
+Add support for using the root pixmap as background to simulate transparency.
+Note that tint, blur and blend effects depend on libAfterImage or on
+libXrender and on the availability of the RENDER extension in the X
+server.
 
 =item --enable-fading (default: on)
 

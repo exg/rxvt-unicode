@@ -126,7 +126,7 @@ Turn on/off skip scrolling (allow multiple screens per refresh); resource B<skip
 
 =item B<-tr>|B<+tr>
 
-Turn on/off illusion of a transparent window background; resource B<transparent>.
+Turn on/off pseudo-transparency by using the root pixmap as background; resource B<transparent>.
 
 B<-ip> is still accepted as an obsolete alias but will be removed in
 future versions.
@@ -144,29 +144,19 @@ is opaque black. resource B<fadeColor>.
 
 =item B<-tint> I<colour>
 
-Tint the transparent background pixmap with the given colour when
-transparency is enabled with B<-tr>. This only works for
-non-tiled backgrounds, currently. See also the B<-sh> option that can be
-used to brighten or darken the image in addition to tinting it.
-Please note that certain tint colours can be applied on the server-side,
-thus yielding performance gain of two orders of magnitude. These colours are:
-blue, red, green, cyan, magenta, yellow, and those close to them. Also
-pure black and pure white colours essentially mean no tinting; resource
-I<tintColor>. Example:
-
-   @@RXVT_NAME@@ -tr -tint blue -sh 40
+Tint the transparent background with the given colour;
+resource I<tintColor>.
 
 =item B<-sh> I<number>
 
-Darken (0 .. 100) or lighten (100 .. 200) the transparent
-background image in addition to (or instead of) tinting it;
+Darken (0 .. 100) or lighten (100 .. 200) the transparent background;
 resource I<shading>.
 
 =item B<-blt> I<string>
 
 Specify background blending type. If background pixmap is specified
 at the same time as transparency - such pixmap will be blended over
-transparency image, using method specified. Supported values are :
+the transparent background, using the method specified. Supported values are:
 B<add>, B<alphablend>, B<allanon> - colour values averaging, B<colorize>,
 B<darken>, B<diff>, B<dissipate>, B<hue>, B<lighten>, B<overlay>,
 B<saturate>, B<screen>, B<sub>, B<tint>, B<value>. The default is
@@ -175,10 +165,10 @@ alpha-blending. Compile I<afterimage>; resource I<blendType>.
 =item B<-blr> I<HxV>
 
 Apply Gaussian Blur with the specified radii to the transparent
-background image. If single number is specified - both vertical and
+background. If a single number is specified - both vertical and
 horizontal radii are considered to be the same. Setting one of the
 radii to 1 and another to a large number creates interesting effects
-on some backgrounds. Maximum radius value is 128. Compile I<afterimage> or I<xft>;
+on some backgrounds. Maximum radius value is 128;
 resource I<blurRadius>.
 
 =item B<-icon> I<file>
@@ -701,7 +691,7 @@ monitor to display anything); option B<+ss>.
 
 =item B<transparent:> I<boolean>
 
-Turn on/off illusion of a transparent window background.
+Turn on/off pseudo-transparency by using the root pixmap as background.
 
 B<inheritPixmap> is still accepted as an obsolete alias but will be removed in
 future versions.
@@ -717,13 +707,13 @@ colour is black; option B<-fadecolor>.
 
 =item B<tintColor:> I<colour>
 
-Tint the transparent background pixmap with the given colour; option
+Tint the transparent background with the given colour; option
 B<-tint>.
 
 =item B<shading:> I<number>
 
-Darken (0 .. 100) or lighten (-1 .. -100) the transparent background image
-in addition to tinting it; option B<-sh>.
+Darken (0 .. 100) or lighten (100 .. 200) the transparent background;
+option B<-sh>.
 
 =item B<blendType:> I<string>
 
@@ -732,7 +722,7 @@ Specify background blending type; option B<-blt>.
 =item B<blurRadius:> I<number>
 
 Apply gaussian blur with the specified radius to the transparent
-background image; option B<-blr>.
+background; option B<-blr>.
 
 =item B<iconFile:> I<file>
 
@@ -773,7 +763,7 @@ Supported operations are:
               whenever terminal window moves
 
 If used in conjunction with B<-tr> option, the specified pixmap will be
-blended over transparency image using alpha-blending. If I<afterimage>
+blended over the transparent background using alpha-blending. If I<afterimage>
 support has been compiled in it is possible to choose other blending
 types with B<-blt "type"> option.
 
