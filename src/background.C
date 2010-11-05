@@ -1449,6 +1449,7 @@ bgPixmap_t::render ()
     }
 # endif
 
+# if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE) && !XRENDER
   XImage *result = NULL;
 
   if (background_flags && (flags & isInvalid))
@@ -1458,7 +1459,6 @@ bgPixmap_t::render ()
 
   if (result)
     {
-#  if !defined(HAVE_AFTERIMAGE) && !XRENDER
       /* our own client-side tinting */
       if (!(background_flags & transpPmapTinted) && (flags & tintNeeded))
         {
@@ -1467,7 +1467,6 @@ bgPixmap_t::render ()
             tint.get (c);
           ShadeXImage (DefaultVisual (target->dpy, target->display->screen), result, shade, c.r, c.g, c.b);
         }
-#  endif
 
       GC gc = XCreateGC (target->dpy, target->vt, 0UL, NULL);
 
@@ -1481,6 +1480,7 @@ bgPixmap_t::render ()
 
       XDestroyImage (result);
     }
+# endif
 
   if (flags & isInvalid)
     {
