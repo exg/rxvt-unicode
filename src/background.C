@@ -1416,7 +1416,7 @@ bgPixmap_t::set_root_pixmap ()
 # endif /* ENABLE_TRANSPARENCY */
 
 #if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
-static void ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm);
+static void ShadeXImage(Visual *visual, XImage *srcImage, int shade, const rgba &c);
 # endif
 
 bool
@@ -1465,7 +1465,7 @@ bgPixmap_t::render ()
           rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
           if (flags & tintSet)
             tint.get (c);
-          ShadeXImage (DefaultVisual (target->dpy, target->display->screen), result, shade, c.r, c.g, c.b);
+          ShadeXImage (DefaultVisual (target->dpy, target->display->screen), result, shade, c);
         }
 
       GC gc = XCreateGC (target->dpy, target->vt, 0UL, NULL);
@@ -1580,13 +1580,13 @@ bgPixmap_t::apply ()
 /* taken from aterm-0.4.2 */
 
 static void
-ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
+ShadeXImage(Visual *visual, XImage *srcImage, int shade, const rgba &c)
 {
   int sh_r, sh_g, sh_b;
   uint32_t mask_r, mask_g, mask_b;
   uint32_t *lookup, *lookup_r, *lookup_g, *lookup_b;
-  unsigned int lower_lim_r, lower_lim_g, lower_lim_b;
-  unsigned int upper_lim_r, upper_lim_g, upper_lim_b;
+  rgba low;
+  rgba high;
   int i;
   int host_byte_order = byteorder.big_endian () ? MSBFirst : LSBFirst;
 
@@ -1661,46 +1661,43 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm)
     {
       shade = 200 - shade;
 
-      lower_lim_r = 65535-rm;
-      lower_lim_g = 65535-gm;
-      lower_lim_b = 65535-bm;
+      high.r = (65535 - c.r) * shade / 100;
+      high.g = (65535 - c.g) * shade / 100;
+      high.b = (65535 - c.b) * shade / 100;
 
-      lower_lim_r = 65535-(unsigned int)(((uint32_t)lower_lim_r)*((uint32_t)shade)/100);
-      lower_lim_g = 65535-(unsigned int)(((uint32_t)lower_lim_g)*((uint32_t)shade)/100);
-      lower_lim_b = 65535-(unsigned int)(((uint32_t)lower_lim_b)*((uint32_t)shade)/100);
-
-      upper_lim_r = upper_lim_g = upper_lim_b = 65535;
+      low.r = 65535 - high.r;
+      low.g = 65535 - high.g;
+      low.b = 65535 - high.b;
     }
   else
     {
+      high.r = c.r * shade / 100;
+      high.g = c.g * shade / 100;
+      high.b = c.b * shade / 100;
 
-      lower_lim_r = lower_lim_g = lower_lim_b = 0;
-
-      upper_lim_r = (unsigned int)((((uint32_t)rm)*((uint32_t)shade))/100);
-      upper_lim_g = (unsigned int)((((uint32_t)gm)*((uint32_t)shade))/100);
-      upper_lim_b = (unsigned int)((((uint32_t)bm)*((uint32_t)shade))/100);
+      low.r = low.g = low.b = 0;
     }
 
   /* fill our lookup tables */
   for (i = 0; i <= mask_r>>sh_r; i++)
     {
       uint32_t tmp;
-      tmp = ((uint32_t)i)*((uint32_t)(upper_lim_r-lower_lim_r));
-      tmp += ((uint32_t)(mask_r>>sh_r))*((uint32_t)lower_lim_r);
+      tmp = i * high.r;
+      tmp += (mask_r>>sh_r) * low.r;
       lookup_r[i] = (tmp/65535)<<sh_r;
     }
   for (i = 0; i <= mask_g>>sh_g; i++)
     {
       uint32_t tmp;
-      tmp = ((uint32_t)i)*((uint32_t)(upper_lim_g-lower_lim_g));
-      tmp += ((uint32_t)(mask_g>>sh_g))*((uint32_t)lower_lim_g);
+      tmp = i * high.g;
+      tmp += (mask_g>>sh_g) * low.g;
       lookup_g[i] = (tmp/65535)<<sh_g;
     }
   for (i = 0; i <= mask_b>>sh_b; i++)
     {
       uint32_t tmp;
-      tmp = ((uint32_t)i)*((uint32_t)(upper_lim_b-lower_lim_b));
-      tmp += ((uint32_t)(mask_b>>sh_b))*((uint32_t)lower_lim_b);
+      tmp = i * high.b;
+      tmp += (mask_b>>sh_b) * low.b;
       lookup_b[i] = (tmp/65535)<<sh_b;
     }
 
