@@ -1415,7 +1415,7 @@ bgPixmap_t::set_root_pixmap ()
 }
 # endif /* ENABLE_TRANSPARENCY */
 
-# ifndef HAVE_AFTERIMAGE
+#if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
 static void ShadeXImage(Visual *visual, XImage *srcImage, int shade, int rm, int gm, int bm);
 # endif
 
@@ -1449,7 +1449,7 @@ bgPixmap_t::render ()
     }
 # endif
 
-# if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE) && !XRENDER
+# if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
   XImage *result = NULL;
 
   if (background_flags && (flags & isInvalid))
@@ -1576,7 +1576,7 @@ bgPixmap_t::apply ()
 
 #endif /* HAVE_BG_PIXMAP */
 
-#if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE) && !XRENDER
+#if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
 /* taken from aterm-0.4.2 */
 
 static void
