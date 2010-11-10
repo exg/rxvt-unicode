@@ -1369,10 +1369,7 @@ bgPixmap_t::make_transparency_pixmap ()
       XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
       result |= transpPmapTiled;
       XFreeGC (dpy, gc);
-    }
 
-  if (tiled_root_pmap != None)
-    {
       if (!need_client_side_rendering ())
         {
           if ((flags & blurNeeded)
@@ -1397,6 +1394,8 @@ bgPixmap_t::make_transparency_pixmap ()
       pmap_height = window_height;
       pmap_depth = target->depth;
     }
+  else
+    XFreePixmap (dpy, tiled_root_pmap);
 
   if (recoded_root_pmap != root_pixmap)
     XFreePixmap (dpy, recoded_root_pmap);
