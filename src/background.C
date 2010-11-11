@@ -1229,7 +1229,7 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
         {
           XRenderColor mask_c;
 
-          memset (&mask_c, (shade > 100) ? 0xFF : 0x0, sizeof (mask_c));
+          mask_c.red = mask_c.green = mask_c.blue = shade > 100 ? 0xffff : 0;
           mask_c.alpha = 0xffff;
           XRenderFillRectangle (dpy, PictOpSrc, overlay_pic, &mask_c, 0, 0, 1, 1);
 
