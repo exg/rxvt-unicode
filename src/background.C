@@ -668,20 +668,14 @@ bgPixmap_t::render_image (unsigned long background_flags)
       XGCValues gcv;
       GC gc;
 
-      if (pixmap)
-        {
-          if (pmap_width != new_pmap_width
-              || pmap_height != new_pmap_height
-              || pmap_depth != target->depth)
-            {
-              XFreePixmap (target->dpy, pixmap);
-              pixmap = None;
-            }
-        }
-
       /* create Pixmap */
-      if (pixmap == None)
+      if (pixmap == None
+          || pmap_width != new_pmap_width
+          || pmap_height != new_pmap_height
+          || pmap_depth != target->depth)
         {
+          if (pixmap)
+            XFreePixmap (target->dpy, pixmap);
           pixmap = XCreatePixmap (target->dpy, target->vt, new_pmap_width, new_pmap_height, target->depth);
           pmap_width = new_pmap_width;
           pmap_height = new_pmap_height;
@@ -799,19 +793,13 @@ bgPixmap_t::render_image (unsigned long background_flags)
             }
         }
 
-      if (pixmap)
+      if (pixmap == None
+          || pmap_width != new_pmap_width
+          || pmap_height != new_pmap_height
+          || pmap_depth != target->depth)
         {
-          if (pmap_width != new_pmap_width
-              || pmap_height != new_pmap_height
-              || pmap_depth != target->depth)
-            {
-              XFreePixmap (target->dpy, pixmap);
-              pixmap = None;
-            }
-        }
-
-      if (pixmap == None)
-        {
+          if (pixmap)
+            XFreePixmap (target->dpy, pixmap);
           pixmap = XCreatePixmap (target->dpy, target->vt, new_pmap_width, new_pmap_height, target->depth);
           pmap_width = new_pmap_width;
           pmap_height = new_pmap_height;
