@@ -174,7 +174,7 @@ bgPixmap_t::window_position_sensitive ()
 # endif
 
   return false;
-};
+}
 
 bool bgPixmap_t::need_client_side_rendering ()
 {

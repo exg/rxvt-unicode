@@ -80,14 +80,14 @@ struct bgPixmap_t
   void unset_geometry ()
   {
     flags = flags & ~geometryFlags;
-  };
+  }
   bool set_geometry (const char *geom);
   void set_defaultGeometry ()
   {
     h_scale = v_scale = defaultScale;
     h_align = v_align = defaultAlign;
     flags |= geometrySet;
-  };
+  }
 
   bool set_file (const char *file);
 # endif /* BG_IMAGE_FROM_FILE */
@@ -131,7 +131,7 @@ struct bgPixmap_t
         flags |= isInvalid;
         invalid_since = ev::now ();
       }
-  };
+  }
 };
 #else
 # undef HAVE_BG_PIXMAP
