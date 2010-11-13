@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2010-10-15" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2010-11-13" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -241,7 +241,7 @@ Turn on/off jump scrolling (allow multiple lines per refresh); resource \fBjumpS
 Turn on/off skip scrolling (allow multiple screens per refresh); resource \fBskipScroll\fR.
 .IP "\fB\-tr\fR|\fB+tr\fR" 4
 .IX Item "-tr|+tr"
-Turn on/off illusion of a transparent window background; resource \fBtransparent\fR.
+Turn on/off pseudo-transparency by using the root pixmap as background; resource \fBtransparent\fR.
 .Sp
 \&\fB\-ip\fR is still accepted as an obsolete alias but will be removed in
 future versions.
@@ -256,29 +256,17 @@ Fade to this colour when fading is used (see \fB\-fade\fR). The default colour
 is opaque black. resource \fBfadeColor\fR.
 .IP "\fB\-tint\fR \fIcolour\fR" 4
 .IX Item "-tint colour"
-Tint the transparent background pixmap with the given colour when
-transparency is enabled with \fB\-tr\fR. This only works for
-non-tiled backgrounds, currently. See also the \fB\-sh\fR option that can be
-used to brighten or darken the image in addition to tinting it.
-Please note that certain tint colours can be applied on the server-side,
-thus yielding performance gain of two orders of magnitude. These colours are:
-blue, red, green, cyan, magenta, yellow, and those close to them. Also
-pure black and pure white colours essentially mean no tinting; resource
-\&\fItintColor\fR. Example:
-.Sp
-.Vb 1
-\&   @@RXVT_NAME@@ \-tr \-tint blue \-sh 40
-.Ve
+Tint the transparent background with the given colour;
+resource \fItintColor\fR.
 .IP "\fB\-sh\fR \fInumber\fR" 4
 .IX Item "-sh number"
-Darken (0 .. 100) or lighten (100 .. 200) the transparent
-background image in addition to (or instead of) tinting it;
+Darken (0 .. 100) or lighten (100 .. 200) the transparent background;
 resource \fIshading\fR.
 .IP "\fB\-blt\fR \fIstring\fR" 4
 .IX Item "-blt string"
 Specify background blending type. If background pixmap is specified
 at the same time as transparency \- such pixmap will be blended over
-transparency image, using method specified. Supported values are :
+the transparent background, using the method specified. Supported values are:
 \&\fBadd\fR, \fBalphablend\fR, \fBallanon\fR \- colour values averaging, \fBcolorize\fR,
 \&\fBdarken\fR, \fBdiff\fR, \fBdissipate\fR, \fBhue\fR, \fBlighten\fR, \fBoverlay\fR,
 \&\fBsaturate\fR, \fBscreen\fR, \fBsub\fR, \fBtint\fR, \fBvalue\fR. The default is
@@ -286,10 +274,10 @@ alpha-blending. Compile \fIafterimage\fR; resource \fIblendType\fR.
 .IP "\fB\-blr\fR \fIHxV\fR" 4
 .IX Item "-blr HxV"
 Apply Gaussian Blur with the specified radii to the transparent
-background image. If single number is specified \- both vertical and
+background. If a single number is specified \- both vertical and
 horizontal radii are considered to be the same. Setting one of the
 radii to 1 and another to a large number creates interesting effects
-on some backgrounds. Maximum radius value is 128. Compile \fIafterimage\fR or \fIxft\fR;
+on some backgrounds. Maximum radius value is 128;
 resource \fIblurRadius\fR.
 .IP "\fB\-icon\fR \fIfile\fR" 4
 .IX Item "-icon file"
@@ -746,7 +734,7 @@ if the refresh is too fast for the human eye to read anything (or the
 monitor to display anything); option \fB+ss\fR.
 .IP "\fBtransparent:\fR \fIboolean\fR" 4
 .IX Item "transparent: boolean"
-Turn on/off illusion of a transparent window background.
+Turn on/off pseudo-transparency by using the root pixmap as background.
 .Sp
 \&\fBinheritPixmap\fR is still accepted as an obsolete alias but will be removed in
 future versions.
@@ -759,19 +747,19 @@ Fade to this colour, when fading is used (see \fBfading:\fR). The default
 colour is black; option \fB\-fadecolor\fR.
 .IP "\fBtintColor:\fR \fIcolour\fR" 4
 .IX Item "tintColor: colour"
-Tint the transparent background pixmap with the given colour; option
+Tint the transparent background with the given colour; option
 \&\fB\-tint\fR.
 .IP "\fBshading:\fR \fInumber\fR" 4
 .IX Item "shading: number"
-Darken (0 .. 100) or lighten (\-1 .. \-100) the transparent background image
-in addition to tinting it; option \fB\-sh\fR.
+Darken (0 .. 100) or lighten (100 .. 200) the transparent background;
+option \fB\-sh\fR.
 .IP "\fBblendType:\fR \fIstring\fR" 4
 .IX Item "blendType: string"
 Specify background blending type; option \fB\-blt\fR.
 .IP "\fBblurRadius:\fR \fInumber\fR" 4
 .IX Item "blurRadius: number"
 Apply gaussian blur with the specified radius to the transparent
-background image; option \fB\-blr\fR.
+background; option \fB\-blr\fR.
 .IP "\fBiconFile:\fR \fIfile\fR" 4
 .IX Item "iconFile: file"
 Set the application icon pixmap; option \fB\-icon\fR.
@@ -809,7 +797,7 @@ Supported operations are:
 .Ve
 .Sp
 If used in conjunction with \fB\-tr\fR option, the specified pixmap will be
-blended over transparency image using alpha-blending. If \fIafterimage\fR
+blended over the transparent background using alpha-blending. If \fIafterimage\fR
 support has been compiled in it is possible to choose other blending
 types with \fB\-blt \*(L"type\*(R"\fR option.
 .IP "\fBpath:\fR \fIpath\fR" 4

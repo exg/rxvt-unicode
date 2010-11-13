@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2010-10-15" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2010-11-13" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -2539,7 +2539,10 @@ It adds support for many file formats including \s-1JPG\s0, \s-1PNG\s0,
 \&\s-1TIFF\s0, \s-1GIF\s0, \s-1XPM\s0, \s-1BMP\s0, \s-1ICO\s0 and \s-1TGA\s0.
 .IP "\-\-enable\-transparency (default: on)" 4
 .IX Item "--enable-transparency (default: on)"
-Add support for backgrounds, creating illusion of transparency in the term.
+Add support for using the root pixmap as background to simulate transparency.
+Note that tint, blur and blend effects depend on libAfterImage or on
+libXrender and on the availability of the \s-1RENDER\s0 extension in the X
+server.
 .IP "\-\-enable\-fading (default: on)" 4
 .IX Item "--enable-fading (default: on)"
 Add support for fading the text when focus is lost.

@@ -19,10 +19,13 @@ DUMB: support tex fonts
 TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
+9.09 Sat Nov 13 01:39:07 CET 2010
+	- NOTICE: this release updates terminfo/termcap.
+	- the bestest release ever.
         - it was verified that urxvt handles µ and μ correctly.
-	- cleanup and minor fixes of the image code (Emanuele Giaquinta).
 	- add support for blending and blurring with XRender (Emanuele Giaquinta).
 	- add support for using gdk-pixbuf as image backend (Emanuele Giaquinta).
+	- cleanup and minor fixes of the image code (Emanuele Giaquinta).
 	- new perl extension "confirm-paste" (Emanuele Giaquinta).
 	- new on_tt_paste perl hook and tt_paste perl binding (Emanuele Giaquinta).
 	- new on_bell perl hook (Emanuele Giaquinta).
@@ -72,7 +75,7 @@ TODO: command line editing when icanon?
         - erase screen would clear to the wrong background when blinking
           was enabled (which selects high intensity under some circumstances).
         - scr_kill_char didn't touch the line.
-        - upgrade and port to libev-4.0.
+        - upgrade and port to libev-4.01.
         - enabled solaris event ports and kqueue backends (if available).
 
 9.07 Wed Dec 30 07:07:18 CET 2009
