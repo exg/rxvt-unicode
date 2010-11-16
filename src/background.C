@@ -30,6 +30,10 @@
 # include <X11/extensions/Xrender.h>
 #endif
 
+#ifndef FilterConvolution
+#define FilterConvolution "convolution"
+#endif
+
 #define DO_TIMING_TEST 0
 
 #if DO_TIMING_TEST
