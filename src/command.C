@@ -3451,12 +3451,14 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
             if (*str != ';')
               {
                 if (bgPixmap.set_file (str))	/* change pixmap */
-                  changed++;
-                str = strchr (str, ';');
-                if (str == NULL)
-                  bgPixmap.set_defaultGeometry ();
-                else
-                  bgPixmap.set_geometry (str+1);
+                  {
+                    changed++;
+                    str = strchr (str, ';');
+                    if (str == NULL)
+                      bgPixmap.set_defaultGeometry ();
+                    else
+                      bgPixmap.set_geometry (str+1);
+                  }
               }
             else
               {
