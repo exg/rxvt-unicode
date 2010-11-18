@@ -68,24 +68,6 @@
  *            W and H are percentages of the terminal window size.
  *            X and Y are also percentages; e.g., +50+50 centers
  *            the image in the window.
- * WxH+X      Assumes Y == X
- * WxH        Assumes Y == X == 50 (centers the image)
- * W+X+Y      Assumes H == W
- * W+X        Assumes H == W and Y == X
- * W          Assumes H == W and Y == X == 50
- *
- * Adjusting position only :
- * =+X+Y      Set position to X% by Y% (absolute).
- * =+X        Set position to X% by X%.
- * +X+Y       Adjust position horizontally X% and vertically Y%
- *            from current position (relative).
- * +X         Adjust position horizontally X% and vertically X%
- *            from current position.
- *
- * Adjusting scale only :
- * Wx0        Multiply horizontal scaling factor by W%
- * 0xH        Multiply vertical scaling factor by H%
- * 0x0        No scaling (show image at normal size).
  *
  * Pixmap Operations : (should be prepended by a colon)
  * tile       Tile image. Scaling/position modifiers above will affect
@@ -258,7 +240,7 @@ make_clip_rectangle (int pos, int size, int target_size, int &dst_pos, int &dst_
 }
 
 bool
-bgPixmap_t::set_geometry (const char *geom)
+bgPixmap_t::set_geometry (const char *geom, bool update)
 {
   bool changed = false;
   int geom_flags = 0;
@@ -282,7 +264,6 @@ bgPixmap_t::set_geometry (const char *geom)
   if (n < MAXLEN_GEOM)
     {
       char *ops;
-      new_flags |= geometrySet;
 
       memcpy (str, geom, n);
       str[n] = '\0';
@@ -307,38 +288,7 @@ bgPixmap_t::set_geometry (const char *geom)
           /* we have geometry string - let's handle it prior to applying ops */
           geom_flags = XParseGeometry (str, &x, &y, &w, &h);
 
-          if ((geom_flags & XValue) && !(geom_flags & YValue))
-            {
-              y = x;
-              geom_flags |= YValue;
-            }
-
-          if (flags & geometrySet)
-            {
-              /* new geometry is an adjustment to the old one ! */
-              if ((geom_flags & WidthValue) && (geom_flags & HeightValue))
-                {
-                  if (w == 0 && h != 0)
-                    {
-                      w = h_scale;
-                      h = (v_scale * h) / 100;
-                    }
-                  else if (h == 0 && w != 0)
-                    {
-                      w = (h_scale * w) / 100;
-                      h = v_scale;
-                    }
-                }
-              if (geom_flags & XValue)
-                {
-                  if (str[0] != '=')
-                    {
-                      y += v_align;
-                      x += h_align;
-                    }
-                }
-            }
-          else /* setting up geometry from scratch */
+          if (!update) /* setting up geometry from scratch */
             {
               if (!(geom_flags & XValue))
                 {
@@ -362,14 +312,14 @@ bgPixmap_t::set_geometry (const char *geom)
                 w = h;
             }
         } /* done parsing geometry string */
-      else if (!(flags & geometrySet))
+      else if (!update)
         {
           /* default geometry - scaled and centered */
           x = y = defaultAlign;
           w = h = defaultScale;
         }
 
-      if (!(flags & geometrySet))
+      if (!update)
         geom_flags |= WidthValue|HeightValue|XValue|YValue;
 
       if (ops)

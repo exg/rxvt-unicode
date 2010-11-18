@@ -23,10 +23,9 @@ struct bgPixmap_t
   void destroy ();
 
   enum {
-    geometrySet     = 1 <<  0,
     propScale       = 1 <<  1,
     rootAlign       = 1 <<  2,
-    geometryFlags   = geometrySet | propScale | rootAlign,
+    geometryFlags   = propScale | rootAlign,
 
     tintSet         = 1 <<  8,
     tintNeeded      = 1 <<  9,
@@ -77,16 +76,11 @@ struct bgPixmap_t
   unsigned int h_scale, v_scale;/* percents of the window size */
   int h_align, v_align;         /* percents of the window size:
                                   0 - left align, 50 - center, 100 - right */
-  void unset_geometry ()
-  {
-    flags = flags & ~geometryFlags;
-  }
-  bool set_geometry (const char *geom);
+  bool set_geometry (const char *geom, bool update = false);
   void set_defaultGeometry ()
   {
     h_scale = v_scale = defaultScale;
     h_align = v_align = defaultAlign;
-    flags |= geometrySet;
   }
 
   bool set_file (const char *file);

@@ -2036,66 +2036,21 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 =head1 BACKGROUND IMAGE
 
 For the BACKGROUND IMAGE XTerm escape sequence B<< C<ESC ] 20 ; Pt ST> >> the value
-of B<< C<Pt> >> can be the name of the background image file followed by a
-sequence of scaling/positioning commands separated by semi-colons. The
-scaling/positioning commands are as follows:
+of B<< C<Pt> >> can be one of the following commands:
 
 =over 4
 
-=item query scale/position
+=item B<< C<?> >>
 
-B<?>
+display scale and position in the title
 
-=item change scale and position
+=item B<< C<;WxH+X+Y> >>
 
-B<WxH+X+Y>
+change scale and/or position
 
-B<WxH+X> (== B<WxH+X+X>)
+=item B<< C<FILE;WxH+X+Y> >>
 
-B<WxH> (same as B<WxH+50+50>)
-
-B<W+X+Y> (same as B<WxW+X+Y>)
-
-B<W+X> (same as B<WxW+X+X>)
-
-B<W> (same as B<WxW+50+50>)
-
-=item change position (absolute)
-
-B<=+X+Y>
-
-B<=+X> (same as B<=+X+Y>)
-
-=item change position (relative)
-
-B<+X+Y>
-
-B<+X> (same as B<+X+Y>)
-
-=item rescale (relative)
-
-B<Wx0> -> B<W *= (W/100)>
-
-B<0xH> -> B<H *= (H/100)>
-
-=back
-
-For example:
-
-=over 4
-
-=item B<\E]20;funky.jpg\a>
-
-load B<funky.jpg> as a tiled image
-
-=item B<\E]20;mona.jpg;100\a>
-
-load B<mona.jpg> with a scaling of 100%
-
-=item B<\E]20;;200;?\a>
-
-rescale the current pixmap to 200% and display the image geometry in
-the title
+change background image
 
 =back
 
