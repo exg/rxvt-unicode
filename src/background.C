@@ -248,7 +248,7 @@ bgPixmap_t::set_geometry (const char *geom, bool update)
   unsigned int w = 0, h = 0;
   unsigned int n;
   unsigned long new_flags = (flags & (~geometryFlags));
-  const char *p;
+  const char *ops;
 #  define MAXLEN_GEOM		256 /* could be longer than regular geometry string */
 
   if (geom == NULL)
@@ -256,71 +256,40 @@ bgPixmap_t::set_geometry (const char *geom, bool update)
 
   char str[MAXLEN_GEOM];
 
-  while (isspace(*geom)) ++geom;
-  if ((p = strchr (geom, ';')) == NULL)
-    p = strchr (geom, '\0');
+  ops = strchr (geom, ':');
+  if (ops == NULL)
+    n = strlen (geom);
+  else
+    n = ops - geom;
 
-  n = (p - geom);
   if (n < MAXLEN_GEOM)
     {
-      char *ops;
-
       memcpy (str, geom, n);
       str[n] = '\0';
-      if (str[0] == ':')
-        ops = &str[0];
-      else if (str[0] != 'x' && str[0] != 'X' && isalpha(str[0]))
-        ops = &str[0];
-      else
-        {
-          char *tmp;
-          ops = strchr (str, ':');
-          if (ops != NULL)
-            {
-              for (tmp = ops-1; tmp >= str && isspace(*tmp); --tmp);
-              *(++tmp) = '\0';
-              if (ops == tmp) ++ops;
-            }
-        }
+      rxvt_strtrim (str);
 
-      if (ops > str || ops == NULL)
+      if (str[0])
         {
           /* we have geometry string - let's handle it prior to applying ops */
           geom_flags = XParseGeometry (str, &x, &y, &w, &h);
-
-          if (!update) /* setting up geometry from scratch */
-            {
-              if (!(geom_flags & XValue))
-                {
-                  /* use default geometry - centered */
-                  x = y = defaultAlign;
-                }
-              else if (!(geom_flags & YValue))
-                y = x;
-
-              if ((geom_flags & (WidthValue|HeightValue)) == 0)
-                {
-                  /* use default geometry - scaled */
-                  w = h = defaultScale;
-                }
-              else if (geom_flags & WidthValue)
-                {
-                  if (!(geom_flags & HeightValue))
-                    h = w;
-                }
-              else
-                w = h;
-            }
         } /* done parsing geometry string */
-      else if (!update)
-        {
-          /* default geometry - scaled and centered */
-          x = y = defaultAlign;
-          w = h = defaultScale;
-        }
 
       if (!update)
-        geom_flags |= WidthValue|HeightValue|XValue|YValue;
+        {
+          if (!(geom_flags & XValue))
+            x = y = defaultAlign;
+          else if (!(geom_flags & YValue))
+            y = x;
+
+          if (!(geom_flags & (WidthValue|HeightValue)))
+            w = h = defaultScale;
+          else if (!(geom_flags & HeightValue))
+            h = w;
+          else if (!(geom_flags & WidthValue))
+            w = h;
+
+          geom_flags |= WidthValue|HeightValue|XValue|YValue;
+        }
 
       if (ops)
         {
