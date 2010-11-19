@@ -1438,6 +1438,25 @@ rxvt_term::x_cb (XEvent &ev)
             while (XCheckTypedWindowEvent (dpy, ev.xconfigure.window, ConfigureNotify, &ev))
               ;
 
+#ifdef HAVE_BG_PIXMAP
+            bool moved = false;
+            if (bgPixmap.window_position_sensitive ())
+              {
+                int x, y;
+                if (ev.xconfigure.send_event)
+                  {
+                    x = ev.xconfigure.x;
+                    y = ev.xconfigure.y;
+                  }
+                else
+                  get_window_origin (x, y);
+
+                if (bgPixmap.set_position (x, y)
+                    || (bgPixmap.flags & bgPixmap_t::isInvalid))
+                  moved = true;
+              }
+#endif
+
             if (szHint.width != ev.xconfigure.width || szHint.height != ev.xconfigure.height)
               {
                 seen_resize = 1;
@@ -1446,7 +1465,7 @@ rxvt_term::x_cb (XEvent &ev)
             else
               {
 #ifdef HAVE_BG_PIXMAP
-                if (bgPixmap.window_position_sensitive ())
+                if (moved)
                   {
                     if (mapped)
                       update_background ();
@@ -3468,7 +3487,15 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
               }
 
             if (changed)
-              update_background ();
+              {
+                if (bgPixmap.window_position_sensitive ())
+                  {
+                    int x, y;
+                    get_window_origin (x, y);
+                    bgPixmap.set_position (x, y);
+                  }
+                update_background ();
+              }
           }
         break;
 #endif

@@ -105,6 +105,7 @@ bgPixmap_t::bgPixmap_t ()
   pixmap = None;
   valid_since = invalid_since = 0;
   target = 0;
+  target_x = target_y = 0;
 }
 
 void
@@ -122,6 +123,20 @@ bgPixmap_t::destroy ()
 
   if (pixmap && target)
     XFreePixmap (target->dpy, pixmap);
+}
+
+bool
+bgPixmap_t::set_position (int x, int y)
+{
+
+  if (target_x != x
+      || target_y != y)
+    {
+      target_x = x;
+      target_y = y;
+      return true;
+    }
+  return false;
 }
 
 bool
@@ -385,9 +400,8 @@ bgPixmap_t::get_image_geometry (int image_width, int image_height, int &w, int &
 
   if (flags & rootAlign)
     {
-      target->get_window_origin (x, y);
-      x = -x;
-      y = -y;
+      x = -target_x;
+      y = -target_y;
     }
   else
     {
@@ -1202,7 +1216,8 @@ bgPixmap_t::make_transparency_pixmap ()
   XGCValues gcv;
   GC gc;
 
-  target->get_window_origin (sx, sy);
+  sx = target_x;
+  sy = target_y;
 
   /* check if we are outside of the visible part of the virtual screen : */
   if (sx + window_width <= 0 || sy + window_height <= 0

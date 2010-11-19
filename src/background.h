@@ -112,6 +112,9 @@ struct bgPixmap_t
   unsigned int pmap_width, pmap_height;
   unsigned int pmap_depth;
 
+  int target_x;
+  int target_y;
+  bool set_position (int x, int y);
   bool window_size_sensitive ();
   bool window_position_sensitive ();
 
