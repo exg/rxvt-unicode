@@ -19,6 +19,13 @@ DUMB: support tex fonts
 TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
+        - avoid spurious redraws of the bg image when bg is transparent or
+          when using 'root' mode (Emanuele Giaquinta).
+        - make OSC 20 simpler and more correct (Emanuele Giaquinta).
+        - fix regression in urxvtd that prevented options from being correctly
+          set (reported by Michal Vaner).
+        - fix build on XFree86.
+
 9.09 Sat Nov 13 01:39:07 CET 2010
 	- NOTICE: this release updates terminfo/termcap.
 	- the bestest release ever.
