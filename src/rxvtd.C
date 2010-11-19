@@ -229,9 +229,9 @@ main (int argc, const char *const *argv)
 {
   ptytty::init ();
 
-  int opt_fork = 0, opt_opendisplay = 0, opt_quiet = 0;
+  static char opt_fork, opt_opendisplay, opt_quiet;
 #if ENABLE_MLOCK
-  int opt_lock = 0;
+  static char opt_lock;
 #endif
 
   for (int i = 1; i < argc; i++)
