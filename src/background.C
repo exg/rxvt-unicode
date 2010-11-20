@@ -277,95 +277,95 @@ bgPixmap_t::set_geometry (const char *geom, bool update)
   else
     n = ops - geom;
 
-  if (n < MAXLEN_GEOM)
+  if (n >= MAXLEN_GEOM)
+    return false;
+
+  memcpy (str, geom, n);
+  str[n] = '\0';
+  rxvt_strtrim (str);
+
+  if (str[0])
     {
-      memcpy (str, geom, n);
-      str[n] = '\0';
-      rxvt_strtrim (str);
+      /* we have geometry string - let's handle it prior to applying ops */
+      geom_flags = XParseGeometry (str, &x, &y, &w, &h);
+    } /* done parsing geometry string */
 
-      if (str[0])
+  if (!update)
+    {
+      if (!(geom_flags & XValue))
+        x = y = defaultAlign;
+      else if (!(geom_flags & YValue))
+        y = x;
+
+      if (!(geom_flags & (WidthValue|HeightValue)))
+        w = h = defaultScale;
+      else if (!(geom_flags & HeightValue))
+        h = w;
+      else if (!(geom_flags & WidthValue))
+        w = h;
+
+      geom_flags |= WidthValue|HeightValue|XValue|YValue;
+    }
+
+  if (ops)
+    {
+      while (*ops)
         {
-          /* we have geometry string - let's handle it prior to applying ops */
-          geom_flags = XParseGeometry (str, &x, &y, &w, &h);
-        } /* done parsing geometry string */
-
-      if (!update)
-        {
-          if (!(geom_flags & XValue))
-            x = y = defaultAlign;
-          else if (!(geom_flags & YValue))
-            y = x;
-
-          if (!(geom_flags & (WidthValue|HeightValue)))
-            w = h = defaultScale;
-          else if (!(geom_flags & HeightValue))
-            h = w;
-          else if (!(geom_flags & WidthValue))
-            w = h;
-
-          geom_flags |= WidthValue|HeightValue|XValue|YValue;
-        }
-
-      if (ops)
-        {
-          while (*ops)
-            {
-              while (*ops == ':' || isspace(*ops)) ++ops;
+          while (*ops == ':' || isspace(*ops)) ++ops;
 
 #  define CHECK_GEOM_OPS(op_str)  (strncasecmp (ops, (op_str), sizeof (op_str) - 1) == 0)
-              if (CHECK_GEOM_OPS ("tile"))
-                {
-                  w = h = noScale;
-                  geom_flags |= WidthValue|HeightValue;
-                }
-              else if (CHECK_GEOM_OPS ("propscale"))
-                {
-                  new_flags |= propScale;
-                }
-              else if (CHECK_GEOM_OPS ("hscale"))
-                {
-                  if (w == 0) w = windowScale;
+          if (CHECK_GEOM_OPS ("tile"))
+            {
+              w = h = noScale;
+              geom_flags |= WidthValue|HeightValue;
+            }
+          else if (CHECK_GEOM_OPS ("propscale"))
+            {
+              new_flags |= propScale;
+            }
+          else if (CHECK_GEOM_OPS ("hscale"))
+            {
+              if (w == 0) w = windowScale;
 
-                  h = noScale;
-                  geom_flags |= WidthValue|HeightValue;
-                }
-              else if (CHECK_GEOM_OPS ("vscale"))
-                {
-                  if (h == 0) h = windowScale;
+              h = noScale;
+              geom_flags |= WidthValue|HeightValue;
+            }
+          else if (CHECK_GEOM_OPS ("vscale"))
+            {
+              if (h == 0) h = windowScale;
 
-                  w = noScale;
-                  geom_flags |= WidthValue|HeightValue;
-                }
-              else if (CHECK_GEOM_OPS ("scale"))
-                {
-                  if (h == 0) h = windowScale;
-                  if (w == 0) w = windowScale;
+              w = noScale;
+              geom_flags |= WidthValue|HeightValue;
+            }
+          else if (CHECK_GEOM_OPS ("scale"))
+            {
+              if (h == 0) h = windowScale;
+              if (w == 0) w = windowScale;
 
-                  geom_flags |= WidthValue|HeightValue;
-                }
-              else if (CHECK_GEOM_OPS ("auto"))
-                {
-                  w = h = windowScale;
-                  x = y = centerAlign;
-                  geom_flags |= WidthValue|HeightValue|XValue|YValue;
-                }
-              else if (CHECK_GEOM_OPS ("root"))
-                {
-                  new_flags |= rootAlign;
-                  w = h = noScale;
-                  geom_flags |= WidthValue|HeightValue;
-                }
+              geom_flags |= WidthValue|HeightValue;
+            }
+          else if (CHECK_GEOM_OPS ("auto"))
+            {
+              w = h = windowScale;
+              x = y = centerAlign;
+              geom_flags |= WidthValue|HeightValue|XValue|YValue;
+            }
+          else if (CHECK_GEOM_OPS ("root"))
+            {
+              new_flags |= rootAlign;
+              w = h = noScale;
+              geom_flags |= WidthValue|HeightValue;
+            }
 #  undef CHECK_GEOM_OPS
 
-              while (*ops != ':' && *ops != '\0') ++ops;
-            } /* done parsing ops */
-        }
-
-      if (check_set_scale_value (geom_flags, WidthValue, h_scale, w))  changed = true;
-      if (check_set_scale_value (geom_flags, HeightValue, v_scale, h)) changed = true;
-      if (check_set_align_value (geom_flags, XValue, h_align, x))      changed = true;
-      if (check_set_align_value (geom_flags, YValue, v_align, y))      changed = true;
+          while (*ops != ':' && *ops != '\0') ++ops;
+        } /* done parsing ops */
     }
+
+  if (check_set_scale_value (geom_flags, WidthValue, h_scale, w))  changed = true;
+  if (check_set_scale_value (geom_flags, HeightValue, v_scale, h)) changed = true;
+  if (check_set_align_value (geom_flags, XValue, h_align, x))      changed = true;
+  if (check_set_align_value (geom_flags, YValue, v_align, y))      changed = true;
 
   if (new_flags != flags)
     {
@@ -943,7 +943,8 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
     {
       tint->get (c);
 #  define IS_COMPONENT_WHOLESOME(cmp)  ((cmp) <= 0x000700 || (cmp) >= 0x00f700)
-      if (!has_shade && IS_COMPONENT_WHOLESOME (c.r)
+      if (!has_shade
+          && IS_COMPONENT_WHOLESOME (c.r)
           && IS_COMPONENT_WHOLESOME (c.g)
           && IS_COMPONENT_WHOLESOME (c.b))
         flags |= bgPixmap_t::tintWholesome;
@@ -1280,12 +1281,11 @@ bgPixmap_t::make_transparency_pixmap ()
     return 0;
 
   /* straightforward pixmap copy */
-  gcv.tile = recoded_root_pmap;
-  gcv.fill_style = FillTiled;
-
   while (sx < 0) sx += (int)root_width;
   while (sy < 0) sy += (int)root_height;
 
+  gcv.tile = recoded_root_pmap;
+  gcv.fill_style = FillTiled;
   gcv.ts_x_origin = -sx;
   gcv.ts_y_origin = -sy;
   gc = XCreateGC (dpy, target->vt, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
@@ -1361,7 +1361,7 @@ bgPixmap_t::render ()
       if (background_flags == 0)
         return false;
       else if ((background_flags & transpTransformations) == (flags & transpTransformations))
-        flags = flags & ~isInvalid;
+        flags &= ~isInvalid;
     }
 # endif
 
@@ -1370,7 +1370,7 @@ bgPixmap_t::render ()
       || (background_flags & transpTransformations) != (flags & transpTransformations))
     {
       if (render_image (background_flags))
-        flags = flags & ~isInvalid;
+        flags &= ~isInvalid;
     }
 # endif
 
@@ -1400,7 +1400,7 @@ bgPixmap_t::render ()
           XPutImage (target->dpy, pixmap, gc, result, 0, 0, 0, 0, result->width, result->height);
 
           XFreeGC (target->dpy, gc);
-          flags = flags & ~isInvalid;
+          flags &= ~isInvalid;
         }
 
       XDestroyImage (result);
