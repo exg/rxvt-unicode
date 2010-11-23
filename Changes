@@ -29,8 +29,12 @@ http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
 	- implement xterm's horribly broken 1005 mouse reporting code,
           and an alternative 1015 code that works in non-utf-8 locales
           and has fewer limitations.
-	- fix a possible bug where mouse mouse notifications didn't work after
+	- fix a possible bug where mouse notifications didn't work after
           startup for the upper left corner.
+        - apply tinting before shading when both operations are requested.
+          Previously they were intermixed when lightening and the result
+          was inaccurate and confusing. Note that now a black tint yields a
+          completely black image, regardless of shading (Emanuele Giaquinta).
         - avoid spurious redraws of the bg image when bg is transparent or
           when using 'root' mode (Emanuele Giaquinta).
         - fix build on XFree86.
