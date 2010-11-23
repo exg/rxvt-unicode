@@ -149,8 +149,8 @@ resource I<tintColor>.
 
 =item B<-sh> I<number>
 
-Darken (0 .. 100) or lighten (100 .. 200) the transparent background;
-resource I<shading>.
+Darken (0 .. 99) or lighten (101 .. 200) the transparent background.
+A value of 100 means no shading; resource I<shading>.
 
 =item B<-blt> I<string>
 
@@ -712,8 +712,8 @@ B<-tint>.
 
 =item B<shading:> I<number>
 
-Darken (0 .. 100) or lighten (100 .. 200) the transparent background;
-option B<-sh>.
+Darken (0 .. 99) or lighten (101 .. 200) the transparent background.
+A value of 100 means no shading; option B<-sh>.
 
 =item B<blendType:> I<string>
 

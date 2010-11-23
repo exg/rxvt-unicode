@@ -242,6 +242,9 @@ descriptions for the programs mentioned and rxvt-unicode. Really, do it!
 
 That works. If you think it doesn't, you lack transparency and tinting
 support, or you are unable to read.
+This method requires that the background-setting program sets the
+_XROOTPMAP_ID or ESETROOT_PMAP_ID property. Compatible programs
+are Esetroot, hsetroot and feh.
 
 2. Use a simple pixmap and emulate pseudo-transparency. This enables you
 to use effects other than tinting and shading: Just shade/tint/whatever
