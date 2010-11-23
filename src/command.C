@@ -1254,12 +1254,14 @@ rxvt_term::mouse_report (XButtonEvent &ev)
   int x, y;
   int code = 32;
 
-  x = Pixel2Col (ev.x);
-  y = Pixel2Row (ev.y);
+  x = Pixel2Col (ev.x) + 1;
+  y = Pixel2Row (ev.y) + 1;
+
   if (ev.type == MotionNotify)
     {
       if (x == mouse_row && y == mouse_col)
         return;
+
       mouse_row = x;
       mouse_col = y;
       code += 32;
@@ -1272,7 +1274,7 @@ rxvt_term::mouse_report (XButtonEvent &ev)
       button_number = MEvent.button - Button1;
       /* add 0x3D for wheel events, like xterm does */
       if (button_number >= 3)
-        button_number += (64 - 3);
+        button_number += 64 - 3;
     }
 
   if (priv_modes & PrivMode_MouseX10)
@@ -1314,14 +1316,27 @@ rxvt_term::mouse_report (XButtonEvent &ev)
     fputc ('2', stderr);
   fprintf (stderr, "]: <%d>, %d/%d\n",
           button_number,
-          x + 1,
-          y + 1);
+          x,
+          y);
 #endif
 
-  tt_printf ("\033[M%c%c%c",
-            (code + button_number + key_state),
-            (32 + x + 1),
-            (32 + y + 1));
+#if ENABLE_FRILLS
+  if (priv_modes & PrivMode_ExtMouseRight)
+    tt_printf ("\033[%d;%d;%dM",
+              code + button_number + key_state,
+              x,
+              y);
+  else if (priv_modes & PrivMode_ExtModeMouse)
+    tt_printf ("\033[M%c%lc%lc",
+              code + button_number + key_state,
+              wint_t (32 + x),
+              wint_t (32 + y));
+  else
+#endif
+    tt_printf ("\033[M%c%c%c",
+              code + button_number + key_state,
+              32 + x,
+              32 + y);
 }
 
 /*{{{ process an X event */
@@ -3656,13 +3671,19 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
                   { 1000, PrivMode_MouseX11 },
                   { 1002, PrivMode_MouseBtnEvent },
                   { 1003, PrivMode_MouseAnyEvent },
+#if ENABLE_FRILLS
+                  { 1005, PrivMode_ExtModeMouse },
+#endif
                   { 1010, PrivMode_TtyOutputInh }, // rxvt extension
                   { 1011, PrivMode_Keypress }, // rxvt extension
+#if ENABLE_FRILLS
+                  { 1015, PrivMode_ExtMouseRight }, // urxvt extension of 1005
+#endif
                  // 1035 enable modifiers for alt, numlock NYI
                  // 1036 send ESC for meta keys NYI
                  // 1037 send DEL for keypad delete NYI
                   { 1047, PrivMode_Screen },
-                 // 1048 save and restore cursor
+                 // 1048 save and restore cursor, implemented in code
                   { 1049, PrivMode_Screen }, /* xterm extension, clear screen on ti rather than te */
                  // 1051, 1052, 1060, 1061 keyboard emulation NYI
                   { 2004, PrivMode_BracketPaste },

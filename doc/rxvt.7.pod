@@ -1222,7 +1222,7 @@ selectable at C<configure> time.
 
 =item B<< C<c> >>
 
-The literal character c.
+The literal character c (potentially a multi-byte character).
 
 =item B<< C<C> >>
 
@@ -1919,6 +1919,20 @@ X<Priv66>
 
 =end table
 
+=item B<< C<Pm = 1005> >> (X11 XTerm)
+
+Try to avoid this mode, it doesn't work sensibly in non-UTF-8 locales. Use
+mode C<1015> instead.
+
+Unlike XTerm, coordinates larger than 2015) will work fine.
+
+=begin table
+
+	B<< C<h> >>	Enable mouse coordinates in locale-specific encoding.
+	B<< C<l> >>	Enable mouse coordinates as binary octets.
+
+=end table
+
 =item B<< C<Pm = 1010> >> (B<rxvt>)
 
 =begin table
@@ -1934,6 +1948,45 @@ X<Priv66>
 
 	B<< C<h> >>	Scroll to bottom when a key is pressed
 	B<< C<l> >>	Don't scroll to bottom when a key is pressed
+
+=end table
+
+=item B<< C<Pm = 1015> >> (B<rxvt-unicode>)
+
+Changes all mouse reporting codes to use decimal parameters instead of
+octets or characters.
+
+This mode should be enabled I<before> actually enabling mouse reporting,
+for semi-obvious reasons.
+
+The sequences received for various modes are as follows:
+
+   ESC [ M o o o    !1005, !1015 (three octets)
+   ESC [ M c c c    1005, !1015 (three characters)
+   ESC [ Pm M       1015 (three or more numeric paramaters)
+
+The three parameters are C<code>, C<x> and C<y>. Code is the numeric code
+as for the other modes (but encoded as a decimal number), C<x> and C<y>
+are the coordinates (1|1 is the upper left corner, just as with cursor
+positioning).
+
+Example: Shift-Button-1 press at top row, column 80.
+
+   ESC [ 5 ; 80 ; 1 M
+
+One can use this feature by simply enabling it and then looking for
+parameters to the C<ESC [ M> reply - if there are any, this mode is
+active, otherwise one of the old reporting styles is used.
+
+Other (to be implemented) reply sequences will use a similar encoding.
+
+In the future, more parameters might get added (pixel coordinates for
+example - anybody out there who needs this?).
+
+=begin table
+
+	B<< C<h> >>	Enable new mouse coordinate reporting.
+	B<< C<l> >>	Use old-style C<CSI M C C C> encoding.
 
 =end table
 
