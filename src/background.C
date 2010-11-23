@@ -1133,9 +1133,9 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
         }
       else
         {
-          c.r = ((0xffff - c.r) * (200 - shade)) / 100;
-          c.g = ((0xffff - c.g) * (200 - shade)) / 100;
-          c.b = ((0xffff - c.b) * (200 - shade)) / 100;
+          c.r = (c.r * (200 - shade)) / 100;
+          c.g = (c.g * (200 - shade)) / 100;
+          c.b = (c.b * (200 - shade)) / 100;
         }
 
       XRenderPictFormat *solid_format = XRenderFindStandardFormat (dpy, PictStandardARGB32);
@@ -1159,7 +1159,7 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
         {
           XRenderColor mask_c;
 
-          mask_c.red = mask_c.green = mask_c.blue = shade > 100 ? 0xffff : 0;
+          mask_c.red = mask_c.green = mask_c.blue = 0;
           mask_c.alpha = 0xffff;
           XRenderFillRectangle (dpy, PictOpSrc, overlay_pic, &mask_c, 0, 0, 1, 1);
 
@@ -1169,6 +1169,16 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
           mask_c.blue = 0xffff - c.b;
           XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
           XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, width, height);
+
+          if (shade > 100)
+            {
+              mask_c.red = mask_c.green = mask_c.blue = 0xffff * (shade - 100) / 100;
+              mask_c.alpha = 0;
+              XRenderFillRectangle (dpy, PictOpSrc, overlay_pic, &mask_c, 0, 0, 1, 1);
+
+              XRenderComposite (dpy, PictOpOver, overlay_pic, None, back_pic, 0, 0, 0, 0, 0, 0, width, height);
+            }
+
           ret = true;
         }
 
@@ -1578,13 +1588,13 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, const rgba &c)
     {
       shade = 200 - shade;
 
-      high.r = (65535 - c.r) * shade / 100;
-      high.g = (65535 - c.g) * shade / 100;
-      high.b = (65535 - c.b) * shade / 100;
+      high.r = c.r * shade / 100;
+      high.g = c.g * shade / 100;
+      high.b = c.b * shade / 100;
 
-      low.r = 65535 - high.r;
-      low.g = 65535 - high.g;
-      low.b = 65535 - high.b;
+      low.r = 65535 * (100 - shade) / 100;
+      low.g = 65535 * (100 - shade) / 100;
+      low.b = 65535 * (100 - shade) / 100;
     }
   else
     {
