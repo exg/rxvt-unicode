@@ -1919,7 +1919,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Pm = 1005> >> (X11 XTerm)
+=item B<< C<Pm = 1005> >> (X11 XTerm) (Compile frills)
 
 Try to avoid this mode, it doesn't work sensibly in non-UTF-8 locales. Use
 mode C<1015> instead.
@@ -1951,7 +1951,7 @@ Unlike XTerm, coordinates larger than 2015) will work fine.
 
 =end table
 
-=item B<< C<Pm = 1015> >> (B<rxvt-unicode>)
+=item B<< C<Pm = 1015> >> (B<rxvt-unicode>) (Compile frills)
 
 Changes all mouse reporting codes to use decimal parameters instead of
 octets or characters.
@@ -2450,6 +2450,7 @@ in combination with other switches) is:
   compile in built-in block graphics
   skip builtin block graphics (-sbg)
   separate highlight colour (-highlightColor, -highlightTextColor)
+  extended mouse reporting modes (1005 and 1015).
 
 It also enables some non-essential features otherwise disabled, such as:
 
