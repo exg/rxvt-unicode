@@ -951,16 +951,8 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
 #  undef  IS_COMPONENT_WHOLESOME
     }
 
-  if (has_shade)
+  if (has_shade || tint)
     flags |= bgPixmap_t::tintNeeded;
-  else if (tint)
-    {
-      if ((c.r > 0x000700 || c.g > 0x000700 || c.b > 0x000700)
-          && (c.r < 0x00f700 || c.g < 0x00f700 || c.b < 0x00f700))
-        {
-          flags |= bgPixmap_t::tintNeeded;
-        }
-    }
 
   return flags;
 }
