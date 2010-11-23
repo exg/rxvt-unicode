@@ -942,7 +942,7 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
   if (tint)
     {
       tint->get (c);
-#  define IS_COMPONENT_WHOLESOME(cmp)  ((cmp) <= 0x000700 || (cmp) >= 0x00f700)
+#  define IS_COMPONENT_WHOLESOME(cmp)  ((cmp) <= 0x00ff || (cmp) >= 0xff00)
       if (!has_shade
           && IS_COMPONENT_WHOLESOME (c.r)
           && IS_COMPONENT_WHOLESOME (c.g)
