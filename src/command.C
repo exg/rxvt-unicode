@@ -2881,7 +2881,7 @@ rxvt_term::process_csi_seq ()
                 scr_soft_reset ();
 
                 static const int pm_h[] = { 7, 25 };
-                static const int pm_l[] = { 1, 3, 4, 5, 6, 9, 66, 1000, 1001, 1049 };
+                static const int pm_l[] = { 1, 3, 4, 5, 6, 9, 66, 1000, 1001, 1005, 1015, 1049 };
 
                 process_terminal_mode ('h', 0, sizeof (pm_h) / sizeof (pm_h[0]), pm_h);
                 process_terminal_mode ('l', 0, sizeof (pm_l) / sizeof (pm_l[0]), pm_l);
@@ -3791,6 +3791,7 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
                 {
                   priv_modes &= ~(PrivMode_MouseX10|PrivMode_MouseX11);
                   priv_modes &= arg[i] == 1003 ? ~PrivMode_MouseBtnEvent : ~PrivMode_MouseAnyEvent;
+                  mouse_row = mouse_col = 0;
                   vt_emask_mouse = PointerMotionMask;
                 }
               else
