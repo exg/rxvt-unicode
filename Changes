@@ -26,8 +26,8 @@ http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
           set (reported by Michal Vaner).
         - INCOMPATIBLE CHANGE: make OSC 20 simpler and more correct
           (Emanuele Giaquinta).
-	- implement xterm's horribly broken 1005 mouse reporting code,
-          and an alternative 1015 code that works in non-utf-8 locales
+	- implement xterm's horribly broken 1005 mouse reporting mode,
+          and an alternative 1015 mode that works in non-utf-8 locales
           and has fewer limitations.
 	- fix a possible bug where mouse notifications didn't work after
           startup for the upper left corner.
