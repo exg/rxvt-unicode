@@ -201,7 +201,7 @@ are defined by things like X11, pseudo terminals, locale support and unix
 domain sockets, which are all less portable than C++ itself.
 
 Regarding the bloat, see the above question: It's easy to write programs
-in C that use gobs of memory, an certainly possible to write programs in
+in C that use gobs of memory, and certainly possible to write programs in
 C++ that don't. C++ also often comes with large libraries, but this is
 not necessarily the case with GCC. Here is what rxvt links against on my
 system with a minimal config:
