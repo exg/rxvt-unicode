@@ -28,6 +28,10 @@
 
 #include <inttypes.h>
 
+#if XFT
+# include <fontconfig/fontconfig.h>
+#endif
+
 #define MAX_OVERLAP_ROMAN  (8 + 2)	// max. character width in 8ths of the base width
 #define MAX_OVERLAP_ITALIC (8 + 3)	// max. overlap for italic fonts
 

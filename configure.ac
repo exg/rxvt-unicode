@@ -628,7 +628,23 @@ TTY_GROUP_CHECK
 dnl# --------------------------------------------------------------------------
 dnl# now add and remove other stuff
 dnl# --------------------------------------------------------------------------
-if test x$support_xft = xyes; then
+if test x$support_xft = xyes || test x$support_inheritpixmap = xyes; then
+  rxvt_have_xrender=no
+  AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+  if test $PKG_CONFIG != no && $PKG_CONFIG --exists xrender; then
+    X_LIBS="`$PKG_CONFIG xrender --libs` $X_LIBS"
+    CPPFLAGS="$CPPFLAGS `$PKG_CONFIG xrender --cflags`"
+    rxvt_have_xrender=yes
+
+    save_LIBS="$LIBS"
+    LIBS="$LIBS $X_LIBS"
+    AC_CHECK_HEADER(X11/extensions/Xrender.h,,[rxvt_have_xrender=no])
+    AC_CHECK_FUNC(XRenderFindStandardFormat,,[rxvt_have_xrender=no])
+    LIBS="$save_LIBS"
+  fi
+fi
+
+if test x$support_xft = xyes && test x$rxvt_have_xrender = xyes; then
   AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
   if test $PKG_CONFIG != no && $PKG_CONFIG --exists xft; then
     X_LIBS="`$PKG_CONFIG xft --libs` $X_LIBS"
@@ -641,33 +657,21 @@ if test x$support_xft = xyes; then
     fi
   fi
 
+  if test $PKG_CONFIG != no && $PKG_CONFIG --exists fontconfig; then
+    X_LIBS="`$PKG_CONFIG fontconfig --libs` $X_LIBS"
+    CPPFLAGS="$CPPFLAGS `$PKG_CONFIG fontconfig --cflags`"
+  fi
+
   save_LIBS="$LIBS"
   LIBS="$LIBS $X_LIBS"
   AC_CHECK_HEADERS(X11/Xft/Xft.h,,[support_xft=no])
   AC_CHECK_LIB(Xft,XftDrawString32,:,[support_xft=no])
+  AC_CHECK_HEADERS(fontconfig/fontconfig.h,,[support_xft=no])
+  AC_CHECK_LIB(fontconfig,FcPatternGet,:,[support_xft=no])
   LIBS="$save_LIBS"
 
   if test x$support_xft = xyes; then
     AC_DEFINE(XFT, 1, Define to enable xft support)
-  fi
-fi
-if test x$support_inheritpixmap = xyes; then
-  support_xrender=yes
-  AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
-  if test $PKG_CONFIG != no && $PKG_CONFIG --exists xrender; then
-    X_LIBS="`$PKG_CONFIG xrender --libs` $X_LIBS"
-    CPPFLAGS="$CPPFLAGS `$PKG_CONFIG xrender --cflags`"
-
-    save_LIBS="$LIBS"
-    LIBS="$LIBS $X_LIBS"
-    AC_CHECK_HEADER(X11/extensions/Xrender.h,,[support_xrender=no])
-    AC_CHECK_FUNC(XRenderFindStandardFormat,,[support_xrender=no])
-    LIBS="$save_LIBS"
-  fi
-
-  if test x$support_xrender = xyes; then
-    LIBS="$LIBS -lm"
-    AC_DEFINE(XRENDER, 1, Define to enable xrender support)
   fi
 fi
 if test x$support_styles = xyes; then
@@ -683,6 +687,10 @@ if test x$support_fading = xyes; then
   AC_DEFINE(OFF_FOCUS_FADING, 1, Define if you want faded colors when focus is lost)
 fi
 if test x$support_inheritpixmap = xyes; then
+  if test x$rxvt_have_xrender = xyes; then
+    LIBS="$LIBS -lm"
+    AC_DEFINE(XRENDER, 1, Define to enable xrender support)
+  fi
   AC_DEFINE(ENABLE_TRANSPARENCY, 1, Define if you want your background to use the parent window background)
 fi
 if test x$support_keepscrolling = xno; then
