@@ -1343,7 +1343,7 @@ bgPixmap_t::set_root_pixmap ()
 # endif /* ENABLE_TRANSPARENCY */
 
 #if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
-static void ShadeXImage(Visual *visual, XImage *srcImage, int shade, const rgba &c);
+static void shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba &c);
 # endif
 
 bool
@@ -1392,7 +1392,7 @@ bgPixmap_t::render ()
           rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
           if (flags & tintSet)
             tint.get (c);
-          ShadeXImage (DefaultVisual (target->dpy, target->display->screen), result, shade, c);
+          shade_ximage (DefaultVisual (target->dpy, target->display->screen), result, shade, c);
         }
 
       GC gc = XCreateGC (target->dpy, target->vt, 0UL, NULL);
@@ -1507,7 +1507,7 @@ bgPixmap_t::apply ()
 /* taken from aterm-0.4.2 */
 
 static void
-ShadeXImage(Visual *visual, XImage *srcImage, int shade, const rgba &c)
+shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba &c)
 {
   int sh_r, sh_g, sh_b;
   uint32_t mask_r, mask_g, mask_b;
@@ -1517,7 +1517,7 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, const rgba &c)
   int i;
   int host_byte_order = byteorder.big_endian () ? MSBFirst : LSBFirst;
 
-  if (visual->c_class != TrueColor || srcImage->format != ZPixmap) return;
+  if (visual->c_class != TrueColor || ximage->format != ZPixmap) return;
 
   /* for convenience */
   mask_r = visual->red_mask;
@@ -1525,7 +1525,7 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, const rgba &c)
   mask_b = visual->blue_mask;
 
   /* boring lookup table pre-initialization */
-  switch (srcImage->depth)
+  switch (ximage->depth)
     {
       case 15:
         if ((mask_r != 0x7c00) ||
@@ -1629,18 +1629,18 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, const rgba &c)
     }
 
   /* apply table to input image (replacing colors by newly calculated ones) */
-  if (srcImage->bits_per_pixel == 32
-      && (srcImage->depth == 24 || srcImage->depth == 32)
-      && srcImage->byte_order == host_byte_order)
+  if (ximage->bits_per_pixel == 32
+      && (ximage->depth == 24 || ximage->depth == 32)
+      && ximage->byte_order == host_byte_order)
     {
       uint32_t *p1, *pf, *p, *pl;
-      p1 = (uint32_t *) srcImage->data;
-      pf = (uint32_t *) (srcImage->data + srcImage->height * srcImage->bytes_per_line);
+      p1 = (uint32_t *) ximage->data;
+      pf = (uint32_t *) (ximage->data + ximage->height * ximage->bytes_per_line);
 
       while (p1 < pf)
         {
           p = p1;
-          pl = p1 + srcImage->width;
+          pl = p1 + ximage->width;
           for (; p < pl; p++)
             {
               *p = lookup_r[(*p & 0xff0000) >> 16] |
@@ -1648,19 +1648,19 @@ ShadeXImage(Visual *visual, XImage *srcImage, int shade, const rgba &c)
                    lookup_b[(*p & 0x0000ff)] |
                    (*p & 0xff000000);
             }
-          p1 = (uint32_t *) ((char *) p1 + srcImage->bytes_per_line);
+          p1 = (uint32_t *) ((char *) p1 + ximage->bytes_per_line);
         }
     }
   else
     {
-      for (int y = 0; y < srcImage->height; y++)
-        for (int x = 0; x < srcImage->width; x++)
+      for (int y = 0; y < ximage->height; y++)
+        for (int x = 0; x < ximage->width; x++)
           {
-            unsigned long pixel = XGetPixel (srcImage, x, y);
+            unsigned long pixel = XGetPixel (ximage, x, y);
             pixel = lookup_r[(pixel & mask_r) >> sh_r] |
                     lookup_g[(pixel & mask_g) >> sh_g] |
                     lookup_b[(pixel & mask_b) >> sh_b];
-            XPutPixel (srcImage, x, y, pixel);
+            XPutPixel (ximage, x, y, pixel);
           }
     }
 
