@@ -659,6 +659,91 @@ bgPixmap_t::render_image (unsigned long background_flags)
 
 #  ifdef HAVE_PIXBUF
 bool
+bgPixmap_t::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
+                              int src_x, int src_y, int dst_x, int dst_y,
+                              unsigned int width, unsigned int height)
+{
+  XImage *ximage;
+  char *data, *line;
+  int bytes_per_pixel;
+  int width_r, width_g, width_b;
+  int sh_r, sh_g, sh_b;
+  int rowstride;
+  int channels;
+  unsigned char *row;
+  Visual *visual = target->visual;
+  int depth = target->depth;
+
+  if (visual->c_class != TrueColor)
+    return false;
+
+  if (depth == 24 || depth == 32)
+    bytes_per_pixel = 4;
+  else if (depth == 15 || depth == 16)
+    bytes_per_pixel = 2;
+  else
+    return false;
+
+  width_r = rxvt_popcount (visual->red_mask);
+  width_g = rxvt_popcount (visual->green_mask);
+  width_b = rxvt_popcount (visual->blue_mask);
+
+  if (width_r > 8 || width_g > 8 || width_b > 8)
+    return false;
+
+  sh_r = rxvt_ctz (visual->red_mask);
+  sh_g = rxvt_ctz (visual->green_mask);
+  sh_b = rxvt_ctz (visual->blue_mask);
+
+  if (width > INT_MAX / height / bytes_per_pixel)
+    return false;
+
+  data = (char *)malloc (width * height * bytes_per_pixel);
+  if (!data)
+    return false;
+
+  ximage = XCreateImage (target->dpy, visual, depth, ZPixmap, 0, data,
+                         width, height, bytes_per_pixel * 8, 0);
+  if (!ximage)
+    {
+      free (data);
+      return false;
+    }
+
+  ximage->byte_order = byteorder.big_endian () ? MSBFirst : LSBFirst;
+
+  rowstride = gdk_pixbuf_get_rowstride (pixbuf);
+  channels = gdk_pixbuf_get_n_channels (pixbuf);
+  row = gdk_pixbuf_get_pixels (pixbuf) + src_y * rowstride + src_x * channels;
+  line = data;
+
+  for (int y = 0; y < height; y++)
+    {
+      for (int x = 0; x < width; x++)
+        {
+          unsigned char *pixel = row + x * channels;
+          uint32_t value;
+
+          value  = ((pixel[0] >> (8 - width_r)) << sh_r)
+                 | ((pixel[1] >> (8 - width_g)) << sh_g)
+                 | ((pixel[2] >> (8 - width_b)) << sh_b);
+
+          if (bytes_per_pixel == 4)
+            ((uint32_t *)line)[x] = value;
+          else
+            ((uint16_t *)line)[x] = value;
+        }
+
+      row += rowstride;
+      line += ximage->bytes_per_line;
+    }
+
+  XPutImage (target->dpy, pixmap, gc, ximage, 0, 0, dst_x, dst_y, width, height);
+  XDestroyImage (ximage);
+  return true;
+}
+
+bool
 bgPixmap_t::render_image (unsigned long background_flags)
 {
   if (target == NULL)
@@ -749,12 +834,10 @@ bgPixmap_t::render_image (unsigned long background_flags)
       if (h_scale == 0 || v_scale == 0)
         {
           Pixmap tile = XCreatePixmap (target->dpy, target->vt, image_width, image_height, target->depth);
-          gdk_pixbuf_xlib_render_to_drawable (result, tile, gc,
-                                              0, 0,
-                                              0, 0,
-                                              image_width, image_height,
-                                              XLIB_RGB_DITHER_NONE,
-                                              0, 0);
+          pixbuf_to_pixmap (result, tile, gc,
+                            0, 0,
+                            0, 0,
+                            image_width, image_height);
 
           gcv.tile = tile;
           gcv.fill_style = FillTiled;
@@ -779,12 +862,10 @@ bgPixmap_t::render_image (unsigned long background_flags)
             XFillRectangle (target->dpy, pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
 
           if (dst_x < new_pmap_width && dst_y < new_pmap_height)
-            gdk_pixbuf_xlib_render_to_drawable (result, pixmap, gc,
-                                                src_x, src_y,
-                                                dst_x, dst_y,
-                                                dst_width, dst_height,
-                                                XLIB_RGB_DITHER_NONE,
-                                                0, 0);
+            pixbuf_to_pixmap (result, pixmap, gc,
+                              src_x, src_y,
+                              dst_x, dst_y,
+                              dst_width, dst_height);
         }
 
 #if XRENDER

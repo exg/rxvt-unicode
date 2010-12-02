@@ -442,9 +442,9 @@ if test x$support_pixbuf = xyes; then
   support_pixbuf=no
   AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
   AC_MSG_CHECKING(for gdk-pixbuf)
-  if test $PKG_CONFIG != no && $PKG_CONFIG --exists gdk-pixbuf-xlib-2.0; then
-    PIXBUF_CFLAGS="`$PKG_CONFIG gdk-pixbuf-xlib-2.0 --cflags`"
-    PIXBUF_LIBS="`$PKG_CONFIG gdk-pixbuf-xlib-2.0 --libs`"
+  if test $PKG_CONFIG != no && $PKG_CONFIG --exists gdk-pixbuf-2.0; then
+    PIXBUF_CFLAGS="`$PKG_CONFIG gdk-pixbuf-2.0 --cflags`"
+    PIXBUF_LIBS="`$PKG_CONFIG gdk-pixbuf-2.0 --libs`"
     support_pixbuf=yes
   fi
 

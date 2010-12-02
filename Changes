@@ -38,6 +38,9 @@ http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
           and has fewer limitations.
 	- fix a possible bug where mouse notifications didn't work after
           startup for the upper left corner.
+        - implement our own pixbuf to pixmap rendering to get rid of
+          dependency on buggy gdk-pixbuf-xlib. Only truecolor visuals
+          are supported (Emanuele Giaquinta).
         - apply tinting before shading when both operations are requested.
           Previously they were intermixed when lightening and the result
           was inaccurate and confusing. Note that now a black tint yields a

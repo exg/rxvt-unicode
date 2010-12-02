@@ -12,7 +12,7 @@
 #endif
 
 #ifdef HAVE_PIXBUF
-#include <gdk-pixbuf-xlib/gdk-pixbuf-xlib.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 #endif
 
 #if defined(BG_IMAGE_FROM_FILE) || defined(ENABLE_TRANSPARENCY)
@@ -59,6 +59,9 @@ struct bgPixmap_t
 
 #  ifdef HAVE_PIXBUF
   GdkPixbuf *pixbuf;
+  bool pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
+                         int src_x, int src_y, int dst_x, int dst_y,
+                         unsigned int width, unsigned int height);
 #  endif
 
   void get_image_geometry (int image_width, int image_height, int &w, int &h, int &x, int &y);
