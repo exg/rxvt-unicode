@@ -641,7 +641,7 @@ BOOT:
 # undef def
 
   HV *option = get_hv ("urxvt::OPTION", 1);
-# define def(name,val) hv_store (option, # name, sizeof (# name) - 1, newSVuv (Opt_ ## name), 0);
+# define def(name) hv_store (option, # name, sizeof (# name) - 1, newSVuv (Opt_ ## name), 0);
 # define nodef(name)
 # include "optinc.h"
 # undef nodef

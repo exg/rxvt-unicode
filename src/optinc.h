@@ -1,39 +1,39 @@
 // all resource indices, used by rxvt.h and rxvtperl.xs
 
- def(loginShell,            1)
- def(iconic,                2)
- def(visualBell,            3)
- def(mapAlert,              4)
- def(reverseVideo,          5)
- def(utmpInhibit,           6)
- def(scrollBar,             7)
- def(scrollBar_right,       8)
- def(scrollBar_floating,    9)
- def(meta8,                10)
- def(scrollTtyOutput,      11)
- def(scrollTtyKeypress,    12)
- def(transparent,          13)
- def(tripleclickwords,     14)
- def(scrollWithBuffer,     15)
- def(jumpScroll,           16)
- def(skipScroll,           17)
- def(mouseWheelScrollPage, 18)
+ def(loginShell)
+ def(iconic)
+ def(visualBell)
+ def(mapAlert)
+ def(reverseVideo)
+ def(utmpInhibit)
+ def(scrollBar)
+ def(scrollBar_right)
+ def(scrollBar_floating)
+ def(meta8)
+ def(scrollTtyOutput)
+ def(scrollTtyKeypress)
+ def(transparent)
+ def(tripleclickwords)
+ def(scrollWithBuffer)
+ def(jumpScroll)
+ def(skipScroll)
+ def(mouseWheelScrollPage)
 #if POINTER_BLANK
- def(pointerBlank,         19)
+ def(pointerBlank)
 #else
  nodef(pointerBlank)
 #endif
- def(cursorBlink,          20)
- def(secondaryScreen,      21)
- def(secondaryScroll,      22)
- def(pastableTabs,         23)
- def(cursorUnderline,      24)
+ def(cursorBlink)
+ def(secondaryScreen)
+ def(secondaryScroll)
+ def(pastableTabs)
+ def(cursorUnderline)
 #if ENABLE_FRILLS
- def(insecure,             25) // insecure esc sequences
- def(borderLess,           26) // mwm borderless hints
- def(hold,                 27) // hold window open after exit
- def(override_redirect,    28)
- def(urgentOnBell,         29)
+ def(insecure)   // insecure esc sequences
+ def(borderLess) // mwm borderless hints
+ def(hold)       // hold window open after exit
+ def(override_redirect)
+ def(urgentOnBell)
 #else
  nodef(insecure)
  nodef(borderLess)
@@ -42,25 +42,25 @@
  nodef(urgentOnBell)
 #endif
 #ifdef BUILTIN_GLYPHS
- def(skipBuiltinGlyphs,    30) // do not use internal glyphs
+ def(skipBuiltinGlyphs) // do not use internal glyphs
 #else
  nodef(skipBuiltinGlyphs)
 #endif
 #if ENABLE_STYLES
- def(intensityStyles,      31) // font styles imply intensity
+ def(intensityStyles)   // font styles imply intensity
 #else
  nodef(intensityStyles)
 #endif
 #if ISO_14755
- def(iso14755,             35)
- def(iso14755_52,          32)
+ def(iso14755)
+ def(iso14755_52)
 #else
  nodef(iso14755)
  nodef(iso14755_52)
 #endif
- def(console,              33)
+ def(console)
 #if XFT
- def(buffered,             34)
+ def(buffered)
 #else
  nodef(buffered)
 #endif

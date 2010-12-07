@@ -20,10 +20,11 @@ TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
 TODO: decrqm
+TODO: do not explicitly number options in optinc.h
 http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
 	- the "schmorp=north korea dickey=south korea" release.
-	- if options were compiled out, this could lead to options
-          receiving duplicate values. This is likely behind the
+	- if options were compiled out, this could lead to the option
+          count to be defined wrongly. This is likely behind the
           failures with gcc 4.5.
         - explicitly depend on fontconfig and xrender when xft support
           is enabled. Although the public Xft api uses types from
@@ -51,6 +52,8 @@ http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
         - avoid spurious redraws of the bg image when bg is transparent or
           when using 'root' mode (Emanuele Giaquinta).
         - fix build on XFree86.
+        - dynamically number option according to compiletime requirements.
+          For the extra saved byte. Or so. Yay.
 
 9.09 Sat Nov 13 01:39:07 CET 2010
 	- NOTICE: this release updates terminfo/termcap.
