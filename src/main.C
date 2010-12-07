@@ -363,6 +363,18 @@ rxvt_term::destroy_cb (ev::idle &w, int revents)
   delete this;
 }
 
+void
+rxvt_term::set_option (uint8_t opt, bool set)
+{
+  if (!opt)
+    return;
+
+  uint8_t mask = 1 << (opt & 7);
+  uint8_t &val = options [opt >> 3];
+
+  val = val & ~mask | (set ? 0 : mask);
+}
+
 /*----------------------------------------------------------------------*/
 /*
  * Exit gracefully, clearing the utmp entry and restoring tty attributes

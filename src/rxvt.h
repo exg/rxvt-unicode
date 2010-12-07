@@ -1385,16 +1385,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
     return options[opt >> 3] & (1 << (opt & 7));
   }
 
-  void set_option (uint8_t opt, bool set = true) NOTHROW
-  {
-    if (!opt)
-      return;
-
-    uint8_t mask = 1 << (opt & 7);
-    uint8_t &val = options [opt >> 3];
-
-    val = val & ~mask | (set ? 0 : mask);
-  }
+  void set_option (uint8_t opt, bool set = true) NOTHROW;
 
   void set_privmode (unsigned bit, int set) NOTHROW
   {
