@@ -954,7 +954,7 @@ struct selection_t
 /* rxvt_vars.options */
 enum {
 # define def(name,idx) Opt_ ## name = idx,
-# define nodef(name)   Opt_ ## name = 0,
+# define nodef(name)   Opt_prev_ ## name, Opt_ ## name = 0, Opt_next_ ## name = Opt_prev_ ## name - 1,
 # include "optinc.h"
 # undef nodef
 # undef def
