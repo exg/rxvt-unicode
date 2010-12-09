@@ -125,7 +125,7 @@ CONFIGURE OPTIONS
 
     --enable-transparency (default: on)
         Add support for using the root pixmap as background to simulate
-        transparency. Note that tint, blur and blend effects depend on
+        transparency. Note that blur and blend effects depend on
         libAfterImage or on libXrender and on the availability of the RENDER
         extension in the X server.
 
@@ -181,6 +181,7 @@ CONFIGURE OPTIONS
           compile in built-in block graphics
           skip builtin block graphics (-sbg)
           separate highlight colour (-highlightColor, -highlightTextColor)
+          extended mouse reporting modes (1005 and 1015).
 
         It also enables some non-essential features otherwise disabled, such
         as:

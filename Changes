@@ -16,11 +16,11 @@ WISH: coloured pastebin
 WISH: load system-wide config file even if we don't have one
 WISH: look into XAddConnectionWatch, does anybody need that?
 DUMB: support tex fonts
+TODO: decrqm http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
 TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
-TODO: decrqm
-http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
+9.10 Sat Nov 13 01:39:07 CET 2010
 	- the "schmorp=north korea dickey=south korea" release.
 	- if options were compiled out, this could lead to the option
           count to be defined wrongly. This is likely behind the
