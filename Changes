@@ -20,7 +20,6 @@ TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
 TODO: decrqm
-TODO: do not explicitly number options in optinc.h
 http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
 	- the "schmorp=north korea dickey=south korea" release.
 	- if options were compiled out, this could lead to the option
@@ -52,7 +51,7 @@ http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
         - avoid spurious redraws of the bg image when bg is transparent or
           when using 'root' mode (Emanuele Giaquinta).
         - fix build on XFree86.
-        - dynamically number option according to compiletime requirements.
+        - dynamically number options according to compiletime requirements.
           For the extra saved byte. Or so. Yay.
         - start options at one, not zero. Wastes a bit per terminal. Maybe.
           saves 50 instruction bytes. Possibly.
