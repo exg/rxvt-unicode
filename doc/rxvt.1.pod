@@ -707,8 +707,11 @@ colour is black; option B<-fadecolor>.
 
 =item B<tintColor:> I<colour>
 
-Tint the transparent background with the given colour; option
-B<-tint>.
+Tint the transparent background with the given colour. If the RENDER
+extension is not available only black, red, green, yellow, blue,
+magenta, cyan and white tints can be performed server-side. Note that
+a black tint yields a completely black image while a white tint yields
+the image unchanged; option B<-tint>.
 
 =item B<shading:> I<number>
 
