@@ -2262,7 +2262,7 @@ you want.
 
 =item --enable-xft (default: enabled)
 
-Add support for Xft (anti-aliases, among others) fonts. Xft fonts are
+Add support for Xft (anti-aliased, among others) fonts. Xft fonts are
 slower and require lots of memory, but as long as you don't use them, you
 don't pay for them.
 
