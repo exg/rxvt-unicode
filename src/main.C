@@ -1654,13 +1654,16 @@ rxvt_term::get_pixmap_property (int prop_id)
         int aformat;
         unsigned long nitems, bytes_after;
         Atom atype;
-        unsigned char *prop = NULL;
+        unsigned char *prop;
         int result = XGetWindowProperty (dpy, display->root, xa[prop_id],
                                          0L, 1L, False, XA_PIXMAP, &atype, &aformat,
                                          &nitems, &bytes_after, &prop);
-        if (result == Success && prop && atype == XA_PIXMAP)
-          pixmap = *(Pixmap *)prop;
-        XFree (prop);
+        if (result == Success)
+          {
+            if (atype == XA_PIXMAP)
+              pixmap = *(Pixmap *)prop;
+            XFree (prop);
+          }
       }
 
   return pixmap;
