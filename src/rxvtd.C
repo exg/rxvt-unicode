@@ -102,7 +102,7 @@ unix_listener::unix_listener (const char *sockname)
   sa.sun_family = AF_UNIX;
   strcpy (sa.sun_path, sockname);
 
-  unlink (rxvt_connection::unix_sockname ());
+  unlink (sockname);
 
   mode_t omask = umask (0077);
 

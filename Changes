@@ -32,6 +32,7 @@ TODO: command line editing when icanon?
           pkg-config that was added to workaround cases like this one.
           Fixes linking when using GNU ld with --as-needed or GNU gold
           (based on patch by Jan Palus).
+        - fix minor memory leaks in urxvt and urxvtd.
         - fix regression in urxvtd that prevented options from being correctly
           set (reported by Michal Vaner).
         - INCOMPATIBLE CHANGE: make OSC 20 simpler and more correct

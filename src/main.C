@@ -1646,6 +1646,8 @@ rxvt_term::get_window_origin (int &x, int &y)
 Pixmap
 rxvt_term::get_pixmap_property (int prop_id)
 {
+  Pixmap pixmap = None;
+
   if (prop_id > 0 && prop_id < NUM_XA)
     if (xa[prop_id])
       {
@@ -1657,10 +1659,11 @@ rxvt_term::get_pixmap_property (int prop_id)
                                          0L, 1L, False, XA_PIXMAP, &atype, &aformat,
                                          &nitems, &bytes_after, &prop);
         if (result == Success && prop && atype == XA_PIXMAP)
-          return *(Pixmap *)prop;
+          pixmap = *(Pixmap *)prop;
+        XFree (prop);
       }
 
-  return None;
+  return pixmap;
 }
 
 #ifdef HAVE_BG_PIXMAP
