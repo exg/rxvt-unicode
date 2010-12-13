@@ -364,14 +364,14 @@ rxvt_display::get_resources (bool refresh)
                               (unsigned char **)&val) == Success
           && actual_type == XA_STRING
           && actual_format == 8)
-         displayResource = val;
-       else
-         {
-           displayResource = 0;
+        displayResource = val;
+      else
+        {
+          displayResource = 0;
 
-           if (val)
-             XFree(val);
-         }
+          if (val)
+            XFree (val);
+        }
 
 #if XLIB_ILLEGAL_ACCESS
       dpy->xdefaults = displayResource;
@@ -530,10 +530,10 @@ void rxvt_display::im_change_check ()
   if (XGetWindowProperty (dpy, root, xa[XA_XIM_SERVERS], 0L, 1000000L,
                           False, XA_ATOM, &actual_type, &actual_format,
                           &nitems, &bytes_after, (unsigned char **)&atoms)
-      != Success )
+      != Success)
     return;
 
-  if (actual_type == XA_ATOM  && actual_format == 32)
+  if (actual_type == XA_ATOM && actual_format == 32)
     for (int i = 0; i < nitems; i++)
       if (XGetSelectionOwner (dpy, atoms[i]))
         {
