@@ -1007,10 +1007,10 @@ xterm? I need this to decide about setting colours etc.
     patches that considerably change the behaviour of rxvt-unicode (but
     unfortunately this notice has been removed). Before reporting a bug to
     the original rxvt-unicode author please download and install the genuine
-    version (<http://software.schmorp.de#rxvt-unicode>) and try to reproduce
-    the problem. If you cannot, chances are that the problems are specific
-    to Debian GNU/Linux, in which case it should be reported via the Debian
-    Bug Tracking System (use "reportbug" to report the bug).
+    version (<http://software.schmorp.de/pkg/rxvt-unicode.html>) and try to
+    reproduce the problem. If you cannot, chances are that the problems are
+    specific to Debian GNU/Linux, in which case it should be reported via
+    the Debian Bug Tracking System (use "reportbug" to report the bug).
 
     For other problems that also affect the Debian package, you can and
     probably should use the Debian BTS, too, because, after all, it's also a
