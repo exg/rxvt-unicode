@@ -891,7 +891,7 @@ rxvt_term::key_release (XKeyEvent &ev)
             return;
           }
 
-        for (unsigned short *i = iso14755_symtab; i[0]; i+= 2)
+        for (unsigned short *i = iso14755_symtab; i[0]; i += 2)
           if (i[0] == keysym)
             {
               iso14755buf = ISO_14755_51 | i[1];
