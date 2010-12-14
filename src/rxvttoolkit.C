@@ -35,7 +35,7 @@
 # include <X11/extensions/Xrender.h>
 #endif
 
-const char *const xa_names[] =
+static const char *const xa_names[] =
 {
   "TEXT",
   "COMPOUND_TEXT",

@@ -41,7 +41,7 @@
     : ((prop)->width * (wcw) * MAX_OVERLAP_ROMAN  + 7) >> 3	\
   ))
 
-const struct rxvt_fallback_font {
+static const struct rxvt_fallback_font {
   codeset cs;
   const char *name;
 } fallback_fonts[] = {

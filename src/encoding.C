@@ -27,7 +27,7 @@
 #include <cstdlib>
 #include <cstring>
 
-const struct n2cs {
+static const struct n2cs {
   const char *name;
   codeset cs;
 } n2cs[] = {

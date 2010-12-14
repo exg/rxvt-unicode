@@ -145,7 +145,7 @@ rxvt_network_display (const char *display)
 }
 #endif
 
-const char *const def_colorName[] =
+static const char *const def_colorName[] =
   {
     COLOR_FOREGROUND,
     COLOR_BACKGROUND,
