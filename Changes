@@ -26,6 +26,8 @@ TODO: resoufces section in manual tlks bullshit about system-wide app-defaults f
           with gcc.
 
 9.10 Mon Dec 13 17:43:52 CET 2010
+        - INCOMPATIBLE CHANGE: make OSC 20 simpler and more correct
+          (Emanuele Giaquinta).
 	- the "schmorp=north korea dickey=south korea" release.
 	- if options were compiled out, this could lead to the option
           count to be defined wrongly. This is likely behind the
@@ -40,8 +42,6 @@ TODO: resoufces section in manual tlks bullshit about system-wide app-defaults f
         - fix minor memory leaks in urxvt and urxvtd.
         - fix regression in urxvtd that prevented options from being correctly
           set (reported by Michal Vaner).
-        - INCOMPATIBLE CHANGE: make OSC 20 simpler and more correct
-          (Emanuele Giaquinta).
 	- implement xterm's horribly broken 1005 mouse reporting mode,
           and an alternative 1015 mode that works in non-utf-8 locales
           and has fewer limitations.
