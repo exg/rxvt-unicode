@@ -26,9 +26,9 @@ TODO: resoufces section in manual tlks bullshit about system-wide app-defaults f
           with gcc.
 
 9.10 Mon Dec 13 17:43:52 CET 2010
+	- the "schmorp=north korea dickey=south korea" release.
         - INCOMPATIBLE CHANGE: make OSC 20 simpler and more correct
           (Emanuele Giaquinta).
-	- the "schmorp=north korea dickey=south korea" release.
 	- if options were compiled out, this could lead to the option
           count to be defined wrongly. This is likely behind the
           failures with gcc 4.5.
