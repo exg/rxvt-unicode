@@ -192,6 +192,22 @@ set_environ (char **envv)
     environ = envv;
 }
 
+struct localise_env
+{
+  char **orig_env;
+
+  localise_env (char **new_env)
+  {
+    orig_env = environ;
+    environ = new_env;
+  }
+
+  ~localise_env ()
+  {
+    environ = orig_env;
+  }
+};
+
 /*
  *****************************************************************************
  * STRUCTURES AND TYPEDEFS

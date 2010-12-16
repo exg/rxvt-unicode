@@ -331,37 +331,37 @@ rxvt_perl_interp::init (rxvt_term *term)
     {
       rxvt_push_locale (""); // perl init destroys current locale
 
-      perl_environ = rxvt_environ;
-      swap (perl_environ, environ);
+      {
+        perl_environ = rxvt_environ;
+        localise_env set_environ (perl_environ);
 
-      char *args[] = {
-        "",
-        "-e"
-        "BEGIN {"
-        "   urxvt->bootstrap;"
-        "   unshift @INC, '" LIBDIR "';"
-        "}"
-        ""
-        "use urxvt;"
-      };
-      int argc = sizeof (args) / sizeof (args[0]);
-      char **argv = args;
+        char *args[] = {
+          "",
+          "-e"
+          "BEGIN {"
+          "   urxvt->bootstrap;"
+          "   unshift @INC, '" LIBDIR "';"
+          "}"
+          ""
+          "use urxvt;"
+        };
+        int argc = sizeof (args) / sizeof (args[0]);
+        char **argv = args;
 
-      PERL_SYS_INIT3 (&argc, &argv, &environ);
-      perl = perl_alloc ();
-      perl_construct (perl);
+        PERL_SYS_INIT3 (&argc, &argv, &environ);
+        perl = perl_alloc ();
+        perl_construct (perl);
 
-      if (perl_parse (perl, xs_init, argc, argv, (char **)NULL)
-          || perl_run (perl))
-        {
-          rxvt_warn ("unable to initialize perl-interpreter, continuing without.\n");
+        if (perl_parse (perl, xs_init, argc, argv, (char **)NULL)
+            || perl_run (perl))
+          {
+            rxvt_warn ("unable to initialize perl-interpreter, continuing without.\n");
 
-          perl_destruct (perl);
-          perl_free (perl);
-          perl = 0;
-        }
-
-      swap (perl_environ, environ);
+            perl_destruct (perl);
+            perl_free (perl);
+            perl = 0;
+          }
+      }
 
       rxvt_pop_locale ();
     }
@@ -391,6 +391,8 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
   if (!perl || !term->perl.self)
     return false;
 
+  localise_env set_environ (perl_environ);
+
   // pre-handling of some events
   if (htype == HOOK_REFRESH_END)
     {
@@ -400,203 +402,195 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
         ((overlay *)SvIV (*av_fetch (av, i, 0)))->swap ();
     }
 
-  swap (perl_environ, environ);
-
   bool event_consumed;
 
   if (htype == HOOK_INIT || htype == HOOK_DESTROY // must be called always
       || term->perl.should_invoke [htype])
-    try
-      {
-        dSP;
-        va_list ap;
+    {
+      dSP;
+      va_list ap;
 
-        va_start (ap, htype);
+      va_start (ap, htype);
 
-        ENTER;
-        SAVETMPS;
+      ENTER;
+      SAVETMPS;
 
-        PUSHMARK (SP);
+      PUSHMARK (SP);
 
-        XPUSHs (sv_2mortal (newSVterm (term)));
-        XPUSHs (sv_2mortal (newSViv (htype)));
+      XPUSHs (sv_2mortal (newSVterm (term)));
+      XPUSHs (sv_2mortal (newSViv (htype)));
 
-        for (;;) {
-          data_type dt = (data_type)va_arg (ap, int);
+      for (;;) {
+        data_type dt = (data_type)va_arg (ap, int);
 
-          switch (dt)
-            {
-              case DT_INT:
-                XPUSHs (sv_2mortal (newSViv (va_arg (ap, int))));
-                break;
+        switch (dt)
+          {
+            case DT_INT:
+              XPUSHs (sv_2mortal (newSViv (va_arg (ap, int))));
+              break;
 
-              case DT_LONG:
-                XPUSHs (sv_2mortal (newSViv (va_arg (ap, long))));
-                break;
+            case DT_LONG:
+              XPUSHs (sv_2mortal (newSViv (va_arg (ap, long))));
+              break;
 
-              case DT_STR:
-                XPUSHs (sv_2mortal (newSVpv (va_arg (ap, char *), 0)));
-                break;
+            case DT_STR:
+              XPUSHs (sv_2mortal (newSVpv (va_arg (ap, char *), 0)));
+              break;
 
-              case DT_STR_LEN:
-                {
-                  char *str = va_arg (ap, char *);
-                  int len   = va_arg (ap, int);
+            case DT_STR_LEN:
+              {
+                char *str = va_arg (ap, char *);
+                int len   = va_arg (ap, int);
 
-                  XPUSHs (sv_2mortal (newSVpvn (str, len)));
-                }
-                break;
+                XPUSHs (sv_2mortal (newSVpvn (str, len)));
+              }
+              break;
 
-              case DT_WCS_LEN:
-                {
-                  wchar_t *wstr = va_arg (ap, wchar_t *);
-                  int wlen      = va_arg (ap, int);
+            case DT_WCS_LEN:
+              {
+                wchar_t *wstr = va_arg (ap, wchar_t *);
+                int wlen      = va_arg (ap, int);
 
-                  XPUSHs (sv_2mortal (wcs2sv (wstr, wlen)));
-                }
-               break;
+                XPUSHs (sv_2mortal (wcs2sv (wstr, wlen)));
+              }
+             break;
 
-              case DT_LCS_LEN:
-                {
-                  long *lstr = va_arg (ap, long *);
-                  int llen   = va_arg (ap, int);
+            case DT_LCS_LEN:
+              {
+                long *lstr = va_arg (ap, long *);
+                int llen   = va_arg (ap, int);
 
-                  XPUSHs (sv_2mortal (newSVpvn ((char *)lstr, llen * sizeof (long))));
-                }
-               break;
+                XPUSHs (sv_2mortal (newSVpvn ((char *)lstr, llen * sizeof (long))));
+              }
+             break;
 
-              case DT_XEVENT:
-                {
-                  XEvent *xe = va_arg (ap, XEvent *);
-                  HV *hv = newHV ();
+            case DT_XEVENT:
+              {
+                XEvent *xe = va_arg (ap, XEvent *);
+                HV *hv = newHV ();
 
-#                 define set(name, sv) hv_store (hv, # name,  sizeof (# name) - 1, sv, 0)
-#                 define setiv(name, val) hv_store (hv, # name,  sizeof (# name) - 1, newSViv (val), 0)
-#                 define setuv(name, val) hv_store (hv, # name,  sizeof (# name) - 1, newSVuv (val), 0)
-#                 undef set
+#               define set(name, sv) hv_store (hv, # name,  sizeof (# name) - 1, sv, 0)
+#               define setiv(name, val) hv_store (hv, # name,  sizeof (# name) - 1, newSViv (val), 0)
+#               define setuv(name, val) hv_store (hv, # name,  sizeof (# name) - 1, newSVuv (val), 0)
+#               undef set
 
-                  setiv (type,       xe->type);
-                  setiv (send_event, xe->xany.send_event);
-                  setiv (serial,     xe->xany.serial);
+                setiv (type,       xe->type);
+                setiv (send_event, xe->xany.send_event);
+                setiv (serial,     xe->xany.serial);
 
-                  switch (xe->type)
-                    {
-                      case KeyPress:
-                      case KeyRelease:
-                      case ButtonPress:
-                      case ButtonRelease:
-                      case MotionNotify:
-                        setuv (window,    xe->xmotion.window);
-                        setuv (root,      xe->xmotion.root);
-                        setuv (subwindow, xe->xmotion.subwindow);
-                        setuv (time,      xe->xmotion.time);
-                        setiv (x,         xe->xmotion.x);
-                        setiv (y,         xe->xmotion.y);
-                        setiv (row,       xe->xmotion.y / term->fheight + term->view_start);
-                        setiv (col,       xe->xmotion.x / term->fwidth);
-                        setiv (x_root,    xe->xmotion.x_root);
-                        setiv (y_root,    xe->xmotion.y_root);
-                        setuv (state,     xe->xmotion.state);
+                switch (xe->type)
+                  {
+                    case KeyPress:
+                    case KeyRelease:
+                    case ButtonPress:
+                    case ButtonRelease:
+                    case MotionNotify:
+                      setuv (window,    xe->xmotion.window);
+                      setuv (root,      xe->xmotion.root);
+                      setuv (subwindow, xe->xmotion.subwindow);
+                      setuv (time,      xe->xmotion.time);
+                      setiv (x,         xe->xmotion.x);
+                      setiv (y,         xe->xmotion.y);
+                      setiv (row,       xe->xmotion.y / term->fheight + term->view_start);
+                      setiv (col,       xe->xmotion.x / term->fwidth);
+                      setiv (x_root,    xe->xmotion.x_root);
+                      setiv (y_root,    xe->xmotion.y_root);
+                      setuv (state,     xe->xmotion.state);
 
-                        switch (xe->type)
-                          {
-                            case KeyPress:
-                            case KeyRelease:
-                              setuv (keycode, xe->xkey.keycode);
-                              break;
+                      switch (xe->type)
+                        {
+                          case KeyPress:
+                          case KeyRelease:
+                            setuv (keycode, xe->xkey.keycode);
+                            break;
 
-                            case ButtonPress:
-                            case ButtonRelease:
-                              setuv (button,  xe->xbutton.button);
-                              break;
+                          case ButtonPress:
+                          case ButtonRelease:
+                            setuv (button,  xe->xbutton.button);
+                            break;
 
-                            case MotionNotify:
-                              setiv (is_hint, xe->xmotion.is_hint);
-                              break;
-                          }
+                          case MotionNotify:
+                            setiv (is_hint, xe->xmotion.is_hint);
+                            break;
+                        }
 
-                        break;
+                      break;
 
-                      case MapNotify:
-                      case UnmapNotify:
-                      case ConfigureNotify:
-                        setuv (event,  xe->xconfigure.event);
-                        setuv (window, xe->xconfigure.window);
+                    case MapNotify:
+                    case UnmapNotify:
+                    case ConfigureNotify:
+                      setuv (event,  xe->xconfigure.event);
+                      setuv (window, xe->xconfigure.window);
 
-                        switch (xe->type)
-                          {
-                            case ConfigureNotify:
-                              setiv (x,      xe->xconfigure.x);
-                              setiv (y,      xe->xconfigure.y);
-                              setiv (width,  xe->xconfigure.width);
-                              setiv (height, xe->xconfigure.height);
-                              setuv (above,  xe->xconfigure.above);
-                              break;
-                          }
+                      switch (xe->type)
+                        {
+                          case ConfigureNotify:
+                            setiv (x,      xe->xconfigure.x);
+                            setiv (y,      xe->xconfigure.y);
+                            setiv (width,  xe->xconfigure.width);
+                            setiv (height, xe->xconfigure.height);
+                            setuv (above,  xe->xconfigure.above);
+                            break;
+                        }
 
-                        break;
+                      break;
 
-                      case PropertyNotify:
-                        setuv (window,       xe->xproperty.window);
-                        setuv (atom,         xe->xproperty.atom);
-                        setuv (time,         xe->xproperty.time);
-                        setiv (state,        xe->xproperty.state);
-                        break;
+                    case PropertyNotify:
+                      setuv (window,       xe->xproperty.window);
+                      setuv (atom,         xe->xproperty.atom);
+                      setuv (time,         xe->xproperty.time);
+                      setiv (state,        xe->xproperty.state);
+                      break;
 
-                      case ClientMessage:
-                        setuv (window,       xe->xclient.window);
-                        setuv (message_type, xe->xclient.message_type);
-                        setuv (format,       xe->xclient.format);
-                        setuv (l0,           xe->xclient.data.l[0]);
-                        setuv (l1,           xe->xclient.data.l[1]);
-                        setuv (l2,           xe->xclient.data.l[2]);
-                        setuv (l3,           xe->xclient.data.l[3]);
-                        setuv (l4,           xe->xclient.data.l[4]);
-                        break;
-                    }
+                    case ClientMessage:
+                      setuv (window,       xe->xclient.window);
+                      setuv (message_type, xe->xclient.message_type);
+                      setuv (format,       xe->xclient.format);
+                      setuv (l0,           xe->xclient.data.l[0]);
+                      setuv (l1,           xe->xclient.data.l[1]);
+                      setuv (l2,           xe->xclient.data.l[2]);
+                      setuv (l3,           xe->xclient.data.l[3]);
+                      setuv (l4,           xe->xclient.data.l[4]);
+                      break;
+                  }
 
-                  XPUSHs (sv_2mortal (newRV_noinc ((SV *)hv)));
-                }
-                break;
+                XPUSHs (sv_2mortal (newRV_noinc ((SV *)hv)));
+              }
+              break;
 
-              case DT_END:
-                goto call;
+            case DT_END:
+              goto call;
 
-              default:
-                rxvt_fatal ("FATAL: unable to pass data type %d\n", dt);
-            }
+            default:
+              rxvt_fatal ("FATAL: unable to pass data type %d\n", dt);
+          }
+      }
+
+    call:
+      va_end (ap);
+
+      PUTBACK;
+      int count = call_pv ("urxvt::invoke", G_ARRAY | G_EVAL);
+      SPAGAIN;
+
+      if (count)
+        {
+          SV *status = POPs;
+          count = SvTRUE (status);
         }
 
-      call:
-        va_end (ap);
+      PUTBACK;
+      FREETMPS;
+      LEAVE;
 
-        PUTBACK;
-        int count = call_pv ("urxvt::invoke", G_ARRAY | G_EVAL);
-        SPAGAIN;
+      if (SvTRUE (ERRSV))
+        {
+          rxvt_warn ("perl hook %d evaluation error: %s", htype, SvPV_nolen (ERRSV));
+          ungrab (term); // better lose the grab than the session
+        }
 
-        if (count)
-          {
-            SV *status = POPs;
-            count = SvTRUE (status);
-          }
-
-        PUTBACK;
-        FREETMPS;
-        LEAVE;
-
-        if (SvTRUE (ERRSV))
-          {
-            rxvt_warn ("perl hook %d evaluation error: %s", htype, SvPV_nolen (ERRSV));
-            ungrab (term); // better lose the grab than the session
-          }
-
-        event_consumed = !!count;
-      }
-    catch (...)
-      {
-        swap (perl_environ, environ);
-        throw;
-      }
+      event_consumed = !!count;
+    }
   else
     event_consumed = false;
 
@@ -616,8 +610,6 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
       // don't allow further calls
       term->perl.self = 0;
     }
-
-  swap (perl_environ, environ);
 
   return event_consumed;
 }
