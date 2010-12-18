@@ -580,10 +580,10 @@ character and so on.
 =head3 Mouse cut/paste suddenly no longer works.
 
 Make sure that mouse reporting is actually turned off since killing
-some editors prematurely may leave the mouse in mouse report mode. I've
-heard that tcsh may use mouse reporting unless it otherwise specified. A
+some editors prematurely may leave it active. I've
+heard that tcsh may use mouse reporting unless it is otherwise specified. A
 quick check is to see if cut/paste works when the Alt or Shift keys are
-depressed.
+pressed.
 
 =head3 What's with the strange Backspace/Delete key behaviour?
 
