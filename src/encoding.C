@@ -23,6 +23,7 @@
 #include "../config.h"
 
 #include "encoding.h"
+#include "rxvtutil.h"
 
 #include <cstdlib>
 #include <cstring>
@@ -287,7 +288,7 @@ unicode_t
 rxvt_compose (unicode_t c1, unicode_t c2)
 {
   int l = 0;
-  int r = sizeof (rxvt_compose_table) / sizeof (rxvt_compose_entry) - 1;
+  int r = ARRAY_LENGTH(rxvt_compose_table) - 1;
   int m;
 
   while (r >= l)

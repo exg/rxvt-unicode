@@ -71,8 +71,6 @@
     (optList[i].flag & Optflag_Boolean)
 #define optList_isReverse(i)						\
     (optList[i].flag & Optflag_Reverse)
-#define optList_size							\
-    (sizeof (optList) / sizeof (optList[0]))
 
 static const struct
   {
@@ -401,7 +399,7 @@ rxvt_usage (int type)
       case 0:			/* brief listing */
         rxvt_log (" [-help] [--help]\n");
 
-        for (col = 1, i = 0; i < optList_size; i++)
+        for (col = 1, i = 0; i < ARRAY_LENGTH(optList); i++)
           if (optList[i].desc != NULL)
             {
               int len = 0;
@@ -429,7 +427,7 @@ rxvt_usage (int type)
       case 1:			/* full command-line listing */
         rxvt_log (" [options] [-e command args]\n\nwhere options include:\n");
 
-        for (i = 0; i < optList_size; i++)
+        for (i = 0; i < ARRAY_LENGTH(optList); i++)
           if (optList[i].desc != NULL)
             {
               assert (optList[i].opt != NULL);
@@ -448,7 +446,7 @@ rxvt_usage (int type)
         rxvt_log (" [options] [-e command args]\n\n"
                    "where resources (long-options) include:\n");
 
-        for (i = 0; i < optList_size; i++)
+        for (i = 0; i < ARRAY_LENGTH(optList); i++)
           if (optList[i].kw != NULL)
             rxvt_log ("  %s: %*s%s\n",
                     optList[i].kw,
@@ -512,13 +510,13 @@ rxvt_term::get_options (int argc, const char *const *argv)
         rxvt_usage (0);
 
       /* feature: always try to match long-options */
-      for (entry = 0; entry < optList_size; entry++)
+      for (entry = 0; entry < ARRAY_LENGTH(optList); entry++)
         if ((optList[entry].kw && !strcmp (opt, optList[entry].kw))
             || (!longopt
                 && optList[entry].opt && !strcmp (opt, optList[entry].opt)))
           break;
 
-      if (entry < optList_size)
+      if (entry < ARRAY_LENGTH(optList))
         {
           if (optList_isReverse (entry))
             flag = !flag;
@@ -669,7 +667,7 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
     {
       unsigned int i;
 
-      for (i=0; i < sizeof (keysym_vocabulary) / sizeof (keysym_vocabulary_t); ++i)
+      for (i=0; i < ARRAY_LENGTH(keysym_vocabulary); ++i)
         {
           if (strncmp (str, keysym_vocabulary [i].name, keysym_vocabulary [i].len) == 0)
             {
@@ -679,7 +677,7 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
             }
         }
 
-      if (i >= sizeof (keysym_vocabulary) / sizeof (keysym_vocabulary_t))
+      if (i >= ARRAY_LENGTH(keysym_vocabulary))
         return -1;
 
       if (*str == '-')
@@ -749,7 +747,7 @@ rxvt_term::extract_resources ()
   /*
    * Query resources for options that affect us
    */
-  for (int entry = 0; entry < optList_size; entry++)
+  for (int entry = 0; entry < ARRAY_LENGTH(optList); entry++)
     {
       int s;
       const char *kw = optList[entry].kw;

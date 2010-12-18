@@ -161,8 +161,6 @@ static uint16_t extent_test_chars[] = {
   0x304c, 0x672c,				// が本
 };
 
-#define NUM_EXTENT_TEST_CHARS (sizeof (extent_test_chars) / sizeof (extent_test_chars[0]))
-
 #define dTermDisplay Display *disp = term->dpy
 #define dTermGC      GC gc = term->gc
 
@@ -920,7 +918,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop, bool force_prop)
 
   width = 1;
 
-  for (uint16_t *t = extent_test_chars + NUM_EXTENT_TEST_CHARS; t-- > extent_test_chars; )
+  for (uint16_t *t = extent_test_chars + ARRAY_LENGTH(extent_test_chars); t-- > extent_test_chars; )
     {
       if (FROM_UNICODE (cs, *t) == NOCHAR)
         continue;
@@ -1238,7 +1236,7 @@ rxvt_font_xft::load (const rxvt_fontprop &prop, bool force_prop)
 
       int glheight = height;
 
-      for (uint16_t *t = extent_test_chars + NUM_EXTENT_TEST_CHARS; t-- > extent_test_chars; )
+      for (uint16_t *t = extent_test_chars + ARRAY_LENGTH(extent_test_chars); t-- > extent_test_chars; )
         {
           FcChar16 ch = *t;
 

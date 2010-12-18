@@ -448,7 +448,7 @@ bool rxvt_display::ref_init ()
   screen = DefaultScreen     (dpy);
   root   = DefaultRootWindow (dpy);
 
-  assert (sizeof (xa_names) / sizeof (char *) == NUM_XA);
+  assert (ARRAY_LENGTH(xa_names) == NUM_XA);
   XInternAtoms (dpy, (char **)xa_names, NUM_XA, False, xa);
 
   XrmSetDatabase (dpy, get_resources (false));
