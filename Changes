@@ -24,6 +24,7 @@ TODO: resources section in manual talks bullshit about system-wide app-defaults 
 	- don't swap perl env with real env, save and restore it, just in case
           we ever get recursive perl invocations. also saves a bit of codespace
           with gcc.
+        - fix debian bug #504817, tot he extend possible.
 
 9.10 Mon Dec 13 17:43:52 CET 2010
 	- the "schmorp=north korea dickey=south korea" release.
