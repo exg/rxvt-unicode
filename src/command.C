@@ -2776,11 +2776,11 @@ enum {
   CSI_78 , CSI_79 , CSI_7A , CSI_7B , CSI_7C , CSI_7D , CSI_7E , CSI_7F
 };
 
-#define make_byte(b7,b6,b5,b4,b3,b2,b1,b0)			\
+#define make_byte(b0,b1,b2,b3,b4,b5,b6,b7)			\
     (((b7) << 7) | ((b6) << 6) | ((b5) << 5) | ((b4) << 4)	\
      | ((b3) << 3) | ((b2) << 2) | ((b1) << 1) | (b0))
 #define get_byte_array_bit(array, bit)				\
-    (!! ((array)[ (bit) / 8] & (128 >> ((bit) & 7))))
+    (!! ((array)[(bit) >> 3] & (1 << ((bit) & 7))))
 
 static const unsigned char csi_defaults[] =
   {

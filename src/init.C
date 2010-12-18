@@ -892,7 +892,6 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 void
 rxvt_term::init_env ()
 {
-  int i;
   char *val;
 
 #ifdef DISPLAY_IS_IP
@@ -916,8 +915,7 @@ rxvt_term::init_env ()
   if (rs[Rs_display_name] == NULL)
     rs[Rs_display_name] = val;   /* use broken `:0' value */
 
-  i = strlen (val);
-  env_display = (char *)rxvt_malloc (i + 9);
+  env_display = (char *)rxvt_malloc (strlen (val) + 9);
 
   sprintf (env_display, "DISPLAY=%s", val);
 
