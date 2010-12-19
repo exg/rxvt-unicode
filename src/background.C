@@ -1415,9 +1415,9 @@ bgPixmap_t::make_transparency_pixmap ()
 void
 bgPixmap_t::set_root_pixmap ()
 {
-  Pixmap new_root_pixmap = target->get_pixmap_property (XA_XROOTPMAP_ID);
+  Pixmap new_root_pixmap = target->get_pixmap_property (target->xa[XA_XROOTPMAP_ID]);
   if (new_root_pixmap == None)
-    new_root_pixmap = target->get_pixmap_property (XA_ESETROOT_PMAP_ID);
+    new_root_pixmap = target->get_pixmap_property (target->xa[XA_ESETROOT_PMAP_ID]);
 
   root_pixmap = new_root_pixmap;
 }

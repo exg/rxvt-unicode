@@ -1644,27 +1644,23 @@ rxvt_term::get_window_origin (int &x, int &y)
 }
 
 Pixmap
-rxvt_term::get_pixmap_property (int prop_id)
+rxvt_term::get_pixmap_property (Atom property)
 {
   Pixmap pixmap = None;
 
-  if (prop_id > 0 && prop_id < NUM_XA)
-    if (xa[prop_id])
-      {
-        int aformat;
-        unsigned long nitems, bytes_after;
-        Atom atype;
-        unsigned char *prop;
-        int result = XGetWindowProperty (dpy, display->root, xa[prop_id],
-                                         0L, 1L, False, XA_PIXMAP, &atype, &aformat,
-                                         &nitems, &bytes_after, &prop);
-        if (result == Success)
-          {
-            if (atype == XA_PIXMAP)
-              pixmap = *(Pixmap *)prop;
-            XFree (prop);
-          }
-      }
+  int aformat;
+  unsigned long nitems, bytes_after;
+  Atom atype;
+  unsigned char *prop;
+  int result = XGetWindowProperty (dpy, display->root, property,
+                                   0L, 1L, False, XA_PIXMAP, &atype, &aformat,
+                                   &nitems, &bytes_after, &prop);
+  if (result == Success)
+    {
+      if (atype == XA_PIXMAP)
+        pixmap = *(Pixmap *)prop;
+      XFree (prop);
+    }
 
   return pixmap;
 }
