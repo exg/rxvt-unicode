@@ -560,10 +560,10 @@ distribution do also load settings from the B<~/.Xresources> file when X
 starts. @@RXVT_NAME@@ will consult the following files/resources in order,
 with later settings overwriting earlier ones:
 
-  1. system-wide app-defaults file, either locale-dependent OR global
-  2. app-defaults file in $XAPPLRESDIR
-  3. RESOURCE_MANAGER property on root-window OR $HOME/.Xdefaults
-  4. SCREEN_RESOURCES for the current screen
+  1. app-defaults file in $XAPPLRESDIR
+  2. $HOME/.Xdefaults
+  3. RESOURCE_MANAGER property on root-window of screen 0
+  4. SCREEN_RESOURCES property on root-window of the current screen
   5. $XENVIRONMENT file OR $HOME/.Xdefaults-<nodename>
   6. resources specified via -xrm on the commandline
 
