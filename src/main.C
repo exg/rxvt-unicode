@@ -396,7 +396,7 @@ print_x_error (Display *dpy, XErrorEvent *event)
     char buffer[BUFSIZ];
     char mesg[BUFSIZ];
     char number[32];
-    char *mtype = "XlibMessage";
+    const char mtype[] = "XlibMessage";
     XGetErrorText(dpy, event->error_code, buffer, BUFSIZ);
     XGetErrorDatabaseText(dpy, mtype, "XError", "X Error", mesg, BUFSIZ);
     rxvt_warn ("An X Error occurred, trying to continue after report.\n");

@@ -2629,7 +2629,7 @@ rxvt_term::scr_dump (int fd) NOTHROW
 {
   int             row, wrote;
   unsigned int    width, towrite;
-  char            r1[] = "\n";
+  const char      r1[] = "\n";
 
   for (row = saveLines + top_row;
        row < saveLines + nrow - 1; row++)

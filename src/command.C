@@ -3326,7 +3326,7 @@ rxvt_term::process_color_seq (int report, int color, const char *str, char resp)
  * XTerm escape sequences: ESC ] Ps;Pt (ST|BEL)
  */
 void
-rxvt_term::process_xterm_seq (int op, char *str, char resp)
+rxvt_term::process_xterm_seq (int op, const char *str, char resp)
 {
   int color;
   char *buf, *name;
