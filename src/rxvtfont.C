@@ -792,12 +792,14 @@ rxvt_font_x11::load (const rxvt_fontprop &prop, bool force_prop)
             diff += 300; // more heavily penalize what looks like scaled bitmap fonts
         }
 
-      if (!set_properties (p, fname))
-        continue;
-
-      if (prop.height != rxvt_fontprop::unset
-          && p.height > prop.height) // weed out too large fonts
-        continue;
+      if (!set_properties (p, fname)
+          // also weed out too large fonts
+          || (prop.height != rxvt_fontprop::unset
+              && p.height > prop.height))
+        {
+          free (fname);
+          continue;
+        }
 
       if (prop.height != rxvt_fontprop::unset) diff += (prop.height - p.height) * 128;
       if (prop.weight != rxvt_fontprop::unset) diff += abs (prop.weight - p.weight);
