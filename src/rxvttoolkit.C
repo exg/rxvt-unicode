@@ -509,6 +509,7 @@ rxvt_display::~rxvt_display ()
 #ifdef USE_XIM
   xims.clear ();
 #endif
+  XrmDestroyDatabase (XrmGetDatabase (dpy));
   XCloseDisplay (dpy);
 }
 
