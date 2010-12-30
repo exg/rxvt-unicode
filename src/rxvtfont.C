@@ -720,12 +720,12 @@ rxvt_font_x11::load (const rxvt_fontprop &prop, bool force_prop)
           if (!f)
             return false;
 
-          char *new_name = get_property (f, XA_FONT, name);
+          char *new_name = get_property (f, XA_FONT, 0);
 
           if (new_name)
             set_name (new_name);
           else
-            rxvt_warn ("font '%s' has no FONT property, continuing without.", name);
+            rxvt_warn ("font '%s' has no FONT property, continuing without.\n", name);
 
           XFreeFont (disp, f);
           f = 0;
