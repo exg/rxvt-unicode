@@ -23,6 +23,7 @@ TODO: command line editing when icanon?
 	- don't swap perl env with real env, save and restore it, just in case
           we ever get recursive perl invocations. also saves a bit of codespace
           with gcc.
+        - fix various memory leaks (Emanuele Giaquinta).
         - fix debian bug #504817, to the extent possible.
 
 9.10 Mon Dec 13 17:43:52 CET 2010
