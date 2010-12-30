@@ -866,7 +866,8 @@ rxvt_font_x11::load (const rxvt_fontprop &prop, bool force_prop)
 
   if (cs == CS_UNKNOWN)
     {
-      const char *charset = get_property (f, XA_FONT, 0);
+      char *value = get_property (f, XA_FONT, 0);
+      const char *charset = value;
 
       if (!charset)
         charset = name;
@@ -879,6 +880,8 @@ rxvt_font_x11::load (const rxvt_fontprop &prop, bool force_prop)
       cs = codeset_from_name (charset);
       if (cs == CS_UNKNOWN)
         rxvt_warn ("%s: cannot deduce encoding from font name property \"%s\", ignoring font.\n", name, charset);
+
+      free (value);
     }
 
   if (cs == CS_UNKNOWN)
