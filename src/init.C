@@ -62,12 +62,9 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-/* these next two are probably only on Sun (not Solaris) */
+/* these next is probably only on Sun (not Solaris) */
 #ifdef HAVE_SYS_SOCKIO_H
 #include <sys/sockio.h>
-#endif
-#ifdef HAVE_SYS_BYTEORDER_H
-#include <sys/byteorder.h>
 #endif
 
 #include <netinet/in.h>

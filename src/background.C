@@ -710,7 +710,7 @@ bgPixmap_t::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
       return false;
     }
 
-  ximage->byte_order = byteorder.big_endian () ? MSBFirst : LSBFirst;
+  ximage->byte_order = byteorder::big_endian () ? MSBFirst : LSBFirst;
 
   rowstride = gdk_pixbuf_get_rowstride (pixbuf);
   channels = gdk_pixbuf_get_n_channels (pixbuf);
@@ -1596,7 +1596,7 @@ shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba &c)
   rgba low;
   rgba high;
   int i;
-  int host_byte_order = byteorder.big_endian () ? MSBFirst : LSBFirst;
+  int host_byte_order = byteorder::big_endian () ? MSBFirst : LSBFirst;
 
   if (visual->c_class != TrueColor || ximage->format != ZPixmap) return;
 
