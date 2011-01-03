@@ -6398,6 +6398,7 @@ fi
 
 
 for ac_header in \
+	sys/byteorder.h \
 	sys/ioctl.h \
 	sys/sockio.h \
 	sys/strredir.h \

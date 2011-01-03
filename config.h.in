@@ -180,6 +180,9 @@
 /* Define if utmpx.h has struct utmpx */
 #undef HAVE_STRUCT_UTMPX
 
+/* Define to 1 if you have the <sys/byteorder.h> header file. */
+#undef HAVE_SYS_BYTEORDER_H
+
 /* Define to 1 if you have the <sys/epoll.h> header file. */
 #undef HAVE_SYS_EPOLL_H
 

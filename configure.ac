@@ -507,6 +507,7 @@ dnl# --------------------------------------------------------------------------
 dnl# CHECKING FOR HEADER FILES
 dnl# --------------------------------------------------------------------------
 AC_CHECK_HEADERS( \
+	sys/byteorder.h \
 	sys/ioctl.h \
 	sys/sockio.h \
 	sys/strredir.h \
