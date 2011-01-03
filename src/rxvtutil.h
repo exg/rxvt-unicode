@@ -47,7 +47,7 @@ namespace byteorder {
   static unsigned char e ()
   {
     const uint32_t u = 0x11223344;
-    return *(unsigned char *)u;
+    return *(unsigned char *)&u;
   }
 
   static bool big_endian    () { return e () == 0x11;     };
