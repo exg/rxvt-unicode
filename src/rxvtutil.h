@@ -44,16 +44,16 @@ using namespace std;
 #endif
 
 namespace byteorder {
-  static uint32_t e ()
+  static unsigned char e ()
   {
-    char c [4] = { 0x11, 0x22, 0x33, 0x44 };
-    return *(uint32_t *)c;
+    const uint32_t u = 0x11223344;
+    return *(unsigned char *)u;
   }
 
-  static bool big_endian    () { return e () == 0x11223344; };
-  static bool network       () { return big_endian ();      };
-  static bool little_endian () { return e () == 0x44332211; };
-  static bool vax           () { return little_endian ();   };
+  static bool big_endian    () { return e () == 0x11;     };
+  static bool network       () { return big_endian ();    };
+  static bool little_endian () { return e () == 0x44;     };
+  static bool vax           () { return little_endian (); };
 };
 
 // various utility functions
