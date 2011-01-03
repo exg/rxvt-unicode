@@ -29,7 +29,7 @@ TODO: resources section in manual talks bullshit about system-wide app-defaults 
         - fix debian bug #504817, to the extent possible.
 	- try to detect byte order at compile time, seems to work around weird linking
           errors on freebsd (seems to have trouble with static member variables) - also
-          saves a coupel of hudnred bytes, if your compiler is smart enough.
+          saves a couple of hundred bytes, if your compiler is smart enough.
 
 9.10 Mon Dec 13 17:43:52 CET 2010
 	- the "schmorp=north korea dickey=south korea" release.
