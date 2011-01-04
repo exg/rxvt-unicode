@@ -56,6 +56,9 @@ sub on_button_press {
       };
 
       for ($text) {
+         /\n/
+            and $add_button->("newlines to spaces" => sub { y/\n/ / });
+
          /./
             and $add_button->("rot13" => sub { y/A-Za-z/N-ZA-Mn-za-m/ });
 
