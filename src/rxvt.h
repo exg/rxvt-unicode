@@ -30,6 +30,8 @@
 
 using namespace std;
 
+// we assume that Xlib.h defines XPointer, and it does since at least 1994...
+
 extern "C" {
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -99,10 +101,6 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
  * SYSTEM HACKS
  *****************************************************************************
  */
-
-#ifndef HAVE_XPOINTER
-typedef char *XPointer;
-#endif
 
 #include <termios.h>
 

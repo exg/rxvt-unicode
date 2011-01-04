@@ -519,12 +519,6 @@ AC_CHECK_HEADERS( \
 	cwchar \
 )
 
-AC_CACHE_CHECK([for XPointer], rxvt_cv_xpointer,
-[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <X11/Xlib.h>]], [[XPointer dummy;]])],[rxvt_cv_xpointer=yes],[rxvt_cv_xpointer=no])])
-if test x$rxvt_cv_xpointer = xyes; then
-  AC_DEFINE(HAVE_XPOINTER, 1, Define if you have XPointer typedef)
-fi
-
 AC_CACHE_CHECK([for XLIB_ILLEGAL_ACCESS], rxvt_cv_xlib_illegal_access,
 [AC_COMPILE_IFELSE(
    [AC_LANG_PROGRAM([
