@@ -3043,7 +3043,7 @@ rxvt_term::selection_make (Time tm)
       if (selection.rect)
         {
           col = selection.beg.col;
-          end_col = ncol + 1;
+          end_col = selection.end.col;
         }
       else
 #endif
@@ -3051,11 +3051,7 @@ rxvt_term::selection_make (Time tm)
 
       col = max (col, 0);
 
-      if (row == selection.end.row
-#if !ENABLE_MINIMAL
-          || selection.rect
-#endif
-          )
+      if (row == selection.end.row)
         min_it (end_col, selection.end.col);
 
       t = ROW(row).t + col;
