@@ -3097,7 +3097,8 @@ rxvt_term::selection_make (Time tm)
         }
       else
 #endif
-        if (!ROW(row).is_longer () && row != selection.end.row)
+        if (!ROW(row).is_longer () && row != selection.end.row
+            && (row != selection.beg.row || selection.beg.col < ncol))
           new_selection_text[ofs++] = C0_LF;
     }
 
