@@ -3000,7 +3000,7 @@ rxvt_term::selection_clear (bool clipboard) NOTHROW
 void
 rxvt_term::selection_make (Time tm)
 {
-  int i;
+  int size;
   wchar_t *new_selection_text;
   text_t *t;
 
@@ -3026,8 +3026,8 @@ rxvt_term::selection_make (Time tm)
   if (HOOK_INVOKE ((this, HOOK_SEL_MAKE, DT_LONG, (long)tm, DT_END)))
     return;
 
-  i = (selection.end.row - selection.beg.row + 1) * (ncol + 1);
-  new_selection_text = (wchar_t *)rxvt_malloc ((i + 4) * sizeof (wchar_t));
+  size = (selection.end.row - selection.beg.row + 1) * (ncol + 1);
+  new_selection_text = (wchar_t *)rxvt_malloc ((size + 4) * sizeof (wchar_t));
 
   int ofs = 0;
   int extra = 0;
@@ -3073,9 +3073,9 @@ rxvt_term::selection_make (Time tm)
 
               if (extra < 0)
                 {
-                  extra += i;
-                  i += i;
-                  new_selection_text = (wchar_t *)rxvt_realloc (new_selection_text, (i + 4) * sizeof (wchar_t));
+                  extra += size;
+                  size += size;
+                  new_selection_text = (wchar_t *)rxvt_realloc (new_selection_text, (size + 4) * sizeof (wchar_t));
                 }
 
               ofs += rxvt_composite.expand (*t++, new_selection_text + ofs);
