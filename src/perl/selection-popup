@@ -68,7 +68,7 @@ sub on_button_press {
          /./
             and $add_button->((sprintf "to unicode hex index (%x)", ord) => sub { $_ = sprintf "%x", ord });
 
-         /^(\S+):(\d+):?$/
+         /(\S+):(\d+):?/
             and $add_button->("vi-commands to load '$1'" => sub { s/^(\S+):(\d+):?$/\x1b:e $1\x0d:$2\x0d/ });
 
          /%[0-9a-fA-F]{2}/ && !/%[^0-9a-fA-F]/ && !/%.[^0-9a-fA-F]/
