@@ -2377,7 +2377,7 @@ increase by a few megabytes even if no extra features are used (mostly due
 to third-party libraries used by libAI). Memory footprint may somewhat be
 lowered if libAfterImage is configured without support for SVG.
 
-=item --enable-pixbuf (default: off)
+=item --enable-pixbuf (default: on)
 
 Add support for GDK-PixBuf to be used for background images.
 It adds support for many file formats including JPG, PNG,

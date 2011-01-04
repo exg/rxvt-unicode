@@ -95,6 +95,7 @@ support_scroll_rxvt=yes
 support_scroll_next=yes
 support_scroll_xterm=yes
 support_xim=yes
+support_pixbuf=yes
 support_afterimage=yes
 support_xft=yes
 support_unicode3=no
@@ -130,6 +131,7 @@ AC_ARG_ENABLE(everything,
        support_utmp=no
        support_wtmp=no
        support_xim=no
+       support_pixbuf=no
        support_afterimage=no
        support_xft=no
        support_unicode3=no
@@ -157,6 +159,7 @@ AC_ARG_ENABLE(everything,
        support_utmp=yes
        support_wtmp=yes
        support_xim=yes
+       support_pixbuf=yes
        support_afterimage=yes
        support_xft=yes
        support_unicode3=yes
