@@ -578,7 +578,7 @@ if test x$support_xim = xyes; then
   if test x$rxvt_cv_func_xlocale = xyes; then
     AC_DEFINE(USE_XIM, 1, Define if you want to have XIM (X Input Method) protocol support - required for multibyte characters input)
     AC_CACHE_CHECK(for broken XIM callback, rxvt_cv_broken_ximcb,
-    [AC_COMPILE_IFELSE([
+    [AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
     #include <X11/Xlib.h>
 
     void im_destroy_cb (XIC unused1, XPointer client_data, XPointer unused3);
@@ -587,7 +587,7 @@ if test x$support_xim = xyes; then
       XIMCallback cb;
       cb.callback = im_destroy_cb;
     }
-    ],rxvt_cv_broken_ximcb=yes,rxvt_cv_broken_ximcb=no)])
+    ]])],rxvt_cv_broken_ximcb=yes,rxvt_cv_broken_ximcb=no)])
 
     if test x$rxvt_cv_broken_ximcb = xyes; then
        AC_DEFINE(XIMCB_PROTO_BROKEN, 1, Define if your XIMCallback specifies XIC as first type.)
