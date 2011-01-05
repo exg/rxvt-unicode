@@ -252,10 +252,8 @@ keyboard_manager::setup_hash ()
   unsigned int i, index, hashkey;
   vector <keysym_t *> sorted_keymap;
   uint16_t hash_bucket_size[KEYSYM_HASH_BUCKETS];	// size of each bucket
-  uint16_t hash_bucket_counter[KEYSYM_HASH_BUCKETS];	// #elements in each bucket
 
   memset (hash_bucket_size, 0, sizeof (hash_bucket_size));
-  memset (hash_bucket_counter, 0, sizeof (hash_bucket_counter));
 
   // determine hash bucket size
   for (i = 0; i < keymap.size (); ++i)
@@ -277,6 +275,8 @@ keyboard_manager::setup_hash ()
   // and allocate just enough space
   sorted_keymap.insert (sorted_keymap.begin (), index + hash_bucket_size [i - 1], 0);
 
+  memset (hash_bucket_size, 0, sizeof (hash_bucket_size));
+
   // fill in sorted_keymap
   // it is sorted in each bucket
   for (i = 0; i < keymap.size (); ++i)
@@ -284,7 +284,7 @@ keyboard_manager::setup_hash ()
       {
         hashkey = (keymap [i]->keysym + j) & KEYSYM_HASH_MASK;
 
-        index = hash [hashkey] + hash_bucket_counter [hashkey];
+        index = hash [hashkey] + hash_bucket_size [hashkey];
 
         while (index > hash [hashkey]
                && compare_priority (keymap [i], sorted_keymap [index - 1]) > 0)
@@ -294,7 +294,7 @@ keyboard_manager::setup_hash ()
           }
 
         sorted_keymap [index] = keymap [i];
-        ++hash_bucket_counter [hashkey];
+        ++hash_bucket_size [hashkey];
       }
 
   keymap.swap (sorted_keymap);
