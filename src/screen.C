@@ -402,7 +402,7 @@ rxvt_term::scr_reset ()
   free (tabs);
   tabs = (char *)rxvt_malloc (ncol);
 
-  for (int col = ncol; --col; )
+  for (int col = ncol; col--; )
     tabs [col] = col % TABSIZE == 0;
 
   CLEAR_ALL_SELECTION ();
