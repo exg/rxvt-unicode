@@ -567,7 +567,7 @@ if test x$support_xim = xyes; then
   AC_CACHE_CHECK(for working Xlocale, rxvt_cv_func_xlocale,
   [AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <X11/Xlib.h>
   #include <stdlib.h>
-  main() {
+  int main() {
   char *p;
   if ((p = XSetLocaleModifiers("@im=none")) != NULL && *p)
   exit (XSupportsLocale() ? 0 : 1);
