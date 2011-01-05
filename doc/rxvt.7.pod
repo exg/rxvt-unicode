@@ -2260,7 +2260,7 @@ or you can start with a minimal configuration by specifying
 C<--disable-everything> and than adding just the C<--enable-...> arguments
 you want.
 
-=item --enable-xft (default: enabled)
+=item --enable-xft (default: on)
 
 Add support for Xft (anti-aliased, among others) fonts. Xft fonts are
 slower and require lots of memory, but as long as you don't use them, you
@@ -2271,7 +2271,7 @@ don't pay for them.
 Add support for B<bold>, I<italic> and B<< I<bold italic> >> font
 styles. The fonts can be set manually or automatically.
 
-=item --with-codesets=NAME,... (default: all)
+=item --with-codesets=CS,... (default: all)
 
 Compile in support for additional codeset (encoding) groups (C<eu>, C<vn>
 are always compiled in, which includes most 8-bit character sets). These
@@ -2332,7 +2332,7 @@ The combining table also contains entries for arabic presentation forms,
 but these are not currently used. Bug me if you want these to be used (and
 tell me how these are to be used...).
 
-=item --enable-fallback(=CLASS) (default: Rxvt)
+=item --enable-fallback[=CLASS] (default: Rxvt)
 
 When reading resource settings, also read settings for class CLASS. To
 disable resource fallback use --disable-fallback.
