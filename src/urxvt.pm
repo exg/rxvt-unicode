@@ -803,7 +803,7 @@ but before other extensions. Gets cleared just like C<@TERM_INIT>.
 Fatally aborts execution with the given error message (which should
 include a trailing newline). Avoid at all costs! The only time this
 is acceptable (and useful) is in the init hook, where it prevents the
-temrinal from starting up.
+terminal from starting up.
 
 =item urxvt::warn $string
 
