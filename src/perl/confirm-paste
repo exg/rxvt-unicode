@@ -3,7 +3,7 @@
 sub msg {
    my ($self, $msg) = @_;
 
-   $self->{overlay} = $self->overlay (0, -1, $self->strwidth ($msg), 1);
+   $self->{overlay} = $self->overlay (0, -1, $self->ncol, 2);
    $self->{overlay}->set (0, 0, $msg);
 }
 
@@ -16,6 +16,8 @@ sub on_tt_paste {
 
    $self->{paste} = \$str;
    $self->msg ("Paste of $count lines, continue? (y/n)");
+   (my $preview = $self->locale_decode ($str)) =~ s/\n/\\n/g;
+   $self->{overlay}->set (0, 1, $preview);
    $self->enable (key_press => \&key_press);
 
    1
