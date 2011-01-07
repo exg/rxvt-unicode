@@ -98,7 +98,7 @@ text_t rxvt_composite_vec::compose (unicode_t c1, unicode_t c2)
   compose_char *cc;
 
   // break compose chains, as stupid readline really likes to duplicate
-  // composing characters for some reason near the end of a line.
+  // composing characters for some reason, near the end of a line.
   cc = (*this)[c1];
   while (cc)
     {
@@ -108,10 +108,8 @@ text_t rxvt_composite_vec::compose (unicode_t c1, unicode_t c2)
 
   // check to see whether this combination already exists otherwise
   for (cc = v.end (); cc-- > v.begin (); )
-    {
-      if (cc->c1 == c1 && cc->c2 == c2)
-        return COMPOSE_LO + (cc - v.begin ());
-    }
+    if (cc->c1 == c1 && cc->c2 == c2)
+      return COMPOSE_LO + (cc - v.begin ());
 
   // allocate a new combination
   if (v.size () == COMPOSE_HI - COMPOSE_LO + 1)
@@ -119,7 +117,7 @@ text_t rxvt_composite_vec::compose (unicode_t c1, unicode_t c2)
       static int seen;
 
       if (!seen++)
-        fprintf (stderr, "too many unrepresentable composite characters, try --enable-unicode3\n");
+        rxvt_warn ("too many unrepresentable composite characters, try --enable-unicode3\n");
 
       return REPLACEMENT_CHAR;
     }

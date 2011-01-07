@@ -800,13 +800,14 @@ but before other extensions. Gets cleared just like C<@TERM_INIT>.
 
 =item urxvt::fatal $errormessage
 
-Fatally aborts execution with the given error message. Avoid at all
-costs! The only time this is acceptable is when the terminal process
-starts up.
+Fatally aborts execution with the given error message (which should
+include a trailing newline). Avoid at all costs! The only time this
+is acceptable (and useful) is in the init hook, where it prevents the
+temrinal from starting up.
 
 =item urxvt::warn $string
 
-Calls C<rxvt_warn> with the given string which should not include a
+Calls C<rxvt_warn> with the given string which should include a trailing
 newline. The module also overwrites the C<warn> builtin with a function
 that calls this function.
 

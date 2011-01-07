@@ -1614,7 +1614,7 @@ rxvt_fontset::add_fonts (const char *desc)
               push_font (new_font (buf, cs));
             }
           else
-            rxvt_warn ("fontset element too long (>511 bytes), ignored.");
+            rxvt_warn ("fontset element too long (>511 bytes), ignored.\n");
 
           desc = end + 1;
         }

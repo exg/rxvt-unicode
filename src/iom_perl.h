@@ -1,3 +1,4 @@
+#define IOM_CLASS "urxvt"
 typedef int IOM_CHAINED;
 
 static SV *
@@ -58,7 +59,7 @@ perl_watcher::invoke (const char *type, SV *self, int arg)
   LEAVE;
 
   if (SvTRUE (ERRSV))
-    IOM_WARN ("%s callback evaluation error: %s", type, SvPV_nolen (ERRSV));
+    rxvt_warn ("%s callback evaluation error: %s", type, SvPV_nolen (ERRSV));
 }
 
 #define newSVtimer(timer) iom_new_ref ((timer)->self, IOM_CLASS "::timer")
