@@ -958,10 +958,9 @@ rxvt_term::set_colorfgbg ()
 {
   unsigned int i;
   const char *xpmb = "";
-  char fstr[sizeof ("default") + 1], bstr[sizeof ("default") + 1];
+  char fstr[] = "default";
+  char bstr[] = "default";
 
-  strcpy (fstr, "default");
-  strcpy (bstr, "default");
   for (i = Color_Black; i <= Color_White; i++)
     if (pix_colors[Color_fg] == pix_colors[i])
       {
