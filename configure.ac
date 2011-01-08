@@ -565,16 +565,17 @@ CFLAGS="$CFLAGS $X_CFLAGS"
 LIBS="$LIBS $X_LIBS $X_EXTRA_LIBS -lX11"
 if test x$support_xim = xyes; then
   AC_CACHE_CHECK(for working Xlocale, rxvt_cv_func_xlocale,
-  [AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <X11/Xlib.h>
+  [AC_RUN_IFELSE([AC_LANG_SOURCE([[
+  #include <X11/Xlib.h>
   #include <stdlib.h>
   int main() {
-  char *p;
-  if ((p = XSetLocaleModifiers("@im=none")) != NULL && *p)
-  exit (XSupportsLocale() ? 0 : 1);
-  else
-  exit (1);}]])],[dnl
-    rxvt_cv_func_xlocale=yes],[rxvt_cv_func_xlocale=no],[dnl
-    :])])
+    char *p;
+    if ((p = XSetLocaleModifiers("@im=none")) != NULL && *p)
+      exit (XSupportsLocale() ? 0 : 1);
+    else
+      exit (1);
+  }
+  ]])],[rxvt_cv_func_xlocale=yes],[rxvt_cv_func_xlocale=no],[:])])
   if test x$rxvt_cv_func_xlocale = xyes; then
     AC_DEFINE(USE_XIM, 1, Define if you want to have XIM (X Input Method) protocol support - required for multibyte characters input)
     AC_CACHE_CHECK(for broken XIM callback, rxvt_cv_broken_ximcb,
