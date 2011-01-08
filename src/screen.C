@@ -2774,7 +2774,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
         goto bailout;
 
       // realloc should be compatible to XFree, here, and elsewhere, too
-      ct.value = (unsigned char *)realloc (ct.value, ct.nitems + ct2.nitems + 1);
+      ct.value = (unsigned char *)rxvt_realloc (ct.value, ct.nitems + ct2.nitems + 1);
       memcpy (ct.value + ct.nitems, ct2.value, ct2.nitems + 1);
       ct.nitems += ct2.nitems;
 
@@ -2833,7 +2833,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
       while (incr_buf_fill + ct.nitems > incr_buf_size)
         {
           incr_buf_size = incr_buf_size ? incr_buf_size * 2 : 128*1024;
-          incr_buf = (char *)realloc (incr_buf, incr_buf_size);
+          incr_buf = (char *)rxvt_realloc (incr_buf, incr_buf_size);
         }
 
       memcpy (incr_buf + incr_buf_fill, ct.value, ct.nitems);

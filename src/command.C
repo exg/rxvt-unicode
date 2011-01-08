@@ -4049,7 +4049,7 @@ rxvt_term::tt_write (const char *data, unsigned int len)
       len  -= written;
     }
 
-  v_buffer = (char *)realloc (v_buffer, v_buflen + len);
+  v_buffer = (char *)rxvt_realloc (v_buffer, v_buflen + len);
 
   memcpy (v_buffer + v_buflen, data, len);
   v_buflen += len;
