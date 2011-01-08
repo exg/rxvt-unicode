@@ -965,14 +965,14 @@ rxvt_term::set_colorfgbg ()
   for (i = Color_Black; i <= Color_White; i++)
     if (pix_colors[Color_fg] == pix_colors[i])
       {
-        sprintf (fstr, "%d", (i - Color_Black));
+        sprintf (fstr, "%d", i - Color_Black);
         break;
       }
 
   for (i = Color_Black; i <= Color_White; i++)
     if (pix_colors[Color_bg] == pix_colors[i])
       {
-        sprintf (bstr, "%d", (i - Color_Black));
+        sprintf (bstr, "%d", i - Color_Black);
 #ifdef BG_IMAGE_FROM_FILE
         xpmb = "default;";
 #endif
