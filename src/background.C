@@ -1053,20 +1053,6 @@ bgPixmap_t::set_tint (rxvt_color &new_tint)
 }
 
 bool
-bgPixmap_t::unset_tint ()
-{
-  unsigned long new_flags = compute_tint_shade_flags (NULL, shade);
-
-  if (new_flags != (flags & tintFlags))
-    {
-      flags = (flags & ~tintFlags) | new_flags;
-      return true;
-    }
-
-  return false;
-}
-
-bool
 bgPixmap_t::set_shade (const char *shade_str)
 {
   int new_shade = (shade_str) ? atoi (shade_str) : 100;

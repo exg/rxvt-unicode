@@ -3457,8 +3457,6 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
 
           if (ISSET_PIXCOLOR (Color_tint))
             changed = bgPixmap.set_tint (pix_colors_focused [Color_tint]);
-          else
-            changed = bgPixmap.unset_tint ();
 
           if (changed)
             update_background ();

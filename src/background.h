@@ -101,7 +101,6 @@ struct bgPixmap_t
   bool set_transparent ();
   bool set_blur_radius (const char *geom);
   bool set_tint (rxvt_color &new_tint);
-  bool unset_tint ();
   bool set_shade (const char *shade_str);
   bool blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height);
   bool tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height);
