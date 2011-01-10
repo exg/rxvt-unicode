@@ -309,11 +309,11 @@ bgPixmap_t::set_geometry (const char *geom, bool update)
 
   if (ops)
     {
-      while (*ops)
-        {
-          while (*ops == ':' || isspace(*ops)) ++ops;
+      char **arr = rxvt_strsplit (':', ops + 1);
 
-#  define CHECK_GEOM_OPS(op_str)  (strncasecmp (ops, (op_str), sizeof (op_str) - 1) == 0)
+      for (int i = 0; arr[i]; i++) 
+        {
+#  define CHECK_GEOM_OPS(op_str)  (strcasecmp (arr[i], (op_str)) == 0)
           if (CHECK_GEOM_OPS ("tile"))
             {
               w = h = noScale;
@@ -357,9 +357,9 @@ bgPixmap_t::set_geometry (const char *geom, bool update)
               geom_flags |= WidthValue|HeightValue;
             }
 #  undef CHECK_GEOM_OPS
-
-          while (*ops != ':' && *ops != '\0') ++ops;
         } /* done parsing ops */
+
+      rxvt_free_strsplit (arr);
     }
 
   if (check_set_scale_value (geom_flags, WidthValue, h_scale, w))  changed = true;
