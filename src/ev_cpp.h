@@ -2,7 +2,7 @@
 #define EV_USE_SELECT 1
 #define EV_USE_EPOLL 1
 #define EV_USE_KQUEUE 1
-#define EV_USE_PORTS 1
+#define EV_USE_PORT 1
 #define EV_PREPARE_ENABLE 1
 #define EV_IDLE_ENABLE 1
 #define EV_SIGNAL_ENABLE 1

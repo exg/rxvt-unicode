@@ -32,6 +32,7 @@ TODO: resources section in manual talks bullshit about system-wide app-defaults 
           errors on freebsd (seems to have trouble with static member variables) - also
           saves a couple of hundred bytes, if your compiler is smart enough.
         - added "newlines to spaces" option in selection-popup.
+        - actually enabled solaris event ports backends (was disabled by accident).
 
 9.10 Mon Dec 13 17:43:52 CET 2010
 	- the "schmorp=north korea dickey=south korea" release.
