@@ -1355,7 +1355,7 @@ rxvt_term::IM_get_IC (const char *modifiers)
       if (!p)
         continue;
 
-      s = rxvt_splitcommastring (p);
+      s = rxvt_strsplit (',', p);
 
       for (i = found = 0; !found && s[i]; i++)
         {
@@ -1377,7 +1377,7 @@ rxvt_term::IM_get_IC (const char *modifiers)
           for (j = 0; j < xim_styles->count_styles; j++)
             if (input_style == xim_styles->supported_styles[j])
               {
-                rxvt_freecommastring (s);
+                rxvt_free_strsplit (s);
 
                 found = 1;
                 goto foundpet;
@@ -1385,7 +1385,7 @@ rxvt_term::IM_get_IC (const char *modifiers)
 
         }
 
-      rxvt_freecommastring (s);
+      rxvt_free_strsplit (s);
     }
 
 foundpet:
@@ -1551,7 +1551,7 @@ rxvt_term::im_cb ()
     {
       bool found = false;
 
-      s = rxvt_splitcommastring (p);
+      s = rxvt_strsplit (',', p);
 
       for (i = 0; s[i]; i++)
         {
@@ -1567,7 +1567,7 @@ rxvt_term::im_cb ()
             }
         }
 
-      rxvt_freecommastring (s);
+      rxvt_free_strsplit (s);
 
       if (found)
         goto done;

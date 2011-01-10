@@ -155,8 +155,14 @@ void             rxvt_fatal                       (const char *fmt, ...) THROW (
 void             rxvt_exit_failure                () THROW ((class rxvt_failure_exception)) NORETURN;
 
 char           * rxvt_strtrim                     (char *str) NOTHROW;
-char          ** rxvt_splitcommastring            (const char *cs) NOTHROW;
-void             rxvt_freecommastring             (char **cs) NOTHROW;
+char          ** rxvt_strsplit                    (char delim, const char *str) NOTHROW;
+
+static inline void
+rxvt_free_strsplit (char **ptr) NOTHROW
+{
+  free (ptr[0]);
+  free (ptr);
+}
 
 void           * rxvt_malloc                      (size_t size);
 void           * rxvt_calloc                      (size_t number, size_t size);

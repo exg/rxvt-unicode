@@ -265,21 +265,20 @@ rxvt_strtrim (char *str) NOTHROW
 }
 
 /*
- * Split a comma-separated string into an array, stripping leading and
+ * Split a string into an array based on the given delimiter, stripping leading and
  * trailing spaces from each entry.  Empty strings are properly returned
  */
 char **
-rxvt_splitcommastring (const char *cs) NOTHROW
+rxvt_strsplit (char delim, const char *str) NOTHROW
 {
-  int             l, n, p;
-  const char     *s, *t;
-  char          **ret;
+  int l, n;
+  char *s, *t;
+  char **ret;
 
-  if ((s = cs) == NULL)
-    s = "";
+  s = strdup (str ? str : "");
 
   for (n = 1, t = s; *t; t++)
-    if (*t == ',')
+    if (*t == delim)
       n++;
 
   ret = (char **)malloc ((n + 1) * sizeof (char *));
@@ -287,25 +286,15 @@ rxvt_splitcommastring (const char *cs) NOTHROW
 
   for (l = 0, t = s; l < n; l++)
     {
-      for ( ; *t && *t != ','; t++) ;
-      p = t - s;
-      ret[l] = (char *)malloc (p + 1);
-      memcpy (ret[l], s, p);
-      ret[l][p] = '\0';
+      for (; *t && *t != delim; t++)
+        ;
+      *t = '\0';
+      ret[l] = s;
       rxvt_strtrim (ret[l]);
       s = ++t;
     }
 
   return ret;
-}
-
-void
-rxvt_freecommastring (char **cs) NOTHROW
-{
-  for (int i = 0; cs[i]; ++i)
-    free (cs[i]);
-
-  free (cs);
 }
 
 void *
