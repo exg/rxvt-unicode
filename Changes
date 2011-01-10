@@ -22,7 +22,9 @@ TODO: command line editing when icanon?
 
 TODO: work around mc misdetecting baudrate
 TODO: resources section in manual talks bullshit about system-wide app-defaults file
-        - gdk-pixbuf is autodetected by default and preferred over libafterimage
+        - gdk-pixbuf is autodetected by default and preferred over libafterimage.
+        - do not prepend a newline to the selection text when the starting line
+          of the selection is not highlighted (Emanuele Giaquinta).
 	- don't swap perl env with real env, save and restore it, just in case
           we ever get recursive perl invocations. also saves a bit of codespace
           with gcc.
@@ -31,6 +33,8 @@ TODO: resources section in manual talks bullshit about system-wide app-defaults 
 	- try to detect byte order at compile time, seems to work around weird linking
           errors on freebsd (seems to have trouble with static member variables) - also
           saves a couple of hundred bytes, if your compiler is smart enough.
+        - add support for previewing the pasted data in confirm-paste
+          (Emanuele Giaquinta).
         - added "newlines to spaces" option in selection-popup.
         - actually enabled solaris event ports backends (was disabled by accident).
 
