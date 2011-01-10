@@ -1220,10 +1220,12 @@ rxvt_font_xft::load (const rxvt_fontprop &prop, bool force_prop)
 
   for (;;)
     {
-      f = XftFontOpenPattern (disp, FcPatternDuplicate (match));
+      p = FcPatternDuplicate (match);
+      f = XftFontOpenPattern (disp, p);
 
       if (!f)
         {
+          FcPatternDestroy (p);
           success = false;
           break;
         }
