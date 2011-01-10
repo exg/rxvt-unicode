@@ -36,6 +36,7 @@ struct bgPixmap_t
 
     HAS_RENDER      = 1 << 12,
     HAS_RENDER_CONV = 1 << 13,
+    CLIENT_RENDER   = 1 << 14,
 
     isTransparent   = 1 << 16,
     isInvalid       = 1 << 17,
@@ -120,7 +121,6 @@ struct bgPixmap_t
   bool window_size_sensitive ();
   bool window_position_sensitive ();
 
-  bool need_client_side_rendering ();
   void apply ();
   bool render ();
   void invalidate ()

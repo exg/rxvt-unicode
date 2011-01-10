@@ -177,15 +177,6 @@ bgPixmap_t::window_position_sensitive ()
   return false;
 }
 
-bool bgPixmap_t::need_client_side_rendering ()
-{
-# ifdef HAVE_AFTERIMAGE
-  if (original_asim)
-    return true;
-# endif
-  return false;
-}
-
 # ifdef BG_IMAGE_FROM_FILE
 static inline bool
 check_set_scale_value (int geom_flags, int flag, unsigned int &scale, unsigned int new_value)
@@ -942,6 +933,7 @@ bgPixmap_t::set_file (const char *file)
       if (original_asim)
         safe_asimage_destroy (original_asim);
       original_asim = image;
+      flags |= CLIENT_RENDER;
       have_image = true;
       return true;
     }
@@ -1365,7 +1357,7 @@ bgPixmap_t::make_transparency_pixmap ()
       result |= transpPmapTiled;
       XFreeGC (dpy, gc);
 
-      if (!need_client_side_rendering ())
+      if (!(flags & CLIENT_RENDER))
         {
           if ((flags & blurNeeded)
               && (flags & HAS_RENDER_CONV))
