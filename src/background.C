@@ -1327,9 +1327,18 @@ bgPixmap_t::make_transparency_pixmap ()
   if (root_pixmap == None)
     return 0;
 
-  Pixmap tiled_root_pmap = XCreatePixmap (dpy, target->vt, window_width, window_height, target->depth);
+  if (pixmap == None
+      || pmap_width != window_width
+      || pmap_height != window_height)
+    {
+      if (pixmap)
+        XFreePixmap (target->dpy, pixmap);
+      pixmap = XCreatePixmap (target->dpy, target->vt, window_width, window_height, target->depth);
+      pmap_width = window_width;
+      pmap_height = window_height;
+    }
 
-  if (tiled_root_pmap == None) /* something really bad happened - abort */
+  if (pixmap == None)
     return 0;
 
   /* straightforward pixmap copy */
@@ -1344,7 +1353,7 @@ bgPixmap_t::make_transparency_pixmap ()
 
   if (gc)
     {
-      XFillRectangle (dpy, tiled_root_pmap, gc, 0, 0, window_width, window_height);
+      XFillRectangle (dpy, pixmap, gc, 0, 0, window_width, window_height);
       result |= transpPmapTiled;
       XFreeGC (dpy, gc);
 
@@ -1353,26 +1362,17 @@ bgPixmap_t::make_transparency_pixmap ()
           if ((flags & blurNeeded)
               && (flags & HAS_RENDER_CONV))
             {
-              if (blur_pixmap (tiled_root_pmap, target->visual, window_width, window_height))
+              if (blur_pixmap (pixmap, target->visual, window_width, window_height))
                 result |= transpPmapBlurred;
             }
           if ((flags & tintNeeded)
               && (flags & (tintWholesome | HAS_RENDER)))
             {
-              if (tint_pixmap (tiled_root_pmap, target->visual, window_width, window_height))
+              if (tint_pixmap (pixmap, target->visual, window_width, window_height))
                 result |= transpPmapTinted;
             }
         } /* server side rendering completed */
-
-      if (pixmap)
-        XFreePixmap (dpy, pixmap);
-
-      pixmap = tiled_root_pmap;
-      pmap_width = window_width;
-      pmap_height = window_height;
     }
-  else
-    XFreePixmap (dpy, tiled_root_pmap);
 
   if (recoded_root_pmap != root_pixmap)
     XFreePixmap (dpy, recoded_root_pmap);
