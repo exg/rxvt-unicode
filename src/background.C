@@ -255,12 +255,11 @@ bgPixmap_t::set_geometry (const char *geom, bool update)
   unsigned int n;
   unsigned long new_flags = (flags & (~geometryFlags));
   const char *ops;
-#  define MAXLEN_GEOM		256 /* could be longer than regular geometry string */
 
   if (geom == NULL)
     return false;
 
-  char str[MAXLEN_GEOM];
+  char str[256];
 
   ops = strchr (geom, ':');
   if (ops == NULL)
@@ -268,7 +267,7 @@ bgPixmap_t::set_geometry (const char *geom, bool update)
   else
     n = ops - geom;
 
-  if (n >= MAXLEN_GEOM)
+  if (n >= sizeof (str))
     return false;
 
   memcpy (str, geom, n);
@@ -304,50 +303,48 @@ bgPixmap_t::set_geometry (const char *geom, bool update)
 
       for (int i = 0; arr[i]; i++) 
         {
-#  define CHECK_GEOM_OPS(op_str)  (strcasecmp (arr[i], (op_str)) == 0)
-          if (CHECK_GEOM_OPS ("tile"))
+          if (!strcasecmp (arr[i], "tile"))
             {
               w = h = noScale;
               geom_flags |= WidthValue|HeightValue;
             }
-          else if (CHECK_GEOM_OPS ("propscale"))
+          else if (!strcasecmp (arr[i], "propscale"))
             {
               new_flags |= propScale;
             }
-          else if (CHECK_GEOM_OPS ("hscale"))
+          else if (!strcasecmp (arr[i], "hscale"))
             {
               if (w == 0) w = windowScale;
 
               h = noScale;
               geom_flags |= WidthValue|HeightValue;
             }
-          else if (CHECK_GEOM_OPS ("vscale"))
+          else if (!strcasecmp (arr[i], "vscale"))
             {
               if (h == 0) h = windowScale;
 
               w = noScale;
               geom_flags |= WidthValue|HeightValue;
             }
-          else if (CHECK_GEOM_OPS ("scale"))
+          else if (!strcasecmp (arr[i], "scale"))
             {
               if (h == 0) h = windowScale;
               if (w == 0) w = windowScale;
 
               geom_flags |= WidthValue|HeightValue;
             }
-          else if (CHECK_GEOM_OPS ("auto"))
+          else if (!strcasecmp (arr[i], "auto"))
             {
               w = h = windowScale;
               x = y = centerAlign;
               geom_flags |= WidthValue|HeightValue|XValue|YValue;
             }
-          else if (CHECK_GEOM_OPS ("root"))
+          else if (!strcasecmp (arr[i], "root"))
             {
               new_flags |= rootAlign;
               w = h = noScale;
               geom_flags |= WidthValue|HeightValue;
             }
-#  undef CHECK_GEOM_OPS
         } /* done parsing ops */
 
       rxvt_free_strsplit (arr);
@@ -1015,13 +1012,11 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
   if (tint)
     {
       tint->get (c);
-#  define IS_COMPONENT_WHOLESOME(cmp)  ((cmp) <= 0x00ff || (cmp) >= 0xff00)
       if (!has_shade
-          && IS_COMPONENT_WHOLESOME (c.r)
-          && IS_COMPONENT_WHOLESOME (c.g)
-          && IS_COMPONENT_WHOLESOME (c.b))
+          && (c.r <= 0x00ff || c.r >= 0xff00)
+          && (c.g <= 0x00ff || c.g >= 0xff00)
+          && (c.b <= 0x00ff || c.b >= 0xff00))
         flags |= bgPixmap_t::tintWholesome;
-#  undef  IS_COMPONENT_WHOLESOME
     }
 
   if (has_shade || tint)
