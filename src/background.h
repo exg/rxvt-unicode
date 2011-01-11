@@ -113,7 +113,6 @@ struct bgPixmap_t
 
   Pixmap pixmap;
   unsigned int pmap_width, pmap_height;
-  unsigned int pmap_depth;
 
   int target_x;
   int target_y;

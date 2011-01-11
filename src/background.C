@@ -596,15 +596,13 @@ bgPixmap_t::render_image (unsigned long background_flags)
       /* create Pixmap */
       if (pixmap == None
           || pmap_width != new_pmap_width
-          || pmap_height != new_pmap_height
-          || pmap_depth != target->depth)
+          || pmap_height != new_pmap_height)
         {
           if (pixmap)
             XFreePixmap (target->dpy, pixmap);
           pixmap = XCreatePixmap (target->dpy, target->vt, new_pmap_width, new_pmap_height, target->depth);
           pmap_width = new_pmap_width;
           pmap_height = new_pmap_height;
-          pmap_depth = target->depth;
         }
       /* fill with background color (if result's not completely overlapping it) */
       gcv.foreground = target->pix_colors[Color_bg];
@@ -805,15 +803,13 @@ bgPixmap_t::render_image (unsigned long background_flags)
 
       if (pixmap == None
           || pmap_width != new_pmap_width
-          || pmap_height != new_pmap_height
-          || pmap_depth != target->depth)
+          || pmap_height != new_pmap_height)
         {
           if (pixmap)
             XFreePixmap (target->dpy, pixmap);
           pixmap = XCreatePixmap (target->dpy, target->vt, new_pmap_width, new_pmap_height, target->depth);
           pmap_width = new_pmap_width;
           pmap_height = new_pmap_height;
-          pmap_depth = target->depth;
         }
 
       gcv.foreground = target->pix_colors[Color_bg];
@@ -1374,7 +1370,6 @@ bgPixmap_t::make_transparency_pixmap ()
       pixmap = tiled_root_pmap;
       pmap_width = window_width;
       pmap_height = window_height;
-      pmap_depth = target->depth;
     }
   else
     XFreePixmap (dpy, tiled_root_pmap);
