@@ -229,10 +229,7 @@ rxvt_screen::rxvt_screen ()
 
 rxvt_drawable &rxvt_screen::scratch_drawable (int w, int h)
 {
-  // it's actually faster to re-allocate every time. don't ask me
-  // why, but its likely no big deal there are no roundtrips
-  // (I think/hope).
-  if (!scratch_area || w > scratch_w || h > scratch_h || 1/*D*/)
+  if (!scratch_area || w > scratch_w || h > scratch_h)
     {
       if (scratch_area)
         {
