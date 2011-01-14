@@ -34,28 +34,6 @@
 #define FilterConvolution "convolution"
 #endif
 
-#define DO_TIMING_TEST 0
-
-#if DO_TIMING_TEST
-# include <sys/time.h>
-#define TIMING_TEST_START(id) \
-  struct timeval timing_test_##id##_stv; \
-  gettimeofday (&timing_test_##id##_stv, NULL);
-
-#define TIMING_TEST_PRINT_RESULT(id) \
-  do { \
-    struct timeval tv; \
-    gettimeofday (&tv, NULL); \
-    tv.tv_sec -= (timing_test_##id##_stv).tv_sec; \
-    fprintf (stderr, "%s: %s: %d: elapsed  %ld usec\n", #id, __FILE__, __LINE__, \
-             tv.tv_sec * 1000000 + tv.tv_usec - (timing_test_##id##_stv).tv_usec); \
-  } while (0)
-
-#else
-#define TIMING_TEST_START(id) do {} while (0)
-#define TIMING_TEST_PRINT_RESULT(id) do {} while (0)
-#endif
-
 /*
  * Pixmap geometry string interpretation :
  * Each geometry string contains zero or one scale/position
