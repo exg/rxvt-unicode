@@ -109,7 +109,7 @@ struct bgPixmap_t
 
   unsigned long make_transparency_pixmap ();/* returns combination of the transpTransformations flags */
 # endif
-  double invalid_since, valid_since;
+  double valid_since;
 
   Pixmap pixmap;
   unsigned int pmap_width, pmap_height;
@@ -124,11 +124,7 @@ struct bgPixmap_t
   bool render ();
   void invalidate ()
   {
-    if (!(flags & isInvalid))
-      {
-        flags |= isInvalid;
-        invalid_since = ev::now ();
-      }
+    flags |= isInvalid;
   }
 };
 #else

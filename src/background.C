@@ -81,7 +81,7 @@ bgPixmap_t::bgPixmap_t ()
 #endif
   flags = 0;
   pixmap = None;
-  valid_since = invalid_since = 0;
+  valid_since = 0;
   target = 0;
   target_x = target_y = 0;
 }
