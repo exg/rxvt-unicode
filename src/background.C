@@ -1445,7 +1445,8 @@ bgPixmap_t::render ()
         }
     }
 
-  apply ();
+  target->scr_recolour (false);
+  flags |= hasChanged;
 
   valid_since = ev::now ();
 
@@ -1472,60 +1473,6 @@ bgPixmap_t::set_target (rxvt_term *new_target)
       XFree (filters);
     }
 #endif
-}
-
-void
-bgPixmap_t::apply ()
-{
-  if (target == NULL)
-    return;
-
-  if (pixmap != None)
-    {
-      /* set target's background to pixmap */
-# ifdef ENABLE_TRANSPARENCY
-      if (flags & isTransparent)
-        {
-          XSetWindowBackgroundPixmap (target->dpy, target->parent[0], pixmap);
-          XSetWindowBackgroundPixmap (target->dpy, target->vt, ParentRelative);
-
-          if (target->scrollBar.win)
-            XSetWindowBackgroundPixmap (target->dpy, target->scrollBar.win, ParentRelative);
-        }
-      else
-# endif
-        {
-          /* force old pixmap dereference in case it was transparent before :*/
-          XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_border]);
-          XSetWindowBackgroundPixmap (target->dpy, target->vt, pixmap);
-          /* do we also need to set scrollbar's background here ? */
-
-          if (target->scrollBar.win)
-            XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
-        }
-    }
-  else
-    {
-      /* set target background to a pixel */
-      XSetWindowBackground (target->dpy, target->parent[0], target->pix_colors[Color_border]);
-      XSetWindowBackground (target->dpy, target->vt, target->pix_colors[Color_bg]);
-      /* do we also need to set scrollbar's background here ? */
-      if (target->scrollBar.win)
-        XSetWindowBackground (target->dpy, target->scrollBar.win, target->pix_colors[Color_border]);
-    }
-
-  /* don't want Expose on the parent or vt. It is better to use
-     scr_touch or we get a great deal of flicker otherwise: */
-  XClearWindow (target->dpy, target->parent[0]);
-
-  if (target->scrollBar.state && target->scrollBar.win)
-    {
-      target->scrollBar.state = STATE_IDLE;
-      target->scrollBar.show (0);
-    }
-
-  target->want_refresh = 1;
-  flags |= hasChanged;
 }
 
 #endif /* HAVE_BG_PIXMAP */

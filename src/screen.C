@@ -2510,28 +2510,52 @@ rxvt_term::scr_remap_chars () NOTHROW
 }
 
 void
-rxvt_term::scr_recolour () NOTHROW
+rxvt_term::scr_recolour (bool refresh) NOTHROW
 {
-#ifdef HAVE_BG_PIXMAP
-  bgPixmap.apply ();
-#else
+  bool transparent = false;
 
-  XSetWindowBackground (dpy, parent[0], pix_colors[Color_border]);
+#ifdef HAVE_BG_PIXMAP
+  if (bgPixmap.pixmap != None)
+    {
+# ifdef ENABLE_TRANSPARENCY
+      if (bgPixmap.flags & bgPixmap_t::isTransparent)
+        {
+          XSetWindowBackgroundPixmap (dpy, parent[0], bgPixmap.pixmap);
+          XSetWindowBackgroundPixmap (dpy, vt, ParentRelative);
+
+          transparent = true;
+        }
+      else
+# endif
+        {
+          XSetWindowBackground (dpy, parent[0], pix_colors[Color_border]);
+          XSetWindowBackgroundPixmap (dpy, vt, bgPixmap.pixmap);
+        }
+    }
+  else
+#endif
+    {
+      XSetWindowBackground (dpy, parent[0], pix_colors[Color_border]);
+      XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
+    }
+
   XClearWindow (dpy, parent[0]);
-  XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
 
   if (scrollBar.win)
     {
-      XSetWindowBackground (dpy, scrollBar.win, pix_colors[Color_border]);
+      if (transparent)
+        XSetWindowBackgroundPixmap (dpy, scrollBar.win, ParentRelative);
+      else
+        XSetWindowBackground (dpy, scrollBar.win, pix_colors[Color_border]);
       scrollBar.state = STATE_IDLE;
       scrollBar.show (0);
     }
 
-#endif
-
-  /* bgPixmap.apply () does not do the following : */
-  scr_clear ();
-  scr_touch (true);
+  if (refresh)
+    {
+      scr_clear ();
+      scr_touch (true);
+    }
   want_refresh = 1;
 }
 

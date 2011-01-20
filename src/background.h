@@ -120,7 +120,6 @@ struct bgPixmap_t
   bool window_size_sensitive ();
   bool window_position_sensitive ();
 
-  void apply ();
   bool render ();
   void invalidate ()
   {
