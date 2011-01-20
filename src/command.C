@@ -980,7 +980,6 @@ rxvt_term::flush ()
   if (bgPixmap.flags & bgPixmap_t::hasChanged)
     {
       bgPixmap.flags &= ~bgPixmap_t::hasChanged;
-//      scr_clear (true); This needs to be researched further!
       scr_touch (false);
     }
 #endif

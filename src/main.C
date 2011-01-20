@@ -1092,12 +1092,6 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
   if (fix_screen || old_height == 0)
     scr_reset ();
 
-#ifdef HAVE_BG_PIXMAP
-//  TODO: this don't seem to have any effect - do we still need it ? If so - in which case exactly ?
-//  if (bgPixmap.pixmap)
-//    scr_touch (false);
-#endif
-
 #ifdef USE_XIM
   IMSetPosition ();
 #endif
