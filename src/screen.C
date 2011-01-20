@@ -2521,11 +2521,11 @@ rxvt_term::scr_recolour () NOTHROW
   XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
 
   if (scrollBar.win)
-   {
-     XSetWindowBackground (dpy, scrollBar.win, pix_colors[Color_border]);
-     scrollBar.state = STATE_IDLE;
-     scrollBar.show (0);
-   }
+    {
+      XSetWindowBackground (dpy, scrollBar.win, pix_colors[Color_border]);
+      scrollBar.state = STATE_IDLE;
+      scrollBar.show (0);
+    }
 
 #endif
 
