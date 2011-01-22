@@ -1026,7 +1026,7 @@ bgPixmap_t::set_shade (const char *shade_str)
     {
       unsigned long new_flags = compute_tint_shade_flags ((flags & tintSet) ? &tint : NULL, new_shade);
       shade = new_shade;
-      flags = (flags & (~tintFlags | tintSet)) | new_flags;
+      flags = (flags & ~tintFlags) | new_flags;
       return true;
     }
 

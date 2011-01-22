@@ -30,7 +30,7 @@ struct bgPixmap_t
     tintSet         = 1 <<  8,
     tintNeeded      = 1 <<  9,
     tintWholesome   = 1 << 10,
-    tintFlags       = tintSet | tintNeeded | tintWholesome,
+    tintFlags       = tintNeeded | tintWholesome,
 
     blurNeeded      = 1 << 11,
 
