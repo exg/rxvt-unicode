@@ -1390,7 +1390,7 @@ bgPixmap_t::render ()
       if (background_flags == 0)
         return false;
       else if ((background_flags & transpTransformations) == (flags & transpTransformations))
-        flags &= ~isInvalid;
+        flags |= isValid;
     }
 # endif
 
@@ -1399,14 +1399,14 @@ bgPixmap_t::render ()
       || (background_flags & transpTransformations) != (flags & transpTransformations))
     {
       if (render_image (background_flags))
-        flags &= ~isInvalid;
+        flags |= isValid;
     }
 # endif
 
 # if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
   XImage *result = NULL;
 
-  if (background_flags && (flags & isInvalid))
+  if (background_flags && !(flags & isValid))
     {
       result = XGetImage (target->dpy, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, ZPixmap);
     }
@@ -1429,14 +1429,14 @@ bgPixmap_t::render ()
           XPutImage (target->dpy, pixmap, gc, result, 0, 0, 0, 0, result->width, result->height);
 
           XFreeGC (target->dpy, gc);
-          flags &= ~isInvalid;
+          flags |= isValid;
         }
 
       XDestroyImage (result);
     }
 # endif
 
-  if (flags & isInvalid)
+  if (!(flags & isValid))
     {
       if (pixmap != None)
         {

@@ -1466,7 +1466,7 @@ rxvt_term::x_cb (XEvent &ev)
                   get_window_origin (x, y);
 
                 if (bgPixmap.set_position (x, y)
-                    || (bgPixmap.flags & bgPixmap_t::isInvalid))
+                    || !(bgPixmap.flags & bgPixmap_t::isValid))
                   moved = true;
               }
 #endif
@@ -1528,7 +1528,7 @@ rxvt_term::x_cb (XEvent &ev)
          * We should render background PRIOR to drawing any text, but AFTER all
          * of ConfigureNotifys for the best results.
          */
-        if (bgPixmap.flags & bgPixmap_t::isInvalid)
+        if (!(bgPixmap.flags & bgPixmap_t::isValid))
           update_background_ev.start (0.025);
 #endif
         mapped = 1;

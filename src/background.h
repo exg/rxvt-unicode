@@ -39,7 +39,7 @@ struct bgPixmap_t
     CLIENT_RENDER   = 1 << 14,
 
     isTransparent   = 1 << 16,
-    isInvalid       = 1 << 17,
+    isValid         = 1 << 17,
     hasChanged      = 1 << 19,
     sizeSensitive   = 1 << 20,
   };
@@ -123,7 +123,7 @@ struct bgPixmap_t
   bool render ();
   void invalidate ()
   {
-    flags |= isInvalid;
+    flags &= ~isValid;
   }
 };
 #else
