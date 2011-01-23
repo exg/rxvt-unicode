@@ -398,7 +398,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
   if (background_flags)
     background = pixmap2ximage (target->asv, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, 100);
 
-  if (!(background_flags & transpPmapTinted) && (flags & tintNeeded))
+  if (background_flags & tintNeeded)
     {
       ShadingInfo as_shade;
       as_shade.shading = shade;
@@ -413,7 +413,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
       background_tint = shading2tint32 (&as_shade);
     }
 
-  if (!(background_flags & transpPmapBlurred) && (flags & blurNeeded) && background != NULL)
+  if ((background_flags & blurNeeded) && background != NULL)
     {
       ASImage *tmp = blur_asimage_gauss (target->asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
                                          (original_asim == NULL || tint == TINT_LEAVE_SAME) ? ASA_XImage : ASA_ASImage,
@@ -1332,7 +1332,7 @@ bgPixmap_t::make_transparency_pixmap ()
   if (gc)
     {
       XFillRectangle (dpy, pixmap, gc, 0, 0, window_width, window_height);
-      result |= transpPmapTiled;
+      result |= isValid | (flags & effectsFlags);
       XFreeGC (dpy, gc);
 
       if (!(flags & CLIENT_RENDER))
@@ -1341,13 +1341,13 @@ bgPixmap_t::make_transparency_pixmap ()
               && (flags & HAS_RENDER_CONV))
             {
               if (blur_pixmap (pixmap, target->visual, window_width, window_height))
-                result |= transpPmapBlurred;
+                result &= ~blurNeeded;
             }
           if ((flags & tintNeeded)
               && (flags & (tintWholesome | HAS_RENDER)))
             {
               if (tint_pixmap (pixmap, target->visual, window_width, window_height))
-                result |= transpPmapTinted;
+                result &= ~tintNeeded;
             }
         } /* server side rendering completed */
     }
@@ -1389,14 +1389,14 @@ bgPixmap_t::render ()
       background_flags = make_transparency_pixmap ();
       if (background_flags == 0)
         return false;
-      else if ((background_flags & transpTransformations) == (flags & transpTransformations))
+      else if (!(background_flags & effectsFlags))
         flags |= isValid;
     }
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
   if (have_image
-      || (background_flags & transpTransformations) != (flags & transpTransformations))
+      || (background_flags & effectsFlags))
     {
       if (render_image (background_flags))
         flags |= isValid;
@@ -1414,7 +1414,7 @@ bgPixmap_t::render ()
   if (result)
     {
       /* our own client-side tinting */
-      if (!(background_flags & transpPmapTinted) && (flags & tintNeeded))
+      if (background_flags & tintNeeded)
         {
           rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
           if (flags & tintSet)

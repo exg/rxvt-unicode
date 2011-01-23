@@ -34,6 +34,8 @@ struct bgPixmap_t
 
     blurNeeded      = 1 << 11,
 
+    effectsFlags    = tintNeeded | blurNeeded,
+
     HAS_RENDER      = 1 << 12,
     HAS_RENDER_CONV = 1 << 13,
     CLIENT_RENDER   = 1 << 14,
@@ -45,13 +47,6 @@ struct bgPixmap_t
   };
 
   unsigned int flags;
-
-  enum {
-    transpPmapTiled       = 1 << 0,
-    transpPmapTinted      = tintNeeded,
-    transpPmapBlurred     = blurNeeded,
-    transpTransformations = tintNeeded | blurNeeded,
-  }; /* these flags are returned by make_transparency_pixmap if called */
 
 # ifdef  BG_IMAGE_FROM_FILE
 #  ifdef HAVE_AFTERIMAGE
@@ -107,7 +102,7 @@ struct bgPixmap_t
   bool tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height);
   void set_root_pixmap ();
 
-  unsigned long make_transparency_pixmap ();/* returns combination of the transpTransformations flags */
+  unsigned long make_transparency_pixmap ();
 # endif
   double valid_since;
 
