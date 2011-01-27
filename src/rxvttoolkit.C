@@ -314,6 +314,11 @@ rxvt_display::get_resources (bool refresh)
   char *displayResource, *xe;
   XrmDatabase rdb1, database = 0;
 
+#if !XLIB_ILLEGAL_ACCESS
+  /* work around a bug in XrmSetDatabase where it frees the db, see ref_next */
+  database = XrmGetStringDatabase ("");
+#endif
+
   // for ordering, see for example http://www.faqs.org/faqs/Xt-FAQ/ Subject: 20
   // as opposed to "standard practise", we always read in ~/.Xdefaults
 
@@ -490,6 +495,10 @@ rxvt_display::ref_next ()
   // TODO: somehow check whether the database files/resources changed
   // before affording re-loading/parsing
   XrmDestroyDatabase (XrmGetDatabase (dpy));
+#if XLIB_ILLEGAL_ACCESS
+  /* work around a bug in XrmSetDatabase where it frees the db */
+  dpy->db = 0;
+#endif
   XrmSetDatabase (dpy, get_resources (true));
 }
 
