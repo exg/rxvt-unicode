@@ -76,6 +76,20 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 #include <X11/keysymdef.h>
 #include <X11/Xatom.h>
 
+#ifdef HAVE_AFTERIMAGE
+# include <afterimage.h>
+# undef min
+# undef max
+#endif
+
+#ifdef HAVE_PIXBUF
+# include <gdk-pixbuf/gdk-pixbuf.h>
+#endif
+
+#if defined(BG_IMAGE_FROM_FILE) || defined(ENABLE_TRANSPARENCY)
+# define HAVE_BG_PIXMAP 1
+#endif
+
 #include "encoding.h"
 #include "rxvtutil.h"
 #include "rxvtfont.h"
@@ -103,8 +117,6 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
  */
 
 #include <termios.h>
-
-#include "background.h"
 
 #ifndef STDIN_FILENO
 # define STDIN_FILENO   0
@@ -1102,9 +1114,99 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   static struct termios def_tio;
   row_col_t       oldcursor;
 #ifdef HAVE_BG_PIXMAP
-  bgPixmap_t      bgPixmap;
+  void bg_init ();
+  void bg_destroy ();
+
+  enum {
+    //subset returned by make_transparency_pixmap
+    isValid         = 1 <<  0,
+    tintNeeded      = 1 <<  1,
+    blurNeeded      = 1 <<  2,
+
+    effectsFlags    = tintNeeded | blurNeeded,
+
+    propScale       = 1 <<  3,
+    rootAlign       = 1 <<  4,
+    geometryFlags   = propScale | rootAlign,
+
+    tintSet         = 1 <<  5,
+    tintWholesome   = 1 <<  6,
+    tintFlags       = tintNeeded | tintWholesome,
+
+    HAS_RENDER      = 1 <<  7,
+    HAS_RENDER_CONV = 1 <<  8,
+    CLIENT_RENDER   = 1 <<  9,
+
+    isTransparent   = 1 << 10,
+    hasChanged      = 1 << 11,
+    sizeSensitive   = 1 << 12,
+  };
+
+  unsigned int bg_flags;
+
+# ifdef BG_IMAGE_FROM_FILE
+  void get_image_geometry (int image_width, int image_height, int &w, int &h, int &x, int &y);
+  bool render_image (unsigned long tr_flags);
+  bool have_image;
+
+  enum {
+    noScale = 0,
+    windowScale = 100,
+    defaultScale = windowScale,
+    centerAlign = 50,
+    defaultAlign = centerAlign,
+  };
+
+  unsigned int h_scale, v_scale; /* percents of the window size */
+  int h_align, v_align;          /* percents of the window size:
+                                    0 - left align, 50 - center, 100 - right */
+
+  bool bg_set_geometry (const char *geom, bool update = false);
+  void bg_set_default_geometry ()
+  {
+    h_scale = v_scale = defaultScale;
+    h_align = v_align = defaultAlign;
+  }
+
+  bool bg_set_file (const char *file);
+# endif
+
+# ifdef ENABLE_TRANSPARENCY
+  Pixmap      root_pixmap; /* current root pixmap set */
+  rxvt_color  tint;
+  int         shade;
+  int         h_blurRadius, v_blurRadius;
+
+  bool bg_set_transparent ();
+  void bg_set_root_pixmap ();
+  bool bg_set_tint (rxvt_color &new_tint);
+  bool bg_set_shade (const char *shade_str);
+  bool bg_set_blur (const char *geom);
+
+  bool blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height);
+  bool tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height);
+  unsigned long make_transparency_pixmap ();
+# endif
+
+  double bg_valid_since;
+
+  Pixmap bg_pixmap;
+  unsigned int bg_pmap_width, bg_pmap_height;
+
+  int target_x;
+  int target_y;
+  bool bg_set_position (int x, int y);
+  bool bg_window_size_sensitive ();
+  bool bg_window_position_sensitive ();
+
+  bool bg_render ();
+  void bg_invalidate ()
+  {
+    bg_flags &= ~isValid;
+  }
 #endif
 #ifdef HAVE_AFTERIMAGE
+  ASImage        *original_asim;
   ASVisual       *asv;
   ASImageManager *asimman;
 
@@ -1113,6 +1215,12 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
     if (!asv)
       asv = create_asvisual_for_id (dpy, display->screen, depth, XVisualIDFromVisual (visual), cmap, NULL);
   }
+#endif
+#ifdef HAVE_PIXBUF
+  GdkPixbuf *pixbuf;
+  bool pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
+                         int src_x, int src_y, int dst_x, int dst_y,
+                         unsigned int width, unsigned int height);
 #endif
 
 #if ENABLE_OVERLAY

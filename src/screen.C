@@ -1687,7 +1687,7 @@ rxvt_term::scr_rvideo_mode (bool on) NOTHROW
 
       ::swap (pix_colors[Color_fg], pix_colors[Color_bg]);
 #ifdef HAVE_BG_PIXMAP
-      if (bgPixmap.pixmap == None)
+      if (bg_pixmap == None)
 #endif
           XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
 
@@ -2033,7 +2033,7 @@ rxvt_term::scr_refresh () NOTHROW
   unsigned int old_screen_flags = screen.flags;
   char have_bg = 0;
 #ifdef HAVE_BG_PIXMAP
-  have_bg = bgPixmap.pixmap != None;
+  have_bg = bg_pixmap != None;
 #endif
   ocrow = oldcursor.row; /* is there an old outline cursor on screen? */
 
@@ -2515,12 +2515,12 @@ rxvt_term::scr_recolour (bool refresh) NOTHROW
   bool transparent = false;
 
 #ifdef HAVE_BG_PIXMAP
-  if (bgPixmap.pixmap != None)
+  if (bg_pixmap != None)
     {
 # ifdef ENABLE_TRANSPARENCY
-      if (bgPixmap.flags & bgPixmap_t::isTransparent)
+      if (bg_flags & isTransparent)
         {
-          XSetWindowBackgroundPixmap (dpy, parent[0], bgPixmap.pixmap);
+          XSetWindowBackgroundPixmap (dpy, parent[0], bg_pixmap);
           XSetWindowBackgroundPixmap (dpy, vt, ParentRelative);
 
           transparent = true;
@@ -2529,7 +2529,7 @@ rxvt_term::scr_recolour (bool refresh) NOTHROW
 # endif
         {
           XSetWindowBackground (dpy, parent[0], pix_colors[Color_border]);
-          XSetWindowBackgroundPixmap (dpy, vt, bgPixmap.pixmap);
+          XSetWindowBackgroundPixmap (dpy, vt, bg_pixmap);
         }
     }
   else

@@ -61,33 +61,8 @@
  */
 
 #ifdef HAVE_BG_PIXMAP
-bgPixmap_t::bgPixmap_t ()
-{
-  // this is basically redundant as bgPixmap_t is only used in
-  // zero_initialised-derived structs
-#ifdef HAVE_AFTERIMAGE
-  original_asim = NULL;
-#endif
-#ifdef HAVE_PIXBUF
-  pixbuf = NULL;
-#endif
-#ifdef BG_IMAGE_FROM_FILE
-  have_image = false;
-  h_scale = v_scale = 0;
-  h_align = v_align = 0;
-#endif
-#ifdef ENABLE_TRANSPARENCY
-  shade = 100;
-#endif
-  flags = 0;
-  pixmap = None;
-  valid_since = 0;
-  target = 0;
-  target_x = target_y = 0;
-}
-
 void
-bgPixmap_t::destroy ()
+rxvt_term::bg_destroy ()
 {
 #ifdef HAVE_AFTERIMAGE
   if (original_asim)
@@ -99,12 +74,12 @@ bgPixmap_t::destroy ()
     g_object_unref (pixbuf);
 #endif
 
-  if (pixmap && target)
-    XFreePixmap (target->dpy, pixmap);
+  if (bg_pixmap)
+    XFreePixmap (dpy, bg_pixmap);
 }
 
 bool
-bgPixmap_t::set_position (int x, int y)
+rxvt_term::bg_set_position (int x, int y)
 {
 
   if (target_x != x
@@ -118,17 +93,17 @@ bgPixmap_t::set_position (int x, int y)
 }
 
 bool
-bgPixmap_t::window_size_sensitive ()
+rxvt_term::bg_window_size_sensitive ()
 {
 # ifdef ENABLE_TRANSPARENCY
-  if (flags & isTransparent)
+  if (bg_flags & isTransparent)
     return true;
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
   if (have_image)
     {
-      if (flags & sizeSensitive)
+      if (bg_flags & sizeSensitive)
         return true;
     }
 # endif
@@ -137,17 +112,17 @@ bgPixmap_t::window_size_sensitive ()
 }
 
 bool
-bgPixmap_t::window_position_sensitive ()
+rxvt_term::bg_window_position_sensitive ()
 {
 # ifdef ENABLE_TRANSPARENCY
-  if (flags & isTransparent)
+  if (bg_flags & isTransparent)
     return true;
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
   if (have_image)
     {
-      if (flags & rootAlign)
+      if (bg_flags & rootAlign)
         return true;
     }
 # endif
@@ -224,14 +199,14 @@ make_clip_rectangle (int pos, int size, int target_size, int &dst_pos, int &dst_
 }
 
 bool
-bgPixmap_t::set_geometry (const char *geom, bool update)
+rxvt_term::bg_set_geometry (const char *geom, bool update)
 {
   bool changed = false;
   int geom_flags = 0;
   int x = 0, y = 0;
   unsigned int w = 0, h = 0;
   unsigned int n;
-  unsigned long new_flags = (flags & (~geometryFlags));
+  unsigned long new_flags = (bg_flags & (~geometryFlags));
   const char *ops;
 
   if (geom == NULL)
@@ -333,9 +308,9 @@ bgPixmap_t::set_geometry (const char *geom, bool update)
   if (check_set_align_value (geom_flags, XValue, h_align, x))      changed = true;
   if (check_set_align_value (geom_flags, YValue, v_align, y))      changed = true;
 
-  if (new_flags != flags)
+  if (new_flags != bg_flags)
     {
-      flags = new_flags;
+      bg_flags = new_flags;
       changed = true;
     }
 
@@ -343,12 +318,12 @@ bgPixmap_t::set_geometry (const char *geom, bool update)
 }
 
 void
-bgPixmap_t::get_image_geometry (int image_width, int image_height, int &w, int &h, int &x, int &y)
+rxvt_term::get_image_geometry (int image_width, int image_height, int &w, int &h, int &x, int &y)
 {
-  int target_width = target->szHint.width;
-  int target_height = target->szHint.height;
+  int target_width = szHint.width;
+  int target_height = szHint.height;
 
-  if (flags & propScale)
+  if (bg_flags & propScale)
     {
       float scale = (float)target_width / image_width;
       min_it (scale, (float)target_height / image_height);
@@ -364,7 +339,7 @@ bgPixmap_t::get_image_geometry (int image_width, int image_height, int &w, int &
   if (!w) w = image_width;
   if (!h) h = image_height;
 
-  if (flags & rootAlign)
+  if (bg_flags & rootAlign)
     {
       x = -target_x;
       y = -target_y;
@@ -375,36 +350,33 @@ bgPixmap_t::get_image_geometry (int image_width, int image_height, int &w, int &
       y = make_align_position (v_align, target_height, h);
     }
 
-  flags &= ~sizeSensitive;
-  if ((flags & propScale) || h_scale || v_scale
-      || (!(flags & rootAlign) && (h_align || v_align))
+  bg_flags &= ~sizeSensitive;
+  if ((bg_flags & propScale) || h_scale || v_scale
+      || (!(bg_flags & rootAlign) && (h_align || v_align))
       || w > target_width || h > target_height)
-    flags |= sizeSensitive;
+    bg_flags |= sizeSensitive;
 }
 
 #  ifdef HAVE_AFTERIMAGE
 bool
-bgPixmap_t::render_image (unsigned long background_flags)
+rxvt_term::render_image (unsigned long tr_flags)
 {
-  if (target == NULL)
-    return false;
-
-  target->init_asv ();
+  init_asv ();
 
   ASImage *background = NULL;
   ARGB32 background_tint = TINT_LEAVE_SAME;
 
 #   ifdef ENABLE_TRANSPARENCY
-  if (background_flags)
-    background = pixmap2ximage (target->asv, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, 100);
+  if (tr_flags)
+    background = pixmap2ximage (asv, bg_pixmap, 0, 0, bg_pmap_width, bg_pmap_height, AllPlanes, 100);
 
-  if (background_flags & tintNeeded)
+  if (tr_flags & tintNeeded)
     {
       ShadingInfo as_shade;
       as_shade.shading = shade;
 
       rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
-      if (flags & tintSet)
+      if (bg_flags & tintSet)
         tint.get (c);
       as_shade.tintColor.red = c.r;
       as_shade.tintColor.green = c.g;
@@ -413,9 +385,9 @@ bgPixmap_t::render_image (unsigned long background_flags)
       background_tint = shading2tint32 (&as_shade);
     }
 
-  if ((background_flags & blurNeeded) && background != NULL)
+  if ((tr_flags & blurNeeded) && background != NULL)
     {
-      ASImage *tmp = blur_asimage_gauss (target->asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
+      ASImage *tmp = blur_asimage_gauss (asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
                                          (original_asim == NULL || tint == TINT_LEAVE_SAME) ? ASA_XImage : ASA_ASImage,
                                          100, ASIMAGE_QUALITY_DEFAULT);
       if (tmp)
@@ -428,8 +400,8 @@ bgPixmap_t::render_image (unsigned long background_flags)
 
   ASImage *result = 0;
 
-  int target_width    = target->szHint.width;
-  int target_height   = target->szHint.height;
+  int target_width    = szHint.width;
+  int target_height   = szHint.height;
   int new_pmap_width  = target_width;
   int new_pmap_height = target_height;
 
@@ -442,7 +414,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
     get_image_geometry (original_asim->width, original_asim->height, w, h, x, y);
 
   if (!original_asim
-      || (!(flags & rootAlign)
+      || (!(bg_flags & rootAlign)
           && (x >= target_width
               || y >= target_height
               || (x + w <= 0)
@@ -456,7 +428,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
 
           if (background_tint != TINT_LEAVE_SAME)
             {
-              ASImage *tmp = tile_asimage (target->asv, background, 0, 0,
+              ASImage *tmp = tile_asimage (asv, background, 0, 0,
                                            target_width, target_height, background_tint,
                                            ASA_XImage, 100, ASIMAGE_QUALITY_DEFAULT);
               if (tmp)
@@ -473,7 +445,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
       if ((w != original_asim->width)
           || (h != original_asim->height))
         {
-          result = scale_asimage (target->asv, original_asim,
+          result = scale_asimage (asv, original_asim,
                                   w, h,
                                   background ? ASA_ASImage : ASA_XImage,
                                   100, ASIMAGE_QUALITY_DEFAULT);
@@ -489,7 +461,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
               new_pmap_height = min (result->height, target_height);
 
               /* we also need to tile our image in both directions */
-              ASImage *tmp = tile_asimage (target->asv, result,
+              ASImage *tmp = tile_asimage (asv, result,
                                            (int)result->width - x,
                                            (int)result->height - y,
                                            new_pmap_width,
@@ -542,14 +514,14 @@ bgPixmap_t::render_image (unsigned long background_flags)
               layers[1].clip_height = result->height;
             }
 
-          if (target->rs[Rs_blendtype])
+          if (rs[Rs_blendtype])
             {
-              layers[1].merge_scanlines = blend_scanlines_name2func (target->rs[Rs_blendtype]);
+              layers[1].merge_scanlines = blend_scanlines_name2func (rs[Rs_blendtype]);
               if (layers[1].merge_scanlines == NULL)
                 layers[1].merge_scanlines = alphablend_scanlines;
             }
 
-          ASImage *tmp = merge_layers (target->asv, layers, 2, target_width, target_height,
+          ASImage *tmp = merge_layers (asv, layers, 2, target_width, target_height,
                                        ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT);
 
           if (tmp)
@@ -572,19 +544,19 @@ bgPixmap_t::render_image (unsigned long background_flags)
       GC gc;
 
       /* create Pixmap */
-      if (pixmap == None
-          || pmap_width != new_pmap_width
-          || pmap_height != new_pmap_height)
+      if (bg_pixmap == None
+          || bg_pmap_width != new_pmap_width
+          || bg_pmap_height != new_pmap_height)
         {
-          if (pixmap)
-            XFreePixmap (target->dpy, pixmap);
-          pixmap = XCreatePixmap (target->dpy, target->vt, new_pmap_width, new_pmap_height, target->depth);
-          pmap_width = new_pmap_width;
-          pmap_height = new_pmap_height;
+          if (bg_pixmap)
+            XFreePixmap (dpy, bg_pixmap);
+          bg_pixmap = XCreatePixmap (dpy, vt, new_pmap_width, new_pmap_height, depth);
+          bg_pmap_width = new_pmap_width;
+          bg_pmap_height = new_pmap_height;
         }
       /* fill with background color (if result's not completely overlapping it) */
-      gcv.foreground = target->pix_colors[Color_bg];
-      gc = XCreateGC (target->dpy, target->vt, GCForeground, &gcv);
+      gcv.foreground = pix_colors[Color_bg];
+      gc = XCreateGC (dpy, vt, GCForeground, &gcv);
 
       int src_x = 0, src_y = 0, dst_x = 0, dst_y = 0;
       int dst_width = result->width, dst_height = result->height;
@@ -599,17 +571,17 @@ bgPixmap_t::render_image (unsigned long background_flags)
           if (dst_x > 0 || dst_y > 0
               || dst_x + dst_width < new_pmap_width
               || dst_y + dst_height < new_pmap_height)
-            XFillRectangle (target->dpy, pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
+            XFillRectangle (dpy, bg_pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
         }
 
       /* put result on pixmap */
       if (dst_x < new_pmap_width && dst_y < new_pmap_height)
-        asimage2drawable (target->asv, pixmap, result, gc, src_x, src_y, dst_x, dst_y, dst_width, dst_height, True);
+        asimage2drawable (asv, bg_pixmap, result, gc, src_x, src_y, dst_x, dst_y, dst_width, dst_height, True);
 
       if (result != background && result != original_asim)
         destroy_asimage (&result);
 
-      XFreeGC (target->dpy, gc);
+      XFreeGC (dpy, gc);
 
       ret = true;
     }
@@ -623,9 +595,9 @@ bgPixmap_t::render_image (unsigned long background_flags)
 
 #  ifdef HAVE_PIXBUF
 bool
-bgPixmap_t::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
-                              int src_x, int src_y, int dst_x, int dst_y,
-                              unsigned int width, unsigned int height)
+rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
+                             int src_x, int src_y, int dst_x, int dst_y,
+                             unsigned int width, unsigned int height)
 {
   XImage *ximage;
   char *data, *line;
@@ -635,8 +607,6 @@ bgPixmap_t::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
   int rowstride;
   int channels;
   unsigned char *row;
-  Visual *visual = target->visual;
-  int depth = target->depth;
 
   if (visual->c_class != TrueColor)
     return false;
@@ -666,7 +636,7 @@ bgPixmap_t::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
   if (!data)
     return false;
 
-  ximage = XCreateImage (target->dpy, visual, depth, ZPixmap, 0, data,
+  ximage = XCreateImage (dpy, visual, depth, ZPixmap, 0, data,
                          width, height, bytes_per_pixel * 8, 0);
   if (!ximage)
     {
@@ -702,22 +672,19 @@ bgPixmap_t::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
       line += ximage->bytes_per_line;
     }
 
-  XPutImage (target->dpy, pixmap, gc, ximage, 0, 0, dst_x, dst_y, width, height);
+  XPutImage (dpy, pixmap, gc, ximage, 0, 0, dst_x, dst_y, width, height);
   XDestroyImage (ximage);
   return true;
 }
 
 bool
-bgPixmap_t::render_image (unsigned long background_flags)
+rxvt_term::render_image (unsigned long tr_flags)
 {
-  if (target == NULL)
-    return false;
-
   if (!pixbuf)
     return false;
 
-  if (background_flags
-      && !(flags & HAS_RENDER))
+  if (tr_flags
+      && !(bg_flags & HAS_RENDER))
     return false;
 
   GdkPixbuf *result;
@@ -725,8 +692,8 @@ bgPixmap_t::render_image (unsigned long background_flags)
   int image_width = gdk_pixbuf_get_width (pixbuf);
   int image_height = gdk_pixbuf_get_height (pixbuf);
 
-  int target_width    = target->szHint.width;
-  int target_height   = target->szHint.height;
+  int target_width    = szHint.width;
+  int target_height   = szHint.height;
   int new_pmap_width  = target_width;
   int new_pmap_height = target_height;
 
@@ -737,7 +704,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
 
   get_image_geometry (image_width, image_height, w, h, x, y);
 
-  if (!(flags & rootAlign)
+  if (!(bg_flags & rootAlign)
       && (x >= target_width
           || y >= target_height
           || (x + w <= 0)
@@ -765,10 +732,10 @@ bgPixmap_t::render_image (unsigned long background_flags)
       image_width = gdk_pixbuf_get_width (result);
       image_height = gdk_pixbuf_get_height (result);
 
-      if (background_flags)
+      if (tr_flags)
         {
-          root_pmap = pixmap;
-          pixmap = None;
+          root_pmap = bg_pixmap;
+          bg_pixmap = None;
         }
       else
         {
@@ -779,23 +746,23 @@ bgPixmap_t::render_image (unsigned long background_flags)
             }
         }
 
-      if (pixmap == None
-          || pmap_width != new_pmap_width
-          || pmap_height != new_pmap_height)
+      if (bg_pixmap == None
+          || bg_pmap_width != new_pmap_width
+          || bg_pmap_height != new_pmap_height)
         {
-          if (pixmap)
-            XFreePixmap (target->dpy, pixmap);
-          pixmap = XCreatePixmap (target->dpy, target->vt, new_pmap_width, new_pmap_height, target->depth);
-          pmap_width = new_pmap_width;
-          pmap_height = new_pmap_height;
+          if (bg_pixmap)
+            XFreePixmap (dpy, bg_pixmap);
+          bg_pixmap = XCreatePixmap (dpy, vt, new_pmap_width, new_pmap_height, depth);
+          bg_pmap_width = new_pmap_width;
+          bg_pmap_height = new_pmap_height;
         }
 
-      gcv.foreground = target->pix_colors[Color_bg];
-      gc = XCreateGC (target->dpy, target->vt, GCForeground, &gcv);
+      gcv.foreground = pix_colors[Color_bg];
+      gc = XCreateGC (dpy, vt, GCForeground, &gcv);
 
       if (h_scale == 0 || v_scale == 0)
         {
-          Pixmap tile = XCreatePixmap (target->dpy, target->vt, image_width, image_height, target->depth);
+          Pixmap tile = XCreatePixmap (dpy, vt, image_width, image_height, depth);
           pixbuf_to_pixmap (result, tile, gc,
                             0, 0,
                             0, 0,
@@ -805,10 +772,10 @@ bgPixmap_t::render_image (unsigned long background_flags)
           gcv.fill_style = FillTiled;
           gcv.ts_x_origin = x;
           gcv.ts_y_origin = y;
-          XChangeGC (target->dpy, gc, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
+          XChangeGC (dpy, gc, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
 
-          XFillRectangle (target->dpy, pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
-          XFreePixmap (target->dpy, tile);
+          XFillRectangle (dpy, bg_pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
+          XFreePixmap (dpy, tile);
         }
       else
         {
@@ -821,29 +788,28 @@ bgPixmap_t::render_image (unsigned long background_flags)
           if (dst_x > 0 || dst_y > 0
               || dst_x + dst_width < new_pmap_width
               || dst_y + dst_height < new_pmap_height)
-            XFillRectangle (target->dpy, pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
+            XFillRectangle (dpy, bg_pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
 
           if (dst_x < new_pmap_width && dst_y < new_pmap_height)
-            pixbuf_to_pixmap (result, pixmap, gc,
+            pixbuf_to_pixmap (result, bg_pixmap, gc,
                               src_x, src_y,
                               dst_x, dst_y,
                               dst_width, dst_height);
         }
 
 #if XRENDER
-      if (background_flags)
+      if (tr_flags)
         {
-          Display *dpy = target->dpy;
           XRenderPictureAttributes pa;
 
-          XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, target->visual);
+          XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, visual);
           Picture src = XRenderCreatePicture (dpy, root_pmap, src_format, 0, &pa);
 
-          XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, target->visual);
-          Picture dst = XRenderCreatePicture (dpy, pixmap, dst_format, 0, &pa);
+          XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, visual);
+          Picture dst = XRenderCreatePicture (dpy, bg_pixmap, dst_format, 0, &pa);
 
           pa.repeat = True;
-          Pixmap mask_pmap = XCreatePixmap (dpy, target->vt, 1, 1, 8);
+          Pixmap mask_pmap = XCreatePixmap (dpy, vt, 1, 1, 8);
           XRenderPictFormat *mask_format = XRenderFindStandardFormat (dpy, PictStandardA8);
           Picture mask = XRenderCreatePicture (dpy, mask_pmap, mask_format, CPRepeat, &pa);
           XFreePixmap (dpy, mask_pmap);
@@ -871,7 +837,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
       if (result != pixbuf)
         g_object_unref (result);
 
-      XFreeGC (target->dpy, gc);
+      XFreeGC (dpy, gc);
 
       ret = true;
     }
@@ -881,7 +847,7 @@ bgPixmap_t::render_image (unsigned long background_flags)
 #  endif /* HAVE_PIXBUF */
 
 bool
-bgPixmap_t::set_file (const char *file)
+rxvt_term::bg_set_file (const char *file)
 {
   if (!file || !*file)
     return false;
@@ -896,15 +862,15 @@ bgPixmap_t::set_file (const char *file)
     }
 
 #  ifdef HAVE_AFTERIMAGE
-  if (!target->asimman)
-    target->asimman = create_generic_imageman (target->rs[Rs_path]);
-  ASImage *image = get_asimage (target->asimman, file, 0xFFFFFFFF, 100);
+  if (!asimman)
+    asimman = create_generic_imageman (rs[Rs_path]);
+  ASImage *image = get_asimage (asimman, file, 0xFFFFFFFF, 100);
   if (image)
     {
       if (original_asim)
         safe_asimage_destroy (original_asim);
       original_asim = image;
-      flags |= CLIENT_RENDER;
+      bg_flags |= CLIENT_RENDER;
       have_image = true;
       return true;
     }
@@ -929,11 +895,11 @@ bgPixmap_t::set_file (const char *file)
 
 # ifdef ENABLE_TRANSPARENCY
 bool
-bgPixmap_t::set_transparent ()
+rxvt_term::bg_set_transparent ()
 {
-  if (!(flags & isTransparent))
+  if (!(bg_flags & isTransparent))
     {
-      flags |= isTransparent;
+      bg_flags |= isTransparent;
       return true;
     }
 
@@ -941,7 +907,7 @@ bgPixmap_t::set_transparent ()
 }
 
 bool
-bgPixmap_t::set_blur_radius (const char *geom)
+rxvt_term::bg_set_blur (const char *geom)
 {
   bool changed = false;
   unsigned int hr, vr;
@@ -969,9 +935,9 @@ bgPixmap_t::set_blur_radius (const char *geom)
     }
 
   if (v_blurRadius == 0 && h_blurRadius == 0)
-    flags &= ~blurNeeded;
+    bg_flags &= ~blurNeeded;
   else
-    flags |= blurNeeded;
+    bg_flags |= blurNeeded;
 
   return changed;
 }
@@ -990,23 +956,23 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
           && (c.r <= 0x00ff || c.r >= 0xff00)
           && (c.g <= 0x00ff || c.g >= 0xff00)
           && (c.b <= 0x00ff || c.b >= 0xff00))
-        flags |= bgPixmap_t::tintWholesome;
+        flags |= rxvt_term::tintWholesome;
     }
 
   if (has_shade || tint)
-    flags |= bgPixmap_t::tintNeeded;
+    flags |= rxvt_term::tintNeeded;
 
   return flags;
 }
 
 bool
-bgPixmap_t::set_tint (rxvt_color &new_tint)
+rxvt_term::bg_set_tint (rxvt_color &new_tint)
 {
-  if (!(flags & tintSet) || tint != new_tint)
+  if (!(bg_flags & tintSet) || tint != new_tint)
     {
       unsigned long new_flags = compute_tint_shade_flags (&new_tint, shade);
       tint = new_tint;
-      flags = (flags & ~tintFlags) | new_flags | tintSet;
+      bg_flags = (bg_flags & ~tintFlags) | new_flags | tintSet;
       return true;
     }
 
@@ -1014,7 +980,7 @@ bgPixmap_t::set_tint (rxvt_color &new_tint)
 }
 
 bool
-bgPixmap_t::set_shade (const char *shade_str)
+rxvt_term::bg_set_shade (const char *shade_str)
 {
   int new_shade = (shade_str) ? atoi (shade_str) : 100;
 
@@ -1024,9 +990,9 @@ bgPixmap_t::set_shade (const char *shade_str)
 
   if (new_shade != shade)
     {
-      unsigned long new_flags = compute_tint_shade_flags ((flags & tintSet) ? &tint : NULL, new_shade);
+      unsigned long new_flags = compute_tint_shade_flags ((bg_flags & tintSet) ? &tint : NULL, new_shade);
       shade = new_shade;
-      flags = (flags & ~tintFlags) | new_flags;
+      bg_flags = (bg_flags & ~tintFlags) | new_flags;
       return true;
     }
 
@@ -1057,7 +1023,7 @@ get_gaussian_kernel (int radius, int width, double *kernel, XFixed *params)
 #endif
 
 bool
-bgPixmap_t::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
+rxvt_term::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 {
   bool ret = false;
 #if XRENDER
@@ -1065,7 +1031,6 @@ bgPixmap_t::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
   double *kernel = (double *)malloc (size * sizeof (double));
   XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
 
-  Display *dpy = target->dpy;
   XRenderPictureAttributes pa;
   XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
 
@@ -1095,7 +1060,7 @@ bgPixmap_t::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
         {
           size = v_blurRadius * 2 + 1;
           get_gaussian_kernel (v_blurRadius, size, kernel, params);
-          swap (params[0], params[1]);
+          ::swap (params[0], params[1]);
 
           XRenderSetPictureFilter (dpy, src, FilterConvolution, params, size+2);
           XRenderComposite (dpy,
@@ -1121,12 +1086,11 @@ bgPixmap_t::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 }
 
 bool
-bgPixmap_t::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
+rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 {
-  Display *dpy = target->dpy;
   bool ret = false;
 
-  if (flags & tintWholesome)
+  if (bg_flags & tintWholesome)
     {
       XGCValues gcv;
       GC gc;
@@ -1150,7 +1114,7 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 #  if XRENDER
       rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
 
-      if (flags & tintSet)
+      if (bg_flags & tintSet)
         tint.get (c);
 
       if (shade <= 100)
@@ -1225,24 +1189,20 @@ bgPixmap_t::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
  * our window.
  */
 unsigned long
-bgPixmap_t::make_transparency_pixmap ()
+rxvt_term::make_transparency_pixmap ()
 {
   unsigned long result = 0;
-
-  if (target == NULL)
-    return 0;
 
   /* root dimensions may change from call to call - but Display structure should
    * be always up-to-date, so let's use it :
    */
-  int screen = target->display->screen;
-  Display *dpy = target->dpy;
+  int screen = display->screen;
   int root_depth = DefaultDepth (dpy, screen);
   int root_width = DisplayWidth (dpy, screen);
   int root_height = DisplayHeight (dpy, screen);
   unsigned int root_pmap_width, root_pmap_height;
-  int window_width = target->szHint.width;
-  int window_height = target->szHint.height;
+  int window_width = szHint.width;
+  int window_height = szHint.height;
   int sx, sy;
   XGCValues gcv;
   GC gc;
@@ -1262,28 +1222,28 @@ bgPixmap_t::make_transparency_pixmap ()
       int idummy;
       unsigned int udummy;
 
-      target->allowedxerror = -1;
+      allowedxerror = -1;
 
       if (!XGetGeometry (dpy, root_pixmap, &wdummy, &idummy, &idummy, &root_pmap_width, &root_pmap_height, &udummy, &udummy))
         root_pixmap = None;
 
-      target->allowedxerror = 0;
+      allowedxerror = 0;
     }
 
   Pixmap recoded_root_pmap = root_pixmap;
 
-  if (root_pixmap != None && root_depth != target->depth)
+  if (root_pixmap != None && root_depth != depth)
     {
 #if XRENDER
-      if (flags & HAS_RENDER)
+      if (bg_flags & HAS_RENDER)
         {
           XRenderPictureAttributes pa;
 
           XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, DefaultVisual (dpy, screen));
           Picture src = XRenderCreatePicture (dpy, root_pixmap, src_format, 0, &pa);
 
-          recoded_root_pmap = XCreatePixmap (dpy, target->vt, root_pmap_width, root_pmap_height, target->depth);
-          XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, target->visual);
+          recoded_root_pmap = XCreatePixmap (dpy, vt, root_pmap_width, root_pmap_height, depth);
+          XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, visual);
           Picture dst = XRenderCreatePicture (dpy, recoded_root_pmap, dst_format, 0, &pa);
 
           if (src && dst)
@@ -1305,18 +1265,18 @@ bgPixmap_t::make_transparency_pixmap ()
   if (root_pixmap == None)
     return 0;
 
-  if (pixmap == None
-      || pmap_width != window_width
-      || pmap_height != window_height)
+  if (bg_pixmap == None
+      || bg_pmap_width != window_width
+      || bg_pmap_height != window_height)
     {
-      if (pixmap)
-        XFreePixmap (target->dpy, pixmap);
-      pixmap = XCreatePixmap (target->dpy, target->vt, window_width, window_height, target->depth);
-      pmap_width = window_width;
-      pmap_height = window_height;
+      if (bg_pixmap)
+        XFreePixmap (dpy, bg_pixmap);
+      bg_pixmap = XCreatePixmap (dpy, vt, window_width, window_height, depth);
+      bg_pmap_width = window_width;
+      bg_pmap_height = window_height;
     }
 
-  if (pixmap == None)
+  if (bg_pixmap == None)
     return 0;
 
   /* straightforward pixmap copy */
@@ -1327,26 +1287,26 @@ bgPixmap_t::make_transparency_pixmap ()
   gcv.fill_style = FillTiled;
   gcv.ts_x_origin = -sx;
   gcv.ts_y_origin = -sy;
-  gc = XCreateGC (dpy, target->vt, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
+  gc = XCreateGC (dpy, vt, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
 
   if (gc)
     {
-      XFillRectangle (dpy, pixmap, gc, 0, 0, window_width, window_height);
-      result |= isValid | (flags & effectsFlags);
+      XFillRectangle (dpy, bg_pixmap, gc, 0, 0, window_width, window_height);
+      result |= isValid | (bg_flags & effectsFlags);
       XFreeGC (dpy, gc);
 
-      if (!(flags & CLIENT_RENDER))
+      if (!(bg_flags & CLIENT_RENDER))
         {
-          if ((flags & blurNeeded)
-              && (flags & HAS_RENDER_CONV))
+          if ((bg_flags & blurNeeded)
+              && (bg_flags & HAS_RENDER_CONV))
             {
-              if (blur_pixmap (pixmap, target->visual, window_width, window_height))
+              if (blur_pixmap (bg_pixmap, visual, window_width, window_height))
                 result &= ~blurNeeded;
             }
-          if ((flags & tintNeeded)
-              && (flags & (tintWholesome | HAS_RENDER)))
+          if ((bg_flags & tintNeeded)
+              && (bg_flags & (tintWholesome | HAS_RENDER)))
             {
-              if (tint_pixmap (pixmap, target->visual, window_width, window_height))
+              if (tint_pixmap (bg_pixmap, visual, window_width, window_height))
                 result &= ~tintNeeded;
             }
         } /* server side rendering completed */
@@ -1359,11 +1319,11 @@ bgPixmap_t::make_transparency_pixmap ()
 }
 
 void
-bgPixmap_t::set_root_pixmap ()
+rxvt_term::bg_set_root_pixmap ()
 {
-  Pixmap new_root_pixmap = target->get_pixmap_property (target->xa[XA_XROOTPMAP_ID]);
+  Pixmap new_root_pixmap = get_pixmap_property (xa[XA_XROOTPMAP_ID]);
   if (new_root_pixmap == None)
-    new_root_pixmap = target->get_pixmap_property (target->xa[XA_ESETROOT_PMAP_ID]);
+    new_root_pixmap = get_pixmap_property (xa[XA_ESETROOT_PMAP_ID]);
 
   root_pixmap = new_root_pixmap;
 }
@@ -1374,101 +1334,100 @@ static void shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba 
 # endif
 
 bool
-bgPixmap_t::render ()
+rxvt_term::bg_render ()
 {
-  unsigned long background_flags = 0;
+  unsigned long tr_flags = 0;
 
-  if (target == NULL)
-    return false;
-
-  invalidate ();
+  bg_invalidate ();
 # ifdef ENABLE_TRANSPARENCY
-  if (flags & isTransparent)
+  if (bg_flags & isTransparent)
     {
       /*  we need to re-generate transparency pixmap in that case ! */
-      background_flags = make_transparency_pixmap ();
-      if (background_flags == 0)
+      tr_flags = make_transparency_pixmap ();
+      if (tr_flags == 0)
         return false;
-      else if (!(background_flags & effectsFlags))
-        flags |= isValid;
+      else if (!(tr_flags & effectsFlags))
+        bg_flags |= isValid;
     }
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
   if (have_image
-      || (background_flags & effectsFlags))
+      || (tr_flags & effectsFlags))
     {
-      if (render_image (background_flags))
-        flags |= isValid;
+      if (render_image (tr_flags))
+        bg_flags |= isValid;
     }
 # endif
 
 # if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
   XImage *result = NULL;
 
-  if (background_flags && !(flags & isValid))
+  if (tr_flags && !(bg_flags & isValid))
     {
-      result = XGetImage (target->dpy, pixmap, 0, 0, pmap_width, pmap_height, AllPlanes, ZPixmap);
+      result = XGetImage (dpy, bg_pixmap, 0, 0, bg_pmap_width, bg_pmap_height, AllPlanes, ZPixmap);
     }
 
   if (result)
     {
       /* our own client-side tinting */
-      if (background_flags & tintNeeded)
+      if (tr_flags & tintNeeded)
         {
           rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
-          if (flags & tintSet)
+          if (bg_flags & tintSet)
             tint.get (c);
-          shade_ximage (DefaultVisual (target->dpy, target->display->screen), result, shade, c);
+          shade_ximage (DefaultVisual (dpy, display->screen), result, shade, c);
         }
 
-      GC gc = XCreateGC (target->dpy, target->vt, 0UL, NULL);
+      GC gc = XCreateGC (dpy, vt, 0UL, NULL);
 
       if (gc)
         {
-          XPutImage (target->dpy, pixmap, gc, result, 0, 0, 0, 0, result->width, result->height);
+          XPutImage (dpy, bg_pixmap, gc, result, 0, 0, 0, 0, result->width, result->height);
 
-          XFreeGC (target->dpy, gc);
-          flags |= isValid;
+          XFreeGC (dpy, gc);
+          bg_flags |= isValid;
         }
 
       XDestroyImage (result);
     }
 # endif
 
-  if (!(flags & isValid))
+  if (!(bg_flags & isValid))
     {
-      if (pixmap != None)
+      if (bg_pixmap != None)
         {
-          XFreePixmap (target->dpy, pixmap);
-          pixmap = None;
+          XFreePixmap (dpy, bg_pixmap);
+          bg_pixmap = None;
         }
     }
 
-  target->scr_recolour (false);
-  flags |= hasChanged;
+  scr_recolour (false);
+  bg_flags |= hasChanged;
 
-  valid_since = ev::now ();
+  bg_valid_since = ev::now ();
 
   return true;
 }
 
 void
-bgPixmap_t::set_target (rxvt_term *new_target)
+rxvt_term::bg_init ()
 {
-  target = new_target;
+#ifdef ENABLE_TRANSPARENCY
+  shade = 100;
+#endif
 
-  flags &= ~(HAS_RENDER | HAS_RENDER_CONV);
+  bg_flags &= ~(HAS_RENDER | HAS_RENDER_CONV);
 #if XRENDER
   int major, minor;
-  if (XRenderQueryVersion (target->dpy, &major, &minor))
-    flags |= HAS_RENDER;
-  XFilters *filters = XRenderQueryFilters (target->dpy, target->vt);
+  if (XRenderQueryVersion (dpy, &major, &minor))
+    bg_flags |= HAS_RENDER;
+  XFilters *filters = XRenderQueryFilters (dpy, vt);
   if (filters)
     {
       for (int i = 0; i < filters->nfilter; i++)
         if (!strcmp (filters->filter[i], FilterConvolution))
-          flags |= HAS_RENDER_CONV;
+          bg_flags |= HAS_RENDER_CONV;
 
       XFree (filters);
     }

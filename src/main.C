@@ -228,7 +228,7 @@ rxvt_term::~rxvt_term ()
   delete fontset[0];
 
 #ifdef HAVE_BG_PIXMAP
-  bgPixmap.destroy ();
+  bg_destroy ();
 #endif
 #ifdef HAVE_AFTERIMAGE
   if (asv)
@@ -1084,7 +1084,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
                          width, height);
 
 #ifdef HAVE_BG_PIXMAP
-      if (bgPixmap.window_size_sensitive ())
+      if (bg_window_size_sensitive ())
         update_background ();
 #endif
     }
@@ -1664,12 +1664,12 @@ rxvt_term::update_background ()
   if (update_background_ev.is_active ())
     return;
 
-  bgPixmap.invalidate ();
+  bg_invalidate ();
 
-  ev_tstamp to_wait = 0.5 - (ev::now () - bgPixmap.valid_since);
+  ev_tstamp to_wait = 0.5 - (ev::now () - bg_valid_since);
 
   if (to_wait <= 0.)
-    bgPixmap.render ();
+    bg_render ();
   else
     update_background_ev.start (to_wait);
 }
@@ -1680,7 +1680,7 @@ rxvt_term::update_background_cb (ev::timer &w, int revents)
   make_current ();
 
   update_background_ev.stop ();
-  bgPixmap.render ();
+  bg_render ();
   refresh_check ();
 }
 

@@ -243,7 +243,7 @@ rxvt_font::clear_rect (rxvt_drawable &d, int x, int y, int w, int h, int color) 
       Picture dst;
 
 # ifdef HAVE_BG_PIXMAP
-      if (term->bgPixmap.pixmap
+      if (term->bg_pixmap
           && !term->pix_colors[color].is_opaque ()
           && ((dst = XftDrawPicture (d))))
         {
@@ -1408,22 +1408,22 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 #ifdef HAVE_BG_PIXMAP
           Picture dst = 0; // the only assignment is done conditionally in the following if condition
 
-          if (term->bgPixmap.pixmap
+          if (term->bg_pixmap
               && (bg == Color_transparent || bg == Color_bg
                   || (bg >= 0 && !term->pix_colors[bg].is_opaque () && ((dst = XftDrawPicture (d2))))))
             {
               int src_x = x, src_y = y;
 
-              if (term->bgPixmap.flags & bgPixmap_t::isTransparent)
+              if (term->bg_flags & rxvt_term::isTransparent)
                 {
                   src_x += term->window_vt_x;
                   src_y += term->window_vt_y;
                 }
 
-              if (term->bgPixmap.pmap_width >= src_x + w
-                  && term->bgPixmap.pmap_height >= src_y + h)
+              if (term->bg_pmap_width >= src_x + w
+                  && term->bg_pmap_height >= src_y + h)
                 {
-                  XCopyArea (disp, term->bgPixmap.pixmap, d2, gc,
+                  XCopyArea (disp, term->bg_pixmap, d2, gc,
                              src_x, src_y, w, h, 0, 0);
                 }
               else
@@ -1431,7 +1431,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                   XGCValues gcv;
 
                   gcv.fill_style  = FillTiled;
-                  gcv.tile        = term->bgPixmap.pixmap;
+                  gcv.tile        = term->bg_pixmap;
                   gcv.ts_x_origin = -src_x;
                   gcv.ts_y_origin = -src_y;
 

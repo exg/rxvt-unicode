@@ -44,7 +44,6 @@ doc/rxvtperl.3.man.in
 src/.cvsignore
 src/Makefile.in
 src/background.C
-src/background.h
 src/callback.h
 src/command.C
 src/command.h

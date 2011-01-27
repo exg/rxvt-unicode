@@ -813,23 +813,23 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
     scrollBar.resize ();      /* create and map scrollbar */
 #ifdef HAVE_BG_PIXMAP
   {
-    bgPixmap.set_target (this);
+    bg_init ();
 
 #ifdef ENABLE_TRANSPARENCY
     if (option (Opt_transparent))
       {
-        bgPixmap.set_transparent ();
+        bg_set_transparent ();
 
         if (rs [Rs_blurradius])
-          bgPixmap.set_blur_radius (rs [Rs_blurradius]);
+          bg_set_blur (rs [Rs_blurradius]);
 
         if (ISSET_PIXCOLOR (Color_tint))
-          bgPixmap.set_tint (pix_colors_focused [Color_tint]);
+          bg_set_tint (pix_colors_focused [Color_tint]);
 
         if (rs [Rs_shade])
-          bgPixmap.set_shade (rs [Rs_shade]);
+          bg_set_shade (rs [Rs_shade]);
 
-        bgPixmap.set_root_pixmap ();
+        bg_set_root_pixmap ();
         XSelectInput (dpy, display->root, PropertyChangeMask);
         rootwin_ev.start (display, display->root);
       }
@@ -843,13 +843,13 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
         if ((p = strchr (p, ';')) != 0)
           {
             p++;
-            bgPixmap.set_geometry (p);
+            bg_set_geometry (p);
           }
         else
-          bgPixmap.set_defaultGeometry ();
+          bg_set_default_geometry ();
 
-        if (bgPixmap.set_file (rs[Rs_backgroundPixmap]))
-          if (!bgPixmap.window_position_sensitive ())
+        if (bg_set_file (rs[Rs_backgroundPixmap]))
+          if (!bg_window_position_sensitive ())
             update_background ();
       }
 #endif

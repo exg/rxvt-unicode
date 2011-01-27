@@ -977,9 +977,9 @@ rxvt_term::flush ()
   flush_ev.stop ();
 
 #ifdef HAVE_BG_PIXMAP
-  if (bgPixmap.flags & bgPixmap_t::hasChanged)
+  if (bg_flags & hasChanged)
     {
-      bgPixmap.flags &= ~bgPixmap_t::hasChanged;
+      bg_flags &= ~hasChanged;
       scr_touch (false);
     }
 #endif
@@ -1454,7 +1454,7 @@ rxvt_term::x_cb (XEvent &ev)
 
 #ifdef HAVE_BG_PIXMAP
             bool moved = false;
-            if (bgPixmap.window_position_sensitive ())
+            if (bg_window_position_sensitive ())
               {
                 int x, y;
                 if (ev.xconfigure.send_event)
@@ -1465,8 +1465,8 @@ rxvt_term::x_cb (XEvent &ev)
                 else
                   get_window_origin (x, y);
 
-                if (bgPixmap.set_position (x, y)
-                    || !(bgPixmap.flags & bgPixmap_t::isValid))
+                if (bg_set_position (x, y)
+                    || !(bg_flags & isValid))
                   moved = true;
               }
 #endif
@@ -1484,7 +1484,7 @@ rxvt_term::x_cb (XEvent &ev)
                     if (mapped)
                       update_background ();
                     else
-                      bgPixmap.invalidate ();
+                      bg_invalidate ();
                   }
 #endif
               }
@@ -1528,7 +1528,7 @@ rxvt_term::x_cb (XEvent &ev)
          * We should render background PRIOR to drawing any text, but AFTER all
          * of ConfigureNotifys for the best results.
          */
-        if (!(bgPixmap.flags & bgPixmap_t::isValid))
+        if (!(bg_flags & isValid))
           update_background_ev.start (0.025);
 #endif
         mapped = 1;
@@ -1853,7 +1853,7 @@ rxvt_term::rootwin_cb (XEvent &ev)
         if (ev.xproperty.atom == xa[XA_XROOTPMAP_ID]
             || ev.xproperty.atom == xa[XA_ESETROOT_PMAP_ID])
           {
-            bgPixmap.set_root_pixmap ();
+            bg_set_root_pixmap ();
             update_background ();
           }
 
@@ -3455,7 +3455,7 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
           bool changed = false;
 
           if (ISSET_PIXCOLOR (Color_tint))
-            changed = bgPixmap.set_tint (pix_colors_focused [Color_tint]);
+            changed = bg_set_tint (pix_colors_focused [Color_tint]);
 
           if (changed)
             update_background ();
@@ -3471,8 +3471,8 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
             char str[256];
 
             sprintf (str, "[%dx%d+%d+%d]",
-                     min (bgPixmap.h_scale, 32767), min (bgPixmap.v_scale, 32767),
-                     min (bgPixmap.h_align, 32767), min (bgPixmap.v_align, 32767));
+                     min (h_scale, 32767), min (v_scale, 32767),
+                     min (h_align, 32767), min (v_align, 32767));
             process_xterm_seq (XTerm_title, str, CHAR_ST);
           }
         else
@@ -3481,30 +3481,30 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
 
             if (*str != ';')
               {
-                if (bgPixmap.set_file (str))	/* change pixmap */
+                if (bg_set_file (str))	/* change pixmap */
                   {
                     changed++;
                     str = strchr (str, ';');
                     if (str == NULL)
-                      bgPixmap.set_defaultGeometry ();
+                      bg_set_default_geometry ();
                     else
-                      bgPixmap.set_geometry (str+1);
+                      bg_set_geometry (str+1);
                   }
               }
             else
               {
                 str++;
-                if (bgPixmap.set_geometry (str, true))
+                if (bg_set_geometry (str, true))
                   changed++;
               }
 
             if (changed)
               {
-                if (bgPixmap.window_position_sensitive ())
+                if (bg_window_position_sensitive ())
                   {
                     int x, y;
                     get_window_origin (x, y);
-                    bgPixmap.set_position (x, y);
+                    bg_set_position (x, y);
                   }
                 update_background ();
               }
