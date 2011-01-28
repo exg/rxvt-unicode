@@ -1140,6 +1140,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
     BG_IS_TRANSPARENT    = 1 << 10,
     BG_NEEDS_REFRESH     = 1 << 11,
     BG_IS_SIZE_SENSITIVE = 1 << 12,
+    BG_IS_FROM_FILE      = 1 << 13,
   };
 
   unsigned int bg_flags;
@@ -1147,7 +1148,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 # ifdef BG_IMAGE_FROM_FILE
   void get_image_geometry (int image_width, int image_height, int &w, int &h, int &x, int &y);
   bool render_image (unsigned long tr_flags);
-  bool have_image;
 
   enum {
     noScale = 0,

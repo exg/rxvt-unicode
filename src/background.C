@@ -101,7 +101,7 @@ rxvt_term::bg_window_size_sensitive ()
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
-  if (have_image)
+  if (bg_flags & BG_IS_FROM_FILE)
     {
       if (bg_flags & BG_IS_SIZE_SENSITIVE)
         return true;
@@ -120,7 +120,7 @@ rxvt_term::bg_window_position_sensitive ()
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
-  if (have_image)
+  if (bg_flags & BG_IS_FROM_FILE)
     {
       if (bg_flags & BG_ROOT_ALIGN)
         return true;
@@ -870,8 +870,7 @@ rxvt_term::bg_set_file (const char *file)
       if (original_asim)
         safe_asimage_destroy (original_asim);
       original_asim = image;
-      bg_flags |= BG_CLIENT_RENDER;
-      have_image = true;
+      bg_flags |= BG_IS_FROM_FILE | BG_CLIENT_RENDER;
       return true;
     }
 #  endif
@@ -883,7 +882,7 @@ rxvt_term::bg_set_file (const char *file)
       if (pixbuf)
         g_object_unref (pixbuf);
       pixbuf = image;
-      have_image = true;
+      bg_flags |= BG_IS_FROM_FILE;
       return true;
     }
 #  endif
@@ -1352,7 +1351,7 @@ rxvt_term::bg_render ()
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
-  if (have_image
+  if ((bg_flags & BG_IS_FROM_FILE)
       || (tr_flags & BG_EFFECTS_FLAGS))
     {
       if (render_image (tr_flags))
