@@ -1414,7 +1414,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
             {
               int src_x = x, src_y = y;
 
-              if (term->bg_flags & rxvt_term::isTransparent)
+              if (term->bg_flags & rxvt_term::BG_IS_TRANSPARENT)
                 {
                   src_x += term->window_vt_x;
                   src_y += term->window_vt_y;

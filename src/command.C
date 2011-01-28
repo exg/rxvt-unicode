@@ -977,9 +977,9 @@ rxvt_term::flush ()
   flush_ev.stop ();
 
 #ifdef HAVE_BG_PIXMAP
-  if (bg_flags & hasChanged)
+  if (bg_flags & BG_NEEDS_REFRESH)
     {
-      bg_flags &= ~hasChanged;
+      bg_flags &= ~BG_NEEDS_REFRESH;
       scr_touch (false);
     }
 #endif
@@ -1466,7 +1466,7 @@ rxvt_term::x_cb (XEvent &ev)
                   get_window_origin (x, y);
 
                 if (bg_set_position (x, y)
-                    || !(bg_flags & isValid))
+                    || !(bg_flags & BG_IS_VALID))
                   moved = true;
               }
 #endif
@@ -1528,7 +1528,7 @@ rxvt_term::x_cb (XEvent &ev)
          * We should render background PRIOR to drawing any text, but AFTER all
          * of ConfigureNotifys for the best results.
          */
-        if (!(bg_flags & isValid))
+        if (!(bg_flags & BG_IS_VALID))
           update_background_ev.start (0.025);
 #endif
         mapped = 1;

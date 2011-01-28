@@ -96,14 +96,14 @@ bool
 rxvt_term::bg_window_size_sensitive ()
 {
 # ifdef ENABLE_TRANSPARENCY
-  if (bg_flags & isTransparent)
+  if (bg_flags & BG_IS_TRANSPARENT)
     return true;
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
   if (have_image)
     {
-      if (bg_flags & sizeSensitive)
+      if (bg_flags & BG_IS_SIZE_SENSITIVE)
         return true;
     }
 # endif
@@ -115,14 +115,14 @@ bool
 rxvt_term::bg_window_position_sensitive ()
 {
 # ifdef ENABLE_TRANSPARENCY
-  if (bg_flags & isTransparent)
+  if (bg_flags & BG_IS_TRANSPARENT)
     return true;
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
   if (have_image)
     {
-      if (bg_flags & rootAlign)
+      if (bg_flags & BG_ROOT_ALIGN)
         return true;
     }
 # endif
@@ -206,7 +206,7 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
   int x = 0, y = 0;
   unsigned int w = 0, h = 0;
   unsigned int n;
-  unsigned long new_flags = (bg_flags & (~geometryFlags));
+  unsigned long new_flags = (bg_flags & (~BG_GEOMETRY_FLAGS));
   const char *ops;
 
   if (geom == NULL)
@@ -263,7 +263,7 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
             }
           else if (!strcasecmp (arr[i], "propscale"))
             {
-              new_flags |= propScale;
+              new_flags |= BG_PROP_SCALE;
             }
           else if (!strcasecmp (arr[i], "hscale"))
             {
@@ -294,7 +294,7 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
             }
           else if (!strcasecmp (arr[i], "root"))
             {
-              new_flags |= rootAlign;
+              new_flags |= BG_ROOT_ALIGN;
               w = h = noScale;
               geom_flags |= WidthValue|HeightValue;
             }
@@ -323,7 +323,7 @@ rxvt_term::get_image_geometry (int image_width, int image_height, int &w, int &h
   int target_width = szHint.width;
   int target_height = szHint.height;
 
-  if (bg_flags & propScale)
+  if (bg_flags & BG_PROP_SCALE)
     {
       float scale = (float)target_width / image_width;
       min_it (scale, (float)target_height / image_height);
@@ -339,7 +339,7 @@ rxvt_term::get_image_geometry (int image_width, int image_height, int &w, int &h
   if (!w) w = image_width;
   if (!h) h = image_height;
 
-  if (bg_flags & rootAlign)
+  if (bg_flags & BG_ROOT_ALIGN)
     {
       x = -target_x;
       y = -target_y;
@@ -350,11 +350,11 @@ rxvt_term::get_image_geometry (int image_width, int image_height, int &w, int &h
       y = make_align_position (v_align, target_height, h);
     }
 
-  bg_flags &= ~sizeSensitive;
-  if ((bg_flags & propScale) || h_scale || v_scale
-      || (!(bg_flags & rootAlign) && (h_align || v_align))
+  bg_flags &= ~BG_IS_SIZE_SENSITIVE;
+  if ((bg_flags & BG_PROP_SCALE) || h_scale || v_scale
+      || (!(bg_flags & BG_ROOT_ALIGN) && (h_align || v_align))
       || w > target_width || h > target_height)
-    bg_flags |= sizeSensitive;
+    bg_flags |= BG_IS_SIZE_SENSITIVE;
 }
 
 #  ifdef HAVE_AFTERIMAGE
@@ -370,13 +370,13 @@ rxvt_term::render_image (unsigned long tr_flags)
   if (tr_flags)
     background = pixmap2ximage (asv, bg_pixmap, 0, 0, bg_pmap_width, bg_pmap_height, AllPlanes, 100);
 
-  if (tr_flags & tintNeeded)
+  if (tr_flags & BG_NEEDS_TINT)
     {
       ShadingInfo as_shade;
       as_shade.shading = shade;
 
       rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
-      if (bg_flags & tintSet)
+      if (bg_flags & BG_TINT_SET)
         tint.get (c);
       as_shade.tintColor.red = c.r;
       as_shade.tintColor.green = c.g;
@@ -385,7 +385,7 @@ rxvt_term::render_image (unsigned long tr_flags)
       background_tint = shading2tint32 (&as_shade);
     }
 
-  if ((tr_flags & blurNeeded) && background != NULL)
+  if ((tr_flags & BG_NEEDS_BLUR) && background != NULL)
     {
       ASImage *tmp = blur_asimage_gauss (asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
                                          (original_asim == NULL || tint == TINT_LEAVE_SAME) ? ASA_XImage : ASA_ASImage,
@@ -414,7 +414,7 @@ rxvt_term::render_image (unsigned long tr_flags)
     get_image_geometry (original_asim->width, original_asim->height, w, h, x, y);
 
   if (!original_asim
-      || (!(bg_flags & rootAlign)
+      || (!(bg_flags & BG_ROOT_ALIGN)
           && (x >= target_width
               || y >= target_height
               || (x + w <= 0)
@@ -684,7 +684,7 @@ rxvt_term::render_image (unsigned long tr_flags)
     return false;
 
   if (tr_flags
-      && !(bg_flags & HAS_RENDER))
+      && !(bg_flags & BG_HAS_RENDER))
     return false;
 
   GdkPixbuf *result;
@@ -704,7 +704,7 @@ rxvt_term::render_image (unsigned long tr_flags)
 
   get_image_geometry (image_width, image_height, w, h, x, y);
 
-  if (!(bg_flags & rootAlign)
+  if (!(bg_flags & BG_ROOT_ALIGN)
       && (x >= target_width
           || y >= target_height
           || (x + w <= 0)
@@ -870,7 +870,7 @@ rxvt_term::bg_set_file (const char *file)
       if (original_asim)
         safe_asimage_destroy (original_asim);
       original_asim = image;
-      bg_flags |= CLIENT_RENDER;
+      bg_flags |= BG_CLIENT_RENDER;
       have_image = true;
       return true;
     }
@@ -897,9 +897,9 @@ rxvt_term::bg_set_file (const char *file)
 bool
 rxvt_term::bg_set_transparent ()
 {
-  if (!(bg_flags & isTransparent))
+  if (!(bg_flags & BG_IS_TRANSPARENT))
     {
-      bg_flags |= isTransparent;
+      bg_flags |= BG_IS_TRANSPARENT;
       return true;
     }
 
@@ -935,9 +935,9 @@ rxvt_term::bg_set_blur (const char *geom)
     }
 
   if (v_blurRadius == 0 && h_blurRadius == 0)
-    bg_flags &= ~blurNeeded;
+    bg_flags &= ~BG_NEEDS_BLUR;
   else
-    bg_flags |= blurNeeded;
+    bg_flags |= BG_NEEDS_BLUR;
 
   return changed;
 }
@@ -956,11 +956,11 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
           && (c.r <= 0x00ff || c.r >= 0xff00)
           && (c.g <= 0x00ff || c.g >= 0xff00)
           && (c.b <= 0x00ff || c.b >= 0xff00))
-        flags |= rxvt_term::tintWholesome;
+        flags |= rxvt_term::BG_TINT_BITAND;
     }
 
   if (has_shade || tint)
-    flags |= rxvt_term::tintNeeded;
+    flags |= rxvt_term::BG_NEEDS_TINT;
 
   return flags;
 }
@@ -968,11 +968,11 @@ compute_tint_shade_flags (rxvt_color *tint, int shade)
 bool
 rxvt_term::bg_set_tint (rxvt_color &new_tint)
 {
-  if (!(bg_flags & tintSet) || tint != new_tint)
+  if (!(bg_flags & BG_TINT_SET) || tint != new_tint)
     {
       unsigned long new_flags = compute_tint_shade_flags (&new_tint, shade);
       tint = new_tint;
-      bg_flags = (bg_flags & ~tintFlags) | new_flags | tintSet;
+      bg_flags = (bg_flags & ~BG_TINT_FLAGS) | new_flags | BG_TINT_SET;
       return true;
     }
 
@@ -990,9 +990,9 @@ rxvt_term::bg_set_shade (const char *shade_str)
 
   if (new_shade != shade)
     {
-      unsigned long new_flags = compute_tint_shade_flags ((bg_flags & tintSet) ? &tint : NULL, new_shade);
+      unsigned long new_flags = compute_tint_shade_flags ((bg_flags & BG_TINT_SET) ? &tint : NULL, new_shade);
       shade = new_shade;
-      bg_flags = (bg_flags & ~tintFlags) | new_flags;
+      bg_flags = (bg_flags & ~BG_TINT_FLAGS) | new_flags;
       return true;
     }
 
@@ -1090,7 +1090,7 @@ rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 {
   bool ret = false;
 
-  if (bg_flags & tintWholesome)
+  if (bg_flags & BG_TINT_BITAND)
     {
       XGCValues gcv;
       GC gc;
@@ -1114,7 +1114,7 @@ rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 #  if XRENDER
       rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
 
-      if (bg_flags & tintSet)
+      if (bg_flags & BG_TINT_SET)
         tint.get (c);
 
       if (shade <= 100)
@@ -1235,7 +1235,7 @@ rxvt_term::make_transparency_pixmap ()
   if (root_pixmap != None && root_depth != depth)
     {
 #if XRENDER
-      if (bg_flags & HAS_RENDER)
+      if (bg_flags & BG_HAS_RENDER)
         {
           XRenderPictureAttributes pa;
 
@@ -1292,22 +1292,22 @@ rxvt_term::make_transparency_pixmap ()
   if (gc)
     {
       XFillRectangle (dpy, bg_pixmap, gc, 0, 0, window_width, window_height);
-      result |= isValid | (bg_flags & effectsFlags);
+      result |= BG_IS_VALID | (bg_flags & BG_EFFECTS_FLAGS);
       XFreeGC (dpy, gc);
 
-      if (!(bg_flags & CLIENT_RENDER))
+      if (!(bg_flags & BG_CLIENT_RENDER))
         {
-          if ((bg_flags & blurNeeded)
-              && (bg_flags & HAS_RENDER_CONV))
+          if ((bg_flags & BG_NEEDS_BLUR)
+              && (bg_flags & BG_HAS_RENDER_CONV))
             {
               if (blur_pixmap (bg_pixmap, visual, window_width, window_height))
-                result &= ~blurNeeded;
+                result &= ~BG_NEEDS_BLUR;
             }
-          if ((bg_flags & tintNeeded)
-              && (bg_flags & (tintWholesome | HAS_RENDER)))
+          if ((bg_flags & BG_NEEDS_TINT)
+              && (bg_flags & (BG_TINT_BITAND | BG_HAS_RENDER)))
             {
               if (tint_pixmap (bg_pixmap, visual, window_width, window_height))
-                result &= ~tintNeeded;
+                result &= ~BG_NEEDS_TINT;
             }
         } /* server side rendering completed */
     }
@@ -1340,30 +1340,30 @@ rxvt_term::bg_render ()
 
   bg_invalidate ();
 # ifdef ENABLE_TRANSPARENCY
-  if (bg_flags & isTransparent)
+  if (bg_flags & BG_IS_TRANSPARENT)
     {
       /*  we need to re-generate transparency pixmap in that case ! */
       tr_flags = make_transparency_pixmap ();
       if (tr_flags == 0)
         return false;
-      else if (!(tr_flags & effectsFlags))
-        bg_flags |= isValid;
+      else if (!(tr_flags & BG_EFFECTS_FLAGS))
+        bg_flags |= BG_IS_VALID;
     }
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
   if (have_image
-      || (tr_flags & effectsFlags))
+      || (tr_flags & BG_EFFECTS_FLAGS))
     {
       if (render_image (tr_flags))
-        bg_flags |= isValid;
+        bg_flags |= BG_IS_VALID;
     }
 # endif
 
 # if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
   XImage *result = NULL;
 
-  if (tr_flags && !(bg_flags & isValid))
+  if (tr_flags && !(bg_flags & BG_IS_VALID))
     {
       result = XGetImage (dpy, bg_pixmap, 0, 0, bg_pmap_width, bg_pmap_height, AllPlanes, ZPixmap);
     }
@@ -1371,10 +1371,10 @@ rxvt_term::bg_render ()
   if (result)
     {
       /* our own client-side tinting */
-      if (tr_flags & tintNeeded)
+      if (tr_flags & BG_NEEDS_TINT)
         {
           rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
-          if (bg_flags & tintSet)
+          if (bg_flags & BG_TINT_SET)
             tint.get (c);
           shade_ximage (DefaultVisual (dpy, display->screen), result, shade, c);
         }
@@ -1386,14 +1386,14 @@ rxvt_term::bg_render ()
           XPutImage (dpy, bg_pixmap, gc, result, 0, 0, 0, 0, result->width, result->height);
 
           XFreeGC (dpy, gc);
-          bg_flags |= isValid;
+          bg_flags |= BG_IS_VALID;
         }
 
       XDestroyImage (result);
     }
 # endif
 
-  if (!(bg_flags & isValid))
+  if (!(bg_flags & BG_IS_VALID))
     {
       if (bg_pixmap != None)
         {
@@ -1403,7 +1403,7 @@ rxvt_term::bg_render ()
     }
 
   scr_recolour (false);
-  bg_flags |= hasChanged;
+  bg_flags |= BG_NEEDS_REFRESH;
 
   bg_valid_since = ev::now ();
 
@@ -1417,17 +1417,17 @@ rxvt_term::bg_init ()
   shade = 100;
 #endif
 
-  bg_flags &= ~(HAS_RENDER | HAS_RENDER_CONV);
+  bg_flags &= ~(BG_HAS_RENDER | BG_HAS_RENDER_CONV);
 #if XRENDER
   int major, minor;
   if (XRenderQueryVersion (dpy, &major, &minor))
-    bg_flags |= HAS_RENDER;
+    bg_flags |= BG_HAS_RENDER;
   XFilters *filters = XRenderQueryFilters (dpy, vt);
   if (filters)
     {
       for (int i = 0; i < filters->nfilter; i++)
         if (!strcmp (filters->filter[i], FilterConvolution))
-          bg_flags |= HAS_RENDER_CONV;
+          bg_flags |= BG_HAS_RENDER_CONV;
 
       XFree (filters);
     }

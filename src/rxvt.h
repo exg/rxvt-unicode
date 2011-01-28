@@ -1119,27 +1119,27 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   enum {
     //subset returned by make_transparency_pixmap
-    isValid         = 1 <<  0,
-    tintNeeded      = 1 <<  1,
-    blurNeeded      = 1 <<  2,
+    BG_IS_VALID          = 1 <<  0,
+    BG_NEEDS_TINT        = 1 <<  1,
+    BG_NEEDS_BLUR        = 1 <<  2,
 
-    effectsFlags    = tintNeeded | blurNeeded,
+    BG_EFFECTS_FLAGS     = BG_NEEDS_TINT | BG_NEEDS_BLUR,
 
-    propScale       = 1 <<  3,
-    rootAlign       = 1 <<  4,
-    geometryFlags   = propScale | rootAlign,
+    BG_PROP_SCALE        = 1 <<  3,
+    BG_ROOT_ALIGN        = 1 <<  4,
+    BG_GEOMETRY_FLAGS    = BG_PROP_SCALE | BG_ROOT_ALIGN,
 
-    tintSet         = 1 <<  5,
-    tintWholesome   = 1 <<  6,
-    tintFlags       = tintNeeded | tintWholesome,
+    BG_TINT_SET          = 1 <<  5,
+    BG_TINT_BITAND       = 1 <<  6,
+    BG_TINT_FLAGS        = BG_NEEDS_TINT | BG_TINT_BITAND,
 
-    HAS_RENDER      = 1 <<  7,
-    HAS_RENDER_CONV = 1 <<  8,
-    CLIENT_RENDER   = 1 <<  9,
+    BG_HAS_RENDER        = 1 <<  7,
+    BG_HAS_RENDER_CONV   = 1 <<  8,
+    BG_CLIENT_RENDER     = 1 <<  9,
 
-    isTransparent   = 1 << 10,
-    hasChanged      = 1 << 11,
-    sizeSensitive   = 1 << 12,
+    BG_IS_TRANSPARENT    = 1 << 10,
+    BG_NEEDS_REFRESH     = 1 << 11,
+    BG_IS_SIZE_SENSITIVE = 1 << 12,
   };
 
   unsigned int bg_flags;
@@ -1202,7 +1202,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   bool bg_render ();
   void bg_invalidate ()
   {
-    bg_flags &= ~isValid;
+    bg_flags &= ~BG_IS_VALID;
   }
 #endif
 #ifdef HAVE_AFTERIMAGE
