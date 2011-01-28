@@ -67,6 +67,10 @@ rxvt_term::bg_destroy ()
 #ifdef HAVE_AFTERIMAGE
   if (original_asim)
     safe_asimage_destroy (original_asim);
+  if (asv)
+    destroy_asvisual (asv, 0);
+  if (asimman)
+    destroy_image_manager (asimman, 0);
 #endif
 
 #ifdef HAVE_PIXBUF
