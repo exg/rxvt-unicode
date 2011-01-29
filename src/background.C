@@ -945,27 +945,26 @@ rxvt_term::bg_set_blur (const char *geom)
   return changed;
 }
 
-static inline unsigned long
-compute_tint_shade_flags (rxvt_color *tint, int shade)
+void
+rxvt_term::set_tint_shade_flags ()
 {
-  unsigned long flags = 0;
   rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
   bool has_shade = shade != 100;
 
-  if (tint)
+  bg_flags &= ~BG_TINT_FLAGS;
+
+  if (bg_flags & BG_TINT_SET)
     {
-      tint->get (c);
+      tint.get (c);
       if (!has_shade
           && (c.r <= 0x00ff || c.r >= 0xff00)
           && (c.g <= 0x00ff || c.g >= 0xff00)
           && (c.b <= 0x00ff || c.b >= 0xff00))
-        flags |= rxvt_term::BG_TINT_BITAND;
+        bg_flags |= BG_TINT_BITAND;
     }
 
-  if (has_shade || tint)
-    flags |= rxvt_term::BG_NEEDS_TINT;
-
-  return flags;
+  if (has_shade || (bg_flags & BG_TINT_SET))
+    bg_flags |= BG_NEEDS_TINT;
 }
 
 bool
@@ -973,9 +972,9 @@ rxvt_term::bg_set_tint (rxvt_color &new_tint)
 {
   if (!(bg_flags & BG_TINT_SET) || tint != new_tint)
     {
-      unsigned long new_flags = compute_tint_shade_flags (&new_tint, shade);
       tint = new_tint;
-      bg_flags = (bg_flags & ~BG_TINT_FLAGS) | new_flags | BG_TINT_SET;
+      bg_flags |= BG_TINT_SET;
+      set_tint_shade_flags ();
       return true;
     }
 
@@ -993,9 +992,8 @@ rxvt_term::bg_set_shade (const char *shade_str)
 
   if (new_shade != shade)
     {
-      unsigned long new_flags = compute_tint_shade_flags ((bg_flags & BG_TINT_SET) ? &tint : NULL, new_shade);
       shade = new_shade;
-      bg_flags = (bg_flags & ~BG_TINT_FLAGS) | new_flags;
+      set_tint_shade_flags ();
       return true;
     }
 

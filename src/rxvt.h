@@ -1179,6 +1179,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   bool bg_set_transparent ();
   void bg_set_root_pixmap ();
+  void set_tint_shade_flags ();
   bool bg_set_tint (rxvt_color &new_tint);
   bool bg_set_shade (const char *shade_str);
   bool bg_set_blur (const char *geom);
