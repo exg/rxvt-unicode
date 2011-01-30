@@ -1189,7 +1189,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   unsigned long make_transparency_pixmap ();
 # endif
 
-  double bg_valid_since;
+  ev_tstamp bg_valid_since;
 
   Pixmap bg_pixmap;
   unsigned int bg_pmap_width, bg_pmap_height;
