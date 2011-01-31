@@ -2744,24 +2744,21 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
 {
   if (prop == None)         /* check for failed XConvertSelection */
     {
+      int selnum = selection_type & Sel_whereMask;
+
+      if (selnum == Sel_direct)
+        selection_type = 0;
+
       if ((selection_type & Sel_CompoundText))
         {
-          int selnum = selection_type & Sel_whereMask;
-
           selection_type = 0;
-          if (selnum != Sel_direct)
-            selection_request_other (XA_STRING, selnum);
+          selection_request_other (XA_STRING, selnum);
         }
 
       if ((selection_type & Sel_UTF8String))
         {
-          int selnum = selection_type & Sel_whereMask;
-
           selection_type = Sel_CompoundText;
-          if (selnum != Sel_direct)
-            selection_request_other (xa[XA_COMPOUND_TEXT], selnum);
-          else
-            selection_type = 0;
+          selection_request_other (xa[XA_COMPOUND_TEXT], selnum);
         }
 
       return;
