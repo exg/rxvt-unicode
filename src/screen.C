@@ -2841,7 +2841,7 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
                * pass through again trying CUT_BUFFER0 if we've come from
                * XConvertSelection () but nothing was presented
                */
-              selection_paste (display->root, XA_CUT_BUFFER0, False);
+              selection_paste (display->root, XA_CUT_BUFFER0, false);
             }
 
           goto bailout;

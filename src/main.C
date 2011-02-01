@@ -1177,10 +1177,10 @@ rxvt_term::IMisRunning ()
       win = XGetSelectionOwner (dpy, atom);
 
       if (win != None)
-        return True;
+        return true;
     }
 
-  return False;
+  return false;
 }
 
 void
