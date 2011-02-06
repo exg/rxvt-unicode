@@ -392,7 +392,6 @@ enum {
 #define Sel_none                0       /* Not waiting */
 #define Sel_normal              0x01    /* normal selection */
 #define Sel_incr                0x02    /* incremental selection */
-#define Sel_direct              0x00
 #define Sel_Primary             0x01
 #define Sel_Secondary           0x02
 #define Sel_Clipboard           0x03

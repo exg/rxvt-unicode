@@ -2744,9 +2744,6 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
     {
       int selnum = selection_type & Sel_whereMask;
 
-      if (selnum == Sel_direct)
-        selection_type = 0;
-
       if ((selection_type & Sel_CompoundText))
         {
           selection_type = 0;
