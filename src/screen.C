@@ -40,8 +40,6 @@ fill_text (text_t *start, text_t value, int len)
 }
 
 /* ------------------------------------------------------------------------- */
-#define PROP_SIZE               256*1024
-#define PASTE_SIZE		32768
 #define TABSIZE                 8       /* default tab size */
 
 /* ------------------------------------------------------------------------- *
@@ -2767,8 +2765,9 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
   unsigned long bytes_after;
   XTextProperty ct;
 
+  // length == (2^31 - 1) / 4, as gdk
   if (XGetWindowProperty (dpy, win, prop,
-                          0, PROP_SIZE / 4,
+                          0, 0x1fffffff,
                           delete_prop, AnyPropertyType,
                           &ct.encoding, &ct.format,
                           &ct.nitems, &bytes_after,
@@ -2780,27 +2779,6 @@ rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
 
   if (ct.encoding == None)
     goto bailout;
-
-  if (bytes_after)
-    {
-      // fetch and append remaining data
-      XTextProperty ct2;
-
-      if (XGetWindowProperty (dpy, win, prop,
-                              ct.nitems / 4, (bytes_after + 3) / 4,
-                              delete_prop, AnyPropertyType,
-                              &ct2.encoding, &ct2.format,
-                              &ct2.nitems, &bytes_after,
-                              &ct2.value) != Success)
-        goto bailout;
-
-      // realloc should be compatible to XFree, here, and elsewhere, too
-      ct.value = (unsigned char *)rxvt_realloc (ct.value, ct.nitems + ct2.nitems + 1);
-      memcpy (ct.value + ct.nitems, ct2.value, ct2.nitems + 1);
-      ct.nitems += ct2.nitems;
-
-      XFree (ct2.value);
-    }
 
   if (ct.value == 0)
     goto bailout;
