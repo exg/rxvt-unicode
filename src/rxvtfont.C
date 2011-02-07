@@ -969,6 +969,8 @@ rxvt_font_x11::clear ()
 bool
 rxvt_font_x11::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &careful) const
 {
+  careful = false;
+
   uint32_t ch = FROM_UNICODE (cs, unicode);
 
   if (ch == NOCHAR)
