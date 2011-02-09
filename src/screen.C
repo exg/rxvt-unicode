@@ -2880,6 +2880,7 @@ rxvt_term::incr_cb (ev::timer &w, int revents) NOTHROW
 
   incr_buf_size = 0;
   free (incr_buf);
+  incr_buf = 0;
 
   rxvt_warn ("data loss: timeout on INCR selection paste, ignoring.\n");
 }
