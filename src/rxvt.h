@@ -389,16 +389,6 @@ enum {
 #define DEFAULT_RSTYLE  (RS_None | (Color_fg    << RS_fgShift) | (Color_bg     << RS_bgShift))
 #define OVERLAY_RSTYLE  (RS_None | (Color_Black << RS_fgShift) | (Color_Yellow << RS_bgShift))
 
-#define Sel_none                0       /* Not waiting */
-#define Sel_normal              0x01    /* normal selection */
-#define Sel_incr                0x02    /* incremental selection */
-#define Sel_Primary             0x01
-#define Sel_Secondary           0x02
-#define Sel_Clipboard           0x03
-#define Sel_whereMask           0x0f
-#define Sel_CompoundText        0x10    /* last request was COMPOUND_TEXT */
-#define Sel_UTF8String          0x20    /* last request was UTF8_STRING */
-
 enum {
   C0_NUL = 0x00,
           C0_SOH, C0_STX, C0_ETX, C0_EOT, C0_ENQ, C0_ACK, C0_BEL,
@@ -1053,10 +1043,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   unsigned char   refresh_type,
 #ifdef META8_OPTION
-                  meta_char,            /* Alt-key prefix */
+                  meta_char;            /* Alt-key prefix */
 #endif
-                  selection_wait,
-                  selection_type;
 /* ---------- */
   bool            rvideo_state, rvideo_mode;
 #ifndef NO_BELL
@@ -1102,11 +1090,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   Atom            *xa;
 /* ---------- */
   Time            selection_time,
-                  selection_request_time,
                   clipboard_time;
   pid_t           cmd_pid;    /* process id of child */
-  char *          incr_buf;
-  size_t          incr_buf_size, incr_buf_fill;
 /* ---------- */
   struct mouse_event MEvent;
   XComposeStatus  compose;
@@ -1307,7 +1292,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void flush_cb (ev::timer &w, int revents); ev::timer flush_ev;
   bool pty_fill ();
   void pty_cb (ev::io &w, int revents); ev::io pty_ev;
-  void incr_cb (ev::timer &w, int revents) NOTHROW; ev::timer incr_ev;
 
 #ifdef CURSOR_BLINK
   void cursor_blink_cb (ev::timer &w, int revents); ev::timer cursor_blink_ev;
@@ -1588,10 +1572,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void scr_dump (int fd) NOTHROW;
 
   void selection_check (int check_more) NOTHROW;
-  void selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW;
-  void selection_property (Window win, Atom prop) NOTHROW;
   void selection_request (Time tm, int selnum = Sel_Primary) NOTHROW;
-  int selection_request_other (Atom target, int selnum) NOTHROW;
   void selection_clear (bool clipboard = false) NOTHROW;
   void selection_make (Time tm);
   bool selection_grab (Time tm, bool clipboard = false) NOTHROW;

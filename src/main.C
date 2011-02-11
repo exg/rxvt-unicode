@@ -189,7 +189,6 @@ rxvt_term::rxvt_term ()
   flush_ev.set            <rxvt_term, &rxvt_term::flush_cb>   (this);
   destroy_ev.set          <rxvt_term, &rxvt_term::destroy_cb> (this);
   pty_ev.set              <rxvt_term, &rxvt_term::pty_cb>     (this);
-  incr_ev.set             <rxvt_term, &rxvt_term::incr_cb>    (this);
   termwin_ev.set          <rxvt_term, &rxvt_term::x_cb>       (this);
   vt_ev.set               <rxvt_term, &rxvt_term::x_cb>       (this);
 
@@ -275,7 +274,6 @@ rxvt_term::~rxvt_term ()
   free (env_term);
   free (locale);
   free (v_buffer);
-  free (incr_buf);
 
   delete envv;
   delete argv;
@@ -321,7 +319,6 @@ rxvt_term::destroy ()
 #if ENABLE_TRANSPARENCY || ENABLE_PERL
       rootwin_ev.stop (display);
 #endif
-      incr_ev.stop ();
       termwin_ev.stop (display);
       vt_ev.stop (display);
     }

@@ -2734,168 +2734,6 @@ rxvt_term::paste (char *data, unsigned int len) NOTHROW
 
 /* ------------------------------------------------------------------------- */
 /*
- * Respond to a notification that a primary selection has been sent
- * EXT: SelectionNotify
- */
-void
-rxvt_term::selection_paste (Window win, Atom prop, bool delete_prop) NOTHROW
-{
-  if (prop == None)         /* check for failed XConvertSelection */
-    {
-      int selnum = selection_type & Sel_whereMask;
-
-      if ((selection_type & Sel_CompoundText))
-        {
-          selection_type = 0;
-          selection_request_other (XA_STRING, selnum);
-        }
-
-      if ((selection_type & Sel_UTF8String))
-        {
-          selection_type = Sel_CompoundText;
-          selection_request_other (xa[XA_COMPOUND_TEXT], selnum);
-        }
-
-      return;
-    }
-
-  unsigned long bytes_after;
-  XTextProperty ct;
-
-  // length == (2^31 - 1) / 4, as gdk
-  if (XGetWindowProperty (dpy, win, prop,
-                          0, 0x1fffffff,
-                          delete_prop, AnyPropertyType,
-                          &ct.encoding, &ct.format,
-                          &ct.nitems, &bytes_after,
-                          &ct.value) != Success)
-    {
-      ct.value = 0;
-      goto bailout;
-    }
-
-  if (ct.encoding == None)
-    goto bailout;
-
-  if (ct.value == 0)
-    goto bailout;
-
-  if (ct.encoding == xa[XA_INCR])
-    {
-      // INCR selection, start handshake
-      if (!delete_prop)
-        XDeleteProperty (dpy, win, prop);
-
-      selection_wait = Sel_incr;
-      incr_buf_fill = 0;
-      incr_ev.start (10);
-
-      goto bailout;
-    }
-
-  if (ct.nitems == 0)
-    {
-      if (selection_wait == Sel_incr)
-        {
-          XFree (ct.value);
-
-          // finally complete, now paste the whole thing
-          selection_wait = Sel_normal;
-          ct.value = (unsigned char *)incr_buf;
-          ct.nitems = incr_buf_fill;
-          incr_buf = 0;
-          incr_buf_size = 0;
-          incr_ev.stop ();
-        }
-      else
-        {
-          if (selection_wait == Sel_normal
-              && (win != display->root || prop != XA_CUT_BUFFER0)) // avoid recursion
-            {
-              /*
-               * pass through again trying CUT_BUFFER0 if we've come from
-               * XConvertSelection () but nothing was presented
-               */
-              selection_paste (display->root, XA_CUT_BUFFER0, false);
-            }
-
-          goto bailout;
-        }
-    }
-  else if (selection_wait == Sel_incr)
-    {
-      incr_ev.start (10);
-
-      while (incr_buf_fill + ct.nitems > incr_buf_size)
-        {
-          incr_buf_size = incr_buf_size ? incr_buf_size * 2 : 128*1024;
-          incr_buf = (char *)rxvt_realloc (incr_buf, incr_buf_size);
-        }
-
-      memcpy (incr_buf + incr_buf_fill, ct.value, ct.nitems);
-      incr_buf_fill += ct.nitems;
-
-      goto bailout;
-    }
-
-  char **cl;
-  int cr;
-
-#if !ENABLE_MINIMAL
-  // xlib is horribly broken with respect to UTF8_STRING, and nobody cares to fix it
-  // so recode it manually
-  if (ct.encoding == xa[XA_UTF8_STRING])
-    {
-      wchar_t *w = rxvt_utf8towcs ((const char *)ct.value, ct.nitems);
-      char *s = rxvt_wcstombs (w);
-      free (w);
-      // TODO: strlen == only the first element will be converted. well...
-      paste (s, strlen (s));
-      free (s);
-    }
-  else
-#endif
-  if (XmbTextPropertyToTextList (dpy, &ct, &cl, &cr) >= 0
-      && cl)
-    {
-      for (int i = 0; i < cr; i++)
-        paste (cl[i], strlen (cl[i]));
-
-      XFreeStringList (cl);
-    }
-  else
-    paste ((char *)ct.value, ct.nitems); // paste raw
-
-bailout:
-  XFree (ct.value);
-
-  if (selection_wait == Sel_normal)
-    selection_wait = Sel_none;
-}
-
-void
-rxvt_term::incr_cb (ev::timer &w, int revents) NOTHROW
-{
-  selection_wait = Sel_none;
-
-  incr_buf_size = 0;
-  free (incr_buf);
-  incr_buf = 0;
-
-  rxvt_warn ("data loss: timeout on INCR selection paste, ignoring.\n");
-}
-
-void
-rxvt_term::selection_property (Window win, Atom prop) NOTHROW
-{
-  if (prop == None || selection_wait != Sel_incr)
-    return;
-
-  selection_paste (win, prop, true);
-}
-
-/* ------------------------------------------------------------------------- */
-/*
  * Request the current selection:
  * Order: > internal selection if available
  *        > PRIMARY, SECONDARY, CLIPBOARD if ownership is claimed (+)
@@ -2904,6 +2742,18 @@ rxvt_term::selection_property (Window win, Atom prop) NOTHROW
  *     will auto fallback to CUT_BUFFER0
  * EXT: button 2 release
  */
+
+static void
+selection_cb (char *data, unsigned int len, rxvt_selection *rs, void *ptr)
+{
+  if (data)
+    {
+      rxvt_term *term = (rxvt_term *)ptr;
+      term->paste (data, len);
+    }
+  delete rs;
+}
+
 void
 rxvt_term::selection_request (Time tm, int selnum) NOTHROW
 {
@@ -2917,46 +2767,8 @@ rxvt_term::selection_request (Time tm, int selnum) NOTHROW
     }
   else
     {
-      selection_request_time = tm;
-      selection_wait = Sel_normal;
-
-#if X_HAVE_UTF8_STRING
-      selection_type = Sel_UTF8String;
-      if (selection_request_other (xa[XA_UTF8_STRING], selnum))
-        return;
-#else
-      selection_type = Sel_CompoundText;
-      if (selection_request_other (xa[XA_COMPOUND_TEXT], selnum))
-        return;
-#endif
+      new rxvt_selection (display, selnum, tm, vt, xa[XA_VT_SELECTION], selection_cb, this);
     }
-
-  selection_wait = Sel_none;       /* don't loop in selection_paste () */
-  selection_paste (display->root, XA_CUT_BUFFER0, false);
-}
-
-int
-rxvt_term::selection_request_other (Atom target, int selnum) NOTHROW
-{
-  Atom sel;
-
-  selection_type |= selnum;
-
-  if (selnum == Sel_Primary)
-    sel = XA_PRIMARY;
-  else if (selnum == Sel_Secondary)
-    sel = XA_SECONDARY;
-  else
-    sel = xa[XA_CLIPBOARD];
-
-  if (XGetSelectionOwner (dpy, sel) != None)
-    {
-      XConvertSelection (dpy, sel, target, xa[XA_VT_SELECTION],
-                         vt, selection_request_time);
-      return 1;
-    }
-
-  return 0;
 }
 
 /* ------------------------------------------------------------------------- */

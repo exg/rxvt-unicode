@@ -893,3 +893,255 @@ rxvt_color::fade (rxvt_screen *screen, int percent, rxvt_color &result, const rg
   );
 }
 
+rxvt_selection::rxvt_selection (rxvt_display *disp, int selnum, Time tm, Window win, Atom prop, sel_cb cb, void *ptr)
+: display (disp), request_time (tm), request_win (win), request_prop (prop), request_cb (cb), user_data (ptr)
+{
+  assert (selnum >= Sel_Primary && selnum <= Sel_Clipboard);
+
+  timer_ev.set<rxvt_selection, &rxvt_selection::timer_cb> (this);
+  timer_ev.repeat = 10.;
+  x_ev.set<rxvt_selection, &rxvt_selection::x_cb> (this);
+
+  incr_buf = 0;
+  incr_buf_size = incr_buf_fill = 0;
+  selection_wait = Sel_normal;
+
+#if X_HAVE_UTF8_STRING
+  selection_type = Sel_UTF8String;
+  if (request (display->xa[XA_UTF8_STRING], selnum))
+    return;
+#else
+  selection_type = Sel_CompoundText;
+  if (request (display->xa[XA_COMPOUND_TEXT], selnum))
+    return;
+#endif
+
+  // fallback to CUT_BUFFER0 if the requested property has no owner
+  handle_selection (display->root, XA_CUT_BUFFER0, false);
+}
+
+rxvt_selection::~rxvt_selection ()
+{
+  stop ();
+}
+
+void
+rxvt_selection::stop ()
+{
+  free (incr_buf);
+  incr_buf = 0;
+  timer_ev.stop ();
+  x_ev.stop (display);
+}
+
+bool
+rxvt_selection::request (Atom target, int selnum)
+{
+  Atom sel;
+
+  selection_type |= selnum;
+
+  if (selnum == Sel_Primary)
+    sel = XA_PRIMARY;
+  else if (selnum == Sel_Secondary)
+    sel = XA_SECONDARY;
+  else
+    sel = display->xa[XA_CLIPBOARD];
+
+  if (XGetSelectionOwner (display->dpy, sel) != None)
+    {
+      XConvertSelection (display->dpy, sel, target, request_prop,
+                         request_win, request_time);
+      x_ev.start (display, request_win);
+      timer_ev.again ();
+      return true;
+    }
+
+  return false;
+}
+
+void
+rxvt_selection::handle_selection (Window win, Atom prop, bool delete_prop)
+{
+  Display *dpy = display->dpy;
+  char *data = 0;
+  unsigned int data_len = 0;
+  unsigned long bytes_after;
+  XTextProperty ct;
+
+  // check for failed XConvertSelection
+  if (prop == None)
+    {
+      bool error = true;
+      int selnum = selection_type & Sel_whereMask;
+
+      if (selection_type & Sel_CompoundText)
+        {
+          selection_type = 0;
+          error = !request (XA_STRING, selnum);
+        }
+
+      if (selection_type & Sel_UTF8String)
+        {
+          selection_type = Sel_CompoundText;
+          error = !request (display->xa[XA_COMPOUND_TEXT], selnum);
+        }
+
+      if (error)
+        {
+          ct.value = 0;
+          goto bailout;
+        }
+
+      return;
+    }
+
+  // length == (2^31 - 1) / 4, as gdk
+  if (XGetWindowProperty (dpy, win, prop,
+                          0, 0x1fffffff,
+                          delete_prop, AnyPropertyType,
+                          &ct.encoding, &ct.format,
+                          &ct.nitems, &bytes_after,
+                          &ct.value) != Success)
+    {
+      ct.value = 0;
+      goto bailout;
+    }
+
+  if (ct.encoding == None)
+    goto bailout;
+
+  if (ct.value == 0)
+    goto bailout;
+
+  if (ct.encoding == display->xa[XA_INCR])
+    {
+      // INCR selection, start handshake
+      if (!delete_prop)
+        XDeleteProperty (dpy, win, prop);
+
+      selection_wait = Sel_incr;
+      timer_ev.again ();
+
+      goto bailout;
+    }
+
+  if (ct.nitems == 0)
+    {
+      if (selection_wait == Sel_incr)
+        {
+          XFree (ct.value);
+
+          // finally complete, now paste the whole thing
+          selection_wait = Sel_normal;
+          ct.value = (unsigned char *)incr_buf;
+          ct.nitems = incr_buf_fill;
+          incr_buf = 0;
+          timer_ev.stop ();
+        }
+      else
+        {
+          // avoid recursion
+          if (win != display->root || prop != XA_CUT_BUFFER0)
+            {
+              XFree (ct.value);
+
+               // fallback to CUT_BUFFER0 if the requested property
+               // has an owner but is empty
+              handle_selection (display->root, XA_CUT_BUFFER0, False);
+              return;
+            }
+
+          goto bailout;
+        }
+    }
+  else if (selection_wait == Sel_incr)
+    {
+      timer_ev.again ();
+
+      while (incr_buf_fill + ct.nitems > incr_buf_size)
+        {
+          incr_buf_size = incr_buf_size ? incr_buf_size * 2 : 128*1024;
+          incr_buf = (char *)rxvt_realloc (incr_buf, incr_buf_size);
+        }
+
+      memcpy (incr_buf + incr_buf_fill, ct.value, ct.nitems);
+      incr_buf_fill += ct.nitems;
+
+      goto bailout;
+    }
+
+  char **cl;
+  int cr;
+
+  // we honour the first item only
+
+#if !ENABLE_MINIMAL
+  // xlib is horribly broken with respect to UTF8_STRING, and nobody cares to fix it
+  // so recode it manually
+  if (ct.encoding == display->xa[XA_UTF8_STRING])
+    {
+      wchar_t *w = rxvt_utf8towcs ((const char *)ct.value, ct.nitems);
+      data = rxvt_wcstombs (w);
+      free (w);
+    }
+  else
+#endif
+  if (XmbTextPropertyToTextList (dpy, &ct, &cl, &cr) >= 0
+      && cl)
+    {
+      data = strdup (cl[0]);
+      XFreeStringList (cl);
+    }
+  else
+    {
+      // paste raw
+      data = strdup ((const char *)ct.value);
+    }
+
+  data_len = strlen (data);
+
+bailout:
+  XFree (ct.value);
+
+  if (selection_wait == Sel_normal)
+    {
+      stop ();
+      request_cb (data, data_len, this, user_data);
+      free (data);
+    }
+}
+
+void
+rxvt_selection::timer_cb (ev::timer &w, int revents)
+{
+  if (selection_wait == Sel_incr)
+    rxvt_warn ("data loss: timeout on INCR selection paste, ignoring.\n");
+
+  stop ();
+  request_cb (NULL, 0, this, user_data);
+}
+
+void
+rxvt_selection::x_cb (XEvent &xev)
+{
+  switch (xev.type)
+    {
+      case PropertyNotify:
+        if (selection_wait == Sel_incr
+            && xev.xproperty.atom == request_prop
+            && xev.xproperty.state == PropertyNewValue)
+          handle_selection (xev.xproperty.window, xev.xproperty.atom, true);
+        break;
+
+      case SelectionNotify:
+        if (selection_wait == Sel_normal
+            && xev.xselection.time == request_time
+            && xev.xselection.property == request_prop)
+          {
+            timer_ev.stop ();
+            handle_selection (xev.xselection.requestor, xev.xselection.property, true);
+          }
+        break;
+    }
+}

@@ -355,5 +355,43 @@ struct rxvt_color
   void fade (rxvt_screen *screen, int percent, rxvt_color &result, const rgba &to = rgba (0, 0, 0));
 };
 
+#define Sel_normal              0x01    /* normal selection */
+#define Sel_incr                0x02    /* incremental selection */
+#define Sel_Primary             0x01
+#define Sel_Secondary           0x02
+#define Sel_Clipboard           0x03
+#define Sel_whereMask           0x0f
+#define Sel_CompoundText        0x10    /* last request was COMPOUND_TEXT */
+#define Sel_UTF8String          0x20    /* last request was UTF8_STRING */
+
+typedef void (*sel_cb)(char *data, unsigned int len, struct rxvt_selection *rs, void *ptr);
+
+struct rxvt_selection
+{
+  rxvt_selection (rxvt_display *disp, int selnum, Time tm, Window win, Atom prop, sel_cb cb, void *ptr);
+  ~rxvt_selection ();
+
+private:
+  rxvt_display *display;
+  Time request_time;
+  Window request_win;
+  Atom request_prop;
+  sel_cb request_cb;
+  void *user_data;
+
+  unsigned char selection_wait;
+  unsigned char selection_type;
+
+  char *incr_buf;
+  size_t incr_buf_size, incr_buf_fill;
+
+  void timer_cb (ev::timer &w, int revents); ev::timer timer_ev;
+  void x_cb (XEvent &xev); xevent_watcher x_ev;
+
+  void stop ();
+  bool request (Atom target, int selnum);
+  void handle_selection (Window win, Atom prop, bool delete_prop);
+};
+
 #endif
 
