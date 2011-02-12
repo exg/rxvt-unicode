@@ -1115,7 +1115,7 @@ bailout:
   if (selection_wait == Sel_normal)
     {
       stop ();
-      request_cb (data, data_len, this, user_data);
+      request_cb (data, data_len, this);
       free (data);
     }
 }
@@ -1127,7 +1127,7 @@ rxvt_selection::timer_cb (ev::timer &w, int revents)
     rxvt_warn ("data loss: timeout on INCR selection paste, ignoring.\n");
 
   stop ();
-  request_cb (NULL, 0, this, user_data);
+  request_cb (NULL, 0, this);
 }
 
 void

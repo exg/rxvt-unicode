@@ -365,7 +365,7 @@ struct rxvt_color
 #define Sel_CompoundText        0x10    /* last request was COMPOUND_TEXT */
 #define Sel_UTF8String          0x20    /* last request was UTF8_STRING */
 
-typedef void (*sel_cb)(char *data, unsigned int len, struct rxvt_selection *rs, void *ptr);
+typedef void (*sel_cb)(char *data, unsigned int len, struct rxvt_selection *rs);
 
 struct rxvt_selection
 {
@@ -373,13 +373,14 @@ struct rxvt_selection
   void run ();
   ~rxvt_selection ();
 
+  void *user_data;
+
 private:
   rxvt_display *display;
   Time request_time;
   Window request_win;
   Atom request_prop;
   sel_cb request_cb;
-  void *user_data;
 
   unsigned char selection_wait;
   unsigned char selection_type;

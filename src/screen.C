@@ -2744,9 +2744,9 @@ rxvt_term::paste (char *data, unsigned int len) NOTHROW
  */
 
 static void
-selection_cb (char *data, unsigned int len, rxvt_selection *rs, void *ptr)
+selection_cb (char *data, unsigned int len, rxvt_selection *rs)
 {
-  rxvt_term *term = (rxvt_term *)ptr;
+  rxvt_term *term = (rxvt_term *)rs->user_data;
 
   if (data)
     term->paste (data, len);
