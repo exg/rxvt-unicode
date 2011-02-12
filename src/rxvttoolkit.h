@@ -370,6 +370,7 @@ typedef void (*sel_cb)(char *data, unsigned int len, struct rxvt_selection *rs, 
 struct rxvt_selection
 {
   rxvt_selection (rxvt_display *disp, int selnum, Time tm, Window win, Atom prop, sel_cb cb, void *ptr);
+  void run ();
   ~rxvt_selection ();
 
 private:

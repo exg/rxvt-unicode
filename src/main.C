@@ -275,6 +275,8 @@ rxvt_term::~rxvt_term ()
   free (locale);
   free (v_buffer);
 
+  delete selection_req;
+
   delete envv;
   delete argv;
 

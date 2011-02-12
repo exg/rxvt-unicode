@@ -1091,6 +1091,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 /* ---------- */
   Time            selection_time,
                   clipboard_time;
+  rxvt_selection *selection_req;
   pid_t           cmd_pid;    /* process id of child */
 /* ---------- */
   struct mouse_event MEvent;

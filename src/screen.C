@@ -2746,12 +2746,12 @@ rxvt_term::paste (char *data, unsigned int len) NOTHROW
 static void
 selection_cb (char *data, unsigned int len, rxvt_selection *rs, void *ptr)
 {
+  rxvt_term *term = (rxvt_term *)ptr;
+
   if (data)
-    {
-      rxvt_term *term = (rxvt_term *)ptr;
-      term->paste (data, len);
-    }
+    term->paste (data, len);
   delete rs;
+  term->selection_req = 0;
 }
 
 void
@@ -2765,9 +2765,10 @@ rxvt_term::selection_request (Time tm, int selnum) NOTHROW
       free (str);
       return;
     }
-  else
+  else if (!selection_req)
     {
-      new rxvt_selection (display, selnum, tm, vt, xa[XA_VT_SELECTION], selection_cb, this);
+      selection_req = new rxvt_selection (display, selnum, tm, vt, xa[XA_VT_SELECTION], selection_cb, this);
+      selection_req->run ();
     }
 }
 

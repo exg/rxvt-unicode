@@ -906,6 +906,13 @@ rxvt_selection::rxvt_selection (rxvt_display *disp, int selnum, Time tm, Window 
   incr_buf = 0;
   incr_buf_size = incr_buf_fill = 0;
   selection_wait = Sel_normal;
+  selection_type = selnum;
+}
+
+void
+rxvt_selection::run ()
+{
+  int selnum = selection_type;
 
 #if X_HAVE_UTF8_STRING
   selection_type = Sel_UTF8String;
