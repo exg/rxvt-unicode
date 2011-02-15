@@ -33,6 +33,7 @@ TODO: resources section in manual talks bullshit about system-wide app-defaults 
           we ever get recursive perl invocations. also saves a bit of codespace
           with gcc.
         - fix various memory leaks (Emanuele Giaquinta).
+        - fix typo in kIC terminfo capability, debian bug #446444.
         - fix debian bug #504817, to the extent possible.
 	- try to detect byte order at compile time, seems to work around weird linking
           errors on freebsd (seems to have trouble with static member variables) - also
