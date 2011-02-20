@@ -51,7 +51,7 @@
 /* Define to 1 if you have the `clock_gettime' function. */
 #undef HAVE_CLOCK_GETTIME
 
-/* "use syscall interface for clock_gettime" */
+/* Define to 1 to use the syscall interface for clock_gettime */
 #undef HAVE_CLOCK_SYSCALL
 
 /* Define to 1 if you have the <cwchar> header file. */
@@ -65,6 +65,9 @@
 
 /* Define to 1 if you have the `eventfd' function. */
 #undef HAVE_EVENTFD
+
+/* Define to 1 if the floor function is available */
+#undef HAVE_FLOOR
 
 /* Define to 1 if you have the <fontconfig/fontconfig.h> header file. */
 #undef HAVE_FONTCONFIG_FONTCONFIG_H
@@ -86,9 +89,6 @@
 
 /* Define to 1 if you have the <lastlog.h> header file. */
 #undef HAVE_LASTLOG_H
-
-/* Define to 1 if you have the `m' library (-lm). */
-#undef HAVE_LIBM
 
 /* Define to 1 if you have the `rt' library (-lrt). */
 #undef HAVE_LIBRT
@@ -264,9 +264,6 @@
 
 /* Define to 1 if you have the <X11/Xft/Xft.h> header file. */
 #undef HAVE_X11_XFT_XFT_H
-
-/* Define if you have XPointer typedef */
-#undef HAVE_XPOINTER
 
 /* Define if setlocale (defined to Xsetlocale) works */
 #undef HAVE_XSETLOCALE
