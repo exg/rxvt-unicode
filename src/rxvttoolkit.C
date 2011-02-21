@@ -894,8 +894,8 @@ rxvt_color::fade (rxvt_screen *screen, int percent, rxvt_color &result, const rg
   );
 }
 
-rxvt_selection::rxvt_selection (rxvt_display *disp, int selnum, Time tm, Window win, Atom prop, sel_cb cb, void *ptr)
-: display (disp), request_time (tm), request_win (win), request_prop (prop), request_cb (cb), user_data (ptr)
+rxvt_selection::rxvt_selection (rxvt_display *disp, int selnum, Time tm, Window win, Atom prop, rxvt_term *term, void *cb_sv)
+: display (disp), request_time (tm), request_win (win), request_prop (prop), term (term), cb_sv (cb_sv)
 {
   assert (selnum >= Sel_Primary && selnum <= Sel_Clipboard);
 
@@ -931,6 +931,26 @@ rxvt_selection::run ()
 rxvt_selection::~rxvt_selection ()
 {
   stop ();
+}
+
+void
+rxvt_selection::finish (char *data, unsigned int len)
+{
+  if (term)
+    {
+      if (data)
+        term->paste (data, len);
+
+      term->selection_req = 0;
+      delete this;
+    }
+#if ENABLE_PERL
+  else
+    {
+      stop ();
+      abort (); //TODO
+    }
+#endif
 }
 
 void
@@ -1114,8 +1134,7 @@ bailout:
 
   if (selection_wait == Sel_normal)
     {
-      stop ();
-      request_cb (data, data_len, this);
+      finish (data, data_len);
       free (data);
     }
 }
@@ -1126,8 +1145,7 @@ rxvt_selection::timer_cb (ev::timer &w, int revents)
   if (selection_wait == Sel_incr)
     rxvt_warn ("data loss: timeout on INCR selection paste, ignoring.\n");
 
-  stop ();
-  request_cb (NULL, 0, this);
+  finish ();
 }
 
 void

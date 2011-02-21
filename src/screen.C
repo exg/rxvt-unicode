@@ -2742,18 +2742,6 @@ rxvt_term::paste (char *data, unsigned int len) NOTHROW
  *     will auto fallback to CUT_BUFFER0
  * EXT: button 2 release
  */
-
-static void
-selection_cb (char *data, unsigned int len, rxvt_selection *rs)
-{
-  rxvt_term *term = (rxvt_term *)rs->user_data;
-
-  if (data)
-    term->paste (data, len);
-  delete rs;
-  term->selection_req = 0;
-}
-
 void
 rxvt_term::selection_request (Time tm, int selnum) NOTHROW
 {
@@ -2767,7 +2755,7 @@ rxvt_term::selection_request (Time tm, int selnum) NOTHROW
     }
   else if (!selection_req)
     {
-      selection_req = new rxvt_selection (display, selnum, tm, vt, xa[XA_VT_SELECTION], selection_cb, this);
+      selection_req = new rxvt_selection (display, selnum, tm, vt, xa[XA_VT_SELECTION], this);
       selection_req->run ();
     }
 }

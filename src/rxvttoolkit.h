@@ -365,32 +365,31 @@ struct rxvt_color
 #define Sel_CompoundText        0x10    /* last request was COMPOUND_TEXT */
 #define Sel_UTF8String          0x20    /* last request was UTF8_STRING */
 
-typedef void (*sel_cb)(char *data, unsigned int len, struct rxvt_selection *rs);
-
 struct rxvt_selection
 {
-  rxvt_selection (rxvt_display *disp, int selnum, Time tm, Window win, Atom prop, sel_cb cb, void *ptr);
+  rxvt_selection (rxvt_display *disp, int selnum, Time tm, Window win, Atom prop, rxvt_term *term, void *cb_sv = 0);
   void run ();
   ~rxvt_selection ();
 
-  void *user_data;
-
-private:
+  rxvt_term *term; // terminal to paste to, may be 0
+  void *cb_sv;     // perl callback, may be 0
+  
   rxvt_display *display;
   Time request_time;
   Window request_win;
   Atom request_prop;
-  sel_cb request_cb;
 
   unsigned char selection_wait;
   unsigned char selection_type;
 
+private:
   char *incr_buf;
   size_t incr_buf_size, incr_buf_fill;
 
   void timer_cb (ev::timer &w, int revents); ev::timer timer_ev;
   void x_cb (XEvent &xev); xevent_watcher x_ev;
 
+  void finish (char *data = 0, unsigned int len = 0);
   void stop ();
   bool request (Atom target, int selnum);
   void handle_selection (Window win, Atom prop, bool delete_prop);
