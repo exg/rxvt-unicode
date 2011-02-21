@@ -910,6 +910,20 @@ rxvt_selection::rxvt_selection (rxvt_display *disp, int selnum, Time tm, Window 
 }
 
 void
+rxvt_selection::stop ()
+{
+  free (incr_buf);
+  incr_buf = 0;
+  timer_ev.stop ();
+  x_ev.stop (display);
+}
+
+rxvt_selection::~rxvt_selection ()
+{
+  stop ();
+}
+
+void
 rxvt_selection::run ()
 {
   int selnum = selection_type;
@@ -926,11 +940,6 @@ rxvt_selection::run ()
 
   // fallback to CUT_BUFFER0 if the requested property has no owner
   handle_selection (display->root, XA_CUT_BUFFER0, false);
-}
-
-rxvt_selection::~rxvt_selection ()
-{
-  stop ();
 }
 
 void
@@ -951,15 +960,6 @@ rxvt_selection::finish (char *data, unsigned int len)
       abort (); //TODO
     }
 #endif
-}
-
-void
-rxvt_selection::stop ()
-{
-  free (incr_buf);
-  incr_buf = 0;
-  timer_ev.stop ();
-  x_ev.stop (display);
 }
 
 bool
