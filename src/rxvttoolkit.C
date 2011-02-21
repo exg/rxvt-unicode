@@ -894,8 +894,8 @@ rxvt_color::fade (rxvt_screen *screen, int percent, rxvt_color &result, const rg
   );
 }
 
-rxvt_selection::rxvt_selection (rxvt_display *disp, int selnum, Time tm, Window win, Atom prop, rxvt_term *term, void *cb_sv)
-: display (disp), request_time (tm), request_win (win), request_prop (prop), term (term), cb_sv (cb_sv)
+rxvt_selection::rxvt_selection (rxvt_display *disp, int selnum, Time tm, Window win, Atom prop, rxvt_term *term)
+: display (disp), request_time (tm), request_win (win), request_prop (prop), term (term)
 {
   assert (selnum >= Sel_Primary && selnum <= Sel_Clipboard);
 
@@ -956,8 +956,8 @@ rxvt_selection::finish (char *data, unsigned int len)
 #if ENABLE_PERL
   else
     {
-      stop ();
-      abort (); //TODO
+      stop (); // we do not really trust perl callbacks
+      rxvt_perl.selection_finish (this, data, len);
     }
 #endif
 }

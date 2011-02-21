@@ -367,22 +367,22 @@ struct rxvt_color
 
 struct rxvt_selection
 {
-  rxvt_selection (rxvt_display *disp, int selnum, Time tm, Window win, Atom prop, rxvt_term *term, void *cb_sv = 0);
+  rxvt_selection (rxvt_display *disp, int selnum, Time tm, Window win, Atom prop, rxvt_term *term);
   void run ();
   ~rxvt_selection ();
 
   rxvt_term *term; // terminal to paste to, may be 0
-  void *cb_sv;     // perl callback, may be 0
+  void *cb_sv;     // managed by perl
   
   rxvt_display *display;
   Time request_time;
   Window request_win;
   Atom request_prop;
 
+private:
   unsigned char selection_wait;
   unsigned char selection_type;
 
-private:
   char *incr_buf;
   size_t incr_buf_size, incr_buf_fill;
 

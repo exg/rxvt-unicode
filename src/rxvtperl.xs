@@ -415,8 +415,9 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 
       PUSHMARK (SP);
 
-      XPUSHs (sv_2mortal (newSVterm (term)));
-      XPUSHs (sv_2mortal (newSViv (htype)));
+      EXTEND (SP, 2);
+      PUSHs (sv_2mortal (newSVterm (term)));
+      PUSHs (sv_2mortal (newSViv (htype)));
 
       for (;;) {
         data_type dt = (data_type)va_arg (ap, int);
@@ -583,7 +584,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 
       if (SvTRUE (ERRSV))
         {
-          rxvt_warn ("perl hook %d evaluation error: %s", htype, SvPV_nolen (ERRSV));
+          rxvt_warn ("perl hook %d evaluation error: %s", htype, SvPVbyte_nolen (ERRSV));
           ungrab (term); // better lose the grab than the session
         }
 
@@ -610,6 +611,25 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
     }
 
   return event_consumed;
+}
+
+void
+rxvt_perl_interp::selection_finish (rxvt_selection *sel, char *data, unsigned int len)
+{
+  localise_env set_environ (perl_environ);
+
+  ENTER;
+  SAVETMPS;
+
+  dSP;
+  XPUSHs (sv_2mortal (newSVpvn (data, len)));
+  call_sv ((SV *)sel->cb_sv, G_VOID | G_DISCARD | G_EVAL);
+
+  if (SvTRUE (ERRSV))
+    rxvt_warn ("perl selection callback evaluation error: %s", SvPVbyte_nolen (ERRSV));
+
+  FREETMPS;
+  LEAVE;
 }
 
 /////////////////////////////////////////////////////////////////////////////
