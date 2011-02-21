@@ -1800,6 +1800,6 @@ numbers indicate more verbose output.
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 .Vb 2
-\& Marc Lehmann <pcg@goof.com>
+\& Marc Lehmann <schmorp@schmorp.de>
 \& http://software.schmorp.de/pkg/rxvt\-unicode
 .Ve

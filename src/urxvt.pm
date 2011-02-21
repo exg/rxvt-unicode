@@ -2253,7 +2253,7 @@ numbers indicate more verbose output.
 
 =head1 AUTHOR
 
- Marc Lehmann <pcg@goof.com>
+ Marc Lehmann <schmorp@schmorp.de>
  http://software.schmorp.de/pkg/rxvt-unicode
 
 =cut

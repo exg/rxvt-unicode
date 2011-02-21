@@ -3,7 +3,7 @@
  *---------------------------------------------------------------------------*
  *
  * Copyright (c) 1997-2001 Geoff Wing <gcw@pobox.com>
- * Copyright (c) 2003-2007 Marc Lehmann <pcg@goof.com>
+ * Copyright (c) 2003-2007 Marc Lehmann <schmorp@schmorp.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

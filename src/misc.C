@@ -6,7 +6,7 @@
  * Copyright (c) 1996      mj olesen <olesen@me.QueensU.CA> Queen's Univ at Kingston
  * Copyright (c) 1997,1998 Oezguer Kesim <kesim@math.fu-berlin.de>
  * Copyright (c) 1998-2000 Geoff Wing <gcw@pobox.com>
- * Copyright (c) 2003-2006 Marc Lehmann <pcg@goof.com>
+ * Copyright (c) 2003-2006 Marc Lehmann <schmorp@schmorp.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

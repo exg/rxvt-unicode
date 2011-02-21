@@ -17,7 +17,7 @@
  * 				- extensive modifications
  * Copyright (c) 1999      D J Hawkey Jr <hawkeyd@visi.com>
  *				- lastlog support
- * Copyright (c) 2004-2006 Marc Lehmann <pcg@goof.com>
+ * Copyright (c) 2004-2006 Marc Lehmann <schmorp@schmorp.de>
  * Copyright (c) 2006      Emanuele Giaquinta <e.giaquinta@glauco.it>
  *
  * This program is free software; you can redistribute it and/or modify

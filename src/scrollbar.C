@@ -6,7 +6,7 @@
  * Copyright (c) 1998      Alfredo K. Kojima <kojima@windowmaker.org>
  *				- N*XTstep like scrollbars
  * Copyright (c) 1999-2001 Geoff Wing <gcw@pobox.com>
- * Copyright (c) 2004-2006 Marc Lehmann <pcg@goof.com>
+ * Copyright (c) 2004-2006 Marc Lehmann <schmorp@schmorp.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

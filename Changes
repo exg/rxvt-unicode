@@ -24,6 +24,7 @@ TODO: resources section in manual talks bullshit about system-wide app-defaults 
 TODO: cat rxvt / pty_drain...
 TOOD: 2639291   59576   78504 2777371  2a611b /opt/rxvt/bin/rxvt
 TOOD: 2640667   59576   78504 2778747  2a667b /opt/rxvt/bin/rxvt
+TOOD: 2640913   59576   78504 2778993  2a6771 /opt/rxvt/bin/rxvt
 TODO: "require" perl5.10+ and enable unicode in selection code
         - fix a possible crash if the INCR transfer process for a
           selection property timeouts and at least one chunk is

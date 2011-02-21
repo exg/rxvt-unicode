@@ -3,7 +3,7 @@
  *----------------------------------------------------------------------*
  *
  * All portions of code are copyright by their respective author/s.
- * Copyright (c) 2005-2008 Marc Lehmann <pcg@goof.com>
+ * Copyright (c) 2005-2008 Marc Lehmann <schmorp@schmorp.de>
  * Copyright (c) 2007      Sasha Vasko <sasha@aftercode.net>
  * Copyright (c) 2010      Emanuele Giaquinta <e.giaquinta@glauco.it>
  *

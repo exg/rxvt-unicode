@@ -4,7 +4,7 @@
 
 /*
     callback.h -- C++ callback mechanism
-    Copyright (C) 2003-2007 Marc Lehmann <pcg@goof.com>
+    Copyright (C) 2003-2007 Marc Lehmann <schmorp@schmorp.de>
  
     This file is part of GVPE.
 

@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------*
  * File:	rxvtfont.C
  *----------------------------------------------------------------------*
- * Copyright (c) 2003-2008 Marc Lehmann <pcg@goof.com>
+ * Copyright (c) 2003-2008 Marc Lehmann <schmorp@schmorp.de>
  *				- original version.
  *
  * This program is free software; you can redistribute it and/or modify
