@@ -20,14 +20,15 @@ TODO: decrqm http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
 TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
-TODO: resources section in manual talks bullshit about system-wide app-defaults file
-TODO: cat rxvt / pty_drain...
 TOOD: 2639291   59576   78504 2777371  2a611b /opt/rxvt/bin/rxvt
-TOOD: 2640667   59576   78504 2778747  2a667b /opt/rxvt/bin/rxvt
+TOOD: 2640667^  59576   78504 2778747  2a667b /opt/rxvt/bin/rxvt
 TOOD: 2640913   59576   78504 2778993  2a6771 /opt/rxvt/bin/rxvt
-TOOD: 2640684   59576   78504 2778764  2a668c rxvt
+TOOD: 2640684^  59576   78504 2778764  2a668c rxvt
 TOOD: 2641100   59552   78504 2779156  2a6814 rxvt
+TOOD: 2641639   59576   78504 2779719  2a6a47 rxvt
+TOOD: 3141592   59548   78504 2779821  3243f6 rxvt
 TODO: "require" perl5.10+ and enable unicode in selection code
+TODO: pelr selection objetc creation/destruction
         - fix a possible crash if the INCR transfer process for a
           selection property timeouts and at least one chunk is
           received. (Emanuele Giaquinta)
@@ -50,6 +51,8 @@ TODO: "require" perl5.10+ and enable unicode in selection code
         - added "newlines to spaces" option in selection-popup.
         - actually enabled solaris event ports backends (was disabled by accident).
         - revert to 38400 baud max., mission accomplished.
+        - no longer create scary "pty_fill: PLEASE REPORT" message, instead,
+          silently drian the input (problem is well understood now).
 
 9.10 Mon Dec 13 17:43:52 CET 2010
 	- the "schmorp=north korea dickey=south korea" release.

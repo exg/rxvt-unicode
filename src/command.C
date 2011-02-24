@@ -27,7 +27,7 @@
  * Copyright (c) 2001      Marius Gedminas
  *				- Ctrl/Mod4+Tab works like Meta+Tab (options)
  * Copyright (c) 2003      Rob McMullen <robm@flipturn.org>
- * Copyright (c) 2003-2007 Marc Lehmann <schmorp@schmorp.de>
+ * Copyright (c) 2003-2011 Marc Lehmann <schmorp@schmorp.de>
  * Copyright (c) 2007      Emanuele Giaquinta <e.giaquinta@glauco.it>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -1160,10 +1160,7 @@ rxvt_term::pty_fill ()
   ssize_t n = cmdbuf_endp - cmdbuf_ptr;
 
   if (CBUFSIZ == n)
-    {
-      rxvt_warn ("PLEASE REPORT: pty_fill on full buffer, draining input, continuing.\n");
-      n = 0;
-    }
+    n = 0; // normally this indicates a "too long" command sequence - just drop the data we have
 
   memmove (cmdbuf_base, cmdbuf_ptr, n);
   cmdbuf_ptr = cmdbuf_base;
