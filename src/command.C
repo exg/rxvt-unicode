@@ -2690,7 +2690,9 @@ rxvt_term::process_escape_seq ()
 
         /* kidnapped escape sequence: Should be 8.3.48 */
       case C1_ESA:		/* ESC G */
-        process_graphics ();
+        // used by original rxvt for rob nations own graphics mode
+        if (cmd_getc () == 'Q')
+          tt_printf ("\033G0\012");	/* query graphics - no graphics */
         break;
 
         /* 8.3.63: CHARACTER TABULATION SET */
@@ -3968,25 +3970,6 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
 #endif
         }
     }
-}
-/*}}} */
-
-/*{{{ (do not) process Rob Nation's own graphics mode sequences */
-void
-rxvt_term::process_graphics ()
-{
-  unicode_t ch, cmd = cmd_getc ();
-
-  if (cmd == 'Q')
-    {
-      /* query graphics */
-      tt_printf ("\033G0\012");	/* no graphics */
-      return;
-    }
-  /* swallow other graphics sequences until terminating ':' */
-  do
-    ch = cmd_getc ();
-  while (ch != ':');
 }
 /*}}} */
 

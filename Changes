@@ -53,6 +53,7 @@ TODO: perl selection object creation/destruction
         - revert to 38400 baud max., mission accomplished.
         - no longer create scary "pty_fill: PLEASE REPORT" message, instead,
           silently drain the input (problem is well understood now).
+        - no longer swallow rob nation's own graphics mode commands.
 
 9.10 Mon Dec 13 17:43:52 CET 2010
 	- the "schmorp=north korea dickey=south korea" release.

@@ -1396,7 +1396,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   int privcases (int mode, unsigned long bit);
   void process_terminal_mode (int mode, int priv, unsigned int nargs, const int *arg);
   void process_sgr_mode (unsigned int nargs, const int *arg);
-  void process_graphics ();
   // init.C
   void init_vars ();
   const char **init_resources (int argc, const char *const *argv);
