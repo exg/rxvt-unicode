@@ -4010,7 +4010,9 @@ rxvt_term::tt_write (const char *data, unsigned int len)
     {
       ssize_t written = write (pty->pty, data, min (len, MAX_PTY_WRITE));
 
-      if ((unsigned int)written == len)
+      max_it (written, 0);
+
+      if (written == len)
         return;
 
       data += written;
