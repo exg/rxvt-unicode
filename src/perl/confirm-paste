@@ -16,8 +16,9 @@ sub on_tt_paste {
 
    $self->{paste} = \$str;
    $self->msg ("Paste of $count lines, continue? (y/n)");
-   (my $preview = $self->locale_decode ($str)) =~ s/\n/\\n/g;
-   $self->{overlay}->set (0, 1, $preview);
+   my $preview = substr $self->locale_decode ($str), 0, $self->ncol;
+   $preview =~ s/\n/\\n/g;
+   $self->{overlay}->set (0, 1, $self->special_encode ($preview));
    $self->enable (key_press => \&key_press);
 
    1
