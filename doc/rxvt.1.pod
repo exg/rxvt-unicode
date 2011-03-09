@@ -905,6 +905,10 @@ every time you hit C<Print>.
 Set scrollbar style to B<rxvt>, B<plain>, B<next> or B<xterm>. B<plain> is
 the author's favourite.
 
+=item B<thickness:> I<number>
+
+Set the scrollbar width in pixels.
+
 =item B<scrollBar:> I<boolean>
 
 B<True>: enable the scrollbar [default]; option B<-sb>. B<False>:

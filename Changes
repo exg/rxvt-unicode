@@ -42,6 +42,7 @@ TODO: perl selection object creation/destruction
           with gcc.
         - fix various memory leaks (Emanuele Giaquinta).
         - fix typo in kIC terminfo capability, debian bug #446444.
+        - document 'thickness' resource.
         - fix debian bug #504817, to the extent possible.
 	- try to detect byte order at compile time, seems to work around weird linking
           errors on freebsd (seems to have trouble with static member variables) - also
