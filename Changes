@@ -44,9 +44,8 @@ TODO: perl selection object creation/destruction
         - fix typo in kIC terminfo capability, debian bug #446444.
         - document 'thickness' resource.
         - fix debian bug #504817, to the extent possible.
-	- try to detect byte order at compile time, seems to work around weird linking
-          errors on freebsd (seems to have trouble with static member variables) - also
-          saves a couple of hundred bytes, if your compiler is smart enough.
+	- try to detect byte order at compile time, saves a couple of
+          hundred bytes, if your compiler is smart enough.
         - add support for previewing the pasted data in confirm-paste
           (Emanuele Giaquinta).
         - added "newlines to spaces" option in selection-popup.
