@@ -27,8 +27,10 @@ TOOD: 2640684^  59576   78504 2778764  2a668c rxvt
 TOOD: 2641100   59552   78504 2779156  2a6814 rxvt
 TOOD: 2641639   59576   78504 2779719  2a6a47 rxvt
 TOOD: 3141592   59548   78504 2779821  3243f6 rxvt
-TODO: "require" perl5.10+ and enable unicode in selection code
 TODO: perl selection object creation/destruction
+        - match character-wise rather than byte-wise in selection extension.
+          perl 5.8.9 or higher is suggested for speed reasons. Fixes debian
+          bug #616463.
         - fix a possible crash if the INCR transfer process for a
           selection property timeouts and at least one chunk is
           received. (Emanuele Giaquinta)

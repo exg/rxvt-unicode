@@ -19,7 +19,6 @@ sub on_init {
 
    for (my $idx = 0; defined (my $res = $self->x_resource ("selection.pattern-$idx")); $idx++) {
       $res = $self->locale_decode ($res);
-      utf8::encode $res;
       push @{ $self->{patterns} }, qr/$res/;
    }
 
@@ -93,17 +92,6 @@ sub on_sel_extend {
    my @matches;
 
    if ($markofs < $line->l) {
-      # convert markofs from character to UTF-8 offset space
-      {
-         my $prefix = substr $text, 0, $markofs;
-         utf8::encode $prefix;
-         $markofs = length $prefix;
-      }
-
-      # not doing matches in unicode mode helps speed
-      # enourmously here. working in utf-8 should be
-      # equivalent due to the magic of utf-8 encoding.
-      utf8::encode $text;
       study $text; # _really_ helps, too :)
 
       for my $regex (@mark_patterns, @{ $self->{patterns} }) {
@@ -132,18 +120,6 @@ sub on_sel_extend {
       my ($ofs, $len) = @$_;
 
       next if $len <= $curlen;
-
-      # convert back from UTF-8 offset space to character space
-      {
-         my $length = substr "$text ", $ofs, $len;
-         utf8::decode $length;
-         $len = length $length;
-      }
-      {
-         my $prefix = substr $text, 0, $ofs;
-         utf8::decode $prefix;
-         $ofs = length $prefix;
-      }
 
       $self->selection_beg ($line->coord_of ($ofs));
       $self->selection_end ($line->coord_of ($ofs + $len));
