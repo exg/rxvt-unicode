@@ -20,17 +20,10 @@ TODO: decrqm http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
 TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
-TOOD: 2639291   59576   78504 2777371  2a611b /opt/rxvt/bin/rxvt
-TOOD: 2640667^  59576   78504 2778747  2a667b /opt/rxvt/bin/rxvt
-TOOD: 2640913   59576   78504 2778993  2a6771 /opt/rxvt/bin/rxvt
-TOOD: 2640684^  59576   78504 2778764  2a668c rxvt
-TOOD: 2641100   59552   78504 2779156  2a6814 rxvt
-TOOD: 2641639   59576   78504 2779719  2a6a47 rxvt
-TOOD: 3141592   59548   78504 2779821  3243f6 rxvt
 TODO: perl selection object creation/destruction
-        - match character-wise rather than byte-wise in selection extension.
-          perl 5.8.9 or higher is suggested for speed reasons. Fixes debian
-          bug #616463.
+        - match character-wise rather than byte-wise in selection
+          extension again. perl 5.8.9+ is required to avoid extreme
+          slowdowns. Fixes debian bug #616463.
         - fix a possible crash if the INCR transfer process for a
           selection property timeouts and at least one chunk is
           received. (Emanuele Giaquinta)
