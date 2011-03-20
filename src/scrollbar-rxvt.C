@@ -164,9 +164,8 @@ scrollBar_t::show_rxvt (int update)
       botShadowGC = XCreateGC (term->dpy, term->vt, GCForeground, &gcvalue);
       gcvalue.foreground = term->pix_colors[ (term->depth <= 2 ? Color_fg : Color_scroll)];
       scrollbarGC = XCreateGC (term->dpy, term->vt, GCForeground, &gcvalue);
-      if (!term->option (Opt_scrollBar_floating))
+      if (shadow)
         {
-          shadow = SHADOW_WIDTH;
           XSetWindowBackground (term->dpy, win, term->pix_colors_focused[Color_trough]);
           XClearWindow (term->dpy, win);
         }

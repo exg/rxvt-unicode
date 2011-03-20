@@ -194,6 +194,11 @@ scrollBar_t::setup (rxvt_term *term)
     if (thickness && (i = atoi (thickness)) >= SB_WIDTH_MINIMUM)
       width = min (i, SB_WIDTH_MAXIMUM);
 
+# ifdef RXVT_SCROLLBAR
+  if (! term->option (Opt_scrollBar_floating) && style == R_SB_RXVT)
+    shadow = SHADOW_WIDTH;
+# endif
+
   this->style = style;
   this->width = width;
 
