@@ -2751,7 +2751,6 @@ rxvt_term::selection_request (Time tm, int selnum) NOTHROW
       char *str = rxvt_wcstombs (selection.text, selection.len);
       paste (str, strlen (str));
       free (str);
-      return;
     }
   else if (!selection_req)
     {
