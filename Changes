@@ -29,6 +29,8 @@ TODO: perl selection object creation/destruction
           received. (Emanuele Giaquinta)
 	- work around as memory corruption bug in xorg's XrmSetDatabase (apparently
           broken since http://lists.freedesktop.org/archives/xorg-commit-diffs/2004-March/000239.html).
+        - fix memory corruption bug when custom command sequences bound to keys
+          were injected into an already-full pty input buffer.
         - gdk-pixbuf is autodetected by default and preferred over libafterimage.
         - do not prepend a newline to the selection text when the starting line
           of the selection is not highlighted (Emanuele Giaquinta).
