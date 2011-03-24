@@ -2745,14 +2745,7 @@ rxvt_term::paste (char *data, unsigned int len) NOTHROW
 void
 rxvt_term::selection_request (Time tm, int selnum) NOTHROW
 {
-  if (selection.text && selnum == Sel_Primary)
-    {
-      /* internal selection */
-      char *str = rxvt_wcstombs (selection.text, selection.len);
-      paste (str, strlen (str));
-      free (str);
-    }
-  else if (!selection_req)
+  if (!selection_req)
     {
       selection_req = new rxvt_selection (display, selnum, tm, vt, xa[XA_VT_SELECTION], this);
       selection_req->run ();

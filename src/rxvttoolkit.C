@@ -928,6 +928,17 @@ rxvt_selection::run ()
 {
   int selnum = selection_type;
 
+#if ENABLE_FRILLS
+  if (selnum == Sel_Primary && display->selection_owner)
+    {
+      /* internal selection */
+      char *str = rxvt_wcstombs (display->selection_owner->selection.text, display->selection_owner->selection.len);
+      finish (str, strlen (str));
+      free (str);
+      return;
+    }
+#endif
+
 #if X_HAVE_UTF8_STRING
   selection_type = Sel_UTF8String;
   if (request (display->xa[XA_UTF8_STRING], selnum))
