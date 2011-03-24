@@ -938,39 +938,6 @@ rxvt_term::key_release (XKeyEvent &ev)
 #endif
 }
 
-#if defined (KEYSYM_RESOURCE)
-unsigned int
-rxvt_term::cmd_write (const char *str, unsigned int count)
-{
-  unsigned int n, s;
-
-  n = cmdbuf_ptr - cmdbuf_base;
-  s = cmdbuf_base + CBUFSIZ - 1 - cmdbuf_endp;
-
-  if (n > 0 && s < count)
-    {
-      memmove (cmdbuf_base, cmdbuf_ptr,
-              (unsigned int) (cmdbuf_endp - cmdbuf_ptr));
-      cmdbuf_ptr = cmdbuf_base;
-      cmdbuf_endp -= n;
-      s += n;
-    }
-
-  if (count > s)
-    {
-      rxvt_warn ("data loss: cmd_write too large, continuing.\n");
-      count = s;
-    }
-
-  for (; count--;)
-    *cmdbuf_endp++ = *str++;
-
-  cmd_parse ();
-
-  return 0;
-}
-#endif
-
 void
 rxvt_term::flush ()
 {
@@ -1154,19 +1121,55 @@ static struct event_handler
 } event_handler;
 #endif
 
+/* make sure all the cmd data is at beginning of cmdbuf */
+void
+rxvt_term::cmdbuf_reify ()
+{
+  if (cmdbuf_ptr == cmdbuf_base)
+    return;
+
+  ssize_t used = cmdbuf_endp - cmdbuf_ptr;
+
+  memmove (cmdbuf_base, cmdbuf_ptr, used);
+  cmdbuf_ptr  = cmdbuf_base;
+  cmdbuf_endp = cmdbuf_ptr + used;
+
+}
+
+#if defined (KEYSYM_RESOURCE)
+void
+rxvt_term::cmdbuf_append (const char *str, size_t count)
+{
+  cmdbuf_reify ();
+
+  size_t avail = cmdbuf_base + CBUFSIZ - cmdbuf_endp;
+
+  if (count > avail)
+    return;
+
+  memcpy (cmdbuf_endp, str, count);
+  cmdbuf_endp += count;
+
+  cmd_parse ();
+}
+#endif
+
 bool
 rxvt_term::pty_fill ()
 {
-  ssize_t n = cmdbuf_endp - cmdbuf_ptr;
+  cmdbuf_reify ();
 
-  if (CBUFSIZ == n)
-    n = 0; // normally this indicates a "too long" command sequence - just drop the data we have
+  size_t avail = cmdbuf_base + CBUFSIZ - cmdbuf_endp;
 
-  memmove (cmdbuf_base, cmdbuf_ptr, n);
-  cmdbuf_ptr = cmdbuf_base;
-  cmdbuf_endp = cmdbuf_ptr + n;
+  if (!avail)
+    {
+      // normally this indicates a "too long" command sequence - just drop the data we have
+      cmdbuf_ptr  = cmdbuf_base;
+      cmdbuf_endp = cmdbuf_ptr;
+      avail       = CBUFSIZ;
+    }
 
-  ssize_t r = read (pty->pty, cmdbuf_endp, CBUFSIZ - n);
+  ssize_t r = read (pty->pty, cmdbuf_endp, avail);
 
   if (r > 0)
     {

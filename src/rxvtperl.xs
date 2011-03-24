@@ -873,6 +873,21 @@ termlist ()
             PUSHs (sv_2mortal (newSVterm (*t)));
 }
 
+IV
+_new_selection_request (rxvt_term *term, int selnum, Time tm, Window win, Atom prop, SV *cb)
+	CODE:
+        rxvt_selection *req = new rxvt_selection (term->display, selnum, tm, win, prop, term);
+        req->cb_sv = newSVsv (cb);
+        RETVAL = (IV)req;
+	OUTPUT:
+        RETVAL
+
+void
+_delete_selection_request (IV req_)
+	CODE:
+        rxvt_selection *req = (rxvt_selection *)req_;
+        delete req;
+
 MODULE = urxvt             PACKAGE = urxvt::term
 
 SV *

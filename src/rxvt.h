@@ -1291,6 +1291,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void refresh_check ();
   void flush ();
   void flush_cb (ev::timer &w, int revents); ev::timer flush_ev;
+  void cmdbuf_reify ();
+  void cmdbuf_append (const char *str, size_t count);
   bool pty_fill ();
   void pty_cb (ev::io &w, int revents); ev::io pty_ev;
 
@@ -1359,7 +1361,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   // command.C
   void key_press (XKeyEvent &ev);
   void key_release (XKeyEvent &ev);
-  unsigned int cmd_write (const char *str, unsigned int count);
 
   wchar_t next_char () NOTHROW;
   wchar_t cmd_getc () THROW ((class out_of_input));
