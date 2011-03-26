@@ -202,7 +202,7 @@ AC_CACHE_CHECK(where utmp is located, pt_cv_path_utmp,
 #include <sys/types.h>
 #include <utmp.h>
 #include <errno.h>
-main()
+int main()
 {
     char **u, *utmplist[] = {
     "/var/run/utmp", "/var/adm/utmp", "/etc/utmp", "/usr/etc/utmp", "/usr/adm/utmp", NULL };
@@ -240,7 +240,7 @@ AC_CACHE_CHECK(where wtmp is located, pt_cv_path_wtmp,
 #include <utmp.h>
 #endif
 #include <errno.h>
-main()
+int main()
 {
     char **w, *wtmplist[] = {
     "/var/log/wtmp", "/var/adm/wtmp", "/etc/wtmp", "/usr/etc/wtmp", "/usr/adm/wtmp", NULL };
@@ -276,7 +276,7 @@ AC_CACHE_CHECK(where wtmpx is located, pt_cv_path_wtmpx,
 #include <utmpx.h>
 #endif
 #include <errno.h>
-main()
+int main()
 {
     char **w, *wtmplist[] = {
     "/var/log/wtmpx", "/var/adm/wtmpx", NULL };
@@ -318,7 +318,7 @@ AC_CACHE_CHECK(where lastlog is located, pt_cv_path_lastlog,
 #include <lastlog.h>
 #endif
 #include <errno.h>
-main()
+int main()
 {
     char **w, *lastloglist[] = { "/var/log/lastlog", NULL };
     FILE *a, *f=fopen("conftestval", "w");
@@ -353,7 +353,7 @@ AC_CACHE_CHECK(where lastlogx is located, pt_cv_path_lastlogx,
 #include <utmpx.h>
 #endif
 #include <errno.h>
-main()
+int main()
 {
     char **w, *wtmplist[] = { "/var/log/lastlogx", "/var/adm/lastlogx", NULL };
     FILE *a, *f=fopen("conftestval", "w");
@@ -429,7 +429,7 @@ AC_CACHE_CHECK([for tty group], pt_cv_tty_group,
 #include <unistd.h>
 #include <grp.h>
 
-main()
+int main()
 {
   struct stat st;
   struct group *gr;
