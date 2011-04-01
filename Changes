@@ -21,6 +21,8 @@ TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
 TODO: perl selection object creation/destruction
+	- fix crash when the window is resized and the overlay is active
+	  (Emanuele Giaquinta, reported by Ryan Kavanagh).
         - match character-wise rather than byte-wise in selection
           extension again. perl 5.8.9+ is required to avoid extreme
           slowdowns. Fixes debian bugs #523072, #616463.

@@ -161,6 +161,10 @@ rxvt_term::scr_kill_char (line_t &l, int col) const NOTHROW
 void
 rxvt_term::scr_reset ()
 {
+#if ENABLE_OVERLAY
+  scr_overlay_off ();
+#endif
+
   view_start = 0;
   num_scr = 0;
 
