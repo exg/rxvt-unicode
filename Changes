@@ -29,7 +29,7 @@ TODO: perl selection object creation/destruction
         - fix a possible crash if the INCR transfer process for a
           selection property timeouts and at least one chunk is
           received. (Emanuele Giaquinta)
-	- work around as memory corruption bug in xorg's XrmSetDatabase (apparently
+	- work around a memory corruption bug in xorg's XrmSetDatabase (apparently
           broken since http://lists.freedesktop.org/archives/xorg-commit-diffs/2004-March/000239.html).
         - fix memory corruption bug when custom command sequences bound to keys
           were injected into an already-full pty input buffer.
