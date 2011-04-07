@@ -1204,7 +1204,7 @@ rxvt_term::pty_fd ()
 Window
 rxvt_term::parent ()
 	CODE:
-        RETVAL = THIS->parent [0];
+        RETVAL = THIS->parent;
         OUTPUT:
         RETVAL
 

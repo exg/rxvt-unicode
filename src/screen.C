@@ -1926,7 +1926,7 @@ rxvt_term::scr_bell () NOTHROW
 #  ifdef MAPALERT_OPTION
   if (option (Opt_mapAlert))
 #  endif
-    XMapWindow (dpy, parent[0]);
+    XMapWindow (dpy, parent);
 # endif
 
 # if ENABLE_FRILLS
@@ -2522,7 +2522,7 @@ rxvt_term::scr_recolour (bool refresh) NOTHROW
 # ifdef ENABLE_TRANSPARENCY
       if (bg_flags & BG_IS_TRANSPARENT)
         {
-          XSetWindowBackgroundPixmap (dpy, parent[0], bg_pixmap);
+          XSetWindowBackgroundPixmap (dpy, parent, bg_pixmap);
           XSetWindowBackgroundPixmap (dpy, vt, ParentRelative);
 
           transparent = true;
@@ -2530,18 +2530,18 @@ rxvt_term::scr_recolour (bool refresh) NOTHROW
       else
 # endif
         {
-          XSetWindowBackground (dpy, parent[0], pix_colors[Color_border]);
+          XSetWindowBackground (dpy, parent, pix_colors[Color_border]);
           XSetWindowBackgroundPixmap (dpy, vt, bg_pixmap);
         }
     }
   else
 #endif
     {
-      XSetWindowBackground (dpy, parent[0], pix_colors[Color_border]);
+      XSetWindowBackground (dpy, parent, pix_colors[Color_border]);
       XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
     }
 
-  XClearWindow (dpy, parent[0]);
+  XClearWindow (dpy, parent);
 
   if (scrollBar.win)
     {

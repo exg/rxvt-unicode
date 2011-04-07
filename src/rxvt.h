@@ -899,7 +899,7 @@ struct TermWin_t
   int            term_start;    /* term lines start here                    */
   int            view_start;    /* scrollback view starts here              */
   int            top_row;       /* topmost row index of scrollback          */
-  Window         parent[6];     /* parent identifiers - we're parent[0]     */
+  Window         parent;        /* parent identifier                        */
   Window         vt;            /* vt100 window                             */
   GC             gc;            /* GC for drawing                           */
   Pixmap         pixmap;

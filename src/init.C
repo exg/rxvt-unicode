@@ -876,13 +876,13 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
     {
       long info[2] = { 0, XEMBED_MAPPED };
 
-      XChangeProperty (dpy, parent[0], xa[XA_XEMBED_INFO], xa[XA_XEMBED_INFO],
+      XChangeProperty (dpy, parent, xa[XA_XEMBED_INFO], xa[XA_XEMBED_INFO],
                        32, PropModeReplace, (unsigned char *)&info, 2);
     }
 #endif
 
   XMapWindow (dpy, vt);
-  XMapWindow (dpy, parent[0]);
+  XMapWindow (dpy, parent);
 
   refresh_check ();
 }
@@ -918,7 +918,7 @@ rxvt_term::init_env ()
 
   sprintf (env_display, "DISPLAY=%s", val);
 
-  sprintf (env_windowid, "WINDOWID=%lu", (unsigned long)parent[0]);
+  sprintf (env_windowid, "WINDOWID=%lu", (unsigned long)parent);
 
   /* add entries to the environment:
    * @ DISPLAY:   in case we started with -display
@@ -1325,7 +1325,7 @@ rxvt_term::set_icon (const char *file)
       for (unsigned int i = 0; i < w * h; ++i)
         buffer [i + 2] = asbuf [i];
 
-      XChangeProperty (dpy, parent[0], xa[XA_NET_WM_ICON], XA_CARDINAL, 32,
+      XChangeProperty (dpy, parent, xa[XA_NET_WM_ICON], XA_CARDINAL, 32,
                        PropModeReplace, (const unsigned char *) buffer, 2 + w * h);
       free (buffer);
     }
@@ -1382,7 +1382,7 @@ rxvt_term::set_icon (const char *file)
           row += rowstride;
         }
 
-      XChangeProperty (dpy, parent[0], xa[XA_NET_WM_ICON], XA_CARDINAL, 32,
+      XChangeProperty (dpy, parent, xa[XA_NET_WM_ICON], XA_CARDINAL, 32,
                        PropModeReplace, (const unsigned char *) buffer, 2 + w * h);
       free (buffer);
     }
@@ -1463,7 +1463,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
                        CWColormap | CWBackPixel | CWBorderPixel | CWOverrideRedirect,
                        &attributes);
 
-  this->parent[0] = top;
+  this->parent = top;
 
   old_width = szHint.width;
   old_height = szHint.height;

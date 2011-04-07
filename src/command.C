@@ -1447,7 +1447,7 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case ConfigureNotify:
-        if (ev.xconfigure.window == parent[0])
+        if (ev.xconfigure.window == parent)
           {
             while (XCheckTypedWindowEvent (dpy, ev.xconfigure.window, ConfigureNotify, &ev))
               ;
@@ -1723,10 +1723,10 @@ rxvt_term::set_urgency (bool enable)
   if (enable == urgency_hint)
     return;
 
-  if (XWMHints *h = XGetWMHints (dpy, parent[0]))
+  if (XWMHints *h = XGetWMHints (dpy, parent))
     {
       h->flags = h->flags & ~XUrgencyHint | (enable ? XUrgencyHint : 0);
-      XSetWMHints (dpy, parent[0], h);
+      XSetWMHints (dpy, parent, h);
       urgency_hint = enable;
     }
 }
@@ -3124,22 +3124,22 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
        * commands
        */
       case 1:			/* deiconify window */
-        XMapWindow (dpy, parent[0]);
+        XMapWindow (dpy, parent);
         break;
       case 2:			/* iconify window */
-        XIconifyWindow (dpy, parent[0], display->screen);
+        XIconifyWindow (dpy, parent, display->screen);
         break;
       case 3:			/* set position (pixels) */
-        XMoveWindow (dpy, parent[0], args[1], args[2]);
+        XMoveWindow (dpy, parent, args[1], args[2]);
         break;
       case 4:			/* set size (pixels) */
         set_widthheight ((unsigned int)args[2], (unsigned int)args[1]);
         break;
       case 5:			/* raise window */
-        XRaiseWindow (dpy, parent[0]);
+        XRaiseWindow (dpy, parent);
         break;
       case 6:			/* lower window */
-        XLowerWindow (dpy, parent[0]);
+        XLowerWindow (dpy, parent);
         break;
       case 7:			/* refresh window */
         scr_touch (true);
@@ -3160,18 +3160,18 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
        * reports - some output format copied from XTerm
        */
       case 11:			/* report window state */
-        XGetWindowAttributes (dpy, parent[0], &wattr);
+        XGetWindowAttributes (dpy, parent, &wattr);
         tt_printf ("\033[%dt", wattr.map_state == IsViewable ? 1 : 2);
         break;
       case 13:			/* report window position */
-        XGetWindowAttributes (dpy, parent[0], &wattr);
-        XTranslateCoordinates (dpy, parent[0], wattr.root,
+        XGetWindowAttributes (dpy, parent, &wattr);
+        XTranslateCoordinates (dpy, parent, wattr.root,
                                -wattr.border_width, -wattr.border_width,
                                &x, &y, &wdummy);
         tt_printf ("\033[3;%d;%dt", x, y);
         break;
       case 14:			/* report window size (pixels) */
-        XGetWindowAttributes (dpy, parent[0], &wattr);
+        XGetWindowAttributes (dpy, parent, &wattr);
         tt_printf ("\033[4;%d;%dt", wattr.height, wattr.width);
         break;
       case 18:			/* report text area size (chars) */
@@ -3183,7 +3183,7 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
       case 20:			/* report icon label */
         {
           char *s;
-          XGetIconName (dpy, parent[0], &s);
+          XGetIconName (dpy, parent, &s);
           tt_printf ("\033]L%-.250s\234", option (Opt_insecure) && s ? s : "");	/* 8bit ST */
           XFree (s);
         }
@@ -3191,7 +3191,7 @@ rxvt_term::process_window_ops (const int *args, unsigned int nargs)
       case 21:			/* report window title */
         {
           char *s;
-          XFetchName (dpy, parent[0], &s);
+          XFetchName (dpy, parent, &s);
           tt_printf ("\033]l%-.250s\234", option (Opt_insecure) && s ? s : "");	/* 8bit ST */
           XFree (s);
         }
@@ -3355,7 +3355,7 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
             const char *str = "";
 
             if (prop
-                && XGetWindowProperty (dpy, parent[0],
+                && XGetWindowProperty (dpy, parent,
                                        prop, 0, 1<<16, 0, AnyPropertyType,
                                        &actual_type, &actual_format,
                                        &nitems, &bytes_after, &value) == Success
@@ -3377,7 +3377,7 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
                 set_utf8_property (display->atom (str), eq + 1);
               }
             else
-              XDeleteProperty (dpy, parent[0],
+              XDeleteProperty (dpy, parent,
                                display->atom (str));
           }
         break;

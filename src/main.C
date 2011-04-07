@@ -243,8 +243,8 @@ rxvt_term::~rxvt_term ()
 
       delete drawable;
       // destroy all windows
-      if (parent[0])
-        XDestroyWindow (dpy, parent[0]);
+      if (parent)
+        XDestroyWindow (dpy, parent);
 
       for (int i = 0; i < TOTAL_COLORS; i++)
         if (ISSET_PIXCOLOR (i))
@@ -810,7 +810,7 @@ rxvt_term::set_fonts ()
 #endif
     }
 
-  if (parent[0])
+  if (parent)
     {
       resize_all_windows (0, 0, 0);
       scr_remap_chars ();
@@ -823,7 +823,7 @@ rxvt_term::set_fonts ()
 void
 rxvt_term::set_string_property (Atom prop, const char *str, int len)
 {
-  XChangeProperty (dpy, parent[0],
+  XChangeProperty (dpy, parent,
                    prop, XA_STRING, 8, PropModeReplace,
                    (const unsigned char *)str, len >= 0 ? len : strlen (str));
 }
@@ -835,7 +835,7 @@ rxvt_term::set_mbstring_property (Atom prop, const char *str, int len)
 
   if (XmbTextListToTextProperty (dpy, (char **)&str, 1, XStdICCTextStyle, &ct) >= 0)
     {
-      XSetTextProperty (dpy, parent[0], &ct, prop);
+      XSetTextProperty (dpy, parent, &ct, prop);
       XFree (ct.value);
     }
 }
@@ -846,7 +846,7 @@ rxvt_term::set_utf8_property (Atom prop, const char *str, int len)
   wchar_t *ws = rxvt_mbstowcs (str, len);
   char *s = rxvt_wcstoutf8 (ws);
 
-  XChangeProperty (dpy, parent[0],
+  XChangeProperty (dpy, parent,
                    prop, xa[XA_UTF8_STRING], 8, PropModeReplace,
                    (const unsigned char *)s, strlen (s));
 
@@ -1010,7 +1010,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
   if (set_hint)
     {
       szHint.flags &= ~(PBaseSize | PResizeInc);
-      XSetWMNormalHints (dpy, parent[0], &szHint);
+      XSetWMNormalHints (dpy, parent, &szHint);
       szHint.flags |= PBaseSize | PResizeInc;
     }
 
@@ -1026,9 +1026,9 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
       unsigned int unused_w1, unused_h1, unused_b1, unused_d1;
       Window unused_cr;
 
-      XTranslateCoordinates (dpy, parent[0], display->root,
+      XTranslateCoordinates (dpy, parent, display->root,
                              0, 0, &x, &y, &unused_cr);
-      XGetGeometry (dpy, parent[0], &unused_cr, &x1, &y1,
+      XGetGeometry (dpy, parent, &unused_cr, &x1, &y1,
                     &unused_w1, &unused_h1, &unused_b1, &unused_d1);
       /*
        * if display->root isn't the parent window, a WM will probably have offset
@@ -1055,15 +1055,15 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
       else if (y == y1)       /* exact center */
         dy /= 2;
 
-      XMoveResizeWindow (dpy, parent[0], x + dx, y + dy,
+      XMoveResizeWindow (dpy, parent, x + dx, y + dy,
                          szHint.width, szHint.height);
 #else
-      XResizeWindow (dpy, parent[0], szHint.width, szHint.height);
+      XResizeWindow (dpy, parent, szHint.width, szHint.height);
 #endif
     }
 
   if (set_hint)
-    XSetWMNormalHints (dpy, parent[0], &szHint);
+    XSetWMNormalHints (dpy, parent, &szHint);
 
   fix_screen = ncol != prev_ncol || nrow != prev_nrow;
 
@@ -1485,7 +1485,7 @@ foundpet:
   Input_Context = XCreateIC (xim,
                              XNInputStyle, input_style,
                              XNClientWindow, vt,
-                             XNFocusWindow, parent[0],
+                             XNFocusWindow, parent,
                              preedit_attr ? XNPreeditAttributes : NULL,
                              preedit_attr,
                              status_attr ? XNStatusAttributes : NULL,
@@ -1624,7 +1624,7 @@ void
 rxvt_term::get_window_origin (int &x, int &y)
 {
   Window cr;
-  XTranslateCoordinates (dpy, parent[0], display->root, 0, 0, &x, &y, &cr);
+  XTranslateCoordinates (dpy, parent, display->root, 0, 0, &x, &y, &cr);
 }
 
 Pixmap

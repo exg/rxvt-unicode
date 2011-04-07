@@ -74,7 +74,7 @@ scrollBar_t::resize ()
     {
       /* create the scrollbar window */
       win = XCreateSimpleWindow (term->dpy,
-                                 term->parent[0],
+                                 term->parent,
                                  window_sb_x, 0,
                                  total_width (),
                                  term->szHint.height,
