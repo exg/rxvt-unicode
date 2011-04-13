@@ -407,7 +407,7 @@ rxvt_usage (int type)
               if (optList[i].arg)
                 len = strlen (optList[i].arg) + 1;
               assert (optList[i].opt != NULL);
-              len += 4 + strlen (optList[i].opt) + (optList_isBool (i) ? 2: 0);
+              len += 4 + strlen (optList[i].opt) + (optList_isBool (i) ? 2 : 0);
               col += len;
               if (col > 79)
                 {
