@@ -705,10 +705,18 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
       c.color.blue  = color.b;
       c.color.alpha = alpha;
 
-      c.pixel = insert_component (color.r, format->direct.redMask  , format->direct.red  )
-              | insert_component (color.g, format->direct.greenMask, format->direct.green)
-              | insert_component (color.b, format->direct.blueMask , format->direct.blue )
-              | insert_component (alpha  , format->direct.alphaMask, format->direct.alpha);
+      // ARGB visuals use premultiplied alpha
+      if (format->direct.alphaMask)
+        {
+          c.color.red   = c.color.red   * alpha / 0xffff;
+          c.color.green = c.color.green * alpha / 0xffff;
+          c.color.blue  = c.color.blue  * alpha / 0xffff;
+        }
+
+      c.pixel = insert_component (c.color.red  , format->direct.redMask  , format->direct.red  )
+              | insert_component (c.color.green, format->direct.greenMask, format->direct.green)
+              | insert_component (c.color.blue , format->direct.blueMask , format->direct.blue )
+              | insert_component (alpha        , format->direct.alphaMask, format->direct.alpha);
 
       return true;
     }
