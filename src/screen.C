@@ -3407,6 +3407,7 @@ rxvt_term::selection_rotate (int x, int y) NOTHROW
 void
 rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
 {
+  Atom property = rq.property == None ? rq.target : rq.property;
   XSelectionEvent ev;
 
   ev.type = SelectionNotify;
@@ -3431,10 +3432,10 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
       *target++ = xa[XA_UTF8_STRING];
 #endif
 
-      XChangeProperty (dpy, rq.requestor, rq.property, XA_ATOM,
+      XChangeProperty (dpy, rq.requestor, property, XA_ATOM,
                        32, PropModeReplace,
                        (unsigned char *)target_list, target - target_list);
-      ev.property = rq.property;
+      ev.property = property;
     }
 #if TODO // TODO
   else if (rq.target == xa[XA_MULTIPLE])
@@ -3444,15 +3445,15 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
 #endif
   else if (rq.target == xa[XA_TIMESTAMP] && rq.selection == XA_PRIMARY && selection.text)
     {
-      XChangeProperty (dpy, rq.requestor, rq.property, rq.target,
+      XChangeProperty (dpy, rq.requestor, property, rq.target,
                        32, PropModeReplace, (unsigned char *)&selection_time, 1);
-      ev.property = rq.property;
+      ev.property = property;
     }
   else if (rq.target == xa[XA_TIMESTAMP] && rq.selection == xa[XA_CLIPBOARD] && selection.clip_text)
     {
-      XChangeProperty (dpy, rq.requestor, rq.property, rq.target,
+      XChangeProperty (dpy, rq.requestor, property, rq.target,
                        32, PropModeReplace, (unsigned char *)&clipboard_time, 1);
-      ev.property = rq.property;
+      ev.property = property;
     }
   else if (rq.target == XA_STRING
            || rq.target == xa[XA_TEXT]
@@ -3533,10 +3534,10 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
           ct.encoding = target;
         }
 
-      XChangeProperty (dpy, rq.requestor, rq.property,
+      XChangeProperty (dpy, rq.requestor, property,
                        ct.encoding, 8, PropModeReplace,
                        ct.value, (int)ct.nitems);
-      ev.property = rq.property;
+      ev.property = property;
 
       if (freect)
         XFree (ct.value);
