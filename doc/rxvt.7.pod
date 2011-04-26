@@ -2144,14 +2144,16 @@ button was pressed and are added together (X11 mouse report only):
 
 =over 4
 
-=item State = B<< C<< (<b> - SPACE) & 60 >> >>
+=item State = B<< C<< (<b> - SPACE) & ~3 >> >>
 
 =begin table
 
 	4	Shift
 	8	Meta
 	16	Control
-	32	Double Click I<(rxvt extension)>
+        32	Motion Notify
+	32	Double Click I<(rxvt extension)>, disabled by default
+	64	Button1 is actually Button4, Button2 is actually Button5 etc.
 
 =end table
 
