@@ -1394,7 +1394,7 @@ rxvt_term::set_icon (const char *file)
 }
 
 /*----------------------------------------------------------------------*/
-/* rxvt_Create_Windows () - Open and map the window */
+/* Open and map the window */
 void
 rxvt_term::create_windows (int argc, const char *const *argv)
 {
@@ -1450,7 +1450,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   window_calc (0, 0);
 
-  /* sub-window placement & size in rxvt_resize_subwindows () */
+  /* sub-window placement & size in rxvt_term::resize_all_windows () */
   attributes.background_pixel = pix_colors_focused [Color_border];
   attributes.border_pixel     = pix_colors_focused [Color_border];
   attributes.colormap         = cmap;

@@ -315,28 +315,28 @@ enum {
 #define FONT_DN                 "#-"
 #define FONT_UP                 "#+"
 
-/* flags for rxvt_scr_gotorc () */
+/* flags for rxvt_term::scr_gotorc () */
 enum {
   C_RELATIVE = 1,       /* col movement is relative */
   R_RELATIVE = 2,       /* row movement is relative */
   RELATIVE   = C_RELATIVE | R_RELATIVE,
 };
 
-/* modes for rxvt_scr_insdel_chars (), rxvt_scr_insdel_lines () */
+/* modes for rxvt_term::scr_insdel_chars (), rxvt_term::scr_insdel_lines () */
 enum {
   INSERT = -1,				/* don't change these values */
   DELETE = +1,
   ERASE  = +2,
 };
 
-/* modes for rxvt_scr_page () - scroll page. used by scrollbar window */
+/* modes for rxvt_term::scr_page () - scroll page. used by scrollbar window */
 enum page_dirn {
   UP,
   DN,
   NO_DIR,
 };
 
-/* arguments for rxvt_scr_change_screen () */
+/* arguments for rxvt_term::scr_change_screen () */
 enum {
   PRIMARY = 0,
   SECONDARY,

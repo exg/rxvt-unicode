@@ -2391,11 +2391,6 @@ rxvt_term::next_octet () NOTHROW
 
 static class out_of_input out_of_input;
 
-/* rxvt_cmd_getc () - Return next input character */
-/*
- * Return the next input character after first passing any keyboard input
- * to the command.
- */
 wchar_t
 rxvt_term::cmd_getc () THROW ((class out_of_input))
 {

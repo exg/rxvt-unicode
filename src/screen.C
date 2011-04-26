@@ -2738,12 +2738,9 @@ rxvt_term::paste (char *data, unsigned int len) NOTHROW
 
 /* ------------------------------------------------------------------------- */
 /*
- * Request the current selection:
- * Order: > internal selection if available
- *        > PRIMARY, SECONDARY, CLIPBOARD if ownership is claimed (+)
- *        > CUT_BUFFER0
- * (+) if ownership is claimed but property is empty, rxvt_selection_paste ()
- *     will auto fallback to CUT_BUFFER0
+ * Request PRIMARY, SECONDARY or CLIPBOARD selection.
+ * if the requested selection has no owner or is empty CUT_BUFFER0 is used
+ * as fallback
  * EXT: button 2 release
  */
 void
