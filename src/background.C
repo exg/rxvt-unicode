@@ -1113,22 +1113,22 @@ rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
   else
     {
 #  if XRENDER
-      rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
+      rgba c (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC);
 
       if (bg_flags & BG_TINT_SET)
         tint.get (c);
 
       if (shade <= 100)
         {
-          c.r = (c.r * shade) / 100;
-          c.g = (c.g * shade) / 100;
-          c.b = (c.b * shade) / 100;
+          c.r = c.r * shade / 100;
+          c.g = c.g * shade / 100;
+          c.b = c.b * shade / 100;
         }
       else
         {
-          c.r = (c.r * (200 - shade)) / 100;
-          c.g = (c.g * (200 - shade)) / 100;
-          c.b = (c.b * (200 - shade)) / 100;
+          c.r = c.r * (200 - shade) / 100;
+          c.g = c.g * (200 - shade) / 100;
+          c.b = c.b * (200 - shade) / 100;
         }
 
       XRenderPictFormat *solid_format = XRenderFindStandardFormat (dpy, PictStandardARGB32);
@@ -1145,21 +1145,23 @@ rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 
       pa.component_alpha = True;
       Pixmap mask_pmap = XCreatePixmap (dpy, pixmap, 1, 1, 32);
-      Picture mask_pic = XRenderCreatePicture (dpy, mask_pmap, solid_format, CPRepeat|CPComponentAlpha, &pa);
+      Picture mask_pic = XRenderCreatePicture (dpy, mask_pmap, solid_format, CPRepeat | CPComponentAlpha, &pa);
       XFreePixmap (dpy, mask_pmap);
 
       if (mask_pic && overlay_pic && back_pic)
         {
           XRenderColor mask_c;
 
-          mask_c.red = mask_c.green = mask_c.blue = 0;
           mask_c.alpha = 0xffff;
+          mask_c.red   =
+          mask_c.green =
+          mask_c.blue  = 0;
           XRenderFillRectangle (dpy, PictOpSrc, overlay_pic, &mask_c, 0, 0, 1, 1);
 
           mask_c.alpha = 0;
-          mask_c.red = 0xffff - c.r;
+          mask_c.red   = 0xffff - c.r;
           mask_c.green = 0xffff - c.g;
-          mask_c.blue = 0xffff - c.b;
+          mask_c.blue  = 0xffff - c.b;
           XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
           XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, width, height);
 
