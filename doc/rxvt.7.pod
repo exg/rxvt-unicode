@@ -1963,7 +1963,7 @@ The sequences received for various modes are as follows:
 
    ESC [ M o o o    !1005, !1015 (three octets)
    ESC [ M c c c    1005, !1015 (three characters)
-   ESC [ Pm M       1015 (three or more numeric paramaters)
+   ESC [ Pm M       1015 (three or more numeric parameters)
 
 The three parameters are C<code>, C<x> and C<y>. Code is the numeric code
 as for the other modes (but encoded as a decimal number), C<x> and C<y>
@@ -2151,7 +2151,7 @@ button was pressed and are added together (X11 mouse report only):
 	4	Shift
 	8	Meta
 	16	Control
-        32	Motion Notify
+	32	Motion Notify
 	32	Double Click I<(rxvt extension)>, disabled by default
 	64	Button1 is actually Button4, Button2 is actually Button5 etc.
 
@@ -2320,7 +2320,7 @@ see next switch), and right now rxvt-unicode cannot display them
 Enable automatic composition of combining characters into
 composite characters. This is required for proper viewing of text
 where accents are encoded as separate unicode characters. This is
-done by using precomposited characters when available or creating
+done by using precomposed characters when available or creating
 new pseudo-characters when no precomposed form exists.
 
 Without --enable-unicode3, the number of additional precomposed
