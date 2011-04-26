@@ -1965,14 +1965,15 @@ The sequences received for various modes are as follows:
    ESC [ M c c c    1005, !1015 (three characters)
    ESC [ Pm M       1015 (three or more numeric parameters)
 
-The three parameters are C<code>, C<x> and C<y>. Code is the numeric code
-as for the other modes (but encoded as a decimal number), C<x> and C<y>
-are the coordinates (1|1 is the upper left corner, just as with cursor
-positioning).
+The first three parameters are C<code>, C<x> and C<y>. Code is the numeric
+code as for the other modes (but encoded as a decimal number, including
+the additional offset of 32, so you have to subtract 32 first), C<x> and
+C<y> are the coordinates (1|1 is the upper left corner, just as with
+cursor positioning).
 
 Example: Shift-Button-1 press at top row, column 80.
 
-   ESC [ 5 ; 80 ; 1 M
+   ESC [ 37 ; 80 ; 1 M
 
 One can use this feature by simply enabling it and then looking for
 parameters to the C<ESC [ M> reply - if there are any, this mode is
