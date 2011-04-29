@@ -571,10 +571,8 @@ rxvt_term::key_press (XKeyEvent &ev)
 #if TODO
                     /* rxvt extras */
                   case XK_KP_Add:	/* Shift+KP_Add = bigger font */
-                    change_font (FONT_UP);
                     return;
                   case XK_KP_Subtract:	/* Shift+KP_Subtract = smaller font */
-                    change_font (FONT_DN);
                     return;
 #endif
                 }

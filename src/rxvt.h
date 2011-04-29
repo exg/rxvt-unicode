@@ -310,11 +310,6 @@ enum {
 # define NSCREENS               1
 #endif
 
-/* special (internal) prefix for font commands */
-#define FONT_CMD                '#'
-#define FONT_DN                 "#-"
-#define FONT_UP                 "#+"
-
 /* flags for rxvt_term::scr_gotorc () */
 enum {
   C_RELATIVE = 1,       /* col movement is relative */

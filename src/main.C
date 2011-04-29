@@ -737,13 +737,7 @@ rxvt_term::tt_winch ()
 }
 
 /*----------------------------------------------------------------------*/
-/* set_fonts () - load and set the various fonts
- *
- * init = 1   - initialize
- *
- * fontname == FONT_UP  - switch to bigger font
- * fontname == FONT_DN  - switch to smaller font
- */
+/* load and set the various fonts */
 bool
 rxvt_term::set_fonts ()
 {
