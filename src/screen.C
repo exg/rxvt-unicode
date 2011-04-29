@@ -1949,7 +1949,6 @@ rxvt_term::scr_bell () NOTHROW
 }
 
 /* ------------------------------------------------------------------------- */
-/* ARGSUSED */
 void
 rxvt_term::scr_printscreen (int fullhist) NOTHROW
 {

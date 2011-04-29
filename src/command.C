@@ -2491,7 +2491,6 @@ rxvt_term::process_print_pipe ()
 #endif /* PRINTPIPE */
 /*}}} */
 
-/* *INDENT-OFF* */
 enum {
   C1_40 = 0x40,
           C1_41 , C1_BPH, C1_NBH, C1_44 , C1_NEL, C1_SSA, C1_ESA,
@@ -2499,7 +2498,6 @@ enum {
   C1_DCS, C1_PU1, C1_PU2, C1_STS, C1_CCH, C1_MW , C1_SPA, C1_EPA,
   C1_SOS, C1_59 , C1_SCI, C1_CSI, CS_ST , C1_OSC, C1_PM , C1_APC,
 };
-/* *INDENT-ON* */
 
 /*{{{ process non-printing single characters */
 void
@@ -2748,7 +2746,6 @@ rxvt_term::process_escape_seq ()
 /*}}} */
 
 /*{{{ process CONTROL SEQUENCE INTRODUCER (CSI) sequences `ESC[' */
-/* *INDENT-OFF* */
 enum {
   CSI_ICH = 0x40,
            CSI_CUU, CSI_CUD, CSI_CUF, CSI_CUB, CSI_CNL, CSI_CPL, CSI_CHA,
@@ -2778,7 +2775,6 @@ static const unsigned char csi_defaults[] =
     make_byte (0,0,0,0,0,0,0,0),	/* p, q, r, s, t, u, v, w, */
     make_byte (0,0,0,0,0,0,0,0),	/* x, y, z, {, |, }, ~,    */
   };
-/* *INDENT-ON* */
 
 void
 rxvt_term::process_csi_seq ()
@@ -3098,7 +3094,6 @@ rxvt_term::process_csi_seq ()
 /*}}} */
 
 #if !ENABLE_MINIMAL
-/* ARGSUSED */
 void
 rxvt_term::process_window_ops (const int *args, unsigned int nargs)
 {
