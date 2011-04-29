@@ -259,22 +259,19 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
 void
 rxvt_term::commit_iso14755 ()
 {
-  wchar_t ch[2];
-
-  ch[0] = iso14755buf & ISO_14755_MASK;
-  ch[1] = 0;
+  wchar_t ch = iso14755buf & ISO_14755_MASK;
 
   if (iso14755buf & ISO_14755_51)
     {
-      char mb[16];
+      char mb[MB_LEN_MAX];
       int len;
 
       // allow verbatim 0-bytes and control-bytes to be entered
-      if (ch[0] >= 0x20)
-        len = wcstombs (mb, ch, 16);
+      if (ch >= 0x20)
+        len = wctomb (mb, ch);
       else
         {
-          mb[0] = ch[0];
+          mb[0] = ch;
           len = 1;
         }
 
