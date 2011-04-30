@@ -2626,7 +2626,6 @@ rxvt_term::process_escape_seq ()
 
   switch (ch)
     {
-        /* case 1:        do_tek_mode (); break; */
       case '#':
         if (cmd_getc () == '8')
           scr_E ();
@@ -2697,10 +2696,10 @@ rxvt_term::process_escape_seq ()
         break;
 
         /* 8.3.142: SINGLE-SHIFT TWO */
-      /*case C1_SS2: scr_single_shift (2);   break; */
+      /* case C1_SS2: break; */
 
         /* 8.3.143: SINGLE-SHIFT THREE */
-      /*case C1_SS3: scr_single_shift (3);   break; */
+      /* case C1_SS3: break; */
 
         /* 8.3.27: DEVICE CONTROL STRING */
       case C1_DCS:		/* ESC P */

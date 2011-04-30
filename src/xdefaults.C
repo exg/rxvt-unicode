@@ -463,7 +463,6 @@ rxvt_usage (int type)
 
   rxvt_log ("\n\n");
   rxvt_exit_failure ();
-  /* NOTREACHED */
 }
 
 /*}}} */
@@ -524,7 +523,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
           if (optList_isString (entry))
             {
               /*
-               * special cases are handled in main.c:main () to allow
+               * special cases are handled in init_resources () to allow
                * X resources to set these values before we settle for
                * default values
                */

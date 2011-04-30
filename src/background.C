@@ -1186,7 +1186,7 @@ rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
   return ret;
 }
 
-/* make_transparency_pixmap()
+/*
  * Builds a pixmap of the same size as the terminal window that contains
  * the tiled portion of the root pixmap that is supposed to be covered by
  * our window.
