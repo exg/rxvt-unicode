@@ -21,6 +21,8 @@ TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
 TODO: perl selection object creation/destruction
+        - remove 'list' syntax for keysym resources, as it serves no useful purpose.
+          If you need it, poke us and provide a use case.
         - fix alpha channel support. Premultiply alpha in colours if the visual
           supports an alpha channel, as xrender expects premultiplied alpha
           (Emanuele Giaquinta).

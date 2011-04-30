@@ -57,7 +57,7 @@ typedef void (keyevent_handler) (rxvt_term *rt,
 struct keysym_t
 {
   enum keysym_type {
-    STRING, LIST, BUILTIN,
+    STRING, BUILTIN,
   };
 
   KeySym      keysym;
@@ -65,7 +65,6 @@ struct keysym_t
   /* the higher bits are preserved for Meta/NumLock keys */
   /* which are mapped to corresponding lower bits at register time */
   uint16_t    state;    /* indicates each modifiers' DOWN/UP status         */
-  uint16_t    range;    /* =1: single keysym; >1: a of range keysyms        */
   keysym_type type;
   const char  *str;      /* would normally be a keycode translation in UTF-8 */
 };

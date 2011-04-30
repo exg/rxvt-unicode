@@ -88,7 +88,7 @@ compare_priority (keysym_t *a, keysym_t *b)
 //else if (a->state != b->state) // this behavior is to be discussed
 //  return b->state - a->state;
   else
-    return b->range - a->range;
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -135,26 +135,10 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
     {
       key->keysym = keysym;
       key->state  = state;
-      key->range  = 1;
       key->str    = translation;
       key->type   = keysym_t::STRING;
 
-      if (strncmp (translation, "list", 4) == 0 && translation [4])
-        {
-          char *middle = strchr  (translation + 5, translation [4]);
-          char *suffix = strrchr (translation + 5, translation [4]);
-
-          if (suffix && middle && suffix > middle + 1)
-            {
-              key->type  = keysym_t::LIST;
-              key->range = suffix - middle - 1;
-
-              memmove (translation, translation + 4, strlen (translation + 4) + 1);
-            }
-          else
-            rxvt_warn ("cannot parse list-type keysym '%s', treating as normal keysym.\n", translation);
-        }
-      else if (strncmp (translation, "builtin:", 8) == 0)
+      if (strncmp (translation, "builtin:", 8) == 0)
         key->type = keysym_t::BUILTIN;
 
       register_keymap (key);
@@ -205,8 +189,6 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
 
       if (key.type != keysym_t::BUILTIN)
         {
-          int keysym_offset = keysym - key.keysym;
-
           wchar_t *wc = rxvt_utf8towcs (key.str);
           char *str = rxvt_wcstombs (wc);
           // TODO: do (some) translations, unescaping etc, here (allow \u escape etc.)
@@ -216,24 +198,6 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
             {
               case keysym_t::STRING:
                 output_string (term, str);
-                break;
-
-              case keysym_t::LIST:
-                {
-                  char buf[STRING_MAX];
-
-                  char *prefix, *middle, *suffix;
-
-                  prefix = str;
-                  middle = strchr  (prefix + 1, *prefix);
-                  suffix = strrchr (middle + 1, *prefix);
-
-                  memcpy (buf, prefix + 1, middle - prefix - 1);
-                  buf [middle - prefix - 1] = middle [keysym_offset + 1];
-                  strcpy (buf + (middle - prefix), suffix + 1);
-
-                  output_string (term, buf);
-                }
                 break;
             }
 
@@ -257,11 +221,10 @@ keyboard_manager::setup_hash ()
 
   // determine hash bucket size
   for (i = 0; i < keymap.size (); ++i)
-    for (int j = min (keymap [i]->range, KEYSYM_HASH_BUCKETS) - 1; j >= 0; --j)
-      {
-        hashkey = (keymap [i]->keysym + j) & KEYSYM_HASH_MASK;
-        ++hash_bucket_size [hashkey];
-      }
+    {
+      hashkey = keymap [i]->keysym & KEYSYM_HASH_MASK;
+      ++hash_bucket_size [hashkey];
+    }
 
   // now we know the size of each bucket
   // compute the index of each bucket
@@ -280,22 +243,21 @@ keyboard_manager::setup_hash ()
   // fill in sorted_keymap
   // it is sorted in each bucket
   for (i = 0; i < keymap.size (); ++i)
-    for (int j = min (keymap [i]->range, KEYSYM_HASH_BUCKETS) - 1; j >= 0; --j)
-      {
-        hashkey = (keymap [i]->keysym + j) & KEYSYM_HASH_MASK;
+    {
+      hashkey = keymap [i]->keysym & KEYSYM_HASH_MASK;
 
-        index = hash [hashkey] + hash_bucket_size [hashkey];
+      index = hash [hashkey] + hash_bucket_size [hashkey];
 
-        while (index > hash [hashkey]
-               && compare_priority (keymap [i], sorted_keymap [index - 1]) > 0)
-          {
-            sorted_keymap [index] = sorted_keymap [index - 1];
-            --index;
-          }
+      while (index > hash [hashkey]
+             && compare_priority (keymap [i], sorted_keymap [index - 1]) > 0)
+        {
+          sorted_keymap [index] = sorted_keymap [index - 1];
+          --index;
+        }
 
-        sorted_keymap [index] = keymap [i];
-        ++hash_bucket_size [hashkey];
-      }
+      sorted_keymap [index] = keymap [i];
+      ++hash_bucket_size [hashkey];
+    }
 
   keymap.swap (sorted_keymap);
 
@@ -306,8 +268,7 @@ keyboard_manager::setup_hash ()
       index = hash[i];
       for (int j = 0; j < hash_bucket_size [i]; ++j)
         {
-          if (keymap [index + j]->range == 1)
-            assert (i == (keymap [index + j]->keysym & KEYSYM_HASH_MASK));
+          assert (i == (keymap [index + j]->keysym & KEYSYM_HASH_MASK));
 
           if (j)
             assert (compare_priority (keymap [index + j - 1],
@@ -319,16 +280,13 @@ keyboard_manager::setup_hash ()
   for (i = 0; i < sorted_keymap.size (); ++i)
     {
       keysym_t *a = sorted_keymap[i];
-      for (int j = 0; j < a->range; ++j)
-        {
-          int index = find_keysym (a->keysym + j, a->state);
+      int index = find_keysym (a->keysym, a->state);
 
-          assert (index >= 0);
-          keysym_t *b = keymap [index];
-          assert (i == index	// the normally expected result
-                  || IN_RANGE_INC (a->keysym + j, b->keysym, b->keysym + b->range)
-                  && compare_priority (a, b) <= 0);	// is effectively the same or a closer match
-        }
+      assert (index >= 0);
+      keysym_t *b = keymap [index];
+      assert (i == index	// the normally expected result
+              || a->keysym == b->keysym
+              && compare_priority (a, b) <= 0);	// is effectively the same or a closer match
     }
 #endif
 }
@@ -346,7 +304,7 @@ keyboard_manager::find_keysym (KeySym keysym, unsigned int state)
     {
       keysym_t *key = keymap [index];
 
-      if (key->keysym <= keysym && keysym < key->keysym + key->range
+      if (key->keysym == keysym
           // match only the specified bits in state and ignore others
           && (key->state & state) == key->state)
         return index;
