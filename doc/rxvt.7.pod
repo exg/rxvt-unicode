@@ -632,26 +632,14 @@ use the `keysym' resource to alter the keystrings associated with keysyms.
 
 Here's an example for a URxvt session started using C<@@URXVT_NAME@@ -name URxvt>
 
-   URxvt.keysym.Home:          \033[1~
-   URxvt.keysym.End:           \033[4~
-   URxvt.keysym.C-apostrophe:  \033<C-'>
-   URxvt.keysym.C-slash:       \033<C-/>
-   URxvt.keysym.C-semicolon:   \033<C-;>
-   URxvt.keysym.C-grave:       \033<C-`>
-   URxvt.keysym.C-comma:       \033<C-,>
-   URxvt.keysym.C-period:      \033<C-.>
-   URxvt.keysym.C-0x60:        \033<C-`>
-   URxvt.keysym.C-Tab:         \033<C-Tab>
-   URxvt.keysym.C-Return:      \033<C-Return>
-   URxvt.keysym.S-Return:      \033<S-Return>
-   URxvt.keysym.S-space:       \033<S-Space>
-   URxvt.keysym.M-Up:          \033<M-Up>
-   URxvt.keysym.M-Down:        \033<M-Down>
-   URxvt.keysym.M-Left:        \033<M-Left>
-   URxvt.keysym.M-Right:       \033<M-Right>
-   URxvt.keysym.M-C-0:         list \033<M-C- 0123456789 >
-   URxvt.keysym.M-C-a:         list \033<M-C- abcdefghijklmnopqrstuvwxyz >
-   URxvt.keysym.F12:           command:\033]701;zh_CN.GBK\007
+   URxvt.keysym.Prior:         \033[5~
+   URxvt.keysym.Next:          \033[6~
+   URxvt.keysym.Home:          \033[7~
+   URxvt.keysym.End:           \033[8~
+   URxvt.keysym.Up:            \033[A
+   URxvt.keysym.Down:          \033[B
+   URxvt.keysym.Right:         \033[C
+   URxvt.keysym.Left:          \033[D
 
 See some more examples in the documentation for the B<keysym> resource.
 
