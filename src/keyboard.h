@@ -47,12 +47,6 @@
 #endif
 
 struct rxvt_term;
-struct keysym_t;
-
-typedef void (keyevent_handler) (rxvt_term *rt,
-                                 keysym_t *key,
-                                 KeySym keysym,
-                                 unsigned int state);
 
 struct keysym_t
 {
