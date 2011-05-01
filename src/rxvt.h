@@ -129,10 +129,6 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 # define EXIT_FAILURE           1       /* exit function failure */
 #endif
 
-#ifndef PATH_MAX
-# define PATH_MAX 16384
-#endif
-
 /****************************************************************************/
 
 // exception thrown on fatal (per-instance) errors

@@ -33,8 +33,6 @@
 #include "rxvtdaemon.h"
 #include "libptytty.h"
 
-#include "rxvt.h"
-
 #define STATUS_SUCCESS           0
 #define STATUS_FAILURE           1
 #define STATUS_CONNECTION_FAILED 2

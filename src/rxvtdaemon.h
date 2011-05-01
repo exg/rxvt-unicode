@@ -1,6 +1,12 @@
 #ifndef RXVT_DAEMON_H
 #define RXVT_DAEMON_H
 
+#include <limits.h>
+
+#ifndef PATH_MAX
+# define PATH_MAX 16384
+#endif
+
 #include "rxvtutil.h"
 
 struct rxvt_connection
