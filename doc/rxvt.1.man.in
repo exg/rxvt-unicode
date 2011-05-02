@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2010-12-13" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2011-05-01" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -619,10 +619,10 @@ starts. @@RXVT_NAME@@ will consult the following files/resources in order,
 with later settings overwriting earlier ones:
 .PP
 .Vb 6
-\&  1. system\-wide app\-defaults file, either locale\-dependent OR global
-\&  2. app\-defaults file in $XAPPLRESDIR
-\&  3. RESOURCE_MANAGER property on root\-window OR $HOME/.Xdefaults
-\&  4. SCREEN_RESOURCES for the current screen
+\&  1. app\-defaults file in $XAPPLRESDIR
+\&  2. $HOME/.Xdefaults
+\&  3. RESOURCE_MANAGER property on root\-window of screen 0
+\&  4. SCREEN_RESOURCES property on root\-window of the current screen
 \&  5. $XENVIRONMENT file OR $HOME/.Xdefaults\-<nodename>
 \&  6. resources specified via \-xrm on the commandline
 .Ve
@@ -931,6 +931,9 @@ every time you hit \f(CW\*(C`Print\*(C'\fR.
 .IX Item "scrollstyle: mode"
 Set scrollbar style to \fBrxvt\fR, \fBplain\fR, \fBnext\fR or \fBxterm\fR. \fBplain\fR is
 the author's favourite.
+.IP "\fBthickness:\fR \fInumber\fR" 4
+.IX Item "thickness: number"
+Set the scrollbar width in pixels.
 .IP "\fBscrollBar:\fR \fIboolean\fR" 4
 .IX Item "scrollBar: boolean"
 \&\fBTrue\fR: enable the scrollbar [default]; option \fB\-sb\fR. \fBFalse\fR:
@@ -1146,24 +1149,6 @@ performed in an exact manner; however, the closest match is assured.
 .Sp
 \&\fIstring\fR may contain escape values (\f(CW\*(C`\en\*(C'\fR: newline, \f(CW\*(C`\e000\*(C'\fR: octal
 number), see \s-1RESOURCES\s0 in \f(CW\*(C`man 7 X\*(C'\fR for further details.
-.Sp
-You can define a range of keysyms in one shot by providing a \fIstring\fR
-with pattern \fBlist/PREFIX/MIDDLE/SUFFIX\fR, where the delimiter `/'
-should be a character not used by the strings.
-.Sp
-Its usage can be demonstrated by an example:
-.Sp
-.Vb 1
-\&  URxvt.keysym.M\-C\-0x61:    list|\e033<M\-C\-|abc|>
-.Ve
-.Sp
-The above line is equivalent to the following three lines:
-.Sp
-.Vb 3
-\&  URxvt.keysym.Meta\-Control\-0x61:    \e033<M\-C\-a>
-\&  URxvt.keysym.Meta\-Control\-0x62:    \e033<M\-C\-b>
-\&  URxvt.keysym.Meta\-Control\-0x63:    \e033<M\-C\-c>
-.Ve
 .Sp
 If \fIstring\fR takes the form of \f(CW\*(C`command:STRING\*(C'\fR, the specified \fB\s-1STRING\s0\fR
 is interpreted and executed as @@RXVT_NAME@@'s control sequence. For
@@ -1581,7 +1566,7 @@ The shell to be used for command execution, defaults to \f(CW\*(C`/bin/sh\*(C'\f
 The unix domain socket path used by @@RXVT_NAME@@c(1) and
 @@RXVT_NAME@@d(1).
 .Sp
-Default \fI\f(CI$HOME\fI/.rxvt\-unicode\-\fI<nodename\fI\fR.
+Default \fI\f(CI$HOME\fI/.rxvt\-unicode\-\fI<nodename>\fI\fR.
 .IP "\fB\s-1HOME\s0\fR" 4
 .IX Item "HOME"
 Used to locate the default directory for the unix domain socket for
@@ -1589,7 +1574,7 @@ daemon communications and to locate various resource files (such as
 \&\f(CW\*(C`.Xdefaults\*(C'\fR)
 .IP "\fB\s-1XAPPLRESDIR\s0\fR" 4
 .IX Item "XAPPLRESDIR"
-Directory where various X resource files are being located.
+Directory where application-specific X resource files are located.
 .IP "\fB\s-1XENVIRONMENT\s0\fR" 4
 .IX Item "XENVIRONMENT"
 If set and accessible, gives the name of a X resource file to be loaded by

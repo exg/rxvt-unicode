@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2010-12-13" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2011-05-01" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -783,10 +783,10 @@ character and so on.
 .IX Subsection "Mouse cut/paste suddenly no longer works."
 .PP
 Make sure that mouse reporting is actually turned off since killing
-some editors prematurely may leave the mouse in mouse report mode. I've
-heard that tcsh may use mouse reporting unless it otherwise specified. A
+some editors prematurely may leave it active. I've
+heard that tcsh may use mouse reporting unless it is otherwise specified. A
 quick check is to see if cut/paste works when the Alt or Shift keys are
-depressed.
+pressed.
 .PP
 \fIWhat's with the strange Backspace/Delete key behaviour?\fR
 .IX Subsection "What's with the strange Backspace/Delete key behaviour?"
@@ -839,27 +839,15 @@ use the `keysym' resource to alter the keystrings associated with keysyms.
 .PP
 Here's an example for a URxvt session started using \f(CW\*(C`@@URXVT_NAME@@ \-name URxvt\*(C'\fR
 .PP
-.Vb 10
-\&   URxvt.keysym.Home:          \e033[1~
-\&   URxvt.keysym.End:           \e033[4~
-\&   URxvt.keysym.C\-apostrophe:  \e033<C\-\*(Aq>
-\&   URxvt.keysym.C\-slash:       \e033<C\-/>
-\&   URxvt.keysym.C\-semicolon:   \e033<C\-;>
-\&   URxvt.keysym.C\-grave:       \e033<C\-\`>
-\&   URxvt.keysym.C\-comma:       \e033<C\-,>
-\&   URxvt.keysym.C\-period:      \e033<C\-.>
-\&   URxvt.keysym.C\-0x60:        \e033<C\-\`>
-\&   URxvt.keysym.C\-Tab:         \e033<C\-Tab>
-\&   URxvt.keysym.C\-Return:      \e033<C\-Return>
-\&   URxvt.keysym.S\-Return:      \e033<S\-Return>
-\&   URxvt.keysym.S\-space:       \e033<S\-Space>
-\&   URxvt.keysym.M\-Up:          \e033<M\-Up>
-\&   URxvt.keysym.M\-Down:        \e033<M\-Down>
-\&   URxvt.keysym.M\-Left:        \e033<M\-Left>
-\&   URxvt.keysym.M\-Right:       \e033<M\-Right>
-\&   URxvt.keysym.M\-C\-0:         list \e033<M\-C\- 0123456789 >
-\&   URxvt.keysym.M\-C\-a:         list \e033<M\-C\- abcdefghijklmnopqrstuvwxyz >
-\&   URxvt.keysym.F12:           command:\e033]701;zh_CN.GBK\e007
+.Vb 8
+\&   URxvt.keysym.Prior:         \e033[5~
+\&   URxvt.keysym.Next:          \e033[6~
+\&   URxvt.keysym.Home:          \e033[7~
+\&   URxvt.keysym.End:           \e033[8~
+\&   URxvt.keysym.Up:            \e033[A
+\&   URxvt.keysym.Down:          \e033[B
+\&   URxvt.keysym.Right:         \e033[C
+\&   URxvt.keysym.Left:          \e033[D
 .Ve
 .PP
 See some more examples in the documentation for the \fBkeysym\fR resource.
@@ -2194,18 +2182,19 @@ The sequences received for various modes are as follows:
 .Vb 3
 \&   ESC [ M o o o    !1005, !1015 (three octets)
 \&   ESC [ M c c c    1005, !1015 (three characters)
-\&   ESC [ Pm M       1015 (three or more numeric paramaters)
+\&   ESC [ Pm M       1015 (three or more numeric parameters)
 .Ve
 .Sp
-The three parameters are \f(CW\*(C`code\*(C'\fR, \f(CW\*(C`x\*(C'\fR and \f(CW\*(C`y\*(C'\fR. Code is the numeric code
-as for the other modes (but encoded as a decimal number), \f(CW\*(C`x\*(C'\fR and \f(CW\*(C`y\*(C'\fR
-are the coordinates (1|1 is the upper left corner, just as with cursor
-positioning).
+The first three parameters are \f(CW\*(C`code\*(C'\fR, \f(CW\*(C`x\*(C'\fR and \f(CW\*(C`y\*(C'\fR. Code is the numeric
+code as for the other modes (but encoded as a decimal number, including
+the additional offset of 32, so you have to subtract 32 first), \f(CW\*(C`x\*(C'\fR and
+\&\f(CW\*(C`y\*(C'\fR are the coordinates (1|1 is the upper left corner, just as with
+cursor positioning).
 .Sp
 Example: Shift\-Button\-1 press at top row, column 80.
 .Sp
 .Vb 1
-\&   ESC [ 5 ; 80 ; 1 M
+\&   ESC [ 37 ; 80 ; 1 M
 .Ve
 .Sp
 One can use this feature by simply enabling it and then looking for
@@ -2351,15 +2340,17 @@ l l .
 .PP
 The upper bits of \fB\f(CB\*(C`<b>\*(C'\fB\fR indicate the modifiers when the
 button was pressed and are added together (X11 mouse report only):
-.ie n .IP "State = \fB\fB""(<b> \- SPACE) & 60""\fB\fR" 4
-.el .IP "State = \fB\f(CB(<b> \- SPACE) & 60\fB\fR" 4
-.IX Item "State = (<b> - SPACE) & 60"
+.ie n .IP "State = \fB\fB""(<b> \- SPACE) & ~3""\fB\fR" 4
+.el .IP "State = \fB\f(CB(<b> \- SPACE) & ~3\fB\fR" 4
+.IX Item "State = (<b> - SPACE) & ~3"
 .TS
 l l .
 4	Shift
 8	Meta
 16	Control
-32	Double Click (rxvt extension)
+32	Motion Notify
+32	Double Click (rxvt extension), disabled by default
+64	Button1 is actually Button4, Button2 is actually Button5 etc.
 .TE
 Col = \fB\f(CB\*(C`<x> \- SPACE\*(C'\fB\fR
 .Sp
@@ -2457,8 +2448,8 @@ You can specify this and then disable options you do not like by
 or you can start with a minimal configuration by specifying
 \&\f(CW\*(C`\-\-disable\-everything\*(C'\fR and than adding just the \f(CW\*(C`\-\-enable\-...\*(C'\fR arguments
 you want.
-.IP "\-\-enable\-xft (default: enabled)" 4
-.IX Item "--enable-xft (default: enabled)"
+.IP "\-\-enable\-xft (default: on)" 4
+.IX Item "--enable-xft (default: on)"
 Add support for Xft (anti-aliased, among others) fonts. Xft fonts are
 slower and require lots of memory, but as long as you don't use them, you
 don't pay for them.
@@ -2466,8 +2457,8 @@ don't pay for them.
 .IX Item "--enable-font-styles (default: on)"
 Add support for \fBbold\fR, \fIitalic\fR and \fB\f(BIbold italic\fB\fR font
 styles. The fonts can be set manually or automatically.
-.IP "\-\-with\-codesets=NAME,... (default: all)" 4
-.IX Item "--with-codesets=NAME,... (default: all)"
+.IP "\-\-with\-codesets=CS,... (default: all)" 4
+.IX Item "--with-codesets=CS,... (default: all)"
 Compile in support for additional codeset (encoding) groups (\f(CW\*(C`eu\*(C'\fR, \f(CW\*(C`vn\*(C'\fR
 are always compiled in, which includes most 8\-bit character sets). These
 codeset tables are used for driving X11 core fonts, they are not required
@@ -2508,7 +2499,7 @@ see next switch), and right now rxvt-unicode cannot display them
 Enable automatic composition of combining characters into
 composite characters. This is required for proper viewing of text
 where accents are encoded as separate unicode characters. This is
-done by using precomposited characters when available or creating
+done by using precomposed characters when available or creating
 new pseudo-characters when no precomposed form exists.
 .Sp
 Without \-\-enable\-unicode3, the number of additional precomposed
@@ -2521,8 +2512,8 @@ beyond plane 0 (>65535) when \-\-enable\-unicode3 was not specified.
 The combining table also contains entries for arabic presentation forms,
 but these are not currently used. Bug me if you want these to be used (and
 tell me how these are to be used...).
-.IP "\-\-enable\-fallback(=CLASS) (default: Rxvt)" 4
-.IX Item "--enable-fallback(=CLASS) (default: Rxvt)"
+.IP "\-\-enable\-fallback[=CLASS] (default: Rxvt)" 4
+.IX Item "--enable-fallback[=CLASS] (default: Rxvt)"
 When reading resource settings, also read settings for class \s-1CLASS\s0. To
 disable resource fallback use \-\-disable\-fallback.
 .IP "\-\-with\-res\-name=NAME (default: urxvt)" 4
@@ -2559,8 +2550,8 @@ Note that with this option enabled, @@RXVT_NAME@@'s memory footprint might
 increase by a few megabytes even if no extra features are used (mostly due
 to third-party libraries used by libAI). Memory footprint may somewhat be
 lowered if libAfterImage is configured without support for \s-1SVG\s0.
-.IP "\-\-enable\-pixbuf (default: off)" 4
-.IX Item "--enable-pixbuf (default: off)"
+.IP "\-\-enable\-pixbuf (default: on)" 4
+.IX Item "--enable-pixbuf (default: on)"
 Add support for GDK-PixBuf to be used for background images.
 It adds support for many file formats including \s-1JPG\s0, \s-1PNG\s0,
 \&\s-1TIFF\s0, \s-1GIF\s0, \s-1XPM\s0, \s-1BMP\s0, \s-1ICO\s0 and \s-1TGA\s0.
