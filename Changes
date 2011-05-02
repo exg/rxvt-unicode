@@ -20,7 +20,7 @@ TODO: decrqm http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
 TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
-TODO: perl selection object creation/destruction
+9.11 Mon May  2 10:34:46 CEST 2011
         - fix compilation on GNU/Hurd, debian bug #624736.
         - remove 'list' syntax for keysym resources, as it serves no useful purpose.
           If you need it, poke us and provide a use case.
