@@ -526,12 +526,16 @@ struct rxvt_font_overflow : rxvt_font {
              const text_t *text, int len,
              int fg, int bg)
   {
-    while (len--)
+    while (len)
       {
         int fid = fs->find_font_idx (*text);
-        (*fs)[fid]->draw (d, x, y, text, 1, fg, bg);
-        ++text;
-        x += term->fwidth;
+        int w = 1;
+        while (w < len && text[w] == NOCHAR)
+          w++;
+        (*fs)[fid]->draw (d, x, y, text, w, fg, bg);
+        text += w;
+        len -= w;
+        x += term->fwidth * w;
       }
   }
 };
