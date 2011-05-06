@@ -937,9 +937,10 @@ B<+si>.
 
 =item B<scrollWithBuffer:> I<boolean>
 
-B<True>: scroll with scrollback buffer when tty receives new lines (and
-B<scrollTtyOutput> is False); option B<-sw>. B<False>: do not scroll
-with scrollback buffer when tty receives new lines; option B<+sw>.
+B<True>: scroll with scrollback buffer when tty receives new lines (i.e.
+try to show the same lines) and B<scrollTtyOutput> is False; option
+B<-sw>. B<False>: do not scroll with scrollback buffer when tty receives
+new lines; option B<+sw>.
 
 =item B<scrollTtyKeypress:> I<boolean>
 
