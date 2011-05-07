@@ -71,6 +71,7 @@ public:
 
   void clear ();
   void register_user_translation (KeySym keysym, unsigned int state, const char *trans);
+  void register_translation (KeySym keysym, unsigned int state, char *translation);
   void register_done ();        // call this to make newly registered keymaps take effect
   bool dispatch (rxvt_term *term, KeySym keysym, unsigned int state);
 

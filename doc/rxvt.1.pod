@@ -1164,6 +1164,20 @@ performed in an exact manner; however, the closest match is assured.
 I<string> may contain escape values (C<\n>: newline, C<\000>: octal
 number), see RESOURCES in C<man 7 X> for further details.
 
+You can define a range of keysyms in one shot by providing a I<string>
+with pattern B<list/PREFIX/MIDDLE/SUFFIX>, where the delimiter `/'
+should be a character not used by the strings.
+
+Its usage can be demonstrated by an example:
+
+  URxvt.keysym.M-C-0x61:    list|\033<|abc|>
+
+The above line is equivalent to the following three lines:
+
+  URxvt.keysym.Meta-Control-0x61:    \033<a>
+  URxvt.keysym.Meta-Control-0x62:    \033<b>
+  URxvt.keysym.Meta-Control-0x63:    \033<c>
+
 If I<string> takes the form of C<command:STRING>, the specified B<STRING>
 is interpreted and executed as @@RXVT_NAME@@'s control sequence. For
 example the following means "change the current locale to C<zh_CN.GBK>

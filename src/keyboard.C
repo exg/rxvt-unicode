@@ -118,18 +118,51 @@ keyboard_manager::clear ()
   keymap.clear ();
 }
 
-// a wrapper for register_keymap,
-// so that outside codes don't have to know so much details.
-//
-// the string 'trans' is copied to an internal managed buffer,
-// so the caller can free memory of 'trans' at any time.
+// a wrapper for register_translation that converts the input string
+// to utf-8 and expands 'list' syntax.
 void
 keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, const char *trans)
 {
-  keysym_t *key = new keysym_t;
   wchar_t *wc = rxvt_mbstowcs (trans);
   char *translation = rxvt_wcstoutf8 (wc);
   free (wc);
+
+  if (strncmp (translation, "list", 4) == 0 && translation [4]
+      && strlen (translation) < STRING_MAX)
+    {
+      char *prefix = translation + 4;
+      char *middle = strchr  (prefix + 1, translation [4]);
+      char *suffix = strrchr (prefix + 1, translation [4]);
+
+      if (suffix && middle && suffix > middle + 1)
+        {
+          int range = suffix - middle - 1;
+          int prefix_len = middle - prefix - 1;
+          char buf[STRING_MAX];
+
+          memcpy (buf, prefix + 1, prefix_len);
+          strcpy (buf + prefix_len + 1, suffix + 1);
+
+          for (int i = 0; i < range; i++)
+            {
+              buf [prefix_len] = middle [i + 1];
+              register_translation (keysym + i, state, strdup (buf));
+            }
+
+          free (translation);
+          return;
+        }
+      else
+        rxvt_warn ("cannot parse list-type keysym '%s', processing as normal keysym.\n", translation);
+    }
+
+  register_translation (keysym, state, translation);
+}
+
+void
+keyboard_manager::register_translation (KeySym keysym, unsigned int state, char *translation)
+{
+  keysym_t *key = new keysym_t;
 
   if (key && translation)
     {
