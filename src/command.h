@@ -6,7 +6,7 @@
 #define COMMAND_H_
 
 // STRING_MAX __MUST__ not be larger than what CBUFSIZ can hold.
-#define STRING_MAX	2048	/* max string size for process_rxvt_xterm_seq() */
+#define STRING_MAX	2048	/* max string size for process_{dcs,osc}_seq () */
 
 #define ESC_ARGS	32	/* max # of args for esc sequences */
 
