@@ -725,10 +725,11 @@ rxvt_term::render_image (unsigned long tr_flags)
                                         GDK_INTERP_BILINEAR);
     }
 
+  if (!result)
+    return false;
+
   bool ret = false;
 
-  if (result)
-    {
       XGCValues gcv;
       GC gc;
       Pixmap root_pmap;
@@ -844,7 +845,6 @@ rxvt_term::render_image (unsigned long tr_flags)
       XFreeGC (dpy, gc);
 
       ret = true;
-    }
 
   return ret;
 }
@@ -1254,7 +1254,7 @@ rxvt_term::make_transparency_pixmap ()
           else
             {
               XFreePixmap (dpy, recoded_root_pmap);
-              root_pixmap = None;
+              recoded_root_pmap = None;
             }
 
           XRenderFreePicture (dpy, src);
@@ -1262,10 +1262,10 @@ rxvt_term::make_transparency_pixmap ()
         }
       else
 #endif
-      root_pixmap = None;
+      recoded_root_pmap = None;
     }
 
-  if (root_pixmap == None)
+  if (recoded_root_pmap == None)
     return 0;
 
   if (bg_pixmap == None
