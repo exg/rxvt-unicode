@@ -730,121 +730,132 @@ rxvt_term::render_image (unsigned long tr_flags)
 
   bool ret = false;
 
-      XGCValues gcv;
-      GC gc;
-      Pixmap root_pmap;
+  XGCValues gcv;
+  GC gc;
+  Pixmap root_pmap;
 
-      image_width = gdk_pixbuf_get_width (result);
-      image_height = gdk_pixbuf_get_height (result);
+  image_width = gdk_pixbuf_get_width (result);
+  image_height = gdk_pixbuf_get_height (result);
 
-      if (tr_flags)
+  if (tr_flags)
+    {
+      root_pmap = bg_pixmap;
+      bg_pixmap = None;
+    }
+  else
+    {
+      if (h_scale == 0 || v_scale == 0)
         {
-          root_pmap = bg_pixmap;
-          bg_pixmap = None;
+          new_pmap_width = min (image_width, target_width);
+          new_pmap_height = min (image_height, target_height);
         }
-      else
-        {
-          if (h_scale == 0 || v_scale == 0)
-            {
-              new_pmap_width = min (image_width, target_width);
-              new_pmap_height = min (image_height, target_height);
-            }
-        }
+    }
 
-      if (bg_pixmap == None
-          || bg_pmap_width != new_pmap_width
-          || bg_pmap_height != new_pmap_height)
-        {
-          if (bg_pixmap)
-            XFreePixmap (dpy, bg_pixmap);
-          bg_pixmap = XCreatePixmap (dpy, vt, new_pmap_width, new_pmap_height, depth);
-          bg_pmap_width = new_pmap_width;
-          bg_pmap_height = new_pmap_height;
-        }
+  if (bg_pixmap == None
+      || bg_pmap_width != new_pmap_width
+      || bg_pmap_height != new_pmap_height)
+    {
+      if (bg_pixmap)
+        XFreePixmap (dpy, bg_pixmap);
+      bg_pixmap = XCreatePixmap (dpy, vt, new_pmap_width, new_pmap_height, depth);
+      bg_pmap_width = new_pmap_width;
+      bg_pmap_height = new_pmap_height;
+    }
 
+  if (bg_pixmap != None)
+    {
       gcv.foreground = pix_colors[Color_bg];
       gc = XCreateGC (dpy, vt, GCForeground, &gcv);
 
-      if (h_scale == 0 || v_scale == 0)
+      if (gc)
         {
-          Pixmap tile = XCreatePixmap (dpy, vt, image_width, image_height, depth);
-          pixbuf_to_pixmap (result, tile, gc,
-                            0, 0,
-                            0, 0,
-                            image_width, image_height);
-
-          gcv.tile = tile;
-          gcv.fill_style = FillTiled;
-          gcv.ts_x_origin = x;
-          gcv.ts_y_origin = y;
-          XChangeGC (dpy, gc, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
-
-          XFillRectangle (dpy, bg_pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
-          XFreePixmap (dpy, tile);
-        }
-      else
-        {
-          int src_x, src_y, dst_x, dst_y;
-          int dst_width, dst_height;
-
-          src_x = make_clip_rectangle (x, image_width , new_pmap_width , dst_x, dst_width );
-          src_y = make_clip_rectangle (y, image_height, new_pmap_height, dst_y, dst_height);
-
-          if (dst_x > 0 || dst_y > 0
-              || dst_x + dst_width < new_pmap_width
-              || dst_y + dst_height < new_pmap_height)
-            XFillRectangle (dpy, bg_pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
-
-          if (dst_x < new_pmap_width && dst_y < new_pmap_height)
-            pixbuf_to_pixmap (result, bg_pixmap, gc,
-                              src_x, src_y,
-                              dst_x, dst_y,
-                              dst_width, dst_height);
-        }
-
-#if XRENDER
-      if (tr_flags)
-        {
-          XRenderPictureAttributes pa;
-
-          XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, visual);
-          Picture src = XRenderCreatePicture (dpy, root_pmap, src_format, 0, &pa);
-
-          XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, visual);
-          Picture dst = XRenderCreatePicture (dpy, bg_pixmap, dst_format, 0, &pa);
-
-          pa.repeat = True;
-          Pixmap mask_pmap = XCreatePixmap (dpy, vt, 1, 1, 8);
-          XRenderPictFormat *mask_format = XRenderFindStandardFormat (dpy, PictStandardA8);
-          Picture mask = XRenderCreatePicture (dpy, mask_pmap, mask_format, CPRepeat, &pa);
-          XFreePixmap (dpy, mask_pmap);
-
-          if (src && dst && mask)
+          if (h_scale == 0 || v_scale == 0)
             {
-              XRenderColor mask_c;
+              Pixmap tile = XCreatePixmap (dpy, vt, image_width, image_height, depth);
 
-              mask_c.alpha = 0x8000;
-              mask_c.red = 0;
-              mask_c.green = 0;
-              mask_c.blue = 0;
-              XRenderFillRectangle (dpy, PictOpSrc, mask, &mask_c, 0, 0, 1, 1);
-              XRenderComposite (dpy, PictOpOver, src, mask, dst, 0, 0, 0, 0, 0, 0, target_width, target_height);
+              if (tile != None)
+                {
+                  pixbuf_to_pixmap (result, tile, gc,
+                                    0, 0,
+                                    0, 0,
+                                    image_width, image_height);
+
+                  gcv.tile = tile;
+                  gcv.fill_style = FillTiled;
+                  gcv.ts_x_origin = x;
+                  gcv.ts_y_origin = y;
+                  XChangeGC (dpy, gc, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
+
+                  XFillRectangle (dpy, bg_pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
+                  XFreePixmap (dpy, tile);
+                }
+            }
+          else
+            {
+              int src_x, src_y, dst_x, dst_y;
+              int dst_width, dst_height;
+
+              src_x = make_clip_rectangle (x, image_width , new_pmap_width , dst_x, dst_width );
+              src_y = make_clip_rectangle (y, image_height, new_pmap_height, dst_y, dst_height);
+
+              if (dst_x > 0 || dst_y > 0
+                  || dst_x + dst_width < new_pmap_width
+                  || dst_y + dst_height < new_pmap_height)
+                XFillRectangle (dpy, bg_pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
+
+              if (dst_x < new_pmap_width && dst_y < new_pmap_height)
+                pixbuf_to_pixmap (result, bg_pixmap, gc,
+                                  src_x, src_y,
+                                  dst_x, dst_y,
+                                  dst_width, dst_height);
             }
 
-          XRenderFreePicture (dpy, src);
-          XRenderFreePicture (dpy, dst);
-          XRenderFreePicture (dpy, mask);
+#if XRENDER
+          if (tr_flags)
+            {
+              XRenderPictureAttributes pa;
 
-          XFreePixmap (dpy, root_pmap);
-        }
+              XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, visual);
+              Picture src = XRenderCreatePicture (dpy, root_pmap, src_format, 0, &pa);
+
+              XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, visual);
+              Picture dst = XRenderCreatePicture (dpy, bg_pixmap, dst_format, 0, &pa);
+
+              pa.repeat = True;
+              Pixmap mask_pmap = XCreatePixmap (dpy, vt, 1, 1, 8);
+              XRenderPictFormat *mask_format = XRenderFindStandardFormat (dpy, PictStandardA8);
+              Picture mask = XRenderCreatePicture (dpy, mask_pmap, mask_format, CPRepeat, &pa);
+              XFreePixmap (dpy, mask_pmap);
+
+              if (src && dst && mask)
+                {
+                  XRenderColor mask_c;
+
+                  mask_c.alpha = 0x8000;
+                  mask_c.red = 0;
+                  mask_c.green = 0;
+                  mask_c.blue = 0;
+                  XRenderFillRectangle (dpy, PictOpSrc, mask, &mask_c, 0, 0, 1, 1);
+                  XRenderComposite (dpy, PictOpOver, src, mask, dst, 0, 0, 0, 0, 0, 0, target_width, target_height);
+                }
+
+              XRenderFreePicture (dpy, src);
+              XRenderFreePicture (dpy, dst);
+              XRenderFreePicture (dpy, mask);
+            }
 #endif
 
-      if (result != pixbuf)
-        g_object_unref (result);
+          XFreeGC (dpy, gc);
 
-      XFreeGC (dpy, gc);
+          ret = true;
+        }
+    }
 
-      ret = true;
+  if (result != pixbuf)
+    g_object_unref (result);
+
+  if (tr_flags)
+    XFreePixmap (dpy, root_pmap);
 
   return ret;
 }
@@ -1240,25 +1251,29 @@ rxvt_term::make_transparency_pixmap ()
 #if XRENDER
       if (bg_flags & BG_HAS_RENDER)
         {
-          XRenderPictureAttributes pa;
-
-          XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, DefaultVisual (dpy, screen));
-          Picture src = XRenderCreatePicture (dpy, root_pixmap, src_format, 0, &pa);
-
           recoded_root_pmap = XCreatePixmap (dpy, vt, root_pmap_width, root_pmap_height, depth);
-          XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, visual);
-          Picture dst = XRenderCreatePicture (dpy, recoded_root_pmap, dst_format, 0, &pa);
 
-          if (src && dst)
-            XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, root_pmap_width, root_pmap_height);
-          else
+          if (recoded_root_pmap != None)
             {
-              XFreePixmap (dpy, recoded_root_pmap);
-              recoded_root_pmap = None;
-            }
+              XRenderPictureAttributes pa;
 
-          XRenderFreePicture (dpy, src);
-          XRenderFreePicture (dpy, dst);
+              XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, DefaultVisual (dpy, screen));
+              Picture src = XRenderCreatePicture (dpy, root_pixmap, src_format, 0, &pa);
+
+              XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, visual);
+              Picture dst = XRenderCreatePicture (dpy, recoded_root_pmap, dst_format, 0, &pa);
+
+              if (src && dst)
+                XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, root_pmap_width, root_pmap_height);
+              else
+                {
+                  XFreePixmap (dpy, recoded_root_pmap);
+                  recoded_root_pmap = None;
+                }
+
+              XRenderFreePicture (dpy, src);
+              XRenderFreePicture (dpy, dst);
+            }
         }
       else
 #endif
