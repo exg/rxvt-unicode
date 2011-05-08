@@ -1297,8 +1297,8 @@ rxvt_term::make_transparency_pixmap ()
   if (bg_pixmap != None)
     {
       /* straightforward pixmap copy */
-      while (sx < 0) sx += (int)root_width;
-      while (sy < 0) sy += (int)root_height;
+      while (sx < 0) sx += root_width;
+      while (sy < 0) sy += root_height;
 
       gcv.tile = recoded_root_pmap;
       gcv.fill_style = FillTiled;
