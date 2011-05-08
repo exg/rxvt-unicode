@@ -1279,40 +1279,40 @@ rxvt_term::make_transparency_pixmap ()
       bg_pmap_height = window_height;
     }
 
-  if (bg_pixmap == None)
-    return 0;
-
-  /* straightforward pixmap copy */
-  while (sx < 0) sx += (int)root_width;
-  while (sy < 0) sy += (int)root_height;
-
-  gcv.tile = recoded_root_pmap;
-  gcv.fill_style = FillTiled;
-  gcv.ts_x_origin = -sx;
-  gcv.ts_y_origin = -sy;
-  gc = XCreateGC (dpy, vt, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
-
-  if (gc)
+  if (bg_pixmap != None)
     {
-      XFillRectangle (dpy, bg_pixmap, gc, 0, 0, window_width, window_height);
-      result |= BG_IS_VALID | (bg_flags & BG_EFFECTS_FLAGS);
-      XFreeGC (dpy, gc);
+      /* straightforward pixmap copy */
+      while (sx < 0) sx += (int)root_width;
+      while (sy < 0) sy += (int)root_height;
 
-      if (!(bg_flags & BG_CLIENT_RENDER))
+      gcv.tile = recoded_root_pmap;
+      gcv.fill_style = FillTiled;
+      gcv.ts_x_origin = -sx;
+      gcv.ts_y_origin = -sy;
+      gc = XCreateGC (dpy, vt, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
+
+      if (gc)
         {
-          if ((bg_flags & BG_NEEDS_BLUR)
-              && (bg_flags & BG_HAS_RENDER_CONV))
+          XFillRectangle (dpy, bg_pixmap, gc, 0, 0, window_width, window_height);
+          result |= BG_IS_VALID | (bg_flags & BG_EFFECTS_FLAGS);
+          XFreeGC (dpy, gc);
+
+          if (!(bg_flags & BG_CLIENT_RENDER))
             {
-              if (blur_pixmap (bg_pixmap, visual, window_width, window_height))
-                result &= ~BG_NEEDS_BLUR;
-            }
-          if ((bg_flags & BG_NEEDS_TINT)
-              && (bg_flags & (BG_TINT_BITAND | BG_HAS_RENDER)))
-            {
-              if (tint_pixmap (bg_pixmap, visual, window_width, window_height))
-                result &= ~BG_NEEDS_TINT;
-            }
-        } /* server side rendering completed */
+              if ((bg_flags & BG_NEEDS_BLUR)
+                  && (bg_flags & BG_HAS_RENDER_CONV))
+                {
+                  if (blur_pixmap (bg_pixmap, visual, window_width, window_height))
+                    result &= ~BG_NEEDS_BLUR;
+                }
+              if ((bg_flags & BG_NEEDS_TINT)
+                  && (bg_flags & (BG_TINT_BITAND | BG_HAS_RENDER)))
+                {
+                  if (tint_pixmap (bg_pixmap, visual, window_width, window_height))
+                    result &= ~BG_NEEDS_TINT;
+                }
+            } /* server side rendering completed */
+        }
     }
 
   if (recoded_root_pmap != root_pixmap)
