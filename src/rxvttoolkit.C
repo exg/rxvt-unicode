@@ -705,13 +705,11 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
       c.color.blue  = color.b;
       c.color.alpha = alpha;
 
-      // ARGB visuals use premultiplied alpha
-      if (format->direct.alphaMask)
-        {
-          c.color.red   = c.color.red   * alpha / 0xffff;
-          c.color.green = c.color.green * alpha / 0xffff;
-          c.color.blue  = c.color.blue  * alpha / 0xffff;
-        }
+      // Xft wants premultiplied alpha, but abuses the alpha channel
+      // as blend factor, and doesn't allow us to set the alpha channel
+      c.color.red   = c.color.red   * alpha / 0xffff;
+      c.color.green = c.color.green * alpha / 0xffff;
+      c.color.blue  = c.color.blue  * alpha / 0xffff;
 
       c.pixel = insert_component (c.color.red  , format->direct.redMask  , format->direct.red  )
               | insert_component (c.color.green, format->direct.greenMask, format->direct.green)

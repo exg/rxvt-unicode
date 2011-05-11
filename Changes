@@ -20,10 +20,13 @@ TODO: decrqm http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
 TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
+        - fix rendering of double width chars in certain circumstances, more
+          likely to happen if urxvt is compiled with 256 colors support as
+          urxvt runs out of fonts much earlier then.  Fixes gentoo bug #358151
+          (Emanuele Giaquinta).
         - restore support for 'list' syntax in keysym resources (requested by Sung Pae).
-        - fix rendering of double width chars in certain circumstances,
-          more likely to happen if urxvt is compiled with 256 colors
-          support. Fixes gentoo bug #358151 (Emanuele Giaquinta).
+	- always premultiply colour values - while this increases differences between
+          core fonts and xft, it is "more correct" in practical situations.
 
 9.11 Mon May  2 10:34:46 CEST 2011
         - fix compilation on GNU/Hurd, debian bug #624736.
