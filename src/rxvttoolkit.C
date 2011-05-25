@@ -1179,8 +1179,7 @@ rxvt_selection::x_cb (XEvent &xev)
 
       case SelectionNotify:
         if (selection_wait == Sel_normal
-            && xev.xselection.time == request_time
-            && xev.xselection.property == request_prop)
+            && xev.xselection.time == request_time)
           {
             timer_ev.stop ();
             handle_selection (xev.xselection.requestor, xev.xselection.property, true);
