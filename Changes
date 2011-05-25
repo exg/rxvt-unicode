@@ -20,6 +20,9 @@ TODO: decrqm http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
 TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
+        - fix regression in processing of SelectionNotify events.
+          urxvt would fail to request a selection if the owner did not
+          support the UTF8_STRING target.
         - fix rendering of double width chars in certain circumstances, more
           likely to happen if urxvt is compiled with 256 colors support as
           urxvt runs out of fonts much earlier then.  Fixes gentoo bug #358151
