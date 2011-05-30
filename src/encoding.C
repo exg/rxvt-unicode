@@ -288,7 +288,7 @@ unicode_t
 rxvt_compose (unicode_t c1, unicode_t c2)
 {
   int l = 0;
-  int r = ARRAY_LENGTH(rxvt_compose_table) - 1;
+  int r = ecb_array_length (rxvt_compose_table) - 1;
   int m;
 
   while (r >= l)

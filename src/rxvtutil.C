@@ -26,33 +26,6 @@
 
 #include "rxvtutil.h"
 
-#if !HAVE_GCC_BUILTINS
-int rxvt_ctz (unsigned int x) CONST
-{
-  int r = 0;
-
-  x &= -x; // this isolates the lowest bit
-
-  if (x & 0xaaaaaaaa) r +=  1;
-  if (x & 0xcccccccc) r +=  2;
-  if (x & 0xf0f0f0f0) r +=  4;
-  if (x & 0xff00ff00) r +=  8;
-  if (x & 0xffff0000) r += 16;
-
-  return r;
-}
-
-int rxvt_popcount (unsigned int x) CONST
-{
-  x -=  (x >> 1) & 0x55555555;
-  x  = ((x >> 2) & 0x33333333) + (x & 0x33333333);
-  x  = ((x >> 4) + x) & 0x0f0f0f0f;
-  x *= 0x01010101;
-
-  return x >> 24;
-}
-#endif
-
 void *
 zero_initialized::operator new (size_t s)
 {

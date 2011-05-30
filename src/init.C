@@ -1506,7 +1506,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #endif
   };
 
-  XSetWMProtocols (dpy, top, protocols, ARRAY_LENGTH(protocols));
+  XSetWMProtocols (dpy, top, protocols, ecb_array_length (protocols));
 
 #if ENABLE_FRILLS
   if (rs[Rs_transient_for])

@@ -451,7 +451,7 @@ bool rxvt_display::ref_init ()
   screen = DefaultScreen     (dpy);
   root   = DefaultRootWindow (dpy);
 
-  assert (ARRAY_LENGTH(xa_names) == NUM_XA);
+  assert (ecb_array_length (xa_names) == NUM_XA);
   XInternAtoms (dpy, (char **)xa_names, NUM_XA, False, xa);
 
   XrmSetDatabase (dpy, get_resources (false));
@@ -736,9 +736,9 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
 
   if (screen->visual->c_class == TrueColor)
     {
-      c.pixel = (color.r >> (16 - rxvt_popcount (screen->visual->red_mask  )) << rxvt_ctz (screen->visual->red_mask  ))
-              | (color.g >> (16 - rxvt_popcount (screen->visual->green_mask)) << rxvt_ctz (screen->visual->green_mask))
-              | (color.b >> (16 - rxvt_popcount (screen->visual->blue_mask )) << rxvt_ctz (screen->visual->blue_mask ));
+      c.pixel = (color.r >> (16 - ecb_popcount32 (screen->visual->red_mask  )) << ecb_ctz32 (screen->visual->red_mask  ))
+              | (color.g >> (16 - ecb_popcount32 (screen->visual->green_mask)) << ecb_ctz32 (screen->visual->green_mask))
+              | (color.b >> (16 - ecb_popcount32 (screen->visual->blue_mask )) << ecb_ctz32 (screen->visual->blue_mask ));
 
       return true;
     }

@@ -4,35 +4,9 @@
 #include <cstdlib>
 #include <cstring>
 #include <inttypes.h>
+#include "ecb.h"
 
 using namespace std;
-
-#define ARRAY_LENGTH(v) (sizeof (v) / sizeof ((v)[0]))
-
-#define PP_CONCAT_(a, b) a ## b
-#define PP_CONCAT(a, b) PP_CONCAT_(a, b)
-#define PP_STRINGIFY_(a) #a
-#define PP_STRINGIFY(a) PP_STRINGIFY_(a)
-
-#define HAVE_GCC_BUILTINS (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ == 4))
-
-#if __GNUC__ >= 4
-# define rxvt_attribute(x) __attribute__(x)
-# define expect(expr,value)         __builtin_expect ((expr),(value))
-#else
-# define rxvt_attribute(x)
-# define expect(expr,value)         (expr)
-#endif
-
-// put into ifs if you are very sure that the expression
-// is mostly true or mostly false. note that these return
-// booleans, not the expression.
-#define expect_false(expr) expect ((expr) != 0, 0)
-#define expect_true(expr)  expect ((expr) != 0, 1)
-
-#define NORETURN rxvt_attribute ((noreturn))
-#define UNUSED   rxvt_attribute ((unused))
-#define CONST    rxvt_attribute ((const))
 
 // increases code size unless -fno-enforce-eh-specs
 #if __GNUC__
@@ -42,19 +16,6 @@ using namespace std;
 # define NOTHROW  throw()
 # define THROW(x) throw x
 #endif
-
-namespace byteorder {
-  static unsigned char e ()
-  {
-    const uint32_t u = 0x11223344;
-    return *(unsigned char *)&u;
-  }
-
-  static bool big_endian    () { return e () == 0x11;     };
-  static bool network       () { return big_endian ();    };
-  static bool little_endian () { return e () == 0x44;     };
-  static bool vax           () { return little_endian (); };
-};
 
 // various utility functions
 template<typename T, typename U> static inline T    min    (T  a, U b) { return a < (T)b ? a : (T)b; }
@@ -95,17 +56,6 @@ rxvt_temp_buf (int len)
 {
   return (T *)rxvt_temp_buf (len * sizeof (T));
 }
-
-// some bit functions, xft fuck me plenty
-#if HAVE_GCC_BUILTINS
-/* netbsd stupidly defines popcount itself and puts it into string.h */
-static inline int rxvt_ctz      (unsigned int x) { return __builtin_ctz      (x); }
-static inline int rxvt_popcount (unsigned int x) { return __builtin_popcount (x); }
-#else
-// count trailing zero bits and count # of one bits
-int rxvt_ctz      (unsigned int x) CONST;
-int rxvt_popcount (unsigned int x) CONST;
-#endif
 
 // in range including end
 #define IN_RANGE_INC(val,beg,end) \

@@ -180,3 +180,5 @@ libev/ev_kqueue.c
 libev/ev_port.c
 libev/libev.m4
 
+libecb/ecb.h
+

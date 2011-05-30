@@ -801,7 +801,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
     {
       c = (unicode_t)*str++; // convert to rxvt-unicodes representation
 
-      if (expect_false (c < 0x20))
+      if (ecb_unlikely (c < 0x20))
         if (c == C0_LF)
           {
             max_it (line->l, screen.cur.col);
@@ -830,7 +830,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
             continue;
           }
 
-      if (expect_false (
+      if (ecb_unlikely (
             checksel            /* see if we're writing within selection */
             && !ROWCOL_IS_BEFORE (screen.cur, selection.beg)
             && ROWCOL_IS_BEFORE (screen.cur, selection.end)
@@ -845,7 +845,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
           CLEAR_SELECTION ();
         }
 
-      if (expect_false (screen.flags & Screen_WrapNext))
+      if (ecb_unlikely (screen.flags & Screen_WrapNext))
         {
           scr_do_wrap ();
 
@@ -857,7 +857,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
         }
 
       // some utf-8 decoders "decode" surrogate characters: let's fix this.
-      if (expect_false (IN_RANGE_INC (c, 0xd800, 0xdfff)))
+      if (ecb_unlikely (IN_RANGE_INC (c, 0xd800, 0xdfff)))
         c = 0xfffd;
 
       // rely on wcwidth to tell us the character width, do wcwidth before
@@ -866,7 +866,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
       // locale.
       int width = WCWIDTH (c);
 
-      if (expect_false (charsets [screen.charset] == '0')) // DEC SPECIAL
+      if (ecb_unlikely (charsets [screen.charset] == '0')) // DEC SPECIAL
         {
           // vt100 special graphics and line drawing
           // 5f-7e standard vt100
@@ -889,7 +889,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
             }
         }
 
-      if (expect_false (screen.flags & Screen_Insert))
+      if (ecb_unlikely (screen.flags & Screen_Insert))
         scr_insdel_chars (width, INSERT);
 
       if (width != 0)
@@ -907,7 +907,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
           rend_t rend = SET_FONT (rstyle, FONTSET (rstyle)->find_font (c));
 
           // if the character doesn't fit into the remaining columns...
-          if (expect_false (screen.cur.col > ncol - width && ncol >= width))
+          if (ecb_unlikely (screen.cur.col > ncol - width && ncol >= width))
             {
               if (screen.flags & Screen_Autowrap)
                 {
@@ -924,7 +924,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
           // due to wonderful coincidences everywhere else in this loop
           // we never have to check for overwriting a wide char itself,
           // only its tail.
-          if (expect_false (line->t[screen.cur.col] == NOCHAR))
+          if (ecb_unlikely (line->t[screen.cur.col] == NOCHAR))
             scr_kill_char (*line, screen.cur.col);
 
           line->touch ();
@@ -934,7 +934,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
               line->t[screen.cur.col] = c;
               line->r[screen.cur.col] = rend;
 
-              if (expect_true (screen.cur.col < ncol - 1))
+              if (ecb_likely (screen.cur.col < ncol - 1))
                 screen.cur.col++;
               else
                 {
@@ -947,10 +947,10 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
 
               c = NOCHAR;
             }
-          while (expect_false (--width > 0));
+          while (ecb_unlikely (--width > 0));
 
           // pad with spaces when overwriting wide character with smaller one
-          for (int c = screen.cur.col; expect_false (c < ncol && line->t[c] == NOCHAR); c++)
+          for (int c = screen.cur.col; ecb_unlikely (c < ncol && line->t[c] == NOCHAR); c++)
             {
               line->t[c] = ' ';
               line->r[c] = rend;
@@ -2236,7 +2236,7 @@ rxvt_term::scr_refresh () NOTHROW
           // redraw one or more characters
 
           // seek to the beginning of wide characters
-          while (expect_false (stp[col] == NOCHAR && col > 0))
+          while (ecb_unlikely (stp[col] == NOCHAR && col > 0))
             --col;
 
           rend_t rend = srp[col];     /* screen rendition (target rendition) */
@@ -2284,7 +2284,7 @@ rxvt_term::scr_refresh () NOTHROW
           count -= i; /* dump any matching trailing chars */
 
           // sometimes we optimize away the trailing NOCHAR's, add them back
-          while (expect_false (i && text[count] == NOCHAR))
+          while (ecb_unlikely (i && text[count] == NOCHAR))
             count++, i--;
 
           /*
@@ -2294,7 +2294,7 @@ rxvt_term::scr_refresh () NOTHROW
           int back = bgcolor_of (rend); // desired background
 
           // only do special processing if any attributes are set, which is unlikely
-          if (expect_false (rend & (RS_baseattrMask | RS_Careful | RS_Sel)))
+          if (ecb_unlikely (rend & (RS_baseattrMask | RS_Careful | RS_Sel)))
             {
               bool invert = rend & RS_RVid;
 
@@ -2393,7 +2393,7 @@ rxvt_term::scr_refresh () NOTHROW
            */
           rxvt_font *font = (*fontset[GET_STYLE (rend)])[GET_FONT (rend)];
 
-          if (expect_true (have_bg && back == Color_bg))
+          if (ecb_likely (have_bg && back == Color_bg))
             {
               // this is very ugly, maybe push it into ->draw?
 
@@ -2410,7 +2410,7 @@ rxvt_term::scr_refresh () NOTHROW
           else
             font->draw (*drawable, xpixel, ypixel, text, count, fore, back);
 
-          if (expect_false (rend & RS_Uline && font->descent > 1 && fore != back))
+          if (ecb_unlikely (rend & RS_Uline && font->descent > 1 && fore != back))
             {
 #if ENABLE_FRILLS
               if (ISSET_PIXCOLOR (Color_underline))

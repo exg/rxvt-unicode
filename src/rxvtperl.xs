@@ -343,7 +343,7 @@ rxvt_perl_interp::init (rxvt_term *term)
           ""
           "use urxvt;"
         };
-        int argc = ARRAY_LENGTH(args);
+        int argc = ecb_array_length (args);
         char **argv = args;
 
         PERL_SYS_INIT3 (&argc, &argv, &environ);
@@ -790,7 +790,7 @@ BOOT:
 #   endif
   };
 
-  for (civ = const_iv + ARRAY_LENGTH(const_iv); civ-- > const_iv; )
+  for (civ = const_iv + ecb_array_length (const_iv); civ-- > const_iv; )
     newCONSTSUB (stash, (char *)civ->name, newSViv (civ->iv));
 }
 
@@ -1483,7 +1483,7 @@ rxvt_term::_resource (char *name, int index, SV *newval = 0)
 #	  undef reserve
         };
 
-        rs = rslist + ARRAY_LENGTH(rslist);
+        rs = rslist + ecb_array_length (rslist);
 
         if (*name)
           {

@@ -2221,7 +2221,7 @@ rxvt_term::cmd_parse ()
 
   for (;;)
     {
-      if (expect_false (ch == NOCHAR))
+      if (ecb_unlikely (ch == NOCHAR))
         {
           seq_begin = cmdbuf_ptr;
           ch = next_char ();
@@ -2230,9 +2230,9 @@ rxvt_term::cmd_parse ()
             break;
         }
 
-      if (expect_true (!IS_CONTROL (ch) || ch == C0_LF || ch == C0_CR || ch == C0_HT))
+      if (ecb_likely (!IS_CONTROL (ch) || ch == C0_LF || ch == C0_CR || ch == C0_HT))
         {
-          if (expect_false (!seen_input))
+          if (ecb_unlikely (!seen_input))
             {
               seen_input = 1;
               // many badly-written programs (e.g. jed) contain a race condition:
@@ -2255,12 +2255,12 @@ rxvt_term::cmd_parse ()
 
           for (;;)
             {
-              if (expect_false (ch == NOCHAR || (IS_CONTROL (ch) && ch != C0_LF && ch != C0_CR && ch != C0_HT)))
+              if (ecb_unlikely (ch == NOCHAR || (IS_CONTROL (ch) && ch != C0_LF && ch != C0_CR && ch != C0_HT)))
                 break;
 
               *str++ = ch;
 
-              if (expect_false (ch == C0_LF || str >= eol))
+              if (ecb_unlikely (ch == C0_LF || str >= eol))
                 {
                   if (ch == C0_LF)
                     nlines++;
@@ -2348,7 +2348,7 @@ rxvt_term::next_char () NOTHROW
   while (cmdbuf_ptr < cmdbuf_endp)
     {
       // assume 7-bit to be ascii ALWAYS
-      if (expect_true ((unsigned char)*cmdbuf_ptr <= 0x7f && *cmdbuf_ptr != 0x1b))
+      if (ecb_likely ((unsigned char)*cmdbuf_ptr <= 0x7f && *cmdbuf_ptr != 0x1b))
         return *cmdbuf_ptr++;
 
       wchar_t wc;
@@ -2674,7 +2674,7 @@ rxvt_term::process_escape_seq ()
       case C1_NEL:		/* ESC E */
         {
           wchar_t nlcr[] = { C0_LF, C0_CR };
-          scr_add_lines (nlcr, ARRAY_LENGTH(nlcr), 1);
+          scr_add_lines (nlcr, ecb_array_length (nlcr), 1);
         }
         break;
 
@@ -2860,8 +2860,8 @@ rxvt_term::process_csi_seq ()
                 static const int pm_h[] = { 7, 25 };
                 static const int pm_l[] = { 1, 3, 4, 5, 6, 9, 66, 1000, 1001, 1005, 1015, 1049 };
 
-                process_terminal_mode ('h', 0, ARRAY_LENGTH(pm_h), pm_h);
-                process_terminal_mode ('l', 0, ARRAY_LENGTH(pm_l), pm_l);
+                process_terminal_mode ('h', 0, ecb_array_length (pm_h), pm_h);
+                process_terminal_mode ('l', 0, ecb_array_length (pm_l), pm_l);
               }
           break;
         }
@@ -3606,7 +3606,7 @@ rxvt_term::privcases (int mode, unsigned long bit)
 
 /* we're not using priv _yet_ */
 void
-rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs, const int *arg)
+rxvt_term::process_terminal_mode (int mode, int priv ecb_unused, unsigned int nargs, const int *arg)
 {
   unsigned int i, j;
   int state;
@@ -3677,7 +3677,7 @@ rxvt_term::process_terminal_mode (int mode, int priv UNUSED, unsigned int nargs,
       state = -1;
 
       /* basic handling */
-      for (j = 0; j < ARRAY_LENGTH(argtopriv); j++)
+      for (j = 0; j < ecb_array_length (argtopriv); j++)
         if (argtopriv[j].argval == arg[i])
           {
             state = privcases (mode, argtopriv[j].bit);

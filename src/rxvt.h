@@ -159,8 +159,8 @@ const char *     rxvt_basename                    (const char *str) NOTHROW;
 void             rxvt_vlog                        (const char *fmt, va_list arg_ptr) NOTHROW;
 void             rxvt_log                         (const char *fmt,...) NOTHROW;
 void             rxvt_warn                        (const char *fmt,...) NOTHROW;
-void             rxvt_fatal                       (const char *fmt, ...) THROW ((class rxvt_failure_exception)) NORETURN;
-void             rxvt_exit_failure                () THROW ((class rxvt_failure_exception)) NORETURN;
+void             rxvt_fatal                       (const char *fmt, ...) THROW ((class rxvt_failure_exception)) ecb_noreturn;
+void             rxvt_exit_failure                () THROW ((class rxvt_failure_exception)) ecb_noreturn;
 
 char           * rxvt_strtrim                     (char *str) NOTHROW;
 char          ** rxvt_strsplit                    (char delim, const char *str) NOTHROW;
@@ -669,7 +669,7 @@ typedef struct _mwmhints
 // return attributes defining the background, encoding doesn't matter
 // depends on RS_fgShift > RS_bgShift
 #define GET_BGATTR(x)                                      \
-  (expect_false ((x) & RS_RVid)                            \
+  (ecb_unlikely ((x) & RS_RVid)                            \
     ? (((x) & (RS_attrMask & ~RS_RVid))                    \
       | (((x) & RS_fgMask) >> (RS_fgShift - RS_bgShift)))  \
     : ((x) & (RS_attrMask | RS_bgMask)))

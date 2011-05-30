@@ -927,7 +927,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop, bool force_prop)
 
   width = 1;
 
-  for (uint16_t *t = extent_test_chars + ARRAY_LENGTH(extent_test_chars); t-- > extent_test_chars; )
+  for (uint16_t *t = extent_test_chars + ecb_array_length (extent_test_chars); t-- > extent_test_chars; )
     {
       if (FROM_UNICODE (cs, *t) == NOCHAR)
         continue;
@@ -1249,7 +1249,7 @@ rxvt_font_xft::load (const rxvt_fontprop &prop, bool force_prop)
 
       int glheight = height;
 
-      for (uint16_t *t = extent_test_chars + ARRAY_LENGTH(extent_test_chars); t-- > extent_test_chars; )
+      for (uint16_t *t = extent_test_chars + ecb_array_length (extent_test_chars); t-- > extent_test_chars; )
         {
           FcChar16 ch = *t;
 

@@ -622,16 +622,16 @@ rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
   else
     return false;
 
-  width_r = rxvt_popcount (visual->red_mask);
-  width_g = rxvt_popcount (visual->green_mask);
-  width_b = rxvt_popcount (visual->blue_mask);
+  width_r = ecb_popcount32 (visual->red_mask);
+  width_g = ecb_popcount32 (visual->green_mask);
+  width_b = ecb_popcount32 (visual->blue_mask);
 
   if (width_r > 8 || width_g > 8 || width_b > 8)
     return false;
 
-  sh_r = rxvt_ctz (visual->red_mask);
-  sh_g = rxvt_ctz (visual->green_mask);
-  sh_b = rxvt_ctz (visual->blue_mask);
+  sh_r = ecb_ctz32 (visual->red_mask);
+  sh_g = ecb_ctz32 (visual->green_mask);
+  sh_b = ecb_ctz32 (visual->blue_mask);
 
   if (width > INT_MAX / height / bytes_per_pixel)
     return false;
@@ -648,7 +648,7 @@ rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
       return false;
     }
 
-  ximage->byte_order = byteorder::big_endian () ? MSBFirst : LSBFirst;
+  ximage->byte_order = ecb_big_endian () ? MSBFirst : LSBFirst;
 
   rowstride = gdk_pixbuf_get_rowstride (pixbuf);
   channels = gdk_pixbuf_get_n_channels (pixbuf);
@@ -1441,7 +1441,7 @@ shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba &c)
   rgba low;
   rgba high;
   int i;
-  int host_byte_order = byteorder::big_endian () ? MSBFirst : LSBFirst;
+  int host_byte_order = ecb_big_endian () ? MSBFirst : LSBFirst;
 
   if (visual->c_class != TrueColor || ximage->format != ZPixmap) return;
 
