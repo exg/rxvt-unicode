@@ -1,2 +1,2 @@
-m4_include([ptytty.m4])
+m4_include([libptytty/ptytty.m4])
 

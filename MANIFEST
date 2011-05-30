@@ -5,13 +5,11 @@ INSTALL
 MANIFEST
 README.configure
 README.FAQ
-update_ptytty
 configure
 configure.ac
 config.sub
 config.guess
 aclocal.m4
-ptytty.m4
 autogen.sh
 config.h.in
 Makefile.in
@@ -49,6 +47,7 @@ src/command.C
 src/command.h
 src/encoding.C
 src/encoding.h
+src/fdpass_wrapper.C
 src/feature.h
 src/hookinc.h
 src/init.C
@@ -60,6 +59,7 @@ src/keyboard.h
 src/main.C
 src/misc.C
 src/optinc.h
+src/ptytty_wrapper.C
 src/rxvtutil.C
 src/rxvtutil.h
 src/rxvttoolkit.C
@@ -85,13 +85,14 @@ src/scrollbar.h
 src/version.h
 src/xdefaults.C
 
-src/libptytty.h
-src/ptytty_conf.h
-src/ptytty.h
-src/ptytty.C
-src/proxy.C
-src/logging.C
-src/fdpass.C
+libptytty/ptytty.m4
+libptytty/src/libptytty.h
+libptytty/src/ptytty_conf.h
+libptytty/src/ptytty.h
+libptytty/src/ptytty.C
+libptytty/src/proxy.C
+libptytty/src/logging.C
+libptytty/src/fdpass.C
 
 src/gentables
 src/gencompose
