@@ -168,16 +168,16 @@
 /* Define to 1 if you have the <stropts.h> header file. */
 #undef HAVE_STROPTS_H
 
-/* Define if utmp.h or lastlog.h has struct lastlog */
+/* Define to 1 if the system has the type `struct lastlog'. */
 #undef HAVE_STRUCT_LASTLOG
 
-/* Define if utmpx.h or lastlog.h has struct lastlogx */
+/* Define to 1 if the system has the type `struct lastlogx'. */
 #undef HAVE_STRUCT_LASTLOGX
 
-/* Define if utmp.h has struct utmp */
+/* Define to 1 if the system has the type `struct utmp'. */
 #undef HAVE_STRUCT_UTMP
 
-/* Define if utmpx.h has struct utmpx */
+/* Define to 1 if the system has the type `struct utmpx'. */
 #undef HAVE_STRUCT_UTMPX
 
 /* Define to 1 if you have the <sys/byteorder.h> header file. */
