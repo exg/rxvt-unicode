@@ -408,7 +408,7 @@ case $basic_machine in
 	| sparcv8-* | sparcv9-* | sparcv9b-* | sparcv9v-* | sv1-* | sx?-* \
 	| tahoe-* \
 	| tic30-* | tic4x-* | tic54x-* | tic55x-* | tic6x-* | tic80-* \
-	| tile-* | tilegx-* \
+	| tile*-* \
 	| tron-* \
 	| ubicom32-* \
 	| v850-* | v850e-* | vax-* \
@@ -1120,13 +1120,8 @@ case $basic_machine in
 		basic_machine=t90-cray
 		os=-unicos
 		;;
-	# This must be matched before tile*.
-	tilegx*)
-		basic_machine=tilegx-unknown
-		os=-linux-gnu
-		;;
 	tile*)
-		basic_machine=tile-unknown
+		basic_machine=$basic_machine-unknown
 		os=-linux-gnu
 		;;
 	tx39)
