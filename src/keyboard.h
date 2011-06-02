@@ -28,7 +28,6 @@
 
 #include <inttypes.h>
 
-#include "feature.h"
 #include "rxvtutil.h"
 
 #define KEYSYM_HASH_BITS        4       /* lowest #bits of keysym is used as hash key */

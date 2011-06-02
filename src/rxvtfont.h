@@ -8,7 +8,6 @@
 
 #include <inttypes.h>
 
-#include "feature.h"
 #include "encoding.h"
 #include "rxvtutil.h"
 #include "rxvttoolkit.h"
