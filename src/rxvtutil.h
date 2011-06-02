@@ -3,7 +3,6 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <inttypes.h>
 #include "ecb.h"
 
 using namespace std;

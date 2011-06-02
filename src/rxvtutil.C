@@ -22,7 +22,6 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <inttypes.h>
 
 #include "rxvtutil.h"
 
