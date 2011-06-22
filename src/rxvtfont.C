@@ -134,7 +134,6 @@ static const struct rxvt_fallback_font {
 # endif
 #endif
 
-  { CS_UNICODE,      "-*-lucidatypewriter-*-*-*-*-*-*-*-*-m-*-iso10646-1" },
   //{ CS_UNICODE,      "-*-unifont-*-*-*-*-*-*-*-*-c-*-iso10646-1"   }, // this gem of a font has actual dotted circles within the combining character glyphs.
 #if XFT
   { CS_UNICODE,      "xft:Bitstream Vera Sans Mono:antialias=false:autohint=true" },

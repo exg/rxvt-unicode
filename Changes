@@ -32,6 +32,8 @@ TODO: command line editing when icanon?
 	- always premultiply colour values - while this increases differences between
           core fonts and xft, it is "more correct" in practical situations.
         - disable PTYTTY_REENTRANT option - not needed for urxvt and saves a bit of code.
+        - remove lucidatypewriter from the list of fallback fonts, it was the only
+          non-xft non-cellfont in the list anyway.
 
 9.11 Mon May  2 10:34:46 CEST 2011
         - fix compilation on GNU/Hurd, debian bug #624736.
