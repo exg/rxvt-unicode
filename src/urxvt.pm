@@ -1338,19 +1338,20 @@ Here is a likely non-exhaustive list of resource names, not all of which
 are supported in every build, please see the source file F</src/rsinc.h>
 to see the actual list:
 
-  answerbackstring backgroundPixmap backspace_key boldFont boldItalicFont
-  borderLess chdir color cursorBlink cursorUnderline cutchars delete_key
-  display_name embed ext_bwidth fade font geometry hold iconName
-  imFont imLocale inputMethod insecure int_bwidth intensityStyles
-  italicFont jumpScroll lineSpace letterSpace loginShell mapAlert meta8
-  modifier mouseWheelScrollPage name override_redirect pastableTabs path
-  perl_eval perl_ext_1 perl_ext_2 perl_lib pointerBlank pointerBlankDelay
+  answerbackstring backgroundPixmap backspace_key blendtype blurradius
+  boldFont boldItalicFont borderLess buffered chdir color cursorBlink
+  cursorUnderline cutchars delete_key depth display_name embed ext_bwidth
+  fade font geometry hold iconName iconfile imFont imLocale inputMethod
+  insecure int_bwidth intensityStyles iso14755 iso14755_52 italicFont
+  jumpScroll letterSpace lineSpace loginShell mapAlert meta8 modifier
+  mouseWheelScrollPage name override_redirect pastableTabs path perl_eval
+  perl_ext_1 perl_ext_2 perl_lib pointerBlank pointerBlankDelay
   preeditType print_pipe pty_fd reverseVideo saveLines scrollBar
   scrollBar_align scrollBar_floating scrollBar_right scrollBar_thickness
   scrollTtyKeypress scrollTtyOutput scrollWithBuffer scrollstyle
-  secondaryScreen secondaryScroll shade term_name title
-  transient_for transparent transparent_all tripleclickwords utmpInhibit
-  visualBell
+  secondaryScreen secondaryScroll shade skipBuiltinGlyphs skipScroll
+  term_name title transient_for transparent tripleclickwords urgentOnBell
+  utmpInhibit visualBell
 
 =cut
 
