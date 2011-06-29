@@ -1310,12 +1310,13 @@ C<%urxvt::OPTION>. Options not enabled in this binary are not in the hash.
 Here is a likely non-exhaustive list of option names, please see the
 source file F</src/optinc.h> to see the actual list:
 
- borderLess console cursorBlink cursorUnderline hold iconic insecure
- intensityStyles jumpScroll loginShell mapAlert meta8 mouseWheelScrollPage
- override-redirect pastableTabs pointerBlank reverseVideo scrollBar
- scrollBar_floating scrollBar_right scrollTtyKeypress scrollTtyOutput
- scrollWithBuffer secondaryScreen secondaryScroll skipBuiltinGlyphs
- transparent tripleclickwords utmpInhibit visualBell
+ borderLess buffered console cursorBlink cursorUnderline hold iconic
+ insecure intensityStyles iso14755 iso14755_52 jumpScroll loginShell
+ mapAlert meta8 mouseWheelScrollPage override-redirect pastableTabs
+ pointerBlank reverseVideo scrollBar scrollBar_floating scrollBar_right
+ scrollTtyKeypress scrollTtyOutput scrollWithBuffer secondaryScreen
+ secondaryScroll skipBuiltinGlyphs skipScroll transparent tripleclickwords
+ urgentOnBell utmpInhibit visualBell
 
 =item $value = $term->resource ($name[, $newval])
 
