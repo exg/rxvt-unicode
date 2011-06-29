@@ -443,7 +443,7 @@ locale-specific way.
 =head2 Extension Objects
 
 Every perl extension is a perl class. A separate perl object is created
-for each terminal, and each terminal has its own set of extenion objects,
+for each terminal, and each terminal has its own set of extension objects,
 which are passed as the first parameter to hooks. So extensions can use
 their C<$self> object without having to think about clashes with other
 extensions or other terminals, with the exception of methods and members
@@ -821,7 +821,7 @@ Messages have a size limit of 1023 bytes currently.
 Returns all urxvt::term objects that exist in this process, regardless of
 whether they are started, being destroyed etc., so be careful. Only term
 objects that have perl extensions attached will be returned (because there
-is no urxvt::term objet associated with others).
+is no urxvt::term object associated with others).
 
 =item $time = urxvt::NOW
 
