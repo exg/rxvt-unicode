@@ -72,7 +72,7 @@ rxvtc: rxvtc.o $(COMMON_DAEMON) fdpass_wrapper.o
 
 #-------------------------------------------------------------------------
 
-#EXUBERANT_OPTS = -I NOTHROW
+#EXUBERANT_OPTS = -I NOTHROW -I THROW
 
 tags: *.[Ch]
 	ctags $(EXUBERANT_OPTS) *.[Ch]
