@@ -369,6 +369,7 @@ rxvt_perl_interp::init (rxvt_term *term)
       // runs outside of perls ENV
       term->perl.self = (void *)newSVptr ((void *)term, "urxvt::term");
       hv_store ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, newRV_noinc ((SV *)newAV ()), 0);
+      hv_store ((HV *)SvRV ((SV *)term->perl.self), "_selection", 10, newRV_noinc ((SV *)newAV ()), 0);
     }
 }
 
@@ -398,6 +399,16 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 
       for (int i = 0; i <= AvFILL (av); i++)
         ((overlay *)SvIV (*av_fetch (av, i, 0)))->swap ();
+    }
+  else if (htype == HOOK_DESTROY)
+    {
+      AV *av = (AV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)term->perl.self), "_selection", 10, 0));
+
+      for (int i = AvFILL (av); i >= 0; i--)
+        {
+          rxvt_selection *req = (rxvt_selection *)SvIV (*av_fetch (av, i, 0));
+          delete req;
+        }
     }
 
   bool event_consumed;
@@ -878,6 +889,8 @@ _new_selection_request (rxvt_term *term, int selnum, Time tm, Window win, Atom p
 	CODE:
         rxvt_selection *req = new rxvt_selection (term->display, selnum, tm, win, prop, term);
         req->cb_sv = newSVsv (cb);
+        AV *av = (AV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)term->perl.self), "_selection", 10, 0));
+        av_push (av, newSViv ((IV)req));
         RETVAL = (IV)req;
 	OUTPUT:
         RETVAL
@@ -886,6 +899,18 @@ void
 _delete_selection_request (IV req_)
 	CODE:
         rxvt_selection *req = (rxvt_selection *)req_;
+        AV *av = (AV *)SvRV (*hv_fetch ((HV *)SvRV ((SV *)req->term->perl.self), "_selection", 10, 0));
+        int i;
+
+        for (i = AvFILL (av); i >= 0; i--)
+          if (SvIV (*av_fetch (av, i, 1)) == req_)
+            break;
+
+        for (; i < AvFILL (av); i++)
+          av_store (av, i, SvREFCNT_inc (*av_fetch (av, i + 1, 0)));
+
+        av_pop (av);
+
         delete req;
 
 MODULE = urxvt             PACKAGE = urxvt::term
