@@ -672,7 +672,7 @@ TODO: command line editing when icanon?
 7.2  Sun Jan 22 21:58:16 CET 2006
         - bugfix: urxvt (not urxvtd) did not correctly handle multiple
           environments necessary, which resulted in segfaults within
-          getenv (reproducable: urxvt -fn 9x15, open a menu once,
+          getenv (reproducible: urxvt -fn 9x15, open a menu once,
           ctrl-shift-672c).
         - bugfix: the selection speedup in in 7.1 unfortunately caused
           non-ascii characters to enlarge/move the selection.
@@ -787,7 +787,7 @@ TODO: command line editing when icanon?
           menus, tabs etc. See the the urxvtperl manpage, the -pe option,
           perl*-resources and keysym resources. Not everything is there yet.
         - try to be more clever about differing font sizes and their ascent.
-          Not guarenteed to work, but works better in most cases now.
+          Not guaranteed to work, but works better in most cases now.
         - fix directory permissions on install.
         - implemented option to disable built-in line drawing characters
           and fall back to the font ones (patch by Martin Pohlack).
@@ -836,7 +836,7 @@ TODO: command line editing when icanon?
         - bump max columns/rows to 10000 each.
         - bump max savelines to 10000000.
         - -pty-fd now passes the urxvtc fd to the urxvtd process.
-        - avoid linking against -lnsl/-lsocket/-lxpg4 unless neccessary.
+        - avoid linking against -lnsl/-lsocket/-lxpg4 unless necessary.
         - major code cleanup (still not complete, though).
         - implement -hold option.
         - _major_ rewrite of internal buffer handling:
@@ -888,7 +888,7 @@ TODO: command line editing when icanon?
 	- R_SB_RXVT bitset value was 0, so rxvt scrollbar was initialised
 	  every time resulting in display errors (original rxvt also affected).
 	  Reported by Jasmin Buchert.
-	- font names are now considered to be utf-8 encoded (xft apperently
+	- font names are now considered to be utf-8 encoded (xft apparently
 	  uses this convention. X Core fonts might not, but it should be rare).
 	  Affects display in iso14755 box.
 	- rewrote the low-level xft drawing function ("xft backend" for the
@@ -907,7 +907,7 @@ TODO: command line editing when icanon?
 	- added doc/solaris9.patch by Ewgenij Starostin.
 
 5.5  Sat Apr 23 22:31:36 CEST 2005
-	- re-enabled modifer state matching as in 5.3, but implement
+	- re-enabled modifier state matching as in 5.3, but implement
 	  a new builtin: keysym style that simply reverts to the built-in
 	  meaning of the given key.
 	- use scrollcolor for next scrollbar instead of hardcoded antiquewhite
@@ -949,7 +949,7 @@ TODO: command line editing when icanon?
 	- SYNCCVS. backported bugfixes done to rxvt
 	  (sourceforge bugs #1028739, #1028732), except for
 	  pts/%s fix as it seems to collide with freebsd,
-	  and sourceforge bug #954654, which is not neccessary.
+	  and sourceforge bug #954654, which is not necessary.
 	- change terminfo file to not clobber G1 when using
 	  line-drawing characters, as this seems to mess
 	  with EUC-JP (it will clobber G0, but G0 practically
@@ -1003,7 +1003,7 @@ TODO: command line editing when icanon?
 4.9  Thu Feb  3 09:52:03 CET 2005
 	- nuke out utmp entries completely. Should be fixed in
 	  original rxvt, too. (reported by James Michael Fultz).
-	- resizes wil now correctly refresh the displayed text when
+	- resizes will now correctly refresh the displayed text when
 	  -pixmap is active.
 	- new option/resource imFont.
 	- document --tripleclickwords/-tcw.
@@ -1045,7 +1045,7 @@ TODO: command line editing when icanon?
 	- fixed two tiny per-instance memory leaks.
 
 4.7  Wed Dec 29 20:54:24 CET 2004
-	- fix a bug in the event logic that could cause the temrinal to be
+	- fix a bug in the event logic that could cause the terminal to be
 	  black on initial startup.
 	- do NOT call XCloseIM, ever. This causes way to many crashes due to
 	  races in the protocol and within Xlib.
@@ -1174,7 +1174,7 @@ TODO: command line editing when icanon?
 	- tweaked src/features.h a bit.
 	- removed README.unicode.
 	- support select&paste of tab characters.
-	- fixed a segfault when trying to load nonexistant fonts (reported
+	- fixed a segfault when trying to load nonexistent fonts (reported
 	  by Eduard Bloch and Mikael Magnusson).
 	- fixed a long-standing rxvt bug in which rxvt failed to save
 	  and restore the correct cursor position on the secondary screen.
@@ -1235,7 +1235,7 @@ TODO: command line editing when icanon?
 	- fix coordinates used for Over && OffTheSpot editing to fit directly
 	  at the cursor (Over) or into the top line (Off).
 	- reset SIGHUP and SIGPIPE handlers to default values (they were
-	  previously being ignored, causing programs not to exit on windoe
+	  previously being ignored, causing programs not to exit on window
 	  close).
 	- implemented simple overlays for feedback messages. believe it or
 	  not, this was a major blocker in implementing tabbed terminals.
@@ -1360,7 +1360,7 @@ TODO: command line editing when icanon?
 	- updated doc/etc/rxvt.* to reflect the change. This brings rxvt
 	  in line with many existing rxvt terminfo and termcap entries as
 	  well as with other terminal emulators.
-	- fix a segfault when trying to set a nonexistant locale
+	- fix a segfault when trying to set a nonexistent locale
 	  (reported by elmex).
 	- find more fonts by default for japanese.
 	- the internal border wasn't always cleared. This is fixed by moving
@@ -1396,7 +1396,7 @@ TODO: command line editing when icanon?
 	  replaced them by runtime-configurable options secondaryScreen and
 	  secondaryScroll (-ssr and -ssc) (see debian bug #237673).
 	- close down terminal window when child exits. (debian bug #241267).
-	- xterm-compat: enable seperate mouse bg colour setting.
+	- xterm-compat: enable separate mouse bg colour setting.
 	- re-enable mouse cursor colours again, fixing colours when fg/bg are
 	  overwritten (as is common).
 	- xterm-compat: correctly implement privmodes 1047, 1048, 1049.
@@ -1451,7 +1451,7 @@ TODO: command line editing when icanon?
 	  MAX_NFONTS. UNICODE and UTF8 defines and references from
 	  all files.
 	- default config now reads an app-defaults file even without
-	  --enable-xgetdefaults.
+	  --enable-xgetdefault.
 
 2.2  Thu Mar 11 01:41:56 CET 2004
 	- implement autocompositing of characters by either using an existing
