@@ -633,6 +633,10 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
   if (count == 0 || (row1 > row2))
     return 0;
 
+  int rows = row2 - row1 + 1;
+
+  min_it (count, rows);
+
   want_refresh = 1;
   num_scr += count;
 
@@ -733,10 +737,6 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
 
       // use a simple and robust scrolling algorithm, this
       // part of scr_scroll_text is not time-critical.
-
-      int rows = row2 - row1 + 1;
-
-      min_it (count, rows);
 
       line_t *temp_buf = row_buf + total_rows;
 

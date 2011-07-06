@@ -20,6 +20,10 @@ TODO: decrqm http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
 TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
+	- sanitise the argument of SD / SU sequences. Fixes a possible
+	  crash when the argument is big enough, red hat bug #711137
+	  (Emanuele Giaquinta).
+
 9.12 Wed Jun 29 14:34:28 CEST 2011
         - fix regression in processing of SelectionNotify events.
           urxvt would fail to request a selection if the owner did not
