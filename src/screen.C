@@ -640,7 +640,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
       && row1 == 0
       && (current_screen == PRIMARY || option (Opt_secondaryScroll)))
     {
-      min_it (count, row2 - total_rows);
+      min_it (count, row2 + total_rows);
 
       top_row = max (top_row - count, -saveLines);
 
