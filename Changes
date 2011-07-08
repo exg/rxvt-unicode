@@ -21,11 +21,12 @@ TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
 TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
-TODO: use temp_buf for ecreen temp_buf and remove the extra nrows
 	- sanitise the argument of SD / SU sequences. Fixes a possible
 	  crash when the argument is big enough, red hat bug #711137
 	  (Emanuele Giaquinta).
         - correctly split long lines when scrolling.
+	- Fix compilation on systems with bsd style utmp and no utmpx,
+	  such as openbsd.
 
 9.12 Wed Jun 29 14:34:28 CEST 2011
         - fix regression in processing of SelectionNotify events.
