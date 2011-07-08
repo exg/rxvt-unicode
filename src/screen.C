@@ -640,36 +640,19 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
       && row1 == 0
       && (current_screen == PRIMARY || option (Opt_secondaryScroll)))
     {
-      min_it (count, row2 + total_rows);
+      min_it (count, total_rows - (nrow - (row2 + 1)));
 
       top_row = max (top_row - count, -saveLines);
 
-      // scroll everything up 'count' lines
-      term_start = (term_start + count) % total_rows;
-
       // sever bottommost line
       {
-        line_t &l = ROW(row2 - count);
+        line_t &l = ROW(row2 - 1);
         l.is_longer (0);
         l.touch ();
       }
 
-      // erase newly scrolled-in lines
-      for (int i = count; i--; )
-        {
-          line_t &l = ROW(nrow - 1 - i);
-
-          // optimise if already cleared, can be significant on slow machines
-          // could be rolled into scr_blank_screen_mem
-          if (l.r && l.l < ncol - 1 && !((l.r[l.l + 1] ^ rstyle) & (RS_fgMask | RS_bgMask)))
-            {
-              scr_blank_line (l, 0, l.l, rstyle);
-              l.l = 0;
-              l.f = 0;
-            }
-          else
-            scr_blank_screen_mem (l, rstyle);
-        }
+      // scroll everything up 'count' lines
+      term_start = (term_start + count) % total_rows;
 
       // now copy lines below the scroll region bottom to the
       // bottom of the screen again, so they look as if they
@@ -681,6 +664,23 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
 
           ::swap (l1, l2);
           l2.touch ();
+        }
+
+      // erase newly scrolled-in lines
+      for (int i = count; i--; )
+        {
+          line_t &l = ROW(row2 - i);
+
+          // optimise if already cleared, can be significant on slow machines
+          // could be rolled into scr_blank_screen_mem
+          if (l.r && l.l < ncol - 1 && !((l.r[l.l + 1] ^ rstyle) & (RS_fgMask | RS_bgMask)))
+            {
+              scr_blank_line (l, 0, l.l, rstyle);
+              l.l = 0;
+              l.f = 0;
+            }
+          else
+            scr_blank_screen_mem (l, rstyle);
         }
 
       // move and/or clear selection, if any
