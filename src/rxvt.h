@@ -983,7 +983,7 @@ struct rxvt_vars : TermWin_t
   XSizeHints      szHint;
   rxvt_color     *pix_colors;
   Cursor          TermWin_cursor;       /* cursor for vt window */
-  line_t         *row_buf;      // all lines, scrollback + terminal, circular, followed by temp_buf
+  line_t         *row_buf;      // all lines, scrollback + terminal, circular
   line_t         *drawn_buf;    // text on screen
   line_t         *swap_buf;     // lines for swap buffer
   char           *tabs;         /* per location: 1 == tab-stop               */

@@ -205,7 +205,7 @@ rxvt_term::scr_reset ()
       talloc = new rxvt_salloc (ncol * sizeof (text_t));
       ralloc = new rxvt_salloc (ncol * sizeof (rend_t));
 
-      row_buf   = (line_t *)rxvt_calloc (total_rows + nrow, sizeof (line_t));
+      row_buf   = (line_t *)rxvt_calloc (total_rows       , sizeof (line_t));
       drawn_buf = (line_t *)rxvt_calloc (nrow             , sizeof (line_t));
       swap_buf  = (line_t *)rxvt_calloc (nrow             , sizeof (line_t));
 
@@ -277,7 +277,7 @@ rxvt_term::scr_reset ()
         }
 
       line_t *old_buf = row_buf;
-      row_buf = (line_t *)rxvt_calloc (total_rows + nrow, sizeof (line_t));
+      row_buf = (line_t *)rxvt_calloc (total_rows, sizeof (line_t));
 
       int p    = MOD (term_start + prev_nrow, prev_total_rows);  // previous row
       int pend = MOD (term_start + top_row  , prev_total_rows);
@@ -748,7 +748,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
 
       min_it (count, rows);
 
-      line_t *temp_buf = row_buf + total_rows;
+      line_t *temp_buf = rxvt_temp_buf<line_t> (rows);
 
       for (int row = 0; row < rows; row++)
         {
