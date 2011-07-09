@@ -2658,6 +2658,7 @@ rxvt_term::process_escape_seq ()
         scr_forwardindex ();
         break;
 #endif
+      // DECPAM/DECPNM
       case '=':
       case '>':
         set_privmode (PrivMode_aplKP, ch == '=');
@@ -3617,7 +3618,7 @@ rxvt_term::process_terminal_mode (int mode, int priv ecb_unused, unsigned int na
     const unsigned long bit;
   } argtopriv[] = {
                   { 1, PrivMode_aplCUR },       // DECCKM
-                  { 2, PrivMode_vt52 },
+                  { 2, PrivMode_vt52 },         // DECANM
                   { 3, PrivMode_132 },          // DECCOLM
                   { 4, PrivMode_smoothScroll }, // DECSCLM
                   { 5, PrivMode_rVideo },       // DECSCNM
@@ -3627,7 +3628,7 @@ rxvt_term::process_terminal_mode (int mode, int priv ecb_unused, unsigned int na
                   { 9, PrivMode_MouseX10 },
                  // 18 end FF to printer after print screen
                  // 19 Print screen prints full screen/scroll region
-                  { 25, PrivMode_VisibleCursor }, // cnorm/cvvis/civis
+                  { 25, PrivMode_VisibleCursor }, // DECTCEM cnorm/cvvis/civis
 #ifdef scrollBar_esc
                   { scrollBar_esc, PrivMode_scrollBar },
 #endif
@@ -3638,7 +3639,7 @@ rxvt_term::process_terminal_mode (int mode, int priv ecb_unused, unsigned int na
                  // 45 margin bell NYI
                  // 46 start logging
                   { 47, PrivMode_Screen },
-                  { 66, PrivMode_aplKP },       // DECPAM/DECPNM
+                  { 66, PrivMode_aplKP },       // DECNKM
 #ifndef NO_BACKSPACE_KEY
                   { 67, PrivMode_BackSpace },   // DECBKM
 #endif
