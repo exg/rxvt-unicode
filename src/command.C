@@ -989,7 +989,7 @@ rxvt_term::flush ()
       scr_refresh ();
       scrollBar.show (1);
 #ifdef USE_XIM
-      IMSendSpot ();
+      im_send_spot ();
 #endif
     }
 
@@ -1738,7 +1738,7 @@ rxvt_term::focus_in ()
 #if USE_XIM
       if (Input_Context != NULL)
         {
-          IMSetPosition ();
+          im_set_position ();
           XSetICFocus (Input_Context);
         }
 #endif

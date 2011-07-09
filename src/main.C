@@ -1080,7 +1080,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
     scr_reset ();
 
 #ifdef USE_XIM
-  IMSetPosition ();
+  im_set_position ();
 #endif
 }
 
@@ -1151,7 +1151,7 @@ rxvt_term::im_set_preedit_area (XRectangle &preedit_rect,
 
 /* Checking whether input method is running. */
 bool
-rxvt_term::IMisRunning ()
+rxvt_term::im_is_running ()
 {
   Atom atom;
   Window win;
@@ -1177,7 +1177,7 @@ rxvt_term::IMisRunning ()
 }
 
 void
-rxvt_term::IMSendSpot ()
+rxvt_term::im_send_spot ()
 {
   XPoint nspot;
   XVaNestedList preedit_attr;
@@ -1293,7 +1293,7 @@ xim_preedit_caret (XIC ic, XPointer client_data, XIMPreeditCaretCallbackStruct *
  * open a suitable preedit type
  */
 bool
-rxvt_term::IM_get_IC (const char *modifiers)
+rxvt_term::im_get_ic (const char *modifiers)
 {
   int i, j, found;
   XIM xim;
@@ -1501,7 +1501,7 @@ foundpet:
     vt_select_input ();
 #endif
 
-  IMSetPosition ();
+  im_set_position ();
 
   return true;
 }
@@ -1539,7 +1539,7 @@ rxvt_term::im_cb ()
             {
               strcpy (buf, "@im=");
               strncat (buf, s[i], IMBUFSIZ - 5);
-              if (IM_get_IC (buf))
+              if (im_get_ic (buf))
                 {
                   found = true;
                   break;
@@ -1554,11 +1554,11 @@ rxvt_term::im_cb ()
     }
 
   /* try with XMODIFIERS env. var. */
-  if (IM_get_IC (""))
+  if (im_get_ic (""))
     goto done;
 
   /* try with no modifiers base IF the user didn't specify an IM */
-  if (IM_get_IC ("@im=none"))
+  if (im_get_ic ("@im=none"))
     goto done;
 
 done:
@@ -1569,7 +1569,7 @@ done:
 }
 
 void
-rxvt_term::IMSetPosition ()
+rxvt_term::im_set_position ()
 {
   XRectangle preedit_rect, status_rect, *needed_rect;
   XVaNestedList preedit_attr, status_attr;
@@ -1577,7 +1577,7 @@ rxvt_term::IMSetPosition ()
   if (!Input_Context
       || !focus
       || !(input_style & (XIMPreeditArea | XIMPreeditPosition))
-      || !IMisRunning ())
+      || !im_is_running ())
     return;
 
   if (input_style & XIMPreeditPosition)

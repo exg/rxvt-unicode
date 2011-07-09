@@ -1343,10 +1343,10 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void im_set_color (unsigned long &fg, unsigned long &bg);
   void im_set_preedit_area (XRectangle &preedit_rect, XRectangle &status_rect, const XRectangle &needed_rect);
 
-  bool IMisRunning ();
-  void IMSendSpot ();
-  bool IM_get_IC (const char *modifiers);
-  void IMSetPosition ();
+  bool im_is_running ();
+  void im_send_spot ();
+  bool im_get_ic (const char *modifiers);
+  void im_set_position ();
 #endif
 
   // command.C
