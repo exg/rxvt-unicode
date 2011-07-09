@@ -1303,9 +1303,6 @@ rxvt_term::IM_get_IC (const char *modifiers)
   const char *p;
   char **s;
   XIMStyles *xim_styles;
-#ifdef ENABLE_XIM_ONTHESPOT
-  XIMCallback xcb[4];
-#endif
 
   set_environ (envv);
 
@@ -1455,6 +1452,8 @@ foundpet:
 #if ENABLE_XIM_ONTHESPOT
   else if (input_style & XIMPreeditCallbacks)
     {
+      XIMCallback xcb[4];
+
       im_set_position (spot);
 
       xcb[0].client_data = (XPointer)this; xcb[0].callback = (XIMProc)xim_preedit_start;
