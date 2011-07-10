@@ -646,7 +646,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
 
       // sever bottommost line
       {
-        line_t &l = ROW(row2 - 1);
+        line_t &l = ROW(row2);
         l.is_longer (0);
         l.touch ();
       }
