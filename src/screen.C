@@ -767,7 +767,6 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
         l.is_longer (0);
         l.touch ();
       }
-
     }
 
   return count;
