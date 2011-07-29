@@ -801,8 +801,8 @@ BOOT:
 #   endif
   };
 
-  for (civ = const_iv + ecb_array_length (const_iv); civ-- > const_iv; )
-    newCONSTSUB (stash, (char *)civ->name, newSViv (civ->iv));
+  for (civ = const_iv + ecb_array_length (const_iv); civ > const_iv; civ--)
+    newCONSTSUB (stash, (char *)civ[-1].name, newSViv (civ[-1].iv));
 }
 
 void

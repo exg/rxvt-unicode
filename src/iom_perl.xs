@@ -19,8 +19,8 @@ BOOT:
 #   undef iom_const
     };
 
-    for (civ = iom_const_iv + sizeof (iom_const_iv) / sizeof (iom_const_iv [0]); civ-- > iom_const_iv; )
-      newCONSTSUB (stash, (char *)civ->name, newSViv (civ->iv));
+    for (civ = iom_const_iv + sizeof (iom_const_iv) / sizeof (iom_const_iv [0]); civ > iom_const_iv; civ--)
+      newCONSTSUB (stash, (char *)civ[-1].name, newSViv (civ[-1].iv));
 
     /* slightly dirty to put the same scalar into all those arrays, but */
     /* we do not expect users to modify them anyways */
