@@ -107,7 +107,7 @@ text_t rxvt_composite_vec::compose (unicode_t c1, unicode_t c2)
     }
 
   // check to see whether this combination already exists otherwise
-  for (cc = v.end (); cc-- > v.begin (); )
+  for (cc = v.begin (); cc < v.end (); cc++)
     if (cc->c1 == c1 && cc->c2 == c2)
       return COMPOSE_LO + (cc - v.begin ());
 
