@@ -1443,8 +1443,8 @@ Erase in Display (ED)
 
 =begin table
 
-	B<< C<Ps = 0> >>	Clear Below (default)
-	B<< C<Ps = 1> >>	Clear Above
+	B<< C<Ps = 0> >>	Clear Right and Below (default)
+	B<< C<Ps = 1> >>	Clear Left and Above
 	B<< C<Ps = 2> >>	Clear All
 
 =end table
