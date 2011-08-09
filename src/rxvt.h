@@ -1103,7 +1103,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
     BG_PROP_SCALE        = 1 <<  3,
     BG_ROOT_ALIGN        = 1 <<  4,
-    BG_GEOMETRY_FLAGS    = BG_PROP_SCALE | BG_ROOT_ALIGN,
+    BG_TILE              = 1 << 14,
+    BG_GEOMETRY_FLAGS    = BG_PROP_SCALE | BG_ROOT_ALIGN | BG_TILE,
 
     BG_TINT_SET          = 1 <<  5,
     BG_TINT_BITAND       = 1 <<  6,

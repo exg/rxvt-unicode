@@ -751,12 +751,12 @@ Use the specified image file for the background and also
 optionally specify its scaling with a geometry string B<WxH+X+Y>,
 (default C<100x100+50+50>) in which B<"W" / "H"> specify the
 horizontal/vertical scale (percent), and B<"X" / "Y"> locate the image
-centre (percent).  A scale of 0 displays the image with tiling.
+centre (percent).  A scale of 0 disables scaling.
 The maximum permitted scale is 1000.
 Additional operations can be specified after colon B<:op1:op2...>.
 Supported operations are:
 
-  tile        force background image to be tiled and not scaled. Equivalent to 0x0
+  tile        will tile image
   propscale   will scale image keeping proportions
   auto        will scale image to match window size. Equivalent to 100x100
   hscale      will scale image horizontally to the window size

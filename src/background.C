@@ -262,6 +262,7 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
         {
           if (!strcasecmp (arr[i], "tile"))
             {
+              new_flags |= BG_TILE;
               w = h = noScale;
               geom_flags |= WidthValue|HeightValue;
             }
@@ -298,7 +299,7 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
             }
           else if (!strcasecmp (arr[i], "root"))
             {
-              new_flags |= BG_ROOT_ALIGN;
+              new_flags |= BG_TILE|BG_ROOT_ALIGN;
               w = h = noScale;
               geom_flags |= WidthValue|HeightValue;
             }
@@ -355,7 +356,8 @@ rxvt_term::get_image_geometry (int image_width, int image_height, int &w, int &h
     }
 
   bg_flags &= ~BG_IS_SIZE_SENSITIVE;
-  if ((bg_flags & BG_PROP_SCALE) || h_scale || v_scale
+  if (!(bg_flags & BG_TILE)
+      || (bg_flags & BG_PROP_SCALE) || h_scale || v_scale
       || (!(bg_flags & BG_ROOT_ALIGN) && (h_align || v_align))
       || w > target_width || h > target_height)
     bg_flags |= BG_IS_SIZE_SENSITIVE;
@@ -457,7 +459,7 @@ rxvt_term::render_image (unsigned long tr_flags)
 
       if (background == NULL)
         {
-          if (h_scale == 0 || v_scale == 0)
+          if (bg_flags & BG_TILE)
             {
               /* if tiling - pixmap has to be sized exactly as the image,
                  but there is no need to make it bigger than the window! */
@@ -492,7 +494,7 @@ rxvt_term::render_image (unsigned long tr_flags)
           layers[0].tint = background_tint;
           layers[1].im = result;
 
-          if (h_scale == 0 || v_scale == 0)
+          if (bg_flags & BG_TILE)
             {
               /* tile horizontally */
               while (x > 0) x -= (int)result->width;
@@ -506,7 +508,7 @@ rxvt_term::render_image (unsigned long tr_flags)
               layers[1].clip_width = result->width;
             }
 
-          if (h_scale == 0 || v_scale == 0)
+          if (bg_flags & BG_TILE)
             {
               while (y > 0) y -= (int)result->height;
               layers[1].dst_y = y;
@@ -566,7 +568,7 @@ rxvt_term::render_image (unsigned long tr_flags)
       int dst_width = result->width, dst_height = result->height;
       if (background == NULL)
         {
-          if (!(h_scale == 0 || v_scale == 0))
+          if (!(bg_flags & BG_TILE))
             {
               src_x = make_clip_rectangle (x, result->width , new_pmap_width , dst_x, dst_width );
               src_y = make_clip_rectangle (y, result->height, new_pmap_height, dst_y, dst_height);
@@ -744,7 +746,7 @@ rxvt_term::render_image (unsigned long tr_flags)
     }
   else
     {
-      if (h_scale == 0 || v_scale == 0)
+      if (bg_flags & BG_TILE)
         {
           new_pmap_width = min (image_width, target_width);
           new_pmap_height = min (image_height, target_height);
@@ -767,7 +769,7 @@ rxvt_term::render_image (unsigned long tr_flags)
 
   if (gc)
     {
-      if (h_scale == 0 || v_scale == 0)
+      if (bg_flags & BG_TILE)
         {
           Pixmap tile = XCreatePixmap (dpy, vt, image_width, image_height, depth);
           pixbuf_to_pixmap (result, tile, gc,
