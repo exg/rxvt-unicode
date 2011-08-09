@@ -758,7 +758,6 @@ Supported operations are:
 
   tile        will tile image
   propscale   will scale image keeping proportions
-  auto        will scale image to match window size. Equivalent to 100x100
   hscale      will scale image horizontally to the window size
   vscale      will scale image vertically to the window size
   scale       will scale image to match window size

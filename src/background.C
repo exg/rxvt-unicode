@@ -57,7 +57,6 @@
  * hscale     Scale horizontally, tile vertically ?
  * vscale     Tile horizontally, scale vertically ?
  * scale      Scale both up and down
- * auto       Same as 100x100+50+50
  */
 
 #ifdef HAVE_BG_PIXMAP
@@ -290,12 +289,6 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
               if (w == 0) w = windowScale;
 
               geom_flags |= WidthValue|HeightValue;
-            }
-          else if (!strcasecmp (arr[i], "auto"))
-            {
-              w = h = windowScale;
-              x = y = centerAlign;
-              geom_flags |= WidthValue|HeightValue|XValue|YValue;
             }
           else if (!strcasecmp (arr[i], "root"))
             {
