@@ -758,8 +758,6 @@ Supported operations are:
 
   tile        will tile image
   propscale   will scale image keeping proportions
-  hscale      will scale image horizontally to the window size
-  vscale      will scale image vertically to the window size
   scale       will scale image to match window size
   root        will tile image as if it was a root window background, auto-adjusting
               whenever terminal window moves

@@ -54,8 +54,6 @@
  *            proper aspect ratio for the image. Any portion of the
  *            background not covered by the image is filled with the
  *            current background color.
- * hscale     Scale horizontally, tile vertically ?
- * vscale     Tile horizontally, scale vertically ?
  * scale      Scale both up and down
  */
 
@@ -268,20 +266,6 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
           else if (!strcasecmp (arr[i], "propscale"))
             {
               new_flags |= BG_PROP_SCALE;
-            }
-          else if (!strcasecmp (arr[i], "hscale"))
-            {
-              if (w == 0) w = windowScale;
-
-              h = noScale;
-              geom_flags |= WidthValue|HeightValue;
-            }
-          else if (!strcasecmp (arr[i], "vscale"))
-            {
-              if (h == 0) h = windowScale;
-
-              w = noScale;
-              geom_flags |= WidthValue|HeightValue;
             }
           else if (!strcasecmp (arr[i], "scale"))
             {
