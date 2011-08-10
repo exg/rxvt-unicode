@@ -759,6 +759,7 @@ Supported operations are:
   tile        will tile image
   propscale   will scale image keeping proportions
   scale       will scale image to match window size
+  center      will center image with no scaling
   root        will tile image as if it was a root window background, auto-adjusting
               whenever terminal window moves
 

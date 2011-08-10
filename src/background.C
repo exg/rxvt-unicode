@@ -274,6 +274,12 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
 
               geom_flags |= WidthValue|HeightValue;
             }
+          else if (!strcasecmp (arr[i], "center"))
+            {
+              w = h = noScale;
+              x = y = centerAlign;
+              geom_flags |= WidthValue|HeightValue|XValue|YValue;
+            }
           else if (!strcasecmp (arr[i], "root"))
             {
               new_flags |= BG_TILE|BG_ROOT_ALIGN;
