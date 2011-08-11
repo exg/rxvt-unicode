@@ -24,6 +24,11 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 	- INCOMPATIBLE CHANGE: A scale value of 0 in the bg image
 	  geometry no longer enables tiling, so as to make it possible
 	  to disable both scaling and tiling.
+        - overhaul of the bg image operations. The old operations have
+          been removed in favour of simple composable operations and
+          styles built on top of the new operations and scale/position
+          settings. Old operations are still parsed for backward
+          compatibility (Emanuele Giaquinta).
 	- sanitise the argument of SD / SU sequences. Fixes a possible
 	  crash when the argument is big enough, red hat bug #711137
 	  (Emanuele Giaquinta).
