@@ -48,13 +48,6 @@
  *            the image in the window.
  *
  * Pixmap Operations : (should be prepended by a colon)
- * tile       Tile image. Scaling/position modifiers above will affect
- *            the tile size and origin.
- * propscale  When scaling, scale proportionally. That is, maintain the
- *            proper aspect ratio for the image. Any portion of the
- *            background not covered by the image is filled with the
- *            current background color.
- * scale      Scale both up and down
  */
 
 #ifdef HAVE_BG_PIXMAP
@@ -257,7 +250,47 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
 
       for (int i = 0; arr[i]; i++) 
         {
-          if (!strcasecmp (arr[i], "tile"))
+          if (!strcasecmp (arr[i], "style=tiled"))
+            {
+              new_flags = BG_TILE;
+              w = h = noScale;
+              x = y = 0;
+              geom_flags = WidthValue|HeightValue|XValue|YValue;
+            }
+          else if (!strcasecmp (arr[i], "style=aspect-stretched"))
+            {
+              new_flags = BG_PROP_SCALE;
+              x = y = centerAlign;
+              geom_flags = XValue|YValue;
+            }
+          else if (!strcasecmp (arr[i], "style=stretched"))
+            {
+              new_flags = 0;
+              w = h = windowScale;
+              geom_flags = WidthValue|HeightValue;
+            }
+          else if (!strcasecmp (arr[i], "style=centered"))
+            {
+              new_flags = 0;
+              w = h = noScale;
+              x = y = centerAlign;
+              geom_flags = WidthValue|HeightValue|XValue|YValue;
+            }
+          else if (!strcasecmp (arr[i], "style=root-tiled"))
+            {
+              new_flags = BG_TILE|BG_ROOT_ALIGN;
+              w = h = noScale;
+              geom_flags = WidthValue|HeightValue;
+            }
+          else if (!strcasecmp (arr[i], "op=tile"))
+            new_flags |= BG_TILE;
+          else if (!strcasecmp (arr[i], "op=pscale"))
+            new_flags |= BG_PROP_SCALE;
+          else if (!strcasecmp (arr[i], "op=root"))
+            new_flags |= BG_ROOT_ALIGN;
+
+          // deprecated
+          else if (!strcasecmp (arr[i], "tile"))
             {
               new_flags |= BG_TILE;
               w = h = noScale;
@@ -273,12 +306,6 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
               if (w == 0) w = windowScale;
 
               geom_flags |= WidthValue|HeightValue;
-            }
-          else if (!strcasecmp (arr[i], "center"))
-            {
-              w = h = noScale;
-              x = y = centerAlign;
-              geom_flags |= WidthValue|HeightValue|XValue|YValue;
             }
           else if (!strcasecmp (arr[i], "root"))
             {

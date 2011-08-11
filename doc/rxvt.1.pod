@@ -756,12 +756,31 @@ The maximum permitted scale is 1000.
 Additional operations can be specified after colon B<:op1:op2...>.
 Supported operations are:
 
-  tile        will tile image
-  propscale   will scale image keeping proportions
-  scale       will scale image to match window size
-  center      will center image with no scaling
-  root        will tile image as if it was a root window background, auto-adjusting
-              whenever terminal window moves
+  op=tile     enables tiling
+  op=pscale   enables proportional scaling
+  op=root     use the position of the terminal window relative to the root
+              window as the image offset, simulating a root window background
+
+Alternatively, a predefined set of templates can be used to achieve
+the most common setups:
+
+  style=tiled              the image is tiled with no scaling
+  style=aspect-stretched   the image is scaled to fill the whole window maintaining
+                           the aspect ratio and centered 
+  style=stretched          the image is scaled to fill the whole window
+  style=centered           the image is centered with no scaling
+  style=root-tiled         the image is tiled with no scaling and using 'op=root' positioning
+
+If multiple templates are specified the last one wins. Note that a
+template overrides all the scale, position and operations settings.
+Indeed, the templates can be specified in terms of low level settings
+as follows:
+
+  style=tiled              0x0+0+0:op=tile
+  style=aspect-stretched   +50+50:op=pscale
+  style=stretched          100x100
+  style=centered           0x0+50+50
+  style=root-tiled         0x0:op=tile:op=root
 
 If used in conjunction with B<-tr> option, the specified pixmap will be
 blended over the transparent background using alpha-blending. If I<afterimage>
