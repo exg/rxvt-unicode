@@ -300,12 +300,28 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
             {
               new_flags |= BG_PROP_SCALE;
             }
+          else if (!strcasecmp (arr[i], "hscale"))
+            {
+              w = windowScale;
+              h = noScale;
+              geom_flags |= WidthValue|HeightValue;
+            }
+          else if (!strcasecmp (arr[i], "vscale"))
+            {
+              h = windowScale;
+              w = noScale;
+              geom_flags |= WidthValue|HeightValue;
+            }
           else if (!strcasecmp (arr[i], "scale"))
             {
-              if (h == 0) h = windowScale;
-              if (w == 0) w = windowScale;
-
+              w = h = windowScale;
               geom_flags |= WidthValue|HeightValue;
+            }
+          else if (!strcasecmp (arr[i], "auto"))
+            {
+              w = h = windowScale;
+              x = y = centerAlign;
+              geom_flags |= WidthValue|HeightValue|XValue|YValue;
             }
           else if (!strcasecmp (arr[i], "root"))
             {
