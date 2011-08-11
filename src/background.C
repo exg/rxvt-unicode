@@ -302,12 +302,14 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
             }
           else if (!strcasecmp (arr[i], "hscale"))
             {
+              new_flags |= BG_TILE;
               w = windowScale;
               h = noScale;
               geom_flags |= WidthValue|HeightValue;
             }
           else if (!strcasecmp (arr[i], "vscale"))
             {
+              new_flags |= BG_TILE;
               h = windowScale;
               w = noScale;
               geom_flags |= WidthValue|HeightValue;
