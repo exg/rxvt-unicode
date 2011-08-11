@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2011-06-29" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2011-08-11" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -783,20 +783,41 @@ Use the specified image file for the background and also
 optionally specify its scaling with a geometry string \fBWxH+X+Y\fR,
 (default \f(CW\*(C`100x100+50+50\*(C'\fR) in which \fB\*(L"W\*(R" / \*(L"H\*(R"\fR specify the
 horizontal/vertical scale (percent), and \fB\*(L"X\*(R" / \*(L"Y\*(R"\fR locate the image
-centre (percent).  A scale of 0 displays the image with tiling.
+centre (percent).  A scale of 0 disables scaling.
 The maximum permitted scale is 1000.
 Additional operations can be specified after colon \fB:op1:op2...\fR.
 Supported operations are:
 .Sp
-.Vb 8
-\&  tile        force background image to be tiled and not scaled. Equivalent to 0x0
-\&  propscale   will scale image keeping proportions
-\&  auto        will scale image to match window size. Equivalent to 100x100
-\&  hscale      will scale image horizontally to the window size
-\&  vscale      will scale image vertically to the window size
-\&  scale       will scale image to match window size
-\&  root        will tile image as if it was a root window background, auto\-adjusting
-\&              whenever terminal window moves
+.Vb 4
+\&  op=tile     enables tiling
+\&  op=pscale   enables proportional scaling
+\&  op=root     use the position of the terminal window relative to the root
+\&              window as the image offset, simulating a root window background
+.Ve
+.Sp
+Alternatively, a predefined set of templates can be used to achieve
+the most common setups:
+.Sp
+.Vb 6
+\&  style=tiled              the image is tiled with no scaling
+\&  style=aspect\-stretched   the image is scaled to fill the whole window maintaining
+\&                           the aspect ratio and centered 
+\&  style=stretched          the image is scaled to fill the whole window
+\&  style=centered           the image is centered with no scaling
+\&  style=root\-tiled         the image is tiled with no scaling and using \*(Aqop=root\*(Aq positioning
+.Ve
+.Sp
+If multiple templates are specified the last one wins. Note that a
+template overrides all the scale, position and operations settings.
+Indeed, the templates can be specified in terms of low level settings
+as follows:
+.Sp
+.Vb 5
+\&  style=tiled              0x0+0+0:op=tile
+\&  style=aspect\-stretched   +50+50:op=pscale
+\&  style=stretched          100x100
+\&  style=centered           0x0+50+50
+\&  style=root\-tiled         0x0:op=tile:op=root
 .Ve
 .Sp
 If used in conjunction with \fB\-tr\fR option, the specified pixmap will be

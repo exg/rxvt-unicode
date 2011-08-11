@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2011-06-29" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2011-08-11" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -1709,8 +1709,8 @@ Move forward \fB\f(CB\*(C`Ps\*(C'\fB\fR tab stops [default: 1]
 Erase in Display (\s-1ED\s0)
 .TS
 l l .
-Ps = 0	Clear Below (default)
-Ps = 1	Clear Above
+Ps = 0	Clear Right and Below (default)
+Ps = 1	Clear Left and Above
 Ps = 2	Clear All
 .TE
 .ie n .IP "\fB\fB""ESC [ Ps K""\fB\fR" 4

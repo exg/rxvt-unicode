@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 3"
-.TH @@RXVT_NAME@@ 3 "2011-06-29" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 3 "2011-08-11" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -583,7 +583,7 @@ locale-specific way.
 .SS "Extension Objects"
 .IX Subsection "Extension Objects"
 Every perl extension is a perl class. A separate perl object is created
-for each terminal, and each terminal has its own set of extenion objects,
+for each terminal, and each terminal has its own set of extension objects,
 which are passed as the first parameter to hooks. So extensions can use
 their \f(CW$self\fR object without having to think about clashes with other
 extensions or other terminals, with the exception of methods and members
@@ -939,7 +939,7 @@ Messages have a size limit of 1023 bytes currently.
 Returns all urxvt::term objects that exist in this process, regardless of
 whether they are started, being destroyed etc., so be careful. Only term
 objects that have perl extensions attached will be returned (because there
-is no urxvt::term objet associated with others).
+is no urxvt::term object associated with others).
 .ie n .IP "$time = urxvt::NOW" 4
 .el .IP "\f(CW$time\fR = urxvt::NOW" 4
 .IX Item "$time = urxvt::NOW"
@@ -1060,13 +1060,14 @@ optionally change it. All option values are stored by name in the hash
 Here is a likely non-exhaustive list of option names, please see the
 source file \fI/src/optinc.h\fR to see the actual list:
 .Sp
-.Vb 6
-\& borderLess console cursorBlink cursorUnderline hold iconic insecure
-\& intensityStyles jumpScroll loginShell mapAlert meta8 mouseWheelScrollPage
-\& override\-redirect pastableTabs pointerBlank reverseVideo scrollBar
-\& scrollBar_floating scrollBar_right scrollTtyKeypress scrollTtyOutput
-\& scrollWithBuffer secondaryScreen secondaryScroll skipBuiltinGlyphs
-\& transparent tripleclickwords utmpInhibit visualBell
+.Vb 7
+\& borderLess buffered console cursorBlink cursorUnderline hold iconic
+\& insecure intensityStyles iso14755 iso14755_52 jumpScroll loginShell
+\& mapAlert meta8 mouseWheelScrollPage override_redirect pastableTabs
+\& pointerBlank reverseVideo scrollBar scrollBar_floating scrollBar_right
+\& scrollTtyKeypress scrollTtyOutput scrollWithBuffer secondaryScreen
+\& secondaryScroll skipBuiltinGlyphs skipScroll transparent tripleclickwords
+\& urgentOnBell utmpInhibit visualBell
 .Ve
 .ie n .IP "$value = $term\->resource ($name[, $newval])" 4
 .el .IP "\f(CW$value\fR = \f(CW$term\fR\->resource ($name[, \f(CW$newval\fR])" 4
@@ -1091,19 +1092,20 @@ are supported in every build, please see the source file \fI/src/rsinc.h\fR
 to see the actual list:
 .Sp
 .Vb 10
-\&  answerbackstring backgroundPixmap backspace_key boldFont boldItalicFont
-\&  borderLess chdir color cursorBlink cursorUnderline cutchars delete_key
-\&  display_name embed ext_bwidth fade font geometry hold iconName
-\&  imFont imLocale inputMethod insecure int_bwidth intensityStyles
-\&  italicFont jumpScroll lineSpace letterSpace loginShell mapAlert meta8
-\&  modifier mouseWheelScrollPage name override_redirect pastableTabs path
-\&  perl_eval perl_ext_1 perl_ext_2 perl_lib pointerBlank pointerBlankDelay
+\&  answerbackstring backgroundPixmap backspace_key blendtype blurradius
+\&  boldFont boldItalicFont borderLess buffered chdir color cursorBlink
+\&  cursorUnderline cutchars delete_key depth display_name embed ext_bwidth
+\&  fade font geometry hold iconName iconfile imFont imLocale inputMethod
+\&  insecure int_bwidth intensityStyles iso14755 iso14755_52 italicFont
+\&  jumpScroll letterSpace lineSpace loginShell mapAlert meta8 modifier
+\&  mouseWheelScrollPage name override_redirect pastableTabs path perl_eval
+\&  perl_ext_1 perl_ext_2 perl_lib pointerBlank pointerBlankDelay
 \&  preeditType print_pipe pty_fd reverseVideo saveLines scrollBar
 \&  scrollBar_align scrollBar_floating scrollBar_right scrollBar_thickness
 \&  scrollTtyKeypress scrollTtyOutput scrollWithBuffer scrollstyle
-\&  secondaryScreen secondaryScroll shade term_name title
-\&  transient_for transparent transparent_all tripleclickwords utmpInhibit
-\&  visualBell
+\&  secondaryScreen secondaryScroll shade skipBuiltinGlyphs skipScroll
+\&  term_name title transient_for transparent tripleclickwords urgentOnBell
+\&  utmpInhibit visualBell
 .Ve
 .ie n .IP "$value = $term\->x_resource ($pattern)" 4
 .el .IP "\f(CW$value\fR = \f(CW$term\fR\->x_resource ($pattern)" 4
