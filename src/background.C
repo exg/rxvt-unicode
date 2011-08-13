@@ -199,54 +199,14 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
   int geom_flags = 0;
   int x = 0, y = 0;
   unsigned int w = 0, h = 0;
-  unsigned int n;
   unsigned long new_flags = (bg_flags & (~BG_GEOMETRY_FLAGS));
-  const char *ops;
 
   if (geom == NULL)
     return false;
 
-  char str[256];
-
-  ops = strchr (geom, ':');
-  if (ops == NULL)
-    n = strlen (geom);
-  else
-    n = ops - geom;
-
-  if (n >= sizeof (str))
-    return false;
-
-  memcpy (str, geom, n);
-  str[n] = '\0';
-  rxvt_strtrim (str);
-
-  if (str[0])
+  if (geom[0])
     {
-      /* we have geometry string - let's handle it prior to applying ops */
-      geom_flags = XParseGeometry (str, &x, &y, &w, &h);
-    } /* done parsing geometry string */
-
-  if (!update)
-    {
-      if (!(geom_flags & XValue))
-        x = y = defaultAlign;
-      else if (!(geom_flags & YValue))
-        y = x;
-
-      if (!(geom_flags & (WidthValue|HeightValue)))
-        w = h = defaultScale;
-      else if (!(geom_flags & HeightValue))
-        h = w;
-      else if (!(geom_flags & WidthValue))
-        w = h;
-
-      geom_flags |= WidthValue|HeightValue|XValue|YValue;
-    }
-
-  if (ops)
-    {
-      char **arr = rxvt_strsplit (':', ops + 1);
+      char **arr = rxvt_strsplit (':', geom);
 
       for (int i = 0; arr[i]; i++) 
         {
@@ -331,9 +291,29 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
               w = h = noScale;
               geom_flags |= WidthValue|HeightValue;
             }
+
+          else
+            geom_flags |= XParseGeometry (arr[i], &x, &y, &w, &h);
         } /* done parsing ops */
 
       rxvt_free_strsplit (arr);
+    }
+
+  if (!update)
+    {
+      if (!(geom_flags & XValue))
+        x = y = defaultAlign;
+      else if (!(geom_flags & YValue))
+        y = x;
+
+      if (!(geom_flags & (WidthValue|HeightValue)))
+        w = h = defaultScale;
+      else if (!(geom_flags & HeightValue))
+        h = w;
+      else if (!(geom_flags & WidthValue))
+        w = h;
+
+      geom_flags |= WidthValue|HeightValue|XValue|YValue;
     }
 
   if (check_set_scale_value (geom_flags, WidthValue, h_scale, w))  changed = true;

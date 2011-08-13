@@ -185,10 +185,10 @@ Window background colour; resource B<background>.
 
 Window foreground colour; resource B<foreground>.
 
-=item B<-pixmap> I<file[;geom[:op1][:op2][...]]>
+=item B<-pixmap> I<file[;oplist]>
 
 Compile I<afterimage> or I<pixbuf>: Specify image file for the background and also
-optionally specify its scaling with a geometry string. Note you may need to
+optionally specify a list of operations to modify it. Note you may need to
 add quotes to avoid special shell interpretation of the C<;> in the
 command-line; for more details see resource B<backgroundPixmap>.
 
@@ -745,22 +745,22 @@ Use the specified colour for the scrollbar's trough area [default
 The colour of the border around the text area and between the scrollbar
 and the text.
 
-=item B<backgroundPixmap:> I<file[;geom[:op1][:op2][...]]>
+=item B<backgroundPixmap:> I<file[;oplist]>
 
 Use the specified image file for the background and also
-optionally specify its scaling with a geometry string B<WxH+X+Y>,
-(default C<100x100+50+50>) in which B<"W" / "H"> specify the
-horizontal/vertical scale (percent), and B<"X" / "Y"> locate the image
-centre (percent).  A scale of 0 disables scaling.
-The maximum permitted scale is 1000.
-Additional operations can be specified after colon B<:op1:op2...>.
+optionally specify a colon separated list of operations to modify it.
 Supported operations are:
 
+  B<WxH+X+Y>  sets scale and position. B<"W" / "H"> specify the
+              horizontal/vertical scale (percent), and B<"X" / "Y">
+              locate the image centre (percent). A scale of 0 disables
+              scaling. The maximum permitted scale is 1000.
   op=tile     enables tiling
   op=pscale   enables proportional scaling
   op=root     use the position of the terminal window relative to the root
               window as the image offset, simulating a root window background
 
+The default scale and position setting is C<100x100+50+50>.
 Alternatively, a predefined set of templates can be used to achieve
 the most common setups:
 
