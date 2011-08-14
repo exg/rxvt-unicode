@@ -220,8 +220,9 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
           else if (!strcasecmp (arr[i], "style=aspect-stretched"))
             {
               new_flags = BG_PROP_SCALE;
+              w = h = windowScale;
               x = y = centerAlign;
-              geom_flags = XValue|YValue;
+              geom_flags = WidthValue|HeightValue|XValue|YValue;
             }
           else if (!strcasecmp (arr[i], "style=stretched"))
             {
@@ -336,17 +337,15 @@ rxvt_term::get_image_geometry (int image_width, int image_height, int &w, int &h
   int target_width = szHint.width;
   int target_height = szHint.height;
 
+  w = h_scale * target_width / 100;
+  h = v_scale * target_height / 100;
+
   if (bg_flags & BG_PROP_SCALE)
     {
-      float scale = (float)target_width / image_width;
-      min_it (scale, (float)target_height / image_height);
+      float scale = (float)w / image_width;
+      min_it (scale, (float)h / image_height);
       w = image_width * scale + 0.5;
       h = image_height * scale + 0.5;
-    }
-  else
-    {
-      w = h_scale * target_width / 100;
-      h = v_scale * target_height / 100;
     }
 
   if (!w) w = image_width;
@@ -365,7 +364,7 @@ rxvt_term::get_image_geometry (int image_width, int image_height, int &w, int &h
 
   bg_flags &= ~BG_IS_SIZE_SENSITIVE;
   if (!(bg_flags & BG_TILE)
-      || (bg_flags & BG_PROP_SCALE) || h_scale || v_scale
+      || h_scale || v_scale
       || (!(bg_flags & BG_ROOT_ALIGN) && (h_align || v_align))
       || w > target_width || h > target_height)
     bg_flags |= BG_IS_SIZE_SENSITIVE;

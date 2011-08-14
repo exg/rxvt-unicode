@@ -777,7 +777,7 @@ Indeed, the templates can be specified in terms of low level settings
 as follows:
 
   style=tiled              0x0+0+0:op=tile
-  style=aspect-stretched   +50+50:op=pscale
+  style=aspect-stretched   100x100+50+50:op=pscale
   style=stretched          100x100
   style=centered           0x0+50+50
   style=root-tiled         0x0:op=tile:op=root
