@@ -629,15 +629,6 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     if (rs [i] == resval_undef)
       rs [i] = 0;
 
-#ifdef HAVE_AFTERIMAGE
-  set_application_name ((char *)rs[Rs_name]);
-  set_output_threshold (OUTPUT_LEVEL_WARNING);
-#endif
-
-#ifdef HAVE_PIXBUF
-  g_type_init ();
-#endif
-
 #if ENABLE_PERL
   if (!rs[Rs_perl_ext_1])
     rs[Rs_perl_ext_1] = "default";

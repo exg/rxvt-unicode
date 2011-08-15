@@ -1418,6 +1418,15 @@ rxvt_term::bg_init ()
       XFree (filters);
     }
 #endif
+
+#ifdef HAVE_AFTERIMAGE
+  set_application_name ((char *)rs[Rs_name]);
+  set_output_threshold (OUTPUT_LEVEL_WARNING);
+#endif
+
+#ifdef HAVE_PIXBUF
+  g_type_init ();
+#endif
 }
 
 #endif /* HAVE_BG_PIXMAP */
