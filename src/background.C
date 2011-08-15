@@ -34,22 +34,6 @@
 #define FilterConvolution "convolution"
 #endif
 
-/*
- * Pixmap geometry string interpretation :
- * Each geometry string contains zero or one scale/position
- * adjustment and may optionally be followed by a colon and one or more
- * colon-delimited pixmap operations.
- * The following table shows the valid geometry strings and their
- * effects on the background image :
- *
- * WxH+X+Y    Set scaling to W% by H%, and position to X% by Y%.
- *            W and H are percentages of the terminal window size.
- *            X and Y are also percentages; e.g., +50+50 centers
- *            the image in the window.
- *
- * Pixmap Operations : (should be prepended by a colon)
- */
-
 #ifdef HAVE_BG_PIXMAP
 void
 rxvt_term::bg_destroy ()
