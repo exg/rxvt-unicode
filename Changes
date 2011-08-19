@@ -39,6 +39,7 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
         - correctly split long lines when scrolling.
 	- Fix compilation on systems with bsd style utmp and no utmpx,
 	  such as openbsd.
+	- consume button release event in matcher (exg).
 
 9.12 Wed Jun 29 14:34:28 CEST 2011
         - fix regression in processing of SelectionNotify events.

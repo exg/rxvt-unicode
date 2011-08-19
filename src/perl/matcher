@@ -164,12 +164,16 @@ sub command_for {
 
 sub on_button_press {
    my ($self, $event) = @_;
-   if($self->valid_button($event)) {
+   if($self->valid_button($event)
+      && (my @exec = $self->command_for($event->{row},$event->{col}))) {
       $self->{row} = $event->{row};
       $self->{col} = $event->{col};
+      $self->{cmd} = \@exec;
+      return 1;
    } else {
       delete $self->{row};
       delete $self->{col};
+      delete $self->{cmd};
    }
 
    ()
@@ -180,19 +184,20 @@ sub on_button_release {
 
    my $row = delete $self->{row};
    my $col = delete $self->{col};
+   my $cmd = delete $self->{cmd};
 
-   if(defined($row) && $row == $event->{row} && abs($col-$event->{col}) < 2) {
+   return if !defined $row;
+
+   if($row == $event->{row} && abs($col-$event->{col}) < 2
+      && join("\x00", @$cmd) eq join("\x00", $self->command_for($row,$col))) {
       if($self->valid_button($event)) {
 
-         my @exec = $self->command_for($row,$col);
-         if(@exec) {
-            return $self->exec_async (@exec);
-         }
+	 $self->exec_async (@$cmd);
 
       }
    }
 
-   ()
+   1;
 }
 
 # vim:set sw=3 sts=3 et:
