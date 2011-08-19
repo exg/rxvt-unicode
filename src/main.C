@@ -708,6 +708,15 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
 
   ncol = width  / fwidth;
   nrow = height / fheight;
+
+  // When the size of the vt window is not a multiple of the cell
+  // size, i.e., when the wm does not honour our size hints, there are
+  // extra areas not covered by the terminal screen. Such gaps, when a
+  // bg pixmap is set, would have to be cleared manually to properly
+  // refresh the background. We take the simpler route and shrink the
+  // vt window so as to avoid creating gaps.
+  width  = ncol * fwidth;
+  height = nrow * fheight;
 }
 
 /*----------------------------------------------------------------------*/
