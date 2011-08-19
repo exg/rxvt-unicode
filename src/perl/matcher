@@ -1,6 +1,7 @@
 #! perl
 
 # Author: Tim Pope <rxvt-unicodeNOSPAM@tpope.info>
+#          Bob Farrell <robertanthonyfarrell@gmail.com>
 
 my $url =
    qr{
@@ -12,12 +13,100 @@ my $url =
       )+
    }x;
 
+sub on_key_press {
+   my ($self, $event, $keysym, $octets) = @_;
+
+   if (! $self->{showing} ) {
+      return;
+   }
+
+   my $i = ($keysym == 96 ? 0 : $keysym - 48);
+   if (($i > scalar(@{$self->{urls}})) || ($i < 0)) {
+      $self->matchlist();
+      return;
+   }
+
+   my @args = ($self->{urls}[ -$i-1 ]);
+   $self->matchlist();
+
+   $self->exec_async( $self->{launcher}, @args );
+}
+
 sub on_user_command {
    my ($self, $cmd) = @_;
-   if($cmd =~ s/^matcher\b//) {
-      $self->most_recent;
+
+   if($cmd =~ s/^matcher:list\b//) {
+      $self->matchlist();
+   } else {
+      if($cmd =~ s/^matcher:last\b//) {
+         $self->most_recent;
+      }
+   # For backward compatibility
+    else {
+      if($cmd =~ s/^matcher\b//) {
+         $self->most_recent;
+      }
    }
+  }
    ()
+}
+
+sub matchlist {
+   my ($self) = @_;
+   if ( $self->{showing} ) {
+     $self->{url_overlay}->hide();
+     $self->{showing} = 0;
+     return;
+   }
+  @{$self->{urls}} = ();
+  my $line;
+  for (my $i = 0; $i < $self->nrow; $i ++) {
+     $line = $self->line($i);
+     next if ($line->beg != $i);
+     for my $url ($self->get_urls_from_line($line->t)) {
+        if (scalar(@{$self->{urls}}) == 10) {
+            shift @{$self->{urls}};
+        }
+        push @{$self->{urls}}, $url;
+     }
+  }
+
+  if (! scalar(@{$self->{urls}})) {
+    return;
+  }
+
+  my $max = 0;
+  my $i = scalar( @{$self->{urls}} ) - 1 ;;
+
+  my @temp = ();
+
+  for my $url (@{$self->{urls}}) {
+     my $url = "$i-$url";
+     my $xpos = 0;
+
+     if ($self->ncol + (length $url) >= $self->ncol) {
+        $url = substr( $url, 0, $self->ncol );
+     }
+
+     push @temp, $url;
+
+     if( length $url > $max ) {
+        $max = length $url;
+     }
+
+     $i--;
+  }
+
+  @temp = reverse @temp;
+
+  $self->{url_overlay} = $self->overlay(0, 0, $max, scalar( @temp ), urxvt::OVERLAY_RSTYLE, 2);
+  my $i = 0;
+  for my $url (@temp) {
+     $self->{url_overlay}->set( 0, $i, $url, [(urxvt::OVERLAY_RSTYLE) x length $url]);
+	$self->{showing} = 1;
+     $i++;
+  }
+
 }
 
 sub most_recent {
@@ -25,8 +114,6 @@ sub most_recent {
    my $row = $self->nrow;
    my @exec;
    while($row-- > $self->top_row) {
-      #my $line = $self->line ($row);
-      #my $text = $line->t;
       @exec = $self->command_for($row);
       last if(@exec);
    }
@@ -44,7 +131,7 @@ sub my_resource {
 # turn a rendition spec in the resource into a sub that implements it on $_
 sub parse_rend {
    my ($self, $str) = @_;
-   my ($mask, $fg, $bg, $failed) = $str ? urxvt::rend2mask($str) 
+   my ($mask, $fg, $bg, $failed) = $str ? urxvt::rend2mask($str)
                                         : (urxvt::RS_Uline, undef, undef, []);
    warn "Failed to parse rendition string: " . join(',', @$failed) if @$failed;
    my @rend;
@@ -65,6 +152,8 @@ sub on_start {
                       $self->x_resource("urlLauncher") ||
                       "sensible-browser";
 
+   $self->{urls} = [];
+   $self->{showing} = 0;
    $self->{button}  = 2;
    $self->{state}   = 0;
    if($self->{argv}[0] || $self->my_resource("button")) {
@@ -97,6 +186,17 @@ sub on_start {
    $self->{matchers} = \@matchers;
 
    ()
+}
+
+sub get_urls_from_line {
+   my ($self, $line) = @_;
+   my @urls;
+   for my $matcher (@{$self->{matchers}}) {
+     while ($line =~ /$matcher->[0]/g) {
+        push @urls, substr( $line, $-[0], $+[0] - $-[0] );
+     }
+   }
+   return @urls;
 }
 
 sub on_line_update {

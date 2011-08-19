@@ -40,6 +40,8 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 	- Fix compilation on systems with bsd style utmp and no utmpx,
 	  such as openbsd.
 	- consume button release event in matcher (exg).
+	- keyboard accessible list of recent matches in matcher
+	  (Bob Farrell).
 
 9.12 Wed Jun 29 14:34:28 CEST 2011
         - fix regression in processing of SelectionNotify events.
