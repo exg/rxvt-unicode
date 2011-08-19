@@ -850,7 +850,10 @@ rxvt_term::bg_set_file (const char *file)
   if (!file || !*file)
     return false;
 
-  if (const char *p = strchr (file, ';'))
+  bool ret = false;
+  const char *p = strchr (file, ';');
+
+  if (p)
     {
       size_t len = p - file;
       char *f = rxvt_temp_buf<char> (len + 1);
@@ -869,7 +872,7 @@ rxvt_term::bg_set_file (const char *file)
         safe_asimage_destroy (original_asim);
       original_asim = image;
       bg_flags |= BG_IS_FROM_FILE | BG_CLIENT_RENDER;
-      return true;
+      ret = true;
     }
 #  endif
 
@@ -881,11 +884,19 @@ rxvt_term::bg_set_file (const char *file)
         g_object_unref (pixbuf);
       pixbuf = image;
       bg_flags |= BG_IS_FROM_FILE;
-      return true;
+      ret = true;
     }
 #  endif
 
-  return false;
+  if (ret)
+    {
+      if (p)
+        bg_set_geometry (p + 1);
+      else
+        bg_set_default_geometry ();
+    }
+
+  return ret;
 }
 
 # endif /* BG_IMAGE_FROM_FILE */

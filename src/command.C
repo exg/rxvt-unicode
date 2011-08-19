@@ -3462,11 +3462,6 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
                 if (bg_set_file (str))	/* change pixmap */
                   {
                     changed++;
-                    str = strchr (str, ';');
-                    if (str == NULL)
-                      bg_set_default_geometry ();
-                    else
-                      bg_set_geometry (str+1);
                   }
               }
             else
