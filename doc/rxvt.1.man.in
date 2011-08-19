@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2011-08-11" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2011-08-19" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -290,10 +290,10 @@ Window background colour; resource \fBbackground\fR.
 .IP "\fB\-fg\fR \fIcolour\fR" 4
 .IX Item "-fg colour"
 Window foreground colour; resource \fBforeground\fR.
-.IP "\fB\-pixmap\fR \fIfile[;geom[:op1][:op2][...]]\fR" 4
-.IX Item "-pixmap file[;geom[:op1][:op2][...]]"
+.IP "\fB\-pixmap\fR \fIfile[;oplist]\fR" 4
+.IX Item "-pixmap file[;oplist]"
 Compile \fIafterimage\fR or \fIpixbuf\fR: Specify image file for the background and also
-optionally specify its scaling with a geometry string. Note you may need to
+optionally specify a list of operations to modify it. Note you may need to
 add quotes to avoid special shell interpretation of the \f(CW\*(C`;\*(C'\fR in the
 command-line; for more details see resource \fBbackgroundPixmap\fR.
 .IP "\fB\-cr\fR \fIcolour\fR" 4
@@ -777,24 +777,24 @@ Use the specified colour for the scrollbar's trough area [default
 .IX Item "borderColor: colour"
 The colour of the border around the text area and between the scrollbar
 and the text.
-.IP "\fBbackgroundPixmap:\fR \fIfile[;geom[:op1][:op2][...]]\fR" 4
-.IX Item "backgroundPixmap: file[;geom[:op1][:op2][...]]"
+.IP "\fBbackgroundPixmap:\fR \fIfile[;oplist]\fR" 4
+.IX Item "backgroundPixmap: file[;oplist]"
 Use the specified image file for the background and also
-optionally specify its scaling with a geometry string \fBWxH+X+Y\fR,
-(default \f(CW\*(C`100x100+50+50\*(C'\fR) in which \fB\*(L"W\*(R" / \*(L"H\*(R"\fR specify the
-horizontal/vertical scale (percent), and \fB\*(L"X\*(R" / \*(L"Y\*(R"\fR locate the image
-centre (percent).  A scale of 0 disables scaling.
-The maximum permitted scale is 1000.
-Additional operations can be specified after colon \fB:op1:op2...\fR.
+optionally specify a colon separated list of operations to modify it.
 Supported operations are:
 .Sp
-.Vb 4
+.Vb 8
+\&  B<WxH+X+Y>  sets scale and position. B<"W" / "H"> specify the
+\&              horizontal/vertical scale (percent), and B<"X" / "Y">
+\&              locate the image centre (percent). A scale of 0 disables
+\&              scaling. The maximum permitted scale is 1000.
 \&  op=tile     enables tiling
 \&  op=pscale   enables proportional scaling
 \&  op=root     use the position of the terminal window relative to the root
 \&              window as the image offset, simulating a root window background
 .Ve
 .Sp
+The default scale and position setting is \f(CW\*(C`100x100+50+50\*(C'\fR.
 Alternatively, a predefined set of templates can be used to achieve
 the most common setups:
 .Sp
@@ -814,7 +814,7 @@ as follows:
 .Sp
 .Vb 5
 \&  style=tiled              0x0+0+0:op=tile
-\&  style=aspect\-stretched   +50+50:op=pscale
+\&  style=aspect\-stretched   100x100+50+50:op=pscale
 \&  style=stretched          100x100
 \&  style=centered           0x0+50+50
 \&  style=root\-tiled         0x0:op=tile:op=root
