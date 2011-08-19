@@ -29,6 +29,10 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
           styles built on top of the new operations and scale/position
           settings. Old operations are still parsed for backward
           compatibility (Emanuele Giaquinta).
+        - fix a redraw bug that occurs when a bg pixmap is set and the
+          wm does not honour the size hints set by urxvt. Now urxvt
+          forces the size of the terminal window to be a multiple of
+          the cell size.
 	- sanitise the argument of SD / SU sequences. Fixes a possible
 	  crash when the argument is big enough, red hat bug #711137
 	  (Emanuele Giaquinta).
