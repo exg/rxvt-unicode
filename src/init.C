@@ -790,6 +790,16 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
 
   pty = ptytty::create ();
 
+#ifdef HAVE_AFTERIMAGE
+  set_application_name ((char *)rs[Rs_name]);
+  set_output_threshold (OUTPUT_LEVEL_WARNING);
+#endif
+
+  // must be called before create_windows, because the latter may call set_icon
+#ifdef HAVE_PIXBUF
+  g_type_init ();
+#endif
+
   create_windows (argc, argv);
 
   init_xlocale ();
