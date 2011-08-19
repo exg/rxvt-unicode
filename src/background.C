@@ -1434,7 +1434,7 @@ rxvt_term::bg_init ()
 #endif /* HAVE_BG_PIXMAP */
 
 #if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
-/* taken from aterm-0.4.2 */
+/* based on code from aterm-0.4.2 */
 
 static void
 shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba &c)
