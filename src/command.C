@@ -3450,20 +3450,18 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
           }
         else
           {
-            int changed = 0;
+            bool changed = false;
 
             if (*str != ';')
               {
                 if (bg_set_file (str))	/* change pixmap */
-                  {
-                    changed++;
-                  }
+                  changed = true;
               }
             else
               {
                 str++;
                 if (bg_set_geometry (str, true))
-                  changed++;
+                  changed = true;
               }
 
             if (changed)
