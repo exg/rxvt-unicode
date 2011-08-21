@@ -1661,6 +1661,9 @@ rxvt_term::update_background ()
 
   bg_invalidate ();
 
+  if (!mapped)
+    return;
+
   ev_tstamp to_wait = 0.5 - (ev::now () - bg_valid_since);
 
   if (to_wait <= 0.)

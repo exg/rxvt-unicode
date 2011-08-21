@@ -1475,12 +1475,7 @@ rxvt_term::x_cb (XEvent &ev)
               {
 #ifdef HAVE_BG_PIXMAP
                 if (moved)
-                  {
-                    if (mapped)
-                      update_background ();
-                    else
-                      bg_invalidate ();
-                  }
+                  update_background ();
 #endif
               }
 
