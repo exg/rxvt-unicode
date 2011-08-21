@@ -385,7 +385,7 @@ rxvt_term::render_image (unsigned long tr_flags)
   if ((tr_flags & BG_NEEDS_BLUR) && background != NULL)
     {
       ASImage *tmp = blur_asimage_gauss (asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
-                                         (original_asim == NULL || tint == TINT_LEAVE_SAME) ? ASA_XImage : ASA_ASImage,
+                                         ASA_XImage,
                                          100, ASIMAGE_QUALITY_DEFAULT);
       if (tmp)
         {
@@ -444,7 +444,7 @@ rxvt_term::render_image (unsigned long tr_flags)
         {
           result = scale_asimage (asv, original_asim,
                                   w, h,
-                                  background ? ASA_ASImage : ASA_XImage,
+                                  ASA_XImage,
                                   100, ASIMAGE_QUALITY_DEFAULT);
         }
 
