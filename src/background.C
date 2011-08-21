@@ -1343,8 +1343,7 @@ rxvt_term::bg_render ()
       tr_flags = make_transparency_pixmap ();
       if (tr_flags == 0)
         return false;
-      else if (!(tr_flags & BG_EFFECTS_FLAGS))
-        bg_flags |= BG_IS_VALID;
+      bg_flags |= BG_IS_VALID;
     }
 # endif
 
@@ -1360,7 +1359,7 @@ rxvt_term::bg_render ()
 # if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
   XImage *result = NULL;
 
-  if (tr_flags && !(bg_flags & BG_IS_VALID))
+  if (tr_flags & BG_NEEDS_TINT)
     {
       result = XGetImage (dpy, bg_pixmap, 0, 0, bg_pmap_width, bg_pmap_height, AllPlanes, ZPixmap);
     }
@@ -1368,7 +1367,8 @@ rxvt_term::bg_render ()
   if (result)
     {
       /* our own client-side tinting */
-      if (tr_flags & BG_NEEDS_TINT)
+      //if (tr_flags & BG_NEEDS_TINT)
+      if (1)
         {
           rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
           if (bg_flags & BG_TINT_SET)
@@ -1383,7 +1383,6 @@ rxvt_term::bg_render ()
           XPutImage (dpy, bg_pixmap, gc, result, 0, 0, 0, 0, result->width, result->height);
 
           XFreeGC (dpy, gc);
-          bg_flags |= BG_IS_VALID;
         }
 
       XDestroyImage (result);
