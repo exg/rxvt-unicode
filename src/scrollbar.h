@@ -5,15 +5,6 @@
 
 struct rxvt_term;
 
-#define R_SB_NEXT               1
-#define R_SB_XTERM              2
-#define R_SB_PLAIN              4
-#define R_SB_RXVT               8
-
-#define R_SB_ALIGN_CENTRE       0
-#define R_SB_ALIGN_TOP          1
-#define R_SB_ALIGN_BOTTOM       2
-
 #define SB_WIDTH_NEXT           19
 #define SB_WIDTH_XTERM          15
 #define SB_WIDTH_PLAIN          7
@@ -40,28 +31,42 @@ struct rxvt_term;
 #define SB_THUMB_MIN_HEIGHT     (SB_BUTTON_WIDTH - (SB_PADDING * 2))
 
 enum sb_state {
-  STATE_IDLE = 1,
+  STATE_OFF,
+  STATE_IDLE,
   STATE_MOTION,
   STATE_UP,
   STATE_DOWN,
 };
 
+enum sb_style {
+  R_SB_NEXT  = 1,
+  R_SB_XTERM = 2,
+  R_SB_PLAIN = 4,
+  R_SB_RXVT  = 8,
+};
+
+enum sb_align {
+  R_SB_ALIGN_CENTRE,
+  R_SB_ALIGN_TOP,
+  R_SB_ALIGN_BOTTOM,
+};
+
 struct scrollBar_t
 {
   rxvt_term *term;
-  char            state;        /* scrollbar state                          */
+  sb_state        state;        /* scrollbar state                          */
   char            init;         /* scrollbar has been initialised           */
   unsigned int    beg;          /* slider sub-window begin height           */
   unsigned int    end;          /* slider sub-window end height             */
   unsigned int    top;          /* slider top position                      */
   unsigned int    bot;          /* slider bottom position                   */
-  unsigned int    style;        /* style: rxvt, xterm, next                 */
+  sb_style        style;        /* style: rxvt, xterm, next                 */
   unsigned int    width;        /* scrollbar width                          */
   int             shadow;       /* scrollbar shadow width                   */
   int             last_bot;     /* scrollbar last bottom position           */
   int             last_top;     /* scrollbar last top position              */
   int             last_state;   /* scrollbar last state                     */
-  unsigned char   align;
+  sb_align        align;
   Window          win;
   Cursor          leftptr_cursor;
   int             (scrollBar_t::*update)(int);

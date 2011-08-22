@@ -51,7 +51,7 @@ scrollBar_t::map (int map)
     }
   else
     {
-      state = 0;
+      state = STATE_OFF;
       XUnmapWindow (term->dpy, win);
       change = 1;
     }
@@ -143,8 +143,9 @@ void
 scrollBar_t::setup (rxvt_term *term)
 {
   int             i;
-  short           style, width;
+  short           width;
   const char *scrollalign, *scrollstyle, *thickness;
+  enum sb_style style;
 
   this->term = term;
   scrollalign = term->rs[Rs_scrollBar_align];
@@ -210,7 +211,7 @@ scrollBar_t::setup (rxvt_term *term)
       else if (strncasecmp (scrollalign, "bottom", 6) == 0)
         align = R_SB_ALIGN_BOTTOM;
     }
-  last_state = 0;
+  last_state = STATE_OFF;
   /* cursor scrollBar: Black-on-White */
   leftptr_cursor = XCreateFontCursor (term->dpy, XC_left_ptr);
 }
