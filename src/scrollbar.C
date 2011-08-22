@@ -210,7 +210,7 @@ scrollBar_t::setup (rxvt_term *term)
       else if (strncasecmp (scrollalign, "bottom", 6) == 0)
         align = R_SB_ALIGN_BOTTOM;
     }
-  last_bot = last_state = -1;
+  last_state = 0;
   /* cursor scrollBar: Black-on-White */
   leftptr_cursor = XCreateFontCursor (term->dpy, XC_left_ptr);
 }
