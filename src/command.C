@@ -1668,7 +1668,7 @@ rxvt_term::x_cb (XEvent &ev)
                           &unused_root_x, &unused_root_y,
                           &ev.xbutton.x, &ev.xbutton.y,
                           &unused_mask);
-            scr_move_to (scrollbar_position (ev.xbutton.y) - csrO,
+            scr_move_to (scrollBar.position (ev.xbutton.y) - csrO,
                          scrollBar.size ());
             want_refresh = 1;
             scrollBar.show (1);
@@ -2046,9 +2046,9 @@ rxvt_term::button_press (XButtonEvent &ev)
                     }
 
                   if (scrollBar.style == R_SB_XTERM
-                      || scrollbar_above_slider (ev.y)
-                      || scrollbar_below_slider (ev.y))
-                    scr_move_to (scrollbar_position (ev.y) - csrO, scrollBar.size ());
+                      || scrollBar.above_slider (ev.y)
+                      || scrollBar.below_slider (ev.y))
+                    scr_move_to (scrollBar.position (ev.y) - csrO, scrollBar.size ());
 
                   scrollBar.state = STATE_MOTION;
                   break;
@@ -2061,13 +2061,13 @@ rxvt_term::button_press (XButtonEvent &ev)
                 case Button3:
                   if (scrollBar.style != R_SB_XTERM)
                     {
-                      if (scrollbar_above_slider (ev.y))
+                      if (scrollBar.above_slider (ev.y))
 # ifdef RXVT_SCROLL_FULL
                         scr_page (UP, nrow - 1);
 # else
                         scr_page (UP, nrow / 4);
 # endif
-                      else if (scrollbar_below_slider (ev.y))
+                      else if (scrollBar.below_slider (ev.y))
 # ifdef RXVT_SCROLL_FULL
                         scr_page (DN, nrow - 1);
 # else
@@ -2080,7 +2080,7 @@ rxvt_term::button_press (XButtonEvent &ev)
                     {
                       scr_page ((ev.button == Button1 ? DN : UP),
                                 (nrow
-                                 * scrollbar_position (ev.y)
+                                 * scrollBar.position (ev.y)
                                  / scrollBar.size ()));
                     }
 

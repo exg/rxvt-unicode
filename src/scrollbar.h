@@ -104,6 +104,19 @@ struct scrollBar_t
   {
     return width + shadow * 2;
   }
+  bool above_slider (int y)
+  {
+    return y < top;
+  }
+  bool below_slider (int y)
+  {
+    return y > bot;
+  }
+  int position (int y)
+  {
+    return y - beg;
+  }
+
 
 #if defined(NEXT_SCROLLBAR)
   GC              blackGC,
@@ -148,10 +161,6 @@ private:
 
   void init_next ();
 };
-
-#define scrollbar_above_slider(y)       ((y) < scrollBar.top)
-#define scrollbar_below_slider(y)       ((y) > scrollBar.bot)
-#define scrollbar_position(y)           ((y) - scrollBar.beg)
 
  /*
   *    +-------------+
