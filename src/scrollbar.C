@@ -142,9 +142,7 @@ void
 scrollBar_t::setup (rxvt_term *term)
 {
   int             i;
-  short           width;
   const char *scrollalign, *scrollstyle, *thickness;
-  enum sb_style style;
 
   this->term = term;
   scrollalign = term->rs[Rs_scrollBar_align];
@@ -198,9 +196,6 @@ scrollBar_t::setup (rxvt_term *term)
   if (! term->option (Opt_scrollBar_floating) && style == R_SB_RXVT)
     shadow = SHADOW_WIDTH;
 # endif
-
-  this->style = style;
-  this->width = width;
 
   /* align = R_SB_ALIGN_CENTRE; */
   if (scrollalign)
