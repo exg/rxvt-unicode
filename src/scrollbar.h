@@ -2,6 +2,7 @@
 #define SCROLLBAR_H
 
 #include <X11/Xlib.h>
+#include "rxvtutil.h"
 
 struct rxvt_term;
 
@@ -56,12 +57,12 @@ struct scrollBar_t
   rxvt_term *term;
   sb_state        state;        /* scrollbar state                          */
   char            init;         /* scrollbar has been initialised           */
-  unsigned int    beg;          /* slider sub-window begin height           */
-  unsigned int    end;          /* slider sub-window end height             */
-  unsigned int    top;          /* slider top position                      */
-  unsigned int    bot;          /* slider bottom position                   */
+  int             beg;          /* slider sub-window begin height           */
+  int             end;          /* slider sub-window end height             */
+  int             top;          /* slider top position                      */
+  int             bot;          /* slider bottom position                   */
   sb_style        style;        /* style: rxvt, xterm, next                 */
-  unsigned int    width;        /* scrollbar width                          */
+  int             width;        /* scrollbar width                          */
   int             shadow;       /* scrollbar shadow width                   */
   int             last_bot;     /* scrollbar last bottom position           */
   int             last_top;     /* scrollbar last top position              */
@@ -92,15 +93,15 @@ struct scrollBar_t
       return y > end;
     return false;
   }
-  unsigned min_height ()
+  int min_height ()
   {
     return style == R_SB_NEXT ? SB_THUMB_MIN_HEIGHT : 10;
   }
-  unsigned size ()
+  int size ()
   {
-    return end - beg - min_height ();
+    return max (end - beg - min_height (), 0);
   }
-  unsigned total_width ()
+  int total_width ()
   {
     return width + shadow * 2;
   }
