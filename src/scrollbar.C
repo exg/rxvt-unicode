@@ -40,16 +40,15 @@ scrollBar_t::map (int map)
 
       if (!win)
         resize ();
-
-      if (win)
-        {
-          XMapWindow (term->dpy, win);
-        }
+      else
+        XMapWindow (term->dpy, win);
     }
   else
     {
       state = STATE_OFF;
-      XUnmapWindow (term->dpy, win);
+
+      if (win)
+        XUnmapWindow (term->dpy, win);
     }
 }
 
