@@ -31,11 +31,9 @@
 /*
  * Map or unmap a scrollbar.  Returns non-zero upon change of state
  */
-int
+void
 scrollBar_t::map (int map)
 {
-  int change = 0;
-
   if (map)
     {
       state = STATE_IDLE;
@@ -46,17 +44,13 @@ scrollBar_t::map (int map)
       if (win)
         {
           XMapWindow (term->dpy, win);
-          change = 1;
         }
     }
   else
     {
       state = STATE_OFF;
       XUnmapWindow (term->dpy, win);
-      change = 1;
     }
-
-  return change;
 }
 
 void

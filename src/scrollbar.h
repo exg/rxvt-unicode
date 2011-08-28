@@ -73,7 +73,7 @@ struct scrollBar_t
   int             (scrollBar_t::*update)(int);
   void setup (rxvt_term *);
   void resize ();
-  int map (int);
+  void map (int);
   int show (int);
   void destroy ();
 

@@ -3727,11 +3727,9 @@ rxvt_term::process_terminal_mode (int mode, int priv ecb_unused, unsigned int na
               break;
 #ifdef scrollBar_esc
             case scrollBar_esc:
-              if (scrollBar.map (state))
-                {
-                  resize_all_windows (0, 0, 0);
-                  scr_touch (true);
-                }
+              scrollBar.map (state);
+              resize_all_windows (0, 0, 0);
+              scr_touch (true);
               break;
 #endif
             case 25:		/* visible/invisible cursor */
