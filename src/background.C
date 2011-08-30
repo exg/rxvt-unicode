@@ -152,9 +152,9 @@ make_align_position (int align, int window_size, int image_size)
   if (align >= 0 && align <= 100)
     return diff * align / 100;
   else if (align > 100 && align <= 200)
-    return ((align - 100) * smaller / 100) + window_size - smaller;
+    return (align - 100) * smaller / 100 + window_size - smaller;
   else if (align >= -100 && align < 0)
-    return ((align + 100) * smaller / 100) - image_size;
+    return (align + 100) * smaller / 100 - image_size;
   return 0;
 }
 
@@ -183,7 +183,7 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
   int geom_flags = 0;
   int x = 0, y = 0;
   unsigned int w = 0, h = 0;
-  unsigned long new_flags = (bg_flags & (~BG_GEOMETRY_FLAGS));
+  unsigned long new_flags = bg_flags & ~BG_GEOMETRY_FLAGS;
 
   if (geom == NULL)
     return false;
@@ -414,8 +414,8 @@ rxvt_term::render_image (unsigned long tr_flags)
       || (!(bg_flags & BG_ROOT_ALIGN)
           && (x >= target_width
               || y >= target_height
-              || (x + w <= 0)
-              || (y + h <= 0))))
+              || x + w <= 0
+              || y + h <= 0)))
     {
       if (background)
         {
@@ -439,8 +439,8 @@ rxvt_term::render_image (unsigned long tr_flags)
     {
       result = original_asim;
 
-      if ((w != original_asim->width)
-          || (h != original_asim->height))
+      if (w != original_asim->width
+          || h != original_asim->height)
         {
           result = scale_asimage (asv, original_asim,
                                   w, h,
@@ -704,14 +704,14 @@ rxvt_term::render_image (unsigned long tr_flags)
   if (!(bg_flags & BG_ROOT_ALIGN)
       && (x >= target_width
           || y >= target_height
-          || (x + w <= 0)
-          || (y + h <= 0)))
+          || x + w <= 0
+          || y + h <= 0))
     return false;
 
   result = pixbuf;
 
-  if ((w != image_width)
-      || (h != image_height))
+  if (w != image_width
+      || h != image_height)
     {
       result = gdk_pixbuf_scale_simple (pixbuf,
                                         w, h,
