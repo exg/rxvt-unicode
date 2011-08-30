@@ -1,6 +1,6 @@
 #! perl
 
-# Author: Tim Pope <rxvt-unicodeNOSPAM@tpope.info>
+# Author: Tim Pope <rxvt-unicodeNOSPAM@tpope.org>
 #          Bob Farrell <robertanthonyfarrell@gmail.com>
 
 my $url =
