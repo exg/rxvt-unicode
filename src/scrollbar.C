@@ -134,7 +134,7 @@ scrollBar_t::show (int refresh)
 void
 scrollBar_t::setup (rxvt_term *term)
 {
-  int             i;
+  int i;
   const char *scrollalign, *scrollstyle, *thickness;
 
   this->term = term;
