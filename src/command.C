@@ -2592,7 +2592,7 @@ rxvt_term::process_escape_vt52 (unicode_t ch)
         tt_printf ("\033/Z");	/* I am a VT100 emulating a VT52 */
         break;
       case '<':		/* turn off VT52 mode */
-        set_privmode (PrivMode_vt52, 0);
+        priv_modes &= ~PrivMode_vt52;
         break;
       case 'F':     	/* use special graphics character set */
       case 'G':           /* use regular character set */
@@ -2655,8 +2655,10 @@ rxvt_term::process_escape_seq ()
 #endif
       // DECPAM/DECPNM
       case '=':
+        priv_modes |= PrivMode_aplKP;
+        break;
       case '>':
-        set_privmode (PrivMode_aplKP, ch == '=');
+        priv_modes &= ~PrivMode_aplKP;
         break;
 
       case C1_40:
@@ -3587,7 +3589,10 @@ rxvt_term::privcases (int mode, unsigned long bit)
       else
         state = (mode == 't') ? ! (priv_modes & bit) : mode;
 
-      set_privmode (bit, state);
+      if (state)
+        priv_modes |= bit;
+      else
+        priv_modes &= ~bit;
     }
 
   return state;
@@ -3702,7 +3707,7 @@ rxvt_term::process_terminal_mode (int mode, int priv ecb_unused, unsigned int na
                * parameter.  Return from VT52 mode with an ESC < from
                * within VT52 mode
                */
-              set_privmode (PrivMode_vt52, 1);
+              priv_modes |= PrivMode_vt52;
               break;
             case 3:			/* 80/132 */
               if (priv_modes & PrivMode_132OK)

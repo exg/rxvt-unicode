@@ -1492,14 +1492,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   void set_option (uint8_t opt, bool set = true) NOTHROW;
 
-  void set_privmode (unsigned bit, int set) NOTHROW
-  {
-    if (set)
-      priv_modes |= bit;
-    else
-      priv_modes &= ~bit;
-  }
-
   // modifies first argument(!)
   void tt_paste (char *data, unsigned int len) NOTHROW;
   void paste (char *data, unsigned int len) NOTHROW;
