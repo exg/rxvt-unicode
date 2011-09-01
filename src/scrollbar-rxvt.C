@@ -60,8 +60,8 @@ draw_button (scrollBar_t *sb, int x, int y, int dirn)
   sz = sb->width;
   sz2 = sz / 2;
 
-  if ((dirn == UP && sb->state == STATE_UP)
-      || (dirn == DN && sb->state == STATE_DOWN))
+  if ((dirn == UP && sb->state == SB_STATE_UP)
+      || (dirn == DN && sb->state == SB_STATE_DOWN))
     {
       top = sb->botShadowGC;
       bot = sb->topShadowGC;
@@ -152,11 +152,11 @@ scrollBar_t::show_rxvt (int update)
 {
   int sbwidth = (int)width;
 
-  if ((init & R_SB_RXVT) == 0)
+  if ((init & SB_STYLE_RXVT) == 0)
     {
       XGCValues gcvalue;
 
-      init |= R_SB_RXVT;
+      init |= SB_STYLE_RXVT;
 
       gcvalue.foreground = term->pix_colors[Color_topShadow];
       topShadowGC = XCreateGC (term->dpy, term->vt, GCForeground, &gcvalue);

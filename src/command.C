@@ -1044,8 +1044,8 @@ rxvt_term::text_blink_cb (ev::timer &w, int revents)
 void
 rxvt_term::cont_scroll_cb (ev::timer &w, int revents)
 {
-  if ((scrollBar.state == STATE_UP || scrollBar.state == STATE_DOWN)
-      && scr_page (scrollBar.state == STATE_UP ? UP : DN, 1))
+  if ((scrollBar.state == SB_STATE_UP || scrollBar.state == SB_STATE_DOWN)
+      && scr_page (scrollBar.state == SB_STATE_UP ? UP : DN, 1))
     {
       want_refresh = 1;
       refresh_check ();
@@ -1559,7 +1559,7 @@ rxvt_term::x_cb (XEvent &ev)
 
             if (scrollBar.state && ev.xany.window == scrollBar.win)
               {
-                scrollBar.state = STATE_IDLE;
+                scrollBar.state = SB_STATE_IDLE;
                 scrollBar.show (0);
               }
           }
@@ -1657,7 +1657,7 @@ rxvt_term::x_cb (XEvent &ev)
 #endif
               }
           }
-        else if (scrollBar.state == STATE_MOTION && ev.xany.window == scrollBar.win)
+        else if (scrollBar.state == SB_STATE_MOTION && ev.xany.window == scrollBar.win)
           {
             while (XCheckTypedWindowEvent (dpy, scrollBar.win,
                                            MotionNotify, &ev))
@@ -1974,7 +1974,7 @@ rxvt_term::button_press (XButtonEvent &ev)
       else if (scrollBar.dnButton (ev.y))
         direction = DN;  /* down */
 
-      scrollBar.state = STATE_IDLE;
+      scrollBar.state = SB_STATE_IDLE;
       /*
        * Rxvt-style scrollbar:
        * move up if mouse is above slider
@@ -2023,9 +2023,9 @@ rxvt_term::button_press (XButtonEvent &ev)
               if (scr_page (direction, 1))
                 {
                   if (direction == UP)
-                    scrollBar.state = STATE_UP;
+                    scrollBar.state = SB_STATE_UP;
                   else
-                    scrollBar.state = STATE_DOWN;
+                    scrollBar.state = SB_STATE_DOWN;
                 }
             }
           else
@@ -2034,32 +2034,32 @@ rxvt_term::button_press (XButtonEvent &ev)
                 case Button2:
                   switch (scrollBar.align)
                     {
-                      case R_SB_ALIGN_TOP:
+                      case SB_ALIGN_TOP:
                         csrO = 0;
                         break;
-                      case R_SB_ALIGN_CENTRE:
+                      case SB_ALIGN_CENTRE:
                         csrO = (scrollBar.bot - scrollBar.top) / 2;
                         break;
-                      case R_SB_ALIGN_BOTTOM:
+                      case SB_ALIGN_BOTTOM:
                         csrO = scrollBar.bot - scrollBar.top;
                         break;
                     }
 
-                  if (scrollBar.style == R_SB_XTERM
+                  if (scrollBar.style == SB_STYLE_XTERM
                       || scrollBar.above_slider (ev.y)
                       || scrollBar.below_slider (ev.y))
                     scr_move_to (scrollBar.position (ev.y) - csrO, scrollBar.size ());
 
-                  scrollBar.state = STATE_MOTION;
+                  scrollBar.state = SB_STATE_MOTION;
                   break;
 
                 case Button1:
-                  if (scrollBar.align == R_SB_ALIGN_CENTRE)
+                  if (scrollBar.align == SB_ALIGN_CENTRE)
                     csrO = ev.y - scrollBar.top;
                   /* FALLTHROUGH */
 
                 case Button3:
-                  if (scrollBar.style != R_SB_XTERM)
+                  if (scrollBar.style != SB_STYLE_XTERM)
                     {
                       if (scrollBar.above_slider (ev.y))
 # ifdef RXVT_SCROLL_FULL
@@ -2074,7 +2074,7 @@ rxvt_term::button_press (XButtonEvent &ev)
                         scr_page (DN, nrow / 4);
 # endif
                       else
-                        scrollBar.state = STATE_MOTION;
+                        scrollBar.state = SB_STATE_MOTION;
                     }
                   else
                     {
@@ -2101,9 +2101,9 @@ rxvt_term::button_release (XButtonEvent &ev)
   if (!bypass_keystate)
     reportmode = !! (priv_modes & PrivMode_mouse_report);
 
-  if (scrollBar.state == STATE_UP || scrollBar.state == STATE_DOWN)
+  if (scrollBar.state == SB_STATE_UP || scrollBar.state == SB_STATE_DOWN)
     {
-      scrollBar.state = STATE_IDLE;
+      scrollBar.state = SB_STATE_IDLE;
       scrollBar.show (0);
     }
 

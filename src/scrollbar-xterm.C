@@ -37,11 +37,11 @@ scrollBar_t::show_xterm (int update)
   int xsb = 0;
   int sbwidth = width - 1;
 
-  if ((init & R_SB_XTERM) == 0)
+  if ((init & SB_STYLE_XTERM) == 0)
     {
       XGCValues       gcvalue;
 
-      init |= R_SB_XTERM;
+      init |= SB_STYLE_XTERM;
       gcvalue.stipple = XCreateBitmapFromData (term->dpy, win,
                                                (char *)x_stp_bits, x_stp_width,
                                                x_stp_height);

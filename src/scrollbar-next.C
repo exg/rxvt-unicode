@@ -235,9 +235,9 @@ scrollBar_t::show_next (int update)
   int height = end + SB_BUTTON_TOTAL_HEIGHT + SB_PADDING;
   Drawable src;
 
-  if ((init & R_SB_NEXT) == 0)
+  if ((init & SB_STYLE_NEXT) == 0)
     {
-      init |= R_SB_NEXT;
+      init |= SB_STYLE_NEXT;
       init_next ();
     }
 
@@ -284,12 +284,12 @@ scrollBar_t::show_next (int update)
                  height - SB_BUTTON_SINGLE_HEIGHT, SB_BUTTON_WIDTH,
                  SB_BUTTON_HEIGHT);
 
-      src = state == STATE_UP ? upArrowHi : upArrow;
+      src = state == SB_STATE_UP ? upArrowHi : upArrow;
       XCopyArea (term->dpy, src, win, whiteGC, 0, 0,
                  ARROW_WIDTH, ARROW_HEIGHT, SB_BUTTON_FACE_X,
                  height - SB_BUTTON_BOTH_HEIGHT + SB_BEVEL_WIDTH_UPPER_LEFT);
 
-      src = state == STATE_DOWN ? downArrowHi : downArrow;
+      src = state == SB_STATE_DOWN ? downArrowHi : downArrow;
       XCopyArea (term->dpy, src, win, whiteGC, 0, 0,
                  ARROW_WIDTH, ARROW_HEIGHT, SB_BUTTON_FACE_X,
                  height - SB_BUTTON_SINGLE_HEIGHT + SB_BEVEL_WIDTH_UPPER_LEFT);

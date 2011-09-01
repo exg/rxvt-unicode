@@ -36,7 +36,7 @@ scrollBar_t::map (int map)
 {
   if (map)
     {
-      state = STATE_IDLE;
+      state = SB_STATE_IDLE;
 
       if (!win)
         resize ();
@@ -45,7 +45,7 @@ scrollBar_t::map (int map)
     }
   else
     {
-      state = STATE_OFF;
+      state = SB_STATE_OFF;
 
       if (win)
         XUnmapWindow (term->dpy, win);
@@ -118,7 +118,7 @@ scrollBar_t::show (int refresh)
       if (top == last_top
           && bot == last_bot
           && (state == last_state
-              || !(state == STATE_UP || state == STATE_DOWN)))
+              || !(state == SB_STATE_UP || state == SB_STATE_DOWN)))
         return 0;
     }
 
@@ -143,15 +143,15 @@ scrollBar_t::setup (rxvt_term *term)
   thickness = term->rs[Rs_scrollBar_thickness];
 
 # if defined(RXVT_SCROLLBAR)
-  style = R_SB_RXVT;
+  style = SB_STYLE_RXVT;
 # elif defined(XTERM_SCROLLBAR)
-  style = R_SB_XTERM;
+  style = SB_STYLE_XTERM;
 # elif defined(NEXT_SCROLLBAR)
-  style = R_SB_NEXT;
+  style = SB_STYLE_NEXT;
 # elif defined(PLAIN_SCROLLBAR)
-  style = R_SB_PLAIN;
+  style = SB_STYLE_PLAIN;
 #else
-  style = R_SB_RXVT;
+  style = SB_STYLE_RXVT;
 # endif
 
 # if (defined(NEXT_SCROLLBAR) || defined(XTERM_SCROLLBAR) || defined(PLAIN_SCROLLBAR))
@@ -159,46 +159,46 @@ scrollBar_t::setup (rxvt_term *term)
     {
 #  ifdef NEXT_SCROLLBAR
       if (strncasecmp (scrollstyle, "next", 4) == 0)
-        style = R_SB_NEXT;
+        style = SB_STYLE_NEXT;
 #  endif
 #  ifdef XTERM_SCROLLBAR
       if (strncasecmp (scrollstyle, "xterm", 5) == 0)
-        style = R_SB_XTERM;
+        style = SB_STYLE_XTERM;
 #  endif
 #  ifdef PLAIN_SCROLLBAR
       if (strncasecmp (scrollstyle, "plain", 5) == 0)
-        style = R_SB_PLAIN;
+        style = SB_STYLE_PLAIN;
 #  endif
 
     }
 # endif
-  if (style == R_SB_NEXT)
+  if (style == SB_STYLE_NEXT)
     width = SB_WIDTH_NEXT;
-  else if (style == R_SB_XTERM)
+  else if (style == SB_STYLE_XTERM)
     width = SB_WIDTH_XTERM;
-  else if (style == R_SB_PLAIN)
+  else if (style == SB_STYLE_PLAIN)
     width = SB_WIDTH_PLAIN;
-  else /* if (style == R_SB_RXVT) */
+  else /* if (style == SB_STYLE_RXVT) */
     width = SB_WIDTH_RXVT;
 
-  if (style != R_SB_NEXT)	/* dishonour request - for now */
+  if (style != SB_STYLE_NEXT)	/* dishonour request - for now */
     if (thickness && (i = atoi (thickness)) >= SB_WIDTH_MINIMUM)
       width = min (i, SB_WIDTH_MAXIMUM);
 
 # ifdef RXVT_SCROLLBAR
-  if (! term->option (Opt_scrollBar_floating) && style == R_SB_RXVT)
+  if (! term->option (Opt_scrollBar_floating) && style == SB_STYLE_RXVT)
     shadow = SHADOW_WIDTH;
 # endif
 
-  /* align = R_SB_ALIGN_CENTRE; */
+  /* align = SB_ALIGN_CENTRE; */
   if (scrollalign)
     {
       if (strncasecmp (scrollalign, "top", 3) == 0)
-        align = R_SB_ALIGN_TOP;
+        align = SB_ALIGN_TOP;
       else if (strncasecmp (scrollalign, "bottom", 6) == 0)
-        align = R_SB_ALIGN_BOTTOM;
+        align = SB_ALIGN_BOTTOM;
     }
-  last_state = STATE_OFF;
+  last_state = SB_STATE_OFF;
   /* cursor scrollBar: Black-on-White */
   leftptr_cursor = XCreateFontCursor (term->dpy, XC_left_ptr);
 }
@@ -236,7 +236,7 @@ void
 scrollBar_t::update_data ()
 {
 #if defined(PLAIN_SCROLLBAR)
-  if (style == R_SB_PLAIN)
+  if (style == SB_STYLE_PLAIN)
     {
       beg = 0;
       end = term->szHint.height;
@@ -244,7 +244,7 @@ scrollBar_t::update_data ()
     }
 #endif
 #if defined(XTERM_SCROLLBAR)
-  if (style == R_SB_XTERM)
+  if (style == SB_STYLE_XTERM)
     {
       beg = 0;
       end = term->szHint.height;
@@ -252,7 +252,7 @@ scrollBar_t::update_data ()
     }
 #endif
 #if defined(NEXT_SCROLLBAR)
-  if (style == R_SB_NEXT)
+  if (style == SB_STYLE_NEXT)
     {
       beg = 0;
       end = term->szHint.height - (SB_BUTTON_TOTAL_HEIGHT + SB_PADDING);
@@ -260,7 +260,7 @@ scrollBar_t::update_data ()
     }
 #endif
 #if defined(RXVT_SCROLLBAR)
-  if (style == R_SB_RXVT)
+  if (style == SB_STYLE_RXVT)
     {
       beg = (width + 1) + shadow;
       end = term->szHint.height - beg - (2 * shadow);

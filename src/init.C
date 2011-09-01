@@ -786,7 +786,7 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
       }
 
   if (option (Opt_scrollBar))
-    scrollBar.state = STATE_IDLE;    /* set existence for size calculations */
+    scrollBar.state = SB_STATE_IDLE;    /* set existence for size calculations */
 
   pty = ptytty::create ();
 
