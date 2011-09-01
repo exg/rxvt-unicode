@@ -111,9 +111,10 @@ scrollBar_t::show (int refresh)
       int sb_top = term->view_start - term->top_row;
       int sb_bot = sb_top + (term->nrow - 1);
       int sb_len = max (term->nrow - 1 - term->top_row, 1);
+      int n = min (min_height (), size ());
 
-      top = beg + (sb_top * size ()) / sb_len;
-      bot = top + ecb_div_ru ((sb_bot - sb_top) * size (), sb_len) + min_height ();
+      top = beg + (sb_top * (size () - n)) / sb_len;
+      bot = top + ecb_div_ru ((sb_bot - sb_top) * (size () - n), sb_len) + n;
       /* no change */
       if (top == last_top
           && bot == last_bot

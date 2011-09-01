@@ -99,7 +99,7 @@ struct scrollBar_t
   }
   int size ()
   {
-    return max (end - beg - min_height (), 0);
+    return max (end - beg, 0);
   }
   int total_width ()
   {
