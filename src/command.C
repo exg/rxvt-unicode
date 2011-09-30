@@ -1718,6 +1718,7 @@ rxvt_term::set_urgency (bool enable)
       h->flags = h->flags & ~XUrgencyHint | (enable ? XUrgencyHint : 0);
       XSetWMHints (dpy, parent, h);
       urgency_hint = enable;
+      XFree (h);
     }
 }
 #endif
