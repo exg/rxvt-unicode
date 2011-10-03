@@ -29,6 +29,8 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
           styles built on top of the new operations and scale/position
           settings. Old operations are still parsed for backward
           compatibility (Emanuele Giaquinta).
+        - fix memory leak when urgentOnBell is set (patch by Nathaniel
+          Filardo).
         - fix a redraw bug that occurs when a bg pixmap is set and the
           wm does not honour the size hints set by urxvt. Now urxvt
           forces the size of the terminal window to be a multiple of
@@ -42,6 +44,10 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 	- consume button release event in matcher (exg).
 	- keyboard accessible list of recent matches in matcher
 	  (Bob Farrell).
+	- properly process 'keysym' sequences in tabbed when using
+	  'focus follows mouse' and the focus is on the main window
+	  but not on the active terminal window (patch by Martin
+	  Pohlack).
 
 9.12 Wed Jun 29 14:34:28 CEST 2011
         - fix regression in processing of SelectionNotify events.
