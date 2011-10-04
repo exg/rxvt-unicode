@@ -879,8 +879,8 @@ struct TermWin_t
   int            fbase;         /* font ascent (baseline)          [pixels] */
   int            ncol;          /* window columns              [characters] */
   int            nrow;          /* window rows                 [characters] */
-  bool           focus;         /* window has focus                         */
-  bool           mapped;        /* window state mapped?                     */
+  int            focus;         /* window has focus                         */
+  int            mapped;        /* window state mapped?                     */
   int            int_bwidth;    /* internal border width                    */
   int            ext_bwidth;    /* external border width                    */
   int            lineSpace;     /* number of extra pixels between rows      */
