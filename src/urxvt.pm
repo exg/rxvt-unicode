@@ -1211,6 +1211,7 @@ sub DESTROY {
    $_[0][1]->stop;
 }
 
+# only needed for AnyEvent < 6 compatibility
 sub one_event {
    Carp::croak "AnyEvent->one_event blocking wait unsupported in urxvt, use a non-blocking API";
 }
