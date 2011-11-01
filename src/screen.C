@@ -2719,7 +2719,7 @@ rxvt_term::selection_check (int check_more) NOTHROW
       || (check_more == 4     /* screen width change */
           && (selection.beg.row != selection.end.row
               || selection.end.col > ncol)))
-    CLEAR_SELECTION ();
+    CLEAR_ALL_SELECTION ();
 }
 
 /* ------------------------------------------------------------------------- */

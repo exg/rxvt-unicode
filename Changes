@@ -29,6 +29,9 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
           styles built on top of the new operations and scale/position
           settings. Old operations are still parsed for backward
           compatibility (Emanuele Giaquinta).
+        - fix a crash caused by selection_check not properly resetting
+          out-of-bounds mark values (can happen when extending a selection
+          while scrolling up in curses programs for example).
         - fix memory leak when urgentOnBell is set (patch by Nathaniel
           Filardo).
         - fix a redraw bug that occurs when a bg pixmap is set and the
