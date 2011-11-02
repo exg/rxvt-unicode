@@ -690,13 +690,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
           selection.end.row  -= count;
           selection.mark.row -= count;
 
-          if (selection.beg.row < top_row
-              || selection.end.row < top_row
-              || selection.mark.row < top_row)
-            {
-              CLEAR_ALL_SELECTION ();
-              selection.op = SELECTION_CLEAR;
-            }
+          selection_check (0);
         }
 
       // finally move the view window, if desired
