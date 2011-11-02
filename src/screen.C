@@ -2692,12 +2692,12 @@ rxvt_term::scr_dump (int fd) NOTHROW
 void
 rxvt_term::selection_check (int check_more) NOTHROW
 {
-  row_col_t pos;
-
   if (!selection.op)
     return;
 
+  row_col_t pos;
   pos.row = pos.col = 0;
+
   if (!IN_RANGE_EXC (selection.beg.row, top_row, nrow)
       || !IN_RANGE_EXC (selection.mark.row, top_row, nrow)
       || !IN_RANGE_EXC (selection.end.row, top_row, nrow)
