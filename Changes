@@ -32,6 +32,8 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
         - fix a crash caused by selection_check not properly resetting
           out-of-bounds mark values (can happen when extending a selection
           while scrolling up in curses programs for example).
+        - do not move the selection when scrolling up and the selection is
+          outside the scrolling region (Emanuele Giaquinta).
         - fix display of bold bright black (reported by Ben Winslow).
         - fix memory leak when urgentOnBell is set (patch by Nathaniel
           Filardo).
