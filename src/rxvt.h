@@ -1465,7 +1465,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 # if ENABLE_STYLES
         && option (Opt_intensityStyles)
 # endif
-        && IN_RANGE_INC (base, minCOLOR, minBrightCOLOR))
+        && IN_RANGE_EXC (base, minCOLOR, minBrightCOLOR))
       base += minBrightCOLOR - minCOLOR;
 #endif
     return base;
@@ -1479,7 +1479,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 # if ENABLE_STYLES
         && option (Opt_intensityStyles)
 # endif
-        && IN_RANGE_INC (base, minCOLOR, minBrightCOLOR))
+        && IN_RANGE_EXC (base, minCOLOR, minBrightCOLOR))
       base += minBrightCOLOR - minCOLOR;
 #endif
     return base;
