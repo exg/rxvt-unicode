@@ -2697,10 +2697,7 @@ rxvt_term::selection_check (int check_more) NOTHROW
           && ROWCOL_IS_BEFORE (selection.beg, pos)
           && ROWCOL_IS_AFTER (selection.end, pos))
       || (check_more == 3
-          && ROWCOL_IS_AFTER (selection.end, pos))
-      || (check_more == 4     /* screen width change */
-          && (selection.beg.row != selection.end.row
-              || selection.end.col > ncol)))
+          && ROWCOL_IS_AFTER (selection.end, pos)))
     CLEAR_ALL_SELECTION ();
 }
 
