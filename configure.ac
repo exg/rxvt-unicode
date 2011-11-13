@@ -96,6 +96,7 @@ support_scroll_next=yes
 support_scroll_xterm=yes
 support_xim=yes
 support_pixbuf=yes
+support_startup_notification=yes
 support_afterimage=yes
 support_xft=yes
 support_unicode3=no
@@ -132,6 +133,7 @@ AC_ARG_ENABLE(everything,
        support_wtmp=no
        support_xim=no
        support_pixbuf=no
+       support_startup_notification=no
        support_afterimage=no
        support_xft=no
        support_unicode3=no
@@ -160,6 +162,7 @@ AC_ARG_ENABLE(everything,
        support_wtmp=yes
        support_xim=yes
        support_pixbuf=yes
+       support_startup_notification=yes
        support_afterimage=yes
        support_xft=yes
        support_unicode3=yes
@@ -248,6 +251,12 @@ AC_ARG_ENABLE(pixbuf,
   [  --enable-pixbuf         enable integration with gdk-pixbuf for background images],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_pixbuf=$enableval
+  fi])
+
+AC_ARG_ENABLE(startup-notification,
+  [  --enable-startup-notification  enable freedesktop startup notification support],
+  [if test x$enableval = xyes -o x$enableval = xno; then
+    support_startup_notification=$enableval
   fi])
 
 AC_ARG_ENABLE(transparency,
@@ -464,6 +473,30 @@ fi
 
 AC_SUBST(PIXBUF_CFLAGS)
 AC_SUBST(PIXBUF_LIBS)
+
+STARTUP_NOTIFICATION_CFLAGS=
+STARTUP_NOTIFICATION_LIBS=
+
+if test x$support_startup_notification = xyes; then
+  support_startup_notification=no
+  AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+  AC_MSG_CHECKING(for libstartup-notification)
+  if test $PKG_CONFIG != no && $PKG_CONFIG --exists libstartup-notification-1.0; then
+    STARTUP_NOTIFICATION_CFLAGS="`$PKG_CONFIG libstartup-notification-1.0 --cflags`"
+    STARTUP_NOTIFICATION_LIBS="`$PKG_CONFIG libstartup-notification-1.0 --libs`"
+    support_startup_notification=yes
+  fi
+
+  if test x$support_startup_notification = xyes; then
+    AC_MSG_RESULT(ok)
+    AC_DEFINE(HAVE_STARTUP_NOTIFICATION, 1, Define if freedesktop startup notifications should be supported)
+  else
+    AC_MSG_RESULT(no)
+  fi
+fi
+
+AC_SUBST(STARTUP_NOTIFICATION_CFLAGS)
+AC_SUBST(STARTUP_NOTIFICATION_LIBS)
 
 AFTERIMAGE_CFLAGS=
 AFTERIMAGE_LIBS=

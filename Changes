@@ -55,6 +55,8 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 	  'focus follows mouse' and the focus is on the main window
 	  but not on the active terminal window (patch by Martin
 	  Pohlack).
+	- Support for the freedesktop startup-notification protocol (patch by
+	  Michael Stapelberg).
 
 9.12 Wed Jun 29 14:34:28 CEST 2011
         - fix regression in processing of SelectionNotify events.

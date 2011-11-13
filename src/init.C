@@ -57,6 +57,11 @@
 # include <langinfo.h>
 #endif
 
+#ifdef HAVE_STARTUP_NOTIFICATION
+# define SN_API_NOT_YET_FROZEN
+# include <libsn/sn-launchee.h>
+#endif
+
 #ifdef DISPLAY_IS_IP
 /* On Solaris link with -lsocket and -lnsl */
 #include <sys/types.h>
@@ -872,8 +877,32 @@ rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
     }
 #endif
 
+#if HAVE_STARTUP_NOTIFICATION
+  SnDisplay *snDisplay;
+  SnLauncheeContext *snContext;
+
+  snDisplay = sn_display_new (dpy, NULL, NULL);
+  snContext = sn_launchee_context_new_from_environment (snDisplay, DefaultScreen (dpy));
+
+  /* Tell the window manager that this window is part of the startup context */
+  if (snContext)
+    sn_launchee_context_setup_window (snContext, parent);
+#endif
+
   XMapWindow (dpy, vt);
   XMapWindow (dpy, parent);
+
+#if HAVE_STARTUP_NOTIFICATION
+  if (snContext)
+    {
+      /* Mark the startup process as complete */
+      sn_launchee_context_complete (snContext);
+
+      sn_launchee_context_unref (snContext);
+    }
+
+  sn_display_unref (snDisplay);
+#endif
 
   refresh_check ();
 }

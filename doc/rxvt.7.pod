@@ -2374,6 +2374,11 @@ Add support for GDK-PixBuf to be used for background images.
 It adds support for many file formats including JPG, PNG,
 TIFF, GIF, XPM, BMP, ICO and TGA.
 
+=item --enable-startup-notification (default: on)
+
+Add support for freedesktop startup notifications. This allows window managers
+to display some kind of progress indicator during startup.
+
 =item --enable-transparency (default: on)
 
 Add support for using the root pixmap as background to simulate transparency.
