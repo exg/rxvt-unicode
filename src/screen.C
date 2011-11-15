@@ -685,7 +685,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
 
       // move and/or clear selection, if any
       if (selection.op && current_screen == selection.screen
-          && selection.beg.row < row2)
+          && selection.beg.row <= row2)
         {
           selection.beg.row  -= count;
           selection.end.row  -= count;
