@@ -3,9 +3,6 @@
 /* Define if you want to have sexy-looking background pixmaps. */
 #undef BG_IMAGE_FROM_FILE
 
-/* clone device filename */
-#undef CLONE_DEVICE
-
 /* Define if you want 8 bit control sequences */
 #undef EIGHT_BIT_CONTROLS
 
@@ -56,9 +53,6 @@
 
 /* Define to 1 if you have the <cwchar> header file. */
 #undef HAVE_CWCHAR
-
-/* Define to 1 if you have /dev/ptmx */
-#undef HAVE_DEV_PTMX
 
 /* Define to 1 if you have the `epoll_ctl' function. */
 #undef HAVE_EPOLL_CTL
@@ -152,6 +146,9 @@
 
 /* Define to 1 if you have the `signalfd' function. */
 #undef HAVE_SIGNALFD
+
+/* Define if freedesktop startup notifications should be supported */
+#undef HAVE_STARTUP_NOTIFICATION
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
