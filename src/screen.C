@@ -777,7 +777,7 @@ rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
   if (len <= 0)               /* sanity */
     return;
 
-  unsigned char checksel;
+  bool checksel;
   unicode_t c;
   int ncol = this->ncol;
   const wchar_t *strend = str + len;
@@ -2044,7 +2044,7 @@ rxvt_term::scr_refresh () NOTHROW
   refresh_count = 0;
 
   unsigned int old_screen_flags = screen.flags;
-  char have_bg = 0;
+  bool have_bg = 0;
 #ifdef HAVE_BG_PIXMAP
   have_bg = bg_pixmap != None;
 #endif
@@ -2060,13 +2060,13 @@ rxvt_term::scr_refresh () NOTHROW
   scr_swap_overlay ();
 #endif
 
-  char showcursor = screen.flags & Screen_VisibleCursor;
+  bool showcursor = screen.flags & Screen_VisibleCursor;
 
   /*
    * C: set the cursor character (s)
    */
   {
-    unsigned char setoldcursor;
+    bool setoldcursor;
 
 #ifdef CURSOR_BLINK
     if (hidden_cursor)
