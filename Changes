@@ -20,7 +20,6 @@ TODO: decrqm http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
 TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 
-TODO: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=648239
 TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 	- INCOMPATIBLE CHANGE: A scale value of 0 in the bg image
 	  geometry no longer enables tiling, so as to make it possible
