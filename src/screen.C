@@ -683,6 +683,16 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
             scr_blank_screen_mem (l, rstyle);
         }
 
+      // move and/or clear selection, if any
+      if (selection.op && current_screen == selection.screen)
+        {
+          selection.beg.row  -= count;
+          selection.end.row  -= count;
+          selection.mark.row -= count;
+
+          selection_check (0);
+        }
+
       // finally move the view window, if desired
       if (option (Opt_scrollWithBuffer)
           && view_start != 0
@@ -694,6 +704,29 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
     }
   else
     {
+      if (selection.op && current_screen == selection.screen)
+        {
+          if ((selection.beg.row < row1 && selection.end.row > row1)
+              || (selection.beg.row < row2 && selection.end.row > row2)
+              || (selection.beg.row - count < row1 && selection.beg.row >= row1)
+              || (selection.beg.row - count > row2 && selection.beg.row <= row2)
+              || (selection.end.row - count < row1 && selection.end.row >= row1)
+              || (selection.end.row - count > row2 && selection.end.row <= row2))
+            {
+              CLEAR_ALL_SELECTION ();
+              selection.op = SELECTION_CLEAR;
+            }
+          else if (selection.end.row >= row1 && selection.end.row <= row2)
+            {
+              /* move selected region too */
+              selection.beg.row  -= count;
+              selection.end.row  -= count;
+              selection.mark.row -= count;
+
+              selection_check (0);
+            }
+        }
+
       // use a simple and robust scrolling algorithm, this
       // part of scr_scroll_text is not time-critical.
 
@@ -728,27 +761,6 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
         l.is_longer (0);
         l.touch ();
       }
-    }
-
-  // move and/or clear selection, if any
-  if (selection.op && current_screen == selection.screen)
-    {
-      if ((selection.beg.row < row1 && selection.end.row > row1)
-          || (selection.beg.row < row2 && selection.end.row > row2)
-          || (selection.beg.row - count < row1 && selection.beg.row >= row1)
-          || (selection.beg.row - count > row2 && selection.beg.row <= row2)
-          || (selection.end.row - count < row1 && selection.end.row >= row1)
-          || (selection.end.row - count > row2 && selection.end.row <= row2))
-        CLEAR_ALL_SELECTION ();
-      else if (selection.end.row >= row1 && selection.end.row <= row2)
-        {
-          /* move selected region too */
-          selection.beg.row  -= count;
-          selection.end.row  -= count;
-          selection.mark.row -= count;
-
-          selection_check (0);
-        }
     }
 
   return count;
