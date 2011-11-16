@@ -2888,11 +2888,11 @@ rxvt_term::process_csi_seq ()
 #endif
 
       case CSI_CUU:		/* 8.3.22: (1) CURSOR UP */
-      case CSI_VPR:		/* 8.3.161: (1) LINE POSITION FORWARD */
+      case CSI_VPB:		/* 8.3.160: (1) LINE POSITION BACKWARD */
         arg[0] = -arg[0];
         /* FALLTHROUGH */
       case CSI_CUD:		/* 8.3.19: (1) CURSOR DOWN */
-      case CSI_VPB:		/* 8.3.160: (1) LINE POSITION BACKWARD */
+      case CSI_VPR:		/* 8.3.161: (1) LINE POSITION FORWARD */
         scr_gotorc (arg[0], 0, RELATIVE);
         break;
 
