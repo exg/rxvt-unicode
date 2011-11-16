@@ -1328,19 +1328,16 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
   switch (mode)
     {
       case 0:                     /* erase to end of screen */
-        selection_check (1);
         scr_erase_line (0);
         row = screen.cur.row + 1;    /* possible OOB */
         num = nrow - row;
         break;
       case 1:                     /* erase to beginning of screen */
-        selection_check (3);
         scr_erase_line (1);
         row = 0;
         num = screen.cur.row;
         break;
       case 2:                     /* erase whole screen */
-        selection_check (3);
         row = 0;
         num = nrow;
         break;
