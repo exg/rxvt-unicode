@@ -551,7 +551,12 @@ rxvt_term::scr_change_screen (int scrn)
   want_refresh = 1;
   view_start = 0;
 
-  selection_check (2);        /* check for boundary cross */
+  /* check for boundary cross */
+  row_col_t pos;
+  pos.row = pos.col = 0;
+  if (ROWCOL_IS_BEFORE (selection.beg, pos)
+      && ROWCOL_IS_AFTER (selection.end, pos))
+    CLEAR_SELECTION ();
 
   current_screen = scrn;
 
@@ -1418,7 +1423,11 @@ rxvt_term::scr_E () NOTHROW
   ZERO_SCROLLBACK ();
 
   num_scr_allow = 0;
-  selection_check (3);
+
+  row_col_t pos;
+  pos.row = pos.col = 0;
+  if (ROWCOL_IS_AFTER (selection.end, pos))
+    CLEAR_SELECTION ();
 
   fs = SET_FONT (rstyle, FONTSET (rstyle)->find_font ('E'));
   for (int row = nrow; row--; )
@@ -2693,21 +2702,13 @@ rxvt_term::selection_check (int check_more) NOTHROW
   if (!selection.op)
     return;
 
-  row_col_t pos;
-  pos.row = pos.col = 0;
-
   if (!IN_RANGE_EXC (selection.beg.row, top_row, nrow)
       || !IN_RANGE_EXC (selection.mark.row, top_row, nrow)
       || !IN_RANGE_EXC (selection.end.row, top_row, nrow)
       || (check_more == 1
           && current_screen == selection.screen
           && !ROWCOL_IS_BEFORE (screen.cur, selection.beg)
-          && ROWCOL_IS_BEFORE (screen.cur, selection.end))
-      || (check_more == 2
-          && ROWCOL_IS_BEFORE (selection.beg, pos)
-          && ROWCOL_IS_AFTER (selection.end, pos))
-      || (check_more == 3
-          && ROWCOL_IS_AFTER (selection.end, pos)))
+          && ROWCOL_IS_BEFORE (screen.cur, selection.end)))
     CLEAR_ALL_SELECTION ();
 }
 
