@@ -1314,7 +1314,7 @@ rxvt_term::scr_erase_line (int mode) NOTHROW
 
 /* ------------------------------------------------------------------------- */
 /*
- * Erase part of whole of the screen
+ * Erase part or whole of the screen
  * XTERM_SEQ: Clear screen after cursor : ESC [ 0 J
  * XTERM_SEQ: Clear screen before cursor: ESC [ 1 J
  * XTERM_SEQ: Clear whole screen        : ESC [ 2 J
