@@ -751,36 +751,61 @@ Use the specified image file for the background and also
 optionally specify a colon separated list of operations to modify it.
 Supported operations are:
 
-  B<WxH+X+Y>  sets scale and position. B<"W" / "H"> specify the
-              horizontal/vertical scale (percent), and B<"X" / "Y">
-              locate the image centre (percent). A scale of 0 disables
-              scaling. The maximum permitted scale is 1000.
-  op=tile     enables tiling
-  op=pscale   enables proportional scaling
-  op=root     use the position of the terminal window relative to the root
-              window as the image offset, simulating a root window background
+=over 4
+
+=item B<WxH+X+Y>
+
+sets scale and position. B<"W" / "H"> specify the horizontal/vertical
+scale (percent), and B<"X" / "Y"> locate the image centre (percent). A
+scale of 0 disables scaling. The maximum permitted scale is 1000.
+
+=item B<op=tile>
+
+enables tiling
+
+=item B<op=pscale>
+
+enables proportional scaling
+
+=item B<op=root>
+
+use the position of the terminal window relative to the root window as
+the image offset, simulating a root window background
+
+=back
 
 The default scale and position setting is C<100x100+50+50>.
 Alternatively, a predefined set of templates can be used to achieve
 the most common setups:
 
-  style=tiled              the image is tiled with no scaling
-  style=aspect-stretched   the image is scaled to fill the whole window maintaining
-                           the aspect ratio and centered 
-  style=stretched          the image is scaled to fill the whole window
-  style=centered           the image is centered with no scaling
-  style=root-tiled         the image is tiled with no scaling and using 'op=root' positioning
+=over 4
+
+=item B<style=tiled>
+
+the image is tiled with no scaling. Equivalent to 0x0+0+0:op=tile
+
+=item B<style=aspect-stretched>
+
+the image is scaled to fill the whole window maintaining the aspect
+ratio and centered. Equivalent to 100x100+50+50:op=pscale
+
+=item B<style=stretched>
+
+the image is scaled to fill the whole window. Equivalent to 100x100
+
+=item B<style=centered>
+
+the image is centered with no scaling. Equivalent to 0x0+50+50
+
+=item B<style=root-tiled>
+
+the image is tiled with no scaling and using 'root' positioning.
+Equivalent to 0x0:op=tile:op=root
+
+=back
 
 If multiple templates are specified the last one wins. Note that a
 template overrides all the scale, position and operations settings.
-Indeed, the templates can be specified in terms of low level settings
-as follows:
-
-  style=tiled              0x0+0+0:op=tile
-  style=aspect-stretched   100x100+50+50:op=pscale
-  style=stretched          100x100
-  style=centered           0x0+50+50
-  style=root-tiled         0x0:op=tile:op=root
 
 If used in conjunction with B<-tr> option, the specified pixmap will be
 blended over the transparent background using alpha-blending. If I<afterimage>
