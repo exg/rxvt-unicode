@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2011-08-11" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2011-11-18" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -2555,6 +2555,10 @@ lowered if libAfterImage is configured without support for \s-1SVG\s0.
 Add support for GDK-PixBuf to be used for background images.
 It adds support for many file formats including \s-1JPG\s0, \s-1PNG\s0,
 \&\s-1TIFF\s0, \s-1GIF\s0, \s-1XPM\s0, \s-1BMP\s0, \s-1ICO\s0 and \s-1TGA\s0.
+.IP "\-\-enable\-startup\-notification (default: on)" 4
+.IX Item "--enable-startup-notification (default: on)"
+Add support for freedesktop startup notifications. This allows window managers
+to display some kind of progress indicator during startup.
 .IP "\-\-enable\-transparency (default: on)" 4
 .IX Item "--enable-transparency (default: on)"
 Add support for using the root pixmap as background to simulate transparency.

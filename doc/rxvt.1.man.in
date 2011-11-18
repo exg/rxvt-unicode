@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2011-08-19" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2011-11-18" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -782,48 +782,56 @@ and the text.
 Use the specified image file for the background and also
 optionally specify a colon separated list of operations to modify it.
 Supported operations are:
-.Sp
-.Vb 8
-\&  B<WxH+X+Y>  sets scale and position. B<"W" / "H"> specify the
-\&              horizontal/vertical scale (percent), and B<"X" / "Y">
-\&              locate the image centre (percent). A scale of 0 disables
-\&              scaling. The maximum permitted scale is 1000.
-\&  op=tile     enables tiling
-\&  op=pscale   enables proportional scaling
-\&  op=root     use the position of the terminal window relative to the root
-\&              window as the image offset, simulating a root window background
-.Ve
+.RS 4
+.IP "\fBWxH+X+Y\fR" 4
+.IX Item "WxH+X+Y"
+sets scale and position. \fB\*(L"W\*(R" / \*(L"H\*(R"\fR specify the horizontal/vertical
+scale (percent), and \fB\*(L"X\*(R" / \*(L"Y\*(R"\fR locate the image centre (percent). A
+scale of 0 disables scaling. The maximum permitted scale is 1000.
+.IP "\fBop=tile\fR" 4
+.IX Item "op=tile"
+enables tiling
+.IP "\fBop=pscale\fR" 4
+.IX Item "op=pscale"
+enables proportional scaling
+.IP "\fBop=root\fR" 4
+.IX Item "op=root"
+use the position of the terminal window relative to the root window as
+the image offset, simulating a root window background
+.RE
+.RS 4
 .Sp
 The default scale and position setting is \f(CW\*(C`100x100+50+50\*(C'\fR.
 Alternatively, a predefined set of templates can be used to achieve
 the most common setups:
-.Sp
-.Vb 6
-\&  style=tiled              the image is tiled with no scaling
-\&  style=aspect\-stretched   the image is scaled to fill the whole window maintaining
-\&                           the aspect ratio and centered 
-\&  style=stretched          the image is scaled to fill the whole window
-\&  style=centered           the image is centered with no scaling
-\&  style=root\-tiled         the image is tiled with no scaling and using \*(Aqop=root\*(Aq positioning
-.Ve
+.IP "\fBstyle=tiled\fR" 4
+.IX Item "style=tiled"
+the image is tiled with no scaling. Equivalent to 0x0+0+0:op=tile
+.IP "\fBstyle=aspect\-stretched\fR" 4
+.IX Item "style=aspect-stretched"
+the image is scaled to fill the whole window maintaining the aspect
+ratio and centered. Equivalent to 100x100+50+50:op=pscale
+.IP "\fBstyle=stretched\fR" 4
+.IX Item "style=stretched"
+the image is scaled to fill the whole window. Equivalent to 100x100
+.IP "\fBstyle=centered\fR" 4
+.IX Item "style=centered"
+the image is centered with no scaling. Equivalent to 0x0+50+50
+.IP "\fBstyle=root\-tiled\fR" 4
+.IX Item "style=root-tiled"
+the image is tiled with no scaling and using 'root' positioning.
+Equivalent to 0x0:op=tile:op=root
+.RE
+.RS 4
 .Sp
 If multiple templates are specified the last one wins. Note that a
 template overrides all the scale, position and operations settings.
-Indeed, the templates can be specified in terms of low level settings
-as follows:
-.Sp
-.Vb 5
-\&  style=tiled              0x0+0+0:op=tile
-\&  style=aspect\-stretched   100x100+50+50:op=pscale
-\&  style=stretched          100x100
-\&  style=centered           0x0+50+50
-\&  style=root\-tiled         0x0:op=tile:op=root
-.Ve
 .Sp
 If used in conjunction with \fB\-tr\fR option, the specified pixmap will be
 blended over the transparent background using alpha-blending. If \fIafterimage\fR
 support has been compiled in it is possible to choose other blending
 types with \fB\-blt \*(L"type\*(R"\fR option.
+.RE
 .IP "\fBpath:\fR \fIpath\fR" 4
 .IX Item "path: path"
 Specify the colon-delimited search path for finding background image files.

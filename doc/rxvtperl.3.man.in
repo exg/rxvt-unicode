@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 3"
-.TH @@RXVT_NAME@@ 3 "2011-08-11" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 3 "2011-11-18" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -405,15 +405,17 @@ The default pattern to match URLs can be overridden with the
 with numbered patterns, in a manner similar to the \*(L"selection\*(R" extension.
 The launcher can also be overridden on a per-pattern basis.
 .Sp
-It is possible to activate the most recently seen match from the keyboard.
-Simply bind a keysym to \*(L"perl:matcher\*(R" as seen in the example below.
+It is possible to activate the most recently seen match or a list of matches
+from the keyboard.  Simply bind a keysym to \*(L"perl:matcher:last\*(R" or
+\&\*(L"perl:matcher:list\*(R" as seen in the example below.
 .Sp
 Example configuration:
 .Sp
-.Vb 7
+.Vb 8
 \&    URxvt.perl\-ext:           default,matcher
 \&    URxvt.urlLauncher:        sensible\-browser
-\&    URxvt.keysym.C\-Delete:    perl:matcher
+\&    URxvt.keysym.C\-Delete:    perl:matcher:last
+\&    URxvt.keysym.M\-Delete:    perl:matcher:list
 \&    URxvt.matcher.button:     1
 \&    URxvt.matcher.pattern.1:  \e\ebwww\e\e.[\e\ew\-]+\e\e.[\e\ew./?&@#\-]*[\e\ew/\-]
 \&    URxvt.matcher.pattern.2:  \e\eB(/\e\eS+?):(\e\ed+)(?=:|$)
