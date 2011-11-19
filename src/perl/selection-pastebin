@@ -26,7 +26,7 @@ sub upload_paste {
    my $cmd = $self->{pastebin_cmd};
    $cmd =~ s/%/$tmpfile/;
 
-   my $pid = $self->exec_async ("/bin/sh", "-c", $cmd);
+   my $pid = $self->exec_async ($cmd);
 
    $self->{pw} = urxvt::pw->new->start ($pid)->cb (sub {
       my (undef, $status) = @_;
