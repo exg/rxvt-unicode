@@ -43,6 +43,8 @@ all:
 	sed $(SEDREPLACE) < $(srcdir)/rxvt.7.man.in  >rxvt.7.man
 @IF_PERL@	sed $(SEDREPLACE) < $(srcdir)/rxvtperl.3.man.in >rxvtperl.3.man
 
+.INTERMEDIATE: rxvtperl.3.pod rxvt.7.tbl
+
 rxvtperl.3.pod: ../src/urxvt.pm
 	cp $< $@
 
