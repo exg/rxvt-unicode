@@ -123,6 +123,11 @@ CONFIGURE OPTIONS
         support for many file formats including JPG, PNG, TIFF, GIF, XPM,
         BMP, ICO and TGA.
 
+    --enable-startup-notification (default: on)
+        Add support for freedesktop startup notifications. This allows
+        window managers to display some kind of progress indicator during
+        startup.
+
     --enable-transparency (default: on)
         Add support for using the root pixmap as background to simulate
         transparency. Note that blur and blend effects depend on
