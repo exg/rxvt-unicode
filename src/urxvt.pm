@@ -977,7 +977,7 @@ sub invoke {
    my $htype = shift;
 
    if ($htype == 0) { # INIT
-      my @dirs = ((split /:/, $TERM->resource ("perl_lib")), "$LIBDIR/perl");
+      my @dirs = ((split /:/, $TERM->resource ("perl_lib")), "$ENV{HOME}/.urxvt/ext", "$LIBDIR/perl");
 
       my %ext_arg;
 

@@ -1301,8 +1301,8 @@ the @@RXVT_NAME@@perl(3) manpage.
 =item B<perl-lib>: I<path>
 
 Colon-separated list of additional directories that hold extension
-scripts. When looking for extensions specified by the C<perl> resource,
-@@RXVT_NAME@@ will first look in these directories and then in
+scripts. When looking for perl extensions, @@RXVT_NAME@@ will first
+look in these directories, then in $HOME/.urxvt/ext and lastly in
 F<@@RXVT_LIBDIR@@/urxvt/perl/>.
 
 See the @@RXVT_NAME@@perl(3) manpage.
