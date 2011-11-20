@@ -162,7 +162,7 @@ sub tt_write {
 
    $self->{search} =~ s/^\(\?i\)//
       if $self->{search} =~ /^\(.*[[:upper:]]/;
-   
+
    $self->search (-1);
    $self->idle;
 

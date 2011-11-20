@@ -24,7 +24,7 @@ sub on_button_press {
 
    my $mask = $self->ModLevel3Mask | $self->ModMetaMask
             | urxvt::ShiftMask | urxvt::ControlMask;
-   
+
    ($event->{state} & $mask) == urxvt::ShiftMask
       or return;
 

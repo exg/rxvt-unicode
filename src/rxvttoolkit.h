@@ -373,7 +373,7 @@ struct rxvt_selection
 
   rxvt_term *term; // terminal to paste to, may be 0
   void *cb_sv;     // managed by perl
-  
+
   rxvt_display *display;
   Time request_time;
   Window request_win;

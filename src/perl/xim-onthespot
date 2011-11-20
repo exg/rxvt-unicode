@@ -2,7 +2,7 @@
 
 #
 # problems with this implementation include
-# 
+#
 # - primary, secondary, tertiary are NO different to other highlighting styles
 # - if rend values are missing, they are not being interpolated
 #

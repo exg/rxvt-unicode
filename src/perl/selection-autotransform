@@ -52,7 +52,7 @@ sub on_sel_grab {
          last;
       }
    }
-      
+
    ()
 }
 

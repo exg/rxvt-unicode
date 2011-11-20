@@ -192,7 +192,7 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
     {
       char **arr = rxvt_strsplit (':', geom);
 
-      for (int i = 0; arr[i]; i++) 
+      for (int i = 0; arr[i]; i++)
         {
           if (!strcasecmp (arr[i], "style=tiled"))
             {
