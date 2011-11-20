@@ -19,8 +19,8 @@ DUMB: support tex fonts
 TODO: decrqm http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
 TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
-
 TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
+
 	- INCOMPATIBLE CHANGE: A scale value of 0 in the bg image
 	  geometry no longer enables tiling, so as to make it possible
 	  to disable both scaling and tiling.
@@ -47,6 +47,9 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
         - correctly split long lines when scrolling.
 	- Fix compilation on systems with bsd style utmp and no utmpx,
 	  such as openbsd.
+	- urxvt now looks for perl extensions also in $HOME/.urxvt/ext.
+	- add bell-command perl extension to execute a command when a
+	  bell event occurs (Ryan Kavanagh).
 	- consume button release event in matcher (exg).
 	- keyboard accessible list of recent matches in matcher
 	  (Bob Farrell).
