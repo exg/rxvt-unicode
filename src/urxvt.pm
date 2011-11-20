@@ -402,6 +402,14 @@ overlays or changes.
 Displays a confirmation dialog when a paste containing at least a full
 line is detected.
 
+=item bell-command
+
+Runs the command specified by the C<URxvt.bell-command> resource when
+a bell event occurs. For example, the following pops up a notification
+bubble with the text "Beep, Beep" using notify-send:
+
+   URxvt.bell-command: notify-send "Beep, Beep"
+
 =back
 
 =head1 API DOCUMENTATION

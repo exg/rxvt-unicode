@@ -146,6 +146,7 @@ src/iom_perl.xs
 src/rxvtperl.h
 src/rxvtperl.xs
 
+src/perl/bell-command
 src/perl/block-graphics-to-ascii
 src/perl/clipboard-osc
 src/perl/confirm-paste
