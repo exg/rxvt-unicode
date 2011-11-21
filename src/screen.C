@@ -2670,26 +2670,8 @@ rxvt_term::scr_reverse_selection () NOTHROW
 void
 rxvt_term::scr_dump (int fd) NOTHROW
 {
-  int             row, wrote;
-  unsigned int    width, towrite;
-  const char      r1[] = "\n";
-
-  for (row = saveLines + top_row;
-       row < saveLines + nrow - 1; row++)
-    {
-      width = row_buf[row].l >= 0 ? row_buf[row].l
-              : ncol;
-      for (towrite = width; towrite; towrite -= wrote)
-        {
-          wrote = write (fd, & (row_buf[row].t[width - towrite]),
-                        towrite);
-          if (wrote < 0)
-            return;         /* XXX: death, no report */
-        }
-      if (row_buf[row].l >= 0)
-        if (write (fd, r1, 1) <= 0)
-          return; /* XXX: death, no report */
-    }
+  // if this method is needed, it can be implemented by factoring the
+  // relevant code in scr_printscreen
 }
 #endif
 
