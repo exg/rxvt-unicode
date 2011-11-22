@@ -1,7 +1,5 @@
 #! perl -w
 
-# http://triplefusion.net/system/macosx-clipboard
-
 # ----------------------------------------------------------------------
 #  File: macosx-clipboard-native
 # ----------------------------------------------------------------------
@@ -30,10 +28,9 @@
 # URxvt.keysym.M-c: perl:macosx-clipboard:copy
 # URxvt.keysym.M-v: perl:macosx-clipboard:paste
 
-use Fcntl ();
 use Foundation;
 
-our $appkit = NSBundle->alloc->init->initWithPath_('/System/Library/Frameworks/AppKit.framework');
+my $appkit = NSBundle->alloc->init->initWithPath_('/System/Library/Frameworks/AppKit.framework');
 $appkit->load if $appkit;
 
 if ($appkit->isLoaded) {
@@ -45,7 +42,7 @@ if ($appkit->isLoaded) {
    undef $appkit;
 }
 
-our $pasteboard = NSPasteboard->generalPasteboard;
+my $pasteboard = NSPasteboard->generalPasteboard;
 
 sub copy {
    my ($self) = @_;
@@ -58,11 +55,10 @@ sub copy {
 
 sub paste {
    my ($self) = @_;
-   my ($type, $str);
 
-   $type = $pasteboard->availableTypeFromArray_(NSArray->arrayWithObject_('NSStringPboardType'));
-   if ($type->isEqual_('NSStringPboardType')){
-      $str = $pasteboard->stringForType_($type)->UTF8String;
+   my $type = $pasteboard->availableTypeFromArray_(NSArray->arrayWithObject_('NSStringPboardType'));
+   if ($type->isEqual_('NSStringPboardType')) {
+      my $str = $pasteboard->stringForType_($type)->UTF8String;
       $str =~ tr/\n/\r/;
       utf8::decode($str);
       $self->tt_write($self->locale_encode($str));

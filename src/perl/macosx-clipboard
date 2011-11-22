@@ -45,7 +45,6 @@ sub copy {
 sub paste {
    my ($self) = @_;
 
-   # $str = $pasteboard->stringForType_($type)->UTF8String;
    my $str = $pasteboard->paste;
    utf8::decode $str;
    $self->tt_write ($self->locale_encode ($str));
