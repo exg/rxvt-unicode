@@ -21,14 +21,15 @@ TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 
+	- INCOMPATIBLE CHANGE: the urxvtd default socket path is now
+	  $HOME/.urxvt/urxvtd-<nodename>.
 	- INCOMPATIBLE CHANGE: A scale value of 0 in the bg image
 	  geometry no longer enables tiling, so as to make it possible
 	  to disable both scaling and tiling.
         - overhaul of the bg image operations. The old operations have
-          been removed in favour of simple composable operations and
+          been deprecated in favour of elementary operations and
           styles built on top of the new operations and scale/position
-          settings. Old operations are still parsed for backward
-          compatibility (Emanuele Giaquinta).
+          settings. (Emanuele Giaquinta).
         - fix a crash caused by selection_check not properly resetting
           out-of-bounds mark values (can happen when extending a selection
           while scrolling up in curses programs for example).
