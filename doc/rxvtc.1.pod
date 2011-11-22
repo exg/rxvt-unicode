@@ -52,7 +52,7 @@ started directly.
 Both @@RXVT_NAME@@c and @@RXVT_NAME@@d use the environment variable
 F<RXVT_SOCKET> to create a listening socket and to contact the
 @@RXVT_NAME@@d, respectively. If the variable is missing,
-F<<< $HOME/.rxvt-unicode-I<< <nodename> >> >>> is used.  The variable must
+F<<< $HOME/.urxvt/urxvtd-I<< <nodename> >> >>> is used.  The variable must
 specify the absolute path of the socket to create.
 
 =back
