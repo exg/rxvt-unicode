@@ -301,10 +301,11 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
       geom_flags |= WidthValue|HeightValue|XValue|YValue;
     }
 
-  if (check_set_scale_value (geom_flags, WidthValue, h_scale, w))  changed = true;
-  if (check_set_scale_value (geom_flags, HeightValue, v_scale, h)) changed = true;
-  if (check_set_align_value (geom_flags, XValue, h_align, x))      changed = true;
-  if (check_set_align_value (geom_flags, YValue, v_align, y))      changed = true;
+  if (check_set_scale_value (geom_flags, WidthValue, h_scale, w)
+      || check_set_scale_value (geom_flags, HeightValue, v_scale, h)
+      || check_set_align_value (geom_flags, XValue, h_align, x)
+      || check_set_align_value (geom_flags, YValue, v_align, y))
+    changed = true;
 
   if (new_flags != bg_flags)
     {
