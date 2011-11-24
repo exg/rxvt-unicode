@@ -778,13 +778,28 @@ rxvt_term::key_press (XKeyEvent &ev)
           if (newlen)
             len = strlen (kbuf);
 
-          /*
-           * Pass meta for all function keys, if 'meta' option set
-           */
+          if (len > 0)
+            {
+              /*
+               * Pass meta for all function keys, if 'meta' option set
+               */
 #ifdef META8_OPTION
-          if (meta && (meta_char == 0x80) && len > 0)
-            kbuf[len - 1] |= 0x80;
+              if (meta && (meta_char == 0x80))
+                kbuf[len - 1] |= 0x80;
 #endif
+
+              /*
+               * pass Shift/Control indicators for function keys ending with `~'
+               *
+               * eg,
+               *   Prior = "ESC[5~"
+               *   Shift+Prior = "ESC[5$"
+               *   Ctrl+Prior = "ESC[5^"
+               *   Ctrl+Shift+Prior = "ESC[5@"
+               */
+              if (kbuf[0] == C0_ESC && kbuf[1] == '[' && kbuf[len - 1] == '~')
+                kbuf[len - 1] = (shft ? (ctrl ? '@' : '$') : (ctrl ? '^' : '~'));
+            }
 
         }
       else if (ctrl && keysym == XK_minus)
@@ -827,20 +842,6 @@ rxvt_term::key_press (XKeyEvent &ev)
         view_start = 0;
         want_refresh = 1;
       }
-
-  /*
-   * these modifications only affect the static keybuffer
-   * pass Shift/Control indicators for function keys ending with `~'
-   *
-   * eg,
-   *   Prior = "ESC[5~"
-   *   Shift+Prior = "ESC[5$"
-   *   Ctrl+Prior = "ESC[5^"
-   *   Ctrl+Shift+Prior = "ESC[5@"
-   * Meta adds an Escape prefix (with META8_OPTION, if meta == <escape>).
-   */
-  if (kbuf[0] == C0_ESC && kbuf[1] == '[' && kbuf[len - 1] == '~')
-    kbuf[len - 1] = (shft ? (ctrl ? '@' : '$') : (ctrl ? '^' : '~'));
 
   /* escape prefix */
   if (meta
