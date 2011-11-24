@@ -2169,7 +2169,6 @@ rxvt_term::scr_refresh () NOTHROW
       int i = num_scr;
       int j;
       int len, wlen;
-      dLocal (int, num_scr);
 
       j = nrow;
       wlen = len = -1;
