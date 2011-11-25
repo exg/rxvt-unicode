@@ -781,14 +781,6 @@ rxvt_term::key_press (XKeyEvent &ev)
           if (len > 0)
             {
               /*
-               * Pass meta for all function keys, if 'meta' option set
-               */
-#ifdef META8_OPTION
-              if (meta && (meta_char == 0x80))
-                kbuf[len - 1] |= 0x80;
-#endif
-
-              /*
                * pass Shift/Control indicators for function keys ending with `~'
                *
                * eg,
@@ -799,6 +791,14 @@ rxvt_term::key_press (XKeyEvent &ev)
                */
               if (kbuf[0] == C0_ESC && kbuf[1] == '[' && kbuf[len - 1] == '~')
                 kbuf[len - 1] = (shft ? (ctrl ? '@' : '$') : (ctrl ? '^' : '~'));
+
+              /*
+               * Pass meta for all function keys, if 'meta' option set
+               */
+#ifdef META8_OPTION
+              if (meta && (meta_char == 0x80))
+                kbuf[len - 1] |= 0x80;
+#endif
             }
 
         }
