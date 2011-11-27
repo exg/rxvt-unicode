@@ -110,7 +110,7 @@ keyboard_manager::clear ()
 
   for (unsigned int i = 0; i < keymap.size (); ++i)
     {
-      free ((void *)keymap [i]->str);
+      free (keymap [i]->str);
       delete keymap [i];
       keymap [i] = 0;
     }
@@ -179,7 +179,7 @@ keyboard_manager::register_translation (KeySym keysym, unsigned int state, char 
   else
     {
       delete key;
-      free ((void *)translation);
+      free (translation);
       rxvt_fatal ("out of memory, aborting.\n");
     }
 }
