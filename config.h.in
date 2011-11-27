@@ -271,12 +271,6 @@
 /* Define if you want ISO 14755 extended support */
 #undef ISO_14755
 
-/* Define location of lastlogx */
-#undef LASTLOGX_FILE
-
-/* Define location of lastlog */
-#undef LASTLOG_FILE
-
 /* Define if you want to have lastlog support when utmp/utmpx is enabled */
 #undef LASTLOG_SUPPORT
 
@@ -336,6 +330,21 @@
 
 /* Define if you want to hide the pointer while typing */
 #undef POINTER_BLANK
+
+/* Define to a fallback location of lastlogx */
+#undef PT_LASTLOGX_FILE
+
+/* Define to a fallback location of lastlog */
+#undef PT_LASTLOG_FILE
+
+/* Define to a fallback location of utmp */
+#undef PT_UTMP_FILE
+
+/* Define to a fallback location of wtmpx */
+#undef PT_WTMPX_FILE
+
+/* Define to a fallback location of wtmp */
+#undef PT_WTMP_FILE
 
 /* Resource class */
 #undef RESCLASS
@@ -409,17 +418,8 @@
    for multibyte characters input */
 #undef USE_XIM
 
-/* Define location of utmp */
-#undef UTMP_FILE
-
 /* Define if you want to have utmp/utmpx support */
 #undef UTMP_SUPPORT
-
-/* Define location of wtmpx */
-#undef WTMPX_FILE
-
-/* Define location of wtmp */
-#undef WTMP_FILE
 
 /* Define if you want to have wtmp support when utmp/utmpx is enabled */
 #undef WTMP_SUPPORT
