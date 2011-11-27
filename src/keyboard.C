@@ -200,11 +200,11 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
 
   if (index >= 0)
     {
-      const keysym_t &key = *keymap [index];
+      keysym_t *key = keymap [index];
 
-      if (key.type != keysym_t::BUILTIN)
+      if (key->type != keysym_t::BUILTIN)
         {
-          wchar_t *wc = rxvt_utf8towcs (key.str);
+          wchar_t *wc = rxvt_utf8towcs (key->str);
           char *str = rxvt_wcstombs (wc);
           // TODO: do (some) translations, unescaping etc, here (allow \u escape etc.)
           free (wc);
