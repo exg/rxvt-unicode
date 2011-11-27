@@ -100,12 +100,6 @@ keyboard_manager::keyboard_manager ()
 
 keyboard_manager::~keyboard_manager ()
 {
-  clear ();
-}
-
-void
-keyboard_manager::clear ()
-{
   hash [0] = 2;
 
   for (unsigned int i = 0; i < keymap.size (); ++i)
@@ -174,7 +168,11 @@ keyboard_manager::register_translation (KeySym keysym, unsigned int state, char 
       if (strncmp (translation, "builtin:", 8) == 0)
         key->type = keysym_t::BUILTIN;
 
-      register_keymap (key);
+      if (keymap.size () == keymap.capacity ())
+        keymap.reserve (keymap.size () * 2);
+
+      keymap.push_back (key);
+      hash[0] = 3;
     }
   else
     {
@@ -182,22 +180,6 @@ keyboard_manager::register_translation (KeySym keysym, unsigned int state, char 
       free (translation);
       rxvt_fatal ("memory allocation failure. aborting.\n");
     }
-}
-
-void
-keyboard_manager::register_keymap (keysym_t *key)
-{
-  if (keymap.size () == keymap.capacity ())
-    keymap.reserve (keymap.size () * 2);
-
-  keymap.push_back (key);
-  hash[0] = 3;
-}
-
-void
-keyboard_manager::register_done ()
-{
-  setup_hash ();
 }
 
 bool
@@ -239,7 +221,7 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
 }
 
 void
-keyboard_manager::setup_hash ()
+keyboard_manager::register_done ()
 {
   unsigned int i, index, hashkey;
   vector <keysym_t *> sorted_keymap;
