@@ -65,14 +65,14 @@
  */
 
 static void
-output_string (rxvt_term *rt, const char *str)
+output_string (rxvt_term *term, const char *str)
 {
   if (strncmp (str, "command:", 8) == 0)
-    rt->cmdbuf_append (str + 8, strlen (str) - 8);
+    term->cmdbuf_append (str + 8, strlen (str) - 8);
   else if (strncmp (str, "perl:", 5) == 0)
-    HOOK_INVOKE((rt, HOOK_USER_COMMAND, DT_STR, str + 5, DT_END));
+    HOOK_INVOKE((term, HOOK_USER_COMMAND, DT_STR, str + 5, DT_END));
   else
-    rt->tt_write (str, strlen (str));
+    term->tt_write (str, strlen (str));
 }
 
 // return: priority_of_a - priority_of_b
