@@ -227,12 +227,7 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
           // TODO: do (some) translations, unescaping etc, here (allow \u escape etc.)
           free (wc);
 
-          switch (key.type)
-            {
-              case keysym_t::STRING:
-                output_string (term, str);
-                break;
-            }
+          output_string (term, str);
 
           free (str);
 
