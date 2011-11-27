@@ -153,7 +153,7 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
           return;
         }
       else
-        rxvt_warn ("cannot parse list-type keysym '%s', processing as normal keysym.\n", translation);
+        rxvt_warn ("unable to parse list-type keysym '%s', processing as normal keysym.\n", translation);
     }
 
   register_translation (keysym, state, translation);
@@ -180,7 +180,7 @@ keyboard_manager::register_translation (KeySym keysym, unsigned int state, char 
     {
       delete key;
       free (translation);
-      rxvt_fatal ("out of memory, aborting.\n");
+      rxvt_fatal ("memory allocation failure. aborting.\n");
     }
 }
 
@@ -203,7 +203,7 @@ keyboard_manager::register_done ()
 bool
 keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
 {
-  assert (hash[0] == 0 && "register_done() need to be called");
+  assert (("register_done() need to be called", hash[0] == 0));
 
   state &= OtherModMask; // mask out uninteresting modifiers
 
