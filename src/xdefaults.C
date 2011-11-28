@@ -793,10 +793,7 @@ rxvt_term::extract_resources ()
   XrmEnumerateDatabase (database, name_prefix, class_prefix,
                         XrmEnumOneLevel, rxvt_define_key, NULL);
 #   ifdef RESFALLBACK
-  name_prefix[0] = XrmStringToName (RESFALLBACK);
-  name_prefix[1] = XrmStringToName ("keysym");
-  class_prefix[0] = XrmStringToName (RESFALLBACK);
-  class_prefix[1] = XrmStringToName ("Keysym");
+  name_prefix[0] = class_prefix[0] = XrmStringToName (RESFALLBACK);
   /* XXX: Need to check sizeof (rxvt_t) == sizeof (XPointer) */
   XrmEnumerateDatabase (database, name_prefix, class_prefix,
                         XrmEnumOneLevel, rxvt_define_key, NULL);
