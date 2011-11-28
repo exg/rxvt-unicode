@@ -46,8 +46,6 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 	  crash when the argument is big enough, red hat bug #711137
 	  (Emanuele Giaquinta).
         - correctly split long lines when scrolling.
-	- Fix compilation on systems with bsd style utmp and no utmpx,
-	  such as openbsd.
 	- urxvt now looks for perl extensions also in $HOME/.urxvt/ext.
 	- add bell-command perl extension to execute a command when a
 	  bell event occurs (Ryan Kavanagh).
