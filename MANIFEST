@@ -85,6 +85,7 @@ src/scrollbar.h
 src/version.h
 src/xdefaults.C
 
+libptytty/Changes
 libptytty/ptytty.m4
 libptytty/src/libptytty.h
 libptytty/src/ptytty_conf.h
@@ -169,6 +170,7 @@ src/perl/tabbed
 src/perl/urxvt-popup
 src/perl/xim-onthespot
 
+libev/Changes
 libev/ev.h
 libev/ev++.h
 libev/ev.c
