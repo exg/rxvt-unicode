@@ -665,7 +665,7 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
     {
       unsigned int i;
 
-      for (i=0; i < ecb_array_length (keysym_vocabulary); ++i)
+      for (i = 0; i < ecb_array_length (keysym_vocabulary); ++i)
         {
           if (strncmp (str, keysym_vocabulary [i].name, keysym_vocabulary [i].len) == 0)
             {
