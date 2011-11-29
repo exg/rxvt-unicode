@@ -1384,9 +1384,9 @@ This method should only be called during the C<on_start> hook, as there is
 only one resource database per display, and later invocations might return
 the wrong resources.
 
-=item $success = $term->parse_keysym ($keysym_spec, $command_string)
+=item $success = $term->parse_keysym ($key, $octets)
 
-Adds a keymap translation exactly as specified via a resource. See the
+Adds a key binding exactly as specified via a resource. See the
 C<keysym> resource in the @@RXVT_NAME@@(1) manpage.
 
 =item $rend = $term->rstyle ([$new_rstyle])
