@@ -981,11 +981,6 @@ rxvt_term::XUngrabKey (int keycode, U32 modifiers, Window window = THIS->vt)
 	CODE:
 	XUngrabKey (THIS->dpy, keycode, modifiers, window);
 
-void
-rxvt_term::XUngrabKeyboard (Time eventtime)
-	CODE:
-	XUngrabKeyboard (THIS->dpy, eventtime);
-
 bool
 rxvt_term::grab (Time eventtime, int sync = 0)
 	CODE:
