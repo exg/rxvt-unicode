@@ -448,6 +448,12 @@ encoding (often locale-specific) and binary data.
 Either binary data or - more common - a text string encoded in a
 locale-specific way.
 
+=item $keysym
+
+an integer that is a valid X11 keysym code. You can convert a string
+into a keysym and viceversa by using C<XStringToKeysym> and
+C<XKeysymToString>.
+
 =back
 
 =head2 Extension Objects
@@ -1935,6 +1941,10 @@ the session.
 =item ($x, $y, $child_window) = $term->XTranslateCoordinates ($src, $dst, $x, $y)
 
 =item $term->XChangeInput ($window, $add_events[, $del_events])
+
+=item $keysym = $term->XStringToKeysym ($string)
+
+=item $string = $term->XKeysymToString ($keysym)
 
 Various X or X-related functions. The C<$term> object only serves as
 the source of the display, otherwise those functions map more-or-less
