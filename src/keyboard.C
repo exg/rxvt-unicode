@@ -100,16 +100,11 @@ keyboard_manager::keyboard_manager ()
 
 keyboard_manager::~keyboard_manager ()
 {
-  hash [0] = 2;
-
   for (unsigned int i = 0; i < keymap.size (); ++i)
     {
       free (keymap [i]->str);
       delete keymap [i];
-      keymap [i] = 0;
     }
-
-  keymap.clear ();
 }
 
 // a wrapper for register_translation that converts the input string
