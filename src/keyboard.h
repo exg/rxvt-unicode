@@ -59,7 +59,7 @@ struct keysym_t
   /* which are mapped to corresponding lower bits at register time */
   uint16_t    state;    /* indicates each modifiers' DOWN/UP status         */
   keysym_type type;
-  char        *str;      /* would normally be a keycode translation in UTF-8 */
+  char        *str;      /* the key's definition encoded in UTF-8 */
 };
 
 class keyboard_manager
