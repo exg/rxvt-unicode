@@ -112,9 +112,9 @@ keyboard_manager::~keyboard_manager ()
 void
 keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, const char *trans)
 {
-  wchar_t *wc = rxvt_mbstowcs (trans);
-  char *translation = rxvt_wcstoutf8 (wc);
-  free (wc);
+  wchar_t *ws = rxvt_mbstowcs (trans);
+  char *translation = rxvt_wcstoutf8 (ws);
+  free (ws);
 
   if (strncmp (translation, "list", 4) == 0 && translation [4]
       && strlen (translation) < STRING_MAX)
@@ -199,10 +199,10 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
 
       if (key->type != keysym_t::BUILTIN)
         {
-          wchar_t *wc = rxvt_utf8towcs (key->str);
-          char *str = rxvt_wcstombs (wc);
+          wchar_t *ws = rxvt_utf8towcs (key->str);
+          char *str = rxvt_wcstombs (ws);
           // TODO: do (some) translations, unescaping etc, here (allow \u escape etc.)
-          free (wc);
+          free (ws);
 
           output_string (term, str);
 
