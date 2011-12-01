@@ -586,7 +586,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
  *      "rxvt" "keysym" "0xFF01"
  *   value will be a string
  */
-int
+static int
 rxvt_define_key (XrmDatabase *database ecb_unused,
                  XrmBindingList bindings ecb_unused,
                  XrmQuarkList quarks,
