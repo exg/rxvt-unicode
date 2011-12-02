@@ -110,11 +110,9 @@ keyboard_manager::~keyboard_manager ()
 // a wrapper for register_translation that converts the input string
 // to utf-8 and expands 'list' syntax.
 void
-keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, const char *trans)
+keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, const wchar_t *ws)
 {
-  wchar_t *ws = rxvt_mbstowcs (trans);
   char *translation = rxvt_wcstoutf8 (ws);
-  free (ws);
 
   if (strncmp (translation, "list", 4) == 0 && translation [4]
       && strlen (translation) < STRING_MAX)

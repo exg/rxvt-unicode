@@ -692,7 +692,9 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
         return -1;
     }
 
-  keyboard->register_user_translation (sym, state, arg);
+  wchar_t *ws = rxvt_mbstowcs (arg);
+  keyboard->register_user_translation (sym, state, ws);
+  free (ws);
   return 1;
 }
 
