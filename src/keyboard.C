@@ -114,35 +114,6 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
 {
   char *translation = rxvt_wcstoutf8 (ws);
 
-  if (strncmp (translation, "list", 4) == 0 && translation [4]
-      && strlen (translation) < STRING_MAX)
-    {
-      char *prefix = translation + 4;
-      char *middle = strchr  (prefix + 1, translation [4]);
-      char *suffix = strrchr (prefix + 1, translation [4]);
-
-      if (suffix && middle && suffix > middle + 1)
-        {
-          int range = suffix - middle - 1;
-          int prefix_len = middle - prefix - 1;
-          char buf[STRING_MAX];
-
-          memcpy (buf, prefix + 1, prefix_len);
-          strcpy (buf + prefix_len + 1, suffix + 1);
-
-          for (int i = 0; i < range; i++)
-            {
-              buf [prefix_len] = middle [i + 1];
-              register_translation (keysym + i, state, strdup (buf));
-            }
-
-          free (translation);
-          return;
-        }
-      else
-        rxvt_warn ("unable to parse list-type keysym '%s', processing as normal keysym.\n", translation);
-    }
-
   register_translation (keysym, state, translation);
 }
 

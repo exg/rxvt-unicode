@@ -1,0 +1,21 @@
+#! perl
+
+sub on_register_command {
+    my ($self, $keysym, $state, $str) = @_;
+
+    if ($str =~ /^list(.)/) {
+    	my @list = split /\Q$1/, $str;
+    	if (@list == 4) {
+    	    for (0 .. (length $list[2]) - 1) {
+    		my $middle = substr $list[2], $_, 1;
+    		my $def = $list[1] . $middle . $list[3];
+    		$self->register_command ($keysym + $_, $state, $def);
+    	    }
+    	    return 1;
+    	}
+
+	warn "unable to parse keysym '$str' as list, processing as normal keysym\n";
+    }
+
+    ()
+}

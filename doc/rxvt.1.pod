@@ -1206,7 +1206,8 @@ performed in an exact manner; however, the closest match is assured.
 I<string> may contain escape values (C<\n>: newline, C<\000>: octal
 number), see RESOURCES in C<man 7 X> for further details.
 
-You can define a range of keysyms in one shot by providing a I<string>
+You can define a range of keysyms in one shot by
+loading the C<keysym-list> perl extension and providing a I<string>
 with pattern B<list/PREFIX/MIDDLE/SUFFIX>, where the delimiter `/'
 should be a character not used by the strings.
 

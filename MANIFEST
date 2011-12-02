@@ -153,6 +153,7 @@ src/perl/clipboard-osc
 src/perl/confirm-paste
 src/perl/digital-clock
 src/perl/example-refresh-hooks
+src/perl/keysym-list
 src/perl/kuake
 src/perl/macosx-clipboard
 src/perl/macosx-clipboard-native
