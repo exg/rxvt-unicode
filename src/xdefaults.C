@@ -693,7 +693,8 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
     }
 
   wchar_t *ws = rxvt_mbstowcs (arg);
-  keyboard->register_user_translation (sym, state, ws);
+  if (!HOOK_INVOKE ((this, HOOK_REGISTER_COMMAND, DT_INT, sym, DT_INT, state, DT_WCS_LEN, ws, wcslen (ws), DT_END)))
+    keyboard->register_user_translation (sym, state, ws);
   free (ws);
   return 1;
 }
@@ -777,11 +778,18 @@ rxvt_term::extract_resources ()
             }
         }
     }
+#endif /* NO_RESOURCES */
+}
 
+void
+rxvt_term::extract_keysym_resources ()
+{
+#ifndef NO_RESOURCES
   /*
    * [R5 or later]: enumerate the resource database
    */
 #  ifdef KEYSYM_RESOURCE
+  XrmDatabase database = XrmGetDatabase (dpy);
   XrmName name_prefix[3];
   XrmClass class_prefix[3];
 

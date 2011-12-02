@@ -674,6 +674,13 @@ resource in the @@RXVT_NAME@@(1) manpage).
 The event is simply the action string. This interface is assumed to change
 slightly in the future.
 
+=item on_register_command $term, $keysym, $modifiermask, $string
+
+Called after parsing a keysym resource but before registering the
+associated binding. If this hook returns TRUE the binding is not
+registered. It can be used to modify a binding by calling
+C<register_command>.
+
 =item on_resize_all_windows $term, $new_width, $new_height
 
 Called just after the new window size has been calculated, but before
@@ -1394,6 +1401,13 @@ the wrong resources.
 
 Adds a key binding exactly as specified via a resource. See the
 C<keysym> resource in the @@RXVT_NAME@@(1) manpage.
+
+=item $term->register_command ($keysym, $modifiermask, $string)
+
+Adds a key binding. This is a lower level api compared to
+C<parse_keysym>, as it expects a parsed key description, and can be
+used only inside either the C<on_init> hook, to add a binding, or the
+C<on_register_command> hook, to modify a parsed binding.
 
 =item $rend = $term->rstyle ([$new_rstyle])
 

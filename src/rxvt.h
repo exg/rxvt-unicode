@@ -1575,6 +1575,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   int parse_keysym (const char *str, const char *arg);
   const char *x_resource (const char *name);
   void extract_resources ();
+  void extract_keysym_resources ();
 };
 
 #endif /* _RXVT_H_ */

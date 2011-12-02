@@ -647,6 +647,10 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     }
 #endif
 
+  // must be called after initialising the perl interpreter as it
+  // may invoke the `on_register_command' hook
+  extract_keysym_resources ();
+
   /*
    * set any defaults not already set
    */

@@ -1587,6 +1587,13 @@ rxvt_term::parse_keysym (char *keysym, char *str)
         RETVAL
 
 void
+rxvt_term::register_command (int keysym, unsigned int state, SV *str)
+        CODE:
+        wchar_t *wstr = sv2wcs (str);
+        THIS->keyboard->register_user_translation (keysym, state, wstr);
+        free (wstr);
+
+void
 rxvt_term::screen_cur (...)
 	PROTOTYPE: $;$$
         ALIAS:
