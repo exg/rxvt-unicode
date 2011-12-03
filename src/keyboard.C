@@ -114,28 +114,22 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
 
   keysym_t *key = new keysym_t;
 
-  if (key && translation)
-    {
-      key->keysym = keysym;
-      key->state  = state;
-      key->str    = translation;
-      key->type   = keysym_t::STRING;
+  if (!key)
+    rxvt_fatal ("memory allocation failure. aborting.\n");
 
-      if (strncmp (translation, "builtin:", 8) == 0)
-        key->type = keysym_t::BUILTIN;
+  key->keysym = keysym;
+  key->state  = state;
+  key->str    = translation;
+  key->type   = keysym_t::STRING;
 
-      if (keymap.size () == keymap.capacity ())
-        keymap.reserve (keymap.size () * 2);
+  if (strncmp (translation, "builtin:", 8) == 0)
+    key->type = keysym_t::BUILTIN;
 
-      keymap.push_back (key);
-      hash[0] = 3;
-    }
-  else
-    {
-      delete key;
-      free (translation);
-      rxvt_fatal ("memory allocation failure. aborting.\n");
-    }
+  if (keymap.size () == keymap.capacity ())
+    keymap.reserve (keymap.size () * 2);
+
+  keymap.push_back (key);
+  hash[0] = 3;
 }
 
 bool
