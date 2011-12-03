@@ -23,6 +23,8 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 
 	- INCOMPATIBLE CHANGE: the urxvtd default socket path is now
 	  $HOME/.urxvt/urxvtd-<nodename>.
+        - INCOMPATIBLE CHANGE: the "list" keysym expansion now requires
+          loading of the "keysym-list" perl extension.
 	- INCOMPATIBLE CHANGE: A scale value of 0 in the bg image
 	  geometry no longer enables tiling, so as to make it possible
 	  to disable both scaling and tiling.
