@@ -69,7 +69,6 @@ public:
   ~keyboard_manager ();
 
   void register_user_translation (KeySym keysym, unsigned int state, const wchar_t *ws);
-  void register_translation (KeySym keysym, unsigned int state, char *translation);
   void register_done ();        // call this to make newly registered key bindings take effect
   bool dispatch (rxvt_term *term, KeySym keysym, unsigned int state);
 
