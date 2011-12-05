@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2011-06-29" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2011-12-05" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -208,7 +208,7 @@ and forks into the background. When you log-out, the server is reset and
 Both \fB@@RXVT_NAME@@c\fR and \fB@@RXVT_NAME@@d\fR use the environment
 variable \fI\s-1RXVT_SOCKET\s0\fR to create a listening socket and to contact
 the @@RXVT_NAME@@d, respectively. If the variable is missing then
-\&\fI\f(CI$HOME\fI/.rxvt\-unicode\-\fI<nodename>\fI\fR is used.
+\&\fI\f(CI$HOME\fI/.urxvt/urxvtd\-\fI<nodename>\fI\fR is used.
 .IP "\fB\s-1DISPLAY\s0\fR" 4
 .IX Item "DISPLAY"
 Only used when the \f(CW\*(C`\-\-opendisplay\*(C'\fR option is specified. Must contain a

@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 3"
-.TH @@RXVT_NAME@@ 3 "2011-11-18" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 3 "2011-12-05" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -549,6 +549,15 @@ overlays or changes.
 .IX Item "confirm-paste"
 Displays a confirmation dialog when a paste containing at least a full
 line is detected.
+.IP "bell-command" 4
+.IX Item "bell-command"
+Runs the command specified by the \f(CW\*(C`URxvt.bell\-command\*(C'\fR resource when
+a bell event occurs. For example, the following pops up a notification
+bubble with the text \*(L"Beep, Beep\*(R" using notify-send:
+.Sp
+.Vb 1
+\&   URxvt.bell\-command: notify\-send "Beep, Beep"
+.Ve
 .SH "API DOCUMENTATION"
 .IX Header "API DOCUMENTATION"
 .SS "General \s-1API\s0 Considerations"
@@ -582,6 +591,12 @@ encoding (often locale-specific) and binary data.
 .IX Item "$octets"
 Either binary data or \- more common \- a text string encoded in a
 locale-specific way.
+.ie n .IP "$keysym" 4
+.el .IP "\f(CW$keysym\fR" 4
+.IX Item "$keysym"
+an integer that is a valid X11 keysym code. You can convert a string
+into a keysym and viceversa by using \f(CW\*(C`XStringToKeysym\*(C'\fR and
+\&\f(CW\*(C`XKeysymToString\*(C'\fR.
 .SS "Extension Objects"
 .IX Subsection "Extension Objects"
 Every perl extension is a perl class. A separate perl object is created
@@ -794,6 +809,13 @@ resource in the @@RXVT_NAME@@(1) manpage).
 .Sp
 The event is simply the action string. This interface is assumed to change
 slightly in the future.
+.ie n .IP "on_register_command $term, $keysym, $modifiermask, $string" 4
+.el .IP "on_register_command \f(CW$term\fR, \f(CW$keysym\fR, \f(CW$modifiermask\fR, \f(CW$string\fR" 4
+.IX Item "on_register_command $term, $keysym, $modifiermask, $string"
+Called after parsing a keysym resource but before registering the
+associated binding. If this hook returns \s-1TRUE\s0 the binding is not
+registered. It can be used to modify a binding by calling
+\&\f(CW\*(C`register_command\*(C'\fR.
 .ie n .IP "on_resize_all_windows $term, $new_width, $new_height" 4
 .el .IP "on_resize_all_windows \f(CW$term\fR, \f(CW$new_width\fR, \f(CW$new_height\fR" 4
 .IX Item "on_resize_all_windows $term, $new_width, $new_height"
@@ -1120,11 +1142,18 @@ resource with that pattern exists.
 This method should only be called during the \f(CW\*(C`on_start\*(C'\fR hook, as there is
 only one resource database per display, and later invocations might return
 the wrong resources.
-.ie n .IP "$success = $term\->parse_keysym ($keysym_spec, $command_string)" 4
-.el .IP "\f(CW$success\fR = \f(CW$term\fR\->parse_keysym ($keysym_spec, \f(CW$command_string\fR)" 4
-.IX Item "$success = $term->parse_keysym ($keysym_spec, $command_string)"
-Adds a keymap translation exactly as specified via a resource. See the
+.ie n .IP "$success = $term\->parse_keysym ($key, $octets)" 4
+.el .IP "\f(CW$success\fR = \f(CW$term\fR\->parse_keysym ($key, \f(CW$octets\fR)" 4
+.IX Item "$success = $term->parse_keysym ($key, $octets)"
+Adds a key binding exactly as specified via a resource. See the
 \&\f(CW\*(C`keysym\*(C'\fR resource in the @@RXVT_NAME@@(1) manpage.
+.ie n .IP "$term\->register_command ($keysym, $modifiermask, $string)" 4
+.el .IP "\f(CW$term\fR\->register_command ($keysym, \f(CW$modifiermask\fR, \f(CW$string\fR)" 4
+.IX Item "$term->register_command ($keysym, $modifiermask, $string)"
+Adds a key binding. This is a lower level api compared to
+\&\f(CW\*(C`parse_keysym\*(C'\fR, as it expects a parsed key description, and can be
+used only inside either the \f(CW\*(C`on_init\*(C'\fR hook, to add a binding, or the
+\&\f(CW\*(C`on_register_command\*(C'\fR hook, to modify a parsed binding.
 .ie n .IP "$rend = $term\->rstyle ([$new_rstyle])" 4
 .el .IP "\f(CW$rend\fR = \f(CW$term\fR\->rstyle ([$new_rstyle])" 4
 .IX Item "$rend = $term->rstyle ([$new_rstyle])"
@@ -1317,6 +1346,10 @@ to receive pointer events all the times:
 .Vb 1
 \&   $term\->vt_emask_add (urxvt::PointerMotionMask);
 .Ve
+.ie n .IP "$term\->set_urgency ($set)" 4
+.el .IP "\f(CW$term\fR\->set_urgency ($set)" 4
+.IX Item "$term->set_urgency ($set)"
+Enable/disable the urgency hint on the toplevel window.
 .ie n .IP "$term\->focus_in" 4
 .el .IP "\f(CW$term\fR\->focus_in" 4
 .IX Item "$term->focus_in"
@@ -1602,6 +1635,12 @@ the session.
 .ie n .IP "$term\->XChangeInput ($window, $add_events[, $del_events])" 4
 .el .IP "\f(CW$term\fR\->XChangeInput ($window, \f(CW$add_events\fR[, \f(CW$del_events\fR])" 4
 .IX Item "$term->XChangeInput ($window, $add_events[, $del_events])"
+.ie n .IP "$keysym = $term\->XStringToKeysym ($string)" 4
+.el .IP "\f(CW$keysym\fR = \f(CW$term\fR\->XStringToKeysym ($string)" 4
+.IX Item "$keysym = $term->XStringToKeysym ($string)"
+.ie n .IP "$string = $term\->XKeysymToString ($keysym)" 4
+.el .IP "\f(CW$string\fR = \f(CW$term\fR\->XKeysymToString ($keysym)" 4
+.IX Item "$string = $term->XKeysymToString ($keysym)"
 .PD
 Various X or X\-related functions. The \f(CW$term\fR object only serves as
 the source of the display, otherwise those functions map more-or-less
