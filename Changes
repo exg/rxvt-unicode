@@ -51,6 +51,7 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 	- urxvt now looks for perl extensions also in $HOME/.urxvt/ext.
 	- add bell-command perl extension to execute a command when a
 	  bell event occurs (Ryan Kavanagh).
+	- add set_urgency perl binding to set/reset the urgency hint.
 	- consume button release event in matcher (exg).
 	- keyboard accessible list of recent matches in matcher
 	  (Bob Farrell).
