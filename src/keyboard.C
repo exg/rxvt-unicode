@@ -114,9 +114,6 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
 
   keysym_t *key = new keysym_t;
 
-  if (!key)
-    rxvt_fatal ("memory allocation failure. aborting.\n");
-
   key->keysym = keysym;
   key->state  = state;
   key->str    = translation;

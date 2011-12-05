@@ -95,9 +95,6 @@ bool rxvt_connection::recv (auto_str &data, int *len)
 
   data = new char[l + 1];
 
-  if (!data)
-    return false;
-
   if (read (fd, data, l) != l)
     return false;
 
