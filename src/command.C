@@ -1711,7 +1711,7 @@ rxvt_term::x_cb (XEvent &ev)
 void
 rxvt_term::set_urgency (bool enable)
 {
-  if (!(enable || urgency_hint))
+  if (enable == urgency_hint)
     return;
 
   if (XWMHints *h = XGetWMHints (dpy, parent))
