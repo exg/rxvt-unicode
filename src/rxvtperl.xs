@@ -1263,6 +1263,9 @@ rxvt_term::view_start (int newval = 1)
 	RETVAL
 
 void
+rxvt_term::set_urgency (bool enable)
+
+void
 rxvt_term::focus_in ()
 
 void

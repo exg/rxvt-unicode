@@ -1631,6 +1631,10 @@ to receive pointer events all the times:
 
    $term->vt_emask_add (urxvt::PointerMotionMask);
 
+=item $term->set_urgency ($set)
+
+Enable/disable the urgency hint on the toplevel window.
+
 =item $term->focus_in
 
 =item $term->focus_out
