@@ -584,14 +584,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   else if (!argv[r_argc + 1])
     rxvt_fatal ("option '-e' requires an argument, aborting.\n");
   else
-    {
-      cmd_argv = (const char **)rxvt_malloc (sizeof (char *) * (argc - r_argc));
-
-      for (i = 0; i < argc - r_argc - 1; i++)
-        cmd_argv[i] = (const char *)argv[i + r_argc + 1];
-
-      cmd_argv[i] = NULL;
-    }
+    cmd_argv = (const char **)argv + r_argc + 1;
 
   rs[Rs_name] = rxvt_basename (argv[0]);
 
@@ -849,8 +842,6 @@ rxvt_term::init (int argc, const char *const *argv)
   set_colorfgbg ();
 
   init_command (cmd_argv);
-
-  free (cmd_argv);
 
   if (pty->pty >= 0)
     pty_ev.start (pty->pty, ev::READ);
