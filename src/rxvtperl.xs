@@ -930,8 +930,6 @@ _new (AV *env, AV *arg)
         for (int i = AvFILL (env) + 1; i--; )
           envv->push_back (strdup (SvPVbyte_nolen (*av_fetch (env, i, 1))));
 
-        envv->push_back (0);
-
         try
           {
             term->init (argv, envv);

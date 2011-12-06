@@ -756,10 +756,8 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
 /*----------------------------------------------------------------------*/
 void
-rxvt_term::init (int argc, const char *const *argv, stringvec *envv)
+rxvt_term::init (int argc, const char *const *argv)
 {
-  this->envv = envv;
-
   SET_R (this);
   set_locale ("");
   set_environ (envv); // a few things in X do not call setlocale :(

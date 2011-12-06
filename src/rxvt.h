@@ -1321,7 +1321,10 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void init (stringvec *argv, stringvec *envv)
   {
     this->argv = argv;
-    init (argv->size (), argv->begin (), envv);
+    this->envv = envv;
+    argv->push_back (0);
+    envv->push_back (0);
+    init (argv->size () - 1, argv->begin ());
   }
 
   void make_current () const // make this the "currently active" urxvt instance
@@ -1392,7 +1395,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   // init.C
   void init_vars ();
   const char **init_resources (int argc, const char *const *argv);
-  void init (int argc, const char *const *argv, stringvec *envv);
+  void init (int argc, const char *const *argv);
   void init_env ();
   void set_locale (const char *locale);
   void init_xlocale ();

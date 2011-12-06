@@ -199,6 +199,8 @@ rxvt_term::rxvt_term ()
 #ifdef KEYSYM_RESOURCE
   keyboard = new keyboard_manager;
 #endif
+
+  // this->envv = 0;
 }
 
 // clean up the most important stuff, do *not* call x or free mem etc.

@@ -45,11 +45,9 @@ try
     for (char **var = environ; *var; var++)
       envv->push_back (strdup (*var));
 
-    envv->push_back (0);
-
     t->init (args, envv);
 #else
-    t->init (argc, argv, 0);
+    t->init (argc, argv);
 #endif
 
     ev_run ();
