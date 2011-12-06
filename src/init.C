@@ -570,7 +570,7 @@ const char **
 rxvt_term::init_resources (int argc, const char *const *argv)
 {
   int i, r_argc;
-  const char **cmd_argv, **r_argv;
+  const char **cmd_argv;
 
   /*
    * Look for -e option. Find => split and make cmd_argv[] of command args
@@ -593,13 +593,6 @@ rxvt_term::init_resources (int argc, const char *const *argv)
       cmd_argv[i] = NULL;
     }
 
-  r_argv = (const char **)rxvt_malloc (sizeof (char *) * (r_argc + 1));
-
-  for (i = 0; i < r_argc; i++)
-    r_argv[i] = (const char *)argv[i];
-
-  r_argv[i] = NULL;
-
   rs[Rs_name] = rxvt_basename (argv[0]);
 
   /*
@@ -609,7 +602,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   if ((rs[Rs_display_name] = getenv ("DISPLAY")) == NULL)
     rs[Rs_display_name] = ":0";
 
-  get_options (r_argc, r_argv);
+  get_options (r_argc, argv);
 
   if (!(display = displays.get (rs[Rs_display_name])))
     rxvt_fatal ("can't open display %s, aborting.\n", rs[Rs_display_name]);
@@ -624,8 +617,6 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   if (rs[Rs_depth])
     select_visual (strtol (rs[Rs_depth], 0, 0));
 #endif
-
-  free (r_argv);
 
   for (int i = NUM_RESOURCES; i--; )
     if (rs [i] == resval_undef)
