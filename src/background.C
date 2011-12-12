@@ -203,7 +203,7 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
             }
           else if (!strcasecmp (arr[i], "style=aspect-stretched"))
             {
-              new_flags = BG_PROP_SCALE;
+              new_flags = BG_KEEP_ASPECT;
               w = h = windowScale;
               x = y = centerAlign;
               geom_flags = WidthValue|HeightValue|XValue|YValue;
@@ -229,9 +229,9 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
             }
           else if (!strcasecmp (arr[i], "op=tile"))
             new_flags |= BG_TILE;
-          else if (!strcasecmp (arr[i], "op=pscale"))
-            new_flags |= BG_PROP_SCALE;
-          else if (!strcasecmp (arr[i], "op=root"))
+          else if (!strcasecmp (arr[i], "op=keep-aspect"))
+            new_flags |= BG_KEEP_ASPECT;
+          else if (!strcasecmp (arr[i], "op=root-align"))
             new_flags |= BG_ROOT_ALIGN;
 
           // deprecated
@@ -243,7 +243,7 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
             }
           else if (!strcasecmp (arr[i], "propscale"))
             {
-              new_flags |= BG_PROP_SCALE;
+              new_flags |= BG_KEEP_ASPECT;
             }
           else if (!strcasecmp (arr[i], "hscale"))
             {
@@ -324,7 +324,7 @@ rxvt_term::get_image_geometry (int image_width, int image_height, int &w, int &h
   w = h_scale * target_width / 100;
   h = v_scale * target_height / 100;
 
-  if (bg_flags & BG_PROP_SCALE)
+  if (bg_flags & BG_KEEP_ASPECT)
     {
       float scale = (float)w / image_width;
       min_it (scale, (float)h / image_height);

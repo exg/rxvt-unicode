@@ -763,11 +763,11 @@ scale of 0 disables scaling. The maximum permitted scale is 1000.
 
 enables tiling
 
-=item B<op=pscale>
+=item B<op=keep-aspect>
 
-enables proportional scaling
+maintain the image aspect ratio when scaling
 
-=item B<op=root>
+=item B<op=root-align>
 
 use the position of the terminal window relative to the root window as
 the image offset, simulating a root window background
@@ -787,7 +787,7 @@ the image is tiled with no scaling. Equivalent to 0x0+0+0:op=tile
 =item B<style=aspect-stretched>
 
 the image is scaled to fill the whole window maintaining the aspect
-ratio and centered. Equivalent to 100x100+50+50:op=pscale
+ratio and centered. Equivalent to 100x100+50+50:op=keep-aspect
 
 =item B<style=stretched>
 
@@ -800,7 +800,7 @@ the image is centered with no scaling. Equivalent to 0x0+50+50
 =item B<style=root-tiled>
 
 the image is tiled with no scaling and using 'root' positioning.
-Equivalent to 0x0:op=tile:op=root
+Equivalent to 0x0:op=tile:op=root-align
 
 =back
 
