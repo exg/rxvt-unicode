@@ -500,7 +500,6 @@ AC_SUBST(STARTUP_NOTIFICATION_LIBS)
 
 AFTERIMAGE_CFLAGS=
 AFTERIMAGE_LIBS=
-AFTERIMAGE_VERSION=
 
 if test x$support_afterimage = xyes; then
   support_afterimage=no
@@ -510,18 +509,15 @@ if test x$support_afterimage = xyes; then
   fi
   if test "x$afterimage_config" != "xno" ; then
     AC_MSG_CHECKING(for libAfterImage version >= 1.15)
-    xAFTERIMAGE_VERSION=`$afterimage_config --version`
-    if test -n "$xAFTERIMAGE_VERSION" ; then
-      xAFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
-      xAFTERIMAGE_LIBS=`$afterimage_config --libs`
-      if test "x$xAFTERIMAGE_LIBS" != "x"; then
-        libai_ver_major=`echo $xAFTERIMAGE_VERSION | cut -f 1 -d .`
-        libai_ver_minor=`echo $xAFTERIMAGE_VERSION | cut -f 2 -d .`
+    AFTERIMAGE_VERSION=`$afterimage_config --version`
+    if test -n "$AFTERIMAGE_VERSION" ; then
+      AFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
+      AFTERIMAGE_LIBS=`$afterimage_config --libs`
+      if test "x$AFTERIMAGE_LIBS" != "x"; then
+        libai_ver_major=`echo $AFTERIMAGE_VERSION | cut -f 1 -d .`
+        libai_ver_minor=`echo $AFTERIMAGE_VERSION | cut -f 2 -d .`
         if test $libai_ver_major -gt 1 -o \( $libai_ver_major -eq 1 -a $libai_ver_minor -ge 15 \); then
           support_afterimage=yes
-          AFTERIMAGE_CFLAGS="$xAFTERIMAGE_CFLAGS"
-          AFTERIMAGE_LIBS="$xAFTERIMAGE_LIBS"
-          AFTERIMAGE_VERSION="$xAFTERIMAGE_VERSION"
         fi
       fi
     fi
@@ -532,6 +528,8 @@ if test x$support_afterimage = xyes; then
       AC_DEFINE(BG_IMAGE_FROM_FILE, 1, Define if you want to have sexy-looking background pixmaps.)
     else
       AC_MSG_RESULT(no)
+      AFTERIMAGE_CFLAGS=
+      AFTERIMAGE_LIBS=
     fi
   fi
 fi
