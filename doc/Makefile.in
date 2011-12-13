@@ -72,11 +72,14 @@ rxvtperl.3.pod: ../src/urxvt.pm
 ../README.FAQ: rxvt.7.tbl
 	sed $(SEDREPLACE) <$< | podselect -section "RXVT-UNICODE\/URXVT FREQUENTLY ASKED QUESTIONS" | pod2text >$@
 
+$(srcdir)/etc/rxvt-unicode.termcap: $(srcdir)/etc/rxvt-unicode.terminfo
+	tic -C $< >$@
+
 tags allbin:
 
 alldoc: rxvt.1.man.in rxvt.7.man.in rxvtc.1.man.in rxvtd.1.man.in rxvtperl.3.man.in \
-	../README.configure ../README.FAQ
-	tic -C $(srcdir)/etc/rxvt-unicode.terminfo >$(srcdir)/etc/rxvt-unicode.termcap
+	../README.configure ../README.FAQ \
+	$(srcdir)/etc/rxvt-unicode.termcap
 
 clean:
 	rm -f rxvt.1.man rxvt.7.man rxvtc.1.man rxvtd.1.man rxvtperl.3.man
