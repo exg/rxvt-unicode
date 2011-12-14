@@ -244,6 +244,8 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
           else if (!strcasecmp (arr[i], "propscale"))
             {
               new_flags |= BG_KEEP_ASPECT;
+              w = h = windowScale;
+              geom_flags |= WidthValue|HeightValue;
             }
           else if (!strcasecmp (arr[i], "hscale"))
             {
