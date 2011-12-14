@@ -2356,7 +2356,7 @@ Write user and tty to lastlog file (used by programs like
 F<lastlogin>) at start of rxvt execution.  This option requires
 --enable-utmp to also be specified.
 
-=item --enable-afterimage (default: on)
+=item --enable-afterimage (default: off)
 
 Add support for libAfterImage to be used for background
 images. It adds support for many file formats including JPG, PNG,
