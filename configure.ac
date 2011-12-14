@@ -172,24 +172,24 @@ AC_ARG_ENABLE(everything,
     fi
   ])
 
-ASSERTIONS=no
+support_assertions=no
 AC_ARG_ENABLE(assert,
   [  --enable-assert         enable assertions],
   [if test x$enableval = xyes; then
-    ASSERTIONS=yes
+    support_assertions=yes
   fi])
-if test x$ASSERTIONS = xno; then
+if test x$support_assertions = xno; then
   AC_DEFINE(NDEBUG, 1, Disable assertions (good for debugging))
 fi
 
-WARNINGS=no
+support_warnings=no
 AC_ARG_ENABLE(warnings,
   [  --enable-warnings       turn on g++ warnings],
   [if test x$enableval = xyes; then
-    WARNINGS=yes
+    support_warnings=yes
   fi])
 if test x$GXX = xyes; then
-  if test $WARNINGS = yes; then
+  if test $support_warnings = yes; then
     save_CXXFLAGS="$CXXFLAGS"
     CXXFLAGS="$CXXFLAGS -Wall -Wno-sign-compare -Wno-reorder -Wno-non-virtual-dtor"
     AC_COMPILE_IFELSE([AC_LANG_PROGRAM([],[])], [], [CXXFLAGS="$save_CXXFLAGS"])
