@@ -97,7 +97,6 @@ support_scroll_xterm=yes
 support_xim=yes
 support_pixbuf=yes
 support_startup_notification=yes
-support_afterimage=yes
 support_xft=yes
 support_unicode3=no
 support_combining=yes
@@ -134,7 +133,6 @@ AC_ARG_ENABLE(everything,
        support_xim=no
        support_pixbuf=no
        support_startup_notification=no
-       support_afterimage=no
        support_xft=no
        support_unicode3=no
        support_combining=no
@@ -163,7 +161,6 @@ AC_ARG_ENABLE(everything,
        support_xim=yes
        support_pixbuf=yes
        support_startup_notification=yes
-       support_afterimage=yes
        support_xft=yes
        support_unicode3=yes
        support_combining=yes
@@ -236,7 +233,7 @@ AC_ARG_ENABLE(font-styles,
   fi])
 
 AC_ARG_ENABLE(afterimage,
-  [  --enable-afterimage     enable integration with libAfterImage for background images],
+  [  --enable-afterimage     enable integration with libAfterImage for background images (deprecated)],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_afterimage=$enableval
   fi])
