@@ -63,7 +63,7 @@ sub on_button_press {
             and $add_button->("rot13" => sub { y/A-Za-z/N-ZA-Mn-za-m/ });
 
          /./
-            and $add_button->("eval perl expression" => sub { no warnings; $_ = eval $_ });
+            and $add_button->("eval perl expression" => sub { my $self = $self; no warnings; $_ = eval $_; $_ = "$@" if $@ });
 
          /./
             and $add_button->((sprintf "to unicode hex index (%x)", ord) => sub { $_ = sprintf "%x", ord });
