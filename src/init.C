@@ -749,7 +749,38 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
 /*----------------------------------------------------------------------*/
 void
-rxvt_term::init (int argc, const char *const *argv)
+rxvt_term::init (stringvec *argv, stringvec *envv)
+{
+  argv->push_back (0);
+  envv->push_back (0);
+
+  this->argv = argv;
+  this->envv = envv;
+
+  init2 (argv->size () - 1, argv->begin ());
+}
+
+void
+rxvt_term::init (int argc, const char *const *argv, const char *const *envv)
+{
+#if ENABLE_PERL
+  // perl might want to access the stringvecs later, so we need to copy them
+  stringvec *args = new stringvec;
+  for (int i = 0; i < argc; i++)
+    args->push_back (strdup (argv [i]));
+
+  stringvec *envs = new stringvec;
+  for (const char *const *var = envv; *var; var++)
+    envs->push_back (strdup (*var));
+
+  init (args, envs);
+#else
+  init2 (argc, argv);
+#endif
+}
+
+void
+rxvt_term::init2 (int argc, const char *const *argv)
 {
   SET_R (this);
   set_locale ("");
@@ -826,11 +857,9 @@ rxvt_term::init (int argc, const char *const *argv)
 
 #ifdef BG_IMAGE_FROM_FILE
     if (rs[Rs_backgroundPixmap])
-      {
-        if (bg_set_file (rs[Rs_backgroundPixmap]))
-          if (!bg_window_position_sensitive ())
-            update_background ();
-      }
+      if (bg_set_file (rs[Rs_backgroundPixmap]))
+        if (!bg_window_position_sensitive ())
+          update_background ();
 #endif
   }
 #endif
@@ -962,10 +991,6 @@ rxvt_term::init_env ()
 }
 
 /*----------------------------------------------------------------------*/
-/*
- * This is more or less stolen straight from XFree86 xterm.
- * This should support all European type languages.
- */
 void
 rxvt_term::set_locale (const char *locale)
 {
@@ -995,13 +1020,12 @@ rxvt_term::set_locale (const char *locale)
 #endif
 
 #if HAVE_NL_LANGINFO
-  char *codeset = strdup (nl_langinfo (CODESET));
+  char *codeset = nl_langinfo (CODESET);
   // /^UTF.?8/i
   enc_utf8 = (codeset[0] == 'U' || codeset[0] == 'u')
           && (codeset[1] == 'T' || codeset[1] == 't')
           && (codeset[2] == 'F' || codeset[2] == 'f')
           && (codeset[3] == '8' || codeset[4] == '8');
-  free (codeset);
 #else
   enc_utf8 = 0;
 #endif
@@ -1014,14 +1038,14 @@ rxvt_term::init_xlocale ()
 
 #ifdef USE_XIM
   if (!locale)
-    rxvt_warn ("setting locale failed, working without locale support.\n");
+    rxvt_warn ("setting locale failed, continuing without locale support.\n");
   else
     {
       set_string_property (xa[XA_WM_LOCALE_NAME], locale);
 
       if (!XSupportsLocale ())
         {
-          rxvt_warn ("the locale is not supported by Xlib, working without locale support.\n");
+          rxvt_warn ("the locale is not supported by Xlib, continuing without locale support.\n");
           return;
         }
 

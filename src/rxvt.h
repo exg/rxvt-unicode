@@ -1318,15 +1318,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void tt_write (const char *data, unsigned int len);
   void pty_write ();
 
-  void init (stringvec *argv, stringvec *envv)
-  {
-    this->argv = argv;
-    this->envv = envv;
-    argv->push_back (0);
-    envv->push_back (0);
-    init (argv->size () - 1, argv->begin ());
-  }
-
   void make_current () const // make this the "currently active" urxvt instance
   {
     SET_R (this);
@@ -1393,9 +1384,11 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void process_terminal_mode (int mode, int priv, unsigned int nargs, const int *arg);
   void process_sgr_mode (unsigned int nargs, const int *arg);
   // init.C
+  void init (stringvec *argv, stringvec *envv);
+  void init (int argc, const char *const *argv, const char *const *envv);
+  void init2 (int argc, const char *const *argv);
   void init_vars ();
   const char **init_resources (int argc, const char *const *argv);
-  void init (int argc, const char *const *argv);
   void init_env ();
   void set_locale (const char *locale);
   void init_xlocale ();

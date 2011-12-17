@@ -223,7 +223,7 @@ void server::read_cb (ev::io &w, int revents)
 }
 
 int
-main (int argc, const char *const *argv)
+main (int argc, char *argv[])
 {
   ptytty::init ();
 

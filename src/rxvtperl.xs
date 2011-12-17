@@ -922,11 +922,10 @@ _new (AV *env, AV *arg)
         rxvt_term *term = new rxvt_term;
 
 	stringvec *argv = new stringvec;
-	stringvec *envv = new stringvec;
-
         for (int i = 0; i <= AvFILL (arg); i++)
           argv->push_back (strdup (SvPVbyte_nolen (*av_fetch (arg, i, 1))));
 
+	stringvec *envv = new stringvec;
         for (int i = AvFILL (env) + 1; i--; )
           envv->push_back (strdup (SvPVbyte_nolen (*av_fetch (env, i, 1))));
 
