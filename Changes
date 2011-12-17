@@ -64,6 +64,9 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 	- Support for the freedesktop startup-notification protocol (patch by
 	  Michael Stapelberg).
         - the direction of VPR and VPB commands was reversed.
+	- Fix alignment of inherited root pixmap when it is a different size
+	  than the root window and the terminal window is off the left or top
+	  edge (Mikachu).
 
 9.12 Wed Jun 29 14:34:28 CEST 2011
         - fix regression in processing of SelectionNotify events.
