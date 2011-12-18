@@ -68,8 +68,8 @@ TODO: popup items should have access to original self
 	- fix alignment of inherited root pixmap when it is a different size
 	  than the root window and the terminal window is off the left or top
 	  edge (Mikachu).
-        - make $self visible in "eval perl expression" popup action, also
-          handle exceptions better.
+	- make $self visible in "eval perl expression" popup action, also
+	  handle exceptions better.
 	- fix parsing of '-e' when it occurs as an option argument, such as in
 	  'urxvt -title -e' (Emanuele Giaquinta).
 
@@ -423,7 +423,7 @@ TODO: popup items should have access to original self
 
 8.5  Wed Nov 21 05:19:20 CET 2007
 	- expect major portability issues in this release: please test and report.
-      	- converted from the veritable io manager event loop to
+	- converted from the veritable io manager event loop to
 	  the high performance libev (http://software.schmorp.de/pkg/libev).
 	- minor tuning to the perl selection (include single words and more quoting chars).
 	- fix memory leak in pixmap code.
