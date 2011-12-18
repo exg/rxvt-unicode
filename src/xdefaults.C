@@ -49,6 +49,9 @@
 #define INFO(opt, arg, desc)					\
     {0, Optflag_Info, -1, NULL, (opt), (arg), (desc)}
 
+#define RINFO(kw, arg)						\
+    {0, Optflag_Info, -1, (kw), NULL, (arg), NULL}
+
 /* STRG () - command-line option, with/without resource */
 #define STRG(rsp, kw, opt, arg, desc)				\
     {0, 0, (rsp), (kw), (opt), (arg), (desc)}
@@ -272,10 +275,17 @@ optList[] = {
 #ifdef HAVE_AFTERIMAGE
               STRG (Rs_blendtype, "blendType", "blt", "string", "background image blending type - alpha, tint, etc..."),
 #endif
+#ifndef NO_RESOURCES
+              RINFO ("xrm", "string"),
+#endif
+#ifdef KEYSYM_RESOURCE
+              RINFO ("keysym.sym", "keysym"),
+#endif
               INFO ("e", "command arg ...", "command to execute")
             };
 
 #undef INFO
+#undef RINFO
 #undef STRG
 #undef RSTRG
 #undef SWCH
@@ -455,11 +465,6 @@ rxvt_usage (int type)
                     optList[i].kw,
                     (INDENT - strlen (optList[i].kw)), "", /* XXX */
                     (optList_isBool (i) ? "boolean" : optList[i].arg));
-#ifdef KEYSYM_RESOURCE
-        rxvt_log ("  " "keysym.sym" ": %*s%s\n",
-                (INDENT - sizeof ("keysym.sym") + 1), "", /* XXX */
-                "keysym");
-#endif
         rxvt_log ("\n  -help to list options");
         break;
     }
