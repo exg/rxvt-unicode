@@ -36,6 +36,7 @@
 #define Optflag_Reverse              1
 #define Optflag_Boolean              2
 #define Optflag_Switch               4
+#define Optflag_Info                 8
 
 /* monolithic option/resource structure: */
 /*
@@ -46,7 +47,7 @@
 
 /* INFO () - descriptive information only */
 #define INFO(opt, arg, desc)					\
-    {0, 0, -1, NULL, (opt), (arg), (desc)}
+    {0, Optflag_Info, -1, NULL, (opt), (arg), (desc)}
 
 /* STRG () - command-line option, with/without resource */
 #define STRG(rsp, kw, opt, arg, desc)				\
@@ -71,6 +72,8 @@
     (optList[i].flag & Optflag_Boolean)
 #define optList_isReverse(i)						\
     (optList[i].flag & Optflag_Reverse)
+#define optList_isInfo(i)						\
+    (optList[i].flag & Optflag_Info)
 
 static const struct
   {
@@ -468,7 +471,7 @@ rxvt_usage (int type)
 /*}}} */
 
 /*{{{ get command-line options before getting resources */
-void
+const char **
 rxvt_term::get_options (int argc, const char *const *argv)
 {
   int i, bad_option = 0;
@@ -515,7 +518,8 @@ rxvt_term::get_options (int argc, const char *const *argv)
                 && optList[entry].opt && !strcmp (opt, optList[entry].opt)))
           break;
 
-      if (entry < ecb_array_length (optList))
+      if (entry < ecb_array_length (optList)
+          && !optList_isInfo (entry))
         {
           if (optList_isReverse (entry))
             flag = !flag;
@@ -563,6 +567,13 @@ rxvt_term::get_options (int argc, const char *const *argv)
             }
         }
 #endif
+      else if (!strcmp (opt, "e"))
+        {
+          if (i+1 == argc)
+            rxvt_fatal ("option '-e' requires an argument, aborting.\n");
+
+          return (const char **)argv + i + 1;
+        }
       else
         {
           bad_option = 1;
@@ -572,6 +583,8 @@ rxvt_term::get_options (int argc, const char *const *argv)
 
   if (bad_option)
     rxvt_usage (0);
+
+  return 0;
 }
 
 /*}}} */

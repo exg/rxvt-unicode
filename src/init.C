@@ -569,22 +569,8 @@ rxvt_term::init_vars ()
 const char **
 rxvt_term::init_resources (int argc, const char *const *argv)
 {
-  int i, r_argc;
+  int i;
   const char **cmd_argv;
-
-  /*
-   * Look for -e option. Find => split and make cmd_argv[] of command args
-   */
-  for (r_argc = 0; r_argc < argc; r_argc++)
-    if (!strcmp (argv[r_argc], "-e"))
-      break;
-
-  if (r_argc == argc)
-    cmd_argv = NULL;
-  else if (!argv[r_argc + 1])
-    rxvt_fatal ("option '-e' requires an argument, aborting.\n");
-  else
-    cmd_argv = (const char **)argv + r_argc + 1;
 
   rs[Rs_name] = rxvt_basename (argv[0]);
 
@@ -595,7 +581,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   if ((rs[Rs_display_name] = getenv ("DISPLAY")) == NULL)
     rs[Rs_display_name] = ":0";
 
-  get_options (r_argc, argv);
+  cmd_argv = get_options (argc, argv);
 
   if (!(display = displays.get (rs[Rs_display_name])))
     rxvt_fatal ("can't open display %s, aborting.\n", rs[Rs_display_name]);
