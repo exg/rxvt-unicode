@@ -70,6 +70,8 @@ TODO: popup items should have access to original self
 	  edge (Mikachu).
         - make $self visible in "eval perl expression" popup action, also
           handle exceptions better.
+	- fix parsing of '-e' when it occurs as an option argument, such as in
+	  'urxvt -title -e' (Emanuele Giaquinta).
 
 9.12 Wed Jun 29 14:34:28 CEST 2011
 	- fix regression in processing of SelectionNotify events.
