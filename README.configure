@@ -106,7 +106,7 @@ CONFIGURE OPTIONS
         at start of rxvt execution. This option requires --enable-utmp to
         also be specified.
 
-    --enable-afterimage (default: on)
+    --enable-afterimage (default: off)
         Add support for libAfterImage to be used for background images. It
         adds support for many file formats including JPG, PNG, SVG, TIFF,
         GIF, XPM, BMP, ICO, XCF, TGA and AfterStep image XML

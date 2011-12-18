@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2011-11-18" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2011-12-18" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -791,11 +791,11 @@ scale of 0 disables scaling. The maximum permitted scale is 1000.
 .IP "\fBop=tile\fR" 4
 .IX Item "op=tile"
 enables tiling
-.IP "\fBop=pscale\fR" 4
-.IX Item "op=pscale"
-enables proportional scaling
-.IP "\fBop=root\fR" 4
-.IX Item "op=root"
+.IP "\fBop=keep\-aspect\fR" 4
+.IX Item "op=keep-aspect"
+maintain the image aspect ratio when scaling
+.IP "\fBop=root\-align\fR" 4
+.IX Item "op=root-align"
 use the position of the terminal window relative to the root window as
 the image offset, simulating a root window background
 .RE
@@ -810,7 +810,7 @@ the image is tiled with no scaling. Equivalent to 0x0+0+0:op=tile
 .IP "\fBstyle=aspect\-stretched\fR" 4
 .IX Item "style=aspect-stretched"
 the image is scaled to fill the whole window maintaining the aspect
-ratio and centered. Equivalent to 100x100+50+50:op=pscale
+ratio and centered. Equivalent to 100x100+50+50:op=keep\-aspect
 .IP "\fBstyle=stretched\fR" 4
 .IX Item "style=stretched"
 the image is scaled to fill the whole window. Equivalent to 100x100
@@ -820,7 +820,7 @@ the image is centered with no scaling. Equivalent to 0x0+50+50
 .IP "\fBstyle=root\-tiled\fR" 4
 .IX Item "style=root-tiled"
 the image is tiled with no scaling and using 'root' positioning.
-Equivalent to 0x0:op=tile:op=root
+Equivalent to 0x0:op=tile:op=root\-align
 .RE
 .RS 4
 .Sp
@@ -1180,7 +1180,8 @@ performed in an exact manner; however, the closest match is assured.
 \&\fIstring\fR may contain escape values (\f(CW\*(C`\en\*(C'\fR: newline, \f(CW\*(C`\e000\*(C'\fR: octal
 number), see \s-1RESOURCES\s0 in \f(CW\*(C`man 7 X\*(C'\fR for further details.
 .Sp
-You can define a range of keysyms in one shot by providing a \fIstring\fR
+You can define a range of keysyms in one shot by
+loading the \f(CW\*(C`keysym\-list\*(C'\fR perl extension and providing a \fIstring\fR
 with pattern \fBlist/PREFIX/MIDDLE/SUFFIX\fR, where the delimiter `/'
 should be a character not used by the strings.
 .Sp
@@ -1288,8 +1289,8 @@ the @@RXVT_NAME@@\fIperl\fR\|(3) manpage.
 .IP "\fBperl-lib\fR: \fIpath\fR" 4
 .IX Item "perl-lib: path"
 Colon-separated list of additional directories that hold extension
-scripts. When looking for extensions specified by the \f(CW\*(C`perl\*(C'\fR resource,
-@@RXVT_NAME@@ will first look in these directories and then in
+scripts. When looking for perl extensions, @@RXVT_NAME@@ will first
+look in these directories, then in \f(CW$HOME\fR/.urxvt/ext and lastly in
 \&\fI@@RXVT_LIBDIR@@/urxvt/perl/\fR.
 .Sp
 See the @@RXVT_NAME@@\fIperl\fR\|(3) manpage.
@@ -1614,7 +1615,7 @@ The shell to be used for command execution, defaults to \f(CW\*(C`/bin/sh\*(C'\f
 The unix domain socket path used by @@RXVT_NAME@@c(1) and
 @@RXVT_NAME@@d(1).
 .Sp
-Default \fI\f(CI$HOME\fI/.rxvt\-unicode\-\fI<nodename>\fI\fR.
+Default \fI\f(CI$HOME\fI/.urxvt/urxvtd\-\fI<nodename>\fI\fR.
 .IP "\fB\s-1HOME\s0\fR" 4
 .IX Item "HOME"
 Used to locate the default directory for the unix domain socket for
