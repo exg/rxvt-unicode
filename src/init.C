@@ -1609,7 +1609,7 @@ rxvt_term::run_command (const char *const *argv)
           if (getfd_hook)
             pty->pty = (*getfd_hook) (pty->pty);
 
-          if (pty->pty < 0 || fcntl (pty->pty, F_SETFL, O_NONBLOCK))
+          if (pty->pty < 0)
             rxvt_fatal ("unusable pty-fd filehandle, aborting.\n");
         }
     }
@@ -1617,6 +1617,8 @@ rxvt_term::run_command (const char *const *argv)
 #endif
     if (!pty->get ())
       rxvt_fatal ("can't initialize pseudo-tty, aborting.\n");
+
+  fcntl (pty->pty, F_SETFL, O_NONBLOCK);
 
   struct termios tio = def_tio;
 
