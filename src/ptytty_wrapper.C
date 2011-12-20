@@ -1,7 +1,7 @@
 #include <config.h>
 #include "rxvt.h"
 
-#define PTYTTY_NO_LIBCPP
+#define PTYTTY_NO_LIBCPP 1
 
 #define PTYTTY_REENTRANT 0
 
