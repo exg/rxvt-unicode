@@ -34,7 +34,7 @@
 # define CQUIT		'\034'	/* ^\ */
 #endif
 #ifndef CERASE
-# ifdef linux
+# ifdef __linux__
 #  define CERASE	'\177'	/* ^? */
 # else
 #  define CERASE	'\010'	/* ^H */
