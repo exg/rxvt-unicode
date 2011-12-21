@@ -30,7 +30,6 @@
 
 #include "rxvtperl.h"
 #include "keyboard.h"
-#include "command.h"
 
 /* an intro to the data structure:
  *
