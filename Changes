@@ -21,7 +21,7 @@ TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 
-TODO: popup items should have access to original self
+9.14 Wed Dec 21 18:40:33 CET 2011
 	- INCOMPATIBLE CHANGE: the urxvtd default socket path is now
 	  $HOME/.urxvt/urxvtd-<nodename>.
 	- INCOMPATIBLE CHANGE: the "list" keysym expansion now requires

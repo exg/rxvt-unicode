@@ -163,7 +163,7 @@ keyboard.o: ../config.h rxvt.h feature.h encoding.h rxvtutil.h
 keyboard.o: ../libecb/ecb.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../config.h
 keyboard.o: ../libev/ev++.h ../libev/ev.h callback.h scrollbar.h salloc.h
 keyboard.o: ../libptytty/src/libptytty.h rxvtperl.h hookinc.h rsinc.h
-keyboard.o: optinc.h keyboard.h command.h
+keyboard.o: optinc.h keyboard.h
 main.o: ../config.h rxvt.h feature.h encoding.h rxvtutil.h ../libecb/ecb.h
 main.o: rxvtfont.h rxvttoolkit.h ev_cpp.h ../config.h ../libev/ev++.h
 main.o: ../libev/ev.h callback.h scrollbar.h salloc.h
