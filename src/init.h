@@ -83,9 +83,6 @@
 # endif
 #endif
 
-#ifndef O_NOCTTY
-# define O_NOCTTY	0
-#endif
 #ifndef ONLCR
 # define ONLCR		0
 #endif
