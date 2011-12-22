@@ -1720,8 +1720,10 @@ rxvt_term::run_child (const char *const *argv)
 
       fd = open (CONSOLE, O_WRONLY, 0);
       if (fd >= 0)
-        if (ioctl (fd, SRIOCSREDIR, NULL) < 0)
+        {
+          ioctl (fd, SRIOCSREDIR, NULL);
           close (fd);
+        }
 #endif /* SRIOCSREDIR */
     }
 
