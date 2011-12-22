@@ -1678,7 +1678,14 @@ rxvt_term::run_command (const char *const *argv)
 
       default:
         if (!option (Opt_utmpInhibit))
-          pty->login (cmd_pid, option (Opt_loginShell), rs[Rs_display_name]);
+          {
+#ifdef LOG_ONLY_ON_LOGIN
+            bool login_shell = option (Opt_loginShell);
+#else
+            bool login_shell = true;
+#endif
+            pty->login (cmd_pid, login_shell, rs[Rs_display_name]);
+          }
 
         pty->close_tty ();
 
