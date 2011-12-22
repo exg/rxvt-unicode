@@ -11,8 +11,8 @@ AC_CANONICAL_HOST
 
 dnl RXVT version
 changequote(, )dnl
-VERSION=`sed -n -e 's/^.*[ \t]VERSION.*"\(.*\)"$/\1/p' ${srcdir}/src/version.h`
-DATE=`sed -n -e 's/^.*[ \t]DATE.*"\(.*\)"$/\1/p' ${srcdir}/src/version.h`
+VERSION=`sed -n -e 's/^.* VERSION.*"\(.*\)"$/\1/p' ${srcdir}/src/version.h`
+DATE=`sed -n -e 's/^.* DATE.*"\(.*\)"$/\1/p' ${srcdir}/src/version.h`
 changequote([, ])dnl
 AC_SUBST(VERSION)dnl
 AC_SUBST(DATE)dnl
