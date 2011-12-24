@@ -1455,7 +1455,7 @@ shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba &c)
   int sh_r, sh_g, sh_b;
   uint32_t mask_r, mask_g, mask_b;
   uint32_t *lookup, *lookup_r, *lookup_g, *lookup_b;
-  rgba low;
+  unsigned short low;
   rgba high;
   int host_byte_order = ecb_big_endian () ? MSBFirst : LSBFirst;
 
@@ -1534,9 +1534,7 @@ shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba &c)
       high.g = c.g * shade / 100;
       high.b = c.b * shade / 100;
 
-      low.r = 65535 * (100 - shade) / 100;
-      low.g = 65535 * (100 - shade) / 100;
-      low.b = 65535 * (100 - shade) / 100;
+      low = 0xffff * (100 - shade) / 100;
     }
   else
     {
@@ -1544,13 +1542,13 @@ shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba &c)
       high.g = c.g * shade / 100;
       high.b = c.b * shade / 100;
 
-      low.r = low.g = low.b = 0;
+      low = 0;
     }
 
   /* fill our lookup tables */
-  fill_lut (lookup_r, mask_r, sh_r, low.r, high.r);
-  fill_lut (lookup_g, mask_g, sh_g, low.g, high.g);
-  fill_lut (lookup_b, mask_b, sh_b, low.b, high.b);
+  fill_lut (lookup_r, mask_r, sh_r, low, high.r);
+  fill_lut (lookup_g, mask_g, sh_g, low, high.g);
+  fill_lut (lookup_b, mask_b, sh_b, low, high.b);
 
   /* apply table to input image (replacing colors by newly calculated ones) */
   if (ximage->bits_per_pixel == 32
