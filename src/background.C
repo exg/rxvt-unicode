@@ -1437,6 +1437,18 @@ rxvt_term::bg_init ()
 #if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
 /* based on code from aterm-0.4.2 */
 
+static inline void
+fill_lut (uint32_t *lookup, uint32_t mask, int sh, unsigned short low, unsigned short high)
+{
+  for (int i = 0; i <= mask >> sh; i++)
+    {
+      uint32_t tmp;
+      tmp = i * high;
+      tmp += (mask >> sh) * low;
+      lookup[i] = (tmp / 0xffff) << sh;
+    }
+}
+
 static void
 shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba &c)
 {
@@ -1445,7 +1457,6 @@ shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba &c)
   uint32_t *lookup, *lookup_r, *lookup_g, *lookup_b;
   rgba low;
   rgba high;
-  int i;
   int host_byte_order = ecb_big_endian () ? MSBFirst : LSBFirst;
 
   if (visual->c_class != TrueColor || ximage->format != ZPixmap) return;
@@ -1537,27 +1548,9 @@ shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba &c)
     }
 
   /* fill our lookup tables */
-  for (i = 0; i <= mask_r>>sh_r; i++)
-    {
-      uint32_t tmp;
-      tmp = i * high.r;
-      tmp += (mask_r>>sh_r) * low.r;
-      lookup_r[i] = (tmp/65535)<<sh_r;
-    }
-  for (i = 0; i <= mask_g>>sh_g; i++)
-    {
-      uint32_t tmp;
-      tmp = i * high.g;
-      tmp += (mask_g>>sh_g) * low.g;
-      lookup_g[i] = (tmp/65535)<<sh_g;
-    }
-  for (i = 0; i <= mask_b>>sh_b; i++)
-    {
-      uint32_t tmp;
-      tmp = i * high.b;
-      tmp += (mask_b>>sh_b) * low.b;
-      lookup_b[i] = (tmp/65535)<<sh_b;
-    }
+  fill_lut (lookup_r, mask_r, sh_r, low.r, high.r);
+  fill_lut (lookup_g, mask_g, sh_g, low.g, high.g);
+  fill_lut (lookup_b, mask_b, sh_b, low.b, high.b);
 
   /* apply table to input image (replacing colors by newly calculated ones) */
   if (ximage->bits_per_pixel == 32
