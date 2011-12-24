@@ -1035,6 +1035,9 @@ rxvt_term::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 {
   bool ret = false;
 #if XRENDER
+  if (!(bg_flags & BG_HAS_RENDER_CONV))
+    return false;
+
   int size = max (h_blurRadius, v_blurRadius) * 2 + 1;
   double *kernel = (double *)malloc (size * sizeof (double));
   XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
@@ -1117,9 +1120,9 @@ rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
           XFreeGC (dpy, gc);
         }
     }
-  else
-    {
 #  if XRENDER
+  else if (bg_flags & BG_HAS_RENDER)
+    {
       rgba c (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC);
 
       if (bg_flags & BG_TINT_SET)
@@ -1184,8 +1187,8 @@ rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
       XRenderFreePicture (dpy, mask_pic);
       XRenderFreePicture (dpy, overlay_pic);
       XRenderFreePicture (dpy, back_pic);
-#  endif
     }
+#  endif
 
   return ret;
 }
@@ -1296,14 +1299,12 @@ rxvt_term::make_transparency_pixmap ()
 
       if (!(bg_flags & BG_CLIENT_RENDER))
         {
-          if ((bg_flags & BG_NEEDS_BLUR)
-              && (bg_flags & BG_HAS_RENDER_CONV))
+          if (bg_flags & BG_NEEDS_BLUR)
             {
               if (blur_pixmap (bg_pixmap, visual, window_width, window_height))
                 result &= ~BG_NEEDS_BLUR;
             }
-          if ((bg_flags & BG_NEEDS_TINT)
-              && (bg_flags & (BG_TINT_BITAND | BG_HAS_RENDER)))
+          if (bg_flags & BG_NEEDS_TINT)
             {
               if (tint_pixmap (bg_pixmap, visual, window_width, window_height))
                 result &= ~BG_NEEDS_TINT;
