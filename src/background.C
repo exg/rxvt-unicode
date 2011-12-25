@@ -1448,7 +1448,6 @@ rxvt_term::tint_ximage (Visual *visual, XImage *ximage)
   uint32_t mask_r, mask_g, mask_b;
   uint32_t *lookup, *lookup_r, *lookup_g, *lookup_b;
   unsigned short low;
-  rgba high;
   int host_byte_order = ecb_big_endian () ? MSBFirst : LSBFirst;
 
   if (visual->c_class != TrueColor || ximage->format != ZPixmap) return;
@@ -1525,25 +1524,25 @@ rxvt_term::tint_ximage (Visual *visual, XImage *ximage)
   /* prepare limits for color transformation (each channel is handled separately) */
   if (shade > 100)
     {
-      high.r = c.r * (200 - shade) / 100;
-      high.g = c.g * (200 - shade) / 100;
-      high.b = c.b * (200 - shade) / 100;
+      c.r = c.r * (200 - shade) / 100;
+      c.g = c.g * (200 - shade) / 100;
+      c.b = c.b * (200 - shade) / 100;
 
       low = 0xffff * (shade - 100) / 100;
     }
   else
     {
-      high.r = c.r * shade / 100;
-      high.g = c.g * shade / 100;
-      high.b = c.b * shade / 100;
+      c.r = c.r * shade / 100;
+      c.g = c.g * shade / 100;
+      c.b = c.b * shade / 100;
 
       low = 0;
     }
 
   /* fill our lookup tables */
-  fill_lut (lookup_r, mask_r, sh_r, low, high.r);
-  fill_lut (lookup_g, mask_g, sh_g, low, high.g);
-  fill_lut (lookup_b, mask_b, sh_b, low, high.b);
+  fill_lut (lookup_r, mask_r, sh_r, low, c.r);
+  fill_lut (lookup_g, mask_g, sh_g, low, c.g);
+  fill_lut (lookup_b, mask_b, sh_b, low, c.b);
 
   /* apply table to input image (replacing colors by newly calculated ones) */
   if (ximage->bits_per_pixel == 32
