@@ -1163,6 +1163,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   bool blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height);
   bool tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height);
+  void tint_ximage (Visual *visual, XImage *ximage);
   unsigned long make_transparency_pixmap ();
 # endif
 

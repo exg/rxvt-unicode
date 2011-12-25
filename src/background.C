@@ -1329,10 +1329,6 @@ rxvt_term::bg_set_root_pixmap ()
 }
 # endif /* ENABLE_TRANSPARENCY */
 
-#if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
-static void shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba &c);
-# endif
-
 bool
 rxvt_term::bg_render ()
 {
@@ -1372,12 +1368,7 @@ rxvt_term::bg_render ()
       /* our own client-side tinting */
       //if (tr_flags & BG_NEEDS_TINT)
       if (1)
-        {
-          rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
-          if (bg_flags & BG_TINT_SET)
-            tint.get (c);
-          shade_ximage (DefaultVisual (dpy, display->screen), result, shade, c);
-        }
+        tint_ximage (DefaultVisual (dpy, display->screen), result);
 
       GC gc = XCreateGC (dpy, vt, 0UL, NULL);
 
@@ -1450,8 +1441,8 @@ fill_lut (uint32_t *lookup, uint32_t mask, int sh, unsigned short low, unsigned 
     }
 }
 
-static void
-shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba &c)
+void
+rxvt_term::tint_ximage (Visual *visual, XImage *ximage)
 {
   int sh_r, sh_g, sh_b;
   uint32_t mask_r, mask_g, mask_b;
@@ -1526,16 +1517,19 @@ shade_ximage (Visual *visual, XImage *ximage, int shade, const rgba &c)
         return; /* we do not support this color depth */
     }
 
+  rgba c (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC);
+
+  if (bg_flags & BG_TINT_SET)
+    tint.get (c);
+
   /* prepare limits for color transformation (each channel is handled separately) */
   if (shade > 100)
     {
-      shade = 200 - shade;
+      high.r = c.r * (200 - shade) / 100;
+      high.g = c.g * (200 - shade) / 100;
+      high.b = c.b * (200 - shade) / 100;
 
-      high.r = c.r * shade / 100;
-      high.g = c.g * shade / 100;
-      high.b = c.b * shade / 100;
-
-      low = 0xffff * (100 - shade) / 100;
+      low = 0xffff * (shade - 100) / 100;
     }
   else
     {
