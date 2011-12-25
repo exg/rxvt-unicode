@@ -955,7 +955,7 @@ rxvt_term::bg_set_blur (const char *geom)
 void
 rxvt_term::set_tint_shade_flags ()
 {
-  rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
+  rgba c;
   bool has_shade = shade != 100;
 
   bg_flags &= ~BG_TINT_FLAGS;
