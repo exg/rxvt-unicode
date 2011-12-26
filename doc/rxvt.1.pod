@@ -1562,7 +1562,7 @@ White.
 =head2 ALPHA CHANNEL SUPPORT
 
 If Xft support has been compiled in and as long as Xft/Xrender/X don't get
-their act together, rxvt-unicode will do it's own alpha channel management:
+their act together, rxvt-unicode will do its own alpha channel management:
 
 You can prefix any colour with an opaqueness percentage enclosed in
 brackets, i.e. C<[percent]>, where C<percent> is a decimal percentage
