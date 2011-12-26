@@ -21,6 +21,8 @@ TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 
+	- fix parsing of bg image styles. They really work now.
+
 9.14 Wed Dec 21 18:40:33 CET 2011
 	- INCOMPATIBLE CHANGE: the urxvtd default socket path is now
 	  $HOME/.urxvt/urxvtd-<nodename>.
@@ -909,7 +911,7 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 	- INCOMPATIBLE CHANGE: many configure options are now on by default.
 	  If you want the old behaviour, try:
 	  configure --disable-everything <your enable options>
-	- INCOMPATIBLE CHANGE: -fade changed it's meaning to comply with
+	- INCOMPATIBLE CHANGE: -fade changed its meaning to comply with
 	  the documentation and common sense: when upgrading, replace your
 	  percentage by 100-percentage.
 	- integrated "fade to specific colour" patch by Martin Parm.
@@ -1087,7 +1089,7 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 	- only define _XOPEN_SOURCE on solaris.
 	- autogenerate src/* dependency list.
 	- fixed linespace option, which ought to work now (and is dependent
-	  on frills, not on it's own configure option).
+	  on frills, not on its own configure option).
 	- include pty.h, if available (cygwin).
 	- removed W11 directory from dist, it wasn't used anyway.
 	- initialize the locale much earlier.
@@ -1111,7 +1113,7 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 	  time (12.8s -> 7.8s on my dsl). Still, doing it with only 2-3
 	  turnarounds would be much faster, but impossible to implement(?).
 	- implement underlineColor resource when ENABLE_FRILLS.
-	- iom left it's signal pipe handle open in the child
+	- iom left its signal pipe handle open in the child
 	  process. Fortunately not security-relevant as the pipe data gets
 	  ignored.
 	- do not use XSETROOTPMAP_ID anymore, support ESETROOT_PMAP_ID
@@ -1319,7 +1321,7 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 	- implemented parts 5.1 and 5.2 of ISO 14755 (i.e. hold down
 	  Ctrl+Shift and enter hex numbers. space commits it as a unicode
 	  character, or press and release Crl+Shift and then enter a
-	  function key to get it's picture). patches for 5.3 (or 5.4 with
+	  function key to get its picture). patches for 5.3 (or 5.4 with
 	  a little window or so) would be welcome.
 	- fixed large pastes (INCR selections, debian bug #191456).
 	- fixed longstanding bug in which rxvtd crashed when
@@ -1413,7 +1415,7 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 	  (reported by elmex).
 	- find more fonts by default for japanese.
 	- the internal border wasn't always cleared. This is fixed by moving
-	  the window relative to it's frame and simplifies a lot of code, too.
+	  the window relative to its frame and simplifies a lot of code, too.
 	- fixed quite hard to find scrollbar colour bug, reported by Eduard
 	  Bloch.
 
