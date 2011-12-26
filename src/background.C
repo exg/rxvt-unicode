@@ -183,7 +183,7 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
   int geom_flags = 0;
   int x = 0, y = 0;
   unsigned int w = 0, h = 0;
-  unsigned long new_flags = bg_flags & ~BG_GEOMETRY_FLAGS;
+  unsigned long new_flags = 0;
 
   if (geom == NULL)
     return false;
@@ -285,6 +285,8 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
 
       rxvt_free_strsplit (arr);
     }
+
+  new_flags |= bg_flags & ~BG_GEOMETRY_FLAGS;
 
   if (!update)
     {
