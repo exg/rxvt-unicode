@@ -993,7 +993,7 @@ rxvt_term::bg_set_tint (rxvt_color &new_tint)
 bool
 rxvt_term::bg_set_shade (const char *shade_str)
 {
-  int new_shade = (shade_str) ? atoi (shade_str) : 100;
+  int new_shade = atoi (shade_str);
 
   clamp_it (new_shade, -100, 200);
   if (new_shade < 0)
