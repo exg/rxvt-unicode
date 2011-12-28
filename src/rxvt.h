@@ -1106,7 +1106,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
     BG_TILE              = 1 << 14,
     BG_GEOMETRY_FLAGS    = BG_KEEP_ASPECT | BG_ROOT_ALIGN | BG_TILE,
 
-    BG_TINT_SET          = 1 <<  5,
     BG_TINT_BITAND       = 1 <<  6,
     BG_TINT_FLAGS        = BG_NEEDS_TINT | BG_TINT_BITAND,
 

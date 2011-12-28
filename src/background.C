@@ -376,9 +376,8 @@ rxvt_term::render_image (unsigned long tr_flags)
       ShadingInfo as_shade;
       as_shade.shading = shade;
 
-      rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
-      if (bg_flags & BG_TINT_SET)
-        tint.get (c);
+      rgba c;
+      tint.get (c);
       as_shade.tintColor.red = c.r;
       as_shade.tintColor.green = c.g;
       as_shade.tintColor.blue = c.b;
@@ -962,27 +961,27 @@ rxvt_term::set_tint_shade_flags ()
 
   bg_flags &= ~BG_TINT_FLAGS;
 
-  if (bg_flags & BG_TINT_SET)
-    {
-      tint.get (c);
-      if (!has_shade
-          && (c.r <= 0x00ff || c.r >= 0xff00)
-          && (c.g <= 0x00ff || c.g >= 0xff00)
-          && (c.b <= 0x00ff || c.b >= 0xff00))
-        bg_flags |= BG_TINT_BITAND;
-    }
+  tint.get (c);
 
-  if (has_shade || (bg_flags & BG_TINT_SET))
+  if (!has_shade
+      && (c.r <= 0x00ff || c.r >= 0xff00)
+      && (c.g <= 0x00ff || c.g >= 0xff00)
+      && (c.b <= 0x00ff || c.b >= 0xff00))
+    bg_flags |= BG_TINT_BITAND;
+
+  if (has_shade
+      || c.r < 0xff00
+      || c.g < 0xff00
+      || c.b < 0xff00)
     bg_flags |= BG_NEEDS_TINT;
 }
 
 bool
 rxvt_term::bg_set_tint (rxvt_color &new_tint)
 {
-  if (!(bg_flags & BG_TINT_SET) || tint != new_tint)
+  if (tint != new_tint)
     {
       tint = new_tint;
-      bg_flags |= BG_TINT_SET;
       set_tint_shade_flags ();
       return true;
     }
@@ -1125,10 +1124,9 @@ rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 #  if XRENDER
   else if (bg_flags & BG_HAS_RENDER)
     {
-      rgba c (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC);
+      rgba c;
 
-      if (bg_flags & BG_TINT_SET)
-        tint.get (c);
+      tint.get (c);
 
       if (shade <= 100)
         {
@@ -1406,6 +1404,8 @@ void
 rxvt_term::bg_init ()
 {
 #ifdef ENABLE_TRANSPARENCY
+  rgba c (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC);
+  tint.set (this, c);
   shade = 100;
 #endif
 
@@ -1518,10 +1518,9 @@ rxvt_term::tint_ximage (Visual *visual, XImage *ximage)
         return; /* we do not support this color depth */
     }
 
-  rgba c (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC);
+  rgba c;
 
-  if (bg_flags & BG_TINT_SET)
-    tint.get (c);
+  tint.get (c);
 
   /* prepare limits for color transformation (each channel is handled separately) */
   if (shade > 100)
