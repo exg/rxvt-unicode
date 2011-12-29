@@ -1301,7 +1301,6 @@ rxvt_term::make_transparency_pixmap ()
     {
       XFillRectangle (dpy, bg_pixmap, gc, 0, 0, window_width, window_height);
       result |= BG_IS_VALID | (bg_flags & BG_EFFECTS_FLAGS);
-      XFreeGC (dpy, gc);
 
       if (!(bg_flags & BG_CLIENT_RENDER))
         {
@@ -1315,7 +1314,23 @@ rxvt_term::make_transparency_pixmap ()
               if (tint_pixmap (bg_pixmap, visual, window_width, window_height))
                 result &= ~BG_NEEDS_TINT;
             }
+#  ifndef HAVE_AFTERIMAGE
+          if (result & BG_NEEDS_TINT)
+            {
+              XImage *ximage = XGetImage (dpy, bg_pixmap, 0, 0, bg_pmap_width, bg_pmap_height, AllPlanes, ZPixmap);
+              if (ximage)
+                {
+                  /* our own client-side tinting */
+                  tint_ximage (DefaultVisual (dpy, display->screen), ximage);
+
+                  XPutImage (dpy, bg_pixmap, gc, ximage, 0, 0, 0, 0, ximage->width, ximage->height);
+                  XDestroyImage (ximage);
+                }
+            }
+#  endif
         } /* server side rendering completed */
+
+      XFreeGC (dpy, gc);
     }
 
   if (recoded_root_pmap != root_pixmap)
@@ -1358,34 +1373,6 @@ rxvt_term::bg_render ()
     {
       if (render_image (tr_flags))
         bg_flags |= BG_IS_VALID;
-    }
-# endif
-
-# if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
-  XImage *result = NULL;
-
-  if (tr_flags & BG_NEEDS_TINT)
-    {
-      result = XGetImage (dpy, bg_pixmap, 0, 0, bg_pmap_width, bg_pmap_height, AllPlanes, ZPixmap);
-    }
-
-  if (result)
-    {
-      /* our own client-side tinting */
-      //if (tr_flags & BG_NEEDS_TINT)
-      if (1)
-        tint_ximage (DefaultVisual (dpy, display->screen), result);
-
-      GC gc = XCreateGC (dpy, vt, 0UL, NULL);
-
-      if (gc)
-        {
-          XPutImage (dpy, bg_pixmap, gc, result, 0, 0, 0, 0, result->width, result->height);
-
-          XFreeGC (dpy, gc);
-        }
-
-      XDestroyImage (result);
     }
 # endif
 
