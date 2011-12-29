@@ -822,12 +822,11 @@ rxvt_term::render_image (unsigned long tr_flags)
       if (tr_flags)
         {
           XRenderPictureAttributes pa;
+          XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
 
-          XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, visual);
-          Picture src = XRenderCreatePicture (dpy, root_pmap, src_format, 0, &pa);
+          Picture src = XRenderCreatePicture (dpy, root_pmap, format, 0, &pa);
 
-          XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, visual);
-          Picture dst = XRenderCreatePicture (dpy, bg_pixmap, dst_format, 0, &pa);
+          Picture dst = XRenderCreatePicture (dpy, bg_pixmap, format, 0, &pa);
 
           Picture mask = create_xrender_mask (dpy, vt, False, False);
 
