@@ -35,6 +35,24 @@
 #endif
 
 #ifdef HAVE_BG_PIXMAP
+# if XRENDER
+static Picture
+create_xrender_mask (Display *dpy, Drawable drawable, Bool argb, Bool component_alpha)
+{
+  Pixmap pixmap = XCreatePixmap (dpy, drawable, 1, 1, argb ? 32 : 8);
+
+  XRenderPictFormat *format = XRenderFindStandardFormat (dpy, argb ? PictStandardARGB32 : PictStandardA8);
+  XRenderPictureAttributes pa;
+  pa.repeat = True;
+  pa.component_alpha = component_alpha;
+  Picture mask = XRenderCreatePicture (dpy, pixmap, format, CPRepeat | CPComponentAlpha, &pa);
+
+  XFreePixmap (dpy, pixmap);
+
+  return mask;
+}
+# endif
+
 void
 rxvt_term::bg_destroy ()
 {
@@ -811,11 +829,7 @@ rxvt_term::render_image (unsigned long tr_flags)
           XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, visual);
           Picture dst = XRenderCreatePicture (dpy, bg_pixmap, dst_format, 0, &pa);
 
-          pa.repeat = True;
-          Pixmap mask_pmap = XCreatePixmap (dpy, vt, 1, 1, 8);
-          XRenderPictFormat *mask_format = XRenderFindStandardFormat (dpy, PictStandardA8);
-          Picture mask = XRenderCreatePicture (dpy, mask_pmap, mask_format, CPRepeat, &pa);
-          XFreePixmap (dpy, mask_pmap);
+          Picture mask = create_xrender_mask (dpy, vt, False, False);
 
           XRenderColor mask_c;
 
@@ -1141,22 +1155,14 @@ rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
           c.b = c.b * (200 - shade) / 100;
         }
 
-      XRenderPictFormat *solid_format = XRenderFindStandardFormat (dpy, PictStandardARGB32);
       XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
       XRenderPictureAttributes pa;
 
       Picture back_pic = XRenderCreatePicture (dpy, pixmap, format, 0, &pa);
 
-      pa.repeat = True;
+      Picture overlay_pic = create_xrender_mask (dpy, pixmap, True, False);
 
-      Pixmap overlay_pmap = XCreatePixmap (dpy, pixmap, 1, 1, 32);
-      Picture overlay_pic = XRenderCreatePicture (dpy, overlay_pmap, solid_format, CPRepeat, &pa);
-      XFreePixmap (dpy, overlay_pmap);
-
-      pa.component_alpha = True;
-      Pixmap mask_pmap = XCreatePixmap (dpy, pixmap, 1, 1, 32);
-      Picture mask_pic = XRenderCreatePicture (dpy, mask_pmap, solid_format, CPRepeat | CPComponentAlpha, &pa);
-      XFreePixmap (dpy, mask_pmap);
+      Picture mask_pic = create_xrender_mask (dpy, pixmap, True, True);
 
       XRenderColor mask_c;
 
