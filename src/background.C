@@ -832,10 +832,11 @@ rxvt_term::render_image (unsigned long tr_flags)
           XRenderColor mask_c;
 
           mask_c.alpha = 0x8000;
-          mask_c.red = 0;
-          mask_c.green = 0;
-          mask_c.blue = 0;
+          mask_c.red   =
+          mask_c.green =
+          mask_c.blue  = 0;
           XRenderFillRectangle (dpy, PictOpSrc, mask, &mask_c, 0, 0, 1, 1);
+
           XRenderComposite (dpy, PictOpOver, src, mask, dst, 0, 0, 0, 0, 0, 0, target_width, target_height);
 
           XRenderFreePicture (dpy, src);
@@ -1173,12 +1174,15 @@ rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
       mask_c.green = 0xffff - c.g;
       mask_c.blue  = 0xffff - c.b;
       XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
+
       XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, width, height);
 
       if (shade > 100)
         {
-          mask_c.red = mask_c.green = mask_c.blue = 0xffff * (shade - 100) / 100;
           mask_c.alpha = 0;
+          mask_c.red   =
+          mask_c.green =
+          mask_c.blue  = 0xffff * (shade - 100) / 100;
           XRenderFillRectangle (dpy, PictOpSrc, overlay_pic, &mask_c, 0, 0, 1, 1);
 
           XRenderComposite (dpy, PictOpOver, overlay_pic, None, back_pic, 0, 0, 0, 0, 0, 0, width, height);
