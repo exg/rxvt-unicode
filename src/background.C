@@ -821,12 +821,11 @@ rxvt_term::render_image (unsigned long tr_flags)
 #if XRENDER
       if (tr_flags)
         {
-          XRenderPictureAttributes pa;
           XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
 
-          Picture src = XRenderCreatePicture (dpy, root_pmap, format, 0, &pa);
+          Picture src = XRenderCreatePicture (dpy, root_pmap, format, 0, 0);
 
-          Picture dst = XRenderCreatePicture (dpy, bg_pixmap, format, 0, &pa);
+          Picture dst = XRenderCreatePicture (dpy, bg_pixmap, format, 0, 0);
 
           Picture mask = create_xrender_mask (dpy, vt, False, False);
 
@@ -1056,11 +1055,10 @@ rxvt_term::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
   double *kernel = (double *)malloc (size * sizeof (double));
   XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
 
-  XRenderPictureAttributes pa;
   XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
 
-  Picture src = XRenderCreatePicture (dpy, pixmap, format, 0, &pa);
-  Picture dst = XRenderCreatePicture (dpy, pixmap, format, 0, &pa);
+  Picture src = XRenderCreatePicture (dpy, pixmap, format, 0, 0);
+  Picture dst = XRenderCreatePicture (dpy, pixmap, format, 0, 0);
 
   if (kernel && params)
     {
@@ -1155,9 +1153,8 @@ rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
         }
 
       XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
-      XRenderPictureAttributes pa;
 
-      Picture back_pic = XRenderCreatePicture (dpy, pixmap, format, 0, &pa);
+      Picture back_pic = XRenderCreatePicture (dpy, pixmap, format, 0, 0);
 
       Picture overlay_pic = create_xrender_mask (dpy, pixmap, True, False);
 
@@ -1254,13 +1251,11 @@ rxvt_term::make_transparency_pixmap ()
         {
           recoded_root_pmap = XCreatePixmap (dpy, vt, root_pmap_width, root_pmap_height, depth);
 
-          XRenderPictureAttributes pa;
-
           XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, DefaultVisual (dpy, screen));
-          Picture src = XRenderCreatePicture (dpy, root_pixmap, src_format, 0, &pa);
+          Picture src = XRenderCreatePicture (dpy, root_pixmap, src_format, 0, 0);
 
           XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, visual);
-          Picture dst = XRenderCreatePicture (dpy, recoded_root_pmap, dst_format, 0, &pa);
+          Picture dst = XRenderCreatePicture (dpy, recoded_root_pmap, dst_format, 0, 0);
 
           XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, root_pmap_width, root_pmap_height);
 
