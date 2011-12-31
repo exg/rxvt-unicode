@@ -165,10 +165,10 @@ alpha-blending. Compile I<afterimage>; resource I<blendType>.
 =item B<-blr> I<HxV>
 
 Apply Gaussian Blur with the specified radii to the transparent
-background. If a single number is specified - both vertical and
+background. If a single number is specified, the vertical and
 horizontal radii are considered to be the same. Setting one of the
-radii to 1 and another to a large number creates interesting effects
-on some backgrounds. Maximum radius value is 128;
+radii to 1 and the other to a large number creates interesting effects
+on some backgrounds. The maximum radius value is 128;
 resource I<blurRadius>.
 
 =item B<-icon> I<file>
