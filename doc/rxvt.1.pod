@@ -168,7 +168,8 @@ Apply Gaussian Blur with the specified radii to the transparent
 background. If a single number is specified, the vertical and
 horizontal radii are considered to be the same. Setting one of the
 radii to 1 and the other to a large number creates interesting effects
-on some backgrounds. The maximum radius value is 128;
+on some backgrounds. The maximum radius value is 128. An horizontal or
+vertical radius of 0 disables blurring;
 resource I<blurRadius>.
 
 =item B<-icon> I<file>

@@ -958,7 +958,7 @@ rxvt_term::bg_set_blur (const char *geom)
       v_blurRadius = vr;
     }
 
-  if (v_blurRadius == 0 && h_blurRadius == 0)
+  if (h_blurRadius == 0 || v_blurRadius == 0)
     bg_flags &= ~BG_NEEDS_BLUR;
   else
     bg_flags |= BG_NEEDS_BLUR;
@@ -1063,40 +1063,34 @@ rxvt_term::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 
   if (kernel && params)
     {
-      if (h_blurRadius)
-        {
-          size = h_blurRadius * 2 + 1;
-          get_gaussian_kernel (h_blurRadius, size, kernel, params);
+      size = h_blurRadius * 2 + 1;
+      get_gaussian_kernel (h_blurRadius, size, kernel, params);
 
-          XRenderSetPictureFilter (dpy, src, FilterConvolution, params, size+2);
-          XRenderComposite (dpy,
-                            PictOpSrc,
-                            src,
-                            None,
-                            dst,
-                            0, 0,
-                            0, 0,
-                            0, 0,
-                            width, height);
-        }
+      XRenderSetPictureFilter (dpy, src, FilterConvolution, params, size+2);
+      XRenderComposite (dpy,
+                        PictOpSrc,
+                        src,
+                        None,
+                        dst,
+                        0, 0,
+                        0, 0,
+                        0, 0,
+                        width, height);
 
-      if (v_blurRadius)
-        {
-          size = v_blurRadius * 2 + 1;
-          get_gaussian_kernel (v_blurRadius, size, kernel, params);
-          ::swap (params[0], params[1]);
+      size = v_blurRadius * 2 + 1;
+      get_gaussian_kernel (v_blurRadius, size, kernel, params);
+      ::swap (params[0], params[1]);
 
-          XRenderSetPictureFilter (dpy, src, FilterConvolution, params, size+2);
-          XRenderComposite (dpy,
-                            PictOpSrc,
-                            src,
-                            None,
-                            dst,
-                            0, 0,
-                            0, 0,
-                            0, 0,
-                            width, height);
-        }
+      XRenderSetPictureFilter (dpy, src, FilterConvolution, params, size+2);
+      XRenderComposite (dpy,
+                        PictOpSrc,
+                        src,
+                        None,
+                        dst,
+                        0, 0,
+                        0, 0,
+                        0, 0,
+                        width, height);
 
       ret = true;
     }
