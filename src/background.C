@@ -34,6 +34,10 @@
 #define FilterConvolution "convolution"
 #endif
 
+#ifndef RepeatPad
+#define RepeatPad True
+#endif
+
 #ifdef HAVE_BG_PIXMAP
 # if XRENDER
 static Picture
@@ -1057,10 +1061,12 @@ rxvt_term::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
   double *kernel = (double *)malloc (size * sizeof (double));
   XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
 
+  XRenderPictureAttributes pa;
   XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
 
-  Picture src = XRenderCreatePicture (dpy, pixmap, format, 0, 0);
-  Picture dst = XRenderCreatePicture (dpy, pixmap, format, 0, 0);
+  pa.repeat = RepeatPad;
+  Picture src = XRenderCreatePicture (dpy, pixmap, format, CPRepeat, &pa);
+  Picture dst = XRenderCreatePicture (dpy, pixmap, format, CPRepeat, &pa);
 
   if (kernel && params)
     {
