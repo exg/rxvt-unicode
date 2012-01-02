@@ -688,7 +688,7 @@ bool
 rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
 {
   //TODO: only supports 24 bit
-  int alpha = color.a >= 0xff00 ? 0xffff : color.a;
+  unsigned int alpha = color.a >= 0xff00 ? 0xffff : color.a;
 
 #if XFT
   XRenderPictFormat *format;
