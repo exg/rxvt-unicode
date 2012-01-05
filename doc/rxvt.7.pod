@@ -848,7 +848,10 @@ user and root):
    infocmp rxvt-unicode | ssh $REMOTE "mkdir -p .terminfo && cat >/tmp/ti && tic /tmp/ti"
 
 One some systems you might need to set C<$TERMINFO> to the full path of
-F<$HOME/.terminfo> for this to work.
+F<$HOME/.terminfo> for this to work. Debian systems have a broken tic
+which will not be able to overwrite the existing rxvt-unicode terminfo
+entry - you might have to manually delete all traces of F<rxvt-unicode*>
+from F</etc/terminfo>.
 
 If you cannot or do not want to do this, then you can simply set
 C<TERM=rxvt> or even C<TERM=xterm>, and live with the small number of
