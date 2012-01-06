@@ -46,8 +46,6 @@ sub refresh {
 sub new_tab {
    my ($self, @argv) = @_;
 
-   my $offset = $self->fheight;
-
    # save a backlink to us, make sure tabbed is inactive
    push @urxvt::TERM_INIT, sub {
       my ($term) = @_;
