@@ -1476,9 +1476,6 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   this->parent = top;
 
-  old_width = szHint.width;
-  old_height = szHint.height;
-
   set_title     (rs [Rs_title]);
   set_icon_name (rs [Rs_iconName]);
 

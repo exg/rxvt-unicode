@@ -1073,8 +1073,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   unsigned int    ModLevel3Mask,
                   ModMetaMask,
                   ModNumLockMask;
-  int             old_width,  /* last used width in screen resize          */
-                  old_height; /* last used height in screen resize         */
   unsigned long   priv_modes,
                   SavedModes;
 /* ---------- */
