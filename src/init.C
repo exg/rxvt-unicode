@@ -854,7 +854,6 @@ rxvt_term::init2 (int argc, const char *const *argv)
   rootwin_ev.start (display, display->root);
 #endif
 
-  set_colorfgbg ();
   init_done = 1;
 
   init_command (cmd_argv);
@@ -910,6 +909,8 @@ rxvt_term::init_env ()
 {
   char *val;
   char *env_display;
+  char *env_windowid;
+  char *env_colorfgbg;
   char *env_term;
 
 #ifdef DISPLAY_IS_IP
@@ -937,6 +938,7 @@ rxvt_term::init_env ()
 
   sprintf (env_display, "DISPLAY=%s", val);
 
+  env_windowid = (char *)rxvt_malloc (21);
   sprintf (env_windowid, "WINDOWID=%lu", (unsigned long)parent);
 
   /* add entries to the environment:
@@ -950,8 +952,8 @@ rxvt_term::init_env ()
   putenv (env_display);
   putenv (env_windowid);
 
-  if (env_colorfgbg)
-    putenv (env_colorfgbg);
+  env_colorfgbg = get_colorfgbg ();
+  putenv (env_colorfgbg);
 
 #ifdef RXVT_TERMINFO
   putenv ("TERMINFO=" RXVT_TERMINFO);

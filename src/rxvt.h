@@ -1216,9 +1216,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   vector<void *> allocated;           // free these memory blocks with free()
 
-  char            env_windowid[21];   /* environmental variable WINDOWID */
-  char            env_colorfgbg[sizeof ("COLORFGBG=default;default;bg") + 1];
-
   char           *locale;
   char            charsets[4];
   char           *v_buffer;           /* pointer to physical buffer */
@@ -1414,7 +1411,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void set_title (const char *str);
   void set_icon_name (const char *str);
   void set_window_color (int idx, const char *color);
-  void set_colorfgbg ();
+  char *get_colorfgbg ();
   bool set_color (rxvt_color &color, const char *name);
   void alias_color (int dst, int src);
   void set_widthheight (unsigned int newwidth, unsigned int newheight);

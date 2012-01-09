@@ -946,13 +946,14 @@ rxvt_term::recolour_cursor ()
 /*
  * find if fg/bg matches any of the normal (low-intensity) colors
  */
-void
-rxvt_term::set_colorfgbg ()
+char *
+rxvt_term::get_colorfgbg ()
 {
   unsigned int i;
   const char *xpmb = "";
   char fstr[] = "default";
   char bstr[] = "default";
+  char *env_colorfgbg;
 
   for (i = Color_Black; i <= Color_White; i++)
     if (pix_colors[Color_fg] == pix_colors[i])
@@ -971,7 +972,9 @@ rxvt_term::set_colorfgbg ()
         break;
       }
 
+  env_colorfgbg = (char *)rxvt_malloc (sizeof ("COLORFGBG=default;default;bg"));
   sprintf (env_colorfgbg, "COLORFGBG=%s;%s%s", fstr, xpmb, bstr);
+  return env_colorfgbg;
 }
 
 /*----------------------------------------------------------------------*/
