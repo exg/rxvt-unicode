@@ -893,7 +893,6 @@ struct TermWin_t
   Window         parent;        /* parent identifier                        */
   Window         vt;            /* vt100 window                             */
   GC             gc;            /* GC for drawing                           */
-  Pixmap         pixmap;
   rxvt_drawable *drawable;
   rxvt_fontset  *fontset[4];
 };
