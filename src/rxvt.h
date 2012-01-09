@@ -872,6 +872,8 @@ typedef struct
 
 struct TermWin_t
 {
+  int            vt_width;      /* actual window width             [pixels] */
+  int            vt_height;     /* actual window height            [pixels] */
   int            width;         /* window width                    [pixels] */
   int            height;        /* window height                   [pixels] */
   int            fwidth;        /* font width                      [pixels] */

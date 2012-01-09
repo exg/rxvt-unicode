@@ -712,8 +712,8 @@ rxvt_term::window_calc (unsigned int newwidth, unsigned int newheight)
   // bg pixmap is set, would have to be cleared manually to properly
   // refresh the background. We take the simpler route and shrink the
   // vt window so as to avoid creating gaps.
-  width  = ncol * fwidth;
-  height = nrow * fheight;
+  vt_width  = ncol * fwidth;
+  vt_height = nrow * fheight;
 }
 
 /*----------------------------------------------------------------------*/
@@ -731,8 +731,8 @@ rxvt_term::tt_winch ()
 
   ws.ws_col = ncol;
   ws.ws_row = nrow;
-  ws.ws_xpixel = width;
-  ws.ws_ypixel = height;
+  ws.ws_xpixel = vt_width;
+  ws.ws_ypixel = vt_height;
   ioctl (pty->pty, TIOCSWINSZ, &ws);
 
 #if 0
@@ -1077,7 +1077,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
 
       XMoveResizeWindow (dpy, vt,
                          window_vt_x, window_vt_y,
-                         width, height);
+                         vt_width, vt_height);
 
 #ifdef HAVE_BG_PIXMAP
       if (bg_window_size_sensitive ())
@@ -1112,7 +1112,7 @@ rxvt_term::set_widthheight (unsigned int newwidth, unsigned int newheight)
         newheight = wattr.height - szHint.base_height;
     }
 
-  if (newwidth != width || newheight != height)
+  if (newwidth != vt_width || newheight != vt_height)
     {
       newwidth += szHint.base_width;
       newheight += szHint.base_height;

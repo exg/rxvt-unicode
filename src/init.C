@@ -1552,7 +1552,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   /* the vt window */
   vt = XCreateSimpleWindow (dpy, top,
                             window_vt_x, window_vt_y,
-                            width, height,
+                            vt_width, vt_height,
                             0,
                             pix_colors_focused[Color_fg],
                             pix_colors_focused[Color_bg]);

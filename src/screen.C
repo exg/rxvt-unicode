@@ -1369,7 +1369,7 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
 
       if (mapped)
         XClearArea (dpy, vt, 0,
-                    Row2Pixel (row - view_start), (unsigned int)width,
+                    Row2Pixel (row - view_start), (unsigned int)vt_width,
                     (unsigned int)Height2Pixel (num), False);
     }
   else
@@ -1382,7 +1382,7 @@ rxvt_term::scr_erase_screen (int mode) NOTHROW
           XChangeGC (dpy, gc, GCForeground, &gcvalue);
           XFillRectangle (dpy, vt, gc,
                           0, Row2Pixel (row - view_start),
-                          (unsigned int)width,
+                          (unsigned int)vt_width,
                           (unsigned int)Height2Pixel (num));
           gcvalue.foreground = pix_colors[Color_fg];
           XChangeGC (dpy, gc, GCForeground, &gcvalue);
@@ -1878,7 +1878,7 @@ rxvt_term::scr_expose (int x, int y, int ewidth, int eheight, bool refresh) NOTH
 void
 rxvt_term::scr_touch (bool refresh) NOTHROW
 {
-  scr_expose (0, 0, width, height, refresh);
+  scr_expose (0, 0, vt_width, vt_height, refresh);
 }
 
 /* ------------------------------------------------------------------------- */
