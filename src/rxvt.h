@@ -1030,6 +1030,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
                   enc_utf8:1,		/* whether locale uses utf-8 */
                   seen_input:1,         /* whether we have seen some program output yet */
                   seen_resize:1,	/* whether we had a resize event */
+                  init_done:1,
                   parsed_geometry:1;
 
   unsigned char   refresh_type,

@@ -855,6 +855,7 @@ rxvt_term::init2 (int argc, const char *const *argv)
 #endif
 
   set_colorfgbg ();
+  init_done = 1;
 
   init_command (cmd_argv);
 

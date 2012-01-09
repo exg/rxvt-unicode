@@ -1545,7 +1545,7 @@ rxvt_term::option (U8 optval, int set = -1)
           {
             THIS->set_option (optval, set);
 
-            if (THIS->env_colorfgbg [0]) // avoid doing this before START
+            if (THIS->init_done) // avoid doing this before START
               switch (optval)
                 {
                   case Opt_skipBuiltinGlyphs:
