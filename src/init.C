@@ -908,6 +908,8 @@ void
 rxvt_term::init_env ()
 {
   char *val;
+  char *env_display;
+  char *env_term;
 
 #ifdef DISPLAY_IS_IP
   /* Fixup display_name for export over pty to any interested terminal

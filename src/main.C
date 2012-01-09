@@ -269,9 +269,6 @@ rxvt_term::~rxvt_term ()
 
   free (selection.text);
   free (selection.clip_text);
-  // TODO: manage env vars in child only(!)
-  free (env_display);
-  free (env_term);
   free (locale);
   free (v_buffer);
 

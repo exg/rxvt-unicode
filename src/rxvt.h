@@ -1217,8 +1217,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   char            env_windowid[21];   /* environmental variable WINDOWID */
   char            env_colorfgbg[sizeof ("COLORFGBG=default;default;bg") + 1];
-  char           *env_display;        /* environmental variable DISPLAY  */
-  char           *env_term;           /* environmental variable TERM     */
 
   char           *locale;
   char            charsets[4];
