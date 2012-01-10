@@ -1050,7 +1050,7 @@ get_gaussian_kernel (int radius, int width, double *kernel, XFixed *params)
 #endif
 
 bool
-rxvt_term::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
+rxvt_term::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height, int depth)
 {
   bool ret = false;
 #if XRENDER
@@ -1066,7 +1066,9 @@ rxvt_term::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 
   pa.repeat = RepeatPad;
   Picture src = XRenderCreatePicture (dpy, pixmap, format, CPRepeat, &pa);
-  Picture dst = XRenderCreatePicture (dpy, pixmap, format, CPRepeat, &pa);
+  Pixmap tmp = XCreatePixmap (dpy, pixmap, width, height, depth);
+  Picture dst = XRenderCreatePicture (dpy, tmp, format, CPRepeat, &pa);
+  XFreePixmap (dpy, tmp);
 
   if (kernel && params)
     {
@@ -1083,6 +1085,8 @@ rxvt_term::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
                         0, 0,
                         0, 0,
                         width, height);
+
+      ::swap (src, dst);
 
       size = v_blurRadius * 2 + 1;
       get_gaussian_kernel (v_blurRadius, size, kernel, params);
@@ -1306,7 +1310,7 @@ rxvt_term::make_transparency_pixmap ()
         {
           if (bg_flags & BG_NEEDS_BLUR)
             {
-              if (blur_pixmap (bg_pixmap, visual, window_width, window_height))
+              if (blur_pixmap (bg_pixmap, visual, window_width, window_height, depth))
                 result &= ~BG_NEEDS_BLUR;
             }
           if (bg_flags & BG_NEEDS_TINT)
