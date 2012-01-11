@@ -131,40 +131,6 @@ rxvt_term::bg_window_position_sensitive ()
 }
 
 # ifdef BG_IMAGE_FROM_FILE
-static inline bool
-check_set_scale_value (int geom_flags, int flag, unsigned int &scale, unsigned int new_value)
-{
-  if (geom_flags & flag)
-    {
-      if (new_value > 1000)
-        new_value = 1000;
-      if (new_value != scale)
-        {
-          scale = new_value;
-          return true;
-        }
-    }
-  return false;
-}
-
-static inline bool
-check_set_align_value (int geom_flags, int flag, int &align, int new_value)
-{
-  if (geom_flags & flag)
-    {
-      if (new_value < -100)
-        new_value = -100;
-      else if (new_value > 200)
-        new_value = 200;
-      if (new_value != align)
-        {
-          align = new_value;
-          return true;
-        }
-    }
-  return false;
-}
-
 static inline int
 make_align_position (int align, int window_size, int image_size)
 {
@@ -202,8 +168,10 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
 {
   bool changed = false;
   int geom_flags = 0;
-  int x = 0, y = 0;
-  unsigned int w = 0, h = 0;
+  int x = h_align;
+  int y = v_align;
+  unsigned int w = h_scale;
+  unsigned int h = v_scale;
   unsigned long new_flags = 0;
 
   if (geom == NULL)
@@ -322,18 +290,24 @@ rxvt_term::bg_set_geometry (const char *geom, bool update)
         h = w;
       else if (!(geom_flags & WidthValue))
         w = h;
-
-      geom_flags |= WidthValue|HeightValue|XValue|YValue;
     }
 
-  if (check_set_scale_value (geom_flags, WidthValue, h_scale, w))  changed = true;
-  if (check_set_scale_value (geom_flags, HeightValue, v_scale, h)) changed = true;
-  if (check_set_align_value (geom_flags, XValue, h_align, x))      changed = true;
-  if (check_set_align_value (geom_flags, YValue, v_align, y))      changed = true;
+  min_it (w, 1000);
+  min_it (h, 1000);
+  clamp_it (x, -100, 200);
+  clamp_it (y, -100, 200);
 
-  if (new_flags != bg_flags)
+  if (bg_flags != new_flags
+      || h_scale != w
+      || v_scale != h
+      || h_align != x
+      || v_align != y)
     {
       bg_flags = new_flags;
+      h_scale = w;
+      v_scale = h;
+      h_align = x;
+      v_align = y;
       changed = true;
     }
 
