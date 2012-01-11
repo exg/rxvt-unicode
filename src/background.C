@@ -193,8 +193,7 @@ make_clip_rectangle (int pos, int size, int target_size, int &dst_pos, int &dst_
       dst_size += pos;
     }
 
-  if (dst_pos + dst_size > target_size)
-    dst_size = target_size - dst_pos;
+  min_it (dst_size, target_size - dst_pos);
   return src_pos;
 }
 
