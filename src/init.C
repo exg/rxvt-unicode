@@ -1195,7 +1195,7 @@ rxvt_term::get_colours ()
 void
 rxvt_term::color_aliases (int idx)
 {
-  if (rs[Rs_color + idx] && isdigit (* (rs[Rs_color + idx])))
+  if (rs[Rs_color + idx] && isdigit (*rs[Rs_color + idx]))
     {
       int i = atoi (rs[Rs_color + idx]);
 
