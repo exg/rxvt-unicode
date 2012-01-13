@@ -727,7 +727,8 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
       d.blue  = color.b;
       d.alpha = alpha;
 
-      return XftColorAllocValue (screen->dpy, screen->visual, screen->cmap, &d, &c);
+      if (XftColorAllocValue (screen->dpy, screen->visual, screen->cmap, &d, &c))
+        return true;
     }
 #else
   c.red   = color.r;
@@ -744,11 +745,11 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
     }
   else if (XAllocColor (screen->dpy, screen->cmap, &c))
     return true;
-  else
-    c.pixel = (color.r + color.g + color.b) > 128*3
-            ? WhitePixelOfScreen (DefaultScreenOfDisplay (screen->dpy))
-            : BlackPixelOfScreen (DefaultScreenOfDisplay (screen->dpy));
 #endif
+
+  c.pixel = (color.r + color.g + color.b) > 128*3
+          ? WhitePixelOfScreen (DefaultScreenOfDisplay (screen->dpy))
+          : BlackPixelOfScreen (DefaultScreenOfDisplay (screen->dpy));
 
   return false;
 }
