@@ -23,6 +23,11 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 
 	- fix parsing of bg image styles. They really work now.
 	- fix blurring of bg image borders when using xrender.
+	- fix xrender blur on common xrender implementations that do
+	  not behave correctly when the same pixmap is used as source
+	  and destination in composite operations.
+	- fix regression that caused tabbed to compute the wrong size
+	  for tabs.
 	- allow again an empty suffix in a keysym list spec (patch by
 	  Sung Pae).
 
