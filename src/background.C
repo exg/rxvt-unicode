@@ -1338,9 +1338,8 @@ rxvt_term::bg_render ()
     {
       /*  we need to re-generate transparency pixmap in that case ! */
       tr_flags = make_transparency_pixmap ();
-      if (tr_flags == 0)
-        return false;
-      bg_flags |= BG_IS_VALID;
+      if (tr_flags)
+        bg_flags |= BG_IS_VALID;
     }
 # endif
 
