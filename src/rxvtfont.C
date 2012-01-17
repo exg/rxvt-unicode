@@ -820,7 +820,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop, bool force_prop)
     {
       font_weight *best = fonts + count - 1;
 
-      for (font_weight *w = fonts; w < best; w++)
+      for (font_weight *w = fonts; w < fonts + count - 1; w++)
         if (w->diff <= best->diff)
           best = w;
 
