@@ -352,7 +352,7 @@ rxvt_term::destroy_cb (ev::idle &w, int revents)
 }
 
 void
-rxvt_term::set_option (uint8_t opt, bool set)
+rxvt_term::set_option (uint8_t opt, bool set) NOTHROW
 {
   if (!opt)
     return;
