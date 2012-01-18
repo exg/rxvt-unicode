@@ -457,7 +457,7 @@ rxvt_term::scr_poweron ()
 }
 
 void
-rxvt_term::scr_soft_reset ()
+rxvt_term::scr_soft_reset () NOTHROW
 {
   /* only affects modes, nothing drastic such as clearing the screen */
 #if ENABLE_OVERLAY
@@ -522,7 +522,7 @@ rxvt_term::scr_cursor (cursor_mode mode) NOTHROW
 }
 
 void
-rxvt_term::scr_swap_screen ()
+rxvt_term::scr_swap_screen () NOTHROW
 {
   if (!option (Opt_secondaryScreen))
     return;
