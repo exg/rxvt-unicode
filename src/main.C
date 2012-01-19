@@ -48,9 +48,7 @@
 # define X_LOCALE
 # include <X11/Xlocale.h>
 #else
-# ifdef HAVE_SETLOCALE
-#  include <locale.h>
-# endif
+# include <locale.h>
 #endif
 
 struct termios rxvt_term::def_tio;
@@ -1530,10 +1528,8 @@ rxvt_term::im_cb ()
   if (Input_Context)
     return;
 
-#if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
   if (rs[Rs_imLocale])
     SET_LOCALE (rs[Rs_imLocale]);
-#endif
 
   p = rs[Rs_inputMethod];
   if (p && *p)
@@ -1571,10 +1567,8 @@ rxvt_term::im_cb ()
     goto done;
 
 done: ;
-#if defined(HAVE_XSETLOCALE) || defined(HAVE_SETLOCALE)
   if (rs[Rs_imLocale])
     SET_LOCALE (locale);
-#endif
 }
 
 void

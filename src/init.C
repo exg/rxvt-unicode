@@ -48,9 +48,7 @@
 # define X_LOCALE
 # include <X11/Xlocale.h>
 #else
-# ifdef HAVE_SETLOCALE
-#  include <locale.h>
-# endif
+# include <locale.h>
 #endif
 
 #ifdef HAVE_NL_LANGINFO
@@ -987,7 +985,6 @@ rxvt_term::set_locale (const char *locale)
 {
   set_environ (envv);
 
-#if HAVE_XSETLOCALE || HAVE_SETLOCALE
   free (this->locale);
   this->locale = setlocale (LC_CTYPE, locale);
 
@@ -1008,7 +1005,6 @@ rxvt_term::set_locale (const char *locale)
   this->locale = strdup (this->locale);
   SET_LOCALE (this->locale);
   mbstate.reset ();
-#endif
 
 #if HAVE_NL_LANGINFO
   char *codeset = nl_langinfo (CODESET);

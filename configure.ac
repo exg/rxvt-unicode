@@ -626,12 +626,6 @@ fi
 LIBS=$save_LIBS
 CFLAGS=$save_CFLAGS
 
-AC_CACHE_CHECK(for working plain setlocale, rxvt_cv_func_setlocale,
-[AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <locale.h>]], [[setlocale(LC_CTYPE, "");]])],[rxvt_cv_func_setlocale=yes],[rxvt_cv_func_setlocale=no])])
-if test x$rxvt_cv_func_setlocale = xyes; then
-  AC_DEFINE(HAVE_SETLOCALE, 1, Define if plain old setlocale works)
-fi
-
 AC_CACHE_CHECK(for working nl_langinfo, rxvt_cv_func_nl_langinfo,
 [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <langinfo.h>]], [[nl_langinfo(CODESET);]])],[rxvt_cv_func_nl_langinfo=yes],[rxvt_cv_func_nl_langinfo=no])])
 if test x$rxvt_cv_func_nl_langinfo = xyes; then
