@@ -5,8 +5,6 @@
 #include <string.h>
 #include "ecb.h"
 
-using namespace std;
-
 // increases code size unless -fno-enforce-eh-specs
 #if __GNUC__
 # define NOTHROW

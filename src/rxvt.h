@@ -26,8 +26,6 @@
 // stdlib.h might provide it
 #endif
 
-using namespace std;
-
 // we assume that Xlib.h defines XPointer, and it does since at least 1994...
 
 extern "C" {
