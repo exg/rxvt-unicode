@@ -538,7 +538,6 @@ AC_CHECK_HEADERS( \
 	sys/strredir.h \
 	stdint.h \
 	wchar.h \
-	cwchar \
 )
 
 AC_CACHE_CHECK([for XLIB_ILLEGAL_ACCESS], rxvt_cv_xlib_illegal_access,
@@ -628,7 +627,7 @@ LIBS=$save_LIBS
 CFLAGS=$save_CFLAGS
 
 AC_CACHE_CHECK(for working plain setlocale, rxvt_cv_func_setlocale,
-[AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <clocale>]], [[setlocale(LC_CTYPE, "");]])],[rxvt_cv_func_setlocale=yes],[rxvt_cv_func_setlocale=no])])
+[AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <locale.h>]], [[setlocale(LC_CTYPE, "");]])],[rxvt_cv_func_setlocale=yes],[rxvt_cv_func_setlocale=no])])
 if test x$rxvt_cv_func_setlocale = xyes; then
   AC_DEFINE(HAVE_SETLOCALE, 1, Define if plain old setlocale works)
 fi

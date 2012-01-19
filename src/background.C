@@ -22,7 +22,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *---------------------------------------------------------------------*/
 
-#include <cmath>
+#include <math.h>
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
 

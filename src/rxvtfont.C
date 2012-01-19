@@ -24,7 +24,7 @@
 #include "rxvtutil.h"
 #include "rxvtfont.h"
 
-#include <cstdlib>
+#include <stdlib.h>
 
 #include <inttypes.h>
 

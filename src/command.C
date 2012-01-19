@@ -56,10 +56,10 @@
 # include "keyboard.h"
 #endif
 
-#include <csignal>
+#include <signal.h>
 
 #if LINUX_YIELD_HACK
-# include <ctime>
+# include <time.h>
 #endif
 
 /*----------------------------------------------------------------------*/

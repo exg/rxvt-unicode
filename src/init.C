@@ -40,7 +40,7 @@
 
 #include <limits>
 
-#include <csignal>
+#include <signal.h>
 
 #include <fcntl.h>
 
@@ -49,7 +49,7 @@
 # include <X11/Xlocale.h>
 #else
 # ifdef HAVE_SETLOCALE
-#  include <clocale>
+#  include <locale.h>
 # endif
 #endif
 

@@ -21,10 +21,10 @@
  *----------------------------------------------------------------------*/
 
 #include "../config.h"
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <csignal>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <signal.h>
 
 #include <unistd.h>
 #include <sys/socket.h>

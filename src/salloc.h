@@ -1,7 +1,7 @@
 #ifndef RXVT_SALLOC_H_
 #define RXVT_SALLOC_H_
 
-#include <cstdlib>
+#include <stdlib.h>
 
 // small blocks allocator
 

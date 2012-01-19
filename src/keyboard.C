@@ -26,7 +26,7 @@
 
 #ifdef KEYSYM_RESOURCE
 
-#include <cstring>
+#include <string.h>
 
 #include "rxvtperl.h"
 #include "keyboard.h"

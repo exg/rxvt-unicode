@@ -1,17 +1,17 @@
 #ifndef RXVT_H_                /* include once only */
 #define RXVT_H_
 
-#include <cstdio>
-#include <cctype>
-#include <cerrno>
-#include <cstdarg>
-#include <cstdlib>
+#include <stdio.h>
+#include <ctype.h>
+#include <errno.h>
+#include <stdarg.h>
+#include <stdlib.h>
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
 #include <sys/types.h>
 #include <unistd.h>
-#include <cstring>
+#include <string.h>
 #include <assert.h>
 #ifdef HAVE_SYS_IOCTL_H
 #include <sys/ioctl.h>
@@ -20,9 +20,7 @@
 #include <sys/strredir.h>
 #endif
 
-#if HAVE_CWCHAR
-# include <cwchar>
-#elif HAVE_WCHAR_H
+#if HAVE_WCHAR_H
 # include <wchar.h>
 #else
 // stdlib.h might provide it

@@ -25,8 +25,8 @@
 #include "encoding.h"
 #include "rxvtutil.h"
 
-#include <cstdlib>
-#include <cstring>
+#include <stdlib.h>
+#include <string.h>
 
 static const struct n2cs {
   const char *name;

@@ -21,10 +21,10 @@
  *----------------------------------------------------------------------*/
 
 #include "../config.h"
-#include <cstdio>
-#include <cstdlib>
-#include <cstdarg>
-#include <cstring>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -41,7 +41,7 @@
 # include <sys/mman.h>
 #endif
 
-#include <cerrno>
+#include <errno.h>
 
 #include "rxvt.h"
 #include "rxvtdaemon.h"

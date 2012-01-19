@@ -38,9 +38,9 @@
 
 #include <limits>
 
-#include <cassert>
-#include <csignal>
-#include <cstring>
+#include <assert.h>
+#include <signal.h>
+#include <string.h>
 
 #include <termios.h>
 
@@ -49,7 +49,7 @@
 # include <X11/Xlocale.h>
 #else
 # ifdef HAVE_SETLOCALE
-#  include <clocale>
+#  include <locale.h>
 # endif
 #endif
 

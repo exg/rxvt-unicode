@@ -1,8 +1,8 @@
 #ifndef RXVT_UTIL_H
 #define RXVT_UTIL_H
 
-#include <cstdlib>
-#include <cstring>
+#include <stdlib.h>
+#include <string.h>
 #include "ecb.h"
 
 using namespace std;

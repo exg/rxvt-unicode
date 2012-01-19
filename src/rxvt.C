@@ -23,8 +23,8 @@
 #include "../config.h"
 #include "rxvt.h"
 
-#include <cstdlib>
-#include <cstring>
+#include <stdlib.h>
+#include <string.h>
 
 int
 main (int argc, char *argv[])
