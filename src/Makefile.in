@@ -194,6 +194,11 @@ rxvtfont.o: ../libecb/ecb.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../config.h
 rxvtfont.o: ../libev/ev++.h ../libev/ev.h callback.h scrollbar.h salloc.h
 rxvtfont.o: ../libptytty/src/libptytty.h rxvtperl.h hookinc.h rsinc.h
 rxvtfont.o: optinc.h table/linedraw.h
+rxvtperl.o: ../config.h ev_cpp.h ../config.h ../libev/ev++.h ../libev/ev.h
+rxvtperl.o: rxvt.h feature.h encoding.h rxvtutil.h ../libecb/ecb.h rxvtfont.h
+rxvtperl.o: rxvttoolkit.h callback.h scrollbar.h salloc.h
+rxvtperl.o: ../libptytty/src/libptytty.h rxvtperl.h hookinc.h rsinc.h
+rxvtperl.o: optinc.h keyboard.h perlxsi.c iom_perl.h
 rxvttoolkit.o: ../config.h rxvt.h feature.h encoding.h rxvtutil.h
 rxvttoolkit.o: ../libecb/ecb.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../config.h
 rxvttoolkit.o: ../libev/ev++.h ../libev/ev.h callback.h scrollbar.h salloc.h
