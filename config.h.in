@@ -244,9 +244,6 @@
 /* Define if struct utmpx contains ut_host */
 #undef HAVE_UTMPX_HOST
 
-/* Define if struct utmpx contains ut_session */
-#undef HAVE_UTMPX_SESSION
-
 /* Define to 1 if you have the <utmp.h> header file. */
 #undef HAVE_UTMP_H
 
@@ -457,8 +454,12 @@
    #define below would cause a syntax error. */
 #undef _UINT32_T
 
-/* Needed to get declarations for msg_control and msg_controllen on Solaris */
+/* Enable declarations of msg_control and msg_controllen on Solaris */
 #undef _XOPEN_SOURCE
+
+/* Enable declarations in utmp.h on Solaris when the XPG4v2 namespace is
+   active */
+#undef __EXTENSIONS__
 
 /* Define to `int' if <sys/types.h> doesn't define. */
 #undef gid_t
