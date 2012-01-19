@@ -776,7 +776,10 @@ xterm? I need this to decide about setting colours etc.
        infocmp rxvt-unicode | ssh $REMOTE "mkdir -p .terminfo && cat >/tmp/ti && tic /tmp/ti"
 
     One some systems you might need to set $TERMINFO to the full path of
-    $HOME/.terminfo for this to work.
+    $HOME/.terminfo for this to work. Debian systems have a broken tic which
+    will not be able to overwrite the existing rxvt-unicode terminfo entry -
+    you might have to manually delete all traces of rxvt-unicode* from
+    /etc/terminfo.
 
     If you cannot or do not want to do this, then you can simply set
     "TERM=rxvt" or even "TERM=xterm", and live with the small number of

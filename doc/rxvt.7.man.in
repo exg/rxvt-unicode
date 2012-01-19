@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2011-12-18" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2012-01-18" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -1095,7 +1095,10 @@ user and root):
 .Ve
 .PP
 One some systems you might need to set \f(CW$TERMINFO\fR to the full path of
-\&\fI\f(CI$HOME\fI/.terminfo\fR for this to work.
+\&\fI\f(CI$HOME\fI/.terminfo\fR for this to work. Debian systems have a broken tic
+which will not be able to overwrite the existing rxvt-unicode terminfo
+entry \- you might have to manually delete all traces of \fIrxvt\-unicode*\fR
+from \fI/etc/terminfo\fR.
 .PP
 If you cannot or do not want to do this, then you can simply set
 \&\f(CW\*(C`TERM=rxvt\*(C'\fR or even \f(CW\*(C`TERM=xterm\*(C'\fR, and live with the small number of

@@ -25,6 +25,7 @@
 #include <perl.h>
 #include <XSUB.h>
 #undef line_t
+#undef bool // perl defines it's own bool type, except with g++... what a trap
 
 #include "../config.h"
 

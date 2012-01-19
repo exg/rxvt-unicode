@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2011-12-18" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2012-01-18" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -274,10 +274,11 @@ alpha-blending. Compile \fIafterimage\fR; resource \fIblendType\fR.
 .IP "\fB\-blr\fR \fIHxV\fR" 4
 .IX Item "-blr HxV"
 Apply Gaussian Blur with the specified radii to the transparent
-background. If a single number is specified \- both vertical and
+background. If a single number is specified, the vertical and
 horizontal radii are considered to be the same. Setting one of the
-radii to 1 and another to a large number creates interesting effects
-on some backgrounds. Maximum radius value is 128;
+radii to 1 and the other to a large number creates interesting effects
+on some backgrounds. The maximum radius value is 128. An horizontal or
+vertical radius of 0 disables blurring;
 resource \fIblurRadius\fR.
 .IP "\fB\-icon\fR \fIfile\fR" 4
 .IX Item "-icon file"
@@ -1527,7 +1528,7 @@ White.
 .SS "\s-1ALPHA\s0 \s-1CHANNEL\s0 \s-1SUPPORT\s0"
 .IX Subsection "ALPHA CHANNEL SUPPORT"
 If Xft support has been compiled in and as long as Xft/Xrender/X don't get
-their act together, rxvt-unicode will do it's own alpha channel management:
+their act together, rxvt-unicode will do its own alpha channel management:
 .PP
 You can prefix any colour with an opaqueness percentage enclosed in
 brackets, i.e. \f(CW\*(C`[percent]\*(C'\fR, where \f(CW\*(C`percent\*(C'\fR is a decimal percentage
