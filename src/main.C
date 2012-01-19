@@ -1566,7 +1566,7 @@ rxvt_term::im_cb ()
   if (im_get_ic ("@im=none"))
     goto done;
 
-done: ;
+done:
   if (rs[Rs_imLocale])
     SET_LOCALE (locale);
 }
