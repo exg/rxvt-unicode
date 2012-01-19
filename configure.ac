@@ -69,12 +69,6 @@ if test -z "$orig_CXXFLAGS"; then
   CFLAGS="$CXXFLAGS"
 fi
 
-case $host in
-   *-*-solaris* )
-      AC_DEFINE(_XOPEN_SOURCE, 500, Needed to get declarations for msg_control and msg_controllen on Solaris)
-      ;;
-esac
-
 dnl# FreeBSD needs to link libxpg4
 AC_SEARCH_LIBS(setlocale,     xpg4)
 
