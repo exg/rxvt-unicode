@@ -51,9 +51,6 @@
 /* Define to 1 to use the syscall interface for clock_gettime */
 #undef HAVE_CLOCK_SYSCALL
 
-/* Define to 1 if you have the <cwchar> header file. */
-#undef HAVE_CWCHAR
-
 /* Define to 1 if you have the `epoll_ctl' function. */
 #undef HAVE_EPOLL_CTL
 
