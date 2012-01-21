@@ -129,9 +129,6 @@
 /* Define to 1 if you have the `seteuid' function. */
 #undef HAVE_SETEUID
 
-/* Define if plain old setlocale works */
-#undef HAVE_SETLOCALE
-
 /* Define to 1 if you have the `setresuid' function. */
 #undef HAVE_SETRESUID
 
@@ -203,9 +200,6 @@
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H
-
-/* Define to 1 if you have the <sys/stropts.h> header file. */
-#undef HAVE_SYS_STROPTS_H
 
 /* Define to 1 if you have the <sys/strredir.h> header file. */
 #undef HAVE_SYS_STRREDIR_H
