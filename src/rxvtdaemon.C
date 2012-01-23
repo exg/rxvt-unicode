@@ -93,7 +93,10 @@ bool rxvt_connection::recv (auto_str &data, int *len)
   if (len)
     *len = l;
 
-  data = new char[l + 1];
+  data = (char *)malloc (l + 1);
+
+  if (!data)
+    return false;
 
   if (read (fd, data, l) != l)
     return false;

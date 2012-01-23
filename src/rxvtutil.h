@@ -109,13 +109,13 @@ struct auto_ptr
 
   ~auto_ptr ()
   {
-    delete p;
+    free (p);
   }
 
   // void because it makes sense in our context
   void operator = (T *a)
   {
-    delete p;
+    free (p);
     p = a;
   }
 
