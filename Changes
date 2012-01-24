@@ -21,6 +21,9 @@ TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 
+	- fix height mismatch between active and inactive cursor when
+	  lineSpace is non zero (patch by Stanislav Seletskiy).
+
 9.15 Sat Jan 21 13:36:56 CET 2012
 	- remove "using namespace std" because clang erroneously
           thinks thats an error.

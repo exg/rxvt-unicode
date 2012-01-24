@@ -2483,7 +2483,7 @@ rxvt_term::scr_refresh () NOTHROW
                           Col2Pixel (col),
                           Row2Pixel (oldcursor.row),
                           (unsigned int) (Width2Pixel (cursorwidth) - 1),
-                          (unsigned int) (Height2Pixel (1) - lineSpace - 1));
+                          (unsigned int) (Height2Pixel (1) - 1));
         }
     }
 
