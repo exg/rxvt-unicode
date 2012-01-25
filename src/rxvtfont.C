@@ -1501,7 +1501,7 @@ rxvt_fontset::clear ()
     (*i)->unref ();
 
   for (pagemap **p = fmap.begin (); p != fmap.end (); p++)
-    delete *p;
+    delete [] *p;
 
   free (fontdesc); fontdesc = 0;
 
@@ -1787,6 +1787,9 @@ found:
 
       if (!fmap[hi])
         {
+          // C++ has no separate new and new [] - we need the "new" form,
+          // just like the syntax implies, but since pagemap is char[],
+          // C++ chooses the wrong new, so we need the cast and delete [].
           fmap[hi] = (pagemap *)new pagemap;
           memset (fmap[hi], 0xff, sizeof (pagemap));
         }
