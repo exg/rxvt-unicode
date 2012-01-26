@@ -1787,7 +1787,7 @@ found:
 
       if (!fmap[hi])
         {
-          // we use [1] here because C has no separate new and new [] forms,
+          // we use [1] here because C++ has no separate new and new [] forms,
           // and pagemap is char[256], so new incorrectly assumes we want to
           // allocate an array of chars instead of a single pagemap.
           // we can either cast the resulting pointer to (pagemap *) or
