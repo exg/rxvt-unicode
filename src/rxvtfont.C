@@ -1787,10 +1787,14 @@ found:
 
       if (!fmap[hi])
         {
-          // C++ has no separate new and new [] - we need the "new" form,
-          // just like the syntax implies, but since pagemap is char[],
-          // C++ chooses the wrong new, so we need the cast and delete [].
-          fmap[hi] = (pagemap *)new pagemap;
+          // we use [1] here because C has no separate new and new [] forms,
+          // and pagemap is char[256], so new incorrectly assumes we want to
+          // allocate an array of chars instead of a single pagemap.
+          // we can either cast the resulting pointer to (pagemap *) or
+          // allocate an array of pagemaps, returning a pointer to the first member
+          // this is no extra overhead, as new even allocates an array for
+          // "new pagemap"
+          fmap[hi] = new pagemap[1];
           memset (fmap[hi], 0xff, sizeof (pagemap));
         }
 
