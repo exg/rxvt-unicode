@@ -766,13 +766,12 @@ rxvt_term::set_fonts ()
   fontset[0] = fs;
 
   prop = (*fs)[rxvt_fontset::firstFont]->properties ();
-  prop.height += lineSpace;
   prop.width += letterSpace;
 
   fs->set_prop (prop, false);
 
   fwidth  = prop.width;
-  fheight = prop.height;
+  fheight = prop.height + lineSpace;
   fbase   = prop.ascent;
 
   for (int style = 1; style < 4; style++)
