@@ -225,18 +225,6 @@ AC_ARG_ENABLE(font-styles,
     support_styles=$enableval
   fi])
 
-AC_ARG_ENABLE(afterimage,
-  [  --enable-afterimage     enable integration with libAfterImage for background images (deprecated)],
-  [if test x$enableval = xyes -o x$enableval = xno; then
-    support_afterimage=$enableval
-  fi])
-
-AC_ARG_WITH(afterimage_config,
-  [  --with-afterimage-config=DIR  use libAfterImage config script in DIR],
-  [if test "x$withval" != x; then
-    afterimage_config=$withval/afterimage-config
-  fi])
-
 AC_ARG_ENABLE(pixbuf,
   [  --enable-pixbuf         enable integration with gdk-pixbuf for background images],
   [if test x$enableval = xyes -o x$enableval = xno; then
@@ -453,7 +441,6 @@ if test x$support_pixbuf = xyes; then
   if test x$support_pixbuf = xyes; then
     AC_MSG_RESULT(ok)
     image_lib=gdk-pixbuf
-    support_afterimage=no
     AC_DEFINE(HAVE_PIXBUF, 1, Define if you want to use gdk-pixbuf for image processing)
     AC_DEFINE(BG_IMAGE_FROM_FILE, 1, Define if you want to have sexy-looking background pixmaps.)
   else
@@ -487,45 +474,6 @@ fi
 
 AC_SUBST(STARTUP_NOTIFICATION_CFLAGS)
 AC_SUBST(STARTUP_NOTIFICATION_LIBS)
-
-AFTERIMAGE_CFLAGS=
-AFTERIMAGE_LIBS=
-
-if test x$support_afterimage = xyes; then
-  support_afterimage=no
-
-  if test "x$afterimage_config" = "x" ; then
-    AC_PATH_PROG(afterimage_config, afterimage-config, no)
-  fi
-  if test "x$afterimage_config" != "xno" ; then
-    AC_MSG_CHECKING(for libAfterImage version >= 1.15)
-    AFTERIMAGE_VERSION=`$afterimage_config --version`
-    if test -n "$AFTERIMAGE_VERSION" ; then
-      AFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
-      AFTERIMAGE_LIBS=`$afterimage_config --libs`
-      if test "x$AFTERIMAGE_LIBS" != "x"; then
-        libai_ver_major=`echo $AFTERIMAGE_VERSION | cut -f 1 -d .`
-        libai_ver_minor=`echo $AFTERIMAGE_VERSION | cut -f 2 -d .`
-        if test $libai_ver_major -gt 1 -o \( $libai_ver_major -eq 1 -a $libai_ver_minor -ge 15 \); then
-          support_afterimage=yes
-        fi
-      fi
-    fi
-    if test "x$support_afterimage" = "xyes"; then
-      AC_MSG_RESULT($AFTERIMAGE_LIBS)
-      image_lib=libafterimage
-      AC_DEFINE(HAVE_AFTERIMAGE, 1, Define if you want to use libAfterImage for image processing)
-      AC_DEFINE(BG_IMAGE_FROM_FILE, 1, Define if you want to have sexy-looking background pixmaps.)
-    else
-      AC_MSG_RESULT(no)
-      AFTERIMAGE_CFLAGS=
-      AFTERIMAGE_LIBS=
-    fi
-  fi
-fi
-
-AC_SUBST(AFTERIMAGE_CFLAGS)
-AC_SUBST(AFTERIMAGE_LIBS)
 
 dnl# --------------------------------------------------------------------------
 dnl# CHECKING FOR HEADER FILES

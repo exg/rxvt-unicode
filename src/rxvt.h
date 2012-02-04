@@ -72,12 +72,6 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 #include <X11/keysymdef.h>
 #include <X11/Xatom.h>
 
-#ifdef HAVE_AFTERIMAGE
-# include <afterimage.h>
-# undef min
-# undef max
-#endif
-
 #ifdef HAVE_PIXBUF
 # include <gdk-pixbuf/gdk-pixbuf.h>
 #endif
@@ -1178,17 +1172,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void bg_invalidate ()
   {
     bg_flags &= ~BG_IS_VALID;
-  }
-#endif
-#ifdef HAVE_AFTERIMAGE
-  ASImage        *original_asim;
-  ASVisual       *asv;
-  ASImageManager *asimman;
-
-  void init_asv ()
-  {
-    if (!asv)
-      asv = create_asvisual_for_id (dpy, display->screen, depth, XVisualIDFromVisual (visual), cmap, NULL);
   }
 #endif
 #ifdef HAVE_PIXBUF

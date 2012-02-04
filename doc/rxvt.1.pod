@@ -152,16 +152,6 @@ resource I<tintColor>.
 Darken (0 .. 99) or lighten (101 .. 200) the transparent background.
 A value of 100 means no shading; resource I<shading>.
 
-=item B<-blt> I<string>
-
-Specify background blending type. If background pixmap is specified
-at the same time as transparency - such pixmap will be blended over
-the transparent background, using the method specified. Supported values are:
-B<add>, B<alphablend>, B<allanon> - colour values averaging, B<colorize>,
-B<darken>, B<diff>, B<dissipate>, B<hue>, B<lighten>, B<overlay>,
-B<saturate>, B<screen>, B<sub>, B<tint>, B<value>. The default is
-alpha-blending. Compile I<afterimage>; resource I<blendType>.
-
 =item B<-blr> I<HxV>
 
 Apply Gaussian Blur with the specified radii to the transparent
@@ -174,7 +164,7 @@ resource I<blurRadius>.
 
 =item B<-icon> I<file>
 
-Compile I<afterimage> or I<pixbuf>: Use the specified image as application icon. This
+Compile I<pixbuf>: Use the specified image as application icon. This
 is used by many window managers, taskbars and pagers to represent the
 application window; resource I<iconFile>.
 
@@ -188,7 +178,7 @@ Window foreground colour; resource B<foreground>.
 
 =item B<-pixmap> I<file[;oplist]>
 
-Compile I<afterimage> or I<pixbuf>: Specify image file for the background and also
+Compile I<pixbuf>: Specify image file for the background and also
 optionally specify a list of operations to modify it. Note you may need to
 add quotes to avoid special shell interpretation of the C<;> in the
 command-line; for more details see resource B<backgroundPixmap>.
@@ -809,9 +799,7 @@ If multiple templates are specified the last one wins. Note that a
 template overrides all the scale, position and operations settings.
 
 If used in conjunction with B<-tr> option, the specified pixmap will be
-blended over the transparent background using alpha-blending. If I<afterimage>
-support has been compiled in it is possible to choose other blending
-types with B<-blt "type"> option.
+blended over the transparent background using alpha-blending.
 
 =item B<path:> I<path>
 

@@ -272,9 +272,6 @@ optList[] = {
               BOOL (Rs_iso14755, "iso14755", NULL, Opt_iso14755, 0, NULL),
               BOOL (Rs_iso14755_52, "iso14755_52", NULL, Opt_iso14755_52, 0, NULL),
 #endif
-#ifdef HAVE_AFTERIMAGE
-              STRG (Rs_blendtype, "blendType", "blt", "string", "background image blending type - alpha, tint, etc..."),
-#endif
 #ifndef NO_RESOURCES
               RINFO ("xrm", "string"),
 #endif
@@ -337,9 +334,6 @@ static const char optionsstring[] = "options: "
 #if defined(ENABLE_TRANSPARENCY)
                                     "transparent,"
                                     "tint,"
-#endif
-#if HAVE_AFTERIMAGE
-                                    "afterimage,"
 #endif
 #if HAVE_PIXBUF
                                     "pixbuf,"

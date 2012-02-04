@@ -60,15 +60,6 @@ create_xrender_mask (Display *dpy, Drawable drawable, Bool argb, Bool component_
 void
 rxvt_term::bg_destroy ()
 {
-#ifdef HAVE_AFTERIMAGE
-  if (original_asim)
-    safe_asimage_destroy (original_asim);
-  if (asv)
-    destroy_asvisual (asv, 0);
-  if (asimman)
-    destroy_image_manager (asimman, 0);
-#endif
-
 #ifdef HAVE_PIXBUF
   if (pixbuf)
     g_object_unref (pixbuf);
@@ -353,242 +344,6 @@ rxvt_term::get_image_geometry (int image_width, int image_height, int &w, int &h
     bg_flags |= BG_IS_SIZE_SENSITIVE;
 }
 
-#  ifdef HAVE_AFTERIMAGE
-bool
-rxvt_term::render_image (unsigned long tr_flags)
-{
-  init_asv ();
-
-  ASImage *background = NULL;
-  ARGB32 background_tint = TINT_LEAVE_SAME;
-
-#   ifdef ENABLE_TRANSPARENCY
-  if (tr_flags)
-    background = pixmap2ximage (asv, bg_pixmap, 0, 0, bg_pmap_width, bg_pmap_height, AllPlanes, 100);
-
-  if (tr_flags & BG_NEEDS_TINT)
-    {
-      ShadingInfo as_shade;
-      as_shade.shading = shade;
-
-      rgba c (rgba::MAX_CC,rgba::MAX_CC,rgba::MAX_CC);
-      if (bg_flags & BG_TINT_SET)
-        tint.get (c);
-      as_shade.tintColor.red = c.r;
-      as_shade.tintColor.green = c.g;
-      as_shade.tintColor.blue = c.b;
-
-      background_tint = shading2tint32 (&as_shade);
-    }
-
-  if ((tr_flags & BG_NEEDS_BLUR) && background != NULL)
-    {
-      ASImage *tmp = blur_asimage_gauss (asv, background, h_blurRadius, v_blurRadius, 0xFFFFFFFF,
-                                         ASA_XImage,
-                                         100, ASIMAGE_QUALITY_DEFAULT);
-      if (tmp)
-        {
-          destroy_asimage (&background);
-          background = tmp;
-        }
-    }
-#   endif
-
-  ASImage *result = 0;
-
-  int target_width    = szHint.width;
-  int target_height   = szHint.height;
-  int new_pmap_width  = target_width;
-  int new_pmap_height = target_height;
-
-  int x = 0;
-  int y = 0;
-  int w = 0;
-  int h = 0;
-
-  if (original_asim)
-    get_image_geometry (original_asim->width, original_asim->height, w, h, x, y);
-
-  if (!original_asim
-      || (!(bg_flags & BG_ROOT_ALIGN)
-          && (x >= target_width
-              || y >= target_height
-              || x + w <= 0
-              || y + h <= 0)))
-    {
-      if (background)
-        {
-          new_pmap_width = background->width;
-          new_pmap_height = background->height;
-          result = background;
-
-          if (background_tint != TINT_LEAVE_SAME)
-            {
-              ASImage *tmp = tile_asimage (asv, background, 0, 0,
-                                           target_width, target_height, background_tint,
-                                           ASA_XImage, 100, ASIMAGE_QUALITY_DEFAULT);
-              if (tmp)
-                result = tmp;
-            }
-        }
-      else
-        new_pmap_width = new_pmap_height = 0;
-    }
-  else
-    {
-      result = original_asim;
-
-      if (w != original_asim->width
-          || h != original_asim->height)
-        {
-          result = scale_asimage (asv, original_asim,
-                                  w, h,
-                                  ASA_XImage,
-                                  100, ASIMAGE_QUALITY_DEFAULT);
-        }
-
-      if (background == NULL)
-        {
-          if (bg_flags & BG_TILE)
-            {
-              /* if tiling - pixmap has to be sized exactly as the image,
-                 but there is no need to make it bigger than the window! */
-              new_pmap_width = min (result->width, target_width);
-              new_pmap_height = min (result->height, target_height);
-
-              /* we also need to tile our image in both directions */
-              ASImage *tmp = tile_asimage (asv, result,
-                                           (int)result->width - x,
-                                           (int)result->height - y,
-                                           new_pmap_width,
-                                           new_pmap_height,
-                                           TINT_LEAVE_SAME, ASA_XImage,
-                                           100, ASIMAGE_QUALITY_DEFAULT);
-              if (tmp)
-                {
-                  if (result != original_asim)
-                    destroy_asimage (&result);
-
-                  result = tmp;
-                }
-            }
-        }
-      else
-        {
-          /* if blending background and image - pixmap has to be sized same as target window */
-          ASImageLayer *layers = create_image_layers (2);
-
-          layers[0].im = background;
-          layers[0].clip_width = target_width;
-          layers[0].clip_height = target_height;
-          layers[0].tint = background_tint;
-          layers[1].im = result;
-
-          if (bg_flags & BG_TILE)
-            {
-              /* tile horizontally */
-              while (x > 0) x -= (int)result->width;
-              layers[1].dst_x = x;
-              layers[1].clip_width = result->width+target_width;
-            }
-          else
-            {
-              /* clip horizontally */
-              layers[1].dst_x = x;
-              layers[1].clip_width = result->width;
-            }
-
-          if (bg_flags & BG_TILE)
-            {
-              while (y > 0) y -= (int)result->height;
-              layers[1].dst_y = y;
-              layers[1].clip_height = result->height + target_height;
-            }
-          else
-            {
-              layers[1].dst_y = y;
-              layers[1].clip_height = result->height;
-            }
-
-          if (rs[Rs_blendtype])
-            {
-              layers[1].merge_scanlines = blend_scanlines_name2func (rs[Rs_blendtype]);
-              if (layers[1].merge_scanlines == NULL)
-                layers[1].merge_scanlines = alphablend_scanlines;
-            }
-
-          ASImage *tmp = merge_layers (asv, layers, 2, target_width, target_height,
-                                       ASA_XImage, 0, ASIMAGE_QUALITY_DEFAULT);
-
-          if (tmp)
-            {
-              if (result != original_asim)
-                destroy_asimage (&result);
-
-              result = tmp;
-            }
-
-          free (layers);
-        }
-    }
-
-  bool ret = false;
-
-  if (result)
-    {
-      XGCValues gcv;
-      GC gc;
-
-      /* create Pixmap */
-      if (bg_pixmap == None
-          || bg_pmap_width != new_pmap_width
-          || bg_pmap_height != new_pmap_height)
-        {
-          if (bg_pixmap)
-            XFreePixmap (dpy, bg_pixmap);
-          bg_pixmap = XCreatePixmap (dpy, vt, new_pmap_width, new_pmap_height, depth);
-          bg_pmap_width = new_pmap_width;
-          bg_pmap_height = new_pmap_height;
-        }
-      /* fill with background color (if result's not completely overlapping it) */
-      gcv.foreground = pix_colors[Color_bg];
-      gc = XCreateGC (dpy, vt, GCForeground, &gcv);
-
-      int src_x = 0, src_y = 0, dst_x = 0, dst_y = 0;
-      int dst_width = result->width, dst_height = result->height;
-      if (background == NULL)
-        {
-          if (!(bg_flags & BG_TILE))
-            {
-              src_x = make_clip_rectangle (x, result->width , new_pmap_width , dst_x, dst_width );
-              src_y = make_clip_rectangle (y, result->height, new_pmap_height, dst_y, dst_height);
-            }
-
-          if (dst_x > 0 || dst_y > 0
-              || dst_x + dst_width < new_pmap_width
-              || dst_y + dst_height < new_pmap_height)
-            XFillRectangle (dpy, bg_pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
-        }
-
-      /* put result on pixmap */
-      if (dst_x < new_pmap_width && dst_y < new_pmap_height)
-        asimage2drawable (asv, bg_pixmap, result, gc, src_x, src_y, dst_x, dst_y, dst_width, dst_height, True);
-
-      if (result != background && result != original_asim)
-        destroy_asimage (&result);
-
-      XFreeGC (dpy, gc);
-
-      ret = true;
-    }
-
-  if (background)
-    destroy_asimage (&background);
-
-  return ret;
-}
-#  endif /* HAVE_AFTERIMAGE */
-
 #  ifdef HAVE_PIXBUF
 bool
 rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
@@ -855,20 +610,6 @@ rxvt_term::bg_set_file (const char *file)
       f[len] = '\0';
       file = f;
     }
-
-#  ifdef HAVE_AFTERIMAGE
-  if (!asimman)
-    asimman = create_generic_imageman (rs[Rs_path]);
-  ASImage *image = get_asimage (asimman, file, 0xFFFFFFFF, 100);
-  if (image)
-    {
-      if (original_asim)
-        safe_asimage_destroy (original_asim);
-      original_asim = image;
-      bg_flags |= BG_IS_FROM_FILE | BG_CLIENT_RENDER;
-      ret = true;
-    }
-#  endif
 
 #  ifdef HAVE_PIXBUF
   GdkPixbuf *image = gdk_pixbuf_new_from_file (file, NULL);
@@ -1291,7 +1032,6 @@ rxvt_term::make_transparency_pixmap ()
               if (tint_pixmap (bg_pixmap, visual, window_width, window_height))
                 result &= ~BG_NEEDS_TINT;
             }
-#  ifndef HAVE_AFTERIMAGE
           if (result & BG_NEEDS_TINT)
             {
               XImage *ximage = XGetImage (dpy, bg_pixmap, 0, 0, bg_pmap_width, bg_pmap_height, AllPlanes, ZPixmap);
@@ -1304,7 +1044,6 @@ rxvt_term::make_transparency_pixmap ()
                   XDestroyImage (ximage);
                 }
             }
-#  endif
         } /* server side rendering completed */
 
       XFreeGC (dpy, gc);
@@ -1395,7 +1134,7 @@ rxvt_term::bg_init ()
 
 #endif /* HAVE_BG_PIXMAP */
 
-#if defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE)
+#ifdef ENABLE_TRANSPARENCY
 /* based on code from aterm-0.4.2 */
 
 static inline void
@@ -1551,4 +1290,4 @@ rxvt_term::tint_ximage (Visual *visual, XImage *ximage)
 
   free (lookup);
 }
-#endif /* defined(ENABLE_TRANSPARENCY) && !defined(HAVE_AFTERIMAGE) */
+#endif /* ENABLE_TRANSPARENCY */

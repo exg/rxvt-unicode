@@ -793,11 +793,6 @@ rxvt_term::init2 (int argc, const char *const *argv)
 
   pty = ptytty::create ();
 
-#ifdef HAVE_AFTERIMAGE
-  set_application_name ((char *)rs[Rs_name]);
-  set_output_threshold (OUTPUT_LEVEL_WARNING);
-#endif
-
   // must be called before create_windows, because the latter may call set_icon
 #ifdef HAVE_PIXBUF
   g_type_init ();
@@ -1296,57 +1291,6 @@ rxvt_term::get_ourmods ()
 void
 rxvt_term::set_icon (const char *file)
 {
-#ifdef HAVE_AFTERIMAGE
-  init_asv ();
-
-  ASImage *im = file2ASImage (file, 0xFFFFFFFF, SCREEN_GAMMA, 0, NULL);
-  if (!im)
-    {
-      rxvt_warn ("Loading image icon failed, continuing without.\n");
-      return;
-    }
-
-  unsigned int w = im->width;
-  unsigned int h = im->height;
-
-  if (!IN_RANGE_INC (w, 1, 16383) || !IN_RANGE_INC (h, 1, 16383))
-    {
-      rxvt_warn ("Icon image too big, continuing without.\n");
-      destroy_asimage (&im);
-      return;
-    }
-
-  ASImage *result = scale_asimage (asv, im,
-                                   w, h, ASA_ARGB32,
-                                   100, ASIMAGE_QUALITY_DEFAULT);
-  destroy_asimage (&im);
-
-  if (!result)
-    {
-      rxvt_warn ("Icon image transformation to ARGB failed, continuing without.\n");
-      return;
-    }
-
-  long *buffer = (long *)malloc ((2 + w * h) * sizeof (long));
-  if (buffer)
-    {
-      ARGB32 *asbuf = result->alt.argb32;
-      buffer [0] = w;
-      buffer [1] = h;
-
-      for (unsigned int i = 0; i < w * h; ++i)
-        buffer [i + 2] = asbuf [i];
-
-      XChangeProperty (dpy, parent, xa[XA_NET_WM_ICON], XA_CARDINAL, 32,
-                       PropModeReplace, (const unsigned char *) buffer, 2 + w * h);
-      free (buffer);
-    }
-  else
-    rxvt_warn ("Memory allocation for icon hint failed, continuing without.\n");
-
-  destroy_asimage (&result);
-#endif
-
 #ifdef HAVE_PIXBUF
   GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (file, NULL);
   if (!pixbuf)

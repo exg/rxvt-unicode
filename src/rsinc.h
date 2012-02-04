@@ -116,9 +116,6 @@
   def (iso14755)
   def (iso14755_52)
 #endif
-#ifdef HAVE_AFTERIMAGE
-  def (blendtype)
-#endif
 #ifdef ENABLE_EWMH
   def (iconfile)
 #endif
