@@ -432,10 +432,11 @@ bool rxvt_display::ref_init ()
 #ifdef LOCAL_X_IS_UNIX
   if (id[0] == ':')
     {
-      if (!(val = rxvt_temp_buf<char> (5 + strlen (id) + 1)))
-        return false;
+      char *val = rxvt_temp_buf<char> (5 + strlen (id) + 1);
+
       strcpy (val, "unix/");
       strcat (val, id);
+
       dpy = XOpenDisplay (val);
     }
   else

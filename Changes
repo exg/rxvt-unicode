@@ -26,6 +26,8 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
           as diagnosed by clang.
 	- fix height mismatch between active and inactive cursor when
 	  lineSpace is non zero (patch by Stanislav Seletskiy).
+        - make it compile with LOCAL_X_IS_UNIX again (reported by
+          nickfailure@gmail.com).
 
 9.15 Sat Jan 21 13:36:56 CET 2012
 	- remove "using namespace std" because clang erroneously
