@@ -1084,7 +1084,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void bg_destroy ();
 
   enum {
-    //subset returned by make_transparency_pixmap
     BG_IS_VALID          = 1 <<  0,
     BG_NEEDS_TINT        = 1 <<  1,
     BG_NEEDS_BLUR        = 1 <<  2,
@@ -1114,7 +1113,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
 # ifdef BG_IMAGE_FROM_FILE
   void get_image_geometry (int image_width, int image_height, int &w, int &h, int &x, int &y);
-  bool render_image (unsigned long tr_flags);
+  bool render_image (bool transparent);
 
   enum {
     noScale = 0,
@@ -1154,7 +1153,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   bool blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height, int depth);
   bool tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height);
   void tint_ximage (Visual *visual, XImage *ximage);
-  unsigned long make_transparency_pixmap ();
+  bool make_transparency_pixmap ();
 # endif
 
   ev_tstamp bg_valid_since;

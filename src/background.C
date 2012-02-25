@@ -429,12 +429,12 @@ rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
 }
 
 bool
-rxvt_term::render_image (unsigned long tr_flags)
+rxvt_term::render_image (bool transparent)
 {
   if (!pixbuf)
     return false;
 
-  if (tr_flags
+  if (transparent
       && !(bg_flags & BG_HAS_RENDER))
     return false;
 
@@ -484,7 +484,7 @@ rxvt_term::render_image (unsigned long tr_flags)
   image_width = gdk_pixbuf_get_width (result);
   image_height = gdk_pixbuf_get_height (result);
 
-  if (tr_flags)
+  if (transparent)
     {
       root_pmap = bg_pixmap;
       bg_pixmap = None;
@@ -552,7 +552,7 @@ rxvt_term::render_image (unsigned long tr_flags)
         }
 
 #if XRENDER
-      if (tr_flags)
+      if (transparent)
         {
           XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
 
@@ -586,7 +586,7 @@ rxvt_term::render_image (unsigned long tr_flags)
   if (result != pixbuf)
     g_object_unref (result);
 
-  if (tr_flags)
+  if (transparent)
     XFreePixmap (dpy, root_pmap);
 
   return ret;
@@ -924,10 +924,10 @@ rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
  * the tiled portion of the root pixmap that is supposed to be covered by
  * our window.
  */
-unsigned long
+bool
 rxvt_term::make_transparency_pixmap ()
 {
-  unsigned long result = 0;
+  bool ret = false;
 
   /* root dimensions may change from call to call - but Display structure should
    * be always up-to-date, so let's use it :
@@ -1018,21 +1018,22 @@ rxvt_term::make_transparency_pixmap ()
   if (gc)
     {
       XFillRectangle (dpy, bg_pixmap, gc, 0, 0, window_width, window_height);
-      result |= BG_IS_VALID | (bg_flags & BG_EFFECTS_FLAGS);
+      ret = true;
+      unsigned long tr_flags = bg_flags & BG_EFFECTS_FLAGS;
 
       if (!(bg_flags & BG_CLIENT_RENDER))
         {
           if (bg_flags & BG_NEEDS_BLUR)
             {
               if (blur_pixmap (bg_pixmap, visual, window_width, window_height, depth))
-                result &= ~BG_NEEDS_BLUR;
+                tr_flags &= ~BG_NEEDS_BLUR;
             }
           if (bg_flags & BG_NEEDS_TINT)
             {
               if (tint_pixmap (bg_pixmap, visual, window_width, window_height))
-                result &= ~BG_NEEDS_TINT;
+                tr_flags &= ~BG_NEEDS_TINT;
             }
-          if (result & BG_NEEDS_TINT)
+          if (tr_flags & BG_NEEDS_TINT)
             {
               XImage *ximage = XGetImage (dpy, bg_pixmap, 0, 0, bg_pmap_width, bg_pmap_height, AllPlanes, ZPixmap);
               if (ximage)
@@ -1052,7 +1053,7 @@ rxvt_term::make_transparency_pixmap ()
   if (recoded_root_pmap != root_pixmap)
     XFreePixmap (dpy, recoded_root_pmap);
 
-  return result;
+  return ret;
 }
 
 void
@@ -1069,24 +1070,23 @@ rxvt_term::bg_set_root_pixmap ()
 bool
 rxvt_term::bg_render ()
 {
-  unsigned long tr_flags = 0;
+  bool transparent = false;
 
   bg_invalidate ();
 # ifdef ENABLE_TRANSPARENCY
   if (bg_flags & BG_IS_TRANSPARENT)
     {
       /*  we need to re-generate transparency pixmap in that case ! */
-      tr_flags = make_transparency_pixmap ();
-      if (tr_flags)
+      transparent = make_transparency_pixmap ();
+      if (transparent)
         bg_flags |= BG_IS_VALID;
     }
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
-  if ((bg_flags & BG_IS_FROM_FILE)
-      || (tr_flags & BG_EFFECTS_FLAGS))
+  if (bg_flags & BG_IS_FROM_FILE)
     {
-      if (render_image (tr_flags))
+      if (render_image (transparent))
         bg_flags |= BG_IS_VALID;
     }
 # endif
