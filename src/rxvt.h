@@ -1097,7 +1097,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
     BG_TINT_SET          = 1 <<  5,
     BG_TINT_BITAND       = 1 <<  6,
-    BG_TINT_FLAGS        = BG_NEEDS_TINT | BG_TINT_BITAND,
 
     BG_HAS_RENDER        = 1 <<  7,
     BG_HAS_RENDER_CONV   = 1 <<  8,

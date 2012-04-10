@@ -688,23 +688,10 @@ rxvt_term::bg_set_blur (const char *geom)
 void
 rxvt_term::set_tint_shade_flags ()
 {
-  rgba c;
-  bool has_shade = shade != 100;
-
-  bg_flags &= ~BG_TINT_FLAGS;
-
-  if (bg_flags & BG_TINT_SET)
-    {
-      tint.get (c);
-      if (!has_shade
-          && (c.r <= 0x00ff || c.r >= 0xff00)
-          && (c.g <= 0x00ff || c.g >= 0xff00)
-          && (c.b <= 0x00ff || c.b >= 0xff00))
-        bg_flags |= BG_TINT_BITAND;
-    }
-
-  if (has_shade || (bg_flags & BG_TINT_SET))
+  if (shade != 100 || (bg_flags & BG_TINT_SET))
     bg_flags |= BG_NEEDS_TINT;
+  else
+    bg_flags &= ~BG_NEEDS_TINT;
 }
 
 bool
@@ -714,6 +701,16 @@ rxvt_term::bg_set_tint (rxvt_color &new_tint)
     {
       tint = new_tint;
       bg_flags |= BG_TINT_SET;
+
+      rgba c;
+      tint.get (c);
+      if ((c.r <= 0x00ff || c.r >= 0xff00)
+          && (c.g <= 0x00ff || c.g >= 0xff00)
+          && (c.b <= 0x00ff || c.b >= 0xff00))
+        bg_flags |= BG_TINT_BITAND;
+      else
+        bg_flags &= ~BG_TINT_BITAND;
+
       set_tint_shade_flags ();
       return true;
     }
@@ -833,7 +830,7 @@ rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
 {
   bool ret = false;
 
-  if (bg_flags & BG_TINT_BITAND)
+  if (shade == 100 && (bg_flags & BG_TINT_BITAND))
     {
       XGCValues gcv;
       GC gc;
