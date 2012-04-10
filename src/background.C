@@ -336,12 +336,13 @@ rxvt_term::get_image_geometry (int image_width, int image_height, int &w, int &h
       y = make_align_position (v_align, target_height, h);
     }
 
-  bg_flags &= ~BG_IS_SIZE_SENSITIVE;
   if (!(bg_flags & BG_TILE)
       || h_scale || v_scale
       || (!(bg_flags & BG_ROOT_ALIGN) && (h_align || v_align))
-      || w > target_width || h > target_height)
+      || image_width > target_width || image_height > target_height)
     bg_flags |= BG_IS_SIZE_SENSITIVE;
+  else
+    bg_flags &= ~BG_IS_SIZE_SENSITIVE;
 }
 
 #  ifdef HAVE_PIXBUF
@@ -677,10 +678,10 @@ rxvt_term::bg_set_blur (const char *geom)
       v_blurRadius = vr;
     }
 
-  if (h_blurRadius == 0 || v_blurRadius == 0)
-    bg_flags &= ~BG_NEEDS_BLUR;
-  else
+  if (h_blurRadius && v_blurRadius)
     bg_flags |= BG_NEEDS_BLUR;
+  else
+    bg_flags &= ~BG_NEEDS_BLUR;
 
   return changed;
 }
