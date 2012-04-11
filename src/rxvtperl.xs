@@ -1557,6 +1557,12 @@ rxvt_term::option (U8 optval, int set = -1)
                     THIS->refresh_check ();
                     break;
 
+#ifdef CURSOR_BLINK
+                  case Opt_cursorBlink:
+                    THIS->cursor_blink_reset ();
+                    break;
+#endif
+
                   case Opt_cursorUnderline:
                     THIS->want_refresh = 1;
                     THIS->refresh_check ();

@@ -1262,6 +1262,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void pty_cb (ev::io &w, int revents); ev::io pty_ev;
 
 #ifdef CURSOR_BLINK
+  void cursor_blink_reset ();
   void cursor_blink_cb (ev::timer &w, int revents); ev::timer cursor_blink_ev;
 #endif
 #ifdef TEXT_BLINK

@@ -1018,6 +1018,21 @@ rxvt_term::flush_cb (ev::timer &w, int revents)
 
 #ifdef CURSOR_BLINK
 void
+rxvt_term::cursor_blink_reset ()
+{
+      if (hidden_cursor)
+        {
+          hidden_cursor = 0;
+          want_refresh = 1;
+        }
+
+      if (option (Opt_cursorBlink))
+        cursor_blink_ev.again ();
+      else
+        cursor_blink_ev.stop ();
+}
+
+void
 rxvt_term::cursor_blink_cb (ev::timer &w, int revents)
 {
   hidden_cursor = !hidden_cursor;
@@ -1678,16 +1693,8 @@ rxvt_term::x_cb (XEvent &ev)
     }
 
 #if defined(CURSOR_BLINK)
-  if (option (Opt_cursorBlink) && ev.type == KeyPress)
-    {
-      if (hidden_cursor)
-        {
-          hidden_cursor = 0;
-          want_refresh = 1;
-        }
-
-      cursor_blink_ev.again ();
-    }
+  if (ev.type == KeyPress)
+    cursor_blink_reset ();
 #endif
 
 #if defined(POINTER_BLANK)
