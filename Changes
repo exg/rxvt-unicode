@@ -23,6 +23,8 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 
 9.16
 	- remove support for libafterimage.
+	- fix disabling of cursor blink with the option-popup menu (based on a
+	  patch by Jan Larres).
 	- the font height is not augmented anymore when lineSpace is non zero.
 	- fix "new pagemap" vs. "delete pagemap" mismatch ([] vs. non-[]),
           as diagnosed by clang.
