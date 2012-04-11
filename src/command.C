@@ -1020,16 +1020,16 @@ rxvt_term::flush_cb (ev::timer &w, int revents)
 void
 rxvt_term::cursor_blink_reset ()
 {
-      if (hidden_cursor)
-        {
-          hidden_cursor = 0;
-          want_refresh = 1;
-        }
+  if (hidden_cursor)
+    {
+      hidden_cursor = 0;
+      want_refresh = 1;
+    }
 
-      if (option (Opt_cursorBlink))
-        cursor_blink_ev.again ();
-      else
-        cursor_blink_ev.stop ();
+  if (option (Opt_cursorBlink))
+    cursor_blink_ev.again ();
+  else
+    cursor_blink_ev.stop ();
 }
 
 void
