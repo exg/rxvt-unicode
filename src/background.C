@@ -125,15 +125,12 @@ rxvt_term::bg_window_position_sensitive ()
 static inline int
 make_align_position (int align, int window_size, int image_size)
 {
-  int diff = window_size - image_size;
-  int smaller = min (image_size, window_size);
-
   if (align >= 0 && align <= 100)
-    return diff * align / 100;
+    return lerp (0, window_size - image_size, align);
   else if (align > 100)
-    return (align - 100) * smaller / 100 + window_size - smaller;
+    return lerp (window_size - image_size, window_size, align - 100);
   else
-    return (align + 100) * smaller / 100 - image_size;
+    return lerp (-image_size, 0, align + 100);
 }
 
 static inline int
