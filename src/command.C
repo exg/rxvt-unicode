@@ -3588,7 +3588,10 @@ rxvt_term::privcases (int mode, unsigned long bit)
 
   if (mode == 's')
     {
-      SavedModes |= (priv_modes & bit);
+      if (priv_modes & bit)
+        SavedModes |= bit;
+      else
+        SavedModes &= ~bit;
       return -1;
     }
   else
