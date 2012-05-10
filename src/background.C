@@ -350,14 +350,23 @@ rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
   XImage *ximage;
   char *data, *line;
   int bytes_per_pixel;
-  int width_r, width_g, width_b;
-  int sh_r, sh_g, sh_b;
+  int width_r, width_g, width_b, width_a;
+  int sh_r, sh_g, sh_b, sh_a;
+  uint32_t alpha_mask;
   int rowstride;
   int channels;
   unsigned char *row;
 
   if (visual->c_class != TrueColor)
     return false;
+
+#if XRENDER
+  XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
+  if (format)
+    alpha_mask = (uint32_t)format->direct.alphaMask << format->direct.alpha;
+  else
+#endif
+    alpha_mask = 0;
 
   if (depth == 24 || depth == 32)
     bytes_per_pixel = 4;
@@ -369,13 +378,15 @@ rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
   width_r = ecb_popcount32 (visual->red_mask);
   width_g = ecb_popcount32 (visual->green_mask);
   width_b = ecb_popcount32 (visual->blue_mask);
+  width_a = ecb_popcount32 (alpha_mask);
 
-  if (width_r > 8 || width_g > 8 || width_b > 8)
+  if (width_r > 8 || width_g > 8 || width_b > 8 || width_a > 8)
     return false;
 
   sh_r = ecb_ctz32 (visual->red_mask);
   sh_g = ecb_ctz32 (visual->green_mask);
   sh_b = ecb_ctz32 (visual->blue_mask);
+  sh_a = ecb_ctz32 (alpha_mask);
 
   if (width > INT_MAX / height / bytes_per_pixel)
     return false;
@@ -399,16 +410,43 @@ rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
   row = gdk_pixbuf_get_pixels (pixbuf) + src_y * rowstride + src_x * channels;
   line = data;
 
+  rgba c (0, 0, 0);
+
+  if (channels == 4 && alpha_mask == 0)
+    {
+      pix_colors[Color_bg].get (c);
+      c.r >>= 8;
+      c.g >>= 8;
+      c.b >>= 8;
+    }
+
   for (int y = 0; y < height; y++)
     {
       for (int x = 0; x < width; x++)
         {
           unsigned char *pixel = row + x * channels;
           uint32_t value;
+          unsigned char r, g, b, a;
 
-          value  = ((pixel[0] >> (8 - width_r)) << sh_r)
-                 | ((pixel[1] >> (8 - width_g)) << sh_g)
-                 | ((pixel[2] >> (8 - width_b)) << sh_b);
+          if (channels == 4)
+            {
+              a = pixel[3];
+              r = (pixel[0] * a + c.r * (0xff - a)) / 0xff;
+              g = (pixel[1] * a + c.g * (0xff - a)) / 0xff;
+              b = (pixel[2] * a + c.b * (0xff - a)) / 0xff;
+            }
+          else
+            {
+              a = 0xff;
+              r = pixel[0];
+              g = pixel[1];
+              b = pixel[2];
+            }
+
+          value  = ((r >> (8 - width_r)) << sh_r)
+                 | ((g >> (8 - width_g)) << sh_g)
+                 | ((b >> (8 - width_b)) << sh_b)
+                 | ((a >> (8 - width_a)) << sh_a);
 
           if (bytes_per_pixel == 4)
             ((uint32_t *)line)[x] = value;
