@@ -21,6 +21,7 @@ TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 
+TODO: DEC PM 4h/4l should toggle jumpscroll on or off (PrivMode_smoothScroll)
 9.16
 	- remove support for libafterimage.
 	- fix processing of DEC private mode save sequences (patch by Patrick
@@ -34,6 +35,7 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 	  lineSpace is non zero (patch by Stanislav Seletskiy).
         - make it compile with LOCAL_X_IS_UNIX again (reported by
           nickfailure@gmail.com).
+        - update to CVS version of libev, for a whopping 11kb size decrease.
 
 9.15 Sat Jan 21 13:36:56 CET 2012
 	- remove "using namespace std" because clang erroneously
