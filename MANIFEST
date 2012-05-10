@@ -94,6 +94,7 @@ libptytty/src/ptytty.C
 libptytty/src/proxy.C
 libptytty/src/logging.C
 libptytty/src/fdpass.C
+libptytty/src/estl.h
 
 src/gentables
 src/gencompose
