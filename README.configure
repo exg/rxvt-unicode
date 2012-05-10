@@ -106,18 +106,6 @@ CONFIGURE OPTIONS
         at start of rxvt execution. This option requires --enable-utmp to
         also be specified.
 
-    --enable-afterimage (default: off)
-        Add support for libAfterImage to be used for background images. It
-        adds support for many file formats including JPG, PNG, SVG, TIFF,
-        GIF, XPM, BMP, ICO, XCF, TGA and AfterStep image XML
-        (<http://www.afterstep.org/visualdoc.php?show=asimagexml>).
-
-        Note that with this option enabled, rxvt's memory footprint might
-        increase by a few megabytes even if no extra features are used
-        (mostly due to third-party libraries used by libAI). Memory
-        footprint may somewhat be lowered if libAfterImage is configured
-        without support for SVG.
-
     --enable-pixbuf (default: on)
         Add support for GDK-PixBuf to be used for background images. It adds
         support for many file formats including JPG, PNG, TIFF, GIF, XPM,
@@ -130,9 +118,8 @@ CONFIGURE OPTIONS
 
     --enable-transparency (default: on)
         Add support for using the root pixmap as background to simulate
-        transparency. Note that blur and blend effects depend on
-        libAfterImage or on libXrender and on the availability of the RENDER
-        extension in the X server.
+        transparency. Note that blur and blend effects depend on libXrender
+        and on the availability of the RENDER extension in the X server.
 
     --enable-fading (default: on)
         Add support for fading the text when focus is lost.
@@ -262,9 +249,6 @@ CONFIGURE OPTIONS
         It also results in higher memory usage and can slow down rxvt
         dramatically when more than six fonts are in use by a terminal
         instance.
-
-    --with-afterimage-config=DIR
-        Look for the libAfterImage config script in DIR.
 
     --with-name=NAME (default: urxvt)
         Set the basename for the installed binaries, resulting in "urxvt",

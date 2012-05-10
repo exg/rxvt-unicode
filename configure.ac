@@ -713,8 +713,7 @@ done
 
 IF_PERL=\#
 if test x$support_perl = xyes; then
-  AC_PATH_PROG(PERL, perl5)
-  AC_PATH_PROG(PERL, perl)
+  AC_PATH_PROG(PERL, perl5, perl)
 
   AC_MSG_CHECKING(for $PERL suitability)
   if $PERL -MExtUtils::Embed -e "use v5.8" >/dev/null 2>/dev/null; then

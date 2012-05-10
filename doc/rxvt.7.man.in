@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2012-01-21" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2012-05-11" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -409,7 +409,7 @@ your picture with gimp or any other tool:
 \&   @@URXVT_NAME@@ \-pixmap "background.jpg;:root"
 .Ve
 .PP
-That works. If you think it doesn't, you lack libAfterImage or GDK-PixBuf support, or you
+That works. If you think it doesn't, you lack GDK-PixBuf support, or you
 are unable to read.
 .PP
 3. Use an \s-1ARGB\s0 visual:
@@ -2282,7 +2282,7 @@ Ps = 12	Change colour of text cursor foreground to Pt
 Ps = 13	Change colour of mouse foreground to Pt
 Ps = 17	Change background colour of highlight characters to Pt
 Ps = 19	Change foreground colour of highlight characters to Pt
-Ps = 20	Change background pixmap parameters (see section BACKGROUND IMAGE) (Compile afterimage or pixbuf).
+Ps = 20	Change background pixmap parameters (see section BACKGROUND IMAGE) (Compile pixbuf).
 Ps = 39	Change default foreground colour to Pt. [deprecated, use 10]
 Ps = 46	Change Log File to Pt unimplemented
 Ps = 49	Change default background colour to Pt. [deprecated, use 11]
@@ -2542,17 +2542,6 @@ option requires \-\-enable\-utmp to also be specified.
 Write user and tty to lastlog file (used by programs like
 \&\fIlastlogin\fR) at start of rxvt execution.  This option requires
 \&\-\-enable\-utmp to also be specified.
-.IP "\-\-enable\-afterimage (default: off)" 4
-.IX Item "--enable-afterimage (default: off)"
-Add support for libAfterImage to be used for background
-images. It adds support for many file formats including \s-1JPG\s0, \s-1PNG\s0,
-\&\s-1SVG\s0, \s-1TIFF\s0, \s-1GIF\s0, \s-1XPM\s0, \s-1BMP\s0, \s-1ICO\s0, \s-1XCF\s0, \s-1TGA\s0 and AfterStep image \s-1XML\s0
-(<http://www.afterstep.org/visualdoc.php?show=asimagexml>).
-.Sp
-Note that with this option enabled, @@RXVT_NAME@@'s memory footprint might
-increase by a few megabytes even if no extra features are used (mostly due
-to third-party libraries used by libAI). Memory footprint may somewhat be
-lowered if libAfterImage is configured without support for \s-1SVG\s0.
 .IP "\-\-enable\-pixbuf (default: on)" 4
 .IX Item "--enable-pixbuf (default: on)"
 Add support for GDK-PixBuf to be used for background images.
@@ -2565,7 +2554,7 @@ to display some kind of progress indicator during startup.
 .IP "\-\-enable\-transparency (default: on)" 4
 .IX Item "--enable-transparency (default: on)"
 Add support for using the root pixmap as background to simulate transparency.
-Note that blur and blend effects depend on libAfterImage or on
+Note that blur and blend effects depend on
 libXrender and on the availability of the \s-1RENDER\s0 extension in the X
 server.
 .IP "\-\-enable\-fading (default: on)" 4
@@ -2697,9 +2686,6 @@ and consequently sets \f(CW\*(C`TERM\*(C'\fR to \f(CW\*(C`rxvt\-unicode\-256colo
 .Sp
 It also results in higher memory usage and can slow down @@RXVT_NAME@@
 dramatically when more than six fonts are in use by a terminal instance.
-.IP "\-\-with\-afterimage\-config=DIR" 4
-.IX Item "--with-afterimage-config=DIR"
-Look for the libAfterImage config script in \s-1DIR\s0.
 .IP "\-\-with\-name=NAME (default: urxvt)" 4
 .IX Item "--with-name=NAME (default: urxvt)"
 Set the basename for the installed binaries, resulting

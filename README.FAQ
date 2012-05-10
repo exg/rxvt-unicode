@@ -208,8 +208,8 @@ xterm? I need this to decide about setting colours etc.
        convert wallpaper.jpg -blur 20x20 -modulate 30 background.jpg
        urxvt -pixmap "background.jpg;:root"
 
-    That works. If you think it doesn't, you lack libAfterImage or
-    GDK-PixBuf support, or you are unable to read.
+    That works. If you think it doesn't, you lack GDK-PixBuf support, or you
+    are unable to read.
 
     3. Use an ARGB visual:
 

@@ -600,9 +600,6 @@ PERLFLAGS
 PERLLIB
 PERL
 XFT_CONFIG
-AFTERIMAGE_LIBS
-AFTERIMAGE_CFLAGS
-afterimage_config
 STARTUP_NOTIFICATION_LIBS
 STARTUP_NOTIFICATION_CFLAGS
 PIXBUF_LIBS
@@ -692,8 +689,6 @@ enable_unicode3
 enable_combining
 enable_xft
 enable_font_styles
-enable_afterimage
-with_afterimage_config
 enable_pixbuf
 enable_startup_notification
 enable_transparency
@@ -1369,7 +1364,6 @@ Optional Features:
   --enable-combining      enable composition of base and combining characters
   --enable-xft            enable xft support on systems that have it
   --enable-font-styles    enable bold and italic support
-  --enable-afterimage     enable integration with libAfterImage for background images (deprecated)
   --enable-pixbuf         enable integration with gdk-pixbuf for background images
   --enable-startup-notification  enable freedesktop startup notification support
   --enable-transparency   enable transparent backgrounds
@@ -1401,7 +1395,6 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-afterimage-config=DIR  use libAfterImage config script in DIR
   --with-codesets=CS,...  compile in additional codesets (jp,jp_ext,kr,zh,zh_ext,all)
   --with-res-name=NAME    use this as default resource name (default: urxvt)
   --with-res-class=CLASS  use this as the resource class (default: URxvt)
@@ -4831,23 +4824,6 @@ if test "${enable_font_styles+set}" = set; then :
 fi
 
 
-# Check whether --enable-afterimage was given.
-if test "${enable_afterimage+set}" = set; then :
-  enableval=$enable_afterimage; if test x$enableval = xyes -o x$enableval = xno; then
-    support_afterimage=$enableval
-  fi
-fi
-
-
-
-# Check whether --with-afterimage_config was given.
-if test "${with_afterimage_config+set}" = set; then :
-  withval=$with_afterimage_config; if test "x$withval" != x; then
-    afterimage_config=$withval/afterimage-config
-  fi
-fi
-
-
 # Check whether --enable-pixbuf was given.
 if test "${enable_pixbuf+set}" = set; then :
   enableval=$enable_pixbuf; if test x$enableval = xyes -o x$enableval = xno; then
@@ -6328,7 +6304,6 @@ $as_echo_n "checking for gdk-pixbuf... " >&6; }
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
     image_lib=gdk-pixbuf
-    support_afterimage=no
 
 $as_echo "#define HAVE_PIXBUF 1" >>confdefs.h
 
@@ -6407,92 +6382,6 @@ $as_echo "#define HAVE_STARTUP_NOTIFICATION 1" >>confdefs.h
   else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-  fi
-fi
-
-
-
-
-AFTERIMAGE_CFLAGS=
-AFTERIMAGE_LIBS=
-
-if test x$support_afterimage = xyes; then
-  support_afterimage=no
-
-  if test "x$afterimage_config" = "x" ; then
-    # Extract the first word of "afterimage-config", so it can be a program name with args.
-set dummy afterimage-config; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_afterimage_config+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $afterimage_config in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_afterimage_config="$afterimage_config" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_afterimage_config="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_afterimage_config" && ac_cv_path_afterimage_config="no"
-  ;;
-esac
-fi
-afterimage_config=$ac_cv_path_afterimage_config
-if test -n "$afterimage_config"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $afterimage_config" >&5
-$as_echo "$afterimage_config" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-  fi
-  if test "x$afterimage_config" != "xno" ; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libAfterImage version >= 1.15" >&5
-$as_echo_n "checking for libAfterImage version >= 1.15... " >&6; }
-    AFTERIMAGE_VERSION=`$afterimage_config --version`
-    if test -n "$AFTERIMAGE_VERSION" ; then
-      AFTERIMAGE_CFLAGS=`$afterimage_config --cflags`
-      AFTERIMAGE_LIBS=`$afterimage_config --libs`
-      if test "x$AFTERIMAGE_LIBS" != "x"; then
-        libai_ver_major=`echo $AFTERIMAGE_VERSION | cut -f 1 -d .`
-        libai_ver_minor=`echo $AFTERIMAGE_VERSION | cut -f 2 -d .`
-        if test $libai_ver_major -gt 1 -o \( $libai_ver_major -eq 1 -a $libai_ver_minor -ge 15 \); then
-          support_afterimage=yes
-        fi
-      fi
-    fi
-    if test "x$support_afterimage" = "xyes"; then
-      { $as_echo "$as_me:${as_lineno-$LINENO}: result: $AFTERIMAGE_LIBS" >&5
-$as_echo "$AFTERIMAGE_LIBS" >&6; }
-      image_lib=libafterimage
-
-$as_echo "#define HAVE_AFTERIMAGE 1" >>confdefs.h
-
-
-$as_echo "#define BG_IMAGE_FROM_FILE 1" >>confdefs.h
-
-    else
-      { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-      AFTERIMAGE_CFLAGS=
-      AFTERIMAGE_LIBS=
-    fi
   fi
 fi
 
@@ -7988,46 +7877,7 @@ done
   done
 IFS=$as_save_IFS
 
-  ;;
-esac
-fi
-PERL=$ac_cv_path_PERL
-if test -n "$PERL"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PERL" >&5
-$as_echo "$PERL" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-  # Extract the first word of "perl", so it can be a program name with args.
-set dummy perl; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_PERL+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PERL in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PERL="$PERL" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_PERL="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
+  test -z "$ac_cv_path_PERL" && ac_cv_path_PERL="perl"
   ;;
 esac
 fi
