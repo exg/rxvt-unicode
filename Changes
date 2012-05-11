@@ -23,6 +23,7 @@ TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 
 TODO: DEC PM 4h/4l should toggle jumpscroll on or off (PrivMode_smoothScroll)
 9.16
+	- the "alpha" release.
 	- remove support for libafterimage.
 	- fix processing of DEC private mode save sequences (patch by Patrick
 	  Hemmer).
