@@ -5,7 +5,7 @@
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 2005-2008 Marc Lehmann <schmorp@schmorp.de>
  * Copyright (c) 2007      Sasha Vasko <sasha@aftercode.net>
- * Copyright (c) 2010      Emanuele Giaquinta <e.giaquinta@glauco.it>
+ * Copyright (c) 2010-2012 Emanuele Giaquinta <e.giaquinta@glauco.it>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1184,6 +1184,7 @@ fill_lut (uint32_t *lookup, uint32_t mask, int sh, unsigned short low, unsigned 
 void
 rxvt_term::tint_ximage (Visual *visual, XImage *ximage)
 {
+  unsigned int size_r, size_g, size_b;
   int sh_r, sh_g, sh_b;
   uint32_t mask_r, mask_g, mask_b;
   uint32_t *lookup, *lookup_r, *lookup_g, *lookup_b;
@@ -1198,63 +1199,21 @@ rxvt_term::tint_ximage (Visual *visual, XImage *ximage)
   mask_b = visual->blue_mask;
 
   /* boring lookup table pre-initialization */
-  switch (ximage->depth)
-    {
-      case 15:
-        if ((mask_r != 0x7c00) ||
-            (mask_g != 0x03e0) ||
-            (mask_b != 0x001f))
-          return;
-        lookup = (uint32_t *) malloc (sizeof (uint32_t)*(32+32+32));
-        lookup_r = lookup;
-        lookup_g = lookup+32;
-        lookup_b = lookup+32+32;
-        sh_r = 10;
-        sh_g = 5;
-        sh_b = 0;
-        break;
-      case 16:
-        if ((mask_r != 0xf800) ||
-            (mask_g != 0x07e0) ||
-            (mask_b != 0x001f))
-          return;
-        lookup = (uint32_t *) malloc (sizeof (uint32_t)*(32+64+32));
-        lookup_r = lookup;
-        lookup_g = lookup+32;
-        lookup_b = lookup+32+64;
-        sh_r = 11;
-        sh_g = 5;
-        sh_b = 0;
-        break;
-      case 24:
-        if ((mask_r != 0xff0000) ||
-            (mask_g != 0x00ff00) ||
-            (mask_b != 0x0000ff))
-          return;
-        lookup = (uint32_t *) malloc (sizeof (uint32_t)*(256+256+256));
-        lookup_r = lookup;
-        lookup_g = lookup+256;
-        lookup_b = lookup+256+256;
-        sh_r = 16;
-        sh_g = 8;
-        sh_b = 0;
-        break;
-      case 32:
-        if ((mask_r != 0xff0000) ||
-            (mask_g != 0x00ff00) ||
-            (mask_b != 0x0000ff))
-          return;
-        lookup = (uint32_t *) malloc (sizeof (uint32_t)*(256+256+256));
-        lookup_r = lookup;
-        lookup_g = lookup+256;
-        lookup_b = lookup+256+256;
-        sh_r = 16;
-        sh_g = 8;
-        sh_b = 0;
-        break;
-      default:
-        return; /* we do not support this color depth */
-    }
+  sh_r = ecb_ctz32 (mask_r);
+  sh_g = ecb_ctz32 (mask_g);
+  sh_b = ecb_ctz32 (mask_b);
+
+  size_r = mask_r >> sh_r;
+  size_g = mask_g >> sh_g;
+  size_b = mask_b >> sh_b;
+
+  if (size_r++ > 255 || size_g++ > 255 || size_b++ > 255)
+    return;
+
+  lookup = (uint32_t *)malloc (sizeof (uint32_t) * (size_r + size_g + size_b));
+  lookup_r = lookup;
+  lookup_g = lookup + size_r;
+  lookup_b = lookup + size_r + size_g;
 
   rgba c (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC);
 
@@ -1286,7 +1245,6 @@ rxvt_term::tint_ximage (Visual *visual, XImage *ximage)
 
   /* apply table to input image (replacing colors by newly calculated ones) */
   if (ximage->bits_per_pixel == 32
-      && (ximage->depth == 24 || ximage->depth == 32)
       && ximage->byte_order == host_byte_order)
     {
       char *line = ximage->data;
@@ -1296,10 +1254,9 @@ rxvt_term::tint_ximage (Visual *visual, XImage *ximage)
           uint32_t *p = (uint32_t *)line;
           for (int x = 0; x < ximage->width; x++)
             {
-              *p = lookup_r[(*p & 0xff0000) >> 16] |
-                   lookup_g[(*p & 0x00ff00) >> 8] |
-                   lookup_b[(*p & 0x0000ff)] |
-                   (*p & 0xff000000);
+              *p = lookup_r[(*p & mask_r) >> sh_r] |
+                   lookup_g[(*p & mask_g) >> sh_g] |
+                   lookup_b[(*p & mask_b) >> sh_b];
               p++;
             }
           line += ximage->bytes_per_line;
