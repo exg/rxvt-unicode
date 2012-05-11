@@ -1289,22 +1289,20 @@ rxvt_term::tint_ximage (Visual *visual, XImage *ximage)
       && (ximage->depth == 24 || ximage->depth == 32)
       && ximage->byte_order == host_byte_order)
     {
-      uint32_t *p1, *pf, *p, *pl;
-      p1 = (uint32_t *) ximage->data;
-      pf = (uint32_t *) (ximage->data + ximage->height * ximage->bytes_per_line);
+      char *line = ximage->data;
 
-      while (p1 < pf)
+      for (int y = 0; y < ximage->height; y++)
         {
-          p = p1;
-          pl = p1 + ximage->width;
-          for (; p < pl; p++)
+          uint32_t *p = (uint32_t *)line;
+          for (int x = 0; x < ximage->width; x++)
             {
               *p = lookup_r[(*p & 0xff0000) >> 16] |
                    lookup_g[(*p & 0x00ff00) >> 8] |
                    lookup_b[(*p & 0x0000ff)] |
                    (*p & 0xff000000);
+              p++;
             }
-          p1 = (uint32_t *) ((char *) p1 + ximage->bytes_per_line);
+          line += ximage->bytes_per_line;
         }
     }
   else
