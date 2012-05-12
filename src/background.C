@@ -348,8 +348,7 @@ rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
                              unsigned int width, unsigned int height)
 {
   XImage *ximage;
-  char *data, *line;
-  int bytes_per_pixel;
+  char *line;
   int width_r, width_g, width_b, width_a;
   int sh_r, sh_g, sh_b, sh_a;
   uint32_t alpha_mask;
@@ -368,13 +367,6 @@ rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
 #endif
     alpha_mask = 0;
 
-  if (depth == 24 || depth == 32)
-    bytes_per_pixel = 4;
-  else if (depth == 15 || depth == 16)
-    bytes_per_pixel = 2;
-  else
-    return false;
-
   width_r = ecb_popcount32 (visual->red_mask);
   width_g = ecb_popcount32 (visual->green_mask);
   width_b = ecb_popcount32 (visual->blue_mask);
@@ -388,18 +380,18 @@ rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
   sh_b = ecb_ctz32 (visual->blue_mask);
   sh_a = ecb_ctz32 (alpha_mask);
 
-  if (width > INT_MAX / height / bytes_per_pixel)
+  if (width > 32767 || height > 32767)
     return false;
 
-  data = (char *)malloc (width * height * bytes_per_pixel);
-  if (!data)
-    return false;
-
-  ximage = XCreateImage (dpy, visual, depth, ZPixmap, 0, data,
-                         width, height, bytes_per_pixel * 8, 0);
+  ximage = XCreateImage (dpy, visual, depth, ZPixmap, 0, 0,
+                         width, height, 32, 0);
   if (!ximage)
+    return false;
+
+  if (height > INT_MAX / ximage->bytes_per_line
+      || !(ximage->data = (char *)malloc (height * ximage->bytes_per_line)))
     {
-      free (data);
+      XDestroyImage (ximage);
       return false;
     }
 
@@ -408,7 +400,7 @@ rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
   rowstride = gdk_pixbuf_get_rowstride (pixbuf);
   channels = gdk_pixbuf_get_n_channels (pixbuf);
   row = gdk_pixbuf_get_pixels (pixbuf) + src_y * rowstride + src_x * channels;
-  line = data;
+  line = ximage->data;
 
   rgba c (0, 0, 0);
 
@@ -448,10 +440,10 @@ rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
                  | ((b >> (8 - width_b)) << sh_b)
                  | ((a >> (8 - width_a)) << sh_a);
 
-          if (bytes_per_pixel == 4)
+          if (ximage->bits_per_pixel == 32)
             ((uint32_t *)line)[x] = value;
           else
-            ((uint16_t *)line)[x] = value;
+            XPutPixel (ximage, x, y, value);
         }
 
       row += rowstride;
