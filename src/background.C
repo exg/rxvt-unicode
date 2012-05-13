@@ -692,21 +692,7 @@ rxvt_term::bg_set_blur (const char *geom)
       v_blurRadius = vr;
     }
 
-  if (h_blurRadius && v_blurRadius)
-    bg_flags |= BG_NEEDS_BLUR;
-  else
-    bg_flags &= ~BG_NEEDS_BLUR;
-
   return changed;
-}
-
-void
-rxvt_term::set_tint_shade_flags ()
-{
-  if (shade != 100 || (bg_flags & BG_TINT_SET))
-    bg_flags |= BG_NEEDS_TINT;
-  else
-    bg_flags &= ~BG_NEEDS_TINT;
 }
 
 bool
@@ -726,7 +712,6 @@ rxvt_term::bg_set_tint (rxvt_color &new_tint)
       else
         bg_flags &= ~BG_TINT_BITAND;
 
-      set_tint_shade_flags ();
       return true;
     }
 
@@ -745,7 +730,6 @@ rxvt_term::bg_set_shade (const char *shade_str)
   if (new_shade != shade)
     {
       shade = new_shade;
-      set_tint_shade_flags ();
       return true;
     }
 
@@ -1031,21 +1015,22 @@ rxvt_term::make_transparency_pixmap ()
     {
       XFillRectangle (dpy, bg_pixmap, gc, 0, 0, window_width, window_height);
       ret = true;
-      unsigned long tr_flags = bg_flags & BG_EFFECTS_FLAGS;
+      bool need_blur = h_blurRadius && v_blurRadius;
+      bool need_tint = shade != 100 || (bg_flags & BG_TINT_SET);
 
       if (!(bg_flags & BG_CLIENT_RENDER))
         {
-          if (bg_flags & BG_NEEDS_BLUR)
+          if (need_blur)
             {
               if (blur_pixmap (bg_pixmap, visual, window_width, window_height, depth))
-                tr_flags &= ~BG_NEEDS_BLUR;
+                need_blur = false;
             }
-          if (bg_flags & BG_NEEDS_TINT)
+          if (need_tint)
             {
               if (tint_pixmap (bg_pixmap, visual, window_width, window_height))
-                tr_flags &= ~BG_NEEDS_TINT;
+                need_tint = false;
             }
-          if (tr_flags & BG_NEEDS_TINT)
+          if (need_tint)
             {
               XImage *ximage = XGetImage (dpy, bg_pixmap, 0, 0, bg_pmap_width, bg_pmap_height, AllPlanes, ZPixmap);
               if (ximage)

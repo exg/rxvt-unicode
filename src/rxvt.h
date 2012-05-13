@@ -1085,10 +1085,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   enum {
     BG_IS_VALID          = 1 <<  0,
-    BG_NEEDS_TINT        = 1 <<  1,
-    BG_NEEDS_BLUR        = 1 <<  2,
-
-    BG_EFFECTS_FLAGS     = BG_NEEDS_TINT | BG_NEEDS_BLUR,
 
     BG_KEEP_ASPECT       = 1 <<  3,
     BG_ROOT_ALIGN        = 1 <<  4,
@@ -1147,7 +1143,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
     bg_flags |= BG_IS_TRANSPARENT;
   }
   void bg_set_root_pixmap ();
-  void set_tint_shade_flags ();
   bool bg_set_tint (rxvt_color &new_tint);
   bool bg_set_shade (const char *shade_str);
   bool bg_set_blur (const char *geom);
