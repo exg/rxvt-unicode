@@ -760,7 +760,7 @@ get_gaussian_kernel (int radius, int width, double *kernel, XFixed *params)
 #endif
 
 bool
-rxvt_term::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height, int depth)
+rxvt_term::blur_pixmap (Pixmap pixmap, int width, int height)
 {
   bool ret = false;
 #if XRENDER
@@ -825,7 +825,7 @@ rxvt_term::blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height, in
 }
 
 bool
-rxvt_term::tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height)
+rxvt_term::tint_pixmap (Pixmap pixmap, int width, int height)
 {
   bool ret = false;
 
@@ -1022,12 +1022,12 @@ rxvt_term::make_transparency_pixmap ()
         {
           if (need_blur)
             {
-              if (blur_pixmap (bg_pixmap, visual, window_width, window_height, depth))
+              if (blur_pixmap (bg_pixmap, window_width, window_height))
                 need_blur = false;
             }
           if (need_tint)
             {
-              if (tint_pixmap (bg_pixmap, visual, window_width, window_height))
+              if (tint_pixmap (bg_pixmap, window_width, window_height))
                 need_tint = false;
             }
           if (need_tint)
@@ -1036,7 +1036,7 @@ rxvt_term::make_transparency_pixmap ()
               if (ximage)
                 {
                   /* our own client-side tinting */
-                  tint_ximage (DefaultVisual (dpy, display->screen), ximage);
+                  tint_ximage (ximage);
 
                   XPutImage (dpy, bg_pixmap, gc, ximage, 0, 0, 0, 0, ximage->width, ximage->height);
                   XDestroyImage (ximage);
@@ -1147,7 +1147,7 @@ fill_lut (uint32_t *lookup, uint32_t mask, int sh, unsigned short low, unsigned 
 }
 
 void
-rxvt_term::tint_ximage (Visual *visual, XImage *ximage)
+rxvt_term::tint_ximage (XImage *ximage)
 {
   unsigned int size_r, size_g, size_b;
   int sh_r, sh_g, sh_b;

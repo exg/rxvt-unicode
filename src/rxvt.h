@@ -1147,9 +1147,9 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   bool bg_set_shade (const char *shade_str);
   bool bg_set_blur (const char *geom);
 
-  bool blur_pixmap (Pixmap pixmap, Visual *visual, int width, int height, int depth);
-  bool tint_pixmap (Pixmap pixmap, Visual *visual, int width, int height);
-  void tint_ximage (Visual *visual, XImage *ximage);
+  bool blur_pixmap (Pixmap pixmap, int width, int height);
+  bool tint_pixmap (Pixmap pixmap, int width, int height);
+  void tint_ximage (XImage *ximage);
   bool make_transparency_pixmap ();
 # endif
 
