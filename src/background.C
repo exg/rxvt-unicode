@@ -665,18 +665,6 @@ rxvt_term::bg_set_file (const char *file)
 
 # ifdef ENABLE_TRANSPARENCY
 bool
-rxvt_term::bg_set_transparent ()
-{
-  if (!(bg_flags & BG_IS_TRANSPARENT))
-    {
-      bg_flags |= BG_IS_TRANSPARENT;
-      return true;
-    }
-
-  return false;
-}
-
-bool
 rxvt_term::bg_set_blur (const char *geom)
 {
   bool changed = false;

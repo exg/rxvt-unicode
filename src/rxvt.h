@@ -1142,7 +1142,10 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   int         shade;
   int         h_blurRadius, v_blurRadius;
 
-  bool bg_set_transparent ();
+  void bg_set_transparent ()
+  {
+    bg_flags |= BG_IS_TRANSPARENT;
+  }
   void bg_set_root_pixmap ();
   void set_tint_shade_flags ();
   bool bg_set_tint (rxvt_color &new_tint);
