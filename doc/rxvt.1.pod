@@ -709,10 +709,6 @@ the image unchanged; option B<-tint>.
 Darken (0 .. 99) or lighten (101 .. 200) the transparent background.
 A value of 100 means no shading; option B<-sh>.
 
-=item B<blendType:> I<string>
-
-Specify background blending type; option B<-blt>.
-
 =item B<blurRadius:> I<number>
 
 Apply gaussian blur with the specified radius to the transparent
