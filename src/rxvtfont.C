@@ -1501,7 +1501,7 @@ rxvt_fontset::clear ()
     (*i)->unref ();
 
   for (pagemap **p = fmap.begin (); p != fmap.end (); p++)
-    delete [] *p;
+    delete *p;
 
   free (fontdesc); fontdesc = 0;
 
