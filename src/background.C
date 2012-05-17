@@ -454,13 +454,15 @@ rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
 }
 
 bool
-rxvt_term::render_image (rxvt_image &image, bool transparent)
+rxvt_term::render_image (rxvt_image &image)
 {
   GdkPixbuf *pixbuf = image.pixbuf;
   if (!pixbuf)
     return false;
 
-  if (transparent
+  bool need_blend = bg_flags & BG_IS_VALID;
+
+  if (need_blend
       && !(bg_flags & BG_HAS_RENDER))
     return false;
 
@@ -505,14 +507,14 @@ rxvt_term::render_image (rxvt_image &image, bool transparent)
 
   XGCValues gcv;
   GC gc;
-  Pixmap root_pmap;
+  Pixmap tmp_pixmap;
 
   image_width = gdk_pixbuf_get_width (result);
   image_height = gdk_pixbuf_get_height (result);
 
-  if (transparent)
+  if (need_blend)
     {
-      root_pmap = bg_pixmap;
+      tmp_pixmap = bg_pixmap;
       bg_pixmap = None;
     }
   else
@@ -578,11 +580,11 @@ rxvt_term::render_image (rxvt_image &image, bool transparent)
         }
 
 #if XRENDER
-      if (transparent)
+      if (need_blend)
         {
           XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
 
-          Picture src = XRenderCreatePicture (dpy, root_pmap, format, 0, 0);
+          Picture src = XRenderCreatePicture (dpy, tmp_pixmap, format, 0, 0);
 
           Picture dst = XRenderCreatePicture (dpy, bg_pixmap, format, 0, 0);
 
@@ -612,8 +614,8 @@ rxvt_term::render_image (rxvt_image &image, bool transparent)
   if (result != pixbuf)
     g_object_unref (result);
 
-  if (transparent)
-    XFreePixmap (dpy, root_pmap);
+  if (need_blend)
+    XFreePixmap (dpy, tmp_pixmap);
 
   return ret;
 }
@@ -1066,15 +1068,12 @@ rxvt_term::bg_set_root_pixmap ()
 bool
 rxvt_term::bg_render ()
 {
-  bool transparent = false;
-
   bg_invalidate ();
 # ifdef ENABLE_TRANSPARENCY
   if (bg_flags & BG_IS_TRANSPARENT)
     {
       /*  we need to re-generate transparency pixmap in that case ! */
-      transparent = make_transparency_pixmap ();
-      if (transparent)
+      if (make_transparency_pixmap ())
         bg_flags |= BG_IS_VALID;
     }
 # endif
@@ -1082,7 +1081,7 @@ rxvt_term::bg_render ()
 # ifdef BG_IMAGE_FROM_FILE
   if (bg_image.flags & IM_IS_SET)
     {
-      if (render_image (bg_image, transparent))
+      if (render_image (bg_image))
         bg_flags |= BG_IS_VALID;
     }
 # endif

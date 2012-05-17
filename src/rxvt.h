@@ -1164,7 +1164,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 # ifdef BG_IMAGE_FROM_FILE
   rxvt_image bg_image;
   void get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y);
-  bool render_image (rxvt_image &image, bool transparent);
+  bool render_image (rxvt_image &image);
 # endif
 
 # ifdef ENABLE_TRANSPARENCY
