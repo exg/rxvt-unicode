@@ -1146,20 +1146,20 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void bg_destroy ();
 
   enum {
-    BG_IS_VALID          = 1 <<  0,
+    BG_IS_VALID          = 1 << 0,
 
-    BG_TINT_SET          = 1 <<  5,
-    BG_TINT_BITAND       = 1 <<  6,
+    BG_IS_TRANSPARENT    = 1 << 1,
+    BG_NEEDS_REFRESH     = 1 << 2,
 
-    BG_HAS_RENDER        = 1 <<  7,
-    BG_HAS_RENDER_CONV   = 1 <<  8,
-    BG_CLIENT_RENDER     = 1 <<  9,
+    BG_HAS_RENDER        = 1 << 3,
+    BG_HAS_RENDER_CONV   = 1 << 4,
+    BG_CLIENT_RENDER     = 1 << 5,
 
-    BG_IS_TRANSPARENT    = 1 << 10,
-    BG_NEEDS_REFRESH     = 1 << 11,
+    BG_TINT_SET          = 1 << 6,
+    BG_TINT_BITAND       = 1 << 7,
   };
 
-  unsigned int bg_flags;
+  uint8_t bg_flags;
 
 # ifdef BG_IMAGE_FROM_FILE
   rxvt_image bg_image;
