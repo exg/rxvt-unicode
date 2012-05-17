@@ -108,7 +108,18 @@ private:
   simplevec<rxvt_font *> fonts;
   const rxvt_fallback_font *fallback;
 
-  typedef unsigned char pagemap[256];
+  // this once was a "typedef xxx pagemap[256]
+  // but c++ arrays are not normal types, and cnanot be
+  // put into containers, new doesn't work for them etc. etc.
+  // so we wrap out array into an objetc that acts like one. doh.
+  // example: C++ has no separate new and new [] forms,
+  // and if pagemap is char[256], new incorrectly assumes we want to
+  // allocate an array of chars instead of a single pagemap.
+  struct pagemap
+  {
+    unsigned char cppsucks[256];
+    unsigned char &operator [](int i) { return cppsucks [i]; };
+  };
   vector<pagemap *> fmap;
 
   void clear ();
