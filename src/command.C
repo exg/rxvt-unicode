@@ -3455,8 +3455,8 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
             char str[256];
 
             sprintf (str, "[%dx%d+%d+%d]",
-                     min (h_scale, 32767), min (v_scale, 32767),
-                     min (h_align, 32767), min (v_align, 32767));
+                     min (bg_image.h_scale, 32767), min (bg_image.v_scale, 32767),
+                     min (bg_image.h_align, 32767), min (bg_image.v_align, 32767));
             process_xterm_seq (XTerm_title, str, CHAR_ST);
           }
         else
@@ -3465,13 +3465,13 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
 
             if (*str != ';')
               {
-                if (bg_set_file (str))	/* change pixmap */
+                if (bg_image.set_file (str))	/* change pixmap */
                   changed = true;
               }
             else
               {
                 str++;
-                if (bg_set_geometry (str, true))
+                if (bg_image.set_geometry (str, true))
                   changed = true;
               }
 

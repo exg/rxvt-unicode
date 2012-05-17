@@ -210,6 +210,68 @@ struct localise_env
   }
 };
 
+#ifdef HAVE_BG_PIXMAP
+# ifdef BG_IMAGE_FROM_FILE
+enum {
+  IM_IS_SET            = 1 << 0,
+  IM_IS_SIZE_SENSITIVE = 1 << 1,
+  IM_KEEP_ASPECT       = 1 << 2,
+  IM_ROOT_ALIGN        = 1 << 3,
+  IM_TILE              = 1 << 4,
+  IM_GEOMETRY_FLAGS    = IM_KEEP_ASPECT | IM_ROOT_ALIGN | IM_TILE,
+};
+
+enum {
+  noScale = 0,
+  windowScale = 100,
+  defaultScale = windowScale,
+  centerAlign = 50,
+  defaultAlign = centerAlign,
+};
+
+struct rxvt_image
+{
+  uint8_t flags;
+  unsigned int h_scale, v_scale; /* percents of the window size */
+  int h_align, v_align;          /* percents of the window size:
+                                    0 - left align, 50 - center, 100 - right */
+
+#  ifdef HAVE_PIXBUF
+  GdkPixbuf *pixbuf;
+#  endif
+
+  ~rxvt_image ()
+  {
+#  ifdef HAVE_PIXBUF
+    if (pixbuf)
+      g_object_unref (pixbuf);
+#  endif
+  }
+
+  int width ()
+  {
+#  ifdef HAVE_PIXBUF
+    return gdk_pixbuf_get_width (pixbuf);
+#  endif
+  }
+  int height ()
+  {
+#  ifdef HAVE_PIXBUF
+    return gdk_pixbuf_get_height (pixbuf);
+#  endif
+  }
+  bool set_file (const char *file);
+  bool set_geometry (const char *geom, bool update = false);
+  void set_default_geometry ()
+  {
+    h_scale = v_scale = defaultScale;
+    h_align = v_align = defaultAlign;
+    flags |= IM_IS_SIZE_SENSITIVE;
+  }
+};
+# endif
+#endif
+
 /*
  *****************************************************************************
  * STRUCTURES AND TYPEDEFS
@@ -1086,11 +1148,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   enum {
     BG_IS_VALID          = 1 <<  0,
 
-    BG_KEEP_ASPECT       = 1 <<  3,
-    BG_ROOT_ALIGN        = 1 <<  4,
-    BG_TILE              = 1 << 14,
-    BG_GEOMETRY_FLAGS    = BG_KEEP_ASPECT | BG_ROOT_ALIGN | BG_TILE,
-
     BG_TINT_SET          = 1 <<  5,
     BG_TINT_BITAND       = 1 <<  6,
 
@@ -1100,36 +1157,14 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
     BG_IS_TRANSPARENT    = 1 << 10,
     BG_NEEDS_REFRESH     = 1 << 11,
-    BG_IS_SIZE_SENSITIVE = 1 << 12,
-    BG_IS_FROM_FILE      = 1 << 13,
   };
 
   unsigned int bg_flags;
 
 # ifdef BG_IMAGE_FROM_FILE
-  void get_image_geometry (int image_width, int image_height, int &w, int &h, int &x, int &y);
-  bool render_image (bool transparent);
-
-  enum {
-    noScale = 0,
-    windowScale = 100,
-    defaultScale = windowScale,
-    centerAlign = 50,
-    defaultAlign = centerAlign,
-  };
-
-  unsigned int h_scale, v_scale; /* percents of the window size */
-  int h_align, v_align;          /* percents of the window size:
-                                    0 - left align, 50 - center, 100 - right */
-
-  bool bg_set_geometry (const char *geom, bool update = false);
-  void bg_set_default_geometry ()
-  {
-    h_scale = v_scale = defaultScale;
-    h_align = v_align = defaultAlign;
-  }
-
-  bool bg_set_file (const char *file);
+  rxvt_image bg_image;
+  void get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y);
+  bool render_image (rxvt_image &image, bool transparent);
 # endif
 
 # ifdef ENABLE_TRANSPARENCY
@@ -1171,7 +1206,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   }
 #endif
 #ifdef HAVE_PIXBUF
-  GdkPixbuf *pixbuf;
   bool pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
                          int src_x, int src_y, int dst_x, int dst_y,
                          unsigned int width, unsigned int height);

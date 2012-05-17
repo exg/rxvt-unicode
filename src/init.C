@@ -836,7 +836,7 @@ rxvt_term::init2 (int argc, const char *const *argv)
 
 #ifdef BG_IMAGE_FROM_FILE
     if (rs[Rs_backgroundPixmap])
-      if (bg_set_file (rs[Rs_backgroundPixmap]))
+      if (bg_image.set_file (rs[Rs_backgroundPixmap]))
         if (!bg_window_position_sensitive ())
           update_background ();
 #endif
