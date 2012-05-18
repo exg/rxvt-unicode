@@ -170,7 +170,6 @@ void
 keyboard_manager::register_done ()
 {
   unsigned int i, index, hashkey;
-  vector <keysym_t *> sorted_keymap;
   uint16_t hash_bucket_size[KEYSYM_HASH_BUCKETS];	// size of each bucket
 
   memset (hash_bucket_size, 0, sizeof (hash_bucket_size));
@@ -192,7 +191,7 @@ keyboard_manager::register_done ()
     }
 
   // and allocate just enough space
-  sorted_keymap.insert (sorted_keymap.begin (), index + hash_bucket_size [i - 1], 0);
+  simplevec <keysym_t *> sorted_keymap (index + hash_bucket_size [i - 1], 0);
 
   memset (hash_bucket_size, 0, sizeof (hash_bucket_size));
 
