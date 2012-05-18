@@ -109,9 +109,9 @@ private:
   const rxvt_fallback_font *fallback;
 
   // this once was a "typedef xxx pagemap[256]
-  // but c++ arrays are not normal types, and cnanot be
+  // but c++ arrays are not normal types, and cannot be
   // put into containers, new doesn't work for them etc. etc.
-  // so we wrap out array into an objetc that acts like one. doh.
+  // so we wrap out array into an object that acts like one. doh.
   // example: C++ has no separate new and new [] forms,
   // and if pagemap is char[256], new incorrectly assumes we want to
   // allocate an array of chars instead of a single pagemap.
