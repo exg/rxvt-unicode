@@ -80,6 +80,7 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 # define HAVE_BG_PIXMAP 1
 #endif
 
+#include <ecb.h>
 #include "encoding.h"
 #include "rxvtutil.h"
 #include "rxvtfont.h"
@@ -833,7 +834,7 @@ struct mbstate
 struct compose_char
 {
   unicode_t c1, c2; // any chars != NOCHAR are valid
-  #if __cplusplus >= 201103L
+  #if __cplusplus >= 201103L || ECB_GCC_VERSION(4,4)
   compose_char () = default;
   #endif
   compose_char (unicode_t c1, unicode_t c2)
