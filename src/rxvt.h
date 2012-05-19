@@ -239,28 +239,23 @@ struct rxvt_image
 
 #  ifdef HAVE_PIXBUF
   GdkPixbuf *pixbuf;
-#  endif
 
   ~rxvt_image ()
   {
-#  ifdef HAVE_PIXBUF
     if (pixbuf)
       g_object_unref (pixbuf);
-#  endif
   }
 
   int width ()
   {
-#  ifdef HAVE_PIXBUF
     return gdk_pixbuf_get_width (pixbuf);
-#  endif
   }
   int height ()
   {
-#  ifdef HAVE_PIXBUF
     return gdk_pixbuf_get_height (pixbuf);
-#  endif
   }
+#  endif
+
   bool set_file (const char *file);
   bool set_geometry (const char *geom, bool update = false);
   void set_default_geometry ()
