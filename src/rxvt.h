@@ -258,12 +258,6 @@ struct rxvt_image
 
   bool set_file (const char *file);
   bool set_geometry (const char *geom, bool update = false);
-  void set_default_geometry ()
-  {
-    h_scale = v_scale = defaultScale;
-    h_align = v_align = defaultAlign;
-    flags |= IM_IS_SIZE_SENSITIVE;
-  }
 };
 # endif
 #endif

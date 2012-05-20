@@ -646,17 +646,18 @@ rxvt_image::set_file (const char *file)
       if (pixbuf)
         g_object_unref (pixbuf);
       pixbuf = image;
-      flags |= IM_IS_SET;
       ret = true;
     }
 #  endif
 
   if (ret)
     {
+      flags = IM_IS_SET | IM_IS_SIZE_SENSITIVE;
+      h_scale = v_scale = defaultScale;
+      h_align = v_align = defaultAlign;
+
       if (p)
         set_geometry (p + 1);
-      else
-        set_default_geometry ();
     }
 
   return ret;
