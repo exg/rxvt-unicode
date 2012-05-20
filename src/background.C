@@ -276,8 +276,6 @@ rxvt_image::set_geometry (const char *geom, bool update)
         w = h;
     }
 
-  min_it (w, 1000);
-  min_it (h, 1000);
   clamp_it (x, -100, 200);
   clamp_it (y, -100, 200);
 
@@ -312,9 +310,11 @@ rxvt_term::get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y
   int image_height = image.height ();
   int target_width = szHint.width;
   int target_height = szHint.height;
+  int h_scale = min (image.h_scale, 32767 * 100 / target_width);
+  int v_scale = min (image.v_scale, 32767 * 100 / target_height);
 
-  w = image.h_scale * target_width / 100;
-  h = image.v_scale * target_height / 100;
+  w = h_scale * target_width / 100;
+  h = v_scale * target_height / 100;
 
   if (image.flags & IM_KEEP_ASPECT)
     {

@@ -744,7 +744,7 @@ Supported operations are:
 
 sets scale and position. B<"W" / "H"> specify the horizontal/vertical
 scale (percent), and B<"X" / "Y"> locate the image centre (percent). A
-scale of 0 disables scaling. The maximum permitted scale is 1000.
+scale of 0 disables scaling.
 
 =item B<op=tile>
 
