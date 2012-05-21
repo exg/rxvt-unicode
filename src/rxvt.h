@@ -1201,7 +1201,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 #ifdef HAVE_PIXBUF
   bool pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
                          int src_x, int src_y, int dst_x, int dst_y,
-                         unsigned int width, unsigned int height);
+                         unsigned int width, unsigned int height, bool argb);
 #endif
 
 #if ENABLE_OVERLAY

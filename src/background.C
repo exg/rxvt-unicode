@@ -343,13 +343,13 @@ rxvt_term::get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y
 bool
 rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
                              int src_x, int src_y, int dst_x, int dst_y,
-                             unsigned int width, unsigned int height)
+                             unsigned int width, unsigned int height, bool argb)
 {
   XImage *ximage;
   char *line;
   int width_r, width_g, width_b, width_a;
   int sh_r, sh_g, sh_b, sh_a;
-  uint32_t alpha_mask;
+  uint32_t red_mask, green_mask, blue_mask, alpha_mask;
   int rowstride;
   int channels;
   unsigned char *row;
@@ -357,31 +357,44 @@ rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
   if (visual->c_class != TrueColor)
     return false;
 
-#if XRENDER
-  XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
-  if (format)
-    alpha_mask = (uint32_t)format->direct.alphaMask << format->direct.alpha;
+  if (argb)
+    {
+      red_mask   = 0xff << 16;
+      green_mask = 0xff << 8;
+      blue_mask  = 0xff;
+      alpha_mask = 0xff << 24;
+    }
   else
+    {
+      red_mask   = visual->red_mask;
+      green_mask = visual->green_mask;
+      blue_mask  = visual->blue_mask;
+#if XRENDER
+      XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
+      if (format)
+        alpha_mask = (uint32_t)format->direct.alphaMask << format->direct.alpha;
+      else
 #endif
-    alpha_mask = 0;
+        alpha_mask = 0;
+    }
 
-  width_r = ecb_popcount32 (visual->red_mask);
-  width_g = ecb_popcount32 (visual->green_mask);
-  width_b = ecb_popcount32 (visual->blue_mask);
+  width_r = ecb_popcount32 (red_mask);
+  width_g = ecb_popcount32 (green_mask);
+  width_b = ecb_popcount32 (blue_mask);
   width_a = ecb_popcount32 (alpha_mask);
 
   if (width_r > 8 || width_g > 8 || width_b > 8 || width_a > 8)
     return false;
 
-  sh_r = ecb_ctz32 (visual->red_mask);
-  sh_g = ecb_ctz32 (visual->green_mask);
-  sh_b = ecb_ctz32 (visual->blue_mask);
+  sh_r = ecb_ctz32 (red_mask);
+  sh_g = ecb_ctz32 (green_mask);
+  sh_b = ecb_ctz32 (blue_mask);
   sh_a = ecb_ctz32 (alpha_mask);
 
   if (width > 32767 || height > 32767)
     return false;
 
-  ximage = XCreateImage (dpy, visual, depth, ZPixmap, 0, 0,
+  ximage = XCreateImage (dpy, visual, argb ? 32 : depth, ZPixmap, 0, 0,
                          width, height, 32, 0);
   if (!ximage)
     return false;
@@ -513,10 +526,7 @@ rxvt_term::render_image (rxvt_image &image)
   image_height = gdk_pixbuf_get_height (result);
 
   if (need_blend)
-    {
-      tmp_pixmap = bg_pixmap;
-      bg_pixmap = None;
-    }
+    tmp_pixmap = XCreatePixmap (dpy, vt, new_pmap_width, new_pmap_height, 32);
   else
     {
       if (image.flags & IM_TILE)
@@ -524,31 +534,33 @@ rxvt_term::render_image (rxvt_image &image)
           new_pmap_width = min (image_width, target_width);
           new_pmap_height = min (image_height, target_height);
         }
-    }
 
-  if (bg_pixmap == None
-      || bg_pmap_width != new_pmap_width
-      || bg_pmap_height != new_pmap_height)
-    {
-      if (bg_pixmap)
-        XFreePixmap (dpy, bg_pixmap);
-      bg_pixmap = XCreatePixmap (dpy, vt, new_pmap_width, new_pmap_height, depth);
-      bg_pmap_width = new_pmap_width;
-      bg_pmap_height = new_pmap_height;
+      if (bg_pixmap == None
+          || bg_pmap_width != new_pmap_width
+          || bg_pmap_height != new_pmap_height)
+        {
+          if (bg_pixmap)
+            XFreePixmap (dpy, bg_pixmap);
+          bg_pixmap = XCreatePixmap (dpy, vt, new_pmap_width, new_pmap_height, depth);
+          bg_pmap_width = new_pmap_width;
+          bg_pmap_height = new_pmap_height;
+        }
+
+      tmp_pixmap = bg_pixmap;
     }
 
   gcv.foreground = pix_colors[Color_bg];
-  gc = XCreateGC (dpy, vt, GCForeground, &gcv);
+  gc = XCreateGC (dpy, tmp_pixmap, GCForeground, &gcv);
 
   if (gc)
     {
       if (image.flags & IM_TILE)
         {
-          Pixmap tile = XCreatePixmap (dpy, vt, image_width, image_height, depth);
+          Pixmap tile = XCreatePixmap (dpy, vt, image_width, image_height, need_blend ? 32 : depth);
           pixbuf_to_pixmap (result, tile, gc,
                             0, 0,
                             0, 0,
-                            image_width, image_height);
+                            image_width, image_height, need_blend);
 
           gcv.tile = tile;
           gcv.fill_style = FillTiled;
@@ -556,7 +568,7 @@ rxvt_term::render_image (rxvt_image &image)
           gcv.ts_y_origin = y;
           XChangeGC (dpy, gc, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
 
-          XFillRectangle (dpy, bg_pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
+          XFillRectangle (dpy, tmp_pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
           XFreePixmap (dpy, tile);
         }
       else
@@ -570,21 +582,22 @@ rxvt_term::render_image (rxvt_image &image)
           if (dst_x > 0 || dst_y > 0
               || dst_x + dst_width < new_pmap_width
               || dst_y + dst_height < new_pmap_height)
-            XFillRectangle (dpy, bg_pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
+            XFillRectangle (dpy, tmp_pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
 
           if (dst_x < new_pmap_width && dst_y < new_pmap_height)
-            pixbuf_to_pixmap (result, bg_pixmap, gc,
+            pixbuf_to_pixmap (result, tmp_pixmap, gc,
                               src_x, src_y,
                               dst_x, dst_y,
-                              dst_width, dst_height);
+                              dst_width, dst_height, need_blend);
         }
 
 #if XRENDER
       if (need_blend)
         {
+          XRenderPictFormat *argb_format = XRenderFindStandardFormat (dpy, PictStandardARGB32);
           XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
 
-          Picture src = XRenderCreatePicture (dpy, tmp_pixmap, format, 0, 0);
+          Picture src = XRenderCreatePicture (dpy, tmp_pixmap, argb_format, 0, 0);
 
           Picture dst = XRenderCreatePicture (dpy, bg_pixmap, format, 0, 0);
 
