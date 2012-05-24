@@ -112,13 +112,13 @@ struct auto_ptr
     free (p);
   }
 
-  void reset (T *a)
+  // void because it makes sense in our context
+  void operator = (T *a)
   {
     free (p);
     p = a;
   }
 
-  // void because it makes sense in our context
   void operator = (auto_ptr &a)
   {
     *this = a.p;
