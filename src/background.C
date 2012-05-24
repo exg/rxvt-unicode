@@ -147,6 +147,41 @@ make_clip_rectangle (int pos, int size, int target_size, int &dst_pos, int &dst_
   return src_pos;
 }
 
+static void
+parse_style (const char *style, int &x, int &y, unsigned int &w, unsigned int &h, uint8_t &flags)
+{
+  if (!strcasecmp (style, "tiled"))
+    {
+      flags = IM_TILE;
+      w = h = noScale;
+      x = y = 0;
+    }
+  else if (!strcasecmp (style, "aspect-stretched"))
+    {
+      flags = IM_KEEP_ASPECT;
+      w = h = windowScale;
+      x = y = centerAlign;
+    }
+  else if (!strcasecmp (style, "stretched"))
+    {
+      flags = 0;
+      w = h = windowScale;
+      x = y = centerAlign;
+    }
+  else if (!strcasecmp (style, "centered"))
+    {
+      flags = 0;
+      w = h = noScale;
+      x = y = centerAlign;
+    }
+  else if (!strcasecmp (style, "root-tiled"))
+    {
+      flags = IM_TILE|IM_ROOT_ALIGN;
+      w = h = noScale;
+      x = y = 0;
+    }
+}
+
 bool
 rxvt_image::set_geometry (const char *geom, bool update)
 {
@@ -156,7 +191,7 @@ rxvt_image::set_geometry (const char *geom, bool update)
   int y = v_align;
   unsigned int w = h_scale;
   unsigned int h = v_scale;
-  unsigned long new_flags = 0;
+  uint8_t new_flags = 0;
 
   if (geom == NULL)
     return false;
@@ -167,38 +202,10 @@ rxvt_image::set_geometry (const char *geom, bool update)
 
       for (int i = 0; arr[i]; i++)
         {
-          if (!strcasecmp (arr[i], "style=tiled"))
+          if (!strncasecmp (arr[i], "style=", 6))
             {
-              new_flags = IM_TILE;
-              w = h = noScale;
-              x = y = 0;
+              parse_style (arr[i] + 6, x, y, w, h, new_flags);
               geom_flags = WidthValue|HeightValue|XValue|YValue;
-            }
-          else if (!strcasecmp (arr[i], "style=aspect-stretched"))
-            {
-              new_flags = IM_KEEP_ASPECT;
-              w = h = windowScale;
-              x = y = centerAlign;
-              geom_flags = WidthValue|HeightValue|XValue|YValue;
-            }
-          else if (!strcasecmp (arr[i], "style=stretched"))
-            {
-              new_flags = 0;
-              w = h = windowScale;
-              geom_flags = WidthValue|HeightValue;
-            }
-          else if (!strcasecmp (arr[i], "style=centered"))
-            {
-              new_flags = 0;
-              w = h = noScale;
-              x = y = centerAlign;
-              geom_flags = WidthValue|HeightValue|XValue|YValue;
-            }
-          else if (!strcasecmp (arr[i], "style=root-tiled"))
-            {
-              new_flags = IM_TILE|IM_ROOT_ALIGN;
-              w = h = noScale;
-              geom_flags = WidthValue|HeightValue;
             }
           else if (!strcasecmp (arr[i], "op=tile"))
             new_flags |= IM_TILE;
