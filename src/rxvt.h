@@ -240,7 +240,13 @@ struct rxvt_image
                                     0 - left align, 50 - center, 100 - right */
 
 #  ifdef HAVE_PIXBUF
-  auto_ptr<GdkPixbuf> pixbuf;
+  GdkPixbuf *pixbuf;
+
+  void destroy ()
+  {
+    if (pixbuf)
+      g_object_unref (pixbuf);
+  }
 
   int width ()
   {

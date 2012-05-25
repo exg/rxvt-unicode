@@ -60,6 +60,11 @@ create_xrender_mask (Display *dpy, Drawable drawable, Bool argb, Bool component_
 void
 rxvt_term::bg_destroy ()
 {
+# ifdef BG_IMAGE_FROM_FILE
+  for (vector<rxvt_image>::iterator bg_image = image_vec.begin (); bg_image < image_vec.end (); bg_image++)
+    bg_image->destroy ();
+# endif
+
   if (bg_pixmap)
     XFreePixmap (dpy, bg_pixmap);
 }
@@ -696,7 +701,7 @@ rxvt_image::rxvt_image ()
   v_align = 0;
 
 #  ifdef HAVE_PIXBUF
-  pixbuf.reset (0);
+  pixbuf = 0;
 #  endif
 }
 
@@ -735,7 +740,7 @@ rxvt_image::set_file (const char *file)
     {
       if (pixbuf)
         g_object_unref (pixbuf);
-      pixbuf.reset (image);
+      pixbuf = image;
       ret = true;
     }
 #  endif
