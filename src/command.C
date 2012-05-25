@@ -3474,9 +3474,8 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
 
             if (*str != ';')
               {
-                if (image_vec.size () > 0
-                    && image_vec[0].set_file_geometry (str))
-                  changed = true;
+                if (image_vec.size () > 0)
+                  changed = image_vec[0].set_file_geometry (str);
                 else
                   {
                     rxvt_image *image = new_image ();
@@ -3489,9 +3488,8 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
             else
               {
                 str++;
-                if (image_vec.size () > 0
-                    && image_vec[0].set_geometry (str, true))
-                  changed = true;
+                if (image_vec.size () > 0)
+                  changed = image_vec[0].set_geometry (str, true);
               }
 
             if (changed)
