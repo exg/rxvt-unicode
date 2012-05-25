@@ -87,11 +87,11 @@ rxvt_term::bg_window_size_sensitive ()
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
-  if (bg_image.flags & IM_IS_SET)
+  for (vector<rxvt_image>::iterator bg_image = image_vec.begin (); bg_image < image_vec.end (); bg_image++)
     {
-      if ((bg_image.flags & IM_IS_SIZE_SENSITIVE)
-          || bg_image.width () > szHint.width
-          || bg_image.height () > szHint.height)
+      if ((bg_image->flags & IM_IS_SIZE_SENSITIVE)
+          || bg_image->width () > szHint.width
+          || bg_image->height () > szHint.height)
         return true;
     }
 # endif
@@ -108,9 +108,9 @@ rxvt_term::bg_window_position_sensitive ()
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
-  if (bg_image.flags & IM_IS_SET)
+  for (vector<rxvt_image>::iterator bg_image = image_vec.begin (); bg_image < image_vec.end (); bg_image++)
     {
-      if (bg_image.flags & IM_ROOT_ALIGN)
+      if (bg_image->flags & IM_ROOT_ALIGN)
         return true;
     }
 # endif
@@ -536,7 +536,11 @@ rxvt_term::render_image (rxvt_image &image)
     tmp_pixmap = XCreatePixmap (dpy, vt, new_pmap_width, new_pmap_height, 32);
   else
     {
-      if (image.flags & IM_TILE)
+      // optimise bg pixmap size when tiling, but only if there are no
+      // other pixbufs to render. Otherwise, the bg pixmap size must
+      // be equal to the window size.
+      if ((image.flags & IM_TILE)
+          && image_vec.size () == 1)
         {
           new_pmap_width = min (image_width, target_width);
           new_pmap_height = min (image_height, target_height);
@@ -612,7 +616,7 @@ rxvt_term::render_image (rxvt_image &image)
 
           XRenderColor mask_c;
 
-          mask_c.alpha = 0x8000;
+          mask_c.alpha = gdk_pixbuf_get_has_alpha (image.pixbuf) ? 0xffff : image.alpha;
           mask_c.red   =
           mask_c.green =
           mask_c.blue  = 0;
@@ -641,13 +645,67 @@ rxvt_term::render_image (rxvt_image &image)
 }
 #  endif /* HAVE_PIXBUF */
 
+#  ifndef NO_RESOURCES
+static int
+rxvt_define_image (XrmDatabase *database ecb_unused,
+                   XrmBindingList bindings ecb_unused,
+                   XrmQuarkList quarks,
+                   XrmRepresentation *type ecb_unused,
+                   XrmValue *value,
+                   XPointer closure ecb_unused)
+{
+  int size;
+
+  for (size = 0; quarks[size] != NULLQUARK; size++)
+    ;
+
+  if (size >= 2)
+    {
+      int id = strtol (XrmQuarkToString (quarks[size-2]), 0, 0);
+      if (id >= 1)
+        GET_R->parse_image (id, XrmQuarkToString (quarks[size-1]), (char *)value->addr);
+    }
+  return False;
+}
+
+void
+rxvt_term::parse_image (int id, const char *type, const char *arg)
+{
+  rxvt_image *image;
+
+  for (image = image_vec.begin (); image < image_vec.end (); image++)
+    if (image->id == id)
+      break;
+
+  if (image == image_vec.end ())
+    {
+      image = new_image ();
+      image->id = id;
+    }
+}
+#  endif
+
+rxvt_image::rxvt_image ()
+{
+  id      =
+  alpha   =
+  flags   =
+  h_scale =
+  v_scale =
+  h_align =
+  v_align = 0;
+
+#  ifdef HAVE_PIXBUF
+  pixbuf.reset (0);
+#  endif
+}
+
 bool
-rxvt_image::set_file (const char *file)
+rxvt_image::set_file_geometry (const char *file)
 {
   if (!file || !*file)
     return false;
 
-  bool ret = false;
   const char *p = strchr (file, ';');
 
   if (p)
@@ -659,25 +717,35 @@ rxvt_image::set_file (const char *file)
       file = f;
     }
 
+  bool ret = set_file (file);
+  alpha = 0x8000;
+  if (ret && p)
+    set_geometry (p + 1);
+  return ret;
+}
+
+bool
+rxvt_image::set_file (const char *file)
+{
+  bool ret = false;
+
 #  ifdef HAVE_PIXBUF
   GdkPixbuf *image = gdk_pixbuf_new_from_file (file, NULL);
   if (image)
     {
       if (pixbuf)
         g_object_unref (pixbuf);
-      pixbuf = image;
+      pixbuf.reset (image);
       ret = true;
     }
 #  endif
 
   if (ret)
     {
+      alpha = 0xffff;
       flags = IM_IS_SET | IM_IS_SIZE_SENSITIVE;
       h_scale = v_scale = defaultScale;
       h_align = v_align = defaultAlign;
-
-      if (p)
-        set_geometry (p + 1);
     }
 
   return ret;
@@ -1100,9 +1168,9 @@ rxvt_term::bg_render ()
 # endif
 
 # ifdef BG_IMAGE_FROM_FILE
-  if (bg_image.flags & IM_IS_SET)
+  for (vector<rxvt_image>::iterator bg_image = image_vec.begin (); bg_image < image_vec.end (); bg_image++)
     {
-      if (render_image (bg_image))
+      if (render_image (*bg_image))
         bg_flags |= BG_IS_VALID;
     }
 # endif
@@ -1145,6 +1213,31 @@ rxvt_term::bg_init ()
 
       XFree (filters);
     }
+#endif
+
+#ifdef BG_IMAGE_FROM_FILE
+  if (rs[Rs_backgroundPixmap])
+    {
+      rxvt_image *image = new_image ();
+      if (!image->set_file_geometry (rs[Rs_backgroundPixmap]))
+        image_vec.pop_back ();
+    }
+
+# ifndef NO_RESOURCES
+  find_resources ("image", "Image", XrmEnumAllLevels, rxvt_define_image);
+  vector<rxvt_image>::iterator bg_image = image_vec.begin ();
+  while (bg_image != image_vec.end ())
+    {
+      if (!(bg_image->flags & IM_IS_SET))
+        bg_image = image_vec.erase (bg_image);
+      else
+        bg_image++;
+    }
+# endif
+
+  if (image_vec.size () > 0
+      && !bg_window_position_sensitive ())
+    update_background ();
 #endif
 }
 

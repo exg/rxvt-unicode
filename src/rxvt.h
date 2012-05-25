@@ -232,19 +232,15 @@ enum {
 
 struct rxvt_image
 {
+  int id;
+  unsigned short alpha;
   uint8_t flags;
   unsigned int h_scale, v_scale; /* percents of the window size */
   int h_align, v_align;          /* percents of the window size:
                                     0 - left align, 50 - center, 100 - right */
 
 #  ifdef HAVE_PIXBUF
-  GdkPixbuf *pixbuf;
-
-  ~rxvt_image ()
-  {
-    if (pixbuf)
-      g_object_unref (pixbuf);
-  }
+  auto_ptr<GdkPixbuf> pixbuf;
 
   int width ()
   {
@@ -256,6 +252,8 @@ struct rxvt_image
   }
 #  endif
 
+  rxvt_image ();
+  bool set_file_geometry (const char *file);
   bool set_file (const char *file);
   bool set_geometry (const char *geom, bool update = false);
 };
@@ -1155,9 +1153,15 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   uint8_t bg_flags;
 
 # ifdef BG_IMAGE_FROM_FILE
-  rxvt_image bg_image;
+  vector<rxvt_image> image_vec;
+  rxvt_image *new_image ()
+  {
+    image_vec.resize (image_vec.size () + 1);
+    return &image_vec.back ();
+  }
   void get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y);
   bool render_image (rxvt_image &image);
+  void parse_image (int id, const char *type, const char *arg);
 # endif
 
 # ifdef ENABLE_TRANSPARENCY
