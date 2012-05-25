@@ -1,6 +1,7 @@
 #ifndef RXVT_UTIL_H
 #define RXVT_UTIL_H
 
+#include <new>
 #include <stdlib.h>
 #include <string.h>
 #include "ecb.h"
@@ -26,8 +27,8 @@ template<typename T> static inline T squared_diff (T a, T b) { return (a - b) * 
 
 // linear interpolation
 template<typename T, typename U, typename P>
-static inline
-T lerp (T a, U b, P p)
+static inline T
+lerp (T a, U b, P p)
 {
   return (long(a) * long(100 - p) + long(b) * long(p) + 50) / 100;
 }
@@ -86,12 +87,27 @@ struct rxvt_vec : simplevec<void *>
 };
 #endif
 
+inline void *
+operator new (size_t size)
+{
+  // TODO: use rxvt_malloc
+  return malloc (size);
+}
+
+inline void
+operator delete (void *p)
+{
+  free (p);
+}
+
 template<typename T>
 struct auto_ptr
 {
   T *p;
 
-  auto_ptr () : p (0) { }
+  auto_ptr ()     : p (0) { }
+
+  explicit
   auto_ptr (T *a) : p (a) { }
 
   auto_ptr (auto_ptr<T> &a)
@@ -109,35 +125,36 @@ struct auto_ptr
 
   ~auto_ptr ()
   {
-    free (p);
+    delete p;
   }
 
   void reset (T *a)
   {
-    free (p);
+    delete p;
     p = a;
   }
 
   // void because it makes sense in our context
-  void operator = (auto_ptr &a)
+  void operator =(auto_ptr &a)
   {
     *this = a.p;
     a.p = 0;
   }
 
   template<typename A>
-  void operator = (auto_ptr<A> &a)
+  void operator =(auto_ptr<A> &a)
   {
     *this = a.p;
     a.p = 0;
   }
 
-  operator T * () const { return p; }
+  T *operator ->() const { return p; }
+  T &operator *() const { return *p; }
 
-  T *operator -> () const { return p; }
-  T &operator * () const { return *p; }
+  operator T *()  { return p; }
+  T *get () const { return p; }
 
-  T *get ()
+  T *release()
   {
     T *r = p;
     p = 0;
