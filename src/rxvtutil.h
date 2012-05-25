@@ -137,15 +137,13 @@ struct auto_ptr
   // void because it makes sense in our context
   void operator =(auto_ptr &a)
   {
-    *this = a.p;
-    a.p = 0;
+    reset (a.release ());
   }
 
   template<typename A>
   void operator =(auto_ptr<A> &a)
   {
-    *this = a.p;
-    a.p = 0;
+    reset (a.release ());
   }
 
   T *operator ->() const { return p; }
