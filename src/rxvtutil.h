@@ -110,7 +110,7 @@ struct auto_ptr
   explicit
   auto_ptr (T *a) : p (a) { }
 
-  auto_ptr (auto_ptr<T> &a)
+  auto_ptr (auto_ptr &a)
   {
     p = a.p;
     a.p = 0;
