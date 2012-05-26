@@ -621,7 +621,7 @@ rxvt_term::render_image (rxvt_image &image)
 
           XRenderColor mask_c;
 
-          mask_c.alpha = gdk_pixbuf_get_has_alpha (image.pixbuf) ? 0xffff : image.alpha;
+          mask_c.alpha = image.alpha;
           mask_c.red   =
           mask_c.green =
           mask_c.blue  = 0;
