@@ -232,7 +232,6 @@ enum {
 
 struct rxvt_image
 {
-  int id;
   unsigned short alpha;
   uint8_t flags;
   unsigned int h_scale, v_scale; /* percents of the window size */

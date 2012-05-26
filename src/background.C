@@ -676,23 +676,15 @@ rxvt_define_image (XrmDatabase *database ecb_unused,
 void
 rxvt_term::parse_image (int id, const char *type, const char *arg)
 {
-  rxvt_image *image;
+  if (image_vec.size () < id + 1)
+    image_vec.resize (id + 1);
 
-  for (image = image_vec.begin (); image < image_vec.end (); image++)
-    if (image->id == id)
-      break;
-
-  if (image == image_vec.end ())
-    {
-      image = new_image ();
-      image->id = id;
-    }
+  rxvt_image *image = &image_vec[id];
 }
 #  endif
 
 rxvt_image::rxvt_image ()
 {
-  id      =
   alpha   =
   flags   =
   h_scale =
