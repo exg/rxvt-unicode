@@ -73,8 +73,6 @@ src/rxvtc.C
 src/rxvtd.C
 src/rxvtdaemon.C
 src/rxvtdaemon.h
-src/salloc.C
-src/salloc.h
 src/screen.C
 src/scrollbar-next.C
 src/scrollbar-rxvt.C

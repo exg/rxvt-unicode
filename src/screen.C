@@ -100,9 +100,9 @@ fill_text (text_t *start, text_t value, int len)
 void
 rxvt_term::scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs) const NOTHROW
 {
-  if (!l.t)
+  if (!l.valid ())
     {
-      lalloc (l);
+      l.alloc ();
       col = 0;
       width = ncol;
     }
@@ -159,6 +159,40 @@ rxvt_term::scr_kill_char (line_t &l, int col) const NOTHROW
  * ------------------------------------------------------------------------- */
 
 void
+rxvt_term::scr_alloc ()
+{
+  int tsize = sizeof (text_t) * ncol;
+  int rsize = sizeof (rend_t) * ncol;
+
+  // we assume that rend_t size is a sufficient alignment
+  // factor for tetx_t and line_t values, and we only
+  // need to adjust tsize.
+  tsize = (tsize + sizeof (rend_t) - 1);
+  tsize -= tsize % sizeof (rend_t);
+
+  int all_rows = total_rows + nrow + nrow;
+
+  chunk_size = (sizeof (line_t) + rsize + tsize) * all_rows;
+  chunk = rxvt_malloc (chunk_size);
+
+  char *base = (char *)chunk + sizeof (line_t) * all_rows;
+
+  for (int row = 0; row < all_rows; ++row)
+    {
+      line_t &l = ((line_t *)chunk) [row];
+
+      l.t = (text_t *)base; base += tsize;
+      l.r = (rend_t *)base; base += rsize;
+      l.l = -1;
+      l.f = 0;
+    }
+
+  drawn_buf = (line_t *)chunk;
+  swap_buf  = drawn_buf + nrow;
+  row_buf   = swap_buf  + nrow;
+}
+
+void
 rxvt_term::scr_reset ()
 {
 #if ENABLE_OVERLAY
@@ -194,27 +228,22 @@ rxvt_term::scr_reset ()
   screen.tscroll = 0;
   screen.bscroll = nrow - 1;
 
-  if (!row_buf)
+  void *prev_chunk = chunk;
+  line_t *prev_drawn_buf = drawn_buf;
+  line_t *prev_swap_buf  = swap_buf;
+  line_t *prev_row_buf   = row_buf;
+
+  int common_col = min (prev_ncol, ncol);
+
+  scr_alloc ();
+
+  if (!prev_row_buf)
     {
       /*
        * first time called so just malloc everything: don't rely on realloc
        */
       top_row    = 0;
       term_start = 0;
-
-      talloc = new rxvt_salloc (ncol * sizeof (text_t));
-      ralloc = new rxvt_salloc (ncol * sizeof (rend_t));
-
-      row_buf   = (line_t *)rxvt_calloc (total_rows       , sizeof (line_t));
-      drawn_buf = (line_t *)rxvt_calloc (nrow             , sizeof (line_t));
-      swap_buf  = (line_t *)rxvt_calloc (nrow             , sizeof (line_t));
-
-      for (int row = nrow; row--; )
-        {
-          scr_blank_screen_mem (ROW (row), DEFAULT_RSTYLE);
-          scr_blank_screen_mem (swap_buf [row], DEFAULT_RSTYLE);
-          scr_blank_screen_mem (drawn_buf[row], DEFAULT_RSTYLE);
-        }
 
       memset (charsets, 'B', sizeof (charsets));
       rstyle = DEFAULT_RSTYLE;
@@ -247,37 +276,16 @@ rxvt_term::scr_reset ()
        * add or delete rows as appropriate
        */
 
-      rxvt_salloc *old_ta = talloc; talloc = new rxvt_salloc (ncol * sizeof (text_t));
-      rxvt_salloc *old_ra = ralloc; ralloc = new rxvt_salloc (ncol * sizeof (rend_t));
-
-#if 0
-      if (nrow < prev_nrow)
-        {
-          for (int row = nrow; row < prev_nrow; row++)
-            {
-              lfree (swap_buf [row]);
-              lfree (drawn_buf[row]);
-            }
-        }
-#endif
-
-      drawn_buf = (line_t *)rxvt_realloc (drawn_buf, nrow * sizeof (line_t));
-      swap_buf  = (line_t *)rxvt_realloc (swap_buf , nrow * sizeof (line_t));
-
       for (int row = min (nrow, prev_nrow); row--; )
         {
-          lresize (drawn_buf[row]);
-          lresize (swap_buf [row]);
-        }
+          scr_blank_screen_mem (drawn_buf [row], DEFAULT_RSTYLE);
+          scr_blank_screen_mem (swap_buf  [row], DEFAULT_RSTYLE);
 
-      for (int row = prev_nrow; row < nrow; row++)
-        {
-          swap_buf [row].clear (); scr_blank_screen_mem (swap_buf [row], DEFAULT_RSTYLE);
-          drawn_buf[row].clear (); scr_blank_screen_mem (drawn_buf[row], DEFAULT_RSTYLE);
+          memcpy (drawn_buf [row].t, prev_drawn_buf [row].t, sizeof (text_t) * common_col);
+          memcpy (drawn_buf [row].r, prev_drawn_buf [row].r, sizeof (rend_t) * common_col);
+          memcpy (swap_buf  [row].t, prev_swap_buf  [row].t, sizeof (text_t) * common_col);
+          memcpy (swap_buf  [row].r, prev_swap_buf  [row].r, sizeof (rend_t) * common_col);
         }
-
-      line_t *old_buf = row_buf;
-      row_buf = (line_t *)rxvt_calloc (total_rows, sizeof (line_t));
 
       int p    = MOD (term_start + prev_nrow, prev_total_rows);  // previous row
       int pend = MOD (term_start + top_row  , prev_total_rows);
@@ -295,11 +303,11 @@ rxvt_term::scr_reset ()
           do
             {
               p = MOD (p - 1, prev_total_rows);
-              assert (old_buf [MOD (p, prev_total_rows)].t);
+              assert (prev_row_buf [MOD (p, prev_total_rows)].t);
               int plines = 1;
-              int llen = old_buf [MOD (p, prev_total_rows)].l;
+              int llen = prev_row_buf [MOD (p, prev_total_rows)].l;
 
-              while (p != pend && old_buf [MOD (p - 1, prev_total_rows)].is_longer ())
+              while (p != pend && prev_row_buf [MOD (p - 1, prev_total_rows)].is_longer ())
                 {
                   p = MOD (p - 1, prev_total_rows);
 
@@ -322,7 +330,7 @@ rxvt_term::scr_reset ()
               for (int qrow = q; qlines--; qrow++)
                 {
                   qline = row_buf + qrow;
-                  lalloc (*qline);
+                  qline->alloc (); // redundant with next line
                   qline->l = ncol;
                   qline->is_longer (1);
 
@@ -347,7 +355,7 @@ rxvt_term::scr_reset ()
                       if (prow == ocur.row)
                         screen.cur.row = q - (total_rows - nrow);
 
-                      line_t &pline = old_buf [prow];
+                      line_t &pline = prev_row_buf [prow];
 
                       int len = min (min (prev_ncol - pcol, ncol - qcol), llen - lofs);
 
@@ -378,28 +386,33 @@ rxvt_term::scr_reset ()
 
           for (int row = min (nrow, prev_nrow); row--; )
             {
-              line_t &pline = old_buf [MOD (term_start + row, prev_total_rows)];
-              line_t &qline = row_buf [row];
+              line_t &src = prev_row_buf [MOD (term_start + row, prev_total_rows)];
+              line_t &dst = row_buf [row];
 
-              qline = pline;
-              lresize (qline);
+              scr_blank_screen_mem (dst, DEFAULT_RSTYLE);
+
+              memcpy (dst.t, src.t, sizeof (text_t) * common_col);
+              memcpy (dst.r, src.r, sizeof (rend_t) * common_col);
             }
 
           for (int row = prev_nrow; row < nrow; row++)
-            {
-              row_buf [row].clear (); scr_blank_screen_mem (row_buf [row], DEFAULT_RSTYLE);
-            }
+            scr_blank_screen_mem (row_buf [row], DEFAULT_RSTYLE);
 
           term_start = 0;
         }
 
-      free (old_buf);
-      delete old_ta;
-      delete old_ra;
-
       clamp_it (screen.cur.row, 0, nrow - 1);
       clamp_it (screen.cur.col, 0, ncol - 1);
     }
+
+  for (int row = nrow; row--; )
+    {
+      if (!ROW       (row).valid ()) scr_blank_screen_mem (ROW       (row), DEFAULT_RSTYLE);
+      if (!swap_buf  [row].valid ()) scr_blank_screen_mem (swap_buf  [row], DEFAULT_RSTYLE);
+      if (!drawn_buf [row].valid ()) scr_blank_screen_mem (drawn_buf [row], DEFAULT_RSTYLE);
+    }
+
+  free (prev_chunk);
 
   free (tabs);
   tabs = (char *)rxvt_malloc (ncol);
@@ -424,19 +437,8 @@ rxvt_term::scr_reset ()
 void
 rxvt_term::scr_release () NOTHROW
 {
-  if (row_buf)
-    {
-      delete talloc; talloc = 0;
-      delete ralloc; ralloc = 0;
-
-      free (row_buf);
-      free (swap_buf);
-      free (drawn_buf);
-      row_buf = 0; // signal that we freed all the arrays above
-
-      free (tabs);
-      tabs = 0;
-    }
+  free (chunk);
+  free (tabs);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -447,6 +449,9 @@ void
 rxvt_term::scr_poweron ()
 {
   scr_release ();
+
+  row_buf = 0;
+  tabs = 0;
   prev_nrow = prev_ncol = 0;
   rvideo_mode = false;
   scr_soft_reset ();
@@ -2505,7 +2510,7 @@ rxvt_term::scr_refresh () NOTHROW
 void
 rxvt_term::scr_remap_chars (line_t &l) NOTHROW
 {
-  if (!l.t)
+  if (!l.valid ())
     return;
 
   l.touch (); // maybe a bit of an overkill, but it's not performance-relevant

@@ -753,6 +753,16 @@ struct line_t
    tlen_t_ l; // length of each text line
    uint32_t f; // flags
 
+   bool valid ()
+   {
+     return l >= 0;
+   }
+
+   void alloc ()
+   {
+     l = 0;
+   }
+
    bool is_longer ()
    {
      return f & LINE_LONGER;
@@ -1032,6 +1042,7 @@ struct rxvt_vars : TermWin_t
   XSizeHints      szHint;
   rxvt_color     *pix_colors;
   Cursor          TermWin_cursor;       /* cursor for vt window */
+
   line_t         *row_buf;      // all lines, scrollback + terminal, circular
   line_t         *drawn_buf;    // text on screen
   line_t         *swap_buf;     // lines for swap buffer
@@ -1248,8 +1259,10 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   ptytty         *pty;
 
-  rxvt_salloc    *talloc;             // text line allocator
-  rxvt_salloc    *ralloc;             // rend line allocator
+  // chunk contains all line_t's as well as rend_t and text_t buffers
+  // for drawn_buf, swap_buf and row_buf, in this order
+  void           *chunk;
+  size_t          chunk_size;
 
   static vector<rxvt_term *> termlist; // a vector of all running rxvt_term's
 
@@ -1433,34 +1446,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   // screen.C
 
-  void lalloc (line_t &l) const
-  {
-    l.t = (text_t *)talloc->alloc ();
-    l.r = (rend_t *)ralloc->alloc ();
-  }
-
-#if 0
-  void lfree (line_t &l)
-  {
-    talloc->free (l.t);
-    ralloc->free (l.r);
-  }
-#endif
-
-  void lresize (line_t &l) const
-  {
-    if (!l.t)
-      return;
-
-    l.t = (text_t *)talloc->alloc (l.t, prev_ncol * sizeof (text_t));
-    l.r = (rend_t *)ralloc->alloc (l.r, prev_ncol * sizeof (rend_t));
-
-    l.l = min (l.l, ncol);
-
-    if (ncol > prev_ncol)
-      scr_blank_line (l, prev_ncol, ncol - prev_ncol, DEFAULT_RSTYLE);
-  }
-
   int fgcolor_of (rend_t r) const NOTHROW
   {
     int base = GET_BASEFG (r);
@@ -1499,6 +1484,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   // modifies first argument(!)
   void tt_paste (char *data, unsigned int len) NOTHROW;
   void paste (char *data, unsigned int len) NOTHROW;
+  void scr_alloc () NOTHROW;
   void scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs) const NOTHROW;
   void scr_blank_screen_mem (line_t &l, rend_t efs) const NOTHROW;
   void scr_kill_char (line_t &l, int col) const NOTHROW;
