@@ -78,7 +78,7 @@
 #include <net/if.h>
 #include <net/if_arp.h>
 
-static char *
+static char * ecb_cold
 rxvt_network_display (const char *display)
 {
   char            buffer[1024], *rval = NULL;

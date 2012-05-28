@@ -149,8 +149,8 @@ const char *     rxvt_basename                    (const char *str) NOTHROW;
 void             rxvt_vlog                        (const char *fmt, va_list arg_ptr) NOTHROW;
 void             rxvt_log                         (const char *fmt,...) NOTHROW;
 void             rxvt_warn                        (const char *fmt,...) NOTHROW;
-void             rxvt_fatal                       (const char *fmt, ...) THROW ((class rxvt_failure_exception)) ecb_noreturn;
-void             rxvt_exit_failure                () THROW ((class rxvt_failure_exception)) ecb_noreturn;
+void             rxvt_fatal                       (const char *fmt, ...) THROW ((class rxvt_failure_exception)) ecb_noreturn ecb_cold;
+void             rxvt_exit_failure                () THROW ((class rxvt_failure_exception)) ecb_noreturn ecb_cold;
 
 char           * rxvt_strtrim                     (char *str) NOTHROW;
 char          ** rxvt_strsplit                    (char delim, const char *str) NOTHROW;

@@ -157,7 +157,7 @@ rxvt_term::scr_kill_char (line_t &l, int col) const NOTHROW
  * ------------------------------------------------------------------------- */
 
 void
-rxvt_term::scr_alloc ()
+rxvt_term::scr_alloc () NOTHROW
 {
   int tsize = sizeof (text_t) * ncol;
   int rsize = sizeof (rend_t) * ncol;
@@ -190,7 +190,7 @@ rxvt_term::scr_alloc ()
   row_buf   = swap_buf  + nrow;
 }
 
-void
+void ecb_cold
 rxvt_term::scr_reset ()
 {
 #if ENABLE_OVERLAY
@@ -432,7 +432,7 @@ rxvt_term::scr_reset ()
 /*
  * Free everything.  That way malloc debugging can find leakage.
  */
-void
+void ecb_cold
 rxvt_term::scr_release () NOTHROW
 {
   free (chunk);
@@ -443,7 +443,7 @@ rxvt_term::scr_release () NOTHROW
 /*
  * Hard/Soft reset
  */
-void
+void ecb_cold
 rxvt_term::scr_poweron ()
 {
   scr_release ();
@@ -459,7 +459,7 @@ rxvt_term::scr_poweron ()
   scr_refresh ();
 }
 
-void
+void ecb_cold
 rxvt_term::scr_soft_reset () NOTHROW
 {
   /* only affects modes, nothing drastic such as clearing the screen */
@@ -635,7 +635,7 @@ rxvt_term::scr_rendition (int set, int style) NOTHROW
  * count positive ==> scroll up
  * count negative ==> scroll down
  */
-int
+int ecb_hot
 rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
 {
   if (count == 0 || (row1 > row2))
@@ -779,7 +779,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
 /*
  * Add text given in <str> of length <len> to screen struct
  */
-void
+void ecb_hot
 rxvt_term::scr_add_lines (const wchar_t *str, int len, int minlines) NOTHROW
 {
   if (len <= 0)               /* sanity */
@@ -1139,7 +1139,7 @@ rxvt_term::scr_tab (int count, bool ht) NOTHROW
  * in that row right.  Clear left column.
  */
 #if !ENABLE_MINIMAL
-void
+void ecb_cold
 rxvt_term::scr_backindex () NOTHROW
 {
   if (screen.cur.col > 0)
@@ -1156,7 +1156,7 @@ rxvt_term::scr_backindex () NOTHROW
  * in that row left.  Clear right column.
  */
 #if !ENABLE_MINIMAL
-void
+void ecb_cold
 rxvt_term::scr_forwardindex () NOTHROW
 {
   if (screen.cur.col < ncol - 1)
@@ -1417,7 +1417,7 @@ rxvt_term::scr_erase_savelines () NOTHROW
  * Fill the screen with `E's
  * XTERM_SEQ: Screen Alignment Test: ESC # 8
  */
-void
+void ecb_cold
 rxvt_term::scr_E () NOTHROW
 {
   rend_t fs;
@@ -1591,7 +1591,7 @@ rxvt_term::scr_insdel_chars (int count, int insdel) NOTHROW
  * Set the scrolling region
  * XTERM_SEQ: Set region <top> - <bot> inclusive: ESC [ <top> ; <bot> r
  */
-void
+void ecb_cold
 rxvt_term::scr_scroll_region (int top, int bot) NOTHROW
 {
   max_it (top, 0);
@@ -1611,7 +1611,7 @@ rxvt_term::scr_scroll_region (int top, int bot) NOTHROW
  * XTERM_SEQ: Make cursor visible  : ESC [ ? 25 h
  * XTERM_SEQ: Make cursor invisible: ESC [ ? 25 l
  */
-void
+void ecb_cold
 rxvt_term::scr_cursor_visible (int mode) NOTHROW
 {
   want_refresh = 1;
@@ -1628,7 +1628,7 @@ rxvt_term::scr_cursor_visible (int mode) NOTHROW
  * XTERM_SEQ: Set Wraparound  : ESC [ ? 7 h
  * XTERM_SEQ: Unset Wraparound: ESC [ ? 7 l
  */
-void
+void ecb_cold
 rxvt_term::scr_autowrap (int mode) NOTHROW
 {
   if (mode)
@@ -1647,7 +1647,7 @@ rxvt_term::scr_autowrap (int mode) NOTHROW
  * XTERM_SEQ: Set Absolute: ESC [ ? 6 h
  * XTERM_SEQ: Set Relative: ESC [ ? 6 l
  */
-void
+void ecb_cold
 rxvt_term::scr_relative_origin (int mode) NOTHROW
 {
   if (mode)
@@ -1664,7 +1664,7 @@ rxvt_term::scr_relative_origin (int mode) NOTHROW
  * XTERM_SEQ: Set Insert mode : ESC [ ? 4 h
  * XTERM_SEQ: Set Replace mode: ESC [ ? 4 l
  */
-void
+void ecb_cold
 rxvt_term::scr_insert_mode (int mode) NOTHROW
 {
   if (mode)
@@ -1680,7 +1680,7 @@ rxvt_term::scr_insert_mode (int mode) NOTHROW
  * XTERM_SEQ: Clear tab at current column: ESC [ 0 g
  * XTERM_SEQ: Clear all tabs             : ESC [ 3 g
  */
-void
+void ecb_cold
 rxvt_term::scr_set_tab (int mode) NOTHROW
 {
   if (mode < 0)
@@ -1729,7 +1729,7 @@ rxvt_term::scr_rvideo_mode (bool on) NOTHROW
  * Report current cursor position
  * XTERM_SEQ: Report position: ESC [ 6 n
  */
-void
+void ecb_cold
 rxvt_term::scr_report_position () NOTHROW
 {
   tt_printf ("\033[%d;%dR", screen.cur.row + 1, screen.cur.col + 1);
@@ -1742,7 +1742,7 @@ rxvt_term::scr_report_position () NOTHROW
 /*
  * Set font style
  */
-void
+void ecb_cold
 rxvt_term::set_font_style () NOTHROW
 {
 #if 0
@@ -1774,7 +1774,7 @@ rxvt_term::set_font_style () NOTHROW
  * XTERM_SEQ: Invoke G2 character set: ESC N
  * XTERM_SEQ: Invoke G3 character set: ESC O
  */
-void
+void ecb_cold
 rxvt_term::scr_charset_choose (int set) NOTHROW
 {
   screen.charset = set;
@@ -1805,7 +1805,7 @@ rxvt_term::scr_charset_set (int set, unsigned int ch) NOTHROW
 /*
  * refresh matching text.
  */
-bool
+bool ecb_cold
 rxvt_term::scr_refresh_rend (rend_t mask, rend_t value) NOTHROW
 {
   bool found = false;
@@ -1834,7 +1834,7 @@ enum {
   RC_COUNT
 };
 
-void
+void ecb_hot
 rxvt_term::scr_expose (int x, int y, int ewidth, int eheight, bool refresh) NOTHROW
 {
   int i;
@@ -1970,7 +1970,7 @@ rxvt_term::scr_bell () NOTHROW
 }
 
 /* ------------------------------------------------------------------------- */
-void
+void ecb_cold
 rxvt_term::scr_printscreen (int fullhist) NOTHROW
 {
 #ifdef PRINTPIPE
@@ -2029,7 +2029,7 @@ rxvt_term::scr_printscreen (int fullhist) NOTHROW
  * drawn_text/drawn_rend contain the screen information before the update.
  * screen.text/screen.rend contain what the screen will change to.
  */
-void
+void ecb_hot
 rxvt_term::scr_refresh () NOTHROW
 {
   int16_t col, row,   /* column/row we're processing               */
@@ -2505,7 +2505,7 @@ rxvt_term::scr_refresh () NOTHROW
   num_scr_allow = 1;
 }
 
-void
+void ecb_cold
 rxvt_term::scr_remap_chars (line_t &l) NOTHROW
 {
   if (!l.valid ())
@@ -2517,7 +2517,7 @@ rxvt_term::scr_remap_chars (line_t &l) NOTHROW
     l.r[i] = SET_FONT (l.r[i], FONTSET (l.r[i])->find_font (l.t[i]));
 }
 
-void
+void ecb_cold
 rxvt_term::scr_remap_chars () NOTHROW
 {
   for (int i = total_rows; i--; )
@@ -2530,7 +2530,7 @@ rxvt_term::scr_remap_chars () NOTHROW
     }
 }
 
-void
+void ecb_cold
 rxvt_term::scr_recolour (bool refresh) NOTHROW
 {
   bool transparent = false;
@@ -2643,7 +2643,7 @@ rxvt_term::scr_xor_span (int beg_row, int beg_col, int end_row, int end_col, ren
 }
 
 /* ------------------------------------------------------------------------- */
-void
+void ecb_hot
 rxvt_term::scr_reverse_selection () NOTHROW
 {
   if (selection.op
@@ -2944,7 +2944,7 @@ rxvt_term::selection_grab (Time tm, bool clipboard) NOTHROW
  * Mark or select text based upon number of clicks: 1, 2, or 3
  * EXT: button 1 press
  */
-void
+void ecb_cold
 rxvt_term::selection_click (int clicks, int x, int y) NOTHROW
 {
   clicks = ((clicks - 1) % 3) + 1;
@@ -2973,7 +2973,7 @@ rxvt_term::selection_click (int clicks, int x, int y) NOTHROW
 /*
  * Mark a selection at the specified col/row
  */
-void
+void ecb_cold
 rxvt_term::selection_start_colrow (int col, int row) NOTHROW
 {
   want_refresh = 1;
@@ -3010,7 +3010,7 @@ rxvt_term::selection_start_colrow (int col, int row) NOTHROW
     (unicode::is_space (x) ? 2 : (x) <= 0xff && !!strchr (rs[Rs_cutchars], (x)))
 #define DELIMIT_REND(x)        1
 
-void
+void ecb_cold
 rxvt_term::selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, row_col_t *ret) NOTHROW
 {
   int col, row, dirnadd, tcol, trow, w1, w2;
@@ -3094,7 +3094,7 @@ rxvt_term::selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, r
  * flag == 1 ==> button 3 press
  * flag == 2 ==> button 3 motion
  */
-void
+void ecb_cold
 rxvt_term::selection_extend (int x, int y, int flag) NOTHROW
 {
   int col = clamp (Pixel2Col (x), 0, ncol);
@@ -3130,7 +3130,7 @@ rxvt_term::selection_extend (int x, int y, int flag) NOTHROW
 /*
  * Extend the selection to the specified col/row
  */
-void
+void ecb_cold
 rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int buttonpress, int clickchange) NOTHROW
 {
   row_col_t pos;
@@ -3331,7 +3331,7 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
 }
 
 #if !ENABLE_MINIMAL
-void
+void ecb_cold
 rxvt_term::selection_remove_trailing_spaces () NOTHROW
 {
   int32_t end_col, end_row;
@@ -3379,7 +3379,7 @@ rxvt_term::selection_remove_trailing_spaces () NOTHROW
  * Double click on button 3 when already selected
  * EXT: button 3 double click
  */
-void
+void ecb_cold
 rxvt_term::selection_rotate (int x, int y) NOTHROW
 {
   selection.clicks = selection.clicks % 3 + 1;
@@ -3391,7 +3391,7 @@ rxvt_term::selection_rotate (int x, int y) NOTHROW
  * Respond to a request for our current selection
  * EXT: SelectionRequest
  */
-void
+void ecb_cold
 rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
 {
   Atom property = rq.property == None ? rq.target : rq.property;
@@ -3535,7 +3535,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
 
 /* ------------------------------------------------------------------------- */
 #ifdef USE_XIM
-void
+void ecb_cold
 rxvt_term::im_set_position (XPoint &pos) NOTHROW
 {
   XWindowAttributes xwa;

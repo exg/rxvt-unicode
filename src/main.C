@@ -376,7 +376,7 @@ rxvt_emergency_cleanup ()
 }
 
 #if !ENABLE_MINIMAL
-static void
+static void ecb_cold
 print_x_error (Display *dpy, XErrorEvent *event)
 {
     char buffer[BUFSIZ];
@@ -424,7 +424,7 @@ print_x_error (Display *dpy, XErrorEvent *event)
 }
 #endif
 
-int
+int ecb_cold
 rxvt_xerror_handler (Display *display, XErrorEvent *event)
 {
   if (GET_R->allowedxerror == -1)
@@ -443,7 +443,7 @@ rxvt_xerror_handler (Display *display, XErrorEvent *event)
   return 0;
 }
 
-int
+int ecb_cold
 rxvt_xioerror_handler (Display *display)
 {
   rxvt_warn ("X connection to '%s' broken, unable to recover, exiting.\n",

@@ -133,7 +133,7 @@ static unsigned short iso14755_symtab[] = {
   0,
 };
 
-void
+void ecb_cold
 rxvt_term::iso14755_54 (int x, int y)
 {
   x = Pixel2Col (x);
@@ -160,7 +160,7 @@ rxvt_term::iso14755_54 (int x, int y)
     }
 }
 
-void
+void ecb_cold
 rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
 {
   rxvt_fontset *fs = FONTSET (r);
@@ -256,7 +256,7 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
 }
 #endif
 
-void
+void ecb_cold
 rxvt_term::commit_iso14755 ()
 {
   wchar_t ch = iso14755buf & ISO_14755_MASK;
@@ -284,7 +284,7 @@ rxvt_term::commit_iso14755 ()
   iso14755buf = 0;
 }
 
-static int
+static int ecb_cold
 hex_keyval (XKeyEvent &ev)
 {
   // check whether this event corresponds to a hex digit
@@ -303,7 +303,7 @@ hex_keyval (XKeyEvent &ev)
 }
 #endif
 
-static inline KeySym
+static inline KeySym ecb_cold
 translate_keypad (KeySym keysym, bool kp)
 {
 #ifdef XK_KP_Home
@@ -339,7 +339,7 @@ translate_keypad (KeySym keysym, bool kp)
   return keysym;
 }
 
-static inline int
+static inline int ecb_cold
 map_function_key (KeySym keysym)
 {
   int param = 0;
@@ -398,7 +398,7 @@ map_function_key (KeySym keysym)
   return param;
 }
 
-void
+void ecb_cold
 rxvt_term::key_press (XKeyEvent &ev)
 {
   int ctrl, meta, shft, len;
@@ -857,7 +857,7 @@ rxvt_term::key_press (XKeyEvent &ev)
   tt_write (kbuf, (unsigned int)len);
 }
 
-void
+void ecb_cold
 rxvt_term::key_release (XKeyEvent &ev)
 {
 #if (MOUSE_WHEEL && MOUSE_SLIP_WHEELING) || ISO_14755 || ENABLE_PERL
@@ -1221,7 +1221,7 @@ rxvt_term::pty_cb (ev::io &w, int revents)
   refresh_check ();
 }
 
-void
+void ecb_cold
 rxvt_term::pointer_unblank ()
 {
   XDefineCursor (dpy, vt, TermWin_cursor);
@@ -1236,7 +1236,7 @@ rxvt_term::pointer_unblank ()
 }
 
 #ifdef POINTER_BLANK
-void
+void ecb_cold
 rxvt_term::pointer_blank ()
 {
   if (!option (Opt_pointerBlank))
@@ -1248,7 +1248,7 @@ rxvt_term::pointer_blank ()
   hidden_pointer = 1;
 }
 
-void
+void ecb_cold
 rxvt_term::pointer_cb (ev::timer &w, int revents)
 {
   make_current ();
@@ -1350,7 +1350,7 @@ rxvt_term::mouse_report (XButtonEvent &ev)
 }
 
 /*{{{ process an X event */
-void
+void ecb_hot
 rxvt_term::x_cb (XEvent &ev)
 {
   make_current ();
@@ -1715,7 +1715,7 @@ rxvt_term::x_cb (XEvent &ev)
 }
 
 #if ENABLE_FRILLS
-void
+void ecb_cold
 rxvt_term::set_urgency (bool enable)
 {
   if (enable == urgency_hint)
@@ -1731,7 +1731,7 @@ rxvt_term::set_urgency (bool enable)
 }
 #endif
 
-void
+void ecb_cold
 rxvt_term::focus_in ()
 {
   if (!focus)
@@ -1766,7 +1766,7 @@ rxvt_term::focus_in ()
     }
 }
 
-void
+void ecb_cold
 rxvt_term::focus_out ()
 {
   if (focus)
@@ -1809,7 +1809,7 @@ rxvt_term::focus_out ()
     }
 }
 
-void
+void ecb_cold
 rxvt_term::update_fade_color (unsigned int idx)
 {
 #if OFF_FOCUS_FADING
@@ -1823,7 +1823,7 @@ rxvt_term::update_fade_color (unsigned int idx)
 }
 
 #if ENABLE_TRANSPARENCY || ENABLE_PERL
-void
+void ecb_hot
 rxvt_term::rootwin_cb (XEvent &ev)
 {
   make_current ();
@@ -2217,7 +2217,7 @@ rxvt_term::button_release (XButtonEvent &ev)
 
 /*}}} */
 
-void
+void ecb_hot
 rxvt_term::cmd_parse ()
 {
   wchar_t ch = NOCHAR;
@@ -2346,7 +2346,7 @@ rxvt_term::cmd_parse ()
 }
 
 // read the next character
-wchar_t
+wchar_t ecb_hot
 rxvt_term::next_char () NOTHROW
 {
   while (cmdbuf_ptr < cmdbuf_endp)
@@ -2380,7 +2380,7 @@ rxvt_term::next_char () NOTHROW
 }
 
 // read the next octet
-uint32_t
+uint32_t ecb_hot
 rxvt_term::next_octet () NOTHROW
 {
   return cmdbuf_ptr < cmdbuf_endp
@@ -2390,7 +2390,7 @@ rxvt_term::next_octet () NOTHROW
 
 static class out_of_input out_of_input;
 
-wchar_t
+wchar_t ecb_hot
 rxvt_term::cmd_getc () THROW ((class out_of_input))
 {
   wchar_t c = next_char ();
@@ -2401,7 +2401,7 @@ rxvt_term::cmd_getc () THROW ((class out_of_input))
   return c;
 }
 
-uint32_t
+uint32_t ecb_hot
 rxvt_term::cmd_get8 () THROW ((class out_of_input))
 {
   uint32_t c = next_octet ();
@@ -2415,7 +2415,7 @@ rxvt_term::cmd_get8 () THROW ((class out_of_input))
 /*{{{ print pipe */
 /*----------------------------------------------------------------------*/
 #ifdef PRINTPIPE
-FILE *
+FILE * ecb_cold
 rxvt_term::popen_printer ()
 {
   FILE *stream = popen (rs[Rs_print_pipe] ? rs[Rs_print_pipe] : PRINTPIPE, "w");
@@ -2426,7 +2426,7 @@ rxvt_term::popen_printer ()
   return stream;
 }
 
-int
+int ecb_cold
 rxvt_term::pclose_printer (FILE *stream)
 {
   fflush (stream);
@@ -2436,7 +2436,7 @@ rxvt_term::pclose_printer (FILE *stream)
 /*
  * simulate attached vt100 printer
  */
-void
+void ecb_cold
 rxvt_term::process_print_pipe ()
 {
   FILE *fd = popen_printer ();
@@ -2501,7 +2501,7 @@ enum {
 };
 
 /*{{{ process non-printing single characters */
-void
+void ecb_hot
 rxvt_term::process_nonprinting (unicode_t ch)
 {
   switch (ch)
@@ -2557,7 +2557,7 @@ rxvt_term::process_nonprinting (unicode_t ch)
 
 
 /*{{{ process VT52 escape sequences */
-void
+void ecb_cold
 rxvt_term::process_escape_vt52 (unicode_t ch)
 {
   int row, col;
@@ -2617,7 +2617,7 @@ rxvt_term::process_escape_vt52 (unicode_t ch)
 
 
 /*{{{ process escape sequences */
-void
+void ecb_hot
 rxvt_term::process_escape_seq ()
 {
   unicode_t ch = cmd_getc ();
@@ -2779,7 +2779,7 @@ static const unsigned char csi_defaults[] =
     make_byte (0,0,0,0,0,0,0,0),	/* x, y, z, {, |, }, ~,    */
   };
 
-void
+void ecb_hot
 rxvt_term::process_csi_seq ()
 {
   unicode_t ch, priv, i;
@@ -3598,7 +3598,7 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
  *      't' = toggle
  * so no need for fancy checking
  */
-int
+int ecb_cold
 rxvt_term::privcases (int mode, unsigned long bit)
 {
   int state;
@@ -3828,7 +3828,7 @@ rxvt_term::process_terminal_mode (int mode, int priv ecb_unused, unsigned int na
 /*}}} */
 
 /*{{{ process sgr sequences */
-void
+void ecb_hot
 rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
 {
   unsigned int i;

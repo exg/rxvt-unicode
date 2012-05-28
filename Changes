@@ -42,6 +42,8 @@ TODO: DEC PM 4h/4l should toggle jumpscroll on or off (PrivMode_smoothScroll)
         - allocate all screen memory in one go and let the virtual memory
           subsystem sort it out. this simplifies code, improves access
           locality, saves a bit of ram and makes thigs a bit faster, too.
+        - selectively mark some methods as cache-hot/cache cold, which
+          might speed up execution but deifnitely decreases codesize.
 
 9.15 Sat Jan 21 13:36:56 CET 2012
 	- remove "using namespace std" because clang erroneously
