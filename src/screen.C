@@ -163,7 +163,7 @@ rxvt_term::scr_alloc () NOTHROW
   int rsize = sizeof (rend_t) * ncol;
 
   // we assume that rend_t size is a sufficient alignment
-  // factor for tetx_t and line_t values, and we only
+  // factor for text_t and line_t values, and we only
   // need to adjust tsize.
   tsize = (tsize + sizeof (rend_t) - 1);
   tsize -= tsize % sizeof (rend_t);
