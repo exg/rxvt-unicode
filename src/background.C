@@ -305,9 +305,7 @@ rxvt_image::set_geometry (const char *geom, bool update)
       changed = true;
     }
 
-  if (!(flags & IM_TILE)
-      || h_scale || v_scale
-      || (!(flags & IM_ROOT_ALIGN) && (h_align || v_align)))
+  if (is_size_sensitive ())
     flags |= IM_IS_SIZE_SENSITIVE;
   else
     flags &= ~IM_IS_SIZE_SENSITIVE;
@@ -1223,7 +1221,12 @@ rxvt_term::bg_init ()
       if (!(bg_image->flags & IM_IS_SET))
         bg_image = image_vec.erase (bg_image);
       else
-        bg_image++;
+        {
+          if (bg_image->is_size_sensitive ())
+            bg_image->flags |= IM_IS_SIZE_SENSITIVE;
+
+          bg_image++;
+        }
     }
 # endif
 

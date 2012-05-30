@@ -237,6 +237,13 @@ struct rxvt_image
   int h_align, v_align;          /* percents of the window size:
                                     0 - left align, 50 - center, 100 - right */
 
+  bool is_size_sensitive ()
+  {
+    return (!(flags & IM_TILE)
+            || h_scale || v_scale
+            || (!(flags & IM_ROOT_ALIGN) && (h_align || v_align)));
+  }
+
 #  ifdef HAVE_PIXBUF
   GdkPixbuf *pixbuf;
 
