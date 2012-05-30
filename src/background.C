@@ -685,12 +685,12 @@ rxvt_term::parse_image (int id, const char *type, const char *arg)
 
 rxvt_image::rxvt_image ()
 {
-  alpha   =
-  flags   =
+  alpha = 0xffff;
+  flags = 0;
   h_scale =
-  v_scale =
+  v_scale = defaultScale;
   h_align =
-  v_align = 0;
+  v_align = defaultAlign;
 
 #  ifdef HAVE_PIXBUF
   pixbuf = 0;
@@ -716,8 +716,8 @@ rxvt_image::set_file_geometry (const char *file)
 
   bool ret = set_file (file);
   alpha = 0x8000;
-  if (ret && p)
-    set_geometry (p + 1);
+  if (ret)
+    set_geometry (p ? p + 1 : "");
   return ret;
 }
 
@@ -738,12 +738,7 @@ rxvt_image::set_file (const char *file)
 #  endif
 
   if (ret)
-    {
-      alpha = 0xffff;
-      flags = IM_IS_SET | IM_IS_SIZE_SENSITIVE;
-      h_scale = v_scale = defaultScale;
-      h_align = v_align = defaultAlign;
-    }
+    flags |= IM_IS_SET;
 
   return ret;
 }
