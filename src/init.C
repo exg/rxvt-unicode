@@ -820,13 +820,13 @@ rxvt_term::init2 (int argc, const char *const *argv)
         bg_set_transparent ();
 
         if (rs [Rs_blurradius])
-          bg_set_blur (rs [Rs_blurradius]);
+          root_effects.set_blur (rs [Rs_blurradius]);
 
         if (ISSET_PIXCOLOR (Color_tint))
-          bg_set_tint (pix_colors_focused [Color_tint]);
+          root_effects.set_tint (pix_colors_focused [Color_tint]);
 
         if (rs [Rs_shade])
-          bg_set_shade (rs [Rs_shade]);
+          root_effects.set_shade (rs [Rs_shade]);
 
         bg_set_root_pixmap ();
         XSelectInput (dpy, display->root, PropertyChangeMask);

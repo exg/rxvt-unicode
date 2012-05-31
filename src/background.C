@@ -605,6 +605,11 @@ rxvt_term::render_image (rxvt_image &image)
                               dst_width, dst_height, need_blend);
         }
 
+      if (image.need_blur ())
+        blur_pixmap (tmp_pixmap, new_pmap_width, new_pmap_height, need_blend, image.h_blurRadius, image.v_blurRadius);
+      if (image.need_tint ())
+        tint_pixmap (tmp_pixmap, new_pmap_width, new_pmap_height, need_blend, image.tint, image.tint_set, image.shade);
+
 #if XRENDER
       if (need_blend)
         {
@@ -743,9 +748,8 @@ rxvt_image::set_file (const char *file)
 
 # endif /* BG_IMAGE_FROM_FILE */
 
-# ifdef ENABLE_TRANSPARENCY
 bool
-rxvt_term::bg_set_blur (const char *geom)
+image_effects::set_blur (const char *geom)
 {
   bool changed = false;
   unsigned int hr, vr;
@@ -776,21 +780,12 @@ rxvt_term::bg_set_blur (const char *geom)
 }
 
 bool
-rxvt_term::bg_set_tint (rxvt_color &new_tint)
+image_effects::set_tint (const rxvt_color &new_tint)
 {
-  if (!(bg_flags & BG_TINT_SET) || tint != new_tint)
+  if (!tint_set || tint != new_tint)
     {
       tint = new_tint;
-      bg_flags |= BG_TINT_SET;
-
-      rgba c;
-      tint.get (c);
-      if ((c.r <= 0x00ff || c.r >= 0xff00)
-          && (c.g <= 0x00ff || c.g >= 0xff00)
-          && (c.b <= 0x00ff || c.b >= 0xff00))
-        bg_flags |= BG_TINT_BITAND;
-      else
-        bg_flags &= ~BG_TINT_BITAND;
+      tint_set = true;
 
       return true;
     }
@@ -799,7 +794,7 @@ rxvt_term::bg_set_tint (rxvt_color &new_tint)
 }
 
 bool
-rxvt_term::bg_set_shade (const char *shade_str)
+image_effects::set_shade (const char *shade_str)
 {
   int new_shade = atoi (shade_str);
 
@@ -840,7 +835,7 @@ get_gaussian_kernel (int radius, int width, double *kernel, XFixed *params)
 #endif
 
 bool
-rxvt_term::blur_pixmap (Pixmap pixmap, int width, int height)
+rxvt_term::blur_pixmap (Pixmap pixmap, int width, int height, bool argb, int h_blurRadius, int v_blurRadius)
 {
   bool ret = false;
 #if XRENDER
@@ -852,7 +847,8 @@ rxvt_term::blur_pixmap (Pixmap pixmap, int width, int height)
   XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
 
   XRenderPictureAttributes pa;
-  XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
+  XRenderPictFormat *format = argb ? XRenderFindStandardFormat (dpy, PictStandardARGB32)
+                                   : XRenderFindVisualFormat (dpy, visual);
 
   pa.repeat = RepeatPad;
   Picture src = XRenderCreatePicture (dpy, pixmap, format, CPRepeat, &pa);
@@ -905,11 +901,19 @@ rxvt_term::blur_pixmap (Pixmap pixmap, int width, int height)
 }
 
 bool
-rxvt_term::tint_pixmap (Pixmap pixmap, int width, int height)
+rxvt_term::tint_pixmap (Pixmap pixmap, int width, int height, bool argb, rxvt_color &tint, bool tint_set, int shade)
 {
   bool ret = false;
 
-  if (shade == 100 && (bg_flags & BG_TINT_BITAND))
+  rgba c (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC);
+
+  if (tint_set)
+    tint.get (c);
+
+  if (shade == 100
+      && (c.r <= 0x00ff || c.r >= 0xff00)
+      && (c.g <= 0x00ff || c.g >= 0xff00)
+      && (c.b <= 0x00ff || c.b >= 0xff00))
     {
       XGCValues gcv;
       GC gc;
@@ -931,11 +935,6 @@ rxvt_term::tint_pixmap (Pixmap pixmap, int width, int height)
 #  if XRENDER
   else if (bg_flags & BG_HAS_RENDER)
     {
-      rgba c (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC);
-
-      if (bg_flags & BG_TINT_SET)
-        tint.get (c);
-
       if (shade <= 100)
         {
           c.r = c.r * shade / 100;
@@ -949,7 +948,8 @@ rxvt_term::tint_pixmap (Pixmap pixmap, int width, int height)
           c.b = c.b * (200 - shade) / 100;
         }
 
-      XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
+      XRenderPictFormat *format = argb ? XRenderFindStandardFormat (dpy, PictStandardARGB32)
+                                       : XRenderFindVisualFormat (dpy, visual);
 
       Picture back_pic = XRenderCreatePicture (dpy, pixmap, format, 0, 0);
 
@@ -995,6 +995,7 @@ rxvt_term::tint_pixmap (Pixmap pixmap, int width, int height)
   return ret;
 }
 
+# ifdef ENABLE_TRANSPARENCY
 /*
  * Builds a pixmap of the same size as the terminal window that contains
  * the tiled portion of the root pixmap that is supposed to be covered by
@@ -1095,19 +1096,21 @@ rxvt_term::make_transparency_pixmap ()
     {
       XFillRectangle (dpy, bg_pixmap, gc, 0, 0, window_width, window_height);
       ret = true;
-      bool need_blur = h_blurRadius && v_blurRadius;
-      bool need_tint = shade != 100 || (bg_flags & BG_TINT_SET);
+      bool need_blur = root_effects.need_blur ();
+      bool need_tint = root_effects.need_tint ();
 
       if (!(bg_flags & BG_CLIENT_RENDER))
         {
           if (need_blur)
             {
-              if (blur_pixmap (bg_pixmap, window_width, window_height))
+              if (blur_pixmap (bg_pixmap, window_width, window_height, false,
+                               root_effects.h_blurRadius, root_effects.v_blurRadius))
                 need_blur = false;
             }
           if (need_tint)
             {
-              if (tint_pixmap (bg_pixmap, window_width, window_height))
+              if (tint_pixmap (bg_pixmap, window_width, window_height, false,
+                               root_effects.tint, root_effects.tint_set, root_effects.shade))
                 need_tint = false;
             }
           if (need_tint)
@@ -1116,7 +1119,7 @@ rxvt_term::make_transparency_pixmap ()
               if (ximage)
                 {
                   /* our own client-side tinting */
-                  tint_ximage (ximage);
+                  tint_ximage (ximage, root_effects.tint, root_effects.tint_set, root_effects.shade);
 
                   XPutImage (dpy, bg_pixmap, gc, ximage, 0, 0, 0, 0, ximage->width, ximage->height);
                   XDestroyImage (ximage);
@@ -1185,10 +1188,6 @@ rxvt_term::bg_render ()
 void
 rxvt_term::bg_init ()
 {
-#ifdef ENABLE_TRANSPARENCY
-  shade = 100;
-#endif
-
   bg_flags &= ~(BG_HAS_RENDER | BG_HAS_RENDER_CONV);
 #if XRENDER
   int major, minor;
@@ -1236,9 +1235,6 @@ rxvt_term::bg_init ()
 #endif
 }
 
-#endif /* HAVE_BG_PIXMAP */
-
-#ifdef ENABLE_TRANSPARENCY
 /* based on code from aterm-0.4.2 */
 
 static inline void
@@ -1254,7 +1250,7 @@ fill_lut (uint32_t *lookup, uint32_t mask, int sh, unsigned short low, unsigned 
 }
 
 void
-rxvt_term::tint_ximage (XImage *ximage)
+rxvt_term::tint_ximage (XImage *ximage, rxvt_color &tint, bool tint_set, int shade)
 {
   unsigned int size_r, size_g, size_b;
   int sh_r, sh_g, sh_b;
@@ -1289,7 +1285,7 @@ rxvt_term::tint_ximage (XImage *ximage)
 
   rgba c (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC);
 
-  if (bg_flags & BG_TINT_SET)
+  if (tint_set)
     tint.get (c);
 
   /* prepare limits for color transformation (each channel is handled separately) */
@@ -1349,4 +1345,5 @@ rxvt_term::tint_ximage (XImage *ximage)
 
   free (lookup);
 }
-#endif /* ENABLE_TRANSPARENCY */
+
+#endif /* HAVE_BG_PIXMAP */

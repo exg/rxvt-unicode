@@ -3439,7 +3439,7 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
           bool changed = false;
 
           if (ISSET_PIXCOLOR (Color_tint))
-            changed = bg_set_tint (pix_colors_focused [Color_tint]);
+            changed = root_effects.set_tint (pix_colors_focused [Color_tint]);
 
           if (changed)
             update_background ();

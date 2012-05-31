@@ -211,6 +211,36 @@ struct localise_env
 };
 
 #ifdef HAVE_BG_PIXMAP
+struct image_effects
+{
+  bool tint_set;
+  rxvt_color tint;
+  int shade;
+  int h_blurRadius, v_blurRadius;
+
+  image_effects ()
+  {
+    tint_set     =
+    h_blurRadius =
+    v_blurRadius = 0;
+    shade = 100;
+  }
+
+  bool need_tint ()
+  {
+    return shade != 100 || tint_set;
+  }
+
+  bool need_blur ()
+  {
+    return h_blurRadius && v_blurRadius;
+  }
+
+  bool set_tint (const rxvt_color &new_tint);
+  bool set_shade (const char *shade_str);
+  bool set_blur (const char *geom);
+};
+
 # ifdef BG_IMAGE_FROM_FILE
 enum {
   IM_IS_SET            = 1 << 0,
@@ -229,7 +259,7 @@ enum {
   defaultAlign = centerAlign,
 };
 
-struct rxvt_image
+struct rxvt_image : image_effects
 {
   unsigned short alpha;
   uint8_t flags;
@@ -1167,9 +1197,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
     BG_HAS_RENDER        = 1 << 3,
     BG_HAS_RENDER_CONV   = 1 << 4,
     BG_CLIENT_RENDER     = 1 << 5,
-
-    BG_TINT_SET          = 1 << 6,
-    BG_TINT_BITAND       = 1 << 7,
   };
 
   uint8_t bg_flags;
@@ -1188,24 +1215,19 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
 # ifdef ENABLE_TRANSPARENCY
   Pixmap      root_pixmap; /* current root pixmap set */
-  rxvt_color  tint;
-  int         shade;
-  int         h_blurRadius, v_blurRadius;
+  image_effects root_effects;
 
   void bg_set_transparent ()
   {
     bg_flags |= BG_IS_TRANSPARENT;
   }
   void bg_set_root_pixmap ();
-  bool bg_set_tint (rxvt_color &new_tint);
-  bool bg_set_shade (const char *shade_str);
-  bool bg_set_blur (const char *geom);
-
-  bool blur_pixmap (Pixmap pixmap, int width, int height);
-  bool tint_pixmap (Pixmap pixmap, int width, int height);
-  void tint_ximage (XImage *ximage);
   bool make_transparency_pixmap ();
 # endif
+
+  bool blur_pixmap (Pixmap pixmap, int width, int height, bool argb, int h_blurRadius, int v_blurRadius);
+  bool tint_pixmap (Pixmap pixmap, int width, int height, bool argb, rxvt_color &tint, bool tint_set, int shade);
+  void tint_ximage (XImage *ximage, rxvt_color &tint, bool tint_set, int shade);
 
   ev_tstamp bg_valid_since;
 
