@@ -1099,33 +1099,30 @@ rxvt_term::make_transparency_pixmap ()
       bool need_blur = root_effects.need_blur ();
       bool need_tint = root_effects.need_tint ();
 
-      if (!(bg_flags & BG_CLIENT_RENDER))
+      if (need_blur)
         {
-          if (need_blur)
+          if (blur_pixmap (bg_pixmap, window_width, window_height, false,
+                           root_effects.h_blurRadius, root_effects.v_blurRadius))
+            need_blur = false;
+        }
+      if (need_tint)
+        {
+          if (tint_pixmap (bg_pixmap, window_width, window_height, false,
+                           root_effects.tint, root_effects.tint_set, root_effects.shade))
+            need_tint = false;
+        }
+      if (need_tint)
+        {
+          XImage *ximage = XGetImage (dpy, bg_pixmap, 0, 0, bg_pmap_width, bg_pmap_height, AllPlanes, ZPixmap);
+          if (ximage)
             {
-              if (blur_pixmap (bg_pixmap, window_width, window_height, false,
-                               root_effects.h_blurRadius, root_effects.v_blurRadius))
-                need_blur = false;
-            }
-          if (need_tint)
-            {
-              if (tint_pixmap (bg_pixmap, window_width, window_height, false,
-                               root_effects.tint, root_effects.tint_set, root_effects.shade))
-                need_tint = false;
-            }
-          if (need_tint)
-            {
-              XImage *ximage = XGetImage (dpy, bg_pixmap, 0, 0, bg_pmap_width, bg_pmap_height, AllPlanes, ZPixmap);
-              if (ximage)
-                {
-                  /* our own client-side tinting */
-                  tint_ximage (ximage, root_effects.tint, root_effects.tint_set, root_effects.shade);
+              /* our own client-side tinting */
+              tint_ximage (ximage, root_effects.tint, root_effects.tint_set, root_effects.shade);
 
-                  XPutImage (dpy, bg_pixmap, gc, ximage, 0, 0, 0, 0, ximage->width, ximage->height);
-                  XDestroyImage (ximage);
-                }
+              XPutImage (dpy, bg_pixmap, gc, ximage, 0, 0, 0, 0, ximage->width, ximage->height);
+              XDestroyImage (ximage);
             }
-        } /* server side rendering completed */
+        }
 
       XFreeGC (dpy, gc);
     }

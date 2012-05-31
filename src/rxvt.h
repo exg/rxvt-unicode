@@ -1196,7 +1196,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
     BG_HAS_RENDER        = 1 << 3,
     BG_HAS_RENDER_CONV   = 1 << 4,
-    BG_CLIENT_RENDER     = 1 << 5,
   };
 
   uint8_t bg_flags;
