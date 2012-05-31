@@ -1221,7 +1221,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
     bg_flags |= BG_IS_TRANSPARENT;
   }
   void bg_set_root_pixmap ();
-  bool make_transparency_pixmap ();
+  bool render_root_image ();
 # endif
 
   bool blur_pixmap (Pixmap pixmap, int width, int height, bool argb, int h_blurRadius, int v_blurRadius);

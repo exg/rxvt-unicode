@@ -1002,7 +1002,7 @@ rxvt_term::tint_pixmap (Pixmap pixmap, int width, int height, bool argb, rxvt_co
  * our window.
  */
 bool
-rxvt_term::make_transparency_pixmap ()
+rxvt_term::render_root_image ()
 {
   bool ret = false;
 
@@ -1152,7 +1152,7 @@ rxvt_term::bg_render ()
   if (bg_flags & BG_IS_TRANSPARENT)
     {
       /*  we need to re-generate transparency pixmap in that case ! */
-      if (make_transparency_pixmap ())
+      if (render_root_image ())
         bg_flags |= BG_IS_VALID;
     }
 # endif
