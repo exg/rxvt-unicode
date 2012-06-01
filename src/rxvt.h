@@ -1213,7 +1213,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 # endif
 
 # ifdef ENABLE_TRANSPARENCY
-  Pixmap      root_pixmap; /* current root pixmap set */
+  Pixmap root_pixmap; /* current root pixmap set */
   image_effects root_effects;
 
   void bg_set_transparent ()
