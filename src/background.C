@@ -675,6 +675,7 @@ rxvt_define_image (XrmDatabase *database ecb_unused,
     }
   return False;
 }
+#  endif
 
 void
 rxvt_term::parse_image (int id, const char *type, const char *arg)
@@ -684,7 +685,6 @@ rxvt_term::parse_image (int id, const char *type, const char *arg)
 
   rxvt_image *image = &image_vec[id];
 }
-#  endif
 
 rxvt_image::rxvt_image ()
 {
@@ -1211,6 +1211,8 @@ rxvt_term::bg_init ()
 
 # ifndef NO_RESOURCES
   find_resources ("image", "Image", XrmEnumAllLevels, rxvt_define_image);
+# endif
+
   vector<rxvt_image>::iterator bg_image = image_vec.begin ();
   while (bg_image != image_vec.end ())
     {
@@ -1224,7 +1226,6 @@ rxvt_term::bg_init ()
           bg_image++;
         }
     }
-# endif
 
   if (image_vec.size () > 0
       && !bg_window_position_sensitive ())
