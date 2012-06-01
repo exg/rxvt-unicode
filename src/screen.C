@@ -238,7 +238,7 @@ rxvt_term::scr_reset ()
   if (!prev_row_buf)
     {
       /*
-       * first time called so just malloc everything: don't rely on realloc
+       * first time called (or after scr_release) so just malloc everything: don't rely on realloc
        */
       top_row    = 0;
       term_start = 0;
@@ -428,15 +428,11 @@ rxvt_term::scr_reset ()
   HOOK_INVOKE ((this, HOOK_RESET, DT_END));
 }
 
-/* ------------------------------------------------------------------------- */
-/*
- * Free everything.  That way malloc debugging can find leakage.
- */
 void ecb_cold
 rxvt_term::scr_release () NOTHROW
 {
-  free (chunk);
-  free (tabs);
+  free (chunk); chunk = 0; row_buf = 0;
+  free (tabs);  tabs  = 0;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -448,8 +444,6 @@ rxvt_term::scr_poweron ()
 {
   scr_release ();
 
-  row_buf = 0;
-  tabs = 0;
   prev_nrow = prev_ncol = 0;
   rvideo_mode = false;
   scr_soft_reset ();
