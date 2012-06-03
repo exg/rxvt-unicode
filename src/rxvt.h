@@ -85,6 +85,7 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 #include "rxvtutil.h"
 #include "rxvtfont.h"
 #include "rxvttoolkit.h"
+#include "rxvtimg.h"
 #include "scrollbar.h"
 #include "ev_cpp.h"
 #include "libptytty.h"

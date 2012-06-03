@@ -17,10 +17,8 @@ struct rxvt_img
   XRenderPictFormat *format;
 
   rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height);
-  rxvt_img (rxvt_screen *screen, Pixmap *pixmap, XRenderPictFormat *format, int width, int height);
+  rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap);
   ~rxvt_img ();
-
-  void render (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int height, int dst_x, int dst_y);
 
   Pixmap steal ()
   {
@@ -34,6 +32,7 @@ struct rxvt_img
   void blur (int rh, int rv);
   void brightness (double r, double g, double b, double a = 1.);
   void contrast (double r, double g, double b, double a = 1.);
+  void render (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int height, int dst_x, int dst_y);
 
   // copy
   rxvt_img *copy ();
