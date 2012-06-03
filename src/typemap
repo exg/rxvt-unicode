@@ -5,12 +5,12 @@ Atom			T_UV
 Window			T_UV
 
 urxvt::pixbuf           T_PTROBJ
-urxvt::img              T_PTROBJ
 
 octet_string            OCTET_STRING
 utf8_string             UTF8_STRING
 
 rxvt_term *		TERM
+rxvt_img *		IMG
 
 GError **		T_UV
 
@@ -27,8 +27,17 @@ OCTET_STRING
 UTF8_STRING
         $var = SvPVutf8_nolen ($arg) /* imperfect, destroys references */
 
+IMG
+        if (SvROK ($arg) && sv_derived_from ($arg, \"urxvt::img\"))
+          $var = INT2PTR ($type, SvIV ((SV *) SvRV ($arg)));
+        else
+          croak (\"%s is not of type urxvt::img\", \"$var\")
+
 OUTPUT
 
 TERM
 	$arg = newSVterm ($var);
+
+IMG
+        sv_setref_pv ($arg, "urxvt::img", (void *)$var);
 

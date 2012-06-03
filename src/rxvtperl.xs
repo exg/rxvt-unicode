@@ -802,6 +802,13 @@ BOOT:
     const_iv (XIMVisibleToForward),
     const_iv (XIMVisibleToBackword),
     const_iv (XIMVisibleToCenter),
+#if HAVE_XRENDER
+    const_iv (PictStandardARGB32),
+    const_iv (PictStandardRGB24),
+    const_iv (PictStandardA8),
+    const_iv (PictStandardA4),
+    const_iv (PictStandardA1),
+#endif
 #   if 0
     const_iv (XIMForwardChar),
     const_iv (XIMBackwardChar),
@@ -1920,6 +1927,24 @@ rxvt_term::XTranslateCoordinates (Window src, Window dst, int x, int y)
 }
 
 #############################################################################
+# fancy bg bloatstuff (TODO: should be moved up somewhere)
+
+#ifdef ENABLE_TRANSPARENCY
+
+# rxvt_img *
+# rxvt_term::new_root_img ()
+# 	CODE:
+#         RETVAL = rxvt_img::new_from_root (THIS);
+# 	OUTPUT:
+#         RETVAL
+
+#endif
+
+#if HAVE_PIXBUF
+
+#endif
+
+#############################################################################
 # urxvt::overlay
 #############################################################################
 
@@ -1957,40 +1982,33 @@ MODULE = urxvt             PACKAGE = urxvt::img
 
 #if HAVE_IMG
 
-#  rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height);
-#  rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap);
+# rxvt_img *new (rxvt_screen *screen, XRenderPictFormat *format, int width, int height)
+# rxvt_img *rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap);
 
-void fill (urxvt::img self, SV *c)
-	CODE:
+void
+rxvt_img::fill (SV *c)
+	INIT:
         rxvt_color rc;
-        parse_color (self->s, rc, c);
-        self->fill (rc);
+        parse_color (THIS->s, rc, c);
+	C_ARGS: rc
 
-void blur (urxvt::img self, int rh, int rv)
-	CODE:
-        self->blur (rh, rv);
+void
+rxvt_img::blur (int rh, int rv)
 
-void brightness (urxvt::img self, double r, double g, double b, double a = 1.)
-	CODE:
-        self->brightness (r, g, b, a);
+void
+rxvt_img::brightness (double r, double g, double b, double a = 1.)
 
-void contrast (urxvt::img self, double r, double g, double b, double a = 1.)
-	CODE:
-        self->contrast (r, g, b, a);
+void
+rxvt_img::contrast (double r, double g, double b, double a = 1.)
 
-urxvt::img copy (urxvt::img self)
-	CODE:
-        RETVAL = self->copy ();
-	OUTPUT:
-        RETVAL
+rxvt_img *
+rxvt_img::copy ()
 
-urxvt::img scale (urxvt::img self, int new_width, int new_height)
-	CODE:
-        RETVAL = self->scale (new_width, new_height);
-	OUTPUT:
-        RETVAL
+rxvt_img *
+rxvt_img::scale (int new_width, int new_height)
 
-#  rxvt_img *transform (urxvt::img self, int new_width, int new_height, double matrix[16]);
+# rxvt_img *
+# rxvt_img::transform (int new_width, int new_height, double matrix[16]);
 
 #endif
 
