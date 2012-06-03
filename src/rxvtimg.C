@@ -218,8 +218,9 @@ rxvt_img::scale (int new_width, int new_height)
 rxvt_img *
 rxvt_img::convert_to (XRenderPictFormat *new_format)
 {
-  Display *dpy = s->display->dpy;
   rxvt_img *img = new rxvt_img (s,new_format,w, h);
+
+  Display *dpy = s->display->dpy;
   Picture src = XRenderCreatePicture (dpy, pm, format, 0, 0);
   Picture dst = XRenderCreatePicture (dpy, img->pm, new_format, 0, 0);
 
