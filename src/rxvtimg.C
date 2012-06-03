@@ -215,6 +215,29 @@ rxvt_img::scale (int new_width, int new_height)
   //TODO
 }
 
+rxvt_img *
+rxvt_img::convert_to (XRenderPictFormat *new_format)
+{
+  Display *dpy = s->display->dpy;
+  Pixmap new_pm = XCreatePixmap (dpy, pm, w, h, new_format->depth);
+  Picture src = XRenderCreatePicture (dpy, pm, format, 0, 0);
+  Picture dst = XRenderCreatePicture (dpy, new_pm, new_format, 0, 0);
+
+  XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
+
+  XRenderFreePicture (dpy, src);
+  XRenderFreePicture (dpy, dst);
+
+  rxvt_img *img = new rxvt_img (
+     s,
+     new_format,
+     w,
+     h,
+     new_pm
+  );
+
+  return img;
+}
 
 #endif
 

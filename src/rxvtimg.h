@@ -41,6 +41,7 @@ struct rxvt_img
   rxvt_img *copy ();
   rxvt_img *scale (int new_width, int new_height);
   rxvt_img *transform (int new_width, int new_height, double matrix[16]);
+  rxvt_img *convert_to (XRenderPictFormat *format);
 };
 
 #endif
