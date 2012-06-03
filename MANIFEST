@@ -66,6 +66,8 @@ src/rxvttoolkit.C
 src/rxvttoolkit.h
 src/rxvtfont.C
 src/rxvtfont.h
+src/rxvtimg.h
+src/rxvtimg.C
 src/rxvt.C
 src/rxvt.h
 src/rsinc.h

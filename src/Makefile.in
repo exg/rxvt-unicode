@@ -34,7 +34,7 @@ COMMON = \
 	background.o command.o rxvtfont.o init.o main.o misc.o \
 	screen.o scrollbar.o scrollbar-next.o scrollbar-rxvt.o \
 	scrollbar-xterm.o scrollbar-plain.o xdefaults.o encoding.o \
-	rxvttoolkit.o rxvtutil.o keyboard.o \
+	rxvttoolkit.o rxvtutil.o keyboard.o rxvtimg.o \
 	ev_cpp.o fdpass_wrapper.o ptytty_wrapper.o @PERL_O@
 
 COMMON_DAEMON = rxvtdaemon.o
