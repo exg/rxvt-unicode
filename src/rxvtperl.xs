@@ -53,9 +53,19 @@
 
 typedef char *		octet_string;
 typedef char *		utf8_string;
+typedef SV *		urxvt_color;
 
 typedef GdkPixbuf *	urxvt__pixbuf;
 typedef rxvt_img *	urxvt__img;
+
+/////////////////////////////////////////////////////////////////////////////
+
+static void
+parse_color (rxvt_screen *s, rxvt_color &c, SV *sv)
+{
+  //TODO: support component stuff
+  c.set (s, SvPVbyte_nolen (sv));
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -1932,10 +1942,56 @@ INCLUDE: $PERL <iom_perl.xs -pe s/IOM_MODULE/urxvt/g,s/IOM_CLASS/urxvt/g |
 
 MODULE = urxvt             PACKAGE = urxvt::pixbuf	PREFIX = gdk_pixbuf_
 
-urxvt::pixbuf gdk_pixbuf_new_from_file (octet_string filename, GError **error = 0)
+#if HAVE_PIXBUF
+
+urxvt::pixbuf gdk_pixbuf_new_from_file (SV *klass, octet_string filename)
+        C_ARGS: filename, 0
 
 void
 DESTROY (urxvt::pixbuf self)
 	CODE:
         gdk_pixbuf_unref (self);
+
+#endif
+
+MODULE = urxvt             PACKAGE = urxvt::img
+
+#if HAVE_IMG
+
+#  rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height);
+#  rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap);
+
+void fill (urxvt::img self, SV *c)
+	CODE:
+        rxvt_color rc;
+        parse_color (self->s, rc, c);
+        self->fill (rc);
+
+void blur (urxvt::img self, int rh, int rv)
+	CODE:
+        self->blur (rh, rv);
+
+void brightness (urxvt::img self, double r, double g, double b, double a = 1.)
+	CODE:
+        self->brightness (r, g, b, a);
+
+void contrast (urxvt::img self, double r, double g, double b, double a = 1.)
+	CODE:
+        self->contrast (r, g, b, a);
+
+urxvt::img copy (urxvt::img self)
+	CODE:
+        RETVAL = self->copy ();
+	OUTPUT:
+        RETVAL
+
+urxvt::img scale (urxvt::img self, int new_width, int new_height)
+	CODE:
+        RETVAL = self->scale (new_width, new_height);
+	OUTPUT:
+        RETVAL
+
+#  rxvt_img *transform (urxvt::img self, int new_width, int new_height, double matrix[16]);
+
+#endif
 
