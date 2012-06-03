@@ -12,8 +12,6 @@ rxvt_img::rxvt_img (rxvt_screen *screen, GdkPixbuf *pixbuf,
           int x, int y, int width, int height)
 : s(screen), w(width), h(height)
 {
-  argb  = gdk_pixbuf_get_has_alpha (pixbuf);
-  depth = gdk_pixbuf_get_bits_per_sample (pixbuf);
 }
 
 rxvt_img::~rxvt_img ()

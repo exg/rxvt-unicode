@@ -14,7 +14,6 @@ struct rxvt_img
   rxvt_screen *s;
   Pixmap pm;
   int w, h;
-  int depth;
   XRenderPictFormat *format;
 
   rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height);
