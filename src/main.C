@@ -573,6 +573,10 @@ rxvt_init ()
   XSetIOErrorHandler (rxvt_xioerror_handler);
 
   XrmInitialize ();
+
+#ifdef HAVE_PIXBUF
+  g_type_init ();
+#endif
 }
 
 /*----------------------------------------------------------------------*/

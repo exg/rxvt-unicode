@@ -793,11 +793,6 @@ rxvt_term::init2 (int argc, const char *const *argv)
 
   pty = ptytty::create ();
 
-  // must be called before create_windows, because the latter may call set_icon
-#ifdef HAVE_PIXBUF
-  g_type_init ();
-#endif
-
   create_windows (argc, argv);
 
   init_xlocale ();
