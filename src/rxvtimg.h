@@ -15,19 +15,19 @@ struct rxvt_img
   Pixmap pm;
   int w, h;
   XRenderPictFormat *format;
+  bool shared; // true if we don't own it
 
   rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height);
   rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap);
   static rxvt_img *new_from_root (rxvt_screen *s); // get root pixmap
-  static rxvt_img *new_from_file (const char *filename); // from pixbuf
+  static rxvt_img *new_from_file (rxvt_screen *s, const char *filename); // from pixbuf
 
   ~rxvt_img ();
 
   Pixmap steal ()
   {
-    Pixmap res = pm;
-    pm = 0;
-    return res;
+    shared = true;
+    return pm;
   }
 
   // inplace

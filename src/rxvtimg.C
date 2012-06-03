@@ -4,19 +4,43 @@
 #if HAVE_IMG
 
 rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height)
-: s(screen), w(width), h(height), format(format)
+: s(screen), w(width), h(height), format(format), shared(false)
 {
   pm = XCreatePixmap (s->display->dpy, s->display->root, w, h, format->depth);
 }
 
 rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap)
-: s(screen), pm(pixmap), w(width), h(height), format(format)
+: s(screen), pm(pixmap), w(width), h(height), format(format), shared(false)
 {
+}
+
+rxvt_img *
+rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
+{
+  GError *err;
+  GdkPixbuf *pb = gdk_pixbuf_new_from_file (filename, &err);
+
+  if (!pb)
+    return 0;
+
+  int w = gdk_pixbuf_get_width  (pb);
+  int h = gdk_pixbuf_get_height (pb);
+
+  rxvt_img *img = new rxvt_img (
+     s,
+     XRenderFindStandardFormat (s->display->dpy, gdk_pixbuf_get_has_alpha (pb) ? PictStandardARGB32 : PictStandardRGB24),
+     gdk_pixbuf_get_width (pb),
+     gdk_pixbuf_get_height (pb)
+  );
+
+  img->render (pb, 0, 0, w, h, 0, 0);
+
+  return img;
 }
 
 rxvt_img::~rxvt_img ()
 {
-  if (pm)
+  if (!shared)
     XFreePixmap (s->display->dpy, pm);
 }
 
