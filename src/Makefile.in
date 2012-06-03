@@ -118,7 +118,7 @@ rxvtperl.o: rxvtperl.C perlxsi.c
 	$(COMPILE) $(PERLFLAGS) -DLIBDIR="\"$(libdir)/urxvt\"" -c $<
 
 depend:
-	makedepend -f Makefile.in -I. -I.. -I../libptytty/src -I../libev -Y *.C >/dev/null 2>&1
+	makedepend -f Makefile.in -I. -I.. -I../libptytty/src -I../libev -Y *.C *.xs >/dev/null 2>&1
 
 # DO NOT DELETE: nice dependency list follows
 
@@ -203,11 +203,6 @@ rxvtimg.o: rxvtutil.h ../libptytty/src/estl.h rxvtfont.h rxvttoolkit.h
 rxvtimg.o: ev_cpp.h ../config.h ../libev/ev++.h ../libev/ev.h callback.h
 rxvtimg.o: scrollbar.h ../libptytty/src/libptytty.h rxvtperl.h hookinc.h
 rxvtimg.o: rsinc.h optinc.h
-rxvtperl.o: ../config.h ev_cpp.h ../config.h ../libev/ev++.h ../libev/ev.h
-rxvtperl.o: rxvt.h feature.h ../libptytty/src/ecb.h encoding.h rxvtutil.h
-rxvtperl.o: ../libptytty/src/estl.h rxvtfont.h rxvttoolkit.h callback.h
-rxvtperl.o: scrollbar.h ../libptytty/src/libptytty.h rxvtperl.h hookinc.h
-rxvtperl.o: rsinc.h optinc.h keyboard.h perlxsi.c iom_perl.h
 rxvttoolkit.o: ../config.h rxvt.h feature.h ../libptytty/src/ecb.h encoding.h
 rxvttoolkit.o: rxvtutil.h ../libptytty/src/estl.h rxvtfont.h rxvttoolkit.h
 rxvttoolkit.o: ev_cpp.h ../config.h ../libev/ev++.h ../libev/ev.h callback.h
@@ -253,3 +248,8 @@ xdefaults.o: rxvtutil.h ../libptytty/src/estl.h rxvtfont.h rxvttoolkit.h
 xdefaults.o: ev_cpp.h ../config.h ../libev/ev++.h ../libev/ev.h callback.h
 xdefaults.o: scrollbar.h ../libptytty/src/libptytty.h rxvtperl.h hookinc.h
 xdefaults.o: rsinc.h optinc.h version.h keyboard.h
+rxvtperl.o: ../config.h ev_cpp.h ../config.h ../libev/ev++.h ../libev/ev.h
+rxvtperl.o: rxvt.h feature.h ../libptytty/src/ecb.h encoding.h rxvtutil.h
+rxvtperl.o: ../libptytty/src/estl.h rxvtfont.h rxvttoolkit.h callback.h
+rxvtperl.o: scrollbar.h ../libptytty/src/libptytty.h rxvtperl.h hookinc.h
+rxvtperl.o: rsinc.h optinc.h keyboard.h iom_perl.h
