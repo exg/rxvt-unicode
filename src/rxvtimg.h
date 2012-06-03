@@ -18,8 +18,8 @@ struct rxvt_img
 
   rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height);
   rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap);
-  rxvt_img (rxvt_screen *screen); // get root pixmap
-  rxvt_img (const char *filename); // from pixbuf
+  static rxvt_img *new_from_root (rxvt_screen *s); // get root pixmap
+  static rxvt_img *new_from_file (const char *filename); // from pixbuf
 
   ~rxvt_img ();
 
