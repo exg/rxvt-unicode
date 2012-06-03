@@ -218,6 +218,12 @@ struct rxvt_screen
   void clear ();
 };
 
+enum {
+  DISPLAY_HAS_RENDER      = 1 << 0,
+  DISPLAY_HAS_RENDER_MUL  = 1 << 1,
+  DISPLAY_HAS_RENDER_CONV = 1 << 2,
+};
+
 struct rxvt_display : refcounted
 {
   event_vec<xevent_watcher> xw;
@@ -244,6 +250,7 @@ struct rxvt_display : refcounted
 #ifdef POINTER_BLANK
   Cursor    blank_cursor;
 #endif
+  uint8_t   flags;
 
   rxvt_display (const char *id);
   XrmDatabase get_resources (bool refresh);

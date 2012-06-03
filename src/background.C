@@ -486,7 +486,7 @@ rxvt_term::render_image (rxvt_image &image)
   bool need_blend = bg_flags & BG_IS_VALID;
 
   if (need_blend
-      && !(bg_flags & BG_HAS_RENDER))
+      && !(display->flags & DISPLAY_HAS_RENDER))
     return false;
 
   GdkPixbuf *result;
@@ -839,7 +839,7 @@ rxvt_term::blur_pixmap (Pixmap pixmap, int width, int height, bool argb, int h_b
 {
   bool ret = false;
 #if XRENDER
-  if (!(bg_flags & BG_HAS_RENDER_CONV))
+  if (!(display->flags & DISPLAY_HAS_RENDER_CONV))
     return false;
 
   int size = max (h_blurRadius, v_blurRadius) * 2 + 1;
@@ -933,7 +933,7 @@ rxvt_term::tint_pixmap (Pixmap pixmap, int width, int height, bool argb, rxvt_co
         }
     }
 #  if XRENDER
-  else if (bg_flags & BG_HAS_RENDER)
+  else if (display->flags & DISPLAY_HAS_RENDER)
     {
       if (shade <= 100)
         {
@@ -1048,7 +1048,7 @@ rxvt_term::render_root_image ()
   if (root_pixmap != None && root_depth != depth)
     {
 #if XRENDER
-      if (bg_flags & BG_HAS_RENDER)
+      if (display->flags & DISPLAY_HAS_RENDER)
         {
           recoded_root_pmap = XCreatePixmap (dpy, vt, root_pmap_width, root_pmap_height, depth);
 
@@ -1185,22 +1185,6 @@ rxvt_term::bg_render ()
 void
 rxvt_term::bg_init ()
 {
-  bg_flags &= ~(BG_HAS_RENDER | BG_HAS_RENDER_CONV);
-#if XRENDER
-  int major, minor;
-  if (XRenderQueryVersion (dpy, &major, &minor))
-    bg_flags |= BG_HAS_RENDER;
-  XFilters *filters = XRenderQueryFilters (dpy, vt);
-  if (filters)
-    {
-      for (int i = 0; i < filters->nfilter; i++)
-        if (!strcmp (filters->filter[i], FilterConvolution))
-          bg_flags |= BG_HAS_RENDER_CONV;
-
-      XFree (filters);
-    }
-#endif
-
 #ifdef BG_IMAGE_FROM_FILE
   if (rs[Rs_backgroundPixmap])
     {
