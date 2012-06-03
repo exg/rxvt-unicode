@@ -23,9 +23,6 @@ rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
   if (!pb)
     return 0;
 
-  int w = gdk_pixbuf_get_width  (pb);
-  int h = gdk_pixbuf_get_height (pb);
-
   rxvt_img *img = new rxvt_img (
      s,
      XRenderFindStandardFormat (s->display->dpy, gdk_pixbuf_get_has_alpha (pb) ? PictStandardARGB32 : PictStandardRGB24),
@@ -33,7 +30,7 @@ rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
      gdk_pixbuf_get_height (pb)
   );
 
-  img->render (pb, 0, 0, w, h, 0, 0);
+  img->render (pb, 0, 0, img->w, img->h, 0, 0);
 
   return img;
 }
