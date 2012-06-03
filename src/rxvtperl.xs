@@ -51,6 +51,14 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
+typedef char *		octet_string;
+typedef char *		utf8_string;
+
+typedef GdkPixbuf *	urxvt__pixbuf;
+typedef rxvt_img *	urxvt__img;
+
+/////////////////////////////////////////////////////////////////////////////
+
 static wchar_t *
 sv2wcs (SV *sv)
 {
@@ -1921,4 +1929,13 @@ void
 overlay::DESTROY ()
 
 INCLUDE: $PERL <iom_perl.xs -pe s/IOM_MODULE/urxvt/g,s/IOM_CLASS/urxvt/g |
+
+MODULE = urxvt             PACKAGE = urxvt::pixbuf	PREFIX = gdk_pixbuf_
+
+urxvt::pixbuf gdk_pixbuf_new_from_file (octet_string filename, GError **error = 0)
+
+void
+DESTROY (urxvt::pixbuf self)
+	CODE:
+        gdk_pixbuf_unref (self);
 

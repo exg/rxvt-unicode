@@ -1,3 +1,6 @@
+octet_string            T_OCTET_STRING
+utf8_string             T_UTF8_STRING
+
 rxvt_term *		T_TERM
 
 overlay *		T_OVERLAY
@@ -6,6 +9,10 @@ Time			T_UV
 Atom			T_UV
 Window			T_UV
 
+urxvt::pixbuf           T_PTROBJ
+urxvt::img              T_PTROBJ
+
+GError **		T_UV
 
 INPUT
 
@@ -14,6 +21,11 @@ T_TERM
 T_OVERLAY
 	$var = SvOVERLAY ($arg);
 
+T_OCTET_STRING
+        $var = SvPVbyte_nolen ($arg)
+
+T_UTF8_STRING
+        $var = SvPVutf8_nolen ($arg); // imperfect, destroys references
 
 OUTPUT
 
