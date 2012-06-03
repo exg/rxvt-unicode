@@ -1,7 +1,10 @@
+#include <math.h>
 #include "../config.h"
 #include "rxvt.h"
 
 #if HAVE_IMG
+
+#define float_to_component(d) ((d) * 65535.99)
 
 rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height)
 : s(screen), w(width), h(height), format(format), shared(false)
@@ -51,22 +54,136 @@ rxvt_img::fill (const rxvt_color &c)
   XFreeGC (s->display->dpy, gc);
 }
 
+static void
+get_gaussian_kernel (int radius, int width, double *kernel, XFixed *params)
+{
+  double sigma = radius / 2.0;
+  double scale = sqrt (2.0 * M_PI) * sigma;
+  double sum = 0.0;
+
+  for (int i = 0; i < width; i++)
+    {
+      double x = i - width / 2;
+      kernel[i] = exp (-(x * x) / (2.0 * sigma * sigma)) / scale;
+      sum += kernel[i];
+    }
+
+  params[0] = XDoubleToFixed (width);
+  params[1] = XDoubleToFixed (1);
+
+  for (int i = 0; i < width; i++)
+    params[i+2] = XDoubleToFixed (kernel[i] / sum);
+}
+
 void
 rxvt_img::blur (int rh, int rv)
 {
-  //TODO
+  if (!(s->display->flags & DISPLAY_HAS_RENDER_CONV))
+    return;
+
+  Display *dpy = s->display->dpy;
+  int size = max (rh, rv) * 2 + 1;
+  double *kernel = (double *)malloc (size * sizeof (double));
+  XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
+
+  XRenderPictureAttributes pa;
+
+  pa.repeat = RepeatPad;
+  Picture src = XRenderCreatePicture (dpy, pm, format, CPRepeat, &pa);
+  Pixmap tmp = XCreatePixmap (dpy, pm, w, h, format->depth);
+  Picture dst = XRenderCreatePicture (dpy, tmp, format, CPRepeat, &pa);
+  XFreePixmap (dpy, tmp);
+
+  if (kernel && params)
+    {
+      size = rh * 2 + 1;
+      get_gaussian_kernel (rh, size, kernel, params);
+
+      XRenderSetPictureFilter (dpy, src, FilterConvolution, params, size+2);
+      XRenderComposite (dpy,
+                        PictOpSrc,
+                        src,
+                        None,
+                        dst,
+                        0, 0,
+                        0, 0,
+                        0, 0,
+                        w, h);
+
+      ::swap (src, dst);
+
+      size = rv * 2 + 1;
+      get_gaussian_kernel (rv, size, kernel, params);
+      ::swap (params[0], params[1]);
+
+      XRenderSetPictureFilter (dpy, src, FilterConvolution, params, size+2);
+      XRenderComposite (dpy,
+                        PictOpSrc,
+                        src,
+                        None,
+                        dst,
+                        0, 0,
+                        0, 0,
+                        0, 0,
+                        w, h);
+    }
+
+  free (kernel);
+  free (params);
+  XRenderFreePicture (dpy, src);
+  XRenderFreePicture (dpy, dst);
+}
+
+static Picture
+create_xrender_mask (Display *dpy, Drawable drawable, Bool argb)
+{
+  Pixmap pixmap = XCreatePixmap (dpy, drawable, 1, 1, argb ? 32 : 8);
+
+  XRenderPictFormat *format = XRenderFindStandardFormat (dpy, argb ? PictStandardARGB32 : PictStandardA8);
+  XRenderPictureAttributes pa;
+  pa.repeat = True;
+  Picture mask = XRenderCreatePicture (dpy, pixmap, format, CPRepeat, &pa);
+
+  XFreePixmap (dpy, pixmap);
+
+  return mask;
 }
 
 void
 rxvt_img::brightness (double r, double g, double b, double a)
 {
-  //TODO
+  Display *dpy = s->display->dpy;
+  Picture src = create_xrender_mask (dpy, pm, True);
+  Picture dst = XRenderCreatePicture (dpy, pm, format, 0, 0);
+
+  XRenderColor mask_c;
+  mask_c.red   = float_to_component (r);
+  mask_c.green = float_to_component (g);
+  mask_c.blue  = float_to_component (b);
+  mask_c.alpha = float_to_component (a);
+  XRenderFillRectangle (dpy, PictOpSrc, src, &mask_c, 0, 0, 1, 1);
+
+  XRenderComposite (dpy, PictOpAdd, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
 }
 
 void
 rxvt_img::contrast (double r, double g, double b, double a)
 {
-  //TODO
+  if (!(s->display->flags & DISPLAY_HAS_RENDER_MUL))
+    return;
+
+  Display *dpy = s->display->dpy;
+  Picture src = create_xrender_mask (dpy, pm, True);
+  Picture dst = XRenderCreatePicture (dpy, pm, format, 0, 0);
+
+  XRenderColor mask_c;
+  mask_c.red   = float_to_component (r);
+  mask_c.green = float_to_component (g);
+  mask_c.blue  = float_to_component (b);
+  mask_c.alpha = float_to_component (a);
+  XRenderFillRectangle (dpy, PictOpSrc, src, &mask_c, 0, 0, 1, 1);
+
+  XRenderComposite (dpy, PictOpMultiply, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
 }
 
 void
