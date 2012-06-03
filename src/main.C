@@ -1626,28 +1626,6 @@ rxvt_term::get_window_origin (int &x, int &y)
   XTranslateCoordinates (dpy, parent, display->root, 0, 0, &x, &y, &cr);
 }
 
-Pixmap
-rxvt_term::get_pixmap_property (Atom property)
-{
-  Pixmap pixmap = None;
-
-  int aformat;
-  unsigned long nitems, bytes_after;
-  Atom atype;
-  unsigned char *prop;
-  int result = XGetWindowProperty (dpy, display->root, property,
-                                   0L, 1L, False, XA_PIXMAP, &atype, &aformat,
-                                   &nitems, &bytes_after, &prop);
-  if (result == Success)
-    {
-      if (atype == XA_PIXMAP)
-        pixmap = *(Pixmap *)prop;
-      XFree (prop);
-    }
-
-  return pixmap;
-}
-
 #ifdef HAVE_BG_PIXMAP
 
 void

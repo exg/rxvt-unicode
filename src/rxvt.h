@@ -1467,7 +1467,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void alias_color (int dst, int src);
   void set_widthheight (unsigned int newwidth, unsigned int newheight);
   void get_window_origin (int &x, int &y);
-  Pixmap get_pixmap_property (Atom property);
 
   // screen.C
 

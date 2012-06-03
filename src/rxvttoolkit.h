@@ -264,6 +264,7 @@ struct rxvt_display : refcounted
   }
 
   Atom atom (const char *name);
+  Pixmap get_pixmap_property (Atom property);
   void set_selection_owner (rxvt_term *owner, bool clipboard);
 
   void reg (xevent_watcher *w);

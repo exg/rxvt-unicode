@@ -693,6 +693,28 @@ Atom rxvt_display::atom (const char *name)
   return XInternAtom (dpy, name, False);
 }
 
+Pixmap
+rxvt_display::get_pixmap_property (Atom property)
+{
+  Pixmap pixmap = None;
+
+  int aformat;
+  unsigned long nitems, bytes_after;
+  Atom atype;
+  unsigned char *prop;
+  int result = XGetWindowProperty (dpy, root, property,
+                                   0L, 1L, False, XA_PIXMAP, &atype, &aformat,
+                                   &nitems, &bytes_after, &prop);
+  if (result == Success)
+    {
+      if (atype == XA_PIXMAP)
+        pixmap = *(Pixmap *)prop;
+      XFree (prop);
+    }
+
+  return pixmap;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 template class refcache<rxvt_display>;

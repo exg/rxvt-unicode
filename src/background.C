@@ -1136,9 +1136,9 @@ rxvt_term::render_root_image ()
 void
 rxvt_term::bg_set_root_pixmap ()
 {
-  Pixmap new_root_pixmap = get_pixmap_property (xa[XA_XROOTPMAP_ID]);
+  Pixmap new_root_pixmap = display->get_pixmap_property (xa[XA_XROOTPMAP_ID]);
   if (new_root_pixmap == None)
-    new_root_pixmap = get_pixmap_property (xa[XA_ESETROOT_PMAP_ID]);
+    new_root_pixmap = display->get_pixmap_property (xa[XA_ESETROOT_PMAP_ID]);
 
   root_pixmap = new_root_pixmap;
 }
