@@ -53,7 +53,6 @@
 
 typedef char *		octet_string;
 typedef char *		utf8_string;
-typedef SV *		urxvt_color;
 
 typedef GdkPixbuf *	urxvt__pixbuf;
 typedef rxvt_img *	urxvt__img;
