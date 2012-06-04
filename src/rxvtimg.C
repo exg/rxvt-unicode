@@ -20,11 +20,11 @@ rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, i
 rxvt_img *
 rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
 {
-  GError *err;
+  GError *err = 0;
   GdkPixbuf *pb = gdk_pixbuf_new_from_file (filename, &err);
 
   if (!pb)
-    return 0;
+    rxvt_fatal ("rxvt_img::new_from_file: %s\n", err->message);
 
   rxvt_img *img = new rxvt_img (
      s,
@@ -42,6 +42,20 @@ rxvt_img::~rxvt_img ()
 {
   if (!shared)
     XFreePixmap (s->display->dpy, pm);
+}
+
+void
+rxvt_img::unshare ()
+{
+  if (!shared)
+    return;
+
+  rxvt_img *img = clone ();
+
+  ::swap (pm    , img->pm);
+  ::swap (shared, img->shared);
+
+  delete img;
 }
 
 void
@@ -193,7 +207,7 @@ rxvt_img::render (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int height
 }
 
 rxvt_img *
-rxvt_img::copy ()
+rxvt_img::clone ()
 {
   GC gc = XCreateGC (s->display->dpy, pm, 0, 0);
   Pixmap pm2 = XCreatePixmap (s->display->dpy, pm, w, h, format->depth);
@@ -203,7 +217,7 @@ rxvt_img::copy ()
 }
 
 rxvt_img *
-rxvt_img::transform (int new_width, int new_height, double matrix[16])
+rxvt_img::transform (int new_width, int new_height, int repeat, double matrix[9])
 {
   //TODO
 }
@@ -211,8 +225,13 @@ rxvt_img::transform (int new_width, int new_height, double matrix[16])
 rxvt_img *
 rxvt_img::scale (int new_width, int new_height)
 {
-  // use transform
-  //TODO
+  double matrix[9] = {
+    new_width  / (double)w, 0, 0,
+    0, new_height / (double)h, 0,
+    0,                      0, 1
+  };
+
+  return transform (new_width, new_height, RepeatNormal, matrix);
 }
 
 rxvt_img *

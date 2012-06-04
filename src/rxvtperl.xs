@@ -808,6 +808,10 @@ BOOT:
     const_iv (PictStandardA8),
     const_iv (PictStandardA4),
     const_iv (PictStandardA1),
+    const_iv (RepeatNone),
+    const_iv (RepeatNormal),
+    const_iv (RepeatPad),
+    const_iv (RepeatReflect),
 #endif
 #   if 0
     const_iv (XIMForwardChar),
@@ -1854,7 +1858,7 @@ rxvt_term::XChangeProperty (Window window, Atom property, Atom type, int format,
 }
 
 Atom
-XInternAtom (rxvt_term *term, char *atom_name, int only_if_exists = FALSE)
+XInternAtom (rxvt_term *term, octet_string atom_name, int only_if_exists = FALSE)
 	C_ARGS: term->dpy, atom_name, only_if_exists
 
 char *
@@ -1865,7 +1869,7 @@ XGetAtomName (rxvt_term *term, Atom atom)
 
 void
 XDeleteProperty (rxvt_term *term, Window window, Atom property)
-  	C_ARGS: term->dpy, window, property
+	C_ARGS: term->dpy, window, property
 
 Window
 rxvt_term::DefaultRootWindow ()
@@ -1931,16 +1935,34 @@ rxvt_term::XTranslateCoordinates (Window src, Window dst, int x, int y)
 
 #ifdef ENABLE_TRANSPARENCY
 
-# rxvt_img *
-# rxvt_term::new_root_img ()
-# 	CODE:
-#         RETVAL = rxvt_img::new_from_root (THIS);
-# 	OUTPUT:
-#         RETVAL
+#if 0
+
+rxvt_img *
+rxvt_term::new_img_from_root ()
+	CODE:
+        RETVAL = rxvt_img::new_from_root (THIS);
+	OUTPUT:
+        RETVAL
+
+#endif
 
 #endif
 
 #if HAVE_PIXBUF
+
+rxvt_img *
+rxvt_term::new_img_from_file (octet_string filename)
+	CODE:
+        try
+          {
+            RETVAL = rxvt_img::new_from_file (THIS, filename);
+          }
+        catch (const class rxvt_failure_exception &e)
+          {
+            croak ("new_img_from_file failed");
+          }
+	OUTPUT:
+        RETVAL
 
 #endif
 
@@ -1993,22 +2015,41 @@ rxvt_img::fill (SV *c)
 	C_ARGS: rc
 
 void
+rxvt_img::DESTROY ()
+	CODE:
+        delete THIS;
+
+void
 rxvt_img::blur (int rh, int rv)
 
 void
-rxvt_img::brightness (double r, double g, double b, double a = 1.)
+rxvt_img::brightness (NV r, NV g, NV b, NV a = 1.)
 
 void
-rxvt_img::contrast (double r, double g, double b, double a = 1.)
+rxvt_img::contrast (NV r, NV g, NV b, NV a = 1.)
+
+void
+rxvt_img::unshare ()
 
 rxvt_img *
-rxvt_img::copy ()
+rxvt_img::clone ()
 
 rxvt_img *
 rxvt_img::scale (int new_width, int new_height)
 
-# rxvt_img *
-# rxvt_img::transform (int new_width, int new_height, double matrix[16]);
+rxvt_img *
+rxvt_img::transform (int new_width, int new_height, int repeat,
+                     NV p11, NV p12, NV p13,
+                     NV p21, NV p22, NV p23,
+                     NV p31, NV p32, NV p23)
+	INIT:
+        double matrix[9] = {
+          p11, p12, p13,
+          p21, p22, p23,
+          p31, p32, p33
+        };
+	C_ARGS: new_width, new_height, repeat, matrix
+        
 
 #endif
 

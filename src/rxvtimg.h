@@ -1,7 +1,7 @@
 #ifndef IMG_H
 #define IMG_H
 
-#if defined HAVE_BG_PIXMAP && defined BG_IMAGE_FROM_FILE && defined ENABLE_TRANSPARENCY && defined HAVE_PIXBUF
+#if HAVE_BG_PIXMAP && BG_IMAGE_FROM_FILE && ENABLE_TRANSPARENCY && HAVE_PIXBUF
   #define HAVE_IMG 1
 #endif
 
@@ -31,6 +31,7 @@ struct rxvt_img
   }
 
   // inplace
+  void unshare (); // create a copy of the pixmap if !shared
   void fill (const rxvt_color &c);
   void blur (int rh, int rv);
   void brightness (double r, double g, double b, double a = 1.);
@@ -38,9 +39,9 @@ struct rxvt_img
   void render (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int height, int dst_x, int dst_y);
 
   // copy
-  rxvt_img *copy ();
+  rxvt_img *clone ();
   rxvt_img *scale (int new_width, int new_height);
-  rxvt_img *transform (int new_width, int new_height, double matrix[16]);
+  rxvt_img *transform (int new_width, int new_height, int repeat, double matrix[9]);
   rxvt_img *convert_to (XRenderPictFormat *format);
 };
 
