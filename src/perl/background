@@ -1,0 +1,142 @@
+#! perl
+
+our $EXPR = 'resize (blur (load "/root/pix/das_fette_schwein.jpg", 1 + (counter 1) % 10, 10), w, h)';
+#$EXPR = 'blur root, 10, 10'
+#$EXPR = 'blur move (root, -x, -y), 5, 5'
+#resize load "/root/pix/das_fette_schwein.jpg", w, h
+
+use Safe;
+
+{
+   package urxvt::bgdsl::vars;
+
+   our ($self, $old, $new);
+   our ($x, $y, $w, $h);
+
+   package urxvt::bgdsl; # background language
+
+   *repeat_black  = \&urxvt::RepeatNone; #TODO wtf
+   *repeat_wrap   = \&urxvt::RepeatNormal;
+   *repeat_pad    = \&urxvt::RepeatPad;
+   *repeat_mirror = \&urxvt::RepeatReflect;
+
+   sub load {
+      my ($path) = @_;
+
+      $new->{load}{$path} = $old->{load}{$path} || $self->new_img_from_file ($path);
+   }
+
+   sub root {
+      die "root op not supported, exg, we need you";
+   }
+
+   sub resize {
+      $_[0]->scale ($_[1], $_[2])
+   }
+
+   sub move {
+      # TODO: must be simpler
+      $_[0]->transform ($_[0]->w, $_[0]->h, $_[1],
+         1, 0, -$_[2],
+         0, 1, -$_[3],
+         0, 0,      1,
+      )
+   }
+
+   sub rotate {
+      $_[0]->rotate ($_[0], $_[1], $_[2], $_[3] * (3.14159265 / 180))
+   }
+
+   sub blur {
+      my ($img, $rh, $rv) = @_;
+
+      $img = $img->clone;
+      $img->clone->blur ($rh, $rv);
+      $img
+   }
+
+   sub contrast {
+      my ($img, $r, $g, $b, $a) = @_;
+      ($g, $b) = ($r, $r) if @_ < 4;
+      $a       = 1        if @_ < 5;
+      $img = $img->clone;
+      $img->contrast ($r, $g, $b, $a);
+      $img
+   }
+
+   sub brightness {
+      my ($img, $r, $g, $b, $a) = @_;
+      ($g, $b) = ($r, $r) if @_ < 4;
+      $a       = 1        if @_ < 5;
+      $img = $img->clone;
+      $img->brightness ($r, $g, $b, $a);
+      $img
+   }
+
+   sub x { $new->{position_sensitive} = 1; $x }
+   sub y { $new->{position_sensitive} = 1; $y }
+   sub w { $new->{size_sensitive}     = 1; $w }
+   sub h { $new->{size_sensitive}     = 1; $h }
+   sub now { urxvt::NOW }
+
+   sub again {
+      $new->{again} = $_[0];
+   }
+
+   sub counter {
+      $new->{again} = $_[0];
+      $self->{counter}++ + 0
+   }
+}
+
+sub parse_expr {
+   my $expr = eval "sub {\npackage urxvt::bgdsl;\n#line 0 'background expression'\n$_[0]\n}";
+   die if $@;
+   $expr
+}
+
+# compiles a parsed expression
+sub set_expr {
+   my ($self, $expr) = @_;
+
+   local $Data::Dumper::Deparse=1; use Data::Dumper; warn Dumper $expr;#d#
+   $self->{expr} = $expr;
+   $self->recalculate;
+}
+
+# evaluate the current bg expression
+sub recalculate {
+   my ($self) = @_;
+
+   local $urxvt::bgdsl::vars::self = $self;
+
+   local $urxvt::bgdsl::vars::old = $self->{state};
+   local $urxvt::bgdsl::vars::new = my $state = $self->{state} = {};
+
+   ($urxvt::bgdsl::vars::x, $urxvt::bgdsl::vars::y, $urxvt::bgdsl::vars::w, $urxvt::bgdsl::vars::h) =
+      $self->get_geometry;
+
+   my $img = eval { $self->{expr}->() };
+   warn $@ if $@;#d#
+
+   if (my $again = $state->{again}) {
+      warn $again;#d#
+      $state->{again} = urxvt::timer->new->after ($again)->cb (sub { $self->recalculate });
+   }
+
+   # TODO: install handlers for geometry changes &c
+
+   warn $img;
+   $self->set_background ($img);
+   $self->scr_recolour (0);
+   $self->want_refresh;
+}
+
+sub on_start {
+   my ($self) = @_;
+
+   $self->set_expr (parse_expr $EXPR);
+
+   ()
+}
+
