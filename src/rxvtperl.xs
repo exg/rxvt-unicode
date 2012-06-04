@@ -1936,6 +1936,18 @@ rxvt_term::XTranslateCoordinates (Window src, Window dst, int x, int y)
 #############################################################################
 # fancy bg bloatstuff (TODO: should be moved up somewhere)
 
+#if HAVE_IMG
+
+rxvt_img *
+rxvt_term::new_img (SV *format, int width, int height)
+	CODE:
+        XRenderPictFormat *f = SvOK (format)
+                             ? XRenderFindVisualFormat   (THIS->dpy, THIS->visual)
+                             : XRenderFindStandardFormat (THIS->dpy, SvIV (format));
+        RETVAL = new rxvt_img (THIS, f, width, height);
+	OUTPUT:
+        RETVAL
+
 #if ENABLE_TRANSPARENCY
 
 #if 0
@@ -1988,6 +2000,8 @@ rxvt_term::set_background (rxvt_img *img)
 
 #endif
 
+#endif
+
 #############################################################################
 # urxvt::overlay
 #############################################################################
@@ -2028,6 +2042,34 @@ MODULE = urxvt             PACKAGE = urxvt::img
 
 # rxvt_img *new (rxvt_screen *screen, XRenderPictFormat *format, int width, int height)
 # rxvt_img *rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap);
+
+int
+rxvt_img::w ()
+	CODE:
+        RETVAL = THIS->w;
+	OUTPUT:
+        RETVAL
+
+int
+rxvt_img::h ()
+	CODE:
+        RETVAL = THIS->h;
+	OUTPUT:
+        RETVAL
+
+bool
+rxvt_img::shared ()
+	CODE:
+        RETVAL = THIS->shared;
+	OUTPUT:
+        RETVAL
+
+Pixmap
+rxvt_img::pm ()
+	CODE:
+        RETVAL = THIS->pm;
+	OUTPUT:
+        RETVAL
 
 void
 rxvt_img::fill (SV *c)

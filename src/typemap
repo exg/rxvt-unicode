@@ -3,6 +3,7 @@ overlay *		OVERLAY
 Time			T_UV
 Atom			T_UV
 Window			T_UV
+Pixmap			T_UV
 
 urxvt::pixbuf           T_PTROBJ
 

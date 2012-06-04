@@ -270,6 +270,7 @@ rxvt_img::render_pixbuf (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int
     {
       //pix_colors[Color_bg].get (c);
       //TODO
+      c.r = 0xffff; c.g = 0xc0c0; c.b = 0xcbcb;//D
       c.r >>= 8;
       c.g >>= 8;
       c.b >>= 8;
