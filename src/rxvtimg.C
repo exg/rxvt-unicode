@@ -219,7 +219,25 @@ rxvt_img::clone ()
 rxvt_img *
 rxvt_img::transform (int new_width, int new_height, int repeat, double matrix[9])
 {
-  //TODO
+  rxvt_img *img = new rxvt_img (s, format, new_width, new_height);
+
+  Display *dpy = s->display->dpy;
+  Picture src = XRenderCreatePicture (dpy,      pm,      format, 0, 0);
+  Picture dst = XRenderCreatePicture (dpy, img->pm, img->format, 0, 0);
+
+  XTransform xfrm;
+
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j)
+      xfrm.matrix [i][j] = XDoubleToFixed (matrix [i * 3 + j]);
+
+  XRenderSetPictureTransform (dpy, src, &xfrm);
+  XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, new_width, new_height);
+
+  XRenderFreePicture (dpy, src);
+  XRenderFreePicture (dpy, dst);
+
+  return img;
 }
 
 rxvt_img *
@@ -240,7 +258,7 @@ rxvt_img::convert_to (XRenderPictFormat *new_format)
   rxvt_img *img = new rxvt_img (s, new_format, w, h);
 
   Display *dpy = s->display->dpy;
-  Picture src = XRenderCreatePicture (dpy, pm, format, 0, 0);
+  Picture src = XRenderCreatePicture (dpy,      pm,     format, 0, 0);
   Picture dst = XRenderCreatePicture (dpy, img->pm, new_format, 0, 0);
 
   XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
