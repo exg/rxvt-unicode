@@ -33,7 +33,7 @@ rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
      gdk_pixbuf_get_height (pb)
   );
 
-  img->render (pb, 0, 0, img->w, img->h, 0, 0);
+  img->render_pixbuf (pb, 0, 0, img->w, img->h, 0, 0);
 
   return img;
 }
@@ -200,10 +200,124 @@ rxvt_img::contrast (double r, double g, double b, double a)
   XRenderComposite (dpy, PictOpMultiply, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
 }
 
-void
-rxvt_img::render (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int height, int dst_x, int dst_y)
+bool
+rxvt_img::render_pixbuf (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int height, int dst_x, int dst_y)
 {
-  //TODO
+  bool argb = format->id == PictStandardARGB32;
+
+  Display *dpy = s->display->dpy;
+
+  if (s->visual->c_class != TrueColor)
+    return false;
+
+  uint32_t red_mask, green_mask, blue_mask, alpha_mask;
+
+  if (argb)
+    {
+      red_mask   = 0xff << 16;
+      green_mask = 0xff << 8;
+      blue_mask  = 0xff;
+      alpha_mask = 0xff << 24;
+    }
+  else
+    {
+      red_mask   = s->visual->red_mask;
+      green_mask = s->visual->green_mask;
+      blue_mask  = s->visual->blue_mask;
+      alpha_mask = (uint32_t)format->direct.alphaMask << format->direct.alpha;
+    }
+
+  int width_r = ecb_popcount32 (red_mask);
+  int width_g = ecb_popcount32 (green_mask);
+  int width_b = ecb_popcount32 (blue_mask);
+  int width_a = ecb_popcount32 (alpha_mask);
+
+  if (width_r > 8 || width_g > 8 || width_b > 8 || width_a > 8)
+    return false;
+
+  int sh_r = ecb_ctz32 (red_mask);
+  int sh_g = ecb_ctz32 (green_mask);
+  int sh_b = ecb_ctz32 (blue_mask);
+  int sh_a = ecb_ctz32 (alpha_mask);
+
+  if (width > 32767 || height > 32767)
+    return false;
+
+  XImage *ximage = XCreateImage (dpy, s->visual, argb ? 32 : format->depth, ZPixmap, 0, 0,
+                                 width, height, 32, 0);
+  if (!ximage)
+    return false;
+
+  if (height > INT_MAX / ximage->bytes_per_line
+      || !(ximage->data = (char *)malloc (height * ximage->bytes_per_line)))
+    {
+      XDestroyImage (ximage);
+      return false;
+    }
+
+  GC gc = XCreateGC (dpy, pm, 0, 0);
+
+  ximage->byte_order = ecb_big_endian () ? MSBFirst : LSBFirst;
+
+  int rowstride = gdk_pixbuf_get_rowstride (pixbuf);
+  int channels = gdk_pixbuf_get_n_channels (pixbuf);
+  unsigned char *row = gdk_pixbuf_get_pixels (pixbuf) + src_y * rowstride + src_x * channels;
+  char *line = ximage->data;
+
+  rgba c (0, 0, 0);
+
+  if (channels == 4 && alpha_mask == 0)
+    {
+      //pix_colors[Color_bg].get (c);
+      //TODO
+      c.r >>= 8;
+      c.g >>= 8;
+      c.b >>= 8;
+    }
+
+  for (int y = 0; y < height; y++)
+    {
+      for (int x = 0; x < width; x++)
+        {
+          unsigned char *pixel = row + x * channels;
+          uint32_t value;
+          unsigned char r, g, b, a;
+
+          if (channels == 4)
+            {
+              a = pixel[3];
+              r = (pixel[0] * a + c.r * (0xff - a)) / 0xff;
+              g = (pixel[1] * a + c.g * (0xff - a)) / 0xff;
+              b = (pixel[2] * a + c.b * (0xff - a)) / 0xff;
+            }
+          else
+            {
+              a = 0xff;
+              r = pixel[0];
+              g = pixel[1];
+              b = pixel[2];
+            }
+
+          value  = ((r >> (8 - width_r)) << sh_r)
+                 | ((g >> (8 - width_g)) << sh_g)
+                 | ((b >> (8 - width_b)) << sh_b)
+                 | ((a >> (8 - width_a)) << sh_a);
+
+          if (ximage->bits_per_pixel == 32)
+            ((uint32_t *)line)[x] = value;
+          else
+            XPutPixel (ximage, x, y, value);
+        }
+
+      row += rowstride;
+      line += ximage->bytes_per_line;
+    }
+
+  XPutImage (dpy, pm, gc, ximage, 0, 0, dst_x, dst_y, width, height);
+  XDestroyImage (ximage);
+  XFreeGC (dpy, gc);
+
+  return true;
 }
 
 rxvt_img *

@@ -36,7 +36,7 @@ struct rxvt_img
   void blur (int rh, int rv);
   void brightness (double r, double g, double b, double a = 1.);
   void contrast (double r, double g, double b, double a = 1.);
-  void render (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int height, int dst_x, int dst_y);
+  bool render_pixbuf (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int height, int dst_x, int dst_y);
 
   // copy
   rxvt_img *clone ();
