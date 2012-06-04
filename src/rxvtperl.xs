@@ -1936,6 +1936,23 @@ rxvt_term::XTranslateCoordinates (Window src, Window dst, int x, int y)
 #############################################################################
 # fancy bg bloatstuff (TODO: should be moved up somewhere)
 
+# TODO: ugly
+void
+rxvt_term::get_geometry ()
+	PPCODE:
+        Window wdummy;
+        int x, y;
+        XWindowAttributes wattr;
+        XGetWindowAttributes (THIS->dpy, THIS->parent, &wattr);
+        XTranslateCoordinates (THIS->dpy, THIS->parent, wattr.root,
+                               -wattr.border_width, -wattr.border_width,
+                               &x, &y, &wdummy);
+	EXTEND (SP, 4);
+        PUSHs (sv_2mortal (newSViv (x)));
+        PUSHs (sv_2mortal (newSViv (y)));
+        PUSHs (sv_2mortal (newSViv (wattr.width)));
+        PUSHs (sv_2mortal (newSViv (wattr.height)));
+
 #if HAVE_IMG
 
 rxvt_img *
