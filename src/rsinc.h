@@ -17,7 +17,7 @@
 #endif
   def (name)
   def (title)
-#ifdef BG_IMAGE_FROM_FILE
+#if BG_IMAGE_FROM_FILE
   def (path)
   def (backgroundPixmap)
 #endif
@@ -54,11 +54,11 @@
 #ifdef PRINTPIPE
   def (print_pipe)
 #endif
-#ifdef USE_XIM
+#if USE_XIM
   def (preeditType)
   def (inputMethod)
 #endif
-#ifdef ENABLE_TRANSPARENCY
+#if ENABLE_TRANSPARENCY
   def (transparent)
   def (shade)
   def (blurradius)
@@ -80,7 +80,7 @@
   def (cursorUnderline)
   def (urgentOnBell)
 #endif
-#ifdef BUILTIN_GLYPHS
+#if BUILTIN_GLYPHS
   def (skipBuiltinGlyphs)
 #endif
 #if CURSOR_BLINK
@@ -103,7 +103,7 @@
   def (secondaryScreen)
   def (secondaryScroll)
 #endif
-#ifdef OFF_FOCUS_FADING
+#if OFF_FOCUS_FADING
   def (fade)
 #endif
 #if ENABLE_PERL
@@ -116,6 +116,6 @@
   def (iso14755)
   def (iso14755_52)
 #endif
-#ifdef ENABLE_EWMH
+#if ENABLE_EWMH
   def (iconfile)
 #endif

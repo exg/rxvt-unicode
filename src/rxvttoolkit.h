@@ -180,7 +180,7 @@ struct rxvt_drawable
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef USE_XIM
+#if USE_XIM
 struct rxvt_xim : refcounted
 {
   void destroy ();
@@ -231,7 +231,7 @@ struct rxvt_display : refcounted
   ev::prepare flush_ev; void flush_cb (ev::prepare &w, int revents);
   ev::io      x_ev    ; void x_cb     (ev::io      &w, int revents);
 
-#ifdef USE_XIM
+#if USE_XIM
   refcache<rxvt_xim> xims;
   vector<im_watcher *> imw;
 
@@ -270,7 +270,7 @@ struct rxvt_display : refcounted
   void reg (xevent_watcher *w);
   void unreg (xevent_watcher *w);
 
-#ifdef USE_XIM
+#if USE_XIM
   void reg (im_watcher *w);
   void unreg (im_watcher *w);
 
@@ -279,7 +279,7 @@ struct rxvt_display : refcounted
 #endif
 };
 
-#ifdef USE_XIM
+#if USE_XIM
 struct im_watcher : rxvt_watcher, callback<void (void)>
 {
   void start (rxvt_display *display)

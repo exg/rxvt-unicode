@@ -194,7 +194,7 @@ optList[] = {
               STRG (Rs_color + Color_pointer_fg, "pointerColor", "pr", "color", "pointer color"),
               STRG (Rs_color + Color_pointer_bg, "pointerColor2", "pr2", "color", "pointer bg color"),
               STRG (Rs_color + Color_border, "borderColor", "bd", "color", "border color"),
-#ifdef BG_IMAGE_FROM_FILE
+#if BG_IMAGE_FROM_FILE
               RSTRG (Rs_path, "path", "search path"),
               STRG (Rs_backgroundPixmap, "backgroundPixmap", "pixmap", "file[;geom]", "background pixmap"),
 # if ENABLE_EWMH
@@ -209,7 +209,7 @@ optList[] = {
               STRG (Rs_boldItalicFont, "boldItalicFont", "fbi", "fontname", "bold italic font"),
               BOOL (Rs_intensityStyles, "intensityStyles", "is", Opt_intensityStyles, 0, "font styles imply intensity changes"),
 #endif
-#ifdef USE_XIM
+#if USE_XIM
               STRG (Rs_inputMethod, "inputMethod", "im", "name", "name of input method"),
               STRG (Rs_preeditType, "preeditType", "pt", "style", "input style: style = OverTheSpot|OffTheSpot|Root"),
               STRG (Rs_imLocale, "imLocale", "imlocale", "string", "locale to use for input method"),

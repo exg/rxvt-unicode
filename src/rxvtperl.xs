@@ -1933,7 +1933,7 @@ rxvt_term::XTranslateCoordinates (Window src, Window dst, int x, int y)
 #############################################################################
 # fancy bg bloatstuff (TODO: should be moved up somewhere)
 
-#ifdef ENABLE_TRANSPARENCY
+#if ENABLE_TRANSPARENCY
 
 #if 0
 

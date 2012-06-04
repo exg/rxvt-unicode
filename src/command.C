@@ -423,7 +423,7 @@ rxvt_term::key_press (XKeyEvent &ev)
 
   kbuf[0] = 0;
 
-#ifdef USE_XIM
+#if USE_XIM
   if (Input_Context)
     {
       Status status_return;
@@ -989,7 +989,7 @@ rxvt_term::flush ()
 
       scr_refresh ();
       scrollBar.show (1);
-#ifdef USE_XIM
+#if USE_XIM
       im_send_spot ();
 #endif
     }

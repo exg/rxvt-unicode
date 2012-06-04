@@ -174,7 +174,7 @@ rxvt_term::rxvt_term ()
   rootwin_ev.set          <rxvt_term, &rxvt_term::rootwin_cb> (this),
 #endif
   scrollbar_ev.set        <rxvt_term, &rxvt_term::x_cb>       (this),
-#ifdef USE_XIM
+#if USE_XIM
   im_ev.set               <rxvt_term, &rxvt_term::im_cb>      (this),
 #endif
 #ifdef POINTER_BLANK
@@ -233,7 +233,7 @@ rxvt_term::~rxvt_term ()
       selection_clear ();
       selection_clear (true);
 
-#ifdef USE_XIM
+#if USE_XIM
       im_destroy ();
 #endif
       scrollBar.destroy ();
@@ -574,7 +574,7 @@ rxvt_init ()
 
   XrmInitialize ();
 
-#ifdef HAVE_PIXBUF
+#if HAVE_PIXBUF
   g_type_init ();
 #endif
 }
@@ -967,7 +967,7 @@ rxvt_term::get_colorfgbg ()
     if (pix_colors[Color_bg] == pix_colors[i])
       {
         sprintf (bstr, "%d", i - Color_Black);
-#ifdef BG_IMAGE_FROM_FILE
+#if BG_IMAGE_FROM_FILE
         xpmb = "default;";
 #endif
         break;
@@ -1089,7 +1089,7 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
   if (fix_screen || old_height == 0)
     scr_reset ();
 
-#ifdef USE_XIM
+#if USE_XIM
   im_set_position ();
 #endif
 }
@@ -1124,7 +1124,7 @@ rxvt_term::set_widthheight (unsigned int newwidth, unsigned int newheight)
 /* -------------------------------------------------------------------- *
  * -                      X INPUT METHOD ROUTINES                     - *
  * -------------------------------------------------------------------- */
-#ifdef USE_XIM
+#if USE_XIM
 
 void
 rxvt_term::im_set_color (unsigned long &fg, unsigned long &bg)

@@ -72,7 +72,7 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 #include <X11/keysymdef.h>
 #include <X11/Xatom.h>
 
-#ifdef HAVE_PIXBUF
+#if HAVE_PIXBUF
 # include <gdk-pixbuf/gdk-pixbuf.h>
 #endif
 
@@ -242,7 +242,7 @@ struct image_effects
   bool set_blur (const char *geom);
 };
 
-# ifdef BG_IMAGE_FROM_FILE
+# if BG_IMAGE_FROM_FILE
 enum {
   IM_IS_SET            = 1 << 0,
   IM_IS_SIZE_SENSITIVE = 1 << 1,
@@ -275,7 +275,7 @@ struct rxvt_image : image_effects
             || (!(flags & IM_ROOT_ALIGN) && (h_align || v_align)));
   }
 
-#  ifdef HAVE_PIXBUF
+#  if HAVE_PIXBUF
   GdkPixbuf *pixbuf;
 
   void destroy ()
@@ -353,7 +353,7 @@ struct mouse_event
 
 /* COLORTERM, TERM environment variables */
 #define COLORTERMENV    "rxvt"
-#ifdef BG_IMAGE_FROM_FILE
+#if BG_IMAGE_FROM_FILE
 # define COLORTERMENVFULL COLORTERMENV "-xpm"
 #else
 # define COLORTERMENVFULL COLORTERMENV
@@ -1198,7 +1198,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   uint8_t bg_flags;
 
-# ifdef BG_IMAGE_FROM_FILE
+# if BG_IMAGE_FROM_FILE
   vector<rxvt_image> image_vec;
   rxvt_image *new_image ()
   {
@@ -1210,7 +1210,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void parse_image (int id, const char *type, const char *arg);
 # endif
 
-# ifdef ENABLE_TRANSPARENCY
+# if ENABLE_TRANSPARENCY
   Pixmap root_pixmap; /* current root pixmap set */
   image_effects root_effects;
 
@@ -1243,7 +1243,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
     bg_flags &= ~BG_IS_VALID;
   }
 #endif
-#ifdef HAVE_PIXBUF
+#if HAVE_PIXBUF
   bool pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
                          int src_x, int src_y, int dst_x, int dst_y,
                          unsigned int width, unsigned int height, bool argb);

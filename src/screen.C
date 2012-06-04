@@ -2532,7 +2532,7 @@ rxvt_term::scr_recolour (bool refresh) NOTHROW
 #ifdef HAVE_BG_PIXMAP
   if (bg_pixmap != None)
     {
-# ifdef ENABLE_TRANSPARENCY
+# if ENABLE_TRANSPARENCY
       if (bg_flags & BG_IS_TRANSPARENT)
         {
           XSetWindowBackgroundPixmap (dpy, parent, bg_pixmap);
@@ -3528,7 +3528,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
 }
 
 /* ------------------------------------------------------------------------- */
-#ifdef USE_XIM
+#if USE_XIM
 void ecb_cold
 rxvt_term::im_set_position (XPoint &pos) NOTHROW
 {

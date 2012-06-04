@@ -60,7 +60,7 @@ create_xrender_mask (Display *dpy, Drawable drawable, Bool argb, Bool component_
 void
 rxvt_term::bg_destroy ()
 {
-# ifdef BG_IMAGE_FROM_FILE
+# if BG_IMAGE_FROM_FILE
   for (vector<rxvt_image>::iterator bg_image = image_vec.begin (); bg_image < image_vec.end (); bg_image++)
     bg_image->destroy ();
 # endif
@@ -86,12 +86,12 @@ rxvt_term::bg_set_position (int x, int y)
 bool
 rxvt_term::bg_window_size_sensitive ()
 {
-# ifdef ENABLE_TRANSPARENCY
+# if ENABLE_TRANSPARENCY
   if (bg_flags & BG_IS_TRANSPARENT)
     return true;
 # endif
 
-# ifdef BG_IMAGE_FROM_FILE
+# if BG_IMAGE_FROM_FILE
   for (vector<rxvt_image>::iterator bg_image = image_vec.begin (); bg_image < image_vec.end (); bg_image++)
     {
       if ((bg_image->flags & IM_IS_SIZE_SENSITIVE)
@@ -107,12 +107,12 @@ rxvt_term::bg_window_size_sensitive ()
 bool
 rxvt_term::bg_window_position_sensitive ()
 {
-# ifdef ENABLE_TRANSPARENCY
+# if ENABLE_TRANSPARENCY
   if (bg_flags & BG_IS_TRANSPARENT)
     return true;
 # endif
 
-# ifdef BG_IMAGE_FROM_FILE
+# if BG_IMAGE_FROM_FILE
   for (vector<rxvt_image>::iterator bg_image = image_vec.begin (); bg_image < image_vec.end (); bg_image++)
     {
       if (bg_image->flags & IM_ROOT_ALIGN)
@@ -123,7 +123,7 @@ rxvt_term::bg_window_position_sensitive ()
   return false;
 }
 
-# ifdef BG_IMAGE_FROM_FILE
+# if BG_IMAGE_FROM_FILE
 static inline int
 make_align_position (int align, int window_size, int image_size)
 {
@@ -349,7 +349,7 @@ rxvt_term::get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y
     }
 }
 
-#  ifdef HAVE_PIXBUF
+#  if HAVE_PIXBUF
 bool
 rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
                              int src_x, int src_y, int dst_x, int dst_y,
@@ -695,7 +695,7 @@ rxvt_image::rxvt_image ()
   h_align =
   v_align = defaultAlign;
 
-#  ifdef HAVE_PIXBUF
+#  if HAVE_PIXBUF
   pixbuf = 0;
 #  endif
 }
@@ -729,7 +729,7 @@ rxvt_image::set_file (const char *file)
 {
   bool ret = false;
 
-#  ifdef HAVE_PIXBUF
+#  if HAVE_PIXBUF
   GdkPixbuf *image = gdk_pixbuf_new_from_file (file, NULL);
   if (image)
     {
@@ -995,7 +995,7 @@ rxvt_term::tint_pixmap (Pixmap pixmap, int width, int height, bool argb, rxvt_co
   return ret;
 }
 
-# ifdef ENABLE_TRANSPARENCY
+# if ENABLE_TRANSPARENCY
 /*
  * Builds a pixmap of the same size as the terminal window that contains
  * the tiled portion of the root pixmap that is supposed to be covered by
@@ -1148,7 +1148,7 @@ bool
 rxvt_term::bg_render ()
 {
   bg_invalidate ();
-# ifdef ENABLE_TRANSPARENCY
+# if ENABLE_TRANSPARENCY
   if (bg_flags & BG_IS_TRANSPARENT)
     {
       /*  we need to re-generate transparency pixmap in that case ! */
@@ -1157,7 +1157,7 @@ rxvt_term::bg_render ()
     }
 # endif
 
-# ifdef BG_IMAGE_FROM_FILE
+# if BG_IMAGE_FROM_FILE
   for (vector<rxvt_image>::iterator bg_image = image_vec.begin (); bg_image < image_vec.end (); bg_image++)
     {
       if (render_image (*bg_image))
@@ -1185,7 +1185,7 @@ rxvt_term::bg_render ()
 void
 rxvt_term::bg_init ()
 {
-#ifdef BG_IMAGE_FROM_FILE
+#if BG_IMAGE_FROM_FILE
   if (rs[Rs_backgroundPixmap])
     {
       rxvt_image *image = new_image ();

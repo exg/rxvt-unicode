@@ -809,7 +809,7 @@ rxvt_term::init2 (int argc, const char *const *argv)
   {
     bg_init ();
 
-#ifdef ENABLE_TRANSPARENCY
+#if ENABLE_TRANSPARENCY
     if (option (Opt_transparent))
       {
         bg_set_transparent ();
@@ -1006,7 +1006,7 @@ rxvt_term::init_xlocale ()
 {
   set_environ (envv);
 
-#ifdef USE_XIM
+#if USE_XIM
   if (!locale)
     rxvt_warn ("setting locale failed, continuing without locale support.\n");
   else
@@ -1279,7 +1279,7 @@ rxvt_term::get_ourmods ()
 void
 rxvt_term::set_icon (const char *file)
 {
-#ifdef HAVE_PIXBUF
+#if HAVE_PIXBUF
   GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (file, NULL);
   if (!pixbuf)
     {

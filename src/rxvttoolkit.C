@@ -68,7 +68,7 @@ static const char *const xa_names[] =
   "WM_LOCALE_NAME",
   "XIM_SERVERS",
 #endif
-#ifdef ENABLE_TRANSPARENCY
+#if ENABLE_TRANSPARENCY
   "_XROOTPMAP_ID",
   "ESETROOT_PMAP_ID",
 #endif
@@ -155,7 +155,7 @@ void refcache<T>::clear ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef USE_XIM
+#if USE_XIM
 
 static void
 #if XIMCB_PROTO_BROKEN
@@ -536,14 +536,14 @@ rxvt_display::~rxvt_display ()
 #endif
   x_ev.stop ();
   flush_ev.stop ();
-#ifdef USE_XIM
+#if USE_XIM
   xims.clear ();
 #endif
   XrmDestroyDatabase (XrmGetDatabase (dpy));
   XCloseDisplay (dpy);
 }
 
-#ifdef USE_XIM
+#if USE_XIM
 void rxvt_display::im_change_cb ()
 {
   for (im_watcher **i = imw.begin (); i != imw.end (); ++i)
@@ -589,7 +589,7 @@ void rxvt_display::flush_cb (ev::prepare &w, int revents)
         XEvent xev;
         XNextEvent (dpy, &xev);
 
-#ifdef USE_XIM
+#if USE_XIM
         if (!XFilterEvent (&xev, None))
           {
             if (xev.type == PropertyNotify
@@ -607,7 +607,7 @@ void rxvt_display::flush_cb (ev::prepare &w, int revents)
                 else if (xw[i]->window == xev.xany.window)
                   xw[i]->call (xev);
               }
-#ifdef USE_XIM
+#if USE_XIM
           }
 #endif
       }
@@ -648,7 +648,7 @@ void rxvt_display::set_selection_owner (rxvt_term *owner, bool clipboard)
   cur_owner = owner;
 }
 
-#ifdef USE_XIM
+#if USE_XIM
 
 void rxvt_display::reg (im_watcher *w)
 {
