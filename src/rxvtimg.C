@@ -361,8 +361,8 @@ rxvt_img *
 rxvt_img::scale (int new_width, int new_height)
 {
   double matrix[9] = {
-    new_width  / (double)w, 0, 0,
-    0, new_height / (double)h, 0,
+    w  / (double)new_width, 0, 0,
+    0, h / (double)new_height, 0,
     0,                      0, 1
   };
 

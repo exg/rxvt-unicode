@@ -802,7 +802,7 @@ BOOT:
     const_iv (XIMVisibleToForward),
     const_iv (XIMVisibleToBackword),
     const_iv (XIMVisibleToCenter),
-#if HAVE_XRENDER
+#if XRENDER
     const_iv (PictStandardARGB32),
     const_iv (PictStandardRGB24),
     const_iv (PictStandardA8),
