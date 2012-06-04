@@ -222,8 +222,10 @@ rxvt_img::transform (int new_width, int new_height, int repeat, double matrix[9]
   rxvt_img *img = new rxvt_img (s, format, new_width, new_height);
 
   Display *dpy = s->display->dpy;
-  Picture src = XRenderCreatePicture (dpy,      pm,      format, 0, 0);
-  Picture dst = XRenderCreatePicture (dpy, img->pm, img->format, 0, 0);
+  XRenderPictureAttributes pa;
+  pa.repeat = repeat;
+  Picture src = XRenderCreatePicture (dpy,      pm,      format, CPRepeat, &pa);
+  Picture dst = XRenderCreatePicture (dpy, img->pm, img->format,        0,   0);
 
   XTransform xfrm;
 
