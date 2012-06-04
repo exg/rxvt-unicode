@@ -2099,9 +2099,6 @@ rxvt_img *
 rxvt_img::clone ()
 
 rxvt_img *
-rxvt_img::scale (int new_width, int new_height)
-
-rxvt_img *
 rxvt_img::transform (int new_width, int new_height, int repeat, NV p11, NV p12, NV p13, NV p21, NV p22, NV p23, NV p31, NV p32, NV p33)
 	INIT:
         double matrix[9] = {
@@ -2110,6 +2107,12 @@ rxvt_img::transform (int new_width, int new_height, int repeat, NV p11, NV p12, 
           p31, p32, p33
         };
 	C_ARGS: new_width, new_height, repeat, matrix
+
+rxvt_img *
+rxvt_img::scale (int new_width, int new_height)
+
+rxvt_img *
+rxvt_img::rotate (int new_width, int new_height, int repeat, int x, int y, NV phi)
 
 #endif
 

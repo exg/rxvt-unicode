@@ -40,8 +40,9 @@ struct rxvt_img
 
   // copy
   rxvt_img *clone ();
-  rxvt_img *scale (int new_width, int new_height);
   rxvt_img *transform (int new_width, int new_height, int repeat, double matrix[9]);
+  rxvt_img *scale (int new_width, int new_height);
+  rxvt_img *rotate (int new_width, int new_height, int repeat, int x, int y, double phi);
   rxvt_img *convert_to (XRenderPictFormat *format);
 };
 

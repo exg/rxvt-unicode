@@ -103,7 +103,7 @@ rxvt_img::blur (int rh, int rv)
   XRenderPictureAttributes pa;
 
   pa.repeat = RepeatPad;
-  Picture src = XRenderCreatePicture (dpy, pm, format, CPRepeat, &pa);
+  Picture src = XRenderCreatePicture (dpy, pm , format, CPRepeat, &pa);
   Pixmap tmp = XCreatePixmap (dpy, pm, w, h, format->depth);
   Picture dst = XRenderCreatePicture (dpy, tmp, format, CPRepeat, &pa);
   XFreePixmap (dpy, tmp);
@@ -348,6 +348,7 @@ rxvt_img::transform (int new_width, int new_height, int repeat, double matrix[9]
     for (int j = 0; j < 3; ++j)
       xfrm.matrix [i][j] = XDoubleToFixed (matrix [i * 3 + j]);
 
+  XRenderSetPictureFilter (dpy, src, "good", 0, 0);
   XRenderSetPictureTransform (dpy, src, &xfrm);
   XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, new_width, new_height);
 
@@ -367,6 +368,21 @@ rxvt_img::scale (int new_width, int new_height)
   };
 
   return transform (new_width, new_height, RepeatNormal, matrix);
+}
+
+rxvt_img *
+rxvt_img::rotate (int new_width, int new_height, int repeat, int x, int y, double phi)
+{
+  double s = sin (phi);
+  double c = cos (phi);
+
+  double matrix[9] = {
+    c, -s, -c * x + s * y + x,
+    s,  c, -s * x - c * y + y,
+    0,  0,                  1
+  };
+
+  return transform (new_width, new_height, repeat, matrix);
 }
 
 rxvt_img *
