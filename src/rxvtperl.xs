@@ -1736,6 +1736,9 @@ void
 rxvt_term::scr_bell ()
 
 void
+rxvt_term::scr_recolour (bool refresh = true);
+
+void
 rxvt_term::scr_change_screen (int screen)
 
 void
@@ -1966,6 +1969,25 @@ rxvt_term::new_img_from_file (octet_string filename)
 
 #endif
 
+#if HAVE_BG_PIXMAP
+
+void
+rxvt_term::set_background (rxvt_img *img)
+	CODE:
+        THIS->bg_destroy ();
+        THIS->bg_pixmap = None;
+        THIS->bg_flags &= ~rxvt_term::BG_NEEDS_REFRESH;
+
+        if (img) // TODO: cannot be false
+          {
+            img->unshare ();
+            THIS->bg_pixmap = img->steal ();
+            THIS->bg_flags |= rxvt_term::BG_NEEDS_REFRESH;
+            THIS->bg_valid_since = ev::now (); // TODO: extra bloat
+          }
+
+#endif
+
 #############################################################################
 # urxvt::overlay
 #############################################################################
@@ -2038,10 +2060,7 @@ rxvt_img *
 rxvt_img::scale (int new_width, int new_height)
 
 rxvt_img *
-rxvt_img::transform (int new_width, int new_height, int repeat,
-                     NV p11, NV p12, NV p13,
-                     NV p21, NV p22, NV p23,
-                     NV p31, NV p32, NV p23)
+rxvt_img::transform (int new_width, int new_height, int repeat, NV p11, NV p12, NV p13, NV p21, NV p22, NV p23, NV p31, NV p32, NV p33)
 	INIT:
         double matrix[9] = {
           p11, p12, p13,
@@ -2049,7 +2068,6 @@ rxvt_img::transform (int new_width, int new_height, int repeat,
           p31, p32, p33
         };
 	C_ARGS: new_width, new_height, repeat, matrix
-        
 
 #endif
 
