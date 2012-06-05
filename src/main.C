@@ -412,11 +412,11 @@ print_x_error (Display *dpy, XErrorEvent *event)
         || event->error_code == BadAtom)
       {
         if (event->error_code == BadValue)
-          XGetErrorDatabaseText(dpy, mtype, "Value", "Value 0x%x", mesg, BUFSIZ);
+          XGetErrorDatabaseText (dpy, mtype, "Value", "Value 0x%x", mesg, BUFSIZ);
         else if (event->error_code == BadAtom)
-          XGetErrorDatabaseText(dpy, mtype, "AtomID", "AtomID 0x%x", mesg, BUFSIZ);
+          XGetErrorDatabaseText (dpy, mtype, "AtomID", "AtomID 0x%x", mesg, BUFSIZ);
         else
-          XGetErrorDatabaseText(dpy, mtype, "ResourceID", "ResourceID 0x%x", mesg, BUFSIZ);
+          XGetErrorDatabaseText (dpy, mtype, "ResourceID", "ResourceID 0x%x", mesg, BUFSIZ);
 
         rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->resourceid);
     }
