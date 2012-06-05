@@ -9,6 +9,7 @@ $EXPR = '
    clip X, Y, W, H, repeat_mirror,
    load "/root/pix/das_fette_schwein.jpg"
 ';
+$EXPR = 'solid "red"';
 #$EXPR = 'blur root, 10, 10'
 #$EXPR = 'blur move (root, -x, -y), 5, 5'
 #resize load "/root/pix/das_fette_schwein.jpg", w, h
@@ -29,6 +30,14 @@ our $MIN_INTERVAL = 1/100;
    *repeat_pad    = \&urxvt::RepeatPad;
    *repeat_mirror = \&urxvt::RepeatReflect;
 
+=head2 PROVIDERS/GENERATORS
+
+=over 4
+
+=item load $path
+
+=cut
+
    sub load($) {
       my ($path) = @_;
 
@@ -39,6 +48,20 @@ our $MIN_INTERVAL = 1/100;
       $new->{rootpmap_sensitive} = 1;
       die "root op not supported, exg, we need you";
    }
+
+   sub solid($;$$) {
+      my $img = $bgdsl_self->new_img (urxvt::PictStandardARGB32, $_[1] || 1, $_[2] || 1);
+      $img->fill ($_[0]);
+      $img
+   }
+
+=back
+
+=head2 OPERATORS
+
+=over 4
+
+=cut
 
 #   sub clone($) {
 #      $_[0]->clone
@@ -121,6 +144,11 @@ our $MIN_INTERVAL = 1/100;
       $new->{again} = $_[0];
       $bgdsl_self->{counter} + 0
    }
+
+=back
+
+=cut
+
 }
 
 sub parse_expr {
@@ -166,6 +194,7 @@ sub recalculate {
 
    my $img = eval { $self->{expr}->() };
    warn $@ if $@;#d#
+   die if !UNIVERSAL::isa $img, "urxvt::img";
 
    # if the expression is sensitive to external events, prepare reevaluation then
 

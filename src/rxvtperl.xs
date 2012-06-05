@@ -2048,16 +2048,12 @@ rxvt_term::new_img (SV *format, int width, int height)
 
 #if ENABLE_TRANSPARENCY
 
-#if 0
-
 rxvt_img *
 rxvt_term::new_img_from_root ()
 	CODE:
         RETVAL = rxvt_img::new_from_root (THIS);
 	OUTPUT:
         RETVAL
-
-#endif
 
 #endif
 
@@ -2091,6 +2087,7 @@ rxvt_term::set_background (rxvt_img *img)
         if (img) // TODO: cannot be false
           {
             img->unshare ();
+            //TODO: convetr to visual, possibly precompose with colour
             THIS->bg_pixmap = img->steal ();
             THIS->bg_flags |= rxvt_term::BG_NEEDS_REFRESH;
             THIS->bg_valid_since = ev::now (); // TODO: extra bloat
