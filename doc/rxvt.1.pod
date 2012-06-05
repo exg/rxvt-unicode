@@ -1287,9 +1287,9 @@ the @@RXVT_NAME@@perl(3) manpage.
 =item B<perl-lib>: I<path>
 
 Colon-separated list of additional directories that hold extension
-scripts. When looking for perl extensions, @@RXVT_NAME@@ will first
-look in these directories, then in $HOME/.urxvt/ext and lastly in
-F<@@RXVT_LIBDIR@@/urxvt/perl/>.
+scripts. When looking for perl extensions, @@RXVT_NAME@@ will first look
+in these directories, then in C<$RXVT_PERL_LIB>, F<$HOME/.urxvt/ext> and
+lastly in F<@@RXVT_LIBDIR@@/urxvt/perl/>.
 
 See the @@RXVT_NAME@@perl(3) manpage.
 
@@ -1639,12 +1639,18 @@ defaults to C<:0> if it doesn't exist.
 
 The shell to be used for command execution, defaults to C</bin/sh>.
 
-=item B<RXVT_SOCKET>
+=item B<RXVT_SOCKET> (sic)
 
 The unix domain socket path used by @@RXVT_NAME@@c(1) and
 @@RXVT_NAME@@d(1).
 
 Default F<<< $HOME/.urxvt/urxvtd-I<< <nodename> >> >>>.
+
+=item B<RXVT_PERL_LIB> (sic)
+
+Additional F<:>-separated library search path for perl extensions. Will be
+searched after B<-perl-lib> but before F<~/.urxvt/ext> and the system library
+directory.
 
 =item B<HOME>
 

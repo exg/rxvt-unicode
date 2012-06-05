@@ -945,8 +945,22 @@ BEGIN {
 
 no warnings 'utf8';
 
+sub perl_libdirs {
+   map { split /:/ }
+      $_[0]->resource ("perl_lib"),
+      $ENV{URXVT_PERL_LIB},
+      "$ENV{HOME}/.urxvt/ext",
+      "$LIBDIR/perl"
+}
+
+our %META; # meta header information from scripts
+our %SCAN; # which dirs already scanned
+
 sub resource {
    my ($term, $name, $isarg, $flag, $value) = @_;
+
+   for my $dir (perl_libdirs $term) {
+   }
 
    warn "resourece<@_>\n";#d#
 
@@ -998,7 +1012,7 @@ sub invoke {
    my $htype = shift;
 
    if ($htype == 0) { # INIT
-      my @dirs = ((split /:/, $TERM->resource ("perl_lib")), "$ENV{HOME}/.urxvt/ext", "$LIBDIR/perl");
+      my @dirs = perl_libdirs $TERM;
 
       my %ext_arg;
 
