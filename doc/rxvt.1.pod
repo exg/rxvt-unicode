@@ -1288,7 +1288,7 @@ the @@RXVT_NAME@@perl(3) manpage.
 
 Colon-separated list of additional directories that hold extension
 scripts. When looking for perl extensions, @@RXVT_NAME@@ will first look
-in these directories, then in C<$RXVT_PERL_LIB>, F<$HOME/.urxvt/ext> and
+in these directories, then in C<$URXVT_PERL_LIB>, F<$HOME/.urxvt/ext> and
 lastly in F<@@RXVT_LIBDIR@@/urxvt/perl/>.
 
 See the @@RXVT_NAME@@perl(3) manpage.
@@ -1646,11 +1646,15 @@ The unix domain socket path used by @@RXVT_NAME@@c(1) and
 
 Default F<<< $HOME/.urxvt/urxvtd-I<< <nodename> >> >>>.
 
-=item B<RXVT_PERL_LIB> [I<sic>]
+=item B<URXVT_PERL_LIB>
 
 Additional F<:>-separated library search path for perl extensions. Will be
 searched after B<-perl-lib> but before F<~/.urxvt/ext> and the system library
 directory.
+
+=item B<URXVT_PERL_VERBOSITY>
+
+See L<@@RXVT_NAME@@perl>(3).
 
 =item B<HOME>
 
@@ -1681,7 +1685,7 @@ Colour names.
 
 =head1 SEE ALSO
 
-@@RXVT_NAME@@(7), @@RXVT_NAME@@c(1), @@RXVT_NAME@@d(1), xterm(1), sh(1), resize(1), X(1), pty(4), tty(4), utmp(5)
+@@RXVT_NAME@@(7), @@RXVT_NAME@@c(1), @@RXVT_NAME@@d(1), @@RXVT_NAME@@perl(3), xterm(1), sh(1), resize(1), X(1), pty(4), tty(4), utmp(5)
 
 =head1 CURRENT PROJECT COORDINATOR
 
