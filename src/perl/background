@@ -2,8 +2,7 @@
 
 our $EXPR = 'move load "/root/pix/das_fette_schwein.jpg", repeat_wrap, X, Y';
 $EXPR = '
-   blur 10, 10,
-   rotate W, H, 50, 50, counter 1/60, repeat_mirror,
+   rotate W, H, 50, 50, counter 1/59.95, repeat_mirror,
    clip X, Y, W, H, repeat_mirror,
    load "/root/pix/das_fette_schwein.jpg"
 ';
@@ -15,6 +14,8 @@ use Safe;
 
 our ($bgdsl_self, $old, $new);
 our ($l, $t, $w, $h);
+
+our $MIN_INTERVAL = 1/60;
 
 {
    package urxvt::bgdsl; # background language
@@ -31,6 +32,7 @@ our ($l, $t, $w, $h);
    }
 
    sub root() {
+      $new->{rootpmap_sensitive} = 1;
       die "root op not supported, exg, we need you";
    }
 
@@ -137,6 +139,14 @@ sub set_expr {
 sub recalculate {
    my ($self) = @_;
 
+   if ($self->{next_refresh} > urxvt::NOW) {
+      $self->{next_refresh_timer} = urxvt::timer->new->after ($self->{next_refresh} - urxvt::NOW)->cb (sub {
+         $self->recalculate;
+      });
+   }
+
+   $self->{next_refresh} = urxvt::NOW + $MIN_INTERVAL;
+
    #TODO: rate limit calls
 
    local $bgdsl_self = $self;
@@ -174,6 +184,13 @@ sub recalculate {
       $self->enable (size_change => sub { $_[0]->recalculate });
    } else {
       $self->disable ("size_change");
+   }
+
+   if (delete $state->{rootpmap_sensitive}) {
+      $repeat = 1;
+      $self->enable (rootpmap_change => sub { $_[0]->recalculate });
+   } else {
+      $self->disable ("rootpmap_change");
    }
 
    %$old = ();

@@ -1846,7 +1846,6 @@ rxvt_term::rootwin_cb (XEvent &ev)
       && HOOK_INVOKE ((this, HOOK_ROOT_EVENT, DT_XEVENT, &ev, DT_END)))
     return;
 
-# if ENABLE_TRANSPARENCY
   switch (ev.type)
     {
       case PropertyNotify:
@@ -1857,13 +1856,17 @@ rxvt_term::rootwin_cb (XEvent &ev)
         if (ev.xproperty.atom == xa[XA_XROOTPMAP_ID]
             || ev.xproperty.atom == xa[XA_ESETROOT_PMAP_ID])
           {
+# if ENABLE_TRANSPARENCY
             bg_set_root_pixmap ();
             update_background ();
+#endif
+#if ENABLE_PERL
+            HOOK_INVOKE ((this, HOOK_ROOTPMAP_CHANGE, DT_END));
+#endif
           }
 
         break;
     }
-# endif
 
   refresh_check ();
 }
