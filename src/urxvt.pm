@@ -1195,9 +1195,10 @@ package urxvt::anyevent;
 The sole purpose of this class is to deliver an interface to the
 C<AnyEvent> module - any module using it will work inside urxvt without
 further programming. The only exception is that you cannot wait on
-condition variables, but non-blocking condvar use is ok. What this means
-is that you cannot use blocking APIs, but the non-blocking variant should
-work.
+condition variables, but non-blocking condvar use is ok.
+
+In practical terms this means is that you cannot use blocking APIs, but
+the non-blocking variant should work.
 
 =cut
 
