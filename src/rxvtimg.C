@@ -214,6 +214,9 @@ rxvt_img::brightness (double r, double g, double b, double a)
   XRenderFillRectangle (dpy, PictOpSrc, src, &mask_c, 0, 0, 1, 1);
 
   XRenderComposite (dpy, PictOpAdd, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
+
+  XRenderFreePicture (dpy, src);
+  XRenderFreePicture (dpy, dst);
 }
 
 void
@@ -234,6 +237,9 @@ rxvt_img::contrast (double r, double g, double b, double a)
   XRenderFillRectangle (dpy, PictOpSrc, src, &mask_c, 0, 0, 1, 1);
 
   XRenderComposite (dpy, PictOpMultiply, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
+
+  XRenderFreePicture (dpy, src);
+  XRenderFreePicture (dpy, dst);
 }
 
 bool
