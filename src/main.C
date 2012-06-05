@@ -394,14 +394,58 @@ print_x_error (Display *dpy, XErrorEvent *event)
     XGetErrorDatabaseText (dpy, "XlibMessage", "MajorCode", "Request Major code %d", mesg, BUFSIZ);
     snprintf (buffer, BUFSIZ, "+ %s\n", mesg); rxvt_warn (buffer, event->request_code);
 
-    sprintf (number, "%d", event->request_code);
-    XGetErrorDatabaseText (dpy, "XRequest", number, "", buffer, BUFSIZ);
-    rxvt_warn ("+ (which is %s)\n", buffer);
-
     if (event->request_code >= 128)
       {
-        XGetErrorDatabaseText (dpy, "XlibMessage", "MinorCode", "Request Minor code %d", mesg, BUFSIZ);
-        snprintf (buffer, BUFSIZ, "+ %s\n", mesg); rxvt_warn (buffer, event->minor_code);
+#if 0
+        /* XListExtensions and probably query extensions hangs when there are multiple queues errors */
+        int nexts;
+        char **exts = XListExtensions (dpy, &nexts);
+
+        while (nexts)
+          {
+            char *extname = exts [nexts - 1];
+            int major, first_event, first_error;
+
+            if (XQueryExtension (dpy, extname, &major, &first_event, &first_error) && major == event->request_code)
+              {
+                XGetErrorDatabaseText (dpy, "XlibMessage", "MinorCode", "Request Minor code %d", mesg, BUFSIZ);
+                rxvt_warn ("+ (which is extension %s minor code %d)\n", extname, event->minor_code);
+
+                snprintf (buffer, BUFSIZ, "%s.%d", extname, event->minor_code);
+                XGetErrorDatabaseText (dpy, "XRequest", buffer, "an unregistered minor code", buffer, BUFSIZ);
+                rxvt_warn ("+ (which is %s)\n", buffer);
+
+                break;
+              }
+
+            printf ("nextss %d %s\n", nexts, extname);//D
+            --nexts;
+            ++exts;
+          }
+#else
+        int nexts = 0;
+        char **exts = 0;
+#endif
+
+        if (!nexts)
+          {
+            rxvt_warn ("+ (which is an unknown extension)\n", buffer);
+
+            XGetErrorDatabaseText (dpy, "XlibMessage", "MinorCode", "Request Minor code %d", mesg, BUFSIZ);
+            snprintf (buffer, BUFSIZ, "+ %s\n", mesg); rxvt_warn (buffer, event->minor_code);
+
+            sprintf (number, "%d", event->minor_code);
+            XGetErrorDatabaseText (dpy, "XRequest", number, "", buffer, BUFSIZ);
+            rxvt_warn ("+ (which is %s)\n", buffer);
+          }
+
+        XFreeExtensionList (exts);
+      }
+    else
+      {
+        sprintf (number, "%d", event->request_code);
+        XGetErrorDatabaseText (dpy, "XRequest", number, "", buffer, BUFSIZ);
+        rxvt_warn ("+ (which is %s)\n", buffer);
       }
 
     if (event->error_code == BadWindow
