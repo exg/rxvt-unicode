@@ -15,7 +15,7 @@ use Safe;
 our ($bgdsl_self, $old, $new);
 our ($l, $t, $w, $h);
 
-our $MIN_INTERVAL = 1/60;
+our $MIN_INTERVAL = 1/100;
 
 {
    package urxvt::bgdsl; # background language
@@ -139,6 +139,8 @@ sub set_expr {
 sub recalculate {
    my ($self) = @_;
 
+   # rate limit evaluation
+
    if ($self->{next_refresh} > urxvt::NOW) {
       $self->{next_refresh_timer} = urxvt::timer->new->after ($self->{next_refresh} - urxvt::NOW)->cb (sub {
          $self->recalculate;
@@ -147,7 +149,7 @@ sub recalculate {
 
    $self->{next_refresh} = urxvt::NOW + $MIN_INTERVAL;
 
-   #TODO: rate limit calls
+   # set environment to evaluate user expression
 
    local $bgdsl_self = $self;
 
@@ -157,8 +159,12 @@ sub recalculate {
    ($l, $t, $w, $h) =
       $self->get_geometry;
 
+   # evaluate user expression
+
    my $img = eval { $self->{expr}->() };
    warn $@ if $@;#d#
+
+   # if the expression is sensitive to external events, prepare reevaluation then
 
    my $repeat;
 
@@ -193,12 +199,16 @@ sub recalculate {
       $self->disable ("rootpmap_change");
    }
 
+   # clear stuff we no longer need
+
    %$old = ();
 
    unless ($repeat) {
       delete $self->{state};
       delete $self->{expr};
    }
+
+   # prepare and set background pixmap
 
    $img = $img->sub_rect (0, 0, $w, $h)
       if $img->w != $w || $img->h != $h;
