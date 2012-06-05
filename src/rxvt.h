@@ -1264,6 +1264,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   vector<void *> allocated;           // free these memory blocks with free()
 
+  int            parent_x, parent_y; // parent window position relative to root, only updated on demand
+
   char           *locale;
   char            charsets[4];
   char           *v_buffer;           /* pointer to physical buffer */

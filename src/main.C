@@ -1080,6 +1080,8 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
                          window_vt_x, window_vt_y,
                          vt_width, vt_height);
 
+      HOOK_INVOKE ((this, HOOK_SIZE_CHANGE, DT_INT, newwidth, DT_INT, newheight, DT_END));
+
 #ifdef HAVE_BG_PIXMAP
       if (bg_window_size_sensitive ())
         update_background ();

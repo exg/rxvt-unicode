@@ -1,6 +1,6 @@
 #! perl
 
-our $EXPR = 'resize (blur (load "/root/pix/das_fette_schwein.jpg", 1 + (counter 1) % 10, 10), w, h)';
+our $EXPR = 'move load "/root/pix/das_fette_schwein.jpg", &x, &y';
 #$EXPR = 'blur root, 10, 10'
 #$EXPR = 'blur move (root, -x, -y), 5, 5'
 #resize load "/root/pix/das_fette_schwein.jpg", w, h
@@ -20,21 +20,21 @@ use Safe;
    *repeat_pad    = \&urxvt::RepeatPad;
    *repeat_mirror = \&urxvt::RepeatReflect;
 
-   sub load {
+   sub load($) {
       my ($path) = @_;
 
       $new->{load}{$path} = $old->{load}{$path} || $self->new_img_from_file ($path);
    }
 
-   sub root {
+   sub root() {
       die "root op not supported, exg, we need you";
    }
 
-   sub resize {
+   sub resize($$$) {
       $_[0]->scale ($_[1], $_[2])
    }
 
-   sub move {
+   sub move($$$) {
       # TODO: must be simpler
       $_[0]->transform ($_[0]->w, $_[0]->h, $_[1],
          1, 0, -$_[2],
@@ -43,11 +43,11 @@ use Safe;
       )
    }
 
-   sub rotate {
+   sub rotate($$$$) {
       $_[0]->rotate ($_[0], $_[1], $_[2], $_[3] * (3.14159265 / 180))
    }
 
-   sub blur {
+   sub blur($$$) {
       my ($img, $rh, $rv) = @_;
 
       $img = $img->clone;
@@ -55,7 +55,7 @@ use Safe;
       $img
    }
 
-   sub contrast {
+   sub contrast($$;$$;$) {
       my ($img, $r, $g, $b, $a) = @_;
       ($g, $b) = ($r, $r) if @_ < 4;
       $a       = 1        if @_ < 5;
@@ -64,7 +64,7 @@ use Safe;
       $img
    }
 
-   sub brightness {
+   sub brightness($$;$$;$) {
       my ($img, $r, $g, $b, $a) = @_;
       ($g, $b) = ($r, $r) if @_ < 4;
       $a       = 1        if @_ < 5;
@@ -73,17 +73,17 @@ use Safe;
       $img
    }
 
-   sub x { $new->{position_sensitive} = 1; $x }
-   sub y { $new->{position_sensitive} = 1; $y }
-   sub w { $new->{size_sensitive}     = 1; $w }
-   sub h { $new->{size_sensitive}     = 1; $h }
-   sub now { urxvt::NOW }
+   sub x() { $new->{position_sensitive} = 1; $x }
+   sub y() { $new->{position_sensitive} = 1; $y }
+   sub w() { $new->{size_sensitive}     = 1; $w }
+   sub h() { $new->{size_sensitive}     = 1; $h }
+   sub now() { urxvt::NOW }
 
-   sub again {
+   sub again($) {
       $new->{again} = $_[0];
    }
 
-   sub counter {
+   sub counter($) {
       $new->{again} = $_[0];
       $self->{counter}++ + 0
    }
@@ -119,9 +119,25 @@ sub recalculate {
    my $img = eval { $self->{expr}->() };
    warn $@ if $@;#d#
 
+   my $repeat;
+
    if (my $again = $state->{again}) {
-      warn $again;#d#
+      $repeat = 1;
       $state->{again} = urxvt::timer->new->after ($again)->cb (sub { $self->recalculate });
+   }
+
+   if (delete $state->{position_sensitive}) {
+      $repeat = 1;
+      $self->enable (position_change => sub { $_[0]->recalculate });
+   } else {
+      $self->disable ("position_change");
+   }
+
+   if (delete $state->{size_sensitive}) {
+      $repeat = 1;
+      $self->enable (size_change => sub { $_[0]->recalculate });
+   } else {
+      $self->disable ("size_change");
    }
 
    # TODO: install handlers for geometry changes &c

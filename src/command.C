@@ -1463,11 +1463,19 @@ rxvt_term::x_cb (XEvent &ev)
             while (XCheckTypedWindowEvent (dpy, ev.xconfigure.window, ConfigureNotify, &ev))
               ;
 
+            bool want_position_change = SHOULD_INVOKE (HOOK_POSITION_CHANGE);
+
 #ifdef HAVE_BG_PIXMAP
-            bool moved = false;
             if (bg_window_position_sensitive ())
+              want_position_change = true;
+#endif
+
+            bool moved = false;
+
+            if (want_position_change)
               {
                 int x, y;
+
                 if (ev.xconfigure.send_event)
                   {
                     x = ev.xconfigure.x;
@@ -1476,11 +1484,17 @@ rxvt_term::x_cb (XEvent &ev)
                 else
                   get_window_origin (x, y);
 
+                if (x != parent_x || y != parent_y)
+                  {
+                    HOOK_INVOKE ((this, HOOK_POSITION_CHANGE, DT_INT, x, DT_INT, y, DT_END));
+                    parent_x = x;
+                    parent_y = y;
+                  }
+
                 if (bg_set_position (x, y)
                     || !(bg_flags & BG_IS_VALID))
                   moved = true;
               }
-#endif
 
             if (szHint.width != ev.xconfigure.width || szHint.height != ev.xconfigure.height)
               {

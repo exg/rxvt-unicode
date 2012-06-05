@@ -980,7 +980,19 @@ rxvt_term::destroy ()
 void
 rxvt_term::set_should_invoke (int htype, int inc)
 	CODE:
-        THIS->perl.should_invoke [htype] += inc;
+        uint8_t &count = THIS->perl.should_invoke [htype];
+        uint8_t prev = count;
+        count += inc;
+        if (!prev != !count)
+	  {
+            // hook status changed, react
+            switch (htype)
+              {
+                case HOOK_POSITION_CHANGE:
+                  if (count)
+                    THIS->get_window_origin (THIS->parent_x, THIS->parent_y);
+              }
+	  }
 
 int
 rxvt_term::grab_button (int button, U32 modifiers, Window window = THIS->vt)
@@ -1247,10 +1259,17 @@ rxvt_term::parent ()
         OUTPUT:
         RETVAL
 
-Window
-rxvt_term::vt ()
+int
+rxvt_term::parent_x ()
 	CODE:
-        RETVAL = THIS->vt;
+        RETVAL = THIS->parent_x;
+        OUTPUT:
+        RETVAL
+
+int
+rxvt_term::parent_y ()
+	CODE:
+        RETVAL = THIS->parent_y;
         OUTPUT:
         RETVAL
 
@@ -1940,18 +1959,11 @@ rxvt_term::XTranslateCoordinates (Window src, Window dst, int x, int y)
 void
 rxvt_term::get_geometry ()
 	PPCODE:
-        Window wdummy;
-        int x, y;
-        XWindowAttributes wattr;
-        XGetWindowAttributes (THIS->dpy, THIS->parent, &wattr);
-        XTranslateCoordinates (THIS->dpy, THIS->parent, wattr.root,
-                               -wattr.border_width, -wattr.border_width,
-                               &x, &y, &wdummy);
 	EXTEND (SP, 4);
-        PUSHs (sv_2mortal (newSViv (x)));
-        PUSHs (sv_2mortal (newSViv (y)));
-        PUSHs (sv_2mortal (newSViv (wattr.width)));
-        PUSHs (sv_2mortal (newSViv (wattr.height)));
+        PUSHs (sv_2mortal (newSViv (THIS->parent_x)));
+        PUSHs (sv_2mortal (newSViv (THIS->parent_y)));
+        PUSHs (sv_2mortal (newSViv (THIS->szHint.width)));
+        PUSHs (sv_2mortal (newSViv (THIS->szHint.height)));
 
 #if HAVE_IMG
 
