@@ -434,9 +434,11 @@ print_x_error (Display *dpy, XErrorEvent *event)
             XGetErrorDatabaseText (dpy, "XlibMessage", "MinorCode", "Request Minor code %d", mesg, BUFSIZ);
             snprintf (buffer, BUFSIZ, "+ %s\n", mesg); rxvt_warn (buffer, event->minor_code);
 
-            sprintf (number, "%d", event->minor_code);
+#if 0
+            sprintf (number, "RENDER.%d", event->minor_code);
             XGetErrorDatabaseText (dpy, "XRequest", number, "", buffer, BUFSIZ);
             rxvt_warn ("+ (which is %s)\n", buffer);
+#endif
           }
 
         XFreeExtensionList (exts);
