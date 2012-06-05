@@ -383,43 +383,45 @@ print_x_error (Display *dpy, XErrorEvent *event)
     char mesg[BUFSIZ];
     char number[32];
     const char mtype[] = "XlibMessage";
-    XGetErrorText(dpy, event->error_code, buffer, BUFSIZ);
-    XGetErrorDatabaseText(dpy, mtype, "XError", "X Error", mesg, BUFSIZ);
+
+    XGetErrorText (dpy, event->error_code, buffer, BUFSIZ);
+    XGetErrorDatabaseText (dpy, mtype, "XError", "X Error", mesg, BUFSIZ);
     rxvt_warn ("An X Error occurred, trying to continue after report.\n");
     rxvt_warn ("%s:  %s\n", mesg, buffer);
-    XGetErrorDatabaseText(dpy, mtype, "MajorCode", "Request Major code %d", mesg, BUFSIZ);
+    XGetErrorDatabaseText (dpy, mtype, "MajorCode", "Request Major code %d", mesg, BUFSIZ);
     rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->request_code);
-    sprintf(number, "%d", event->request_code);
-    XGetErrorDatabaseText(dpy, "XRequest", number, "", buffer, BUFSIZ);
+    sprintf (number, "%d", event->request_code);
+    XGetErrorDatabaseText (dpy, "XRequest", number, "", buffer, BUFSIZ);
     rxvt_warn ("(which is %s)\n", buffer);
-    if (event->request_code >= 128) {
-        XGetErrorDatabaseText(dpy, mtype, "MinorCode", "Request Minor code %d",
-                              mesg, BUFSIZ);
+
+    if (event->request_code >= 128)
+      {
+        XGetErrorDatabaseText (dpy, mtype, "MinorCode", "Request Minor code %d", mesg, BUFSIZ);
         rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->minor_code);
-    }
-    if ((event->error_code == BadWindow) ||
-               (event->error_code == BadPixmap) ||
-               (event->error_code == BadCursor) ||
-               (event->error_code == BadFont) ||
-               (event->error_code == BadDrawable) ||
-               (event->error_code == BadColor) ||
-               (event->error_code == BadGC) ||
-               (event->error_code == BadIDChoice) ||
-               (event->error_code == BadValue) ||
-               (event->error_code == BadAtom)) {
+      }
+
+    if (event->error_code == BadWindow
+        || event->error_code == BadPixmap
+        || event->error_code == BadCursor
+        || event->error_code == BadFont
+        || event->error_code == BadDrawable
+        || event->error_code == BadColor
+        || event->error_code == BadGC
+        || event->error_code == BadIDChoice
+        || event->error_code == BadValue
+        || event->error_code == BadAtom)
+      {
         if (event->error_code == BadValue)
-            XGetErrorDatabaseText(dpy, mtype, "Value", "Value 0x%x",
-                                  mesg, BUFSIZ);
+          XGetErrorDatabaseText(dpy, mtype, "Value", "Value 0x%x", mesg, BUFSIZ);
         else if (event->error_code == BadAtom)
-            XGetErrorDatabaseText(dpy, mtype, "AtomID", "AtomID 0x%x",
-                                  mesg, BUFSIZ);
+          XGetErrorDatabaseText(dpy, mtype, "AtomID", "AtomID 0x%x", mesg, BUFSIZ);
         else
-            XGetErrorDatabaseText(dpy, mtype, "ResourceID", "ResourceID 0x%x",
-                                  mesg, BUFSIZ);
+          XGetErrorDatabaseText(dpy, mtype, "ResourceID", "ResourceID 0x%x", mesg, BUFSIZ);
+
         rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->resourceid);
     }
-    XGetErrorDatabaseText(dpy, mtype, "ErrorSerial", "Error Serial #%d",
-                          mesg, BUFSIZ);
+
+    XGetErrorDatabaseText (dpy, mtype, "ErrorSerial", "Error Serial #%d", mesg, BUFSIZ);
     rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->serial);
 }
 #endif
