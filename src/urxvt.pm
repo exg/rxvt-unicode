@@ -945,26 +945,38 @@ BEGIN {
 
 no warnings 'utf8';
 
-sub perl_libdirs {
-   map { split /:/ }
-      $_[0]->resource ("perl_lib"),
-      $ENV{URXVT_PERL_LIB},
-      "$ENV{HOME}/.urxvt/ext",
-      "$LIBDIR/perl"
-}
-
-our %META; # meta header information from scripts
-our %SCAN; # which dirs already scanned
-
 sub resource {
    my ($term, $name, $isarg, $flag, $value) = @_;
 
-   for my $dir (perl_libdirs $term) {
-   }
+   $term->scan_meta;
 
    warn "resourece<@_>\n";#d#
 
    0
+}
+
+sub usage {
+   my ($term, $usage_type) = @_;
+
+   $term->scan_meta;
+
+   my $r = $term->{meta}{resource};
+
+   for my $regex (sort keys %$r) {
+      my ($ext, $type, $desc) = @{ $r->{$regex} };
+
+      $desc .= " (-pe $ext)";
+
+      if ($usage_type == 1) {
+         if ($type eq "boolean") {
+            urxvt::log sprintf "  -%-20.20s %s\n", "/+$regex", $desc;
+         } else {
+            urxvt::log sprintf "  -%-20.20s %s\n", "$regex $type", $desc;
+         }
+      } else {
+         urxvt::log sprintf "  %-19.19s %s\n", "$regex:", $type;
+      }
+   }
 }
 
 my $verbosity = $ENV{URXVT_PERL_VERBOSITY};
@@ -1012,7 +1024,7 @@ sub invoke {
    my $htype = shift;
 
    if ($htype == 0) { # INIT
-      my @dirs = perl_libdirs $TERM;
+      my @dirs = $TERM->perl_libdirs;
 
       my %ext_arg;
 
@@ -1289,6 +1301,49 @@ sub register_package {
    for my $name (@HOOKNAME) {
       if (my $ref = $pkg->can ("on_" . lc $name)) {
          $proxy->enable ($name => $ref);
+      }
+   }
+}
+
+sub perl_libdirs {
+   map { split /:/ }
+      $_[0]->resource ("perl_lib"),
+      $ENV{URXVT_PERL_LIB},
+      "$ENV{HOME}/.urxvt/ext",
+      "$LIBDIR/perl"
+}
+
+sub scan_meta {
+   my ($self) = @_;
+   my @libdirs = perl_libdirs $self;
+
+   return if $self->{meta_libdirs} eq join "\x00", @libdirs;
+
+   my %meta;
+
+   $self->{meta_libdirs} = join "\x00", @libdirs;
+   $self->{meta}         = \%meta;
+
+   for my $dir (reverse @libdirs) {
+      opendir my $fh, $dir
+         or next;
+      for my $ext (readdir $fh) {
+         $ext ne "."
+            and $ext ne ".."
+            and open my $fh, "<", "$dir/$ext"
+            or next;
+
+         while (<$fh>) {
+            if (/^#:META:RESOURCE:(.*)/) {
+               my ($regex, $type, $desc) = split /:/, $1;
+               $regex =~ s/\$\$/$ext/g; # $$ in regex == extension name
+               $meta{resource}{$regex} = [$ext, $type, $desc];
+            } elsif (/^\s*(?:#|$)/) {
+               # skip other comments and empty lines
+            } else {
+               last; # stop parsing on first non-empty non-comment line
+            }
+         }
       }
    }
 }

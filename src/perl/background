@@ -1,6 +1,7 @@
 #! perl
 
 #:META:RESOURCE:$$:string:background expression
+#:META:RESOURCE:$$-enable:boolean:some boolean
 
 our $EXPR = 'move load "/root/pix/das_fette_schwein.jpg", repeat_wrap, X, Y';
 $EXPR = '

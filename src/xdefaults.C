@@ -449,6 +449,12 @@ rxvt_term::rxvt_usage (int type)
                          (optList_isBool (i) ? "turn on/off " : ""),
                          optList[i].desc);
             }
+
+#if ENABLE_PERL
+        rxvt_perl.init (this);
+        rxvt_perl.usage (this, 1);
+#endif
+
         rxvt_log ("\n  --help to list long-options");
         break;
 
@@ -462,17 +468,15 @@ rxvt_term::rxvt_usage (int type)
                     optList[i].kw,
                     (INDENT - strlen (optList[i].kw)), "", /* XXX */
                     (optList_isBool (i) ? "boolean" : optList[i].arg));
+
+#if ENABLE_PERL
+        rxvt_perl.init (this);
+        rxvt_perl.usage (this, 2);
+#endif
+
         rxvt_log ("\n  -help to list options");
         break;
     }
-
-#if ENABLE_PERL
-  if (type) // do not initialise perl for type == 0, as perl does not have "short" options
-    {
-      rxvt_perl.init (this);
-      rxvt_perl.usage (type);
-    }
-#endif
 
   rxvt_log ("\n\n");
   rxvt_exit_failure ();

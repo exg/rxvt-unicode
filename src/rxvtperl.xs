@@ -394,7 +394,7 @@ rxvt_perl_interp::init (rxvt_term *term)
 }
 
 void
-rxvt_perl_interp::usage (int type)
+rxvt_perl_interp::usage (rxvt_term *term, int type)
 {
   localise_env set_environ (perl_environ);
 
@@ -402,7 +402,9 @@ rxvt_perl_interp::usage (int type)
   SAVETMPS;
 
   dSP;
-  XPUSHs (sv_2mortal (newSViv (type)));
+  EXTEND (SP, 2);
+  PUSHs (sv_2mortal (newSVterm (term)));
+  PUSHs (sv_2mortal (newSViv (type)));
   PUTBACK;
   call_pv ("urxvt::usage", G_VOID | G_DISCARD | G_EVAL);
 
@@ -879,6 +881,11 @@ BOOT:
   for (civ = const_iv + ecb_array_length (const_iv); civ > const_iv; civ--)
     newCONSTSUB (stash, (char *)civ[-1].name, newSViv (civ[-1].iv));
 }
+
+void
+log (const char *msg)
+	CODE:
+        rxvt_log ("%s", msg);
 
 void
 warn (const char *msg)

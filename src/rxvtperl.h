@@ -57,7 +57,7 @@ struct rxvt_perl_interp
   bool invoke (rxvt_term *term, hook_type htype, ...);
   void line_update (rxvt_term *term);
   void selection_finish (rxvt_selection *sel, char *data, unsigned int len);
-  void usage (int type);
+  void usage (rxvt_term *term, int type);
 
   enum
   {
