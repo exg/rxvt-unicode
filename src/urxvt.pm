@@ -945,6 +945,14 @@ BEGIN {
 
 no warnings 'utf8';
 
+sub resource {
+   my ($term, $name, $isarg, $flag, $value) = @_;
+
+   warn "resourece<@_>\n";#d#
+
+   0
+}
+
 my $verbosity = $ENV{URXVT_PERL_VERBOSITY};
 
 sub verbose {
@@ -1102,7 +1110,7 @@ sub enable {
       defined $htype
          or Carp::croak "unsupported hook type '$name'";
 
-      $self->modify_should_invoke_count ($htype, +1)
+      $self->set_should_invoke ($htype, +1)
          unless exists $self->{term}{_hook}[$htype]{$pkg};
 
       $self->{term}{_hook}[$htype]{$pkg} = $cb;
@@ -1118,7 +1126,7 @@ sub disable {
       defined $htype
          or Carp::croak "unsupported hook type '$name'";
 
-      $self->modify_should_invoke_count ($htype, -1)
+      $self->set_should_invoke ($htype, -1)
          if delete $self->{term}{_hook}[$htype]{$pkg};
    }
 }
