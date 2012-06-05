@@ -45,6 +45,7 @@ struct rxvt_img
   rxvt_img *scale (int new_width, int new_height);
   rxvt_img *rotate (int new_width, int new_height, int x, int y, double phi, int repeat = RepeatNormal);
   rxvt_img *convert_to (XRenderPictFormat *format);
+  rxvt_img *blend (rxvt_img *img, double factor);
 };
 
 #endif

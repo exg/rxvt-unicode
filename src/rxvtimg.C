@@ -453,5 +453,31 @@ rxvt_img::convert_to (XRenderPictFormat *new_format)
   return img;
 }
 
+rxvt_img *
+rxvt_img::blend (rxvt_img *img, double factor)
+{
+  rxvt_img *img2 = clone ();
+  Display *dpy = s->display->dpy;
+  Picture src = XRenderCreatePicture (dpy, img->pm, img->format, 0, 0);
+  Picture dst = XRenderCreatePicture (dpy, img2->pm, img2->format, 0, 0);
+  Picture mask = create_xrender_mask (dpy, img->pm, False);
+
+  XRenderColor mask_c;
+
+  mask_c.alpha = float_to_component (factor);
+  mask_c.red   =
+  mask_c.green =
+  mask_c.blue  = 0;
+  XRenderFillRectangle (dpy, PictOpSrc, mask, &mask_c, 0, 0, 1, 1);
+
+  XRenderComposite (dpy, PictOpOver, src, mask, dst, 0, 0, 0, 0, 0, 0, w, h);
+
+  XRenderFreePicture (dpy, src);
+  XRenderFreePicture (dpy, dst);
+  XRenderFreePicture (dpy, mask);
+
+  return img2;
+}
+
 #endif
 
