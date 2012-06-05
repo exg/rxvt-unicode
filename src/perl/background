@@ -138,6 +138,8 @@ sub recalculate {
    my $img = eval { $self->{expr}->() };
    warn $@ if $@;#d#
 
+   %$old = ();
+
    my $repeat;
 
    if (my $again = $state->{again}) {
@@ -157,6 +159,11 @@ sub recalculate {
       $self->enable (size_change => sub { $_[0]->recalculate });
    } else {
       $self->disable ("size_change");
+   }
+
+   unless ($repeat) {
+      delete $self->{state};
+      delete $self->{expr};
    }
 
    $img = $img->sub_rect (0, 0, $w, $h)
