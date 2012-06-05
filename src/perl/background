@@ -1,5 +1,7 @@
 #! perl
 
+#:META:RESOURCE:$$:string
+
 our $EXPR = 'move load "/root/pix/das_fette_schwein.jpg", repeat_wrap, X, Y';
 $EXPR = '
    rotate W, H, 50, 50, counter 1/59.95, repeat_mirror,
@@ -15,6 +17,7 @@ use Safe;
 our ($bgdsl_self, $old, $new);
 our ($l, $t, $w, $h);
 
+# enforce at leats this time between updates
 our $MIN_INTERVAL = 1/100;
 
 {
@@ -143,6 +146,7 @@ sub recalculate {
       $self->{next_refresh_timer} = urxvt::timer->new->after ($self->{next_refresh} - urxvt::NOW)->cb (sub {
          $self->recalculate;
       });
+      return;
    }
 
    $self->{next_refresh} = urxvt::NOW + $MIN_INTERVAL;
