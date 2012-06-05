@@ -1639,14 +1639,14 @@ defaults to C<:0> if it doesn't exist.
 
 The shell to be used for command execution, defaults to C</bin/sh>.
 
-=item B<RXVT_SOCKET> (sic)
+=item B<RXVT_SOCKET> [I<sic>]
 
 The unix domain socket path used by @@RXVT_NAME@@c(1) and
 @@RXVT_NAME@@d(1).
 
 Default F<<< $HOME/.urxvt/urxvtd-I<< <nodename> >> >>>.
 
-=item B<RXVT_PERL_LIB> (sic)
+=item B<RXVT_PERL_LIB> [I<sic>]
 
 Additional F<:>-separated library search path for perl extensions. Will be
 searched after B<-perl-lib> but before F<~/.urxvt/ext> and the system library
