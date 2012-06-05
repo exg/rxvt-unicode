@@ -294,18 +294,6 @@ rxvt_img::render_pixbuf (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int
   unsigned char *row = gdk_pixbuf_get_pixels (pixbuf) + src_y * rowstride + src_x * channels;
   char *line = ximage->data;
 
-  rgba c (0, 0, 0);
-
-  if (channels == 4 && alpha_mask == 0)
-    {
-      //pix_colors[Color_bg].get (c);
-      //TODO
-      c.r = 0xffff; c.g = 0xc0c0; c.b = 0xcbcb;//D
-      c.r >>= 8;
-      c.g >>= 8;
-      c.b >>= 8;
-    }
-
   for (int y = 0; y < height; y++)
     {
       for (int x = 0; x < width; x++)
@@ -317,9 +305,9 @@ rxvt_img::render_pixbuf (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int
           if (channels == 4)
             {
               a = pixel[3];
-              r = (pixel[0] * a + c.r * (0xff - a)) / 0xff;
-              g = (pixel[1] * a + c.g * (0xff - a)) / 0xff;
-              b = (pixel[2] * a + c.b * (0xff - a)) / 0xff;
+              r = pixel[0] * a / 0xff;
+              g = pixel[1] * a / 0xff;
+              b = pixel[2] * a / 0xff;
             }
           else
             {
