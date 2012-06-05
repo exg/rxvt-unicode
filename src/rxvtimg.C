@@ -312,15 +312,34 @@ rxvt_img::render_pixbuf (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int
 rxvt_img *
 rxvt_img::clone ()
 {
+  rxvt_img *img = new rxvt_img (s, format, w, h);
+
   GC gc = XCreateGC (s->display->dpy, pm, 0, 0);
-  Pixmap pm2 = XCreatePixmap (s->display->dpy, pm, w, h, format->depth);
-  XCopyArea (s->display->dpy, pm, pm2, gc, 0, 0, w, h, 0, 0);
+  XCopyArea (s->display->dpy, pm, img->pm, gc, 0, 0, w, h, 0, 0);
   XFreeGC (s->display->dpy, gc);
-  return new rxvt_img (s, format, w, h, pm2);
 }
 
 rxvt_img *
-rxvt_img::transform (int new_width, int new_height, int repeat, double matrix[9])
+rxvt_img::sub_rect (int x, int y, int width, int height, int repeat)
+{
+  rxvt_img *img = new rxvt_img (s, format, width, height);
+
+  Display *dpy = s->display->dpy;
+  XRenderPictureAttributes pa;
+  pa.repeat = repeat;
+  Picture src = XRenderCreatePicture (dpy,      pm,      format, CPRepeat, &pa);
+  Picture dst = XRenderCreatePicture (dpy, img->pm, img->format,        0,   0);
+
+  XRenderComposite (dpy, PictOpSrc, src, None, dst, x, y, 0, 0, 0, 0, width, height);
+
+  XRenderFreePicture (dpy, src);
+  XRenderFreePicture (dpy, dst);
+
+  return img;
+}
+
+rxvt_img *
+rxvt_img::transform (int new_width, int new_height, double matrix[9], int repeat)
 {
   rxvt_img *img = new rxvt_img (s, format, new_width, new_height);
 
@@ -355,11 +374,11 @@ rxvt_img::scale (int new_width, int new_height)
     0,                      0, 1
   };
 
-  return transform (new_width, new_height, RepeatNormal, matrix);
+  return transform (new_width, new_height, matrix);
 }
 
 rxvt_img *
-rxvt_img::rotate (int new_width, int new_height, int repeat, int x, int y, double phi)
+rxvt_img::rotate (int new_width, int new_height, int x, int y, double phi, int repeat)
 {
   double s = sin (phi);
   double c = cos (phi);
@@ -370,7 +389,7 @@ rxvt_img::rotate (int new_width, int new_height, int repeat, int x, int y, doubl
     0,  0,                  1
   };
 
-  return transform (new_width, new_height, repeat, matrix);
+  return transform (new_width, new_height, matrix, repeat);
 }
 
 rxvt_img *

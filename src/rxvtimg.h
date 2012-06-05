@@ -40,9 +40,10 @@ struct rxvt_img
 
   // copy
   rxvt_img *clone ();
-  rxvt_img *transform (int new_width, int new_height, int repeat, double matrix[9]);
+  rxvt_img *sub_rect (int x, int y, int width, int height, int repeat = RepeatNormal);
+  rxvt_img *transform (int new_width, int new_height, double matrix[9], int repeat = RepeatNormal);
   rxvt_img *scale (int new_width, int new_height);
-  rxvt_img *rotate (int new_width, int new_height, int repeat, int x, int y, double phi);
+  rxvt_img *rotate (int new_width, int new_height, int x, int y, double phi, int repeat = RepeatNormal);
   rxvt_img *convert_to (XRenderPictFormat *format);
 };
 

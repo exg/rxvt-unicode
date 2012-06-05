@@ -475,6 +475,9 @@ bool rxvt_display::ref_init ()
     {
       flags |= DISPLAY_HAS_RENDER;
 
+      if (major > 0 || (major == 0 && minor >= 10))
+        flags |= DISPLAY_HAS_RENDER_10;
+
       if (major > 0 || (major == 0 && minor >= 11))
         flags |= DISPLAY_HAS_RENDER_MUL;
 

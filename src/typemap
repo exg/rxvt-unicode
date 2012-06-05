@@ -15,6 +15,8 @@ rxvt_img *		IMG
 
 GError **		T_UV
 
+render_repeat_mode	RENDER_REPEAT_MODE
+
 INPUT
 
 TERM
@@ -33,6 +35,16 @@ IMG
           $var = INT2PTR ($type, SvIV ((SV *) SvRV ($arg)));
         else
           croak (\"%s is not of type urxvt::img\", \"$var\")
+
+RENDER_REPEAT_MODE
+	if (SvOK ($arg))
+          {
+	    $var = SvIV ($arg);
+            if ($var != RepeatNone && $var != RepeatNormal && $var != RepeatPad && $var != RepeatReflect)
+              croak (\"invalid repeat mode specified (%d)\\n\", $var);
+          }
+        else
+          $var = RepeatNormal;
 
 OUTPUT
 

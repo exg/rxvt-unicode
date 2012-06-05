@@ -1,6 +1,7 @@
 #! perl
 
-our $EXPR = 'move load "/root/pix/das_fette_schwein.jpg", left, top';
+our $EXPR = 'move load "/root/pix/das_fette_schwein.jpg", repeat_wrap, X, Y';
+$EXPR = 'rotate load "/root/pix/das_fette_schwein.jpg", W, H, 50, 50, counter 1/60, repeat_mirror';
 #$EXPR = 'blur root, 10, 10'
 #$EXPR = 'blur move (root, -x, -y), 5, 5'
 #resize load "/root/pix/das_fette_schwein.jpg", w, h
@@ -28,35 +29,53 @@ our ($l, $t, $w, $h);
       die "root op not supported, exg, we need you";
    }
 
+#   sub clone($) {
+#      $_[0]->clone
+#   }
+
+   sub subrect($$$$$;$) {
+      $_[0]->sub_rect ($_[1], $_[2], $_[3], $_[4], $_[5])
+   }
+
    sub resize($$$) {
       $_[0]->scale ($_[1], $_[2])
    }
 
-   sub move($$$) {
+   sub move($$$;$) {
       # TODO: must be simpler
-      $_[0]->transform ($_[0]->w, $_[0]->h, $_[1],
-         1, 0, -$_[2],
-         0, 1, -$_[3],
-         0, 0,      1,
+      $_[0]->transform ($_[0]->w, $_[0]->h,
+         1, 0, $_[1],
+         0, 1, $_[2],
+         0, 0,     1,
+         $_[3],
       )
    }
 
-   sub rotate($$$$) {
-      $_[0]->rotate ($_[0], $_[1], $_[2], $_[3] * (3.14159265 / 180))
+   sub rotate($$$$$$;$) {
+      $_[0]->rotate (
+         $_[1],
+         $_[2],
+         $_[3] * $_[0]->w * .01,
+         $_[4] * $_[0]->h * .01,
+         $_[5] * (3.14159265 / 180),
+         $_[6],
+      )
    }
 
    sub blur($$$) {
       my ($img, $rh, $rv) = @_;
 
       $img = $img->clone;
-      $img->clone->blur ($rh, $rv);
+      $img->blur ($rh, $rv);
       $img
    }
 
    sub contrast($$;$$;$) {
       my ($img, $r, $g, $b, $a) = @_;
+
       ($g, $b) = ($r, $r) if @_ < 4;
       $a       = 1        if @_ < 5;
+
       $img = $img->clone;
       $img->contrast ($r, $g, $b, $a);
       $img
@@ -64,17 +83,19 @@ our ($l, $t, $w, $h);
 
    sub brightness($$;$$;$) {
       my ($img, $r, $g, $b, $a) = @_;
+
       ($g, $b) = ($r, $r) if @_ < 4;
       $a       = 1        if @_ < 5;
+
       $img = $img->clone;
       $img->brightness ($r, $g, $b, $a);
       $img
    }
 
-   sub left  () { $new->{position_sensitive} = 1; $l }
-   sub top   () { $new->{position_sensitive} = 1; $t }
-   sub width () { $new->{size_sensitive}     = 1; $w }
-   sub height() { $new->{size_sensitive}     = 1; $h }
+   sub X() { $new->{position_sensitive} = 1; $l }
+   sub Y() { $new->{position_sensitive} = 1; $t }
+   sub W() { $new->{size_sensitive}     = 1; $w }
+   sub H() { $new->{size_sensitive}     = 1; $h }
 
    sub now() { urxvt::NOW }
 
@@ -98,7 +119,6 @@ sub parse_expr {
 sub set_expr {
    my ($self, $expr) = @_;
 
-   local $Data::Dumper::Deparse=1; use Data::Dumper; warn Dumper $expr;#d#
    $self->{expr} = $expr;
    $self->recalculate;
 }
@@ -114,8 +134,6 @@ sub recalculate {
 
    ($l, $t, $w, $h) =
       $self->get_geometry;
-
-      warn "$l, $t";#d#
 
    my $img = eval { $self->{expr}->() };
    warn $@ if $@;#d#
@@ -141,9 +159,9 @@ sub recalculate {
       $self->disable ("size_change");
    }
 
-   # TODO: install handlers for geometry changes &c
+   $img = $img->sub_rect (0, 0, $w, $h)
+      if $img->w != $w || $img->h != $h;
 
-   warn $img;
    $self->set_background ($img);
    $self->scr_recolour (0);
    $self->want_refresh;

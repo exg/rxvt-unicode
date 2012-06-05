@@ -54,6 +54,8 @@
 typedef char *		octet_string;
 typedef char *		utf8_string;
 
+typedef int		render_repeat_mode;
+
 typedef GdkPixbuf *	urxvt__pixbuf;
 typedef rxvt_img *	urxvt__img;
 
@@ -846,6 +848,22 @@ fatal (const char *msg)
 
 void
 _exit (int status)
+
+void
+catch_fatal (SV *block)
+	PROTOTYPE: &
+        CODE:
+        try
+          {
+            PUSHMARK (SP);
+            PUTBACK;
+            call_sv (block, G_VOID | G_DISCARD);
+            SPAGAIN;
+          }
+        catch (const rxvt_failure_exception &e)
+          {
+            croak ("rxvt_fatal exception caught, trying to continue.");
+          }
 
 NV
 NOW ()
@@ -2128,20 +2146,23 @@ rxvt_img *
 rxvt_img::clone ()
 
 rxvt_img *
-rxvt_img::transform (int new_width, int new_height, int repeat, NV p11, NV p12, NV p13, NV p21, NV p22, NV p23, NV p31, NV p32, NV p33)
+rxvt_img::sub_rect (int x, int y, int width, int height, render_repeat_mode repeat = RepeatNormal)
+
+rxvt_img *
+rxvt_img::transform (int new_width, int new_height, NV p11, NV p12, NV p13, NV p21, NV p22, NV p23, NV p31, NV p32, NV p33, render_repeat_mode repeat = RepeatNormal)
 	INIT:
         double matrix[9] = {
           p11, p12, p13,
           p21, p22, p23,
           p31, p32, p33
         };
-	C_ARGS: new_width, new_height, repeat, matrix
+	C_ARGS: new_width, new_height, matrix, repeat
 
 rxvt_img *
 rxvt_img::scale (int new_width, int new_height)
 
 rxvt_img *
-rxvt_img::rotate (int new_width, int new_height, int repeat, int x, int y, NV phi)
+rxvt_img::rotate (int new_width, int new_height, int x, int y, NV phi, render_repeat_mode repeat = RepeatNormal)
 
 #endif
 
