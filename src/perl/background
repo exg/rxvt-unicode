@@ -1,7 +1,7 @@
 #! perl
 
 our $EXPR = 'move load "/root/pix/das_fette_schwein.jpg", repeat_wrap, X, Y';
-$EXPR = 'rotate load "/root/pix/das_fette_schwein.jpg", W, H, 50, 50, counter 1/60, repeat_mirror';
+$EXPR = 'rotate (move (load "/root/pix/das_fette_schwein.jpg", X, Y), W, H, 50, 50, counter 1/60, repeat_mirror)';
 #$EXPR = 'blur root, 10, 10'
 #$EXPR = 'blur move (root, -x, -y), 5, 5'
 #resize load "/root/pix/das_fette_schwein.jpg", w, h
@@ -127,6 +127,8 @@ sub set_expr {
 sub recalculate {
    my ($self) = @_;
 
+   #TODO: rate limit calls
+
    local $bgdsl_self = $self;
 
    local $old = $self->{state};
@@ -138,13 +140,13 @@ sub recalculate {
    my $img = eval { $self->{expr}->() };
    warn $@ if $@;#d#
 
-   %$old = ();
-
    my $repeat;
 
    if (my $again = $state->{again}) {
       $repeat = 1;
-      $state->{again} = urxvt::timer->new->after ($again)->cb (sub { $self->recalculate });
+      $state->{timer} = $again == $old->{again}
+                        ? $old->{timer}
+                        : urxvt::timer->new->after ($again)->interval ($again)->cb (sub { $self->recalculate });
    }
 
    if (delete $state->{position_sensitive}) {
@@ -160,6 +162,8 @@ sub recalculate {
    } else {
       $self->disable ("size_change");
    }
+
+   %$old = ();
 
    unless ($repeat) {
       delete $self->{state};
