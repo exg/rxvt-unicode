@@ -1989,8 +1989,8 @@ rxvt_img *
 rxvt_term::new_img (SV *format, int width, int height)
 	CODE:
         XRenderPictFormat *f = SvOK (format)
-                             ? XRenderFindVisualFormat   (THIS->dpy, THIS->visual)
-                             : XRenderFindStandardFormat (THIS->dpy, SvIV (format));
+                             ? XRenderFindStandardFormat (THIS->dpy, SvIV (format))
+                             : XRenderFindVisualFormat   (THIS->dpy, THIS->visual);
         RETVAL = new rxvt_img (THIS, f, width, height);
 	OUTPUT:
         RETVAL
