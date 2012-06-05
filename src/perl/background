@@ -75,9 +75,7 @@ our $MIN_INTERVAL = 1/100;
    sub blur($$$) {
       my ($rh, $rv, $img) = @_;
 
-      $img = $img->clone;
       $img->blur ($rh, $rv);
-      $img
    }
 
    sub contrast($$;$$;$) {

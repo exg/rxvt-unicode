@@ -121,24 +121,27 @@ get_gaussian_kernel (int radius, int width, double *kernel, XFixed *params)
     params[i+2] = XDoubleToFixed (kernel[i] / sum);
 }
 
-void
+rxvt_img *
 rxvt_img::blur (int rh, int rv)
 {
   if (!(s->display->flags & DISPLAY_HAS_RENDER_CONV))
-    return;
+    return clone ();
 
   Display *dpy = s->display->dpy;
   int size = max (rh, rv) * 2 + 1;
   double *kernel = (double *)malloc (size * sizeof (double));
   XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
+  rxvt_img *img = new rxvt_img (s, format, w, h);
 
   XRenderPictureAttributes pa;
 
   pa.repeat = RepeatPad;
-  Picture src = XRenderCreatePicture (dpy, pm , format, CPRepeat, &pa);
-  Pixmap tmp = XCreatePixmap (dpy, pm, w, h, format->depth);
-  Picture dst = XRenderCreatePicture (dpy, tmp, format, CPRepeat, &pa);
-  XFreePixmap (dpy, tmp);
+  Picture src = XRenderCreatePicture (dpy, pm     , format, CPRepeat, &pa);
+  Picture dst = XRenderCreatePicture (dpy, img->pm, format, CPRepeat, &pa);
+
+  Pixmap tmp_pm = XCreatePixmap (dpy, pm, w, h, format->depth);
+  Picture tmp = XRenderCreatePicture (dpy, tmp_pm , format, CPRepeat, &pa);
+  XFreePixmap (dpy, tmp_pm);
 
   if (kernel && params)
     {
@@ -150,13 +153,11 @@ rxvt_img::blur (int rh, int rv)
                         PictOpSrc,
                         src,
                         None,
-                        dst,
+                        tmp,
                         0, 0,
                         0, 0,
                         0, 0,
                         w, h);
-
-      ::swap (src, dst);
 
       size = rv * 2 + 1;
       get_gaussian_kernel (rv, size, kernel, params);
@@ -165,7 +166,7 @@ rxvt_img::blur (int rh, int rv)
       XRenderSetPictureFilter (dpy, src, FilterConvolution, params, size+2);
       XRenderComposite (dpy,
                         PictOpSrc,
-                        src,
+                        tmp,
                         None,
                         dst,
                         0, 0,
@@ -178,6 +179,9 @@ rxvt_img::blur (int rh, int rv)
   free (params);
   XRenderFreePicture (dpy, src);
   XRenderFreePicture (dpy, dst);
+  XRenderFreePicture (dpy, tmp);
+
+  return img;
 }
 
 static Picture

@@ -2130,7 +2130,7 @@ rxvt_img::DESTROY ()
 	CODE:
         delete THIS;
 
-void
+rxvt_img *
 rxvt_img::blur (int rh, int rv)
 
 void
