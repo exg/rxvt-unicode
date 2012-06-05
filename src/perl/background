@@ -1,7 +1,11 @@
 #! perl
 
 our $EXPR = 'move load "/root/pix/das_fette_schwein.jpg", repeat_wrap, X, Y';
-$EXPR = 'rotate (move (load "/root/pix/das_fette_schwein.jpg", X, Y), W, H, 50, 50, counter 1/60, repeat_mirror)';
+$EXPR = '
+   rotate W, H, 50, 50, counter 1/60, repeat_mirror,
+   clip X, Y, W, H, repeat_mirror,
+   load "/root/pix/das_fette_schwein.jpg"
+';
 #$EXPR = 'blur root, 10, 10'
 #$EXPR = 'blur move (root, -x, -y), 5, 5'
 #resize load "/root/pix/das_fette_schwein.jpg", w, h
@@ -33,37 +37,40 @@ our ($l, $t, $w, $h);
 #      $_[0]->clone
 #   }
 
-   sub subrect($$$$$;$) {
-      $_[0]->sub_rect ($_[1], $_[2], $_[3], $_[4], $_[5])
+   sub clip($$$$$;$) {
+      my $img = pop;
+      $img->sub_rect ($_[0], $_[1], $_[2], $_[3], $_[4])
    }
 
    sub resize($$$) {
-      $_[0]->scale ($_[1], $_[2])
+      my $img = pop;
+      $img->scale ($_[0], $_[1])
    }
 
-   sub move($$$;$) {
-      # TODO: must be simpler
-      $_[0]->transform ($_[0]->w, $_[0]->h,
-         1, 0, $_[1],
-         0, 1, $_[2],
-         0, 0,     1,
-         $_[3],
+   # TODO: ugly
+   sub move($$;$) {
+      my $img = pop;
+      $img->sub_rect (
+         $_[0], $_[1],
+         $img->w, $img->h,
+         $_[2],
       )
    }
 
    sub rotate($$$$$$;$) {
-      $_[0]->rotate (
+      my $img = pop;
+      $img->rotate (
+         $_[0],
          $_[1],
-         $_[2],
-         $_[3] * $_[0]->w * .01,
-         $_[4] * $_[0]->h * .01,
-         $_[5] * (3.14159265 / 180),
-         $_[6],
+         $_[2] * $img->w * .01,
+         $_[3] * $img->h * .01,
+         $_[4] * (3.14159265 / 180),
+         $_[5],
       )
    }
 
    sub blur($$$) {
-      my ($img, $rh, $rv) = @_;
+      my ($rh, $rv, $img) = @_;
 
       $img = $img->clone;
       $img->blur ($rh, $rv);
@@ -71,7 +78,8 @@ our ($l, $t, $w, $h);
    }
 
    sub contrast($$;$$;$) {
-      my ($img, $r, $g, $b, $a) = @_;
+      my $img = pop;
+      my ($r, $g, $b, $a) = @_;
 
       ($g, $b) = ($r, $r) if @_ < 4;
       $a       = 1        if @_ < 5;
@@ -82,7 +90,8 @@ our ($l, $t, $w, $h);
    }
 
    sub brightness($$;$$;$) {
-      my ($img, $r, $g, $b, $a) = @_;
+      my $img = pop;
+      my ($r, $g, $b, $a) = @_;
 
       ($g, $b) = ($r, $r) if @_ < 4;
       $a       = 1        if @_ < 5;
@@ -105,7 +114,7 @@ our ($l, $t, $w, $h);
 
    sub counter($) {
       $new->{again} = $_[0];
-      $bgdsl_self->{counter}++ + 0
+      $bgdsl_self->{counter} + 0
    }
 }
 
@@ -146,7 +155,10 @@ sub recalculate {
       $repeat = 1;
       $state->{timer} = $again == $old->{again}
                         ? $old->{timer}
-                        : urxvt::timer->new->after ($again)->interval ($again)->cb (sub { $self->recalculate });
+                        : urxvt::timer->new->after ($again)->interval ($again)->cb (sub {
+                             ++$self->{counter};
+                             $self->recalculate
+                          });
    }
 
    if (delete $state->{position_sensitive}) {
