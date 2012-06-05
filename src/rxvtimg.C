@@ -203,8 +203,6 @@ rxvt_img::contrast (double r, double g, double b, double a)
 bool
 rxvt_img::render_pixbuf (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int height, int dst_x, int dst_y)
 {
-  bool argb = format->id == PictStandardARGB32;
-
   Display *dpy = s->display->dpy;
 
   if (s->visual->c_class != TrueColor)
@@ -212,20 +210,10 @@ rxvt_img::render_pixbuf (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int
 
   uint32_t red_mask, green_mask, blue_mask, alpha_mask;
 
-  if (argb)
-    {
-      red_mask   = 0xff << 16;
-      green_mask = 0xff << 8;
-      blue_mask  = 0xff;
-      alpha_mask = 0xff << 24;
-    }
-  else
-    {
-      red_mask   = s->visual->red_mask;
-      green_mask = s->visual->green_mask;
-      blue_mask  = s->visual->blue_mask;
-      alpha_mask = (uint32_t)format->direct.alphaMask << format->direct.alpha;
-    }
+  red_mask   = (uint32_t)format->direct.redMask   << format->direct.red;
+  green_mask = (uint32_t)format->direct.greenMask << format->direct.green;
+  blue_mask  = (uint32_t)format->direct.blueMask  << format->direct.blue;
+  alpha_mask = (uint32_t)format->direct.alphaMask << format->direct.alpha;
 
   int width_r = ecb_popcount32 (red_mask);
   int width_g = ecb_popcount32 (green_mask);
@@ -243,7 +231,7 @@ rxvt_img::render_pixbuf (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int
   if (width > 32767 || height > 32767)
     return false;
 
-  XImage *ximage = XCreateImage (dpy, s->visual, argb ? 32 : format->depth, ZPixmap, 0, 0,
+  XImage *ximage = XCreateImage (dpy, s->visual, format->depth, ZPixmap, 0, 0,
                                  width, height, 32, 0);
   if (!ximage)
     return false;
