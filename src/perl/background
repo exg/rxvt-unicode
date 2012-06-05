@@ -1,18 +1,16 @@
 #! perl
 
-our $EXPR = 'move load "/root/pix/das_fette_schwein.jpg", &x, &y';
+our $EXPR = 'move load "/root/pix/das_fette_schwein.jpg", left, top';
 #$EXPR = 'blur root, 10, 10'
 #$EXPR = 'blur move (root, -x, -y), 5, 5'
 #resize load "/root/pix/das_fette_schwein.jpg", w, h
 
 use Safe;
 
+our ($bgdsl_self, $old, $new);
+our ($l, $t, $w, $h);
+
 {
-   package urxvt::bgdsl::vars;
-
-   our ($self, $old, $new);
-   our ($x, $y, $w, $h);
-
    package urxvt::bgdsl; # background language
 
    *repeat_black  = \&urxvt::RepeatNone; #TODO wtf
@@ -23,7 +21,7 @@ use Safe;
    sub load($) {
       my ($path) = @_;
 
-      $new->{load}{$path} = $old->{load}{$path} || $self->new_img_from_file ($path);
+      $new->{load}{$path} = $old->{load}{$path} || $bgdsl_self->new_img_from_file ($path);
    }
 
    sub root() {
@@ -73,10 +71,11 @@ use Safe;
       $img
    }
 
-   sub x() { $new->{position_sensitive} = 1; $x }
-   sub y() { $new->{position_sensitive} = 1; $y }
-   sub w() { $new->{size_sensitive}     = 1; $w }
-   sub h() { $new->{size_sensitive}     = 1; $h }
+   sub left  () { $new->{position_sensitive} = 1; $l }
+   sub top   () { $new->{position_sensitive} = 1; $t }
+   sub width () { $new->{size_sensitive}     = 1; $w }
+   sub height() { $new->{size_sensitive}     = 1; $h }
+
    sub now() { urxvt::NOW }
 
    sub again($) {
@@ -85,7 +84,7 @@ use Safe;
 
    sub counter($) {
       $new->{again} = $_[0];
-      $self->{counter}++ + 0
+      $bgdsl_self->{counter}++ + 0
    }
 }
 
@@ -108,13 +107,15 @@ sub set_expr {
 sub recalculate {
    my ($self) = @_;
 
-   local $urxvt::bgdsl::vars::self = $self;
+   local $bgdsl_self = $self;
 
-   local $urxvt::bgdsl::vars::old = $self->{state};
-   local $urxvt::bgdsl::vars::new = my $state = $self->{state} = {};
+   local $old = $self->{state};
+   local $new = my $state = $self->{state} = {};
 
-   ($urxvt::bgdsl::vars::x, $urxvt::bgdsl::vars::y, $urxvt::bgdsl::vars::w, $urxvt::bgdsl::vars::h) =
+   ($l, $t, $w, $h) =
       $self->get_geometry;
+
+      warn "$l, $t";#d#
 
    my $img = eval { $self->{expr}->() };
    warn $@ if $@;#d#
