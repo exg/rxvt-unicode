@@ -1102,7 +1102,7 @@ sub enable {
       defined $htype
          or Carp::croak "unsupported hook type '$name'";
 
-      $self->set_should_invoke ($htype, +1)
+      $self->modify_should_invoke_count ($htype, +1)
          unless exists $self->{term}{_hook}[$htype]{$pkg};
 
       $self->{term}{_hook}[$htype]{$pkg} = $cb;
@@ -1118,7 +1118,7 @@ sub disable {
       defined $htype
          or Carp::croak "unsupported hook type '$name'";
 
-      $self->set_should_invoke ($htype, -1)
+      $self->modify_should_invoke_count ($htype, -1)
          if delete $self->{term}{_hook}[$htype]{$pkg};
    }
 }

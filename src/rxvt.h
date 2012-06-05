@@ -1587,6 +1587,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void selection_rotate (int x, int y) NOTHROW;
 
   // xdefaults.C
+  void rxvt_usage (int type);
   const char **get_options (int argc, const char *const *argv);
   int parse_keysym (const char *str, const char *arg);
   const char *x_resource (const char *name);

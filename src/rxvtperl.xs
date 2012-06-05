@@ -393,6 +393,50 @@ rxvt_perl_interp::init (rxvt_term *term)
     }
 }
 
+void
+rxvt_perl_interp::usage (int type)
+{
+  localise_env set_environ (perl_environ);
+
+  ENTER;
+  SAVETMPS;
+
+  dSP;
+  XPUSHs (sv_2mortal (newSViv (type)));
+  PUTBACK;
+  call_pv ("urxvt::usage", G_VOID | G_DISCARD | G_EVAL);
+
+  FREETMPS;
+  LEAVE;
+}
+
+uint8_t
+rxvt_perl_interp::resource (rxvt_term *term, const char *name, bool arg, bool longopt, bool flag, const char *value)
+{
+  localise_env set_environ (perl_environ);
+
+  ENTER;
+  SAVETMPS;
+
+  dSP;
+  EXTEND (SP, 6);
+  PUSHs (sv_2mortal (newSVterm (term)));
+  PUSHs (sv_2mortal (newSVpv (name, 0)));
+  PUSHs (arg     ? &PL_sv_yes : &PL_sv_no);
+  PUSHs (longopt ? &PL_sv_yes : &PL_sv_no);
+  PUSHs (flag    ? &PL_sv_yes : &PL_sv_no);
+  PUSHs (value ? sv_2mortal (newSVpv (value, 0)) : &PL_sv_undef);
+  PUTBACK;
+  call_pv ("urxvt::resource", G_SCALAR | G_EVAL);
+
+  uint8_t ret = POPi;
+
+  FREETMPS;
+  LEAVE;
+
+  return ret;
+}
+
 static void
 ungrab (rxvt_term *THIS)
 {
@@ -433,8 +477,7 @@ rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
 
   bool event_consumed;
 
-  if (htype == HOOK_INIT || htype == HOOK_DESTROY // must be called always
-      || term->perl.should_invoke [htype])
+  if (term->perl.should_invoke [htype])
     {
       dSP;
       va_list ap;
@@ -654,6 +697,7 @@ rxvt_perl_interp::selection_finish (rxvt_selection *sel, char *data, unsigned in
 
   dSP;
   XPUSHs (sv_2mortal (newSVpvn (data, len)));
+  PUTBACK;
   call_sv ((SV *)sel->cb_sv, G_VOID | G_DISCARD | G_EVAL);
 
   if (SvTRUE (ERRSV))

@@ -1,5 +1,4 @@
 // all supported hooks
-
   def (INIT)
   def (DESTROY)
   def (RESET)

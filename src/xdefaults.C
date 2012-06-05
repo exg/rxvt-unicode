@@ -394,8 +394,8 @@ const char rxvt_term::resval_off []   = "off";
 
 /*{{{ usage: */
 /*----------------------------------------------------------------------*/
-static void
-rxvt_usage (int type)
+void
+rxvt_term::rxvt_usage (int type)
 {
   unsigned int i, col;
 
@@ -413,9 +413,11 @@ rxvt_usage (int type)
 
               if (optList[i].arg)
                 len = strlen (optList[i].arg) + 1;
+
               assert (optList[i].opt != NULL);
               len += 4 + strlen (optList[i].opt) + (optList_isBool (i) ? 2 : 0);
               col += len;
+
               if (col > 79)
                 {
                   /* assume regular width */
@@ -424,6 +426,7 @@ rxvt_usage (int type)
                 }
 
               rxvt_log (" [-%s%s", (optList_isBool (i) ? "/+" : ""), optList[i].opt);
+
               if (optList[i].arg)
                 rxvt_log (" %s]", optList[i].arg);
               else
@@ -462,6 +465,14 @@ rxvt_usage (int type)
         rxvt_log ("\n  -help to list options");
         break;
     }
+
+#if ENABLE_PERL
+  if (type) // do not initialise perl for type == 0, as perl does not have "short" options
+    {
+      rxvt_perl.init (this);
+      rxvt_perl.usage (type);
+    }
+#endif
 
   rxvt_log ("\n\n");
   rxvt_exit_failure ();
@@ -575,8 +586,25 @@ rxvt_term::get_options (int argc, const char *const *argv)
         }
       else
         {
-          bad_option = 1;
-          rxvt_warn ("\"%s\": unknown or malformed option.\n", opt);
+#if ENABLE_PERL
+          rxvt_perl.init (this);
+
+          if (int flags = rxvt_perl.resource (this, opt, true, longopt, flag, argv [i + 1]))
+            {
+              if ((!flags & rxvt_perl.RESOURCE_BOOLEAN))
+                {
+                  if (flag && i + 1 == argc)
+                    rxvt_fatal ("option '%s' requires an argument, aborting.\n", argv [i]);
+
+                  ++i;
+                }
+            }
+          else
+#endif
+            {
+              bad_option = 1;
+              rxvt_warn ("\"%s\": unknown or malformed option.\n", opt);
+            }
         }
     }
 
