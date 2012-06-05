@@ -18,6 +18,38 @@ rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, i
 }
 
 rxvt_img *
+rxvt_img::new_from_root (rxvt_screen *s)
+{
+  Display *dpy = s->display->dpy;
+  unsigned int root_pm_w, root_pm_h;
+  Pixmap root_pixmap = s->display->get_pixmap_property (s->display->xa[XA_XROOTPMAP_ID]);
+  if (root_pixmap == None)
+    root_pixmap = s->display->get_pixmap_property (s->display->xa[XA_ESETROOT_PMAP_ID]);
+
+  if (root_pixmap == None)
+    return 0;
+
+  Window wdummy;
+  int idummy;
+  unsigned int udummy;
+
+  if (!XGetGeometry (dpy, root_pixmap, &wdummy, &idummy, &idummy, &root_pm_w, &root_pm_h, &udummy, &udummy))
+    return 0;
+
+  rxvt_img *img = new rxvt_img (
+     s,
+     XRenderFindVisualFormat (dpy, DefaultVisual (dpy, s->display->screen)),
+     root_pm_w,
+     root_pm_h,
+     root_pixmap
+  );
+
+  img->shared = true;
+
+  return img;
+}
+
+rxvt_img *
 rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
 {
   GError *err = 0;
