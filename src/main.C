@@ -364,7 +364,6 @@ rxvt_term::set_option (uint8_t opt, bool set) NOTHROW
 /*----------------------------------------------------------------------*/
 /*
  * Exit gracefully, clearing the utmp entry and restoring tty attributes
- * TODO: if debugging, this should free up any known resources if we can
  */
 static XErrorHandler old_xerror_handler;
 
@@ -382,22 +381,27 @@ print_x_error (Display *dpy, XErrorEvent *event)
     char buffer[BUFSIZ];
     char mesg[BUFSIZ];
     char number[32];
-    const char mtype[] = "XlibMessage";
+
+    rxvt_warn ("An X Error occurred, trying to continue after report.\n");
+
+    XGetErrorDatabaseText (dpy, "XlibMessage", "ErrorSerial", "Error Serial #%d", mesg, BUFSIZ);
+    snprintf (buffer, BUFSIZ, "+ %s\n", mesg); rxvt_warn (buffer, event->serial);
 
     XGetErrorText (dpy, event->error_code, buffer, BUFSIZ);
-    XGetErrorDatabaseText (dpy, mtype, "XError", "X Error", mesg, BUFSIZ);
-    rxvt_warn ("An X Error occurred, trying to continue after report.\n");
-    rxvt_warn ("%s:  %s\n", mesg, buffer);
-    XGetErrorDatabaseText (dpy, mtype, "MajorCode", "Request Major code %d", mesg, BUFSIZ);
-    rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->request_code);
+    XGetErrorDatabaseText (dpy, "XlibMessage", "XError", "X Error", mesg, BUFSIZ);
+    rxvt_warn ("+ %s: %s\n", mesg, buffer);
+
+    XGetErrorDatabaseText (dpy, "XlibMessage", "MajorCode", "Request Major code %d", mesg, BUFSIZ);
+    snprintf (buffer, BUFSIZ, "+ %s\n", mesg); rxvt_warn (buffer, event->request_code);
+
     sprintf (number, "%d", event->request_code);
     XGetErrorDatabaseText (dpy, "XRequest", number, "", buffer, BUFSIZ);
-    rxvt_warn ("(which is %s)\n", buffer);
+    rxvt_warn ("+ (which is %s)\n", buffer);
 
     if (event->request_code >= 128)
       {
-        XGetErrorDatabaseText (dpy, mtype, "MinorCode", "Request Minor code %d", mesg, BUFSIZ);
-        rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->minor_code);
+        XGetErrorDatabaseText (dpy, "XlibMessage", "MinorCode", "Request Minor code %d", mesg, BUFSIZ);
+        snprintf (buffer, BUFSIZ, "+ %s\n", mesg); rxvt_warn (buffer, event->minor_code);
       }
 
     if (event->error_code == BadWindow
@@ -412,17 +416,14 @@ print_x_error (Display *dpy, XErrorEvent *event)
         || event->error_code == BadAtom)
       {
         if (event->error_code == BadValue)
-          XGetErrorDatabaseText (dpy, mtype, "Value", "Value 0x%x", mesg, BUFSIZ);
+          XGetErrorDatabaseText (dpy, "XlibMessage", "Value", "Value 0x%x", mesg, BUFSIZ);
         else if (event->error_code == BadAtom)
-          XGetErrorDatabaseText (dpy, mtype, "AtomID", "AtomID 0x%x", mesg, BUFSIZ);
+          XGetErrorDatabaseText (dpy, "XlibMessage", "AtomID", "AtomID 0x%x", mesg, BUFSIZ);
         else
-          XGetErrorDatabaseText (dpy, mtype, "ResourceID", "ResourceID 0x%x", mesg, BUFSIZ);
+          XGetErrorDatabaseText (dpy, "XlibMessage", "ResourceID", "ResourceID 0x%x", mesg, BUFSIZ);
 
-        rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->resourceid);
+        snprintf (buffer, BUFSIZ, "+ %s\n", mesg); rxvt_warn (buffer, event->resourceid);
     }
-
-    XGetErrorDatabaseText (dpy, mtype, "ErrorSerial", "Error Serial #%d", mesg, BUFSIZ);
-    rxvt_warn (strncat (mesg, "\n", BUFSIZ), event->serial);
 }
 #endif
 
