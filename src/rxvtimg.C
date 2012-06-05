@@ -317,6 +317,8 @@ rxvt_img::clone ()
   GC gc = XCreateGC (s->display->dpy, pm, 0, 0);
   XCopyArea (s->display->dpy, pm, img->pm, gc, 0, 0, w, h, 0, 0);
   XFreeGC (s->display->dpy, gc);
+
+  return img;
 }
 
 rxvt_img *

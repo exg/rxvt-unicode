@@ -2,6 +2,7 @@
 
 our $EXPR = 'move load "/root/pix/das_fette_schwein.jpg", repeat_wrap, X, Y';
 $EXPR = '
+   blur 10, 10,
    rotate W, H, 50, 50, counter 1/60, repeat_mirror,
    clip X, Y, W, H, repeat_mirror,
    load "/root/pix/das_fette_schwein.jpg"
