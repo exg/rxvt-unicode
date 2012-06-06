@@ -51,6 +51,8 @@ TODO: something resets the bg pixmap afetr on_start
           might speed up execution but definitely decreases codesize.
         - new env variable: RXVT_PERL_LIB.
         - iso14755 51 mode window now displays row and column.
+        - perl extensions can now provide commandline switches and resources
+          which show up in -help etc.
 
 9.15 Sat Jan 21 13:36:56 CET 2012
 	- remove "using namespace std" because clang erroneously

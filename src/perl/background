@@ -26,8 +26,8 @@ our $MIN_INTERVAL = 1/100;
 {
    package urxvt::bgdsl; # background language
 
-   *repeat_black  = \&urxvt::RepeatNone; #TODO wtf
-   *repeat_wrap   = \&urxvt::RepeatNormal;
+   *repeat_empty  = \&urxvt::RepeatNone;
+   *repeat_tile   = \&urxvt::RepeatNormal;
    *repeat_pad    = \&urxvt::RepeatPad;
    *repeat_mirror = \&urxvt::RepeatReflect;
 
@@ -253,8 +253,6 @@ sub recalculate {
 
 sub on_start {
    my ($self) = @_;
-
-   warn $self->x_resource ("background.enable");
 
    $self->set_expr (parse_expr $EXPR);
 

@@ -402,6 +402,7 @@ rxvt_perl_interp::usage (rxvt_term *term, int type)
   SAVETMPS;
 
   dSP;
+  PUSHMARK (SP);
   EXTEND (SP, 2);
   PUSHs (sv_2mortal (newSVterm (term)));
   PUSHs (sv_2mortal (newSViv (type)));
@@ -421,6 +422,7 @@ rxvt_perl_interp::parse_resource (rxvt_term *term, const char *name, bool arg, b
   SAVETMPS;
 
   dSP;
+  PUSHMARK (SP);
   EXTEND (SP, 6);
   PUSHs (sv_2mortal (newSVterm (term)));
   PUSHs (sv_2mortal (newSVpv (name, 0)));

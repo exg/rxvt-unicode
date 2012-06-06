@@ -764,8 +764,8 @@ use List::Util ();
 
 our $VERSION = 1;
 our $TERM;
-our @TERM_INIT;
-our @TERM_EXT;
+our @TERM_INIT; # should go, prevents async I/O etc.
+our @TERM_EXT;  # should go, prevents async I/O etc.
 our @HOOKNAME;
 our %HOOKTYPE = map +($HOOKNAME[$_] => $_), 0..$#HOOKNAME;
 our %OPTION;
@@ -950,8 +950,6 @@ sub parse_resource {
 
    $term->scan_meta;
 
-   warn "resourece<@_>\n";#d#
-
    my $r = $term->{meta}{resource};
    while (my ($pattern, $v) = each %$r) {
       $name =~ y/-/./ if $isarg;
@@ -962,8 +960,9 @@ sub parse_resource {
          : $pattern eq $name
       ) {
          $name = "$urxvt::RESCLASS.$name";
-         warn "set option <$name=$value>\n";#d#
-         #TODO: queue $v->[0] for loading
+
+         push @TERM_EXT, $v->[0];
+
          if ($v->[1] eq "boolean") {
             $term->put_option_db ($name, $flag ? "true" : "false");
             return 1;
@@ -1503,6 +1502,22 @@ resource with that pattern exists.
 This method should only be called during the C<on_start> hook, as there is
 only one resource database per display, and later invocations might return
 the wrong resources.
+
+=item $value = $term->x_resource_boolean ($pattern)
+
+Like C<x_resource>, above, but interprets the string value as a boolean
+and returns C<1> for true values, C<0> for false values and C<undef> if
+the resource or option isn't specified.
+
+You should always use this method to parse boolean resources.
+
+=cut
+
+sub x_resource_boolean {
+   my $res = &x_resource;
+
+   $res =~ /^\s*(?:true|yes|on|1)\s*$/i ? 1 : defined $res && 0
+}
 
 =item $success = $term->parse_keysym ($key, $octets)
 
