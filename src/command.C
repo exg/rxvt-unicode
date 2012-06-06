@@ -151,7 +151,7 @@ rxvt_term::iso14755_54 (int x, int y)
 
       if (t != NOCHAR || !x)
         {
-          iso14755_51 (l.t[x], l.r[x], x, y);
+          iso14755_51 (l.t[x], l.r[x], x, y, view_start);
           iso14755buf = ISO_14755_54;
           break;
         }
@@ -161,7 +161,7 @@ rxvt_term::iso14755_54 (int x, int y)
 }
 
 void ecb_cold
-rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
+rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y, int y2)
 {
   rxvt_fontset *fs = FONTSET (r);
   wchar_t *chr, *alloc, ch2, **fname;
@@ -184,6 +184,9 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
       len = 1;
     }
 
+  char rowcol[40];
+  snprintf (rowcol, sizeof rowcol, "col %d row %d @%d", x, y, y2);
+
   char attr[80]; // plenty
 
   sprintf (attr, "%08x = fg %d bg %d%s%s%s%s%s%s",
@@ -205,7 +208,6 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
       max_it (width, wcswidth (fname[i], wcslen (fname[i])));
     }
 
-  max_it (width, 8+5); // for char + hex
   max_it (width, strlen (attr));
 
   if (y >= 0)
@@ -214,7 +216,9 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
       x = 0;
     }
 
-  scr_overlay_new (x, y, width, len * 2 + 1);
+  scr_overlay_new (x, y, width, len * 2 + 2);
+
+  scr_overlay_set (0, 0, rowcol);
 
   r = SET_STYLE (OVERLAY_RSTYLE, GET_STYLE (r));
 
@@ -225,16 +229,16 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
       ch = *chr++;
 
       sprintf (buf, "%8x", ch);
-      scr_overlay_set (0, y, buf);
-      scr_overlay_set (9, y, '=');
+      scr_overlay_set (0, y + 1, buf);
+      scr_overlay_set (9, y + 1, '=');
 # if !UNICODE_3
       if (ch >= 0x10000)
         ch = 0xfffd;
 # endif
-      scr_overlay_set (11, y, ch, r);
+      scr_overlay_set (11, y + 1, ch, r);
 
       if (WCWIDTH (ch) >= 2)
-        scr_overlay_set (12, y, NOCHAR, r);
+        scr_overlay_set (12, y + 1, NOCHAR, r);
     }
 
 //  {
@@ -242,10 +246,10 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y)
 //    snprintf (buf, sizeof (buf), "(%.4d|%.4d)", x, y);
 //    scr_overlay_set (0, 0, buf);
 //  }
-  scr_overlay_set (0, len    , attr);
+  scr_overlay_set (0, len + 1, attr);
   for (int i = 0; i < len; i++)
     {
-      scr_overlay_set (0, len + 1 + i, fname[i]);
+      scr_overlay_set (0, len + 2 + i, fname[i]);
       free (fname[i]);
     }
 

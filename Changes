@@ -50,6 +50,7 @@ TODO: something resets the bg pixmap afetr on_start
         - selectively mark some methods as cache-hot/cache cold, which
           might speed up execution but definitely decreases codesize.
         - new env variable: RXVT_PERL_LIB.
+        - iso14755 51 mode window now displays row and column.
 
 9.15 Sat Jan 21 13:36:56 CET 2012
 	- remove "using namespace std" because clang erroneously
