@@ -1200,15 +1200,9 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   uint8_t bg_flags;
 
 # if BG_IMAGE_FROM_FILE
-  vector<rxvt_image> image_vec;
-  rxvt_image *new_image ()
-  {
-    image_vec.resize (image_vec.size () + 1);
-    return &image_vec.back ();
-  }
+  rxvt_image fimage;
   void get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y);
   bool render_image (rxvt_image &image);
-  void parse_image (int id, const char *type, const char *arg);
 # endif
 
 # if ENABLE_TRANSPARENCY

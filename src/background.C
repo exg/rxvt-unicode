@@ -61,8 +61,7 @@ void
 rxvt_term::bg_destroy ()
 {
 # if BG_IMAGE_FROM_FILE
-  for (vector<rxvt_image>::iterator bg_image = image_vec.begin (); bg_image < image_vec.end (); bg_image++)
-    bg_image->destroy ();
+  fimage.destroy ();
 # endif
 
   if (bg_pixmap)
@@ -92,11 +91,11 @@ rxvt_term::bg_window_size_sensitive ()
 # endif
 
 # if BG_IMAGE_FROM_FILE
-  for (vector<rxvt_image>::iterator bg_image = image_vec.begin (); bg_image < image_vec.end (); bg_image++)
+  if (fimage.flags & IM_IS_SET)
     {
-      if ((bg_image->flags & IM_IS_SIZE_SENSITIVE)
-          || bg_image->width () > szHint.width
-          || bg_image->height () > szHint.height)
+      if ((fimage.flags & IM_IS_SIZE_SENSITIVE)
+          || fimage.width () > szHint.width
+          || fimage.height () > szHint.height)
         return true;
     }
 # endif
@@ -113,9 +112,9 @@ rxvt_term::bg_window_position_sensitive ()
 # endif
 
 # if BG_IMAGE_FROM_FILE
-  for (vector<rxvt_image>::iterator bg_image = image_vec.begin (); bg_image < image_vec.end (); bg_image++)
+  if (fimage.flags & IM_IS_SET)
     {
-      if (bg_image->flags & IM_ROOT_ALIGN)
+      if (fimage.flags & IM_ROOT_ALIGN)
         return true;
     }
 # endif
@@ -539,11 +538,7 @@ rxvt_term::render_image (rxvt_image &image)
     tmp_pixmap = XCreatePixmap (dpy, vt, new_pmap_width, new_pmap_height, 32);
   else
     {
-      // optimise bg pixmap size when tiling, but only if there are no
-      // other pixbufs to render. Otherwise, the bg pixmap size must
-      // be equal to the window size.
-      if ((image.flags & IM_TILE)
-          && image_vec.size () == 1)
+      if (image.flags & IM_TILE)
         {
           new_pmap_width = min (image_width, target_width);
           new_pmap_height = min (image_height, target_height);
@@ -652,39 +647,6 @@ rxvt_term::render_image (rxvt_image &image)
   return ret;
 }
 #  endif /* HAVE_PIXBUF */
-
-#  ifndef NO_RESOURCES
-static int
-rxvt_define_image (XrmDatabase *database ecb_unused,
-                   XrmBindingList bindings ecb_unused,
-                   XrmQuarkList quarks,
-                   XrmRepresentation *type ecb_unused,
-                   XrmValue *value,
-                   XPointer closure ecb_unused)
-{
-  int size;
-
-  for (size = 0; quarks[size] != NULLQUARK; size++)
-    ;
-
-  if (size >= 2)
-    {
-      int id = strtol (XrmQuarkToString (quarks[size-2]), 0, 0);
-      if (id >= 1)
-        GET_R->parse_image (id, XrmQuarkToString (quarks[size-1]), (char *)value->addr);
-    }
-  return False;
-}
-#  endif
-
-void
-rxvt_term::parse_image (int id, const char *type, const char *arg)
-{
-  if (image_vec.size () < id + 1)
-    image_vec.resize (id + 1);
-
-  rxvt_image *image = &image_vec[id];
-}
 
 rxvt_image::rxvt_image ()
 {
@@ -1158,9 +1120,9 @@ rxvt_term::bg_render ()
 # endif
 
 # if BG_IMAGE_FROM_FILE
-  for (vector<rxvt_image>::iterator bg_image = image_vec.begin (); bg_image < image_vec.end (); bg_image++)
+  if (fimage.flags & IM_IS_SET)
     {
-      if (render_image (*bg_image))
+      if (render_image (fimage))
         bg_flags |= BG_IS_VALID;
     }
 # endif
@@ -1188,32 +1150,10 @@ rxvt_term::bg_init ()
 #if BG_IMAGE_FROM_FILE
   if (rs[Rs_backgroundPixmap])
     {
-      rxvt_image *image = new_image ();
-      if (!image->set_file_geometry (rs[Rs_backgroundPixmap]))
-        image_vec.pop_back ();
+      if (fimage.set_file_geometry (rs[Rs_backgroundPixmap])
+          && !bg_window_position_sensitive ())
+        update_background ();
     }
-
-# ifndef NO_RESOURCES
-  find_resources ("image", "Image", XrmEnumAllLevels, rxvt_define_image);
-# endif
-
-  vector<rxvt_image>::iterator bg_image = image_vec.begin ();
-  while (bg_image != image_vec.end ())
-    {
-      if (!(bg_image->flags & IM_IS_SET))
-        bg_image = image_vec.erase (bg_image);
-      else
-        {
-          if (bg_image->is_size_sensitive ())
-            bg_image->flags |= IM_IS_SIZE_SENSITIVE;
-
-          bg_image++;
-        }
-    }
-
-  if (image_vec.size () > 0
-      && !bg_window_position_sensitive ())
-    update_background ();
 #endif
 }
 

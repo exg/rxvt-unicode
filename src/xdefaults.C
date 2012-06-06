@@ -833,7 +833,7 @@ rxvt_term::extract_keysym_resources ()
 #endif
 }
 
-#if !defined NO_RESOURCES && (defined KEYSYM_RESOURCE || defined BG_IMAGE_FROM_FILE)
+#if !defined NO_RESOURCES && defined KEYSYM_RESOURCE
 void
 rxvt_term::find_resources (const char *n_prefix, const char *c_prefix, int mode,
                            Bool (*proc)(XrmDatabase *, XrmBindingList, XrmQuarkList, XrmRepresentation *, XrmValue *, XPointer))

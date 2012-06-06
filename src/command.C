@@ -3474,15 +3474,10 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
         if (!strcmp (str, "?"))
           {
             char str[256];
-            int h_scale = 0, v_scale = 0;
-            int h_align = 0, v_align = 0;
-            if (image_vec.size () > 0)
-              {
-                h_scale = image_vec[0].h_scale;
-                v_scale = image_vec[0].v_scale;
-                h_align = image_vec[0].h_align;
-                v_align = image_vec[0].v_align;
-              }
+            int h_scale = fimage.h_scale;
+            int v_scale = fimage.v_scale;
+            int h_align = fimage.h_align;
+            int v_align = fimage.v_align;
 
             sprintf (str, "[%dx%d+%d+%d]",
                      h_scale, v_scale,
@@ -3495,22 +3490,14 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
 
             if (*str != ';')
               {
-                if (image_vec.size () > 0)
-                  changed = image_vec[0].set_file_geometry (str);
-                else
-                  {
-                    rxvt_image *image = new_image ();
-                    if (!image->set_file_geometry (str))
-                      image_vec.pop_back ();
-                    else
-                      changed = true;
-                  }
+                if (fimage.set_file_geometry (str))
+                  changed = true;
               }
             else
               {
                 str++;
-                if (image_vec.size () > 0)
-                  changed = image_vec[0].set_geometry (str, true);
+                if (fimage.set_geometry (str, true))
+                  changed = true;
               }
 
             if (changed)
