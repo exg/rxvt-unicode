@@ -1362,7 +1362,7 @@ sub scan_meta {
          while (<$fh>) {
             if (/^#:META:X_RESOURCE:(.*)/) {
                my ($pattern, $type, $desc) = split /:/, $1;
-               $pattern =~ s/^%(?:\.|$)/$ext./g; # % in pattern == extension name
+               $pattern =~ s/^%(\.|$)/$ext$1/g; # % in pattern == extension name
                if ($pattern =~ /[^a-zA-Z0-9\-\.]/) {
                   warn "$dir/$ext: meta resource '$pattern' contains illegal characters (not alphanumeric nor . nor *)\n";
                } else {
