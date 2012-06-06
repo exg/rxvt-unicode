@@ -2094,11 +2094,18 @@ rxvt_term::set_background (rxvt_img *img)
 
         if (img) // TODO: cannot be false
           {
+            XRenderPictFormat *f = XRenderFindVisualFormat (THIS->dpy, THIS->visual);
+            rxvt_img *img2 = 0;
+
+            if (f != img->format)
+              img = img2 = img->convert_to (f, THIS->pix_colors [Color_bg]);
+
             img->unshare ();
-            //TODO: convetr to visual, possibly precompose with colour
             THIS->bg_pixmap = img->steal ();
             THIS->bg_flags |= rxvt_term::BG_NEEDS_REFRESH;
             THIS->bg_valid_since = ev::now (); // TODO: extra bloat
+
+            delete img2;
           }
 
 #endif

@@ -4,13 +4,13 @@
 #:META:X_RESOURCE:%.enable:boolean:some boolean
 #:META:X_RESOURCE:%.extra.:value:extra config
 
-our $EXPR = 'move load "/root/pix/das_fette_schwein.jpg", repeat_wrap, X, Y';
-$EXPR = '
-   rotate W, H, 50, 50, counter 1/59.95, repeat_mirror,
-   clip X, Y, W, H, repeat_mirror,
-   load "/root/pix/das_fette_schwein.jpg"
-';
-$EXPR = 'solid "red"';
+our $EXPR = 'move X, Y, load "MagnoliaAlpha.png"';
+#$EXPR = '
+#   rotate W, H, 50, 50, counter 1/59.95, repeat_mirror,
+#   clip X, Y, W, H, repeat_mirror,
+#   load "/root/pix/das_fette_schwein.jpg"
+#';
+#$EXPR = 'solid "red"';
 #$EXPR = 'blur root, 10, 10'
 #$EXPR = 'blur move (root, -x, -y), 5, 5'
 #resize load "/root/pix/das_fette_schwein.jpg", w, h

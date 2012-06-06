@@ -436,9 +436,7 @@ rxvt_img::convert_to (XRenderPictFormat *new_format, const rxvt_color &bg)
   Picture dst = XRenderCreatePicture (dpy, img->pm, new_format, 0, 0);
   int op = PictOpSrc;
 
-  printf ("fa %x,%x fb %x,%x\n", format->direct.alpha, format->direct.alphaMask, new_format->direct.alpha, new_format->direct.alphaMask);//D
-
-  if (format->direct.alpha && !new_format->direct.alpha)
+  if (format->direct.alphaMask && !new_format->direct.alphaMask)
     {
       // does it have to be that complicated
       rgba c;
