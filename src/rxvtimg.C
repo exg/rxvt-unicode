@@ -427,15 +427,31 @@ rxvt_img::rotate (int new_width, int new_height, int x, int y, double phi, int r
 }
 
 rxvt_img *
-rxvt_img::convert_to (XRenderPictFormat *new_format)
+rxvt_img::convert_to (XRenderPictFormat *new_format, const rxvt_color &bg)
 {
   rxvt_img *img = new rxvt_img (s, new_format, w, h);
 
   Display *dpy = s->display->dpy;
   Picture src = XRenderCreatePicture (dpy,      pm,     format, 0, 0);
   Picture dst = XRenderCreatePicture (dpy, img->pm, new_format, 0, 0);
+  int op = PictOpSrc;
 
-  XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
+  printf ("fa %x,%x fb %x,%x\n", f->direct.alpha, f->direct.alpha_mask, new_format->direct.alpha, new_format->direct.alpha_mask);//D
+
+  if (f->direct.alpha && !new_format->direct.alpha)
+    {
+      // does it have to be that complicated
+      rgba c;
+      bg.get (c);
+
+      XRenderColor rc = { c.r, c.g, c.b, 0xffff };
+
+      XRenderFillRectangle (dpy, PictOpSrc, dst, &mask_c, 0, 0, w, h);
+
+      op = PictOpOver;
+    }
+
+  XRenderComposite (dpy, op, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
 
   XRenderFreePicture (dpy, src);
   XRenderFreePicture (dpy, dst);
