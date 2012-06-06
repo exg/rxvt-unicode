@@ -356,8 +356,8 @@ struct rxvt_color
   bool alloc (rxvt_screen *screen, const rgba &color);
   void free (rxvt_screen *screen);
 
-  void get (rgba &color);
-  void get (XColor &color);
+  void get (rgba &color) const;
+  void get (XColor &color) const;
 
   bool set (rxvt_screen *screen, const char *name);
   bool set (rxvt_screen *screen, const rgba &color);

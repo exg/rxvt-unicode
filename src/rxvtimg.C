@@ -436,17 +436,16 @@ rxvt_img::convert_to (XRenderPictFormat *new_format, const rxvt_color &bg)
   Picture dst = XRenderCreatePicture (dpy, img->pm, new_format, 0, 0);
   int op = PictOpSrc;
 
-  printf ("fa %x,%x fb %x,%x\n", f->direct.alpha, f->direct.alpha_mask, new_format->direct.alpha, new_format->direct.alpha_mask);//D
+  printf ("fa %x,%x fb %x,%x\n", format->direct.alpha, format->direct.alphaMask, new_format->direct.alpha, new_format->direct.alphaMask);//D
 
-  if (f->direct.alpha && !new_format->direct.alpha)
+  if (format->direct.alpha && !new_format->direct.alpha)
     {
       // does it have to be that complicated
       rgba c;
       bg.get (c);
 
       XRenderColor rc = { c.r, c.g, c.b, 0xffff };
-
-      XRenderFillRectangle (dpy, PictOpSrc, dst, &mask_c, 0, 0, w, h);
+      XRenderFillRectangle (dpy, PictOpSrc, dst, &rc, 0, 0, w, h);
 
       op = PictOpOver;
     }

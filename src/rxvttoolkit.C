@@ -892,7 +892,7 @@ rxvt_color::set (rxvt_screen *screen, const rgba &color)
 }
 
 void
-rxvt_color::get (rgba &color)
+rxvt_color::get (rgba &color) const
 {
 #if XFT
   color.r = c.color.red;
@@ -908,7 +908,7 @@ rxvt_color::get (rgba &color)
 }
 
 void
-rxvt_color::get (XColor &color)
+rxvt_color::get (XColor &color) const
 {
   rgba c;
   get (c);
