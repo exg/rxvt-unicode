@@ -28,6 +28,7 @@ TODO: find out about overhead of NOTHROW
 TODO: xrender, versiobn check for filters, or use query filters instead?
 TODO: something resets the bg pixmap afetr on_start
 TODO: provide something like % for easy access for parse_keysym and x_resource*
+TODO: description into --help output?
 9.16
 	- the "so much new stuff you eyes will pop out" release.
         - INCOMPATIBLE CHANGE: renamed urlLauncher resource to url-launcher.

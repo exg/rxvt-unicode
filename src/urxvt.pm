@@ -998,6 +998,7 @@ sub usage {
             urxvt::log sprintf "  -%-30s %s\n", "$pattern $type", $desc;
          }
       } else {
+         $pattern =~ s/\.$/.*/g;
          urxvt::log sprintf "  %-31s %s\n", "$pattern:", $type;
       }
    }
@@ -1362,7 +1363,7 @@ sub scan_meta {
             if (/^#:META:X_RESOURCE:(.*)/) {
                my ($pattern, $type, $desc) = split /:/, $1;
                $pattern =~ s/^%(?:\.|$)/$ext./g; # % in pattern == extension name
-               if ($pattern =~ /[^a-zA-Z\.]/) {
+               if ($pattern =~ /[^a-zA-Z0-9\-\.]/) {
                   warn "$dir/$ext: meta resource '$pattern' contains illegal characters (not alphanumeric nor . nor *)\n";
                } else {
                   $meta{resource}{$pattern} = [$ext, $type, $desc];
