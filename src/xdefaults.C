@@ -386,7 +386,7 @@ static const char optionsstring[] = "options: "
 #endif
                                     "\nUsage: ";		/* Usage */
 
-#define INDENT 18
+#define INDENT 28
 
 const char rxvt_term::resval_undef [] = "<undef>";
 const char rxvt_term::resval_on []    = "on";
@@ -466,7 +466,7 @@ rxvt_term::rxvt_usage (int type)
           if (optList[i].kw != NULL)
             rxvt_log ("  %s: %*s%s\n",
                     optList[i].kw,
-                    (INDENT - strlen (optList[i].kw)), "", /* XXX */
+                    (INDENT + 2 - strlen (optList[i].kw)), "", /* XXX */
                     (optList_isBool (i) ? "boolean" : optList[i].arg));
 
 #if ENABLE_PERL
@@ -548,7 +548,7 @@ rxvt_term::get_options (int argc, const char *const *argv)
 
               if (optList[entry].doff != -1)
                 {
-                  if (flag && i+1 == argc)
+                  if (flag && i + 1 == argc)
                     rxvt_fatal ("option '%s' requires an argument, aborting.\n", argv [i]);
 
                   rs[optList[entry].doff] = flag ? argv[++i] : resval_undef;
@@ -566,14 +566,14 @@ rxvt_term::get_options (int argc, const char *const *argv)
 #ifndef NO_RESOURCES
       else if (!strcmp (opt, "xrm"))
         {
-          if (i+1 < argc)
+          if (i + 1 < argc)
             XrmPutLineResource (&option_db, argv[++i]);
         }
 #endif
 #ifdef KEYSYM_RESOURCE
       else if (!strncmp (opt, "keysym.", sizeof ("keysym.") - 1))
         {
-          if (i+1 < argc)
+          if (i + 1 < argc)
             {
               char *res = rxvt_temp_buf<char> (strlen (opt) + strlen (argv[++i]) + 6);
               sprintf (res, "*.%s: %s\n", opt, argv[i]);
@@ -583,31 +583,35 @@ rxvt_term::get_options (int argc, const char *const *argv)
 #endif
       else if (!strcmp (opt, "e"))
         {
-          if (i+1 == argc)
-            rxvt_fatal ("option '-e' requires an argument, aborting.\n");
+          if (i + 1 < argc)
+            return (const char **)argv + i + 1;
 
-          return (const char **)argv + i + 1;
+          rxvt_warn ("option '-e' requires an argument, aborting.\n");
+          bad_option = 1;
         }
       else
         {
 #if ENABLE_PERL
           rxvt_perl.init (this);
 
-          if (int flags = rxvt_perl.resource (this, opt, true, longopt, flag, argv [i + 1]))
+          if (int flags = rxvt_perl.parse_resource (this, opt, true, longopt, flag, argv [i + 1]))
             {
-              if ((!flags & rxvt_perl.RESOURCE_BOOLEAN))
+              if (flags & rxvt_perl.RESOURCE_ARG)
                 {
-                  if (flag && i + 1 == argc)
-                    rxvt_fatal ("option '%s' requires an argument, aborting.\n", argv [i]);
-
-                  ++i;
+                  if (i + 1 == argc)
+                    {
+                      rxvt_warn ("option '%s' requires an argument.\n", argv [i]);
+                      bad_option = 1;
+                    }
+                  else
+                    ++i;
                 }
             }
           else
 #endif
             {
-              bad_option = 1;
               rxvt_warn ("\"%s\": unknown or malformed option.\n", opt);
+              bad_option = 1;
             }
         }
     }

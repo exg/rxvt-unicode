@@ -61,10 +61,10 @@ struct rxvt_perl_interp
 
   enum
   {
-    RESOURCE_AVAILABLE = 0,
-    RESOURCE_BOOLEAN   = 1
+    RESOURCE_AVAILABLE = 1, // whether the option is valid
+    RESOURCE_ARG       = 2  // whether the option eats the next arg
   };
-  uint8_t resource (rxvt_term *term, const char *name, bool arg, bool longopt, bool flag, const char *value);
+  uint8_t parse_resource (rxvt_term *term, const char *name, bool arg, bool longopt, bool flag, const char *value);
 };
 
 extern struct rxvt_perl_interp rxvt_perl;

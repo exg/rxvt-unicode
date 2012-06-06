@@ -47,6 +47,7 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 
 #if defined (ISO_14755) || defined (ENABLE_PERL)
 # define ENABLE_OVERLAY 1
+# undef NO_RESOURCES
 #endif
 
 #if ENABLE_PERL
@@ -1298,7 +1299,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   unicode_t iso14755buf;
   void commit_iso14755 ();
 # if ISO_14755
-  void iso14755_51 (unicode_t ch, rend_t r = DEFAULT_RSTYLE, int x = 0, int y = -1);
+  void iso14755_51 (unicode_t ch, rend_t r = DEFAULT_RSTYLE, int x = 0, int y = -1, int y2 = -1);
   void iso14755_54 (int x, int y);
 # endif
 #endif

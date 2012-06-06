@@ -406,14 +406,14 @@ rxvt_perl_interp::usage (rxvt_term *term, int type)
   PUSHs (sv_2mortal (newSVterm (term)));
   PUSHs (sv_2mortal (newSViv (type)));
   PUTBACK;
-  call_pv ("urxvt::usage", G_VOID | G_DISCARD | G_EVAL);
+  call_pv ("urxvt::usage", G_VOID | G_DISCARD);
 
   FREETMPS;
   LEAVE;
 }
 
 uint8_t
-rxvt_perl_interp::resource (rxvt_term *term, const char *name, bool arg, bool longopt, bool flag, const char *value)
+rxvt_perl_interp::parse_resource (rxvt_term *term, const char *name, bool arg, bool longopt, bool flag, const char *value)
 {
   localise_env set_environ (perl_environ);
 
@@ -429,7 +429,8 @@ rxvt_perl_interp::resource (rxvt_term *term, const char *name, bool arg, bool lo
   PUSHs (flag    ? &PL_sv_yes : &PL_sv_no);
   PUSHs (value ? sv_2mortal (newSVpv (value, 0)) : &PL_sv_undef);
   PUTBACK;
-  call_pv ("urxvt::resource", G_SCALAR | G_EVAL);
+  call_pv ("urxvt::parse_resource", G_SCALAR);
+  SPAGAIN;
 
   uint8_t ret = POPi;
 
@@ -1062,6 +1063,11 @@ rxvt_term::set_should_invoke (int htype, int inc)
                     THIS->get_window_origin (THIS->parent_x, THIS->parent_y);
               }
 	  }
+
+void
+rxvt_term::put_option_db (octet_string specifier, octet_string value)
+	CODE:
+        XrmPutStringResource (&THIS->option_db, specifier, value);
 
 int
 rxvt_term::grab_button (int button, U32 modifiers, Window window = THIS->vt)

@@ -945,12 +945,34 @@ BEGIN {
 
 no warnings 'utf8';
 
-sub resource {
-   my ($term, $name, $isarg, $flag, $value) = @_;
+sub parse_resource {
+   my ($term, $name, $isarg, $longopt, $flag, $value) = @_;
 
    $term->scan_meta;
 
    warn "resourece<@_>\n";#d#
+
+   my $r = $term->{meta}{resource};
+   while (my ($pattern, $v) = each %$r) {
+      $name =~ y/-/./ if $isarg;
+
+      if (
+         $pattern =~ s/\*$//
+         ? $pattern eq substr $name, 0, length $pattern
+         : $pattern eq $name
+      ) {
+         $name = "$urxvt::RESCLASS.$name";
+         warn "set option <$name=$value>\n";#d#
+         #TODO: queue $v->[0] for loading
+         if ($v->[1] eq "boolean") {
+            $term->put_option_db ($name, $flag ? "true" : "false");
+            return 1;
+         } else {
+            $term->put_option_db ($name, $value);
+            return 1 + 2;
+         }
+      }
+   }
 
    0
 }
@@ -962,19 +984,22 @@ sub usage {
 
    my $r = $term->{meta}{resource};
 
-   for my $regex (sort keys %$r) {
-      my ($ext, $type, $desc) = @{ $r->{$regex} };
+   for my $pattern (sort keys %$r) {
+      my ($ext, $type, $desc) = @{ $r->{$pattern} };
 
       $desc .= " (-pe $ext)";
 
       if ($usage_type == 1) {
+         $pattern =~ y/./-/;
+         $pattern =~ s/\*/.../g;
+
          if ($type eq "boolean") {
-            urxvt::log sprintf "  -%-20.20s %s\n", "/+$regex", $desc;
+            urxvt::log sprintf "  -%-30s %s\n", "/+$pattern", $desc;
          } else {
-            urxvt::log sprintf "  -%-20.20s %s\n", "$regex $type", $desc;
+            urxvt::log sprintf "  -%-30s %s\n", "$pattern $type", $desc;
          }
       } else {
-         urxvt::log sprintf "  %-19.19s %s\n", "$regex:", $type;
+         urxvt::log sprintf "  %-31s %s\n", "$pattern:", $type;
       }
    }
 }
@@ -1335,10 +1360,14 @@ sub scan_meta {
             or next;
 
          while (<$fh>) {
-            if (/^#:META:RESOURCE:(.*)/) {
-               my ($regex, $type, $desc) = split /:/, $1;
-               $regex =~ s/\$\$/$ext/g; # $$ in regex == extension name
-               $meta{resource}{$regex} = [$ext, $type, $desc];
+            if (/^#:META:X_RESOURCE:(.*)/) {
+               my ($pattern, $type, $desc) = split /:/, $1;
+               $pattern =~ s/^%\./$ext./g; # $$ in pattern == extension name
+               if ($pattern =~ /[^a-zA-Z\*\.]/) {
+                  warn "$dir/$ext: meta resource '$pattern' contains illegal characters (not alphanumeric nor . nor *)\n";
+               } else {
+                  $meta{resource}{$pattern} = [$ext, $type, $desc];
+               }
             } elsif (/^\s*(?:#|$)/) {
                # skip other comments and empty lines
             } else {
