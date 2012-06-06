@@ -955,7 +955,7 @@ sub parse_resource {
       $name =~ y/-/./ if $isarg;
 
       if (
-         $pattern =~ s/\*$//
+         $pattern =~ /\.$/
          ? $pattern eq substr $name, 0, length $pattern
          : $pattern eq $name
       ) {
@@ -990,7 +990,7 @@ sub usage {
 
       if ($usage_type == 1) {
          $pattern =~ y/./-/;
-         $pattern =~ s/\*/.../g;
+         $pattern =~ s/-$/-.../g;
 
          if ($type eq "boolean") {
             urxvt::log sprintf "  -%-30s %s\n", "/+$pattern", $desc;
@@ -1361,8 +1361,8 @@ sub scan_meta {
          while (<$fh>) {
             if (/^#:META:X_RESOURCE:(.*)/) {
                my ($pattern, $type, $desc) = split /:/, $1;
-               $pattern =~ s/^%\./$ext./g; # $$ in pattern == extension name
-               if ($pattern =~ /[^a-zA-Z\*\.]/) {
+               $pattern =~ s/^%(?:\.|$)/$ext./g; # % in pattern == extension name
+               if ($pattern =~ /[^a-zA-Z\.]/) {
                   warn "$dir/$ext: meta resource '$pattern' contains illegal characters (not alphanumeric nor . nor *)\n";
                } else {
                   $meta{resource}{$pattern} = [$ext, $type, $desc];

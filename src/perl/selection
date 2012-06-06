@@ -1,5 +1,7 @@
 #! perl
 
+#:META:X_RESOURCE:%.pattern-0:string:first selection pattern
+
 sub on_user_command {
    my ($self, $cmd) = @_;
 

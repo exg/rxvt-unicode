@@ -2,6 +2,8 @@
 
 # this extension implements scrollback buffer search
 
+#:META:X_RESOURCE:%:string:activation hotkey keysym
+
 sub on_init {
    my ($self) = @_;
 

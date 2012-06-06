@@ -1,5 +1,7 @@
 #! perl
 
+#:META:X_RESOURCE:%.:string:autotransform expression
+
 sub msg {
    my ($self, $msg) = @_;
 

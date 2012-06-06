@@ -16,6 +16,8 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+#:META:X_RESOURCE:%:string:the shell snippet to execute
+
 sub on_start {
    my ($self) = @_;
 

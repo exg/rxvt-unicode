@@ -1,5 +1,8 @@
 #! perl
 
+#:META:X_RESOURCE:%.store: the command used to store the selection
+#:META:X_RESOURCE:%.fetch: the command used to fetch the selection
+
 use Fcntl ();
 
 sub msg {

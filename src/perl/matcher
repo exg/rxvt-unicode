@@ -3,6 +3,12 @@
 # Author: Tim Pope <rxvt-unicodeNOSPAM@tpope.org>
 #          Bob Farrell <robertanthonyfarrell@gmail.com>
 
+#:META:X_RESOURCE:%.launcher:string:default launcher command
+#:META:X_RESOURCE:%.button:string:the button, yeah
+#:META:X_RESOURCE:%.pattern.:string:extra pattern to match
+#:META:X_RESOURCE:%.launcher.:string:custom launcher for pattern
+#:META:X_RESOURCE:%.rend.:string:custom rednition for pattern
+
 my $url =
    qr{
       (?:https?://|ftp://|news://|mailto:|file://|\bwww\.)
@@ -148,16 +154,14 @@ sub on_start {
 
    ($self->{name} = __PACKAGE__) =~ s/.*:://;
    $self->{name} =~ tr/_/-/;
-   $self->{launcher} = $self->my_resource("launcher") ||
-                      $self->x_resource("urlLauncher") ||
-                      "sensible-browser";
+   $self->{launcher} = $self->my_resource ("launcher") || $self->x_resource("url-launcher") || "sensible-browser";
 
    $self->{urls} = [];
    $self->{showing} = 0;
    $self->{button}  = 2;
    $self->{state}   = 0;
-   if($self->{argv}[0] || $self->my_resource("button")) {
-      my @mods = split('', $self->{argv}[0] || $self->my_resource("button"));
+   if($self->{argv}[0] || $self->my_resource ("button")) {
+      my @mods = split '', $self->{argv}[0] || $self->my_resource ("button");
       for my $mod (@mods) {
          if($mod =~ /^\d+$/) {
             $self->{button} = $mod;
@@ -175,12 +179,12 @@ sub on_start {
 
    my @defaults = ($url);
    my @matchers;
-   for (my $idx = 0; defined (my $res = $self->my_resource("pattern.$idx") || $defaults[$idx]); $idx++) {
+   for (my $idx = 0; defined (my $res = $self->my_resource ("pattern.$idx") || $defaults[$idx]); $idx++) {
       $res = $self->locale_decode ($res);
       utf8::encode $res;
-      my $launcher = $self->my_resource("launcher.$idx");
-      $launcher =~ s/\$&|\$\{&\}/\${0}/g if ($launcher);
-      my $rend = $self->parse_rend($self->my_resource("rend.$idx"));
+      my $launcher = $self->my_resource ("launcher.$idx");
+      $launcher =~ s/\$&|\$\{&\}/\${0}/g if $launcher;
+      my $rend = $self->parse_rend($self->my_resource ("rend.$idx"));
       unshift @matchers, [qr($res)x,$launcher,$rend];
    }
    $self->{matchers} = \@matchers;

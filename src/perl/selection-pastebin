@@ -1,5 +1,8 @@
 #! perl
 
+#:META:X_RESOURCE:%.cmd:string:the command to run create a new pastebin
+#:META:X_RESOURCE:%.url:string:the url template for new pastebins
+
 sub upload_paste {
    my ($self) = @_;
 

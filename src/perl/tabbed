@@ -1,5 +1,10 @@
 #! perl
 
+#:META:X_RESOURCE:tabbar-fg:tab bar foreground colour
+#:META:X_RESOURCE:tabbar-bg:tab bar background colour
+#:META:X_RESOURCE:tab-fg:tab foreground colour
+#:META:X_RESOURCE:tab-bg:tab background colour
+
 sub refresh {
    my ($self) = @_;
 
