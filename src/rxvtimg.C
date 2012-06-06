@@ -7,13 +7,13 @@
 #define float_to_component(d) ((d) * 65535.99)
 
 rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height)
-: s(screen), w(width), h(height), format(format), shared(false)
+: s(screen), x(0), y(0), w(width), h(height), format(format), repeat(RepeatNormal), shared(false)
 {
   pm = XCreatePixmap (s->display->dpy, s->display->root, w, h, format->depth);
 }
 
 rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap)
-: s(screen), pm(pixmap), w(width), h(height), format(format), shared(false)
+: s(screen), x(0), y(0), w(width), h(height), format(format), repeat(RepeatNormal), shared(false), pm(pixmap)
 {
 }
 
@@ -354,7 +354,7 @@ rxvt_img::clone ()
 }
 
 rxvt_img *
-rxvt_img::sub_rect (int x, int y, int width, int height, int repeat)
+rxvt_img::sub_rect (int x, int y, int width, int height)
 {
   rxvt_img *img = new rxvt_img (s, format, width, height);
 
@@ -373,7 +373,7 @@ rxvt_img::sub_rect (int x, int y, int width, int height, int repeat)
 }
 
 rxvt_img *
-rxvt_img::transform (int new_width, int new_height, double matrix[9], int repeat)
+rxvt_img::transform (int new_width, int new_height, double matrix[9])
 {
   rxvt_img *img = new rxvt_img (s, format, new_width, new_height);
 
@@ -412,7 +412,7 @@ rxvt_img::scale (int new_width, int new_height)
 }
 
 rxvt_img *
-rxvt_img::rotate (int new_width, int new_height, int x, int y, double phi, int repeat)
+rxvt_img::rotate (int new_width, int new_height, int x, int y, double phi)
 {
   double s = sin (phi);
   double c = cos (phi);
@@ -423,7 +423,7 @@ rxvt_img::rotate (int new_width, int new_height, int x, int y, double phi, int r
     0,  0,                  1
   };
 
-  return transform (new_width, new_height, matrix, repeat);
+  return transform (new_width, new_height, matrix);
 }
 
 rxvt_img *

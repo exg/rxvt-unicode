@@ -13,7 +13,7 @@ struct rxvt_img
 {
   rxvt_screen *s;
   Pixmap pm;
-  int w, h;
+  int x, y, w, h, repeat;
   XRenderPictFormat *format;
   bool shared; // true if we don't own it
 
@@ -31,6 +31,17 @@ struct rxvt_img
   }
 
   // inplace
+  void move (int dx, int dy)
+  {
+    x += dx;
+    y += dy;
+  }
+
+  void repeat_mode (int repeat)
+  {
+    this->repeat = repeat;
+  }
+
   void unshare (); // create a copy of the pixmap if !shared
   void fill (const rxvt_color &c);
   void brightness (double r, double g, double b, double a = 1.);
@@ -40,10 +51,10 @@ struct rxvt_img
   // copy
   rxvt_img *blur (int rh, int rv);
   rxvt_img *clone ();
-  rxvt_img *sub_rect (int x, int y, int width, int height, int repeat = RepeatNormal);
-  rxvt_img *transform (int new_width, int new_height, double matrix[9], int repeat = RepeatNormal);
+  rxvt_img *sub_rect (int x, int y, int width, int height);
+  rxvt_img *transform (int new_width, int new_height, double matrix[9]);
   rxvt_img *scale (int new_width, int new_height);
-  rxvt_img *rotate (int new_width, int new_height, int x, int y, double phi, int repeat = RepeatNormal);
+  rxvt_img *rotate (int new_width, int new_height, int x, int y, double phi);
   rxvt_img *convert_to (XRenderPictFormat *format, const rxvt_color &bg);
   rxvt_img *blend (rxvt_img *img, double factor);
 };

@@ -26,10 +26,10 @@ our $MIN_INTERVAL = 1/100;
 {
    package urxvt::bgdsl; # background language
 
-   *repeat_empty  = \&urxvt::RepeatNone;
-   *repeat_tile   = \&urxvt::RepeatNormal;
-   *repeat_pad    = \&urxvt::RepeatPad;
-   *repeat_mirror = \&urxvt::RepeatReflect;
+#   *repeat_empty  = \&urxvt::RepeatNone;
+#   *repeat_tile   = \&urxvt::RepeatNormal;
+#   *repeat_pad    = \&urxvt::RepeatPad;
+#   *repeat_mirror = \&urxvt::RepeatReflect;
 
 =head2 PROVIDERS/GENERATORS
 
@@ -58,6 +58,30 @@ our $MIN_INTERVAL = 1/100;
 
 =back
 
+=head2 VARIABLES
+
+=over 4
+
+=cut
+
+   sub X() { $new->{position_sensitive} = 1; $l }
+   sub Y() { $new->{position_sensitive} = 1; $t }
+   sub W() { $new->{size_sensitive}     = 1; $w }
+   sub H() { $new->{size_sensitive}     = 1; $h }
+
+   sub now() { urxvt::NOW }
+
+   sub again($) {
+      $new->{again} = $_[0];
+   }
+
+   sub counter($) {
+      $new->{again} = $_[0];
+      $bgdsl_self->{counter} + 0
+   }
+
+=back
+
 =head2 OPERATORS
 
 =over 4
@@ -68,9 +92,9 @@ our $MIN_INTERVAL = 1/100;
 #      $_[0]->clone
 #   }
 
-   sub clip($$$$$;$) {
+   sub clip($;$$;$$) {
       my $img = pop;
-      $img->sub_rect ($_[0], $_[1], $_[2], $_[3], $_[4])
+      $img->sub_rect ($_[0], $_[1], $_[2] || W, $_[3] || H)
    }
 
    sub resize($$$) {
@@ -80,15 +104,18 @@ our $MIN_INTERVAL = 1/100;
 
    # TODO: ugly
    sub move($$;$) {
-      my $img = pop;
-      $img->sub_rect (
-         $_[0], $_[1],
-         $img->w, $img->h,
-         $_[2],
-      )
+      my $img = pop->clone;
+      $img->move ($_[0], $_[1]);
+      $img
+#      my $img = pop;
+#      $img->sub_rect (
+#         $_[0], $_[1],
+#         $img->w, $img->h,
+#         $_[2],
+#      )
    }
 
-   sub rotate($$$$$$;$) {
+   sub rotate($$$$$$) {
       my $img = pop;
       $img->rotate (
          $_[0],
@@ -96,7 +123,6 @@ our $MIN_INTERVAL = 1/100;
          $_[2] * $img->w * .01,
          $_[3] * $img->h * .01,
          $_[4] * (3.14159265 / 180),
-         $_[5],
       )
    }
 
@@ -128,22 +154,6 @@ our $MIN_INTERVAL = 1/100;
       $img = $img->clone;
       $img->brightness ($r, $g, $b, $a);
       $img
-   }
-
-   sub X() { $new->{position_sensitive} = 1; $l }
-   sub Y() { $new->{position_sensitive} = 1; $t }
-   sub W() { $new->{size_sensitive}     = 1; $w }
-   sub H() { $new->{size_sensitive}     = 1; $h }
-
-   sub now() { urxvt::NOW }
-
-   sub again($) {
-      $new->{again} = $_[0];
-   }
-
-   sub counter($) {
-      $new->{again} = $_[0];
-      $bgdsl_self->{counter} + 0
    }
 
 =back

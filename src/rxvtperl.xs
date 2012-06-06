@@ -2096,6 +2096,7 @@ rxvt_term::set_background (rxvt_img *img)
           {
             XRenderPictFormat *f = XRenderFindVisualFormat (THIS->dpy, THIS->visual);
             rxvt_img *img2 = 0;
+            rxvt_img *img3 = 0;
 
             if (f != img->format)
               img = img2 = img->convert_to (f, THIS->pix_colors [Color_bg]);
@@ -2193,8 +2194,14 @@ rxvt_img::DESTROY ()
 	CODE:
         delete THIS;
 
-rxvt_img *
-rxvt_img::blur (int rh, int rv)
+void
+rxvt_img::unshare ()
+
+void
+rxvt_img::repeat_mode (render_repeat_mode repeat = RepeatNormal)
+
+void
+rxvt_img::move (int dx, int dy)
 
 void
 rxvt_img::brightness (NV r, NV g, NV b, NV a = 1.)
@@ -2202,30 +2209,30 @@ rxvt_img::brightness (NV r, NV g, NV b, NV a = 1.)
 void
 rxvt_img::contrast (NV r, NV g, NV b, NV a = 1.)
 
-void
-rxvt_img::unshare ()
-
 rxvt_img *
 rxvt_img::clone ()
 
 rxvt_img *
-rxvt_img::sub_rect (int x, int y, int width, int height, render_repeat_mode repeat = RepeatNormal)
+rxvt_img::sub_rect (int x, int y, int width, int height)
 
 rxvt_img *
-rxvt_img::transform (int new_width, int new_height, NV p11, NV p12, NV p13, NV p21, NV p22, NV p23, NV p31, NV p32, NV p33, render_repeat_mode repeat = RepeatNormal)
+rxvt_img::blur (int rh, int rv)
+
+rxvt_img *
+rxvt_img::transform (int new_width, int new_height, NV p11, NV p12, NV p13, NV p21, NV p22, NV p23, NV p31, NV p32, NV p33)
 	INIT:
         double matrix[9] = {
           p11, p12, p13,
           p21, p22, p23,
           p31, p32, p33
         };
-	C_ARGS: new_width, new_height, matrix, repeat
+	C_ARGS: new_width, new_height, matrix
 
 rxvt_img *
 rxvt_img::scale (int new_width, int new_height)
 
 rxvt_img *
-rxvt_img::rotate (int new_width, int new_height, int x, int y, NV phi, render_repeat_mode repeat = RepeatNormal)
+rxvt_img::rotate (int new_width, int new_height, int x, int y, NV phi)
 
 #endif
 
