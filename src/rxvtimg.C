@@ -67,6 +67,8 @@ rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
 
   img->render_pixbuf (pb, 0, 0, img->w, img->h, 0, 0);
 
+  g_object_unref (pb);
+
   return img;
 }
 
