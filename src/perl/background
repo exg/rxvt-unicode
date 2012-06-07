@@ -30,6 +30,10 @@ our $MIN_INTERVAL = 1/100;
 
 =head2 PROVIDERS/GENERATORS
 
+These functions provide an image, by loading it from disk, grabbing it
+from the root screen or by simply generating it. They are used as strating
+points to get an image you can play with.
+
 =over 4
 
 =item load $path
@@ -37,7 +41,7 @@ our $MIN_INTERVAL = 1/100;
 Loads the image at the given C<$path>. The image is set to plane tiling
 mode.
 
-
+Loaded images will be cached for one cycle.
 
 =cut
 
@@ -47,14 +51,38 @@ mode.
       $new->{load}{$path} = $old->{load}{$path} || $bgdsl_self->new_img_from_file ($path);
    }
 
+=item root
+
+Returns the root window pixmap, that is, hopefully, the background image
+of your screen. The image is set to extend mode.
+
+This function makes your expression root sensitive, that means it will be
+reevaluated when the bg image changes.
+
+=cut
+
    sub root() {
       $new->{rootpmap_sensitive} = 1;
       die "root op not supported, exg, we need you";
    }
 
-   sub solid($;$$) {
-      my $img = $bgdsl_self->new_img (urxvt::PictStandardARGB32, $_[1] || 1, $_[2] || 1);
-      $img->fill ($_[0]);
+=item solid $colour
+
+=item solid $width, $height, $colour
+
+Creates a new image and completely fills it with the given colour. The
+image is set to tiling mode.
+
+If <$width> and C<$height> are omitted, it creates a 1x1 image, which is
+useful for solid backgrounds or for use in filtering effects.
+
+=cut
+
+   sub solid($$;$) {
+      my $colour = pop;
+
+      my $img = $bgdsl_self->new_img (urxvt::PictStandardARGB32, $_[0] || 1, $_[1] || 1);
+      $img->fill ($colour);
       $img
    }
 
@@ -62,7 +90,45 @@ mode.
 
 =head2 VARIABLES
 
+The following functions provide variable data such as the terminal
+widnow dimensions. Most of them make your expression sensitive to some
+events, for example using C<TW> (terminal width) means your expression is
+evaluated again when the terminal is resized.
+
 =over 4
+
+=item TX
+
+=item TY
+
+Return the X and Y coordinates of the terminal window (the terminal
+window is the full window by default, and the character area only when in
+border-respect mode).
+
+Using these functions make your expression sensitive to window moves.
+
+These functions are mainly useful to align images to the root window.
+
+Example: load an image and align it so it looks as if anchored to the
+background.
+
+   move -TX, -TY, load "mybg.png"
+
+=item TW
+
+Return the width (C<TW>) and height (C<TH>) of the terminal window (the
+terminal window is the full window by default, and the character area only
+when in border-respect mode).
+
+Using these functions make your expression sensitive to window resizes.
+
+These functions are mainly useful to scale images, or to clip images to
+the window size to conserve memory.
+
+Example: take the screen background, clip it to the window size, blur it a
+bit, align it to the window position and use it as background.
+
+   clip move -TX, -TY, blur 5, root
 
 =cut
 
