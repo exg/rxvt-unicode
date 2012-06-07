@@ -4,7 +4,9 @@
 #:META:X_RESOURCE:%.enable:boolean:some boolean
 #:META:X_RESOURCE:%.extra.:value:extra config
 
-our $EXPR = 'move W * 0.1, -H * 0.1, resize W * 0.5, H * 0.5, repeat_none load "opensource.png"';
+our $EXPR;
+#$EXPR = 'move W * 0.1, -H * 0.1, resize W * 0.5, H * 0.5, repeat_none load "opensource.png"';
+$EXPR = 'border; move -X, -Y, load "argb.png"';
 #$EXPR = '
 #   rotate W, H, 50, 50, counter 1/59.95, repeat_mirror,
 #   clip X, Y, W, H, repeat_mirror,
@@ -17,6 +19,7 @@ our $EXPR = 'move W * 0.1, -H * 0.1, resize W * 0.5, H * 0.5, repeat_none load "
 
 use Safe;
 
+our $border;
 our ($bgdsl_self, $old, $new);
 our ($l, $t, $w, $h);
 
@@ -82,27 +85,141 @@ our $MIN_INTERVAL = 1/100;
 
 =back
 
-=head2 OPERATORS
+=head2 TILING MODES
+
+The following operators modify the tiling mode of an image, that is, the
+way that pixels outside the image area are painted when the image is used.
 
 =over 4
 
+=item tile $img
+
+Tiles the whole plane with the image and returns this new image - or in
+other words, it returns a copy of the image in plane tiling mode.
+
+=item mirror $img
+
+Similar to tile, but reflects the image each time it uses a new copy, so
+that top edges always touch top edges, right edges always touch right
+edges and so on (with normal tiling, left edges always touch right edges
+and top always touch bottom edges).
+
+=item pad $img
+
+Takes an image and modifies it so that all pixels outside the image area
+become transparent. This mode is most useful when you want to place an
+image over another image or the background colour while leaving all
+background pixels outside the image unchanged.
+
+=item extend $img
+
+Extends the image over the whole plane, using the closest pixel in the
+area outside the image. This mode is mostly useful when you more complex
+filtering operations and want the pixels outside the image to have the
+same values as the pixels near the edge.
+
 =cut
 
-#   sub clone($) {
-#      $_[0]->clone
-#   }
-
-   sub repeat_none($) {
+   sub pad($) {
       my $img = $_[0]->clone;
       $img->repeat_mode (urxvt::RepeatNone);
       $img
    }
+
+   sub tile($) {
+      my $img = $_[0]->clone;
+      $img->repeat_mode (urxvt::RepeatNormal);
+      $img
+   }
+
+   sub mirror($) {
+      my $img = $_[0]->clone;
+      $img->repeat_mode (urxvt::RepeatReflect);
+      $img
+   }
+
+   sub extend($) {
+      my $img = $_[0]->clone;
+      $img->repeat_mode (urxvt::RepeatPad);
+      $img
+   }
+
+=back
+
+=head2 PIXEL OPERATORS
+
+The following operators modify the image pixels in various ways.
+
+=over 4
+
+=item clone $img
+
+Returns an exact copy of the image.
+
+=cut
+
+   sub clone($) {
+      $_[0]->clone
+   }
+
+=item clip $img
+
+=item clip $width, $height, $img
+
+=item clip $x, $y, $width, $height, $img
+
+Clips an image to the given rectangle. If the rectangle is outside the
+image area (e.g. when C<$x> or C<$y> are negative) or the rectangle is
+larger than the image, then the tiling mode defines how the extra pixels
+will be filled.
+
+If C<$x> an C<$y> are missing, then C<0> is assumed for both.
+
+If C<$width> and C<$height> are missing, then the window size will be
+assumed.
+
+Example: load an image, blur it, and clip it to the window size to save
+memory.
+
+   clip blur 10, load "mybg.png"
+
+=cut
 
    sub clip($;$$;$$) {
       my $img = pop;
       my $h = pop || H;
       my $w = pop || W;
       $img->sub_rect ($_[0], $_[1], $w, $h)
+   }
+
+=item scale $img
+
+=item scale $size_percent, $img
+
+=item scale $width_percent, $height_percent, $img
+
+Scales the image by the given percentages in horizontal
+(C<$width_percent>) and vertical (C<$height_percent>) direction.
+
+If only one percentage is give, it is used for both directions.
+
+If no percentages are given, scales the image to the window size without
+keeping aspect.
+
+=item resize $width, $height, $img
+
+Resizes the image to exactly C<$width> times C<$height> pixels.
+
+=cut
+
+#TODO: maximise, maximise_fill?
+
+   sub scale($$$) {
+      my $img = pop;
+
+      @_ == 2 ? $img->scale ($_[0] * $img->w * 0.01, $_[1] * $img->h * 0.01)
+      : @_    ? $img->scale ($_[0] * $img->w * 0.01, $_[0] * $img->h * 0.01)
+              : $img->scale (W, H)
    }
 
    sub resize($$$) {
@@ -134,10 +251,10 @@ our $MIN_INTERVAL = 1/100;
       )
    }
 
-   sub blur($$$) {
-      my ($rh, $rv, $img) = @_;
+   sub blur($$;$) {
+      my $img = pop;
 
-      $img->blur ($rh, $rv);
+      $img->blur ($_[0], @_ >= 2 ? $_[1] : $_[0]);
    }
 
    sub contrast($$;$$;$) {
@@ -162,6 +279,27 @@ our $MIN_INTERVAL = 1/100;
       $img = $img->clone;
       $img->brightness ($r, $g, $b, $a);
       $img
+   }
+
+=back
+
+=head2 SETTINGS
+
+=over 4
+
+=item border $respect_border=1
+
+Sets whether the image should respect the terminal border (argument true
+or missing), or whether it should fill the whole window (the default).
+
+By default, the image will cover the whole toplevel window. If C<border>
+is enabled, then it will only fill the character area and leave a normal
+border in the background colour around it and behind the scrollbar.
+
+=cut
+
+   sub border {
+      $border = @_ ? $_[0] : 1;
    }
 
 =back
@@ -202,6 +340,7 @@ sub recalculate {
    # set environment to evaluate user expression
 
    local $bgdsl_self = $self;
+   local $border;
 
    local $old = $self->{state};
    local $new = my $state = $self->{state} = {};
@@ -266,7 +405,7 @@ sub recalculate {
    $img = $img->sub_rect (0, 0, $w, $h)
       if $img->w != $w || $img->h != $h;
 
-   $self->set_background ($img);
+   $self->set_background ($img, $border);
    $self->scr_recolour (0);
    $self->want_refresh;
 }

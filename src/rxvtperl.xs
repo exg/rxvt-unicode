@@ -2090,11 +2090,11 @@ rxvt_term::new_img_from_file (octet_string filename)
 #if HAVE_BG_PIXMAP
 
 void
-rxvt_term::set_background (rxvt_img *img)
+rxvt_term::set_background (rxvt_img *img, bool border = false)
 	CODE:
         THIS->bg_destroy ();
         THIS->bg_pixmap = None;
-        THIS->bg_flags &= ~(rxvt_term::BG_NEEDS_REFRESH | rxvt_term::BG_INHIBIT_RENDER);
+        THIS->bg_flags &= ~(rxvt_term::BG_NEEDS_REFRESH | rxvt_term::BG_INHIBIT_RENDER | rxvt_term::BG_IS_TRANSPARENT);
 
         if (img) // TODO: cannot be false
           {
@@ -2103,6 +2103,10 @@ rxvt_term::set_background (rxvt_img *img)
             delete img;
             THIS->bg_pixmap = img2->steal ();
             THIS->bg_flags |= rxvt_term::BG_NEEDS_REFRESH | rxvt_term::BG_INHIBIT_RENDER;
+
+            if (!border)
+              THIS->bg_flags |= rxvt_term::BG_IS_TRANSPARENT;
+
             THIS->bg_valid_since = ev::now (); // TODO: extra bloat
           }
 
