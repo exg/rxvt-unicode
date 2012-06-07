@@ -4,8 +4,8 @@
 
 #if HAVE_IMG
 
-rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int x, int y, int width, int height)
-: s(screen), x(x), y(y), w(width), h(height), format(format), repeat(RepeatNormal),
+rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int x, int y, int width, int height, int repeat)
+: s(screen), x(x), y(y), w(width), h(height), format(format), repeat(repeat),
   pm(0), ref(0)
 {
 }
@@ -178,7 +178,7 @@ rxvt_img::blur (int rh, int rv)
   int size = max (rh, rv) * 2 + 1;
   double *kernel = (double *)malloc (size * sizeof (double));
   XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
-  rxvt_img *img = new rxvt_img (s, format, x, y, w, h);
+  rxvt_img *img = new rxvt_img (s, format, x, y, w, h, repeat);
   img->alloc ();
 
   Picture src = src_picture ();
@@ -405,7 +405,7 @@ rxvt_img::reify ()
                && (x || y)
                && repeat == RepeatNone;
 
-  rxvt_img *img = new rxvt_img (s, alpha ? XRenderFindStandardFormat (dpy, PictStandardARGB32) : format, 0, 0, w, h);
+  rxvt_img *img = new rxvt_img (s, alpha ? XRenderFindStandardFormat (dpy, PictStandardARGB32) : format, 0, 0, w, h, repeat);
   img->alloc ();
 
   Picture src = src_picture ();
@@ -443,7 +443,7 @@ rxvt_img::sub_rect (int x, int y, int width, int height)
 rxvt_img *
 rxvt_img::transform (int new_width, int new_height, double matrix[9])
 {
-  rxvt_img *img = new rxvt_img (s, format, 0, 0, new_width, new_height);
+  rxvt_img *img = new rxvt_img (s, format, 0, 0, new_width, new_height, repeat);
   img->alloc ();
 
   Display *dpy = s->display->dpy;
@@ -502,7 +502,7 @@ rxvt_img::convert_to (XRenderPictFormat *new_format, const rxvt_color &bg)
   if (new_format == format)
     return clone ();
 
-  rxvt_img *img = new rxvt_img (s, new_format, 0, 0, w, h);
+  rxvt_img *img = new rxvt_img (s, new_format, 0, 0, w, h, repeat);
   img->alloc ();
 
   Display *dpy = s->display->dpy;

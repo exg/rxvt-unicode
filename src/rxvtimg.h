@@ -37,7 +37,7 @@ public:
   int x, y, w, h, repeat;
   XRenderPictFormat *format;
 
-  rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int x, int y, int width, int height);
+  rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int x, int y, int width, int height, int repeat = RepeatNormal);
   rxvt_img (const rxvt_img &img);
 
   //rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap);
