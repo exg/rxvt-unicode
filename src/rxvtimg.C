@@ -399,10 +399,14 @@ rxvt_img::reify ()
   if (x == 0 && y == 0 && w == ref->w && h == ref->h)
     return clone ();
 
-  rxvt_img *img = new rxvt_img (s, format, 0, 0, w, h);
-  img->alloc ();
-
   Display *dpy = s->display->dpy;
+
+  bool alpha = !format->direct.alphaMask
+               && (x || y)
+               && repeat == RepeatNone;
+
+  rxvt_img *img = new rxvt_img (s, alpha ? XRenderFindStandardFormat (dpy, PictStandardARGB32) : format, 0, 0, w, h);
+  img->alloc ();
 
   Picture src = src_picture ();
   Picture dst = XRenderCreatePicture (dpy, img->pm, img->format, 0, 0);

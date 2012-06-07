@@ -1490,9 +1490,9 @@ rxvt_term::x_cb (XEvent &ev)
 
                 if (x != parent_x || y != parent_y)
                   {
-                    HOOK_INVOKE ((this, HOOK_POSITION_CHANGE, DT_INT, x, DT_INT, y, DT_END));
                     parent_x = x;
                     parent_y = y;
+                    HOOK_INVOKE ((this, HOOK_POSITION_CHANGE, DT_INT, x, DT_INT, y, DT_END));
                   }
 
                 if (bg_set_position (x, y)
