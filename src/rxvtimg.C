@@ -79,16 +79,16 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
   xi.height           = height;
   xi.xoffset          = 0;
   xi.format           = ZPixmap;
-  xi.byte_order       = MSBFirst; // maybe go for host byte order, because servers are usually local?
+  xi.byte_order       = LSBFirst; // maybe go for host byte order, because servers are usually local?
   xi.bitmap_unit      = 32;
-  xi.bitmap_bit_order = MSBFirst;
+  xi.bitmap_bit_order = LSBFirst;
   xi.bitmap_pad       = BitmapPad (dpy);
   xi.depth            = depth;
   xi.bytes_per_line   = 0;
   xi.bits_per_pixel   = 32;
-  xi.red_mask         = 0x00ff0000;
+  xi.red_mask         = 0x000000ff;
   xi.green_mask       = 0x0000ff00;
-  xi.blue_mask        = 0x000000ff;
+  xi.blue_mask        = 0x00ff0000;
 
   if (!XInitImage (&xi))
     rxvt_fatal ("unable to initialise ximage, please report.\n");
@@ -106,29 +106,33 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
 
   for (int y = 0; y < height; y++)
     {
-      unsigned char r, g, b, a;
-      unsigned char *data = row;
+      unsigned char *src = row;
+      uint32_t      *dst = (uint32_t *)line;
 
       if (depth == 24)
         for (int x = 0; x < width; x++)
           {
-            r = *data++;
-            g = *data++;
-            b = *data++;
-            *line++ = 0;
-            *line++ = r;
-            *line++ = g;
-            *line++ = b;
+            uint8_t r = *src++;
+            uint8_t g = *src++;
+            uint8_t b = *src++;
+
+            uint32_t v = r | (g << 8) | (b << 16);
+            
+            if (ecb_big_endian ())
+              v = ecb_bswap32 (v);
+
+            *dst++ = x;
           }
       else
         for (int x = 0; x < width; x++)
           {
-            uint32_t v = *(uint32_t *)data; data += 4;
+            uint32_t v = *(uint32_t *)src; src += 4;
             v = ecb_big_endian () ? ecb_rotr32 (v, 8) : ecb_rotl32 (v, 8);
-            *(uint32_t *)line = x; line += 4;
+            *dst++ = ecb_bswap32 (v);
           }
 
       row += rowstride;
+      line += xi.bytes_per_line;
     }
 
   rxvt_img *img = new rxvt_img (s, XRenderFindStandardFormat (dpy, depth == 24 ? PictStandardRGB24 : PictStandardARGB32), 0, 0, width, height);
