@@ -479,6 +479,9 @@ rxvt_img::transform (int new_width, int new_height, double matrix[9])
 rxvt_img *
 rxvt_img::scale (int new_width, int new_height)
 {
+  if (w == new_width && h == new_height)
+    return clone ();
+
   double matrix[9] = {
     w  / (double)new_width, 0, 0,
     0, h / (double)new_height, 0,
