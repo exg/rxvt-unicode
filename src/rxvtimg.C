@@ -418,17 +418,18 @@ rxvt_img::reify ()
 rxvt_img *
 rxvt_img::sub_rect (int x, int y, int width, int height)
 {
-  bool need_reify = w < width || h < height;
-
   rxvt_img *img = clone ();
 
   img->x += x;
   img->y += y;
-  img->w = width;
-  img->h = height;
 
-  if (need_reify)
-    img->reify ();
+  if (w != width || h != height)
+    {
+      img->w = width;
+      img->h = height;
+
+      img->reify ();
+    }
 
   return img;
 }

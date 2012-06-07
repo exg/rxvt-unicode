@@ -4,7 +4,7 @@
 #:META:X_RESOURCE:%.enable:boolean:some boolean
 #:META:X_RESOURCE:%.extra.:value:extra config
 
-our $EXPR = 'move X, Y, load "MagnoliaAlpha.png"';
+our $EXPR = 'clip -50, -50, 150, 100, move X, Y, load "MagnoliaAlpha.png"';
 #$EXPR = '
 #   rotate W, H, 50, 50, counter 1/59.95, repeat_mirror,
 #   clip X, Y, W, H, repeat_mirror,
@@ -94,7 +94,9 @@ our $MIN_INTERVAL = 1/100;
 
    sub clip($;$$;$$) {
       my $img = pop;
-      $img->sub_rect ($_[0], $_[1], $_[2] || W, $_[3] || H)
+      my $h = pop || H;
+      my $w = pop || W;
+      $img->sub_rect ($_[0], $_[1], $w, $h)
    }
 
    sub resize($$$) {
