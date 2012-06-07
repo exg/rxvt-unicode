@@ -117,7 +117,7 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
             uint8_t g = *src++;
             uint8_t b = *src++;
 
-            uint32_t v = r | (g << 8) | (b << 16);
+            uint32_t v = (r << 16) | (g << 8) | b;
             
             if (ecb_big_endian ())
               v = ecb_bswap32 (v);
