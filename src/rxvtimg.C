@@ -16,13 +16,6 @@ rxvt_img::rxvt_img (const rxvt_img &img)
   ++ref->cnt;
 }
 
-#if 0
-rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap)
-: s(screen), x(0), y(0), w(width), h(height), format(format), repeat(RepeatNormal), shared(false), pm(pixmap)
-{
-}
-#endif
-
 rxvt_img *
 rxvt_img::new_from_root (rxvt_screen *s)
 {

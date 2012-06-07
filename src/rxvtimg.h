@@ -40,7 +40,6 @@ public:
   rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int x, int y, int width, int height, int repeat = RepeatNormal);
   rxvt_img (const rxvt_img &img);
 
-  //rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap);
   static rxvt_img *new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb); // from pixbuf
   static rxvt_img *new_from_file (rxvt_screen *s, const char *filename); // via pixbuf
   static rxvt_img *new_from_root (rxvt_screen *s); // get root pixmap
