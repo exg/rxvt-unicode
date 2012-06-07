@@ -414,7 +414,7 @@ rxvt_img::reify ()
   if (alpha)
     {
       XRenderColor rc = { 0, 0, 0, 0 };
-      XRenderFillRectangle (dpy, PictOpSrc, dst, &rc, 0, 0, w, h);
+      XRenderFillRectangle (dpy, PictOpSrc, dst, &rc, 0, 0, w, h);//TODO: split into four fillrectangles
       XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, -x, -y, ref->w, ref->h);
     }
   else
@@ -463,8 +463,10 @@ rxvt_img::transform (int new_width, int new_height, double matrix[9])
     for (int j = 0; j < 3; ++j)
       xfrm.matrix [i][j] = XDoubleToFixed (matrix [i * 3 + j]);
 
-  xfrm.matrix [0][2] += XDoubleToFixed (x);//TODO
-  xfrm.matrix [0][3] += XDoubleToFixed (y);
+#if 0
+  xfrm.matrix [0][2] -= XDoubleToFixed (x);//TODO
+  xfrm.matrix [1][2] -= XDoubleToFixed (y);
+#endif
 
   XRenderSetPictureFilter (dpy, src, "good", 0, 0);
   XRenderSetPictureTransform (dpy, src, &xfrm);
@@ -522,8 +524,6 @@ rxvt_img::convert_to (XRenderPictFormat *new_format, const rxvt_color &bg)
 
   rxvt_img *img = new rxvt_img (s, new_format, 0, 0, w, h, repeat);
   img->alloc ();
-
-  printf ("convert %d to %d\n", format->direct.alphaMask, new_format->direct.alphaMask);//D
 
   Display *dpy = s->display->dpy;
   Picture src = src_picture ();

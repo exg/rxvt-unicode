@@ -2034,13 +2034,13 @@ rxvt_term::XTranslateCoordinates (Window src, Window dst, int x, int y)
 
 # TODO: ugly
 void
-rxvt_term::get_geometry ()
+rxvt_term::background_geometry (bool border = false)
 	PPCODE:
 	EXTEND (SP, 4);
-        PUSHs (sv_2mortal (newSViv (THIS->parent_x)));
-        PUSHs (sv_2mortal (newSViv (THIS->parent_y)));
-        PUSHs (sv_2mortal (newSViv (THIS->szHint.width)));
-        PUSHs (sv_2mortal (newSViv (THIS->szHint.height)));
+        PUSHs (sv_2mortal (newSViv (THIS->parent_x + (border ? THIS->window_vt_x : 0))));
+        PUSHs (sv_2mortal (newSViv (THIS->parent_y + (border ? THIS->window_vt_y : 0))));
+        PUSHs (sv_2mortal (newSViv (border ? THIS->vt_width  : THIS->szHint.width )));
+        PUSHs (sv_2mortal (newSViv (border ? THIS->vt_height : THIS->szHint.height)));
 
 #if HAVE_IMG
 

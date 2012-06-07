@@ -6,7 +6,7 @@
 
 our $EXPR;
 #$EXPR = 'move W * 0.1, -H * 0.1, resize W * 0.5, H * 0.5, repeat_none load "opensource.png"';
-$EXPR = 'border; move -X, -Y, load "argb.png"';
+$EXPR = 'move -X, -Y, load "argb.png"';
 #$EXPR = '
 #   rotate W, H, 50, 50, counter 1/59.95, repeat_mirror,
 #   clip X, Y, W, H, repeat_mirror,
@@ -19,9 +19,8 @@ $EXPR = 'border; move -X, -Y, load "argb.png"';
 
 use Safe;
 
-our $border;
 our ($bgdsl_self, $old, $new);
-our ($l, $t, $w, $h);
+our ($x, $y, $w, $h);
 
 # enforce at least this interval between updates
 our $MIN_INTERVAL = 1/100;
@@ -29,16 +28,16 @@ our $MIN_INTERVAL = 1/100;
 {
    package urxvt::bgdsl; # background language
 
-#   *repeat_empty  = \&urxvt::RepeatNone;
-#   *repeat_tile   = \&urxvt::RepeatNormal;
-#   *repeat_pad    = \&urxvt::RepeatPad;
-#   *repeat_mirror = \&urxvt::RepeatReflect;
-
 =head2 PROVIDERS/GENERATORS
 
 =over 4
 
 =item load $path
+
+Loads the image at the given C<$path>. The image is set to plane tiling
+mode.
+
+
 
 =cut
 
@@ -67,8 +66,8 @@ our $MIN_INTERVAL = 1/100;
 
 =cut
 
-   sub X() { $new->{position_sensitive} = 1; $l }
-   sub Y() { $new->{position_sensitive} = 1; $t }
+   sub X() { $new->{position_sensitive} = 1; $x }
+   sub Y() { $new->{position_sensitive} = 1; $y }
    sub W() { $new->{size_sensitive}     = 1; $w }
    sub H() { $new->{size_sensitive}     = 1; $h }
 
@@ -283,27 +282,6 @@ Resizes the image to exactly C<$width> times C<$height> pixels.
 
 =back
 
-=head2 SETTINGS
-
-=over 4
-
-=item border $respect_border=1
-
-Sets whether the image should respect the terminal border (argument true
-or missing), or whether it should fill the whole window (the default).
-
-By default, the image will cover the whole toplevel window. If C<border>
-is enabled, then it will only fill the character area and leave a normal
-border in the background colour around it and behind the scrollbar.
-
-=cut
-
-   sub border {
-      $border = @_ ? $_[0] : 1;
-   }
-
-=back
-
 =cut
 
 }
@@ -340,15 +318,14 @@ sub recalculate {
    # set environment to evaluate user expression
 
    local $bgdsl_self = $self;
-   local $border;
 
    local $old = $self->{state};
    local $new = my $state = $self->{state} = {};
 
-   ($l, $t, $w, $h) =
-      $self->get_geometry;
+   my $border = 0; #d#
 
-      warn "$l,$t,$w,$h\n";#d#
+   ($x, $y, $w, $h) =
+      $self->background_geometry ($border);
 
    # evaluate user expression
 
