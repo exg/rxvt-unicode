@@ -224,10 +224,11 @@ optList[] = {
               STRG (Rs_embed, NULL, "embed", "windowid", "window id to embed terminal in"),
 #endif
 #if XFT
-              STRG (Rs_depth, "depth", "depth", "number", "depth of visual to request"),
               BOOL (Rs_buffered, "buffered", NULL, Opt_buffered, 0, NULL),
 #endif
 #if ENABLE_FRILLS
+              STRG (Rs_depth, "depth", "depth", "number", "depth of visual to request"),
+              STRG (Rs_visual, "visual", "visual", "number", "visual id to request"),
               RSTRG (Rs_transient_for, "transient-for", "windowid"),
               BOOL (Rs_override_redirect, "override-redirect", "override-redirect", Opt_override_redirect, 0, "set override-redirect on the terminal window"),
               STRG (Rs_pty_fd, NULL, "pty-fd", "fileno", "file descriptor of pty to use"),

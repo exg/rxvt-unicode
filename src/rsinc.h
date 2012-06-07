@@ -64,10 +64,11 @@
   def (blurradius)
 #endif
 #if XFT
-  def (depth)
   def (buffered)
 #endif
 #if ENABLE_FRILLS
+  def (depth)
+  def (visual)
   def (transient_for)
   def (override_redirect)
   def (pty_fd)
