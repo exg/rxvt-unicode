@@ -82,8 +82,8 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
   xi.xoffset          = 0;
   xi.format           = ZPixmap;
   xi.byte_order       = ImageByteOrder (dpy);
-  xi.bitmap_unit      = 32;         //XY only, unused
-  xi.bitmap_bit_order = LSBFirst;   //XY only, unused
+  xi.bitmap_unit      = 0;         //XY only, unused
+  xi.bitmap_bit_order = 0;         //XY only, unused
   xi.bitmap_pad       = BitmapPad (dpy);
   xi.depth            = depth;
   xi.bytes_per_line   = 0;
