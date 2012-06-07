@@ -214,7 +214,8 @@ struct rxvt_screen
 #endif
 
   void set (rxvt_display *disp);
-  void select_visual (int bitdepth);
+  void select_visual (int id);
+  void select_depth (int bitdepth); // select visual by depth
   void clear ();
 };
 

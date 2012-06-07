@@ -590,9 +590,11 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   set (display);
   extract_resources ();
 
-#if XFT
-  if (rs[Rs_depth])
-    select_visual (strtol (rs[Rs_depth], 0, 0));
+#if ENABLE_FRILLS
+  if (rs[Rs_visual])
+    select_visual (strtol (rs[Rs_visual], 0, 0));
+  else if (rs[Rs_depth])
+    select_depth (strtol (rs[Rs_depth], 0, 0));
 #endif
 
   for (int i = NUM_RESOURCES; i--; )

@@ -262,20 +262,40 @@ rxvt_screen::set (rxvt_display *disp)
   cmap    = DefaultColormapOfScreen (screen);
 }
 
+#if ENABLE_FRILLS
+
 void
-rxvt_screen::select_visual (int bitdepth)
+rxvt_screen::select_visual (int id)
 {
-#if XFT
+  XVisualInfo vinfo;
+  vinfo.visualid = id;
+  int n;
+
+  if (XVisualInfo *vi = XGetVisualInfo (dpy, VisualIDMask, &vinfo, &n))
+    {
+      depth  = vi->depth;
+      visual = vi->visual;
+
+      XFree (vi);
+
+      cmap = XCreateColormap (dpy, display->root, visual, AllocNone);
+    }
+  else
+    rxvt_warn ("cannot requested visual id 0x%02x, using default visual.\n", id);
+}
+
+void
+rxvt_screen::select_depth (int bitdepth)
+{
   XVisualInfo vinfo;
 
   if (XMatchVisualInfo (dpy, display->screen, bitdepth, TrueColor, &vinfo))
-    {
-      depth  = bitdepth;
-      visual = vinfo.visual;
-      cmap   = XCreateColormap (dpy, display->root, visual, AllocNone);
-    }
-#endif
+    select_visual (vinfo.visualid);
+  else
+    rxvt_warn ("no visual found for requested depth %d, using default visual.\n", bitdepth);
 }
+
+#endif
 
 void
 rxvt_screen::clear ()

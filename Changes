@@ -56,6 +56,8 @@ TODO: description into --help output?
         - iso14755 51 mode window now displays row and column.
         - perl extensions can now provide commandline switches and resources
           which show up in -help etc.
+        - implement a -visual switch and move that and -depth to frills, also
+          warn when we can't get the requested visual.
 
 9.15 Sat Jan 21 13:36:56 CET 2012
 	- remove "using namespace std" because clang erroneously
