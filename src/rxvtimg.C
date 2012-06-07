@@ -80,15 +80,16 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
   xi.xoffset          = 0;
   xi.format           = ZPixmap;
   xi.byte_order       = LSBFirst; // maybe go for host byte order, because servers are usually local?
-  xi.bitmap_unit      = 32;
-  xi.bitmap_bit_order = LSBFirst;
+  xi.bitmap_unit      = 32;         //XY only, unused
+  xi.bitmap_bit_order = LSBFirst;   //XY only, unused
   xi.bitmap_pad       = BitmapPad (dpy);
   xi.depth            = depth;
   xi.bytes_per_line   = 0;
-  xi.bits_per_pixel   = 32;
-  xi.red_mask         = 0x000000ff;
-  xi.green_mask       = 0x0000ff00;
-  xi.blue_mask        = 0x00ff0000;
+  xi.bits_per_pixel   = 32;         //Z only
+  xi.red_mask         = 0x000000ff; //Z only
+  xi.green_mask       = 0x0000ff00; //Z only
+  xi.blue_mask        = 0x00ff0000; //Z only
+  xi.obdata           = 0;          // probbaly unused
 
   if (!XInitImage (&xi))
     rxvt_fatal ("unable to initialise ximage, please report.\n");
@@ -121,14 +122,17 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
             if (ecb_big_endian ())
               v = ecb_bswap32 (v);
 
-            *dst++ = x;
+            *dst++ = v;
           }
       else
         for (int x = 0; x < width; x++)
           {
             uint32_t v = *(uint32_t *)src; src += 4;
-            v = ecb_big_endian () ? ecb_rotr32 (v, 8) : ecb_rotl32 (v, 8);
-            *dst++ = ecb_bswap32 (v);
+
+            if (ecb_big_endian ())
+              v = ecb_bswap32 (v);
+
+            *dst++ = v;
           }
 
       row += rowstride;
