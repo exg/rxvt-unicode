@@ -4,7 +4,7 @@
 #:META:X_RESOURCE:%.enable:boolean:some boolean
 #:META:X_RESOURCE:%.extra.:value:extra config
 
-our $EXPR = 'move W * 0.1, -H * 0.1, resize W * 0.5, H * 0.5, repeat_none load "MagnoliaAlpha.png"';
+our $EXPR = 'move W * 0.1, -H * 0.1, resize W * 0.5, H * 0.5, repeat_none load "opensource.png"';
 #$EXPR = '
 #   rotate W, H, 50, 50, counter 1/59.95, repeat_mirror,
 #   clip X, Y, W, H, repeat_mirror,

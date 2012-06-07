@@ -411,8 +411,15 @@ rxvt_img::reify ()
   Picture src = src_picture ();
   Picture dst = XRenderCreatePicture (dpy, img->pm, img->format, 0, 0);
   
-  XRenderComposite (dpy, PictOpSrc, src, None, dst, x, y, 0, 0, 0, 0, w, h);
-  
+  if (alpha)
+    {
+      XRenderColor rc = { 0, 0, 0, 0 };
+      XRenderFillRectangle (dpy, PictOpSrc, dst, &rc, 0, 0, w, h);
+      XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, -x, -y, ref->w, ref->h);
+    }
+  else
+    XRenderComposite (dpy, PictOpSrc, src, None, dst, x, y, 0, 0, 0, 0, w, h);
+
   XRenderFreePicture (dpy, src);
   XRenderFreePicture (dpy, dst);
 
@@ -478,7 +485,15 @@ rxvt_img::scale (int new_width, int new_height)
     0,                      0, 1
   };
 
-  return transform (new_width, new_height, matrix);
+  int old_repeat_mode = repeat;
+  repeat = RepeatPad; // not right, but xrender can't proeprly scale it seems
+
+  rxvt_img *img = transform (new_width, new_height, matrix);
+
+  repeat = old_repeat_mode;
+  img->repeat = repeat;
+
+  return img;
 }
 
 rxvt_img *
@@ -504,6 +519,8 @@ rxvt_img::convert_to (XRenderPictFormat *new_format, const rxvt_color &bg)
 
   rxvt_img *img = new rxvt_img (s, new_format, 0, 0, w, h, repeat);
   img->alloc ();
+
+  printf ("convert %d to %d\n", format->direct.alphaMask, new_format->direct.alphaMask);//D
 
   Display *dpy = s->display->dpy;
   Picture src = src_picture ();
