@@ -100,13 +100,18 @@ display specified by the B<DISPLAY> environment variable is used.
 
 =item B<-depth> I<bitdepth>
 
-Compile I<xft>: Attempt to find a visual with the given bit depth;
+Compile I<frills>: Attempt to find a visual with the given bit depth;
 resource B<depth>.
 
 [Please note that many X servers (and libXft) are buggy with
 respect to C<-depth 32> and/or alpha channels, and will cause all sorts
 of graphical corruption. This is harmless, but we can't do anything about
 this, so watch out]
+
+=item B<-visual> I<visualID>
+
+Compile I<frills>: Use the given visual (see e.g. C<xdpyinfo> for possible
+visual ids).
 
 =item B<-geometry> I<geom>
 
