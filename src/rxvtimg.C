@@ -393,6 +393,27 @@ rxvt_img::clone ()
   return new rxvt_img (*this);
 }
 
+
+static XRenderPictFormat *
+find_alpha_format_for (Display *dpy, XRenderPictFormat *format)
+{
+  if (format->direct.alphaMask)
+    return format; // already has alpha
+
+  // try to find a suitable alpha format, one bit alpha is enough for our purposes
+  if (format->type == PictTypeDirect)
+    for (int n = 0; XRenderPictFormat *f = XRenderFindFormat (dpy, 0, 0, n); ++n)
+      if (f->direct.alphaMask
+          && f->type == PictTypeDirect
+          && ecb_popcount32 (f->direct.redMask  ) >= ecb_popcount32 (format->direct.redMask  )
+          && ecb_popcount32 (f->direct.greenMask) >= ecb_popcount32 (format->direct.greenMask)
+          && ecb_popcount32 (f->direct.blueMask ) >= ecb_popcount32 (format->direct.blueMask ))
+        return f;
+
+  // should be a very good fallback
+  return XRenderFindStandardFormat (dpy, PictStandardARGB32);
+}
+
 rxvt_img *
 rxvt_img::reify ()
 {
@@ -405,7 +426,7 @@ rxvt_img::reify ()
                && (x || y)
                && repeat == RepeatNone;
 
-  rxvt_img *img = new rxvt_img (s, alpha ? XRenderFindStandardFormat (dpy, PictStandardARGB32) : format, 0, 0, w, h, repeat);
+  rxvt_img *img = new rxvt_img (s, alpha ? find_alpha_format_for (dpy, format) : format, 0, 0, w, h, repeat);
   img->alloc ();
 
   Picture src = src_picture ();
