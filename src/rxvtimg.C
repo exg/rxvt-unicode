@@ -4,8 +4,8 @@
 
 #if HAVE_IMG
 
-rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height)
-: s(screen), x(0), y(0), w(width), h(height), format(format), repeat(RepeatNormal),
+rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int x, int y, int width, int height)
+: s(screen), x(x), y(y), w(width), h(height), format(format), repeat(RepeatNormal),
   pm(0), refcnt(0)
 {
 }
@@ -46,6 +46,8 @@ rxvt_img::new_from_root (rxvt_screen *s)
   rxvt_img *img = new rxvt_img (
      s,
      XRenderFindVisualFormat (dpy, DefaultVisual (dpy, s->display->screen)),
+     0,
+     0,
      root_pm_w,
      root_pm_h
   );
@@ -67,6 +69,8 @@ rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
   rxvt_img *img = new rxvt_img (
      s,
      XRenderFindStandardFormat (s->display->dpy, gdk_pixbuf_get_has_alpha (pb) ? PictStandardARGB32 : PictStandardRGB24),
+     0,
+     0,
      gdk_pixbuf_get_width (pb),
      gdk_pixbuf_get_height (pb)
   );
@@ -160,7 +164,7 @@ rxvt_img::blur (int rh, int rv)
   int size = max (rh, rv) * 2 + 1;
   double *kernel = (double *)malloc (size * sizeof (double));
   XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
-  rxvt_img *img = new rxvt_img (s, format, w, h);
+  rxvt_img *img = new rxvt_img (s, format, x, y, w, h);
   img->alloc ();
 
   XRenderPictureAttributes pa;
@@ -376,19 +380,22 @@ rxvt_img::clone ()
 }
 
 rxvt_img *
-rxvt_img::sub_rect (int x, int y, int width, int height)
+rxvt_img::reify ()
 {
-  rxvt_img *img = new rxvt_img (s, format, width, height);
+  rxvt_img *img = new rxvt_img (s, format, 0, 0, w, h);
   img->alloc ();
+
+  // todo, if x==0  and y==0 and w==real width we could clone
+  // but that involves an rtt to find pixmap width.
 
   Display *dpy = s->display->dpy;
   XRenderPictureAttributes pa;
   pa.repeat = repeat;
   Picture src = XRenderCreatePicture (dpy,      pm,      format, CPRepeat, &pa);
   Picture dst = XRenderCreatePicture (dpy, img->pm, img->format,        0,   0);
-
-  XRenderComposite (dpy, PictOpSrc, src, None, dst, x, y, 0, 0, 0, 0, width, height);
-
+  
+  XRenderComposite (dpy, PictOpSrc, src, None, dst, x, y, 0, 0, 0, 0, w, h);
+  
   XRenderFreePicture (dpy, src);
   XRenderFreePicture (dpy, dst);
 
@@ -396,9 +403,22 @@ rxvt_img::sub_rect (int x, int y, int width, int height)
 }
 
 rxvt_img *
+rxvt_img::sub_rect (int x, int y, int width, int height)
+{
+  rxvt_img *img = clone ();
+
+  img->x += x;
+  img->y += y;
+  img->w = width;
+  img->h = height;
+
+  return img;
+}
+
+rxvt_img *
 rxvt_img::transform (int new_width, int new_height, double matrix[9])
 {
-  rxvt_img *img = new rxvt_img (s, format, new_width, new_height);
+  rxvt_img *img = new rxvt_img (s, format, 0, 0, new_width, new_height);
   img->alloc ();
 
   Display *dpy = s->display->dpy;
@@ -412,6 +432,9 @@ rxvt_img::transform (int new_width, int new_height, double matrix[9])
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 3; ++j)
       xfrm.matrix [i][j] = XDoubleToFixed (matrix [i * 3 + j]);
+
+  xfrm.matrix [0][2] += XDoubleToFixed (x);//TODO
+  xfrm.matrix [0][3] += XDoubleToFixed (y);
 
   XRenderSetPictureFilter (dpy, src, "good", 0, 0);
   XRenderSetPictureTransform (dpy, src, &xfrm);
@@ -456,7 +479,7 @@ rxvt_img::convert_to (XRenderPictFormat *new_format, const rxvt_color &bg)
   if (new_format == format)
     return clone ();
 
-  rxvt_img *img = new rxvt_img (s, new_format, w, h);
+  rxvt_img *img = new rxvt_img (s, new_format, x, y, w, h);
   img->alloc ();
 
   Display *dpy = s->display->dpy;

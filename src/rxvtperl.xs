@@ -2044,6 +2044,8 @@ rxvt_term::get_geometry ()
 
 #if HAVE_IMG
 
+#if 0
+
 rxvt_img *
 rxvt_term::new_img (SV *format, int width, int height)
 	CODE:
@@ -2053,6 +2055,8 @@ rxvt_term::new_img (SV *format, int width, int height)
         RETVAL = new rxvt_img (THIS, f, width, height);
 	OUTPUT:
         RETVAL
+
+#endif
 
 #if ENABLE_TRANSPARENCY
 
@@ -2094,11 +2098,12 @@ rxvt_term::set_background (rxvt_img *img)
 
         if (img) // TODO: cannot be false
           {
-            img = img->convert_to (XRenderFindVisualFormat (THIS->dpy, THIS->visual), THIS->pix_colors [Color_bg]);
-            THIS->bg_pixmap = img->steal ();
+            img = img->reify ();
+            rxvt_img *img2 = img->convert_to (XRenderFindVisualFormat (THIS->dpy, THIS->visual), THIS->pix_colors [Color_bg]);
+            delete img;
+            THIS->bg_pixmap = img2->steal ();
             THIS->bg_flags |= rxvt_term::BG_NEEDS_REFRESH;
             THIS->bg_valid_since = ev::now (); // TODO: extra bloat
-            delete img;
           }
 
 #endif
@@ -2196,6 +2201,9 @@ rxvt_img::contrast (NV r, NV g, NV b, NV a = 1.)
 
 rxvt_img *
 rxvt_img::clone ()
+
+rxvt_img *
+rxvt_img::reify ()
 
 rxvt_img *
 rxvt_img::sub_rect (int x, int y, int width, int height)

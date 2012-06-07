@@ -23,7 +23,7 @@ public:
   int x, y, w, h, repeat;
   XRenderPictFormat *format;
 
-  rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height);
+  rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int x, int y, int width, int height);
   rxvt_img (const rxvt_img &img);
 
   //rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap);
@@ -76,6 +76,7 @@ public:
   bool render_pixbuf (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int height, int dst_x, int dst_y);
 
   // copy
+  rxvt_img *reify (); // make x, y 0, make real width/height
   rxvt_img *blur (int rh, int rv);
   rxvt_img *clone ();
   rxvt_img *sub_rect (int x, int y, int width, int height);
