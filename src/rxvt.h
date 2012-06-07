@@ -1195,6 +1195,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
     BG_IS_TRANSPARENT    = 1 << 1,
     BG_NEEDS_REFRESH     = 1 << 2,
+    BG_INHIBIT_RENDER    = 1 << 3,
   };
 
   uint8_t bg_flags;

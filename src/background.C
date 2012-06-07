@@ -1109,6 +1109,9 @@ rxvt_term::bg_set_root_pixmap ()
 void
 rxvt_term::bg_render ()
 {
+  if (bg_flags & BG_INHIBIT_RENDER)
+    return;
+
   bg_invalidate ();
 # if ENABLE_TRANSPARENCY
   if (bg_flags & BG_IS_TRANSPARENT)

@@ -2094,7 +2094,7 @@ rxvt_term::set_background (rxvt_img *img)
 	CODE:
         THIS->bg_destroy ();
         THIS->bg_pixmap = None;
-        THIS->bg_flags &= ~rxvt_term::BG_NEEDS_REFRESH;
+        THIS->bg_flags &= ~(rxvt_term::BG_NEEDS_REFRESH | rxvt_term::BG_INHIBIT_RENDER);
 
         if (img) // TODO: cannot be false
           {
@@ -2102,7 +2102,7 @@ rxvt_term::set_background (rxvt_img *img)
             rxvt_img *img2 = img->convert_to (XRenderFindVisualFormat (THIS->dpy, THIS->visual), THIS->pix_colors [Color_bg]);
             delete img;
             THIS->bg_pixmap = img2->steal ();
-            THIS->bg_flags |= rxvt_term::BG_NEEDS_REFRESH;
+            THIS->bg_flags |= rxvt_term::BG_NEEDS_REFRESH | rxvt_term::BG_INHIBIT_RENDER;
             THIS->bg_valid_since = ev::now (); // TODO: extra bloat
           }
 
