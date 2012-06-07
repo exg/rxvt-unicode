@@ -11,25 +11,33 @@
 
 #include <X11/extensions/Xrender.h>
 
-struct rxvt_img
+class rxvt_img
 {
+  void alloc ();
+  void destroy ();
+
+public:
   rxvt_screen *s;
   Pixmap pm;
+  int *refcnt; // shared refcnt
   int x, y, w, h, repeat;
   XRenderPictFormat *format;
-  bool shared; // true if we don't own it
 
   rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height);
-  rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap);
+  rxvt_img (const rxvt_img &img);
+
+  //rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap);
   static rxvt_img *new_from_root (rxvt_screen *s); // get root pixmap
   static rxvt_img *new_from_file (rxvt_screen *s, const char *filename); // from pixbuf
 
   ~rxvt_img ();
 
+  // TODO: steal should not do what it does, and this todo should be more specific
   Pixmap steal ()
   {
-    shared = true;
-    return pm;
+    Pixmap retval = pm;
+    pm = None;
+    return retval;
   }
 
   // inplace
@@ -44,7 +52,7 @@ struct rxvt_img
     this->repeat = repeat;
   }
 
-  void unshare (); // create a copy of the pixmap if !shared
+  void unshare (); // prepare for write
   void fill (const rxvt_color &c);
   void brightness (unsigned short r, unsigned short g, unsigned short b, unsigned short a);
   void contrast (unsigned short r, unsigned short g, unsigned short b, unsigned short a);

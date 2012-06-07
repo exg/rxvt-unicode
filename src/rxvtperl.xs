@@ -2094,19 +2094,11 @@ rxvt_term::set_background (rxvt_img *img)
 
         if (img) // TODO: cannot be false
           {
-            XRenderPictFormat *f = XRenderFindVisualFormat (THIS->dpy, THIS->visual);
-            rxvt_img *img2 = 0;
-            rxvt_img *img3 = 0;
-
-            if (f != img->format)
-              img = img2 = img->convert_to (f, THIS->pix_colors [Color_bg]);
-
-            img->unshare ();
+            img = img->convert_to (XRenderFindVisualFormat (THIS->dpy, THIS->visual), THIS->pix_colors [Color_bg]);
             THIS->bg_pixmap = img->steal ();
             THIS->bg_flags |= rxvt_term::BG_NEEDS_REFRESH;
             THIS->bg_valid_since = ev::now (); // TODO: extra bloat
-
-            delete img2;
+            delete img;
           }
 
 #endif
@@ -2165,13 +2157,6 @@ int
 rxvt_img::h ()
 	CODE:
         RETVAL = THIS->h;
-	OUTPUT:
-        RETVAL
-
-bool
-rxvt_img::shared ()
-	CODE:
-        RETVAL = THIS->shared;
 	OUTPUT:
         RETVAL
 

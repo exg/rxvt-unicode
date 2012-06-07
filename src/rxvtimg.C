@@ -5,15 +5,24 @@
 #if HAVE_IMG
 
 rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height)
-: s(screen), x(0), y(0), w(width), h(height), format(format), repeat(RepeatNormal), shared(false)
+: s(screen), x(0), y(0), w(width), h(height), format(format), repeat(RepeatNormal),
+  pm(0), refcnt(0)
 {
-  pm = XCreatePixmap (s->display->dpy, s->display->root, w, h, format->depth);
 }
 
+rxvt_img::rxvt_img (const rxvt_img &img)
+: s(img.s), x(img.x), y(img.y), w(img.w), h(img.h), format(img.format), repeat(img.repeat), pm(img.pm), refcnt(img.refcnt)
+{
+  if (refcnt)
+    ++*refcnt;
+}
+
+#if 0
 rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap)
 : s(screen), x(0), y(0), w(width), h(height), format(format), repeat(RepeatNormal), shared(false), pm(pixmap)
 {
 }
+#endif
 
 rxvt_img *
 rxvt_img::new_from_root (rxvt_screen *s)
@@ -38,11 +47,10 @@ rxvt_img::new_from_root (rxvt_screen *s)
      s,
      XRenderFindVisualFormat (dpy, DefaultVisual (dpy, s->display->screen)),
      root_pm_w,
-     root_pm_h,
-     root_pixmap
+     root_pm_h
   );
 
-  img->shared = true;
+  img->pm = root_pixmap;
 
   return img;
 }
@@ -62,7 +70,7 @@ rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
      gdk_pixbuf_get_width (pb),
      gdk_pixbuf_get_height (pb)
   );
-
+  img->alloc ();
   img->render_pixbuf (pb, 0, 0, img->w, img->h, 0, 0);
 
   g_object_unref (pb);
@@ -70,24 +78,45 @@ rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
   return img;
 }
 
+void
+rxvt_img::destroy ()
+{
+  if (!refcnt || --*refcnt)
+    return;
+
+  if (pm)
+    XFreePixmap (s->display->dpy, pm);
+
+  delete refcnt;
+}
+
 rxvt_img::~rxvt_img ()
 {
-  if (!shared)
-    XFreePixmap (s->display->dpy, pm);
+  destroy ();
+}
+
+void
+rxvt_img::alloc ()
+{
+  pm = XCreatePixmap (s->display->dpy, s->display->root, w, h, format->depth);
+  refcnt = new int (1);
 }
 
 void
 rxvt_img::unshare ()
 {
-  if (!shared)
+  if (refcnt && *refcnt == 1)
     return;
 
-  rxvt_img *img = clone ();
+  Pixmap pm2 = XCreatePixmap (s->display->dpy, s->display->root, w, h, format->depth);
+  GC gc = XCreateGC (s->display->dpy, pm, 0, 0);
+  XCopyArea (s->display->dpy, pm, pm2, gc, 0, 0, w, h, 0, 0);
+  XFreeGC (s->display->dpy, gc);
 
-  ::swap (pm    , img->pm);
-  ::swap (shared, img->shared);
+  destroy ();
 
-  delete img;
+  pm = pm2;
+  refcnt = new int (1);
 }
 
 void
@@ -132,6 +161,7 @@ rxvt_img::blur (int rh, int rv)
   double *kernel = (double *)malloc (size * sizeof (double));
   XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
   rxvt_img *img = new rxvt_img (s, format, w, h);
+  img->alloc ();
 
   XRenderPictureAttributes pa;
 
@@ -342,19 +372,14 @@ rxvt_img::render_pixbuf (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int
 rxvt_img *
 rxvt_img::clone ()
 {
-  rxvt_img *img = new rxvt_img (s, format, w, h);
-
-  GC gc = XCreateGC (s->display->dpy, pm, 0, 0);
-  XCopyArea (s->display->dpy, pm, img->pm, gc, 0, 0, w, h, 0, 0);
-  XFreeGC (s->display->dpy, gc);
-
-  return img;
+  return new rxvt_img (*this);
 }
 
 rxvt_img *
 rxvt_img::sub_rect (int x, int y, int width, int height)
 {
   rxvt_img *img = new rxvt_img (s, format, width, height);
+  img->alloc ();
 
   Display *dpy = s->display->dpy;
   XRenderPictureAttributes pa;
@@ -374,6 +399,7 @@ rxvt_img *
 rxvt_img::transform (int new_width, int new_height, double matrix[9])
 {
   rxvt_img *img = new rxvt_img (s, format, new_width, new_height);
+  img->alloc ();
 
   Display *dpy = s->display->dpy;
   XRenderPictureAttributes pa;
@@ -427,7 +453,11 @@ rxvt_img::rotate (int new_width, int new_height, int x, int y, double phi)
 rxvt_img *
 rxvt_img::convert_to (XRenderPictFormat *new_format, const rxvt_color &bg)
 {
+  if (new_format == format)
+    return clone ();
+
   rxvt_img *img = new rxvt_img (s, new_format, w, h);
+  img->alloc ();
 
   Display *dpy = s->display->dpy;
   Picture src = XRenderCreatePicture (dpy,      pm,     format, 0, 0);
