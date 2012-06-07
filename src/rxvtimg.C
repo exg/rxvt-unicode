@@ -529,7 +529,7 @@ rxvt_img::blend (rxvt_img *img, double factor)
 {
   rxvt_img *img2 = clone ();
   Display *dpy = s->display->dpy;
-  Picture src = src_picture ();
+  Picture src = img->src_picture ();
   Picture dst = XRenderCreatePicture (dpy, img2->pm, img2->format, 0, 0);
   Picture mask = create_xrender_mask (dpy, img->pm, False);
 
