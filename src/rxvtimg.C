@@ -517,12 +517,12 @@ rxvt_img::rotate (int new_width, int new_height, int x, int y, double phi)
 }
 
 rxvt_img *
-rxvt_img::convert_to (XRenderPictFormat *new_format, const rxvt_color &bg)
+rxvt_img::convert_format (XRenderPictFormat *new_format, const rxvt_color &bg)
 {
   if (new_format == format)
     return clone ();
 
-  rxvt_img *img = new rxvt_img (s, new_format, 0, 0, w, h, repeat);
+  rxvt_img *img = new rxvt_img (s, new_format, x, y, w, h, repeat);
   img->alloc ();
 
   Display *dpy = s->display->dpy;

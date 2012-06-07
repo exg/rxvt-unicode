@@ -2110,7 +2110,14 @@ rxvt_term::set_background (rxvt_img *img, bool border = false)
               }
 
             {
-              rxvt_img *img2 = img->convert_to (XRenderFindVisualFormat (THIS->dpy, THIS->visual), THIS->pix_colors [Color_bg]);
+              rxvt_img *img2 = img->convert_format (XRenderFindVisualFormat (THIS->dpy, THIS->visual), THIS->pix_colors [Color_bg]);
+              delete img;
+              img = img2;
+            }
+
+            {
+              // just in case, should usually be a nop
+              rxvt_img *img2 = img->reify ();
               delete img;
               img = img2;
             }
