@@ -384,7 +384,7 @@ rxvt_perl_interp::init (rxvt_term *term)
       rxvt_pop_locale ();
     }
 
-  if (perl)
+  if (perl && !term->perl.self)
     {
       // runs outside of perls ENV
       term->perl.self = (void *)newSVptr ((void *)term, "urxvt::term");

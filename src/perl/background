@@ -1,8 +1,20 @@
 #! perl
 
 #:META:X_RESOURCE:%.expr:string:background expression
-#:META:X_RESOURCE:%.enable:boolean:some boolean
-#:META:X_RESOURCE:%.extra.:value:extra config
+#:META:X_RESOURCE:%.border.:boolean:respect the terminal border
+
+=head1 background - manage terminal background
+
+=head2 SYNOPSIS
+
+   rxvt -background-expr 'background expression'
+        -background-border
+
+=head2 DESCRIPTION
+
+=head2 REFERENCE
+
+=cut
 
 our $EXPR;
 #$EXPR = 'move W * 0.1, -H * 0.1, resize W * 0.5, H * 0.5, repeat_none load "opensource.png"';
@@ -17,9 +29,7 @@ $EXPR = 'move -TX, -TY, load "argb.png"';
 #$EXPR = 'blur move (root, -x, -y), 5, 5'
 #resize load "/root/pix/das_fette_schwein.jpg", w, h
 
-use Safe;
-
-our ($bgdsl_self, $old, $new);
+our ($self, $old, $new);
 our ($x, $y, $w, $h);
 
 # enforce at least this interval between updates
@@ -48,7 +58,7 @@ Loaded images will be cached for one cycle.
    sub load($) {
       my ($path) = @_;
 
-      $new->{load}{$path} = $old->{load}{$path} || $bgdsl_self->new_img_from_file ($path);
+      $new->{load}{$path} = $old->{load}{$path} || $self->new_img_from_file ($path);
    }
 
 =item root
@@ -81,7 +91,7 @@ useful for solid backgrounds or for use in filtering effects.
    sub solid($$;$) {
       my $colour = pop;
 
-      my $img = $bgdsl_self->new_img (urxvt::PictStandardARGB32, $_[0] || 1, $_[1] || 1);
+      my $img = $self->new_img (urxvt::PictStandardARGB32, $_[0] || 1, $_[1] || 1);
       $img->fill ($colour);
       $img
    }
@@ -137,6 +147,30 @@ bit, align it to the window position and use it as background.
    sub TW() { $new->{size_sensitive}     = 1; $w }
    sub TH() { $new->{size_sensitive}     = 1; $h }
 
+=item now
+
+Returns the current time as (fractional) seconds since the epoch.
+
+Using this expression does I<not> make your expression sensitive to time,
+but the next two functions do.
+
+=item again $seconds
+
+When this function is used the expression will be reevaluated again in
+C<$seconds> seconds.
+
+Example: load some image and rotate it according to the time of day (as if it were
+the hour pointer of a clock). update this image every minute.
+
+   again 60; rotate TW, TH, 50, 50, (now % 86400) * -720 / 86400, scale load "myclock.png"
+
+=item counter $seconds
+
+Like C<again>, but also returns an increasing counter value, starting at
+0, which might be useful for some simple animation effects.
+
+=cut
+
    sub now() { urxvt::NOW }
 
    sub again($) {
@@ -145,7 +179,7 @@ bit, align it to the window position and use it as background.
 
    sub counter($) {
       $new->{again} = $_[0];
-      $bgdsl_self->{counter} + 0
+      $self->{counter} + 0
    }
 
 =back
@@ -279,7 +313,7 @@ Resizes the image to exactly C<$width> times C<$height> pixels.
 
 #TODO: maximise, maximise_fill?
 
-   sub scale($$$) {
+   sub scale($;$;$) {
       my $img = pop;
 
       @_ == 2 ? $img->scale ($_[0] * $img->w * 0.01, $_[1] * $img->h * 0.01)
@@ -360,30 +394,28 @@ sub set_expr {
 
 # evaluate the current bg expression
 sub recalculate {
-   my ($self) = @_;
+   my ($arg_self) = @_;
 
    # rate limit evaluation
 
-   if ($self->{next_refresh} > urxvt::NOW) {
-      $self->{next_refresh_timer} = urxvt::timer->new->after ($self->{next_refresh} - urxvt::NOW)->cb (sub {
-         $self->recalculate;
+   if ($arg_self->{next_refresh} > urxvt::NOW) {
+      $arg_self->{next_refresh_timer} = urxvt::timer->new->after ($arg_self->{next_refresh} - urxvt::NOW)->cb (sub {
+         $arg_self->recalculate;
       });
       return;
    }
 
-   $self->{next_refresh} = urxvt::NOW + $MIN_INTERVAL;
+   $arg_self->{next_refresh} = urxvt::NOW + $MIN_INTERVAL;
 
    # set environment to evaluate user expression
 
-   local $bgdsl_self = $self;
+   local $self = $arg_self;
 
    local $old = $self->{state};
    local $new = my $state = $self->{state} = {};
 
-   my $border = 0; #d#
-
    ($x, $y, $w, $h) =
-      $self->background_geometry ($border);
+      $self->background_geometry ($self->{border});
 
    # evaluate user expression
 
@@ -440,7 +472,7 @@ sub recalculate {
    $img = $img->sub_rect (0, 0, $w, $h)
       if $img->w != $w || $img->h != $h;
 
-   $self->set_background ($img, $border);
+   $self->set_background ($img, $self->{border});
    $self->scr_recolour (0);
    $self->want_refresh;
 }
@@ -448,7 +480,11 @@ sub recalculate {
 sub on_start {
    my ($self) = @_;
 
-   $self->set_expr (parse_expr $EXPR);
+   my $expr = $self->x_resource ("background.expr")
+      or return;
+
+   $self->set_expr (parse_expr $expr);
+   $self->{border} = $self->x_resource_boolean ("background.border");
 
    ()
 }

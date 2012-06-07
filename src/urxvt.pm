@@ -22,7 +22,7 @@
 Every time a terminal object gets created, extension scripts specified via
 the C<perl> resource are loaded and associated with it.
 
-Scripts are compiled in a 'use strict' and 'use utf8' environment, and
+Scripts are compiled in a 'use strict "vars"' and 'use utf8' environment, and
 thus must be encoded as UTF-8.
 
 Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
@@ -757,7 +757,7 @@ Called on receipt of a bell character.
 package urxvt;
 
 use utf8;
-use strict;
+use strict 'vars';
 use Carp ();
 use Scalar::Util ();
 use List::Util ();
@@ -961,7 +961,7 @@ sub parse_resource {
       ) {
          $name = "$urxvt::RESCLASS.$name";
 
-         push @TERM_EXT, $v->[0];
+         push @{ $term->{perl_ext_3} }, $v->[0];
 
          if ($v->[1] eq "boolean") {
             $term->put_option_db ($name, $flag ? "true" : "false");
@@ -1029,7 +1029,7 @@ sub extension_package($) {
          or die "$path: $!";
 
       my $source =
-         "package $pkg; use strict; use utf8; no warnings 'utf8';\n"
+         "package $pkg; use strict 'vars'; use utf8; no warnings 'utf8';\n"
          . "#line 1 \"$path\"\n{\n"
          . (do { local $/; <$fh> })
          . "\n};\n1";
@@ -1062,7 +1062,10 @@ sub invoke {
          $TERM->register_package ($_) for @pkg;
       }
 
-      for (grep $_, map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2) {
+      for (
+         @{ delete $TERM->{perl_ext_3} },
+         grep $_, map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2
+      ) {
          if ($_ eq "default") {
             $ext_arg{$_} ||= [] for qw(selection option-popup selection-popup searchable-scrollback readline);
          } elsif (/^-(.*)$/) {
