@@ -1106,7 +1106,7 @@ rxvt_term::bg_set_root_pixmap ()
 }
 # endif /* ENABLE_TRANSPARENCY */
 
-bool
+void
 rxvt_term::bg_render ()
 {
   bg_invalidate ();
@@ -1140,8 +1140,6 @@ rxvt_term::bg_render ()
   bg_flags |= BG_NEEDS_REFRESH;
 
   bg_valid_since = ev::now ();
-
-  return true;
 }
 
 void
