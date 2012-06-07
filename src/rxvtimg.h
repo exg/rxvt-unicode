@@ -15,11 +15,25 @@ class rxvt_img
 {
   void alloc ();
   void destroy ();
+  Picture src_picture ();
 
 public:
+  // *could* also hold the Pixmap itself
+  struct pixref
+  {
+    int cnt;
+    int w, h;
+    bool ours; // false if we don't own the pixmap at all
+
+    pixref (int w, int h)
+    : cnt(1), w(w), h(h), ours(true)
+    {
+    }
+  };
+
   rxvt_screen *s;
   Pixmap pm;
-  int *refcnt; // shared refcnt
+  pixref *ref; // shared refcnt
   int x, y, w, h, repeat;
   XRenderPictFormat *format;
 
@@ -32,12 +46,10 @@ public:
 
   ~rxvt_img ();
 
-  // TODO: steal should not do what it does, and this todo should be more specific
   Pixmap steal ()
   {
-    Pixmap retval = pm;
-    pm = None;
-    return retval;
+    ref->ours = false;
+    return pm;
   }
 
   // inplace

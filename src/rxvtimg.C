@@ -6,15 +6,14 @@
 
 rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int x, int y, int width, int height)
 : s(screen), x(x), y(y), w(width), h(height), format(format), repeat(RepeatNormal),
-  pm(0), refcnt(0)
+  pm(0), ref(0)
 {
 }
 
 rxvt_img::rxvt_img (const rxvt_img &img)
-: s(img.s), x(img.x), y(img.y), w(img.w), h(img.h), format(img.format), repeat(img.repeat), pm(img.pm), refcnt(img.refcnt)
+: s(img.s), x(img.x), y(img.y), w(img.w), h(img.h), format(img.format), repeat(img.repeat), pm(img.pm), ref(img.ref)
 {
-  if (refcnt)
-    ++*refcnt;
+  ++ref->cnt;
 }
 
 #if 0
@@ -53,6 +52,8 @@ rxvt_img::new_from_root (rxvt_screen *s)
   );
 
   img->pm = root_pixmap;
+  img->ref = new pixref (root_pm_w, root_pm_h);
+  img->ref->ours = false;
 
   return img;
 }
@@ -85,13 +86,13 @@ rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
 void
 rxvt_img::destroy ()
 {
-  if (!refcnt || --*refcnt)
+  if (--ref->cnt)
     return;
 
-  if (pm)
+  if (pm && ref->ours)
     XFreePixmap (s->display->dpy, pm);
 
-  delete refcnt;
+  delete ref;
 }
 
 rxvt_img::~rxvt_img ()
@@ -103,24 +104,40 @@ void
 rxvt_img::alloc ()
 {
   pm = XCreatePixmap (s->display->dpy, s->display->root, w, h, format->depth);
-  refcnt = new int (1);
+  ref = new pixref (w, h);
+}
+
+Picture
+rxvt_img::src_picture ()
+{
+  Display *dpy = s->display->dpy;
+
+  XRenderPictureAttributes pa;
+  pa.repeat = repeat;
+  Picture pic = XRenderCreatePicture (dpy, pm, format, CPRepeat, &pa);
+
+  XRectangle clip = { -x, -y, min (w, ref->w), min (h, ref->h) };
+  XRenderSetPictureClipRectangles (dpy, pic, 0, 0, &clip, 1);
+
+  return pic;
 }
 
 void
 rxvt_img::unshare ()
 {
-  if (refcnt && *refcnt == 1)
+  if (ref->cnt == 1 && ref->ours)
     return;
 
-  Pixmap pm2 = XCreatePixmap (s->display->dpy, s->display->root, w, h, format->depth);
+  //TODO: maybe should reify instead
+  Pixmap pm2 = XCreatePixmap (s->display->dpy, s->display->root, ref->w, ref->h, format->depth);
   GC gc = XCreateGC (s->display->dpy, pm, 0, 0);
-  XCopyArea (s->display->dpy, pm, pm2, gc, 0, 0, w, h, 0, 0);
+  XCopyArea (s->display->dpy, pm, pm2, gc, 0, 0, ref->w, ref->h, 0, 0);
   XFreeGC (s->display->dpy, gc);
 
   destroy ();
 
   pm = pm2;
-  refcnt = new int (1);
+  ref = new pixref (ref->w, ref->h);
 }
 
 void
@@ -167,10 +184,10 @@ rxvt_img::blur (int rh, int rv)
   rxvt_img *img = new rxvt_img (s, format, x, y, w, h);
   img->alloc ();
 
-  XRenderPictureAttributes pa;
+  Picture src = src_picture ();
 
+  XRenderPictureAttributes pa;
   pa.repeat = RepeatPad;
-  Picture src = XRenderCreatePicture (dpy, pm     , format, CPRepeat, &pa);
   Picture dst = XRenderCreatePicture (dpy, img->pm, format, CPRepeat, &pa);
 
   Pixmap tmp_pm = XCreatePixmap (dpy, pm, w, h, format->depth);
@@ -389,10 +406,9 @@ rxvt_img::reify ()
   // but that involves an rtt to find pixmap width.
 
   Display *dpy = s->display->dpy;
-  XRenderPictureAttributes pa;
-  pa.repeat = repeat;
-  Picture src = XRenderCreatePicture (dpy,      pm,      format, CPRepeat, &pa);
-  Picture dst = XRenderCreatePicture (dpy, img->pm, img->format,        0,   0);
+
+  Picture src = src_picture ();
+  Picture dst = XRenderCreatePicture (dpy, img->pm, img->format, 0, 0);
   
   XRenderComposite (dpy, PictOpSrc, src, None, dst, x, y, 0, 0, 0, 0, w, h);
   
@@ -406,6 +422,8 @@ rxvt_img *
 rxvt_img::sub_rect (int x, int y, int width, int height)
 {
   rxvt_img *img = clone ();
+
+  //TODO: width > w, must reify
 
   img->x += x;
   img->y += y;
@@ -422,10 +440,8 @@ rxvt_img::transform (int new_width, int new_height, double matrix[9])
   img->alloc ();
 
   Display *dpy = s->display->dpy;
-  XRenderPictureAttributes pa;
-  pa.repeat = repeat;
-  Picture src = XRenderCreatePicture (dpy,      pm,      format, CPRepeat, &pa);
-  Picture dst = XRenderCreatePicture (dpy, img->pm, img->format,        0,   0);
+  Picture src = src_picture ();
+  Picture dst = XRenderCreatePicture (dpy, img->pm, img->format, 0, 0);
 
   XTransform xfrm;
 
@@ -479,11 +495,11 @@ rxvt_img::convert_to (XRenderPictFormat *new_format, const rxvt_color &bg)
   if (new_format == format)
     return clone ();
 
-  rxvt_img *img = new rxvt_img (s, new_format, x, y, w, h);
+  rxvt_img *img = new rxvt_img (s, new_format, 0, 0, w, h);
   img->alloc ();
 
   Display *dpy = s->display->dpy;
-  Picture src = XRenderCreatePicture (dpy,      pm,     format, 0, 0);
+  Picture src = src_picture ();
   Picture dst = XRenderCreatePicture (dpy, img->pm, new_format, 0, 0);
   int op = PictOpSrc;
 
@@ -512,7 +528,7 @@ rxvt_img::blend (rxvt_img *img, double factor)
 {
   rxvt_img *img2 = clone ();
   Display *dpy = s->display->dpy;
-  Picture src = XRenderCreatePicture (dpy, img->pm, img->format, 0, 0);
+  Picture src = src_picture ();
   Picture dst = XRenderCreatePicture (dpy, img2->pm, img2->format, 0, 0);
   Picture mask = create_xrender_mask (dpy, img->pm, False);
 
