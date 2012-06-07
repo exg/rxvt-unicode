@@ -61,6 +61,8 @@ rxvt_img::new_from_root (rxvt_screen *s)
 rxvt_img *
 rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
 {
+  Display *dpy = s->display->dpy;
+
   int width  = gdk_pixbuf_get_width  (pb);
   int height = gdk_pixbuf_get_height (pb);
 
@@ -80,7 +82,7 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
   xi.byte_order       = MSBFirst; // maybe go for host byte order, because servers are usually local?
   xi.bitmap_unit      = 32;
   xi.bitmap_bit_order = MSBFirst;
-  xi.bitmap_pad       = 32;
+  xi.bitmap_pad       = BitmapPad (dpy);
   xi.depth            = depth;
   xi.bytes_per_line   = 0;
   xi.bits_per_pixel   = 32;
@@ -110,6 +112,7 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
       if (depth == 24)
         for (int x = 0; x < width; x++)
           {
+            asm volatile("nop");
             r = *data++;
             g = *data++;
             b = *data++;
@@ -117,24 +120,18 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
             *line++ = r;
             *line++ = g;
             *line++ = b;
+            asm volatile("nop");
           }
       else
         for (int x = 0; x < width; x++)
           {
-            r = *data++;
-            g = *data++;
-            b = *data++;
-            a = *data++;
-            *line++ = a;
-            *line++ = r;
-            *line++ = g;
-            *line++ = b;
+            uint32_t v = *(uint32_t *)data; data += 4;
+            v = ecb_big_endian () ? ecb_rotr32 (v, 8) : ecb_rotl32 (v, 8);
+            *(uint32_t *)line = x; line += 4;
           }
 
       row += rowstride;
     }
-
-  Display *dpy = s->display->dpy;
 
   rxvt_img *img = new rxvt_img (s, XRenderFindStandardFormat (dpy, depth == 24 ? PictStandardRGB24 : PictStandardARGB32), 0, 0, width, height);
   img->alloc ();
