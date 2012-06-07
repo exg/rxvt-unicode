@@ -31,7 +31,7 @@ our $MIN_INTERVAL = 1/100;
 =head2 PROVIDERS/GENERATORS
 
 These functions provide an image, by loading it from disk, grabbing it
-from the root screen or by simply generating it. They are used as strating
+from the root screen or by simply generating it. They are used as starting
 points to get an image you can play with.
 
 =over 4
@@ -91,7 +91,7 @@ useful for solid backgrounds or for use in filtering effects.
 =head2 VARIABLES
 
 The following functions provide variable data such as the terminal
-widnow dimensions. Most of them make your expression sensitive to some
+window dimensions. Most of them make your expression sensitive to some
 events, for example using C<TW> (terminal width) means your expression is
 evaluated again when the terminal is resized.
 
