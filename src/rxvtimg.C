@@ -136,7 +136,7 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
             if (ecb_big_endian ())
               v = ecb_bswap32 (v);
 
-            v = ecb_rotl32 (v, 8);
+            v = ecb_rotl32 (v, 8); // abgr to bgra
 
             if (!byte_order_mismatch)
               v = ecb_bswap32 (v);
