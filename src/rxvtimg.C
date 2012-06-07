@@ -73,13 +73,15 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
   // that both 24 and 32 bpp MUST be supported by any screen that supports xrender
   int depth = gdk_pixbuf_get_has_alpha (pb) ? 32 : 24;
 
+  int byte_order = ecb_big_endian () ? MSBFirst : LSBFirst;
+
   XImage xi;
 
   xi.width            = width;
   xi.height           = height;
   xi.xoffset          = 0;
   xi.format           = ZPixmap;
-  xi.byte_order       = LSBFirst; // maybe go for host byte order, because servers are usually local?
+  xi.byte_order       = ImageByteOrder (dpy);
   xi.bitmap_unit      = 32;         //XY only, unused
   xi.bitmap_bit_order = LSBFirst;   //XY only, unused
   xi.bitmap_pad       = BitmapPad (dpy);
@@ -90,6 +92,8 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
   xi.green_mask       = 0x00000000; //Z only, unused
   xi.blue_mask        = 0x00000000; //Z only, unused
   xi.obdata           = 0;          // probably unused
+
+  bool byte_order_mismatch = byte_order != xi.byte_order;
 
   if (!XInitImage (&xi))
     rxvt_fatal ("unable to initialise ximage, please report.\n");
@@ -122,6 +126,9 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
             if (ecb_big_endian ())
               v = ecb_bswap32 (v);
 
+            if (byte_order_mismatch)
+              v = ecb_bswap32 (v);
+
             *dst++ = v;
           }
       else
@@ -133,6 +140,9 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
               v = ecb_bswap32 (v);
 
             v = ecb_rotr32 (v, 8);
+
+            if (byte_order_mismatch)
+              v = ecb_bswap32 (v);
 
             *dst++ = v;
           }
