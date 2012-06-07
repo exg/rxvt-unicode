@@ -428,7 +428,9 @@ rxvt_img::sub_rect (int x, int y, int width, int height)
       img->w = width;
       img->h = height;
 
-      img->reify ();
+      rxvt_img *img2 = img->reify ();
+      delete img;
+      img = img2;
     }
 
   return img;

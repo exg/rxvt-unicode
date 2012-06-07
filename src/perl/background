@@ -4,7 +4,7 @@
 #:META:X_RESOURCE:%.enable:boolean:some boolean
 #:META:X_RESOURCE:%.extra.:value:extra config
 
-our $EXPR = 'clip -50, -50, 150, 100, move X, Y, load "MagnoliaAlpha.png"';
+our $EXPR = 'clip move X, Y, load "MagnoliaAlpha.png"';
 #$EXPR = '
 #   rotate W, H, 50, 50, counter 1/59.95, repeat_mirror,
 #   clip X, Y, W, H, repeat_mirror,
@@ -202,6 +202,8 @@ sub recalculate {
 
    ($l, $t, $w, $h) =
       $self->get_geometry;
+
+      warn "$l,$t,$w,$h\n";#d#
 
    # evaluate user expression
 
