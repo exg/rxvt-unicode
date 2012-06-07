@@ -196,12 +196,23 @@ way that pixels outside the image area are painted when the image is used.
 Tiles the whole plane with the image and returns this new image - or in
 other words, it returns a copy of the image in plane tiling mode.
 
+Example: load an image and tile it over the background, without
+resizing. The C<tile> call is superfluous because C<load> already defaults
+to tiling mode.
+
+   tile load "mybg.png"
+
 =item mirror $img
 
 Similar to tile, but reflects the image each time it uses a new copy, so
 that top edges always touch top edges, right edges always touch right
 edges and so on (with normal tiling, left edges always touch right edges
 and top always touch bottom edges).
+
+Exmaple: load an image and mirror it over the background, avoiding sharp
+edges at the image borders at the expense of mirroring the image itself
+
+   mirror load "mybg.png"
 
 =item pad $img
 
@@ -210,12 +221,22 @@ become transparent. This mode is most useful when you want to place an
 image over another image or the background colour while leaving all
 background pixels outside the image unchanged.
 
+Example: load an image and display it in the upper left corner. The rets
+of the space is left "empty" (transparent or wahtever your compisotr does
+in alpha mode, else background colour).
+
+   pad load "mybg.png"
+
 =item extend $img
 
 Extends the image over the whole plane, using the closest pixel in the
 area outside the image. This mode is mostly useful when you more complex
 filtering operations and want the pixels outside the image to have the
 same values as the pixels near the edge.
+
+Example: just for curiosity, how does this pixel extension stuff work?
+
+   extend move 50, 50, load "mybg.png"
 
 =cut
 
@@ -423,6 +444,9 @@ sub recalculate {
    warn $@ if $@;#d#
    die if !UNIVERSAL::isa $img, "urxvt::img";
 
+   $state->{size_sensitive} = 1
+      if $img->repeat_mode != urxvt::RepeatNormal;
+
    # if the expression is sensitive to external events, prepare reevaluation then
 
    my $repeat;
@@ -467,10 +491,7 @@ sub recalculate {
       delete $self->{expr};
    }
 
-   # prepare and set background pixmap
-
-   $img = $img->sub_rect (0, 0, $w, $h)
-      if $img->w != $w || $img->h != $h;
+   # set background pixmap
 
    $self->set_background ($img, $self->{border});
    $self->scr_recolour (0);

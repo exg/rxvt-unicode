@@ -2098,16 +2098,30 @@ rxvt_term::set_background (rxvt_img *img, bool border = false)
 
         if (img) // TODO: cannot be false
           {
-            img = img->reify ();
-            rxvt_img *img2 = img->convert_to (XRenderFindVisualFormat (THIS->dpy, THIS->visual), THIS->pix_colors [Color_bg]);
-            delete img;
-            THIS->bg_pixmap = img2->steal ();
+            img = img->clone (); // own the img
+
+            if (img->repeat != RepeatNormal) // X11 only supports RepeatNormal as bg pixmap
+              {
+                rxvt_img *img2 = img->sub_rect (0, 0,
+                                                border ? THIS->vt_width  : THIS->szHint.width,
+                                                border ? THIS->vt_height : THIS->szHint.height);
+                delete img;
+                img = img2;
+              }
+
+            {
+              rxvt_img *img2 = img->convert_to (XRenderFindVisualFormat (THIS->dpy, THIS->visual), THIS->pix_colors [Color_bg]);
+              delete img;
+              img = img2;
+            }
+
+            THIS->bg_pixmap = img->steal ();
             THIS->bg_flags |= rxvt_term::BG_NEEDS_REFRESH | rxvt_term::BG_INHIBIT_RENDER;
 
             if (!border)
               THIS->bg_flags |= rxvt_term::BG_IS_TRANSPARENT;
 
-            THIS->bg_valid_since = ev::now (); // TODO: extra bloat
+            delete img;
           }
 
 #endif
@@ -2191,8 +2205,13 @@ rxvt_img::DESTROY ()
 void
 rxvt_img::unshare ()
 
-void
-rxvt_img::repeat_mode (render_repeat_mode repeat = RepeatNormal)
+int
+rxvt_img::repeat_mode (render_repeat_mode repeat = 0)
+	CODE:
+        if (items >= 2)
+          THIS->repeat_mode (repeat);
+        if (GIMME_V != G_VOID)
+          XPUSHs (sv_2mortal (newSViv (THIS->repeat)));
 
 void
 rxvt_img::move (int dx, int dy)
