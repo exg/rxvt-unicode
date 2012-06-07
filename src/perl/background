@@ -6,7 +6,7 @@
 
 our $EXPR;
 #$EXPR = 'move W * 0.1, -H * 0.1, resize W * 0.5, H * 0.5, repeat_none load "opensource.png"';
-$EXPR = 'move -X, -Y, load "argb.png"';
+$EXPR = 'move -TX, -TY, load "argb.png"';
 #$EXPR = '
 #   rotate W, H, 50, 50, counter 1/59.95, repeat_mirror,
 #   clip X, Y, W, H, repeat_mirror,
@@ -66,10 +66,10 @@ mode.
 
 =cut
 
-   sub X() { $new->{position_sensitive} = 1; $x }
-   sub Y() { $new->{position_sensitive} = 1; $y }
-   sub W() { $new->{size_sensitive}     = 1; $w }
-   sub H() { $new->{size_sensitive}     = 1; $h }
+   sub TX() { $new->{position_sensitive} = 1; $x }
+   sub TY() { $new->{position_sensitive} = 1; $y }
+   sub TW() { $new->{size_sensitive}     = 1; $w }
+   sub TH() { $new->{size_sensitive}     = 1; $h }
 
    sub now() { urxvt::NOW }
 
@@ -186,8 +186,8 @@ memory.
 
    sub clip($;$$;$$) {
       my $img = pop;
-      my $h = pop || H;
-      my $w = pop || W;
+      my $h = pop || TH;
+      my $w = pop || TW;
       $img->sub_rect ($_[0], $_[1], $w, $h)
    }
 
@@ -218,7 +218,7 @@ Resizes the image to exactly C<$width> times C<$height> pixels.
 
       @_ == 2 ? $img->scale ($_[0] * $img->w * 0.01, $_[1] * $img->h * 0.01)
       : @_    ? $img->scale ($_[0] * $img->w * 0.01, $_[0] * $img->h * 0.01)
-              : $img->scale (W, H)
+              : $img->scale (TW, TH)
    }
 
    sub resize($$$) {
@@ -226,17 +226,10 @@ Resizes the image to exactly C<$width> times C<$height> pixels.
       $img->scale ($_[0], $_[1])
    }
 
-   # TODO: ugly
    sub move($$;$) {
       my $img = pop->clone;
       $img->move ($_[0], $_[1]);
       $img
-#      my $img = pop;
-#      $img->sub_rect (
-#         $_[0], $_[1],
-#         $img->w, $img->h,
-#         $_[2],
-#      )
    }
 
    sub rotate($$$$$$) {
@@ -252,8 +245,7 @@ Resizes the image to exactly C<$width> times C<$height> pixels.
 
    sub blur($$;$) {
       my $img = pop;
-
-      $img->blur ($_[0], @_ >= 2 ? $_[1] : $_[0]);
+      $img->blur ($_[0], @_ >= 2 ? $_[1] : $_[0])
    }
 
    sub contrast($$;$$;$) {
