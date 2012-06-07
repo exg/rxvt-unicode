@@ -7,6 +7,8 @@
 
 #if HAVE_IMG
 
+#define float_to_component(d) ((d) * 65535.99)
+
 #include <X11/extensions/Xrender.h>
 
 struct rxvt_img
@@ -44,8 +46,25 @@ struct rxvt_img
 
   void unshare (); // create a copy of the pixmap if !shared
   void fill (const rxvt_color &c);
-  void brightness (double r, double g, double b, double a = 1.);
-  void contrast (double r, double g, double b, double a = 1.);
+  void brightness (unsigned short r, unsigned short g, unsigned short b, unsigned short a);
+  void contrast (unsigned short r, unsigned short g, unsigned short b, unsigned short a);
+
+  void brightness (double r, double g, double b, double a = 1.)
+  {
+    brightness (float_to_component (r),
+                float_to_component (g),
+                float_to_component (b),
+                float_to_component (a));
+  }
+
+  void contrast (double r, double g, double b, double a = 1.)
+  {
+    contrast (float_to_component (r),
+              float_to_component (g),
+              float_to_component (b),
+              float_to_component (a));
+  }
+
   bool render_pixbuf (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int height, int dst_x, int dst_y);
 
   // copy

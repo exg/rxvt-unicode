@@ -4,8 +4,6 @@
 
 #if HAVE_IMG
 
-#define float_to_component(d) ((d) * 65535.99)
-
 rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height)
 : s(screen), x(0), y(0), w(width), h(height), format(format), repeat(RepeatNormal), shared(false)
 {
@@ -202,17 +200,17 @@ create_xrender_mask (Display *dpy, Drawable drawable, Bool argb)
 }
 
 void
-rxvt_img::brightness (double r, double g, double b, double a)
+rxvt_img::brightness (unsigned short r, unsigned short g, unsigned short b, unsigned short a)
 {
   Display *dpy = s->display->dpy;
   Picture src = create_xrender_mask (dpy, pm, True);
   Picture dst = XRenderCreatePicture (dpy, pm, format, 0, 0);
 
   XRenderColor mask_c;
-  mask_c.red   = float_to_component (r);
-  mask_c.green = float_to_component (g);
-  mask_c.blue  = float_to_component (b);
-  mask_c.alpha = float_to_component (a);
+  mask_c.red   = r;
+  mask_c.green = g;
+  mask_c.blue  = b;
+  mask_c.alpha = a;
   XRenderFillRectangle (dpy, PictOpSrc, src, &mask_c, 0, 0, 1, 1);
 
   XRenderComposite (dpy, PictOpAdd, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
@@ -222,7 +220,7 @@ rxvt_img::brightness (double r, double g, double b, double a)
 }
 
 void
-rxvt_img::contrast (double r, double g, double b, double a)
+rxvt_img::contrast (unsigned short r, unsigned short g, unsigned short b, unsigned short a)
 {
   if (!(s->display->flags & DISPLAY_HAS_RENDER_MUL))
     return;
@@ -232,10 +230,10 @@ rxvt_img::contrast (double r, double g, double b, double a)
   Picture dst = XRenderCreatePicture (dpy, pm, format, 0, 0);
 
   XRenderColor mask_c;
-  mask_c.red   = float_to_component (r);
-  mask_c.green = float_to_component (g);
-  mask_c.blue  = float_to_component (b);
-  mask_c.alpha = float_to_component (a);
+  mask_c.red   = r;
+  mask_c.green = g;
+  mask_c.blue  = b;
+  mask_c.alpha = a;
   XRenderFillRectangle (dpy, PictOpSrc, src, &mask_c, 0, 0, 1, 1);
 
   XRenderComposite (dpy, PictOpMultiply, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
