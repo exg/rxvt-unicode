@@ -112,7 +112,6 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
       if (depth == 24)
         for (int x = 0; x < width; x++)
           {
-            asm volatile("nop");
             r = *data++;
             g = *data++;
             b = *data++;
@@ -120,7 +119,6 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
             *line++ = r;
             *line++ = g;
             *line++ = b;
-            asm volatile("nop");
           }
       else
         for (int x = 0; x < width; x++)
