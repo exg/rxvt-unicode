@@ -59,6 +59,96 @@ rxvt_img::new_from_root (rxvt_screen *s)
 }
 
 rxvt_img *
+rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
+{
+  int width  = gdk_pixbuf_get_width  (pb);
+  int height = gdk_pixbuf_get_height (pb);
+
+  if (width > 32767 || height > 32767) // well, we *could* upload in chunks
+    rxvt_fatal ("rxvt_img::new_from_pixbuf: image too big (maximum size 32768x32768).\n");
+
+  // since we require rgb24/argb32 formats from xrender we assume
+  // that both 24 and 32 bpp MUST be supported by any screen that supports xrender
+  int depth = gdk_pixbuf_get_has_alpha (pb) ? 32 : 24;
+
+  XImage xi;
+
+  xi.width            = width;
+  xi.height           = height;
+  xi.xoffset          = 0;
+  xi.format           = ZPixmap;
+  xi.byte_order       = MSBFirst; // maybe go for host byte order, because servers are usually local?
+  xi.bitmap_unit      = 32;
+  xi.bitmap_bit_order = MSBFirst;
+  xi.bitmap_pad       = 32;
+  xi.depth            = depth;
+  xi.bytes_per_line   = 0;
+  xi.bits_per_pixel   = 32;
+  xi.red_mask         = 0x00ff0000;
+  xi.green_mask       = 0x0000ff00;
+  xi.blue_mask        = 0x000000ff;
+
+  if (!XInitImage (&xi))
+    rxvt_fatal ("unable to initialise ximage, please report.\n");
+
+  if (height > INT_MAX / xi.bytes_per_line)
+    rxvt_fatal ("rxvt_img::new_from_pixbuf: image too big for Xlib.\n");
+
+  xi.data = (char *)rxvt_malloc (height * xi.bytes_per_line);
+
+  int rowstride = gdk_pixbuf_get_rowstride (pb);
+
+  assert (3 + (depth == 32) == gdk_pixbuf_get_n_channels (pb));
+  unsigned char *row = gdk_pixbuf_get_pixels (pb);
+  char *line = xi.data;
+
+  for (int y = 0; y < height; y++)
+    {
+      unsigned char r, g, b, a;
+      unsigned char *data = row;
+
+      if (depth == 24)
+        for (int x = 0; x < width; x++)
+          {
+            r = *data++;
+            g = *data++;
+            b = *data++;
+            *line++ = 0;
+            *line++ = r;
+            *line++ = g;
+            *line++ = b;
+          }
+      else
+        for (int x = 0; x < width; x++)
+          {
+            r = *data++;
+            g = *data++;
+            b = *data++;
+            a = *data++;
+            *line++ = a;
+            *line++ = r;
+            *line++ = g;
+            *line++ = b;
+          }
+
+      row += rowstride;
+    }
+
+  Display *dpy = s->display->dpy;
+
+  rxvt_img *img = new rxvt_img (s, XRenderFindStandardFormat (dpy, depth == 24 ? PictStandardRGB24 : PictStandardARGB32), 0, 0, width, height);
+  img->alloc ();
+
+  GC gc = XCreateGC (dpy, img->pm, 0, 0);
+  XPutImage (dpy, img->pm, gc, &xi, 0, 0, 0, 0, width, height);
+  XFreeGC (dpy, gc);
+
+  free (xi.data);
+
+  return img;
+}
+
+rxvt_img *
 rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
 {
   GError *err = 0;
@@ -67,16 +157,7 @@ rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
   if (!pb)
     rxvt_fatal ("rxvt_img::new_from_file: %s\n", err->message);
 
-  rxvt_img *img = new rxvt_img (
-     s,
-     XRenderFindStandardFormat (s->display->dpy, gdk_pixbuf_get_has_alpha (pb) ? PictStandardARGB32 : PictStandardRGB24),
-     0,
-     0,
-     gdk_pixbuf_get_width (pb),
-     gdk_pixbuf_get_height (pb)
-  );
-  img->alloc ();
-  img->render_pixbuf (pb, 0, 0, img->w, img->h, 0, 0);
+  rxvt_img *img = new_from_pixbuf (s, pb);
 
   g_object_unref (pb);
 
@@ -290,109 +371,11 @@ rxvt_img::contrast (unsigned short r, unsigned short g, unsigned short b, unsign
   XRenderFreePicture (dpy, dst);
 }
 
-bool
-rxvt_img::render_pixbuf (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int height, int dst_x, int dst_y)
-{
-  Display *dpy = s->display->dpy;
-
-  if (s->visual->c_class != TrueColor)
-    return false;
-
-  uint32_t red_mask, green_mask, blue_mask, alpha_mask;
-
-  red_mask   = (uint32_t)format->direct.redMask   << format->direct.red;
-  green_mask = (uint32_t)format->direct.greenMask << format->direct.green;
-  blue_mask  = (uint32_t)format->direct.blueMask  << format->direct.blue;
-  alpha_mask = (uint32_t)format->direct.alphaMask << format->direct.alpha;
-
-  int width_r = ecb_popcount32 (red_mask);
-  int width_g = ecb_popcount32 (green_mask);
-  int width_b = ecb_popcount32 (blue_mask);
-  int width_a = ecb_popcount32 (alpha_mask);
-
-  if (width_r > 8 || width_g > 8 || width_b > 8 || width_a > 8)
-    return false;
-
-  int sh_r = ecb_ctz32 (red_mask);
-  int sh_g = ecb_ctz32 (green_mask);
-  int sh_b = ecb_ctz32 (blue_mask);
-  int sh_a = ecb_ctz32 (alpha_mask);
-
-  if (width > 32767 || height > 32767)
-    return false;
-
-  XImage *ximage = XCreateImage (dpy, s->visual, format->depth, ZPixmap, 0, 0,
-                                 width, height, 32, 0);
-  if (!ximage)
-    return false;
-
-  if (height > INT_MAX / ximage->bytes_per_line
-      || !(ximage->data = (char *)malloc (height * ximage->bytes_per_line)))
-    {
-      XDestroyImage (ximage);
-      return false;
-    }
-
-  GC gc = XCreateGC (dpy, pm, 0, 0);
-
-  ximage->byte_order = ecb_big_endian () ? MSBFirst : LSBFirst;
-
-  int rowstride = gdk_pixbuf_get_rowstride (pixbuf);
-  int channels = gdk_pixbuf_get_n_channels (pixbuf);
-  unsigned char *row = gdk_pixbuf_get_pixels (pixbuf) + src_y * rowstride + src_x * channels;
-  char *line = ximage->data;
-
-  for (int y = 0; y < height; y++)
-    {
-      for (int x = 0; x < width; x++)
-        {
-          unsigned char *pixel = row + x * channels;
-          uint32_t value;
-          unsigned char r, g, b, a;
-
-          if (channels == 4)
-            {
-              a = pixel[3];
-              r = pixel[0] * a / 0xff;
-              g = pixel[1] * a / 0xff;
-              b = pixel[2] * a / 0xff;
-            }
-          else
-            {
-              a = 0xff;
-              r = pixel[0];
-              g = pixel[1];
-              b = pixel[2];
-            }
-
-          value  = ((r >> (8 - width_r)) << sh_r)
-                 | ((g >> (8 - width_g)) << sh_g)
-                 | ((b >> (8 - width_b)) << sh_b)
-                 | ((a >> (8 - width_a)) << sh_a);
-
-          if (ximage->bits_per_pixel == 32)
-            ((uint32_t *)line)[x] = value;
-          else
-            XPutPixel (ximage, x, y, value);
-        }
-
-      row += rowstride;
-      line += ximage->bytes_per_line;
-    }
-
-  XPutImage (dpy, pm, gc, ximage, 0, 0, dst_x, dst_y, width, height);
-  XDestroyImage (ximage);
-  XFreeGC (dpy, gc);
-
-  return true;
-}
-
 rxvt_img *
 rxvt_img::clone ()
 {
   return new rxvt_img (*this);
 }
-
 
 static XRenderPictFormat *
 find_alpha_format_for (Display *dpy, XRenderPictFormat *format)

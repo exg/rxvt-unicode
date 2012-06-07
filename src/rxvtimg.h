@@ -41,8 +41,9 @@ public:
   rxvt_img (const rxvt_img &img);
 
   //rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap);
+  static rxvt_img *new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb); // from pixbuf
+  static rxvt_img *new_from_file (rxvt_screen *s, const char *filename); // via pixbuf
   static rxvt_img *new_from_root (rxvt_screen *s); // get root pixmap
-  static rxvt_img *new_from_file (rxvt_screen *s, const char *filename); // from pixbuf
 
   ~rxvt_img ();
 
@@ -84,8 +85,6 @@ public:
               float_to_component (b),
               float_to_component (a));
   }
-
-  bool render_pixbuf (GdkPixbuf *pixbuf, int src_x, int src_y, int width, int height, int dst_x, int dst_y);
 
   // copy
   rxvt_img *reify (); // make x, y 0, make real width/height
