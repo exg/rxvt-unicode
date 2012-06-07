@@ -86,10 +86,10 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
   xi.depth            = depth;
   xi.bytes_per_line   = 0;
   xi.bits_per_pixel   = 32;         //Z only
-  xi.red_mask         = 0x000000ff; //Z only
-  xi.green_mask       = 0x0000ff00; //Z only
-  xi.blue_mask        = 0x00ff0000; //Z only
-  xi.obdata           = 0;          // probbaly unused
+  xi.red_mask         = 0x00000000; //Z only, unused
+  xi.green_mask       = 0x00000000; //Z only, unused
+  xi.blue_mask        = 0x00000000; //Z only, unused
+  xi.obdata           = 0;          // probably unused
 
   if (!XInitImage (&xi))
     rxvt_fatal ("unable to initialise ximage, please report.\n");
@@ -129,8 +129,10 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
           {
             uint32_t v = *(uint32_t *)src; src += 4;
 
-            if (ecb_big_endian ())
+            if (ecb_little_endian ())
               v = ecb_bswap32 (v);
+
+            v = ecb_rotr32 (v, 8);
 
             *dst++ = v;
           }
