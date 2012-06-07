@@ -116,9 +116,6 @@ rxvt_img::src_picture ()
   pa.repeat = repeat;
   Picture pic = XRenderCreatePicture (dpy, pm, format, CPRepeat, &pa);
 
-  XRectangle clip = { -x, -y, min (w, ref->w), min (h, ref->h) };
-  XRenderSetPictureClipRectangles (dpy, pic, 0, 0, &clip, 1);
-
   return pic;
 }
 
@@ -421,14 +418,17 @@ rxvt_img::reify ()
 rxvt_img *
 rxvt_img::sub_rect (int x, int y, int width, int height)
 {
-  rxvt_img *img = clone ();
+  bool need_reify = w < width || h < height;
 
-  //TODO: width > w, must reify
+  rxvt_img *img = clone ();
 
   img->x += x;
   img->y += y;
   img->w = width;
   img->h = height;
+
+  if (need_reify)
+    img->reify ();
 
   return img;
 }
