@@ -399,11 +399,11 @@ rxvt_img::clone ()
 rxvt_img *
 rxvt_img::reify ()
 {
+  if (x == 0 && y == 0 && w == ref->w && h == ref->h)
+    return clone ();
+
   rxvt_img *img = new rxvt_img (s, format, 0, 0, w, h);
   img->alloc ();
-
-  // todo, if x==0  and y==0 and w==real width we could clone
-  // but that involves an rtt to find pixmap width.
 
   Display *dpy = s->display->dpy;
 
