@@ -4,7 +4,7 @@
 #:META:X_RESOURCE:%.enable:boolean:some boolean
 #:META:X_RESOURCE:%.extra.:value:extra config
 
-our $EXPR = 'clip move X, Y, load "MagnoliaAlpha.png"';
+our $EXPR = 'clip move -X, -Y, load "MagnoliaAlpha.png"';
 #$EXPR = '
 #   rotate W, H, 50, 50, counter 1/59.95, repeat_mirror,
 #   clip X, Y, W, H, repeat_mirror,

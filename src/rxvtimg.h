@@ -55,8 +55,8 @@ public:
   // inplace
   void move (int dx, int dy)
   {
-    x += dx;
-    y += dy;
+    x -= dx;
+    y -= dy;
   }
 
   void repeat_mode (int repeat)
