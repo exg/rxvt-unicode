@@ -123,10 +123,7 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
 
             uint32_t v = (r << 16) | (g << 8) | b;
             
-            if (ecb_big_endian ())
-              v = ecb_bswap32 (v);
-
-            if (byte_order_mismatch)
+            if (ecb_big_endian () ? !byte_order_mismatch : byte_order_mismatch)
               v = ecb_bswap32 (v);
 
             *dst++ = v;
