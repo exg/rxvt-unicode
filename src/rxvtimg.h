@@ -66,6 +66,9 @@ public:
 
   void unshare (); // prepare for write
   void fill (const rxvt_color &c);
+  //void linear_gradient  (const XLinearGradient  *gradient, const XFixed *stops, const XRenderColor *colors, int nstops);
+  //void radial_gradient  (const XRadialGradient  *gradient, const XFixed *stops, const XRenderColor *colors, int nstops);
+  //void conical_gradient (const XConicalGradient *gradient, const XFixed *stops, const XRenderColor *colors, int nstops);
   void brightness (uint16_t r, uint16_t g, uint16_t b, uint16_t a);
   void contrast (uint16_t r, uint16_t g, uint16_t b, uint16_t a);
 

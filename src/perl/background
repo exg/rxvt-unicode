@@ -72,7 +72,7 @@ which means you could use multiple lines and statements:
    }
 
 This expression gets evaluated once per hour. It will set F<sunday.png> as
-background on sundays, and F<weekday.png> on all other days.
+background on Sundays, and F<weekday.png> on all other days.
 
 Fortunately, we expect that most expressions will be much simpler, with
 little Perl knowledge needed.
@@ -114,14 +114,61 @@ width and doubles the image height:
 
    scale 50, 200, load "$HOME/mypic.png"
 
-TODO
+Other effects than scalign are also readily available, for exmaple, you can
+tile the image to fill the whole window, instead of resizing it:
+
+   tile load "$HOME/mypic.png"
+
+In fact, images returned by C<load> are in C<tile> mode by default, so the C<tile> operator
+is kind of superfluous.
+
+Another common effect is to mirror the image, so that the same edges touch:
+
+   mirror load "$HOME/mypic.png"
+
+This is also a typical background expression:
+
+   rootalign root
+
+It first takes a snapshot of the screen background image, and then
+moves it to the upper left corner of the screen - the result is
+pseudo-transparency, as the image seems to be static while the window is
+moved around.
 
 =head3 CYCLES AND CACHING
 
-TODO
+As has been mentioned before, the expression might be evaluated multiple
+times. Each time the expression is reevaluated, a new cycle is said to
+have begun. Many operators cache their results till the next cycle.
 
-Each time the expression is reevaluated, a new cycle is said to have begun. Many operators
-cache their results till the next cycle. For example
+For example, the C<load> operator keeps a copy of the image. If it is
+asked to load the same image on the next cycle it will not load it again,
+but return the cached copy.
+
+This only works for one cycle though, so as long as you load the same
+image every time, it will always be cached, but when you load a different
+image, it will forget about the first one.
+
+This allows you to either speed things up by keeping multiple images in
+memory, or comserve memory by loading images more often.
+
+For example, you can keep two images in memory and use a random one like
+this:
+
+   my $img1 = load "img1.png";
+   my $img2 = load "img2.png";
+   (0.5 > rand) ? $img1 : $img2
+
+Since both images are "loaded" every time the expression is evaluated,
+they are always kept in memory. Contrast this version:
+
+   my $path1 = "img1.png";
+   my $path2 = "img2.png";
+   load ((0.5 > rand) ? $path1 : $path2)
+
+Here, a path is selected randomly, and load is only called for one image,
+so keeps only one image in memory. If, on the next evaluation, luck
+decides to use the other path, then it will have to load that image again.
 
 =head2 REFERENCE
 
@@ -144,19 +191,6 @@ replaces the background of the character area.
 =back
 
 =cut
-
-our $EXPR;#d#
-#$EXPR = 'move W * 0.1, -H * 0.1, resize W * 0.5, H * 0.5, repeat_none load "opensource.png"';
-$EXPR = 'move -TX, -TY, load "argb.png"';
-#$EXPR = '
-#   rotate W, H, 50, 50, counter 1/59.95, repeat_mirror,
-#   clip X, Y, W, H, repeat_mirror,
-#   load "/root/pix/das_fette_schwein.jpg"
-#';
-#$EXPR = 'solid "red"';
-#$EXPR = 'blur root, 10, 10'
-#$EXPR = 'blur move (root, -x, -y), 5, 5'
-#resize load "/root/pix/das_fette_schwein.jpg", w, h
 
 our $HOME;
 our ($self, $old, $new);
@@ -564,6 +598,11 @@ Adjusts the brightness of an image.
 
 Gaussian-blurs the image with (roughly) C<$radius> pixel radius. The radii
 can also be specified separately.
+
+Blurring is often I<very> slow, at least compared or other
+operators. Larger blur radii are slower than smaller ones, too, so if you
+don't want to freeze your screen for long times, start experimenting with
+low values for radius (<5).
 
 =cut
 
