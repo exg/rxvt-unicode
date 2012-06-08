@@ -3,6 +3,8 @@
 #:META:X_RESOURCE:%.expr:string:background expression
 #:META:X_RESOURCE:%.border.:boolean:respect the terminal border
 
+#TODO: once, rootalign
+
 =head1 background - manage terminal background
 
 =head2 SYNOPSIS
@@ -453,6 +455,7 @@ sub recalculate {
 
    if (my $again = $state->{again}) {
       $repeat = 1;
+      my $self = $self;
       $state->{timer} = $again == $old->{again}
                         ? $old->{timer}
                         : urxvt::timer->new->after ($again)->interval ($again)->cb (sub {
