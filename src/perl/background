@@ -247,7 +247,7 @@ reevaluated when the bg image changes.
 Creates a new image and completely fills it with the given colour. The
 image is set to tiling mode.
 
-If <$width> and C<$height> are omitted, it creates a 1x1 image, which is
+If C<$width> and C<$height> are omitted, it creates a 1x1 image, which is
 useful for solid backgrounds or for use in filtering effects.
 
 =cut
