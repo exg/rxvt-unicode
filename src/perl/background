@@ -5,14 +5,16 @@
 
 #TODO: once, rootalign
 
-=head1 background - manage terminal background
+=head1 NAME
 
-=head2 SYNOPSIS
+   background - manage terminal background
+
+=head1 SYNOPSIS
 
    urxvt --background-expr 'background expression'
          --background-border
 
-=head2 DESCRIPTION
+=head1 DESCRIPTION
 
 This extension manages the terminal background by creating a picture that
 is behind the text, replacing the normal background colour.
@@ -32,7 +34,7 @@ Or specified as a X resource:
 
    URxvt.background-expr: scale load "/path/to/mybg.png"
 
-=head2 THEORY OF OPERATION
+=head1 THEORY OF OPERATION
 
 At startup, just before the window is mapped for the first time, the
 expression is evaluated and must yield an image. The image is then
@@ -59,7 +61,7 @@ be reevaluated each time it is changed, but not when it moves for
 example. That ensures that the picture always fills the terminal, even
 after it's size changes.
 
-=head3 EXPRESSIONS
+=head2 EXPRESSIONS
 
 Expressions are normal Perl expressions, in fact, they are Perl blocks -
 which means you could use multiple lines and statements:
@@ -135,7 +137,7 @@ moves it to the upper left corner of the screen - the result is
 pseudo-transparency, as the image seems to be static while the window is
 moved around.
 
-=head3 CYCLES AND CACHING
+=head2 CYCLES AND CACHING
 
 As has been mentioned before, the expression might be evaluated multiple
 times. Each time the expression is reevaluated, a new cycle is said to
@@ -170,9 +172,9 @@ Here, a path is selected randomly, and load is only called for one image,
 so keeps only one image in memory. If, on the next evaluation, luck
 decides to use the other path, then it will have to load that image again.
 
-=head2 REFERENCE
+=head1 REFERENCE
 
-=head3 COMMAND LINE SWITCHES
+=head2 COMMAND LINE SWITCHES
 
 =over 4
 
@@ -264,10 +266,11 @@ useful for solid backgrounds or for use in filtering effects.
 
 =head2 VARIABLES
 
-The following functions provide variable data such as the terminal
-window dimensions. Most of them make your expression sensitive to some
-events, for example using C<TW> (terminal width) means your expression is
-evaluated again when the terminal is resized.
+The following functions provide variable data such as the terminal window
+dimensions. They are not (Perl-) variables, they jsut return stuff that
+varies. Most of them make your expression sensitive to some events, for
+example using C<TW> (terminal width) means your expression is evaluated
+again when the terminal is resized.
 
 =over 4
 
