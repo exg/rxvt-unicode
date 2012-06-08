@@ -211,7 +211,6 @@ rxvt_img::unshare ()
   if (ref->cnt == 1 && ref->ours)
     return;
 
-  //TODO: maybe should reify instead
   Pixmap pm2 = XCreatePixmap (s->display->dpy, s->display->root, ref->w, ref->h, format->depth);
   GC gc = XCreateGC (s->display->dpy, pm, 0, 0);
   XCopyArea (s->display->dpy, pm, pm2, gc, 0, 0, ref->w, ref->h, 0, 0);
