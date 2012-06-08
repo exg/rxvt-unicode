@@ -409,9 +409,10 @@ rxvt_img::reify ()
 
   Display *dpy = s->display->dpy;
 
-  bool alpha = !format->direct.alphaMask
-               && (x || y)
-               && repeat == RepeatNone;
+  // add an alpha channel if...
+  bool alpha = !format->direct.alphaMask // pixmap has none yet
+               && (x || y)               // we need one because of non-zero offset
+               && repeat == RepeatNone;  // and we have no good pixels to fill with
 
   rxvt_img *img = new rxvt_img (s, alpha ? find_alpha_format_for (dpy, format) : format, 0, 0, w, h, repeat);
   img->alloc ();
