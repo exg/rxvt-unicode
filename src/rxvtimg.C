@@ -297,7 +297,7 @@ rxvt_img::blur (int rh, int rv)
       get_gaussian_kernel (rv, size, kernel, params);
       ::swap (params[0], params[1]);
 
-      XRenderSetPictureFilter (dpy, src, FilterConvolution, params, size+2);
+      XRenderSetPictureFilter (dpy, tmp, FilterConvolution, params, size+2);
       XRenderComposite (dpy,
                         PictOpSrc,
                         tmp,
