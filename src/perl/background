@@ -9,16 +9,143 @@
 
 =head2 SYNOPSIS
 
-   rxvt -background-expr 'background expression'
-        -background-border
+   urxvt --background-expr 'background expression'
+         --background-border
 
 =head2 DESCRIPTION
 
+This extension manages the terminal background by creating a picture that
+is behind the text, replacing the normal background colour.
+
+It does so by evaluating a Perl expression that I<calculates> the image on
+the fly, for example, by grabbing the root background or loading a file.
+
+While the full power of Perl is available, the operators have been design
+to be as simple as possible.
+
+For example, to load an image and scale it to the window size, you would
+use:
+
+   urxvt --background-expr 'scale load "/path/to/mybg.png"'
+
+Or specified as a X resource:
+
+   URxvt.background-expr: scale load "/path/to/mybg.png"
+
+=head2 THEORY OF OPERATION
+
+At startup, just before the window is mapped for the first time, the
+expression is evaluated and must yield an image. The image is then
+extended as necessary to cover the whole terminal window, and is set as a
+background pixmap.
+
+If the image contains an alpha channel, then it will be used as-is in
+visuals that support alpha channels (for example, for a compositing
+manager). In other visuals, the terminal background colour will be used to
+replace any transparency.
+
+When the expression relies, directly or indirectly, on the window size,
+position, the root pixmap, or a timer, then it will be remembered. If not,
+then it will be removed.
+
+If any of the parameters that the expression relies on changes (when the
+window is moved or resized, its position or size changes; when the root
+pixmap is replaced by another one the root background changes; or when the
+timer elapses), then the expression will be evaluated again.
+
+For example, an expression such as C<scale load "$HOME/mybg.png"> scales the
+image to the window size, so it relies on the window size and will
+be reevaluated each time it is changed, but not when it moves for
+example. That ensures that the picture always fills the terminal, even
+after it's size changes.
+
+=head3 EXPRESSIONS
+
+Expressions are normal Perl expressions, in fact, they are Perl blocks -
+which means you could use multiple lines and statements:
+
+   again 3600;
+   if (localtime now)[6]) {
+      return scale load "$HOME/weekday.png";
+   } else {
+      return scale load "$HOME/sunday.png";
+   }
+
+This expression gets evaluated once per hour. It will set F<sunday.png> as
+background on sundays, and F<weekday.png> on all other days.
+
+Fortunately, we expect that most expressions will be much simpler, with
+little Perl knowledge needed.
+
+Basically, you always start with a function that "generates" an image
+object, such as C<load>, which loads an image from disk, or C<root>, which
+returns the root window background image:
+
+   load "$HOME/mypic.png"
+
+The path is usually specified as a quoted string (the exact rules can be
+found in the L<perlop> manpage). The F<$HOME> at the beginning of the
+string is expanded to the home directory.
+
+Then you prepend one or more modifiers or filtering expressions, such as
+C<scale>:
+
+   scale load "$HOME/mypic.png"
+
+Just like a mathematical expression with functions, you should read these
+expressions from right to left, as the C<load> is evaluated first, and
+its result becomes the argument to the C<scale> function.
+
+Many operators also allow some parameters preceding the input image
+that modify its behaviour. For example, C<scale> without any additional
+arguments scales the image to size of the terminal window. If you specify
+an additional argument, it uses it as a percentage:
+
+   scale 200, load "$HOME/mypic.png"
+
+This enlarges the image by a factor of 2 (200%). As you can see, C<scale>
+has now two arguments, the C<200> and the C<load> expression, while
+C<load> only has one argument. Arguments are separated from each other by
+commas.
+
+Scale also accepts two arguments, which are then separate factors for both
+horizontal and vertical dimensions. For example, this halves the image
+width and doubles the image height:
+
+   scale 50, 200, load "$HOME/mypic.png"
+
+TODO
+
+=head3 CYCLES AND CACHING
+
+TODO
+
+Each time the expression is reevaluated, a new cycle is said to have begun. Many operators
+cache their results till the next cycle. For example
+
 =head2 REFERENCE
+
+=head3 COMMAND LINE SWITCHES
+
+=over 4
+
+=item --background-expr perl-expression
+
+Specifies the Perl expression to evaluate.
+
+=item --background-border
+
+By default, the expression creates an image that fills the full window,
+overwriting borders and any other areas, such as the scrollbar.
+
+Specifying this flag changes the behaviour, so that the image only
+replaces the background of the character area.
+
+=back
 
 =cut
 
-our $EXPR;
+our $EXPR;#d#
 #$EXPR = 'move W * 0.1, -H * 0.1, resize W * 0.5, H * 0.5, repeat_none load "opensource.png"';
 $EXPR = 'move -TX, -TY, load "argb.png"';
 #$EXPR = '
@@ -31,6 +158,7 @@ $EXPR = 'move -TX, -TY, load "argb.png"';
 #$EXPR = 'blur move (root, -x, -y), 5, 5'
 #resize load "/root/pix/das_fette_schwein.jpg", w, h
 
+our $HOME;
 our ($self, $old, $new);
 our ($x, $y, $w, $h);
 
@@ -162,7 +290,7 @@ When this function is used the expression will be reevaluated again in
 C<$seconds> seconds.
 
 Example: load some image and rotate it according to the time of day (as if it were
-the hour pointer of a clock). update this image every minute.
+the hour pointer of a clock). Update this image every minute.
 
    again 60; rotate TW, TH, 50, 50, (now % 86400) * -720 / 86400, scale load "myclock.png"
 
@@ -211,7 +339,7 @@ that top edges always touch top edges, right edges always touch right
 edges and so on (with normal tiling, left edges always touch right edges
 and top always touch bottom edges).
 
-Exmaple: load an image and mirror it over the background, avoiding sharp
+Example: load an image and mirror it over the background, avoiding sharp
 edges at the image borders at the expense of mirroring the image itself
 
    mirror load "mybg.png"
@@ -223,7 +351,7 @@ become transparent. This mode is most useful when you want to place an
 image over another image or the background colour while leaving all
 background pixels outside the image unchanged.
 
-Example: load an image and display it in the upper left corner. The rets
+Example: load an image and display it in the upper left corner. The rest
 of the space is left "empty" (transparent or wahtever your compisotr does
 in alpha mode, else background colour).
 
@@ -349,27 +477,58 @@ Resizes the image to exactly C<$width> times C<$height> pixels.
       $img->scale ($_[0], $_[1])
    }
 
+=item move $dx, $dy, $img
+
+Moves the image by C<$dx> pixels in the horizontal, and C<$dy> pixels in
+the vertical.
+
+Example: move the image right by 20 pixels and down by 30.
+
+   move 20, 30, ...
+
+=item rootalign $img
+
+Moves the image so that it appears glued to the screen as opposed to the
+window. This gives the illusion of a larger area behind the window. It is
+exactly equivalent to C<move -TX, -TY>, that is, it moves the image to the
+top left of the screen.
+
+Example: load a background image, put it in mirror mode and root align it.
+
+   rootalign mirror load "mybg.png"
+
+Example: take the screen background and align it, giving the illusion of
+transparency as long as the window isn't in front of other windows.
+
+  rootalign root
+
+=cut
+
    sub move($$;$) {
       my $img = pop->clone;
       $img->move ($_[0], $_[1]);
       $img
    }
 
-   sub rotate($$$$$$) {
-      my $img = pop;
-      $img->rotate (
-         $_[0],
-         $_[1],
-         $_[2] * $img->w * .01,
-         $_[3] * $img->h * .01,
-         $_[4] * (3.14159265 / 180),
-      )
+   sub rootalign($) {
+      move -TX, -TY, $_[0]
    }
 
-   sub blur($$;$) {
-      my $img = pop;
-      $img->blur ($_[0], @_ >= 2 ? $_[1] : $_[0])
-   }
+=item contrast $factor, $img
+
+=item contrast $r, $g, $b, $img
+
+=item contrast $r, $g, $b, $a, $img
+
+Adjusts the I<contrast> of an image.
+
+=item brightness $factor, $img
+
+=item brightness $r, $g, $b, $img
+
+=item brightness $r, $g, $b, $a, $img
+
+=cut
 
    sub contrast($$;$$;$) {
       my $img = pop;
@@ -379,7 +538,7 @@ Resizes the image to exactly C<$width> times C<$height> pixels.
       $a       = 1        if @_ < 5;
 
       $img = $img->clone;
-      $img->contrast ($r, $g, $b, $a);
+#      $img->contrast ($r, $g, $b, $a);
       $img
    }
 
@@ -393,6 +552,22 @@ Resizes the image to exactly C<$width> times C<$height> pixels.
       $img = $img->clone;
       $img->brightness ($r, $g, $b, $a);
       $img
+   }
+
+   sub blur($$;$) {
+      my $img = pop;
+      $img->blur ($_[0], @_ >= 2 ? $_[1] : $_[0])
+   }
+
+   sub rotate($$$$$$) {
+      my $img = pop;
+      $img->rotate (
+         $_[0],
+         $_[1],
+         $_[2] * $img->w * .01,
+         $_[3] * $img->h * .01,
+         $_[4] * (3.14159265 / 180),
+      )
    }
 
 =back
@@ -434,6 +609,7 @@ sub recalculate {
 
    local $self = $arg_self;
 
+   local $HOME = $ENV{HOME};
    local $old = $self->{state};
    local $new = my $state = $self->{state} = {};
 
