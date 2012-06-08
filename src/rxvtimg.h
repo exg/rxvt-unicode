@@ -7,7 +7,7 @@
 
 #if HAVE_IMG
 
-#define float_to_component(d) ((d) * 65535.99)
+#define float_to_component(d) (uint16_t)((d) * 65535.99)
 
 #include <X11/extensions/Xrender.h>
 
@@ -66,8 +66,8 @@ public:
 
   void unshare (); // prepare for write
   void fill (const rxvt_color &c);
-  void brightness (unsigned short r, unsigned short g, unsigned short b, unsigned short a);
-  void contrast (unsigned short r, unsigned short g, unsigned short b, unsigned short a);
+  void brightness (uint16_t r, uint16_t g, uint16_t b, uint16_t a);
+  void contrast (uint16_t r, uint16_t g, uint16_t b, uint16_t a);
 
   void brightness (double r, double g, double b, double a = 1.)
   {

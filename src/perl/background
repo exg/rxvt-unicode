@@ -538,7 +538,7 @@ Adjusts the I<contrast> of an image.
       $a       = 1        if @_ < 5;
 
       $img = $img->clone;
-#      $img->contrast ($r, $g, $b, $a);
+      $img->contrast ($r, $g, $b, $a);
       $img
    }
 

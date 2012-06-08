@@ -333,7 +333,7 @@ create_xrender_mask (Display *dpy, Drawable drawable, Bool argb)
 }
 
 void
-rxvt_img::brightness (unsigned short r, unsigned short g, unsigned short b, unsigned short a)
+rxvt_img::brightness (uint16_t r, uint16_t g, uint16_t b, uint16_t a)
 {
   Display *dpy = s->display->dpy;
   Picture src = create_xrender_mask (dpy, pm, True);
@@ -353,7 +353,7 @@ rxvt_img::brightness (unsigned short r, unsigned short g, unsigned short b, unsi
 }
 
 void
-rxvt_img::contrast (unsigned short r, unsigned short g, unsigned short b, unsigned short a)
+rxvt_img::contrast (uint16_t r, uint16_t g, uint16_t b, uint16_t a)
 {
   if (!(s->display->flags & DISPLAY_HAS_RENDER_MUL))
     return;
