@@ -356,7 +356,10 @@ void
 rxvt_img::contrast (uint16_t r, uint16_t g, uint16_t b, uint16_t a)
 {
   if (!(s->display->flags & DISPLAY_HAS_RENDER_MUL))
-    return;
+    {
+      rxvt_warn ("rxvt_img::contrast operation not supported on this display, RENDER extension too old.\n");
+      return;
+    }
 
   Display *dpy = s->display->dpy;
   Picture src = create_xrender_mask (dpy, pm, True);
