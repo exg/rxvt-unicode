@@ -474,10 +474,8 @@ rxvt_img::transform (int new_width, int new_height, double matrix[9])
     for (int j = 0; j < 3; ++j)
       xfrm.matrix [i][j] = XDoubleToFixed (matrix [i * 3 + j]);
 
-#if 0
   xfrm.matrix [0][2] -= XDoubleToFixed (x);//TODO
   xfrm.matrix [1][2] -= XDoubleToFixed (y);
-#endif
 
   XRenderSetPictureFilter (dpy, src, "good", 0, 0);
   XRenderSetPictureTransform (dpy, src, &xfrm);

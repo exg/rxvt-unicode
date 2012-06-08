@@ -522,11 +522,15 @@ transparency as long as the window isn't in front of other windows.
 
 Adjusts the I<contrast> of an image.
 
+#TODO#
+
 =item brightness $factor, $img
 
 =item brightness $r, $g, $b, $img
 
 =item brightness $r, $g, $b, $a, $img
+
+Adjusts the brightness of an image.
 
 =cut
 
@@ -554,10 +558,32 @@ Adjusts the I<contrast> of an image.
       $img
    }
 
+=item blur $radius, $img
+
+=item blur $radius_horz, $radius_vert, $img
+
+Gaussian-blurs the image with (roughly) C<$radius> pixel radius. The radii
+can also be specified separately.
+
+=cut
+
    sub blur($$;$) {
       my $img = pop;
       $img->blur ($_[0], @_ >= 2 ? $_[1] : $_[0])
    }
+
+=item rotate $new_width, $new_height, $center_x, $center_y, $degrees
+
+Rotates the image by C<$degrees> degrees, counter-clockwise, around the
+pointer at C<$center_x> and C<$center_y> (specified as percentage of image
+width/height), generating a new image with width C<$new_width> and height
+C<$new_height>.
+
+#TODO# new width, height, maybe more operators?
+
+Example: rotate the image by 90 degrees
+
+=cut
 
    sub rotate($$$$$$) {
       my $img = pop;
