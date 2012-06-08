@@ -267,11 +267,10 @@ rxvt_img::blur (int rh, int rv)
   rxvt_img *img = new rxvt_img (s, format, x, y, w, h, repeat);
   img->alloc ();
 
-  Picture src = src_picture ();
-
   XRenderPictureAttributes pa;
   pa.repeat = RepeatPad;
-  Picture dst = XRenderCreatePicture (dpy, img->pm, format, CPRepeat, &pa);
+  Picture src = XRenderCreatePicture (dpy, pm, format, CPRepeat, &pa);
+  Picture dst = XRenderCreatePicture (dpy, img->pm, format, 0, 0);
 
   Pixmap tmp_pm = XCreatePixmap (dpy, pm, w, h, format->depth);
   Picture tmp = XRenderCreatePicture (dpy, tmp_pm , format, CPRepeat, &pa);
