@@ -396,7 +396,6 @@ rxvt_img::contrast (int32_t r, int32_t g, int32_t b, int32_t a)
   unshare ();
 
   Display *dpy = s->display->dpy;
-  Picture src = create_xrender_mask (dpy, pm, True);
   Picture dst = XRenderCreatePicture (dpy, pm, format, 0, 0);
 
   XRenderColor mask_c;
@@ -404,11 +403,8 @@ rxvt_img::contrast (int32_t r, int32_t g, int32_t b, int32_t a)
   mask_c.green = g;
   mask_c.blue  = b;
   mask_c.alpha = a;
-  XRenderFillRectangle (dpy, PictOpSrc, src, &mask_c, 0, 0, 1, 1);
+  XRenderFillRectangle (dpy, PictOpMultiply, dst, &mask_c, 0, 0, w, h);
 
-  XRenderComposite (dpy, PictOpMultiply, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
-
-  XRenderFreePicture (dpy, src);
   XRenderFreePicture (dpy, dst);
 }
 
