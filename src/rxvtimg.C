@@ -318,6 +318,21 @@ rxvt_img::blur (int rh, int rv)
   return img;
 }
 
+static Picture
+create_xrender_mask (Display *dpy, Drawable drawable, Bool argb)
+{
+  Pixmap pixmap = XCreatePixmap (dpy, drawable, 1, 1, argb ? 32 : 8);
+
+  XRenderPictFormat *format = XRenderFindStandardFormat (dpy, argb ? PictStandardARGB32 : PictStandardA8);
+  XRenderPictureAttributes pa;
+  pa.repeat = RepeatNormal;
+  Picture mask = XRenderCreatePicture (dpy, pixmap, format, CPRepeat, &pa);
+
+  XFreePixmap (dpy, pixmap);
+
+  return mask;
+}
+
 static void
 extract (int32_t cl0, int32_t cl1, int32_t &c, unsigned short &xc)
 {
@@ -367,32 +382,60 @@ rxvt_img::brightness (int32_t r, int32_t g, int32_t b, int32_t a)
         }
     }
 
-
   XRenderFreePicture (dpy, dst);
 }
 
 void
 rxvt_img::contrast (int32_t r, int32_t g, int32_t b, int32_t a)
 {
-  if (!(s->display->flags & DISPLAY_HAS_RENDER_MUL))
-    {
-      rxvt_warn ("rxvt_img::contrast operation not supported on this display, RENDER extension too old.\n");
-      return;
-    }
+  if (r < 0 || g < 0 || b < 0 || a < 0)
+    rxvt_fatal ("rxvt_img::contrast does not support negative values.\n");
 
-  unshare ();
+  rxvt_img *img = new rxvt_img (s, format, x, y, w, h, repeat);
+  img->alloc ();
+
+  {
+    rxvt_color empty;
+    empty.set (s, rgba (0, 0, 0, 0));
+    img->fill (empty);
+  }
+
+  // premultiply (yeah, these are not exact, sue me or fix it)
+  r = (r * (a >> 8)) >> 8;
+  g = (g * (a >> 8)) >> 8;
+  b = (b * (a >> 8)) >> 8;
 
   Display *dpy = s->display->dpy;
-  Picture dst = XRenderCreatePicture (dpy, pm, format, 0, 0);
 
-  XRenderColor mask_c;
-  mask_c.red   = r;
-  mask_c.green = g;
-  mask_c.blue  = b;
-  mask_c.alpha = a;
-  XRenderFillRectangle (dpy, PictOpMultiply, dst, &mask_c, 0, 0, w, h);
+  Picture src = src_picture ();
+  Picture dst = XRenderCreatePicture (dpy, img->pm, format, 0, 0);
+  Picture mul = create_xrender_mask (dpy, pm, True);
 
+  XRenderPictureAttributes pa;
+  pa.component_alpha = 1;
+  XRenderChangePicture (dpy, mul, CPComponentAlpha, &pa);
+
+  //TODO: this operator does not yet implement some useful contrast
+  while (r | g | b | a)
+    {
+      unsigned short xr, xg, xb, xa;
+      XRenderColor mask_c;
+
+      if (extract (0, 65535, r, g, b, a, mask_c.red, mask_c.green, mask_c.blue, mask_c.alpha))
+        {
+          XRenderFillRectangle (dpy, PictOpSrc, mul, &mask_c, 0, 0, 1, 1);
+          XRenderComposite (dpy, PictOpAdd, src, mul, dst, 0, 0, 0, 0, 0, 0, w, h);
+        }
+    }
+
+  XRenderFreePicture (dpy, mul);
   XRenderFreePicture (dpy, dst);
+  XRenderFreePicture (dpy, src);
+
+  ::swap (img->ref, ref);
+  ::swap (img->pm , pm );
+
+  delete img;
 }
 
 rxvt_img *
