@@ -316,21 +316,6 @@ rxvt_img::blur (int rh, int rv)
   return img;
 }
 
-static Picture
-create_xrender_mask (Display *dpy, Drawable drawable, Bool argb)
-{
-  Pixmap pixmap = XCreatePixmap (dpy, drawable, 1, 1, argb ? 32 : 8);
-
-  XRenderPictFormat *format = XRenderFindStandardFormat (dpy, argb ? PictStandardARGB32 : PictStandardA8);
-  XRenderPictureAttributes pa;
-  pa.repeat = True;
-  Picture mask = XRenderCreatePicture (dpy, pixmap, format, CPRepeat, &pa);
-
-  XFreePixmap (dpy, pixmap);
-
-  return mask;
-}
-
 static void
 extract (int32_t cl0, int32_t cl1, int32_t &c, unsigned short &xc)
 {
@@ -597,7 +582,13 @@ rxvt_img::blend (rxvt_img *img, double factor)
   Display *dpy = s->display->dpy;
   Picture src = img->src_picture ();
   Picture dst = XRenderCreatePicture (dpy, img2->pm, img2->format, 0, 0);
-  Picture mask = create_xrender_mask (dpy, img->pm, False);
+
+  Pixmap pixmap = XCreatePixmap (dpy, img->pm, 1, 1, 8);
+  XRenderPictFormat *format = XRenderFindStandardFormat (dpy, PictStandardA8);
+  XRenderPictureAttributes pa;
+  pa.repeat = True;
+  Picture mask = XRenderCreatePicture (dpy, pixmap, format, CPRepeat, &pa);
+  XFreePixmap (dpy, pixmap);
 
   XRenderColor mask_c;
 
