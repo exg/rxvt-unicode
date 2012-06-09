@@ -98,6 +98,14 @@ public:
   rxvt_img *rotate (int new_width, int new_height, int x, int y, double phi);
   rxvt_img *convert_format (XRenderPictFormat *format, const rxvt_color &bg);
   rxvt_img *blend (rxvt_img *img, double factor);
+
+  // egregiuous helper category
+  rxvt_img *replace (rxvt_img *&p)
+  {
+    delete p;
+    p = this;
+    return this;
+  }
 };
 
 #endif

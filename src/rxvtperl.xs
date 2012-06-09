@@ -2101,26 +2101,17 @@ rxvt_term::set_background (rxvt_img *img, bool border = false)
             img = img->clone (); // own the img
 
             if (img->repeat != RepeatNormal) // X11 only supports RepeatNormal as bg pixmap
-              {
-                rxvt_img *img2 = img->sub_rect (0, 0,
-                                                border ? THIS->vt_width  : THIS->szHint.width,
-                                                border ? THIS->vt_height : THIS->szHint.height);
-                delete img;
-                img = img2;
-              }
+                img->sub_rect (0, 0,
+                               border ? THIS->vt_width  : THIS->szHint.width,
+                               border ? THIS->vt_height : THIS->szHint.height)
+                   ->replace (img);
 
-            {
-              // just in case, should usually be a nop
-              rxvt_img *img2 = img->reify ();
-              delete img;
-              img = img2;
-            }
+            // just in case, should usually be a nop
+            img->reify ()
+               ->replace (img);
 
-            {
-              rxvt_img *img2 = img->convert_format (XRenderFindVisualFormat (THIS->dpy, THIS->visual), THIS->pix_colors [Color_bg]);
-              delete img;
-              img = img2;
-            }
+            img->convert_format (XRenderFindVisualFormat (THIS->dpy, THIS->visual), THIS->pix_colors [Color_bg])
+               ->replace (img);
 
             THIS->bg_pixmap = img->steal ();
             THIS->bg_flags |= rxvt_term::BG_NEEDS_REFRESH | rxvt_term::BG_INHIBIT_RENDER;
