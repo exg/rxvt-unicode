@@ -331,34 +331,64 @@ create_xrender_mask (Display *dpy, Drawable drawable, Bool argb)
   return mask;
 }
 
-void
-rxvt_img::brightness (uint16_t r, uint16_t g, uint16_t b, uint16_t a)
+static void
+extract (int32_t cl0, int32_t cl1, int32_t &c, unsigned short &xc)
 {
+  int32_t x = clamp (c, cl0, cl1);
+  c -= x;
+  xc = x;
+}
+
+static bool
+extract (int32_t cl0, int32_t cl1, int32_t &r, int32_t &g, int32_t &b, int32_t &a, unsigned short &xr, unsigned short &xg, unsigned short &xb, unsigned short &xa)
+{
+  extract (cl0, cl1, r, xr);
+  extract (cl0, cl1, g, xg);
+  extract (cl0, cl1, b, xb);
+  extract (cl0, cl1, a, xa);
+
+  return xr | xg | xb | xa;
+}
+
+void
+rxvt_img::brightness (int32_t r, int32_t g, int32_t b, int32_t a)
+{
+  unshare ();
+
   Display *dpy = s->display->dpy;
-  Picture src = create_xrender_mask (dpy, pm, True);
   Picture dst = XRenderCreatePicture (dpy, pm, format, 0, 0);
 
-  XRenderColor mask_c;
-  mask_c.red   = r;
-  mask_c.green = g;
-  mask_c.blue  = b;
-  mask_c.alpha = a;
-  XRenderFillRectangle (dpy, PictOpSrc, src, &mask_c, 0, 0, 1, 1);
+  while (r | g | b | a)
+    {
+      unsigned short xr, xg, xb, xa;
+      XRenderColor mask_c;
 
-  XRenderComposite (dpy, PictOpAdd, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
+      if (extract (0, 65535, r, g, b, a, mask_c.red, mask_c.green, mask_c.blue, mask_c.alpha))
+        XRenderFillRectangle (dpy, PictOpAdd, dst, &mask_c, 0, 0, w, h);
 
-  XRenderFreePicture (dpy, src);
+      if (extract (-65535, 0, r, g, b, a, mask_c.red, mask_c.green, mask_c.blue, mask_c.alpha))
+        {
+          XRenderColor mask_w = { 65535, 65535, 65535, 65535 };
+          XRenderFillRectangle (dpy, PictOpDifference, dst, &mask_w, 0, 0, w, h);
+          XRenderFillRectangle (dpy, PictOpAdd, dst, &mask_c, 0, 0, w, h);
+          XRenderFillRectangle (dpy, PictOpDifference, dst, &mask_w, 0, 0, w, h);
+        }
+    }
+
+
   XRenderFreePicture (dpy, dst);
 }
 
 void
-rxvt_img::contrast (uint16_t r, uint16_t g, uint16_t b, uint16_t a)
+rxvt_img::contrast (int32_t r, int32_t g, int32_t b, int32_t a)
 {
   if (!(s->display->flags & DISPLAY_HAS_RENDER_MUL))
     {
       rxvt_warn ("rxvt_img::contrast operation not supported on this display, RENDER extension too old.\n");
       return;
     }
+
+  unshare ();
 
   Display *dpy = s->display->dpy;
   Picture src = create_xrender_mask (dpy, pm, True);

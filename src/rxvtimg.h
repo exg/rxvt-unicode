@@ -7,7 +7,7 @@
 
 #if HAVE_IMG
 
-#define float_to_component(d) (uint16_t)((d) * 65535.99)
+#define float_to_component(d) (int32_t)((d) * 65535.99)
 
 #include <X11/extensions/Xrender.h>
 
@@ -69,8 +69,8 @@ public:
   //void linear_gradient  (const XLinearGradient  *gradient, const XFixed *stops, const XRenderColor *colors, int nstops);
   //void radial_gradient  (const XRadialGradient  *gradient, const XFixed *stops, const XRenderColor *colors, int nstops);
   //void conical_gradient (const XConicalGradient *gradient, const XFixed *stops, const XRenderColor *colors, int nstops);
-  void brightness (uint16_t r, uint16_t g, uint16_t b, uint16_t a);
-  void contrast (uint16_t r, uint16_t g, uint16_t b, uint16_t a);
+  void brightness (int32_t r, int32_t g, int32_t b, int32_t a);
+  void contrast (int32_t r, int32_t g, int32_t b, int32_t a);
 
   void brightness (double r, double g, double b, double a = 1.)
   {
