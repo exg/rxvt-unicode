@@ -51,6 +51,7 @@ rxvt_img::new_from_root (rxvt_screen *s)
   return img;
 }
 
+# if HAVE_PIXBUF
 rxvt_img *
 rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
 {
@@ -168,6 +169,7 @@ rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
 
   return img;
 }
+# endif
 
 void
 rxvt_img::destroy ()

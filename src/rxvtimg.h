@@ -1,7 +1,7 @@
 #ifndef IMG_H
 #define IMG_H
 
-#if HAVE_BG_PIXMAP && BG_IMAGE_FROM_FILE && ENABLE_TRANSPARENCY && HAVE_PIXBUF
+#if HAVE_BG_PIXMAP
   #define HAVE_IMG 1
 #endif
 
@@ -40,8 +40,10 @@ public:
   rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int x, int y, int width, int height, int repeat = RepeatNormal);
   rxvt_img (const rxvt_img &img);
 
+# if HAVE_PIXBUF
   static rxvt_img *new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb); // from pixbuf
   static rxvt_img *new_from_file (rxvt_screen *s, const char *filename); // via pixbuf
+# endif
   static rxvt_img *new_from_root (rxvt_screen *s); // get root pixmap
 
   ~rxvt_img ();

@@ -56,7 +56,9 @@ typedef char *		utf8_string;
 
 typedef int		render_repeat_mode;
 
+#if HAVE_PIXBUF
 typedef GdkPixbuf *	urxvt__pixbuf;
+#endif
 typedef rxvt_img *	urxvt__img;
 
 /////////////////////////////////////////////////////////////////////////////
