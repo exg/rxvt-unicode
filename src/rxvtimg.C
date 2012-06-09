@@ -358,6 +358,8 @@ rxvt_img::brightness (int32_t r, int32_t g, int32_t b, int32_t a)
   Display *dpy = s->display->dpy;
   Picture dst = XRenderCreatePicture (dpy, pm, format, 0, 0);
 
+  // loop should not be needed for brightness, as only -1..1 makes sense
+
   while (r | g | b | a)
     {
       unsigned short xr, xg, xb, xa;
