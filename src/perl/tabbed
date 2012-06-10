@@ -5,6 +5,35 @@
 #:META:X_RESOURCE:tab-fg:colour:tab foreground colour
 #:META:X_RESOURCE:tab-bg:colour:tab background colour
 
+=head1 NAME
+
+   tabbed - tabbed interface to urxvt
+
+=head1 DESCRIPTION
+
+This transforms the terminal into a tabbar with additional terminals, that
+is, it implements what is commonly referred to as "tabbed terminal". The topmost line
+displays a "[NEW]" button, which, when clicked, will add a new tab, followed by one
+button per tab.
+
+Clicking a button will activate that tab. Pressing B<Shift-Left> and
+B<Shift-Right> will switch to the tab left or right of the current one,
+while B<Shift-Down> creates a new tab.
+
+The tabbar itself can be configured similarly to a normal terminal, but
+with a resource class of C<URxvt.tabbed>. In addition, it supports the
+following four resources (shown with defaults):
+
+   URxvt.tabbed.tabbar-fg: <colour-index, default 3>
+   URxvt.tabbed.tabbar-bg: <colour-index, default 0>
+   URxvt.tabbed.tab-fg:    <colour-index, default 0>
+   URxvt.tabbed.tab-bg:    <colour-index, default 1>
+
+See I<COLOR AND GRAPHICS> in the @@RXVT_NAME@@(1) manpage for valid
+indices.
+
+=cut
+
 sub refresh {
    my ($self) = @_;
 

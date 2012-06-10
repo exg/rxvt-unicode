@@ -3,6 +3,46 @@
 #:META:X_RESOURCE:%.cmd:string:the command to run create a new pastebin
 #:META:X_RESOURCE:%.url:string:the url template for new pastebins
 
+=head1 NAME
+
+   selection-pastebin - automatic pastebin upload
+
+=head1 DESCRPTION
+
+This is a little rarely useful extension that uploads the selection as
+textfile to a remote site (or does other things). (The implementation is
+not currently secure for use in a multiuser environment as it writes to
+F</tmp> directly.).
+
+It listens to the C<selection-pastebin:remote-pastebin> keyboard command,
+i.e.
+
+   URxvt.keysym.C-M-e: perl:selection-pastebin:remote-pastebin
+
+Pressing this combination runs a command with C<%> replaced by the name of
+the textfile. This command can be set via a resource:
+
+   URxvt.selection-pastebin.cmd: rsync -apP % ruth:/var/www/www.ta-sa.org/files/txt/.
+
+And the default is likely not useful to anybody but the few people around
+here :)
+
+The name of the textfile is the hex encoded md5 sum of the selection, so
+the same content should lead to the same filename.
+
+After a successful upload the selection will be replaced by the text given
+in the C<selection-pastebin-url> resource (again, the % is the placeholder
+for the filename):
+
+   URxvt.selection-pastebin.url: http://www.ta-sa.org/files/txt/%
+
+I<Note to xrdb users:> xrdb uses the C preprocessor, which might interpret
+the double C</> characters as comment start. Use C<\057\057> instead,
+which works regardless of whether xrdb is used to parse the resource file
+or not.
+
+=cut
+
 sub upload_paste {
    my ($self) = @_;
 

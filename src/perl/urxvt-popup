@@ -1,7 +1,7 @@
 #! perl
 
 # this extension implements popup-menu functionality for urxvt. it works
-# together with the urxvt::popup class.
+# together with the urxvt::popup class - "no user servicable parts inside".
 
 sub refresh {
    my ($self) = @_;

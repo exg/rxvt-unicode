@@ -4,8 +4,6 @@
 #:META:X_RESOURCE:%.border:boolean:respect the terminal border
 #:META:X_RESOURCE:%.interval:seconds:minimum time between updates
 
-#TODO: once, rootalign
-
 =head1 NAME
 
    background - manage terminal background

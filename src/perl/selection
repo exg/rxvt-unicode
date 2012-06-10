@@ -2,6 +2,59 @@
 
 #:META:X_RESOURCE:%.pattern-0:string:first selection pattern
 
+=head1 NAME
+
+   selection - more intelligent selection (enabled by default)
+
+=head1 DESCRIPTION
+
+This extension tries to be more intelligent when the user extends
+selections (double-click and further clicks). Right now, it tries to
+select words, urls and complete shell-quoted arguments, which is very
+convenient, too, if your F<ls> supports C<--quoting-style=shell>.
+
+A double-click usually selects the word under the cursor, further clicks
+will enlarge the selection.
+
+The selection works by trying to match a number of regexes and displaying
+them in increasing order of length. You can add your own regexes by
+specifying resources of the form:
+
+   URxvt.selection.pattern-0: perl-regex
+   URxvt.selection.pattern-1: perl-regex
+   ...
+
+The index number (0, 1...) must not have any holes, and each regex must
+contain at least one pair of capturing parentheses, which will be used for
+the match. For example, the following adds a regex that matches everything
+between two vertical bars:
+
+   URxvt.selection.pattern-0: \\|([^|]+)\\|
+
+Another example: Programs I use often output "absolute path: " at the
+beginning of a line when they process multiple files. The following
+pattern matches the filename (note, there is a single space at the very
+end):
+
+   URxvt.selection.pattern-0: ^(/[^:]+):\ 
+
+You can look at the source of the selection extension to see more
+interesting uses, such as parsing a line from beginning to end.
+
+This extension also offers following bindable keyboard commands:
+
+=over 4
+
+=item rot13
+
+Rot-13 the selection when activated. Used via keyboard trigger:
+
+   URxvt.keysym.C-M-r: perl:selection:rot13
+
+=back
+
+=cut
+
 sub on_user_command {
    my ($self, $cmd) = @_;
 

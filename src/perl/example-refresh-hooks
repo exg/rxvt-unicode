@@ -1,6 +1,16 @@
 #! perl
 
-# this creates a simple digital clock by overwriting the refresh hooks
+=head1 NAME
+
+   example-refresh-hooks - example of how to use refresh hooks
+
+=head1 DESCRPTION
+
+Displays a very simple digital clock in the upper right corner of the
+window. Illustrates overwriting the refresh callbacks to create your own
+overlays or changes.
+
+=cut
 
 sub on_init {
    my ($self) = @_;

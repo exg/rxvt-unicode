@@ -3,6 +3,32 @@
 #:META:X_RESOURCE:%.store:string:the command used to store the selection
 #:META:X_RESOURCE:%.fetch:string:the command used to fetch the selection
 
+=head1 NAME
+
+   remote-clipboard - manage a shared and possibly rmeote clipboard
+
+=head1 DESCRPTION
+
+Somewhat of a misnomer, this extension adds two menu entries to the
+selection popup that allows one to run external commands to store the
+selection somewhere and fetch it again.
+
+We use it to implement a "distributed selection mechanism", which just
+means that one command uploads the file to a remote server, and another
+reads it.
+
+The commands can be set using the C<URxvt.remote-selection.store> and
+C<URxvt.remote-selection.fetch> resources. The first should read the
+selection to store from STDIN (always in UTF-8), the second should provide
+the selection data on STDOUT (also in UTF-8).
+
+The defaults (which are likely useless to you) use rsh and cat:
+
+   URxvt.remote-selection.store: rsh ruth 'cat >/tmp/distributed-selection'
+   URxvt.remote-selection.fetch: rsh ruth 'cat /tmp/distributed-selection'
+
+=cut
+
 use Fcntl ();
 
 sub msg {

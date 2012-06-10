@@ -18,6 +18,20 @@
 
 #:META:X_RESOURCE:%:string:the shell snippet to execute
 
+=head1 NAME
+
+   bell-command - execute a command when the bell rings
+
+=head1 DESCRPTION
+
+Runs the command specified by the C<URxvt.bell-command> resource when
+a bell event occurs. For example, the following pops up a notification
+bubble with the text "Beep, Beep" using notify-send:
+
+   URxvt.bell-command: notify-send "Beep, Beep"
+
+=cut
+
 sub on_start {
    my ($self) = @_;
 

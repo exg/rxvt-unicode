@@ -1,5 +1,33 @@
 #! perl
 
+=head1 NAME
+
+   option-popup - option menu (enabled by default)
+
+=head1 DESCRIPTION
+
+Binds a popup menu to Ctrl-Button2 that lets you toggle (some) options at
+runtime.
+
+Other extensions can extend this popup menu by pushing a code reference
+onto C<@{ $term->{option_popup_hook} }>, which gets called whenever the
+popup is being displayed.
+
+Its sole argument is the popup menu, which can be modified.  It should
+either return nothing or a string, the initial boolean value and a code
+reference. The string will be used as button text and the code reference
+will be called when the toggle changes, with the new boolean value as
+first argument.
+
+The following will add an entry C<myoption> that changes
+C<< $self->{myoption} >>:
+
+   push @{ $self->{term}{option_popup_hook} }, sub {
+      ("my option" => $myoption, sub { $self->{myoption} = $_[0] })
+   };
+
+=cut
+
 sub on_start {
    my ($self) = @_;
 

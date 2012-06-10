@@ -1,5 +1,17 @@
 #! perl
 
+=head1 NAME
+
+   overlay-osc - implement OSC to manage overlays
+
+=head1 DESCRPTION
+
+This extension implements some OSC commands to display timed popups on the
+screen - useful for status displays from within scripts. You have to read
+the sources for more info.
+
+=cut
+
 # allows programs to open popups
 # printf "\033]777;overlay;action;args\007"
 #

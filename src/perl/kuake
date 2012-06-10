@@ -1,5 +1,30 @@
 #! perl
 
+=head1 NAME
+
+  kuake<hotkey> - kuake-like hotkey terminal
+
+=head1 DESCRIPTION
+
+A very primitive quake-console-like extension. It was inspired by a
+description of how the programs C<kuake> and C<yakuake> work: Whenever the
+user presses a global accelerator key (by default C<F10>), the terminal
+will show or hide itself. Another press of the accelerator key will hide
+or show it again.
+
+Initially, the window will not be shown when using this extension.
+
+This is useful if you need a single terminal that is not using any desktop
+space most of the time but is quickly available at the press of a key.
+
+The accelerator key is grabbed regardless of any modifiers, so this
+extension will actually grab a physical key just for this function.
+
+If you want a quake-like animation, tell your window manager to do so
+(fvwm can do it).
+
+=cut
+
 sub on_start {
    my ($self) = @_;
 

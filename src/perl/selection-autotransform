@@ -2,6 +2,47 @@
 
 #:META:X_RESOURCE:%.:string:autotransform expression
 
+=head1 NAME
+
+   selection-autotransform - automatically transform select text
+
+=head1 DESCRPIPTION
+
+This selection allows you to do automatic transforms on a selection
+whenever a selection is made.
+
+It works by specifying perl snippets (most useful is a single C<s///>
+operator) that modify C<$_> as resources:
+
+   URxvt.selection-autotransform.0: transform
+   URxvt.selection-autotransform.1: transform
+   ...
+
+For example, the following will transform selections of the form
+C<filename:number>, often seen in compiler messages, into C<vi +$filename
+$word>:
+
+   URxvt.selection-autotransform.0: s/^([^:[:space:]]+):(\\d+):?$/vi +$2 \\Q$1\\E\\x0d/
+
+And this example matches the same,but replaces it with vi-commands you can
+paste directly into your (vi :) editor:
+
+   URxvt.selection-autotransform.0: s/^([^:[:space:]]+(\\d+):?$/:e \\Q$1\\E\\x0d:$2\\x0d/
+
+Of course, this can be modified to suit your needs and your editor :)
+
+To expand the example above to typical perl error messages ("XXX at
+FILENAME line YYY."), you need a slightly more elaborate solution:
+
+   URxvt.selection.pattern-0: ( at .*? line \\d+[,.])
+   URxvt.selection-autotransform.0: s/^ at (.*?) line (\\d+)[,.]$/:e \\Q$1\E\\x0d:$2\\x0d/
+
+The first line tells the selection code to treat the unchanging part of
+every error message as a selection pattern, and the second line transforms
+the message into vi commands to load the file.
+
+=cut
+
 sub msg {
    my ($self, $msg) = @_;
 

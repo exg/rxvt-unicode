@@ -1,5 +1,17 @@
 #! perl
 
+=head1 NAME
+
+   block-graphics-to-ascii - map block graphics to ascii characters
+
+=head1 DESCRPTION
+
+A not very useful example of filtering all text output to the terminal
+by replacing all line-drawing characters (U+2500 .. U+259F) by a
+similar-looking ascii character.
+
+=cut
+
 # simple example that uses the add_lines hook to filter unicode and vt100 line/box graphics
 
 #                  ─━│┃┄┅┆┇┈┉┊┋┌┍┎┏┐┑┒┓└┕┖┗┘┙┚┛├┝┞┟┠┡┢┣┤┥┦┧┨┩┪┫┬┭┮┯┰┱┲┳┴┵┶┷┸┹┺┻┼┽┾┿╀╁╂╃╄╅╆╇╈╉╊╋╌╍╎╏

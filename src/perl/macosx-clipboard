@@ -23,11 +23,25 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 # ----------------------------------------------------------------------
 
-# Usage:
+=head1 NAME
 
-# URxvt.perl-ext-common: macosx-clipboard
-# URxvt.keysym.M-c: perl:macosx-clipboard:copy
-# URxvt.keysym.M-v: perl:macosx-clipboard:paste
+   macosx-clipboard and macosx-clipboard-native
+
+=head1 DESCRPTION
+
+These two modules implement an extended clipboard for Mac OS X. They are
+used like this:
+
+   URxvt.perl-ext-common: default,macosx-clipboard
+   URxvt.keysym.M-c: perl:macosx-clipboard:copy
+   URxvt.keysym.M-v: perl:macosx-clipboard:paste
+
+The difference between them is that the native variant requires a
+perl from apple's devkit or so, and C<macosx-clipboard> requires the
+C<Mac::Pasteboard> module, works with other perls, has fewer bugs, is
+simpler etc. etc.
+
+=cut
 
 use Mac::Pasteboard;
 

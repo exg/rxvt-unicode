@@ -1,5 +1,22 @@
 #! perl
 
+=head1 NAME
+
+   xim-onthespot - implement XIM "on-the-spot" behaviour
+
+=head1 DESCRIPTION
+
+This perl extension implements OnTheSpot editing. It does not work
+perfectly, and some input methods don't seem to work well with OnTheSpot
+editing in general, but it seems to work at least for SCIM and kinput2.
+
+You enable it by specifying this extension and a preedit style of
+C<OnTheSpot>, i.e.:
+
+   urxvt -pt OnTheSpot -pe xim-onthespot
+
+=cut
+
 #
 # problems with this implementation include
 #

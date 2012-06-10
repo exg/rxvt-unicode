@@ -1,6 +1,14 @@
 #! perl
 
-# this creates a simple digital clock
+=head1 NAME
+
+   digital-clock - display a digital clock overlay
+
+=head1 DESCRPTION
+
+Displays a digital clock using the built-in overlay.
+
+=cut
 
 sub on_start {
    my ($self) = @_;

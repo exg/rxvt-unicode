@@ -1,5 +1,16 @@
 #! perl
 
+=head1 NAME
+
+   confirm-paste - ask for confirmation before pasting multiline text
+
+=head1 DESCRPTION
+
+Displays a confirmation dialog when a paste containing at least a full
+line is detected.
+
+=cut
+
 sub msg {
    my ($self, $msg) = @_;
 

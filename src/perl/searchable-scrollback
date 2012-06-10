@@ -4,6 +4,33 @@
 
 #:META:X_RESOURCE:%:string:activation hotkey keysym
 
+=head1 NAME
+
+   searchable-scrollback<hotkey> - incremental scrollback search (enabled by default)
+
+=head1 DESCRIPTION
+
+Adds regex search functionality to the scrollback buffer, triggered
+by a hotkey (default: C<M-s>). While in search mode, normal terminal
+input/output is suspended and a regex is displayed at the bottom of the
+screen.
+
+Inputting characters appends them to the regex and continues incremental
+search. C<BackSpace> removes a character from the regex, C<Up> and C<Down>
+search upwards/downwards in the scrollback buffer, C<End> jumps to the
+bottom. C<Escape> leaves search mode and returns to the point where search
+was started, while C<Enter> or C<Return> stay at the current position and
+additionally stores the first match in the current line into the primary
+selection if the C<Shift> modifier is active.
+
+The regex defaults to "(?i)", resulting in a case-insensitive search. To
+get a case-sensitive search you can delete this prefix using C<BackSpace>
+or simply use an uppercase character which removes the "(?i)" prefix.
+
+See L<perlre> for more info about perl regular expression syntax.
+
+=cut
+
 sub on_init {
    my ($self) = @_;
 
