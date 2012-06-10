@@ -22,7 +22,7 @@
 
    bell-command - execute a command when the bell rings
 
-=head1 DESCRPTION
+=head1 DESCRIPTION
 
 Runs the command specified by the C<URxvt.bell-command> resource when
 a bell event occurs. For example, the following pops up a notification

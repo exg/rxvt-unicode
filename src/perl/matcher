@@ -13,7 +13,7 @@
 
   matcher - match strings in terminal output and change their rendition
 
-=head1 DESCRPTION
+=head1 DESCRIPTION
 
 Uses per-line display filtering (C<on_line_update>) to underline text
 matching a certain pattern and make it clickable. When clicked with the

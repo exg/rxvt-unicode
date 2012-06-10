@@ -4,7 +4,7 @@
 
    example-refresh-hooks - example of how to use refresh hooks
 
-=head1 DESCRPTION
+=head1 DESCRIPTION
 
 Displays a very simple digital clock in the upper right corner of the
 window. Illustrates overwriting the refresh callbacks to create your own

@@ -4,7 +4,7 @@
 
    block-graphics-to-ascii - map block graphics to ascii characters
 
-=head1 DESCRPTION
+=head1 DESCRIPTION
 
 A not very useful example of filtering all text output to the terminal
 by replacing all line-drawing characters (U+2500 .. U+259F) by a

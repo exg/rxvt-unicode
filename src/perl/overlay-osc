@@ -4,7 +4,7 @@
 
    overlay-osc - implement OSC to manage overlays
 
-=head1 DESCRPTION
+=head1 DESCRIPTION
 
 This extension implements some OSC commands to display timed popups on the
 screen - useful for status displays from within scripts. You have to read

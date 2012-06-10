@@ -7,7 +7,7 @@
 
    selection-pastebin - automatic pastebin upload
 
-=head1 DESCRPTION
+=head1 DESCRIPTION
 
 This is a little rarely useful extension that uploads the selection as
 textfile to a remote site (or does other things). (The implementation is

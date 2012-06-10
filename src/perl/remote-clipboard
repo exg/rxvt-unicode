@@ -7,7 +7,7 @@
 
    remote-clipboard - manage a shared and possibly rmeote clipboard
 
-=head1 DESCRPTION
+=head1 DESCRIPTION
 
 Somewhat of a misnomer, this extension adds two menu entries to the
 selection popup that allows one to run external commands to store the

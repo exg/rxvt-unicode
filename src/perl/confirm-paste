@@ -4,7 +4,7 @@
 
    confirm-paste - ask for confirmation before pasting multiline text
 
-=head1 DESCRPTION
+=head1 DESCRIPTION
 
 Displays a confirmation dialog when a paste containing at least a full
 line is detected.

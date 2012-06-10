@@ -27,7 +27,7 @@
 
    macosx-clipboard and macosx-clipboard-native
 
-=head1 DESCRPTION
+=head1 DESCRIPTION
 
 These two modules implement an extended clipboard for Mac OS X. They are
 used like this:
