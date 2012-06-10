@@ -265,91 +265,15 @@ useful for solid backgrounds or for use in filtering effects.
       $img
    }
 
-=back
+=item clone $img
 
-=head2 VARIABLES
-
-The following functions provide variable data such as the terminal window
-dimensions. They are not (Perl-) variables, they jsut return stuff that
-varies. Most of them make your expression sensitive to some events, for
-example using C<TW> (terminal width) means your expression is evaluated
-again when the terminal is resized.
-
-=over 4
-
-=item TX
-
-=item TY
-
-Return the X and Y coordinates of the terminal window (the terminal
-window is the full window by default, and the character area only when in
-border-respect mode).
-
-Using these functions make your expression sensitive to window moves.
-
-These functions are mainly useful to align images to the root window.
-
-Example: load an image and align it so it looks as if anchored to the
-background.
-
-   move -TX, -TY, load "mybg.png"
-
-=item TW
-
-Return the width (C<TW>) and height (C<TH>) of the terminal window (the
-terminal window is the full window by default, and the character area only
-when in border-respect mode).
-
-Using these functions make your expression sensitive to window resizes.
-
-These functions are mainly useful to scale images, or to clip images to
-the window size to conserve memory.
-
-Example: take the screen background, clip it to the window size, blur it a
-bit, align it to the window position and use it as background.
-
-   clip move -TX, -TY, blur 5, root
+Returns an exact copy of the image. This is useful if you want to have
+multiple copies of the same image to apply different effects to.
 
 =cut
 
-   sub TX() { $new->{position_sensitive} = 1; $x }
-   sub TY() { $new->{position_sensitive} = 1; $y }
-   sub TW() { $new->{size_sensitive}     = 1; $w }
-   sub TH() { $new->{size_sensitive}     = 1; $h }
-
-=item now
-
-Returns the current time as (fractional) seconds since the epoch.
-
-Using this expression does I<not> make your expression sensitive to time,
-but the next two functions do.
-
-=item again $seconds
-
-When this function is used the expression will be reevaluated again in
-C<$seconds> seconds.
-
-Example: load some image and rotate it according to the time of day (as if it were
-the hour pointer of a clock). Update this image every minute.
-
-   again 60; rotate TW, TH, 50, 50, (now % 86400) * -720 / 86400, scale load "myclock.png"
-
-=item counter $seconds
-
-Like C<again>, but also returns an increasing counter value, starting at
-0, which might be useful for some simple animation effects.
-
-=cut
-
-   sub now() { urxvt::NOW }
-
-   sub again($) {
-      $new->{again} = $_[0];
-   }
-
-   sub counter($) {
-      $new->{again} = $_[0];
-      $self->{counter} + 0
+   sub clone($) {
+      $_[0]->clone
    }
 
 =back
@@ -436,21 +360,98 @@ Example: just for curiosity, how does this pixel extension stuff work?
 
 =back
 
-=head2 PIXEL OPERATORS
+=head2 VARIABLE VALUES
 
-The following operators modify the image pixels in various ways.
+The following functions provide variable data such as the terminal window
+dimensions. They are not (Perl-) variables, they just return stuff that
+varies. Most of them make your expression sensitive to some events, for
+example using C<TW> (terminal width) means your expression is evaluated
+again when the terminal is resized.
 
 =over 4
 
-=item clone $img
+=item TX
 
-Returns an exact copy of the image.
+=item TY
+
+Return the X and Y coordinates of the terminal window (the terminal
+window is the full window by default, and the character area only when in
+border-respect mode).
+
+Using these functions make your expression sensitive to window moves.
+
+These functions are mainly useful to align images to the root window.
+
+Example: load an image and align it so it looks as if anchored to the
+background.
+
+   move -TX, -TY, load "mybg.png"
+
+=item TW
+
+Return the width (C<TW>) and height (C<TH>) of the terminal window (the
+terminal window is the full window by default, and the character area only
+when in border-respect mode).
+
+Using these functions make your expression sensitive to window resizes.
+
+These functions are mainly useful to scale images, or to clip images to
+the window size to conserve memory.
+
+Example: take the screen background, clip it to the window size, blur it a
+bit, align it to the window position and use it as background.
+
+   clip move -TX, -TY, blur 5, root
 
 =cut
 
-   sub clone($) {
-      $_[0]->clone
+   sub TX() { $new->{position_sensitive} = 1; $x }
+   sub TY() { $new->{position_sensitive} = 1; $y }
+   sub TW() { $new->{size_sensitive}     = 1; $w }
+   sub TH() { $new->{size_sensitive}     = 1; $h }
+
+=item now
+
+Returns the current time as (fractional) seconds since the epoch.
+
+Using this expression does I<not> make your expression sensitive to time,
+but the next two functions do.
+
+=item again $seconds
+
+When this function is used the expression will be reevaluated again in
+C<$seconds> seconds.
+
+Example: load some image and rotate it according to the time of day (as if it were
+the hour pointer of a clock). Update this image every minute.
+
+   again 60; rotate TW, TH, 50, 50, (now % 86400) * -720 / 86400, scale load "myclock.png"
+
+=item counter $seconds
+
+Like C<again>, but also returns an increasing counter value, starting at
+0, which might be useful for some simple animation effects.
+
+=cut
+
+   sub now() { urxvt::NOW }
+
+   sub again($) {
+      $new->{again} = $_[0];
    }
+
+   sub counter($) {
+      $new->{again} = $_[0];
+      $self->{counter} + 0
+   }
+
+=back
+
+=head2 SHAPE CHANGING OPERATORS
+
+The following operators modify the shape, size or position of the image.
+
+=over 4
 
 =item clip $img
 
@@ -598,6 +599,14 @@ transparency as long as the window isn't in front of other windows.
       move -TX, -TY, $_[0]
    }
 
+=back
+
+=head2 COLOUR MODIFICATIONS
+
+The following operators change the pixels of the image.
+
+=over 4
+
 =item contrast $factor, $img
 
 =item contrast $r, $g, $b, $img
@@ -606,15 +615,35 @@ transparency as long as the window isn't in front of other windows.
 
 Adjusts the I<contrast> of an image.
 
-#TODO#
+The first form applies a single C<$factor> to red, green and blue, the
+second form applies separate factors to each colour channel, and the last
+form includes the alpha channel.
 
-=item brightness $factor, $img
+Values from 0 to 1 lower the contrast, values higher than 1 increase the
+contrast.
+
+Due to limitations in the underlying XRender extension, lowering contrast
+also reduces brightness, while increasing contrast currently also
+increases brightness.
+
+=item brightness $bias, $img
 
 =item brightness $r, $g, $b, $img
 
 =item brightness $r, $g, $b, $a, $img
 
 Adjusts the brightness of an image.
+
+The first form applies a single C<$bias> to red, green and blue, the
+second form applies separate biases to each colour channel, and the last
+form includes the alpha channel.
+
+Values less than 0 reduce brightness, while values larger than 0 increase
+it. Useful range is from -1 to 1 - the former results in a black, the
+latter in a white picture.
+
+Due to idiosynchrasies in the underlying XRender extension, biases less
+than zero can be I<very> slow.
 
 =cut
 
