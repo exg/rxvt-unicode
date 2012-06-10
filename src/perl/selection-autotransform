@@ -6,7 +6,7 @@
 
    selection-autotransform - automatically transform select text
 
-=head1 DESCRPIPTION
+=head1 DESCRIPTION
 
 This selection allows you to do automatic transforms on a selection
 whenever a selection is made.
