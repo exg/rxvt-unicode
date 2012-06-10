@@ -554,6 +554,14 @@ Example: move the image right by 20 pixels and down by 30.
 
    move 20, 30, ...
 
+=item center $img
+
+=item center $width, $height, $img
+
+Centers the image, i.e. the center of the image is moved to the center of
+the terminal window (or the box specified by C<$width> and C<$height> if
+given).
+
 =item rootalign $img
 
 Moves the image so that it appears glued to the screen as opposed to the
@@ -576,6 +584,14 @@ transparency as long as the window isn't in front of other windows.
       my $img = pop->clone;
       $img->move ($_[0], $_[1]);
       $img
+   }
+
+   sub center($;$$) {
+      my $img = pop;
+      my $w = $_[0] || TW;
+      my $h = $_[0] || TH;
+
+      move 0.5 * ($w - $img->w), 0.5 * ($h - $img->h), $img
    }
 
    sub rootalign($) {
