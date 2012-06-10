@@ -34,7 +34,7 @@ and "perl-ext-common" resources to the empty string.
 =head1 PREPACKAGED EXTENSIONS
 
 A number of extensions are delivered with this release. You can find them
-in F<@@RXVT_LIBDIR@@/urxvt/perl/>, and the documentation can be vewiwed
+in F<@@RXVT_LIBDIR@@/urxvt/perl/>, and the documentation can be viewed
 using F<< man urxvt-<EXTENSIONNAME> >>.
 
 You can activate them like this:
@@ -46,7 +46,7 @@ Or by adding them to the resource for extensions loaded by default:
   URxvt.perl-ext-common: default,selection-autotransform
 
 Extensions that add command line parameters or resources on their own are
-laoded automatically when used.
+loaded automatically when used.
 
 =head1 API DOCUMENTATION
 
@@ -1123,7 +1123,7 @@ Here is a likely non-exhaustive list of resource names, not all of which
 are supported in every build, please see the source file F</src/rsinc.h>
 to see the actual list:
 
-  answerbackstring backgroundPixmap backspace_key blendtype blurradius
+  answerbackstring backgroundPixmap backspace_key blurradius
   boldFont boldItalicFont borderLess buffered chdir color cursorBlink
   cursorUnderline cutchars delete_key depth display_name embed ext_bwidth
   fade font geometry hold iconName iconfile imFont imLocale inputMethod
@@ -1158,7 +1158,7 @@ to call this method to access their values.
 
 If the method is called on an extension object (basically, from an
 extension), then the special prefix C<%.> will be replaced by the name of
-the extension and a dot, and the lone string C<%> will be replcaed by the
+the extension and a dot, and the lone string C<%> will be replaced by the
 extension name itself. This makes it possible to code extensions so you
 can rename them and get a new set of commandline switches and resources
 without having to change the actual code.
