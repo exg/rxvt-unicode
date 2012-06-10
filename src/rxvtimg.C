@@ -65,7 +65,6 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
 
   // since we require rgb24/argb32 formats from xrender we assume
   // that both 24 and 32 bpp MUST be supported by any screen that supports xrender
-  int depth = gdk_pixbuf_get_has_alpha (pb) ? 32 : 24;
 
   int byte_order = ecb_big_endian () ? MSBFirst : LSBFirst;
 
@@ -79,7 +78,7 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
   xi.bitmap_unit      = 0;         //XY only, unused
   xi.bitmap_bit_order = 0;         //XY only, unused
   xi.bitmap_pad       = BitmapPad (dpy);
-  xi.depth            = depth;
+  xi.depth            = 32;
   xi.bytes_per_line   = 0;
   xi.bits_per_pixel   = 32;         //Z only
   xi.red_mask         = 0x00000000; //Z only, unused
@@ -98,9 +97,9 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
   xi.data = (char *)rxvt_malloc (height * xi.bytes_per_line);
 
   int rowstride = gdk_pixbuf_get_rowstride (pb);
-
-  assert (3 + (depth == 32) == gdk_pixbuf_get_n_channels (pb));
+  bool pb_has_alpha = gdk_pixbuf_get_has_alpha (pb);
   unsigned char *row = gdk_pixbuf_get_pixels (pb);
+
   char *line = xi.data;
 
   for (int y = 0; y < height; y++)
@@ -108,14 +107,14 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
       unsigned char *src = row;
       uint32_t      *dst = (uint32_t *)line;
 
-      if (depth == 24)
+      if (!pb_has_alpha)
         for (int x = 0; x < width; x++)
           {
             uint8_t r = *src++;
             uint8_t g = *src++;
             uint8_t b = *src++;
 
-            uint32_t v = (r << 16) | (g << 8) | b;
+            uint32_t v = (255 << 24) | (r << 16) | (g << 8) | b;
             
             if (ecb_big_endian () ? !byte_order_mismatch : byte_order_mismatch)
               v = ecb_bswap32 (v);
@@ -142,7 +141,7 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
       line += xi.bytes_per_line;
     }
 
-  rxvt_img *img = new rxvt_img (s, XRenderFindStandardFormat (dpy, depth == 24 ? PictStandardRGB24 : PictStandardARGB32), 0, 0, width, height);
+  rxvt_img *img = new rxvt_img (s, XRenderFindStandardFormat (dpy, PictStandardARGB32), 0, 0, width, height);
   img->alloc ();
 
   GC gc = XCreateGC (dpy, img->pm, 0, 0);

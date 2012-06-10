@@ -66,7 +66,7 @@ typedef rxvt_img *	urxvt__img;
 static void
 parse_color (rxvt_screen *s, rxvt_color &c, SV *sv)
 {
-  //TODO: support component stuff
+  //TODO: support component stuff, 0..1
   c.set (s, SvPVbyte_nolen (sv));
 }
 
@@ -2046,19 +2046,16 @@ rxvt_term::background_geometry (bool border = false)
 
 #if HAVE_IMG
 
-#if 0
-
 rxvt_img *
-rxvt_term::new_img (SV *format, int width, int height)
+rxvt_term::new_img (SV *format, int width = 1, int height = 1)
 	CODE:
         XRenderPictFormat *f = SvOK (format)
                              ? XRenderFindStandardFormat (THIS->dpy, SvIV (format))
                              : XRenderFindVisualFormat   (THIS->dpy, THIS->visual);
-        RETVAL = new rxvt_img (THIS, f, width, height);
+        RETVAL = new rxvt_img (THIS, f, 0, 0, width, height);
+        RETVAL->alloc ();
 	OUTPUT:
         RETVAL
-
-#endif
 
 #if ENABLE_TRANSPARENCY
 

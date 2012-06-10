@@ -13,7 +13,6 @@
 
 class rxvt_img
 {
-  void alloc ();
   void destroy ();
   Picture src_picture ();
 
@@ -39,6 +38,7 @@ public:
 
   rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int x, int y, int width, int height, int repeat = RepeatNormal);
   rxvt_img (const rxvt_img &img);
+  void alloc ();
 
 # if HAVE_PIXBUF
   static rxvt_img *new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb); // from pixbuf
